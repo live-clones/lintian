@@ -1,3 +1,10 @@
+scripts (4) unstable; urgency=low
+
+  * Add new example to check that not executable files with a shebang line
+    called *in don't trigger the script-not-executable warning.
+
+ -- Marc 'HE' Brockschmidt <he@debian.org>  Wed, 14 Apr 2004 19:44:04 +0200
+
 scripts (3) unstable; urgency=low
 
   * Add suidperlfoo and some code in debian/rules to

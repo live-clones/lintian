@@ -108,6 +108,9 @@ lintian (1.23.0) UNRELEASED; urgency=low
       shouldn't/can't be called directly anymore so add a new
       error and remove it from the list of usual interpreters.
       (Closes: #240806)
+    + [HE] Don't warn about files with a shebang line which are not executable
+      when they are called *in, as they're probably just templates. (Closes:
+      #114740)
   * checks/shared-libs:
     + [HE] Add some new logic to cope with symlinks from /usr/lib to another
       dir to fix false positives of postrm-has-useless-call-to-ldconfig and
