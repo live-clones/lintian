@@ -41,6 +41,10 @@ lintian (1.23.1~alpha) unstable; urgency=low
   * checks/huge-usr-share:
     + [FL] Skip check for packages that don't have usr/share at all
       (Closes: #247708)
+  * checks/menus:
+    + [FL] Fix regex which checks for update-menus calls (missing
+      whitespace) and allow path before executable name (perhaps this
+      should be another warning, though?) (Closes: #254420)
   * checks/menu-format:
     + [FL] Fix su-to-root checks to cope with the new -X option and
       improve the option parsing to better handle unknown options
