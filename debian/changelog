@@ -43,6 +43,9 @@ lintian (1.23.3) unstable; urgency=low
   * checks/shared-libraries:
     + [JvW] Ignore comments in shlibs files (Closes: #275124)
 
+  * doc/lintian.sgml:
+    + [JvW] Document that you can use comments in overrides (Closes: #87805)
+
   * frontend/lintian:
     + [JvW] Fix overrides so that they allow all of (1) <package> <type>:, (2)
       <package>:, and (3) <nothing> as prefix to tags you want to override,
