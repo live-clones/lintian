@@ -59,6 +59,8 @@ lintian (1.23.1~alpha) unstable; urgency=low
     + [FL] Don't issue executable-not-elf-or-script for files
       that are named *.exe on request of mono maintainers (Closes: #251075)
     + [CW] Add python2.4 as a valid interpreter (Closes: #254482)
+    + [FL] Add ruby1.[68] as valid interpreters, introduce new
+      ruby-script-but-no-ruby-dep error, copied from the python stuff
   * checks/shared-libs:
     + [FL] Don't report shlib-with-executable-bit and
       shlib-with-bad-permissions on symbolic links to such files

@@ -333,6 +333,19 @@ Info: Packages with scripts that are executed with python must depend on the
  In some cases a weaker relationship, such as Suggests or Recommends, will
  be more appropriate.
 
+Tag: ruby-script-but-no-ruby-dep
+Type: error
+Info: Packages with scripts that are executed with ruby must depend on the
+ package ruby. Those that have scripts executed with a versioned ruby
+ package need a dependency on the equivalent version of ruby.
+ .
+ For example, if a script in the package uses #!/usr/bin/ruby, then the
+ package needs a dependency on "ruby". If a script uses
+ #!/usr/bin/ruby1.6, then the package need a dependency on "ruby1.6".
+ .
+ In some cases a weaker relationship, such as Suggests or Recommends, will
+ be more appropriate.
+
 Tag: wrong-path-for-rc
 Type: error
 Info: The rc shell is installed as /usr/bin/rc on Debian systems.
