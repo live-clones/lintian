@@ -151,7 +151,7 @@ foreach my $template (@templates) {
     } elsif ($template->{description}=~m/^\s*(.*?)\s*?\n\s*\1\s*$/) {
 	# Check for duplication. Should all this be folded into the
 	# description checks?
-	print "W: $pkg $type: duplicate-long-description-in-template ",
+	tag "duplicate-long-description-in-template ",
 	      "$template->{template}\n";
     }
 
@@ -161,7 +161,7 @@ foreach my $template (@templates) {
 	my ($mainfield, $lang) = split m/-/, $field, 2;
 	if (defined $lang) {
 	    if ($isselect and $mainfield eq 'default') {
-	        print "W: $pkg $type: select-with-translated-default-field ",
+	        tag "select-with-translated-default-field ",
 	              "$template->{template} $lang\n";
 	    }
 	    $languages{$lang}{$mainfield}=1;
