@@ -96,7 +96,7 @@ while (defined(my $file=readdir(DEBIAN))) {
         if (m/charset=(.*?)\\n/) {
                 $charset = ($1 eq 'CHARSET' ? '' : $1);
         }
-        tag "unknown-charset-in-po-file", "debian/po/$file"
+        tag "unknown-encoding-in-po-file", "debian/po/$file"
                 unless length($charset);
 	if (-x "/usr/bin/msgfmt" ) {
 	    system("msgfmt -o /dev/null debfiles/po/$file 2>/dev/null") == 0

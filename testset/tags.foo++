@@ -9,7 +9,7 @@ E: foo++ source: wrong-debian-qa-address-set-as-maintainer Lintian Maintainer <d
 E: foo++-helper: usr-doc-symlink-without-dependency foo++
 E: foo++-helper: wrong-debian-qa-address-set-as-maintainer Lintian Maintainer <debian-qa@lists.debian.org>
 E: foo++: debian-changelog-file-contains-debmake-default-email-address
-E: foo++: debian-changelog-file-uses-obsolete-national-charset at line 11
+E: foo++: debian-changelog-file-uses-obsolete-national-encoding at line 11
 E: foo++: no-copyright-file
 E: foo++: wrong-debian-qa-address-set-as-maintainer Lintian Maintainer <debian-qa@lists.debian.org>
 W: foo++ source: ancient-standards-version 3.1.1

@@ -28,7 +28,7 @@ Type: warning
 Info: The required file templates.pot is missing from debian/po
  See po-debconf(7).
 
-Tag: unknown-charset-in-po-file
+Tag: unknown-encoding-in-po-file
 Type: warning
 Info: Encoding must be declared in PO files, otherwise charset conversions
  cannot be performed.
