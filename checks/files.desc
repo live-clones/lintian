@@ -472,3 +472,14 @@ Type: warning
 Info: Compiled python source files should not be included in the package.
  These files should be removed from the package and created at package
  installation time in the postinst. 
+
+Tag: bad-permissions-for-ali-file
+Type: warning
+Info: Ada Library Information (*.ali) files are required to be read-only
+ (mode 0444) by GNAT. 
+ .
+ If at least one user can write the *.ali file, GNAT considers whether
+ or not to recompile the corresponding source file.  Such recompilation
+ would fail because normal users don't have write permission on the
+ files.  Moreover, such recompilation would defeat the purpose of
+ library packages, which provide *.a and *.so libraries to link against).

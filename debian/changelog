@@ -53,6 +53,8 @@ lintian (1.23.0) UNRELEASED; urgency=low
     + [FL] Warn about ancient files with the value of
       Dinstall::CutOffPastYear from dak CVS as limit.
       (Closes: #204801, #218304)
+    + [HE] Check for *.ali files introduced, warn if their permissions are !=
+      0444. (Closes: #226879)
   * checks/manpages:
     + [FL] New checks:
        - Section number of directory and file differ

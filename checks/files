@@ -330,6 +330,11 @@ while (<IN>) {
 	print "E: $pkg $type: use-of-compat-symlink $file\n";
     }
 
+    # ---------------- .ali files (Ada Library Information)
+    if ($file =~ m,^usr/lib/.*\.ali$, && $operm != 0444) {
+	print "W: $pkg $type: bad-permissions-for-ali-file $file\n";
+    }
+
     # ---------------- any files
     if ($perm !~ m/^d/) {
 	unless ($type eq 'udeb' or

@@ -94,6 +94,18 @@ N:
 N:   Package contains a CVS directory. It was most likely installed by
 N:   accident, since transient CVS data usually doesn't belong in packages.
 N:
+W: filenames: bad-permissions-for-ali-file usr/lib/ada/adalib/test.ali
+N:
+N:   Ada Library Information (*.ali) files are required to be read-only
+N:   (mode 0444) by GNAT.
+N:   
+N:   If at least one user can write the *.ali file, GNAT considers whether
+N:   or not to recompile the corresponding source file. Such recompilation
+N:   would fail because normal users don't have write permission on the
+N:   files. Moreover, such recompilation would defeat the purpose of
+N:   library packages, which provide *.a and *.so libraries to link
+N:   against).
+N:
 W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/examples/very_interesting_example
 N:
 N:   Package contains a file which is empty.

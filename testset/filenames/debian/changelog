@@ -1,3 +1,10 @@
+filenames (9) unstable; urgency=low
+
+  * Add a two *.ali files, one with the right permission, one with
+    the more common, but false one.
+
+ -- Marc 'HE' Brockschmidt <he@debian.org>  Sun, 11 Apr 2004 00:18:16 +0200
+
 filenames (8) unstable; urgency=low
 
   * Add a real ancient file
