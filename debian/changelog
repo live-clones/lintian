@@ -142,6 +142,8 @@ lintian (1.23.0~beta1-fixing1) unstable; urgency=low
     + [HE] Added a --dont-check-parts|-X option to allow users to specify
       which tests should not be run. Also added infos about this to the
       manpage. (Closes: #206674)
+  * frontend/lintian-info:
+    + [JvW] Fixed that lintian -I also displays info for I: tags
   
   * lib/Dep.pm:
     + [FL] Fixed some semantic errors (since noone ever observed the
@@ -157,7 +159,7 @@ lintian (1.23.0~beta1-fixing1) unstable; urgency=low
       based on patch by Robert Lemmen <robertle@semistable.com>, thanks!
       (Closes: #198617)
 
- -- Debian Lintian Maintainers <lintian-maint@debian.org>  Sun, 18 Apr 2004 11:37:08 +0200
+ -- Debian Lintian Maintainers <lintian-maint@debian.org>  Sun, 18 Apr 2004 21:26:09 +0200
 
 lintian (1.22.12) unstable; urgency=low
 
