@@ -70,10 +70,16 @@ while (<IN>) {
 	#    if ($sym =~ m/^(__register_frame_info)$/) {
 	#    	$DYNSYM{$file}{$sym} = $sec;
 	#    }
-	    if ($foo eq '.text' and $sec eq 'Base' and
-		$sym eq '__gmon_start__') {
-	      tag "binary-compiled-with-profiling-enabled", "$file";
-	    }
+	    if ($arch ne 'hppa') {
+		if ($foo eq '.text' and $sec eq 'Base' and
+		    $sym eq '__gmon_start__') {
+		    tag "binary-compiled-with-profiling-enabled", "$file";
+		}
+	    } else {
+		if ( ($sec =~ /^GLIBC_.*/) and ($sym eq '_mcount') ) {
+		    tag "binary-compiled-with-profiling-enabled", "$file";
+		}
+	    }    
 	}
     } else {
 	if (m/^\s*NEEDED\s*(\S+)/o) {
