@@ -126,6 +126,8 @@ open(IN,"copyright") or fail("cannot open copyright file copyright: $!");
 undef $/;  $_ = <IN>;
 close(IN);
 
+my $wrong_directory_detected = 0;
+
 if (m/\<fill in ftp site\>/ or m/\<Must follow here\>/) {
     print "E: $pkg $type: helper-templates-in-copyright\n";
 }
@@ -136,14 +138,17 @@ if (m,usr/share/common-licenses/(GPL|LGPL|BSD|Artistic)\.gz,) {
 
 if (m,usr/share/common-licences,) {
     print "E: $pkg $type: copyright-refers-to-incorrect-directory $&\n";
+    $wrong_directory_detected = 1;
 }
 
 if (m,usr/share/doc/copyright,) {
     print "E: $pkg $type: copyright-refers-to-old-directory\n";
+    $wrong_directory_detected = 1;
 }
 
 if (m,usr/doc/copyright,) {
     print "E: $pkg $type: copyright-refers-to-old-directory\n";
+    $wrong_directory_detected = 1;
 }
 
 # lame check for old FSF zip code
@@ -172,7 +177,7 @@ if ((m,common-licenses(/\S+),) && (! m,/usr/share/common-licenses/,)) {
 
 if (m/(GNU General Public License|GPL)/ && !m,/usr/share/common-licenses,
     && !m/Zope Public License/ && !m/LICENSE AGREEMENT FOR PYTHON 1.6.1/
-    && !m/LaTeX Project Public License/) {
+    && !m/LaTeX Project Public License/ && !$wrong_directory_detected) {
     print "E: $pkg $type: copyright-should-refer-to-common-license-file-for-gpl\n";
 }
 
