@@ -54,6 +54,7 @@ lintian (1.23.1~beta) unstable; urgency=low
       <sgunderson@bigfoot.com>. (Closes: #255593)
     + [HE] Don't issue virtual-package-depends-without-real-package-depends 
       if this happens in Suggests. (Closes: #254367)
+    + [FL] Allow whitespace in relations after the version number
   * checks/huge-usr-share:
     + [FL] Skip check for packages that don't have usr/share at all
       (Closes: #247708)
