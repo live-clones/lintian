@@ -22,6 +22,8 @@
 package Tags;
 use strict;
 
+use Util;
+
 use Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT = qw(tag);
