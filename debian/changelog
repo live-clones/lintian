@@ -1,3 +1,12 @@
+lintian (1.23.2) unstable; urgency=low
+
+  * The "of course it had to go wrong on my first own lintian
+    upload" release.
+  * Tigthen versioned Build-Depends on sed to (>= 4.1-4) to avoid
+    be hitten by bug #257232 in sed (Closes: #259109)
+
+ -- Frank Lichtenheld <djpig@debian.org>  Tue, 13 Jul 2004 13:36:45 +0200
+
 lintian (1.23.1) unstable; urgency=low
 
   The ``Now featuring over 500 checks'' release, prepared by the usual
