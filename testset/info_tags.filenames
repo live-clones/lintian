@@ -120,10 +120,19 @@ N:   files. Moreover, such recompilation would defeat the purpose of
 N:   library packages, which provide *.a and *.so libraries to link
 N:   against).
 N:
-W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/examples/very_interesting_example
+W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/README.macosx
 N:
 N:   Package contains a file which is empty.
 N:
+W: filenames: package-contains-readme-for-other-platform-or-distro usr/share/doc/filenames/README.macosx
+N:
+N:   package contains a README.(platform) file that contains instructions
+N:   specific to a platform or distribution other than Debian and thus can
+N:   most likely be removed. If it contains information that pertains to
+N:   Debian, please consider renaming it, or including it in an already
+N:   existing README file.
+N:
+W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/examples/very_interesting_example
 W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/examples/very_interesting_example2.gz
 W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/Changes.gz
 E: filenames: package-installs-file-to-usr-something-x11 usr/bin/X11/

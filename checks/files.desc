@@ -501,3 +501,11 @@ Info: Ada Library Information (*.ali) files are required to be read-only
  would fail because normal users don't have write permission on the
  files.  Moreover, such recompilation would defeat the purpose of
  library packages, which provide *.a and *.so libraries to link against).
+
+Tag: package-contains-readme-for-other-platform-or-distro
+Type: warning
+Info: package contains a README.(platform) file that contains instructions
+ specific to a platform or distribution other than Debian and thus can
+ most likely be removed.  If it contains information that pertains to 
+ Debian, please consider renaming it, or including it in an already 
+ existing README file.

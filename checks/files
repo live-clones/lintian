@@ -196,6 +196,14 @@ while (<IN>) {
 		if ($file =~ m,^usr/share/doc/$tmp/INSTALL(?:\..+)*$,) {
 		    print "W: $pkg $type: package-contains-upstream-install-documentation $file\n";
 		}
+
+		# contains a README for another distribution/platform?
+		if ($file =~ m,^usr/share/doc/$tmp/readme\.(apple|aix|atari|be|beos|bsd|bsdi|
+		                cygwin|darwin|irix|gentoo|freebsd|mac|macos|macosx|netbsd|
+				openbsd|osf|redhat|sco|sgi|solaris|suse|sun|vms|win32|win9x|
+				windows)(\.txt)?(\.gz)?$,xi){
+		    print "W: $pkg $type: package-contains-readme-for-other-platform-or-distro $file\n";
+		}
 	    }
 	}
 	# ---------------- /usr/doc

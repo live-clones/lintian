@@ -19,6 +19,8 @@ E: filenames: package-contains-ancient-file usr/lib/perl5/foo/ancient.pm 1975-01
 W: filenames: package-contains-svn-control-dir usr/lib/perl5/.svn/
 W: filenames: package-contains-CVS-dir usr/lib/perl5/CVS/
 W: filenames: bad-permissions-for-ali-file usr/lib/ada/adalib/test.ali
+W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/README.macosx
+W: filenames: package-contains-readme-for-other-platform-or-distro usr/share/doc/filenames/README.macosx
 W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/examples/very_interesting_example
 W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/examples/very_interesting_example2.gz
 W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/Changes.gz

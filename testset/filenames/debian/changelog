@@ -1,3 +1,9 @@
+filenames (11) unstable; urgency=low
+
+  * Add a README.macos.
+
+ -- Marc 'HE' Brockschmidt <he@debian.org>  Mon, 12 Apr 2004 23:35:24 +0200
+
 filenames (10) unstable; urgency=low
 
   * Some new files to check the checks for the use of /usr/*/X11 and
