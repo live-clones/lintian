@@ -32,6 +32,8 @@ lintian (1.23.4) unstable; urgency=low
   
   * testset/debconf/*,testset/tags.debconf:
     + [FL] New test package for debconf and udeb tests
+  * testset/diffs:
+    + [JvW] Remove the shipped ELF binary, can be compiled at test-time
   * testset/runtests:
     + [FL] Make checks of udeb packages possible
   
