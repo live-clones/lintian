@@ -1,0 +1,5 @@
+debconf (1) unstable; urgency=low
+
+  * Initial Release
+
+ -- Lintian Maintainers <lintian@packages.debian.org>  Sat, 13 Nov 2004 22:45:05 +0100

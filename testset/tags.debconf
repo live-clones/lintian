@@ -1,0 +1,4 @@
+E: debconf-test: extended-description-is-empty
+E: debconf-test: settitle-requires-versioned-depends config
+W: debconf source: maintainer-script-lacks-debhelper-token debian/debconf-test.postinst
+W: debconf-udeb udeb: missing-debconf-dependency

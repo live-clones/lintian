@@ -1,5 +1,8 @@
 lintian (1.23.4) unstable; urgency=low
 
+  * checks/debconf{,.desc}:
+    + [FL] The SETTITLE command was introduced in debconf version
+      1.3.22. Check the depends for that (Closes: #261890)
   * checks/debhelper:
     + [FL] Update list of debhelper scripts that modify maintainer
       scripts
@@ -11,6 +14,11 @@ lintian (1.23.4) unstable; urgency=low
   * lib/Tags.pm:
     + [FL] Add missing "use Util;", noted by Robert Luberda
       (Closes: #278513)
+  
+  * testset/debconf/*,testset/tags.debconf:
+    + [FL] New test package for debconf and udeb tests
+  * testset/runtests:
+    + [FL] Make checks of udeb packages possible
   
  -- Frank Lichtenheld <frank@lichtenheld.de>  Sun, 17 Oct 2004 20:04:06 +0200
 

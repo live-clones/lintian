@@ -1,0 +1,19 @@
+Source: debconf
+Section: utils
+Priority: optional
+Build-Depends: debhelper (>= 4)
+Maintainer: Lintian Maintainers <lintian@packages.debian.org>
+Standards-Version: 3.6.1
+
+Package: debconf-test
+Architecture: any
+Depends: ${shlibs:Depends}, debconf
+Description: Test package for the debconf checks of lintian
+
+Package: debconf-udeb
+Section: debian-installer
+XC-Package-Type: udeb
+XB-Installer-Menu-Item: 100
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: Test udeb package for the debconf checks of lintian
