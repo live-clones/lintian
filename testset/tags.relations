@@ -11,7 +11,6 @@ E: relations: depends-on-essential-package-without-using-version depends: dpkg
 E: relations: needlessly-depends-on-awk depends
 E: relations: no-copyright-file
 E: relations: obsolete-field optional
-E: relations: package-has-a-duplicate-relation depends: relations, relations (<< 3)
 I: relations-multiple-libs: unknown-field-in-control bugs
 I: relations-multiple-libs: unknown-field-in-control origin
 I: relations: unknown-field-in-control bugs
@@ -22,6 +21,7 @@ W: relations source: redundant-origin-field
 W: relations source: virtual-package-depends-without-real-package-depends build-depends: mail-transport-agent
 W: relations-multiple-libs: description-synopsis-might-not-be-phrased-properly
 W: relations-multiple-libs: redundant-origin-field
+W: relations: package-has-a-duplicate-relation depends: relations, relations (<< 3)
 W: relations: package-relation-with-self depends: relations
 W: relations: package-relation-with-self depends: relations (<< 3)
 W: relations: package-relation-with-self replaces: relations

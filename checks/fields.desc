@@ -404,10 +404,14 @@ Info: The control file specifies source relations for architecture-dependent
  Build-Depends-Indep.
 
 Tag: package-has-a-duplicate-relation
-Type: error
+Type: warning
 Info: The package seems to declare a relation on another package which is
  already implied by other relations it declares, and is therefore redundant.
- This is not only sloppy but can break some tools.
+ .
+ Note that when using ${shlibs:Depends}, this is sometimes unavoidable (unless
+ you're in a mood for ugly kludges), feel free to ignore/override this warning
+ in that case, as it can only be fixed at the package-tools level (e.g., in
+ dpkg)
 
 Tag: needlessly-depends-on-awk
 Type: error
