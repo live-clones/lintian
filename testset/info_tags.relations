@@ -9,6 +9,16 @@ N:   don't have to re-upload the package just to adjust the
 N:   Standards-Version control field. However, please remember to update
 N:   this field next time you upload the package.
 N:
+E: relations source: build-depends-without-arch-dep
+N:
+N:   The control file specifies source relations for architecture-dependent
+N:   packages, but no architecture-dependent packages are built. There are
+N:   some exceptions, the most common is a Build-Depends: debhelper if you
+N:   use dh_clean in the clean target of debian/rules. In other cases, you
+N:   most likely need to change Build-Depends to Build-Depends-Indep.
+N:   
+N:   Refer to Policy Manual, section 7.6 for details.
+N:
 E: relations source: bad-relation build-depends: foo (>> 2) bar baz bat
 N:
 N:   The package declares a relationship that could not be parsed according

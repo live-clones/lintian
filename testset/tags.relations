@@ -1,4 +1,5 @@
 W: relations source: ancient-standards-version 3.1.1
+E: relations source: build-depends-without-arch-dep
 E: relations source: bad-relation build-depends: foo (>> 2) bar baz bat
 W: relations source: redundant-origin-field
 E: relations-multiple-libs: no-copyright-file

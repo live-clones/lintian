@@ -4,6 +4,7 @@ Abbrev: fld
 Standards-Version: 3.6.1
 Type: binary, udeb, source
 Unpack-Level: 1
+Needs-Info: debfiles
 Info: This script checks the syntax of the fields in package control files,
  as described in the Policy Manual.
 
@@ -360,6 +361,16 @@ Type: error
 Ref: policy 7.6
 Info: The control file specifies source relations for architecture-independent
  packages, but no architecture-independent packages are built.
+
+Tag: build-depends-without-arch-dep
+Type: error
+Ref: policy 7.6
+Info: The control file specifies source relations for architecture-dependent
+ packages, but no architecture-dependent packages are built.  There are some
+ exceptions, the most common is a Build-Depends: debhelper if you use 
+ dh_clean in the clean target of debian/rules.
+ In other cases, you most likely need to change Build-Depends to 
+ Build-Depends-Indep.
 
 Tag: package-has-a-duplicate-relation
 Type: error

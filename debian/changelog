@@ -33,6 +33,8 @@ lintian (1.23.0) UNRELEASED; urgency=low
         (Closes: #234978, #235356)
     + [HE] Add check for an Origin field with "Debian" as value. 
       (Closes: #119618)
+    + [HE] Reintroduce build-depends-without-arch-dep check with the patch
+      i proposed in #214231. (Closes: #242484)
   * checks/files:
     + [HE] New check for compiled python files (*.pyc). Patch by David
       Kimdon <david@kimdon.org>, thanks. (Closes: #236606)

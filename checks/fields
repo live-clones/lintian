@@ -356,9 +356,47 @@ if ($type eq "source") {
 	
 	#Get number of arch-indep packages:
 	my $arch_indep_packages = 0;
-	if (open(CONTROL, "debfiles/control")) {
-		$arch_indep_packages = grep { /^Architecture: all/ } <CONTROL>;
+	my $arch_dep_packages = 0;
+	if (not open(CONTROL, "debfiles/control")) {
+		fail("Can't open debfiles/control: $!");
+	} else {
+		local $/ = "\n"; #Read this linewise
+		while (<CONTROL>) {	
+			if (/^Architecture: all/) {			
+				$arch_indep_packages++;
+			} elsif (/^Architecture:/) {		
+				$arch_dep_packages++;
+			}
+		}
 	} 
+
+	if (-e "fields/build-depends" && $arch_dep_packages == 0) {
+		if (not open(BD, "fields/build-depends")) {
+			fail("Can't open fields/build-depends");
+		} else {
+			my $build_depends = <BD>;
+			close BD;
+
+			my $uses_dh = 0;
+			if (not open (RULES, "debfiles/rules")) {
+				fail("cannot read debfiles/rules: $!");
+			} else {
+				my $target = "none";
+				local $/ = "\n"; #Read this linewise				
+				while (<RULES>) {
+					$target = $1 if (/^(\S+):/);
+					if (/^\s+dh_.+/ && grep ($_ eq $target, qw(clean binary-arch build-arch))) {
+						$uses_dh = "yes";
+						last
+					}
+				}
+				close RULES;
+			}
+			unless ($build_depends =~ /^\s*debhelper(?:\s+\((.+?)\))?(?:\s+(\[.+?\]))?\s*$/ && $uses_dh){
+				print "E: $pkg $type: build-depends-without-arch-dep\n"
+			}
+		}
+	}
 
 	print "E: $pkg $type: build-depends-indep-without-arch-indep\n"
 		if (-e "fields/build-depends-indep" && $arch_indep_packages == 0);
