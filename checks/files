@@ -26,6 +26,7 @@ my $pkg = shift;
 my $type = shift;
 
 my $file;
+my $source_pkg;
 my $is_python;
 my $is_perl;
 my $has_binary_perl_file;
@@ -51,6 +52,11 @@ while (<IN>) {
     }
 }
 close(IN);
+
+#Get source package name, if possible
+if (open (SOURCE, "fields/source")) {
+    chomp ($source_pkg = (<SOURCE> || ""));
+}
 
 # find out which files are scripts
 open(SCRIPTS, "scripts") or fail("cannot open lintian scripts file: $!");
@@ -202,6 +208,20 @@ while (<IN>) {
 	elsif ($file =~ m,usr/X11R6/lib/X11/app-defaults,) {
 	    print "E: $pkg $type: old-app-defaults-directory $file\n";
 	}
+
+	#----------------- /usr/{lib,bin,include}/X11/
+	elsif ($file =~ m,^usr/(?:lib|bin|include)/X11/,) {
+	    print "E: $pkg $type: package-installs-file-to-usr-something-x11 $file\n";
+	}
+
+	#----------------- /usr/X11R6/
+	elsif ($file =~ m,^usr/X11R6/, and
+	       $file !~ m,^usr/X11R6/lib/X11/fonts, and #font packages are allowed
+	       $perm !~ m,^l, and #links to FHS locations are encouraged
+	       $source_pkg ne "xfree86") { #The X Window System is allowed to do anything
+	    print "W: $pkg $type: packages-installs-file-to-usr-x11r6 $file\n";
+	}
+
 	# ---------------- /usr/lib/sgml
 	elsif ($file =~ m,^usr/lib/sgml/\S,) {
 	    if ($perm =~ m/^-.*[xs]/) {

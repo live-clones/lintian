@@ -3,6 +3,8 @@ W: filenames source: source-contains-svn-control-dir .svn
 W: filenames source: cvsignore-file-in-source files/.cvsignore
 W: filenames source: svn-commit-file-in-source files/svn-commit.tmp
 W: filenames source: source-contains-CVS-dir CVS
+E: filenames: binary-without-manpage testxbin
+E: filenames: binary-without-manpage testxbin2
 E: filenames: non-standard-toplevel-dir files/
 W: filenames: file-in-unusual-dir files/.cvsignore
 W: filenames: cvsignore-file-in-package files/.cvsignore
@@ -20,6 +22,13 @@ W: filenames: bad-permissions-for-ali-file usr/lib/ada/adalib/test.ali
 W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/examples/very_interesting_example
 W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/examples/very_interesting_example2.gz
 W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/Changes.gz
+E: filenames: package-installs-file-to-usr-something-x11 usr/bin/X11/
+E: filenames: use-of-compat-symlink usr/bin/X11/
+E: filenames: package-installs-file-to-usr-something-x11 usr/bin/X11/testxbin
+E: filenames: use-of-compat-symlink usr/bin/X11/testxbin
+W: filenames: packages-installs-file-to-usr-x11r6 usr/X11R6/
+W: filenames: packages-installs-file-to-usr-x11r6 usr/X11R6/bin/
+W: filenames: packages-installs-file-to-usr-x11r6 usr/X11R6/bin/testxbin2
 E: filenames: symlink-should-be-absolute usr/lib/filenames/symlink1wrong ../../../etc/symlink
 E: filenames: symlink-has-too-many-up-segments usr/lib/filenames/symlink2wrong ../../../../etc/symlink
 E: filenames: symlink-should-be-relative usr/lib/filenames/symlink3wrong /usr/lib/filenames/symlink2

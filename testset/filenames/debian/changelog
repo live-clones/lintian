@@ -1,3 +1,10 @@
+filenames (10) unstable; urgency=low
+
+  * Some new files to check the checks for the use of /usr/*/X11 and
+    /usr/X11R6/*.
+
+ -- Marc 'HE' Brockschmidt <he@debian.org>  Sun, 11 Apr 2004 17:35:20 +0200
+
 filenames (9) unstable; urgency=low
 
   * Add a two *.ali files, one with the right permission, one with

@@ -55,6 +55,8 @@ lintian (1.23.0) UNRELEASED; urgency=low
       (Closes: #204801, #218304)
     + [HE] Check for *.ali files introduced, warn if their permissions are !=
       0444. (Closes: #226879)
+    + [HE] New checks for deprecated X11 dirs (/usr/{bin,lib,include}/X11 and
+      usr/X11R6/*). (Closes: #81004)
   * checks/manpages:
     + [FL] New checks:
        - Section number of directory and file differ

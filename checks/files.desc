@@ -4,7 +4,7 @@ Abbrev: fil
 Standards-Version: 3.5.0
 Type: binary, udeb
 Unpack-Level: 1
-Needs-Info: objdump-info
+Needs-Info: objdump-info, scripts
 Info: This script checks if a binary package conforms to policy
  WRT to files and directories.
 
@@ -22,6 +22,24 @@ Info: The app-defaults files have moved to /etc/X11/app-defaults/. Files in
  used by X. The old directory should not exist in packages at all;
  this prevents X from replacing it with a compatability symlink.
 Ref: policy 11.8.6
+
+Tag: package-installs-file-to-usr-something-x11
+Type: error
+Info: Packages must not provide or install files into the directories 
+ /usr/bin/X11/, /usr/include/X11/ or /usr/lib/X11/.
+Ref: policy 11.8.7
+
+Tag: packages-installs-file-to-usr-x11r6
+Type: warning
+Info: Packages using the X Window System should not be configured to install
+ files under the /usr/X11R6/ directory unless they use imake. The /usr/X11R6/
+ directory hierarchy should be regarded as deprecated for all packages except
+ the X Window System itself.
+ .
+ Programs that use GNU autoconf and automake are usually easily configured at
+ compile time to use /usr/ instead of /usr/X11R6/, and this should be done
+ whenever possible.
+Ref: policy 11.8.7
 
 Tag: config-file-reserved $file
 Type: error

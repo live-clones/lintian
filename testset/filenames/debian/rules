@@ -52,6 +52,10 @@ binary-indep:
 	touch debian/tmp/usr/lib/ada/adalib/test.ali debian/tmp/usr/lib/ada/adalib/test2.ali
 	chmod 0644 debian/tmp/usr/lib/ada/adalib/test.ali
 	chmod 0444 debian/tmp/usr/lib/ada/adalib/test2.ali
+	install -d debian/tmp/usr/bin/X11/
+	touch debian/tmp/usr/bin/X11/testxbin
+	install -d debian/tmp/usr/X11R6/bin
+	touch debian/tmp/usr/X11R6/bin/testxbin2
 	touch debian/tmp/usr/share/doc/filenames/Changes
 	chmod 644 debian/tmp/usr/share/doc/filenames/Changes
 	gzip -9 debian/tmp/usr/share/doc/filenames/Changes

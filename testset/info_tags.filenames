@@ -32,6 +32,20 @@ N:   Package contains a CVS directory. It was most likely installed by
 N:   accident, since transient CVS data usually doesn't belong in packages.
 N:   Export from CVS rather than use a checkout.
 N:
+E: filenames: binary-without-manpage testxbin
+N:
+N:   Each binary in /usr/bin, /usr/sbin, /bin, /sbin, or /usr/games, must
+N:   have a manual page.
+N:   
+N:   Note, that though the `man' program has the capability to check for
+N:   several program names in the NAMES section, each of these programs
+N:   must have its own manual page (a symbolic link to the appropriate
+N:   manual page is sufficient) because other manual page viewers such as
+N:   xman or tkman don't support this.
+N:   
+N:   Refer to Policy Manual, section 12.1 for details.
+N:
+E: filenames: binary-without-manpage testxbin2
 E: filenames: non-standard-toplevel-dir files/
 N:
 N:   The Filesystem Hierarchy Standard forbids the installation of new
@@ -112,6 +126,37 @@ N:   Package contains a file which is empty.
 N:
 W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/examples/very_interesting_example2.gz
 W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/Changes.gz
+E: filenames: package-installs-file-to-usr-something-x11 usr/bin/X11/
+N:
+N:   Packages must not provide or install files into the directories
+N:   /usr/bin/X11/, /usr/include/X11/ or /usr/lib/X11/.
+N:   
+N:   Refer to Policy Manual, section 11.8.7 for details.
+N:
+E: filenames: use-of-compat-symlink usr/bin/X11/
+N:
+N:   This package uses a directory that, according to the Filesystem
+N:   Hierarchy Standard, should exist only as a compatibility symlink.
+N:   Packages should not traverse such symlinks when installing files, they
+N:   should use the standard directories instead.
+N:
+E: filenames: package-installs-file-to-usr-something-x11 usr/bin/X11/testxbin
+E: filenames: use-of-compat-symlink usr/bin/X11/testxbin
+W: filenames: packages-installs-file-to-usr-x11r6 usr/X11R6/
+N:
+N:   Packages using the X Window System should not be configured to install
+N:   files under the /usr/X11R6/ directory unless they use imake. The
+N:   /usr/X11R6/ directory hierarchy should be regarded as deprecated for
+N:   all packages except the X Window System itself.
+N:   
+N:   Programs that use GNU autoconf and automake are usually easily
+N:   configured at compile time to use /usr/ instead of /usr/X11R6/, and
+N:   this should be done whenever possible.
+N:   
+N:   Refer to Policy Manual, section 11.8.7 for details.
+N:
+W: filenames: packages-installs-file-to-usr-x11r6 usr/X11R6/bin/
+W: filenames: packages-installs-file-to-usr-x11r6 usr/X11R6/bin/testxbin2
 E: filenames: symlink-should-be-absolute usr/lib/filenames/symlink1wrong ../../../etc/symlink
 N:
 N:   Symbolic links between different top-level directories should be
