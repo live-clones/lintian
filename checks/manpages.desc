@@ -91,8 +91,9 @@ Info: Each manual page should start with a `NAME' section, which lists the
  `whatis', so they must be in a certain format. This manual page apparently
  uses the wrong format and cannot be parsed by `mandb'.
  .
- For information on how `NAME' sections should be written see man(7). See also
- lexgrog(1) for some common mistakes.
+ For information on how `NAME' sections should be written see lexgrog(1).
+ See also groff_man(7) and groff_mdoc(7) for general information on writing
+ manual pages.
 
 Tag: manpage-for-x11-binary-in-wrong-directory
 Type: error
@@ -137,8 +138,8 @@ Tag: manpage-section-mismatch
 Type: warning
 Info: A man page usually should contain a <tt>.TH</tt> header, specifying the
  section.  The section in this manpage doesn't match with the section in the
- filename.  Please consult man(7) for more information about <tt>.TH</tt>
- syntax (amongst others).
+ filename.  Please consult groff_man(7) for more information about
+ <tt>.TH</tt> syntax (amongst others).
 
 Tag: hyphen-used-as-minus-sign
 Type: info
