@@ -396,6 +396,17 @@ if ($type eq "source") {
 	}
 }
 
+#----- Origin
+
+if (open(FH, "fields/origin")) {
+	my $origin = <FH>;
+	close(FH);
+
+	unfold('origin', \$origin);
+
+	print "W: $pkg $type: redundant-origin-field\n" if $origin =~ /^\s*debian\s*$/i
+}
+
 #----- Field checks (without checking the value)
 
 for my $field (glob("fields/*")) {

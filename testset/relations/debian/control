@@ -4,6 +4,8 @@ Priority: optional
 Build-Depends: foo (>> 2) bar baz bat
 Maintainer: Lintian Maintainer <lintian-maint@debian.org>
 Standards-Version: 3.1.1
+Origin: Debian
+Bugs: foobar
 
 Package: relations
 Architecture: all

@@ -36,7 +36,7 @@ use base qw(Exporter);
     ('source', 'version', 'maintainer', 'binary', 'architecture',
      'standards-version', 'files', 'build-depends', 'build-depends-indep',
      'build-conflicts', 'build-conflicts-indep', 'format', 'origin',
-     'uploaders', 'bugs' );
+     'uploaders' );
 
 %known_binary_fields = map { $_ => 1 }
     ('package', 'version', 'architecture', 'depends', 'pre-depends',
@@ -52,7 +52,7 @@ use base qw(Exporter);
 
 %known_obsolete_fields = map { $_ => 1 }
     ('revision', 'package-revision', 'package_revision',
-     'recommended', 'optional', 'class');
+     'recommended', 'optional', 'class', 'bugs');
 
 %known_essential = map { $_ => 1 }
     ('base-files', 'base-passwd', 'bash', 'bsdutils', 'coreutils',

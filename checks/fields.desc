@@ -422,3 +422,8 @@ Tag: bad-menu-item
 Type: error
 Info: The field Installer-Menu-Item should only contain positive integer
  values.
+
+Tag: redundant-origin-field
+Type: warning
+Info: You use the Origin field though the field value is the default (Debian).
+ In this case the field is redundant and should be removed.

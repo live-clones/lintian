@@ -1,5 +1,6 @@
 W: relations source: ancient-standards-version 3.1.1
 E: relations source: bad-relation build-depends: foo (>> 2) bar baz bat
+W: relations source: redundant-origin-field
 E: relations-multiple-libs: no-copyright-file
 W: relations-multiple-libs: description-synopsis-might-not-be-phrased-properly
 E: relations-multiple-libs: description-synopsis-is-duplicated
@@ -8,6 +9,9 @@ E: relations-multiple-libs: package-depends-on-multiple-tcl-versions tcl8.0 tcl8
 E: relations-multiple-libs: package-depends-on-multiple-tk-versions tk8.2 tk8.3
 E: relations-multiple-libs: package-depends-on-multiple-tkx-versions tkx8.2 tkx8.3
 E: relations-multiple-libs: package-depends-on-multiple-libpng-versions libpng2 libpng3
+W: relations-multiple-libs: redundant-origin-field
+E: relations-multiple-libs: obsolete-field bugs
+N: relations-multiple-libs binary: unknown-field-in-changes origin
 E: relations: no-copyright-file
 W: relations: package-relation-with-self depends: relations
 W: relations: package-relation-with-self depends: relations (<< 3)
@@ -17,4 +21,7 @@ E: relations: needlessly-depends-on-awk depends
 E: relations: bad-version-in-relation conflicts: foobar (<< 5&5)
 W: relations: package-relation-with-self replaces: relations
 E: relations: package-has-a-duplicate-relation depends: relations, relations (<< 3)
+W: relations: redundant-origin-field
+E: relations: obsolete-field bugs
 E: relations: obsolete-field optional
+N: relations binary: unknown-field-in-changes origin

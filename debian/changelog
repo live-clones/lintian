@@ -13,6 +13,9 @@ lintian (1.23.0) UNRELEASED; urgency=low
 
   * checks/binaries:
     + [JvW] Ignore static binaries in /usr/lib/debug
+  * checks/common_data:
+    + [HE] Change known_obsolete_fields to allow checks/fields to
+    report the Bugs field als obsolete.
   * checks/debconf{,.desc}:
     + [JvW] Add an error for a bogus default for a boolean template
       (Closes: #236846)
@@ -23,6 +26,8 @@ lintian (1.23.0) UNRELEASED; urgency=low
       - bad-relation seems to work better now (Closes: #171763)
       - duplicate relations checking now works for different fields, too
         (Closes: #234978, #235356)
+    + [HE] Add check for an Origin field with "Debian" as value. 
+      (Closes: #119618)
   * checks/files:
     + [HE] New check for compiled python files (*.pyc). Patch by David
       Kimdon <david@kimdon.org>, thanks. (Closes: #236606)

@@ -16,6 +16,11 @@ N:   to the rules given in the Policy Manual.
 N:   
 N:   Refer to Policy Manual, section 7.1 for details.
 N:
+W: relations source: redundant-origin-field
+N:
+N:   You use the Origin field though the field value is the default
+N:   (Debian). In this case the field is redundant and should be removed.
+N:
 E: relations-multiple-libs: no-copyright-file
 N:
 N:   Each binary package has to include a plain file
@@ -74,6 +79,14 @@ N:   The package seems to declare several relations to a libpng version.
 N:   This is not only sloppy but in the case of libraries, it may well
 N:   break the runtime execution of programs.
 N:
+W: relations-multiple-libs: redundant-origin-field
+E: relations-multiple-libs: obsolete-field bugs
+N:
+N:   This is one of the fields listed in Policy Manual as obsolete.
+N:   
+N:   Refer to policy D.2.6 for details.
+N:
+N: relations-multiple-libs binary: unknown-field-in-changes origin
 E: relations: no-copyright-file
 W: relations: package-relation-with-self depends: relations
 N:
@@ -126,9 +139,7 @@ N:   The package seems to declare a relation on another package which is
 N:   already implied by other relations it declares, and is therefore
 N:   redundant. This is not only sloppy but can break some tools.
 N:
+W: relations: redundant-origin-field
+E: relations: obsolete-field bugs
 E: relations: obsolete-field optional
-N:
-N:   This is one of the fields listed in Policy Manual as obsolete.
-N:   
-N:   Refer to policy D.2.6 for details.
-N:
+N: relations binary: unknown-field-in-changes origin
