@@ -509,3 +509,10 @@ Info: package contains a README.(platform) file that contains instructions
  most likely be removed.  If it contains information that pertains to 
  Debian, please consider renaming it, or including it in an already 
  existing README file.
+
+Tag: desktop-file-in-wrong-dir
+Type: warning
+Info: package contains a .desktop file in a non-standard directory.
+ According to the menu-spec draft on freedesktop.org, those .desktop
+ files that are intended to create a menu should be placed in 
+ <tt>/usr/share/applications/</tt>.

@@ -306,6 +306,22 @@ while (<IN>) {
 	    # Make an exception for the altdev dirs, which will go away
 	    # at some point and are not worth moving.
 	}
+	# ---------------- .desktop files
+	# People have placed them everywhere, but nowadays the consensus 
+	# seems to be to stick to the fd.org standard drafts, which says
+	# that .desktop files intended for menus should be placed in 
+	# $XDG_DATA_DIRS/applications.
+	# The default for $XDG_DATA_DIRS is /usr/local/share/:/usr/share/,
+	# according to the basedir-spec on fd.org. As distributor, we 
+	# should only allow /usr/share.
+	#
+	# Other applications also use .desktop files (yay!), so we need to
+	# exclude them.
+	elsif ($file =~ m,\.desktop$, && $file !~ m,^usr/share/applications/ &&
+	       $file !~ m,^usr/share/xsessions/,) {
+	    tag "desktop-file-in-wrong-dir", "$file";
+	}
+	
     }
     # ---------------- /var subdirs
     elsif ($type ne 'udeb' and $file =~ m,^var/[^/]+/$,) { # FSSTND dirs

@@ -11,7 +11,12 @@ lintian (1.23.6) UNRELEASED; urgency=low
       a binary NMU. New check's name is binary-nmu-debian-revision-in-source.
       (Closes: #244830)
     + [HE] Warn if people use the Bugs field to refer to the Debian BTS, the
-      new check is called redundant-bugs-field. (Closes: #245883)      
+      new check is called redundant-bugs-field. (Closes: #245883)
+  * checks/files:
+    + [HE] Check that .desktop files are placed in /usr/share/applications.
+      This seems to be the standard place for those files that are used
+      to create menus. The check is called desktop-file-in-wrong-dir. 
+      (Closes: #200171)
   * checks/manpages:
     + [HE] Don't compare the manpage filename extension and the content of
       .TH case-sensitive. Report + patch by Jay Berkenbilt <ejb@ql.org>,
