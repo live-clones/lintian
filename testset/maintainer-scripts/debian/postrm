@@ -4,3 +4,17 @@ update-alternatives --remove dummy /usr/bin/dummy-alternative
 
 echo "Hit enter"
 read
+
+# neither of the following should be detected as postrm-unsafe-ldconfig
+# intended, without quotes
+   if [ "$1" = remove ]; then
+       ldconfig
+    fi
+# reversed, many whitespace
+if [ 'remove' = "$1" ]
+then
+ 
+ ldconfig
+fi
+
+[ "remove" ="$1" ] && ldconfig

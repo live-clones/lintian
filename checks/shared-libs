@@ -304,13 +304,16 @@ if (-f $postrm) {
     }
 
     # Decide if we do it safely
+    s/\bldconfig\b/BldconfigB/g;
+    s/[ \t]//g;
     # this one matches code from debhelper
-    s/^if\s+\[\s+"\$1"\s+=\s+"remove"\s+\];\s+then\s+ldconfig\b//gm;
+    s/^if\["\$1"=.?remove.?\];?\n*then\n*BldconfigB//gm;
     # variations...
-    s/^if\s+\[\s+"remove"\s+=\s+"\$1"\s+\];\s+then\s+ldconfig\b//gm;
-    s/^\[\s+"\$1"\s+=\s+"remove"\s+\]\s+&&\s+ldconfig\b//gm;
-    s/^\[\s+"remove"\s+=\s+"\$1"\s+\]\s+&&\s+ldconfig\b//gm;
-    if (/^[^\#]*\bldconfig\b/m) {
+    s/^if\[.?remove.?="\$1"\];?\n*then\n*BldconfigB//gm;
+    s/^\["\$1"=.?remove.?\]\&&BldconfigB//gm;
+    s/^\[.?remove.?="\$1"\]&&BldconfigB//gm;
+
+    if (/^[^\#]*BldconfigB/m) {
         print "W: $pkg $type: postrm-unsafe-ldconfig\n";
     }
 }

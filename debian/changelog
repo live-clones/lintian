@@ -7,6 +7,11 @@ lintian (1.22.12) unstable; urgency=low
   * checks/scripts:
     + Fix check for "exec ..." line. Fix suggested by Josip Rodin.
       (Closes: #212811)
+  * checks/shared-libs:
+    + Be more tolerant to variations when checking for
+      postrm-unsafe-ldconfig. (Closes: #218543, #233740)
+      Thanks to Martin Godisch, Steinar H. Gunderson and
+      Aidas Kasparas for their input.
 
  -- Frank Lichtenheld <djpig@debian.org>  Sat, 21 Feb 2004 16:55:27 +0100
 

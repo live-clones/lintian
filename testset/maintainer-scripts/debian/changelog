@@ -1,3 +1,10 @@
+maintainer-scripts (6) unstable; urgency=low
+
+  * added ldconfig calls to postrm to check test the postrm tests
+    from shared-libs
+
+ -- Frank Lichtenheld <djpig@debian.org>  Sat, 21 Feb 2004 18:29:36 +0100
+
 maintainer-scripts (5) unstable; urgency=low
 
   * added bash style arrays to postinst, this one is for you Torsten (-:

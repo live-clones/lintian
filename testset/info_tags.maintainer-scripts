@@ -15,6 +15,13 @@ N:   The technical committee chose the symlink transition method to move
 N:   from FSSTND to FHS. That transition has been completed with woody and
 N:   thus this link is no longer required.
 N:
+W: maintainer-scripts: postrm-has-useless-call-to-ldconfig
+N:
+N:   The postrm script calls ldconfig even though no shared libraries are
+N:   installed in a directory controlled by the dynamic library loader.
+N:   
+N:   Refer to Policy Manual, section 8.1.1 for details.
+N:
 W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:12 '. /usr/share/lintian/shell foo'
 N:
 N:   This script is marked as running under /bin/sh, but it seems to use a

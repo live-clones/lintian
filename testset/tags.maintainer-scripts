@@ -1,5 +1,6 @@
 W: maintainer-scripts source: ancient-standards-version 3.1.1
 W: maintainer-scripts: postinst-should-not-set-usr-doc-link
+W: maintainer-scripts: postrm-has-useless-call-to-ldconfig
 W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:12 '. /usr/share/lintian/shell foo'
 W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:15 'read'
 W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:17 'H[0]='
