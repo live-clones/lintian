@@ -34,6 +34,8 @@ lintian (1.22.9-0.1) unstable; urgency=low
      + Check for required POTFILES.in and template.pot in debian/po
    * checks/menu-format
      + Drop menu-icon-has-bad-colors, it doesn't apply anymore (Closes: #199341)
+   * checks/scripts
+     + Recognise the 'tcl' interpreter, not the same as tclsh (Closes: #230182)
 
   Frank Lichtenheld <djpig@debian.org>
    * checks/debhelper:
@@ -50,8 +52,9 @@ lintian (1.22.9-0.1) unstable; urgency=low
        Choices is only a substitution variable (Closes: #200802,#222648)
      + fix testing of dependencies to eliminate false
        positives of missing-debconf-dependency (Closes: #195201)
+  * 
 
- -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Tue, 10 Feb 2004 15:14:45 +0100
+ -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Thu, 12 Feb 2004 01:56:54 +0100
 
 lintian (1.22.9) unstable; urgency=low
 

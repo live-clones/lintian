@@ -412,6 +412,17 @@ Info: Packages that use trs scripts must depend on the konwert package,
  In some cases a weaker relationship, such as Suggests or Recommends, will
  be more appropriate.
 
+Tag: wrong-path-for-tcl
+Type: error
+Info: Tcl is installed as /usr/bin/tcl on Debian systems.
+
+Tag: tcl-script-but-no-tcl-dep
+Type: error
+Info: Packages that use tcl scripts must depend on the virtual package tcl.
+ .
+ In some cases a weaker relationship, such as Suggests or Recommends, will
+ be more appropriate.
+
 Tag: wrong-path-for-tclsh
 Type: error
 Info: Tclsh is installed as /usr/bin/tclsh on Debian systems.
