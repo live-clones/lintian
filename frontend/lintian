@@ -1216,11 +1216,11 @@ for (reverse sort @packages) {
 			    s/\s+/ /go;
 			    next if $_ eq '';
 
-			    if ( defined( $overridden{$_} ) ) {
-				print "N: Local override not needed in package $pkg: $_\n" if $verbose;
-			    } else {
-				$overridden{$_} = 0;
-			    }
+#			    if ( defined( $overridden{$_} ) ) {
+#				print "N: Local override not needed in package $pkg: $_\n" if $verbose;
+#			    } else {
+#				$overridden{$_} = 0;
+#			    }
 			}
 			close(O);
 		    }
@@ -1263,15 +1263,15 @@ for (reverse sort @packages) {
 	# report unused overrides
 	if (not $no_override and $verbose) {
 	    my $ppkg = $type eq 'b' ? quotemeta($pkg) : quotemeta("$pkg $long_type");
-	    for my $o (sort keys %overridden) {
-		next unless $o =~ /^$ppkg:/;
-		next if $overridden{$o};
-
-		print "I: $pkg: unused-override $o\n";
-
-		# mark override entry as used
-		$overridden{$o} = 99999;
-	    }
+#	    for my $o (sort keys %overridden) {
+#		next unless $o =~ /^$ppkg:/;
+#		next if $overridden{$o};
+#
+#		print "I: $pkg: unused-override $o\n";
+#
+#		# mark override entry as used
+#		$overridden{$o} = 99999;
+#	    }
 	}
     }
 
@@ -1329,12 +1329,12 @@ if ($lintian_info) {
 }
 
 # report unused overrides
-if ($check_everything and not $no_override and $verbose) {
-    for my $o (sort keys %overridden) {
-	next if $overridden{$o};
-	print "I: general: unused-override $o\n";
-    }
-}
+#if ($check_everything and not $no_override and $verbose) {
+#    for my $o (sort keys %overridden) {
+#	next if $overridden{$o};
+#	print "I: general: unused-override $o\n";
+#    }
+#}
 
 exit $exit_code;
 

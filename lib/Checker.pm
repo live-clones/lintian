@@ -21,8 +21,11 @@
 
 package Checker;
 use strict;
+no strict 'refs';
 
 use Pipeline;
+use Tags;
+use Cwd 'cwd';
 
 my $LINTIAN_ROOT = $::LINTIAN_ROOT;
 
@@ -35,9 +38,17 @@ my $debug = $::debug;
 my $display_infotags = $::display_infotags;
 my $no_override = $::no_override;
 my $show_overrides = $::show_overrides;
-# I want a reference... Yes it's very evil
-my %experimental_tag; *experimental_tag = \%::experimental_tag;
 
+my %checks;
+
+# Register a check. Argument is a hash with info
+sub register {
+	my $info = $_[0];
+	fail("Duplicate check $info->{'check-script'}")
+		if exists $checks{$info->{'check-script'}};
+
+	$checks{$info->{'check-script'}} = $info;
+}
 
 sub runcheck {
 	my $pkg = shift;
@@ -46,78 +57,20 @@ sub runcheck {
 
 	# Will be set to 1 if error is encountered
 	my $return = 0;
-	my %overridden;
 
 	print "N: Running check: $name ...\n" if $debug;
 
-	my $cmd = "$LINTIAN_ROOT/checks/$name";
+	my $check = $checks{$name};
 
-	my $PIPE=FileHandle->new;
-	unless (pipeline_open($PIPE, sub { exec $cmd, $pkg, $type })) {
-		print STDERR "internal error: cannot open input pipe to command $cmd: $!\n";
-		return 2;
-	}
-	my $suppress;
-	while (<$PIPE>) {
-		chop;
+	# require has a anti-require-twice cache
+	require "$LINTIAN_ROOT/checks/$name";
 
-		# error/warning/info ?
-		if (/^[EWI]: \S+ \S+:\s+\S+/o) {
-			$suppress = (/^I: / and not $display_infotags);
+	$Tags::prefix = $type eq 'binary' ? $pkg : "$pkg $type";
+	#Tags::reset();
 
-			# change "pkg binary:" to just "pkg:"
-			s/^(.: \S+)\s+binary:/$1:/;
-
-			# remove `[EWI]:' for override matching
-			my $tag_long = $_;
-			$tag_long =~ s/^.:\s+//;
-			$tag_long =~ s/\s+$//;
-			$tag_long =~ s/\s+/ /g;
-
-			my $tag_short;
-			if ($tag_long =~ /^([^:]*): (\S+)/) {
-				$tag_short = "$1: $2";
-			} else {
-				die "couldn't parse tag_long $tag_long to create tag_short";
-			}
-
-			if ($experimental_tag{$2}) {
-				s/^.:/X:/;
-			}
-
-			# overridden?
-			if (not $no_override and
-				((exists $overridden{$tag_long}) or
-				 (exists $overridden{$tag_short}))) {
-				# yes, this tag is overridden
-				$overridden{$tag_long}++ if exists $overridden{$tag_long};
-				$overridden{$tag_short}++ if exists $overridden{$tag_short};
-				s/^.:/O:/;
-				print "$_\n"
-					if $show_overrides or ($verbose and not $suppress);
-			} else {
-				# no, just display it
-				print "$_\n"
-					if not $suppress;
-			}
-
-			# error?
-			if (/^E:/) {
-				$return = 1;
-			}
-		} else {
-			# no, so just display it
-			print "$_\n";
-		}
-	}
-	unless (close($PIPE)) {
-		if ($!) {
-			print STDERR "internal error: cannot close input pipe to command $cmd: $!";
-		} else {
-			print STDERR "internal error: cannot run $name check on package $pkg\n";
-		}
-		return 2;
-	}
+	#print STDERR "Now running $name...\n";
+	$name =~ s/[-.]/_/g;
+	&{'Lintian::'.$name.'::run'}($pkg, $type);
 
 	return $return;
 }

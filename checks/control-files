@@ -1,4 +1,3 @@
-#!/usr/bin/perl -w
 # control-files -- lintian check script
 
 # Copyright (C) 1998 Christian Schwarz and Richard Braakman
@@ -19,9 +18,12 @@
 # Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 # MA 02111-1307, USA.
 
+package Lintian::control_files;
 use strict;
+use Tags;
 
-($#ARGV == 1) or fail("syntax: control-files <pkg> <type>");
+sub run {
+
 my $pkg = shift;
 my $type = shift;
 
@@ -72,10 +74,10 @@ while (<IN>) {
     # valid control file?
     unless ( exists $ctrl{$file} ) {
 	if ( exists $ctrl_alt{$file} ) {
-	    print "E: $pkg $type: not-allowed-control-file $file\n";
+	    tag "not-allowed-control-file", "$file";
 	    next;
 	} else {
-	    print "E: $pkg $type: unknown-control-file $file\n";
+	    tag "unknown-control-file", "$file";
 	    next;
 	}
     }
@@ -88,31 +90,19 @@ while (<IN>) {
 
     # correct permissions?
     unless ($operm == $ctrl{$file}) {
-	printf "E: $pkg $type: control-file-has-bad-permissions $file %04o != %04o\n",$operm,$ctrl{$file};
+	tag "control-file-has-bad-permissions",
+	    sprintf("$file %04o != %04o",$operm,$ctrl{$file});
     }
 
     # correct owner?
     unless ($owner eq 'root/root') {
-	printf "E: $pkg $type: control-file-has-bad-owner $file $owner != root/root\n";
+	tag "control-file-has-bad-owner", "$file $owner != root/root";
     }
 
 # for other maintainer scripts checks, see the scripts check
 }
 
-exit 0;
-
-# -----------------------------------
-
-sub fail {
-    if ($_[0]) {
-	warn "internal error: $_[0]\n";
-    } elsif ($!) {
-	warn "internal error: $!\n";
-    } else {
-	warn "internal error.\n";
-    }
-    exit 1;
-}
+} # </run>
 
 # translate permission strings like `-rwxrwxrwx' into an octal number
 sub perm2oct {
@@ -137,3 +127,7 @@ sub perm2oct {
 
     return $o;
 }
+
+1;
+
+# vim: syntax=perl sw=4 ts=8

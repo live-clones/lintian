@@ -1,4 +1,3 @@
-#!/usr/bin/perl -w
 # init.d -- lintian check script
 
 # Copyright (C) 1998 Christian Schwarz
@@ -19,9 +18,12 @@
 # Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 # MA 02111-1307, USA.
 
+package Lintian::init_d;
 use strict;
+use Tags;
 
-($#ARGV == 1) or fail("syntax: init.d <pkg> <type>");
+sub run {
+
 my $pkg = shift;
 my $type = shift;
 
@@ -44,11 +46,11 @@ if (open(IN,$postinst)) {
 	my ($name,$opt) = ($1,$2);
 	next if $opt eq 'remove';
 	if ($initd_postinst{$name}++ == 1) {
-	    print "E: $pkg $type: duplicate-updaterc.d-calls-in-postinst $name\n";
+	    tag "duplicate-updaterc.d-calls-in-postinst", "$name";
 	    next;
 	}
 	unless (m,>\s*/dev/null,o) {
-	    print "I: $pkg $type: output-of-updaterc.d-not-redirected-to-dev-null $name postinst\n";
+	    tag "output-of-updaterc.d-not-redirected-to-dev-null", "$name postinst";
 	}
     }
 }
@@ -62,7 +64,7 @@ if (open(IN,$preinst)) {
 	next unless m/update-rc\.d\s+(?:-\S+\s*)*(\S+)\s+(\S+)/o;
 	my ($name,$opt) = ($1,$2);
 	next if $opt eq 'remove';
-	print "E: $pkg $type: preinst-calls-updaterc.d $name\n";
+	tag "preinst-calls-updaterc.d", "$name";
     }
     close(IN);
 }
@@ -74,11 +76,11 @@ if (open(IN,$postrm)) {
 	s/\#.*$//o;
 	next unless m/update-rc\.d\s+(-\S+\s*)*(\S+)/;
 	if ($initd_postrm{$2}++ == 1) {
-	    print "E: $pkg $type: duplicate-updaterc.d-calls-in-postrm $2\n";
+	    tag "duplicate-updaterc.d-calls-in-postrm", "$2";
 	    next;
 	}
 	unless (m,>\s*/dev/null,o) {
-	    print "E: $pkg $type: output-of-updaterc.d-not-redirected-to-dev-null $2 postrm\n";
+	    tag "output-of-updaterc.d-not-redirected-to-dev-null", "$2 postrm";
 	}
     }
     close(IN);
@@ -90,7 +92,7 @@ if (open(IN,$prerm)) {
 	next if m/if\s+\[\s+-x\s+\S*update-rc\.d/o;
 	s/\#.*$//o;
 	next unless m/update-rc\.d\s+(-\S+\s*)*(\S+)/;
-	print "E: $pkg $type: prerm-calls-updaterc.d $2\n";
+	tag "prerm-calls-updaterc.d", "$2";
     }
     close(IN);
 }
@@ -100,11 +102,11 @@ for (keys %initd_postinst) {
     if ($initd_postrm{$_}) {
 	delete $initd_postrm{$_};
     } else {
-	print "E: $pkg $type: postrm-does-not-call-updaterc.d-for-init.d-script /etc/init.d/$_\n";
+	tag "postrm-does-not-call-updaterc.d-for-init.d-script", "/etc/init.d/$_";
     }
 }
 for (keys %initd_postrm) {
-    print "E: $pkg $type: postrm-contains-additional-updaterc.d-calls /etc/init.d/$_\n";
+    tag "postrm-contains-additional-updaterc.d-calls", "/etc/init.d/$_";
 }
 
 # load conffiles
@@ -115,7 +117,7 @@ if (open(IN,$conffiles)) {
 	$conffiles{$_} = 1;
 
 	if (m,^/?etc/rc.\.d,o) {
-	    print "E: $pkg $type: file-in-etc-rc.d-marked-as-conffile $_\n";
+	    tag "file-in-etc-rc.d-marked-as-conffile", "$_";
 	}
     }
     close(IN);
@@ -124,7 +126,7 @@ if (open(IN,$conffiles)) {
 for (keys %initd_postinst) {
     # init.d scripts have to be marked as conffiles
     unless ($conffiles{"/etc/init.d/$_"} or $conffiles{"etc/init.d/$_"}) {
-	print "E: $pkg $type: init.d-script-not-marked-as-conffile /etc/init.d/$_\n";
+	tag "init.d-script-not-marked-as-conffile", "/etc/init.d/$_";
     }
 
     # check if file exists in package
@@ -141,12 +143,12 @@ for (keys %initd_postinst) {
 	close(IN);
 
 	# all tags included in file?
-	$tag{'start'} or print "E: $pkg $type: init.d-script-does-not-implement-required-option /etc/init.d/$_ start\n";
-	$tag{'stop'} or print "E: $pkg $type: init.d-script-does-not-implement-required-option /etc/init.d/$_ stop\n";
-	$tag{'restart'} or print "E: $pkg $type: init.d-script-does-not-implement-required-option /etc/init.d/$_ restart\n";
-	$tag{'force-reload'} or print "E: $pkg $type: init.d-script-does-not-implement-required-option /etc/init.d/$_ force-reload\n";
+	$tag{'start'} or tag "init.d-script-does-not-implement-required-option", "/etc/init.d/$_ start";
+	$tag{'stop'} or tag "init.d-script-does-not-implement-required-option", "/etc/init.d/$_ stop";
+	$tag{'restart'} or tag "init.d-script-does-not-implement-required-option", "/etc/init.d/$_ restart";
+	$tag{'force-reload'} or tag "init.d-script-does-not-implement-required-option", "/etc/init.d/$_ force-reload";
     } else {
-	print "E: $pkg $type: init.d-script-not-included-in-package /etc/init.d/$_\n";
+	tag "init.d-script-not-included-in-package", "/etc/init.d/$_";
     }
 }
 
@@ -154,22 +156,13 @@ for (keys %initd_postinst) {
 opendir(INITD, "init.d") or fail("cannot read init.d directory: $!");
 for (readdir(INITD)) {
     next if $_ eq '.' || $_ eq '..';
-    print "W: $pkg $type: script-in-etc-init.d-not-registered-via-update-rc.d /etc/init.d/$_\n"
+    tag "script-in-etc-init.d-not-registered-via-update-rc.d", "/etc/init.d/$_"
 	unless $initd_postinst{$_};
 }
 closedir(INITD);
 
-exit 0;
-
-# -----------------------------------
-
-sub fail {
-    if ($_[0]) {
-	warn "internal error: $_[0]\n";
-    } elsif ($!) {
-	warn "internal error: $!\n";
-    } else {
-	warn "internal error.\n";
-    }
-    exit 1;
 }
+
+1;
+
+# vim: syntax=perl

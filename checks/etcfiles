@@ -1,4 +1,3 @@
-#!/usr/bin/perl -w
 # etcfiles -- lintian check script
 
 # Copyright (C) 2000 by Sean 'Shaleh' Perry
@@ -19,9 +18,12 @@
 # Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 # MA 02111-1307, USA.
 
+package Lintian::etcfiles;
 use strict;
+use Tags;
 
-($#ARGV == 1) or fail("syntax: etcfiles <pkg> <type>");
+sub run {
+
 my $pkg = shift;
 my $type = shift;
 
@@ -60,22 +62,11 @@ while (<IN>) {
 
     # if there is a /etc/foo, it must be a conffile
     if (not exists($conffiles{$file})) {
-	print "E: $pkg $type: file-in-etc-not-marked-as-conffile /$file\n";
+	tag "file-in-etc-not-marked-as-conffile", "/$file";
     }
 }
 close(IN);
 
-exit 0;
-
-# -----------------------------------
-
-sub fail {
-    if ($_[0]) {
-	warn "internal error: $_[0]\n";
-    } elsif ($!) {
-	warn "internal error: $!\n";
-    } else {
-	warn "internal error.\n";
-    }
-    exit 1;
 }
+
+1;

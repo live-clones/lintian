@@ -1,4 +1,3 @@
-#!/usr/bin/perl -w
 # changelog-file -- lintian check script
 
 # Copyright (C) 1998 Christian Schwarz
@@ -19,9 +18,12 @@
 # Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 # MA 02111-1307, USA.
 
+package Lintian::changelog_file;
 use strict;
+use Tags;
 
-($#ARGV == 1) or fail("syntax: changelog-file <pkg> <type>");
+sub run {
+
 my $pkg = shift;
 my $type = shift;
 my $found_html=0;
@@ -89,12 +91,13 @@ while (<IN>) {
 
     s,^(\./),,;
     # skip packages which have a /usr/share/doc/$pkg -> foo symlink
-    if (m, usr/share/doc/$ppkg -> ,o) {
-	exit 0;
+    if (m, usr/share/doc/$ppkg -> ,) {
+	return 0;
     }
 
+
     # we are only interested in files or symlinks in /usr/(share/)?doc/$pkg
-    if (m,usr/(share/)?doc/$ppkg/([^/\s]+),o ) {
+    if (m,usr/(share/)?doc/$ppkg/([^/\s]+), ) {
 	my $file = $2;
 
 	push(@doc_files, $file);
@@ -105,7 +108,7 @@ while (<IN>) {
 	my $file1 = "usr/share/doc/$pkg/$file";
 
 	if (not $file =~ m/\.gz$/) {
-	    print "E: $pkg $type: changelog-file-not-compressed $file\n";
+	    tag "changelog-file-not-compressed", "$file";
 	} else {
 	    my $max_compressed = 0;
 	    if (exists $file_info{$file1} && defined $file_info{$file1}) {
@@ -115,7 +118,7 @@ while (<IN>) {
 	    }
 	    if (not $max_compressed) {
 		unless ($is_a_symlink{$file1}) {
-		    print "E: $pkg $type: changelog-not-compressed-with-max-compression $file\n";
+		    tag "changelog-not-compressed-with-max-compression", "$file";
 		}
 	    }
 	}
@@ -135,11 +138,11 @@ close(IN);
 # ignore packages which don't have a /usr/share/doc/$pkg directory, since
 # the copyright check will complain about this
 if ($#doc_files < 0) {
-    exit 0;
+    return 0;
 }
 
 if ( $found_html && !$found_text ) {
-    print "E: $pkg $type: html-changelog-without-text-version\n";
+    tag "html-changelog-without-text-version", "";
 }
 
 # is this a native Debian package?
@@ -158,9 +161,9 @@ if ($native_pkg) {
     if (grep m/^changelog(\.gz)?$/,@doc_files) {
 	# everything is fine
     } elsif (@foo = grep m/^changelog\.debian(\.gz)$/i,@doc_files) {
-	print "W: $pkg $type: wrong-name-for-changelog-of-native-package usr/share/doc/$pkg/$foo[0]\n";
+	tag "wrong-name-for-changelog-of-native-package", "usr/share/doc/$pkg/$foo[0]";
     } else {
-	print "E: $pkg $type: changelog-file-missing-in-native-package\n";
+	tag "changelog-file-missing-in-native-package", "";
     }
 } else {
     # non-native (foreign :) Debian package
@@ -173,7 +176,7 @@ if ($native_pkg) {
     	my $found = 0;
     	for (@doc_files) {
 	    if (m/^change/i and not m/debian/i) {
-		print "W: $pkg $type: wrong-name-for-upstream-changelog usr/share/doc/$pkg/$_\n";
+		tag "wrong-name-for-upstream-changelog", "usr/share/doc/$pkg/$_";
 		$found = 1;
 		last;
 	    }
@@ -182,7 +185,7 @@ if ($native_pkg) {
 	    # This tag is disabled for now since a lot of packages fail this
 	    # aspect of policy and I want to clarify policy WRT multi-binary
 	    # packages first.
-	    #print "W: $pkg $type: no-upstream-changelog\n";
+	    #tag "no-upstream-changelog", "";
 	}
     }
 
@@ -190,9 +193,9 @@ if ($native_pkg) {
     if (grep m/^changelog\.Debian(\.gz)?$/,@doc_files) {
 	# everything is fine
     } elsif (my @foo = grep m/^changelog\.debian(\.gz)?$/i,@doc_files) {
-	print "W: $pkg $type: wrong-name-for-debian-changelog-file usr/share/doc/$pkg/$foo[0]\n";
+	tag "wrong-name-for-debian-changelog-file", "usr/share/doc/$pkg/$foo[0]";
     } else {
-	print "E: $pkg $type: debian-changelog-file-missing\n"
+	tag "debian-changelog-file-missing", ""
 	    if $foreign_pkg;
 	# TODO: if uncertain whether foreign or native, either changelog.gz or
 	# changelog.debian.gz should exists though... but no tests catches
@@ -208,7 +211,7 @@ open ICONV, "env LANG=C iconv -f utf8 -t utf8 changelog 2>&1 |"
 my $line = 1;
 while (<ICONV>) {
     if (m/iconv: illegal input sequence at position \d+$/) {
-	print "E: $pkg $type: debian-changelog-file-uses-obsolete-national-charset at line $line\n";
+	tag "debian-changelog-file-uses-obsolete-national-charset", "at line $line";
 	last;
     }
     $line++;
@@ -230,27 +233,16 @@ while (<IN>) {
     }
     # emacs allows whitespace between prefix and variable, hence \s*
     if (defined $prefix && defined $suffix && /^\Q$prefix\E\s*add-log-mailing-address:.*\Q$suffix\E$/) {
-	print "E: $pkg $type: debian-changelog-file-contains-obsolete-user-emacs-settings\n";
+	tag "debian-changelog-file-contains-obsolete-user-emacs-settings";
     }
     if (/^\s*--[^<]*<[^>\@]+\@unknown>/) {
-       print "E: $pkg $type: debian-changelog-file-contains-debmake-default-email-address\n";
+       tag "debian-changelog-file-contains-debmake-default-email-address";
     }
 }
 close IN;
 
-exit 0;
-
-# ---------------------------------------------------
-
-sub fail {
-    if ($_[0]) {
-	warn "internal error: $_[0]\n";
-    } elsif ($!) {
-	warn "internal error: $!\n";
-    } else {
-	warn "internal error.\n";
-    }
-    exit 1;
 }
 
-# vim: ts=8 sw=4
+1;
+
+# vim: syntax=perl ts=8 sw=4

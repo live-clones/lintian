@@ -1,4 +1,3 @@
-#!/usr/bin/perl -w
 # standards-version -- lintian check script
 
 # Copyright (C) 1998 Christian Schwarz and Richard Braakman
@@ -19,7 +18,12 @@
 # Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 # MA 02111-1307, USA.
 
+package Lintian::standards_version;
 use strict;
+use Tags;
+use Util;
+
+sub run {
 
 # 1 means current
 # 2 means old
@@ -65,7 +69,6 @@ my $MAJOR = 3;
 my $MINOR = 6;
 my $PATCH = 1;
 
-($#ARGV == 1) or fail("syntax: standards-version <pkg> <type>");
 my $pkg = shift;
 my $type = shift;
 
@@ -76,8 +79,8 @@ unless ( -d "fields" ) {
 my $std = "fields/standards-version";
 # Standards-Version?
 if (not -f $std) {
-    print "E: $pkg $type: no-standards-version-field\n";
-    exit 0;
+    tag "no-standards-version-field", "";
+    return 0;
 }
 
 open(IN,$std) or fail("cannot open $std for reading: $!");
@@ -86,8 +89,8 @@ close(IN);
 
 unless (m/^\s*(\d+\.\d+\.\d+)(?:\.\d+)?\s*$/) {
     # invalid standard
-    print "E: $pkg $type: invalid-standards-version $_\n";
-    exit 0;
+    tag "invalid-standards-version", "$_";
+    return 0;
 }
 
 my $stdver = $1;
@@ -98,39 +101,30 @@ if (not exists $valid_standard{$stdver}) {
     if (($major > $MAJOR) or
 	($major == $MAJOR and $minor > $MINOR) or
 	($major == $MAJOR and $minor == $MINOR and $patch > $PATCH)) {
-	print "W: $pkg $type: newer-standards-version $_\n";
+	tag "newer-standards-version", "$_";
     } else {
 	# invalid standard
-	print "E: $pkg $type: invalid-standards-version $_\n";
+	tag "invalid-standards-version", "$_";
     }
 } elsif ($valid_standard{$stdver} == 2) {
     # old standard
-    print "W: $pkg $type: out-of-date-standards-version $_\n";
+    tag "out-of-date-standards-version", "$_";
 } elsif ($valid_standard{$stdver} == 3) {
     # OK, now this is ancient.
-    print "W: $pkg $type: ancient-standards-version $_\n";
+    tag "ancient-standards-version", "$_";
 } else { # looks valid ......
     if (($major == 3 and $minor == 0) or $major < 3) {
 	if (-f "fields/build-depends" or
 	    -f "fields/build-depends-indep" or
 	    -f "fields/build-conflicts" or
 	    -f "fields/build-conflicts-indep") {
-	    print "E: $pkg $type: package-declares-source-relation-but-has-older-standards-version $_ < 3.1.0\n";
+	    tag "package-declares-source-relation-but-has-older-standards-version", "$_ < 3.1.0";
 	}
     }
 }
 
-exit 0;
-
-# -----------------------------------
-
-sub fail {
-  if ($_[0]) {
-    warn "internal error: $_[0]\n";
-  } elsif ($!) {
-    warn "internal error: $!\n";
-  } else {
-    warn "internal error.\n";
-  }
-  exit 1;
 }
+
+1;
+
+# vim: syntax=perl

@@ -1,4 +1,3 @@
-#!/usr/bin/perl -w
 # infofiles -- lintian check script
 
 # Copyright (C) 1998 Christian Schwarz
@@ -20,13 +19,16 @@
 # Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 # MA 02111-1307, USA.
 
+package Lintian::infofiles;
 use strict;
+use Tags;
+use Util;
+use File::Basename;
 
-($#ARGV == 1) or fail("syntax: infofiles <pkg> <type>");
+sub run {
+
 my $pkg = shift;
 my $type = shift;
-
-use File::Basename;
 
 my %file_info;
 
@@ -83,20 +85,20 @@ while (<IN>) {
         if ($perm =~ m,^-,o) { # compressed with maximum compression rate?
 	    my $info = $file_info{$file};
 	    if ($info !~ m/gzip compressed data/o) {
-		print "E: $pkg $type: info-document-not-compressed-with-gzip $file\n";
+		tag "info-document-not-compressed-with-gzip", "$file";
 	    } else {
 		if ($info !~ m/max compression/o) {
-		    print "E: $pkg $type: info-document-not-compressed-with-max-compression $file\n";
+		    tag "info-document-not-compressed-with-max-compression", "$file";
 		}
 	    }
         }
     } else {
-	print "E: $pkg $type: info-document-not-compressed $file\n";
+	tag "info-document-not-compressed", "$file";
     }
     my $infoext = pop @fname_pieces;
     unless ($infoext =~ /info(-\d)?/) { # it's not foo.info
 	unless (@fname_pieces) { # it's not foo{,-{1,2,3,...}}
-	    print "E: $pkg $type: info-document-has-wrong-extension $file\n";
+	    tag "info-document-has-wrong-extension", "$file";
 	}
     }
 }
@@ -104,38 +106,27 @@ close IN;
 
 # policy 13.2 says prerm and postinst
 if ($postrm{'calls-install-info'}) {
-    print "W: $pkg $type: postrm-calls-install-info\n";
+    tag "postrm-calls-install-info", "";
 }
 if ($preinst{'calls-install-info'}) {
-    print "E: $pkg $type: preinst-calls-install-info\n";
+    tag "preinst-calls-install-info", "";
 }
 
 if ($postinst{'calls-install-info'}) {
-    print "W: $pkg $type: install-info-not-called-with-quiet-option\n"
+    tag "install-info-not-called-with-quiet-option", ""
 	unless $postinst{'calls-install-info-quiet'};
-    print "W: $pkg $type: install-info-not-called-with-section-option\n"
+    tag "install-info-not-called-with-section-option", ""
 	unless $postinst{'calls-install-info-section'};
 }
 if ($prerm{'calls-install-info'}) {
     # it must use the --quiet option
-    print "W: $pkg $type: install-info-not-called-with-quiet-option\n"
+    tag "install-info-not-called-with-quiet-option", ""
 	unless $prerm{'calls-install-info-quiet'};
 }
 
-exit 0;
+}
 
 # -----------------------------------
-
-sub fail {
-    if ($_[0]) {
-	warn "internal error: $_[0]\n";
-    } elsif ($!) {
-	warn "internal error: $!\n";
-    } else {
-	warn "internal error.\n";
-    }
-    exit 1;
-}
 
 sub check_script {
     my ($script,$pres) = @_;
@@ -160,7 +151,7 @@ sub check_script {
 	    }
 	    $interp = 'unknown';
 	}
-	print "N: unknown interpreter: $script $interp\n";
+	tag "unknown-interpreter", $script, $interp;
     }
 
     my $hold;
@@ -189,3 +180,7 @@ sub check_script {
 	}
     }
 }
+
+1;
+
+# vim: syntax=perl

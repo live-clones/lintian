@@ -1,4 +1,3 @@
-#!/usr/bin/perl -w
 # huge-usr-share -- lintian check script
 
 # Copyright (C) 2004 Jeroen van Wolffelaar <jeroen@wolffelaar.nl>
@@ -19,9 +18,12 @@
 # Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 # MA 02111-1307, USA.
 
+package Lintian::huge_usr_share;
 use strict;
+use Tags;
 
-($#ARGV == 1) or fail("syntax: huge-usr-share <pkg> <type>");
+sub run {
+
 my $pkg = shift;
 my $type = shift;
 
@@ -40,7 +42,7 @@ if (open(IN,"fields/architecture")) {
 }
 
 # If this is a arch-independent package, this test doesn't apply
-exit 0 if $arch eq 'all';
+return 0 if $arch eq 'all';
 
 my $size = `du -ks unpacked`;
 $size =~ s/\t.*//;
@@ -54,21 +56,10 @@ if ($size_usrshare > $THRESHOLD_SIZE_SOFT) {
     my $perc = int (100 * $size_usrshare / $size);
     if (($size_usrshare > $THRESHOLD_SIZE_HARD)
 	|| ($perc > $THRESHOLD_PERC)) { 
-	print "I: $pkg $type: arch-dep-package-has-big-usr-share ${size_usrshare}kB $perc%\n";
+	tag "arch-dep-package-has-big-usr-share", "${size_usrshare}kB $perc%";
     }
 }
 
-exit 0;
-
-# -----------------------------------
-
-sub fail {
-    if ($_[0]) {
-	warn "internal error: $_[0]\n";
-    } elsif ($!) {
-	warn "internal error: $!\n";
-    } else {
-	warn "internal error.\n";
-    }
-    exit 1;
 }
+
+1;

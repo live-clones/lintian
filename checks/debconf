@@ -1,4 +1,3 @@
-#!/usr/bin/perl -w
 # debconf -- lintian check script
 
 # Copyright (C) 2001 Colin Watson
@@ -19,13 +18,15 @@
 # Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 # MA 02111-1307, USA.
 
+package Lintian::debconf;
 use strict;
+use Tags;
 
-use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Dep;
 use Util;
 
-($#ARGV == 1) or fail("syntax: debconf <pkg> <type>");
+sub run {
+
 my $pkg = shift;
 my $type = shift;
 
@@ -61,17 +62,17 @@ if (-f "control/templates") {
     $seentemplates=1;
 }
 
-exit unless $seenconfig or $seentemplates;
+return unless $seenconfig or $seentemplates;
 
 # Check that both debconf control area files are present.
 if ($seenconfig and not $seentemplates) {
-    print "W: $pkg $type: no-debconf-templates\n";
+    tag "no-debconf-templates", "";
 } elsif ($seentemplates and not $seenconfig and $type ne 'udeb') {
-    print "W: $pkg $type: no-debconf-config\n";
+    tag "no-debconf-config", "";
 }
 
 if ($seenconfig and not -x "control/config") {
-    print "E: $pkg $type: debconf-config-not-executable\n";
+    tag "debconf-config-not-executable", "";
 }
 
 # First check that templates look valid
@@ -92,7 +93,7 @@ if ($seentemplates) {
 
 	foreach (keys %fields) {
 	    if ($fields{$_} > 1) {
-		print "E: $pkg $type: duplicate-fields-in-templates $name $_\n";
+		tag "duplicate-fields-in-templates", "$name $_";
 		#  Templates file is corrupted, no need to report
 		#  further errors
 		$seentemplates = '';
@@ -110,24 +111,24 @@ foreach my $template (@templates) {
     my $isselect='';
 
     if (not exists $template->{template}) {
-	print "E: $pkg $type: no-template-name\n";
+	tag "no-template-name", "";
 	$template->{template} = 'no-template-name';
     } elsif ($template->{template}!~m|[A-Za-z0-9.+-](?:/[A-Za-z0-9.+-])|) {
-	print "E: $pkg $type: malformed-template-name $template->{template}\n";
+	tag "malformed-template-name", "$template->{template}";
     }
 
     if (not exists $template->{type}) {
-	print "E: $pkg $type: no-template-type $template->{template}\n";
+	tag "no-template-type", "$template->{template}";
     } elsif (not $valid_types{$template->{type}}) {
-	print "E: $pkg $type: unknown-template-type $template->{type}\n";
+	tag "unknown-template-type", "$template->{type}";
     } elsif ($template->{type} eq 'select') {
 	$isselect=1;
     } elsif ($template->{type} eq 'multiselect') {
 	$isselect=1;
 	$usesmultiselect=1;
     } elsif ($template->{type} eq 'boolean') {
-	print "E: $pkg $type: boolean-template-has-bogus-default ".
-	    "$template->{template} $template->{default}\n"
+	tag "boolean-template-has-bogus-default ",
+	    "$template->{template} $template->{default}"
 		if defined $template->{default}
 		    and $template->{default} ne 'true'
 		    and $template->{default} ne 'false';
@@ -137,16 +138,16 @@ foreach my $template (@templates) {
 	if (($key =~ /^choices-/) and
 	    ($template->{choices} && $template->{choices} !~ /^\s*$/) and 
 	    (! $template->{$key} || $template->{$key} =~ /^\s*$/)) {
-	    print "E: $pkg $type: empty-translated-choices $key\n";
+	    tag "empty-translated-choices", "$key";
 	}
     }
 
     if ($isselect and not exists $template->{choices}) {
-	print "E: $pkg $type: select-without-choices $template->{template}\n";
+	tag "select-without-choices", "$template->{template}";
     }
 
     if (not exists $template->{description}) {
-	print "E: $pkg $type: no-template-description $template->{template}\n";
+	tag "no-template-description", "$template->{template}";
     } elsif ($template->{description}=~m/^\s*(.*?)\s*?\n\s*\1\s*$/) {
 	# Check for duplication. Should all this be folded into the
 	# description checks?
@@ -166,14 +167,14 @@ foreach my $template (@templates) {
 	    $languages{$lang}{$mainfield}=1;
 	}
 	unless ($template_fields{$mainfield}) { # Ignore language codes here
-	    print "E: $pkg $type: unknown-field-in-templates $field\n";
+	    tag "unknown-field-in-templates", "$field";
 	}
     }
     if (exists $template->{choices}
 	&& $template->{choices} !~ m/^\s*\$\{\w+\}\s*$/) {
 	foreach my $lang (sort keys %languages) {
 	    if ($languages{$lang}{choices} xor $languages{$lang}{description}) {
-		print "W: $pkg $type: partially-translated-question $template->{template} $lang\n";
+		tag "partially-translated-question", "$template->{template} $lang";
 	    }
 	}
     }
@@ -249,25 +250,25 @@ for my $file (qw(config postinst)) {
 	    if (not $obsoleteconfmodule and
 	        m#(/usr/share/debconf/confmodule\.sh|
 	           Debian::DebConf::Client::ConfModule)#x) {
-	        print "W: $pkg $type: $file-loads-obsolete-confmodule $1\n";
+	        tag "$file-loads-obsolete-confmodule", "$1";
 	        $usesconfmodule=1;
 	        $obsoleteconfmodule=1;
 	    }
 	    if ($file eq 'postinst' and not $db_input and m/db_input/) {
 	        # TODO: Perl?
-	        print "W: $pkg $type: postinst-uses-db-input\n"
+	        tag "postinst-uses-db-input", ""
 		    unless $type eq 'udeb';
 	        $db_input=1;
 	    }
 	    if (not $isdefault and m/db_fset.*isdefault/) {
 	        # TODO: Perl?
-	        print "W: $pkg $type: isdefault-flag-is-deprecated $file\n";
+	        tag "isdefault-flag-is-deprecated", "$file";
 	        $isdefault=1;
 	    }
 	    if (not $usesseen and m/db_f[sg]et\s+\S+\s+seen\s+/) {
 	       unless (Dep::implies($alldependencies,
 	                 Dep::parse('debconf (>= 0.5)'))) {
-	           print "E: $pkg $type: seen-flag-requires-versioned-depends $file\n" 
+	           tag "seen-flag-requires-versioned-depends", "$file" 
 		       unless $type eq 'udeb';
 	       }
 	        $usesseen = 1;
@@ -275,7 +276,7 @@ for my $file (qw(config postinst)) {
 	}
 
 	unless ($usesconfmodule) {
-	    print "W: $pkg $type: $file-does-not-load-confmodule\n" 
+	    tag "$file-does-not-load-confmodule", "" 
 		unless $type eq 'udeb';
 	}
 
@@ -294,7 +295,7 @@ if (open(POSTRM, "control/postrm")) {
     }
 
     unless ($db_purge) {
-	print "W: $pkg $type: postrm-does-not-purge-debconf\n";
+	tag "postrm-does-not-purge-debconf", "";
     }
 }
 
@@ -303,19 +304,19 @@ if (open(POSTRM, "control/postrm")) {
 if ($usesmultiselect) {
     unless (Dep::implies($alldependencies,
 	                 Dep::parse('debconf (>= 0.2.26)'))) {
-	print "W: $pkg $type: multiselect-without-dependency\n"
+	tag "multiselect-without-dependency", ""
 	    unless $type eq 'udeb';
     }
 } elsif ($usespreinst) {
     unless (Dep::implies($dependencies{'pre-depends'},
 	                 Dep::parse('debconf (>= 0.2.17)'))
 	    or Dep::implies($dependencies{'depends'}, Dep::parse('debconf'))) {
-	print "W: $pkg $type: missing-debconf-dependency-for-preinst\n"
+	tag "missing-debconf-dependency-for-preinst", ""
 	    unless $type eq 'udeb';
     }
 } else {
     unless (Dep::implies($alldependencies, Dep::parse('debconf'))) {
-	print "W: $pkg $type: missing-debconf-dependency\n";
+	tag "missing-debconf-dependency", "";
     }
 }
 
@@ -325,7 +326,7 @@ if ($usesmultiselect) {
 # the following checks is ignored if the package being checked is debconf
 # itself.
 
-exit 0 if ($pkg eq "debconf") || ($type eq 'udeb');
+return 0 if ($pkg eq "debconf") || ($type eq 'udeb');
 
 open(SCRIPTS, "scripts") or fail("cannot open lintian scripts file: $!");
 while (<SCRIPTS>) {
@@ -340,7 +341,7 @@ while (<SCRIPTS>) {
 	s/#.*//;    # Not perfect for Perl, but should be OK
 	if (m,/usr/share/debconf/confmodule, or
 	        m/(?:Debconf|Debian::DebConf)::Client::ConfModule/) {
-	    print "W: $pkg $type: debconf-is-not-a-registry $filename\n";
+	    tag "debconf-is-not-a-registry", "$filename";
 	    last;
 	}
     }
@@ -348,5 +349,8 @@ while (<SCRIPTS>) {
 }
 close SCRIPTS;
 
-exit 0;
+} # </run>
 
+1;
+
+# vim: syntax=perl

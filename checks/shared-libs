@@ -1,4 +1,3 @@
-#!/usr/bin/perl -w
 # shared-libs -- lintian check script
 
 # Copyright (C) 1998 Christian Schwarz
@@ -19,11 +18,13 @@
 # Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 # MA 02111-1307, USA.
 
+package Lintian::shared_libs;
 use strict;
+use Tags;
 use File::Basename;
-
-use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Util;
+
+sub run {
 
 my %ldso_dir = map { $_ => 1 }
     qw( lib
@@ -54,7 +55,6 @@ my @words;
 
 # ---end-of-configuration-part---
 
-($#ARGV == 1) or fail("syntax: shared-libs <pkg> <type>");
 my $pkg = shift;
 my $type = shift;
 
@@ -72,7 +72,7 @@ while (<IN>) {
     } elsif (m/^\s*SONAME\s*(\S+)/o) {
 	$SONAME{$file} = $1;
     } elsif (m/^\s+\d+\s+\.rela?\.text/o) {
-	print "E: $pkg $type: shlib-with-non-pic-code $file\n"
+	tag "shlib-with-non-pic-code", "$file"
 	    if exists $ldso_dir{dirname($file)};
     } elsif (m/^\s*INTERP\b/) {
 	$INTERP{$file} = 1;
@@ -138,11 +138,11 @@ for (keys %files) {
             if ($real_perm =~ m/x/) {
                 # yes.  But if the library has an INTERP section, it's designed
                 # to do something useful when executed, so don't report an error.
-                printf "E: $pkg $type: shlib-with-executable-bit $cur_file %04o\n",perm2oct($real_perm)
+                tag "shlib-with-executable-bit", $cur_file, sprintf("%04o",perm2oct($real_perm))
                     unless $INTERP{$real_file};
             } elsif ($real_perm ne '-rw-r--r--') {
                 # bad permissions
-                printf "W: $pkg $type: shlib-with-bad-permissions $cur_file %04o\n",perm2oct($real_perm);
+                tag "shlib-with-bad-permissions", $cur_file, sprintf("%04o",perm2oct($real_perm));
             }
         }
 
@@ -154,7 +154,7 @@ for (keys %files) {
     } elsif (exists $objsomething{$cur_file} &&
 	     exists $ldso_dir{dirname($cur_file)} &&
 	     exists $sharedobject{$cur_file}) {
-	print "E: $pkg $type: sharedobject-in-library-directory-not-actually-a-shlib $cur_file\n";
+	tag "sharedobject-in-library-directory-not-actually-a-shlib", "$cur_file";
     }
 }
 
@@ -175,7 +175,7 @@ for my $shlib_file (keys %SONAME) {
     # symlink found?
     my $link_file = "$dir/$SONAME{$shlib_file}";
     if (not exists $index_info{$link_file}) {
-	print "E: $pkg $type: ldconfig-symlink-missing-for-shlib $link_file $shlib_file $SONAME{$shlib_file}\n";
+	tag "ldconfig-symlink-missing-for-shlib", "$link_file $shlib_file $SONAME{$shlib_file}";
     } else {
 	# $link_file really another file?
 	if ($link_file eq $shlib_file) {
@@ -189,15 +189,15 @@ for my $shlib_file (keys %SONAME) {
 		if ($link_info{$link_file} eq $shlib_name) {
 		    # ok.
 		} else {
-		    print "E: $pkg $type: ldconfig-symlink-referencing-wrong-file $link_file -> $link_info{$link_file} instead of $shlib_name\n";
+		    tag "ldconfig-symlink-referencing-wrong-file", "$link_file -> $link_info{$link_file} instead of $shlib_name";
 		}
 	    } else {
-		print "E: $pkg $type: ldconfig-symlink-is-not-a-symlink $shlib_file $link_file\n";
+		tag "ldconfig-symlink-is-not-a-symlink", "$shlib_file $link_file";
 	    }
 
 	    # symlink after shlib?
 	    if ($index_info{$link_file} < $index_info{$shlib_file}) {
-		print "E: $pkg $type: ldconfig-symlink-before-shlib-in-deb $link_file\n";
+		tag "ldconfig-symlink-before-shlib-in-deb", "$link_file";
 	    }
 	}
     }
@@ -211,7 +211,7 @@ for my $shlib_file (keys %SONAME) {
 
 	# need shlib symlink
 	if (not exists $index_info{$link_file}) {
-	    print "W: $pkg $type: dev-pkg-without-shlib-symlink $shlib_file $link_file\n";
+	    tag "dev-pkg-without-shlib-symlink", "$shlib_file $link_file";
 	}
     } else {
 	# no.
@@ -220,7 +220,7 @@ for my $shlib_file (keys %SONAME) {
 	# if shlib doesn't _have_ a version, then $link_file and $shlib_file will
 	# be equal, and it's not a development link, so don't complain.
 	if (exists $index_info{$link_file} and $link_file ne $shlib_file) {
-	    print "W: $pkg $type: non-dev-pkg-with-shlib-symlink $shlib_file $link_file\n";
+	    tag "non-dev-pkg-with-shlib-symlink", "$shlib_file $link_file";
 	}
     }
 }
@@ -231,7 +231,7 @@ if ($#shlibs == -1) {
     # no shared libraries included in package, thus shlibs control file should
     # not be present
     if (-f $shlibs_control_file) {
-	print "E: $pkg $type: pkg-has-shlibs-control-file-but-no-actual-shared-libs\n";
+	tag "pkg-has-shlibs-control-file-but-no-actual-shared-libs", "";
     }
 } else {
     # shared libraries included, thus shlibs control file has to exist
@@ -240,7 +240,7 @@ if ($#shlibs == -1) {
 	    for my $shlib (@shlibs) {
 		# skip it if it's not a public shared library
 		next unless defined $ldso_dir{dirname($shlib)};
-		print "E: $pkg $type: no-shlibs-control-file $shlib\n";
+		tag "no-shlibs-control-file", "$shlib";
 	    }
 	}
     } else {
@@ -252,7 +252,7 @@ if ($#shlibs == -1) {
 	    next if m/^\s*$/;
 	    @words = split(/\s+/o,$_);
 	    if ($shlibs_control{$words[0]}) {
-		print "E: $pkg $type: duplicate-entry-in-shlibs-control-file $words[0]\n";
+		tag "duplicate-entry-in-shlibs-control-file", "$words[0]";
 	    } else {
 		$shlibs_control{$words[0]} = 1;
 	    }
@@ -275,11 +275,11 @@ if ($#shlibs == -1) {
 		# skip it if it's not a public shared library
  		next unless defined $ldso_dir{dirname($shlib)};
 		# no!!
-		print "E: $pkg $type: shlib-missing-in-control-file $shlib_name $shlib\n";
+		tag "shlib-missing-in-control-file", "$shlib_name $shlib";
 	    }
 	}
 	for $shlib_name (keys %shlibs_control) {
-	    print "W: $pkg $type: unused-shlib-entry-in-control-file $shlib_name\n"
+	    tag "unused-shlib-entry-in-control-file", "$shlib_name"
 		unless $shlibs_control_used{$shlib_name};
 	}
     }
@@ -289,7 +289,7 @@ if ($#shlibs == -1) {
 if (-f $preinst) {
     local $_ = slurp_entire_file($preinst);
     if (/^[^\#]*\bldconfig\b/m) {
-	print "W: $pkg $type: preinst-calls-ldconfig\n"
+	tag "preinst-calls-ldconfig", ""
     }
 }
 
@@ -298,10 +298,10 @@ if (-f $postinst) {
 
     # Decide if we call ldconfig
     if (/^[^\#]*\bldconfig\b/m) {
-	print "W: $pkg $type: postinst-has-useless-call-to-ldconfig\n"
+	tag "postinst-has-useless-call-to-ldconfig", ""
 	    unless $must_call_ldconfig;
     } else {
-	print "E: $pkg $type: postinst-must-call-ldconfig $must_call_ldconfig\n"
+	tag "postinst-must-call-ldconfig", "$must_call_ldconfig"
 	    if $must_call_ldconfig;
     }
 }
@@ -309,7 +309,7 @@ if (-f $postinst) {
 if (-f $prerm) {
     local $_ = slurp_entire_file($prerm);
     if (/^[^\#]*\bldconfig\b/m) {
-	print "W: $pkg $type: prerm-calls-ldconfig\n";
+	tag "prerm-calls-ldconfig", "";
     }
 }
 
@@ -318,10 +318,10 @@ if (-f $postrm) {
 
     # Decide if we call ldconfig
     if (/^[^\#]*\bldconfig\b/m) {
-	print "W: $pkg $type: postrm-has-useless-call-to-ldconfig\n"
+	tag "postrm-has-useless-call-to-ldconfig", ""
 	    unless $must_call_ldconfig;
     } else {
-	print "W: $pkg $type: postrm-should-call-ldconfig $must_call_ldconfig\n"
+	tag "postrm-should-call-ldconfig", "$must_call_ldconfig"
 	    if $must_call_ldconfig;
     }
 
@@ -338,14 +338,11 @@ if (-f $postrm) {
 	s!remove(?:|[^)]+)*\).*?BldconfigB.*?(;;|esac)!!s;
 
     if (/^[^\#]*BldconfigB/m) {
-        print "W: $pkg $type: postrm-unsafe-ldconfig\n";
+        tag "postrm-unsafe-ldconfig", "";
     }
 }
 
-
-exit 0;
-
-# -----------------------------------
+}
 
 # translate permission strings like `-rwxrwxrwx' into an octal number
 sub perm2oct {
@@ -377,3 +374,7 @@ sub abs_path {
     while($path =~ s!/[^/]*/\.\./!/!g){1};
     return $path;
 }
+
+1;
+
+# vim: syntax=perl sw=4 ts=8

@@ -1,4 +1,3 @@
-#!/usr/bin/perl -w
 # debhelper format -- lintian check script
 
 # Copyright (C) 1999 by Joey Hess
@@ -19,9 +18,12 @@
 # Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 # MA 02111-1307, USA.
 
+package Lintian::debhelper;
 use strict;
+use Tags;
 
-($#ARGV == 1) or fail("syntax: debhelper <pkg> <type>");
+sub run {
+
 my $pkg = shift;
 my $type = shift;
 
@@ -67,13 +69,13 @@ while (<RULES>) {
         my $dhcommand = $1;
     	if ($dhcommand =~ /dh_testversion(?:\s+(.+))?/) {
 	    $needversiondepends = $1 if ($1);
-            print "W: $pkg $type: dh_testversion-is-deprecated\n";
+            tag "dh_testversion-is-deprecated", "";
 	}
 	if ($dhcommand eq 'dh_dhelp') {
-	    print "W: $pkg $type: dh_dhelp-is-deprecated\n";
+	    tag "dh_dhelp-is-deprecated", "";
 	}
 	if ($dhcommand eq 'dh_suidregister') {
-	    print "W: $pkg $type: dh_suidregister-is-obsolete\n";
+	    tag "dh_suidregister-is-obsolete", "";
 	}
 	# if command is passed -n, it does not modify the scripts
 	if ($commands{$dhcommand} and not m/\s+\-n\s+/) {
@@ -87,7 +89,7 @@ while (<RULES>) {
 }
 close RULES;
 
-exit unless $seencommand;
+return unless $seencommand;
 
 # We may need to make a difference between deb and udeb packages
 # so try to find out
@@ -124,7 +126,7 @@ while (defined(my $file=readdir(DEBIAN))) {
 	close IN;
 	
 	if ((! $seentag) and $needtomodifyscripts) {
-	    print "W: $pkg $type: maintainer-script-lacks-debhelper-token debian/$file\n" unless $binpkg && ($pkgs{$binpkg} =~ /udeb/i);
+	    tag "maintainer-script-lacks-debhelper-token", "debian/$file" unless $binpkg && ($pkgs{$binpkg} =~ /udeb/i);
 	}
     } elsif ($file =~ m/^compat$/) {
 	open IN, "debfiles/$file"
@@ -134,12 +136,12 @@ while (defined(my $file=readdir(DEBIAN))) {
 	if ($compat) {
 	    chomp $compat;
 	    if ($needversiondepends) {
-		print "E: $pkg $type: declares-possibly-conflicting-debhelper-compat-versions $needversiondepends $compat\n";
+		tag "declares-possibly-conflicting-debhelper-compat-versions", "$needversiondepends $compat";
 	    } else {
 		$needversiondepends = $compat;
 	    }
 	} else {
-	    print "E: $pkg $type: debhelper-compat-file-is-empty\n";
+	    tag "debhelper-compat-file-is-empty", "";
 	}
     } elsif ($file =~ m/^control$/) {
 	open(IN,"debfiles/$file")
@@ -158,29 +160,21 @@ while (defined(my $file=readdir(DEBIAN))) {
 	    }
 	}
 	if ($needbuilddepends) {
-	    print "E: $pkg $type: package-uses-debhelper-but-lacks-build-depends\n";
+	    tag "package-uses-debhelper-but-lacks-build-depends", "";
 	}
 	close IN;
     } elsif ($file =~ m/^ex\.|\.ex$/) {
-        print "W: $pkg $type: dh-make-template-in-source debian/$file\n";
+        tag "dh-make-template-in-source", "debian/$file";
     }
 }
 closedir(DEBIAN);
 
 if ($needversiondepends and ($needversiondepends > 1) and ! Dep::versions_lte($needversiondepends, $seenversiondepends)) {
-    print "E: $pkg $type: package-lacks-versioned-build-depends-on-debhelper $needversiondepends\n";
+    tag "package-lacks-versioned-build-depends-on-debhelper", "$needversiondepends";
 }
 
-
-# -----------------------------------
-
-sub fail {
-    if ($_[0]) {
-	warn "internal error: $_[0]\n";
-    } elsif ($!) {
-	warn "internal error: $!\n";
-    } else {
-	warn "internal error.\n";
-    }
-    exit 1;
 }
+
+1;
+
+# vim: syntax=perl

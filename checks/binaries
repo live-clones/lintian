@@ -1,4 +1,3 @@
-#!/usr/bin/perl -w
 # binaries -- lintian check script
 
 # Copyright (C) 1998 Christian Schwarz and Richard Braakman
@@ -19,9 +18,12 @@
 # Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 # MA 02111-1307, USA.
 
+package Lintian::binaries;
 use strict;
+use Tags;
 
-($#ARGV == 1) or fail("syntax: binaries <pkg> <type>");
+sub run {
+
 my $pkg = shift;
 my $type = shift;
 
@@ -42,7 +44,7 @@ if (open(IN,"fields/architecture")) {
 } else {
     # Don't display this tag, since `fields' check already checks for this!
     # -> no-architecture-field
-    #print "E: $pkg $type: package-does-not-specify-architecture\n";
+    #tag "package-does-not-specify-architecture", "";
 }
 
 my $file;
@@ -70,7 +72,7 @@ while (<IN>) {
 	#    }
 	    if ($foo eq '.text' and $sec eq 'Base' and
 		$sym eq '__gmon_start__') {
-	      print "W: $pkg $type: binary-compiled-with-profiling-enabled $file\n";
+	      tag "binary-compiled-with-profiling-enabled", "$file";
 	    }
 	}
     } else {
@@ -87,7 +89,7 @@ while (<IN>) {
 	} elsif (m/^objdump: (.*?): File format not recognized$/) {
 	    fail("file format not recognized for $1\nif you are checking non-i386 binaries, you'll need to install binutils-multiarch\n");
 	} elsif (m/^objdump: \.(.*?): Packed with UPX$/) {
-	    print "E: $pkg $type: binary-file-compressed-with-upx $1\n";
+	    tag "binary-file-compressed-with-upx", "$1";
 	} elsif (m/CXXABI/) {
 	    $CXXABI{$file} = 1;
 	}
@@ -108,18 +110,18 @@ while (<IN>) {
 
     if ($arch eq 'all') {
 	# package is `Architecture: all' but contains libs!?
-	print "E: $pkg $type: arch-independent-package-contains-binary-or-object $file\n";
+	tag "arch-independent-package-contains-binary-or-object", "$file";
     }
 
     # ELF?
     next unless $info =~ m/^ELF/o;
 
     if ($file =~ m,^etc/,) {
-	print "E: $pkg $type: binary-in-etc $file\n";
+	tag "binary-in-etc", "$file";
     }
 
     if ($file =~ m,^usr/share/,) {
-	print "E: $pkg $type: arch-dependent-file-in-usr-share $file\n";
+	tag "arch-dependent-file-in-usr-share", "$file";
     }
 
     # stripped?
@@ -127,19 +129,19 @@ while (<IN>) {
 	# Is it an object file (which generally can not be stripped),
 	# a kernel module, or perhaps a debugging package? 
 	unless ($file =~ m,\.k?o$, or $pkg =~ m/-dbg$/ or $pkg =~ m/debug/) {
-	    print "E: $pkg $type: unstripped-binary-or-object $file\n";
+	    tag "unstripped-binary-or-object", "$file";
 	}
     } else {
 	# stripped but a debug or profiling library?
 	if (($file =~ m,lib/debug/,o) or ($file =~ m,lib/profile/,o)) {
-	    print "E: $pkg $type: library-in-debug-or-profile-should-not-be-stripped $file\n";
+	    tag "library-in-debug-or-profile-should-not-be-stripped", "$file";
 	} else {
 	    # appropriately stripped, but is it stripped enough?
 	    if (exists $NOTE{$file}) {
-		print "W: $pkg $type: binary-has-unneeded-section $file .note\n";
+		tag "binary-has-unneeded-section", "$file .note";
 	    }
 	    if (exists $COMMENT{$file}) {
-		print "W: $pkg $type: binary-has-unneeded-section $file .comment\n";
+		tag "binary-has-unneeded-section", "$file .comment";
 	    }
 	}
     }
@@ -148,7 +150,7 @@ while (<IN>) {
     if (exists $RPATH{$file} &&
         grep(!m#^/usr/lib/\Q$pkg\E(?:/|$)#, split(/:/, $RPATH{$file}))
        ) {
-	print "W: $pkg $type: binary-or-shlib-defines-rpath $file $RPATH{$file}\n";
+	tag "binary-or-shlib-defines-rpath", "$file $RPATH{$file}";
     }
 
     # binary or shared object?
@@ -160,7 +162,7 @@ while (<IN>) {
     my @needed;
     if (!exists($NEEDED{$file}) && !defined($NEEDED{$file})) {
 	if ($info =~ m/shared object/o) {
-	    print "W: $pkg $type: shared-lib-without-dependency-information $file\n";
+	    tag "shared-lib-without-dependency-information", "$file";
 	} else {
 	    # Some exceptions: files in /boot, /usr/lib/debug/*, named *-static or
 	    # *.static, or *-static as package-name.
@@ -171,7 +173,7 @@ while (<IN>) {
 	    next if ($file =~ /(\.|-)static$/);
 	    next if ($pkg =~ /-static$/);
 
-	    print "E: $pkg $type: statically-linked-binary $file\n";
+	    tag "statically-linked-binary", "$file";
 	}
     } else {
 	my $lib;
@@ -187,7 +189,7 @@ while (<IN>) {
 		    ($file =~ m/i486-linuxlibc1/)) {
 		    # ok, ignore it
 		} else {
-		    print "W: $pkg $type: libc5-binary $file\n" unless $libc5_binary{$file}++;
+		    tag "libc5-binary", "$file" unless $libc5_binary{$file}++;
 		}
 	    }
 
@@ -195,7 +197,7 @@ while (<IN>) {
 # removed for not being reliable enough
 #	    if ($lib =~ /^libstdc\+\+/) {
 #		unless ($CXXABI{$file}) {
-#		    print "W: $pkg $type: binary-or-shlib-with-obsolete-c++-abi $file\n";
+#		    tag "binary-or-shlib-with-obsolete-c++-abi", "$file";
 #		}
 #	    }
 
@@ -206,9 +208,9 @@ while (<IN>) {
 
 	if ($no_libc and not $file =~ m,/libc\b,) {
 	    if ($info =~ m/shared object/) {
-		print "W: $pkg $type: library-not-linked-against-libc $file\n";
+		tag "library-not-linked-against-libc", "$file";
 	    } else {
-		print "W: $pkg $type: program-not-linked-against-libc $file\n";
+		tag "program-not-linked-against-libc", "$file";
 	    }
 	}
     }
@@ -217,24 +219,13 @@ close(IN);
 
 if ($needs_depends_line) {
     if (not -e "fields/depends" and not -e "fields/pre-depends") {
-	print "W: $pkg $type: missing-depends-line\n"
+	tag "missing-depends-line", ""
 	    unless $pkg eq 'ldso';
     }
 }
 
-exit 0;
-
-# -----------------------------------
-
-sub fail {
-    if ($_[0]) {
-	warn "internal error: $_[0]\n";
-    } elsif ($!) {
-	warn "internal error: $!\n";
-    } else {
-	warn "internal error.\n";
-    }
-    exit 1;
 }
 
-# vim: ts=8 sw=4
+1;
+
+# vim: syntax=perl ts=8 sw=4

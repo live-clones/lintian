@@ -1,4 +1,3 @@
-#!/usr/bin/perl -w
 # copyright-file -- lintian check script
 
 # Copyright (C) 1998 Christian Schwarz
@@ -19,9 +18,12 @@
 # Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 # MA 02111-1307, USA.
 
+package Lintian::copyright_file;
 use strict;
+use Tags;
 
-($#ARGV == 1) or fail("syntax: copyright-file <pkg> <type>");
+sub run {
+
 my $pkg = shift;
 my $type = shift;
 
@@ -36,7 +38,7 @@ use common_data;
 open(IN,"index") or fail("cannot open index file index: $!");
 while (<IN>) {
     chop;
-    if (m,usr/(share/)?doc/$ppkg/copyright(\.\S+)?(\s+\-\>\s+.*)?$,o) {
+    if (m,usr/(share/)?doc/$ppkg/copyright(\.\S+)?(\s+\-\>\s+.*)?$,) {
 	my ($ext,$link) = ($2,$3);
 	
 	$ext = '' if (! defined $ext);
@@ -46,13 +48,13 @@ while (<IN>) {
 	
 	#search for an extension
 	if ($ext eq '.gz') {
-	    print "E: $pkg $type: copyright-file-compressed\n";
+	    tag "copyright-file-compressed", "";
 	    last;
     	}
 	
 	#make sure copyright is not a symlink
     	if ($link) {
-	    print "E: $pkg $type: copyright-file-is-symlink\n";
+	    tag "copyright-file-is-symlink", "";
 	    last;
     	}
 	
@@ -63,14 +65,14 @@ while (<IN>) {
     	}
     	fail("unhandled case: $_");
 	
-    } elsif (m,usr/share/doc/$ppkg \-\>\s+(\S+),o) {
+    } elsif (m,usr/share/doc/$ppkg \-\>\s+(\S+),) {
 	my ($link) = ($1);
 	
     	$found = 1;
 	
     	# check if this symlink references a directory elsewhere
     	if ($link =~ m,^(\.\.)?/,) {
-	    print "E: $pkg $type: usr-doc-symlink-points-outside-of-usr-doc $link\n";
+	    tag "usr-doc-symlink-points-outside-of-usr-doc", "$link";
 	    last;
     	}
 	
@@ -93,7 +95,7 @@ while (<IN>) {
 	         defined($known_essential{$link}))) {
 		# no, it does not.
 
-		print "E: $pkg $type: usr-doc-symlink-without-dependency $link\n";
+		tag "usr-doc-symlink-without-dependency", "$link";
 		last;
 	    }
     	}
@@ -107,16 +109,16 @@ while (<IN>) {
 		# yes, everything is ok.
 	    } else {
 		# no, it is not.
-		print "E: $pkg $type: usr-doc-symlink-to-foreign-package $link\n";
+		tag "usr-doc-symlink-to-foreign-package", "$link";
 	    }
     	} else {		# no, source is not available
-	    print "I: $pkg $type: cannot-check-whether-usr-doc-symlink-points-to-foreign-package\n";
+	    tag "cannot-check-whether-usr-doc-symlink-points-to-foreign-package", "";
     	}
 	
     	# everything is ok.
     	last;
-    } elsif (m,usr/doc/copyright/$ppkg$,o) {
-	print "E: $pkg $type: old-style-copyright-file\n";
+    } elsif (m,usr/doc/copyright/$ppkg$,) {
+	tag "old-style-copyright-file", "";
 	$found = 1;
     	last;
     }
@@ -124,76 +126,77 @@ while (<IN>) {
 close(IN);
 
 if (not $found) {
-    print "E: $pkg $type: no-copyright-file\n";
+    tag "no-copyright-file", "";
 }
 
 # check contents of copyright file
 open(IN,"copyright") or fail("cannot open copyright file copyright: $!");
 # gulp whole file
-undef $/;  $_ = <IN>;
+local $/ = undef;
+$_ = <IN>;
 close(IN);
 
 my $wrong_directory_detected = 0;
 
 if (m/\<fill in ftp site\>/ or m/\<Must follow here\>/) {
-    print "E: $pkg $type: helper-templates-in-copyright\n";
+    tag "helper-templates-in-copyright", "";
 }
 
 if (m,usr/share/common-licenses/(GPL|LGPL|BSD|Artistic)\.gz,) {
-    print "E: $pkg $type: copyright-refers-to-compressed-license $&\n";
+    tag "copyright-refers-to-compressed-license", "$&";
 }
 
 if (m,usr/share/common-licences,) {
-    print "E: $pkg $type: copyright-refers-to-incorrect-directory $&\n";
+    tag "copyright-refers-to-incorrect-directory", "$&";
     $wrong_directory_detected = 1;
 }
 
 if (m,usr/share/doc/copyright,) {
-    print "E: $pkg $type: copyright-refers-to-old-directory\n";
+    tag "copyright-refers-to-old-directory", "";
     $wrong_directory_detected = 1;
 }
 
 if (m,usr/doc/copyright,) {
-    print "E: $pkg $type: copyright-refers-to-old-directory\n";
+    tag "copyright-refers-to-old-directory", "";
     $wrong_directory_detected = 1;
 }
 
 # lame check for old FSF zip code
 if (m/02139/) {
-    print "E: $pkg $type: old-fsf-address-in-copyright-file\n";
+    tag "old-fsf-address-in-copyright-file", "";
 }
 
 if (length($_) > 12000 and
     m/\bGNU GENERAL PUBLIC LICENSE\s*TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION\b/m and m/\bVersion 2\b/) {
-    print "E: $pkg $type: copyright-file-contains-full-gpl-license\n";
+    tag "copyright-file-contains-full-gpl-license", "";
 }
 
 if (m/^This copyright info was automatically extracted from the perl module\./) {
-    print "W: $pkg $type: helper-templates-in-copyright\n";
+    tag "helper-templates-in-copyright", "";
 }
 
 if (m,(under )?(the )?(same )?(terms )?as Perl itself,i &&
     !m,usr/share/common-licenses/,) {
-    print "E: $pkg $type: copyright-file-lacks-pointer-to-perl-license\n";
+    tag "copyright-file-lacks-pointer-to-perl-license", "";
 }
 
 # wtf?
 if ((m,common-licenses(/\S+),) && (! m,/usr/share/common-licenses/,)) {
-    print "W: $pkg $type: copyright-does-not-refer-to-common-license-file $1\n";
+    tag "copyright-does-not-refer-to-common-license-file", "$1";
 }
 
 if (m/(GNU General Public License|GPL)/ && !m,/usr/share/common-licenses,
     && !m/Zope Public License/ && !m/LICENSE AGREEMENT FOR PYTHON 1.6.1/
     && !m/LaTeX Project Public License/ && !m/GNU Free Documentation License/
     && !$wrong_directory_detected) {
-    print "E: $pkg $type: copyright-should-refer-to-common-license-file-for-gpl\n";
+    tag "copyright-should-refer-to-common-license-file-for-gpl", "";
 }
 
 if (m,Upstream Author\(s\),) {
-    print "W: $pkg $type: copyright-lists-upstream-authors-with-dh_make-boilerplate\n";
+    tag "copyright-lists-upstream-authors-with-dh_make-boilerplate", "";
 }
 
-exit 0;
+} # </run>
 
 # -----------------------------------
 
@@ -230,13 +233,6 @@ sub depends_on {
     return 0;
 }
 
-sub fail {
-    if ($_[0]) {
-	warn "internal error: $_[0]\n";
-    } elsif ($!) {
-	warn "internal error: $!\n";
-    } else {
-	warn "internal error.\n";
-    }
-    exit 1;
-}
+1;
+
+# vim: syntax=perl ts=8 sw=4

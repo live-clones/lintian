@@ -1,4 +1,3 @@
-#!/usr/bin/perl -w
 # conffiles -- lintian check script
 
 # Copyright (C) 1998 Christian Schwarz
@@ -19,9 +18,12 @@
 # Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 # MA 02111-1307, USA.
 
+package Lintian::conffiles;
 use strict;
+use Tags;
 
-($#ARGV == 1) or fail("syntax: conffiles <pkg> <type>");
+sub run {
+
 my $pkg = shift;
 my $type = shift;
 
@@ -29,7 +31,7 @@ my $cf = "control/conffiles";
 
 # conffiles?
 unless (-f $cf) {
-    exit 0;
+    return 0;
 }
 
 my %conffiles = ();
@@ -41,38 +43,27 @@ while (<IN>) {
 
     $conffiles{"$_"}++;
     if ($conffiles{"$_"} > 1) {
-	print "E: $pkg $type: duplicate-conffile $_\n";
+	tag "duplicate-conffile", "$_";
     }
 
     if (m,^/?var/lib/games/,o) {
-	print "E: $pkg $type: score-file-must-not-be-conffile $_\n";
+	tag "score-file-must-not-be-conffile", "$_";
     }
 
     if (m,^/?usr/,o) {
-	print "E: $pkg $type: file-in-usr-marked-as-conffile $_\n";
+	tag "file-in-usr-marked-as-conffile", "$_";
     } else {
 	unless (m,^/?etc/,o or m,^/?var/,o) {
-	    print "W: $pkg $type: non-etc-or-var-file-marked-as-conffile $_\n";
+	    tag "non-etc-or-var-file-marked-as-conffile", "$_";
 	}
     }
 
     unless (m,^/,o) {
-	print "E: $pkg $type: relative-conffile $_\n";
+	tag "relative-conffile", "$_";
     }
 }
 close(IN);
 
-exit 0;
-
-# -----------------------------------
-
-sub fail {
-    if ($_[0]) {
-	warn "internal error: $_[0]\n";
-    } elsif ($!) {
-	warn "internal error: $!\n";
-    } else {
-	warn "internal error.\n";
-    }
-    exit 1;
 }
+
+1;

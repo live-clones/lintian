@@ -1,4 +1,3 @@
-#!/usr/bin/perl -w
 # po-debconf -- lintian check script
 
 # Copyright (C) 2002-2004 by Denis Barbier <barbier@linuxfr.org>
@@ -19,12 +18,13 @@
 # Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 # MA 02111-1307, USA.
 
+package Lintian::po_debconf;
 use strict;
-
-use lib "$ENV{'LINTIAN_ROOT'}/lib";
+use Tags;
 use Util;
 
-($#ARGV == 1) or fail("syntax: po-debconf <pkg> <type>");
+sub run {
+
 my $pkg = shift;
 my $type = shift;
 
@@ -51,11 +51,11 @@ closedir(DEB);
 
 #TODO: check whether all templates are named in TEMPLATES.pot
 if ( $has_template && ! -d "debfiles/po" ) {
-	print "W: $pkg $type: not-using-po-debconf\n";
+	tag "not-using-po-debconf", "";
 }
 
 #   Exit if package does not seem to use po-debconf
--d "debfiles/po" or exit(0);
+-d "debfiles/po" or return(0);
 
 if (-f "debfiles/po/POTFILES.in") {
 	open(POTFILES,"debfiles/po/POTFILES.in")
@@ -65,15 +65,15 @@ if (-f "debfiles/po/POTFILES.in") {
 		s/.*\]\s*//;
 		#  Cannot check files which are not under debian/
 		next if m,^\.\./,;
-		print "W: $pkg $type: missing-file-from-potfiles-in $_\n"
+		tag "missing-file-from-potfiles-in", "$_"
 			 unless -f "debfiles/$_";
 	}
 	close(POTFILES);
 } else {
-	print "W: $pkg $type: missing-potfiles-in\n";
+	tag "missing-potfiles-in", "";
 }
 if (! -f "debfiles/po/templates.pot") {
-	print "W: $pkg $type: missing-templates-pot\n";
+	tag "missing-templates-pot", "";
 }
 
 opendir(DEBIAN, 'debfiles/po')
@@ -97,12 +97,16 @@ while (defined(my $file=readdir(DEBIAN))) {
         if (m/charset=(.*?)\\n/) {
                 $charset = ($1 eq 'CHARSET' ? '' : $1);
         }
-        print "W: $pkg $type: unknown-charset-in-po-file debian/po/$file\n"
+        tag "unknown-charset-in-po-file", "debian/po/$file"
                 unless length($charset);
 	if (-x "/usr/bin/msgfmt" ) {
 	    system("msgfmt -o /dev/null debfiles/po/$file 2>/dev/null") == 0
-                or print "W: $pkg $type: invalid-po-file debian/po/$file\n";
+                or tag "invalid-po-file", "debian/po/$file";
 	}
 }
 
-exit(0);
+}
+
+1;
+
+# vim: syntax=perl

@@ -1,4 +1,3 @@
-#!/usr/bin/perl -w
 # debdiff -- Lintian check script
 
 # Copyright (C) 1998 Richard Braakman
@@ -19,9 +18,12 @@
 # Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 # MA 02111-1307, USA.
 
+package Lintian::debdiff;
 use strict;
+use Tags;
 
-($#ARGV == 1) or fail("syntax: debdiff <pkg> <type>");
+sub run {
+
 my $pkg = shift;
 my $type = shift;
 
@@ -56,12 +58,12 @@ for my $tar (<*.tar.gz>) {
     open HEAD, '-|', 'zcat '.quotemeta($tar) or fail("Couldn't open ${tar}: $!");
 	my $head = "";
     sysread HEAD, $head, 13 or fail("Couldn't read first part of $tar: $!");
-    print "E: $pkg $type: source-tar-is-posix-tar $tar\n"
+    tag "source-tar-is-posix-tar", "$tar"
     	if $head eq './PaxHeaders.';
     close HEAD;
 }
 
-exit 0;
+} # </run>
 
 # ---------------------------------
 
@@ -71,19 +73,10 @@ sub tag_warn {
         # We can't have newlines in a tag message, so turn them into \n
         map { s,\n,\\n, } @_;
         my $args = join(' ', @_);
-        print "W: $pkg $type: $tag $args\n";
+        tag "$tag", "$args";
     } else {
-        print "W: $pkg $type: $tag\n";
+        tag "$tag", "";
     }
 }
 
-sub fail {
-    if ($_[0]) {
-	warn "internal error: $_[0]\n";
-    } elsif ($!) {
-	warn "internal error: $!\n";
-    } else {
-	warn "internal error.\n";
-    }
-    exit 1;
-}
+1;

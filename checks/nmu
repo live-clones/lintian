@@ -1,4 +1,3 @@
-#!/usr/bin/perl -w
 # nmu -- lintian check script
 
 # Copyright (C) 2004 Jeroen van Wolffelaar
@@ -19,9 +18,12 @@
 # Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 # MA 02111-1307, USA.
 
+package Lintian::nmu;
 use strict;
+use Tags;
 
-($#ARGV == 1) or fail("syntax: nmu <pkg> <type>");
+sub run {
+
 my $pkg = shift;
 my $type = shift;
 my $changelog_mentions_nmu = 0;
@@ -62,34 +64,21 @@ if (defined $uploaders) {
 }
 
 if ($maintainer =~ /packages\@qa.debian.org/) {
-	print "E: $pkg $type: orphaned-package-should-not-have-uploaders\n"
+	tag "orphaned-package-should-not-have-uploaders", ""
 		if defined $uploaders;
-	print "W: $pkg $type: qa-upload-has-incorrect-version-number $version\n"
+	tag "qa-upload-has-incorrect-version-number", "$version"
 		if $version_nmuness;
-	print "W: $pkg $type: changelog-should-mention-qa\n"
+	tag "changelog-should-mention-qa", ""
 		if !$changelog_mentions_qa;
 } else {
-	print "W: $pkg $type: changelog-should-mention-nmu\n"
+	tag "changelog-should-mention-nmu", ""
 		if !$changelog_mentions_nmu && $upload_is_nmu;
-	print "W: $pkg $type: source-nmu-has-incorrect-version-number $version\n"
+	tag "source-nmu-has-incorrect-version-number", "$version"
 		if $upload_is_nmu && $version_nmuness != 1;
-	print "W: $pkg $type: maintainer-upload-has-incorrect-version-number $version\n"
+	tag "maintainer-upload-has-incorrect-version-number", "$version"
 		if !$upload_is_nmu && $version_nmuness;
 }
 
-exit 0;
-
-# -----------------------------------
-
-sub fail {
-	if ($_[0]) {
-		warn "internal error: $_[0]\n";
-	} elsif ($!) {
-		warn "internal error: $!\n";
-	} else {
-		warn "internal error.\n";
-	}
-	exit 1;
 }
 
 sub getfield {
@@ -99,5 +88,7 @@ sub getfield {
 	$field =~ s/\n$//;
 	return $field;
 }
+
+1;
 
 # vim: ts=4 sw=4

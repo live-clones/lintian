@@ -33,7 +33,7 @@ my $verbose = $::verbose;
 my $debug = $::debug;
 
 # What to print between the "E:" and the tag, f.e. "package source"
-my $prefix = undef;
+our $prefix = undef;
 
 # The master hash with all tag info. Key is a hash too, with these stuff:
 # - tag: short name
@@ -44,6 +44,13 @@ my $prefix = undef;
 my %tags;
 
 my $codes = { 'error' => 'E' , 'warning' => 'W' , 'info' => 'I' };
+
+
+# TODO
+# - override support back in
+# - info display configurable
+# - understand 'reset'
+# - be able to return whether any errors were there, better, full stats
 
 # Call this function to add a certain tag, by supplying the info as a hash
 sub add_tag {
@@ -58,7 +65,8 @@ sub tag {
 	my $tag = shift;
 	my $info = $tags{$tag};
 	my $extra = '';
-	$extra = ' '.join(' ', map { s,\n,\\n, } @_) if $#_ >=0;
+	$extra = ' '.join(' ', @_) if $#_ >=0;
+	$extra = '' if $extra eq ' ';
 
 	print "$codes->{$info->{'type'}}: $prefix: $tag$extra\n";
 }

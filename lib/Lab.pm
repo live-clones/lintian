@@ -103,6 +103,8 @@ sub delete {
 
     print "N: Removing $LINTIAN_LAB ...\n" if $verbose;
 
+	return;
+
     # chdir to root (otherwise, the shell will complain if we happen
     # to sit in the directory we want to delete :)
     chdir('/');
