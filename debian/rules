@@ -5,11 +5,12 @@ tmp := $(CURDIR)/debian/tmp
 usl := $(tmp)/usr/share/lintian
 usdl := $(tmp)/usr/share/doc/lintian
 neededfiles := debian/rules frontend/lintian
+onlyrun =
 
 runtests: $(neededfiles)
 	@echo .... running tests ....
 	[ -d debian/tests ] || mkdir debian/tests
-	LINTIAN_ROOT="" /usr/bin/perl testset/runtests -v -k testset debian/tests
+	LINTIAN_ROOT="" /usr/bin/perl testset/runtests -v -k testset debian/tests $(onlyrun)
 	touch $@
 
 build: $(neededfiles)
