@@ -6,6 +6,7 @@ E: libbaz1: no-shlibs-control-file usr/lib/libfoo2.so.1.0.3b
 E: libbaz1: postinst-must-call-ldconfig usr/lib/libfoo2.so.1.0.3b
 E: libbaz1: sharedobject-in-library-directory-not-actually-a-shlib usr/lib/libbaz1.so.1.0.3b
 E: libbaz1: shlib-with-executable-bit usr/lib/libfoo2.so.1.0.3b 0755
+E: libbaz1: shlib-with-non-pic-code usr/lib/libbaz1.so.1.0.3b
 E: libbaz1: unstripped-binary-or-object ./usr/lib/libbaz1.so.1.0.3b
 E: libbaz1: unstripped-binary-or-object ./usr/lib/libfoo2.so.1.0.3b
 W: libbaz source: ancient-standards-version 3.2.1
