@@ -1,3 +1,12 @@
+lintian (1.22.12) unstable; urgency=low
+
+  Frank Lichtenheld <djpig@debian.org>
+  * checks/fields:
+    + Really check only "real" dependency fields for needlessy
+      depends (Closes: #185035)
+
+ -- Frank Lichtenheld <djpig@debian.org>  Sat, 21 Feb 2004 16:55:27 +0100
+
 lintian (1.22.11) unstable; urgency=low
 
   Jeroen van Wolffelaar <jeroen@wolffelaar.nl>

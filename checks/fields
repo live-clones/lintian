@@ -269,6 +269,18 @@ if (not open(IN, "fields/priority")) {
     }
 }
 
+# returns true, if the fieldname is one of 'depends', 'pre-depends',
+# 'recommends' or 'suggests' and false otherwise
+sub is_depends_relation {
+    if ($_[0]) {
+	return ($_[0] eq 'depends'
+	    or $_[0] eq 'pre-depends'
+	    or $_[0] eq 'recommends'
+	    or $_[0] eq 'suggests');
+    }
+    return 1;
+}
+
 if ($type eq 'binary') {
     for my $fld ('depends', 'pre-depends', 'recommends', 'suggests',
 		 'conflicts', 'provides', 'replaces') {
@@ -299,8 +311,7 @@ if ($type eq 'binary') {
 	    my $versioned;
 
 	    if ($#alternates >= 1) {
-		if ($fld ne 'depends' and $fld ne 'recommends' and
-		    $fld ne 'suggests' and $fld ne 'pre-depends') {
+		unless (is_depends_relation($fld)) {
 		    tag_error("alternates-not-allowed", "$fld:", $conj);
 		}
 	    }
@@ -333,18 +344,18 @@ if ($type eq 'binary') {
 		    $versioned = 0;
 		}
 
-		if ($relpkg eq "libdb1-compat" and $pkg !~ /^libc(6|6.1|0.3)$/) {
-		    tag_error("depends-on-libdb1-compat");
-		}
+		if (is_depends_relation($fld)) {
+		    if ($relpkg eq "libdb1-compat" and $pkg !~ /^libc(6|6.1|0.3)$/) {
+			tag_error("depends-on-libdb1-compat");
+		    }
 
-		if ($relpkg eq "awk" and not $versioned) {
-		    tag_error("needlessly-depends-on-awk");
-		}
+		    if ($relpkg eq "awk" and not $versioned) {
+			tag_error("needlessly-depends-on-awk");
+		    }
 
-		if (not $versioned and
-		    ($fld eq 'depends' or $fld eq 'pre-depends') and
-		    exists $known_essential{$relpkg}) {
-		    tag_error("depends-on-essential-package-without-using-version", $relpkg);
+		    if (not $versioned and exists $known_essential{$relpkg}) {
+			tag_error("depends-on-essential-package-without-using-version", $relpkg);
+		    }
 		}
 
 		if (not $relpkg =~ m/^$package_re$/so) {
