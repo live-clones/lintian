@@ -48,6 +48,10 @@ while (read(INPUT, $chunk, 512)) {
 	if (!$is_long && length($name) == 100) {
 		# This should have been a LongLink, as now the filename isn't
 		# NUL-terminated, as dpkg -i expects.
+
+		# Remove the leading dot
+		$name =~ s/^\.//;
+
 		print "E: $pkg $type: deb-created-with-broken-tar file: $name\n";
 	}
 
