@@ -1,7 +1,7 @@
 Check-Script: cruft
 Author: Sean 'Shaleh' Perry <shaleh@debian.org>
 Abbrev: deb
-Standards-Version: 3.2.0
+Standards-Version: 3.6.1
 Type: source
 Unpack-Level: 2
 Info: This looks for cruft in Debian packaging
@@ -17,10 +17,10 @@ Info: Leaving <tt>debian/files</tt> causes problems for the autobuilders,
 
 Tag: configure-generated-file-in-source
 Type: warning
-Info: Leaving config.cache/status causes autobuilders problems
+Info: Leaving config.cache/status causes autobuilders problems.
  config.cache and config.status are produced by GNU autoconf's configure
  scripts. If they are left in the source package, autobuilders may pick
- up settings for the wrong architecture, causing problems.
+ up settings for the wrong architecture.
  .
  The clean rule in <tt>debian/rules</tt> should remove this file. This
  should ideally be done by fixing the upstream build system to do it when
@@ -51,18 +51,18 @@ Info: Package source contains a 'svn-commit(.NNN).tmp' file.  This file is
 
 Tag: cvsignore-file-in-source
 Type: warning
-Info: Package contains a '.cvsignore' file.  It may have been installed by
+Info: Package contains a '.cvsignore' file.  It may have been included by
  accident.
 
 Tag: source-contains-svn-control-dir
 Type: error
-Info: Source contains a .svn directory. It was most likely installed by
+Info: Source contains a .svn directory. It was most likely included by
  accident, since Subversion version control directories usually don't belong
  in packages. Export from subversion rather than checkout.
 
 Tag: source-contains-CVS-dir
 Type: error
-Info: Package contains a CVS directory. It was most likely installed by
+Info: Package contains a CVS directory. It was most likely included by
  accident, since transient CVS data usually doesn't belong in packages.
  Export from CVS rather than use a checkout.
 
