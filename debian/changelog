@@ -13,6 +13,9 @@ lintian (1.23.0~beta1-fixing1) unstable; urgency=low
     + [HE] Check for the debmake template email address in the changelog
       entries. Patch by Steffen Moeller <moeller@pzr.uni-rostock.de>,
       thanks! (Closes: #199903)
+    + [JvW] Loosen up checks for -0.x versions, could be either native or
+      upstream + Debian revision, so some tests cannot be performed because of
+      that uncertainty
   * checks/common_data:
     + [HE] Change known_obsolete_fields to allow checks/fields to
       report the Bugs field als obsolete.

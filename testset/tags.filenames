@@ -1,7 +1,6 @@
 E: filenames: bad-menu-file-name usr/lib/menu/menu
 E: filenames: binary-without-manpage testxbin
 E: filenames: binary-without-manpage testxbin2
-E: filenames: debian-changelog-file-missing <<<< FALSE POSITIVE
 E: filenames: lengthy-symlink usr/lib/filenames/symlink4wrong ../filenames/symlink2
 E: filenames: lengthy-symlink usr/share/doc/filenames/version.txt.gz ../filenames/doc/version6.txt.gz
 E: filenames: no-copyright-file
