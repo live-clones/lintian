@@ -1,96 +1,90 @@
 lintian (1.22.12) unstable; urgency=low
 
-  Frank Lichtenheld <djpig@debian.org>
+  The ``Fix those false positives, mkay'' release, prepared for all Debian
+  Maintainers by Frank Lichtenheld and Jeroen van Wolffelaar.
+  Best served cold.
+
   * debian/control:
-    + make Uploaders a single line field. It didn't really
+    + [FL] Make Uploaders a single line field. It didn't really
       break, but at least DDPO had its difficulties
 
   * man/lintian.1:
-    + sync man page with the --help output by adding
-      missing options (Closes: #198615)
-      Based on a patch by Robert Lemmen.
+    + [FL] sync man page with the --help output by adding missing options
+      Based on a patch by Robert Lemmen. (Closes: #198615)
 
   * checks/binaries:
-    + don't complain about non-stripped kernel modules (Closes: #203373)
-      Patch by Dagfinn Ilmari Mannsaker
+    + [FL] Don't complain about non-stripped kernel modules.
+      Patch by Dagfinn Ilmari Mannsaker (Closes: #203373)
+    + [JvW] Exclude binaries and packages named *-static from the
+      binary-is-static test. Exception for sash removed. (Closes: #215235)
   * checks/changelog-file:
-    + check that encoding of changelog file is UTF-8 (Closes: #175318)
-      based on a patch by Denis Barbier
+    + [FL] Check that encoding of changelog file is UTF-8, based on a patch by
+      Denis Barbier (Closes: #175318)
   * checks/copyright-file{,.desc}:
-    + Don't advise to point to the perl packages' copyright file
-      (Closes: #193293)
-      Thanks to Martin Orr for pointing this out.
-    + Fixed false positives of
+    + [FL] Don't advise to point to the perl packages' copyright file.
+      Thanks to Martin Orr for pointing this out. (Closes: #193293)
+    + [FL] Fixed false positives of
       copyright-should-refer-to-common-license-file-for-gpl due to
-      the GFDL. (Closes: #192278)
-      Thanks to Ross Burton for reporting this.
+      the GFDL. Thanks to Ross Burton for reporting this. (Closes: #192278)
+  * checks/deb-format:
+    + [JvW] Fix perl variable-name clash causing unusually formatted error
+      output (only important if you do automatic processing on it)
   * checks/debhelper.desc:
-    + correct reference to debhelper manpage. It's debhelper(7), not
-      debhelper(1). (Closes: #188245)
-      Thanks to Brian Nelson for pointing this out.
+    + [FL] correct reference to debhelper manpage. It's debhelper(7), not
+      debhelper(1). Thanks to Brian Nelson for pointing this out
+      (Closes: #188245)
+  * checks/debconf:
+    + [JvW] Update valid types, since currently 'title' is supported now too
+      (Closes: #234379, #234608)
   * checks/description:
-    + fix description-is-dh_make-template check (Closes: #215125)
+    + [FL] fix description-is-dh_make-template check. (Closes: #215125)
       Fix suggested by Josip Rodin
   * checks/fields:
-    + Really check only "real" dependency fields for needlessy
+    + [FL] Really check only "real" dependency fields for needlessy
       depends (Closes: #185035)
-    + Remove the build-depends-without-arch-dep check. It produces
+    + [JvW] Don't consider depending on coreutils bad, as this is in a way a
+      versioned depend (Closes: #216536)
+    + [FL] Remove the build-depends-without-arch-dep check. It produces
       way too much false positives and can only be replaced by
       a sophisticated debian/rules parser
       (Closes: #192037, #202950, #214231)
+    + [JvW] Test syntax of Uploaders: too
+    + [JvW] Accept more whitespace in relations, which is allowed according to
+      policy, thanks Adrian Bunk for noticing, FL for patch (Closes: #200280)
+  * checks/filenames:
+    + [JvW] Revised the symlink detection stuff, it is now more rigorous, and
+      has seperate warning for recursive symlinks that are otherwise not
+      necessarily wrong (Closes: #118080)
   * checks/files:
-    + only issue package-installs-nonbinary-perl-in-usr-lib-perl5 if
+    + [FL] only issue package-installs-nonbinary-perl-in-usr-lib-perl5 if
       there is no binary perl file at all in the package, since this
       reflects the way the Installer module behaves (Closes: #199898)
-  * checks/menus{,.desc}:
-    + Remove non-exectuable-in-etc-menu-methods as it doesn't
-      reflects the current menu manual (Closes: #229460)
-  * checks/scripts:
-    + Fix check for "exec ..." line. Fix suggested by Josip Rodin.
-      (Closes: #212811)
-  * checks/shared-libs:
-    + Be more tolerant to variations when checking for
-      postrm-unsafe-ldconfig. (Closes: #218543, #233740)
-      Thanks to Martin Godisch, Steinar H. Gunderson and
-      Aidas Kasparas for their input.
-
-  * unpack/unpack-binpkg-l1: tar uses now h to signal hardlinks which
-     breaks a lot of our code. so sed'ing it away (Closes: #234545)
-     Many many thanks to Theodore Y. Ts'o for bringing this to our
-     attention.
-
-  Jeroen van Wolffelaar <jeroen@wolffelaar.nl>
-  * checks/debconf:
-    + Update valid types, since currently 'title' is supported now too
-      (Closes: #234379, #234608)
-  * checks/deb-format:
-    + Fix perl variable-name clash causing unusually formatted error output
-      (only important if you do automatic processing on it)
-  * checks/filenames:
-    + Revised the symlink detection stuff, it is now more rigorous, and has
-      seperate warning for recursive symlinks that are otherwise not
-      necessarily wrong (Closes: #118080)
-  * checks/po-debconf:
-    + Check whether files listed in debian/po/POTFILES.in actually exist,
-      and only positively detect po-debconf usage if dependency is there.
-      (Patch by Denis Barbier <barbier@debian.org>, only minimally modified)
   * checks/huge-usr-share:
-    + Check for a big /usr/share (currently 250kB) in arch-dependent
-      packages (Closes: #232849)
-      Thanks Steve McIntyre for the idea
-  * checks/binaries:
-    + Exclude binaries and packages named *-static from the binary-is-static
-      test. Exception for sash removed (override case) (Closes: #215235)
-  * checks/fields:
-    + Test syntax of Uploaders: too
-    + Don't consider depending on coreutils bad, as this is in a way a
-      versioned depend (Closes: #216536)
-    + Accept more whitespace in relations, which is allowed according to
-      policy, thanks Adrian Bunk for noticing, FL for fixing (Closes: #200280)
+    + [JvW] Check for a big /usr/share (currently 250kB) in arch-dependent
+      packages. Thanks Steve McIntyre for the idea. (Closes: #232849)
+  * checks/menus{,.desc}:
+    + [FL] Remove non-exectuable-in-etc-menu-methods as it doesn't
+      reflects the current menu manual (Closes: #229460)
+  * checks/po-debconf:
+    + [JvW] Check whether files listed in debian/po/POTFILES.in actually
+      exist, and only positively detect po-debconf usage if dependency is
+      there. (Patch by Denis Barbier <barbier@debian.org>, only minimally
+      modified)
   * checks/scripts:
-    + Tighten up mknod, dpkg --print-architecture and killall detection in
-      maintainer scripts, would need rewrite to be really sane
+    + [FL] Fix check for "exec ..." line. Fix suggested by Josip Rodin.
+      (Closes: #212811)
+    + [JvW] Tighten up mknod, dpkg --print-architecture and killall detection
+      in maintainer scripts, would need rewrite to be really sane.
       (Closes: #148548, #161820, #192300)
+  * checks/shared-libs:
+    + [FL] Be more tolerant to variations when checking for
+      postrm-unsafe-ldconfig. Thanks to Martin Godisch, Steinar H. Gunderson
+      and Aidas Kasparas for their input. (Closes: #218543, #233740)
+
+  * unpack/unpack-binpkg-l1:
+    + [FL] tar uses now h to signal hardlinks which breaks a lot of our code.
+      so sed'ing it away. Many many thanks to Theodore Y. Ts'o for bringing
+      this to our attention (Closes: #234545)
 
  -- Frank Lichtenheld <djpig@debian.org>  Mon,  8 Mar 2004 00:46:15 +0100
 
@@ -3027,3 +3021,5 @@ lintian (0.1.0) unstable; urgency=low
   * First release
   
  -- Christian Schwarz <schwarz@debian.org>  Wed, 11 Feb 1998 23:15:51 +0100
+
+vim: et
