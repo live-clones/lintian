@@ -32,23 +32,29 @@ my @known_tags=qw(needs section title sort command longtitle icon description ho
 my @needs_tag_vals=qw(x11 text vc asmodule fvwmmodule fvwm2module fvwm95module
 		      fvwmother wm dwww wmaker);
 
+# Authorative source of menu sections:
+# http://www.debian.org/doc/packaging-manuals/menu-policy/ch2#s2.1
+
 # This is a list of all valid section on the root menu.
 my @root_sections=qw(Apps Games Screen WindowManagers XShells Help);
 
 # This is a list of all valid sections a menu item or submenu can go in.
+# Note: toplevel sections that are by letter of policy allowed ('Apps',
+# 'Games' and 'Screen') are not included anyway, as their use is discouraged.
 my @sections=qw(
 		Apps/Databases
 		Apps/Editors
+		Apps/Education
 		Apps/Emulators
 		Apps/Graphics
 		Apps/Hamradio
 		Apps/Math
 		Apps/Net
 		Apps/Programming
-		Apps/Technical
-		Apps/Tools
-		Apps/Text
 		Apps/Science
+		Apps/Tools
+		Apps/Technical
+		Apps/Text
 		Apps/Shells
 		Apps/Sound
 		Apps/Viewers
@@ -58,6 +64,7 @@ my @sections=qw(
 		Games/Board
 		Games/Card
 		Games/Puzzles
+		Games/Simulation
 		Games/Sports
 		Games/Strategy
 		Games/Tetris-like

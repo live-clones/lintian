@@ -87,6 +87,9 @@ Info: The menu item has a line that specifies a new section to put a menu
  .
  Note that most root sections have to be subsectioned, and should not be
  used as sections directly.
+ .
+ See: http://www.debian.org/doc/packaging-manuals/menu-policy/ch2#s2.1
+Ref: Debian Menu sub-policy 2.1
 
 Tag: menu-item-creates-new-root-section
 Type: error
