@@ -1,3 +1,12 @@
+lintian (1.23.0) UNRELEASED; urgency=low
+
+  The ``moving forward'' release
+  
+  * checks/menu-format:
+    + [FL] only issue one warning about needs=dwww, not two
+
+ -- Frank Lichtenheld <djpig@debian.org>  Mon,  8 Mar 2004 17:35:03 +0100
+
 lintian (1.22.12) unstable; urgency=low
 
   The ``Fix those false positives, mkay'' release, prepared for all Debian

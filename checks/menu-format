@@ -346,9 +346,6 @@ sub VerifyLine {
     # Check the needs tag.
     my $needs = lc($vals{'needs'}); # needs is case insensitive.
 
-    if ($needs eq "dwww") {
-	print "W: $pkg $type: menu-item-needs-dwww /usr/lib/menu/$menufile:$linecount\n";
-    }
     if ($section =~ m:^WindowManagers/Modules:) {
 	# WM/Modules: needs must not be the regular ones nor wm
 	if ($needs_tag_vals_hash{$needs} or $needs eq "wm") {
@@ -361,7 +358,9 @@ sub VerifyLine {
 	}
     } else {
 	# Any other section: just only the general ones
-	if (not $needs_tag_vals_hash{$needs}) {
+	if ($needs eq "dwww") {
+	    print "W: $pkg $type: menu-item-needs-dwww /usr/lib/menu/$menufile:$linecount\n";
+	} elsif (not $needs_tag_vals_hash{$needs}) {
 	    print "W: $pkg $type: menu-item-needs-tag-has-unknown-value $needs /usr/lib/menu/$menufile:$linecount\n";
 	}
     }
