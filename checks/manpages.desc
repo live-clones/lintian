@@ -84,15 +84,15 @@ Info: Manual pages should be compressed with <tt>gzip -9</tt>.
 Ref: policy 12.1
 
 Tag: manpage-has-bad-whatis-entry
-Type: error
+Type: warning
 Info: Each manual page should start with a `NAME' section, which lists the
- name and a brief description of the page. These sections are parsed by
- `mandb' and stored in a database for the use of `apropos' and `whatis', so
- they must be in a certain format. This manual page apparently uses the
- wrong format and cannot be parsed by `mandb'.
+ name and a brief description of the page seperated by '\-'. These sections
+ are parsed by `mandb' and stored in a database for the use of `apropos' and
+ `whatis', so they must be in a certain format. This manual page apparently
+ uses the wrong format and cannot be parsed by `mandb'.
  .
- For information on how `NAME' sections should be written and a list of some
- common mistakes, please see the lexgrog(8) manual page.
+ For information on how `NAME' sections should be written see man(7). See also
+ lexgrog(1) for some common mistakes.
 
 Tag: manpage-for-x11-binary-in-wrong-directory
 Type: error
@@ -133,14 +133,12 @@ Tag: empty-manual-page
 Type: error
 Info: The referenced manual page is empty.
 
-Tag: manpage-section-missmatch
-Type: error
-Info: Most man pages contain a header line (marked .TH) in which
- among other thing their section number is specified. For this
- particular man page the section number in the header line isn't
- equal with the section number specified by the filename. This
- is most probably an error (In most cases caused by someone
- renaming the file but not adjusting the content).
+Tag: manpage-section-mismatch
+Type: warning
+Info: A man page usually should contain a <tt>.TH</tt> header, specifying the
+ section.  The section in this manpage doesn't match with the section in the
+ filename.  Please consult man(7) for more information about <tt>.TH</tt>
+ syntax (amongst others).
 
 Tag: hyphen-used-as-minus-sign
 Type: info

@@ -226,7 +226,7 @@ while (<IN>) {
 	# removed.
 	if ($path =~ m,/man/man\d/,) {
 	    if (system("lexgrog unpacked/\Q$file\E >/dev/null 2>&1")) {
-	        print "E: $pkg $type: manpage-has-bad-whatis-entry $file\n";
+	        print "W: $pkg $type: manpage-has-bad-whatis-entry $file\n";
 	    }
 	}
 	# Now we search through the whole man page for some common errors
@@ -241,7 +241,7 @@ while (<IN>) {
 		my ($th_command, $th_title, $th_section, $th_date ) = 
 		    Text::ParseWords::parse_line( '\s+', 0, $line);
 		if ($th_section && ($fn_section ne $th_section)) {
-		    print "E: $pkg $type: manpage-section-mismatch $file:$lc $fn_section != $th_section\n";
+		    print "W: $pkg $type: manpage-section-mismatch $file:$lc $fn_section != $th_section\n";
 		}
 	    }
 	    if ($line =~ /^[^\.].*[^\w\\]--?\w+/o) {
