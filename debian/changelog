@@ -1,3 +1,12 @@
+lintian (1.23.4) unstable; urgency=low
+
+  * checks/scripts.desc:
+    + [FL] Fix copy-and-paste error in description
+      of wrong-path-for-gnuplot (Closes: #276945)
+      Thanks to Lionel Elie Mamane for reporting.
+  
+ -- Frank Lichtenheld <frank@lichtenheld.de>  Sun, 17 Oct 2004 20:04:06 +0200
+
 lintian (1.23.3) unstable; urgency=low
 
   The ``the others must be busy releasing Sarge or something'' release,

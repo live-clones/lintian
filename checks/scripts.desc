@@ -196,7 +196,7 @@ Info: Packages that use expect scripts must depend on the virtual
 
 Tag: wrong-path-for-gnuplot
 Type: error
-Info: scsh is installed as /usr/bin/gnuplot on Debian systems.
+Info: gnuplot is installed as /usr/bin/gnuplot on Debian systems.
 
 Tag: gnuplot-script-but-no-gnuplot-dep
 Type: error

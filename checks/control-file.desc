@@ -5,7 +5,7 @@ Standards-Version: 3.6.1
 Type: source
 Unpack-Level: 1
 Needs-Info: debfiles
-Info: This script checks debian/control files
+Info: This script checks debian/control files in source packages
 
 Tag: debian-control-file-uses-obsolete-national-encoding
 Type: error
