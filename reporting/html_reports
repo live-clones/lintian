@@ -33,6 +33,10 @@ use vars qw($LINTIAN_ROOT $LINTIAN_ARCHIVEDIR $LINTIAN_DIST $LINTIAN_SECTION
             $LINTIAN_ARCH $HTML_TMP_DIR $LINTIAN_LAB
             $statistics_file);
 
+# Read_pkglists needs this
+$ENV{'LINTIAN_LAB'} = $LINTIAN_LAB;
+$ENV{'LINTIAN_ROOT'} = $LINTIAN_ROOT;
+
 # Import perl libraries
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Util;
@@ -74,10 +78,10 @@ my %anchor;
 
 # process input
 while (<>) {
-    chop;
+    chomp;
     next unless /^([EWXOI]): (\S+)( \S+)?: (\S+)/;
     my ($code, $pkg, $type, $tag) = ($1, $2, $3, $4);
-    $type = "" unless (defined $type); # probably...?
+    $type = ' binary' unless (defined $type);
     my $src;
 
     if ($code eq 'E') {
@@ -131,13 +135,13 @@ for my $src (sort by_maint keys %by_src) {
     $lastpkg = $lasttag = "";
 
     warn "no maintainer for $src!\n" unless defined $source_info{$src}{maintainer};
-    set_maintainer($source_info{$src}->{'maintainer'});
-    new_src_package($src, $source_info{$src}->{'version'});
+    set_maintainer($source_info{$src}{'maintainer'});
+    new_src_package($src, $source_info{$src}{'version'});
 
     for (sort by_tag @{$by_src{$src}}) {
 	my ($code, $pkg, $type, $tag, $rest) =
 	    /^(\S): (\S+)( \S+)?: (\S+)(.*)/;
-        $type = "" unless (defined $type); # probably...?
+        $type = ' binary' unless (defined $type);
 	$rest = quotehtml($rest);
 
 	# Create a table of these for the debian-qa folks
@@ -154,7 +158,6 @@ for my $src (sort by_maint keys %by_src) {
 	if ($tag ne $lasttag or $pkg ne $lastpkg) {
 	    output_chunk(\@tags) if @tags;
 	    undef @tags;
-
 	}
 	$lastpkg = $pkg; $lasttag = $tag;
 
@@ -397,7 +400,7 @@ sub close_tag_index {
 }
 
 sub list_tag {
-    my ($ts, $ps);
+    my ($ts, $ps) = ( "", "" );
 
     $ts = 's' if $_[1] != 1;
     $ps = 's' if $_[2] != 1;
