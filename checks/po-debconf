@@ -57,6 +57,7 @@ if ( $has_template && ! -d "debfiles/po" ) {
 #   Exit if package does not seem to use po-debconf
 -d "debfiles/po" or return(0);
 
+my $missing_files = 0;
 if (-f "debfiles/po/POTFILES.in") {
 	open(POTFILES,"debfiles/po/POTFILES.in")
 		or fail("Can't open debfiles/po/POTFILES.in.");
@@ -65,22 +66,36 @@ if (-f "debfiles/po/POTFILES.in") {
 		s/.*\]\s*//;
 		#  Cannot check files which are not under debian/
 		next if m,^\.\./, or $_ eq '';
-		tag "missing-file-from-potfiles-in", "$_"
-			 unless -f "debfiles/$_";
+		unless (-f "debfiles/$_") {
+			tag "missing-file-from-potfiles-in", "$_";
+			$missing_files = 1;
+		} 
 	}
 	close(POTFILES);
 } else {
 	tag "missing-potfiles-in", "";
+	$missing_files = 1;
 }
 if (! -f "debfiles/po/templates.pot") {
 	tag "missing-templates-pot", "";
+	$missing_files = 1;
 }
 
-opendir(DEBIAN, 'debfiles/po')
-        or fail("Can't open debfiles/po directory.");
+if (-x "/usr/bin/msgcmp" && -x "/usr/share/intltool-debian/intltool-update" ) {
+	if ($missing_files == 0) {
+		system("cd debfiles/po && /usr/share/intltool-debian/intltool-update --gettext-package=test --pot");
+		system("/usr/bin/msgcmp debfiles/po/test.pot debfiles/po/templates.pot >/dev/null 2>&1") == 0
+                	or tag "newer-debconf-templates";
+	}
+} else {
+	fail("either msgcmp or intltool-update not found");
+}
+
 if (! -x "/usr/bin/msgfmt" ) {
 	fail("msgfmt not found");
 }
+opendir(DEBIAN, 'debfiles/po')
+        or fail("Can't open debfiles/po directory.");
 while (defined(my $file=readdir(DEBIAN))) {
         next unless $file =~ m/\.po$/;
         local ($/) = "\n\n";
@@ -98,10 +113,8 @@ while (defined(my $file=readdir(DEBIAN))) {
         }
         tag "unknown-encoding-in-po-file", "debian/po/$file"
                 unless length($charset);
-	if (-x "/usr/bin/msgfmt" ) {
-	    system("msgfmt -o /dev/null debfiles/po/$file 2>/dev/null") == 0
-                or tag "invalid-po-file", "debian/po/$file";
-	}
+	system("msgfmt -o /dev/null debfiles/po/$file 2>/dev/null") == 0
+		or tag "invalid-po-file", "debian/po/$file";
 }
 
 }

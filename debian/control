@@ -8,7 +8,7 @@ Standards-Version: 3.6.1
 
 Package: lintian
 Architecture: all
-Depends: perl, libdigest-md5-perl | perl (>> 5.8), file, binutils, diffstat (>= 1.27-1), man-db (>= 2.3.20-1), gettext
+Depends: perl, libdigest-md5-perl | perl (>> 5.8), file, binutils, diffstat (>= 1.27-1), man-db (>= 2.3.20-1), gettext, intltool-debian
 Suggests: binutils-multiarch
 Description: Debian package checker
  Lintian dissects Debian packages and reports bugs and policy

@@ -13,6 +13,10 @@ lintian (1.23.4) unstable; urgency=low
   * checks/menu-format.desc:
     + [FL] Adjust references to the menu documentation. Noted by
       Jack Moffitt (Closes: #277393)
+  * checks/po-debconf{,.desc}:
+    + [FL] Check for outdated .pot files when using po-debconf.
+      This requires a new dependency on intltool-debian. Patch
+      by Denis Barbier with corrections by JvW (Closes: #242345)
   * checks/scripts.desc:
     + [FL] Fix copy-and-paste error in description
       of wrong-path-for-gnuplot (Closes: #276945)
