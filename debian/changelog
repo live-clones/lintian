@@ -53,7 +53,7 @@ lintian (1.23.0~beta1-fixing1) unstable; urgency=low
       (Closes: #119618)
     + [HE] Reintroduce build-depends-without-arch-dep check with the patch
       I proposed in #214231. (Closes: #242484)
-    + [JvW] Check for welformed Debian-revision
+    + [JvW] Check for well-formed Debian-revision
     + [JvW] Check for correct realname when QA mailadress used
   * checks/fields.desc:
     + [FL] Fix some wrong policy references

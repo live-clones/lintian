@@ -40,7 +40,7 @@ Type: error
 Info: The upstream version number should start with a digit. 
 Ref: policy 5.6.11
 
-Tag: debian-revision-not-welformed
+Tag: debian-revision-not-well-formed
 Type: warning
 Info: The debian version part (the part after the -) should consist of one to
  three dot-seperated parts: one for maintainer release, two for source-NMU,
