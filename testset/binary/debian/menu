@@ -5,3 +5,4 @@
 ?package(binary):needs="wm" section="Apps/System" title="Run fdisk-wm" command="/usr/bin/su-to-root cfdisk"
 ?package(binary):needs="text" section="Apps/System" title="I'm not here!" command="/imnothere"
 ?package(binary,other-binary):needs="text" section="Apps/System" title="more than one required" command="other-bin -s omething"
+?package(binary):needs="wmmodule" section="WindowManagers/Modules" title="somemodule" command="ModuleCmd"

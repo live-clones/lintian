@@ -23,6 +23,10 @@ lintian (1.23.1~alpha) unstable; urgency=low
       to pkg-not-in-package-test which is issued when the package is
       not in the list. Don't issue menu-command-not-in-package when
       we have a list.
+    + [FL] Commands for window manager's modules can't be expected
+      to be available as executables, so don't issue
+      menu-command-not-in-package in this case. Thanks to
+      Manoj Srivastava for reporting (Closes: #247805)
   * checks/po-debconf:
     + [JvW] Simply fail if stuff from gettext is missing.
   * checks/shared-libs:

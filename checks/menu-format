@@ -305,6 +305,11 @@ sub VerifyLine {
 	}
     }
 
+    # Sanitize the section tag
+    my $section = $vals{'section'};
+	$section =~ tr:/:/:s;	# eliminate duplicate slashes.
+	$section =~ s:/$::;	# remove trailing slash.
+	
     # Read the file index:
     my %file_index;
     open(FILE_INDEX,"index") or fail("cannot open index file index: $!");
@@ -345,12 +350,14 @@ sub VerifyLine {
 		tag "su-to-root-without--c", "/usr/lib/menu/$menufile:$linecount";
 	    } else {   
 		tag "menu-command-not-in-package", "/usr/lib/menu/$menufile:$linecount"
-		    if (!$file_index{".$cmd"} && ($tested_packages < 2));
+		    if (!$file_index{".$cmd"} && ($tested_packages < 2)
+			&& ($section !~ m:^WindowManagers/Modules:));
 	    }
 	} else {
 	    tag "menu-command-not-in-package", "/usr/lib/menu/$menufile:$linecount $com[0]"
 	        if ($com[0] && !$file_index{".$com[0]"}
-                    && ($tested_packages < 2));
+		    && ($tested_packages < 2)
+		    && ($section !~ m:^WindowManagers/Modules:));
 	}
 
     if (exists($vals{'icon'})) {
@@ -363,11 +370,6 @@ sub VerifyLine {
 	VerifyIcon($menufile, $linecount, $vals{'icon16x16'}, 16);
     }
 
-    # Sanitize the section tag
-    my $section = $vals{'section'};
-	$section =~ tr:/:/:s;	# eliminate duplicate slashes.
-	$section =~ s:/$::;	# remove trailing slash.
-	
     # Check the needs tag.
     my $needs = lc($vals{'needs'}); # needs is case insensitive.
 
