@@ -35,6 +35,8 @@ lintian (1.22.9-0.1) unstable; urgency=low
      + Menu sub-policy 3.6.0 added two sections (Closes: #207529)
      + Added three checks for correct su-to-root usage (Closes: #188095)
        (based on patch by Bill Allombert <ballombe@debian.org>)
+     + Understand icon32x32 and icon16x16 (Closes: #200046)
+       (based on patch by Bill Allombert <ballombe@debian.org>)
    * checks/scripts
      + Recognise the 'tcl' interpreter, not the same as tclsh (Closes: #230182)
 
@@ -54,7 +56,7 @@ lintian (1.22.9-0.1) unstable; urgency=low
      + fix testing of dependencies to eliminate false
        positives of missing-debconf-dependency (Closes: #195201)
 
- -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Thu, 12 Feb 2004 19:52:00 +0100
+ -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Thu, 12 Feb 2004 21:20:41 +0100
 
 lintian (1.22.9) unstable; urgency=low
 

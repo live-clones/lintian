@@ -25,7 +25,20 @@ use strict;
 my @req_tags=qw(needs section title command);
 
 # This is a list of all known tags.
-my @known_tags=qw(needs section title sort command longtitle icon description hotkey hints);
+my @known_tags=qw(
+	needs
+	section
+	title
+	sort
+	command
+	longtitle
+	icon
+	icon16x16
+	icon32x32
+	description
+	hotkey
+	hints
+    );
 
 # This is a list of all known uses of the needs= tag.
 # (It's case insensitive, use lower case here.).
@@ -310,11 +323,17 @@ sub VerifyLine {
 	    }
 	}
     }
-	
+
     if (exists($vals{'icon'})) {
-	VerifyIcon($menufile, $linecount, $vals{'icon'});
+	VerifyIcon($menufile, $linecount, $vals{'icon'}, 32);
     }
-	
+    if (exists($vals{'icon32x32'})) {
+	VerifyIcon($menufile, $linecount, $vals{'icon32x32'}, 32);
+    }
+    if (exists($vals{'icon16x16'})) {
+	VerifyIcon($menufile, $linecount, $vals{'icon16x16'}, 16);
+    }
+
     # Check the needs tag.
     if ((not $needs_tag_vals_hash{lc($vals{'needs'})}) and
 	$vals{'needs'} ne $pkg) {
@@ -374,7 +393,7 @@ sub VerifyLine {
 
 
 sub VerifyIcon {
-    my ($menufile, $linecount, $icon) = @_;
+    my ($menufile, $linecount, $icon, $size) = @_;
     local *IN;
 
     if ($icon eq 'none') {
@@ -417,8 +436,8 @@ sub VerifyIcon {
     my $numcolours = $3 + 0;
     my $cpp = $4 + 0;
     
-    if ($width > 32 || $height > 32) {
-	print "E: $pkg $type: menu-icon-too-big $icon: ${width}x${height}\n";
+    if ($width > $size || $height > $size) {
+	print "E: $pkg $type: menu-icon-too-big $icon: ${width}x${height} > ${size}x${size}\n";
     }
 
     close IN or die;

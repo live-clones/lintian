@@ -114,7 +114,8 @@ Info: This icon file couldn't be found in the standard icon locations
 
 Tag: menu-icon-too-big
 Type: error
-Info: Icons in the Debian menu system should be at most 32x32 pixels.
+Info: Icons in the Debian menu system should be at most 32x32 pixels
+ (icon16x16 icons should of course be at most 16x16 pixels)
 Ref: menu 3.4
 
 Tag: menu-icon-cannot-parse
