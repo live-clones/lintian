@@ -128,19 +128,23 @@ for (keys %files) {
 	    $real_perm = $perm;
 	} else {
 	    $real_file = abs_path(dirname($cur_file)."/".$link_info{$cur_file});
-	    $real_perm = $files{abs_path(dirname($cur_file)."/".$link_info{$cur_file})} || $perm;
+	    $real_perm = $files{$real_file} || $perm;
 	}
 
-	# executable?
-	if ($real_perm =~ m/x/) {
-	    # yes.  But if the library has an INTERP section, it's designed
-	    # to do something useful when executed, so don't report an error.
-	    printf "E: $pkg $type: shlib-with-executable-bit $cur_file %04o\n",perm2oct($real_perm)
-		unless $INTERP{$real_file};
-	} elsif ($real_perm ne '-rw-r--r--') {
-	    # bad permissions
-	    printf "W: $pkg $type: shlib-with-bad-permissions $cur_file %04o\n",perm2oct($real_perm);
-	}
+        # don't apply the permission checks to links
+        # since this only results in doubled messages
+        if ($cur_file eq $real_file) { 
+            # executable?
+            if ($real_perm =~ m/x/) {
+                # yes.  But if the library has an INTERP section, it's designed
+                # to do something useful when executed, so don't report an error.
+                printf "E: $pkg $type: shlib-with-executable-bit $cur_file %04o\n",perm2oct($real_perm)
+                    unless $INTERP{$real_file};
+            } elsif ($real_perm ne '-rw-r--r--') {
+                # bad permissions
+                printf "W: $pkg $type: shlib-with-bad-permissions $cur_file %04o\n",perm2oct($real_perm);
+            }
+        }
 
 	# installed in a directory controlled by the dynamic linker?
 	if (exists $ldso_dir{dirname($cur_file)}) {
