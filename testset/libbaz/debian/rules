@@ -22,6 +22,7 @@ binary-arch: build
 	install -d $(lib_tmp)/DEBIAN
 	install -m 755 debian/lib.postinst $(lib_tmp)/DEBIAN/postinst
 	install -m 755 debian/lib.prerm $(lib_tmp)/DEBIAN/prerm
+	touch $(lib_tmp)/usr/share/doc/README.Debian
 	#dpkg-shlibdeps $(lib_tmp)/usr/lib/libbaz.so.1.0
 	dpkg-gencontrol -isp -p$(LIB) -P$(lib_tmp)
 	dpkg --build $(lib_tmp) ..
