@@ -113,14 +113,17 @@ while (defined(my $file=readdir(DEBIAN))) {
     } elsif ($file =~ m/^compat$/) {
 	open IN, "debfiles/$file"
 	    or fail("Can't open debfiles/$file: $!");
-	chomp($compat = <IN>);
+	$compat = <IN>;
 	close IN;
 	if ($compat) {
+	    chomp $compat;
 	    if ($needversiondepends) {
 		print "E: $pkg $type: declares-possibly-conflicting-debhelper-compat-versions $needversiondepends $compat\n";
 	    } else {
 		$needversiondepends = $compat;
 	    }
+	} else {
+	    print "E: $pkg $type: debhelper-compat-file-is-empty\n";
 	}
     } elsif ($file =~ m/^control$/) {
 	open(IN,"debfiles/$file")

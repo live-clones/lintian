@@ -211,10 +211,12 @@ lintian (1.22.12) unstable; urgency=low
       output (only important if you do automatic processing on it)
     + [FL] The current script is by Denis Barbier, correcting author in
       .desc file
-  * checks/debhelper.desc:
+  * checks/debhelper{,.desc}:
     + [FL] correct reference to debhelper manpage. It's debhelper(7), not
       debhelper(1). Thanks to Brian Nelson for pointing this out
       (Closes: #188245)
+    + [JvW] Add error if debian/compat is empty, happens once in current
+      sid and gave internal error before
   * checks/debconf:
     + [JvW] Update valid types, since currently 'title' is supported now too
       (Closes: #234379, #234608)

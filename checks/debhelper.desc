@@ -58,6 +58,13 @@ Info: suidregister is obsoleted by dpkg-statoverride, so registration of
  .
  Please refer to the dh_suidregister(1) manual page for more information.
 
+Tag: debhelper-compat-file-is-empty
+Type: error
+Info: The source package has an empty debian/compat file. This is an error,
+ the compat level of debhelper should be in there.
+ .
+ Please refer to the debhelper(7) manual page for more information.
+
 Tag: declares-possibly-conflicting-debhelper-compat-versions
 Type: error
 Info: The source package declares the debhelper compatibility version
