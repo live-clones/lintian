@@ -113,7 +113,8 @@ foreach my $template (@templates) {
 	    print "E: $pkg $type: unknown-field-in-templates $field\n";
 	}
     }
-    if (exists $template->{choices}) {
+    if (exists $template->{choices}
+	&& $template->{choices} !~ m/^\s*\$\{\w+\}\s*$/) {
 	foreach my $lang (sort keys %languages) {
 	    if ($languages{$lang}{choices} xor $languages{$lang}{description}) {
 		print "W: $pkg $type: partially-translated-question $template->{template} $lang\n";
@@ -139,6 +140,7 @@ for my $field (qw(depends pre-depends)) {
     if (-f "fields/$field") {
 	open(IN, "fields/$field") or fail("Can't open fields/$field: $!");
 	chomp($_ = <IN>);
+	$_ =~ s/debconf-2\.0/debconf (>= 1.2.30)/go;
 	$_ .= ", $version" if defined $version;
 	push @alldeps, $_;
 	$dependencies{$field} = Dep::parse($_);

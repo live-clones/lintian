@@ -21,6 +21,11 @@ lintian (1.22.9-0.1) unstable; urgency=low
        manpage-not-compressed (Closes: #225293)
    * checks/copyright-file: don't complain about missing reference to
       the GPL if we already detected a wrong reference (Closes: #225837)
+   * checks/debconf: 
+     + don't complain about partially-translated-question, if
+       Choices is only a substitution variable (Closes: #200802,#222648)
+     + fix testing of dependencies to eliminate false
+       positives of missing-debconf-dependency (Closes: #195201)
 
  -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Sat, 31 Jan 2004 14:44:55 +0100
 
