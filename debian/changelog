@@ -3,7 +3,7 @@ lintian (1.22.9-0.1) unstable; urgency=low
   * Non Maintainer Upload with knowledge of Maintainer
 
   Jeroen van Wolffelaar <jeroen@wolffelaar.nl>
-   * Check wether changelog is valid UTF-8 (Closes: #175318)
+   * Check whether changelog is valid UTF-8 (Closes: #175318)
      (Patch by: Colin Walters <walters@debian.org>)
    * Update to Debian Policy 3.6.1, all references broken by
      section-reorganization are updated (Closes: #194257, #208945, #214949,
@@ -17,6 +17,9 @@ lintian (1.22.9-0.1) unstable; urgency=low
      + Check for Subversion version control leftovers (Closes: #190067)
      + Ignore empty __init__.py files in /usr/share/doc (Closes: #215234)
        (based on patch by Frank Lichtenheld <djpig@debian.org>)
+   * checks/curft:
+     + Check for CVS and Subversion cruft in source packages (Closes: #189776,
+       also closes: #190067)
 
   Frank Lichtenheld <djpig@debian.org>
    * checks/debhelper:
@@ -33,8 +36,9 @@ lintian (1.22.9-0.1) unstable; urgency=low
        Choices is only a substitution variable (Closes: #200802,#222648)
      + fix testing of dependencies to eliminate false
        positives of missing-debconf-dependency (Closes: #195201)
+  * 
 
- -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Mon,  9 Feb 2004 00:10:15 +0100
+ -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Mon,  9 Feb 2004 01:33:10 +0100
 
 lintian (1.22.9) unstable; urgency=low
 

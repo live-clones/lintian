@@ -62,6 +62,17 @@ sub find_cruft {
     -f or return; # we just need normal files, for now
     (my $name = $File::Find::name) =~ s,^\Q$dir\E/,,;
 
+    # More or less copied from files, but this time it checks the source
+    if ($name =~ m,^(.+/)?svn-commit\.(.+\.)?tmp$,) {
+	print "W: $pkg $type: svn-commit-file-in-source $name\n";
+    } elsif ($name =~ m,^(.+/)?\.cvsignore$,) {
+	print "W: $pkg $type: cvsignore-file-in-source $name\n";
+    } elsif ($name =~ m,^(.+/)?CVS$,) {
+	print "W: $pkg $type: source-contains-CVS-dir $name\n";
+    } elsif ($name =~ m,^(.+/)?\.svn$,) {
+	print "W: $pkg $type: source-contains-svn-control-dir $name\n";
+    }
+
     if ($name =~ m,^(.+/)?config.(?:cache|log|status)$, and $pkg ne "lintian") {
 	print "W: $pkg $type: configure-generated-file-in-source $name\n";
     } elsif ($name =~ m,^(.+/)?config.(?:guess|sub)$, and not $atdinbd) {

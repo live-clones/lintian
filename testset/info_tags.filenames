@@ -9,6 +9,12 @@ N:   don't have to re-upload the package just to adjust the
 N:   Standards-Version control field. However, please remember to update
 N:   this field next time you upload the package.
 N:
+W: filenames source: svn-commit-file-in-source files/svn-commit.tmp
+N:
+N:   Package source contains a 'svn-commit(.NNN).tmp' file. This file is
+N:   almost certainly a left-over from a failed Subversion commit, and does
+N:   not belong in a Debian package.
+N:
 E: filenames: non-standard-toplevel-dir files/
 N:
 N:   The Filesystem Hierarchy Standard forbids the installation of new
