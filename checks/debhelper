@@ -164,7 +164,7 @@ while (defined(my $file=readdir(DEBIAN))) {
 	    tag "package-uses-debhelper-but-lacks-build-depends", "";
 	}
 	close IN;
-    } elsif ($file =~ m/^ex\.|\.ex$/) {
+    } elsif ($file =~ m/^ex\.|\.ex$/i) {
         tag "dh-make-template-in-source", "debian/$file";
     }
 }
