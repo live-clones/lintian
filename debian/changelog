@@ -17,6 +17,8 @@ lintian (1.23.1~beta) unstable; urgency=low
       latter can't be used as an indicator on that arch (Closes: #207063)
     + [JvW] Exempt ocaml binaries from the 'is the binary stripped?' test,
       since they cannot be stripped harmlessly. See #256900 (Closes: #252695)
+    + [JvW] Parse the output of file a little bit more strict, and make it
+      consequent across checks (Closes: #257898)
   * checks/changelog-files{,.desc}:
     + [HE] New check latest-debian-changelog-entry-without-new-date, comparing
       the dates of the last 2 changelog entries. (Closes: #111215)

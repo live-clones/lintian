@@ -163,9 +163,9 @@ close(INDEX);
 # Fortunately no filenames containing ": " currently occur in Debian packages.
 open(FILEINFO, "file-info") or fail("cannot open lintian file-info file: $!");
 while (<FILEINFO>) {
-    next unless (m/\bELF\b/);
-    m/^(.*?): / or fail("bad line in file-info: $_");
-    $ELF{$1} = 1;
+    m/^(.*?): (.*)/ or fail("bad line in file-info: $_");
+    my $file = $1;
+    $ELF{$file} = 1 if $2 =~ /^[^,]*\bELF\b/o;
 }
 close(FILEINFO);
 

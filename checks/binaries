@@ -118,7 +118,7 @@ while (<IN>) {
     my ($file,$info) = ($1,$2);
 
     # binary or object file?
-    next unless ($info =~ m/\bELF\b/) or ($info =~ m/\bcurrent ar archive\b/);
+    next unless ($info =~ m/^[^,]*\bELF\b/) or ($info =~ m/\bcurrent ar archive\b/);
 
     if ($arch eq 'all') {
 	# package is `Architecture: all' but contains libs!?
@@ -126,7 +126,7 @@ while (<IN>) {
     }
 
     # ELF?
-    next unless $info =~ m/^ELF/o;
+    next unless $info =~ m/^[^,]*\bELF\b/o;
 
     if ($file =~ m,^etc/,) {
 	tag "binary-in-etc", "$file";

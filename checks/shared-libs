@@ -88,7 +88,7 @@ while (<IN>) {
     # with file names containing colons and spaces, we're fucked.
     m/^(?:\.\/)?(.+?):\s+(.*)$/o or fail("unrecognized file(1) output: $_");
     my ($file,$info) = ($1,$2);
-    if ($info =~ m/^ELF/ && $info =~ m/shared object/) {
+    if ($info =~ m/^[^,]*\bELF\b/ && $info =~ m/shared object/) {
 	$sharedobject{$file} = 1;
     }
 }
