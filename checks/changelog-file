@@ -243,12 +243,13 @@ while (<IN>) {
 }
 close IN;
 
-chomp($first_entry_date = `/bin/date -d "$first_entry_date" +\%s`);
-chomp($second_entry_date = `/bin/date -d "$second_entry_date" +\%s`);
+if ($first_entry_date && $second_entry_date) {
+    chomp($first_entry_date = `/bin/date -d "$first_entry_date" +\%s`);
+    chomp($second_entry_date = `/bin/date -d "$second_entry_date" +\%s`);
 
-tag "latest-debian-changelog-entry-without-new-date" 
-    unless (($first_entry_date - $second_entry_date) > 0);
-
+    tag "latest-debian-changelog-entry-without-new-date" 
+	unless (($first_entry_date - $second_entry_date) > 0);
+}
 }
 
 1;
