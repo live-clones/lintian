@@ -227,7 +227,11 @@ sub depends_on {
 	# has to be there whatever happens.
 	if (/^\s* ( [^\s\[\(]+ ) \s* (?:\( \s* (<=|<|=|>=|>>|>) \s* ([^(]+) \))?\s*$/x) {
 	    my ($d_pkg, $d_relation, $d_version) = ($1, ($2 || ""), ($3 || ""));
-	    return 1 if (($package eq $d_pkg) and ($d_relation eq "=") and ($d_version eq $version));
+	    return 1 if (($package eq $d_pkg));
+	    # We won't check for a strict dependency, for practical
+	    # reasons, it's sometimes preferred
+	    # # and ($d_relation eq "=") and ($d_version eq $version));
+
 	}
     }
 

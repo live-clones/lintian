@@ -6,6 +6,10 @@ lintian (1.23.3) unstable; urgency=low
     + [JvW] Note the most likely cause for duplicate-conffile in the
       description (thanks Chris Anderson for running into this problem and
       asking me about it)
+  * checks/copyright-file:
+    + [JvW] Revert the extra pedantic check introduced in 1.23.0 that
+      complained about unstrict dependencies when one as a
+      /usr/share/doc/<package> that is a symlink (Closes: #249414)
   * checks/po-debconf:
     + [JvW] Don't give missing-file-from-potfile-in on empty lines
       (Thanks Adam Conrad for noticing)

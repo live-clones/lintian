@@ -1,4 +1,3 @@
-E: libbaz1-dev: usr-doc-symlink-without-dependency libbaz1
 E: libbaz1: file-directly-in-usr-share-doc usr/share/doc/README.Debian
 E: libbaz1: ldconfig-symlink-missing-for-shlib usr/lib/libbaz2.so.1.0 usr/lib/libfoo2.so.1.0.3b libbaz2.so.1.0
 E: libbaz1: maintainer-shell-script-fails-syntax-check postinst
