@@ -84,6 +84,7 @@ my %valid_interpreters = (
 			  'sh' => '/bin/sh',
 			  'tcl' => '/usr/bin/tcl',
 			  'tclsh' => '/usr/bin/tclsh',
+			  'tclsh8.3' => '/usr/bin/tclsh8.3',
 			  'tcsh' => '/usr/bin/tcsh',
 			  'tixwish' => '/usr/bin/tixwish',
 			  'trs' => '/usr/bin/trs',
@@ -128,6 +129,7 @@ my %interpreter_dependencies = (
 				'scsh' => 'scsh',
 				'tcl' => 'tcl',
 				'tclsh' => 'tclsh',
+				'tclsh8.3' => 'tcl8.3',
 				'tcsh' => 'tcsh',
 				'tixwish' => 'tix',
 				'trs' => 'konwert',
@@ -229,9 +231,15 @@ while (<SCRIPTS>) {
 		$filename =~ m,etc/menu-methods,);
 
     if (exists $valid_interpreters{$base}) {
-	tag_error("wrong-path-for-$base", $filename, "#!$interpreter")
-	    unless ($interpreter eq $valid_interpreters{$base} or
-		    defined $calls_env);
+	unless ($interpreter eq $valid_interpreters{$base} or
+		defined $calls_env) {
+	    # save us from some copy and paste
+	    if ($base =~ /^(ruby|python)(?:\d.\d)?$/) {
+		tag_error("wrong-path-for-$1", $filename, "#!$interpreter");
+	    } else {
+		tag_error("wrong-path-for-$base", $filename, "#!$interpreter");
+	    }
+	}
 	
 	# Do not complain about dependencies for non-executable scripts.
 	if ($executable{$filename}) {

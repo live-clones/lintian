@@ -329,6 +329,14 @@ Info: Packages that use Pike7 scripts must depend on pike7.
 Tag: wrong-path-for-python
 Type: error
 Info: Python is installed as /usr/bin/python on Debian systems.
+ .
+ Specific Python versions are installed as /usr/bin/pythonX.Y
+
+Tag: wrong-path-for-ruby
+Type: error
+Info: Ruby is installed as /usr/bin/ruby on Debian systems.
+ .
+ Specific Ruby versions are installed as /usr/bin/rubyX.Y
 
 Tag: python-script-but-no-python-dep
 Type: error
@@ -459,9 +467,20 @@ Tag: wrong-path-for-tclsh
 Type: error
 Info: Tclsh is installed as /usr/bin/tclsh on Debian systems.
 
+Tag: wrong-path-for-tclsh8.3
+Type: error
+Info: Tclsh 8.3 is installed as /usr/bin/tclsh8.3 on Debian systems.
+
 Tag: tclsh-script-but-no-tclsh-dep
 Type: error
 Info: Packages that use tclsh scripts must depend on the virtual package tclsh.
+ .
+ In some cases a weaker relationship, such as Suggests or Recommends, will
+ be more appropriate.
+
+Tag: tclsh8.3-script-but-no-tcl8.3-dep
+Type: error
+Info: Packages that use tclsh8.3 scripts must depend on the package tcl8.3.
  .
  In some cases a weaker relationship, such as Suggests or Recommends, will
  be more appropriate.

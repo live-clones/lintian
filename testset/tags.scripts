@@ -3,12 +3,14 @@ E: scripts: no-copyright-file
 E: scripts: python-script-but-no-python-dep ./usr/bin/py2foo
 E: scripts: python-script-but-no-python-dep ./usr/bin/pyfoo
 E: scripts: suid-perl-script-but-no-perl-suid-dep ./usr/bin/suidperlfoo2
+E: scripts: wrong-path-for-ruby ./usr/bin/rubyfoo #!/bin/ruby1.8
 W: scripts source: ancient-standards-version 3.2.1
 W: scripts source: changelog-should-mention-nmu
 W: scripts source: source-nmu-has-incorrect-version-number 5
 W: scripts: binary-without-manpage perlfoo
 W: scripts: binary-without-manpage py2foo
 W: scripts: binary-without-manpage pyfoo
+W: scripts: binary-without-manpage rubyfoo
 W: scripts: binary-without-manpage suidperlfoo
 W: scripts: binary-without-manpage suidperlfoo2
 W: scripts: binary-without-manpage tkfoo
