@@ -25,7 +25,7 @@ N:
 E: binary: binary-without-manpage hello-static
 E: binary: binary-without-manpage hello.static
 E: binary: binary-without-manpage static-hello
-W: binary: arch-dep-package-has-big-usr-share 292kB 18%
+W: binary: arch-dep-package-has-big-usr-share 1540kB 55%
 N:
 N:   The package has a significant amount of architecture-independent data
 N:   in /usr/share, while it is an architecture-dependent package. This is
@@ -144,7 +144,10 @@ N:   The package installs a statically linked binary or object file.
 N:   
 N:   Usually this is a bug. Otherwise, please contact
 N:   lintian-maint@debian.org about this so that this exception would be
-N:   recognized in future versions of Lintian.
+N:   recognized in future versions of Lintian, or install an override if
+N:   your package is an exception. Note that binaries named *-static and
+N:   *.static are already excluded, just as any binaries in packages named
+N:   *-static.
 N:
 E: binary: changelog-file-not-compressed changelog
 N:

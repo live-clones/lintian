@@ -27,7 +27,7 @@ binary-arch: build
 	install -d $(tmp)/DEBIAN
 	install -m 755 debian/postinst $(tmp)/DEBIAN
 
-	dd if=/dev/zero of=$(tmp)/usr/share/binary/largefile count=500
+	dd if=/dev/zero of=$(tmp)/usr/share/binary/largefile bs=1024 count=1500
 
 	dpkg-shlibdeps $(tmp)/usr/bin/hello
 	dpkg-gencontrol -isp
