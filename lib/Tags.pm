@@ -22,7 +22,8 @@
 package Tags;
 use strict;
 
-use Exporter 'import';
+use Exporter;
+our @ISA = qw(Exporter);
 our @EXPORT = qw(tag);
 
 my $LINTIAN_ROOT = $::LINTIAN_ROOT;

@@ -22,7 +22,8 @@
 package Util;
 use strict;
 
-use Exporter 'import';
+use Exporter;
+our @ISA = qw(Exporter);
 our @EXPORT = qw(parse_dpkg_control
 	read_dpkg_control
 	get_deb_info

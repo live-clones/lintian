@@ -22,7 +22,8 @@
 package Pipeline;
 use strict;
 
-use Exporter 'import';
+use Exporter;
+our @ISA = qw(Exporter);
 our @EXPORT = qw(spawn pipeline pipeline_open pipeline_pure);
 
 use Fcntl;
