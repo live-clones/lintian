@@ -10,6 +10,9 @@ lintian (1.23.4) unstable; urgency=low
   * checks/debhelper:
     + [FL] Update list of debhelper scripts that modify maintainer
       scripts
+  * checks/menu-format.desc:
+    + [FL] Adjust references to the menu documentation. Noted by
+      Jack Moffitt (Closes: #277393)
   * checks/scripts.desc:
     + [FL] Fix copy-and-paste error in description
       of wrong-path-for-gnuplot (Closes: #276945)
