@@ -3,10 +3,14 @@ The latest version of Lintian can always be found at:
 	http://lintian.debian.org/
 
 Lintian was designed and written by Christian Schwarz and Richard Braakman.
-Parts of it were written by Joey Hess.
-The package was previously maintained by Darren Benham and
-Sean 'Shaleh' Perry. It is currently maintained by
-Josip Rodin <joy-packages@debian.org>.
+The package was previously maintained by Darren Benham,
+Sean 'Shaleh' Perry and Josip Rodin.
+It is now maintained by a goup of people, namely:
+ Josip Rodin <joy-packages@debian.org>
+ Jeroen van Wolffelaar <jeroen@wolffelaar.nl>
+ Frank Lichtenheld <djpig@debian.org>
+ Colin Watson <cjwatson@debian.org>
+Contact address is <lintian-maint@debian.org>.
 
 Copyright (C) 1998 Christian Schwarz and Richard Braakman
 Portions Copyright (C) 1998-1999 Joey Hess
@@ -14,6 +18,10 @@ Portions Copyright (C) 1999 Darren Benham
 Portions Copyright (C) 2000 Sean 'Shaleh' Perry
 Portions Copyright (C) 2001 Colin Watson
 Portions Copyright (C) 2001-2002 Josip Rodin
+Portions Copyright (C) 2002-2004 Denis Barbier
+Portions Copyright (C) 2004 Marc Brockschmidt
+Portions Copyright (C) 2004 Frank Lichtenheld
+Portions Copyright (C) 2004 Jeroen van Wolffelaar
 
 This program is free software; you may redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
