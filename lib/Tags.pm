@@ -68,7 +68,7 @@ sub add_tag {
 # Used to reset the matched tags data
 sub pkg_reset {
 	$prefix = shift;
-	*overrides = {};
+	%overrides = ();
 }
 
 # Add an override, string tag, string rest
