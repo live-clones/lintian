@@ -5,13 +5,13 @@ Standards-Version: 3.6.1
 Type: source
 Unpack-Level: 1
 Needs-Info: debfiles
-Info: This script checks if a source package is consequent about its NMU-ness.
+Info: This script checks if a source package is consistent about its NMU-ness.
 
 Tag: orphaned-package-should-not-have-uploaders
 Type: error
-Info: Packages which their maintainer set to packages@qa.debian.org, i.e.
- orphaned packages, should not have uploaders. Properly adopt the package if
- you want to resume its maintainance.
+Info: Packages with their maintainer set to packages@qa.debian.org, i.e.
+ orphaned packages, should not have uploaders. Adopt the package properly if
+ you want to resume its maintenance.
 
 Tag: qa-upload-has-incorrect-version-number
 Type: warning
@@ -27,7 +27,7 @@ Info: A source NMU should have a Debian revision of '-x.x'. This is to prevent
 Tag: maintainer-upload-has-incorrect-version-number
 Type: warning
 Info: A maintainer upload should have a Debian revision without dots.
- Revisions with dots are reserverd for Non-Maintainer Uploads (NMU's), if you
+ Revisions with dots are reserved for Non-Maintainer Uploads (NMU's), if you
  do a maintainer-upload with dots, a potential NMU'er has problems choosing a
  correct version number.
 
