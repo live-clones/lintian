@@ -449,13 +449,6 @@ if ($LINTIAN_ARCH) {
 
 $ENV{'LINTIAN_DEBUG'} = $debug;
 
-# Now that we have LINTIAN_ROOT we can import our own perl libraries
-unshift @INC, "$ENV{'LINTIAN_ROOT'}/lib";
-require Util;
-require Pipeline;
-require Read_pkglists;
-use vars qw(%source_info %binary_info %udeb_info); # from the above
-
 # determine requested unpack level
 if (defined($unpack_level)) {
     # specified through command line
@@ -477,9 +470,16 @@ unless (($unpack_level == 0) or ($unpack_level == 1) or ($unpack_level == 2)) {
 $LINTIAN_UNPACK_LEVEL = $unpack_level;
 $ENV{'LINTIAN_UNPACK_LEVEL'} = $LINTIAN_UNPACK_LEVEL;
 
-#----------------------------------------------------------------------------
-# Create/Maintain Lab and add any specified Debian Archives (*.debs)
-#----------------------------------------------------------------------------
+# Now that we have LINTIAN_ROOT we can import our own perl libraries
+unshift @INC, "$LINTIAN_ROOT/lib";
+
+require Lab;
+
+require Util;
+require Pipeline;
+require Read_pkglists;
+
+use vars qw(%source_info %binary_info %udeb_info); # from the above
 
 # Print Debug banner
 if ($debug) {
@@ -499,16 +499,16 @@ undef $cleanup_filename;
 $SIG{'INT'} = \&interrupted;
 $SIG{'QUIT'} = \&interrupted;
 
+#----------------------------------------------------------------------------
+# Create/Maintain Lab and add any specified Debian Archives (*.debs)
+#----------------------------------------------------------------------------
+
 # sanity check:
 if (($action ne 'setup-lab') and ($lab_mode eq 'static')) {
 
     # LINTIAN_LAB has to exist in this mode
-    unless (-d "$LINTIAN_LAB/binary" &&
-	    -d "$LINTIAN_LAB/udeb" &&
-	    -d "$LINTIAN_LAB/source" &&
-	    -d "$LINTIAN_LAB/info") {
-	fail("lintian lab has not been set up correctly (run lintian --setup-lab)");
-    }
+    fail("lintian lab has not been set up correctly (run lintian --setup-lab)")
+	unless Lab::is_lab($LINTIAN_LAB);
 }
 
 #######################################
@@ -1707,3 +1707,5 @@ sub interrupted {
     $SIG{$_[0]} = 'DEFAULT';
     die "N: Interrupted.\n";
 }
+
+# vim: sw=4 ts=8 noet
