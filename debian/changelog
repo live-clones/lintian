@@ -1,16 +1,17 @@
-lintian (1.23.8) UNRELEASED; urgency=low
+lintian (1.23.8) unstable; urgency=low
 
-  The "Hm, this is (FIXME: nearly) the team's one year anniversery of
-  maintaining lintian" release:
+  The "Hm, this is the team's one year anniversery of maintaining lintian"
+  release[1], and still using the "temporary" subversion repository...
 
-  - http://lists.debian.org/debian-lint-maint/2004/01/msg00014.html
+  Featuring Steve "R." Langasek in a guest appearance.
 
-  (and still using the temporary subversion repository)
+  [1] http://lists.debian.org/debian-lint-maint/2004/01/msg00014.html
 
-  * checks/*.desc:
+  * checks/*.desc,doc/lintian.sgml:
     + [JvW] Stop bugging us for exceptions, mmkay, just install overrides.
-      Hints ..like this should be in the general documentation anyway, not in
-      per-tag descriptions.
+      Hints like this should be in the general documentation anyway, not in
+      per-tag descriptions. The general documentation will now only ask to
+      contact us if in doubt
   * checks/changelog-file{,desc}:
     + [JvW] (new test) Bark on @toplevel email signatures in changelogs
     + [JvW] Display invalid debmake email address upon detection
@@ -34,7 +35,7 @@ lintian (1.23.8) UNRELEASED; urgency=low
   * checks/scripts{,.desc}:
     + [CW] Add checks for tclsh8.4 and wish8.4. (Closes: #288287)
 
- -- Colin Watson <cjwatson@debian.org>  Sat, 15 Jan 2005 00:34:45 +0100
+ -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Mon, 31 Jan 2005 23:14:01 +0100
 
 lintian (1.23.7) unstable; urgency=high
 
