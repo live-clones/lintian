@@ -33,6 +33,11 @@ lintian (1.23.0) UNRELEASED; urgency=low
   * checks/debconf{,.desc}:
     + [JvW] Add an error for a bogus default for a boolean template
       (Closes: #236846)
+  * checks/deb-format:
+    + [HE] Add a check for the data member of a deb. dpkg 1.11 introduces
+      support for configurable compression algorithms (bzip2, for example),
+      but this shouldn't be allowed before dpkg 1.11 hits stable. 
+      (Closes: #159874)
   * checks/fields.desc:
     + [FL] Fix some wrong policy references
   * checks/fields:

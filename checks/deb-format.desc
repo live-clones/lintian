@@ -4,8 +4,7 @@ Abbrev: dfmt
 Standards-Version: 3.6.1
 Type: binary, udeb
 Unpack-Level: 1
-Info: This script checks if a binary package was build using a broken version
- of tar (i.e., containing bug#230910)
+Info: This script checks the format of the deb ar archive itself.
 
 Tag: deb-created-with-broken-tar
 Type: error
@@ -16,3 +15,10 @@ Info: The binary package was created with a broken version of tar.
  This package was build with such a version of tar, and the mentioned filename
  is corrupted. Refer to Debian bug #230910 for more information, or simply
  update your tar-version and rebuild.
+
+Tag: deb-data-member-wrongly-compressed
+Type: error
+Info: The binary package contains a data member not compressed with gzip.
+ From dpkg-dev 1.11 on, you can configure the way the data tarball is
+ compressed. Though this is possible, you are not allowed to use it
+ before dpkg 1.11 (or later) enters stable.

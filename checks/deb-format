@@ -35,6 +35,15 @@ sub get_block_size {
 	return 512*$nblocks;
 }
 
+if (open (LIST, "ar t |")) {
+	while (<LIST>) {
+		chomp;
+		print "E: $pkg $type: deb-data-member-wrongly-compressed\n"
+		    if (($_ eq "data.tar.bz2") or ($_ eq "data.tar"));
+	}
+	close LIST;
+}
+
 open INPUT, "ar p deb data.tar.gz | gzip -dc |";
 
 my $chunk;
