@@ -1,5 +1,8 @@
 E: debconf-test: extended-description-is-empty
+E: debconf-test: mismatch-translated-choices choices-de.utf-8
 E: debconf-test: settitle-requires-versioned-depends config
 W: debconf source: maintainer-script-lacks-debhelper-token debian/debconf-test.postinst
 W: debconf source: newer-debconf-templates
+W: debconf-test: multiselect-without-dependency
+W: debconf-test: partially-translated-question debconf/testmulti de.utf-8
 W: debconf-udeb udeb: missing-debconf-dependency

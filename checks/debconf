@@ -134,11 +134,17 @@ foreach my $template (@templates) {
 		    and $template->{default} ne 'false';
     }
 
-    for my $key (keys %$template) {
-	if (($key =~ /^choices-/) and
-	    ($template->{choices} && $template->{choices} !~ /^\s*$/) and 
-	    (! $template->{$key} || $template->{$key} =~ /^\s*$/)) {
-	    tag "empty-translated-choices", "$key";
+    if ($template->{choices} && ($template->{choices} !~ /^\s*$/)) {
+      my $nrchoices = ($template->{choices} =~ s/,\s/, /g);
+      for my $key (keys %$template) {
+	  if ($key =~ /^choices-/) {
+	    if (! $template->{$key} || ($template->{$key} =~ /^\s*$/)) {
+		tag "empty-translated-choices", "$key";
+	    }
+	    if (($template->{$key} =~ s/,\s/, /g) != $nrchoices) {
+		tag "mismatch-translated-choices", "$key";
+	    }
+	  }
 	}
     }
 

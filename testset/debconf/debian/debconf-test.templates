@@ -1,3 +1,8 @@
 Template: debconf/test
 Type: text
-_description: Foo bar (2)
+_description: Foo bar (1)
+
+Template: debconf/testmulti
+Type: multiselect
+__Choices: foo, bar, boo
+_Description: test comma usages in choices fields

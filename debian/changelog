@@ -1,5 +1,7 @@
 lintian (1.23.4) unstable; urgency=low
 
+  The "A little pause from the sarge release work" release.
+  
   * checks/changelog-file:
     + [FL] file has apparently changed its output format for
       symlinks sometime in the past. This broke symlink detection.
@@ -7,6 +9,9 @@ lintian (1.23.4) unstable; urgency=low
   * checks/debconf{,.desc}:
     + [FL] The SETTITLE command was introduced in debconf version
       1.3.22. Check the depends for that (Closes: #261890)
+    + [FL] Warn about incorrect usage of commas in translated Choices
+      fields. Patch by Denis Barbier after a suggestion by Andreas
+      Metzler (Closes: #282030)
   * checks/debhelper:
     + [FL] Update list of debhelper scripts that modify maintainer
       scripts

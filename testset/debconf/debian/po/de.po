@@ -11,17 +11,16 @@
 #
 #    Developers do not need to manually edit POT or PO files.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: debconf-test 1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2004-12-06 00:51+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"PO-Revision-Date: 2004-12-06 01:01+0100\n"
+"Last-Translator: Frank Lichtenheld <djpig@debian.org>\n"
+"Language-Team: debian-l10n-german@l.d.o\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #. Type: text
@@ -34,19 +33,19 @@ msgstr ""
 #. Choices
 #: ../debconf-test.templates:7
 msgid "foo"
-msgstr ""
+msgstr "foo"
 
 #. Type: multiselect
 #. Choices
 #: ../debconf-test.templates:7
 msgid "bar"
-msgstr ""
+msgstr "bar, boo"
 
 #. Type: multiselect
 #. Choices
 #: ../debconf-test.templates:7
 msgid "boo"
-msgstr ""
+msgstr "boo"
 
 #. Type: multiselect
 #. Description
@@ -58,4 +57,4 @@ msgstr ""
 #. description
 #: ../debconf-udeb.templates:3
 msgid "This is just a test"
-msgstr ""
+msgstr "Dies ist nur ein Test"
