@@ -79,7 +79,9 @@ unless ( -d "fields" ) {
 my $std = "fields/standards-version";
 # Standards-Version?
 if (not -f $std) {
-    tag "no-standards-version-field", "";
+    # udebs aren't required to conform to policy, so they don't need
+    # Standards-Version. (If they have it, though, it should be valid.)
+    tag "no-standards-version-field", "" unless $type eq 'udeb';
     return 0;
 }
 
