@@ -861,6 +861,8 @@ closedir(COLLDIR);
 require Tags;
 import Tags;
 
+$Tags::show_info = $display_infotags;
+
 # load information about checker scripts
 opendir(CHECKDIR, "$LINTIAN_ROOT/checks")
     or fail("cannot read directory $LINTIAN_ROOT/checks");
