@@ -85,15 +85,22 @@ if ($#ARGV == 0) {
 }
 
 # --- Set and unset environment variables that lintian is sensitive to
-my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
-if (not $LINTIAN_ROOT) {
-    use Cwd;
-    $ENV{'LINTIAN_ROOT'} = $LINTIAN_ROOT = cwd();
+BEGIN {
+    my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
+    if (not $LINTIAN_ROOT) {
+	use Cwd ();
+	$ENV{'LINTIAN_ROOT'} = $LINTIAN_ROOT = Cwd::cwd();
+    }
+    delete $ENV{'LINTIAN_CFG'};
+    delete $ENV{'LINTIAN_LAB'};
+    delete $ENV{'LINTIAN_DIST'};
+    delete $ENV{'LINTIAN_UNPACK_LEVEL'};
 }
-delete $ENV{'LINTIAN_CFG'};
-delete $ENV{'LINTIAN_LAB'};
-delete $ENV{'LINTIAN_DIST'};
-delete $ENV{'LINTIAN_UNPACK_LEVEL'};
+
+my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
+
+use lib "$ENV{'LINTIAN_ROOT'}/lib";
+use Util;
 
 # --- Set the ways to call lintian and dpkg-buildpackage
 my $lintian_options = '-I';
@@ -102,6 +109,8 @@ my $dpkg_buildpackage_options = '-rfakeroot -us -uc -d';
 my $lintian_path = $LINTIAN_ROOT . "/frontend/lintian";
 
 my $testok = 0;
+my %tags;
+my %types = ( 'E' => 'error', 'W' => 'warning', 'I' => 'info' );
 
 # --- Display output immediately
 $| = 1;
@@ -111,17 +120,34 @@ $| = 1;
 -d $rundir
     or fail("test directory $rundir does not exist\n");
 
-if ( -d "$LINTIAN_ROOT/testset" ) {
-    # does every tag have an info section?
-    my $check = "$LINTIAN_ROOT/testset/check_info.pl";
-    print "Checking for missing info tags ... ";
-    $testok = runsystem_ok("$check $LINTIAN_ROOT");
-    if ($testok) {
-	print "done.\n";
-    } else {
-	print "FAILED!\n";
-	exit 1 unless $run_all_tests;
+# does every tag have an info section?
+print "Checking for missing info tags ... ";
+
+$testok = 1;
+for my $desc_file (<$LINTIAN_ROOT/checks/*.desc>) {
+    for my $i (read_dpkg_control($desc_file)) {
+	$desc_file =~ s#.*/##;
+	if (exists $i->{'tag'}) {
+	    if (not exists $i->{'info'}) {
+		print "E: test-has-no-info $i->{'tag'} in $desc_file\n";
+		$testok = 0;
+	    }
+	    if (not exists $i->{'type'}) {
+		print "E: test-has-no-type $i->{'tag'} in $desc_file\n";
+		$testok = 0;
+		next;
+	    }
+	    $tags{$i->{'tag'}}{'desc_file'} = $desc_file;
+	    $tags{$i->{'tag'}}{'desc_type'} = $i->{'type'};
+	}
     }
+}
+
+if ($testok) {
+    print "done.\n";
+} else {
+    print "FAILED!\n";
+    exit 1 unless $run_all_tests;
 }
 
 # can I make a lab?
@@ -164,7 +190,7 @@ for (@tests) {
     $line =~ s/\).*$//;
     
     my ($pkg, $ver) = ($pkgdir, $line);
-    print "Running test on $pkg $ver ... ";
+    print "Running test on $pkg $ver: copying... ";
 
     print "Cleaning up and repopulating $rundir/$pkgdir...\n" if $verbose;
     runsystem_ok("rm -rf $rundir/$pkgdir");
@@ -178,11 +204,19 @@ for (@tests) {
     closedir D;
     runsystem("find $rundir -name CVS -o -name .svn -print0 | xargs -0r rm -R");
 
+    print "building... ";
     print "Running dpkg-buildpackage $dpkg_buildpackage_options in $rundir/$pkgdir...\n" if $verbose;
     runsystem("cd $rundir/$pkgdir && dpkg-buildpackage $dpkg_buildpackage_options >../build.$pkg 2>&1");
 
+    print "testing... ";
     print "Running lintian $lintian_options on $rundir/$pkg\_$ver*.changes...\n" if $verbose;
-    runsystem_ok("$lintian_path $lintian_options $rundir/$pkg\_$ver*.changes >$rundir/tags.$pkg");
+    runsystem_ok("$lintian_path $lintian_options $rundir/$pkg\_$ver*.changes".
+    	" 2>&1 | sort > $rundir/tags.$pkg");
+
+    # Run a sed-script if it exists, for tests that have slightly varialbe
+    # output
+    runsystem_ok("sed -i -f $testset/tags.$pkg.sed $rundir/tags/$pkg")
+	if -e "$testset/tags.$pkg.sed";
 
     $testok = runsystem_ok("cmp -s $rundir/tags.$pkg $testset/tags.$pkg");
     if ($testok) {
@@ -194,25 +228,43 @@ for (@tests) {
 	next;
     }
 
-    print "Running info test on $pkg $ver ... ";
+    open TAGS, "$rundir/tags.$pkg" or fail("Cannot open $rundir/tags.$pkg");
+    while (<TAGS>) {
+	if (not /^(.): (\S+)(?: source)?: (\S+)/) {
+	    print "E: Invalid line:\n$_";
+	    next;
+	}
+	$tags{$3}{'tested_type'} = $types{$1};
+	$tags{$3}{'tested_package'} = $2;
+    }
+    close TAGS;
+}
 
-    runsystem_ok("$lintian_path $lintian_info_options $rundir/$pkg\_$ver*.changes >$rundir/info_tags.$pkg");
-    $testok = runsystem_ok("cmp -s $rundir/info_tags.$pkg $testset/info_tags.$pkg");
-    if ($testok) {
-	print "done.\n";
-    } else {
-	print "FAILED:\n";
-	runsystem_ok("diff -u $testset/info_tags.$pkg $rundir/info_tags.$pkg");
-	exit 1 unless $run_all_tests;
+print "Checking whether all tags are tested and tags have description ... \n";
+$testok = 1;
+for (keys %tags) {
+    my $values = $tags{$_};
+    if (not defined $values->{'desc_type'}) {
+	print "E: test-has-no-description $_ in $values->{'tested_package'}\n";
+	$testok = 0;
+    } elsif (not defined $values->{'tested_type'}) {
+	print "I: test-is-not-tested $_ in $values->{'desc_file'}\n"
+	    if $verbose;
+    } elsif ($values->{'desc_type'} ne $values->{'tested_type'}) {
+	print "E: test-has-inconsistent-type $_ $values->{'tested_type'} vs ".
+	    "$values->{'desc_type'}\n";
+	$testok = 0;
     }
 }
 
-# --------------
-sub fail {
-    print STDERR @_;
-    exit 2;
+if ($testok) {
+    print "done.\n";
+} else {
+    print "FAILED\n";
+    exit 1 unless $run_all_tests;
 }
 
+# --------------
 sub runsystem {
     system(@_) == 0
 	or fail("failed: @_\n");
@@ -224,3 +276,5 @@ sub runsystem_ok {
 	or fail("failed: @_\n");
     return $errcode == 0;
 }
+
+# vim: ts=8 sw=4
