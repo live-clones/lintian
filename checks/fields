@@ -405,7 +405,8 @@ if ($type eq "source") {
 				local $/ = "\n"; #Read this linewise				
 				while (<RULES>) {
 					$target = $1 if (/^(\S+):/);
-					if (/^\s+dh_.+/ && grep ($_ eq $target, qw(clean binary-arch build-arch))) {
+					if (/^\s+dh_.+/ && grep ($_ eq $target, qw(clean binary-arch build-arch)) or
+							m#^include\s+/usr/share/cdbs/1/rules/debhelper.mk#) {
 						$uses_dh = "yes";
 						last
 					}
