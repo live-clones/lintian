@@ -76,67 +76,6 @@ my %needs_tag_vals_hash;
 my %root_sections_hash;
 my %sections_hash;
 
-# icon_cmap keys are the colours permitted in an icon, as lower case
-# strings, either in hex like '#4c4c4c', or names from rgb.txt like
-# 'chartreuse1'.
-#
-# Can be automatically generated using ../rgb-vs-cmap
-
-my %icon_cmap = (
-   'none' => 1,
-   '#000000' => 1,
-   '#00007f' => 1,
-   '#0000ff' => 1,
-   '#007f00' => 1,
-   '#007f7f' => 1,
-   '#00ff00' => 1,
-   '#00ffff' => 1,
-   '#191919' => 1,
-   '#333333' => 1,
-   '#4c4c4c' => 1,
-   '#666667' => 1,
-   '#7f0000' => 1,
-   '#7f007f' => 1,
-   '#7f7f00' => 1,
-   '#7f7f7f' => 1,
-   '#999999' => 1,
-   '#b2b2b2' => 1,
-   '#cccccc' => 1,
-   '#e5e5e5' => 1,
-   '#ff0000' => 1,
-   '#ff00ff' => 1,
-   '#ffff00' => 1,
-   '#ffffff' => 1,
-   'white' => 1,
-   'black' => 1,
-   'blue' => 1,
-   'cyan' => 1,
-   'green' => 1,
-   'yellow' => 1,
-   'red' => 1,
-   'magenta' => 1,
-   'blue1' => 1,
-   'cyan1' => 1,
-   'green1' => 1,
-   'yellow1' => 1,
-   'red1' => 1,
-   'magenta1' => 1,
-   'gray0' => 1,
-   'grey0' => 1,
-   'gray20' => 1,
-   'grey20' => 1,
-   'gray50' => 1,
-   'grey50' => 1,
-   'gray60' => 1,
-   'grey60' => 1,
-   'gray80' => 1,
-   'grey80' => 1,
-   'gray90' => 1,
-   'grey90' => 1,
-   'gray100' => 1,
-   'grey100' => 1,
-);
-
 # -----------------------------------
 
 ($#ARGV == 1) or fail("syntax: menu-format <pkg> <type>");
@@ -455,41 +394,7 @@ sub VerifyIcon {
 	print "E: $pkg $type: menu-icon-too-big $icon: ${width}x${height}\n";
     }
 
-    my $cppre = '';
-    foreach (1 .. $cpp) { $cppre .= '.'; }
-
-    my %bad;
-    foreach (1 .. $numcolours) {
-	$parse = "colour line $_";
-	do { defined ($line = <IN>) or goto parse_error; }
-        until ($line =~ /"$cppre\s*((m|s|g4|g|c)\s+[^ \t]+.*)"/);
-
-        # Notice whitespace is allowed in a colour name.  Not sure if that's
-        # strictly valid according to the xpm spec, but gnu.xpm from emacs20
-        # had some colours like that.
-        my $s = $1;
-        while ($s =~ /\s*(m|s|g4|g|c)\s+(.*?)\s*((m|s|g4|g|c)\s+.*|$)/) {
-            $s = $3;
-            my $c_orig = $2;
-            my $c = lc($c_orig);
-	    # reduce any 16-bit colours to 8 bits for matching
-            if ($c =~ /^#(..)00(..)00(..)00$/) {
-                $c = "#$1$2$3";
-            }
-            if (! defined $icon_cmap{$c}) {
-                $bad{$c_orig} = 1;
-            }
-	}
-        # expect to have processed everything in the colour string
-        if ($s ne '') {
-            $parse = "colour spec: $line";
-            goto parse_error;
-        }
-    }
     close IN or die;
-    if (%bad) {
-	print "E: $pkg $type: menu-icon-has-bad-colors $icon: ", join (', ', sort keys %bad), "\n";
-    }
     return;
 
 parse_error:

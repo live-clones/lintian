@@ -114,12 +114,6 @@ Type: error
 Info: Icons in the Debian menu system should be at most 32x32 pixels.
 Ref: menu 3.4
 
-Tag: menu-icon-has-bad-colors
-Type: error
-Info: Icons in the Debian menu system should use only the 24 colors in
- <tt>/usr/share/pixmaps/cmap.xpm</tt>.
-Ref: menu 3.4
-
 Tag: menu-icon-cannot-parse
 Type: warning
 Info: The icon file could not be parsed.  Perhaps this means a bad XPM file,

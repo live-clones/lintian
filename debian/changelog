@@ -32,6 +32,8 @@ lintian (1.22.9-0.1) unstable; urgency=low
      + Based on patch by Denis Barbier <barbier@debian.org>, Closes: #210576
      + Check whether po-debconf is used at all, and warn if it isn't
      + Check for required POTFILES.in and template.pot in debian/po
+   * checks/menu-format
+     + Drop menu-icon-has-bad-colors, it doesn't apply anymore (Closes: #199341)
 
   Frank Lichtenheld <djpig@debian.org>
    * checks/debhelper:
@@ -49,7 +51,7 @@ lintian (1.22.9-0.1) unstable; urgency=low
      + fix testing of dependencies to eliminate false
        positives of missing-debconf-dependency (Closes: #195201)
 
- -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Mon,  9 Feb 2004 02:49:27 +0100
+ -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Tue, 10 Feb 2004 15:14:45 +0100
 
 lintian (1.22.9) unstable; urgency=low
 
