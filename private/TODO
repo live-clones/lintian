@@ -18,25 +18,35 @@ goals for 1.23.0 [04.2004 - should get into Sarge]
 - update doc/* to reflect current lintian versions and not some from
   the last century ;) -- done
 
-goals for 1.23.1 [05.2004]
+goals for 1.23.1 [07.2004]
 ==========================
 
 - fix anything we broke in 1.23.0 and that prevents us from
-  getting 1.23.0 to testing
+  getting 1.23.0 to testing -- severest mistakes are done
+- go through all checks and try to move common code to modules
+  -- partly done
+
+goals for 1.23.2 [??]
+======================
+
+goals for 1.24.0 [???]
+======================
+
+- overhaul the Errors/Warnings concept
+  (#197955, #189656)
+  -- wil make a proposal after 1.23.1 is released, djpig
 
 goals not targetted
 ===================
 
 - #118170: [frontend] lintian needs lots of space in /tmp
   should be tackled, don't know when, though
-- overhaul the Errors/Warnings concept
-  (#197955, #189656)
-- go through all checks and try to move common code to modules
 - go through the test suite and organise it more cleanly
 - update doc/CREDITS file
 - Fix experimental support back in
 - Go through testset/libbaz/debian/rules, and make sure all TODO's are
   lintian-detected
+- move the SVN to Alioth and merge the old CVS rep in
 
 old todo list
 =============
