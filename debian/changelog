@@ -105,6 +105,11 @@ lintian (1.23.0) UNRELEASED; urgency=low
   * checks/standards-version:
     + [JvW] Also emit warning if standards version is 3.6.0, and not yet 3.6.1
 
+  * unpack/list-binpkg:
+    + [HE] Try to open Packages.gz if no Packages file can be found. Fix
+      based on patch by Robert Lemmen <robertle@semistable.com>, thanks!
+      (Closes: #198617)
+
  -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Mon,  5 Apr 2004 03:17:53 +0200
 
 lintian (1.22.12) unstable; urgency=low

@@ -89,8 +89,15 @@ print OUT "$BINLIST_FORMAT\n";
 # parse Packages file to get list of packages
 my $packages = "$LINTIAN_ARCHIVEDIR/dists/$LINTIAN_DIST/$LINTIAN_SECTION/".
                "binary-$LINTIAN_ARCH/Packages";
-print "N: Parsing $packages ...\n" if $verbose;
-open(IN,"$packages") or fail("cannot open Packages file $packages: $!");
+if (-e $packages) {
+	print "N: Parsing $packages ...\n" if $verbose;
+	open(IN,"$packages") or fail("cannot open Packages file $packages: $!");
+} elsif (-e "$packages.gz") {
+	print "N: Parsing $packages.gz ...\n" if $verbose;
+	open(IN,"gzip -dc $packages.gz | ") or fail("cannot open Packages file $packages.gz: $!");	
+} else {
+	fail("No packages file $packages");
+}
 
 my $line;
 my %packages;
