@@ -12,10 +12,10 @@ Info: The package contains an `unknown' control file, which should be
 
 Tag: control-file-has-bad-permissions
 Type: error
-Info: The control postinst, postrm, preinst, prerm control files should use
- mode 0755, all other control files should use 0644.
+Info: The postinst, postrm, preinst, and prerm control files should use
+ mode 0755; all other control files should use 0644.
 
 Tag: control-file-has-bad-owner
 Type: error
 Severity: Important
-Info: All control files should be owner by root/root.
+Info: All control files should be owned by root/root.

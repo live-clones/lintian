@@ -85,7 +85,7 @@ if (not open(IN, "fields/version")) {
 if (not open(IN, "fields/architecture")) {
     tag_error("no-architecture-field");
 } else {
-    # Policy Manual D.2.3 says that multiple architectures should be
+    # Policy Manual 5.6.7 says that multiple architectures should be
     # separated by "spaces", not "whitespace".  But I'll allow any
     # whitespace here anyway.  It's not important enough to check for.
     chop($_ = <IN>);
@@ -130,7 +130,7 @@ if (not open(IN, "fields/maintainer")) {
     s/^\s+//;
     s/\s+$//;
 
-    # Parse maintainer-address.  Policy Manual D.2.4 says:
+    # Parse maintainer-address.  Policy Manual 5.6.2 says:
     #   The package maintainer's name and email address. The name should
     #   come first, then the email address inside angle brackets <> (in
     #   RFC822 format).
@@ -211,9 +211,6 @@ if (open(IN, "fields/essential")) {
 	}
     }
 }
-
-# typo in Policy Manual, end of fourth paragraph of D.2.9:
-# "priorities" should be "sections".
 
 if (not open(IN, "fields/section")) {
     # The section and priority fields are mandatory in the debian/control

@@ -30,7 +30,7 @@ Info: Symbolic links to the undocumented(7) manual page may be provided
  <file>/usr/share/doc/man-db/examples</file> directory.
  If the package provides <tt>--help</tt> output, you might want to use
  the <tt>help2man</tt> utility to generate a simple manual page.
-Ref: policy 13.1
+Ref: policy 12.1
 
 Tag: binary-without-manpage
 Type: error
@@ -42,13 +42,13 @@ Info: Each binary in <tt>/usr/bin</tt>, <tt>/usr/sbin</tt>, <tt>/bin</tt>,
  must have its own manual page (a symbolic link to the appropriate
  manual page is sufficient) because other manual page viewers such as
  xman or tkman don't support this.
-Ref: policy 13.1
+Ref: policy 12.1
 
 Tag: manpage-in-wrong-directory
 Info: The manual page should be installed in the correct directory below
  <tt>/usr/share/man/</tt> or <tt>/usr/share/man/<i>locale</i></tt>.
  Only sections 1 through 9 should be used.
-Ref: policy 13.1
+Ref: policy 12.1
 
 Tag: manpage-has-wrong-extension
 Type: error
@@ -59,7 +59,7 @@ Ref: policy 13.1
 Tag: manpage-not-compressed
 Type: error
 Info: Manual pages have to be installed compressed (using `<tt>gzip -9</tt>').
-Ref: policy 13.1
+Ref: policy 12.1
 
 Tag: x11-games-should-be-in-usr-games
 Type: error
@@ -71,17 +71,17 @@ Info: Since X11 games should be installed in <tt>/usr/games</tt> (and
  There are a few exceptions though, as utilities like `xeyes'. If this is
  one of these exceptions, please contact &maint; about this so that
  this exception would be recognized in future versions of Lintian.
-Ref: policy 12.10
+Ref: policy 11.11
 
 Tag: manpage-not-compressed-with-gzip
 Type: error
 Info: Manual pages should be compressed with <tt>gzip -9</tt>.
-Ref: policy 13.1
+Ref: policy 12.1
 
 Tag: manpage-not-compressed-with-max-compression
 Type: error
 Info: Manual pages should be compressed with <tt>gzip -9</tt>.
-Ref: policy 13.1
+Ref: policy 12.1
 
 Tag: manpage-has-bad-whatis-entry
 Type: error

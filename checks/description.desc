@@ -24,12 +24,12 @@ Tag: description-contains-invalid-control-statement
 Type: error
 Info: The description contains a line starting with a dot (.). This is
  not allowed.
-Ref: policy 3.1
+Ref: policy 5.6.12
 
 Tag: description-too-long
 Type: error
 Info: The first line of the "Description:" must not exceed 80 characters.
-Ref: policy 5.7.1
+Ref: policy 3.4.1
 
 Tag: description-synopsis-has-leading-spaces
 Type: error
@@ -45,12 +45,12 @@ Info: The first line of the "Description:" should not start with the
  If Lintian reported this error by mistake (i.e., if the package name
  is a common word), please contact &maint; about this so that this
  exception would be recognized in future versions of Lintian.
-Ref: policy 5.7.1
+Ref: policy 3.4.1
 
 Tag: description-contains-tabs
 Type: error
 Info: The package "Description:" must not contain tab characters.
-Ref: policy 5.7.1
+Ref: policy 5.6.12
 
 Tag: description-starts-with-leading-spaces
 Type: warning
@@ -66,7 +66,7 @@ Info: The package "Description:" contains an unindented line which
  starts with a dash (-) or asterisk (*). If this was meant to be a
  list of items these lines need to be indented (dselect would
  word-wrap these lines otherwise).
-Ref: policy D.2.7
+Ref: policy 5.6.12
 
 Tag: description-is-debmake-template
 Type: error
@@ -87,14 +87,14 @@ Info: The synopsis (first line in the package "Description:" field, the
  .
  Note also that the synopsis is not part of the rest of the "Description:"
  field.
-Ref: policy 5.7.1
+Ref: policy 3.4.1
 
 Tag: description-synopsis-is-duplicated
 Type: error
 Info: The first line of the extended Description: should not repeat the
  synopsis exactly. This indicates that either the synopsis is badly formed
  or that the extended description has been wrongly copied and pasted.
-Ref: policy 5.7.1
+Ref: policy 3.4.2
 
 Tag: extended-description-line-too-long
 Type: warn
@@ -102,3 +102,4 @@ Info: One or more lines in the extended part of the "Description:" field
  have been found to contain more than 80 characters. For the benefit of
  users of 80x25 terminals, it is recommended that the lines do not exceed
  80 characters.
+Ref: policy 3.4.1

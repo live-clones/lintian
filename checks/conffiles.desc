@@ -21,7 +21,7 @@ Info: A file installed in some other directory than <tt>/etc</tt> or
  not, please contact &maint; about this so that this exception would
  be recognized in future versions of Lintian.
 Status: untested
-Ref: policy 11.7.2
+Ref: policy 10.7.2
 
 Tag: relative-conffile
 Type: error

@@ -14,7 +14,7 @@ Info: The app-defaults files have moved to /etc/X11/app-defaults/. Files in
  the old directory, /usr/X11R6/lib/X11/app-defaults/, will no longer be
  used by X. The old directory should not exist in packages at all;
  this prevents X from replacing it with a compatability symlink.
-Ref: policy 12.8
+Ref: policy 11.8.6
 
 Tag: config-file-reserved $file
 Type: error
@@ -26,7 +26,7 @@ Type: warning
 Info: the file, /etc/nntpserver, is no longer recommenced.  As of policy
  revision 2.5.1.0, /etc/news/server is the preferred file to use to specify
  a news server.
-Ref: policy 12.7
+Ref: policy 11.7
 
 Tag: FSSTND-dir-in-usr
 Type: error
@@ -47,13 +47,13 @@ Type: error
 Severity: Important
 Info: The package installs files into the <tt>/etc/rc.d</tt> or
  <tt>/etc/rc?.d</tt> which is not allowed.
-Ref: policy 10.3.3
+Ref: policy 9.3.3
 
 Tag: package-installs-into-etc-rc.boot
 Type: error
 Info: The package installs files in the <tt>/etc/rc.boot</tt> directory,
  which is obsolete.  See rc.boot(5) for details.
-Ref: policy 10.3.4
+Ref: policy 9.3.4
 
 Tag: non-standard-file-permissions-for-etc-init.d-script
 Type: error
@@ -76,7 +76,7 @@ Type: error
 Severity: Important
 Info: The package installs a file in <tt>/usr/local/...</tt> which is
  not allowed.
-Ref: policy 10.1.2
+Ref: policy 9.1.2
 
 Tag: file-in-opt
 Type: error
@@ -95,10 +95,10 @@ Info: The package installs a directory in <tt>/usr/local/...</tt> which is
  .
  If you want to provide an empty directory in <tt>/usr/local</tt> for
  convenience of the local system administrator, please follow the rules
- in the policy manual (section 10.1.2), i.e., create the directories in
+ in the policy manual (section 9.1.2), i.e., create the directories in
  the postinst script but don't fail if this isn't possible (e.g., if
  <tt>/usr/local</tt> is mounted read-only).
-Ref: policy 10.1.2
+Ref: policy 9.1.2
 
 Tag: possible-name-space-pollution
 Type: warning
@@ -169,7 +169,7 @@ Info: The package contains a <i>special</i> file (e.g., a device file).
  This is forbidden by current policy. If your program needs this device,
  you should create it by calling <tt>makedev</tt> from the postinst
  script.
-Ref: policy 11.6
+Ref: policy 10.6
 
 Tag: old-style-example-dir
 Type: error
@@ -183,18 +183,18 @@ Info: The package installs a symbolic link pointing to a compressed file,
  but the symbolic link does not use the same file extension than the
  referenced file. In most cases, this can produce troubles when the
  user or a program tries to access the file through the link.
-Ref: policy 11.5
+Ref: policy 10.5
 
 Tag: symlink-should-be-relative
 Type: error
 Info: Usually, symbolic links should be relative.
-Ref: policy 11.5
+Ref: policy 10.5
 
 Tag: symlink-should-be-absolute
 Type: error
 Info: Symbolic links between different top-level directories should be
  absolute.
-Ref: policy 11.5
+Ref: policy 10.5
 
 Tag: executable-in-usr-share-doc
 Type: error
@@ -221,12 +221,12 @@ Type: warning
 Info: This link goes up, and then back down into the same subdirectory.
  Making it shorter will improve its chances of finding the right file
  if the user's system has lots of symlinked directories.
-Ref: policy 11.5
+Ref: policy 10.5
 
 Tag: symlink-contains-up-and-down-segments
 Type: error
 Info: The symbolic link goes up and down.
-Ref: policy 11.5
+Ref: policy 10.5
 
 Tag: bad-permissions-for-etc-cron.d-script
 Type: error
@@ -251,7 +251,7 @@ Info: Files in <tt>/usr/lib/sgml</tt> should not be marked executable.
 Tag: file-directly-in-usr-share-doc
 Type: error
 Info: Documentation files have to be installed in <tt>/usr/share/doc/<i>pkg</i>
-Ref: policy 13.3
+Ref: policy 12.3
 
 Tag: bad-owner-for-doc-file
 Type: error
@@ -301,7 +301,7 @@ Info: This package installs a file <tt>perllocal.pod</tt>.  Since that
 
 Tag: extra-license-file
 Type: warning
-Ref: policy 13.5
+Ref: policy 12.5
 Info: All license information should be collected in the
  <tt>debian/copyright</tt> file.  This usually makes it unnecessary
  for the package to install this information in other places as well.
@@ -361,17 +361,17 @@ Info: Packages built using the perl MakeMaker package will have a file
 
 Tag: zero-byte-file-in-doc-directory
 Type: warning
-Info: package contains a file which is empty
+Info: Package contains a file which is empty.
 
 Tag: override-file-in-wrong-location
 Type: error
-Info: location of per package overrides the file
+Info: Location of per package overrides the file
  /usr/share/lintian/overrides/package.  See the lintian documentation for more
  info on proper naming and format.
 
 Tag: package-contains-upstream-install-documentation
 Type: warning
-Ref: policy 13.3
+Ref: policy 12.3
 Info: Binary packages do not need to contain the instructions for building
  and installing the package as this info is not needed by package users.
  If the info contained is important for configuration perhaps it could be
@@ -379,8 +379,8 @@ Info: Binary packages do not need to contain the instructions for building
 
 Tag: xresources-file-in-etc-without-proper-conflicts
 Type: error
-Ref: policy 12.8
-Info: packages that install files into the /etc/X11/Xresources/ directory must
+Ref: policy 11.8.6
+Info: Packages that install files into the /etc/X11/Xresources/ directory must
  declare a conflict with xbase (<< 3.3.2.3a-2); if this is not done it is
  possible for the installing package to destroy a previously-existing
  /etc/X11/Xresources file which had been customized by the system
@@ -388,26 +388,26 @@ Info: packages that install files into the /etc/X11/Xresources/ directory must
 
 Tag: package-contains-hardlink
 Type: warning
-Info: hardlinks are bad mkay, don't use hardlinks.
+Info: Hardlinks are bad mkay, don't use hardlinks.
 
 Tag: package-contains-CVS-dir
 Type: error
-Info: package contains a CVS directory. It was most likely installed by
+Info: Package contains a CVS directory. It was most likely installed by
  accident, since transient CVS data usually doesn't belong in packages.
 
 Tag: package-contains-xvpics-dir
 Type: error
-Info: package contains a .xvpics directory. It was most likely installed by
+Info: Package contains a .xvpics directory. It was most likely installed by
  accident, since thumbnails usually don't belong in packages.
 
 Tag: cvsignore-file-in-package
 Type: warning
-Info: package contains a '.cvsignore' file.  It may have been installed by
+Info: Package contains a '.cvsignore' file.  It may have been installed by
  accident.
 
 Tag: nested-examples-directory
 Type: error
-Info: package contains a <tt>usr/share/doc/something/examples/examples</tt>
+Info: Package contains a <tt>usr/share/doc/something/examples/examples</tt>
  directory. It was most likely installed by accident, since one examples/
  directory should be enough for everybody(tm).
 

@@ -10,45 +10,45 @@ Info: This script checks if a binary package conforms to info document policy.
 Tag: info-document-not-compressed
 Type: error
 Info: Info documents have to be installed compressed (using `<tt>gzip -9</tt>').
-Ref: policy 13.2
+Ref: policy 12.2
 
 Tag: info-document-not-compressed-with-gzip
 Type: error
 Info: Info documents should be compressed with <tt>gzip -9</tt>.
-Ref: policy 13.2
+Ref: policy 12.2
 
 Tag: info-document-not-compressed-with-max-compression
 Type: error
 Info: Info documents should be compressed with <tt>gzip -9</tt>.
-Ref: policy 13.2
+Ref: policy 12.2
 
 Tag: info-document-has-wrong-extension
 Type: warning
 Info: The info document has an extension other than `info*.gz'.
-Ref: policy 13.2
+Ref: policy 12.2
 
 Tag: postrm-calls-install-info
 Type: warning
-Ref: policy 13.2
+Ref: policy 12.2
 Info: The postrm script calls the <tt>install-info</tt> command. Usually,
  this command should be called from the <tt>prerm</tt> maintainer script.
 
 Tag: preinst-calls-install-info
 Type: error
-Ref: policy 13.2
+Ref: policy 12.2
 Info: The preinst script calls the <tt>install-info</tt> command. Usually,
  this command should be called from the <tt>postinst</tt> maintainer script.
 
 Tag: install-info-not-called-with-quiet-option
 Type: warning
-Ref: policy 2.3.8
+Ref: policy 3.10
 Info: The package installation scripts should avoid producing output which it
  is unnecessary for the user to see.  Policy specifically mentions install-info
  output as unnecessary.
 
 Tag: install-info-not-called-with-section-option
 Type: warning
-Ref: policy 13.2
+Ref: policy 12.2
 Info: It is a good idea to specify a section for the location of your program;
  this is done with the --section switch. To determine which section to use,
  you should look at the info dir file on your system and choose the most

@@ -24,26 +24,26 @@ Type: error
 Info: If the upstream changelog file is HTML formatted, a text version must
  also be accessible as `changelog.gz'. (This can be created by
  `lynx -dump -nolist')
-Ref: policy 13.7
+Ref: policy 12.7
 
 Tag: changelog-file-not-compressed
 Type: error
 Info: Changelog files must be compressed using `gzip -9'.
  Even if they start out small, they will become large with time.
-Ref: policy 13.7
+Ref: policy 12.7
 
 Tag: changelog-not-compressed-with-max-compression
 Type: error
 Info: Changelog files must be compressed using `gzip -9', i.e. using the
  maximum compression level via the `-9' option to gzip.
-Ref: policy 13.7
+Ref: policy 12.7
 
 Tag: wrong-name-for-changelog-of-native-package
 Type: warning
 Info: The changelog file of a native Debian package (i.e., if there is
  no upstream source) should usually be installed as
  /usr/share/doc/<i>pkg</i>/changelog.gz
-Ref: policy 13.7
+Ref: policy 12.7
 
 Tag: changelog-file-missing-in-native-package
 Type: error
@@ -52,13 +52,13 @@ Info: Each Debian package (which provides a /usr/share/doc/<i>pkg</i>
  to be a native Debian package (i.e., there is no upstream source),
  the file should usually be installed as
  /usr/share/doc/<i>pkg</i>/changelog.gz
-Ref: policy 13.7
+Ref: policy 12.7
 
 Tag: wrong-name-for-upstream-changelog
 Type: warning
 Info: If there is an upstream changelog file, it should usually be
  installed as /usr/share/doc/<i>pkg</i>/changelog.gz
-Ref: policy 13.7
+Ref: policy 12.7
 
 Tag: no-upstream-changelog
 Type: warning
@@ -67,20 +67,20 @@ Info: The package does not install an upstream changelog file.
  If there is no upstream changelog file, please contact &maint; about
  this so that this exception would be recognized in future versions of
  Lintian.
-Ref: policy 13.7
+Ref: policy 12.7
 
 Tag: wrong-name-for-debian-changelog-file
 Type: warning
 Info: The Debian changelog file should usually be installed as
  /usr/share/doc/<i>pkg</i>/changelog.Debian.gz
-Ref: policy 13.7
+Ref: policy 12.7
 
 Tag: debian-changelog-file-missing
 Type: error
 Info: Each Debian package (which provides a /usr/share/doc/<i>pkg</i>
  directory) has to install a Debian changelog file
  /usr/share/doc/<i>pkg</i>/changelog.Debian.gz
-Ref: policy 13.7
+Ref: policy 12.7
 
 Tag: debian-changelog-file-contains-obsolete-user-emacs-settings
 Type: error

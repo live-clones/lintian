@@ -10,16 +10,16 @@ Info: This script checks if a binary package conforms to shared library policy.
 Tag: shlib-with-executable-bit
 Type: error
 Info: Shared libraries should be mode 0644.
-Ref: policy 9.1
+Ref: policy 8.1
 
 Tag: shlib-with-bad-permissions
 Type: warning
 Info: Shared libraries should be mode 0644.
-Ref: policy 9.1
+Ref: policy 8.1
 
 Tag: shlib-with-non-pic-code
 Type: error
-Ref: policy 11.2
+Ref: policy 10.2
 Info: The listed shared libraries contain object code that was compiled 
  without -fPIC. All object code in shared libraries should be recompiled
  separately from the static libraries with the -fPIC option. 
@@ -35,14 +35,14 @@ Info: The package should not only include the shared library itself, but also
  that the link gets removed by dpkg automatically when the package
  gets removed.)  If the symlink is in the package, check that the SONAME of the
  library matches the info in the shlibs file.
-Ref: policy 9.1
+Ref: policy 8.1
 
 Tag: ldconfig-symlink-before-shlib-in-deb
 Type: error
 Severity: Important
 Info: In the package contents list, the shared library has to come before
  any symbolic links referencing the shared library.
-Ref: policy 9.1
+Ref: policy 8.1
 
 Tag: dev-pkg-without-shlib-symlink
 Type: warning
@@ -50,7 +50,7 @@ Info: A `-dev' package is supposed to install a `libsomething.so' symbolic
  link referencing the corresponding shared library. Notice how the link name
  doesn't include the version number -- this is because such a link is used
  by the linker when other programs are built against this shared library.
-Ref: policy 9.4
+Ref: policy 8.4
 
 Tag: non-dev-pkg-with-shlib-symlink
 Type: warning
@@ -67,25 +67,25 @@ Info: Although this package is not a `-dev' package, it installs a
  development libraries, this is not a bug. In the latter case, please
  contact &maint; about this so that this exception would be recognized in
  future versions of Lintian.
-Ref: policy 9.4
+Ref: policy 8.4
 
 Tag: preinst-calls-ldconfig
 Type: warning
 Info: The preinst script calls ldconfig.  Calls to ldconfig should only be
  in postinst and postrm scripts.
-Ref: policy 9.1.1
+Ref: policy 8.1.1
 
 Tag: prerm-calls-ldconfig
 Type: warning
 Info: The prerm script calls ldconfig.  Calls to ldconfig should only
  be in postinst and postrm scripts.
-Ref: policy 9.1.1
+Ref: policy 8.1.1
 
 Tag: postrm-unsafe-ldconfig
 Type: warning
 Info: The postrm script calls ldconfig unsafely.  The postrm
  must only call ldconfig when given the argument "remove".
-Ref: policy 9.1.1
+Ref: policy 8.1.1
 
 Tag: no-shlibs-control-file
 Type: error
@@ -93,7 +93,7 @@ Info: Although the package includes a shared library, the package does not
  have a shlibs control file. If this is intentional, please contact
  &maint; about this so that this exception would be recognized in future
  versions of Lintian.
-Ref: policy 9.6
+Ref: policy 8.6
 
 Tag: pkg-has-shlibs-control-file-but-no-actual-shared-libs
 Type: error
@@ -116,51 +116,51 @@ Info: The package contains a shared library that is not listed in the
  shlibs control file. If this is intentional, please contact &maint;
  about this so that this exception would be recognized in future versions of
  Lintian.
-Ref: policy 9.6
+Ref: policy 8.6
 
 Tag: unused-shlib-entry-in-control-file
 Type: warning
 Info: The shlibs control file contains an entry for a shared library that
  is not installed by this package.
-Ref: policy 9.6
+Ref: policy 8.6
 
 Tag: ldconfig-symlink-referencing-wrong-file
 Type: error
 Info: The symbolic link references the wrong file. (It should reference
  the shared library.)
-Ref: policy 9.1
+Ref: policy 8.1
 
 Tag: ldconfig-symlink-is-not-a-symlink
 Type: error
 Info: The package installs a file with the name, ldconfig would use for
  the symbolic link to reference the shared library.
-Ref: policy 9.1
+Ref: policy 8.1
 
 Tag: postinst-has-useless-call-to-ldconfig
 Type: warning
 Info: The postinst script calls ldconfig even though no shared libraries are
  installed in a directory controlled by the dynamic library loader.
-Ref: policy 9.1.1
+Ref: policy 8.1.1
 
 Tag: postrm-has-useless-call-to-ldconfig
 Type: warning
 Info: The postrm script calls ldconfig even though no shared libraries are
  installed in a directory controlled by the dynamic library loader.
-Ref: policy 9.1.1
+Ref: policy 8.1.1
 
 Tag: postinst-must-call-ldconfig
 Type: error
 Info: The package installs shared libraries in a directory controlled by
  the dynamic library loader. Therefore, the package must call `ldconfig' in
  its postinst script.
-Ref: policy 9.1.1
+Ref: policy 8.1.1
 
 Tag: postrm-should-call-ldconfig
 Type: warning
 Info: The package installs shared libraries in a directory controlled by
  the dynamic library loader. Therefore, the package should call `ldconfig'
  in its postrm script.
-Ref: policy 9.1.1
+Ref: policy 8.1.1
 
 Tag: sharedobject-in-library-directory-not-actually-a-shlib
 Type: error

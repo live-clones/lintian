@@ -5,8 +5,11 @@ lintian (1.22.9-0.1) unstable; urgency=low
   Jeroen van Wolffelaar <jeroen@wolffelaar.nl>
    * Check wether changelog is valid UTF-8 (Closes: #175318)
      (Patch by: Colin Walters <walters@debian.org>)
+   * Update to Debian Policy 3.6.1, all references are fixed (because policy
+     moved sections (Closes: #194257, #208945, #214949)
+     (Patch by Nicholas Breen <nbreen@ofb.net>)
 
- -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Sat, 31 Jan 2004 14:22:48 +0100
+ -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Sat, 31 Jan 2004 14:44:55 +0100
 
 lintian (1.22.9) unstable; urgency=low
 

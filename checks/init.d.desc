@@ -20,6 +20,7 @@ Tag: preinst-calls-updaterc.d
 Type: error
 Info: The <tt>preinst</tt> package calls <tt>update-rc.d</tt>. Instead,
  you should call it in the <tt>postinst</tt> script.
+Ref: policy 9.3.3.1
 
 Tag: duplicate-updaterc.d-calls-in-postrm
 Type: error
@@ -30,6 +31,7 @@ Tag: prerm-calls-updaterc.d
 Type: error
 Info: The <tt>prerm</tt> package calls <tt>update-rc.d</tt>. Instead,
  you should call it in the <tt>postrm</tt> script.
+Ref: policy 9.3.3.1
 
 Tag: postrm-does-not-call-updaterc.d-for-init.d-script
 Type: error
@@ -44,12 +46,12 @@ Info: The <tt>postrm</tt> de-registers an <tt>/etc/init.d</tt> script which
 
 Tag: file-in-etc-rc.d-marked-as-conffile
 Type: error
-Ref: policy 10.3.3
+Ref: policy 9.3.3
 Info: The symbolic links in <tt>/etc/rc?.d</tt> may not be marked as conffiles.
 
 Tag: init.d-script-not-marked-as-conffile
 Type: warning
-Ref: policy 10.3.2
+Ref: policy 9.3.2
 Info: <tt>/etc/init.d</tt> scripts should be marked as conffiles.
  .
  This is usually an error, but the Policy allows for managing these files

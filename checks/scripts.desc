@@ -17,7 +17,7 @@ Type: warning
 Info: This executable file is not an ELF format binary, and does not start
  with the #! sequence that marks interpreted scripts.  It might be a sh script
  that fails to name /bin/sh as its shell.
-Ref: policy 11.4
+Ref: policy 10.4
 
 Tag: script-not-executable
 Type: warning
@@ -60,7 +60,7 @@ Info: The package contains a control script that uses an unusual interpreter,
  available when the script is invoked.
  .
  Please do not add a pre-dependency without following the policy for doing so.
- (Policy section 2.3.4).
+ (Policy section 3.5).
 
 Tag: wrong-path-for-awk
 Type: error
@@ -110,7 +110,7 @@ Info: Packages that use burlap scripts must depend on the felt package.
 Tag: wrong-path-for-csh
 Type: error
 Info: Csh is installed as /bin/csh on Debian systems.
-Ref: policy 11.4
+Ref: policy 10.4
 
 Tag: wrong-path-for-tcsh
 Type: error
@@ -123,13 +123,13 @@ Info: Packages that use csh scripts must depend on the virtual package c-shell,
  .
  In some cases a weaker relationship, such as Suggests or Recommends, will
  be more appropriate.
-Ref: policy 11.4
+Ref: policy 10.4
 
 Tag: csh-considered-harmful
 Type: warning
 Info: The Debian policy for scripts explicitly warns against using csh
  and tcsh as scripting languages.
-Ref: policy 11.4
+Ref: policy 10.4
 
 Tag: wrong-path-for-ash
 Type: error
@@ -234,7 +234,7 @@ Info: Packages that use make scripts must depend on the make package.
 Tag: wrong-path-for-perl
 Type: error
 Info: Perl is installed as /usr/bin/perl on Debian systems.
-Ref: policy 11.4
+Ref: policy 10.4
 
 Tag: perl-5.004-script-but-no-perl-5.004-dep
 Type: error
@@ -349,19 +349,16 @@ Info: Packages that use rexx scripts must depend on the regina-rexx package.
 Tag: wrong-path-for-runhugs
 Type: error
 Info: Hugs is installed as /usr/bin/runhugs on Debian systems.
-Ref: policy 11.4
 
 Tag: wrong-path-for-runhugs1.4
 Type: error
 Info: Hugs is installed as /usr/bin/runhugs or /usr/bin/runhugs1.4 on Debian 
  systems.
-Ref: policy 11.4
 
 Tag: wrong-path-for-runhugs98
 Type: error
 Info: Hugs is installed as /usr/bin/runhugs or /usr/bin/runhugs98 on Debian 
  systems.
-Ref: policy 11.4
 
 Tag: runhugs1.4-script-but-no-hugs-dep
 Type: error
@@ -487,7 +484,7 @@ Info: The maintainer script seems to access a file in <tt>/tmp</tt> or some
  If this is just a misinterpretation of some code in your maintainer
  script, please contact &maint; about this so that this exception would be
  recognized in future versions of Lintian.
-Ref: policy 11.4
+Ref: policy 10.4
 
 Tag: killall-is-dangerous
 Type: warning
@@ -505,17 +502,16 @@ Info: The maintainer script seems to call "<tt>dpkg --print-architecture</tt>".
  .
  The script should probably use "<tt>dpkg --print-installation-architecture</tt>"
  instead.
-Ref: policy 5.2
 
 Tag: mknod-in-maintainer-script
 Type: warning
-Ref: policy 11.6
+Ref: policy 10.6
 Info: Maintainer scripts should not create device files directly.  They
  should call makedev instead.
 
 Tag: possible-bashism-in-maintainer-script
 Type: warning
-Ref: policy 11.4
+Ref: policy 10.4
 Info: This script is marked as running under <tt>/bin/sh</tt>, but it seems
  to use a feature found in bash.
  .
