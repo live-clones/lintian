@@ -46,6 +46,15 @@ Info: The debian version part (the part after the -) should consist of one to
  three dot-seperated parts: one for maintainer release, two for source-NMU,
  three for binary NMU.
 
+Tag: debian-revision-should-not-be-zero
+Type: warning
+Info: The debian version part (the part after the -) should start with one,
+ not with zero. This is to ensure that a correctly-done Maintainer Upload will
+ always have a higher version number than a Non-Maintainer upload: a NMU could
+ have been prepared which introduces this upstream version with
+ Debian-revision -0.1
+Ref: devref 5.11.4.1
+
 Tag: no-architecture-field
 Type: error
 Info: The package does not have an `Architecture:' field in its control file.

@@ -69,6 +69,8 @@ if (not open (FH, "fields/version")) {
 			print "W: $pkg $type: upstream-version-not-numeric $version\n";
 		}
 		if (defined $debian) {
+			print "W: $pkg $type: debian-revision-should-not-be-zero $version\n"
+				if $debian eq '0';
 			$debian =~ /^-([^.]+)?(?:\.[^.]+)?(?:\.[^.]+)?(\..*)?$/;
 			if (not defined $1 or defined $2) {
 				print "W: $pkg $type: debian-revision-not-welformed $version\n";
