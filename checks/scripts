@@ -234,7 +234,7 @@ while (<SCRIPTS>) {
 	unless ($interpreter eq $valid_interpreters{$base} or
 		defined $calls_env) {
 	    # save us from some copy and paste
-	    if ($base =~ /^(ruby|python)(?:\d.\d)?$/) {
+	    if ($base =~ /^(ruby|python)(?:\d\.\d)?$/) {
 		tag_error("wrong-path-for-$1", $filename, "#!$interpreter");
 	    } else {
 		tag_error("wrong-path-for-$base", $filename, "#!$interpreter");
