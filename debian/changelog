@@ -1,3 +1,12 @@
+lintian (1.22.10) unstable; urgency=low
+
+  * Lintian maintainance is now in the hands of the `Debian Lintian
+    Maintainers' group
+  * Add check for tar bug #230910
+    (tar check written by Marc 'HE' Brockschmidt <marc@marcbrockschmidt.de>)
+
+ -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Fri, 13 Feb 2004 01:00:48 +0100
+
 lintian (1.22.9) unstable; urgency=low
 
   * config.* files from 2000-09-05 and such had the timestamp in a

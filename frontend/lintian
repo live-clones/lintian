@@ -29,7 +29,7 @@ use FileHandle;
 #  Global Variables
 #######################################
 my $lintian_info_cmd = 'lintian-info'; #Command to run for ?
-my $LINTIAN_VERSION = "1.22.9";	#External Version number
+my $LINTIAN_VERSION = "1.22.10";	#External Version number
 my $BANNER = "Lintian v$LINTIAN_VERSION"; #Version Banner - text form
 my $LAB_FORMAT = 6;		#Lab format Version Number
 				#increased whenever incompatible
