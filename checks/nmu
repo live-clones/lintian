@@ -70,7 +70,7 @@ if ($maintainer =~ /packages\@qa.debian.org/) {
 		if !$changelog_mentions_qa;
 } else {
 	print "W: $pkg $type: changelog-should-mention-nmu\n"
-		if !$changelog_mentions_nmu && ($upload_is_nmu || $version_nmuness);
+		if !$changelog_mentions_nmu && $upload_is_nmu;
 	print "W: $pkg $type: source-nmu-has-incorrect-version-number $version\n"
 		if $upload_is_nmu && $version_nmuness != 1;
 	print "W: $pkg $type: maintainer-upload-has-incorrect-version-number $version\n"
