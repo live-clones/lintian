@@ -156,6 +156,12 @@ Info: Orphaned packages should no longer have the address
  Debian QA Group &lt;packages@qa.debian.org&gt;.
 Ref: devref 5.9.4
 
+Tag: wrong-debian-qa-group-name
+Type: error
+Info: Orphaned packages should have "Debian QA Group
+ &lt;packages@qa.debian.org&gt;" in the maintainer field.
+Ref: devref 5.9.4
+
 Tag: no-source-field
 Type: error
 Info: The package does not have a `Source:' field in its control file.
