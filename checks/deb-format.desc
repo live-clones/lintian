@@ -14,4 +14,5 @@ Info: The binary package was created with a broken version of tar.
  unpack, some filenames are going to be corrupted.
  .
  This package was build with such a version of tar, and the mentioned filename
- is corrupted. Refer to Debian bug #230910 for more information.
+ is corrupted. Refer to Debian bug #230910 for more information, or simply
+ update your tar-version and rebuild.

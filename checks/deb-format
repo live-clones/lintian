@@ -1,98 +1,64 @@
-#!/usr/bin/perl -w
-# Most of this code is shamelessly stolen from Archive::Tar. Thanks.
-#
-# The copyright for the rest is as follows: 
-#
-# Copyright: (C) 2004 Marc Brockschmidt <marc@dch-faq.de>
-# Adapted to lintian by Jeroen van Wolffelaar <jeroen@wolffelaar.nl>
-#
-# This program is free software; you can redistribute it and/or modify it
-# under the terms of the GNU Library General Public License as published
-# by the Free Software Foundation; either version 2, or (at your option)
-# any later version.
+#! /usr/bin/perl -w
+
+# deb-format -- lintian check script
+
+# Copyright (C) 2004 Denis Barbier
+# Based on a check provided by Marc 'HE' Brockschmidt.
+# Code cleared up a bit, and fix one thinko by Jeroen van Wolffelaar
+# 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+# MA 02111-1307, USA.
 
 use strict;
 
-($#ARGV == 1) or fail("syntax: standards-version <pkg> <type>");
+($#ARGV == 1) or fail("syntax: deb-format <pkg> <type>");
 my $pkg = shift;
 my $type = shift;
 
-use Archive::Tar;
-
-use constant HEAD           => 512;
-use constant TAR_END        => "\0" x 512;
-use constant BLOCK_SIZE     => sub { my $n = int($_[0]/512); $n++ if $_[0] % 512; $n * 512 };
+sub get_block_size {
+	my $size = shift;
+	my $nblocks = int($size / 512);
+	$nblocks ++ if (($size % 512) > 0);
+	return 512*$nblocks;
+}
 
 open INPUT, "ar p deb data.tar.gz | gzip -dc |";
 
-my ($chunk, $real_name, $data, $oldraw, $raw);
-while( read( INPUT, $chunk, HEAD ) ) {                  
-    ### if we can't read in all bytes... ###
-    last if length $chunk != HEAD;
-    
-    # Apparently this should really be two blocks of 512 zeroes,
-    # but GNU tar sometimes gets it wrong. See comment in the
-    # source code (tar.c) to GNU cpio.
-    last if $chunk eq TAR_END; 
-    
-    my $entry; 
-    unless( $entry = Archive::Tar::File->_new_from_chunk( $chunk ) ) {
-        warn ( qq[Couldnt read chunk '$chunk'] );
-        next;
-    }
-    
-    ### ignore labels:
-    ### http://www.gnu.org/manual/tar/html_node/tar_139.html
-    next if $entry->is_label;
-    
-    if( length $entry->type and ($entry->is_file || $entry->is_longlink) ) {      
-        ### part II of the @LongLink munging -- need to do /after/
-        ### the checksum check.
+my $chunk;
+# Previous was a LongLink?
+my $is_long = 0;
+while (read(INPUT, $chunk, 512)) {
+	last if length($chunk) != 512;
+	my ($name, $size, $type) = unpack "A100x24A12x20A1", $chunk;
+	$size = oct($size);
 
-        my $block = BLOCK_SIZE->( $entry->size );
+	if (!$is_long && length($name) == 100) {
+		# This should have been a LongLink, as now the filename isn't
+		# NUL-terminated, as dpkg -i expects.
+		print "E: $pkg $type: deb-created-with-broken-tar file: $name\n";
+	}
 
-        $data = $entry->get_content_by_ref;
-        
-        ### just read everything into memory 
-        ### can't do lazy loading since IO::Zlib doesn't support 'seek'
-        ### this is because Compress::Zlib doesn't support it =/            
-        if( read( INPUT, $$data, $block ) < $block ) {
-            die ( qq[Read error on tarfile ]. $entry->name ."'" );
-        }
+	$is_long = $type eq 'L';
 
-        ### throw away trailing garbage ###
-        substr ($$data, $entry->size) = "";
-    }
-
-    $oldraw = $raw;
-    $raw = $entry->raw();
-
-    ### clean up of the entries.. posix tar /apparently/ has some
-    ### weird 'feature' that allows for filenames > 255 characters
-    ### they'll put a header in with as name '././@LongLink' and the
-    ### contents will be the name of the /next/ file in the archive
-    ### pretty crappy and kludgy if you ask me
-    
-    ### set the name for the next entry if this is a @LongLink;
-    ### this is one ugly hack =/ but needed for direct extraction
-    if( $entry->is_longlink ) {
-        $real_name = $data;	
-        next;
-    } elsif ( defined $real_name ) {
-        $entry->name( $$real_name );
-        undef $real_name;
-    }
-
-	my $name = substr($raw, 0, 100);
-	$name =~ s/\x00/-/g;
-
-	print "E: $pkg $type: deb-created-with-broken-tar broken file: /$name\n"
-		if ((length($name) == 100) && ($name eq $entry->name()) &&
-			substr($oldraw, 0, 13) ne '././@LongLink');
-    
-    ### Guard against tarfiles with garbage at the end
-    last if $entry->name eq ''; 
-} continue {
-    undef $data;
+	# eat data
+	if ($size) {
+		read(INPUT, $chunk, get_block_size($size)) or last;
+	}
 }
 
+close INPUT;
+
+# vim: ts=4 sw=4
