@@ -125,6 +125,7 @@ if (open(IN,$conffiles)) {
 }
 
 for (keys %initd_postinst) {
+    next if /^\$/;
     # init.d scripts have to be marked as conffiles
     unless ($conffiles{"/etc/init.d/$_"} or $conffiles{"etc/init.d/$_"}) {
 	tag "init.d-script-not-marked-as-conffile", "/etc/init.d/$_";
@@ -166,4 +167,4 @@ closedir(INITD);
 
 1;
 
-# vim: syntax=perl
+# vim: syntax=perl ts=8

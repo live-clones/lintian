@@ -13,6 +13,9 @@ lintian (1.23.3) unstable; urgency=low
   * checks/debconf:
     + [JvW] Don't warn when you're not translation choices of a debconf
       question, it might not make sense (Closes: #262649)
+  * checks/init.d:
+    + [JvW] Don't warn for missing init.d scripts in package and conffile list
+      if a variable is used instead of a real name (Closes: #264218)
   * checks/po-debconf:
     + [JvW] Don't give missing-file-from-potfile-in on empty lines
       (Thanks Adam Conrad for noticing)
