@@ -244,7 +244,7 @@ while (<IN>) {
 		    print "E: $pkg $type: manpage-section-mismatch $file:$lc $fn_section != $th_section\n";
 		}
 	    }
-	    if ($line =~ /^[^\.][^\\].*\W--?\w+/o) {
+	    if ($line =~ /^[^\.].*[^\w\\]--?\w+/o) {
 		# hyphen at the begin of a word, probably not!
 		$hc++;
 		print "W: $pkg $type: hyphen-used-as-minus-sign $file:$lc\n" if $hc <= 10 or $ENV{'LINTIAN_DEBUG'};
