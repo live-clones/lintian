@@ -20,6 +20,8 @@
 # Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 # MA 02111-1307, USA.
 
+use strict;
+
 # Maximum number of identical tags per package:
 my $max_tags = 8;
 
@@ -37,7 +39,7 @@ use Util;
 use Read_taginfo;
 my %tag_info = %{read_tag_info('html')};
 use Read_pkglists;
-use vars qw(%binary_info %source_info %bin_src_ref); # from the above
+use vars qw(%binary_info %source_info %udeb_info %bin_src_ref); # from the above
 
 # Determine Lintian version
 chomp(my $LINTIAN_VERSION = `$LINTIAN_ROOT/frontend/lintian --print-version`);
@@ -57,6 +59,7 @@ EOT_EOT_EOT
 
 # Read configuration file
 read_bin_list();
+read_udeb_list();
 # read_src_list(); # not necessary, get_bin_src_ref will run it
 get_bin_src_ref();
 
@@ -67,6 +70,7 @@ mkdir($HTML_TMP_DIR,0777)
 my ($num_errors, $num_warnings, $num_experimental, $num_overridden);
 $num_errors = $num_warnings = $num_experimental = $num_overridden = 0;
 my (%by_src, %by_tag);
+my %anchor;
 
 # process input
 while (<>) {
@@ -105,7 +109,8 @@ while (<>) {
     if (not exists $source_info{$src}) {
 	# work around:
 	$source_info{$src}->{'maintainer'} = 
-	    $binary_info{$pkg}->{'maintainer'} || '(unknown)';
+	    $binary_info{$pkg}->{'maintainer'} || 
+	    $udeb_info{$pkg}->{'maintainer'} || '(unknown)';
 	$source_info{$src}->{'version'} = $binary_info{$pkg}->{'version'};
     }
   
@@ -115,9 +120,9 @@ while (<>) {
 
 open_qa_list();
 open_maintainer_index();
-read_bug_file("$LINTIAN_ROOT/reporting/bug.status");
 
 my ($src_num_errors, $src_num_warnings);
+my ($num_binpkg, $num_udebpkg, $num_maint, $num_srcpkg);
 
 # Create per-maintainer list
 for my $src (sort by_maint keys %by_src) {
@@ -139,16 +144,17 @@ for my $src (sort by_maint keys %by_src) {
 	$src_num_errors++ if $code eq 'E';
 	$src_num_warnings++ if $code eq 'W';
 
-	if ($pkg ne $lastpkg and $type ne ' source') {
+	if ($pkg ne $lastpkg and $type eq ' binary') {
 	    $num_binpkg++;
+	    drop_anchor($pkg, "");
+	} elsif ($pkg ne $lastpkg and $type eq ' udeb') {
+	    $num_udebpkg++;
 	    drop_anchor($pkg, "");
 	}
 	if ($tag ne $lasttag or $pkg ne $lastpkg) {
 	    output_chunk(\@tags) if @tags;
 	    undef @tags;
 
-	    my $b = bug_number("$pkg: $tag");
-	    $rest .= " [" . make_bugref($b) . "]" if $b;
 	}
 	$lastpkg = $pkg; $lasttag = $tag;
 
@@ -171,6 +177,7 @@ open_tag_index();
 for my $tag (sort keys %by_tag) {
     my $lastpkg = "";
     my $tag_pkgs = 0;
+    my @tags;
 
     open_tag_file($tag);
 
@@ -187,8 +194,6 @@ for my $tag (sort keys %by_tag) {
 		undef @tags;
 	    }
 
-	    my $b = bug_number("$pkg: $tag");
-	    $rest .= " [" . make_bugref($b) . "]" if $b;
 	}
 	$lastpkg = $pkg;
 
@@ -235,6 +240,7 @@ output_packages(\@list3,'packages_3.html','M-R');
 output_packages(\@list4,'packages_4.html','S-Z');
 
 # Read old statistics file
+my $old_stat;
 if (-f $statistics_file) {
     ($old_stat) = read_dpkg_control($statistics_file);
 }
@@ -245,6 +251,7 @@ if (-f $statistics_file) {
 my $delta_num_maint = sprintf "%+d",$num_maint-$old_stat->{'maintainers'};
 my $delta_num_srcpkg = sprintf "%+d",$num_srcpkg-$old_stat->{'source-packages'};
 my $delta_num_binpkg = sprintf "%+d",$num_binpkg-$old_stat->{'binary-packages'};
+my $delta_num_udebpkg = sprintf "%+d",$num_udebpkg-$old_stat->{'udeb-packages'};
 my $delta_num_warnings = sprintf "%+d",$num_warnings-$old_stat->{'warnings'};
 my $delta_num_errors = sprintf "%+d",$num_errors-$old_stat->{'errors'};
 my $delta_num_experimental = sprintf "%+d",$num_experimental-$old_stat->{'experimental'};
@@ -257,6 +264,7 @@ $stat->{'mirror-timestamp'} = $mirror_timestamp;
 $stat->{'maintainers'} = $num_maint;
 $stat->{'source-packages'} = $num_srcpkg;
 $stat->{'binary-packages'} = $num_binpkg;
+$stat->{'udeb-packages'} = $num_udebpkg;
 $stat->{'warnings'} = $num_warnings;
 $stat->{'errors'} = $num_errors;
 $stat->{'experimental'} = $num_experimental;
@@ -324,9 +332,9 @@ Manual</a>.</p>
 <tr><td>Maintainers listed:</td>		<td>$num_maint ($delta_num_maint)</td></tr>
 <tr><td>Source packages listed:</td>		<td>$num_srcpkg ($delta_num_srcpkg)</td></tr>
 <tr><td>Binary packages listed:</td>		<td>$num_binpkg ($delta_num_binpkg)</td></tr>
+<tr><td>Udeb packages listed:</td>		<td>$num_udebpkg ($delta_num_udebpkg)</td></tr>
 <tr><td>Warnings:</td>				<td>$num_warnings ($delta_num_warnings)</td></tr>
 <tr><td>Errors:</td>				<td>$num_errors ($delta_num_errors)</td></tr>
-<tr><td>Experimental tags:</td>			<td>$num_experimental ($delta_num_experimental)</td></tr>
 <tr><td>Overridden tags:</td>			<td>$num_overridden ($delta_num_overridden)</td></tr>
 <tr><td>Lintian version:</td>			<td>$LINTIAN_VERSION</td></tr>
 </table>
@@ -565,34 +573,6 @@ sub output_packages {
 
     print I $close_text;
     close(I);
-}
-
-# -------------------------------
-
-my %bugs;
-
-sub read_bug_file {
-    undef %bugs;
-    open(B,$_[0]) or die "cannot open file $_[0] for reading: $!";
-    while (<B>) {
-	chop;
-	next if /^\s*$/;
-	/^\#(\d+):\s+(.*\S)\s*$/ or die "syntax error in $_[0]: $_";
-	$bugs{$2} = $1;
-    }
-    close(B);
-}
-
-sub bug_number {
-    return $bugs{$_[0]};
-}
-
-sub make_bugref {
-    my $bugnum = shift;
-    my $bugdir = substr($bugnum, 0, 2);
-
-    return "<a href=\"http://www.debian.org/Bugs/db/$bugdir/$bugnum.html\">"
-	. "\#$bugnum</a>";
 }
 
 # -------------------------------

@@ -115,7 +115,15 @@ lintian (1.23.1~beta) unstable; urgency=low
       correctly
     + [FL] a space after the colon is not mandatory in dpkg control
       files
-
+  
+  * reporting/harness:
+    + [FL] Correctly support udeb packages
+  * reporting/html_reports:
+    + [FL] Correctly support udeb packages
+    + [FL] Remove some unused code for bug references
+  * reporting/bug.status:
+    + [FL] Remove
+  
   * testset/filenames:
     + [JvW] Fix two lintian warnings in lintian itself by touching files only
       on clean target, and not distributing them in the source

@@ -62,7 +62,7 @@ use vars qw($LINTIAN_ROOT $LINTIAN_LAB $LINTIAN_ARCHIVEDIR $LINTIAN_DIST
 # import perl libraries
 unshift @INC, "$LINTIAN_ROOT/lib";
 require Read_pkglists;
-use vars qw(%binary_info %source_info); # from the above
+use vars qw(%binary_info %source_info %udeb_info); # from the above
 require Util;
 
 # turn file buffering off
@@ -89,6 +89,8 @@ $ENV{'LINTIAN_ARCH'} = $LINTIAN_ARCH;
 if ($opt_c) { # purge the old packages
   system("rm -rf $LINTIAN_LAB/binary") == 0 || die "$!";
   system("mkdir -m 2775 $LINTIAN_LAB/binary") == 0 || die "$!";
+  system("rm -rf $LINTIAN_LAB/udeb") == 0 || die "$!";
+  system("mkdir -m 2775 $LINTIAN_LAB/udeb") == 0 || die "$!";
   system("rm -rf $LINTIAN_LAB/source") == 0 || die "$!";
   system("mkdir -m 2775 $LINTIAN_LAB/source") == 0 || die "$!";
   system("rm -f $LINTIAN_LAB/info/*") == 0 || die "$!";
@@ -127,12 +129,18 @@ if ($opt_i) { # process changes only
 
     my $pkgfile;
     my %skip_binary;
+    my %skip_udeb;
     my %skip_source;
 
     # read binary packages files
     $pkgfile = "$LINTIAN_LAB/info/binary-packages";
     (-f $pkgfile) or Die("cannot find list of binary packages $pkgfile");
     read_bin_list($pkgfile);
+
+    # read udeb packages files
+    $pkgfile = "$LINTIAN_LAB/info/udeb-packages";
+    (-f $pkgfile) or Die("cannot find list of udeb packages $pkgfile");
+    read_udeb_list($pkgfile);
   
     # read source packages files
     $pkgfile = "$LINTIAN_LAB/info/source-packages";
@@ -148,7 +156,7 @@ if ($opt_i) { # process changes only
     while (<IN>) {
 	chop;
     
-	if (/^N: Listed (changed|new) (binary|source) package (\S+) (\S+)/o) {
+	if (/^N: Listed (changed|new) (binary|udeb|source) package (\S+) (\S+)/o) {
 	    my ($type,$binsrc,$pkg,$ver) = ($1,$2,$3,$4);
       
 	    Log("$type $binsrc package $pkg $ver");
@@ -158,13 +166,18 @@ if ($opt_i) { # process changes only
 		$data or Die("cannot find binary package $pkg in binary-packages file");
 		print OUT "b $binary_info{$pkg}->{'package'} $binary_info{$pkg}->{'version'} $LINTIAN_ARCHIVEDIR/$binary_info{$pkg}->{'file'}\n";
 		$skip_binary{$pkg} = 1;
+	    } elsif ($binsrc eq 'udeb') {
+		my $data = $udeb_info{$pkg};
+		$data or Die("cannot find udeb package $pkg in udeb-packages file");
+		print OUT "u $udeb_info{$pkg}->{'package'} $udeb_info{$pkg}->{'version'} $LINTIAN_ARCHIVEDIR/$udeb_info{$pkg}->{'file'}\n";
+		$skip_udeb{$pkg} = 1;
 	    } else {
 		my $data = $source_info{$pkg};
 		$data or Die("cannot find source package $pkg in source-packages file");
 		print OUT "s $source_info{$pkg}->{'source'} $source_info{$pkg}->{'version'} $LINTIAN_ARCHIVEDIR/$source_info{$pkg}->{'file'}\n";
 		$skip_source{$pkg} = 1;
 	    }
-	} elsif (/^N: Removed (binary|source) package (\S+)/o) {
+	} elsif (/^N: Removed (binary|udeb|source) package (\S+)/o) {
 	    my ($binsrc,$pkg) = ($1,$2);
 
 	    Log("removed $binsrc package $pkg");
@@ -172,6 +185,8 @@ if ($opt_i) { # process changes only
 		or Log("could not remove $binsrc package $pkg");
 	    if ($binsrc eq 'binary') {
 		$skip_binary{$pkg} = 1;
+	    } elsif ($binsrc eq 'udeb') {
+		$skip_udeb{$pkg} = 1;
 	    } else {
 		$skip_source{$pkg} = 1;
 	    }
@@ -194,11 +209,13 @@ if ($opt_i) { # process changes only
 	or Die("cannot open lintian.log $lintian_log for writing: $!");
     my $copy_mode = 1;
     while (<IN>) {
-	if (/^N: Processing (binary|source) package (\S+)/o) {
+	if (/^N: Processing (binary|udeb|source) package (\S+)/o) {
 	    my ($type,$pkg) = ($1,$2);
 
 	    if ($type eq 'binary') {
 		$copy_mode = not exists $skip_binary{$pkg};
+	    } elsif ($type eq 'udeb') {
+		$copy_mode = not exists $skip_udeb{$pkg};
 	    } else {
 		$copy_mode = not exists $skip_source{$pkg};
 	    }
