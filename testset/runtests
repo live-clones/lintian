@@ -218,9 +218,9 @@ for (@tests) {
     runsystem_ok("$lintian_path $lintian_options $rundir/$pkg\_$ver*.changes".
     	" 2>&1 | sort > $rundir/tags.$pkg");
 
-    # Run a sed-script if it exists, for tests that have slightly varialbe
+    # Run a sed-script if it exists, for tests that have slightly variable
     # output
-    runsystem_ok("sed -i -f $testset/tags.$pkg.sed $rundir/tags/$pkg")
+    runsystem_ok("sed -i -f $testset/tags.$pkg.sed $rundir/tags.$pkg")
 	if -e "$testset/tags.$pkg.sed";
 
     $testok = runsystem_ok("cmp -s $rundir/tags.$pkg $testset/tags.$pkg");
