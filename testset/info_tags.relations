@@ -14,7 +14,7 @@ N:
 N:   Each binary package has to include a plain file
 N:   /usr/share/doc/<pkg>/copyright
 N:   
-N:   Refer to Policy Manual, section 13.5 for details.
+N:   Refer to Policy Manual, section 12.5 for details.
 N:
 W: relations-multiple-libs: description-synopsis-might-not-be-phrased-properly
 N:
@@ -26,7 +26,7 @@ N:
 N:   Note also that the synopsis is not part of the rest of the
 N:   "Description:" field.
 N:   
-N:   Refer to Policy Manual, section 5.7.1 for details.
+N:   Refer to Policy Manual, section 3.4.1 for details.
 N:
 E: relations-multiple-libs: description-synopsis-is-duplicated
 N:
@@ -35,7 +35,7 @@ N:   synopsis exactly. This indicates that either the synopsis is badly
 N:   formed or that the extended description has been wrongly copied and
 N:   pasted.
 N:   
-N:   Refer to Policy Manual, section 5.7.1 for details.
+N:   Refer to Policy Manual, section 3.4.2 for details.
 N:
 E: relations-multiple-libs: package-depends-on-multiple-libstdc-versions libstdc++2.10 libstdc++2.10-glibc2.2 libstdc++3.0
 N:
@@ -74,8 +74,8 @@ N:   The package declares a relationship with itself. This is not very
 N:   useful, except in the case of a package Conflicting with itself, if
 N:   its package name doubles as a virtual package.
 N:
-W: relations: package-relation-with-self depends: relations(<< 3)
-E: relations: package-has-a-duplicate-relation relations, relations(<< 3)
+W: relations: package-relation-with-self depends: relations (<< 3)
+E: relations: package-has-a-duplicate-relation relations, relations (<< 3)
 N:
 N:   The package seems to declare a relation on another package which is
 N:   already implied by other relations it declares, and is therefore
@@ -88,7 +88,7 @@ N:   without using a versioned depends. In general a package should not
 N:   depend on essential packages but if it must do so, the depends should
 N:   have a version string.
 N:   
-N:   Refer to Policy Manual, section 2.3.4 for details.
+N:   Refer to Policy Manual, section 3.5 for details.
 N:
 W: relations: virtual-package-depends-without-real-package-depends mail-transport-agent
 N:
@@ -111,23 +111,17 @@ N:   need to depend on a specific version of awk (which wouldn't work
 N:   anyway, as dpkg doesn't support versioned provides), you should remove
 N:   the dependency on awk.
 N:
-E: relations: multiline-field conflicts
-N:
-N:   Most control fields must have only a single line of data.
-N:   
-N:   Refer to Policy Manual, section 3.1 for details.
-N:
 W: relations: bad-version-in-relation conflicts: foobar (<< 5&5)
 N:
 N:   The version number used in this relationship does not match the
 N:   defined format of a version number.
 N:   
-N:   Refer to Policy Manual, chapter 4 for details.
+N:   Refer to Policy Manual, section 5.6.11 for details.
 N:
 W: relations: package-relation-with-self replaces: relations
 E: relations: obsolete-field optional
 N:
 N:   This is one of the fields listed in Policy Manual as obsolete.
 N:   
-N:   Refer to policy D.2.24 for details.
+N:   Refer to policy D.2.6 for details.
 N:

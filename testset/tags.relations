@@ -14,7 +14,6 @@ E: relations: package-has-a-duplicate-relation relations, relations (<< 3)
 E: relations: depends-on-essential-package-without-using-version dpkg
 W: relations: virtual-package-depends-without-real-package-depends mail-transport-agent
 E: relations: needlessly-depends-on-awk
-E: relations: multiline-field conflicts
 W: relations: bad-version-in-relation conflicts: foobar (<< 5&5)
 W: relations: package-relation-with-self replaces: relations
 E: relations: obsolete-field optional
