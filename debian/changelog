@@ -78,6 +78,10 @@ lintian (1.23.0) UNRELEASED; urgency=low
       shouldn't/can't be called directly anymore so add a new
       error and remove it from the list of usual interpreters.
       (Closes: #240806)
+  * checks/shared-libs:
+    + [HE] Add some new logic to cope with symlinks from /usr/lib to another
+      dir to fix false positives of postrm-has-useless-call-to-ldconfig and
+      friends. (Closes: #190714)
   * checks/standards-version:
     + [JvW] Also emit warning if standards version is 3.6.0, and not yet 3.6.1
 

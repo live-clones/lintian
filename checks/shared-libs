@@ -95,42 +95,57 @@ while (<IN>) {
 close(IN);
 
 # 2nd step: read package contents
+my %files;
 open(IN,"index") or fail("cannot open index file index: $!");
 while (<IN>) {
     chop;
     @words = split(/\s+/o, $_, 6);
     my $perm = $words[0];
     my $cur_file = $words[5];
-    my $link;
-    my $index_count = 0;
     $cur_file =~ s,^(\./),,;
     $cur_file =~ s/ link to .*//;
 
     if ($perm =~ m/^l/) {
+	my $link;
 	($cur_file, $link) = split(' -> ', $cur_file);
 	$link_info{$cur_file} = $link;
     }
-    $index_info{$cur_file} = ++$index_count;
+    $index_info{$cur_file} = 1;
+    $files{$cur_file} = $perm;
+}
+
+for (keys %files) {
+    my ($cur_file, $perm) = ($_, $files{$_});
 
     # shared library?
-    if (exists $SONAME{$cur_file}) {
+    if (exists $SONAME{$cur_file} or 
+	($link_info{$cur_file} and exists $SONAME{abs_path(dirname($cur_file)."/".$link_info{$cur_file})})) {
 	# yes!!
+	
+	my ($real_file, $real_perm);
+	if ($SONAME{$cur_file}) {
+	    $real_file = $cur_file;
+	    $real_perm = $perm;
+	} else {
+	    $real_file = abs_path(dirname($cur_file)."/".$link_info{$cur_file});
+	    $real_perm = $files{abs_path(dirname($cur_file)."/".$link_info{$cur_file})} || $perm;
+	}
 
 	# executable?
-	if ($perm =~ m/x/) {
+	if ($real_perm =~ m/x/) {
 	    # yes.  But if the library has an INTERP section, it's designed
 	    # to do something useful when executed, so don't report an error.
-	    printf "E: $pkg $type: shlib-with-executable-bit $cur_file %04o\n",perm2oct($perm)
-		unless $INTERP{$cur_file};
-	} elsif ($perm ne '-rw-r--r--') {
+	    printf "E: $pkg $type: shlib-with-executable-bit $cur_file %04o\n",perm2oct($real_perm)
+		unless $INTERP{$real_file};
+	} elsif ($real_perm ne '-rw-r--r--') {
 	    # bad permissions
-	    printf "W: $pkg $type: shlib-with-bad-permissions $cur_file %04o\n",perm2oct($perm);
+	    printf "W: $pkg $type: shlib-with-bad-permissions $cur_file %04o\n",perm2oct($real_perm);
 	}
 
 	# installed in a directory controlled by the dynamic linker?
 	if (exists $ldso_dir{dirname($cur_file)}) {
 	    # yes! so postinst must call ldconfig
-	    $must_call_ldconfig = $cur_file;
+	    $must_call_ldconfig = $real_file;
 	}
     } elsif (exists $objsomething{$cur_file} &&
 	     exists $ldso_dir{dirname($cur_file)} &&
@@ -138,6 +153,7 @@ while (<IN>) {
 	print "E: $pkg $type: sharedobject-in-library-directory-not-actually-a-shlib $cur_file\n";
     }
 }
+
 close(IN);
 
 # 3rd step: check if shlib symlinks are present and in correct order
@@ -347,4 +363,11 @@ sub perm2oct {
     $o += 00001 if $9 ne '-';	# owner execute
 
     return $o;
+}
+
+# make /tmp/baz/baz.txt from /tmp/foo/../bar/../baz/baz.txt
+sub abs_path {
+    my $path = shift;
+    while($path =~ s!/[^/]*/\.\./!/!g){1};
+    return $path;
 }
