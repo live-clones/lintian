@@ -16,6 +16,10 @@ lintian (1.22.12) unstable; urgency=low
     + Don't advise to point to to the perl packages' copyright file
       (Closes: #193293)
       Thanks to Martin Orr for pointing this out.
+  * checks/debhelper.desc:
+    + correct reference to debhelper manpage. It's debhelper(7), not
+      debhelper(1). (Closes: #188245)
+      Thanks to Brian Nelson for pointing this out.
 
  -- Frank Lichtenheld <djpig@debian.org>  Sat, 21 Feb 2004 16:55:27 +0100
 

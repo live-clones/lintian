@@ -64,4 +64,4 @@ Info: The source package declares the debhelper compatibility version
  both in the debian/control file and in the rules file. If these ever
  get out of synchronisation, the package may not build as expected.
  .
- Please refer to the debhelper(1) manual page for more information.
+ Please refer to the debhelper(7) manual page for more information.
