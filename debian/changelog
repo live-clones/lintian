@@ -1,4 +1,10 @@
-lintian (1.23.0~beta1-r181) unstable; urgency=low
+lintian (1.23.1~alpha) unstable; urgency=low
+
+  Next release, name to be determined.
+
+ -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Sun, 18 Apr 2004 03:13:17 +0200
+
+lintian (1.23.0) unstable; urgency=low
 
   The ``moving forward'' release, prepared by Marc 'HE' Brockschmidt,
   Frank Lichtenheld and Jeroen van Wolffelaar.
