@@ -32,12 +32,12 @@ use Pipeline;
 print "N: Unpacking binary packages in directory $base_dir ...\n" if $::verbose;
 mkdir("$base_dir/unpacked", 0777) or fail();
 
-# avoid using dpkg-deb; this pipeline is far faster.  I got a factor 2
+# avoid using dpkg-deb -x; this pipeline is far faster.  I got a factor 2
 # improvement on large debs, and factor 1.5 on small debs.  I heard
 # it's because dpkg-deb syncs while writing.  -- Richard
 
-pipeline((sub { exec 'ar', 'p', "$base_dir/deb", 'data.tar.gz' }),
-	 (sub { exec 'tar', 'xfz', '-', '-C', "$base_dir/unpacked" })) == 0
+pipeline((sub { exec 'dpkg', '--fsys-tarfile', "$base_dir/deb" }),
+	 (sub { exec 'tar', 'xf', '-', '-C', "$base_dir/unpacked" })) == 0
     or fail();
 
 # fix permissions

@@ -6,6 +6,9 @@ lintian (1.23.4) unstable; urgency=low
     + [FL] file has apparently changed its output format for
       symlinks sometime in the past. This broke symlink detection.
       (Closes: #276504)
+  * checks/deb-format, unpack/unpack-binpkg-l1, unpack/unpack-binpkg-l2:
+    + [CW] Fix binary package data member extraction to work with arbitrary
+      compression algorithms instead of hardcoding data.tar.gz.
   * checks/debconf{,.desc}:
     + [FL] The SETTITLE command was introduced in debconf version
       1.3.22. Check the depends for that (Closes: #261890)

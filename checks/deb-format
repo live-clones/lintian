@@ -38,7 +38,7 @@ if (open (LIST, "ar t deb |")) {
 	close LIST;
 }
 
-open INPUT, "ar p deb data.tar.gz | gzip -dc |";
+open INPUT, "dpkg --fsys-tarfile deb |";
 
 my $chunk;
 # Previous was a LongLink?
