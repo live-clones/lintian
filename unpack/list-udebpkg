@@ -117,7 +117,7 @@ while (!eof(IN)) {
     if (exists $pkgfile{$deb_file}) {
 	# yes!
 	$pkg = $pkgfile{$deb_file};
-	$data = $binary_info{$pkg};
+	$data = $udeb_info{$pkg};
 
 	# file changed since last run?
 	if ($timestamp == $data->{'timestamp'}) {
