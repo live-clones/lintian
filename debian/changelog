@@ -13,7 +13,7 @@ lintian (1.22.12) unstable; urgency=low
       Thanks to Martin Godisch, Steinar H. Gunderson and
       Aidas Kasparas for their input.
   * checks/copyright.desc:
-    + Don't advise to point to to the perl packages' copyright file
+    + Don't advise to point to the perl packages' copyright file
       (Closes: #193293)
       Thanks to Martin Orr for pointing this out.
   * checks/debhelper.desc:
