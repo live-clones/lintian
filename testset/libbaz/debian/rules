@@ -7,8 +7,11 @@ LIB=libbaz1
 DEV=libbaz1-dev
 
 build:
+	$(MAKE)
 
 clean:
+	$(MAKE) clean
+	dh_clean -plibbaz2 -plibbaz2-dev
 	rm -f debian/files debian/substvars
 	rm -rf $(lib_tmp) $(dev_tmp)
 
@@ -36,6 +39,31 @@ binary-arch: build
 	install -m 755 debian/dev.prerm $(dev_tmp)/DEBIAN/prerm
 	dpkg-gencontrol -isp -p$(DEV) -P$(dev_tmp)
 	dpkg --build $(dev_tmp) ..
+
+	# Now the correct libbaz2-dev package
+	install -d debian/libbaz2-dev/usr/lib
+	cp -a *.a *.so debian/libbaz2-dev/usr/lib
+	# usually, I'd also include some .h files to /usr/include
+	
+	# Now the correct libbaz2 package
+	install -d debian/libbaz2/usr/lib
+	cp -a *.so.* debian/libbaz2/usr/lib
+	chmod a-x debian/libbaz2/usr/lib/*
+	
+	# General stuff that is tested in other testsets:
+	dh_installchangelogs -plibbaz2 -plibbaz2-dev
+	dh_installdocs -plibbaz2 -plibbaz2-dev
+	dh_compress -plibbaz2 -plibbaz2-dev
+
+	# Okay, if either line is omitted, it should be noted
+	dh_strip -plibbaz2 -plibbaz2-dev
+	dh_makeshlibs -plibbaz2 -plibbaz2-dev
+	dh_shlibdeps -plibbaz2 -plibbaz2-dev
+
+	# and again, regular packaging stuff
+	dh_installdeb -plibbaz2 -plibbaz2-dev
+	dh_gencontrol -plibbaz2 -plibbaz2-dev
+	dh_builddeb -plibbaz2 -plibbaz2-dev
 
 binary: binary-arch
 
