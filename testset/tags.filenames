@@ -43,6 +43,7 @@ W: filenames: file-in-unusual-dir files/Maelstrom Sound.mine
 W: filenames: file-in-unusual-dir files/svn-commit.tmp
 W: filenames: no-priority-field
 W: filenames: no-section-field
+W: filenames: non-standard-dir-perm usr/lib/filenames/readonly/ 0555 != 0755
 W: filenames: package-contains-CVS-dir usr/lib/perl5/CVS/
 W: filenames: package-contains-readme-for-other-platform-or-distro usr/share/doc/filenames/README.macosx
 W: filenames: package-contains-svn-control-dir usr/lib/perl5/.svn/

@@ -1437,6 +1437,9 @@ sub clean_pkg {
 
 	# remove unpacked/ directory
 	print "N: Decreasing unpack level to 1 (removing files) ...\n" if $debug;
+	# rm -rf doesn't remove non-empty write-protected
+	# directories
+	spawn('chmod', '-R', 'u+w', '--', "$base/unpacked/") == 0 or return -1;
 	if ( -l "$base/unpacked" ) {
 	    spawn('rm', '-rf', '--', "$base/".readlink( "$base/unpacked" )) == 0
 		or return -1;
@@ -1456,6 +1459,9 @@ sub remove_pkg {
     my ($base) = @_;
 
     print "N: Removing package in lab ...\n" if $debug;
+    # rm -rf doesn't remove non-empty write-protected
+    # directories
+    spawn('chmod', '-R', 'u+w', '--', $base) or warn "error: chmod on $base failed.\n";
     if (spawn('rm', '-rf', '--', $base) != 0) {
 	print STDERR "error: cannot remove directory $base: $!\n";
 	return 0;
