@@ -50,6 +50,9 @@ lintian (1.22.12) unstable; urgency=low
   * checks/debconf:
     + Update valid types, since currently 'title' is supported now too
       (Closes: #234379, #234608)
+  * checks/deb-format:
+    + Fix perl variable-name clash causing unusually formatted error output
+      (only important if you do automatic processing on it)
   * checks/filenames:
     + Revised the symlink detection stuff, it is now more rigorous, and has
       seperate warning for recursive symlinks that are otherwise not

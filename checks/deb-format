@@ -1,4 +1,4 @@
-#! /usr/bin/perl -w
+#! /usr/bin/perl -W
 
 # deb-format -- lintian check script
 
@@ -42,7 +42,7 @@ my $chunk;
 my $is_long = 0;
 while (read(INPUT, $chunk, 512)) {
 	last if length($chunk) != 512;
-	my ($name, $size, $type) = unpack "A100x24A12x20A1", $chunk;
+	my ($name, $size, $htype) = unpack "A100x24A12x20A1", $chunk;
 	$size = oct($size);
 
 	if (!$is_long && length($name) == 100) {
@@ -55,7 +55,7 @@ while (read(INPUT, $chunk, 512)) {
 		print "E: $pkg $type: deb-created-with-broken-tar file: $name\n";
 	}
 
-	$is_long = $type eq 'L';
+	$is_long = $htype eq 'L';
 
 	# eat data
 	if ($size) {
