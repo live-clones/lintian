@@ -13,13 +13,7 @@ E: manpages: manpage-not-compressed usr/share/man/man1/usr-bin-binary.1
 N:
 N:   Manual pages have to be installed compressed (using `gzip -9').
 N:   
-N:   Refer to Policy Manual, section 13.1 for details.
-N:
-E: manpages: manpage-has-wrong-extension usr/share/man/man1/usr-bin-binary.1
-N:
-N:   The manual page has an extension other than `<section>[<program>].gz'.
-N:   
-N:   Refer to Policy Manual, section 13.1 for details.
+N:   Refer to Policy Manual, section 12.1 for details.
 N:
 E: manpages: empty-manual-page usr/share/man/man1/usr-bin-binary.1
 N:
@@ -40,7 +34,7 @@ E: manpages: manpage-not-compressed-with-gzip usr/share/man/man1/usr-sbin-binary
 N:
 N:   Manual pages should be compressed with gzip -9.
 N:   
-N:   Refer to Policy Manual, section 13.1 for details.
+N:   Refer to Policy Manual, section 12.1 for details.
 N:
 E: manpages: empty-manual-page usr/share/man/man1/usr-sbin-binary.1.gz
 E: manpages: manpage-has-bad-whatis-entry usr/share/man/man1/usr-sbin-binary.1.gz
@@ -48,12 +42,17 @@ E: manpages: manpage-not-compressed-with-max-compression usr/share/man/man6/usr-
 N:
 N:   Manual pages should be compressed with gzip -9.
 N:   
-N:   Refer to Policy Manual, section 13.1 for details.
+N:   Refer to Policy Manual, section 12.1 for details.
 N:
 E: manpages: empty-manual-page usr/share/man/man6/usr-games-binary.6.gz
 E: manpages: manpage-has-bad-whatis-entry usr/share/man/man6/usr-games-binary.6.gz
 E: manpages: manpage-not-compressed usr/X11R6/man/man6/X11R6-binary.man
 E: manpages: manpage-has-wrong-extension usr/X11R6/man/man6/X11R6-binary.man
+N:
+N:   The manual page has an extension other than `<section>[<program>].gz'.
+N:   
+N:   Refer to Policy Manual, section 13.1 for details.
+N:
 W: manpages: x11-games-should-be-in-usr-games usr/X11R6/man/man6/X11R6-binary.man
 N:
 N:   Since X11 games should be installed in /usr/games (and not in
@@ -66,7 +65,7 @@ N:   is one of these exceptions, please contact lintian-maint@debian.org
 N:   about this so that this exception would be recognized in future
 N:   versions of Lintian.
 N:   
-N:   Refer to Policy Manual, section 12.10 for details.
+N:   Refer to Policy Manual, section 11.11 for details.
 N:
 E: manpages: empty-manual-page usr/X11R6/man/man6/X11R6-binary.man
 E: manpages: manpage-has-bad-whatis-entry usr/X11R6/man/man6/X11R6-binary.man
@@ -84,7 +83,7 @@ N:   by debmake or dh_make, or the /usr/share/doc/man-db/examples
 N:   directory. If the package provides --help output, you might want to
 N:   use the help2man utility to generate a simple manual page.
 N:   
-N:   Refer to Policy Manual, section 13.1 for details.
+N:   Refer to Policy Manual, section 12.1 for details.
 N:
 E: manpages: bad-link-to-undocumented-manpage usr/share/man/man1/sbin-binary.1.gz
 N:
@@ -99,5 +98,5 @@ N:
 N:   Each binary package has to include a plain file
 N:   /usr/share/doc/<pkg>/copyright
 N:   
-N:   Refer to Policy Manual, section 13.5 for details.
+N:   Refer to Policy Manual, section 12.5 for details.
 N:
