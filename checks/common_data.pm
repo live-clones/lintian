@@ -13,8 +13,8 @@ use base qw(Exporter);
 # simple defines for commonly needed data
 
 %known_archs = map { $_ => 1 }
-    ('alpha', 'arm', 'hppa', 'hurd-i386', 'i386', 'ia64', 'mips', 'mipsel',
-     'm68k', 'powerpc', 's390', 'sh', 'sparc', 'any', 'all');
+    ('alpha', 'amd64', 'arm', 'hppa', 'hurd-i386', 'i386', 'ia64', 'mips',
+	 'mipsel', 'm68k', 'powerpc', 's390', 'sh', 'sparc', 'any', 'all');
 
 %known_sections = map { $_ => 1 }
     ('admin', 'base', 'comm', 'devel', 'doc', 'editors', 'electronics',

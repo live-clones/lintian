@@ -69,10 +69,10 @@ Ref:  policy 5.6.7
 Tag: unknown-architecture
 Type: warning
 Info: In addition to the special values `all' and `any', the architecture
- names alpha, arm, hppa, hurd-i386, i386, ia64, m68k, mips, mipsel, powerpc,
- s390, sh, and sparc are currently in use.  The special value `source' is 
- only used in .changes files and does not make sense in a binary package or
- a .dsc file.
+ names alpha, amd64, arm, hppa, hurd-i386, i386, ia64, m68k, mips, mipsel,
+ powerpc, s390, sh, and sparc are currently in use.  The special value
+ `source' is only used in .changes files and does not make sense in a binary
+ package or a .dsc file.
 
 Tag: too-many-architectures
 Type: error

@@ -25,6 +25,8 @@ lintian (1.23.1~beta) unstable; urgency=low
       parse error
   * checks/common-data.pm:
     + [JvW] Add libgl(u)-dev to list of virtual packages (Closes: #255595)
+    + [JvW] Added amd64 to list of known architectures, as the name has
+      settled and it'll likely enter the archive soonish (Closes: #257503)
   * checks/control-file{,.desc}:
     + [HE] Introduced new check script. New checks:
       - build-info-in-binary-control-file-section, triggered
