@@ -73,3 +73,14 @@ N:
 N:   Refer to Policy Manual, section 12.5 for details.
 N:
 E: foo++: wrong-debian-qa-address-set-as-maintainer Lintian Maintainer <debian-qa@lists.debian.org>
+E: foo++: debian-changelog-file-uses-obsolete-national-charset at line 3
+N:
+N:   The Debian changelog file must be valid UTF-8, an encoding of the
+N:   Unicode character set.
+N:   
+N:   There are many ways to convert a changelog from an obsoleted charset
+N:   like ISO-8859-1; you may for example use "iconv" like:
+N:   
+N:    $ iconv -f ISO-8859-1 -t UTF-8 changelog > changelog.new
+N:    $ mv changelog.new changelog
+N:

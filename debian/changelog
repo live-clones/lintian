@@ -31,6 +31,9 @@ lintian (1.22.12) unstable; urgency=low
       copyright-should-refer-to-common-license-file-for-gpl due to
       the GFDL. (Closes: #192278)
       Thanks to Ross Burton for reporting this.
+  * checks/changelog-file:
+    + check encoding of changelog file if it is UTF-8 (Closes: #175318)
+      based on a patch by Denis Barbier
   * checks/debhelper.desc:
     + correct reference to debhelper manpage. It's debhelper(7), not
       debhelper(1). (Closes: #188245)

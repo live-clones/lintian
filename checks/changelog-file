@@ -188,6 +188,19 @@ if ($native_pkg) {
     }
 }
 
+# check that changelog is UTF-8 encoded
+open ICONV, "env LANG=C iconv -f utf8 -t utf8 changelog 2>&1 |"
+    or fail("failure while checking encoding of changelog for $type package $pkg");
+my $line = 1;
+while (<ICONV>) {
+    if (m/iconv: illegal input sequence at position \d+$/) {
+	print "E: $pkg $type: debian-changelog-file-uses-obsolete-national-charset at line $line\n";
+	last;
+    }
+    $line++;
+}
+close ICONV;
+
 # read the changelog itself
 #
 # emacs only looks at the last "local variables:" in a file, and only at
