@@ -26,8 +26,10 @@ lintian (1.23.0) UNRELEASED; urgency=low
       shouldn't/can't be called directly anymore so add a new
       error and remove it from the list of usual interpreters.
       (Closes: #240806)
+  * checks/standards-version
+    + [JvW] Also emit warning if standards version is 3.6.0, and not yet 3.6.1
 
- -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Thu,  1 Apr 2004 01:10:34 +0200
+ -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Mon,  5 Apr 2004 03:17:53 +0200
 
 lintian (1.22.12) unstable; urgency=low
 
