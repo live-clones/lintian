@@ -18,10 +18,6 @@ Info: The package installs an unstripped binary or object file.
  .
  Please note, that shared libraries have to be stripped with the
  <tt>--strip-unneeded</tt> option.
- .
- Usually this is a bug. Otherwise, please contact &maint;
- about this so that this exception would be recognized in future versions of
- Lintian.
 
 Tag: library-in-debug-or-profile-should-not-be-stripped
 Type: error
@@ -32,29 +28,19 @@ Tag: statically-linked-binary
 Type: error
 Info: The package installs a statically linked binary or object file.
  .
- Usually this is a bug. Otherwise, please contact &maint;
- about this so that this exception would be recognized in future versions of
- Lintian, or install an override if your package is an exception. Note that
- binaries named *-static and *.static are already excluded, just as any
- binaries in packages named *-static.
+ Usually this is a bug. Otherwise, please install an override if your package
+ is an exception. Note that binaries named *-static and *.static are already
+ excluded, just as any binaries in packages named *-static.
 
 Tag: library-not-linked-against-libc
 Type: warning
 Info: The package installs a library which is not dynamically linked
  against libc.
- .
- Usually this is a bug. Otherwise, please contact &maint;
- about this so that this exception would be recognized in future versions of
- Lintian.
 
 Tag: program-not-linked-against-libc
 Type: warning
 Info: The package installs a binary which is not dynamically linked
  against libc.
- .
- Usually this is a bug. Otherwise, please contact &maint;
- about this so that this exception would be recognized in future versions of
- Lintian.
 
 Tag: libc5-binary
 Type: warning
@@ -63,9 +49,7 @@ Info: The package contains a binary or shared library which is linked
  .
  This could be a bug since all programs in Debian should use
  libc6. However, the packages in the oldlibs section might contain
- libc5 libs/binaries intentionally. In that case, please send a note to
- &maint; so that this exception would be recognized in future versions of
- Lintian.
+ libc5 libs/binaries intentionally.
 
 Tag: binary-or-shlib-defines-rpath
 Type: warning
@@ -111,8 +95,7 @@ Info: This file defines or requires `__register_frame_info' as a dynamic
  available; see debian-devel).
  .
  This was a problem in the second half of 1998.  If you get this tag
- much later than that, it may be a different problem.  Please check
- with the lintian maintainer in that case.
+ much later than that, it may be a different problem, file a bug.
 
 Tag: arch-dependent-file-in-usr-share
 Type: error

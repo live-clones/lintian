@@ -84,9 +84,6 @@ Tag: non-standard-file-permissions-for-etc-init.d-script
 Type: error
 Info: Usually, scripts in the <tt>/etc/init.d</tt> directory should have
  mode 0755.
- .
- If this is an exception, please contact &maint; about it so that this
- exception would be recognized in future versions of Lintian.
 
 Tag: file-directly-in-usr-share
 Type: error
@@ -132,60 +129,41 @@ Info: The package installs a binary which uses a very short file name (one
  should be reserved for the user.  Unless this short name has been used
  for a while already (like the famous `ls', `rm', `cp' commands), you
  should consider giving these binaries a longer name.
- .
- If you think that the short name is ok, please send a note to &maint;
- so that this exception would be recognized in future versions of Lintian.
 
 Tag: non-standard-dir-perm
 Type: warning
 Info: The directory has a mode different from 0755, and it's not one of the
  known exceptions.
- .
- This is usually a bug, but if it's intentional, please send a note to
- &maint; so that this exception would be recognized in future versions of
- Lintian.
 
 Tag: non-standard-game-executable-perm
 Type: warning
 Info: The file has a mode different from 2755 or 0755. In some cases this 
- is intentional, but in other cases this is a bug. If it's intentional,
- please send a note to &maint; so that this exception would be recognized in
- future versions of Lintian.
+ is intentional, but in other cases this is a bug.
 
 Tag: non-standard-executable-perm
 Type: warning
 Info: The file has a mode different from 0755. In some cases this is
- intentional, but in other cases this is a bug. If it's intentional,
- please send a note to &maint; so that this exception would be recognized in
- future versions of Lintian.
+ intentional, but in other cases this is a bug.
 
 Tag: setuid-binary
 Type: warning
 Info: The file is tagged SETUID. In some cases this is
- intentional, but in other cases this is a bug. If it's intentional,
- please send a note to &maint; so that this exception would be recognized in
- future versions of Lintian.
+ intentional, but in other cases this is a bug.
 
 Tag: setgid-binary
 Type: warning
 Info: The file is tagged SETGID. In some cases this is
- intentional, but in other cases this is a bug. If it's intentional,
- please send a note to &maint; so that this exception would be recognized in
- future versions of Lintian.
+ intentional, but in other cases this is a bug.
 
 Tag: setuid-gid-binary
 Type: warning
 Info: The file is tagged SETUID and SETGID. In some cases this is
- intentional, but in other cases this is a bug. If it's intentional,
- please send a note to &maint; so that this exception would be recognized in
- future versions of Lintian.
+ intentional, but in other cases this is a bug.
 
 Tag: non-standard-file-perm
 Type: warning
 Info: The file has a mode different from 0644. In some cases this is
- intentional, but in other cases this is a bug. If it's intentional,
- please send a note to &maint; so that this exception would be recognized in
- future versions of Lintian.
+ intentional, but in other cases this is a bug.
 
 Tag: special-file
 Type: error
@@ -238,20 +216,12 @@ Ref: policy 10.5
 Tag: udeb-contains-documentation-file
 Type: error
 Info: udeb packages should not contain any documentation.
- .
- If this is an exception, please contact &maint;
- about this so that this exception would be recognized in future versions of
- Lintian.
 
 Tag: executable-in-usr-share-doc
 Type: error
 Info: Usually, documentation files in <tt>/usr/share/doc</tt> should have mode
  0644.  If the executable is an example, it should go in
  <tt>/usr/share/doc/<i>pkg</i>/examples</tt>.
- .
- If this is an exception, please contact &maint;
- about this so that this exception would be recognized in future versions of
- Lintian.
 
 Tag: script-in-usr-share-doc
 Type: info
@@ -395,8 +365,7 @@ Info: This package uses a directory that, according to the Filesystem
 Tag: file-in-unusual-dir
 Type: warning
 Info: This file or symbolic link is in a directory where files are not
- normally installed by Debian packages.  If this is deliberate, please
- contact &maint; to make Lintian accept this as a usual directory.
+ normally installed by Debian packages.
 
 Tag: package-installs-packlist
 Type: error

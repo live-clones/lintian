@@ -123,8 +123,7 @@ Type: warning
 Info: The icon file could not be parsed.  Perhaps this means a bad XPM file,
  or perhaps it means the lintian parsing needs to be improved.  If the
  window managers and standard tools accept the file then probably it's the
- latter; please notify &maint; either directly or via the bug tracking
- system.
+ latter; please file a bug on lintian then.
 
 Tag: su-to-root-without--c
 Type: error

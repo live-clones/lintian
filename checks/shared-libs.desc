@@ -65,8 +65,7 @@ Info: Although this package is not a `-dev' package, it installs a
  .
  However, if this is a small package which includes the runtime and the
  development libraries, this is not a bug. In the latter case, please
- contact &maint; about this so that this exception would be recognized in
- future versions of Lintian.
+ override this warning.
 Ref: policy 8.4
 
 Tag: preinst-calls-ldconfig
@@ -90,9 +89,8 @@ Ref: policy 8.1.1
 Tag: no-shlibs-control-file
 Type: error
 Info: Although the package includes a shared library, the package does not
- have a shlibs control file. If this is intentional, please contact
- &maint; about this so that this exception would be recognized in future
- versions of Lintian.
+ have a shlibs control file. If this is intentional, please override this
+ error.
 Ref: policy 8.6
 
 Tag: pkg-has-shlibs-control-file-but-no-actual-shared-libs
@@ -113,9 +111,7 @@ Info: The shlibs control file contains a duplicate entry.
 Tag: shlib-missing-in-control-file
 Type: error
 Info: The package contains a shared library that is not listed in the
- shlibs control file. If this is intentional, please contact &maint;
- about this so that this exception would be recognized in future versions of
- Lintian.
+ shlibs control file. If this is intentional, please override this error.
 Ref: policy 8.6
 
 Tag: unused-shlib-entry-in-control-file

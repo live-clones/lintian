@@ -34,8 +34,8 @@ Tag: unusual-interpreter
 Type: warning
 Info: This package contains a script for an interpreter that the Lintian
  maintainers have not thought of.  It could be a typo for a common 
- interpreter.  If not, please contact the Lintian maintainers so that
- they can add this interpreter to their list.
+ interpreter.  If not, please file a wishlist bug on lintian so that the
+ Lintian maintainers can add this interpreter to their list.
 
 Tag: forbidden-config-interpreter
 Type: error
@@ -571,10 +571,6 @@ Info: The maintainer script seems to access a file in <tt>/tmp</tt> or some
  security bug. It's suggested that you use the <tt>tempfile</tt> or
  <tt>mktemp</tt> utilities to create temporary files in these
  directories.
- .
- If this is just a misinterpretation of some code in your maintainer
- script, please contact &maint; about this so that this exception would be
- recognized in future versions of Lintian.
 Ref: policy 10.4
 
 Tag: killall-is-dangerous
@@ -633,7 +629,3 @@ Info: 'update-alternatives --remove &lt;alternative&gt; foo' is called in the
  run by hand.
  .
  update-alternatives --remove should be called in the prerm instead.
- .
- If the postrm is the right place for what the package is doing, then
- please email &maint; about it so that this exception would be recognized
- in future versions of Lintian.

@@ -11,20 +11,12 @@ Tag: missing-debconf-dependency
 Type: warning
 Info: Packages using debconf should depend on it, since debconf is not an
  essential package.
- .
- Some packages fall back to a different configuration system if debconf is
- not present; please contact &maint; so that the exception would be
- recognized in future versions of Lintian.
 
 Tag: missing-debconf-dependency-for-preinst
 Type: warning
 Info: Packages using debconf in their preinst script must either pre-depend
  on debconf (>= 0.2.17), with appropriate discussion on &debdev;, or else
  depend on debconf and fall back to a different configuration system.
- .
- Some packages fall back to another configuration system throughout the
- package if debconf is not present; please contact &maint; so that this
- exception would be recognized in future versions of Lintian.
  
 Tag: duplicate-fields-in-templates
 Type: error
@@ -187,8 +179,7 @@ Info: In the Unix tradition, Debian packages should have human-readable and
  .
  Some standalone programs may legitimately use debconf to prompt the user
  for questions. If you maintain a package containing such a program, please
- contact &maint; so that the exception would be recognized in future
- versions of Lintian. Other exceptions to this check include configuration
+ install an override. Other exceptions to this check include configuration
  scripts called from the package's post-installation script.
 
 Tag: seen-flag-requires-versioned-depends

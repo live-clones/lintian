@@ -63,10 +63,6 @@ Ref: policy 12.7
 Tag: no-upstream-changelog
 Type: warning
 Info: The package does not install an upstream changelog file. 
- .
- If there is no upstream changelog file, please contact &maint; about
- this so that this exception would be recognized in future versions of
- Lintian.
 Ref: policy 12.7
 
 Tag: wrong-name-for-debian-changelog-file

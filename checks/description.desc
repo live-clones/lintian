@@ -41,10 +41,6 @@ Type: error
 Info: The first line of the "Description:" should not start with the
  package name. For example, the package <tt>foo</tt> should not
  have a description like this: `foo is a program that...'.
- .
- If Lintian reported this error by mistake (i.e., if the package name
- is a common word), please contact &maint; about this so that this
- exception would be recognized in future versions of Lintian.
 Ref: policy 3.4.1
 
 Tag: description-contains-tabs
@@ -56,9 +52,7 @@ Tag: description-starts-with-leading-spaces
 Type: warning
 Info: The package "Description:" starts with leading spaces. Usually,
  leading spaces are used to switch `verbatim display' on (i.e., lines
- are not wrapped) so this might be a bug in the package. Otherwise,
- please contact &maint; about this so that this exception would be
- recognized in future versions of Lintian.
+ are not wrapped) so this might be a bug in the package.
 
 Tag: possible-unindented-list-in-extended-description
 Type: warning

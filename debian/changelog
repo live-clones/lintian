@@ -1,5 +1,9 @@
 lintian (1.23.8) UNRELEASED; urgency=low
 
+  * checks/*.desc:
+    [JvW] Stop bugging us for exceptions, mmkay, just install overrides. Hints
+    like this should be in the general documentation anyway, not in per-tag
+    descriptions.
   * checks/common_data.pm:
     [CW] Add tclx8.4 to %known_tclxs.
   * checks/scripts, checks/scripts.desc:
@@ -12,7 +16,7 @@ lintian (1.23.8) UNRELEASED; urgency=low
     an article; this is good grammar and should not be discouraged.
     (Closes: #290505)
 
- -- Colin Watson <cjwatson@debian.org>  Fri, 14 Jan 2005 21:02:01 +0100
+ -- Colin Watson <cjwatson@debian.org>  Fri, 14 Jan 2005 22:10:42 +0100
 
 lintian (1.23.7) unstable; urgency=high
 
