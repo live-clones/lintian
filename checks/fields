@@ -73,7 +73,6 @@ if (not open (FH, "fields/version")) {
 			$debian =~ /^-([^.]+)?(?:\.[^.]+)?(?:\.[^.]+)?(\..*)?$/;
 			if (not defined $1 or defined $2) {
 				print "W: $pkg $type: debian-revision-not-well-formed $version\n";
-				return;
 			}
 		}
 	} else {
