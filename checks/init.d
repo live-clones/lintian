@@ -48,7 +48,7 @@ if (open(IN,$postinst)) {
 	    next;
 	}
 	unless (m,>\s*/dev/null,o) {
-	    print "E: $pkg $type: output-of-updaterc.d-not-redirected-to-dev-null $name postinst\n";
+	    print "I: $pkg $type: output-of-updaterc.d-not-redirected-to-dev-null $name postinst\n";
 	}
     }
 }

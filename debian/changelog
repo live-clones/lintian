@@ -77,6 +77,10 @@ lintian (1.23.0) UNRELEASED; urgency=low
       usr/X11R6/*). (Closes: #81004)
     + [HE] Check for README for other distributions/platforms and warn if
       they're installed. Based on patch by Jay Bonci. (Closes: #178441)
+  * checks/init.d:
+    + [FL] output-of-updaterc.d-not-redirected-to-dev-null should be
+      only a info tag since it is more a aesthetical issue, not a
+      policy violation. (Closes: #149700)
   * checks/manpages:
     + [FL] New checks:
        - Section number of directory and file differ

@@ -12,9 +12,10 @@ Info: The <tt>postinst</tt> script calls <tt>update-rc.d</tt> several
  times for the same <tt>/etc/init.d</tt> script.
 
 Tag: output-of-updaterc.d-not-redirected-to-dev-null
-Type: error
+Type: info
 Info: The output messages of the <tt>update-rc.d</tt> command should be
- redirected to <tt>/dev/null</tt>.
+ redirected to <tt>/dev/null</tt> because it is currently very chatty
+ per default.
 
 Tag: preinst-calls-updaterc.d
 Type: error
