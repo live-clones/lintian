@@ -1,11 +1,13 @@
 E: maintainer-scripts source: orphaned-package-should-not-have-uploaders
 E: maintainer-scripts source: wrong-debian-qa-group-name QA group <packages@qa.debian.org>
+E: maintainer-scripts: maintainer-script-does-not-check-for-existence-of-wm-menu-config postinst:28
 E: maintainer-scripts: maintainer-shell-script-fails-syntax-check prerm
 E: maintainer-scripts: no-copyright-file
 E: maintainer-scripts: wrong-debian-qa-group-name QA group <packages@qa.debian.org>
 W: maintainer-scripts source: ancient-standards-version 3.1.1
 W: maintainer-scripts source: changelog-should-mention-qa
 W: maintainer-scripts source: qa-upload-has-incorrect-version-number 7-0.1
+W: maintainer-scripts: maintainer-script-calls-deprecated-wm-menu-config postinst:28
 W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:12 '. /usr/share/lintian/shell foo'
 W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:15 'read'
 W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:17 'H[0]='

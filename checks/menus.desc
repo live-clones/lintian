@@ -1,7 +1,7 @@
 Check-Script: menus
 Author: Christian Schwarz <schwarz@debian.org>
 Abbrev: men
-Standards-Version: 3.2.0
+Standards-Version: 3.6.1
 Type: binary
 Unpack-Level: 1
 Needs-Info: doc-base-files
@@ -20,9 +20,15 @@ Info: The maintainer script calls the <tt>update-menus</tt> command without
  .
  For example, use the following code in your maintainer script:
   if [ -x /usr/bin/update-menus ] ; then update-menus ; fi
+
+Tag: maintainer-script-does-not-check-for-existence-of-wm-menu-config
+Type: error
+Info: The maintainer script calls the <tt>wm-menu-config</tt> command without
+ checking for existence first. (The <tt>menu</tt> package which provides
+ the command is not marked as `essential' package.)
  .
- Maintainers of window managers who call wm-menu-config but do not check for
- it first also trigger this warning.
+ For example, use the following code in your maintainer script:
+  if [ -x /usr/sbin/wm-menu ]; then /usr/sbin/wm-menu-config; fi
 
 Tag: maintainer-script-does-not-check-for-existence-of-installdocs
 Type: error
@@ -34,6 +40,12 @@ Info: The maintainer script calls the <tt>install-docs</tt> command without
   if [ -x /usr/sbin/install-docs ]; then
     /usr/sbin/install-docs -i /usr/share/doc-base/&lt;your-package&gt;
   fi
+
+Tag: maintainer-script-calls-deprecated-wm-menu-config
+Type: warning
+Info: The use of the wm-menu-config script is deprecated because it's
+ design had some serious flaws. Please see the menu documentation,
+ chapter 5 for more information.
 
 Tag: preinst-calls-updatemenus
 Type: error
@@ -56,8 +68,10 @@ Info: The postrm script calls the <tt>install-docs</tt> command. Usually,
  this command should be called from the <tt>prerm</tt> maintainer script.
 
 Tag: executable-in-usr-lib-menu
-Type: error
-Info: Files in <tt>/usr/lib/menu</tt> may not be marked as executables.
+Type: warning
+Info: Files in <tt>/usr/lib/menu</tt> should normally not be marked as
+ executables. You only need to do this if your package has to generate
+ menu entries dynamically.
 
 Tag: executable-in-usr-share-docbase
 Type: error

@@ -24,3 +24,5 @@ install-info /usr/share/info/foo \
 	--section foo
 
 echo Please use update-rc.d or invoke-rc.d to set up blah blah.
+
+wm-menu-config

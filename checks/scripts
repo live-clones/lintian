@@ -225,7 +225,8 @@ while (<SCRIPTS>) {
     tag_warn("script-not-executable", $filename)
 	unless ($executable{$filename} or
 		$filename =~ m,usr/(lib|share)/.*\.pm, or
-		$filename =~ m,\.in$,);
+		$filename =~ m,\.in$, or
+		$filename =~ m,etc/menu-methods,);
 
     if (exists $valid_interpreters{$base}) {
 	tag_error("wrong-path-for-$base", $filename, "#!$interpreter")

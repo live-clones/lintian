@@ -45,6 +45,10 @@ lintian (1.23.1~alpha) unstable; urgency=low
     + [FL] Fix regex which checks for update-menus calls (missing
       whitespace) and allow path before executable name (perhaps this
       should be another warning, though?) (Closes: #254420)
+    + [FL] Some clean-up and warn that wm-menu-config is deprecated
+      (Closes: #248997)
+    + [FL] Demote executable-in-usr-lib-menu to warning as executables
+      are supported (but seldomly used) (Closes: #254498)
   * checks/menu-format:
     + [FL] Fix su-to-root checks to cope with the new -X option and
       improve the option parsing to better handle unknown options
@@ -65,6 +69,8 @@ lintian (1.23.1~alpha) unstable; urgency=low
     + [CW] Add python2.4 as a valid interpreter (Closes: #254482)
     + [FL] Add ruby1.[68] as valid interpreters, introduce new
       ruby-script-but-no-ruby-dep error, copied from the python stuff
+    + [FL] Don't issue script-not-executable for menu-methods. There
+      are reasons why they are sometimes not executable (Closes: #250632)
   * checks/shared-libs:
     + [FL] Don't report shlib-with-executable-bit and
       shlib-with-bad-permissions on symbolic links to such files

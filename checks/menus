@@ -233,7 +233,7 @@ sub perm2oct {
 
 sub check_script {
     my ($script,$pres) = @_;
-    my ($no_check_menu,$no_check_installdocs);
+    my ($no_check_menu,$no_check_installdocs,$no_check_wmmenu,$calls_wmmenu);
     my $interp;
 
     open(IN,"control/$script") or
@@ -289,17 +289,18 @@ sub check_script {
 	if (s/-x\s+\S*wm-menu-config//o or /which\s+wm-menu-config/o
 	    or s/command\s+.*?wm-menu-config//o) {
 	    # yes, it does.
-	    $pres->{'checks-for-updatemenus'} = 1;
+	    $pres->{'checks-for-wmmenuconfig'} = 1;
 	}
 
 	# does the script call wm-menu-config?
-	if (m/wm-menu-config/) {
+	if (m/(?:^\s*|[;&|]\s*|(?:then|do)\s+)(?:\/usr\/sbin\/)?wm-menu-config(?:\s|[;&|<>]|$)/) {
 	    # yes, it does.
-	    $pres->{'calls-updatemenus'} = 1;
+	    $pres->{'calls-wmmenuconfig'} = 1;
+	    tag "maintainer-script-calls-deprecated-wm-menu-config", "$script:$." unless $calls_wmmenu++;
 
 	    # checked first?
-	    if (not $pres->{'checks-for-updatemenus'} and $pkg ne 'menu') {
-		tag "maintainer-script-does-not-check-for-existence-of-updatemenus", "$script:$." unless $no_check_menu++;
+	    if (not $pres->{'checks-for-wmmenuconfig'} and $pkg ne 'menu') {
+		tag "maintainer-script-does-not-check-for-existence-of-wm-menu-config", "$script:$." unless $no_check_wmmenu++;
 	    }
 	}
 
@@ -330,7 +331,7 @@ sub check_script {
 	}
 
 	# does the script call install-docs?
-	if (m/install-docs/o) {
+	if (m/(?:^\s*|[;&|]\s*|(?:then|do)\s+)(?:\/usr\/sbin\/)?install-docs(?:\s|[;&|<>]|$)/) {
 	    # yes, it does.  Does it remove or add a doc?
 	    if (m/install-docs\s+(-r|--remove)\s/) {
 		$pres->{'calls-installdocs-r'} = 1;
