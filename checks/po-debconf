@@ -83,6 +83,7 @@ if (! -f "debfiles/po/templates.pot") {
 
 if (-x "/usr/bin/msgcmp" && -x "/usr/share/intltool-debian/intltool-update" ) {
 	if ($missing_files == 0) {
+		$ENV{"INTLTOOL_EXTRACT"} ||= "/usr/share/intltool-debian/intltool-extract";
 		system("cd debfiles/po && /usr/share/intltool-debian/intltool-update --gettext-package=test --pot");
 		system("/usr/bin/msgcmp debfiles/po/test.pot debfiles/po/templates.pot >/dev/null 2>&1") == 0
                 	or tag "newer-debconf-templates";

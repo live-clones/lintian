@@ -1,3 +1,12 @@
+lintian (1.23.5) unstable; urgency=low
+
+  The "learn how to use intltool-debian correctly the hard way" release
+  
+  * checks/po-debconf: Set INTLTOOL_EXTRACT to fix invocation
+    of intltool-update (Closes: #285419, #285471)
+
+ -- Frank Lichtenheld <djpig@debian.org>  Mon, 13 Dec 2004 18:16:52 +0100
+
 lintian (1.23.4) unstable; urgency=low
 
   The "A little pause from the sarge release work" release.
