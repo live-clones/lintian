@@ -128,8 +128,8 @@ while (<IN>) {
     # stripped?
     if ($info =~ m,not stripped\s*$,o) {
 	# Is it an object file (which generally can not be stripped),
-	# or perhaps a debugging package? 
-	unless ($file =~ m,\.o$, or $pkg =~ m/-dbg$/ or $pkg =~ m/debug/) {
+	# a kernel module, or perhaps a debugging package? 
+	unless ($file =~ m,\.k?o$, or $pkg =~ m/-dbg$/ or $pkg =~ m/debug/) {
 	    print "E: $pkg $type: unstripped-binary-or-object $file\n";
 	}
     } else {
