@@ -29,12 +29,24 @@ use Util;
 my $pkg = shift;
 my $type = shift;
 
+# From debconf-devel(7), section 'THE TEMPLATES FILE', uptodate with debconf
+# version 1.3.22
 my %template_fields;
 map { $template_fields{$_}=1 } qw(template type choices default description);
 
+# From debconf-devel(7), section 'THE TEMPLATES FILE', uptodate with debconf
+# version 1.3.22
 my %valid_types;
-map { $valid_types{$_}=1 } qw(string boolean select multiselect
-	                      note text password);
+map { $valid_types{$_}=1 } qw(
+	string
+	password
+	boolean
+	select
+	multiselect
+	note
+	text
+	title
+	);
 
 my $seenconfig='';
 my $seentemplates='';

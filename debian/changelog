@@ -1,7 +1,7 @@
 lintian (1.22.12) unstable; urgency=low
 
   Frank Lichtenheld <djpig@debian.org>
-  * man/lintian.1: 
+  * man/lintian.1:
     + sync man page with the --help output by adding
       missing options (Closes: #198615)
       Based on a patch by Robert Lemmen.
@@ -20,8 +20,8 @@ lintian (1.22.12) unstable; urgency=low
     + Don't advise to point to the perl packages' copyright file
       (Closes: #193293)
       Thanks to Martin Orr for pointing this out.
-    + Fixed false positives of 
-      copyright-should-refer-to-common-license-file-for-gpl due to 
+    + Fixed false positives of
+      copyright-should-refer-to-common-license-file-for-gpl due to
       the GFDL. (Closes: #192278)
       Thanks to Ross Burton for reporting this.
   * checks/debhelper.desc:
@@ -29,7 +29,12 @@ lintian (1.22.12) unstable; urgency=low
       debhelper(1). (Closes: #188245)
       Thanks to Brian Nelson for pointing this out.
 
- -- Frank Lichtenheld <djpig@debian.org>  Sat, 21 Feb 2004 16:55:27 +0100
+  Jeroen van Wolffelaar <jeroen@wolffelaar.nl>
+  * checks/debconf:
+    + Update valid types, since currently 'title' is supported now too
+      (Closes: #234379, #234608)
+
+ -- Frank Lichtenheld <djpig@debian.org>  Thu, 26 Feb 2004 21:52:14 +0100
 
 lintian (1.22.11) unstable; urgency=low
 
