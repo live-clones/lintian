@@ -69,6 +69,7 @@ my %valid_interpreters = (
 			  'python2.1' => '/usr/bin/python2.1',
 			  'python2.2' => '/usr/bin/python2.2',
 			  'python2.3' => '/usr/bin/python2.3',
+			  'python2.4' => '/usr/bin/python2.4',
 			  'rexx' => '/usr/bin/rexx',
 			  'regina' => '/usr/bin/regina',
 			  'rc' => '/usr/bin/rc',
