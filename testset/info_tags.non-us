@@ -25,9 +25,9 @@ N:
 N:   The `Section:' field in this package's control file is not one of the
 N:   sections in use on the ftp archive. Valid sections are currently
 N:   admin, base, comm, devel, doc, editors, electronics, embedded, games,
-N:   gnome, graphics, hamradio, interpreters, libs, mail, math, misc, net,
-N:   news, oldlibs, otherosfs, perl, python, science, shells, sound, tex,
-N:   text, utils, web, and x11.
+N:   gnome, graphics, hamradio, interpreters, kde, libdevel, libs, mail,
+N:   math, misc, net, news, oldlibs, otherosfs, perl, python, science,
+N:   shells, sound, tex, text, utils, web, and x11.
 N:   
 N:   The section name should be preceded by `non-free/' if the package is
 N:   in the non-free distribution, and by `contrib/' if the package is in
