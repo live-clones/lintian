@@ -317,19 +317,32 @@ sub VerifyLine {
 	    tag "su-to-root-with-usr-bin", "/usr/lib/menu/$menufile:$linecount";
 	} elsif ($com[0] eq "/usr/sbin/su-to-root") {
 	    shift @com;
-	    # This is _so_ going to break on every parameter added to
-	    # su-to-root... But alas --Jeroen
-	    if (defined($com[0]) && $com[0] eq '-p') {
-		shift @com;
-		shift @com;
-	    }
-	    if (! defined($com[0]) || $com[0] ne '-c') {
+	    
+            my $cmd;
+            while (@com) {
+                if ($com[0]) {
+                    if ($com[0] eq '-p') {
+                        shift @com;
+                        shift @com;
+                    } elsif ($com[0] eq '-X') {
+                        shift @com;
+                    } elsif ($com[0] eq '-c') {
+                        $cmd = $com[1];
+                        shift @com;
+                        shift @com;
+                    } else {
+                        shift @com;
+                    }
+                } else {
+                    shift @com;
+                }
+            }
+            
+            unless ($cmd) {
 		tag "su-to-root-without--c", "/usr/lib/menu/$menufile:$linecount";
-		tag "menu-command-not-in-package", "/usr/lib/menu/$menufile:$linecount"
-		    if ($com[0] && !$file_index{".$com[0]"});
 	    } else {   
 		tag "menu-command-not-in-package", "/usr/lib/menu/$menufile:$linecount"
-		    if ($com[1] && !$file_index{".$com[1]"});
+		    if (!$file_index{".$cmd"});
 	    }
 	} else {
 	    tag "menu-command-not-in-package", "/usr/lib/menu/$menufile:$linecount $com[0]"

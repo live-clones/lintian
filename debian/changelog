@@ -10,6 +10,9 @@ lintian (1.23.1~alpha) unstable; urgency=low
   * checks/fields{,.desc}:
     + [JvW] Added debian-revision-should-not-be-zero, suggested by Adam
       Conrad
+  * checks/menu-format:
+    + [FL] Fix su-to-root checks to cope with the new -X option and
+      improve the option parsing to better handle unknown options
   * checks/shared-libs:
     + [FL] Don't report shlib-with-executable-bit and
       shlib-with-bad-permissions on symbolic links to such files
