@@ -459,3 +459,9 @@ Info: Architecture-independent Perl code should be placed in
  <tt>/usr/share/perl5</tt>, not <tt>/usr/lib/perl5</tt>
  unless there is at least one architecture-dependent file
  in the module.
+
+Tag: package-installs-python-pyc
+Type: warning
+Info: Compiled python source files should not be included in the package.
+ These files should be removed from the package and created at package
+ installation time in the postinst. 

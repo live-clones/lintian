@@ -332,6 +332,11 @@ while (<IN>) {
 	}
     }
 
+    # ---------------- .pyc (compiled python files
+    if ($file =~ m,^usr/lib/python\d\.\d/.*.pyc$,) {
+	print "W: $pkg $type: package-installs-python-pyc $file\n"
+    }
+
     # ---------------- pythonX.Y extensions
     if ($file =~ m,^usr/lib/python\d\.\d/\S,
 	and not $file =~ m,^usr/lib/python\d\.\d/site-packages/,) {

@@ -9,6 +9,7 @@ binary-arch:
 binary-indep:
 	install -d $(tmp)/usr/bin/
 	install -d $(tmp)/usr/share/doc/scripts/
+	install -d $(tmp)/usr/lib/python2.3/site-packages/
 	install -d $(tmp)/DEBIAN
 
 	install -m 755 pyfoo $(tmp)/usr/bin/
@@ -17,6 +18,7 @@ binary-indep:
 	install -m 4755 perlfoo $(tmp)/usr/bin/suidperlfoo2
 	install -m 4755 suidperlfoo $(tmp)/usr/bin/
 	install -m 755 tkfoo $(tmp)/usr/bin/
+	touch $(tmp)/usr/lib/python2.3/site-packages/test.pyc
 	cp debian/changelog $(tmp)/usr/share/doc/scripts/changelog
 	gzip -9 $(tmp)/usr/share/doc/scripts/changelog
 

@@ -7,6 +7,7 @@ E: scripts: binary-without-manpage suidperlfoo2
 E: scripts: binary-without-manpage tkfoo
 W: scripts: setuid-binary usr/bin/suidperlfoo2 4755 root/root
 W: scripts: setuid-binary usr/bin/suidperlfoo 4755 root/root
+W: scripts: package-installs-python-pyc usr/lib/python2.3/site-packages/test.pyc
 E: scripts: python-script-but-no-python-dep ./usr/bin/pyfoo
 E: scripts: python-script-but-no-python-dep ./usr/bin/py2foo
 E: scripts: suid-perl-script-but-no-perl-suid-dep ./usr/bin/suidperlfoo2
