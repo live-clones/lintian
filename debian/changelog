@@ -115,6 +115,7 @@ lintian (1.23.0) UNRELEASED; urgency=low
     + [HE] Add some new logic to cope with symlinks from /usr/lib to another
       dir to fix false positives of postrm-has-useless-call-to-ldconfig and
       friends. (Closes: #190714)
+    + [HE] Also handle case statements in postrm scripts. (Closes: #179435)
   * checks/standards-version:
     + [JvW] Also emit warning if standards version is 3.6.0, and not yet 3.6.1
 

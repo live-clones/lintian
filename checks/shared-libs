@@ -331,6 +331,8 @@ if (-f $postrm) {
     s/^\["\$1"=.?remove.?\]\&&BldconfigB//gm;
     s/^\[.?remove.?="\$1"\]&&BldconfigB//gm;
 
+	s!remove(?:|[^)]+)*\).*?BldconfigB.*?(;;|esac)!!s;
+
     if (/^[^\#]*BldconfigB/m) {
         print "W: $pkg $type: postrm-unsafe-ldconfig\n";
     }
