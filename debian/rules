@@ -89,3 +89,4 @@ binary-arch:
 binary:	binary-indep binary-arch
 
 .PHONY: build binary binary-arch binary-indep clean
+.DELETE_ON_ERROR: runtests
