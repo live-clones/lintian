@@ -58,6 +58,10 @@ lintian (1.23.1~beta) unstable; urgency=low
   * checks/huge-usr-share:
     + [FL] Skip check for packages that don't have usr/share at all
       (Closes: #247708)
+  * checks/manpages:
+    + [FL] Comment check for no-manpage-in-correct-directory out until
+      I know if it's worth keeping it at all (Closes: #253011)
+      Thanks to Stephen Stafford for pointing this out.
   * checks/menus:
     + [FL] Fix regex which checks for update-menus calls (missing
       whitespace) and allow path before executable name (perhaps this

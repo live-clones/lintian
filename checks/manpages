@@ -33,8 +33,8 @@ use File::Basename;
 my %file_info;
 my %binary;
 my %link;
-my %sect_by_binary;
-my %sect_by_manpage;
+# my %sect_by_binary;
+# my %sect_by_manpage;
 my %manpage;
 
 # Read file info...
@@ -83,20 +83,20 @@ while (<IN>) {
 	$binary{$bin} = $file;
 	$link{$bin} = $link if $link;
 
-	for ($path) {
-	    m,^(usr/(X11R6/)?)?bin/,o && do {
-		$sect_by_binary{$bin} = 1;
-		last;
-	    };
-	    m,^usr/games/,o && do {
-		$sect_by_binary{$bin} = 6;
-		last;
-	    };
-	    m,^(usr/)?sbin/,o && do {
-		$sect_by_binary{$bin} = 8;
-		last;
-	    };
-	}
+#	for ($path) {
+#	    m,^(usr/(X11R6/)?)?bin/,o && do {
+#		$sect_by_binary{$bin} = 1;
+#		last;
+#	    };
+#	    m,^usr/games/,o && do {
+#		$sect_by_binary{$bin} = 6;
+#		last;
+#	    };
+#	    m,^(usr/)?sbin/,o && do {
+#		$sect_by_binary{$bin} = 8;
+#		last;
+#	    };
+#	}
 	
     	next;
     }
@@ -142,7 +142,7 @@ while (<IN>) {
 	if ($section_num != $section) {
 	    tag "manpage-in-wrong-directory", "$file";
 	}
-	push @{$sect_by_manpage{$bin}}, $section_num; # array needed for cases like man(1), man(7)
+#	push @{$sect_by_manpage{$bin}}, $section_num; # array needed for cases like man(1), man(7)
     } else {
 	tag "manpage-has-wrong-extension", "$file";
     }
@@ -284,9 +284,9 @@ for my $f (sort keys %binary) {
 	    }
 	}
 
-	unless (grep { $_ == $sect_by_binary{$f} } @{$sect_by_manpage{$f}}) {
-	    tag "no-manpage-in-correct-directory", "$binary{$f} (@{$sect_by_manpage{$f}})";
-	}
+#	unless (grep { $_ == $sect_by_binary{$f} } @{$sect_by_manpage{$f}}) {
+#	    tag "no-manpage-in-correct-directory", "$binary{$f} (@{$sect_by_manpage{$f}})";
+#	}
     } else {
 	tag "binary-without-manpage", "$f";
     }
