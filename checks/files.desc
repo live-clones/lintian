@@ -490,7 +490,8 @@ Info: package contains a README.(platform) file that contains instructions
 
 Tag: desktop-file-in-wrong-dir
 Type: warning
-Info: package contains a .desktop file in a non-standard directory.
+Info: package contains a .desktop file in an obsolete directory.
  According to the menu-spec draft on freedesktop.org, those .desktop
  files that are intended to create a menu should be placed in 
- <tt>/usr/share/applications/</tt>.
+ <tt>/usr/share/applications/</tt>, and no longer in
+ <tt>/usr/share/gnome/apps</tt> or <tt>/usr/share/applnk</tt>

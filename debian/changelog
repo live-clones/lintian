@@ -11,6 +11,9 @@ lintian (1.23.8) UNRELEASED; urgency=low
   * checks/files{,.desc}:
     [JvW] Warn only for hardlinks in /etc or amongst different directories
     (Closes: #288634)
+    [JvW] Only check for desktop files in GNOME's and KDE's obsolete places,
+    not in all the package, as KDE uses .desktop files also for other
+    purposes (Closes: #289773)
   * checks/description:
     [SRL] Do not generate warnings when a short description starts with
     an article; this is good grammar and should not be discouraged.
