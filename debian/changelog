@@ -65,7 +65,7 @@ lintian (1.23.1~alpha) unstable; urgency=low
     + [JvW] Simply fail if stuff from gettext is missing.
   * checks/scripts:
     + [FL] Don't issue executable-not-elf-or-script for files
-      that are named *.exe on request of mono maintainers (Closes: #251075)
+      that are named *.exe (Closes: #251075, #255083)
     + [CW] Add python2.4 as a valid interpreter (Closes: #254482)
     + [FL] Add ruby1.[68] as valid interpreters, introduce new
       ruby-script-but-no-ruby-dep error, copied from the python stuff
