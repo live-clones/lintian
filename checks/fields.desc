@@ -344,9 +344,9 @@ Info: The package depends on a package that has been superseded.
 
 Tag: depends-on-essential-package-without-using-version
 Type: error
-Ref: policy 3.5
-Info: The package declares a depends on an essential package i.e. dpkg without
- using a versioned depends.  In general a package should not depend on
+Ref: policy 4.2
+Info: The package declares a depends on an essential package, e.g. dpkg,
+ without using a versioned depends.  In general a package should not depend on
  essential packages but if it must do so, the depends should have a version
  string.
 

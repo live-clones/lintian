@@ -21,6 +21,9 @@ lintian (1.23.3) unstable; urgency=low
       this sometimes happens to you when using ${shlibs:Depends}, and you
       shouldn't bother too much if that's the case (Closes: #274286)
       Thanks Peter Eisentraut for the suggestion
+    + [JvW] Fix English language and chapter of policy in description of
+      depends-on-essential-package-without-using-version, thanks to Peter
+      Eisentrautf for noticing (Closes: #261603, #261602)
   * checks/init.d:
     + [JvW] Don't warn for missing init.d scripts in package and conffile list
       if a variable is used instead of a real name (Closes: #264218)
