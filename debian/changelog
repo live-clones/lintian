@@ -71,6 +71,7 @@ lintian (1.23.1~alpha) unstable; urgency=low
       ruby-script-but-no-ruby-dep error, copied from the python stuff
     + [FL] Don't issue script-not-executable for menu-methods. There
       are reasons why they are sometimes not executable (Closes: #250632)
+    + [FL] 'and' and 'or' are no bash keywords (Closes: #194283)
   * checks/shared-libs:
     + [FL] Don't report shlib-with-executable-bit and
       shlib-with-bad-permissions on symbolic links to such files

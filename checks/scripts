@@ -449,8 +449,7 @@ while (<SCRIPTS>) {
 		# since this test is ugly, I have to do it by itself
 		# detect source (.) trying to pass args to the command it runs
 		if (not $found and m/^\s*(\.\s+[^\s]+\s+([^\s]+))/) {
-		    if ($2 eq 'and' || $2 eq '&&' ||
-			$2 eq 'or' || $2 eq '||') {
+		    if ($2 eq '&&' || $2 eq '||') {
 			# everything is ok
 			;
 		    } else {
