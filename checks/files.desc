@@ -235,7 +235,7 @@ Info: Symbolic links between different top-level directories should be
  absolute.
 Ref: policy 10.5
 
-Tag: documentation-file
+Tag: udeb-contains-documentation-file
 Type: error
 Info: udeb packages should not contain any documentation.
  .
