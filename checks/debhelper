@@ -45,7 +45,9 @@ my $compat = '';
 # commands can be found by "grep -l autoscript /usr/bin/dh_*", but I'll
 # hardcode them here.
 
-map { $commands{$_}=1 } qw(dh_installcatalogs
+map { $commands{$_}=1 } qw(dh_desktop
+			   dh_gconf
+			   dh_installcatalogs
 			   dh_installdebconf
                            dh_installdefoma
                            dh_installdocs
@@ -57,6 +59,7 @@ map { $commands{$_}=1 } qw(dh_installcatalogs
 			   dh_installmodules
 			   dh_installwm
 			   dh_installxfonts
+			   dh_installxmlcatalogs
 			   dh_makeshlibs
 			   dh_python
 			   dh_scrollkeeper
