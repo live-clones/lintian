@@ -118,9 +118,8 @@ Tag: copyright-file-lacks-pointer-to-perl-license
 Type: error
 Ref: policy 12.5
 Info: If your package is released under the same terms as Perl itself,
- it should either refer to the Artistic and GPL license files in the
- <tt>/usr/share/common-licenses</tt> directory, or to the
- <tt>/usr/share/doc/perl/copyright</tt> file.
+ it should refer to the Artistic and GPL license files in the
+ <tt>/usr/share/common-licenses</tt> directory.
 
 Tag: copyright-should-refer-to-common-license-file-for-gpl
 Type: error

@@ -12,6 +12,10 @@ lintian (1.22.12) unstable; urgency=low
       postrm-unsafe-ldconfig. (Closes: #218543, #233740)
       Thanks to Martin Godisch, Steinar H. Gunderson and
       Aidas Kasparas for their input.
+  * checks/copyright.desc:
+    + Don't advise to point to to the perl packages' copyright file
+      (Closes: #193293)
+      Thanks to Martin Orr for pointing this out.
 
  -- Frank Lichtenheld <djpig@debian.org>  Sat, 21 Feb 2004 16:55:27 +0100
 
