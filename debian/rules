@@ -15,8 +15,6 @@ runtests: $(neededfiles)
 
 build: $(neededfiles)
 	@echo .... running build ....
-	perl -i -pe '$$_="my \$$LINTIAN_VERSION = \"$(VER)\";\t#External Version number\n" \
-		if m/^my \$$LINTIAN_VERSION = /;' frontend/lintian
 	cd doc && LANG=C debiandoc2html lintian.sgml
 	cd doc && LANG=C debiandoc2text lintian.sgml
 
@@ -37,6 +35,7 @@ binary-indep: $(neededfiles) build
 	@echo .... install frontends ....
 	install -d $(tmp)/usr/bin
 	install -m 755 frontend/lintian $(tmp)/usr/bin/
+	sed -i 's/<VERSION>/$(VER)/' $(tmp)/usr/bin/lintian
 	install -m 755 frontend/lintian-info $(tmp)/usr/bin/
 # library files
 	@echo .... install library files ....
