@@ -94,7 +94,9 @@ sub setup_force {
 
     # create lab directory
     # (Note, that the mode 0777 is reduced by the current umask.)
-    mkdir($dir,0777) or fail("cannot create lab directory $dir");
+    unless (-d $dir && ( $self->{mode} eq 'static' )) {
+    	mkdir($dir,0777) or fail("cannot create lab directory $dir");
+    }
 
     # create base directories
     for my $subdir (qw( binary source udeb info )) {
