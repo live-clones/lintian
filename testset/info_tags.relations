@@ -9,6 +9,13 @@ N:   don't have to re-upload the package just to adjust the
 N:   Standards-Version control field. However, please remember to update
 N:   this field next time you upload the package.
 N:
+E: relations source: bad-relation build-depends: foo (>> 2) bar baz bat
+N:
+N:   The package declares a relationship that could not be parsed according
+N:   to the rules given in the Policy Manual.
+N:   
+N:   Refer to Policy Manual, section 7.1 for details.
+N:
 E: relations-multiple-libs: no-copyright-file
 N:
 N:   Each binary package has to include a plain file
@@ -75,13 +82,7 @@ N:   useful, except in the case of a package Conflicting with itself, if
 N:   its package name doubles as a virtual package.
 N:
 W: relations: package-relation-with-self depends: relations (<< 3)
-E: relations: package-has-a-duplicate-relation relations, relations (<< 3)
-N:
-N:   The package seems to declare a relation on another package which is
-N:   already implied by other relations it declares, and is therefore
-N:   redundant. This is not only sloppy but can break some tools.
-N:
-E: relations: depends-on-essential-package-without-using-version dpkg
+E: relations: depends-on-essential-package-without-using-version depends: dpkg
 N:
 N:   The package declares a depends on an essential package i.e. dpkg
 N:   without using a versioned depends. In general a package should not
@@ -90,7 +91,7 @@ N:   have a version string.
 N:   
 N:   Refer to Policy Manual, section 3.5 for details.
 N:
-W: relations: virtual-package-depends-without-real-package-depends mail-transport-agent
+W: relations: virtual-package-depends-without-real-package-depends depends: mail-transport-agent
 N:
 N:   The package declares a depends on a virtual package without listing a
 N:   real package as an alternative first.
@@ -103,7 +104,7 @@ N:   without manual overrides.
 N:   
 N:   Refer to Policy Manual, section 7.4 for details.
 N:
-E: relations: needlessly-depends-on-awk
+E: relations: needlessly-depends-on-awk depends
 N:
 N:   The package seems to declare a relation on awk. awk is a virtual
 N:   package, but it is special since it's de facto essential. If you don't
@@ -111,7 +112,7 @@ N:   need to depend on a specific version of awk (which wouldn't work
 N:   anyway, as dpkg doesn't support versioned provides), you should remove
 N:   the dependency on awk.
 N:
-W: relations: bad-version-in-relation conflicts: foobar (<< 5&5)
+E: relations: bad-version-in-relation conflicts: foobar (<< 5&5)
 N:
 N:   The version number used in this relationship does not match the
 N:   defined format of a version number.
@@ -119,6 +120,12 @@ N:
 N:   Refer to Policy Manual, section 5.6.11 for details.
 N:
 W: relations: package-relation-with-self replaces: relations
+E: relations: package-has-a-duplicate-relation depends: relations, relations (<< 3)
+N:
+N:   The package seems to declare a relation on another package which is
+N:   already implied by other relations it declares, and is therefore
+N:   redundant. This is not only sloppy but can break some tools.
+N:
 E: relations: obsolete-field optional
 N:
 N:   This is one of the fields listed in Policy Manual as obsolete.

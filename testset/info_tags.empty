@@ -4,6 +4,11 @@ N:   The source package does not have a `Standards-Version' control field.
 N:   Please update your package to latest policy and set this control field
 N:   appropriately.
 N:
+W: empty source: maintainer-not-full-name empty
+N:
+N:   The `name' part of this maintainer field is just one word, so it might
+N:   not be a full name.
+N:
 E: empty source: maintainer-address-missing empty
 N:
 N:   The maintainer field should contain the package maintainer's name and
@@ -23,6 +28,7 @@ E: empty: package-has-no-description
 N:
 N:   The binary package does not have a "Description:" control field.
 N:
+W: empty: maintainer-not-full-name empty
 E: empty: maintainer-address-missing empty
 W: empty: no-section-field
 N:
@@ -32,7 +38,7 @@ N:   The Section field can be included in a binary package by passing the
 N:   -is or -isp flags to dpkg-gencontrol when building the package. The
 N:   field is optional in binary packages.
 N:   
-N:   Refer to Policy Manual, section 5.6.4 for details.
+N:   Refer to Policy Manual, section 5.3 for details.
 N:
 W: empty: no-priority-field
 N:
@@ -42,5 +48,5 @@ N:   The Priority field can be included in a binary package by passing the
 N:   -ip or -isp flags to dpkg-gencontrol when building the package. The
 N:   field is optional in binary packages.
 N:   
-N:   Refer to policy D.2.9 for details.
+N:   Refer to Policy Manual, section 5.3 for details.
 N:

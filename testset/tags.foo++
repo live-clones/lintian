@@ -3,8 +3,10 @@ E: foo++ source: wrong-debian-qa-address-set-as-maintainer Lintian Maintainer <d
 E: foo++ source: multiline-field uploaders
 W: foo++ source: uploader-address-looks-weird Jeroen van Wolffelaar<jeroen@localhost.localdomain>
 E: foo++ source: uploader-address-is-on-localhost Jeroen van Wolffelaar<jeroen@localhost.localdomain>
-W: foo++ source: uploader-not-full-name Frank 
+W: foo++ source: uploader-not-full-name Frank
 E: foo++ source: uploader-name-missing Yama@gotchi
+E: foo++ source: uploader-address-malformed Yama@gotchi
+W: foo++ source: uploader-not-full-name Josip
 E: foo++ source: uploader-address-missing Josip
 E: foo++ source: uploader-address-malformed I am afraid of spam and think this helps <no_spam_please AT debian.org>
 E: foo++-helper: wrong-debian-qa-address-set-as-maintainer Lintian Maintainer <debian-qa@lists.debian.org>

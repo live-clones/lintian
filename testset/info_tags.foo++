@@ -37,7 +37,7 @@ N:   invalid e-mail address.
 N:   
 N:   Refer to Policy Manual, section 5.6.2 for details.
 N:
-W: foo++ source: uploader-not-full-name Frank 
+W: foo++ source: uploader-not-full-name Frank
 N:
 N:   The `name' part of this uploader field is just one word, so it might
 N:   not be a full name.
@@ -49,6 +49,14 @@ N:   contain the package uploader's name and email address.
 N:   
 N:   Refer to Policy Manual, section 5.6.2 for details.
 N:
+E: foo++ source: uploader-address-malformed Yama@gotchi
+N:
+N:   The uploader field could not be parsed according to the rules in the
+N:   Policy Manual.
+N:   
+N:   Refer to Policy Manual, section 5.6.2 for details.
+N:
+W: foo++ source: uploader-not-full-name Josip
 E: foo++ source: uploader-address-missing Josip
 N:
 N:   The uploader field should contain the package uploader's name and
@@ -58,12 +66,6 @@ N:
 N:   Refer to Policy Manual, section 5.6.2 for details.
 N:
 E: foo++ source: uploader-address-malformed I am afraid of spam and think this helps <no_spam_please AT debian.org>
-N:
-N:   The uploader field could not be parsed according to the rules in the
-N:   Policy Manual.
-N:   
-N:   Refer to Policy Manual, section 5.6.2 for details.
-N:
 E: foo++-helper: wrong-debian-qa-address-set-as-maintainer Lintian Maintainer <debian-qa@lists.debian.org>
 E: foo++: no-copyright-file
 N:

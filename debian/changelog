@@ -13,6 +13,11 @@ lintian (1.23.0) UNRELEASED; urgency=low
       (Closes: #236846)
   * checks/fields.desc:
     + [FL] Fix some wrong policy references
+  * checks/fields:
+    + [HE, FL] Nearly complete rewrite for clean up:
+      - bad-relation seems to work better now (Closes: #171763)
+      - duplicate relations checking now works for different fields, too
+        (Closes: #234978, #235356)
   * checks/files:
     + [HE] New check for compiled python files (*.pyc). Patch by David
       Kimdon <david@kimdon.org>, thanks. (Closes: #236606)
