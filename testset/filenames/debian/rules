@@ -21,6 +21,8 @@
 clean:
 	mkdir -p .svn CVS
 	touch files/.cvsignore files/svn-commit.tmp
+	touch 'files/.#Maelstrom Sound.1.1.1' 'files/Maelstrom Sounce.r121'
+	touch 'files/Maelstrom Sound.mine'
 
 build:
 
