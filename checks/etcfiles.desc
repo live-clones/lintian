@@ -1,0 +1,13 @@
+Check-Script: etcfiles
+Author: Sean 'Shaleh' Perry <shaleh@debian.org>
+Abbrev: ini
+Standards-Version: 3.5.0.0
+Type: binary
+Needs-Info: etcfiles
+Unpack-Level: 1
+
+Tag: file-in-etc-not-marked-as-conffile
+Type: error
+Ref: policy 11.7
+Info: Files in <tt>/etc</tt> must be marked conffiles if they are included
+ in a package.  Otherwise they should be created by maintainer scripts.

@@ -1,0 +1,25 @@
+#!/usr/bin/make -f
+
+build:
+
+binary-arch:
+
+binary-indep:
+	install -d debian/tmp/DEBIAN
+	cp debian/postinst debian/tmp/DEBIAN
+	chmod +x debian/tmp/DEBIAN/postinst
+	cp debian/prerm debian/tmp/DEBIAN
+	chmod +x debian/tmp/DEBIAN/prerm
+	cp debian/postrm debian/tmp/DEBIAN
+	chmod +x debian/tmp/DEBIAN/postrm
+	install -d debian/tmp/usr/share/doc/maintainer-scripts
+	cp debian/changelog debian/tmp/usr/share/doc/maintainer-scripts/changelog
+	gzip -9 debian/tmp/usr/share/doc/maintainer-scripts/changelog
+	dpkg-gencontrol -isp
+	dpkg --build debian/tmp ..
+
+binary: binary-arch binary-indep
+
+clean:
+
+.PHONY: build binary-arch binary-indep binary clean

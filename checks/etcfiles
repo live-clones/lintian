@@ -1,0 +1,81 @@
+#!/usr/bin/perl -w
+# etcfiles -- lintian check script
+
+# Copyright (C) 2000 by Sean 'Shaleh' Perry
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+# MA 02111-1307, USA.
+
+use strict;
+
+($#ARGV == 1) or fail("syntax: etcfiles <pkg> <type>");
+my $pkg = shift;
+my $type = shift;
+
+my %conffiles;
+
+my $conffiles = "control/conffiles";
+
+# load conffiles
+if (open(IN,$conffiles)) {
+    while (<IN>) {
+	chop;
+	next if m/^\s*$/o;
+	s,^/,,;
+	$conffiles{$_} = 1;
+    }
+    close(IN);
+}
+
+# Read package contents...
+open(IN,"index") or fail("cannot open index file index: $!");
+while (<IN>) {
+    chop;
+
+    my ($perm,$owner,$size,$date,$time,$file) = split(' ', $_, 6);
+    my $link;
+
+    $file =~ s,^(\./),,;
+    $file =~ s/ link to .*//;
+
+    if ($perm =~ m/^l/) {
+	($file, $link) = split(' -> ', $file);
+    }
+
+    # skip it unless it is a file in /etc
+    next unless $file =~ m,^etc, and $perm =~ m,^-,;
+
+    # if there is a /etc/foo, it must be a conffile
+    if (not exists($conffiles{$file})) {
+	print "E: $pkg $type: file-in-etc-not-marked-as-conffile /$file\n";
+    }
+}
+close(IN);
+
+exit 0;
+
+# -----------------------------------
+
+sub fail {
+    if ($_[0]) {
+	warn "internal error: $_[0]\n";
+    } elsif ($!) {
+	warn "internal error: $!\n";
+    } else {
+	warn "internal error.\n";
+    }
+    exit 1;
+}

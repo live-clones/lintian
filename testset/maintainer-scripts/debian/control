@@ -1,0 +1,11 @@
+Source: maintainer-scripts
+Section: misc
+Priority: optional
+Maintainer: Lintian Maintainer <lintian-maint@debian.org>
+Standards-Version: 3.1.1
+
+Package: maintainer-scripts
+Architecture: all
+Depends: test
+Description: test lintian's maintainer script checks
+ Regression test lintian's maintainer script checks.

@@ -1,0 +1,179 @@
+# Hey emacs! This is a -*- Perl -*- script!
+# Util -- Perl utility functions for lintian
+
+# Copyright (C) 1998 Christian Schwarz
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+# MA 02111-1307, USA.
+
+use strict;
+use FileHandle;
+use lib "$ENV{'LINTIAN_ROOT'}/lib";
+use Pipeline;
+
+# general function to read dpkg control files
+# this function can parse output of `dpkg-deb -f', .dsc,
+# and .changes files (and probably all similar formats)
+# arguments:
+#    $file
+# output:
+#    list of hashes
+#    (a hash contains one sections,
+#    keys in hash are lower case letters of control fields)
+sub parse_dpkg_control {
+    my ($CONTROL) = @_;
+
+    my @data;
+    my $cur_section = 0;
+    my $open_section = 0;
+    my $last_tag;
+
+    while (<$CONTROL>) {
+	chop;
+
+	# tabs at the beginning are illegal, but handle them anyways
+	s/^\t/ \t/o;
+
+	# empty line?
+	if (m/^\s*$/) {
+	    if ($open_section) { # end of current section
+		$cur_section++;
+		$open_section = 0;
+	    }
+	}
+	# pgp sig?
+	elsif (m/^-----BEGIN PGP SIGNATURE/) { # skip until end of signature
+	    while (<$CONTROL>) {
+		last if m/^-----END PGP SIGNATURE/o;
+	    }
+	}
+	# other pgp control?
+	elsif (m/^-----BEGIN PGP/) { # skip until the next blank line
+	    while (<$CONTROL>) {
+		last if /^\s*$/o;
+	    }
+	}
+	# new empty field?
+	elsif (m/^(\S+):\s*$/o) {
+	    $open_section = 1;
+
+	    my ($tag) = (lc $1);
+	    $data[$cur_section]->{$tag} = '';
+
+	    $last_tag = $tag;
+	}
+	# new field?
+	elsif (m/^(\S+): (.*)$/o) {
+	    $open_section = 1;
+
+	    my ($tag,$value) = (lc $1,$2);
+	    $data[$cur_section]->{$tag} = $value;
+
+	    $last_tag = $tag;
+	}
+	# continued field?
+	elsif (m/^ (.*)$/o) {
+	    $open_section or fail("syntax error in section $cur_section after the tag $last_tag: $_");
+
+	    $data[$cur_section]->{$last_tag} .= "\n".$1;
+	}
+    }
+
+    return @data;
+}
+
+sub read_dpkg_control {
+    my ($file) = @_;
+
+    if (not _ensure_file_is_sane($file)) {
+	return undef;
+    }
+
+    my $CONTROL = FileHandle->new;
+    open($CONTROL,$file)
+	or fail("cannot open control file $file for reading: $!");
+    my @data = parse_dpkg_control($CONTROL);
+    close($CONTROL)
+	or fail("pipe for control file $file exited with status: $?");
+    return @data;
+}
+
+sub get_deb_info {
+    my ($file) = @_;
+
+    if (not _ensure_file_is_sane($file)) {
+	return undef;
+    }
+
+    # `dpkg-deb -f $file' is very slow. Instead, we use ar and tar.
+    my $CONTROL = FileHandle->new;
+    pipeline_open($CONTROL,
+		  (sub { exec 'ar', 'p', $file, 'control.tar.gz' }),
+		  (sub { exec 'tar', 'xfzO', '-', '*control' }))
+	or fail("cannot fork to unpack $file: $!\n");
+    my @data = parse_dpkg_control($CONTROL);
+    close($CONTROL) or fail("broken input pipe for unpacking $file: $!");
+    return $data[0];
+}
+
+sub get_dsc_info {
+    my ($file) = @_;
+
+    if (not _ensure_file_is_sane($file)) {
+	return undef;
+    }
+
+    my @data = read_dpkg_control($file);
+    return $data[0];
+}
+
+sub _ensure_file_is_sane {
+    my ($file) = @_;
+
+    # if file exists and is not 0 bytes
+    if (-f $file and -s $file) {
+	return 1;
+    }
+    return 0;
+}
+
+sub slurp_entire_file {
+    my $file = shift;
+    open(C,$file)
+	or fail("cannot open file $file for reading: $!");
+    my $save = $/;
+    undef $/;
+    local $_ = <C>;
+    $/ = $save;
+    close(C);
+    return $_;
+}
+
+# ------------------------
+
+sub fail {
+    if ($_[0]) {
+	warn "internal error: $_[0]\n";
+    } elsif ($!) {
+	warn "internal error: $!\n";
+    } else {
+	warn "internal error.\n";
+    }
+    warn "$_[1]\n" if $_[1];
+    exit 2;
+}
+
+1;

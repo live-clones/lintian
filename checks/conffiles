@@ -1,0 +1,78 @@
+#!/usr/bin/perl -w
+# conffiles -- lintian check script
+
+# Copyright (C) 1998 Christian Schwarz
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+# MA 02111-1307, USA.
+
+use strict;
+
+($#ARGV == 1) or fail("syntax: conffiles <pkg> <type>");
+my $pkg = shift;
+my $type = shift;
+
+my $cf = "control/conffiles";
+
+# conffiles?
+unless (-f $cf) {
+    exit 0;
+}
+
+my %conffiles = ();
+
+open(IN,$cf) or fail("cannot open $cf for reading: $!");
+while (<IN>) {
+    chop;
+    next if m/^\s*$/o;
+
+    $conffiles{"$_"}++;
+    if ($conffiles{"$_"} > 1) {
+	print "E: $pkg $type: duplicate-conffile $_\n";
+    }
+
+    if (m,^/?var/lib/games/,o) {
+	print "E: $pkg $type: score-file-must-not-be-conffile $_\n";
+    }
+
+    if (m,^/?usr/,o) {
+	print "E: $pkg $type: file-in-usr-marked-as-conffile $_\n";
+    } else {
+	unless (m,^/?etc/,o or m,^/?var/,o) {
+	    print "W: $pkg $type: non-etc-or-var-file-marked-as-conffile $_\n";
+	}
+    }
+
+    unless (m,^/,o) {
+	print "E: $pkg $type: relative-conffile $_\n";
+    }
+}
+close(IN);
+
+exit 0;
+
+# -----------------------------------
+
+sub fail {
+    if ($_[0]) {
+	warn "internal error: $_[0]\n";
+    } elsif ($!) {
+	warn "internal error: $!\n";
+    } else {
+	warn "internal error.\n";
+    }
+    exit 1;
+}

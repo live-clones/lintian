@@ -1,0 +1,38 @@
+Check-Script: conffiles
+Author: Christian Schwarz <schwarz@debian.org>
+Abbrev: cnf
+Standards-Version: 3.5.0
+Type: binary
+Unpack-Level: 1
+Info: This script checks if the `conffiles' control file of a binary
+ package is correct.
+
+Tag: file-in-usr-marked-as-conffile
+Type: error
+Info: Files below <tt>/usr</tt> may not be marked as conffiles, since
+ <tt>/usr</tt> might be mounted read-only and thus, the local system
+ administrator would not have a chance to modify this configuration
+ file.
+
+Tag: non-etc-or-var-file-marked-as-conffile
+Type: warning
+Info: A file installed in some other directory than <tt>/etc</tt> or
+ <tt>/var</tt> is marked as conffile. Usually this is a bug. If not
+ not, please contact &maint; about this so that this exception would
+ be recognized in future versions of Lintian.
+Status: untested
+Ref: policy 11.7.2
+
+Tag: relative-conffile
+Type: error
+Ref: policy E.1
+Info: All entries in the conffile control file should have an absolute
+ path specification.
+
+Tag: score-file-must-not-be-conffile
+Type: error
+Info: Game score and data files should not be marked as conffiles.
+
+Tag: duplicate-conffile
+Type: error
+Info: The file is listed more than once in your <tt>debian/conffiles</tt> file.

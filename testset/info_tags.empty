@@ -1,0 +1,46 @@
+E: empty source: no-standards-version-field
+N:
+N:   The source package does not have a `Standards-Version' control field.
+N:   Please update your package to latest policy and set this control field
+N:   appropriately.
+N:
+E: empty source: maintainer-address-missing empty
+N:
+N:   The maintainer field should contain the package maintainer's name and
+N:   email address, with the name followed by the address inside angle
+N:   brackets (< and &rt;). The address seems to be missing.
+N:   
+N:   Refer to policy D.2.4 for details.
+N:
+E: empty: no-copyright-file
+N:
+N:   Each binary package has to include a plain file
+N:   /usr/share/doc/<pkg>/copyright
+N:   
+N:   Refer to Policy Manual, section 13.5 for details.
+N:
+E: empty: package-has-no-description
+N:
+N:   The binary package does not have a "Description:" control field.
+N:
+E: empty: maintainer-address-missing empty
+W: empty: no-section-field
+N:
+N:   The package does not have a `Section:' field in its control file.
+N:   
+N:   The Section field can be included in a binary package by passing the
+N:   -is or -isp flags to dpkg-gencontrol when building the package. The
+N:   field is optional in binary packages.
+N:   
+N:   Refer to policy D.2.9 for details.
+N:
+W: empty: no-priority-field
+N:
+N:   The package does not have a `Priority:' field in its control file.
+N:   
+N:   The Priority field can be included in a binary package by passing the
+N:   -ip or -isp flags to dpkg-gencontrol when building the package. The
+N:   field is optional in binary packages.
+N:   
+N:   Refer to policy D.2.9 for details.
+N:

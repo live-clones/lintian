@@ -1,0 +1,552 @@
+Check-Script: scripts
+Author: Richard Braakman <dark@xs4all.nl>
+Abbrev: scr
+Standards-Version: 3.2.0
+Type: binary
+Unpack-Level: 2
+Info: This script checks the #! lines of scripts in a package.
+Needs-Info: file-info, scripts
+
+Tag: script-without-interpreter
+Type: error
+Info: This file starts with the #! sequence that identifies scripts, but
+ it does not name an interpreter.
+
+Tag: executable-not-elf-or-script
+Type: warning
+Info: This executable file is not an ELF format binary, and does not start
+ with the #! sequence that marks interpreted scripts.  It might be a sh script
+ that fails to name /bin/sh as its shell.
+Ref: policy 11.4
+
+Tag: script-not-executable
+Type: warning
+Info: This file starts with the #! sequence that marks interpreted scripts,
+ but it is not executable.
+
+Tag: interpreter-not-absolute
+Type: warning
+Info: This script uses a relative path to locate its interpreter.
+ This path will be taken relative to the caller's current directory, not
+ the script's, so it is not likely to be what was intended.
+
+Tag: unusual-interpreter
+Type: warning
+Info: This package contains a script for an interpreter that the Lintian
+ maintainers have not thought of.  It could be a typo for a common 
+ interpreter.  If not, please contact the Lintian maintainers so that
+ they can add this interpreter to their list.
+
+Tag: unusual-control-interpreter
+Type: info
+Info: This package contains a control script for an interpreter that
+ is not normally used for control scripts.
+
+Tag: interpreter-in-usr-local
+Type: error
+Info: This package contains a script that looks for an interpreter
+ in a directory in /usr/local.  Since Debian does not install anything
+ in /usr/local, this is the wrong place to look.
+
+Tag: interpreter-without-predep
+Type: error
+Info: The package contains a control script that uses an unusual interpreter,
+ but does not declare a pre-dependency on the package that provides this
+ interpreter.
+ .
+ A perusal of &packaging; section 6.2 shows that any of the control scripts
+ can be called while the package is not configured.  Therefore, a
+ pre-dependency is required to ensure that the interpreter is always
+ available when the script is invoked.
+ .
+ Please do not add a pre-dependency without following the policy for doing so.
+ (Policy section 2.3.4).
+
+Tag: wrong-path-for-awk
+Type: error
+Info: Awk is installed as /usr/bin/awk on Debian systems.
+
+Tag: wrong-path-for-nawk
+Type: error
+Info: nawk is installed as /usr/bin/nawk on Debian systems.
+
+Tag: wrong-path-for-gawk
+Type: error
+Info: GNU awk is installed as /usr/bin/gawk on Debian systems.
+
+Tag: gawk-script-but-no-gawk-dep
+Type: error
+Info: Packages that use gawk scripts must depend on the gawk package.
+ If they don't need gawk-specific features, and can just as easily work
+ with mawk, then they should be awk scripts instead.
+ .
+ In some cases a weaker relationship, such as Suggests or Recommends, will
+ be more appropriate.
+
+Tag: wrong-path-for-mawk
+Type: error
+Info: Mawk is installed as /usr/bin/mawk on Debian systems.
+
+Tag: mawk-script-but-no-mawk-dep
+Type: error
+Info: Packages that use mawk scripts must depend on the mawk package.
+ If they don't need mawk-specific features, and can just as easily work
+ with gawk, then they should be awk scripts instead.
+ .
+ In some cases a weaker relationship, such as Suggests or Recommends, will
+ be more appropriate.
+
+Tag: wrong-path-for-burlap
+Type: error
+Info: burlap is installed as /usr/bin/burlap on Debian systems.
+
+Tag: burlap-script-but-no-felt-dep
+Type: error
+Info: Packages that use burlap scripts must depend on the felt package.
+ .
+ In some cases a weaker relationship, such as Suggests or Recommends, will
+ be more appropriate.
+
+Tag: wrong-path-for-csh
+Type: error
+Info: Csh is installed as /bin/csh on Debian systems.
+Ref: policy 11.4
+
+Tag: wrong-path-for-tcsh
+Type: error
+Info: Tcsh is installed as /usr/bin/tcsh on Debian systems.
+
+Tag: csh-script-but-no-c-shell-dep
+Type: error
+Info: Packages that use csh scripts must depend on the virtual package c-shell,
+ which is provided by csh and tcsh.
+ .
+ In some cases a weaker relationship, such as Suggests or Recommends, will
+ be more appropriate.
+Ref: policy 11.4
+
+Tag: csh-considered-harmful
+Type: warning
+Info: The Debian policy for scripts explicitly warns against using csh
+ and tcsh as scripting languages.
+Ref: policy 11.4
+
+Tag: wrong-path-for-ash
+Type: error
+Info: Ash is installed as /bin/ash on Debian systems.
+
+Tag: ash-script-but-no-ash-dep
+Type: error
+Info: Packages that use ash scripts must depend on the ash package.
+ .
+ In some cases a weaker relationship, such as Suggests or Recommends, will
+ be more appropriate.
+
+Tag: wrong-path-for-sh
+Type: error
+Info: The Bourne shell is installed as /bin/sh on Debian systems.
+
+Tag: wrong-path-for-bash
+Type: error
+Info: Bash is installed as /bin/bash on Debian systems.
+
+Tag: wrong-path-for-ksh
+Type: error
+Info: Ksh is installed as /bin/ksh on Debian systems.
+
+Tag: ksh-script-but-no-pdksh-dep
+Type: error
+Info: Packages that use ksh scripts must depend on the pdksh package.
+ .
+ In some cases a weaker relationship, such as Suggests or Recommends, will
+ be more appropriate.
+
+Tag: wrong-path-for-env
+Type: error
+Info: env is installed as /usr/bin/env on Debian systems.
+
+Tag: wrong-path-for-expect
+Type: error
+Info: Wish is installed as /usr/bin/expect on Debian systems.
+
+Tag: expect-script-but-no-expect-dep
+Type: error
+Info: Packages that use expect scripts must depend on the virtual
+ package expect.
+ .
+ In some cases a weaker relationship, such as Suggests or Recommends, will
+ be more appropriate.
+
+Tag: wrong-path-for-gnuplot
+Type: error
+Info: scsh is installed as /usr/bin/gnuplot on Debian systems.
+
+Tag: gnuplot-script-but-no-gnuplot-dep
+Type: error
+Info: Packages that use gnuplot scripts must depend on the gnuplot package.
+ .
+ In some cases a weaker relationship, such as Suggests or Recommends, will
+ be more appropriate.
+
+Tag: wrong-path-for-guile
+Type: error
+Info: guile is installed as /usr/bin/guile on Debian systems.
+
+Tag: guile-script-but-no-guile-dep
+Type: error
+Info: Packages that use guile scripts must depend on the virtual package
+ `guile'.
+ .
+ In some cases a weaker relationship, such as Suggests or Recommends, will
+ be more appropriate.
+
+Tag: wrong-path-for-install-menu
+Type: error
+Info: Install-menu is installed as /usr/sbin/install-menu.
+
+Tag: wrong-path-for-install-fvwmgenmenu
+Type: error
+Info: install-fvwmgenmenu is installed as /usr/sbin/install-fvwmgenmenu.
+
+Tag: wrong-path-for-js
+Type: error
+Info: js is installed as /usr/bin/js on Debian systems.
+
+Tag: js-script-but-no-ngs-js-dep
+Type: error
+Info: Packages that use js scripts must depend on the package ngs-js,
+ which provides the interpreter.
+ .
+ In some cases a weaker relationship, such as Suggests or Recommends, will
+ be more appropriate.
+
+Tag: wrong-path-for-make
+Type: error
+Info: Make is installed as /usr/bin/make on Debian systems.
+
+Tag: make-script-but-no-make-dep
+Type: error
+Info: Packages that use make scripts must depend on the make package.
+ .
+ In some cases a weaker relationship, such as Suggests or Recommends, will
+ be more appropriate.
+
+Tag: wrong-path-for-perl
+Type: error
+Info: Perl is installed as /usr/bin/perl on Debian systems.
+Ref: policy 11.4
+
+Tag: perl-5.004-script-but-no-perl-5.004-dep
+Type: error
+Info: Packages that use perl-5.004 scripts must depend on the perl-5.004
+ package.
+ .
+ In some cases a weaker relationship, such as Suggests or Recommends, will
+ be more appropriate.
+
+Tag: perl-5.005-script-but-no-perl-5.005-dep
+Type: error
+Info: Packages that use perl-5.005 scripts must depend on the perl-5.005
+ package.
+ .
+ In some cases a weaker relationship, such as Suggests or Recommends, will
+ be more appropriate.
+
+Tag: wrong-path-for-suidperl
+Type: error
+Info: Suidperl is installed as /usr/bin/suidperl on Debian systems.
+
+Tag: suidperl-script-but-no-perl-suid-dep
+Type: error
+Info: Packages that use suidperl scripts must depend on the perl-suid package.
+ .
+ In some cases a weaker relationship, such as Suggests or Recommends, will
+ be more appropriate.
+
+Tag: wrong-path-for-php4
+Type: error
+Info: PHP4 is installed as /usr/bin/php4 on Debian systems.
+
+Tag: php4-script-but-no-php4-cgi-dep
+Type: error
+Info: Packages that use PHP4 scripts must depend on the php4-cgi package.
+ .
+ In some cases a weaker relationship, such as Suggests or Recommends, will
+ be more appropriate.
+
+Tag: wrong-path-for-pike
+Type: error
+Info: Pike is installed as /usr/bin/pike on Debian systems.
+
+Tag: pike-script-but-no-pike-dep
+Type: error
+Info: Packages that use Pike scripts must depend on pike or pike7.
+ .
+ In some cases a weaker relationship, such as Suggests or Recommends, will
+ be more appropriate.
+
+Tag: wrong-path-for-pike7
+Type: error
+Info: Pike7 is installed as /usr/bin/pike7 on Debian systems.
+
+Tag: pike7-script-but-no-pike7-dep
+Type: error
+Info: Packages that use Pike7 scripts must depend on pike7.
+ .
+ In some cases a weaker relationship, such as Suggests or Recommends, will
+ be more appropriate.
+
+Tag: wrong-path-for-python
+Type: error
+Info: Python is installed as /usr/bin/python on Debian systems.
+
+Tag: python-script-but-no-python-dep
+Type: error
+Info: Packages with scripts that are executed with python must depend on the
+ package python. Those that have scripts executed with a versioned python
+ package need a dependency on the equivalent version of python.
+ .
+ For example, if a script in the package uses #!/usr/bin/python, then the
+ package needs a dependency on "python". If a script uses
+ #!/usr/bin/python2.2, then the package need a dependency on "python2.2".
+ .
+ In some cases a weaker relationship, such as Suggests or Recommends, will
+ be more appropriate.
+
+Tag: wrong-path-for-rc
+Type: error
+Info: The rc shell is installed as /usr/bin/rc on Debian systems.
+
+Tag: rc-script-but-no-rc-dep
+Type: error
+Info: Packages that use rc scripts must depend on the rc package.
+ .
+ In some cases a weaker relationship, such as Suggests or Recommends, will
+ be more appropriate.
+
+Tag: wrong-path-for-regina
+Type: error
+Info: regina is installed as /usr/bin/regina on Debian systems.
+
+Tag: regina-script-but-no-regina-rexx-dep
+Type: error
+Info: Packages that use regina scripts must depend on the regina-rexx package.
+ .
+ In some cases a weaker relationship, such as Suggests or Recommends, will
+ be more appropriate.
+
+Tag: wrong-path-for-rexx
+Type: error
+Info: rexx is installed as /usr/bin/rexx on Debian systems.
+
+Tag: rexx-script-but-no-regina-rexx-dep
+Type: error
+Info: Packages that use rexx scripts must depend on the regina-rexx package.
+ .
+ In some cases a weaker relationship, such as Suggests or Recommends, will
+ be more appropriate.
+
+Tag: wrong-path-for-runhugs
+Type: error
+Info: Hugs is installed as /usr/bin/runhugs on Debian systems.
+Ref: policy 11.4
+
+Tag: wrong-path-for-runhugs1.4
+Type: error
+Info: Hugs is installed as /usr/bin/runhugs or /usr/bin/runhugs1.4 on Debian 
+ systems.
+Ref: policy 11.4
+
+Tag: wrong-path-for-runhugs98
+Type: error
+Info: Hugs is installed as /usr/bin/runhugs or /usr/bin/runhugs98 on Debian 
+ systems.
+Ref: policy 11.4
+
+Tag: runhugs1.4-script-but-no-hugs-dep
+Type: error
+Info: Packages that use runhugs scripts must depend on the hugs package.
+ .
+ In some cases a weaker relationship, such as Suggests or Recommends, will
+ be more appropriate.
+
+Tag: runhugs98-script-but-no-hugs98-dep
+Type: error
+Info: Packages that use runhugs98 scripts must depend on the hugs98 package.
+ .
+ In some cases a weaker relationship, such as Suggests or Recommends, will
+ be more appropriate.
+
+Tag: wrong-path-for-scsh
+Type: error
+Info: scsh is installed as /usr/bin/scsh on Debian systems.
+
+Tag: scsh-script-but-no-scsh-dep
+Type: error
+Info: Packages that use scsh scripts must depend on the scsh package.
+ .
+ In some cases a weaker relationship, such as Suggests or Recommends, will
+ be more appropriate.
+
+Tag: wrong-path-for-sed
+Type: error
+Info: sed is installed as /bin/sed on Debian systems.
+
+Tag: wrong-path-for-trs
+Type: error
+Info: trs is installed as /usr/bin/trs on Debian systems.
+
+Tag: trs-script-but-no-konwert-dep
+Type: error
+Info: Packages that use trs scripts must depend on the konwert package,
+ which provides that interpreter.
+ .
+ In some cases a weaker relationship, such as Suggests or Recommends, will
+ be more appropriate.
+
+Tag: wrong-path-for-tclsh
+Type: error
+Info: Tclsh is installed as /usr/bin/tclsh on Debian systems.
+
+Tag: tclsh-script-but-no-tclsh-dep
+Type: error
+Info: Packages that use tclsh scripts must depend on the virtual package tclsh.
+ .
+ In some cases a weaker relationship, such as Suggests or Recommends, will
+ be more appropriate.
+
+Tag: wrong-path-for-bltwish
+Type: error
+Info: bltwish is installed as /usr/bin/bltwish on Debian systems.
+
+Tag: bltwish-script-but-no-blt-dep
+Type: error
+Info: Packages that use bltwish scripts must depend on the blt package.
+ It has superseded the blt8.0 package.
+ .
+ In some cases a weaker relationship, such as Suggests or Recommends, will
+ be more appropriate.
+
+Tag: wrong-path-for-wish
+Type: error
+Info: Wish is installed as /usr/bin/wish on Debian systems.
+
+Tag: wish-script-but-no-wish-dep
+Type: error
+Info: Packages that use wish scripts must depend on the virtual package wish.
+ .
+ In some cases a weaker relationship, such as Suggests or Recommends, will
+ be more appropriate.
+
+Tag: wrong-path-for-wish8.0
+Type: error
+Info: wish8.0 is installed as /usr/bin/wish8.0 on Debian systems.
+
+Tag: wish8.0-script-but-no-tk8.0-dep
+Type: error
+Info: Packages that use wish8.0 scripts must depend on the tk8.0 package.
+ .
+ In some cases a weaker relationship, such as Suggests or Recommends, will
+ be more appropriate.
+
+Tag: wrong-path-for-zsh
+Type: error
+Info: Zsh is installed as /usr/bin/zsh on Debian systems.
+
+Tag: zsh-script-but-no-zsh-dep
+Type: error
+Info: Packages that use zsh scripts must depend on the zsh package.
+ .
+ In some cases a weaker relationship, such as Suggests or Recommends, will
+ be more appropriate.
+
+Tag: shell-script-fails-syntax-check
+Type: error
+Info: Running this shell script with the shell's -n option set fails,
+ which means that the script has syntax errors.
+ .
+ Run e.g. <tt>sh -n yourscript</tt> to see the errors yourself.
+
+Tag: maintainer-shell-script-fails-syntax-check
+Type: error
+Info: Running this shell script with the shell's -n option set fails,
+ which means that the script has syntax errors. This will likely make
+ the package uninstallable.
+ .
+ Run e.g. <tt>sh -n yourscript</tt> to see the errors yourself.
+
+Tag: possibly-insecure-handling-of-tmp-files-in-maintainer-script
+Type: warning
+Info: The maintainer script seems to access a file in <tt>/tmp</tt> or some
+ other temporary directory. Since creating temporary files in a
+ world-writable directory is very dangerous, this is likely to be a
+ security bug. It's suggested that you use the <tt>tempfile</tt> or
+ <tt>mktemp</tt> utilities to create temporary files in these
+ directories.
+ .
+ If this is just a misinterpretation of some code in your maintainer
+ script, please contact &maint; about this so that this exception would be
+ recognized in future versions of Lintian.
+Ref: policy 11.4
+
+Tag: killall-is-dangerous
+Type: warning
+Info: The maintainer script seems to call <tt>killall</tt>.  Since this
+ utility kills processes by name, it may well end up killing unrelated
+ processes.  Most uses of <tt>killall</tt> should use
+ <tt>start-stop-daemon</tt> instead.
+
+Tag: dpkg-print-architecture-in-maintainer-script
+Type: warning
+Info: The maintainer script seems to call "<tt>dpkg --print-architecture</tt>".
+ This invokes <tt>gcc</tt>, and returns the <em>build</em> architecture
+ (which may not be the installation architecture if the system is configured
+ for cross-compiling).
+ .
+ The script should probably use "<tt>dpkg --print-installation-architecture</tt>"
+ instead.
+Ref: policy 5.2
+
+Tag: mknod-in-maintainer-script
+Type: warning
+Ref: policy 11.6
+Info: Maintainer scripts should not create device files directly.  They
+ should call makedev instead.
+
+Tag: possible-bashism-in-maintainer-script
+Type: warning
+Ref: policy 11.4
+Info: This script is marked as running under <tt>/bin/sh</tt>, but it seems
+ to use a feature found in bash.
+ .
+ Examples:
+ '==' in a test, it should use '=' instead
+ 'read' without a variable in the argument
+ 'function' to define a function
+ 'source' instead of '.'
+ '. command args', passing arguments to commands via 'source' is not supported
+ '{foo,bar}' instead of 'foo bar'
+
+Tag: suidregister-used-in-maintainer-script
+Type: error
+Info: This script calls suidregister which is no longer needed, a new
+ command 'dpkg-statoverride' gives admins more flexibility.  Please see
+ the documentation of suidmanager and dpkg-statoverride for details.
+
+Tag: update-alternatives-remove-called-in-postrm
+Type: warning
+Info: 'update-alternatives --remove <alternative> foo' is called in the
+ postrm.  This can be dangerous because at the time the postrm is executed
+ foo has already been deleted and update-alternatives will ignore it while
+ constructing its list of available alternatives.  Then, if the
+ /etc/alternatives symlink points at foo, update-alternatives won't
+ recognize it and will mark the symlink as something site-specific.  As
+ such, the symlink will no longer be updated automatically and will be
+ left dangling until `update-alternatives --auto <alternative>' is
+ run by hand.
+ .
+ update-alternatives --remove should be called in the prerm instead.
+ .
+ If the postrm is the right place for what the package is doing, then
+ please email &maint; about it so that this exception would be recognized
+ in future versions of Lintian.

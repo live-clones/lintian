@@ -1,0 +1,15 @@
+Check-Script: debdiff
+Author: Richard Braakman <dark@xs4all.nl>
+Abbrev: dif
+Standards-Version: 3.2.0
+Type: source
+Unpack-Level: 1
+Info: This script looks for .orig and .rej files in the Debian diff
+Needs-Info: diffstat
+
+Tag: patch-failure-file-in-diff
+Type: warning
+Info: If the <tt>patch</tt> utility cannot completely apply a diff,
+ it leaves certain files in the directory tree.  Lintian found such files
+ in the Debian-diff for this source package.  This may indicate that the
+ maintainer applied a patch that did not quite fit, and didn't notice.

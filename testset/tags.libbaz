@@ -1,0 +1,3 @@
+W: libbaz source: ancient-standards-version 3.2.1
+W: libbaz1: postinst-should-not-set-usr-doc-link
+E: libbaz1: maintainer-shell-script-fails-syntax-check postinst

@@ -1,0 +1,270 @@
+#!/usr/bin/perl
+#
+# Lintian reporting harness -- Create and maintain Lintian reports automatically
+#
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+#
+# This program is free software.  It is distributed under the terms of
+# the GNU General Public License as published by the Free Software
+# Foundation; either version 2 of the License, or (at your option) any
+# later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+# MA 02111-1307, USA.
+
+use strict;
+use Getopt::Std;
+
+use vars qw($opt_c $opt_f $opt_i $opt_r);
+unless (getopts('cfir')) {
+  print <<END;
+Lintian reporting harness
+Create and maintain Lintian reports automatically
+
+Usage: harness [ -i | -c [-f] ] [ -r ]
+
+Options:
+  -c	clean mode, erase everything and start from scratch
+  -f	full mode, blithely overwrite lintian.log
+  -i	incremental mode, use old lintian.log data, process changes only
+  -r	generate HTML reports only
+
+Incremental mode is the default if you have a lintian.log;
+otherwise, it's full.
+
+Report bugs to <lintian-maint\@debian.org>.
+END
+  exit;
+}
+
+die "Can't use both incremental and full/clean." if ($opt_i && ($opt_f || $opt_c));
+$opt_f = 1 if $opt_c;
+die "Can't use other modes with reports only." if ($opt_r && ($opt_i || $opt_f || $opt_c));
+
+# read configuration
+require './config';
+use vars qw($LINTIAN_ROOT $LINTIAN_LAB $LINTIAN_ARCHIVEDIR $LINTIAN_DIST 
+            $LINTIAN_SECTION $LINTIAN_ARCH $LINTIAN_UNPACK_LEVEL $LINTIAN_CFG
+            $lintian_cmd $html_reports_cmd
+            $log_file $lintian_log $old_lintian_log
+            $changes_file $list_file $html_reports_log
+            $LOG_DIR $statistics_file
+            $HTML_DIR $HTML_TMP_DIR);
+
+# import perl libraries
+unshift @INC, "$LINTIAN_ROOT/lib";
+require Read_pkglists;
+use vars qw(%binary_info %source_info); # from the above
+require Util;
+
+# turn file buffering off
+$| = 1;
+
+# rotate log files
+system("savelog $log_file $changes_file $list_file $html_reports_log >/dev/null") == 0
+    or Die("cannot rotate log files");
+
+# create new log file
+open(LOG,">$log_file")
+    or Die("cannot open log file $log_file for writing: $!");
+
+# export Lintian's configuration
+$ENV{'LINTIAN_ROOT'} = $LINTIAN_ROOT;
+$ENV{'LINTIAN_CFG'} = $LINTIAN_CFG;
+$ENV{'LINTIAN_LAB'} = $LINTIAN_LAB;
+$ENV{'LINTIAN_ARCHIVEDIR'} = $LINTIAN_ARCHIVEDIR;
+$ENV{'LINTIAN_DIST'} = $LINTIAN_DIST;
+$ENV{'LINTIAN_UNPACK_LEVEL'} = $LINTIAN_UNPACK_LEVEL;
+$ENV{'LINTIAN_SECTION'} = $LINTIAN_SECTION;
+$ENV{'LINTIAN_ARCH'} = $LINTIAN_ARCH;
+
+if ($opt_c) { # purge the old packages
+  system("rm -rf $LINTIAN_LAB/binary") == 0 || die "$!";
+  system("mkdir -m 2775 $LINTIAN_LAB/binary") == 0 || die "$!";
+  system("rm -rf $LINTIAN_LAB/source") == 0 || die "$!";
+  system("mkdir -m 2775 $LINTIAN_LAB/source") == 0 || die "$!";
+  system("rm -f $LINTIAN_LAB/info/*") == 0 || die "$!";
+}
+
+unless ($opt_r) {
+  # make lintian update its packages files and save output
+  run("$lintian_cmd -v --setup-lab >$changes_file")
+      or Die("cannot run lintian --setup-lab");
+  Log("");
+}
+
+unless ($opt_f || $opt_c) {
+  unless ($opt_r) {
+    if (-f $lintian_log) {
+      $opt_i = 1;
+    } else {
+      $opt_f = 1;
+    }
+  }
+}
+
+if ($opt_f) { # check all packages
+  Log("Running Lintian over all packages...");
+  my $cmd = "$lintian_cmd -I -v -a -U changelog-file >$lintian_log";
+  Log("Executing $cmd");
+  my $res = (system($cmd) >> 8);
+  (($res == 0) or ($res == 1))
+    or Log("warning: executing lintian returned $res");
+  Log("");
+}
+
+if ($opt_i) { # process changes only
+
+    die "Old Lintian log file $lintian_log not found!\n" unless -f $lintian_log;
+
+    my $pkgfile;
+    my %skip_binary;
+    my %skip_source;
+
+    # read binary packages files
+    $pkgfile = "$LINTIAN_LAB/info/binary-packages";
+    (-f $pkgfile) or Die("cannot find list of binary packages $pkgfile");
+    read_bin_list($pkgfile);
+  
+    # read source packages files
+    $pkgfile = "$LINTIAN_LAB/info/source-packages";
+    (-f $pkgfile) or Die("cannot find list of source packages $pkgfile");
+    read_src_list($pkgfile);
+
+    # process changes file and create list of packages to process
+    Log("Reading changes file...");
+    open(IN,$changes_file)
+	or Die("cannot open changes file $changes_file for reading: $!");
+    open(OUT,">$list_file")
+	or Die("cannot open list file $list_file for writing: $!");
+    while (<IN>) {
+	chop;
+    
+	if (/^N: Listed (changed|new) (binary|source) package (\S+) (\S+)/o) {
+	    my ($type,$binsrc,$pkg,$ver) = ($1,$2,$3,$4);
+      
+	    Log("$type $binsrc package $pkg $ver");
+      
+	    if ($binsrc eq 'binary') {
+		my $data = $binary_info{$pkg};
+		$data or Die("cannot find binary package $pkg in binary-packages file");
+		print OUT "b $binary_info{$pkg}->{'package'} $binary_info{$pkg}->{'version'} $LINTIAN_ARCHIVEDIR/$binary_info{$pkg}->{'file'}\n";
+		$skip_binary{$pkg} = 1;
+	    } else {
+		my $data = $source_info{$pkg};
+		$data or Die("cannot find source package $pkg in source-packages file");
+		print OUT "s $source_info{$pkg}->{'source'} $source_info{$pkg}->{'version'} $LINTIAN_ARCHIVEDIR/$source_info{$pkg}->{'file'}\n";
+		$skip_source{$pkg} = 1;
+	    }
+	} elsif (/^N: Removed (binary|source) package (\S+)/o) {
+	    my ($binsrc,$pkg) = ($1,$2);
+
+	    Log("removed $binsrc package $pkg");
+	    run("rm -r -- \"$LINTIAN_LAB/$binsrc/$pkg\"")
+		or Log("could not remove $binsrc package $pkg");
+	    if ($binsrc eq 'binary') {
+		$skip_binary{$pkg} = 1;
+	    } else {
+		$skip_source{$pkg} = 1;
+	    }
+	} elsif (/^N/o) {
+	    # ignore other notes
+	} else {
+	    Log("skipping changes line: $_");
+	}
+    }
+    close(OUT);
+    close(IN);
+    Log("");
+
+    # update lintian.log
+    Log("Updating lintian.log...");
+    rename $lintian_log, $old_lintian_log;
+    open(IN,$old_lintian_log)
+	or Die("cannot open old lintian.log $old_lintian_log for reading: $!");
+    open(OUT,">$lintian_log")
+	or Die("cannot open lintian.log $lintian_log for writing: $!");
+    my $copy_mode = 1;
+    while (<IN>) {
+	if (/^N: Processing (binary|source) package (\S+)/o) {
+	    my ($type,$pkg) = ($1,$2);
+
+	    if ($type eq 'binary') {
+		$copy_mode = not exists $skip_binary{$pkg};
+	    } else {
+		$copy_mode = not exists $skip_source{$pkg};
+	    }
+	}
+    
+	if ($copy_mode) {
+	    print OUT $_;
+	}
+    }
+    print OUT "N: ---end-of-old-lintian-log-file---\n";
+    close(OUT);
+    close(IN);
+    Log("");
+
+    # run Lintian over the newly introduced or changed packages
+    Log("Running Lintian over newly introduced and changed packages...");
+    my $cmd = "$lintian_cmd -I -v -p $list_file -U changelog-file >>$lintian_log";
+    Log("Executing $cmd");
+    my $res = (system($cmd) >> 8);
+    (($res == 0) or ($res == 1))
+        or Log("warning: executing lintian returned $res");
+    Log("");
+}
+
+# create html reports
+Log("Creating HTML reports...");
+run("$html_reports_cmd $lintian_log >$html_reports_log 2>&1")
+    or Log("warning: executing $html_reports_cmd returned $?");
+Log("");
+
+# rotate the statistics file updated by $html_reports_cmd
+if (-f $statistics_file) {
+  system("cp $statistics_file $LOG_DIR/stats/statistics-`date +%Y%m%d`") == 0
+    or Log("warning: couldn't rotate the statistics file");
+}
+
+#Log("Creating depcheck pages...");
+#run("$LINTIAN_ROOT/depcheck/deppages.pl >>$html_reports_log")
+#    or Log("warning: executing deppages.pl returned $?");
+#Log("");
+
+# install new html directory
+Log("Installing HTML reports...");
+system("rm -rf $HTML_DIR") == 0
+    or Die("error removing $HTML_DIR");
+# a tiny bit of race right here
+rename($HTML_TMP_DIR,$HTML_DIR)
+    or Die("error renaming $HTML_TMP_DIR into $HTML_DIR");
+Log("");
+
+# ready!!! :-)
+Log("All done.");
+exit 0;
+
+# -------------------------------
+
+sub Log {
+    print LOG $_[0],"\n";
+}
+
+sub run {
+    Log("Executing $_[0]");
+    return (system($_[0]) == 0);
+}
+
+sub Die {
+    Log("fatal error: $_[0]");
+    exit 1;
+}

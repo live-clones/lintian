@@ -1,0 +1,345 @@
+#!/usr/bin/perl -w
+# shared-libs -- lintian check script
+
+# Copyright (C) 1998 Christian Schwarz
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+# MA 02111-1307, USA.
+
+use strict;
+use File::Basename;
+
+use lib "$ENV{'LINTIAN_ROOT'}/lib";
+use Util;
+
+my %ldso_dir = map { $_ => 1 }
+    qw( lib
+        usr/lib
+        usr/lib/libg++-dbg
+        usr/X11R6/lib/Xaw3d
+        usr/local/lib
+        usr/X11R6/lib
+        usr/lib/libc5-compat
+        lib/libc5-compat
+      );
+
+my $file;
+my $must_call_ldconfig;
+my $postrm = "control/postrm";
+my $postinst = "control/postinst";
+my $preinst = "control/preinst";
+my $prerm = "control/prerm";
+my $shlibs_control_file = "control/shlibs";
+my %SONAME;
+my %INTERP;
+my %objsomething;
+my %sharedobject;
+my %index_info;
+my %link_info;
+my @shlibs;
+my @words;
+
+# ---end-of-configuration-part---
+
+($#ARGV == 1) or fail("syntax: shared-libs <pkg> <type>");
+my $pkg = shift;
+my $type = shift;
+
+# 1st step: get info about shared libraries installed by this package
+open(IN,"objdump-info")
+    or fail("cannot find objdump-info for $type package $pkg");
+while (<IN>) {
+    chop;
+
+    #skip blank lines
+    next if m/^\s*$/o;
+
+    if (m/^-- (\S+)\s*$/o) {
+	$file = $1; $file =~ s,^(\./)?,,;
+    } elsif (m/^\s*SONAME\s*(\S+)/o) {
+	$SONAME{$file} = $1;
+    } elsif (m/^\s+\d+\s+\.rela?\.text/o) {
+	print "E: $pkg $type: shlib-with-non-pic-code $file\n"
+	    if exists $ldso_dir{dirname($file)};
+    } elsif (m/^\s*INTERP\b/) {
+	$INTERP{$file} = 1;
+    } else {
+        $objsomething{$file} = 1;
+    }
+}
+close(IN);
+
+open IN, "file-info" or fail("cannot find file-info for $type package $pkg");
+while (<IN>) {
+    chomp;
+    # with file names containing colons and spaces, we're fucked.
+    m/^(?:\.\/)?(.+?):\s+(.*)$/o or fail("unrecognized file(1) output: $_");
+    my ($file,$info) = ($1,$2);
+    if ($info =~ m/^ELF/ && $info =~ m/shared object/) {
+	$sharedobject{$file} = 1;
+    }
+}
+close(IN);
+
+# 2nd step: read package contents
+open(IN,"index") or fail("cannot open index file index: $!");
+while (<IN>) {
+    chop;
+    @words = split(/\s+/o, $_, 6);
+    my $perm = $words[0];
+    my $cur_file = $words[5];
+    my $link;
+    my $index_count = 0;
+    $cur_file =~ s,^(\./),,;
+    $cur_file =~ s/ link to .*//;
+
+    if ($perm =~ m/^l/) {
+	($cur_file, $link) = split(' -> ', $cur_file);
+	$link_info{$cur_file} = $link;
+    }
+    $index_info{$cur_file} = ++$index_count;
+
+    # shared library?
+    if (exists $SONAME{$cur_file}) {
+	# yes!!
+
+	# executable?
+	if ($perm =~ m/x/) {
+	    # yes.  But if the library has an INTERP section, it's designed
+	    # to do something useful when executed, so don't report an error.
+	    printf "E: $pkg $type: shlib-with-executable-bit $cur_file %04o\n",perm2oct($perm)
+		unless $INTERP{$cur_file};
+	} elsif ($perm ne '-rw-r--r--') {
+	    # bad permissions
+	    printf "W: $pkg $type: shlib-with-bad-permissions $cur_file %04o\n",perm2oct($perm);
+	}
+
+	# installed in a directory controlled by the dynamic linker?
+	if (exists $ldso_dir{dirname($cur_file)}) {
+	    # yes! so postinst must call ldconfig
+	    $must_call_ldconfig = $cur_file;
+	}
+    } elsif (exists $objsomething{$cur_file} &&
+	     exists $ldso_dir{dirname($cur_file)} &&
+	     exists $sharedobject{$cur_file}) {
+	print "E: $pkg $type: sharedobject-in-library-directory-not-actually-a-shlib $cur_file\n";
+    }
+}
+close(IN);
+
+# 3rd step: check if shlib symlinks are present and in correct order
+for my $shlib_file (keys %SONAME) {
+    # file found?
+    if (not exists $index_info{$shlib_file}) {
+	fail("shlib $shlib_file not found in package (should not happen!)");
+    }
+
+    my ($dir, $shlib_name) = $shlib_file =~ m,(.*)/([^/]+)$,;
+
+    # not a public shared library, skip it
+    next unless defined $ldso_dir{$dir};
+
+    # symlink found?
+    my $link_file = "$dir/$SONAME{$shlib_file}";
+    if (not exists $index_info{$link_file}) {
+	print "E: $pkg $type: ldconfig-symlink-missing-for-shlib $link_file $shlib_file $SONAME{$shlib_file}\n";
+    } else {
+	# $link_file really another file?
+	if ($link_file eq $shlib_file) {
+	    # the library file uses its SONAME, this is ok...
+	} else {
+	    # $link_file really a symlink?
+	    if (exists $link_info{$link_file}) {
+		# yes.
+
+		# $link_file pointing to correct file?
+		if ($link_info{$link_file} eq $shlib_name) {
+		    # ok.
+		} else {
+		    print "E: $pkg $type: ldconfig-symlink-referencing-wrong-file $link_file -> $link_info{$link_file} instead of $shlib_name\n";
+		}
+	    } else {
+		print "E: $pkg $type: ldconfig-symlink-is-not-a-symlink $shlib_file $link_file\n";
+	    }
+
+	    # symlink after shlib?
+	    if ($index_info{$link_file} < $index_info{$shlib_file}) {
+		print "E: $pkg $type: ldconfig-symlink-before-shlib-in-deb $link_file\n";
+	    }
+	}
+    }
+
+    # determine shlib link name (w/o version)
+    $link_file =~ s/\.so.*$/.so/o;
+
+    # -dev package?
+    if ($pkg =~ m/\-dev$/o) {
+	# yes!!
+
+	# need shlib symlink
+	if (not exists $index_info{$link_file}) {
+	    print "W: $pkg $type: dev-pkg-without-shlib-symlink $shlib_file $link_file\n";
+	}
+    } else {
+	# no.
+
+	# shlib symlink may not exist.
+	# if shlib doesn't _have_ a version, then $link_file and $shlib_file will
+	# be equal, and it's not a development link, so don't complain.
+	if (exists $index_info{$link_file} and $link_file ne $shlib_file) {
+	    print "W: $pkg $type: non-dev-pkg-with-shlib-symlink $shlib_file $link_file\n";
+	}
+    }
+}
+
+# 4th step: check shlibs control file
+@shlibs = keys %SONAME;
+if ($#shlibs == -1) {
+    # no shared libraries included in package, thus shlibs control file should
+    # not be present
+    if (-f $shlibs_control_file) {
+	print "E: $pkg $type: pkg-has-shlibs-control-file-but-no-actual-shared-libs\n";
+    }
+} else {
+    # shared libraries included, thus shlibs control file has to exist
+    if (not -f $shlibs_control_file) {
+	for my $shlib (@shlibs) {
+	    # skip it if it's not a public shared library
+	    next unless defined $ldso_dir{dirname($shlib)};
+	    print "E: $pkg $type: no-shlibs-control-file $shlib\n";
+	}
+    } else {
+	my %shlibs_control_used;
+	my %shlibs_control;
+	open(SHLIBS,$shlibs_control_file) or fail("cannot open shlibs control file $shlibs_control_file for reading: $!");
+	while (<SHLIBS>) {
+	    chop;
+	    next if m/^\s*$/;
+	    @words = split(/\s+/o,$_);
+	    if ($shlibs_control{$words[0]}) {
+		print "E: $pkg $type: duplicate-entry-in-shlibs-control-file $words[0]\n";
+	    } else {
+		$shlibs_control{$words[0]} = 1;
+	    }
+	}
+	close(SHLIBS);
+	my $shlib_name; 
+	for my $shlib (@shlibs) {
+	    $shlib_name = $SONAME{$shlib};
+	    # libfoo.so.X.X
+	    if ($shlib_name =~ m/(.+)\.so\..*$/) {
+		$shlib_name = $1;
+	    # libfoo-X.X.so
+	    } elsif ($shlib_name =~ m/(.+)\-\w[\w\.]*\.so$/) {
+		$shlib_name = $1;
+	    }
+	    if (exists $shlibs_control{$shlib_name}) {
+		# ok, have entry in shlibs control file
+		$shlibs_control_used{$shlib_name} = 1;
+	    } else {
+		# skip it if it's not a public shared library
+ 		next unless defined $ldso_dir{dirname($shlib)};
+		# no!!
+		print "E: $pkg $type: shlib-missing-in-control-file $shlib_name $shlib\n";
+	    }
+	}
+	for $shlib_name (keys %shlibs_control) {
+	    print "W: $pkg $type: unused-shlib-entry-in-control-file $shlib_name\n"
+		unless $shlibs_control_used{$shlib_name};
+	}
+    }
+}
+
+# 5th step: check pre- and post- control files
+if (-f $preinst) {
+    local $_ = slurp_entire_file($preinst);
+    if (/^[^\#]*\bldconfig\b/m) {
+	print "W: $pkg $type: preinst-calls-ldconfig\n"
+    }
+}
+
+if (-f $postinst) {
+    local $_ = slurp_entire_file($postinst);
+
+    # Decide if we call ldconfig
+    if (/^[^\#]*\bldconfig\b/m) {
+	print "W: $pkg $type: postinst-has-useless-call-to-ldconfig\n"
+	    unless $must_call_ldconfig;
+    } else {
+	print "E: $pkg $type: postinst-must-call-ldconfig $must_call_ldconfig\n"
+	    if $must_call_ldconfig;
+    }
+}
+
+if (-f $prerm) {
+    local $_ = slurp_entire_file($prerm);
+    if (/^[^\#]*\bldconfig\b/m) {
+	print "W: $pkg $type: prerm-calls-ldconfig\n";
+    }
+}
+
+if (-f $postrm) {
+    local $_ = slurp_entire_file($postrm);
+
+    # Decide if we call ldconfig
+    if (/^[^\#]*\bldconfig\b/m) {
+	print "W: $pkg $type: postrm-has-useless-call-to-ldconfig\n"
+	    unless $must_call_ldconfig;
+    } else {
+	print "W: $pkg $type: postrm-should-call-ldconfig $must_call_ldconfig\n"
+	    if $must_call_ldconfig;
+    }
+
+    # Decide if we do it safely
+    # this one matches code from debhelper
+    s/^if\s+\[\s+"\$1"\s+=\s+"remove"\s+\];\s+then\s+ldconfig\b//gm;
+    # variations...
+    s/^if\s+\[\s+"remove"\s+=\s+"\$1"\s+\];\s+then\s+ldconfig\b//gm;
+    s/^\[\s+"\$1"\s+=\s+"remove"\s+\]\s+&&\s+ldconfig\b//gm;
+    s/^\[\s+"remove"\s+=\s+"\$1"\s+\]\s+&&\s+ldconfig\b//gm;
+    if (/^[^\#]*\bldconfig\b/m) {
+        print "W: $pkg $type: postrm-unsafe-ldconfig\n";
+    }
+}
+
+
+exit 0;
+
+# -----------------------------------
+
+# translate permission strings like `-rwxrwxrwx' into an octal number
+sub perm2oct {
+    my ($t) = @_;
+
+    my $o = 0;
+
+    $t =~ m/^.(.)(.)(.)(.)(.)(.)(.)(.)(.)/o;
+
+    $o += 04000 if $3 eq 's';	# set-uid
+    $o += 02000 if $6 eq 's';	# set-gid
+    $o += 01000 if $9 eq 't';	# sticky bit
+    $o += 00400 if $1 ne '-';	# owner read
+    $o += 00200 if $2 ne '-';	# owner write
+    $o += 00100 if $3 ne '-';	# owner execute
+    $o += 00040 if $4 ne '-';	# owner read
+    $o += 00020 if $5 ne '-';	# owner write
+    $o += 00010 if $6 ne '-';	# owner execute
+    $o += 00004 if $7 ne '-';	# owner read
+    $o += 00002 if $8 ne '-';	# owner write
+    $o += 00001 if $9 ne '-';	# owner execute
+
+    return $o;
+}

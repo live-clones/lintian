@@ -1,0 +1,582 @@
+#!/usr/bin/perl -w
+# files -- lintian check script
+
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+# MA 02111-1307, USA.
+
+use strict;
+
+($#ARGV == 1) or fail("syntax: files <pkg> <type>");
+my $pkg = shift;
+my $type = shift;
+
+my $file;
+my $is_python;
+my $is_perl;
+
+my %linked_against_libvga;
+my %script = ();
+
+# read data from objdump-info file
+open(IN,"objdump-info")
+    or fail("cannot find objdump-info for $type package $pkg");
+while (<IN>) {
+    chop;
+
+    next if m/^\s*$/;
+
+    if (m,^-- (?:\./)?(\S+)\s*$,) {
+	$file = $1;
+    } elsif (m,^\s*NEEDED\s*(\S+),) {
+	my $lib = $1;
+	$linked_against_libvga{$file} = 1
+	    if $lib =~ m/libvga/;
+    }
+}
+close(IN);
+
+# find out which files are scripts
+open(SCRIPTS, "scripts") or fail("cannot open lintian scripts file: $!");
+while (<SCRIPTS>) {
+    chop;
+    m/^(\S*) (.*)$/ or fail("bad line in scripts file: $_");
+    $script{$2} = 1;
+}
+close(SCRIPTS);
+
+# Read package contents...
+open(IN,"index") or fail("cannot open index file index: $!");
+while (<IN>) {
+    chop;
+
+    my ($perm,$owner,$size,$date,$time,$file) = split(' ', $_, 6);
+    my $link;
+    my $operm;
+
+    $file =~ s,^\./,,;
+
+    if ($file =~ s/ link to .*//) {
+	print "W: $pkg $type: package-contains-hardlink $file\n";
+	next;
+    } elsif ($perm =~ m/^l/) {
+	($file, $link) = split(' -> ', $file);
+    }
+
+    $operm = perm2oct($perm);
+
+    # ---------------- /etc
+    if ($file =~ m,^etc/,) {
+	if ($file =~ m,^etc/nntpserver, ) {
+	    print "W: $pkg $type: package-uses-obsolete-file $file\n";
+	}
+	# ---------------- /etc/cron.d
+	elsif ($file =~ m,^etc/cron\.d/\S, and $operm != 0644) {
+	    printf "E: $pkg $type: bad-permissions-for-etc-cron.d-script $file %04o != 0644\n",$operm;
+	}
+	# ---------------- /etc/emacs.*
+	elsif ($file =~ m,^etc/emacs.*/\S, and $perm =~ m/^-/
+	       and $operm != 0644) {
+	    printf "E: $pkg $type: bad-permissions-for-etc-emacs-script $file %04o != 0644\n",$operm;
+	}
+	# ---------------- /etc/init.d
+	elsif ($file =~ m,^etc/init\.d/\S, and $operm != 0755
+	       and $perm =~ m/^-/) {
+	    printf "E: $pkg $type: non-standard-file-permissions-for-etc-init.d-script $file %04o != 0755\n",$operm;
+	}
+	#----------------- /etc/pam.conf
+	elsif ($file =~ m,^etc/pam.conf, and $pkg ne "libpam-runtime" ) {
+	    print "E: $pkg $type: config-file-reserved $file by libpam-runtime\n";
+	}
+	# ---------------- /etc/rc.d
+	elsif ($file =~ m,^etc/rc\.d/\S, and $pkg !~ /^(sysvinit|file-rc)$/) {
+	    print "E: $pkg $type: package-installs-into-etc-rc.d $file\n";
+	}
+	# ---------------- /etc/rc?.d
+	elsif ($file =~ m,^etc/rc(\d|S)\.d/\S, and $pkg !~ /^(sysvinit|file-rc)$/) {
+	    print "E: $pkg $type: package-installs-into-etc-rc.d $file\n";
+	}
+	# ---------------- /etc/rc.boot
+	elsif ($file =~ m,^etc/rc\.boot/\S,) {
+	    print "E: $pkg $type: package-installs-into-etc-rc.boot $file\n";
+	}
+	# --------------- /etc/X11/Xresources/
+	elsif ($file =~ m,^etc/X11/Xresources,) {
+	    my $needs_conflicts = 1;
+	    if (open(CONFLICTS, "fields/conflicts")) {
+		my $line = <CONFLICTS>;
+		if ($line =~ m/xbase \(.+?\)/) {
+		    $needs_conflicts = 0;
+		}
+		close(CONFLICTS);
+	    }
+	    if ($needs_conflicts) {
+		print "E: $pkg $type: xresources-file-in-etc-without-proper-conflicts $file\n";
+	    }
+	}
+    }
+    # ---------------- /usr
+    elsif ($file =~ m,^usr/,) {
+	# ---------------- /usr/share/doc
+	if ($file =~ m,^usr/share/doc/\S,) {
+	    # file not owned by root?
+	    if ($owner ne 'root/root') {
+		print "E: $pkg $type: bad-owner-for-doc-file $file $owner != root/root\n";
+	    }
+
+	    # file directly in /usr/share/doc ?
+	    if ($perm =~ m/^-/ and $file =~ m,^usr/share/doc/[^/]+$,) {
+		print "E: $pkg $type: file-directly-in-usr-share-doc $file\n";
+	    }
+
+	    # executable in /usr/share/doc ?
+	    if ($perm =~ m/^-.*[xs]/ and $file !~ m,^usr/share/doc/([^/]+/)?examples/,) {
+		if ($script{$file}) {
+		    print "I: $pkg $type: script-in-usr-share-doc $file\n";
+		} else {
+		    print "E: $pkg $type: executable-in-usr-share-doc $file " . (sprintf "%04o\n", $operm);
+		}
+	    }
+
+	    # zero byte file in /usr/share/doc/
+	    if ($size == 0 and $perm =~ m,^-,) {
+		print "W: $pkg $type: zero-byte-file-in-doc-directory $file\n";
+	    }
+
+	    # override files have moved
+	    my $tmp = quotemeta($pkg);
+	    if ($file =~ m,^usr/share/doc/$tmp/override\.[lL]intian(\.gz)?$,) {
+		print "E: $pkg $type: override-file-in-wrong-location $file\n";
+	    } elsif ($file =~ m,^usr/share/lintian/overrides/$tmp/.*,) {
+		print "E: $pkg $type: override-file-in-wrong-location $file\n";
+	    }
+
+	    # contains an INSTALL file?
+	    if ($file =~ m,^usr/share/doc/$tmp/INSTALL(?:\..+)*$,) {
+		print "W: $pkg $type: package-contains-upstream-install-documentation $file\n";
+	    }
+	}
+	# ---------------- /usr/doc
+	elsif ($file =~ m,^usr/doc/\S,) {
+	    if ($file =~ m,^usr/doc/examples/\S+, and $perm =~ m/^d/) {
+		print "E: $pkg $type: old-style-example-dir $file\n";
+	    }
+	}
+	# ---------------- /usr/X11R6/lib/X11/app-defaults
+	elsif ($file =~ m,usr/X11R6/lib/X11/app-defaults,) {
+	    print "E: $pkg $type: old-app-defaults-directory $file\n";
+	}
+	# ---------------- /usr/lib/sgml
+	elsif ($file =~ m,^usr/lib/sgml/\S,) {
+	    if ($perm =~ m/^-.*[xs]/) {
+		printf "E: $pkg $type: executable-in-usr-lib-sgml $file %04o\n",$operm;
+	    }
+	}
+	# ---------------- perllocal.pod
+	elsif ($file =~ m,^usr/lib/perl.*/perllocal.pod$,) {
+	    print "E: $pkg $type: package-installs-perllocal-pod $file\n";
+	}
+	# ---------------- .packlist files
+	elsif ($file =~ m,^usr/lib/perl.*/.packlist$,) {
+	    print "E: $pkg $type: package-installs-packlist $file\n";
+	}
+	elsif ($file =~ m,^usr/lib/perl5/.*\.(pl|pm)$,) {
+	    print "W: $pkg $type: package-installs-nonbinary-perl-in-usr-lib-perl5 $file\n";
+	}
+	# ---------------- /usr/lib -- needs to go after the other usr/lib/*
+	elsif ($file =~ m,^usr/lib/,) {
+	    if ($file =~ m,\.(gif|jpeg|jpg|png|tiff|xpm|xbm)$, and not defined $link) {
+		print "W: $pkg $type: image-file-in-usr-lib $file\n"
+	    }
+	}
+	# ---------------- /usr/local
+	elsif ($file =~ m,^usr/local/\S+,) {
+	    if ($perm =~ m/^d/) {
+		print "E: $pkg $type: dir-in-usr-local $file\n";
+	    } else {
+		print "E: $pkg $type: file-in-usr-local $file\n";
+	    }
+	}
+	# ---------------- /usr/share/man and /usr/X11R6/man
+	elsif ($file =~ m,^usr/X11R6/man/\S+, or m,^usr/share/man/\S+, ) {
+	    if ($perm =~ m/^-.*[xt]/) {
+		print "E: $pkg $type: executable-manpage $file\n";
+	    }
+	}
+	# ---------------- /usr/share
+	elsif ($file =~ m,^usr/share/[^/]+$,) {
+	    if ($perm =~ m/^-/) {
+		print "E: $pkg $type: file-directly-in-usr-share $file\n";
+	    }
+	}
+	# ---------------- /usr subdirs
+	elsif ($file =~ m,^usr/[^/]+/$, ) { # FSSTND dirs
+	    if ( $file =~ m,^usr/(dict|doc|etc|info|man|adm|preserve)/,) {
+		print "E: $pkg $type: FSSTND-dir-in-usr $file\n";
+	    }
+	    # FHS dirs
+	    elsif ( $file !~ m,^usr/(X11R6|X386|bin|games|include|lib|local|sbin|share|src|spool|tmp)/, ) {
+		print "W: $pkg $type: non-standard-dir-in-usr $file\n";
+	    } elsif ( $file =~ m,^usr/share/doc, ) {
+		print "I: $pkg $type: uses-FHS-doc-dir $file\n";
+	    }
+
+	    # unless $file =~ m,^usr/[^/]+-linuxlibc1/,; was tied into print
+	    # above...
+	    # Make an exception for the altdev dirs, which will go away
+	    # at some point and are not worth moving.
+	}
+    }
+    # ---------------- /var subdirs
+    elsif ($file =~ m,^var/[^/]+/$,) { # FSSTND dirs
+	if ( $file =~ m,^var/(adm|catman|named|nis|preserve)/, ) {
+	    print "W: $pkg $type: FSSTND-dir-in-var $file\n";
+	}
+	# FHS dirs with exception in Debian policy
+	elsif ( $file !~ m,^var/(account|lib|cache|crash|games|lock|log|opt|run|spool|state|tmp|www|yp)/,) {
+	    print "E: $pkg $type: non-standard-dir-in-var $file\n";
+	}
+    }
+    elsif ($file =~ m,^var/lib/games/.,) {
+	print "E: $pkg $type: non-standard-dir-in-var $file\n";
+    }
+    # ---------------- /opt
+    elsif ($file =~ m,^opt/.,) {
+	print "E: $pkg $type: dir-or-file-in-opt $file\n";
+    }
+    elsif ($file =~ m,^hurd/.,) {
+	next;
+    } elsif ($file =~ m,^server/.,) {
+	next;
+    }
+    # ---------------- /tmp, /var/tmp, /usr/tmp
+    elsif ($file =~ m,^tmp/., or $file =~ m,^(var|usr)/tmp/.,) {
+	print "E: $pkg $type: dir-or-file-in-tmp $file\n";
+    }
+    # ---------------- /mnt
+    elsif ($file =~ m,^mnt/.,) {
+	print "E: $pkg $type: dir-or-file-in-mnt $file\n";
+    }
+    # ---------------- /bin, /usr/bin
+    elsif ($file =~ m,^bin/, or $file =~ m,^usr/bin/,) {
+	if ($perm =~ m/^d/ and $file =~ m,^bin/.,) {
+	    print "E: $pkg $type: subdir-in-bin $file\n";
+	}
+    }
+    # ---------------- FHS directory?
+    elsif ($file =~ m,^[^/]+/$, and $file ne './' and
+	   $file !~ m,^(bin|boot|dev|etc|home|lib|mnt|opt|root|sbin|tmp|usr|var)/,) { # Make an exception for the base-files package here, because it
+	# installs a slew of top-level directories for setting up the
+	# base system.  (Specifically, /cdrom, /floppy, /initrd, and /proc
+	# are not mentioned in the FHS).
+	print "E: $pkg $type: non-standard-toplevel-dir $file\n"
+	    unless $pkg eq 'base-files' or $pkg eq 'hurd';
+    }
+
+    # ---------------- compatibility symlinks should not be used
+    if ($file =~ m,^usr/(spool|tmp)/, or
+	$file =~ m,^usr/(doc|bin|lib|include)/X11/, or
+	$file =~ m,^var/adm/,) {
+	print "E: $pkg $type: use-of-compat-symlink $file\n";
+    }
+
+    # ---------------- any files
+    if ($perm !~ m/^d/) {
+	unless ($file =~ m,^usr/(bin|dict|doc|games|include|info|lib|man|sbin|share|src|X11R6)/, or
+		$file =~ m,^lib/(modules/|libc5-compat/)?, or
+		$file =~ m,^var/(games|lib|www|named)/, or
+		$file =~ m,^(bin|boot|dev|etc|sbin)/, or
+		# non-FHS, but still usual
+		$file =~ m,^usr/[^/]+-linux[^/]*/, or
+		$file =~ m,^usr/iraf/,) {
+	    print "W: $pkg $type: file-in-unusual-dir $file\n";
+	}
+    }
+
+    # ---------------- pythonX.Y extensions
+    if ($file =~ m,^usr/lib/python\d\.\d/\S,
+	and not $file =~ m,^usr/lib/python\d\.\d/site-packages/,) {
+        # check if it's one of the Python proper packages
+	unless (defined $is_python) {
+	    $is_python = 0;
+	    if (open(SOURCE, "fields/source")) {
+		$_ = <SOURCE>;
+		$is_python = 1 if /^python(\d\.\d)?($|\s)/;
+		close(SOURCE);
+	    }
+	}
+	print "W: $pkg $type: third-party-package-in-python-dir $file\n"
+	    unless $is_python;
+    }
+    # ---------------- perl modules
+    if ($file =~ m,^usr/(share|lib)/perl/\S,) {
+       # check if it's the "perl" package itself
+       unless (defined $is_perl) {
+           $is_perl = 0;
+           if (open(SOURCE, "fields/source")) {
+               $_ = <SOURCE>;
+               $is_perl = 1 if /^perl($|\s)/;
+               close(SOURCE);
+           }
+       }
+       print "E: $pkg $type: perl-module-in-core-directory $file\n"
+           unless $is_perl;
+    }
+
+    # ---------------- license files
+    if ($file =~ m,(copying|licen[cs]e)(\.[^/]+)?$,i
+	# ignore some common extensions; there was at least one file
+	# named "license.el".  These are probably license-displaying
+	# code, not license files.
+        # Another exception is made for .html and .php because preserving
+        # working links is more important than saving some bytes, and
+	# because a package had a HTML form for licenses called like that.
+	# Another exception is made for various picture formats since
+	# those are likely to just be simply pictures.
+	and not $file =~ m/\.(el|c|h|py|cc|pl|pm|html|php|xpm|png)$/
+        and not defined $link) {
+	print "W: $pkg $type: extra-license-file $file\n";
+    }
+
+
+    # ---------------- plain files
+    if ($perm =~ m/^-/) {
+	my $wanted_operm;
+	# ---------------- backup files and autosave files
+	if ($file =~ /~$/ or $file =~ m,\#[^/]+\#$, or $file =~ m,/\.nfs[^/]+$,) {
+	    print "W: $pkg $type: backup-file-in-package $file\n";
+	}
+	
+	# ---------------- cvsignore files
+	if ($file =~ m/\.cvsignore$/) {
+	    print "W: $pkg $type: cvsignore-file-in-package $file\n";
+	}
+
+	# ---------------- general: setuid/setgid files!
+	if ($perm =~ m/s/) {
+	    my ($setuid, $setgid) = ("","");
+	    # get more info:
+	    my ($user,$group) = ("", "");
+
+	    if ($owner =~ m,^(.*)/(.*)$,) {
+		$user = $1;
+		$group = $2;
+	    }
+	    $setuid = $user if ($operm & 04000);
+	    $setgid = $group if ($operm & 02000);
+
+	    $wanted_operm = 0755;
+
+	    # 1st special case: program is using svgalib:
+	    if (exists $linked_against_libvga{$file}) {
+		# setuid root is ok, so remove it
+		if ($setuid eq 'root') {
+		    undef $setuid;
+		    $wanted_operm |= 04000;
+		}
+	    }
+
+	    # 2nd special case: program is a setgid game
+	    if ($file =~ m,usr/lib/games/\S+, or $file =~ m,usr/games/\S+,) {
+		# setgid games is ok, so remove it
+		if ($setgid eq 'games') {
+		    undef $setgid;
+		    $wanted_operm |= 02000;
+		}
+	    }
+
+	    #allow anything with suid in the name
+	    if ($pkg =~ m,-suid,) {
+		undef $setuid;
+		$wanted_operm |= 04000;
+	    }
+
+	    if ($setuid and $setgid) {
+		printf "W: $pkg $type: setuid-gid-binary $file %04o $owner\n",$operm;
+	    } elsif ($setuid) {
+		printf "W: $pkg $type: setuid-binary $file %04o $owner\n",$operm;
+	    } elsif ($setgid) {
+		printf "W: $pkg $type: setgid-binary $file %04o $owner\n",$operm;
+	    } elsif ($operm != $wanted_operm) {
+		printf "W: $pkg $type: non-standard-executable-perm $file %04o != %04o\n",$operm,$wanted_operm;
+	    }
+	}
+	# ---------------- general: executable files
+	elsif ($perm =~ m/[xt]/) {
+	    # executable
+	    if ($owner =~ m,root/games,) {
+		if ($operm != 2755) {
+		    printf "W: $pkg $type: non-standard-executable-perm $file %04o != 2755\n",$operm;
+	    	}
+	    } else {
+		if ($operm != 0755) {
+		    printf "W: $pkg $type: non-standard-executable-perm $file %04o != 0755\n",$operm;
+	    	}
+	    }
+	}
+	# ---------------- general: normal (non-executable) files
+	else {
+	    # not executable
+	    # special case first: game data
+	    if ($operm == 0664 and $owner =~ m,root/games, and
+		$file =~ m,var/(lib/)?games/\S+,) {
+		# everything is ok
+	    } elsif ($operm != 0644) {
+		printf "W: $pkg $type: non-standard-file-perm $file %04o != 0644\n",$operm;
+	    }
+	}
+    }
+    # ---------------- directories
+    elsif ($perm =~ m/^d/) {
+	# special cases first:
+        # game directory with setgid bit
+	if ($file =~ m,var/(lib/)?games/\S+, and $operm == 02775
+            and $owner =~ m,root/games,) {
+            # do nothing, this is allowed, but not mandatory
+        }
+	# otherwise, complain if it's not 0755.
+	elsif ($operm != 0755) {
+	    printf "W: $pkg $type: non-standard-dir-perm $file %04o != 0755\n", $operm;
+	}
+	if ($file =~ m,/CVS/?$,) {
+	    print "W: $pkg $type: package-contains-CVS-dir $file\n";
+	}
+	if ($file =~ m,/.xvpics/?$,) {
+	    print "E: $pkg $type: package-contains-xvpics-dir $file\n";
+	}
+	if ($file =~ m,usr/share/doc/[^/]+/examples/examples/?$,) {
+	    print "E: $pkg $type: nested-examples-directory $file\n";
+	}
+    }
+    # ---------------- symbolic links
+    elsif ($perm =~ m/^l/) {
+	# link
+	# determine top-level directory of file
+	$file =~ m,^/?([^/]+),;
+	my $filetop = $1;
+	
+	if ($link =~ m,^/([^/]+),) {
+	    # absolute link
+
+	    # determine top-level directory of link
+	    $link =~ m,^/?([^/]+),;
+	    my $linktop = $1;
+
+	    if ($filetop eq $linktop) {
+		# absolute links within one toplevel directory are _not_ ok!
+		print "E: $pkg $type: symlink-should-be-relative $file $link\n";
+	    }
+	} else {
+	    # relative link
+
+	    my @pathcomponents = split('/', $file);
+	    # chop off filename
+	    splice(@pathcomponents,$#pathcomponents);
+
+	    # handle `../' at beginning of $link
+	    my $my_link = $link;
+	    my $lastpop = "";
+	    while ($my_link =~ s,^../,,) {
+		if (@pathcomponents) {
+		    $lastpop = pop @pathcomponents;
+		} else {
+		    print "E: $pkg $type: symlink-has-too-many-up-segments $file $link\n";
+		    goto NEXT_LINK;
+		}
+	    }
+
+	    $my_link =~ m,^/?([^/]+),;
+	    my $linktop = $1;
+
+	    # does the link go up and then down into the same directory?
+	    if ($linktop eq $lastpop) {
+		print "W: $pkg $type: lengthy-symlink $file $link\n";
+	    }
+
+	    if ($#pathcomponents == -1) {
+		# we've reached the root directory
+		if ($filetop ne $linktop) {
+		    # relative link into other toplevel directory
+		    print "E: $pkg $type: symlink-should-be-absolute $file $link\n";
+		}
+	    }
+
+	    # check additional segments for mistakes like `foo/../bar/'
+	    for my $linksegment (split('/', $my_link)) {
+		if ($linksegment eq '..') {
+		    print "E: $pkg $type: symlink-contains-up-and-down-segments $file $link\n";
+		    goto NEXT_LINK;
+		}
+	    }
+	}
+    NEXT_LINK:
+	
+	if ($link =~ m,\.(gz|z|Z|zip)\s*$,) {
+	    # symlink is pointing to a compressed file
+
+	    # symlink has correct extension?
+	    unless ($file =~ m,\.$1\s*$,) {
+		print "E: $pkg $type: gzipped-symlink-with-wrong-ext $file $link\n";
+	    }
+	}
+    }
+    # ---------------- special files
+    else {
+	# special file
+	printf "E: $pkg $type: special-file $file %04o\n",$operm;
+    }
+}
+close(IN);
+
+exit 0;
+
+# -----------------------------------
+
+sub fail {
+    if ($_[0]) {
+	warn "internal error: $_[0]\n";
+    } elsif ($!) {
+	warn "internal error: $!\n";
+    } else {
+	warn "internal error.\n";
+    }
+    exit 1;
+}
+
+# translate permission strings like `-rwxrwxrwx' into an octal number
+sub perm2oct {
+    my ($t) = @_;
+
+    my $o = 0;
+
+    $t =~ m/^.(.)(.)(.)(.)(.)(.)(.)(.)(.)/;
+
+    $o += 04000 if $3 eq 's';	# set-uid
+    $o += 02000 if $6 eq 's';	# set-gid
+    $o += 01000 if $9 eq 't';	# sticky bit
+    $o += 00400 if $1 ne '-';	# owner read
+    $o += 00200 if $2 ne '-';	# owner write
+    $o += 00100 if $3 ne '-';	# owner execute
+    $o += 00040 if $4 ne '-';	# owner read
+    $o += 00020 if $5 ne '-';	# owner write
+    $o += 00010 if $6 ne '-';	# owner execute
+    $o += 00004 if $7 ne '-';	# owner read
+    $o += 00002 if $8 ne '-';	# owner write
+    $o += 00001 if $9 ne '-';	# owner execute
+
+    return $o;
+}

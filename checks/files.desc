@@ -1,0 +1,417 @@
+Check-Script: files
+Author: Christian Schwarz <schwarz@debian.org>
+Abbrev: fil
+Standards-Version: 3.5.0
+Type: binary
+Unpack-Level: 1
+Needs-Info: objdump-info
+Info: This script checks if a binary package conforms to policy
+ WRT to files and directories.
+
+Tag: old-app-defaults-directory
+Type: error
+Info: The app-defaults files have moved to /etc/X11/app-defaults/. Files in
+ the old directory, /usr/X11R6/lib/X11/app-defaults/, will no longer be
+ used by X. The old directory should not exist in packages at all;
+ this prevents X from replacing it with a compatability symlink.
+Ref: policy 12.8
+
+Tag: config-file-reserved $file
+Type: error
+Info: This file is reserved by a specific package.  Please email the
+ maintainer of the package in question if you have questions.
+
+Tag: package-uses-obsolete-file
+Type: warning
+Info: the file, /etc/nntpserver, is no longer recommenced.  As of policy
+ revision 2.5.1.0, /etc/news/server is the preferred file to use to specify
+ a news server.
+Ref: policy 12.7
+
+Tag: FSSTND-dir-in-usr
+Type: error
+Info: As of policy version 3.0.0.0, Debian no longer follows the FSSTND.  
+ .
+ Instead, the Filesystem Hierarchy Standard (FHS), version 2.1, is
+ used. You can find it in /usr/share/doc/debian-policy/fhs/ .
+
+Tag: FSSTND-dir-in-var
+Type: error
+Info: As of policy version 3.0.0.0, Debian no longer follows the FSSTND.  
+ .
+ Instead, the Filesystem Hierarchy Standard (FHS), version 2.1, is
+ used. You can find it in /usr/share/doc/debian-policy/fhs/ .
+
+Tag: package-installs-into-etc-rc.d
+Type: error
+Severity: Important
+Info: The package installs files into the <tt>/etc/rc.d</tt> or
+ <tt>/etc/rc?.d</tt> which is not allowed.
+Ref: policy 10.3.3
+
+Tag: package-installs-into-etc-rc.boot
+Type: error
+Info: The package installs files in the <tt>/etc/rc.boot</tt> directory,
+ which is obsolete.  See rc.boot(5) for details.
+Ref: policy 10.3.4
+
+Tag: non-standard-file-permissions-for-etc-init.d-script
+Type: error
+Info: Usually, scripts in the <tt>/etc/init.d</tt> directory should have
+ mode 0755.
+ .
+ If this is an exception, please contact &maint; about it so that this
+ exception would be recognized in future versions of Lintian.
+
+Tag: file-directly-in-usr-share
+Type: error
+Info: Packages should not install files directly in <tt>/usr/share</tt>,
+ i.e., without a subdirectory.
+ .
+ You should either create a subdirectory <tt>/usr/share/...</tt> for your
+ package or place the file in <tt>/usr/share/misc</tt>.
+
+Tag: file-in-usr-local
+Type: error
+Severity: Important
+Info: The package installs a file in <tt>/usr/local/...</tt> which is
+ not allowed.
+Ref: policy 10.1.2
+
+Tag: file-in-opt
+Type: error
+Severity: Important
+Info: The package installs a file in <tt>/opt/...</tt> which is not allowed.
+
+Tag: executable-manpage
+Type: error
+Info: Manual pages are not meant to be executed.
+
+Tag: dir-in-usr-local
+Type: error
+Severity: Important
+Info: The package installs a directory in <tt>/usr/local/...</tt> which is
+ not allowed.
+ .
+ If you want to provide an empty directory in <tt>/usr/local</tt> for
+ convenience of the local system administrator, please follow the rules
+ in the policy manual (section 10.1.2), i.e., create the directories in
+ the postinst script but don't fail if this isn't possible (e.g., if
+ <tt>/usr/local</tt> is mounted read-only).
+Ref: policy 10.1.2
+
+Tag: possible-name-space-pollution
+Type: warning
+Info: The package installs a binary which uses a very short file name (one
+ or two characters). This is not forbidden by policy, but short names
+ should be reserved for the user.  Unless this short name has been used
+ for a while already (like the famous `ls', `rm', `cp' commands), you
+ should consider giving these binaries a longer name.
+ .
+ If you think that the short name is ok, please send a note to &maint;
+ so that this exception would be recognized in future versions of Lintian.
+
+Tag: non-standard-dir-perm
+Type: warning
+Info: The directory has a mode different from 0755, and it's not one of the
+ known exceptions.
+ .
+ This is usually a bug, but if it's intentional, please send a note to
+ &maint; so that this exception would be recognized in future versions of
+ Lintian.
+
+Tag: non-standard-game-executable-perm
+Type: warning
+Info: The file has a mode different from 2755 or 0755. In some cases this 
+ is intentional, but in other cases this is a bug. If it's intentional,
+ please send a note to &maint; so that this exception would be recognized in
+ future versions of Lintian.
+
+Tag: non-standard-executable-perm
+Type: warning
+Info: The file has a mode different from 0755. In some cases this is
+ intentional, but in other cases this is a bug. If it's intentional,
+ please send a note to &maint; so that this exception would be recognized in
+ future versions of Lintian.
+
+Tag: setuid-binary
+Type: warning
+Info: The file is tagged SETUID. In some cases this is
+ intentional, but in other cases this is a bug. If it's intentional,
+ please send a note to &maint; so that this exception would be recognized in
+ future versions of Lintian.
+
+Tag: setgid-binary
+Type: warning
+Info: The file is tagged SETGID. In some cases this is
+ intentional, but in other cases this is a bug. If it's intentional,
+ please send a note to &maint; so that this exception would be recognized in
+ future versions of Lintian.
+
+Tag: setuid-gid-binary
+Type: warning
+Info: The file is tagged SETUID and SETGID. In some cases this is
+ intentional, but in other cases this is a bug. If it's intentional,
+ please send a note to &maint; so that this exception would be recognized in
+ future versions of Lintian.
+
+Tag: non-standard-file-perm
+Type: warning
+Info: The file has a mode different from 0644. In some cases this is
+ intentional, but in other cases this is a bug. If it's intentional,
+ please send a note to &maint; so that this exception would be recognized in
+ future versions of Lintian.
+
+Tag: special-file
+Type: error
+Severity: Important
+Info: The package contains a <i>special</i> file (e.g., a device file).
+ This is forbidden by current policy. If your program needs this device,
+ you should create it by calling <tt>makedev</tt> from the postinst
+ script.
+Ref: policy 11.6
+
+Tag: old-style-example-dir
+Type: error
+Info: The package installs some files into the old
+ <tt>/usr/doc/examples</tt> directory.  The new location for examples
+ is <tt>/usr/share/doc/<i>pkg</i>/examples</tt>.
+
+Tag: gzipped-symlink-with-wrong-ext
+Type: error
+Info: The package installs a symbolic link pointing to a compressed file,
+ but the symbolic link does not use the same file extension than the
+ referenced file. In most cases, this can produce troubles when the
+ user or a program tries to access the file through the link.
+Ref: policy 11.5
+
+Tag: symlink-should-be-relative
+Type: error
+Info: Usually, symbolic links should be relative.
+Ref: policy 11.5
+
+Tag: symlink-should-be-absolute
+Type: error
+Info: Symbolic links between different top-level directories should be
+ absolute.
+Ref: policy 11.5
+
+Tag: executable-in-usr-share-doc
+Type: error
+Info: Usually, documentation files in <tt>/usr/share/doc</tt> should have mode
+ 0644.  If the executable is an example, it should go in
+ <tt>/usr/share/doc/<i>pkg</i>/examples</tt>.
+ .
+ If this is an exception, please contact &maint;
+ about this so that this exception would be recognized in future versions of
+ Lintian.
+
+Tag: script-in-usr-share-doc
+Type: info
+Info: Scripts are usually not documentation files, unless they are
+ examples, in which case they should be in the
+ <tt>/usr/share/doc/<i>pkg</i>/examples</tt> directory.
+
+Tag: symlink-has-too-many-up-segments
+Type: error
+Info: The symlink references a directory beyond the root directory `/'.
+
+Tag: lengthy-symlink
+Type: warning
+Info: This link goes up, and then back down into the same subdirectory.
+ Making it shorter will improve its chances of finding the right file
+ if the user's system has lots of symlinked directories.
+Ref: policy 11.5
+
+Tag: symlink-contains-up-and-down-segments
+Type: error
+Info: The symbolic link goes up and down.
+Ref: policy 11.5
+
+Tag: bad-permissions-for-etc-cron.d-script
+Type: error
+Info: Files in <tt>/etc/cron.d</tt> are configuration files for cron and not
+ scripts. Thus, they should not be marked executable.
+
+Tag: bad-permissions-for-etc-emacs-script
+Type: error
+Info: Files in the <tt>/etc/emacs*</tt> directories should not be marked
+ executable.
+
+Tag: image-file-in-usr-lib
+Type: warning
+Info: This package installs a pixmap or a bitmap within <tt>/usr/lib</tt>.
+ According to the Filesystem Hierarchy Standard, architecture-independent
+ files need to be placed within <tt>/usr/share</tt> instead.
+
+Tag: executable-in-usr-lib-sgml
+Type: error
+Info: Files in <tt>/usr/lib/sgml</tt> should not be marked executable.
+
+Tag: file-directly-in-usr-share-doc
+Type: error
+Info: Documentation files have to be installed in <tt>/usr/share/doc/<i>pkg</i>
+Ref: policy 13.3
+
+Tag: bad-owner-for-doc-file
+Type: error
+Info: Documentation files should be owned by <tt>root/root</tt>.
+
+Tag: dir-or-file-in-tmp
+Type: error
+Info: Packages should not install into <tt>/tmp</tt> or <tt>/var/tmp</tt>.
+
+Tag: dir-or-file-in-mnt
+Type: error
+Info: Packages should not install into <tt>/mnt</tt>.  The FHS states that
+ the contents of this directory is a local issue.
+
+Tag: dir-or-file-in-opt
+Type: error
+Info: Debian packages should not install into <tt>/opt</tt>, because it
+ is reserved for add-on software.
+
+Tag: third-party-package-in-python-dir
+Type: warning
+Info: According to <a href="http://www.python.org/doc/essays/packages.html">
+ <tt>http://www.python.org/doc/essays/packages.html</tt></a>, third-party
+ python packages should install their files in
+ <tt>/usr/lib/python1.5/site-packages</tt>.  All other directories in
+ <tt>/usr/lib/python1.5</tt> are for use by the core python packages.
+ 
+Tag: perl-module-in-core-directory
+Type: error
+Info: Packaged modules must not be installed into the core perl
+ directories as those directories change with each upstream perl
+ revision.  The vendor directories are provided for this purpose.
+Ref: perl-policy 3.1
+
+Tag: backup-file-in-package
+Type: warning
+Info: There is a file in the package that matches the format emacs uses
+ for backup and autosave files.  It may have been installed by accident.
+
+Tag: package-installs-perllocal-pod
+Type: warning
+Info: This package installs a file <tt>perllocal.pod</tt>.  Since that
+ file is intended for local documentation, it is not likely that it is
+ a good place for documentation supplied by a Debian package.  In fact,
+ installing this package will wipe out whatever local documentation
+ existed there.
+
+Tag: extra-license-file
+Type: warning
+Ref: policy 13.5
+Info: All license information should be collected in the
+ <tt>debian/copyright</tt> file.  This usually makes it unnecessary
+ for the package to install this information in other places as well.
+
+Tag: non-standard-toplevel-dir
+Type: error
+Info: The Filesystem Hierarchy Standard forbids the installation of new
+ files or directories in the root directory, in section 3.
+
+Tag: subdir-in-bin
+Type: error
+Info: The Filesystem Hierarchy Standard forbids the installation of new
+ directories in <tt>/bin</tt>.
+
+Tag: non-standard-dir-in-usr
+Type: warning
+Info: The FHS says "No large software packages should use a direct
+ subdirectory under the <tt>/usr</tt> hierarchy".  This package contains
+ a directory in <tt>/usr</tt> that is not mentioned in the Filesystem
+ Hierarchy Standard.
+
+Tag: non-standard-dir-in-var
+Type: error
+Info: The FHS says "Applications should generally not add directories to
+ the top level of <tt>/var</tt>.  Such directories should only be added
+ if they have some system-wide implication, and in consultation with the
+ FHS mailing list."
+
+Tag: use-of-compat-symlink
+Type: error
+Info: This package uses a directory that, according to the Filesystem
+ Hierarchy Standard, should exist only as a compatibility symlink.
+ Packages should not traverse such symlinks when installing files, they
+ should use the standard directories instead.
+
+Tag: file-in-unusual-dir
+Type: warning
+Info: This file or symbolic link is in a directory where files are not
+ normally installed by Debian packages.  If this is deliberate, please
+ contact &maint; to make Lintian accept this as a usual directory.
+
+Tag: package-installs-packlist
+Type: error
+Info: Packages built using the perl MakeMaker package will have a file
+ named .packlist in them.  Those files are useless, and (in some cases)
+ have the additional problem of creating an architecture-specific
+ directory name in an architecture-independent package.
+ .
+ They can be suppressed by adding the following to <tt>debian/rules</tt>:
+ .
+ <tt>find debian/tmp -type f -name .packlist | xargs rm -f</tt>
+ .
+ <tt>-find debian/tmp/usr/lib/perl5 -type d -empty | xargs rmdir -p</tt>
+ .
+ Or by telling MakeMaker to use vendor install dirs; consult a recent
+ version of perl policy. Perl 5.6.0-12 or higher supports this.
+
+Tag: zero-byte-file-in-doc-directory
+Type: warning
+Info: package contains a file which is empty
+
+Tag: override-file-in-wrong-location
+Type: error
+Info: location of per package overrides the file
+ /usr/share/lintian/overrides/package.  See the lintian documentation for more
+ info on proper naming and format.
+
+Tag: package-contains-upstream-install-documentation
+Type: warning
+Ref: policy 13.3
+Info: Binary packages do not need to contain the instructions for building
+ and installing the package as this info is not needed by package users.
+ If the info contained is important for configuration perhaps it could be
+ summarized in README.Debian, otherwise an override may be added.
+
+Tag: xresources-file-in-etc-without-proper-conflicts
+Type: error
+Ref: policy 12.8
+Info: packages that install files into the /etc/X11/Xresources/ directory must
+ declare a conflict with xbase (<< 3.3.2.3a-2); if this is not done it is
+ possible for the installing package to destroy a previously-existing
+ /etc/X11/Xresources file which had been customized by the system
+ administrator.
+
+Tag: package-contains-hardlink
+Type: warning
+Info: hardlinks are bad mkay, don't use hardlinks.
+
+Tag: package-contains-CVS-dir
+Type: error
+Info: package contains a CVS directory. It was most likely installed by
+ accident, since transient CVS data usually doesn't belong in packages.
+
+Tag: package-contains-xvpics-dir
+Type: error
+Info: package contains a .xvpics directory. It was most likely installed by
+ accident, since thumbnails usually don't belong in packages.
+
+Tag: cvsignore-file-in-package
+Type: warning
+Info: package contains a '.cvsignore' file.  It may have been installed by
+ accident.
+
+Tag: nested-examples-directory
+Type: error
+Info: package contains a <tt>usr/share/doc/something/examples/examples</tt>
+ directory. It was most likely installed by accident, since one examples/
+ directory should be enough for everybody(tm).
+
+Tag: package-installs-nonbinary-perl-in-usr-lib-perl5
+Type: warning
+Info: Architecture-independent Perl code should be placed in
+ <tt>/usr/share/perl5</tt>, not <tt>/usr/lib/perl5</tt>.

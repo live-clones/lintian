@@ -1,0 +1,21 @@
+W: relations source: ancient-standards-version 3.1.1
+W: relations source: build-depends-without-arch-dep
+E: relations-multiple-libs: no-copyright-file
+W: relations-multiple-libs: description-synopsis-might-not-be-phrased-properly
+E: relations-multiple-libs: description-synopsis-is-duplicated
+E: relations-multiple-libs: package-depends-on-multiple-libstdc-versions libstdc++2.10 libstdc++2.10-glibc2.2 libstdc++3.0
+E: relations-multiple-libs: package-depends-on-multiple-tcl-versions tcl8.0 tcl8.2
+E: relations-multiple-libs: package-depends-on-multiple-tk-versions tk8.2 tk8.3
+E: relations-multiple-libs: package-depends-on-multiple-tkx-versions tkx8.2 tkx8.3
+E: relations-multiple-libs: package-depends-on-multiple-libpng-versions libpng2 libpng3
+E: relations: no-copyright-file
+W: relations: package-relation-with-self depends: relations
+W: relations: package-relation-with-self depends: relations(<< 3)
+E: relations: package-has-a-duplicate-relation relations, relations(<< 3)
+E: relations: depends-on-essential-package-without-using-version dpkg
+W: relations: virtual-package-depends-without-real-package-depends mail-transport-agent
+E: relations: needlessly-depends-on-awk
+E: relations: multiline-field conflicts
+W: relations: bad-version-in-relation conflicts: foobar (<< 5&5)
+W: relations: package-relation-with-self replaces: relations
+E: relations: obsolete-field optional

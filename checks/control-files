@@ -1,0 +1,120 @@
+#!/usr/bin/perl -w
+# control-files -- lintian check script
+
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+# MA 02111-1307, USA.
+
+use strict;
+
+($#ARGV == 1) or fail("syntax: control-files <pkg> <type>");
+my $pkg = shift;
+my $type = shift;
+
+my %ctrl =
+    (
+     'config', 0755,
+     'control', 0644,
+     'conffiles', 0644,
+     'md5sums', 0644,
+     'postinst', 0755,
+     'preinst', 0755,
+     'postrm', 0755,
+     'prerm', 0755,
+     'shlibs', 0644,
+     'templates', 0644,
+    );
+
+# process control-index file
+open(IN,"control-index") or fail("cannot open control-index file: $!");
+while (<IN>) {
+    chop;
+
+    my ($perm,$owner,$size,$date,$time,$file) = split(' ', $_, 6);
+    my $operm;
+
+    next if $file eq './';
+
+    $file =~ s,^(\./),,;
+    $file =~ s/ link to .*//;
+    $file =~ s/ -> .*//;
+
+    next if $file eq './';
+
+    # valid control file?
+    unless (exists $ctrl{$file}) {
+	print "E: $pkg $type: unknown-control-file $file\n";
+	next;
+    }
+
+    # skip `control' control file (that's an exception: dpkg doesn't care and
+    # this file isn't installed on the systems anyways)
+    next if $file eq 'control';
+
+    $operm = perm2oct($perm);
+
+    # correct permissions?
+    unless ($operm == $ctrl{$file}) {
+	printf "E: $pkg $type: control-file-has-bad-permissions $file %04o != %04o\n",$operm,$ctrl{$file};
+    }
+
+    # correct owner?
+    unless ($owner eq 'root/root') {
+	printf "E: $pkg $type: control-file-has-bad-owner $file $owner != root/root\n";
+    }
+
+# for other maintainer scripts checks, see the scripts check
+}
+
+exit 0;
+
+# -----------------------------------
+
+sub fail {
+    if ($_[0]) {
+	warn "internal error: $_[0]\n";
+    } elsif ($!) {
+	warn "internal error: $!\n";
+    } else {
+	warn "internal error.\n";
+    }
+    exit 1;
+}
+
+# translate permission strings like `-rwxrwxrwx' into an octal number
+sub perm2oct {
+    my ($t) = @_;
+
+    my $o = 0;
+
+    $t =~ m/^.(.)(.)(.)(.)(.)(.)(.)(.)(.)/o;
+
+    $o += 04000 if $3 eq 's';	# set-uid
+    $o += 02000 if $6 eq 's';	# set-gid
+    $o += 01000 if $9 eq 't';	# sticky bit
+    $o += 00400 if $1 ne '-';	# owner read
+    $o += 00200 if $2 ne '-';	# owner write
+    $o += 00100 if $3 ne '-';	# owner execute
+    $o += 00040 if $4 ne '-';	# owner read
+    $o += 00020 if $5 ne '-';	# owner write
+    $o += 00010 if $6 ne '-';	# owner execute
+    $o += 00004 if $7 ne '-';	# owner read
+    $o += 00002 if $8 ne '-';	# owner write
+    $o += 00001 if $9 ne '-';	# owner execute
+
+    return $o;
+}

@@ -1,0 +1,574 @@
+.\" Copyright (C) 1998 Richard Braakman and Christian Schwarz
+.\"
+.\" This manual page is free software.  It is distributed under the
+.\" terms of the GNU General Public License as published by the Free
+.\" Software Foundation; either version 2 of the License, or (at your
+.\" option) any later version.
+.\"
+.\" This manual page is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public License
+.\" along with this manual page; if not, write to the Free Software
+.\" Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
+.\" USA
+.\"
+.TH LINTIAN 1 "April 6, 1998" "Debian GNU/Linux"
+
+.SH NAME
+lintian \- Debian package checker
+
+.SH SYNOPSIS
+.B lintian
+.RI [ action ]
+.RI [ options ] 
+.RI [ packages ]
+\&...
+
+.SH DESCRIPTION
+.PP
+Lintian dissects Debian packages and reports bugs and policy
+violations.  It contains automated checks for many aspects of Debian
+policy as well as some checks for common errors.
+.sp
+It uses an archive directory, called \fIlaboratory\fR, in which it
+stores information about the packages it examines.  It can keep this
+information between multiple invocations in order to avoid repeating
+expensive data\-collection operations.
+.sp
+There are three ways to specify binary or source packages for Lintian
+to process: by file name, by package name, or by naming a
+.I .changes
+file.  
+If you list packages by package name, you'll have to
+define the 
+.B LINTIAN_DIST
+variable in the configuration file (see below).  Lintian will then
+search for any binary or source packages in this directory for
+packages with the given name. (You can use the
+.B \-b
+and
+.B \-s
+options if you only want to process either binary or source packages.)
+
+If you specify a
+.I .changes
+file, Lintian will process all packages listed in that file.
+This is convenient when checking a new package before uploading it.
+
+.SH OPTIONS
+
+.PP
+Actions of the
+.B lintian
+command: (Only one action can be specified per invocation)
+
+.TP
+.BR \-S ", " \-\-setup-lab
+Set up or update the laboratory.
+
+.TP
+.BR \-R ", " \-\-remove-lab
+Remove the laboratory directory.
+
+.TP
+.BR \-c ", " \-\-check
+Run all checks over the specified packages.
+This is the default action.
+
+.TP
+.BR \-C " chk1,chk2,..., " \-\-check\-part " chk1,chk2,..."
+Run only the specified checks.  You can either specify the
+name of the check script or the abbreviation.
+For details, see the CHECKS section below.
+
+.TP
+.BR \-u ", " \-\-unpack
+Unpack the specified packages up to the current unpack level.
+The default unpack level is 1 for this option.  See the UNPACK
+LEVELS section below.
+
+.TP
+.BR \-r ", " \-\-remove
+Clean up the lintian directory of the specified packages up to
+the current unpack level.  The default unpack level is 0 for
+this option.
+
+.PP
+General options:
+
+.TP
+.BR \-h ", " \-\-help
+Display usage information and exit.
+
+.TP
+.BR \-v ", " \-\-verbose
+Display verbose messages.
+
+.TP
+.BR \-V ", " \-\-version
+Display lintian version number and exit.
+
+.TP
+.BR \-d ", " \-\-debug
+Display debugging messages. (Implies
+.BR \-v ).
+
+.PP
+
+Behaviour options for
+.BR lintian .
+
+.TP
+.BR \-i ", " \-\-info
+Print explanatory information about discovered policy violations in
+addition to the lintian error tags.
+
+.TP
+.BR \-I ", " \-\-display\-info
+Display informational ("I:") tags as well.  They are normally suppressed.
+
+.TP
+.BR \-l " n, " \-\-unpack\-level " n"
+Set unpack level to
+.IR n .
+See the UNPACK LEVELS section, below.
+
+.TP
+.BR \-o ", " \-\-no\-override
+Don't use the overrides file.
+
+.TP
+.BR \-\-show\-overrides
+Output tags that have been overriden
+
+.TP
+.BR \-U " info1,info2,..., " \-\-unpack-info " info1,info2,..."
+Collect information info1, info2, etc. even if these are not
+required by the checks.
+
+.TP
+.BR \-m ", " \-\-md5sums
+Check md5sums when processing a .changes file.  Normally, Lintian only
+checks the md5sums for .dsc files when processing a .changes file.
+
+.TP
+.BR \-\-allow\-root
+Override
+.BR lintian 's
+warning when it is run with superuser privileges.
+
+.PP
+
+Configuration options:
+
+.TP
+.BR \-\-cfg " configfile"
+Read the configuration from
+.IR configfile
+rather than the default locations.  This option overrides the
+.B LINTIAN_CFG
+environment variable.
+
+.TP
+.BR \-\-lab " labdir"
+Use
+.IR labdir
+as the permanent laboratory.  This is where Lintian keeps information about
+the packages it checks.  This option overrides the
+.B LINTIAN_LAB
+environment variable and the configuration file entry of the same name.
+
+.TP
+.BR \-\-dist " distdir"
+Scan for packages in the
+.IR distdir
+directory.  Use this if you want Lintian to check the whole Debian
+archive instead of just single packages.  This option overrides the
+.B LINTIAN_DIST
+environment variable and the configuration file entry of the same name.
+
+.TP
+.BR \-\-arch " arch"
+When scanning for packages in the distdir, select only packages for
+architecture
+.IR arch .
+This option overrides the
+.B LINTIAN_ARCH
+environment variable and the configuration file entry of the same name.
+
+.TP
+.BR \-\-root " rootdir"
+Look for
+.BR lintian 's
+support files (such as check scripts and collection scripts) in
+.IR rootdir .
+This overrides the
+.B LINTIAN_ROOT
+environment variable.  The default location is
+.IR /usr/share/lintian .
+
+.PP
+
+Package selection options:
+
+.TP
+.BR \-a ", " \-\-all
+Check all packages in the distribution. (This requires that the
+LINTIAN_DIST variable is defined in the configuration file.)
+
+.TP
+.BR \-b ", " \-\-binary
+The following packages listed on the command line are binary packages.
+
+.TP
+.BR \-s ", " \-\-source
+The following packages listed on the command line are source packages.
+
+.TP
+.BR \-p ", " \-\-packages\-file " X"
+Process all packages which are listed in file
+.BR X .
+Each package has to be listed in a single line using the following format:
+.sp
+.B type package version file
+.sp
+where 
+.B type
+is either `b' or `s' (binary or source package),
+.B package
+is the package name,
+.B version
+is the package's version, and
+.B file
+is the package file name (absolute path specification).
+
+.SH "UNPACK LEVELS"
+.TP
+.B "0 (none)"
+The package does not exist in the \fIlaboratory\fR at all.
+
+.TP
+.B "1 (basic)"
+A directory for this package exists in the \fIlaboratory\fR
+and basic information is extracted.  This does not take
+much space.
+
+For binary packages,
+the
+.I control
+and
+.I fields
+directories and the
+.I index
+file are unpacked, and symbolic links are made to the
+.B .deb
+file and to the lintian directory for the source package.
+
+For source packages, the
+.I binary
+and
+.I fields
+directories are unpacked, and symbolic links are made to the
+source package files.
+
+.TP
+.B "2 (contents)"
+The actual package contents are unpacked as well.
+
+.PP
+Lintian will unpack packages as far as is necessary to do its checks,
+but it will leave the package in whatever unpack level was specified
+when it is done.
+
+The default unpack level can be overwritten by setting the
+.B LINTIAN_UNPACK_LEVEL
+variable in the configuration file.
+
+.SH CHECKS
+.TP
+.B binaries (bin)
+Search for bugs in binaries and object files.
+
+.TP
+.B changelog-file (chg)
+Check changelog files in a binary package.
+
+.TP
+.B conffiles (cnf)
+Check if the
+.I conffiles
+control file of a binary package is correct.
+
+.TP
+.B control-files (ctl)
+Check for unknown control files in the binary package.
+
+.TP
+.B copyright\-file (cpy)
+Check if a binary package conforms to policy with respect to
+the copyright file.  Each binary package must either have a 
+.RI /usr/share/doc/ package /copyright
+file or must have a symlink
+.RI /usr/share/doc/ package -> foo,
+where
+.I foo
+comes from the same source package, and this package declares a 
+"Depends" relation on
+.IR foo .
+
+.TP
+.B description (des)
+Check if the
+.B Description
+control field of a binary package conforms to the rules in the
+Policy Manual (appendix D).
+
+.TP
+.B debian\-readme (drm)
+Check if the README.Debian file is merely the debmake template.
+
+.TP
+.B debdiff (dif)
+Look for .orig and .rej files in the Debian diffs.
+
+.TP
+.B fields (fld)
+Check control fields of a binary or source package.
+
+.TP
+.B files (fil)
+Check if a binary package conforms to policy with respect to
+types, permissions and ownerships of files and directories.
+
+.TP
+.B init.d (ini)
+Check if a binary package conforms to policy with respect
+to scripts in \fB/etc/init.d\fR.
+
+.TP
+.B manpages (man)
+Check if a binary package conforms to policy with respect
+to manual pages.
+
+.TP
+.B md5sums (md5)
+If the
+.B md5sum
+control file of a binary package exists, check if it is valid.
+
+.TP
+.B menus (men)
+Check if a binary package conforms to policy with respect
+to 
+.B menu
+and 
+.B doc\-base
+files.
+
+.TP
+.B menu\-format (mnf)
+Check the syntax of menu files installed by the package.
+
+.TP
+.B perl (prl)
+Check perl scripts installed by the package for the usage of perl
+modules, and check that the package declares the appropriate dependencies.
+
+.TP
+.B scripts (scr)
+Check the the \fB#!\fR lines of scripts in a binary package.
+
+.TP
+.B shared-libs (shl)
+Check if a binary package conforms to policy with respect to
+shared libraries and the
+.B shlibs
+control file.
+
+.TP
+.B spelling (spl)
+Check a binary package's "Description:" field and copyright file
+for common spelling errors.
+
+.TP
+.B standards\-version (std)
+Check if a source package contains a valid
+.B Standards\-Version
+field in its
+.I debian/control
+file.
+
+.SH COLLECTION
+
+.TP
+.B changelog\-file
+Copy the changelog file of a package into the lintian directory.
+
+.TP
+.B copyright\-file
+Copy the copyright file of a package into the lintian directory.
+
+.TP
+.B debian\-readme
+Copy the README.Debian file of a package into the lintian directory.
+
+.TP
+.B diffstat
+Collect the output of the
+.BR diffstat (1)
+utility for the Debian diff in a source package.
+
+.TP
+.B file\-info
+Collect the output of the
+.BR file (1)
+utility for each file in a binary package.
+
+.TP
+.B init.d
+Copy 
+.B /etc/init.d
+scripts into the lintian directory (below \fBinit.d\fR).
+
+.TP
+.B md5sums
+Collect the md5sums of all files in a binary package.
+
+.TP
+.B menu-files
+Copy the contents of a binary package's
+.I usr/share/doc/menu
+directory into the
+.I menu
+directory in the lab.
+
+.TP
+.B objdump\-info
+Collect the output of the
+.BR obj\-dump (1)
+utility for each file in a binary package.
+
+.TP
+.B perlmods
+Search the perl scripts in a binary package for
+.B use
+and
+.B require
+directives.
+
+.TP
+.B scripts
+Collect information about scripts in binary package.
+
+.SH FILES
+Lintian looks for its configuration file in the following locations:
+.TP
+The directory given with the \-\-cfg option
+.TP
+.I $LINTIAN_CFG
+.TP 
+.I $LINTIAN_ROOT/lintianrc
+.TP
+.I $HOME/.lintianrc
+.TP
+.I /etc/lintianrc
+.PP
+Lintian uses the following directories:
+.TP
+.I /usr/share/lintian/checks
+Scripts that check aspects of a package.
+.TP
+.I /usr/share/lintian/collection
+Scripts that collect information about a package and store it for
+use by the check scripts.
+.TP
+.I /usr/share/lintian/info
+Information used by lintian collected from external sources.
+.TP
+.I /usr/share/lintian/lib
+Utility scripts used by the other lintian scripts.
+.TP
+.I /usr/share/lintian/unpack
+Scripts that manage the \fIlaboratory\fR.
+
+.PP
+The
+.I /usr/share/lintian
+directory can be overridden with the
+.B LINTIAN_ROOT
+environment variable or the
+.B \-\-root
+option.
+
+.SH EXIT STATUS
+.TP
+.B 0
+No policy violations (errors) detected. (There might have been warnings, though.)
+.TP
+.B 1
+Policy violations detected.
+.TP
+.B 2
+Lintian run-time error. An error message is sent to stderr.
+
+.SH USAGE
+Examples:
+.TP
+.B "$ lintian foo.deb"
+Check binary package foo given by foo.deb.
+.TP
+.B "$ lintian foo.dsc"
+Check source package foo given by foo.dsc.
+.TP
+.B "$ lintian foo"
+Search for package foo in the Debian archive and check it. (Depending
+on what is found, this command will check either the source or binary
+package foo, or both.)
+.TP
+.B "$ lintian -i foo.changes"
+Check the changes file and, if listed, the source and binary package
+of the upload. The output will contain detailed information about the
+reported tags.
+.TP
+.B "$ lintian \-c \-\-binary foo"
+Search for binary package foo in the Debian archive and check it. 
+.TP
+.B "$ lintian \-C cpy \-\-source foo"
+Run the copyright checks on source package foo.
+.TP
+.B "$ lintian -u foo"
+Unpack package foo in the Lintian laboratory up to level 1. (If it's
+already unpacked at level 1 or 2, nothing is done.)
+.TP
+.B "$ lintian -l1 -r foo"
+Search for package foo in the Debian archive and, if found, reduce the
+package disk usage in the laboratory to level 1.
+.TP
+.B "$ lintian -r foo"
+Remove package foo from the Lintian laboratory.
+
+.SH BUGS
+Lintian does not handle packages with different binary and source
+version numbers correctly.
+.sp
+Lintian does not have any locking mechanisms yet. (Running several
+checks simultaneously is likely to fail.)
+.sp
+If you discover any other bugs in Lintian, please contact the authors.
+
+.SH SEE ALSO
+.BR lintian-info (1),
+.B Lintian User's Manual
+(file:/usr/share/doc/lintian/lintian.html/index.html)
+
+
+.SH AUTHORS
+Richard Braakman <dark@xs4all.nl>
+.br
+Christian Schwarz <schwarz@monet.m.isar.de>
+.br
+Please use the email address <lintian-maint@debian.org> for Lintian related
+comments.

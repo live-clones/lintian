@@ -1,0 +1,29 @@
+Source: non-us
+Priority: optional
+Maintainer: Lintian Maintainer <lintian-maint@debian.org>
+Standards-Version: 3.1.1
+
+Package: patented-app
+Architecture: all
+Section: non-us
+Description: test for non-us checks
+ regession test to stress non-us checks
+
+Package: crypto-app
+Architecture: all
+Section: non-US
+Description: proper non-US app
+ This is a proper non-us package
+
+Package: broken-crypto
+Architecture: all
+Section: non-US/admin
+Description: broken non-US app
+ This package declares an invalid section
+
+Package: nonfree-crypto-app
+Architecture: all
+Section: non-US/non-free
+Description: proper non-US/non-free app
+ This is a proper non-us package
+

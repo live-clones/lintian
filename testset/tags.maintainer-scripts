@@ -1,0 +1,13 @@
+W: maintainer-scripts source: ancient-standards-version 3.1.1
+W: maintainer-scripts: postinst-should-not-set-usr-doc-link
+W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:12 '. /usr/share/lintian/shell foo'
+W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:15 'read'
+W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:17 'H[0]='
+W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:18 '${H[0]}'
+W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:20 '${H[@]}'
+E: maintainer-scripts: maintainer-shell-script-fails-syntax-check prerm
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:19 '[ "$2" == '
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:23 'function foo( )'
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:27 'source $FOO'
+W: maintainer-scripts: update-alternatives-remove-called-in-postrm
+E: maintainer-scripts: no-copyright-file

@@ -1,0 +1,101 @@
+#!/usr/bin/perl -w
+# scripts -- lintian collection script
+
+# Copyright (C) 1998 Richard Braakman
+# 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+# MA 02111-1307, USA.
+
+use strict;
+
+open(SCRIPTS, ">scripts") or fail("cannot open scripts output file: $!");
+open(INDEX, "index") or fail("cannot open index file: $!");
+
+my $file;
+my $magic;
+my $scriptpath;
+
+while (<INDEX>) {
+    next unless /^-/;   # skip non-files
+    chop;
+
+    # Extract the filename field from the tar-like file index.
+    # Note that the split is done with an explicit limit so that filenames
+    # with embedded spaces are handled correctly.
+    $file = (split(' ', $_, 6))[5];
+    $file =~ s/ link to .*//;    # cut off info about hard links
+    # This used to call fail() instead of next.  However, the check to
+    # see if all files in the index can be opened should be done elsewhere.
+    open(FILE, "unpacked/$file") or next;
+    if (read(FILE, $magic, 2) and $magic eq '#!' and not eof(FILE)) {
+	$scriptpath = <FILE>;
+	chomp($scriptpath);
+	next if ($scriptpath =~ m/^\#!/); # skip lincity data files
+	                                  # #!#!#!
+	my $copy_path = $scriptpath;
+	$scriptpath =~ s/^\s+//; # remove leading whitespace
+	$scriptpath =~ s/^\#.*//; # remove comments
+	if ($scriptpath eq '') {
+	    print SCRIPTS "$copy_path $file\n";
+	} else {
+	# This used to have (\S+) rather than (\S*), but that went wrong
+	# with scripts that start with an empty #! line.
+	    my $env = '';
+	    if ($scriptpath =~ s,^/usr/bin/env\s+,,) {
+	        $env = 'env ';
+	    }
+            $scriptpath =~ s/^(\S*).*/$1/s;
+	    print SCRIPTS $env . "$scriptpath $file\n";
+	}
+    }
+    close(FILE);
+}
+close(INDEX);
+close(SCRIPTS);
+
+open(SCRIPTS, ">control-scripts")
+    or fail("cannot open control-scripts output file: $!");
+
+opendir(CONTROL, "control")
+    or fail("cannot read control directory: $!");
+
+for $file (readdir CONTROL) {
+    next unless -f "control/$file";
+    open(FILE, "control/$file") or fail("cannot open control/$file: $!");
+    if (read(FILE, $magic, 2) and $magic eq '#!') {
+	$scriptpath = <FILE>;
+	$scriptpath =~ s/^\s*(\S*).*/$1/s;
+	print SCRIPTS "$scriptpath $file\n"
+    }
+    close(FILE);
+}
+closedir(CONTROL);
+close(SCRIPTS);
+
+exit 0;
+
+# -----------------------------------
+
+sub fail {
+    if ($_[0]) {
+        print STDERR "internal error: $_[0]\n";
+    } elsif ($!) {
+        print STDERR "internal error: $!\n";
+    } else {
+        print STDERR "internal error.\n";
+    }
+    exit 1;
+}

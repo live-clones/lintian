@@ -1,0 +1,87 @@
+#!/usr/bin/make -f
+
+VER := $(shell head -1 debian/changelog | sed -e 's/^.*(//' -e 's/).*$$//')
+tmp := $(CURDIR)/debian/tmp
+usl := $(tmp)/usr/share/lintian
+usdl := $(tmp)/usr/share/doc/lintian
+neededfiles := debian/rules frontend/lintian
+
+runtests: $(neededfiles)
+	@echo .... running tests ....
+	[ -d debian/tests ] || mkdir debian/tests
+	LINTIAN_ROOT="" /usr/bin/perl testset/runtests -v -k testset debian/tests
+	touch $@
+
+build: $(neededfiles)
+	@echo .... running build ....
+	perl -i -pe '$$_="my \$$LINTIAN_VERSION = \"$(VER)\";\t#External Version number\n" \
+		if m/^my \$$LINTIAN_VERSION = /;' frontend/lintian
+	cd doc && LANG=C debiandoc2html lintian.sgml
+	cd doc && LANG=C debiandoc2text lintian.sgml
+
+clean: $(neededfiles)
+	@echo .... cleaning ....
+	rm -f runtests debian/files* debian/substvars
+	rm -rf $(tmp)
+	rm -rf doc/lintian.html/ doc/lintian.txt
+	rm -rf debian/tests
+	find -name "*~" -print0 -o -name core -o -name "*.py?" | xargs -0r rm
+# ???	find -name CVS -type d -print0 | xargs -0r rm -r
+
+binary-indep: $(neededfiles) build
+	@test `id -u` -eq 0 || { echo "you need (fake)root."; exit 1; }
+	@echo .... binary-indep ....
+	rm -rf $(tmp)
+# frontends
+	@echo .... install frontends ....
+	install -d $(tmp)/usr/bin
+	install -m 755 frontend/lintian $(tmp)/usr/bin/
+	install -m 755 frontend/lintian-info $(tmp)/usr/bin/
+# library files
+	@echo .... install library files ....
+	install -d $(usl) $(usl)/checks $(usl)/collection $(usl)/info
+	install -d $(usl)/lib $(usl)/unpack $(usl)/overrides
+	for d in checks collection lib unpack; do \
+	  find $$d -type f ! -path '*/CVS/*' | xargs -iFILE cp -p FILE $(usl)/$$d/; \
+	done
+# documentation
+	@echo .... install documentation ....
+	install -d $(usdl)
+	find doc -maxdepth 1 -type f ! -path '*/CVS/*' ! -name lintianrc.example | xargs -iFILE cp -p FILE $(usdl)/
+	cp -a doc/lintian.html $(usdl)/
+	gzip -9 $(usdl)/lintian.sgml
+	gzip -9 $(usdl)/lintian.txt
+	install -m 644 debian/changelog $(usdl)/
+	gzip -9 $(usdl)/changelog
+	ln -s changelog.gz $(usdl)/changelog.Debian.gz
+	install -m 644 debian/copyright $(usdl)/
+	install -d $(tmp)/usr/share/doc-base
+	install -m 644 debian/doc-base $(tmp)/usr/share/doc-base/lintian
+# manual pages
+	@echo .... install manual pages ....
+	install -d $(tmp)/usr/share/man/man1
+	install -m 644 man/*.1 $(tmp)/usr/share/man/man1
+	gzip -9 $(tmp)/usr/share/man/man1/*
+# config file
+	@echo .... install config file ....
+	install -d $(tmp)/etc/	
+	install -m 644 doc/lintianrc.example $(tmp)/etc/lintianrc
+# spool directory
+	@echo .... install spool directory ....
+	install -d $(tmp)/var/spool/lintian
+# control files
+	@echo .... install control files ....
+	install -d $(tmp)/DEBIAN
+	install -m 755 debian/postinst debian/prerm $(tmp)/DEBIAN/
+	install -m 644 debian/conffiles $(tmp)/DEBIAN/
+
+	dpkg-gencontrol -isp
+	chown -R root.root $(tmp)
+	chmod -R go=rX $(tmp)
+	dpkg --build $(tmp) ..
+
+binary-arch:
+
+binary:	binary-indep binary-arch
+
+.PHONY: build binary binary-arch binary-indep clean

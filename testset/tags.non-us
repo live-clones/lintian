@@ -1,0 +1,7 @@
+W: non-us source: ancient-standards-version 3.1.1
+E: patented-app: no-copyright-file
+I: patented-app: non-us-spelling
+E: nonfree-crypto-app: no-copyright-file
+E: crypto-app: no-copyright-file
+E: broken-crypto: no-copyright-file
+W: broken-crypto: unknown-section non-US/admin

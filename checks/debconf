@@ -1,0 +1,280 @@
+#!/usr/bin/perl -w
+# debconf -- lintian check script
+
+# Copyright (C) 2001 Colin Watson
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+# MA 02111-1307, USA.
+
+use strict;
+
+use lib "$ENV{'LINTIAN_ROOT'}/lib";
+use Dep;
+use Util;
+
+($#ARGV == 1) or fail("syntax: debconf <pkg> <type>");
+my $pkg = shift;
+my $type = shift;
+
+my %template_fields;
+map { $template_fields{$_}=1 } qw(template type choices default description);
+
+my %valid_types;
+map { $valid_types{$_}=1 } qw(string boolean select multiselect
+	                      note text password);
+
+my $seenconfig='';
+my $seentemplates='';
+my $usespreinst='';
+my $usesmultiselect='';
+
+if (-f "control/config") {
+    $seenconfig=1;
+}
+if (-f "control/templates") {
+    $seentemplates=1;
+}
+
+exit unless $seenconfig or $seentemplates;
+
+# Check that both debconf control area files are present.
+if ($seenconfig and not $seentemplates) {
+    print "W: $pkg $type: no-debconf-templates\n";
+} elsif ($seentemplates and not $seenconfig) {
+    print "W: $pkg $type: no-debconf-config\n";
+}
+
+if ($seenconfig and not -x "control/config") {
+    print "E: $pkg $type: debconf-config-not-executable\n";
+}
+
+# Lots of template checks.
+
+my @templates = $seentemplates ? read_dpkg_control("control/templates") : ();
+
+foreach my $template (@templates) {
+    my $isselect='';
+
+    if (not exists $template->{template}) {
+	print "E: $pkg $type: no-template-name\n";
+    } elsif ($template->{template}!~m|[A-Za-z0-9.+-](?:/[A-Za-z0-9.+-])|) {
+	print "E: $pkg $type: malformed-template-name $template->{template}\n";
+    }
+
+    if (not exists $template->{type}) {
+	print "E: $pkg $type: no-template-type $template->{template}\n";
+    } elsif (not $valid_types{$template->{type}}) {
+	print "E: $pkg $type: unknown-template-type $template->{type}\n";
+    } elsif ($template->{type} eq 'select') {
+	$isselect=1;
+    } elsif ($template->{type} eq 'multiselect') {
+	$isselect=1;
+	$usesmultiselect=1;
+    }
+
+    if ($isselect and not exists $template->{choices}) {
+	print "E: $pkg $type: select-without-choices $template->{template}\n";
+    }
+
+    if (not exists $template->{description}) {
+	print "E: $pkg $type: no-template-description $template->{template}\n";
+    } elsif ($template->{description}=~m/^\s*(.*?)\s*?\n\s*\1\s*$/) {
+	# Check for duplication. Should all this be folded into the
+	# description checks?
+	print "W: $pkg $type: duplicate-long-description-in-template ",
+	      "$template->{template}\n";
+    }
+
+    my %languages;
+    foreach my $field (sort keys %$template) {
+	# Tests on translations
+	my ($mainfield, $lang) = split m/-/, $field, 2;
+	if (defined $lang) {
+	    if ($isselect and $mainfield eq 'default') {
+	        print "W: $pkg $type: select-with-translated-default-field ",
+	              "$template->{template} $lang\n";
+	    }
+	    $languages{$lang}{$mainfield}=1;
+	}
+	unless ($template_fields{$mainfield}) { # Ignore language codes here
+	    print "E: $pkg $type: unknown-field-in-templates $field\n";
+	}
+    }
+    if (exists $template->{choices}) {
+	foreach my $lang (sort keys %languages) {
+	    if ($languages{$lang}{choices} xor $languages{$lang}{description}) {
+		print "W: $pkg $type: partially-translated-question $template->{template} $lang\n";
+	    }
+	}
+    }
+}
+
+# parse depends info for later checks
+
+# Consider every package to depend on itself.
+my $version;
+if (-f "fields/version") {
+    open(IN, "fields/version") or fail("Can't open fields/version: $!");
+    chomp($_ = <IN>);
+    $version = "$pkg (= $_)";
+    close IN;
+}
+
+my (%dependencies, @alldeps);
+
+for my $field (qw(depends pre-depends)) {
+    if (-f "fields/$field") {
+	open(IN, "fields/$field") or fail("Can't open fields/$field: $!");
+	chomp($_ = <IN>);
+	$_ .= ", $version" if defined $version;
+	push @alldeps, $_;
+	$dependencies{$field} = Dep::parse($_);
+    } else {
+	push @alldeps, $version;
+	$dependencies{$field} = Dep::parse($version);
+    }
+}
+
+my $alldependencies = Dep::parse(join ', ', @alldeps);
+
+# Check the maintainer scripts.
+
+if (open(PREINST, "control/preinst")) {
+    while (<PREINST>) {
+	s/#.*//;    # Not perfect for Perl, but should be OK
+	if (m,/usr/share/debconf/confmodule, or
+	        m/(?:Debconf|Debian::DebConf)::Client::ConfModule/) {
+	    $usespreinst=1;
+	    last;
+	}
+    }
+    close PREINST;
+}
+
+for my $file (qw(config postinst)) {
+    if (open(IN, "control/$file")) {
+	my $usesconfmodule='';
+	my $obsoleteconfmodule='';
+	my $db_input='';
+	my $isdefault='';
+	my $usesseen='';
+
+	while (<IN>) {
+	    s/#.*//;    # Not perfect for Perl, but should be OK
+	    next unless m/\S/;
+	    if (m#(?:\.|source)\s+/usr/share/debconf/confmodule# ||
+	            m/use\s+Debconf::Client::ConfModule/) {
+	        $usesconfmodule=1;
+	    }
+	    if (not $obsoleteconfmodule and
+	        m#(/usr/share/debconf/confmodule\.sh|
+	           Debian::DebConf::Client::ConfModule)#x) {
+	        print "W: $pkg $type: $file-loads-obsolete-confmodule $1\n";
+	        $usesconfmodule=1;
+	        $obsoleteconfmodule=1;
+	    }
+	    if ($file eq 'postinst' and not $db_input and m/db_input/) {
+	        # TODO: Perl?
+	        print "W: $pkg $type: postinst-uses-db-input\n";
+	        $db_input=1;
+	    }
+	    if (not $isdefault and m/db_fset.*isdefault/) {
+	        # TODO: Perl?
+	        print "W: $pkg $type: isdefault-flag-is-deprecated $file\n";
+	        $isdefault=1;
+	    }
+	    if (not $usesseen and m/db_f[sg]et\s+\S+\s+seen\s+/) {
+	       unless (Dep::implies($alldependencies,
+	                 Dep::parse('debconf (>= 0.5)'))) {
+	           print "E: $pkg $type: seen-flag-requires-versioned-depends $file\n";
+	       }
+	        $usesseen = 1;
+	    }
+	}
+
+	unless ($usesconfmodule) {
+	    print "W: $pkg $type: $file-does-not-load-confmodule\n";
+	}
+
+	close IN;
+    }
+}
+
+if (open(POSTRM, "control/postrm")) {
+    my $db_purge='';
+
+    while (<POSTRM>) {
+	s/#.*//;    # Not perfect for Perl, but should be OK
+	if (not $db_purge and m/db_purge/) {    # TODO: Perl?
+	    $db_purge=1;
+	}
+    }
+
+    unless ($db_purge) {
+	print "W: $pkg $type: postrm-does-not-purge-debconf\n";
+    }
+}
+
+# Check that the right dependencies are in the control file.
+
+if ($usesmultiselect) {
+    unless (Dep::implies($alldependencies,
+	                 Dep::parse('debconf (>= 0.2.26)'))) {
+	print "W: $pkg $type: multiselect-without-dependency\n";
+    }
+} elsif ($usespreinst) {
+    unless (Dep::implies($dependencies{'pre-depends'},
+	                 Dep::parse('debconf (>= 0.2.17)'))
+	    or Dep::implies($dependencies{'depends'}, Dep::parse('debconf'))) {
+	print "W: $pkg $type: missing-debconf-dependency-for-preinst\n";
+    }
+} else {
+    unless (Dep::implies($alldependencies, Dep::parse('debconf'))) {
+	print "W: $pkg $type: missing-debconf-dependency\n";
+    }
+}
+
+# Now make sure that no scripts are using debconf as a registry.
+# Unfortunately this requires us to unpack to level 2 and grep all the
+# scripts in the package.
+# the following checks is ignored if the package being checked is debconf
+# itself.
+
+exit 0 if $pkg eq "debconf";
+
+open(SCRIPTS, "scripts") or fail("cannot open lintian scripts file: $!");
+while (<SCRIPTS>) {
+    chomp;
+
+    # From checks/scripts.
+    my ($calls_env, $interpreter, $filename) = m/^(env )?(\S*) (.*)$/
+	or fail("bad line in scripts file: $_");
+
+    open(IN, "< unpacked/$filename") or fail("cannot open $filename: $!");
+    while (<IN>) {
+	s/#.*//;    # Not perfect for Perl, but should be OK
+	if (m,/usr/share/debconf/confmodule, or
+	        m/(?:Debconf|Debian::DebConf)::Client::ConfModule/) {
+	    print "W: $pkg $type: debconf-is-not-a-registry $filename\n";
+	    last;
+	}
+    }
+    close IN;
+}
+close SCRIPTS;
+
+exit 0;
+

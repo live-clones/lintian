@@ -1,0 +1,19 @@
+reorganize regression suite:
+  valid
+  invalid
+  <in between, odd, etc>
+
+  whenever a check is touched or added, add a valid and invalid example
+
+rewrite into a more sane layout.  What I would really like is a set of modules
+that the controller script can open and use.  Probably some OO design.
+I am leaning towards python, but will give OO perl a look first.
+
+policy 3.5 updates, which means reading policy and ensuring lintian follows it
+then I need to updater lintian to know about 3.5.
+
+various items require the policy team to make a new policy or update existing
+need to keep on them about this
+  * libs v. plugins
+  * X policy
+

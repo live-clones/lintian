@@ -1,0 +1,28 @@
+#!/usr/bin/perl -w
+
+use strict;
+$ENV{'LINTIAN_ROOT'} = '..';
+require "$ENV{'LINTIAN_ROOT'}/lib/deplib.pl";
+
+my $foo = Dep::parse('aalib1 (>= 1.2), libc6 (>= 2.2.2-2), libgpmg1 (>= 1.14-16), libncurses5 (>= 5.2.20010310-1), libpng2, slang1 (>> 1.3.0-0), svgalibg1 | svgalib-dummyg1, slang1, xlibs (>= 4.0.1-11), libpng2, zlib1g (>= 1:1.1.3)');
+
+use Data::Dumper;
+
+if ($foo->[0] eq 'AND') {
+    my %seen;
+    shift @$foo;
+    foreach my $i (@$foo) {
+	next if ($i->[0] eq 'OR');
+	$seen{$i->[1]}++;
+    }
+    my @dups = grep {$seen{$_} > 1} keys(%seen);
+    if (scalar(@dups) > 0) {
+	print "Dups: " . scalar(@dups) . "\n";
+	print "@dups\n";
+    }
+}
+
+print Dumper($foo) . "\n";
+
+#my @preds = $foo->[1];
+#print Dumper(@preds);

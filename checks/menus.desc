@@ -1,0 +1,141 @@
+Check-Script: menus
+Author: Christian Schwarz <schwarz@debian.org>
+Abbrev: men
+Standards-Version: 3.2.0
+Type: binary
+Unpack-Level: 1
+Needs-Info: doc-base-files
+
+Tag: postinst-should-not-set-usr-doc-link
+Type: warning
+Info: The technical committee chose the symlink transition method to move
+ from FSSTND to FHS.  That transition has been completed with woody and thus
+ this link is no longer required.
+
+Tag: maintainer-script-does-not-check-for-existence-of-updatemenus
+Type: error
+Info: The maintainer script calls the <tt>update-menus</tt> command without
+ checking for existence first. (The <tt>menu</tt> package which provides the
+ command is not marked as `essential' package.)
+ .
+ For example, use the following code in your maintainer script:
+  if [ -x /usr/bin/update-menus ] ; then update-menus ; fi
+ .
+ Maintainers of window managers who call wm-menu-config but do not check for
+ it first also trigger this warning.
+
+Tag: maintainer-script-does-not-check-for-existence-of-installdocs
+Type: error
+Info: The maintainer script calls the <tt>install-docs</tt> command without
+ checking for existence first. (The <tt>doc-base</tt> package which provides
+ the command is not marked as `essential' package.)
+ .
+ For example, use the following code in your maintainer script:
+  if [ -x /usr/sbin/install-docs ]; then
+    /usr/sbin/install-docs -i /usr/share/doc-base/&lt;your-package&gt;
+  fi
+
+Tag: preinst-calls-updatemenus
+Type: error
+Info: The preinst script calls the <tt>update-menus</tt> command. Usually,
+ this command should be called from the <tt>postinst</tt> maintainer script.
+
+Tag: preinst-calls-installdocs
+Type: error
+Info: The preinst script calls the <tt>install-docs</tt> command. Usually,
+ this command should be called from the <tt>postinst</tt> maintainer script.
+
+Tag: prerm-calls-updatemenus
+Type: error
+Info: The prerm script calls the <tt>update-menus</tt> command. Usually,
+ this command should be called from the <tt>postrm</tt> maintainer script.
+
+Tag: postrm-calls-installdocs
+Type: error
+Info: The postrm script calls the <tt>install-docs</tt> command. Usually,
+ this command should be called from the <tt>prerm</tt> maintainer script.
+
+Tag: executable-in-usr-lib-menu
+Type: error
+Info: Files in <tt>/usr/lib/menu</tt> may not be marked as executables.
+
+Tag: executable-in-usr-share-docbase
+Type: error
+Info: Files in <tt>/usr/share/doc-base</tt> may not be marked as executables.
+
+Tag: non-executable-in-etc-menu-methods
+Type: error
+Info: Files in <tt>/etc/menu-methods</tt> must be marked as executables.
+
+Tag: postinst-does-not-call-installdocs
+Type: error
+Info: Since the package installs a file in <tt>/usr/share/doc-base</tt>, the
+ package should probably call the <tt>install-docs</tt> command in its
+ <tt>postinst</tt> script.
+ .
+ For example, use the following code in your maintainer script:
+  if [ -x /usr/sbin/install-docs ]; then
+    /usr/sbin/install-docs -i /usr/share/doc-base/&lt;your-package&gt;
+  fi
+
+Tag: prerm-does-not-call-installdocs
+Type: error
+Info: Since the package installs a file in <tt>/usr/share/doc-base</tt>, the
+ package should probably call the <tt>install-docs</tt> command in its
+ <tt>prerm</tt> script.
+ .
+ For example, use the following code in your maintainer script:
+  if [ -x /usr/sbin/install-docs ]; then
+    /usr/sbin/install-docs -r &lt;your-package&gt; || true
+  fi
+
+Tag: postinst-does-not-call-updatemenus
+Type: error
+Info: Since the package installs a file in either <tt>/usr/lib/menu</tt> or
+ <tt>/etc/menu-methods</tt>, the package should probably call the
+ <tt>update-menus</tt> command in it's <tt>postinst</tt> script.
+ .
+ For example, use the following code in your maintainer script:
+  if [ -x /usr/bin/update-menus ] ; then update-menus ; fi
+
+Tag: postrm-does-not-call-updatemenus
+Type: error
+Info: Since the package installs a file in either <tt>/usr/lib/menu</tt> or
+ <tt>/etc/menu-methods</tt>, the package should probably call the
+ <tt>update-menus</tt> command in it's <tt>postrm</tt> script.
+ .
+ For example, use the following code in your maintainer script:
+  if [ -x /usr/bin/update-menus ] ; then update-menus ; fi
+
+Tag: postinst-has-useless-call-to-update-menus
+Type: warning
+Info: The <tt>postinst</tt> script calls the <tt>update-menus</tt> program
+ though no file is installed in <tt>/usr/lib/menu</tt> or
+ <tt>/etc/menu-methods</tt>.
+
+Tag: postrm-has-useless-call-to-update-menus
+Type: warning
+Info: The <tt>postrm</tt> script calls the <tt>update-menus</tt> program
+ though no file is installed in <tt>/usr/lib/menu</tt> or
+ <tt>/etc/menu-methods</tt>
+
+Tag: postinst-has-useless-call-to-install-docs
+Type: error
+Info: The <tt>postinst</tt> script calls the <tt>install-docs</tt> program
+ though no file is installed in <tt>/usr/share/doc-base</tt>.
+
+Tag: postrm-has-useless-call-to-install-docs
+Type: error
+Info: The <tt>postrm</tt> script calls the <tt>install-docs</tt> program
+ though no file is installed in <tt>/usr/share/doc-base</tt>.
+
+Tag: bad-menu-file-name
+Type: error
+Info: The package installs a file <tt>/usr/lib/menu/menu</tt>, which is
+ already in use by the <tt>menu</tt> package itself.  The menu file should
+ be named after the package that installs it.
+
+Tag: doc-base-file-references-usr-doc
+Type: warning
+Info: Files in <tt>/usr/share/doc-base</tt> should only contain links to
+ files in the <tt>/usr/share/doc</tt> directory.

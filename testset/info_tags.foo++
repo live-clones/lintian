@@ -1,0 +1,18 @@
+W: foo++ source: ancient-standards-version 3.1.1
+N:
+N:   The source package refers to a `Standards-Version' older than one
+N:   year. Please update your package to latest policy and set this control
+N:   field appropriately.
+N:   
+N:   If the package is already compliant with the current standards, you
+N:   don't have to re-upload the package just to adjust the
+N:   Standards-Version control field. However, please remember to update
+N:   this field next time you upload the package.
+N:
+E: foo++: no-copyright-file
+N:
+N:   Each binary package has to include a plain file
+N:   /usr/share/doc/<pkg>/copyright
+N:   
+N:   Refer to Policy Manual, section 13.5 for details.
+N:

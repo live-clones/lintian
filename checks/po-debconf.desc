@@ -1,0 +1,22 @@
+Check-Script: po-debconf
+Author: Denis Barbier <barbier@linuxfr.org>
+Abbrev: pd
+Standards-Version: 3.5.8
+Type: source
+Unpack-Level: 2
+Info: This looks for common mistakes in packages using po-debconf.
+Needs-Info: debfiles
+
+Tag: unknown-charset-in-po-file
+Type: warning
+Info: Encoding must be declared in PO files, otherwise charset conversions
+ cannot be performed.
+
+Tag: newer-debconf-templates
+Type: warning
+Info: Some debconf templates files have been updated, but PO files do
+ not reflect these changes.
+ .
+ You should run debconf-updatepo whenever debconf templates files are
+ changed so that translators can be warned that their files are
+ outdated.

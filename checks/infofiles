@@ -1,0 +1,191 @@
+#!/usr/bin/perl -w
+# infofiles -- lintian check script
+
+# Copyright (C) 1998 Christian Schwarz
+# Copyright (C) 2001 Josip Rodin
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+# MA 02111-1307, USA.
+
+use strict;
+
+($#ARGV == 1) or fail("syntax: infofiles <pkg> <type>");
+my $pkg = shift;
+my $type = shift;
+
+use File::Basename;
+
+my %file_info;
+
+my %preinst;
+my %postinst;
+my %prerm;
+my %postrm;
+
+# check maintainer scripts (for install-info invocation)
+check_script("preinst", \%preinst) if (-f "control/preinst");
+check_script("postinst", \%postinst) if (-f "control/postinst");
+check_script("prerm", \%prerm) if (-f "control/prerm");
+check_script("postrm", \%postrm) if (-f "control/postrm");
+
+# Read file info...
+open IN, "file-info" or fail("cannot find file-info for $type package $pkg");
+while (<IN>) {
+    chop;
+
+    m/^(.*?):\s+(.*)$/o or fail("an error in the file pkg is preventing lintian from checking this package: $_");
+    my ($file,$info) = ($1,$2);
+
+    next unless $file =~ m,/info/,o;
+    $file =~ s,^(\./)?,,;
+
+    $file_info{$file} = $info;
+}
+close IN;
+
+# Read package contents...
+open IN, "index" or fail("cannot open index file index: $!");
+while (<IN>) {
+    chop;
+
+    my ($perm,$owner,$size,$date,$time,$file) = split(' ', $_, 6);
+    my $link;
+
+    $file =~ s,^(\./),,;
+    $file =~ s/ link to .*//;
+
+    if ($perm =~ m/^l/) {
+	($file, $link) = split(' -> ', $file);
+    }
+
+    my ($fname, $path, $suffix) = fileparse($file);
+
+    next unless ($perm =~ m,^[\-l],o)
+            and ($path =~ m,^usr/share/info,)
+            and ($path =~ m,^usr/info,);
+
+    my @fname_pieces = split /\./, $fname;
+    my $ext = pop @fname_pieces;
+    if ($ext eq "gz") { # ok!
+        if ($perm =~ m,^-,o) { # compressed with maximum compression rate?
+	    my $info = $file_info{$file};
+	    if ($info !~ m/gzip compressed data/o) {
+		print "E: $pkg $type: info-document-not-compressed-with-gzip $file\n";
+	    } else {
+		if ($info !~ m/max compression/o) {
+		    print "E: $pkg $type: info-document-not-compressed-with-max-compression $file\n";
+		}
+	    }
+        }
+    } else {
+	print "E: $pkg $type: info-document-not-compressed $file\n";
+    }
+    my $infoext = pop @fname_pieces;
+    unless ($infoext =~ /info(-\d)?/) { # it's not foo.info
+	unless (@fname_pieces) { # it's not foo{,-{1,2,3,...}}
+	    print "E: $pkg $type: info-document-has-wrong-extension $file\n";
+	}
+    }
+}
+close IN;
+
+# policy 13.2 says prerm and postinst
+if ($postrm{'calls-install-info'}) {
+    print "W: $pkg $type: postrm-calls-install-info\n";
+}
+if ($preinst{'calls-install-info'}) {
+    print "E: $pkg $type: preinst-calls-install-info\n";
+}
+
+if ($postinst{'calls-install-info'}) {
+    print "W: $pkg $type: install-info-not-called-with-quiet-option\n"
+	unless $postinst{'calls-install-info-quiet'};
+    print "W: $pkg $type: install-info-not-called-with-section-option\n"
+	unless $postinst{'calls-install-info-section'};
+}
+if ($prerm{'calls-install-info'}) {
+    # it must use the --quiet option
+    print "W: $pkg $type: install-info-not-called-with-quiet-option\n"
+	unless $prerm{'calls-install-info-quiet'};
+}
+
+exit 0;
+
+# -----------------------------------
+
+sub fail {
+    if ($_[0]) {
+	warn "internal error: $_[0]\n";
+    } elsif ($!) {
+	warn "internal error: $!\n";
+    } else {
+	warn "internal error.\n";
+    }
+    exit 1;
+}
+
+sub check_script {
+    my ($script,$pres) = @_;
+    my ($no_check_menu,$no_check_installdocs);
+    my $interp;
+
+    open(IN,"control/$script") or
+	fail("cannot open maintainer script control/$script for reading: $!");
+    $interp = <IN>;
+    if ($interp =~ m,^\#\!\s*/bin/(a|ba|k|pdk)?sh,) {
+        $interp = 'sh';
+    } elsif ($interp =~ m,^\#\!\s*/usr/bin/perl,) {
+        $interp = 'perl';
+    } else {
+	if ($interp =~ m,^\#\!\s*(.+),) {
+            $interp = $1;
+	}
+	else { # hmm, doesn't seem to start with #!
+	    # is it a binary? look for ELF header
+	    if ($interp =~ m/^\177ELF/) {
+		return; # nothing to do here
+	    }
+	    $interp = 'unknown';
+	}
+	print "N: unknown interpreter: $script $interp\n";
+    }
+
+    my $hold;
+    while (<IN>) {
+	s/\s+#.*$//;
+	# this wraps a previous line continuation into the current line
+	if (defined $hold) {
+	    $_ = "$hold $_";
+	    $hold = undef;
+	}
+	# check if install-info is called and if so, is it called properly
+	if (m/install-info/o) {
+	    if (m,\\$,) {
+		$hold = substr($_, 0, -1);
+		next;
+	    }
+	    $pres->{'calls-install-info'} = 1;
+	    my @pieces = split(/\s+/);
+	    for my $piece (@pieces) {
+		if ($piece eq '--quiet') {
+		    $pres->{'calls-install-info-quiet'} = 1;
+		} elsif ($piece eq '--section') {
+		    $pres->{'calls-install-info-section'} = 1;
+		}
+	    }
+	}
+    }
+}

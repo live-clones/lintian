@@ -1,0 +1,27 @@
+#!/usr/bin/make -f
+
+tmp=debian/tmp
+
+build:
+
+binary-arch:
+
+binary-indep:
+	install -d $(tmp)/usr/bin/
+	install -d $(tmp)/usr/share/doc/scripts/
+	install -d $(tmp)/DEBIAN
+
+	install -m 755 pyfoo $(tmp)/usr/bin/
+	install -m 755 py2foo $(tmp)/usr/bin/
+	install -m 755 perlfoo $(tmp)/usr/bin/
+	cp debian/changelog $(tmp)/usr/share/doc/scripts/changelog
+	gzip -9 $(tmp)/usr/share/doc/scripts/changelog
+
+	dpkg-gencontrol -isp
+	dpkg --build $(tmp) ..
+
+binary: binary-arch binary-indep
+
+clean:
+
+.PHONY: build binary-arch binary-indep binary clean

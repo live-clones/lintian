@@ -1,0 +1,6 @@
+#!/bin/bash
+
+update-alternatives --remove dummy /usr/bin/dummy-alternative
+
+echo "Hit enter"
+read

@@ -1,0 +1,72 @@
+#!/usr/bin/perl
+# unpack-srcpkg-l2 -- lintian unpack script (source packages level 2)
+#
+# syntax: unpack-srcpkg-l2 <base-dir>
+
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+# MA 02111-1307, USA.
+
+use strict;
+
+use FileHandle;
+
+use lib "$ENV{'LINTIAN_ROOT'}/lib";
+use Pipeline;
+
+($#ARGV == 0) or fail("syntax: unpack-srcpkg-l2 <base-dir>");
+my $base_dir = shift;
+my $unpack_dir;
+
+print "N: Unpacking source package in directory $base_dir ...\n" if $::verbose;
+chdir($base_dir);
+
+my $IN = FileHandle->new;
+pipeline_open($IN, sub {
+	my $ret=exec 'dpkg-source', '-x', 'dsc';
+	$ret;
+    }) or fail("cannot run dpkg-source: $!");
+
+while (<$IN>) {
+    chop;
+    $unpack_dir = $1
+	if (/^dpkg-source: extracting [^\s]+ in (\S+)/);
+}
+close($IN) or fail("error occured during execution of dpkg-source in $base_dir: $!");
+$unpack_dir or fail("dpkg-source didn't report unpack directory");
+
+# create link to unpack directory
+symlink($unpack_dir, "unpacked")
+    or fail("cannot symlink to unpack directory $unpack_dir");
+
+# fix permissions
+spawn('chmod', '-R', 'u+rwX,o+rX,o-w', $unpack_dir) == 0 or fail();
+
+exit 0;
+
+# -------------------------------
+
+sub fail {
+  if ($_[0]) {
+    print STDERR "internal error: $_[0]\n";
+  } elsif ($!) {
+    print STDERR "internal error: $!\n";
+  } else {
+    print STDERR "internal error.\n";
+  }
+  exit 1;
+}

@@ -1,0 +1,44 @@
+Check-Script: cruft
+Author: Sean 'Shaleh' Perry <shaleh@debian.org>
+Abbrev: deb
+Standards-Version: 3.2.0
+Type: source
+Unpack-Level: 2
+Info: This looks for cruft in Debian packaging
+Needs-Info: debfiles
+
+Tag: debian-files-list-in-source
+Type: error
+Info: Leaving <tt>debian/files</tt> causes problems for the autobuilders,
+ since that file will likely include the list of .deb files for another
+ architecture, which will cause dpkg-buildpackage run by the buildd to fail.
+ .
+ The clean rule for the package should remove this file.
+
+Tag: configure-generated-file-in-source
+Type: warning
+Info: Leaving config.cache/status causes autobuilders problems
+ config.cache and config.status are produced by GNU autoconf's configure
+ scripts. If they are left in the source package, autobuilders may pick
+ up settings for the wrong architecture, causing problems.
+ .
+ The clean rule in <tt>debian/rules</tt> should remove this file. This
+ should ideally be done by fixing the upstream build system to do it when
+ you run the appropriate cleaning command (and don't forget to forward the
+ fix to the upstream authors so it doesn't happen in the next release). If
+ that is already implemented, then make sure you are indeed cleaning it in
+ the clean rule. If all else fails, a simple rm -f should work.
+ .
+ Note that Lintian cannot reliably detect the removal in the clean rule,
+ so once you fix this, please ignore or override this warning.
+
+Tag: documentation-package-not-architecture-independent
+Type: warning
+Info: Documentation packages usually shouldn't carry anything that requires
+ recompiling on various architectures, in order to save space on mirrors.
+
+Tag: outdated-autotools-helper-file
+Type: warning
+Info: The referenced file has a time stamp older than year 2002. This
+ usually means that the source package will not work correctly on all
+ currently released architectures.

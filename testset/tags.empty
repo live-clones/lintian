@@ -1,0 +1,7 @@
+E: empty source: no-standards-version-field
+E: empty source: maintainer-address-missing empty
+E: empty: no-copyright-file
+E: empty: package-has-no-description
+E: empty: maintainer-address-missing empty
+W: empty: no-section-field
+W: empty: no-priority-field

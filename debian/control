@@ -1,0 +1,28 @@
+Source: lintian
+Section: devel
+Priority: optional
+Maintainer: Josip Rodin <joy-packages@debian.org>
+Build-Depends-Indep: debiandoc-sgml
+Standards-Version: 3.5.10
+
+Package: lintian
+Architecture: all
+Depends: perl, file, binutils, diffstat (>= 1.27-1), man-db (>= 2.3.20-1)
+Suggests: binutils-multiarch
+Description: Debian package checker
+ Lintian dissects Debian packages and reports bugs and policy
+ violations. It contains automated checks for many aspects of Debian
+ policy as well as some checks for common errors.
+ .
+ It uses an archive directory, called laboratory, in which it stores
+ information about the packages it examines.  It can keep this
+ information between multiple invocations in order to avoid repeating
+ expensive data-collection operations. This also possible to check the
+ complete Debian archive for bugs, in a reasonable time.
+ .
+ This package is useful for all people who want to check Debian 
+ packages for compliance with Debian policy. Every Debian maintainer
+ should check packages with this tool before uploading them to the
+ archive.
+ .
+ This version of Lintian is calibrated for policy version 3.5.10.

@@ -1,0 +1,11 @@
+Source: binary
+Section: misc
+Priority: extra
+Maintainer: Lintian Maintainers <lintian-maint@debian.org>
+Standards-Version: 3.2.1
+
+Package: binary
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: test handling of binary files
+ Regression test for lintian's handling of binary files.

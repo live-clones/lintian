@@ -1,0 +1,44 @@
+Check-Script: md5sums
+Author: Christian Schwarz <schwarz@debian.org>
+Abbrev: md5
+Standards-Version: 3.2.0
+Type: binary
+Unpack-Level: 1
+Needs-Info: md5sums
+Info: This script checks if md5sum control files are valid, if they are
+ provided by a binary package. (All packages not containing a md5sums
+ control file are skipped.)
+
+Tag: md5sums-control-file-is-empty
+Type: error
+Info: The package contains an md5sums control file, but it lists no files.
+
+Tag: md5sum-mismatch
+Type: error
+Info: The md5sum listed for the file does not match the actual file contents.
+ .
+ Usually, this error occurs during the package build process, if the
+ <tt>debian/tmp/</tt> directory is touched after <tt>dh_md5sums</tt> or
+ <tt>debstd</tt> is run.
+
+Tag: md5sums-lists-nonexisting-file
+Type: error
+Info: The md5sums control file lists a file which is not included in the package.
+ .
+ Usually, this error occurs during the package build process, if the
+ <tt>debian/tmp/</tt> directory is touched after <tt>dh_md5sums</tt> or
+ <tt>debstd</tt> is run.
+ .
+ If all the files in the <tt>DEBIAN/</tt> subdirectory are listed
+ above, the problem was probably caused by building the package using a
+ buggy debstd/debmake. In this case, rebuilding the package with an
+ updated debstd should fix the problem.
+
+Tag: file-missing-in-md5sums
+Type: error
+Info: The package contains a file which isn't listed in the md5sums control
+ file.
+ .
+ Usually, this error occurs during the package build process, if the
+ <tt>debian/tmp/</tt> directory is touched after <tt>dh_md5sums</tt> or
+ <tt>debstd</tt> is run.

@@ -1,0 +1,5 @@
+#!/bin/sh
+
+echo cache > config.cache
+echo log > config.log
+echo status > config.status

@@ -1,0 +1,138 @@
+Check-Script: binaries
+Author: Christian Schwarz <schwarz@debian.org>
+Abbrev: bin
+Standards-Version: 3.2.0
+Type: binary
+Unpack-Level: 1
+Needs-Info: objdump-info, file-info
+Info: This script checks binaries and object files for bugs.
+
+Tag: arch-independent-package-contains-binary-or-object
+Type: error
+Info: The package contains a binary or object file but is tagged
+ `Architecture: all'.
+
+Tag: unstripped-binary-or-object
+Type: error
+Info: The package installs an unstripped binary or object file.
+ .
+ Please note, that shared libraries have to be stripped with the
+ <tt>--strip-unneeded</tt> option.
+ .
+ Usually this is a bug. Otherwise, please contact &maint;
+ about this so that this exception would be recognized in future versions of
+ Lintian.
+
+Tag: library-in-debug-or-profile-should-not-be-stripped
+Type: error
+Info: Libraries in <tt>.../lib/debug</tt> or in
+ <tt>.../lib/profile</tt> usually should not be stripped.
+
+Tag: statically-linked-binary
+Type: error
+Info: The package installs a statically linked binary or object file.
+ .
+ Usually this is a bug. Otherwise, please contact &maint;
+ about this so that this exception would be recognized in future versions of
+ Lintian.
+
+Tag: library-not-linked-against-libc
+Type: warning
+Info: The package installs a library which is not dynamically linked
+ against libc.
+ .
+ Usually this is a bug. Otherwise, please contact &maint;
+ about this so that this exception would be recognized in future versions of
+ Lintian.
+
+Tag: program-not-linked-against-libc
+Type: warning
+Info: The package installs a binary which is not dynamically linked
+ against libc.
+ .
+ Usually this is a bug. Otherwise, please contact &maint;
+ about this so that this exception would be recognized in future versions of
+ Lintian.
+
+Tag: libc5-binary
+Type: warning
+Info: The package contains a binary or shared library which is linked
+ against libc.so.5.
+ .
+ This could be a bug since all programs in Debian should use
+ libc6. However, the packages in the oldlibs section might contain
+ libc5 libs/binaries intentionally. In that case, please send a note to
+ &maint; so that this exception would be recognized in future versions of
+ Lintian.
+
+Tag: binary-or-shlib-defines-rpath
+Type: warning
+Info: The binary or shared library defines the `RPATH'. Usually this
+ is a bad thing.  Most likely you will find a Makefile with a line like:
+     gcc test.o -o test -Wl,--rpath
+ or
+     gcc test.o -o test -R/usr/local/lib
+ Please contact &debdev; if you have questions about this.
+
+Tag: binary-has-unneeded-section
+Type: warn
+Info: The binary or shared library is stripped, but still contains a
+ section that is not useful.  The utilities (<tt>install -s</tt>
+ and <tt>dh_strip</tt>) are patched to remove the <tt>.note</tt> and
+ <tt>.comment</tt> sections.
+
+Tag: missing-depends-line
+Type: warning
+Info: The package contains an ELF binary with dynamic dependencies,
+ but does not have a Depends line in its control file.  This usually
+ means that a call to <tt>dpkg-shlibdeps</tt> is missing from the
+ package's <tt>debian/rules</tt> file.
+
+Tag: shared-lib-without-dependency-information
+Type: warning
+Info: The listed shared library doesn't include information about which
+ other libraries the library was linked against. (When running `<tt>ldd
+ foo.so</tt>' ldd should report about these other libraries. In your
+ case, ldd just reports `statically linked'.)
+ .
+ To fix this, you should explicitly specify the libraries which are
+ used (e.g., `-lc') when building the shared library with `ld'.
+ .
+ If you have questions about this, please contact &debdev;.
+
+Tag: compiled-with-bad-libc
+Type: error
+Info: This file defines or requires `__register_frame_info' as a dynamic
+ symbol, and is not linked with libstdc++.  This means that it was
+ compiled with a buggy version of libc.  It should be recompiled with
+ the fixed versions, libc6 2.0.7u-6 or higher.  (which may not yet be
+ available; see debian-devel).
+ .
+ This was a problem in the second half of 1998.  If you get this tag
+ much later than that, it may be a different problem.  Please check
+ with the lintian maintainer in that case.
+
+Tag: arch-dependent-file-in-usr-share
+Type: error
+Info: This package installs an ELF binary in the <tt>/usr/share</tt>
+ hierarchy, which is reserved for architecture-independent files.
+
+Tag: binary-in-etc
+Type: error
+Info: This package installs an ELF binary in <tt>/etc</tt>.
+ The Filesystem Hierarchy Standard forbids this.
+
+Tag: binary-compiled-with-profiling-enable
+Type: warning
+Info: While profiling is useful for testing and debugging purposes, enabling
+ it causes a program to leave gmon.out files whenever a user runs it.
+
+Tag: binary-file-compressed-with-upx
+Type: error
+Info: Debian does not allow binaries to be compressed by UPX.
+
+Tag: binary-or-shlib-with-obsolete-c++-abi
+Type: warning
+Info: There is no CXXABI_* mark in the objdump output on this file,
+ and it is linked against a libstdc++, meaning it's likely linking to
+ an obsolete version of the C++ library.

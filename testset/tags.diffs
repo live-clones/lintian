@@ -1,0 +1,13 @@
+E: diffs source: debian-files-list-in-source
+W: diffs source: configure-generated-file-in-source config.cache
+W: diffs source: configure-generated-file-in-source config.log
+W: diffs source: configure-generated-file-in-source config.status
+W: diffs source: configure-generated-file-in-source subdir-bad/config.cache
+W: diffs source: configure-generated-file-in-source subdir-bad/config.log
+W: diffs source: configure-generated-file-in-source subdir-bad/config.status
+W: diffs source: configure-generated-file-in-source subdir-good/config.cache
+W: diffs source: configure-generated-file-in-source subdir-good/config.log
+W: diffs source: configure-generated-file-in-source subdir-good/config.status
+E: diffs: binary-without-manpage diffs
+E: diffs: no-copyright-file
+E: diffs: arch-independent-package-contains-binary-or-object ./usr/bin/diffs

@@ -1,0 +1,185 @@
+#!/usr/bin/perl -w
+# list-srcpkg -- lintian helper script
+
+# Copyright (C) 1998 Christian Schwarz
+# 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+# MA 02111-1307, USA.
+
+use strict;
+
+# turn file buffering off:
+$| = 1;
+
+# parse command line options
+if ($#ARGV == -1) {
+  print "list-srcpkg [-v] <output-list-file>\n";
+  print "options:\n";
+  print "   -v  verbose\n";
+  exit 0;
+}
+
+my $verbose = 0;
+my $output_file = undef;
+
+while (my $arg = shift) {
+  if ($arg =~ s,^-,,o) {
+    if ($arg eq 'v') {
+      $verbose = 1;
+    } else {
+      print STDERR "error: unknown command line argument: $arg\n";
+      exit 1;
+    }
+  } else {
+    if ($output_file) {
+      print STDERR "error: too many command line arguments: $arg\n";
+      exit 1;
+    }
+    $output_file = $arg;
+  }
+}
+unless ($output_file) {
+  print STDERR "error: no output file specified\n";
+  exit 1;
+}
+
+# import perl libraries
+use lib "$ENV{'LINTIAN_ROOT'}/lib";
+use Read_pkglists;
+use vars qw(%source_info $SRCLIST_FORMAT); # from the above
+use Util;
+
+# get variables out of environment
+my $LINTIAN_ARCHIVEDIR = $ENV{'LINTIAN_ARCHIVEDIR'};
+my $LINTIAN_DIST = $ENV{'LINTIAN_DIST'};
+my $LINTIAN_LAB = $ENV{'LINTIAN_LAB'};
+my $LINTIAN_SECTION = $ENV{'LINTIAN_SECTION'};
+
+# read old list file (this command does nothing if the file does not exist)
+read_src_list($output_file,1);
+
+my %pkgfile;
+# map filenames to package names
+for my $pkg (keys %source_info) {
+  $pkgfile{$source_info{$pkg}->{'file'}} = $pkg;
+}
+
+# open output file
+open(OUT,">$output_file") or fail("cannot open list file $output_file for writing: $!");
+print OUT "$SRCLIST_FORMAT\n";
+
+# parse Sources.gz to get list of packages
+my $sources = "$LINTIAN_ARCHIVEDIR/dists/$LINTIAN_DIST/$LINTIAN_SECTION/source/Sources.gz";
+print "N: Parsing $sources ...\n" if $verbose;
+open(IN,"zcat $sources|") or fail("Cannot open input pipe from zcat $sources: $!");
+
+my $line;
+my %packages;
+my $total = 0;
+
+while (!eof(IN)) {
+  do { $line = <IN> } until ($line =~ m/^Directory: (.*)$/m);
+  my $pkg_dir = $1;
+  do { $line = <IN> } until ($line =~ m/^ [0-9a-f]{32} [0-9]+ (.+\.dsc)$/m);
+  my $dsc_file = "$pkg_dir/$1";
+  do { $line = <IN> } until ($line =~ m/^\s*$/m);
+  
+  my @stat;
+  # get timestamp...
+  unless (@stat = stat "$LINTIAN_ARCHIVEDIR/$dsc_file") {
+    warn "E: general: cannot stat file $LINTIAN_ARCHIVEDIR/$dsc_file: $!\n";
+    next;
+  }
+  my $timestamp = $stat[9];
+
+  my ($status,$pkg,$data);
+
+  # was package already included in last list?
+  if (exists $pkgfile{$dsc_file}) {
+    # yes!
+    $pkg = $pkgfile{$dsc_file};
+    $data = $source_info{$pkg};
+
+    # file changed since last run?
+    if ($timestamp == $data->{'timestamp'}) {
+      # no.
+      $status = 'unchanged';
+    } else {
+      $status = 'changed';
+      delete $source_info{$pkg};
+    }
+  } else {
+    # new package, get info
+    $status = 'new';
+  }
+
+  if (($status eq 'new') or ($status eq 'changed')) {
+    # use eval when calling get_dsc_info, since we don't want to `die' just
+    # because of a single broken package
+    eval { $data = get_dsc_info("$LINTIAN_ARCHIVEDIR/$dsc_file"); };
+    if ($@) {
+      # error!
+      print STDERR "$@\n";
+      print "E: general: bad-source-package $dsc_file\n";
+      next;
+    }
+    my @f = (); 
+    for my $fs (split(/\n/,$data->{'files'})) {
+      next if $fs =~ /^\s*$/o;
+      my @t = split(/\s+/o,$fs);
+      push(@f,$t[2]);
+    }
+    $data->{'files'} = join(',',@f);
+    $pkg = $data->{'source'};
+  }
+
+  # check for duplicates
+  if (exists $packages{$pkg}) {
+    print "E: general: duplicate-source-package $pkg\n";
+    next;
+  }
+
+  # write entry to output file
+  print OUT join(';',
+		 $pkg,
+		 $data->{'version'},
+		 $data->{'maintainer'},
+                 $data->{'architecture'},
+                 $data->{'standards-version'},
+                 $data->{'binary'},
+                 $data->{'files'},
+                 $dsc_file,
+		 $timestamp,
+		 ),"\n";
+  printf "N: Listed %s source package %s %s\n",$status,$pkg,$data->{'version'} if $verbose;
+
+  # remove record from hash
+  delete $source_info{$pkg} if $status eq 'unchanged';
+  $packages{$pkg} = 1;
+  $total++;
+}
+close(IN) or fail("cannot close input pipe: $!");
+close(OUT) or fail("cannot close output pipe: $!");
+
+if ($verbose) {
+  # all packages that are still included in %source_info have disappeared from the archive...
+  for my $pkg (sort keys %source_info) {
+    print "N: Removed source package $pkg from list\n";
+  }
+  printf "N: Listed %d source packages\n",$total;
+}
+
+exit 0;

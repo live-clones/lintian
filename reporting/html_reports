@@ -1,0 +1,614 @@
+#!/usr/bin/perl -w
+#
+# Lintian HTML reporting tool -- Create Lintian web reports
+#
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+#
+# This program is free software.  It is distributed under the terms of
+# the GNU General Public License as published by the Free Software
+# Foundation; either version 2 of the License, or (at your option) any
+# later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+# MA 02111-1307, USA.
+
+# Maximum number of identical tags per package:
+my $max_tags = 8;
+
+my $debug = 0;
+
+# Read configuration
+require './config';
+use vars qw($LINTIAN_ROOT $LINTIAN_ARCHIVEDIR $LINTIAN_DIST $LINTIAN_SECTION
+            $LINTIAN_ARCH $HTML_TMP_DIR $LINTIAN_LAB
+            $statistics_file);
+
+# Import perl libraries
+use lib "$ENV{'LINTIAN_ROOT'}/lib";
+use Util;
+use Read_taginfo;
+my %tag_info = %{read_tag_info('html')};
+use Read_pkglists;
+use vars qw(%binary_info %source_info %bin_src_ref); # from the above
+
+# Determine Lintian version
+chomp(my $LINTIAN_VERSION = `$LINTIAN_ROOT/frontend/lintian --print-version`);
+
+# Determine timestamp
+chomp(my $timestamp = `date -u --rfc-822`);
+chomp(my $mirror_timestamp = `cat $LINTIAN_ARCHIVEDIR/project/trace/ftp-master.debian.org`);
+
+# Footer for each html page:
+my $close_text = <<"EOT_EOT_EOT";
+<HR>
+<FONT SIZE="-1">Please send all comments about these web pages to
+<A HREF="mailto:lintian-maint\@debian.org">Lintian maintainer</A>.
+<P>Page last updated: $timestamp</FONT>
+</BODY></HTML>
+EOT_EOT_EOT
+
+# Read configuration file
+read_bin_list();
+# read_src_list(); # not necessary, get_bin_src_ref will run it
+get_bin_src_ref();
+
+# Create output directories
+mkdir($HTML_TMP_DIR,0777)
+    or die "cannot create output directory $HTML_TMP_DIR: $!";
+
+my ($num_errors, $num_warnings, $num_experimental, $num_overridden);
+$num_errors = $num_warnings = $num_experimental = $num_overridden = 0;
+my (%by_src, %by_tag);
+
+# process input
+while (<>) {
+    chop;
+    next unless /^([EWXOI]): (\S+)( \S+)?: (\S+)/;
+    my ($code, $pkg, $type, $tag) = ($1, $2, $3, $4);
+    $type = "" unless (defined $type); # probably...?
+    my $src;
+
+    if ($code eq 'E') {
+	$num_errors++;
+    } elsif ($code eq 'W') {
+	$num_warnings++;
+    } elsif ($code eq 'X') {
+	$num_experimental++;
+    } elsif ($code eq 'O') {
+	$num_overridden++;
+	next;
+    } elsif ($code eq 'I') {
+	next;
+    }
+
+    if ($type eq ' source') {
+	$src = $pkg;
+	unless (exists $source_info{$pkg}) {
+	    print STDERR "error: source package $pkg not listed!\n";
+	}
+    } else {
+	$src = $bin_src_ref{$pkg};
+	unless ($src) {
+	    print STDERR "error: source for package $pkg not found!\n";
+	    $src = $pkg;
+	}
+    }
+
+    if (not exists $source_info{$src}) {
+	# work around:
+	$source_info{$src}->{'maintainer'} = 
+	    $binary_info{$pkg}->{'maintainer'} || '(unknown)';
+	$source_info{$src}->{'version'} = $binary_info{$pkg}->{'version'};
+    }
+  
+    push(@{$by_src{$src}},$_);
+    push(@{$by_tag{$tag}},$_);
+}
+
+open_qa_list();
+open_maintainer_index();
+read_bug_file("$LINTIAN_ROOT/reporting/bug.status");
+
+my ($src_num_errors, $src_num_warnings);
+
+# Create per-maintainer list
+for my $src (sort by_maint keys %by_src) {
+    my @tags;
+    my ($lastpkg, $lasttag);
+    $lastpkg = $lasttag = "";
+
+    warn "no maintainer for $src!\n" unless defined $source_info{$src}{maintainer};
+    set_maintainer($source_info{$src}->{'maintainer'});
+    new_src_package($src, $source_info{$src}->{'version'});
+
+    for (sort by_tag @{$by_src{$src}}) {
+	my ($code, $pkg, $type, $tag, $rest) =
+	    /^(\S): (\S+)( \S+)?: (\S+)(.*)/;
+        $type = "" unless (defined $type); # probably...?
+	$rest = quotehtml($rest);
+
+	# Create a table of these for the debian-qa folks
+	$src_num_errors++ if $code eq 'E';
+	$src_num_warnings++ if $code eq 'W';
+
+	if ($pkg ne $lastpkg and $type ne ' source') {
+	    $num_binpkg++;
+	    drop_anchor($pkg, "");
+	}
+	if ($tag ne $lasttag or $pkg ne $lastpkg) {
+	    output_chunk(\@tags) if @tags;
+	    undef @tags;
+
+	    my $b = bug_number("$pkg: $tag");
+	    $rest .= " [" . make_bugref($b) . "]" if $b;
+	}
+	$lastpkg = $pkg; $lasttag = $tag;
+
+	$tag = make_tagref($tag);
+	push(@tags,"$code: $pkg$type: $tag$rest\n");
+    }
+
+    output_chunk(\@tags) if @tags;
+    undef @tags;
+
+    end_src_package($src);
+}
+
+close_maintainer();
+close_maintainer_index();
+close_qa_list();
+
+# Create tag pages
+open_tag_index();
+for my $tag (sort keys %by_tag) {
+    my $lastpkg = "";
+    my $tag_pkgs = 0;
+
+    open_tag_file($tag);
+
+    for (sort @{$by_tag{$tag}}) {
+	my ($code, $pkg, $type, $tag, $rest) =
+	    /^(\S): (\S+)( \S+)?: (\S+)(.*)/;
+        $type = "" unless (defined $type); # probably...?
+	$rest = quotehtml($rest);
+
+	if ($pkg ne $lastpkg) {
+	    if (@tags) {
+		$tag_pkgs++;
+		output_chunk(\@tags);
+		undef @tags;
+	    }
+
+	    my $b = bug_number("$pkg: $tag");
+	    $rest .= " [" . make_bugref($b) . "]" if $b;
+	}
+	$lastpkg = $pkg;
+
+	$pkg = make_anchor($pkg);
+	push(@tags,"$code: $pkg$type: $tag$rest\n");
+    }
+
+    if (@tags) {
+	$tag_pkgs++;
+	output_chunk(\@tags);
+	undef @tags;
+    }
+
+    close_tag_file($tag);
+    list_tag($tag, $#{$by_tag{$tag}} + 1, $tag_pkgs);
+}
+close_tag_index();
+
+# Create per-package list
+my %package_lists;
+for my $p (sort keys %anchor) {
+    my $c = uc substr($p,0,1);
+    push (@{$package_lists{$c}}, make_anchor($p));
+}
+
+my (@list1, @list2, @list3, @list4);
+for my $c (sort keys %package_lists) {
+    my $list = join(', ', @{$package_lists{$c}});
+    $list = "<H1>$c</H1>\n<BLOCKQUOTE>\n$list</BLOCKQUOTE><P>\n";
+    if ($c le 'F') {
+	push(@list1, $list);
+    } elsif ($c le 'L') {
+	push(@list2, $list);
+    } elsif ($c le 'R') {
+	push(@list3, $list);
+    } elsif ($c le 'Z') {
+	push(@list4, $list);
+    }
+}
+
+output_packages(\@list1,'packages_1.html','0-9, A-F');
+output_packages(\@list2,'packages_2.html','G-L');
+output_packages(\@list3,'packages_3.html','M-R');
+output_packages(\@list4,'packages_4.html','S-Z');
+
+# Read old statistics file
+if (-f $statistics_file) {
+    ($old_stat) = read_dpkg_control($statistics_file);
+}
+
+#foreach (keys %old_stat) { print "old stat $_: $old_stat{$_}\n"; };
+
+# Calculate changes
+my $delta_num_maint = sprintf "%+d",$num_maint-$old_stat->{'maintainers'};
+my $delta_num_srcpkg = sprintf "%+d",$num_srcpkg-$old_stat->{'source-packages'};
+my $delta_num_binpkg = sprintf "%+d",$num_binpkg-$old_stat->{'binary-packages'};
+my $delta_num_warnings = sprintf "%+d",$num_warnings-$old_stat->{'warnings'};
+my $delta_num_errors = sprintf "%+d",$num_errors-$old_stat->{'errors'};
+my $delta_num_experimental = sprintf "%+d",$num_experimental-$old_stat->{'experimental'};
+my $delta_num_overridden = sprintf "%+d",$num_overridden-$old_stat->{'overridden'};
+
+# update statistics file
+my $stat;
+$stat->{'last-updated'} = $timestamp;
+$stat->{'mirror-timestamp'} = $mirror_timestamp;
+$stat->{'maintainers'} = $num_maint;
+$stat->{'source-packages'} = $num_srcpkg;
+$stat->{'binary-packages'} = $num_binpkg;
+$stat->{'warnings'} = $num_warnings;
+$stat->{'errors'} = $num_errors;
+$stat->{'experimental'} = $num_experimental;
+$stat->{'overridden'} = $num_overridden;
+$stat->{'lintian-version'} = $LINTIAN_VERSION;
+open(OUT,">$statistics_file")
+    or die "cannot open statistics file $statistics_file for writing: $!";
+for my $k (keys %$stat) {
+  printf OUT "%s: %s\n",$k,$stat->{$k};
+}
+close(OUT);
+
+# create index page
+open(OUT,">$HTML_TMP_DIR/report-index.html")
+    or die "cannot open index page $HTML_TMP_DIR/report-index.html for writing: $!";
+print OUT <<"EOT_EOT_EOT";
+<html>
+<head>
+  <title>Lintian</title>
+</head>
+<body background="bg.gif">
+
+<img align="left" src="logo.gif" alt="Lintian" width=300 height=200>
+
+<H1>Lintian</H1>
+
+<p>Lintian dissects <a href="http://www.debian.org/">Debian</a>
+<a href="http://packages.debian.org/">packages</a> and reports bugs
+and policy violations. It contains automated checks for many aspects
+of <a href="http://www.debian.org/doc/debian-policy/">Debian policy</a>
+as well as some checks for common errors.</p>
+
+<p>For more information, see the <a href="manual/index.html">User
+Manual</a>.</p>
+
+<p>Lintian is available in the
+<a href="http://packages.debian.org/lintian">lintian package</a>.</p>
+
+<hr size=1>
+
+<p>The following Lintian report indices are available:</p>
+
+<ul>
+  <li><strong><a href="reports/maintainers.html">Maintainers</a></strong></li>
+
+  <li><strong><a href="reports/tags.html">Tag types</a></strong></li>
+
+  <li><strong>Packages that have names starting with:</strong>
+    <ul>
+      <li><a href="reports/packages_1.html">0-9, A-F</a>
+      <li><a href="reports/packages_2.html">G-L</a>
+      <li><a href="reports/packages_3.html">M-R</a>
+      <li><a href="reports/packages_4.html">S-Z</a>
+    </ul>
+  </li>
+</ul>
+
+<p>Statistics:</p>
+
+<blockquote>
+<table>
+<tr><td>Last updated:</td>			<td>$timestamp</td></tr>
+<tr><td>Archive timestamp:</td>			<td>$mirror_timestamp</td></tr>
+<tr><td>Distribution/section/architecture:</td>	<td>$LINTIAN_DIST / $LINTIAN_SECTION / $LINTIAN_ARCH</td></tr>
+<tr><td>Maintainers listed:</td>		<td>$num_maint ($delta_num_maint)</td></tr>
+<tr><td>Source packages listed:</td>		<td>$num_srcpkg ($delta_num_srcpkg)</td></tr>
+<tr><td>Binary packages listed:</td>		<td>$num_binpkg ($delta_num_binpkg)</td></tr>
+<tr><td>Warnings:</td>				<td>$num_warnings ($delta_num_warnings)</td></tr>
+<tr><td>Errors:</td>				<td>$num_errors ($delta_num_errors)</td></tr>
+<tr><td>Experimental tags:</td>			<td>$num_experimental ($delta_num_experimental)</td></tr>
+<tr><td>Overridden tags:</td>			<td>$num_overridden ($delta_num_overridden)</td></tr>
+<tr><td>Lintian version:</td>			<td>$LINTIAN_VERSION</td></tr>
+</table>
+</blockquote>
+
+<p>(The numbers in parentheses describe the changes since the last Lintian
+report, published on $old_stat->{'last-updated'}.)</td>
+
+<!-- 
+<H1>Other Reports</H1>
+
+<H3><a href="reports/depcheck.html">Dependency problem reports</a></H3>
+
+<p>A list of package dependencies that cannot be satisfied, for each architecture:
+<a href="reports/depcheck.html#i386">i386</a>,
+<a href="reports/depcheck.html#m68k">m68k</a>,
+<a href="reports/depcheck.html#alpha">alpha</a>,
+<a href="reports/depcheck.html#sparc">sparc</a>,
+<a href="reports/depcheck.html#powerpc">powerpc</a>,
+<a href="reports/depcheck.html#arm">arm</a>,
+<a href="reports/depcheck.html#hurd-i386">hurd-i386</a>.
+-->
+$close_text
+EOT_EOT_EOT
+close(OUT);
+
+exit 0;
+
+# -------------------------------
+
+sub open_maintainer_index {
+    open(I,">$HTML_TMP_DIR/maintainers.html") or die "$!";
+    print I "<html><head><title>Lintian report, sorted by maintainers</title></head>\n";
+    print I "<body>\n";
+    print I "<h1>Lintian report, sorted by maintainers</h1>\n";
+}
+
+sub close_maintainer_index {
+    print I $close_text;
+    close(I);
+}
+
+sub list_maintainer {
+    print I "\n<a href=\"$_[0]\">$_[1]</a><P>\n";
+    $num_maint++;
+}
+
+# -------------------------------
+
+sub open_tag_index {
+    open(T,">$HTML_TMP_DIR/tags.html") or die "$!";
+    print T "<HTML><HEAD><TITLE>Lintian report, sorted by tags</TITLE></HEAD>\n";
+    print T "<BODY>\n";
+    print T "<H1>Lintian report, sorted by tags</H1>\n";
+}
+
+sub close_tag_index {
+    print T $close_text;
+    close(T);
+}
+
+sub list_tag {
+    my ($ts, $ps);
+
+    $ts = 's' if $_[1] != 1;
+    $ps = 's' if $_[2] != 1;
+    print T "\n" . make_tagref($_[0]) . " ($_[2] package$ps, $_[1] tag$ts)<P>\n";
+}
+
+# -------------------------------
+
+my $maint = "";
+my $maint_file = "";
+
+sub open_maintainer {
+    return if $_[0] eq $maint_file;
+    close_maintainer();
+
+    $maint_file = $_[0];
+    open(P,">$HTML_TMP_DIR/$maint_file") or die "$!";
+    
+    my $t = quotehtml($maint);
+
+    print P "<html><head><title>Lintian report for $t</title></head>\n";
+    print P "<body>\n";
+    print P "<h2>Lintian report for</h2>\n";
+    print P "<h1>$t</h1>\n";
+
+    list_maintainer($maint_file, $t);
+}
+
+sub set_maintainer {
+    return if $_[0] eq $maint;
+
+    $maint = $_[0];
+
+    my $file = $maint;
+    if ($file) {
+	$file =~ s/^(.+)\<.*$/$1/;
+	$file =~ tr/A-Za-z0-9_.,/_/c;
+	$file =~ s/^_//g;
+	$file =~ s/_$//g;
+
+	$file = "m$file.html";
+    } else {
+	$file = "munsorted.html";
+    }
+
+    open_maintainer($file);
+}
+
+sub drop_anchor {
+    my ($anch, $text) = @_;
+    my $key = $anch;
+
+    if (exists $anchor{$key}) {
+	print P $text;
+    } else {
+	$anch =~ tr/-/_/;  # dashes don't work correctly in anchors
+	print P "<A name=\"$anch\">$text</a>";
+
+	$anchor{$key} = "$maint_file#$anch";
+    }
+}
+
+sub make_anchor {
+    my $key = shift;
+    if ($anchor{$key}) {
+	return "<a href=\"$anchor{$key}\">$key</a>";
+    } else {
+	return $key;
+    }
+}
+    
+sub close_maintainer {
+    return if not $maint_file;
+
+    print P $close_text;
+    close(P);
+
+    undef $maint_file;
+}
+
+# -------------------------------
+
+sub new_src_package {
+    my ($src, $ver) = @_;
+
+    print P "\n<p> <hr> <p> <h2>";
+    drop_anchor($src, "Source package: $src ($ver)");
+    print P "</h2><p>\n";
+
+    $num_srcpkg++;
+    $src_num_errors = 0;
+    $src_num_warnings = 0;
+}
+
+sub end_src_package {
+    my ($src) = @_;
+
+    list_qa_entry($src, $src_num_errors, $src_num_warnings);
+}
+
+# -------------------------------
+
+sub open_qa_list {
+    open(Q,">$HTML_TMP_DIR/qa-list.txt") or die "$!";
+}
+
+sub close_qa_list {
+    close(Q);
+}
+
+sub list_qa_entry {
+    my ($src, $errs, $warns) = @_;
+    print Q "$src $errs $warns\n";
+}
+
+# -------------------------------
+
+sub open_tag_file {
+    my $tag = shift;
+
+    open(P,">$HTML_TMP_DIR/T$tag.html") or die "$!";
+    print P "<HTML><HEAD><TITLE>Lintian report for $tag</TITLE></HEAD>\n";
+    print P "<BODY>\n";
+    print P "<H2>Lintian report for</H2>\n";
+    print P "<H1>$tag</H1>\n";
+
+    # print explanation about tag, if available
+    if ($tag_info{$tag}) {
+	print P "<P><blockquote>\n";
+	print P wrap_paragraphs('HTML', '',$tag_info{$tag}),"\n";
+	print P "</blockquote><P>\n";
+    } else {
+	warn "Can't find info for tag $tag.\n";
+    }
+
+    print P "<HR>\n";
+}
+
+sub close_tag_file {
+    print P $close_text;
+    close(P);
+}
+
+sub make_tagref {
+    return "<a href=\"T$_[0].html\">$_[0]</a>";
+}
+
+# -------------------------------
+
+sub output_chunk {
+    my ($pbuf) = @_;
+
+    my $count = $#$pbuf+1;
+    if ($count > $max_tags) {
+	splice(@$pbuf,$max_tags-1);
+	push(@$pbuf, sprintf("   ... reported %d more times\n",
+			     $count-($max_tags-1)));
+    }
+
+    print P "<PRE>\n  " . join('  ', @$pbuf) . "</PRE>\n";
+}
+
+sub output_packages {
+    my ($l,$f,$r) = @_;
+
+    open(I,">$HTML_TMP_DIR/$f") or die "$!";
+    print I "<HTML><HEAD><TITLE>Lintian report, sorted by packages ($r)</TITLE></HEAD>\n";
+    print I "<BODY>\n";
+    print I "<H1>Lintian report, sorted by packages ($r)</H1>\n";
+    print I "<a href=\"packages_1.html\">0-9, A-F</a> | <a href=\"packages_2.html\">G-L</a> | <a href=\"packages_3.html\">M-R</a> | <a href=\"packages_4.html\">S-Z</a><P>\n";
+
+    print I @$l;
+
+    print I $close_text;
+    close(I);
+}
+
+# -------------------------------
+
+my %bugs;
+
+sub read_bug_file {
+    undef %bugs;
+    open(B,$_[0]) or die "cannot open file $_[0] for reading: $!";
+    while (<B>) {
+	chop;
+	next if /^\s*$/;
+	/^\#(\d+):\s+(.*\S)\s*$/ or die "syntax error in $_[0]: $_";
+	$bugs{$2} = $1;
+    }
+    close(B);
+}
+
+sub bug_number {
+    return $bugs{$_[0]};
+}
+
+sub make_bugref {
+    my $bugnum = shift;
+    my $bugdir = substr($bugnum, 0, 2);
+
+    return "<a href=\"http://www.debian.org/Bugs/db/$bugdir/$bugnum.html\">"
+	. "\#$bugnum</a>";
+}
+
+# -------------------------------
+
+sub by_maint {
+  $source_info{$a}->{'maintainer'} cmp $source_info{$b}->{'maintainer'};
+}
+
+sub by_tag {
+  substr($a,3) cmp substr($b,3);
+}
+
+sub quotehtml {
+    $_ = $_[0] . '';
+    s/&/\&amp;/g;
+    s/</\&lt;/g;
+    s/>/\&gt;/g;
+    return $_;
+}

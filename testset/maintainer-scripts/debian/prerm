@@ -1,0 +1,27 @@
+#!/bin/sh
+
+if [ "$1" != "upgrade" ]; then
+       update-alternatives --remove dummy /usr/bin/dummy-alternative
+fi
+
+if [ \( "$1" = "upgrade" -o "$1" = "remove" \) -a -L /usr/doc/maintainer-scripts ]; the
+n
+        rm -f /usr/doc/maintainer-scripts
+fi
+
+cat <<EOF
+This is all really bad bash specific code!!!
+read
+source /bar/baz/bat foo
+EOF
+
+# ok, back to checking
+if [ "$2" == "purge" ]; then
+	rm -r /bar/baz
+fi
+
+function foo( ) {
+   echo "foo"
+}
+
+source $FOO

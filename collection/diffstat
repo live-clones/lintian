@@ -1,0 +1,82 @@
+#!/usr/bin/perl -w
+# diffstat -- lintian collection script for source packages
+
+# Copyright (C) 1998 Richard Braakman
+# 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+# MA 02111-1307, USA.
+
+# This could be written more easily in shell script, but I'm trying
+# to keep everything as perl to cut down on the number of processes
+# that need to be started in a lintian scan.  Eventually all the
+# perl code will be perl modules, so only one perl interpreter
+# need be started.
+
+use strict;
+
+my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'} || '/usr/share/lintian';
+
+($#ARGV == 1) or fail("syntax: diffstat <pkg>");
+my $pkg = shift;
+
+-f "fields/version" or fail("diffstat invoked in wrong directory");
+
+open V, "fields/version" or fail("cannot open fields/version: $!");
+my $ver = <V>; chomp $ver;
+close V;
+
+my $diff_file = "${pkg}_${ver}.diff.gz";
+unless (-f $diff_file) {
+# we have to write an empty file so that the checks don't crap out. <sigh>
+  open D, ">diffstat"; close D;
+  exit 0;
+}
+
+use lib "$ENV{'LINTIAN_ROOT'}/lib";
+use Pipeline;
+pipeline((sub { exec('gzip', '-dc', $diff_file); }),
+         "debian-patch"
+        );
+
+open STAT, ">diffstat" or fail("cannot open scripts output file: $!");
+# diffstat is noisy on stderr if its stdout is not a tty.
+# Shut it up by redirecting stderr to /dev/null.
+open STDERR, ">/dev/null";
+open DIFF, "diffstat -p1 debian-patch |"
+  or fail("cannot open pipe to diffstat on debian-patch: $!");
+# Copy all except last line to the STAT file
+my $previous;
+while (<DIFF>) {
+    print STAT $previous if $previous;
+    $previous = $_;
+}
+close DIFF or fail("cannot close pipe to diffstat on debian-patch: $!");
+close STAT or fail("error writing diffstat file: $!");
+
+exit 0;
+
+# -----------------------------------
+
+sub fail {
+    if ($_[0]) {
+        print STDERR "internal error: $_[0]\n";
+    } elsif ($!) {
+        print STDERR "internal error: $!\n";
+    } else {
+        print STDERR "internal error.\n";
+    }
+    exit 1;
+}

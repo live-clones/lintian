@@ -1,0 +1,11 @@
+Source: manpages
+Section: misc
+Priority: optional
+Maintainer: Lintian Maintianer <lintian-maint@debian.org>
+Standards-Version: 3.2.1
+
+Package: manpages
+Architecture: all
+Depends: test
+Description: test lintian's manual page checks
+ Regression test lintian's manual page checks.

@@ -1,0 +1,110 @@
+#!/usr/bin/perl -w
+# md5sums -- lintian check script
+
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+# MA 02111-1307, USA.
+
+use strict;
+
+($#ARGV == 1) or fail("syntax: md5sums <pkg> <type>");
+my $pkg = shift;
+my $type = shift;
+
+my $control = "control/md5sums";
+
+my %control_entry;
+my %info_entry;
+my %conffile;
+
+# Is there a md5sums control file?
+unless (-f $control) {
+    # no, skip this package
+    exit 0;
+}
+
+# Is it empty?
+if (-z $control) {
+    print "E: $pkg $type: md5sums-control-file-is-empty\n";
+    exit 0;
+}
+
+# read in md5sums control file
+open(C, $control) or fail("cannot open md5sums control file $control: $!");
+while (<C>) {
+    chop;
+    next if m/^\s*$/;
+    m/^(\S+)\s*(\S.*)$/ or fail("syntax error in md5sums control file: $_");
+    $control_entry{$2} = $1;
+}
+close(C);
+
+# read in md5sums info file
+open(C, "md5sums") or fail("cannot open md5sums info file: $!");
+while (<C>) {
+    chop;
+    next if m/^\s*$/;
+    m/^(\S+)\s*(\S.*)$/ or fail("syntax error in md5sums info file: $_");
+    my $zzsum = $1;
+    my $zzfile = $2;
+    $zzfile =~ s,^(\./)?,,;
+    $info_entry{$zzfile} = $zzsum;
+}
+close(C);
+
+# read in conffiles
+if (-f "control/conffiles") {
+    open(C, "control/conffiles")
+	or fail("cannot open control file conffiles: $!");
+    while (<C>) {
+	chop;
+	next if m/^\s*$/;
+	s,^/,,;
+	$conffile{$_} = 1;
+    }
+    close(C);
+}
+
+for my $file (keys %control_entry) {
+
+    if (not exists $info_entry{$file}) {
+	print "E: $pkg $type: md5sums-lists-nonexisting-file $file\n";
+    } elsif ($info_entry{$file} ne $control_entry{$file}) {
+	print "E: $pkg $type: md5sum-mismatch $file\n";
+    }
+
+    delete $info_entry{$file};
+}
+for my $file (keys %info_entry) {
+    print "E: $pkg $type: file-missing-in-md5sums $file\n"
+	unless ($conffile{$file});
+}
+
+exit 0;
+
+# -----------------------------------
+
+sub fail {
+    if ($_[0]) {
+	warn "internal error: $_[0]\n";
+    } elsif ($!) {
+	warn "internal error: $!\n";
+    } else {
+	warn "internal error.\n";
+    }
+    exit 1;
+}

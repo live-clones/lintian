@@ -1,0 +1,28 @@
+# Hey emacs! This is a -*- Perl -*- script!
+# config -- configuration file for Lintian reporting harness
+
+$HOME = "/org/lintian.debian.org";
+$LINTIAN_ARCHIVEDIR = "/org/ftp.debian.org/ftp";
+$LINTIAN_DIST = "sid";
+$LINTIAN_SECTION = "main";
+$LINTIAN_ARCH = "i386";
+
+$LINTIAN_ROOT = "$HOME/root";
+$LINTIAN_LAB = "$HOME/laboratory";
+$LOG_DIR = "$HOME/logs";
+$HTML_DIR = "$HOME/www/reports";
+$HTML_TMP_DIR = "$HTML_DIR.new";
+$LINTIAN_CFG = "$LINTIAN_ROOT/reporting/lintian-dummy.cfg";  # this config file has to be empty!
+$LINTIAN_UNPACK_LEVEL = "";
+
+$log_file = "$LOG_DIR/harness.log";
+$changes_file = "$LOG_DIR/setup-lab.log";
+$list_file = "$LOG_DIR/changed-packages.list";
+$lintian_log = "$LOG_DIR/lintian.log";
+$old_lintian_log = "$LOG_DIR/lintian.log.old";
+$lintian_cmd = "$LINTIAN_ROOT/frontend/lintian";
+$html_reports_cmd = "$LINTIAN_ROOT/reporting/html_reports";
+$html_reports_log = "$LOG_DIR/html_reports.log";
+$statistics_file = "$LOG_DIR/statistics";
+
+1;

@@ -1,0 +1,388 @@
+Check-Script: fields
+Author: Richard Braakman <dark@xs4all.nl>
+Abbrev: fld
+Standards-Version: 3.2.0
+Type: binary, source
+Unpack-Level: 1
+Info: This script checks the syntax of the fields in package control files,
+ as described in the Policy Manual.
+
+Tag: no-package-name
+Type: error
+Info: The package does not have a `Package:' field in its control file.
+Ref: policy B.3
+
+Tag: bad-package-name
+Type: error
+Info: A package name should be at least two characters long, must consist
+ of the alphanumerics and `+' `-' and `.', and must start with an
+ alphanumeric character.
+Ref: policy 3.2.1
+
+Tag: package-not-lowercase
+Type: error
+Info: New packages should not use uppercase characters in their names.
+Ref: policy 3.2.1
+
+Tag: no-version-field
+Type: error
+Info: The package does not have a `Version:' field in its control file.
+Ref: policy B.3
+
+Tag: bad-version-number
+Type: error
+Info: The version number fails one of the syntactic requirements of dpkg.
+Ref: policy 4
+
+Tag: upstream-version-not-numeric
+Type: error
+Info: The upstream version number should start with a digit. 
+Ref: policy 4
+
+Tag: no-architecture-field
+Type: error
+Info: The package does not have an `Architecture:' field in its control file.
+Ref: policy B.3
+
+Tag: magic-arch-in-arch-list
+Type: error
+Info: The special architecture values `all' and `any' only make sense if
+ they occur alone.
+Ref:  policy D.2.3
+
+Tag: unknown-architecture
+Type: warning
+Info: In addition to the special values `all' and `any', the architecture
+ names i386, m68k, alpha, powerpc, and sparc are currently in use.
+ The special value `source' is only used in .changes files and does not
+ make sense in a binary package or a .dsc file.
+
+Tag: too-many-architectures
+Type: error
+Info: A binary package should list exactly one architecture (the one it is
+ compiled for), or the special value `all' if it is architecture-independent.
+Ref: policy D.2.3
+
+Tag: arch-any-in-binary-pkg
+Type: error
+Info: The special architecture value `any' does not make sense in a binary
+ package.
+Ref: policy D.2.3
+
+Tag: no-maintainer-field
+Type: error
+Info: The package does not have a `Maintainer:' field in its control file.
+Ref: policy 2.3.2
+Tested: empty
+
+Tag: maintainer-name-missing
+Type: error
+Info: The maintainer field seems to contain just an email address. It must
+ contain the package maintainer's name and email address.
+Ref: policy D.2.4
+
+Tag: maintainer-address-missing
+Type: error
+Info: The maintainer field should contain the package maintainer's name and
+ email address, with the name followed by the address inside angle
+ brackets (&lt; and &rt;).  The address seems to be missing.
+Ref: policy D.2.4
+
+Tag: maintainer-address-malformed
+Type: error
+Info: The maintainer field could not be parsed according to the rules in
+ the Policy Manual.
+Ref: policy D.2.4
+
+Tag: maintainer-not-full-name
+Type: warning
+Info: The `name' part of this maintainer field is just one word, so it
+ might not be a full name.
+
+Tag: maintainer-address-looks-weird
+Type: warning
+Info: The maintainer address does not have whitespace between the name
+ and the email address.
+
+Tag: maintainer-address-is-on-localhost
+Type: error
+Info: The maintainer address includes localhost(.localdomain), which is
+ an invalid e-mail address.
+Ref: policy D.2.4
+
+Tag: wrong-debian-qa-address-set-as-maintainer
+Type: error
+Info: Orphaned packages should no longer have the address
+ &lt;debian-qa@lists.debian.org&gt; in the Maintainer field.
+ .
+ The correct Maintainer field for orphaned packages is
+ Debian QA Group &lt;packages@qa.debian.org&gt;.
+Ref: devref 5.5.4
+
+Tag: no-source-field
+Type: error
+Info: The package does not have a `Source:' field in its control file.
+Ref: policy C.3
+
+Tag: source-field-does-not-match-pkg-name
+Type: error
+Info: The source package's filename is not the same as the name given
+ in its Source field.  The Source field should name the package.
+Ref: policy D.2.5
+
+Tag: source-field-malformed
+Type: error
+Info: In a binary package, the Source field should identify the source
+ package from which the package was compiled.  It should be the
+ source package name, optionally followed by a version number
+ between parentheses.
+Ref: policy D.2.5
+
+Tag: essential-in-source-package
+Type: error
+Info: This field should only appear in binary packages.
+Ref: policy D.2.8
+ 
+Tag: essential-no-not-needed
+Type: error
+Info: Having `Essential: no' is the same as not having the field at all,
+ so it just makes the Packages file longer with no benefit.
+Ref: policy D.2.8
+
+Tag: unknown-essential-value
+Type: error
+Info: The only valid values for the Essential field are yes and no.
+Ref: policy D.2.8
+
+Tag: no-section-field
+Type: warn
+Info: The package does not have a `Section:' field in its control file.
+ .
+ The Section field can be included in a binary package by passing
+ the -is or -isp flags to dpkg-gencontrol when building the package.
+ The field is optional in binary packages.
+Ref: policy D.2.9
+
+Tag: unknown-section
+Type: warning
+Info: The `Section:' field in this package's control file is not one of
+ the sections in use on the ftp archive.  Valid sections are currently
+ admin, base, comm, devel, doc, editors, electronics, games, graphics,
+ hamradio, interpreters, libs, mail, math, misc, net, news, oldlibs,
+ otherosfs, science, shells, sound, tex, text, utils, web, and x11.
+ .
+ The section name should be preceded by `non-free/' if the package
+ is in the non-free distribution, and by `contrib/' if the package
+ is in the contrib distribution.
+Ref: policy D.2.9
+
+Tag: no-priority-field
+Type: warn
+Info: The package does not have a `Priority:' field in its control file.
+ .
+ The Priority field can be included in a binary package by passing
+ the -ip or -isp flags to dpkg-gencontrol when building the package.
+ The field is optional in binary packages.
+Ref: policy D.2.9
+
+Tag: unknown-priority
+Type: error
+Info: The `Priority:' field in this package's control file is not one of
+ the priorities defined in the Policy Manual.
+Ref: policy 2.2
+
+Tag: obsolete-field
+Type: error
+Info: This is one of the fields listed in Policy Manual as obsolete.
+Ref: policy D.2.24
+
+Tag: unknown-field-in-dsc
+Type: info
+Info: See the Policy Manual for a list of the possible fields in
+ a source package control file.
+Ref: policy C.3 
+
+Tag: unknown-field-in-control
+Type: info
+Info: See the Policy Manual for a list of the possible fields in
+ a binary package control file.
+Ref: policy B.3 
+
+Tag: multiline-field
+Type: error
+Info: Most control fields must have only a single line of data.
+Ref: policy 3.1
+
+Tag: alternates-not-allowed
+Type: error
+Info: Only the `Depends', `Recommends', `Suggests' and `Pre-Depends'
+ fields may specify alternate dependencies using the `|' symbol.
+Ref: policy 7.1
+
+Tag: versioned-provides
+Type: error
+Ref: policy 7.1
+Info: The `Provides' field may not specify a version range.
+
+Tag: obsolete-relation-form
+Ref: policy 7.1
+Type: warning
+Info: The forms `&lt;' and `&gt;' mean `&lt;=' and `&gt;=', not `&lt;&lt;'
+ and `&gt;&gt;' as one might expect.  For that reason these forms are
+ obsolete, and should not be used in new packages.  Use the longer forms
+ instead.
+
+Tag: bad-version-in-relation
+Ref: policy 4
+Type: warning
+Info: The version number used in this relationship does not match the
+ defined format of a version number.
+
+Tag: package-relation-with-self
+Type: warning
+Info: The package declares a relationship with itself.  This is not very
+ useful, except in the case of a package Conflicting with itself, if its
+ package name doubles as a virtual package.
+
+Tag: bad-relation
+Type: error
+Info: The package declares a relationship that could not be parsed according
+ to the rules given in the Policy Manual.
+Ref: policy 7.1
+
+Tag: new-essential-package
+Type: warning
+Info: This package has the Essential flag set.  New Essential packages
+ are sufficiently rare that it seems worth warning about.  They should
+ be discussed on debian-devel first.
+Ref: policy 2.3.7
+
+Tag: non-us-spelling
+Type: info
+Info: Although non-us works for a section name, non-US is preferred
+
+Tag: doc-package-depends-on-main-package
+Type: warning
+Info: The name of this package suggests that it is a documentation package.
+ It is usually not desirable for documentation packages to depend on the
+ packages they document, because users may want to install the docs before
+ they decide whether they want to install the package.  Also, documentation
+ packages are often architecture-independent, so on other architectures
+ the package on which it depends may not even exist.
+
+Tag: depends-on-obsolete-package
+Type: error
+Info: The package depends on a package that has been superseded.
+
+Tag: depends-on-essential-package-without-using-version
+Type: error
+Ref: policy 2.3.4
+Info: The package declares a depends on an essential package i.e. dpkg without
+ using a versioned depends.  In general a package should not depend on
+ essential packages but if it must do so, the depends should have a version
+ string.
+
+Tag: virtual-package-depends-without-real-package-depends
+Type: warning
+Ref: policy 7.4
+Info: The package declares a depends on a virtual package without listing a
+ real package as an alternative first.
+ .
+ A real package should be listed in the first part of the | dependency in
+ order for the package to be installable by package management programs that
+ can't or won't guess which alternative to select by default. In particular,
+ it helps build daemons rebuild the package without manual overrides.
+
+Tag: invalid-arch-string-in-source-relation
+Type: error
+Ref: policy 7.6
+Info: The architecture string in the source relation does not follow policy.
+ A common cause of this is a comma in the arch, i.e. [i386, m68k], it should
+ be [i386 m68k].
+
+Tag: depends-on-build-essential-package-without-using-version
+Type: error
+Info: The package declares a depends on a build essential package without
+ using a versioned depends.  In general a package should not depend on
+ build essential packages but if it must do so, the depends should have a
+ version string.
+
+Tag: package-depends-on-an-x-font-package
+Type: error
+Info: Packages must not depend on X Window System font packages.
+ .
+ If one or more of the fonts so packaged are necessary for proper operation
+ of the package with which they are associated the font package may be
+ Recommended; if the fonts merely provide an enhancement, a Suggests
+ relationship may be used.
+Ref: policy 12.8.5
+
+Tag: build-depends-without-arch-dep
+Type: warning
+Ref: policy 7.6
+Info: The control file specifies source relations for architecture-dependent
+ packages, but no architecture-dependent packages are built.  Most likely
+ you need to change Build-Depends to Build-Depends-Indep.
+
+Tag: build-depends-indep-without-arch-indep
+Type: error
+Ref: policy 7.6
+Info: The control file specifies source relations for architecture-independent
+ packages, but no architecture-independent packages are built.
+
+Tag: package-has-a-duplicate-relation
+Type: error
+Info: The package seems to declare a relation on another package which is
+ already implied by other relations it declares, and is therefore redundant.
+ This is not only sloppy but can break some tools.
+
+Tag: needlessly-depends-on-awk
+Type: error
+Info: The package seems to declare a relation on awk. awk is a virtual
+ package, but it is special since it's de facto essential. If you don't
+ need to depend on a specific version of awk (which wouldn't work anyway,
+ as dpkg doesn't support versioned provides), you should remove the
+ dependency on awk.
+
+Tag: package-depends-on-multiple-libstdc-versions
+Type: error
+Info: The package seems to declare several relations to a libstdc version.
+ This is not only sloppy but in the case of libraries, it may well break
+ the runtime execution of programs.
+
+Tag: package-depends-on-multiple-tcl-versions
+Type: error
+Info: The package seems to declare several relations to a tcl version.
+ This is not only sloppy but in the case of libraries, it may well break
+ the runtime execution of programs.
+
+Tag: package-depends-on-multiple-tclx-versions
+Type: error
+Info: The package seems to declare several relations to a tclx version.
+ This is not only sloppy but in the case of libraries, it may well break
+ the runtime execution of programs.
+
+Tag: package-depends-on-multiple-tk-versions
+Type: error
+Info: The package seems to declare several relations to a tk version.
+ This is not only sloppy but in the case of libraries, it may well break
+ the runtime execution of programs.
+
+Tag: package-depends-on-multiple-tkx-versions
+Type: error
+Info: The package seems to declare several relations to a tkx version.
+ This is not only sloppy but in the case of libraries, it may well break
+ the runtime execution of programs.
+
+Tag: package-depends-on-multiple-libpng-versions
+Type: error
+Info: The package seems to declare several relations to a libpng version.
+ This is not only sloppy but in the case of libraries, it may well break
+ the runtime execution of programs.
+
+Tag: depends-on-libdb1-compat
+Type: error
+Info: The package seems to declare a relation on libdb1-compat.
+ This library exists for compatibility with applications built against
+ glibc 2.0 or 2.1. There is intentionally no corresponding development
+ package. Do not link new applications against this library!

@@ -1,0 +1,101 @@
+W: filenames source: ancient-standards-version 3.1.1
+N:
+N:   The source package refers to a `Standards-Version' older than one
+N:   year. Please update your package to latest policy and set this control
+N:   field appropriately.
+N:   
+N:   If the package is already compliant with the current standards, you
+N:   don't have to re-upload the package just to adjust the
+N:   Standards-Version control field. However, please remember to update
+N:   this field next time you upload the package.
+N:
+E: filenames: non-standard-toplevel-dir files/
+N:
+N:   The Filesystem Hierarchy Standard forbids the installation of new
+N:   files or directories in the root directory, in section 3.
+N:
+W: filenames: file-in-unusual-dir files/ .tif
+N:
+N:   This file or symbolic link is in a directory where files are not
+N:   normally installed by Debian packages. If this is deliberate, please
+N:   contact lintian-maint@debian.org to make Lintian accept this as a
+N:   usual directory.
+N:
+W: filenames: file-in-unusual-dir files/".tif
+W: filenames: file-in-unusual-dir files/'\\ 
+W: filenames: file-in-unusual-dir files/Maelstrom Sound
+E: filenames: package-installs-packlist usr/lib/perl5/foo/.packlist
+N:
+N:   Packages built using the perl MakeMaker package will have a file named
+N:   .packlist in them. Those files are useless, and (in some cases) have
+N:   the additional problem of creating an architecture-specific directory
+N:   name in an architecture-independent package.
+N:   
+N:   They can be suppressed by adding the following to debian/rules:
+N:   
+N:   find debian/tmp -type f -name .packlist | xargs rm -f
+N:   
+N:   -find debian/tmp/usr/lib/perl5 -type d -empty | xargs rmdir -p
+N:   
+N:   Or by telling MakeMaker to use vendor install dirs; consult a recent
+N:   version of perl policy. Perl 5.6.0-12 or higher supports this.
+N:
+W: filenames: lengthy-symlink usr/share/doc/filenames/version.txt.gz ../filenames/doc/version6.txt.gz
+N:
+N:   This link goes up, and then back down into the same subdirectory.
+N:   Making it shorter will improve its chances of finding the right file
+N:   if the user's system has lots of symlinked directories.
+N:   
+N:   Refer to Policy Manual, section 11.5 for details.
+N:
+E: filenames: bad-menu-file-name usr/lib/menu/menu
+N:
+N:   The package installs a file /usr/lib/menu/menu, which is already in
+N:   use by the menu package itself. The menu file should be named after
+N:   the package that installs it.
+N:
+E: filenames: postinst-does-not-call-updatemenus usr/lib/menu/menu
+N:
+N:   Since the package installs a file in either /usr/lib/menu or
+N:   /etc/menu-methods, the package should probably call the update-menus
+N:   command in it's postinst script.
+N:   
+N:   For example, use the following code in your maintainer script:
+N:    if [ -x /usr/bin/update-menus ] ; then update-menus ; fi
+N:
+E: filenames: postrm-does-not-call-updatemenus usr/lib/menu/menu
+N:
+N:   Since the package installs a file in either /usr/lib/menu or
+N:   /etc/menu-methods, the package should probably call the update-menus
+N:   command in it's postrm script.
+N:   
+N:   For example, use the following code in your maintainer script:
+N:    if [ -x /usr/bin/update-menus ] ; then update-menus ; fi
+N:
+E: filenames: no-copyright-file
+N:
+N:   Each binary package has to include a plain file
+N:   /usr/share/doc/<pkg>/copyright
+N:   
+N:   Refer to Policy Manual, section 13.5 for details.
+N:
+W: filenames: no-section-field
+N:
+N:   The package does not have a `Section:' field in its control file.
+N:   
+N:   The Section field can be included in a binary package by passing the
+N:   -is or -isp flags to dpkg-gencontrol when building the package. The
+N:   field is optional in binary packages.
+N:   
+N:   Refer to policy D.2.9 for details.
+N:
+W: filenames: no-priority-field
+N:
+N:   The package does not have a `Priority:' field in its control file.
+N:   
+N:   The Priority field can be included in a binary package by passing the
+N:   -ip or -isp flags to dpkg-gencontrol when building the package. The
+N:   field is optional in binary packages.
+N:   
+N:   Refer to policy D.2.9 for details.
+N:

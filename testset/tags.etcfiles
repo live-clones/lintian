@@ -1,0 +1,5 @@
+W: etcfiles source: ancient-standards-version 3.5.0
+E: etcfiles: file-in-etc-not-marked-as-conffile /etc/proper
+E: etcfiles: file-in-etc-not-marked-as-conffile /etc/improper
+E: etcfiles: no-copyright-file
+E: etcfiles: changelog-file-not-compressed changelog

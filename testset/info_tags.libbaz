@@ -1,0 +1,25 @@
+W: libbaz source: ancient-standards-version 3.2.1
+N:
+N:   The source package refers to a `Standards-Version' older than one
+N:   year. Please update your package to latest policy and set this control
+N:   field appropriately.
+N:   
+N:   If the package is already compliant with the current standards, you
+N:   don't have to re-upload the package just to adjust the
+N:   Standards-Version control field. However, please remember to update
+N:   this field next time you upload the package.
+N:
+W: libbaz1: postinst-should-not-set-usr-doc-link
+N:
+N:   The technical committee chose the symlink transition method to move
+N:   from FSSTND to FHS. That transition has been completed with woody and
+N:   thus this link is no longer required.
+N:
+E: libbaz1: maintainer-shell-script-fails-syntax-check postinst
+N:
+N:   Running this shell script with the shell's -n option set fails, which
+N:   means that the script has syntax errors. This will likely make the
+N:   package uninstallable.
+N:   
+N:   Run e.g. sh -n yourscript to see the errors yourself.
+N:

@@ -1,0 +1,139 @@
+Check-Script: copyright-file
+Author: Christian Schwarz <schwarz@debian.org>
+Abbrev: cpy
+Standards-Version: 3.2.0
+Type: binary
+Unpack-Level: 1
+Needs-Info: copyright-file
+Info: This script checks if a binary package conforms to policy
+ with regard to copyright files.
+ .
+ Each binary package must either have a /usr/share/doc/<foo>/copyright file
+ or must have a symlink /usr/share/doc/<foo> -> <bar>, where <bar> comes
+ from the same source package and pkg foo declares a "Depends" relation
+ on bar.
+
+Tag: no-copyright-file
+Type: error
+Severity: Important
+Info: Each binary package has to include a plain file
+ /usr/share/doc/<i>pkg</i>/copyright
+Ref: policy 13.5
+Tested: empty
+
+Tag: copyright-refers-to-old-directory
+Type: error
+Info: The common licenses (GPL, BSD, Artistic, etc) have been moved from
+ /usr/doc/copyright to /usr/share/common-licenses.
+ Copyright files should be updated.
+Ref: policy 13.5
+
+Tag: copyright-file-compressed
+Type: error
+Info: The copyright file /usr/share/doc/<i>pkg</i>/copyright must not be
+ compressed
+Ref: policy 13.5
+
+Tag: copyright-file-is-symlink
+Type: error
+Info: The copyright file /usr/share/doc/<i>pkg</i>/copyright must not be a
+ symbolic link
+Ref: policy 13.5
+
+Tag: copyright-file-contains-full-gpl-license
+Type: error
+Info: The copyright file /usr/share/doc/<i>pkg</i>/copyright contains the
+ complete text of the GPL.  It should refer to the file
+ <tt>/usr/share/common-licenses/GPL</tt> instead.
+Ref: policy 13.5
+
+Tag: usr-doc-symlink-without-dependency
+Type: error
+Info: If the package installs a symbolic link /usr/share/doc/<i>pkg1</i> -&gt;
+ <i>pkg2</i>, then <i>pkg1</i> has to depend on <i>pkg2</i>.
+ .
+ Note, that adding the "Depends:" entry just to fix this bug is not a good
+ solution. It's suggested that you include a real /usr/share/doc/<i>pkg1</i>
+ directory within <i>pkg1</i> and copy the copyright file into that directory.
+Ref: policy 13.5
+
+Tag: usr-doc-symlink-to-foreign-package
+Type: error
+Info: If the package installs a symbolic link /usr/share/doc/<i>pkg1</i> -&gt;
+ <i>pkg2</i>, then <i>pkg1</i> and <i>pkg2</i> must both come from the same
+ source package.
+ .
+ It's suggested that you include a real /usr/share/doc/<i>pkg1</i> directory
+ within <i>pkg1</i> and copy the copyright file to that directory.
+Ref: policy 13.5
+
+Tag: old-style-copyright-file
+Type: error
+Info: The package installs a /usr/doc/copyright/<i>pkg</i> file. Instead,
+ you should place the copyright file in /usr/share/doc/<i>pkg</i>/copyright.
+Ref: policy 13.5
+
+Tag: old-fsf-address-in-copyright-file
+Type: error
+Info: The /usr/share/doc/<i>pkg</i>/copyright file refers to the old postal
+ address of the Free Software Foundation (FSF). The new address is:
+ .
+   Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+   MA 02111-1307, USA.
+
+Tag: helper-templates-in-copyright
+Type: error
+Severity: Important
+Info: The /usr/share/doc/<i>pkg</i>/copyright file still contains the template
+ contents from a packaging helper. Please include the actual license and
+ download information about the package.
+
+Tag: copyright-refers-to-compressed-license
+Type: error
+Info: The /usr/share/doc/<i>pkg</i>/copyright file refers to a standard license
+ /usr/share/common-licenses/{GPL,LGPL,Artistic,BSD}.gz as a compressed
+ file. Please update the reference (the licenses are installed
+ uncompressed).
+
+Tag: usr-doc-symlink-points-outside-of-usr-doc
+Type: error
+Info: The /usr/share/doc/<i>pkg</i> symbolic link is pointing to a directory
+ outside of <tt>/usr/share/doc</tt>.
+Ref: policy 13.5
+
+Tag: copyright-does-not-refer-to-common-license-file
+Type: warning
+Info: If your package uses any one of the licenses in
+ <tt>/usr/share/common-licenses</tt>, the copyright file should refer to
+ files therein.
+
+Tag: copyright-refers-to-incorrect-directory
+Type: error
+Ref: policy 13.5
+Info: In the directory name /usr/share/common-licenses, licenses is spelled
+ with an `s', not with as licences with a `c'.
+
+Tag: copyright-file-lacks-pointer-to-perl-license
+Type: error
+Ref: policy 13.5
+Info: If your package is released under the same terms as Perl itself,
+ it should either refer to the Artistic and GPL license files in the
+ <tt>/usr/share/common-licenses</tt> directory, or to the
+ <tt>/usr/share/doc/perl/copyright</tt> file.
+
+Tag: copyright-should-refer-to-common-license-file-for-gpl
+Type: error
+Ref: policy 13.5
+Info: Packages distributed under the GNU GPL must make reference to
+ /usr/share/common-licenses as the location of the GPL on Debian systems.
+
+Tag: copyright-lists-upstream-authors-with-dh_make-boilerplate
+Type: warning
+Info: There is "Upstream Author(s)" in your copyright file. This was most
+ likely a remnant from the dh_make template.
+ .
+ There's either one upstream author, in which case you should remove the
+ "(s)", or there are several upstream authors, in which case you should
+ remove the "(" and ")".
+ .
+ o/~ join us now and carefully edit debian/copyright files! o/~

@@ -1,0 +1,73 @@
+#!/usr/bin/perl
+# unpack-srcpkg-l1 -- lintian unpack script (source packages level 1)
+#
+# syntax: unpack-srcpkg-l1 <base-dir> <dsc-file>
+#
+# Note, that <dsc-file> must be specified with absolute path.
+
+# Copyright (C) 1998 Christian Schwarz
+# 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+# MA 02111-1307, USA.
+
+use strict;
+
+($#ARGV == 1) or die "syntax: unpack-srcpkg-l1 <base-dir> <dsc-file>";
+my $base_dir = shift;
+my $file = shift;
+
+# import perl libraries
+use lib "$ENV{'LINTIAN_ROOT'}/lib";
+use Util;
+
+use File::Basename;
+
+# stat $file
+(my @stat = stat $file) or fail("$file: cannot stat: $!");
+
+# get package control information
+my $data = get_dsc_info($file);
+
+# create directory in lab
+print "N: Creating directory $base_dir ...\n" if $::verbose;
+mkdir("$base_dir", 0777) or fail("mkdir $base_dir: $!");
+mkdir("$base_dir/fields", 0777) or fail("mkdir $base_dir/fields: $!");
+
+# create control field files
+for my $field (keys %$data) {
+  my $field_file = "$base_dir/fields/$field";
+  open(F,">$field_file") or fail("cannot open file $field_file for writing: $!");
+  print F $data->{$field},"\n";
+  close(F);
+}
+
+# Install symbolic links to source package files
+my $dir = dirname($file);
+my $name = basename($file);
+symlink($file,"$base_dir/dsc") or fail("cannot symlink dsc file: $!");
+for my $fs (split(/\n/,$data->{'files'})) {
+  next if $fs =~ /^\s*$/o;
+  my @t = split(/\s+/o,$fs);
+  symlink("$dir/$t[2]","$base_dir/$t[2]") or fail("cannot symlink file $t[2]: $!");
+}
+
+# Create symbolic links to binary packages
+mkdir("$base_dir/binary", 0777) or fail("mkdir $base_dir/binary: $!");
+for my $bin (split(/,\s+/o,$data->{'binary'})) {
+  symlink("../../../binary/$bin", "$base_dir/binary/$bin") or fail("cannot symlink binary package $bin: $!");
+}
+
+exit 0;

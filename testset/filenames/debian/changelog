@@ -1,0 +1,32 @@
+filenames (5) unstable; urgency=low
+
+  * Added check for too long symlink
+
+ -- Sean 'Shaleh' Perry <shaleh@debian.org>  Wed,  3 Jan 2001 13:20:31 -0800
+
+filenames (4) unstable; urgency=low
+
+  * Add /usr/lib/menu/menu file to test the bad-menu-file-name tag.
+  * Add /usr/lib/menu/README to test the new execption for it.
+
+ -- Richard Braakman <dark@xs4all.nl>  Thu, 22 Oct 1998 15:42:52 +0200
+
+filenames (3) unstable; urgency=low
+
+  * Don't rely on the installer's umask.
+
+ -- Richard Braakman <dark@xs4all.nl>  Thu, 20 Aug 1998 12:45:47 +0200
+
+filenames (2) unstable; urgency=low
+
+  * Noted more limitations on what filenames lintian handles.
+  * Added Changes.gz in /usr/doc/filenames and made a symlink from changelog.gz
+    to Changes.gz.
+
+ -- Richard Braakman <dark@xs4all.nl>  Sat,  4 Jul 1998 15:46:11 +0200
+
+filenames (1) unstable; urgency=low
+
+  * Initial version
+
+ -- Richard Braakman <dark@xs4all.nl>  Sat,  4 Jul 1998 15:25:01 +0200

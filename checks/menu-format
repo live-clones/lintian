@@ -1,0 +1,499 @@
+#!/usr/bin/perl -w
+# menu format -- lintian check script
+
+# Copyright (C) 1998 by Joey Hess
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+# MA 02111-1307, USA.
+
+use strict;
+
+# This is a list of all tags that should be in every menu item.
+my @req_tags=qw(needs section title command);
+
+# This is a list of all known tags.
+my @known_tags=qw(needs section title sort command longtitle icon description hotkey hints);
+
+# This is a list of all known uses of the needs= tag.
+# (It's case insensitive, use lower case here.).
+my @needs_tag_vals=qw(x11 text vc asmodule fvwmmodule fvwm2module fvwm95module
+		      fvwmother wm dwww wmaker);
+
+# This is a list of all valid section on the root menu.
+my @root_sections=qw(Apps Games Screen WindowManagers XShells Help);
+
+# This is a list of all valid sections a menu item or submenu can go in.
+my @sections=qw(
+		Apps/Databases
+		Apps/Editors
+		Apps/Emulators
+		Apps/Graphics
+		Apps/Hamradio
+		Apps/Math
+		Apps/Net
+		Apps/Programming
+		Apps/Technical
+		Apps/Tools
+		Apps/Text
+		Apps/Science
+		Apps/Shells
+		Apps/Sound
+		Apps/Viewers
+		Apps/System
+		Games/Adventure
+		Games/Arcade
+		Games/Board
+		Games/Card
+		Games/Puzzles
+		Games/Sports
+		Games/Strategy
+		Games/Tetris-like
+		Games/Toys
+		Help
+		Screen/Lock
+		Screen/Save
+		Screen/Root-window
+		WindowManagers
+		WindowManagers/Modules
+		XShells
+	       );
+
+my %known_tags_hash;
+my %needs_tag_vals_hash;
+my %root_sections_hash;
+my %sections_hash;
+
+# icon_cmap keys are the colours permitted in an icon, as lower case
+# strings, either in hex like '#4c4c4c', or names from rgb.txt like
+# 'chartreuse1'.
+#
+# Can be automatically generated using ../rgb-vs-cmap
+
+my %icon_cmap = (
+   'none' => 1,
+   '#000000' => 1,
+   '#00007f' => 1,
+   '#0000ff' => 1,
+   '#007f00' => 1,
+   '#007f7f' => 1,
+   '#00ff00' => 1,
+   '#00ffff' => 1,
+   '#191919' => 1,
+   '#333333' => 1,
+   '#4c4c4c' => 1,
+   '#666667' => 1,
+   '#7f0000' => 1,
+   '#7f007f' => 1,
+   '#7f7f00' => 1,
+   '#7f7f7f' => 1,
+   '#999999' => 1,
+   '#b2b2b2' => 1,
+   '#cccccc' => 1,
+   '#e5e5e5' => 1,
+   '#ff0000' => 1,
+   '#ff00ff' => 1,
+   '#ffff00' => 1,
+   '#ffffff' => 1,
+   'white' => 1,
+   'black' => 1,
+   'blue' => 1,
+   'cyan' => 1,
+   'green' => 1,
+   'yellow' => 1,
+   'red' => 1,
+   'magenta' => 1,
+   'blue1' => 1,
+   'cyan1' => 1,
+   'green1' => 1,
+   'yellow1' => 1,
+   'red1' => 1,
+   'magenta1' => 1,
+   'gray0' => 1,
+   'grey0' => 1,
+   'gray20' => 1,
+   'grey20' => 1,
+   'gray50' => 1,
+   'grey50' => 1,
+   'gray60' => 1,
+   'grey60' => 1,
+   'gray80' => 1,
+   'grey80' => 1,
+   'gray90' => 1,
+   'grey90' => 1,
+   'gray100' => 1,
+   'grey100' => 1,
+);
+
+# -----------------------------------
+
+($#ARGV == 1) or fail("syntax: menu-format <pkg> <type>");
+my $pkg = shift;
+my $type = shift;
+
+# Things worth hashing.
+foreach my $tag (@known_tags) {
+    $known_tags_hash{$tag}=1;
+}
+foreach my $val (@needs_tag_vals) {
+    $needs_tag_vals_hash{$val}=1;
+}
+foreach my $section (@root_sections) {
+    $root_sections_hash{$section}=1;
+}
+foreach my $section (@sections) {
+    $sections_hash{$section}=1;
+}
+
+opendir (MENUDIR, "menu/") or fail("cannot read menu file directory.");
+while (my $menufile = readdir(MENUDIR)) {
+    next if -x "menu/$menufile"; # don't try to parse executables
+    next if $menufile eq "README"; # README is a special case
+
+    my $menufile_line ="";
+    open (IN,"menu/$menufile") or
+	fail("cannot open menu file $menufile for reading.");
+    # line below is commented out in favour of the while loop
+    # do { $_=<IN>; } while defined && (m/^\s* \#/ || m/^\s*$/);
+    while (<IN>) {
+	if (m/^\s*\#/ || m/^\s*$/) {
+	    next;
+	} else {
+	    $menufile_line = $_;
+	    last;
+	}
+    }
+
+    # Check first line of file to see if it matches the old menu file format.
+    if ($menufile_line =~ m/^(?!\?package\(.*\)).* .* .* .* "?.*"? .*$/o) {
+	print "E: $pkg $type: old-format-menu-file /usr/lib/menu/$menufile\n";
+	close IN;
+	next;
+    }
+
+    # Parse entire file as a new format menu file.
+    my $line="";
+    my $lc=0;
+    do {
+	$lc++;
+
+	# Ignore lines that are comments.
+	if ($menufile_line =~ m/^\s*\#/o) {
+	    next;
+	}
+	    $line .= $menufile_line;
+	# Note that I allow whitespace after the continuation character.
+	# This is caught by VerifyLine().
+	if (! ($menufile_line =~ m/\\\s*?$/)) {
+	    VerifyLine($pkg,$type,$menufile,$line,$lc);
+	    $line="";
+	}
+    } while ($menufile_line = <IN>);
+    VerifyLine($pkg,$type,$menufile,$line,$lc);
+
+    close IN;
+}
+closedir MENUDIR;
+
+exit 0;
+
+# -----------------------------------
+
+sub fail {
+    if ($_[0]) {
+	warn "internal error: $_[0]\n";
+    } elsif ($!) {
+	warn "internal error: $!\n";
+    } else {
+	warn "internal error.\n";
+    }
+    exit 1;
+}
+
+# Pass this a line of a menu file, it sanitizes it and
+# verifies that it is correct.
+sub VerifyLine {
+    my $pkg=shift;
+    my $type=shift;
+    my $menufile=shift;
+    my $line=shift;
+    my $linecount=shift;
+
+    my %vals;
+
+    chomp $line;
+
+    # Replace all line continuation characters with whitespace.
+    # (do not remove them completely, because update-menus doesn't)
+    $line =~ s/\\\n/ /mgo;
+
+    # This is in here to fix a common mistake: whitespace after a '\'
+    # character.
+    if ($line =~ s/\\\s+\n/ /mgo) {
+	print "E: $pkg $type: whitespace-after-continuation-character /usr/lib/menu/$menufile:$linecount\n";
+    }
+
+    # Ignore lines that are all whitespace or empty.
+    return if $line =~ m/^\s+$/o or ! $line;
+
+    # Ignore lines that are comments.
+    return if $line =~ m/^\s*\#/o;
+
+    # Start by testing the package check.
+    if (not $line =~ m/^\?package\((.*?)\):/o) {
+	print "E: $pkg $type: bad-test-in-menu-item /usr/lib/menu/$menufile:$linecount\n";
+	return;
+    }
+    if ($1 ne $pkg) {
+	print "E: $pkg $type: incorrect-package-test $1 /usr/lib/menu/$menufile\n";
+    }
+    $line =~ s/^\?package\(.*?\)://;
+	
+    # Now collect all the tag=value pairs. I've heavily commented
+    # the killer regexp that's responsible.
+    #
+    # The basic idea here is we start at the beginning of the line.
+    # Each loop pulls off one tag=value pair and advances to the next
+    # when we have no more matches, there should be no text left on
+    # the line - if there is, it's a parse error.
+    while ($line =~ m/
+	   \s*?			# allow whitespace between pairs
+	   (			# capture what follows in $1, it's our tag
+	    [^\"\s=]		# a non-quote, non-whitespace, character
+	    *			# match as many as we can
+	   )
+	   =
+	   (			# capture what follows in $2, it's our value
+	    (?:
+	     \"			# this is a quoted string
+	     (?:
+	      \\.		# any quoted character
+	      |			# or
+	      [^\"]		# a non-quote character
+	     )
+	     *			# repeat as many times as possible
+	     \"			# end of the quoted value string
+	    )
+	    |			# the other possibility is a non-quoted string
+	    (?:
+	     [^\"\s]		# a non-quote, non-whitespace character
+	     *			# match as many times as we can
+	    )
+	   )
+	   /ogcx) {
+	my $tag = $1;
+	my $value = $2;
+
+	if (exists $vals{$tag}) {
+	    print "W: $pkg $type: duplicated-tag-in-menu-item /usr/lib/menu/$menufile $1:$linecount\n";
+	}
+
+	# If the value was quoted, remove those quotes.
+	if ($value =~ m/^\"(.*)\"$/) {
+	    $value = $1;
+	}
+
+	# If the value has escaped characters, remove the
+	# escapes.
+	$value =~ s/\\(.)/$1/g;
+
+	$vals{$tag} = $value;
+    }
+	
+    # This is not really a no-op. Note the use of the /c
+    # switch - this makes perl keep track of the current
+    # search position. Notice, we did it above in the loop,
+    # too. (I have a /g here just so the /c takes affect.)
+    # We use this below when we look at how far along in the
+    # string we matched. So the point of this line is to allow
+    # trailing whitespace on the end of a line.
+    $line =~ m/\s*/ogc;
+	
+    # If that loop didn't match up to end of line, we have a
+    # problem..
+    if (pos($line) < length($line)) {
+	print "E: $pkg $type: unparsable-menu-item /usr/lib/menu/$menufile:$linecount\n";
+	# Give up now, before things just blow up in our face.
+	return;
+    }
+	
+    # Now validate the data in the menu file.
+	
+    # Test for important tags.
+    foreach my $tag (@req_tags) {
+	unless ( exists($vals{$tag}) && defined($vals{$tag}) ) {
+	    print "W: $pkg $type: menu-item-missing-important-tag $tag /usr/lib/menu/$menufile:$linecount\n";
+	}
+    }
+	
+    # Make sure all tags are known.
+    foreach my $tag (keys %vals) {
+	if (! $known_tags_hash{$tag}) {
+	    print "W: $pkg $type: menu-item-contains-unknown-tag $tag /usr/lib/menu/$menufile:$linecount\n";
+	}
+    }
+	
+    if (exists($vals{'icon'})) {
+	VerifyIcon($menufile, $linecount, $vals{'icon'});
+    }
+	
+    # Check the needs tag.
+    if ((not $needs_tag_vals_hash{lc($vals{'needs'})}) and
+	$vals{'needs'} ne $pkg) {
+	print "W: $pkg $type: menu-item-needs-tag-has-unknown-value $vals{'needs'} /usr/lib/menu/$menufile:$linecount\n";
+	return;		# don't check section tag for weird needs values.
+    }
+	
+    # Check the section tag.
+    my $section;
+    if (exists($vals{'section'}) && defined($vals{'section'})) {
+	$section = $vals{'section'};
+	$section =~ tr:/:/:s;	# eliminate duplicate slashes.
+	$section =~ s:/$::;	# remove trailing slash.
+    }
+	
+    if ($vals{'needs'} eq 'dwww') {
+	# dwww entries are really just variants of doc-base, so we don't check
+	# their sections until a policy on documentation structure is defined.
+    } elsif (! defined($section)) {
+	# If the section tag does not exist then the item will go
+	# right in the root menu, which is just Evil.
+	print "E: $pkg $type: menu-item-adds-to-root-menu /usr/lib/menu/$menufile:$linecount\n";
+    } else {
+	# Check for historical changes in the section tree.
+	if ($section =~ m:^Apps/Games:) {
+	    print "W: $pkg $type: menu-item-uses-apps-games-section /usr/lib/menu/$menufile:$linecount\n";
+	    $section =~ s:^Apps/::;
+	}
+
+	# Check for Evil new root sections.
+	my ($rootsection) = $section =~ m:([^/]*):;
+	if (not $root_sections_hash{$rootsection}) {
+	    if (not $rootsection =~ m/$pkg/i) {
+		print "E: $pkg $type: menu-item-creates-new-root-section $rootsection /usr/lib/menu/$menufile:$linecount\n";
+	    }
+	} else {
+	    # Check to see if the section is valid.
+	    # It's ok to subdivide existing sections,
+	    # the section just has to be rooted at
+	    # a valid section.
+	    my $s = undef;
+	    my $ok = undef;
+	    foreach (split(m:/:, $section)) {
+		$s .= "/" if $s;
+		$s .= $_;
+		if ($sections_hash{$s}) {
+		    $ok = 1;
+		    last;
+		}
+	    }
+	    if (! $ok) {
+		print "W: $pkg $type: menu-item-creates-new-section $vals{section} /usr/lib/menu/$menufile:$linecount\n";
+	    }
+	}
+    }
+}
+
+
+sub VerifyIcon {
+    my ($menufile, $linecount, $icon) = @_;
+    local *IN;
+
+    if ($icon eq 'none') {
+	print "W: $pkg $type: menu-item-uses-icon-none /usr/lib/menu/$menufile:$linecount\n";
+	return;
+    }
+    
+    if (not ($icon =~ m/\.xpm$/i)) {
+	print "E: $pkg $type: menu-icon-not-in-xpm-format $icon\n";
+	return;
+    }
+
+    # try the explicit location, but if not, try one of the standard paths
+    my $iconfile = "unpacked/$icon";
+    if (! -f $iconfile) {
+	$iconfile = "unpacked/usr/X11R6/include/X11/pixmaps/$icon";
+    }
+    if (! -f $iconfile) {
+	$iconfile = "unpacked/usr/X11R6/include/X11/bitmaps/$icon";
+    }
+    if (! -f $iconfile) {
+	$iconfile = "unpacked/usr/share/pixmaps/$icon";
+    }
+
+    if (! open IN, $iconfile) {
+	print "W: $pkg $type: menu-icon-missing $icon\n";
+	return;
+    }
+
+    my $parse = "XPM header";
+    my $line;
+    do { defined ($line = <IN>) or goto parse_error; }
+    until ($line =~ /\/\*\s*XPM\s*\*\//);
+
+    $parse = "size line";
+    do { defined ($line = <IN>) or goto parse_error; }
+    until ($line =~ /"\s*([0-9]+)\s*([0-9]+)\s*([0-9]+)\s*([0-9]+)\s*"/);
+    my $width = $1 + 0;
+    my $height = $2 + 0;
+    my $numcolours = $3 + 0;
+    my $cpp = $4 + 0;
+    
+    if ($width > 32 || $height > 32) {
+	print "E: $pkg $type: menu-icon-too-big $icon: ${width}x${height}\n";
+    }
+
+    my $cppre = '';
+    foreach (1 .. $cpp) { $cppre .= '.'; }
+
+    my %bad;
+    foreach (1 .. $numcolours) {
+	$parse = "colour line $_";
+	do { defined ($line = <IN>) or goto parse_error; }
+        until ($line =~ /"$cppre\s*((m|s|g4|g|c)\s+[^ \t]+.*)"/);
+
+        # Notice whitespace is allowed in a colour name.  Not sure if that's
+        # strictly valid according to the xpm spec, but gnu.xpm from emacs20
+        # had some colours like that.
+        my $s = $1;
+        while ($s =~ /\s*(m|s|g4|g|c)\s+(.*?)\s*((m|s|g4|g|c)\s+.*|$)/) {
+            $s = $3;
+            my $c_orig = $2;
+            my $c = lc($c_orig);
+	    # reduce any 16-bit colours to 8 bits for matching
+            if ($c =~ /^#(..)00(..)00(..)00$/) {
+                $c = "#$1$2$3";
+            }
+            if (! defined $icon_cmap{$c}) {
+                $bad{$c_orig} = 1;
+            }
+	}
+        # expect to have processed everything in the colour string
+        if ($s ne '') {
+            $parse = "colour spec: $line";
+            goto parse_error;
+        }
+    }
+    close IN or die;
+    if (%bad) {
+	print "E: $pkg $type: menu-icon-has-bad-colors $icon: ", join (', ', sort keys %bad), "\n";
+    }
+    return;
+
+parse_error:
+    close IN or die;
+    print "W: $pkg $type: menu-icon-cannot-be-parsed $icon: looking for $parse\n";
+    return;
+}

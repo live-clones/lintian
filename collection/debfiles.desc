@@ -1,0 +1,8 @@
+Collector-Script: debfiles
+Author: Joey Hess <joeyh@debian.org>
+Info: This script collects files shipped in the source of the
+ package.
+Type: source
+Unpack-Level: 2
+Output: debfiles
+Order: 1

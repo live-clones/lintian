@@ -1,0 +1,1640 @@
+#!/usr/bin/perl -w
+#
+# Lintian -- Debian package checker
+#
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+#
+# This program is free software.  It is distributed under the terms of
+# the GNU General Public License as published by the Free Software
+# Foundation; either version 2 of the License, or (at your option) any
+# later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+# MA 02111-1307, USA.
+
+use strict;
+
+use Getopt::Long;
+use FileHandle;
+
+#######################################
+#  Global Variables
+#######################################
+my $lintian_info_cmd = 'lintian-info'; #Command to run for ?
+my $LINTIAN_VERSION = "1.22.9";	#External Version number
+my $BANNER = "Lintian v$LINTIAN_VERSION"; #Version Banner - text form
+my $LAB_FORMAT = 6;		#Lab format Version Number
+				#increased whenever incompatible
+				#changes are done to the lab
+				#so that all packages are re-unpacked
+
+# Variables used to record commandline options
+# Commented out variables have "defined" checks somewhere to determine if
+# they were set via commandline or environment variables
+my $pkg_mode = 'a';		# auto -- automatically search for
+				# binary and source pkgs
+use vars qw($verbose);
+$verbose = 0;			#flag for -v|--verbose switch
+my $debug = 0;    	     	#flag for -d|--debug switch
+my @debug;
+my $check_everything = 0;	#flag for -a|--all switch
+my $lintian_info = 0;		#flag for -i|--info switch
+my $display_infotags = 0;	#flag for -I|--display-info switch
+my $unpack_level = undef;	#flag for -l|--unpack-level switch
+my $no_override = 0;		#flag for -o|--no-override switch
+my $show_overrides = 0;		#flag for --show-overrides switch
+my $check_md5sums = 0;		#flag for -m|--md5sums switch
+my $allow_root = 0;		#flag for --allow-root swtich
+my $packages_file = 0;		#string for the -p option
+my $OPT_LINTIAN_LAB = "";	#string for the --lab option
+my $OPT_LINTIAN_ARCHIVEDIR = "";#string for the --archivedir option
+my $OPT_LINTIAN_DIST = "";	#string for the --dist option
+my $OPT_LINTIAN_ARCH = "";	#string for the --arch option
+my $OPT_LINTIAN_SECTION = "";	#string for the --release option
+# These options can also be used via default or environment variables
+my $LINTIAN_CFG = "";		#config file to use
+my $LINTIAN_ROOT;		#location of the lintian modules
+
+my @packages;
+
+my $action;
+my $checks;
+my $unpack_info;
+my $cwd;
+my $cleanup_filename;
+my $exit_code;
+my $lab_mode = 'static';
+
+my %collection_info;
+my %already_scheduled;
+my %overridden;
+my %checks;
+my %check_abbrev;
+my %unpack_infos;
+my %experimental_tag;
+my %check_info;
+
+# reset configuration variables
+my $LINTIAN_LAB = undef;
+my $LINTIAN_ARCHIVEDIR = undef;
+my $LINTIAN_DIST = undef;
+my $LINTIAN_UNPACK_LEVEL = undef;
+my $LINTIAN_ARCH = undef;
+my $LINTIAN_SECTION = undef;
+
+#######################################
+#  Setup Code
+#######################################
+#turn off file buffering
+$| = 1;
+
+# reset locale definition (necessary for tar)
+$ENV{'LC_ALL'} = 'C';
+
+# check for arguments
+if ($#ARGV == -1) {
+    syntax();
+}
+
+# -----------------------------------
+
+#----------------------------------------------------------------------------
+# Process Command Line
+#----------------------------------------------------------------------------
+#######################################
+# Subroutines called by various options
+# in the options hash below.  These are
+# invoked to process the commandline
+# options
+#######################################
+# Display Command Syntax
+# Options: -h|--help
+sub syntax {
+    print "$BANNER\n";
+    print <<"EOT-EOT-EOT";
+Syntax: lintian [action] [options] [--] [packages] ...
+Actions:
+    -S, --setup-lab           set up static lab
+    -R, --remove-lab          remove static lab
+    -c, --check               check packages (default action)
+    -C X, --check-part X      check only certain aspects
+    -u, --unpack              only unpack packages in the lab
+    -r, --remove              remove package from the lab
+General options:
+    -h, --help                display short help text
+    -v, --verbose             verbose messages
+    -V, --version             display Lintian version and exit
+    -d, --debug               turn Lintian\'s debug messages ON
+    --print-version           print unadorned version number and exit
+Behaviour options:
+    -i, --info                give detailed info about tags
+    -I, --display-info        display "I:" tags (normally suppressed)
+    -l X, --unpack-level X    set default unpack level to X
+    -o, --no-override         ignore overrides
+    --show-overrides          output tags that have been overriden
+    -U X, --unpack-info X     specify which info should be collected
+    -m, --md5sums             check md5sums when processing a .changes file
+    --allow-root              suppress lintian\'s warning when run as root
+Configuration options:
+    --cfg CONFIGFILE          read CONFIGFILE for configuration
+    --lab LABDIR              use LABDIR as permanent laboratory
+    --archivedir ARCHIVEDIR   location of Debian archive to scan for packages
+    --dist DIST               scan packages in this distribution (e.g. sid)
+    --section RELEASE         scan packages in this section (e.g. main)
+    --arch ARCH               scan packages with architecture ARCH
+    --root ROOTDIR            use ROOTDIR instead of /usr/share/lintian
+Package selection options:
+    -a, --all                 process all packages in distribution
+    -b, --binary              process only binary packages
+    -s, --source              process only source packages
+    -p X, --packages-file X   process all files in file (special syntax!)
+EOT-EOT-EOT
+
+    exit 0;
+}
+
+# Display Version Banner
+# Options: -V|--version, --print-version
+sub banner {
+    if ($_[0] eq 'print-version') {
+	print "$LINTIAN_VERSION\n";
+    } else {
+	print "$BANNER\n";
+    }
+    exit 0;
+}
+
+# Record action requested
+# Options: -S, -R, -c, -u, -r
+sub record_action {
+    if ($action) {
+	die("too many actions specified: $_[0]");
+    }
+    $action = $_[0];
+}
+
+# Record Parts requested for checking
+# Optoins: -C|--check-part
+sub record_check_part {
+    if (defined $action and $action eq 'check' and $checks) {
+	die("multiple -C or --check-part options not allowed");
+    }
+    if ($action) {
+	die("too many actions specified: $_[0]");
+    }
+    $action = 'check';
+    $checks = $_[1];
+}
+
+# Process for -U|--unpack-info flag
+sub record_unpack_info {
+    if ($unpack_info) {
+	die("multiple -U or --unpack-info options not allowed");
+    }
+    $unpack_info = $_[1];
+}
+
+# Record what type of data is specified
+# Options: -b|--binary, -s|--source
+sub record_pkgmode {
+    $pkg_mode = 'b' if $_[0] eq 'binary';
+    $pkg_mode = 's' if $_[0] eq 'source';
+}
+
+# Hash used to process commandline options
+my %opthash = (			# ------------------ actions
+	       "setup-lab|S" => \&record_action,
+	       "remove-lab|R" => \&record_action,
+	       "check|c" => \&record_action,
+	       "check-part|C=s" => \&record_check_part,
+	       "unpack|u" => \&record_action,
+	       "remove|r" => \&record_action,
+
+	       # ------------------ general options
+	       "help|h" => \&syntax,
+	       "version|V" => \&banner,
+	       "print-version" => \&banner,
+
+	       "verbose|v" => \$verbose,
+	       "debug|d" => \@debug, # Count the -d flags
+
+	       # ------------------ behaviour options
+	       "info|i" => \$lintian_info,
+	       "display-info|I" => \$display_infotags,
+	       "unpack-level|l=i" => \$unpack_level,
+	       "no-override|o" => \$no_override,
+	       "show-overrides" => \$show_overrides,
+	       "unpack-info|U=s" => \&record_unpack_info,
+	       "md5sums|m" => \$check_md5sums,
+	       "allow-root" => \$allow_root,
+
+	       # ------------------ configuration options
+	       "cfg=s" => \$LINTIAN_CFG,
+	       "lab=s" => \$OPT_LINTIAN_LAB,
+	       "archivedir=s" => \$OPT_LINTIAN_ARCHIVEDIR,
+	       "dist=s" => \$OPT_LINTIAN_DIST,
+	       "section=s" => \$OPT_LINTIAN_SECTION,
+	       "arch=s" => \$OPT_LINTIAN_ARCH,
+	       "root=s" => \$LINTIAN_ROOT,
+
+	       # ------------------ package selection options
+	       "all|a" => \$check_everything,
+	       "binary|b" => \&record_pkgmode,
+	       "source|s" => \&record_pkgmode,
+	       "packages-file|p=s" => \$packages_file,
+	      );
+
+# init commandline parser
+Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
+
+# process commandline options
+GetOptions(%opthash)
+    or die("error parsing options\n");
+
+# determine LINTIAN_ROOT if it was not set with --root.
+$LINTIAN_ROOT = $LINTIAN_ROOT || $ENV{'LINTIAN_ROOT'};
+if (defined $LINTIAN_ROOT) { # see if it has a frontend directory
+    if (-d "$LINTIAN_ROOT/frontend") {
+        $lintian_info_cmd = "$LINTIAN_ROOT/frontend/lintian-info";
+    }
+} else {
+    $LINTIAN_ROOT = '/usr/share/lintian';
+}
+
+$debug = $#debug + 1;
+$verbose = 1 if $debug;
+$::verbose = $verbose; # that's $main::verbose
+
+# option --all and packages specified at the same time?
+if (($check_everything or $packages_file) and $#ARGV+1 > 0) {
+    print STDERR "warning: options -a or -p can't be mixed with package parameters!\n";
+    print STDERR "(will ignore -a or -p option)\n";
+    undef $check_everything;
+    undef $packages_file;
+}
+
+# check specified action
+$action = 'check' if not $action;
+
+#----------------------------------------------------------------------------
+# Setup Configuration
+#----------------------------------------------------------------------------
+# root permissions?
+# check if effective UID is 0
+if ($> == 0 and not $allow_root) {
+    print STDERR "warning: lintian's authors do not recommend running it with root privileges!\n";
+}
+
+# determine current working directory--we'll need this later
+chop($cwd = `pwd`);
+
+# search for configuration file if it was not set with --cfg
+# do not search the default locations if it was set.
+if ($LINTIAN_CFG) {
+} elsif (exists $ENV{'LINTIAN_CFG'} &&
+	 -f ($LINTIAN_CFG = $ENV{'LINTIAN_CFG'})) {
+} elsif (-f ($LINTIAN_CFG = $LINTIAN_ROOT . '/lintianrc')) {
+} elsif (exists $ENV{'HOME'} &&
+	 -f ($LINTIAN_CFG = $ENV{'HOME'} . '/.lintianrc')) {
+} elsif (-f ($LINTIAN_CFG = '/etc/lintianrc')) {
+} else {
+    undef $LINTIAN_CFG;
+}
+
+# read configuration file
+if ($LINTIAN_CFG) {
+    open(CFG,$LINTIAN_CFG)
+	or fail("cannot open configuration file $LINTIAN_CFG for reading: $!");
+    while (<CFG>) {
+	chop;
+	s/\#.*$//go;
+	s/\"//go;		# " for emacs :)
+	next if m/^\s*$/o;
+
+	# substitute some special variables
+	s,\$HOME/,$ENV{'HOME'}/,go;
+	s,\~/,$ENV{'HOME'}/,go;
+
+	if (m/^\s*LINTIAN_LAB\s*=\s*(.*\S)\s*$/i) {
+	    $LINTIAN_LAB = $1;
+	} elsif (m/^\s*LINTIAN_ARCHIVEDIR\s*=\s*(.*\S)\s*$/i) {
+	    $LINTIAN_ARCHIVEDIR = $1;
+	} elsif (m/^\s*LINTIAN_DIST\s*=\s*(.*\S)\s*$/i) {
+	    $LINTIAN_DIST = $1;
+	} elsif (m/^\s*LINTIAN_UNPACK_LEVEL\s*=\s*(.*\S)\s*$/i) {
+	    $LINTIAN_UNPACK_LEVEL = $1;
+	} elsif (/^\s*LINTIAN_SECTION\s*=\s*(.*\S)\s*$/i) {
+	    $LINTIAN_SECTION = $1;
+	} elsif (m/^\s*LINTIAN_ARCH\s*=\s*(.*\S)\s*$/i) {
+	    $LINTIAN_ARCH = $1;
+	} else {
+	    fail("syntax error in configuration file: $_","(Note, that the syntax of the configuration file has been changed\nwith Lintian v0.3.0. In most cases, you don't need a configuration\nfile anymore -- just remove it.)");
+	}
+    }
+    close(CFG);
+}
+
+# environment variables overwrite settings in conf file:
+$LINTIAN_LAB = $ENV{'LINTIAN_LAB'} if $ENV{'LINTIAN_LAB'};
+$LINTIAN_ARCHIVEDIR = $ENV{'LINTIAN_ARCHIVEDIR'} if $ENV{'LINTIAN_ARCHIVEDIR'};
+$LINTIAN_DIST = $ENV{'LINTIAN_DIST'} if $ENV{'LINTIAN_DIST'};
+$LINTIAN_UNPACK_LEVEL = $ENV{'LINTIAN_UNPACK_LEVEL'} if $ENV{'LINTIAN_UNPACK_LEVEL'};
+$LINTIAN_SECTION = $ENV{'LINTIAN_SECTION'} if $ENV{'LINTIAN_SECTION'};
+$LINTIAN_ARCH = $ENV{'LINTIAN_ARCH'} if $ENV{'LINTIAN_ARCH'};
+
+# command-line options override everything
+$LINTIAN_LAB = $OPT_LINTIAN_LAB if $OPT_LINTIAN_LAB;
+$LINTIAN_ARCHIVEDIR = $OPT_LINTIAN_ARCHIVEDIR if $OPT_LINTIAN_ARCHIVEDIR;
+$LINTIAN_DIST = $OPT_LINTIAN_DIST if $OPT_LINTIAN_DIST;
+$LINTIAN_SECTION = $OPT_LINTIAN_SECTION if $OPT_LINTIAN_SECTION;
+$LINTIAN_ARCH = $OPT_LINTIAN_ARCH if $OPT_LINTIAN_ARCH;
+
+# LINTIAN_ARCH must have a value.
+unless (defined $LINTIAN_ARCH) {
+    if ($LINTIAN_DIST) {
+	chop($LINTIAN_ARCH=`dpkg --print-installation-architecture`);
+    } else {
+	$LINTIAN_ARCH = 'any';
+    }
+}
+
+# export current settings for our helper scripts
+if ($LINTIAN_ROOT) {
+    $ENV{'LINTIAN_ROOT'} = $LINTIAN_ROOT;
+} else {
+    $ENV{'LINTIAN_ROOT'} = "";
+}
+
+if ($LINTIAN_CFG) {
+    $ENV{'LINTIAN_CFG'} = $LINTIAN_CFG;
+} else {
+    $ENV{'LINTIAN_CFG'} = "";
+}
+
+if ($LINTIAN_LAB) {
+    # LINTIAN_LAB defined => advanced mode (static lab)
+    $lab_mode = 'static';
+} else {
+    # LINTIAN_LAB not defined => basic mode (temporary lab)
+    $lab_mode = 'temporary';
+
+    if ($ENV{'TMPDIR'}) {
+	$LINTIAN_LAB = "$ENV{'TMPDIR'}/lintian-lab.$$";
+    } else {
+	$LINTIAN_LAB = "/tmp/lintian-lab.$$";
+    }
+}
+$ENV{'LINTIAN_LAB'} = $LINTIAN_LAB;
+
+if ($LINTIAN_ARCHIVEDIR) {
+    $ENV{'LINTIAN_ARCHIVEDIR'} = $LINTIAN_ARCHIVEDIR;
+} else {
+    $ENV{'LINTIAN_ARCHIVEDIR'} = "";
+    $LINTIAN_ARCHIVEDIR = "";
+}
+
+if ($LINTIAN_DIST) {
+    $ENV{'LINTIAN_DIST'} = $LINTIAN_DIST;
+} else {
+    $ENV{'LINTIAN_DIST'} = "";
+    $LINTIAN_DIST = "";
+}
+
+if ($LINTIAN_SECTION) {
+    $ENV{'LINTIAN_SECTION'} = $LINTIAN_SECTION;
+} else {
+    $ENV{'LINTIAN_SECTION'} = "";
+    $LINTIAN_SECTION = "";
+}
+
+if ($LINTIAN_ARCH) {
+    $ENV{'LINTIAN_ARCH'} = $LINTIAN_ARCH;
+} else {
+    $ENV{'LINTIAN_ARCH'} = "";
+}
+
+$ENV{'LINTIAN_DEBUG'} = $debug;
+
+# Now that we have LINTIAN_ROOT we can import our own perl libraries
+unshift @INC, "$ENV{'LINTIAN_ROOT'}/lib";
+require Util;
+require Pipeline;
+require Read_pkglists;
+use vars qw(%source_info %binary_info); # from the above
+
+# determine requested unpack level
+if (defined($unpack_level)) {
+    # specified through command line
+} elsif (defined($LINTIAN_UNPACK_LEVEL)) {
+    # specified via configuration file or env variable
+    $unpack_level = $LINTIAN_UNPACK_LEVEL;
+} else {
+    # determine by action
+    if (($action eq 'unpack') or ($action eq 'check')) {
+	$unpack_level = 1;
+    } else {
+	$unpack_level = 0;
+    }
+}
+unless (($unpack_level == 0) or ($unpack_level == 1) or ($unpack_level == 2)) {
+    fail("bad unpack level $unpack_level specified");
+}
+
+$LINTIAN_UNPACK_LEVEL = $unpack_level;
+$ENV{'LINTIAN_UNPACK_LEVEL'} = $LINTIAN_UNPACK_LEVEL;
+
+#----------------------------------------------------------------------------
+# Create/Maintain Lab and add any specified Debian Archives (*.debs)
+#----------------------------------------------------------------------------
+
+# Print Debug banner
+if ($debug) {
+    print "N: $BANNER\n";
+    print "N: Lintian root directory: $LINTIAN_ROOT\n";
+    print "N: Configuration file: $LINTIAN_CFG\n";
+    print "N: Laboratory: $LINTIAN_LAB\n";
+    print "N: Archive directory: $LINTIAN_ARCHIVEDIR\n";
+    print "N: Distribution: $LINTIAN_DIST\n";
+    print "N: Default unpack level: $LINTIAN_UNPACK_LEVEL\n";
+    print "N: Architecture: $LINTIAN_ARCH\n";
+    print "N: ----\n";
+}
+
+# Set up clean-up handlers.
+undef $cleanup_filename;
+$SIG{'INT'} = \&interrupted;
+$SIG{'QUIT'} = \&interrupted;
+
+# sanity check:
+if (($action ne 'setup-lab') and ($lab_mode eq 'static')) {
+
+    # LINTIAN_LAB has to exist in this mode
+    unless (-d "$LINTIAN_LAB/binary" &&
+	    -d "$LINTIAN_LAB/source" &&
+	    -d "$LINTIAN_LAB/info") {
+	fail("lintian lab has not been set up correctly (run lintian --setup-lab)");
+    }
+}
+
+#######################################
+# Process -S option
+if ($action eq 'setup-lab') {
+    if ($#ARGV+1 > 0) {
+	print STDERR "warning: ignoring additional command line arguments\n";
+    }
+
+    if ($lab_mode eq 'temporary') {
+	fail("no laboratory specified (need to define LINTIAN_LAB)");
+    }
+
+    setup_lab();
+    $lab_mode = 'static';
+
+    exit 0;
+
+#######################################
+# Process -R option
+} elsif ($action eq 'remove-lab') {
+    if ($#ARGV+1 > 0) {
+	print STDERR "warning: ignoring additional command line arguments\n";
+    }
+
+    if ($lab_mode eq 'temporary') {
+	fail("no laboratory specified (need to define LINTIAN_LAB)");
+    }
+
+    remove_lab();
+
+    exit 0;
+
+#######################################
+#  Check for non deb specific actions
+} elsif (not (($action eq 'unpack') or ($action eq 'check')
+	      or ($action eq 'remove'))) {
+    fail("bad action $action specified");
+}
+
+# pipe output through lintian-info?
+# note: if any E:/W: lines are added above this point, this block needs to
+#       be moved up
+if ($lintian_info) {
+    open(OUTPUT_PIPE,"| $lintian_info_cmd") or fail("cannot open output pipe to $lintian_info_cmd: $!");
+    select OUTPUT_PIPE;
+}
+
+#----------------------------------------------------------------------------
+# Compile list of files to process
+#----------------------------------------------------------------------------
+
+# process package/file arguments
+while (my $arg = shift) {
+    # file?
+    if (-f $arg) {
+	# $arg contains absolute dir spec?
+	unless ($arg =~ m,^/,) {
+	    $arg = "$cwd/$arg";
+	}
+
+	# .deb file?
+	if ($arg =~ /\.deb$/) {
+	    my $info = get_deb_info($arg);
+	    if (not defined $info) {
+		print STDERR "$arg is a zero-byte file, skipping\n";
+		next;
+	    }
+	    schedule_package('b', $info->{'package'}, $info->{'version'}, $arg);
+	}
+	# .dsc file?
+	elsif ($arg =~ /\.dsc$/) {
+	    my $info = get_dsc_info($arg);
+	    if (not defined $info) {
+		print STDERR "$arg is a zero-byte file, skipping\n";
+		next;
+	    }
+	    schedule_package('s', $info->{'source'}, $info->{'version'}, $arg);
+	}
+	# .changes file?
+	elsif ($arg =~ /\.changes$/) {
+	    # get directory and filename part of $arg
+	    my ($arg_dir, $arg_name) = $arg =~ m,(.*)/([^/]+)$,;
+
+	    print "N: Processing changes file $arg_name ...\n" if $verbose;
+
+	    my ($data) = read_dpkg_control($arg);
+	    if (not defined $data) {
+		warn "$arg is a zero-byte file, skipping\n";
+		next;
+	    }
+
+	    # check distribution field
+	    if (! (($data->{'distribution'} eq 'stable')
+		  or ($data->{'distribution'} eq 'testing')
+		  or ($data->{'distribution'} eq 'unstable')
+		  or ($data->{'distribution'} eq 'experimental')
+		  or ($data->{'distribution'} =~ /\w+-proposed-updates/)
+		  or ($data->{'distribution'} =~ /\w+-security/))
+               ) {
+		# bad distribution entry
+		print "E: $arg_name: bad-distribution-in-changes-file $data->{'distribution'}\n";
+	    }
+
+	    # process all listed `files:'
+	    for (split(/\n/o,$data->{'files'})) {
+		chomp;
+		s/^\s+//o;
+		next if $_ eq '';
+
+		my ($md5sum,$size,$section,$priority,$file) = split(/\s+/o, $_);
+		my $filename = $arg_dir . '/' . $file;
+	
+		# check size
+		if (not -f $filename) {
+		    warn "E: $file does not exist, exiting\n";
+		    exit(-1);
+		}
+		if (-s $filename ne $size) {
+		    print "N: size is $size, argname is $arg_name, filename is $filename\n";
+
+		    print "E: $arg_name: file-size-mismatch-in-changes-file $file\n";
+		}
+	
+		# check md5sums
+		if ($check_md5sums or $file =~ /\.dsc$/) {
+		    my $MD5SUM = FileHandle->new;
+		    pipeline_open($MD5SUM, (sub { exec 'md5sum', $filename }))
+			or fail("cannot fork for md5sum: $!");
+		    my $real_md5sum = <$MD5SUM>;
+
+		    close($MD5SUM) or fail("md5sum $filename exited with error $?");
+		    $real_md5sum =~ s/\s.*//s;
+		    if ($real_md5sum ne $md5sum) {
+			print "E: $arg_name: md5sum-mismatch-in-changes-file $file\n";
+		    }
+		}
+	
+		# check section
+		if (($section eq 'non-free') or ($section eq 'contrib')) {
+		    print "E: $arg_name: bad-section-in-changes-file $file $section\n";
+		}
+	
+		# process file?
+		if ($file =~ /\.dsc$/) {
+		    my $info = get_dsc_info($filename);
+		    schedule_package('s', $info->{'source'},
+				     $info->{'version'}, $filename);
+		} elsif ($file =~ /\.deb$/) {
+		    my $info = get_deb_info($filename);
+		    schedule_package('b', $info->{'package'},
+				     $info->{'version'}, $filename);
+		}
+	    }
+	} else {
+	    fail("bad package file name $arg (neither .deb or .dsc file)");
+	}
+    } else {
+	# parameter is a package name--so look it up
+	# search the distribution first, then the lab
+	# special case: search only in lab if action is `remove'
+	
+	my $search;
+	if ($action eq 'remove') {
+	    # search only in lab--see below
+	    $search = 'lab';
+	} else {
+	    # search in dist, then in lab
+	    $search = 'dist or lab';
+
+	    my $found = 0;
+
+	    # read package info
+	    read_src_list("$LINTIAN_LAB/info/source-packages", 0);
+	    read_bin_list("$LINTIAN_LAB/info/binary-packages", 0);
+
+	    if (($pkg_mode eq 'b') or ($pkg_mode eq 'a')) {
+		if ($binary_info{$arg}) {
+		    schedule_package('b', $binary_info{$arg}->{'package'},
+				     $binary_info{$arg}->{'version'},
+				     "$LINTIAN_ARCHIVEDIR/$binary_info{$arg}->{'file'}");
+		    $found = 1;
+		}
+	    }
+	    if (($pkg_mode eq 's') or ($pkg_mode eq 'a')) {
+		if ($source_info{$arg}) {
+		    schedule_package('s', $source_info{$arg}->{'source'},
+				     $source_info{$arg}->{'version'},
+				     "$LINTIAN_ARCHIVEDIR/$source_info{$arg}->{'file'}");
+		    $found = 1;
+		}
+	    }
+
+	    next if $found;
+	}
+
+	# nothing found so far, so search the lab
+
+	my $b = "$LINTIAN_LAB/binary/$arg";
+	my $s = "$LINTIAN_LAB/source/$arg";
+
+	if ($pkg_mode eq 'b') {
+	    unless (-d $b) {
+		warn "error: cannot find binary package $arg in $search (skipping)\n";
+		$exit_code = 2;
+		next;
+	    }
+	} elsif ($pkg_mode eq 's') {
+	    unless (-d $s) {
+		warn "error: cannot find source package $arg in $search (skipping)\n";
+		$exit_code = 2;
+		next;
+	    }
+	} else {
+	    # $pkg_mode eq 'a'
+	    unless (-d $b or -d $s) {
+		warn "error: cannot find binary or source package $arg in $search (skipping)\n";
+		$exit_code = 2;
+		next;
+	    }
+	}
+
+	if (($pkg_mode eq 'b') or (($pkg_mode eq 'a') and (-d $b))) {
+	    schedule_package('b', get_bin_info_from_lab($b));
+	}
+	if (($pkg_mode eq 's') or (($pkg_mode eq 'a') and (-d $s))) {
+	    schedule_package('s', get_src_info_from_lab($s));
+	}
+    }
+}
+
+if (not $check_everything and not $packages_file and ($#packages == -1)) {
+    print "N: No packages selected.\n" if $verbose;
+    exit 0;
+}
+
+#----------------------------------------------------------------------------
+# Run Checks on all files (packages) in the lab
+#----------------------------------------------------------------------------
+#  Check to make sure there are packages to check.
+sub set_value {
+    my ($f,$target,$field,$source,$required) = @_;
+    if ($required and not $source->{$field}) {
+	fail("description file $f does not define required tag $field");
+    }
+    $target->{$field} = $source->{$field};
+    delete $source->{$field};
+}
+
+# load information about collector scripts
+opendir(COLLDIR, "$LINTIAN_ROOT/collection")
+    or fail("cannot read directory $LINTIAN_ROOT/collection");
+
+for my $f (readdir COLLDIR) {
+    next unless $f =~ /\.desc$/;
+
+    print "N: Reading collector description file $f ...\n" if $debug >= 2;
+    my @secs = read_dpkg_control("$LINTIAN_ROOT/collection/$f");
+    my $script;
+    ($#secs+1 == 1) 
+	or fail("syntax error in description file $f: too many sections");
+
+    ($script = $secs[0]->{'collector-script'})
+	or fail("error in description file $f: `Collector-Script:' not defined");
+
+    delete $secs[0]->{'collector-script'};
+    $collection_info{$script}->{'script'} = $script;
+    my $p = $collection_info{$script};
+
+    set_value($f, $p,'type',$secs[0],1);
+    # convert Type:
+    my ($b,$s);
+    for (split(/\s*,\s*/o,$p->{'type'})) {
+	if ($_ eq 'binary') {
+	    $b = 1;
+	} elsif ($_ eq 'source') {
+	    $s = 1;
+	} else {
+	    fail("unknown type $_ specified in description file $f");
+	}
+    }
+    if ($b and $s) {
+	$p->{'type'} = 'a';
+    } elsif ($b) {
+	$p->{'type'} = 'b';
+    } elsif ($s) {
+	$p->{'type'} = 's';
+    } else {
+	$p->{'type'} = '';
+    }
+
+    set_value($f,$p,'unpack-level',$secs[0],1);
+    set_value($f,$p,'output',$secs[0],1);
+    set_value($f,$p,'order',$secs[0],1);
+
+    if (exists $secs[0]->{'needs-info'} && defined $secs[0]->{'needs-info'}) {
+	for (split(/\s*,\s*/o,$secs[0]->{'needs-info'})) {
+	    $p->{$_} = 1;
+	}
+	delete $secs[0]->{'needs-info'};
+    }
+
+    # ignore Info: and other fields for now
+    delete $secs[0]->{'info'};
+    delete $secs[0]->{'author'};
+
+    for (keys %{$secs[0]}) {
+	print STDERR "warning: unused tag $_ in description file $f\n";
+    }
+
+    if ($debug >= 2) {
+	for (sort keys %$p) {
+	    print "N:  $_: $p->{$_}\n";
+	}
+    }
+}
+
+closedir(COLLDIR);
+
+
+# load information about checker scripts
+opendir(CHECKDIR, "$LINTIAN_ROOT/checks")
+    or fail("cannot read directory $LINTIAN_ROOT/checks");
+
+for my $f (readdir CHECKDIR) {
+    next unless $f =~ /\.desc$/;
+    print "N: Reading checker description file $f ...\n" if $debug >= 2;
+
+    my @secs = read_dpkg_control("$LINTIAN_ROOT/checks/$f");
+    my $script;
+    ($script = $secs[0]->{'check-script'})
+	or fail("error in description file $f: `Check-Script:' not defined");
+
+    # ignore check `lintian' (this check is a special case and contains the
+    # tag info for the lintian frontend--this script here)
+    next if $secs[0]->{'check-script'} eq 'lintian';
+
+    delete $secs[0]->{'check-script'};
+    $check_info{$script}->{'script'} = $script;
+    my $p = $check_info{$script};
+
+    set_value($f,$p,'type',$secs[0],1);
+    # convert Type:
+    my ($b,$s);
+    for (split(/\s*,\s*/o,$p->{'type'})) {
+	if ($_ eq 'binary') {
+	    $b = 1;
+	} elsif ($_ eq 'source') {
+	    $s = 1;
+	} else {
+	    fail("unknown type $_ specified in description file $f");
+	}
+    }
+    if ($b and $s) {
+	$p->{'type'} = 'a';
+    } elsif ($b) {
+	$p->{'type'} = 'b';
+    } elsif ($s) {
+	$p->{'type'} = 's';
+    } else {
+	$p->{'type'} = '';
+    }
+
+    set_value($f,$p,'unpack-level',$secs[0],1);
+    set_value($f,$p,'abbrev',$secs[0],1);
+
+    if (exists $secs[0]->{'needs-info'} && defined $secs[0]->{'needs-info'}) {
+	for (split(/\s*,\s*/o,$secs[0]->{'needs-info'})) {
+	    $p->{$_} = 1;
+	}
+	delete $secs[0]->{'needs-info'};
+    }
+
+    # ignore Info: and other fields for now...
+    delete $secs[0]->{'info'};
+    delete $secs[0]->{'standards-version'};
+    delete $secs[0]->{'author'};
+
+    for (keys %{$secs[0]}) {
+	print STDERR "warning: unused tag $_ in description file $f\n";
+    }
+
+    if ($debug >= 2) {
+	for (sort keys %$p) {
+	    print "N:  $_: $p->{$_}\n";
+	}
+    }
+
+    shift(@secs);
+    for my $taginf (@secs) {
+	if (exists $taginf->{'experimental'} 
+	    and $taginf->{'experimental'} =~ m/yes/i) {
+	    $experimental_tag{$taginf->{'tag'}} = 1;
+	}
+    }
+}
+
+closedir(CHECKDIR);
+
+if ($unpack_info) {
+    # determine which info has been requested
+    for my $i (split(/,/,$unpack_info)) {
+	unless ($collection_info{$i}) {
+	    fail("unknown info specified: $i");
+	}
+	$unpack_infos{$i} = 1;
+    }
+}
+
+# create check_abbrev hash
+for my $c (keys %check_info) {
+    $check_abbrev{$check_info{$c}->{'abbrev'}} = $c;
+}
+
+# determine which checks have been requested
+if ($action eq 'check') {
+    $checks or ($checks = join(',',keys %check_info));
+    for my $c (split(/,/,$checks)) {
+	if ($check_info{$c}) {
+	    $checks{$c} = 1;
+	} elsif (exists $check_abbrev{$c}) {
+	    $checks{$check_abbrev{$c}} = 1;
+	} else {
+	    fail("unknown check specified: $c");
+	}
+    }
+
+    # determine which info is needed by the checks
+    for my $c (keys %checks) {
+	for my $i (keys %collection_info) {
+	    # required by $c ?
+	    if ($check_info{$c}->{$i}) {
+		$unpack_infos{$i} = 1;
+	    }
+	}
+    }
+}
+
+# determine which info is needed by the collection scripts
+for my $c (keys %unpack_infos) {
+    for my $i (keys %collection_info) {
+	# required by $c ?
+	if ($collection_info{$c}->{$i}) {
+	    $unpack_infos{$i} = 1;
+	}
+    }
+}
+
+if ($lab_mode eq 'temporary') {
+    # register signal handler to remove lab when C-C is pressed
+
+    # create lab
+    setup_lab();
+}
+
+# process all packages in the archive?
+if ($check_everything) {
+    # make sure package info is available
+    read_src_list("$LINTIAN_LAB/info/source-packages", 0);
+    read_bin_list("$LINTIAN_LAB/info/binary-packages", 0);
+
+    if ($debug >= 2) {
+      print STDERR "pkg_mode = $pkg_mode\n";
+      for my $arg (keys %source_info) {
+        print STDERR $arg."\n";
+      }
+    }
+
+    if (($pkg_mode eq 'a') or ($pkg_mode eq 's')) {
+	for my $arg (keys %source_info) {
+	    print STDERR "doing stuff with $LINTIAN_ARCHIVEDIR/$source_info{$arg}->{'file'}\n" if $debug;
+	    push(@packages,"s $source_info{$arg}->{'source'} $source_info{$arg}->{'version'} $LINTIAN_ARCHIVEDIR/$source_info{$arg}->{'file'}");
+	}
+    }
+    if (($pkg_mode eq 'a') or ($pkg_mode eq 'b')) {
+	for my $arg (keys %binary_info) {
+	    print STDERR "doing stuff with $LINTIAN_ARCHIVEDIR/$binary_info{$arg}->{'file'}\n" if $debug;
+	    push(@packages,"b $binary_info{$arg}->{'package'} $binary_info{$arg}->{'version'} $LINTIAN_ARCHIVEDIR/$binary_info{$arg}->{'file'}");
+	}
+    }
+
+    # package list still empty?
+    if ($#packages == -1) {
+	print STDERR "warning: no packages found in distribution directory\n";
+    }
+} elsif ($packages_file) {	# process all packages listed in packages file?
+    open(IN,$packages_file)
+	or fail("cannot open packages file $packages_file for reading: $!");
+    while (<IN>) {
+	chop;
+	push(@packages,$_);
+    }
+    close(IN);
+}
+
+if ($#packages == -1) {
+    print "N: No packages selected.\n" if $verbose;
+    exit 0;
+}
+
+# -----------------------------------------------------------------------
+$unpack_infos{ "override-file" } = 1 unless $no_override;
+printf "N: Processing %d packages...\n",$#packages+1 if $verbose;
+if ($debug) {
+    print "N: Selected action: $action\n";
+    print "N: Requested unpack level: $unpack_level\n";
+    printf "N: Requested data to collect: %s\n",join(',',keys %unpack_infos);
+    printf "N: Selected checks: %s\n",join(',',keys %checks);
+}
+
+$exit_code = 0;
+
+# for each package (the `reverse sort' is to make sure that source packages are
+# before the corresponding binary packages--this has the advantage that binary
+# can use information from the source packages if these are unpacked)
+PACKAGE:
+for (reverse sort @packages) {
+    m/^([bs]) (\S+) (\S+) (.+)$/ or fail("internal error: syntax error in \@packages array: $_");
+    my ($type,$pkg,$ver,$file) = ($1,$2,$3,$4);
+    my $long_type = ($type eq 'b' ? 'binary' : 'source');
+
+    print "N: ----\n" if $verbose;
+    if ($verbose) {
+	print "N: Processing $long_type package $pkg (version $ver) ...\n";
+    }
+
+    # determine base directory
+    my $base = "$LINTIAN_LAB/$long_type/$pkg";
+    print "N: Base directory in lab: $base\n" if $debug;
+
+    my $act_unpack_level = 0;
+
+    # unpacked package up-to-date?
+    if (-d $base) {
+	my $remove_basedir = 0;
+
+        # there's a base dir, so we assume that at least
+        # one level of unpacking has been done
+	$act_unpack_level = 1;
+
+	# lintian status file exists?
+	unless (-f "$base/.lintian-status") {
+	    print "N: No lintian status file found (removing old directory in lab)\n" if $verbose;
+	    $remove_basedir = 1;
+	    goto REMOVE_BASEDIR;
+	}
+
+	# read unpack status -- catch any possible errors
+	my $data;
+	eval { ($data) = read_dpkg_control("$base/.lintian-status"); };
+	if ($@) {		# error!
+	    print "N: $@\n" if $verbose;
+	    $remove_basedir = 1;
+	    goto REMOVE_BASEDIR;
+	}
+
+	# compatible lintian version?
+	if (not exists $data->{'lab-format'} or ($data->{'lab-format'} < $LAB_FORMAT)) {
+	    print "N: Lab directory was created by incompatible lintian version\n" if $verbose;
+	    $remove_basedir = 1;
+	    goto REMOVE_BASEDIR;
+	}
+
+	# version up to date?
+	if (not exists $data->{'version'} or ($data->{'version'} ne $ver)) {
+	    print "N: Removing package in lab (newer version exists) ...\n" if $debug;
+	    $remove_basedir = 1;
+	    goto REMOVE_BASEDIR;
+	}
+
+	# unpack level defined?
+	unless (exists $data->{'unpack-level'}) {
+	    print "N: warning: cannot determine unpack-level of package\n" if $verbose;
+	    $remove_basedir = 1;
+	    goto REMOVE_BASEDIR;
+        } else {
+            $act_unpack_level = $data->{'unpack-level'};
+	}
+
+	# file modified?
+	my $timestamp;
+	my @stat;
+	unless (@stat = stat $file) {
+	    print "N: Cannot stat file $file: $!\n";
+	} else {
+	    $timestamp = $stat[9];
+	}
+	if ((not defined $timestamp) or (not exists $data->{'timestamp'}) or ($data->{'timestamp'} != $timestamp)) {
+	    print "N: Removing package in lab (package has been changed) ...\n" if $debug;
+	    $remove_basedir = 1;
+	    goto REMOVE_BASEDIR;
+	}
+
+    REMOVE_BASEDIR:
+	if ($remove_basedir) {
+            print "N: Removing $pkg\n" if $verbose;
+	    unless (remove_pkg($base)) {
+		print "N: Skipping $action of $long_type package $pkg\n";
+		$exit_code = 2;
+		next PACKAGE;
+	    }
+	    $act_unpack_level = 0;
+	}
+    }
+
+    # unpack to requested unpack level
+    $act_unpack_level = unpack_pkg($type,$base,$file,$act_unpack_level,
+				   $unpack_level);
+    if ($act_unpack_level == -1) {
+	print STDERR "internal error: could not unpack package to desired level: $!\n";
+	print "N: Skipping $action of $long_type package $pkg\n";
+	$exit_code = 2;
+	next PACKAGE;
+    }
+
+    if (($action eq 'unpack') or ($action eq 'check')) { # collect info
+	for my $coll (sort by_collection_order keys %unpack_infos) {
+	    my $ci = $collection_info{$coll};
+
+	    # current type?
+	    next unless ($ci->{'type'} eq $type) or ($ci->{'type'} eq 'a');
+
+	    # info already available?
+	    next if (-e "$base/$ci->{'output'}");
+
+	    # unpack to desired unpack level (if necessary)
+	    $act_unpack_level = unpack_pkg($type,$base,$file,$act_unpack_level,$ci->{'unpack-level'});
+	    if ($act_unpack_level == -1) {
+		print STDERR "internal error: could not unpack package to desired level: $!\n";
+		print "N: Skipping $action of $long_type package $pkg\n";
+		$exit_code = 2;
+		next PACKAGE;
+	    }
+
+	    # chdir to base directory
+	    unless (chdir($base))
+		{ 	print STDERR "internal error: could not chdir into directory $base: $!\n";
+			print "N: Skipping $action of $long_type package $pkg\n";
+			$exit_code = 2;
+			next PACKAGE;
+		    }
+
+	    # collect info
+	    remove_status_file($base);
+	    print "N: Collecting info: $coll ...\n" if $debug;
+	    if (spawn("$LINTIAN_ROOT/collection/$ci->{'script'}", $pkg, $long_type) != 0) {
+		print STDERR "internal error: collect info $coll about package $pkg: $?\n";
+		print "N: Skipping $action of $long_type package $pkg\n";
+		$exit_code = 2;
+		next PACKAGE;
+	    }
+	}
+    }
+
+    if ($action eq 'check') { 	# read override file
+	unless ($no_override) 
+	    { 	if ( open(O,"$base/override") )
+		    {
+			binmode(O);
+			while (<O>) {
+			    chomp;
+			    next if m,^\#,o;
+
+			    s/^\s+//o;
+			    s/\s+$//o;
+			    s/\s+/ /go;
+			    next if $_ eq '';
+
+			    if ( defined( $overridden{$_} ) ) {
+				print "N: Local override not needed in package $pkg: $_\n" if $verbose;
+			    } else {
+				$overridden{$_} = 0;
+			    }
+			}
+			close(O);
+		    }
+	    }
+
+	# perform checks
+	for my $check (keys %checks) {
+	    my $ci = $check_info{$check};
+
+	    # current type?
+	    next unless ($ci->{'type'} eq $type) or ($ci->{'type'} eq 'a');
+
+	    # unpack to desired unpack level (if necessary)
+	    $act_unpack_level = unpack_pkg($type,$base,$file,$act_unpack_level,$ci->{'unpack-level'});
+	    if ($act_unpack_level == -1) {
+		print STDERR "internal error: could not unpack package to desired level: $!\n";
+		print "N: Skipping $action of $long_type package $pkg\n";
+		$exit_code = 2;
+		next PACKAGE;
+	    }
+
+	    # chdir to base directory
+	    unless (chdir($base)) {
+		print STDERR "internal error: could not chdir into directory $base: $!\n";
+		print "N: Skipping $action of $long_type package $pkg\n";
+		$exit_code = 2;
+		next PACKAGE;
+	    }
+
+	    print "N: Running check: $check ...\n" if $debug;
+
+	    my $cmd = "$LINTIAN_ROOT/checks/$ci->{'script'}";
+
+	    my $PIPE=FileHandle->new;
+	    unless (pipeline_open($PIPE, sub { exec $cmd, $pkg, $long_type })) {
+		print STDERR "internal error: cannot open input pipe to command $cmd: $!\n";
+		print "N: Skipping $action of $long_type package $pkg\n";
+		$exit_code = 2;
+		next PACKAGE;
+	    }
+	    my $suppress;
+	    while (<$PIPE>) {
+		chop;
+
+		# error/warning/info ?
+		if (/^[EWI]: \S+ \S+:\s+\S+/o) {
+		    $suppress = (/^I: / and not $display_infotags);
+
+		    # change "pkg binary:" to just "pkg:"
+		    s/^(.: \S+)\s+binary:/$1:/;
+
+		    # remove `[EWI]:' for override matching
+		    my $tag_long = $_;
+		    $tag_long =~ s/^.:\s+//;
+		    $tag_long =~ s/\s+$//;
+		    $tag_long =~ s/\s+/ /g;
+
+		    my $tag_short;
+		    if ($tag_long =~ /^([^:]*): (\S+)/) {
+			$tag_short = "$1: $2";
+		    } else {
+			die "couldn't parse tag_long $tag_long to create tag_short";
+		    }
+
+		    if ($experimental_tag{$2}) {
+			s/^.:/X:/;
+		    }
+
+		    # overridden?
+		    if (not $no_override and
+			((exists $overridden{$tag_long}) or
+			 (exists $overridden{$tag_short}))) {
+			# yes, this tag is overridden
+			$overridden{$tag_long}++ if exists $overridden{$tag_long};
+			$overridden{$tag_short}++ if exists $overridden{$tag_short};
+			s/^.:/O:/;
+			print "$_\n"
+			    if $show_overrides or ($verbose and not $suppress);
+		    } else {
+			# no, just display it
+			print "$_\n"
+			    if not $suppress;
+		    }
+
+		    # error?
+		    if (/^E:/) {
+			$exit_code or ($exit_code = 1);
+		    }
+		} else {
+		    # no, so just display it
+		    print "$_\n";
+		}
+	    }
+	    unless (close($PIPE)) {
+		if ($!) {
+		    print STDERR "internal error: cannot close input pipe to command $cmd: $!";
+		} else {
+		    print STDERR "internal error: cannot run $check check on package $pkg\n";
+		}
+		print "N: Skipping $action of $long_type package $pkg\n";
+		$exit_code = 2;
+		next PACKAGE;
+	    }
+	}
+
+	# report unused overrides
+	if (not $no_override and $verbose) {
+	    my $ppkg = $type eq 'b' ? quotemeta($pkg) : quotemeta("$pkg $long_type");
+	    for my $o (sort keys %overridden) {
+		next unless $o =~ /^$ppkg:/;
+		next if $overridden{$o};
+
+		print "I: $pkg: unused-override $o\n";
+
+		# mark override entry as used
+		$overridden{$o} = 99999;
+	    }
+	}
+    }
+
+    # chdir to lintian root directory (to unlock $base so it can be removed below)
+    unless (chdir($LINTIAN_ROOT)) {
+	print STDERR "internal error: could not chdir into directory $LINTIAN_ROOT: $!\n";
+	print "N: Skipping $action of $long_type package $pkg\n";
+	$exit_code = 2;
+	next PACKAGE;
+    }
+
+    # clean up
+    if ($act_unpack_level > $unpack_level) {
+	$act_unpack_level = clean_pkg($type,$base,$file,$act_unpack_level,$unpack_level);
+	if ($act_unpack_level == -1) {
+	    print STDERR "error: could not clean up laboratory for package $pkg: $!\n";
+	    print "N: Skipping clean up\n";
+	    $exit_code = 2;
+	    next PACKAGE;
+	}
+    }
+
+    # create Lintian status file
+    if (($act_unpack_level > 0) and (not -f "$base/.lintian-status")) {
+	my @stat;
+	unless (@stat = stat $file) {
+	    print STDERR "internal error: cannot stat file $file: $!\n";
+	    print "N: Skipping creation of status file\n";
+	    $exit_code = 2;
+	    next PACKAGE;
+	}
+	my $timestamp = $stat[9];
+
+	unless (open(STATUS,">$base/.lintian-status")) {
+	    print STDERR "internal error: could not create status file $base/.lintian-status for package $pkg: $!\n";
+	    $exit_code = 2;
+	    next PACKAGE;
+	}
+
+	print STATUS "Lintian-Version: $LINTIAN_VERSION\n";
+	print STATUS "Lab-Format: $LAB_FORMAT\n";
+	print STATUS "Package: $pkg\n";
+	print STATUS "Version: $ver\n";
+	print STATUS "Type: $type\n";
+	print STATUS "Unpack-Level: $act_unpack_level\n";
+	print STATUS "Timestamp: $timestamp\n";
+	close(STATUS);
+    }
+}
+
+# did I pipe output through lintian-info?
+if ($lintian_info) {
+    close(OUTPUT_PIPE) or fail("cannot close output pipe to $lintian_info_cmd: $!");
+    select STDOUT;
+}
+
+# report unused overrides
+if ($check_everything and not $no_override and $verbose) {
+    for my $o (sort keys %overridden) {
+	next if $overridden{$o};
+	print "I: general: unused-override $o\n";
+    }
+}
+
+exit $exit_code;
+
+# -----------------------------------------------------------------------
+
+sub setup_lab {
+    print "N: Setting up lab in $LINTIAN_LAB ...\n" if $verbose;
+
+    # create lab directory
+    if (not -d "$LINTIAN_LAB" or ($lab_mode eq 'temporary')) {
+	# (Note, that the mode 0777 is reduced by the current umask.)
+	mkdir($LINTIAN_LAB,0777) or fail("cannot create lab directory $LINTIAN_LAB");
+    }
+
+    # create base directories
+    if (not -d "$LINTIAN_LAB/binary") {
+	mkdir("$LINTIAN_LAB/binary",0777) or fail("cannot create lab directory $LINTIAN_LAB/binary");
+    }
+    if (not -d "$LINTIAN_LAB/source") {
+	mkdir("$LINTIAN_LAB/source",0777) or fail("cannot create lab directory $LINTIAN_LAB/source");
+    }
+    if (not -d "$LINTIAN_LAB/info") {
+	mkdir("$LINTIAN_LAB/info",0777) or fail("cannot create lab directory $LINTIAN_LAB/info");
+    }
+
+    # distribution specified?
+    if ($LINTIAN_DIST) {
+	print STDERR "spawning list-binpkg and list-srcpkg since LINTIAN_DIST=$LINTIAN_DIST\n" if ($debug >= 2);
+	# yes!
+
+	my $v = $verbose ? '-v' : '';
+
+	spawn("$LINTIAN_ROOT/unpack/list-binpkg",
+	      "$LINTIAN_LAB/info/binary-packages", $v) == 0
+		  or fail("cannot create binary package list");
+	spawn("$LINTIAN_ROOT/unpack/list-srcpkg",
+	      "$LINTIAN_LAB/info/source-packages", $v) == 0
+		  or fail("cannot create source package list");
+    } else {
+	print STDERR "not spawning list-binpkg and list-srcpkg since LINTIAN_DIST is empty\n" if ($debug >= 2);
+	# just create empty files
+	touch("$LINTIAN_LAB/info/binary-packages")
+	    or fail("cannot create binary package list");
+	touch("$LINTIAN_LAB/info/source-packages")
+	    or fail("cannot create source package list");
+    }
+}
+
+sub remove_lab {
+    $SIG{'INT'} = 'DEFAULT';
+    $SIG{'QUIT'} = 'DEFAULT';
+
+    # if $LINTIAN_LAB has no value, nothing to do here
+    return unless $LINTIAN_LAB;
+
+    print "N: Removing $LINTIAN_LAB ...\n" if $verbose;
+
+    # chdir to root (otherwise, the shell will complain if we happen
+    # to sit in the directory we want to delete :)
+    chdir('/');
+
+    # does the lab exist?
+    unless (-d "$LINTIAN_LAB") {
+	# no.
+	print STDERR "warning: cannot remove lab in directory $LINTIAN_LAB ! (directory does not exist)\n";
+	return;
+    }
+
+    # sanity check if $LINTIAN_LAB really points to a lab :)
+    unless (-d "$LINTIAN_LAB/binary") {
+	# binary/ subdirectory does not exist--empty directory?
+	my @t = <$LINTIAN_LAB/*>;
+	if ($#t+1 <= 2) {
+	    # yes, empty directory--skip it
+	    return;
+	} else {
+	    # non-empty directory that does not look like a lintian lab!
+	    print STDERR "warning: directory $LINTIAN_LAB does not look like a lab! (please remove it yourself)\n";
+	    return;
+	}
+    }
+
+    # looks ok.
+    if (spawn('rm', '-rf', '--',
+	      "$LINTIAN_LAB/binary",
+	      "$LINTIAN_LAB/source",
+	      "$LINTIAN_LAB/info") != 0) {
+	print STDERR "warning: cannot remove lab directory $LINTIAN_LAB (please remove it yourself)\n";
+    }
+
+    # dynamic lab?
+    if ($lab_mode eq 'temporary') {
+	if (rmdir($LINTIAN_LAB) != 1) {
+	    print STDERR "warning: cannot remove lab directory $LINTIAN_LAB (please remove it yourself)\n";
+	}
+    }
+}
+
+# -------------------------------
+
+sub unpack_pkg {
+    my ($type,$base,$file,$cur_level,$new_level) = @_;
+
+    printf("N: Current unpack level is %d\n",$cur_level) if $debug;
+
+    return $cur_level if $cur_level == $new_level;
+
+    # remove .lintian-status file
+    remove_status_file($base);
+
+    if ( ($cur_level == 0) and (-d $base) ) {
+       # We were lied to, there's something already there - clean it up first
+       remove_pkg($base) or return -1;
+    }
+
+    if ( ($new_level >= 1) and
+	 (not defined ($cur_level) or ($cur_level < 1)) ) {
+	# create new directory
+	print "N: Unpacking package to level 1 ...\n" if $debug;
+	if ($type eq 'b') {
+	    spawn("$LINTIAN_ROOT/unpack/unpack-binpkg-l1", $base, $file) == 0
+		or return -1;
+	} else {
+	    spawn("$LINTIAN_ROOT/unpack/unpack-srcpkg-l1", $base, $file) == 0
+		or return -1;
+	}
+	$cur_level = 1;
+    }
+
+    if ( ($new_level >= 2) and
+	 (not defined ($cur_level) or ($cur_level < 2)) ) {
+	# unpack package contents
+	print "N: Unpacking package to level 2 ...\n" if $debug;
+	if ($type eq 'b') {
+	    spawn("$LINTIAN_ROOT/unpack/unpack-binpkg-l2", $base) == 0
+		or return -1;
+	} else {
+	    print "N: $LINTIAN_ROOT/unpack/unpack-srcpkg-l2 $base\n" if $debug;
+	    spawn("$LINTIAN_ROOT/unpack/unpack-srcpkg-l2", $base) == 0
+		or return -1;
+	}
+	$cur_level = 2;
+    }
+
+    return $cur_level;
+}
+
+# TODO: is this the best way to clean dirs in perl?
+# no, look at File::Path module
+sub clean_pkg {
+    my ($type,$base,$file,$cur_level,$new_level) = @_;
+
+    return $cur_level if $cur_level == $new_level;
+
+    if ($new_level < 1) {
+	# remove base directory
+	remove_pkg($base) or return -1;
+	return 0;
+    }
+
+    if ( ($new_level < 2) and defined ($cur_level) and ($cur_level >= 2) ) {
+	# remove .lintian-status file
+	remove_status_file($base);
+
+	# remove unpacked/ directory
+	print "N: Decreasing unpack level to 1 (removing files) ...\n" if $debug;
+	if ( -l "$base/unpacked" ) {
+	    spawn('rm', '-rf', '--', "$base/".readlink( "$base/unpacked" )) == 0
+		or return -1;
+	    spawn('rm', '-rf', '--', "$base/unpacked") == 0 or return -1;
+	} else {
+	    spawn('rm', '-rf', '--', "$base/unpacked") == 0 or return -1;
+	}
+
+	$cur_level = 1;
+    }
+
+    return $cur_level;
+}
+
+# this function removes a package's base directory in the lab completely
+sub remove_pkg {
+    my ($base) = @_;
+
+    print "N: Removing package in lab ...\n" if $debug;
+    if (spawn('rm', '-rf', '--', $base) != 0) {
+	print STDERR "error: cannot remove directory $base: $!\n";
+	return 0;
+    }
+
+    return 1;
+}
+
+sub remove_status_file {
+    my ($base) = @_;
+
+    # status file exists?
+    if (not -e "$base/.lintian-status") {
+	return 1;
+    }
+
+    if (not unlink("$base/.lintian-status")) {
+	print STDERR "internal error: cannot remove status file $base/.lintian-status: $!\n";
+	return 0;
+    }
+
+    return 1;
+}
+
+# -------------------------------
+
+# get package name, version, and file name from the lab
+sub get_bin_info_from_lab {
+    my ($base_dir) = @_;
+    my ($pkg,$ver,$file);
+
+    ($pkg = read_file("$base_dir/fields/package"))
+	or fail("cannot read file $base_dir/fields/package: $!");
+
+    ($ver = read_file("$base_dir/fields/version"))
+	or fail("cannot read file $base_dir/fields/version: $!");
+
+    ($file = readlink("$base_dir/deb"))
+	or fail("cannot read link $base_dir/deb: $!");
+
+    return ($pkg,$ver,$file);
+}
+
+# get package name, version, and file name from the lab
+sub get_src_info_from_lab {
+    my ($base_dir) = @_;
+    my ($pkg,$ver,$file);
+
+    ($pkg = read_file("$base_dir/fields/source"))
+	or fail("cannot read file $base_dir/fields/source: $!");
+
+    ($ver = read_file("$base_dir/fields/version"))
+	or fail("cannot read file $base_dir/fields/version: $!");
+
+    ($file = readlink("$base_dir/dsc"))
+	or fail("cannot read link $base_dir/dsc: $!");
+
+    return ($pkg,$ver,$file);
+}
+
+# schedule a package for processing
+sub schedule_package {
+    my ($type,$pkg,$ver,$file) = @_;
+
+    my $s = "$type $pkg $ver $file";
+
+    if ( $already_scheduled{$s}++ ) {
+	if ($verbose) {
+	    printf "N: Ignoring duplicate %s package $pkg (version $ver)\n",
+		$type eq 'b' ? 'binary' : 'source';
+	}
+	return;
+    }
+
+    push(@packages,$s);
+}
+
+# -------------------------------
+
+# create an empty file
+# --okay, okay, this is not exactly what `touch' does :-)
+sub touch {
+    open(T,">$_[0]") or return 0;
+    close(T) or return 0;
+
+    return 1;
+}
+
+# read first line of a file
+sub read_file {
+    my $t;
+
+    open(T,$_[0]) or return;
+    chop($t = <T>);
+    close(T) or return;
+
+    return $t;
+}
+
+# sort collection list by `order'
+sub by_collection_order {
+    $collection_info{$a}->{'order'} <=> $collection_info{$b}->{'order'};
+}
+
+# -----------------------------
+# Exit handler.
+
+sub END {
+    # Prevent remove_lab from affecting the exit code.
+    local $?;
+
+    remove_lab() if $lab_mode eq 'temporary';
+}
+
+sub interrupted {
+    $SIG{$_[0]} = 'DEFAULT';
+    die "N: Interrupted.\n";
+}

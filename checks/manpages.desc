@@ -1,0 +1,124 @@
+Check-Script: manpages
+Author: Christian Schwarz <schwarz@debian.org>
+Abbrev: man
+Standards-Version: 3.2.0
+Type: binary
+Unpack-Level: 2
+Needs-Info: file-info
+Info: This script checks if a binary package conforms to manual page policy.
+
+Tag: bad-link-to-undocumented-manpage
+Type: error
+Severity: Important
+Info: The symbolic link should reference
+ `<tt>../man[237]/undocumented.[237].gz</tt>' for manual pages in
+ <tt>/usr/share/man</tt> or
+ `<tt>../../../share/man/man[237]/undocumented.[237].gz</tt>' for manual
+ pages in <tt>/usr/X11R6/man</tt>.
+
+Tag: link-to-undocumented-manpage
+Type: warning
+Info: Symbolic links to the undocumented(7) manual page may be provided
+ if no manual page is available, but that is deprecated.
+ .
+ The lack of a manual page is still a bug, and if at all possible you
+ should write one yourself.
+ .
+ For help with writing manual pages, refer to the Man-Page-HOWTO at
+ http://www.schweikhardt.net/man_page_howto.html, the examples created
+ by <tt>debmake</tt> or <tt>dh_make</tt>, or the
+ <file>/usr/share/doc/man-db/examples</file> directory.
+ If the package provides <tt>--help</tt> output, you might want to use
+ the <tt>help2man</tt> utility to generate a simple manual page.
+Ref: policy 13.1
+
+Tag: binary-without-manpage
+Type: error
+Info: Each binary in <tt>/usr/bin</tt>, <tt>/usr/sbin</tt>, <tt>/bin</tt>,
+ <tt>/sbin</tt>, or <tt>/usr/games</tt>, must have a manual page.
+ .
+ Note, that though the `man' program has the capability to check for
+ several program names in the NAMES section, each of these programs
+ must have its own manual page (a symbolic link to the appropriate
+ manual page is sufficient) because other manual page viewers such as
+ xman or tkman don't support this.
+Ref: policy 13.1
+
+Tag: manpage-in-wrong-directory
+Info: The manual page should be installed in the correct directory below
+ <tt>/usr/share/man/</tt> or <tt>/usr/share/man/<i>locale</i></tt>.
+ Only sections 1 through 9 should be used.
+Ref: policy 13.1
+
+Tag: manpage-has-wrong-extension
+Type: error
+Info: The manual page has an extension other than
+ `<i>section</i>[<i>program</i>].gz'.
+Ref: policy 13.1
+
+Tag: manpage-not-compressed
+Type: error
+Info: Manual pages have to be installed compressed (using `<tt>gzip -9</tt>').
+Ref: policy 13.1
+
+Tag: x11-games-should-be-in-usr-games
+Type: error
+Info: Since X11 games should be installed in <tt>/usr/games</tt> (and
+ not in <tt>/usr/X11R6/bin</tt>) and the game's manual pages should be
+ installed in <tt>/usr/share/man/man6</tt>, the directory
+ <tt>/usr/X11R6/man/man6</tt> should be (nearly) empty.
+ .
+ There are a few exceptions though, as utilities like `xeyes'. If this is
+ one of these exceptions, please contact &maint; about this so that
+ this exception would be recognized in future versions of Lintian.
+Ref: policy 12.10
+
+Tag: manpage-not-compressed-with-gzip
+Type: error
+Info: Manual pages should be compressed with <tt>gzip -9</tt>.
+Ref: policy 13.1
+
+Tag: manpage-not-compressed-with-max-compression
+Type: error
+Info: Manual pages should be compressed with <tt>gzip -9</tt>.
+Ref: policy 13.1
+
+Tag: manpage-has-bad-whatis-entry
+Type: error
+Info: Each manual page should start with a `NAME' section, which lists the
+ name and a brief description of the page. These sections are parsed by
+ `mandb' and stored in a database for the use of `apropos' and `whatis', so
+ they must be in a certain format. This manual page apparently uses the
+ wrong format and cannot be parsed by `mandb'.
+ .
+ For information on how `NAME' sections should be written and a list of some
+ common mistakes, please see the lexgrog(8) manual page.
+
+Tag: manpage-for-x11-binary-in-wrong-directory
+Type: error
+Info: Manual pages for binaries which are located in <tt>/usr/X11R6/bin</tt>
+ should be installed below <tt>/usr/X11R6/man</tt>.
+ .
+ Note that normally only packages that are part of X itself and those that
+ are using some arcane Imakefiles should actually install binaries into
+ <tt>/usr/X11R6/bin</tt>.
+
+Tag: manpage-for-non-x11-binary-in-wrong-directory
+Type: error
+Info: Manual pages for binaries that are not located in <tt>/usr/X11R6/bin</tt>
+ should not be installed below <tt>/usr/X11R6/man</tt>, but below
+ <tt>/usr/share/man</tt>.
+ .
+ Note that moving a binary into <tt>/usr/X11R6/bin</tt> is almost never the
+ proper solution for this problem; move the manual page instead.
+
+Tag: bad-so-link-within-manual-page
+Type: error
+Info: Manual files that use the .so links to include other pages should
+ only point to a path relative to the top-level manual hierarchy, e.g.
+ .
+ <tt>.so man3/boo.1.gz</tt>
+
+Tag: empty-manual-page
+Type: error
+Info: The referenced manual page is empty.

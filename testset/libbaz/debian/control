@@ -1,0 +1,16 @@
+Source: libbaz
+Section: libs
+Priority: extra
+Maintainer: Lintian Maintainer <lintian-maint@debian.org>
+Standards-Version: 3.2.1
+
+Package: libbaz1
+Architecture: any
+Description: test handling of library packages
+ Regression test for lintian's handling of libraries
+
+Package: libbaz1-dev
+Architecture: any
+Depends: libbaz1
+Description: development package
+ Regression test for lintian's handling of libraries

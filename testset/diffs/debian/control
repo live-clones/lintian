@@ -1,0 +1,11 @@
+Source: diffs
+Section: interpreters
+Priority: extra
+Maintainer: Lintian Maintainers <lintian-maint@debian.org>
+Standards-Version: 3.5.8
+
+Package: diffs
+Architecture: all
+Depends: test
+Description: test lintian's diff file checks
+ Regression test lintian's diff file checks.

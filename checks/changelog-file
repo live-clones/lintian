@@ -1,0 +1,224 @@
+#!/usr/bin/perl -w
+# changelog-file -- lintian check script
+
+# Copyright (C) 1998 Christian Schwarz
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+# MA 02111-1307, USA.
+
+use strict;
+
+($#ARGV == 1) or fail("syntax: changelog-file <pkg> <type>");
+my $pkg = shift;
+my $type = shift;
+my $found_html=0;
+my $found_text=0;
+my $native_pkg;
+my $ppkg = quotemeta($pkg);
+
+my @doc_files;
+
+my %file_info;
+my %is_a_symlink;
+
+# Read file info...
+open(IN,"file-info") or fail("cannot find file-info for $type package $pkg");
+while (<IN>) {
+    chop;
+
+    m/^(.*?):\s+(.*)$/o or
+	fail("an error in the file pkg is preventing lintian from checking this package: $_");
+    my ($file,$info) = ($1,$2);
+
+    next unless $file =~ m/doc/o;
+    $file =~ s,^(\./)?,,;
+    $file_info{$file} = $info;
+}
+close(IN);
+
+# Modify the file_info by following symbolic links.
+for my $file (keys %file_info) {
+    if ($file_info{$file} =~ m/^symbolic link to (.*)/) {
+	$is_a_symlink{$file} = 1;
+	# Figure out the link destination.  This algorithm is
+	# not perfect but should be good enough.  (If it fails,
+	# all that happens is that an evil symlink causes a bogus warning).
+	my $newfile;
+	my $link = $1;
+	if ($link =~ m/^\//) {
+	    # absolute path; replace
+	    $newfile = $link;
+	} else {
+	    $newfile = $file;	# relative path; base on $file
+	    $newfile =~ s,/[^/]+$,,; # strip final pathname component
+	    # strip another component for every leading ../ in $link
+	    while ($link =~ m,^\.\./,) {
+		$newfile =~ s,/[^/]+$,,;
+		$link =~ s,^\.\./,,;
+	    }
+	    # concatenate the results
+	    $newfile .= '/' . $link;
+	}
+	if (exists $file_info{$newfile}) {
+	    $file_info{$file} = $file_info{$newfile};
+	}
+    }
+}
+
+# Read package contents...
+open(IN,"index") or fail("cannot open index file index: $!");
+while (<IN>) {
+    chop;
+
+    s,^(\./),,;
+    # skip packages which have a /usr/share/doc/$pkg -> foo symlink
+    if (m, usr/share/doc/$ppkg -> ,o) {
+	exit 0;
+    }
+
+    # we are only interested in files or symlinks in /usr/(share/)?doc/$pkg
+    if (m,usr/(share/)?doc/$ppkg/([^/\s]+),o ) {
+	my $file = $2;
+
+	push(@doc_files, $file);
+
+	# check if changelog files are compressed with gzip -9
+	next unless $file =~ m/^changelog(\.html)?(\.gz)?$|changelog.debian(\.gz)?$/i;
+
+	my $file1 = "usr/share/doc/$pkg/$file";
+
+	if (not $file =~ m/\.gz$/) {
+	    print "E: $pkg $type: changelog-file-not-compressed $file\n";
+	} else {
+	    my $max_compressed = 0;
+	    if (exists $file_info{$file1} && defined $file_info{$file1}) {
+		if ($file_info{$file1} =~ m/max compression/o) {
+		    $max_compressed = 1;
+		}
+	    }
+	    if (not $max_compressed) {
+		unless ($is_a_symlink{$file1}) {
+		    print "E: $pkg $type: changelog-not-compressed-with-max-compression $file\n";
+		}
+	    }
+	}
+
+	if ($file =~ m/^changelog\.html(\.gz)?$/ ) {
+	    $found_html = 1;
+	}
+	if ($file =~ m/^changelog(\.gz)?$/ ) {
+	    $found_text = 1;
+	}
+    }
+
+    #  next unless m,^(\S+).*usr/share/doc/$ppkg/([^/\s]+)( -> [^/\s]+)?$,o;
+}
+close(IN);
+
+# ignore packages which don't have a /usr/share/doc/$pkg directory, since
+# the copyright check will complain about this
+if ($#doc_files < 0) {
+    exit 0;
+}
+
+if ( $found_html && !$found_text ) {
+    print "E: $pkg $type: html-changelog-without-text-version\n";
+}
+
+# is this a native Debian package?
+open(IN,"fields/version") or fail("cannot open fields/version file for reading: $!");
+chop(my $version = <IN>);
+close(IN);
+$native_pkg = ($version !~ m/-/);
+
+if ($native_pkg) {
+    my @foo;
+    # native Debian package
+    if (grep m/^changelog(\.gz)?$/,@doc_files) {
+	# everything is fine
+    } elsif (@foo = grep m/^changelog\.debian(\.gz)$/i,@doc_files) {
+	print "W: $pkg $type: wrong-name-for-changelog-of-native-package usr/share/doc/$pkg/$foo[0]\n";
+    } else {
+	print "E: $pkg $type: changelog-file-missing-in-native-package\n";
+    }
+} else {
+    # non-native (foreign :) Debian package
+
+    # 1. check for upstream changelog
+    if (grep m/^changelog(\.html)?(\.gz)?$/,@doc_files) {
+	# everything is fine
+    } else {
+	# search for changelogs with wrong file name
+    	my $found = 0;
+    	for (@doc_files) {
+	    if (m/^change/i and not m/debian/i) {
+		print "W: $pkg $type: wrong-name-for-upstream-changelog usr/share/doc/$pkg/$_\n";
+		$found = 1;
+		last;
+	    }
+    	}
+	if (not $found) {
+	    # This tag is disabled for now since a lot of packages fail this
+	    # aspect of policy and I want to clarify policy WRT multi-binary
+	    # packages first.
+	    #print "W: $pkg $type: no-upstream-changelog\n";
+	}
+    }
+
+    # 2. check for Debian changelog
+    if (grep m/^changelog\.Debian(\.gz)?$/,@doc_files) {
+	# everything is fine
+    } elsif (my @foo = grep m/^changelog\.debian(\.gz)?$/i,@doc_files) {
+	print "W: $pkg $type: wrong-name-for-debian-changelog-file usr/share/doc/$pkg/$foo[0]\n";
+    } else {
+	print "E: $pkg $type: debian-changelog-file-missing\n";
+    }
+}
+
+# read the changelog itself
+#
+# emacs only looks at the last "local variables:" in a file, and only at
+# one within 3000 chars of EOF and on the last page (^L), but that's a bit
+# pesky to replicate.  Demanding a match of $prefix and $suffix ought to
+# be enough to avoid false positives.
+open IN, "changelog" or fail("cannot find changelog for $type package $pkg");
+my ($prefix, $suffix);
+while (<IN>) {
+    if (/^(.*)Local variables:(.*)$/i) {
+	$prefix = $1;
+	$suffix = $2;
+    }
+    # emacs allows whitespace between prefix and variable, hence \s*
+    if (defined $prefix && defined $suffix && /^\Q$prefix\E\s*add-log-mailing-address:.*\Q$suffix\E$/) {
+	print "E: $pkg $type: debian-changelog-file-contains-obsolete-user-emacs-settings\n";
+    }
+}
+close IN;
+
+exit 0;
+
+# ---------------------------------------------------
+
+sub fail {
+    if ($_[0]) {
+	warn "internal error: $_[0]\n";
+    } elsif ($!) {
+	warn "internal error: $!\n";
+    } else {
+	warn "internal error.\n";
+    }
+    exit 1;
+}

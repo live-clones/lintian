@@ -1,0 +1,60 @@
+#!/usr/bin/perl -w
+#
+# lintian-info -- transform lintian tags into descriptive text
+#
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+#
+# This program is free software.  It is distributed under the terms of
+# the GNU General Public License as published by the Free Software
+# Foundation; either version 2 of the License, or (at your option) any
+# later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+# MA 02111-1307, USA.
+
+use strict;
+
+# turn file buffering off:
+$| = 1;
+
+BEGIN {
+  # determine LINTIAN_ROOT
+  my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'} || '/usr/share/lintian';
+  $ENV{'LINTIAN_ROOT'} = $LINTIAN_ROOT
+    unless exists $ENV{'LINTIAN_ROOT'};
+}
+
+# import perl libraries
+use lib "$ENV{'LINTIAN_ROOT'}/lib";
+use Read_taginfo;
+
+my %already_displayed = ();
+
+my %tag_info = %{read_tag_info()};
+
+while (<>) {
+    print;
+    chomp;
+
+    my $tag;
+    my ($type, $pkg, @pieces) = split(/:\s+/);
+    if ($type =~ m/^[0EWX]$/) {
+	$tag = shift @pieces;
+	($tag) = split(/\s+/, $tag, 2);
+
+	next if not exists $tag_info{$tag} or $already_displayed{$tag}++;
+	print "N:\n";
+	print wrap_paragraphs('N:   ',$tag_info{$tag});
+	print "N:\n";
+    }
+}
+
+exit 0;

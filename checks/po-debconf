@@ -1,0 +1,58 @@
+#! /bin/sh
+# po-debconf -- lintian check script
+
+# Copyright (C) 2002 by Denis Barbier <barbier@linuxfr.org>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+# MA 02111-1307, USA.
+
+[ $# -eq 2 ] || {
+        echo "syntax: po-debconf <pkg> <type>" 1>&2
+        exit 2
+}
+
+pkg=$1
+type=$2
+
+cd debfiles
+
+[ -f po/POTFILES.in ] || exit 0
+[ -f po/templates.pot ] || exit 0
+
+for lang in po/*.po
+do
+        [ -f $lang ] || continue
+        if sed -e ':t /^msgstr/,${N;/\nmsgid/q;bt;};' $lang | grep charset=CHARSET >/dev/null 2>&1; then
+                echo "W: $pkg $type: unknown-charset-in-po-file $lang"
+        fi
+done
+
+extract_msgid()
+{
+        perl -e 'local $/=undef; $_=<>; s/"\n"//g; for $line (split(/\n/, $_)) {next unless $line=~s/^msgid "([^"])/$1/; $line=~s/"$/\n/; print $line;}' $1 > $2
+}
+
+rm -rf lintianpo 2>/dev/null
+mkdir lintianpo
+cp po/POTFILES.in lintianpo/
+extract_msgid po/templates.pot lintianpo/msgid.pot
+debconf-updatepo --podir=lintianpo >/dev/null 2>&1 || exit 2
+extract_msgid lintianpo/templates.pot lintianpo/msgid.templates
+cmp lintianpo/msgid.pot lintianpo/msgid.templates >/dev/null || echo "W: $pkg $type: newer-debconf-templates"
+rm -rf lintianpo 2>/dev/null
+
+exit 0
+

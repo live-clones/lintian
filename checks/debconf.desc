@@ -1,0 +1,169 @@
+Check-Script: debconf
+Author: Colin Watson <cjw44@flatline.org.uk>
+Abbrev: dc
+Standards-Version: 3.5.0
+Type: binary
+Unpack-Level: 2
+Info: This looks for common mistakes in packages using debconf.
+Needs-Info: scripts
+
+Tag: missing-debconf-dependency
+Type: warning
+Info: Packages using debconf should depend on it, since debconf is not an
+ essential package.
+ .
+ Some packages fall back to a different configuration system if debconf is
+ not present; please contact &maint; so that the exception would be
+ recognized in future versions of Lintian.
+
+Tag: missing-debconf-dependency-for-preinst
+Type: warning
+Info: Packages using debconf in their preinst script must either pre-depend
+ on debconf (>= 0.2.17), with appropriate discussion on &debdev;, or else
+ depend on debconf and fall back to a different configuration system.
+ .
+ Some packages fall back to another configuration system throughout the
+ package if debconf is not present; please contact &maint; so that this
+ exception would be recognized in future versions of Lintian.
+
+Tag: unknown-field-in-templates
+Type: error
+Info: See the Debconf Programmer's Tutorial for a list of the possible
+ fields in a debconf templates file.
+
+Tag: no-template-name
+Type: error
+Info: The templates file contains a template without a `Template:' field.
+
+Tag: malformed-template-name
+Type: error
+Info: The `Template:' field should contain more than one component, each
+ separated by a slash (`/'). Each component may only consist of the
+ alphanumeric characters, `+', `-', and `.'.
+
+Tag: no-template-type
+Type: error
+Info: The templates file contains a template without a `Type:' field.
+
+Tag: unknown-template-type
+Type: error
+Info: A `Type:' field in a templates file provided by this package uses an
+ unknown data type. Valid types are currently `string', `boolean', `select',
+ `multiselect', `note', `text', and `password'.
+
+Tag: select-without-choices
+Type: error
+Info: Templates using the `select' or `multiselect' data types must provide
+ a `Choices:' field listing the possible values of the template.
+
+Tag: multiselect-without-dependency
+Type: warning
+Info: If your package uses the `multiselect' type in a debconf template, it
+ must depend on debconf (>= 0.2.26).
+
+Tag: no-template-description
+Type: error
+Info: The templates file contains a template without a `Description:' field.
+
+Tag: duplicate-long-description-in-template
+Type: warning
+Info: The long description of one of the templates provided by this package
+ is a duplicate of the short description. If you cannot provide a good
+ extended description, it is better to leave it blank.
+
+Tag: select-with-translated-default-field
+Type: warning
+Info: You do not need to translate `Default:' fields of `select' or
+ `multiselect' questions in templates.
+
+Tag: partially-translated-question
+Type: warning
+Info: If you translate either of the `Choices:' and `Description:' fields in
+ a template, you should translate the other one as well.
+
+Tag: config-does-not-load-confmodule
+Type: warning
+Info: The config script must load one of the debconf libraries.
+
+Tag: config-loads-obsolete-confmodule
+Type: warning
+Info: The config script uses an obsolete name for a debconf confmodule.
+ Shell scripts should source <tt>/usr/share/debconf/confmodule</tt>, while
+ Perl scripts should use <tt>Debconf::Client::ConfModule</tt>.
+
+Tag: postinst-uses-db-input
+Type: warning
+Info: It is generally not a good idea for postinst scripts to use debconf
+ commands like <tt>db_input</tt>. Typically, they should restrict themselves
+ to <tt>db_get</tt> to request previously acquired information, and have the
+ config script do the actual prompting.
+
+Tag: postinst-does-not-load-confmodule
+Type: warning
+Info: Even if your postinst does not involve debconf, you currently need to
+ make sure it loads one of the debconf libraries. This will be changed in
+ the future.
+
+Tag: postinst-loads-obsolete-confmodule
+Type: warning
+Info: The postinst script uses an obsolete name for a debconf confmodule.
+ Shell scripts should source <tt>/usr/share/debconf/confmodule</tt>, while
+ Perl scripts should use <tt>Debconf::Client::ConfModule</tt>.
+
+Tag: postrm-does-not-purge-debconf
+Type: warning
+Info: Packages using debconf should call <tt>db_purge</tt> or its equivalent
+ in their postrm. If the package uses debhelper, dh_installdebconf(1) should
+ take care of this.
+
+Tag: isdefault-flag-is-deprecated
+Type: warning
+Info: The 'isdefault' flag on debconf questions is deprecated as of debconf
+ 0.5.00, and has been replaced by 'seen' with the inverse meaning. From
+ debconf 0.5 onwards there should be very few reasons to use isdefault/seen
+ anyway, as backing up works much better now. See
+ /usr/share/doc/debconf-doc/changelog.gz for more information.
+ .
+ The misuse of isdefault often leads to questions being asked twice in one
+ installation run, or, worse, on every upgrade. Please test your package
+ carefully to make sure this does not happen.
+
+Tag: debconf-config-not-executable
+Type: error
+Info: The debconf `config' script in the package control area must be
+ executable.
+
+Tag: no-debconf-config
+Type: warning
+Info: The package contains a `templates' file in its control area but has no
+ corresponding `config' script. This is occasionally OK, but is usually an
+ error.
+
+Tag: no-debconf-templates
+Type: warning
+Info: The package contains a `config' script in its control area but has no
+ corresponding `templates' file. This is occasionally OK, but is usually an
+ error.
+
+Tag: debconf-is-not-a-registry
+Type: warning
+Info: In the Unix tradition, Debian packages should have human-readable and
+ human-editable configuration files. This package uses debconf commands
+ outside its maintainer scripts, which often indicates that it is taking
+ configuration information directly from the debconf database. Typically,
+ packages should use debconf-supplied information to generate configuration
+ files, and - to avoid losing configuration information on upgrades - should
+ parse these configuration files in the `config' script if it is necessary
+ to ask the user for changes.
+ .
+ Some standalone programs may legitimately use debconf to prompt the user
+ for questions. If you maintain a package containing such a program, please
+ contact &maint; so that the exception would be recognized in future
+ versions of Lintian. Other exceptions to this check include configuration
+ scripts called from the package's post-installation script.
+
+Tag: seen-flag-requires-versioned-depends
+Type: error
+Info: Debconf only supports the 'seen' flag as of version 0.5.00.  To ensure
+ upgrades work correctly, packages that use this new flag should declare a
+ dependency on that version of debconf.

@@ -1,0 +1,21 @@
+Check-Script: control-files
+Author: Christian Schwarz <schwarz@debian.org>
+Abbrev: ctl
+Standards-Version: 3.2.0
+Type: binary
+Unpack-Level: 1
+
+Tag: unknown-control-file
+Type: error
+Info: The package contains an `unknown' control file, which should be
+ removed.
+
+Tag: control-file-has-bad-permissions
+Type: error
+Info: The control postinst, postrm, preinst, prerm control files should use
+ mode 0755, all other control files should use 0644.
+
+Tag: control-file-has-bad-owner
+Type: error
+Severity: Important
+Info: All control files should be owner by root/root.

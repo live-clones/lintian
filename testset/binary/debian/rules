@@ -1,0 +1,33 @@
+#!/usr/bin/make -f
+
+tmp=debian/tmp
+
+build:
+	make
+
+clean:
+	make clean
+	rm -f debian/files debian/substvars
+
+binary-arch: build
+	install -d $(tmp)/usr/bin
+	install -m 755 hello $(tmp)/usr/bin
+	install -s -m 755 hello-static $(tmp)/usr/bin
+	install -d $(tmp)/usr/share/doc/binary
+	install -m 644 INSTALL $(tmp)/usr/share/doc/binary
+	install -d $(tmp)/usr/lib/menu
+	install -m 644 debian/menu $(tmp)/usr/lib/menu/binary
+	install -m 644 debian/README.Debian $(tmp)/usr/share/doc/binary
+	install -m 644 debian/copyright $(tmp)/usr/share/doc/binary
+	install -m 644 debian/changelog $(tmp)/usr/share/doc/binary
+	#gzip -9 $(tmp)/usr/share/doc/binary/changelog
+	install -d $(tmp)/DEBIAN
+	install -m 755 debian/postinst $(tmp)/DEBIAN
+
+	dpkg-shlibdeps $(tmp)/usr/bin/hello
+	dpkg-gencontrol -isp
+	dpkg --build debian/tmp ..
+
+binary: binary-arch
+
+.PHONY: build binary-arch binary clean

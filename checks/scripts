@@ -1,0 +1,510 @@
+#!/usr/bin/perl -w
+# scripts -- lintian check script
+#
+# This is probably the right file to add a check for the use of
+# set -e in bash and sh scripts.
+#
+# Copyright (C) 1998 Richard Braakman
+# Copyright (C) 2002 Josip Rodin
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+# MA 02111-1307, USA.
+
+use strict;
+
+# Don't forget to edit the scripts.desc file if you change these!
+
+my %valid_interpreters = (
+			  'ash' => '/bin/ash',
+			  'awk' => '/usr/bin/awk',
+			  'bash' => '/bin/bash',
+			  'bltwish' => '/usr/bin/bltwish',
+			  'burlap' => '/usr/bin/burlap',
+			  'csh' => '/bin/csh',
+			  'expect' => '/usr/bin/expect',
+			  'gawk' => '/usr/bin/gawk',
+			  'gforth' => '/usr/bin/gforth',
+			  'gnuplot' => '/usr/bin/gnuplot',
+			  'guile' => '/usr/bin/guile',
+			  'install-fvwmgenmenu' => '/usr/sbin/install-fvwmgenmenu',
+			  'install-menu' => '/usr/sbin/install-menu',
+			  'js' => '/usr/bin/js',
+			  'kforth' => '/usr/bin/kforth',
+			  'ksh' => '/bin/ksh',
+			  'magicfilter' => '/usr/sbin/magicfilter',
+			  'make' => '/usr/bin/make',
+			  'mawk' => '/usr/bin/mawk',
+			  'nawk' => '/usr/bin/nawk',
+			  'ocaml' => '/usr/bin/ocamlrun',
+			  'ocamlrun' => '/usr/bin/ocamlrun',
+			  'perl' => '/usr/bin/perl',
+			  'perl-5.005' => '/usr/bin/perl-5.005',
+			  'perl-5.004' => '/usr/bin/perl-5.004',
+			  'pforth' => '/usr/bin/pforth',
+			  'php3' => '/usr/bin/php3',
+			  'php4' => '/usr/bin/php4',
+			  'pike' => '/usr/bin/pike',
+			  'pike7' => '/usr/bin/pike7',
+			  'python' => '/usr/bin/python',
+			  'python1.5' => '/usr/bin/python1.5',
+			  'python2.1' => '/usr/bin/python2.1',
+			  'python2.2' => '/usr/bin/python2.2',
+			  'python2.3' => '/usr/bin/python2.3',
+			  'rexx' => '/usr/bin/rexx',
+			  'regina' => '/usr/bin/regina',
+			  'rc' => '/usr/bin/rc',
+			  'runhugs1.4' => '/usr/bin/runhugs1.4',
+			  'runhugs98' => '/usr/bin/runhugs98',
+			  'runhugs' => '/usr/bin/runhugs',
+			  'ruby' => '/usr/bin/ruby',
+			  'scsh' => '/usr/bin/scsh',
+			  'sed' => '/bin/sed',
+			  'sh' => '/bin/sh',
+			  'suidperl' => '/usr/bin/suidperl',
+			  'tclsh' => '/usr/bin/tclsh',
+			  'tcsh' => '/usr/bin/tcsh',
+			  'tixwish' => '/usr/bin/tixwish',
+			  'trs' => '/usr/bin/trs',
+			  'wish' => '/usr/bin/wish',
+			  'wish8.0' => '/usr/bin/wish8.0',
+			  'wish8.3' => '/usr/bin/wish8.3',
+			  'yforth' => '/usr/bin/yforth',
+			  'zsh' => '/usr/bin/zsh'
+			 );
+
+my %interpreter_dependencies = (
+				'ash' => 'ash',
+				'bltwish' => 'blt',
+				'burlap' => 'felt',
+				'csh' => 'c-shell',
+				'expect' => 'expect',
+				'gawk' => 'gawk',
+				'gforth' => 'gforth',
+				'gnuplot' => 'gnuplot',
+				'guile' => 'guile',
+				'js' => 'ngs-js',
+				'kforth' => 'kforth',
+				'ksh' => 'pdksh',
+				'magicfilter' => 'magicfilter',
+				'make' => 'make',
+				'mawk' => 'mawk',
+				'ocaml' => 'ocaml',
+				'perl-5.005' => 'perl-5.005',
+				'perl-5.004' => 'perl-5.004',
+				'pforth' => 'pforth',
+				'php3' => 'php3-cgi',
+				'php4' => 'php4-cgi',
+				'pike' => 'pike',
+				'pike7' => 'pike7',
+				'rc' => 'rc',
+				'regina' => 'regina-rexx',
+				'rexx' => 'regina-rexx',
+				'ruby' => 'ruby',
+				'runhugs1.4' => 'hugs',
+				'runhugs98' => 'hugs98',
+				'scsh' => 'scsh',
+				'suidperl' => 'perl-suid',
+				'tclsh' => 'tclsh',
+				'tcsh' => 'tcsh',
+				'tixwish' => 'tix',
+				'trs' => 'konwert',
+				'yforth' => 'yforth',
+				'zsh' => 'zsh'
+			       );
+
+my %executable = ();
+my %ELF = ();
+my %deps = ();
+my %scripts = ();
+
+# no dependency for install-menu, because the menu package specifically
+# says not to depend on it.
+
+($#ARGV == 1) or fail("syntax: scripts <pkg> <type>");
+my $pkg = shift;
+my $type = shift;
+
+open(INDEX, "index") or fail("cannot open lintian index file: $!");
+while (<INDEX>) {
+    next unless (m/^-[rw-]*[xs]/);
+    chop;
+    s/ link to .*//;
+    $executable{(split(' ', $_, 6))[5]} = 1;
+}
+close(INDEX);
+
+# Urgle... this is ambiguous, since the sequence ": " can occur in
+# the output of file and also in the filename.
+# Fortunately no filenames containing ": " currently occur in Debian packages.
+open(FILEINFO, "file-info") or fail("cannot open lintian file-info file: $!");
+while (<FILEINFO>) {
+    next unless (m/\bELF\b/);
+    m/^(.*?): / or fail("bad line in file-info: $_");
+    $ELF{$1} = 1;
+}
+close(FILEINFO);
+
+# If alternatives are used, they are each listed as a separate dependency.
+# This is the best thing to do with the tk/tcl interpreters, which
+# are often listed with dependencies like tk41|tk42|wish.
+# They are also the only interpreters likely to be listed with alternatives.
+foreach my $depfield ('suggests', 'recommends', 'depends', 'pre-depends',
+		   'provides') {
+    if (open(IN, "fields/$depfield")) {
+	$_ = join('', <IN>);
+	close(IN);
+	foreach (split /\s*[,|]\s*/) {
+	    # Lop off version number, if any
+	    s/(?:\s|\().*//s;
+	    $deps{$_} = $depfield;
+	}
+    }
+}
+$deps{$pkg} = 'self';	# Do this last because it should override all others.
+
+open(SCRIPTS, "scripts") or fail("cannot open lintian scripts file: $!");
+while (<SCRIPTS>) {
+    chop;
+
+    # This used to be split(' ', $_, 2), but that didn't handle empty
+    # interpreter lines correctly.
+    my ($calls_env, $interpreter, $filename) = m/^(env )?(\S*) (.*)$/ or
+	 fail("bad line in scripts file: $_");
+
+    $scripts{$filename} = 1;
+
+    # no checks necessary at all for scripts in /usr/share/doc/
+    next if $filename =~ m,usr/share/doc/,;
+
+    my ($base) = $interpreter =~ m,([^/]*)$,;
+
+    # allow exception for .in files that have stuff like #!@PERL@
+    next if ($filename =~ m,\.in$, and $interpreter =~ m,^\@[A-Z_]+\@$,);
+
+    my $is_absolute = ($interpreter =~ m,^/, or defined $calls_env);
+
+    # Skip files that have the #! line, but are not executable and do not have
+    # an absolute path and are not in a bin/ directory (/usr/bin, /bin etc)
+    # They are probably not scripts after all.
+    next if ($filename !~ m,(bin/|etc/init.d/), and !$executable{$filename}
+             and !$is_absolute);
+
+    if ($interpreter eq "") {
+	tag_error("script-without-interpreter", $filename);
+	next;
+    }
+
+    # either they use an absolute path or they call it as '/usr/bin/env interp'
+    tag_error("interpreter-not-absolute", $filename, "#!$interpreter")
+	       unless $is_absolute;
+    tag_warn("script-not-executable", $filename)
+	unless ($executable{$filename} or
+		$filename =~ m,usr/(lib|share)/.*\.pm,);
+
+    if (exists $valid_interpreters{$base}) {
+	tag_error("wrong-path-for-$base", $filename, "#!$interpreter")
+	    unless ($interpreter eq $valid_interpreters{$base} or
+		    defined $calls_env);
+	
+	# Do not complain about dependencies for non-executable scripts.
+	if ($executable{$filename}) {
+	    if (exists $interpreter_dependencies{$base}) {
+		my $dep = $interpreter_dependencies{$base};
+		tag_error("$base-script-but-no-$dep-dep", $filename)
+		    unless ($deps{$dep});
+	    } elsif ($base =~ /^python(\d.\d)?$/) {
+		my $ver = $1 ? $1 : "";
+		tag_error("python-script-but-no-python-dep", $filename)
+		    unless ($deps{"python$ver"});
+            } elsif ($base eq 'pike') {
+                tag_error("pike-script-but-no-pike-dep", $filename)
+                    unless ($deps{'pike'} or $deps{'pike7'});
+	    } elsif ($base =~ m/^wish(\d+\.\d+)?$/) {
+		my $has_deps = 0;
+		for my $key (keys(%deps)) {
+		    if ($key =~ m/^((tk\d+\.\d+)|(wish(\d+\.\d+)?))$/) {
+			# has a tk depends which provides wish,
+			# or just depends on wish itself
+			$has_deps = 1;
+			last;
+		    }
+		}
+		if (not $has_deps) {
+		    tag_error("wish-script-but-no-wish-dep", $filename);
+		}
+	    }
+	}
+    } elsif ($interpreter =~ m,/usr/local/,) {
+	tag_error("interpreter-in-usr-local", $filename, "#!$interpreter");
+    } elsif ($executable{'.' . $interpreter}) { # each key is './path/to/exe'
+	# Package installs the interpreter itself, so it's probably ok.
+	# Don't emit any tag for this.
+    } else {
+	tag_warn("unusual-interpreter", $filename, "#!$interpreter");
+    }
+
+    tag_warn("csh-considered-harmful", $filename)
+        if (($base eq 'csh' or $base eq 'tcsh') and $executable{$filename});
+
+    if ($base =~ /^(?:(?:b|d)?a|k|z)?sh$/) {
+	if (-x "$interpreter" && ! script_is_evil_and_wrong("unpacked/$filename")) {
+	    if (system("$interpreter -n unpacked/$filename >/dev/null 2>&1")) {
+		tag_error("shell-script-fails-syntax-check", $filename);
+	    }
+	}
+	next;
+    }
+}
+close(SCRIPTS);
+
+foreach (keys %executable) {
+    tag_warn("executable-not-elf-or-script", $_)
+	unless $ELF{$_} or $scripts{$_} or $_ =~ m,^usr(/X11R6)?/man/,;
+}
+
+open(SCRIPTS, "control-scripts")
+    or fail("cannot open lintian control-scripts file: $!");
+
+# Handle control scripts.  This is an edited version of the code for
+# normal scripts above, because there were just enough differences to
+# make a shared function awkward.
+
+while (<SCRIPTS>) {
+    chop;
+
+    m/^(\S*) (.*)$/ or fail("bad line in control-scripts file: $_");
+    my $interpreter = $1;
+    my $file = $2;
+    my $filename = "control/$file";
+
+    $interpreter =~ m|([^/]*)$|;
+    my $base = $1;
+
+    if ($interpreter eq "") {
+	tag_error("script-without-interpreter", $filename);
+	next;
+    }
+
+    tag_error("interpreter-not-absolute", $filename, "#!$interpreter")
+	unless ($interpreter =~ m|^/|);
+
+    if (exists $valid_interpreters{$base}) {
+	tag_error("wrong-path-for-$base", $filename, "#!$interpreter")
+	    unless ($interpreter eq $valid_interpreters{$base});
+	
+	print "I: $pkg $type: unusual-control-interpreter $filename #!$interpreter\n"
+	    unless ($base eq 'sh'
+		    or $base eq 'bash'
+		    or $base eq 'perl');
+	
+	if (exists $interpreter_dependencies{$base}) {
+	    my $dep = $interpreter_dependencies{$base};
+	    tag_error("interpreter-without-predep", $filename,
+		      "#!$interpreter")
+		unless (exists $deps{$dep} and $deps{$dep} eq 'pre-depends');
+	} elsif ($base eq 'python') {
+	    tag_error("interpreter-without-predep", $filename,
+		      "#!$interpreter")
+		unless ((exists $deps{'python'} and
+			 $deps{'python'} eq 'pre-depends') or
+			(exists $deps{'python-base'}
+			 and $deps{'python-base'} eq 'pre-depends'));
+	}
+    } elsif ($interpreter =~ m|/usr/local/|) {
+	tag_error("interpreter-in-usr-local", $filename, "#!$interpreter");
+    } else {
+	tag_warn("unusual-interpreter", $filename, "#!$interpreter");
+	next; # no use doing further checks if it's not a known interpreter
+    }
+
+    # perhaps we should warn about *csh even if they're somehow screwed,
+    # but that's not really important...
+    tag_warn("csh-considered-harmful", $filename)
+	if ($base eq 'csh' or $base eq 'tcsh');
+
+    my $shellscript = $base =~ /^((b|d)?a|t?c|(pd)?k)?sh$/ ? 1 : 0;
+
+    my $checkbashisms;
+    if ($shellscript) {
+        # perhaps just do it when $base eq "sh" instead?
+	$checkbashisms = $base eq "sh" ? 1 : 0;
+	if (-x $valid_interpreters{$base}) {
+	    if (system("$interpreter -n $filename >/dev/null 2>&1")) {
+		tag_error("maintainer-shell-script-fails-syntax-check", $file);
+	    }
+	}
+    }
+
+# the control-files check already has an unknown-control-file error
+# so there's no need for anything like this here:
+# my %maintainer_scripts = map { $_ => 1 } qw(preinst postinst prerm postrm config);
+# print "E: something" unless exists $maintainer_scripts{$file}
+
+    # now scan the file contents themselves
+    open C, "$filename"
+	or fail("cannot open maintainer script $filename for reading: $!");
+
+    my ($warned_tmp, $warned_killall);
+    my $cat_string = "";
+
+    while (<C>) {
+	next if m,^\s*\#,; # skip comment lines
+	s/\#.*$//;         # eat comments
+	chomp();
+	if (m,\W(/var)?/tmp\b, and not m/\bmktemp\b/ and not m/\btempfile\b/ and not m/\bmkdir\b/) {
+	    print "W: $pkg $type: possibly-insecure-handling-of-tmp-files-in-maintainer-script $file:$.\n"
+		unless $warned_tmp;
+	    $warned_tmp = 1;
+	}
+	if (m/\bkillall\b/) {
+	    print "W: $pkg $type: killall-is-dangerous $file:$.\n"
+		unless $warned_killall;
+	    $warned_killall = 1;
+	}
+	if (m/\bdpkg\s+--print-architecture\b/) {
+	    print "W: $pkg $type: dpkg-print-architecture-in-maintainer-script $file:$.\n";
+	}
+	if (m/\bmknod\b/ and not m/\sp\s/) {
+	    print "W: $pkg $type: mknod-in-maintainer-script $file:$.\n";
+	}
+
+	if ($shellscript) {
+	    if (m/(?:^|\s+)cat\s*\<\<\s*(\w+)/) {
+		$cat_string = $1;
+	    }
+	    elsif ($cat_string ne "" and m/^$cat_string/) {
+		$cat_string = "";
+	    }
+	    my $within_another_shell = 0;
+	    if (m,(^|\s+)((/usr)?/bin/)?((b|d)?a|k|z|t?c)sh\s+-c\s*.+,) {
+		$within_another_shell = 1;
+	    }
+	    # if cat_string is set, we are in a HERE document and need not
+	    # check for things
+	    if ($cat_string eq "" and $checkbashisms and !$within_another_shell) {
+		my $found = 0;
+		my $match = '';
+		my @bashism_regexs = (
+		  'function \w+\(\s*\)',       # function is useless
+				               # should be '.', not 'source'
+		  '(?:^|\s+)source\s+(?:\.\/|\/|\$)[^\s]+',
+		  '(\[|test|-o|-a)\s*[^\s]+\s+==\s', # should be 'b = a'
+		  '\s\|\&',                    # pipelining is not POSIX
+		  '\$\[\w+\]',                 # arith not allowed
+		  '\$\{\w+\:\d+(?::\d+)?\}',   # ${foo:3[:1]}
+		  '\$\{\w+(/.+?){1,2}\}',      # ${parm/?/pat[/str]}
+		  '[^\\\]\{([^\s]+?,)+[^\\\}\s]+\}',     # brace expansion
+		  '(?:^|\s+)\w+\[\d+\]=',      # bash arrays, H[0]
+		  '\$\{\#?\w+\[[0-9\*\@]+\]\}',   # bash arrays, ${name[0|*|@]}
+		  '(?:^|\s+)(read\s*(?:;|$))'  # read without variable
+		);
+
+		for my $re (@bashism_regexs) {
+		    if (m/($re)/) {
+			$found = 1;
+			$match = $1;
+			last;
+		    }
+		}
+		# since this test is ugly, I have to do it by itself
+		# detect source (.) trying to pass args to the command it runs
+		if (not $found and m/^\s*(\.\s+[^\s]+\s+([^\s]+))/) {
+		    if ($2 eq 'and' || $2 eq '&&' ||
+			$2 eq 'or' || $2 eq '||') {
+			# everything is ok
+			;
+		    } else {
+			$found = 1;
+			$match = $1;
+		    }
+		}
+		unless ($found == 0) {
+		    print "W: $pkg $type: possible-bashism-in-maintainer-script $file:$. \'$match\'\n";
+		}
+	    }
+	}
+	if (m,\bsuidregister\b,) {
+	    print "E: $pkg $type: suidregister-used-in-maintainer-script $file\n";
+	}
+	if ($file eq 'postrm') {
+	    if (m,update\-alternatives \-\-remove,) {
+		print "W: $pkg $type: update-alternatives-remove-called-in-postrm\n";
+	    }
+	}
+    }
+
+    close C;
+
+}
+close(SCRIPTS);
+
+exit 0;
+
+# -----------------------------------
+
+sub fail {
+    if ($_[0]) {
+	warn "internal error: $_[0]\n";
+    } elsif ($!) {
+	warn "internal error: $!\n";
+    } else {
+	warn "internal error.\n";
+    }
+    exit 1;
+}
+
+sub tag_error {
+    my $tag = shift;
+    if ($#_ >= 0) {
+	# We can't have newlines in a tag message, so turn them into \n
+	map { s,\n,\\n, } @_;
+	my $args = join(' ', @_);
+	print "E: $pkg $type: $tag $args\n";
+    } else {
+	print "E: $pkg $type: $tag\n";
+    }
+}
+
+sub tag_warn {
+    my $tag = shift;
+    if ($#_ >= 0) {
+	# We can't have newlines in a tag message, so turn them into \n
+	map { s,\n,\\n, } @_;
+	my $args = join(' ', @_);
+	print "W: $pkg $type: $tag $args\n";
+    } else {
+	print "W: $pkg $type: $tag\n";
+    }
+}
+
+# Returns non-zero if the given file is not actually a shell script, 
+# just looks like one.
+sub script_is_evil_and_wrong {
+    my ($filename) = @_;
+    my $ret = 0;
+    open IN, $filename or fail("cannot open $filename: $!");
+    my $i = 0;
+    while (<IN>) {
+        last if (++$i > 20);
+        chomp;
+        if (/^\s*exec\s*.+\s*.?\$0.?\s*(\${1\+)?.?\$\@/) {
+            $ret = 1;
+            last;
+        }
+    }
+    close IN;
+    return $ret;
+}

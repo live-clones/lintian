@@ -1,0 +1,55 @@
+#!/bin/sh
+# objdump-info -- lintian collection script
+
+# Copyright (C) 1998 Christian Schwarz
+# 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+# MA 02111-1307, USA.
+
+set -e
+
+# sanity check
+if [ -f "fields/package" ]; then
+    # everything is ok
+    :
+else
+    echo "error: collection script called in wrong directory!"
+    exit 2
+fi
+
+cd unpacked
+
+rm -f ../objdump-info
+touch ../objdump-info
+# objdump error output is combined with standard output here.
+# I can't send it to the console, because objdump complains when it's
+# asked to -T a non-dynamic object.  I can't ignore it either, because
+# objdump doesn't give an error code if it meets a real problem,
+# such as being unable to parse the file format.  So I put the error
+# output in the objdump-info file and let the check script deal with
+# it later.
+for bin in `grep ' ELF' <../file-info | cut -d\: -f1`; do
+    echo "-- $bin" >> ../objdump-info
+    if head $bin | grep -q 'packed.*with.*UPX'; then
+	echo "objdump: $bin: Packed with UPX" >> ../objdump-info
+    else
+	objdump --headers --private-headers -T $bin >> ../objdump-info 2>&1
+    fi
+done
+
+exit 0
+
+# -----------------------------------

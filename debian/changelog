@@ -1,0 +1,2858 @@
+lintian (1.22.9) unstable; urgency=low
+
+  * config.* files from 2000-09-05 and such had the timestamp in a
+    variable called version, not timestamp, so check for that as well
+    to detect the really old ones as well.
+  * Made sharedobject-in-library-directory-not-actually-a-shlib an E
+    because it uses the same method as
+    pkg-has-shlibs-control-file-but-no-actual-shared-libs does, and that
+    one's pretty reliable and already E, closes: #197951
+  * Fixed logic error in detecting whether the uncompressed changelog
+    file is really a symlink, closes: #198171.
+  * Ripped out those few remaining bits of code that watched over /usr/doc,
+    closes: #193598.
+  * Don't whine about policy 3.5.10. No changes.
+  * Avoid install-docs' --no-update-menus when checking for update-menus
+    calls, closes: #183193.
+  * Close the IN filehandle in menus:check_script() so that $. gets
+    properly reset (sloppy coding -- argh!).
+  * Fixed a $1 overwriting thinko in debhelper checks.
+  * Demoted build-depends-without-arch-dep from E to W. "Most likely"
+    isn't non-heuristic, dammit.
+
+ -- Josip Rodin <joy-packages@debian.org>  Sat, 06 Sep 2003 22:05:22 +0200
+
+lintian (1.22.8.1) unstable; urgency=high
+
+  * Fixed a small logic oversight in the new debhelper compat check,
+    closes: #187415.
+
+ -- Josip Rodin <joy-packages@debian.org>  Thu,  3 Apr 2003 12:27:55 +0200
+
+lintian (1.22.8) unstable; urgency=low
+
+  * Updated the list of valid archive sections, closes: #187111.
+  * Ignore symlinks in the image-file-in-usr-lib check, closes: #180280.
+  * Updated the list of virtual packages, closes: #179614, #180421.
+  * Fixed typo in the LaTeX license exception, closes: #184640.
+  * Removed anal-retentive check for a bug in debconf << 1.2.9,
+    closes: #185721.
+  * Updated policy version in the description, closes: #185882.
+  * Checks in debian/compat for debhelper compat version, and warns
+    if it finds that as well as DH_COMPAT, closes: #186269.
+
+ -- Josip Rodin <joy-packages@debian.org>  Wed,  2 Apr 2003 19:22:37 +0200
+
+lintian (1.22.7) unstable; urgency=low
+
+  * Adjusted Policy references for changes in the shared library stuff.
+    Updated standards-version checks to recognize 3.5.9, and shifted
+    old/ancient borders to 3.5.7/3.5.2.
+  * Allow for ${1+"$@"} as well in the evil exec line check, closes: #179145.
+  * Removed the CXXABI check because it's not reliable enough, not all
+    C++-linked programs include libsupc++ which provides those symbols.
+    Sorry. Closes: #179278, #184729.
+  * Allow /usr/lib/$pkg in the rpath check, thanks to Matej Vela,
+    closes: #173610.
+  * Added /usr/share/pixmaps to the icon file path, closes: #181552.
+  * Ignored symlinks in the gzip -9 check for changelogs, closes: #181899.
+  * Ignore LaTeX license in the common-licenses check for GPL, thanks
+    to Peter van Rossum, closes: #184640.
+  * Included (tcl|tk)8.4 on their respective lists, thanks to Chris Waters,
+    closes: #184655.
+  * Ignore alternatives in the check for duplicate relations, closes: #184660.
+    It's still not inclusive, but the remaining cases should be rare enough.
+  * Added Denis Barbier's po-debconf checks, closes: #173823.
+
+ -- Josip Rodin <joy-packages@debian.org>  Fri, 14 Mar 2003 23:21:41 +0100
+
+lintian (1.22.6) unstable; urgency=low
+
+  * Added missing description for empty-manual-page.
+  * Adjusted some descriptions for -dev symlinks.
+  * Updated the policy section for copyright files from 13.6 to 13.5,
+    closes: #177769.
+  * Updated the policy section for changelog files from 13.8 to 13.7,
+    closes: #176946.
+  * Added extended-description-line-too-long, closes: #176784.
+  * Warn against lack of CXXABI, thanks to Colin Watson, closes: #175920.
+  * Allow for all the other tricks scripts play with their interpreters
+    by making the check generic, /^\s*exec\s*.+\s*.?\$0.?\s*.?\$\@/.
+    Thanks to Colin Watson, closes: #175602.
+  * Changed the dh_testversion checks to also find disparities between
+    DH_COMPAT and debhelper build-dep version, closes: #175295.
+  * Ignore packages that build-depend on autotools-dev in the config.*
+    date check, since they probably copy stuff around, closes: #178347.
+
+ -- Josip Rodin <joy-packages@debian.org>  Thu, 30 Jan 2003 17:03:15 +0100
+
+lintian (1.22.5) unstable; urgency=low
+
+  * Ignore Zope's license in
+    copyright-should-refer-to-common-license-file-for-gpl, thanks to
+    Matej Vela, closes: #172211.
+  * Don't require \S+ but .+ while parsing @packages, closes: #172444.
+  * Rewrote the chunk of code dealing with names of manual pages, because
+    it was done all wrong, closes: #173548.
+  * Ignore files consisting merely of .so links completely, thanks to
+    Matej Vela, closes: #173609.
+  * Added code to check for bad-so-link-within-manual-page.
+  * Also added code to check for empty-manual-page.
+  * Added a few more cases of safe ldconfig invocation in postrm,
+    closes: #174042. Didn't handle the one with the "case" statement,
+    it's too bothersome. Oh well, the check is a warning instead of
+    an error for a reason.
+  * Added a check for the timestamp line in config.guess/sub files,
+    closes: #171295.
+  * Renamed the full-stop check to
+    description-synopsis-might-not-be-phrased-properly and rephrased its
+    description. This is where I draw the line :) closes: #174150.
+  * Added a warning on .pl and .pm files within /usr/lib/perl5,
+    closes: #174595.
+  * Renamed pkg-without-shlibs-has-shlibs-control-file to
+    pkg-has-shlibs-control-file-but-no-actual-shared-libs and improved
+    its long description.
+  * Added sharedobject-in-library-directory-not-actually-a-shlib,
+    which should properly address the issue of SONAME-less libraries,
+    closes: #174928.
+  * Exclude files that match "LICENSE AGREEMENT FOR PYTHON 1.6.1" from the
+    copyright-should-refer-to-common-license-file-for-gpl check,
+    closes: #174929.
+
+ -- Josip Rodin <jrodin@jagor.srce.hr>  Sat, 11 Jan 2003 12:32:33 +0100
+
+lintian (1.22.4) unstable; urgency=low
+
+  * Fixed typo in the description of description-synopsis-ends-with-full-stop,
+    closes: #172049.
+  * Slightly clarified the text as well, and added a pointer to Policy 5.7.1.
+  * Made it a warning, not an error which it was by mistake, closes: #172541.
+  * Removed an extra colon from copyright-file-lacks-pointer-to-perl-license.
+
+ -- Josip Rodin <jrodin@jagor.srce.hr>  Wed, 11 Dec 2002 20:39:38 +0100
+
+lintian (1.22.3) unstable; urgency=low
+
+  * Fixed typo in copyright-should-refer-to-common-license-file-for-gpl
+    which caused it to have no description. Also moved the opening of
+    the pipe to lintian-info before the first print E: line so that
+    bad-distribution-in-changes-file and other tags in lintian.desc
+    actually get displayed, closes: #171737.
+  * Updated the description of link-to-undocumented-manpage to better
+    match the current Policy and be more helpful.
+  * Added missing \Q and \E around the variable in
+    description-synopsis-is-duplicated, closes: #171721.
+  * Don't warn on _any_ mention of update-rc.d in postinst, just those that
+    follow whitespace or something else and a semicolon, closes: #171472.
+
+ -- Josip Rodin <jrodin@jagor.srce.hr>  Thu,  5 Dec 2002 12:25:17 +0100
+
+lintian (1.22.2) unstable; urgency=medium
+
+  * Fixed some random glitches.
+  * Change rgb-vs-cmap to first include the hex codes of colors in cmap.xpm,
+    and then go searching for names in rgb.txt. Updated the cmap.xpm
+    location in the description. This hopefully really closes: #170860.
+  * Added exception in the shell syntax checks for evil rep scripts,
+    thanks to Kevin Ryde, closes: #171175.
+  * Added checks for multiple dependencies on libstdc, tcl, tclx, tk, tkx
+    and libpng packages. This is currently beind done in a hardcoded manner,
+    but that should do for now, closes: #80447, #129548.
+  * Added a regression test as part of the relations regression test for
+    the above multiple dependencies.
+  * Don't barf on /var/local in the FSSTND-dir-in-var check, just in
+    non-standard-dir-in-var, closes: #119414. The normal packages
+    shouldn't install anything there anyway, and base-files can have
+    overrides :)
+  * Prepend a slash to the file names in file-in-etc-not-marked-as-conffile,
+    closes: #122285. We already don't have the prepended thing normalized,
+    so why not indulge this.
+  * Added dh_suidregister-is-obsolete, closes: #94031.
+  * Added copyright-lists-upstream-authors-with-dh_make-boilerplate,
+    closes: #107815. I am now the official maintainer so I get to do that >:)
+    This time I've written the description much better, so there should
+    be no confusion like there was the last time.
+  * Added description-synopsis-is-duplicated first by comparing the
+    lowercased synopsis with the lowercased start of the extended
+    description, and then if that fails, the letters and numbers are
+    removed and the strings are compared. This may not catch _everything_,
+    but should be satisfactory, and it closes: #118098.
+  * Added a regression test for the above error to the other relations test.
+    It seemed handy. :)
+  * Added an error for depending on libdb1-compat, just in case, as advised
+    by Colin Watson.
+
+ -- Josip Rodin <jrodin@jagor.srce.hr>  Fri, 29 Nov 2002 22:22:54 +0100
+
+lintian (1.22.1) unstable; urgency=medium
+
+  * Handle the $statistics_file rotation in harness.
+  * Warn on dh_dhelp use, thanks to Chris Tillman, closes: #130016.
+  * Exempt awk from the virtual-package-depends-without-real-package-depends
+    check, and add an error when there's a non-versioned dependency on awk,
+    closes: #136831. The description may be considered vague for some
+    cases, but I'll wait until someone actually complains about that
+    before rewriting it.
+  * Moved the generic exceptions before the script-without-interpreter check,
+    which should fix Daniel Kobras' dx false positive, closes: #165574.
+  * Added a warning for full stop in the synopsis line, thanks to
+    Colin Walters, closes: #131747.
+  * Added a warning for daemon stopping stuff in postinst, without
+    a dependency on debconf (>= 1.2.9), thanks to Martin Godisch,
+    closes: #168621.
+  * Based on hints from in Jim Van Zandt's otherwise rather flawed patch
+    posted in bug #94928, moved the diff file stuff from the cruft check
+    into the diffstat collector, and made it simply extract the patch into
+    a file called "debian-patch" which is then used elsewhere, instead of
+    zcatting it over and over again.
+  * Added a regression test for the debian/files and config.* checks.
+  * Added config.log to the list of configure-generated files to warn about.
+  * Updated menu icon colors with a little script I wrote, closes: #170860.
+  * It appears File::Find has changed semantics since woody and now refuses
+    to follow a symlink as the name of the directory to scan. Obviously,
+    a simple readlink() fixes it.
+  * I realized that bug #122855 couldn't have been fixed the diff scanning
+    code anyhow, since dpkg-source ignores file deletions in the first place.
+    Removed the hours of work and simply expanded on the description of the
+    error instead. Oh well.
+  * Added an error for GPL copyrights that don't refer to
+    /usr/share/common-licenses, thanks to Edward Betts, closes: #99885.
+  * Added a warning for some popular architecture-independent image files
+    in /usr/lib which suggests moving them to /usr/share per FHS, thanks to
+    Bill Allombert, closes: #114474.
+
+ -- Josip Rodin <jrodin@jagor.srce.hr>  Wed, 27 Nov 2002 20:00:05 +0100
+
+lintian (1.22) unstable; urgency=medium
+
+  * Further updated the python script checks to ignore obsolete -base
+    packages and watch versioned python interpreters better, thanks
+    to Federico Di Gregorio and Luca De Vitis, closes: #169872.
+  * Added an exception for sash in the statically-linked-binary check,
+    as reported by H. S. Teoh.
+  * Moved descriptions for two manual page location consistency checks
+    from shared-libs.desc (?!) to manpages.desc, and clarified them,
+    as reported by Othmar Pasteka.
+  * Accept /var/games as an exception for setgid stuff, closes: #169382.
+  * Removed the /etc/ppp perms exception as per discussion on debian-devel.
+  * Fixed the add-log-mailing-address check by not re-my-ing the prefix
+    and suffix variables in each iteration of the loop, closes: #129581.
+    Added the word obsolete in the name of the error and a paragraph break
+    to further clarify it.
+  * Added Apps/Science as a valid menu section. This and the removal of
+    the error for calling ldconfig anywhere in the postinst in 1.21.5
+    make Lintian Policy 3.5.8 compliant, closes: #170093.
+  * Exclude .png files from the extra-license-file check, closes: #164017.
+  * Exclude .php files from the extra-license-file check, closes: #116384.
+  * Added documentation-package-not-architecture-independent warning in
+    the cruft check, closes: #120261.
+  * Check if $action is defined before comparing it to avoid a warning with
+    the -C option, closes: #129582.
+  * Added Kevin Ryde's patch that implements menu-icon-too-big,
+    menu-icon-has-bad-colors, menu-icon-cannot-be-parsed, closes: #71396.
+  * Make .nfs* files trigger the backup-file-in-package check, closes: #95140.
+  * Added an error for .xvpics directories, closes: #169831.
+  * Added more misspellings from Matt Zimmerman, without the British
+    English stuff, with the four language names in a special arrangement,
+    closes: #119786.
+  * Made package-contains-CVS-dir an error, closes: #147301.
+  * Added an error for /usr/share/doc/<something>/examples/examples
+    directory, closes: #153144.
+  * Added an error for referring to the Perl license terms without actually
+    pointing to their location on the file system, thanks to Gergely Nagy,
+    closes: #157449.
+  * Check for localhost(.localdomain) in the Maintainer fields,
+    closes: #162248.
+  * Fixed the needs=dwww exception in the menu file check for an empty
+    section, thanks to Colin Watson, closes: #170437.
+  * Check for debian-qa@l.d.o in Maintainer fields, thanks to Colin Watson,
+    closes: #126687.
+  * Updated standards-version check to declare anything lesser than 3.2
+    ancient (1999!), and anything lesser than 3.5.6 old (2001).
+
+ -- Josip Rodin <jrodin@jagor.srce.hr>  Mon, 25 Nov 2002 14:38:55 +0100
+
+lintian (1.21.6) unstable; urgency=high
+
+  * Fix two regexps in the scripts check in order to fix *sh -n checking,
+    closes: #167079.
+  * Added duplicate-conffile error, closes: #131632.
+  * There doesn't appear to be any provision in the Policy or in the FHS
+    for random compatibility symlinks, so I've just added "or symbolic
+    link" to the description of file-in-unusual-dir, closes: #135546.
+  * Fixed the regexp for package-contains-CVS-dir to actually recognize
+    directories that are printed with the trailing slash, closes: #146831.
+  * Made unregistered-script-in-etc-init.d a warning, renamed it to
+    script-in-etc-init.d-not-registered-via-update-rc.d and updated
+    its description to mention why it may not be an error, closes: #118823.
+  * Added dash into the regexps in the scripts check.
+  * Added a crude check for code within another shell (foosh -c something).
+    I say crude because it works with oneliners only -- anything that spans
+    lines sounds like pretty much impossible to do in without actually
+    _being_ a shell script interpreter :) closes: #166483.
+  * Added an exception for /etc/ppp being 750 root:dip, and complain if
+    it exists and it's not like that, closes: #169260.
+  * Expunged the notion of a global override file from the tag descriptions.
+
+ -- Josip Rodin <jrodin@jagor.srce.hr>  Sat, 16 Nov 2002 17:26:07 +0100
+
+lintian (1.21.5) unstable; urgency=medium
+
+  * Removed postinst-unsafe-ldconfig warning as per the discussion in
+    #120585, which also conveniently closes: #117260, #114123.
+    Note that postrm-unsafe-ldconfig stays!
+  * Further improvements to reporting/harness, reporting/html_reports
+    and related code.
+  * Fixed the display of info for python-script-but-no-python-dep on
+    python1*.
+
+ -- Josip Rodin <jrodin@jagor.srce.hr>  Wed, 13 Nov 2002 16:37:09 +0100
+
+lintian (1.21.4) unstable; urgency=medium
+
+  * Just check for bashisms in sh files, thanks to Jay Bonci for
+    pointing me a this.
+  * Recognize python source packages called pythonX.Y, which should fix
+    third-party-package-in-python-dir for all of them, closes: #114281.
+    Also extend the checking of that directory on all X.Y and not just 1.5.
+  * Fixed policy references in several init script related tags, made the
+    init.d not conffile check a warning since Policy allows otherwise and we
+    can't check reliably, extended the rc.d file check on rc(\d|S).d and
+    excluded sysvinit and file-rc from the check. All this closes: #118824.
+
+ -- Josip Rodin <jrodin@jagor.srce.hr>  Mon, 11 Nov 2002 11:52:47 +0100
+
+lintian (1.21.3) unstable; urgency=high
+
+  * Do _not_ close STDERR before running dpkg-source in unpack-srcpkg-l2.
+    The logname stuff has been fixed ages ago so there shouldn't be any
+    remotely valid reason to do this. This should explain bugs like #159474
+    and #162813 to the submitters, but I'll have to wait and see, since
+    I still can't reproduce it myself.
+  * Fixed the cruft check not to check the diff file just once, not for
+    every damn subdirectory of the source, d'oh.
+  * Backed out the --remove-lab move to postrm, lintian doesn't exist there
+    any more, silly, closes: #166309.
+
+ -- Josip Rodin <jrodin@jagor.srce.hr>  Sun, 27 Oct 2002 12:48:57 +0100
+
+lintian (1.21.2) unstable; urgency=low
+
+  * Changed the default path for ksh to /bin/ksh, as per the change
+    in the pdksh package, closes: #131484.
+    Maybe /usr/bin/ksh should still be allowed, but it seems inconsistent
+    to allow several paths like that... perhaps the same should be done
+    for zsh? Although, I suppose there are less zsh scripts out there
+    compared to ksh.
+  * Added $link to the usr-doc-symlink-to-foreign-package error message,
+    hopefully properly closes: #116309 (untested).
+  * Eradicated the remaining Packaging Manual references, from
+    Chris Tillman's patch in #116488. Also removed FSSTND references.
+  * Fixed typo in description-is-dh_make-template, closes: #145802.
+  * Replaced /usr/share/doc with /usr/doc in checks/copyright-file.desc,
+    thanks Matej, closes: #157423.
+  * Set binary mode to be able to grok UTF-8 with Perl 5.8 when reading
+    override files, thanks to Colin in #158119. Maybe this is all wrong,
+    but it shouldn't hurt anyway. :)
+  * Added Colin's patch check manual pages for correctness with lexprog,
+    along with the appropriate versioned dependency on man-db, closes: #52524.
+  * Cleaned up some typos in copyrights.
+  * Added *sh -n checking for syntax errors in shell scripts, closes: #42348.
+  * Moved script checks from control-files to the second part of scripts,
+    and also noticed and fixed a bug -- if a script e.g. called killall and
+    had a bashism on the same line, it would escape undetected.
+  * Check the .diff.gz file (if it exists) for config.(cache|status) that
+    includes no added and a number of removed lines and don't print the
+    configure-generated-file-in-source error for those files, closes: #122855.
+    The diff output analysis isn't perfect, but it oughta work.
+  * Clarified the virtual-package-depends-without-real-package-depends
+    warning with an additional paragraph, closes: #164813.
+  * Updated the testset/check_info.pl to work, similarly to lintian-info.
+  * Updated the testsets (this verified my s/elsif/if/g bug fix in
+    checks/scripts mentioned above).
+  * Updated %known_essential as per my sid available file.
+  * Updated %known_virtual_packages as per Policy's virtual packages list.
+
+ -- Josip Rodin <jrodin@jagor.srce.hr>  Thu, 17 Oct 2002 13:57:00 +0200
+
+lintian (1.21.1) unstable; urgency=low
+
+  * Removed FHS transition stuff from lintian's own maintainer scripts.
+    Lintian is now Lintian-clean. :o)
+  * Moved the purge stuff from the old prerm to postrm, and made the
+    (possibly redundant; to-do) question more forgiving.
+  * Added a doc-base file and run install-docs, closes: #129509.
+  * Removed spurious no-manpage exception for binaries that end in
+    numbers, closes: #118479.
+  * Fixed lintian-info's broken $ENV{LINTIAN_ROOT} use. 
+  * Fixed --setup-lab to ignore already-existing packages, thanks to
+    Chris Tillman, closes #83593. Let's hope it all works out :o)
+  * Updated the list of allowed distributions, closes: #150466.
+  * Removed the leading ./ from filenames in %linked_against_libvga which
+    actually makes it work, thanks to Matej Vela, closes: #157317.
+  * Warn against all uncompressed changelogs, thanks again to Matej Vela,
+    closes: #157318.
+  * Nuked the code that checked that that for every /usr/share/doc/foo -> ...
+    symlink there exists an equivalent /usr/doc/foo -> ... symlink;
+    seems to be a leftover from the FHS transition days, thanks yet again
+    to Matej Vela for the patch, closes: #161716.
+
+ -- Josip Rodin <jrodin@jagor.srce.hr>  Mon,  7 Oct 2002 22:18:20 +0200
+
+lintian (1.21) unstable; urgency=low
+
+  * New maintainer.
+  * Applied the ever so appropriately named ``unfuck'' patch to the lab
+    code. It includes but is not limited to:
+     + code to read the pool from Bas Zoetekouw
+     + other changes to support new style distributions from myself
+     + fixes for the breakage induced by Shaleh's blitheful insertion of
+       "use strict" everywhere
+     + an array of assorted fixes from Colin Watson, myself and perhaps
+       others which I've accidentally forgotten.
+    The lab code is now officially not entirely broken. Yay! :)
+    There's still work to be done, but this still closes: #157369, #157942.
+
+ -- Josip Rodin <jrodin@jagor.srce.hr>  Wed, 25 Sep 2002 19:18:57 +0200
+
+lintian (1.20.19) unstable; urgency=high
+
+  * revert the frontend to using require as use is a compile time only option
+    which was causing the environment variables to not be read.
+    Closes: #160819
+
+ -- Sean 'Shaleh' Perry <shaleh@debian.org>  Fri, 13 Sep 2002 17:55:54 -0700
+
+lintian (1.20.18) unstable; urgency=low
+
+  * "I release once a year whether I need to or not" release
+  * updated debhelper command list, closes: #119094
+  * applied lab patch from Joy, et. al., closes: #157942
+  * added python version 1.5, 2.{1,2,3} to checks/scripts, closes: #114164
+  * applied Colin Watson's patch for needs=dwww handling in menu files,
+    closes: 115486
+  * renamed autoconf-generated-file-in-source to
+    configure-generated-file-in-source, closes: #115744
+  * updated php checks in checks/scripts, closes: #116386
+  * yet another checks/script update.  This time we allow for unusual
+    interpreters when the file is not in a bin/ directory, closes: #116584
+  * updated policy revision, closes: 118694
+  * applied Colin Watson's patch for a bug in deplib which made A | B => A,
+    closes: #122742
+  * applied Chris Tillman's patch to clean up policy references,
+    closes: #123585
+  * applied Kevin Ryde <user42@zip.com.au>'s patch to better check for emacs
+    local variables in changelogs and updated the error message as well,
+    closes: #129581, #138216
+  * accept *-proposed-updates in distribution field, closes: #139288
+  * removed check for postrm removing usr doc symlink and inverted the
+    postinst check to now make sure the package does NOT set the symlink.
+    Closes: #154005
+  * removed global override file, it was getting ancient
+  * converted all uses of 'require' to use statements
+  * more use strict cleanups
+  
+ -- Sean 'Shaleh' Perry <shaleh@debian.org>  Fri, 13 Sep 2002 09:49:24 -0700
+
+lintian (1.20.17) unstable; urgency=high
+
+  * Colin patches:
+    fixed typo in man page causing incorrect formatting, closes: #114118
+    duplicate relations check is a lot more intelligent, closes: #119048
+  * urgency set to high to reflect the fact that the relations check is
+    reporting many packages violating policy when in fact they are following
+    it correctly.  This is especially true for the new python policy.
+
+ -- Sean 'Shaleh' Perry <shaleh@debian.org>  Sun, 25 Nov 2001 18:15:04 -0800
+
+lintian (1.20.16) unstable; urgency=low
+
+  * the "next day bug" release
+  * give an error if a package declares a relation on the same package twice,
+    i.e. Depends: libc6, libc6 (<< 2.0).  Closes: #27442.
+  * objdump-info collection script now handles UPX binaries (closes: #113497)
+
+ -- Sean 'Shaleh' Perry <shaleh@debian.org>  Tue, 25 Sep 2001 15:40:30 -0700
+
+lintian (1.20.15) unstable; urgency=low
+
+  * the "collecting unemployment and have time to code" release
+  * no longer use syscall to exit from pipeline handler, now uses POSIX::_exit
+    Closes: #112205.
+  * Accept Joy's NMU patch (he applied it as 1.20.14.1).
+    Closes: #110991, #109244.
+  * Warn if the copyright file contains dh-perl-make boilerplate as suggested
+    by James Troup.  In the process debmake-templates-in-copyright became
+    helper-templates-in-copyright.  Closes: #110337.
+  * Oops, used the same argument name (-s) twice.  Reverted back to -s meaning
+    "source".  Updated manpage and source to reflect this.  Closes: #109631.
+  * added a warning when hardlinks are used.  Closes: #103893, #97518.
+    I am closing #97518 here as well which asked that I warn about hard links
+    that link to files in another directory.  Since I warn about hardlinks
+    existing adding a separate check for where they link seems silly.
+  * applied Edward Betts patch to detect .cvsignore and CVS/.  Closes: #74684.
+  * applied Daniel Schleper's patch for Build-Depends v. Build-Depends-Indep.
+    Closes: #92472.
+  * applied Edward Betts patch for detecting a misspelling in common-licenses.
+  * added 'debain' to list of spelling errors.  Closes: #112083.
+  * applied Steve Kowalik's patch that adds out-of-date-standards-version.
+    This will be defined as the policy shipped with the last stable release.
+    Closes: #112043.
+  * Made doc-base-references-usr-doc inform which file is the culprit.
+    Closes: #111020.
+  * Applied Steve M. Robbins' patch for improved handling of ldconfig checks
+    in maintainer scripts.  Closes: #110465, #113285.
+  * do not complain about static binaries if they are called "foo.static".
+    Closes: #98288.
+  * testset/runtests now calls dpkg-buildpackage with a '-d' so build-depends
+    are not checked.
+  * oops I left 'debian' in the spelling check list.
+  * backed out Gergely Nagy's suggestion for checking for 'Author(s)'.  That
+    is just overly pedantic and lame.  Reopens: #107815, tagged wontfix.
+  * checks/etcfiles now complains about ANY file found in /etc that is not a
+    conffile.  The finer grain checks have been removed.  Closes: #103940.
+    Added a new testset 'etcfiles' to go along with the test.
+  * debconf check now looks for the 'seen' flag and gives an error if the
+    package does not have a versioned dependency on debconf 0.5.00.
+    Closes: #113164.
+
+ -- Sean 'Shaleh' Perry <shaleh@debian.org>  Mon, 24 Sep 2001 12:20:00 -0700
+
+lintian (1.20.14.1) unstable; urgency=low
+
+  * Another non-maintainer upload blessed by the maintainer, to clean up
+    after the last such NMU. :)
+  * Fixed spurious postinst-has-useless-call-to-ldconfig warnings, patch
+    from Colin Watson, closes: #109721. Also fixed the silly error in
+    shared-libs which broke shlib-missing-in-control-file.
+  * Fixed checking for /var/lib/games, patch from Andrew Suffield, amended
+    by me not to warn for the files but just that dir, closes: #109970.
+  * Have debian-changelog-file-contains-user-emacs-settings checked only
+    at the start of the line (wonder if Emacs allows indentation in there?),
+    closes: #109971.
+  * Force LANG=C because of a bug in debiandoc-sgml, closes: #110891.
+
+ -- Josip Rodin <jrodin@jagor.srce.hr>  Sat,  1 Sep 2001 21:01:30 +0200
+
+lintian (1.20.14) unstable; urgency=low
+
+  * Non-maintainer upload blessed by the maintainer. Kudos to Colin Watson
+    and Steve Kowalik for helping in the preparation of this upload.
+  * Skip shared objects which aren't in %ldso_dir in some shlib checks,
+    as per changes in Policy 3.5.5, finally closes: #42399, #41613.
+  * Fixed Policy section in package-contains-upstream-install-documentation,
+    closes: #94267.
+  * Added Adrian Bunk's patch for pike/pike7 stuff, along with pike7 stuff
+    in checks/scripts.desc so it's consistent, closes: #94902.
+  * Added an error for leaving files generated by autoconf in the source
+    package, patch from Colin Watson, closes: #107679, #94316.
+    This pulled in renaming checks/debian-cruft* to cruft*, logically.
+  * Added checks/infofiles* for everything related to info files, moved
+    parts of checks/menus* in it and added compression related errors,
+    closes: #95785.
+  * Added Brendan O'Dea's patch for checking Perl module directories,
+    and for not checking the source for each matching file in a !$is_python
+    package, closes: #96350.
+  * Removed lc() from checks on whether a debconf field value is valid,
+    closes: #106324.
+  * Improved binary-or-shlib-defines-rpath description, closes: #94901.
+  * Fixed the references to /usr/doc in the manual page using the patch
+    from Stephen Stafford, closes: #103177.
+  * Added debconf's "config" among %maintainer_scripts in
+    checks/control-files, closes: #108123.
+  * Added "Debian/GNU Linux" among the corrections in checks/spelling,
+    closes: #35761. It required some other modifications but oh well.
+  * Added a new warning, doc-base-file-references-usr-doc, closes: #46582.
+    This required adding collection/doc-base-files* and using that in
+    checks/menus*.
+  * Added a new error, debian-changelog-file-contains-user-emacs-settings,
+    closes: #84750. This required using collection/changelog-file in
+    checks/changelog-file (doh! :).
+  * Complains on manual pages located in /usr/(share|X11R6)/man instead of
+    man* subdirs, closes: #93056.
+  * Added php4 as a valid interpreter, closes: #94534.
+  * Fixed a little bug in checks/spelling.desc, it lacked a comma in its
+    Needs-Info field.
+  * Added a warning when there's common-licenses and not
+    /usr/share/common-licenses/ in the copyright file, closes: #99886.
+  * Added a warning when there's "Upstream Author(s)" in the copyright file,
+    closes: #107815.
+  * Removed -v from command(1) invocation check, patch from Colin Watson,
+    closes: #96227.
+  * Mention the language in select-with-translated-default-field and
+    partially-translated-question, patch from Colin Watson, closes: #95795.
+    Also, fixed some thinkos in the code for the latter warning.
+  * No longer barfs on debhelper-generated safe ldconfig calls, patch from
+    Paul Martin, closes: #82479.
+  * Added the recent Policy versions up to 3.5.6 to standards-version,
+    and moved the threshold for ancient versions up to 3.2.0 because that
+    version was released a bit more than one year ago, closes: #104766.
+  * Added a new error, package-depends-on-an-x-font-package. The pattern
+    is ^xfont.*, that ought to work fine (xfntil2 et al will go undetected,
+    but that's obsolete).
+  * Colin tweaked lib/text_utils.pl to display indented and empty stuff in
+    Info: tags properly.
+
+ -- Josip Rodin <jrodin@jagor.srce.hr>  Sat, 18 Aug 2001 18:46:34 +0200
+
+lintian (1.20.13) unstable; urgency=low
+
+  * debhelper check for lacks #DEBHELPER# token now checks if -n was passed
+    to the dh_ script. Thanks Chip for pointing this out. (closes: #92624)
+  * list of debhelper programs that want to write to maintainer scripts updated
+  * now check for Build-Depends on essential or build-essential packages
+    (closes: #92372)
+
+ -- Sean 'Shaleh' Perry <shaleh@debian.org>  Thu,  5 Apr 2001 16:00:10 -0700
+
+lintian (1.20.12) unstable; urgency=low
+
+  * 'farewell to Fabrizio Polacco' release
+  * checks/debhelper's dh-make-template check did not include the $type in
+    its output.
+  * removed spurious debug message from zero-byte-file check in checks/files
+  * lintian no longer runs its regression test when it builds (closes: #92192)
+  * unpack-src-l2 now ensures that we have sufficient permissions to later
+    remove the package (closes: #92224)
+  * bashism check now looks for bash style arrays, thanks Torsten Landschoff.
+    also added to testset.
+
+ -- Sean 'Shaleh' Perry <shaleh@debian.org>  Mon,  2 Apr 2001 12:30:20 -0700
+
+lintian (1.20.11) unstable; urgency=low
+
+  * 'where is my mind release'
+  * added science to list of known sections, Closes: #91798
+  * cleanup override handling, was using chop instead of chomp
+  * checks/binaries checks a binary for profiling symbols now, Closes: #91837
+  * removed false report of prerm failing to remove a doc link when there is
+    no doc dir, just a symlink to another package.
+
+ -- Sean 'Shaleh' Perry <shaleh@debian.org>  Mon, 26 Mar 2001 11:22:22 -0800
+
+lintian (1.20.10) unstable; urgency=low
+
+  * 'I think I remember perl' release
+  * checks/menu-format would die if the last line of a menu had a line
+    continuation character.  Seems the function was not getting called with
+    all 5 arguments.
+  * added a list of exempt paths for static binaries, currently only /boot
+    is listed.
+
+ -- Sean 'Shaleh' Perry <shaleh@debian.org>  Mon, 19 Mar 2001 14:14:41 -0800
+
+lintian (1.20.9) unstable; urgency=low
+
+  * 'rule monger' release
+  * checks/debhelper: make regex case insensitive, Closes: #89070
+  * checks/debhelper: modify search logic so it does not report false postives
+    when both Build-Depends and Build-Depends-Indep are defined, Closes: #89069
+  * Fix the decription for package-contains-upstream-install-documentation,
+    Closes: #89257
+  * dh_testversion is deprecated, patch applied.  Closes: #89624
+  * lintian now detects that the deb/dsc/changes file it was told to parse is
+    zero bytes and skips it.
+
+ -- Sean 'Shaleh' Perry <shaleh@debian.org>  Fri,  9 Mar 2001 14:16:24 -0800
+
+lintian (1.20.8) unstable; urgency=low
+
+  * 'wearing my "fuck redhat" shirt and loving it' release
+  * checks/menus, the check for whether or not the doc symlink is removed
+    fails for people who do not use the -f option to rm (or any other options)
+    thanks Oliver Elphick, Closes: #88182
+  * checks/scripts handles 'wish' better (I hope), Closes: #88333
+  * checks/debconf, the registry check is ignore if the package being tested
+    is debconf itself.  Closes: #88526
+  * frontend handles files that are referenced but do not exist better
+  * this is looking like one of the last releases for a while
+
+ -- Sean 'Shaleh' Perry <shaleh@debian.org>  Wed,  7 Mar 2001 10:42:03 -0800
+
+lintian (1.20.7) unstable; urgency=low
+
+  * 'test everything' release
+  * updated architecture list -- hppa, ia64, mips, mipsel, s390, sh added
+  * added 'Enhances' to list of known fields
+  * removed libwraster2 from list of obsolete packages, Closes: #85584
+  * Colin Watson's debconf checks added, still need a testset though,
+    Closes: #85876, #84759
+  * checks/menus now checks for proper use of install-info,
+    Closes: #25823, #30192
+    need a testset for this too
+  * checks/files.desc now points to the FHS in /usr/share/doc/debian-policy
+  * applied Joey Hess' app-defaults patch.  This allows app-defaults to be
+    conffiles as well as adding a check for app-defaults in old dirs.
+    Closes: #86707, #76811
+  * lintian now knows more about 3.5.x's X policy in 12.8.  Added check for
+    Xresources file but no conflicts on xbase (<< 3.3.2.3a-2).  Closes: #63542
+  * applied Joey Hess's perl patch.  Now know that pm's in /usr/share have
+    no need for the +x bit.  Closes: #86709
+  * check for INSTALL in /usr/share/doc now knows about INSTALL\..+ (i.e.
+    INSTALL.gz)
+  * checks/standards-version has an error for packages which declare a source
+    relation (ie Build-Depends) but are not at least policy 3.1.x.
+    Closes: #86711
+  * checks/fields now checks that the arch definition in source relations
+    follows policy.  Closes: #86710
+  * added wish8.3 to list of known interpreters in checks/scripts
+  * warning description cleanups, Closes: #87528
+  * added more bashism checks -- '|&', '$[foo]', '${parm:len[:offset]}',
+    '${parm/pat[/str]}', '${parm//pat[/str]}'
+    Closes: #32113 (the suiregister stuff happened a release or three ago)
+    you guessed it, need a testset
+  * bashism check now tells you what it thinks the bashism was.
+    Closes: #81738
+  * bashism checks now ignore here documents, Closes: #87527
+    teset/maintainer-scripts now has a here document in a script and extended
+    bash triggers.
+    Also, various other bashism test cleanups and improvements.
+  * typo in scripts fixed, now I really do work on python2, thanks Jerome.
+    Closes: #87772
+  * hmm, versioned-provides message was often wrong, made it better and it
+    reports the perceived relation, i.e. foo (= 4).
+  * removed the -w and strict from reporting/ scripts
+  * update-menus checks enhanced with knowledge about wm-menu-config.
+  * added 'asmodule' to list of known menu tags
+  * depends-on-essential-package-without-using-version now is only reported
+    for actual depends or pre-depends.
+  * interpreter checking handles arbitrary whitespace now
+  * fixed scripts check for ocaml, now know about ocamlrun.
+  * unusual-interpreter messages were being caused by not prepending '.' to
+    the interpreter name when checking %executables in checks/scripts.
+  * still more fun with ++ )-:  menus is now even more paranoid with
+    quotemeta().
+  * ensure $setuid, $setgid is set in checks/files, thanks to the luxman
+    package for triggering the perl oops.
+  * collections/scripts handles files that only contain '#!'.
+
+ -- Sean 'Shaleh' Perry <shaleh@debian.org>  Wed, 14 Feb 2001 08:55:09 -0800
+
+lintian (1.20.6) unstable; urgency=low
+
+  * 'people who depend on side effects should be flogged' release
+  * lintian had code which set a variable to undef, then used it.  Without
+    -w and use strict, this silently became a zero, but now it causes errors.
+    So, since it obviously was meant to be zero, I set it to zero instead of
+    undef.  Closes: #85326
+    Fun part was this only happened when run on more than one version of a
+    single package i.e. lintian foo_1.changes foo_2.changes.
+  * checks/scripts updated to deal with python2.x and there being two versions
+    of python.  Closes: #85441
+    while doing this, collections/scripts was updated to support the use of
+    /usr/bin/env.  I probably added bugs here )-:
+    added a scripts testset, very early still.
+  * my modification to checks/menus to support /usr/share/doc/package -> other
+    had a problem with special chars.  Now calls quotemeta().  Annoying because
+    I have a ++ package name but it did not trigger this particular case.
+    So, I added a package to foo++ which links to foo++.  Closes: #85530
+  * added a TODO to the private dir.
+  * left off a closes in the big perl closings 2 revisions ago, Closes: #80192
+
+ -- Sean 'Shaleh' Perry <shaleh@debian.org>  Sat, 10 Feb 2001 14:28:19 -0800
+
+lintian (1.20.5) unstable; urgency=low
+
+  * 'people who name a lib libfoo-X.X.so should be shot' release
+  * checks/shared-libs handles libraries of the form 'libfoo-X.X.so' now
+  * the virtual package check I added in the last release failed to check
+    the field it was testing, so errors were reported on fields other than
+    Depends.  Ooops.  The description also should have referred to packaging
+    not policy.  Closes: #85225
+
+ -- Sean 'Shaleh' Perry <shaleh@debian.org>  Wed,  7 Feb 2001 13:55:10 -0800
+
+lintian (1.20.4) unstable; urgency=low
+
+  * 'why would you ever do THAT?' release
+  * lintian-info sets $ENV{'LINTIAN_ROOT'} if it is not set
+  * added a check to checks/files for packages which ship the upstream INSTALL
+    document.  This is almost always useless for users of a package.
+    testset/binary now includes such a file
+    Closes: #81970
+  * checks/menus -- the walk over package contents now has logic to run file
+    tests on files, link tests on links, etc.
+  * checks/menus -- if there is a /usr/share/doc/$pkg symlink, assume it links
+    to a package it depends on and do not warn about setting the usr/doc
+    symlink.  There is code in checks/copyright-file that makes sure policy is
+    followed with regards to what is actually linked against.  Closes: #48048
+  * checks/fields is now less strict about Section: non-US handling
+  * added debconf files to list of known control files in checks/control-files
+    Closes: #46863
+  * perl mistakes are no longer checked for. Closes: #47076, #75889
+  * FHS 2.1 cleanups, Closes: #75878
+  * lintian will not complain if you symlink your doc directory to an essential
+    package and leave off the depends, because since it is essential you must
+    not depend on it.  Closes: #48296
+  * lintian now gives and error when a package declares a depends on an
+    essential package without using a versioned depends.  Closes: #33250
+  * extra-license-file is not given if the file is just a symlink.
+    Closes: #35224
+  * checks/fields: now complain if a package declares a depends on a virtual
+    package without first depending on a real packages as an alternative.
+    Required adding a known_virtual_packages list to checks/common_data.pl.
+    Also removed redundant info/registered-virtual-packages file.
+    Closes: #70673
+  * added a library (mostly empty right now) and non-us testset
+  * runtests now runs the tests in alphabetical order
+  * lintian's --version info is being updated automagically again
+  * moved some hashes around in checks/ to common_data.pl
+  * checks/changelog-file reorganized so it knows the size of the files.  Now
+    it can check that the changelog is sufficiently large to require
+    compressing.  Also modified the desc file to reflect this. Closes: #84400
+  * --info now outputs all info.  Silly bug in how I used split and defined.
+    Closes: #82970
+  * added a testset/check_info.pl script.  It verifies that every lintian
+    check referenced in a desc also has an info section.  runtests now runs
+    this test as well.
+  * suidregister warning is now an error.
+  * checks/menus: fixed the if link case pattern match -- one more perl erro
+    down, 3 billion hidden ones to go.
+  * Following items thanks to Colin Watson
+  * updated checks/standards-version so it does not give perl errors when it
+    encounters a newer standards version than it knows about. Closes: #84083
+  * updated references to policy for policy 3.5.0. Closes: #84088, #83969
+  * Added a warning for packages containing a link to undocumented(7) as
+    suggested on debian-policy list.  Also includes a testset (manpages) 
+    addition.
+    Closes: #83188
+  * At the moment checks/copyright-file just tests for a slash in the link;
+    I've changed it here to test for an initial / or ../, and then after that
+    check it strips off everything from the first slash on, so that tests on
+    the package name work correctly when people link to subdirectories of
+    other /usr/share/doc directories.  Closes: #84066
+  * It was unpacking to level 2 even though I had Unpack-Level: 1 and no
+    associated collection scripts. Of course, it wanted override files from
+    /usr/share/lintian/overrides/$pkg. Fair enough - except that if I said 
+    --no-override it wanted the override file information anyway, and still
+    unpacked to level 2.  No obeys non-overrides.  Closes: #84722
+
+ -- Sean 'Shaleh' Perry <shaleh@debian.org>  Tue, 30 Jan 2001 14:26:04 -0800
+
+lintian (1.20.3) unstable; urgency=low
+
+  * 'Does the pain ever end?' release
+  * oops, lintian can not create a static lab due to an error check too
+    early in the code.  While fixing this I also added a static lab check in
+    testset/runtests. Closes: #83411
+
+ -- Sean 'Shaleh' Perry <shaleh@debian.org>  Wed, 24 Jan 2001 14:36:35 -0800
+
+lintian (1.20.2) unstable; urgency=low
+
+  * 'Where or where did my changes go' release
+  * fixed --help option to not show escaped chars
+  * changed regression test to also do a run with --info on
+  * seems lintian always used the lintian-info script from the path, changed
+    to look in LINTIAN_ROOT if passed
+  * perl problems cleaned up, Closes: #82970
+  * removed randomization of output strings when refering to policy documents,
+    not only is this silly but it makes regression tests impossible
+  * moved manual_refs.pl list of policy manuals to an external file.  This will
+    allow automated updating when releases occur.  It also removes the perl
+    warnings (-:
+
+ -- Sean 'Shaleh' Perry <shaleh@debian.org>  Sat, 20 Jan 2001 12:21:30 -0800
+
+lintian (1.20.1) unstable; urgency=low
+
+  * the change hurts release
+  * every perl script now calls use strict and passes -w to perl
+    The long road of bug tracking because of this has begun.  Thanks Joey H.
+  * testset/filenames now has a lengthy-symlink bug to show how that code works
+  * typo in checks/control-files in a bashism check, the correct POSIX call
+    is 'read foo' however the code was checking for the existance of whitespace
+    before the call, not the existance of the variable to read into due to a
+    mixed up regex.  Thanks Adam Heath for pointing this out. Closes: #81453
+  * checks/control-files, the check for whether '.' takes more than one
+    argument did not take into account things like 'and'.  It does now.
+    Closes: #81737
+  * fixed interpreter check code to hand a space between the #! and the
+    interpreter (really), also allows bash,ksh,ash as valid sh shells. Also
+    knows to look for an ELF header and stop parsing the script. Thanks
+    Colin Watson.  Closes: #80348, #82541
+  * testet/binary-1 added.  This is a small C program to test lintian's 
+    handling of binary files.  See the changelog in this directory for info
+  * fixed message for 'manpage-has-wrong-extension', Closes: #82452
+  * 'N: Unknown interpreter' message now only printed once per script,
+    Closes: #81644
+  * added equivalent file-directly-in-usr-share-doc messages (et al.),
+    Closes: #82654
+  * added new message: suidregister-used-in-maintainer-script. this replaces
+    the old messages suidregister-used-in-maintainer-script-other-than-postinst
+    and suidunregister-not-called-in-postrm due to suidregister being phased
+    out of Debian.  Closes: #81868
+  * binary-has-unneeded-section upgradeed from info to warning
+
+ -- Sean 'Shaleh' Perry <shaleh@debian.org>  Wed,  3 Jan 2001 13:04:20 -0800
+
+lintian (1.11.15) unstable; urgency=low
+
+  * Hack Hack
+  * checks/perl disabled until it can be improved
+  * fixed typo in checks/description: s/%type/$type/
+  * fixed mental typo in checks/*: $foo == 'string' is not the same as
+    $foo eq 'string', Closes: #80813
+  * Added Colin Watson's patches, Closes: #80373, #80376, #80377
+
+ -- Sean 'Shaleh' Perry <shaleh@debian.org>  Fri, 22 Dec 2000 16:02:58 -0800
+
+lintian (1.11.14) unstable; urgency=low
+
+  * more fun with interpreter checking, seems a space is allowed between bang
+    and the interp path.  So, fixed the regex (again).  Also store the name
+    of the interpreter in $interp and use that rather than $is_sh, this will
+    allow for other interpreter checks later.  Closes: #80348
+
+ -- Sean 'Shaleh' Perry <shaleh@debian.org>  Fri, 22 Dec 2000 15:51:10 -0800
+
+lintian (1.11.13) unstable; urgency=low
+
+  * (Joy) fixed a typo in binaries.desc
+  * (Joy) checks/debhelper now passes $type with the lintian message
+  * (Joy) libs/text_utils.pl, reporting/html_reports fix maintainer name
+  * checks/control-files now checks if the postrm calls update-alternatives
+    with the --remove option, this is considered harmful, Closes: #80255
+    checks/control-files.desc explains the problem in detail
+  * fixed checks/menus setting of is_sh, $foo = split() sets foo to the number
+    of items, not the first item -- duh (-:  How did this make it thru testing?
+    added a maintainer-scripts testset to help catch this in the future
+
+ -- Sean 'Shaleh' Perry <shaleh@debian.org>  Thu, 21 Dec 2000 10:34:43 -0800
+
+lintian (1.11.12) unstable; urgency=low
+
+  * new command line option: --show-overrides, displays tags even if
+    they have been overriden, marked 'O: .....'
+  * shared-libs.desc text changed to give more info when a shared library is
+    present, but the SONAME is not set or set improperly, Closes: #78277
+  * removed references to libtool-workarounds.txt (it never died ....),
+    Closes: #78420
+  * my reformat of the code in checks/menu-format changed the regex from
+    m/^#/ to m/^	#/, I changed it back (kind of).  The test is now
+    m/^\s*\#/ just in case a space snuck in.  Also modified the code so it
+    does a if (m//) { next;} rather than if (! m//) { ........ }.
+    Closes: #78532
+  * checks/menus now checks which interpreter the maint script uses and varies
+    its checks accordingly -- works for sh and perl currently, Closes: #78880
+    Updated menus.desc while I was at it.
+  * fixed typo in scripts.desc, pike error message should have referred to pike
+    not to make, Closes: #79744
+  * killed use of \b in bashism checks, now uses (^|\s+), Closes: #80122
+
+ -- Sean 'Shaleh' Perry <shaleh@debian.org>  Thu, 21 Dec 2000 10:20:30 -0800
+
+lintian (1.11.11) unstable; urgency=low
+
+  * Finally, lintian's version number is automagically set
+  * lintian.sgml updated to document per package overrides info.
+  * the /usr/share/lintian/overrides/<package> actually works now (-:
+
+ -- Sean 'Shaleh' Perry <shaleh@debian.org>  Thu, 16 Nov 2000 14:19:22 -0800
+
+lintian (1.11.10) unstable; urgency=low
+
+  * Dammit, + sign in package name problems again
+    added a regression test for a foo++ package. Closes: #77216
+  * removed the libtool text in the rpath message, libtool no longer sets rpath
+    the upstream finally saw the light.
+
+ -- Sean 'Shaleh' Perry <shaleh@debian.org>  Thu, 16 Nov 2000 09:02:50 -0800
+
+lintian (1.11.9) unstable; urgency=low
+
+  * Moved the override files from /usr/share/doc/<package> to
+    /usr/share/lintian/overrides/<package>
+    also added a check to catch override files in the old directory
+  * Removed calls to defined in checks/perl, Closes: #76339
+  * copyright-file-is-gpl renamed to copyright-file-contains-full-gpl-license
+  * magicfilter should be in /usr/sbin, not /usr/bin, Closes: #76686
+  * modified testset/empty.  dpkg-genchanges now requires a Maintainer
+    field.
+
+ -- Sean 'Shaleh' Perry <shaleh@debian.org>  Thu,  9 Nov 2000 12:23:43 -0800
+
+lintian (1.11.8) unstable; urgency=low
+
+  * Fixed Description too long message, Closes: #75570
+  * removed description-may-be-too-long
+  * Fixed description of package-uses-debhelper-but-lacks-build-depends,
+    I left the 's' off of lacks
+  * zero-byte-file-in-usr-doc changed to zero-byte-file-in-doc-directory
+  * added documentation for zero-byte-file-in-doc-directory, Closes: #75744
+  * renamed package-source-contains-debian/files to
+    debian-files-list-in-source, Closes: #75746
+  
+ -- Sean 'Shaleh' Perry <shaleh@debian.org>  Fri, 27 Oct 2000 16:09:09 -0700
+
+lintian (1.11.7) unstable; urgency=low
+
+  * Fixed lintian's handling of autouse, Closes: #75115
+    Thanks Stefan Hornburg for helping me with this
+  * Fixed silly manpage filename parsing bug, Closes: #75246
+  * Removed now out of date libtool-workarounds.txt, Closes: #75324
+  * unpack-srcpkg-l2 used a silly regex to parse dpkg-source output, this
+    has been fixed to simply read some string of non-whitespace, Closes: #58943
+  * checks/spelling should now work with high ascii chars, Closes: #70974
+  * added debiandoc-sgml Build-Depends-Indep, Closes: #74751
+  * added checks/debian-cruft.  Checks for the debian/files file, Closes: #38710
+  * fixed checks/debhelper -- it actually works now.
+  * added tixwish to list of known interpreters, Closes: #47775
+
+ -- Sean 'Shaleh' Perry <shaleh@debian.org>  Tue, 24 Oct 2000 15:29:14 -0700
+
+lintian (1.11.6) unstable; urgency=low
+
+  * Fixed manpages check to handle oddly named files, now uses
+    File::Basename
+  * fixed debhelper check so it will detect a need for Build-Depends even if
+    a script which needs to modify maintainer scripts is not used.
+  * lintian-info now outputs info for source messages too, Closes: #51811
+  * used a different syntax in checks/perl rather than set $2, Closes: #54710
+  * if dh_testversion is called by a package, ensure that the package uses a
+    versioned Build-Depends
+  * Maintainer Upload (with Darren's blessing)
+
+ -- Sean 'Shaleh' Perry <shaleh@debian.org>  Mon,  9 Oct 2000 13:23:51 -0700
+
+lintian (1.11.5) unstable; urgency=low
+
+  * /etc/pam.d are now checked to ensure they are conffiles, Closes: #50293
+  * fixed the typo in checks/copyright-file, Closes: #53626
+  * fixed description, lintian is at policy 3.2.0.0, Closes: #55083
+  * fixed checks/standards-version, knows about policy version 3.2.0,
+    Closes: #68655
+  * check for zero byte length files in /usr/share/doc/<package>,
+    Closes: #59508
+  * added a fail function to frontends/lintian, Closes: #69259
+  * checks/files.desc now refers to FHS 2.1, Closes: #69422
+  * ran ispell on checks/*.desc files, Closes: #69423
+  * added checks for suidregister and suidunregister, Closes: #29444
+  * lintian now checks the length of the short description, Closes: #33411
+  * lintian now verifies that /etc/cron.{d,daily,monthly,weekly} files are
+    marked as conffiles, Closes: #46332
+  * Description: is checked to make sure it is not a dh_make template,
+    Closes: #59141
+  * fixed URL in README, Closes: #59733
+  * added magicfilter to list of interpreters, Closes: #60361
+  * added check if debhelper is used by a package, it is included in
+    Build-Depends, Closes: #70438
+  * for menu files, if the menu needs=foo and foo is the package name, assume
+    this is ok.  Also, sections that match the package name are also assumed
+    to be ok.  This affects mostly window managers.  Closes: #64674
+  * Checks whether the icon used in a menu file is in xpm format.
+  * added {g,k,p,y}forth as valid interpreters, Closes: #51778
+  * More checks/ dir cleanups
+
+ -- Sean 'Shaleh' Perry <shaleh@debian.org>  Wed, 27 Sep 2000 15:31:38 -0700
+
+lintian (1.11.4) unstable; urgency=low
+
+  * Brought lintian.sgml up to date
+  * cleaned up the layout of frontend/lintian
+  * Dep::implies did not parse Depend: foo | bar | baz correctly, this is why
+    things like wmakerconf gave bogus errors.  This is duct taped, real fix
+    some day.
+  * Closes: #43706
+
+ -- Sean 'Shaleh' Perry <shaleh@debian.org>  Wed,  6 Sep 2000 19:13:20 -0700
+
+lintian (1.11.3) unstable; urgency=low
+
+  * Added 'Format' field to dsc file checks
+    New dpkg versions seem to write a Format version to dsc files, lintian
+    flagged them as an unknown field.
+  * lintian failed lintian (-:
+    changed copyright to point at /usr/share/common-licenses/GPL
+
+ -- Sean 'Shaleh' Perry <shaleh@debian.org>  Fri,  1 Sep 2000 15:35:03 -0700
+
+lintian (1.11.2) unstable; urgency=low
+
+  * Official maintainer change
+  * Package specified overrides
+  * Fixed perl dep check bug
+  * Added perl modules: (#46118) (#51457) (thanks ardo)
+  * Added interpreter ocaml (#50933)
+  * Cleaned up some overrides -hopefully not yours (#48703, #48769)
+  * SUID allowed for packages named *-suid
+  * Applied Frank Belew's patches (#39832 #48794)
+  * Added checks for /usr/[share/]doc/copyrights references in copyright
+    file
+  * Added change in directory checks based on changes by the Great X
+    Reorganization
+  * Added check for text version of changelog no matter what
+  * Added check for /var/lib/games
+  * Added checks for Build-* source-depends fields
+  * Updated standards-version to accept 3.1.0 and made anything 2.x ancient
+
+ -- Darren Benham <gecko@debian.org>  Fri, 24 Sep 1999 09:59:35 -0700
+
+lintian (1.10) unstable; urgency=low
+
+  * Richard's changes:
+  * Darren's changes:
+    + changed rm of /usr/doc link to look for rm and rm -f (closes: #46740)
+    + changed numerous overrides to account for tar (closes: #46903)
+    + added doc-base override (closes: #45999)
+    + changed of URI:: functions liburi-perl (closes: #45770)
+    + added recognition of HTML::SimpleParse (closes: #45081)
+    + added "hints" to the known menu tags (closes: #47248)
+    + changed example checks to include ./ (closes: #44897)
+    + moved data/dumper to perl|perl5 (closes: #42036)
+    + changed perl|perl5 check to allow perl5|perl (ver) (closes: #44425)
+    + caused lintian to skip many file related checks for the files in
+      directories /hurd and /server (closes: #36680)
+
+ -- Darren Benham <gecko@debian.org>  Fri, 24 Sep 1999 09:59:35 -0700
+
+lintian (1.9.1) unstable; urgency=low
+
+  * Richard's changes:
+  * Darren's changes:
+    + Added a check for /etc/pam.conf.  Precursor for reserved 
+      /etc/* files
+    + Added a check of postinst and prerm for /usr/doc symlink manipulation
+    + Added the /usr/doc symlink to lintians scripts
+
+ -- Darren Benham <gecko@debian.org>  Mon, 13 Sep 1999 22:06:07 -0700
+
+lintian (1.8.2) unstable; urgency=low
+
+  * Richard's changes:
+  * Darren's changes:
+    + Added /var/lib to the FHS check
+    + Fix for the new tar
+    + Make libraster2, not libraster1 obsolete
+
+ -- Darren Benham <gecko@debian.org>  Thu,  5 Aug 1999 00:13:28 -0700
+
+lintian (1.7) unstable; urgency=low
+
+  * Richard's changes:
+  * Darren's changes:
+    + This time.. added Help as a valid root level menu option
+    + Changed FSSTND directory Infos to Josip's suggested wording.
+    + Removed /var/lib from the FSSTND check
+    + Fixed non-US/section check
+    + Added text about bashism checks perfromed to N: tag
+    + Fixed bad-link-to-undocumented.man.page N: tag
+
+ -- Darren Benham <gecko@debian.org>  Thu, 29 Jul 1999 15:54:37 -0700
+
+lintian (1.6) unstable; urgency=low
+
+  * Richard's changes:
+  * Darren's changes:
+    + Added some bashism checks from Shalah
+    + Added /usr/share/doc as valid directory
+    + Added /usr/share/man as valid directory
+    + Set warning for FSSTND directories
+    + Added Help and App/Databases to valid menu entries
+    + Added patch from Steve Haslam to recognise /etc/menu-methods and
+      check for update-menus calls
+    + Added overrieds for dh_make requested by C. Small
+    + Added patch from Roderick Schertler to skip comments/blank lines at
+      top of menu files.
+    + Changed the relative shared-library check to look for either
+      rela.text or rel.text, not just rel.text.  This is needed for PowerPC
+      and other non-i386 architectures.
+    + Added ruby as a valid interpreter
+    + Added notice when unrecogized file format is found that it might be
+      due to a missing package: binutils-multiarch
+
+ -- Darren Benham <gecko@debian.org>  Sun, 11 Jul 1999 17:15:40 -0700
+
+lintian (1.5) unstable; urgency=low
+
+  * Richard's changes:
+  * Darren's changes:
+     + Changed file error message to indicate it's file's
+       fault(closes: #37259)
+     + Changed perl depends to perl | perl5 to cover both
+	   Also added perl-5.004 and perl-5.005 since they are valid perls
+	   (closes: #41041, closes: #39835)
+     + Remove a undefine causing spurious unknown-tag error (close: #40699)
+     + Ancient-ized standards-version 2.4.0 and 2.4.1 
+     + Added policy 2.5.1 to the accepted number for standards-version
+     + Check for use of /etc/nntpserver.  Only major change in policy v2.5.1
+     + Added perl-5.005 and perl-5.004 as valid interpreters (close: #39834)
+
+ -- Darren Benham <gecko@debian.org>  Mon,  5 Jul 1999 11:46:53 -0700
+
+lintian (1.4-1) unstable; urgency=low
+
+  * Richard's changes:
+     + When reporting errors in .changes files, report filenames the way
+       they were listed, rather than as absolute pathnames.
+     + Don't exit with code 1 for errors that were overridden.
+       This fixes bug#37353, reported by Wichert Akkerman.
+     + Correctly handle escaped characters in menu items (bug pointed
+       out by Raphael Herzog).
+     + bltwish scripts should now depend on blt, not blt8.0.
+       This fixes bug#38092, reported by Gordon Russell.
+  * Darren's changes:
+     + override requested by christian kurz for ppp.  Several of the
+       files/dirs have non-standard permissions.
+     + override requested by adam kleine for gtk-engines-gtkstep.  Contains
+       libraries not meant to be linked.
+	 + override requested by Manoj Srivastava for latex2html.  Fixes
+       bug#38098.
+     + hugs added to the list of interpreters.  Fixes bug#37668 reported by
+       Antti-Juhani Kaijanaho.
+
+ -- Darren Benham <gecko@debian.org>  Tue, 11 May 1999 13:24:27 -0700
+
+lintian (1.3-1) unstable; urgency=low
+
+  * Richard's changes:
+    + For install-docs, accept --remove as well as -r.  Fixes bug#35664,
+      reported by James Van Zandt.
+    + In explanatory text for prerm-does-not-call-installdocs, give a
+      correct example for the prerm (not the postinst).  Fixes bug#35665,
+      reported by James Van Zandt.
+    + List gmp2 as obsolete package (replaced by libgmp2).
+    + Don't generate depends-on-obsolete-package for -dev and -dbg packages
+      that depend on their library.
+  * Darren's changes:
+    + override requested by julian gilbey for menu.  Menu can't call
+      update-menus in postrm since it won't exist then.
+    + added requested override for vtwm update menus.  Fixes bug#36457
+      reported by Branden Robinson
+    + override requested by Oliver Elphick for postgresql-pl.  Has shared 
+      libraries not loaded by ld.so
+
+ -- Darren Benham <gecko@debian.org>  Mon, 05 Apr 1999 16:00:05 -0800
+
+lintian (1.2-1) unstable; urgency=low
+
+  * Darren's changes:
+  	+ added the -1 to denote purely packaging changes
+  	+ added fvwmother to menu needs= check (fixes bug#35057)
+  * Richard's changes:
+    + Added new tag package-installs-packlist.
+		This closes wishlist bug#33827, reported by Joey Hess.
+    + Mark all versions of libgtk1.1 as obsolete for
+		depends-on-obsolete-package tag.
+    + For tag arch-indep-package-contains-binary-or-object,
+		tighten up regexp that detects "ELF".  This fixes bug#35237,
+		reported by Mark Brown.
+
+ -- Darren Benham <gecko@debian.org>  Mon, 29 Mar 1999 16:31:05 -0800
+
+lintian (1.1) unstable; urgency=low
+  
+  * Zapped compiled-with-bad-libc check.
+  * Corrected spelling error in spelling check (it flagged "interchangeable"
+    as a bad word; this should have been "interchangable").  This fixes
+    bug#33252, reported by Santiago Vila.
+  * Silenced non-standard-dir-in-usr check about /usr/$arch-linuxlibc1/,
+    which will go away at some point and is not worth moving now.
+    I'll file a policy proposal for it at some point.  This fixes
+    bug#33114, reported by Marcus Brinkmann, and bug#33374, reported
+    by James Troup
+  * Silenced non-standard-dir-in-var check about /var/www/, since it's
+    Debian policy to use it.
+  
+ -- Richard Braakman <dark@xs4all.nl>  Thu, 25 Feb 1999 14:43:27 +0100
+  
+lintian (1.0) unstable; urgency=low
+
+  * New tags:
+      E: non-standard-toplevel-dir
+      W: non-standard-dir-in-usr
+      W: non-standard-dir-in-var
+      W: file-in-unusual-dir
+      E: dir-or-file-in-mnt
+      E: binary-in-etc
+      E: use-of-compat-symlink
+      E: subdir-in-bin
+    These cover much of the FSSTND and FHS.
+
+  * No longer emit executable-in-usr-doc for scripts.  It's just too
+    controversial.  I've added an info-level tag script-in-usr-doc
+    for people who are interested.  This closes bug#28560, by
+    Stephane Bortzmeyer.
+
+  * Only emit compiled-with-bad-libc if the register_frame symbols
+    are UNdefined.  This closes bug#31867, submitted by Michael Meskes.
+
+  * Don't emit compiled-with-bad-libc for binaries linked to
+    libgnustep_base.so.0, which also defines __register_frame_info.
+    This closes bug#31004, submitted by Matthias Klose.
+
+  * Changed a lot of "error:" messages to "internal error:", to make
+    clear that they are errors in Lintian's execution, not in the package
+    being checked.  This closes bug#31013, submitted by James Troup.
+
+  * (frontend/lintian) Select STDOUT again after closing OUTPUT_PIPE.  
+    This fixes bug#31574, reported by Julian Gilbey.  Thanks for the patch!
+
+  * (checks/copyright-file) Lintian was confused by "libident(=0.22-1)",
+    i.e. without separating whitespace.  Fixed.  This closes bug#31821,
+    reported by Paul Slootman.
+
+  * Man page fix: mention that lintian can be run on .changes files.
+  * Depcheck pages: fixed version comparison bug.
+
+ -- Richard Braakman <dark@xs4all.nl>  Wed, 27 Jan 1999 14:43:15 +0100
+
+lintian (0.9.5) unstable; urgency=low
+
+  * Do not abort when run as root; print a warning instead.
+    --allow-root still overrides the warning.
+
+  * Only generate non-standard-file-permissions-for-etc-init.d-script
+    tag for regular files.  Reported by Martin Schulze.
+
+  * Corrected libtool-workaround sample configure.in snippet:
+    Look for *-*-linux-gnu, not *-pc-linux-gnu.
+    Fixes bug#30756, reported by James Troup.
+
+  * Made lintian abort with an error message when objdump can't handle
+    a binary's file format.  Also made lintian Suggest binutils-multiarch.
+
+  * New error tag: arch-dependent-file-in-usr-share
+    This closes bug#30742, reported by Matthias Klose.
+
+  * Added gnuplot as a known interpreter.  Suggestion by Rafael Laboissiere.
+
+ -- Richard Braakman <dark@xs4all.nl>  Sun, 20 Dec 1998 18:05:46 +0100
+
+lintian (0.9.4) unstable; urgency=low
+
+  * New features (summary):
+    - 112 new spelling corrections.
+    - Minor efficiency improvements.
+    - Checks __register_frame_info problems.
+    - Updated to policy 2.5.0
+
+  * (lib/util.pl) Exit with code 2 when failing, like the manpage says.
+  * (checks/files) Print octal permissions in
+    bad-permissions-for-etc-cron.d-script, not decimal.
+  * (checks/files)
+    Ignore .xpm extensions too when hunting for extra license files.
+  * (checks/conffiles, checks/conffiles.desc)
+    Renamed -may-not-be- tags to -must-not-be-, for clarity.
+
+  * Replaced most bash scripts with perl scripts, for faster startup times
+    and fewer subprocesses.  This speeds up lintian by some 30% on my machine.
+  * (collection/objdump-info)
+    Add -T flag, to collect dynamic symbols table too.
+  * (checks/binaries)
+    Look for __register_frame_info and __unregister_frame_info.
+    New tag: compiled-with-bad-libc
+
+  * (checks/*.desc) Use new (2.5.0) section numbering for policy references.
+  * (checks/changelog-file) Accept changelog.html.gz files.
+  * (checks/standards-version) newer-standards-version is warning, not error.
+    This fixes bug#29366, reported by Julian Gilbey <jdg@maths.qmw.ac.uk>.
+  * (checks/standards-version) Updated to standards-version 2.5.0.
+
+  * (info/overrides) New overrides.
+    Fixes bug#29449 reported by Marcus Brinkmann (libc5 overrides)
+
+  * (checks/standards-version.desc) Remove the link to the upgrading-checklist,
+    which I can no longer find and which is probably not maintained anymore.
+
+  * (checks/control-files) Fix check for mknod-in-maintainer script:
+    pipes are made with p, not -p.
+
+  * (debian/control) In the package description, mention which policy
+    version Lintian checks.
+
+ -- Richard Braakman <dark@xs4all.nl>  Mon, 23 Nov 1998 14:46:32 +0100
+
+lintian (0.9.3) unstable; urgency=low
+
+  * (checks/binaries) Warn if a package with ELF binaries does not have
+    a Depends line.  New tag: missing-depends-line.
+    (Suggested by Charles Briscoe-Smith)
+
+  * (checks/menus) Don't warn about /usr/lib/menu/README.
+    (Noted by joost witteveen)
+
+  * (checks/binaries.desc, checks/binaries, checks/shared-libs.desc)
+    Renamed "shlib-without-dependency-information" to
+    "shared-lib-without-dependency-information", to avoid confusion with
+    the shlibs control file.  (Suggested by Branden Robinson)
+    Also moved the tag info from shared-libs.desc to binaries.desc, where
+    it belongs.
+
+  * (checks/shared-libs)
+    Suppress "shlib-with-executable-bit" error if a library has an
+    INTERP header.  This catches the libraries (such as libc or libm)
+    that print a little banner when executed.
+
+  * (checks/fields)
+    Report maintainer addresses that have no dots in the domain part.
+    (Suggestion by James Troup)
+  * Teach fields check about non-us.
+
+  * (info/perl-modules)  Updated modules info.
+  * (lib/deplib.pl)  Fixed handling of versioned dependencies.
+
+  * (checks/files.desc)  In executable-in-usr-doc tag, suggest examples
+    directory as a place for executables.
+    (Suggestion by Stephane Bortzmeyer)
+
+  * (checks/fields, checks/fields.desc)
+    New tag: depends-on-obsolete-package, to flag dependencies on 
+    old libraries.
+
+ -- Richard Braakman <dark@xs4all.nl>  Tue, 27 Oct 1998 12:59:43 +0100
+
+lintian (0.9.2) unstable; urgency=low
+
+  * Look for more misspellings:
+      dependant -> dependent, dependancy -> dependency,
+      definate -> definite, definately -> definitely.
+  * (checks/scripts) Correctly deal with the terminating newline when
+    parsing dependency lines.  Fixed bug#27694, reported by Rob Tillotson.
+  * (checks/menu-format) Added Apps/Technical and Apps/Hamradio as sections.
+  * (checks/copyright-file)
+    Don't report copyright-file-is-gpl unless it is GPL version 2.
+    This fixes bug#27793, reported by Milan Zamazal.
+  * (checks/menus) Add newline after bad-menu-file-name tag!
+  * (lib/manual_refs.pl) Update urls to manual sections, so that
+    they refer to www.debian.org.  Regenerate index of devref sections.
+
+ -- Richard Braakman <dark@xs4all.nl>  Thu, 15 Oct 1998 14:06:26 +0200
+
+lintian (0.9.1) unstable; urgency=low
+
+  * Added overrides for imap daemons being sgid mail.
+  * Updated info/perl-modules from new Contents file.
+  * (lib/read_pkglist.pl) Don't fail on 0-size package lists.
+    This fixes bug#27121, reported by Adam P. Harris.
+
+ -- Richard Braakman <dark@xs4all.nl>  Wed, 30 Sep 1998 18:16:14 +0200
+
+lintian (0.9) unstable; urgency=low
+
+  * (frontend/lintian, reporting/html_reports, checks/*, collection/*)
+    Make rigorous distinction between source and binary packages.
+    Pass "source" or "binary" as second argument to check scripts.
+    Report source package tags with "pkg source:" instead of just "pkg:".
+    Binary package tags stay the same.
+    (The check scripts always report "pkg type:", and the frontend strips
+     the type again if it's "binary").
+    This involves several changes in the web-report scripts as well.
+
+  * Add command-line options for the things that could only be set via
+    environment variables or the configuration file.  (--cfg, --root,
+    --lab, --dist, --arch).
+
+  * Really rename obsolete-ldconfig-call-in-postinst to
+    postinst-has-useless-call-to-ldconfig.
+  * Really rename changelog-file-missing-in-native-debian-package to
+    changelog-file-missing-in-native-package
+
+  * (checks/scripts) bltwish now lives in blt8.0, not blt4.2.
+
+ -- Richard Braakman <dark@xs4all.nl>  Sun, 20 Sep 1998 16:34:38 +0200
+
+lintian (0.8.3) unstable; urgency=low
+
+  * (checks/menu-format) Added "sort" as a known tag; it's documented in
+    the menu package.  This fixes bug#26373, reported by Marcelo E. Magallon.
+
+  * (checks/scripts, checks/scripts.desc)  Added /usr/bin/js as a known
+    interpreter (in ngs-js), as suggested by Brian Bassett.
+
+  * (checks/shared-libs)  Brian Bassett reported inaccuracies in detection
+    of "ldconfig" calls in maintainer scripts.  Fixed.
+
+  * (checks/menu-format)  Skip checks on "section" if the "needs" tag had an
+    unknown value.  This deals with bug#26375, reported by Marcelo E. Magallon.
+
+  * (checks/manpages)  Fixed: check for links to "undocumented" manpage
+    should not react to link destinations like "ilu-undocumented".
+
+  * changelog-file-missing-in-native-debian-package shortened to
+    changelog-file-missing-in-native-package
+  * wrong-name-for-changelog-file-of-native-debian-package shortened to
+    wrong-name-for-changelog-of-native-package.
+
+ -- Richard Braakman <dark@xs4all.nl>  Thu, 10 Sep 1998 12:55:45 +0200
+
+lintian (0.8.2) unstable; urgency=low
+
+  * Ignore common programming-language extensions when looking for
+    extra-license-files.  (Fixes bug#26252, reported by Manoj Srivastava,
+    who had a file vm-license.el).
+
+  * Use -z flag for tar, rather than piping through gzip -dc explicitly.
+    This allows tar to detect and pass on errors reported by gzip.
+
+ -- Richard Braakman <dark@xs4all.nl>  Tue,  1 Sep 1998 11:57:53 +0200
+
+lintian (0.8.1) unstable; urgency=low
+
+  * Added /usr/bin/guile and /usr/bin/scsh as known interpreters.
+    (This fixes bug#26093, reported by Karl M. Hegbloom <karlheg@debian.org>)
+
+  * Renamed tags:
+       postinst-contains-obsolete-call-to-updatemenus
+    to postinst-has-useless-call-to-update-menus
+       postrm-contains-obsolete-call-to-updatemenus
+    to postrm-has-useless-call-to-update-menus
+       postinst-contains-obsolete-call-to-installdocs
+    to postinst-has-useless-call-to-install-docs
+       postrm-contains-obsolete-call-to-installdocs
+    to postrm-has-useless-call-to-install-docs
+       obsolete-ldconfig-call-in-postinst
+    to postinst-has-useless-call-to-ldconfig
+    The first two are also downgraded from error to warning.
+    (This fixes bug#26118, reported by Wichert Akkerman <wakkerma@debian.org>)
+
+  * Renamed tag use-of-killall-in-maintainer-script to killall-is-dangerous.
+
+  * More overrides.
+ 
+ -- Richard Braakman <dark@xs4all.nl>  Thu, 27 Aug 1998 18:56:03 +0200
+
+lintian (0.8) unstable; urgency=low
+
+  * (checks/perl) Don't emit warnings for perl scripts in /usr/doc.
+    This closed bug#25728, reported by Manoj Srivastava.
+
+  * (info/overrides) Change the non-standard-*-perm overrides to match
+    the new format of those tags.  (was changed in 0.7.5)
+
+  * (checks/control-files)
+    "possibly-insecure-handling-of-tmp-files-in-maintainer-script" now knows
+    about mkdir.
+    New tag: W: possible-bashism-in-maintainer-script (Suggestion by Joey Hess)
+
+  * (testset/filenames-2)  Don't rely on installer's umask for testset.
+
+  * (collection/menu-files, collection/menu-files.desc,
+     checks/menu-format, checks/menu-format.desc)
+    New check for correct syntax in "menu" files, written by Joey Hess.
+    New tags:
+      E: old-format-menu-file
+      E: whitespace-after-continuation-character
+      E: bad-test-in-menu-item
+      E: unparsable-menu-item
+      W: incorrect-package-test
+      W: duplicated-tag-in-menu-item
+      W: menu-item-missing-important-tag
+      W: menu-item-contains-unknown-tag
+      W: menu-item-uses-icon-none
+      W: menu-item-needs-tag-has-unknown-value
+      E: menu-item-adds-to-root-menu
+      W: menu-item-uses-apps-games-section
+      W: menu-item-creates-new-section
+      E: menu-item-creates-new-root-section
+    The check follows current practice on two sections:
+      Window-managers -> WindowManagers
+      Screen/Screen-saver -> Screen/Save
+    The menu docs will be updated to match.
+
+  * (lib/pipeline.pl) Bugfix: Use syscall SYS_exit when exiting from
+    children that failed to exec, because the perl function exit() would
+    run END blocks and such.
+
+  * (checks/standards-version) By now, 2.2.0.0 is more than one year old;
+    mark it as 'ancient'.
+
+  * (reporting/html_reports) Bugfix: Apply quotehtml() to the tag text
+    *before* adding links to bug pages.
+
+  * Many small adjustments to checks:
+  * (checks/scripts) Be less picky about package names when checking
+    dependencies.  (The check was confused by the package blt4.2)
+  * (checks/description) Ignore case when looking for synopsis lines
+    that start with the package name.
+  * (checks/files) Don't give executable-in-usr-doc error for executables
+    in /usr/doc/examples/, since that directory does contain examples, and
+    it's already flagged by old-style-example-dir.
+  * (checks/control-files) Don't warn about references to "/tmp" unless the
+    full filename is "/tmp" or "/var/tmp".
+  * (checks/binaries) Split tag "binary-not-linked-against-libc" into
+    "program" and "library" tags.
+  * (checks/files, checks/scripts) New tag "executable-manpage", which
+    replaces "executable-not-elf-or-script" for manpages.
+  * (checks/files) Shortened file-directly-in-usr-share-not-in-a-sub-directory
+    and file-directly-in-usr-doc-not-in-a-sub-directory to just
+    file-directly-in-usr-share and file-directly-in-usr-doc.
+  * (checks/md5sums) Added md5sums-control-file-is-empty tag, to avoid
+    spewing many file-missing-in-md5sums errors in that case.
+  * (checks/scripts) Suppress interpreter-not-absolute tag if the
+    filename ends in .in and the interpreter looks like #!@PERL@
+  * (checks/control-files) Suppress mknod-in-maintainer-script tag if
+    mknod was called with -p.
+  * (checks/shared-libs) Emit no-shlibs-control-file tag for each shared lib
+    found, rather than just once.
+  * (checks/files) Emit old-style-example-dir only for directories, not for
+    every file.
+  * (checks/perl) perl-script-needs-dependency
+    Bugfix: realize that a package does not need to depend on itself.
+  * (checks/description) possible-unindented-list-in-extended-description:
+    Only emit this tag if there are at least two things that look like
+    list items.
+  * (checks/scripts) List /usr/bin/env as a known interpreter.
+  * (checks/binaries) unstripped-binary-or-object:
+    Instead of an exception for /lib/modules specifically, suppress this
+    tag for all .o files.
+  * (checks/control-files) Bugfix: check for == bashism works now.
+  * (checks/files) Introduced new tag lengthy-symlink, which supersedes
+    and corrects the relative-symlink-enters-same-toplevel-directory tag.
+
+  * (man/lintian.1) Document the check and collection scripts added to
+    lintian in the last few months. (oops)
+
+  * (collection/perlmods, checks/perl)
+    Refined scanner so that fewer spurious perl-script-uses-unknown-module
+    tags are emitted.
+    Perl tags are no longer 'Experimental'.
+
+ -- Richard Braakman <dark@xs4all.nl>  Mon, 24 Aug 1998 18:01:40 +0200
+
+lintian (0.7.5) unstable; urgency=low
+
+  * (checks/perl) Exchanged order of arguments in
+    perl-script-needs-dependency tag, for clarity.
+  * (info/perl-modules) Added some module dependencies.
+
+  * (info/overrides) More overrides.
+
+  * (checks/shared-libs, checks/shared-libs.desc)
+    Fixed: erroneous shlib-missing-in-control-file if a shared library
+    had more than one symlink to it.
+  * Renamed obsolete-shlib-entry-in-control-file to
+    unused-shlib-entry-in-control-file.
+
+  * (checks/copyright-file) Changed size-requirement for copyright-file-is-gpl
+    tag from 17000 to 12000 bytes, because some packages (casio) extracted
+    only the "TERMS AND CONDITIONS" part, which is shorter.
+
+  * (reporting/html_reports) Count packages as well as tags, in tag index.
+
+  * (checks/control-files, checks/control-files.desc)
+    New tag: W: mknod-in-maintainer-script
+
+  * (checks/files, checks/files.desc)
+    New tags:
+       W: package-installs-into-etc-rc.boot   (rc.boot is obsolete)
+       W: extra-license-file                  (for COPYING files, etc)
+
+  * (checks/shared-libs, frontend/lintian)
+    Get rid of dependency on File::Basename; use a simple regexp instead.
+
+ -- Richard Braakman <dark@xs4all.nl>  Fri, 14 Aug 1998 17:33:37 +0200
+
+lintian (0.7.4) unstable; urgency=low
+
+  * (collection/perlmods)
+    Fixed: perl script scanner is now POD-aware.
+    This should cut down on the number of spurious warnings.
+
+  * (doc/CREDITS)
+    Install credits file.  My apologies if I have forgotten anyone.
+    There were far more people than I would have guessed -- Thanks to all! :-)
+
+  * (checks/perl)
+    Skip 'autouse' keyword when parsing use and require directives.
+
+  * (frontend/lintian)
+    When processing a .changes file, turn md5sum checks OFF by default.
+    A new -m flag is provided to turn them back on.
+    The .dsc file is still always checked.
+
+  * (frontend/lintian)
+    Saner interrupt handling.  Lintian now dies immediately if ^C is hit,
+    and does remove the temporary lab (if any).  This is mostly a side
+    effect of avoiding system() (in favour of the new functions in 
+    lib/pipeline.pl), but did involve some tinkering about with perl's
+    signal handling.  Thanks to Ruud de Rooij and Graydon Hoare for
+    their help.  This closes bug#24975, reported by Yann Dirson.
+
+  * (checks/copyright)
+    Fixed copyright-is-gpl tag so that it actually works.
+
+  * (lib/dep.pl, checks/perl, checks/perl.desc, info/perl-modules)
+    Much smarter perl module analysis.  Lintian now has a list of
+    perl modules and the packages that provide them (in info/perl-modules),
+    and a dependency processor (in lib/dep.pl), and uses these to
+    check "use" and "require" lines in perl scripts.
+    New tags:
+      W: perl-script-needs-dependency  (Experimental)
+      W: perl-script-uses-unknown-module  (Experimental)
+    Tag "script-needs-full-perl" has been dropped.
+
+ -- Richard Braakman <dark@xs4all.nl>  Mon, 10 Aug 1998 19:02:53 +0200
+
+lintian (0.7.3) unstable; urgency=low
+
+  * (frontend/lintian)
+    Fixed: --display-infotags option wasn't working.
+
+  * (reporting/harness, reporting/html_reports)
+    Have the archive check generate infotags but not display them on the
+    web pages.  This way they are still available in the log file.
+
+  * (checks/fields, checks/fields.desc)
+    New tag: W: doc-package-depends-on-main-package
+
+  * (checks/menus, checks/menus.desc)
+    New tag: E: bad-menu-file-name
+    This is emitted for packages that install "/usr/lib/menu/menu", which
+    overlaps with the menu package.  (I've seen it happen a couple of times).
+
+  * (checks/binaries, checks/binaries.desc)
+    Allow unstripped-binary-or-object for any package with "debug" in its
+    name.  (This is in addition to the exeption already made for "-dbg").
+    Allow binary-not-linked-against-libc for libc itself :-)
+
+  * (lib/pipeline.pl)
+    New helper functions for starting pipelines from perl scripts, without
+    involving the shell.  This makes it easier to pass filenames literally,
+    and often saves a shell invocation.
+  * (collection/diffstat, frontend/lintian, unpack/*)
+    Use the new pipeline functions.
+
+  * (checks/description, checks/description.desc)
+    New tag:
+      E: description-is-debmake-template
+
+  * (reporting/html_reports)
+    Quote < and > in displayed tags (such as occurs in email addresses).
+    This fixes the maintainer-name-missing tag output.
+
+  * (checks/copyright-file, checks/copyright-file.desc)
+    New tag:
+      E: copyright-file-is-gpl
+    Generated for copyright files that contain the complete GPL text.
+
+ -- Richard Braakman <dark@xs4all.nl>  Thu,  6 Aug 1998 23:39:18 +0200
+
+lintian (0.7.2) unstable; urgency=low
+
+  * (unpack/unpack-srcpkg-l1, unpack/unpack-binpkg-l1, unpack/unpack-binpkg-l2)
+    Speedup: replaced system("mkdir ...") with mkdir() calls.
+  * (unpack/unpack-binpkg-l1)
+    Speedup: avoid extracting control info twice.
+    More speedups are possible here.
+  * (unpack/unpack-binpkg-l1, unpack/unpack-binpkg-l2)
+    Speedup: avoid using dpkg-deb to unpack debs; construct a pipeline
+    with ar, gzip, and tar instead.  It turns out to be far faster.
+  * Together, these changes made for a speed increase of some 30%
+    when checking packages that have to be unpacked.
+
+ -- Richard Braakman <dark@xs4all.nl>  Wed,  5 Aug 1998 19:18:44 +0200
+
+lintian (0.7.1) unstable; urgency=low
+
+  * (reporting/html_reports)
+    Fixed: Print bug number with tags that were reported as bugs.
+
+  * (checks/scripts, checks/scripts.desc)
+    Added /usr/bin/expect (provided by expect) as known interpreter.
+
+  * (unpack/unpack-srcpkg-l2)
+    Fixed: chmod -R the right directory when unpacking a source package.
+
+  * (collection/diffstat, collection/diffstat.desc)
+    New collection script that runs diffstat on the Debian diff.
+  * (debian/control)
+    Depend on diffstat, version >= 1.27-1 so that it can parse Debian diffs.
+  * (checks/debdiff, checks/debdiff.desc)
+    New check that look at the filenames included in the Debian diff.
+    New tag:
+      W: patch-failure-file-in-diff foo.rej
+
+  * (checks/control-files, checks/control-files.desc)
+    New tag:
+      W: dpkg-print-architecture-in-maintainer-script
+    (dpkg --print-installation-architecture should be used there)
+
+ -- Richard Braakman <dark@xs4all.nl>  Wed,  5 Aug 1998 14:58:02 +0200
+
+lintian (0.7) unstable; urgency=low
+
+  * (reporting/html_reports)
+    - Rewritten (more modular).
+    - Create a page for each different tag, which gives the lintian-info
+      for that tag and then lists all occurrences of that tag, with each
+      tag line also being a link back to the page for the package in
+      which it occurs.
+      This closes bug#21390, reported by Gregory S. Stark <gsstark@mit.edu>.
+    - Instead of listing the lintian-info text with every different tag
+      in every package, make every tag a link to the page for that tag
+      (which will have the lintian-info for it at the top).
+      This should make the reports a lot smaller, and also more readable.
+    - Make a "Sorted by tag types" page and link to it from the index page.
+  * (doc/TODO) Entries [L3] and [L4] now complete.
+
+  * (checks/spelling, checks/spelling.desc)
+    Check README.Debian file as well, since we now collect it anyway
+    for the readme-debian-is-debmake-template tag.
+    New tag:
+       E: spelling-error-in-readme-debian
+
+  * (checks/fields) Added hurd-i386 to the list of known architectures, at
+    the request of Marcus Brinkmann <brinkmds@rz.ruhr-uni-bochum.de>.
+
+  * (checks/scripts, checks/scripts.desc)
+    Added trs to the list of known interpreters, as /usr/bin/trs provided
+    by konwert.  Suggestion by Yann Dirson <dirson@debian.org>.  This
+    closed bug#24998.
+
+  * (checks/files)
+    - Fixed: tags dir-in-user-local and file-in-usr-local did not print
+      the filename involved.
+    - Fixed: some tags were erroneously output as "setuid-gid-binary"
+      even though only one of suid or sgid was set.
+
+  * (checks/fields)
+    - Fixed: change a few cases of "maintainer-address-malformed"
+      to "maintainer-name-missing".
+
+ -- Richard Braakman <dark@xs4all.nl>  Tue,  4 Aug 1998 19:45:47 +0200
+
+lintian (0.6.1) unstable; urgency=low
+
+  * Inserted GPL boilerplate text in every file whose format allowed comments.
+
+  * (doc/lintian.sgml) Use new <url> tag.
+
+  * (info/overrides) New override for the file in kbd-data with the strange
+    name.  Having lintian handle that file correctly would be too expensive.
+    This "closes" bug#25107.
+
+  * (checks/control-files, checks/control-files.desc)
+    New tag: use-of-killall-in-maintainer-script (experimental)
+    Added at the recommendation of Santiago Vila <sanvila@unex.es>.
+    This closes bug#22206.
+
+  * (depcheck/deppages.pl, reporting/html_reports)
+    Added arm and hurd-i386 to the list of architectures to check.
+
+  * (doc/libtool-rpath-workaround.txt, checks/binaries.desc)
+    Revamped doc file at Rob Browning's suggestion, and renamed it to
+    doc/libtool-workarounds.txt because it describes both -rpath and -lc
+    workarounds.  Updated the info for the tags binary-not-linked-against-libc
+    and binary-or-shlib-defines-rpath to refer to the new file.
+
+  * (doc/desc-files)  Moved from private/DESC.
+    Briefly describes the meanings of the fields used in lintian's .desc files.
+
+  * (doc/TODO)
+    Updated and restructured version of what used to be in private/TODO,
+    various bugreports and mailed suggestions.  This will become the 
+    central place for potential improvements to lintian.  I hope that
+    having it in /usr/doc/lintian will inspire some people to help.
+
+ -- Richard Braakman <dark@xs4all.nl>  Mon,  3 Aug 1998 16:07:54 +0200
+
+lintian (0.6.0) unstable; urgency=low
+
+  * (checks/shared-libs)
+    Corrected bug that made lintian complain about shared modules without
+    version info (thus ending in ".so") with a "non-dev-pkg-with-shlib-symlink"
+    warning.
+
+  * (info/overrides)  Added overrides:
+    libtricks is like fakeroot; nothing is compiled with it.
+      libtricks: no-shlibs-control-file
+    slrnpull has been split off from slrn, and shares some of its overrides.
+      slrnpull: non-standard-dir-perm var/spool/slrnpull/ 2755
+      This fixes bug#24668, reported by Joey Hess.
+
+  * (collection/perlmods)
+    Collector script that greps perl scripts for use and require directives.
+  * (checks/perl, checks/perl.desc)
+    New check script that checks perl "use" and "require" directives.
+    New tags:
+       E: script-needs-perl-version   (Experimental)
+       W: script-needs-full-perl      (Experimental)
+       I: cannot-parse-perl-directive
+
+  * (frontend/lintian)
+    New flag --print-version that prints the unadorned version number.
+  * (reporting/config, reporting/html_reports)
+    Instead of requiring $LINTIAN_VERSION in the config file, query the
+    lintian frontend for the version number.
+
+ -- Richard Braakman <dark@xs4all.nl>  Sun, 19 Jul 1998 16:41:39 +0200
+
+lintian (0.5.2) unstable; urgency=low
+
+  * (reporting/html_reports)
+    Lintian web pages now use dists/unstable/main in the path for
+    "Getting Lintian", rather than hamm/hamm, where it doesn't exist anymore.
+    (Pointed out by Ruud de Rooij)
+
+  * (checks/scripts)
+    Add /usr/sbin/install-fvwmgenmenu as a known interpreter.
+    This fixes bug#23783, reported by Joost Kooij.
+
+  * (checks/binaries, checks/changelog-file, checks/manpages)
+    [speedup] Don't skip blank lines in file-info file, since there
+    shouldn't be any.
+
+  * (checks/manpages.desc)
+    - Added note to manpage-in-wrong-directory info that only
+      sections 1 through 9 should be used.  Refer to policy 5.1.
+    I had a rewrite of the manpages check in the works, but I deferred
+    it to a later lintian version.
+
+  * (info/overrides)
+    New override from Joel Klecker: binutils: no-shlibs-control-file.
+    Added overrides supplied by Joey Hess, in bugreport #24425.
+
+  * (checks/changelog-file)
+    Corrected regexp used for changelog-file-not-compressed;
+    This really fixes bug#23683, reported by Joey Hess.
+
+  * (checks/files)
+    New warning: package-installs-perllocal-pod, inspired by 
+    Manoj Srivasta's recent bugreports about such files.
+
+  * (checks/fields.desc) 
+    No longer experimental:
+      E: alternates-not-allowed
+      E: versioned-provides
+      E: bad-version-in-relation
+
+ -- Richard Braakman <dark@xs4all.nl>  Sun, 12 Jul 1998 22:04:04 +0200
+
+lintian (0.5.1) unstable; urgency=low
+
+  * Added overrides supplied by Ray Dassen.
+
+  * (frontend/lintian-info)
+    Made lintian-info aware of X (experimental) tags.  (oops)
+  * (lib/read_taginfo.pl)
+    Add a paragraph to the info output for experimental tags that explains
+    what experimental status means.
+
+  * Added test package "relationships" to test weird dependency lines.
+
+  * (frontend/lintian)
+    Instead of specifying /usr/bin/lintian-info, use just lintian-info
+    and let the path search find the script.
+
+ -- Richard Braakman <dark@xs4all.nl>  Tue,  7 Jul 1998 16:27:56 +0200
+
+lintian (0.5.0) unstable; urgency=low
+
+  * (checks/menus) The menu package doesn't need to check for the
+    existence of update-menus :-)
+
+  * (testset/runtests) A harness for running regression tests on Lintian.
+  * (testset/*) A collection of broken packages on which to test Lintian.
+    Currently, only an empty package is provided for testing.
+  * (debian/rules) Run the tests in the build target.
+  * (checks/*.desc) Added "Tested: empty" to tags that are tested for
+    with the "empty" testpackage.
+
+  * (collection/file-info) Use a better parser for the index file, so
+    that weird filenames are handled correctly.  This fixes bug#24079.
+  * (collection/md5sums) Adapt index-file parser from file-info collector,
+    this saves a "find" operation on the unpacked tree.
+  * New test package filenames-1, which contains various evil filenames.
+
+  * (checks/shared-libs, checks/menus, checks/manpages, checks/files,
+     checks/control-files)
+    Handle filenames that contain spaces correctly.
+
+  * (frontend/lintian, reporting/config)
+    Update version number.  This fixes bug #23555, reported by Yann Dirson.
+    These will have to be kept in sync manually, because the lintian
+    source package has to be directly usable by the lintian web page
+    generator.
+
+  * (checks/changelog-file)
+    Allow the upstream changelog to be a symbolic link.
+    As a side-effect, allow it for the Debian changelog too.
+    This handles bug#23300, reported by Manoj Srivastava.
+
+  * (checks/changelog-file, checks/changelog-file.desc)
+    The wrong-name tags are now warnings, not errors, because the
+    relevant section of policy uses "should usually".
+    This fixes bug#23757, reported by Gregory S. Stark.
+
+  * (checks/changelog-file)
+    Limited the changelog-file-not-compressed tag to only complain
+    about changelog and changelog.Debian, because policy 5.8 does not
+    mention other changelogs.  (These would fall under section 5.3, I guess.)
+    This fixes bug#23683, reported by Joey Hess.
+
+ -- Richard Braakman <dark@xs4all.nl>  Sat,  4 Jul 1998 15:33:31 +0200
+
+lintian (0.4.8) unstable; urgency=low
+
+  * (checks/fields)
+    New error tag: "multiline-field" flags control fields that span multiple
+    lines when they shouldn't.  (According to the Packaging manual,
+    "Except where otherwise stated only a single line of data is allowed").
+
+  * (checks/fields)
+    Check dependency relationship fields as well.
+    New tags:
+      E: alternates-not-allowed
+           (generated for use of | in Provides, Conflicts, and Replaces fields)
+      E: versioned-provides
+           (generated for Provides fields that use a versioned package name)
+      W: obsolete-relation-form
+           (generated for use of < and > in versioned relationships)
+      W: bad-version-in-relation
+           (generated if the version number in a versioned relation
+            is not syntactically correct)
+      E: bad-relation
+           (generated if lintian cannot parse an element of a dependency line)
+      W: package-relation-with-self
+
+  * (checks/fields)
+    Bugfix to maintainer-not-full-name tag, it works now.
+    Added maintainer-address-looks-weird warning for obscure cases.
+    I doubt anyone will ever see it.
+
+  * (checks/fields)
+    Added new-essential-package warning, to highlight such packages.
+
+  * (checks/fields.desc) Descriptions of new tags.
+
+ -- Richard Braakman <dark@xs4all.nl>  Sun,  7 Jun 1998 17:58:19 +0200
+
+lintian (0.4.7) unstable; urgency=low
+
+  * Removed Christian's name wherever it appeared as a contact address.
+
+  * (depcheck/buglist) Entered newly reported bug numbers for dependency 
+    problems.
+
+  * (checks/menus) Distinguish between install-docs and install-docs -r.
+    (closes #23049).
+
+  * (checks/files) Added new tag backup-file-in-package.  This warns
+    about emacs-style backup files that got installed in a package.
+
+  * (frontend/lintian) Allow I: tags to be overridden just like any other.
+
+  * (frontend/lintian) Add support for "Experimental" tags.  These are
+    handled like other tags, but an "Experimental: yes" flag in the tag
+    description tells lintian to output them with "X:" rather than "E:"
+    or "W:" or "I:".  This is used for new tags that might still misbehave.
+
+  * (doc/lintian.sgml) Add a paragraph to explain the new tag type.
+    "The displayed message is one of types listed above, but has been
+     flagged as `experimental' by the Lintian maintainers.  This means
+     that the code that generates this message is not as well tested as
+     the rest of Lintian, and might still give surprising results.  Feel
+     free to ignore Experimental messages that do not seem to make sense,
+     though of course bug reports are always welcomed."
+
+ -- Richard Braakman <dark@xs4all.nl>  Sat,  6 Jun 1998 20:30:36 +0200
+
+lintian (0.4.6) unstable; urgency=low
+
+  * (debian/control)
+    Lintian now depends on perl, since perl-base is not enough. It already
+    uses Text::Wrap, which is only in perl, and soon it will also use
+    Getopt::Long.
+
+  * (reporting/html_reports)
+    Report all dates in GMT, in rfc822 format.
+
+  * (debian/rules)
+    In clean target, delete byte-compiled python files (*.pyc) as well.
+
+  * (depcheck/dependencies.py)
+    Check "Cannot satisfy without packages in base" before checking
+    "Cannot satisfy with required packages", because a dependency will
+    be listed in only one category, and the former is more important
+    to flag.
+
+  * (frontent/lintian)
+    Rewrote option handling to use Getopt::Long, thus allowing nifty
+    features like bundling of single-character options.  Closes wishlist
+    bug#22566.
+
+ -- Richard Braakman <dark@xs4all.nl>  Fri, 29 May 1998 11:25:31 +0200
+
+lintian (0.4.5) unstable; urgency=low
+
+  * (depcheck/) New directory, containing scripts for generating reports
+    about broken dependency relationships in the main distribution.
+    These are not installed by the lintian deb, they are intended for
+    use by the lintian web pages, which use the source package directly.
+  * (reports/harness) Added hooks to call the depcheck scripts to generate
+    the depcheck page.
+  * (reports/html_reports) Add links from the lintian root page to the
+    depcheck page.
+
+  * (checks/menus) A tag was still generating "existance" while its
+    description had been corrected to "existence"; the html report
+    generator complained about that.  Fixed.
+
+  * (unpack/list-binpkg) Bugfix in lintian --setup-lab.  Instead of
+    looking for files in binary-$arch and binary-all, look only in
+    binary-$arch and follow the symlinks.
+
+  * (lib/text_utils.pl) Changed "&maint;" name from Christian Schwarz
+    to Richard Braakman, and changed mail address to lintian-maint@debian.org.
+
+  * (checks/standards-version) If checking a package with a Standards-Version
+    that is newer than the one lintian is written for, warn that lintian 
+    should be upgraded.  (closes: #22919).
+  * (checks/standards-version.dsc)
+    New tag: newer-standards-version
+
+  * (checks/debian-readme) New check: at James Troup's suggestion,
+    scan for unmodified deb-make templates in README.Debian files.
+    New tags:
+      readme-debian-is-debmake-template
+      readme-debian-contains-debmake-template
+  * (checks/debian-readme.desc) Describe new tags.
+  * (collection/debian-readme) New collection script for README.Debian file.
+  * (man/lintian.1) Describe new check and collection script.
+
+  * (doc/libtool-rpath-workaround.txt) Explain how to achieve the same
+    result without touching configure.in and rerunning autoconf, provided
+    certain conditions hold.
+
+  * (lib/text_utils.pl, frontend/lintian-info, reporting/html_reports)
+    Do not split words that are longer than a line.  This fixes the
+    "Poli cy" bug in the lintian HTML reports.
+
+  * (checks/standards-version.desc) Corrected the URL to Christian's
+    policy upgrading checklist, which seems to have changed from
+    "upgrading.html" to "upgrading-checklist.html".
+
+  * (info/override) Removed another *.pm warning, I missed it the last time.
+
+ -- Richard Braakman <dark@xs4all.nl>  Thu, 28 May 1998 15:51:37 +0200
+
+lintian (0.4.4) unstable; urgency=low
+
+  * (checks/scripts) Suppress script-not-executable warnings for files
+    in /usr/lib that match *.pm.  These are perl modules, which often
+    have a #!/usr/bin/perl line at the top but are not intended to be
+    executed directly.
+  * (info/override) Removed now-suppressed warnings from the overrides file.
+
+  * (info/override) Added more overrides.  (closes #21028).
+
+  * (checks/scripts) At Oliver Elphick's suggestion, do not emit
+    *-script-but-no-*-dep tags or csh-considered-harmful tags for
+    scripts that are not executable.  (These already produce a
+    script-not-executable warning).
+
+  * (checks/binaries) At Yann Dirson's suggestion, added a tag for
+    stripped binaries that still have the .comment and .note sections.
+    This tag is info-level, thus not normally displayed.
+    dh_strip and install -s have been patched to strip these sections,
+    but most of the distribution has not been recompiled with the patched
+    versions.
+  * (checks/binaries.desc) Described the new tag.
+    (closes #22495).
+
+  * (man/lintian.1) Documented the options that were added in lintian 0.4.3.
+
+  * (checks/fields) Produce informational tags no-section-field and
+    no-priority-field.  These were removed in a previous version, because
+    nearly all packages do not pass -isp to dpkg-gencontrol when building
+    packages, but the new handling of info-level tags makes them useful again.
+
+ -- Richard Braakman <dark@xs4all.nl>  Sat, 16 May 1998 14:10:30 +0200
+
+lintian (0.4.3) unstable; urgency=low
+
+  * Christian added more overrides.
+  * debian/control: New maintainer.
+  * debian/copyright: Mention that lintian has no separate upstream source.
+  * debian/rules: Got rid of 'dirs' file.
+  * Moved manpages from doc/ to man/ in source package.
+  * debian/rules: Restyled :-)
+  * New overrides, read all about them in /usr/share/lintian/info/overrides.
+    (closes #22001)
+  * Corrected typo in frontend, added --allow-root option at Johnie Ingram's
+    suggestion to override lintian's refusal to run as root.  (closes #22162).
+  * Ran ispell over .desc files, fixing lots of typos, including the
+    word "existance" which occurs in several tags.
+  * checks/files: At the advice of the python maintainer, added a warning
+    against files installed in /usr/lib/python1.5 that are not in the
+    site-packages subdirectory.  (closes #22236)
+  * checks/fields: Reduced unknown-field-in-dsc and unknown-field-in-control
+    tags from "warning" to "info", because such fields can only be
+    introduced deliberately anyway.  ("info" tags are not normally reported,
+    but can be queried when someone is interested.)  (closes #20521)
+  * Made the above comment about info tags true, by adding a --display-info
+    option.
+
+ -- Richard Braakman <dark@xs4all.nl>  Mon,  4 May 1998 17:31:34 +0200
+
+lintian (0.4.2) unstable; urgency=low
+
+  * This release contains updates for Policy 2.4.1
+
+  * Fixed `changelog' check:
+    - don't report not-max-compression tag if changelog file is a symbolic
+      link (thanks to Santiago for noticing that! fixes:bug#20842)
+  
+  * Improved `description' check:
+    - recognize if extended description is `Missing'
+      (fixes:bug#21091)
+
+  * Changed `files' check:
+    - symbolic links within /etc and /var have to be relative!
+  
+  * Fixed `scripts' check:
+    - package name is "blt4.2", not "btl4.2" :)
+
+  * Updated `shared-libraries' check:
+    - check if postinst calls ldconfig if shared libraries are installed
+      in a directory controlled by ld.so
+      (fixes:bug#20414)
+    [2 new tags]   
+
+  * Changed `standards-version' check:
+    - added Standards-Version 2.4.1
+    - only check first there digits of Standards-Version field
+  
+  * Changes to the `lintian' frontend:
+    - unused overrides are displayed per package
+    - display `Processing changes file...'
+    - use $TMPDIR environment variable for creation of the temporary lab
+      (fixes:bug#21092)
+    - clean up lab if C-C is pressed
+  
+  * Added more overrides
+  
+ -- Christian Schwarz <schwarz@debian.org>  Wed, 15 Apr 1998 19:57:09 +0200
+
+lintian (0.4.1) unstable; urgency=low
+
+  * Fixed `changelog-file' check:
+    - don't treat "NEWS" files as changelog files
+      (thanks to Manoj for pointing this out! fixes:bug#20787)
+
+  * internal: small changes to the reporting harness
+
+ -- Christian Schwarz <schwarz@debian.org>  Tue,  7 Apr 1998 21:42:51 +0200
+
+lintian (0.4.0) unstable; urgency=low
+
+  * Changes which make it possible to check the whole archive with Lintian
+    each day without having to check all packages all the time:
+    - Reworked creation and handling of info/{binary,source}-packages files:
+      - the list files contain a version number now, which allows checking
+        for old file formats
+      - each entry has a timestamp now
+      - don't remove $LAB/info/ directory on --setup-lab
+      - just process changed packages when doing --setup-lab
+    - added command line option: `-p X' makes lintian only process all
+      packages which are listed in file X
+    - changed meaning of command line option `-U': specifies info to
+      collect _in addition to_ the usual info (necessary to extract
+      the changelog files on master--see below)
+ 
+  * Improved `binaries' check:
+    - objects and binaries in a *-dbg package may be unstripped
+    - libraries in lib/profile or lib/debug may not be stripped
+      (suggested by Fabrizio)
+    [1 new tag]
+  
+  * Added new `changelog' check
+    (thanks to Juan Cespedes for the idea! fixes:bug#19695)
+
+  * Improved `control-files' check:
+    - improved RE that searches maintainer scripts for /tmp security bugs
+  
+  * Improved `description' check:
+    - fixed RE to check for description-starts-with-package-name
+      (thanks to Roderick Schertler)
+  
+  * Fixed `fields' check:
+    - internal: check for source pkg using "-l dsc" instead of "-e dsc"
+  
+  * Fixed `files' check:
+    - disabled possible-name-space-pollution tag since policy is not
+      defined yet
+
+  * Improved `manpages' check:
+    - fixed silly typo in binary-without-manpage tag info
+      (thanks to Robert Edmonds for noticing that!)
+    - disabled tag binary-without-manpage for `versioned binaries'
+      (thanks to Dirk for the suggestion! fixes:bug#20186)
+  
+  * Fixed `menu' check:
+    - report maintainer-script-does-not-check... tag only once per package
+      and maintainer script
+    - recognize `$(which update-menus)' as valid check for the existance
+      of update-menus; same for install-docs
+      (thanks to Fabrizio for pointing this out!)
+    - recognize `command -v update-menus' as valid check for the existance
+      of update-menus; same for install-docs
+      (thanks to Adam P. Harris for pointing this out! fixes:bug#20759)
+    - fixed tag infos
+      (thanks to Adam P. Harris for the input! fixes:bug#19810)
+  
+  * Improved `scripts' check:
+    - added new interpreters: 
+        nawk, pike, rexx, regina, burlap, wish8.0, bltwish
+      (fixes:bug#20223)
+  
+  * Improved `shared-libs' check:
+    - added check if shared libraries contain non-pic code
+      (thanks to Gregory S. Stark for the idea and the patch!
+       fixes:bug#19249)
+    [1 new tag]
+  
+  * Added `changelog' collector script
+    This makes it possible for Lintian to extract all changelog files
+    on master for use by Apt (fixes:bug#20546)
+
+  * Incremented LAB_FORMAT version to 3 because of
+    incompatible changes in the objdump-info collector script
+  
+  * Internal: fixed bug in read_dpkg_control() utility function: empty
+    tags have not been handled correctly
+  
+  * Internal: html-reporting tool: don't chop of text after hash (#) 
+
+  * Added a lot new overrides and removed unused overrides
+    (fixes:bug#20017,bug#20082,bug#19562)
+  
+ -- Christian Schwarz <schwarz@debian.org>  Mon,  6 Apr 1998 21:58:42 +0200
+
+lintian (0.3.4) unstable; urgency=low
+
+  * Bug fix release:
+    - check if lab in /tmp already exists (fixes security bug#19799)
+      Thanks to James Troup for noticing this and thanks to Joey Hess
+      for providing a patch!
+
+  * Added one override entry
+
+ -- Christian Schwarz <schwarz@debian.org>  Tue, 17 Mar 1998 23:28:38 +0100
+
+lintian (0.3.3) unstable; urgency=low
+
+  * Bug fix release:
+    - `unknown-control-file du' message disappeared
+    - fixed `executable-in-usr-doc' to not display files in
+      /usr/doc/<pkg>/example
+    - fixed tag parameters for
+        bad-owner-for-doc-file
+        dir-or-file-in-opt
+
+  * Added overrides
+
+ -- Christian Schwarz <schwarz@debian.org>  Mon, 16 Mar 1998 08:44:34 +0100
+
+lintian (0.3.2) unstable; urgency=low
+
+  * This is (intentionally) an `unstable' upload--we've decided to not
+    include the lintian package in `frozen' since it doesn't make sense to
+    maintain a `stable' and `unstable' version of a package in such an
+    early state. The maintainers should get Lintian from the `unstable'
+    distribution to check `frozen' uploads though.
+
+  * Added `menus' check. This check checks for common mistakes WRT
+    /usr/lib/menu and /usr/share/doc-base files.
+    [16 new tags]
+
+  * Fixed `shared-libs' check:
+    - removed `shared-library-uses-its-soname' check since this produced
+      way too many false alarms (thanks to David Engel for the input!)
+  
+  * Fixed `binaries' check:
+    - skip `unstripped-binary-or-object' check for kernel modules
+      (thanks to Michael Meskes for noticing that!)
+    - fixed pattern which parses the `file' command's output to be able
+      to handle files without info text correctly
+      (thanks to James R. Van Zandt for pointing this out!)
+    - mention in tag info that shared libs should be stripped with
+      `--strip-unneeded' options (thanks to Brian for pointing this out!)
+
+  * Improved `manpages' check:
+    - check if manual pages are compressed with gzip -9
+      (thanks to Holger Rusch for the idea!)
+      [2 new tags]
+
+  * Improved `files' check:
+    - for files in /usr/doc:
+      - executables may only be in /usr/doc/<something>/examples
+      - files should be owned by root.root (thanks to Joey)
+      - files should not be directly placed into /usr/doc/
+  	(fixes:bug#19485)
+    - no files may be installed into /tmp and /var/tmp
+    - renamed file-directly-in-usr-share to
+      file-directly-in-usr-share-not-in-a-sub-directory
+      (thanks to Santiago) 
+    - fix tag info for "symlink-should-be-absolute"
+    [3 new tags]
+
+  * Improved `description' check:
+    - lists (starting with a dash or asterisk) have to be indented
+      (thanks to cpb4@ukc.ac.uk for the idea and the patch!
+      fixes:bug#19481) 
+    [1 new tag]
+  
+  * Fixed `scripts' check:
+    - packages with python scripts might depend on python or python-base
+      (thanks to Gregor Hoffleit for pointing this out and to Richard for
+      the patch! fixes:bug#19162)
+    - remove wrong policy quotation for `script-not-executable' tag
+  
+  * Fixed `init.d' check:
+    - ignore update-rc.d calls in preinst and postinst scripts, if
+      "remove" option is specified (thanks to Roman Hodek and Herbert Xu
+      for pointing this out--this change also removes a lot of other false
+      alarms WRT update-rc.d calls)
+
+  * Improved `control-files' check:
+    - scan maintainer scripts for references to /tmp or TMPFILE since this
+      might be insecure (thanks to Topi Miettinen for the help!)
+    [1 new tag]
+
+  * Improved `copyright-file' to issue a special error message if a
+    symbolic link /usr/doc/foo refers to a directory outside of /usr/doc
+    (thanks to Darren for pointing this out!)
+    [1 new tag]
+
+  * Fixed `fields' check:
+    - added architecture `arm' (thanks to Roman Hodek)
+
+  * Fixed `lintian' frontend:
+    - run lintian scripts with LC_ALL=C 
+      (thanks to Yann for pointing this out! fixes:bug#19166)
+    - changed handling of `#' comments: for comments in the overrides
+      file, the hash (#) has to be in the first column
+    - changed all tags which used `#' for comments
+  
+  * Fixed `lintian-info':
+    - multiple HTML tags haven't been converted into text format in all
+      cases 
+    - preformatted text is now handled correctly
+    - merged with code that produced the HTML reports
+    - code much cleaner now
+  
+  * Improved Lintian's documentation:
+    - fixed libtool/rpath workaround file: don't wrap long line
+      (Thanks to Yann for pointing this out!)
+    - stress in docs that the "lintian-maint@debian.org" address should
+      be used to contact the lintian authors (thanks to Adrian Bridgett
+      for pointing this out!)
+  
+  * Added more overrides (fixes:bug#19163)  
+
+ -- Christian Schwarz <schwarz@debian.org>  Sun, 15 Mar 1998 23:00:31 +0100
+
+lintian (0.3.1) unstable; urgency=low
+
+  * Added `scripts' checks and collector, written by Richard. This check
+    checks the #! lines of scripts in a package.
+    [40 new tags]
+  
+  * Added `spelling' checks, written by Richard. This check searches
+    the "Description:" field and the "copyright" file for common spelling
+    errors (typos).
+    [2 new tags]
+
+  * Improved `files' check: No package should install files directly into
+    /usr/share. 
+    New tag:
+      file-directly-in-usr-share  
+  
+  * Fixed `files' check WRT files in /usr/lib/sgml and
+    /etc/emacs/site-start.d: 
+      -	ignore directories and symbolic links when checking for correct
+        file permissions
+      - display permissions in octal format
+    (fixes:bug#18866,#19026)
+  
+  * Fixed `control-files' check: really ignore `control' control file
+  
+  * Improved `lintian' frontend:
+      - parse command line parameters before reading the configuration
+        file. With that, `lintian -h' even works if the cfg file has
+        errors.  (fixes:bug#19031)
+      - issue a warning and ignore `-all' option if packages are specified
+        at the same time (in older versions, this make lintian abort with
+        an error message)
+      - really check all packages listed in a .changes file
+        (fixes:bug#18851)
+
+  * Fixed `md5sums' check to handle file names with spaces correctly
+  
+  * Put conffile /etc/lintianrc back in (fixes:bug#19031)
+  
+  * Include information about libtool/rpath workaround by Yann Dirson
+    (Thanks Yann!)
+  
+  * Added more overrides
+  
+  * Internal changes:
+      - Each error tag has a (bug) `Severity' field now which can be used
+        to file bug reports with the correct severity
+      - Each helper script has an `Author' field now
+      - Fixed `unused overrides' report
+
+ -- Christian Schwarz <schwarz@debian.org>  Sat,  7 Mar 1998 18:46:31 +0100
+
+lintian (0.3.0) unstable; urgency=low
+
+  * Lintian now also works without a configuration file and without
+    a static laboratory!  (Since Lintian is so easy to use now, there
+    are no excuses for not using it! ;-)
+
+  * Changed handling of lab:
+      - if no lab is specified, it is created dynamically by the
+        `lintian' command (the average use does not have to worry
+        about the lab anymore)
+      - since the dynamically created lab is placed in /tmp, several
+        users can run lintian at the same time without having to know
+        of each other
+      - the commands `lintian-setup' and `lintian-remove' have been
+        removed (fixes: bug#18707).
+      - a `static' laboratory can be created/updated or removed by
+        specifying the `--setup-lab' or `--remove-lab' options for the
+        `lintian' command
+      - added a lot of sanity checks to make removal of lab less risky :)
+
+  * Changed handling of configuration file:
+      - configuration file is not necessary anymore
+      - changed search path for the configuration file to:
+          $LINTIAN_CFG/lintianrc
+          $LINTIAN_ROOT/lintianrc
+          $HOME/.lintianrc
+          /etc/lintianrc
+      - all configuration variables have reasonable defaults and can
+        be overwritten by environment variables of the same name
+      - removed configuration file /etc/lintianrc--the file is now
+        installed as /usr/doc/lintian/lintianrc.example
+      - renamed all configuration variables to LINTIAN_xxxx
+      - relaxed syntax of configuration file. It's now also possible
+        to use `~' and `$HOME' in the configuration file (fixes:
+        bug#18559)
+      - added LINTIAN_ARCH configuration variable so that Lintian
+        handles distribution directories correctly if these contain
+        several architectures
+
+  * Changed parsing of command line arguments:
+      - if a package name is specified (instead of a file), look for
+        this package in the distribution directory and in the lab (in
+        earlier version, only the distribution directory was searched
+        for packages)
+      - added `--all' option to check the whole distribution
+        (in earlier version, this was the default operation)
+      - removed buggy `-n' command line option (this option wasn't
+        really useful anyways)
+      - the `-h' option displays a short description of all available
+        options now
+      - debug option `-d' can be specified several times to increase
+        the verbosity level
+      - recognize `--' as the end of options on the command line
+
+  * Improved overrides handling:
+      - the override files does not include the leading `[EW]:'
+        anymore
+      - the parameters of an error tag may be omitted to disable
+        a certain tag for a whole package
+      - when checking the full distribution, unused overrides are
+        displayed
+      - cleaned up overrides file and added/removed a few overrides
+
+  * Improved documentation:
+      - there is now a `Lintian User's Manual' which explains how to
+        setup and use Lintian to check ones packages, and which gives
+        insight on the design issues behind Lintian
+      - added a manual page for lintian-info (has been split off
+        from lintian(1))
+      - updated the documentation files and the example lintianrc file
+      - merged QUICKSTART file into the README
+
+  * Improved `binaries' check: check if a binary or shared library
+    defines RPATH
+    (Thanks to Ray Dassen for the suggestion! fixes: bug#18519)
+    New tag:
+      binary-or-shlib-defines-rpath
+
+  * Improved `files' check:
+     WRT symbolic links:
+      - issue errors instead of warnings
+      - links between different top-level directories should always be
+        absolute
+      - check for relative links which contain to many `../' segments
+      - check for symbolic links which contain segments like `foo/../bar'
+        (Thanks to Manoj for the patch and the ideas!)
+     general:
+      - some additional checks for wrong file permissions
+    New tags:
+      symlink-has-too-many-up-segments
+      relative-symlink-enters-same-toplevel-directory
+      symlink-contains-up-and-down-segments
+      bad-permissions-for-etc-cron.d-script (renamed)
+      bad-permissions-for-etc-emacs-script
+      executable-in-usr-lib-sgml
+
+  * Fixed `control-files' check: check file permissions correctly;
+    also check file owners of control files
+    New tag:
+      control-file-has-bad-owner
+
+  * Fixed `copyright' check: check for package dependencies correctly
+    (fixes: bug#18611)
+
+  * Improved `conffiles' check: files in /var/lib/games should not be
+    tagged as conffile, in general.
+    New tag:
+      score-file-may-not-be-conffile
+
+  * Improved `manpages' check: files in /usr/X11R6/man/man6 usually
+    indicate X11 games in the wrong directory.
+    New tag:
+      x11-games-should-be-in-usr-games
+
+  * Fixed `init.d' check: skip comments in init.d file
+    (Thanks to Joey for pointing this out!)
+
+      - don't collect info for unselected collector scripts (internal bug)
+
+  * Internal changes:
+      - don't refer to package `ftp.debian.org' for bugs in the
+        $LINTIAN_DIST directory--refer to package `general' instead
+      - made list-binpkg and list-srcpkg more verbose
+      - made lintian-info less verbose (don't give detailed info more
+        than once)
+      - create control-index file which lists all files in control.tar.gz
+      - fix permissions in the lab after a package has been unpacked
+      - chdir to lab dir before running the checker and collection
+        scripts (this makes it easier to write checks in awk or even sh)
+      - pass vars to helpers via environment
+      - don't link static info/* files into lab
+      - implemented dpkg_read_control to parse all controls
+      - don't use dpkg-deb to get control information about a .deb
+      - collection and checking scripts `registry' is now done dynamically
+      - move tag descriptions from collector and checker scripts into
+        separate `.desc' files
+      - each base directory in the lab has a .lintian-status file now, which
+        can be used to detect incompatible lab changes, for example
+      - moved unused files and internal documents into a private/ directory
+        of the source package
+      - cleaned up code
+
+ -- Christian Schwarz <schwarz@debian.org>  Sun,  1 Mar 1998 23:16:15 +0100
+
+lintian (0.2.4) unstable; urgency=low
+
+  * Added `fields' check for control fields. (That's the first check
+    written by Richard--and it's all Perl!!! ;-)
+    [32 new tags]
+
+  * Added `binaries' check.
+    [6 new tags]
+
+  * Improved `shared-libraries' check:
+      - use objdump instead of ldd and ldconfig
+      - this should fix all problems where Lintian couldn't check
+        python/perl dynamic objects, etc.
+      - allow cross-checking of packages, e.g., to check non-i386 .debs
+        on a i386 system (note, that this requires a multi-arch objdump)
+      - recognize if the shared library uses its SONAME
+    New tag:
+      shared-library-uses-its-soname
+
+  * Improved `control-files' check:
+      - Don't check the `control' control file for correct
+        permissions, because dpkg doesn't care and this file isn't
+        installed on the systems anyways
+
+  * Improved `files' check:
+      - Games are allowed to be setgid games
+      - svgalib programs are allowed to be setuid root
+      - usually, files in /usr/doc/foo should not be executable
+    New tag:
+      executable-in-usr-doc
+
+  * Fix bug in `manpages' check: symlinks in /usr/bin, etc. also need
+    a manual page! (Thanks to Joey Hess for pointing this out!)
+
+  * Use `.' instead of `source' in lintian-{remove,setup} /bin/sh scripts
+    (fixes bug#18421)
+
+  * Define default values for configuration variables in
+    lintian-{remove,setup} scripts (fixes bug#18354)
+
+  * Fix bug in `copyright-file' check: Don't report
+    usr-doc-symlink-to-foreign-package if we don't know whether the
+    referenced package comes from the same source or not.
+    (Thanks to James A. Treacy for pointing this out!)
+
+  * Internal change:
+      - process source packages before binary packages so that a binary
+        package check can use info from the source packages (if these
+        are unpacked, too)
+
+  * Added more override entries--and removed a few obsolete entries
+    (the checks are smarter now! :)
+
+  * Added "Depends: binutils" for `objdump'
+
+  * Changed maintainer email address to lintian-maint@debian.org
+
+ -- Christian Schwarz <schwarz@debian.org>  Sat, 21 Feb 1998 22:39:46 +0100
+
+lintian (0.2.3) unstable; urgency=low
+
+  * Fixed manual-pages check: Check for the `undocumented' symbolic
+    link failed on X11 manual pages (fixes #18343).
+
+  * Improved files check. New tag:
+      etc-cron.d-script-tagged-executable
+
+  * Improved control-files check:
+      - the `du' control file is not allowed anymore
+      - check file permissions of control files
+    New tags:
+      control-file-has-bad-permissions
+
+  * Fixed bug: ldd-info collection script stopped when ldd failed
+
+  * Fixed (internal) bugs:
+      - collect data for collection scripts too
+      - don't collect init.d data every time again
+
+  * Error handling code improved again :)
+
+  * The lintian frontend script checks if it has root permissions and
+    aborts if this is the case. (Running it as root is unnecessary and
+    simply too dangerous.)
+
+  * Added one override entry
+
+ -- Christian Schwarz <schwarz@debian.org>  Wed, 18 Feb 1998 21:50:16 +0100
+
+lintian (0.2.2) unstable; urgency=low
+
+  * Fixed bug in lintian-setup: don't try to create $LAB if it already
+    exists (fixes bug#18227, bug#18252)
+
+  * Added "Depends: file" (oops!)
+
+  * Rewrote package "Description:"
+
+  * Added a lot more override entries (thanks to all that told me about
+    overrides!)
+
+ -- Christian Schwarz <schwarz@debian.org>  Wed, 18 Feb 1998 12:55:58 +0100
+
+lintian (0.2.1) unstable; urgency=low
+
+  * Fixed bug in ldconfig collection script: script aborted without
+    error message if a shared library had errors (thanks to Kai!)
+
+  * Fixed bug: `standards-version' check didn't collect necessary data
+    (actually, this was a more general bug--thanks to Joey Hess!)
+
+  * Fixed bug: init.d checker script didn't notice if several of the
+    required options (start, stop, etc.) have been included on a single
+    line (thanks to Joey Hess!)
+
+  * Don't check duplicated packages more than once (thanks to Joey Hess!)
+
+  * Error handling code improved once more
+
+  * Added more overrides (Thanks to Joey Hess!)
+
+  * Mentioned Lintian's home page in the README file
+
+  * Set package priority to `optional' (requested by several developers)
+
+ -- Christian Schwarz <schwarz@debian.org>  Sun, 15 Feb 1998 11:44:32 +0100
+
+lintian (0.2.0) unstable; urgency=low
+
+  * First public release
+
+  * Fixed bug in shlibs check: Sometimes, ldconfig doesn't install any
+    symbolic links at all (e.g., for `acroread' package).
+
+  * Changed lintian-setup: Don't remove the whole lab if it already 
+    exists--just remove the info/ directory.
+
+  * Changed handling of critical Lintian errors (abort on error)
+
+  * Built package using fakeroot (first time i tried fakeroot--it's great!!)
+
+  * Checked package with latest Lintian :)
+  
+ -- Christian Schwarz <schwarz@debian.org>  Sat, 14 Feb 1998 21:49:10 +0100
+
+lintian (0.1.3) unstable; urgency=low
+
+  * Next beta release (hopefully the last one :-)
+
+  * The lintian-info script is available now! You can either pipe the output
+    of lintian through it, or specify the `-i' option when calling lintian.
+
+  * Lintian can check .changes files now! New tags:
+      bad-distribution-in-changes-file
+      file-size-mismatch-in-changes-file
+      md5sum-mismatch-in-changes-file
+      bad-section-in-changes-file
+
+  * Lintian now detects if packages have been changed, even if they
+    have the same version number as before.
+
+  * Improved shlibs check (this fixes the "error: bad ldconfig-info file"
+    bug). New tags:
+      ldconfig-symlink-referencing-wrong-file
+      ldconfig-symlink-is-not-a-symlink
+
+  * Improved files check! New tags:
+      package-installs-into-etc-rc.d
+      non-standard-file-permissions-for-etc-init.d-script
+
+  * New check for /etc/init.d scripts! Tags:
+      duplicate-updaterc.d-calls-in-postinst
+      output-of-updaterc.d-not-redirected-to-dev-null
+      preinst-calls-updaterc.d
+      duplicate-updaterc.d-calls-in-postrm
+      prerm-calls-updaterc.d
+      postrm-does-not-call-updaterc.d-for-init.d-script
+      postrm-contains-additional-updaterc.d-calls
+      file-in-etc-rc.d-marked-as-conffile
+      init.d-script-not-marked-as-conffile
+      init.d-script-does-not-implement-required-option
+      init.d-script-not-included-in-package
+      unregistered-script-in-etc-init.d
+
+  * Fixed manpages check: Subdirectories of /usr/bin (e.g., /usr/bin/mh)
+    have not been handled correctly.
+
+  * Added new override entries
+
+  * Cleaned up Lintian's source code
+
+  * Updated documentation
+
+  * Lots of small changes
+  
+ -- Christian Schwarz <schwarz@debian.org>  Fri, 13 Feb 1998 23:24:51 +0100
+
+lintian (0.1.2) unstable; urgency=low
+
+  * Beta release
+  * Two major bugs have been fixed
+  * Debugging info increased
+  
+ -- Christian Schwarz <schwarz@debian.org>  Fri, 13 Feb 1998 11:20:51 +0100
+
+lintian (0.1.1) unstable; urgency=low
+
+  * Beta release
+  
+ -- Christian Schwarz <schwarz@debian.org>  Thu, 12 Feb 1998 23:45:51 +0100
+
+lintian (0.1.0) unstable; urgency=low
+
+  * First release
+  
+ -- Christian Schwarz <schwarz@debian.org>  Wed, 11 Feb 1998 23:15:51 +0100

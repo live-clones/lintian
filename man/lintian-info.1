@@ -1,0 +1,62 @@
+.\" Copyright (C) 1998 Richard Braakman and Christian Schwarz
+.\"
+.\" This manual page is free software.  It is distributed under the
+.\" terms of the GNU General Public License as published by the Free
+.\" Software Foundation; either version 2 of the License, or (at your
+.\" option) any later version.
+.\"
+.\" This manual page is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public License
+.\" along with this manual page; if not, write to the Free Software
+.\" Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
+.\" USA
+.\"
+.TH LINTIAN-INFO 1 "March 1, 1998" "Debian GNU/Linux"
+
+.SH NAME
+lintian-info \- give detailed information about Lintian's error tags
+
+.SH SYNOPSIS
+.B lintian-info
+.RI [ log-file ]
+\&...
+
+.SH DESCRIPTION
+.PP
+The
+.B lintian-info
+command parses the output of the
+.B lintian
+command and gives verbose information about the listed Lintian error
+tags.
+.sp
+If no log-file is specified on the command line, this command expects
+its input on stdin. Thus, the output of
+.B lintian
+can either be piped through
+.B lintian-info
+or a log file produced by
+.B lintian
+can be processed with this command. (Note, that the
+.B lintian
+command has a command line option
+.B \-i
+to automatically pipe its output through
+.BR lintian-info .
+Thus, you will rarely use this command directly.)
+
+.SH EXIT STATUS
+.PP
+This command always returns with exit code 0.
+
+.SH SEE ALSO
+.BR lintian (1)
+
+.SH AUTHORS
+Richard Braakman <dark@xs4all.nl>
+.br
+Christian Schwarz <schwarz@monet.m.isar.de>

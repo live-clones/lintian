@@ -1,0 +1,31 @@
+Source: relations
+Section: misc
+Priority: optional
+Build-Depends: foo (>> 2) bar baz bat
+Maintainer: Lintian Maintainer <lintian-maint@debian.org>
+Standards-Version: 3.1.1
+
+Package: relations
+Architecture: all
+Depends: relations, relations(<< 3), dpkg, bash (>> 2.0), mail-transport-agent, gawk | awk, foo (>> 2.0), foo (<< 2.2)
+Provides: mail-reader
+Replaces: relations
+Conflicts: foobar (<< 5&5), foo, relations,
+           gnuwdf,
+Optional: everything
+Suggests: alpha, gnu (>= 44-3-4-8-11.4) | ung (<< 89beta) | nug | ngu, beta
+Description: Strange dependency relationships
+ This package declares relationships designed to tickle lintian's "fields"
+ check.  It should generate a number of tags for these.
+ .
+ The package is built with "dpkg --build --no-check", because some of the
+ relationships used here are normally rejected by dpkg.
+
+Package: relations-multiple-libs
+Architecture: all
+Depends: libstdc++2.10, libstdc++2.10-glibc2.2, libstdc++3.0, tk8.2, tk8.3, tcl8.0, tcl8.2, tkx8.2, tkx8.3, tclx8.2, libpng2, libpng3
+Description: Duplicate library dependency relationships.
+ Duplicate library dependency relationships. This tests the depending on
+ different versions of the same library at the same time.
+ .
+ At the same time, it conveniently tests some description file checks. :)

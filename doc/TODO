@@ -1,0 +1,3 @@
+Add testset for perl policy
+Add testset for helper-templates-in-copyright
+Add test for dpkg -r calls

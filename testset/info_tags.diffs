@@ -1,0 +1,59 @@
+E: diffs source: debian-files-list-in-source
+N:
+N:   Leaving debian/files causes problems for the autobuilders, since that
+N:   file will likely include the list of .deb files for another
+N:   architecture, which will cause dpkg-buildpackage run by the buildd to
+N:   fail.
+N:   
+N:   The clean rule for the package should remove this file.
+N:
+W: diffs source: configure-generated-file-in-source config.cache
+N:
+N:   Leaving config.cache/status causes autobuilders problems config.cache
+N:   and config.status are produced by GNU autoconf's configure scripts. If
+N:   they are left in the source package, autobuilders may pick up settings
+N:   for the wrong architecture, causing problems.
+N:   
+N:   The clean rule in debian/rules should remove this file. This should
+N:   ideally be done by fixing the upstream build system to do it when you
+N:   run the appropriate cleaning command (and don't forget to forward the
+N:   fix to the upstream authors so it doesn't happen in the next release).
+N:   If that is already implemented, then make sure you are indeed cleaning
+N:   it in the clean rule. If all else fails, a simple rm -f should work.
+N:   
+N:   Note that Lintian cannot reliably detect the removal in the clean
+N:   rule, so once you fix this, please ignore or override this warning.
+N:
+W: diffs source: configure-generated-file-in-source config.log
+W: diffs source: configure-generated-file-in-source config.status
+W: diffs source: configure-generated-file-in-source subdir-bad/config.cache
+W: diffs source: configure-generated-file-in-source subdir-bad/config.log
+W: diffs source: configure-generated-file-in-source subdir-bad/config.status
+W: diffs source: configure-generated-file-in-source subdir-good/config.cache
+W: diffs source: configure-generated-file-in-source subdir-good/config.log
+W: diffs source: configure-generated-file-in-source subdir-good/config.status
+E: diffs: binary-without-manpage diffs
+N:
+N:   Each binary in /usr/bin, /usr/sbin, /bin, /sbin, or /usr/games, must
+N:   have a manual page.
+N:   
+N:   Note, that though the `man' program has the capability to check for
+N:   several program names in the NAMES section, each of these programs
+N:   must have its own manual page (a symbolic link to the appropriate
+N:   manual page is sufficient) because other manual page viewers such as
+N:   xman or tkman don't support this.
+N:   
+N:   Refer to Policy Manual, section 13.1 for details.
+N:
+E: diffs: no-copyright-file
+N:
+N:   Each binary package has to include a plain file
+N:   /usr/share/doc/<pkg>/copyright
+N:   
+N:   Refer to Policy Manual, section 13.5 for details.
+N:
+E: diffs: arch-independent-package-contains-binary-or-object ./usr/bin/diffs
+N:
+N:   The package contains a binary or object file but is tagged
+N:   `Architecture: all'.
+N:

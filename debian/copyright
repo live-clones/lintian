@@ -1,0 +1,32 @@
+This is the Debian package of Lintian, the Debian package checker.
+The latest version of Lintian can always be found at:
+	http://lintian.debian.org/
+
+Lintian was designed and written by Christian Schwarz and Richard Braakman.
+Parts of it were written by Joey Hess.
+The package was previously maintained by Darren Benham and
+Sean 'Shaleh' Perry. It is currently maintained by
+Josip Rodin <joy-packages@debian.org>.
+
+Copyright (C) 1998 Christian Schwarz and Richard Braakman
+Portions Copyright (C) 1998-1999 Joey Hess
+Portions Copyright (C) 1999 Darren Benham
+Portions Copyright (C) 2000 Sean 'Shaleh' Perry
+Portions Copyright (C) 2001 Colin Watson
+Portions Copyright (C) 2001-2002 Josip Rodin
+
+This program is free software; you may redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2, or (at your option)
+any later version.
+
+This is distributed in the hope that it will be useful, but without
+any warranty; without even the implied warranty of merchantability or
+fitness for a particular purpose. See the GNU General Public License
+for more details.
+
+A copy of the GNU General Public License is available as
+/usr/share/common-licenses/GPL in the Debian GNU/Linux distribution
+or on the World Wide Web at http://www.gnu.org/copyleft/gpl.html.
+You can also obtain it by writing to the Free Software Foundation, Inc.,
+59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.

@@ -1,0 +1,93 @@
+#!/usr/bin/perl -w
+# check for source package cruft -- lintian check script
+
+# based on debhelper check,
+# Copyright (C) 1999 Joey Hess
+# Copyright (C) 2000 Sean 'Shaleh' Perry
+# Copyright (C) 2002 Josip Rodin
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+# MA 02111-1307, USA.
+
+use strict;
+
+use Cwd;
+use File::Find;
+use File::Basename;
+
+($#ARGV == 1) or fail("syntax: cruft <pkg> <type>");
+my $pkg = shift;
+my $type = shift;
+
+unless ((not -e "debfiles/files") or (-z "debfiles/files")) {
+    print "E: $pkg $type: debian-files-list-in-source\n";
+}
+
+# read architecture file and see if it's a doc package
+my $arch;
+if (open IN, "fields/architecture") {
+    chop($arch = <IN>);
+    close IN;
+    if ($pkg =~ /-docs?$/ && $arch ne 'all') {
+	print "W: $pkg $type: documentation-package-not-architecture-independent\n";
+    }
+}
+
+# read build-depends file and see if it depends on autotools-dev
+my $atdinbd = 0;
+if (open IN, "fields/build-depends") {
+    my $bd;
+    chop($bd = <IN>);
+    close IN;
+    $atdinbd = 1 if ($bd =~ /,\s*autotools-dev/);
+}
+
+my $cwd = cwd;
+my $dir = readlink "$cwd/unpacked"; # File::Find in Perl 5.8 appears to need it
+
+sub find_cruft {
+    -f or return; # we just need normal files, for now
+    (my $name = $File::Find::name) =~ s,^\Q$dir\E/,,;
+
+    if ($name =~ m,^(.+/)?config.(?:cache|log|status)$, and $pkg ne "lintian") {
+	print "W: $pkg $type: configure-generated-file-in-source $name\n";
+    } elsif ($name =~ m,^(.+/)?config.(?:guess|sub)$, and not $atdinbd) {
+	my $b = basename $name;
+	my ($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,$atime,$mtime,$ctime,$blksize,$blocks) = stat $b;
+	open F, $b or die "can't open $name: $!";
+	while (<F>) {
+            last if $. > 10; # it's on the 6th line, but be a bit more lenient
+	    if (/^(?:timestamp|version)='(\d+)(.+)'$/ and $1 < 2002) {
+		print "W: $pkg $type: outdated-autotools-helper-file $name $1$2\n";
+	    }
+	}
+	close F;
+    }
+}
+find(\&find_cruft, "$dir");
+
+# -----------------------------------
+
+sub fail {
+    if ($_[0]) {
+	warn "internal error: $_[0]\n";
+    } elsif ($!) {
+	warn "internal error: $!\n";
+    } else {
+	warn "internal error.\n";
+    }
+    exit 1;
+}

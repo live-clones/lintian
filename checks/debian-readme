@@ -1,0 +1,88 @@
+#!/usr/bin/perl -w
+# debian-readme -- lintian check script
+
+# Copyright (C) 1998 Richard Braakman
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+# MA 02111-1307, USA.
+
+use strict;
+
+($#ARGV == 1) or fail("syntax: copyright-file <pkg> <type>");
+my $pkg = shift;
+my $type = shift;
+my $readme;
+my $template;
+
+# read the file in one go
+undef $/;
+
+open(IN,"README.Debian") or fail("cannot open README.Debian file: $!");
+$readme = <IN>;
+close(IN);
+
+$template =
+    ".* for DEBIAN\n" .
+    "-+\n\n" .
+    "(Comments regarding the Package|So far nothing to say\.|" .
+    "<possible notes regarding this package - if none, delete this file>" .
+    ")\n\n" .
+    ".*<.*>,.*\n";
+
+if ($readme =~ m/$template/iom) {
+    tag_warn("readme-debian-is-debmake-template");
+} elsif ($readme =~ m/^So far nothing to say/m) {
+    tag_warn("readme-debian-contains-debmake-template");
+}
+
+exit 0;
+
+# -----------------------------------
+
+sub fail {
+    if ($_[0]) {
+	warn "internal error: $_[0]\n";
+    } elsif ($!) {
+	warn "internal error: $!\n";
+    } else {
+	warn "internal error.\n";
+    }
+    exit 1;
+}
+
+sub tag_error {
+    my $tag = shift;
+    if ($#_ >= 0) {
+	# We can't have newlines in a tag message, so turn them into \n
+	map { s,\n,\\n, } @_;
+	my $args = join(' ', @_);
+	print "E: $pkg $type: $tag $args\n";
+    } else {
+	print "E: $pkg $type: $tag\n";
+    }
+}
+
+sub tag_warn {
+    my $tag = shift;
+    if ($#_ >= 0) {
+	# We can't have newlines in a tag message, so turn them into \n
+	map { s,\n,\\n, } @_;
+	my $args = join(' ', @_);
+	print "W: $pkg $type: $tag $args\n";
+    } else {
+	print "W: $pkg $type: $tag\n";
+    }
+}

@@ -1,0 +1,73 @@
+Check-Script: init.d
+Author: Christian Schwarz <schwarz@debian.org>
+Abbrev: ini
+Standards-Version: 3.2.0
+Type: binary
+Needs-Info: init.d
+Unpack-Level: 1
+
+Tag: duplicate-updaterc.d-calls-in-postinst
+Type: error
+Info: The <tt>postinst</tt> script calls <tt>update-rc.d</tt> several
+ times for the same <tt>/etc/init.d</tt> script.
+
+Tag: output-of-updaterc.d-not-redirected-to-dev-null
+Type: error
+Info: The output messages of the <tt>update-rc.d</tt> command should be
+ redirected to <tt>/dev/null</tt>.
+
+Tag: preinst-calls-updaterc.d
+Type: error
+Info: The <tt>preinst</tt> package calls <tt>update-rc.d</tt>. Instead,
+ you should call it in the <tt>postinst</tt> script.
+
+Tag: duplicate-updaterc.d-calls-in-postrm
+Type: error
+Info: The <tt>postrm</tt> script calls <tt>update-rc.d</tt> several
+ times for the same <tt>/etc/init.d</tt> script.
+
+Tag: prerm-calls-updaterc.d
+Type: error
+Info: The <tt>prerm</tt> package calls <tt>update-rc.d</tt>. Instead,
+ you should call it in the <tt>postrm</tt> script.
+
+Tag: postrm-does-not-call-updaterc.d-for-init.d-script
+Type: error
+Info: An <tt>/etc/init.d</tt> script which has been registered in the
+ <tt>postinst</tt> script is not de-registered in the
+ <tt>postrm</tt> script.
+
+Tag: postrm-contains-additional-updaterc.d-calls
+Type: error
+Info: The <tt>postrm</tt> de-registers an <tt>/etc/init.d</tt> script which
+ has not been registered in the <tt>postinst</tt> script before.
+
+Tag: file-in-etc-rc.d-marked-as-conffile
+Type: error
+Ref: policy 10.3.3
+Info: The symbolic links in <tt>/etc/rc?.d</tt> may not be marked as conffiles.
+
+Tag: init.d-script-not-marked-as-conffile
+Type: warning
+Ref: policy 10.3.2
+Info: <tt>/etc/init.d</tt> scripts should be marked as conffiles.
+ .
+ This is usually an error, but the Policy allows for managing these files
+ manually in maintainer scripts and Lintian cannot reliably detect that.
+
+Tag: init.d-script-does-not-implement-required-option
+Type: error
+Info: The <tt>/etc/init.d</tt> scripts have to support the following
+ command line arguments: start, stop, restart, force-reload.
+
+Tag: init.d-script-not-included-in-package
+Type: error
+Info: The <tt>/etc/init.d</tt> script is registered in the
+ <tt>postinst</tt> script, but is not included in the package.
+
+Tag: script-in-etc-init.d-not-registered-via-update-rc.d
+Type: warn
+Info: The package installs an <tt>/etc/init.d</tt> script which is
+ not registered in the <tt>postinst</tt> script. This is usually a bug,
+ unless you omit the links intentionally for some reason or create the
+ links some other way.

@@ -1,0 +1,242 @@
+#!/usr/bin/perl -w
+# manpages -- lintian check script
+
+# Copyright (C) 1998 Christian Schwarz
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+# MA 02111-1307, USA.
+
+use strict;
+
+($#ARGV == 1) or fail("syntax: manpages <pkg> <type>");
+my $pkg = shift;
+my $type = shift;
+
+use File::Basename;
+
+my %file_info;
+my %binary;
+my %manpage;
+
+# Read file info...
+open(IN,"file-info") or fail("cannot find file-info for $type package $pkg");
+while (<IN>) {
+    chop;
+
+    m/^(.*?):\s+(.*)$/o or fail("an error in the file pkg is preventing lintian from checking this package: $_");
+    my ($file,$info) = ($1,$2);
+
+    next unless $file =~ m/man/o;
+    $file =~ s,^(\./)?,,;
+
+    $file_info{$file} = $info;
+}
+close(IN);
+
+# Read package contents...
+open(IN,"index") or fail("cannot open index file index: $!");
+while (<IN>) {
+    chop;
+
+    my ($perm,$owner,$size,$date,$time,$file) = split(' ', $_, 6);
+    my $link;
+
+    $file =~ s,^(\./),,;
+    $file =~ s/ link to .*//;
+
+    if ($perm =~ m/^l/) {
+	($file, $link) = split(' -> ', $file);
+    }
+
+    my ($fname,$path,$suffix) = fileparse($file);
+
+    # binary that wants a manual page?
+    if (($perm =~ m,^[\-l],o) and
+    	(($path =~ m,^bin/,o) or
+	 ($path =~ m,^sbin/,o) or
+	 ($path =~ m,^usr/bin/,o) or
+	 ($path =~ m,^usr/sbin/,o) or
+	 ($path =~ m,^usr/games/,o) or
+	 ($path =~ m,^usr/X11R6/bin/,o) )) {
+
+	my $bin = $fname;
+	
+	$binary{$bin} = $file;
+	
+    	next;
+    }
+
+    if (($path =~ m,usr/(share|X11R6)/man/$,) and ($fname ne "")) {
+	print "E: $pkg $type: manpage-in-wrong-directory $file\n";
+    	next;
+    }
+
+    # manual page?
+    next unless ($perm =~ m,^[\-l],o) and
+	(($path =~ m,^usr/man(/\S+),o)
+	 or ($path =~ m,^usr/X11R6/man(/\S+),o)
+	 or ($path =~ m,^usr/share/man(/\S+),o) );
+
+    my $t = $1;
+    if (not $t =~ m,^.*man(\d)/$,o) {
+	print "E: $pkg $type: manpage-in-wrong-directory $file\n";
+    	next;
+    }
+    my ($section,$name) = ($1,$fname);
+
+    my @pieces = split(/\./, $name);
+    my $ext = pop @pieces;
+    if ($ext ne 'gz') {
+	print "E: $pkg $type: manpage-not-compressed $file\n";
+    } elsif ($perm =~ m,^-,o) { # so it's .gz... files first; links later
+	my $info = $file_info{$file};
+	if ($info !~ m/gzip compressed data/o) {
+	    print "E: $pkg $type: manpage-not-compressed-with-gzip $file\n";
+	} elsif ($info !~ m/max compression/o) {
+	    print "E: $pkg $type: manpage-not-compressed-with-max-compression $file\n";
+	}
+    }
+    my $num = pop @pieces;
+    if (scalar @pieces && $num =~ /^\d/) {
+	$manpage{join(".", @pieces)} = $file;
+    } else {
+	print "E: $pkg $type: manpage-has-wrong-extension $file\n";
+    }
+
+    # special check for manual pages for X11 games
+    if ($path =~ m,^usr/X11R6/man/man6/,o) {
+	print "W: $pkg $type: x11-games-should-be-in-usr-games $file\n";
+    }
+
+    #  reformatted to here
+
+    # check symbolic links to other manual pages
+    if ($perm =~ m,^l,o) {
+	if ($link =~ m,(^|/)undocumented,o) {
+	    if ($path =~ m,^usr/share/man,o) {
+		# undocumented link in /usr/share/man -- possibilities
+                #    undocumented... (if in the appropriate section)
+		#    ../man?/undocumented...
+		#    ../../man/man?/undocumented...
+		#    ../../../share/man/man?/undocumented...
+		#    ../../../../usr/share/man/man?/undocumented...
+                if ((($link =~ m,^undocumented\.([237])\.gz,o) and
+                    ($path =~ m,^usr/share/man/man$1,)) or
+                    ($link =~ m,^\.\./man[237]/undocumented\.[237]\.gz$,o) or
+                    ($link =~ m,^\.\./\.\./man/man[237]/undocumented\.[237]\.gz$,o) or
+                    ($link =~ m,^\.\./\.\./\.\./share/man/man[237]/undocumented\.[237]\.gz$,o) or
+                    ($link =~ m,^\.\./\.\./\.\./\.\./usr/share/man/man[237]/undocumented\.[237]\.gz$,o)) {
+		    print "W: $pkg $type: link-to-undocumented-manpage $file\n";
+                } else {
+		    print "E: $pkg $type: bad-link-to-undocumented-manpage $file\n";
+		}
+	    } else {
+		# undocumented link in /usr/X11R6/man -- possibilities:
+		#    ../../../share/man/man?/undocumented...
+		#    ../../../../usr/share/man/man?/undocumented...
+		if (($link =~ m,^\.\./\.\./\.\./share/man/man[237]/undocumented\.[237]\.gz$,o) or
+		    ($link =~ m,^\.\./\.\./\.\./\.\./usr/share/man/man[237]/undocumented\.[237]\.gz$,o)) {
+		    print "W: $pkg $type: link-to-undocumented-manpage $file\n";
+		} else {
+		    print "E: $pkg $type: bad-link-to-undocumented-manpage $file\n";
+		}
+	    }
+	}
+    } else { # not a symlink
+	# Is it a .so link?
+	if ($size < 256) {
+	    open SOTEST, "zcat unpacked/\Q$file\E 2>/dev/null |"
+		 or fail("cannot open $file: $!");
+	    my $line = <SOTEST>;
+	    close SOTEST;
+	    unless ($line) {
+		print "E: $pkg $type: empty-manual-page $file\n";
+	    } elsif ($line =~ /^\.so\s+(.+)?$/) {
+		my $dest = $1;
+		if ($dest =~ m,^([^/]+)/(.+)$,) {
+		    my ($manxorlang, $rest) = ($1, $2);
+		    if ($manxorlang !~ /^man\d+$/) {
+			# then it's likely a language subdir, so let's run
+			# the other component through the same check
+			if ($rest =~ m,^([^/]+)/(.+)$,) {
+			    my ($lang, $rest) = ($1, $2);
+			    if ($rest !~ m,^[^/]+\.\d(?:\S+)?(?:\.gz)?$,) {
+				print "E: $pkg $type: bad-so-link-within-manual-page $file\n";
+			    }
+			} else {
+			    print "E: $pkg $type: bad-so-link-within-manual-page $file\n";
+			}
+		    }
+		} else {
+		    print "E: $pkg $type: bad-so-link-within-manual-page $file\n";
+		}
+		next;
+	    }
+	}
+	# If it's not a .so link, use lexgrog to find out if the man page
+	# parses correctly.
+	# This check is currently not applied to pages in language-specific
+	# hierarchies, because those pages are not currently scanned by
+	# mandb (bug #29448), and because lexgrog can't handle pages in all
+	# languages at the moment, leading to huge numbers of false
+	# negatives. When man-db is fixed, this limitation should be
+	# removed.
+	if ($path =~ m,/man/man\d/,) {
+	    if (system("lexgrog unpacked/\Q$file\E >/dev/null 2>&1")) {
+	        print "E: $pkg $type: manpage-has-bad-whatis-entry $file\n";
+	    }
+	}
+    }
+}
+close(IN);
+
+for my $f (sort keys %binary) {
+    if (exists $manpage{$f}) {
+	# X11 binary?
+	if ($binary{$f} =~ m/X11/) {
+	    # yes. manpage in X11 too?
+	    if ($manpage{$f} =~ m/X11/) {
+		# ok.
+	    } else {
+		print "E: $pkg $type: manpage-for-x11-binary-in-wrong-directory $binary{$f} $manpage{$f}\n";
+	    }
+	} else {
+	    # no. manpage in X11?
+	    if ($manpage{$f} =~ m/X11/) {
+		print "E: $pkg $type: manpage-for-non-x11-binary-in-wrong-directory $binary{$f} $manpage{$f}\n";
+	    } else {
+		# ok.
+	    }
+	}
+    } else {
+	print "E: $pkg $type: binary-without-manpage $f\n";
+    }
+}
+
+exit 0;
+
+# -----------------------------------
+
+sub fail {
+    if ($_[0]) {
+	warn "internal error: $_[0]\n";
+    } elsif ($!) {
+	warn "internal error: $!\n";
+    } else {
+	warn "internal error.\n";
+    }
+    exit 1;
+}

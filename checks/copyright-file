@@ -1,0 +1,226 @@
+#!/usr/bin/perl -w
+# copyright-file -- lintian check script
+
+# Copyright (C) 1998 Christian Schwarz
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+# MA 02111-1307, USA.
+
+use strict;
+
+($#ARGV == 1) or fail("syntax: copyright-file <pkg> <type>");
+my $pkg = shift;
+my $type = shift;
+
+my $ppkg = quotemeta($pkg);
+
+my $found = 0;
+
+use lib "$ENV{'LINTIAN_ROOT'}/checks/";
+use common_data;
+
+# Read package contents...
+open(IN,"index") or fail("cannot open index file index: $!");
+while (<IN>) {
+    chop;
+    if (m,usr/(share/)?doc/$ppkg/copyright(\.\S+)?(\s+\-\>\s+.*)?$,o) {
+	my ($ext,$link) = ($2,$3);
+	
+	$ext = '' if (! defined $ext);
+	#an extension other than .gz doesn't count as copyright file
+	next unless ($ext eq '') or ($ext eq '.gz');
+	$found = 1;
+	
+	#search for an extension
+	if ($ext eq '.gz') {
+	    print "E: $pkg $type: copyright-file-compressed\n";
+	    last;
+    	}
+	
+	#make sure copyright is not a symlink
+    	if ($link) {
+	    print "E: $pkg $type: copyright-file-is-symlink\n";
+	    last;
+    	}
+	
+	#otherwise, pass
+    	if (($ext eq '') and not $link) {
+	    # everything is ok.
+	    last;
+    	}
+    	fail("unhandled case: $_");
+	
+    } elsif (m,usr/share/doc/$ppkg \-\>\s+(\S+),o) {
+	my ($link) = ($1);
+	
+    	$found = 1;
+	
+    	# check if this symlink references a directory elsewhere
+    	if ($link =~ m,^(\.\.)?/,) {
+	    print "E: $pkg $type: usr-doc-symlink-points-outside-of-usr-doc $link\n";
+	    last;
+    	}
+	
+	# link might point to a subdirectory of another /usr/share/doc
+	# directory
+	$link =~ s,/.*,,;
+
+    	# this case is allowed, if this package depends on link
+    	# and both packages come from the same source package
+	
+    	# depend on $link pkg?
+    	if ((not depends_on($link)) &&
+	    not (exists($known_essential{$link}) &&
+		 defined($known_essential{$link}))) {
+	    # no, it does not.
+
+	    print "E: $pkg $type: usr-doc-symlink-without-dependency $link\n";
+	    last;
+    	}
+	
+    	# We can only check if both packages come from the same source
+    	# if our source package is currently unpacked in the lab, too!
+    	if (-d "source") { 	# yes, it's unpacked
+
+	    # $link from the same source pkg?
+	    if (-l "source/binary/$link") {
+		# yes, everything is ok.
+	    } else {
+		# no, it is not.
+		print "E: $pkg $type: usr-doc-symlink-to-foreign-package $link\n";
+	    }
+    	} else {		# no, source is not available
+	    print "I: $pkg $type: cannot-check-whether-usr-doc-symlink-points-to-foreign-package\n";
+    	}
+	
+    	# everything is ok.
+    	last;
+    } elsif (m,usr/doc/copyright/$ppkg$,o) {
+	print "E: $pkg $type: old-style-copyright-file\n";
+	$found = 1;
+    	last;
+    }
+}
+close(IN);
+
+if (not $found) {
+    print "E: $pkg $type: no-copyright-file\n";
+}
+
+# check contents of copyright file
+open(IN,"copyright") or fail("cannot open copyright file copyright: $!");
+# gulp whole file
+undef $/;  $_ = <IN>;
+close(IN);
+
+if (m/\<fill in ftp site\>/ or m/\<Must follow here\>/) {
+    print "E: $pkg $type: helper-templates-in-copyright\n";
+}
+
+if (m,usr/share/common-licenses/(GPL|LGPL|BSD|Artistic)\.gz,) {
+    print "E: $pkg $type: copyright-refers-to-compressed-license $&\n";
+}
+
+if (m,usr/share/common-licences,) {
+    print "E: $pkg $type: copyright-refers-to-incorrect-directory $&\n";
+}
+
+if (m,usr/share/doc/copyright,) {
+    print "E: $pkg $type: copyright-refers-to-old-directory\n";
+}
+
+if (m,usr/doc/copyright,) {
+    print "E: $pkg $type: copyright-refers-to-old-directory\n";
+}
+
+# lame check for old FSF zip code
+if (m/02139/) {
+    print "E: $pkg $type: old-fsf-address-in-copyright-file\n";
+}
+
+if (length($_) > 12000 and
+    m/\bGNU GENERAL PUBLIC LICENSE\s*TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION\b/m and m/\bVersion 2\b/) {
+    print "E: $pkg $type: copyright-file-contains-full-gpl-license\n";
+}
+
+if (m/^This copyright info was automatically extracted from the perl module\./) {
+    print "W: $pkg $type: helper-templates-in-copyright\n";
+}
+
+if (m,(under )?(the )?(same )?(terms )?as Perl itself,i &&
+    !(m,usr/share/common-licenses/, || m,usr/share/doc/perl,)) {
+    print "E: $pkg $type: copyright-file-lacks-pointer-to-perl-license\n";
+}
+
+# wtf?
+if ((m,common-licenses(/\S+),) && (! m,/usr/share/common-licenses/,)) {
+    print "W: $pkg $type: copyright-does-not-refer-to-common-license-file $1\n";
+}
+
+if (m/(GNU General Public License|GPL)/ && !m,/usr/share/common-licenses,
+    && !m/Zope Public License/ && !m/LICENSE AGREEMENT FOR PYTHON 1.6.1/
+    && !m/LaTeX Project Public License/) {
+    print "E: $pkg $type: copyright-should-refer-to-common-license-file-for-gpl\n";
+}
+
+if (m,Upstream Author\(s\),) {
+    print "W: $pkg $type: copyright-lists-upstream-authors-with-dh_make-boilerplate\n";
+}
+
+exit 0;
+
+# -----------------------------------
+
+# returns true, if $foo depends on $bar
+sub depends_on {
+    my ($bar) = @_;
+
+    my ($deps, $predeps) = ("", "");
+
+    my $f = "fields/depends";
+    if (-f $f) {
+	open(I,$f) or die "cannot open depends file $f: $!";
+	chop($deps = <I>);
+	close(I);
+    }
+
+    $f = "fields/pre-depends";
+    if (-f $f) {
+	open(I,$f) or die "cannot open pre-depends file $f: $!";
+	chop($predeps = <I>);
+	close(I);
+    }
+
+    for (split(/\s*(?:,|\|)\s*/,"$deps,$predeps")) {
+	# whitespace or an opening parenthesis indicates the end of the
+	# package name.
+	s/(\s|\().*//;
+	return 1 if $_ eq $bar;
+    }
+
+    return 0;
+}
+
+sub fail {
+    if ($_[0]) {
+	warn "internal error: $_[0]\n";
+    } elsif ($!) {
+	warn "internal error: $!\n";
+    } else {
+	warn "internal error.\n";
+    }
+    exit 1;
+}

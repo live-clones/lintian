@@ -1,0 +1,354 @@
+#!/usr/bin/perl -w
+# menus -- lintian check script
+
+# somewhat of a misnomer -- it doesn't only check menus
+
+# Copyright (C) 1998 Christian Schwarz
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+# MA 02111-1307, USA.
+
+use strict;
+
+($#ARGV == 1) or fail("syntax: menus <pkg> <type>");
+my $pkg = shift;
+my $type = shift;
+
+my %preinst;
+my %postinst;
+my %prerm;
+my %postrm;
+
+my $docbase_file;
+my $menu_file;
+my $menumethod_file;
+my $anymenu_file;
+
+# check preinst script
+if ( -f "control/preinst" ) {
+    # parse script...
+    check_script("preinst",\%preinst);
+}
+
+# check postinst script
+if ( -f "control/postinst" ) {
+    # parse script...
+    check_script("postinst",\%postinst);
+}
+
+# check prerm script
+if ( -f "control/prerm" ) {
+    # parse script...
+    check_script("prerm",\%prerm);
+}
+
+# check postrm script
+if ( -f "control/postrm" ) {
+    # parse script...
+    check_script("postrm",\%postrm);
+}
+
+# read package contents
+open(IN,"index") or fail("cannot open index file index: $!");
+while (<IN>) {
+    chomp;
+    my ($perm,$owner,$size,$date,$time,$file) = split(' ', $_, 6);
+    $file =~ s,^(\./),,;
+    my $temp_file = $file; # save this for the link checks to follow
+    $file =~ s/ link to .*//;
+    $file =~ s/ -> .*//;
+
+    my $operm = perm2oct($perm);
+
+    if ($perm =~ m,^-,o) { # file checks
+	# menu file?
+	if ($file =~ m,^usr/lib/menu/\S,o) { # correct permissions?
+	    if ($perm =~ m,x,o) {
+		printf "E: $pkg $type: executable-in-usr-lib-menu $file %04o\n",$operm;
+	    }
+
+	    next if $file eq 'usr/lib/menu/README';
+
+	    $menu_file = $file;
+
+	    if ($file eq 'usr/lib/menu/menu' and $pkg ne 'menu') {
+		printf "E: $pkg $type: bad-menu-file-name $file\n";
+	    }
+	}
+	# doc-base file?
+	elsif ($file =~ m,^usr/share/doc-base/\S,o) { # correct permissions?
+	    if ($perm =~ m,x,o) {
+		printf "E: $pkg $type: executable-in-usr-share-docbase $file %04o\n",$operm;
+	    }
+
+	    $docbase_file = $file;
+	}
+	#menu-methods file?
+	elsif ( $file =~ m,^etc/menu-methods/\S,o ) {
+	    #correct permissions?  (skipped for menu package)
+	    if ( $pkg ne 'menu' ) {
+		if ($perm !~ m,x,o) {
+		    printf "E: $pkg $type: non-executable-in-etc-menu-methods $file %04o\n", $operm;
+		}
+	    }
+
+	    $menumethod_file = $file;
+	}
+    }
+}
+
+# prerm scripts should not call update-menus
+if ($prerm{'calls-updatemenus'}) {
+    print "E: $pkg $type: prerm-calls-updatemenus\n";
+}
+
+# postrm scripts should not call install-docs
+if ($postrm{'calls-installdocs'} or $postrm{'calls-installdocs-r'}) {
+    print "E: $pkg $type: postrm-calls-installdocs\n";
+}
+
+# preinst scripts should not call either update-menus nor installdocs
+if ($preinst{'calls-updatemenus'}) {
+    print "E: $pkg $type: preinst-calls-updatemenus\n";
+}
+
+if ($preinst{'calls-installdocs'}) {
+    print "E: $pkg $type: preinst-calls-installdocs\n";
+}
+
+# don't set the /usr/doc link, the FHS transition is over (2002-10-08)
+if (defined $postinst{'sets-link'} && $postinst{'sets-link'} == 1) {
+    print "W: $pkg $type: postinst-should-not-set-usr-doc-link\n";
+}
+
+$anymenu_file = $menu_file || $menumethod_file;
+
+# check consistency
+# docbase file?
+if ($docbase_file) {		# postinst has to call install-docs
+    if (not $postinst{'calls-installdocs'}) {
+	print "E: $pkg $type: postinst-does-not-call-installdocs $docbase_file\n";
+    }
+    # prerm has to call install-docs -r
+    if (not $prerm{'calls-installdocs-r'}) {
+	print "E: $pkg $type: prerm-does-not-call-installdocs $docbase_file\n";
+    }
+
+    # does postinst also call update-menus?
+    if ($postinst{'calls-updatemenus'}) {
+	# is there a menu file or menu-methods files?
+    	if ($anymenu_file) { 	# postrm has to call update-menus
+	    if (not $postrm{'calls-updatemenus'}) {
+		print "E: $pkg $type: postrm-does-not-call-updatemenus $anymenu_file\n" unless $pkg eq 'menu';
+	    }
+    	} else { #no!
+	    print "W: $pkg $type: postinst-has-useless-call-to-update-menus\n";
+	}
+    }
+
+    # check the contents of the doc-base file(s)
+    opendir DOCBASEDIR, "doc-base" or fail("cannot read doc-base directory.");
+    while (my $dbfile = readdir DOCBASEDIR) {
+        next if -x "doc-base/$dbfile"; # don't try to parse executables, plus we already warned about it
+        open IN, "doc-base/$dbfile" or
+            fail("cannot open doc-base file $dbfile for reading.");
+        while (<IN>) {
+            if (/usr\/doc/) {
+                print "E: $pkg $type: doc-base-file-references-usr-doc $dbfile\n";
+            }
+        }
+        close IN;
+    }
+    closedir DOCBASEDIR;
+}
+# no docbase file, but menu file?
+elsif ($anymenu_file) { 	# postinst has to call update-menus
+    if (not $postinst{'calls-updatemenus'}) {
+	print "E: $pkg $type: postinst-does-not-call-updatemenus $anymenu_file\n";
+    }
+    # postrm has to call update-menus
+    if (not $postrm{'calls-updatemenus'}) {
+	print "E: $pkg $type: postrm-does-not-call-updatemenus $anymenu_file\n";
+    }
+}
+# no menu files and no doc-base files...
+else {
+    # postinst and postrm should not need to call update-menus
+    if ($postinst{'calls-updatemenus'}) {
+	print "W: $pkg $type: postinst-has-useless-call-to-update-menus\n";
+    }
+    if ($postinst{'calls-installdocs'} or $postinst{'calls-installdocs-r'}) {
+	print "E: $pkg $type: postinst-has-useless-call-to-install-docs\n";
+    }
+    if ($postrm{'calls-updatemenus'}) {
+	print "W: $pkg $type: postrm-has-useless-call-to-update-menus\n";
+    }
+    if ($postrm{'calls-installdocs'} or $postrm{'calls-installdocs-r'}) {
+	print "E: $pkg $type: postrm-has-useless-call-to-install-docs\n";
+    }
+}
+
+exit 0;
+
+# -----------------------------------
+
+sub fail {
+    if ($_[0]) {
+	warn "internal error: $_[0]\n";
+    } elsif ($!) {
+	warn "internal error: $!\n";
+    } else {
+	warn "internal error.\n";
+    }
+    exit 1;
+}
+
+# translate permission strings like `-rwxrwxrwx' into an octal number
+sub perm2oct {
+    my ($t) = @_;
+
+    my $o = 0;
+
+    $t =~ /^.(.)(.)(.)(.)(.)(.)(.)(.)(.)/o;
+
+    $o += 04000 if $3 eq 's';	# set-uid
+    $o += 02000 if $6 eq 's';	# set-gid
+    $o += 01000 if $9 eq 't';	# sticky bit
+    $o += 00400 if $1 ne '-';	# owner read
+    $o += 00200 if $2 ne '-';	# owner write
+    $o += 00100 if $3 ne '-';	# owner execute
+    $o += 00040 if $4 ne '-';	# owner read
+    $o += 00020 if $5 ne '-';	# owner write
+    $o += 00010 if $6 ne '-';	# owner execute
+    $o += 00004 if $7 ne '-';	# owner read
+    $o += 00002 if $8 ne '-';	# owner write
+    $o += 00001 if $9 ne '-';	# owner execute
+
+    return $o;
+}
+
+sub check_script {
+    my ($script,$pres) = @_;
+    my ($no_check_menu,$no_check_installdocs);
+    my $interp;
+
+    open(IN,"control/$script") or
+	fail("cannot open maintainer script control/$script for reading: $!");
+    $interp = <IN>;
+    if ($interp =~ m,^\#\!\s*/bin/(a|ba|k|pdk)?sh,) {
+        $interp = 'sh';
+    } elsif ($interp =~ m,^\#\!\s*/usr/bin/perl,) {
+        $interp = 'perl';
+    } else {
+	if ($interp =~ m,^\#\!\s*(.+),) {
+            $interp = $1;
+	}
+	else { # hmm, doesn't seem to start with #!
+	    # is it a binary? look for ELF header
+	    if ($interp =~ m/^\177ELF/) {
+		return; # nothing to do here
+	    }
+	    $interp = 'unknown';
+	}
+	print "N: unknown interpreter: $script $interp\n";
+    }
+
+    while (<IN>) {
+	# skip comments
+	s/\#.*$//o;
+
+	##
+	# either update-menus or wm-menu-config will satisfy
+	# the checks that the menu file installed is properly used
+	##
+
+	# does the script check whether update-menus exists?
+	if (/-x\s+\S*update-menus/o or /(which|command)(\s+\S+)?\s+update-menus/o) {
+	    # yes, it does.
+	    $pres->{'checks-for-updatemenus'} = 1;
+	}
+
+	# does the script call update-menus?
+	if (/update-menus/ && !/--no-update-menus/) {
+	    # yes, it does.
+	    $pres->{'calls-updatemenus'} = 1;
+
+	    # checked first?
+	    if (not $pres->{'checks-for-updatemenus'} and $pkg ne 'menu') {
+		print "E: $pkg $type: maintainer-script-does-not-check-for-existence-of-updatemenus $script:$.\n" unless $no_check_menu++;
+	    }
+	}
+
+	# does the script check whether wm-menu-config exists?
+	if (s/-x\s+\S*wm-menu-config//o or /which\s+wm-menu-config/o
+	    or s/command\s+.*?wm-menu-config//o) {
+	    # yes, it does.
+	    $pres->{'checks-for-updatemenus'} = 1;
+	}
+
+	# does the script call wm-menu-config?
+	if (m/wm-menu-config/) {
+	    # yes, it does.
+	    $pres->{'calls-updatemenus'} = 1;
+
+	    # checked first?
+	    if (not $pres->{'checks-for-updatemenus'} and $pkg ne 'menu') {
+		print "E: $pkg $type: maintainer-script-does-not-check-for-existence-of-updatemenus $script:$.\n" unless $no_check_menu++;
+	    }
+	}
+
+	# does the script set a link in /usr/doc?
+	# does the script remove a link in /usr/doc?
+	if ($interp eq 'sh') {
+	    if (m,ln\s+(-\w+)?\s+\"?\.\./share/doc/\S+, ) {
+		$pres->{'sets-link'} = 1;
+	    }
+	    if (m,rm\s+(-\w+\s+)?\"?/usr/doc/\S+, ) {
+		$pres->{'removes-link'} = 1;
+	    }
+	} elsif ($interp eq 'perl') {
+	    if (m|symlink\s*\(?\s*[\"\']\.\./share/doc/\.+?[\"\']\s*,|) {
+		$pres->{'sets-link'} = 1;
+	    } elsif (m,ln\s+(-\w+)?\s+\"?\.\./share/doc/\S+, ) {
+		$pres->{'sets-link'} = 1;
+	    }
+	} else {
+	    # just fall through for now
+	}
+
+	# does the script check whether install-docs exists?
+	if (s/-x\s+\S*install-docs//o or /which\s+install-docs/o
+	    or s/command\s+.*?install-docs//o) {
+	    # yes, it does.
+	    $pres->{'checks-for-installdocs'} = 1;
+	}
+
+	# does the script call install-docs?
+	if (m/install-docs/o) {
+	    # yes, it does.  Does it remove or add a doc?
+	    if (m/install-docs\s+(-r|--remove)\s/) {
+		$pres->{'calls-installdocs-r'} = 1;
+	    } else {
+		$pres->{'calls-installdocs'} = 1;
+	    }
+	    # checked first?
+	    if (not $pres->{'checks-for-installdocs'}) {
+		print "E: $pkg $type: maintainer-script-does-not-check-for-existence-of-installdocs $script\n" unless $no_check_installdocs++;
+	    }
+	}
+    }
+    close IN;
+}

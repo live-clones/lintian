@@ -1,0 +1,60 @@
+#!/usr/bin/perl -w
+# doc-base-files -- lintian collector script
+
+# Copyright (C) 1998 Richard Braakman
+# Copyright (C) 2001 Josip Rodin
+# 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+# MA 02111-1307, USA.
+
+use strict;
+
+($#ARGV == 1) or fail("syntax: doc-base-files <pkg> <type>");
+my $pkg = shift;
+my $type = shift;
+
+-f "fields/package" or fail("doc-base-files invoked in wrong directory");
+
+use lib "$ENV{'LINTIAN_ROOT'}/lib";
+use Pipeline;
+
+if (-e "doc-base") {
+    spawn('rm', '-rf', 'doc-base') == 0
+	or fail("cannot rm old doc-base directory");
+}
+
+if (-d "unpacked/usr/share/doc-base") {
+    spawn('cp', '-a', 'unpacked/usr/share/doc-base', 'doc-base') == 0
+	or fail("cannot copy directory unpacked/usr/share/doc-base");
+} else {
+    # no doc-base directory
+    mkdir("doc-base", 0777) or fail("cannot mkdir doc-base: $!");
+}
+
+exit 0;
+
+# -----------------------------------
+
+sub fail {
+    if ($_[0]) {
+        print STDERR "internal error: $_[0]\n";
+    } elsif ($!) {
+        print STDERR "internal error: $!\n";
+    } else {
+        print STDERR "internal error.\n";
+    }
+    exit 1;
+}

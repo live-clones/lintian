@@ -1,0 +1,129 @@
+Check-Script: menu-format
+Author: Joey Hess <joeyh@master.debian.org>
+Abbrev: mnf
+Standards-Version: 3.2.0
+Needs-Info: menu-files
+Type: binary
+Unpack-Level: 1
+Info: This script validates the format of menu files.
+
+Tag: old-format-menu-file
+Type: error
+Info: The package contains a menu file that is in the old menu file format.
+ This format is deprecated. Convert the menu file to the new menu format.
+ Note that lintian will not test this file for any other problems.
+
+Tag: whitespace-after-continuation-character
+Type: error
+Info: The menu item is split up over 2 or more lines using '\' at the end of
+ the line to join them together. However, there is some whitespace after
+ the '\' character, which is not guaranteed to be handled correctly.
+ The '\' should be at the end of the line.
+
+Tag: bad-test-in-menu-item
+Type: error
+Info: The menu file contains an item that does not start with the text
+ "?package(somepackage):". All menu file lines must test for the existence
+ of a package in this way.
+
+Tag: unparsable-menu-item
+Type: error
+Info: An item of the menu file cannot be parsed as a series of tag=value
+ pairs. This could be because you didn't close a set of double quotes.
+
+Tag: incorrect-package-test
+Type: warning
+Info: The menu item tests to see if a package other than the package that
+ contains it is installed. This is probably an error. Perhaps it is spelled
+ or capitalized wrong, or perhaps the menu file was copied from some other
+ package and this was accidentally not changed.
+
+Tag: duplicated-tag-in-menu-item
+Type: warning
+Info: The menu item contains two instances of the same tag. This is just a
+ waste of space, as menu will only use one of them.
+
+Tag: menu-item-missing-important-tag
+Type: warning
+Info: The menu item has a line that is missing an important tag. It's likely
+ that the line will have no effect without this tag. <tt>install-menu</tt> may
+ report this as an error during package installation.
+
+Tag: menu-item-contains-unknown-tag
+Type: warning
+Info: The menu item has a line that has a tag in it that is not one
+ of the standard tags (needs=, section=, title=, longtitle=, command=, etc).
+ While other tags can be used for specialized purposes, this is rare and
+ it's more likely the tag's name is misspelled.
+
+Tag: menu-item-uses-icon-none
+Type: warning
+Info: The menu item has a line that uses icon=none. This is redundant and
+ deprecated -- if there is no icon, just leave off the icon tag.
+
+Tag: menu-item-needs-tag-has-unknown-value
+Type: warning
+Info: The menu item has a line that has a needs= field with a strange value.
+ This may be intentional, but it's probably a typo that will make menu
+ ignore the line.
+
+Tag: menu-item-adds-to-root-menu
+Type: error
+Info: The menu item has a line that specifies a section that will put a menu
+ item right in the root menu. Packages should never add items directly to the
+ root menu. Note that if you specify an empty section, this error will
+ pop up, as it will if you specify a section of "/".
+
+Tag: menu-item-uses-apps-games-section
+Type: warning
+Info: The menu item has a line that specifies a section under "Apps/Games".
+ This section has been moved to just "Games".
+
+Tag: menu-item-creates-new-section
+Type: warning
+Info: The menu item has a line that specifies a new section to put a menu 
+ entry in. This may be ok, but most menu entries should go in one of the 
+ sections listed in the menu documentation.
+ .
+ Note that most root sections have to be subsectioned, and should not be
+ used as sections directly.
+
+Tag: menu-item-creates-new-root-section
+Type: error
+Info: The menu item has a line that specifies a new section to put a menu
+ entry in, and this section appears right in the root menu. This is almost
+ certainly an error, no new sections should be added to the root menu
+ without discussion with the author of menu.
+
+Tag: menu-icon-not-in-xpm-format
+Type: error
+Info: Icons in the Debian menu system should be in XPM format.
+Ref: menu 3.4
+
+Tag: menu-icon-missing
+Type: warning
+Info: This icon file couldn't be found in the standard icon locations
+ within the package (<tt>/usr/X11R6/include/X11/pixmaps</tt> and
+ <tt>/usr/X11R6/include/X11/bitmaps</tt>).
+ .
+ If the icon is in a dependent package then this warning can be ignored,
+ since currently lintian cannot check icons in other packages.
+
+Tag: menu-icon-too-big
+Type: error
+Info: Icons in the Debian menu system should be at most 32x32 pixels.
+Ref: menu 3.4
+
+Tag: menu-icon-has-bad-colors
+Type: error
+Info: Icons in the Debian menu system should use only the 24 colors in
+ <tt>/usr/share/pixmaps/cmap.xpm</tt>.
+Ref: menu 3.4
+
+Tag: menu-icon-cannot-parse
+Type: warning
+Info: The icon file could not be parsed.  Perhaps this means a bad XPM file,
+ or perhaps it means the lintian parsing needs to be improved.  If the
+ window managers and standard tools accept the file then probably it's the
+ latter; please notify &maint; either directly or via the bug tracking
+ system.

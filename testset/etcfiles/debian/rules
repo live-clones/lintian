@@ -1,0 +1,25 @@
+#!/usr/bin/make -f
+
+tmp=debian/tmp
+
+clean:
+	rm -f debian/files debian/substvars
+	rm -rf debian/tmp
+
+build:
+binary-indep:
+	install -d $(tmp)/etc
+	install -m 644 proper $(tmp)/etc
+	install -m 644 improper $(tmp)/etc
+	install -d $(tmp)/usr/share/doc/etcfiles
+	install -m 644 debian/README.Debian $(tmp)/usr/share/doc/etcfiles
+	install -m 644 debian/changelog $(tmp)/usr/share/doc/etcfiles
+	#gzip -9 $(tmp)/usr/share/doc/etcfiles/changelog
+	install -d $(tmp)/DEBIAN
+
+	dpkg-gencontrol -isp
+	dpkg --build debian/tmp ..
+
+binary: binary-indep
+
+.PHONY: binary-indep binary clean

@@ -1,0 +1,59 @@
+#!/usr/bin/perl
+# unpack-binpkg-l2 -- lintian unpack script (binary packages level 2)
+#
+# syntax: unpack-binpkg-l <base-dir>
+
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+# MA 02111-1307, USA.
+
+use strict;
+
+($#ARGV == 0) or fail("syntax: unpack-binpkg-l2 <base-dir>");
+my $base_dir = shift;
+
+use lib "$ENV{'LINTIAN_ROOT'}/lib";
+use Pipeline;
+
+print "N: Unpacking binary packages in directory $base_dir ...\n" if $::verbose;
+mkdir("$base_dir/unpacked", 0777) or fail();
+
+# avoid using dpkg-deb; this pipeline is far faster.  I got a factor 2
+# improvement on large debs, and factor 1.5 on small debs.  I heard
+# it's because dpkg-deb syncs while writing.  -- Richard
+
+pipeline((sub { exec 'ar', 'p', "$base_dir/deb", 'data.tar.gz' }),
+	 (sub { exec 'tar', 'xfz', '-', '-C', "$base_dir/unpacked" })) == 0
+    or fail();
+
+# fix permissions
+spawn('chmod', '-R', 'u+rX,o-w', "$base_dir/unpacked") == 0 or fail();
+
+exit 0;
+
+# -------------------------------
+
+sub fail {
+  if ($_[0]) {
+    print STDERR "internal error: $_[0]\n";
+  } elsif ($!) {
+    print STDERR "internal error: $!\n";
+  } else {
+    print STDERR "internal error.\n";
+  }
+  exit 1;
+}

@@ -1,0 +1,140 @@
+#!/usr/bin/perl -w
+# description -- lintian check script
+
+# Copyright (C) 1998 Christian Schwarz
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+# MA 02111-1307, USA.
+
+use strict;
+
+($#ARGV == 1) or fail("syntax: description <pkg> <type>");
+my $pkg = shift;
+my $type = shift;
+
+my $ppkg = quotemeta($pkg);
+my $cf = "fields/description";
+my $tabs = 0;
+my $lines = 0;
+my $template = 0;
+my $unindented_list = 0;
+my $synopsis;
+
+# description?
+unless (-f $cf) {
+    print "E: $pkg $type: package-has-no-description\n";
+    exit 0;
+}
+
+open(IN,$cf) or fail("cannot open $cf for reading: $!");
+
+# 1st line contains synopsis
+chop($synopsis = <IN>);
+
+if ($synopsis =~ m/^\s*$/) {
+    print "E: $pkg $type: description-synopsis-is-empty\n";
+} else {
+    if ($synopsis =~ m/^\s/) {
+	print "E: $pkg $type: description-synopsis-has-leading-spaces\n";
+    }
+    if ($synopsis =~ m/^\s*$ppkg\b/i) {
+	print "E: $pkg $type: description-starts-with-package-name\n";
+    }
+    if ($synopsis =~ m/\.\s*$/) {
+	print "W: $pkg $type: description-synopsis-might-not-be-phrased-properly\n";
+    }
+    if ($synopsis =~ m/\t/) {
+	print "E: $pkg $type: description-contains-tabs\n" unless $tabs++;
+    }
+    if (length($synopsis) >= 80) {
+	print "E: $pkg $type: description-too-long\n";
+    }
+    if ($synopsis =~ m/^\s*missing\s*$/i) {
+	print "E: $pkg $type: description-is-debmake-template\n" unless $template++;
+    } elsif ($synopsis =~ m/<insert up to 60 chars description>/) {
+	print "E: $pkg $type: description-is-dh_make-template\n";
+    }
+}
+
+while (<IN>) {
+    chop;
+    next if m/^\s*$/o;
+    next if m/^\.\s*$/o;
+
+    if ($lines == 0) {
+	my $firstline = lc $_;
+	my $lsyn = lc $synopsis;
+	if ($firstline =~ /^\Q$lsyn\E/) {
+	    print "E: $pkg $type: description-synopsis-is-duplicated\n";
+	} else {
+	    $firstline =~ s/[^a-zA-Z0-9]+//g;
+	    $lsyn =~ s/[^a-zA-Z0-9]+//g;
+	    if ($firstline eq $lsyn) {
+		print "E: $pkg $type: description-synopsis-is-duplicated\n";
+	    }
+	}
+    }
+
+    $lines++;
+
+    if (m/^\.\s*\S/o) {
+	print "E: $pkg $type: description-contains-invalid-control-statement\n";
+    } elsif (m/^[\-\*]/o) {
+	# Print it only the second time.  Just one is not enough to be sure that
+	# it's a list, and after the second there's no need to repeat it.
+	print "W: $pkg $type: possible-unindented-list-in-extended-description\n" if $unindented_list++ == 2;
+    }
+
+    if (m/\t/o) {
+	print "E: $pkg $type: description-contains-tabs\n" unless $tabs++;
+    }
+
+    if ($lines == 1) {
+	# checks for the first line of the extended description:
+	if (m/^\s/o) {
+	    print "W: $pkg $type: description-starts-with-leading-spaces\n";
+	}
+	if (m/^\s*missing\s*$/oi) {
+	    print "E: $pkg $type: description-is-debmake-template\n" unless $template++;
+	} elsif (m/ <insert long description, indented with spaces>/) {
+	    print "E: $pkg $type: description-is-dh_make-template\n";
+	}
+    }
+
+    if (length($_) >= 80) {
+	print "W: $pkg $type: extended-description-line-too-long\n";
+    }
+}
+close(IN);
+
+if ($lines == 0) {
+    print "E: $pkg $type: extended-description-is-empty\n";
+}
+
+exit 0;
+
+# -----------------------------------
+
+sub fail {
+    if ($_[0]) {
+	warn "internal error: $_[0]\n";
+    } elsif ($!) {
+	warn "internal error: $!\n";
+    } else {
+	warn "internal error.\n";
+    }
+    exit 1;
+}

@@ -1,0 +1,601 @@
+#!/usr/bin/perl -w
+# fields -- lintian check script
+
+# Copyright (C) 1998 Richard Braakman
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+# MA 02111-1307, USA.
+
+use strict;
+
+($#ARGV == 1) or fail("syntax: field <pkg> <type>");
+my $pkg = shift;
+my $type = shift;
+
+unless (-d "fields") {
+    fail("directory in lintian laboratory for $type package $pkg missing: fields");
+}
+
+use lib "$ENV{'LINTIAN_ROOT'}/lib";
+use Dep;
+use lib "$ENV{'LINTIAN_ROOT'}/checks";
+use common_data; # my data in checks/
+
+# Complex regexps used more than once
+my $package_re = "[A-Za-z0-9][A-Za-z0-9+.-]+";
+my $version_re = "([0-9]+:)?([0-9a-zA-Z][0-9a-zA-Z+.:\-]*?)(-[0-9a-zA-Z+.]+)?";
+# lenient regexp also allows underlines to appear, which were once used
+# in package names and may still appear in Conflicts and Replaces lines
+my $lenient_package_re = "[A-Za-z0-9][_A-Za-z0-9+.-]+";
+
+my @version;
+
+# In general, read entire files in one go
+undef $/;
+
+if (not open(IN, "fields/package")) {
+    if ($type eq 'binary') {
+	tag_error("no-package-name");
+    }
+} else {
+    chop(my $package = <IN>);
+    close(IN);
+    single_line('package', $package);
+    if ($package !~ m/^$package_re$/so) {
+	tag_error("bad-package-name", $_);
+    } elsif ($package =~ m/[A-Z]/) {
+	tag_error("package-not-lowercase", $_);
+    }
+}
+
+if (not open(IN, "fields/version")) {
+    tag_error("no-version-field");
+} else {
+    chop($_ = <IN>);
+    close(IN);
+    single_line('version', $_);
+    if (not (@version = m/^$version_re$/so)) {
+	tag_error("bad-version-number", $_);
+    } else {
+	# Could have more detailed tags here, but they would be pretty long.
+	if ($version[1] =~ m/:/ and not $version[0]) {
+	    tag_error("bad-version-number", $_);
+	} elsif ($version[1] =~ m/-/ and not $version[2]) {
+	    tag_error("bad-version-number", $_);
+	}
+	if ($version[1] !~ m/^\d/) {
+	    tag_error("upstream-version-not-numeric", $version[1]);
+	}
+    }
+}
+
+if (not open(IN, "fields/architecture")) {
+    tag_error("no-architecture-field");
+} else {
+    # Policy Manual D.2.3 says that multiple architectures should be
+    # separated by "spaces", not "whitespace".  But I'll allow any
+    # whitespace here anyway.  It's not important enough to check for.
+    chop($_ = <IN>);
+    my @archs = split;
+    close(IN);
+
+    single_line('architecture', $_);
+
+    if ($type eq 'source') {
+	# Special architectures "all" and "any" should only occur alone.
+	if ($#archs > 0 and grep {$_ eq 'all' or $_ eq 'any'} @archs) {
+	    tag_error("magic-arch-in-arch-list");
+	}
+	
+	foreach my $arch (@archs) {
+	    if (not exists $known_archs{$arch}) {
+		tag_warn("unknown-architecture", $arch);
+	    }
+	}
+    } else {
+	if ($#archs > 0) {
+	    tag_error("too-many-architectures");
+	}
+	if ($archs[0] eq 'any') {
+	    tag_error("arch-any-in-binary-pkg");
+	}
+	if (not exists $known_archs{$archs[0]}) {
+	    tag_warn("unknown-architecture", $archs[0]);
+	}
+    }
+}
+
+if (not open(IN, "fields/maintainer")) {
+    tag_error("no-maintainer-field");
+} else {
+    chop($_ = <IN>);
+    close(IN);
+
+    single_line('maintainer', $_);
+
+    # Zap leading and trailing whitespace
+    s/^\s+//;
+    s/\s+$//;
+
+    # Parse maintainer-address.  Policy Manual D.2.4 says:
+    #   The package maintainer's name and email address. The name should
+    #   come first, then the email address inside angle brackets <> (in
+    #   RFC822 format).
+    # Note that it is _not_ necessary for the name to be in any particular
+    # format.  However, lintian will emit warnings if it doesn't look
+    # like a full name.
+    if (not m/(.*?)<(.*?)>(.*)/) {
+	if (m/@/) {
+	    # Name is missing and address does not have <> around it
+	    tag_error("maintainer-name-missing", $_);
+	} else {
+	    # address is missing
+	    tag_error("maintainer-address-missing", $_);
+	}
+    } else {
+	my ($name, $addr, $rest) = ($1, $2, $3);
+	# Check that there is something before the address and nothing
+	# after it, and that the address looks vaguely like user@domain.foo.
+	# Full RFC822 parsing is probably overkill.
+	if (not $name) {
+	    tag_error("maintainer-name-missing", $_);
+	} elsif ($rest or $addr !~ m/.+@.+\..+/) {
+	    tag_error("maintainer-address-malformed", $_);
+	} elsif ($name !~ m/\s\S/) {
+	    # Also complain if the maintainer name has no embedded spaces
+	    tag_warn("maintainer-not-full-name", $name);
+	} elsif ($name !~ m/\s$/) {
+	    # And complain if there is no whitespace between the
+	    # name and the address.
+	    tag_warn("maintainer-address-looks-weird", $_);
+	}
+
+	if ($addr =~ /localhost(?:\.localdomain)?$/) {
+	    tag_error("maintainer-address-is-on-localhost", $_);
+	}
+	if ($addr eq 'debian-qa@lists.debian.org') {
+	    tag_error("wrong-debian-qa-address-set-as-maintainer", $_);
+	}
+    }
+}
+
+if (not open(IN, "fields/source")) {
+    if ($type eq 'source') {
+	tag_error("no-source-field");
+    }
+} else {
+    chop($_ = <IN>);
+    close(IN);
+
+    single_line('source', $_);
+
+    if ($type eq 'source') {
+	if ($_ ne $pkg) {
+	    tag_error("source-field-does-not-match-pkg-name", $_);
+	}
+    } else {
+	if (not m/^($package_re)\s*(?:\(\s*($version_re)\s*\))?$/so) {
+	    tag_error("source-field-malformed", $_);
+	}
+    }
+}
+
+if (open(IN, "fields/essential")) {
+    chop($_ = <IN>);
+    close(IN);
+
+    single_line('essential', $_);
+
+    if ($type eq 'source') {
+	tag_error("essential-in-source-package");
+    } else {
+	if ($_ eq 'no') {
+	    tag_warn("essential-no-not-needed");
+	} elsif ($_ ne 'yes') {
+	    tag_error("unknown-essential-value", $_);
+	} elsif (not exists $known_essential{$pkg}) {
+	    tag_warn("new-essential-package");
+	}
+    }
+}
+
+# typo in Policy Manual, end of fourth paragraph of D.2.9:
+# "priorities" should be "sections".
+
+if (not open(IN, "fields/section")) {
+    # The section and priority fields are mandatory in the debian/control
+    # files, but they are not copied to the .dsc files, so we can't check
+    # them for source packages unless we have a full-blown debian/control
+    # parser.
+    # It is an informational tag, because most packages do not yet use
+    # -isp when building packages, and it is not yet policy to do so.
+    tag_warn("no-section-field")
+	unless $type eq 'source';
+} else {
+    chop(my $section = <IN>);
+    close(IN);
+
+    my @foo;
+
+    single_line('section', $section);
+
+    # Packages in the main distribution have a simple section field,
+    # but others have "non-free/section" or "contrib/section".
+    @foo = split(/\//, $section, 2);
+    if ( $foo[0] eq 'non-us' ) {
+	tag_info("non-us-spelling");
+    }
+    if ( $foo[0] =~ m/non-us/i ) {
+	if (defined $foo[1] and (not exists $known_non_us_parts{$foo[1]} or
+				 not defined $known_non_us_parts{$foo[1]})) {
+	    tag_warn("unknown-section", $section);
+	}
+    } elsif ($#foo > 0) {
+	if (not exists $known_archive_parts{$foo[0]} or
+	    not defined $known_archive_parts{$foo[0]}) {
+	    tag_warn("unknown-section", $section);
+	}
+	if (not exists $known_sections{$foo[1]}) {
+	    tag_warn("unknown-section", $section);
+	}
+    } else {
+    	if (not exists $known_sections{$foo[0]}) {
+	    tag_warn("unknown-section", $section);
+	}
+    }
+}
+
+if (not open(IN, "fields/priority")) {
+    tag_warn("no-priority-field")
+	unless $type eq 'source';
+} else {
+    chop($_ = <IN>);
+    close(IN);
+
+    single_line('priority', $_);
+
+    if (not exists $known_prios{$_} or not defined $known_prios{$_}) {
+	tag_error("unknown-priority", $_);
+    }
+}
+
+if ($type eq 'binary') {
+    for my $fld ('depends', 'pre-depends', 'recommends', 'suggests',
+		 'conflicts', 'provides', 'replaces') {
+	next if not open(IN, "fields/$fld");
+	my @conjunctions;
+	my @seen_libstdcs;
+	my @seen_tcls;
+	my @seen_tclxs;
+	my @seen_tks;
+	my @seen_tkxs;
+	my @seen_libpngs;
+	chop($_ = <IN>);
+	close(IN);
+	
+	single_line($fld, $_);
+	
+	# zap whitespace at the edges
+	s/^\s+//;
+	s/\s+$//;
+	
+	@conjunctions = split(/\s*,\s*/);
+	my @seen_conjunctions;
+	for my $conj (@conjunctions) {
+	    my @alternates = split(/\s*\|\s*/, $conj);
+	    my $relpkg;
+	    my $relation;
+	    my $version;
+	    my $versioned;
+
+	    if ($#alternates >= 1) {
+		if ($fld ne 'depends' and $fld ne 'recommends' and
+		    $fld ne 'suggests' and $fld ne 'pre-depends') {
+		    tag_error("alternates-not-allowed", "$fld:", $conj);
+		}
+	    }
+
+	    if ($fld eq 'depends' and @alternates and
+		exists $known_virtual_packages{$alternates[0]} and
+	        defined $known_virtual_packages{$alternates[0]} and
+		$alternates[0] ne "awk") {
+		tag_warn("virtual-package-depends-without-real-package-depends", $conj);
+	    }
+
+	    my @seen_alternates;
+	    for my $alt (@alternates) {
+		# fill in blank
+		if ($alt =~ m/^(\S+)\s*\((<<|<=|=|>=|>>|<|>)\s*(\S+)\s*\)$/) {
+                    ($relpkg, $relation, $version) = ($1, $2, $3);
+                    tag_warn("obsolete-relation-form", "$fld:", $alt)
+		        if ($relation eq '<' or $relation eq '>');
+
+		    tag_warn("bad-version-in-relation", "$fld:", $alt)
+			unless $version =~ m/^$version_re$/so;
+
+		    tag_error("versioned-provides",
+			      "$relpkg ($relation $version)")
+			if $fld eq 'provides';
+
+		    $versioned = 1;
+		} else {
+		    $relpkg = $alt;
+		    $versioned = 0;
+		}
+
+		if ($relpkg eq "libdb1-compat" and $pkg !~ /^libc(6|6.1|0.3)$/) {
+		    tag_error("depends-on-libdb1-compat");
+		}
+
+		if ($relpkg eq "awk" and not $versioned) {
+		    tag_error("needlessly-depends-on-awk");
+		}
+
+		if (not $versioned and
+		    ($fld eq 'depends' or $fld eq 'pre-depends') and
+		    exists $known_essential{$relpkg}) {
+		    tag_error("depends-on-essential-package-without-using-version", $relpkg);
+		}
+
+		if (not $relpkg =~ m/^$package_re$/so) {
+		    tag_error("bad-relation", "$fld:", $alt)
+			unless (($fld eq 'conflicts' or $fld eq 'replaces')
+				and $relpkg =~ m/^$lenient_package_re$/so);
+		}
+		
+		if ($relpkg eq $pkg) {
+		    tag_warn("package-relation-with-self", "$fld:", $alt)
+			unless ($fld eq 'conflicts' and not $versioned);
+		}
+		
+		if ($pkg eq "$relpkg-doc" and $fld eq 'depends') {
+		    tag_warn("doc-package-depends-on-main-package", "$fld:",
+			     $alt);
+		}
+		
+		if (($fld eq 'depends' or $fld eq 'pre-depends') and
+		    ((exists $known_obsolete_packages{$relpkg} and
+		      defined $known_obsolete_packages{$relpkg}) or
+		     $relpkg =~ m/^libgtk1\.1/)) {
+		    tag_error("depends-on-obsolete-package", "$fld:", $alt)
+			unless $pkg eq "$relpkg-dev" or $pkg eq "$relpkg-dbg";
+		}
+
+		if ($relpkg =~ /^xfont.*/ and $fld eq 'depends') {
+		    tag_warn("package-depends-on-an-x-font-package", $alt);
+		}
+
+		if ($#alternates == 0) {
+		    # just count the first alternative, others don't count as duplicates
+		    push @seen_libstdcs, $relpkg if exists $known_libstdcs{"$relpkg"};
+		    push @seen_tcls, $relpkg if exists $known_tcls{"$relpkg"};
+		    push @seen_tclxs, $relpkg if exists $known_tclxs{"$relpkg"};
+		    push @seen_tks, $relpkg if exists $known_tks{"$relpkg"};
+		    push @seen_tkxs, $relpkg if exists $known_tkxs{"$relpkg"};
+		    push @seen_libpngs, $relpkg if exists $known_libpngs{"$relpkg"};
+		}
+
+                # Check if this implies or is implied by other alternates.
+                my $parsed_alt = Dep::parse($alt);
+		for my $seen_alt (@seen_alternates) {
+		    my $parsed_seen_alt = Dep::parse($seen_alt);
+		    if (Dep::implies($parsed_alt, $parsed_seen_alt) or
+			Dep::implies($parsed_seen_alt, $parsed_alt)) {
+			tag_error("package-has-a-duplicate-relation",
+				  "$seen_alt | $alt");
+		    }
+		}
+		push @seen_alternates, $alt;
+	    }
+
+            # Check if this implies or is implied by other elements in the
+            # conjunction.
+            my $parsed_conj = Dep::parse($conj);
+	    for my $seen_conj (@seen_conjunctions) {
+		my $parsed_seen_conj = Dep::parse($seen_conj);
+		if (Dep::implies($parsed_conj, $parsed_seen_conj) or
+		    Dep::implies($parsed_seen_conj, $parsed_conj)) {
+		    tag_error("package-has-a-duplicate-relation",
+			      "$seen_conj, $conj");
+		}
+	    }
+	    push @seen_conjunctions, $conj;
+	}
+	# for each dependency field, report multiple dependencies
+	tag_error("package-depends-on-multiple-libstdc-versions", @seen_libstdcs) if ($#seen_libstdcs > 0);
+	tag_error("package-depends-on-multiple-tcl-versions", @seen_tcls) if ($#seen_tcls > 0);
+	tag_error("package-depends-on-multiple-tclx-versions", @seen_tclxs) if ($#seen_tclxs > 0);
+	tag_error("package-depends-on-multiple-tk-versions", @seen_tks) if ($#seen_tks > 0);
+	tag_error("package-depends-on-multiple-tkx-versions", @seen_tkxs) if ($#seen_tkxs > 0);
+	tag_error("package-depends-on-multiple-libpng-versions", @seen_libpngs) if ($#seen_libpngs > 0);
+    }
+    for my $fld ('build-depends', 'build-depends-indep', 'build-conflicts',
+	      'build-conflicts-indep') {
+	next if not open(IN, "fields/$fld");
+	chop($_ = <IN>);
+	close(IN);
+	
+	single_line($fld, $_);
+	
+	# zap whitespace at the edges
+	s/^\s+//;
+	s/\s+$//;
+
+	my $dep = $_;
+	my $sentinel = 0;
+	my ($package, $version, $archs);
+	while ($dep =~ m/\G
+			  \s*([^\s]+?)      # the package
+                          (?:\s+\((.+?)\))? # the version
+		          (?:\s+(\[.+?\]))? # the arch(s)
+			  \s*
+                       /xgc) {
+	    $package = $1;
+	    $version = $2;
+	    $archs = $3;
+	    if (pos($dep) != length($dep) and not $dep =~ m/\G[,|]/gc) {
+		$sentinel = 1;
+	    }
+	    if ($archs =~ m/,/) {
+		tag_error("invalid-arch-string-in-source-relation",
+			  $fld, $archs);
+	    }
+	    if ($known_essential{$package} and not defined $version) {
+		    tag_error("depends-on-essential-package-without-using-version", $package);
+	    }
+	    if ($known_build_essential{$package} and not defined $version) {
+		    tag_error("depends-on-build-essential-package-without-using-version", $package);
+	    }
+	}
+	if ($sentinel || pos($dep) != length($dep)) {
+	    tag_error("bad-relation", $fld, $dep);
+	}
+    }
+}
+
+if ($type eq 'source') {
+    my $num_arch_dep = 0;
+    my $num_arch_indep = 0;
+
+    $/ = "\n";
+
+    if (not open(IN, "debfiles/control")) {
+	fail("Can't open debfiles/control: $!");
+    }
+
+    while (<IN>) {
+	if (/^Architecture:\s*(\S*)/) {
+	    if ($1 eq "all") {
+		$num_arch_indep++;
+	    }
+	    else {
+		$num_arch_dep++;
+	    }
+	}
+    }
+    close(IN);
+
+    if (-e "fields/build-depends" && $num_arch_dep == 0) {
+	tag_warn("build-depends-without-arch-dep");
+    }
+    if (-e "fields/build-depends-indep" && $num_arch_indep == 0) {
+	tag_error("build-depends-indep-without-arch-indep");
+    }
+
+    undef $/;
+}
+
+# Not really anything to check in the Binary field, except for the
+# syntax which I assume dpkg will get right.
+
+# Not much to check about Installed-Size either.  It is generated by
+# dpkg-gencontrol automatically.  What could be checked in the future
+# is whether the figure matches the actual contents of the .deb.
+
+# The check for the Files field may be a good place to verify the
+# md5sums, but dinstall does that already.
+
+# Standards-Version is checked separately.
+
+# Description field is checked separately
+
+# Distribution, Urgency, Date, Format, Changes occur only in .changes files.
+# Filename, MSDOS-Filename, Size and MD5sum occur in Packages files but
+# not in the package control files themselves.
+
+# Status, Config-Version, and Conffiles occur only in status files.
+
+opendir(FIELDS, "fields") or fail("cannot open fields directory: $!");
+my @fields = readdir(FIELDS);
+closedir(FIELDS);
+
+foreach (@fields) {
+    if ($_ eq '.' or $_ eq '..') {
+	# skip
+    } elsif (exists $known_obsolete_fields{$_} and
+	     defined $known_obsolete_fields{$_}) {
+	tag_error("obsolete-field", $_);
+    } elsif ($type eq 'source' and (not exists $known_source_fields{$_} or
+	     not defined $known_source_fields{$_})) {
+	tag_info("unknown-field-in-dsc", $_);
+    } elsif ($type eq 'binary' and (not exists $known_binary_fields{$_} or
+	     not defined $known_binary_fields{$_})) {
+	tag_info("unknown-field-in-control", $_);
+    }
+}
+
+exit 0;
+
+# -----------------------------------
+
+sub fail {
+    if ($_[0]) {
+	warn "internal error: $_[0]\n";
+    } elsif ($!) {
+	warn "internal error: $!\n";
+    } else {
+	warn "internal error.\n";
+    }
+    exit 1;
+}
+
+sub tag_error {
+    my $tag = shift;
+    if ($#_ >= 0) {
+	# We can't have newlines in a tag message, so turn them into \n
+	map { s,\n,\\n, } @_;
+	my $args = join(' ', @_);
+	print "E: $pkg $type: $tag $args\n";
+    } else {
+	print "E: $pkg $type: $tag\n";
+    }
+}
+
+sub tag_warn {
+    my $tag = shift;
+    if ($#_ >= 0) {
+	# We can't have newlines in a tag message, so turn them into \n
+	map { s,\n,\\n, } @_;
+	my $args = join(' ', @_);
+	print "W: $pkg $type: $tag $args\n";
+    } else {
+	print "W: $pkg $type: $tag\n";
+    }
+}
+
+sub tag_info {
+    my $tag = shift;
+    if ($#_ >= 0) {
+	# We can't have newlines in a tag message, so turn them into \n
+	map { s,\n,\\n, } @_;
+	my $args = join(' ', @_);
+	print "I: $pkg $type: $tag $args\n";
+    } else {
+	print "I: $pkg $type: $tag\n";
+    }
+}
+
+sub single_line {
+    my $fieldname = shift;
+    my $fieldval = shift;
+
+    if ($fieldval =~ m/\n/) {
+	tag_error("multiline-field", $fieldname);
+	return undef;
+    }
+
+    return 1;
+}

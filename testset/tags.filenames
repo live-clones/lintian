@@ -1,0 +1,14 @@
+W: filenames source: ancient-standards-version 3.1.1
+E: filenames: non-standard-toplevel-dir files/
+W: filenames: file-in-unusual-dir files/ .tif
+W: filenames: file-in-unusual-dir files/".tif
+W: filenames: file-in-unusual-dir files/'\\ 
+W: filenames: file-in-unusual-dir files/Maelstrom Sound
+E: filenames: package-installs-packlist usr/lib/perl5/foo/.packlist
+W: filenames: lengthy-symlink usr/share/doc/filenames/version.txt.gz ../filenames/doc/version6.txt.gz
+E: filenames: bad-menu-file-name usr/lib/menu/menu
+E: filenames: postinst-does-not-call-updatemenus usr/lib/menu/menu
+E: filenames: postrm-does-not-call-updatemenus usr/lib/menu/menu
+E: filenames: no-copyright-file
+W: filenames: no-section-field
+W: filenames: no-priority-field

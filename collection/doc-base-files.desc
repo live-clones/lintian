@@ -1,0 +1,8 @@
+Collector-Script: doc-base-files
+Author: Josip Rodin <jrodin@jagor.srce.hr>
+Info: This script copies the contents of /usr/share/doc-base into the
+ lintian doc-base/ directory.
+Type: binary
+Unpack-Level: 2
+Output: doc-base
+Order: 1

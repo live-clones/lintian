@@ -1,0 +1,83 @@
+#!/usr/bin/perl -w
+# changelog-file -- lintian collector script
+
+# Copyright (C) 1998 Richard Braakman
+# 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+# MA 02111-1307, USA.
+
+use strict;
+
+($#ARGV == 1) or fail("syntax: changelog-file <pkg> <type>");
+my $pkg = shift;
+my $type = shift;
+
+-f "fields/package" or fail("changelog-file invoked in wrong directory");
+
+unlink("changelog");
+
+# Pick the first of these files that exists.
+my @changelogs = ("unpacked/usr/share/doc/$pkg/changelog.Debian.gz",
+	       "unpacked/usr/share/doc/$pkg/changelog.Debian",
+	       "unpacked/usr/share/doc/$pkg/changelog.debian.gz",
+	       "unpacked/usr/share/doc/$pkg/changelog.debian",
+	       "unpacked/usr/share/doc/$pkg/changelog.gz",
+	       "unpacked/usr/share/doc/$pkg/changelog",
+           "unpacked/usr/doc/$pkg/changelog.Debian.gz",
+	       "unpacked/usr/doc/$pkg/changelog.Debian",
+	       "unpacked/usr/doc/$pkg/changelog.debian.gz",
+	       "unpacked/usr/doc/$pkg/changelog.debian",
+	       "unpacked/usr/doc/$pkg/changelog.gz",
+	       "unpacked/usr/doc/$pkg/changelog");
+
+my $chl;
+
+for (@changelogs) {
+    if (-f $_) {
+	$chl = $_;
+	last;
+    }
+}
+
+if (not defined $chl) {
+    # no changelog found
+    open(DUMMY, ">changelog");
+    close(DUMMY);
+} elsif ($chl =~ /\.gz$/) {
+    use lib "$ENV{'LINTIAN_ROOT'}/lib";
+    use Pipeline;
+
+    pipeline((sub { exec 'gzip', '-dc', $chl }), "changelog") == 0
+	or fail("error in gzip");
+} else {
+    link($chl, "changelog")
+	or fail("cannot link $chl to changelog: $!");
+}
+
+exit 0;
+
+# -----------------------------------
+
+sub fail {
+    if ($_[0]) {
+        print STDERR "internal error: $_[0]\n";
+    } elsif ($!) {
+        print STDERR "internal error: $!\n";
+    } else {
+        print STDERR "internal error.\n";
+    }
+    exit 1;
+}

@@ -1,0 +1,49 @@
+#!/usr/bin/make -f
+
+# Copyright (C) 1998 Richard Braakman
+# 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+# MA 02111-1307, USA.
+
+clean:
+
+build:
+
+binary-arch:
+
+binary-indep:
+	install -d debian/tmp/DEBIAN
+	cp -a files debian/tmp
+	chmod -R go=rX debian/tmp/files
+	install -d debian/tmp/usr/lib/menu
+	touch debian/tmp/usr/lib/menu/README
+	touch debian/tmp/usr/lib/menu/menu
+	chmod 644 debian/tmp/usr/lib/menu/*
+	install -d debian/tmp/usr/lib/perl5/foo
+	touch debian/tmp/usr/lib/perl5/foo/.packlist
+	chmod 644 debian/tmp/usr/lib/perl5/foo/.packlist
+	install -d debian/tmp/usr/share/doc/filenames
+	touch debian/tmp/usr/share/doc/filenames/Changes
+	chmod 644 debian/tmp/usr/share/doc/filenames/Changes
+	gzip -9 debian/tmp/usr/share/doc/filenames/Changes
+	ln -s Changes.gz debian/tmp/usr/share/doc/filenames/changelog.gz
+	ln -s '../filenames/doc/version6.txt.gz' debian/tmp/usr/share/doc/filenames/version.txt.gz
+	dpkg-gencontrol
+	dpkg --build debian/tmp ..
+
+binary: binary-arch binary-indep
+
+.PHONY: build binary-arch binary-indep binary clean

@@ -1,0 +1,12 @@
+W: binary source: ancient-standards-version 3.2.1
+E: binary: binary-without-manpage hello
+E: binary: binary-without-manpage hello-static
+W: binary: package-contains-upstream-install-documentation usr/share/doc/binary/INSTALL
+E: binary: postinst-does-not-call-updatemenus usr/lib/menu/binary
+E: binary: postrm-does-not-call-updatemenus usr/lib/menu/binary
+E: binary: suidregister-used-in-maintainer-script postinst
+W: binary: menu-item-missing-important-tag section /usr/lib/menu/binary:1
+E: binary: menu-item-adds-to-root-menu /usr/lib/menu/binary:1
+E: binary: unstripped-binary-or-object ./usr/bin/hello
+E: binary: statically-linked-binary ./usr/bin/hello-static
+E: binary: changelog-file-not-compressed changelog
