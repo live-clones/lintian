@@ -10,24 +10,26 @@ lintian (1.22.9-0.1) unstable; urgency=low
      (Patch by Nicholas Breen <nbreen@ofb.net>)
    * Support for dash scripts (Closes: #194787)
      (Patch by Frank Lichtenheld <djpig@debian.org>)
-  
+   * checks/binaries.desc:
+     + Fix typo (Closes: #202856)
+
   Frank Lichtenheld <djpig@debian.org>
-   * checks/debhelper: 
-     + fix parsing debian/compat for needed 
+   * checks/debhelper:
+     + fix parsing debian/compat for needed
        version (Closes: #198611)
      + update list of existing debhelper commands
-   * checks/manpages: 
+   * checks/manpages:
      + push back the extension after testing for
        manpage-not-compressed (Closes: #225293)
    * checks/copyright-file: don't complain about missing reference to
       the GPL if we already detected a wrong reference (Closes: #225837)
-   * checks/debconf: 
+   * checks/debconf:
      + don't complain about partially-translated-question, if
        Choices is only a substitution variable (Closes: #200802,#222648)
      + fix testing of dependencies to eliminate false
        positives of missing-debconf-dependency (Closes: #195201)
 
- -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Sat, 31 Jan 2004 14:44:55 +0100
+ -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Sun,  8 Feb 2004 21:10:36 +0100
 
 lintian (1.22.9) unstable; urgency=low
 
