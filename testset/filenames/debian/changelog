@@ -1,3 +1,11 @@
+filenames (6) unstable; urgency=low
+
+  * Add perl files to check if
+    package-installs-nonbinary-perl-in-usr-lib-perl5 is correctly
+    issued even after attempting to suppress it in some cases
+
+ -- Frank Lichtenheld <djpig@debian.org>  Fri, 27 Feb 2004 00:49:44 +0100
+
 filenames (5) unstable; urgency=low
 
   * Added check for too long symlink

@@ -17,6 +17,7 @@ W: filenames: package-contains-svn-control-dir usr/lib/perl5/.svn/
 W: filenames: package-contains-CVS-dir usr/lib/perl5/CVS/
 W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/examples/very_interesting_example
 W: filenames: lengthy-symlink usr/share/doc/filenames/version.txt.gz ../filenames/doc/version6.txt.gz
+W: filenames: package-installs-nonbinary-perl-in-usr-lib-perl5 usr/lib/perl5/foo/bar.pm
 E: filenames: bad-menu-file-name usr/lib/menu/menu
 E: filenames: postinst-does-not-call-updatemenus usr/lib/menu/menu
 E: filenames: postrm-does-not-call-updatemenus usr/lib/menu/menu

@@ -34,6 +34,10 @@ lintian (1.22.12) unstable; urgency=low
   * checks/description:
     + fix description-is-dh_make-template check (Closes: #215125)
       Fix suggested by Josip Rodin
+  * checks/files:
+    + only issue package-installs-nonbinary-perl-in-usr-lib-perl5 if
+      there is no binary perl file at all in the package, since this
+      reflects the way the Installer module behaves (Closes: #199898)
   * unpack/unpack-binpkg-l1: tar uses now h to signal hardlinks which
      breaks a lot of our code. so sed'ing it away (Closes: #234545)
      Many many thanks to Theodore Y. Ts'o for bringing this to our

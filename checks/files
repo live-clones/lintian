@@ -28,6 +28,8 @@ my $type = shift;
 my $file;
 my $is_python;
 my $is_perl;
+my $has_binary_perl_file;
+my @nonbinary_perl_files_in_lib;
 
 my %linked_against_libvga;
 my %script = ();
@@ -199,7 +201,10 @@ while (<IN>) {
 	    print "E: $pkg $type: package-installs-packlist $file\n";
 	}
 	elsif ($file =~ m,^usr/lib/perl5/.*\.(pl|pm)$,) {
-	    print "W: $pkg $type: package-installs-nonbinary-perl-in-usr-lib-perl5 $file\n";
+	    push @nonbinary_perl_files_in_lib, $file;
+	}
+	elsif ($file =~ m,^usr/lib/perl5/.*\.(bs|so)$,) {
+	    $has_binary_perl_file = 1;
 	}
 	# ---------------- /usr/lib -- needs to go after the other usr/lib/*
 	elsif ($file =~ m,^usr/lib/,) {
@@ -553,6 +558,12 @@ while (<IN>) {
     }
 }
 close(IN);
+
+if (!$has_binary_perl_file && @nonbinary_perl_files_in_lib) {
+    foreach my $file (@nonbinary_perl_files_in_lib) {
+	print "W: $pkg $type: package-installs-nonbinary-perl-in-usr-lib-perl5 $file\n";
+    }
+}
 
 exit 0;
 

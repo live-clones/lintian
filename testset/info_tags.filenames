@@ -99,6 +99,13 @@ N:   if the user's system has lots of symlinked directories.
 N:   
 N:   Refer to Policy Manual, section 10.5 for details.
 N:
+W: filenames: package-installs-nonbinary-perl-in-usr-lib-perl5 usr/lib/perl5/foo/bar.pm
+N:
+N:   Architecture-independent Perl code should be placed in
+N:   <tt>/usr/share/perl5</tt>, not <tt>/usr/lib/perl5</tt>
+N:   unless there is at least one architecture-dependent file
+N:   in the module.
+N:
 E: filenames: bad-menu-file-name usr/lib/menu/menu
 N:
 N:   The package installs a file /usr/lib/menu/menu, which is already in
