@@ -26,3 +26,4 @@ W: relations: package-relation-with-self depends: relations (<< 3)
 W: relations: package-relation-with-self replaces: relations
 W: relations: redundant-origin-field
 W: relations: virtual-package-depends-without-real-package-depends depends: mail-transport-agent
+W: relations source: virtual-package-depends-without-real-package-depends build-depends: mail-transport-agent

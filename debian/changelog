@@ -39,6 +39,9 @@ lintian (1.23.1~alpha) unstable; urgency=low
       Conrad
     + [FL] Downgrade build-depends-without-arch-dep to warning as it's
       heuristic. Reword explanation. This partly handles #247171.
+    + [HE] Check Build-Depends(-Indep) for virtual packages without a 
+      real dependency. Fix based on patch by Steinar H. Gunderson
+      <sgunderson@bigfoot.com>. (Closes: #255593)
   * checks/huge-usr-share:
     + [FL] Skip check for packages that don't have usr/share at all
       (Closes: #247708)

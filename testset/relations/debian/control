@@ -1,7 +1,7 @@
 Source: relations
 Section: misc
 Priority: optional
-Build-Depends: foo (>> 2) bar baz bat
+Build-Depends: mail-transport-agent, foo (>> 2) bar baz bat
 Maintainer: Debian QA Group <packages@qa.debian.org>
 Standards-Version: 3.1.1
 Origin: Debian
