@@ -237,8 +237,10 @@ while (<IN>) {
     if (defined $prefix && defined $suffix && /^\Q$prefix\E\s*add-log-mailing-address:.*\Q$suffix\E$/) {
 	tag "debian-changelog-file-contains-obsolete-user-emacs-settings";
     }
-    if (/^\s*--[^<]*<[^>\@]+\@unknown>/) {
-       tag "debian-changelog-file-contains-debmake-default-email-address";
+    if (/^\s*--[^<]*<([^>\@]+\@unknown)>/) {
+       tag "debian-changelog-file-contains-debmake-default-email-address", $1;
+    } elsif (/^\s*--[^<]*<([^>\@]+\@[^>.]*)>/) {
+       tag "debian-changelog-file-contains-invalid-email-address", $1;
     }
 }
 close IN;

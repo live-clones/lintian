@@ -5,6 +5,12 @@ maintainer-scripts (7-0.1) unstable; urgency=low
 
  -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Sun, 18 Apr 2004 02:05:29 +0200
 
+maintainer-scripts (6.1) unstable; urgency=low
+
+  * I made this entry on my local PC, oops ;)
+
+ -- Jeroen van Wolffelaar <jeroen@mordor>  Sat, 21 Feb 2004 18:29:37 +0100
+
 maintainer-scripts (6) unstable; urgency=low
 
   * added ldconfig calls to postrm to check test the postrm tests

@@ -11,6 +11,9 @@ lintian (1.23.8) UNRELEASED; urgency=low
     + [JvW] Stop bugging us for exceptions, mmkay, just install overrides.
       Hints ..like this should be in the general documentation anyway, not in
       per-tag descriptions.
+  * checks/changelog-file{,desc}:
+    + [JvW] (new test) Bark on @toplevel email signatures in changelogs
+    + [JvW] Display invalid debmake email address upon detection
   * checks/common_data.pm:
     + [CW] Add tclx8.4 to %known_tclxs.
   * checks/description:

@@ -91,6 +91,11 @@ Type: error
 Info: The changelog file contains an email address (&lt;..@unknown&gt;)
  that was not updated to the maintainer's real address.
 
+Tag: debian-changelog-file-contains-invalid-email-address
+Type: error
+Info: The changelog file contains an invalid email address: the domain needs
+ at least one dot. This is looks like a mistake.
+
 Tag: debian-changelog-file-uses-obsolete-national-encoding
 Type: error
 Info: The Debian changelog file must be valid UTF-8, an encoding of

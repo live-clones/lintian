@@ -9,7 +9,7 @@ E: foo++ source: uploader-address-missing Josip
 E: foo++ source: uploader-name-missing Yama@gotchi
 E: foo++ source: wrong-debian-qa-address-set-as-maintainer Lintian Maintainer <debian-qa@lists.debian.org>
 E: foo++-helper: wrong-debian-qa-address-set-as-maintainer Lintian Maintainer <debian-qa@lists.debian.org>
-E: foo++: debian-changelog-file-contains-debmake-default-email-address
+E: foo++: debian-changelog-file-contains-debmake-default-email-address he@unknown
 E: foo++: debian-changelog-file-uses-obsolete-national-encoding at line 11
 E: foo++: no-copyright-file
 E: foo++: wrong-debian-qa-address-set-as-maintainer Lintian Maintainer <debian-qa@lists.debian.org>
