@@ -26,6 +26,8 @@ I: filenames source: cvsignore-file-in-source files/.cvsignore
 W: filenames source: ancient-standards-version 3.1.1
 W: filenames source: source-contains-CVS-dir CVS
 W: filenames source: source-contains-cvs-conflict-copy files/.#Maelstrom Sound.1.1.1
+W: filenames source: source-contains-svn-conflict-copy files/Maelstrom Sounce.r121
+W: filenames source: source-contains-svn-conflict-copy files/Maelstrom Sound.mine
 W: filenames source: source-contains-svn-control-dir .svn
 W: filenames source: svn-commit-file-in-source files/svn-commit.tmp
 W: filenames: bad-permissions-for-ali-file usr/lib/ada/adalib/test.ali
@@ -33,8 +35,11 @@ W: filenames: cvsignore-file-in-package files/.cvsignore
 W: filenames: file-in-unusual-dir files/ .tif
 W: filenames: file-in-unusual-dir files/".tif
 W: filenames: file-in-unusual-dir files/'\\ 
+W: filenames: file-in-unusual-dir files/.#Maelstrom Sound.1.1.1
 W: filenames: file-in-unusual-dir files/.cvsignore
+W: filenames: file-in-unusual-dir files/Maelstrom Sounce.r121
 W: filenames: file-in-unusual-dir files/Maelstrom Sound
+W: filenames: file-in-unusual-dir files/Maelstrom Sound.mine
 W: filenames: file-in-unusual-dir files/svn-commit.tmp
 W: filenames: no-priority-field
 W: filenames: no-section-field

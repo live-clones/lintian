@@ -25,6 +25,8 @@ lintian (1.23.1~alpha) unstable; urgency=low
     + [HE] New check: source-contains-cvs-conflict-copy, triggered by 
       .#file.version files. They are created by cvs when it tries to merge
       local changes and an update from the repo. (Closes: #246060)
+    + [JvW] Also check for source-contains-svn-conflict-copy (for .r123 and
+      .mine files)
   * checks/debhelper:
     + [FL] Avoid Perl warning about undefined values. Noted by JvW.
   * checks/fields{,.desc}:
@@ -70,7 +72,7 @@ lintian (1.23.1~alpha) unstable; urgency=low
     + [JvW] Fix two lintian warnings in lintian itself by touching files only
       on clean target, and not distributing them in the source
 
- -- Debian Lintian Maintainers <lintian-maint@debian.org>  Wed, 12 May 2004 01:26:07 +0200
+ -- Debian Lintian Maintainers <lintian-maint@debian.org>  Tue, 18 May 2004 00:03:28 +0200
 
 lintian (1.23.0) unstable; urgency=low
 

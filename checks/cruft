@@ -88,6 +88,8 @@ sub find_cruft {
 	tag "cvsignore-file-in-source", "$name";
     } elsif ($name =~ m,^(.+/)?\.\#(.+?)\.\d+(\.\d+)*$,) {
 	tag "source-contains-cvs-conflict-copy", "$name";
+    } elsif ($name =~ m,^(.+/)?(.+?)\.(r\d+|mine)$,) {
+	tag "source-contains-svn-conflict-copy", "$name";
     }
 
     if ($name =~ m,^(.+/)?config.(?:cache|log|status)$, and $pkg ne "lintian") {
