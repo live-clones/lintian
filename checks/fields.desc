@@ -2,7 +2,7 @@ Check-Script: fields
 Author: Richard Braakman <dark@xs4all.nl>
 Abbrev: fld
 Standards-Version: 3.2.0
-Type: binary, source
+Type: binary, udeb, source
 Unpack-Level: 1
 Info: This script checks the syntax of the fields in package control files,
  as described in the Policy Manual.
@@ -69,6 +69,11 @@ Type: error
 Info: The special architecture value `any' does not make sense in a binary
  package.
 Ref: policy 5.6.7
+
+Tag: bad-menu-item
+Type: error
+Info: The field Installer-Menu-Item should only contain positive integer
+ values.
 
 Tag: no-maintainer-field
 Type: error

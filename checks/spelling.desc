@@ -2,7 +2,7 @@ Check-Script: spelling
 Author: Richard Braakman <dark@xs4all.nl>
 Abbrev: spl
 Standards-Version: 3.2.0
-Type: binary
+Type: binary, udeb
 Unpack-Level: 1
 Info: This script looks for common spelling errors.
 Needs-Info: copyright-file, debian-readme

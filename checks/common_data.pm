@@ -3,7 +3,7 @@
 package common_data;
 use base qw(Exporter);
 @EXPORT=qw(%known_archs %known_sections %known_non_us_parts %known_archive_parts
-           %known_prios %known_source_fields %known_binary_fields
+           %known_prios %known_source_fields %known_binary_fields %known_udeb_fields
 	   %known_obsolete_fields %known_essential %known_build_essential
 	   %known_obsolete_packages %known_virtual_packages
 	   %known_libstdcs %known_tcls %known_tclxs %known_tks %known_tkxs
@@ -42,6 +42,12 @@ use base qw(Exporter);
     ('package', 'version', 'architecture', 'depends', 'pre-depends',
      'recommends', 'suggests', 'enhances', 'conflicts', 'provides',
      'replaces', 'essential', 'maintainer', 'section', 'priority',
+     'source', 'description', 'installed-size');
+
+%known_udeb_fields = map { $_ => 1 }
+    ('package', 'version', 'architecture', 'subarchitecture', 'depends',
+     'recommends', 'enhances', 'provides', 'installer-menu-item',
+     'replaces', 'maintainer', 'section', 'priority',
      'source', 'description', 'installed-size');
 
 %known_obsolete_fields = map { $_ => 1 }

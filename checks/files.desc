@@ -2,7 +2,7 @@ Check-Script: files
 Author: Christian Schwarz <schwarz@debian.org>
 Abbrev: fil
 Standards-Version: 3.5.0
-Type: binary
+Type: binary, udeb
 Unpack-Level: 1
 Needs-Info: objdump-info
 Info: This script checks if a binary package conforms to policy
@@ -209,6 +209,14 @@ Type: error
 Info: Symbolic links between different top-level directories should be
  absolute.
 Ref: policy 10.5
+
+Tag: documentation-file
+Type: error
+Info: udeb packages should not contain any documentation.
+ .
+ If this is an exception, please contact &maint;
+ about this so that this exception would be recognized in future versions of
+ Lintian.
 
 Tag: executable-in-usr-share-doc
 Type: error

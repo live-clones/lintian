@@ -34,6 +34,12 @@ use Dep;
 use lib "$ENV{'LINTIAN_ROOT'}/checks";
 use common_data; # my data in checks/
 
+if ($type eq 'udeb') {
+    %known_sections = ( 'debian-installer' => 1 );
+    %known_non_us_parts = ();
+    %known_archive_parts = ();
+}
+
 # Complex regexps used more than once
 my $package_re = "[A-Za-z0-9][A-Za-z0-9+.-]+";
 my $version_re = "([0-9]+:)?([0-9a-zA-Z][0-9a-zA-Z+.:\-]*?)(-[0-9a-zA-Z+.]+)?";
@@ -116,6 +122,22 @@ if (not open(IN, "fields/architecture")) {
 	    tag_warn("unknown-architecture", $archs[0]);
 	}
     }
+}
+
+if (open(IN, "fields/subarchitecture")) {
+    chop($_ = <IN>);
+    my @subarchs = split;
+    close(IN);
+
+    single_line('subarchitecture', $_);
+}
+
+if (open(IN, "fields/installer-menu-item")) {
+    chop($_ = <IN>);
+    /^\d+$/ || tag_error("bad-menu-item");
+    close(IN);
+
+    single_line('installer-menu-item', $_);
 }
 
 if (not open(IN, "fields/maintainer")) {
@@ -252,7 +274,7 @@ sub is_depends_relation {
     return 1;
 }
 
-if ($type eq 'binary') {
+if (($type eq 'binary') || ($type eq 'udeb')) {
     for my $fld ('depends', 'pre-depends', 'recommends', 'suggests',
 		 'conflicts', 'provides', 'replaces') {
 	next if not open(IN, "fields/$fld");
@@ -512,6 +534,9 @@ foreach (@fields) {
 	tag_info("unknown-field-in-dsc", $_);
     } elsif ($type eq 'binary' and (not exists $known_binary_fields{$_} or
 	     not defined $known_binary_fields{$_})) {
+	tag_info("unknown-field-in-control", $_);
+    } elsif ($type eq 'udeb' and (not exists $known_udeb_fields{$_} or
+	     not defined $known_udeb_fields{$_})) {
 	tag_info("unknown-field-in-control", $_);
     }
 }

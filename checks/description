@@ -121,7 +121,7 @@ while (<IN>) {
 close(IN);
 
 if ($lines == 0) {
-    print "E: $pkg $type: extended-description-is-empty\n";
+    print "E: $pkg $type: extended-description-is-empty\n" unless $type eq 'udeb';
 }
 
 exit 0;

@@ -20,15 +20,17 @@
 # MA 02111-1307, USA.
 
 use strict;
-use vars qw($BINLIST_FORMAT $SRCLIST_FORMAT %source_info %binary_info %bin_src_ref);
+use vars qw($BINLIST_FORMAT $SRCLIST_FORMAT $UDEBLIST_FORMAT %source_info %binary_info %udeb_info %bin_src_ref);
 
 # these banner lines have to be changed with every incompatible change of the
 # binary and source list file formats
 $BINLIST_FORMAT = "Lintian's list of binary packages in the archive--V2";
 $SRCLIST_FORMAT = "Lintian's list of source packages in the archive--V2";
+$UDEBLIST_FORMAT = "Lintian's list of udeb packages in the archive--V1";
 
 %source_info = ();
 %binary_info = ();
+%udeb_info = ();
 %bin_src_ref = ();
 
 sub read_src_list {
@@ -125,6 +127,54 @@ sub read_bin_list {
 
   close(IN);
 }
+
+sub read_udeb_list {
+  my ($udeb_list,$quiet) = @_;
+  my $LINTIAN_LAB = $ENV{'LINTIAN_LAB'};
+
+  if (%udeb_info) {
+    warn "\%udeb_info exists, nothing to do in read_bin_list\n" unless $quiet;
+    return;
+  }
+
+  $udeb_list or ($udeb_list = "$LINTIAN_LAB/info/udeb-packages");
+  return unless -s $udeb_list;
+
+  open(IN,$udeb_list) or fail("cannot open udeb list file $udeb_list: $!");
+
+  # compatible file format?
+  my $f;
+  chop($f = <IN>);
+  if ($f ne $UDEBLIST_FORMAT) {
+    close(IN);
+    return 0 if $quiet;
+    fail("the udeb list file $udeb_list has an incompatible file format (run lintian --setup-lab)");
+  }
+
+  # compatible format, so read file
+  while (<IN>) {
+    chop;
+
+    next if /^\s*$/o;
+    my ($udeb,$ver,$source,$file,$timestamp) = split(/\;/o,$_);
+
+    my $udeb_struct;
+    %$udeb_struct =
+      (
+       'package' => $udeb,
+       'version' => $ver,
+       'source' => $source,
+       'file' => $file,
+       'timestamp' => $timestamp,
+       );
+
+    $udeb_info{$udeb} = $udeb_struct;
+  }
+
+  close(IN);
+}
+
+
 
 sub get_bin_src_ref {
   read_src_list();

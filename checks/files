@@ -105,11 +105,11 @@ while (<IN>) {
 	    print "E: $pkg $type: config-file-reserved $file by libpam-runtime\n";
 	}
 	# ---------------- /etc/rc.d
-	elsif ($file =~ m,^etc/rc\.d/\S, and $pkg !~ /^(sysvinit|file-rc)$/) {
+	elsif ($type ne 'udeb' and $file =~ m,^etc/rc\.d/\S, and $pkg !~ /^(sysvinit|file-rc)$/) {
 	    print "E: $pkg $type: package-installs-into-etc-rc.d $file\n";
 	}
 	# ---------------- /etc/rc?.d
-	elsif ($file =~ m,^etc/rc(\d|S)\.d/\S, and $pkg !~ /^(sysvinit|file-rc)$/) {
+	elsif ($type ne 'udeb' and $file =~ m,^etc/rc(\d|S)\.d/\S, and $pkg !~ /^(sysvinit|file-rc)$/) {
 	    print "E: $pkg $type: package-installs-into-etc-rc.d $file\n";
 	}
 	# ---------------- /etc/rc.boot
@@ -135,45 +135,49 @@ while (<IN>) {
     elsif ($file =~ m,^usr/,) {
 	# ---------------- /usr/share/doc
 	if ($file =~ m,^usr/share/doc/\S,) {
-	    # file not owned by root?
-	    if ($owner ne 'root/root') {
-		print "E: $pkg $type: bad-owner-for-doc-file $file $owner != root/root\n";
-	    }
-
-	    # file directly in /usr/share/doc ?
-	    if ($perm =~ m/^-/ and $file =~ m,^usr/share/doc/[^/]+$,) {
-		print "E: $pkg $type: file-directly-in-usr-share-doc $file\n";
-	    }
-
-	    # executable in /usr/share/doc ?
-	    if ($perm =~ m/^-.*[xs]/ and $file !~ m,^usr/share/doc/([^/]+/)?examples/,) {
-		if ($script{$file}) {
-		    print "I: $pkg $type: script-in-usr-share-doc $file\n";
-		} else {
-		    print "E: $pkg $type: executable-in-usr-share-doc $file " . (sprintf "%04o\n", $operm);
+	    if ($type eq 'udeb') {
+		print "E: $pkg $type: documentation-file $file\n";
+	    } else {
+		# file not owned by root?
+		if ($owner ne 'root/root') {
+		    print "E: $pkg $type: bad-owner-for-doc-file $file $owner != root/root\n";
 		}
-	    }
-
-	    # zero byte file in /usr/share/doc/
-	    if ($size == 0 and $perm =~ m,^-,) {
-		# exception: __init__.py files are empty tagging files (see
-		# bug #215234)
-		unless ($file =~ m,^usr/share/doc/([^/]+/)?examples/(.+/)?__init__\.py$,) {
-		    print "W: $pkg $type: zero-byte-file-in-doc-directory $file\n";
+		
+		# file directly in /usr/share/doc ?
+		if ($perm =~ m/^-/ and $file =~ m,^usr/share/doc/[^/]+$,) {
+		    print "E: $pkg $type: file-directly-in-usr-share-doc $file\n";
 		}
-	    }
+		
+		# executable in /usr/share/doc ?
+		if ($perm =~ m/^-.*[xs]/ and $file !~ m,^usr/share/doc/([^/]+/)?examples/,) {
+		    if ($script{$file}) {
+			print "I: $pkg $type: script-in-usr-share-doc $file\n";
+		    } else {
+			print "E: $pkg $type: executable-in-usr-share-doc $file " . (sprintf "%04o\n", $operm);
+		    }
+		}
+		
+		# zero byte file in /usr/share/doc/
+		if ($size == 0 and $perm =~ m,^-,) {
+		    # exception: __init__.py files are empty tagging files (see
+		    # bug #215234)
+		    unless ($file =~ m,^usr/share/doc/([^/]+/)?examples/(.+/)?__init__\.py$,) {
+			print "W: $pkg $type: zero-byte-file-in-doc-directory $file\n";
+		    }
+		}
 
-	    # override files have moved
-	    my $tmp = quotemeta($pkg);
-	    if ($file =~ m,^usr/share/doc/$tmp/override\.[lL]intian(\.gz)?$,) {
-		print "E: $pkg $type: override-file-in-wrong-location $file\n";
-	    } elsif ($file =~ m,^usr/share/lintian/overrides/$tmp/.*,) {
-		print "E: $pkg $type: override-file-in-wrong-location $file\n";
-	    }
-
-	    # contains an INSTALL file?
-	    if ($file =~ m,^usr/share/doc/$tmp/INSTALL(?:\..+)*$,) {
-		print "W: $pkg $type: package-contains-upstream-install-documentation $file\n";
+		# override files have moved
+		my $tmp = quotemeta($pkg);
+		if ($file =~ m,^usr/share/doc/$tmp/override\.[lL]intian(\.gz)?$,) {
+		    print "E: $pkg $type: override-file-in-wrong-location $file\n";
+		} elsif ($file =~ m,^usr/share/lintian/overrides/$tmp/.*,) {
+		    print "E: $pkg $type: override-file-in-wrong-location $file\n";
+		}
+		
+		# contains an INSTALL file?
+		if ($file =~ m,^usr/share/doc/$tmp/INSTALL(?:\..+)*$,) {
+		    print "W: $pkg $type: package-contains-upstream-install-documentation $file\n";
+		}
 	    }
 	}
 	# ---------------- /usr/doc
@@ -208,7 +212,7 @@ while (<IN>) {
 	}
 	# ---------------- /usr/lib -- needs to go after the other usr/lib/*
 	elsif ($file =~ m,^usr/lib/,) {
-	    if ($file =~ m,\.(gif|jpeg|jpg|png|tiff|xpm|xbm)$, and not defined $link) {
+	    if ($type ne 'udeb' and $file =~ m,\.(gif|jpeg|jpg|png|tiff|xpm|xbm)$, and not defined $link) {
 		print "W: $pkg $type: image-file-in-usr-lib $file\n"
 	    }
 	}
@@ -222,8 +226,17 @@ while (<IN>) {
 	}
 	# ---------------- /usr/share/man and /usr/X11R6/man
 	elsif ($file =~ m,^usr/X11R6/man/\S+, or m,^usr/share/man/\S+, ) {
+	    if ($type eq 'udeb') {
+		print "E: $pkg $type: documentation-file $file\n";
+	    }
 	    if ($perm =~ m/^-.*[xt]/) {
 		print "E: $pkg $type: executable-manpage $file\n";
+	    }
+	}
+	# ---------------- /usr/share/info
+	elsif ($file =~ m,^usr/share/info\S+,) {
+	    if ($type eq 'udeb') {
+		print "E: $pkg $type: documentation-file $file\n";
 	    }
 	}
 	# ---------------- /usr/share
@@ -233,7 +246,7 @@ while (<IN>) {
 	    }
 	}
 	# ---------------- /usr subdirs
-	elsif ($file =~ m,^usr/[^/]+/$, ) { # FSSTND dirs
+	elsif ($type ne 'udeb' and $file =~ m,^usr/[^/]+/$, ) { # FSSTND dirs
 	    if ( $file =~ m,^usr/(dict|doc|etc|info|man|adm|preserve)/,) {
 		print "E: $pkg $type: FSSTND-dir-in-usr $file\n";
 	    }
@@ -251,7 +264,7 @@ while (<IN>) {
 	}
     }
     # ---------------- /var subdirs
-    elsif ($file =~ m,^var/[^/]+/$,) { # FSSTND dirs
+    elsif ($type ne 'udeb' and $file =~ m,^var/[^/]+/$,) { # FSSTND dirs
 	if ( $file =~ m,^var/(adm|catman|named|nis|preserve)/, ) {
 	    print "W: $pkg $type: FSSTND-dir-in-var $file\n";
 	}
@@ -260,7 +273,7 @@ while (<IN>) {
 	    print "E: $pkg $type: non-standard-dir-in-var $file\n";
 	}
     }
-    elsif ($file =~ m,^var/lib/games/.,) {
+    elsif ($type ne 'udeb' and $file =~ m,^var/lib/games/.,) {
 	print "E: $pkg $type: non-standard-dir-in-var $file\n";
     }
     # ---------------- /opt
@@ -293,7 +306,9 @@ while (<IN>) {
 	# base system.  (Specifically, /cdrom, /floppy, /initrd, and /proc
 	# are not mentioned in the FHS).
 	print "E: $pkg $type: non-standard-toplevel-dir $file\n"
-	    unless $pkg eq 'base-files' or $pkg eq 'hurd';
+	    unless $pkg eq 'base-files' 
+	    or $pkg eq 'hurd' 
+	    or $pkg =~ /^rootskel(-bootfloppy)?/;
     }
 
     # ---------------- compatibility symlinks should not be used
@@ -305,7 +320,8 @@ while (<IN>) {
 
     # ---------------- any files
     if ($perm !~ m/^d/) {
-	unless ($file =~ m,^usr/(bin|dict|doc|games|include|info|lib|man|sbin|share|src|X11R6)/, or
+	unless ($type eq 'udeb' or
+		$file =~ m,^usr/(bin|dict|doc|games|include|info|lib|man|sbin|share|src|X11R6)/, or
 		$file =~ m,^lib/(modules/|libc5-compat/)?, or
 		$file =~ m,^var/(games|lib|www|named)/, or
 		$file =~ m,^(bin|boot|dev|etc|sbin)/, or
@@ -502,7 +518,7 @@ while (<IN>) {
 	    $mylink =~ m,^/([^/]*),;
 	    my $linktop = $1;
 
-	    if ($filetop eq $linktop) {
+	    if ($type ne 'udeb' and $filetop eq $linktop) {
 		# absolute links within one toplevel directory are _not_ ok!
 		print "E: $pkg $type: symlink-should-be-relative $file $link\n";
 	    }
@@ -554,7 +570,9 @@ while (<IN>) {
 
 	    if ($#filecomponents == -1) {
 		# we've reached the root directory
-		if (!defined $linkcomponent || $filetop ne $linkcomponent) {
+		if (($type ne 'udeb') 
+		    && (!defined $linkcomponent)
+		    || ($filetop ne $linkcomponent)) {
 		    # relative link into other toplevel directory.
 		    # this hits a relative symbolic link in the root too.
 		    print "E: $pkg $type: symlink-should-be-absolute $file $link\n";

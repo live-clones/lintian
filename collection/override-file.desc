@@ -1,7 +1,7 @@
 Collector-Script: override-file
 Author: Darren Benham <gecko@debian.org>
 Info: This script copies the `override' file of a package into the lintian directory.
-Type: binary
+Type: binary, udeb
 Unpack-Level: 2
 Output: override
 Order: 1

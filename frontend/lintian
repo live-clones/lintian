@@ -29,9 +29,9 @@ use FileHandle;
 #  Global Variables
 #######################################
 my $lintian_info_cmd = 'lintian-info'; #Command to run for ?
-my $LINTIAN_VERSION = "1.22.12";	#External Version number
+my $LINTIAN_VERSION = "1.23.0 UNRELEASED";	#External Version number
 my $BANNER = "Lintian v$LINTIAN_VERSION"; #Version Banner - text form
-my $LAB_FORMAT = 6;		#Lab format Version Number
+my $LAB_FORMAT = 7;		#Lab format Version Number
 				#increased whenever incompatible
 				#changes are done to the lab
 				#so that all packages are re-unpacked
@@ -155,6 +155,7 @@ Package selection options:
     -a, --all                 process all packages in distribution
     -b, --binary              process only binary packages
     -s, --source              process only source packages
+    --udeb                    process only udeb packages
     -p X, --packages-file X   process all files in file (special syntax!)
 EOT-EOT-EOT
 
@@ -203,10 +204,11 @@ sub record_unpack_info {
 }
 
 # Record what type of data is specified
-# Options: -b|--binary, -s|--source
+# Options: -b|--binary, -s|--source, --udeb
 sub record_pkgmode {
     $pkg_mode = 'b' if $_[0] eq 'binary';
     $pkg_mode = 's' if $_[0] eq 'source';
+    $pkg_mode = 'u' if $_[0] eq 'udeb';
 }
 
 # Hash used to process commandline options
@@ -249,6 +251,7 @@ my %opthash = (			# ------------------ actions
 	       "all|a" => \$check_everything,
 	       "binary|b" => \&record_pkgmode,
 	       "source|s" => \&record_pkgmode,
+	       "udeb" => \&record_pkgmode,
 	       "packages-file|p=s" => \$packages_file,
 	      );
 
@@ -428,7 +431,7 @@ unshift @INC, "$ENV{'LINTIAN_ROOT'}/lib";
 require Util;
 require Pipeline;
 require Read_pkglists;
-use vars qw(%source_info %binary_info); # from the above
+use vars qw(%source_info %binary_info %udeb_info); # from the above
 
 # determine requested unpack level
 if (defined($unpack_level)) {
@@ -478,6 +481,7 @@ if (($action ne 'setup-lab') and ($lab_mode eq 'static')) {
 
     # LINTIAN_LAB has to exist in this mode
     unless (-d "$LINTIAN_LAB/binary" &&
+	    -d "$LINTIAN_LAB/udeb" &&
 	    -d "$LINTIAN_LAB/source" &&
 	    -d "$LINTIAN_LAB/info") {
 	fail("lintian lab has not been set up correctly (run lintian --setup-lab)");
@@ -551,6 +555,15 @@ while (my $arg = shift) {
 		next;
 	    }
 	    schedule_package('b', $info->{'package'}, $info->{'version'}, $arg);
+	}
+	# .udeb file?
+	if ($arg =~ /\.udeb$/) {
+	    my $info = get_deb_info($arg);
+	    if (not defined $info) {
+		print STDERR "$arg is a zero-byte file, skipping\n";
+		next;
+	    }
+	    schedule_package('u', $info->{'package'}, $info->{'version'}, $arg);
 	}
 	# .dsc file?
 	elsif ($arg =~ /\.dsc$/) {
@@ -634,10 +647,14 @@ while (my $arg = shift) {
 		    my $info = get_deb_info($filename);
 		    schedule_package('b', $info->{'package'},
 				     $info->{'version'}, $filename);
+		} elsif ($file =~ /\.udeb$/) {
+		    my $info = get_deb_info($filename);
+		    schedule_package('u', $info->{'package'},
+				     $info->{'version'}, $filename);
 		}
 	    }
 	} else {
-	    fail("bad package file name $arg (neither .deb or .dsc file)");
+	    fail("bad package file name $arg (neither .deb, .udeb or .dsc file)");
 	}
     } else {
 	# parameter is a package name--so look it up
@@ -657,12 +674,21 @@ while (my $arg = shift) {
 	    # read package info
 	    read_src_list("$LINTIAN_LAB/info/source-packages", 0);
 	    read_bin_list("$LINTIAN_LAB/info/binary-packages", 0);
+	    read_udeb_list("$LINTIAN_LAB/info/udeb-packages", 0);
 
 	    if (($pkg_mode eq 'b') or ($pkg_mode eq 'a')) {
 		if ($binary_info{$arg}) {
 		    schedule_package('b', $binary_info{$arg}->{'package'},
 				     $binary_info{$arg}->{'version'},
 				     "$LINTIAN_ARCHIVEDIR/$binary_info{$arg}->{'file'}");
+		    $found = 1;
+		}
+	    }
+	    if (($pkg_mode eq 'u') or ($pkg_mode eq 'a')) {
+		if ($udeb_info{$arg}) {
+		    schedule_package('u', $udeb_info{$arg}->{'package'},
+				     $udeb_info{$arg}->{'version'},
+				     "$LINTIAN_ARCHIVEDIR/$udeb_info{$arg}->{'file'}");
 		    $found = 1;
 		}
 	    }
@@ -682,6 +708,7 @@ while (my $arg = shift) {
 
 	my $b = "$LINTIAN_LAB/binary/$arg";
 	my $s = "$LINTIAN_LAB/source/$arg";
+	my $u = "$LINTIAN_LAB/udeb/$arg";
 
 	if ($pkg_mode eq 'b') {
 	    unless (-d $b) {
@@ -695,10 +722,16 @@ while (my $arg = shift) {
 		$exit_code = 2;
 		next;
 	    }
+	} elsif ($pkg_mode eq 'u') {
+	    unless (-d $u) {
+		warn "error: cannot find udeb package $arg in $search (skipping)\n";
+		$exit_code = 2;
+		next;
+	    }
 	} else {
 	    # $pkg_mode eq 'a'
-	    unless (-d $b or -d $s) {
-		warn "error: cannot find binary or source package $arg in $search (skipping)\n";
+	    unless (-d $b or -d $s or -d $u) {
+		warn "error: cannot find binary, udeb or source package $arg in $search (skipping)\n";
 		$exit_code = 2;
 		next;
 	    }
@@ -709,6 +742,9 @@ while (my $arg = shift) {
 	}
 	if (($pkg_mode eq 's') or (($pkg_mode eq 'a') and (-d $s))) {
 	    schedule_package('s', get_src_info_from_lab($s));
+	}
+	if (($pkg_mode eq 'u') or (($pkg_mode eq 'a') and (-d $u))) {
+	    schedule_package('u', get_bin_info_from_lab($u));
 	}
     }
 }
@@ -753,25 +789,19 @@ for my $f (readdir COLLDIR) {
 
     set_value($f, $p,'type',$secs[0],1);
     # convert Type:
-    my ($b,$s);
+    my ($b,$s,$u) = ( "", "", "" );;
     for (split(/\s*,\s*/o,$p->{'type'})) {
 	if ($_ eq 'binary') {
-	    $b = 1;
+	    $b = 'b';
 	} elsif ($_ eq 'source') {
-	    $s = 1;
+	    $s = 's';
+	} elsif ($_ eq 'udeb') {
+	    $u = 'u';
 	} else {
 	    fail("unknown type $_ specified in description file $f");
 	}
     }
-    if ($b and $s) {
-	$p->{'type'} = 'a';
-    } elsif ($b) {
-	$p->{'type'} = 'b';
-    } elsif ($s) {
-	$p->{'type'} = 's';
-    } else {
-	$p->{'type'} = '';
-    }
+    $p->{'type'} = "$s$b$u";
 
     set_value($f,$p,'unpack-level',$secs[0],1);
     set_value($f,$p,'output',$secs[0],1);
@@ -825,25 +855,19 @@ for my $f (readdir CHECKDIR) {
 
     set_value($f,$p,'type',$secs[0],1);
     # convert Type:
-    my ($b,$s);
+    my ($b,$s,$u) = ( "", "", "" );
     for (split(/\s*,\s*/o,$p->{'type'})) {
 	if ($_ eq 'binary') {
-	    $b = 1;
+	    $b = 'b';
 	} elsif ($_ eq 'source') {
-	    $s = 1;
+	    $s = 's';
+	} elsif ($_ eq 'udeb') {
+	    $u = 'u';
 	} else {
 	    fail("unknown type $_ specified in description file $f");
 	}
     }
-    if ($b and $s) {
-	$p->{'type'} = 'a';
-    } elsif ($b) {
-	$p->{'type'} = 'b';
-    } elsif ($s) {
-	$p->{'type'} = 's';
-    } else {
-	$p->{'type'} = '';
-    }
+    $p->{'type'} = "$s$b$u";
 
     set_value($f,$p,'unpack-level',$secs[0],1);
     set_value($f,$p,'abbrev',$secs[0],1);
@@ -942,6 +966,7 @@ if ($check_everything) {
     # make sure package info is available
     read_src_list("$LINTIAN_LAB/info/source-packages", 0);
     read_bin_list("$LINTIAN_LAB/info/binary-packages", 0);
+    read_udeb_list("$LINTIAN_LAB/info/udeb-packages", 0);
 
     if ($debug >= 2) {
       print STDERR "pkg_mode = $pkg_mode\n";
@@ -960,6 +985,12 @@ if ($check_everything) {
 	for my $arg (keys %binary_info) {
 	    print STDERR "doing stuff with $LINTIAN_ARCHIVEDIR/$binary_info{$arg}->{'file'}\n" if $debug;
 	    push(@packages,"b $binary_info{$arg}->{'package'} $binary_info{$arg}->{'version'} $LINTIAN_ARCHIVEDIR/$binary_info{$arg}->{'file'}");
+	}
+    }
+    if (($pkg_mode eq 'a') or ($pkg_mode eq 'u')) {
+	for my $arg (keys %udeb_info) {
+	    print STDERR "doing stuff with $LINTIAN_ARCHIVEDIR/$udeb_info{$arg}->{'file'}\n" if $debug;
+	    push(@packages,"u $udeb_info{$arg}->{'package'} $udeb_info{$arg}->{'version'} $LINTIAN_ARCHIVEDIR/$udeb_info{$arg}->{'file'}");
 	}
     }
 
@@ -999,9 +1030,9 @@ $exit_code = 0;
 # can use information from the source packages if these are unpacked)
 PACKAGE:
 for (reverse sort @packages) {
-    m/^([bs]) (\S+) (\S+) (.+)$/ or fail("internal error: syntax error in \@packages array: $_");
+    m/^([bsu]) (\S+) (\S+) (.+)$/ or fail("internal error: syntax error in \@packages array: $_");
     my ($type,$pkg,$ver,$file) = ($1,$2,$3,$4);
-    my $long_type = ($type eq 'b' ? 'binary' : 'source');
+    my $long_type = ($type eq 'b' ? 'binary' : ($type eq 's' ? 'source' : 'udeb' ));
 
     print "N: ----\n" if $verbose;
     if ($verbose) {
@@ -1102,7 +1133,7 @@ for (reverse sort @packages) {
 	    my $ci = $collection_info{$coll};
 
 	    # current type?
-	    next unless ($ci->{'type'} eq $type) or ($ci->{'type'} eq 'a');
+	    next unless ($ci->{'type'} =~ m/$type/);
 
 	    # info already available?
 	    next if (-e "$base/$ci->{'output'}");
@@ -1165,7 +1196,7 @@ for (reverse sort @packages) {
 	    my $ci = $check_info{$check};
 
 	    # current type?
-	    next unless ($ci->{'type'} eq $type) or ($ci->{'type'} eq 'a');
+	    next unless ($ci->{'type'} =~ m/$type/);
 
 	    # unpack to desired unpack level (if necessary)
 	    $act_unpack_level = unpack_pkg($type,$base,$file,$act_unpack_level,$ci->{'unpack-level'});
@@ -1356,13 +1387,16 @@ sub setup_lab {
     if (not -d "$LINTIAN_LAB/source") {
 	mkdir("$LINTIAN_LAB/source",0777) or fail("cannot create lab directory $LINTIAN_LAB/source");
     }
+    if (not -d "$LINTIAN_LAB/udeb") {
+	mkdir("$LINTIAN_LAB/udeb",0777) or fail("cannot create lab directory $LINTIAN_LAB/udeb");
+    }
     if (not -d "$LINTIAN_LAB/info") {
 	mkdir("$LINTIAN_LAB/info",0777) or fail("cannot create lab directory $LINTIAN_LAB/info");
     }
 
     # distribution specified?
     if ($LINTIAN_DIST) {
-	print STDERR "spawning list-binpkg and list-srcpkg since LINTIAN_DIST=$LINTIAN_DIST\n" if ($debug >= 2);
+	print STDERR "spawning list-binpkg, list-udebpkg and list-srcpkg since LINTIAN_DIST=$LINTIAN_DIST\n" if ($debug >= 2);
 	# yes!
 
 	my $v = $verbose ? '-v' : '';
@@ -1373,13 +1407,18 @@ sub setup_lab {
 	spawn("$LINTIAN_ROOT/unpack/list-srcpkg",
 	      "$LINTIAN_LAB/info/source-packages", $v) == 0
 		  or fail("cannot create source package list");
+	spawn("$LINTIAN_ROOT/unpack/list-udebpkg",
+	      "$LINTIAN_LAB/info/udeb-packages", $v) == 0
+		  or fail("cannot create udeb package list");
     } else {
-	print STDERR "not spawning list-binpkg and list-srcpkg since LINTIAN_DIST is empty\n" if ($debug >= 2);
+	print STDERR "not spawning list-binpkg, list-udebpkg and list-srcpkg since LINTIAN_DIST is empty\n" if ($debug >= 2);
 	# just create empty files
 	touch("$LINTIAN_LAB/info/binary-packages")
 	    or fail("cannot create binary package list");
 	touch("$LINTIAN_LAB/info/source-packages")
 	    or fail("cannot create source package list");
+	touch("$LINTIAN_LAB/info/udeb-packages")
+	    or fail("cannot create udeb package list");
     }
 }
 
@@ -1421,6 +1460,7 @@ sub remove_lab {
     if (spawn('rm', '-rf', '--',
 	      "$LINTIAN_LAB/binary",
 	      "$LINTIAN_LAB/source",
+	      "$LINTIAN_LAB/udeb",
 	      "$LINTIAN_LAB/info") != 0) {
 	print STDERR "warning: cannot remove lab directory $LINTIAN_LAB (please remove it yourself)\n";
     }
@@ -1454,7 +1494,7 @@ sub unpack_pkg {
 	 (not defined ($cur_level) or ($cur_level < 1)) ) {
 	# create new directory
 	print "N: Unpacking package to level 1 ...\n" if $debug;
-	if ($type eq 'b') {
+	if (($type eq 'b') || ($type eq 'u')) {
 	    spawn("$LINTIAN_ROOT/unpack/unpack-binpkg-l1", $base, $file) == 0
 		or return -1;
 	} else {
@@ -1468,7 +1508,7 @@ sub unpack_pkg {
 	 (not defined ($cur_level) or ($cur_level < 2)) ) {
 	# unpack package contents
 	print "N: Unpacking package to level 2 ...\n" if $debug;
-	if ($type eq 'b') {
+	if (($type eq 'b') || ($type eq 'u')) {
 	    spawn("$LINTIAN_ROOT/unpack/unpack-binpkg-l2", $base) == 0
 		or return -1;
 	} else {
@@ -1589,7 +1629,7 @@ sub schedule_package {
     if ( $already_scheduled{$s}++ ) {
 	if ($verbose) {
 	    printf "N: Ignoring duplicate %s package $pkg (version $ver)\n",
-		$type eq 'b' ? 'binary' : 'source';
+		$type eq 'b' ? 'binary' : ($type eq 's' ? 'source': 'udeb');
 	}
 	return;
     }

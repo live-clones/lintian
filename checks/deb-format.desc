@@ -2,7 +2,7 @@ Check-Script: deb-format
 Author: Denis Barbier <barbier@linuxfr.org>
 Abbrev: dfmt
 Standards-Version: 3.6.1
-Type: binary
+Type: binary, udeb
 Unpack-Level: 1
 Info: This script checks if a binary package was build using a broken version
  of tar (i.e., containing bug#230910)

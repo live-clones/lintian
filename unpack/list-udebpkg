@@ -1,0 +1,193 @@
+#!/usr/bin/perl -w
+# list-udebpkg -- lintian helper script
+
+# Copyright (C) 1998 Christian Schwarz
+# Copyright (C) 2004 Frank Lichtenheld
+# 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+# MA 02111-1307, USA.
+
+use strict;
+
+# turn file buffering off:
+$| = 1;
+
+# parse command line options
+if ($#ARGV == -1) {
+    print "list-udebpkg [-v] <output-list-file>\n";
+    print "options:\n";
+    print "   -v  verbose\n";
+    exit 0;
+}
+
+my $verbose = 0;
+my $output_file = undef;
+my $pkgdata = undef; # WTF?
+
+while (my $arg = shift) {
+    if ($arg =~ s,^-,,o) {
+	if ($arg eq 'v') {
+	    $verbose = 1;
+	} else {
+	    print STDERR "error: unknown command line argument: $arg\n";
+	    exit 1;
+	}
+    } else {
+	if ($output_file) {
+	    print STDERR "error: too many command line arguments: $arg\n";
+	    exit 1;
+	}
+	$output_file = $arg;
+    }
+}
+
+unless ($output_file) {
+    print STDERR "error: no output file specified\n";
+    exit 1;
+}
+
+# import perl libraries
+use lib "$ENV{'LINTIAN_ROOT'}/lib";
+use Read_pkglists;
+use vars qw(%udeb_info $UDEBLIST_FORMAT); # from the above
+use Pipeline;
+use Util;
+
+# get variables out of environment
+my $LINTIAN_ARCHIVEDIR = $ENV{'LINTIAN_ARCHIVEDIR'};
+my $LINTIAN_DIST = $ENV{'LINTIAN_DIST'};
+my $LINTIAN_ARCH = $ENV{'LINTIAN_ARCH'};
+my $LINTIAN_SECTION = $ENV{'LINTIAN_SECTION'};
+my $LINTIAN_LAB = $ENV{'LINTIAN_LAB'};
+
+# read old list file (this command does nothing if the file does not exist)
+read_udeb_list($output_file,1);
+
+my %pkgfile;
+# map filenames to package names
+for my $pkg (keys %udeb_info) {
+    $pkgfile{$udeb_info{$pkg}->{'file'}} = $pkg;
+}
+
+# open output file
+open(OUT,">$output_file")
+    or fail("cannot open list file $output_file for writing: $!");
+print OUT "$UDEBLIST_FORMAT\n";
+
+# parse Packages file to get list of packages
+my $packages = "$LINTIAN_ARCHIVEDIR/dists/$LINTIAN_DIST/$LINTIAN_SECTION/".
+               "debian-installer/binary-$LINTIAN_ARCH/Packages";
+print "N: Parsing $packages ...\n" if $verbose;
+open(IN,"$packages") or fail("cannot open Packages file $packages: $!");
+
+my $line;
+my %packages;
+my $total = 0;
+
+while (!eof(IN)) {
+    do { $line = <IN> } until ($line =~ m/^Architecture: (.*)$/m);
+    my $arch = $1;
+    do { $line = <IN> } until ($line =~ m/^Filename: (.*)$/m);
+    my $deb_file = $1;
+    do { $line = <IN> } until ($line =~ m/^\s*$/m);
+
+    my @stat;
+    # get timestamp...
+    unless (@stat = stat "$LINTIAN_ARCHIVEDIR/$deb_file") {
+	print "E: general: cannot stat $LINTIAN_ARCHIVEDIR/$deb_file\n";
+	next;
+    }
+    my $timestamp = $stat[9];
+    my ($status, $pkg, $data);
+
+    # was package already included in last list?
+    if (exists $pkgfile{$deb_file}) {
+	# yes!
+	$pkg = $pkgfile{$deb_file};
+	$data = $binary_info{$pkg};
+
+	# file changed since last run?
+	if ($timestamp == $data->{'timestamp'}) {
+	    # no.
+	    $status = 'unchanged';
+	} else {
+	    $status = 'changed';
+	    delete $udeb_info{$pkg};
+	}
+    } else {
+	# new package, get info
+	$status = 'new';
+    }
+
+    if (($status eq 'new') or ($status eq 'changed')) {
+	if (defined $pkgdata) {
+	    # avoid collecting the info twice
+	    $data = $pkgdata;
+	} else {
+	    $data = &safe_get_deb_info($deb_file);
+	}
+	next if not defined $data;
+	$pkg = $data->{'package'};
+    }
+
+    # check for duplicates
+    if (exists $packages{$pkg}) {
+	print "E: general: duplicate-udeb-package $pkg\n";
+	next;
+    }
+
+    # write entry to output file
+    print OUT join(';',
+		   $pkg,
+		   $data->{'version'},
+		   $data->{'source'},
+		   $deb_file,
+		   $timestamp,
+		   ),"\n";
+    printf "N: Listed %s udeb package %s %s\n",$status,$pkg,$data->{'version'} if $verbose;
+
+    # remove record from hash
+    delete $udeb_info{$pkg} if $status eq 'unchanged';
+    $packages{$pkg} = 1;
+    $total++;
+}
+close(IN) or fail("cannot close input pipe: $!");
+close(OUT) or fail("cannot close output pipe: $!");
+
+if ($verbose) {
+    # all packages that are still included in %udeb_info have disappeared from the archive...
+    for my $pkg (sort keys %udeb_info) {
+	print "N: Removed udeb package $pkg from list\n";
+    }
+    printf "N: Listed %d udeb packages\n",$total;
+}
+
+exit 0;
+
+sub safe_get_deb_info {
+    # use eval when calling get_deb_info, since we don't want to `die' just
+    # because of a single broken package
+    my $data;
+    eval { $data = get_deb_info("$LINTIAN_ARCHIVEDIR/$_[0]"); };
+    if ($@) {
+	# error!
+	print STDERR "$@\n";
+	print "E: general: bad-udeb-package $_[0]\n";
+	return undef;
+    }
+    $data->{'source'} or ($data->{'source'} = $data->{'package'});
+    return $data;
+}

@@ -2,7 +2,7 @@ Check-Script: debconf
 Author: Colin Watson <cjw44@flatline.org.uk>
 Abbrev: dc
 Standards-Version: 3.5.0
-Type: binary
+Type: binary, udeb
 Unpack-Level: 2
 Info: This looks for common mistakes in packages using debconf.
 Needs-Info: scripts

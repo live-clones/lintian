@@ -2,7 +2,7 @@ Check-Script: description
 Author: Christian Schwarz <schwarz@debian.org>
 Abbrev: des
 Standards-Version: 3.2.0
-Type: binary
+Type: binary, udeb
 Unpack-Level: 1
 
 Tag: package-has-no-description

@@ -1,7 +1,7 @@
 Collector-Script: objdump-info
 Author: Christian Schwarz <schwarz@debian.org>
 Info: This script runs `objdump' over all binaries and object files of a binary package.
-Type: binary
+Type: binary, udeb
 Unpack-Level: 2
 Output: objdump-info
 Order: 2

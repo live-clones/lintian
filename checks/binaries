@@ -153,6 +153,7 @@ while (<IN>) {
 
     # binary or shared object?
     next unless ($info =~ m/executable/) or ($info =~ m/shared object/);
+    next if $type eq 'udeb';
 
     # statically linked?
     my %libc5_binary;

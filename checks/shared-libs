@@ -216,10 +216,12 @@ if ($#shlibs == -1) {
 } else {
     # shared libraries included, thus shlibs control file has to exist
     if (not -f $shlibs_control_file) {
-	for my $shlib (@shlibs) {
-	    # skip it if it's not a public shared library
-	    next unless defined $ldso_dir{dirname($shlib)};
-	    print "E: $pkg $type: no-shlibs-control-file $shlib\n";
+	if ($type ne 'udeb') {
+	    for my $shlib (@shlibs) {
+		# skip it if it's not a public shared library
+		next unless defined $ldso_dir{dirname($shlib)};
+		print "E: $pkg $type: no-shlibs-control-file $shlib\n";
+	    }
 	}
     } else {
 	my %shlibs_control_used;
