@@ -81,14 +81,14 @@ while (<IN>) {
     	# this case is allowed, if this package depends on link
     	# and both packages come from the same source package
 
-
 	if (not open (VERSION, "fields/version")) {
 	    fail("Can't open fields/version: $!");
 	} else {
 	    chomp(my $our_version = <VERSION>); 
+	    close VERSION;
 	
-    	    # depend on $link pkg?
-    	    if ((not depends_on($link, $our_version)) &&
+	    # depend on $link pkg?
+	    if ((not depends_on($link, $our_version)) &&
 	         not (exists($known_essential{$link}) &&
 	         defined($known_essential{$link}))) {
 		# no, it does not.
