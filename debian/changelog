@@ -49,6 +49,9 @@ lintian (1.23.1~alpha) unstable; urgency=low
       Manoj Srivastava for reporting (Closes: #247805)
   * checks/po-debconf:
     + [JvW] Simply fail if stuff from gettext is missing.
+  * checks/scripts:
+    + [FL] Don't issue executable-not-elf-or-script for files
+      that are named *.exe on request of mono maintainers (Closes: #251075)
   * checks/shared-libs:
     + [FL] Don't report shlib-with-executable-bit and
       shlib-with-bad-permissions on symbolic links to such files

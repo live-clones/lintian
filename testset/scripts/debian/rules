@@ -19,10 +19,13 @@ binary-indep:
 	install -m 4755 perlfoo $(tmp)/usr/bin/suidperlfoo2
 	install -m 4755 suidperlfoo $(tmp)/usr/bin/
 	install -m 755 tkfoo $(tmp)/usr/bin/
-	
+
 	echo "#!/usr/bin/perl" >> $(tmp)/usr/share/scripts/foobar.in
 	chmod 644 $(tmp)/usr/share/scripts/foobar.in
-	
+
+	touch $(tmp)/usr/share/scripts/mono.exe
+	chmod 755 $(tmp)/usr/share/scripts/mono.exe
+
 	touch $(tmp)/usr/lib/python2.3/site-packages/test.pyc
 	cp debian/changelog $(tmp)/usr/share/doc/scripts/changelog
 	gzip -9 $(tmp)/usr/share/doc/scripts/changelog

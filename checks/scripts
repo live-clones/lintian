@@ -288,7 +288,11 @@ close(SCRIPTS);
 
 foreach (keys %executable) {
     tag_warn("executable-not-elf-or-script", $_)
-	unless $ELF{$_} or $scripts{$_} or $_ =~ m,^usr(/X11R6)?/man/,;
+	unless ( $ELF{$_} 
+		 or $scripts{$_}
+		 or $_ =~ m,^usr(/X11R6)?/man/,
+		 or $_ =~ m/\.exe$/ # mono convention
+		 );
 }
 
 open(SCRIPTS, "control-scripts")
