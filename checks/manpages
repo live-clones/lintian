@@ -127,16 +127,17 @@ while (<IN>) {
 	    print "E: $pkg $type: manpage-not-compressed-with-max-compression $file\n";
 	}
     }
-    my $num = pop @pieces;
-    if (scalar @pieces && $num =~ s/^(\d).*$/$1/) {
+    my $fn_section = pop @pieces;
+    my $section_num = $fn_section;
+    if (scalar @pieces && $section_num =~ s/^(\d).*$/$1/) {
 	my $bin = join(".", @pieces);
 	$manpage{$bin} = $file;
 
 	# number of directory and manpage extension equal?
-	if ($num != $section) {
+	if ($section_num != $section) {
 	    print "E: $pkg $type: manpage-in-wrong-directory $file\n";
 	}
-	push @{$sect_by_manpage{$bin}}, $num; # array needed for cases like man(1), man(7)
+	push @{$sect_by_manpage{$bin}}, $section_num; # array needed for cases like man(1), man(7)
     } else {
 	print "E: $pkg $type: manpage-has-wrong-extension $file\n";
     }
@@ -181,15 +182,17 @@ while (<IN>) {
 	    }
 	}
     } else { # not a symlink
+	open MANFILE, "zcat unpacked/\Q$file\E 2>/dev/null |"
+	    or fail("cannot open $file: $!");
+	my @manfile = ();
+	while (<MANFILE>) { push @manfile, $_; }
+	close MANFILE;
 	# Is it a .so link?
 	if ($size < 256) {
-	    open SOTEST, "zcat unpacked/\Q$file\E 2>/dev/null |"
-		 or fail("cannot open $file: $!");
-	    my $line = <SOTEST>;
-	    close SOTEST;
-	    unless ($line) {
+	    my $first = $manfile[0];
+	    unless ($first) {
 		print "E: $pkg $type: empty-manual-page $file\n";
-	    } elsif ($line =~ /^\.so\s+(.+)?$/) {
+	    } elsif ($first =~ /^\.so\s+(.+)?$/) {
 		my $dest = $1;
 		if ($dest =~ m,^([^/]+)/(.+)$,) {
 		    my ($manxorlang, $rest) = ($1, $2);
@@ -224,6 +227,34 @@ while (<IN>) {
 	        print "E: $pkg $type: manpage-has-bad-whatis-entry $file\n";
 	    }
 	}
+	# Now we search through the whole man page for some common errors
+	my $lc = 0;
+	my $hc = 0;
+	foreach my $line (@manfile) {
+	    $lc++;
+	    chomp $line;
+	    next if $line =~ /^\.\\\"/o; # comments .\"
+	    if ($line =~ /^\.TH\s/) { # header
+		require Text::ParseWords;
+		my ($th_command, $th_title, $th_section, $th_date ) = 
+		    Text::ParseWords::parse_line( '\s+', 0, $line);
+		if ($th_section && ($fn_section ne $th_section)) {
+		    print "E: $pkg $type: manpage-section-mismatch $file:$lc $fn_section != $th_section\n";
+		}
+	    }
+	    if ($line =~ /^[^\.][^\\].*\W--?\w+/o) {
+		# hyphen at the begin of a word, probably not!
+		$hc++;
+		print "W: $pkg $type: hyphen-used-as-minus-sign $file:$lc\n" if $hc <= 10 or $ENV{'LINTIAN_DEBUG'};
+	    }
+	    if (($line =~ m,(/usr/(dict|doc|etc|info|man|adm|preserve)/),o)
+		|| ($line =~ m,(/var/(adm|catman|named|nis|preserve)/),o)) {
+		# FSSTND dirs in man pages
+		# regexes taken from checks/files
+		print "I: $pkg $type: FSSTND-dir-in-manual-page $file:$lc $1";
+	    }
+	}
+	print "W: $pkg $type: hyphen-used-as-minus-sign $file ".($hc-10)." more occurences not shown\n" if $hc > 10 and ! $ENV{'LINTIAN_DEBUG'};
     }
 }
 close(IN);

@@ -135,3 +135,34 @@ Info: Manual files that use the .so links to include other pages should
 Tag: empty-manual-page
 Type: error
 Info: The referenced manual page is empty.
+
+Tag: manpage-section-missmatch
+Type: error
+Info: Most man pages contain a header line (marked .TH) in which
+ among other thing their section number is specified. For this
+ particular man page the section number in the header line isn't
+ equal with the section number specified by the filename. This
+ is most probably an error (In most cases caused by someone
+ renaming the file but not adjusting the content).
+
+Tag: hyphen-used-as-minus-sign
+Type: warning
+Info: Manual page seems to contain a hyphen where a minus sign was intended.
+ '-' chars are interpreted as hyphens by groff, not as minus signs (which
+ you want for options for example). '-' must be escaped ('\-') to be
+ interpreted as minus. See groff(7) for details.
+ .
+ Because this error can occur <em>very</em> often we show only the
+ first 10 occurences for each man page and give the number of
+ suppressed occurences. If you want to see all warnings, run
+ lintian with the -d/--debug option.
+
+Tag: FSSTND-dir-in-manual-page
+Type: info
+Info: The manual page references a directory that is specified
+ in the FSSTND but not in the FHS which is used by Debian.
+ This can be an indicator of a mismatch of the location of
+ files as installed for Debian and as described by the man page.
+ .
+ If you have to change file locations to abide by Debian Policy
+ please also patch the man page to mention these new locations.

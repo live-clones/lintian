@@ -38,9 +38,17 @@ lintian (1.23.0) UNRELEASED; urgency=low
       Dinstall::CutOffPastYear from dak CVS as limit.
       (Closes: #204801, #218304)
   * checks/manpages:
-    + [FL] Two new errors: 1) if section number of directory and file
-      differ, 2) if section number of file differs from what is expected
-      from the location of the binary. (Closes: #203831)
+    + [FL] New checks:
+       - Section number of directory and file differ
+       - Section number of file differs from what is expected
+         from the location of the binary. (Closes: #203831)
+    + [FL] Parse contents of man page and implement more new checks:
+      - Section number of file and header differ (Closes: #89488)
+      - Try to search for hyphens that should be minus signs
+        (Closes: #205924). First patch by Eduard Bloch, final 
+        regex by Josip Rodin.
+      - Search for FSSTND directories referenced in man pages. Only
+        an info tag. (Closes: #111098)
   * checks/menu-format:
     + [FL] Only issue one warning about needs=dwww, not two
     + [HE] Check if the command given with command= is in the package
