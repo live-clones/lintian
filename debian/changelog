@@ -85,6 +85,10 @@ lintian (1.22.12) unstable; urgency=low
     + Test syntax of Uploaders: too
     + Don't consider depending on coreutils bad, as this is in a way a
       versioned depend (Closes: #216536)
+  * checks/scripts:
+    + Tighten up mknod, dpkg --print-architecture and killall detection in
+      maintainer scripts, would need rewrite to be really sane
+      (Closes: #148548, #161820, #192300)
 
  -- Frank Lichtenheld <djpig@debian.org>  Mon,  8 Mar 2004 00:46:15 +0100
 
