@@ -97,6 +97,12 @@ foreach my $template (@templates) {
     } elsif ($template->{type} eq 'multiselect') {
 	$isselect=1;
 	$usesmultiselect=1;
+    } elsif ($template->{type} eq 'boolean') {
+	print "E: $pkg $type: boolean-template-has-bogus-default ".
+	    "$template->{template} $template->{default}\n"
+		if defined $template->{default}
+		    and $template->{default} ne 'true'
+		    and $template->{default} ne 'false';
     }
 
     if ($isselect and not exists $template->{choices}) {

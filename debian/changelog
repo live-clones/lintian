@@ -5,9 +5,12 @@ lintian (1.23.0) UNRELEASED; urgency=low
   * [FL] add udeb support (Closes: #216117)
     Thanks to Joey Hess for his input. Many changes, mostly to
      frontend/lintian, checks/debconf and checks/files
-  
+
   * checks/binaries:
     + [JvW] Ignore static binaries in /usr/lib/debug
+  * checks/debconf{,.desc}:
+    + [JvW] Add an error for a bogus default for a boolean template
+      (Closes: #236846)
   * checks/fields.desc:
     + [FL] Fix some wrong policy references
   * checks/menu-format:
@@ -20,7 +23,7 @@ lintian (1.23.0) UNRELEASED; urgency=low
       error and remove it from the list of usual interpreters.
       (Closes: #240806)
 
- -- Frank Lichtenheld <djpig@debian.org>  Sat, 27 Mar 2004 20:55:15 +0100
+ -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Thu,  1 Apr 2004 01:10:34 +0200
 
 lintian (1.22.12) unstable; urgency=low
 
