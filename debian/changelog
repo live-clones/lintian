@@ -11,6 +11,8 @@ lintian (1.22.12) unstable; urgency=low
   * man/lintian.1:
     + [FL] sync man page with the --help output by adding missing options
       Based on a patch by Robert Lemmen. (Closes: #198615)
+    + [FL] sync man page with the current list of checks and collection
+      scripts
 
   * checks/binaries:
     + [FL] Don't complain about non-stripped kernel modules.
@@ -26,9 +28,11 @@ lintian (1.22.12) unstable; urgency=low
     + [FL] Fixed false positives of
       copyright-should-refer-to-common-license-file-for-gpl due to
       the GFDL. Thanks to Ross Burton for reporting this. (Closes: #192278)
-  * checks/deb-format:
+  * checks/deb-format{,.desc}:
     + [JvW] Fix perl variable-name clash causing unusually formatted error
       output (only important if you do automatic processing on it)
+    + [FL] The current script is by Denis Barbier, correcting author in
+      .desc file
   * checks/debhelper.desc:
     + [FL] correct reference to debhelper manpage. It's debhelper(7), not
       debhelper(1). Thanks to Brian Nelson for pointing this out
@@ -39,6 +43,9 @@ lintian (1.22.12) unstable; urgency=low
   * checks/description:
     + [FL] fix description-is-dh_make-template check. (Closes: #215125)
       Fix suggested by Josip Rodin
+  * checks/etcfiles.desc:
+    + [FL] correcting abbrevation of etcfiles to 'etc', was 'ini' which
+      is already used by init.d
   * checks/fields:
     + [FL] Really check only "real" dependency fields for needlessy
       depends (Closes: #185035)

@@ -15,7 +15,7 @@
 .\" Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
 .\" USA
 .\"
-.TH LINTIAN 1 "February 21, 2004" "Debian GNU/Linux"
+.TH LINTIAN 1 "March 8, 2004" "Debian GNU/Linux"
 
 .SH NAME
 lintian \- Debian package checker
@@ -66,11 +66,11 @@ Actions of the
 command: (Only one action can be specified per invocation)
 
 .TP
-.BR \-S ", " \-\-setup-lab
+.BR \-S ", " \-\-setup\-lab
 Set up or update the laboratory.
 
 .TP
-.BR \-R ", " \-\-remove-lab
+.BR \-R ", " \-\-remove\-lab
 Remove the laboratory directory.
 
 .TP
@@ -317,7 +317,7 @@ variable in the configuration file.
 Search for bugs in binaries and object files.
 
 .TP
-.B changelog-file (chg)
+.B changelog\-file (chg)
 Check changelog files in a binary package.
 
 .TP
@@ -327,7 +327,7 @@ Check if the
 control file of a binary package is correct.
 
 .TP
-.B control-files (ctl)
+.B control\-files (ctl)
 Check for unknown control files in the binary package.
 
 .TP
@@ -336,7 +336,7 @@ Check if a binary package conforms to policy with respect to
 the copyright file.  Each binary package must either have a 
 .RI /usr/share/doc/ package /copyright
 file or must have a symlink
-.RI /usr/share/doc/ package -> foo,
+.RI /usr/share/doc/ package \-> foo,
 where
 .I foo
 comes from the same source package, and this package declares a 
@@ -344,19 +344,45 @@ comes from the same source package, and this package declares a
 .IR foo .
 
 .TP
-.B description (des)
-Check if the
-.B Description
-control field of a binary package conforms to the rules in the
-Policy Manual (appendix D).
+.B cruft (deb)
+Looks for cruft in source packages, like files of version control
+systems and temporary files from the build process.
+
+.TP
+.B deb\-format (dfmt)
+Checks if a binary package was build with a broken version of tar so
+that dpkg can't handle it correctly.
+
+.TP
+.B debconf (dc)
+Looks for common mistakes in packages using debconf, like missing
+dependencies or errors in the template file.
+
+.TP
+.B debdiff (dif)
+Look for .orig and .rej files in the Debian diffs.
 
 .TP
 .B debian\-readme (drm)
 Check if the README.Debian file is merely the debmake template.
 
 .TP
-.B debdiff (dif)
-Look for .orig and .rej files in the Debian diffs.
+.B debhelper (dh)
+Looks for common mistakes in source packages using debhelper.
+
+.TP
+.B description (des)
+Check if the
+.B Description
+control field of a binary package conforms to the rules in the
+Policy Manual (section 3.4).
+
+.TP
+.B etcfiles (etc)
+Checks if all files in
+.B /etc
+that are shipped with the package are marked as conffiles as
+required by policy.
 
 .TP
 .B fields (fld)
@@ -366,6 +392,18 @@ Check control fields of a binary or source package.
 .B files (fil)
 Check if a binary package conforms to policy with respect to
 types, permissions and ownerships of files and directories.
+
+.TP
+.B huge\-usr\-share (hus)
+Checks whether an architecture\-dependent package does
+have a significantly big \fB/usr/share\fR. Big amounts of
+architecture independent data in architecture dependent
+packages waste space on the mirrors.
+
+.TP
+.B infofiles (info)
+Check if a binary package conforms to policy with respect
+to info documents.
 
 .TP
 .B init.d (ini)
@@ -399,14 +437,19 @@ Check the syntax of menu files installed by the package.
 .TP
 .B perl (prl)
 Check perl scripts installed by the package for the usage of perl
-modules, and check that the package declares the appropriate dependencies.
+modules, and check that the package declares the appropriate
+dependencies.
+
+.TP
+.B po\-debconf (pd)
+Looks for common mistakes in packages using po\-debconf.
 
 .TP
 .B scripts (scr)
 Check the the \fB#!\fR lines of scripts in a binary package.
 
 .TP
-.B shared-libs (shl)
+.B shared\-libs (shl)
 Check if a binary package conforms to policy with respect to
 shared libraries and the
 .B shlibs
@@ -436,6 +479,10 @@ Copy the changelog file of a package into the lintian directory.
 Copy the copyright file of a package into the lintian directory.
 
 .TP
+.B debfiles
+Collects files shipped in the source of the package.
+
+.TP
 .B debian\-readme
 Copy the README.Debian file of a package into the lintian directory.
 
@@ -444,6 +491,12 @@ Copy the README.Debian file of a package into the lintian directory.
 Collect the output of the
 .BR diffstat (1)
 utility for the Debian diff in a source package.
+
+.TP
+.B doc\-base\-files
+Copy the contents of 
+.B /usr/share/doc\-base
+into the lintian directory (below \fBdoc\-base\fR).
 
 .TP
 .B file\-info
@@ -462,7 +515,7 @@ scripts into the lintian directory (below \fBinit.d\fR).
 Collect the md5sums of all files in a binary package.
 
 .TP
-.B menu-files
+.B menu\-files
 Copy the contents of a binary package's
 .I usr/share/doc/menu
 directory into the
@@ -476,12 +529,8 @@ Collect the output of the
 utility for each file in a binary package.
 
 .TP
-.B perlmods
-Search the perl scripts in a binary package for
-.B use
-and
-.B require
-directives.
+.B override\-file
+Copy the override file of a package into the lintian directory
 
 .TP
 .B scripts
@@ -536,7 +585,7 @@ No policy violations (errors) detected. (There might have been warnings, though.
 Policy violations detected.
 .TP
 .B 2
-Lintian run-time error. An error message is sent to stderr.
+Lintian run\-time error. An error message is sent to stderr.
 
 .SH USAGE
 Examples:
@@ -552,7 +601,7 @@ Search for package foo in the Debian archive and check it. (Depending
 on what is found, this command will check either the source or binary
 package foo, or both.)
 .TP
-.B "$ lintian -i foo.changes"
+.B "$ lintian \-i foo.changes"
 Check the changes file and, if listed, the source and binary package
 of the upload. The output will contain detailed information about the
 reported tags.
@@ -563,15 +612,15 @@ Search for binary package foo in the Debian archive and check it.
 .B "$ lintian \-C cpy \-\-source foo"
 Run the copyright checks on source package foo.
 .TP
-.B "$ lintian -u foo"
+.B "$ lintian \-u foo"
 Unpack package foo in the Lintian laboratory up to level 1. (If it's
 already unpacked at level 1 or 2, nothing is done.)
 .TP
-.B "$ lintian -l1 -r foo"
+.B "$ lintian \-l1 \-r foo"
 Search for package foo in the Debian archive and, if found, reduce the
 package disk usage in the laboratory to level 1.
 .TP
-.B "$ lintian -r foo"
+.B "$ lintian \-r foo"
 Remove package foo from the Lintian laboratory.
 
 .SH BUGS
@@ -584,7 +633,7 @@ checks simultaneously is likely to fail.)
 If you discover any other bugs in Lintian, please contact the authors.
 
 .SH SEE ALSO
-.BR lintian-info (1),
+.BR lintian\-info (1),
 .B Lintian User's Manual
 (file:/usr/share/doc/lintian/lintian.html/index.html)
 
@@ -594,5 +643,5 @@ Richard Braakman <dark@xs4all.nl>
 .br
 Christian Schwarz <schwarz@monet.m.isar.de>
 .br
-Please use the email address <lintian-maint@debian.org> for Lintian related
+Please use the email address <lintian\-maint@debian.org> for Lintian related
 comments.

@@ -1,5 +1,5 @@
 Check-Script: deb-format
-Author: Marc Brockschmidt <marc@dch-faq.de>
+Author: Denis Barbier <barbier@linuxfr.org>
 Abbrev: dfmt
 Standards-Version: 3.6.1
 Type: binary
