@@ -314,7 +314,7 @@ sub VerifyLine {
     my %file_index;
     open(FILE_INDEX,"index") or fail("cannot open index file index: $!");
     while(<FILE_INDEX>) {
-	$file_index{(split /\s*/, $_)[5]} = 1;
+	$file_index{(split /\s+/, $_)[5]} = 1;
     }
     close FILE_INDEX;
     
@@ -334,14 +334,14 @@ sub VerifyLine {
 	    if (! defined($com[0]) || $com[0] ne '-c') {
 		print "E: $pkg $type: su-to-root-without--c /usr/lib/menu/$menufile:$linecount\n";
 		print "W: $pkg $type: menu-command-not-in-package /usr/lib/menu/$menufile:$linecount\n"
-		    if ($com[0] && !$file_index{$com[0]});
+		    if ($com[0] && !$file_index{".$com[0]"});
 	    } else {   
 		print "W: $pkg $type: menu-command-not-in-package /usr/lib/menu/$menufile:$linecount\n"
-		    if ($com[1] && !$file_index{$com[1]});
+		    if ($com[1] && !$file_index{".$com[1]"});
 	    }
-	} else { 	
-	    print "W: $pkg $type: menu-command-not-in-package /usr/lib/menu/$menufile:$linecount\n"
-	        if ($com[0] && !$file_index{$com[0]});
+	} else {
+	    print "W: $pkg $type: menu-command-not-in-package /usr/lib/menu/$menufile:$linecount $com[0]\n"
+	        if ($com[0] && !$file_index{".$com[0]"});
 	}
 
     if (exists($vals{'icon'})) {
