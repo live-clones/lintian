@@ -3,6 +3,8 @@ lintian (1.22.9-0.1) unstable; urgency=low
   * Non Maintainer Upload with knowledge of Maintainer
 
   Jeroen van Wolffelaar <jeroen@wolffelaar.nl>
+   * Upgrade lintian itself to policy 3.6.1
+     + Drop question about removing lab on purge, just do it.
    * Check whether changelog is valid UTF-8 (Closes: #175318)
      (Patch by: Colin Walters <walters@debian.org>)
    * Update to Debian Policy 3.6.1, all references broken by
