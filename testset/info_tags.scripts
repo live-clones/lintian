@@ -24,6 +24,7 @@ N:   Refer to Policy Manual, section 12.1 for details.
 N:
 E: scripts: binary-without-manpage py2foo
 E: scripts: binary-without-manpage pyfoo
+E: scripts: binary-without-manpage tkfoo
 E: scripts: python-script-but-no-python-dep ./usr/bin/pyfoo
 N:
 N:   Packages with scripts that are executed with python must depend on the

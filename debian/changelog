@@ -4,6 +4,9 @@ lintian (1.22.12) unstable; urgency=low
   * checks/fields:
     + Really check only "real" dependency fields for needlessy
       depends (Closes: #185035)
+  * checks/scripts:
+    + Fix check for "exec ..." line. Fix suggested by Josip Rodin.
+      (Closes: #212811)
 
  -- Frank Lichtenheld <djpig@debian.org>  Sat, 21 Feb 2004 16:55:27 +0100
 

@@ -2,6 +2,7 @@ W: scripts source: ancient-standards-version 3.2.1
 E: scripts: binary-without-manpage perlfoo
 E: scripts: binary-without-manpage py2foo
 E: scripts: binary-without-manpage pyfoo
+E: scripts: binary-without-manpage tkfoo
 E: scripts: python-script-but-no-python-dep ./usr/bin/pyfoo
 E: scripts: python-script-but-no-python-dep ./usr/bin/py2foo
 E: scripts: no-copyright-file

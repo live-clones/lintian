@@ -14,6 +14,7 @@ binary-indep:
 	install -m 755 pyfoo $(tmp)/usr/bin/
 	install -m 755 py2foo $(tmp)/usr/bin/
 	install -m 755 perlfoo $(tmp)/usr/bin/
+	install -m 755 tkfoo $(tmp)/usr/bin/
 	cp debian/changelog $(tmp)/usr/share/doc/scripts/changelog
 	gzip -9 $(tmp)/usr/share/doc/scripts/changelog
 

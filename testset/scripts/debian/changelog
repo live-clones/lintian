@@ -1,3 +1,9 @@
+scripts (2) unstable; urgency=low
+
+  * Add tkfoo script for tk checkings
+
+ -- Lintian Maintainers <lintian-maint@debian.org>  Sat, 21 Feb 2004 17:13:36 +0100
+
 scripts (1) unstable; urgency=low
 
   * Initial version

@@ -504,7 +504,7 @@ sub script_is_evil_and_wrong {
     while (<IN>) {
         last if (++$i > 20);
         chomp;
-        if (/^\s*exec\s*.+\s*.?\$0.?\s*(\${1\+)?.?\$\@/) {
+        if (/^\s*exec\s*.+\s*.?\$0.?\s*(--\s*)?(\${1\+)?.?\$\@/) {
             $ret = 1;
             last;
         }
