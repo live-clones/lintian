@@ -35,6 +35,8 @@ goals not targetted
 - go through the test suite and organise it more cleanly
 - update doc/CREDITS file
 - Fix experimental support back in
+- Go through testset/libbaz/debian/rules, and make sure all TODO's are
+  lintian-detected
 
 old todo list
 =============

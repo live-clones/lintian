@@ -5,15 +5,22 @@ CFLAGS=-Wall -Winline -O2
 
 OBJS=baz.o extra.o
 
-all: libbaz2.a libbaz2.so
+all: libbaz1.a libbaz2.a libbaz1.so.1.0.3b libbaz2.so
 
 libbaz2.so: libbaz2.so.1.0
 	ln -sf $^ $@
 libbaz2.so.1.0: libbaz2.so.1.0.3b
 	ln -sf $^ $@
 
+# Oops, forget the soname altogether
+libbaz1.so.1.0.3b: $(OBJS)
+	$(CC) -o $@ -shared $^ -lc
+
 libbaz2.so.1.0.3b: $(OBJS:%.o=%.sho)
 	$(CC) -o $@ -shared -Wl,-soname,libbaz2.so.1.0 $^ -lc
+
+#%.o-noreentrant: %.c
+#	$(CC) $(CFLAGS) -o $@ -c $<
 
 %.sho: %.c
 	$(CC) $(CFLAGS) -D_REENTRANT -fPIC -o $@ -c $<
@@ -24,6 +31,10 @@ libbaz2.so.1.0.3b: $(OBJS:%.o=%.sho)
 libbaz2.a: $(OBJS)
 	ar cq $@ $(OBJS)
 	ranlib $@
+
+# The pic one in the .a (wrong), no archive table
+libbaz1.a: $(OBJS:%.o=%.sho)
+	ar cqS $@ $^
 
 clean:
 	rm -f *.a *.o *.so* *.sho
