@@ -10,21 +10,21 @@ goals for 1.22.12 [08.03.2004 - surely in Sarge]
 goals for 1.23.0 [04.2004 - do we get it in Sarge?]
 ===================================================
 
-- add .udeb support -- almost done, see 1.22.11+udeb branch
+- add .udeb support -- done
   (#216117)
 - go through all checks and try to move common code to modules
 - go through the test suite and organise it more cleanly
-- perhaps already try to overhaul the Errors/Warnings concept
-  (#197955, #189656)
 - overhaul the overrides concept to enable source overrides
   (#129510)
-- update debian/copyright. List of authors seems rather outdated
+- update debian/copyright. List of authors seems rather outdated -- done
 
 goals not targetted
 ===================
 
 - #118170: [frontend] lintian needs lots of space in /tmp
   should be tackled, don't know when, though
+- overhaul the Errors/Warnings concept
+  (#197955, #189656)
 
 
 old todo list
