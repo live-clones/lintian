@@ -19,6 +19,8 @@ lintian (1.23.0) UNRELEASED; urgency=low
       from the location of the binary. (Closes: #203831)
   * checks/menu-format:
     + [FL] Only issue one warning about needs=dwww, not two
+    + [HE] Check if the command given with command= is in the package
+      (Closes: #199346)
   * checks/scripts:
     + [FL] Add /usr/bin/php as valid interpreter. (Closes: #239115)
       Thanks to Peter Eisentraut for pointing this change out

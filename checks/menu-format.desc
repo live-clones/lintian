@@ -175,3 +175,9 @@ Type: warning
 Info: The menu item includes a tag with an unquoted string like section=Games
  instead of section="Games". This is deprecated. Use a quoted string instead.
 Ref: menu 3.1
+
+Tag: menu-command-not-in-package
+Type: warning
+Info: The menu item specifies a command which is not available in the package.
+ In most cases this is a typo or after you moved a binary around, but forgot
+ to update the menu file.

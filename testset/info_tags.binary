@@ -94,6 +94,12 @@ N:
 N:   The menu item command uses su-to-root without the -c flag. This is a
 N:   syntax error, see su-to-root(1) for more information.
 N:
+W: binary: menu-command-not-in-package /usr/lib/menu/binary:2
+N:
+N:   The menu item specifies a command which is not available in the
+N:   package. In most cases this is a typo or after you moved a binary
+N:   around, but forgot to update the menu file.
+N:
 E: binary: su-to-root-without--c /usr/lib/menu/binary:3
 E: binary: su-to-root-without-usr-sbin /usr/lib/menu/binary:4
 N:
@@ -127,6 +133,7 @@ N:   The menu item has a line that has a needs= field with a strange value.
 N:   This may be intentional, but it's probably a typo that will make menu
 N:   ignore the line.
 N:
+W: binary: menu-command-not-in-package /usr/lib/menu/binary:6
 E: binary: unstripped-binary-or-object ./usr/bin/hello
 N:
 N:   The package installs an unstripped binary or object file.
