@@ -89,16 +89,3 @@ Info: The add-log-mailing-address variable is no longer honored in
  files.  Instead, put something like this in your ~/.emacs:
  .
  (setq debian-changelog-mailing-address "userid@debian.org")
-
-Tag: debian-changelog-file-uses-obsolete-national-charset
-Type: error
-Info: The Debian changelog file must be valid UTF-8, an encoding of
- the Unicode character set. 
- .
- There are many ways to convert a changelog from an obsoleted charset
- like ISO-8859-1; you may for example use "iconv" like:
- .
- $ iconv --from-code=ISO-8859-1 --to-code=UTF-8 changelog > changelog.new
- .
- $ mv changelog.new changelog
-Ref: policy 5.3
