@@ -658,7 +658,7 @@ while (my $arg = shift) {
 	
 		# check md5sums
 		if ($check_md5sums or $file =~ /\.dsc$/) {
-		    my $real_md5sum = get_md5_file($filename);
+		    my $real_md5sum = get_file_md5($filename);
 
 		    if ($real_md5sum ne $md5sum) {
 			print "E: $arg_name: md5sum-mismatch-in-changes-file $file\n";
