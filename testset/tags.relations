@@ -1,5 +1,4 @@
 W: relations source: ancient-standards-version 3.1.1
-W: relations source: build-depends-without-arch-dep
 E: relations-multiple-libs: no-copyright-file
 W: relations-multiple-libs: description-synopsis-might-not-be-phrased-properly
 E: relations-multiple-libs: description-synopsis-is-duplicated

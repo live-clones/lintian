@@ -11,6 +11,10 @@ lintian (1.22.12) unstable; urgency=low
   * checks/fields:
     + Really check only "real" dependency fields for needlessy
       depends (Closes: #185035)
+    + Remove the build-depends-without-arch-dep check. It produces
+      way too much false positives and can only be replaced by
+      a sophisticated debian/rules parser
+      (Closes: #192037, #202950, #214231)
   * checks/scripts:
     + Fix check for "exec ..." line. Fix suggested by Josip Rodin.
       (Closes: #212811)

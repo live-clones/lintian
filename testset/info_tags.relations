@@ -9,14 +9,6 @@ N:   don't have to re-upload the package just to adjust the
 N:   Standards-Version control field. However, please remember to update
 N:   this field next time you upload the package.
 N:
-W: relations source: build-depends-without-arch-dep
-N:
-N:   The control file specifies source relations for architecture-dependent
-N:   packages, but no architecture-dependent packages are built. Most
-N:   likely you need to change Build-Depends to Build-Depends-Indep.
-N:   
-N:   Refer to Policy Manual, section 7.6 for details.
-N:
 E: relations-multiple-libs: no-copyright-file
 N:
 N:   Each binary package has to include a plain file
