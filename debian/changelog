@@ -9,9 +9,9 @@ lintian (1.23.1~alpha) unstable; urgency=low
     + [FL] Don't report shlib-with-executable-bit and
       shlib-with-bad-permissions on symbolic links to such files
 
-  * debian/{control,rules}, frontent/lintian:
+  * debian/{control,rules}, frontend/lintian:
     + [JvW] Insert version number at package build time, no need to commit a
-      change to frontent/lintian on every version number change... Requires
+      change to frontend/lintian on every version number change... Requires
       sed version 4 at build-time.
 
   * testset/filenames:
