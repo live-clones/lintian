@@ -91,6 +91,8 @@ W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/examples/v
 N:
 N:   Package contains a file which is empty.
 N:
+W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/examples/very_interesting_example2.gz
+W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/Changes.gz
 E: filenames: symlink-should-be-absolute usr/lib/filenames/symlink1wrong ../../../etc/symlink
 N:
 N:   Symbolic links between different top-level directories should be

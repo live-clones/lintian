@@ -16,6 +16,7 @@ lintian (1.23.0) UNRELEASED; urgency=low
   * checks/files:
     + [HE] New check for compiled python files (*.pyc). Patch by David
       Kimdon <david@kimdon.org>, thanks. (Closes: #236606)
+    + [HE] Check for gzipped zero byte files. (Closes: #172052)
   * checks/manpages:
     + [FL] Two new errors: 1) if section number of directory and file
       differ, 2) if section number of file differs from what is expected

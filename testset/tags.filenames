@@ -16,6 +16,8 @@ E: filenames: package-installs-packlist usr/lib/perl5/foo/.packlist
 W: filenames: package-contains-svn-control-dir usr/lib/perl5/.svn/
 W: filenames: package-contains-CVS-dir usr/lib/perl5/CVS/
 W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/examples/very_interesting_example
+W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/examples/very_interesting_example2.gz
+W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/Changes.gz
 E: filenames: symlink-should-be-absolute usr/lib/filenames/symlink1wrong ../../../etc/symlink
 E: filenames: symlink-has-too-many-up-segments usr/lib/filenames/symlink2wrong ../../../../etc/symlink
 E: filenames: symlink-should-be-relative usr/lib/filenames/symlink3wrong /usr/lib/filenames/symlink2

@@ -165,6 +165,13 @@ while (<IN>) {
 			print "W: $pkg $type: zero-byte-file-in-doc-directory $file\n";
 		    }
 		}
+		# gzipped zero byte files:
+		# 276 is 255 bytes (maximal length for a filename) + gzip overhead
+		if ($file =~ m,.gz$, and $size <= 276 and $perm =~ m,^-,) {
+		    unless (`gzip -dc unpacked/$file`) {
+			print "W: $pkg $type: zero-byte-file-in-doc-directory $file\n";
+		    }
+		}
 
 		# override files have moved
 		my $tmp = quotemeta($pkg);
