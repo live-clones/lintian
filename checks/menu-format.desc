@@ -43,9 +43,9 @@ Type: warning
 Info: The menu item contains two instances of the same tag. This is just a
  waste of space, as menu will only use one of them.
 
-Tag: menu-item-missing-important-tag
-Type: warning
-Info: The menu item has a line that is missing an important tag. It's likely
+Tag: menu-item-missing-required-tag
+Type: error
+Info: The menu item has a line that is missing a required tag. It's likely
  that the line will have no effect without this tag. <tt>install-menu</tt> may
  report this as an error during package installation.
 
@@ -150,3 +150,28 @@ Info: The menu item command use su-to-root without the full
  .
  Therefore, the absolute pathname to su-to-root is still required for Sarge
  packages.
+
+Tag: menu-item-needs-dwww
+Type: warning
+Info: The menu item has needs=dwww. This is deprecated. Instead, you should
+ register your documentation with doc-base, and dwww entries will be 
+ automatically generated.
+
+Tag: non-wm-in-windowmanager-menu-section
+Type: error
+Info: The menu item is in the WindowManager section but does not needs=wm.
+ Either it is a window manager and it should needs=wm, either it isn't and
+ then it must be moved in another section.
+
+Tag: non-wm-module-in-wm-module-menu-section
+Type: error
+Info: The menu item is in the WindowManager/Modules section but does not use
+ a window-manager specific needs, like needs="fvwmmodule", or needs="wmmaker".
+ You should make it needs the window manager it is a module for and add
+ support in the window-manager menu-method.
+
+Tag: unquoted-string-in-menu-item
+Type: warning
+Info: The menu item includes a tag with an unquoted string like section=Games
+ instead of section="Games". This is deprecated. Use a quoted string instead.
+Ref: menu 3.1

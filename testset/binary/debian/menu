@@ -1,5 +1,5 @@
 ?package(binary):needs=text title="Hello World" command="/usr/bin/hello"
 ?package(binary):needs=text section="Apps/System" title="Run cfdisk (0)" command="/usr/sbin/su-to-root cfdisk"
-?package(binary):needs=text section="Apps/System" title="Run cfdisk (1)" command="/usr/sbin/su-to-root -p cfdisk"
-?package(binary):needs=text section="Apps/System" title="Run cfdisk (2)" command="su-to-root -c cfdisk"
-?package(binary):needs=text section="Apps/System" title="Run cfdisk (3)" command="/usr/bin/su-to-root cfdisk"
+?package(binary):needs="text" section="Apps/System" title="Run cfdisk (1)" command="/usr/sbin/su-to-root -p cfdisk"
+?package(binary):needs="x11" section="WindowManagers" title="Run xfdisk" command="su-to-root -c xfdisk"
+?package(binary):needs="wm" section="Apps/System" title="Run fdisk-wm" command="/usr/bin/su-to-root cfdisk"

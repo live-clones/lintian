@@ -40,10 +40,10 @@ my @known_tags=qw(
 	hints
     );
 
-# This is a list of all known uses of the needs= tag.
+# These 'needs' tags are always valid, no matter the context, and no other
+# values are valid outside WindowManagers context
 # (It's case insensitive, use lower case here.).
-my @needs_tag_vals=qw(x11 text vc asmodule fvwmmodule fvwm2module fvwm95module
-		      fvwmother wm dwww wmaker);
+my @needs_tag_vals=qw(x11 text vc);
 
 # Authorative source of menu sections:
 # http://www.debian.org/doc/packaging-manuals/menu-policy/ch2#s2.1
@@ -262,6 +262,8 @@ sub VerifyLine {
 	# If the value was quoted, remove those quotes.
 	if ($value =~ m/^\"(.*)\"$/) {
 	    $value = $1;
+	} else {
+	    print "W: $pkg $type: unquoted-string-in-menu-item /usr/lib/menu/$menufile $1:$linecount\n";
 	}
 
 	# If the value has escaped characters, remove the
@@ -293,7 +295,11 @@ sub VerifyLine {
     # Test for important tags.
     foreach my $tag (@req_tags) {
 	unless ( exists($vals{$tag}) && defined($vals{$tag}) ) {
-	    print "W: $pkg $type: menu-item-missing-important-tag $tag /usr/lib/menu/$menufile:$linecount\n";
+	    print "E: $pkg $type: menu-item-missing-required-tag $tag /usr/lib/menu/$menufile:$linecount\n";
+	    # Just give up right away, if such an essential tag is missing,
+	    # chance is high the rest doesn't make sense either. And now all
+	    # following checks can assume those tags to be there
+	    return;
 	}
     }
 	
@@ -304,7 +310,6 @@ sub VerifyLine {
 	}
     }
     
-    if (exists($vals{'command'})) {
 	my @com=split(' ',$vals{'command'});
 	if ($com[0] eq "su-to-root") {
 	    print "E: $pkg $type: su-to-root-without-usr-sbin /usr/lib/menu/$menufile:$linecount\n";
@@ -322,7 +327,6 @@ sub VerifyLine {
 		print "E: $pkg $type: su-to-root-without--c /usr/lib/menu/$menufile:$linecount\n";
 	    }
 	}
-    }
 
     if (exists($vals{'icon'})) {
 	VerifyIcon($menufile, $linecount, $vals{'icon'}, 32);
@@ -334,29 +338,35 @@ sub VerifyLine {
 	VerifyIcon($menufile, $linecount, $vals{'icon16x16'}, 16);
     }
 
-    # Check the needs tag.
-    if ((not $needs_tag_vals_hash{lc($vals{'needs'})}) and
-	$vals{'needs'} ne $pkg) {
-	print "W: $pkg $type: menu-item-needs-tag-has-unknown-value $vals{'needs'} /usr/lib/menu/$menufile:$linecount\n";
-	return;		# don't check section tag for weird needs values.
-    }
-	
-    # Check the section tag.
-    my $section;
-    if (exists($vals{'section'}) && defined($vals{'section'})) {
-	$section = $vals{'section'};
+    # Sanitize the section tag
+    my $section = $vals{'section'};
 	$section =~ tr:/:/:s;	# eliminate duplicate slashes.
 	$section =~ s:/$::;	# remove trailing slash.
-    }
 	
-    if ($vals{'needs'} eq 'dwww') {
-	# dwww entries are really just variants of doc-base, so we don't check
-	# their sections until a policy on documentation structure is defined.
-    } elsif (! defined($section)) {
-	# If the section tag does not exist then the item will go
-	# right in the root menu, which is just Evil.
-	print "E: $pkg $type: menu-item-adds-to-root-menu /usr/lib/menu/$menufile:$linecount\n";
+    # Check the needs tag.
+    my $needs = lc($vals{'needs'}); # needs is case insensitive.
+
+    if ($needs eq "dwww") {
+	print "W: $pkg $type: menu-item-needs-dwww /usr/lib/menu/$menufile:$linecount\n";
+    }
+    if ($section =~ m:^WindowManagers/Modules:) {
+	# WM/Modules: needs must not be the regular ones nor wm
+	if ($needs_tag_vals_hash{$needs} or $needs eq "wm") {
+	    print "E: $pkg $type: non-wm-module-in-wm-modules-menu-section $needs /usr/lib/menu/$menufile:$linecount\n";
+	}
+    } elsif ($section =~ m:^WindowManagers:) {
+	# Other WM sections: needs must be wm
+        if ($needs ne 'wm') {
+	    print "E: $pkg $type: non-wm-in-windowmanager-menu-section $needs /usr/lib/menu/$menufile:$linecount\n";
+	}
     } else {
+	# Any other section: just only the general ones
+	if (not $needs_tag_vals_hash{$needs}) {
+	    print "W: $pkg $type: menu-item-needs-tag-has-unknown-value $needs /usr/lib/menu/$menufile:$linecount\n";
+	}
+    }
+
+    # Check the section tag
 	# Check for historical changes in the section tree.
 	if ($section =~ m:^Apps/Games:) {
 	    print "W: $pkg $type: menu-item-uses-apps-games-section /usr/lib/menu/$menufile:$linecount\n";
@@ -388,7 +398,6 @@ sub VerifyLine {
 		print "W: $pkg $type: menu-item-creates-new-section $vals{section} /usr/lib/menu/$menufile:$linecount\n";
 	    }
 	}
-    }
 }
 
 
@@ -448,3 +457,5 @@ parse_error:
     print "W: $pkg $type: menu-icon-cannot-be-parsed $icon: looking for $parse\n";
     return;
 }
+
+# vim: ts=8 sw=4

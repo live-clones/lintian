@@ -34,9 +34,14 @@ lintian (1.22.9-0.1) unstable; urgency=low
      + Drop menu-icon-has-bad-colors, it doesn't apply anymore (Closes: #199341)
      + Menu sub-policy 3.6.0 added two sections (Closes: #207529)
      + Added three checks for correct su-to-root usage (Closes: #188095)
-       (based on patch by Bill Allombert <ballombe@debian.org>)
      + Understand icon32x32 and icon16x16 (Closes: #200046)
-       (based on patch by Bill Allombert <ballombe@debian.org>)
+     + Missing required tags are now an error (and check name changed)
+     + Check tag-quotation
+     + Rewrite needs check properly, being more precise what is allowed
+     + Complain about needs="dwww", as this is obsolete accordint to menu
+       maintainer
+       (parts menu-format updates based on patch by Bill Allombert
+       <ballombe@debian.org>)
    * checks/scripts
      + Recognise the 'tcl' interpreter, not the same as tclsh (Closes: #230182)
 

@@ -57,19 +57,21 @@ N:   This script calls suidregister which is no longer needed, a new
 N:   command 'dpkg-statoverride' gives admins more flexibility. Please see
 N:   the documentation of suidmanager and dpkg-statoverride for details.
 N:
-W: binary: menu-item-missing-important-tag section /usr/lib/menu/binary:1
+W: binary: unquoted-string-in-menu-item /usr/lib/menu/binary needs:1
 N:
-N:   The menu item has a line that is missing an important tag. It's likely
+N:   The menu item includes a tag with an unquoted string like
+N:   section=Games instead of section="Games". This is deprecated. Use a
+N:   quoted string instead.
+N:   
+N:   Refer to menu 3.1 for details.
+N:
+E: binary: menu-item-missing-required-tag section /usr/lib/menu/binary:1
+N:
+N:   The menu item has a line that is missing a required tag. It's likely
 N:   that the line will have no effect without this tag. install-menu may
 N:   report this as an error during package installation.
 N:
-E: binary: menu-item-adds-to-root-menu /usr/lib/menu/binary:1
-N:
-N:   The menu item has a line that specifies a section that will put a menu
-N:   item right in the root menu. Packages should never add items directly
-N:   to the root menu. Note that if you specify an empty section, this
-N:   error will pop up, as it will if you specify a section of "/".
-N:
+W: binary: unquoted-string-in-menu-item /usr/lib/menu/binary needs:2
 E: binary: su-to-root-without--c /usr/lib/menu/binary:2
 N:
 N:   The menu item command uses su-to-root without the -c flag. This is a
@@ -85,6 +87,12 @@ N:
 N:   Therefore, the absolute pathname to su-to-root is still required for
 N:   Sarge packages.
 N:
+E: binary: non-wm-in-windowmanager-menu-section x11 /usr/lib/menu/binary:4
+N:
+N:   The menu item is in the WindowManager section but does not needs=wm.
+N:   Either it is a window manager and it should needs=wm, either it isn't
+N:   and then it must be moved in another section.
+N:
 E: binary: su-to-root-with-usr-bin /usr/lib/menu/binary:5
 N:
 N:   The menu item command use su-to-root using /usr/bin/su-to-root.
@@ -95,6 +103,12 @@ N:   The reason for this is that the old Woody menu package had su-to-root
 N:   exclusively in /usr/sbin, which is not in a regular user's $PATH.
 N:   Therefore, the absolute pathname to su-to-root is still required for
 N:   Sarge packages.
+N:
+W: binary: menu-item-needs-tag-has-unknown-value wm /usr/lib/menu/binary:5
+N:
+N:   The menu item has a line that has a needs= field with a strange value.
+N:   This may be intentional, but it's probably a typo that will make menu
+N:   ignore the line.
 N:
 E: binary: unstripped-binary-or-object ./usr/bin/hello
 N:
