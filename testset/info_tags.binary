@@ -25,7 +25,7 @@ N:
 E: binary: binary-without-manpage hello-static
 E: binary: binary-without-manpage hello.static
 E: binary: binary-without-manpage static-hello
-W: binary: arch-dep-package-has-big-usr-share 1540kB 55%
+I: binary: arch-dep-package-has-big-usr-share 1540kB 55%
 N:
 N:   The package has a significant amount of architecture-independent data
 N:   in /usr/share, while it is an architecture-dependent package. This is

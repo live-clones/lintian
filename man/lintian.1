@@ -36,7 +36,7 @@ policy as well as some checks for common errors.
 It uses an archive directory, called \fIlaboratory\fR, in which it
 stores information about the packages it examines.  It can keep this
 information between multiple invocations in order to avoid repeating
-expensive data\-collection operations.
+expensive data-collection operations.
 .sp
 There are three ways to specify binary or source packages for Lintian
 to process: by file name, by package name, or by naming a
@@ -149,7 +149,7 @@ Don't use the overrides file.
 Output tags that have been overriden
 
 .TP
-.BR \-U " info1,info2,..., " \-\-unpack-info " info1,info2,..."
+.BR \-U " info1,info2,..., " \-\-unpack\-info " info1,info2,..."
 Collect information info1, info2, etc. even if these are not
 required by the checks.
 
@@ -399,7 +399,7 @@ types, permissions and ownerships of files and directories.
 
 .TP
 .B huge\-usr\-share (hus)
-Checks whether an architecture\-dependent package does
+Checks whether an architecture-dependent package does
 have a significantly big \fB/usr/share\fR. Big amounts of
 architecture independent data in architecture dependent
 packages waste space on the mirrors.
@@ -529,7 +529,7 @@ directory in the lab.
 .TP
 .B objdump\-info
 Collect the output of the
-.BR obj\-dump (1)
+.BR objdump (1)
 utility for each file in a binary package.
 
 .TP
@@ -589,7 +589,7 @@ No policy violations (errors) detected. (There might have been warnings, though.
 Policy violations detected.
 .TP
 .B 2
-Lintian run\-time error. An error message is sent to stderr.
+Lintian run-time error. An error message is sent to stderr.
 
 .SH USAGE
 Examples:
