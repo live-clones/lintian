@@ -31,7 +31,7 @@ close VERSION;
 $version =~ s/^\d+://; #Remove epoch
 
 if ((not -f "${pkg}_${version}.diff.gz") and
-    ($version =~ /-/) and ($version !~ /-0\.\d+(?:\.\d+)?$/) ) {
+    ($version =~ /-/) and ($version !~ /-0\.[^-]+$/) ) {
     tag_warn("native-package-with-dash-version");
 }
 
