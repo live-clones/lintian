@@ -1,3 +1,10 @@
+lintian (1.23.8) UNRELEASED; urgency=low
+
+  * checks/common_data.pm:
+    [CW] Add tclx8.4 to %known_tclxs.
+
+ -- Colin Watson <cjwatson@debian.org>  Sun,  9 Jan 2005 23:48:45 +0000
+
 lintian (1.23.7) unstable; urgency=high
 
   * lib/Lab.pm:

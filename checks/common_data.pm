@@ -104,7 +104,7 @@ use base qw(Exporter);
     ( 'tcl74', 'tcl8.0', 'tcl8.2', 'tcl8.3', 'tcl8.4', );
 
 %known_tclxs = map { $_ => 1 }
-    ( 'tclx76', 'tclx8.0.4', 'tclx8.2', 'tclx8.3', );
+    ( 'tclx76', 'tclx8.0.4', 'tclx8.2', 'tclx8.3', 'tclx8.4', );
 
 %known_tks = map { $_ => 1 }
     ( 'tk40', 'tk8.0', 'tk8.2', 'tk8.3', 'tk8.4', );
