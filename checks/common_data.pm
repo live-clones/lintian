@@ -52,7 +52,7 @@ use base qw(Exporter);
 
 %known_obsolete_fields = map { $_ => 1 }
     ('revision', 'package-revision', 'package_revision',
-     'recommended', 'optional', 'class', 'bugs');
+     'recommended', 'optional', 'class');
 
 %known_essential = map { $_ => 1 }
     ('base-files', 'base-passwd', 'bash', 'bsdutils', 'coreutils',

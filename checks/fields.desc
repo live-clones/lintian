@@ -247,7 +247,8 @@ Ref: policy 2.5
 
 Tag: obsolete-field
 Type: error
-Info: This is one of the fields listed in Policy Manual as obsolete.
+Info: This field is listed in the Policy Manual as obsolete and
+ not-to-be-present in any package.
 Ref: policy D.2.6
 
 Tag: unknown-field-in-dsc
