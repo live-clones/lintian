@@ -145,9 +145,15 @@ Info: Most man pages contain a header line (marked .TH) in which
 Tag: hyphen-used-as-minus-sign
 Type: warning
 Info: Manual page seems to contain a hyphen where a minus sign was intended.
- '-' chars are interpreted as hyphens by groff, not as minus signs (which
- you want for options for example). '-' must be escaped ('\-') to be
- interpreted as minus. See groff(7) for details.
+ '-' chars are interpreted as hyphens (U+2010) by groff, not as minus signs
+ (U+002D). Since options to programs use minus signs (U+002D), this means for
+ example in UTF-8 locales that you cannot cut&amp;paste options, nor search for
+ them easily.
+ .
+ '-' must be escaped ('\-') to be interpreted as minus. If you really intend a
+ hyphen, write it as '\(hy' to emphasise that fact. See groff(7) and
+ especially groff_char(7) for details, and also the thread starting with
+ http://lists.debian.org/debian-devel/2003/debian-devel-200303/msg01481.html
  .
  Because this error can occur <em>very</em> often we show only the
  first 10 occurences for each man page and give the number of
