@@ -81,7 +81,7 @@ while (<RULES>) {
 	}
 	$seencommand = 1;
 	$needbuilddepends = 1;
-    } elsif (/^\s*export\s+DH_COMPAT=(\d+)/) {
+    } elsif (/^\s*export\s+DH_COMPAT\s*=\s*(\d+)/) {
 	$needversiondepends = $1;
     }
 }
