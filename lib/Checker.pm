@@ -52,7 +52,7 @@ sub runcheck {
 	my $type = shift;
 	my $name = shift;
 
-	# Will be set to 1 if error is encountered
+	# Will be set to 2 if error is encountered
 	my $return = 0;
 
 	print "N: Running check: $name ...\n" if $debug;
@@ -67,7 +67,12 @@ sub runcheck {
 
 	#print STDERR "Now running $name...\n";
 	$name =~ s/[-.]/_/g;
-	&{'Lintian::'.$name.'::run'}($pkg, $type);
+	eval { &{'Lintian::'.$name.'::run'}($pkg, $type) };
+	if ( $@ ) {
+	    print STDERR $@;
+	    print STDERR "internal error: cannot run $name check on package $pkg\n";
+	    $return = 2;
+	}
 
 	return $return;
 }
