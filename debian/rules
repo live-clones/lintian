@@ -10,7 +10,7 @@ onlyrun =
 runtests: $(neededfiles)
 	@echo .... running tests ....
 	[ -d debian/tests ] || mkdir debian/tests
-	LINTIAN_ROOT="" /usr/bin/perl testset/runtests -v -k testset debian/tests $(onlyrun)
+	LINTIAN_ROOT="" /usr/bin/perl testset/runtests -k testset debian/tests $(onlyrun)
 	touch $@
 
 build: $(neededfiles)

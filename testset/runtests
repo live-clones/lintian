@@ -27,12 +27,16 @@ Usage: $0 [-k] [-v] testset-directory testing-directory [test]
 The -k option means do not stop after one failed test, but try
 them all and report all errors.
 
-The -v option adds extra verbosity, for debugging purposes.
+The -v option will also display those tests that have a description, but are
+not tested in any testset-package.
 
 The optional 3rd parameter causes runtests to only run that particular test.
 END
     exit 2;
 }
+
+# for debugging:
+my $debug = 0;
 
 # Tests layout:
 # Every test package is in a directory pkgname-version in the testset
@@ -192,24 +196,24 @@ for (@tests) {
     my ($pkg, $ver) = ($pkgdir, $line);
     print "Running test on $pkg $ver: copying... ";
 
-    print "Cleaning up and repopulating $rundir/$pkgdir...\n" if $verbose;
+    print "Cleaning up and repopulating $rundir/$pkgdir...\n" if $debug;
     runsystem_ok("rm -rf $rundir/$pkgdir");
     runsystem("cp -rp $testset/$pkgdir $rundir");
     opendir D, "$testset" or die;
     foreach (readdir D) {
       next unless /^\Q${pkg}\E_.*\.orig\.tar\.gz$/;
-      print "Symlinking $_ in $rundir...\n" if $verbose;
+      print "Symlinking $_ in $rundir...\n" if $debug;
       symlink "../../$testset/$_", "$rundir/$_";
     }
     closedir D;
     runsystem("find $rundir -name CVS -o -name .svn -print0 | xargs -0r rm -R");
 
     print "building... ";
-    print "Running dpkg-buildpackage $dpkg_buildpackage_options in $rundir/$pkgdir...\n" if $verbose;
+    print "Running dpkg-buildpackage $dpkg_buildpackage_options in $rundir/$pkgdir...\n" if $debug;
     runsystem("cd $rundir/$pkgdir && dpkg-buildpackage $dpkg_buildpackage_options >../build.$pkg 2>&1");
 
     print "testing... ";
-    print "Running lintian $lintian_options on $rundir/$pkg\_$ver*.changes...\n" if $verbose;
+    print "Running lintian $lintian_options on $rundir/$pkg\_$ver*.changes...\n" if $debug;
     runsystem_ok("$lintian_path $lintian_options $rundir/$pkg\_$ver*.changes".
     	" 2>&1 | sort > $rundir/tags.$pkg");
 
