@@ -11,6 +11,8 @@ E: foo++ source: uploader-address-missing Josip
 E: foo++ source: uploader-address-malformed I am afraid of spam and think this helps <no_spam_please AT debian.org>
 E: foo++-helper: usr-doc-symlink-without-dependency foo++
 E: foo++-helper: wrong-debian-qa-address-set-as-maintainer Lintian Maintainer <debian-qa@lists.debian.org>
+W: foo++: readme-debian-contains-debmake-default-email-address
 E: foo++: no-copyright-file
 E: foo++: wrong-debian-qa-address-set-as-maintainer Lintian Maintainer <debian-qa@lists.debian.org>
-E: foo++: debian-changelog-file-uses-obsolete-national-charset at line 3
+E: foo++: debian-changelog-file-uses-obsolete-national-charset at line 11
+E: foo++: debian-changelog-file-contains-debmake-default-email-address

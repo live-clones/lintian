@@ -18,6 +18,10 @@ lintian (1.23.0) UNRELEASED; urgency=low
 
   * checks/binaries:
     + [JvW] Ignore static binaries in /usr/lib/debug
+  * checks/changelog-file:
+    + [HE] Check for the dh_make template email address in the changelog
+      entries. Patch by Steffen Moeller <moeller@pzr.uni-rostock.de>,
+      thanks! (Closes: #199903)
   * checks/common_data:
     + [HE] Change known_obsolete_fields to allow checks/fields to
       report the Bugs field als obsolete.
@@ -33,6 +37,9 @@ lintian (1.23.0) UNRELEASED; urgency=low
   * checks/debconf{,.desc}:
     + [JvW] Add an error for a bogus default for a boolean template
       (Closes: #236846)
+  * checks/debian-readme:
+    + [HE] Add check for the dh_make template email address. Patch by Steffen
+      Moeller <moeller@pzr.uni-rostock.de>, thanks!
   * checks/deb-format:
     + [HE] Add a check for the data member of a deb. dpkg 1.11 introduces
       support for configurable compression algorithms (bzip2, for example),

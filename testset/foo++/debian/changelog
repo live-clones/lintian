@@ -1,3 +1,11 @@
+foo++ (5) unstable; urgency=low
+
+  * Add a fake README.Debian to trigger a warning.
+  * This should trigger
+    debian-changelog-file-contains-debmake-default-email-address.
+
+ -- Marc 'HE' Brockschmidt <he@unknown>  Wed, 14 Apr 2004 01:35:47 +0200
+
 foo++ (4) unstable; urgency=low
 
   * This changelog now includes a ISO-8859-1 character: 'ä'

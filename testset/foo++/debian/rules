@@ -12,6 +12,8 @@ binary-indep:
 	install -d debian/$(foo)/usr/share/doc/$(foo)
 	cp debian/changelog debian/$(foo)/usr/share/doc/$(foo)/changelog
 	gzip -9 debian/$(foo)/usr/share/doc/$(foo)/changelog
+	cp debian/README.Debian debian/$(foo)/usr/share/doc/$(foo)/README.Debian
+	gzip -9 debian/$(foo)/usr/share/doc/$(foo)/README.Debian
 	dpkg-gencontrol -isp -p$(foo) -Pdebian/$(foo)
 	dpkg --build debian/$(foo) ..
 

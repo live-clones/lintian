@@ -90,6 +90,11 @@ Info: The add-log-mailing-address variable is no longer honored in
  .
  (setq debian-changelog-mailing-address "userid@debian.org")
 
+Tag: debian-changelog-file-contains-debmake-default-email-address
+Type: error
+Info: The changelog file contains an email address (<..@unknown>)
+ that was not updated to the maintainer's real address.
+
 Tag: debian-changelog-file-uses-obsolete-national-charset
 Type: error
 Info: The Debian changelog file must be valid UTF-8, an encoding of

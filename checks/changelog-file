@@ -218,6 +218,9 @@ while (<IN>) {
     if (defined $prefix && defined $suffix && /^\Q$prefix\E\s*add-log-mailing-address:.*\Q$suffix\E$/) {
 	print "E: $pkg $type: debian-changelog-file-contains-obsolete-user-emacs-settings\n";
     }
+    if (/^\s*--[^<]*<[^>\@]+\@unknown>/) {
+       print "E: $pkg $type: debian-changelog-file-contains-debmake-default-email-address\n";
+    }
 }
 close IN;
 

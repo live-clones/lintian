@@ -41,11 +41,12 @@ $template =
     "<possible notes regarding this package - if none, delete this file>" .
     ")\n\n" .
     ".*<.*>,.*\n";
-
 if ($readme =~ m/$template/iom) {
     tag_warn("readme-debian-is-debmake-template");
 } elsif ($readme =~ m/^So far nothing to say/m) {
     tag_warn("readme-debian-contains-debmake-template");
+} elsif ($readme =~ m/^\s*-- [^<]*<[^> ]+.\@unknown>/m) {
+    tag_warn("readme-debian-contains-debmake-default-email-address");
 }
 
 exit 0;
