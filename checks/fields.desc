@@ -320,13 +320,6 @@ Info: Packages must not depend on X Window System font packages.
  relationship may be used.
 Ref: policy 11.8.5
 
-Tag: build-depends-without-arch-dep
-Type: warning
-Ref: policy 7.6
-Info: The control file specifies source relations for architecture-dependent
- packages, but no architecture-dependent packages are built.  Most likely
- you need to change Build-Depends to Build-Depends-Indep.
-
 Tag: build-depends-indep-without-arch-indep
 Type: error
 Ref: policy 7.6

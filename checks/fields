@@ -496,9 +496,6 @@ if ($type eq 'source') {
     }
     close(IN);
 
-    if (-e "fields/build-depends" && $num_arch_dep == 0) {
-	tag_warn("build-depends-without-arch-dep");
-    }
     if (-e "fields/build-depends-indep" && $num_arch_indep == 0) {
 	tag_error("build-depends-indep-without-arch-indep");
     }
