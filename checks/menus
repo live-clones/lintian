@@ -279,7 +279,9 @@ sub check_script {
 	}
 
 	# does the script call update-menus?
-	if (/update-menus/ && !/--no-update-menus/) {
+	# TODO this regex-magic should be moved to some lib for checking
+	# whether a certain word is likely called as command... --Jeroen
+	if (/(?:^\s*|[;&|]|(?:then|do)\s+)update-menus(?:\s|[;&|<>]|$)/) {
 	    # yes, it does.
 	    $pres->{'calls-updatemenus'} = 1;
 

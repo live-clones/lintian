@@ -166,7 +166,7 @@ lintian (1.23.0~beta1-fixing1) unstable; urgency=low
       based on patch by Robert Lemmen <robertle@semistable.com>, thanks!
       (Closes: #198617)
 
- -- Debian Lintian Maintainers <lintian-maint@debian.org>  Sun, 18 Apr 2004 21:23:21 +0200
+ -- Debian Lintian Maintainers <lintian-maint@debian.org>  Mon, 19 Apr 2004 23:01:36 +0200
 
 lintian (1.22.12) unstable; urgency=low
 
@@ -243,6 +243,8 @@ lintian (1.22.12) unstable; urgency=low
   * checks/menus{,.desc}:
     + [FL] Remove non-exectuable-in-etc-menu-methods as it doesn't
       reflects the current menu manual (Closes: #229460)
+    + [JvW] Stricter checking for whether update-menus is actually called
+      (Closes: #244628)
   * checks/po-debconf:
     + [JvW] Check whether files listed in debian/po/POTFILES.in actually
       exist, and only positively detect po-debconf usage if dependency is
