@@ -9,7 +9,7 @@ lintian (1.22.9-0.1) unstable; urgency=low
      (Patch by: Colin Walters <walters@debian.org>)
    * Update to Debian Policy 3.6.1, all references broken by
      section-reorganization are updated (Closes: #194257, #208945, #214949,
-     also closes: #217384)
+     also closes: #217384, #231884)
      (Patch by Nicholas Breen <nbreen@ofb.net>)
    * Support for dash scripts (Closes: #194787)
      (Patch by Frank Lichtenheld <djpig@debian.org>)
