@@ -5,6 +5,11 @@ lintian (1.23.0) UNRELEASED; urgency=low
   * [FL] add udeb support (Closes: #216117)
     Thanks to Joey Hess for his input. Many changes, mostly to
      frontend/lintian, checks/debconf and checks/files
+  
+  * lib/Dep.pm:
+    + [FL] Fixed some semantic errors (since noone ever observed the
+      correspoding perl warnings the fixed parts are probably never
+      used in the current code)
 
   * checks/binaries:
     + [JvW] Ignore static binaries in /usr/lib/debug

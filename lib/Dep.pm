@@ -137,21 +137,21 @@ sub implies_inverse {
     if ($$q[0] eq 'PRED') {
 	if ($$p[0] eq 'PRED') {
 	    return Dep::pred_implies_inverse($p, $q);
-	} elsif ($$p eq 'AND') {
+	} elsif ($$p[0] eq 'AND') {
 	    # q's falsehood can be deduced from any of p's clauses
 	    $i = 1;
 	    while ($i < @$p) {
 		return 1 if Dep::implies_inverse($$p[$i++], $q);
 	    }
 	    return 0;
-	} elsif ($$p eq 'OR') {
+	} elsif ($$p[0] eq 'OR') {
 	    # q's falsehood must be deduced from each of p's clauses
 	    $i = 1;
 	    while ($i < @$p) {
 		return 0 if not Dep::implies_inverse($$p[$i++], $q);
 	    }
 	    return 1;
-	} elsif ($$p eq 'NOT') {
+	} elsif ($$p[0] eq 'NOT') {
 	    return Dep::implies($q, $$p[1]);
 	}
     } elsif ($$q[0] eq 'AND') {
@@ -165,7 +165,7 @@ sub implies_inverse {
 	# Each of q's clauses must be falsified by p.
 	$i = 1;
 	while ($i < @$q) {
-	    return 0 if not Dep::implies($p, $$q[$i++]);
+	    return 0 if not Dep::implies_inverse($p, $$q[$i++]);
 	}
 	return 1;
     } elsif ($$q[0] eq 'NOT') {
@@ -226,7 +226,7 @@ sub pred_implies {
 # can be deduced from the truth of the first.
 sub pred_implies_inverse {
     my ($p, $q) = @_;
-    my $res = Dep::pred_implies($$q, $$p);
+    my $res = Dep::pred_implies($q, $p);
 
     return not $res if defined $res;
     return undef;
