@@ -1,3 +1,10 @@
+manpages (4) unstable; urgency=low
+
+  * Add a test manpage.
+  * debian/rules: Fix a little bug creating a file named 755 in the source dir.
+
+ -- Marc 'HE' Brockschmidt <he@debian.org>  Sat, 18 Dec 2004 13:32:29 +0100
+
 manpages (3) unstable; urgency=low
 
   * Add X11 binary to check the manpage-for-non-x11-binary-in-wrong-directory
