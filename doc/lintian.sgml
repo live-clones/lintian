@@ -314,11 +314,10 @@ appropriate policy section when it is invoked with the <tt>-i</tt> option.
 
 <tag><em>Warnings (W)</em>
 <item>The displayed message might be a policy violation or packaging
-error. A warnings is usually an indication that the test is
+error. A warning is usually an indication that the test is
 known to sometimes produce false positive alarms, because either
 the corresponding rule in policy has many exceptions or the test
 uses some sort of heuristic to find errors.
-
 
 <p>
 
