@@ -19,6 +19,11 @@ lintian (1.23.0) UNRELEASED; urgency=low
     + [HE] Added a --dont-check-parts|-X option to allow users to specify
       which tests should not be run. Also added infos about this to the
       manpage. (Closes: #206674)
+  
+  * doc/lintian.sgml:
+    + [FL] Some updates, some more verbatim explantions
+  * doc/README:
+    + [FL] Update options
 
   * checks/binaries:
     + [JvW] Ignore static binaries in /usr/lib/debug

@@ -40,6 +40,7 @@ Here is what you have to do at minimum to get lintian up and running:
   2. Run lintian over your packages:
 
 	$ lintian <something>.deb
+	$ lintian <something>.udeb
 	$ lintian <something>.dsc
 	$ lintian <something>.changes
 
@@ -53,30 +54,43 @@ Command line options of the lintian command
 
   (Please refer to the manual page lintian(1) for details.)
 
-  actions:
+  Actions:
     -S, --setup-lab           set up static lab
-    -R, --removed-lab         remove static lab
+    -R, --remove-lab          remove static lab
     -c, --check               check packages (default action)
     -C X, --check-part X      check only certain aspects
+    -X X, --dont-check-part X don't check certain aspects
     -u, --unpack              only unpack packages in the lab
-    -U X, --unpack-info X     only unpack and collect some info
     -r, --remove              remove package from the lab
-
-  general options:
+  General options:
     -h, --help                display short help text
     -v, --verbose             verbose messages
     -V, --version             display Lintian version and exit
     -d, --debug               turn Lintian's debug messages ON
-
-  configuration options:
+    --print-version           print unadorned version number and exit
+  Behaviour options:
     -i, --info                give detailed info about tags
+    -I, --display-info        display "I:" tags (normally suppressed)
     -l X, --unpack-level X    set default unpack level to X
     -o, --no-override         ignore overrides
-
-  package selection options:
+    --show-overrides          output tags that have been overriden
+    -U X, --unpack-info X     specify which info should be collected
+    -m, --md5sums             check md5sums when processing a .changes file
+    --allow-root              suppress lintian's warning when run as root
+  Configuration options:
+    --cfg CONFIGFILE          read CONFIGFILE for configuration
+    --lab LABDIR              use LABDIR as permanent laboratory
+    --archivedir ARCHIVEDIR   location of Debian archive to scan for packages
+    --dist DIST               scan packages in this distribution (e.g. sid)
+    --section RELEASE         scan packages in this section (e.g. main)
+    --arch ARCH               scan packages with architecture ARCH
+    --root ROOTDIR            use ROOTDIR instead of /usr/share/lintian
+  Package selection options:
     -a, --all                 process all packages in distribution
     -b, --binary              process only binary packages
     -s, --source              process only source packages
+    --udeb                    process only udeb packages
+    -p X, --packages-file X   process all files in file (special syntax!)
 
 
 Where to find more information
@@ -106,3 +120,4 @@ are highly appreciated by the authors! Please contact
 
 
 Christian Schwarz <schwarz@debian.org>, Mar 14, 1998.
+Updated by Frank Lichtenheld, Apr 14, 2004 (Lintian 1.23.0).

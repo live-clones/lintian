@@ -6,8 +6,9 @@
 <author>Christian Schwarz <email>schwarz@debian.org</email>
 <author>Richard Braakman <email>dark@xs4all.nl</email>
 <author>Sean 'Shaleh' Perry <email>shaleh@debian.org</email>
+<author>Frank Lichtenheld <email>djpig@debian.org</email>
 <author>Contact address: <email>lintian-maint@debian.org</email>
-<version>version 0.3.3, 6 September 2000
+<version>version 1.23.0, 15 April 2004
 
 <abstract>
 This manual describes Lintian, the Debian package checker.
@@ -15,6 +16,7 @@ This manual describes Lintian, the Debian package checker.
 
 <copyright>Copyright &copy; 1998 Christian Schwarz and Richard Braakman
            Copyright &copy; 2000 Sean 'Shaleh' Perry
+           Copyright &copy; 2004 Frank Lichtenheld
 <p>
 
 This manual is free software; you may redistribute it and/or
@@ -261,8 +263,7 @@ comments to the lintian maintainers <email/lintian-maint@debian.org/.
 <p>
 
 Before you can start to check your packages with Lintian, you'll have
-to install the <prgn>lintian</prgn> Debian package. With Lintian version
-0.3.0, you don't need a configuration file in order to check packages.
+to install the <prgn>lintian</prgn> Debian package.
 
 <p>
 
@@ -270,7 +271,7 @@ to install the <prgn>lintian</prgn> Debian package. With Lintian version
 
 <p>
 
-After that, you can run Lintian over any Debian binary or source packages
+After that, you can run Lintian over any Debian binary, udeb or source packages
 like this:
 
 <p>
@@ -312,7 +313,12 @@ appropriate policy section when it is invoked with the <tt>-i</tt> option.
 <p>
 
 <tag><em>Warnings (W)</em>
-<item>The displayed message might be a policy violation or packaging error.
+<item>The displayed message might be a policy violation or packaging
+error. A warnings is usually an indication that the test is
+known to sometimes produce false positive alarms, because either
+the corresponding rule in policy has many exceptions or the test
+uses some sort of heuristic to find errors.
+
 
 <p>
 
@@ -343,7 +349,8 @@ course bug reports are always welcomed.
 <tag><em>Overridden (O)</em>
 <item>The displayed message indicates a previous
 <em>Warning</em> or <em>Error</em> message which has been
-<em>overridden</em> (see below).
+<em>overridden</em> (see below). They are not displayed unless
+the <tt>--show-overrides</tt> option is set.
 
 <p>
 
@@ -407,7 +414,8 @@ In the first case (where Lintian has a bug) you should send a bug
 report to the Debian bug tracking system and describe which package
 you checked, which messages have been displayed, and why you think
 Lintian has a bug. Best would be, if you would run Lintian again over
-your packages using the <tt>-d</tt> option, which will cause Lintian to
+your packages using the <tt>-d</tt> (or <tt>--debug</tt>) option,
+which will cause Lintian to
 output much more information (debugging info), and include these
 messages in your bug report. This will simplify the debugging process
 for the authors of Lintian.
@@ -426,13 +434,28 @@ again, but with type <em>overridden</em>, see above.)
 
 <p>
 
-The format of the overrides file is simple: package: lintian-message.
+Note that Lintian extracts the override file from the deb and stores
+it in the laboratory. The files currently installed on the system are
+not used in current Lintian versions.
+
+<p>
+
+The format of the overrides file is simple: <tt>package:
+lintian-tag lintian-info</tt> (lintian-info is optional).
 An example file would look like:
 <example>
 /usr/share/lintian/overrides/foo, where foo is the name of your package
-foo: FSSTND-dir-in-usr
+foo: FSSTND-dir-in-usr /usr/man/man1/foo.1.gz
 foo: non-standard-dir-perm
 </example>
+
+<p>
+
+Many tags can occour more than once (e.g. if the same error is found
+in more than one file. You can override a tag either completly by
+specifying its name (second line in the example) or only one
+occourence of it by specifying the additional info, too (first line
+in the example).
 
 <p>
 
@@ -592,8 +615,13 @@ Here is a sketch of the Lintian laboratory:
         deb                 (symlink to actual file)
 	unpacked/           (opt., contains unpacked binary package)
 
+      udeb/
+       &lt;udeb-pkg-name&gt;/
+	...                 (same structure as for binary packages)
+
       info/
         binary-packages     list of binary packages in archive
+        udeb-packages       list of udeb packages in archive
 	source-packages     list of source packages in archive
 
 </example>
