@@ -1,14 +1,18 @@
 Source: lintian
 Section: devel
 Priority: optional
-Maintainer: Josip Rodin <joy-packages@debian.org>
+Maintainer: Debian Lintian Maintainers <lintian-maint@debian.org>
+Uploaders: Josip Rodin <joy-packages@debian.org>,
+ Jeroen van Wolffelaar <jeroen@wolffelaar.nl>,
+ Frank Lichtenheld <djpig@debian.org>,
+ Colin Watson <cjwatson@debian.org>
 Build-Depends-Indep: debiandoc-sgml
 Standards-Version: 3.6.1
 
 Package: lintian
 Architecture: all
 Depends: perl, file, binutils, diffstat (>= 1.27-1), man-db (>= 2.3.20-1)
-Suggests: binutils-multiarch, gettext
+Suggests: binutils-multiarch, libarchive-tar-perl, gettext
 Description: Debian package checker
  Lintian dissects Debian packages and reports bugs and policy
  violations. It contains automated checks for many aspects of Debian

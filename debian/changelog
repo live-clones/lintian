@@ -1,6 +1,4 @@
-lintian (1.22.9-0.1) unstable; urgency=low
-
-  * Non Maintainer Upload with knowledge of Maintainer
+lintian (1.22.11) unstable; urgency=low
 
   Jeroen van Wolffelaar <jeroen@wolffelaar.nl>
    * Upgrade lintian itself to policy 3.6.1
@@ -62,6 +60,15 @@ lintian (1.22.9-0.1) unstable; urgency=low
        positives of missing-debconf-dependency (Closes: #195201)
 
  -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Thu, 12 Feb 2004 21:20:41 +0100
+
+lintian (1.22.10) unstable; urgency=low
+
+  * Lintian maintainance is now in the hands of the `Debian Lintian
+    Maintainers' group
+  * Add check for tar bug #230910
+    (tar check written by Marc 'HE' Brockschmidt <marc@marcbrockschmidt.de>)
+
+ -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Fri, 13 Feb 2004 01:00:48 +0100
 
 lintian (1.22.9) unstable; urgency=low
 

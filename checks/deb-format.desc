@@ -1,0 +1,17 @@
+Check-Script: deb-format
+Author: Marc Brockschmidt <marc@dch-faq.de>
+Abbrev: dfmt
+Standards-Version: 3.6.1
+Type: binary
+Unpack-Level: 1
+Info: This script checks if a binary package was build using a broken version
+ of tar (i.e., containing bug#230910)
+
+Tag: deb-created-with-broken-tar
+Type: error
+Info: The binary package was created with a broken version of tar.
+ Some versions of tar contain a bug, which make the resulting .deb broken. On
+ unpack, some filenames are going to be corrupted.
+ .
+ This package was build with such a version of tar, and the mentioned filename
+ is corrupted. Refer to Debian bug #230910 for more information.
