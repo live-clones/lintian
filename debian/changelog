@@ -13,6 +13,10 @@ lintian (1.23.0) UNRELEASED; urgency=low
       (Closes: #236846)
   * checks/fields.desc:
     + [FL] Fix some wrong policy references
+  * checks/manpages:
+    + [FL] Two new errors: 1) if section number of directory and file
+      differ, 2) if section number of file differs from what is expected
+      from the location of the binary. (Closes: #203831)
   * checks/menu-format:
     + [FL] Only issue one warning about needs=dwww, not two
   * checks/scripts:

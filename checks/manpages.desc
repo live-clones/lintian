@@ -48,6 +48,9 @@ Tag: manpage-in-wrong-directory
 Info: The manual page should be installed in the correct directory below
  <tt>/usr/share/man/</tt> or <tt>/usr/share/man/<i>locale</i></tt>.
  Only sections 1 through 9 should be used.
+ .
+ The section number in the filename should correspond with the section
+ number in the directory name.
 Ref: policy 12.1
 
 Tag: manpage-has-wrong-extension
@@ -111,6 +114,16 @@ Info: Manual pages for binaries that are not located in <tt>/usr/X11R6/bin</tt>
  .
  Note that moving a binary into <tt>/usr/X11R6/bin</tt> is almost never the
  proper solution for this problem; move the manual page instead.
+
+Tag: no-manpage-in-correct-directory
+Type: warning
+Info: Manpages for executables in /sbin and /usr/sbin should be placed in
+ section 8; manpages for executables in /bin and /usr/bin in section 1;
+ manpages for executables in /usr/games in section 6. For the noted
+ executable some probable manpages were found but none in the right section.
+ .
+ This could either mean there is no manpage for the executable or that its
+ manpage is placed in the wrong section.
 
 Tag: bad-so-link-within-manual-page
 Type: error

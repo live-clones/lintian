@@ -29,6 +29,8 @@ use File::Basename;
 
 my %file_info;
 my %binary;
+my %sect_by_binary;
+my %sect_by_manpage;
 my %manpage;
 
 # Read file info...
@@ -75,6 +77,21 @@ while (<IN>) {
 	my $bin = $fname;
 	
 	$binary{$bin} = $file;
+
+	for ($path) {
+	    m,^(usr/(X11R6/)?)?bin/,o && do {
+		$sect_by_binary{$bin} = 1;
+		last;
+	    };
+	    m,^usr/games/,o && do {
+		$sect_by_binary{$bin} = 6;
+		last;
+	    };
+	    m,^(usr/)?sbin/,o && do {
+		$sect_by_binary{$bin} = 8;
+		last;
+	    };
+	}
 	
     	next;
     }
@@ -111,12 +128,19 @@ while (<IN>) {
 	}
     }
     my $num = pop @pieces;
-    if (scalar @pieces && $num =~ /^\d/) {
-	$manpage{join(".", @pieces)} = $file;
+    if (scalar @pieces && $num =~ s/^(\d).*$/$1/) {
+	my $bin = join(".", @pieces);
+	$manpage{$bin} = $file;
+
+	# number of directory and manpage extension equal?
+	if ($num != $section) {
+	    print "E: $pkg $type: manpage-in-wrong-directory $file\n";
+	}
+	push @{$sect_by_manpage{$bin}}, $num; # array needed for cases like man(1), man(7)
     } else {
 	print "E: $pkg $type: manpage-has-wrong-extension $file\n";
     }
-
+    
     # special check for manual pages for X11 games
     if ($path =~ m,^usr/X11R6/man/man6/,o) {
 	print "W: $pkg $type: x11-games-should-be-in-usr-games $file\n";
@@ -221,6 +245,10 @@ for my $f (sort keys %binary) {
 	    } else {
 		# ok.
 	    }
+	}
+
+	unless (grep { $_ == $sect_by_binary{$f} } @{$sect_by_manpage{$f}}) {
+	    print "W: $pkg $type: no-manpage-in-correct-directory $binary{$f} (@{$sect_by_manpage{$f}})\n";
 	}
     } else {
 	print "E: $pkg $type: binary-without-manpage $f\n";
