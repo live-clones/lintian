@@ -325,7 +325,10 @@ if ($type eq 'binary') {
 		    }
 
 		    if (not $versioned and exists $known_essential{$relpkg}) {
-			tag_error("depends-on-essential-package-without-using-version", $relpkg);
+			# exception for coreutils, as it is quite new,
+			# depending on coreutils is NOT a no-op. Bug#216536
+			tag_error("depends-on-essential-package-without-using-version", $relpkg)
+			    unless $relpkg eq 'coreutils';
 		    }
 		}
 

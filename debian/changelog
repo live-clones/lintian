@@ -4,12 +4,12 @@ lintian (1.22.12) unstable; urgency=low
   * debian/control:
     + make Uploaders a single line field. It didn't really
       break, but at least DDPO had its difficulties
-  
+
   * man/lintian.1:
     + sync man page with the --help output by adding
       missing options (Closes: #198615)
       Based on a patch by Robert Lemmen.
-  
+
   * checks/binaries:
     + don't complain about non-stripped kernel modules (Closes: #203373)
       Patch by Dagfinn Ilmari Mannsaker
@@ -83,8 +83,10 @@ lintian (1.22.12) unstable; urgency=low
       test. Exception for sash removed (override case) (Closes: #215235)
   * checks/fields:
     + Test syntax of Uploaders: too
+    + Don't consider depending on coreutils bad, as this is in a way a
+      versioned depend (Closes: #216536)
 
- -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Fri,  5 Mar 2004 04:35:22 +0100
+ -- Frank Lichtenheld <djpig@debian.org>  Mon,  8 Mar 2004 00:46:15 +0100
 
 lintian (1.22.11) unstable; urgency=low
 

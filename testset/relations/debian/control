@@ -7,7 +7,7 @@ Standards-Version: 3.1.1
 
 Package: relations
 Architecture: all
-Depends: relations, relations(<< 3), dpkg, bash (>> 2.0), mail-transport-agent, gawk | awk, foo (>> 2.0), foo (<< 2.2)
+Depends: relations, relations(<< 3), dpkg, bash (>> 2.0), mail-transport-agent, gawk | awk, foo (>> 2.0), foo (<< 2.2), coreutils
 Provides: mail-reader
 Replaces: relations
 Conflicts: foobar (<< 5&5), foo, relations,
