@@ -143,7 +143,7 @@ Info: Most man pages contain a header line (marked .TH) in which
  renaming the file but not adjusting the content).
 
 Tag: hyphen-used-as-minus-sign
-Type: warning
+Type: info
 Info: Manual page seems to contain a hyphen where a minus sign was intended.
  '-' chars are interpreted as hyphens (U+2010) by groff, not as minus signs
  (U+002D). Since options to programs use minus signs (U+002D), this means for
@@ -154,6 +154,11 @@ Info: Manual page seems to contain a hyphen where a minus sign was intended.
  hyphen, write it as '\(hy' to emphasise that fact. See groff(7) and
  especially groff_char(7) for details, and also the thread starting with
  http://lists.debian.org/debian-devel/2003/debian-devel-200303/msg01481.html
+ .
+ If you use some tool that converts your documentation to groff format, it
+ might be possible that this tool converts dashes of any kind to groff
+ hyphens, while the safe way of converting dashes is usually to convert them
+ to '\-'.
  .
  Because this error can occur <em>very</em> often we show only the
  first 10 occurences for each man page and give the number of

@@ -247,7 +247,7 @@ while (<IN>) {
 	    if ($line =~ /^[^\.].*[^\w\\]--?\w+/o) {
 		# hyphen at the begin of a word, probably not!
 		$hc++;
-		print "W: $pkg $type: hyphen-used-as-minus-sign $file:$lc\n" if $hc <= 10 or $ENV{'LINTIAN_DEBUG'};
+		print "I: $pkg $type: hyphen-used-as-minus-sign $file:$lc\n" if $hc <= 10 or $ENV{'LINTIAN_DEBUG'};
 	    }
 	    if (($line =~ m,(/usr/(dict|doc|etc|info|man|adm|preserve)/),o)
 		|| ($line =~ m,(/var/(adm|catman|named|nis|preserve)/),o)) {
@@ -256,7 +256,7 @@ while (<IN>) {
 		print "I: $pkg $type: FSSTND-dir-in-manual-page $file:$lc $1\n";
 	    }
 	}
-	print "W: $pkg $type: hyphen-used-as-minus-sign $file ".($hc-10)." more occurences not shown\n" if $hc > 10 and ! $ENV{'LINTIAN_DEBUG'};
+	print "I: $pkg $type: hyphen-used-as-minus-sign $file ".($hc-10)." more occurences not shown\n" if $hc > 10 and ! $ENV{'LINTIAN_DEBUG'};
     }
 }
 close(IN);
