@@ -471,6 +471,10 @@ Tag: wrong-path-for-tclsh8.3
 Type: error
 Info: Tclsh 8.3 is installed as /usr/bin/tclsh8.3 on Debian systems.
 
+Tag: wrong-path-for-tclsh8.4
+Type: error
+Info: Tclsh 8.4 is installed as /usr/bin/tclsh8.4 on Debian systems.
+
 Tag: tclsh-script-but-no-tclsh-dep
 Type: error
 Info: Packages that use tclsh scripts must depend on the virtual package tclsh.
@@ -481,6 +485,13 @@ Info: Packages that use tclsh scripts must depend on the virtual package tclsh.
 Tag: tclsh8.3-script-but-no-tcl8.3-dep
 Type: error
 Info: Packages that use tclsh8.3 scripts must depend on the package tcl8.3.
+ .
+ In some cases a weaker relationship, such as Suggests or Recommends, will
+ be more appropriate.
+
+Tag: tclsh8.4-script-but-no-tcl8.4-dep
+Type: error
+Info: Packages that use tclsh8.4 scripts must depend on the package tcl8.4.
  .
  In some cases a weaker relationship, such as Suggests or Recommends, will
  be more appropriate.
