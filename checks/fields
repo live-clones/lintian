@@ -470,7 +470,7 @@ for my $field (glob("fields/*")) {
 	print "I: $pkg $type: unknown-field-in-dsc $field\n"
 	    if ($type eq "source" && ! $known_source_fields{$field} && ! $known_obsolete_fields{$field});
 
-	print "I: $pkg $type: unknown-field-in-changes $field\n"
+	print "I: $pkg $type: unknown-field-in-control $field\n"
 	    if ($type eq "binary" && ! $known_binary_fields{$field} && ! $known_obsolete_fields{$field});
 }
 
