@@ -68,10 +68,12 @@ if (not open (FH, "fields/version")) {
 		if ($upstream !~ /^\d/i) {
 			print "W: $pkg $type: upstream-version-not-numeric $version\n";
 		}
-		$debian =~ /^-([^.]+)?(?:\.[^.]+)?(?:\.[^.]+)?(\..*)?$/;
-		if (not defined $1 or defined $2) {
-			print "W: $pkg $type: debian-revision-not-welformed $version\n";
-			return;
+		if (defined $debian) {
+			$debian =~ /^-([^.]+)?(?:\.[^.]+)?(?:\.[^.]+)?(\..*)?$/;
+			if (not defined $1 or defined $2) {
+				print "W: $pkg $type: debian-revision-not-welformed $version\n";
+				return;
+			}
 		}
 	} else {
 		print "E: $pkg $type: bad-version-number $version\n";

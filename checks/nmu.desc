@@ -4,7 +4,7 @@ Abbrev: nmu
 Standards-Version: 3.6.1
 Type: source
 Unpack-Level: 1
-Needs-Info: debfiles, changelog-file
+Needs-Info: debfiles
 Info: This script checks if a source package is consequent about its NMU-ness.
 
 Tag: orphaned-package-should-not-have-uploaders

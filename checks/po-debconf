@@ -34,6 +34,7 @@ opendir(DEB, 'debfiles')
 my $has_template = 0;
 for my $file (readdir(DEB)) {
 	if ($file =~ m/^(.+\.)?templates$/) {
+# TODO: out of this loop, use fields/*?
 		open(IN,"debfiles/control")
 			or fail("Can't open debfiles/control.");
 		while (<IN>) {
@@ -48,6 +49,7 @@ for my $file (readdir(DEB)) {
 }
 closedir(DEB);
 
+#TODO: check whether all templates are named in TEMPLATES.pot
 if ( $has_template && ! -d "debfiles/po" ) {
 	print "W: $pkg $type: not-using-po-debconf\n";
 }
