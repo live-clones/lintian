@@ -51,7 +51,7 @@ open(C, $control) or fail("cannot open md5sums control file $control: $!");
 while (<C>) {
     chop;
     next if m/^\s*$/;
-    m/^(\S+)\s*(\S.*)$/ or fail("syntax error in md5sums control file: $_");
+    m{^(\S+)\s*(?:\./)?(\S.*)$} or fail("syntax error in md5sums control file: $_");
     $control_entry{$2} = $1;
 }
 close(C);
