@@ -28,6 +28,10 @@ lintian (1.22.12) unstable; urgency=low
     + correct reference to debhelper manpage. It's debhelper(7), not
       debhelper(1). (Closes: #188245)
       Thanks to Brian Nelson for pointing this out.
+  * unpack/unpack-binpkg-l1: tar uses now h to signal hardlinks which
+     breaks a lot of our code. so sed'ing it away (Closes: #234545)
+     Many many thanks to Theodore Y. Ts'o for bringing this to our
+     attention.
 
   Jeroen van Wolffelaar <jeroen@wolffelaar.nl>
   * checks/debconf:

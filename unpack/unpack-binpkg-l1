@@ -73,6 +73,7 @@ spawn("chmod", "-R", "u+rX,o-w", "$base_dir/control") == 0
 # create index file for package
 pipeline((sub { exec "ar", "p", $file, "data.tar.gz" }),
 	 (sub { exec "tar", "tfvz", "-" }),
+	 (sub { exec "sed", "-e", "s/^h/-/" }),
 	 "$base_dir/index") == 0
     or fail();
 

@@ -1,3 +1,10 @@
+manpages (2) unstable; urgency=low
+
+  * Add a hardlink check after the recent hardlink breackage
+  * Add some fake binaries
+
+ -- Frank Lichtenheld <djpig@debian.org>  Thu, 26 Feb 2004 21:20:07 +0100
+
 manpages (1) unstable; urgency=low
 
   * Initial version
