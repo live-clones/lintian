@@ -244,11 +244,20 @@ while (<IN>) {
 close IN;
 
 if ($first_entry_date && $second_entry_date) {
-    chomp($first_entry_date = `/bin/date -d "$first_entry_date" +\%s`);
-    chomp($second_entry_date = `/bin/date -d "$second_entry_date" +\%s`);
+    my ($first_timestamp, $second_timestamp);
+    chomp($first_timestamp = `/bin/date -d "$first_entry_date" +\%s 2>/dev/null`);
+    chomp($second_timestamp = `/bin/date -d "$second_entry_date" +\%s 2>/dev/null`);
 
-    tag "latest-debian-changelog-entry-without-new-date" 
-	unless (($first_entry_date - $second_entry_date) > 0);
+    unless ( $first_timestamp && $second_timestamp ) {
+	tag "invalid-date-in-changelog", $first_entry_date 
+	    unless $first_timestamp;
+	
+	tag "invalid-date-in-changelog", $second_entry_date 
+	    unless $second_timestamp;
+    } else {
+	tag "latest-debian-changelog-entry-without-new-date" 
+	    unless (($first_timestamp - $second_timestamp) > 0);
+    }
 }
 }
 

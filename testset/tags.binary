@@ -21,6 +21,7 @@ W: binary source: ancient-standards-version 3.2.1
 W: binary source: maintainer-upload-has-incorrect-version-number 4-1.1
 W: binary source: native-package-with-dash-version
 W: binary: executable-not-elf-or-script ./usr/bin/iminusrbin
+W: binary: invalid-date-in-changelog The, 15 Apr 2004 23:33:51 +0200
 W: binary: menu-command-not-in-package /usr/lib/menu/binary:6 /imnothere
 W: binary: menu-item-needs-tag-has-unknown-value wm /usr/lib/menu/binary:5
 W: binary: package-contains-upstream-install-documentation usr/share/doc/binary/INSTALL

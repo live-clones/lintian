@@ -106,6 +106,12 @@ Info: The Debian changelog file must be valid UTF-8, an encoding of
   $ iconv -f ISO-8859-1 -t UTF-8 changelog > changelog.new
   $ mv changelog.new changelog
 
+Tag: invalid-date-in-changelog
+Type: warning
+Info: /bin/date couldn't parse the date of one of your changelog
+ entries. The date should be in RFC822 format.
+Ref: policy 4.4
+
 Tag: latest-debian-changelog-entry-without-new-date
 Type: warning
 Info: The latest Debian changelog has either the same or even an older date

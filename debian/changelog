@@ -20,6 +20,9 @@ lintian (1.23.1~beta) unstable; urgency=low
   * checks/changelog-files{,.desc}:
     + [HE] New check latest-debian-changelog-entry-without-new-date, comparing
       the dates of the last 2 changelog entries. (Closes: #111215)
+    + [FL] New tag invalid-date-in-changelog which is issued if
+      latest-debian-changelog-entry-without-new-date encounters a
+      parse error
   * checks/common-data.pm:
     + [JvW] Add libgl(u)-dev to list of virtual packages (Closes: #255595)
   * checks/control-file{,.desc}:
