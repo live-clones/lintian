@@ -1,8 +1,14 @@
+remove: unpack level -> altijd 1
+setup-lab , remove-lab
+LAB_FORMAT
+lab_mode -> altijd temp
+
 #!/usr/bin/perl -w
 # {{{ Legal stuff 
 # Lintian -- Debian package checker
 #
 # Copyright (C) 1998 Christian Schwarz and Richard Braakman
+#               2004 Jeroen van Wolffelaar
 #
 # This program is free software.  It is distributed under the terms of
 # the GNU General Public License as published by the Free Software
@@ -26,16 +32,13 @@ use strict;
 
 use Getopt::Long;
 use FileHandle;
+use File::Temp ( tempdir );
 # }}}
 
 # {{{ Global Variables
 my $lintian_info_cmd = 'lintian-info'; #Command to run for ?
 my $LINTIAN_VERSION = "<VERSION>";	#External Version number
 my $BANNER = "Lintian v$LINTIAN_VERSION"; #Version Banner - text form
-my $LAB_FORMAT = 7;		#Lab format Version Number
-				#increased whenever incompatible
-				#changes are done to the lab
-				#so that all packages are re-unpacked
 
 # Variables used to record commandline options
 # Commented out variables have "defined" checks somewhere to determine if
@@ -49,13 +52,11 @@ my @debug;
 my $check_everything = 0;	#flag for -a|--all switch
 my $lintian_info = 0;		#flag for -i|--info switch
 our $display_infotags = 0;	#flag for -I|--display-info switch
-my $unpack_level = undef;	#flag for -l|--unpack-level switch
 our $no_override = 0;		#flag for -o|--no-override switch
 our $show_overrides = 0;		#flag for --show-overrides switch
 my $check_md5sums = 0;		#flag for -m|--md5sums switch
 my $allow_root = 0;		#flag for --allow-root swtich
 my $packages_file = 0;		#string for the -p option
-my $OPT_LINTIAN_LAB = "";	#string for the --lab option
 my $OPT_LINTIAN_ARCHIVEDIR = "";#string for the --archivedir option
 my $OPT_LINTIAN_DIST = "";	#string for the --dist option
 my $OPT_LINTIAN_ARCH = "";	#string for the --arch option
@@ -69,11 +70,9 @@ my @packages;
 my $action;
 my $checks;
 my $dont_check;
-my $unpack_info;
 my $cwd;
 my $cleanup_filename;
 my $exit_code;
-my $lab_mode = 'static';
 
 my %collection_info;
 my %already_scheduled;
@@ -83,10 +82,8 @@ my %unpack_infos;
 my %check_info;
 
 # reset configuration variables
-my $LINTIAN_LAB = undef;
 my $LINTIAN_ARCHIVEDIR = undef;
 my $LINTIAN_DIST = undef;
-my $LINTIAN_UNPACK_LEVEL = undef;
 my $LINTIAN_ARCH = undef;
 my $LINTIAN_SECTION = undef;
 # }}}
@@ -121,13 +118,9 @@ sub syntax {
     print <<"EOT-EOT-EOT";
 Syntax: lintian [action] [options] [--] [packages] ...
 Actions:
-    -S, --setup-lab           set up static lab
-    -R, --remove-lab          remove static lab
     -c, --check               check packages (default action)
     -C X, --check-part X      check only certain aspects
     -X X, --dont-check-part X don\'t check certain aspects
-    -u, --unpack              only unpack packages in the lab
-    -r, --remove              remove package from the lab
 General options:
     -h, --help                display short help text
     -v, --verbose             verbose messages
@@ -137,15 +130,12 @@ General options:
 Behaviour options:
     -i, --info                give detailed info about tags
     -I, --display-info        display "I:" tags (normally suppressed)
-    -l X, --unpack-level X    set default unpack level to X
     -o, --no-override         ignore overrides
     --show-overrides          output tags that have been overriden
-    -U X, --unpack-info X     specify which info should be collected
     -m, --md5sums             check md5sums when processing a .changes file
     --allow-root              suppress lintian\'s warning when run as root
 Configuration options:
     --cfg CONFIGFILE          read CONFIGFILE for configuration
-    --lab LABDIR              use LABDIR as permanent laboratory
     --archivedir ARCHIVEDIR   location of Debian archive to scan for packages
     --dist DIST               scan packages in this distribution (e.g. sid)
     --section RELEASE         scan packages in this section (e.g. main)
@@ -215,14 +205,6 @@ sub record_dont_check_part {
 }
 
 
-# Process for -U|--unpack-info flag
-sub record_unpack_info {
-    if ($unpack_info) {
-	die("multiple -U or --unpack-info options not allowed");
-    }
-    $unpack_info = $_[1];
-}
-
 # Record what type of data is specified
 # Options: -b|--binary, -s|--source, --udeb
 sub record_pkgmode {
@@ -233,13 +215,9 @@ sub record_pkgmode {
 
 # Hash used to process commandline options
 my %opthash = (			# ------------------ actions
-	       "setup-lab|S" => \&record_action,
-	       "remove-lab|R" => \&record_action,
 	       "check|c" => \&record_action,
 	       "check-part|C=s" => \&record_check_part,
 	       "dont-check-part|X=s" => \&record_dont_check_part,	       
-	       "unpack|u" => \&record_action,
-	       "remove|r" => \&record_action,
 
 	       # ------------------ general options
 	       "help|h" => \&syntax,
@@ -252,16 +230,13 @@ my %opthash = (			# ------------------ actions
 	       # ------------------ behaviour options
 	       "info|i" => \$lintian_info,
 	       "display-info|I" => \$display_infotags,
-	       "unpack-level|l=i" => \$unpack_level,
 	       "no-override|o" => \$no_override,
 	       "show-overrides" => \$show_overrides,
-	       "unpack-info|U=s" => \&record_unpack_info,
 	       "md5sums|m" => \$check_md5sums,
 	       "allow-root" => \$allow_root,
 
 	       # ------------------ configuration options
 	       "cfg=s" => \$LINTIAN_CFG,
-	       "lab=s" => \$OPT_LINTIAN_LAB,
 	       "archivedir=s" => \$OPT_LINTIAN_ARCHIVEDIR,
 	       "dist=s" => \$OPT_LINTIAN_DIST,
 	       "section=s" => \$OPT_LINTIAN_SECTION,
@@ -348,14 +323,10 @@ if ($LINTIAN_CFG) {
 	s,\$HOME/,$ENV{'HOME'}/,go;
 	s,\~/,$ENV{'HOME'}/,go;
 
-	if (m/^\s*LINTIAN_LAB\s*=\s*(.*\S)\s*$/i) {
-	    $LINTIAN_LAB = $1;
-	} elsif (m/^\s*LINTIAN_ARCHIVEDIR\s*=\s*(.*\S)\s*$/i) {
+	if (m/^\s*LINTIAN_ARCHIVEDIR\s*=\s*(.*\S)\s*$/i) {
 	    $LINTIAN_ARCHIVEDIR = $1;
 	} elsif (m/^\s*LINTIAN_DIST\s*=\s*(.*\S)\s*$/i) {
 	    $LINTIAN_DIST = $1;
-	} elsif (m/^\s*LINTIAN_UNPACK_LEVEL\s*=\s*(.*\S)\s*$/i) {
-	    $LINTIAN_UNPACK_LEVEL = $1;
 	} elsif (/^\s*LINTIAN_SECTION\s*=\s*(.*\S)\s*$/i) {
 	    $LINTIAN_SECTION = $1;
 	} elsif (m/^\s*LINTIAN_ARCH\s*=\s*(.*\S)\s*$/i) {
@@ -368,15 +339,12 @@ if ($LINTIAN_CFG) {
 }
 
 # environment variables overwrite settings in conf file:
-$LINTIAN_LAB = $ENV{'LINTIAN_LAB'} if $ENV{'LINTIAN_LAB'};
 $LINTIAN_ARCHIVEDIR = $ENV{'LINTIAN_ARCHIVEDIR'} if $ENV{'LINTIAN_ARCHIVEDIR'};
 $LINTIAN_DIST = $ENV{'LINTIAN_DIST'} if $ENV{'LINTIAN_DIST'};
-$LINTIAN_UNPACK_LEVEL = $ENV{'LINTIAN_UNPACK_LEVEL'} if $ENV{'LINTIAN_UNPACK_LEVEL'};
 $LINTIAN_SECTION = $ENV{'LINTIAN_SECTION'} if $ENV{'LINTIAN_SECTION'};
 $LINTIAN_ARCH = $ENV{'LINTIAN_ARCH'} if $ENV{'LINTIAN_ARCH'};
 
 # command-line options override everything
-$LINTIAN_LAB = $OPT_LINTIAN_LAB if $OPT_LINTIAN_LAB;
 $LINTIAN_ARCHIVEDIR = $OPT_LINTIAN_ARCHIVEDIR if $OPT_LINTIAN_ARCHIVEDIR;
 $LINTIAN_DIST = $OPT_LINTIAN_DIST if $OPT_LINTIAN_DIST;
 $LINTIAN_SECTION = $OPT_LINTIAN_SECTION if $OPT_LINTIAN_SECTION;
@@ -403,21 +371,6 @@ if ($LINTIAN_CFG) {
 } else {
     $ENV{'LINTIAN_CFG'} = "";
 }
-
-if ($LINTIAN_LAB) {
-    # LINTIAN_LAB defined => advanced mode (static lab)
-    $lab_mode = 'static';
-} else {
-    # LINTIAN_LAB not defined => basic mode (temporary lab)
-    $lab_mode = 'temporary';
-
-    if ($ENV{'TMPDIR'}) {
-	$LINTIAN_LAB = "$ENV{'TMPDIR'}/lintian-lab.$$";
-    } else {
-	$LINTIAN_LAB = "/tmp/lintian-lab.$$";
-    }
-}
-$ENV{'LINTIAN_LAB'} = $LINTIAN_LAB;
 
 if ($LINTIAN_ARCHIVEDIR) {
     $ENV{'LINTIAN_ARCHIVEDIR'} = $LINTIAN_ARCHIVEDIR;
@@ -448,27 +401,6 @@ if ($LINTIAN_ARCH) {
 
 $ENV{'LINTIAN_DEBUG'} = $debug;
 
-# determine requested unpack level
-if (defined($unpack_level)) {
-    # specified through command line
-} elsif (defined($LINTIAN_UNPACK_LEVEL)) {
-    # specified via configuration file or env variable
-    $unpack_level = $LINTIAN_UNPACK_LEVEL;
-} else {
-    # determine by action
-    if (($action eq 'unpack') or ($action eq 'check')) {
-	$unpack_level = 1;
-    } else {
-	$unpack_level = 0;
-    }
-}
-unless (($unpack_level == 0) or ($unpack_level == 1) or ($unpack_level == 2)) {
-    fail("bad unpack level $unpack_level specified");
-}
-
-$LINTIAN_UNPACK_LEVEL = $unpack_level;
-$ENV{'LINTIAN_UNPACK_LEVEL'} = $LINTIAN_UNPACK_LEVEL;
-
 # }}}
 
 # {{{ Loading lintian's own libraries (now LINTIAN_ROOT is known)
@@ -494,10 +426,8 @@ if ($debug) {
     print "N: $BANNER\n";
     print "N: Lintian root directory: $LINTIAN_ROOT\n";
     print "N: Configuration file: $LINTIAN_CFG\n";
-    print "N: Laboratory: $LINTIAN_LAB\n";
     print "N: Archive directory: $LINTIAN_ARCHIVEDIR\n";
     print "N: Distribution: $LINTIAN_DIST\n";
-    print "N: Default unpack level: $LINTIAN_UNPACK_LEVEL\n";
     print "N: Architecture: $LINTIAN_ARCH\n";
     print "N: ----\n";
 }
@@ -511,51 +441,7 @@ $SIG{'QUIT'} = \&interrupted;
 
 # {{{ Create/Maintain Lab and add any specified Debian Archives (*.debs)
 
-# sanity check:
-if (($action ne 'setup-lab') and ($lab_mode eq 'static')) {
-
-    # LINTIAN_LAB has to exist in this mode
-    fail("lintian lab has not been set up correctly (run lintian --setup-lab)")
-	unless Lab::is_lab($LINTIAN_LAB);
-}
-
-#######################################
-# Process -S option
-if ($action eq 'setup-lab') {
-    if ($#ARGV+1 > 0) {
-	print STDERR "warning: ignoring additional command line arguments\n";
-    }
-
-    if ($lab_mode eq 'temporary') {
-	fail("no laboratory specified (need to define LINTIAN_LAB)");
-    }
-
-    Lab::setup($LINTIAN_LAB, $lab_mode);
-
-    # No idea what this is needed here, but it used to be in the code, so I'll
-    # leave it untouched for the moment
-    Lab::populate_with_dist($LINTIAN_LAB, $LINTIAN_DIST) if $LINTIAN_DIST;
-
-    exit 0;
-
-#######################################
-# Process -R option
-} elsif ($action eq 'remove-lab') {
-    if ($#ARGV+1 > 0) {
-	print STDERR "warning: ignoring additional command line arguments\n";
-    }
-
-    if ($lab_mode eq 'temporary') {
-	fail("no laboratory specified (need to define LINTIAN_LAB)");
-    }
-
-    Lab::delete($LINTIAN_LAB, $lab_mode);
-
-    exit 0;
-
-#######################################
-#  Check for non deb specific actions
-} elsif (not (($action eq 'unpack') or ($action eq 'check')
+if ($action ne 'check')
 	      or ($action eq 'remove'))) {
     fail("bad action $action specified");
 }
@@ -947,18 +833,7 @@ closedir(CHECKDIR);
 
 # }}}
 
-# {{{ Again some lone code the author just dumped where his cursor just happened to be
-if ($unpack_info) {
-    # determine which info has been requested
-    for my $i (split(/,/,$unpack_info)) {
-	unless ($collection_info{$i}) {
-	    fail("unknown info specified: $i");
-	}
-	$unpack_infos{$i} = 1;
-    }
-}
-
-# create check_abbrev hash
+# {{{ create check_abbrev hash
 for my $c (keys %check_info) {
     $check_abbrev{$check_info{$c}->{'abbrev'}} = $c;
 }
@@ -1078,7 +953,6 @@ $unpack_infos{ "override-file" } = 1 unless $no_override;
 printf "N: Processing %d packages...\n",$#packages+1 if $verbose;
 if ($debug) {
     print "N: Selected action: $action\n";
-    print "N: Requested unpack level: $unpack_level\n";
     printf "N: Requested data to collect: %s\n",join(',',keys %unpack_infos);
     printf "N: Selected checks: %s\n",join(',',keys %checks);
 }
@@ -1370,7 +1244,6 @@ if ($lintian_info) {
 exit $exit_code;
 
 # {{{ Some subroutines
-
 sub unpack_pkg {
     my ($type,$base,$file,$cur_level,$new_level) = @_;
 

@@ -68,6 +68,8 @@ use base qw(Exporter);
      'libjpegg6a', 'gmp2', 'libgtop0', 'libghttp0', 'libpgsql', 'tk4.2',
      'tcl7.6', 'libpng0g', 'xbase');
 
+# Used only (at least lintian 1.23.1) for giving a warning about a
+# virtual-only dependency
 %known_virtual_packages = map { $_ => 1 }
     ('x-terminal-emulator', 'x-window-manager', 'xserver', 'awk', 'c-compiler',
      'c-shell', 'dotfile-module', 'emacsen', 'fortran77-compiler',
@@ -90,6 +92,7 @@ use base qw(Exporter);
      'debconf-2.0',
      'aspell-dictionary',
      'radius-server',
+     'libgl-dev', 'libglu-dev'
     );
 
 %known_libstdcs = map { $_ => 1 }
