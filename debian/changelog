@@ -8,6 +8,8 @@ lintian (1.22.9-0.1) unstable; urgency=low
    * Update to Debian Policy 3.6.1, all references are fixed (because policy
      moved sections (Closes: #194257, #208945, #214949)
      (Patch by Nicholas Breen <nbreen@ofb.net>)
+   * Support for dash scripts (Closes: #194787)
+     (Patch by Frank Lichtenheld <frank@lichtenheld.de>)
 
  -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Sat, 31 Jan 2004 14:44:55 +0100
 

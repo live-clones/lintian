@@ -142,6 +142,17 @@ Info: Packages that use ash scripts must depend on the ash package.
  In some cases a weaker relationship, such as Suggests or Recommends, will
  be more appropriate.
 
+Tag: wrong-path-for-dash
+Type: error
+Info: Dash is installed as /bin/dash on Debian systems.
+
+Tag: dash-script-but-no-dash-dep
+Type: error
+Info: Packages that use dash scripts must depend on the dash package.
+ .
+ In some cases a weaker relationship, such as Suggests or Recommends, will
+ be more appropriate.
+
 Tag: wrong-path-for-sh
 Type: error
 Info: The Bourne shell is installed as /bin/sh on Debian systems.
