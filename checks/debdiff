@@ -28,7 +28,7 @@ my $type = shift;
 open (VERSION, "fields/version") or fail("cannot open fields/version: $!");
 chomp(my $version = <VERSION>);
 close VERSION;
-$version =~ s/^\d://; #Remove epoch
+$version =~ s/^\d+://; #Remove epoch
 
 if ((not -f "${pkg}_${version}.diff.gz") and
     ($version =~ /-/) and ($version !~ /-0\.\d+(?:\.\d+)?$/) ) {
