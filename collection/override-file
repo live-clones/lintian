@@ -26,12 +26,18 @@ use strict;
 my $pkg = shift;
 my $type = shift;
 
--f "fields/package" or fail("override-file invoked in wrong directory");
+-d "unpacked" or fail("override-file invoked in wrong directory");
 
 unlink("override");
 
 # Pick the first of these files that exists.
-my $file = "unpacked/usr/share/lintian/overrides/$pkg";
+my $file;
+if ($type eq 'source') {
+    $file = "unpacked/debian/source.lintian-overrides";
+} else {
+    $file = "unpacked/usr/share/lintian/overrides/$pkg";
+}
+
 if ( ! -f $file ) 
 { 	if ( -f $file . ".gz" ) { $file = $file . ".gz"; }
 	else { $file = ''; }

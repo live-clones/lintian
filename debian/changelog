@@ -5,6 +5,10 @@ lintian (1.23.0) UNRELEASED; urgency=low
   * [FL] add udeb support (Closes: #216117)
     Thanks to Joey Hess for his input. Many changes, mostly to
      frontend/lintian, checks/debconf and checks/files
+
+  * collection/override-file:
+    + [FL] add support for source overrides (Closes: #129510)
+    See the User Manual for more information.
   
   * lib/Dep.pm:
     + [FL] Fixed some semantic errors (since noone ever observed the
@@ -22,6 +26,8 @@ lintian (1.23.0) UNRELEASED; urgency=low
   
   * doc/lintian.sgml:
     + [FL] Some updates, some more verbatim explantions
+    + [FL] Reworked the override section to handle udeb and
+      source packages, too
   * doc/README:
     + [FL] Update options
 

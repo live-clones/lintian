@@ -426,37 +426,56 @@ policy) you should contact the Lintian maintainers too, including the
 Lintian error message and a short note, stating why you think this is an
 exception. This way, the Lintian maintainers can be sure the problem is not
 actually a bug in Lintian or an error in the author's reading of policy.
+
 Once it has been decided that an override is needed, you can easily add one by
-supply a <file>/usr/share/lintian/overrides/package</file> file.
-With that, Lintian will know about this exception and not report the problem again when checking your package. (Actually, Lintian will report the problem
-again, but with type <em>overridden</em>, see above.)
+supply a overrides file. If the override is for a binary or udeb
+package, you have to place it at
+<file>/usr/share/lintian/overrides/&lt;package&gt;</file> inside the
+package. If the override is for a source package, you have to place
+it at <file>debian/source.lintian-overrides</file>. With that, Lintian
+will know about this exception and not report the problem again when
+checking your package. (Actually, Lintian will report the problem 
+again, but with type <em>overridden</em>, see above.) Note that
+support for source overrides was added in Lintian version 1.23.0.
 
 <p>
 
-Note that Lintian extracts the override file from the deb and stores
+Note that Lintian extracts the override file from the (u)deb and stores
 it in the laboratory. The files currently installed on the system are
 not used in current Lintian versions.
 
 <p>
 
-The format of the overrides file is simple: <tt>package:
-lintian-tag lintian-info</tt> (lintian-info is optional).
-An example file would look like:
+The format of the overrides file is simple: <tt>&lt;package&gt; &lt;type&gt;:
+&lt;lintian-tag&gt; &lt;lintian-info&gt;</tt>, where
+<tt>&lt;package&gt;</tt> is the package name; <tt>&lt;type&gt;</tt>
+is one of <tt>binary</tt>, <tt>udeb</tt> and <tt>source</tt>, and
+<tt>&lt;lintian-info&gt;</tt> is all additional information provided
+by Lintian except for the tag. (lintian-info is optional, type can
+be omitted if it is <tt>binary</tt>).
+An example file for a binary package would look like:
 <example>
 /usr/share/lintian/overrides/foo, where foo is the name of your package
-foo: FSSTND-dir-in-usr /usr/man/man1/foo.1.gz
 foo: non-standard-dir-perm
+foo: FSSTND-dir-in-usr /usr/man/man1/foo.1.gz
+</example>
+
+<p>
+
+An example file for a source package would look like:
+<example>
+debian/source.lintian-overrides in your base source directory
+foo source: debian-files-list-in-source
+foo source: configure-generated-file-in-source config.cache
 </example>
 
 <p>
 
 Many tags can occour more than once (e.g. if the same error is found
-in more than one file. You can override a tag either completly by
-specifying its name (second line in the example) or only one
-occourence of it by specifying the additional info, too (first line
-in the example).
-
-<p>
+in more than one file). You can override a tag either completly by
+specifying its name (first line in the examples) or only one
+occourence of it by specifying the additional info, too (second line
+in the examples).
 
 <chapt>Advanced usage
 
