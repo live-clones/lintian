@@ -43,14 +43,14 @@ my $pkg_mode = 'a';		# auto -- automatically search for
 				# binary and source pkgs
 use vars qw($verbose);
 $verbose = 0;			#flag for -v|--verbose switch
-my $debug = 0;    	     	#flag for -d|--debug switch
+our $debug = 0;    	     	#flag for -d|--debug switch
 my @debug;
 my $check_everything = 0;	#flag for -a|--all switch
 my $lintian_info = 0;		#flag for -i|--info switch
-my $display_infotags = 0;	#flag for -I|--display-info switch
+our $display_infotags = 0;	#flag for -I|--display-info switch
 my $unpack_level = undef;	#flag for -l|--unpack-level switch
-my $no_override = 0;		#flag for -o|--no-override switch
-my $show_overrides = 0;		#flag for --show-overrides switch
+our $no_override = 0;		#flag for -o|--no-override switch
+our $show_overrides = 0;		#flag for --show-overrides switch
 my $check_md5sums = 0;		#flag for -m|--md5sums switch
 my $allow_root = 0;		#flag for --allow-root swtich
 my $packages_file = 0;		#string for the -p option
@@ -61,7 +61,7 @@ my $OPT_LINTIAN_ARCH = "";	#string for the --arch option
 my $OPT_LINTIAN_SECTION = "";	#string for the --release option
 # These options can also be used via default or environment variables
 my $LINTIAN_CFG = "";		#config file to use
-my $LINTIAN_ROOT;		#location of the lintian modules
+our $LINTIAN_ROOT;		#location of the lintian modules
 
 my @packages;
 
@@ -80,7 +80,7 @@ my %overridden;
 my %checks;
 my %check_abbrev;
 my %unpack_infos;
-my %experimental_tag;
+our %experimental_tag;
 my %check_info;
 
 # reset configuration variables
@@ -478,6 +478,7 @@ require Lab;
 require Util;
 require Pipeline;
 require Read_pkglists;
+
 import Util;
 import Pipeline;
 
@@ -1060,6 +1061,8 @@ if ($debug) {
 
 $exit_code = 0;
 
+require Checker;
+
 # for each package (the `reverse sort' is to make sure that source packages are
 # before the corresponding binary packages--this has the advantage that binary
 # can use information from the source packages if these are unpacked)
@@ -1250,78 +1253,12 @@ for (reverse sort @packages) {
 		next PACKAGE;
 	    }
 
-	    print "N: Running check: $check ...\n" if $debug;
+	    my $returnvalue = Checker::runcheck($pkg, $long_type, $check);
+	    # Set exit_code correctly if there was not yet an exit code
+	    $exit_code = $returnvalue unless $exit_code;
 
-	    my $cmd = "$LINTIAN_ROOT/checks/$ci->{'script'}";
-
-	    my $PIPE=FileHandle->new;
-	    unless (pipeline_open($PIPE, sub { exec $cmd, $pkg, $long_type })) {
-		print STDERR "internal error: cannot open input pipe to command $cmd: $!\n";
+	    if ($returnvalue == 2) {
 		print "N: Skipping $action of $long_type package $pkg\n";
-		$exit_code = 2;
-		next PACKAGE;
-	    }
-	    my $suppress;
-	    while (<$PIPE>) {
-		chop;
-
-		# error/warning/info ?
-		if (/^[EWI]: \S+ \S+:\s+\S+/o) {
-		    $suppress = (/^I: / and not $display_infotags);
-
-		    # change "pkg binary:" to just "pkg:"
-		    s/^(.: \S+)\s+binary:/$1:/;
-
-		    # remove `[EWI]:' for override matching
-		    my $tag_long = $_;
-		    $tag_long =~ s/^.:\s+//;
-		    $tag_long =~ s/\s+$//;
-		    $tag_long =~ s/\s+/ /g;
-
-		    my $tag_short;
-		    if ($tag_long =~ /^([^:]*): (\S+)/) {
-			$tag_short = "$1: $2";
-		    } else {
-			die "couldn't parse tag_long $tag_long to create tag_short";
-		    }
-
-		    if ($experimental_tag{$2}) {
-			s/^.:/X:/;
-		    }
-
-		    # overridden?
-		    if (not $no_override and
-			((exists $overridden{$tag_long}) or
-			 (exists $overridden{$tag_short}))) {
-			# yes, this tag is overridden
-			$overridden{$tag_long}++ if exists $overridden{$tag_long};
-			$overridden{$tag_short}++ if exists $overridden{$tag_short};
-			s/^.:/O:/;
-			print "$_\n"
-			    if $show_overrides or ($verbose and not $suppress);
-		    } else {
-			# no, just display it
-			print "$_\n"
-			    if not $suppress;
-		    }
-
-		    # error?
-		    if (/^E:/) {
-			$exit_code or ($exit_code = 1);
-		    }
-		} else {
-		    # no, so just display it
-		    print "$_\n";
-		}
-	    }
-	    unless (close($PIPE)) {
-		if ($!) {
-		    print STDERR "internal error: cannot close input pipe to command $cmd: $!";
-		} else {
-		    print STDERR "internal error: cannot run $check check on package $pkg\n";
-		}
-		print "N: Skipping $action of $long_type package $pkg\n";
-		$exit_code = 2;
 		next PACKAGE;
 	    }
 	}
