@@ -161,10 +161,12 @@ while (<IN>) {
 	if ($info =~ m/shared object/o) {
 	    print "W: $pkg $type: shared-lib-without-dependency-information $file\n";
 	} else {
-	    # Some exceptions: files in /boot, named *-static or *.static, or
-	    # *-static as package-name.
+	    # Some exceptions: files in /boot, /usr/lib/debug/*, named *-static or
+	    # *.static, or *-static as package-name.
 	    use File::Basename;
 	    next if (dirname($file) eq './boot');
+	    # Location of debugging symbols:
+	    next if ($file =~ m#^./usr/lib/debug/#);
 	    next if ($file =~ /(\.|-)static$/);
 	    next if ($pkg =~ /-static$/);
 
@@ -233,3 +235,5 @@ sub fail {
     }
     exit 1;
 }
+
+# vim: ts=8 sw=4

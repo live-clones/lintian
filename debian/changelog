@@ -1,11 +1,13 @@
 lintian (1.23.0) UNRELEASED; urgency=low
 
   The ``moving forward'' release
-  
+
+  * checks/binaries:
+    + [JvW] Ignore static binaries in /usr/lib/debug
   * checks/menu-format:
     + [FL] only issue one warning about needs=dwww, not two
 
- -- Frank Lichtenheld <djpig@debian.org>  Mon,  8 Mar 2004 17:35:03 +0100
+ -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Tue, 16 Mar 2004 00:27:29 +0100
 
 lintian (1.22.12) unstable; urgency=low
 
