@@ -1,42 +1,12 @@
-lintian (1.23.0~beta1-r181) unstable; urgency=low
+lintian (1.23.0~beta1-fixing1) unstable; urgency=low
 
   The ``moving forward'' release, prepared by Marc 'HE' Brockschmidt,
   Frank Lichtenheld and Jeroen van Wolffelaar.
 
   * [FL] add udeb support (Closes: #216117)
     Thanks to Joey Hess for his input. Many changes, mostly to
-     frontend/lintian, checks/debconf and checks/files
+    frontend/lintian, checks/debconf and checks/files
 
-  * collection/override-file:
-    + [FL] add support for source overrides (Closes: #129510)
-    See the User Manual for more information.
-  
-  * debian/control,debian/copyright:
-    + [FL] Add Marc 'HE' Brockschmidt to Uploaders and
-      to copyright file
-  
-  * doc/lintian.sgml:
-    + [FL] Some updates, some more verbatim explantions
-      (Closes: #197955)
-    + [FL] Reworked the override section to handle udeb and
-      source packages, too
-  * doc/README:
-    + [FL] Update options
-  
-  * frontend/lintian:
-    + [HE] Added a --dont-check-parts|-X option to allow users to specify
-      which tests should not be run. Also added infos about this to the
-      manpage. (Closes: #206674)
-  
-  * lib/Dep.pm:
-    + [FL] Fixed some semantic errors (since noone ever observed the
-      correspoding perl warnings the fixed parts are probably never
-      used in the current code)
-  * lib/Utils.pm
-    + [HE] Changed {read,parse}_dpkg_control a bit to cope with the fact
-      that template files sometimes contain lines consisting only of
-      whitespace which do *not* separate to blocks. (Closes: #242479)
-  
   * checks/binaries:
     + [JvW] Ignore static binaries in /usr/lib/debug
   * checks/changelog-file:
@@ -152,13 +122,42 @@ lintian (1.23.0~beta1-r181) unstable; urgency=low
   * collection/diffstat
     + [HE] The diff.gz file name does not include the the epoch, so strip it
       before trying to get the file.
-
+  * collection/override-file:
+    + [FL] add support for source overrides (Closes: #129510)
+      See the User Manual for more information.
+  
+  * debian/control,debian/copyright:
+    + [FL] Add Marc 'HE' Brockschmidt to Uploaders and
+      to copyright file
+  
+  * doc/lintian.sgml:
+    + [FL] Some updates, some more verbatim explantions
+      (Closes: #197955)
+    + [FL] Reworked the override section to handle udeb and
+      source packages, too
+  * doc/README:
+    + [FL] Update options
+  
+  * frontend/lintian:
+    + [HE] Added a --dont-check-parts|-X option to allow users to specify
+      which tests should not be run. Also added infos about this to the
+      manpage. (Closes: #206674)
+  
+  * lib/Dep.pm:
+    + [FL] Fixed some semantic errors (since noone ever observed the
+      correspoding perl warnings the fixed parts are probably never
+      used in the current code)
+  * lib/Utils.pm
+    + [HE] Changed {read,parse}_dpkg_control a bit to cope with the fact
+      that template files sometimes contain lines consisting only of
+      whitespace which do *not* separate to blocks. (Closes: #242479)
+  
   * unpack/list-binpkg:
     + [HE] Try to open Packages.gz if no Packages file can be found. Fix
       based on patch by Robert Lemmen <robertle@semistable.com>, thanks!
       (Closes: #198617)
 
- -- Frank Lichtenheld <djpig@debian.org>  Fri, 16 Apr 2004 01:45:00 +0200
+ -- Debian Lintian Maintainers <lintian-maint@debian.org>  Sun, 18 Apr 2004 11:37:08 +0200
 
 lintian (1.22.12) unstable; urgency=low
 
