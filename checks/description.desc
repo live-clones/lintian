@@ -96,14 +96,6 @@ Info: The synopsis (first line in the package "Description:" field, the
  to use lowercase instead.
 Ref: devref 6.2.2
 
-Tag: description-synopsis-starts-with-an-article
-Type: warning
-Info: The synopsis (first line in the package "Description:" field, the
- short description) starts with an article, either definite ("the") or
- indefinite ("a" or "an"). It is recommended to use a synopsis without
- the article instead.
-Ref: devref 6.2.2
-
 Tag: description-synopsis-is-duplicated
 Type: error
 Info: The first line of the extended Description: should not repeat the

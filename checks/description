@@ -62,9 +62,6 @@ if ($synopsis =~ m/^\s*$/) {
     if ($synopsis =~ m/^\s*[A-Z]/) {
 	tag "description-synopsis-starts-with-a-capital-letter";
     }
-    if ($synopsis =~ m/^\s*([Tt]he|[Aa]n?)\b/) {
-	tag "description-synopsis-starts-with-an-article";
-    }
     if ($synopsis =~ m/\t/) {
 	tag "description-contains-tabs", "" unless $tabs++;
     }
