@@ -16,9 +16,6 @@ lintian (1.23.0~RC2) unstable; urgency=low
     + [JvW] Loosen up checks for -0.x versions, could be either native or
       upstream + Debian revision, so some tests cannot be performed because of
       that uncertainty
-  * checks/common_data:
-    + [HE] Change known_obsolete_fields to allow checks/fields to
-      report the Bugs field als obsolete.
   * checks/copyright-file:
     + [HE] Change usr-doc-symlink-to-foreign-package check to throw an
       error when a package doesn't depend on the *same* version of the
