@@ -41,7 +41,7 @@ pipeline((sub { exec 'ar', 'p', "$base_dir/deb", 'data.tar.gz' }),
     or fail();
 
 # fix permissions
-spawn('chmod', '-R', 'u+rX,o-w', "$base_dir/unpacked") == 0 or fail();
+spawn('chmod', '-R', 'u+rwX,go-w', "$base_dir/unpacked") == 0 or fail();
 
 exit 0;
 

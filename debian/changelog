@@ -1,4 +1,4 @@
-lintian (1.23.1~RC1) unstable; urgency=low
+lintian (1.23.1~beta) unstable; urgency=low
 
   The ``Now featuring over 500 checks'' release, prepared by the usual
   suspects.
@@ -117,8 +117,6 @@ lintian (1.23.1~RC1) unstable; urgency=low
       rather than executed as separate executables. Makes it easy to make
       common functions available, tags are done centrally, etc etc. Should
       also save quite a number of forks, thus more speedier.
-    + [FL] Correctly handle non-empty write-protected directories
-      on removal
   
   * lib/Util.pm:
     + [FL] dpkg supports comments in control files now, handle them
@@ -144,6 +142,10 @@ lintian (1.23.1~RC1) unstable; urgency=low
   * unpack/list-udebpkg:
     + [FL] Fix sort of copy & paste error which caused the whole
       script to behave ill
+  * unpack/unpack-binpkg-l2:
+    + [FL] While fixing permissions, also enable write access
+      so we get no problems on removal. Disable group write
+      permissions, we need nobody to interfere with us.
 
  -- Debian Lintian Maintainers <lintian-maint@debian.org>  Fri, 09 Jul 2004 00:58:38 +0200
 
