@@ -31,10 +31,10 @@ Type: error
 Info: An item of the menu file cannot be parsed as a series of tag=value
  pairs. This could be because you didn't close a set of double quotes.
 
-Tag: incorrect-package-test
+Tag: pkg-not-in-package-test
 Type: warning
-Info: The menu item tests to see if a package other than the package that
- contains it is installed. This is probably an error. Perhaps it is spelled
+Info: The menu item doesn't tests to see if the package that contains it
+ is installed. This is probably an error. Perhaps it is spelled
  or capitalized wrong, or perhaps the menu file was copied from some other
  package and this was accidentally not changed.
 

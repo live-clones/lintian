@@ -13,6 +13,11 @@ lintian (1.23.1~alpha) unstable; urgency=low
   * checks/menu-format:
     + [FL] Fix su-to-root checks to cope with the new -X option and
       improve the option parsing to better handle unknown options
+    + [FL] Allow a comma separated list in the package test. Pointed
+      out by Gerfried Fuchs (Closes: #246507) Change incorrect-package-test
+      to pkg-not-in-package-test which is issued when the package is
+      not in the list. Don't issue menu-command-not-in-package when
+      we have a list.
   * checks/shared-libs:
     + [FL] Don't report shlib-with-executable-bit and
       shlib-with-bad-permissions on symbolic links to such files

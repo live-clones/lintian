@@ -207,8 +207,11 @@ sub VerifyLine {
 	tag "bad-test-in-menu-item", "/usr/lib/menu/$menufile:$linecount";
 	return;
     }
-    if ($1 ne $pkg) {
-	tag "incorrect-package-test", "$1 /usr/lib/menu/$menufile";
+    my $pkg_test = $1;
+    my %tested_packages = map { $_ => 1 } split( /\s*,\s*/, $pkg_test);
+    my $tested_packages = scalar keys %tested_packages;
+    unless (exists $tested_packages{$pkg}) {
+	tag "pkg-not-in-package-test", "$pkg_test /usr/lib/menu/$menufile";
     }
     $line =~ s/^\?package\(.*?\)://;
 	
@@ -342,11 +345,12 @@ sub VerifyLine {
 		tag "su-to-root-without--c", "/usr/lib/menu/$menufile:$linecount";
 	    } else {   
 		tag "menu-command-not-in-package", "/usr/lib/menu/$menufile:$linecount"
-		    if (!$file_index{".$cmd"});
+		    if (!$file_index{".$cmd"} && ($tested_packages < 2));
 	    }
 	} else {
 	    tag "menu-command-not-in-package", "/usr/lib/menu/$menufile:$linecount $com[0]"
-	        if ($com[0] && !$file_index{".$com[0]"});
+	        if ($com[0] && !$file_index{".$com[0]"}
+                    && ($tested_packages < 2));
 	}
 
     if (exists($vals{'icon'})) {
