@@ -18,6 +18,7 @@ goals for 1.23.0 [04.2004 - do we get it in Sarge?]
   (#197955, #189656)
 - overhaul the overrides concept to enable source overrides
   (#129510)
+- update debian/copyright. List of authors seems rather outdated
 
 goals not targetted
 ===================
