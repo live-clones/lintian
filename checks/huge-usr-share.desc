@@ -1,0 +1,22 @@
+Check-Script: huge-usr-share
+Author: Jeroen van Wolffelaar <jeroen@wolffelaar.nl>
+Abbrev: hus
+Standards-Version: 3.6.1
+Type: binary
+Unpack-Level: 2
+Info: This script checks whether an architecture-dependent package doesn't
+ have a significantly big /usr/share
+
+Tag: arch-dep-package-has-big-usr-share
+Type: warning
+Info: The package has a significant amount of architecture-independent data in
+ /usr/share, while it is an architecture-dependent package.
+ This is wasteful of mirror space and bandwidth, as we then end up with
+ multiple copies of this data, one for each architecture.
+ .
+ If the data in /usr/share is not architecture-independent, it is a policy
+ violation, and in this case, you should move that data elsewhere.
+ .
+ See also: http://www.debian.org/doc/developers-reference/ch-best-pkging-practices#s-bpp-archindepdata
+
+

@@ -1,0 +1,69 @@
+#!/usr/bin/perl -w
+# binaries -- lintian check script
+
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+# MA 02111-1307, USA.
+
+use strict;
+
+($#ARGV == 1) or fail("syntax: huge-usr-share <pkg> <type>");
+my $pkg = shift;
+my $type = shift;
+
+# Treshold in kB of /usr/share to trigger this warning
+# Consider that the changelog alone can be quite big, and cannot be moved away
+my $TRESHOLD = 250;
+
+my $arch;
+
+# read architecture file
+if (open(IN,"fields/architecture")) {
+    chop($arch = <IN>);
+    close(IN);
+}
+
+# If this is a arch-independent package, this test doesn't apply
+exit 0 if $arch eq 'all';
+
+my $size = `du -ks unpacked`;
+$size =~ s/\t.*//;
+$size = int $size;
+
+my $size_usrshare = `du -ks unpacked/usr/share`;
+$size_usrshare =~ s/\t.*//;
+$size_usrshare = int $size_usrshare;
+
+if ($size_usrshare > $TRESHOLD) {
+	my $perc = int (100 * $size_usrshare / $size);
+	print "W: $pkg $type: arch-dep-package-has-big-usr-share ${size_usrshare}kB $perc%\n";
+}
+
+exit 0;
+
+# -----------------------------------
+
+sub fail {
+    if ($_[0]) {
+	warn "internal error: $_[0]\n";
+    } elsif ($!) {
+	warn "internal error: $!\n";
+    } else {
+	warn "internal error.\n";
+    }
+    exit 1;
+}

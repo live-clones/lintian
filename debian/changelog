@@ -58,6 +58,10 @@ lintian (1.22.12) unstable; urgency=low
     + Check whether files listed in debian/po/POTFILES.in actually exist,
       and only positively detect po-debconf usage if dependency is there.
       (Patch by Denis Barbier <barbier@debian.org>, only minimally modified)
+  * checks/huge-usr-share:
+    + Check for a big /usr/share (currently 250kB) in arch-dependent
+      packages (Closes: #232849)
+      Thanks Steve McIntyre for the idea
 
  -- Frank Lichtenheld <djpig@debian.org>  Thu, 26 Feb 2004 21:52:14 +0100
 

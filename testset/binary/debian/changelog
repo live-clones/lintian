@@ -1,3 +1,9 @@
+binary (4) unstable; urgency=low
+
+  * Add big file to /usr/share to trigger the big-usr-share check
+
+ -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Fri, 27 Feb 2004 10:15:59 +0100
+
 binary (3) unstable; urgency=unlimited
 
   * Add some bogus menu entries using su-to-root in a bogus way

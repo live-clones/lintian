@@ -16,6 +16,7 @@ binary-arch: build
 	install -d $(tmp)/usr/share/doc/binary
 	install -m 644 INSTALL $(tmp)/usr/share/doc/binary
 	install -d $(tmp)/usr/lib/menu
+	install -d $(tmp)/usr/share/binary
 	install -m 644 debian/menu $(tmp)/usr/lib/menu/binary
 	install -m 644 debian/README.Debian $(tmp)/usr/share/doc/binary
 	install -m 644 debian/copyright $(tmp)/usr/share/doc/binary
@@ -23,6 +24,8 @@ binary-arch: build
 	#gzip -9 $(tmp)/usr/share/doc/binary/changelog
 	install -d $(tmp)/DEBIAN
 	install -m 755 debian/postinst $(tmp)/DEBIAN
+
+	dd if=/dev/zero of=$(tmp)/usr/share/binary/largefile count=500
 
 	dpkg-shlibdeps $(tmp)/usr/bin/hello
 	dpkg-gencontrol -isp

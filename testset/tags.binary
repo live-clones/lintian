@@ -1,6 +1,7 @@
 W: binary source: ancient-standards-version 3.2.1
 E: binary: binary-without-manpage hello
 E: binary: binary-without-manpage hello-static
+W: binary: arch-dep-package-has-big-usr-share 292kB 39%
 W: binary: package-contains-upstream-install-documentation usr/share/doc/binary/INSTALL
 E: binary: postinst-does-not-call-updatemenus usr/lib/menu/binary
 E: binary: postrm-does-not-call-updatemenus usr/lib/menu/binary
