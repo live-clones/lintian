@@ -100,6 +100,8 @@ lintian (1.23.0~beta1-fixing1) unstable; urgency=low
       manpage-for-non-x11-binary-in-wrong-directory when a link
       from a normal bin/ is pointing to a binary in an X11 dir. Based
       on patch by FL. (Closes: #203389)
+    + [JvW] x11-games-should-be-in-usr-games is now error, because it's
+      mandated by policy
   * checks/menu-format:
     + [FL] Only issue one warning about needs=dwww, not two
     + [HE] Check if the command given with command= is in the package
@@ -174,7 +176,7 @@ lintian (1.23.0~beta1-fixing1) unstable; urgency=low
       based on patch by Robert Lemmen <robertle@semistable.com>, thanks!
       (Closes: #198617)
 
- -- Debian Lintian Maintainers <lintian-maint@debian.org>  Mon, 19 Apr 2004 23:01:36 +0200
+ -- Debian Lintian Maintainers <lintian-maint@debian.org>  Fri, 23 Apr 2004 12:32:36 +0200
 
 lintian (1.22.12) unstable; urgency=low
 

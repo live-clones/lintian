@@ -19,6 +19,7 @@ E: manpages: manpage-not-compressed-with-gzip usr/share/man/man1/usr-bin-binary-
 E: manpages: manpage-not-compressed-with-gzip usr/share/man/man1/usr-sbin-binary.1.gz
 E: manpages: manpage-not-compressed-with-max-compression usr/share/man/man6/usr-games-binary.6.gz
 E: manpages: no-copyright-file
+E: manpages: x11-games-should-be-in-usr-games usr/X11R6/man/man6/X11R6-binary.man
 W: manpages source: ancient-standards-version 3.2.1
 W: manpages source: changelog-should-mention-nmu
 W: manpages source: source-nmu-has-incorrect-version-number 3
@@ -28,4 +29,11 @@ W: manpages: link-to-undocumented-manpage usr/share/man/man1/bin-binary.1.gz
 W: manpages: link-to-undocumented-manpage usr/share/man/man3/function.3.gz
 W: manpages: no-manpage-in-correct-directory usr/sbin/usr-sbin-binary (1)
 W: manpages: package-contains-hardlink usr/share/man/man1/usr-bin-binary-alt.1.gz
-W: manpages: x11-games-should-be-in-usr-games usr/X11R6/man/man6/X11R6-binary.man
+W: manpages: packages-installs-file-to-usr-x11r6 usr/X11R6/
+W: manpages: packages-installs-file-to-usr-x11r6 usr/X11R6/bin/
+W: manpages: packages-installs-file-to-usr-x11r6 usr/X11R6/bin/rstartd
+W: manpages: packages-installs-file-to-usr-x11r6 usr/X11R6/man/
+W: manpages: packages-installs-file-to-usr-x11r6 usr/X11R6/man/man1/
+W: manpages: packages-installs-file-to-usr-x11r6 usr/X11R6/man/man1/rstartd.1x.gz
+W: manpages: packages-installs-file-to-usr-x11r6 usr/X11R6/man/man6/
+W: manpages: packages-installs-file-to-usr-x11r6 usr/X11R6/man/man6/X11R6-binary.man

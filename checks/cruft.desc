@@ -55,13 +55,13 @@ Info: Package contains a '.cvsignore' file.  It may have been included by
  accident.
 
 Tag: source-contains-svn-control-dir
-Type: error
+Type: warning
 Info: Source contains a .svn directory. It was most likely included by
  accident, since Subversion version control directories usually don't belong
  in packages. Export from subversion rather than checkout.
 
 Tag: source-contains-CVS-dir
-Type: error
+Type: warning
 Info: Package contains a CVS directory. It was most likely included by
  accident, since transient CVS data usually doesn't belong in packages.
  Export from CVS rather than use a checkout.

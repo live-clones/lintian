@@ -15,8 +15,8 @@ E: relations: no-copyright-file
 E: relations: obsolete-field bugs
 E: relations: obsolete-field optional
 E: relations: package-has-a-duplicate-relation depends: relations, relations (<< 3)
-N: relations binary: unknown-field-in-changes origin
-N: relations-multiple-libs binary: unknown-field-in-changes origin
+I: relations-multiple-libs: unknown-field-in-control origin
+I: relations: unknown-field-in-control origin
 W: relations source: ancient-standards-version 3.1.1
 W: relations source: redundant-origin-field
 W: relations-multiple-libs: description-synopsis-might-not-be-phrased-properly

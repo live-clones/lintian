@@ -17,7 +17,6 @@ E: binary: suidregister-used-in-maintainer-script postinst
 E: binary: unstripped-binary-or-object ./usr/bin/hello
 I: binary: arch-dep-package-has-big-usr-share 1528kB 54%
 W: binary source: ancient-standards-version 3.2.1
-W: binary source: changelog-should-mention-nmu
 W: binary source: maintainer-upload-has-incorrect-version-number 4-1.1
 W: binary source: native-package-with-dash-version
 W: binary: menu-command-not-in-package /usr/lib/menu/binary:2

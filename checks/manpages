@@ -146,7 +146,7 @@ while (<IN>) {
     
     # special check for manual pages for X11 games
     if ($path =~ m,^usr/X11R6/man/man6/,o) {
-	print "W: $pkg $type: x11-games-should-be-in-usr-games $file\n";
+	print "E: $pkg $type: x11-games-should-be-in-usr-games $file\n";
     }
 
     #  reformatted to here

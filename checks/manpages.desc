@@ -70,11 +70,7 @@ Type: error
 Info: Since X11 games should be installed in <tt>/usr/games</tt> (and
  not in <tt>/usr/X11R6/bin</tt>) and the game's manual pages should be
  installed in <tt>/usr/share/man/man6</tt>, the directory
- <tt>/usr/X11R6/man/man6</tt> should be (nearly) empty.
- .
- There are a few exceptions though, as utilities like `xeyes'. If this is
- one of these exceptions, please contact &maint; about this so that
- this exception would be recognized in future versions of Lintian.
+ <tt>/usr/X11R6/man/man6</tt> should be empty.
 Ref: policy 11.11
 
 Tag: manpage-not-compressed-with-gzip
