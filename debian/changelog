@@ -31,6 +31,9 @@ lintian (1.22.12) unstable; urgency=low
   * checks/binaries:
     + don't complain about non-stripped kernel modules (Closes: #203373)
       Patch by Dagfinn Ilmari Mannsaker
+  * checks/description:
+    + fix description-is-dh_make-template check (Closes: #215125)
+      Fix suggested by Josip Rodin
   * unpack/unpack-binpkg-l1: tar uses now h to signal hardlinks which
      breaks a lot of our code. so sed'ing it away (Closes: #234545)
      Many many thanks to Theodore Y. Ts'o for bringing this to our

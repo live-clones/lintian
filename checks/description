@@ -109,7 +109,7 @@ while (<IN>) {
 	}
 	if (m/^\s*missing\s*$/oi) {
 	    print "E: $pkg $type: description-is-debmake-template\n" unless $template++;
-	} elsif (m/ <insert long description, indented with spaces>/) {
+	} elsif (m/<insert long description, indented with spaces>/) {
 	    print "E: $pkg $type: description-is-dh_make-template\n";
 	}
     }
