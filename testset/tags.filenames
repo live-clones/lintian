@@ -1,57 +1,57 @@
-W: filenames source: ancient-standards-version 3.1.1
-W: filenames source: source-contains-CVS-dir CVS
-W: filenames source: svn-commit-file-in-source files/svn-commit.tmp
-W: filenames source: cvsignore-file-in-source files/.cvsignore
-W: filenames source: source-contains-svn-control-dir .svn
+E: filenames: bad-menu-file-name usr/lib/menu/menu
 E: filenames: binary-without-manpage testxbin
 E: filenames: binary-without-manpage testxbin2
+E: filenames: debian-changelog-file-missing <<<< FALSE POSITIVE
+E: filenames: lengthy-symlink usr/lib/filenames/symlink4wrong ../filenames/symlink2
+E: filenames: lengthy-symlink usr/share/doc/filenames/version.txt.gz ../filenames/doc/version6.txt.gz
+E: filenames: no-copyright-file
 E: filenames: non-standard-toplevel-dir files/
-W: filenames: file-in-unusual-dir files/.cvsignore
+E: filenames: package-contains-ancient-file usr/lib/perl5/foo/ancient.pm 1975-01-01
+E: filenames: package-installs-file-to-usr-something-x11 usr/bin/X11/
+E: filenames: package-installs-file-to-usr-something-x11 usr/bin/X11/testxbin
+E: filenames: package-installs-packlist usr/lib/perl5/foo/.packlist
+E: filenames: postinst-does-not-call-updatemenus usr/lib/menu/menu
+E: filenames: postrm-does-not-call-updatemenus usr/lib/menu/menu
+E: filenames: symlink-contains-spurious-segments usr/lib/filenames/symlink5wrong ../menu/../somethingelse
+E: filenames: symlink-contains-spurious-segments usr/lib/filenames/symlink6wrong ./file4
+E: filenames: symlink-contains-spurious-segments usr/lib/filenames/symlink7wrong ../menu/./something
+E: filenames: symlink-ends-with-slash usr/lib/filenames/symlink9wrong ../menu/something/
+E: filenames: symlink-has-double-slash usr/lib/filenames/symlink8wrong ../menu//something
+E: filenames: symlink-has-too-many-up-segments usr/lib/filenames/symlink2wrong ../../../../etc/symlink
+E: filenames: symlink-should-be-absolute usr/lib/filenames/symlink10wrong ../../..
+E: filenames: symlink-should-be-absolute usr/lib/filenames/symlink1wrong ../../../etc/symlink
+E: filenames: symlink-should-be-relative usr/lib/filenames/symlink3wrong /usr/lib/filenames/symlink2
+E: filenames: use-of-compat-symlink usr/bin/X11/
+E: filenames: use-of-compat-symlink usr/bin/X11/testxbin
+W: filenames source: ancient-standards-version 3.1.1
+W: filenames source: cvsignore-file-in-source files/.cvsignore
+W: filenames source: source-contains-CVS-dir CVS
+W: filenames source: source-contains-svn-control-dir .svn
+W: filenames source: svn-commit-file-in-source files/svn-commit.tmp
+W: filenames: bad-permissions-for-ali-file usr/lib/ada/adalib/test.ali
 W: filenames: cvsignore-file-in-package files/.cvsignore
 W: filenames: file-in-unusual-dir files/ .tif
 W: filenames: file-in-unusual-dir files/".tif
 W: filenames: file-in-unusual-dir files/'\\ 
-W: filenames: file-in-unusual-dir files/svn-commit.tmp
-W: filenames: svn-commit-file-in-package files/svn-commit.tmp
+W: filenames: file-in-unusual-dir files/.cvsignore
 W: filenames: file-in-unusual-dir files/Maelstrom Sound
-E: filenames: package-installs-packlist usr/lib/perl5/foo/.packlist
-E: filenames: package-contains-ancient-file usr/lib/perl5/foo/ancient.pm 1975-01-01
-W: filenames: package-contains-svn-control-dir usr/lib/perl5/.svn/
+W: filenames: file-in-unusual-dir files/svn-commit.tmp
+W: filenames: no-priority-field
+W: filenames: no-section-field
 W: filenames: package-contains-CVS-dir usr/lib/perl5/CVS/
-W: filenames: bad-permissions-for-ali-file usr/lib/ada/adalib/test.ali
-W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/README.macosx
 W: filenames: package-contains-readme-for-other-platform-or-distro usr/share/doc/filenames/README.macosx
-W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/examples/very_interesting_example
-W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/examples/very_interesting_example2.gz
-W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/Changes.gz
-E: filenames: package-installs-file-to-usr-something-x11 usr/bin/X11/
-E: filenames: use-of-compat-symlink usr/bin/X11/
-E: filenames: package-installs-file-to-usr-something-x11 usr/bin/X11/testxbin
-E: filenames: use-of-compat-symlink usr/bin/X11/testxbin
+W: filenames: package-contains-svn-control-dir usr/lib/perl5/.svn/
+W: filenames: package-installs-nonbinary-perl-in-usr-lib-perl5 usr/lib/perl5/foo/ancient.pm
+W: filenames: package-installs-nonbinary-perl-in-usr-lib-perl5 usr/lib/perl5/foo/bar.pm
 W: filenames: packages-installs-file-to-usr-x11r6 usr/X11R6/
 W: filenames: packages-installs-file-to-usr-x11r6 usr/X11R6/bin/
 W: filenames: packages-installs-file-to-usr-x11r6 usr/X11R6/bin/testxbin2
-E: filenames: symlink-should-be-absolute usr/lib/filenames/symlink1wrong ../../../etc/symlink
-E: filenames: symlink-has-too-many-up-segments usr/lib/filenames/symlink2wrong ../../../../etc/symlink
-E: filenames: symlink-should-be-relative usr/lib/filenames/symlink3wrong /usr/lib/filenames/symlink2
-E: filenames: lengthy-symlink usr/lib/filenames/symlink4wrong ../filenames/symlink2
-E: filenames: symlink-contains-spurious-segments usr/lib/filenames/symlink5wrong ../menu/../somethingelse
-E: filenames: symlink-contains-spurious-segments usr/lib/filenames/symlink6wrong ./file4
-E: filenames: symlink-contains-spurious-segments usr/lib/filenames/symlink7wrong ../menu/./something
-E: filenames: symlink-has-double-slash usr/lib/filenames/symlink8wrong ../menu//something
-E: filenames: symlink-ends-with-slash usr/lib/filenames/symlink9wrong ../menu/something/
+W: filenames: svn-commit-file-in-package files/svn-commit.tmp
+W: filenames: symlink-is-self-recursive usr/lib/filenames/symlink10wrong ../../..
 W: filenames: symlink-is-self-recursive usr/lib/filenames/symlink5ok+warn ..
 W: filenames: symlink-is-self-recursive usr/lib/filenames/symlink6ok+warn .
 W: filenames: symlink-is-self-recursive usr/lib/filenames/symlink7ok+warn /
-W: filenames: symlink-is-self-recursive usr/lib/filenames/symlink10wrong ../../..
-E: filenames: symlink-should-be-absolute usr/lib/filenames/symlink10wrong ../../..
-E: filenames: lengthy-symlink usr/share/doc/filenames/version.txt.gz ../filenames/doc/version6.txt.gz
-W: filenames: package-installs-nonbinary-perl-in-usr-lib-perl5 usr/lib/perl5/foo/bar.pm
-W: filenames: package-installs-nonbinary-perl-in-usr-lib-perl5 usr/lib/perl5/foo/ancient.pm
-E: filenames: bad-menu-file-name usr/lib/menu/menu
-E: filenames: postinst-does-not-call-updatemenus usr/lib/menu/menu
-E: filenames: postrm-does-not-call-updatemenus usr/lib/menu/menu
-E: filenames: no-copyright-file
-W: filenames: no-section-field
-W: filenames: no-priority-field
-E: filenames: debian-changelog-file-missing <<<< FALSE POSITIVE
+W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/Changes.gz
+W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/README.macosx
+W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/examples/very_interesting_example
+W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/examples/very_interesting_example2.gz

@@ -1,19 +1,19 @@
-W: foo++ source: ancient-standards-version 3.1.1
-E: foo++ source: wrong-debian-qa-address-set-as-maintainer Lintian Maintainer <debian-qa@lists.debian.org>
 E: foo++ source: multiline-field uploaders
-E: foo++ source: uploader-address-malformed Marc 'HE' Brockschmidt <he@unknown>
-W: foo++ source: uploader-address-looks-weird Jeroen van Wolffelaar<jeroen@localhost.localdomain>
 E: foo++ source: uploader-address-is-on-localhost Jeroen van Wolffelaar<jeroen@localhost.localdomain>
-W: foo++ source: uploader-not-full-name Frank
-E: foo++ source: uploader-name-missing Yama@gotchi
-E: foo++ source: uploader-address-malformed Yama@gotchi
-W: foo++ source: uploader-not-full-name Josip
-E: foo++ source: uploader-address-missing Josip
 E: foo++ source: uploader-address-malformed I am afraid of spam and think this helps <no_spam_please AT debian.org>
+E: foo++ source: uploader-address-malformed Marc 'HE' Brockschmidt <he@unknown>
+E: foo++ source: uploader-address-malformed Yama@gotchi
+E: foo++ source: uploader-address-missing Josip
+E: foo++ source: uploader-name-missing Yama@gotchi
+E: foo++ source: wrong-debian-qa-address-set-as-maintainer Lintian Maintainer <debian-qa@lists.debian.org>
 E: foo++-helper: usr-doc-symlink-without-dependency foo++
 E: foo++-helper: wrong-debian-qa-address-set-as-maintainer Lintian Maintainer <debian-qa@lists.debian.org>
-W: foo++: readme-debian-contains-debmake-default-email-address
+E: foo++: debian-changelog-file-contains-debmake-default-email-address
+E: foo++: debian-changelog-file-uses-obsolete-national-charset at line 11
 E: foo++: no-copyright-file
 E: foo++: wrong-debian-qa-address-set-as-maintainer Lintian Maintainer <debian-qa@lists.debian.org>
-E: foo++: debian-changelog-file-uses-obsolete-national-charset at line 11
-E: foo++: debian-changelog-file-contains-debmake-default-email-address
+W: foo++ source: ancient-standards-version 3.1.1
+W: foo++ source: uploader-address-looks-weird Jeroen van Wolffelaar<jeroen@localhost.localdomain>
+W: foo++ source: uploader-not-full-name Frank
+W: foo++ source: uploader-not-full-name Josip
+W: foo++: readme-debian-contains-debmake-default-email-address

@@ -1,28 +1,28 @@
-W: relations source: ancient-standards-version 3.1.1
-E: relations source: build-depends-without-arch-dep
 E: relations source: bad-relation build-depends: foo (>> 2) bar baz bat
-W: relations source: redundant-origin-field
-E: relations-multiple-libs: usr-doc-symlink-without-dependency relations
-W: relations-multiple-libs: description-synopsis-might-not-be-phrased-properly
+E: relations source: build-depends-without-arch-dep
 E: relations-multiple-libs: description-synopsis-is-duplicated
+E: relations-multiple-libs: obsolete-field bugs
+E: relations-multiple-libs: package-depends-on-multiple-libpng-versions libpng2 libpng3
 E: relations-multiple-libs: package-depends-on-multiple-libstdc-versions libstdc++2.10 libstdc++2.10-glibc2.2 libstdc++3.0
 E: relations-multiple-libs: package-depends-on-multiple-tcl-versions tcl8.0 tcl8.2
 E: relations-multiple-libs: package-depends-on-multiple-tk-versions tk8.2 tk8.3
 E: relations-multiple-libs: package-depends-on-multiple-tkx-versions tkx8.2 tkx8.3
-E: relations-multiple-libs: package-depends-on-multiple-libpng-versions libpng2 libpng3
-W: relations-multiple-libs: redundant-origin-field
-E: relations-multiple-libs: obsolete-field bugs
-N: relations-multiple-libs binary: unknown-field-in-changes origin
-E: relations: no-copyright-file
-W: relations: package-relation-with-self depends: relations
-W: relations: package-relation-with-self depends: relations (<< 3)
-E: relations: depends-on-essential-package-without-using-version depends: dpkg
-W: relations: virtual-package-depends-without-real-package-depends depends: mail-transport-agent
-E: relations: needlessly-depends-on-awk depends
+E: relations-multiple-libs: usr-doc-symlink-without-dependency relations
 E: relations: bad-version-in-relation conflicts: foobar (<< 5&5)
-W: relations: package-relation-with-self replaces: relations
-E: relations: package-has-a-duplicate-relation depends: relations, relations (<< 3)
-W: relations: redundant-origin-field
+E: relations: depends-on-essential-package-without-using-version depends: dpkg
+E: relations: needlessly-depends-on-awk depends
+E: relations: no-copyright-file
 E: relations: obsolete-field bugs
 E: relations: obsolete-field optional
+E: relations: package-has-a-duplicate-relation depends: relations, relations (<< 3)
 N: relations binary: unknown-field-in-changes origin
+N: relations-multiple-libs binary: unknown-field-in-changes origin
+W: relations source: ancient-standards-version 3.1.1
+W: relations source: redundant-origin-field
+W: relations-multiple-libs: description-synopsis-might-not-be-phrased-properly
+W: relations-multiple-libs: redundant-origin-field
+W: relations: package-relation-with-self depends: relations
+W: relations: package-relation-with-self depends: relations (<< 3)
+W: relations: package-relation-with-self replaces: relations
+W: relations: redundant-origin-field
+W: relations: virtual-package-depends-without-real-package-depends depends: mail-transport-agent
