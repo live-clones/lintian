@@ -38,6 +38,7 @@ lintian (1.23.1~alpha) unstable; urgency=low
   * checks/shared-libs:
     + [FL] Don't report shlib-with-executable-bit and
       shlib-with-bad-permissions on symbolic links to such files
+    + [JvW] Fix the pic-detection code (Closes: #185816)
 
   * debian/{control,rules}, frontend/lintian:
     + [JvW] Insert version number at package build time, no need to commit a
@@ -57,7 +58,7 @@ lintian (1.23.1~alpha) unstable; urgency=low
     + [JvW] Fix two lintian warnings in lintian itself by touching files only
       on clean target, and not distributing them in the source
 
- -- Debian Lintian Maintainers <lintian-maint@debian.org>  Wed, 05 May 2004 16:54:46 +0200
+ -- Debian Lintian Maintainers <lintian-maint@debian.org>  Wed, 12 May 2004 01:26:07 +0200
 
 lintian (1.23.0) unstable; urgency=low
 

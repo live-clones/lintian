@@ -69,12 +69,12 @@ while (<IN>) {
 
     if (m/^-- (\S+)\s*$/o) {
 	$file = $1; $file =~ s,^(\./)?,,;
-    } elsif (m/^\s*SONAME\s*(\S+)/o) {
+    } elsif (m/^\s*SONAME\s+(\S+)/o) {
 	$SONAME{$file} = $1;
-    } elsif (m/^\s+\d+\s+\.rela?\.text/o) {
+    } elsif (m/^\s*TEXTREL\s/o) {
 	tag "shlib-with-non-pic-code", "$file"
 	    if exists $ldso_dir{dirname($file)};
-    } elsif (m/^\s*INTERP\b/) {
+    } elsif (m/^\s*INTERP\s/) {
 	$INTERP{$file} = 1;
     } else {
         $objsomething{$file} = 1;
