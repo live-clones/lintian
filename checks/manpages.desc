@@ -45,6 +45,7 @@ Info: Each binary in <tt>/usr/bin</tt>, <tt>/usr/sbin</tt>, <tt>/bin</tt>,
 Ref: policy 12.1
 
 Tag: manpage-in-wrong-directory
+Type: error
 Info: The manual page should be installed in the correct directory below
  <tt>/usr/share/man/</tt> or <tt>/usr/share/man/<i>locale</i></tt>.
  Only sections 1 through 9 should be used.

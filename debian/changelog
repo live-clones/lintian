@@ -76,6 +76,8 @@ lintian (1.23.0~beta1-fixing1) unstable; urgency=low
     + [FL] output-of-updaterc.d-not-redirected-to-dev-null should be
       only a info tag since it is more a aesthetical issue, not a
       policy violation. (Closes: #149700)
+  * checks/lintian.desc:
+    + [JvW] Added missing Type: tags
   * checks/manpages:
     + [FL] New checks:
        - Section number of directory and file differ
