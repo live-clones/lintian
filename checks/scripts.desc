@@ -263,13 +263,22 @@ Info: Packages that use perl-5.005 scripts must depend on the perl-5.005
  In some cases a weaker relationship, such as Suggests or Recommends, will
  be more appropriate.
 
-Tag: wrong-path-for-suidperl
+Tag: suid-perl-script-but-no-perl-suid-dep
 Type: error
-Info: Suidperl is installed as /usr/bin/suidperl on Debian systems.
+Info: Packages that use perl scripts that are suid must depend on the
+ perl-suid package.
+ .
+ In some cases a weaker relationship, such as Suggests or Recommends, will
+ be more appropriate.
 
-Tag: suidperl-script-but-no-perl-suid-dep
+Tag: wrong-path-for-php
 Type: error
-Info: Packages that use suidperl scripts must depend on the perl-suid package.
+Info: PHP can be called as /usr/bin/php on Debian systems.
+
+Tag: php-script-but-no-php4-cgi-dep
+Type: error
+Info: Packages that use PHP scripts with /usr/bin/php as interpreter must
+ depend on the php4-cgi package.
  .
  In some cases a weaker relationship, such as Suggests or Recommends, will
  be more appropriate.
@@ -478,6 +487,13 @@ Info: Packages that use zsh scripts must depend on the zsh package.
  .
  In some cases a weaker relationship, such as Suggests or Recommends, will
  be more appropriate.
+
+Tag: calls-suidperl-directly
+Type: error
+Info: Since perl version 5.8.3-3, /usr/bin/suidperl shouldn't be called directly
+ anymore (and doing so will lead to errors in most cases) but the script should
+ just use /usr/bin/perl as interpreter which will call suidperl automatically if
+ the script has the suid permission bit set.
 
 Tag: shell-script-fails-syntax-check
 Type: error

@@ -2,7 +2,13 @@ W: scripts source: ancient-standards-version 3.2.1
 E: scripts: binary-without-manpage perlfoo
 E: scripts: binary-without-manpage py2foo
 E: scripts: binary-without-manpage pyfoo
+E: scripts: binary-without-manpage suidperlfoo
+E: scripts: binary-without-manpage suidperlfoo2
 E: scripts: binary-without-manpage tkfoo
+W: scripts: setuid-binary usr/bin/suidperlfoo2 4755 root/root
+W: scripts: setuid-binary usr/bin/suidperlfoo 4755 root/root
 E: scripts: python-script-but-no-python-dep ./usr/bin/pyfoo
 E: scripts: python-script-but-no-python-dep ./usr/bin/py2foo
+E: scripts: suid-perl-script-but-no-perl-suid-dep ./usr/bin/suidperlfoo2
+E: scripts: calls-suidperl-directly ./usr/bin/suidperlfoo
 E: scripts: no-copyright-file

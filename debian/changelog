@@ -11,7 +11,14 @@ lintian (1.23.0) UNRELEASED; urgency=low
   * checks/fields.desc:
     + [FL] Fix some wrong policy references
   * checks/menu-format:
-    + [FL] only issue one warning about needs=dwww, not two
+    + [FL] Only issue one warning about needs=dwww, not two
+  * checks/scripts:
+    + [FL] Add /usr/bin/php as valid interpreter. (Closes: #239115)
+      Thanks to Peter Eisentraut for pointing this change out
+    + [FL] Reflect new suidperl handling. /usr/bin/suidperl
+      shouldn't/can't be called directly anymore so add a new
+      error and remove it from the list of usual interpreters.
+      (Closes: #240806)
 
  -- Frank Lichtenheld <djpig@debian.org>  Sat, 27 Mar 2004 20:55:15 +0100
 

@@ -56,6 +56,7 @@ my %valid_interpreters = (
 			  'perl-5.004' => '/usr/bin/perl-5.004',
 			  'pforth' => '/usr/bin/pforth',
 			  'php3' => '/usr/bin/php3',
+			  'php' => '/usr/bin/php',
 			  'php4' => '/usr/bin/php4',
 			  'pike' => '/usr/bin/pike',
 			  'pike7' => '/usr/bin/pike7',
@@ -74,7 +75,6 @@ my %valid_interpreters = (
 			  'scsh' => '/usr/bin/scsh',
 			  'sed' => '/bin/sed',
 			  'sh' => '/bin/sh',
-			  'suidperl' => '/usr/bin/suidperl',
 			  'tcl' => '/usr/bin/tcl',
 			  'tclsh' => '/usr/bin/tclsh',
 			  'tcsh' => '/usr/bin/tcsh',
@@ -108,6 +108,7 @@ my %interpreter_dependencies = (
 				'perl-5.005' => 'perl-5.005',
 				'perl-5.004' => 'perl-5.004',
 				'pforth' => 'pforth',
+				'php' => 'php4-cgi',
 				'php3' => 'php3-cgi',
 				'php4' => 'php4-cgi',
 				'pike' => 'pike',
@@ -119,7 +120,6 @@ my %interpreter_dependencies = (
 				'runhugs1.4' => 'hugs',
 				'runhugs98' => 'hugs98',
 				'scsh' => 'scsh',
-				'suidperl' => 'perl-suid',
 				'tcl' => 'tcl',
 				'tclsh' => 'tclsh',
 				'tcsh' => 'tcsh',
@@ -130,6 +130,7 @@ my %interpreter_dependencies = (
 			       );
 
 my %executable = ();
+my %suid = ();
 my %ELF = ();
 my %deps = ();
 my %scripts = ();
@@ -146,7 +147,9 @@ while (<INDEX>) {
     next unless (m/^-[rw-]*[xs]/);
     chop;
     s/ link to .*//;
+    my $is_suid = m/^-[rw-]*s/;
     $executable{(split(' ', $_, 6))[5]} = 1;
+    $suid{(split(' ', $_, 6))[5]} = $is_suid;
 }
 close(INDEX);
 
@@ -236,6 +239,9 @@ while (<SCRIPTS>) {
             } elsif ($base eq 'pike') {
                 tag_error("pike-script-but-no-pike-dep", $filename)
                     unless ($deps{'pike'} or $deps{'pike7'});
+	    } elsif ($base eq 'perl' && $suid{$filename}) {
+		tag_error("suid-perl-script-but-no-perl-suid-dep", $filename)
+		    unless ($deps{'perl-suid'});
 	    } elsif ($base =~ m/^wish(\d+\.\d+)?$/) {
 		my $has_deps = 0;
 		for my $key (keys(%deps)) {
@@ -256,6 +262,8 @@ while (<SCRIPTS>) {
     } elsif ($executable{'.' . $interpreter}) { # each key is './path/to/exe'
 	# Package installs the interpreter itself, so it's probably ok.
 	# Don't emit any tag for this.
+    } elsif ($base eq 'suidperl') {
+	tag_error("calls-suidperl-directly", $filename);
     } else {
 	tag_warn("unusual-interpreter", $filename, "#!$interpreter");
     }

@@ -1,3 +1,10 @@
+scripts (3) unstable; urgency=low
+
+  * Add suidperlfoo and some code in debian/rules to
+    check the new suidperl checks
+
+ -- Frank Lichtenheld <djpig@debian.org>  Wed, 31 Mar 2004 21:06:20 +0000
+
 scripts (2) unstable; urgency=low
 
   * Add tkfoo script for tk checkings
