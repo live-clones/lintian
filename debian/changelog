@@ -6,9 +6,9 @@ lintian (1.23.1~alpha) unstable; urgency=low
     + [JvW] Changed from executables to check-plugins
     + [HE] Drop the misuse of charset when we want to say "encoding".
       Renamed 2 tests for that:
-       unknown-charset-in-po-file -> unknown-encoding-in-po-file
-       debian-changelog-file-uses-obsolete-national-charset ->
-         debian-changelog-file-uses-obsolete-national-encoding
+      unknown-charset-in-po-file -> unknown-encoding-in-po-file
+      debian-changelog-file-uses-obsolete-national-charset ->
+      debian-changelog-file-uses-obsolete-national-encoding
       (Closes: #248194)
   * checks/changelog-files{,.desc}:
     + [HE] New check latest-debian-changelog-entry-without-new-date, comparing

@@ -1,3 +1,5 @@
+E: foo++ source: build-info-in-binary-control-file-section Package foo++
+E: foo++ source: debian-control-file-uses-obsolete-national-encoding at line 18
 E: foo++ source: multiline-field uploaders
 E: foo++ source: uploader-address-is-on-localhost Jeroen van Wolffelaar<jeroen@localhost.localdomain>
 E: foo++ source: uploader-address-malformed I am afraid of spam and think this helps <no_spam_please AT debian.org>
@@ -16,7 +18,5 @@ W: foo++ source: ancient-standards-version 3.1.1
 W: foo++ source: uploader-address-looks-weird Jeroen van Wolffelaar<jeroen@localhost.localdomain>
 W: foo++ source: uploader-not-full-name Frank
 W: foo++ source: uploader-not-full-name Josip
-W: foo++: readme-debian-contains-debmake-default-email-address
-E: foo++ source: build-info-in-binary-control-file-section Package foo++
-E: foo++ source: debian-control-file-uses-obsolete-national-encoding at line 18
 W: foo++: latest-debian-changelog-entry-without-new-date
+W: foo++: readme-debian-contains-debmake-default-email-address
