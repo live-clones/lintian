@@ -17,6 +17,8 @@ lintian (1.23.8) UNRELEASED; urgency=low
     + [SRL] Do not generate warnings when a short description starts with an
       article; this is good grammar and should not be discouraged.
       (Closes: #290505)
+    + [JvW] Drop description-synopsis-starts-with-a-capital-letter by popular
+      demand (Closes: #288568)
   * checks/files{,.desc}:
     + [JvW] Warn only for hardlinks in /etc or amongst different directories
       (Closes: #288634)

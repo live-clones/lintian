@@ -83,13 +83,6 @@ Info: The synopsis (first line in the package "Description:" field, the
  field.
 Ref: policy 3.4.1
 
-Tag: description-synopsis-starts-with-a-capital-letter
-Type: warning
-Info: The synopsis (first line in the package "Description:" field, the
- short description) starts with a letter in uppercase. It is recommended
- to use lowercase instead.
-Ref: devref 6.2.2
-
 Tag: description-synopsis-is-duplicated
 Type: error
 Info: The first line of the extended Description: should not repeat the
