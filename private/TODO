@@ -7,16 +7,22 @@ goals for 1.22.12 [08.03.2004 - surely in Sarge]
 - bring the bug count down (normal/minor) -- I think we've done
   this fairly well
 
-goals for 1.23.0 [04.2004 - do we get it in Sarge?]
+goals for 1.23.0 [04.2004 - should get into Sarge]
 ===================================================
 
 - add .udeb support -- done
   (#216117)
-- go through all checks and try to move common code to modules
-- go through the test suite and organise it more cleanly
-- overhaul the overrides concept to enable source overrides
+- overhaul the overrides concept to enable source overrides -- done
   (#129510)
 - update debian/copyright. List of authors seems rather outdated -- done
+- update doc/* to reflect current lintian versions and not some from
+  the last century ;) -- done
+
+goals for 1.23.1 [05.2004]
+==========================
+
+- fix anything we broke in 1.23.0 and that prevents us from
+  getting 1.23.0 to testing
 
 goals not targetted
 ===================
@@ -25,7 +31,9 @@ goals not targetted
   should be tackled, don't know when, though
 - overhaul the Errors/Warnings concept
   (#197955, #189656)
-
+- go through all checks and try to move common code to modules
+- go through the test suite and organise it more cleanly
+- update doc/CREDITS file
 
 old todo list
 =============
