@@ -53,7 +53,7 @@ close(STAT) or fail("error reading diffstat file: $!");
 # Check whether a tar.gz file is accidentally POSIX tar, which woody's tar
 # can't cope with...
 for my $tar (<*.tar.gz>) {
-    open HEAD, '-|', 'zcat', $tar or fail("Couldn't open ${tar}: $!");
+    open HEAD, '-|', 'zcat '.quotemeta($tar) or fail("Couldn't open ${tar}: $!");
 	my $head = "";
     sysread HEAD, $head, 13 or fail("Couldn't read first part of $tar: $!");
     print "E: $pkg $type: source-tar-is-posix-tar $tar\n"
