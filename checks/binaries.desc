@@ -34,7 +34,9 @@ Info: The package installs a statically linked binary or object file.
  .
  Usually this is a bug. Otherwise, please contact &maint;
  about this so that this exception would be recognized in future versions of
- Lintian.
+ Lintian, or install an override if your package is an exception. Note that
+ binaries named *-static and *.static are already excluded, just as any
+ binaries in packages named *-static.
 
 Tag: library-not-linked-against-libc
 Type: warning

@@ -13,6 +13,8 @@ binary-arch: build
 	install -d $(tmp)/usr/bin
 	install -m 755 hello $(tmp)/usr/bin
 	install -s -m 755 hello-static $(tmp)/usr/bin
+	install -s -m 755 hello-static $(tmp)/usr/bin/hello.static
+	install -s -m 755 hello-static $(tmp)/usr/bin/static-hello
 	install -d $(tmp)/usr/share/doc/binary
 	install -m 644 INSTALL $(tmp)/usr/share/doc/binary
 	install -d $(tmp)/usr/lib/menu

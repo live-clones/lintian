@@ -1,7 +1,9 @@
 W: binary source: ancient-standards-version 3.2.1
 E: binary: binary-without-manpage hello
 E: binary: binary-without-manpage hello-static
-W: binary: arch-dep-package-has-big-usr-share 292kB 39%
+E: binary: binary-without-manpage hello.static
+E: binary: binary-without-manpage static-hello
+W: binary: arch-dep-package-has-big-usr-share 292kB 18%
 W: binary: package-contains-upstream-install-documentation usr/share/doc/binary/INSTALL
 E: binary: postinst-does-not-call-updatemenus usr/lib/menu/binary
 E: binary: postrm-does-not-call-updatemenus usr/lib/menu/binary
@@ -16,5 +18,5 @@ E: binary: non-wm-in-windowmanager-menu-section x11 /usr/lib/menu/binary:4
 E: binary: su-to-root-with-usr-bin /usr/lib/menu/binary:5
 W: binary: menu-item-needs-tag-has-unknown-value wm /usr/lib/menu/binary:5
 E: binary: unstripped-binary-or-object ./usr/bin/hello
-E: binary: statically-linked-binary ./usr/bin/hello-static
+E: binary: statically-linked-binary ./usr/bin/static-hello
 E: binary: changelog-file-not-compressed changelog

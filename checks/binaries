@@ -29,9 +29,6 @@ my $arch;
 my $dynsyms = 0;
 my $needs_depends_line = 0;
 
-# the paths need a leading '.' because lintian sees the files that way
-my @static_file_paths = ('./boot');
-
 my %COMMENT;
 my %NOTE;
 my %RPATH;
@@ -164,12 +161,13 @@ while (<IN>) {
 	if ($info =~ m/shared object/o) {
 	    print "W: $pkg $type: shared-lib-without-dependency-information $file\n";
 	} else {
+	    # Some exceptions: files in /boot, named *-static or *.static, or
+	    # *-static as package-name.
 	    use File::Basename;
-	    my $dirname = dirname($file);
-	    next if(grep($_ eq $dirname, @static_file_paths));
-	    # they named it "foo.static" for a reason
-	    next if ($file =~ /\.static$/);
-	    next if ($file =~ m,^\./bin/sash$,); # exception for sash
+	    next if (dirname($file) eq './boot');
+	    next if ($file =~ /(\.|-)static$/);
+	    next if ($pkg =~ /-static$/);
+
 	    print "E: $pkg $type: statically-linked-binary $file\n";
 	}
     } else {
