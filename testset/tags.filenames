@@ -25,6 +25,7 @@ E: filenames: use-of-compat-symlink usr/bin/X11/testxbin
 I: filenames source: cvsignore-file-in-source files/.cvsignore
 W: filenames source: ancient-standards-version 3.1.1
 W: filenames source: source-contains-CVS-dir CVS
+W: filenames source: source-contains-cvs-conflict-copy files/.#Maelstrom Sound.1.1.1
 W: filenames source: source-contains-svn-control-dir .svn
 W: filenames source: svn-commit-file-in-source files/svn-commit.tmp
 W: filenames: bad-permissions-for-ali-file usr/lib/ada/adalib/test.ali

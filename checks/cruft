@@ -86,6 +86,8 @@ sub find_cruft {
 	tag "svn-commit-file-in-source", "$name";
     } elsif ($name =~ m,^(.+/)?\.cvsignore$,) {
 	tag "cvsignore-file-in-source", "$name";
+    } elsif ($name =~ m,^(.+/)?\.\#(.+?)\.\d+(\.\d+)*$,) {
+	tag "source-contains-cvs-conflict-copy", "$name";
     }
 
     if ($name =~ m,^(.+/)?config.(?:cache|log|status)$, and $pkg ne "lintian") {

@@ -22,6 +22,9 @@ lintian (1.23.1~alpha) unstable; urgency=low
   * checks/cruft{,.desc}:
     + [JvW] cvsignore-file-in-source is now info, because it happens so often
       by upstream, and is only very minor in size
+    + [HE] New check: source-contains-cvs-conflict-copy, triggered by 
+      .#file.version files. They are created by cvs when it tries to merge
+      local changes and an update from the repo. (Closes: #246060)
   * checks/debhelper:
     + [FL] Avoid Perl warning about undefined values. Noted by JvW.
   * checks/fields{,.desc}:
