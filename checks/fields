@@ -126,49 +126,20 @@ if (not open(IN, "fields/maintainer")) {
 
     single_line('maintainer', $_);
 
-    # Zap leading and trailing whitespace
-    s/^\s+//;
-    s/\s+$//;
+    check_maint('maintainer', $_);
+}
 
-    # Parse maintainer-address.  Policy Manual 5.6.2 says:
-    #   The package maintainer's name and email address. The name should
-    #   come first, then the email address inside angle brackets <> (in
-    #   RFC822 format).
-    # Note that it is _not_ necessary for the name to be in any particular
-    # format.  However, lintian will emit warnings if it doesn't look
-    # like a full name.
-    if (not m/(.*?)<(.*?)>(.*)/) {
-	if (m/@/) {
-	    # Name is missing and address does not have <> around it
-	    tag_error("maintainer-name-missing", $_);
-	} else {
-	    # address is missing
-	    tag_error("maintainer-address-missing", $_);
-	}
-    } else {
-	my ($name, $addr, $rest) = ($1, $2, $3);
-	# Check that there is something before the address and nothing
-	# after it, and that the address looks vaguely like user@domain.foo.
-	# Full RFC822 parsing is probably overkill.
-	if (not $name) {
-	    tag_error("maintainer-name-missing", $_);
-	} elsif ($rest or $addr !~ m/.+@.+\..+/) {
-	    tag_error("maintainer-address-malformed", $_);
-	} elsif ($name !~ m/\s\S/) {
-	    # Also complain if the maintainer name has no embedded spaces
-	    tag_warn("maintainer-not-full-name", $name);
-	} elsif ($name !~ m/\s$/) {
-	    # And complain if there is no whitespace between the
-	    # name and the address.
-	    tag_warn("maintainer-address-looks-weird", $_);
-	}
 
-	if ($addr =~ /localhost(?:\.localdomain)?$/) {
-	    tag_error("maintainer-address-is-on-localhost", $_);
-	}
-	if ($addr eq 'debian-qa@lists.debian.org') {
-	    tag_error("wrong-debian-qa-address-set-as-maintainer", $_);
-	}
+if (open(IN, "fields/uploaders")) {
+    chop($_ = <IN>);
+    close(IN);
+
+    single_line('uploaders', $_);
+
+    # somehow doesn't catch the ', ,' case, where nothing is between comma's
+    # I don't get it...  --Jeroen
+    for (split /,/) {
+	check_maint('uploader', $_);
     }
 }
 
@@ -604,3 +575,58 @@ sub single_line {
 
     return 1;
 }
+
+sub check_maint {
+    my $type = shift;
+    $_ = shift;
+
+    # Zap leading and trailing whitespace
+    s/^\s+//;
+    s/\s+$//;
+
+    # Parse maintainer-address.  Policy Manual 5.6.2 says:
+    #   The package maintainer's name and email address. The name should
+    #   come first, then the email address inside angle brackets <> (in
+    #   RFC822 format).
+    # Note that it is _not_ necessary for the name to be in any particular
+    # format.  However, lintian will emit warnings if it doesn't look
+    # like a full name.
+    if (not m/(.*?)<(.*?)>(.*)/) {
+	if (m/@/) {
+	    # Name is missing and address does not have <> around it
+	    tag_error("$type-name-missing", $_);
+	} else {
+	    # address is missing
+	    tag_error("$type-address-missing", $_);
+	}
+    } else {
+	my ($name, $addr, $rest) = ($1, $2, $3);
+	# Check that there is something before the address and nothing
+	# after it, and that the address looks vaguely like user@domain.foo.
+	# Full RFC822 parsing is probably overkill.
+	if (not $name) {
+	    tag_error("$type-name-missing", $_);
+	} elsif ($rest or $addr !~ m/.+@.+\..+/) {
+	    tag_error("$type-address-malformed", $_);
+	} elsif ($name !~ m/\s\S/) {
+	    # Also complain if the maintainer name has no embedded spaces
+	    tag_warn("$type-not-full-name", $name);
+	} elsif ($name !~ m/\s$/) {
+	    # And complain if there is no whitespace between the
+	    # name and the address.
+	    tag_warn("$type-address-looks-weird", $_);
+	}
+
+	if ($addr =~ /localhost(?:\.localdomain)?$/) {
+	    tag_error("$type-address-is-on-localhost", $_);
+	}
+	if ($type eq 'maintainer' 
+	    	and $addr eq 'debian-qa@lists.debian.org') {
+	    tag_error("wrong-debian-qa-address-set-as-maintainer", $_);
+	}
+    }
+
+    return 1;
+}
+
+# vim: ts=8 sw=4

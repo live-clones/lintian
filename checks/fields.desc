@@ -111,6 +111,41 @@ Info: The maintainer address includes localhost(.localdomain), which is
  an invalid e-mail address.
 Ref: policy 5.6.2
 
+Tag: uploader-name-missing
+Type: error
+Info: The uploader field seems to contain just an email address. It must
+ contain the package uploader's name and email address.
+Ref: policy 5.6.2
+
+Tag: uploader-address-missing
+Type: error
+Info: The uploader field should contain the package uploader's name and
+ email address, with the name followed by the address inside angle
+ brackets (&lt; and &rt;).  The address seems to be missing.
+Ref: policy 5.6.2
+
+Tag: uploader-address-malformed
+Type: error
+Info: The uploader field could not be parsed according to the rules in
+ the Policy Manual.
+Ref: policy 5.6.2
+
+Tag: uploader-not-full-name
+Type: warning
+Info: The `name' part of this uploader field is just one word, so it
+ might not be a full name.
+
+Tag: uploader-address-looks-weird
+Type: warning
+Info: The uploader address does not have whitespace between the name
+ and the email address.
+
+Tag: uploader-address-is-on-localhost
+Type: error
+Info: The uploader address includes localhost(.localdomain), which is
+ an invalid e-mail address.
+Ref: policy 5.6.2
+
 Tag: wrong-debian-qa-address-set-as-maintainer
 Type: error
 Info: Orphaned packages should no longer have the address

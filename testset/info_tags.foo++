@@ -9,6 +9,62 @@ N:   don't have to re-upload the package just to adjust the
 N:   Standards-Version control field. However, please remember to update
 N:   this field next time you upload the package.
 N:
+E: foo++ source: wrong-debian-qa-address-set-as-maintainer Lintian Maintainer <debian-qa@lists.debian.org>
+N:
+N:   Orphaned packages should no longer have the address
+N:   <debian-qa@lists.debian.org> in the Maintainer field.
+N:   
+N:   The correct Maintainer field for orphaned packages is Debian QA Group
+N:   <packages@qa.debian.org>.
+N:   
+N:   Refer to Developers Reference, section 5.9.4 for details.
+N:
+E: foo++ source: multiline-field uploaders
+N:
+N:   Most control fields must have only a single line of data.
+N:   
+N:   Refer to Policy Manual, section 5.1 for details.
+N:
+W: foo++ source: uploader-address-looks-weird Jeroen van Wolffelaar<jeroen@localhost.localdomain>
+N:
+N:   The uploader address does not have whitespace between the name and the
+N:   email address.
+N:
+E: foo++ source: uploader-address-is-on-localhost Jeroen van Wolffelaar<jeroen@localhost.localdomain>
+N:
+N:   The uploader address includes localhost(.localdomain), which is an
+N:   invalid e-mail address.
+N:   
+N:   Refer to Policy Manual, section 5.6.2 for details.
+N:
+W: foo++ source: uploader-not-full-name Frank 
+N:
+N:   The `name' part of this uploader field is just one word, so it might
+N:   not be a full name.
+N:
+E: foo++ source: uploader-name-missing Yama@gotchi
+N:
+N:   The uploader field seems to contain just an email address. It must
+N:   contain the package uploader's name and email address.
+N:   
+N:   Refer to Policy Manual, section 5.6.2 for details.
+N:
+E: foo++ source: uploader-address-missing Josip
+N:
+N:   The uploader field should contain the package uploader's name and
+N:   email address, with the name followed by the address inside angle
+N:   brackets (< and &rt;). The address seems to be missing.
+N:   
+N:   Refer to Policy Manual, section 5.6.2 for details.
+N:
+E: foo++ source: uploader-address-malformed I am afraid of spam and think this helps <no_spam_please AT debian.org>
+N:
+N:   The uploader field could not be parsed according to the rules in the
+N:   Policy Manual.
+N:   
+N:   Refer to Policy Manual, section 5.6.2 for details.
+N:
+E: foo++-helper: wrong-debian-qa-address-set-as-maintainer Lintian Maintainer <debian-qa@lists.debian.org>
 E: foo++: no-copyright-file
 N:
 N:   Each binary package has to include a plain file
@@ -16,3 +72,4 @@ N:   /usr/share/doc/<pkg>/copyright
 N:   
 N:   Refer to Policy Manual, section 12.5 for details.
 N:
+E: foo++: wrong-debian-qa-address-set-as-maintainer Lintian Maintainer <debian-qa@lists.debian.org>

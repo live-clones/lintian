@@ -1,7 +1,10 @@
 Source: foo++
 Section: misc
 Priority: optional
-Maintainer: Lintian Maintainer <lintian-maint@debian.org>
+Maintainer: Lintian Maintainer <debian-qa@lists.debian.org>
+Uploaders: Jeroen van Wolffelaar<jeroen@localhost.localdomain>,
+ Frank <djpig@debian.org>, Yama@gotchi, Josip, ,
+ I am afraid of spam and think this helps <no_spam_please AT debian.org>
 Standards-Version: 3.1.1
 
 Package: foo++

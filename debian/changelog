@@ -72,8 +72,10 @@ lintian (1.22.12) unstable; urgency=low
   * checks/binaries:
     + Exclude binaries and packages named *-static from the binary-is-static
       test. Exception for sash removed (override case) (Closes: #215235)
+  * checks/fields:
+    + Test syntax of Uploaders: too
 
- -- Frank Lichtenheld <djpig@debian.org>  Thu, 26 Feb 2004 21:52:14 +0100
+ -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Fri,  5 Mar 2004 04:35:22 +0100
 
 lintian (1.22.11) unstable; urgency=low
 

@@ -1,3 +1,9 @@
+foo++ (3) unstable; urgency=low
+
+  * Set maintainers + uploaders incorrectly
+
+ -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Fri,  5 Mar 2004 04:20:24 +0100
+
 foo++ (2) unstable; urgency=low
 
   * Added a foo++-helper package to try and catch even more ++ bugs.
