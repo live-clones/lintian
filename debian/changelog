@@ -1,4 +1,4 @@
-lintian (1.23.0) UNRELEASED; urgency=low
+lintian (1.23.0~beta1-r181) unstable; urgency=low
 
   The ``moving forward'' release, prepared by Marc 'HE' Brockschmidt,
   Frank Lichtenheld and Jeroen van Wolffelaar.
