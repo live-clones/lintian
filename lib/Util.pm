@@ -92,7 +92,7 @@ sub parse_dpkg_control {
 	    $last_tag = $tag;
 	}
 	# new field?
-	elsif (m/^(\S+): (.*)$/o) {
+	elsif (m/^(\S+):(.*)$/o) {
 	    $open_section = 1;
 
 	    my ($tag,$value) = (lc $1,$2);

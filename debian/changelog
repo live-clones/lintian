@@ -109,6 +109,8 @@ lintian (1.23.1~beta) unstable; urgency=low
   * lib/Util.pm:
     + [FL] dpkg supports comments in control files now, handle them
       correctly
+    + [FL] a space after the colon is not mandatory in dpkg control
+      files
 
   * testset/filenames:
     + [JvW] Fix two lintian warnings in lintian itself by touching files only
