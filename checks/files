@@ -81,8 +81,16 @@ while (<IN>) {
 
     $file =~ s,^\./,,;
 
-    if ($file =~ s/ link to .*//) {
-	tag "package-contains-hardlink", "$file";
+    if ($file =~ s/ link to (.*)//) {
+	my $link_target = $1;
+	$link_target =~ s,^\./,,;
+	my $link_target_dir = $link_target;
+	$link_target_dir =~ s,[^/]*$,,;
+	# TODO: actually, policy says 'conffile', not '/etc' -> extend!
+	tag "package-contains-hardlink", $file, "->", $link_target
+	    if $file =~ m,^etc/,
+		or $link_target =~ m,^etc/,
+		or $file !~ m,^\Q$link_target_dir\E[^/]*$,;
 	next;
     } elsif ($perm =~ m/^l/) {
 	($file, $link) = split(' -> ', $file);

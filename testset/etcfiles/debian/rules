@@ -11,11 +11,13 @@ binary-indep:
 	install -d $(tmp)/etc
 	install -m 644 proper $(tmp)/etc
 	install -m 644 improper $(tmp)/etc
+	ln $(tmp)/etc/improper $(tmp)/etc/improper-link
 	install -d $(tmp)/usr/share/doc/etcfiles
 	install -m 644 debian/README.Debian $(tmp)/usr/share/doc/etcfiles
 	install -m 644 debian/changelog $(tmp)/usr/share/doc/etcfiles
 	#gzip -9 $(tmp)/usr/share/doc/etcfiles/changelog
 	install -d $(tmp)/DEBIAN
+	install -m 644 debian/conffiles $(tmp)/DEBIAN
 
 	dpkg-gencontrol -isp
 	dpkg --build debian/tmp ..

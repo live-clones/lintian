@@ -29,6 +29,13 @@ binary-arch: build
 	install -d $(tmp)/DEBIAN
 	install -m 755 debian/postinst $(tmp)/DEBIAN
 
+	# should be ok...
+	echo boe > $(tmp)/usr/bar
+	ln $(tmp)/usr/bar $(tmp)/usr/foo 
+	# but this isn't
+	echo boe > $(tmp)/usr/bar2
+	ln $(tmp)/usr/bar2 $(tmp)/usr/share/baz 
+
 	dd if=/dev/zero of=$(tmp)/usr/share/binary/largefile bs=1024 count=1500
 
 	dpkg-shlibdeps $(tmp)/usr/bin/hello

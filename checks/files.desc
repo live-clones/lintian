@@ -443,7 +443,16 @@ Info: Packages that install files into the /etc/X11/Xresources/ directory must
 
 Tag: package-contains-hardlink
 Type: warning
-Info: Hardlinks are bad mkay, don't use hardlinks.
+Info: The package contains a hardlink in <tt>/etc</tt> or across different
+ directories. This might not work at all if directories are on different
+ filesystems (which can happen anytime as the system administrator sees fit),
+ certain filesystems such as AFS don't even support cross-directory hardlinks
+ at all.
+ .
+ For configuration files, certain editors might break hardlinks, and so
+ does dpkg in certain cases.
+ .
+ A better solution might be using symlinks here.
 
 Tag: package-contains-CVS-dir
 Type: warning

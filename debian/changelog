@@ -4,12 +4,15 @@ lintian (1.23.8) UNRELEASED; urgency=low
     [CW] Add tclx8.4 to %known_tclxs.
   * checks/scripts, checks/scripts.desc:
     [CW] Add checks for tclsh8.4 and wish8.4. (Closes: #288287)
+  * checks/files{,.desc}:
+    [JvW] Warn only for hardlinks in /etc or amongst different directories
+    (Closes: #288634)
   * checks/description:
     [SRL] Do not generate warnings when a short description starts with
     an article; this is good grammar and should not be discouraged.
     (Closes: #290505)
 
- -- Colin Watson <cjwatson@debian.org>  Sun,  9 Jan 2005 23:48:45 +0000
+ -- Colin Watson <cjwatson@debian.org>  Fri, 14 Jan 2005 21:02:01 +0100
 
 lintian (1.23.7) unstable; urgency=high
 
