@@ -173,7 +173,7 @@ foreach my $template (@templates) {
     if (exists $template->{choices}
 	&& $template->{choices} !~ m/^\s*\$\{\w+\}\s*$/) {
 	foreach my $lang (sort keys %languages) {
-	    if (not $languages{$lang}{choices} and $languages{$lang}{description}) {
+	    if ($languages{$lang}{choices} and not $languages{$lang}{description}) {
 		tag "partially-translated-question", "$template->{template} $lang";
 	    }
 	}
