@@ -238,7 +238,7 @@ for my $file (qw(config postinst)) {
 	my $usesseen='';
 
 	my $fl = <IN>;
-	next if $fl !~ /^#!/; # skip, if not a script
+	next unless $fl && ( $fl =~ /^#!/ ); # skip, if not a script
 
 	while (<IN>) {
 	    s/#.*//;    # Not perfect for Perl, but should be OK
