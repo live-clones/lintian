@@ -32,6 +32,8 @@ lintian (1.23.0) UNRELEASED; urgency=low
     + [HE] New check for compiled python files (*.pyc). Patch by David
       Kimdon <david@kimdon.org>, thanks. (Closes: #236606)
     + [HE] Check for gzipped zero byte files. (Closes: #172052)
+    + [FL] Don't complain about read-only *.ali files as requested by
+       Ludovic Brenta. This makes #226879 wishlist again.
   * checks/manpages:
     + [FL] Two new errors: 1) if section number of directory and file
       differ, 2) if section number of file differs from what is expected
@@ -47,7 +49,7 @@ lintian (1.23.0) UNRELEASED; urgency=low
       shouldn't/can't be called directly anymore so add a new
       error and remove it from the list of usual interpreters.
       (Closes: #240806)
-  * checks/standards-version
+  * checks/standards-version:
     + [JvW] Also emit warning if standards version is 3.6.0, and not yet 3.6.1
 
  -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Mon,  5 Apr 2004 03:17:53 +0200

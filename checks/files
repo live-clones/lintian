@@ -477,6 +477,10 @@ while (<IN>) {
 	    if ($operm == 0664 and $owner =~ m,root/games, and
 		$file =~ m,var/(lib/)?games/\S+,) {
 		# everything is ok
+	    } elsif ($operm == 0444 and $file =~ m,usr/lib/.*\.ali$,) {
+		# Ada library information files should be read-only
+		# since GNAT behaviour depends on that
+		# everything is ok
 	    } elsif ($operm != 0644) {
 		printf "W: $pkg $type: non-standard-file-perm $file %04o != 0644\n",$operm;
 	    }
