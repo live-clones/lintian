@@ -522,8 +522,11 @@ if ($action eq 'setup-lab') {
 	fail("no laboratory specified (need to define LINTIAN_LAB)");
     }
 
-    setup_lab();
-    $lab_mode = 'static';
+    Lab::setup($LINTIAN_LAB, $lab_mode);
+
+    # No idea what this is needed here, but it used to be in the code, so I'll
+    # leave it untouched for the moment
+    Lab::populate_with_dist($LINTIAN_LAB, $LINTIAN_DIST) if $LINTIAN_DIST;
 
     exit 0;
 
@@ -538,7 +541,7 @@ if ($action eq 'setup-lab') {
 	fail("no laboratory specified (need to define LINTIAN_LAB)");
     }
 
-    remove_lab();
+    Lab::delete($LINTIAN_LAB, $lab_mode);
 
     exit 0;
 
@@ -987,7 +990,8 @@ if ($lab_mode eq 'temporary') {
     # register signal handler to remove lab when C-C is pressed
 
     # create lab
-    setup_lab();
+    Lab::setup($LINTIAN_LAB, $lab_mode);
+    Lab::populate_with_dist($LINTIAN_LAB, $LINTIAN_DIST) if $LINTIAN_DIST;
 }
 
 # process all packages in the archive?
@@ -1400,107 +1404,6 @@ exit $exit_code;
 
 # -----------------------------------------------------------------------
 
-sub setup_lab {
-    print "N: Setting up lab in $LINTIAN_LAB ...\n" if $verbose;
-
-    # create lab directory
-    if (not -d "$LINTIAN_LAB" or ($lab_mode eq 'temporary')) {
-	# (Note, that the mode 0777 is reduced by the current umask.)
-	mkdir($LINTIAN_LAB,0777) or fail("cannot create lab directory $LINTIAN_LAB");
-    }
-
-    # create base directories
-    if (not -d "$LINTIAN_LAB/binary") {
-	mkdir("$LINTIAN_LAB/binary",0777) or fail("cannot create lab directory $LINTIAN_LAB/binary");
-    }
-    if (not -d "$LINTIAN_LAB/source") {
-	mkdir("$LINTIAN_LAB/source",0777) or fail("cannot create lab directory $LINTIAN_LAB/source");
-    }
-    if (not -d "$LINTIAN_LAB/udeb") {
-	mkdir("$LINTIAN_LAB/udeb",0777) or fail("cannot create lab directory $LINTIAN_LAB/udeb");
-    }
-    if (not -d "$LINTIAN_LAB/info") {
-	mkdir("$LINTIAN_LAB/info",0777) or fail("cannot create lab directory $LINTIAN_LAB/info");
-    }
-
-    # distribution specified?
-    if ($LINTIAN_DIST) {
-	print STDERR "spawning list-binpkg, list-udebpkg and list-srcpkg since LINTIAN_DIST=$LINTIAN_DIST\n" if ($debug >= 2);
-	# yes!
-
-	my $v = $verbose ? '-v' : '';
-
-	spawn("$LINTIAN_ROOT/unpack/list-binpkg",
-	      "$LINTIAN_LAB/info/binary-packages", $v) == 0
-		  or fail("cannot create binary package list");
-	spawn("$LINTIAN_ROOT/unpack/list-srcpkg",
-	      "$LINTIAN_LAB/info/source-packages", $v) == 0
-		  or fail("cannot create source package list");
-	spawn("$LINTIAN_ROOT/unpack/list-udebpkg",
-	      "$LINTIAN_LAB/info/udeb-packages", $v) == 0
-		  or fail("cannot create udeb package list");
-    } else {
-	print STDERR "not spawning list-binpkg, list-udebpkg and list-srcpkg since LINTIAN_DIST is empty\n" if ($debug >= 2);
-	# just create empty files
-	touch("$LINTIAN_LAB/info/binary-packages")
-	    or fail("cannot create binary package list");
-	touch("$LINTIAN_LAB/info/source-packages")
-	    or fail("cannot create source package list");
-	touch("$LINTIAN_LAB/info/udeb-packages")
-	    or fail("cannot create udeb package list");
-    }
-}
-
-sub remove_lab {
-    $SIG{'INT'} = 'DEFAULT';
-    $SIG{'QUIT'} = 'DEFAULT';
-
-    # if $LINTIAN_LAB has no value, nothing to do here
-    return unless $LINTIAN_LAB;
-
-    print "N: Removing $LINTIAN_LAB ...\n" if $verbose;
-
-    # chdir to root (otherwise, the shell will complain if we happen
-    # to sit in the directory we want to delete :)
-    chdir('/');
-
-    # does the lab exist?
-    unless (-d "$LINTIAN_LAB") {
-	# no.
-	print STDERR "warning: cannot remove lab in directory $LINTIAN_LAB ! (directory does not exist)\n";
-	return;
-    }
-
-    # sanity check if $LINTIAN_LAB really points to a lab :)
-    unless (-d "$LINTIAN_LAB/binary") {
-	# binary/ subdirectory does not exist--empty directory?
-	my @t = <$LINTIAN_LAB/*>;
-	if ($#t+1 <= 2) {
-	    # yes, empty directory--skip it
-	    return;
-	} else {
-	    # non-empty directory that does not look like a lintian lab!
-	    print STDERR "warning: directory $LINTIAN_LAB does not look like a lab! (please remove it yourself)\n";
-	    return;
-	}
-    }
-
-    # looks ok.
-    if (spawn('rm', '-rf', '--',
-	      "$LINTIAN_LAB/binary",
-	      "$LINTIAN_LAB/source",
-	      "$LINTIAN_LAB/udeb",
-	      "$LINTIAN_LAB/info") != 0) {
-	print STDERR "warning: cannot remove lab directory $LINTIAN_LAB (please remove it yourself)\n";
-    }
-
-    # dynamic lab?
-    if ($lab_mode eq 'temporary') {
-	if (rmdir($LINTIAN_LAB) != 1) {
-	    print STDERR "warning: cannot remove lab directory $LINTIAN_LAB (please remove it yourself)\n";
-	}
-    }
-}
 
 # -------------------------------
 
@@ -1668,15 +1571,6 @@ sub schedule_package {
 
 # -------------------------------
 
-# create an empty file
-# --okay, okay, this is not exactly what `touch' does :-)
-sub touch {
-    open(T,">$_[0]") or return 0;
-    close(T) or return 0;
-
-    return 1;
-}
-
 # read first line of a file
 sub read_file {
     my $t;
@@ -1697,10 +1591,10 @@ sub by_collection_order {
 # Exit handler.
 
 sub END {
-    # Prevent remove_lab from affecting the exit code.
+    # Prevent Lab::delete from affecting the exit code.
     local $?;
 
-    remove_lab() if $lab_mode eq 'temporary';
+    Lab::delete($LINTIAN_LAB, $lab_mode) if $lab_mode eq 'temporary';
 }
 
 sub interrupted {

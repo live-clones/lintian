@@ -19,8 +19,14 @@
 # Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 # MA 02111-1307, USA.
 
+package Pipeline;
 use strict;
+
+use Exporter 'import';
+our @EXPORT = qw(spawn pipeline pipeline_open pipeline_pure);
+
 use Fcntl;
+
 
 # This is used to avoid END blocks and such, when exiting from
 # children that have not execed.
