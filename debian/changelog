@@ -32,7 +32,7 @@ lintian (1.22.12) unstable; urgency=low
       the GFDL. (Closes: #192278)
       Thanks to Ross Burton for reporting this.
   * checks/changelog-file:
-    + check encoding of changelog file if it is UTF-8 (Closes: #175318)
+    + check that encoding of changelog file is UTF-8 (Closes: #175318)
       based on a patch by Denis Barbier
   * checks/debhelper.desc:
     + correct reference to debhelper manpage. It's debhelper(7), not
