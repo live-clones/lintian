@@ -28,6 +28,8 @@ lintian (1.22.9-0.1) unstable; urgency=low
        downloaded from a BR), but it should occur seldom.
      + PO files are processed through msgfmt to ensure they are valid.
      + Based on patch by Denis Barbier <barbier@debian.org>, Closes: #210576
+     + Check whether po-debconf is used at all, and warn if it isn't
+     + Check for required POTFILES.in and template.pot in debian/po
 
   Frank Lichtenheld <djpig@debian.org>
    * checks/debhelper:

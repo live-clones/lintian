@@ -7,6 +7,21 @@ Unpack-Level: 2
 Info: This looks for common mistakes in packages using po-debconf.
 Needs-Info: debfiles
 
+Tag: not-using-po-debconf
+Type: warning
+Info: Package seems to be using debconf templates, but it does not
+ use po-debconf to make translations possible. See po-debconf(7).
+
+Tag: missing-potfiles-in
+Type: warning
+Info: The required file POTFILES.in is missing from debian/po
+ See po-debconf(7).
+
+Tag: missing-templates-pot
+Type: warning
+Info: The required file templates.pot is missing from debian/po
+ See po-debconf(7).
+
 Tag: unknown-charset-in-po-file
 Type: warning
 Info: Encoding must be declared in PO files, otherwise charset conversions
