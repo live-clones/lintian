@@ -1,6 +1,7 @@
 lintian (1.23.1~alpha) unstable; urgency=low
 
-  Next release, name to be determined.
+  The ``Now featuring over 500 checks'' release, prepared by the usual
+  suspects.
 
   * checks/*:
     + [JvW] Changed from executables to check-plugins
