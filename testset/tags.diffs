@@ -1,6 +1,5 @@
 E: diffs source: debian-files-list-in-source
 E: diffs: arch-independent-package-contains-binary-or-object ./usr/bin/diffs
-E: diffs: binary-without-manpage diffs
 E: diffs: no-copyright-file
 W: diffs source: configure-generated-file-in-source config.cache
 W: diffs source: configure-generated-file-in-source config.log
@@ -12,3 +11,4 @@ W: diffs source: configure-generated-file-in-source subdir-good/config.cache
 W: diffs source: configure-generated-file-in-source subdir-good/config.log
 W: diffs source: configure-generated-file-in-source subdir-good/config.status
 W: diffs source: out-of-date-standards-version 3.5.8
+W: diffs: binary-without-manpage diffs

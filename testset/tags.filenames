@@ -1,6 +1,4 @@
 E: filenames: bad-menu-file-name usr/lib/menu/menu
-E: filenames: binary-without-manpage testxbin
-E: filenames: binary-without-manpage testxbin2
 E: filenames: lengthy-symlink usr/lib/filenames/symlink4wrong ../filenames/symlink2
 E: filenames: lengthy-symlink usr/share/doc/filenames/version.txt.gz ../filenames/doc/version6.txt.gz
 E: filenames: no-copyright-file
@@ -31,6 +29,8 @@ W: filenames source: source-contains-svn-conflict-copy files/Maelstrom Sound.min
 W: filenames source: source-contains-svn-control-dir .svn
 W: filenames source: svn-commit-file-in-source files/svn-commit.tmp
 W: filenames: bad-permissions-for-ali-file usr/lib/ada/adalib/test.ali
+W: filenames: binary-without-manpage testxbin
+W: filenames: binary-without-manpage testxbin2
 W: filenames: cvsignore-file-in-package files/.cvsignore
 W: filenames: file-in-unusual-dir files/ .tif
 W: filenames: file-in-unusual-dir files/".tif

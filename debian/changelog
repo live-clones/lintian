@@ -21,6 +21,11 @@ lintian (1.23.3) unstable; urgency=low
   * checks/init.d:
     + [JvW] Don't warn for missing init.d scripts in package and conffile list
       if a variable is used instead of a real name (Closes: #264218)
+  * checks/manpages.desc:
+    + [JvW] Demote binary-without-manpage to warning, and adjust description,
+      to be consistent with policy, which says a manpage should be available
+      (and doesn't use "must" for it). Thanks to Robert Millan for his patch
+      (Closes: #271014)
   * checks/po-debconf:
     + [JvW] Don't give missing-file-from-potfile-in on empty lines
       (Thanks Adam Conrad for noticing)
