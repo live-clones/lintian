@@ -1,7 +1,12 @@
 lintian (1.23.7) unstable; urgency=high
 
-  * lib/Lab.pm: Since the last release, creation of static lab failed
-    if the directory already existed
+  * lib/Lab.pm:
+    + Since the last release, creation of static lab failed
+      if the directory already existed
+    + In temporary lab mode, try to create the directory several
+      times
+  
+  * testset/runtests: Extend the static lab test
 
  -- Frank Lichtenheld <djpig@debian.org>  Sat,  8 Jan 2005 21:41:21 +0100
 

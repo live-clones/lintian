@@ -65,9 +65,18 @@ sub setup {
     } else {
 	$self->{mode} = 'temporary';
 
-	$dir = tmpnam();
+	my $created = 0;
+	for (1..10) {
+	    $dir = tmpnam();
 
-	$self->setup_force( $dir, $dist );
+	    if ($self->setup_force( $dir, $dist )) {
+		$created = 1;
+		last;
+	    }
+	}
+	unless ($created) {
+	    fail("cannot create lab directory $dir");
+	}
     }
 
     return 1;
@@ -95,7 +104,7 @@ sub setup_force {
     # create lab directory
     # (Note, that the mode 0777 is reduced by the current umask.)
     unless (-d $dir && ( $self->{mode} eq 'static' )) {
-    	mkdir($dir,0777) or fail("cannot create lab directory $dir");
+    	mkdir($dir,0777) or return 0;
     }
 
     # create base directories
