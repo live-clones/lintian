@@ -484,7 +484,7 @@ while (<IN>) {
 	# link
 	
 	my $mylink = $link;
-	if ($mylink =~ s,//+,/,) {
+	if ($mylink =~ s,//+,/,g) {
 	    print "E: $pkg $type: symlink-has-double-slash $file $link\n";
 	}
 	if ($mylink =~ s,(.)/$,$1,) {
