@@ -139,7 +139,7 @@ my @tests = sort(readdir(TESTDIR));
 closedir(TESTDIR);
 
 for (@tests) {
-    next if $_ eq '.' or $_ eq '..' or $_ eq 'CVS';
+    next if $_ eq '.' or $_ eq '..' or $_ eq 'CVS' or $_ eq '.svn';
     next unless -d "$testset/$_";
 
     my $pkgdir = $_;
@@ -165,7 +165,7 @@ for (@tests) {
       symlink "../../$testset/$_", "$rundir/$_";
     }
     closedir D;
-    runsystem("find $rundir -name CVS -print0 | xargs -0r rm -R");
+    runsystem("find $rundir -name CVS -o -name .svn -print0 | xargs -0r rm -R");
 
     print "Running dpkg-buildpackage $dpkg_buildpackage_options in $rundir/$pkgdir...\n" if $verbose;
     runsystem("cd $rundir/$pkgdir && dpkg-buildpackage $dpkg_buildpackage_options >../build.$pkg 2>&1");

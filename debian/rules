@@ -42,12 +42,14 @@ binary-indep: $(neededfiles) build
 	install -d $(usl) $(usl)/checks $(usl)/collection $(usl)/info
 	install -d $(usl)/lib $(usl)/unpack $(usl)/overrides
 	for d in checks collection lib unpack; do \
-	  find $$d -type f ! -path '*/CVS/*' | xargs -iFILE cp -p FILE $(usl)/$$d/; \
+	  find $$d -type f ! -path '*/CVS/*' ! -path '*/.svn/*' \
+	  	| xargs -iFILE cp -p FILE $(usl)/$$d/; \
 	done
 # documentation
 	@echo .... install documentation ....
 	install -d $(usdl)
-	find doc -maxdepth 1 -type f ! -path '*/CVS/*' ! -name lintianrc.example | xargs -iFILE cp -p FILE $(usdl)/
+	find doc -maxdepth 1 -type f ! -path '*/CVS/*' ! -path '*/.svn/*' \
+		! -name lintianrc.example | xargs -iFILE cp -p FILE $(usdl)/
 	cp -a doc/lintian.html $(usdl)/
 	gzip -9 $(usdl)/lintian.sgml
 	gzip -9 $(usdl)/lintian.txt
