@@ -124,6 +124,9 @@ lintian (1.23.1) unstable; urgency=low
     + [FL] a space after the colon is not mandatory in dpkg control
       files
   
+  * man/lintian.1:
+    + [FL] Document new control-file check script
+  
   * reporting/harness:
     + [FL] Correctly support udeb packages
   * reporting/html_reports:
