@@ -15,7 +15,7 @@ E: binary: su-to-root-without--c /usr/lib/menu/binary:3
 E: binary: su-to-root-without-usr-sbin /usr/lib/menu/binary:4
 E: binary: suidregister-used-in-maintainer-script postinst
 E: binary: unstripped-binary-or-object ./usr/bin/hello
-I: binary: arch-dep-package-has-big-usr-share
+I: binary: arch-dep-package-has-big-usr-share 1540kB 55%
 W: binary source: ancient-standards-version 3.2.1
 W: binary source: maintainer-upload-has-incorrect-version-number 4-1.1
 W: binary source: native-package-with-dash-version
@@ -24,3 +24,5 @@ W: binary: menu-item-needs-tag-has-unknown-value wm /usr/lib/menu/binary:5
 W: binary: package-contains-upstream-install-documentation usr/share/doc/binary/INSTALL
 W: binary: unquoted-string-in-menu-item /usr/lib/menu/binary needs:1
 W: binary: unquoted-string-in-menu-item /usr/lib/menu/binary needs:2
+E: binary: binary-without-manpage iminusrbin
+W: binary: executable-not-elf-or-script ./usr/bin/iminusrbin

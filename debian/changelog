@@ -65,6 +65,8 @@ lintian (1.23.1~alpha) unstable; urgency=low
       to be available as executables, so don't issue
       menu-command-not-in-package in this case. Thanks to
       Manoj Srivastava for reporting (Closes: #247805)
+    + [HE] Change menu-command-not-in-package to also look into the standard
+      PATH. (Closes: #255155)
   * checks/po-debconf:
     + [JvW] Simply fail if stuff from gettext is missing.
   * checks/scripts:

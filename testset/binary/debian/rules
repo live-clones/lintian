@@ -12,6 +12,8 @@ clean:
 binary-arch: build
 	install -d $(tmp)/usr/bin
 	install -m 755 hello $(tmp)/usr/bin
+	touch $(tmp)/usr/bin/iminusrbin
+	chmod 755 $(tmp)/usr/bin/iminusrbin
 	install -s -m 755 hello-static $(tmp)/usr/bin
 	install -s -m 755 hello-static $(tmp)/usr/bin/hello.static
 	install -s -m 755 hello-static $(tmp)/usr/bin/static-hello
