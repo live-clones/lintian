@@ -1,5 +1,5 @@
 #!/usr/bin/perl -w
-#
+# {{{ Legal stuff 
 # Lintian -- Debian package checker
 #
 # Copyright (C) 1998 Christian Schwarz and Richard Braakman
@@ -19,15 +19,16 @@
 # Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 # MA 02111-1307, USA.
+# }}}
 
+# {{{ libraries and such
 use strict;
 
 use Getopt::Long;
 use FileHandle;
+# }}}
 
-#######################################
-#  Global Variables
-#######################################
+# {{{ Global Variables
 my $lintian_info_cmd = 'lintian-info'; #Command to run for ?
 my $LINTIAN_VERSION = "<VERSION>";	#External Version number
 my $BANNER = "Lintian v$LINTIAN_VERSION"; #Version Banner - text form
@@ -88,10 +89,10 @@ my $LINTIAN_DIST = undef;
 my $LINTIAN_UNPACK_LEVEL = undef;
 my $LINTIAN_ARCH = undef;
 my $LINTIAN_SECTION = undef;
+# }}}
 
-#######################################
-#  Setup Code
-#######################################
+# {{{ Setup Code
+
 #turn off file buffering
 $| = 1;
 
@@ -103,11 +104,10 @@ if ($#ARGV == -1) {
     syntax();
 }
 
-# -----------------------------------
+# }}}
 
-#----------------------------------------------------------------------------
-# Process Command Line
-#----------------------------------------------------------------------------
+# {{{ Process Command Line
+
 #######################################
 # Subroutines called by various options
 # in the options hash below.  These are
@@ -308,9 +308,10 @@ if (($check_everything or $packages_file) and $#ARGV+1 > 0) {
 # check specified action
 $action = 'check' if not $action;
 
-#----------------------------------------------------------------------------
-# Setup Configuration
-#----------------------------------------------------------------------------
+# }}} 
+
+# {{{ Setup Configuration
+#
 # root permissions?
 # check if effective UID is 0
 if ($> == 0 and not $allow_root) {
@@ -468,7 +469,9 @@ unless (($unpack_level == 0) or ($unpack_level == 1) or ($unpack_level == 2)) {
 $LINTIAN_UNPACK_LEVEL = $unpack_level;
 $ENV{'LINTIAN_UNPACK_LEVEL'} = $LINTIAN_UNPACK_LEVEL;
 
-# Now that we have LINTIAN_ROOT we can import our own perl libraries
+# }}}
+
+# {{{ Loading lintian's own libraries (now LINTIAN_ROOT is known)
 unshift @INC, "$LINTIAN_ROOT/lib";
 
 require Lab;
@@ -479,6 +482,10 @@ require Read_pkglists;
 
 import Util;
 import Pipeline;
+
+# }}} 
+
+# {{{ No clue why this code is here...
 
 use vars qw(%source_info %binary_info %udeb_info); # from the above
 
@@ -500,9 +507,9 @@ undef $cleanup_filename;
 $SIG{'INT'} = \&interrupted;
 $SIG{'QUIT'} = \&interrupted;
 
-#----------------------------------------------------------------------------
-# Create/Maintain Lab and add any specified Debian Archives (*.debs)
-#----------------------------------------------------------------------------
+# }}}
+
+# {{{ Create/Maintain Lab and add any specified Debian Archives (*.debs)
 
 # sanity check:
 if (($action ne 'setup-lab') and ($lab_mode eq 'static')) {
@@ -553,6 +560,10 @@ if ($action eq 'setup-lab') {
     fail("bad action $action specified");
 }
 
+# }}} 
+
+# {{{ Setup the lintian-info pipe
+
 # pipe output through lintian-info?
 # note: if any E:/W: lines are added above this point, this block needs to
 #       be moved up
@@ -560,10 +571,9 @@ if ($lintian_info) {
     open(OUTPUT_PIPE,"| $lintian_info_cmd") or fail("cannot open output pipe to $lintian_info_cmd: $!");
     select OUTPUT_PIPE;
 }
+# }}}
 
-#----------------------------------------------------------------------------
-# Compile list of files to process
-#----------------------------------------------------------------------------
+# {{{ Compile list of files to process
 
 # process package/file arguments
 while (my $arg = shift) {
@@ -780,9 +790,9 @@ if (not $check_everything and not $packages_file and ($#packages == -1)) {
     print "N: No packages selected.\n" if $verbose;
     exit 0;
 }
+# }}}
 
-#----------------------------------------------------------------------------
-# Run Checks on all files (packages) in the lab
+# {{{ A lone subroutine
 #----------------------------------------------------------------------------
 #  Check to make sure there are packages to check.
 sub set_value {
@@ -793,8 +803,9 @@ sub set_value {
     $target->{$field} = $source->{$field};
     delete $source->{$field};
 }
+# }}}
 
-# load information about collector scripts
+# {{{ Load information about collector scripts
 opendir(COLLDIR, "$LINTIAN_ROOT/collection")
     or fail("cannot read directory $LINTIAN_ROOT/collection");
 
@@ -857,6 +868,9 @@ for my $f (readdir COLLDIR) {
 }
 
 closedir(COLLDIR);
+# }}}
+
+# {{{ Now we're ready to load info about checks & tags
 
 require Tags;
 import Tags;
@@ -935,6 +949,9 @@ for my $f (readdir CHECKDIR) {
 
 closedir(CHECKDIR);
 
+# }}}
+
+# {{{ Again some lone code the author just dumped where his cursor just happened to be
 if ($unpack_info) {
     # determine which info has been requested
     for my $i (split(/,/,$unpack_info)) {
@@ -950,7 +967,9 @@ for my $c (keys %check_info) {
     $check_abbrev{$check_info{$c}->{'abbrev'}} = $c;
 }
 
-# determine which checks have been requested
+# }}}
+
+# {{{ determine which checks have been requested
 if ($action eq 'check') {
     my %dont_check = map { $_ => 1 } (split /,/, ($dont_check || ""));
     $checks or ($checks = join(',',keys %check_info));
@@ -980,7 +999,9 @@ if ($action eq 'check') {
     }
 }
 
-# determine which info is needed by the collection scripts
+# }}}
+
+# {{{ determine which info is needed by the collection scripts
 for my $c (keys %unpack_infos) {
     for my $i (keys %collection_info) {
 	# required by $c ?
@@ -989,16 +1010,19 @@ for my $c (keys %unpack_infos) {
 	}
     }
 }
+# }}}
 
+# {{{ Create temp lab if needed (Why here??)
 if ($lab_mode eq 'temporary') {
-    # register signal handler to remove lab when C-C is pressed
+    # TODO: register signal handler to remove lab when C-C is pressed
 
     # create lab
     Lab::setup($LINTIAN_LAB, $lab_mode);
     Lab::populate_with_dist($LINTIAN_LAB, $LINTIAN_DIST) if $LINTIAN_DIST;
 }
+# }}}
 
-# process all packages in the archive?
+# {{{ process all packages in the archive?
 if ($check_everything) {
     # make sure package info is available
     read_src_list("$LINTIAN_LAB/info/source-packages", 0);
@@ -1044,13 +1068,16 @@ if ($check_everything) {
     }
     close(IN);
 }
+# }}}
 
+# {{{ Some silent exit
 if ($#packages == -1) {
     print "N: No packages selected.\n" if $verbose;
     exit 0;
 }
+# }}}
 
-# -----------------------------------------------------------------------
+# {{{ Okay, now really processing the packages in one huge loop
 $unpack_infos{ "override-file" } = 1 unless $no_override;
 printf "N: Processing %d packages...\n",$#packages+1 if $verbose;
 if ($debug) {
@@ -1325,27 +1352,28 @@ for (reverse sort @packages) {
 	close(STATUS);
     }
 }
+# }}}
 
+# {{{ close up lintian-info pipe if needed
 # did I pipe output through lintian-info?
 if ($lintian_info) {
     close(OUTPUT_PIPE) or fail("cannot close output pipe to $lintian_info_cmd: $!");
     select STDOUT;
 }
+# }}}
 
-# report unused overrides
+# {{{ report unused overrides (disabled)
 #if ($check_everything and not $no_override and $verbose) {
 #    for my $o (sort keys %overridden) {
 #	next if $overridden{$o};
 #	print "I: general: unused-override $o\n";
 #    }
 #}
+# }}}
 
 exit $exit_code;
 
-# -----------------------------------------------------------------------
-
-
-# -------------------------------
+# {{{ Some subroutines
 
 sub unpack_pkg {
     my ($type,$base,$file,$cur_level,$new_level) = @_;
@@ -1526,9 +1554,9 @@ sub read_file {
 sub by_collection_order {
     $collection_info{$a}->{'order'} <=> $collection_info{$b}->{'order'};
 }
+# }}}
 
-# -----------------------------
-# Exit handler.
+# {{{ Exit handler.
 
 sub END {
     # Prevent Lab::delete from affecting the exit code.
@@ -1541,5 +1569,6 @@ sub interrupted {
     $SIG{$_[0]} = 'DEFAULT';
     die "N: Interrupted.\n";
 }
+# }}}
 
-# vim: sw=4 ts=8 noet
+# vim: sw=4 ts=8 noet fdm=marker
