@@ -12,7 +12,7 @@ Standards-Version: 3.6.1
 Package: lintian
 Architecture: all
 Depends: perl, file, binutils, diffstat (>= 1.27-1), man-db (>= 2.3.20-1)
-Suggests: binutils-multiarch, libarchive-tar-perl, gettext
+Suggests: binutils-multiarch, libarchive-tar-perl (>= 1.08-1), gettext
 Description: Debian package checker
  Lintian dissects Debian packages and reports bugs and policy
  violations. It contains automated checks for many aspects of Debian
