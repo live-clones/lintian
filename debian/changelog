@@ -16,6 +16,9 @@ lintian (1.22.9-0.1) unstable; urgency=low
      + fix parsing debian/compat for needed 
        version (Closes: #198611)
      + update list of existing debhelper commands
+   * checks/manpages: 
+     + push back the extension after testing for
+       manpage-not-compressed (Closes: #225293)
 
  -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Sat, 31 Jan 2004 14:44:55 +0100
 

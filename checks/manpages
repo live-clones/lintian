@@ -100,6 +100,7 @@ while (<IN>) {
     my @pieces = split(/\./, $name);
     my $ext = pop @pieces;
     if ($ext ne 'gz') {
+        push @pieces, $ext;
 	print "E: $pkg $type: manpage-not-compressed $file\n";
     } elsif ($perm =~ m,^-,o) { # so it's .gz... files first; links later
 	my $info = $file_info{$file};
