@@ -64,7 +64,7 @@ if (-f "debfiles/po/POTFILES.in") {
 		chomp;
 		s/.*\]\s*//;
 		#  Cannot check files which are not under debian/
-		next if m,^\.\./,;
+		next if m,^\.\./, or $_ eq '';
 		tag "missing-file-from-potfiles-in", "$_"
 			 unless -f "debfiles/$_";
 	}
