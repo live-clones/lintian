@@ -37,6 +37,12 @@ Info: This package contains a script for an interpreter that the Lintian
  interpreter.  If not, please contact the Lintian maintainers so that
  they can add this interpreter to their list.
 
+Tag: forbidden-config-interpreter
+Type: error
+Info: This package contains a 'config' script for pre-configuring the package,
+ however, at that time only essential packages are guaranteed to be installed,
+ so you cannot use a non-essential interpreter
+
 Tag: unusual-control-interpreter
 Type: info
 Info: This package contains a control script for an interpreter that

@@ -331,8 +331,9 @@ while (<SCRIPTS>) {
     if (exists $valid_interpreters{$base}) {
 	tag_error("wrong-path-for-$base", $filename, "#!$interpreter")
 	    unless ($interpreter eq $valid_interpreters{$base});
-	
-	tag "unusual-control-interpreter", "$filename #!$interpreter"
+	tag $file eq 'config'?
+	    "forbidden-config-interpreter":"unusual-control-interpreter",
+	    "#!$interpreter"
 	    unless ($base eq 'sh'
 		    or $base eq 'bash'
 		    or $base eq 'perl');
