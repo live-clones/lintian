@@ -552,6 +552,10 @@ sub check_maint {
 
 		print "E: $pkg $type: wrong-debian-qa-address-set-as-maintainer $maintainer\n"
 		    if ($f eq "maintainer" && $mail eq 'debian-qa@lists.debian.org');
+
+		print "E: $pkg $type: wrong-debian-qa-group-name $maintainer\n"
+		    if ($f eq "maintainer" && $mail eq 'packages@qa.debian.org' &&
+				$name ne 'Debian QA Group');
 	}
 }
 
