@@ -68,6 +68,15 @@ Info: If the package installs a symbolic link /usr/share/doc/<i>pkg1</i> -&gt;
  within <i>pkg1</i> and copy the copyright file to that directory.
 Ref: policy 12.5
 
+Tag: cannot-check-whether-usr-doc-symlink-points-to-foreign-package
+Type: info
+Info: There is a symlink /usr/share/doc/<i>pkg1</i> -&gt; <i>pkg2</i>
+ in your package. This means that <i>pkg1</i> and <i>pkg2</i> must
+ both come from the same source package. I can't check this right now
+ however since I'm only checking a binary package and I only can check
+ this when I'm checking both the binary and the corresponding source
+ package.
+
 Tag: old-style-copyright-file
 Type: error
 Info: The package installs a /usr/doc/copyright/<i>pkg</i> file. Instead,

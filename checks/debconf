@@ -127,7 +127,7 @@ foreach my $template (@templates) {
 	$isselect=1;
 	$usesmultiselect=1;
     } elsif ($template->{type} eq 'boolean') {
-	tag "boolean-template-has-bogus-default ",
+	tag "boolean-template-has-bogus-default",
 	    "$template->{template} $template->{default}"
 		if defined $template->{default}
 		    and $template->{default} ne 'true'
