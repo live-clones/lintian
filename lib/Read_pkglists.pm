@@ -20,6 +20,10 @@
 # MA 02111-1307, USA.
 
 use strict;
+
+use lib "$ENV{'LINTIAN_ROOT'}/lib";
+use Util;
+
 use vars qw($BINLIST_FORMAT $SRCLIST_FORMAT $UDEBLIST_FORMAT %source_info %binary_info %udeb_info %bin_src_ref);
 
 # these banner lines have to be changed with every incompatible change of the
