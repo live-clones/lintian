@@ -46,7 +46,7 @@ N:   This link goes up, and then back down into the same subdirectory.
 N:   Making it shorter will improve its chances of finding the right file
 N:   if the user's system has lots of symlinked directories.
 N:   
-N:   Refer to Policy Manual, section 11.5 for details.
+N:   Refer to Policy Manual, section 10.5 for details.
 N:
 E: filenames: bad-menu-file-name usr/lib/menu/menu
 N:
@@ -77,7 +77,7 @@ N:
 N:   Each binary package has to include a plain file
 N:   /usr/share/doc/<pkg>/copyright
 N:   
-N:   Refer to Policy Manual, section 13.5 for details.
+N:   Refer to Policy Manual, section 12.5 for details.
 N:
 W: filenames: no-section-field
 N:
@@ -87,7 +87,7 @@ N:   The Section field can be included in a binary package by passing the
 N:   -is or -isp flags to dpkg-gencontrol when building the package. The
 N:   field is optional in binary packages.
 N:   
-N:   Refer to policy D.2.9 for details.
+N:   Refer to Policy Manual, section 5.6.4 for details.
 N:
 W: filenames: no-priority-field
 N:

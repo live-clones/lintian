@@ -20,7 +20,7 @@ N:   must have its own manual page (a symbolic link to the appropriate
 N:   manual page is sufficient) because other manual page viewers such as
 N:   xman or tkman don't support this.
 N:   
-N:   Refer to Policy Manual, section 13.1 for details.
+N:   Refer to Policy Manual, section 12.1 for details.
 N:
 E: binary: binary-without-manpage hello-static
 W: binary: package-contains-upstream-install-documentation usr/share/doc/binary/INSTALL
@@ -31,7 +31,7 @@ N:   users. If the info contained is important for configuration perhaps it
 N:   could be summarized in README.Debian, otherwise an override may be
 N:   added.
 N:   
-N:   Refer to Policy Manual, section 13.3 for details.
+N:   Refer to Policy Manual, section 12.3 for details.
 N:
 E: binary: postinst-does-not-call-updatemenus usr/lib/menu/binary
 N:
@@ -94,5 +94,5 @@ N:
 N:   Changelog files must be compressed using `gzip -9'. Even if they start
 N:   out small, they will become large with time.
 N:   
-N:   Refer to Policy Manual, section 13.7 for details.
+N:   Refer to Policy Manual, section 12.7 for details.
 N:

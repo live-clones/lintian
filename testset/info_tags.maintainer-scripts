@@ -25,7 +25,7 @@ N:   variable in the argument 'function' to define a function 'source'
 N:   instead of '.' '. command args', passing arguments to commands via
 N:   'source' is not supported '{foo,bar}' instead of 'foo bar'
 N:   
-N:   Refer to Policy Manual, section 11.4 for details.
+N:   Refer to Policy Manual, section 10.4 for details.
 N:
 W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:15 'read'
 W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:17 'H[0]='
@@ -64,5 +64,5 @@ N:
 N:   Each binary package has to include a plain file
 N:   /usr/share/doc/<pkg>/copyright
 N:   
-N:   Refer to Policy Manual, section 13.5 for details.
+N:   Refer to Policy Manual, section 12.5 for details.
 N:

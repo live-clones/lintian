@@ -14,7 +14,7 @@ N:
 N:   Files in /etc must be marked conffiles if they are included in a
 N:   package. Otherwise they should be created by maintainer scripts.
 N:   
-N:   Refer to Policy Manual, section 11.7 for details.
+N:   Refer to Policy Manual, section 10.7 for details.
 N:
 E: etcfiles: file-in-etc-not-marked-as-conffile /etc/improper
 E: etcfiles: no-copyright-file
@@ -22,12 +22,12 @@ N:
 N:   Each binary package has to include a plain file
 N:   /usr/share/doc/<pkg>/copyright
 N:   
-N:   Refer to Policy Manual, section 13.5 for details.
+N:   Refer to Policy Manual, section 12.5 for details.
 N:
 E: etcfiles: changelog-file-not-compressed changelog
 N:
 N:   Changelog files must be compressed using `gzip -9'. Even if they start
 N:   out small, they will become large with time.
 N:   
-N:   Refer to Policy Manual, section 13.7 for details.
+N:   Refer to Policy Manual, section 12.7 for details.
 N:

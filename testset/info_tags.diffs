@@ -1,3 +1,10 @@
+W: diffs source: out-of-date-standards-version 3.5.8
+N:
+N:   The source package refers to a 'Standards-Version' that is starting to
+N:   get out of date, compared to current Policy. You can safely ignore
+N:   this warning, but please consider updating the package to current
+N:   Policy.
+N:
 E: diffs source: debian-files-list-in-source
 N:
 N:   Leaving debian/files causes problems for the autobuilders, since that
@@ -26,12 +33,12 @@ N:   rule, so once you fix this, please ignore or override this warning.
 N:
 W: diffs source: configure-generated-file-in-source config.log
 W: diffs source: configure-generated-file-in-source config.status
-W: diffs source: configure-generated-file-in-source subdir-bad/config.cache
-W: diffs source: configure-generated-file-in-source subdir-bad/config.log
-W: diffs source: configure-generated-file-in-source subdir-bad/config.status
 W: diffs source: configure-generated-file-in-source subdir-good/config.cache
 W: diffs source: configure-generated-file-in-source subdir-good/config.log
 W: diffs source: configure-generated-file-in-source subdir-good/config.status
+W: diffs source: configure-generated-file-in-source subdir-bad/config.cache
+W: diffs source: configure-generated-file-in-source subdir-bad/config.log
+W: diffs source: configure-generated-file-in-source subdir-bad/config.status
 E: diffs: binary-without-manpage diffs
 N:
 N:   Each binary in /usr/bin, /usr/sbin, /bin, /sbin, or /usr/games, must
@@ -43,14 +50,14 @@ N:   must have its own manual page (a symbolic link to the appropriate
 N:   manual page is sufficient) because other manual page viewers such as
 N:   xman or tkman don't support this.
 N:   
-N:   Refer to Policy Manual, section 13.1 for details.
+N:   Refer to Policy Manual, section 12.1 for details.
 N:
 E: diffs: no-copyright-file
 N:
 N:   Each binary package has to include a plain file
 N:   /usr/share/doc/<pkg>/copyright
 N:   
-N:   Refer to Policy Manual, section 13.5 for details.
+N:   Refer to Policy Manual, section 12.5 for details.
 N:
 E: diffs: arch-independent-package-contains-binary-or-object ./usr/bin/diffs
 N:

@@ -14,7 +14,7 @@ N:
 N:   Each binary package has to include a plain file
 N:   /usr/share/doc/<pkg>/copyright
 N:   
-N:   Refer to Policy Manual, section 13.5 for details.
+N:   Refer to Policy Manual, section 12.5 for details.
 N:
 I: patented-app: non-us-spelling
 E: nonfree-crypto-app: no-copyright-file
@@ -24,13 +24,14 @@ W: broken-crypto: unknown-section non-US/admin
 N:
 N:   The `Section:' field in this package's control file is not one of the
 N:   sections in use on the ftp archive. Valid sections are currently
-N:   admin, base, comm, devel, doc, editors, electronics, games, graphics,
-N:   hamradio, interpreters, libs, mail, math, misc, net, news, oldlibs,
-N:   otherosfs, science, shells, sound, tex, text, utils, web, and x11.
+N:   admin, base, comm, devel, doc, editors, electronics, embedded, games,
+N:   gnome, graphics, hamradio, interpreters, libs, mail, math, misc, net,
+N:   news, oldlibs, otherosfs, perl, python, science, shells, sound, tex,
+N:   text, utils, web, and x11.
 N:   
 N:   The section name should be preceded by `non-free/' if the package is
 N:   in the non-free distribution, and by `contrib/' if the package is in
 N:   the contrib distribution.
 N:   
-N:   Refer to policy D.2.9 for details.
+N:   Refer to Policy Manual, section 2.4 for details.
 N:

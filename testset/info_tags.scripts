@@ -20,7 +20,7 @@ N:   must have its own manual page (a symbolic link to the appropriate
 N:   manual page is sufficient) because other manual page viewers such as
 N:   xman or tkman don't support this.
 N:   
-N:   Refer to Policy Manual, section 13.1 for details.
+N:   Refer to Policy Manual, section 12.1 for details.
 N:
 E: scripts: binary-without-manpage py2foo
 E: scripts: binary-without-manpage pyfoo
@@ -44,5 +44,5 @@ N:
 N:   Each binary package has to include a plain file
 N:   /usr/share/doc/<pkg>/copyright
 N:   
-N:   Refer to Policy Manual, section 13.5 for details.
+N:   Refer to Policy Manual, section 12.5 for details.
 N:
