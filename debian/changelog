@@ -1,6 +1,10 @@
 lintian (1.22.12) unstable; urgency=low
 
   Frank Lichtenheld <djpig@debian.org>
+  * man/lintian.1: 
+    + sync man page with the --help output by adding
+      missing options (Closes: #198615)
+      Based on a patch by Robert Lemmen.
   * checks/fields:
     + Really check only "real" dependency fields for needlessy
       depends (Closes: #185035)

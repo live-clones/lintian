@@ -15,7 +15,7 @@
 .\" Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
 .\" USA
 .\"
-.TH LINTIAN 1 "April 6, 1998" "Debian GNU/Linux"
+.TH LINTIAN 1 "February 21, 2004" "Debian GNU/Linux"
 
 .SH NAME
 lintian \- Debian package checker
@@ -116,6 +116,10 @@ Display lintian version number and exit.
 Display debugging messages. (Implies
 .BR \-v ).
 
+.TP
+.BR \-\-print\-version
+Print unadorned version number and exit.
+
 .PP
 
 Behaviour options for
@@ -179,7 +183,17 @@ Use
 as the permanent laboratory.  This is where Lintian keeps information about
 the packages it checks.  This option overrides the
 .B LINTIAN_LAB
-environment variable and the configuration file entry of the same name.
+environment variable and the configuration file entry of the same
+name.
+
+.TP
+.BR \-\-archivedir " archivedir"
+Location of Debian archive to scan for packages.  Use this if you want
+Lintian to check the whole Debian archive instead of just single
+packages. This option overrides the
+.B LINTIAN_ARCHIVEDIR
+environment variable and the configuration file entry of the same
+name.
 
 .TP
 .BR \-\-dist " distdir"
@@ -188,6 +202,16 @@ Scan for packages in the
 directory.  Use this if you want Lintian to check the whole Debian
 archive instead of just single packages.  This option overrides the
 .B LINTIAN_DIST
+environment variable and the configuration file entry of the same
+name.
+
+.TP
+.BR \-\-section " release"
+When scanning for packages in the distdir, select only packages from
+section
+.IR section
+(e.g. main). This option overrides the
+.B LINTIAN_SECTION
 environment variable and the configuration file entry of the same name.
 
 .TP
