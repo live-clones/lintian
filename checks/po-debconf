@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 # po-debconf -- lintian check script
 
-# Copyright (C) 2002-2003 by Denis Barbier <barbier@linuxfr.org>
+# Copyright (C) 2002-2004 by Denis Barbier <barbier@linuxfr.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -32,9 +32,17 @@ my $type = shift;
 opendir(DEB, 'debfiles')
 	or fail("Can't open debfiles directory.");
 my $has_template = 0;
-for (readdir(DEB)) {
-	if ($_ =~ m/^(.+\.)?templates$/) {
-		$has_template = 1;
+for my $file (readdir(DEB)) {
+	if ($file =~ m/^(.+\.)?templates$/) {
+		open(IN,"debfiles/control")
+			or fail("Can't open debfiles/control.");
+		while (<IN>) {
+			if (m/^Depends:/i) {
+				$has_template = 1
+					if m/\bdebconf(-[.\d]+)?\b/;
+			}
+		}
+		close(IN);
 		last;
 	}
 }
@@ -47,7 +55,19 @@ if ( $has_template && ! -d "debfiles/po" ) {
 #   Exit if package does not seem to use po-debconf
 -d "debfiles/po" or exit(0);
 
-if (! -f "debfiles/po/POTFILES.in") {
+if (-f "debfiles/po/POTFILES.in") {
+	open(POTFILES,"debfiles/po/POTFILES.in")
+		or fail("Can't open debfiles/po/POTFILES.in.");
+	while (<POTFILES>) {
+		chomp;
+		s/.*\]\s*//;
+		#  Cannot check files which are not under debian/
+		next if m,^\.\./,;
+		print "W: $pkg $type: missing-file-from-potfiles-in $_\n"
+			 unless -f "debfiles/$_";
+	}
+	close(POTFILES);
+} else {
 	print "W: $pkg $type: missing-potfiles-in\n";
 }
 if (! -f "debfiles/po/templates.pot") {

@@ -10,12 +10,18 @@ Needs-Info: debfiles
 Tag: not-using-po-debconf
 Type: warning
 Info: Package seems to be using debconf templates, but it does not
- use po-debconf to make translations possible. See po-debconf(7).
+ use po-debconf to make translations possible (debian/po doesn't exist, or no
+ dependency on po-debconf). See po-debconf(7).
 
 Tag: missing-potfiles-in
 Type: warning
 Info: The required file POTFILES.in is missing from debian/po
  See po-debconf(7).
+
+Tag: missing-file-from-potfiles-in
+Type: warning
+Info: A file listed in debian/po/POTFILES.in could not be found in the source
+ package.  See po-debconf(7).
 
 Tag: missing-templates-pot
 Type: warning
