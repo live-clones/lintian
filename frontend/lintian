@@ -1241,7 +1241,7 @@ for (reverse sort @packages) {
 			    next if m,^\s*(\#|$),o;
 
 			    # TODO: warn if no $pkg: thing is there...
-			    s/^$pkg://;
+			    s/^\Q$pkg\E://;
 			    s/^\s+//o;
 			    s/\s+$//o;
 			    s/\s+/ /go;
