@@ -32,6 +32,8 @@ lintian (1.23.1~alpha) unstable; urgency=low
   * checks/fields{,.desc}:
     + [JvW] Added debian-revision-should-not-be-zero, suggested by Adam
       Conrad
+    + [FL] Downgrade build-depends-without-arch-dep to warning as it's
+      heuristic. Reword explanation. This partly handles #247171.
   * checks/huge-usr-share:
     + [FL] Skip check for packages that don't have usr/share at all
       (Closes: #247708)
