@@ -29,6 +29,9 @@ lintian (1.23.3) unstable; urgency=low
       to be consistent with policy, which says a manpage should be available
       (and doesn't use "must" for it). Thanks to Robert Millan for his patch
       (Closes: #271014)
+  * checks/nmu.desc:
+    + [JvW] Note in source-nmu-has-incorrect-version-number's description that
+      the mistake could also be the other way around (Closes: #258604)
   * checks/po-debconf:
     + [JvW] Don't give missing-file-from-potfile-in on empty lines
       (Thanks Adam Conrad for noticing)
