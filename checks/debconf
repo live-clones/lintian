@@ -133,6 +133,14 @@ foreach my $template (@templates) {
 		    and $template->{default} ne 'false';
     }
 
+    for my $key (keys %$template) {
+	if (($key =~ /^choices-/) and
+	    ($template->{choices} && $template->{choices} !~ /^\s*$/) and 
+	    (! $template->{$key} || $template->{$key} =~ /^\s*$/)) {
+	    print "E: $pkg $type: empty-translated-choices $key\n";
+	}
+    }
+
     if ($isselect and not exists $template->{choices}) {
 	print "E: $pkg $type: select-without-choices $template->{template}\n";
     }

@@ -57,6 +57,12 @@ Info: A `Type:' field in a templates file provided by this package uses an
  unknown data type. Valid types are currently `string', `boolean', `select',
  `multiselect', `note', `text', and `password'.
 
+Tag: empty-translated-choices
+Type: error
+Info: When the translation of a Choices: field is empty, the whole question
+ is skipped (and nothing is selected). Please verify that the translation
+ you're using is valid.
+
 Tag: select-without-choices
 Type: error
 Info: Templates using the `select' or `multiselect' data types must provide
