@@ -3,7 +3,7 @@ E: binary: binary-without-manpage hello
 E: binary: binary-without-manpage hello-static
 E: binary: binary-without-manpage hello.static
 E: binary: binary-without-manpage static-hello
-W: binary: arch-dep-package-has-big-usr-share 1540kB 55%
+I: binary: arch-dep-package-has-big-usr-share 1540kB 55%
 W: binary: package-contains-upstream-install-documentation usr/share/doc/binary/INSTALL
 E: binary: postinst-does-not-call-updatemenus usr/lib/menu/binary
 E: binary: postrm-does-not-call-updatemenus usr/lib/menu/binary

@@ -67,8 +67,9 @@ lintian (1.22.12) unstable; urgency=low
       there is no binary perl file at all in the package, since this
       reflects the way the Installer module behaves (Closes: #199898)
   * checks/huge-usr-share:
-    + [JvW] Check for a big /usr/share (currently 250kB) in arch-dependent
-      packages. Thanks Steve McIntyre for the idea. (Closes: #232849)
+    + [JvW] Check for a big /usr/share (currently 1-2MB will trigger it) in
+      arch-dependent packages. Currently just I:. Thanks Steve McIntyre for
+      the idea. (Closes: #232849)
   * checks/menus{,.desc}:
     + [FL] Remove non-exectuable-in-etc-menu-methods as it doesn't
       reflects the current menu manual (Closes: #229460)
