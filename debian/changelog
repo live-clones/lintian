@@ -26,6 +26,7 @@ lintian (1.23.0) UNRELEASED; urgency=low
   
   * doc/lintian.sgml:
     + [FL] Some updates, some more verbatim explantions
+      (Closes: #197955)
     + [FL] Reworked the override section to handle udeb and
       source packages, too
   * doc/README:
