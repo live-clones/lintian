@@ -37,6 +37,8 @@ lintian (1.23.0) UNRELEASED; urgency=low
   * checks/debconf{,.desc}:
     + [JvW] Add an error for a bogus default for a boolean template
       (Closes: #236846)
+    + [HE] Check for duplicate fields in templates. Fix based on
+      patch by Denis Barbier <barbier@linuxfr.org>, thanks! (Closes: #233116)
   * checks/debian-readme:
     + [HE] Add check for the debmake template email address. Patch by Steffen
       Moeller <moeller@pzr.uni-rostock.de>, thanks!

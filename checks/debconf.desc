@@ -25,6 +25,12 @@ Info: Packages using debconf in their preinst script must either pre-depend
  Some packages fall back to another configuration system throughout the
  package if debconf is not present; please contact &maint; so that this
  exception would be recognized in future versions of Lintian.
+ 
+Tag: duplicate-fields-in-templates
+Type: error
+Info: A template contains two identical fields (with identical values or
+ not). This is either an error in this template, or two templates are
+ not properly seperated by a lone newline.
 
 Tag: unknown-field-in-templates
 Type: error
