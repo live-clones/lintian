@@ -44,8 +44,9 @@ lintian (1.22.11) unstable; urgency=low
      + Recognise the 'tcl' interpreter, not the same as tclsh (Closes: #230182)
 
   Frank Lichtenheld <djpig@debian.org>
-   * debian/control:
-     + we need the libarchive-tar-perl from sarge (>= 1.08-1)
+   * debian/control,checks/deb-format:
+     + Move libarchive-tar-perl to Depends and make it versioned
+     + So just fail in checks/deb-format if Archive::Tar is missing
    * checks/debhelper:
      + fix parsing debian/compat for needed
        version (Closes: #198611)

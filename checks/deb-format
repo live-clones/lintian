@@ -17,13 +17,7 @@ use strict;
 my $pkg = shift;
 my $type = shift;
 
-eval q{ use Archive::Tar };
-if ($@) {
-    print "N: The Archive::Tar module is not installed, so lintian\n";
-    print "N: cannot check whether a broken tar version was used for\n";
-    print "N: creating this .deb. Please install libarchive-tar-perl\n";
-    exit;
-}
+use Archive::Tar;
 
 use constant HEAD           => 512;
 use constant TAR_END        => "\0" x 512;
