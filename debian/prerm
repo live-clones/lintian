@@ -5,7 +5,5 @@ if [ "$1" = remove ] || [ "$1" = upgrade ] && command -v install-docs >/dev/null
 fi
 
 if [ "$1" = "purge" ]; then
-# to-do: check for the existance of useful files in the lab
-  echo -n "  Shall I also remove the whole lintian tree (no/yes)? "; read ans
-  case $ans in [yY]*) lintian --remove-lab;; esac
+  lintian --remove-lab
 fi
