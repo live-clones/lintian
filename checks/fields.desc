@@ -1,7 +1,7 @@
 Check-Script: fields
 Author: Richard Braakman <dark@xs4all.nl>
 Abbrev: fld
-Standards-Version: 3.2.0
+Standards-Version: 3.6.1
 Type: binary, udeb, source
 Unpack-Level: 1
 Info: This script checks the syntax of the fields in package control files,
@@ -69,11 +69,6 @@ Type: error
 Info: The special architecture value `any' does not make sense in a binary
  package.
 Ref: policy 5.6.7
-
-Tag: bad-menu-item
-Type: error
-Info: The field Installer-Menu-Item should only contain positive integer
- values.
 
 Tag: no-maintainer-field
 Type: error
@@ -202,7 +197,7 @@ Info: The package does not have a `Section:' field in its control file.
  The Section field can be included in a binary package by passing
  the -is or -isp flags to dpkg-gencontrol when building the package.
  The field is optional in binary packages.
-Ref: policy 5.6.4
+Ref: policy 5.3
 
 Tag: unknown-section
 Type: warning
@@ -225,13 +220,13 @@ Info: The package does not have a `Priority:' field in its control file.
  The Priority field can be included in a binary package by passing
  the -ip or -isp flags to dpkg-gencontrol when building the package.
  The field is optional in binary packages.
-Ref: policy D.2.9
+Ref: policy 5.3
 
 Tag: unknown-priority
 Type: error
 Info: The `Priority:' field in this package's control file is not one of
  the priorities defined in the Policy Manual.
-Ref: policy 2.2
+Ref: policy 2.5
 
 Tag: obsolete-field
 Type: error
@@ -242,7 +237,7 @@ Tag: unknown-field-in-dsc
 Type: info
 Info: See the Policy Manual for a list of the possible fields in
  a source package control file.
-Ref: policy 5.2
+Ref: policy 5.4
 
 Tag: unknown-field-in-control
 Type: info
@@ -422,3 +417,8 @@ Info: The package seems to declare a relation on libdb1-compat.
  This library exists for compatibility with applications built against
  glibc 2.0 or 2.1. There is intentionally no corresponding development
  package. Do not link new applications against this library!
+
+Tag: bad-menu-item
+Type: error
+Info: The field Installer-Menu-Item should only contain positive integer
+ values.
