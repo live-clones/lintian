@@ -482,25 +482,24 @@ while (<IN>) {
     # ---------------- symbolic links
     elsif ($perm =~ m/^l/) {
 	# link
+	
+	my $mylink = $link;
+	if ($mylink =~ s,//+,/,) {
+	    print "E: $pkg $type: symlink-has-double-slash $file $link\n";
+	}
+	if ($mylink =~ s,(.)/$,$1,) {
+	    print "E: $pkg $type: symlink-ends-with-slash $file $link\n";
+	}
+
 	# determine top-level directory of file
 	$file =~ m,^/?([^/]*),;
 	my $filetop = $1;
-	
-	if ($link =~ m,//,) {
-	    print "E: $pkg $type: symlink-has-double-slash $file $link\n";
-	    # rest of the checks assume this isn't the case...
-	    goto NEXT_LINK;
-	} elsif ($link =~ m,./$,) {
-	    print "E: $pkg $type: symlink-ends-with-slash $file $link\n";
-	    # rest of the checks assume this isn't the case...
-	    goto NEXT_LINK;
-	}
 
-	if ($link =~ m,^/([^/]*),) {
+	if ($mylink =~ m,^/([^/]*),) {
 	    # absolute link, including link to /
 
 	    # determine top-level directory of link
-	    $link =~ m,^/?([^/]*),;
+	    $mylink =~ m,^/([^/]*),;
 	    my $linktop = $1;
 
 	    if ($filetop eq $linktop) {
@@ -510,7 +509,7 @@ while (<IN>) {
 
 	    # Any other case is already definitely non-recursive
 	    print "W: $pkg $type: symlink-is-self-recursive $file $link\n"
-	    	if $link eq '/';
+	    	if $mylink eq '/';
 
 	} else {
 	    # relative link, we can assume from here that the link starts nor
@@ -520,7 +519,7 @@ while (<IN>) {
 	    # chop off the name of the symlink
 	    pop @filecomponents;
 
-	    my @linkcomponents = split('/', $link);
+	    my @linkcomponents = split('/', $mylink);
 
 	    # handle `../' at beginning of $link
 	    my $lastpop = undef;
@@ -528,7 +527,7 @@ while (<IN>) {
 	    while ($linkcomponent = shift @linkcomponents) {
 		if ($linkcomponent eq '.') {
 		    print "E: $pkg $type: symlink-contains-spurious-segments $file $link\n"
-		    	unless $link eq '.';
+		    	unless $mylink eq '.';
 		    next;
 		}
 		last if $linkcomponent ne '..';
