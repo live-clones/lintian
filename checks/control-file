@@ -29,17 +29,10 @@ my $pkg = shift;
 my $type = shift;
 
 # check that control is UTF-8 encoded
-open ICONV, "env LANG=C iconv -f utf8 -t utf8 debfiles/control 2>&1 |"
-	or fail("failure while checking encoding of control for $type package $pkg");
-my $line = 1;
-while (<ICONV>) {
-	if (m/iconv: illegal input sequence at position \d+$/) {
-		tag "debian-control-file-uses-obsolete-national-encoding", "at line $line";
-		last;
-    }
-    $line++;
+my $line = file_is_encoded_in_non_utf8("debfiles/control", $type, $pkg);
+if ($line) {
+    tag "debian-control-file-uses-obsolete-national-encoding", "at line $line"
 }
-close ICONV;
 
 my ($header, @binary_controls) = read_dpkg_control("debfiles/control");
 

@@ -30,6 +30,7 @@ our @EXPORT = qw(parse_dpkg_control
 	get_dsc_info
 	slurp_entire_file
 	get_file_md5
+	file_is_encoded_in_non_utf8
 	fail);
 
 use FileHandle;
@@ -183,6 +184,26 @@ sub get_file_md5 {
 	$md5->addfile(*FILE);
 	close FILE or fail("Couldn't close $file");
 	return $md5->hexdigest;
+}
+
+sub file_is_encoded_in_non_utf8 {
+	my ($file, $type, $pkg) = @_;
+	my $non_utf8 = 0;
+	
+	open ICONV, "env LANG=C iconv -f utf8 -t utf8 $file 2>&1 |"
+	    or fail("failure while checking encoding of $file for $type package $pkg");
+	my $line = 1;
+	while (<ICONV>) {
+		if (m/iconv: illegal input sequence at position \d+$/) {
+			$non_utf8 = 1;
+			last;
+		}
+		$line++
+	}
+	close ICONV;
+
+	return $line if $non_utf8;
+	return 0;
 }
 
 # ------------------------

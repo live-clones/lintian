@@ -21,6 +21,7 @@
 package Lintian::changelog_file;
 use strict;
 use Tags;
+use Util;
 
 sub run {
 
@@ -206,17 +207,10 @@ if ($native_pkg) {
 }
 
 # check that changelog is UTF-8 encoded
-open ICONV, "env LANG=C iconv -f utf8 -t utf8 changelog 2>&1 |"
-    or fail("failure while checking encoding of changelog for $type package $pkg");
-my $line = 1;
-while (<ICONV>) {
-    if (m/iconv: illegal input sequence at position \d+$/) {
-	tag "debian-changelog-file-uses-obsolete-national-encoding", "at line $line";
-	last;
-    }
-    $line++;
+my $line = file_is_encoded_in_non_utf8("changelog", $type, $pkg);
+if ($line) {
+    tag "debian-changelog-file-uses-obsolete-national-encoding", "at line $line"
 }
-close ICONV;
 
 # read the changelog itself
 #
