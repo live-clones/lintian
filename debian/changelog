@@ -4,25 +4,18 @@ lintian (1.22.12) unstable; urgency=low
   * debian/control:
     + make Uploaders a single line field. It didn't really
       break, but at least DDPO had its difficulties
+  
   * man/lintian.1:
     + sync man page with the --help output by adding
       missing options (Closes: #198615)
       Based on a patch by Robert Lemmen.
-  * checks/fields:
-    + Really check only "real" dependency fields for needlessy
-      depends (Closes: #185035)
-    + Remove the build-depends-without-arch-dep check. It produces
-      way too much false positives and can only be replaced by
-      a sophisticated debian/rules parser
-      (Closes: #192037, #202950, #214231)
-  * checks/scripts:
-    + Fix check for "exec ..." line. Fix suggested by Josip Rodin.
-      (Closes: #212811)
-  * checks/shared-libs:
-    + Be more tolerant to variations when checking for
-      postrm-unsafe-ldconfig. (Closes: #218543, #233740)
-      Thanks to Martin Godisch, Steinar H. Gunderson and
-      Aidas Kasparas for their input.
+  
+  * checks/binaries:
+    + don't complain about non-stripped kernel modules (Closes: #203373)
+      Patch by Dagfinn Ilmari Mannsaker
+  * checks/changelog-file:
+    + check that encoding of changelog file is UTF-8 (Closes: #175318)
+      based on a patch by Denis Barbier
   * checks/copyright-file{,.desc}:
     + Don't advise to point to the perl packages' copyright file
       (Closes: #193293)
@@ -31,23 +24,33 @@ lintian (1.22.12) unstable; urgency=low
       copyright-should-refer-to-common-license-file-for-gpl due to
       the GFDL. (Closes: #192278)
       Thanks to Ross Burton for reporting this.
-  * checks/changelog-file:
-    + check that encoding of changelog file is UTF-8 (Closes: #175318)
-      based on a patch by Denis Barbier
   * checks/debhelper.desc:
     + correct reference to debhelper manpage. It's debhelper(7), not
       debhelper(1). (Closes: #188245)
       Thanks to Brian Nelson for pointing this out.
-  * checks/binaries:
-    + don't complain about non-stripped kernel modules (Closes: #203373)
-      Patch by Dagfinn Ilmari Mannsaker
   * checks/description:
     + fix description-is-dh_make-template check (Closes: #215125)
       Fix suggested by Josip Rodin
+  * checks/fields:
+    + Really check only "real" dependency fields for needlessy
+      depends (Closes: #185035)
+    + Remove the build-depends-without-arch-dep check. It produces
+      way too much false positives and can only be replaced by
+      a sophisticated debian/rules parser
+      (Closes: #192037, #202950, #214231)
   * checks/files:
     + only issue package-installs-nonbinary-perl-in-usr-lib-perl5 if
       there is no binary perl file at all in the package, since this
       reflects the way the Installer module behaves (Closes: #199898)
+  * checks/scripts:
+    + Fix check for "exec ..." line. Fix suggested by Josip Rodin.
+      (Closes: #212811)
+  * checks/shared-libs:
+    + Be more tolerant to variations when checking for
+      postrm-unsafe-ldconfig. (Closes: #218543, #233740)
+      Thanks to Martin Godisch, Steinar H. Gunderson and
+      Aidas Kasparas for their input.
+
   * unpack/unpack-binpkg-l1: tar uses now h to signal hardlinks which
      breaks a lot of our code. so sed'ing it away (Closes: #234545)
      Many many thanks to Theodore Y. Ts'o for bringing this to our
