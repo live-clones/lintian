@@ -226,6 +226,10 @@ Info: The `Section:' field in this package's control file is not one of
  is in the contrib distribution.
 Ref: policy 2.4
 
+Tag: wrong-section-for-udeb
+Type: warning
+Info: udeb packages should have `Section: debian-installer'.
+
 Tag: no-priority-field
 Type: warn
 Info: The package does not have a `Priority:' field in its control file.

@@ -188,18 +188,25 @@ if (not open (FH, "fields/section")) {
 
 	unfold("section", \$section);
 
-	my @parts = split /\//, $section, 2;
+	if ($type eq 'udeb') {
+	    unless ($section eq 'debian-installer') {
+		print "W: $pkg $type: wrong-section-for-udeb $section\n";
+	    }
+	} else {
 
-	if ($parts[0] =~ /non-US/i) {
+	    my @parts = split /\//, $section, 2;
+	    
+	    if ($parts[0] =~ /non-US/i) {
 		print "I: $pkg $type: non-us-spelling\n" if ($parts[0] ne "non-US");
 		if ($parts[1] and not $known_non_us_parts{$parts[1]}) {
-			print "W: $pkg $type: unknown-section $section\n";
+		    print "W: $pkg $type: unknown-section $section\n";
 		}
-	} elsif (scalar @parts > 1) {
+	    } elsif (scalar @parts > 1) {
 		print "W: $pkg $type: unknown-section $section\n" unless $known_archive_parts{$parts[0]};
 		print "W: $pkg $type: unknown-section $section\n" unless $known_sections{$parts[1]};
-	} else {
+	    } else {
 		print "W: $pkg $type: unknown-section $section\n" unless $known_sections{$parts[0]};
+	    }
 	}
 }
 
