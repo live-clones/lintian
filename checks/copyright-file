@@ -166,7 +166,7 @@ if (m/^This copyright info was automatically extracted from the perl module\./) 
 }
 
 if (m,(under )?(the )?(same )?(terms )?as Perl itself,i &&
-    !(m,usr/share/common-licenses/, || m,usr/share/doc/perl,)) {
+    !m,usr/share/common-licenses/,) {
     print "E: $pkg $type: copyright-file-lacks-pointer-to-perl-license\n";
 }
 
