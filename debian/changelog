@@ -13,6 +13,8 @@ lintian (1.22.9-0.1) unstable; urgency=low
      (Patch by Frank Lichtenheld <djpig@debian.org>)
    * checks/binaries.desc:
      + Fix typo (Closes: #202856)
+   * checks/filenames (and more):
+     + Check for Subversion version control leftovers (Closes: #190067)
 
   Frank Lichtenheld <djpig@debian.org>
    * checks/debhelper:
@@ -30,7 +32,7 @@ lintian (1.22.9-0.1) unstable; urgency=low
      + fix testing of dependencies to eliminate false
        positives of missing-debconf-dependency (Closes: #195201)
 
- -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Sun,  8 Feb 2004 21:10:36 +0100
+ -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Sun,  8 Feb 2004 23:49:47 +0100
 
 lintian (1.22.9) unstable; urgency=low
 

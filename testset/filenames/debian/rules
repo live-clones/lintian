@@ -33,6 +33,8 @@ binary-indep:
 	touch debian/tmp/usr/lib/menu/menu
 	chmod 644 debian/tmp/usr/lib/menu/*
 	install -d debian/tmp/usr/lib/perl5/foo
+	mkdir debian/tmp/usr/lib/perl5/.svn
+	mkdir debian/tmp/usr/lib/perl5/CVS
 	touch debian/tmp/usr/lib/perl5/foo/.packlist
 	chmod 644 debian/tmp/usr/lib/perl5/foo/.packlist
 	install -d debian/tmp/usr/share/doc/filenames

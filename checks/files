@@ -366,6 +366,11 @@ while (<IN>) {
 	    print "W: $pkg $type: cvsignore-file-in-package $file\n";
 	}
 
+	# ---------------- subversion commit message backups
+	if ($file =~ m/svn-commit.*\.tmp$/) {
+	    print "W: $pkg $type: svn-commit-file-in-package $file\n";
+	}
+
 	# ---------------- general: setuid/setgid files!
 	if ($perm =~ m/s/) {
 	    my ($setuid, $setgid) = ("","");
@@ -454,6 +459,9 @@ while (<IN>) {
 	}
 	if ($file =~ m,/CVS/?$,) {
 	    print "W: $pkg $type: package-contains-CVS-dir $file\n";
+	}
+	if ($file =~ m,/\.svn/?$,) {
+	    print "W: $pkg $type: package-contains-svn-control-dir $file\n";
 	}
 	if ($file =~ m,/.xvpics/?$,) {
 	    print "E: $pkg $type: package-contains-xvpics-dir $file\n";
