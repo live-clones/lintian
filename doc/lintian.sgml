@@ -446,18 +446,18 @@ not used in current Lintian versions.
 
 <p>
 
-The format of the overrides file is simple: <tt>&lt;package&gt; &lt;type&gt;:
-&lt;lintian-tag&gt; &lt;lintian-info&gt;</tt>, where
+The format of the overrides file is simple: <tt>[&lt;package&gt;[
+&lt;type&gt;]: ]&lt;lintian-tag&gt;[ &lt;lintian-info&gt;]</tt>. 
 <tt>&lt;package&gt;</tt> is the package name; <tt>&lt;type&gt;</tt>
 is one of <tt>binary</tt>, <tt>udeb</tt> and <tt>source</tt>, and
 <tt>&lt;lintian-info&gt;</tt> is all additional information provided
-by Lintian except for the tag. (lintian-info is optional, type can
-be omitted if it is <tt>binary</tt>).
+by Lintian except for the tag. What's inside brackets is optional and may be
+omitted if you want to match it all.
 An example file for a binary package would look like:
 <example>
 /usr/share/lintian/overrides/foo, where foo is the name of your package
-foo: non-standard-dir-perm
-foo: FSSTND-dir-in-usr /usr/man/man1/foo.1.gz
+foo binary: non-standard-dir-perm
+foo binary: FSSTND-dir-in-usr /usr/man/man1/foo.1.gz
 </example>
 
 <p>
