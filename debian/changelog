@@ -85,6 +85,8 @@ lintian (1.22.12) unstable; urgency=low
     + Test syntax of Uploaders: too
     + Don't consider depending on coreutils bad, as this is in a way a
       versioned depend (Closes: #216536)
+    + Accept more whitespace in relations, which is allowed according to
+      policy, thanks Adrian Bunk for noticing, FL for fixing (Closes: #200280)
   * checks/scripts:
     + Tighten up mknod, dpkg --print-architecture and killall detection in
       maintainer scripts, would need rewrite to be really sane

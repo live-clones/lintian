@@ -297,7 +297,7 @@ if ($type eq 'binary') {
 	    my @seen_alternates;
 	    for my $alt (@alternates) {
 		# fill in blank
-		if ($alt =~ m/^(\S+)\s*\((<<|<=|=|>=|>>|<|>)\s*(\S+)\s*\)$/) {
+		if ($alt =~ m/^(\S+)\s*\(\s*(<<|<=|=|>=|>>|<|>)\s*(\S+)\s*\)$/) {
                     ($relpkg, $relation, $version) = ($1, $2, $3);
                     tag_warn("obsolete-relation-form", "$fld:", $alt)
 		        if ($relation eq '<' or $relation eq '>');
