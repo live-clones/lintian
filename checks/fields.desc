@@ -481,3 +481,9 @@ Tag: redundant-origin-field
 Type: warning
 Info: You use the Origin field though the field value is the default (Debian).
  In this case the field is redundant and should be removed.
+
+Tag: binary-nmu-debian-revision-in-source
+Type: warning
+Ref: devref 5.10.2.1
+Info: The version number of your source package has a debian revision with
+ three parts, which is usually used by binary NMUs.

@@ -1,4 +1,3 @@
-W: manpages: manpage-section-mismatch usr/share/man/man1/test.1p.gz:2 1p != 1P
 E: manpages: bad-link-to-undocumented-manpage usr/share/man/man1/sbin-binary.1.gz
 E: manpages: empty-manual-page usr/X11R6/man/man1/rstartd.1x.gz
 E: manpages: empty-manual-page usr/X11R6/man/man6/X11R6-binary.man
@@ -16,8 +15,9 @@ E: manpages: manpage-not-compressed-with-max-compression usr/share/man/man6/usr-
 E: manpages: no-copyright-file
 E: manpages: x11-games-should-be-in-usr-games usr/X11R6/man/man6/X11R6-binary.man
 W: manpages source: ancient-standards-version 3.2.1
+W: manpages source: binary-nmu-debian-revision-in-source 4-0.0.1
 W: manpages source: changelog-should-mention-nmu
-W: manpages source: source-nmu-has-incorrect-version-number 3
+W: manpages source: source-nmu-has-incorrect-version-number 4-0.0.1
 W: manpages: executable-not-elf-or-script ./usr/bin/usr-bin-binary-alt
 W: manpages: executable-not-elf-or-script ./usr/sbin/usr-sbin-binary
 W: manpages: link-to-undocumented-manpage usr/share/man/man1/bin-binary.1.gz
@@ -28,7 +28,6 @@ W: manpages: manpage-has-bad-whatis-entry usr/share/man/man1/usr-bin-binary-alt.
 W: manpages: manpage-has-bad-whatis-entry usr/share/man/man1/usr-bin-binary.1
 W: manpages: manpage-has-bad-whatis-entry usr/share/man/man1/usr-sbin-binary.1.gz
 W: manpages: manpage-has-bad-whatis-entry usr/share/man/man6/usr-games-binary.6.gz
-W: manpages: manpage-section-mismatch usr/share/man/man1/test.1p.gz:2 1p != 1
 W: manpages: package-contains-hardlink usr/share/man/man1/usr-bin-binary-alt.1.gz
 W: manpages: packages-installs-file-to-usr-x11r6 usr/X11R6/
 W: manpages: packages-installs-file-to-usr-x11r6 usr/X11R6/bin/

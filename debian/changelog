@@ -6,6 +6,10 @@ lintian (1.23.6) UNRELEASED; urgency=low
     + [HE] Warn if the short description start with an article or a capital
       letter. Patch by Tobias Toedter <t.toedter@gmx.net>, thanks. (Closes:
       #258824)
+  * checks/fields:
+    + [HE] Warn if the debian revision has three parts, as this is the sign of
+      a binary NMU. New check's name is binary-nmu-debian-revision-in-source.
+      (Closes: #244830)
   * checks/manpages:
     + [HE] Don't compare the manpage filename extension and the content of
       .TH case-sensitive. Report + patch by Jay Berkenbilt <ejb@ql.org>,

@@ -1,4 +1,4 @@
-manpages (4) unstable; urgency=low
+manpages (4-0.0.1) unstable; urgency=low
 
   * Add a test manpage.
   * debian/rules: Fix a little bug creating a file named 755 in the source dir.

@@ -79,6 +79,9 @@ if (not open (FH, "fields/version")) {
 			if (not defined $1 or defined $2) {
 				tag "debian-revision-not-well-formed", "$version";
 			}
+			if ($debian =~ /^-[^.]+\.[^.]+\./ && ($type eq "source")) {
+				tag "binary-nmu-debian-revision-in-source", "$version";
+			}
 		}
 	} else {
 		tag "bad-version-number", "$version";
