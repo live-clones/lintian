@@ -34,6 +34,7 @@ my $debug = $::debug;
 
 # What to print between the "E:" and the tag, f.e. "package source"
 our $prefix = undef;
+our $show_info = 0;
 
 # The master hash with all tag info. Key is a hash too, with these stuff:
 # - tag: short name
@@ -64,6 +65,7 @@ sub add_tag {
 sub tag {
 	my $tag = shift;
 	my $info = $tags{$tag};
+	return if not $show_info and $info->{'type'} eq 'info';
 	my $extra = '';
 	$extra = ' '.join(' ', @_) if $#_ >=0;
 	$extra = '' if $extra eq ' ';
