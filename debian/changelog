@@ -10,6 +10,9 @@ lintian (1.23.3) unstable; urgency=low
     + [JvW] Revert the extra pedantic check introduced in 1.23.0 that
       complained about unstrict dependencies when one as a
       /usr/share/doc/<package> that is a symlink (Closes: #249414)
+  * checks/debconf:
+    + [JvW] Don't warn when you're not translation choices of a debconf
+      question, it might not make sense (Closes: #262649)
   * checks/po-debconf:
     + [JvW] Don't give missing-file-from-potfile-in on empty lines
       (Thanks Adam Conrad for noticing)

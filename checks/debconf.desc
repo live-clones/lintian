@@ -95,8 +95,8 @@ Info: You do not need to translate `Default:' fields of `select' or
 
 Tag: partially-translated-question
 Type: warning
-Info: If you translate either of the `Choices:' and `Description:' fields in
- a template, you should translate the other one as well.
+Info: If you translate the `Choices:' fields in a template, you should
+ translate the 'Description:' field as well
 
 Tag: config-does-not-load-confmodule
 Type: warning

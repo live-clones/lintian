@@ -173,7 +173,7 @@ foreach my $template (@templates) {
     if (exists $template->{choices}
 	&& $template->{choices} !~ m/^\s*\$\{\w+\}\s*$/) {
 	foreach my $lang (sort keys %languages) {
-	    if ($languages{$lang}{choices} xor $languages{$lang}{description}) {
+	    if (not $languages{$lang}{choices} and $languages{$lang}{description}) {
 		tag "partially-translated-question", "$template->{template} $lang";
 	    }
 	}
@@ -353,4 +353,4 @@ close SCRIPTS;
 
 1;
 
-# vim: syntax=perl
+# vim: syntax=perl ts=8
