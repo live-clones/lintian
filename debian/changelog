@@ -12,10 +12,14 @@ lintian (1.22.12) unstable; urgency=low
       postrm-unsafe-ldconfig. (Closes: #218543, #233740)
       Thanks to Martin Godisch, Steinar H. Gunderson and
       Aidas Kasparas for their input.
-  * checks/copyright.desc:
+  * checks/copyright-file{,.desc}:
     + Don't advise to point to the perl packages' copyright file
       (Closes: #193293)
       Thanks to Martin Orr for pointing this out.
+    + Fixed false positives of 
+      copyright-should-refer-to-common-license-file-for-gpl due to 
+      the GFDL. (Closes: #192278)
+      Thanks to Ross Burton for reporting this.
   * checks/debhelper.desc:
     + correct reference to debhelper manpage. It's debhelper(7), not
       debhelper(1). (Closes: #188245)
