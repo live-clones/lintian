@@ -10,8 +10,8 @@ E: relations-multiple-libs: package-depends-on-multiple-tkx-versions tkx8.2 tkx8
 E: relations-multiple-libs: package-depends-on-multiple-libpng-versions libpng2 libpng3
 E: relations: no-copyright-file
 W: relations: package-relation-with-self depends: relations
-W: relations: package-relation-with-self depends: relations(<< 3)
-E: relations: package-has-a-duplicate-relation relations, relations(<< 3)
+W: relations: package-relation-with-self depends: relations (<< 3)
+E: relations: package-has-a-duplicate-relation relations, relations (<< 3)
 E: relations: depends-on-essential-package-without-using-version dpkg
 W: relations: virtual-package-depends-without-real-package-depends mail-transport-agent
 E: relations: needlessly-depends-on-awk
