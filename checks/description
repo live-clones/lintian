@@ -60,10 +60,10 @@ if ($synopsis =~ m/^\s*$/) {
 	tag "description-synopsis-might-not-be-phrased-properly", "";
     }
     if ($synopsis =~ m/^\s*[A-Z]/) {
-	print "W: $pkg $type: description-synopsis-starts-with-a-capital-letter\n";
+	tag "description-synopsis-starts-with-a-capital-letter";
     }
     if ($synopsis =~ m/^\s*([Tt]he|[Aa]n?)\b/) {
-	print "W: $pkg $type: description-synopsis-starts-with-an-article\n";
+	tag "description-synopsis-starts-with-an-article";
     }
     if ($synopsis =~ m/\t/) {
 	tag "description-contains-tabs", "" unless $tabs++;

@@ -317,7 +317,7 @@ while (<IN>) {
 	#
 	# Other applications also use .desktop files (yay!), so we need to
 	# exclude them.
-	elsif ($file =~ m,\.desktop$, && $file !~ m,^usr/share/applications/ &&
+	elsif ($file =~ m,\.desktop$, && $file !~ m,^usr/share/applications/, &&
 	       $file !~ m,^usr/share/xsessions/,) {
 	    tag "desktop-file-in-wrong-dir", "$file";
 	}
