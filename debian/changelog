@@ -1,61 +1,62 @@
 lintian (1.23.3) unstable; urgency=low
 
-  The ``PLACEHOLDER'' release, ...
+  The ``the others must be busy releasing Sarge or something'' release,
+  prepared by yours truly
 
   * checks/conffiles.desc:
-    + [JvW] Note the most likely cause for duplicate-conffile in the
-      description (thanks Chris Anderson for running into this problem and
-      asking me about it)
+    + Note the most likely cause for duplicate-conffile in the description
+      (thanks Chris Anderson for running into this problem and asking me
+      about it)
   * checks/copyright-file:
-    + [JvW] Revert the extra pedantic check introduced in 1.23.0 that
+    + Revert the extra pedantic check introduced in 1.23.0 that
       complained about unstrict dependencies when one as a
       /usr/share/doc/<package> that is a symlink (Closes: #249414)
   * checks/debconf:
-    + [JvW] Don't warn when you're not translation choices of a debconf
+    + Don't warn when you're not translation choices of a debconf
       question, it might not make sense (Closes: #262649)
   * checks/debhelper:
-    + [JvW] dh-make also creates sample files named .EX, so make that check
+    + dh-make also creates sample files named .EX, so make that check
       case-insensitive (Closes: #251262)
   * checks/fields.desc:
-    + [JvW] Adjust package-has-a-duplicate-relation to warning, and note that
+    + Adjust package-has-a-duplicate-relation to warning, and note that
       this sometimes happens to you when using ${shlibs:Depends}, and you
       shouldn't bother too much if that's the case (Closes: #274286)
       Thanks Peter Eisentraut for the suggestion
-    + [JvW] Fix English language and chapter of policy in description of
+    + Fix English language and chapter of policy in description of
       depends-on-essential-package-without-using-version, thanks to Peter
       Eisentrautf for noticing (Closes: #261603, #261602)
   * checks/init.d:
-    + [JvW] Don't warn for missing init.d scripts in package and conffile list
+    + Don't warn for missing init.d scripts in package and conffile list
       if a variable is used instead of a real name (Closes: #264218)
   * checks/manpages.desc:
-    + [JvW] Demote binary-without-manpage to warning, and adjust description,
+    + Demote binary-without-manpage to warning, and adjust description,
       to be consistent with policy, which says a manpage should be available
       (and doesn't use "must" for it). Thanks to Robert Millan for his patch
       (Closes: #271014)
   * checks/nmu.desc:
-    + [JvW] Note in source-nmu-has-incorrect-version-number's description that
+    + Note in source-nmu-has-incorrect-version-number's description that
       the mistake could also be the other way around (Closes: #258604)
   * checks/po-debconf:
-    + [JvW] Don't give missing-file-from-potfile-in on empty lines
+    + Don't give missing-file-from-potfile-in on empty lines
       (Thanks Adam Conrad for noticing)
   * checks/scripts:
-    + [JvW] The php commandline interpreter is now provided by php4-cli, and
+    + The php commandline interpreter is now provided by php4-cli, and
       not php4-cgi, update dependency check accordingly (Closes: #268077)
-    + [JvW] Give an error if the 'config' script uses a non-essential
+    + Give an error if the 'config' script uses a non-essential
       interpreter (Closes: #274832)
   * checks/shared-libraries:
-    + [JvW] Ignore comments in shlibs files (Closes: #275124)
+    + Ignore comments in shlibs files (Closes: #275124)
 
   * doc/lintian.sgml:
-    + [JvW] Document that you can use comments in overrides (Closes: #87805)
+    + Document that you can use comments in overrides (Closes: #87805)
 
   * frontend/lintian:
-    + [JvW] Fix overrides so that they allow all of (1) <package> <type>:, (2)
-      <package>:, and (3) <nothing> as prefix to tags you want to override,
-      and modify documentation accordingly. This used to be buggy
+    + Fix overrides so that they allow all of (1) <package> <type>:,
+      (2) <package>:, and (3) <nothing> as prefix to tags you want to
+      override, and modify documentation accordingly. This used to be buggy
       (Closes: #261435)
 
- -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Wed, 13 Oct 2004 01:14:41 +0200
+ -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Wed, 13 Oct 2004 02:45:36 +0200
 
 lintian (1.23.2) unstable; urgency=low
 
