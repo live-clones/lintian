@@ -472,6 +472,9 @@ for my $field (glob("fields/*")) {
 
 	print "I: $pkg $type: unknown-field-in-control $field\n"
 	    if ($type eq "binary" && ! $known_binary_fields{$field} && ! $known_obsolete_fields{$field});
+
+	print "I: $pkg $type: unknown-field-in-control $field\n"
+	    if ($type eq "udeb" && ! $known_udeb_fields{$field} && ! $known_obsolete_fields{$field});
 }
 
 exit 0;

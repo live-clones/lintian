@@ -260,6 +260,10 @@ Tag: unknown-field-in-control
 Type: info
 Info: See the Policy Manual for a list of the possible fields in
  a binary package control file.
+ .
+ In udeb packages the fields pre-depends, conflicts, essential and
+ suggests are disalllowed, but they can contain the new fields
+ subarchitecture and installer-menu-item.
 Ref: policy 5.3 
 
 Tag: multiline-field
