@@ -104,7 +104,7 @@ if ($seentemplates) {
 
 # Lots of template checks.
 
-my @templates = $seentemplates ? read_dpkg_control("control/templates") : ();
+my @templates = $seentemplates ? read_dpkg_control("control/templates", "templates file") : ();
 
 foreach my $template (@templates) {
     my $isselect='';

@@ -10,6 +10,10 @@ lintian (1.23.0) UNRELEASED; urgency=low
     + [FL] Fixed some semantic errors (since noone ever observed the
       correspoding perl warnings the fixed parts are probably never
       used in the current code)
+  * lib/Utils.pm
+    + [HE] Changed {read,parse}_dpkg_control a bit to cope with the fact
+      that template files sometimes contain lines consisting only of
+      whitespace which do *not* separate to blocks. (Closes: #242479)
 
   * frontend/lintian:
     + [HE] Added a --dont-check-parts|-X option to allow users to specify

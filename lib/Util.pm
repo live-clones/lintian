@@ -28,13 +28,14 @@ use Pipeline;
 # this function can parse output of `dpkg-deb -f', .dsc,
 # and .changes files (and probably all similar formats)
 # arguments:
-#    $file
+#    $filehandle 
+#    $debconf_flag (true if the file is a debconf template file)
 # output:
 #    list of hashes
 #    (a hash contains one sections,
 #    keys in hash are lower case letters of control fields)
 sub parse_dpkg_control {
-    my ($CONTROL) = @_;
+    my ($CONTROL, $debconf_flag) = @_;
 
     my @data;
     my $cur_section = 0;
@@ -42,13 +43,14 @@ sub parse_dpkg_control {
     my $last_tag;
 
     while (<$CONTROL>) {
-	chop;
+	chomp;
 
 	# tabs at the beginning are illegal, but handle them anyways
 	s/^\t/ \t/o;
 
 	# empty line?
-	if (m/^\s*$/) {
+	if ((!$debconf_flag && m/^\s*$/) or 
+	    ($debconf_flag && m/^$/)) {
 	    if ($open_section) { # end of current section
 		$cur_section++;
 		$open_section = 0;
@@ -96,7 +98,7 @@ sub parse_dpkg_control {
 }
 
 sub read_dpkg_control {
-    my ($file) = @_;
+    my ($file, $debconf_flag) = @_;
 
     if (not _ensure_file_is_sane($file)) {
 	return undef;
@@ -105,7 +107,7 @@ sub read_dpkg_control {
     my $CONTROL = FileHandle->new;
     open($CONTROL,$file)
 	or fail("cannot open control file $file for reading: $!");
-    my @data = parse_dpkg_control($CONTROL);
+    my @data = parse_dpkg_control($CONTROL, $debconf_flag);
     close($CONTROL)
 	or fail("pipe for control file $file exited with status: $?");
     return @data;
