@@ -35,7 +35,7 @@ sub get_block_size {
 	return 512*$nblocks;
 }
 
-if (open (LIST, "ar t |")) {
+if (open (LIST, "ar t deb |")) {
 	while (<LIST>) {
 		chomp;
 		print "E: $pkg $type: deb-data-member-wrongly-compressed\n"
