@@ -35,8 +35,13 @@ lintian (1.23.6) UNRELEASED; urgency=low
       don't issue no-standards-version-field for them. (If they happen to
       have a Standards-Version field anyway, we still check that it's
       valid.)
+  
+  * lib/Lab.pm, frontend/lintian:
+    SECURITY (CAN-2004-1000):
+    + [FL] Overhaul lab directory handling. This also fixes the issue
+      of removing a lab that never was created (Closes: #286681)
 
- -- Marc 'HE' Brockschmidt <he@debian.org>  Sat, 18 Dec 2004 13:13:11 +0100
+ -- Debian Lintian Maintainers <lintian-maint@debian.org>  Mon, 27 Dec 2004 05:40:13 +0100
 
 lintian (1.23.5) unstable; urgency=low
 

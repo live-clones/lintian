@@ -73,7 +73,7 @@ my $unpack_info;
 my $cwd;
 my $cleanup_filename;
 my $exit_code;
-my $lab_mode = 'static';
+my $LAB;
 
 my %collection_info;
 my %already_scheduled;
@@ -405,19 +405,11 @@ if ($LINTIAN_CFG) {
 }
 
 if ($LINTIAN_LAB) {
-    # LINTIAN_LAB defined => advanced mode (static lab)
-    $lab_mode = 'static';
+    $ENV{'LINTIAN_LAB'} = $LINTIAN_LAB;
 } else {
-    # LINTIAN_LAB not defined => basic mode (temporary lab)
-    $lab_mode = 'temporary';
-
-    if ($ENV{'TMPDIR'}) {
-	$LINTIAN_LAB = "$ENV{'TMPDIR'}/lintian-lab.$$";
-    } else {
-	$LINTIAN_LAB = "/tmp/lintian-lab.$$";
-    }
+    $ENV{'LINTIAN_LAB'} = "";
+    $LINTIAN_LAB = "";
 }
-$ENV{'LINTIAN_LAB'} = $LINTIAN_LAB;
 
 if ($LINTIAN_ARCHIVEDIR) {
     $ENV{'LINTIAN_ARCHIVEDIR'} = $LINTIAN_ARCHIVEDIR;
@@ -511,13 +503,7 @@ $SIG{'QUIT'} = \&interrupted;
 
 # {{{ Create/Maintain Lab and add any specified Debian Archives (*.debs)
 
-# sanity check:
-if (($action ne 'setup-lab') and ($lab_mode eq 'static')) {
-
-    # LINTIAN_LAB has to exist in this mode
-    fail("lintian lab has not been set up correctly (run lintian --setup-lab)")
-	unless Lab::is_lab($LINTIAN_LAB);
-}
+$LAB = new Lab( $LINTIAN_LAB, $LINTIAN_DIST );
 
 #######################################
 # Process -S option
@@ -526,15 +512,8 @@ if ($action eq 'setup-lab') {
 	print STDERR "warning: ignoring additional command line arguments\n";
     }
 
-    if ($lab_mode eq 'temporary') {
-	fail("no laboratory specified (need to define LINTIAN_LAB)");
-    }
-
-    Lab::setup($LINTIAN_LAB, $lab_mode);
-
-    # No idea what this is needed here, but it used to be in the code, so I'll
-    # leave it untouched for the moment
-    Lab::populate_with_dist($LINTIAN_LAB, $LINTIAN_DIST) if $LINTIAN_DIST;
+    $LAB->setup_static()
+	or fail("There was an error while setting up the static lab.");
 
     exit 0;
 
@@ -545,11 +524,8 @@ if ($action eq 'setup-lab') {
 	print STDERR "warning: ignoring additional command line arguments\n";
     }
 
-    if ($lab_mode eq 'temporary') {
-	fail("no laboratory specified (need to define LINTIAN_LAB)");
-    }
-
-    Lab::delete($LINTIAN_LAB, $lab_mode);
+    $LAB->delete_static()
+	or fail("There was an error while removing the static lab.");
 
     exit 0;
 
@@ -559,6 +535,13 @@ if ($action eq 'setup-lab') {
 	      or ($action eq 'remove'))) {
     fail("bad action $action specified");
 }
+
+# sanity check:
+fail("lintian lab has not been set up correctly (perhaps you forgot to run lintian --setup-lab?)")
+    unless $LAB->is_lab();
+
+#XXX: There has to be a cleaner way to do this
+$LINTIAN_LAB = $LAB->{dir};
 
 # }}} 
 
@@ -1005,16 +988,6 @@ for my $c (keys %unpack_infos) {
 	    $unpack_infos{$i} = 1;
 	}
     }
-}
-# }}}
-
-# {{{ Create temp lab if needed (Why here??)
-if ($lab_mode eq 'temporary') {
-    # TODO: register signal handler to remove lab when C-C is pressed
-
-    # create lab
-    Lab::setup($LINTIAN_LAB, $lab_mode);
-    Lab::populate_with_dist($LINTIAN_LAB, $LINTIAN_DIST) if $LINTIAN_DIST;
 }
 # }}}
 
@@ -1559,7 +1532,10 @@ sub END {
     # Prevent Lab::delete from affecting the exit code.
     local $?;
 
-    Lab::delete($LINTIAN_LAB, $lab_mode) if $lab_mode eq 'temporary';
+    $SIG{'INT'} = 'DEFAULT';
+    $SIG{'QUIT'} = 'DEFAULT';
+
+    $LAB->delete() if $LAB;
 }
 
 sub interrupted {

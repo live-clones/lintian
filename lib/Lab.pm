@@ -25,6 +25,8 @@ use strict;
 use Pipeline;
 use Util;
 
+use File::Temp;
+
 my $LINTIAN_ROOT = $::LINTIAN_ROOT;
 
 # Can also be more precise later on (only verbose with lab actions) but for
@@ -32,118 +34,190 @@ my $LINTIAN_ROOT = $::LINTIAN_ROOT;
 my $verbose = $::verbose;
 my $debug = $::debug;
 
-sub is_lab {
-	my $labdir = shift;
+sub new {
+    my ( $class, $dir, $dist ) = @_;
 
-	return -d "$labdir/binary"
-		&& -d "$labdir/udeb"
-		&& -d "$labdir/source"
-		&& -d "$labdir/info";
+    my $self = {};
+    bless $self, $class;
+
+    $self->setup( $dir, $dist );
+    return $self;
+}
+
+
+sub is_lab {
+    my ( $self ) = @_;
+
+    return unless $self->{dir};
+    return -d "$self->{dir}/binary"
+	&& -d "$self->{dir}/udeb"
+	&& -d "$self->{dir}/source"
+	&& -d "$self->{dir}/info";
 }
 
 sub setup {
-	my $LINTIAN_LAB = shift;
-	my $lab_mode = shift;
+    my ( $self, $dir, $dist ) = @_;
 
-    print "N: Setting up lab in $LINTIAN_LAB ...\n" if $verbose;
+    if ( $dir ) {
+	$self->{mode} = 'static';
+	$self->{dir} = $dir;
+	$self->{dist} = $dist;
+    } else {
+	$self->{mode} = 'temporary';
+
+	$dir = tmpnam();
+
+	$self->setup_force( $dir, $dist );
+    }
+
+    return 1;
+}
+
+sub setup_static {
+    my ( $self ) = @_;
+
+    unless ( $self->{mode} eq 'static' and $self->{dir} ) {
+	print STDERR "no laboratory specified (need to define LINTIAN_LAB)";
+	return 0;
+    }
+
+    return $self->setup_force( $self->{dir}, $self->{dist} );
+}
+
+
+sub setup_force {
+    my ( $self, $dir, $dist ) = @_;
+
+    return unless $dir;
+
+    print "N: Setting up lab in $dir ...\n" if $verbose;
 
     # create lab directory
-    if (not -d "$LINTIAN_LAB" or ($lab_mode eq 'temporary')) {
-		# (Note, that the mode 0777 is reduced by the current umask.)
-		mkdir($LINTIAN_LAB,0777) or fail("cannot create lab directory $LINTIAN_LAB");
-    }
+    # (Note, that the mode 0777 is reduced by the current umask.)
+    mkdir($dir,0777) or fail("cannot create lab directory $dir");
 
     # create base directories
-    if (not -d "$LINTIAN_LAB/binary") {
-		mkdir("$LINTIAN_LAB/binary",0777) or fail("cannot create lab directory $LINTIAN_LAB/binary");
+    for my $subdir (qw( binary source udeb info )) {
+	my $fulldir = "$dir/$subdir";
+	if (not -d $fulldir) {
+	    mkdir($fulldir, 0777)
+		or fail("cannot create lab directory $fulldir");
+	}
     }
-    if (not -d "$LINTIAN_LAB/source") {
-		mkdir("$LINTIAN_LAB/source",0777) or fail("cannot create lab directory $LINTIAN_LAB/source");
+
+    # just create empty files
+    for my $pkgtype (qw( binary source udeb )) {
+	_touch("$dir/info/$pkgtype-packages")
+	    or fail("cannot create $pkgtype package list");
     }
-    if (not -d "$LINTIAN_LAB/udeb") {
-		mkdir("$LINTIAN_LAB/udeb",0777) or fail("cannot create lab directory $LINTIAN_LAB/udeb");
-    }
-    if (not -d "$LINTIAN_LAB/info") {
-		mkdir("$LINTIAN_LAB/info",0777) or fail("cannot create lab directory $LINTIAN_LAB/info");
-    }
-	# just create empty files
-	_touch("$LINTIAN_LAB/info/binary-packages")
-		or fail("cannot create binary package list");
-	_touch("$LINTIAN_LAB/info/source-packages")
-		or fail("cannot create source package list");
-	_touch("$LINTIAN_LAB/info/udeb-packages")
-		or fail("cannot create udeb package list");
+
+    $self->{dir} = $dir;
+    $ENV{'LINTIAN_LAB'} = $dir;
+    $self->populate_with_dist( $dist );
+
+    return 1;
 }
 
 sub populate_with_dist {
-    my $LINTIAN_LAB = shift;
-    my $LINTIAN_DIST = shift;
+    my ( $self, $dist ) = @_;
 
-	print STDERR "spawning list-binpkg, list-udebpkg and list-srcpkg since LINTIAN_DIST=$LINTIAN_DIST\n" if ($debug >= 2);
+    return 0 unless $dist;
+    return 0 unless $self->{dir};
 
-	my $v = $verbose ? '-v' : '';
+    print STDERR "spawning list-binpkg, list-udebpkg and list-srcpkg since LINTIAN_DIST=$dist\n" if ($debug >= 2);
 
-	spawn("$LINTIAN_ROOT/unpack/list-binpkg",
-		  "$LINTIAN_LAB/info/binary-packages", $v) == 0
-		  or fail("cannot create binary package list");
-	spawn("$LINTIAN_ROOT/unpack/list-srcpkg",
-		  "$LINTIAN_LAB/info/source-packages", $v) == 0
-		  or fail("cannot create source package list");
-	spawn("$LINTIAN_ROOT/unpack/list-udebpkg",
-		  "$LINTIAN_LAB/info/udeb-packages", $v) == 0
-		  or fail("cannot create udeb package list");
+    my $v = $verbose ? '-v' : '';
+
+    spawn("$LINTIAN_ROOT/unpack/list-binpkg",
+	  "$self->{dir}/info/binary-packages", $v) == 0
+	      or fail("cannot create binary package list");
+    spawn("$LINTIAN_ROOT/unpack/list-srcpkg",
+	  "$self->{dir}/info/source-packages", $v) == 0
+	      or fail("cannot create source package list");
+    spawn("$LINTIAN_ROOT/unpack/list-udebpkg",
+	  "$self->{dir}/info/udeb-packages", $v) == 0
+	      or fail("cannot create udeb package list");
+
+    return 1;
+}
+
+sub delete_static {
+    my ( $self ) = @_;
+
+    unless ( $self->{mode} eq 'static' and $self->{dir} ) {
+	print STDERR "warning: no laboratory specified (need to define LINTIAN_LAB)";
+	return 0;
+    }
+
+    return $self->delete_force;
+}
+
+sub delete {
+    my ( $self ) = @_;
+
+    return 1 unless $self->{mode} eq 'temporary';
+
+    return $self->delete_force;
 }
 
 # Remove is apparantly some reserved name...
-sub delete {
-	my $LINTIAN_LAB = shift;
-	my $lab_mode = shift;
+sub delete_force {
+    my ( $self ) = @_;
 
-    $SIG{'INT'} = 'DEFAULT';
-    $SIG{'QUIT'} = 'DEFAULT';
+    return 0 unless $self->{dir};
 
-    print "N: Removing $LINTIAN_LAB ...\n" if $verbose;
+    print "N: Removing $self->{dir} ...\n" if $verbose;
+
+    # since we will chdir in a moment, make the path of the lab absolute
+    unless ( $self->{dir} =~ m,^/, ) {
+	require Cwd;
+	$self->{dir} = Cwd::getcwd() . "/$self->{dir}";
+    }
 
     # chdir to root (otherwise, the shell will complain if we happen
     # to sit in the directory we want to delete :)
     chdir('/');
 
     # does the lab exist?
-    unless (-d "$LINTIAN_LAB") {
+    unless (-d $self->{dir}) {
 		# no.
-		print STDERR "warning: cannot remove lab in directory $LINTIAN_LAB ! (directory does not exist)\n";
-		return;
+		print STDERR "warning: cannot remove lab in directory $self->{dir} ! (directory does not exist)\n";
+		return 0;
     }
 
-    # sanity check if $LINTIAN_LAB really points to a lab :)
-    unless (-d "$LINTIAN_LAB/binary") {
+    # sanity check if $self->{dir} really points to a lab :)
+    unless (-d "$self->{dir}/binary") {
 		# binary/ subdirectory does not exist--empty directory?
-		my @t = <$LINTIAN_LAB/*>;
+		my @t = glob("$self->{dir}/*");
 		if ($#t+1 <= 2) {
 			# yes, empty directory--skip it
-			return;
+			return 1;
 		} else {
 			# non-empty directory that does not look like a lintian lab!
-			print STDERR "warning: directory $LINTIAN_LAB does not look like a lab! (please remove it yourself)\n";
-			return;
+			print STDERR "warning: directory $self->{dir} does not look like a lab! (please remove it yourself)\n";
+			return 0;
 		}
     }
 
     # looks ok.
     if (spawn('rm', '-rf', '--',
-	      "$LINTIAN_LAB/binary",
-	      "$LINTIAN_LAB/source",
-	      "$LINTIAN_LAB/udeb",
-	      "$LINTIAN_LAB/info") != 0) {
-		print STDERR "warning: cannot remove lab directory $LINTIAN_LAB (please remove it yourself)\n";
+	      "$self->{dir}/binary",
+	      "$self->{dir}/source",
+	      "$self->{dir}/udeb",
+	      "$self->{dir}/info") != 0) {
+		print STDERR "warning: cannot remove lab directory $self->{dir} (please remove it yourself)\n";
     }
 
     # dynamic lab?
-    if ($lab_mode eq 'temporary') {
-		if (rmdir($LINTIAN_LAB) != 1) {
-			print STDERR "warning: cannot remove lab directory $LINTIAN_LAB (please remove it yourself)\n";
+    if ($self->{mode} eq 'temporary') {
+		if (rmdir($self->{dir}) != 1) {
+			print STDERR "warning: cannot remove lab directory $self->{dir} (please remove it yourself)\n";
 		}
     }
+
+    $self->{dir} = "";
+
+    return 1;
 }
 
 # create an empty file
