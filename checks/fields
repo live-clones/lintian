@@ -467,12 +467,10 @@ for my $field (glob("fields/*")) {
 	print "E: $pkg $type: obsolete-field $field\n"
 	    if $known_obsolete_fields{$field};
 
-# TODO: why N: here? --Jeroen
-	print "N: $pkg $type: unknown-field-in-dsc $field\n"
+	print "I: $pkg $type: unknown-field-in-dsc $field\n"
 	    if ($type eq "source" && ! $known_source_fields{$field} && ! $known_obsolete_fields{$field});
 
-# TODO: why N: here? --Jeroen
-	print "N: $pkg $type: unknown-field-in-changes $field\n"
+	print "I: $pkg $type: unknown-field-in-changes $field\n"
 	    if ($type eq "binary" && ! $known_binary_fields{$field} && ! $known_obsolete_fields{$field});
 }
 
