@@ -13,7 +13,7 @@ binary-indep:
 	install -d $(tmp)/usr/share/doc/$(package)/
 	install -d $(tmp)/DEBIAN
 
-	install -s -m 755 binary $(tmp)/usr/bin/$(package)
+	install -m 755 binary $(tmp)/usr/bin/$(package)
 	gzip -c9 ChangeLog > $(tmp)/usr/share/doc/$(package)/changelog.gz
 	gzip -c9 debian/changelog > $(tmp)/usr/share/doc/$(package)/changelog.Debian.gz
 
