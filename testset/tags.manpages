@@ -1,3 +1,4 @@
+W: manpages: manpage-section-mismatch usr/share/man/man1/test.1p.gz:2 1p != 1P
 E: manpages: bad-link-to-undocumented-manpage usr/share/man/man1/sbin-binary.1.gz
 E: manpages: empty-manual-page usr/X11R6/man/man1/rstartd.1x.gz
 E: manpages: empty-manual-page usr/X11R6/man/man6/X11R6-binary.man
@@ -27,6 +28,7 @@ W: manpages: manpage-has-bad-whatis-entry usr/share/man/man1/usr-bin-binary-alt.
 W: manpages: manpage-has-bad-whatis-entry usr/share/man/man1/usr-bin-binary.1
 W: manpages: manpage-has-bad-whatis-entry usr/share/man/man1/usr-sbin-binary.1.gz
 W: manpages: manpage-has-bad-whatis-entry usr/share/man/man6/usr-games-binary.6.gz
+W: manpages: manpage-section-mismatch usr/share/man/man1/test.1p.gz:2 1p != 1
 W: manpages: package-contains-hardlink usr/share/man/man1/usr-bin-binary-alt.1.gz
 W: manpages: packages-installs-file-to-usr-x11r6 usr/X11R6/
 W: manpages: packages-installs-file-to-usr-x11r6 usr/X11R6/bin/
