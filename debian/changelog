@@ -19,6 +19,9 @@ lintian (1.23.3) unstable; urgency=low
   * checks/po-debconf:
     + [JvW] Don't give missing-file-from-potfile-in on empty lines
       (Thanks Adam Conrad for noticing)
+  * checks/scripts:
+    + [JvW] The php commandline interpreter is now provided by php4-cli, and
+      not php4-cgi, update dependency check accordingly (Closes: #268077)
 
  -- Debian Lintian Maintainers <lintian-maint@debian.org>  Thu, 26 Aug 2004 02:19:20 +0200
 

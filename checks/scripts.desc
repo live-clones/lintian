@@ -275,10 +275,12 @@ Tag: wrong-path-for-php
 Type: error
 Info: PHP can be called as /usr/bin/php on Debian systems.
 
-Tag: php-script-but-no-php4-cgi-dep
+Tag: php-script-but-no-php4-cli-dep
 Type: error
 Info: Packages that use PHP scripts with /usr/bin/php as interpreter must
- depend on the php4-cgi package.
+ depend on the php4-cli package. Note that a dependency on php4-cgi is
+ needlessly strict, and forces the user to install a package that isn't
+ needed.
  .
  In some cases a weaker relationship, such as Suggests or Recommends, will
  be more appropriate.
@@ -287,9 +289,11 @@ Tag: wrong-path-for-php4
 Type: error
 Info: PHP4 is installed as /usr/bin/php4 on Debian systems.
 
-Tag: php4-script-but-no-php4-cgi-dep
+Tag: php4-script-but-no-php4-cli-dep
 Type: error
-Info: Packages that use PHP4 scripts must depend on the php4-cgi package.
+Info: Packages that use PHP4 scripts must depend on the php4-cli package. Note
+ that a dependency on php4-cgi is needlessly strict, and forces the user to
+ install a package that isn't needed.
  .
  In some cases a weaker relationship, such as Suggests or Recommends, will
  be more appropriate.
