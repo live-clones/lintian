@@ -210,15 +210,17 @@ sub file_is_encoded_in_non_utf8 {
 # ------------------------
 
 sub fail {
-    $! = 2; # set return code outside eval()
-    if ($_[0]) {
-	die "internal error: $_[0]\n";
+    my $str = "internal error";
+    if (@_) {
+	$str .= ": ".join( "\n", @_)."\n";
     } elsif ($!) {
-	die "internal error: $!\n";
+	$str .= ": $!\n";
     } else {
-	die "internal error.\n";
+	$str .= ".\n";
     }
-    die "$_[1]\n" if $_[1];
+    $! = 2; # set return code outside eval()
+    die $str;
+
 }
 
 1;
