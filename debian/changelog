@@ -34,6 +34,9 @@ lintian (1.23.0) UNRELEASED; urgency=low
     + [HE] Check for gzipped zero byte files. (Closes: #172052)
     + [FL] Don't complain about read-only *.ali files as requested by
        Ludovic Brenta. This makes #226879 wishlist again.
+    + [FL] Warn about ancient files with the value of
+      Dinstall::CutOffPastYear from dak CVS as limit.
+      (Closes: #204801, #218304)
   * checks/manpages:
     + [FL] Two new errors: 1) if section number of directory and file
       differ, 2) if section number of file differs from what is expected

@@ -52,6 +52,7 @@ N:
 W: filenames: file-in-unusual-dir files/ .tif
 W: filenames: file-in-unusual-dir files/".tif
 W: filenames: file-in-unusual-dir files/'\\ 
+W: filenames: file-in-unusual-dir files/Maelstrom Sound
 W: filenames: file-in-unusual-dir files/svn-commit.tmp
 W: filenames: svn-commit-file-in-package files/svn-commit.tmp
 N:
@@ -59,7 +60,6 @@ N:   Package contains a 'svn-commit(.NNN).tmp' file. This file is almost
 N:   certainly a left-over from a failed Subversion commit, and does not
 N:   belong in a Debian package.
 N:
-W: filenames: file-in-unusual-dir files/Maelstrom Sound
 E: filenames: package-installs-packlist usr/lib/perl5/foo/.packlist
 N:
 N:   Packages built using the perl MakeMaker package will have a file named
@@ -75,6 +75,13 @@ N:   -find debian/tmp/usr/lib/perl5 -type d -empty | xargs rmdir -p
 N:   
 N:   Or by telling MakeMaker to use vendor install dirs; consult a recent
 N:   version of perl policy. Perl 5.6.0-12 or higher supports this.
+N:
+E: filenames: package-contains-ancient-file usr/lib/perl5/foo/ancient.pm 1975-01-01
+N:
+N:   Your package contains a file that claims to been generated more than
+N:   20 years ago. This is most probably an error. Your package will be
+N:   rejected by the Debian archive scripts if it contains a file with such
+N:   a timestamp.
 N:
 W: filenames: package-contains-svn-control-dir usr/lib/perl5/.svn/
 N:
@@ -162,6 +169,7 @@ N:   Architecture-independent Perl code should be placed in
 N:   /usr/share/perl5, not /usr/lib/perl5 unless there is at least one
 N:   architecture-dependent file in the module.
 N:
+W: filenames: package-installs-nonbinary-perl-in-usr-lib-perl5 usr/lib/perl5/foo/ancient.pm
 E: filenames: bad-menu-file-name usr/lib/menu/menu
 N:
 N:   The package installs a file /usr/lib/menu/menu, which is already in
@@ -201,7 +209,7 @@ N:   The Section field can be included in a binary package by passing the
 N:   -is or -isp flags to dpkg-gencontrol when building the package. The
 N:   field is optional in binary packages.
 N:   
-N:   Refer to Policy Manual, section 5.6.4 for details.
+N:   Refer to Policy Manual, section 5.3 for details.
 N:
 W: filenames: no-priority-field
 N:
@@ -211,5 +219,5 @@ N:   The Priority field can be included in a binary package by passing the
 N:   -ip or -isp flags to dpkg-gencontrol when building the package. The
 N:   field is optional in binary packages.
 N:   
-N:   Refer to policy D.2.9 for details.
+N:   Refer to Policy Manual, section 5.3 for details.
 N:

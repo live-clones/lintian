@@ -9,10 +9,11 @@ W: filenames: cvsignore-file-in-package files/.cvsignore
 W: filenames: file-in-unusual-dir files/ .tif
 W: filenames: file-in-unusual-dir files/".tif
 W: filenames: file-in-unusual-dir files/'\\ 
+W: filenames: file-in-unusual-dir files/Maelstrom Sound
 W: filenames: file-in-unusual-dir files/svn-commit.tmp
 W: filenames: svn-commit-file-in-package files/svn-commit.tmp
-W: filenames: file-in-unusual-dir files/Maelstrom Sound
 E: filenames: package-installs-packlist usr/lib/perl5/foo/.packlist
+E: filenames: package-contains-ancient-file usr/lib/perl5/foo/ancient.pm 1975-01-01
 W: filenames: package-contains-svn-control-dir usr/lib/perl5/.svn/
 W: filenames: package-contains-CVS-dir usr/lib/perl5/CVS/
 W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/examples/very_interesting_example
@@ -34,6 +35,7 @@ W: filenames: symlink-is-self-recursive usr/lib/filenames/symlink10wrong ../../.
 E: filenames: symlink-should-be-absolute usr/lib/filenames/symlink10wrong ../../..
 E: filenames: lengthy-symlink usr/share/doc/filenames/version.txt.gz ../filenames/doc/version6.txt.gz
 W: filenames: package-installs-nonbinary-perl-in-usr-lib-perl5 usr/lib/perl5/foo/bar.pm
+W: filenames: package-installs-nonbinary-perl-in-usr-lib-perl5 usr/lib/perl5/foo/ancient.pm
 E: filenames: bad-menu-file-name usr/lib/menu/menu
 E: filenames: postinst-does-not-call-updatemenus usr/lib/menu/menu
 E: filenames: postrm-does-not-call-updatemenus usr/lib/menu/menu

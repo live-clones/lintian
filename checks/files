@@ -81,6 +81,11 @@ while (<IN>) {
 
     $operm = perm2oct($perm);
 
+    my ($year) = ($date =~ /^(\d{4})/);
+    if ( $year <= 1984 ) { # value from dak CVS: Dinstall::PastCutOffYear
+	print "E: $pkg $type: package-contains-ancient-file $file $date\n";
+    }
+
     # ---------------- /etc
     if ($file =~ m,^etc/,) {
 	if ($file =~ m,^etc/nntpserver, ) {

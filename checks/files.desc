@@ -8,6 +8,13 @@ Needs-Info: objdump-info
 Info: This script checks if a binary package conforms to policy
  WRT to files and directories.
 
+Tag: package-contains-ancient-file
+Type: error
+Info: Your package contains a file that claims to been generated more
+ than 20 years ago. This is most probably an error. Your package will
+ be rejected by the Debian archive scripts if it contains a file with
+ such a timestamp.
+
 Tag: old-app-defaults-directory
 Type: error
 Info: The app-defaults files have moved to /etc/X11/app-defaults/. Files in

@@ -1,3 +1,9 @@
+filenames (8) unstable; urgency=low
+
+  * Add a real ancient file
+
+ -- Frank Lichtenheld <djpig@debian.org>  Thu,  8 Apr 2004 22:22:40 +0200
+
 filenames (7) unstable; urgency=low
 
   * Add a dozen symlinks, some correct, some not
