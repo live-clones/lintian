@@ -34,6 +34,7 @@ goals not targetted
 - go through all checks and try to move common code to modules
 - go through the test suite and organise it more cleanly
 - update doc/CREDITS file
+- Fix experimental support back in
 
 old todo list
 =============

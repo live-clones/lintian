@@ -76,11 +76,9 @@ my $lab_mode = 'static';
 
 my %collection_info;
 my %already_scheduled;
-my %overridden;
 my %checks;
 my %check_abbrev;
 my %unpack_infos;
-our %experimental_tag;
 my %check_info;
 
 # reset configuration variables
@@ -860,6 +858,8 @@ for my $f (readdir COLLDIR) {
 
 closedir(COLLDIR);
 
+require Tags;
+import Tags;
 
 # load information about checker scripts
 opendir(CHECKDIR, "$LINTIAN_ROOT/checks")
@@ -876,60 +876,57 @@ for my $f (readdir CHECKDIR) {
 
     # ignore check `lintian' (this check is a special case and contains the
     # tag info for the lintian frontend--this script here)
-    next if $secs[0]->{'check-script'} eq 'lintian';
+    if ($secs[0]->{'check-script'} ne 'lintian') {
 
-    delete $secs[0]->{'check-script'};
-    $check_info{$script}->{'script'} = $script;
-    my $p = $check_info{$script};
+	delete $secs[0]->{'check-script'};
+	$check_info{$script}->{'script'} = $script;
+	my $p = $check_info{$script};
 
-    set_value($f,$p,'type',$secs[0],1);
-    # convert Type:
-    my ($b,$s,$u) = ( "", "", "" );
-    for (split(/\s*,\s*/o,$p->{'type'})) {
-	if ($_ eq 'binary') {
-	    $b = 'b';
-	} elsif ($_ eq 'source') {
-	    $s = 's';
-	} elsif ($_ eq 'udeb') {
-	    $u = 'u';
-	} else {
-	    fail("unknown type $_ specified in description file $f");
+	set_value($f,$p,'type',$secs[0],1);
+	# convert Type:
+	my ($b,$s,$u) = ( "", "", "" );
+	for (split(/\s*,\s*/o,$p->{'type'})) {
+	    if ($_ eq 'binary') {
+		$b = 'b';
+	    } elsif ($_ eq 'source') {
+		$s = 's';
+	    } elsif ($_ eq 'udeb') {
+		$u = 'u';
+	    } else {
+		fail("unknown type $_ specified in description file $f");
+	    }
 	}
-    }
-    $p->{'type'} = "$s$b$u";
+	$p->{'type'} = "$s$b$u";
 
-    set_value($f,$p,'unpack-level',$secs[0],1);
-    set_value($f,$p,'abbrev',$secs[0],1);
+	set_value($f,$p,'unpack-level',$secs[0],1);
+	set_value($f,$p,'abbrev',$secs[0],1);
 
-    if (exists $secs[0]->{'needs-info'} && defined $secs[0]->{'needs-info'}) {
-	for (split(/\s*,\s*/o,$secs[0]->{'needs-info'})) {
-	    $p->{$_} = 1;
+	if (exists $secs[0]->{'needs-info'} && defined $secs[0]->{'needs-info'}) {
+	    for (split(/\s*,\s*/o,$secs[0]->{'needs-info'})) {
+		$p->{$_} = 1;
+	    }
+	    delete $secs[0]->{'needs-info'};
 	}
-	delete $secs[0]->{'needs-info'};
-    }
 
-    # ignore Info: and other fields for now...
-    delete $secs[0]->{'info'};
-    delete $secs[0]->{'standards-version'};
-    delete $secs[0]->{'author'};
+	# ignore Info: and other fields for now...
+	delete $secs[0]->{'info'};
+	delete $secs[0]->{'standards-version'};
+	delete $secs[0]->{'author'};
 
-    for (keys %{$secs[0]}) {
-	print STDERR "warning: unused tag $_ in description file $f\n";
-    }
-
-    if ($debug >= 2) {
-	for (sort keys %$p) {
-	    print "N:  $_: $p->{$_}\n";
+	for (keys %{$secs[0]}) {
+	    print STDERR "warning: unused tag $_ in description file $f\n";
 	}
-    }
+
+	if ($debug >= 2) {
+	    for (sort keys %$p) {
+		print "N:  $_: $p->{$_}\n";
+	    }
+	}
+
+    } # end: if ne lintian
 
     shift(@secs);
-    for my $taginf (@secs) {
-	if (exists $taginf->{'experimental'} 
-	    and $taginf->{'experimental'} =~ m/yes/i) {
-	    $experimental_tag{$taginf->{'tag'}} = 1;
-	}
-    }
+    map Tags::add_tag($_), @secs;
 }
 
 closedir(CHECKDIR);
