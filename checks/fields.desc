@@ -169,9 +169,9 @@ Type: warning
 Info: The `Section:' field in this package's control file is not one of
  the sections in use on the ftp archive.  Valid sections are currently
  admin, base, comm, devel, doc, editors, electronics, embedded, games,
- gnome, graphics, hamradio, interpreters, libs, mail, math, misc, net,
- news, oldlibs, otherosfs, perl, python, science, shells, sound, tex,
- text, utils, web, and x11.
+ gnome, graphics, hamradio, interpreters, kde, libdevel, libs, mail, 
+ math, misc, net, news, oldlibs, otherosfs, perl, python, science, shells, 
+ sound, tex, text, utils, web, and x11.
  .
  The section name should be preceded by `non-free/' if the package
  is in the non-free distribution, and by `contrib/' if the package
