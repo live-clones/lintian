@@ -69,7 +69,7 @@ Info: The <tt>/etc/init.d</tt> script is registered in the
  <tt>postinst</tt> script, but is not included in the package.
 
 Tag: script-in-etc-init.d-not-registered-via-update-rc.d
-Type: warn
+Type: warning
 Info: The package installs an <tt>/etc/init.d</tt> script which is
  not registered in the <tt>postinst</tt> script. This is usually a bug,
  unless you omit the links intentionally for some reason or create the

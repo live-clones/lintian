@@ -77,7 +77,7 @@ Info: The binary or shared library defines the `RPATH'. Usually this
  Please contact &debdev; if you have questions about this.
 
 Tag: binary-has-unneeded-section
-Type: warn
+Type: warning
 Info: The binary or shared library is stripped, but still contains a
  section that is not useful.  The utilities (<tt>install -s</tt>
  and <tt>dh_strip</tt>) are patched to remove the <tt>.note</tt> and
