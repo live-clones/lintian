@@ -9,7 +9,7 @@ Info: This script checks debian/control files
 
 Tag: debian-control-file-uses-obsolete-national-encoding
 Type: error
-Info: The Debian changelog file should be valid UTF-8, an encoding of
+Info: The Debian control file should be valid UTF-8, an encoding of
  the Unicode character set.
  .
  There are many ways to convert a control from an obsoleted encoding
