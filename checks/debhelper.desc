@@ -5,7 +5,7 @@ Standards-Version: 3.2.0
 Type: source
 Unpack-Level: 2
 Info: This looks for common mistakes in debhelper source packages.
-Needs-Info: debfiles
+Needs-Info: debfiles, source-control-file
 
 Tag: maintainer-script-lacks-debhelper-token
 Type: warning

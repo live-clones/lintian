@@ -1,0 +1,52 @@
+#!/usr/bin/perl -w
+# source-control-file -- lintian collector script
+
+# Copyright (C) 2004 Frank Lichtenheld
+# 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+# MA 02111-1307, USA.
+
+use strict;
+use warnings;
+
+($#ARGV == 1) or fail("syntax: source-control-file <pkg> <type>");
+my $pkg = shift;
+my $type = shift;
+
+-f "debfiles/control" or fail("control invoked in wrong directory");
+
+use lib "$ENV{'LINTIAN_ROOT'}/lib";
+use Util;
+
+my @control_data = read_dpkg_control("debfiles/control");
+shift @control_data; # we don't need the source information
+
+mkdir "control", 0777  or fail( "can't create dir control: $!" );
+
+foreach (@control_data) {
+    my $pkg_name = $_->{'package'};
+    fail("no package line found in control file of $pkg $type")
+        if !$pkg_name;
+    mkdir "control/$pkg_name", 0777
+        or fail( "can't create dir control/$pkg_name: $!" );
+    for my $field (keys %$_) {
+        my $field_file = "control/$pkg_name/$field";
+        open F, ">", "$field_file"
+            or fail("cannot open file $field_file for writing: $!");
+        print F $_->{$field},"\n";
+        close F;
+    }
+}

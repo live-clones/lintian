@@ -135,6 +135,10 @@ lintian (1.23.0~beta1-fixing1) unstable; urgency=low
   * collection/override-file:
     + [FL] add support for source overrides (Closes: #129510)
       See the User Manual for more information.
+  * collection/source-control-file:
+    + [FL] New collection script to extract field information
+      from debian/control in source packages. Currently used
+      in checks/debhelper to guess udeb packages.
 
   * debian/control,debian/copyright:
     + [FL] Add Marc 'HE' Brockschmidt to Uploaders and
