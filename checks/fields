@@ -66,10 +66,15 @@ if (not open (FH, "fields/version")) {
 
 	if (my ($epoch, $upstream, $debian) = _valid_version($version)) {
 		if ($upstream !~ /^\d/i) {
-			print "W: $pkg $type: upstream-version-not-numeric\n";
+			print "W: $pkg $type: upstream-version-not-numeric $version\n";
+		}
+		$debian =~ /^-([^.]+)?(?:\.[^.]+)?(?:\.[^.]+)?(\..*)?$/;
+		if (not defined $1 or defined $2) {
+			print "W: $pkg $type: debian-revision-not-welformed $version\n";
+			return;
 		}
 	} else {
-		print "E: $pkg $type: bad-version-number\n";
+		print "E: $pkg $type: bad-version-number $version\n";
 	}
 }
 
@@ -453,9 +458,11 @@ for my $field (glob("fields/*")) {
 	print "E: $pkg $type: obsolete-field $field\n"
 	    if $known_obsolete_fields{$field};
 
+# TODO: why N: here? --Jeroen
 	print "N: $pkg $type: unknown-field-in-dsc $field\n"
 	    if ($type eq "source" && ! $known_source_fields{$field} && ! $known_obsolete_fields{$field});
 
+# TODO: why N: here? --Jeroen
 	print "N: $pkg $type: unknown-field-in-changes $field\n"
 	    if ($type eq "binary" && ! $known_binary_fields{$field} && ! $known_obsolete_fields{$field});
 }

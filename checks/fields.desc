@@ -40,6 +40,12 @@ Type: error
 Info: The upstream version number should start with a digit. 
 Ref: policy 5.6.11
 
+Tag: debian-revision-not-welformed
+Type: warning
+Info: The debian version part (the part after the -) should consist of one to
+ three dot-seperated parts: one for maintainer release, two for source-NMU,
+ three for binary NMU.
+
 Tag: no-architecture-field
 Type: error
 Info: The package does not have an `Architecture:' field in its control file.

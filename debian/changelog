@@ -74,8 +74,6 @@ lintian (1.23.0) UNRELEASED; urgency=low
       support for configurable compression algorithms (bzip2, for example),
       but this shouldn't be allowed before dpkg 1.11 hits stable. 
       (Closes: #159874)
-  * checks/fields.desc:
-    + [FL] Fix some wrong policy references
   * checks/fields:
     + [HE, FL] Nearly complete rewrite for clean up:
       - bad-relation seems to work better now (Closes: #171763)
@@ -84,7 +82,11 @@ lintian (1.23.0) UNRELEASED; urgency=low
     + [HE] Add check for an Origin field with "Debian" as value. 
       (Closes: #119618)
     + [HE] Reintroduce build-depends-without-arch-dep check with the patch
-      i proposed in #214231. (Closes: #242484)
+      I proposed in #214231. (Closes: #242484)
+    + [JvW] Check for welformed Debian-revision
+    + [JvW] Check for correct realname when QA mailadress used
+  * checks/fields.desc:
+    + [FL] Fix some wrong policy references
   * checks/files:
     + [HE] New check for compiled python files (*.pyc). Patch by David
       Kimdon <david@kimdon.org>, thanks. (Closes: #236606)
