@@ -447,7 +447,7 @@ not used in current Lintian versions.
 <p>
 
 The format of the overrides file is simple, it consists of one override per
-line (and may contain empty lines and comments, staring with a #, on others):
+line (and may contain empty lines and comments, starting with a #, on others):
 <tt>[&lt;package&gt;[ &lt;type&gt;]: ]&lt;lintian-tag&gt;[
 &lt;lintian-info&gt;]</tt>.  <tt>&lt;package&gt;</tt> is the package name;
 <tt>&lt;type&gt;</tt> is one of <tt>binary</tt>, <tt>udeb</tt> and
