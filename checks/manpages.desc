@@ -45,6 +45,7 @@ Info: Each binary in <tt>/usr/bin</tt>, <tt>/usr/sbin</tt>, <tt>/bin</tt>,
 Ref: policy 12.1
 
 Tag: manpage-in-wrong-directory
+Type: error
 Info: The manual page should be installed in the correct directory below
  <tt>/usr/share/man/</tt> or <tt>/usr/share/man/<i>locale</i></tt>.
  Only sections 1 through 9 should be used.
@@ -69,11 +70,7 @@ Type: error
 Info: Since X11 games should be installed in <tt>/usr/games</tt> (and
  not in <tt>/usr/X11R6/bin</tt>) and the game's manual pages should be
  installed in <tt>/usr/share/man/man6</tt>, the directory
- <tt>/usr/X11R6/man/man6</tt> should be (nearly) empty.
- .
- There are a few exceptions though, as utilities like `xeyes'. If this is
- one of these exceptions, please contact &maint; about this so that
- this exception would be recognized in future versions of Lintian.
+ <tt>/usr/X11R6/man/man6</tt> should be empty.
 Ref: policy 11.11
 
 Tag: manpage-not-compressed-with-gzip
@@ -87,15 +84,16 @@ Info: Manual pages should be compressed with <tt>gzip -9</tt>.
 Ref: policy 12.1
 
 Tag: manpage-has-bad-whatis-entry
-Type: error
+Type: warning
 Info: Each manual page should start with a `NAME' section, which lists the
- name and a brief description of the page. These sections are parsed by
- `mandb' and stored in a database for the use of `apropos' and `whatis', so
- they must be in a certain format. This manual page apparently uses the
- wrong format and cannot be parsed by `mandb'.
+ name and a brief description of the page seperated by '\-'. These sections
+ are parsed by `mandb' and stored in a database for the use of `apropos' and
+ `whatis', so they must be in a certain format. This manual page apparently
+ uses the wrong format and cannot be parsed by `mandb'.
  .
- For information on how `NAME' sections should be written and a list of some
- common mistakes, please see the lexgrog(8) manual page.
+ For information on how `NAME' sections should be written see lexgrog(1).
+ See also groff_man(7) and groff_mdoc(7) for general information on writing
+ manual pages.
 
 Tag: manpage-for-x11-binary-in-wrong-directory
 Type: error
@@ -136,21 +134,30 @@ Tag: empty-manual-page
 Type: error
 Info: The referenced manual page is empty.
 
-Tag: manpage-section-missmatch
-Type: error
-Info: Most man pages contain a header line (marked .TH) in which
- among other thing their section number is specified. For this
- particular man page the section number in the header line isn't
- equal with the section number specified by the filename. This
- is most probably an error (In most cases caused by someone
- renaming the file but not adjusting the content).
+Tag: manpage-section-mismatch
+Type: warning
+Info: A man page usually should contain a <tt>.TH</tt> header, specifying the
+ section.  The section in this manpage doesn't match with the section in the
+ filename.  Please consult groff_man(7) for more information about
+ <tt>.TH</tt> syntax (amongst others).
 
 Tag: hyphen-used-as-minus-sign
-Type: warning
+Type: info
 Info: Manual page seems to contain a hyphen where a minus sign was intended.
- '-' chars are interpreted as hyphens by groff, not as minus signs (which
- you want for options for example). '-' must be escaped ('\-') to be
- interpreted as minus. See groff(7) for details.
+ '-' chars are interpreted as hyphens (U+2010) by groff, not as minus signs
+ (U+002D). Since options to programs use minus signs (U+002D), this means for
+ example in UTF-8 locales that you cannot cut&amp;paste options, nor search for
+ them easily.
+ .
+ '-' must be escaped ('\-') to be interpreted as minus. If you really intend a
+ hyphen, write it as '\(hy' to emphasise that fact. See groff(7) and
+ especially groff_char(7) for details, and also the thread starting with
+ http://lists.debian.org/debian-devel/2003/debian-devel-200303/msg01481.html
+ .
+ If you use some tool that converts your documentation to groff format, it
+ might be possible that this tool converts dashes of any kind to groff
+ hyphens, while the safe way of converting dashes is usually to convert them
+ to '\-'.
  .
  Because this error can occur <em>very</em> often we show only the
  first 10 occurences for each man page and give the number of

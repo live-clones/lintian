@@ -147,7 +147,7 @@ while (<IN>) {
 	# ---------------- /usr/share/doc
 	if ($file =~ m,^usr/share/doc/\S,) {
 	    if ($type eq 'udeb') {
-		print "E: $pkg $type: documentation-file $file\n";
+		print "E: $pkg $type: udeb-contains-documentation-file $file\n";
 	    } else {
 		# file not owned by root?
 		if ($owner ne 'root/root') {

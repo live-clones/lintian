@@ -1,0 +1,8 @@
+Collector-Script: source-control-file
+Author: Frank Lichtenheld <djpig@debian.org>
+Info: Collects information about binary packages from debian/control in source packages
+Type: source
+Unpack-Level: 1
+Output: control
+Order: 2
+Needs-Info: debfiles

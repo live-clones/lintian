@@ -1,20 +1,19 @@
-W: maintainer-scripts source: ancient-standards-version 3.1.1
 E: maintainer-scripts source: orphaned-package-should-not-have-uploaders
-W: maintainer-scripts source: qa-upload-has-incorrect-version-number 7-0.1
-W: maintainer-scripts source: changelog-should-mention-qa
 E: maintainer-scripts source: wrong-debian-qa-group-name QA group <packages@qa.debian.org>
-W: maintainer-scripts: postinst-should-not-set-usr-doc-link
-W: maintainer-scripts: update-alternatives-remove-called-in-postrm
 E: maintainer-scripts: maintainer-shell-script-fails-syntax-check prerm
-W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:19 '[ "$2" == '
-W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:23 'function foo( )'
-W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:27 'source $FOO'
+E: maintainer-scripts: no-copyright-file
+E: maintainer-scripts: wrong-debian-qa-group-name QA group <packages@qa.debian.org>
+W: maintainer-scripts source: ancient-standards-version 3.1.1
+W: maintainer-scripts source: changelog-should-mention-qa
+W: maintainer-scripts source: qa-upload-has-incorrect-version-number 7-0.1
 W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:12 '. /usr/share/lintian/shell foo'
 W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:15 'read'
 W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:17 'H[0]='
 W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:18 '${H[0]}'
 W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:20 '${H[@]}'
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:19 '[ "$2" == '
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:23 'function foo( )'
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:27 'source $FOO'
+W: maintainer-scripts: postinst-should-not-set-usr-doc-link
 W: maintainer-scripts: postrm-has-useless-call-to-ldconfig
-E: maintainer-scripts: no-copyright-file
-E: maintainer-scripts: wrong-debian-qa-group-name QA group <packages@qa.debian.org>
-E: maintainer-scripts: debian-changelog-file-missing <<<< Is false positive, this is version -0.1
+W: maintainer-scripts: update-alternatives-remove-called-in-postrm

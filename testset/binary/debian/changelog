@@ -1,7 +1,7 @@
 binary (4-1.1) unstable; urgency=low
 
-  * I'm doing an comaintainer-upload, but with a version number which suggests
-    I'm doing a NMU.
+  * I'm doing an comaintainer-upload, acknowledging a NMU, but with a version
+    number which suggests I'm doing a NMU myself.
 
     Lintian-maintainers: Please don't update this changelog, otherwise you'll
     probably break the checks/nmu checks.

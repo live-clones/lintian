@@ -235,7 +235,7 @@ Info: Symbolic links between different top-level directories should be
  absolute.
 Ref: policy 10.5
 
-Tag: documentation-file
+Tag: udeb-contains-documentation-file
 Type: error
 Info: udeb packages should not contain any documentation.
  .
@@ -446,12 +446,12 @@ Type: warning
 Info: Hardlinks are bad mkay, don't use hardlinks.
 
 Tag: package-contains-CVS-dir
-Type: error
+Type: warning
 Info: Package contains a CVS directory. It was most likely installed by
  accident, since transient CVS data usually doesn't belong in packages.
 
 Tag: package-contains-svn-control-dir
-Type: error
+Type: warning
 Info: Package contains a .svn directory. It was most likely installed by
  accident, since Subversion version control directories usually don't belong
  in packages.

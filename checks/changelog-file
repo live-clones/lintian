@@ -27,6 +27,7 @@ my $type = shift;
 my $found_html=0;
 my $found_text=0;
 my $native_pkg;
+my $foreign_pkg;
 my $ppkg = quotemeta($pkg);
 
 my @doc_files;
@@ -77,6 +78,9 @@ for my $file (keys %file_info) {
 	}
     }
 }
+
+# TODO: better check for incorrect case, /../i and /../ without i is used
+# together at random it seems here
 
 # Read package contents...
 open(IN,"index") or fail("cannot open index file index: $!");
@@ -142,9 +146,11 @@ if ( $found_html && !$found_text ) {
 open(IN,"fields/version") or fail("cannot open fields/version file for reading: $!");
 chop(my $version = <IN>);
 close(IN);
-# FIXME: should do real native-checking, and then if version number is okay.
-# version number of -0.x for example can be either native or non-native...
-$native_pkg = ($version !~ m/-/);
+
+$native_pkg  = ($version !~ m/-/);
+$foreign_pkg = (!$native_pkg and $version !~ m/-0\./);
+# A version of 1.2.3-0.1 could be either, so in that
+# case, both vars are false
 
 if ($native_pkg) {
     my @foo;
@@ -186,7 +192,13 @@ if ($native_pkg) {
     } elsif (my @foo = grep m/^changelog\.debian(\.gz)?$/i,@doc_files) {
 	print "W: $pkg $type: wrong-name-for-debian-changelog-file usr/share/doc/$pkg/$foo[0]\n";
     } else {
-	print "E: $pkg $type: debian-changelog-file-missing\n";
+	print "E: $pkg $type: debian-changelog-file-missing\n"
+	    if $foreign_pkg;
+	# TODO: if uncertain whether foreign or native, either changelog.gz or
+	# changelog.debian.gz should exists though... but no tests catches
+	# this (extremely rare) border case... Keep in mind this is only
+	# happening if we have a -0.x version number... So not my priority to
+	# fix --Jeroen
     }
 }
 
@@ -240,3 +252,5 @@ sub fail {
     }
     exit 1;
 }
+
+# vim: ts=8 sw=4

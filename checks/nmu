@@ -33,7 +33,8 @@ open CHANGELOG, "debfiles/changelog" or fail("Failed opening changelog");
 my $firstline = 1;
 while (<CHANGELOG>) {
 	if ($firstline) {
-		$changelog_mentions_nmu = 1 if /nmu/i or /non-maintainer upload/i;
+		$changelog_mentions_nmu = 1
+			if (/nmu/i or /non-maintainer upload/i) and not /(ackno|confir)/i;
 		$changelog_mentions_qa = 1 if /orphan/i or /qa (?:group )?upload/i;
 		$firstline = 0 if /^\s+\S/ 
 	}
@@ -69,7 +70,7 @@ if ($maintainer =~ /packages\@qa.debian.org/) {
 		if !$changelog_mentions_qa;
 } else {
 	print "W: $pkg $type: changelog-should-mention-nmu\n"
-		if !$changelog_mentions_nmu && ($upload_is_nmu || $version_nmuness);
+		if !$changelog_mentions_nmu && $upload_is_nmu;
 	print "W: $pkg $type: source-nmu-has-incorrect-version-number $version\n"
 		if $upload_is_nmu && $version_nmuness != 1;
 	print "W: $pkg $type: maintainer-upload-has-incorrect-version-number $version\n"

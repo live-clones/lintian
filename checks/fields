@@ -64,7 +64,8 @@ if (not open (FH, "fields/version")) {
 
 	unfold("version", \$version);
 
-	if (my ($epoch, $upstream, $debian) = _valid_version($version)) {
+	if (@_ = _valid_version($version)) {
+		my ($epoch, $upstream, $debian) = @_;
 		if ($upstream !~ /^\d/i) {
 			print "W: $pkg $type: upstream-version-not-numeric $version\n";
 		}
@@ -73,8 +74,7 @@ if (not open (FH, "fields/version")) {
 				if $debian eq '0';
 			$debian =~ /^-([^.]+)?(?:\.[^.]+)?(?:\.[^.]+)?(\..*)?$/;
 			if (not defined $1 or defined $2) {
-				print "W: $pkg $type: debian-revision-not-welformed $version\n";
-				return;
+				print "W: $pkg $type: debian-revision-not-well-formed $version\n";
 			}
 		}
 	} else {
@@ -190,18 +190,25 @@ if (not open (FH, "fields/section")) {
 
 	unfold("section", \$section);
 
-	my @parts = split /\//, $section, 2;
+	if ($type eq 'udeb') {
+	    unless ($section eq 'debian-installer') {
+		print "W: $pkg $type: wrong-section-for-udeb $section\n";
+	    }
+	} else {
 
-	if ($parts[0] =~ /non-US/i) {
+	    my @parts = split /\//, $section, 2;
+	    
+	    if ($parts[0] =~ /non-US/i) {
 		print "I: $pkg $type: non-us-spelling\n" if ($parts[0] ne "non-US");
 		if ($parts[1] and not $known_non_us_parts{$parts[1]}) {
-			print "W: $pkg $type: unknown-section $section\n";
+		    print "W: $pkg $type: unknown-section $section\n";
 		}
-	} elsif (scalar @parts > 1) {
+	    } elsif (scalar @parts > 1) {
 		print "W: $pkg $type: unknown-section $section\n" unless $known_archive_parts{$parts[0]};
 		print "W: $pkg $type: unknown-section $section\n" unless $known_sections{$parts[1]};
-	} else {
+	    } else {
 		print "W: $pkg $type: unknown-section $section\n" unless $known_sections{$parts[0]};
+	    }
 	}
 }
 
@@ -462,13 +469,14 @@ for my $field (glob("fields/*")) {
 	print "E: $pkg $type: obsolete-field $field\n"
 	    if $known_obsolete_fields{$field};
 
-# TODO: why N: here? --Jeroen
-	print "N: $pkg $type: unknown-field-in-dsc $field\n"
+	print "I: $pkg $type: unknown-field-in-dsc $field\n"
 	    if ($type eq "source" && ! $known_source_fields{$field} && ! $known_obsolete_fields{$field});
 
-# TODO: why N: here? --Jeroen
-	print "N: $pkg $type: unknown-field-in-changes $field\n"
+	print "I: $pkg $type: unknown-field-in-control $field\n"
 	    if ($type eq "binary" && ! $known_binary_fields{$field} && ! $known_obsolete_fields{$field});
+
+	print "I: $pkg $type: unknown-field-in-control $field\n"
+	    if ($type eq "udeb" && ! $known_udeb_fields{$field} && ! $known_obsolete_fields{$field});
 }
 
 exit 0;
@@ -514,10 +522,12 @@ sub _split_dep {
 sub _valid_version {
 	my $ver = shift;
 
+	# epoch check means nothing here... This check is only useful to detect
+	# weird characters in version (and to get the debian revision)
 	if ($ver =~ m/^(\d+:)?([-\.+:A-Z0-9]+?)(-[\.+A-Z0-9]+)?$/i) {
 		return ($1, $2, $3);
 	} else {
-		return undef;
+		return ();
 	}
 }
 

@@ -5,7 +5,7 @@ Standards-Version: 3.2.0
 Type: source
 Unpack-Level: 2
 Info: This looks for common mistakes in debhelper source packages.
-Needs-Info: debfiles
+Needs-Info: debfiles, source-control-file
 
 Tag: maintainer-script-lacks-debhelper-token
 Type: warning
@@ -57,6 +57,13 @@ Info: suidregister is obsoleted by dpkg-statoverride, so registration of
  files in with dh_suidregister is unnecessary, and even harmful.
  .
  Please refer to the dh_suidregister(1) manual page for more information.
+
+Tag: debhelper-compat-file-is-empty
+Type: error
+Info: The source package has an empty debian/compat file. This is an error,
+ the compat level of debhelper should be in there.
+ .
+ Please refer to the debhelper(7) manual page for more information.
 
 Tag: declares-possibly-conflicting-debhelper-compat-versions
 Type: error

@@ -28,10 +28,10 @@ my $type = shift;
 open (VERSION, "fields/version") or fail("cannot open fields/version: $!");
 chomp(my $version = <VERSION>);
 close VERSION;
-$version =~ s/^\d://; #Remove epoch
+$version =~ s/^\d+://; #Remove epoch
 
 if ((not -f "${pkg}_${version}.diff.gz") and
-    ($version =~ /-/) and ($version !~ /-0\.\d+(?:\.\d+)?$/) ) {
+    ($version =~ /-/) and ($version !~ /-0\.[^-]+$/) ) {
     tag_warn("native-package-with-dash-version");
 }
 
@@ -49,6 +49,17 @@ while (<STAT>) {
 	if ($file =~ m/\.(orig|rej)$/);
 }
 close(STAT) or fail("error reading diffstat file: $!");
+
+# Check whether a tar.gz file is accidentally POSIX tar, which woody's tar
+# can't cope with...
+for my $tar (<*.tar.gz>) {
+    open HEAD, '-|', 'zcat '.quotemeta($tar) or fail("Couldn't open ${tar}: $!");
+	my $head = "";
+    sysread HEAD, $head, 13 or fail("Couldn't read first part of $tar: $!");
+    print "E: $pkg $type: source-tar-is-posix-tar $tar\n"
+    	if $head eq './PaxHeaders.';
+    close HEAD;
+}
 
 exit 0;
 

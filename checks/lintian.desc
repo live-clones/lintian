@@ -3,6 +3,7 @@ Info: this description file is a special case: it contains the tag info
  for the tags produced by the lintian frontend itself
 
 Tag: bad-distribution-in-changes-file
+Type: error
 Info: You've specified an unknown `target distribution' for your upload in
  the <tt>debian/changelog</tt> file.
  .
@@ -12,18 +13,22 @@ Info: You've specified an unknown `target distribution' for your upload in
  `<tt>Section: contrib/xxx</tt>' instead.
 
 Tag: file-size-mismatch-in-changes-file
+Type: error
 Info: The actual file size does not match what's listed in the
  <tt>.changes</tt> file.
 
 Tag: md5sum-mismatch-in-changes-file
+Type: error
 Info: The actual md5sum checksum does not match what's listed in the
  <tt>.changes</tt> file.
 
 Tag: bad-section-in-changes-file
+Type: error
 Info: The sections <tt>non-free</tt> and <tt>contrib</tt> are no longer
  valid. Please use section <tt>non-free/xxx</tt> or
  <tt>contrib/xxx</tt> instead.
 
 Tag: unused-override
+Type: info
 Info: Lintian discovered an unused override entry in its database.
  Please remove it from the overrides file if it is not needed anymore.

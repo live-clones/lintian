@@ -146,7 +146,7 @@ while (<IN>) {
     
     # special check for manual pages for X11 games
     if ($path =~ m,^usr/X11R6/man/man6/,o) {
-	print "W: $pkg $type: x11-games-should-be-in-usr-games $file\n";
+	print "E: $pkg $type: x11-games-should-be-in-usr-games $file\n";
     }
 
     #  reformatted to here
@@ -226,7 +226,7 @@ while (<IN>) {
 	# removed.
 	if ($path =~ m,/man/man\d/,) {
 	    if (system("lexgrog unpacked/\Q$file\E >/dev/null 2>&1")) {
-	        print "E: $pkg $type: manpage-has-bad-whatis-entry $file\n";
+	        print "W: $pkg $type: manpage-has-bad-whatis-entry $file\n";
 	    }
 	}
 	# Now we search through the whole man page for some common errors
@@ -241,22 +241,22 @@ while (<IN>) {
 		my ($th_command, $th_title, $th_section, $th_date ) = 
 		    Text::ParseWords::parse_line( '\s+', 0, $line);
 		if ($th_section && ($fn_section ne $th_section)) {
-		    print "E: $pkg $type: manpage-section-mismatch $file:$lc $fn_section != $th_section\n";
+		    print "W: $pkg $type: manpage-section-mismatch $file:$lc $fn_section != $th_section\n";
 		}
 	    }
 	    if ($line =~ /^[^\.].*[^\w\\]--?\w+/o) {
 		# hyphen at the begin of a word, probably not!
 		$hc++;
-		print "W: $pkg $type: hyphen-used-as-minus-sign $file:$lc\n" if $hc <= 10 or $ENV{'LINTIAN_DEBUG'};
+		print "I: $pkg $type: hyphen-used-as-minus-sign $file:$lc\n" if $hc <= 10 or $ENV{'LINTIAN_DEBUG'};
 	    }
 	    if (($line =~ m,(/usr/(dict|doc|etc|info|man|adm|preserve)/),o)
 		|| ($line =~ m,(/var/(adm|catman|named|nis|preserve)/),o)) {
 		# FSSTND dirs in man pages
 		# regexes taken from checks/files
-		print "I: $pkg $type: FSSTND-dir-in-manual-page $file:$lc $1";
+		print "I: $pkg $type: FSSTND-dir-in-manual-page $file:$lc $1\n";
 	    }
 	}
-	print "W: $pkg $type: hyphen-used-as-minus-sign $file ".($hc-10)." more occurences not shown\n" if $hc > 10 and ! $ENV{'LINTIAN_DEBUG'};
+	print "I: $pkg $type: hyphen-used-as-minus-sign $file ".($hc-10)." more occurences not shown\n" if $hc > 10 and ! $ENV{'LINTIAN_DEBUG'};
     }
 }
 close(IN);

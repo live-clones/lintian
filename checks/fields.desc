@@ -40,7 +40,7 @@ Type: error
 Info: The upstream version number should start with a digit. 
 Ref: policy 5.6.11
 
-Tag: debian-revision-not-welformed
+Tag: debian-revision-not-well-formed
 Type: warning
 Info: The debian version part (the part after the -) should consist of one to
  three dot-separated parts: one for maintainer release, two for source-NMU,
@@ -213,7 +213,7 @@ Info: The only valid values for the Essential field are yes and no.
 Ref: policy 5.6.8
 
 Tag: no-section-field
-Type: warn
+Type: warning
 Info: The package does not have a `Section:' field in its control file.
  .
  The Section field can be included in a binary package by passing
@@ -235,8 +235,12 @@ Info: The `Section:' field in this package's control file is not one of
  is in the contrib distribution.
 Ref: policy 2.4
 
+Tag: wrong-section-for-udeb
+Type: warning
+Info: udeb packages should have `Section: debian-installer'.
+
 Tag: no-priority-field
-Type: warn
+Type: warning
 Info: The package does not have a `Priority:' field in its control file.
  .
  The Priority field can be included in a binary package by passing
@@ -252,7 +256,8 @@ Ref: policy 2.5
 
 Tag: obsolete-field
 Type: error
-Info: This is one of the fields listed in Policy Manual as obsolete.
+Info: This field is listed in the Policy Manual as obsolete and
+ not-to-be-present in any package.
 Ref: policy D.2.6
 
 Tag: unknown-field-in-dsc
@@ -265,6 +270,10 @@ Tag: unknown-field-in-control
 Type: info
 Info: See the Policy Manual for a list of the possible fields in
  a binary package control file.
+ .
+ In udeb packages the fields pre-depends, conflicts, essential and
+ suggests are disallowed, but they can contain the new fields
+ subarchitecture and installer-menu-item.
 Ref: policy 5.3 
 
 Tag: multiline-field
@@ -293,7 +302,7 @@ Info: The forms `&lt;' and `&gt;' mean `&lt;=' and `&gt;=', not `&lt;&lt;'
 
 Tag: bad-version-in-relation
 Ref: policy 5.6.11
-Type: warning
+Type: error
 Info: The version number used in this relationship does not match the
  defined format of a version number.
 

@@ -1,8 +1,8 @@
+E: libbaz1-dev: usr-doc-symlink-without-dependency libbaz1
+E: libbaz1: file-directly-in-usr-share-doc usr/share/doc/README.Debian
+E: libbaz1: maintainer-shell-script-fails-syntax-check postinst
 W: libbaz source: ancient-standards-version 3.2.1
 W: libbaz source: changelog-should-mention-nmu
 W: libbaz source: source-nmu-has-incorrect-version-number 1
-E: libbaz1-dev: usr-doc-symlink-without-dependency libbaz1
-E: libbaz1: file-directly-in-usr-share-doc usr/share/doc/README.Debian
-W: libbaz1: zero-byte-file-in-doc-directory usr/share/doc/README.Debian
 W: libbaz1: postinst-should-not-set-usr-doc-link
-E: libbaz1: maintainer-shell-script-fails-syntax-check postinst
+W: libbaz1: zero-byte-file-in-doc-directory usr/share/doc/README.Debian

@@ -81,7 +81,7 @@ while (<RULES>) {
 	}
 	$seencommand = 1;
 	$needbuilddepends = 1;
-    } elsif (/^\s*export\s+DH_COMPAT=(\d+)/) {
+    } elsif (/^\s*export\s+DH_COMPAT\s*=\s*(\d+)/) {
 	$needversiondepends = $1;
     }
 }
@@ -89,13 +89,29 @@ close RULES;
 
 exit unless $seencommand;
 
+# We may need to make a difference between deb and udeb packages
+# so try to find out
+my %pkgs;
+opendir(BINPKGS, 'control')
+    or fail("Can't open control directory.");
+while(my $binpkg = readdir(BINPKGS)) {
+    if (-d "control/$binpkg") {
+        if (open TYPE, "<", "control/$binpkg/xc-package-type") {
+            $pkgs{$binpkg} = <TYPE> || 'deb';
+        } else {
+            $pkgs{$binpkg} = 'deb';
+        }
+    }
+}
+
 # If we got this far, they need to have #DEBHELPER# in their scripts.
 # search for scripts that look like maintainer scripts.
 opendir(DEBIAN, 'debfiles')
     or fail("Can't open debfiles directory.");
 while (defined(my $file=readdir(DEBIAN))) {
-    if ($file =~ m/^(?:.*\.)?(?:post|pre)(?:inst|rm)$/) {
+    if ($file =~ m/^(?:(.*)\.)?(?:post|pre)(?:inst|rm)$/) {
 	
+        my $binpkg = $1 || '';
 	open(IN,"debfiles/$file")
 	    or fail("Can't open debfiles/$file: $!");
 	my $seentag = '';
@@ -108,19 +124,22 @@ while (defined(my $file=readdir(DEBIAN))) {
 	close IN;
 	
 	if ((! $seentag) and $needtomodifyscripts) {
-	    print "W: $pkg $type: maintainer-script-lacks-debhelper-token debian/$file\n";
+	    print "W: $pkg $type: maintainer-script-lacks-debhelper-token debian/$file\n" unless $binpkg && ($pkgs{$binpkg} =~ /udeb/i);
 	}
     } elsif ($file =~ m/^compat$/) {
 	open IN, "debfiles/$file"
 	    or fail("Can't open debfiles/$file: $!");
-	chomp($compat = <IN>);
+	$compat = <IN>;
 	close IN;
 	if ($compat) {
+	    chomp $compat;
 	    if ($needversiondepends) {
 		print "E: $pkg $type: declares-possibly-conflicting-debhelper-compat-versions $needversiondepends $compat\n";
 	    } else {
 		$needversiondepends = $compat;
 	    }
+	} else {
+	    print "E: $pkg $type: debhelper-compat-file-is-empty\n";
 	}
     } elsif ($file =~ m/^control$/) {
 	open(IN,"debfiles/$file")

@@ -19,55 +19,25 @@ lintian (1.23.0) unstable; urgency=low
 
   * [FL] add udeb support (Closes: #216117)
     Thanks to Joey Hess for his input. Many changes, mostly to
-     frontend/lintian, checks/debconf and checks/files
+    frontend/lintian, checks/debconf and checks/files
 
-  * collection/override-file:
-    + [FL] add support for source overrides (Closes: #129510)
-    See the User Manual for more information.
-  
-  * debian/control,debian/copyright:
-    + [FL] Add Marc 'HE' Brockschmidt to Uploaders and
-      to copyright file
-  
-  * doc/lintian.sgml:
-    + [FL] Some updates, some more verbatim explantions
-      (Closes: #197955)
-    + [FL] Reworked the override section to handle udeb and
-      source packages, too
-  * doc/README:
-    + [FL] Update options
-  
-  * frontend/lintian:
-    + [HE] Added a --dont-check-parts|-X option to allow users to specify
-      which tests should not be run. Also added infos about this to the
-      manpage. (Closes: #206674)
-  
-  * lib/Dep.pm:
-    + [FL] Fixed some semantic errors (since noone ever observed the
-      correspoding perl warnings the fixed parts are probably never
-      used in the current code)
-  * lib/Utils.pm
-    + [HE] Changed {read,parse}_dpkg_control a bit to cope with the fact
-      that template files sometimes contain lines consisting only of
-      whitespace which do *not* separate to blocks. (Closes: #242479)
-  
   * checks/binaries:
     + [JvW] Ignore static binaries in /usr/lib/debug
   * checks/changelog-file:
     + [HE] Check for the debmake template email address in the changelog
       entries. Patch by Steffen Moeller <moeller@pzr.uni-rostock.de>,
       thanks! (Closes: #199903)
-  * checks/common_data:
-    + [HE] Change known_obsolete_fields to allow checks/fields to
-      report the Bugs field als obsolete.
+    + [JvW] Loosen up checks for -0.x versions, could be either native or
+      upstream + Debian revision, so some tests cannot be performed because of
+      that uncertainty
   * checks/copyright-file:
-    + [HE] Change usr-doc-symlink-to-foreign-package check to throw an 
+    + [HE] Change usr-doc-symlink-to-foreign-package check to throw an
       error when a package doesn't depend on the *same* version of the
       package its /usr/share/doc/$foo dir is symlinked to. This is supposed
       to ensure that both come from the same source and the same source
       version. (Closes: #201470)
   * checks/cruft.desc:
-    + [HE] Reworded some parts and bumped the Standards-Version after 
+    + [HE] Reworded some parts and bumped the Standards-Version after
       checking for changes. (Closes: #235735)
   * checks/debconf{,.desc}:
     + [JvW] Add an error for a bogus default for a boolean template
@@ -76,29 +46,35 @@ lintian (1.23.0) unstable; urgency=low
       patch by Denis Barbier <barbier@linuxfr.org>, thanks! (Closes: #233116)
     + [HE] Check if the translation of a Choices: field is empty, leading to
       skipped questions. (Closes: #149451)
-  * checks/debdiff
+  * checks/debdiff:
     + [HE] Check for accidental native packaging. This is done by checking for
       a dash in the version number (though -0.\d+ and -0.\d+.\d+ are allowed
       for (binary) NMUs) and the existence of a .diff.gz. (Closes: #216327)
+    + [JvW] Implement source-tar-is-posix-tar, which checks for upstream
+      tarballs that are tar --posix tarballs, which cannot be untarred by the
+      tar version in woody (Closes: #245138)
+  * checks/debhelper{,.desc}:
+    + [JvW] Add error if debian/compat is empty, happens once in current
+      sid and gave internal error before
   * checks/debian-readme:
     + [HE] Add check for the debmake template email address. Patch by Steffen
       Moeller <moeller@pzr.uni-rostock.de>, thanks!
   * checks/deb-format:
     + [HE] Add a check for the data member of a deb. dpkg 1.11 introduces
       support for configurable compression algorithms (bzip2, for example),
-      but this shouldn't be allowed before dpkg 1.11 hits stable. 
+      but this shouldn't be allowed before dpkg 1.11 hits stable.
       (Closes: #159874)
   * checks/fields:
     + [HE, FL] Nearly complete rewrite for clean up:
       - bad-relation seems to work better now (Closes: #171763)
       - duplicate relations checking now works for different fields, too
         (Closes: #234978, #235356)
-    + [HE] Add check for an Origin field with "Debian" as value. 
+    + [HE] Add check for an Origin field with "Debian" as value.
       (Closes: #119618)
     + [HE] Reintroduce build-depends-without-arch-dep check with the patch
       I proposed in #214231. (Closes: #242484)
-    + [JvW] Check for welformed Debian-revision
-    + [JvW] Check for correct realname when QA mailadress used
+    + [JvW] Check for well-formed Debian-revision
+    + [JvW] Check for correct realname when QA mailaddress used
   * checks/fields.desc:
     + [FL] Fix some wrong policy references
   * checks/files:
@@ -120,6 +96,8 @@ lintian (1.23.0) unstable; urgency=low
     + [FL] output-of-updaterc.d-not-redirected-to-dev-null should be
       only a info tag since it is more a aesthetical issue, not a
       policy violation. (Closes: #149700)
+  * checks/lintian.desc:
+    + [JvW] Added missing Type: tags
   * checks/manpages:
     + [FL] New checks:
        - Section number of directory and file differ
@@ -128,14 +106,19 @@ lintian (1.23.0) unstable; urgency=low
     + [FL] Parse contents of man page and implement more new checks:
       - Section number of file and header differ (Closes: #89488)
       - Try to search for hyphens that should be minus signs
-        (Closes: #205924). First patch by Eduard Bloch, final 
+        (Closes: #205924). First patch by Eduard Bloch, final
         regex by Josip Rodin.
       - Search for FSSTND directories referenced in man pages. Only
         an info tag. (Closes: #111098)
     + [FL, HE] Fix false positives of
       manpage-for-non-x11-binary-in-wrong-directory when a link
-      from a normal bin/ is pointing to a binary in an X11 dir. Based 
+      from a normal bin/ is pointing to a binary in an X11 dir. Based
       on patch by FL. (Closes: #203389)
+    + [JvW] x11-games-should-be-in-usr-games is now error, because it's
+      mandated by policy
+  * checks/menus:
+    + [JvW] Stricter checking for whether update-menus is actually called
+      (Closes: #244628)
   * checks/menu-format:
     + [FL] Only issue one warning about needs=dwww, not two
     + [HE] Check if the command given with command= is in the package
@@ -166,13 +149,55 @@ lintian (1.23.0) unstable; urgency=low
   * collection/diffstat
     + [HE] The diff.gz file name does not include the the epoch, so strip it
       before trying to get the file.
+  * collection/override-file:
+    + [FL] add support for source overrides (Closes: #129510)
+      See the User Manual for more information.
+  * collection/source-control-file:
+    + [FL] New collection script to extract field information
+      from debian/control in source packages. Currently used
+      in checks/debhelper to guess udeb packages.
+
+  * debian/control,debian/copyright:
+    + [FL] Add Marc 'HE' Brockschmidt to Uploaders and
+      to copyright file
+
+  * doc/lintian.sgml:
+    + [FL] Some updates, some more verbatim explantions
+      (Closes: #197955)
+    + [FL] Reworked the override section to handle udeb and
+      source packages, too
+  * doc/README:
+    + [FL] Update options
+
+  * frontend/lintian:
+    + [HE] Added a --dont-check-parts|-X option to allow users to specify
+      which tests should not be run. Also added infos about this to the
+      manpage. (Closes: #206674)
+  * frontend/lintian-info:
+    + [JvW] Fixed that lintian -I also displays info for I: entries
+
+  * lib/Dep.pm:
+    + [FL] Fixed some semantic errors (since noone ever observed the
+      correspoding perl warnings the fixed parts are probably never
+      used in the current code)
+  * lib/Utils.pm
+    + [HE] Changed {read,parse}_dpkg_control a bit to cope with the fact
+      that template files sometimes contain lines consisting only of
+      whitespace which do *not* separate to blocks. (Closes: #242479)
+
+  * testset/runtests:
+    + [JvW] Rewrote so that it is actually useful: 
+      - sort output to nullify filesystem directory ordering differences
+      - run lintian just once
+      - check that all tests that are triggered have a description, if verbose
+        specified, warn about tests that are not tested
 
   * unpack/list-binpkg:
     + [HE] Try to open Packages.gz if no Packages file can be found. Fix
       based on patch by Robert Lemmen <robertle@semistable.com>, thanks!
       (Closes: #198617)
 
- -- Frank Lichtenheld <djpig@debian.org>  Fri, 16 Apr 2004 01:45:00 +0200
+ -- Debian Lintian Maintainers <lintian-maint@debian.org>  Fri, 23 Apr 2004 12:32:36 +0200
 
 lintian (1.22.12) unstable; urgency=low
 
