@@ -567,12 +567,12 @@ Info: This script is marked as running under <tt>/bin/sh</tt>, but it seems
  to use a feature found in bash.
  .
  Examples:
- '==' in a test, it should use '=' instead
- 'read' without a variable in the argument
- 'function' to define a function
- 'source' instead of '.'
- '. command args', passing arguments to commands via 'source' is not supported
- '{foo,bar}' instead of 'foo bar'
+  '==' in a test, it should use '=' instead
+  'read' without a variable in the argument
+  'function' to define a function
+  'source' instead of '.'
+  '. command args', passing arguments to commands via 'source' is not supported
+  '{foo,bar}' instead of 'foo bar'
 
 Tag: suidregister-used-in-maintainer-script
 Type: error
