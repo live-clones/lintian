@@ -34,6 +34,7 @@ my $seencommand = '';
 my $needbuilddepends = '';
 my $needtomodifyscripts = '';
 my $needversiondepends = '';
+my $seenversiondepends = '0';
 my $compat = '';
 
 # Parse the debian/rules file, and try to figure out if debhelper commands
@@ -41,7 +42,8 @@ my $compat = '';
 # commands can be found by "grep -l autoscript /usr/bin/dh_*", but I'll
 # hardcode them here.
 
-map { $commands{$_}=1 } qw(dh_installdebconf
+map { $commands{$_}=1 } qw(dh_installcatalogs
+			   dh_installdebconf
                            dh_installdefoma
                            dh_installdocs
 			   dh_installemacsen
@@ -53,7 +55,10 @@ map { $commands{$_}=1 } qw(dh_installdebconf
 			   dh_installwm
 			   dh_installxfonts
 			   dh_makeshlibs
+			   dh_python
+			   dh_scrollkeeper
 			   dh_suidregister
+			   dh_usrlocal
 			   );
 
 open(RULES, "debfiles/rules") or fail("cannot read debian/rules: $!");
@@ -122,25 +127,16 @@ while (defined(my $file=readdir(DEBIAN))) {
 	    or fail("Can't open debfiles/$file: $!");
 	while (<IN>) {
 	    if (m/^(Build-Depends|Build-Depends-Indep):/i) {
-	        if ($needversiondepends) {
-		    if ($needversiondepends > 1) {
-			if (m,debhelper\s*\(\s*>(?:>|=)\s*([^)]+), and Dep::versions_lte($needversiondepends, $1)) {
-				$needversiondepends = 0; # seen them, all is good
-			}
-		    } else {
-			$needversiondepends = 0; # don't bother if < 1
-		    }
-		}
-		if ($needbuilddepends and m/debhelper/) {
-		    $needbuilddepends = 0; # seen them, all is good
-		}
+		if (m,debhelper\s*\(\s*>(?:>|=)\s*([^)]+),) {  
+		    $seenversiondepends = $1;
+	        }
+	    }
+	    if ($needbuilddepends and m/debhelper/) {
+		$needbuilddepends = 0; # seen them, all is good
 	    }
 	    if (m/^\s*$/) { # end of first stanza
 		last;
 	    }
-	}
-	if ($needversiondepends) {
-	    print "E: $pkg $type: package-lacks-versioned-build-depends-on-debhelper $needversiondepends\n";
 	}
 	if ($needbuilddepends) {
 	    print "E: $pkg $type: package-uses-debhelper-but-lacks-build-depends\n";
@@ -151,6 +147,11 @@ while (defined(my $file=readdir(DEBIAN))) {
     }
 }
 closedir(DEBIAN);
+
+if ($needversiondepends and ($needversiondepends > 1) and ! Dep::versions_lte($needversiondepends, $seenversiondepends)) {
+    print "E: $pkg $type: package-lacks-versioned-build-depends-on-debhelper $needversiondepends\n";
+}
+
 
 # -----------------------------------
 

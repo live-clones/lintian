@@ -9,7 +9,13 @@ lintian (1.22.9-0.1) unstable; urgency=low
      moved sections (Closes: #194257, #208945, #214949)
      (Patch by Nicholas Breen <nbreen@ofb.net>)
    * Support for dash scripts (Closes: #194787)
-     (Patch by Frank Lichtenheld <frank@lichtenheld.de>)
+     (Patch by Frank Lichtenheld <djpig@debian.org>)
+  
+  Frank Lichtenheld <djpig@debian.org>
+   * checks/debhelper: 
+     + fix parsing debian/compat for needed 
+       version (Closes: #198611)
+     + update list of existing debhelper commands
 
  -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Sat, 31 Jan 2004 14:44:55 +0100
 
