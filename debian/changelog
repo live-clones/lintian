@@ -90,6 +90,10 @@ lintian (1.23.1~alpha) unstable; urgency=low
       executed as separate executables. Makes it easy to make common functions
       available, tags are done centrally, etc etc. Should also save quite a
       number of forks, thus more speedier.
+  
+  * lib/Util.pm:
+    + [FL] dpkg supports comments in control files now, handle them
+      correctly
 
   * testset/filenames:
     + [JvW] Fix two lintian warnings in lintian itself by touching files only

@@ -60,6 +60,7 @@ sub parse_dpkg_control {
 
 	# tabs at the beginning are illegal, but handle them anyways
 	s/^\t/ \t/o;
+	next if s/^#/; #comment line?
 
 	# empty line?
 	if ((!$debconf_flag && m/^\s*$/) or 
