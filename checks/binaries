@@ -36,6 +36,7 @@ my %NOTE;
 my %RPATH;
 my %NEEDED;
 my %CXXABI;
+my %OCAML;
 
 # read architecture file
 if (open(IN,"fields/architecture")) {
@@ -80,6 +81,10 @@ while (<IN>) {
 		    tag "binary-compiled-with-profiling-enabled", "$file";
 		}
 	    }    
+
+	    if ($foo eq '.text' and $sec eq 'Base' and $sym eq 'caml_main') {
+		$OCAML{$file} = 1;
+	    }
 	}
     } else {
 	if (m/^\s*NEEDED\s*(\S+)/o) {
@@ -134,7 +139,9 @@ while (<IN>) {
     if ($info =~ m,not stripped\s*$,o) {
 	# Is it an object file (which generally can not be stripped),
 	# a kernel module, or perhaps a debugging package? 
-	unless ($file =~ m,\.k?o$, or $pkg =~ m/-dbg$/ or $pkg =~ m/debug/) {
+	# Ocaml executables are exempted, see #252695
+	unless ($file =~ m,\.k?o$, or $pkg =~ m/-dbg$/ or $pkg =~ m/debug/
+		or exists $OCAML{$file}) {
 	    tag "unstripped-binary-or-object", "$file";
 	}
     } else {
