@@ -75,7 +75,7 @@ sub find_cruft {
     if ($name =~ m,^(.+/)?svn-commit\.(.+\.)?tmp$,) {
 	print "W: $pkg $type: svn-commit-file-in-source $name\n";
     } elsif ($name =~ m,^(.+/)?\.cvsignore$,) {
-	print "W: $pkg $type: cvsignore-file-in-source $name\n";
+	print "I: $pkg $type: cvsignore-file-in-source $name\n";
     }
 
     if ($name =~ m,^(.+/)?config.(?:cache|log|status)$, and $pkg ne "lintian") {

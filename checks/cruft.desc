@@ -50,9 +50,11 @@ Info: Package source contains a 'svn-commit(.NNN).tmp' file.  This file is
  belong in a Debian package.
 
 Tag: cvsignore-file-in-source
-Type: warning
+Type: info
 Info: Package contains a '.cvsignore' file.  It may have been included by
- accident.
+ accident. It is Version Control System metadata that should not be
+ distributed normally. However, since upstream tarball often still contain
+ those, it's only an informational tag.
 
 Tag: source-contains-svn-control-dir
 Type: warning

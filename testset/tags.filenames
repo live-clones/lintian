@@ -22,8 +22,8 @@ E: filenames: symlink-should-be-absolute usr/lib/filenames/symlink1wrong ../../.
 E: filenames: symlink-should-be-relative usr/lib/filenames/symlink3wrong /usr/lib/filenames/symlink2
 E: filenames: use-of-compat-symlink usr/bin/X11/
 E: filenames: use-of-compat-symlink usr/bin/X11/testxbin
+I: filenames source: cvsignore-file-in-source files/.cvsignore
 W: filenames source: ancient-standards-version 3.1.1
-W: filenames source: cvsignore-file-in-source files/.cvsignore
 W: filenames source: source-contains-CVS-dir CVS
 W: filenames source: source-contains-svn-control-dir .svn
 W: filenames source: svn-commit-file-in-source files/svn-commit.tmp
