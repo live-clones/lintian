@@ -43,6 +43,9 @@ if (open(IN,"fields/architecture")) {
 
 # If this is a arch-independent package, this test doesn't apply
 return 0 if $arch eq 'all';
+# usr/share missing. other checks will moan about it
+# so just ignore this package
+return 0 if !-d unpacked/usr/share;
 
 my $size = `du -ks unpacked`;
 $size =~ s/\t.*//;
