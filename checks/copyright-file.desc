@@ -50,7 +50,8 @@ Ref: policy 12.5
 Tag: usr-doc-symlink-without-dependency
 Type: error
 Info: If the package installs a symbolic link /usr/share/doc/<i>pkg1</i> -&gt;
- <i>pkg2</i>, then <i>pkg1</i> has to depend on <i>pkg2</i>.
+ <i>pkg2</i>, then <i>pkg1</i> has to depend on <i>pkg2</i> with the same
+ version as <i>pkg1</i>.
  .
  Note, that adding the "Depends:" entry just to fix this bug is not a good
  solution. It's suggested that you include a real /usr/share/doc/<i>pkg1</i>

@@ -80,15 +80,22 @@ while (<IN>) {
 
     	# this case is allowed, if this package depends on link
     	# and both packages come from the same source package
-	
-    	# depend on $link pkg?
-    	if ((not depends_on($link)) &&
-	    not (exists($known_essential{$link}) &&
-		 defined($known_essential{$link}))) {
-	    # no, it does not.
 
-	    print "E: $pkg $type: usr-doc-symlink-without-dependency $link\n";
-	    last;
+
+	if (not open (VERSION, "fields/version")) {
+	    fail("Can't open fields/version: $!");
+	} else {
+	    chomp(my $our_version = <VERSION>); 
+	
+    	    # depend on $link pkg?
+    	    if ((not depends_on($link, $our_version)) &&
+	         not (exists($known_essential{$link}) &&
+	         defined($known_essential{$link}))) {
+		# no, it does not.
+
+		print "E: $pkg $type: usr-doc-symlink-without-dependency $link\n";
+		last;
+	    }
     	}
 	
     	# We can only check if both packages come from the same source
@@ -192,7 +199,7 @@ exit 0;
 
 # returns true, if $foo depends on $bar
 sub depends_on {
-    my ($bar) = @_;
+    my ($package, $version) = @_;
 
     my ($deps, $predeps) = ("", "");
 
@@ -210,11 +217,14 @@ sub depends_on {
 	close(I);
     }
 
-    for (split(/\s*(?:,|\|)\s*/,"$deps,$predeps")) {
-	# whitespace or an opening parenthesis indicates the end of the
-	# package name.
-	s/(\s|\().*//;
-	return 1 if $_ eq $bar;
+    for (split(/\s*,\s*/,"$deps,$predeps")) {
+    	# Now split the dep
+	# We don't allow alternatives, as we need a strong depends: The dependency
+	# has to be there whatever happens.
+	if (/^\s* ( [^\s\[\(]+ ) \s* (?:\( \s* (<=|<|=|>=|>>|>) \s* ([^(]+) \))?\s*$/x) {
+	    my ($d_pkg, $d_relation, $d_version) = ($1, ($2 || ""), ($3 || ""));
+	    return 1 if (($package eq $d_pkg) and ($d_relation eq "=") and ($d_version eq $version));
+	}
     }
 
     return 0;

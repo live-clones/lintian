@@ -31,10 +31,16 @@ N:
 N:   You use the Origin field though the field value is the default
 N:   (Debian). In this case the field is redundant and should be removed.
 N:
-E: relations-multiple-libs: no-copyright-file
+E: relations-multiple-libs: usr-doc-symlink-without-dependency relations
 N:
-N:   Each binary package has to include a plain file
-N:   /usr/share/doc/<pkg>/copyright
+N:   If the package installs a symbolic link /usr/share/doc/<pkg1> ->
+N:   <pkg2>, then <pkg1> has to depend on <pkg2> with the same version as
+N:   <pkg1>.
+N:   
+N:   Note, that adding the "Depends:" entry just to fix this bug is not a
+N:   good solution. It's suggested that you include a real
+N:   /usr/share/doc/<pkg1> directory within <pkg1> and copy the copyright
+N:   file into that directory.
 N:   
 N:   Refer to Policy Manual, section 12.5 for details.
 N:
@@ -98,6 +104,12 @@ N:   Refer to policy D.2.6 for details.
 N:
 N: relations-multiple-libs binary: unknown-field-in-changes origin
 E: relations: no-copyright-file
+N:
+N:   Each binary package has to include a plain file
+N:   /usr/share/doc/<pkg>/copyright
+N:   
+N:   Refer to Policy Manual, section 12.5 for details.
+N:
 W: relations: package-relation-with-self depends: relations
 N:
 N:   The package declares a relationship with itself. This is not very

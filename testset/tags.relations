@@ -2,7 +2,7 @@ W: relations source: ancient-standards-version 3.1.1
 E: relations source: build-depends-without-arch-dep
 E: relations source: bad-relation build-depends: foo (>> 2) bar baz bat
 W: relations source: redundant-origin-field
-E: relations-multiple-libs: no-copyright-file
+E: relations-multiple-libs: usr-doc-symlink-without-dependency relations
 W: relations-multiple-libs: description-synopsis-might-not-be-phrased-properly
 E: relations-multiple-libs: description-synopsis-is-duplicated
 E: relations-multiple-libs: package-depends-on-multiple-libstdc-versions libstdc++2.10 libstdc++2.10-glibc2.2 libstdc++3.0

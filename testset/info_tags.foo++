@@ -66,6 +66,19 @@ N:
 N:   Refer to Policy Manual, section 5.6.2 for details.
 N:
 E: foo++ source: uploader-address-malformed I am afraid of spam and think this helps <no_spam_please AT debian.org>
+E: foo++-helper: usr-doc-symlink-without-dependency foo++
+N:
+N:   If the package installs a symbolic link /usr/share/doc/<pkg1> ->
+N:   <pkg2>, then <pkg1> has to depend on <pkg2> with the same version as
+N:   <pkg1>.
+N:   
+N:   Note, that adding the "Depends:" entry just to fix this bug is not a
+N:   good solution. It's suggested that you include a real
+N:   /usr/share/doc/<pkg1> directory within <pkg1> and copy the copyright
+N:   file into that directory.
+N:   
+N:   Refer to Policy Manual, section 12.5 for details.
+N:
 E: foo++-helper: wrong-debian-qa-address-set-as-maintainer Lintian Maintainer <debian-qa@lists.debian.org>
 E: foo++: no-copyright-file
 N:

@@ -21,6 +21,12 @@ lintian (1.23.0) UNRELEASED; urgency=low
   * checks/common_data:
     + [HE] Change known_obsolete_fields to allow checks/fields to
     report the Bugs field als obsolete.
+  * checks/copyright-file:
+    + [HE] Change usr-doc-symlink-to-foreign-package check to throw an 
+    error when a package doesn't depend on the *same* version of the
+    package its /usr/share/doc/$foo dir is symlinked to. This is supposed
+    to ensure that both come from the same source and the same source
+    version. (Closes: #201470)
   * checks/debconf{,.desc}:
     + [JvW] Add an error for a bogus default for a boolean template
       (Closes: #236846)
