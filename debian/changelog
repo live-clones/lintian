@@ -50,6 +50,10 @@ lintian (1.23.0) UNRELEASED; urgency=low
       patch by Denis Barbier <barbier@linuxfr.org>, thanks! (Closes: #233116)
     + [HE] Check if the translation of a Choices: field is empty, leading to
       skipped questions. (Closes: #149451)
+  * checks/debdiff
+    + [HE] Check for accidental native packaging. This is done by checking for
+      a dash in the version number (though -0.\d+ and -0.\d+.\d+ are allowed
+      for (binary) NMUs) and the existence of a .diff.gz. (Closes: #216327)
   * checks/debian-readme:
     + [HE] Add check for the debmake template email address. Patch by Steffen
       Moeller <moeller@pzr.uni-rostock.de>, thanks!
@@ -125,6 +129,10 @@ lintian (1.23.0) UNRELEASED; urgency=low
     + [HE] Also handle case statements in postrm scripts. (Closes: #179435)
   * checks/standards-version:
     + [JvW] Also emit warning if standards version is 3.6.0, and not yet 3.6.1
+
+  * collection/diffstat
+    + [HE] The diff.gz file name does not include the the epoch, so strip it
+      before trying to get the file.
 
   * unpack/list-binpkg:
     + [HE] Try to open Packages.gz if no Packages file can be found. Fix

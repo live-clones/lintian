@@ -9,6 +9,17 @@ N:   don't have to re-upload the package just to adjust the
 N:   Standards-Version control field. However, please remember to update
 N:   this field next time you upload the package.
 N:
+W: binary source: native-package-with-dash-version
+N:
+N:   Native packaging should only be used if a piece of software was
+N:   written specifically to be turned into a Debian package. In this case,
+N:   the version number should not contain a debian revision part.
+N:   
+N:   Native source packages are sometimes created by accident. In most
+N:   cases the reason is the location of the original source tarball.
+N:   dpkg-source searches for this in
+N:   ../package_upstream-version.orig.tar.gz.
+N:
 E: binary: binary-without-manpage hello
 N:
 N:   Each binary in /usr/bin, /usr/sbin, /bin, /sbin, or /usr/games, must
@@ -133,7 +144,7 @@ N:   The menu item has a line that has a needs= field with a strange value.
 N:   This may be intentional, but it's probably a typo that will make menu
 N:   ignore the line.
 N:
-W: binary: menu-command-not-in-package /usr/lib/menu/binary:6
+W: binary: menu-command-not-in-package /usr/lib/menu/binary:6 /imnothere
 E: binary: unstripped-binary-or-object ./usr/bin/hello
 N:
 N:   The package installs an unstripped binary or object file.
@@ -160,6 +171,14 @@ E: binary: changelog-file-not-compressed changelog
 N:
 N:   Changelog files must be compressed using `gzip -9'. Even if they start
 N:   out small, they will become large with time.
+N:   
+N:   Refer to Policy Manual, section 12.7 for details.
+N:
+E: binary: debian-changelog-file-missing
+N:
+N:   Each Debian package (which provides a /usr/share/doc/<pkg> directory)
+N:   has to install a Debian changelog file
+N:   /usr/share/doc/<pkg>/changelog.Debian.gz
 N:   
 N:   Refer to Policy Manual, section 12.7 for details.
 N:

@@ -1,10 +1,10 @@
 Check-Script: debdiff
 Author: Richard Braakman <dark@xs4all.nl>
 Abbrev: dif
-Standards-Version: 3.2.0
+Standards-Version: 3.6.1
 Type: source
 Unpack-Level: 1
-Info: This script looks for .orig and .rej files in the Debian diff
+Info: This script checks the diff to the original source tarball of a debian package
 Needs-Info: diffstat
 
 Tag: patch-failure-file-in-diff
@@ -13,3 +13,13 @@ Info: If the <tt>patch</tt> utility cannot completely apply a diff,
  it leaves certain files in the directory tree.  Lintian found such files
  in the Debian-diff for this source package.  This may indicate that the
  maintainer applied a patch that did not quite fit, and didn't notice.
+
+Tag: native-package-with-dash-version
+Type: warning
+Info: Native packaging should only be used if a piece of software was
+ written specifically to be turned into a Debian package. In this case,
+ the version number should not contain a debian revision part.
+ .
+ Native source packages are sometimes created by accident. In most cases
+ the reason is the location of the original source tarball. dpkg-source
+ searches for this in ../package_upstream-version.orig.tar.gz.

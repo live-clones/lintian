@@ -1,4 +1,5 @@
 W: binary source: ancient-standards-version 3.2.1
+W: binary source: native-package-with-dash-version
 E: binary: binary-without-manpage hello
 E: binary: binary-without-manpage hello-static
 E: binary: binary-without-manpage hello.static
@@ -18,7 +19,8 @@ E: binary: su-to-root-without-usr-sbin /usr/lib/menu/binary:4
 E: binary: non-wm-in-windowmanager-menu-section x11 /usr/lib/menu/binary:4
 E: binary: su-to-root-with-usr-bin /usr/lib/menu/binary:5
 W: binary: menu-item-needs-tag-has-unknown-value wm /usr/lib/menu/binary:5
-W: binary: menu-command-not-in-package /usr/lib/menu/binary:6
+W: binary: menu-command-not-in-package /usr/lib/menu/binary:6 /imnothere
 E: binary: unstripped-binary-or-object ./usr/bin/hello
 E: binary: statically-linked-binary ./usr/bin/static-hello
 E: binary: changelog-file-not-compressed changelog
+E: binary: debian-changelog-file-missing

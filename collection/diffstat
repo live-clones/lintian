@@ -38,6 +38,8 @@ open V, "fields/version" or fail("cannot open fields/version: $!");
 my $ver = <V>; chomp $ver;
 close V;
 
+$ver =~ s/^\d://; #Remove epoch for this
+
 my $diff_file = "${pkg}_${ver}.diff.gz";
 unless (-f $diff_file) {
 # we have to write an empty file so that the checks don't crap out. <sigh>
