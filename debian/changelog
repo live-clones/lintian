@@ -31,7 +31,8 @@ lintian (1.23.1~alpha) unstable; urgency=low
       change to frontend/lintian on every version number change... Requires
       sed version 4 at build-time.
     + [JvW] Start depending on gettext.
-    + [JvW] Start depending on libdigest-perl, for using md5 on files.
+    + [JvW] Start depending on libdigest-md5-perl on woody, for using md5 on
+      files.
 
   * frontend/lintian:
     + [JvW] Rewrite: checks are now plugins loaded into lintian, rather than
