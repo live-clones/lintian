@@ -20,6 +20,8 @@ lintian (1.23.1~alpha) unstable; urgency=low
       to pkg-not-in-package-test which is issued when the package is
       not in the list. Don't issue menu-command-not-in-package when
       we have a list.
+  * checks/po-debconf:
+    + [JvW] Simply fail is stuff from gettext is missing.
   * checks/shared-libs:
     + [FL] Don't report shlib-with-executable-bit and
       shlib-with-bad-permissions on symbolic links to such files
@@ -28,6 +30,7 @@ lintian (1.23.1~alpha) unstable; urgency=low
     + [JvW] Insert version number at package build time, no need to commit a
       change to frontend/lintian on every version number change... Requires
       sed version 4 at build-time.
+    + [JvW] Start depending on gettext.
 
   * frontend/lintian:
     + [JvW] Rewrite: checks are now plugins loaded into lintian, rather than
@@ -39,7 +42,7 @@ lintian (1.23.1~alpha) unstable; urgency=low
     + [JvW] Fix two lintian warnings in lintian itself by touching files only
       on clean target, and not distributing them in the source
 
- -- Debian Lintian Maintainers <lintian-maint@debian.org>  Sun, 02 May 2004 19:11:02 +0200
+ -- Debian Lintian Maintainers <lintian-maint@debian.org>  Wed, 05 May 2004 16:54:46 +0200
 
 lintian (1.23.0) unstable; urgency=low
 

@@ -79,8 +79,7 @@ if (! -f "debfiles/po/templates.pot") {
 opendir(DEBIAN, 'debfiles/po')
         or fail("Can't open debfiles/po directory.");
 if (! -x "/usr/bin/msgfmt" ) {
-    print "N: Warning: msgfmt (package gettext) not available, not\n";
-    print "N: going to check *.po syntax\n";
+	fail("msgfmt not found");
 }
 while (defined(my $file=readdir(DEBIAN))) {
         next unless $file =~ m/\.po$/;
