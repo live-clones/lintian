@@ -17,3 +17,5 @@ W: foo++ source: uploader-address-looks-weird Jeroen van Wolffelaar<jeroen@local
 W: foo++ source: uploader-not-full-name Frank
 W: foo++ source: uploader-not-full-name Josip
 W: foo++: readme-debian-contains-debmake-default-email-address
+E: foo++ source: build-info-in-binary-control-file-section Package foo++
+E: foo++ source: debian-control-file-uses-obsolete-national-encoding at line 18

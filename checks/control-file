@@ -1,0 +1,56 @@
+# control-file -- lintian check script
+#
+# Copyright (C) 2004 Marc Brockschmidt
+# 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+# MA 02111-1307, USA.
+
+package Lintian::control_file;
+use strict;
+use Util;
+use Tags;
+
+sub run {
+
+my $pkg = shift;
+my $type = shift;
+
+# check that control is UTF-8 encoded
+open ICONV, "env LANG=C iconv -f utf8 -t utf8 debfiles/control 2>&1 |"
+	or fail("failure while checking encoding of control for $type package $pkg");
+my $line = 1;
+while (<ICONV>) {
+	if (m/iconv: illegal input sequence at position \d+$/) {
+		tag "debian-control-file-uses-obsolete-national-encoding", "at line $line";
+		last;
+    }
+    $line++;
+}
+close ICONV;
+
+my ($header, @binary_controls) = read_dpkg_control("debfiles/control");
+
+for my $binary_control (@binary_controls) {
+	tag "build-info-in-binary-control-file-section", "Package ".$binary_control->{"package"}
+	    if ($binary_control->{"build-depends"} || $binary_control->{"build-depends-indep"} ||
+	        $binary_control->{"build-conflicts"} || $binary_control->{"build-conflicts-indep"});
+}
+
+}
+
+1;
+
+# vim: syntax=perl sw=4 ts=4 noet shiftround

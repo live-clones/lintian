@@ -10,6 +10,12 @@ lintian (1.23.1~alpha) unstable; urgency=low
        debian-changelog-file-uses-obsolete-national-charset ->
          debian-changelog-file-uses-obsolete-national-encoding
       (Closes: #248194)
+  * checks/control-file{,.desc}:
+    + [HE] Introduced new check script. New checks:
+      - build-info-in-binary-control-file-section, triggered
+        by a Build-* field in a binary section (Closes: #94928)
+      - debian-control-file-uses-obsolete-national-encoding, stolen from
+        changelog-file (Closes: #247197)
   * checks/cruft{,.desc}:
     + [JvW] cvsignore-file-in-source is now info, because it happens so often
       by upstream, and is only very minor in size

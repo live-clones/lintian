@@ -1,0 +1,27 @@
+Check-Script: control-file
+Author: Marc 'HE' Brockschmidt <marc@marcbrockschmidt.de>
+Abbrev: dctl
+Standards-Version: 3.6.1
+Type: source
+Unpack-Level: 1
+Needs-Info: debfiles
+Info: This script checks debian/control files
+
+Tag: debian-control-file-uses-obsolete-national-encoding
+Type: error
+Info: The Debian changelog file should be valid UTF-8, an encoding of
+ the Unicode character set.
+ .
+ There are many ways to convert a control from an obsoleted encoding
+ like ISO-8859-1; you may for example use "iconv" like:
+ .
+  $ iconv -f ISO-8859-1 -t UTF-8 control > control.new
+  $ mv control.new control
+
+Tag: build-info-in-binary-control-file-section
+Type: error
+Ref: policy 5.2
+Info: The control file has a `Build-Depends', `Build-Depends-Indep',
+ `Build-Conflicts' or `Build-Conflicts-Indep' field in a binary
+ section.  These specify source package relationships, and should be in
+ the source section of the control file.
