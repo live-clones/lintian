@@ -16,6 +16,8 @@ lintian (1.23.6) UNRELEASED; urgency=low
     + [HE] Don't compare the manpage filename extension and the content of
       .TH case-sensitive. Report + patch by Jay Berkenbilt <ejb@ql.org>,
       thanks. (Closes: #285335)
+    + [HE] Emit binary-without-english-manpage if a package only provides
+      translated manpages for a binary. (Closes: #259227)
   * checks/md5sums: 
     + [HE] Strip off ./ at the beginning of the filenames in md5sums
       files (this seems to happen on some systems, though we don't know

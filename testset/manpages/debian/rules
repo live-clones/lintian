@@ -10,12 +10,14 @@ binary-indep:
 	install -d $(tmp)/usr/share/man/man1 $(tmp)/usr/share/man/man3 \
                   $(tmp)/usr/share/man/man6 $(tmp)/usr/X11R6/man/man6 \
                   $(tmp)/usr/bin $(tmp)/usr/sbin $(tmp)/usr/X11R6/bin \
-                  $(tmp)/usr/X11R6/man/man1/
+				  $(tmp)/usr/share/man/de/man1 $(tmp)/usr/X11R6/man/man1/
 	touch $(tmp)/usr/bin/usr-bin-binary-alt
 	chmod 755 $(tmp)/usr/bin/usr-bin-binary-alt
 	touch $(tmp)/usr/sbin/usr-sbin-binary
 	chmod 755 $(tmp)/usr/sbin/usr-sbin-binary
 	touch $(tmp)/usr/X11R6/bin/rstartd
+	touch $(tmp)/usr/bin/binary-without-english-manpage
+	chmod 755 $(tmp)/usr/bin/binary-without-english-manpage
 
 	gzip -c9 <test.1p >$(tmp)/usr/share/man/man1/test.1p.gz
 	
@@ -36,6 +38,8 @@ binary-indep:
 	gzip -1 $(tmp)/usr/share/man/man6/usr-games-binary.6
 	touch $(tmp)/usr/X11R6/man/man6/X11R6-binary.man
 	chmod 644 $(tmp)/usr/X11R6/man/man6/X11R6-binary.man
+	touch $(tmp)/usr/share/man/de/man1/binary-without-english-manpage.1
+	chmod 644 $(tmp)/usr/share/man/de/man1/binary-without-english-manpage.1
 	install -d $(tmp)/usr/share/doc/manpages
 	cp debian/changelog $(tmp)/usr/share/doc/manpages/changelog
 	gzip -9 $(tmp)/usr/share/doc/manpages/changelog
@@ -46,6 +50,6 @@ binary-indep:
 binary: binary-arch binary-indep
 
 clean:
-	rm -rf $(tmp)
+	rm -rf debian/files $(tmp)
 
 .PHONY: build binary-arch binary-indep binary clean
