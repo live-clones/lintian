@@ -1,5 +1,5 @@
 #!/usr/bin/perl -W
-# fields.new -- lintian check script (rewrite)
+# fields -- lintian check script (rewrite)
 #
 # Copyright (C) 2004 Marc Brockschmidt
 #
@@ -27,7 +27,7 @@ use strict;
 use lib "$ENV{'LINTIAN_ROOT'}/checks/";
 use common_data;
 
-($#ARGV == 1) or fail("syntax: fields.net <pkg> <type>");
+($#ARGV == 1) or fail("syntax: fields <pkg> <type>");
 my $pkg = shift;
 my $type = shift;
 my $version;
@@ -404,7 +404,7 @@ if (open(FH, "fields/origin")) {
 
 	unfold('origin', \$origin);
 
-	print "W: $pkg $type: redundant-origin-field\n" if $origin =~ /^\s*debian\s*$/i
+	print "W: $pkg $type: redundant-origin-field\n" if $origin =~ /^\s*debian\s*$/i;
 }
 
 #----- Field checks (without checking the value)
