@@ -59,8 +59,8 @@ my %valid_standard = (
 
 # version lintian is programmed for. ($valid_standard[0]?)
 my $MAJOR = 3;
-my $MINOR = 5;
-my $PATCH = 8;
+my $MINOR = 6;
+my $PATCH = 1;
 
 ($#ARGV == 1) or fail("syntax: standards-version <pkg> <type>");
 my $pkg = shift;
