@@ -21,6 +21,7 @@
 package Lintian::binaries;
 use strict;
 use Tags;
+use Util;
 
 sub run {
 

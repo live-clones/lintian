@@ -21,6 +21,7 @@
 package Lintian::manpages;
 use strict;
 use Tags;
+use Util;
 
 sub run {
 

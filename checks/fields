@@ -27,6 +27,7 @@ use strict;
 use lib "$ENV{'LINTIAN_ROOT'}/checks/";
 use common_data;
 use Tags;
+use Util;
 
 sub run {
 

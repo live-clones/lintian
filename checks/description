@@ -21,6 +21,7 @@
 package Lintian::description;
 use strict;
 use Tags;
+use Util;
 
 sub run {
 

@@ -21,6 +21,7 @@
 package Lintian::copyright_file;
 use strict;
 use Tags;
+use Util;
 
 sub run {
 

@@ -21,6 +21,7 @@
 package Lintian::debhelper;
 use strict;
 use Tags;
+use Util;
 
 sub run {
 

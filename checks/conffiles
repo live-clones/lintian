@@ -21,6 +21,7 @@
 package Lintian::conffiles;
 use strict;
 use Tags;
+use Util;
 
 sub run {
 

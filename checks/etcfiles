@@ -21,6 +21,7 @@
 package Lintian::etcfiles;
 use strict;
 use Tags;
+use Util;
 
 sub run {
 

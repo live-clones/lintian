@@ -21,6 +21,7 @@
 package Lintian::init_d;
 use strict;
 use Tags;
+use Util;
 
 sub run {
 

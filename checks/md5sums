@@ -21,6 +21,7 @@
 package Lintian::md5sums;
 use strict;
 use Tags;
+use Util;
 
 sub run {
 
