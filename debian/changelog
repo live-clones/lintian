@@ -1,4 +1,4 @@
-lintian (1.23.1~beta) unstable; urgency=low
+lintian (1.23.1~RC1) unstable; urgency=low
 
   The ``Now featuring over 500 checks'' release, prepared by the usual
   suspects.
@@ -145,7 +145,7 @@ lintian (1.23.1~beta) unstable; urgency=low
     + [FL] Fix sort of copy & paste error which caused the whole
       script to behave ill
 
- -- Debian Lintian Maintainers <lintian-maint@debian.org>  Tue, 29 Jun 2004 23:38:05 +0200
+ -- Debian Lintian Maintainers <lintian-maint@debian.org>  Fri, 09 Jul 2004 00:58:38 +0200
 
 lintian (1.23.0) unstable; urgency=low
 
