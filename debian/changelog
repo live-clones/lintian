@@ -20,6 +20,14 @@ lintian (1.22.9-0.1) unstable; urgency=low
    * checks/curft:
      + Check for CVS and Subversion cruft in source packages (Closes: #189776,
        also closes: #190067)
+   * checks/po-debconf
+     + Rewrite in Perl
+     + Obsolete PO files are no more checked because po2debconf now
+       automatically runs debconf-updatepo if PO files are older than
+       templates files.  Of course PO files might be outdated (e.g. when
+       downloaded from a BR), but it should occur seldom.
+     + PO files are processed through msgfmt to ensure they are valid.
+     + Based on patch by Denis Barbier <barbier@debian.org>, Closes: #210576
 
   Frank Lichtenheld <djpig@debian.org>
    * checks/debhelper:
@@ -36,9 +44,8 @@ lintian (1.22.9-0.1) unstable; urgency=low
        Choices is only a substitution variable (Closes: #200802,#222648)
      + fix testing of dependencies to eliminate false
        positives of missing-debconf-dependency (Closes: #195201)
-  * 
 
- -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Mon,  9 Feb 2004 01:33:10 +0100
+ -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Mon,  9 Feb 2004 02:49:27 +0100
 
 lintian (1.22.9) unstable; urgency=low
 

@@ -12,11 +12,7 @@ Type: warning
 Info: Encoding must be declared in PO files, otherwise charset conversions
  cannot be performed.
 
-Tag: newer-debconf-templates
+Tag: invalid-po-file
 Type: warning
-Info: Some debconf templates files have been updated, but PO files do
- not reflect these changes.
- .
- You should run debconf-updatepo whenever debconf templates files are
- changed so that translators can be warned that their files are
- outdated.
+Info: Some errors are found in PO files and their content will be
+ discarded.  Run 'msgfmt' to see error messages.

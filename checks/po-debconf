@@ -1,7 +1,7 @@
-#! /bin/sh
+#!/usr/bin/perl -w
 # po-debconf -- lintian check script
 
-# Copyright (C) 2002 by Denis Barbier <barbier@linuxfr.org>
+# Copyright (C) 2002-2003 by Denis Barbier <barbier@linuxfr.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,40 +19,44 @@
 # Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 # MA 02111-1307, USA.
 
-[ $# -eq 2 ] || {
-        echo "syntax: po-debconf <pkg> <type>" 1>&2
-        exit 2
+use strict;
+
+use lib "$ENV{'LINTIAN_ROOT'}/lib";
+use Util;
+
+($#ARGV == 1) or fail("syntax: po-debconf <pkg> <type>");
+my $pkg = shift;
+my $type = shift;
+
+#   Exit if package does not seem to use po-debconf
+-d "debfiles/po" or exit(0);
+opendir(DEBIAN, 'debfiles/po')
+        or fail("Can't open debfiles/po directory.");
+if (! -x /usr/bin/msgfmt ) {
+    print "N: Warning: msgfmt (package gettext) not available, not"
+    print "N: going to check *.po syntax"
+}
+while (defined(my $file=readdir(DEBIAN))) {
+        next unless $file =~ m/\.po$/;
+        local ($/) = "\n\n";
+        $_ = '';
+        open(PO, "< debfiles/po/$file")
+                or fail("Can't open debfiles/po/$file file.");
+        while (<PO>) {
+                last if m/^msgstr/m;
+        }
+        close(PO);
+        s/"\n"//g;
+        my $charset = '';
+        if (m/charset=(.*?)\\n/) {
+                $charset = ($1 eq 'CHARSET' ? '' : $1);
+        }
+        print "W: $pkg $type: unknown-charset-in-po-file debian/po/$file\n"
+                unless length($charset);
+	if (-x /usr/bin/msgfmt ) {
+	    system("msgfmt -o /dev/null debfiles/po/$file 2>/dev/null") == 0
+                or print "W: $pkg $type: invalid-po-file debian/po/$file\n";
+	}
 }
 
-pkg=$1
-type=$2
-
-cd debfiles
-
-[ -f po/POTFILES.in ] || exit 0
-[ -f po/templates.pot ] || exit 0
-
-for lang in po/*.po
-do
-        [ -f $lang ] || continue
-        if sed -e ':t /^msgstr/,${N;/\nmsgid/q;bt;};' $lang | grep charset=CHARSET >/dev/null 2>&1; then
-                echo "W: $pkg $type: unknown-charset-in-po-file $lang"
-        fi
-done
-
-extract_msgid()
-{
-        perl -e 'local $/=undef; $_=<>; s/"\n"//g; for $line (split(/\n/, $_)) {next unless $line=~s/^msgid "([^"])/$1/; $line=~s/"$/\n/; print $line;}' $1 > $2
-}
-
-rm -rf lintianpo 2>/dev/null
-mkdir lintianpo
-cp po/POTFILES.in lintianpo/
-extract_msgid po/templates.pot lintianpo/msgid.pot
-debconf-updatepo --podir=lintianpo >/dev/null 2>&1 || exit 2
-extract_msgid lintianpo/templates.pot lintianpo/msgid.templates
-cmp lintianpo/msgid.pot lintianpo/msgid.templates >/dev/null || echo "W: $pkg $type: newer-debconf-templates"
-rm -rf lintianpo 2>/dev/null
-
-exit 0
-
+exit(0);
