@@ -177,7 +177,7 @@ Info: The package installs some files into the old
  <tt>/usr/doc/examples</tt> directory.  The new location for examples
  is <tt>/usr/share/doc/<i>pkg</i>/examples</tt>.
 
-Tag: gzipped-symlink-with-wrong-ext
+Tag: compressed-symlink-with-wrong-ext
 Type: error
 Info: The package installs a symbolic link pointing to a compressed file,
  but the symbolic link does not use the same file extension than the
@@ -185,9 +185,23 @@ Info: The package installs a symbolic link pointing to a compressed file,
  user or a program tries to access the file through the link.
 Ref: policy 10.5
 
+Tag: symlink-has-double-slash
+Type: error
+Info: This symlink contains two successive slashes (//). This is in violation
+ of policy, where it is stated that symlinks should be as short as possible
+Ref: policy 10.5
+
+Tag: symlink-ends-with-slash
+Type: error
+Info: This symlink ends with a slash (/). This is in violation
+ of policy, where it is stated that symlinks should be as short as possible
+Ref: policy 10.5
+
 Tag: symlink-should-be-relative
 Type: error
-Info: Usually, symbolic links should be relative.
+Info: Symlinks to files which are in the same top-level directory, should be
+ relative according to policy (i.e., files within /usr, should be relative
+ etc., while files from /usr to /etc should be absolute)
 Ref: policy 10.5
 
 Tag: symlink-should-be-absolute
@@ -217,15 +231,23 @@ Type: error
 Info: The symlink references a directory beyond the root directory `/'.
 
 Tag: lengthy-symlink
-Type: warning
+Type: error
 Info: This link goes up, and then back down into the same subdirectory.
  Making it shorter will improve its chances of finding the right file
  if the user's system has lots of symlinked directories.
 Ref: policy 10.5
 
-Tag: symlink-contains-up-and-down-segments
+Tag: symlink-is-self-recursive
+Type: warning
+Info: The symbolic link is recursive to a higher directory of the symlink
+ itself. This means, that you can infinitely chdir with this symlink. This is
+ usually not okay, but sometimes wanted behaviour.
+
+Tag: symlink-contains-spurious-segments
 Type: error
-Info: The symbolic link goes up and down.
+Info: The symbolic link has needless segments like '..' and '.' in the middle.
+ These are unneeded, and make the link longer than it could be, which is in
+ violation of policy.
 Ref: policy 10.5
 
 Tag: bad-permissions-for-etc-cron.d-script

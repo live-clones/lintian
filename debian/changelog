@@ -47,6 +47,10 @@ lintian (1.22.12) unstable; urgency=low
   * checks/debconf:
     + Update valid types, since currently 'title' is supported now too
       (Closes: #234379, #234608)
+  * checks/filenames:
+    + Revised the symlink detection stuff, it is now more rigorous, and has
+      seperate warning for recursive symlinks that are otherwise not
+      necessarily wrong (Closes: #118080)
 
  -- Frank Lichtenheld <djpig@debian.org>  Thu, 26 Feb 2004 21:52:14 +0100
 

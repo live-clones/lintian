@@ -483,71 +483,101 @@ while (<IN>) {
     elsif ($perm =~ m/^l/) {
 	# link
 	# determine top-level directory of file
-	$file =~ m,^/?([^/]+),;
+	$file =~ m,^/?([^/]*),;
 	my $filetop = $1;
 	
-	if ($link =~ m,^/([^/]+),) {
-	    # absolute link
+	if ($link =~ m,//,) {
+	    print "E: $pkg $type: symlink-has-double-slash $file $link\n";
+	    # rest of the checks assume this isn't the case...
+	    goto NEXT_LINK;
+	} elsif ($link =~ m,./$,) {
+	    print "E: $pkg $type: symlink-ends-with-slash $file $link\n";
+	    # rest of the checks assume this isn't the case...
+	    goto NEXT_LINK;
+	}
+
+	if ($link =~ m,^/([^/]*),) {
+	    # absolute link, including link to /
 
 	    # determine top-level directory of link
-	    $link =~ m,^/?([^/]+),;
+	    $link =~ m,^/?([^/]*),;
 	    my $linktop = $1;
 
 	    if ($filetop eq $linktop) {
 		# absolute links within one toplevel directory are _not_ ok!
 		print "E: $pkg $type: symlink-should-be-relative $file $link\n";
 	    }
-	} else {
-	    # relative link
 
-	    my @pathcomponents = split('/', $file);
-	    # chop off filename
-	    splice(@pathcomponents,$#pathcomponents);
+	    # Any other case is already definitely non-recursive
+	    print "W: $pkg $type: symlink-is-self-recursive $file $link\n"
+	    	if $link eq '/';
+
+	} else {
+	    # relative link, we can assume from here that the link starts nor
+	    # ends with /
+
+	    my @filecomponents = split('/', $file);
+	    # chop off the name of the symlink
+	    pop @filecomponents;
+
+	    my @linkcomponents = split('/', $link);
 
 	    # handle `../' at beginning of $link
-	    my $my_link = $link;
-	    my $lastpop = "";
-	    while ($my_link =~ s,^../,,) {
-		if (@pathcomponents) {
-		    $lastpop = pop @pathcomponents;
+	    my $lastpop = undef;
+	    my $linkcomponent = undef;
+	    while ($linkcomponent = shift @linkcomponents) {
+		if ($linkcomponent eq '.') {
+		    print "E: $pkg $type: symlink-contains-spurious-segments $file $link\n"
+		    	unless $link eq '.';
+		    next;
+		}
+		last if $linkcomponent ne '..';
+		if (@filecomponents) {
+		    $lastpop = pop @filecomponents;
 		} else {
 		    print "E: $pkg $type: symlink-has-too-many-up-segments $file $link\n";
 		    goto NEXT_LINK;
 		}
 	    }
 
-	    $my_link =~ m,^/?([^/]+),;
-	    my $linktop = $1;
-
-	    # does the link go up and then down into the same directory?
-	    if ($linktop eq $lastpop) {
-		print "W: $pkg $type: lengthy-symlink $file $link\n";
+	    if (!defined $linkcomponent) {
+		# After stripping all starting .. components, nothing left
+		print "W: $pkg $type: symlink-is-self-recursive $file $link\n";
 	    }
 
-	    if ($#pathcomponents == -1) {
+	    # does the link go up and then down into the same directory?
+	    # (lastpop indicates there was a backref at all, no linkcomponent
+	    # means the symlink doesn't get up anymore)
+	    if (defined $lastpop && defined $linkcomponent &&
+		$linkcomponent eq $lastpop) {
+		print "E: $pkg $type: lengthy-symlink $file $link\n";
+	    }
+
+	    if ($#filecomponents == -1) {
 		# we've reached the root directory
-		if ($filetop ne $linktop) {
-		    # relative link into other toplevel directory
+		if (!defined $linkcomponent || $filetop ne $linkcomponent) {
+		    # relative link into other toplevel directory.
+		    # this hits a relative symbolic link in the root too.
 		    print "E: $pkg $type: symlink-should-be-absolute $file $link\n";
 		}
 	    }
 
 	    # check additional segments for mistakes like `foo/../bar/'
-	    for my $linksegment (split('/', $my_link)) {
-		if ($linksegment eq '..') {
-		    print "E: $pkg $type: symlink-contains-up-and-down-segments $file $link\n";
-		    goto NEXT_LINK;
+	    foreach (@linkcomponents) {
+		if ($_ eq '..' || $_ eq '.') {
+		    print "E: $pkg $type: symlink-contains-spurious-segments $file $link\n";
+		    last;
 		}
 	    }
 	}
     NEXT_LINK:
 	
-	if ($link =~ m,\.(gz|z|Z|zip)\s*$,) {
+	if ($link =~ m,\.(gz|z|Z|bz|bz2|tgz|zip)\s*$,) {
 	    # symlink is pointing to a compressed file
 
 	    # symlink has correct extension?
 	    unless ($file =~ m,\.$1\s*$,) {
-		print "E: $pkg $type: gzipped-symlink-with-wrong-ext $file $link\n";
+		print "E: $pkg $type: compressed-symlink-with-wrong-ext $file $link\n";
 	    }
 	}
     }

@@ -91,7 +91,26 @@ W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/examples/v
 N:
 N:   Package contains a file which is empty.
 N:
-W: filenames: lengthy-symlink usr/share/doc/filenames/version.txt.gz ../filenames/doc/version6.txt.gz
+E: filenames: symlink-should-be-absolute usr/lib/filenames/symlink1wrong ../../../etc/symlink
+N:
+N:   Symbolic links between different top-level directories should be
+N:   absolute.
+N:   
+N:   Refer to Policy Manual, section 10.5 for details.
+N:
+E: filenames: symlink-has-too-many-up-segments usr/lib/filenames/symlink2wrong ../../../../etc/symlink
+N:
+N:   The symlink references a directory beyond the root directory `/'.
+N:
+E: filenames: symlink-should-be-relative usr/lib/filenames/symlink3wrong /usr/lib/filenames/symlink2
+N:
+N:   Symlinks to files which are in the same top-level directory, should be
+N:   relative according to policy (i.e., files within /usr, should be
+N:   relative etc., while files from /usr to /etc should be absolute)
+N:   
+N:   Refer to Policy Manual, section 10.5 for details.
+N:
+E: filenames: lengthy-symlink usr/lib/filenames/symlink4wrong ../filenames/symlink2
 N:
 N:   This link goes up, and then back down into the same subdirectory.
 N:   Making it shorter will improve its chances of finding the right file
@@ -99,6 +118,42 @@ N:   if the user's system has lots of symlinked directories.
 N:   
 N:   Refer to Policy Manual, section 10.5 for details.
 N:
+E: filenames: symlink-contains-spurious-segments usr/lib/filenames/symlink5wrong ../menu/../somethingelse
+N:
+N:   The symbolic link has needless segments like '..' and '.' in the
+N:   middle. These are unneeded, and make the link longer than it could be,
+N:   which is in violation of policy.
+N:   
+N:   Refer to Policy Manual, section 10.5 for details.
+N:
+E: filenames: symlink-contains-spurious-segments usr/lib/filenames/symlink6wrong ./file4
+E: filenames: symlink-contains-spurious-segments usr/lib/filenames/symlink7wrong ../menu/./something
+E: filenames: symlink-has-double-slash usr/lib/filenames/symlink8wrong ../menu//something
+N:
+N:   This symlink contains two successive slashes (//). This is in
+N:   violation of policy, where it is stated that symlinks should be as
+N:   short as possible
+N:   
+N:   Refer to Policy Manual, section 10.5 for details.
+N:
+E: filenames: symlink-ends-with-slash usr/lib/filenames/symlink9wrong ../menu/something/
+N:
+N:   This symlink ends with a slash (/). This is in violation of policy,
+N:   where it is stated that symlinks should be as short as possible
+N:   
+N:   Refer to Policy Manual, section 10.5 for details.
+N:
+W: filenames: symlink-is-self-recursive usr/lib/filenames/symlink5ok+warn ..
+N:
+N:   The symbolic link is recursive to a higher directory of the symlink
+N:   itself. This means, that you can infinitely chdir with this symlink.
+N:   This is usually not okay, but sometimes wanted behaviour.
+N:
+W: filenames: symlink-is-self-recursive usr/lib/filenames/symlink6ok+warn .
+W: filenames: symlink-is-self-recursive usr/lib/filenames/symlink7ok+warn /
+W: filenames: symlink-is-self-recursive usr/lib/filenames/symlink10wrong ../../..
+E: filenames: symlink-should-be-absolute usr/lib/filenames/symlink10wrong ../../..
+E: filenames: lengthy-symlink usr/share/doc/filenames/version.txt.gz ../filenames/doc/version6.txt.gz
 W: filenames: package-installs-nonbinary-perl-in-usr-lib-perl5 usr/lib/perl5/foo/bar.pm
 N:
 N:   Architecture-independent Perl code should be placed in

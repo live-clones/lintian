@@ -1,3 +1,9 @@
+filenames (7) unstable; urgency=low
+
+  * Add a dozen symlinks, some correct, some not
+
+ -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Fri, 27 Feb 2004 01:28:42 +0100
+
 filenames (6) unstable; urgency=low
 
   * Add perl files to check if

@@ -34,6 +34,7 @@ binary-indep:
 	touch debian/tmp/usr/lib/menu/menu
 	chmod 644 debian/tmp/usr/lib/menu/*
 	install -d debian/tmp/usr/lib/perl5/foo
+	install -d debian/tmp/usr/lib/filenames
 	mkdir debian/tmp/usr/lib/perl5/.svn
 	mkdir debian/tmp/usr/lib/perl5/CVS
 	touch debian/tmp/usr/lib/perl5/foo/.packlist
@@ -49,6 +50,23 @@ binary-indep:
 	gzip -9 debian/tmp/usr/share/doc/filenames/Changes
 	ln -s Changes.gz debian/tmp/usr/share/doc/filenames/changelog.gz
 	ln -s '../filenames/doc/version6.txt.gz' debian/tmp/usr/share/doc/filenames/version.txt.gz
+	ln -s ../../share/symlink debian/tmp/usr/lib/filenames/symlink1ok
+	ln -s ../../../etc/symlink debian/tmp/usr/lib/filenames/symlink1wrong
+	ln -s ../../../../etc/symlink debian/tmp/usr/lib/filenames/symlink2wrong
+	ln -s /etc/symlink debian/tmp/usr/lib/filenames/symlink2ok
+	ln -s /usr/lib/filenames/symlink2 debian/tmp/usr/lib/filenames/symlink3wrong
+	ln -s test debian/tmp/usr/lib/filenames/symlink3ok
+	ln -s ../filenames/symlink2 debian/tmp/usr/lib/filenames/symlink4wrong
+	ln -s ../menu/../somethingelse debian/tmp/usr/lib/filenames/symlink5wrong
+	ln -s ../menu/somethingelse debian/tmp/usr/lib/filenames/symlink4ok
+	ln -s ./file4 debian/tmp/usr/lib/filenames/symlink6wrong
+	ln -s ../menu/./something debian/tmp/usr/lib/filenames/symlink7wrong
+	ln -s ../menu//something debian/tmp/usr/lib/filenames/symlink8wrong
+	ln -s ../menu/something/ debian/tmp/usr/lib/filenames/symlink9wrong
+	ln -s .. debian/tmp/usr/lib/filenames/symlink5ok+warn
+	ln -s . debian/tmp/usr/lib/filenames/symlink6ok+warn
+	ln -s / debian/tmp/usr/lib/filenames/symlink7ok+warn
+	ln -s ../../.. debian/tmp/usr/lib/filenames/symlink10wrong
 	dpkg-gencontrol
 	dpkg --build debian/tmp ..
 
