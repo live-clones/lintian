@@ -8,7 +8,7 @@
 <author>Sean 'Shaleh' Perry <email>shaleh@debian.org</email>
 <author>Frank Lichtenheld <email>djpig@debian.org</email>
 <author>Contact address: <email>lintian-maint@debian.org</email>
-<version>version 1.23.0, 15 April 2004
+<version>version 1.23.8, 31 January 2005
 
 <abstract>
 This manual describes Lintian, the Debian package checker.
@@ -234,7 +234,10 @@ by mistake. If in doubt, please check out the policy manuals.
 most cases, the guidelines included in the manuals allow
 exceptions. Thus, if Lintian reports a policy violation on a package
 and you think this is such an exception (or if you think Lintian has a
-bug) please contact the authors of Lintian about this.
+bug) you can do two things: If your package is a bit non-standard and weird in
+this regard, you can install an override. If you think however that the check
+is too easily or outright wrongly triggered, please file a bug on the lintian
+package.
 
 <p>
 
@@ -422,10 +425,13 @@ for the authors of Lintian.
 <p>
 
 In the other two cases (where the error is actually an exception to
-policy) you should contact the Lintian maintainers too, including the
-Lintian error message and a short note, stating why you think this is an
-exception. This way, the Lintian maintainers can be sure the problem is not
-actually a bug in Lintian or an error in the author's reading of policy.
+policy), you should probably add an override. If you're unsure though whether
+it's indeed a good case for an override, you should contact the Lintian
+maintainers too, including the Lintian error message and a short note, stating
+why you think this is an exception. This way, the Lintian maintainers can be
+sure the problem is not actually a bug in Lintian or an error in the author's
+reading of policy. Please do not override bugs in lintian, they should rather
+be fixed than overridden.
 
 Once it has been decided that an override is needed, you can easily add one by
 supply a overrides file. If the override is for a binary or udeb
