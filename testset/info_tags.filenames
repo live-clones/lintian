@@ -58,6 +58,10 @@ N:
 N:   Package contains a CVS directory. It was most likely installed by
 N:   accident, since transient CVS data usually doesn't belong in packages.
 N:
+W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/examples/very_interesting_example
+N:
+N:   Package contains a file which is empty.
+N:
 W: filenames: lengthy-symlink usr/share/doc/filenames/version.txt.gz ../filenames/doc/version6.txt.gz
 N:
 N:   This link goes up, and then back down into the same subdirectory.

@@ -154,7 +154,11 @@ while (<IN>) {
 
 	    # zero byte file in /usr/share/doc/
 	    if ($size == 0 and $perm =~ m,^-,) {
-		print "W: $pkg $type: zero-byte-file-in-doc-directory $file\n";
+		# exception: __init__.py files are empty tagging files (see
+		# bug #215234)
+		unless ($file =~ m,^usr/share/doc/([^/]+/)?examples/(.+/)?__init__\.py$,) {
+		    print "W: $pkg $type: zero-byte-file-in-doc-directory $file\n";
+		}
 	    }
 
 	    # override files have moved

@@ -15,6 +15,8 @@ lintian (1.22.9-0.1) unstable; urgency=low
      + Fix typo (Closes: #202856)
    * checks/filenames (and more):
      + Check for Subversion version control leftovers (Closes: #190067)
+     + Ignore empty __init__.py files in /usr/share/doc (Closes: #215234)
+       (based on patch by Frank Lichtenheld <djpig@debian.org>)
 
   Frank Lichtenheld <djpig@debian.org>
    * checks/debhelper:
@@ -32,7 +34,7 @@ lintian (1.22.9-0.1) unstable; urgency=low
      + fix testing of dependencies to eliminate false
        positives of missing-debconf-dependency (Closes: #195201)
 
- -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Sun,  8 Feb 2004 23:49:47 +0100
+ -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Mon,  9 Feb 2004 00:10:15 +0100
 
 lintian (1.22.9) unstable; urgency=low
 
