@@ -1,10 +1,14 @@
 lintian (1.23.1~alpha) unstable; urgency=low
 
-Next release, name to be determined.
+  Next release, name to be determined.
 
   * checks/fields{,.desc}:
     + [JvW] Added debian-revision-should-not-be-zero, suggested by Adam
       Conrad
+
+  * testset/filenames:
+    + [JvW] Fix two lintian warnings in lintian itself by touching files only
+      on clean target, and not distributing them in the source
 
  -- Debian Lintian Maintainers <lintian-maint@debian.org>  Tue, 20 Apr 2004 02:03:37 +0200
 

@@ -20,6 +20,7 @@
 
 clean:
 	mkdir -p .svn CVS
+	touch files/.cvsignore files/svn-commit.tmp
 
 build:
 
