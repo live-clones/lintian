@@ -258,7 +258,7 @@ while (<IN>) {
 		tag "FSSTND-dir-in-manual-page", "$file:$lc $1";
 	    }
 	}
-	tag "hyphen-used-as-minus-sign", $file, ($hc-10), "more occurences not shown" if $hc > 10 and ! $ENV{'LINTIAN_DEBUG'};
+	tag "hyphen-used-as-minus-sign", $file, ($hc-10), "more occurrences not shown" if $hc > 10 and ! $ENV{'LINTIAN_DEBUG'};
     }
 }
 close(IN);

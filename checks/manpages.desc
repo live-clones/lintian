@@ -160,8 +160,8 @@ Info: Manual page seems to contain a hyphen where a minus sign was intended.
  to '\-'.
  .
  Because this error can occur <em>very</em> often we show only the
- first 10 occurences for each man page and give the number of
- suppressed occurences. If you want to see all warnings, run
+ first 10 occurrences for each man page and give the number of
+ suppressed occurrences. If you want to see all warnings, run
  lintian with the -d/--debug option.
 
 Tag: FSSTND-dir-in-manual-page

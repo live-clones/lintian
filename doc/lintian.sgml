@@ -474,7 +474,7 @@ foo source: configure-generated-file-in-source config.cache
 Many tags can occour more than once (e.g. if the same error is found
 in more than one file). You can override a tag either completly by
 specifying its name (first line in the examples) or only one
-occurence of it by specifying the additional info, too (second line
+occurrence of it by specifying the additional info, too (second line
 in the examples).
 
 <chapt>Advanced usage
