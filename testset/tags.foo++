@@ -19,3 +19,4 @@ W: foo++ source: uploader-not-full-name Josip
 W: foo++: readme-debian-contains-debmake-default-email-address
 E: foo++ source: build-info-in-binary-control-file-section Package foo++
 E: foo++ source: debian-control-file-uses-obsolete-national-encoding at line 18
+W: foo++: latest-debian-changelog-entry-without-new-date

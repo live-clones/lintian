@@ -105,3 +105,8 @@ Info: The Debian changelog file must be valid UTF-8, an encoding of
  .
   $ iconv -f ISO-8859-1 -t UTF-8 changelog > changelog.new
   $ mv changelog.new changelog
+
+Tag: latest-debian-changelog-entry-without-new-date
+Type: warning
+Info: The latest Debian changelog has either the same or even an older date
+ as the entry before.

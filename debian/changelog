@@ -10,6 +10,9 @@ lintian (1.23.1~alpha) unstable; urgency=low
        debian-changelog-file-uses-obsolete-national-charset ->
          debian-changelog-file-uses-obsolete-national-encoding
       (Closes: #248194)
+  * checks/changelog-files{,.desc}:
+    + [HE] New check latest-debian-changelog-entry-without-new-date, comparing
+      the dates of the last 2 changelog entries. (Closes: #111215)
   * checks/control-file{,.desc}:
     + [HE] Introduced new check script. New checks:
       - build-info-in-binary-control-file-section, triggered
