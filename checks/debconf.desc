@@ -30,7 +30,7 @@ Tag: duplicate-fields-in-templates
 Type: error
 Info: A template contains two identical fields (with identical values or
  not). This is either an error in this template, or two templates are
- not properly seperated by a lone newline.
+ not properly separated by a lone newline.
 
 Tag: unknown-field-in-templates
 Type: error

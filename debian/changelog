@@ -2,8 +2,11 @@ lintian (1.23.1~alpha) unstable; urgency=low
 
 Next release, name to be determined.
 
-* checks/fields{,.desc}:
-+ [JvW] Added debian-revision-should-not-be-zero, suggested by Adam Conrad
+  * checks/fields{,.desc}:
+    + [JvW] Added debian-revision-should-not-be-zero, suggested by Adam
+      Conrad
+  * checks/debconf.desc, checks/fields.desc:
+    + [CW] Fix misspellings of "separated".
 
  -- Debian Lintian Maintainers <lintian-maint@debian.org>  Tue, 20 Apr 2004 02:03:37 +0200
 
