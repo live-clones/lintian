@@ -94,6 +94,10 @@ lintian (1.23.1~alpha) unstable; urgency=low
   * testset/filenames:
     + [JvW] Fix two lintian warnings in lintian itself by touching files only
       on clean target, and not distributing them in the source
+  
+  * unpack/list-srcpkg:
+    + [FL] Some packages don't specifiy a standards-version, e.g. d-i ones.
+      Prevent Perl warnings.
 
  -- Debian Lintian Maintainers <lintian-maint@debian.org>  Tue, 18 May 2004 00:03:28 +0200
 

@@ -143,6 +143,7 @@ while (!eof(IN)) {
       push(@f,$t[2]);
     }
     $data->{'files'} = join(',',@f);
+    $data->{'standards-version'} ||= "";
     $pkg = $data->{'source'};
   }
 
