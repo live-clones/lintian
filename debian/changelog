@@ -1,6 +1,9 @@
 lintian (1.22.12) unstable; urgency=low
 
   Frank Lichtenheld <djpig@debian.org>
+  * debian/control:
+    + make Uploaders a single line field. It didn't really
+      break, but at least DDPO had its difficulties
   * man/lintian.1:
     + sync man page with the --help output by adding
       missing options (Closes: #198615)
