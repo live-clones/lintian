@@ -658,13 +658,8 @@ while (my $arg = shift) {
 	
 		# check md5sums
 		if ($check_md5sums or $file =~ /\.dsc$/) {
-		    my $MD5SUM = FileHandle->new;
-		    pipeline_open($MD5SUM, (sub { exec 'md5sum', $filename }))
-			or fail("cannot fork for md5sum: $!");
-		    my $real_md5sum = <$MD5SUM>;
+		    my $real_md5sum = get_md5_file($filename);
 
-		    close($MD5SUM) or fail("md5sum $filename exited with error $?");
-		    $real_md5sum =~ s/\s.*//s;
 		    if ($real_md5sum ne $md5sum) {
 			print "E: $arg_name: md5sum-mismatch-in-changes-file $file\n";
 		    }
