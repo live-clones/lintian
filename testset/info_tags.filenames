@@ -9,24 +9,47 @@ N:   don't have to re-upload the package just to adjust the
 N:   Standards-Version control field. However, please remember to update
 N:   this field next time you upload the package.
 N:
+W: filenames source: source-contains-svn-control-dir .svn
+N:
+N:   Source contains a .svn directory. It was most likely installed by
+N:   accident, since Subversion version control directories usually don't
+N:   belong in packages. Export from subversion rather than checkout.
+N:
+W: filenames source: cvsignore-file-in-source files/.cvsignore
+N:
+N:   Package contains a '.cvsignore' file. It may have been installed by
+N:   accident.
+N:
 W: filenames source: svn-commit-file-in-source files/svn-commit.tmp
 N:
 N:   Package source contains a 'svn-commit(.NNN).tmp' file. This file is
 N:   almost certainly a left-over from a failed Subversion commit, and does
 N:   not belong in a Debian package.
 N:
+W: filenames source: source-contains-CVS-dir CVS
+N:
+N:   Package contains a CVS directory. It was most likely installed by
+N:   accident, since transient CVS data usually doesn't belong in packages.
+N:   Export from CVS rather than use a checkout.
+N:
 E: filenames: non-standard-toplevel-dir files/
 N:
 N:   The Filesystem Hierarchy Standard forbids the installation of new
 N:   files or directories in the root directory, in section 3.
 N:
-W: filenames: file-in-unusual-dir files/ .tif
+W: filenames: file-in-unusual-dir files/.cvsignore
 N:
 N:   This file or symbolic link is in a directory where files are not
 N:   normally installed by Debian packages. If this is deliberate, please
 N:   contact lintian-maint@debian.org to make Lintian accept this as a
 N:   usual directory.
 N:
+W: filenames: cvsignore-file-in-package files/.cvsignore
+N:
+N:   Package contains a '.cvsignore' file. It may have been installed by
+N:   accident.
+N:
+W: filenames: file-in-unusual-dir files/ .tif
 W: filenames: file-in-unusual-dir files/".tif
 W: filenames: file-in-unusual-dir files/'\\ 
 W: filenames: file-in-unusual-dir files/svn-commit.tmp

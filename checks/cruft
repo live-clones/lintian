@@ -59,18 +59,23 @@ my $cwd = cwd;
 my $dir = readlink "$cwd/unpacked"; # File::Find in Perl 5.8 appears to need it
 
 sub find_cruft {
-    -f or return; # we just need normal files, for now
     (my $name = $File::Find::name) =~ s,^\Q$dir\E/,,;
+    if (-d) {
+	# More or less copied from files, but this time it checks the source
+	if ($name =~ m,^(.+/)?CVS$,) {
+	    print "W: $pkg $type: source-contains-CVS-dir $name\n";
+	} elsif ($name =~ m,^(.+/)?\.svn$,) {
+	    print "W: $pkg $type: source-contains-svn-control-dir $name\n";
+	}
+    }
+
+    -f or return; # we just need normal files, for now
 
     # More or less copied from files, but this time it checks the source
     if ($name =~ m,^(.+/)?svn-commit\.(.+\.)?tmp$,) {
 	print "W: $pkg $type: svn-commit-file-in-source $name\n";
     } elsif ($name =~ m,^(.+/)?\.cvsignore$,) {
 	print "W: $pkg $type: cvsignore-file-in-source $name\n";
-    } elsif ($name =~ m,^(.+/)?CVS$,) {
-	print "W: $pkg $type: source-contains-CVS-dir $name\n";
-    } elsif ($name =~ m,^(.+/)?\.svn$,) {
-	print "W: $pkg $type: source-contains-svn-control-dir $name\n";
     }
 
     if ($name =~ m,^(.+/)?config.(?:cache|log|status)$, and $pkg ne "lintian") {

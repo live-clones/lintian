@@ -1,6 +1,11 @@
 W: filenames source: ancient-standards-version 3.1.1
+W: filenames source: source-contains-svn-control-dir .svn
+W: filenames source: cvsignore-file-in-source files/.cvsignore
 W: filenames source: svn-commit-file-in-source files/svn-commit.tmp
+W: filenames source: source-contains-CVS-dir CVS
 E: filenames: non-standard-toplevel-dir files/
+W: filenames: file-in-unusual-dir files/.cvsignore
+W: filenames: cvsignore-file-in-package files/.cvsignore
 W: filenames: file-in-unusual-dir files/ .tif
 W: filenames: file-in-unusual-dir files/".tif
 W: filenames: file-in-unusual-dir files/'\\ 
