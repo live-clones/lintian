@@ -19,9 +19,18 @@
 # Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 # MA 02111-1307, USA.
 
+package Util;
 use strict;
+
+use Exporter 'import';
+our @EXPORT = qw(parse_dpkg_control
+	read_dpkg_control
+	get_deb_info
+	get_dsc_info
+	slurp_entire_file
+	fail);
+
 use FileHandle;
-use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Pipeline;
 
 # general function to read dpkg control files

@@ -478,6 +478,8 @@ require Lab;
 require Util;
 require Pipeline;
 require Read_pkglists;
+import Util;
+import Pipeline;
 
 use vars qw(%source_info %binary_info %udeb_info); # from the above
 
