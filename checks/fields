@@ -104,10 +104,10 @@ if (not open (FH, "fields/architecture")) {
 #---- Subarchitecture (udeb)
 
 if (open(FH, "fields/subarchitecture")) {
-    my $subarch = <FH>;
-    close(FH);
+	my $subarch = <FH>;
+	close(FH);
 
-    unfold("subarchitecture", \$subarch);
+	unfold("subarchitecture", \$subarch);
 }
 
 #---- Maintainer
@@ -149,7 +149,7 @@ if ($type eq "source") {
 			}
 		} else {
 			if ($source !~ /[A-Z0-9][-+\.A-Z0-9]+                      #Package name
-			                \s*                                        
+			                \s*
 			                (?:\((?:\d+:)?(?:[-\.+:A-Z0-9]+?)(?:-[\.+A-Z0-9]+)?\))?\s*$/ix) { #Version
 				print "E: $pkg $type: source-field-malformed $source\n";
 			}
@@ -184,15 +184,15 @@ if (not open (FH, "fields/section")) {
 	my @parts = split /\//, $section, 2;
 
 	if ($parts[0] =~ /non-US/i) {
-	    print "I: $pkg $type: non-us-spelling\n" if ($parts[0] ne "non-US");
-	    if ($parts[1] and not $known_non_us_parts{$parts[1]}) {
-		print "W: $pkg $type: unknown-section $section\n";
-	    }
+		print "I: $pkg $type: non-us-spelling\n" if ($parts[0] ne "non-US");
+		if ($parts[1] and not $known_non_us_parts{$parts[1]}) {
+			print "W: $pkg $type: unknown-section $section\n";
+		}
 	} elsif (scalar @parts > 1) {
-	    print "W: $pkg $type: unknown-section $section\n" unless $known_archive_parts{$parts[0]};
-	    print "W: $pkg $type: unknown-section $section\n" unless $known_sections{$parts[1]};
+		print "W: $pkg $type: unknown-section $section\n" unless $known_archive_parts{$parts[0]};
+		print "W: $pkg $type: unknown-section $section\n" unless $known_sections{$parts[1]};
 	} else {
-	    print "W: $pkg $type: unknown-section $section\n" unless $known_sections{$parts[0]};
+		print "W: $pkg $type: unknown-section $section\n" unless $known_sections{$parts[0]};
 	}
 }
 
@@ -218,19 +218,19 @@ if (not open (FH, "fields/priority")) {
 #---- Installer-Menu-Item (udeb)
 
 if (open(FH, "fields/installer-menu-item")) {
-    my $menu_item = <FH>;
-    close(FH);
+	my $menu_item = <FH>;
+	close(FH);
 
-    unfold('installer-menu-item', \$menu_item);
+	unfold('installer-menu-item', \$menu_item);
 
-    $menu_item =~ /^\d+$/ or print "E: $pkg $type: bad-menu-item $menu_item\n";
+	$menu_item =~ /^\d+$/ or print "E: $pkg $type: bad-menu-item $menu_item\n";
 }
 
 
 #---- Package relations (binary package)
 
 if (($type eq "binary") || ($type eq 'udeb')) {
-    my %deps;
+	my %deps;
 	for my $field (qw(depends pre-depends recommends suggests conflicts provides replaces)) {
 		if (open(FH, "fields/$field")) {
 			#Get data and clean it
@@ -323,28 +323,28 @@ if (($type eq "binary") || ($type eq 'udeb')) {
 			#Allow things like Depends: package1 (>= 1.3), package1 (<= 5.2)
 			unless ((scalar @$d_pkg == 2) && 
 			        (($d_pkg->[0]->[1]->[0] =~ />=|>>|>/ && $d_pkg->[1]->[1]->[0] =~ /<=|<<|</) or
-					 ($d_pkg->[0]->[1]->[0] =~ /<=|<<|</ && $d_pkg->[1]->[1]->[0] =~ />=|>>|>/))) {
-			    print "E: $pkg $type: package-has-a-duplicate-relation ";
-			    my @relations;
-			    if ($d_pkg->[0][0] eq $d_pkg->[1][0]) {
-				print "$d_pkg->[0][0]: ";
-				for (@$d_pkg) {
-				    if ($_->[1][0]) {
-					push @relations, "$d_pkg_name (".$_->[1][0]." ".$_->[1][1].")";
-				    } else {
-					push @relations, "$d_pkg_name";
-				    }
+			         ($d_pkg->[0]->[1]->[0] =~ /<=|<<|</ && $d_pkg->[1]->[1]->[0] =~ />=|>>|>/))) {
+				print "E: $pkg $type: package-has-a-duplicate-relation ";
+				my @relations;
+			 	if ($d_pkg->[0][0] eq $d_pkg->[1][0]) {
+					print "$d_pkg->[0][0]: ";
+					for (@$d_pkg) {
+						if ($_->[1][0]) {
+							push @relations, "$d_pkg_name (".$_->[1][0]." ".$_->[1][1].")";
+						} else {
+							push @relations, "$d_pkg_name";
+						}
+					}
+				} else {
+					for (@$d_pkg) {
+						if ($_->[1][0]) {
+							push @relations, "$_->[0]: $d_pkg_name (".$_->[1][0]." ".$_->[1][1].")";
+						} else {
+							push @relations, "$_->[0]: $d_pkg_name";
+						}
+					}
 				}
-			    } else {
-				for (@$d_pkg) {
-				    if ($_->[1][0]) {
-					push @relations, "$_->[0]: $d_pkg_name (".$_->[1][0]." ".$_->[1][1].")";
-				    } else {
-					push @relations, "$_->[0]: $d_pkg_name";
-				    }
-				}
-			    }
-			    print join( ", ", @relations ),"\n";			    
+				print join( ", ", @relations ),"\n";
 			}
 		}
 	}
@@ -478,8 +478,8 @@ sub check_maint {
 	my ($name, $del, $mail, $crap) = ($1, $2, $3, $4);
 
 	if (!$mail && $name =~ m/@/) { # name probably missing and address has no <>
-	    $mail = $name;
-	    $name = undef;
+		$mail = $name;
+		$name = undef;
 	}
 
 	print "E: $pkg $type: $f-address-malformed $maintainer\n" if $crap;
@@ -493,15 +493,20 @@ sub check_maint {
 			
 	#This should be done with Email::Valid:
 	if (!$mail) {
-	    print "E: $pkg $type: $f-address-missing $maintainer\n";
+		print "E: $pkg $type: $f-address-missing $maintainer\n";
 	} else {
-	    print "E: $pkg $type: $f-address-malformed $maintainer\n" 
-		unless ($mail =~ /^[^()<>@,;:\\"[\]]+@(\S+\.)+\S+/); #"
-				    
-	    print "E: $pkg $type: $f-address-is-on-localhost $maintainer\n"
-	        if ($mail =~ /(?:localhost|\.localdomain|\.localnet)$/);
+		print "E: $pkg $type: $f-address-malformed $maintainer\n" 
+		    unless ($mail =~ /^[^()<>@,;:\\"[\]]+@(\S+\.)+\S+/); #"
 
-	    print "E: $pkg $type: wrong-debian-qa-address-set-as-maintainer $maintainer\n"
-	        if ($f eq "maintainer" && $mail eq 'debian-qa@lists.debian.org');
+		print "E: $pkg $type: $f-address-is-on-localhost $maintainer\n"
+		    if ($mail =~ /(?:localhost|\.localdomain|\.localnet)$/);
+
+		print "E: $pkg $type: wrong-debian-qa-address-set-as-maintainer $maintainer\n"
+		    if ($f eq "maintainer" && $mail eq 'debian-qa@lists.debian.org');
 	}
 }
+
+# vim:set shiftwidth=4:
+# vim:set tabstop=4:
+# vim:set noet:
+# vim:set shiftround:
