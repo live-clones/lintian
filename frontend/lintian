@@ -557,7 +557,7 @@ while (my $arg = shift) {
 	    schedule_package('b', $info->{'package'}, $info->{'version'}, $arg);
 	}
 	# .udeb file?
-	if ($arg =~ /\.udeb$/) {
+	elsif ($arg =~ /\.udeb$/) {
 	    my $info = get_deb_info($arg);
 	    if (not defined $info) {
 		print STDERR "$arg is a zero-byte file, skipping\n";
