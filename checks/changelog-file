@@ -20,6 +20,7 @@
 # MA 02111-1307, USA.
 
 use strict;
+use utf8;
 
 ($#ARGV == 1) or fail("syntax: changelog-file <pkg> <type>");
 my $pkg = shift;
@@ -187,6 +188,15 @@ if ($native_pkg) {
 	print "E: $pkg $type: debian-changelog-file-missing\n";
     }
 }
+
+open (IN, "<:utf8", "changelog") or fail("cannot find changelog for $type package $pkg");
+while (<IN>) {
+  unless (utf8::valid($_)) {
+    print "E: $pkg $type: debian-changelog-file-uses-obsolete-national-charset\n";
+    last;
+  }
+}
+close IN;
 
 # read the changelog itself
 #

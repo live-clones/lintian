@@ -1,3 +1,13 @@
+lintian (1.22.9-0.1) unstable; urgency=low
+
+  * Non Maintainer Upload with knowledge of Maintainer
+
+  Jeroen van Wolffelaar <jeroen@wolffelaar.nl>
+   * Check wether changelog is valid UTF-8 (Closes: #175318)
+     (Patch by: Colin Walters <walters@debian.org>)
+
+ -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Sat, 31 Jan 2004 14:22:48 +0100
+
 lintian (1.22.9) unstable; urgency=low
 
   * config.* files from 2000-09-05 and such had the timestamp in a
