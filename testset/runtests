@@ -99,6 +99,7 @@ BEGIN {
     delete $ENV{'LINTIAN_LAB'};
     delete $ENV{'LINTIAN_DIST'};
     delete $ENV{'LINTIAN_UNPACK_LEVEL'};
+    $ENV{'LC_COLLATE'} = 'C';
 }
 
 my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
