@@ -1,4 +1,4 @@
-lintian (1.23.0~beta1-fixing1) unstable; urgency=low
+lintian (1.23.0~RC1+fixes) unstable; urgency=low
 
   The ``moving forward'' release, prepared by Marc 'HE' Brockschmidt,
   Frank Lichtenheld and Jeroen van Wolffelaar.
@@ -42,6 +42,9 @@ lintian (1.23.0~beta1-fixing1) unstable; urgency=low
     + [JvW] Implement source-tar-is-posix-tar, which checks for upstream
       tarballs that are tar --posix tarballs, which cannot be untarred by the
       tar version in woody (Closes: #245138)
+  * checks/debhelper{,.desc}:
+    + [JvW] Add error if debian/compat is empty, happens once in current
+      sid and gave internal error before
   * checks/debian-readme:
     + [HE] Add check for the debmake template email address. Patch by Steffen
       Moeller <moeller@pzr.uni-rostock.de>, thanks!
@@ -102,6 +105,9 @@ lintian (1.23.0~beta1-fixing1) unstable; urgency=low
       on patch by FL. (Closes: #203389)
     + [JvW] x11-games-should-be-in-usr-games is now error, because it's
       mandated by policy
+  * checks/menus:
+    + [JvW] Stricter checking for whether update-menus is actually called
+      (Closes: #244628)
   * checks/menu-format:
     + [FL] Only issue one warning about needs=dwww, not two
     + [HE] Check if the command given with command= is in the package
@@ -217,12 +223,10 @@ lintian (1.22.12) unstable; urgency=low
       output (only important if you do automatic processing on it)
     + [FL] The current script is by Denis Barbier, correcting author in
       .desc file
-  * checks/debhelper{,.desc}:
+  * checks/debhelper.desc:
     + [FL] correct reference to debhelper manpage. It's debhelper(7), not
       debhelper(1). Thanks to Brian Nelson for pointing this out
       (Closes: #188245)
-    + [JvW] Add error if debian/compat is empty, happens once in current
-      sid and gave internal error before
   * checks/debconf:
     + [JvW] Update valid types, since currently 'title' is supported now too
       (Closes: #234379, #234608)
@@ -259,8 +263,6 @@ lintian (1.22.12) unstable; urgency=low
   * checks/menus{,.desc}:
     + [FL] Remove non-exectuable-in-etc-menu-methods as it doesn't
       reflects the current menu manual (Closes: #229460)
-    + [JvW] Stricter checking for whether update-menus is actually called
-      (Closes: #244628)
   * checks/po-debconf:
     + [JvW] Check whether files listed in debian/po/POTFILES.in actually
       exist, and only positively detect po-debconf usage if dependency is
