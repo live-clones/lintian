@@ -29,6 +29,8 @@ lintian (1.23.3) unstable; urgency=low
       not php4-cgi, update dependency check accordingly (Closes: #268077)
     + [JvW] Give an error if the 'config' script uses a non-essential
       interpreter (Closes: #274832)
+  * checks/shared-libraries:
+    + [JvW] Ignore comments in shlibs files (Closes: #275124)
 
  -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Wed, 13 Oct 2004 01:14:41 +0200
 

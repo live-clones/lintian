@@ -249,7 +249,7 @@ if ($#shlibs == -1) {
 	open(SHLIBS,$shlibs_control_file) or fail("cannot open shlibs control file $shlibs_control_file for reading: $!");
 	while (<SHLIBS>) {
 	    chop;
-	    next if m/^\s*$/;
+	    next if m/^\s*$/ or /^#/;
 	    @words = split(/\s+/o,$_);
 	    if ($shlibs_control{$words[0]}) {
 		tag "duplicate-entry-in-shlibs-control-file", "$words[0]";
