@@ -38,7 +38,7 @@ stores information about the packages it examines.  It can keep this
 information between multiple invocations in order to avoid repeating
 expensive data-collection operations.
 .sp
-There are three ways to specify binary or source packages for Lintian
+There are three ways to specify binary, udeb or source packages for Lintian
 to process: by file name, by package name, or by naming a
 .I .changes
 file.  
@@ -48,10 +48,10 @@ define the
 variable in the configuration file (see below).  Lintian will then
 search for any binary or source packages in this directory for
 packages with the given name. (You can use the
-.B \-b
+.BR \-b " (" \-\-binary "), " \-\-udeb
 and
-.B \-s
-options if you only want to process either binary or source packages.)
+.BR \-s " (" \-\-source )
+options if you only want to process binary, udeb or source packages.)
 
 If you specify a
 .I .changes
@@ -290,7 +290,7 @@ A directory for this package exists in the \fIlaboratory\fR
 and basic information is extracted.  This does not take
 much space.
 
-For binary packages,
+For binary and udeb packages,
 the
 .I control
 and
