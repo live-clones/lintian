@@ -1,3 +1,10 @@
+manpages (3) unstable; urgency=low
+
+  * Add X11 binary to check the manpage-for-non-x11-binary-in-wrong-directory
+    and friends.
+
+ -- Marc 'HE' Brockschmidt <he@debian.org>  Sun, 11 Apr 2004 16:39:04 +0200
+
 manpages (2) unstable; urgency=low
 
   * Add a hardlink check after the recent hardlink breackage

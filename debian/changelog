@@ -67,6 +67,10 @@ lintian (1.23.0) UNRELEASED; urgency=low
         regex by Josip Rodin.
       - Search for FSSTND directories referenced in man pages. Only
         an info tag. (Closes: #111098)
+    + [FL, HE] Fix false positives of
+      manpage-for-non-x11-binary-in-wrong-directory when a link
+      from a normal bin/ is pointing to a binary in an X11 dir. Based 
+      on patch by FL. (Closes: #203389)
   * checks/menu-format:
     + [FL] Only issue one warning about needs=dwww, not two
     + [HE] Check if the command given with command= is in the package

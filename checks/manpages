@@ -29,6 +29,7 @@ use File::Basename;
 
 my %file_info;
 my %binary;
+my %link;
 my %sect_by_binary;
 my %sect_by_manpage;
 my %manpage;
@@ -77,6 +78,7 @@ while (<IN>) {
 	my $bin = $fname;
 	
 	$binary{$bin} = $file;
+	$link{$bin} = $link if $link;
 
 	for ($path) {
 	    m,^(usr/(X11R6/)?)?bin/,o && do {
@@ -262,7 +264,8 @@ close(IN);
 for my $f (sort keys %binary) {
     if (exists $manpage{$f}) {
 	# X11 binary?
-	if ($binary{$f} =~ m/X11/) {
+	if ($binary{$f} =~ m/X11/ or 
+	     ($link{$f} && $link{$f} =~ m/X11/)) { #Link to a X11 dir
 	    # yes. manpage in X11 too?
 	    if ($manpage{$f} =~ m/X11/) {
 		# ok.

@@ -72,6 +72,9 @@ N:   Refer to Policy Manual, section 11.11 for details.
 N:
 E: manpages: empty-manual-page usr/X11R6/man/man6/X11R6-binary.man
 E: manpages: manpage-has-bad-whatis-entry usr/X11R6/man/man6/X11R6-binary.man
+E: manpages: manpage-not-compressed-with-gzip usr/X11R6/man/man1/rstartd.1x.gz
+E: manpages: empty-manual-page usr/X11R6/man/man1/rstartd.1x.gz
+E: manpages: manpage-has-bad-whatis-entry usr/X11R6/man/man1/rstartd.1x.gz
 W: manpages: link-to-undocumented-manpage usr/share/man/man1/bin-binary.1.gz
 N:
 N:   Symbolic links to the undocumented(7) manual page may be provided if
@@ -96,6 +99,17 @@ N:   `../../../share/man/man[237]/undocumented.[237].gz' for manual pages
 N:   in /usr/X11R6/man.
 N:
 W: manpages: link-to-undocumented-manpage usr/share/man/man3/function.3.gz
+W: manpages: no-manpage-in-correct-directory usr/sbin/usr-sbin-binary (1)
+N:
+N:   Manpages for executables in /sbin and /usr/sbin should be placed in
+N:   section 8; manpages for executables in /bin and /usr/bin in section 1;
+N:   manpages for executables in /usr/games in section 6. For the noted
+N:   executable some probable manpages were found but none in the right
+N:   section.
+N:   
+N:   This could either mean there is no manpage for the executable or that
+N:   its manpage is placed in the wrong section.
+N:
 W: manpages: package-contains-hardlink usr/share/man/man1/usr-bin-binary-alt.1.gz
 N:
 N:   Hardlinks are bad mkay, don't use hardlinks.
