@@ -877,6 +877,7 @@ import Tags;
 
 no warnings;
 $Tags::show_info = $display_infotags;
+$Tags::show_overrides = $show_overrides;
 use warnings;
 
 # load information about checker scripts
@@ -1234,24 +1235,24 @@ for (reverse sort @packages) {
     }
 
     if ($action eq 'check') { 	# read override file
+	Tags::pkg_reset($type eq 'binary' ? $pkg : "$pkg $type");
+
+
 	unless ($no_override) 
 	    { 	if ( open(O,"$base/override") )
 		    {
-			binmode(O);
 			while (<O>) {
 			    chomp;
-			    next if m,^\#,o;
+			    next if m,^\s*(\#|$),o;
 
+			    # TODO: warn if no $pkg: thing is there...
+			    s/^$pkg://;
 			    s/^\s+//o;
 			    s/\s+$//o;
 			    s/\s+/ /go;
 			    next if $_ eq '';
 
-#			    if ( defined( $overridden{$_} ) ) {
-#				print "N: Local override not needed in package $pkg: $_\n" if $verbose;
-#			    } else {
-#				$overridden{$_} = 0;
-#			    }
+			    Tags::add_override($_);
 			}
 			close(O);
 		    }
@@ -1292,8 +1293,8 @@ for (reverse sort @packages) {
 	}
 
 	# report unused overrides
-	if (not $no_override and $verbose) {
-	    my $ppkg = $type eq 'b' ? quotemeta($pkg) : quotemeta("$pkg $long_type");
+#	if (not $no_override and $verbose) {
+#	    my $ppkg = $type eq 'b' ? quotemeta($pkg) : quotemeta("$pkg $long_type");
 #	    for my $o (sort keys %overridden) {
 #		next unless $o =~ /^$ppkg:/;
 #		next if $overridden{$o};
@@ -1303,7 +1304,7 @@ for (reverse sort @packages) {
 #		# mark override entry as used
 #		$overridden{$o} = 99999;
 #	    }
-	}
+#	}
     }
 
     # chdir to lintian root directory (to unlock $base so it can be removed below)

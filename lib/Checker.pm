@@ -1,7 +1,7 @@
 # Checker -- Perl checker functions for lintian
 # $Id$
 
-# Copyright (C) 1998-2004 Various authors
+# Copyright (C) 2004 Jeroen van Wolffelaar
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -34,12 +34,9 @@ my $LINTIAN_ROOT = $::LINTIAN_ROOT;
 my $verbose = $::verbose;
 my $debug = $::debug;
 
-# Not very neat to do like this... but the code wasn't neat to begin with :-/
-my $display_infotags = $::display_infotags;
-my $no_override = $::no_override;
-my $show_overrides = $::show_overrides;
-
 my %checks;
+# For source, binary, udeb, the names of applicable checks
+my %checks_per_type;
 
 # Register a check. Argument is a hash with info
 sub register {

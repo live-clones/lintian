@@ -44,13 +44,15 @@ our $show_info = 0;
 # - experimental: experimental status (possibly undef)
 my %tags;
 
+our $show_overrides;
+# in the form overrides->tag or full thing
+my %overrides;
+
 my $codes = { 'error' => 'E' , 'warning' => 'W' , 'info' => 'I' };
 
 
 # TODO
-# - override support back in
-# - info display configurable
-# - understand 'reset'
+# - override support back in --> just the unused reporting
 # - be able to return whether any errors were there, better, full stats
 
 # Call this function to add a certain tag, by supplying the info as a hash
@@ -62,6 +64,19 @@ sub add_tag {
 	$tags{$newtag->{'tag'}} = $newtag;
 }
 
+# Used to reset the matched tags data
+sub pkg_reset {
+	$prefix = shift;
+	*overrides = {};
+}
+
+# Add an override, string tag, string rest
+sub add_override {
+	my $tag = shift;
+	$overrides{$tag} = 0;
+}
+
+
 sub tag {
 	my $tag = shift;
 	my $info = $tags{$tag};
@@ -69,8 +84,13 @@ sub tag {
 	my $extra = '';
 	$extra = ' '.join(' ', @_) if $#_ >=0;
 	$extra = '' if $extra eq ' ';
+	my $code = $codes->{$info->{'type'}};
+	if (exists $overrides{$tag} or exists $overrides{"$tag$extra"}) {
+		return unless $show_overrides;
+		$code = 'O';
+	}
 
-	print "$codes->{$info->{'type'}}: $prefix: $tag$extra\n";
+	print "$code: $prefix: $tag$extra\n";
 }
 
 1;
