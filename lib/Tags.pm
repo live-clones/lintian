@@ -87,7 +87,7 @@ sub tag {
 	$extra = '' if $extra eq ' ';
 	my $code = $codes->{$info->{'type'}};
 	if (exists $overrides{$tag} or exists $overrides{"$tag$extra"}) {
-		return unless $show_overrides;
+		return unless $show_overrides or $verbose;
 		$code = 'O';
 	}
 
