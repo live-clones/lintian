@@ -130,7 +130,7 @@ lintian (1.23.0) UNRELEASED; urgency=low
     + [JvW] New series of checks: Check whether NMU's have correct NMU version
       number, and whether maintainer uploads have correct maintainer version.
       Also, check whether NMU's and QA uploads are identified as such in the
-      changelog.
+      changelog (Closes: #111948)
   * checks/scripts:
     + [FL] Add /usr/bin/php as valid interpreter. (Closes: #239115)
       Thanks to Peter Eisentraut for pointing this change out
