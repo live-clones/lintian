@@ -21,18 +21,19 @@
 
 use strict;
 
-($#ARGV == 1) or fail("syntax: copyright-file <pkg> <type>");
+($#ARGV == 1) or fail("syntax: debian-readme <pkg> <type>");
 my $pkg = shift;
 my $type = shift;
-my $readme;
+my $readme = "";
 my $template;
 
 # read the file in one go
 undef $/;
 
-open(IN,"README.Debian") or fail("cannot open README.Debian file: $!");
-$readme = <IN>;
-close(IN);
+if (open(IN,"README.Debian")) {
+    $readme = <IN>;
+    close(IN);
+}
 
 $template =
     ".* for DEBIAN\n" .
