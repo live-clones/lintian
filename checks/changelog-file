@@ -142,6 +142,8 @@ if ( $found_html && !$found_text ) {
 open(IN,"fields/version") or fail("cannot open fields/version file for reading: $!");
 chop(my $version = <IN>);
 close(IN);
+# FIXME: should do real native-checking, and then if version number is okay.
+# version number of -0.x for example can be either native or non-native...
 $native_pkg = ($version !~ m/-/);
 
 if ($native_pkg) {

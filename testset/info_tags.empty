@@ -4,6 +4,17 @@ N:   The source package does not have a `Standards-Version' control field.
 N:   Please update your package to latest policy and set this control field
 N:   appropriately.
 N:
+W: empty source: changelog-should-mention-nmu
+N:
+N:   When you NMU a package, that fact should be mentioned on the first
+N:   line in the changelog entry.
+N:
+W: empty source: source-nmu-has-incorrect-version-number 1
+N:
+N:   A source NMU should have a Debian revision of '-x.x'. This is to
+N:   prevent stealing version numbers from the maintainer (and the -x.x.x
+N:   version numbers are reserved for binary-only NMU's).
+N:
 W: empty source: maintainer-not-full-name empty
 N:
 N:   The `name' part of this maintainer field is just one word, so it might

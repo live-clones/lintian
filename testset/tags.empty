@@ -1,4 +1,6 @@
 E: empty source: no-standards-version-field
+W: empty source: changelog-should-mention-nmu
+W: empty source: source-nmu-has-incorrect-version-number 1
 W: empty source: maintainer-not-full-name empty
 E: empty source: maintainer-address-missing empty
 E: empty: no-copyright-file

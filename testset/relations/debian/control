@@ -2,7 +2,7 @@ Source: relations
 Section: misc
 Priority: optional
 Build-Depends: foo (>> 2) bar baz bat
-Maintainer: Lintian Maintainer <lintian-maint@debian.org>
+Maintainer: Debian QA Group <packages@qa.debian.org>
 Standards-Version: 3.1.1
 Origin: Debian
 Bugs: foobar

@@ -1,8 +1,8 @@
 W: filenames source: ancient-standards-version 3.1.1
-W: filenames source: source-contains-svn-control-dir .svn
-W: filenames source: cvsignore-file-in-source files/.cvsignore
-W: filenames source: svn-commit-file-in-source files/svn-commit.tmp
 W: filenames source: source-contains-CVS-dir CVS
+W: filenames source: svn-commit-file-in-source files/svn-commit.tmp
+W: filenames source: cvsignore-file-in-source files/.cvsignore
+W: filenames source: source-contains-svn-control-dir .svn
 E: filenames: binary-without-manpage testxbin
 E: filenames: binary-without-manpage testxbin2
 E: filenames: non-standard-toplevel-dir files/
@@ -11,9 +11,9 @@ W: filenames: cvsignore-file-in-package files/.cvsignore
 W: filenames: file-in-unusual-dir files/ .tif
 W: filenames: file-in-unusual-dir files/".tif
 W: filenames: file-in-unusual-dir files/'\\ 
-W: filenames: file-in-unusual-dir files/Maelstrom Sound
 W: filenames: file-in-unusual-dir files/svn-commit.tmp
 W: filenames: svn-commit-file-in-package files/svn-commit.tmp
+W: filenames: file-in-unusual-dir files/Maelstrom Sound
 E: filenames: package-installs-packlist usr/lib/perl5/foo/.packlist
 E: filenames: package-contains-ancient-file usr/lib/perl5/foo/ancient.pm 1975-01-01
 W: filenames: package-contains-svn-control-dir usr/lib/perl5/.svn/
@@ -54,3 +54,4 @@ E: filenames: postrm-does-not-call-updatemenus usr/lib/menu/menu
 E: filenames: no-copyright-file
 W: filenames: no-section-field
 W: filenames: no-priority-field
+E: filenames: debian-changelog-file-missing <<<< FALSE POSITIVE

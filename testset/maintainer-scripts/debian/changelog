@@ -1,3 +1,10 @@
+maintainer-scripts (7-0.1) unstable; urgency=low
+
+  * Doing an upload for QA  but I fail to give it a correct version number,
+    have some uploaders, and also fail to mention it... Bad me ;)
+
+ -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Sun, 18 Apr 2004 02:05:29 +0200
+
 maintainer-scripts (6) unstable; urgency=low
 
   * added ldconfig calls to postrm to check test the postrm tests

@@ -9,46 +9,36 @@ N:   don't have to re-upload the package just to adjust the
 N:   Standards-Version control field. However, please remember to update
 N:   this field next time you upload the package.
 N:
+E: maintainer-scripts source: orphaned-package-should-not-have-uploaders
+N:
+N:   Packages which their maintainer set to packages@qa.debian.org, i.e.
+N:   orphaned packages, should not have uploaders. Properly adopt the
+N:   package if you want to resume its maintainance.
+N:
+W: maintainer-scripts source: qa-upload-has-incorrect-version-number 7-0.1
+N:
+N:   A QA upload (uploading an orphaned package without adopting it) is
+N:   always a maintainer upload: it should not get a NMU revision number.
+N:
+W: maintainer-scripts source: changelog-should-mention-qa
+N:
+N:   If this upload is to orphan this package, please mention this fact on
+N:   the first line of the changelog. If this is a QA upload, please
+N:   mention "QA (group) upload" there.
+N:
+E: maintainer-scripts source: wrong-debian-qa-group-name QA group <packages@qa.debian.org>
+N:
+N:   Orphaned packages should have "Debian QA Group
+N:   <packages@qa.debian.org>" in the maintainer field.
+N:   
+N:   Refer to Developers Reference, section 5.9.4 for details.
+N:
 W: maintainer-scripts: postinst-should-not-set-usr-doc-link
 N:
 N:   The technical committee chose the symlink transition method to move
 N:   from FSSTND to FHS. That transition has been completed with woody and
 N:   thus this link is no longer required.
 N:
-W: maintainer-scripts: postrm-has-useless-call-to-ldconfig
-N:
-N:   The postrm script calls ldconfig even though no shared libraries are
-N:   installed in a directory controlled by the dynamic library loader.
-N:   
-N:   Refer to Policy Manual, section 8.1.1 for details.
-N:
-W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:12 '. /usr/share/lintian/shell foo'
-N:
-N:   This script is marked as running under /bin/sh, but it seems to use a
-N:   feature found in bash.
-N:   
-N:   Examples: '==' in a test, it should use '=' instead 'read' without a
-N:   variable in the argument 'function' to define a function 'source'
-N:   instead of '.' '. command args', passing arguments to commands via
-N:   'source' is not supported '{foo,bar}' instead of 'foo bar'
-N:   
-N:   Refer to Policy Manual, section 10.4 for details.
-N:
-W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:15 'read'
-W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:17 'H[0]='
-W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:18 '${H[0]}'
-W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:20 '${H[@]}'
-E: maintainer-scripts: maintainer-shell-script-fails-syntax-check prerm
-N:
-N:   Running this shell script with the shell's -n option set fails, which
-N:   means that the script has syntax errors. This will likely make the
-N:   package uninstallable.
-N:   
-N:   Run e.g. sh -n yourscript to see the errors yourself.
-N:
-W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:19 '[ "$2" == '
-W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:23 'function foo( )'
-W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:27 'source $FOO'
 W: maintainer-scripts: update-alternatives-remove-called-in-postrm
 N:
 N:   'update-alternatives --remove foo' is called in the postrm. This can
@@ -66,10 +56,53 @@ N:   If the postrm is the right place for what the package is doing, then
 N:   please email lintian-maint@debian.org about it so that this exception
 N:   would be recognized in future versions of Lintian.
 N:
+E: maintainer-scripts: maintainer-shell-script-fails-syntax-check prerm
+N:
+N:   Running this shell script with the shell's -n option set fails, which
+N:   means that the script has syntax errors. This will likely make the
+N:   package uninstallable.
+N:   
+N:   Run e.g. sh -n yourscript to see the errors yourself.
+N:
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:19 '[ "$2" == '
+N:
+N:   This script is marked as running under /bin/sh, but it seems to use a
+N:   feature found in bash.
+N:   
+N:   Examples: '==' in a test, it should use '=' instead 'read' without a
+N:   variable in the argument 'function' to define a function 'source'
+N:   instead of '.' '. command args', passing arguments to commands via
+N:   'source' is not supported '{foo,bar}' instead of 'foo bar'
+N:   
+N:   Refer to Policy Manual, section 10.4 for details.
+N:
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:23 'function foo( )'
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:27 'source $FOO'
+W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:12 '. /usr/share/lintian/shell foo'
+W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:15 'read'
+W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:17 'H[0]='
+W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:18 '${H[0]}'
+W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:20 '${H[@]}'
+W: maintainer-scripts: postrm-has-useless-call-to-ldconfig
+N:
+N:   The postrm script calls ldconfig even though no shared libraries are
+N:   installed in a directory controlled by the dynamic library loader.
+N:   
+N:   Refer to Policy Manual, section 8.1.1 for details.
+N:
 E: maintainer-scripts: no-copyright-file
 N:
 N:   Each binary package has to include a plain file
 N:   /usr/share/doc/<pkg>/copyright
 N:   
 N:   Refer to Policy Manual, section 12.5 for details.
+N:
+E: maintainer-scripts: wrong-debian-qa-group-name QA group <packages@qa.debian.org>
+E: maintainer-scripts: debian-changelog-file-missing
+N:
+N:   Each Debian package (which provides a /usr/share/doc/<pkg> directory)
+N:   has to install a Debian changelog file
+N:   /usr/share/doc/<pkg>/changelog.Debian.gz
+N:   
+N:   Refer to Policy Manual, section 12.7 for details.
 N:

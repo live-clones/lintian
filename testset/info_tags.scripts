@@ -9,6 +9,17 @@ N:   don't have to re-upload the package just to adjust the
 N:   Standards-Version control field. However, please remember to update
 N:   this field next time you upload the package.
 N:
+W: scripts source: changelog-should-mention-nmu
+N:
+N:   When you NMU a package, that fact should be mentioned on the first
+N:   line in the changelog entry.
+N:
+W: scripts source: source-nmu-has-incorrect-version-number 5
+N:
+N:   A source NMU should have a Debian revision of '-x.x'. This is to
+N:   prevent stealing version numbers from the maintainer (and the -x.x.x
+N:   version numbers are reserved for binary-only NMU's).
+N:
 E: scripts: binary-without-manpage perlfoo
 N:
 N:   Each binary in /usr/bin, /usr/sbin, /bin, /sbin, or /usr/games, must

@@ -25,11 +25,11 @@ binary-arch:
 binary-indep:
 	install -d debian/tmp/DEBIAN
 	dpkg-gencontrol -prelations -isp
-	dpkg --build debian/tmp ../relations_4_all.deb
+	dpkg --build debian/tmp ../relations_5_all.deb
 	install -d debian/tmp/usr/share/doc/
 	ln -s relations debian/tmp/usr/share/doc/relations-multiple-libs
 	dpkg-gencontrol -prelations-multiple-libs -isp
-	dpkg --build debian/tmp ../relations-multiple-libs_4_all.deb
+	dpkg --build debian/tmp ../relations-multiple-libs_5_all.deb
 
 binary: binary-arch binary-indep
 

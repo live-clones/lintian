@@ -1,7 +1,8 @@
 Source: maintainer-scripts
 Section: misc
 Priority: optional
-Maintainer: Lintian Maintainer <lintian-maint@debian.org>
+Maintainer: QA group <packages@qa.debian.org>
+Uploaders: Anyone but Jeroen <jeroen@wolffelaar.nl>
 Standards-Version: 3.1.1
 
 Package: maintainer-scripts

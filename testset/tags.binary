@@ -1,10 +1,12 @@
 W: binary source: ancient-standards-version 3.2.1
 W: binary source: native-package-with-dash-version
+W: binary source: changelog-should-mention-nmu
+W: binary source: maintainer-upload-has-incorrect-version-number 4-1.1
 E: binary: binary-without-manpage hello
 E: binary: binary-without-manpage hello-static
 E: binary: binary-without-manpage hello.static
 E: binary: binary-without-manpage static-hello
-I: binary: arch-dep-package-has-big-usr-share 1540kB 55%
+I: binary: arch-dep-package-has-big-usr-share 1528kB 54%
 W: binary: package-contains-upstream-install-documentation usr/share/doc/binary/INSTALL
 E: binary: postinst-does-not-call-updatemenus usr/lib/menu/binary
 E: binary: postrm-does-not-call-updatemenus usr/lib/menu/binary

@@ -1,6 +1,7 @@
 Source: non-us
 Priority: optional
 Maintainer: Lintian Maintainer <lintian-maint@debian.org>
+Uploaders: Sean 'Shaleh' Perry <shaleh@debian.org>
 Standards-Version: 3.1.1
 
 Package: patented-app

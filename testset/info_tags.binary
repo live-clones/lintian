@@ -20,6 +20,18 @@ N:   cases the reason is the location of the original source tarball.
 N:   dpkg-source searches for this in
 N:   ../package_upstream-version.orig.tar.gz.
 N:
+W: binary source: changelog-should-mention-nmu
+N:
+N:   When you NMU a package, that fact should be mentioned on the first
+N:   line in the changelog entry.
+N:
+W: binary source: maintainer-upload-has-incorrect-version-number 4-1.1
+N:
+N:   A maintainer upload should have a Debian revision without dots.
+N:   Revisions with dots are reserverd for Non-Maintainer Uploads (NMU's),
+N:   if you do a maintainer-upload with dots, a potential NMU'er has
+N:   problems choosing a correct version number.
+N:
 E: binary: binary-without-manpage hello
 N:
 N:   Each binary in /usr/bin, /usr/sbin, /bin, /sbin, or /usr/games, must
@@ -36,21 +48,13 @@ N:
 E: binary: binary-without-manpage hello-static
 E: binary: binary-without-manpage hello.static
 E: binary: binary-without-manpage static-hello
-I: binary: arch-dep-package-has-big-usr-share 1540kB 55%
-N:
-N:   The package has a significant amount of architecture-independent data
-N:   in /usr/share, while it is an architecture-dependent package. This is
-N:   wasteful of mirror space and bandwidth, as we then end up with
-N:   multiple copies of this data, one for each architecture.
-N:   
-N:   If the data in /usr/share is not architecture-independent, it is a
-N:   policy violation, and in this case, you should move that data
-N:   elsewhere.
-N:   
-N:   See also:
-N:   http://www.debian.org/doc/developers-reference/ch-best-pkging-practice
-N:   s#s-bpp-archindepdata
-N:
+I: binary: arch-dep-package-has-big-usr-share 1528kB 54%
+
+
+   SOMETHING WRONG HERE, description must be printed here... why isn't that
+   happening? --Jeroen
+
+
 W: binary: package-contains-upstream-install-documentation usr/share/doc/binary/INSTALL
 N:
 N:   Binary packages do not need to contain the instructions for building

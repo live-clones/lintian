@@ -1,3 +1,10 @@
+relations (5) unstable; urgency=low
+
+  * I'm orphaning this package -- I'm sick of it: it's completely broken,
+    lintian complains all over the place.
+
+ -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Sun, 18 Apr 2004 02:08:41 +0200
+
 relations (4) unstable; urgency=low
 
   * Added a package that tests dependencies for multiple versions of

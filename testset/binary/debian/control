@@ -2,6 +2,7 @@ Source: binary
 Section: misc
 Priority: extra
 Maintainer: Lintian Maintainers <lintian-maint@debian.org>
+Uploaders: Co-maintainer one <one@debian.org>, Jeroen van Wolffelaar <jeroen@wolffelaar.nl>, Co-maintainer three <three@debian.org>
 Standards-Version: 3.2.1
 
 Package: binary

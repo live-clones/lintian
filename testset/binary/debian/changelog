@@ -1,3 +1,13 @@
+binary (4-1.1) unstable; urgency=low
+
+  * I'm doing an comaintainer-upload, but with a version number which suggests
+    I'm doing a NMU.
+
+    Lintian-maintainers: Please don't update this changelog, otherwise you'll
+    probably break the checks/nmu checks.
+
+ -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Sun, 18 Apr 2004 01:49:42 +0200
+
 binary (4-1) unstable; urgency=low
 
   * Weird version number for the new check for accidents with native

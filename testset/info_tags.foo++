@@ -25,6 +25,13 @@ N:   Most control fields must have only a single line of data.
 N:   
 N:   Refer to Policy Manual, section 5.1 for details.
 N:
+E: foo++ source: uploader-address-malformed Marc 'HE' Brockschmidt <he@unknown>
+N:
+N:   The uploader field could not be parsed according to the rules in the
+N:   Policy Manual.
+N:   
+N:   Refer to Policy Manual, section 5.6.2 for details.
+N:
 W: foo++ source: uploader-address-looks-weird Jeroen van Wolffelaar<jeroen@localhost.localdomain>
 N:
 N:   The uploader address does not have whitespace between the name and the
@@ -50,12 +57,6 @@ N:
 N:   Refer to Policy Manual, section 5.6.2 for details.
 N:
 E: foo++ source: uploader-address-malformed Yama@gotchi
-N:
-N:   The uploader field could not be parsed according to the rules in the
-N:   Policy Manual.
-N:   
-N:   Refer to Policy Manual, section 5.6.2 for details.
-N:
 W: foo++ source: uploader-not-full-name Josip
 E: foo++ source: uploader-address-missing Josip
 N:
