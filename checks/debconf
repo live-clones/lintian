@@ -82,6 +82,7 @@ foreach my $template (@templates) {
 
     if (not exists $template->{template}) {
 	print "E: $pkg $type: no-template-name\n";
+	$template->{template} = 'no-template-name';
     } elsif ($template->{template}!~m|[A-Za-z0-9.+-](?:/[A-Za-z0-9.+-])|) {
 	print "E: $pkg $type: malformed-template-name $template->{template}\n";
     }
