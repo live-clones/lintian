@@ -8,7 +8,7 @@ Needs-Info: file-info, changelog-file
 Info: This script checks if a binary package conforms to policy
  with regards to changelog files.
  .
- Each binary package with a /usr/share/doc/<foo> directory must have a
+ Each binary package with a /usr/share/doc/&lt;foo&gt; directory must have a
  Debian changelog file in `changelog.Debian.gz' unless the Debian
  changelog and the upstream one is the same file; in this case, it
  must be in `changelog.gz'.
@@ -92,7 +92,7 @@ Info: The add-log-mailing-address variable is no longer honored in
 
 Tag: debian-changelog-file-contains-debmake-default-email-address
 Type: error
-Info: The changelog file contains an email address (<..@unknown>)
+Info: The changelog file contains an email address (&lt;..@unknown&gt;)
  that was not updated to the maintainer's real address.
 
 Tag: debian-changelog-file-uses-obsolete-national-charset

@@ -22,5 +22,5 @@ Info: The README.Debian file installed by this package contains the
 
 Tag: readme-debian-contains-debmake-default-email-address
 Type: error
-Info: The README.Debian file contains an email address (<..@unknown>)
+Info: The README.Debian file contains an email address (&lt;..@unknown&gt;)
  that was not updated to the maintainer's real address.
