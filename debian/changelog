@@ -35,10 +35,13 @@ lintian (1.23.0~beta1-fixing1) unstable; urgency=low
       patch by Denis Barbier <barbier@linuxfr.org>, thanks! (Closes: #233116)
     + [HE] Check if the translation of a Choices: field is empty, leading to
       skipped questions. (Closes: #149451)
-  * checks/debdiff
+  * checks/debdiff:
     + [HE] Check for accidental native packaging. This is done by checking for
       a dash in the version number (though -0.\d+ and -0.\d+.\d+ are allowed
       for (binary) NMUs) and the existence of a .diff.gz. (Closes: #216327)
+    + [JvW] Implement source-tar-is-posix-tar, which checks for upstream
+      tarballs that are tar --posix tarballs, which cannot be untarred by the
+      tar version in woody (Closes: #245138)
   * checks/debian-readme:
     + [HE] Add check for the debmake template email address. Patch by Steffen
       Moeller <moeller@pzr.uni-rostock.de>, thanks!
