@@ -23,6 +23,7 @@ package Lab;
 use strict;
 
 use Pipeline;
+use Util;
 
 my $LINTIAN_ROOT = $::LINTIAN_ROOT;
 
