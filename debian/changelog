@@ -33,6 +33,8 @@ lintian (1.22.9-0.1) unstable; urgency=low
    * checks/menu-format
      + Drop menu-icon-has-bad-colors, it doesn't apply anymore (Closes: #199341)
      + Menu sub-policy 3.6.0 added two sections (Closes: #207529)
+     + Added three checks for correct su-to-root usage (Closes: #188095)
+       (based on patch by Bill Allombert <ballombe@debian.org>)
    * checks/scripts
      + Recognise the 'tcl' interpreter, not the same as tclsh (Closes: #230182)
 
@@ -52,7 +54,7 @@ lintian (1.22.9-0.1) unstable; urgency=low
      + fix testing of dependencies to eliminate false
        positives of missing-debconf-dependency (Closes: #195201)
 
- -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Thu, 12 Feb 2004 02:56:27 +0100
+ -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Thu, 12 Feb 2004 19:52:00 +0100
 
 lintian (1.22.9) unstable; urgency=low
 

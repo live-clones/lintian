@@ -290,6 +290,26 @@ sub VerifyLine {
 	    print "W: $pkg $type: menu-item-contains-unknown-tag $tag /usr/lib/menu/$menufile:$linecount\n";
 	}
     }
+    
+    if (exists($vals{'command'})) {
+	my @com=split(' ',$vals{'command'});
+	if ($com[0] eq "su-to-root") {
+	    print "E: $pkg $type: su-to-root-without-usr-sbin /usr/lib/menu/$menufile:$linecount\n";
+	} elsif ($com[0] eq "/usr/bin/su-to-root") {
+	    print "E: $pkg $type: su-to-root-with-usr-bin /usr/lib/menu/$menufile:$linecount\n";
+	} elsif ($com[0] eq "/usr/sbin/su-to-root") {
+	    shift @com;
+	    # This is _so_ going to break on every parameter added to
+	    # su-to-root... But alas --Jeroen
+	    if (defined($com[0]) && $com[0] eq '-p') {
+		shift @com;
+		shift @com;
+	    }
+	    if (! defined($com[0]) || $com[0] ne '-c') {
+		print "E: $pkg $type: su-to-root-without--c /usr/lib/menu/$menufile:$linecount\n";
+	    }
+	}
+    }
 	
     if (exists($vals{'icon'})) {
 	VerifyIcon($menufile, $linecount, $vals{'icon'});

@@ -124,3 +124,28 @@ Info: The icon file could not be parsed.  Perhaps this means a bad XPM file,
  window managers and standard tools accept the file then probably it's the
  latter; please notify &maint; either directly or via the bug tracking
  system.
+
+Tag: su-to-root-without--c
+Type: error
+Info: The menu item command uses su-to-root without the -c flag. This is
+ a syntax error, see su-to-root(1) for more information.
+
+Tag: su-to-root-with-usr-bin
+Type: error
+Info: The menu item command use su-to-root using /usr/bin/su-to-root.
+ Usually, using absolute pathnames is bad. In this specific case however, you
+ should use the absolute pathname of /usr/sbin/su-to-root.
+ .
+ The reason for this is that the old Woody menu package had su-to-root
+ exclusively in /usr/sbin, which is not in a regular user's $PATH.
+ Therefore, the absolute pathname to su-to-root is still required for Sarge
+ packages.
+
+Tag: su-to-root-without-usr-sbin
+Type: error
+Info: The menu item command use su-to-root without the full
+ /usr/sbin/su-to-root path. The Woody version of menu does not have a
+ su-to-root in a user's $PATH, unlike Sarge's version of menu.
+ .
+ Therefore, the absolute pathname to su-to-root is still required for Sarge
+ packages.

@@ -1,3 +1,9 @@
+binary (3) unstable; urgency=unlimited
+
+  * Add some bogus menu entries using su-to-root in a bogus way
+
+ -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Thu, 12 Feb 2004 20:11:22 +0100
+
 binary (2) unstable; urgency=low
 
   * Added an INSTALL document which policy 6.3 suggests not to do
