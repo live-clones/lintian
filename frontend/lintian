@@ -67,6 +67,7 @@ my @packages;
 
 my $action;
 my $checks;
+my $dont_check;
 my $unpack_info;
 my $cwd;
 my $cleanup_filename;
@@ -126,6 +127,7 @@ Actions:
     -R, --remove-lab          remove static lab
     -c, --check               check packages (default action)
     -C X, --check-part X      check only certain aspects
+    -X X, --dont-check-part X don\'t check certain aspects
     -u, --unpack              only unpack packages in the lab
     -r, --remove              remove package from the lab
 General options:
@@ -183,10 +185,13 @@ sub record_action {
 }
 
 # Record Parts requested for checking
-# Optoins: -C|--check-part
+# Options: -C|--check-part
 sub record_check_part {
     if (defined $action and $action eq 'check' and $checks) {
 	die("multiple -C or --check-part options not allowed");
+    }
+    if ($dont_check) {
+	die("both -C or --check-part and -X or --dont-check-part options not allowed");
     }
     if ($action) {
 	die("too many actions specified: $_[0]");
@@ -194,6 +199,23 @@ sub record_check_part {
     $action = 'check';
     $checks = $_[1];
 }
+
+# Record Parts requested not to check
+# Options: -X|--dont-check-part X
+sub record_dont_check_part {
+    if (defined $action and $action eq 'check' and $dont_check) {
+	die("multiple -x or --dont-check-part options not allowed");
+    }
+    if ($checks) {
+	die("both -C or --check-part and -X or --dont-check-part options not allowed");
+    }    
+    if ($action) {
+	die("too many actions specified: $_[0]");
+    }
+    $action = 'check';
+    $dont_check = $_[1];
+}
+
 
 # Process for -U|--unpack-info flag
 sub record_unpack_info {
@@ -217,6 +239,7 @@ my %opthash = (			# ------------------ actions
 	       "remove-lab|R" => \&record_action,
 	       "check|c" => \&record_action,
 	       "check-part|C=s" => \&record_check_part,
+	       "dont-check-part|X=s" => \&record_dont_check_part,	       
 	       "unpack|u" => \&record_action,
 	       "remove|r" => \&record_action,
 
@@ -922,11 +945,17 @@ for my $c (keys %check_info) {
 
 # determine which checks have been requested
 if ($action eq 'check') {
+    my %dont_check = map { $_ => 1 } (split /,/, ($dont_check || ""));
     $checks or ($checks = join(',',keys %check_info));
     for my $c (split(/,/,$checks)) {
 	if ($check_info{$c}) {
-	    $checks{$c} = 1;
+	    if ($dont_check{$c} || ($check_info{$c}->{'abbrev'} && $dont_check{$check_info{$c}->{'abbrev'}})) {
+		#user requested not to run this check
+	    } else {
+		$checks{$c} = 1;
+	    }
 	} elsif (exists $check_abbrev{$c}) {
+	    #abbrevs only used when -C is given, so we don't need %dont_check
 	    $checks{$check_abbrev{$c}} = 1;
 	} else {
 	    fail("unknown check specified: $c");

@@ -11,6 +11,11 @@ lintian (1.23.0) UNRELEASED; urgency=low
       correspoding perl warnings the fixed parts are probably never
       used in the current code)
 
+  * frontend/lintian:
+    + [HE] Added a --dont-check-parts|-X option to allow users to specify
+      which tests should not be run. Also added infos about this to the
+      manpage. (Closes: #206674)
+
   * checks/binaries:
     + [JvW] Ignore static binaries in /usr/lib/debug
   * checks/common_data:
