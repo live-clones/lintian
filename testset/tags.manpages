@@ -20,6 +20,8 @@ E: manpages: manpage-not-compressed-with-gzip usr/share/man/man1/usr-sbin-binary
 E: manpages: manpage-not-compressed-with-max-compression usr/share/man/man6/usr-games-binary.6.gz
 E: manpages: no-copyright-file
 W: manpages source: ancient-standards-version 3.2.1
+W: manpages source: changelog-should-mention-nmu
+W: manpages source: source-nmu-has-incorrect-version-number 3
 W: manpages: executable-not-elf-or-script ./usr/bin/usr-bin-binary-alt
 W: manpages: executable-not-elf-or-script ./usr/sbin/usr-sbin-binary
 W: manpages: link-to-undocumented-manpage usr/share/man/man1/bin-binary.1.gz

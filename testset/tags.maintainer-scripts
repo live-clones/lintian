@@ -1,6 +1,5 @@
 E: maintainer-scripts source: orphaned-package-should-not-have-uploaders
 E: maintainer-scripts source: wrong-debian-qa-group-name QA group <packages@qa.debian.org>
-E: maintainer-scripts: debian-changelog-file-missing <<<< Is false positive, this is version -0.1
 E: maintainer-scripts: maintainer-shell-script-fails-syntax-check prerm
 E: maintainer-scripts: no-copyright-file
 E: maintainer-scripts: wrong-debian-qa-group-name QA group <packages@qa.debian.org>
