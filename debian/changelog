@@ -28,6 +28,9 @@ lintian (1.23.8) UNRELEASED; urgency=low
     + [JvW] Only check for desktop files in GNOME's and KDE's obsolete places,
       not in all the package, as KDE uses .desktop files also for other
       purposes (Closes: #289773)
+  * checks/nmu.desc:
+    + [JvW] Be more precise in explaining why lintian thinks this is a NMU,
+      and copy explanation to changelog-should-mention-nmu
   * checks/scripts{,.desc}:
     + [CW] Add checks for tclsh8.4 and wish8.4. (Closes: #288287)
 

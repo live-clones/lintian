@@ -25,9 +25,8 @@ Info: A source NMU should have a Debian revision of '-x.x'. This is to prevent
  are reserved for binary-only NMU's).
  .
  Maybe you didn't intend this upload to be a NMU, in that case, please
- doublecheck the used emailaddress and maintainer, the most recent entry in
- the changelog should be byte-for-byte identical to a maintainer or one of the
- uploaders.
+ doublecheck that the most recent entry in the changelog is byte-for-byte
+ identical to the maintainer or one of the uploaders.
 
 Tag: maintainer-upload-has-incorrect-version-number
 Type: warning
@@ -46,3 +45,7 @@ Tag: changelog-should-mention-nmu
 Type: warning
 Info: When you NMU a package, that fact should be mentioned on the first line
  in the changelog entry.
+ .
+ Maybe you didn't intend this upload to be a NMU, in that case, please
+ doublecheck that the most recent entry in the changelog is byte-for-byte
+ identical to the maintainer or one of the uploaders.
