@@ -36,7 +36,7 @@ mkdir("$base_dir/unpacked", 0777) or fail();
 # improvement on large debs, and factor 1.5 on small debs.  I heard
 # it's because dpkg-deb syncs while writing.  -- Richard
 
-pipeline((sub { exec 'dpkg', '--fsys-tarfile', "$base_dir/deb" }),
+pipeline((sub { exec 'dpkg-deb', '--fsys-tarfile', "$base_dir/deb" }),
 	 (sub { exec 'tar', 'xf', '-', '-C', "$base_dir/unpacked" })) == 0
     or fail();
 
