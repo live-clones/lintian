@@ -19,15 +19,19 @@ I: relations-multiple-libs: unknown-field-in-control bugs
 I: relations-multiple-libs: unknown-field-in-control origin
 I: relations: unknown-field-in-control bugs
 I: relations: unknown-field-in-control origin
+W: relations binary: description-synopsis-starts-with-a-capital-letter
 W: relations source: ancient-standards-version 3.1.1
 W: relations source: build-depends-without-arch-dep
 W: relations source: redundant-origin-field
 W: relations source: virtual-package-depends-without-real-package-depends build-depends: mail-transport-agent
+W: relations-multiple-libs binary: description-synopsis-starts-with-a-capital-letter
 W: relations-multiple-libs: description-synopsis-might-not-be-phrased-properly
+W: relations-multiple-libs: redundant-bugs-field
 W: relations-multiple-libs: redundant-origin-field
 W: relations: package-has-a-duplicate-relation depends: relations, relations (<< 3)
 W: relations: package-relation-with-self depends: relations
 W: relations: package-relation-with-self depends: relations (<< 3)
 W: relations: package-relation-with-self replaces: relations
+W: relations: redundant-bugs-field
 W: relations: redundant-origin-field
 W: relations: virtual-package-depends-without-real-package-depends depends: mail-transport-agent

@@ -475,6 +475,17 @@ if (open(FH, "fields/origin")) {
 	tag "redundant-origin-field", "" if $origin =~ /^\s*debian\s*$/i;
 }
 
+#----- Bugs
+
+if (open(FH, "fields/bugs")) {
+	my $bugs = <FH>;
+	close FH;
+
+	unfold('bugs', \$bugs);
+
+	tag "redundant-bugs-field", "" if $bugs =~ m{^\s*debbugs://bugs.debian.org/?\s*$}i;
+}
+
 #----- Field checks (without checking the value)
 
 for my $field (glob("fields/*")) {

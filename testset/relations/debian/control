@@ -6,7 +6,7 @@ Build-Depends-Indep: make, bash
 Maintainer: Debian QA Group <packages@qa.debian.org>
 Standards-Version: 3.1.1
 Origin: Debian
-Bugs: foobar
+Bugs: debbugs://bugs.debian.org/
 
 Package: relations
 Architecture: all
