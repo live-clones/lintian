@@ -5,12 +5,6 @@ E: manpages: empty-manual-page usr/share/man/man1/usr-bin-binary-alt.1.gz
 E: manpages: empty-manual-page usr/share/man/man1/usr-bin-binary.1
 E: manpages: empty-manual-page usr/share/man/man1/usr-sbin-binary.1.gz
 E: manpages: empty-manual-page usr/share/man/man6/usr-games-binary.6.gz
-E: manpages: manpage-has-bad-whatis-entry usr/X11R6/man/man1/rstartd.1x.gz
-E: manpages: manpage-has-bad-whatis-entry usr/X11R6/man/man6/X11R6-binary.man
-E: manpages: manpage-has-bad-whatis-entry usr/share/man/man1/usr-bin-binary-alt.1.gz
-E: manpages: manpage-has-bad-whatis-entry usr/share/man/man1/usr-bin-binary.1
-E: manpages: manpage-has-bad-whatis-entry usr/share/man/man1/usr-sbin-binary.1.gz
-E: manpages: manpage-has-bad-whatis-entry usr/share/man/man6/usr-games-binary.6.gz
 E: manpages: manpage-has-wrong-extension usr/X11R6/man/man6/X11R6-binary.man
 E: manpages: manpage-not-compressed usr/X11R6/man/man6/X11R6-binary.man
 E: manpages: manpage-not-compressed usr/share/man/man1/usr-bin-binary.1
@@ -27,6 +21,12 @@ W: manpages: executable-not-elf-or-script ./usr/bin/usr-bin-binary-alt
 W: manpages: executable-not-elf-or-script ./usr/sbin/usr-sbin-binary
 W: manpages: link-to-undocumented-manpage usr/share/man/man1/bin-binary.1.gz
 W: manpages: link-to-undocumented-manpage usr/share/man/man3/function.3.gz
+W: manpages: manpage-has-bad-whatis-entry usr/X11R6/man/man1/rstartd.1x.gz
+W: manpages: manpage-has-bad-whatis-entry usr/X11R6/man/man6/X11R6-binary.man
+W: manpages: manpage-has-bad-whatis-entry usr/share/man/man1/usr-bin-binary-alt.1.gz
+W: manpages: manpage-has-bad-whatis-entry usr/share/man/man1/usr-bin-binary.1
+W: manpages: manpage-has-bad-whatis-entry usr/share/man/man1/usr-sbin-binary.1.gz
+W: manpages: manpage-has-bad-whatis-entry usr/share/man/man6/usr-games-binary.6.gz
 W: manpages: no-manpage-in-correct-directory usr/sbin/usr-sbin-binary (1)
 W: manpages: package-contains-hardlink usr/share/man/man1/usr-bin-binary-alt.1.gz
 W: manpages: packages-installs-file-to-usr-x11r6 usr/X11R6/

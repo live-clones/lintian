@@ -1,7 +1,6 @@
 E: relations source: bad-relation build-depends: foo (>> 2) bar baz bat
 E: relations source: build-depends-without-arch-dep
 E: relations-multiple-libs: description-synopsis-is-duplicated
-E: relations-multiple-libs: obsolete-field bugs
 E: relations-multiple-libs: package-depends-on-multiple-libpng-versions libpng2 libpng3
 E: relations-multiple-libs: package-depends-on-multiple-libstdc-versions libstdc++2.10 libstdc++2.10-glibc2.2 libstdc++3.0
 E: relations-multiple-libs: package-depends-on-multiple-tcl-versions tcl8.0 tcl8.2
@@ -12,10 +11,11 @@ E: relations: bad-version-in-relation conflicts: foobar (<< 5&5)
 E: relations: depends-on-essential-package-without-using-version depends: dpkg
 E: relations: needlessly-depends-on-awk depends
 E: relations: no-copyright-file
-E: relations: obsolete-field bugs
 E: relations: obsolete-field optional
 E: relations: package-has-a-duplicate-relation depends: relations, relations (<< 3)
+I: relations-multiple-libs: unknown-field-in-control bugs
 I: relations-multiple-libs: unknown-field-in-control origin
+I: relations: unknown-field-in-control bugs
 I: relations: unknown-field-in-control origin
 W: relations source: ancient-standards-version 3.1.1
 W: relations source: redundant-origin-field
