@@ -1,0 +1,102 @@
+#!/usr/bin/perl -w
+# nmu -- lintian check script
+
+# Copyright (C) 2004 Jeroen van Wolffelaar
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+# MA 02111-1307, USA.
+
+use strict;
+
+($#ARGV == 1) or fail("syntax: nmu <pkg> <type>");
+my $pkg = shift;
+my $type = shift;
+my $changelog_mentions_nmu = 0;
+my $changelog_mentions_qa = 0;
+my $uploader = undef;
+
+open CHANGELOG, "changelog" or fail "Failed opening changelog";
+<CHANGELOG>;
+my $firstline = 1;
+while (<CHANGELOG>) {
+	if ($firstline) {
+		$changelog_mentions_nmu = 1 if /nmu/i or /non-maintainer upload/i;
+		$changelog_mentions_qa = 1 if /orphan/i or /qa (?:group )?upload/i;
+		$firstline = 0 if /^\s+\S/ 
+	}
+	if (/^ -- ([^>]+>)/) {
+		$uploader = $1;
+		last;
+	}
+}
+close CHANGELOG;
+
+my $version = getfield "version";
+my $maintainer = getfield "maintainer";
+my $uploaders = getfield "uploaders";
+
+my $version_nmuness = 0;
+if ($version =~ /-[^.-]+(\.[^.-]+)?(\.[^.-]+)?$/) {
+	$version_nmuness = 1 if defined $1;
+	$version_nmuness = 2 if defined $2;
+}
+
+my $upload_is_nmu = $uploader ne $maintainer;
+if (defined $uploaders) {
+	my @uploaders = split /,/, $uploaders;
+	$upload_is_nmu = 0 if grep /^\s*\Q$uploader\E\s*$/, @uploaders;
+}
+
+if ($maintainer =~ /packages\@qa.debian.org/) {
+	print "E: $pkg $type: orphaned-package-should-not-have-uploaders\n"
+		if defined $uploaders;
+	print "W: $pkg $type: qa-upload-has-incorrect-version-number $version\n"
+		if $version_nmuness;
+	print "W: $pkg $type: changelog-should-mention-qa\n";
+} else {
+	print "W: $pkg $type: changelog-should-mention-nmu\n"
+		if $upload_is_nmu || $version_nmuness;
+	print "W: $pkg $type: source-nmu-has-incorrect-version-number $version\n"
+		if $upload_is_nmu && $version_nmuness != 1;
+	print "W: $pkg $type: maintainer-upload-has-incorrect-version-number $version\n"
+		if !$upload_is_nmu && $version_nmuness;
+}
+
+exit 0;
+
+# -----------------------------------
+
+sub fail {
+	if ($_[0]) {
+		warn "internal error: $_[0]\n";
+	} elsif ($!) {
+		warn "internal error: $!\n";
+	} else {
+		warn "internal error.\n";
+	}
+	exit 1;
+}
+
+sub getfield {
+	return undef if not open FIELD, "fields/".shift;
+	my $field = <FIELD>;
+	close FIELD;
+	my $field = shift;
+	$field =~ s/\n$//;
+	return $field;
+}
+
+# vim: ts=4 sw=4

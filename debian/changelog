@@ -126,6 +126,11 @@ lintian (1.23.0) UNRELEASED; urgency=low
     + [FL] Only issue one warning about needs=dwww, not two
     + [HE] Check if the command given with command= is in the package
       (Closes: #199346)
+  * checks/nmu{,desc}:
+    + [JvW] New series of checks: Check whether NMU's have correct NMU version
+      number, and whether maintainer uploads have correct maintainer version.
+      Also, check whether NMU's and QA uploads are identified as such in the
+      changelog.
   * checks/scripts:
     + [FL] Add /usr/bin/php as valid interpreter. (Closes: #239115)
       Thanks to Peter Eisentraut for pointing this change out
