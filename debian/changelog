@@ -1,25 +1,32 @@
 lintian (1.23.8) UNRELEASED; urgency=low
 
-  * checks/*.desc:
-    [JvW] Stop bugging us for exceptions, mmkay, just install overrides. Hints
-    like this should be in the general documentation anyway, not in per-tag
-    descriptions.
-  * checks/common_data.pm:
-    [CW] Add tclx8.4 to %known_tclxs.
-  * checks/scripts, checks/scripts.desc:
-    [CW] Add checks for tclsh8.4 and wish8.4. (Closes: #288287)
-  * checks/files{,.desc}:
-    [JvW] Warn only for hardlinks in /etc or amongst different directories
-    (Closes: #288634)
-    [JvW] Only check for desktop files in GNOME's and KDE's obsolete places,
-    not in all the package, as KDE uses .desktop files also for other
-    purposes (Closes: #289773)
-  * checks/description:
-    [SRL] Do not generate warnings when a short description starts with
-    an article; this is good grammar and should not be discouraged.
-    (Closes: #290505)
+  The "Hm, this is (FIXME: nearly) the team's one year anniversery of
+  maintaining lintian" release:
 
- -- Colin Watson <cjwatson@debian.org>  Fri, 14 Jan 2005 22:10:42 +0100
+  - http://lists.debian.org/debian-lint-maint/2004/01/msg00014.html
+
+  (and still using the temporary subversion repository)
+
+  * checks/*.desc:
+    + [JvW] Stop bugging us for exceptions, mmkay, just install overrides.
+      Hints ..like this should be in the general documentation anyway, not in
+      per-tag descriptions.
+  * checks/common_data.pm:
+    + [CW] Add tclx8.4 to %known_tclxs.
+  * checks/description:
+    + [SRL] Do not generate warnings when a short description starts with an
+      article; this is good grammar and should not be discouraged.
+      (Closes: #290505)
+  * checks/files{,.desc}:
+    + [JvW] Warn only for hardlinks in /etc or amongst different directories
+      (Closes: #288634)
+    + [JvW] Only check for desktop files in GNOME's and KDE's obsolete places,
+      not in all the package, as KDE uses .desktop files also for other
+      purposes (Closes: #289773)
+  * checks/scripts{,.desc}:
+    + [CW] Add checks for tclsh8.4 and wish8.4. (Closes: #288287)
+
+ -- Colin Watson <cjwatson@debian.org>  Sat, 15 Jan 2005 00:34:45 +0100
 
 lintian (1.23.7) unstable; urgency=high
 
