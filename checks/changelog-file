@@ -55,7 +55,7 @@ close(IN);
 
 # Modify the file_info by following symbolic links.
 for my $file (keys %file_info) {
-    if ($file_info{$file} =~ m/^symbolic link to (.*)/) {
+    if ($file_info{$file} =~ m/^(?:broken )?symbolic link to (.*)/) {
 	$is_a_symlink{$file} = 1;
 	# Figure out the link destination.  This algorithm is
 	# not perfect but should be good enough.  (If it fails,
