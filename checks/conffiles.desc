@@ -36,3 +36,6 @@ Info: Game score and data files should not be marked as conffiles.
 Tag: duplicate-conffile
 Type: error
 Info: The file is listed more than once in your <tt>debian/conffiles</tt> file.
+ Usually, this is because debhelper (dh_installdeb) will since compat level 3
+ add any files in your package located in /etc automatically to the list of
+ conffiles, so if you do that manually too, you'll get duplicates

@@ -2,11 +2,15 @@ lintian (1.23.3) unstable; urgency=low
 
   The ``PLACEHOLDER'' release, ...
 
-  * checks/po-debconf
+  * checks/conffiles.desc:
+    + [JvW] Note the most likely cause for duplicate-conffile in the
+      description (thanks Chris Anderson for running into this problem and
+      asking me about it)
+  * checks/po-debconf:
     + [JvW] Don't give missing-file-from-potfile-in on empty lines
       (Thanks Adam Conrad for noticing)
 
- -- Debian Lintian Maintainers <lintian-maint@debian.org>  Wed, 18 Aug 2004 10:02:51 +0200
+ -- Debian Lintian Maintainers <lintian-maint@debian.org>  Thu, 26 Aug 2004 02:19:20 +0200
 
 lintian (1.23.2) unstable; urgency=low
 
