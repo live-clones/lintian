@@ -11,6 +11,10 @@ lintian (1.23.4) unstable; urgency=low
       of wrong-path-for-gnuplot (Closes: #276945)
       Thanks to Lionel Elie Mamane for reporting.
   
+  * frontend/lintian-info:
+    + [FL] Overrides start with O:, not with 0:, d'oh!
+      (Closes: #258815)
+  
   * lib/Tags.pm:
     + [FL] Add missing "use Util;", noted by Robert Luberda
       (Closes: #278513)
