@@ -63,10 +63,6 @@ Tag: executable-in-usr-share-docbase
 Type: error
 Info: Files in <tt>/usr/share/doc-base</tt> may not be marked as executables.
 
-Tag: non-executable-in-etc-menu-methods
-Type: error
-Info: Files in <tt>/etc/menu-methods</tt> must be marked as executables.
-
 Tag: postinst-does-not-call-installdocs
 Type: error
 Info: Since the package installs a file in <tt>/usr/share/doc-base</tt>, the

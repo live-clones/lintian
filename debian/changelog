@@ -42,6 +42,9 @@ lintian (1.22.12) unstable; urgency=low
     + only issue package-installs-nonbinary-perl-in-usr-lib-perl5 if
       there is no binary perl file at all in the package, since this
       reflects the way the Installer module behaves (Closes: #199898)
+  * checks/menus{,.desc}:
+    + Remove non-exectuable-in-etc-menu-methods as it doesn't
+      reflects the current menu manual (Closes: #229460)
   * checks/scripts:
     + Fix check for "exec ..." line. Fix suggested by Josip Rodin.
       (Closes: #212811)
