@@ -157,9 +157,8 @@ E: filenames: lengthy-symlink usr/share/doc/filenames/version.txt.gz ../filename
 W: filenames: package-installs-nonbinary-perl-in-usr-lib-perl5 usr/lib/perl5/foo/bar.pm
 N:
 N:   Architecture-independent Perl code should be placed in
-N:   <tt>/usr/share/perl5</tt>, not <tt>/usr/lib/perl5</tt>
-N:   unless there is at least one architecture-dependent file
-N:   in the module.
+N:   /usr/share/perl5, not /usr/lib/perl5 unless there is at least one
+N:   architecture-dependent file in the module.
 N:
 E: filenames: bad-menu-file-name usr/lib/menu/menu
 N:
