@@ -47,15 +47,11 @@ while (<IN>) {
 	tag "duplicate-conffile", "$_";
     }
 
-    if (m,^/?var/lib/games/,o) {
-	tag "score-file-must-not-be-conffile", "$_";
-    }
-
     if (m,^/?usr/,o) {
 	tag "file-in-usr-marked-as-conffile", "$_";
     } else {
-	unless (m,^/?etc/,o or m,^/?var/,o) {
-	    tag "non-etc-or-var-file-marked-as-conffile", "$_";
+	unless (m,^/?etc/,o) {
+	    tag "non-etc-file-marked-as-conffile", "$_";
 	}
     }
 

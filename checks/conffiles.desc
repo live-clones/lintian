@@ -14,10 +14,11 @@ Info: Files below <tt>/usr</tt> may not be marked as conffiles, since
  administrator would not have a chance to modify this configuration
  file.
 
-Tag: non-etc-or-var-file-marked-as-conffile
+Tag: non-etc-file-marked-as-conffile
 Type: warning
-Info: A file installed in some other directory than <tt>/etc</tt> or
- <tt>/var</tt> is marked as conffile.
+Info: A file installed in some other directory than <tt>/etc</tt>
+ is marked as conffile. A conffile typically implies a configuration file, and
+ policy mandates such files to be in /etc
 Status: untested
 Ref: policy 10.7.2
 
@@ -26,10 +27,6 @@ Type: error
 Ref: policy E.1
 Info: All entries in the conffile control file should have an absolute
  path specification.
-
-Tag: score-file-must-not-be-conffile
-Type: error
-Info: Game score and data files should not be marked as conffiles.
 
 Tag: duplicate-conffile
 Type: error

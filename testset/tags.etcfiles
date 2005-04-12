@@ -3,4 +3,5 @@ E: etcfiles: file-in-etc-not-marked-as-conffile /etc/improper
 E: etcfiles: file-in-etc-not-marked-as-conffile /etc/improper-link
 E: etcfiles: no-copyright-file
 W: etcfiles source: ancient-standards-version 3.5.0
+W: etcfiles: non-etc-file-marked-as-conffile /var/lib/foo
 W: etcfiles: package-contains-hardlink etc/improper-link -> etc/improper
