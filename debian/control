@@ -3,6 +3,7 @@ Section: devel
 Priority: optional
 Maintainer: Debian Lintian Maintainers <lintian-maint@debian.org>
 Uploaders: Josip Rodin <joy-packages@debian.org>, Jeroen van Wolffelaar <jeroen@wolffelaar.nl>, Frank Lichtenheld <djpig@debian.org>, Marc 'HE' Brockschmidt <he@debian.org>, Colin Watson <cjwatson@debian.org>
+Build-Depends: debhelper (>= 4)
 Build-Depends-Indep: debiandoc-sgml, sed (>= 4.1-4)
 Standards-Version: 3.6.1
 

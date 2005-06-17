@@ -1,5 +1,17 @@
 lintian (1.23.9) unstable; urgency=low
 
+  * The "Wow, so much time at hand" release
+  
+  * [FL] Convert build process to debhelper
+    - debian/rules    - adapted
+    - debian/compat   - new
+    - debian/dirs     - new
+    - debian/docs     - new
+    - debian/control  - add build depends
+    - debian/postinst - remove (Closes: #292981)
+    - debian/conffiles- remove
+    - debian/prerm    - adapted
+  
   * checks/conffiles:
     + [JvW] Warn on /var files being a conffile too (Closes: #293443)
   * checks/menus:
