@@ -28,7 +28,9 @@ binary-arch:	build
 
 	dh_installchangelogs -a
 	dh_installdocs -a
-	dh_installdebconf -a
+	dh_installdebconf -pdebconf-test
+	dh_installdebconf -pdebconf-test-noscripts --noscripts
+	dh_installdebconf -pdebconf-udeb
 
 	dh_compress -a
 	dh_fixperms -a

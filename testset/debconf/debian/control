@@ -10,6 +10,12 @@ Architecture: any
 Depends: ${shlibs:Depends}, debconf
 Description: Test package for the debconf checks of lintian
 
+Package: debconf-test-noscripts
+Architecture: any
+Depends: ${shlibs:Depends}, debconf
+Description: Test package for the debconf checks of lintian
+ Package missing postinst/postrm/config
+
 Package: debconf-udeb
 Section: debian-installer
 XC-Package-Type: udeb

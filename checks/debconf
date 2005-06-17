@@ -296,6 +296,9 @@ for my $file (qw(config postinst)) {
 	}
 
 	close IN;
+    } elsif ($file eq 'postinst') {
+	tag "$file-does-not-load-confmodule", "" 
+	    unless $type eq 'udeb';
     }
 }
 
@@ -306,12 +309,15 @@ if (open(POSTRM, "control/postrm")) {
 	s/#.*//;    # Not perfect for Perl, but should be OK
 	if (not $db_purge and m/db_purge/) {    # TODO: Perl?
 	    $db_purge=1;
+	    last;
 	}
     }
 
     unless ($db_purge) {
 	tag "postrm-does-not-purge-debconf", "";
     }
+} elsif ($type ne 'udeb') {
+    tag "postrm-does-not-purge-debconf", "";
 }
 
 # Check that the right dependencies are in the control file.

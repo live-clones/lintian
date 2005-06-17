@@ -14,6 +14,10 @@ lintian (1.23.9) unstable; urgency=low
   
   * checks/conffiles:
     + [JvW] Warn on /var files being a conffile too (Closes: #293443)
+  * checks/debconf:
+    + [FL] Also report postinst-does-not-load-confmodule and
+      postrm-does-not-purge-debconf if the related files don't
+      exist at all. Spotted by Gerfried Fuchs (Closes: #301056)
   * checks/menus:
     + [FL] New check menu-file-in-usr-lib because /usr/lib/menu is
       deprecated
