@@ -2,14 +2,20 @@ E: binary: changelog-file-not-compressed changelog
 E: binary: debian-changelog-file-missing
 E: binary: file-directly-in-usr-share usr/share/baz
 E: binary: menu-item-missing-required-tag section /usr/lib/menu/binary:1
+E: binary: menu-item-missing-required-tag section /usr/share/menu/binary:1
 E: binary: non-wm-in-windowmanager-menu-section x11 /usr/lib/menu/binary:4
+E: binary: non-wm-in-windowmanager-menu-section x11 /usr/share/menu/binary:4
 E: binary: postinst-does-not-call-updatemenus usr/lib/menu/binary
 E: binary: postrm-does-not-call-updatemenus usr/lib/menu/binary
 E: binary: statically-linked-binary ./usr/bin/static-hello
 E: binary: su-to-root-with-usr-bin /usr/lib/menu/binary:5
+E: binary: su-to-root-with-usr-bin /usr/share/menu/binary:5
 E: binary: su-to-root-without--c /usr/lib/menu/binary:2
 E: binary: su-to-root-without--c /usr/lib/menu/binary:3
+E: binary: su-to-root-without--c /usr/share/menu/binary:2
+E: binary: su-to-root-without--c /usr/share/menu/binary:3
 E: binary: su-to-root-without-usr-sbin /usr/lib/menu/binary:4
+E: binary: su-to-root-without-usr-sbin /usr/share/menu/binary:4
 E: binary: suidregister-used-in-maintainer-script postinst
 E: binary: unstripped-binary-or-object ./usr/bin/hello
 I: binary: arch-dep-package-has-big-usr-share
@@ -25,8 +31,13 @@ W: binary: executable-not-elf-or-script ./usr/bin/iminusrbin
 W: binary: file-in-unusual-dir usr/bar
 W: binary: invalid-date-in-changelog The, 15 Apr 2004 23:33:51 +0200
 W: binary: menu-command-not-in-package /usr/lib/menu/binary:6 /imnothere
+W: binary: menu-command-not-in-package /usr/share/menu/binary:6 /imnothere
+W: binary: menu-file-in-usr-lib usr/lib/menu/binary
 W: binary: menu-item-needs-tag-has-unknown-value wm /usr/lib/menu/binary:5
+W: binary: menu-item-needs-tag-has-unknown-value wm /usr/share/menu/binary:5
 W: binary: package-contains-hardlink usr/bar2 -> usr/share/baz
 W: binary: package-contains-upstream-install-documentation usr/share/doc/binary/INSTALL
 W: binary: unquoted-string-in-menu-item /usr/lib/menu/binary needs:1
 W: binary: unquoted-string-in-menu-item /usr/lib/menu/binary needs:2
+W: binary: unquoted-string-in-menu-item /usr/share/menu/binary needs:1
+W: binary: unquoted-string-in-menu-item /usr/share/menu/binary needs:2

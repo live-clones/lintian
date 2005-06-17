@@ -2,8 +2,18 @@ lintian (1.23.9) unstable; urgency=low
 
   * checks/conffiles:
     + [JvW] Warn on /var files being a conffile too (Closes: #293443)
+  * checks/menus:
+    + [FL] New check menu-file-in-usr-lib because /usr/lib/menu is
+      deprecated
+    + [FL] Also find menu files in /usr/share/menu (Closes: #314187)
+    + [FL] Rename executable-in-usr-lib-menu to executable-menu-file
+  * checks/menu-format:
+    + [FL] Adapt to changes in collections/menu-files
 
- -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Tue, 12 Apr 2005 23:12:36 +0200
+  * collections/menu-files:
+    + [FL] Also collect files from /usr/share/menu
+  
+ -- Frank Lichtenheld <djpig@debian.org>  Fri, 17 Jun 2005 02:17:52 +0200
 
 lintian (1.23.8) unstable; urgency=low
 

@@ -38,8 +38,11 @@ binary-indep:
 	touch debian/tmp/usr/lib/filenames/readonly/test
 
 	install -d debian/tmp/usr/lib/menu
+	install -d debian/tmp/usr/share/menu
 	touch debian/tmp/usr/lib/menu/README
+	touch debian/tmp/usr/share/menu/README
 	touch debian/tmp/usr/lib/menu/menu
+	touch debian/tmp/usr/share/menu/menu
 	chmod 644 debian/tmp/usr/lib/menu/*
 
 	install -d debian/tmp/usr/lib/perl5/foo

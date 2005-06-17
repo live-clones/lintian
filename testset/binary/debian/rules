@@ -19,8 +19,10 @@ binary-arch: build
 	install -s -m 755 hello-static $(tmp)/usr/bin/static-hello
 	install -d $(tmp)/usr/share/doc/binary
 	install -m 644 INSTALL $(tmp)/usr/share/doc/binary
+	install -d $(tmp)/usr/share/menu
 	install -d $(tmp)/usr/lib/menu
 	install -d $(tmp)/usr/share/binary
+	install -m 644 debian/menu $(tmp)/usr/share/menu/binary
 	install -m 644 debian/menu $(tmp)/usr/lib/menu/binary
 	install -m 644 debian/README.Debian $(tmp)/usr/share/doc/binary
 	install -m 644 debian/copyright $(tmp)/usr/share/doc/binary

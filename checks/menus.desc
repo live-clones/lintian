@@ -67,11 +67,17 @@ Type: error
 Info: The postrm script calls the <tt>install-docs</tt> command. Usually,
  this command should be called from the <tt>prerm</tt> maintainer script.
 
-Tag: executable-in-usr-lib-menu
+Tag: executable-menu-file
 Type: warning
-Info: Files in <tt>/usr/lib/menu</tt> should normally not be marked as
- executables. You only need to do this if your package has to generate
- menu entries dynamically.
+Info: Menu files should normally not be marked as executables. You only
+ need to do this if your package has to generate menu entries dynamically.
+
+Tag: menu-file-in-usr-lib
+Type: warning
+Info: As of menu, version 2.1.25, /usr/lib/menu as location for menu
+ files is deprecated (but still works perfectly). Menu files should
+ now be placed in /usr/share/menu instead. Only menu files that are
+ actually binary executables still need to go to /usr/lib/menu.
 
 Tag: executable-in-usr-share-docbase
 Type: error

@@ -22,6 +22,7 @@ package Lintian::menu_format;
 use strict;
 use Tags;
 use Util;
+use File::Basename;
 
 # This is a list of all tags that should be in every menu item.
 my @req_tags=qw(needs section title command);
@@ -119,13 +120,25 @@ foreach my $section (@sections) {
     $sections_hash{$section}=1;
 }
 
-opendir (MENUDIR, "menu/") or fail("cannot read menu file directory.");
-while (my $menufile = readdir(MENUDIR)) {
-    next if -x "menu/$menufile"; # don't try to parse executables
-    next if $menufile eq "README"; # README is a special case
+my @menufiles;
+opendir (MENUDIR, "menu/lib") or fail("cannot read menu/lib file directory.");
+push @menufiles, map { "menu/lib/$_" } readdir(MENUDIR);
+closedir MENUDIR;
+opendir (MENUDIR, "menu/share") or fail("cannot read menu/share file directory.");
+push @menufiles, map { "menu/share/$_" } readdir(MENUDIR);
+closedir MENUDIR;
+
+foreach my $menufile (@menufiles) {
+    next if -x $menufile; # don't try to parse executables
+
+    my $basename = basename $menufile;
+    my $fullname = "/usr/share/menu/$basename";
+    $fullname = "/usr/lib/menu/$basename" if $menufile =~ m,^menu/lib/,o;
+
+    next if $basename eq "README"; # README is a special case
 
     my $menufile_line ="";
-    open (IN,"menu/$menufile") or
+    open (IN, $menufile) or
 	fail("cannot open menu file $menufile for reading.");
     # line below is commented out in favour of the while loop
     # do { $_=<IN>; } while defined && (m/^\s* \#/ || m/^\s*$/);
@@ -140,7 +153,7 @@ while (my $menufile = readdir(MENUDIR)) {
 
     # Check first line of file to see if it matches the old menu file format.
     if ($menufile_line =~ m/^(?!\?package\(.*\)).* .* .* .* "?.*"? .*$/o) {
-	tag "old-format-menu-file", "/usr/lib/menu/$menufile";
+	tag "old-format-menu-file", $fullname;
 	close IN;
 	next;
     }
@@ -159,15 +172,15 @@ while (my $menufile = readdir(MENUDIR)) {
 	# Note that I allow whitespace after the continuation character.
 	# This is caught by VerifyLine().
 	if (! ($menufile_line =~ m/\\\s*?$/)) {
-	    VerifyLine($pkg,$type,$menufile,$line,$lc);
+	    VerifyLine($pkg,$type,$menufile,$fullname,$line,$lc);
 	    $line="";
 	}
     } while ($menufile_line = <IN>);
-    VerifyLine($pkg,$type,$menufile,$line,$lc);
+    VerifyLine($pkg,$type,$menufile,$fullname,$line,$lc);
 
     close IN;
 }
-closedir MENUDIR;
+
 
 }
 
@@ -176,11 +189,7 @@ closedir MENUDIR;
 # Pass this a line of a menu file, it sanitizes it and
 # verifies that it is correct.
 sub VerifyLine {
-    my $pkg=shift;
-    my $type=shift;
-    my $menufile=shift;
-    my $line=shift;
-    my $linecount=shift;
+    my ( $pkg, $type, $menufile, $fullname, $line, $linecount ) = @_;
 
     my %vals;
 
@@ -193,7 +202,7 @@ sub VerifyLine {
     # This is in here to fix a common mistake: whitespace after a '\'
     # character.
     if ($line =~ s/\\\s+\n/ /mgo) {
-	tag "whitespace-after-continuation-character", "/usr/lib/menu/$menufile:$linecount";
+	tag "whitespace-after-continuation-character", "$fullname:$linecount";
     }
 
     # Ignore lines that are all whitespace or empty.
@@ -204,14 +213,14 @@ sub VerifyLine {
 
     # Start by testing the package check.
     if (not $line =~ m/^\?package\((.*?)\):/o) {
-	tag "bad-test-in-menu-item", "/usr/lib/menu/$menufile:$linecount";
+	tag "bad-test-in-menu-item", "$fullname:$linecount";
 	return;
     }
     my $pkg_test = $1;
     my %tested_packages = map { $_ => 1 } split( /\s*,\s*/, $pkg_test);
     my $tested_packages = scalar keys %tested_packages;
     unless (exists $tested_packages{$pkg}) {
-	tag "pkg-not-in-package-test", "$pkg_test /usr/lib/menu/$menufile";
+	tag "pkg-not-in-package-test", "$pkg_test $fullname";
     }
     $line =~ s/^\?package\(.*?\)://;
 	
@@ -251,14 +260,14 @@ sub VerifyLine {
 	my $value = $2;
 
 	if (exists $vals{$tag}) {
-	    tag "duplicated-tag-in-menu-item", "/usr/lib/menu/$menufile $1:$linecount";
+	    tag "duplicated-tag-in-menu-item", "$fullname $1:$linecount";
 	}
 
 	# If the value was quoted, remove those quotes.
 	if ($value =~ m/^\"(.*)\"$/) {
 	    $value = $1;
 	} else {
-	    tag "unquoted-string-in-menu-item", "/usr/lib/menu/$menufile $1:$linecount";
+	    tag "unquoted-string-in-menu-item", "$fullname $1:$linecount";
 	}
 
 	# If the value has escaped characters, remove the
@@ -280,7 +289,7 @@ sub VerifyLine {
     # If that loop didn't match up to end of line, we have a
     # problem..
     if (pos($line) < length($line)) {
-	tag "unparsable-menu-item", "/usr/lib/menu/$menufile:$linecount";
+	tag "unparsable-menu-item", "$fullname:$linecount";
 	# Give up now, before things just blow up in our face.
 	return;
     }
@@ -290,7 +299,7 @@ sub VerifyLine {
     # Test for important tags.
     foreach my $tag (@req_tags) {
 	unless ( exists($vals{$tag}) && defined($vals{$tag}) ) {
-	    tag "menu-item-missing-required-tag", "$tag /usr/lib/menu/$menufile:$linecount";
+	    tag "menu-item-missing-required-tag", "$tag $fullname:$linecount";
 	    # Just give up right away, if such an essential tag is missing,
 	    # chance is high the rest doesn't make sense either. And now all
 	    # following checks can assume those tags to be there
@@ -301,7 +310,7 @@ sub VerifyLine {
     # Make sure all tags are known.
     foreach my $tag (keys %vals) {
 	if (! $known_tags_hash{$tag}) {
-	    tag "menu-item-contains-unknown-tag", "$tag /usr/lib/menu/$menufile:$linecount";
+	    tag "menu-item-contains-unknown-tag", "$tag $fullname:$linecount";
 	}
     }
 
@@ -320,9 +329,9 @@ sub VerifyLine {
     
 	my @com=split(' ',$vals{'command'});
 	if ($com[0] eq "su-to-root") {
-	    tag "su-to-root-without-usr-sbin", "/usr/lib/menu/$menufile:$linecount";
+	    tag "su-to-root-without-usr-sbin", "$fullname:$linecount";
 	} elsif ($com[0] eq "/usr/bin/su-to-root") {
-	    tag "su-to-root-with-usr-bin", "/usr/lib/menu/$menufile:$linecount";
+	    tag "su-to-root-with-usr-bin", "$fullname:$linecount";
 	} elsif ($com[0] eq "/usr/sbin/su-to-root") {
 	    shift @com;
 	    
@@ -347,16 +356,16 @@ sub VerifyLine {
             }
             
             unless ($cmd) {
-		tag "su-to-root-without--c", "/usr/lib/menu/$menufile:$linecount";
+		tag "su-to-root-without--c", "$fullname:$linecount";
 	    } else {   
-		tag "menu-command-not-in-package", "/usr/lib/menu/$menufile:$linecount $cmd"
+		tag "menu-command-not-in-package", "$fullname:$linecount $cmd"
 		    if (!($file_index{".$cmd"} 
 			|| grep {$file_index{".".$_.$cmd}} qw(/usr/local/bin/ /usr/bin/ /bin/ /usr/bin/X11/ /usr/games/)) # Check for binary in PATH
 			&& ($tested_packages < 2)
 			&& ($section !~ m:^WindowManagers/Modules:));
 	    }
 	} else {
-	    tag "menu-command-not-in-package", "/usr/lib/menu/$menufile:$linecount $com[0]"
+	    tag "menu-command-not-in-package", "$fullname:$linecount $com[0]"
 	        if ($com[0] && ! ($file_index{".$com[0]"}
 		    || grep {$file_index{".".$_.$com[0]}} qw(/usr/local/bin/ /usr/bin/ /bin/ /usr/bin/X11/ /usr/games/)) # Check for binary in PATH
 		    && ($tested_packages < 2)
@@ -364,13 +373,13 @@ sub VerifyLine {
 	}
 
     if (exists($vals{'icon'})) {
-	VerifyIcon($menufile, $linecount, $vals{'icon'}, 32);
+	VerifyIcon($menufile, $fullname, $linecount, $vals{'icon'}, 32);
     }
     if (exists($vals{'icon32x32'})) {
-	VerifyIcon($menufile, $linecount, $vals{'icon32x32'}, 32);
+	VerifyIcon($menufile, $fullname, $linecount, $vals{'icon32x32'}, 32);
     }
     if (exists($vals{'icon16x16'})) {
-	VerifyIcon($menufile, $linecount, $vals{'icon16x16'}, 16);
+	VerifyIcon($menufile, $fullname, $linecount, $vals{'icon16x16'}, 16);
     }
 
     # Check the needs tag.
@@ -379,26 +388,26 @@ sub VerifyLine {
     if ($section =~ m:^WindowManagers/Modules:) {
 	# WM/Modules: needs must not be the regular ones nor wm
 	if ($needs_tag_vals_hash{$needs} or $needs eq "wm") {
-	    tag "non-wm-module-in-wm-modules-menu-section", "$needs /usr/lib/menu/$menufile:$linecount";
+	    tag "non-wm-module-in-wm-modules-menu-section", "$needs $fullname:$linecount";
 	}
     } elsif ($section =~ m:^WindowManagers:) {
 	# Other WM sections: needs must be wm
         if ($needs ne 'wm') {
-	    tag "non-wm-in-windowmanager-menu-section", "$needs /usr/lib/menu/$menufile:$linecount";
+	    tag "non-wm-in-windowmanager-menu-section", "$needs $fullname:$linecount";
 	}
     } else {
 	# Any other section: just only the general ones
 	if ($needs eq "dwww") {
-	    tag "menu-item-needs-dwww", "/usr/lib/menu/$menufile:$linecount";
+	    tag "menu-item-needs-dwww", "$fullname:$linecount";
 	} elsif (not $needs_tag_vals_hash{$needs}) {
-	    tag "menu-item-needs-tag-has-unknown-value", "$needs /usr/lib/menu/$menufile:$linecount";
+	    tag "menu-item-needs-tag-has-unknown-value", "$needs $fullname:$linecount";
 	}
     }
 
     # Check the section tag
 	# Check for historical changes in the section tree.
 	if ($section =~ m:^Apps/Games:) {
-	    tag "menu-item-uses-apps-games-section", "/usr/lib/menu/$menufile:$linecount";
+	    tag "menu-item-uses-apps-games-section", "$fullname:$linecount";
 	    $section =~ s:^Apps/::;
 	}
 
@@ -406,7 +415,7 @@ sub VerifyLine {
 	my ($rootsection) = $section =~ m:([^/]*):;
 	if (not $root_sections_hash{$rootsection}) {
 	    if (not $rootsection =~ m/$pkg/i) {
-		tag "menu-item-creates-new-root-section", "$rootsection /usr/lib/menu/$menufile:$linecount";
+		tag "menu-item-creates-new-root-section", "$rootsection $fullname:$linecount";
 	    }
 	} else {
 	    # Check to see if the section is valid.
@@ -424,18 +433,18 @@ sub VerifyLine {
 		}
 	    }
 	    if (! $ok) {
-		tag "menu-item-creates-new-section", "$vals{section} /usr/lib/menu/$menufile:$linecount";
+		tag "menu-item-creates-new-section", "$vals{section} $fullname:$linecount";
 	    }
 	}
 }
 
 
 sub VerifyIcon {
-    my ($menufile, $linecount, $icon, $size) = @_;
+    my ($menufile, $fullname, $linecount, $icon, $size) = @_;
     local *IN;
 
     if ($icon eq 'none') {
-	tag "menu-item-uses-icon-none", "/usr/lib/menu/$menufile:$linecount";
+	tag "menu-item-uses-icon-none", "$fullname:$linecount";
 	return;
     }
     

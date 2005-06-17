@@ -35,13 +35,24 @@ if (-e "menu") {
 	or fail("cannot rm old menu directory");
 }
 
-if (-d "unpacked/usr/lib/menu") {
-    spawn('cp', '-a', 'unpacked/usr/lib/menu', 'menu') == 0
-	or fail("cannot copy unpacked/usr/lib/menu directory");
+mkdir("menu", 0777) or fail("cannot mkdir menu: $!");
+
+if (-d "unpacked/usr/lib/menu") {    
+    spawn('cp', '-a', 'unpacked/usr/lib/menu', 'menu/lib') == 0
+	or fail("cannot copy unpacked/usr/lib/menu/ directory");
 } else {
     # no menu directory
-    mkdir("menu", 0777) or fail("cannot mkdir menu: $!");
+    mkdir("menu/lib", 0777) or fail("cannot mkdir menu/lib: $!");
 }
+
+if (-d "unpacked/usr/share/menu") {    
+    spawn('cp', '-a', 'unpacked/usr/share/menu', 'menu/share') == 0
+	or fail("cannot copy unpacked/usr/share/menu directory");
+} else {
+    # no menu directory
+    mkdir("menu/share", 0777) or fail("cannot mkdir menu/share: $!");
+}
+
 
 exit 0;
 

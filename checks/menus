@@ -80,16 +80,20 @@ while (<IN>) {
 
     if ($perm =~ m,^-,o) { # file checks
 	# menu file?
-	if ($file =~ m,^usr/lib/menu/\S,o) { # correct permissions?
+	if ($file =~ m,^usr/(lib|share)/menu/\S,o) { # correct permissions?
 	    if ($perm =~ m,x,o) {
-		tag "executable-in-usr-lib-menu", sprintf("$file %04o",$operm);
+		tag "executable-menu-file", sprintf("$file %04o",$operm);
 	    }
 
-	    next if $file eq 'usr/lib/menu/README';
+	    next if $file =~ m,^usr/(lib|share)/menu/README$,;
+
+	    if ($file =~ m,^usr/lib/,o) {
+		tag "menu-file-in-usr-lib", $file;
+	    }
 
 	    $menu_file = $file;
 
-	    if ($file eq 'usr/lib/menu/menu' and $pkg ne 'menu') {
+	    if ($file =~ m,usr/(lib|share)/menu/menu$,o and $pkg ne 'menu') {
 		tag "bad-menu-file-name", $file;
 	    }
 	}
