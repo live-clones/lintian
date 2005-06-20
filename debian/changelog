@@ -11,6 +11,8 @@ lintian (1.23.9) unstable; urgency=low
     - debian/postinst - remove (Closes: #292981)
     - debian/conffiles- remove
     - debian/prerm    - adapted
+  * debian/control:
+    + [FL] Update Standards-Version to 3.6.2
   
   * checks/conffiles:
     + [JvW] Warn on /var files being a conffile too (Closes: #293443)
@@ -25,6 +27,8 @@ lintian (1.23.9) unstable; urgency=low
     + [FL] Rename executable-in-usr-lib-menu to executable-menu-file
   * checks/menu-format:
     + [FL] Adapt to changes in collections/menu-files
+  * checks/standards-version:
+    + [FL] Update to 3.6.2 (Closes: #314879)
 
   * collections/menu-files:
     + [FL] Also collect files from /usr/share/menu
