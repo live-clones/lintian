@@ -3,7 +3,7 @@ Section: utils
 Priority: optional
 Build-Depends: debhelper (>= 4)
 Maintainer: Lintian Maintainers <lintian@packages.debian.org>
-Standards-Version: 3.6.1
+Standards-Version: 3.6.2
 
 Package: debconf-test
 Architecture: any
