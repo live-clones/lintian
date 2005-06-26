@@ -231,7 +231,8 @@ while (<SCRIPTS>) {
 	unless ($executable{$filename} or
 		$filename =~ m,usr/(lib|share)/.*\.pm, or
 		$filename =~ m,\.in$, or
-		$filename =~ m,etc/menu-methods,);
+		$filename =~ m,etc/menu-methods, or
+		$filename =~ m,etc/X11/Xsession.d,);
 
     if (exists $valid_interpreters{$base}) {
 	unless ($interpreter eq $valid_interpreters{$base} or

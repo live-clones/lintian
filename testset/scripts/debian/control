@@ -2,7 +2,7 @@ Source: scripts
 Section: interpreters
 Priority: extra
 Maintainer: Lintian Maintainers <lintian-maint@debian.org>
-Uploaders: Jeroen van Wolfelaar <jeroen@wolffelaar.nl>
+Uploaders: Jeroen van Wolfelaar <jeroen@wolffelaar.nl>, Marc 'HE' Brockschmidt <he@debian.org>
 Standards-Version: 3.2.1
 
 Package: scripts

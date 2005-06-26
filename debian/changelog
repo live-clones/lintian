@@ -1,3 +1,13 @@
+lintian (1.23.10) unstable; urgency=low
+
+  * The "Ah, it's LinuxTag and I still have free time!" release
+
+  * checks/scripts:
+    + [HE] Allow Scripts in /etc/Xsession.d/ to be not executable, as they're
+      not directly called, but only sourced. (Closes: #309203)
+
+ -- Marc 'HE' Brockschmidt <he@debian.org>  Tue, 21 Jun 2005 14:40:53 +0200
+
 lintian (1.23.9) unstable; urgency=low
 
   * The "Wow, so much time at hand" release

@@ -8,6 +8,7 @@ binary-arch:
 
 binary-indep:
 	install -d $(tmp)/usr/bin/
+	install -d $(tmp)/etc/X11/Xsession.d/
 	install -d $(tmp)/usr/share/scripts/
 	install -d $(tmp)/usr/share/doc/scripts/
 	install -d $(tmp)/usr/lib/python2.3/site-packages/
@@ -20,6 +21,7 @@ binary-indep:
 	install -m 4755 perlfoo $(tmp)/usr/bin/suidperlfoo2
 	install -m 4755 suidperlfoo $(tmp)/usr/bin/
 	install -m 755 tkfoo $(tmp)/usr/bin/
+	install -m 644 xsession-test $(tmp)/etc/X11/Xsession.d/ 
 
 	echo "#!/usr/bin/perl" >> $(tmp)/usr/share/scripts/foobar.in
 	chmod 644 $(tmp)/usr/share/scripts/foobar.in
@@ -31,11 +33,13 @@ binary-indep:
 	cp debian/changelog $(tmp)/usr/share/doc/scripts/changelog
 	gzip -9 $(tmp)/usr/share/doc/scripts/changelog
 
+	cp debian/scripts.conffiles $(tmp)/DEBIAN/conffiles
 	dpkg-gencontrol -isp
 	dpkg --build $(tmp) ..
 
 binary: binary-arch binary-indep
 
 clean:
+	rm -rf debian/files $(tmp)
 
 .PHONY: build binary-arch binary-indep binary clean

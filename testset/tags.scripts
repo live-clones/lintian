@@ -6,7 +6,7 @@ E: scripts: suid-perl-script-but-no-perl-suid-dep ./usr/bin/suidperlfoo2
 E: scripts: wrong-path-for-ruby ./usr/bin/rubyfoo #!/bin/ruby1.8
 W: scripts source: ancient-standards-version 3.2.1
 W: scripts source: changelog-should-mention-nmu
-W: scripts source: source-nmu-has-incorrect-version-number 5
+W: scripts source: source-nmu-has-incorrect-version-number 6
 W: scripts: binary-without-manpage perlfoo
 W: scripts: binary-without-manpage py2foo
 W: scripts: binary-without-manpage pyfoo

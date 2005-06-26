@@ -1,3 +1,10 @@
+scripts (6) unstable; urgency=low
+
+  * I'm also not able to write my name.
+  * Added a script in /etc/Xsession.d
+
+ -- Mark 'HE' Brokschmitt <he@debian.org>  Thu, 23 Jun 2005 14:32:39 +0200
+
 scripts (5) unstable; urgency=low
 
   * I'm making a typo in my own name... And I want lintian to warn me about
