@@ -2,6 +2,10 @@ lintian (1.23.10) unstable; urgency=low
 
   * The "Ah, it's LinuxTag and I still have free time!" release
 
+  * checks/files:
+    + [HE] Allow backupninja configuration files in /etc/backup.d/ to be 
+      0600. (Closes: #307639)
+
   * checks/rules:
     + [HE] New file with two new tests, checking that debian/rules is a 
       Makefile and that it contains rules for all mandatory targets.
