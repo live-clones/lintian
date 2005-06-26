@@ -616,6 +616,16 @@ Info: This script calls suidregister which is no longer needed, a new
  command 'dpkg-statoverride' gives admins more flexibility.  Please see
  the documentation of suidmanager and dpkg-statoverride for details.
 
+Tag: maintainer-script-needs-depends-on-netbase
+Type: warning
+Info: This script calls update-inetd, but the package does not depend or
+ pre-depend on netbase, which provides it.
+
+Tag: maintainer-script-needs-depends-on-adduser
+Type: warning
+Info: This script calls adduser, but the package does not depend or
+ pre-depend on the adduser package.
+
 Tag: update-alternatives-remove-called-in-postrm
 Type: warning
 Info: 'update-alternatives --remove &lt;alternative&gt; foo' is called in the

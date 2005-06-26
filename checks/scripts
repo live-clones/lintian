@@ -397,7 +397,7 @@ while (<SCRIPTS>) {
     open C, "$filename"
 	or fail("cannot open maintainer script $filename for reading: $!");
 
-    my ($warned_tmp, $warned_killall);
+    my ($warned_tmp, $warned_killall, $warned_netbase, $warned_adduser);
     my $cat_string = "";
 
     while (<C>) {
@@ -477,6 +477,20 @@ while (<SCRIPTS>) {
 	}
 	if (m,\bsuidregister\b,) {
 	    tag "suidregister-used-in-maintainer-script", "$file";
+	}
+	if (m,\bupdate-inetd\b, && !$warned_netbase) {
+	    my $type = $deps{'netbase'};
+	    unless ($type and ($type eq 'depends' or $type eq 'pre-depends')) {
+		tag "maintainer-script-needs-depends-on-netbase", "$file";
+		$warned_netbase = 1;
+	    }
+	}
+	if (m,\badduser\b, && !$warned_adduser) {
+	    my $type = $deps{'adduser'};
+	    unless ($type and ($type eq 'depends' or $type eq 'pre-depends')) {
+		tag "maintainer-script-needs-depends-on-adduser", "$file";
+		$warned_adduser = 1;
+	    }
 	}
 	if ($file eq 'postrm') {
 	    if (m,update\-alternatives \-\-remove,) {

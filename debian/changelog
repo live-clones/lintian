@@ -10,6 +10,9 @@ lintian (1.23.10) unstable; urgency=low
   * checks/scripts:
     + [HE] Allow Scripts in /etc/Xsession.d/ to be not executable, as they're
       not directly called, but only sourced. (Closes: #309203)
+    + [HE] Check for use of adduser and update-inetd and warn if the package
+      has no (pre-)dependency on adduser/netbase. Patch by Russ Allbery,
+      thanks for the work. (Closes: #308569)
 
  -- Marc 'HE' Brockschmidt <he@debian.org>  Tue, 21 Jun 2005 14:40:53 +0200
 
