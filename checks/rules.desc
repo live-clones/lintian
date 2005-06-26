@@ -1,0 +1,20 @@
+Check-Script: rules
+Author: Rene van Bevern <rvb@pro-linux.de>
+Standards-Version: 3.6.1.1
+Type: source
+Unpack-Level: 2
+Info: checks for common problems in debian/rules
+Abbrev: rls
+
+Tag: debian-rules-lacks-target
+Type: error
+Ref: policy 4.8
+Info: Your debian/rules lacks or contains an errorneous target.
+ The Debian policy requires that the debian/rules provides at least the
+ clean, binary, binary-arch, binary-indep and build targets.
+
+Tag: debian-rules-not-a-makefile
+Type: error
+Ref: policy 4.8
+Info: Your debian/rules is not a Makefile. Make sure that your script
+ starts with something like "#!/usr/bin/make -f" in its first line.

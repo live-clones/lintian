@@ -1,0 +1,44 @@
+# rules -- lintian check script
+
+# Copyright (C) 2005 René van Bevern <rvb@pro-linux.de>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+package Lintian::rules;
+use strict;
+use Tags;
+use Util;
+
+sub run {
+	my $rules = 'debian/rules';
+	my @required_targets = ('build', 'binary', 'binary-arch',
+	                        'binary-indep', 'clean');
+
+	fail 'unpacked source tree is unavailable' unless -d 'unpacked';
+
+	# check for #!/usr/bin/make -f
+	open (RULES, '<', "unpacked/$rules") or fail "Could not open unpacked/$rules";
+	unless (<RULES> =~ /#!\s*\/usr\/bin\/make\s+-f/) {
+		tag 'debian-rules-not-a-makefile';
+	}
+	close RULES;
+
+	# check for missing targets
+	foreach my $target (@required_targets) {
+		if ((system "make -C unpacked -f $rules -n $target > /dev/null 2>&1") != 0) {
+			tag 'debian-rules-lacks-target', $target;
+		}
+	}
+}
+
+1;
+
+# vim: syntax=perl sw=4 ts=4 noet shiftround
