@@ -7,14 +7,18 @@ use base qw(Exporter);
 	   %known_obsolete_fields %known_essential %known_build_essential
 	   %known_obsolete_packages %known_virtual_packages
 	   %known_libstdcs %known_tcls %known_tclxs %known_tks %known_tkxs
-	   %known_libpngs
+	   %known_libpngs %non_standard_archs
           );
 
 # simple defines for commonly needed data
 
 %known_archs = map { $_ => 1 }
-    ('alpha', 'amd64', 'arm', 'hppa', 'hurd-i386', 'i386', 'ia64', 'mips',
-	 'mipsel', 'm68k', 'powerpc', 's390', 'sh', 'sparc', 'any', 'all');
+    ('alpha', 'arm', 'hppa', 'hurd-386', 'i386', 'ia64', 'mips', 'mipsel', 
+     'm68k', 'powerpc', 's390', 'sparc', 'any', 'all');
+
+%non_standard_archs = map { $_ => 1 }
+    ('amd64', 'ppc64', 'sh', 'kfreebsd-i386', 'knetbsd-i386');
+
 
 %known_sections = map { $_ => 1 }
     ('admin', 'base', 'comm', 'devel', 'doc', 'editors', 'electronics',

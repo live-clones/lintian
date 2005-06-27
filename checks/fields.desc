@@ -1,7 +1,7 @@
 Check-Script: fields
 Author: Marc 'HE' Brockschmidt <marc@marcbrockschmidt.de>
 Abbrev: fld
-Standards-Version: 3.6.1
+Standards-Version: 3.6.2
 Type: binary, udeb, source
 Unpack-Level: 1
 Needs-Info: debfiles
@@ -69,10 +69,18 @@ Ref:  policy 5.6.7
 Tag: unknown-architecture
 Type: warning
 Info: In addition to the special values `all' and `any', the architecture
- names alpha, amd64, arm, hppa, hurd-i386, i386, ia64, m68k, mips, mipsel,
- powerpc, s390, sh, and sparc are currently in use.  The special value
- `source' is only used in .changes files and does not make sense in a binary
- package or a .dsc file.
+ names alpha, arm, hppa, hurd-i386, i386, ia64, m68k, mips, mipsel, powerpc,
+ s390, and sparc are currently in use.  The special value `source' is only 
+ used in .changes files and does not make sense in a binary package or a 
+ .dsc file.
+
+Tag: non-standard-architecture
+Type: info
+Info: In addition to the special values `all', `any' and the names of the
+ architectures already in the archive (alpha, arm, hppa, hurd-386, i386, 
+ ia64, m68k, mips, mipsel, powerpc, s390, sparc), there are some 
+ architectures still waiting to be included in the archive. At the moment,
+ these are amd64, kfreebsd-i386, knetbsd-i386, ppc64 and sh. 
 
 Tag: too-many-architectures
 Type: error
