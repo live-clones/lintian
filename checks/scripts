@@ -432,6 +432,10 @@ while (<SCRIPTS>) {
 	    if (m,(^|\s+)((/usr)?/bin/)?((b|d)?a|k|z|t?c)sh\s+-c\s*.+,) {
 		$within_another_shell = 1;
 	    }
+	    #Don't use chown foo.bar:
+	    if (m{(chown\s+[-_A-Za-z0-9]+\.[-_A-Za-z0-9]+)\s+}) {
+	    	tag "deprecated-chown-usage", "$file:$. \'$1\'";
+	    }
 	    # if cat_string is set, we are in a HERE document and need not
 	    # check for things
 	    if ($cat_string eq "" and $checkbashisms and !$within_another_shell) {

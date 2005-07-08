@@ -22,6 +22,8 @@ lintian (1.23.10) unstable; urgency=low
     + [HE] Check for use of adduser and update-inetd and warn if the package
       has no (pre-)dependency on adduser/netbase. Patch by Russ Allbery,
       thanks for the work. (Closes: #308569)
+    + [HE] Check for use of "." as a deprecated separator between user and
+      group names in chown call. (Closes: #88340)
 
  -- Marc 'HE' Brockschmidt <he@debian.org>  Tue, 21 Jun 2005 14:40:53 +0200
 

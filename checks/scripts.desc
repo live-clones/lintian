@@ -639,3 +639,10 @@ Info: 'update-alternatives --remove &lt;alternative&gt; foo' is called in the
  run by hand.
  .
  update-alternatives --remove should be called in the prerm instead.
+
+Tag: deprecated-chown-usage
+Type: warning
+Info: 'chown user.group' is called in one of the maintainer scripts.
+ This should be avoided, as the correct syntax is 'chown user:group'.
+ Using "." as a separator is still supported by the GNU tools, but it will
+ fail as soon as a system uses the "." in user or group names.

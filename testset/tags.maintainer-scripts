@@ -13,6 +13,7 @@ W: maintainer-scripts source: ancient-standards-version 3.1.1
 W: maintainer-scripts source: changelog-should-mention-qa
 W: maintainer-scripts source: qa-upload-has-incorrect-version-number 7-0.1
 W: maintainer-scripts: config-does-not-load-confmodule
+W: maintainer-scripts: deprecated-chown-usage postinst:30 'chown root.root'
 W: maintainer-scripts: maintainer-script-calls-deprecated-wm-menu-config postinst:28
 W: maintainer-scripts: missing-debconf-dependency
 W: maintainer-scripts: no-debconf-templates
