@@ -29,6 +29,9 @@ lintian (1.23.10) unstable; urgency=low
       thanks for the work. (Closes: #308569)
     + [HE] Check for use of "." as a deprecated separator between user and
       group names in chown call. (Closes: #88340)
+    + [HE] Fix to work $interpreter-script-but-no-$pkg-dep with more than one
+      dependency if needed. First use case is depending on build-essential
+      to provide /usr/bin/make. (Closes: #294894)
 
   * checks/shared-libs:
     + [HE] Don't allow non-PIC shared libraries. This conforms to the new

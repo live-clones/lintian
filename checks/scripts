@@ -112,7 +112,7 @@ my %interpreter_dependencies = (
 				'kforth' => 'kforth',
 				'ksh' => 'pdksh',
 				'magicfilter' => 'magicfilter',
-				'make' => 'make',
+				'make' => 'make,build-essential',
 				'mawk' => 'mawk',
 				'ocaml' => 'ocaml',
 				'perl-5.005' => 'perl-5.005',
@@ -248,9 +248,9 @@ while (<SCRIPTS>) {
 	# Do not complain about dependencies for non-executable scripts.
 	if ($executable{$filename}) {
 	    if (exists $interpreter_dependencies{$base}) {
-		my $dep = $interpreter_dependencies{$base};
-		tag_error("$base-script-but-no-$dep-dep", $filename)
-		    unless ($deps{$dep});
+		my @deps = split(/,/,$interpreter_dependencies{$base});
+		tag_error("$base-script-but-no-".$deps[0]."-dep", $filename)
+		    unless (scalar map { $deps{$_}?$_:() } @deps);
 	    } elsif ($base =~ /^python(\d.\d)?$/) {
 		my $ver = $1 ? $1 : "";
 		tag_error("python-script-but-no-python-dep", $filename)
@@ -351,10 +351,10 @@ while (<SCRIPTS>) {
 		    or $base eq 'perl');
 	
 	if (exists $interpreter_dependencies{$base}) {
-	    my $dep = $interpreter_dependencies{$base};
+	    my @deps = split(/,/,$interpreter_dependencies{$base});
 	    tag_error("interpreter-without-predep", $filename,
 		      "#!$interpreter")
-		unless (exists $deps{$dep} and $deps{$dep} eq 'pre-depends');
+		unless (scalar map { ($deps{$_} && $deps{$_} eq 'pre-depends')?$_:() } @deps);
 	} elsif ($base eq 'python') {
 	    tag_error("interpreter-without-predep", $filename,
 		      "#!$interpreter")
