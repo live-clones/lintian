@@ -7,6 +7,9 @@ lintian (1.23.10) unstable; urgency=low
       version 3.6.2. As the changes between 3.6.{1,2} aren't stuff we
       (can) check, this is actually true! (Closes: #317049)
 
+  * checks/control-file
+    + [HE] Check for duplicated fields. (Closes: #299792)
+
   * checks/fields:
     + [HE] Change unknown-architecture a bit: We don't complain about
       "known" non-standard archs (like amd64, ppc64, *bsd-i386) and only

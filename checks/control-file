@@ -34,6 +34,24 @@ if ($line) {
     tag "debian-control-file-uses-obsolete-national-encoding", "at line $line"
 }
 
+# Check that each field is only used once:
+my $seen_fields = {};
+open (CONTROL, "debfiles/control") or fail "Couldn't read debfiles/control: $!";
+while (<CONTROL>) {
+	#Reset seen_fields if we enter a new section:
+	$seen_fields = {} if /^$/;
+
+	#line with field:
+	if (/^(\S+):/) {
+		my $field = lc ($1);
+		if ($seen_fields->{$field}) {
+			tag "debian-control-with-duplicate-fields", "$field: $$seen_fields{$field}, $.";
+		}
+		$seen_fields->{$field} = $.; 
+	}
+}
+close CONTROL;
+
 my ($header, @binary_controls) = read_dpkg_control("debfiles/control");
 
 for my $binary_control (@binary_controls) {

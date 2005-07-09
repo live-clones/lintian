@@ -25,3 +25,9 @@ Info: The control file has a `Build-Depends', `Build-Depends-Indep',
  `Build-Conflicts' or `Build-Conflicts-Indep' field in a binary
  section.  These specify source package relationships, and should be in
  the source section of the control file.
+
+Tag: debian-control-with-duplicate-fields
+Type: error
+Info: One of the paragraphs of your debian/control contains the same
+ field more than once. This can lead to an unexpected behaviour of dpkg
+ and apt.
