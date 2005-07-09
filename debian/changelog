@@ -30,6 +30,11 @@ lintian (1.23.10) unstable; urgency=low
     + [HE] Check for use of "." as a deprecated separator between user and
       group names in chown call. (Closes: #88340)
 
+  * checks/shared-libs:
+    + [HE] Don't allow non-PIC shared libraries. This conforms to the new
+      etch release policy. Thanks for the report and patch to Kurt Roeckx
+      <kurt@roeckx.be>. (Closes: #309220)
+
  -- Marc 'HE' Brockschmidt <he@debian.org>  Tue, 21 Jun 2005 14:40:53 +0200
 
 lintian (1.23.9) unstable; urgency=low

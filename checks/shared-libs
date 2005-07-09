@@ -72,8 +72,7 @@ while (<IN>) {
     } elsif (m/^\s*SONAME\s+(\S+)/o) {
 	$SONAME{$file} = $1;
     } elsif (m/^\s*TEXTREL\s/o) {
-	tag "shlib-with-non-pic-code", "$file"
-	    if exists $ldso_dir{dirname($file)};
+	tag "shlib-with-non-pic-code", "$file";
     } elsif (m/^\s*INTERP\s/) {
 	$INTERP{$file} = 1;
     } else {
