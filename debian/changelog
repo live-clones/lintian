@@ -32,6 +32,8 @@ lintian (1.23.10) unstable; urgency=low
     + [HE] Fix to work $interpreter-script-but-no-$pkg-dep with more than one
       dependency if needed. First use case is depending on build-essential
       to provide /usr/bin/make. (Closes: #294894)
+    + [HE] Add lefty as a valid interpreter and check for a correct dependency
+      on graphviz. (Closes: #295093)
 
   * checks/shared-libs:
     + [HE] Don't allow non-PIC shared libraries. This conforms to the new

@@ -19,6 +19,7 @@ binary-indep:
 	install -m 755 perlfoo $(tmp)/usr/bin/
 	install -m 755 rubyfoo $(tmp)/usr/bin/
 	install -m 755 make-foo $(tmp)/usr/bin/
+	install -m 755 lefty-foo $(tmp)/usr/bin/
 	install -m 4755 perlfoo $(tmp)/usr/bin/suidperlfoo2
 	install -m 4755 suidperlfoo $(tmp)/usr/bin/
 	install -m 755 tkfoo $(tmp)/usr/bin/

@@ -646,3 +646,14 @@ Info: 'chown user.group' is called in one of the maintainer scripts.
  This should be avoided, as the correct syntax is 'chown user:group'.
  Using "." as a separator is still supported by the GNU tools, but it will
  fail as soon as a system uses the "." in user or group names.
+
+Tag: wrong-path-for-lefty
+Type: error
+Info: lefty is installed as /usr/bin/lefty on Debian systems.
+
+Tag: lefty-script-but-no-graphviz-dep
+Type: error
+Info: Packages that use lefty must depend on the package graphviz.
+ .
+ In some cases a weaker relationship, such as Suggests or Recommends, will
+ be more appropriate.   

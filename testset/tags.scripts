@@ -1,12 +1,15 @@
 E: scripts: calls-suidperl-directly ./usr/bin/suidperlfoo
+E: scripts: lefty-script-but-no-graphviz-dep ./usr/bin/lefty-foo
 E: scripts: no-copyright-file
 E: scripts: python-script-but-no-python-dep ./usr/bin/py2foo
 E: scripts: python-script-but-no-python-dep ./usr/bin/pyfoo
 E: scripts: suid-perl-script-but-no-perl-suid-dep ./usr/bin/suidperlfoo2
+E: scripts: wrong-path-for-lefty ./usr/bin/lefty-foo #!/usr/local/bin/lefty
 E: scripts: wrong-path-for-ruby ./usr/bin/rubyfoo #!/bin/ruby1.8
 W: scripts source: ancient-standards-version 3.2.1
 W: scripts source: changelog-should-mention-nmu
 W: scripts source: source-nmu-has-incorrect-version-number 6
+W: scripts: binary-without-manpage lefty-foo
 W: scripts: binary-without-manpage make-foo
 W: scripts: binary-without-manpage perlfoo
 W: scripts: binary-without-manpage py2foo
