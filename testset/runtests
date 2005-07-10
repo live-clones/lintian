@@ -217,7 +217,7 @@ for (@tests) {
     foreach (readdir D) {
       next unless /^\Q${pkg}\E_.*\.orig\.tar\.gz$/;
       print "Symlinking $_ in $rundir...\n" if $debug;
-      symlink "../../$testset/$_", "$rundir/$_";
+      symlink $ENV{'PWD'}."/$testset/$_", "$rundir/$_";
     }
     closedir D;
     runsystem("find $rundir -name CVS -o -name .svn -print0 | xargs -0r rm -R");
