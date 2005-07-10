@@ -23,11 +23,6 @@ lintian (1.23.10) unstable; urgency=low
     + [HE] Allow backupninja configuration files in /etc/backup.d/ to be 
       0600. (Closes: #307639)
 
-  * checks/rules:
-    + [HE] New file with two new tests, checking that debian/rules is a 
-      Makefile and that it contains rules for all mandatory targets.
-      Patch by René van Bevern, thanks for the work. (Closes: #311786)
-
   * checks/scripts:
     + [HE] Allow Scripts in /etc/Xsession.d/ to be not executable, as they're
       not directly called, but only sourced. (Closes: #309203)
