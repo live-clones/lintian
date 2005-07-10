@@ -8,6 +8,8 @@ W: diffs source: configure-generated-file-in-source config.status
 W: diffs source: configure-generated-file-in-source subdir-bad/config.cache
 W: diffs source: configure-generated-file-in-source subdir-bad/config.log
 W: diffs source: configure-generated-file-in-source subdir-bad/config.status
-W: diffs source: native-package-with-dash-version
+W: diffs source: configure-generated-file-in-source subdir-good/config.cache
+W: diffs source: configure-generated-file-in-source subdir-good/config.log
+W: diffs source: configure-generated-file-in-source subdir-good/config.status
 W: diffs source: out-of-date-standards-version 3.5.9
 W: diffs: binary-without-manpage diffs
