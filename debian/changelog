@@ -1,3 +1,13 @@
+lintian (1.23.11) unstable; urgency=low
+
+  * checks/common_data.pm:
+    + [FL] Fix typo (hurd-386 -> hurd-i386) from last release
+      that lead to spurious warnings about unknown architectures
+  * checks/fields:
+    + [FL] Actually mention which architecture we're complaining about
+
+ -- Frank Lichtenheld <djpig@debian.org>  Mon, 11 Jul 2005 15:50:10 +0300
+
 lintian (1.23.10) unstable; urgency=low
 
   * The "Ah, it's LinuxTag and I still have free time!" release

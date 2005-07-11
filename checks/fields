@@ -106,9 +106,9 @@ if (not open (FH, "fields/architecture")) {
 
 	for my $arch (@archs) {
 		if ($non_standard_archs{$arch}) {
-			tag "non-standard-architecture", "";
+			tag "non-standard-architecture", "$arch";
 		} elsif (! $known_archs{$arch}) {
-			tag "unknown-architecture", "";
+			tag "unknown-architecture", "$arch";
 		}
 	}
 

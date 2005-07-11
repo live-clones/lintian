@@ -13,7 +13,7 @@ use base qw(Exporter);
 # simple defines for commonly needed data
 
 %known_archs = map { $_ => 1 }
-    ('alpha', 'arm', 'hppa', 'hurd-386', 'i386', 'ia64', 'mips', 'mipsel', 
+    ('alpha', 'arm', 'hppa', 'hurd-i386', 'i386', 'ia64', 'mips', 'mipsel', 
      'm68k', 'powerpc', 's390', 'sparc', 'any', 'all');
 
 %non_standard_archs = map { $_ => 1 }
