@@ -1,3 +1,11 @@
+lintian (1.23.12) UNRELEASED; urgency=low
+
+  * checks/control-file:
+    + [CW] Break control paragraphs at lines containing only whitespace, not
+      just on zero-length lines. (Closes: #319370)
+
+ -- Colin Watson <cjwatson@debian.org>  Fri, 22 Jul 2005 12:22:45 +0100
+
 lintian (1.23.11) unstable; urgency=low
 
   * checks/common_data.pm:

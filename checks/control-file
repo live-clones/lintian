@@ -38,6 +38,8 @@ if ($line) {
 my $seen_fields = {};
 open (CONTROL, "debfiles/control") or fail "Couldn't read debfiles/control: $!";
 while (<CONTROL>) {
+	s/\s*\n$//;
+
 	#Reset seen_fields if we enter a new section:
 	$seen_fields = {} if /^$/;
 
