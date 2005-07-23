@@ -95,6 +95,27 @@ Info: Each manual page should start with a `NAME' section, which lists the
  See also groff_man(7) and groff_mdoc(7) for general information on writing
  manual pages.
 
+Tag: manpage-has-errors-from-man
+Type: warning
+Info: This man page provokes warnings or errors from man.
+ .
+ "cannot adjust" or "can't break" are trouble with paragraph filling,
+ usually related to long lines.  Adjustment can be helped by left
+ justifying, breaks can be helped with hyphenation, see "Manipulating
+ Filling and Adjusting" and "Manipulating Hyphenation" in the manual.
+ .
+ "can't find numbered character" usually means latin1 etc in the input, and
+ this warning indicates characters will be missing from the output.  You can
+ change to escapes like \[:a] described on the groff_char man page.
+ .
+ Other warnings are often formatting typos, like missing quotes around a
+ string argument to .IP.  These are likely to result in lost or malformed
+ output.  See the groff_man (or groff_mdoc if using mdoc) man page for
+ information on macros.
+ .
+ At worst, warning messages can be disabled with the .warn directive, see
+ "Debugging" in the groff manual.
+
 Tag: manpage-for-x11-binary-in-wrong-directory
 Type: error
 Info: Manual pages for binaries which are located in <tt>/usr/X11R6/bin</tt>

@@ -25,6 +25,9 @@ lintian (1.23.11) UNRELEASED; urgency=low
       just on zero-length lines. (Closes: #319370)
   * checks/fields:
     + [FL] Actually mention which architecture we're complaining about
+  * checks/manpages:
+    + [FL] Report errors from man when parsing man pages. Based on
+      a patch by Kevin Ryde (Closes: #285540)
   * checks/po-debconf:
     + [FL] Abort check if the package doesn't seem to use debconf to
       avoid false positives in case maintainers use debian/po for

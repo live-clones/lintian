@@ -200,8 +200,8 @@ while (<IN>) {
 	    my ($i, $first) = (0, "");
 	    do {
 		$first = $manfile[$i++] || ""; 
-	    } while ($first =~ /^\.\\"/ && $manfile[$i]);
-	    
+	    } while ($first =~ /^\.\\"/ && $manfile[$i]); #");
+
 	    unless ($first) {
 		tag "empty-manual-page", "$file";
 	    } elsif ($first =~ /^\.so\s+(.+)?$/) {
@@ -236,9 +236,24 @@ while (<IN>) {
 	# removed.
 	if ($path =~ m,/man/man\d/,) {
 	    if (system("lexgrog unpacked/\Q$file\E >/dev/null 2>&1")) {
-	        tag "manpage-has-bad-whatis-entry", "$file";
+		tag "manpage-has-bad-whatis-entry", "$file";
 	    }
 	}
+	# If it's not a .so link, run it through "man" to check for errors.
+	open MANERRS, '-|', "(LANG=C man -l unpacked/\Q$file\E >/dev/null) 2>&1"
+	    or fail("cannot run man -l: $!");
+	while (<MANERRS>) {
+	    # ignore progress information from man
+	    next if /^Reformatting/;
+	    next if /^\s*$/;
+	    # ignore errors from gzip, will be dealt with at other places
+	    next if /^(man|gzip)/;
+	    chomp;
+	    s/^[^:]://o;
+	    tag "manpage-has-errors-from-man", "$file", "$_";
+	    last;
+	}
+	close(MANERRS);
 	# Now we search through the whole man page for some common errors
 	my $lc = 0;
 	my $hc = 0;
@@ -248,7 +263,7 @@ while (<IN>) {
 	    next if $line =~ /^\.\\\"/o; # comments .\"
 	    if ($line =~ /^\.TH\s/) { # header
 		require Text::ParseWords;
-		my ($th_command, $th_title, $th_section, $th_date ) = 
+		my ($th_command, $th_title, $th_section, $th_date ) =
 		    Text::ParseWords::parse_line( '\s+', 0, $line);
 		if ($th_section && (lc($fn_section) ne lc($th_section))) {
 		    tag "manpage-section-mismatch", "$file:$lc $fn_section != $th_section";
