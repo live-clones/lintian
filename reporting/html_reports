@@ -159,7 +159,8 @@ for my $src (sort by_maint keys %by_src) {
 	    output_chunk(\@tags) if @tags;
 	    undef @tags;
 	}
-	$lastpkg = $pkg; $lasttag = $tag;
+	$lastpkg = $pkg if $type ne ' source';
+	$lasttag = $tag;
 
 	$tag = make_tagref($tag);
 	push(@tags,"$code: $pkg$type: $tag$rest\n");

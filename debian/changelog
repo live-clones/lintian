@@ -41,6 +41,9 @@ lintian (1.23.11) UNRELEASED; urgency=low
     + [FL] Adjust check for positional arguments after ". file" to detect
       more shell control and piping commands that are all allowed.
       Noted by Thomas Hood. (Closes: #319212)
+  
+  * reporting/html_reports:
+    + [FL] Fix counting of binary package names
 
  -- Frank Lichtenheld <djpig@debian.org>  Mon, 11 Jul 2005 15:50:10 +0300
 
