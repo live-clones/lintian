@@ -127,3 +127,9 @@ Info: The latest Debian changelog has either the same or even an older date
 Tag: syntax-error-in-debian-changelog
 Type: warning
 Info: While parsing the Debian changelog, an syntax error was found.
+Ref: policy 4.4
+
+Tag: wrong-bug-number-in-closes
+Type: warning
+Info: Bug numbers can only contain digits.
+Ref: policy 4.4

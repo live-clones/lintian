@@ -14,6 +14,8 @@ lintian (1.23.11) UNRELEASED; urgency=low
       latter file as the Debian changelog and only issuing
       debian-changelog-file-missing would be confusing then
       (Closes: #285152)
+    + [FL] Detect closes: statements with non-valid bugnumbers,
+      suggested by martin f. krafft (Closes: #294409)
   * checks/common_data.pm:
     + [FL] Fix typo (hurd-386 -> hurd-i386) from last release
       that lead to spurious warnings about unknown architectures

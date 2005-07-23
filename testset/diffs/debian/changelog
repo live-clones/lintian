@@ -1,5 +1,10 @@
 diffs (1-1) unstable; urgency=low
 
   * Initial version
+  (Closes: #123456)
+  (Closes: #nnnnnn)
+  (Closes: #123nnn)
+  (Closes: #1, #foo)
+  (Closes: #1, #2, #bar)
 
  -- Lintian Maintainers <lintian-maint@debian.org>  Wed, 27 Nov 2002 14:15:00 +0100
