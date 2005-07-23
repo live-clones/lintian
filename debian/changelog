@@ -5,6 +5,10 @@ lintian (1.23.11) UNRELEASED; urgency=low
       >= 0.6 since prior versions have bugs regarding parse
       error handling
   
+  * checks/binaries:
+    + [FL] Check that the package name of a shared library matches
+      the SONAME as defined in the "Library Packaging guide"
+      (Closes: #305575, #313118)
   * checks/changelog-file{,.desc}:
     + [FL] Use libparse-debianchangelog-perl to parse the changelog,
       which detects a lot of syntax errors

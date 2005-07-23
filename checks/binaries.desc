@@ -121,3 +121,18 @@ Type: warning
 Info: There is no CXXABI_* mark in the objdump output on this file,
  and it is linked against a libstdc++, meaning it's likely linking to
  an obsolete version of the C++ library.
+
+Tag: several-sonames-in-same-package
+Type: info
+Info: There are several shared libraries in this package and they
+ have different sonames. This is usually discouraged because it is
+ inherently error-prone.
+
+Tag: package-name-doesnt-match-sonames
+Type: warning
+Info: The package name of a library package should usually reflect
+ the soname of the included library. The package name can determined
+ from the package name with the following code snippet:
+ .
+  $ objdump -p /path/to/libfoo-bar.so.1.2.3 | sed -n -e's/^[[:space:]]*SONAME[[:space:]]*//p' | sed -e's/\([0-9]\)\.so\./\1-/; s/\.so\.//'
+Ref: Library Packaging guide 5

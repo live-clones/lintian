@@ -12,7 +12,9 @@ W: libbaz source: ancient-standards-version 3.2.1
 W: libbaz source: changelog-should-mention-nmu
 W: libbaz source: source-nmu-has-incorrect-version-number 1
 W: libbaz1: missing-depends-line
+W: libbaz1: package-name-doesnt-match-sonames libbaz2-1.0
 W: libbaz1: possible-bashism-in-maintainer-script postinst:6 '[ -d /usr/doc -a ! -e /usr/doc/$PKG -a '
 W: libbaz1: possible-bashism-in-maintainer-script prerm:5 '[ \( "$1" = "upgrade" -o "$1" = "remove" \) -a '
 W: libbaz1: postinst-should-not-set-usr-doc-link
 W: libbaz1: zero-byte-file-in-doc-directory usr/share/doc/README.Debian
+W: libbaz2: package-name-doesnt-match-sonames libbaz2-1.0
