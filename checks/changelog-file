@@ -258,11 +258,11 @@ open IN, "changelog" or fail("cannot find changelog for $type package $pkg");
 my ($prefix, $suffix);
 while (<IN>) {
 
-    if (/closes:\s*((?:bug)?\#?\s?\d*[[:alpha:]]\w*)/io
+    if (/closes:\s*(((?:bug)?\#?\s?\d*)[[:alpha:]]\w*)/io
 	|| /closes:\s*(?:bug)?\#?\s?\d+
 	      (?:,\s*(?:bug)?\#?\s?\d+)*
-	      (?:,\s*((?:bug)?\#?\s?\d*[[:alpha:]]\w*))/iox) {
-	tag "wrong-bug-number-in-closes", $1;
+	      (?:,\s*(((?:bug)?\#?\s?\d*)[[:alpha:]]\w*))/iox) {
+	tag "wrong-bug-number-in-closes", $1 if $2;
     }
 
     if (/^(.*)Local variables:(.*)$/i) {
