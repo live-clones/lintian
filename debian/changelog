@@ -32,6 +32,12 @@ lintian (1.23.11) UNRELEASED; urgency=low
   * checks/scripts:
     + [FL] increase search limit for exec hack by not counting comments
       and empty lines (Closes: #294661)
+    + [FL] detect more bashisms, suggested by Clint Adams and
+      martin f krafft (Closes: #253498, #296233 and addresses #253012
+      partly).
+    + [FL] Adjust check for positional arguments after ". file" to detect
+      more shell control and piping commands that are all allowed.
+      Noted by Thomas Hood. (Closes: #319212)
 
  -- Frank Lichtenheld <djpig@debian.org>  Mon, 11 Jul 2005 15:50:10 +0300
 

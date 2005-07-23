@@ -4,7 +4,7 @@ if [ "$1" != "upgrade" ]; then
        update-alternatives --remove dummy /usr/bin/dummy-alternative
 fi
 
-if [ \( "$1" = "upgrade" -o "$1" = "remove" \) -a -L /usr/doc/maintainer-scripts ]; the
+if ([ "$1" = "upgrade" ] || [ "$1" = "remove" ]) && [ -L /usr/doc/maintainer-scripts ]; the
 n
         rm -f /usr/doc/maintainer-scripts
 fi
@@ -21,7 +21,15 @@ if [ "$2" == "purge" ]; then
 fi
 
 function foo( ) {
-   echo "foo"
+   local bar
+   echo "foo" &>/dev/null
 }
 
 source $FOO
+
+trap "echo hi" EXIT HUP 3
+
+if [[ "$2" = "purge" ]]; then
+    kill -HUP $$
+fi
+

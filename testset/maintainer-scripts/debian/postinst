@@ -8,6 +8,9 @@ fi
 
 # valid
 . /usr/share/lintian/shell || exit 0
+. /usr/share/lintian/shell >/dev/null
+. /usr/share/lintian/shell 2>/dev/null
+. /usr/share/lintian/shell </dev/null
 # invalid
 . /usr/share/lintian/shell foo
 
