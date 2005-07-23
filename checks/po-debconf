@@ -55,7 +55,7 @@ if ( $has_template && ! -d "debfiles/po" ) {
 }
 
 #   Exit if package does not seem to use po-debconf
--d "debfiles/po" or return(0);
+($has_template && -d "debfiles/po") or return(0);
 
 my $missing_files = 0;
 if (-f "debfiles/po/POTFILES.in") {

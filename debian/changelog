@@ -17,6 +17,10 @@ lintian (1.23.11) UNRELEASED; urgency=low
       just on zero-length lines. (Closes: #319370)
   * checks/fields:
     + [FL] Actually mention which architecture we're complaining about
+  * checks/po-debconf:
+    + [FL] Abort check if the package doesn't seem to use debconf to
+      avoid false positives in case maintainers use debian/po for
+      other Debian specific strings (Closes: #262749)
   * checks/scripts:
     + [FL] increase search limit for exec hack by not counting comments
       and empty lines (Closes: #294661)
