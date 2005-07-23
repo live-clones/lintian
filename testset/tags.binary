@@ -32,7 +32,6 @@ W: binary: binary-without-manpage iminusrbin
 W: binary: binary-without-manpage static-hello
 W: binary: executable-not-elf-or-script ./usr/bin/iminusrbin
 W: binary: file-in-unusual-dir usr/bar
-W: binary: invalid-date-in-changelog The, 15 Apr 2004 23:33:51 +0200
 W: binary: menu-command-not-in-package /usr/lib/menu/binary:6 /imnothere
 W: binary: menu-command-not-in-package /usr/share/menu/binary:6 /imnothere
 W: binary: menu-file-in-usr-lib usr/lib/menu/binary
@@ -40,6 +39,7 @@ W: binary: menu-item-needs-tag-has-unknown-value wm /usr/lib/menu/binary:5
 W: binary: menu-item-needs-tag-has-unknown-value wm /usr/share/menu/binary:5
 W: binary: package-contains-hardlink usr/bar2 -> usr/share/baz
 W: binary: package-contains-upstream-install-documentation usr/share/doc/binary/INSTALL
+W: binary: syntax-error-in-debian-changelog line 16 "couldn't parse date The, 15 Apr 2004 23:33:51 +0200"
 W: binary: unquoted-string-in-menu-item /usr/lib/menu/binary needs:1
 W: binary: unquoted-string-in-menu-item /usr/lib/menu/binary needs:2
 W: binary: unquoted-string-in-menu-item /usr/share/menu/binary needs:1

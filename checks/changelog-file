@@ -22,6 +22,7 @@ package Lintian::changelog_file;
 use strict;
 use Tags;
 use Util;
+use Parse::DebianChangelog;
 
 sub run {
 
@@ -212,6 +213,36 @@ if ($line) {
     tag "debian-changelog-file-uses-obsolete-national-encoding", "at line $line"
 }
 
+my $changes = Parse::DebianChangelog->init( { infile => 'changelog',
+					      quiet => 1 } );
+if (my @errors = $changes->get_parse_errors) {
+    foreach (@errors) {
+	tag "syntax-error-in-debian-changelog", "line $_->[1]", "\"$_->[2]\"";
+    }
+}
+
+my @entries = $changes->data;
+if (@entries) {
+    foreach (@entries) {
+	if ($_->Maintainer =~ /<([^>\@]+\@unknown)>/) {
+	    tag "debian-changelog-file-contains-debmake-default-email-address", $1;
+	} elsif ($_->Maintainer =~ /<([^>\@]+\@[^>.]*)>/) {
+	    tag "debian-changelog-file-contains-invalid-email-address", $1;
+	}
+    }
+
+    if (@entries > 1) {
+	my $first_timestamp = ($changes->data)[0]->Timestamp;
+	my $second_timestamp = ($changes->data)[1]->Timestamp;
+
+	if ( $first_timestamp && $second_timestamp ) {
+	    tag "latest-debian-changelog-entry-without-new-date"
+		unless (($first_timestamp - $second_timestamp) > 0);
+	}
+    }
+}
+
+
 # read the changelog itself
 #
 # emacs only looks at the last "local variables:" in a file, and only at
@@ -219,48 +250,20 @@ if ($line) {
 # pesky to replicate.  Demanding a match of $prefix and $suffix ought to
 # be enough to avoid false positives.
 open IN, "changelog" or fail("cannot find changelog for $type package $pkg");
-my ($prefix, $suffix, $first_entry_date, $second_entry_date);
+my ($prefix, $suffix);
 while (<IN>) {
-    if (/^ -- .+>  (.+?)$/) {
-	if (!$first_entry_date) {
-	    $first_entry_date = $1;
-	} elsif (!$second_entry_date) {
-	    $second_entry_date = $1;
-	}
-    }
-
     if (/^(.*)Local variables:(.*)$/i) {
 	$prefix = $1;
 	$suffix = $2;
     }
     # emacs allows whitespace between prefix and variable, hence \s*
-    if (defined $prefix && defined $suffix && /^\Q$prefix\E\s*add-log-mailing-address:.*\Q$suffix\E$/) {
+    if (defined $prefix && defined $suffix
+	&& /^\Q$prefix\E\s*add-log-mailing-address:.*\Q$suffix\E$/) {
 	tag "debian-changelog-file-contains-obsolete-user-emacs-settings";
-    }
-    if (/^\s*--[^<]*<([^>\@]+\@unknown)>/) {
-       tag "debian-changelog-file-contains-debmake-default-email-address", $1;
-    } elsif (/^\s*--[^<]*<([^>\@]+\@[^>.]*)>/) {
-       tag "debian-changelog-file-contains-invalid-email-address", $1;
     }
 }
 close IN;
 
-if ($first_entry_date && $second_entry_date) {
-    my ($first_timestamp, $second_timestamp);
-    chomp($first_timestamp = `/bin/date -d "$first_entry_date" +\%s 2>/dev/null`);
-    chomp($second_timestamp = `/bin/date -d "$second_entry_date" +\%s 2>/dev/null`);
-
-    unless ( $first_timestamp && $second_timestamp ) {
-	tag "invalid-date-in-changelog", $first_entry_date 
-	    unless $first_timestamp;
-	
-	tag "invalid-date-in-changelog", $second_entry_date 
-	    unless $second_timestamp;
-    } else {
-	tag "latest-debian-changelog-entry-without-new-date" 
-	    unless (($first_timestamp - $second_timestamp) > 0);
-    }
-}
 }
 
 1;

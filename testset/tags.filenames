@@ -59,6 +59,7 @@ W: filenames: symlink-is-self-recursive usr/lib/filenames/symlink10wrong ../../.
 W: filenames: symlink-is-self-recursive usr/lib/filenames/symlink5ok+warn ..
 W: filenames: symlink-is-self-recursive usr/lib/filenames/symlink6ok+warn .
 W: filenames: symlink-is-self-recursive usr/lib/filenames/symlink7ok+warn /
+W: filenames: syntax-error-in-debian-changelog line 0 "found eof where expected first heading"
 W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/Changes.gz
 W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/README.macosx
 W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/examples/very_interesting_example
