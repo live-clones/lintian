@@ -1,5 +1,9 @@
 lintian (1.23.11) UNRELEASED; urgency=low
 
+  * frontend/lintian:
+    + [FL] Don't use dpkg --print-installation-architecture since
+      it is deprecated, use dpkg --print-architecture instead.
+  
   * debian/control:
     + [FL] Depend on libparse-debianchangelog-perl, require
       >= 0.6 since prior versions have bugs regarding parse

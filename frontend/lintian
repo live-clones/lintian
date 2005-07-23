@@ -385,7 +385,7 @@ $LINTIAN_ARCH = $OPT_LINTIAN_ARCH if $OPT_LINTIAN_ARCH;
 # LINTIAN_ARCH must have a value.
 unless (defined $LINTIAN_ARCH) {
     if ($LINTIAN_DIST) {
-	chop($LINTIAN_ARCH=`dpkg --print-installation-architecture`);
+	chop($LINTIAN_ARCH=`dpkg --print-architecture`);
     } else {
 	$LINTIAN_ARCH = 'any';
     }
