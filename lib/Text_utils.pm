@@ -136,7 +136,7 @@ sub dtml_to_html {
 		push(@o,"</pre>");
 		$pre=0;
 	    }
-	    push(@o,"$_<p>\n");
+	    push(@o,"<p>$_\n");
 	}
     }
     if ($pre) {

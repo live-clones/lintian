@@ -55,9 +55,11 @@ chomp(my $mirror_timestamp = `cat $LINTIAN_ARCHIVEDIR/project/trace/ftp-master.d
 # Footer for each html page:
 my $close_text = <<"EOT_EOT_EOT";
 <HR>
-<FONT SIZE="-1">Please send all comments about these web pages to
-<A HREF="mailto:lintian-maint\@debian.org">Lintian maintainer</A>.
-<P>Page last updated: $timestamp</FONT>
+<div style="font-size: smaller">
+<p>Please send all comments about these web pages to
+<A HREF="mailto:lintian-maint\@debian.org">Lintian maintainer</A>.</p>
+<p>Page last updated: $timestamp</p>
+</div>
 </BODY></HTML>
 EOT_EOT_EOT
 
@@ -226,7 +228,7 @@ for my $p (sort keys %anchor) {
 my (@list1, @list2, @list3, @list4);
 for my $c (sort keys %package_lists) {
     my $list = join(', ', @{$package_lists{$c}});
-    $list = "<H1>$c</H1>\n<BLOCKQUOTE>\n$list</BLOCKQUOTE><P>\n";
+    $list = "<H1>$c</H1>\n<BLOCKQUOTE>\n$list</BLOCKQUOTE>\n";
     if ($c le 'F') {
 	push(@list1, $list);
     } elsif ($c le 'L') {
@@ -285,7 +287,9 @@ close(OUT);
 open(OUT,">$HTML_TMP_DIR/report-index.html")
     or die "cannot open index page $HTML_TMP_DIR/report-index.html for writing: $!";
 print OUT <<"EOT_EOT_EOT";
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
 <head>
   <title>Lintian</title>
 </head>
@@ -345,22 +349,8 @@ Manual</a>.</p>
 </blockquote>
 
 <p>(The numbers in parentheses describe the changes since the last Lintian
-report, published on $old_stat->{'last-updated'}.)</td>
+report, published on $old_stat->{'last-updated'}.)</p>
 
-<!-- 
-<H1>Other Reports</H1>
-
-<H3><a href="reports/depcheck.html">Dependency problem reports</a></H3>
-
-<p>A list of package dependencies that cannot be satisfied, for each architecture:
-<a href="reports/depcheck.html#i386">i386</a>,
-<a href="reports/depcheck.html#m68k">m68k</a>,
-<a href="reports/depcheck.html#alpha">alpha</a>,
-<a href="reports/depcheck.html#sparc">sparc</a>,
-<a href="reports/depcheck.html#powerpc">powerpc</a>,
-<a href="reports/depcheck.html#arm">arm</a>,
-<a href="reports/depcheck.html#hurd-i386">hurd-i386</a>.
--->
 $close_text
 EOT_EOT_EOT
 close(OUT);
@@ -371,9 +361,19 @@ exit 0;
 
 sub open_maintainer_index {
     open(I,">$HTML_TMP_DIR/maintainers.html") or die "$!";
-    print I "<html><head><title>Lintian report, sorted by maintainers</title></head>\n";
-    print I "<body>\n";
-    print I "<h1>Lintian report, sorted by maintainers</h1>\n";
+    print I <<EOH;
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+<title>Lintian report, sorted by maintainers</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
+<body>
+<h1>Lintian report, sorted by maintainers</h1>
+EOH
+;
+
 }
 
 sub close_maintainer_index {
@@ -382,7 +382,7 @@ sub close_maintainer_index {
 }
 
 sub list_maintainer {
-    print I "\n<a href=\"$_[0]\">$_[1]</a><P>\n";
+    print I "\n<p><a href=\"$_[0]\">$_[1]</a>\n";
     $num_maint++;
 }
 
@@ -390,9 +390,19 @@ sub list_maintainer {
 
 sub open_tag_index {
     open(T,">$HTML_TMP_DIR/tags.html") or die "$!";
-    print T "<HTML><HEAD><TITLE>Lintian report, sorted by tags</TITLE></HEAD>\n";
-    print T "<BODY>\n";
-    print T "<H1>Lintian report, sorted by tags</H1>\n";
+    print T <<EOH;
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<HTML lang="en">
+<HEAD>
+<TITLE>Lintian report, sorted by tags</TITLE>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</HEAD>
+<BODY>
+<H1>Lintian report, sorted by tags</H1>
+EOH
+;
+
 }
 
 sub close_tag_index {
@@ -419,13 +429,22 @@ sub open_maintainer {
 
     $maint_file = $_[0];
     open(P,">$HTML_TMP_DIR/$maint_file") or die "$!";
-    
+
     my $t = quotehtml($maint);
 
-    print P "<html><head><title>Lintian report for $t</title></head>\n";
-    print P "<body>\n";
-    print P "<h2>Lintian report for</h2>\n";
-    print P "<h1>$t</h1>\n";
+    print P <<EOH;
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<HTML lang="en">
+<HEAD>
+<title>Lintian report for $t</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</HEAD>
+<body>
+<h2>Lintian report for</h2>
+<h1>$t</h1>
+EOH
+;
 
     list_maintainer($maint_file, $t);
 }
@@ -458,7 +477,7 @@ sub drop_anchor {
 	print P $text;
     } else {
 	$anch =~ tr/-/_/;  # dashes don't work correctly in anchors
-	print P "<A name=\"$anch\">$text</a>";
+	print P "<a id=\"$anch\" name=\"$anch\">$text</a>";
 
 	$anchor{$key} = "$maint_file#$anch";
     }
@@ -472,7 +491,7 @@ sub make_anchor {
 	return $key;
     }
 }
-    
+
 sub close_maintainer {
     return if not $maint_file;
 
@@ -487,9 +506,9 @@ sub close_maintainer {
 sub new_src_package {
     my ($src, $ver) = @_;
 
-    print P "\n<p> <hr> <p> <h2>";
+    print P "\n<hr> <h2>";
     drop_anchor($src, "Source package: $src ($ver)");
-    print P "</h2><p>\n";
+    print P "</h2>\n";
 
     $num_srcpkg++;
     $src_num_errors = 0;
@@ -523,16 +542,25 @@ sub open_tag_file {
     my $tag = shift;
 
     open(P,">$HTML_TMP_DIR/T$tag.html") or die "$!";
-    print P "<HTML><HEAD><TITLE>Lintian report for $tag</TITLE></HEAD>\n";
-    print P "<BODY>\n";
-    print P "<H2>Lintian report for</H2>\n";
-    print P "<H1>$tag</H1>\n";
+    print P <<EOH;
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<HTML lang="en">
+<HEAD>
+<TITLE>Lintian report for $tag</TITLE>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</HEAD>
+<BODY>
+<H2>Lintian report for</H2>
+<H1>$tag</H1>
+EOH
+;
 
     # print explanation about tag, if available
     if ($tag_info{$tag}) {
-	print P "<P><blockquote>\n";
+	print P "<blockquote>\n";
 	print P wrap_paragraphs('HTML', '',$tag_info{$tag}),"\n";
-	print P "</blockquote><P>\n";
+	print P "</blockquote>\n";
     } else {
 	warn "Can't find info for tag $tag.\n";
     }
@@ -568,11 +596,22 @@ sub output_packages {
     my ($l,$f,$r) = @_;
 
     open(I,">$HTML_TMP_DIR/$f") or die "$!";
-    print I "<HTML><HEAD><TITLE>Lintian report, sorted by packages ($r)</TITLE></HEAD>\n";
-    print I "<BODY>\n";
-    print I "<H1>Lintian report, sorted by packages ($r)</H1>\n";
-    print I "<a href=\"packages_1.html\">0-9, A-F</a> | <a href=\"packages_2.html\">G-L</a> | <a href=\"packages_3.html\">M-R</a> | <a href=\"packages_4.html\">S-Z</a><P>\n";
-
+    print I <<EOH;
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<HTML lang="en">
+<HEAD>
+<TITLE>Lintian report, sorted by packages ($r)</TITLE>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</HEAD>
+<BODY>
+<H1>Lintian report, sorted by packages ($r)</H1>
+<a href="packages_1.html">0-9, A-F</a> |
+<a href="packages_2.html">G-L</a> |
+<a href="packages_3.html">M-R</a> |
+<a href="packages_4.html">S-Z</a>
+EOH
+;
     print I @$l;
 
     print I $close_text;

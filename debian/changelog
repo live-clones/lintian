@@ -44,6 +44,8 @@ lintian (1.23.11) UNRELEASED; urgency=low
   
   * reporting/html_reports:
     + [FL] Fix counting of binary package names
+    + [FL] Generate mostly valid HTML (id and name attributes still
+      aren't valid in all cases)
 
  -- Frank Lichtenheld <djpig@debian.org>  Mon, 11 Jul 2005 15:50:10 +0300
 
