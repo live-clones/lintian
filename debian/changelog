@@ -11,6 +11,7 @@ lintian (1.23.11) UNRELEASED; urgency=low
   * checks/common_data.pm:
     + [FL] Fix typo (hurd-386 -> hurd-i386) from last release
       that lead to spurious warnings about unknown architectures
+      (Closes: #318110)
   * checks/control-file:
     + [CW] Break control paragraphs at lines containing only whitespace, not
       just on zero-length lines. (Closes: #319370)
