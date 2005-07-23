@@ -17,6 +17,9 @@ lintian (1.23.11) UNRELEASED; urgency=low
       just on zero-length lines. (Closes: #319370)
   * checks/fields:
     + [FL] Actually mention which architecture we're complaining about
+  * checks/scripts:
+    + [FL] increase search limit for exec hack by not counting comments
+      and empty lines (Closes: #294661)
 
  -- Frank Lichtenheld <djpig@debian.org>  Mon, 11 Jul 2005 15:50:10 +0300
 

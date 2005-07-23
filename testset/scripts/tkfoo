@@ -1,4 +1,23 @@
 #!/bin/sh
+#
+# Insane amount of empty lines and comments
+
+#
+#                                          
+#
+#
+
+#
+#
+
+#
+#
+#
+
+#
+#
+   
+#
 # This line makes the next one a comment in Tcl \
 exec wish "$0" -- ${1+"$@"}
 
