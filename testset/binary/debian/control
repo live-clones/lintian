@@ -6,7 +6,7 @@ Uploaders: Co-maintainer one <one@debian.org>, Jeroen van Wolffelaar <jeroen@wol
 Standards-Version: 3.2.1
 
 Package: binary
-Architecture: any
+Architecture: alpha amd64 arm hppa hurd-i386 i386 ia64 kfreebsd-i386 m68k mips mipsel powerpc ppc64 s390 sparc
 Depends: ${shlibs:Depends}
 Description: test handling of binary files
  Regression test for lintian's handling of binary files.
