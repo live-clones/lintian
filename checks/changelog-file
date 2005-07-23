@@ -171,7 +171,9 @@ if ($native_pkg) {
     # non-native (foreign :) Debian package
 
     # 1. check for upstream changelog
+    my $found_upstream_text_changelog = 0;
     if (grep m/^changelog(\.html)?(\.gz)?$/,@doc_files) {
+	$found_upstream_text_changelog = 1 unless $1;
 	# everything is fine
     } else {
 	# search for changelogs with wrong file name
@@ -197,8 +199,11 @@ if ($native_pkg) {
     } elsif (my @foo = grep m/^changelog\.debian(\.gz)?$/i,@doc_files) {
 	tag "wrong-name-for-debian-changelog-file", "usr/share/doc/$pkg/$foo[0]";
     } else {
-	tag "debian-changelog-file-missing", ""
-	    if $foreign_pkg;
+	if ($foreign_pkg && $found_upstream_text_changelog) {
+	    tag "debian-changelog-file-missing-or-wrong-name", "";
+	} elsif ($foreign_pkg) {
+	    tag "debian-changelog-file-missing", "";
+	}
 	# TODO: if uncertain whether foreign or native, either changelog.gz or
 	# changelog.debian.gz should exists though... but no tests catches
 	# this (extremely rare) border case... Keep in mind this is only

@@ -1,5 +1,5 @@
 E: binary: changelog-file-not-compressed changelog
-E: binary: debian-changelog-file-missing
+E: binary: debian-changelog-file-missing-or-wrong-name
 E: binary: file-directly-in-usr-share usr/share/baz
 E: binary: menu-item-missing-required-tag section /usr/lib/menu/binary:1
 E: binary: menu-item-missing-required-tag section /usr/share/menu/binary:1

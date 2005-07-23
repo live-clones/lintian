@@ -8,6 +8,12 @@ lintian (1.23.11) UNRELEASED; urgency=low
   * checks/changelog-file{,.desc}:
     + [FL] Use libparse-debianchangelog-perl to parse the changelog,
       which detects a lot of syntax errors
+    + [FL] Add a new tag debian-changelog-file-missing-or-wrong-name
+      which is issued if we found no Debian changelog but an upstream
+      changelog since the further checks will treat the
+      latter file as the Debian changelog and only issuing
+      debian-changelog-file-missing would be confusing then
+      (Closes: #285152)
   * checks/common_data.pm:
     + [FL] Fix typo (hurd-386 -> hurd-i386) from last release
       that lead to spurious warnings about unknown architectures

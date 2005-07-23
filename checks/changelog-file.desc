@@ -78,6 +78,18 @@ Info: Each Debian package (which provides a /usr/share/doc/<i>pkg</i>
  /usr/share/doc/<i>pkg</i>/changelog.Debian.gz
 Ref: policy 12.7
 
+Tag: debian-changelog-file-missing-or-wrong-name
+Type: error
+Info: Each Debian package (which provides a /usr/share/doc/<i>pkg</i>
+ directory) has to install a Debian changelog file
+ /usr/share/doc/<i>pkg</i>/changelog.Debian.gz
+ .
+ A common error is to name the Debian changelog like an upstream
+ changelog (/usr/share/doc/<i>pkg</i>/changelog.gz) therefor
+ lintian will apply further checks to such a file if it exists
+ even after issuing this error.
+Ref: policy 12.7
+
 Tag: debian-changelog-file-contains-obsolete-user-emacs-settings
 Type: error
 Info: The add-log-mailing-address variable is no longer honored in
