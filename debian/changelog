@@ -1,4 +1,4 @@
-lintian (1.23.11) UNRELEASED; urgency=low
+lintian (1.23.11) unstable; urgency=low
 
   * frontend/lintian:
     + [FL] Don't use dpkg --print-installation-architecture since
