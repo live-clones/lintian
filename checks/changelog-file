@@ -229,10 +229,12 @@ if (my @errors = $changes->get_parse_errors) {
 my @entries = $changes->data;
 if (@entries) {
     foreach (@entries) {
-	if ($_->Maintainer =~ /<([^>\@]+\@unknown)>/) {
-	    tag "debian-changelog-file-contains-debmake-default-email-address", $1;
-	} elsif ($_->Maintainer =~ /<([^>\@]+\@[^>.]*)>/) {
-	    tag "debian-changelog-file-contains-invalid-email-address", $1;
+	if ($_->Maintainer) {
+	    if ($_->Maintainer =~ /<([^>\@]+\@unknown)>/) {
+		tag "debian-changelog-file-contains-debmake-default-email-address", $1;
+	    } elsif ($_->Maintainer =~ /<([^>\@]+\@[^>.]*)>/) {
+		tag "debian-changelog-file-contains-invalid-email-address", $1;
+	    }
 	}
     }
 
