@@ -10,6 +10,7 @@ E: libbaz1: unstripped-binary-or-object ./usr/lib/libbaz1.so.1.0.3b
 E: libbaz1: unstripped-binary-or-object ./usr/lib/libfoo2.so.1.0.3b
 W: libbaz source: ancient-standards-version 3.2.1
 W: libbaz source: changelog-should-mention-nmu
+W: libbaz source: package-uses-deprecated-debhelper-compat-version 1
 W: libbaz source: source-nmu-has-incorrect-version-number 1
 W: libbaz1: missing-depends-line
 W: libbaz1: package-name-doesnt-match-sonames libbaz2-1.0

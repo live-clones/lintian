@@ -72,3 +72,10 @@ Info: The source package declares the debhelper compatibility version
  get out of synchronisation, the package may not build as expected.
  .
  Please refer to the debhelper(7) manual page for more information.
+
+Tag: package-uses-deprecated-debhelper-compat-version
+Type: warning
+Info: The debhelper compatibility version used by this package
+ (either declared in debian/compat or in debian/rules) is marked
+ as deprecated by the debhelper developer. You should really consider
+ using a newer compatibility version.

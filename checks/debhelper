@@ -173,8 +173,13 @@ while (defined(my $file=readdir(DEBIAN))) {
 }
 closedir(DEBIAN);
 
-if ($needversiondepends and ($needversiondepends > 1) and ! Dep::versions_lte($needversiondepends, $seenversiondepends)) {
-    tag "package-lacks-versioned-build-depends-on-debhelper", "$needversiondepends";
+$needversiondepends ||= 1;
+if ($needversiondepends < 3) {
+    tag "package-uses-deprecated-debhelper-compat-version", $needversiondepends;
+}
+
+if ($needversiondepends > 4 and ! Dep::versions_lte($needversiondepends, $seenversiondepends)) {
+    tag "package-lacks-versioned-build-depends-on-debhelper", $needversiondepends;
 }
 
 }

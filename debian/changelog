@@ -3,6 +3,12 @@ lintian (1.23.12) UNRELEASED; urgency=low
   * checks/binaries:
     + [FL] Convert the SONAME to lower case before comparing with
       package name. Suggested by Josh Triplett (Closes: #321206)
+  * checks/debhelper{,.desc}:
+    + [FL] Warn about using debhelper compat version lower than 3
+      like debhelper itself
+    + [FL] Drop package-lacks-versioned-build-depends-on-debhelper
+      tag for compat versions < 5. With debhelper 4 even in oldstable
+      issuing an error here is silly
 
  -- Frank Lichtenheld <djpig@debian.org>  Thu,  4 Aug 2005 12:45:33 +0200
 
