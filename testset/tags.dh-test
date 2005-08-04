@@ -4,5 +4,6 @@ W: dh-test source: dh_suidregister-is-obsolete
 W: dh-test source: dh_testversion-is-deprecated
 W: dh-test source: native-package-with-dash-version
 W: dh-test source: package-uses-deprecated-debhelper-compat-version 2
+W: dh-test: readme-debian-is-debmake-template
 W: dh-test: unknown-section unknown
 W: dh-test: wrong-bug-number-in-closes #nnnn
