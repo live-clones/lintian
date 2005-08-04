@@ -68,7 +68,7 @@ if ($synopsis =~ m/^\s*$/) {
     if ($synopsis =~ m/^\s*missing\s*$/i) {
 	tag "description-is-debmake-template", "" unless $template++;
     } elsif ($synopsis =~ m/<insert up to 60 chars description>/) {
-	tag "description-is-dh_make-template", "";
+	tag "description-is-dh_make-template", "" unless $template++;
     }
 }
 
@@ -113,7 +113,7 @@ while (<IN>) {
 	if (m/^\s*missing\s*$/oi) {
 	    tag "description-is-debmake-template", "" unless $template++;
 	} elsif (m/<insert long description, indented with spaces>/) {
-	    tag "description-is-dh_make-template", "";
+	    tag "description-is-dh_make-template", "" unless $template++;
 	}
     }
 
