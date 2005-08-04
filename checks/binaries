@@ -121,7 +121,7 @@ foreach my $expected_name (@sonames) {
     $expected_name =~ s/([0-9])\.so\./$1-/;
     $expected_name =~ s/\.so\.//;
 
-    if ($expected_name eq $pkg) {
+    if (lc($expected_name) eq $pkg) {
 	$match_found = 1;
 	last;
     }

@@ -1,3 +1,11 @@
+lintian (1.23.12) UNRELEASED; urgency=low
+
+  * checks/binaries:
+    + [FL] Convert the SONAME to lower case before comparing with
+      package name. Suggested by Josh Triplett (Closes: #321206)
+
+ -- Frank Lichtenheld <djpig@debian.org>  Thu,  4 Aug 2005 12:45:33 +0200
+
 lintian (1.23.11) unstable; urgency=low
 
   * frontend/lintian:
