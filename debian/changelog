@@ -9,6 +9,8 @@ lintian (1.23.12) UNRELEASED; urgency=low
     + [FL] Drop package-lacks-versioned-build-depends-on-debhelper
       tag for compat versions < 5. With debhelper 4 even in oldstable
       issuing an error here is silly
+    + [FL] Fix typo (s,debian/control,debian/compat,) in description of
+      declares-possibly-conflicting-debhelper-compat-versions
 
  -- Frank Lichtenheld <djpig@debian.org>  Thu,  4 Aug 2005 12:45:33 +0200
 
