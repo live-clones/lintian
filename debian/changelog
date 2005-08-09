@@ -14,6 +14,9 @@ lintian (1.23.12) UNRELEASED; urgency=low
   * checks/description:
     + [FL] Avoid double warning about description-is-dh_make-template
       in the same way we do it for the corresponding debmake tag
+  * checks/manpages:
+    + [FL] Don't issue warnings about 8bit characters in translated
+      man pages. Patch by Denis Barbier (Closes: #321650)
 
  -- Frank Lichtenheld <djpig@debian.org>  Thu,  4 Aug 2005 12:45:33 +0200
 
