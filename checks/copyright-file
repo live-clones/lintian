@@ -163,7 +163,7 @@ if (m,usr/doc/copyright,) {
 }
 
 # lame check for old FSF zip code
-if (m/02139/) {
+if (m/(02139|02111-1307)/) {
     tag "old-fsf-address-in-copyright-file", "";
 }
 

@@ -6,6 +6,9 @@ lintian (1.23.12) UNRELEASED; urgency=low
   * checks/binaries:
     + [FL] Convert the SONAME to lower case before comparing with
       package name. Suggested by Josh Triplett (Closes: #321206)
+  * checks/changelog-file:
+    + [FL] Detect old FSF address additionally to the even older
+      one
   * checks/debhelper{,.desc}:
     + [FL] Warn about using debhelper compat version lower than 3
       like debhelper itself
