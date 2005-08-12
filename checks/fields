@@ -448,8 +448,11 @@ if ($type eq "source") {
 					my ($d_pkg, $d_version, $d_arch, $rest, $part_d_orig) = @$part_d;
 
 					for my $arch (@{$d_arch->[0]}) {
-						tag "invalid-arch-string-in-source-relation", "$arch [$field: $part_d_orig]"
-						    unless ($known_archs{$arch} || $arch eq "any" || $arch eq "all");
+						if ($non_standard_archs{$arch}) {
+							tag "non-standard-arch-in-source-relation", "$arch [$field: $part_d_orig]";
+						} elsif (!$known_archs{$arch} && $arch ne "any" && $arch ne "all") {
+							tag "invalid-arch-string-in-source-relation", "$arch [$field: $part_d_orig]"
+						}
 					}
 
 					tag "depends-on-build-essential-package-without-using-version", "$d_pkg [$field: $part_d_orig]"

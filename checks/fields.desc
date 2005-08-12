@@ -384,6 +384,11 @@ Info: The architecture string in the source relation does not follow policy.
  A common cause of this is a comma in the arch, i.e. [i386, m68k], it should
  be [i386 m68k].
 
+Tag: non-standard-arch-in-source-relation
+Type: info
+Info: The architecture string in the source relation is one of the
+ architectures still waiting to be included in the archive.
+
 Tag: depends-on-build-essential-package-without-using-version
 Type: error
 Info: The package declares a depends on a build essential package without
