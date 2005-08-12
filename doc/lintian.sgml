@@ -37,7 +37,7 @@ A copy of the GNU General Public License is available as
 <tt>/usr/share/common-licenses/GPL</tt> in the Debian GNU/Linux distribution or on the
 World Wide Web at <url id="http://www.gnu.org/copyleft/gpl.html">.
 You can also obtain it by writing to the Free Software Foundation,
-Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.
 
 <p>
 
@@ -385,8 +385,8 @@ N:
 N:   The /usr/doc/&lt;pkg&gt;/copyright file refers to the old postal address of
 N:   the Free Software Foundation (FSF). The new address is:
 N:   
-N:   Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-N:   MA 02111-1307, USA.
+N:   Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+N:   MA 02110-1301, USA.
 N:
 [...]
 $

@@ -1,5 +1,8 @@
 lintian (1.23.12) UNRELEASED; urgency=low
 
+  * all files:
+    + [FL] Update FSF address
+  
   * checks/binaries:
     + [FL] Convert the SONAME to lower case before comparing with
       package name. Suggested by Josh Triplett (Closes: #321206)

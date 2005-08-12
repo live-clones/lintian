@@ -88,8 +88,8 @@ Type: error
 Info: The /usr/share/doc/<i>pkg</i>/copyright file refers to the old postal
  address of the Free Software Foundation (FSF). The new address is:
  .
-   Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-   MA 02111-1307, USA.
+   Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+   MA 02110-1301, USA.
 
 Tag: helper-templates-in-copyright
 Type: error
