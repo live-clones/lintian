@@ -17,9 +17,14 @@ lintian (1.23.12) UNRELEASED; urgency=low
       issuing an error here is silly
     + [FL] Fix typo (s,debian/control,debian/compat,) in description of
       declares-possibly-conflicting-debhelper-compat-versions
-  * checks/description:
+  * checks/description{,.desc}:
     + [FL] Avoid double warning about description-is-dh_make-template
       in the same way we do it for the corresponding debmake tag
+    + [FL] Policy section of Description field has changed
+  * checks/fields.desc:
+    + [FL] Fix a lot of off-by-one errors in the policy references
+      (caused by the addition of the Uploaders field). Unknowningly
+      pointed out by Russ Allbery
   * checks/manpages:
     + [FL] Don't issue warnings about 8bit characters in translated
       man pages. Patch by Denis Barbier (Closes: #321650)

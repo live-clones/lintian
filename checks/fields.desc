@@ -18,12 +18,12 @@ Type: error
 Info: A package name should be at least two characters long, must consist
  of the alphanumerics and `+' `-' and `.', and must start with an
  alphanumeric character.
-Ref: policy 5.6.6
+Ref: policy 5.6.7
 
 Tag: package-not-lowercase
 Type: error
 Info: New packages should not use uppercase characters in their names.
-Ref: policy 5.6.6
+Ref: policy 5.6.7
 
 Tag: no-version-field
 Type: error
@@ -33,12 +33,12 @@ Ref: policy 5.3
 Tag: bad-version-number
 Type: error
 Info: The version number fails one of the syntactic requirements of dpkg.
-Ref: policy 5.6.11
+Ref: policy 5.6.12
 
 Tag: upstream-version-not-numeric
 Type: error
 Info: The upstream version number should start with a digit. 
-Ref: policy 5.6.11
+Ref: policy 5.6.12
 
 Tag: debian-revision-not-well-formed
 Type: warning
@@ -64,7 +64,7 @@ Tag: magic-arch-in-arch-list
 Type: error
 Info: The special architecture values `all' and `any' only make sense if
  they occur alone.
-Ref:  policy 5.6.7
+Ref:  policy 5.6.8
 
 Tag: unknown-architecture
 Type: warning
@@ -86,13 +86,13 @@ Tag: too-many-architectures
 Type: error
 Info: A binary package should list exactly one architecture (the one it is
  compiled for), or the special value `all' if it is architecture-independent.
-Ref: policy 5.6.7
+Ref: policy 5.6.8
 
 Tag: arch-any-in-binary-pkg
 Type: error
 Info: The special architecture value `any' does not make sense in a binary
  package.
-Ref: policy 5.6.7
+Ref: policy 5.6.8
 
 Tag: no-maintainer-field
 Type: error
@@ -207,18 +207,18 @@ Ref: policy 5.6.1
 Tag: essential-in-source-package
 Type: error
 Info: This field should only appear in binary packages.
-Ref: policy 5.6.8
+Ref: policy 5.6.9
  
 Tag: essential-no-not-needed
 Type: error
 Info: Having `Essential: no' is the same as not having the field at all,
  so it just makes the Packages file longer with no benefit.
-Ref: policy 5.6.8
+Ref: policy 5.6.9
 
 Tag: unknown-essential-value
 Type: error
 Info: The only valid values for the Essential field are yes and no.
-Ref: policy 5.6.8
+Ref: policy 5.6.9
 
 Tag: no-section-field
 Type: warning
@@ -309,7 +309,7 @@ Info: The forms `&lt;' and `&gt;' mean `&lt;=' and `&gt;=', not `&lt;&lt;'
  instead.
 
 Tag: bad-version-in-relation
-Ref: policy 5.6.11
+Ref: policy 5.6.12
 Type: error
 Info: The version number used in this relationship does not match the
  defined format of a version number.
@@ -379,7 +379,7 @@ Info: The package declares a depends on a virtual package without listing a
 
 Tag: invalid-arch-string-in-source-relation
 Type: error
-Ref: policy 5.6.7
+Ref: policy 5.6.8
 Info: The architecture string in the source relation does not follow policy.
  A common cause of this is a comma in the arch, i.e. [i386, m68k], it should
  be [i386 m68k].
