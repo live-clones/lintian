@@ -116,12 +116,19 @@ close(IN);
 my @sonames = keys %SONAME;
 tag "several-sonames-in-same-package", "@sonames" if @sonames > 1;
 
+# try to identify transition strings
+my $base_pkg = $pkg;
+$base_pkg =~ s/c102\b//o;
+$base_pkg =~ s/c2\b//o;
+$base_pkg =~ s/\dg$//o;
+
 my $match_found = 0;
 foreach my $expected_name (@sonames) {
     $expected_name =~ s/([0-9])\.so\./$1-/;
     $expected_name =~ s/\.so\.//;
 
-    if (lc($expected_name) eq $pkg) {
+    if ((lc($expected_name) eq $pkg)
+	|| (lc($expected_name) eq $base_pkg)) {
 	$match_found = 1;
 	last;
     }
