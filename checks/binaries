@@ -121,11 +121,14 @@ my $base_pkg = $pkg;
 $base_pkg =~ s/c102\b//o;
 $base_pkg =~ s/c2\b//o;
 $base_pkg =~ s/\dg$//o;
+$base_pkg =~ s/-udeb$//o;
+$base_pkg =~ s/^lib64/lib/o;
 
 my $match_found = 0;
 foreach my $expected_name (@sonames) {
     $expected_name =~ s/([0-9])\.so\./$1-/;
-    $expected_name =~ s/\.so\.//;
+    $expected_name =~ s/\.so\.//o;
+    $expected_name =~ s/_/-/o;
 
     if ((lc($expected_name) eq $pkg)
 	|| (lc($expected_name) eq $base_pkg)) {

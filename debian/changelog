@@ -9,6 +9,11 @@ lintian (1.23.12) UNRELEASED; urgency=low
     + [FL] Try to remove strings added for transition purposes from
       library package names before comparing package name with SONAME.
       Pointed out by Rene Engelhard (Closes: #322241)
+    + [FL] Also remove -udeb strings and substitute lib64 with lib in
+      package name before comparing with SONAME
+    + [FL] Replace any occurence of _ in the SONAME with - since the
+      former isn't allowed in package names but occasionally used in
+      sonames
   * checks/changelog-file:
     + [FL] Detect old FSF address additionally to the even older
       one
