@@ -211,8 +211,7 @@ while (<IN>) {
 	} else {
 	    # Some exceptions: files in /boot, /usr/lib/debug/*, named *-static or
 	    # *.static, or *-static as package-name.
-	    use File::Basename;
-	    next if (dirname($file) eq './boot');
+	    next if ($file =~ m#^./boot/#);
 	    # Location of debugging symbols:
 	    next if ($file =~ m#^./usr/lib/debug/#);
 	    next if ($file =~ /(\.|-)static$/);

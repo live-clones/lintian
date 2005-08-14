@@ -11,12 +11,14 @@ clean:
 
 binary-arch: build
 	install -d $(tmp)/usr/bin
+	install -d $(tmp)/boot/hello
 	install -m 755 hello $(tmp)/usr/bin
 	touch $(tmp)/usr/bin/iminusrbin
 	chmod 755 $(tmp)/usr/bin/iminusrbin
 	install -s -m 755 hello-static $(tmp)/usr/bin
 	install -s -m 755 hello-static $(tmp)/usr/bin/hello.static
 	install -s -m 755 hello-static $(tmp)/usr/bin/static-hello
+	install -s -m 755 hello-static $(tmp)/boot/hello
 	install -d $(tmp)/usr/share/doc/binary
 	install -m 644 INSTALL $(tmp)/usr/share/doc/binary
 	install -d $(tmp)/usr/share/menu
@@ -38,7 +40,7 @@ binary-arch: build
 	echo boe > $(tmp)/usr/bar2
 	ln $(tmp)/usr/bar2 $(tmp)/usr/share/baz 
 
-	dd if=/dev/zero of=$(tmp)/usr/share/binary/largefile bs=1024 count=1500
+	dd if=/dev/zero of=$(tmp)/usr/share/binary/largefile bs=1024 count=2000
 
 	dpkg-shlibdeps $(tmp)/usr/bin/hello
 	dpkg-gencontrol -isp
