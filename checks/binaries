@@ -127,7 +127,7 @@ $base_pkg =~ s/^lib64/lib/o;
 my $match_found = 0;
 foreach my $expected_name (@sonames) {
     $expected_name =~ s/([0-9])\.so\./$1-/;
-    $expected_name =~ s/\.so\.//o;
+    $expected_name =~ s/\.so(\.|$)//o;
     $expected_name =~ s/_/-/o;
 
     if ((lc($expected_name) eq $pkg)

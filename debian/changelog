@@ -14,6 +14,7 @@ lintian (1.23.12) UNRELEASED; urgency=low
     + [FL] Replace any occurence of _ in the SONAME with - since the
       former isn't allowed in package names but occasionally used in
       sonames
+    + [FL] Remove trailing .so from SONAMEs
   * checks/changelog-file:
     + [FL] Detect old FSF address additionally to the even older
       one
