@@ -9,10 +9,10 @@ lintian (1.23.12) UNRELEASED; urgency=low
   
   * checks/binaries:
     + [FL] Convert the SONAME to lower case before comparing with
-      package name. Suggested by Josh Triplett (Closes: #321206)
+      package name. Suggested by Josh Triplett (Closes: #321206, #325225)
     + [FL] Try to remove strings added for transition purposes from
       library package names before comparing package name with SONAME.
-      Pointed out by Rene Engelhard (Closes: #322241)
+      Pointed out by Rene Engelhard (Closes: #322241, #324121)
     + [FL] Also remove -udeb strings and substitute lib64 with lib in
       package name before comparing with SONAME
     + [FL] Replace any occurence of _ in the SONAME with - since the
