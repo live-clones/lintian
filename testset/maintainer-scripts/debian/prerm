@@ -33,3 +33,7 @@ if [[ "$2" = "purge" ]]; then
     kill -HUP $$
 fi
 
+#this is ok though
+if test -n $(echo foo | perl -pe 's/[[:space:]]//go'); then
+    echo 1
+fi

@@ -46,6 +46,10 @@ lintian (1.23.12) UNRELEASED; urgency=low
   * checks/manpages:
     + [FL] Don't issue warnings about 8bit characters in translated
       man pages. Patch by Denis Barbier (Closes: #321650)
+  * checks/scripts:
+    + [FL] Don't issue bashism warning on POSIX character classes ([[:foo:]]).
+      Noted by Stephen Gran (Closes: #323098)
+    + [FL] Remove some useless groupings in the bashism regexes
 
  -- Frank Lichtenheld <djpig@debian.org>  Thu,  4 Aug 2005 12:45:33 +0200
 
