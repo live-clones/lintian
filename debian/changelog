@@ -25,6 +25,9 @@ lintian (1.23.12) UNRELEASED; urgency=low
   * checks/changelog-file:
     + [FL] Detect old FSF address additionally to the even older
       one
+  * checks/{cruft,files}{,.desc}:
+    + [FL] Also check for .arch-ids/ {arch}/ .arch-inventory and .bzr/
+      in packages and sources (Closes: #324255)
   * checks/debhelper{,.desc}:
     + [FL] Warn about using debhelper compat version lower than 3
       like debhelper itself

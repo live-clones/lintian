@@ -76,6 +76,12 @@ sub find_cruft {
 	    tag "source-contains-CVS-dir", "$name";
 	} elsif ($name =~ m,^(.+/)?\.svn$,) {
 	    tag "source-contains-svn-control-dir", "$name";
+	} elsif ($name =~ m,^(.+/)?\.bzr$,) {
+	    tag "source-contains-bzr-control-dir", "$name";
+	} elsif ($name =~ m,^(.+/)?\{arch\}$,) {
+	    tag "source-contains-arch-control-dir", "$name";
+	} elsif ($name =~ m,^(.+/)?\.arch-ids$,) {
+	    tag "source-contains-arch-control-dir", "$name";
 	}
     }
 
@@ -86,6 +92,8 @@ sub find_cruft {
 	tag "svn-commit-file-in-source", "$name";
     } elsif ($name =~ m,^(.+/)?\.cvsignore$,) {
 	tag "cvsignore-file-in-source", "$name";
+    } elsif ($name =~ m,^(.+/)?\.arch-inventory$,) {
+	tag "arch-inventory-file-in-source", "$name";
     } elsif ($name =~ m,^(.+/)?\.\#(.+?)\.\d+(\.\d+)*$,) {
 	tag "source-contains-cvs-conflict-copy", "$name";
     } elsif ($name =~ m,^(.+/)?(.+?)\.(r\d+|mine)$,) {

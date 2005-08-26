@@ -21,14 +21,19 @@ E: filenames: symlink-should-be-absolute usr/lib/filenames/symlink1wrong ../../.
 E: filenames: symlink-should-be-relative usr/lib/filenames/symlink3wrong /usr/lib/filenames/symlink2
 E: filenames: use-of-compat-symlink usr/bin/X11/
 E: filenames: use-of-compat-symlink usr/bin/X11/testxbin
+I: filenames source: arch-inventory-file-in-source files/.arch-inventory
 I: filenames source: cvsignore-file-in-source files/.cvsignore
 W: filenames source: ancient-standards-version 3.1.1
 W: filenames source: source-contains-CVS-dir CVS
+W: filenames source: source-contains-arch-control-dir .arch-ids
+W: filenames source: source-contains-arch-control-dir {arch}
+W: filenames source: source-contains-bzr-control-dir .bzr
 W: filenames source: source-contains-cvs-conflict-copy files/.#Maelstrom Sound.1.1.1
 W: filenames source: source-contains-svn-conflict-copy files/Maelstrom Sounce.r121
 W: filenames source: source-contains-svn-conflict-copy files/Maelstrom Sound.mine
 W: filenames source: source-contains-svn-control-dir .svn
 W: filenames source: svn-commit-file-in-source files/svn-commit.tmp
+W: filenames: arch-inventory-file-in-package files/.arch-inventory
 W: filenames: bad-permissions-for-ali-file usr/lib/ada/adalib/test.ali
 W: filenames: binary-without-manpage testxbin
 W: filenames: binary-without-manpage testxbin2
@@ -37,6 +42,7 @@ W: filenames: file-in-unusual-dir files/ .tif
 W: filenames: file-in-unusual-dir files/".tif
 W: filenames: file-in-unusual-dir files/'\\ 
 W: filenames: file-in-unusual-dir files/.#Maelstrom Sound.1.1.1
+W: filenames: file-in-unusual-dir files/.arch-inventory
 W: filenames: file-in-unusual-dir files/.cvsignore
 W: filenames: file-in-unusual-dir files/Maelstrom Sounce.r121
 W: filenames: file-in-unusual-dir files/Maelstrom Sound
@@ -47,6 +53,9 @@ W: filenames: no-priority-field
 W: filenames: no-section-field
 W: filenames: non-standard-dir-perm usr/lib/filenames/readonly/ 0555 != 0755
 W: filenames: package-contains-CVS-dir usr/lib/perl5/CVS/
+W: filenames: package-contains-arch-control-dir usr/lib/perl5/.arch-ids/
+W: filenames: package-contains-arch-control-dir usr/lib/perl5/{arch}/
+W: filenames: package-contains-bzr-control-dir usr/lib/perl5/.bzr/
 W: filenames: package-contains-readme-for-other-platform-or-distro usr/share/doc/filenames/README.macosx
 W: filenames: package-contains-svn-control-dir usr/lib/perl5/.svn/
 W: filenames: package-installs-nonbinary-perl-in-usr-lib-perl5 usr/lib/perl5/foo/ancient.pm

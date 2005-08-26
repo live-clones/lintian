@@ -468,6 +468,11 @@ while (<IN>) {
 	    tag "cvsignore-file-in-package", "$file";
 	}
 
+	# ---------------- arch-inventory files
+	if ($file =~ m/\.arch-inventory$/) {
+	    tag "arch-inventory-file-in-package", "$file";
+	}
+
 	# ---------------- subversion commit message backups
 	if ($file =~ m/svn-commit.*\.tmp$/) {
 	    tag "svn-commit-file-in-package", "$file";
@@ -575,6 +580,13 @@ while (<IN>) {
 	}
 	if ($file =~ m,/\.svn/?$,) {
 	    tag "package-contains-svn-control-dir", "$file";
+	}
+	if ($file =~ m,/\.bzr/?$,) {
+	    tag "package-contains-bzr-control-dir", "$file";
+	}
+	if (($file =~ m,/\.arch-ids/?$,)
+	    || ($file =~ m,/\{arch\}/?$,)) {
+	    tag "package-contains-arch-control-dir", "$file";
 	}
 	if ($file =~ m,/.xvpics/?$,) {
 	    tag "package-contains-xvpics-dir", "$file";

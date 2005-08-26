@@ -19,8 +19,9 @@
 # MA 02110-1301, USA.
 
 clean:
-	mkdir -p .svn CVS
+	mkdir -p .svn CVS "{arch}" .arch-ids .bzr
 	touch files/.cvsignore files/svn-commit.tmp
+	touch files/.arch-inventory
 	touch 'files/.#Maelstrom Sound.1.1.1' 'files/Maelstrom Sounce.r121'
 	touch 'files/Maelstrom Sound.mine'
 
@@ -48,6 +49,10 @@ binary-indep:
 	install -d debian/tmp/usr/lib/perl5/foo
 	mkdir debian/tmp/usr/lib/perl5/.svn
 	mkdir debian/tmp/usr/lib/perl5/CVS
+	mkdir "debian/tmp/usr/lib/perl5/{arch}"
+	mkdir debian/tmp/usr/lib/perl5/.arch-ids
+	mkdir debian/tmp/usr/lib/perl5/.bzr
+
 	touch debian/tmp/usr/lib/perl5/foo/.packlist
 	chmod 644 debian/tmp/usr/lib/perl5/foo/.packlist
 	touch debian/tmp/usr/lib/perl5/foo/bar.pm
