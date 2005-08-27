@@ -8,6 +8,9 @@ lintian (1.23.12) UNRELEASED; urgency=low
       this bug? (Closes: #324673)
   
   * checks/binaries:
+    + [FL] Only use sonames from files in common library directories for
+      the soname checks. This avoids many false positives. Patch by
+      Russ Allbery (Closes: #321564)
     + [FL] Convert the SONAME to lower case before comparing with
       package name. Suggested by Josh Triplett (Closes: #321206, #325225)
     + [FL] Try to remove strings added for transition purposes from
