@@ -1,5 +1,7 @@
-lintian (1.23.12) UNRELEASED; urgency=low
+lintian (1.23.12) unstable; urgency=low
 
+  * The "bad, bad SONAME check" release
+  
   * all files:
     + [FL] Update FSF address
   
