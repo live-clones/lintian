@@ -38,6 +38,9 @@ W: filenames: bad-permissions-for-ali-file usr/lib/ada/adalib/test.ali
 W: filenames: binary-without-manpage testxbin
 W: filenames: binary-without-manpage testxbin2
 W: filenames: cvsignore-file-in-package files/.cvsignore
+W: filenames: extra-license-file usr/share/pixmaps/COPYING
+W: filenames: extra-license-file usr/share/pixmaps/license.foo
+W: filenames: extra-license-file usr/share/pixmaps/license.txt
 W: filenames: file-in-unusual-dir files/ .tif
 W: filenames: file-in-unusual-dir files/".tif
 W: filenames: file-in-unusual-dir files/'\\ 

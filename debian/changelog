@@ -1,3 +1,11 @@
+lintian (1.23.13) UNRELEASED; urgency=low
+
+  * debian/files:
+    + [FL] Add some formats to the exception list for extra-license-file
+      (jpe?g, gif and svg) (Closes: #324944)
+
+ -- Frank Lichtenheld <frank@lichtenheld.de>  Fri,  9 Sep 2005 07:15:00 +0200
+
 lintian (1.23.12) unstable; urgency=low
 
   * The "bad, bad SONAME check" release
