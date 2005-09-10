@@ -80,7 +80,7 @@ while (<IN>) {
     if ($lines == 0) {
 	my $firstline = lc $_;
 	my $lsyn = lc $synopsis;
-	if ($firstline =~ /^\Q$lsyn\E/) {
+	if ($firstline =~ /^\Q$lsyn\E$/) {
 	    tag "description-synopsis-is-duplicated", "";
 	} else {
 	    $firstline =~ s/[^a-zA-Z0-9]+//g;
