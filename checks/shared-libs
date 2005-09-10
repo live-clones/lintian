@@ -46,6 +46,7 @@ my $prerm = "control/prerm";
 my $shlibs_control_file = "control/shlibs";
 my %SONAME;
 my %INTERP;
+my %STACK;
 my %objsomething;
 my %sharedobject;
 my %index_info;
@@ -75,8 +76,16 @@ while (<IN>) {
 	tag "shlib-with-non-pic-code", "$file";
     } elsif (m/^\s*INTERP\s/) {
 	$INTERP{$file} = 1;
+    } elsif (m/^\s*STACK\s/) {
+	$STACK{$file} = 0;
     } else {
-        $objsomething{$file} = 1;
+        if (defined $STACK{$file} and $STACK{$file} eq 0) {
+	    m/\sflags\s+(\S+)/o;
+	    $STACK{$file} = $1;
+	}
+	else {
+	    $objsomething{$file} = 1;
+	}
     }
 }
 close(IN);
@@ -149,6 +158,15 @@ for (keys %files) {
 	if (exists $ldso_dir{dirname($cur_file)}) {
 	    # yes! so postinst must call ldconfig
 	    $must_call_ldconfig = $real_file;
+	}
+
+	# executable stack
+	if (exists $objsomething{$cur_file}) {
+	    if (not defined $STACK{$cur_file}) {
+		tag "shlib-without-PT_GNU_STACK-section", $cur_file;
+	    } elsif ($STACK{$cur_file} ne "rw-") {
+		tag "shlib-with-executable-stack", $cur_file;
+	    }
 	}
     } elsif (exists $objsomething{$cur_file} &&
 	     exists $ldso_dir{dirname($cur_file)} &&

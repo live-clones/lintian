@@ -4,6 +4,11 @@ lintian (1.23.13) UNRELEASED; urgency=low
     + [FL] Add some formats to the exception list for extra-license-file
       (jpe?g, gif and svg) (Closes: #324944)
 
+  * checks/shared-libs:
+    + [HE] Apply patch from Bastian Blank to check for executable stacks in
+      binaries. New checks are called shlib-without-PT_GNU_STACK-section,
+      shlib-with-executable-stack, thanks waldi. (Closes: #321750)
+
  -- Frank Lichtenheld <frank@lichtenheld.de>  Fri,  9 Sep 2005 07:15:00 +0200
 
 lintian (1.23.12) unstable; urgency=low
