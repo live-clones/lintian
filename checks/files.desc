@@ -69,7 +69,6 @@ Info: As of policy version 3.0.0.0, Debian no longer follows the FSSTND.
 
 Tag: package-installs-into-etc-rc.d
 Type: error
-Severity: Important
 Info: The package installs files into the <tt>/etc/rc.d</tt> or
  <tt>/etc/rc?.d</tt> which is not allowed.
 Ref: policy 9.3.3
@@ -95,14 +94,12 @@ Info: Packages should not install files directly in <tt>/usr/share</tt>,
 
 Tag: file-in-usr-local
 Type: error
-Severity: Important
 Info: The package installs a file in <tt>/usr/local/...</tt> which is
  not allowed.
 Ref: policy 9.1.2
 
 Tag: file-in-opt
 Type: error
-Severity: Important
 Info: The package installs a file in <tt>/opt/...</tt> which is not allowed.
 
 Tag: executable-manpage
@@ -111,7 +108,6 @@ Info: Manual pages are not meant to be executed.
 
 Tag: dir-in-usr-local
 Type: error
-Severity: Important
 Info: The package installs a directory in <tt>/usr/local/...</tt> which is
  not allowed.
  .
@@ -167,7 +163,6 @@ Info: The file has a mode different from 0644. In some cases this is
 
 Tag: special-file
 Type: error
-Severity: Important
 Info: The package contains a <i>special</i> file (e.g., a device file).
  This is forbidden by current policy. If your program needs this device,
  you should create it by calling <tt>makedev</tt> from the postinst

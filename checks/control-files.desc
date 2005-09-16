@@ -24,5 +24,4 @@ Info: The postinst, postrm, preinst, and prerm control files should use
 
 Tag: control-file-has-bad-owner
 Type: error
-Severity: Important
 Info: All control files should be owned by root/root.

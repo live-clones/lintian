@@ -15,7 +15,6 @@ Info: This script checks if a binary package conforms to policy
 
 Tag: no-copyright-file
 Type: error
-Severity: Important
 Info: Each binary package has to include a plain file
  /usr/share/doc/<i>pkg</i>/copyright
 Ref: policy 12.5
@@ -93,7 +92,6 @@ Info: The /usr/share/doc/<i>pkg</i>/copyright file refers to the old postal
 
 Tag: helper-templates-in-copyright
 Type: error
-Severity: Important
 Info: The /usr/share/doc/<i>pkg</i>/copyright file still contains the template
  contents from a packaging helper. Please include the actual license and
  download information about the package.

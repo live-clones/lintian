@@ -9,7 +9,6 @@ Info: This script checks if a binary package conforms to manual page policy.
 
 Tag: bad-link-to-undocumented-manpage
 Type: error
-Severity: Important
 Info: The symbolic link should reference
  `<tt>../man[237]/undocumented.[237].gz</tt>' for manual pages in
  <tt>/usr/share/man</tt> or
