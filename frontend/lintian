@@ -1203,7 +1203,7 @@ for (reverse sort @packages) {
     }
 
     if ($action eq 'check') { 	# read override file
-	Tags::pkg_reset($long_type eq 'binary' ? $pkg : "$pkg $long_type");
+	Tags::set_pkg( $file, $pkg, "", "", $long_type );
 
 
 	unless ($no_override) 
