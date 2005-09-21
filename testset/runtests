@@ -106,6 +106,7 @@ my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Util;
+use Tags;
 
 # --- Set the ways to call lintian and dpkg-buildpackage
 my $lintian_options = '-I';
@@ -137,13 +138,18 @@ for my $desc_file (<$LINTIAN_ROOT/checks/*.desc>) {
 		print "E: test-has-no-info $i->{'tag'} in $desc_file\n";
 		$testok = 0;
 	    }
-	    if (not exists $i->{'type'}) {
+	    if (!exists($i->{'type'})
+		&& !exists($i->{'severity'})) {
+		use Data::Dumper;
+		print Dumper $i;
 		print "E: test-has-no-type $i->{'tag'} in $desc_file\n";
 		$testok = 0;
 		next;
 	    }
+
 	    $tags{$i->{'tag'}}{'desc_file'} = $desc_file;
-	    $tags{$i->{'tag'}}{'desc_type'} = $i->{'type'};
+	    $tags{$i->{'tag'}}{'desc_type'} = $i->{'type'} ||
+		$Tags::sev_to_type[$i->{'severity'}];
 	}
     }
 }
