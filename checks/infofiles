@@ -116,7 +116,8 @@ if ($postinst{'calls-install-info'}) {
     tag "install-info-not-called-with-quiet-option", ""
 	unless $postinst{'calls-install-info-quiet'};
     tag "install-info-not-called-with-section-option", ""
-	unless $postinst{'calls-install-info-section'};
+	unless ( $postinst{'calls-install-info-section'}
+		 || $postinst{'calls-install-info-remove'} ) ;
 }
 if ($prerm{'calls-install-info'}) {
     # it must use the --quiet option
@@ -175,6 +176,8 @@ sub check_script {
 		    $pres->{'calls-install-info-quiet'} = 1;
 		} elsif ($piece eq '--section') {
 		    $pres->{'calls-install-info-section'} = 1;
+		} elsif ($piece eq '--remove') {
+		    $pres->{'calls-install-info-remove'} = 1;
 		}
 	    }
 	}

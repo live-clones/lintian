@@ -13,6 +13,10 @@ lintian (1.23.13) UNRELEASED; urgency=low
     + [FL] Don't complain about lib(32|64) as unusual directories. Noted
       by Matthias Klose (partly fixes #328612, see checks/shared-libs for
       the rest)
+  * checks/infofiles:
+    + [FL] Don't issue install-info-not-called-with-section-option if
+      the call in postinst is really a removal. Experienced by Ben Pfaff
+      in autoconf (Closes: #329170)
   * checks/scripts:
     + [FL] PythonX.Y dependency can also be satisfied with pythonX.Y-minimal.
       Noted by Matthias Klose (Closes: #326643)
