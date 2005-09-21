@@ -303,7 +303,11 @@ while (<IN>) {
 		tag "FSSTND-dir-in-usr", "$file";
 	    }
 	    # FHS dirs
-	    elsif ( $file !~ m,^usr/(X11R6|X386|bin|games|include|lib|local|sbin|share|src|spool|tmp)/, ) {
+	    elsif ( $file !~ m,^usr/(X11R6|X386|
+				     bin|games|include|
+				     lib|lib32|lib64|
+				     local|sbin|share|
+				     src|spool|tmp)/,x ) {
 		tag "non-standard-dir-in-usr", "$file";
 	    } elsif ( $file =~ m,^usr/share/doc, ) {
 		tag "uses-FHS-doc-dir", "$file";
@@ -393,7 +397,9 @@ while (<IN>) {
     # ---------------- any files
     if ($perm !~ m/^d/) {
 	unless ($type eq 'udeb' or
-		$file =~ m,^usr/(bin|dict|doc|games|include|info|lib|man|sbin|share|src|X11R6)/, or
+		$file =~ m,^usr/(bin|dict|doc|games|
+				 include|info|lib|lib32|lib64|
+				 man|sbin|share|src|X11R6)/,x or
 		$file =~ m,^lib/(modules/|libc5-compat/)?, or
 		$file =~ m,^var/(games|lib|www|named)/, or
 		$file =~ m,^(bin|boot|dev|etc|sbin)/, or

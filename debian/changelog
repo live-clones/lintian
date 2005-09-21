@@ -10,6 +10,9 @@ lintian (1.23.13) UNRELEASED; urgency=low
   * checks/files:
     + [FL] Add some formats to the exception list for extra-license-file
       (jpe?g, gif and svg) (Closes: #324944)
+    + [FL] Don't complain about lib(32|64) as unusual directories. Noted
+      by Matthias Klose (partly fixes #328612, see checks/shared-libs for
+      the rest)
   * checks/scripts:
     + [FL] PythonX.Y dependency can also be satisfied with pythonX.Y-minimal.
       Noted by Matthias Klose (Closes: #326643)
@@ -17,6 +20,8 @@ lintian (1.23.13) UNRELEASED; urgency=low
     + [HE] Apply patch from Bastian Blank to check for executable stacks in
       binaries. New checks are called shlib-without-PT_GNU_STACK-section,
       shlib-with-executable-stack, thanks waldi. (Closes: #321750)
+    + [FL] Add lib(32|64) to ldso directories. Pointed out by
+      Matthias Klose (Closes: #328612)
 
  -- Frank Lichtenheld <frank@lichtenheld.de>  Fri,  9 Sep 2005 07:15:00 +0200
 

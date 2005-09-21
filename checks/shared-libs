@@ -29,6 +29,8 @@ sub run {
 my %ldso_dir = map { $_ => 1 }
     qw( lib
         usr/lib
+	usr/lib32
+	usr/lib64
         usr/lib/libg++-dbg
         usr/X11R6/lib/Xaw3d
         usr/local/lib
