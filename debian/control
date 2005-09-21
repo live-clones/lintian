@@ -19,7 +19,7 @@ Description: Debian package checker
  It uses an archive directory, called laboratory, in which it stores
  information about the packages it examines.  It can keep this
  information between multiple invocations in order to avoid repeating
- expensive data-collection operations. This also possible to check the
+ expensive data-collection operations. This makes it possible to check the
  complete Debian archive for bugs, in a reasonable time.
  .
  This package is useful for all people who want to check Debian 

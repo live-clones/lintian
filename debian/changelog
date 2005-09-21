@@ -1,5 +1,9 @@
 lintian (1.23.13) UNRELEASED; urgency=low
 
+  * debian/control:
+    + [FL] Fix typo in description. Noted by Bill Allombert
+      (Closes: #327859)
+  
   * checks/description:
     + [HE] Change description-synopsis-is-duplicated to only be emitted if
       the synopsis is copied without being extended. (Closes: #316523)
