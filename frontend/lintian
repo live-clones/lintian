@@ -64,6 +64,8 @@ my $OPT_LINTIAN_SECTION = "";	#string for the --release option
 my $LINTIAN_CFG = "";		#config file to use
 our $LINTIAN_ROOT;		#location of the lintian modules
 
+my $experimental_output_opts = undef;
+
 my @packages;
 
 my $action;
@@ -274,6 +276,9 @@ my %opthash = (			# ------------------ actions
 	       "source|s" => \&record_pkgmode,
 	       "udeb" => \&record_pkgmode,
 	       "packages-file|p=s" => \$packages_file,
+
+	       # ------------------ experimental
+	       "exp-output:s" => \$experimental_output_opts,
 	      );
 
 # init commandline parser
@@ -853,7 +858,22 @@ closedir(COLLDIR);
 require Tags;
 import Tags;
 
-no warnings;
+no warnings 'once';
+if (defined $experimental_output_opts) {
+    $Tags::output_formatter = \&Tags::print_tag_new;
+    my %opts = map { split(/=/) } split( /,/, $experimental_output_opts );
+    foreach (keys %opts) {
+	if ($_ eq 'format') {
+	    if ($opts{$_} eq 'colons') {
+		require Tags::ColonSeparated;
+		$Tags::output_formatter = \&Tags::ColonSeparated::print_tag;
+	    }
+	}
+	no strict 'refs';
+	${"Tags::$_"} = $opts{$_};
+    }
+}
+
 $Tags::show_info = $display_infotags;
 $Tags::show_overrides = $show_overrides;
 use warnings;
