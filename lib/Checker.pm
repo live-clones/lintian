@@ -62,9 +62,6 @@ sub runcheck {
 	# require has a anti-require-twice cache
 	require "$LINTIAN_ROOT/checks/$name";
 
-	$Tags::prefix = $type eq 'binary' ? $pkg : "$pkg $type";
-	#Tags::reset();
-
 	#print STDERR "Now running $name...\n";
 	$name =~ s/[-.]/_/g;
 	eval { &{'Lintian::'.$name.'::run'}($pkg, $type) };
