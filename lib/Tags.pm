@@ -22,6 +22,7 @@
 
 package Tags;
 use strict;
+use warnings;
 
 use Exporter;
 our @ISA = qw(Exporter);
@@ -32,7 +33,7 @@ our $verbose = $::verbose;
 our $debug = $::debug;
 our $show_info = 0;
 our $show_overrides = 0;
-our $output_format = 'default';
+our $output_formatter = \&print_tag;
 our $min_severity = 1;
 our $max_severity = 99;
 our $min_significance = 1;
@@ -69,21 +70,24 @@ my $current;
 
 # Compatibility stuff
 my %codes = ( 'error' => 'E' , 'warning' => 'W' , 'info' => 'I' );
-my %type_to_sev = ( error => 3, warning => 1, info => 0 );
-my @sev_to_type = qw( info warning error error );
+our %type_to_sev = ( error => 4, warning => 2, info => 0 );
+our @sev_to_type = qw( info warning warning error error );
+
+my @sig_to_qualifier = ( '??', '?', '', '!' );
+my @sev_to_code = qw( I W W E E );
 
 # Add a new tag, supplied as a hash reference
 sub add_tag {
 	my $newtag = shift;
-	if (exists $tags{$newtag->{'tag'}}) {
-	    warn "Duplicate tag: $newtag->{'tag'}\n";
+	if (exists $tags{$newtag->{tag}}) {
+	    warn "Duplicate tag: $newtag->{tag}\n";
 	    return 0;
 	}
 
 	# smooth transition
 	$newtag->{type} = $sev_to_type[$newtag->{severity}]
 	    unless $newtag->{type};
-	$newtag->{significance} = 3 unless exists $newtag->{significance};
+	$newtag->{significance} = 2 unless exists $newtag->{significance};
 	$newtag->{severity} = $type_to_sev{$newtag->{type}}
 	    unless exists $newtag->{severity};
 	$tags{$newtag->{'tag'}} = $newtag;
@@ -190,9 +194,9 @@ sub check_overrides {
     my $extra = '';
     $extra = " @$information" if @$information;
     $extra = '' if $extra eq ' ';
-    return $info{$current}{overrides}{$tag_info->{tag}}
+    return $tag_info->{tag}
         if exists $info{$current}{overrides}{$tag_info->{tag}};
-    return $info{$current}{overrides}{"$tag_info->{tag}$extra"}
+    return "$tag_info->{tag}$extra"
         if exists $info{$current}{overrides}{"$tag_info->{tag}$extra"};
 
     return '';
@@ -235,12 +239,6 @@ sub get_stats {
 sub print_tag {
     my ( $pkg_info, $tag_info, $information ) = @_;
 
-    return if 
-	$tag_info->{overridden}{severity} != 0
-	|| $tag_info->{overridden}{significance} != 0
-	|| ( $tag_info->{overridden}{override} &&
-	     !$show_overrides);
-
     my $extra = '';
     $extra = " @$information" if @$information;
     $extra = '' if $extra eq ' ';
@@ -250,6 +248,23 @@ sub print_tag {
     $type = " $pkg_info->{type}" if $pkg_info->{type} ne 'binary';
 
     print "$code: $pkg_info->{pkg}$type: $tag_info->{tag}$extra\n";
+}
+
+sub print_tag_new {
+    my ( $pkg_info, $tag_info, $information ) = @_;
+
+    my $extra = '';
+    $extra = " @$information" if @$information;
+    $extra = '' if $extra eq ' ';
+    my $code = $sev_to_code[$tag_info->{severity}];
+    $code = 'O' if $tag_info->{overridden}{override};
+    my $qualifier = $sig_to_qualifier[$tag_info->{significance}];
+    $qualifier = '' if $code eq 'O';
+    my $type = '';
+    $type = " $pkg_info->{type}" if $pkg_info->{type} ne 'binary';
+
+    print "$code$qualifier: $pkg_info->{pkg}$type: $tag_info->{tag}$extra\n";
+
 }
 
 sub tag {
@@ -268,7 +283,13 @@ sub tag {
 
     record_stats( $tag_info );
 
-    print_tag( $info{$current}, $tag_info, \@information );
+    return 1 if
+	$tag_info->{overridden}{severity} != 0
+	|| $tag_info->{overridden}{significance} != 0
+	|| ( $tag_info->{overridden}{override} &&
+	     !$show_overrides);
+
+    &$output_formatter( $info{$current}, $tag_info, \@information );
     return 1;
 }
 
