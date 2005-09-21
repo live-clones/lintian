@@ -256,7 +256,8 @@ while (<SCRIPTS>) {
 	    } elsif ($base =~ /^python(\d.\d)?$/) {
 		my $ver = $1 ? $1 : "";
 		tag_error("python-script-but-no-python-dep", $filename)
-		    unless ($deps{"python$ver"});
+		    unless ($deps{"python$ver"}
+			    || $deps{"python${ver}-minimal"});
 	    } elsif ($base =~ /^ruby(\d.\d)?$/) {
 		my $ver = $1 ? $1 : "";
 		tag_error("ruby-script-but-no-ruby-dep", $filename)

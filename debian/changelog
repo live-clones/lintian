@@ -10,6 +10,9 @@ lintian (1.23.13) UNRELEASED; urgency=low
   * checks/files:
     + [FL] Add some formats to the exception list for extra-license-file
       (jpe?g, gif and svg) (Closes: #324944)
+  * checks/scripts:
+    + [FL] PythonX.Y dependency can also be satisfied with pythonX.Y-minimal.
+      Noted by Matthias Klose (Closes: #326643)
   * checks/shared-libs:
     + [HE] Apply patch from Bastian Blank to check for executable stacks in
       binaries. New checks are called shlib-without-PT_GNU_STACK-section,
