@@ -83,7 +83,7 @@ Info: The package installs a /usr/doc/copyright/<i>pkg</i> file. Instead,
 Ref: policy 12.5
 
 Tag: old-fsf-address-in-copyright-file
-Type: error
+Type: warning
 Info: The /usr/share/doc/<i>pkg</i>/copyright file refers to the old postal
  address of the Free Software Foundation (FSF). The new address is:
  .

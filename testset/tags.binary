@@ -5,7 +5,7 @@ E: binary: menu-item-missing-required-tag section /usr/lib/menu/binary:1
 E: binary: menu-item-missing-required-tag section /usr/share/menu/binary:1
 E: binary: non-wm-in-windowmanager-menu-section x11 /usr/lib/menu/binary:4
 E: binary: non-wm-in-windowmanager-menu-section x11 /usr/share/menu/binary:4
-E: binary: old-fsf-address-in-copyright-file
+W: binary: old-fsf-address-in-copyright-file
 E: binary: postinst-does-not-call-updatemenus usr/lib/menu/binary
 E: binary: postrm-does-not-call-updatemenus usr/lib/menu/binary
 E: binary: statically-linked-binary ./usr/bin/static-hello
