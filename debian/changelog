@@ -22,6 +22,8 @@ lintian (1.23.13) UNRELEASED; urgency=low
   * checks/scripts:
     + [FL] PythonX.Y dependency can also be satisfied with pythonX.Y-minimal.
       Noted by Matthias Klose (Closes: #326643)
+    + [FL] Only match 'local' at the beginning of a line. The check is too
+      ambigious otherwise. Reported by Marc Haber (Closes: #330548)
   * checks/shared-libs:
     + [HE] Apply patch from Bastian Blank to check for executable stacks in
       binaries. New checks are called shlib-without-PT_GNU_STACK-section,

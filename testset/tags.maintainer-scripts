@@ -25,12 +25,12 @@ W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:23 '${H[@]
 W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:4 '[ -d /usr/doc -a ! -e /usr/doc/maintainer-scripts -a '
 W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:19 '[ "$2" == '
 W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:23 'function foo( )'
-W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:24 '   local '
-W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:25 '&>'
-W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:28 'source $FOO'
-W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:30 'trap "echo hi" EXIT HUP 3'
-W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:32 '[['
-W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:33 '    kill -HUP'
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:25 '   local '
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:26 '&>'
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:29 'source $FOO'
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:31 'trap "echo hi" EXIT HUP 3'
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:33 '[['
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:34 '    kill -HUP'
 W: maintainer-scripts: postinst-does-not-load-confmodule
 W: maintainer-scripts: postinst-should-not-set-usr-doc-link
 W: maintainer-scripts: postrm-does-not-purge-debconf

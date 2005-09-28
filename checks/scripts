@@ -460,7 +460,7 @@ while (<SCRIPTS>) {
 		  '((?:test|\[)\s+.+\s-[ao])\s',# test/[ -a/-o binary operators
 		  '(?:^|\s+)kill\s+-[^sl]\w*',   # kill -[0-9] or -[A-Z]
 		  '(?:^|\s+)trap\s+["\']?.*["\']?\s+.*[1-9]', # trap with signal numbers
-		  '(?:^|\s+)local\s',        # local scoping of variables
+		  '(?:^\s*)local\s',        # local scoping of variables
 		  '\&>',                     # cshism
 		  '\[\[(?!:)',                    # alternative test command
 		);

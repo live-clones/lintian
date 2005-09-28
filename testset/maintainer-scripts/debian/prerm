@@ -21,6 +21,7 @@ if [ "$2" == "purge" ]; then
 fi
 
 function foo( ) {
+   # but not here: local
    local bar
    echo "foo" &>/dev/null
 }
