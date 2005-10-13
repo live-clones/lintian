@@ -31,31 +31,39 @@ my $type = shift;
 # First, check wether this package seems to use debconf but not po-debconf
 opendir(DEB, 'debfiles')
 	or fail("Can't open debfiles directory.");
-my $has_template = 0;
+my $has_template = my $has_depends = my $has_config = 0;
 for my $file (readdir(DEB)) {
-	if ($file =~ m/^(.+\.)?templates$/) {
+	if ($file =~ m/^(.+\.)?templates(\..+)?$/) {
 # TODO: out of this loop, use fields/*?
+	        $has_template = 1;
 		open(IN,"debfiles/control")
 			or fail("Can't open debfiles/control.");
 		while (<IN>) {
 			if (m/^Depends:/i) {
-				$has_template = 1
+				$has_depends = 1
 					if m/\bdebconf(-[.\d]+)?\b/;
 			}
 		}
 		close(IN);
 		last;
 	}
+	if ($file =~ m/^(.+\.)?config(\..+)?$/) {
+	    $has_config = 1;
+	}
 }
 closedir(DEB);
 
-#TODO: check whether all templates are named in TEMPLATES.pot
-if ( $has_template && ! -d "debfiles/po" ) {
-	tag "not-using-po-debconf", "";
-}
+my $probably_uses_debconf = $has_depends || ($has_template && $has_config);
 
-#   Exit if package does not seem to use po-debconf
-($has_template && -d "debfiles/po") or return(0);
+#TODO: check whether all templates are named in TEMPLATES.pot
+if ( $probably_uses_debconf ) {
+    if ( ! -d "debfiles/po" ) {
+	tag "not-using-po-debconf", "";
+	return 0;
+    }
+} else {
+    return 0;
+}    
 
 my $missing_files = 0;
 if (-f "debfiles/po/POTFILES.in") {

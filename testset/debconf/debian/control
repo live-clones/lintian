@@ -7,12 +7,12 @@ Standards-Version: 3.6.2
 
 Package: debconf-test
 Architecture: any
-Depends: ${shlibs:Depends}, debconf
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Test package for the debconf checks of lintian
 
 Package: debconf-test-noscripts
 Architecture: any
-Depends: ${shlibs:Depends}, debconf
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Test package for the debconf checks of lintian
  Package missing postinst/postrm/config
 
