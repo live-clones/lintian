@@ -44,7 +44,7 @@ lintian (1.23.13) unstable; urgency=low
     + [FL] Add lib(32|64) to ldso directories. Pointed out by
       Matthias Klose (Closes: #328612)
 
- -- Frank Lichtenheld <frank@lichtenheld.de>  Fri,  9 Sep 2005 07:15:00 +0200
+ -- Frank Lichtenheld <djpig@debian.org>  Thu, 13 Oct 2005 15:19:05 +0200
 
 lintian (1.23.12) unstable; urgency=low
 
