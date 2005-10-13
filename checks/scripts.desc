@@ -610,6 +610,20 @@ Info: This script is marked as running under <tt>/bin/sh</tt>, but it seems
   '. command args', passing arguments to commands via 'source' is not supported
   '{foo,bar}' instead of 'foo bar'
 
+Tag: possible-non-posix-code-in-maintainer-script
+Type: info
+Ref: policy 10.4
+Info: This script is marked as running under <tt>/bin/sh</tt>, but it seems
+ to use a shell feature that is not defined in the POSIX standard. The
+ feature is so common in current shells that this isn't currently
+ considered an release critical bug and there are discussion wether
+ policy should be amended to specifically allow the use of the feature.
+ .
+ Examples:
+  '-a' and '-o' as operators of 'test'. You can use shell conditionals
+  (&& and ||) instead.
+  'local' scoping of variables.
+
 Tag: suidregister-used-in-maintainer-script
 Type: error
 Info: This script calls suidregister which is no longer needed, a new

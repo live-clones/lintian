@@ -443,6 +443,7 @@ while (<SCRIPTS>) {
 	    # check for things
 	    if ($cat_string eq "" and $checkbashisms and !$within_another_shell) {
 		my $found = 0;
+		my $found_strict = 0;
 		my $match = '';
 		my @bashism_regexs = (
 		  'function \w+\(\s*\)',       # function is useless
@@ -457,13 +458,16 @@ while (<SCRIPTS>) {
 		  '(?:^|\s+)\w+\[\d+\]=',      # bash arrays, H[0]
 		  '\$\{\#?\w+\[[0-9\*\@]+\]\}',# bash arrays, ${name[0|*|@]}
 		  '(?:^|\s+)read\s*(?:;|$)', # read without variable
-		  '((?:test|\[)\s+.+\s-[ao])\s',# test/[ -a/-o binary operators
+
 		  '(?:^|\s+)kill\s+-[^sl]\w*',   # kill -[0-9] or -[A-Z]
 		  '(?:^|\s+)trap\s+["\']?.*["\']?\s+.*[1-9]', # trap with signal numbers
-		  '(?:^\s*)local\s',        # local scoping of variables
 		  '\&>',                     # cshism
 		  '\[\[(?!:)',                    # alternative test command
 		);
+		my @strict_posix_regexs = (
+		  '((?:test|\[)\s+.+\s-[ao])\s',# test/[ -a/-o binary operators
+		  '(?:^\s*)local\s',        # local scoping of variables
+					   );
 
 		for my $re (@bashism_regexs) {
 		    if (m/($re)/) {
@@ -472,6 +476,17 @@ while (<SCRIPTS>) {
 			last;
 		    }
 		}
+		unless ($found) {
+		    for my $re (@strict_posix_regexs) {
+			if (m/($re)/) {
+			    $found = 1;
+			    $found_strict = 1;
+			    $match = $1;
+			    last;
+			}
+		    }
+		}
+
 		# since this test is ugly, I have to do it by itself
 		# detect source (.) trying to pass args to the command it runs
 		if (not $found and m/^\s*(\.\s+[^\s]+\s+([^\s]+))/) {
@@ -483,7 +498,9 @@ while (<SCRIPTS>) {
 			$match = $1;
 		    }
 		}
-		unless ($found == 0) {
+		if ($found && $found_strict) {
+		    tag "possible-non-posix-code-in-maintainer-script", "$file:$. \'$match\'";
+		} elsif ($found) {
 		    tag "possible-bashism-in-maintainer-script", "$file:$. \'$match\'";
 		}
 	    }

@@ -24,6 +24,11 @@ lintian (1.23.13) UNRELEASED; urgency=low
       Noted by Matthias Klose (Closes: #326643)
     + [FL] Only match 'local' at the beginning of a line. The check is too
       ambigious otherwise. Reported by Marc Haber (Closes: #330548)
+    + [FL] Better reflect the current discussions wether some of the
+      XSI:sms should be allowed in shell scripts by moving some of
+      them to a separate check possible-non-posix-code-in-maintainer-script.
+      Not doing that for kill -NAME as reuqested since -s NAME is available
+      and should be perfectly portable. (Closes: #323053)
   * checks/shared-libs:
     + [HE] Apply patch from Bastian Blank to check for executable stacks in
       binaries. New checks are called shlib-without-PT_GNU_STACK-section,
