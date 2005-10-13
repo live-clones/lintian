@@ -5,7 +5,6 @@ E: binary: menu-item-missing-required-tag section /usr/lib/menu/binary:1
 E: binary: menu-item-missing-required-tag section /usr/share/menu/binary:1
 E: binary: non-wm-in-windowmanager-menu-section x11 /usr/lib/menu/binary:4
 E: binary: non-wm-in-windowmanager-menu-section x11 /usr/share/menu/binary:4
-W: binary: old-fsf-address-in-copyright-file
 E: binary: postinst-does-not-call-updatemenus usr/lib/menu/binary
 E: binary: postrm-does-not-call-updatemenus usr/lib/menu/binary
 E: binary: statically-linked-binary ./usr/bin/static-hello
@@ -38,6 +37,7 @@ W: binary: menu-command-not-in-package /usr/share/menu/binary:6 /imnothere
 W: binary: menu-file-in-usr-lib usr/lib/menu/binary
 W: binary: menu-item-needs-tag-has-unknown-value wm /usr/lib/menu/binary:5
 W: binary: menu-item-needs-tag-has-unknown-value wm /usr/share/menu/binary:5
+W: binary: old-fsf-address-in-copyright-file
 W: binary: package-contains-hardlink usr/bar2 -> usr/share/baz
 W: binary: package-contains-upstream-install-documentation usr/share/doc/binary/INSTALL
 W: binary: syntax-error-in-debian-changelog line 16 "couldn't parse date The, 15 Apr 2004 23:33:51 +0200"
