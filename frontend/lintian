@@ -74,7 +74,7 @@ my $dont_check;
 my $unpack_info;
 my $cwd;
 my $cleanup_filename;
-my $exit_code;
+my $exit_code = 0;
 my $LAB;
 
 my %collection_info;
@@ -480,7 +480,14 @@ require Read_pkglists;
 import Util;
 import Pipeline;
 
-# }}} 
+require Tags;
+import Tags;
+
+my @l_secs = read_dpkg_control("$LINTIAN_ROOT/checks/lintian.desc");
+shift(@l_secs);
+map Tags::add_tag($_), @l_secs;
+
+# }}}
 
 # {{{ No clue why this code is here...
 
@@ -612,6 +619,7 @@ while (my $arg = shift) {
 		next;
 	    }
 
+	    Tags::set_pkg( $arg, $arg_name, "", "", 'binary' );
 	    # check distribution field
 	    if (! (($data->{'distribution'} eq 'stable')
 		  or ($data->{'distribution'} eq 'testing')
@@ -621,7 +629,8 @@ while (my $arg = shift) {
 		  or ($data->{'distribution'} =~ /\w+-security/))
                ) {
 		# bad distribution entry
-		print "E: $arg_name: bad-distribution-in-changes-file $data->{'distribution'}\n";
+		tag("bad-distribution-in-changes-file",
+		    $data->{'distribution'});
 	    }
 
 	    # process all listed `files:'
@@ -641,7 +650,7 @@ while (my $arg = shift) {
 		if (-s $filename ne $size) {
 		    print "N: size is $size, argname is $arg_name, filename is $filename\n";
 
-		    print "E: $arg_name: file-size-mismatch-in-changes-file $file\n";
+		    tag( "file-size-mismatch-in-changes-file", $file );
 		}
 	
 		# check md5sums
@@ -649,13 +658,13 @@ while (my $arg = shift) {
 		    my $real_md5sum = get_file_md5($filename);
 
 		    if ($real_md5sum ne $md5sum) {
-			print "E: $arg_name: md5sum-mismatch-in-changes-file $file\n";
+			tag( "md5sum-mismatch-in-changes-file", $file );
 		    }
 		}
 	
 		# check section
 		if (($section eq 'non-free') or ($section eq 'contrib')) {
-		    print "E: $arg_name: bad-section-in-changes-file $file $section\n";
+		    tag( "bad-section-in-changes-file", $file, $section );
 		}
 	
 		# process file?
@@ -673,6 +682,14 @@ while (my $arg = shift) {
 				     $info->{'version'}, $filename);
 		}
 	    }
+
+	    unless ($exit_code) {
+		my $stats = Tags::get_stats( $arg );
+		if ($stats->{severity}{4}) {
+		    $exit_code = 1;
+		}
+	    }
+
 	} else {
 	    fail("bad package file name $arg (neither .deb, .udeb or .dsc file)");
 	}
@@ -855,9 +872,6 @@ closedir(COLLDIR);
 
 # {{{ Now we're ready to load info about checks & tags
 
-require Tags;
-import Tags;
-
 no warnings 'once';
 if (defined $experimental_output_opts) {
     $Tags::output_formatter = \&Tags::print_tag_new;
@@ -940,10 +954,10 @@ for my $f (readdir CHECKDIR) {
 	    }
 	}
 
+	shift(@secs);
+	map Tags::add_tag($_), @secs;
     } # end: if ne lintian
 
-    shift(@secs);
-    map Tags::add_tag($_), @secs;
 }
 
 closedir(CHECKDIR);
@@ -1075,8 +1089,6 @@ if ($debug) {
     printf "N: Requested data to collect: %s\n",join(',',keys %unpack_infos);
     printf "N: Selected checks: %s\n",join(',',keys %checks);
 }
-
-$exit_code = 0;
 
 require Checker;
 
@@ -1279,21 +1291,25 @@ for (reverse sort @packages) {
 		print "N: Skipping $action of $long_type package $pkg\n";
 		next PACKAGE;
 	    }
+
+	}
+	unless ($exit_code) {
+	    my $stats = Tags::get_stats( $file );
+	    if ($stats->{severity}{4}) {
+		$exit_code = 1;
+	    }
 	}
 
 	# report unused overrides
-#	if (not $no_override and $verbose) {
-#	    my $ppkg = $type eq 'b' ? quotemeta($pkg) : quotemeta("$pkg $long_type");
-#	    for my $o (sort keys %overridden) {
-#		next unless $o =~ /^$ppkg:/;
-#		next if $overridden{$o};
-#
-#		print "I: $pkg: unused-override $o\n";
-#
-#		# mark override entry as used
-#		$overridden{$o} = 99999;
-#	    }
-#	}
+	if (not $no_override and $verbose) {
+	    my $overrides = Tags::get_overrides( $file );
+
+	    for my $o (sort keys %$overrides) {
+		next if $overrides->{$o};
+
+		tag( "unused-override", $o );
+	    }
+	}
     }
 
     # chdir to lintian root directory (to unlock $base so it can be removed below)

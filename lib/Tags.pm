@@ -166,9 +166,20 @@ sub add_override {
 	return 0;
     }
 
-    $info{$file}{overrides}{$tag}++;
+    $info{$file}{overrides}{$tag} = 0;
 
     return 1;
+}
+
+sub get_overrides {
+    my ($file) = @_;
+
+    unless ($file) {
+	warn "Don't know which package to get overrides from";
+	return undef;
+    }
+
+    return $info{$file}{overrides};
 }
 
 # Get the info hash for a tag back as a reference. The hash will be
@@ -194,10 +205,13 @@ sub check_overrides {
     my $extra = '';
     $extra = " @$information" if @$information;
     $extra = '' if $extra eq ' ';
-    return $tag_info->{tag}
-        if exists $info{$current}{overrides}{$tag_info->{tag}};
-    return "$tag_info->{tag}$extra"
-        if exists $info{$current}{overrides}{"$tag_info->{tag}$extra"};
+    if( exists $info{$current}{overrides}{$tag_info->{tag}}) {
+	$info{$current}{overrides}{$tag_info->{tag}}++;
+	return $tag_info->{tag};
+    } elsif( exists $info{$current}{overrides}{"$tag_info->{tag}$extra"} ) {
+	$info{$current}{overrides}{"$tag_info->{tag}$extra"}++;
+	return "$tag_info->{tag}$extra";
+    }
 
     return '';
 }
@@ -221,10 +235,12 @@ sub record_stats {
     my ( $tag_info ) = @_;
 
     for my $k (qw( severity significance tag )) {
-	$stats{$current}{$k}{$tag_info->{$k}}++;
+	$stats{$current}{$k}{$tag_info->{$k}}++
+	    unless $tag_info->{overridden}{$k};
     }
     for my $k (qw( severity significance override )) {
-	$stats{$current}{overrides}{$k}{$tag_info->{overridden}{$k}}++;
+	$stats{$current}{overrides}{$k}{$tag_info->{overridden}{$k}}++
+	    if $tag_info->{overridden}{$k};
     }
 }
 
