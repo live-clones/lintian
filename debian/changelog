@@ -23,11 +23,14 @@ lintian (1.23.14) UNRELEASED; urgency=low
     + [FL] debhelper compat level 3 is deprecated as well now (Closes: #340222)
   * checks/files:
     + [FL] forgot /lib(32|64) (more #328612 fixes)
+  * checks/menu-format:
+    + [FL] Drop su-to-root-with-usr-bin and su-to-root-without-usr-sbin, and add
+      su-to-root-with-usr-sbin to adapt to current menu package and policy (Closes: #332400)
   * checks/po-debconf:
     + [FL] Fix logical error in search for files (Closes: #342707)
   * checks/scripts{.desc,}:
     + [FL] Drop install-fvwmgenmenu as valid interpreter. Was dropped from menu package before sarge.
-      (partly fixes: #332400)
+      (also for #332400, see checks/menu-format)
     + [FL] Change path for install-menu from /usr/sbin to /usr/bin (also for #332400)
   * checks/shared-libs:
     + [FL] forgot /lib(32|64) (hopefully finally closes: #328612)

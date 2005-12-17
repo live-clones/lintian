@@ -326,13 +326,11 @@ sub VerifyLine {
 	$file_index{(split /\s+/, $_)[5]} = 1;
     }
     close FILE_INDEX;
-    
+
 	my @com=split(' ',$vals{'command'});
-	if ($com[0] eq "su-to-root") {
-	    tag "su-to-root-without-usr-sbin", "$fullname:$linecount";
-	} elsif ($com[0] eq "/usr/bin/su-to-root") {
-	    tag "su-to-root-with-usr-bin", "$fullname:$linecount";
-	} elsif ($com[0] eq "/usr/sbin/su-to-root") {
+	if ($com[0] eq "/usr/sbin/su-to-root") {
+	    tag "su-to-root-with-usr-sbin", "$fullname:$linecount";
+	} elsif ($com[0] =~ m,(/usr/bin/)?su-to-root,o) {
 	    shift @com;
 	    
             my $cmd;
