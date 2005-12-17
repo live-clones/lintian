@@ -130,6 +130,7 @@ my %interpreter_dependencies = (
 				'runhugs1.4' => 'hugs',
 				'runhugs98' => 'hugs98',
 				'scsh' => 'scsh',
+				'speedy' => 'speedy-cgi-perl',
 				'tcl' => 'tcl',
 				'tclsh' => 'tclsh',
 				'tclsh8.3' => 'tcl8.3',
@@ -242,16 +243,24 @@ while (<SCRIPTS>) {
 	    if ($base =~ /^(ruby|python)(?:\d\.\d)?$/) {
 		tag_error("wrong-path-for-$1", $filename, "#!$interpreter");
 	    } else {
-		tag_error("wrong-path-for-$base", $filename, "#!$interpreter");
+		tag_error("wrong-path-for-interpreter",
+			  "#!$interpreter != $valid_interpreters{$base}",
+			  "($filename)");
 	    }
 	}
-	
+
 	# Do not complain about dependencies for non-executable scripts.
 	if ($executable{$filename}) {
 	    if (exists $interpreter_dependencies{$base}) {
 		my @deps = split(/,/,$interpreter_dependencies{$base});
-		tag_error("$base-script-but-no-".$deps[0]."-dep", $filename)
-		    unless (scalar map { $deps{$_}?$_:() } @deps);
+		if ($base =~ /^(php\d?|(m|g)awk)/) {
+		    tag_error("$base-script-but-no-$deps[0]-dep", $filename)
+			unless (scalar map { $deps{$_}?$_:() } @deps);
+		} else {
+		    tag_error("missing-dep-for-interpreter",
+			      "$base => $deps[0]", "($filename)")
+			unless (scalar map { $deps{$_}?$_:() } @deps);
+		}
 	    } elsif ($base =~ /^python(\d.\d)?$/) {
 		my $ver = $1 ? $1 : "";
 		tag_error("python-script-but-no-python-dep", $filename)
@@ -261,9 +270,6 @@ while (<SCRIPTS>) {
 		my $ver = $1 ? $1 : "";
 		tag_error("ruby-script-but-no-ruby-dep", $filename)
 		    unless ($deps{"ruby$ver"});
-            } elsif ($base eq 'pike') {
-                tag_error("pike-script-but-no-pike-dep", $filename)
-                    unless ($deps{'pike'} or $deps{'pike7'});
 	    } elsif ($base eq 'perl' && $suid{$filename}) {
 		tag_error("suid-perl-script-but-no-perl-suid-dep", $filename)
 		    unless ($deps{'perl-suid'});

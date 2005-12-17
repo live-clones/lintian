@@ -32,6 +32,10 @@ lintian (1.23.14) UNRELEASED; urgency=low
     + [FL] Drop install-fvwmgenmenu as valid interpreter. Was dropped from menu package before sarge.
       (also for #332400, see checks/menu-format)
     + [FL] Change path for install-menu from /usr/sbin to /usr/bin (also for #332400)
+    + [FL] Merge most of the wrong-path-for-* and *-script-but-no-*-dep tags to two tags
+      wrong-path-for-interpreter and missing-dep-for-interpreter. This makes maintaining the
+      list of valid interpreters way easier. Some tags with special text have been special
+      cased (php\d? and (m|g)awk).
   * checks/shared-libs:
     + [FL] forgot /lib(32|64) (hopefully finally closes: #328612)
 
