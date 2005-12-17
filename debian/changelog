@@ -28,6 +28,7 @@ lintian (1.23.14) UNRELEASED; urgency=low
   * checks/scripts{.desc,}:
     + [FL] Drop install-fvwmgenmenu as valid interpreter. Was dropped from menu package before sarge.
       (partly fixes: #332400)
+    + [FL] Change path for install-menu from /usr/sbin to /usr/bin (also for #332400)
   * checks/shared-libs:
     + [FL] forgot /lib(32|64) (hopefully finally closes: #328612)
 
