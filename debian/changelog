@@ -11,8 +11,9 @@ lintian (1.23.14) UNRELEASED; urgency=low
     + [FL] Some fixes to the statistics code to make the fixes
       in frontend/lintian possible
   
-  * checks/binaries:
+  * checks/binaries{.desc,}:
     + [FL] support c2a suffix in soname check, too (Closes: #340856)
+    + [FL] fix typo in description of package-name-doesnt-match-sonames (Closes: #339360)
   * checks/debconf{.desc,}:
     + [FL] drop seen-flag-requires-versioned-depends and multiselect-without-dependency and
       drop version requirement from missing-debconf-dependency-for-preinst. All due to the
