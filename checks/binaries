@@ -132,7 +132,7 @@ tag "several-sonames-in-same-package", "@sonames" if @sonames > 1;
 # try to identify transition strings
 my $base_pkg = $pkg;
 $base_pkg =~ s/c102\b//o;
-$base_pkg =~ s/c2\b//o;
+$base_pkg =~ s/c2a?\b//o;
 $base_pkg =~ s/\dg$//o;
 $base_pkg =~ s/-udeb$//o;
 $base_pkg =~ s/^lib64/lib/o;
