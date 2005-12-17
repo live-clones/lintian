@@ -10,6 +10,9 @@ lintian (1.23.14) UNRELEASED; urgency=low
   * lib/Tags.pm:
     + [FL] Some fixes to the statistics code to make the fixes
       in frontend/lintian possible
+  
+  * checks/debhelper:
+    + [FL] debhelper compat level 3 is deprecated as well now (Closes: #340222)
 
  --
 

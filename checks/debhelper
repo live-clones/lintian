@@ -174,7 +174,7 @@ while (defined(my $file=readdir(DEBIAN))) {
 closedir(DEBIAN);
 
 $needversiondepends ||= 1;
-if ($needversiondepends < 3) {
+if ($needversiondepends < 4) {
     tag "package-uses-deprecated-debhelper-compat-version", $needversiondepends;
 }
 
