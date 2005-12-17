@@ -15,6 +15,10 @@ lintian (1.23.14) UNRELEASED; urgency=low
     + [FL] support c2a suffix in soname check, too (Closes: #340856)
   * checks/debhelper:
     + [FL] debhelper compat level 3 is deprecated as well now (Closes: #340222)
+  * checks/files:
+    + [FL] forgot /lib(32|64) (more #328612 fixes)
+  * checks/shared-libs:
+    + [FL] forgot /lib(32|64) (hopefully finally closes: #328612)
 
  --
 

@@ -28,6 +28,8 @@ sub run {
 
 my %ldso_dir = map { $_ => 1 }
     qw( lib
+	lib32
+	lib64
         usr/lib
 	usr/lib32
 	usr/lib64
