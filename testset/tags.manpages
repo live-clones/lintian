@@ -14,7 +14,6 @@ E: manpages: manpage-not-compressed-with-gzip usr/X11R6/man/man1/rstartd.1x.gz
 E: manpages: manpage-not-compressed-with-gzip usr/share/man/man1/usr-bin-binary-alt.1.gz
 E: manpages: manpage-not-compressed-with-gzip usr/share/man/man1/usr-sbin-binary.1.gz
 E: manpages: manpage-not-compressed-with-max-compression usr/share/man/man6/usr-games-binary.6.gz
-E: manpages: no-copyright-file
 E: manpages: x11-games-should-be-in-usr-games usr/X11R6/man/man6/X11R6-binary.man
 W: manpages source: ancient-standards-version 3.2.1
 W: manpages source: binary-nmu-debian-revision-in-source 4-0.0.1

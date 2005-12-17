@@ -42,6 +42,10 @@ binary-indep:
 	touch $(tmp)/usr/share/man/de/man1/binary-without-english-manpage.1
 	chmod 644 $(tmp)/usr/share/man/de/man1/binary-without-english-manpage.1
 	gzip -c9 <test.1p.de >$(tmp)/usr/share/man/de/man1/test-latin1-chars.1p.gz
+
+	install -d $(tmp)/usr/share/lintian/overrides
+	install -m644 debian/overrides $(tmp)/usr/share/lintian/overrides/manpages
+	
 	install -d $(tmp)/usr/share/doc/manpages
 	cp debian/changelog $(tmp)/usr/share/doc/manpages/changelog
 	gzip -9 $(tmp)/usr/share/doc/manpages/changelog
