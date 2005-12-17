@@ -36,6 +36,7 @@ lintian (1.23.14) UNRELEASED; urgency=low
       wrong-path-for-interpreter and missing-dep-for-interpreter. This makes maintaining the
       list of valid interpreters way easier. Some tags with special text have been special
       cased (php\d? and (m|g)awk).
+    + [FL] Add speedy and slsh to list of valid interpreters (Closes: #333955, #336700)
   * checks/shared-libs:
     + [FL] forgot /lib(32|64) (hopefully finally closes: #328612)
 
