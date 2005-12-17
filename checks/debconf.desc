@@ -15,7 +15,7 @@ Info: Packages using debconf should depend on it, since debconf is not an
 Tag: missing-debconf-dependency-for-preinst
 Type: warning
 Info: Packages using debconf in their preinst script must either pre-depend
- on debconf (>= 0.2.17), with appropriate discussion on &debdev;, or else
+ on debconf, with appropriate discussion on &debdev;, or else
  depend on debconf and fall back to a different configuration system.
  
 Tag: duplicate-fields-in-templates
@@ -71,11 +71,6 @@ Tag: select-without-choices
 Type: error
 Info: Templates using the `select' or `multiselect' data types must provide
  a `Choices:' field listing the possible values of the template.
-
-Tag: multiselect-without-dependency
-Type: warning
-Info: If your package uses the `multiselect' type in a debconf template, it
- must depend on debconf (>= 0.2.26).
 
 Tag: boolean-template-has-bogus-default
 Type: error
@@ -181,12 +176,6 @@ Info: In the Unix tradition, Debian packages should have human-readable and
  for questions. If you maintain a package containing such a program, please
  install an override. Other exceptions to this check include configuration
  scripts called from the package's post-installation script.
-
-Tag: seen-flag-requires-versioned-depends
-Type: error
-Info: Debconf only supports the 'seen' flag as of version 0.5.00.  To ensure
- upgrades work correctly, packages that use this new flag should declare a
- dependency on that version of debconf.
 
 Tag: settitle-requires-versioned-depends
 Type: error

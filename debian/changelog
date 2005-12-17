@@ -13,6 +13,11 @@ lintian (1.23.14) UNRELEASED; urgency=low
   
   * checks/binaries:
     + [FL] support c2a suffix in soname check, too (Closes: #340856)
+  * checks/debconf{.desc,}:
+    + [FL] drop seen-flag-requires-versioned-depends and multiselect-without-dependency and
+      drop version requirement from missing-debconf-dependency-for-preinst. All due to the
+      fact that woody shipped with 1.0.x and therefor versioned depends on versions lesser than
+      that don't make much sense anymore (Closes: #333736)
   * checks/debhelper:
     + [FL] debhelper compat level 3 is deprecated as well now (Closes: #340222)
   * checks/files:

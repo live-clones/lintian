@@ -272,14 +272,6 @@ for my $file (qw(config postinst)) {
 	        tag "isdefault-flag-is-deprecated", "$file";
 	        $isdefault=1;
 	    }
-	    if (not $usesseen and m/db_f[sg]et\s+\S+\s+seen\s+/) {
-	       unless (Dep::implies($alldependencies,
-				    Dep::parse('debconf (>= 0.5)'))) {
-	           tag "seen-flag-requires-versioned-depends", "$file" 
-		       unless $type eq 'udeb';
-	       }
-	        $usesseen = 1;
-	    }
 	    if (not $usessettitle and m/db_settitle\s+/) {
 		unless (Dep::implies($alldependencies,
 				     Dep::parse('debconf (>= 1.3.22)'))) {
@@ -322,15 +314,9 @@ if (open(POSTRM, "control/postrm")) {
 
 # Check that the right dependencies are in the control file.
 
-if ($usesmultiselect) {
-    unless (Dep::implies($alldependencies,
-	                 Dep::parse('debconf (>= 0.2.26)'))) {
-	tag "multiselect-without-dependency", ""
-	    unless $type eq 'udeb';
-    }
-} elsif ($usespreinst) {
+if ($usespreinst) {
     unless (Dep::implies($dependencies{'pre-depends'},
-	                 Dep::parse('debconf (>= 0.2.17)'))
+	                 Dep::parse('debconf'))
 	    or Dep::implies($dependencies{'depends'}, Dep::parse('debconf'))) {
 	tag "missing-debconf-dependency-for-preinst", ""
 	    unless $type eq 'udeb';
