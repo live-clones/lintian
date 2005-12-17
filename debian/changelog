@@ -23,6 +23,8 @@ lintian (1.23.14) UNRELEASED; urgency=low
     + [FL] debhelper compat level 3 is deprecated as well now (Closes: #340222)
   * checks/files:
     + [FL] forgot /lib(32|64) (more #328612 fixes)
+  * checks/po-debconf:
+    + [FL] Fix logical error in search for files (Closes: #342707)
   * checks/shared-libs:
     + [FL] forgot /lib(32|64) (hopefully finally closes: #328612)
 

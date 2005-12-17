@@ -45,9 +45,7 @@ for my $file (readdir(DEB)) {
 			}
 		}
 		close(IN);
-		last;
-	}
-	if ($file =~ m/^(.+\.)?config(\..+)?$/) {
+	} elsif ($file =~ m/^(.+\.)?config(\..+)?$/) {
 	    $has_config = 1;
 	}
 }
