@@ -1,3 +1,18 @@
+lintian (1.23.14) UNRELEASED; urgency=low
+  
+  * The "fix those frontend regressions" release
+
+  * frontend/lintian:
+    + [FL] Fix exit status computing so that we exit with 1 again
+      if we found any error. (Closes: #329458)
+    + [FL] Re-enable reporting unused overrides.
+  
+  * lib/Tags.pm:
+    + [FL] Some fixes to the statistics code to make the fixes
+      in frontend/lintian possible
+
+ --
+
 lintian (1.23.13) unstable; urgency=low
 
   * The "doesn't contain all the fixes I would like but that's no
