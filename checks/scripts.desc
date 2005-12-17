@@ -221,10 +221,6 @@ Tag: wrong-path-for-install-menu
 Type: error
 Info: Install-menu is installed as /usr/sbin/install-menu.
 
-Tag: wrong-path-for-install-fvwmgenmenu
-Type: error
-Info: install-fvwmgenmenu is installed as /usr/sbin/install-fvwmgenmenu.
-
 Tag: wrong-path-for-js
 Type: error
 Info: js is installed as /usr/bin/js on Debian systems.

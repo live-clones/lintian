@@ -44,7 +44,6 @@ my %valid_interpreters = (
 			  'gforth' => '/usr/bin/gforth',
 			  'gnuplot' => '/usr/bin/gnuplot',
 			  'guile' => '/usr/bin/guile',
-			  'install-fvwmgenmenu' => '/usr/sbin/install-fvwmgenmenu',
 			  'install-menu' => '/usr/sbin/install-menu',
 			  'js' => '/usr/bin/js',
 			  'kforth' => '/usr/bin/kforth',
