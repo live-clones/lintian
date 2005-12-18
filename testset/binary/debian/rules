@@ -15,10 +15,14 @@ binary-arch: build
 	install -m 755 hello $(tmp)/usr/bin
 	touch $(tmp)/usr/bin/iminusrbin
 	chmod 755 $(tmp)/usr/bin/iminusrbin
-	install -s -m 755 hello-static $(tmp)/usr/bin
-	install -s -m 755 hello-static $(tmp)/usr/bin/hello.static
-	install -s -m 755 hello-static $(tmp)/usr/bin/static-hello
-	install -s -m 755 hello-static $(tmp)/boot/hello
+	install -m 755 hello-static $(tmp)/usr/bin
+	strip $(tmp)/usr/bin/hello-static
+	install -m 755 hello-static $(tmp)/usr/bin/hello.static
+	strip --remove-section=.comment --remove-section=.note $(tmp)/usr/bin/hello.static
+	install -m 755 hello-static $(tmp)/usr/bin/static-hello
+	strip --remove-section=.comment --remove-section=.note $(tmp)/usr/bin/static-hello
+	install -m 755 hello-static $(tmp)/boot/hello
+	strip --remove-section=.comment --remove-section=.note $(tmp)/boot/hello/hello-static
 	install -d $(tmp)/usr/share/doc/binary
 	install -m 644 INSTALL $(tmp)/usr/share/doc/binary
 	install -d $(tmp)/usr/share/menu

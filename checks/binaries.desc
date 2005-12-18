@@ -61,11 +61,14 @@ Info: The binary or shared library defines the `RPATH'. Usually this
  Please contact &debdev; if you have questions about this.
 
 Tag: binary-has-unneeded-section
-Type: warning
+Type: info
 Info: The binary or shared library is stripped, but still contains a
- section that is not useful.  The utilities (<tt>install -s</tt>
- and <tt>dh_strip</tt>) are patched to remove the <tt>.note</tt> and
- <tt>.comment</tt> sections.
+ section that is not useful.  You should call strip with
+ <tt>--remove-section=.comment --remove-section=.note</tt> to remove the
+ <tt>.note</tt> and <tt>.comment</tt> sections.
+ .
+ <tt>dh_strip</tt> will do this automatically for you, but
+ <tt>install -s</tt> not because it calls strip without any arguments.
 
 Tag: missing-depends-line
 Type: warning

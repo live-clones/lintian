@@ -14,6 +14,11 @@ lintian (1.23.14) unstable; urgency=low
   * checks/binaries{.desc,}:
     + [FL] support c2a suffix in soname check, too (Closes: #340856)
     + [FL] fix typo in description of package-name-doesnt-match-sonames (Closes: #339360)
+    + [FL] The Debian specific patches from coreutils to call strip with --remove-section
+      arguments on install -s have been dropped. Adapt description of binary-has-unneeded-section
+      accordingly and demote it to "info" because many packages will get this now.
+      (Policy only seems to demand stripping the symbols but doesn't talk about removing the
+      sections)
   * checks/debconf{.desc,}:
     + [FL] drop seen-flag-requires-versioned-depends and multiselect-without-dependency and
       drop version requirement from missing-debconf-dependency-for-preinst. All due to the

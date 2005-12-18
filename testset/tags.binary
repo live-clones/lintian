@@ -18,6 +18,7 @@ I: binary source: non-standard-architecture amd64
 I: binary source: non-standard-architecture kfreebsd-i386
 I: binary source: non-standard-architecture ppc64
 I: binary: arch-dep-package-has-big-usr-share
+I: binary: binary-has-unneeded-section ./usr/bin/hello-static .comment
 W: binary source: ancient-standards-version 3.2.1
 W: binary source: maintainer-upload-has-incorrect-version-number 4-1.1
 W: binary source: native-package-with-dash-version
