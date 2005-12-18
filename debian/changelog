@@ -17,8 +17,6 @@ lintian (1.23.14) unstable; urgency=low
     + [FL] The Debian specific patches from coreutils to call strip with --remove-section
       arguments on install -s have been dropped. Adapt description of binary-has-unneeded-section
       accordingly and demote it to "info" because many packages will get this now.
-      (Policy only seems to demand stripping the symbols but doesn't talk about removing the
-      sections)
   * checks/debconf{.desc,}:
     + [FL] drop seen-flag-requires-versioned-depends and multiselect-without-dependency and
       drop version requirement from missing-debconf-dependency-for-preinst. All due to the
@@ -45,7 +43,7 @@ lintian (1.23.14) unstable; urgency=low
   * checks/shared-libs:
     + [FL] forgot /lib(32|64) (hopefully finally closes: #328612)
 
- --
+ -- Frank Lichtenheld <djpig@debian.org>  Sun, 18 Dec 2005 02:04:46 +0100
 
 lintian (1.23.13) unstable; urgency=low
 
