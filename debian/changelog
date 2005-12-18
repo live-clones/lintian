@@ -1,3 +1,12 @@
+lintian (1.23.15) UNRELEASED; urgency=low
+  
+  * The "www.no-name-yet.eu" release
+
+  * checks/fields.desc:
+    + [JvW] Fix typo in description
+
+ -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Sun, 18 Dec 2005 03:40:15 +0100
+
 lintian (1.23.14) unstable; urgency=low
   
   * The "fix those frontend regressions" release
