@@ -5,6 +5,9 @@ lintian (1.23.15) UNRELEASED; urgency=low
   * debian/changelog:
     + [FL] Fix wrapping of last changelog entry (Closes: #344899)
 
+  * checks/debhelper:
+    + [FL] Also check for debhelper build-dependency in debhelper-using
+      cdbs based packages
   * checks/fields:
     + [FL] Allow version numbers of 0 by correctly checking the output
       of _valid_version for definedness and not the boolean value
