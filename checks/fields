@@ -300,7 +300,7 @@ if (($type eq "binary") || ($type eq 'udeb')) {
 					    if ($d_version && grep { $d_version->[0] eq $_ } ("<", ">"));
 
 					tag "bad-version-in-relation", "$field: $part_d_orig"
-					    if ($d_version->[0] && ! (_valid_version($d_version->[1]))[1]);
+					    if ($d_version->[0] && ! defined((_valid_version($d_version->[1]))[1]));
 					
 					tag "package-relation-with-self", "$field: $part_d_orig"
 					    if ($pkg eq $d_pkg) && ($field ne 'conflicts');

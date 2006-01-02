@@ -5,6 +5,10 @@ lintian (1.23.15) UNRELEASED; urgency=low
   * debian/changelog:
     + [FL] Fix wrapping of last changelog entry (Closes: #344899)
 
+  * checks/fields:
+    + [FL] Allow version numbers of 0 by correctly checking the output
+      of _valid_version for definedness and not the boolean value
+      (Closes: #345005)
   * checks/fields.desc:
     + [JvW] Fix typo in description
 
