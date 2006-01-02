@@ -1,0 +1,2 @@
+E: cdbs-test source: package-lacks-versioned-build-depends-on-debhelper 5
+W: cdbs-test source: native-package-with-dash-version

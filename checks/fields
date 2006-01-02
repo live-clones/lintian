@@ -29,6 +29,28 @@ use common_data;
 use Tags;
 use Util;
 
+# Certain build tools must be listed in Build-Depends even if there are no
+# arch-specific packages because they're required in order to run the clean
+# rule.  (See Policy 7.6.)  The following is a list of pairs of packages and
+# regular expressions that, if they match anywhere in the debian/rules file,
+# say that this package is allowed in Build-Depends.
+my @global_depends = (
+	[ cdbs => '^include\s+/usr/share/cdbs/' ],
+	[ dbs => '^include\s+/usr/share/dbs/' ],
+	[ debhelper => '^include\s+/usr/share/cdbs/1/rules/debhelper.mk' ],
+	[ dpatch => '^include\s+/usr/share/dpatch/' ]
+);
+
+# Similarly, these pairs of packages and regexes say that if the regex matches
+# in one of clean, build-arch, or binary-arch, this package is allowed in
+# Build-Depends.
+my @rule_depends = (
+	[ debhelper => '^\s+dh_.+' ]
+);
+
+# Note that yada is handled as a special case, based on the existence of
+# debian/packages.
+
 sub run {
 
 my $pkg = shift;
@@ -403,24 +425,37 @@ if ($type eq "source") {
 			my $build_depends = <BD>;
 			close BD;
 
-			my $uses_dh = 0;
+			my %allowed;
 			if (not open (RULES, "debfiles/rules")) {
 				fail("cannot read debfiles/rules: $!");
 			} else {
 				my $target = "none";
-				local $/ = "\n"; #Read this linewise				
+				local $/ = "\n"; #Read this linewise
 				while (<RULES>) {
-					$target = $1 if (/^(\S+):/);
-					if (/^\s+dh_.+/ && grep ($_ eq $target, qw(clean binary-arch build-arch)) or
-							m#^include\s+/usr/share/cdbs/1/rules/debhelper.mk#) {
-						$uses_dh = "yes";
-						last
+				    for my $rule (@global_depends) {
+					if ($_ =~ /$rule->[1]/) {
+					    $allowed{$rule->[0]}++;
 					}
+				    }
+				    $target = $1 if (/^(\S+):/);
+				    if (grep ($_ eq $target, qw(clean binary-arch build-arch))) {
+					for my $rule (@rule_depends) {
+					    if ($_ =~ /$rule->[1]/) {
+						$allowed{$rule->[0]}++;
+					    }
+					}
+				    }
 				}
 				close RULES;
 			}
-			unless ($build_depends =~ /^\s*debhelper(?:\s+\((.+?)\))?(?:\s+(\[.+?\]))?\s*$/ && $uses_dh){
-				tag "build-depends-without-arch-dep", ""
+			$allowed{yada}++ if -e "debfiles/packages";
+			my @packages = split /\s*,\s*/, $build_depends;
+			foreach my $pkg (@packages) {
+			    my ($name) = ($pkg =~ /^(\S+)/);
+			    unless ($allowed{$name}) {
+				tag "build-depends-without-arch-dep", "";
+				last;
+			    }
 			}
 		}
 	}

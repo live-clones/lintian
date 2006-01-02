@@ -12,6 +12,9 @@ lintian (1.23.15) UNRELEASED; urgency=low
     + [FL] Allow version numbers of 0 by correctly checking the output
       of _valid_version for definedness and not the boolean value
       (Closes: #345005)
+    + [FL] Better check for false postives of build-depends-without-arch-dep.
+      Should fix false positives for cdbs, dbs, dpatch and yada. Based on
+      a patch by Russ Allbery (Closes: #344609, #321135, #339750)
   * checks/fields.desc:
     + [JvW] Fix typo in description
 
