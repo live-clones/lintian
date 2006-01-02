@@ -1,6 +1,9 @@
 lintian (1.23.15) UNRELEASED; urgency=low
   
   * The "www.no-name-yet.eu" release
+  
+  * debian/changelog:
+    + [FL] Fix wrapping of last changelog entry (Closes: #344899)
 
   * checks/fields.desc:
     + [JvW] Fix typo in description
@@ -22,33 +25,41 @@ lintian (1.23.14) unstable; urgency=low
   
   * checks/binaries{.desc,}:
     + [FL] support c2a suffix in soname check, too (Closes: #340856)
-    + [FL] fix typo in description of package-name-doesnt-match-sonames (Closes: #339360)
-    + [FL] The Debian specific patches from coreutils to call strip with --remove-section
-      arguments on install -s have been dropped. Adapt description of binary-has-unneeded-section
-      accordingly and demote it to "info" because many packages will get this now.
+    + [FL] fix typo in description of package-name-doesnt-match-sonames
+      (Closes: #339360)
+    + [FL] The Debian specific patches from coreutils to call strip with
+      --remove-section arguments on install -s have been dropped. Adapt
+      description of binary-has-unneeded-section accordingly and demote
+      it to "info" because many packages will get this now.
   * checks/debconf{.desc,}:
-    + [FL] drop seen-flag-requires-versioned-depends and multiselect-without-dependency and
-      drop version requirement from missing-debconf-dependency-for-preinst. All due to the
-      fact that woody shipped with 1.0.x and therefor versioned depends on versions lesser than
-      that don't make much sense anymore (Closes: #333736)
+    + [FL] drop seen-flag-requires-versioned-depends and
+      multiselect-without-dependency and drop version requirement from
+      missing-debconf-dependency-for-preinst. All due to the fact that
+      woody shipped with 1.0.x and therefor versioned depends on versions
+      lesser than that don't make much sense anymore (Closes: #333736)
   * checks/debhelper:
     + [FL] debhelper compat level 3 is deprecated as well now (Closes: #340222)
   * checks/files:
     + [FL] forgot /lib(32|64) (more #328612 fixes)
   * checks/menu-format:
-    + [FL] Drop su-to-root-with-usr-bin and su-to-root-without-usr-sbin, and add
-      su-to-root-with-usr-sbin to adapt to current menu package and policy (Closes: #332400)
+    + [FL] Drop su-to-root-with-usr-bin and su-to-root-without-usr-sbin,
+      and add su-to-root-with-usr-sbin to adapt to current menu package
+      and policy (Closes: #332400)
   * checks/po-debconf:
     + [FL] Fix logical error in search for files (Closes: #342707)
   * checks/scripts{.desc,}:
-    + [FL] Drop install-fvwmgenmenu as valid interpreter. Was dropped from menu package before sarge.
-      (also for #332400, see checks/menu-format)
-    + [FL] Change path for install-menu from /usr/sbin to /usr/bin (also for #332400)
-    + [FL] Merge most of the wrong-path-for-* and *-script-but-no-*-dep tags to two tags
-      wrong-path-for-interpreter and missing-dep-for-interpreter. This makes maintaining the
-      list of valid interpreters way easier. Some tags with special text have been special
-      cased (php\d? and (m|g)awk).
-    + [FL] Add speedy and slsh to list of valid interpreters (Closes: #333955, #336700)
+    + [FL] Drop install-fvwmgenmenu as valid interpreter. Was dropped
+      from menu package before sarge. (also for #332400, see
+      checks/menu-format)
+    + [FL] Change path for install-menu from /usr/sbin to /usr/bin (also
+      for #332400)
+    + [FL] Merge most of the wrong-path-for-* and *-script-but-no-*-dep
+      tags to two tags wrong-path-for-interpreter and
+      missing-dep-for-interpreter. This makes maintaining the list of
+      valid interpreters way easier. Some tags with special text have
+      been special cased (php\d? and (m|g)awk).
+    + [FL] Add speedy and slsh to list of valid interpreters
+      (Closes: #333955, #336700)
   * checks/shared-libs:
     + [FL] forgot /lib(32|64) (hopefully finally closes: #328612)
 
