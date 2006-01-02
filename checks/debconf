@@ -1,4 +1,4 @@
-# debconf -- lintian check script
+# debconf -- lintian check script -*- perl -*-
 
 # Copyright (C) 2001 Colin Watson
 #

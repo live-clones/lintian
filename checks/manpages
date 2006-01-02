@@ -1,4 +1,4 @@
-# manpages -- lintian check script
+# manpages -- lintian check script -*- perl -*-
 
 # Copyright (C) 1998 Christian Schwarz
 #

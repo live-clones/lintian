@@ -1,4 +1,4 @@
-# description -- lintian check script
+# description -- lintian check script -*- perl -*-
 
 # Copyright (C) 1998 Christian Schwarz
 #

@@ -1,4 +1,4 @@
-# infofiles -- lintian check script
+# infofiles -- lintian check script -*- perl -*-
 
 # Copyright (C) 1998 Christian Schwarz
 # Copyright (C) 2001 Josip Rodin

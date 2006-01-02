@@ -1,4 +1,4 @@
-# spelling -- lintian check script
+# spelling -- lintian check script -*- perl -*-
 
 # Look for common spelling errors in the package description and the
 # copyright file.

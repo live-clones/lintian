@@ -1,4 +1,4 @@
-# nmu -- lintian check script
+# nmu -- lintian check script -*- perl -*-
 
 # Copyright (C) 2004 Jeroen van Wolffelaar
 #

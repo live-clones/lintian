@@ -1,4 +1,4 @@
-# init.d -- lintian check script
+# init.d -- lintian check script -*- perl -*-
 
 # Copyright (C) 1998 Christian Schwarz
 #

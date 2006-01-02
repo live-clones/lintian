@@ -1,4 +1,4 @@
-# files -- lintian check script
+# files -- lintian check script -*- perl -*-
 
 # Copyright (C) 1998 Christian Schwarz and Richard Braakman
 #

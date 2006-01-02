@@ -1,4 +1,4 @@
-# etcfiles -- lintian check script
+# etcfiles -- lintian check script -*- perl -*-
 
 # Copyright (C) 2000 by Sean 'Shaleh' Perry
 #

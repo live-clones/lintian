@@ -1,4 +1,4 @@
-# debian-readme -- lintian check script
+# debian-readme -- lintian check script -*- perl -*-
 
 # Copyright (C) 1998 Richard Braakman
 #

@@ -1,4 +1,4 @@
-# standards-version -- lintian check script
+# standards-version -- lintian check script -*- perl -*-
 
 # Copyright (C) 1998 Christian Schwarz and Richard Braakman
 # 

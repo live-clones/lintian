@@ -1,4 +1,4 @@
-# fields -- lintian check script (rewrite)
+# fields -- lintian check script (rewrite) -*- perl -*-
 #
 # Copyright (C) 2004 Marc Brockschmidt
 #

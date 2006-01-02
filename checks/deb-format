@@ -1,4 +1,4 @@
-# deb-format -- lintian check script
+# deb-format -- lintian check script -*- perl -*-
 
 # Copyright (C) 2004 Denis Barbier
 # Based on a check provided by Marc 'HE' Brockschmidt.

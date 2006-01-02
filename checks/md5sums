@@ -1,4 +1,4 @@
-# md5sums -- lintian check script
+# md5sums -- lintian check script -*- perl -*-
 
 # Copyright (C) 1998 Christian Schwarz and Richard Braakman
 #

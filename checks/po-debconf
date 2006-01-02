@@ -1,4 +1,4 @@
-# po-debconf -- lintian check script
+# po-debconf -- lintian check script -*- perl -*-
 
 # Copyright (C) 2002-2004 by Denis Barbier <barbier@linuxfr.org>
 #

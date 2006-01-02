@@ -1,4 +1,4 @@
-# menus -- lintian check script
+# menus -- lintian check script -*- perl -*-
 
 # somewhat of a misnomer -- it doesn't only check menus
 

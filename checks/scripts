@@ -1,4 +1,4 @@
-# scripts -- lintian check script
+# scripts -- lintian check script -*- perl -*-
 #
 # This is probably the right file to add a check for the use of
 # set -e in bash and sh scripts.

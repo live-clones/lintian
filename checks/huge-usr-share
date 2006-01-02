@@ -1,4 +1,4 @@
-# huge-usr-share -- lintian check script
+# huge-usr-share -- lintian check script -*- perl -*-
 
 # Copyright (C) 2004 Jeroen van Wolffelaar <jeroen@wolffelaar.nl>
 #
