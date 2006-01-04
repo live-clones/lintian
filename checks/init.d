@@ -38,12 +38,18 @@ my %initd_postinst;
 my %initd_postrm;
 my %conffiles;
 
+my $opts_r = qr/-\S+\s*/;
+my $name_r = qr/[\w.-]+/;
+my $action_r = qr/\w+/;
+my $exclude_r = qr/if\s+\[\s+-x\s+\S*update-rc\.d/;
+
 # read postinst control file
 if (open(IN,$postinst)) {
     while (<IN>) {
-	next if m/if\s+\[\s+-x\s+\S*update-rc\.d/o;
+	next if /$exclude_r/o;
 	s/\#.*$//o;
-	next unless /^(?:.+;)?\s*update-rc\.d\s+(?:-\S+\s*)*(\S+)\s+(\S+)/;
+	next unless /^(?:.+;)?\s*update-rc\.d\s+
+	    (?:$opts_r)*($name_r)\s+($action_r)/xo;
 	my ($name,$opt) = ($1,$2);
 	next if $opt eq 'remove';
 	if ($initd_postinst{$name}++ == 1) {
@@ -60,9 +66,9 @@ close(IN);
 # read preinst control file
 if (open(IN,$preinst)) {
     while (<IN>) {
-	next if m/if\s+\[\s+-x\s+\S*update-rc\.d/o;
+	next if /$exclude_r/o;
 	s/\#.*$//o;
-	next unless m/update-rc\.d\s+(?:-\S+\s*)*(\S+)\s+(\S+)/o;
+	next unless m/update-rc\.d\s+(?:$opts_r)*($name_r)\s+($action_r)/o;
 	my ($name,$opt) = ($1,$2);
 	next if $opt eq 'remove';
 	tag "preinst-calls-updaterc.d", "$name";
@@ -73,9 +79,9 @@ if (open(IN,$preinst)) {
 # read postrm control file
 if (open(IN,$postrm)) {
     while (<IN>) {
-	next if m/if\s+\[\s+-x\s+\S*update-rc\.d/o;
+	next if /$exclude_r/o;
 	s/\#.*$//o;
-	next unless m/update-rc\.d\s+(-\S+\s*)*(\S+)/;
+	next unless m/update-rc\.d\s+($opts_r)*($name_r)/o;
 	if ($initd_postrm{$2}++ == 1) {
 	    tag "duplicate-updaterc.d-calls-in-postrm", "$2";
 	    next;
@@ -90,9 +96,9 @@ if (open(IN,$postrm)) {
 # read prerm control file
 if (open(IN,$prerm)) {
     while (<IN>) {
-	next if m/if\s+\[\s+-x\s+\S*update-rc\.d/o;
+	next if /$exclude_r/o;
 	s/\#.*$//o;
-	next unless m/update-rc\.d\s+(-\S+\s*)*(\S+)/;
+	next unless m/update-rc\.d\s+($opts_r)*($name_r)/o;
 	tag "prerm-calls-updaterc.d", "$2";
     }
     close(IN);

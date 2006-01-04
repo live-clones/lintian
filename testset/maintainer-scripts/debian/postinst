@@ -32,3 +32,8 @@ wm-menu-config
 
 chown root.root /usr/share/doc/maintainer-scripts/changelog
 chown root:root /usr/share/doc/maintainer-scripts/changelog
+
+$FOO=bar
+update-rc.d foo defaults >/dev/null
+update-rc.d $FOO defaults
+update-rc.d foo remove

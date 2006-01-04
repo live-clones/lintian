@@ -38,3 +38,5 @@ fi
 if test -n $(echo foo | perl -pe 's/[[:space:]]//go'); then
     echo 1
 fi
+
+update-rc.d foo remove

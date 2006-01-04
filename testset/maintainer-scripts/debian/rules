@@ -7,6 +7,8 @@ binary-arch:
 binary-indep:
 	install -d debian/tmp/DEBIAN
 	cp debian/config debian/tmp/DEBIAN
+	cp debian/preinst debian/tmp/DEBIAN
+	chmod +x debian/tmp/DEBIAN/preinst
 	cp debian/postinst debian/tmp/DEBIAN
 	chmod +x debian/tmp/DEBIAN/postinst
 	cp debian/prerm debian/tmp/DEBIAN

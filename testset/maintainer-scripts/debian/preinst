@@ -1,0 +1,4 @@
+#!/bin/sh
+
+update-rc.d foo remove
+update-rc.d bar defaults

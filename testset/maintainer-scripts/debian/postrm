@@ -18,3 +18,5 @@ then
 fi
 
 [ "remove" ="$1" ] && ldconfig
+
+update-rc.d bar remove
