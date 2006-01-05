@@ -495,6 +495,8 @@ if ($type eq "source") {
 
 					tag "build-depends-on-essential-package-without-using-version", "$field: $part_d_orig"
 					    if ($d_pkg ne "coreutils" && $known_essential{$d_pkg} && ! $d_version->[0]);
+					tag "build-depends-on-obsolete-package", "$field: $part_d_orig"
+					    if ($known_obsolete_packages{$d_pkg} && &$is_dep_field($field));
 
 					tag "bad-relation", "$field: $part_d_orig"
 					    if $rest;

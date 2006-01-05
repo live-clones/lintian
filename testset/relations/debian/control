@@ -2,8 +2,8 @@ Source: relations
 Section: misc
 Priority: optional
 Build-Depends: mail-transport-agent, libc6-dev, findutils, foo (>> 2) bar baz bat
-Build-Depends-Indep: make, bash
-Build-Conflicts: foo [amd64 i386], bar [alpha test] 
+Build-Depends-Indep: make, bash, debmake
+Build-Conflicts: foo [amd64 i386], bar [alpha test], xlibs-dev
 Maintainer: Debian QA Group <packages@qa.debian.org>
 Standards-Version: 3.1.1
 Origin: Debian

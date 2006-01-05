@@ -350,6 +350,10 @@ Tag: depends-on-obsolete-package
 Type: error
 Info: The package depends on a package that has been superseded.
 
+Tag: build-depends-on-obsolete-package
+Type: error
+Info: The package build-depends on a package that has been superseded.
+
 Tag: depends-on-essential-package-without-using-version
 Type: error
 Ref: policy 3.5

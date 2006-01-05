@@ -1,6 +1,7 @@
 E: relations source: bad-relation build-depends: foo (>> 2) bar baz bat
 E: relations source: build-depends-on-essential-package-without-using-version build-depends-indep: bash
 E: relations source: build-depends-on-essential-package-without-using-version build-depends: findutils
+E: relations source: build-depends-on-obsolete-package build-depends-indep: debmake
 E: relations source: debian-control-with-duplicate-fields provides: 31, 32
 E: relations source: depends-on-build-essential-package-without-using-version libc6-dev [build-depends: libc6-dev]
 E: relations source: depends-on-build-essential-package-without-using-version make [build-depends-indep: make]

@@ -70,7 +70,7 @@ use base qw(Exporter);
 %known_obsolete_packages = map { $_ => 1 }
     ('libstdc++2.8', 'ncurses3.4', 'slang0.99.38', 'newt0.25', 'mesag2',
      'libjpegg6a', 'gmp2', 'libgtop0', 'libghttp0', 'libpgsql', 'tk4.2',
-     'tcl7.6', 'libpng0g', 'xbase');
+     'tcl7.6', 'libpng0g', 'xbase', 'xlibs-dev', 'debmake', 'gcc-2.95' );
 
 # Used only (at least lintian 1.23.1) for giving a warning about a
 # virtual-only dependency
@@ -102,6 +102,7 @@ use base qw(Exporter);
 %known_libstdcs = map { $_ => 1 }
     ('libstdc++2.9-glibc2.1', 'libstdc++2.10', 'libstdc++2.10-glibc2.2',
      'libstdc++3', 'libstdc++3.0', 'libstdc++4', 'libstdc++5',
+     'libstdc++6', 'lib64stdc++6',
     );
 
 %known_tcls = map { $_ => 1 }

@@ -5,6 +5,8 @@ lintian (1.23.15) UNRELEASED; urgency=low
   * debian/changelog:
     + [FL] Fix wrapping of last changelog entry (Closes: #344899)
 
+  * checks/common_data.pm:
+    + [FL] Add xlibs-dev and debmake to %known_obsolete_packages
   * checks/debhelper:
     + [FL] Also check for debhelper build-dependency in debhelper-using
       cdbs based packages
@@ -15,6 +17,8 @@ lintian (1.23.15) UNRELEASED; urgency=low
     + [FL] Better check for false postives of build-depends-without-arch-dep.
       Should fix false positives for cdbs, dbs, dpatch and yada. Based on
       a patch by Russ Allbery (Closes: #344609, #321135, #339750)
+    + [FL] Also check for build-dependencies on obsolete packages not
+      only dependencies (Closes: #234531)
   * checks/fields.desc:
     + [JvW] Fix typo in description
   * checks/init.d:
