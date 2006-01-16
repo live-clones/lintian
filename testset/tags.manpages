@@ -31,7 +31,7 @@ W: manpages: manpage-has-bad-whatis-entry usr/share/man/man1/usr-bin-binary-alt.
 W: manpages: manpage-has-bad-whatis-entry usr/share/man/man1/usr-bin-binary.1
 W: manpages: manpage-has-bad-whatis-entry usr/share/man/man1/usr-sbin-binary.1.gz
 W: manpages: manpage-has-bad-whatis-entry usr/share/man/man6/usr-games-binary.6.gz
-W: manpages: manpage-has-errors-from-man usr/share/man/man1/test-latin1-chars.1p.gz temp_file:9: warning: can't find numbered character 228
+W: manpages: manpage-has-errors-from-man usr/share/man/man1/test-latin1-chars.1p.gz 9: warning: can't find numbered character 228
 W: manpages: packages-installs-file-to-usr-x11r6 usr/X11R6/
 W: manpages: packages-installs-file-to-usr-x11r6 usr/X11R6/bin/
 W: manpages: packages-installs-file-to-usr-x11r6 usr/X11R6/bin/rstartd

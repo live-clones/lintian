@@ -26,6 +26,10 @@ lintian (1.23.15) UNRELEASED; urgency=low
       script matches [\w.-]+. That accounts for all today known init
       scripts and eliminates false positives like shell variables in the
       name (Closes: #343865)
+  * checks/manpages:
+    + [FL] Fix stupid mistake in regex to strip of filenames from roff
+      output (which was hidden by another stupid mistake in the test
+      suite). Patch by Nicolas François (Closes: #347999)
 
  -- Frank Lichtenheld <djpig@debian.org>  Wed,  4 Jan 2006 16:02:50 +0100
 

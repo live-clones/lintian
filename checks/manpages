@@ -251,7 +251,7 @@ while (<IN>) {
 	    # ignore 8bit character errors on localized man pages
 	    next if /warning: can\'t find numbered character/ && $lang ne "";
 	    chomp;
-	    s/^[^:]://o;
+	    s/^[^:]+://o;
 	    tag "manpage-has-errors-from-man", "$file", "$_";
 	    last;
 	}
