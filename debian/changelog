@@ -7,6 +7,9 @@ lintian (1.23.15) UNRELEASED; urgency=low
 
   * checks/common_data.pm:
     + [FL] Add xlibs-dev and debmake to %known_obsolete_packages
+  * checks/debconf:
+    + [CW] Show template name for empty-translated-choices,
+      mismatch-translated-choices, and unknown-field-in-templates.
   * checks/debhelper:
     + [FL] Also check for debhelper build-dependency in debhelper-using
       cdbs based packages
