@@ -1,4 +1,4 @@
-# debhelper format -- lintian check script
+# debhelper format -- lintian check script -*- perl -*-
 
 # Copyright (C) 1999 by Joey Hess
 #
