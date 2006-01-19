@@ -18,6 +18,8 @@ lintian (1.23.15) UNRELEASED; urgency=low
       (Closes: #329953)
     + [FL] Add dh_installtexfonts to list of commands that modfiy
       the maintainer scripts
+    + [FL] Try a little harder to find the DH_COMPAT setting in debian/rules
+      (Closes: #348380)
   * checks/fields:
     + [FL] Allow version numbers of 0 by correctly checking the output
       of _valid_version for definedness and not the boolean value

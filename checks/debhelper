@@ -69,6 +69,7 @@ map { $commands{$_}=1 } qw(dh_desktop
 			   );
 
 open(RULES, "debfiles/rules") or fail("cannot read debian/rules: $!");
+my $dhcompatvalue;
 while (<RULES>) {
     if (m/^\s+(dh_\w+)/) {
         my $dhcommand = $1;
@@ -94,6 +95,10 @@ while (<RULES>) {
 	$needtomodifyscripts = 1;
     } elsif (/^\s*export\s+DH_COMPAT\s*=\s*(\d+)/) {
 	$needversiondepends = $1;
+    } elsif (/^\s*export\s+DH_COMPAT/) {
+	$needversiondepends = $dhcompatvalue if $dhcompatvalue;
+    } elsif (/^\s*DH_COMPAT\s*=\s*(\d+)/) {
+	$dhcompatvalue = $1;
     }
 }
 close RULES;

@@ -9,7 +9,8 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
-export DH_COMPAT=3
+DH_COMPAT=3
+export DH_COMPAT
 
 CFLAGS = -Wall -g
 

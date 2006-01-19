@@ -1,5 +1,7 @@
 #!/usr/bin/make -f
 
+export DH_COMPAT = 4
+
 deb_dir		=	debian/debconf
 udeb_dir	=	debian/debconf-udeb
 build_dirs	=	$(deb_dir) $(udeb_dir)
