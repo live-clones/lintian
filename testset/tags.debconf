@@ -1,5 +1,5 @@
 E: debconf-test: extended-description-is-empty
-E: debconf-test: mismatch-translated-choices choices-de.utf-8
+E: debconf-test: mismatch-translated-choices debconf/testmulti choices-de.utf-8
 E: debconf-test: settitle-requires-versioned-depends config
 W: debconf source: invalid-po-file debian/po/fr.po
 W: debconf source: maintainer-script-lacks-debhelper-token debian/debconf-test.postinst
