@@ -16,6 +16,8 @@ lintian (1.23.15) UNRELEASED; urgency=low
     + [FL] Indicate where we found which compat version in
       declares-possibly-conflicting-debhelper-compat-versions
       (Closes: #329953)
+    + [FL] Add dh_installtexfonts to list of commands that modfiy
+      the maintainer scripts
   * checks/fields:
     + [FL] Allow version numbers of 0 by correctly checking the output
       of _valid_version for definedness and not the boolean value

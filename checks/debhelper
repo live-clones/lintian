@@ -57,6 +57,7 @@ map { $commands{$_}=1 } qw(dh_desktop
 			   dh_installmenu
 			   dh_installmime
 			   dh_installmodules
+			   dh_installtexfonts
 			   dh_installwm
 			   dh_installxfonts
 			   dh_installxmlcatalogs
