@@ -425,9 +425,6 @@ while (<SCRIPTS>) {
 		unless $warned_killall;
 	    $warned_killall = 1;
 	}
-	if (m/^\s*dpkg\s+--print-architecture\b/) {
-	    tag "dpkg-print-architecture-in-maintainer-script", "$file:$.";
-	}
 	if (m/^\s*mknod(?:\s|$)/ and not m/\sp\s/) {
 	    tag "mknod-in-maintainer-script", "$file:$.";
 	}

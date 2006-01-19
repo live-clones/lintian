@@ -36,6 +36,8 @@ lintian (1.23.15) UNRELEASED; urgency=low
   * checks/scripts:
     + [FL] Make mknod-in-maintainer-script an error since this is now
       a must in policy. Pointed out by Bartosz Fenski (Closes: #344928)
+    + [FL] dpkg --print-installation-architecture is deprecated
+      so delete dpkg-print-architecture-in-maintainer-script
 
  -- Frank Lichtenheld <djpig@debian.org>  Wed,  4 Jan 2006 16:02:50 +0100
 

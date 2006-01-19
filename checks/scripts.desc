@@ -216,16 +216,6 @@ Info: The maintainer script seems to call <tt>killall</tt>.  Since this
  processes.  Most uses of <tt>killall</tt> should use
  <tt>start-stop-daemon</tt> instead.
 
-Tag: dpkg-print-architecture-in-maintainer-script
-Type: warning
-Info: The maintainer script seems to call "<tt>dpkg --print-architecture</tt>".
- This invokes <tt>gcc</tt>, and returns the <em>build</em> architecture
- (which may not be the installation architecture if the system is configured
- for cross-compiling).
- .
- The script should probably use "<tt>dpkg --print-installation-architecture</tt>"
- instead.
-
 Tag: mknod-in-maintainer-script
 Type: error
 Ref: policy 10.6
