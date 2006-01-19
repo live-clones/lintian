@@ -144,7 +144,7 @@ while (defined(my $file=readdir(DEBIAN))) {
 	if ($compat) {
 	    chomp $compat;
 	    if ($needversiondepends) {
-		tag "declares-possibly-conflicting-debhelper-compat-versions", "$needversiondepends $compat";
+		tag "declares-possibly-conflicting-debhelper-compat-versions", "rules=$needversiondepends compat=$compat";
 	    } else {
 		$needversiondepends = $compat;
 	    }
