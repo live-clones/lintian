@@ -33,6 +33,9 @@ lintian (1.23.15) UNRELEASED; urgency=low
     + [FL] Fix stupid mistake in regex to strip of filenames from roff
       output (which was hidden by another stupid mistake in the test
       suite). Patch by Nicolas François (Closes: #347999)
+  * checks/scripts:
+    + [FL] Make mknod-in-maintainer-script an error since this is now
+      a must in policy. Pointed out by Bartosz Fenski (Closes: #344928)
 
  -- Frank Lichtenheld <djpig@debian.org>  Wed,  4 Jan 2006 16:02:50 +0100
 

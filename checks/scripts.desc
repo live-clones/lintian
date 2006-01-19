@@ -227,10 +227,10 @@ Info: The maintainer script seems to call "<tt>dpkg --print-architecture</tt>".
  instead.
 
 Tag: mknod-in-maintainer-script
-Type: warning
+Type: error
 Ref: policy 10.6
-Info: Maintainer scripts should not create device files directly.  They
- should call makedev instead.
+Info: Maintainer scripts must not create device files directly.  They
+ should call MAKEDEV instead.
 
 Tag: possible-bashism-in-maintainer-script
 Type: warning
