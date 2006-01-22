@@ -101,7 +101,7 @@ Info: The menu item has a line that specifies a new section to put a menu
 Tag: menu-icon-not-in-xpm-format
 Type: error
 Info: Icons in the Debian menu system should be in XPM format.
-Ref: menu 3.7
+Ref: menu manual 3.7
 
 Tag: menu-icon-missing
 Type: warning
@@ -116,7 +116,7 @@ Tag: menu-icon-too-big
 Type: error
 Info: Icons in the Debian menu system should be at most 32x32 pixels
  (icon16x16 icons should of course be at most 16x16 pixels)
-Ref: menu 3.7
+Ref: menu manual 3.7
 
 Tag: menu-icon-cannot-parse
 Type: warning
@@ -162,7 +162,7 @@ Tag: unquoted-string-in-menu-item
 Type: warning
 Info: The menu item includes a tag with an unquoted string like section=Games
  instead of section="Games". This is deprecated. Use a quoted string instead.
-Ref: menu 3.2
+Ref: menu manual 3.2
 
 Tag: menu-command-not-in-package
 Type: warning
