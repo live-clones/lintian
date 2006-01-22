@@ -38,7 +38,8 @@ my @global_depends = (
 	[ cdbs => '^include\s+/usr/share/cdbs/' ],
 	[ dbs => '^include\s+/usr/share/dbs/' ],
 	[ debhelper => '^include\s+/usr/share/cdbs/1/rules/debhelper.mk' ],
-	[ dpatch => '^include\s+/usr/share/dpatch/' ]
+	[ dpatch => '^include\s+/usr/share/dpatch/' ],
+	[ quilt => '^include\s+/usr/share/quilt/' ]
 );
 
 # Similarly, these pairs of packages and regexes say that if the regex matches
