@@ -93,11 +93,11 @@ while (<RULES>) {
 	$seencommand = 1;
 	$needbuilddepends = 1;
 	$needtomodifyscripts = 1;
-    } elsif (/^\s*export\s+DH_COMPAT\s*=\s*(\d+)/) {
+    } elsif (/^\s*export\s+DH_COMPAT\s*:?=\s*(\d+)/) {
 	$needversiondepends = $1;
     } elsif (/^\s*export\s+DH_COMPAT/) {
 	$needversiondepends = $dhcompatvalue if $dhcompatvalue;
-    } elsif (/^\s*DH_COMPAT\s*=\s*(\d+)/) {
+    } elsif (/^\s*DH_COMPAT\s*:?=\s*(\d+)/) {
 	$dhcompatvalue = $1;
     }
 }

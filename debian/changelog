@@ -1,5 +1,8 @@
 lintian (1.23.16) UNRELEASED; urgency=low
 
+  * checks/debhelper:
+    + [RA] Recognize setting DH_COMPAT with := in addition to = in
+      debian/rules.  (Closes: #349272)
   * checks/fields:
     + [RA] Allow a quilt build-dependency for arch-independent packages if
       the quilt makefile rules are included.  (Closes: #349273)
@@ -7,7 +10,7 @@ lintian (1.23.16) UNRELEASED; urgency=low
     + [RA] Use "menu manual" rather than "menu" for references to more
       clearly distinguish from the Debian Menu Policy.  (Closes: #347510)
 
- -- Russ Allbery <rra@debian.org>  Sun, 22 Jan 2006 13:14:54 -0800
+ -- Russ Allbery <rra@debian.org>  Sun, 22 Jan 2006 14:08:12 -0800
 
 lintian (1.23.15) unstable; urgency=low
   
