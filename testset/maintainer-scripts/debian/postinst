@@ -37,3 +37,16 @@ $FOO=bar
 update-rc.d foo defaults >/dev/null
 update-rc.d $FOO defaults
 update-rc.d foo remove
+
+# valid
+FOO=/tmp
+FOO=/var/tmp
+: ${FOO:=/tmp}
+FOO=`mktemp /tmp/scripts.XXXXXX`
+rm "$FOO"
+FOO=`tempfile -n/tmp/scripts.tmp`
+mkdir /var/tmp/scripts
+# invalid
+echo foo >>/tmp/scripts.tmp
+rm /tmp/scripts.tmp
+rmdir /var/tmp/scripts

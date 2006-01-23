@@ -9,8 +9,11 @@ lintian (1.23.16) UNRELEASED; urgency=low
   * checks/menu-format.desc:
     + [RA] Use "menu manual" rather than "menu" for references to more
       clearly distinguish from the Debian Menu Policy.  (Closes: #347510)
+  * checks/scripts:
+    + [RA] Allow /tmp in variable settings.  It's likely to be a false
+      positive.  Reported by Frank Küster.  (Closes: #344998)
 
- -- Russ Allbery <rra@debian.org>  Sun, 22 Jan 2006 14:08:12 -0800
+ -- Russ Allbery <rra@debian.org>  Sun, 22 Jan 2006 16:27:20 -0800
 
 lintian (1.23.15) unstable; urgency=low
   

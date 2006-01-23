@@ -417,7 +417,7 @@ while (<SCRIPTS>) {
 	next if m,^\s*\#,; # skip comment lines
 	s/\#.*$//;         # eat comments
 	chomp();
-	if (m,\W(/var)?/tmp\b, and not m/\bmktemp\b/ and not m/\btempfile\b/ and not m/\bmkdir\b/) {
+	if (m,[^\w=](/var)?/tmp\b, and not m/\bmktemp\b/ and not m/\btempfile\b/ and not m/\bmkdir\b/) {
 	    tag "possibly-insecure-handling-of-tmp-files-in-maintainer-script", "$file:$."
 		unless $warned_tmp;
 	    $warned_tmp = 1;
