@@ -6,6 +6,9 @@ lintian (1.23.16) UNRELEASED; urgency=low
   * checks/fields:
     + [RA] Allow a quilt build-dependency for arch-independent packages if
       the quilt makefile rules are included.  (Closes: #349273)
+  * checks/manpages:
+    + [FL] Ignore more warnings ("cannot adjust line", "can't break
+      line") in non-English manpages
   * checks/menu-format.desc:
     + [RA] Use "menu manual" rather than "menu" for references to more
       clearly distinguish from the Debian Menu Policy.  (Closes: #347510)

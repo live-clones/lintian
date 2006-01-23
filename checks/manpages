@@ -249,7 +249,11 @@ while (<IN>) {
 	    # ignore errors from gzip, will be dealt with at other places
 	    next if /^(man|gzip)/;
 	    # ignore 8bit character errors on localized man pages
-	    next if /warning: can\'t find numbered character/ && $lang ne "";
+	    if ($lang ne "") {
+		next if /warning: can\'t find numbered character/;
+		next if /warning \[.*\]: cannot adjust line/;
+		next if /warning \[.*\]: can\'t break line/;
+	    }
 	    chomp;
 	    s/^[^:]+://o;
 	    tag "manpage-has-errors-from-man", "$file", "$_";
