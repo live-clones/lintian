@@ -14,7 +14,7 @@ lintian (1.23.16) UNRELEASED; urgency=low
       the quilt makefile rules are included.  (Closes: #349273)
   * checks/manpages:
     + [FL] Ignore more warnings ("cannot adjust line", "can't break
-      line") in non-English manpages
+      line") in non-English manpages. (Closes: #349792)
   * checks/menu-format.desc:
     + [RA] Use "menu manual" rather than "menu" for references to more
       clearly distinguish from the Debian Menu Policy.  (Closes: #347510)
