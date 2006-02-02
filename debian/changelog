@@ -1,5 +1,8 @@
 lintian (1.23.16) UNRELEASED; urgency=low
 
+  * checks/changelog-file:
+    + [FL] Add line number to output of wrong-bug-number-in-closes.
+      Inspired by #349761 from Steinar H. Gunderson.
   * checks/debhelper:
     + [RA] Recognize setting DH_COMPAT with := in addition to = in
       debian/rules.  (Closes: #349272)

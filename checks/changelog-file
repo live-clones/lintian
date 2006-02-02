@@ -264,7 +264,7 @@ while (<IN>) {
 	|| /closes:\s*(?:bug)?\#?\s?\d+
 	      (?:,\s*(?:bug)?\#?\s?\d+)*
 	      (?:,\s*(((?:bug)?\#?\s?\d*)[[:alpha:]]\w*))/iox) {
-	tag "wrong-bug-number-in-closes", $1 if $2;
+	tag "wrong-bug-number-in-closes", "l$.:$1" if $2;
     }
 
     if (/^(.*)Local variables:(.*)$/i) {
