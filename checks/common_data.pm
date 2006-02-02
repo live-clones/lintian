@@ -17,7 +17,7 @@ use base qw(Exporter);
      'm68k', 'powerpc', 's390', 'sparc', 'any', 'all');
 
 %non_standard_archs = map { $_ => 1 }
-    ('amd64', 'ppc64', 'sh', 'kfreebsd-i386', 'knetbsd-i386');
+    ('amd64', 'armeb', 'ppc64', 'sh', 'kfreebsd-i386', 'knetbsd-i386');
 
 
 %known_sections = map { $_ => 1 }
