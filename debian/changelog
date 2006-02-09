@@ -21,8 +21,11 @@ lintian (1.23.16) UNRELEASED; urgency=low
   * checks/scripts:
     + [RA] Allow /tmp in variable settings.  It's likely to be a false
       positive.  Reported by Frank Küster.  (Closes: #344998)
+    + [RA] Make the syntax checking of shell scripts more robust against
+      filenames containing shell metacharacters.  Reported by Michael
+      Stilkerich.
 
- -- Russ Allbery <rra@debian.org>  Sun, 22 Jan 2006 16:27:20 -0800
+ -- Russ Allbery <rra@debian.org>  Thu,  9 Feb 2006 11:27:55 -0800
 
 lintian (1.23.15) unstable; urgency=low
   

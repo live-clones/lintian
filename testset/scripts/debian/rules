@@ -31,6 +31,9 @@ binary-indep:
 	touch $(tmp)/usr/share/scripts/mono.exe
 	chmod 755 $(tmp)/usr/share/scripts/mono.exe
 
+	echo "#!/bin/sh" > $(tmp)/usr/share/scripts/foo\$$bar
+	chmod 755 $(tmp)/usr/share/scripts/foo\$$bar
+
 	touch $(tmp)/usr/lib/python2.3/site-packages/test.pyc
 	cp debian/changelog $(tmp)/usr/share/doc/scripts/changelog
 	gzip -9 $(tmp)/usr/share/doc/scripts/changelog

@@ -309,7 +309,7 @@ while (<SCRIPTS>) {
 
     if ($base =~ /^(?:(?:b|d)?a|k|z)?sh$/) {
 	if (-x "$interpreter" && ! script_is_evil_and_wrong("unpacked/$filename")) {
-	    if (system("$interpreter -n unpacked/$filename >/dev/null 2>&1")) {
+	    if (check_script_syntax($interpreter, "unpacked/$filename")) {
 		tag_error("shell-script-fails-syntax-check", $filename);
 	    }
 	}
@@ -395,7 +395,7 @@ while (<SCRIPTS>) {
         # perhaps just do it when $base eq "sh" instead?
 	$checkbashisms = $base eq "sh" ? 1 : 0;
 	if (-x $valid_interpreters{$base}) {
-	    if (system("$interpreter -n $filename >/dev/null 2>&1")) {
+	    if (check_script_syntax($interpreter, $filename)) {
 		tag_error("maintainer-shell-script-fails-syntax-check", $file);
 	    }
 	}
@@ -588,6 +588,24 @@ sub script_is_evil_and_wrong {
     }
     close IN;
     return $ret;
+}
+
+# Given an interpretor and a file, run the interpretor on that file with the
+# -n option to check syntax, discarding output and returning the exit status.
+sub check_script_syntax {
+    my ($interpreter, $script) = @_;
+    my $pid = fork;
+    if (!defined $pid) {
+	fail("cannot fork: $!");
+    } elsif ($pid == 0) {
+	open STDOUT, '>/dev/null' or fail("cannot reopen stdout: $!");
+	open STDERR, '>&STDOUT' or fail("cannot reopen stderr: $!");
+	exec $interpreter, '-n', $script
+	    or fail("cannot exec $interpreter: $!");
+    } else {
+	waitpid $pid, 0;
+    }
+    return $?;
 }
 
 1;
