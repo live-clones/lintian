@@ -314,18 +314,20 @@ if (-f $preinst) {
     }
 }
 
+my $we_call_postinst=0;
 if (-f $postinst) {
     local $_ = slurp_entire_file($postinst);
 
     # Decide if we call ldconfig
     if (/^[^\#]*\bldconfig\b/m) {
-	tag "postinst-has-useless-call-to-ldconfig", ""
-	    unless $must_call_ldconfig;
-    } else {
-	tag "postinst-must-call-ldconfig", "$must_call_ldconfig"
-	    if $must_call_ldconfig;
+	$we_call_postinst=1;
     }
 }
+
+tag "postinst-has-useless-call-to-ldconfig", ""
+    if $we_call_postinst and not $must_call_ldconfig;
+tag "postinst-must-call-ldconfig", "$must_call_ldconfig"
+    if not $we_call_postinst and $must_call_ldconfig;
 
 if (-f $prerm) {
     local $_ = slurp_entire_file($prerm);
