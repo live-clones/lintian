@@ -28,6 +28,9 @@ lintian (1.23.16) UNRELEASED; urgency=low
     + [JvW] Fix postinst-must-call-ldconfig to also get emitted when there is
       no postinst at all, instead of just one lacking a ldconfig call
 
+  * testset/runtests:
+    + [RA] Filter out dpkg-source warnings about unsigned source packages.
+
  -- Russ Allbery <rra@debian.org>  Thu,  9 Feb 2006 11:27:55 -0800
 
 lintian (1.23.15) unstable; urgency=low
