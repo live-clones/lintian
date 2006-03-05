@@ -27,6 +27,8 @@ lintian (1.23.16) UNRELEASED; urgency=low
     + [RA] Make the syntax checking of shell scripts more robust against
       filenames containing shell metacharacters.  Reported by Michael
       Stilkerich.
+    + [RA] Add fish and expectk to the list of valid interpreters.
+      (Closes: #351624, #353770)
   * checks/shared-libs:
     + [JvW] Fix postinst-must-call-ldconfig to also get emitted when there is
       no postinst at all, instead of just one lacking a ldconfig call
