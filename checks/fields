@@ -43,8 +43,8 @@ my @global_depends = (
 );
 
 # Similarly, these pairs of packages and regexes say that if the regex matches
-# in one of clean, build-arch, or binary-arch, this package is allowed in
-# Build-Depends.
+# in one of clean, build-arch, binary-arch, or a rule they depend on, this
+# package is allowed in Build-Depends.
 my @rule_depends = (
 	[ debhelper => '^\s+dh_.+' ]
 );
@@ -432,14 +432,20 @@ if ($type eq "source") {
 			} else {
 				my $target = "none";
 				local $/ = "\n"; #Read this linewise
+				my @rules = qw(clean binary-arch build-arch);
 				while (<RULES>) {
 				    for my $rule (@global_depends) {
 					if ($_ =~ /$rule->[1]/) {
 					    $allowed{$rule->[0]}++;
 					}
 				    }
-				    $target = $1 if (/^(\S+):/);
-				    if (grep ($_ eq $target, qw(clean binary-arch build-arch))) {
+				    if (/^(\S+):(.*)/) {
+					$target = $1;
+					if (grep ($_ eq $target, @rules)) {
+					    push (@rules, split (' ', $2));
+					}
+				    }
+				    if (grep ($_ eq $target, @rules)) {
 					for my $rule (@rule_depends) {
 					    if ($_ =~ /$rule->[1]/) {
 						$allowed{$rule->[0]}++;

@@ -12,6 +12,9 @@ lintian (1.23.16) UNRELEASED; urgency=low
   * checks/fields:
     + [RA] Allow a quilt build-dependency for arch-independent packages if
       the quilt makefile rules are included.  (Closes: #349273)
+    + [RA] If clean depends on a rule that calls dh_clean rather than
+      calling it directly, still allow debhelper in Build-Depends for
+      arch-independent packages.  Reported by Michael Stilkerich.
   * checks/manpages:
     + [FL] Ignore more warnings ("cannot adjust line", "can't break
       line") in non-English manpages. (Closes: #349792)

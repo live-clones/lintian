@@ -23,6 +23,12 @@ binary-indep:
 
 binary: binary-arch binary-indep
 
-clean:
+# Make sure we see dh_clean even in a rule clean depends on.  Not the point of
+# this test suite, but a convenient place to put it.
+clean: clean1 clean2 clean3
+clean1:
+clean2:
+	dh_clean
+clean3:
 
 .PHONY: build binary-arch binary-indep binary clean
