@@ -21,6 +21,9 @@ lintian (1.23.16) UNRELEASED; urgency=low
   * checks/manpages:
     + [FL] Ignore more warnings ("cannot adjust line", "can't break
       line") in non-English manpages. (Closes: #349792)
+  * checks/menu-format:
+    + [RA] Look for binaries in /usr/X11R6/bin, not /usr/bin/X11, per
+      Policy 11.8.7.  Thanks, Matej Vela.  (Closes: #354890)
   * checks/menu-format.desc:
     + [RA] Use "menu manual" rather than "menu" for references to more
       clearly distinguish from the Debian Menu Policy.  (Closes: #347510)

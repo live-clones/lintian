@@ -358,14 +358,14 @@ sub VerifyLine {
 	    } else {   
 		tag "menu-command-not-in-package", "$fullname:$linecount $cmd"
 		    if (!($file_index{".$cmd"} 
-			|| grep {$file_index{".".$_.$cmd}} qw(/usr/local/bin/ /usr/bin/ /bin/ /usr/bin/X11/ /usr/games/)) # Check for binary in PATH
+			|| grep {$file_index{".".$_.$cmd}} qw(/usr/local/bin/ /usr/bin/ /bin/ /usr/X11R6/bin/ /usr/games/)) # Check for binary in PATH
 			&& ($tested_packages < 2)
 			&& ($section !~ m:^WindowManagers/Modules:));
 	    }
 	} else {
 	    tag "menu-command-not-in-package", "$fullname:$linecount $com[0]"
 	        if ($com[0] && ! ($file_index{".$com[0]"}
-		    || grep {$file_index{".".$_.$com[0]}} qw(/usr/local/bin/ /usr/bin/ /bin/ /usr/bin/X11/ /usr/games/)) # Check for binary in PATH
+		    || grep {$file_index{".".$_.$com[0]}} qw(/usr/local/bin/ /usr/bin/ /bin/ /usr/X11R6/bin/ /usr/games/)) # Check for binary in PATH
 		    && ($tested_packages < 2)
 		    && ($section !~ m:^WindowManagers/Modules:));
 	}
