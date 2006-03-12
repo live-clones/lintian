@@ -1,0 +1,62 @@
+#!/usr/bin/make -f
+# Sample debian/rules that uses debhelper. 
+# This file is public domain software, originally written by Joey Hess.
+
+export DH_COMPAT := 5
+
+build: build-stamp
+build-stamp:
+	dh_testdir
+	gcc -D_REENTRANT -fPIC -c libhello.c
+	gcc -o libhello.so.0.0 -shared -Wl,-soname,libhello.so.0 libhello.o
+	ln -s libhello.so.0.0 libhello.so
+	gcc -o hello hello.c -L. -lhello
+	touch build-stamp
+
+clean:
+	dh_testdir
+	dh_testroot
+	rm -f build-stamp *.o libhello.so.0.0
+	dh_clean
+
+install: build-stamp
+	dh_testdir
+	dh_testroot
+	dh_clean -k
+	install -D hello $(CURDIR)/debian/hello/usr/bin/hello
+	install -D libhello.so.0.0 \
+	    $(CURDIR)/debian/libhello0/usr/lib/libhello.so.0.0
+	ln -s libhello.so.0.0 \
+	    $(CURDIR)/debian/libhello0/usr/lib/libhello.so.0
+
+# Build architecture-dependent files here.
+export DH_OPTIONS
+binary-arch: DH_OPTIONS=-a
+binary-arch: build-stamp install
+	dh_testdir
+	dh_testroot
+	dh_installchangelogs
+	dh_installdocs
+	DH_OPTIONS= dh_strip -phello --dbg-package=hello-dbg
+	DH_OPTIONS= dh_strip -plibhello0 --dbg-package=libhello0-dbg
+
+	# Now break a few things.  Copy the debugging data into places it
+	# shouldn't be.
+	cp $(CURDIR)/debian/hello-dbg/usr/lib/debug/usr/bin/hello \
+	    $(CURDIR)/debian/hello/usr/bin/hello.dbg
+	cp $(CURDIR)/debian/libhello0-dbg/usr/lib/debug/usr/lib/libhello.so.0.0 \
+	    $(CURDIR)/debian/libhello0-dbg/usr/lib/libhello.so.dbg
+
+	dh_link
+	dh_compress
+	dh_fixperms
+	dh_makeshlibs
+	dh_installdeb
+	dh_shlibdeps
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+binary-indep:
+binary: binary-indep binary-arch
+.PHONY: binary binary-indep binary-arch build clean install

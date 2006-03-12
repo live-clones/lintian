@@ -1,5 +1,9 @@
 lintian (1.23.16) UNRELEASED; urgency=low
 
+  * checks/binaries{.desc,}:
+    + [RA] Add a check for the new "Invalid operation" error from
+      objdump -T.  Skip shared-lib-without-dependency-information for
+      files in /usr/lib/debug.
   * checks/changelog-file:
     + [FL] Add line number to output of wrong-bug-number-in-closes.
       Inspired by #349761 from Steinar H. Gunderson.
@@ -54,6 +58,10 @@ lintian (1.23.16) UNRELEASED; urgency=low
   * frontends/lintian-info:
     + [RA] Avoid Perl uninitialized value warnings when given output that
       looks like lintian messages without tags.  (Closes: #352606)
+
+  * collection/objdump-info:
+    + [RA] Pass "Invalid operation" errors from objdump -T on to the check
+      scripts instead of failing.  (Closes: #249435)
 
   * testset/runtests:
     + [RA] Filter out dpkg-source warnings about unsigned source packages.

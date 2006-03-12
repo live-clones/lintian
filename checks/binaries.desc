@@ -139,3 +139,9 @@ Info: The package name of a library package should usually reflect
  .
   $ objdump -p /path/to/libfoo-bar.so.1.2.3 | sed -n -e's/^[[:space:]]*SONAME[[:space:]]*//p' | sed -e's/\([0-9]\)\.so\./\1-/; s/\.so\.//'
 Ref: Library Packaging guide 5
+
+Tag: binary-with-bad-dynamic-table
+Type: error
+Info: This appears to be an ELF file but objdump -T cannot parse it.
+ If it is external debugging symbols for another file, it should be
+ installed under /usr/lib/debug.

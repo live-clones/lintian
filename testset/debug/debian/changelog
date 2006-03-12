@@ -1,0 +1,6 @@
+debug (1.0) unstable; urgency=low
+
+  * Initial version.
+
+ -- Russ Allbery <rra@debian.org>  Sat,  4 Mar 2006 21:31:06 -0800
+

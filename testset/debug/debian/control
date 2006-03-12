@@ -1,0 +1,34 @@
+Source: debug
+Section: utils
+Priority: optional
+Maintainer: Russ Allbery <rra@debian.org>
+Build-Depends: debhelper (>= 5.0.0)
+Standards-Version: 3.6.2
+
+Package: hello
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Test for external debugging information
+ lintian regression test for external debugging file handling.
+
+Package: hello-dbg
+Priority: extra
+Architecture: any
+Depends: hello (= ${Source-Version}), ${shlibs:Depends}, ${misc:Depends}
+Description: Test for external debugging information
+ lintian regression test for external debugging file handling.
+
+Package: libhello0
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Test for external debugging information
+ lintian regression test for external debugging file handling.
+
+Package: libhello0-dbg
+Section: libdevel
+Priority: extra
+Architecture: any
+Depends: libhello (= ${Source-Version}), ${shlibs:Depends}, ${misc:Depends}
+Description: Test for external debugging information
+ lintian regression test for external debugging file handling.
