@@ -32,6 +32,8 @@ lintian (1.23.16) UNRELEASED; urgency=low
       Stilkerich.
     + [RA] Add fish and expectk to the list of valid interpreters.
       (Closes: #351624, #353770)
+    + [RA] /usr/bin/tcl is provided by tclx8.3, not tcl.  Reported by
+      James R. Van Zandt.  (Closes: #351324)
   * checks/shared-libs:
     + [JvW] Fix postinst-must-call-ldconfig to also get emitted when there is
       no postinst at all, instead of just one lacking a ldconfig call
