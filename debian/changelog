@@ -12,6 +12,10 @@ lintian (1.23.16) UNRELEASED; urgency=low
   * checks/debhelper:
     + [RA] Recognize setting DH_COMPAT with := in addition to = in
       debian/rules.  (Closes: #349272)
+    + [RA] CDBS sets DH_COMPAT to 4 but doesn't export it.  It does create
+      debian/compat with that value if none was present.  Reflect this
+      behavior to avoid spurious compat level warnings when using CDBS.
+      Based on a patch by Jay Berkenbilt.  (Closes: #350228)
   * checks/fields:
     + [RA] Allow a quilt build-dependency for arch-independent packages if
       the quilt makefile rules are included.  (Closes: #349273)

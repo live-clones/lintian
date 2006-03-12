@@ -39,6 +39,14 @@ my $needtomodifyscripts = '';
 my $needversiondepends = '';
 my $seenversiondepends = '0';
 my $compat = '';
+my $usescdbs = '';
+
+# If there is no debian/compat file present but cdbs is being used, cdbs will
+# create one automatically.  Currently it always uses compatibility level 4.
+# It may be better to look at what version of cdbs the package depends on and
+# from that derive the compatibility level....
+
+my $cdbscompat = 4;
 
 # Parse the debian/rules file, and try to figure out if debhelper commands
 # are run in it that like to modify maintainer scripts. Those debhelper
@@ -93,6 +101,11 @@ while (<RULES>) {
 	$seencommand = 1;
 	$needbuilddepends = 1;
 	$needtomodifyscripts = 1;
+
+	# CDBS sets DH_COMPAT but doesn't export it.  It does, however, create
+	# a debian/compat file if none was found; that logic is handled later.
+	$dhcompatvalue = $cdbscompat;
+	$usescdbs = 1;
     } elsif (/^\s*export\s+DH_COMPAT\s*:?=\s*(\d+)/) {
 	$needversiondepends = $1;
     } elsif (/^\s*export\s+DH_COMPAT/) {
@@ -183,6 +196,9 @@ while (defined(my $file=readdir(DEBIAN))) {
 }
 closedir(DEBIAN);
 
+if ($usescdbs and not $needversiondepends) {
+    $needversiondepends = $cdbscompat;
+}
 $needversiondepends ||= 1;
 if ($needversiondepends < 4) {
     tag "package-uses-deprecated-debhelper-compat-version", $needversiondepends;
