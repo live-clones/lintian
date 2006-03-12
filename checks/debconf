@@ -64,8 +64,48 @@ if (-f "control/templates") {
 
 return unless $seenconfig or $seentemplates;
 
+# parse depends info for later checks
+
+# Consider every package to depend on itself.
+my $version;
+if (-f "fields/version") {
+    open(IN, "fields/version") or fail("Can't open fields/version: $!");
+    chomp($_ = <IN>);
+    $version = "$pkg (= $_)";
+    close IN;
+}
+
+my (%dependencies, @alldeps);
+
+for my $field (qw(depends pre-depends)) {
+    if (-f "fields/$field") {
+	open(IN, "fields/$field") or fail("Can't open fields/$field: $!");
+	chomp($_ = <IN>);
+	$_ .= ", $version" if defined $version;
+	$_ =~ s/debconf-2\.0/debconf (>= 1.2.30)/go;
+	$_ =~ s/cdebconf(-\w+)?(-udeb)?\s*(\(.+?\))?/debconf (>= 1.2.30)/g;
+	$_ =~ s/libdebconfclient.?(-udeb)?\s*(\(.+?\))?/debconf (>= 1.2.30)/g;
+        push @alldeps, $_;
+	$dependencies{$field} = Dep::parse($_);
+    } else {
+	my $dep = $version;
+	$dep =~ s/debconf-2\.0/debconf (>= 1.2.30)/go;
+	$dep =~ s/cdebconf(-\w+)?(-udeb)?\s*(\(.+?\))?/debconf (>= 1.2.30)/g;
+	$dep =~ s/libdebconfclient.?(-udeb)?\s*(\(.+?\))?/debconf (>= 1.2.30)/g;
+	push @alldeps, $dep;
+	$dependencies{$field} = Dep::parse($dep);
+    }
+}
+
+my $alldependencies = Dep::parse(join ', ', @alldeps);
+
+# See if the package depends on dbconfig-common.  Packages that do are allowed
+# to have a config file with no templates, since they use the dbconfig-common
+# templates.
+my $usesdbconfig = Dep::implies($alldependencies, Dep::parse('dbconfig-common'));
+
 # Check that both debconf control area files are present.
-if ($seenconfig and not $seentemplates) {
+if ($seenconfig and not $seentemplates and not $usesdbconfig) {
     tag "no-debconf-templates", "";
 } elsif ($seentemplates and not $seenconfig and $type ne 'udeb') {
     tag "no-debconf-config", "";
@@ -186,41 +226,6 @@ foreach my $template (@templates) {
     }
 }
 
-# parse depends info for later checks
-
-# Consider every package to depend on itself.
-my $version;
-if (-f "fields/version") {
-    open(IN, "fields/version") or fail("Can't open fields/version: $!");
-    chomp($_ = <IN>);
-    $version = "$pkg (= $_)";
-    close IN;
-}
-
-my (%dependencies, @alldeps);
-
-for my $field (qw(depends pre-depends)) {
-    if (-f "fields/$field") {
-	open(IN, "fields/$field") or fail("Can't open fields/$field: $!");
-	chomp($_ = <IN>);
-	$_ .= ", $version" if defined $version;
-	$_ =~ s/debconf-2\.0/debconf (>= 1.2.30)/go;
-	$_ =~ s/cdebconf(-\w+)?(-udeb)?\s*(\(.+?\))?/debconf (>= 1.2.30)/g;
-	$_ =~ s/libdebconfclient.?(-udeb)?\s*(\(.+?\))?/debconf (>= 1.2.30)/g;
-        push @alldeps, $_;
-	$dependencies{$field} = Dep::parse($_);
-    } else {
-	my $dep = $version;
-	$dep =~ s/debconf-2\.0/debconf (>= 1.2.30)/go;
-	$dep =~ s/cdebconf(-\w+)?(-udeb)?\s*(\(.+?\))?/debconf (>= 1.2.30)/g;
-	$dep =~ s/libdebconfclient.?(-udeb)?\s*(\(.+?\))?/debconf (>= 1.2.30)/g;
-	push @alldeps, $dep;
-	$dependencies{$field} = Dep::parse($dep);
-    }
-}
-
-my $alldependencies = Dep::parse(join ', ', @alldeps);
-
 # Check the maintainer scripts.
 
 if (open(PREINST, "control/preinst")) {
@@ -322,7 +327,7 @@ if ($usespreinst) {
 	    unless $type eq 'udeb';
     }
 } else {
-    unless (Dep::implies($alldependencies, Dep::parse('debconf'))) {
+    unless (Dep::implies($alldependencies, Dep::parse('debconf')) or $usesdbconfig) {
 	tag "missing-debconf-dependency", "";
     }
 }

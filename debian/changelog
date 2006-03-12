@@ -10,6 +10,10 @@ lintian (1.23.16) UNRELEASED; urgency=low
   * checks/common_data.pm:
     + [FL] Add armeb to %non_standard_archs as requested by
       Martin Michlmayr. (Closes: #350653)
+  * checks/debconf:
+    + [RA] Packages that depend in dbconfig-common are allowed to have
+      config scripts without templates or an explicit debconf dependency.
+      Reported by Marcus Better.  (Closes: #344421)
   * checks/debconf.desc:
     + [RA] Clarify the necessary dependencies for packages using SETTITLE.
       (Closes: #349616)
