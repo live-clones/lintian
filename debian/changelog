@@ -38,6 +38,10 @@ lintian (1.23.16) UNRELEASED; urgency=low
   * checks/menu-format.desc:
     + [RA] Use "menu manual" rather than "menu" for references to more
       clearly distinguish from the Debian Menu Policy.  (Closes: #347510)
+  * checks/po-debconf:
+    + [RA] If there are template files in debian, assume the package uses
+      debconf; don't require a dependency or config script.  Patch by
+      Thomas Huriaux.  (Closes: #353294)
   * checks/scripts:
     + [RA] Allow /tmp in variable settings.  It's likely to be a false
       positive.  Reported by Frank Küster.  (Closes: #344998)

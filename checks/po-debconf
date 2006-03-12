@@ -34,27 +34,13 @@ opendir(DEB, 'debfiles')
 my $has_template = my $has_depends = my $has_config = 0;
 for my $file (readdir(DEB)) {
 	if ($file =~ m/^(.+\.)?templates(\..+)?$/) {
-# TODO: out of this loop, use fields/*?
 	        $has_template = 1;
-		open(IN,"debfiles/control")
-			or fail("Can't open debfiles/control.");
-		while (<IN>) {
-			if (m/^Depends:/i) {
-				$has_depends = 1
-					if m/\bdebconf(-[.\d]+)?\b/;
-			}
-		}
-		close(IN);
-	} elsif ($file =~ m/^(.+\.)?config(\..+)?$/) {
-	    $has_config = 1;
 	}
 }
 closedir(DEB);
 
-my $probably_uses_debconf = $has_depends || ($has_template && $has_config);
-
 #TODO: check whether all templates are named in TEMPLATES.pot
-if ( $probably_uses_debconf ) {
+if ( $has_template ) {
     if ( ! -d "debfiles/po" ) {
 	tag "not-using-po-debconf", "";
 	return 0;
