@@ -112,7 +112,11 @@ binary-indep:
 	ln -s . debian/tmp/usr/lib/filenames/symlink6ok+warn
 	ln -s / debian/tmp/usr/lib/filenames/symlink7ok+warn
 	ln -s ../../.. debian/tmp/usr/lib/filenames/symlink10wrong
-	dpkg-gencontrol
+
+# Running dpkg-gencontrol without any options used to omit the section and
+# priority from the .dsc file.  Now, as of 1.13.16, -isp is the default.
+# Stimulate the same lintian check by explicitly omitting the fields.
+	dpkg-gencontrol -Usection -Upriority
 	dpkg --build debian/tmp ..
 
 binary: binary-arch binary-indep
