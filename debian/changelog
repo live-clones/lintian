@@ -45,6 +45,9 @@ lintian (1.23.16) UNRELEASED; urgency=low
     + [JvW] Fix postinst-must-call-ldconfig to also get emitted when there is
       no postinst at all, instead of just one lacking a ldconfig call
 
+  * debian/{control,copyright}:
+    + [RA] Add Russ Allbery to Uploaders and copyright.
+
   * frontends/lintian-info:
     + [RA] Avoid Perl uninitialized value warnings when given output that
       looks like lintian messages without tags.  (Closes: #352606)
