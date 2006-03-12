@@ -71,6 +71,12 @@ lintian (1.23.16) UNRELEASED; urgency=low
     + [RA] Pass "Invalid operation" errors from objdump -T on to the check
       scripts instead of failing.  (Closes: #249435)
 
+  * man/lintian.1:
+    + [RA] Add references to dh_make, debhelper, dpkg-buildpackage, and
+      linda in new reference sections.  (Closes: #322288)
+  * man/{lintian.1,lintian-info.1}:
+    + [RA] Left-justify and disable hyphenation for readability.
+
   * testset/runtests:
     + [RA] Filter out dpkg-source warnings about unsigned source packages.
 
