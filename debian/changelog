@@ -25,6 +25,9 @@ lintian (1.23.16) UNRELEASED; urgency=low
   * checks/manpages:
     + [FL] Ignore more warnings ("cannot adjust line", "can't break
       line") in non-English manpages. (Closes: #349792)
+    + [RA] cd into the parent directory before checking man pages with man
+      so that .so inclusions are processed correctly.  Based on a patch by
+      Nicolas François.  (Closes: #349614)
   * checks/menu-format:
     + [RA] Look for binaries in /usr/X11R6/bin, not /usr/bin/X11, per
       Policy 11.8.7.  Thanks, Matej Vela.  (Closes: #354890)

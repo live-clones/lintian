@@ -240,7 +240,17 @@ while (<IN>) {
 	    }
 	}
 	# If it's not a .so link, run it through "man" to check for errors.
-	open MANERRS, '-|', "(LANG=C man -l unpacked/\Q$file\E >/dev/null) 2>&1"
+	# If it is in a directory with the standard man layout, cd to the
+	# parent directory before running man so that .so directives are
+	# processed properly.  (Yes, there are man pages that include other
+	# pages with .so but aren't simple links; rbash, for instance.)
+        my $cmd;
+        if ($file =~ m,^(.*)/(man\d/.*)$,) {
+            $cmd = "cd unpacked/\Q$1\E && LANG=C man -l \Q$2\E";
+        } else {
+            $cmd = "LANG=C man -l unpacked/\Q$file\E";
+        }
+	open MANERRS, '-|', "($cmd >/dev/null) 2>&1"
 	    or fail("cannot run man -l: $!");
 	while (<MANERRS>) {
 	    # ignore progress information from man

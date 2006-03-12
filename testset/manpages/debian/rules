@@ -43,6 +43,9 @@ binary-indep:
 	chmod 644 $(tmp)/usr/share/man/de/man1/binary-without-english-manpage.1
 	gzip -c9 <test.1p.de >$(tmp)/usr/share/man/de/man1/test-latin1-chars.1p.gz
 
+	gzip -c9 <include.3 >$(tmp)/usr/share/man/man3/include.3.gz
+	gzip -c9 <included.3 >$(tmp)/usr/share/man/man3/included.3.gz
+
 	install -d $(tmp)/usr/share/lintian/overrides
 	install -m644 debian/overrides $(tmp)/usr/share/lintian/overrides/manpages
 	
