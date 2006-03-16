@@ -60,6 +60,10 @@ lintian (1.23.16) UNRELEASED; urgency=low
       (Closes: #351624, #353770)
     + [RA] /usr/bin/tcl is provided by tclx8.3, not tcl.  Reported by
       James R. Van Zandt.  (Closes: #351324)
+    + [RA] Allow more variations on leading magic to invoke some
+      interpreter rather than then shell.  Bypass the ELF magic check for
+      scripts using magic that relies on having no leading #! line.
+      Reported by Frank Küster.  (Closes: #344269)
   * checks/shared-libs:
     + [JvW] Fix postinst-must-call-ldconfig to also get emitted when there is
       no postinst at all, instead of just one lacking a ldconfig call

@@ -328,6 +328,7 @@ foreach (keys %executable) {
 		 or $scripts{$_}
 		 or $_ =~ m,^usr(/X11R6)?/man/,
 		 or $_ =~ m/\.exe$/ # mono convention
+		 or script_is_evil_and_wrong("unpacked/$_")
 		 );
 }
 
@@ -580,12 +581,13 @@ sub script_is_evil_and_wrong {
     my $ret = 0;
     open IN, $filename or fail("cannot open $filename: $!");
     my $i = 0;
+    local $_;
     while (<IN>) {
         chomp;
 	next if /^#/o;
 	next if /^$/o;
         last if (++$i > 20);
-        if (/^\s*exec\s*.+\s*.?\$0.?\s*(--\s*)?(\${1\+)?.?\$\@/o) {
+        if (/(^\s*|\beval\s*\'|;)?exec\s*.+\s*.?\$0.?\s*(--\s*)?(\${1\+)?.?\$\@/o) {
             $ret = 1;
             last;
         }

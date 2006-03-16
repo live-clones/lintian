@@ -23,7 +23,10 @@ binary-indep:
 	install -m 4755 perlfoo $(tmp)/usr/bin/suidperlfoo2
 	install -m 4755 suidperlfoo $(tmp)/usr/bin/
 	install -m 755 tkfoo $(tmp)/usr/bin/
-	install -m 644 xsession-test $(tmp)/etc/X11/Xsession.d/ 
+	install -m 644 xsession-test $(tmp)/etc/X11/Xsession.d/
+	install -m 755 perl-bizarre-1 $(tmp)/usr/bin/
+	install -m 755 perl-bizarre-2 $(tmp)/usr/bin/
+	install -m 755 perl-bizarre-3 $(tmp)/usr/bin/
 
 	echo "#!/usr/bin/perl" >> $(tmp)/usr/share/scripts/foobar.in
 	chmod 644 $(tmp)/usr/share/scripts/foobar.in
