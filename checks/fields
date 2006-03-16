@@ -160,6 +160,8 @@ for my $f (qw(maintainer uploaders)) {
 		my $maintainer = <FH>;
 		close FH;
 
+		# Note, not expected to hit on uploaders anymore, as dpkg now strips
+		# newlines for the .dsc, and the newlines don't hurt in debian/control
 		unfold($f, \$maintainer);
 
 		$maintainer =~ s/^\s*(.+?)\s*$/$1/; #Remove leading and trailing whitespace

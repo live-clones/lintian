@@ -1,5 +1,7 @@
 lintian (1.23.16) UNRELEASED; urgency=low
 
+  The "What's this Russ guy up to?" release
+
   * checks/binaries{.desc,}:
     + [RA] Add a check for the new "Invalid operation" error from
       objdump -T.  Skip shared-lib-without-dependency-information for
@@ -30,6 +32,8 @@ lintian (1.23.16) UNRELEASED; urgency=low
     + [RA] If clean depends on a rule that calls dh_clean rather than
       calling it directly, still allow debhelper in Build-Depends for
       arch-independent packages.  Reported by Michael Stilkerich.
+    + [JvW] Commented that Uploaders no longer will hit the multiline field
+      issue, updated testsuite accordingly
   * checks/manpages:
     + [FL] Ignore more warnings ("cannot adjust line", "can't break
       line") in non-English manpages. (Closes: #349792)
