@@ -67,6 +67,8 @@ lintian (1.23.16) UNRELEASED; urgency=low
   * checks/shared-libs:
     + [JvW] Fix postinst-must-call-ldconfig to also get emitted when there is
       no postinst at all, instead of just one lacking a ldconfig call
+    + [JvW] Implement checks for "udeb:" lines in shlibs files
+      (Closes: #357541)
 
   * debian/{control,copyright}:
     + [RA] Add Russ Allbery to Uploaders and copyright.
@@ -88,7 +90,7 @@ lintian (1.23.16) UNRELEASED; urgency=low
   * testset/runtests:
     + [RA] Filter out dpkg-source warnings about unsigned source packages.
 
- -- Russ Allbery <rra@debian.org>  Thu,  9 Feb 2006 11:27:55 -0800
+ -- Russ Allbery <rra@debian.org>  Sat, 18 Mar 2006 02:35:14 +0100
 
 lintian (1.23.15) unstable; urgency=low
   

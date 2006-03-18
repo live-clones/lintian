@@ -271,11 +271,13 @@ if ($#shlibs == -1) {
 	while (<SHLIBS>) {
 	    chop;
 	    next if m/^\s*$/ or /^#/;
+	    my $udeb="";
+	    $udeb = "udeb: " if s/^udeb:\s+//o;
 	    @words = split(/\s+/o,$_);
-	    if ($shlibs_control{$words[0]}) {
-		tag "duplicate-entry-in-shlibs-control-file", "$words[0]";
+	    if ($shlibs_control{$udeb.$words[0]}) {
+		tag "duplicate-entry-in-shlibs-control-file", "$udeb$words[0]";
 	    } else {
-		$shlibs_control{$words[0]} = 1;
+		$shlibs_control{$udeb.$words[0]} = 1;
 	    }
 	}
 	close(SHLIBS);
@@ -289,10 +291,9 @@ if ($#shlibs == -1) {
 	    } elsif ($shlib_name =~ m/(.+)\-\w[\w\.]*\.so$/) {
 		$shlib_name = $1;
 	    }
-	    if (exists $shlibs_control{$shlib_name}) {
-		# ok, have entry in shlibs control file
-		$shlibs_control_used{$shlib_name} = 1;
-	    } else {
+	    $shlibs_control_used{$shlib_name} = 1;
+	    $shlibs_control_used{"udeb: ".$shlib_name} = 1;
+	    unless (exists $shlibs_control{$shlib_name}) {
 		# skip it if it's not a public shared library
  		next unless defined $ldso_dir{dirname($shlib)};
 		# no!!

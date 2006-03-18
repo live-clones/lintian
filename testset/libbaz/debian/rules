@@ -38,6 +38,7 @@ binary-correct:
 
 	# and again, regular packaging stuff
 	dh_installdeb -plibbaz2 -plibbaz2-dev
+	echo udeb: libbaz2 1.0 libbaz2 >> debian/libbaz2/DEBIAN/shlibs
 	dh_gencontrol -plibbaz2 -plibbaz2-dev
 	dh_builddeb -plibbaz2 -plibbaz2-dev
 
@@ -68,6 +69,7 @@ binary-arch: build binary-correct
 	install -m 755 debian/lib.prerm $(lib_tmp)/DEBIAN/prerm
 	touch $(lib_tmp)/usr/share/doc/README.Debian
 	#dpkg-shlibdeps $(lib_tmp)/usr/lib/libbaz.so.1.0
+	install -m 755 debian/lib.shlibs $(lib_tmp)/DEBIAN/shlibs
 	dpkg-gencontrol -isp -p$(LIB) -P$(lib_tmp)
 	dpkg --build $(lib_tmp) ..
 
