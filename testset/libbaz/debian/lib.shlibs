@@ -1,4 +1,5 @@
 libdoesntexist2 1.0 libbaz2
 libdoesntexist2 1.0 libbaz2
+libbaz2 1.1 libbaz2
 udeb: libdoesntexist2 1.0 libbaz2
 udeb: libdoesntexist2 1.0 libbaz2

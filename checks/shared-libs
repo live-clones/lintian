@@ -274,10 +274,11 @@ if ($#shlibs == -1) {
 	    my $udeb="";
 	    $udeb = "udeb: " if s/^udeb:\s+//o;
 	    @words = split(/\s+/o,$_);
-	    if ($shlibs_control{$udeb.$words[0]}) {
-		tag "duplicate-entry-in-shlibs-control-file", "$udeb$words[0]";
+	    my $shlibs_string = $udeb.$words[0].' '.$words[1];
+	    if ($shlibs_control{$shlibs_string}) {
+		tag "duplicate-entry-in-shlibs-control-file", $shlibs_string;
 	    } else {
-		$shlibs_control{$udeb.$words[0]} = 1;
+		$shlibs_control{$shlibs_string} = 1;
 	    }
 	}
 	close(SHLIBS);
@@ -285,11 +286,11 @@ if ($#shlibs == -1) {
 	for my $shlib (@shlibs) {
 	    $shlib_name = $SONAME{$shlib};
 	    # libfoo.so.X.X
-	    if ($shlib_name =~ m/(.+)\.so\..*$/) {
-		$shlib_name = $1;
+	    if ($shlib_name =~ m/(.+)\.so\.(.*)$/) {
+		$shlib_name = "$1 $2";
 	    # libfoo-X.X.so
-	    } elsif ($shlib_name =~ m/(.+)\-\w[\w\.]*\.so$/) {
-		$shlib_name = $1;
+	    } elsif ($shlib_name =~ m/(.+)\-(\w[\w\.]*)\.so$/) {
+		$shlib_name = "$1 $2";
 	    }
 	    $shlibs_control_used{$shlib_name} = 1;
 	    $shlibs_control_used{"udeb: ".$shlib_name} = 1;
@@ -297,11 +298,11 @@ if ($#shlibs == -1) {
 		# skip it if it's not a public shared library
  		next unless defined $ldso_dir{dirname($shlib)};
 		# no!!
-		tag "shlib-missing-in-control-file", "$shlib_name $shlib";
+		tag "shlib-missing-in-control-file", $shlib_name, 'for', $shlib;
 	    }
 	}
 	for $shlib_name (keys %shlibs_control) {
-	    tag "unused-shlib-entry-in-control-file", "$shlib_name"
+	    tag "unused-shlib-entry-in-control-file", $shlib_name
 		unless $shlibs_control_used{$shlib_name};
 	}
     }
