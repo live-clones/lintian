@@ -72,6 +72,8 @@ lintian (1.23.16~r583) UNRELEASED; urgency=low
     + [JvW] Consider also the soname version for shlibs checking, preventing
       some bogus 'duplicate' warnings, and actually throw a warning when
       soname version doesn't match
+    + [JvW] Added error when udeb postinst calls ldconfig, that must never
+      happen (thanks to Frans Pop for noticing, see #203056)
 
   * debian/{control,copyright}:
     + [RA] Add Russ Allbery to Uploaders and copyright.

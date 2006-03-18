@@ -136,6 +136,11 @@ Info: The postinst script calls ldconfig even though no shared libraries are
  installed in a directory controlled by the dynamic library loader.
 Ref: policy 8.1.1
 
+Tag: udeb-postinst-must-not-call-ldconfig
+Type: error
+Info: The postinst script calls ldconfig, which is an error in udebs.
+ ldconfig is not available and not needed in debian-installer
+
 Tag: postrm-has-useless-call-to-ldconfig
 Type: warning
 Info: The postrm script calls ldconfig even though no shared libraries are

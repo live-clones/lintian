@@ -4,4 +4,6 @@ set -e
 
 . /usr/share/debconf/confmodule
 
+ldconfig
+
 true

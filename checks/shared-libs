@@ -326,10 +326,15 @@ if (-f $postinst) {
     }
 }
 
-tag "postinst-has-useless-call-to-ldconfig", ""
-    if $we_call_postinst and not $must_call_ldconfig;
-tag "postinst-must-call-ldconfig", "$must_call_ldconfig"
-    if not $we_call_postinst and $must_call_ldconfig;
+if ($type eq 'udeb') {
+    tag "udeb-postinst-must-not-call-ldconfig"
+	if $we_call_postinst;
+} else {
+    tag "postinst-has-useless-call-to-ldconfig", ""
+	if $we_call_postinst and not $must_call_ldconfig;
+    tag "postinst-must-call-ldconfig", "$must_call_ldconfig"
+	if not $we_call_postinst and $must_call_ldconfig;
+}
 
 if (-f $prerm) {
     local $_ = slurp_entire_file($prerm);
