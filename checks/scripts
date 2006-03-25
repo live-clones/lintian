@@ -539,6 +539,9 @@ while (<SCRIPTS>) {
 		tag "update-alternatives-remove-called-in-postrm", "";
 	    }
 	}
+	if (/invoke-rc.d.*\|\| exit 0/) {
+	    tag "maintainer-script-built-with-broken-debhelper-version";
+	}
     }
 
     close C;
