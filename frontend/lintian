@@ -260,6 +260,9 @@ my %opthash = (			# ------------------ actions
 	       "unpack-info|U=s" => \&record_unpack_info,
 	       "md5sums|m" => \$check_md5sums,
 	       "allow-root" => \$allow_root,
+	       # Note: Ubuntu has (and other derivatives might gain) a
+	       # -D/--debian option to make lintian behave like in Debian, that
+	       # is, to revert distribution-specific changes
 
 	       # ------------------ configuration options
 	       "cfg=s" => \$LINTIAN_CFG,
