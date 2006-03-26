@@ -1,4 +1,4 @@
-lintian (1.23.16) UNRELEASED; urgency=low
+lintian (1.23.16) unstable; urgency=low
 
   The "What's this Russ guy up to?" release
 
@@ -79,6 +79,8 @@ lintian (1.23.16) UNRELEASED; urgency=low
 
   * debian/{control,copyright}:
     + [RA] Add Russ Allbery to Uploaders and copyright.
+    + [JvW] Version dpkg-dev requirement to >= 1.13.17, for
+      unpack/unpack-srcpkg-l2
 
   * frontends/lintian-info:
     + [RA] Avoid Perl uninitialized value warnings when given output that
@@ -94,10 +96,11 @@ lintian (1.23.16) UNRELEASED; urgency=low
   * man/{lintian.1,lintian-info.1}:
     + [RA] Left-justify and disable hyphenation for readability.
 
-  * testset/runtests:
-    + [RA] Filter out dpkg-source warnings about unsigned source packages.
+  * unpack/unpack-srcpkg-l2:
+    + [JvW] Use -q with dpkg-source to surpress warnings about unsigned source
+      packages. Requires dpkg-dev 1.13.17
 
- -- Russ Allbery <rra@debian.org>  Sat, 18 Mar 2006 02:35:14 +0100
+ -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Sun, 26 Mar 2006 15:38:37 +0200
 
 lintian (1.23.15) unstable; urgency=low
   

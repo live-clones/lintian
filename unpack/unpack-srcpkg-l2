@@ -37,7 +37,7 @@ chdir($base_dir);
 
 my $IN = FileHandle->new;
 pipeline_open($IN, sub {
-	my $ret=exec 'dpkg-source', '-x', 'dsc';
+	my $ret=exec 'dpkg-source', '-q', '-x', 'dsc';
 	$ret;
     }) or fail("cannot run dpkg-source: $!");
 
