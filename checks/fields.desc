@@ -79,8 +79,8 @@ Type: info
 Info: In addition to the special values `all', `any' and the names of the
  architectures already in the archive (alpha, arm, hppa, hurd-386, i386, 
  ia64, m68k, mips, mipsel, powerpc, s390, sparc), there are some 
- architectures still waiting to be included in the archive. At the moment,
- these are amd64, kfreebsd-i386, knetbsd-i386, ppc64 and sh. 
+ architectures still waiting to be included in the archive. Examples
+ include kfreebsd-i386 and ppc64.
 
 Tag: too-many-architectures
 Type: error

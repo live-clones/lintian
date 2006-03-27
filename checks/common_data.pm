@@ -7,7 +7,7 @@ use base qw(Exporter);
 	   %known_obsolete_fields %known_essential %known_build_essential
 	   %known_obsolete_packages %known_virtual_packages
 	   %known_libstdcs %known_tcls %known_tclxs %known_tks %known_tkxs
-	   %known_libpngs %non_standard_archs
+	   %known_libpngs %non_standard_archs %all_cpus %all_oses
           );
 
 # simple defines for commonly needed data
@@ -16,8 +16,29 @@ use base qw(Exporter);
     ('alpha', 'arm', 'hppa', 'hurd-i386', 'i386', 'ia64', 'mips', 'mipsel',
      'm68k', 'powerpc', 's390', 'sparc', 'any', 'all');
 
+# From /usr/share/dpkg/cputable, included here to make lintian results
+# consistent no matter what dpkg one has installed.
+%all_cpus = map { $_ => 1 }
+    ('i386', 'ia64', 'alpha', 'amd64', 'armeb', 'arm', 'hppa', 'm32r', 'm68k',
+     'mips', 'mipsel', 'powerpc', 'ppc64', 's390', 's390x', 'sh3', 'sh3eb',
+     'sh4', 'sh4eb', 'sparc');
+
+# From /usr/share/dpkg/ostable, included here to make lintian results
+# consistent no matter what dpkg one has installed.
+%all_oses = map { $_ => 1 }
+    ('linux', 'darwin', 'freebsd', 'kfreebsd', 'knetbsd', 'netbsd', 'openbsd',
+     'hurd');
+
+# Yes, this includes combinations that are rather unlikely to ever exist, like
+# hurd-sh3, but the chances of those showing up as errors are rather low and
+# this reduces the necessary updating.
+#
+# For right now, linux-* are non-standard architectures.  This probably isn't
+# strictly correct and will need to be revisited later.
 %non_standard_archs = map { $_ => 1 }
-    ('amd64', 'armeb', 'ppc64', 'sh', 'kfreebsd-i386', 'knetbsd-i386');
+    grep { !$known_archs{$_} }
+        (keys %all_cpus,
+         map { my $os = $_; map { "$os-$_" } keys %all_cpus } keys %all_oses);
 
 
 %known_sections = map { $_ => 1 }

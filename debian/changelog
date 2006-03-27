@@ -1,3 +1,14 @@
+lintian (1.23.17) UNRELEASED; urgency=low
+
+  * checks/common_data.pm:
+    + [RA] Include all combinations of cpu and os from the dpkg cputable
+      and ostable files (as of dpkg 1.13.16).  (Closes: #337034, #357433)
+  * checks/fields.desc:
+    + [RA] Only list examples of non-standard architectures, since there
+      are now too many combinations to list completely.
+
+ -- Russ Allbery <rra@debian.org>  Sun, 26 Mar 2006 16:16:55 -0800
+
 lintian (1.23.16) unstable; urgency=low
 
   The "What's this Russ guy up to?" release
