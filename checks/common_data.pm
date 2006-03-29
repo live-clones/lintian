@@ -7,7 +7,8 @@ use base qw(Exporter);
 	   %known_obsolete_fields %known_essential %known_build_essential
 	   %known_obsolete_packages %known_virtual_packages
 	   %known_libstdcs %known_tcls %known_tclxs %known_tks %known_tkxs
-	   %known_libpngs %non_standard_archs %all_cpus %all_oses
+	   %known_libpngs %known_x_metapackages
+	   %non_standard_archs %all_cpus %all_oses
           );
 
 # simple defines for commonly needed data
@@ -140,5 +141,9 @@ use base qw(Exporter);
 
 %known_libpngs = map { $_ => 1 }
     ( 'libpng12-0', 'libpng2', 'libpng3', );
+
+%known_x_metapackages = map { $_ => 1 }
+    ( 'x-window-system', 'x-window-system-dev', 'x-window-system-core',
+      'xorg', );
 
 1;

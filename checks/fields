@@ -508,6 +508,9 @@ if ($type eq "source") {
 					tag "build-depends-on-obsolete-package", "$field: $part_d_orig"
 					    if ($known_obsolete_packages{$d_pkg} && &$is_dep_field($field));
 
+					tag "build-depends-on-x-metapackage", "$field: $part_d_orig"
+					    if ($known_x_metapackages{$d_pkg} && &$is_dep_field($field));
+
 					tag "bad-relation", "$field: $part_d_orig"
 					    if $rest;
 				}
