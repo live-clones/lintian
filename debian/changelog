@@ -3,6 +3,9 @@ lintian (1.23.17) UNRELEASED; urgency=low
   * checks/common_data.pm:
     + [RA] Include all combinations of cpu and os from the dpkg cputable
       and ostable files (as of dpkg 1.13.16).  (Closes: #337034, #357433)
+  * checks/fields:
+    + [RA] Allow dpatch in Build-Depends for arch-independent packages if
+      it is invoked in clean, build-arch, or binary-arch.
   * checks/fields.desc:
     + [RA] Only list examples of non-standard architectures, since there
       are now too many combinations to list completely.

@@ -46,7 +46,8 @@ my @global_depends = (
 # in one of clean, build-arch, binary-arch, or a rule they depend on, this
 # package is allowed in Build-Depends.
 my @rule_depends = (
-	[ debhelper => '^\s+dh_.+' ]
+	[ debhelper => '^\s+dh_.+' ],
+	[ dpatch => '^\s+dpatch\s' ]
 );
 
 # Note that yada is handled as a special case, based on the existence of
