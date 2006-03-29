@@ -1,0 +1,2 @@
+# This shouldn't be included in the package; it's normally created
+# dynamically and removed on debian/rules clean.

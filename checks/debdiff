@@ -50,6 +50,9 @@ while (<STAT>) {
     $file = $1;
     tag_warn("patch-failure-file-in-diff", $file)
 	if ($file =~ m/\.(orig|rej)$/);
+
+    tag_warn("diff-contains-substvars", $file)
+	if ($file =~ m%^debian/substvars$%);
 }
 close(STAT) or fail("error reading diffstat file: $!");
 

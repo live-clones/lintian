@@ -24,6 +24,14 @@ Info: Native packaging should only be used if a piece of software was
  the reason is the location of the original source tarball. dpkg-source
  searches for this in ../package_upstream-version.orig.tar.gz.
 
+Tag: diff-contains-substvars
+Type: warning
+Info: Lintian found a substvars file in the Debian diff for this source 
+ package. The debian/substvars file is usually generated and modified
+ dynamically by debian/rules targets, in which case it must be removed by
+ the clean target.
+Ref: policy 4.9
+
 Tag: source-tar-is-posix-tar
 Type: error
 Info: The source tar archive of this package is made with tar --posix. This
