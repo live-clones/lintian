@@ -358,7 +358,7 @@ Tag: build-depends-on-x-metapackage
 Type: error
 Info: Packages must not build-depend on X Window System metapackages.
  .
- The metapackages xorg, x-window-system, x-window-system-dev, and
+ The metapackages xorg, xorg-dev, x-window-system, x-window-system-dev, and
  x-window-system-core exist only for the benefit of users and should not
  be used in package build dependencies.
 
