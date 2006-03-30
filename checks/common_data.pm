@@ -144,6 +144,6 @@ use base qw(Exporter);
 
 %known_x_metapackages = map { $_ => 1 }
     ( 'x-window-system', 'x-window-system-dev', 'x-window-system-core',
-      'xorg', );
+      'xorg', 'xorg-dev', );
 
 1;
