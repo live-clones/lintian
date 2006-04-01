@@ -235,7 +235,7 @@ while (<IN>) {
 	# negatives. When man-db is fixed, this limitation should be
 	# removed.
 	if ($path =~ m,/man/man\d/,) {
-	    if (system("lexgrog unpacked/\Q$file\E >/dev/null 2>&1")) {
+	    if (system_env("lexgrog unpacked/\Q$file\E >/dev/null 2>&1")) {
 		tag "manpage-has-bad-whatis-entry", "$file";
 	    }
 	}
@@ -244,14 +244,22 @@ while (<IN>) {
 	# parent directory before running man so that .so directives are
 	# processed properly.  (Yes, there are man pages that include other
 	# pages with .so but aren't simple links; rbash, for instance.)
-        my $cmd;
-        if ($file =~ m,^(.*)/(man\d/.*)$,) {
-            $cmd = "cd unpacked/\Q$1\E && LANG=C man -l \Q$2\E";
-        } else {
-            $cmd = "LANG=C man -l unpacked/\Q$file\E";
-        }
-	open MANERRS, '-|', "($cmd >/dev/null) 2>&1"
-	    or fail("cannot run man -l: $!");
+	my $cmd;
+	if ($file =~ m,^(.*)/(man\d/.*)$,) {
+	    $cmd = "cd unpacked/\Q$1\E && man -l \Q$2\E";
+	} else {
+	    $cmd = "man -l unpacked/\Q$file\E";
+	}
+	my $pid = open MANERRS, '-|';
+	if (not defined $pid) {
+	    fail("cannot run man -l: $!");
+	} elsif ($pid == 0) {
+	    my %newenv = (LANG => 'C', PATH => $ENV{PATH});
+	    undef %ENV;
+	    %ENV = %newenv;
+	    exec "($cmd >/dev/null) 2>&1"
+		or fail("cannot run man -l: $!");
+	}
 	while (<MANERRS>) {
 	    # ignore progress information from man
 	    next if /^Reformatting/;

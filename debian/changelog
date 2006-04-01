@@ -14,13 +14,27 @@ lintian (1.23.17) UNRELEASED; urgency=low
       are now too many combinations to list completely.
     + [RA] Catch build dependencies on X metapackages, based on a patch by
       Josh Triplett.  (Partially addresses #347169)
+  * checks/manpages:
+    + [RA] Use system_env instead of system and sanitize the environment
+      before running man -l out of caution and to avoid extraneous output
+      when CDPATH is set.  Reported by Marc Haber.  (Closes: #360217)
+  * checks/po-debconf:
+    + [RA] Use system_env instead of system out of caution and to avoid
+      extraneous output when CDPATH is set.
   * checks/scripts.desc:
     + [RA] Change the check for broken error handling with invoke-rc.d to
       maintainer-script-hides-init-failure to be more generic and explain
       what the test looks at.  Add the script name and line number and fix
       a typo.  Thanks, Marc Haber.  (Closes: #360214, #360216)
 
- -- Russ Allbery <rra@debian.org>  Fri, 31 Mar 2006 22:00:45 -0800
+  * collection/objdump-info:
+    + [RA] Unset CDPATH before running cd to avoid strange effects from
+      the user's environment.
+
+  * lib/Util.pm:
+    + [RA] Add system_env, like system but sanitizing the environment.
+
+ -- Russ Allbery <rra@debian.org>  Fri, 31 Mar 2006 22:40:32 -0800
 
 lintian (1.23.16) unstable; urgency=low
 

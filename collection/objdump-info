@@ -30,6 +30,7 @@ else
     exit 2
 fi
 
+CDPATH=
 cd unpacked
 
 rm -f ../objdump-info

@@ -31,7 +31,8 @@ our @EXPORT = qw(parse_dpkg_control
 	slurp_entire_file
 	get_file_md5
 	file_is_encoded_in_non_utf8
-	fail);
+	fail
+	system_env);
 
 use FileHandle;
 use Pipeline;
@@ -205,6 +206,23 @@ sub file_is_encoded_in_non_utf8 {
 
 	return $line if $non_utf8;
 	return 0;
+}
+
+# Just like system, except cleanses the environment first to avoid any strange
+# side effects due to the user's environment.
+sub system_env {
+    my @whitelist = qw(PATH INTLTOOL_EXTRACT);
+    my %newenv = map { exists $ENV{$_} ? ($_ => $ENV{$_}) : () } @whitelist;
+    my $pid = fork;
+    if (not defined $pid) {
+	return -1;
+    } elsif ($pid == 0) {
+	%ENV = %newenv;
+	exec @_ or die("exec of $_[0] failed: $!\n");
+    } else {
+	waitpid $pid, 0;
+	return $?;
+    }
 }
 
 # ------------------------
