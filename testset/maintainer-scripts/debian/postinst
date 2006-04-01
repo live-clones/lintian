@@ -50,3 +50,6 @@ mkdir /var/tmp/scripts
 echo foo >>/tmp/scripts.tmp
 rm /tmp/scripts.tmp
 rmdir /var/tmp/scripts
+
+# invalid, maintainer-script-hides-init-failure
+invoke-rc.d foo start || exit 0

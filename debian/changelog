@@ -14,8 +14,13 @@ lintian (1.23.17) UNRELEASED; urgency=low
       are now too many combinations to list completely.
     + [RA] Catch build dependencies on X metapackages, based on a patch by
       Josh Triplett.  (Partially addresses #347169)
+  * checks/scripts.desc:
+    + [RA] Change the check for broken error handling with invoke-rc.d to
+      maintainer-script-hides-init-failure to be more generic and explain
+      what the test looks at.  Add the script name and line number and fix
+      a typo.  Thanks, Marc Haber.  (Closes: #360214, #360216)
 
- -- Russ Allbery <rra@debian.org>  Sun, 26 Mar 2006 16:16:55 -0800
+ -- Russ Allbery <rra@debian.org>  Fri, 31 Mar 2006 22:00:45 -0800
 
 lintian (1.23.16) unstable; urgency=low
 

@@ -540,7 +540,7 @@ while (<SCRIPTS>) {
 	    }
 	}
 	if (/invoke-rc.d.*\|\| exit 0/) {
-	    tag "maintainer-script-built-with-broken-debhelper-version";
+	    tag "maintainer-script-hides-init-failure", "$file:$.";
 	}
     }
 
