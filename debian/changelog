@@ -1,5 +1,8 @@
 lintian (1.23.17) UNRELEASED; urgency=low
 
+  * checks/binaries:
+    + [RA] Detect klibc binaries from their requested interpreter and
+      allow them to appear static.  (Closes: #328850)
   * checks/common_data.pm:
     + [RA] Include all combinations of cpu and os from the dpkg cputable
       and ostable files (as of dpkg 1.13.16).  (Closes: #337034, #357433)
@@ -30,11 +33,12 @@ lintian (1.23.17) UNRELEASED; urgency=low
   * collection/objdump-info:
     + [RA] Unset CDPATH before running cd to avoid strange effects from
       the user's environment.
+    + [RA] Run readelf -l to collect interpreter information.
 
   * lib/Util.pm:
     + [RA] Add system_env, like system but sanitizing the environment.
 
- -- Russ Allbery <rra@debian.org>  Fri, 31 Mar 2006 22:40:32 -0800
+ -- Russ Allbery <rra@debian.org>  Sun,  2 Apr 2006 15:40:00 -0700
 
 lintian (1.23.16) unstable; urgency=low
 

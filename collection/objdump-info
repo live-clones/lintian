@@ -47,6 +47,10 @@ for bin in `grep ' ELF' <../file-info | cut -d\: -f1`; do
     if head $bin | grep -q 'packed.*with.*UPX'; then
 	echo "objdump: $bin: Packed with UPX" >> ../objdump-info
     else
+	# readelf is for interpreter information only; ignore failure.
+	readelf -l "$bin" >> ../objdump-info 2>&1 || true
+
+	# The main data of interest.
 	if objdump --headers --private-headers -T $bin >> ../objdump-info 2>&1 ; then
 	    # everything is ok
 	    :

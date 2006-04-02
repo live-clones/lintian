@@ -39,6 +39,7 @@ my %NEEDED;
 my %CXXABI;
 my %OCAML;
 my %SONAME;
+my %KLIBC;
 
 # read architecture file
 if (open(IN,"fields/architecture")) {
@@ -110,6 +111,8 @@ while (<IN>) {
 	    tag "binary-with-bad-dynamic-table", "$file" unless $file =~ m%^\./usr/lib/debug/%;
 	} elsif (m/CXXABI/) {
 	    $CXXABI{$file} = 1;
+	} elsif (m%Requesting program interpreter:\s+/lib/klibc-\S+\.so%) {
+	    $KLIBC{$file} = 1;
 	}
     }
 }
@@ -227,6 +230,8 @@ while (<IN>) {
 	    # Some exceptions: files in /boot, /usr/lib/debug/*, named *-static or
 	    # *.static, or *-static as package-name.
 	    next if ($file =~ m#^./boot/#);
+	    # klibc binaries appear to be static.
+	    next if ($KLIBC{$file});
 	    # Location of debugging symbols:
 	    next if ($file =~ m#^./usr/lib/debug/#);
 	    next if ($file =~ /(\.|-)static$/);
