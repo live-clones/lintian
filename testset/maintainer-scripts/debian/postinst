@@ -60,3 +60,6 @@ if which invoke-rc.d >/dev/null 2>&1; then
 else
     /etc/init.d/package start
 fi
+
+# Example ucf invocation.
+ucf /usr/share/foo/configuration /etc/foo.conf

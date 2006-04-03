@@ -266,6 +266,11 @@ Type: warning
 Info: This script calls adduser, but the package does not depend or
  pre-depend on the adduser package.
 
+Tag: maintainer-script-needs-depends-on-ucf
+Type: warning
+Info: This script calls ucf, but the package does not depend or pre-depend
+ on the ucf package.
+
 Tag: update-alternatives-remove-called-in-postrm
 Type: warning
 Info: 'update-alternatives --remove &lt;alternative&gt; foo' is called in the

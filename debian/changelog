@@ -41,6 +41,8 @@ lintian (1.23.17) UNRELEASED; urgency=low
       a typo.  Thanks, Marc Haber.  (Closes: #360214, #360216)
     + [RA] Warn when maintainer scripts run init scripts directly and
       don't use invoke-rc.d.  Thanks, Lars Wirzenius.  (Closes: #353659)
+    + [RA] Find missing ucf dependencies and restructure the code to allow
+      easier addition of similar checks.  (Closes: #261891)
 
   * collection/objdump-info:
     + [RA] Unset CDPATH before running cd to avoid strange effects from
@@ -50,7 +52,7 @@ lintian (1.23.17) UNRELEASED; urgency=low
   * lib/Util.pm:
     + [RA] Add system_env, like system but sanitizing the environment.
 
- -- Russ Allbery <rra@debian.org>  Sun,  2 Apr 2006 15:40:00 -0700
+ -- Russ Allbery <rra@debian.org>  Sun,  2 Apr 2006 22:32:37 -0700
 
 lintian (1.23.16) unstable; urgency=low
 

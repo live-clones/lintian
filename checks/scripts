@@ -151,6 +151,16 @@ my %interpreter_dependencies = (
 				'zsh' => 'zsh'
 			       );
 
+# Appearance of one of these regexes in a maintainer script means that there
+# must be a dependency (or pre-dependency) on the given package.  The tag
+# reported is maintainer-script-needs-depends-on-%s, so be sure to update
+# scripts.desc when adding a new rule.
+my @depends_needed = (
+        [ adduser => '\badduser\b' ],
+        [ netbase => '\bupdate-inetd\b' ],
+        [ ucf => '\bucf\s' ],
+);
+
 my %executable = ();
 my %suid = ();
 my %ELF = ();
@@ -415,7 +425,7 @@ while (<SCRIPTS>) {
     open C, "$filename"
 	or fail("cannot open maintainer script $filename for reading: $!");
 
-    my ($warned_tmp, $warned_killall, $warned_netbase, $warned_adduser);
+    my %warned;
     my ($saw_init, $saw_invoke);
     my $cat_string = "";
 
@@ -425,13 +435,13 @@ while (<SCRIPTS>) {
 	chomp();
 	if (m,[^\w=](/var)?/tmp\b, and not m/\bmktemp\b/ and not m/\btempfile\b/ and not m/\bmkdir\b/) {
 	    tag "possibly-insecure-handling-of-tmp-files-in-maintainer-script", "$file:$."
-		unless $warned_tmp;
-	    $warned_tmp = 1;
+		unless $warned{tmp};
+	    $warned{tmp} = 1;
 	}
 	if (m/^\s*killall(?:\s|$)/) {
 	    tag "killall-is-dangerous", "$file:$."
-		unless $warned_killall;
-	    $warned_killall = 1;
+		unless $warned{killall};
+	    $warned{killall} = 1;
 	}
 	if (m/^\s*mknod(?:\s|$)/ and not m/\sp\s/) {
 	    tag "mknod-in-maintainer-script", "$file:$.";
@@ -554,23 +564,20 @@ while (<SCRIPTS>) {
 	if (m,\bsuidregister\b,) {
 	    tag "suidregister-used-in-maintainer-script", "$file";
 	}
-	if (m,\bupdate-inetd\b, && !$warned_netbase) {
-	    my $type = $deps{'netbase'};
-	    unless ($type and ($type eq 'depends' or $type eq 'pre-depends')) {
-		tag "maintainer-script-needs-depends-on-netbase", "$file";
-		$warned_netbase = 1;
-	    }
-	}
-	if (m,\badduser\b, && !$warned_adduser) {
-	    my $type = $deps{'adduser'};
-	    unless ($type and ($type eq 'depends' or $type eq 'pre-depends')) {
-		tag "maintainer-script-needs-depends-on-adduser", "$file";
-		$warned_adduser = 1;
-	    }
-	}
 	if ($file eq 'postrm') {
 	    if (m,update\-alternatives \-\-remove,) {
 		tag "update-alternatives-remove-called-in-postrm", "";
+	    }
+	} else {
+	    for my $rule (@depends_needed) {
+		my ($package, $regex) = @$rule;
+		if (/$regex/ && ! $warned{$package}) {
+		    my $type = $deps{$package};
+		    unless ($type and ($type eq 'depends' or $type eq 'pre-depends')) {
+			tag "maintainer-script-needs-depends-on-$package", "$file";
+			$warned{$package} = 1;
+		    }
+		}
 	    }
 	}
 	if (/invoke-rc.d.*\|\| exit 0/) {

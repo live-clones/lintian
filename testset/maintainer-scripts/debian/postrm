@@ -23,3 +23,10 @@ update-rc.d bar remove
 
 # Shouldn't provoke an error despite no invoke-rc.d.
 echo "/etc/init.d/package stop to stop something"
+
+# Shouldn't require a ucf dependency.  Unfortunately, right now that's
+# just because postrm isn't checked, not because we ensure that the
+# invocation is conditional.
+if which ucf >/dev/null; then
+    ucf --purge /etc/foo.conf
+fi    
