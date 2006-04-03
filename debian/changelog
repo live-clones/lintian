@@ -15,8 +15,10 @@ lintian (1.23.17) UNRELEASED; urgency=low
       it is invoked in clean, build-arch, or binary-arch.
     + [RA] Only list examples of non-standard architectures, since there
       are now too many combinations to list completely.
-    + [RA] Catch build dependencies on X metapackages, based on a patch by
-      Josh Triplett.  (Partially addresses #347169)
+    + [RA] Catch dependencies on X metapackages, based on a patch by Josh
+      Triplett.  No packages are allowed to build-depend, and only
+      packages that look like metapackages (arch: all, no files outside of
+      /usr/share/doc) are allowed to depend.  (Closes: #347169)
   * checks/manpages:
     + [RA] Use system_env instead of system and sanitize the environment
       before running man -l out of caution and to avoid extraneous output

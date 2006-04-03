@@ -354,6 +354,16 @@ Tag: build-depends-on-obsolete-package
 Type: error
 Info: The package build-depends on a package that has been superseded.
 
+Tag: depends-on-x-metapackage
+Type: error
+Info: Packages that are not themselves metapackages must not depend on X
+ Window System metapackages.
+ .
+ The metapackages xorg, xorg-dev, x-window-system, x-window-system-dev, and
+ x-window-system-core exist only for the benefit of users and dependencies
+ for other metapackages and should not be used in regular package
+ dependencies.
+
 Tag: build-depends-on-x-metapackage
 Type: error
 Info: Packages must not build-depend on X Window System metapackages.

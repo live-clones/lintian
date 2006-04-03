@@ -58,6 +58,7 @@ sub run {
 my $pkg = shift;
 my $type = shift;
 my $version;
+my $arch_indep;
 
 local $/ = undef; #Read everything in one go
 
@@ -140,6 +141,9 @@ if (not open (FH, "fields/architecture")) {
 		tag "too-many-architectures", "" if (@archs > 1);
 		tag "arch-any-in-binary-pkg", "" if (grep { $_ eq "any" } @archs);
 	}
+
+	# Used for later tests.
+	$arch_indep = 1 if (@archs == 1 && $archs[0] eq 'all');
 }
 
 #---- Subarchitecture (udeb)
@@ -279,6 +283,22 @@ if (open(FH, "fields/installer-menu-item")) {
 
 #---- Package relations (binary package)
 
+# Check whether the package looks like a meta-package, used for later
+# dependency checks.  We consider a package to possibly be a meta-package if
+# it is a binary package, arch: all, with no files outside of /usr/share/doc.
+my $metapackage = 0;
+if ($type eq 'binary' && $arch_indep) {
+	$metapackage = 1;
+	open IN, "index" or fail("cannot open index file index: $!");
+	local $_;
+	local $/ = "\n";
+	while (<IN>) {
+		my ($mode, $file) = (split(' ', $_, 6))[0,5];
+		next unless $file;
+		$metapackage = 0 unless ($mode =~ /^d/ || $file =~ m%^\./usr/share/doc/%);
+	}
+	close IN;
+}
 if (($type eq "binary") || ($type eq 'udeb')) {
 	my %deps;
 	for my $field (qw(depends pre-depends recommends suggests conflicts provides replaces)) {
@@ -336,6 +356,9 @@ if (($type eq "binary") || ($type eq 'udeb')) {
 
 					tag "depends-on-obsolete-package", "$field: $part_d_orig"
 					    if ($known_obsolete_packages{$d_pkg} && &$is_dep_field($field));
+
+					tag "depends-on-x-metapackage", "$field: $part_d_orig"
+					    if ($known_x_metapackages{$d_pkg} && ! $metapackage && &$is_dep_field($field));
 
 					tag "depends-on-essential-package-without-using-version", "$field: $part_d_orig"
 					    if ($d_pkg ne "coreutils" && $known_essential{$d_pkg} && ! $d_version->[0] && &$is_dep_field($field));

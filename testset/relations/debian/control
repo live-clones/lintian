@@ -27,7 +27,7 @@ Description: Strange dependency relationships
 
 Package: relations-multiple-libs
 Architecture: all
-Depends: libstdc++2.10, libstdc++2.10-glibc2.2, libstdc++3.0, tk8.2, tk8.3, tcl8.0, tcl8.2, tkx8.2, tkx8.3, tclx8.2, libpng2, libpng3
+Depends: libstdc++2.10, libstdc++2.10-glibc2.2, libstdc++3.0, tk8.2, tk8.3, tcl8.0, tcl8.2, tkx8.2, tkx8.3, tclx8.2, libpng2, libpng3, xorg
 Provides: awk
 Provides: awk
 Description: Duplicate library dependency relationships.
@@ -36,3 +36,6 @@ Description: Duplicate library dependency relationships.
  at the same time.
  .
  At the same time, it conveniently tests some description file checks. :)
+ .
+ It is a metapackage from the lintian perspective, so the xorg dependency
+ should be allowed.
