@@ -30,6 +30,8 @@ lintian (1.23.17) UNRELEASED; urgency=low
     + [RA] Ignore text inside single quotes and, for most checks, text
       inside double quotes when checking for bashisms.  Reported by Frank
       Küster.  (Closes: #344266)
+    + [RA] Change canonical zsh path to /bin/zsh at the request of the zsh
+      maintainer.  (Closes: #360534)
   * checks/scripts.desc:
     + [RA] Change the check for broken error handling with invoke-rc.d to
       maintainer-script-hides-init-failure to be more generic and explain

@@ -99,7 +99,7 @@ my %valid_interpreters = (
 			  'wish8.3' => '/usr/bin/wish8.3',
 			  'wish8.4' => '/usr/bin/wish8.4',
 			  'yforth' => '/usr/bin/yforth',
-			  'zsh' => '/usr/bin/zsh'
+			  'zsh' => '/bin/zsh'
 			 );
 
 my %interpreter_dependencies = (
