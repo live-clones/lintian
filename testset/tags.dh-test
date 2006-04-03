@@ -1,9 +1,9 @@
 E: dh-test: description-is-dh_make-template
 E: dh-test: helper-templates-in-copyright
+E: dh-test: section-is-dh_make-template
 W: dh-test source: dh_suidregister-is-obsolete
 W: dh-test source: dh_testversion-is-deprecated
 W: dh-test source: native-package-with-dash-version
 W: dh-test source: package-uses-deprecated-debhelper-compat-version 3
 W: dh-test: readme-debian-is-debmake-template
-W: dh-test: unknown-section unknown
 W: dh-test: wrong-bug-number-in-closes l3:#nnnn

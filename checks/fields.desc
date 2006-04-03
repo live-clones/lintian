@@ -243,6 +243,14 @@ Info: The `Section:' field in this package's control file is not one of
  is in the contrib distribution.
 Ref: policy 2.4
 
+Tag: section-is-dh_make-template
+Type: error
+Info: The `Section:' field in this package's control file is set to
+ unknown.  This is not a valid section, and usually means a dh_make
+ template control file was used and never modified to set the correct
+ section.
+Ref: policy 2.4
+
 Tag: wrong-section-for-udeb
 Type: warning
 Info: udeb packages should have `Section: debian-installer'.

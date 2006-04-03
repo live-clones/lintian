@@ -19,6 +19,9 @@ lintian (1.23.17) UNRELEASED; urgency=low
       Triplett.  No packages are allowed to build-depend, and only
       packages that look like metapackages (arch: all, no files outside of
       /usr/share/doc) are allowed to depend.  (Closes: #347169)
+    + [RA] Look for an explicit section of unknown, probably left over
+      from dh_make templates, and diagnose it with an error rather than a
+      warning.  Reported by Jari Aalto.  (Closes: #355032)
   * checks/manpages:
     + [RA] Use system_env instead of system and sanitize the environment
       before running man -l out of caution and to avoid extraneous output

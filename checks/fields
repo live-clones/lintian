@@ -244,6 +244,8 @@ if (not open (FH, "fields/section")) {
 	    } elsif (scalar @parts > 1) {
 		tag "unknown-section", "$section" unless $known_archive_parts{$parts[0]};
 		tag "unknown-section", "$section" unless $known_sections{$parts[1]};
+	    } elsif ($parts[0] eq 'unknown') {
+		tag "section-is-dh_make-template";
 	    } else {
 		tag "unknown-section", "$section" unless $known_sections{$parts[0]};
 	    }
