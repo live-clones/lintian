@@ -25,6 +25,7 @@ W: maintainer-scripts: config-does-not-load-confmodule
 W: maintainer-scripts: deprecated-chown-usage postinst:33 'chown root.root'
 W: maintainer-scripts: init.d-script-not-marked-as-conffile /etc/init.d/foo
 W: maintainer-scripts: maintainer-script-calls-deprecated-wm-menu-config postinst:31
+W: maintainer-scripts: maintainer-script-calls-init-script-directly prerm:54
 W: maintainer-scripts: maintainer-script-hides-init-failure postinst:55
 W: maintainer-scripts: missing-debconf-dependency
 W: maintainer-scripts: no-debconf-templates

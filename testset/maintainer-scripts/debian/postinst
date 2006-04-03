@@ -53,3 +53,10 @@ rmdir /var/tmp/scripts
 
 # invalid, maintainer-script-hides-init-failure
 invoke-rc.d foo start || exit 0
+
+# The right way to invoke an rc script
+if which invoke-rc.d >/dev/null 2>&1; then
+    invoke-rc.d package start
+else
+    /etc/init.d/package start
+fi

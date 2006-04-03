@@ -49,3 +49,6 @@ perl -e "print q( kill -HUP $? )"
 
 # Still catch disallowed expansions in double-quotes, though.
 echo "${line:3:1}"
+
+# The wrong way to run an init script (no invoke-rc.d).
+/etc/init.d/package stop

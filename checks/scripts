@@ -416,6 +416,7 @@ while (<SCRIPTS>) {
 	or fail("cannot open maintainer script $filename for reading: $!");
 
     my ($warned_tmp, $warned_killall, $warned_netbase, $warned_adduser);
+    my ($saw_init, $saw_invoke);
     my $cat_string = "";
 
     while (<C>) {
@@ -434,6 +435,19 @@ while (<SCRIPTS>) {
 	}
 	if (m/^\s*mknod(?:\s|$)/ and not m/\sp\s/) {
 	    tag "mknod-in-maintainer-script", "$file:$.";
+	}
+
+	# Collect information about init script invocations to catch running
+	# init scripts directory rather than through invoke-rc.d.  Since the
+	# script is allowed to run the init script directly if invoke-rc.d
+	# doesn't exist, only tag direct invocations where invoke-rc.d is
+	# never used in the same script.  Lots of false negatives, but
+	# hopefully not many false positives.
+	if (m%^\s*/etc/init.d/(\S+)\s+[\"\']?(\S+)[\"\']?%) {
+	    $saw_init = $.;
+	}
+	if (m%^\s*invoke-rc.d\s+%) {
+	    $saw_invoke = $.;
 	}
 
 	if ($shellscript) {
@@ -562,6 +576,10 @@ while (<SCRIPTS>) {
 	if (/invoke-rc.d.*\|\| exit 0/) {
 	    tag "maintainer-script-hides-init-failure", "$file:$.";
 	}
+    }
+
+    if ($saw_init && ! $saw_invoke) {
+	tag "maintainer-script-calls-init-script-directly", "$file:$saw_init";
     }
 
     close C;
