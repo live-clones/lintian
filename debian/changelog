@@ -24,6 +24,10 @@ lintian (1.23.17) UNRELEASED; urgency=low
   * checks/po-debconf:
     + [RA] Use system_env instead of system out of caution and to avoid
       extraneous output when CDPATH is set.
+  * checks/scripts:
+    + [RA] Ignore text inside single quotes and, for most checks, text
+      inside double quotes when checking for bashisms.  Reported by Frank
+      Küster.  (Closes: #344266)
   * checks/scripts.desc:
     + [RA] Change the check for broken error handling with invoke-rc.d to
       maintainer-script-hides-init-failure to be more generic and explain

@@ -457,47 +457,30 @@ while (<SCRIPTS>) {
 		my $found = 0;
 		my $found_strict = 0;
 		my $match = '';
-		my @bashism_regexs = (
-		  'function \w+\(\s*\)',       # function is useless
-				               # should be '.', not 'source'
-		  '(?:^|\s+)source\s+(?:\.\/|\/|\$)[^\s]+',
-		  '(\[|test|-o|-a)\s*[^\s]+\s+==\s', # should be 'b = a'
-		  '\s(\|\&)',                  # pipelining is not POSIX
-		  '\$\[\w+\]',                 # arith not allowed
+		my @bashism_string_regexs = (
+		  '\$\[\w+\]',		       # arith not allowed
 		  '\$\{\w+\:\d+(?::\d+)?\}',   # ${foo:3[:1]}
 		  '\$\{\w+(/.+?){1,2}\}',      # ${parm/?/pat[/str]}
+		  '\$\{\#?\w+\[[0-9\*\@]+\]\}',# bash arrays, ${name[0|*|@]}
+		);
+		my @bashism_regexs = (
+		  'function \w+\(\s*\)',       # function is useless
+					       # should be '.', not 'source'
+		  '(?:^|\s+)source\s+(?:\.\/|\/|\$)[^\s]+',
+		  '(\[|test|-o|-a)\s*[^\s]+\s+==\s', # should be 'b = a'
+		  '\s(\|\&)',		       # pipelining is not POSIX
 		  '[^\\\]\{([^\s]+?,)+[^\\\}\s]+\}', # brace expansion
 		  '(?:^|\s+)\w+\[\d+\]=',      # bash arrays, H[0]
-		  '\$\{\#?\w+\[[0-9\*\@]+\]\}',# bash arrays, ${name[0|*|@]}
-		  '(?:^|\s+)read\s*(?:;|$)', # read without variable
-
-		  '(?:^|\s+)kill\s+-[^sl]\w*',   # kill -[0-9] or -[A-Z]
+		  '(?:^|\s+)read\s*(?:;|$)',   # read without variable
+		  '(?:^|\s+)kill\s+-[^sl]\w*', # kill -[0-9] or -[A-Z]
 		  '(?:^|\s+)trap\s+["\']?.*["\']?\s+.*[1-9]', # trap with signal numbers
-		  '\&>',                     # cshism
-		  '\[\[(?!:)',                    # alternative test command
+		  '\&>',		       # cshism
+		  '\[\[(?!:)',		       # alternative test command
 		);
 		my @strict_posix_regexs = (
 		  '((?:test|\[)\s+.+\s-[ao])\s',# test/[ -a/-o binary operators
-		  '(?:^\s*)local\s',        # local scoping of variables
+		  '(?:^\s*)local\s',	    # local scoping of variables
 					   );
-
-		for my $re (@bashism_regexs) {
-		    if (m/($re)/) {
-			$found = 1;
-			$match = $1;
-			last;
-		    }
-		}
-		unless ($found) {
-		    for my $re (@strict_posix_regexs) {
-			if (m/($re)/) {
-			    $found = 1;
-			    $found_strict = 1;
-			    $match = $1;
-			    last;
-			}
-		    }
-		}
 
 		# since this test is ugly, I have to do it by itself
 		# detect source (.) trying to pass args to the command it runs
@@ -510,6 +493,43 @@ while (<SCRIPTS>) {
 			$match = $1;
 		    }
 		}
+
+		# Ignore anything inside single quotes; it could be an
+		# argument to grep or the like.
+                my $line = $_;
+		$line =~ s/([^\\](?:\\\\)*)\'(?:\\.|[^\\\'])+\'/$1''/g;
+
+		for my $re (@bashism_string_regexs) {
+		    if ($line =~ m/($re)/) {
+			$found = 1;
+                        ($match) = m/($re)/;
+			last;
+		    }
+		}
+
+		# We've checked for all the things we still want to notice in
+		# double-quoted strings, so now remove those strings as well.
+		unless ($found) {
+		    $line =~ s/([^\\](?:\\\\)*)\"(?:\\.|[^\\\"])+\"/$1""/g;
+		    for my $re (@bashism_regexs) {
+			if ($line =~ m/($re)/) {
+			    $found = 1;
+			    ($match) = m/($re)/;
+			    last;
+			}
+		    }
+		}
+		unless ($found) {
+		    for my $re (@strict_posix_regexs) {
+			if ($line =~ m/($re)/) {
+			    $found = 1;
+			    $found_strict = 1;
+			    ($match) = m/($re)/;
+			    last;
+			}
+		    }
+		}
+
 		if ($found && $found_strict) {
 		    tag "possible-non-posix-code-in-maintainer-script", "$file:$. \'$match\'";
 		} elsif ($found) {

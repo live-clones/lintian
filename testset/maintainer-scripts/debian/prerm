@@ -40,3 +40,12 @@ if test -n $(echo foo | perl -pe 's/[[:space:]]//go'); then
 fi
 
 update-rc.d foo remove
+
+# More false positives for bashism checks.  None of these are errors.
+echo "$line" | grep -q '{fonts/map,}/{\$progname,pdftex,dvips,}//'
+echo '$[1+2]'
+printf "foo |& bar"
+perl -e "print q( kill -HUP $? )"
+
+# Still catch disallowed expansions in double-quotes, though.
+echo "${line:3:1}"
