@@ -39,6 +39,10 @@ lintian (1.23.17) UNRELEASED; urgency=low
     + [RA] Use system_env instead of system and sanitize the environment
       before running man -l out of caution and to avoid extraneous output
       when CDPATH is set.  Reported by Marc Haber.  (Closes: #360217)
+  * checks/nmu{.desc,}:
+    + [RA] Warn if debian/changelog in a native source package is a
+      symlink and skip checks rather than aborting if it was a symlink to
+      a file we didn't unpack.  (Closes: #257650)
   * checks/po-debconf:
     + [RA] Use system_env instead of system out of caution and to avoid
       extraneous output when CDPATH is set.
