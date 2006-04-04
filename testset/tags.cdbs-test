@@ -1,2 +1,5 @@
+E: cdbs-test source: build-depends-indep-should-be-build-depends debhelper
+E: cdbs-test source: missing-build-dependency python
 E: cdbs-test source: package-lacks-versioned-build-depends-on-debhelper 5
+W: cdbs-test source: build-depends-without-arch-dep yada
 W: cdbs-test source: native-package-with-dash-version

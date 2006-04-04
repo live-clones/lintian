@@ -446,13 +446,33 @@ Info: The control file specifies source relations for architecture-independent
 Tag: build-depends-without-arch-dep
 Type: warning
 Ref: policy 7.6
-Info: The control file specifies source relations for architecture-dependent
- packages, but no architecture-dependent packages are built. There are some
- exceptions, e.g. build dependencies that have to be satisfied while calling
- the "clean" target of debian/rules, the most common case of which is a
- Build-Depends: debhelper if you use dh_clean in the "clean" target.
- In other cases, you most likely need to change Build-Depends to
- Build-Depends-Indep.
+Info: The control file lists the given package in Build-Depends, but no
+ architecture-dependent packages are built. If all the packages built are
+ architecture-independent, the only packages that should be listed in
+ Build-Depends are those required to run the clean target (such as
+ debhelper if you use dh_clean). Other build dependencies should be listed
+ in Build-Depends-Indep instead.
+
+Tag: build-depends-indep-should-be-build-depends
+Type: error
+Ref: policy 7.6
+Info: The specified package is required to run the clean target of
+ <tt>debian/rules</tt> and therefore must be listed in Build-Depends, even
+ if no architecture-dependent packages are built.
+
+Tag: missing-build-dependency
+Type: error
+Ref: policy 4.2
+Info: The package doesn't specify a build dependency on a package that is
+ used in <tt>debian/rules</tt>.
+
+Tag: missing-dh_python-build-dependency
+Type: error
+Ref: dh_python man page
+Info: The package runs dh_python in <tt>debian/rules</tt> but doesn't
+ build-depend on python. dh_python requires Python to run, so packages
+ using dh_python must build-depend on python, even if they don't otherwise
+ need Python to build.
 
 Tag: package-has-a-duplicate-relation
 Type: warning

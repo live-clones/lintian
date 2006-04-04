@@ -22,6 +22,12 @@ lintian (1.23.17) UNRELEASED; urgency=low
     + [RA] Look for an explicit section of unknown, probably left over
       from dh_make templates, and diagnose it with an error rather than a
       warning.  Reported by Jari Aalto.  (Closes: #355032)
+    + [RA] Reorganize dependency checking based on debian/rules analysis.
+      Diagnose missing build dependencies on the helper packages we know
+      about, catch cases where Build-Depends-Indep should be Build-Depends
+      because of the clean target, and make sure users of dh_python
+      build-depend on python.  yada is no longer a special case.
+      (Closes: #242789, #278290)
   * checks/manpages:
     + [RA] Use system_env instead of system and sanitize the environment
       before running man -l out of caution and to avoid extraneous output

@@ -23,7 +23,7 @@ I: relations-multiple-libs: unknown-field-in-control origin
 I: relations: unknown-field-in-control bugs
 I: relations: unknown-field-in-control origin
 W: relations source: ancient-standards-version 3.1.1
-W: relations source: build-depends-without-arch-dep
+W: relations source: build-depends-without-arch-dep mail-transport-agent
 W: relations source: redundant-origin-field
 W: relations source: virtual-package-depends-without-real-package-depends build-depends: mail-transport-agent
 W: relations-multiple-libs: description-synopsis-might-not-be-phrased-properly

@@ -26,6 +26,7 @@ package Lintian::fields;
 use strict;
 use lib "$ENV{'LINTIAN_ROOT'}/checks/";
 use common_data;
+use Dep;
 use Tags;
 use Util;
 
@@ -33,8 +34,8 @@ use Util;
 # arch-specific packages because they're required in order to run the clean
 # rule.  (See Policy 7.6.)  The following is a list of pairs of packages and
 # regular expressions that, if they match anywhere in the debian/rules file,
-# say that this package is allowed in Build-Depends.
-my @global_depends = (
+# say that this package is allowed (and required) in Build-Depends.
+my @global_clean_depends = (
 	[ cdbs => '^include\s+/usr/share/cdbs/' ],
 	[ dbs => '^include\s+/usr/share/dbs/' ],
 	[ debhelper => '^include\s+/usr/share/cdbs/1/rules/debhelper.mk' ],
@@ -42,16 +43,23 @@ my @global_depends = (
 	[ quilt => '^include\s+/usr/share/quilt/' ]
 );
 
-# Similarly, these pairs of packages and regexes say that if the regex matches
-# in one of clean, build-arch, binary-arch, or a rule they depend on, this
-# package is allowed in Build-Depends.
-my @rule_depends = (
-	[ debhelper => '^\s+dh_.+' ],
-	[ dpatch => '^\s+dpatch\s' ]
+# A list of pairs of packages and regular expressions that, if they match
+# anywhere in the debian/rules file, this package must be listed in either
+# Build-Depends or Build-Depends-Indep as appropriate.  dh_python is handled
+# later as a special case rather than a literal package.
+my @global_depends = (
+        [ python => '/usr/share/cdbs/1/class/python-distutils.mk' ],
+        [ dh_python => '^\t\s*dh_python\s' ]
 );
 
-# Note that yada is handled as a special case, based on the existence of
-# debian/packages.
+# Similarly, these pairs of packages and regexes say that if the regex matches
+# in one of clean, build-arch, binary-arch, or a rule they depend on, this
+# package is allowed (and required) in Build-Depends.
+my @rule_clean_depends = (
+	[ debhelper => '^\t\s*dh_.+' ],
+	[ dpatch => '^\t\s*dpatch\s' ],
+	[ yada => '^\t\s*yada\s' ]
+);
 
 sub run {
 
@@ -445,67 +453,54 @@ if ($type eq "source") {
 				$arch_dep_packages++;
 			}
 		}
-	} 
+	}
 
-	if (-e "fields/build-depends" && $arch_dep_packages == 0) {
-		if (not open(BD, "fields/build-depends")) {
-			fail("Can't open fields/build-depends");
-		} else {
-			my $build_depends = <BD>;
-			close BD;
-
-			my %allowed;
-			if (not open (RULES, "debfiles/rules")) {
-				fail("cannot read debfiles/rules: $!");
-			} else {
-				my $target = "none";
-				local $/ = "\n"; #Read this linewise
-				my @rules = qw(clean binary-arch build-arch);
-				while (<RULES>) {
-				    for my $rule (@global_depends) {
-					if ($_ =~ /$rule->[1]/) {
-					    $allowed{$rule->[0]}++;
-					}
-				    }
-				    if (/^(\S+):(.*)/) {
-					$target = $1;
-					if (grep ($_ eq $target, @rules)) {
-					    push (@rules, split (' ', $2));
-					}
-				    }
-				    if (grep ($_ eq $target, @rules)) {
-					for my $rule (@rule_depends) {
-					    if ($_ =~ /$rule->[1]/) {
-						$allowed{$rule->[0]}++;
-					    }
-					}
-				    }
-				}
-				close RULES;
+	# Search through rules and determine which dependencies are required.
+	my (%needed, %needed_clean);
+	open (RULES, "debfiles/rules") or fail("cannot read debfiles/rules: $!");
+	my $target = "none";
+	local $/ = "\n";	# Read this linewise
+	my @rules = qw(clean binary-arch build-arch);
+	while (<RULES>) {
+		for my $rule (@global_clean_depends) {
+			if ($_ =~ /$rule->[1]/) {
+				$needed_clean{$rule->[0]}++;
 			}
-			$allowed{yada}++ if -e "debfiles/packages";
-			my @packages = split /\s*,\s*/, $build_depends;
-			foreach my $pkg (@packages) {
-			    my ($name) = ($pkg =~ /^(\S+)/);
-			    unless ($allowed{$name}) {
-				tag "build-depends-without-arch-dep", "";
-				last;
-			    }
+		}
+		for my $rule (@global_depends) {
+			if ($_ =~ /$rule->[1]/) {
+				$needed{$rule->[0]}++;
+			}
+		}
+		if (/^(\S+):(.*)/) {
+			$target = $1;
+			if (grep ($_ eq $target, @rules)) {
+				push (@rules, split (' ', $2));
+			}
+		}
+		if (grep ($_ eq $target, @rules)) {
+			for my $rule (@rule_clean_depends) {
+				if ($_ =~ /$rule->[1]/) {
+					$needed_clean{$rule->[0]}++;
+				}
 			}
 		}
 	}
+	close RULES;
 
 	tag "build-depends-indep-without-arch-indep", ""
 		if (-e "fields/build-depends-indep" && $arch_indep_packages == 0);
 
 	my $is_dep_field = sub { grep { $_ eq $_[0] } qw(build-depends build-depends-indep) };
-	
+
+	my %depend;
 	for my $field (qw(build-depends build-depends-indep build-conflicts build-conflicts-indep)) {
 		if (open(FH, "fields/$field")) {
 			#Get data and clean it
 			my $data = <FH>;
 			unfold($field, \$data);
 			$data =~ s/^\s*(.+?)\s*$/$1/;
+			$depend{$field} = Dep::parse($data);
 
 			for my $dep (split /\s*,\s*/, $data) {
 				my @alternatives;
@@ -539,6 +534,48 @@ if ($type eq "source") {
 					tag "bad-relation", "$field: $part_d_orig"
 					    if $rest;
 				}
+			}
+		}
+	}
+	$depend{'build-depends'} ||= Dep::parse('');
+	$depend{'build-depends-indep'} ||= Dep::parse('');
+
+	# Make sure that all the required build dependencies are there.	 Don't
+	# issue missing-build-dependency errors for debhelper, since there's
+	# another test that does that and it would just be a duplicate.
+	for my $package (keys %needed_clean) {
+		my $dep = Dep::parse($package);
+		unless (Dep::implies($depend{'build-depends'}, $dep)) {
+			if (Dep::implies($depend{'build-depends-indep'}, $dep)) {
+				tag "build-depends-indep-should-be-build-depends", $package;
+			} else {
+				tag "missing-build-dependency", $package
+				    if $package ne 'debhelper';
+			}
+		}
+	}
+	for my $package (keys %needed) {
+		my $dep = Dep::parse($package);
+		unless (Dep::implies($depend{'build-depends'}, $dep)) {
+			unless (Dep::implies($depend{'build-depends-indep'}, $dep)) {
+				if ($package eq 'dh_python') {
+					tag "missing-dh_python-build-dependency";
+				} else {
+					tag "missing-build-dependency", $package;
+				}
+			}
+		}
+	}
+	if (-e "fields/build-depends" && $arch_dep_packages == 0) {
+		open(FH, "fields/build-depends") or fail("cannot read fields/build-depends: $!");
+		my $build_depends = <FH>;
+		close FH;
+		my @packages = split /\s*,\s*/, $build_depends;
+		foreach my $pkg (@packages) {
+			my ($name) = ($pkg =~ /^(\S+)/);
+			unless ($needed_clean{$name}) {
+				tag "build-depends-without-arch-dep", $name;
+				last;
 			}
 		}
 	}
