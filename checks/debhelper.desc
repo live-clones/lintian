@@ -75,7 +75,11 @@ Info: The source package declares the debhelper compatibility version
 
 Tag: package-uses-deprecated-debhelper-compat-version
 Type: warning
-Info: The debhelper compatibility version used by this package
- (either declared in debian/compat or in debian/rules) is marked
+Info: The debhelper compatibility version used by this package is marked
  as deprecated by the debhelper developer. You should really consider
  using a newer compatibility version.
+ .
+ The compatibility version can be set in (preferred)
+ <tt>debian/compat</tt> or by setting and exporting DH_COMPAT in
+ <tt>debian/rules</tt>.  If it is not set in either place, debhelper
+ defaults to the deprecated compatibility version 1.

@@ -10,6 +10,10 @@ lintian (1.23.17) UNRELEASED; urgency=low
   * checks/debdiff{.desc,}:
     + [RA] Warn if the diff contains debian/substvars.  Based on a patch
       by Michael Ablassmeier.  (Closes: #359646)
+  * checks/debhelper.desc:
+    + [RA] When explaining the warning about deprecated debhelper
+      compatibility versions, mention that debhelper defaults to version 1
+      if not set anywhere.  (Closes: #360711)
   * checks/fields{.desc,}:
     + [RA] Allow dpatch in Build-Depends for arch-independent packages if
       it is invoked in clean, build-arch, or binary-arch.
