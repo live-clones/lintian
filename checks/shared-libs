@@ -41,6 +41,19 @@ my %ldso_dir = map { $_ => 1 }
         lib/libc5-compat
       );
 
+# The following architectures should always have a STACK setting in shared
+# libraries to disable executable stack.  Other architectures don't always add
+# this section and therefore can't be checked.
+my %stack_arches = map { $_ => 1 }
+    qw( alpha
+	amd64
+	i386
+	m68k
+	powerpc
+	s390
+	sparc
+      );
+
 my $file;
 my $must_call_ldconfig;
 my $postrm = "control/postrm";
@@ -164,10 +177,18 @@ for (keys %files) {
 	    $must_call_ldconfig = $real_file;
 	}
 
-	# executable stack
+	# executable stack.  We can only warn about a missing section on some
+	# architectures.  Only warn if there's an Architecture field; if
+	# that's missing, we'll already be complaining elsewhere.
 	if (exists $objsomething{$cur_file}) {
 	    if (not defined $STACK{$cur_file}) {
-		tag "shlib-without-PT_GNU_STACK-section", $cur_file;
+		if (open(FH, "fields/architecture")) {
+		    my $arch = <FH>;
+		    close FH;
+		    chomp $arch;
+		    tag "shlib-without-PT_GNU_STACK-section", $cur_file
+			if $stack_arches{$arch};
+		}
 	    } elsif ($STACK{$cur_file} ne "rw-") {
 		tag "shlib-with-executable-stack", $cur_file;
 	    }
