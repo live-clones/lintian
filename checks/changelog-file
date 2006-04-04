@@ -252,7 +252,7 @@ if (@entries) {
 
 # read the changelog itself
 #
-# emacs only looks at the last "local variables:" in a file, and only at
+# emacs only looks at the last "local variables" in a file, and only at
 # one within 3000 chars of EOF and on the last page (^L), but that's a bit
 # pesky to replicate.  Demanding a match of $prefix and $suffix ought to
 # be enough to avoid false positives.
@@ -267,7 +267,7 @@ while (<IN>) {
 	tag "wrong-bug-number-in-closes", "l$.:$1" if $2;
     }
 
-    if (/^(.*)Local variables:(.*)$/i) {
+    if (/^(.*)Local\ variables:(.*)$/i) {
 	$prefix = $1;
 	$suffix = $2;
     }
