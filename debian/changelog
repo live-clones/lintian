@@ -1,5 +1,7 @@
 lintian (1.23.17) UNRELEASED; urgency=low
 
+  The "happy Nanaimo hacking" release
+
   * checks/binaries:
     + [RA] Detect klibc binaries from their requested interpreter and
       allow them to appear static.  (Closes: #328850)
@@ -79,7 +81,7 @@ lintian (1.23.17) UNRELEASED; urgency=low
   * lib/Util.pm:
     + [RA] Add system_env, like system but sanitizing the environment.
 
- -- Russ Allbery <rra@debian.org>  Tue,  4 Apr 2006 12:22:01 -0700
+ -- Russ Allbery <rra@debian.org>  Tue,  4 Apr 2006 15:32:34 -0700
 
 lintian (1.23.16) unstable; urgency=low
 
