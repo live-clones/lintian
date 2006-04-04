@@ -105,6 +105,8 @@ sub format_ref {
 	    } elsif (exists $url{$man}) {
 		$foo[$u] = "<a href=\"$url{$man}\">$foo[$u]</a>";
 	    }
+	} elsif ($foo[$u] =~ m,\s*([\w_-]+\(\d+\w*\))\s*$,i) {
+	    $foo[$u] = "the $foo[$u] manual page";
 	}
     }
 	

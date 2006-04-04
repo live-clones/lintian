@@ -468,7 +468,7 @@ Info: The package doesn't specify a build dependency on a package that is
 
 Tag: missing-dh_python-build-dependency
 Type: error
-Ref: dh_python man page
+Ref: dh_python(1)
 Info: The package runs dh_python in <tt>debian/rules</tt> but doesn't
  build-depend on python. dh_python requires Python to run, so packages
  using dh_python must build-depend on python, even if they don't otherwise

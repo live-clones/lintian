@@ -36,10 +36,11 @@ Info: This package contains debian/*.ex and/or debian/ex.* files
 
 Tag: dh_testversion-is-deprecated
 Type: warning
+Ref: dh_testversion(1)
 Info: This package calls dh_testversion in its <tt>debian/rules</tt> file.
- As dh_testversion.1 says, dh_testversion is deprecated. Packages
- using debhelper should use versioned build dependencies to ensure
- that the correct version of debhelper is installed.
+ dh_testversion is deprecated. Packages using debhelper should use
+ versioned build dependencies to ensure that the correct version of
+ debhelper is installed.
 
 Tag: dh_dhelp-is-deprecated
 Type: warning
@@ -53,28 +54,26 @@ Info: This package calls dh_dhelp in its <tt>debian/rules</tt> file.
 
 Tag: dh_suidregister-is-obsolete
 Type: warning
+Ref: dh_suidregister(1)
 Info: suidregister is obsoleted by dpkg-statoverride, so registration of
  files in with dh_suidregister is unnecessary, and even harmful.
- .
- Please refer to the dh_suidregister(1) manual page for more information.
 
 Tag: debhelper-compat-file-is-empty
 Type: error
+Ref: debhelper(7)
 Info: The source package has an empty debian/compat file. This is an error,
  the compat level of debhelper should be in there.
- .
- Please refer to the debhelper(7) manual page for more information.
 
 Tag: declares-possibly-conflicting-debhelper-compat-versions
 Type: error
+Ref: debhelper(7)
 Info: The source package declares the debhelper compatibility version
  both in the debian/compat file and in the rules file. If these ever
  get out of synchronisation, the package may not build as expected.
- .
- Please refer to the debhelper(7) manual page for more information.
 
 Tag: package-uses-deprecated-debhelper-compat-version
 Type: warning
+Ref: debhelper(7)
 Info: The debhelper compatibility version used by this package is marked
  as deprecated by the debhelper developer. You should really consider
  using a newer compatibility version.
