@@ -474,6 +474,12 @@ Info: The package runs dh_python in <tt>debian/rules</tt> but doesn't
  using dh_python must build-depend on python, even if they don't otherwise
  need Python to build.
 
+Tag: build-conflicts-with-build-dependency
+Type: error
+Ref: policy 7.6
+Info: The package build-conflicts with a package that it also
+ build-depends on.
+
 Tag: package-has-a-duplicate-relation
 Type: warning
 Info: The package seems to declare a relation on another package which is
@@ -534,6 +540,12 @@ Info: The package seems to declare a relation on libdb1-compat.
  This library exists for compatibility with applications built against
  glibc 2.0 or 2.1. There is intentionally no corresponding development
  package. Do not link new applications against this library!
+
+Tag: conflicts-with-dependency
+Type: error
+Ref: 7.3
+Info: The package seems to conflict with one of its dependencies,
+ recommendations, or suggestions.
 
 Tag: bad-menu-item
 Type: error

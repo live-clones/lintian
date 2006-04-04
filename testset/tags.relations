@@ -1,3 +1,5 @@
+E: relations source: build-conflicts-with-build-dependency bar [alpha test]
+E: relations source: build-conflicts-with-build-dependency foo [amd64 i386]
 E: relations source: build-depends-on-essential-package-without-using-version build-depends-indep: bash
 E: relations source: build-depends-on-essential-package-without-using-version build-depends: findutils
 E: relations source: build-depends-on-obsolete-package build-depends-indep: debmake
@@ -13,6 +15,8 @@ E: relations-multiple-libs: package-depends-on-multiple-tk-versions tk8.2 tk8.3
 E: relations-multiple-libs: package-depends-on-multiple-tkx-versions tkx8.2 tkx8.3
 E: relations-multiple-libs: usr-doc-symlink-without-dependency relations
 E: relations: bad-version-in-relation conflicts: foobar (<< 5&5)
+E: relations: conflicts-with-dependency foo
+E: relations: conflicts-with-dependency relations
 E: relations: depends-on-essential-package-without-using-version depends: dpkg
 E: relations: needlessly-depends-on-awk depends
 E: relations: no-copyright-file

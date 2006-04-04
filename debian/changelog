@@ -28,6 +28,8 @@ lintian (1.23.17) UNRELEASED; urgency=low
       because of the clean target, and make sure users of dh_python
       build-depend on python.  yada is no longer a special case.
       (Closes: #242789, #278290)
+    + [RA] Check for conflicting with dependencies and build-conflicting
+      with build dependencies.  (Closes: #122760)
   * checks/manpages:
     + [RA] Use system_env instead of system and sanitize the environment
       before running man -l out of caution and to avoid extraneous output
