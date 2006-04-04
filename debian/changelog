@@ -57,10 +57,13 @@ lintian (1.23.17) UNRELEASED; urgency=low
       the user's environment.
     + [RA] Run readelf -l to collect interpreter information.
 
+  * lib/Dep.pm:
+    + [RA] Add initial support for analyzing architecture information in
+      dependencies instead of ignoring it.
   * lib/Util.pm:
     + [RA] Add system_env, like system but sanitizing the environment.
 
- -- Russ Allbery <rra@debian.org>  Sun,  2 Apr 2006 22:32:37 -0700
+ -- Russ Allbery <rra@debian.org>  Tue,  4 Apr 2006 02:49:20 -0700
 
 lintian (1.23.16) unstable; urgency=low
 

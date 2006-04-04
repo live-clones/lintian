@@ -36,15 +36,20 @@ sub Pred {
                 \s* (.*?)                   # do not attempt to parse version
                 \s* \)                      # closing parenthesis
 	      )?                            # end of optional part
+              (?:                           # start of optional architecture
+                \s* \[                      # open bracket for architecture
+                \s* (.*?)                   # don't parse architectures now
+                \s* \]                      # closing bracket
+              )?                            # end of optional architecture
 	    /x;
-    return ['PRED', $1] if not defined $2;
+    return ['PRED', $1, undef, undef, $4] if not defined $2;
     my $two = $2;
     if ($two eq '<') {
 	$two = '<<';
     } elsif ($two eq '>') {
 	$two = '>>';
     }
-    return ['PRED', $1, $two, $3];
+    return ['PRED', $1, $two, $3, $4];
 }
 
 sub Or { return ['OR', @_]; }
@@ -180,9 +185,70 @@ sub pred_implies {
     # If the names don't match, there is no relationship between them.
     return undef if $$p[1] ne $$q[1];
 
-    # If the names match, then the only difference is in the version clauses.
-    # The implication is true if p's clause is stronger than q's, or is
-    # equivalent.
+    # If the names match, then the only difference is in the architecture or
+    # version clauses.  First, check architecture.  The architectures for p
+    # must be a superset of the architectures for q.
+    my @p_arches = split(' ', $$p[4] || '');
+    my @q_arches = split(' ', $$q[4] || '');
+    if (@p_arches || @q_arches) {
+        my $p_arch_neg = @p_arches && $p_arches[0] =~ /^!/;
+        my $q_arch_neg = @q_arches && $q_arches[0] =~ /^!/;
+
+        # If p has no arches, it is a superset of q and we should fall through
+        # to the version check.
+        if (not @p_arches) {
+            # nothing
+        }
+
+        # If q has no arches, it is a superset of p and there are no useful
+        # implications.
+        elsif (not @q_arches) {
+            return undef;
+        }
+
+        # Both have arches.  If neither are negated, we know nothing useful
+        # unless q is a subset of p.
+        elsif (not $p_arch_neg and not $q_arch_neg) {
+            my %p_arches = map { $_ => 1 } @p_arches;
+            my $subset = 1;
+            for my $arch (@q_arches) {
+                $subset = 0 unless $p_arches{$arch};
+            }
+            return undef unless $subset;
+        }
+
+        # If both are negated, we know nothing useful unless p is a subset of
+        # q (and therefore has fewer things excluded, and therefore is more
+        # general).
+        elsif ($p_arch_neg and $q_arch_neg) {
+            my %q_arches = map { $_ => 1 } @q_arches;
+            my $subset = 1;
+            for my $arch (@p_arches) {
+                $subset = 0 unless $q_arches{$arch};
+            }
+            return undef unless $subset;
+        }
+
+        # If q is negated and p isn't, we'd need to know the full list of
+        # arches to know if there's any relationship, so bail.
+        elsif (not $p_arch_neg and $q_arch_neg) {
+            return undef;
+        }
+
+        # If p is negated and q isn't, q is a subset of p iff none of the
+        # negated arches in p are present in q.
+        elsif ($p_arch_neg and not $q_arch_neg) {
+            my %q_arches = map { $_ => 1 } @q_arches;
+            my $subset = 1;
+            for my $arch (@p_arches) {
+                $subset = 0 if $q_arches{substr($arch, 1)};
+            }
+            return undef unless $subset;
+        }
+    }
+
+    # Now, down to version.  The implication is true if p's clause is stronger
+    # than q's, or is equivalent.
 
     # If q has no version clause, then p's clause is always stronger.
     return 1 if not defined $$q[2];
