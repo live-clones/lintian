@@ -26,13 +26,6 @@ Info: The <tt>debian/rules</tt> file for this package does not appear to
  <tt>debian/rules</tt> must be a valid makefile and must have
  "<tt>#!/usr/bin/make -f</tt>" as its first line.
 
-Tag: debian-rules-not-valid-makefile
-Type: error
-Ref: policy 4.8
-Info: The <tt>debian/rules</tt> file for this package does not appear to
- be a syntactically valid makefile. (When <tt>make -n -p</tt> was run on
- <tt>debian/rules</tt>, it returned an error status.)
-
 Tag: debian-rules-missing-required-target
 Type: error
 Ref: policy 4.8

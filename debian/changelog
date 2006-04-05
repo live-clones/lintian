@@ -51,10 +51,10 @@ lintian (1.23.17) UNRELEASED; urgency=low
     + [RA] Use system_env instead of system out of caution and to avoid
       extraneous output when CDPATH is set.
   * checks/rules{.desc,}:
-    + [RA] Let's try this again.  Bring back the check for a well-formed
-      debian/rules file with all the required rules using the make -p
-      suggestion made on debian-devel.  Based heavily on previous work by
-      René van Bevern.  (Closes: #294926, #311786)
+    + [RA] A new set of checks that parses debian/rules and checks for
+      required rules, debian/rules as a symlink, and the correct first
+      line.  Based heavily on previous work by René van Bevern.
+      (Closes: #294926, #311786)
   * checks/scripts{.desc,}:
     + [RA] Ignore text inside single quotes and, for most checks, text
       inside double quotes when checking for bashisms.  Reported by Frank
