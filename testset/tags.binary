@@ -1,3 +1,4 @@
+E: binary source: debian-rules-missing-required-target binary-indep
 E: binary: changelog-file-not-compressed changelog
 E: binary: debian-changelog-file-missing-or-wrong-name
 E: binary: depends-on-x-metapackage depends: xorg

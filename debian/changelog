@@ -9,6 +9,8 @@ lintian (1.23.17) UNRELEASED; urgency=low
     + [RA] Include all combinations of cpu and os from the dpkg cputable
       and ostable files (as of dpkg 1.13.16).  (Closes: #337034, #357433)
     + [RA] Include a list of known X metapackages.
+  * checks/control-file{.desc,}:
+    + [RA] Warn if debian/control in a source package is a symlink.
   * checks/debdiff{.desc,}:
     + [RA] Warn if the diff contains debian/substvars.  Based on a patch
       by Michael Ablassmeier.  (Closes: #359646)
@@ -48,6 +50,11 @@ lintian (1.23.17) UNRELEASED; urgency=low
   * checks/po-debconf:
     + [RA] Use system_env instead of system out of caution and to avoid
       extraneous output when CDPATH is set.
+  * checks/rules{.desc,}:
+    + [RA] Let's try this again.  Bring back the check for a well-formed
+      debian/rules file with all the required rules using the make -p
+      suggestion made on debian-devel.  Based heavily on previous work by
+      René van Bevern.  (Closes: #294926, #311786)
   * checks/scripts{.desc,}:
     + [RA] Ignore text inside single quotes and, for most checks, text
       inside double quotes when checking for bashisms.  Reported by Frank
@@ -73,6 +80,9 @@ lintian (1.23.17) UNRELEASED; urgency=low
       the user's environment.
     + [RA] Run readelf -l to collect interpreter information.
 
+  * debian/control:
+    + [RA] Depend on make for debian/rules checks.
+
   * lib/Dep.pm:
     + [RA] Add initial support for analyzing architecture information in
       dependencies instead of ignoring it.
@@ -81,7 +91,10 @@ lintian (1.23.17) UNRELEASED; urgency=low
   * lib/Util.pm:
     + [RA] Add system_env, like system but sanitizing the environment.
 
- -- Russ Allbery <rra@debian.org>  Tue,  4 Apr 2006 15:32:34 -0700
+  * man/lintian.1:
+    + [RA] Mention the new rules check class.
+
+ -- Russ Allbery <rra@debian.org>  Tue,  4 Apr 2006 20:53:09 -0700
 
 lintian (1.23.16) unstable; urgency=low
 

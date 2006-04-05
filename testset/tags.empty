@@ -1,3 +1,4 @@
+E: empty source: debian-rules-missing-required-target binary-arch
 E: empty source: maintainer-address-missing empty
 E: empty source: no-standards-version-field
 E: empty: maintainer-address-missing empty

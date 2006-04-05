@@ -1,0 +1,42 @@
+Check-Script: rules
+Author: Russ Allbery <rra@debian.org>
+Standards-Version: 3.6.2
+Type: source
+Unpack-Level: 1
+Needs-Info: debfiles
+Info: Check targets and actions in debian/rules.
+Abbrev: rul
+
+Tag: debian-rules-is-symlink
+Type: warning
+Info: The file <tt>debian/rules</tt> is a symlink instead of a regular
+ file. This is unnecessary and makes package checking and manipulation
+ more difficult. If the rules file should be available in the source
+ package under multiple names, make <tt>debian/rules</tt> the real
+ file and the other names symlinks to it.
+ .
+ This problem may have prevented lintian from performing other checks,
+ leading to undetected changelog errors.
+
+Tag: debian-rules-not-a-makefile
+Type: error
+Ref: policy 4.8
+Info: The <tt>debian/rules</tt> file for this package does not appear to
+ be a makefile or does not start with the required line.
+ <tt>debian/rules</tt> must be a valid makefile and must have
+ "<tt>#!/usr/bin/make -f</tt>" as its first line.
+
+Tag: debian-rules-not-valid-makefile
+Type: error
+Ref: policy 4.8
+Info: The <tt>debian/rules</tt> file for this package does not appear to
+ be a syntactically valid makefile. (When <tt>make -n -p</tt> was run on
+ <tt>debian/rules</tt>, it returned an error status.)
+
+Tag: debian-rules-missing-required-target
+Type: error
+Ref: policy 4.8
+Info: The <tt>debian/rules</tt> file for this package does not provide one
+ of the required targets.  All of build, binary, binary-arch,
+ binary-indep, and clean must be provided, even if they don't do anything
+ for this package.

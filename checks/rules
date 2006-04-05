@@ -1,0 +1,100 @@
+# rules -- lintian check script -*- perl -*-
+
+# Copyright (C) 2006 Russ Allbery <rra@debian.org>
+# Copyright (C) 2005 René van Bevern <rvb@pro-linux.de>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+# GNU General Public License for more details.
+
+package Lintian::rules;
+use strict;
+use Tags;
+use Util;
+
+# The following targets are required per Policy.
+my %required = map { $_ => 1 }
+    qw(build binary binary-arch binary-indep clean);
+
+sub run {
+
+my $pkg = shift;
+my $type = shift;
+
+# Policy could be read as allowing debian/rules to be a symlink to some other
+# file, and in a native Debian package it could be a symlink to a file that we
+# didn't unpack.  Warn if it's a symlink (dpkg-source does as well) and skip
+# all the tests if we then can't read it.
+if (-l "debfiles/rules") {
+    tag "debian-rules-is-symlink", "";
+    return 0 unless -f "debfiles/rules";
+}
+
+open(RULES, '< debfiles/rules') or fail("Failed opening rules: $!");
+
+# Check for required #!/usr/bin/make -f opening line.
+my $start = <RULES>;
+tag "debian-rules-not-a-makefile", ""
+    unless $start =~ m%^\#!\s*/usr/bin/make\s+-f\s*$%;
+
+# Scan debian/rules looking for other things of interest, particularly whether
+# it includes any other files.
+my $includes = 0;
+local $_;
+while (<RULES>) {
+    $includes = 1 if /^ *[s-]?include\s+/;
+}
+close RULES;
+
+# Analyze the available targets.  If the makefile contained any includes, give
+# it a free pass and assume everything is fine.  It may have included some
+# makefile fragment from its build dependencies that we can't check.
+#
+# Some explanation of the magic here:  -p says to print the database, which
+# lets us use make as the makefile parser instead of having to do it
+# ourselves.  -q is like -n but does even less, since we're throwing away the
+# results (but means either 0 or 1 is a non-error exit status).  -r and -R
+# suppress implicit rules and variables, which we're not interested in and
+# which just bloat the output that we have to throw away and slow things down.
+# Finally, MAKE=true prevents make from using its magic handling of make
+# recursion, which we don't want it to try because the other makefiles that we
+# may be trying to recurse into probably haven't been created yet.
+unless ($includes) {
+    open(MAKE, 'env - PATH="$PATH" make -f debfiles/rules -qprR MAKE=true |')
+	or fail("Cannot run make: $!");
+    local $_;
+
+    # We're looking only for the required targets.  Ignore everything else.
+    my %seen;
+    while (<MAKE>) {
+	next unless /^([^\s:]+):/;
+	my $target = $1;
+	next unless $required{$target};
+	$seen{$target}++;
+    }
+    close MAKE;
+
+    # If make exited with non-zero status, we probably have a syntactically
+    # invalid makefile (since we already ruled out includes).
+    my $status = ($? >> 8);
+    tag "debian-rules-not-valid-makefile", ""
+	if ($status != 0 && $status != 1);
+
+    # Make sure all the required rules were seen.
+    for my $target (sort keys %required) {
+	tag "debian-rules-missing-required-target", $target
+	    unless $seen{$target};
+    }
+}
+
+}
+
+1;
+
+# vim: syntax=perl ts=8 sw=4

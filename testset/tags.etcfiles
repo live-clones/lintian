@@ -1,3 +1,4 @@
+E: etcfiles source: debian-rules-missing-required-target binary-arch
 E: etcfiles: changelog-file-not-compressed changelog
 E: etcfiles: file-in-etc-not-marked-as-conffile /etc/improper
 E: etcfiles: file-in-etc-not-marked-as-conffile /etc/improper-link

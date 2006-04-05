@@ -1,3 +1,4 @@
+E: libbaz source: debian-rules-missing-required-target binary-indep
 E: libbaz1: control-file-has-bad-permissions shlibs 0755 != 0644
 E: libbaz1: duplicate-entry-in-shlibs-control-file libdoesntexist2 1.0
 E: libbaz1: duplicate-entry-in-shlibs-control-file udeb: libdoesntexist2 1.0

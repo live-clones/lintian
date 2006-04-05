@@ -31,3 +31,11 @@ Type: error
 Info: One of the paragraphs of your debian/control contains the same
  field more than once. This can lead to an unexpected behaviour of dpkg
  and apt.
+
+Tag: debian-control-file-is-a-symlink
+Type: warning
+Info: The <tt>debian/control</tt> file is a symlink rather than a regular
+ file. Using symlinks for required source package files is unnecessary and
+ makes package checking and manipulation more difficult. If the control
+ file should be available in the source package under multiple names, make
+ <tt>debian/control</tt> the real file and the other names symlinks to it.
