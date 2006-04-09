@@ -69,6 +69,8 @@ lintian (1.23.17) UNRELEASED; urgency=low
       don't use invoke-rc.d.  Thanks, Lars Wirzenius.  (Closes: #353659)
     + [RA] Find missing ucf dependencies and restructure the code to allow
       easier addition of similar checks.  (Closes: #261891)
+    + [RA] Add python2.5 and lua50 to the list of valid interpreters.
+      (Closes: #361601, #361644)
   * checks/shared-libs:
     + [RA] Limit shlib-without-PT_GNU_STACK-section to only those
       architectures where gcc always adds the section.  Thanks to Frans
