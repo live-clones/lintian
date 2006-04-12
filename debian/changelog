@@ -11,6 +11,9 @@ lintian (1.23.17) UNRELEASED; urgency=low
     + [RA] Include a list of known X metapackages.
   * checks/control-file{.desc,}:
     + [RA] Warn if debian/control in a source package is a symlink.
+  * checks/debconf:
+    + [RA] Allow Indices as a template field.  cdebconf uses it and
+      debconf ignores it.  Reported by Frans Pop.  (Closes: #361986)
   * checks/debdiff{.desc,}:
     + [RA] Warn if the diff contains debian/substvars.  Based on a patch
       by Michael Ablassmeier.  (Closes: #359646)
