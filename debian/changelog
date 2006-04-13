@@ -11,6 +11,12 @@ lintian (1.23.17) UNRELEASED; urgency=low
     + [RA] Include a list of known X metapackages.
   * checks/control-file{.desc,}:
     + [RA] Warn if debian/control in a source package is a symlink.
+  * checks/copyright-file{.desc,}:
+    + [RA] Don't assume mentions of GPL or GNU General Public License
+      after what look like mail headers are referring to the license of
+      the package.  Be a bit more specific in the old FSF address check
+      to avoid false positives on other Cambridge, MA addresses.  Reported
+      by Adam C. Powell IV.  (Closes: #205934)
   * checks/debconf:
     + [RA] Allow Indices as a template field.  cdebconf uses it and
       debconf ignores it.  Reported by Frans Pop.  (Closes: #361986)

@@ -162,8 +162,9 @@ if (m,usr/doc/copyright,) {
     $wrong_directory_detected = 1;
 }
 
-# lame check for old FSF zip code
-if (m/(02139|02111-1307)/) {
+# Lame check for old FSF zip code.  Try to avoid false positives from other
+# Cambridge, MA addresses.
+if (m/(Free\s*Software\s*Foundation.*02139|02111-1307)/s) {
     tag "old-fsf-address-in-copyright-file", "";
 }
 
@@ -186,9 +187,15 @@ if ((m,common-licenses(/\S+),) && (! m,/usr/share/common-licenses/,)) {
     tag "copyright-does-not-refer-to-common-license-file", "$1";
 }
 
+# This check is a bit prone to false positives, since some other licenses
+# mention the GPL.  Also exclude any mention of the GPL following what looks
+# like mail headers, since sometimes e-mail discussions of licensing are
+# included in the copyright file but aren't referring to the license of the
+# package.
 if (m/(GNU General Public License|GPL)/ && !m,/usr/share/common-licenses,
     && !m/Zope Public License/ && !m/LICENSE AGREEMENT FOR PYTHON 1.6.1/
     && !m/LaTeX Project Public License/ && !m/GNU Free Documentation License/
+    && !m/(^From:.*^To:|^To:.*^From:).*(GNU General Public License|GPL)/ms
     && !$wrong_directory_detected) {
     tag "copyright-should-refer-to-common-license-file-for-gpl", "";
 }
