@@ -29,17 +29,43 @@ Info: Packages must not provide or install files into the directories
  /usr/bin/X11/, /usr/include/X11/ or /usr/lib/X11/.
 Ref: policy 11.8.7
 
-Tag: packages-installs-file-to-usr-x11r6
-Type: warning
-Info: Packages using the X Window System should not be configured to install
- files under the /usr/X11R6/ directory unless they use imake. The /usr/X11R6/
- directory hierarchy should be regarded as deprecated for all packages except
- the X Window System itself.
+Tag: package-installs-font-to-usr-x11r6
+Type: error
+Info: The standard location for X fonts has moved to /usr/share/fonts/X11.
+ Packages providing X fonts must install them into the new path.  Fonts
+ installed into the old /usr/X11R6/lib/X11/fonts path may not be seen by
+ the X server.
  .
- Programs that use GNU autoconf and automake are usually easily configured at
- compile time to use /usr/ instead of /usr/X11R6/, and this should be done
- whenever possible.
-Ref: policy 11.8.7
+ If the package uses imake, it must build-depend on xutils-dev (>=
+ 1:1.0.2-2) for the correct paths. If it uses dh_installxfonts to handle X
+ font installation, it must build-depend on debhelper (>= 5.0.29).
+
+Tag: package-installs-file-to-usr-x11r6-bin
+Type: error
+Info: Debian has switched to the modular X tree which now uses the regular
+ FHS paths, and all packages must follow. All packages installing binaries
+ must install them into /usr/bin (or some other appropriate location)
+ instead of /usr/X11R6/bin.
+ .
+ The x11-common package attempts to change /usr/X11R6/bin into a symlink
+ to /usr/bin, so if this migration has already occurred, a package
+ installing files into /usr/X11R6/bin may appear to install
+ successfully. However, such a package will be left in an inconsistent
+ state and may orphan files when the compatibility link goes away.
+ .
+ If the package uses imake, it must build-depend on xutils-dev (>=
+ 1:1.0.2-2) for the correct paths.
+
+Tag: package-installs-file-to-usr-x11r6
+Type: error
+Info: Packages using the X Window System should not be configured to install
+ files under the /usr/X11R6/ directory. Debian has switched to the modular
+ X tree which now uses regular FHS paths and all packages should follow.
+ .
+ Programs that use GNU autoconf and automake are usually easily configured
+ at compile time to use /usr/ instead of /usr/X11R6/.  Packages that use
+ imake must build-depend on xutils-dev (>= 1:1.0.2-2) for the correct
+ paths.
 
 Tag: config-file-reserved $file
 Type: error

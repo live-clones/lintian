@@ -235,11 +235,15 @@ while (<IN>) {
 	}
 
 	#----------------- /usr/X11R6/
+	elsif ($file =~ m,^usr/X11R6/bin,) {
+	    tag "package-installs-file-to-usr-x11r6-bin", "$file";
+	}
+	elsif ($file =~ m,^usr/X11R6/lib/X11/fonts,) {
+	    tag "package-installs-font-to-usr-x11r6", "$file";
+	}
 	elsif ($file =~ m,^usr/X11R6/, and
-	       $file !~ m,^usr/X11R6/lib/X11/fonts, and #font packages are allowed
-	       $perm !~ m,^l, and #links to FHS locations are encouraged
-	       $source_pkg ne "xfree86") { #The X Window System is allowed to do anything
-	    tag "packages-installs-file-to-usr-x11r6", "$file";
+	       $perm !~ m,^l,) { #links to FHS locations are allowed
+	    tag "package-installs-file-to-usr-x11r6", "$file";
 	}
 
 	# ---------------- /usr/lib/sgml

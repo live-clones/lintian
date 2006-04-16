@@ -14,6 +14,14 @@ E: manpages: manpage-not-compressed-with-gzip usr/X11R6/man/man1/rstartd.1x.gz
 E: manpages: manpage-not-compressed-with-gzip usr/share/man/man1/usr-bin-binary-alt.1.gz
 E: manpages: manpage-not-compressed-with-gzip usr/share/man/man1/usr-sbin-binary.1.gz
 E: manpages: manpage-not-compressed-with-max-compression usr/share/man/man6/usr-games-binary.6.gz
+E: manpages: package-installs-file-to-usr-x11r6 usr/X11R6/
+E: manpages: package-installs-file-to-usr-x11r6 usr/X11R6/man/
+E: manpages: package-installs-file-to-usr-x11r6 usr/X11R6/man/man1/
+E: manpages: package-installs-file-to-usr-x11r6 usr/X11R6/man/man1/rstartd.1x.gz
+E: manpages: package-installs-file-to-usr-x11r6 usr/X11R6/man/man6/
+E: manpages: package-installs-file-to-usr-x11r6 usr/X11R6/man/man6/X11R6-binary.man
+E: manpages: package-installs-file-to-usr-x11r6-bin usr/X11R6/bin/
+E: manpages: package-installs-file-to-usr-x11r6-bin usr/X11R6/bin/rstartd
 E: manpages: x11-games-should-be-in-usr-games usr/X11R6/man/man6/X11R6-binary.man
 W: manpages source: ancient-standards-version 3.2.1
 W: manpages source: binary-nmu-debian-revision-in-source 4-0.0.1
@@ -32,11 +40,3 @@ W: manpages: manpage-has-bad-whatis-entry usr/share/man/man1/usr-bin-binary.1
 W: manpages: manpage-has-bad-whatis-entry usr/share/man/man1/usr-sbin-binary.1.gz
 W: manpages: manpage-has-bad-whatis-entry usr/share/man/man6/usr-games-binary.6.gz
 W: manpages: manpage-has-errors-from-man usr/share/man/man1/test-latin1-chars.1p.gz 9: warning: can't find numbered character 228
-W: manpages: packages-installs-file-to-usr-x11r6 usr/X11R6/
-W: manpages: packages-installs-file-to-usr-x11r6 usr/X11R6/bin/
-W: manpages: packages-installs-file-to-usr-x11r6 usr/X11R6/bin/rstartd
-W: manpages: packages-installs-file-to-usr-x11r6 usr/X11R6/man/
-W: manpages: packages-installs-file-to-usr-x11r6 usr/X11R6/man/man1/
-W: manpages: packages-installs-file-to-usr-x11r6 usr/X11R6/man/man1/rstartd.1x.gz
-W: manpages: packages-installs-file-to-usr-x11r6 usr/X11R6/man/man6/
-W: manpages: packages-installs-file-to-usr-x11r6 usr/X11R6/man/man6/X11R6-binary.man

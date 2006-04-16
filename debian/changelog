@@ -48,6 +48,14 @@ lintian (1.23.17) UNRELEASED; urgency=low
       (Closes: #242789, #278290)
     + [RA] Check for conflicting with dependencies and build-conflicting
       with build dependencies.  (Closes: #122760)
+  * checks/files{.desc,}:
+    + [RA] For the X.Org 7 transition, add explicit checks for fonts and
+      binaries installed in /usr/X11R6.  Rename the existing check for
+      other files in /usr/X11R6 since the tag had a pluralization error
+      and we want package maintainers to see the error again and
+      reconsider whether to ignore it.  No packages should be installing
+      files in /usr/X11R6 going forward.  Remove the policy cross-refs for
+      right now until policy catches up.
   * checks/manpages:
     + [RA] Use system_env instead of system and sanitize the environment
       before running man -l out of caution and to avoid extraneous output
