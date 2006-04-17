@@ -101,9 +101,6 @@ lintian (1.23.17) UNRELEASED; urgency=low
       the user's environment.
     + [RA] Run readelf -l to collect interpreter information.
 
-  * debian/control:
-    + [RA] Depend on make for debian/rules checks.
-
   * lib/Dep.pm:
     + [RA] Add initial support for analyzing architecture information in
       dependencies instead of ignoring it.
@@ -115,7 +112,7 @@ lintian (1.23.17) UNRELEASED; urgency=low
   * man/lintian.1:
     + [RA] Mention the new rules check class.
 
- -- Russ Allbery <rra@debian.org>  Tue,  4 Apr 2006 20:53:09 -0700
+ -- Russ Allbery <rra@debian.org>  Sun, 16 Apr 2006 21:34:20 -0700
 
 lintian (1.23.16) unstable; urgency=low
 
