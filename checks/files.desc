@@ -38,7 +38,7 @@ Info: The standard location for X fonts has moved to /usr/share/fonts/X11.
  .
  If the package uses imake, it must build-depend on xutils-dev (>=
  1:1.0.2-2) for the correct paths. If it uses dh_installxfonts to handle X
- font installation, it must build-depend on debhelper (>= 5.0.29).
+ font installation, it must build-depend on debhelper (>= 5.0.31).
 
 Tag: package-installs-file-to-usr-x11r6-bin
 Type: error
