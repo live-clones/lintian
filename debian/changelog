@@ -1,4 +1,4 @@
-lintian (1.23.17) UNRELEASED; urgency=low
+lintian (1.23.17) unstable; urgency=low
 
   The "happy Nanaimo hacking" release
 
@@ -112,7 +112,7 @@ lintian (1.23.17) UNRELEASED; urgency=low
   * man/lintian.1:
     + [RA] Mention the new rules check class.
 
- -- Russ Allbery <rra@debian.org>  Sun, 16 Apr 2006 21:34:20 -0700
+ -- Russ Allbery <rra@debian.org>  Fri, 21 Apr 2006 09:36:34 -0700
 
 lintian (1.23.16) unstable; urgency=low
 
