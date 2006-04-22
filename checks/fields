@@ -50,7 +50,8 @@ my @global_clean_depends = (
 # Build-Depends-Indep as appropriate; and optional tags as above.
 my @global_depends = (
         [ 'python | python-dev' => '/usr/share/cdbs/1/class/python-distutils.mk' ],
-        [ 'python | python-dev' => '^\t\s*dh_python\s', 'missing-dh_python-build-dependency' ]
+        [ 'python | python-dev' => '^\t\s*dh_python\s', 'missing-dh_python-build-dependency' ],
+        [ 'debhelper (>= 5.0.31)' => '^\t\s*dh_installxfonts', 'missing-dh_installxfonts-build-dependency' ],
 );
 
 # Similarly, this list of packages, regexes, and optional tags say that if the
