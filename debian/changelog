@@ -1,3 +1,19 @@
+lintian (1.23.18) unstable; urgency=low
+
+  The "brown paper Python" release
+
+  * checks/fields:
+    + [RA] Redo handling of build dependencies to allow a custom tag to be
+      specified and to allow a general dependency string to be required
+      rather than a simple package name.  As a result, dh_python handling
+      is no longer a buggy special case.  Allow either python or
+      python-dev for dh_python and the cdbs Python rules.  Thanks, Torsten
+      Merek and Aaron M. Ucko.  (Closes: #364297, #364330)
+    + [RA] Require at least quilt 0.40 if /usr/share/quilt/quilt.make is
+      included.  Thanks, Michele Baldessari.
+
+ -- Russ Allbery <rra@debian.org>  Sat, 22 Apr 2006 15:34:22 -0700
+
 lintian (1.23.17) unstable; urgency=low
 
   The "happy Nanaimo hacking" release

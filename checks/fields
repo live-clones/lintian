@@ -32,29 +32,30 @@ use Util;
 
 # Certain build tools must be listed in Build-Depends even if there are no
 # arch-specific packages because they're required in order to run the clean
-# rule.  (See Policy 7.6.)  The following is a list of pairs of packages and
+# rule.  (See Policy 7.6.)  The following is a list of package dependencies;
 # regular expressions that, if they match anywhere in the debian/rules file,
-# say that this package is allowed (and required) in Build-Depends.
+# say that this package is allowed (and required) in Build-Depends; and
+# optional tags to use for reporting the problem if some information other
+# than the default is required.
 my @global_clean_depends = (
 	[ cdbs => '^include\s+/usr/share/cdbs/' ],
 	[ dbs => '^include\s+/usr/share/dbs/' ],
 	[ debhelper => '^include\s+/usr/share/cdbs/1/rules/debhelper.mk' ],
 	[ dpatch => '^include\s+/usr/share/dpatch/' ],
-	[ quilt => '^include\s+/usr/share/quilt/' ]
+	[ 'quilt (>= 0.40)' => '^include\s+/usr/share/quilt/' ]
 );
 
-# A list of pairs of packages and regular expressions that, if they match
-# anywhere in the debian/rules file, this package must be listed in either
-# Build-Depends or Build-Depends-Indep as appropriate.  dh_python is handled
-# later as a special case rather than a literal package.
+# A list of packages; regular expressions that, if they match anywhere in the
+# debian/rules file, this package must be listed in either Build-Depends or
+# Build-Depends-Indep as appropriate; and optional tags as above.
 my @global_depends = (
-        [ python => '/usr/share/cdbs/1/class/python-distutils.mk' ],
-        [ dh_python => '^\t\s*dh_python\s' ]
+        [ 'python | python-dev' => '/usr/share/cdbs/1/class/python-distutils.mk' ],
+        [ 'python | python-dev' => '^\t\s*dh_python\s', 'missing-dh_python-build-dependency' ]
 );
 
-# Similarly, these pairs of packages and regexes say that if the regex matches
-# in one of clean, build-arch, binary-arch, or a rule they depend on, this
-# package is allowed (and required) in Build-Depends.
+# Similarly, this list of packages, regexes, and optional tags say that if the
+# regex matches in one of clean, build-arch, binary-arch, or a rule they
+# depend on, this package is allowed (and required) in Build-Depends.
 my @rule_clean_depends = (
 	[ debhelper => '^\t\s*dh_.+' ],
 	[ dpatch => '^\t\s*dpatch\s' ],
@@ -470,6 +471,9 @@ if ($type eq "source") {
 	}
 
 	# Search through rules and determine which dependencies are required.
+	# The keys in %needed and %needed_clean are the dependencies; the
+	# values are the tags to use or the empty string to use the default
+	# tag.
 	my (%needed, %needed_clean);
 	open (RULES, "debfiles/rules") or fail("cannot read debfiles/rules: $!");
 	my $target = "none";
@@ -478,12 +482,12 @@ if ($type eq "source") {
 	while (<RULES>) {
 		for my $rule (@global_clean_depends) {
 			if ($_ =~ /$rule->[1]/) {
-				$needed_clean{$rule->[0]}++;
+				$needed_clean{$rule->[0]} = $rule->[2] || $needed_clean{$rule->[0]} || '';
 			}
 		}
 		for my $rule (@global_depends) {
 			if ($_ =~ /$rule->[1]/) {
-				$needed{$rule->[0]}++;
+				$needed{$rule->[0]} = $rule->[2] || $needed{$rule->[0]} || '';
 			}
 		}
 		if (/^(\S+):(.*)/) {
@@ -495,7 +499,7 @@ if ($type eq "source") {
 		if (grep ($_ eq $target, @rules)) {
 			for my $rule (@rule_clean_depends) {
 				if ($_ =~ /$rule->[1]/) {
-					$needed_clean{$rule->[0]}++;
+					$needed_clean{$rule->[0]} = $rule->[2] || $needed_clean{$rule->[0]} || '';
 				}
 			}
 		}
@@ -570,24 +574,21 @@ if ($type eq "source") {
 	# another test that does that and it would just be a duplicate.
 	for my $package (keys %needed_clean) {
 		my $dep = Dep::parse($package);
+		my $tag = $needed_clean{$package} || 'missing-build-dependency';
 		unless (Dep::implies($depend{'build-depends'}, $dep)) {
 			if (Dep::implies($depend{'build-depends-indep'}, $dep)) {
 				tag "build-depends-indep-should-be-build-depends", $package;
 			} else {
-				tag "missing-build-dependency", $package
-				    if $package ne 'debhelper';
+				tag $tag, $package if $package ne 'debhelper';
 			}
 		}
 	}
 	for my $package (keys %needed) {
 		my $dep = Dep::parse($package);
+		my $tag = $needed{$package} || 'missing-build-dependency';
 		unless (Dep::implies($depend{'build-depends'}, $dep)) {
 			unless (Dep::implies($depend{'build-depends-indep'}, $dep)) {
-				if ($package eq 'dh_python') {
-					tag "missing-dh_python-build-dependency";
-				} else {
-					tag "missing-build-dependency", $package;
-				}
+				tag $tag, $package;
 			}
 		}
 	}
@@ -598,7 +599,7 @@ if ($type eq "source") {
 		my @packages = split /\s*,\s*/, $build_depends;
 		foreach my $pkg (@packages) {
 			my ($name) = ($pkg =~ /^(\S+)/);
-			unless ($needed_clean{$name}) {
+			unless (defined $needed_clean{$name}) {
 				tag "build-depends-without-arch-dep", $name;
 				last;
 			}

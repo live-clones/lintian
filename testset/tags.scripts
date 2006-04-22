@@ -1,3 +1,4 @@
+E: scripts source: package-uses-debhelper-but-lacks-build-depends
 E: scripts: calls-suidperl-directly ./usr/bin/suidperlfoo
 E: scripts: missing-dep-for-interpreter lefty => graphviz (./usr/bin/lefty-foo)
 E: scripts: no-copyright-file
@@ -8,6 +9,7 @@ E: scripts: wrong-path-for-interpreter #!/usr/local/bin/lefty != /usr/bin/lefty 
 E: scripts: wrong-path-for-ruby ./usr/bin/rubyfoo #!/bin/ruby1.8
 W: scripts source: ancient-standards-version 3.2.1
 W: scripts source: changelog-should-mention-nmu
+W: scripts source: package-uses-deprecated-debhelper-compat-version 1
 W: scripts source: source-nmu-has-incorrect-version-number 6
 W: scripts: binary-without-manpage lefty-foo
 W: scripts: binary-without-manpage make-foo
