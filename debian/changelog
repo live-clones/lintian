@@ -11,10 +11,10 @@ lintian (1.23.18) unstable; urgency=low
       Merek and Aaron M. Ucko.  (Closes: #364297, #364330)
     + [RA] Require at least quilt 0.40 if /usr/share/quilt/quilt.make is
       included.  Thanks, Michele Baldessari.
-    + [RA] Packages using dh_installxfonts must depend on 5.0.31 or later
-      of debhelper for the X.Org 7 transition.
+    + [RA] Packages using dh_installxfonts must build-depend on 5.0.31 or
+      later of debhelper for the X.Org 7 transition.
 
- -- Russ Allbery <rra@debian.org>  Sat, 22 Apr 2006 16:02:05 -0700
+ -- Russ Allbery <rra@debian.org>  Sat, 22 Apr 2006 16:17:14 -0700
 
 lintian (1.23.17) unstable; urgency=low
 
