@@ -39,6 +39,7 @@ Info: The standard location for X fonts has moved to /usr/share/fonts/X11.
  If the package uses imake, it must build-depend on xutils-dev (>=
  1:1.0.2-2) for the correct paths. If it uses dh_installxfonts to handle X
  font installation, it must build-depend on debhelper (>= 5.0.31).
+Ref: policy 11.8.5
 
 Tag: package-installs-file-to-usr-x11r6-bin
 Type: error
@@ -55,6 +56,7 @@ Info: Debian has switched to the modular X tree which now uses the regular
  .
  If the package uses imake, it must build-depend on xutils-dev (>=
  1:1.0.2-2) for the correct paths.
+Ref: policy 11.8.7
 
 Tag: package-installs-file-to-usr-x11r6
 Type: error
@@ -66,6 +68,7 @@ Info: Packages using the X Window System should not be configured to install
  at compile time to use /usr/ instead of /usr/X11R6/.  Packages that use
  imake must build-depend on xutils-dev (>= 1:1.0.2-2) for the correct
  paths.
+Ref: policy 11.8.7
 
 Tag: config-file-reserved $file
 Type: error

@@ -1,3 +1,11 @@
+lintian (1.23.19) UNRELEASED; urgency=low
+
+  * checks/fields.desc:
+    + [RA] Add the references to Policy for the deprecation of X11R6
+      directories now that Policy has been updated in 3.7.0.0.
+
+ -- Russ Allbery <rra@debian.org>  Wed, 26 Apr 2006 19:17:42 -0700
+
 lintian (1.23.18) unstable; urgency=low
 
   The "brown paper Python" release
