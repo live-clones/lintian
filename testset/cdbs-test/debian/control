@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Frank Lichtenheld <djpig@debian.org>
 Build-Depends: cdbs, yada
 Build-Depends-Indep: debhelper, cdbs
-Standards-Version: 3.6.2
+Standards-Version: 3.7.0
 
 Package: cdbs-test
 Architecture: all
