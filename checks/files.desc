@@ -1,7 +1,7 @@
 Check-Script: files
 Author: Christian Schwarz <schwarz@debian.org>
 Abbrev: fil
-Standards-Version: 3.5.0
+Standards-Version: 3.7.0
 Type: binary, udeb
 Unpack-Level: 1
 Needs-Info: objdump-info, scripts

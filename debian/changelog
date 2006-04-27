@@ -10,8 +10,14 @@ lintian (1.23.19) UNRELEASED; urgency=low
       include language extensions (.sh, .pl, .py), per Policy 10.4.
   * checks/scripts.desc:
     + [RA] Using invoke-rc.d is now required by Policy.
+  * checks/standards-version:
+    + [RA] Update to 3.7.0.
 
- -- Russ Allbery <rra@debian.org>  Wed, 26 Apr 2006 22:06:13 -0700
+  * debian/control:
+    + [RA] Update standards version to 3.7.0 (no changes required).
+    + [RA] Update description to note calibration for Policy 3.7.0.
+
+ -- Russ Allbery <rra@debian.org>  Wed, 26 Apr 2006 22:11:58 -0700
 
 lintian (1.23.18) unstable; urgency=low
 

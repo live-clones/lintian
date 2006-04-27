@@ -1,7 +1,7 @@
 Check-Script: scripts
 Author: Richard Braakman <dark@xs4all.nl>
 Abbrev: scr
-Standards-Version: 3.2.0
+Standards-Version: 3.7.0
 Type: binary
 Unpack-Level: 2
 Info: This script checks the #! lines of scripts in a package.
