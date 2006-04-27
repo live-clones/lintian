@@ -304,10 +304,10 @@ Info: This script calls invoke-rc.d to run an init script but then, if the
  be reuploaded (could be bin-NMUd, no source changes needed).
 
 Tag: maintainer-script-calls-init-script-directly
-Type: warning
+Type: error
 Info: This script apparently runs an init script directly rather than
  using invoke-rc.d.  The use of invoke-rc.d to invoke the /etc/init.d/*
- initscripts instead of calling them directly is strongly recommended.
- Maintainer scripts may call the init script directly if invoke-rc.d is
- not available.
+ initscripts instead of calling them directly is required.  Maintainer
+ scripts may call the init script directly only if invoke-rc.d is not
+ available.
 Ref: policy 9.3.3.2

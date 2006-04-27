@@ -4,6 +4,8 @@ lintian (1.23.19) UNRELEASED; urgency=low
     + [RA] Add the references to Policy for the deprecation of X11R6
       directories now that Policy has been updated in 3.7.0.0.
     + [RA] Policy now mandates FHS 2.3.  Update tag descriptions.
+  * checks/scripts.desc:
+    + [RA] Using invoke-rc.d is now required by Policy 3.7.0.0.
 
  -- Russ Allbery <rra@debian.org>  Wed, 26 Apr 2006 19:17:42 -0700
 
