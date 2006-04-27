@@ -11,6 +11,11 @@ lintian (1.23.19) UNRELEASED; urgency=low
       states they should be installed in /usr/lib/cgi-lib.
     + [RA] Warn about scripts installed on the user's PATH with names that
       include language extensions (.sh, .pl, .py), per Policy 10.4.
+  * checks/scripts:
+    + [RA] Debian etch release policy explicitly forbids scripts without
+      #! magic and they rely on being run from a shell.  Revert the change
+      that permitted the Perl magic without a #! line.  Thanks to Piotr
+      Engelking and Steve Langasek for pointing this out.
   * checks/scripts.desc:
     + [RA] Using invoke-rc.d is now required by Policy.
   * checks/standards-version:

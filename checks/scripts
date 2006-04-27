@@ -345,7 +345,6 @@ foreach (keys %executable) {
 		 or $scripts{$_}
 		 or $_ =~ m,^usr(/X11R6)?/man/,
 		 or $_ =~ m/\.exe$/ # mono convention
-		 or script_is_evil_and_wrong("unpacked/$_")
 		 );
 }
 

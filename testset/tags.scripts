@@ -24,6 +24,7 @@ W: scripts: binary-without-manpage suidperlfoo
 W: scripts: binary-without-manpage suidperlfoo2
 W: scripts: binary-without-manpage test.sh
 W: scripts: binary-without-manpage tkfoo
+W: scripts: executable-not-elf-or-script ./usr/bin/perl-bizarre-3
 W: scripts: file-in-usr-lib-cgi-bin usr/lib/cgi-bin/cgi-script
 W: scripts: package-installs-python-pyc usr/lib/python2.3/site-packages/test.pyc
 W: scripts: script-with-language-extension usr/bin/test.sh
