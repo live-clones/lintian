@@ -1,5 +1,8 @@
 lintian (1.23.19) UNRELEASED; urgency=low
 
+  * checks/fields{.desc,}:
+    + [RA] python-all-dev also satisfies dh_python's requirements.
+      Thanks, Marc Dequènes (Duck).  (Closes: #364943)
   * checks/files{.desc,}:
     + [RA] Add the references to Policy for the deprecation of X11R6
       directories now that Policy has been updated in 3.7.0.0.
@@ -17,7 +20,7 @@ lintian (1.23.19) UNRELEASED; urgency=low
     + [RA] Update standards version to 3.7.0 (no changes required).
     + [RA] Update description to note calibration for Policy 3.7.0.
 
- -- Russ Allbery <rra@debian.org>  Wed, 26 Apr 2006 22:11:58 -0700
+ -- Russ Allbery <rra@debian.org>  Wed, 26 Apr 2006 22:30:07 -0700
 
 lintian (1.23.18) unstable; urgency=low
 

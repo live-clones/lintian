@@ -45,12 +45,17 @@ my @global_clean_depends = (
 	[ 'quilt (>= 0.40)' => '^include\s+/usr/share/quilt/' ]
 );
 
+# The allowed Python dependencies currently.  This is the list of alternatives
+# that, either directly or through transitive dependencies that can be relied
+# upon, ensure /usr/bin/python will exist for the use of dh_python.
+my $python_depend = 'python | python-dev | python-all-dev';
+
 # A list of packages; regular expressions that, if they match anywhere in the
 # debian/rules file, this package must be listed in either Build-Depends or
 # Build-Depends-Indep as appropriate; and optional tags as above.
 my @global_depends = (
-        [ 'python | python-dev' => '/usr/share/cdbs/1/class/python-distutils.mk' ],
-        [ 'python | python-dev' => '^\t\s*dh_python\s', 'missing-dh_python-build-dependency' ],
+        [ $python_depend => '/usr/share/cdbs/1/class/python-distutils.mk' ],
+        [ $python_depend => '^\t\s*dh_python\s', 'missing-dh_python-build-dependency' ],
         [ 'debhelper (>= 5.0.31)' => '^\t\s*dh_installxfonts', 'missing-dh_installxfonts-build-dependency' ],
 );
 
