@@ -41,6 +41,9 @@ binary-indep:
 	echo "#!/bin/sh" > $(tmp)/usr/lib/cgi-bin/cgi-script
 	chmod 755 $(tmp)/usr/lib/cgi-bin/cgi-script
 
+	echo "#!/bin/sh" > $(tmp)/usr/bin/test.sh
+	chmod 755 $(tmp)/usr/bin/test.sh
+
 # Should produce complaints about a missing debhelper dependency, but not a
 # missing Python dependency.
 	dh_python

@@ -493,6 +493,11 @@ while (<IN>) {
 	    tag "svn-commit-file-in-package", "$file";
 	}
 
+	# ---------------- executables with language extensions
+	if ($file =~ m,^(usr/)?(s?bin|games)/[^/]+\.(pl|sh|py)$,) {
+	    tag "script-with-language-extension", "$file";
+	}
+
 	# ---------------- general: setuid/setgid files!
 	if ($perm =~ m/s/) {
 	    my ($setuid, $setgid) = ("","");

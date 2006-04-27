@@ -22,8 +22,10 @@ W: scripts: binary-without-manpage pyfoo
 W: scripts: binary-without-manpage rubyfoo
 W: scripts: binary-without-manpage suidperlfoo
 W: scripts: binary-without-manpage suidperlfoo2
+W: scripts: binary-without-manpage test.sh
 W: scripts: binary-without-manpage tkfoo
 W: scripts: file-in-usr-lib-cgi-bin usr/lib/cgi-bin/cgi-script
 W: scripts: package-installs-python-pyc usr/lib/python2.3/site-packages/test.pyc
+W: scripts: script-with-language-extension usr/bin/test.sh
 W: scripts: setuid-binary usr/bin/suidperlfoo 4755 root/root
 W: scripts: setuid-binary usr/bin/suidperlfoo2 4755 root/root

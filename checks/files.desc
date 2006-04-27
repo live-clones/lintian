@@ -545,3 +545,13 @@ Info: Packages shipping web server CGI files should install them in
  for the local use of webmasters.  Web servers should include /cgi-lib/ as
  a standard ScriptAlias pointing to that directory.
 Ref: policy 11.5
+
+Tag: script-with-language-extension
+Type: warning
+Info: When scripts are installed into a directory in the system PATH, the
+ script name should not include an extension such as <tt>.sh</tt> or
+ <tt>.pl</tt> that denotes the scripting language currently used to
+ implement it.  The implementation language may change; if it does,
+ leaving the name the same would be confusing and changing it would be
+ disruptive.
+Ref: policy 10.4
