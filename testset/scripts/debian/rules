@@ -13,6 +13,7 @@ binary-indep:
 	install -d $(tmp)/usr/share/doc/scripts/
 	install -d $(tmp)/usr/lib/python2.3/site-packages/
 	install -d $(tmp)/usr/lib/cgi-bin
+	install -d $(tmp)/usr/src/scripts
 	install -d $(tmp)/DEBIAN
 
 	install -m 755 pyfoo $(tmp)/usr/bin/
@@ -28,6 +29,10 @@ binary-indep:
 	install -m 755 perl-bizarre-1 $(tmp)/usr/bin/
 	install -m 755 perl-bizarre-2 $(tmp)/usr/bin/
 	install -m 755 perl-bizarre-3 $(tmp)/usr/bin/
+
+# First one should produce a warning; second one shouldn't.
+	install -m 755 gccbug.dpatch $(tmp)/usr/share/scripts/
+	install -m 755 gccbug.dpatch $(tmp)/usr/src/scripts/
 
 	echo "#!/usr/bin/perl" >> $(tmp)/usr/share/scripts/foobar.in
 	chmod 644 $(tmp)/usr/share/scripts/foobar.in

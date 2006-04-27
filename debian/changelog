@@ -16,6 +16,9 @@ lintian (1.23.19) UNRELEASED; urgency=low
       #! magic and they rely on being run from a shell.  Revert the change
       that permitted the Perl magic without a #! line.  Thanks to Piotr
       Engelking and Steve Langasek for pointing this out.
+    + [RA] Don't syntax-check *.dpatch scripts in /usr/src.  bash -n
+      doesn't stop at exit 0 and then may choke on the patch.  Thanks,
+      Matthias Klose.  (Closes: #364521)
   * checks/scripts.desc:
     + [RA] Using invoke-rc.d is now required by Policy.
   * checks/standards-version:
@@ -25,7 +28,7 @@ lintian (1.23.19) UNRELEASED; urgency=low
     + [RA] Update standards version to 3.7.0 (no changes required).
     + [RA] Update description to note calibration for Policy 3.7.0.
 
- -- Russ Allbery <rra@debian.org>  Wed, 26 Apr 2006 22:30:07 -0700
+ -- Russ Allbery <rra@debian.org>  Wed, 26 Apr 2006 23:07:13 -0700
 
 lintian (1.23.18) unstable; urgency=low
 

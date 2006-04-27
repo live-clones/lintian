@@ -328,10 +328,15 @@ while (<SCRIPTS>) {
     tag_warn("csh-considered-harmful", $filename)
         if (($base eq 'csh' or $base eq 'tcsh') and $executable{$filename});
 
+    # Don't syntax-check scripts in /usr/src that end in .dpatch.  bash -n
+    # doesn't stop checking at exit 0 and goes on to blow up on the patch
+    # itself.
     if ($base =~ /^(?:(?:b|d)?a|k|z)?sh$/) {
 	if (-x "$interpreter" && ! script_is_evil_and_wrong("unpacked/$filename")) {
-	    if (check_script_syntax($interpreter, "unpacked/$filename")) {
-		tag_error("shell-script-fails-syntax-check", $filename);
+	    if ($filename !~ m,^./usr/src/.*\.dpatch$,) {
+		if (check_script_syntax($interpreter, "unpacked/$filename")) {
+		    tag_error("shell-script-fails-syntax-check", $filename);
+		}
 	    }
 	}
 	next;
