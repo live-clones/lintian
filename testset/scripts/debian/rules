@@ -12,6 +12,7 @@ binary-indep:
 	install -d $(tmp)/usr/share/scripts/
 	install -d $(tmp)/usr/share/doc/scripts/
 	install -d $(tmp)/usr/lib/python2.3/site-packages/
+	install -d $(tmp)/usr/lib/cgi-bin
 	install -d $(tmp)/DEBIAN
 
 	install -m 755 pyfoo $(tmp)/usr/bin/
@@ -36,6 +37,9 @@ binary-indep:
 
 	echo "#!/bin/sh" > $(tmp)/usr/share/scripts/foo\$$bar
 	chmod 755 $(tmp)/usr/share/scripts/foo\$$bar
+
+	echo "#!/bin/sh" > $(tmp)/usr/lib/cgi-bin/cgi-script
+	chmod 755 $(tmp)/usr/lib/cgi-bin/cgi-script
 
 # Should produce complaints about a missing debhelper dependency, but not a
 # missing Python dependency.
