@@ -5,6 +5,10 @@ lintian (1.23.19) UNRELEASED; urgency=low
       Thanks, Marc Dequènes (Duck).  (Closes: #364943)
     + [RA] Allow python in Build-Depends if it's invoked explicitly in the
       clean rule.  Thanks, Marc Dequènes (Duck).  (Closes: #365030)
+    + [RA] Recognize the CDBS included rule files that indicate dpatch or
+      quilt will be used, check those dependencies, and require that they
+      be in Build-Depends since they're used for clean.  Thanks, Marc
+      Dequènes (Duck).  (Closes: #365041)
   * checks/files{.desc,}:
     + [RA] Add the references to Policy for the deprecation of X11R6
       directories now that Policy has been updated in 3.7.0.0.

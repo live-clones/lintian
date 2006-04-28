@@ -41,6 +41,8 @@ my @global_clean_depends = (
 	[ cdbs => '^include\s+/usr/share/cdbs/' ],
 	[ dbs => '^include\s+/usr/share/dbs/' ],
 	[ debhelper => '^include\s+/usr/share/cdbs/1/rules/debhelper.mk' ],
+	[ dpatch => '^include\s+/usr/share/cdbs/1/rules/dpatch.mk' ],
+	[ quilt => '^include\s+/usr/share/cdbs/1/rules/patchsys-quilt.mk' ],
 	[ dpatch => '^include\s+/usr/share/dpatch/' ],
 	[ 'quilt (>= 0.40)' => '^include\s+/usr/share/quilt/' ]
 );
