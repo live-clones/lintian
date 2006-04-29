@@ -286,11 +286,14 @@ while (<IN>) {
 	    }
 	}
 	# ---------------- /usr/share/man and /usr/X11R6/man
-	elsif ($file =~ m,^usr/X11R6/man/\S+, or m,^usr/share/man/\S+, ) {
+	elsif ($file =~ m,^usr/X11R6/man/\S+, or $file =~ m,^usr/share/man/\S+,) {
 	    if ($type eq 'udeb') {
 		tag "documentation-file", "$file";
 	    }
-	    if ($perm =~ m/^-.*[xt]/) {
+	    if ($perm =~ m/^d/) {
+		tag "stray-directory-in-manpage-directory", "$file"
+		    if ($file !~ m,^usr/(X11R6|share)/man/(?:[^/]+/(?:[^/]+/)?)?(man\d/)?$,);
+	    } elsif ($perm =~ m/^-.*[xt]/) {
 		tag "executable-manpage", "$file";
 	    }
 	}

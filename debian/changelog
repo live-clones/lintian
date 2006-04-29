@@ -17,6 +17,10 @@ lintian (1.23.19) UNRELEASED; urgency=low
       states they should be installed in /usr/lib/cgi-lib.
     + [RA] Warn about scripts installed on the user's PATH with names that
       include language extensions (.sh, .pl, .py), per Policy 10.4.
+    + [RA] Report directories under /usr/share/man that don't match the
+      directory layout specified in the FHS.  (Closes: #176683)
+    + [RA] Fix a very long-standing bug that caused the check for
+      executable manpages to be silently skipped.
   * checks/scripts:
     + [RA] Debian etch release policy explicitly forbids scripts without
       #! magic and they rely on being run from a shell.  Revert the change
@@ -34,7 +38,7 @@ lintian (1.23.19) UNRELEASED; urgency=low
     + [RA] Update standards version to 3.7.0 (no changes required).
     + [RA] Update description to note calibration for Policy 3.7.0.
 
- -- Russ Allbery <rra@debian.org>  Thu, 27 Apr 2006 10:30:09 -0700
+ -- Russ Allbery <rra@debian.org>  Sat, 29 Apr 2006 01:01:04 -0700
 
 lintian (1.23.18) unstable; urgency=low
 
