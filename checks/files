@@ -292,7 +292,7 @@ while (<IN>) {
 	    }
 	    if ($perm =~ m/^d/) {
 		tag "stray-directory-in-manpage-directory", "$file"
-		    if ($file !~ m,^usr/(X11R6|share)/man/(?:[^/]+/(?:[^/]+/)?)?(man\d/)?$,);
+		    if ($file !~ m,^usr/(X11R6|share)/man/(?:[^/]+/)?(man\d/)?$,);
 	    } elsif ($perm =~ m/^-.*[xt]/) {
 		tag "executable-manpage", "$file";
 	    }
