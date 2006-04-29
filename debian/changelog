@@ -1,4 +1,6 @@
-lintian (1.23.19) UNRELEASED; urgency=low
+lintian (1.23.19) unstable; urgency=low
+
+  The "Policy 3.7.0" release
 
   * checks/fields{.desc,}:
     + [RA] python-all-dev also satisfies dh_python's requirements.
@@ -38,7 +40,7 @@ lintian (1.23.19) UNRELEASED; urgency=low
     + [RA] Update standards version to 3.7.0 (no changes required).
     + [RA] Update description to note calibration for Policy 3.7.0.
 
- -- Russ Allbery <rra@debian.org>  Sat, 29 Apr 2006 01:01:04 -0700
+ -- Russ Allbery <rra@debian.org>  Sat, 29 Apr 2006 01:06:59 -0700
 
 lintian (1.23.18) unstable; urgency=low
 
