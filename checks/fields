@@ -385,7 +385,7 @@ if (($type eq "binary") || ($type eq 'udeb')) {
 					    if ($d_pkg ne "coreutils" && $known_essential{$d_pkg} && ! $d_version->[0] && &$is_dep_field($field));
 
 					tag "package-depends-on-an-x-font-package", "$field: $part_d_orig"
-					    if ($field =~ /^(pre-)?depends$/ && $d_pkg =~ /^xfont.*/ && $d_pkg ne 'xfonts-utils');
+					    if ($field =~ /^(pre-)?depends$/ && $d_pkg =~ /^xfont.*/ && $d_pkg ne 'xfonts-utils' && $d_pkg ne 'xfongs-encodings');
 
 					tag "needlessly-depends-on-awk", "$field"
 					    if ($d_pkg eq "awk" && ! $d_version->[0] && &$is_dep_field($field));

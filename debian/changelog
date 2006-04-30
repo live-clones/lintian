@@ -1,3 +1,11 @@
+lintian (1.23.20) unstable; urgency=low
+
+  * checks/fields:
+    + [RA] xfonts-encodings is also not an xfont package.  Thanks, Drew
+      Parsons.  (Closes: #365503)
+
+ -- Russ Allbery <rra@debian.org>  Sun, 30 Apr 2006 13:00:00 -0700
+
 lintian (1.23.19) unstable; urgency=low
 
   The "Policy 3.7.0" release
