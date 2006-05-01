@@ -548,6 +548,14 @@ Info: The package seems to declare a relation on libdb1-compat.
  glibc 2.0 or 2.1. There is intentionally no corresponding development
  package. Do not link new applications against this library!
 
+Tag: depends-on-python-minimal
+Type: error
+Info: The python-minimal package exists only to possibly become an
+ Essential package.  Depending on it is always an error since it should
+ never be installed without python.  If it becomes Essential, there is no
+ need to depend on it, and until then, packages that require Python must
+ depend on python.
+
 Tag: conflicts-with-dependency
 Type: error
 Ref: 7.3
