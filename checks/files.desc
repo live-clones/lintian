@@ -166,36 +166,65 @@ Tag: non-standard-dir-perm
 Type: warning
 Info: The directory has a mode different from 0755, and it's not one of the
  known exceptions.
+Ref: policy 10.9
 
-Tag: non-standard-game-executable-perm
+Tag: executable-is-not-world-readable
 Type: warning
-Info: The file has a mode different from 2755 or 0755. In some cases this 
- is intentional, but in other cases this is a bug.
+Info: All executabless should be readable by any user.  Since anyone can
+ download the Debian package and obtain a copy of the executable, no
+ security is gained by making the executable unreadable even for setuid
+ binaries.  If only members of a certain group may execute this file,
+ remove execute permission for world, but leave read permission.
+Ref: policy 10.9
 
 Tag: non-standard-executable-perm
 Type: warning
-Info: The file has a mode different from 0755. In some cases this is
- intentional, but in other cases this is a bug.
+Info: Executables that are not setuid or setgid should always have a mode
+ of 0755.  Since anyone can obtain the executable by downloading the
+ Debian package and extracting it, restricting access serves little
+ purpose.
+Ref: policy 10.9
+
+Tag: non-standard-game-executable-perm
+Type: warning
+Info: The file is owned by the games group but is not mode 2755.  If a
+ game does not have to be setgid games, it should be owned by the root
+ group like any other executable.  This executable is either owned by the
+ wrong group or is not setgid when it should be.
+
+Tag: non-standard-setuid-executable-perm
+Type: warning
+Info: The file is setuid or setgid and has a mode different from any of
+ 2755, 4755, 4754, or 6755.  Any other permissions on setuid executables
+ is probably a bug.  In particular, removing root write privileges serves
+ no purpose, group-writable setuid or setgid executables are probably bad
+ ideas, and setgid executables that are not world-executable serve little
+ purpose.
+Ref: policy 10.9
 
 Tag: setuid-binary
 Type: warning
-Info: The file is tagged SETUID. In some cases this is
- intentional, but in other cases this is a bug.
+Info: The file is tagged SETUID. In some cases this is intentional, but in
+ other cases this is a bug. If this is intentional, please add a lintian
+ override to document this fact.
 
 Tag: setgid-binary
 Type: warning
-Info: The file is tagged SETGID. In some cases this is
- intentional, but in other cases this is a bug.
+Info: The file is tagged SETGID. In some cases this is intentional, but in
+ other cases this is a bug. If this is intentional, please add a lintian
+ override to document this fact.
 
 Tag: setuid-gid-binary
 Type: warning
 Info: The file is tagged SETUID and SETGID. In some cases this is
- intentional, but in other cases this is a bug.
+ intentional, but in other cases this is a bug. If this is intentional,
+ please add a lintian override to document this fact.
 
 Tag: non-standard-file-perm
 Type: warning
 Info: The file has a mode different from 0644. In some cases this is
  intentional, but in other cases this is a bug.
+Ref: policy 10.9
 
 Tag: special-file
 Type: error

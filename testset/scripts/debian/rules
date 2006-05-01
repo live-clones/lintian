@@ -22,13 +22,16 @@ binary-indep:
 	install -m 755 rubyfoo $(tmp)/usr/bin/
 	install -m 755 make-foo $(tmp)/usr/bin/
 	install -m 755 lefty-foo $(tmp)/usr/bin/
-	install -m 4755 perlfoo $(tmp)/usr/bin/suidperlfoo2
-	install -m 4755 suidperlfoo $(tmp)/usr/bin/
+	install -m 4751 perlfoo $(tmp)/usr/bin/suidperlfoo2
+	install -m 4555 suidperlfoo $(tmp)/usr/bin/
 	install -m 755 tkfoo $(tmp)/usr/bin/
 	install -m 644 xsession-test $(tmp)/etc/X11/Xsession.d/
+
+# Permissions here aren't part of what's being tested, but let us exercise
+# some other errors.
 	install -m 755 perl-bizarre-1 $(tmp)/usr/bin/
-	install -m 755 perl-bizarre-2 $(tmp)/usr/bin/
-	install -m 755 perl-bizarre-3 $(tmp)/usr/bin/
+	install -m 750 perl-bizarre-2 $(tmp)/usr/bin/
+	install -m 754 perl-bizarre-3 $(tmp)/usr/bin/
 
 # First one should produce a warning; second one shouldn't.
 	install -m 755 gccbug.dpatch $(tmp)/usr/share/scripts/

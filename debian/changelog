@@ -3,8 +3,19 @@ lintian (1.23.20) unstable; urgency=low
   * checks/fields:
     + [RA] xfonts-encodings is also not an xfont package.  Thanks, Drew
       Parsons.  (Closes: #365503)
+  * checks/files{.desc,}:
+    + [RA] Add an explicit check for non-world-readable executables to
+      provide a more detailed explanation and tighten the accepted
+      permissions of setuid and setgid executables to just the permissions
+      mentioned in Policy 10.9.  Add Policy 10.9 references to the
+      descriptions.  Reported by Piotr Engelking.  (Closes: #365452)
+    + [RA] Add a request to the descriptions of setuid and setgid tags to
+      add a lintian override for documentation if the permissions are
+      intentional.
+    + [RA] Report a more specific tag for binaries that are owned by group
+      games but are not setgid.
 
- -- Russ Allbery <rra@debian.org>  Sun, 30 Apr 2006 13:00:00 -0700
+ -- Russ Allbery <rra@debian.org>  Sun, 30 Apr 2006 19:10:52 -0700
 
 lintian (1.23.19) unstable; urgency=low
 

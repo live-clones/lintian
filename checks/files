@@ -514,14 +514,11 @@ while (<IN>) {
 	    $setuid = $user if ($operm & 04000);
 	    $setgid = $group if ($operm & 02000);
 
-	    $wanted_operm = 0755;
-
 	    # 1st special case: program is using svgalib:
 	    if (exists $linked_against_libvga{$file}) {
 		# setuid root is ok, so remove it
 		if ($setuid eq 'root') {
 		    undef $setuid;
-		    $wanted_operm |= 04000;
 		}
 	    }
 
@@ -530,25 +527,30 @@ while (<IN>) {
 		# setgid games is ok, so remove it
 		if ($setgid eq 'games') {
 		    undef $setgid;
-		    $wanted_operm |= 02000;
 		}
 	    }
 
-	    #allow anything with suid in the name
+	    # 3rd special case: allow anything with suid in the name
 	    if ($pkg =~ m,-suid,) {
 		undef $setuid;
-		$wanted_operm |= 04000;
 	    }
 
+	    # Check for setuid and setgid that isn't expected.
 	    if ($setuid and $setgid) {
 		tag "setuid-gid-binary", $file, sprintf("%04o $owner",$operm);
 	    } elsif ($setuid) {
 		tag "setuid-binary", $file, sprintf("%04o $owner",$operm);
 	    } elsif ($setgid) {
 		tag "setgid-binary", $file, sprintf("%04o $owner",$operm);
-	    } elsif ($operm != $wanted_operm) {
-		tag "non-standard-executable-perm",
-		    sprintf("$file %04o != %04o",$operm,$wanted_operm);
+	    }
+
+	    # Check for permission problems other than the setuid status.
+	    if (($operm & 0444) != 0444) {
+		tag "executable-is-not-world-readable", $file,
+		    sprintf("%04o",$operm);
+	    } elsif ($operm != 04755 && $operm != 02755 && $operm != 06755 && $operm != 04754) {
+		tag "non-standard-setuid-executable-perm", $file,
+		    sprintf("%04o",$operm);
 	    }
 	}
 	# ---------------- general: executable files
@@ -556,14 +558,17 @@ while (<IN>) {
 	    # executable
 	    if ($owner =~ m,root/games,) {
 		if ($operm != 2755) {
-		    tag "non-standard-executable-perm", $file,
+		    tag "non-standard-game-executable-perm", $file,
 			sprintf("%04o != 2755",$operm);
 	    	}
 	    } else {
-		if ($operm != 0755) {
+		if (($operm & 0444) != 0444) {
+		    tag "executable-is-not-world-readable", $file,
+			sprintf("%04o != 0755",$operm);
+		} elsif ($operm != 0755) {
 		    tag "non-standard-executable-perm", $file,
 			sprintf("%04o != 0755",$operm);
-	    	}
+		}
 	    }
 	}
 	# ---------------- general: normal (non-executable) files
