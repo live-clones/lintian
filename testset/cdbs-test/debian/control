@@ -2,7 +2,7 @@ Source: cdbs-test
 Section: devel
 Priority: optional
 Maintainer: Frank Lichtenheld <djpig@debian.org>
-Build-Depends: cdbs, yada
+Build-Depends: cdbs, yada, patchutils (>= 0.2.25)
 Build-Depends-Indep: debhelper, cdbs
 Standards-Version: 3.7.0
 

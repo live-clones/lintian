@@ -47,6 +47,14 @@ my @global_clean_depends = (
 	[ 'quilt (>= 0.40)' => '^include\s+/usr/share/quilt/' ]
 );
 
+# These are similar, but the resulting dependency is only allowed, not
+# required.
+my @global_clean_allowed = (
+	[ patchutils => '^include\s+/usr/share/cdbs/1/rules/dpatch.mk' ],
+	[ patchutils => '^include\s+/usr/share/cdbs/1/rules/patchsys-quilt.mk' ],
+	[ patchutils => '^include\s+/usr/share/cdbs/1/rules/simple-patchsys.mk' ],
+);
+
 # The allowed Python dependencies currently.  This is the list of alternatives
 # that, either directly or through transitive dependencies that can be relied
 # upon, ensure /usr/bin/python will exist for the use of dh_python.
@@ -486,7 +494,7 @@ if ($type eq "source") {
 	# The keys in %needed and %needed_clean are the dependencies; the
 	# values are the tags to use or the empty string to use the default
 	# tag.
-	my (%needed, %needed_clean);
+	my (%needed, %needed_clean, %allowed_clean);
 	open (RULES, "debfiles/rules") or fail("cannot read debfiles/rules: $!");
 	my $target = "none";
 	local $/ = "\n";	# Read this linewise
@@ -495,6 +503,11 @@ if ($type eq "source") {
 		for my $rule (@global_clean_depends) {
 			if ($_ =~ /$rule->[1]/) {
 				$needed_clean{$rule->[0]} = $rule->[2] || $needed_clean{$rule->[0]} || '';
+			}
+		}
+		for my $rule (@global_clean_allowed) {
+			if ($_ =~ /$rule->[1]/) {
+				$allowed_clean{$rule->[0]} = 1;
 			}
 		}
 		for my $rule (@global_depends) {
@@ -611,9 +624,8 @@ if ($type eq "source") {
 		my @packages = split /\s*,\s*/, $build_depends;
 		foreach my $pkg (@packages) {
 			my ($name) = ($pkg =~ /^(\S+)/);
-			unless (defined $needed_clean{$name}) {
+			unless (defined $needed_clean{$name} || defined $allowed_clean{$name}) {
 				tag "build-depends-without-arch-dep", $name;
-				last;
 			}
 		}
 	}

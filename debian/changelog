@@ -5,6 +5,12 @@ lintian (1.23.20) unstable; urgency=low
       Parsons.  (Closes: #365503)
     + [RA] Report errors for dependencies on python-minimal.  Thanks to
       Steve Langasek for the analysis.
+    + [RA] Allow a build-dependency on patchutils when using CDBS with one
+      of the patch systems, as patchutils may be optionally used to check
+      for bad patches.  Thanks, Marc Dequènes (Duck).  (Closes: #365466)
+    + [RA] Since some packages should be in Build-Depends and some should
+      be in Build-Depends-Indep, report all of the misplaced ones rather
+      than just the first one.  That way, users know which to move.
   * checks/files{.desc,}:
     + [RA] Add an explicit check for non-world-readable executables to
       provide a more detailed explanation and tighten the accepted
@@ -17,7 +23,7 @@ lintian (1.23.20) unstable; urgency=low
     + [RA] Report a more specific tag for binaries that are owned by group
       games but are not setgid.
 
- -- Russ Allbery <rra@debian.org>  Sun, 30 Apr 2006 19:39:56 -0700
+ -- Russ Allbery <rra@debian.org>  Sun, 30 Apr 2006 19:59:02 -0700
 
 lintian (1.23.19) unstable; urgency=low
 
