@@ -246,14 +246,6 @@ while (<IN>) {
 	    tag "package-installs-file-to-usr-x11r6", "$file";
 	}
 
-	# ---------------- /usr/lib/cgi-bin
-	# Disabled at least for the time being.	 Policy still says this isn't
-	# allowed, but there is widespread objection to policy and that
-	# discussion is still ongoing.
-	#elsif ($file =~ m,^usr/lib/cgi-bin/\S,) {
-	#    tag "file-in-usr-lib-cgi-bin", "$file";
-	#}
-
 	# ---------------- /usr/lib/sgml
 	elsif ($file =~ m,^usr/lib/sgml/\S,) {
 	    if ($perm =~ m/^-.*[xs]/) {
