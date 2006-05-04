@@ -247,9 +247,12 @@ while (<IN>) {
 	}
 
 	# ---------------- /usr/lib/cgi-bin
-	elsif ($file =~ m,^usr/lib/cgi-bin/\S,) {
-	    tag "file-in-usr-lib-cgi-bin", "$file";
-	}
+	# Disabled at least for the time being.	 Policy still says this isn't
+	# allowed, but there is widespread objection to policy and that
+	# discussion is still ongoing.
+	#elsif ($file =~ m,^usr/lib/cgi-bin/\S,) {
+	#    tag "file-in-usr-lib-cgi-bin", "$file";
+	#}
 
 	# ---------------- /usr/lib/sgml
 	elsif ($file =~ m,^usr/lib/sgml/\S,) {
