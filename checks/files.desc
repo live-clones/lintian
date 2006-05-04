@@ -23,11 +23,6 @@ Info: The app-defaults files have moved to /etc/X11/app-defaults/. Files in
  this prevents X from replacing it with a compatability symlink.
 Ref: policy 11.8.6
 
-Tag: package-installs-file-to-usr-bin-x11
-Type: error
-Info: Packages must not provide or install files into the directory
- /usr/bin/X11/.  This directory is actually a symlink.
-
 Tag: package-installs-font-to-usr-x11r6
 Type: error
 Info: The standard location for X fonts has moved to /usr/share/fonts/X11.
@@ -55,6 +50,16 @@ Info: Debian has switched to the modular X tree which now uses the regular
  .
  If the package uses imake, it must build-depend on xutils-dev (>=
  1:1.0.2-2) for the correct paths.
+Ref: policy 11.8.7
+
+Tag: file-in-usr-something-x11-without-pre-depends
+Type: error
+Info: Packages that install files into /usr/include/X11 or /usr/lib/X11
+ must pre-depend on at least x11-common (>= 1:7.0.0).  These directories
+ used to be symlinks and installing files in them while they are still
+ symlinks will put files in the wrong locations and cause stranded files
+ and other problems.  x11-common is responsible for converting the
+ symlinks to regular directories.
 Ref: policy 11.8.7
 
 Tag: package-installs-file-to-usr-x11r6

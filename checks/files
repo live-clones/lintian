@@ -20,6 +20,7 @@
 
 package Lintian::files;
 use strict;
+use Dep;
 use Tags;
 use Util;
 
@@ -69,6 +70,9 @@ while (<SCRIPTS>) {
     $script{$2} = 1;
 }
 close(SCRIPTS);
+
+# We only want to warn about this once.
+my $warned_x11_predepends = 0;
 
 # Read package contents...
 open(IN,"index") or fail("cannot open index file index: $!");
@@ -229,10 +233,32 @@ while (<IN>) {
 	    tag "old-app-defaults-directory", "$file";
 	}
 
-	#----------------- /usr/bin/X11/
-	elsif ($file =~ m,^usr/bin/X11/,) {
-	    tag "package-installs-file-to-usr-bin-x11", "$file";
+	#----------------- /usr/{include,lib}/X11/
+	# Packages installing files here must pre-depend on x11-common
+	# so that the symlinks will be sorted out first.
+	elsif ($file =~ m,^usr/(?:include|lib)/X11/, && !$warned_x11_predepends) {
+	    if (open (FH, "fields/package")) {
+		my $name = <FH>;
+		close FH;
+		$name =~ s/\n//g;
+		if ($name ne 'x11-common') {
+		    my $pre_depends = '';
+		    if (open (FH, "fields/pre-depends")) {
+			$pre_depends = <FH>;
+			close FH;
+			$pre_depends =~ s/\n//g;
+		    }
+		    $pre_depends = Dep::parse($pre_depends);
+		    tag "file-in-usr-something-x11-without-pre-depends", "$file"
+			unless Dep::implies($pre_depends, Dep::parse('x11-common (>= 1:7.0.0)'));
+		}
+	    }
+
+	    # Always set this so that we don't redo the check, even if we
+	    # didn't warn.  If the first instance didn't warn, none will.
+	    $warned_x11_predepends = 1;
 	}
+
 
 	#----------------- /usr/X11R6/
 	elsif ($file =~ m,^usr/X11R6/bin,) {
@@ -391,7 +417,7 @@ while (<IN>) {
 
     # ---------------- compatibility symlinks should not be used
     if ($file =~ m,^usr/(spool|tmp)/, or
-	$file =~ m,^usr/(doc|bin|lib|include)/X11/, or
+	$file =~ m,^usr/(doc|bin)/X11/, or
 	$file =~ m,^var/adm/,) {
 	tag "use-of-compat-symlink", "$file";
     }

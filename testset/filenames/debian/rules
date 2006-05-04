@@ -88,6 +88,8 @@ binary-indep:
 	touch debian/tmp/usr/bin/X11/testxbin
 	install -d debian/tmp/usr/X11R6/bin
 	touch debian/tmp/usr/X11R6/bin/testxbin2
+	install -d debian/tmp/usr/include/X11
+	touch debian/tmp/usr/include/X11/foo.h
 
 	touch debian/tmp/usr/share/doc/filenames/Changes
 	chmod 644 debian/tmp/usr/share/doc/filenames/Changes
