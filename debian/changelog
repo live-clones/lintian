@@ -1,4 +1,4 @@
-lintian (1.23.20) unstable; urgency=low
+lintian (1.23.20) UNRELEASED; urgency=low
 
   * checks/fields{.desc,}:
     + [RA] xfonts-encodings is also not an xfont package.  Thanks, Drew
@@ -28,8 +28,14 @@ lintian (1.23.20) unstable; urgency=low
       require Pre-Depends on x11-common (>= 1:7.0.0).  Remove the
       duplicate check for files in /usr/bin/X11 since it no longer adds
       additional information.
+  * checks/standards-version:
+    + [RA] Update to 3.7.2.
 
- -- Russ Allbery <rra@debian.org>  Wed,  3 May 2006 20:37:11 -0700
+  * debian/control:
+    + [RA] Update standards version to 3.7.2 (no changes required).
+    + [RA] Update description to note calibration for Policy 3.7.2.
+
+ -- Russ Allbery <rra@debian.org>  Wed,  3 May 2006 21:07:34 -0700
 
 lintian (1.23.19) unstable; urgency=low
 

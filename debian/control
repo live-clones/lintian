@@ -5,7 +5,7 @@ Maintainer: Debian Lintian Maintainers <lintian-maint@debian.org>
 Uploaders: Josip Rodin <joy-packages@debian.org>, Jeroen van Wolffelaar <jeroen@wolffelaar.nl>, Frank Lichtenheld <djpig@debian.org>, Marc 'HE' Brockschmidt <he@debian.org>, Colin Watson <cjwatson@debian.org>, Russ Allbery <rra@debian.org>
 Build-Depends: debhelper (>= 4)
 Build-Depends-Indep: debiandoc-sgml, sed (>= 4.1-4)
-Standards-Version: 3.7.0
+Standards-Version: 3.7.2
 
 Package: lintian
 Architecture: all
@@ -27,4 +27,4 @@ Description: Debian package checker
  should check packages with this tool before uploading them to the
  archive.
  .
- This version of Lintian is calibrated for policy version 3.7.0.
+ This version of Lintian is calibrated for policy version 3.7.2.
