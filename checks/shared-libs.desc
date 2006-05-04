@@ -1,7 +1,7 @@
 Check-Script: shared-libs
 Author: Christian Schwarz <schwarz@debian.org>
 Abbrev: shl
-Standards-Version: 3.2.0
+Standards-Version: 3.7.2
 Type: binary, udeb
 Unpack-Level: 1
 Needs-Info: file-info, objdump-info
@@ -25,7 +25,11 @@ Info: The listed shared libraries contain object code that was compiled
  separately from the static libraries with the -fPIC option. 
  .
  Another common mistake that causes this problem is linking with 
- ``gcc -Wl,-shared'' instead of ``gcc -shared''.
+ <tt>gcc -Wl,-shared</tt> instead of <tt>gcc -shared</tt>.
+ .
+ In some cases, exceptions to this rule are warranted. If this is such a
+ case, follow the procedure outlined in Policy and then please document
+ the exception by adding a lintian override to this package.
 
 Tag: ldconfig-symlink-missing-for-shlib
 Type: error
