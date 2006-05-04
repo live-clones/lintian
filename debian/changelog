@@ -24,8 +24,11 @@ lintian (1.23.20) unstable; urgency=low
       games but are not setgid.
     + [RA] Remove the check for files in /usr/lib/cgi-bin.  This policy
       change was reverted.
+    + [RA] Allow files installed in /usr/include/X11 and /usr/lib/X11.
+      Change the tag for files in /usr/bin/X11 to be specific to that
+      case.
 
- -- Russ Allbery <rra@debian.org>  Wed,  3 May 2006 18:53:35 -0700
+ -- Russ Allbery <rra@debian.org>  Wed,  3 May 2006 19:15:10 -0700
 
 lintian (1.23.19) unstable; urgency=low
 

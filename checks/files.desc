@@ -23,11 +23,10 @@ Info: The app-defaults files have moved to /etc/X11/app-defaults/. Files in
  this prevents X from replacing it with a compatability symlink.
 Ref: policy 11.8.6
 
-Tag: package-installs-file-to-usr-something-x11
+Tag: package-installs-file-to-usr-bin-x11
 Type: error
-Info: Packages must not provide or install files into the directories 
- /usr/bin/X11/, /usr/include/X11/ or /usr/lib/X11/.
-Ref: policy 11.8.7
+Info: Packages must not provide or install files into the directory
+ /usr/bin/X11/.  This directory is actually a symlink.
 
 Tag: package-installs-font-to-usr-x11r6
 Type: error
