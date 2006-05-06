@@ -22,10 +22,13 @@
 
 package Lintian::menus;
 use strict;
+use common_data;
 use Tags;
 use Util;
 
 my $pkg;
+my @all_files = ();
+my %all_links = ();
 
 sub run {
 
@@ -72,7 +75,7 @@ while (<IN>) {
     chomp;
     my ($perm,$owner,$size,$date,$time,$file) = split(' ', $_, 6);
     $file =~ s,^(\./),,;
-    my $temp_file = $file; # save this for the link checks to follow
+    add_file_link_info ($file);
     $file =~ s/ link to .*//;
     $file =~ s/ -> .*//;
 
@@ -115,6 +118,7 @@ while (<IN>) {
 	}
     }
 }
+close IN;
 
 # prerm scripts should not call update-menus
 if ($prerm{'calls-updatemenus'}) {
@@ -153,57 +157,95 @@ if ($docbase_file) {		# postinst has to call install-docs
 	tag "prerm-does-not-call-installdocs", "$docbase_file";
     }
 
-    # does postinst also call update-menus?
-    if ($postinst{'calls-updatemenus'}) {
-	# is there a menu file or menu-methods files?
-    	if ($anymenu_file) { 	# postrm has to call update-menus
-	    if (not $postrm{'calls-updatemenus'}) {
-		tag "postrm-does-not-call-updatemenus", "$anymenu_file" unless $pkg eq 'menu';
-	    }
-    	} else { #no!
-	    tag "postinst-has-useless-call-to-update-menus", "";
-	}
-    }
-
     # check the contents of the doc-base file(s)
     opendir DOCBASEDIR, "doc-base" or fail("cannot read doc-base directory.");
     while (my $dbfile = readdir DOCBASEDIR) {
-        next if -x "doc-base/$dbfile"; # don't try to parse executables, plus we already warned about it
-        open IN, "doc-base/$dbfile" or
-            fail("cannot open doc-base file $dbfile for reading.");
-        while (<IN>) {
-            if (/usr\/doc/) {
-                tag "doc-base-file-references-usr-doc", "$dbfile";
-            }
-        }
-        close IN;
+	next if -x "doc-base/$dbfile"; # don't try to parse executables, plus we already warned about it
+	open IN, "doc-base/$dbfile" or
+	    fail("cannot open doc-base file $dbfile for reading.");
+
+	# Check if files referenced by doc-base are included in the package.
+	# The Index field should refer to only one file without wildcards.
+	# The Files field is a whitespace-separated list of files and may
+	# contain wildcards.  We skip without validating wildcard patterns
+	# containing character classes since otherwise we'd need to deal with
+	# wildcards inside character classes and aren't there yet.
+	#
+	# Defer checking files until we've read all possible continuation
+	# lines for the field.	As a result, all tags will be reported on the
+	# last continuation line of the field, rather than possibly where the
+	# offending file name is.
+	my (@files, $field);
+	while (1) {
+	    $_ = <IN>;
+	    if ((!defined ($_) || /^\S/ || /^$/) && $field) {
+		# Figure out the right line number.  It's actually the
+		# previous line, since we read ahead for continuation lines,
+		# unless we're at the end of the file.
+		my $line = $. - 1 + (defined ($_) ? 0 : 1);
+		if ($field eq 'index' && @files > 1) {
+		    tag "doc-base-index-references-multiple-files", "$dbfile:$line";
+		}
+		for my $file (@files) {
+		    if ($file =~ m%^/usr/doc%) {
+			tag "doc-base-file-references-usr-doc", "$dbfile:$line";
+		    }
+		    my $regex = quotemeta (delink ($file));
+		    unless ($field eq 'index') {
+			next if $regex =~ /\[/;
+			$regex =~ s%\\\*%[^/]*%g;
+			$regex =~ s%\\\?%[^/]%g;
+			$regex .= '/?';
+		    }
+		    unless (grep { /^$regex\z/ } @all_files) {
+			tag "doc-base-file-references-missing-file", "$dbfile:$line", $file;
+		    }
+		}
+		undef @files;
+		undef $field;
+	    }
+	    last unless defined $_;
+	    if (/^\s/ && $field) {
+		push (@files, split ' ');
+	    }
+	    if (/^(Index|Files)\s*:\s*(.*)\s*$/i) {
+		$field = lc $1;
+		@files = split (' ', $2);
+	    } elsif (/^Format\s*:\s*(.*)\s*$/i) {
+		my $format = lc $1;
+		tag "doc-base-file-unknown-format", "$dbfile:$.", $format
+		    unless $known_doc_base_formats{$format};
+	    }
+	}
+	close IN;
     }
     closedir DOCBASEDIR;
+} else {
+    # postinst and postrm should not need to call install-docs
+    if ($postinst{'calls-installdocs'} or $postinst{'calls-installdocs-r'}) {
+	tag "postinst-has-useless-call-to-install-docs", "";
+    }
+    if ($prerm{'calls-installdocs'} or $prerm{'calls-installdocs-r'}) {
+	tag "prerm-has-useless-call-to-install-docs", "";
+    }
 }
-# no docbase file, but menu file?
-elsif ($anymenu_file) { 	# postinst has to call update-menus
+
+if ($anymenu_file) {
+    # postinst has to call update-menus
     if (not $postinst{'calls-updatemenus'}) {
 	tag "postinst-does-not-call-updatemenus", "$anymenu_file";
     }
     # postrm has to call update-menus
     if (not $postrm{'calls-updatemenus'}) {
-	tag "postrm-does-not-call-updatemenus", "$anymenu_file";
+	tag "postrm-does-not-call-updatemenus", "$anymenu_file" unless $pkg eq 'menu';
     }
-}
-# no menu files and no doc-base files...
-else {
+} else {
     # postinst and postrm should not need to call update-menus
     if ($postinst{'calls-updatemenus'}) {
 	tag "postinst-has-useless-call-to-update-menus", "";
     }
-    if ($postinst{'calls-installdocs'} or $postinst{'calls-installdocs-r'}) {
-	tag "postinst-has-useless-call-to-install-docs", "";
-    }
     if ($postrm{'calls-updatemenus'}) {
 	tag "postrm-has-useless-call-to-update-menus", "";
-    }
-    if ($postrm{'calls-installdocs'} or $postrm{'calls-installdocs-r'}) {
-	tag "postrm-has-useless-call-to-install-docs", "";
     }
 }
 
@@ -233,6 +275,82 @@ sub perm2oct {
     $o += 00001 if $9 ne '-';	# owner execute
 
     return $o;
+}
+
+# Add file and link to %all_files and %all_links.  Note that both files and
+# links have to include a leading /.
+sub add_file_link_info {
+    my $file = shift;
+    my $link = undef;
+
+    $file = "/" . $file if (not $file =~ m%^/%); # make file absolute
+    $file =~ s%/+%/%g;				 # remove duplicated `/'
+    ($file, $link) = split(/ -> /, $file);
+
+    push (@all_files, $file);
+
+    if (defined $link) {
+	if (not $link =~ m,^/,) {		  # not absolute link
+	    $link = "/" . $link;		  # make sure link starts with '/'
+	    $link =~ s,/+\./+,/,g;		  # remove all /./ parts
+	    my $dcount = 1;
+	    while ($link =~ s,^/+\.\./+,/,) {	  #\ count & remove
+	       $dcount++;			  #/ any leading /../ parts
+	    }
+	    my $f = $file;
+	    while ($dcount--) {			  #\ remove last $dcount
+		$f =~ s,/[^/]*$,,;		  #/ path components from $file
+	    }
+	    $link = $f . $link;			  # now we should have absolute link
+	}
+	$all_links{$file} = $link unless ($link eq $file);
+    }
+}
+
+
+# Dereference all symlinks in file.  Uses %all_links.
+sub delink {
+    my $file = shift;
+
+    $file =~ s%/+%/%g;				  # remove duplicated '/'
+    return $file unless %all_links;		  # package doesn't symlinks
+
+    my $p1 = "";
+    my $p2 = $file;
+    my %used_links = ();
+
+    # In the loop below we split $file into two parts on each '/' until
+    # there's no remaining slashes.  We try substituting the first part with
+    # corresponding symlink and if it succeedes, we start the procedure from
+    # beginning.
+    #
+    # Example:
+    #	 Let $all_links{"/a/b"} == "/d", and $file == "/a/b/c"
+    #	 Then 0) $p1 == "",	$p2 == "/a/b/c"
+    #	      1) $p1 == "/a",	$p2 == "/b/c"
+    #	      2) $p1 == "/a/b", $p2 == "/c"	 ; substitute "/d" for "/a/b"
+    #	      3) $p1 == "",	$p2 == "/d/c"
+    #	      4) $p1 == "/d",	$p2 == "/c"
+    #	      5) $p1 == "/d/c", $p2 == ""
+    #
+    # Note that the algorithm supposes, that
+    #	 i) $all_links{$X} != $X for each $X
+    #	ii) both keys and values of %all_links start with '/'
+
+    while (($p2 =~ s%^(/[^/]*)%%g) > 0) {
+	$p1 .= $1;
+	if (defined $all_links{$p1}) {
+	    return '!!! SYMLINK LOOP !!!' if defined $used_links{$p1};
+	    $p2 = $all_links{$p1} . $p2;
+	    $p1 = "";
+	    $used_links{$p1} = 1;
+	}
+    }
+
+    # After the loop $p2 should be empty and $p1 should contain the target
+    # file.  In some rare cases when $file contains no slashes, $p1 will be
+    # empty and $p2 will contain the result (which will be equal to $file).
+    return $p1 ne "" ? $p1 : $p2;
 }
 
 sub check_script {

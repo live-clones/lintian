@@ -140,9 +140,9 @@ Type: error
 Info: The <tt>postinst</tt> script calls the <tt>install-docs</tt> program
  though no file is installed in <tt>/usr/share/doc-base</tt>.
 
-Tag: postrm-has-useless-call-to-install-docs
+Tag: prerm-has-useless-call-to-install-docs
 Type: error
-Info: The <tt>postrm</tt> script calls the <tt>install-docs</tt> program
+Info: The <tt>prerm</tt> script calls the <tt>install-docs</tt> program
  though no file is installed in <tt>/usr/share/doc-base</tt>.
 
 Tag: bad-menu-file-name
@@ -156,3 +156,24 @@ Tag: doc-base-file-references-usr-doc
 Type: warning
 Info: Files in <tt>/usr/share/doc-base</tt> should only contain links to
  files in the <tt>/usr/share/doc</tt> directory.
+
+Tag: doc-base-index-references-multiple-files
+Type: error
+Info: The Index field in a doc-base file should reference the single index
+ file for that document.  Any other files belonging to the same document
+ should be listed in the Files field.
+Ref: Debian doc-base Manual, section 2.3
+
+Tag: doc-base-file-references-missing-file
+Type: error
+Info: One of the files referenced in an Index or Files field in this
+ doc-base control file does not exist in the package.  The doc-base
+ control files should be installed by the package that provides the
+ documents they are registering.
+
+Tag: doc-base-file-unknown-format
+Type: warning
+Info: The Format field in this doc-base control file declares a format
+ that is not supported.  Recognized formats are "HTML", "Text", "PDF",
+ "PostScript", "Info", "DVI", and "DebianDoc-SGML" (case-insensitive).
+Ref: Debian doc-base Manual, section 2.3

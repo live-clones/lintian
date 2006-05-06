@@ -28,6 +28,15 @@ lintian (1.23.20) UNRELEASED; urgency=low
       require Pre-Depends on x11-common (>= 1:7.0.0).  Remove the
       duplicate check for files in /usr/bin/X11 since it no longer adds
       additional information.
+  * checks/menus{.desc,}:
+    + [RA] Check that all files referenced in doc-base control files are
+      present in the package, based on a patch by Robert Luberda.  Also
+      check that Index references only one file and that Format names a
+      known format.  (Closes: #196122)
+    + [RA] Fix incomplete diagnosis of missing calls to update-menus.
+    + [RA] Change postrm to prerm in the check for a useless install-docs
+      call; calling install-docs in postrm is always a warning and useless
+      calls in prerm were not being diagnosed.
   * checks/shared-libs.desc:
     + [RA] Document that exceptions to the -fPIC rule for shared libraries
       are possible and ask that such exceptions be documented with lintian
@@ -41,7 +50,7 @@ lintian (1.23.20) UNRELEASED; urgency=low
     + [RA] Update standards version to 3.7.2 (no changes required).
     + [RA] Update description to note calibration for Policy 3.7.2.
 
- -- Russ Allbery <rra@debian.org>  Sat,  6 May 2006 10:05:37 -0700
+ -- Russ Allbery <rra@debian.org>  Sat,  6 May 2006 14:08:15 -0700
 
 lintian (1.23.19) unstable; urgency=low
 

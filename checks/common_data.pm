@@ -9,6 +9,7 @@ use base qw(Exporter);
 	   %known_libstdcs %known_tcls %known_tclxs %known_tks %known_tkxs
 	   %known_libpngs %known_x_metapackages
 	   %non_standard_archs %all_cpus %all_oses
+	   %known_doc_base_formats
           );
 
 # simple defines for commonly needed data
@@ -145,5 +146,9 @@ use base qw(Exporter);
 %known_x_metapackages = map { $_ => 1 }
     ( 'x-window-system', 'x-window-system-dev', 'x-window-system-core',
       'xorg', 'xorg-dev', );
+
+# Supported documentation formats for doc-base files.
+%known_doc_base_formats = map { $_ => 1 }
+    ( 'html', 'text', 'pdf', 'postscript', 'info', 'dvi', 'debiandoc-sgml' );
 
 1;
