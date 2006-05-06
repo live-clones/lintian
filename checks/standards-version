@@ -70,8 +70,8 @@ my %valid_standard = (
 
 # version lintian is programmed for. ($valid_standard[0]?)
 my $MAJOR = 3;
-my $MINOR = 6;
-my $PATCH = 1;
+my $MINOR = 7;
+my $PATCH = 2;
 
 my $pkg = shift;
 my $type = shift;
@@ -107,17 +107,17 @@ if (not exists $valid_standard{$stdver}) {
     if (($major > $MAJOR) or
 	($major == $MAJOR and $minor > $MINOR) or
 	($major == $MAJOR and $minor == $MINOR and $patch > $PATCH)) {
-	tag "newer-standards-version", "$_";
+	tag "newer-standards-version", "$_ (current is $MAJOR.$MINOR.$PATCH)";
     } else {
 	# invalid standard
 	tag "invalid-standards-version", "$_";
     }
 } elsif ($valid_standard{$stdver} == 2) {
     # old standard
-    tag "out-of-date-standards-version", "$_";
+    tag "out-of-date-standards-version", "$_ (current is $MAJOR.$MINOR.$PATCH)";
 } elsif ($valid_standard{$stdver} == 3) {
     # OK, now this is ancient.
-    tag "ancient-standards-version", "$_";
+    tag "ancient-standards-version", "$_ (current is $MAJOR.$MINOR.$PATCH)";
 } else { # looks valid ......
     if (($major == 3 and $minor == 0) or $major < 3) {
 	if (-f "fields/build-depends" or

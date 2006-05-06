@@ -2,7 +2,7 @@ E: hello: statically-linked-binary ./usr/bin/hello.dbg
 E: hello: unstripped-binary-or-object ./usr/bin/hello.dbg
 E: libhello0-dbg: binary-with-bad-dynamic-table ./usr/lib/libhello.so.dbg
 E: libhello0-dbg: sharedobject-in-library-directory-not-actually-a-shlib usr/lib/libhello.so.dbg
-W: debug source: out-of-date-standards-version 3.7.0
+W: debug source: out-of-date-standards-version 3.7.0 (current is 3.7.2)
 W: hello: binary-without-manpage hello
 W: hello: binary-without-manpage hello.dbg
 W: libhello0-dbg: shared-lib-without-dependency-information ./usr/lib/libhello.so.dbg

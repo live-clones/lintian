@@ -27,7 +27,7 @@ I: relations-multiple-libs: unknown-field-in-control bugs
 I: relations-multiple-libs: unknown-field-in-control origin
 I: relations: unknown-field-in-control bugs
 I: relations: unknown-field-in-control origin
-W: relations source: ancient-standards-version 3.1.1
+W: relations source: ancient-standards-version 3.1.1 (current is 3.7.2)
 W: relations source: build-depends-without-arch-dep arch-test1
 W: relations source: build-depends-without-arch-dep arch-test2
 W: relations source: build-depends-without-arch-dep bar

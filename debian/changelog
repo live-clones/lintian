@@ -34,12 +34,14 @@ lintian (1.23.20) UNRELEASED; urgency=low
       overrides.
   * checks/standards-version:
     + [RA] Update to 3.7.2.
+    + [RA] Report the current standards version when warning about too old
+      or too new versions.  Thanks, Jari Aalto.  (Closes: #366104)
 
   * debian/control:
     + [RA] Update standards version to 3.7.2 (no changes required).
     + [RA] Update description to note calibration for Policy 3.7.2.
 
- -- Russ Allbery <rra@debian.org>  Wed,  3 May 2006 21:49:22 -0700
+ -- Russ Allbery <rra@debian.org>  Fri,  5 May 2006 18:02:13 -0700
 
 lintian (1.23.19) unstable; urgency=low
 
