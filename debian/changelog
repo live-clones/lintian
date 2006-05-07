@@ -14,6 +14,9 @@ lintian (1.23.20) UNRELEASED; urgency=low
     + [RA] Since some packages should be in Build-Depends and some should
       be in Build-Depends-Indep, report all of the misplaced ones rather
       than just the first one.  That way, users know which to move.
+    + [RA] Allow perl in Build-Depends if invoked in clean rules.
+    + [RA] Allow patch in Build-Depends if yada unpatch is invoked in
+      clean rules.
   * checks/files{.desc,}:
     + [RA] Add an explicit check for non-world-readable executables to
       provide a more detailed explanation and tighten the accepted
@@ -57,7 +60,7 @@ lintian (1.23.20) UNRELEASED; urgency=low
     + [RA] Update standards version to 3.7.2 (no changes required).
     + [RA] Update description to note calibration for Policy 3.7.2.
 
- -- Russ Allbery <rra@debian.org>  Sat,  6 May 2006 22:33:30 -0700
+ -- Russ Allbery <rra@debian.org>  Sat,  6 May 2006 22:40:27 -0700
 
 lintian (1.23.19) unstable; urgency=low
 

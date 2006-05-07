@@ -75,8 +75,10 @@ my @global_depends = (
 my @rule_clean_depends = (
 	[ debhelper => '^\t\s*dh_.+' ],
 	[ dpatch => '^\t\s*dpatch\s' ],
+	[ patch => '^\t\s*(?:perl debian/)?yada\s+unpatch' ],
+	[ perl => '^\t\s*perl\s' ],
 	[ $python_depend => '^\t\s*python\s' ],
-	[ yada => '^\t\s*yada\s' ]
+	[ yada => '^\t\s*yada\s' ],
 );
 
 sub run {
