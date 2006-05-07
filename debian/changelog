@@ -1,5 +1,7 @@
 lintian (1.23.20) UNRELEASED; urgency=low
 
+  The "Policy backlog clearing is a wonderful sight" release
+
   * checks/debconf{.desc,}:
     + [RA] Add checks for the Developer's Reference guidelines for debconf
       templates.  Based on a patch by Thomas Huriaux.  (Closes: #362145)
