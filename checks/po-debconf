@@ -47,10 +47,24 @@ if ( $has_template ) {
     }
 } else {
     return 0;
-}    
+}
 
+# yada builds its template and po/POTFILES.in dynamically at build time, so
+# excuse yada from some of these checks (including the out of date templates
+# check).
 my $missing_files = 0;
-if (-f "debfiles/po/POTFILES.in") {
+my $yada = 0;
+if (open (RULES, 'debfiles/rules')) {
+    local $_;
+    while (<RULES>) {
+	if (m%^\t\s*(?:perl debian/)?yada\s%) {
+	    $yada = 1;
+	    $missing_files = 1;
+	}
+    }
+}
+
+if (!$yada && -f "debfiles/po/POTFILES.in") {
 	open(POTFILES,"debfiles/po/POTFILES.in")
 		or fail("Can't open debfiles/po/POTFILES.in.");
 	while (<POTFILES>) {
@@ -64,7 +78,7 @@ if (-f "debfiles/po/POTFILES.in") {
 		} 
 	}
 	close(POTFILES);
-} else {
+} elsif (!$yada) {
 	tag "missing-potfiles-in", "";
 	$missing_files = 1;
 }
