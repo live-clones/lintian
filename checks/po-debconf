@@ -32,9 +32,13 @@ my $type = shift;
 opendir(DEB, 'debfiles')
 	or fail("Can't open debfiles directory.");
 my $has_template = my $has_depends = my $has_config = 0;
+my @lang_templates;
 for my $file (readdir(DEB)) {
 	if ($file =~ m/^(.+\.)?templates(\..+)?$/) {
 	        $has_template = 1;
+		if ($file =~ m/templates\.\w\w(_\w\w)?$/) {
+			push (@lang_templates, $file);
+		}
 	}
 }
 closedir(DEB);
@@ -47,6 +51,12 @@ if ( $has_template ) {
     }
 } else {
     return 0;
+}
+
+# If we got here, we're using po-debconf, so there shouldn't be any stray
+# language templates left over from debconf-mergetemplate.
+for (@lang_templates) {
+    tag "stray-translated-debconf-templates", $_;
 }
 
 # yada builds its template and po/POTFILES.in dynamically at build time, so

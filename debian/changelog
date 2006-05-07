@@ -47,6 +47,8 @@ lintian (1.23.20) UNRELEASED; urgency=low
     + [RA] Exempt packages that use yada from the POTFILES.in check and
       from checking for up-to-date templates, since yada does this at
       build time.  Reported by Piotr Roszatycki.  (Closes: #321139)
+    + [RA] Check for stray debconf-mergetemplate files in packages
+      using po-debconf.  Thanks, Martin Quinson.  (Closes: #232442)
   * checks/shared-libs.desc:
     + [RA] Document that exceptions to the -fPIC rule for shared libraries
       are possible and ask that such exceptions be documented with lintian
@@ -60,7 +62,7 @@ lintian (1.23.20) UNRELEASED; urgency=low
     + [RA] Update standards version to 3.7.2 (no changes required).
     + [RA] Update description to note calibration for Policy 3.7.2.
 
- -- Russ Allbery <rra@debian.org>  Sat,  6 May 2006 22:40:27 -0700
+ -- Russ Allbery <rra@debian.org>  Sat,  6 May 2006 23:20:02 -0700
 
 lintian (1.23.19) unstable; urgency=low
 

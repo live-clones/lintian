@@ -13,6 +13,14 @@ Info: Package seems to be using debconf templates, but it does not
  use po-debconf to make translations possible (debian/po doesn't exist, or no
  dependency on po-debconf). See po-debconf(7).
 
+Tag: stray-translated-debconf-templates
+Type: warning
+Info: This package contains a file named *templates.XX or
+ *templates.XX_XX.  This was the naming convention for the translated
+ templates merged using debconf-mergetemplate.  Since the package is using
+ po-debconf, these files should be replaced by language-specific files in
+ the <tt>debian/po</tt> directory and should no longer be needed.
+
 Tag: missing-potfiles-in
 Type: warning
 Info: The required file POTFILES.in is missing from debian/po
