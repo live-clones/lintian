@@ -9,9 +9,10 @@ Needs-Info: debfiles
 
 Tag: not-using-po-debconf
 Type: warning
-Info: Package seems to be using debconf templates, but it does not
- use po-debconf to make translations possible (debian/po doesn't exist, or no
- dependency on po-debconf). See po-debconf(7).
+Info: Package seems to be using debconf templates, but it does not use
+ po-debconf to make translations possible (<tt>debian/po</tt> doesn't
+ exist).
+Ref: po-debconf(7)
 
 Tag: stray-translated-debconf-templates
 Type: warning
@@ -23,38 +24,42 @@ Info: This package contains a file named *templates.XX or
 
 Tag: missing-potfiles-in
 Type: warning
-Info: The required file POTFILES.in is missing from debian/po
- See po-debconf(7).
+Info: The required file <tt>POTFILES.in</tt> is missing from
+ <tt>debian/po</tt>.
+Ref: po-debconf(7)
 
 Tag: missing-file-from-potfiles-in
 Type: warning
-Info: A file listed in debian/po/POTFILES.in could not be found in the source
- package.  See po-debconf(7).
+Info: A file listed in <tt>debian/po/POTFILES.in</tt> could not be found
+ in the source package.
+Ref: po-debconf(7)
 
 Tag: missing-templates-pot
 Type: warning
-Info: The required file templates.pot is missing from debian/po
- See po-debconf(7).
+Info: The required file <tt>templates.pot</tt> is missing from
+ <tt>debian/po</tt>.
+Ref: po-debconf(7)
 
 Tag: unknown-encoding-in-po-file
 Type: warning
-Info: Encoding must be declared in PO files, otherwise charset conversions
- cannot be performed.
+Info: Encoding must be declared in PO files. Otherwise, charset
+ conversions cannot be performed.
 
 Tag: invalid-po-file
 Type: warning
-Info: Some errors are found in PO files and their content will be
- discarded.  Run 'msgfmt' to see error messages.
+Info: Errors were found in the listed PO file that will cause its content
+ to be discarded. Run <tt>msgfmt</tt> on the file to see the error
+ messages.
 
 Tag: newer-debconf-templates
 Type: warning
 Info: debconf-updatepo has not been run since the last change to your
- debconf template(s).
+ debconf templates.
  .
  You should run debconf-updatepo whenever debconf templates files are
  changed so that translators can be warned that their files are
  outdated.
  .
  This can be ensured by running debconf-updatepo in the 'clean' target
- of debian/rules, PO files will then always be up-to-date in the source
- package.
+ of <tt>debian/rules</tt>. PO files will then always be up-to-date when
+ building the source package.
