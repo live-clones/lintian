@@ -6,3 +6,44 @@ Template: debconf/testmulti
 Type: multiselect
 __Choices: foo, bar, boo
 _Description: test comma usages in choices fields
+
+Template: debconf/testboolean
+Type: boolean
+_Description: Enter yes or no:
+ Do you want to answer this question?
+
+Template: debconf/teststring
+Type: string
+_Description: This template goes on and on.
+ This template goes on and on.
+ This template goes on and on.
+ This template goes on and on.
+ This template goes on and on.
+ This template goes on and on.
+ This template goes on and on.
+ This template goes on and on.
+ This template goes on and on.
+ This template goes on and on.
+ This template goes on and on.
+ This template goes on and on.
+ This template goes on and on.
+ This template goes on and on.
+ This template goes on and on.
+ This template goes on and on.
+ This template goes on and on.
+ This template goes on and on.
+ This template goes on and on.
+ This template goes on and on.
+ This template goes on and on.
+ This template goes on and on.
+
+Template: debconf/testnote
+Type: note
+Description: This should be a title and not a really long sentence that ends in a regular period.
+
+Template: debconf/1st-person
+Type: select
+__Choices: one, two
+_Description: Select one of these:
+ I am a stupid test of first-person syntax that tells you to select yes
+ even though yes isn't an option in this prompt.

@@ -227,6 +227,68 @@ foreach my $template (@templates) {
 	    }
 	}
     }
+
+    # Check the description against the best practices in the Developer's
+    # Reference.
+    $template->{description} =~ m/^([^\n]*)\n(.*)$/s;
+    my ($short, $extended) = ($1, $2);
+    unless (defined $short) {
+	$short = $template->{description};
+    }
+    my $isprompt = grep { $_ eq $template->{type} } qw(string select password multiselect);
+    if ($isprompt) {
+	if ($short !~ m/:$/) {
+	    tag "malformed-prompt-in-templates", $template->{template};
+	}
+	if ($short =~ /^(Please|Cho+se|Enter|Select|Specify|Give)/) {
+	    tag "using-imperative-form-in-templates", $template->{template};
+	}
+    }
+    if ($template->{type} eq 'boolean') {
+	if ($short !~ /\?/) {
+	    tag "malformed-question-in-templates", $template->{template};
+	}
+	if (defined ($extended) && $extended =~ /\?/) {
+	    tag "using-question-in-extended-description-in-templates", $template->{template};
+	}
+    }
+    if ($template->{type} eq 'note') {
+	if ($short =~ /[.?;:]$/) {
+	    tag "malformed-title-in-templates", $template->{template};
+	}
+    }
+    if (length ($short) > 75) {
+	tag "too-long-short-description-in-templates", $template->{template};
+    }
+    if ($template->{description} =~ /(\A|\s)(I|[Mm]y|[Ww]e|[Oo]ur|[Oo]urs|mine|myself|ourself|me|us) /) {
+	tag "using-first-person-in-templates", $template->{template};
+    }
+    if ($template->{description} =~ /[ \'\"]([Yy]es)[ \'\",.]/) {
+	tag "making-assumptions-about-interfaces-in-templates", $template->{template};
+    }
+
+    # Check whether the extended description is too long.
+    if ($extended) {
+	my $lines = 0;
+	for my $string (split ("\n", $extended)) {
+	    while (length ($string) > 80) {
+		my $pos = rindex ($string, ' ', 80);
+		if ($pos == -1) {
+		    $pos = index ($string, ' ');
+		}
+		if ($pos == -1) {
+		    $string = '';
+		} else {
+		    $string = substr ($string, $pos + 1);
+		    $lines++;
+		}
+	    }
+	    $lines++;
+	}
+	if ($lines > 20) {
+	    tag "too-long-extended-description-in-templates", $template->{template};
+	}
+    }
 }
 
 # Check the maintainer scripts.

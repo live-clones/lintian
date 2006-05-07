@@ -12,6 +12,17 @@ W: debconf-test-noscripts: no-debconf-config
 W: debconf-test-noscripts: old-fsf-address-in-copyright-file
 W: debconf-test-noscripts: postinst-does-not-load-confmodule
 W: debconf-test-noscripts: postrm-does-not-purge-debconf
+W: debconf-test: making-assumptions-about-interfaces-in-templates debconf/1st-person
+W: debconf-test: making-assumptions-about-interfaces-in-templates debconf/testboolean
+W: debconf-test: malformed-prompt-in-templates debconf/testmulti
+W: debconf-test: malformed-prompt-in-templates debconf/teststring
+W: debconf-test: malformed-question-in-templates debconf/testboolean
+W: debconf-test: malformed-title-in-templates debconf/testnote
 W: debconf-test: old-fsf-address-in-copyright-file
 W: debconf-test: partially-translated-question debconf/testmulti de.utf-8
+W: debconf-test: too-long-extended-description-in-templates debconf/teststring
+W: debconf-test: too-long-short-description-in-templates debconf/testnote
+W: debconf-test: using-first-person-in-templates debconf/1st-person
+W: debconf-test: using-imperative-form-in-templates debconf/1st-person
+W: debconf-test: using-question-in-extended-description-in-templates debconf/testboolean
 W: debconf-udeb udeb: missing-debconf-dependency

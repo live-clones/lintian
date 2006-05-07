@@ -1,5 +1,8 @@
 lintian (1.23.20) UNRELEASED; urgency=low
 
+  * checks/debconf{.desc,}:
+    + [RA] Add checks for the Developer's Reference guidelines for debconf
+      templates.  Based on a patch by Thomas Huriaux.  (Closes: #362145)
   * checks/fields{.desc,}:
     + [RA] xfonts-encodings is also not an xfont package.  Thanks, Drew
       Parsons.  (Closes: #365503)
@@ -50,7 +53,7 @@ lintian (1.23.20) UNRELEASED; urgency=low
     + [RA] Update standards version to 3.7.2 (no changes required).
     + [RA] Update description to note calibration for Policy 3.7.2.
 
- -- Russ Allbery <rra@debian.org>  Sat,  6 May 2006 14:08:15 -0700
+ -- Russ Allbery <rra@debian.org>  Sat,  6 May 2006 18:20:12 -0700
 
 lintian (1.23.19) unstable; urgency=low
 
