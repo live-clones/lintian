@@ -1,4 +1,4 @@
-lintian (1.23.20) UNRELEASED; urgency=low
+lintian (1.23.20) unstable; urgency=low
 
   The "Policy backlog clearing is a wonderful sight" release
 
@@ -66,7 +66,7 @@ lintian (1.23.20) UNRELEASED; urgency=low
     + [RA] Update standards version to 3.7.2 (no changes required).
     + [RA] Update description to note calibration for Policy 3.7.2.
 
- -- Russ Allbery <rra@debian.org>  Sat,  6 May 2006 23:20:02 -0700
+ -- Russ Allbery <rra@debian.org>  Mon,  8 May 2006 13:22:03 -0700
 
 lintian (1.23.19) unstable; urgency=low
 
