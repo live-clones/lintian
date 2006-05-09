@@ -1,3 +1,11 @@
+lintian (1.23.21) unstable; urgency=low
+
+  * checks/menus:
+    + [RA] Tell Perl where common_data.pm is since we're now including it.
+      Doh.  Thanks, Nelson A. de Oliveira.  (Closes: #366481)
+
+ -- Russ Allbery <rra@debian.org>  Mon,  8 May 2006 18:52:45 -0700
+
 lintian (1.23.20) unstable; urgency=low
 
   The "Policy backlog clearing is a wonderful sight" release

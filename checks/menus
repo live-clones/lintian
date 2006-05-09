@@ -22,6 +22,7 @@
 
 package Lintian::menus;
 use strict;
+use lib "$ENV{'LINTIAN_ROOT'}/checks/";
 use common_data;
 use Tags;
 use Util;
