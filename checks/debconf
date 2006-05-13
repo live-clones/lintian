@@ -50,6 +50,7 @@ map { $valid_types{$_}=1 } qw(
 	note
 	text
 	title
+	error
 	);
 $valid_types{error} = 1 if $type eq 'udeb';
 

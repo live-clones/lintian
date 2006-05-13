@@ -1,3 +1,10 @@
+lintian (1.23.22) UNRELEASED; urgency=low
+
+  * [JvW] Teach lintian to know about the 'error' debconf template question
+    type
+
+ -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Sun, 14 May 2006 00:32:48 +0200
+
 lintian (1.23.21) unstable; urgency=low
 
   * checks/menus:
