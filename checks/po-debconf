@@ -56,7 +56,7 @@ if ( $has_template ) {
 # If we got here, we're using po-debconf, so there shouldn't be any stray
 # language templates left over from debconf-mergetemplate.
 for (@lang_templates) {
-    tag "stray-translated-debconf-templates", $_;
+    tag "stray-translated-debconf-templates", $_ unless /templates\.in$/;
 }
 
 # yada builds its template and po/POTFILES.in dynamically at build time, so

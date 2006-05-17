@@ -3,8 +3,11 @@ lintian (1.23.22) UNRELEASED; urgency=low
   * checks/debconf:
     + [JvW] Teach lintian to know about the 'error' debconf template
       question type
+  * checks/po-debconf:
+    + [RA] Don't consider templates.in to be a stray translated template
+      file.  Thanks, Thomas Huriaux.  (Closes: #367534)
 
- -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Sun, 14 May 2006 00:32:48 +0200
+ -- Russ Allbery <rra@debian.org>  Tue, 16 May 2006 19:06:58 -0700
 
 lintian (1.23.21) unstable; urgency=low
 
