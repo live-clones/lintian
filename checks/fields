@@ -49,10 +49,14 @@ my @global_clean_depends = (
 
 # These are similar, but the resulting dependency is only allowed, not
 # required.
+#
+# The xsfclean rule is specific to the packages maintained by the X Strike
+# Force, but there are enough of those to make the rule worthwhile.
 my @global_clean_allowed = (
 	[ patchutils => '^include\s+/usr/share/cdbs/1/rules/dpatch.mk' ],
 	[ patchutils => '^include\s+/usr/share/cdbs/1/rules/patchsys-quilt.mk' ],
 	[ patchutils => '^include\s+/usr/share/cdbs/1/rules/simple-patchsys.mk' ],
+	[ quilt => '^clean:\s+xsfclean\b' ],
 );
 
 # The allowed Python dependencies currently.  This is the list of alternatives

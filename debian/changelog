@@ -3,11 +3,14 @@ lintian (1.23.22) UNRELEASED; urgency=low
   * checks/debconf:
     + [JvW] Teach lintian to know about the 'error' debconf template
       question type
+  * checks/fields:
+    + [RA] Allow build-depend on quilt if clean depends on the xsfclean
+      rule, for packages maintained by the X Strike Force.
   * checks/po-debconf:
     + [RA] Don't consider templates.in to be a stray translated template
       file.  Thanks, Thomas Huriaux.  (Closes: #367534)
 
- -- Russ Allbery <rra@debian.org>  Tue, 16 May 2006 19:06:58 -0700
+ -- Russ Allbery <rra@debian.org>  Sat, 20 May 2006 15:33:00 -0700
 
 lintian (1.23.21) unstable; urgency=low
 
