@@ -583,3 +583,9 @@ Type: warning
 Info: You use the Bugs field though the field value is the default 
  (debbugs://bugs.debian.org/). In this case the field is redundant and
  should be removed.
+
+Tag: build-depends-on-build-essential
+Type: error
+Ref: 7.6
+Info: You depends on the build-essential package, which is only a meta-package
+ depending on build tools that have to be installed in all build environments.

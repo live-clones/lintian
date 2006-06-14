@@ -9,6 +9,7 @@ lintian (1.23.22) UNRELEASED; urgency=low
     + [RA] CDBS packages that use the python-distutils class should list
       Python in Build-Depends, not Build-Depends-Indep, since CDBS wants
       to use it in debian/rules clean.  Thanks, Jan Lübbe.
+    + [HE] Add check for build-deps on build-essential. Yes, people do that.
   * checks/po-debconf:
     + [RA] Don't consider templates.in to be a stray translated template
       file.  Thanks, Thomas Huriaux.  (Closes: #367534)

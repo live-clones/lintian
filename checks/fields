@@ -569,6 +569,9 @@ if ($type eq "source") {
 						}
 					}
 
+					tag "build-depends-on-build-essential", $field
+						if ($d_pkg eq "build-essential");
+
 					tag "depends-on-build-essential-package-without-using-version", "$d_pkg [$field: $part_d_orig]"
 					    if ($known_build_essential{$d_pkg} && ! $d_version->[1]);
 
