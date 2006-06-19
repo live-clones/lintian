@@ -2,7 +2,7 @@ lintian (1.23.22) UNRELEASED; urgency=low
 
   * checks/debconf:
     + [JvW] Teach lintian to know about the 'error' debconf template
-      question type
+      question type. (Closes: #374399)
   * checks/fields:
     + [RA] Allow build-depend on quilt if clean depends on the xsfclean
       rule, for packages maintained by the X Strike Force.
