@@ -35,5 +35,6 @@ binary: binary-arch binary-indep
 
 clean:
 	rm -rf debian/tmp debian/files
+	TESTING=foo ANOTHER=bar quilt || true
 
 .PHONY: build binary-arch binary-indep binary clean
