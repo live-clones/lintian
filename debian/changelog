@@ -16,9 +16,10 @@ lintian (1.23.22) UNRELEASED; urgency=low
     + [RA] Fix handling of versioned Build-Depends to avoid spurious
       build-depends-without-arch-dep warnings.  Reported by Marcus
       Better.
-    + [RA] Allow (but don't require due to perl-base) Build-Depends on
-      perl for arch-independent packages if perl is invoked in
-      debian/rules clean.
+    + [RA] Don't require Build-Depends on perl even if run explicitly in
+      debian/rules clean, since perl-base may be sufficient.  Catch more
+      ways perl could be run, including the common idiom for packages that
+      use Build.PL.
   * checks/po-debconf:
     + [RA] Don't consider templates.in to be a stray translated template
       file.  Thanks, Thomas Huriaux.  (Closes: #367534)
