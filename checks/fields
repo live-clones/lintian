@@ -80,10 +80,14 @@ my @rule_clean_depends = (
 	[ debhelper => '^\t\s*dh_.+' ],
 	[ dpatch => '^\t\s*dpatch\s' ],
 	[ patch => '^\t\s*(?:perl debian/)?yada\s+unpatch' ],
-	[ perl => '^\t\s*perl\s' ],
 	[ $python_depend => '^\t\s*python\s' ],
 	[ quilt => '^\t\s*(\S+=\S+\s+)*quilt\s' ],
 	[ yada => '^\t\s*yada\s' ],
+);
+
+# Similar, but the resulting dependency is only allowed, not required.
+my @rule_clean_allowed = (
+	[ 'perl | perl-base (>= 5.6.0-16)' => '(^\t|\|\|)\s*(perl|\$\(PERL\))\s' ],
 );
 
 sub run {
@@ -534,6 +538,11 @@ if ($type eq "source") {
 					$needed_clean{$rule->[0]} = $rule->[2] || $needed_clean{$rule->[0]} || '';
 				}
 			}
+			for my $rule (@rule_clean_allowed) {
+				if ($_ =~ /$rule->[1]/) {
+					$allowed_clean{$rule->[0]} = 1;
+				}
+			}
 		}
 	}
 	close RULES;
@@ -636,12 +645,17 @@ if ($type eq "source") {
 	# dependencies in Build-Depends, and then allow any dependency in
 	# Build-Depends that's implied by the dependencies we require or allow
 	# there.
+	#
+	# We also have to map | to , when building the list of allowed
+	# packages so that the implications will work properly.
+	#
+	# This is confusing.  There should be a better way to do this.
 	if (-e "fields/build-depends" && $arch_dep_packages == 0) {
 		open(FH, "fields/build-depends") or fail("cannot read fields/build-depends: $!");
 		my $build_depends = <FH>;
 		close FH;
 		my @packages = split /\s*,\s*/, $build_depends;
-		my @allowed = map { s/[\(\[][^\)\]]+[\)\]]//g; $_ } keys (%needed_clean), keys (%allowed_clean);
+		my @allowed = map { s/[\(\[][^\)\]]+[\)\]]//g; s/\|/,/g; $_ } keys (%needed_clean), keys (%allowed_clean);
 		my $dep = Dep::parse (join (',', @allowed));
 		foreach my $pkg (@packages) {
 			my $name = $pkg;

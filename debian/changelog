@@ -16,11 +16,14 @@ lintian (1.23.22) UNRELEASED; urgency=low
     + [RA] Fix handling of versioned Build-Depends to avoid spurious
       build-depends-without-arch-dep warnings.  Reported by Marcus
       Better.
+    + [RA] Allow (but don't require due to perl-base) Build-Depends on
+      perl for arch-independent packages if perl is invoked in
+      debian/rules clean.
   * checks/po-debconf:
     + [RA] Don't consider templates.in to be a stray translated template
       file.  Thanks, Thomas Huriaux.  (Closes: #367534)
 
- -- Russ Allbery <rra@debian.org>  Wed, 21 Jun 2006 13:29:37 -0700
+ -- Russ Allbery <rra@debian.org>  Wed, 21 Jun 2006 13:53:06 -0700
 
 lintian (1.23.21) unstable; urgency=low
 

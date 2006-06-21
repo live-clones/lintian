@@ -35,6 +35,11 @@ binary: binary-arch binary-indep
 
 clean:
 	rm -rf debian/tmp debian/files
+
+# Test allowing quilt Build-Depends for manual quilt invocations.
 	TESTING=foo ANOTHER=bar quilt || true
+
+# Test requiring perl Build-Depends for manual perl invocations.
+	[ ! -f Build ] || $(PERL) Build distclean
 
 .PHONY: build binary-arch binary-indep binary clean
