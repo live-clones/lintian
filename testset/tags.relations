@@ -22,8 +22,6 @@ E: relations: depends-on-essential-package-without-using-version depends: dpkg
 E: relations: needlessly-depends-on-awk depends
 E: relations: no-copyright-file
 E: relations: obsolete-field optional
-I: relations source: non-standard-arch-in-source-relation amd64 [build-conflicts: foo [amd64 i386]]
-I: relations source: non-standard-arch-in-source-relation amd64 [build-depends: foo (>> 2) [!amd64 !i386]]
 I: relations-multiple-libs: unknown-field-in-control bugs
 I: relations-multiple-libs: unknown-field-in-control origin
 I: relations: unknown-field-in-control bugs

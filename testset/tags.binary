@@ -26,7 +26,6 @@ E: binary: suidregister-used-in-maintainer-script postinst
 E: binary: symlink-contains-spurious-segments usr/share/doc/binary/html/ch2.html ../html/./ch1.html
 E: binary: symlink-should-be-relative usr/share/doc/binary/html/ch3.html /usr/share/doc/binary/htm/ch1.html
 E: binary: unstripped-binary-or-object ./usr/bin/hello
-I: binary source: non-standard-architecture amd64
 I: binary source: non-standard-architecture kfreebsd-i386
 I: binary source: non-standard-architecture ppc64
 I: binary: arch-dep-package-has-big-usr-share
