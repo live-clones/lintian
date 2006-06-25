@@ -22,18 +22,18 @@ E: relations: depends-on-essential-package-without-using-version depends: dpkg
 E: relations: needlessly-depends-on-awk depends
 E: relations: no-copyright-file
 E: relations: obsolete-field optional
+I: relations source: build-depends-without-arch-dep arch-test1
+I: relations source: build-depends-without-arch-dep arch-test2
+I: relations source: build-depends-without-arch-dep bar
+I: relations source: build-depends-without-arch-dep findutils
+I: relations source: build-depends-without-arch-dep foo
+I: relations source: build-depends-without-arch-dep libc6-dev
+I: relations source: build-depends-without-arch-dep mail-transport-agent
 I: relations-multiple-libs: unknown-field-in-control bugs
 I: relations-multiple-libs: unknown-field-in-control origin
 I: relations: unknown-field-in-control bugs
 I: relations: unknown-field-in-control origin
 W: relations source: ancient-standards-version 3.1.1 (current is 3.7.2)
-W: relations source: build-depends-without-arch-dep arch-test1
-W: relations source: build-depends-without-arch-dep arch-test2
-W: relations source: build-depends-without-arch-dep bar
-W: relations source: build-depends-without-arch-dep findutils
-W: relations source: build-depends-without-arch-dep foo
-W: relations source: build-depends-without-arch-dep libc6-dev
-W: relations source: build-depends-without-arch-dep mail-transport-agent
 W: relations source: redundant-origin-field
 W: relations source: virtual-package-depends-without-real-package-depends build-depends: mail-transport-agent
 W: relations-multiple-libs: description-synopsis-might-not-be-phrased-properly
