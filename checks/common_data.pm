@@ -14,9 +14,11 @@ use base qw(Exporter);
 
 # simple defines for commonly needed data
 
+# From /usr/share/dpkg/archtable, included here to make lintian results
+# consistent no matter what dpkg one has installed.
 %known_archs = map { $_ => 1 }
-    ('alpha', 'arm', 'hppa', 'hurd-i386', 'i386', 'ia64', 'mips', 'mipsel',
-     'm68k', 'powerpc', 's390', 'sparc', 'any', 'all');
+    ('i386', 'ia64', 'alpha', 'amd64', 'arm', 'hppa', 'm68k', 'mips',
+     'mipsel', 'powerpc', 's390', 'sparc', 'hurd-i386', 'any', 'all');
 
 # From /usr/share/dpkg/cputable, included here to make lintian results
 # consistent no matter what dpkg one has installed.

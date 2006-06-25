@@ -7,6 +7,8 @@ lintian (1.23.22) UNRELEASED; urgency=low
       description from style checks and document this in the log
       description of the tags most likely to trigger on internal
       templates.  (Closes: #368206)
+  * checks/common_data.pm:
+    + [RA] Add amd64 to the standard architectures.  (Closes: #367324)
   * checks/fields:
     + [RA] Allow build-depend on quilt if clean depends on the xsfclean
       rule, for packages maintained by the X Strike Force.
