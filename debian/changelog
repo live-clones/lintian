@@ -3,6 +3,10 @@ lintian (1.23.22) UNRELEASED; urgency=low
   * checks/debconf:
     + [JvW] Teach lintian to know about the 'error' debconf template
       question type. (Closes: #374399)
+    + [RA] Exclude debconf templates with "for internal use" in the short
+      description from style checks and document this in the log
+      description of the tags most likely to trigger on internal
+      templates.  (Closes: #368206)
   * checks/fields:
     + [RA] Allow build-depend on quilt if clean depends on the xsfclean
       rule, for packages maintained by the X Strike Force.
@@ -24,7 +28,7 @@ lintian (1.23.22) UNRELEASED; urgency=low
     + [RA] Don't consider templates.in to be a stray translated template
       file.  Thanks, Thomas Huriaux.  (Closes: #367534)
 
- -- Russ Allbery <rra@debian.org>  Wed, 21 Jun 2006 13:53:06 -0700
+ -- Russ Allbery <rra@debian.org>  Sat, 24 Jun 2006 20:26:24 -0700
 
 lintian (1.23.21) unstable; urgency=low
 

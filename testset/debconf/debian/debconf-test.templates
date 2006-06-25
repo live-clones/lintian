@@ -47,3 +47,9 @@ __Choices: one, two
 _Description: Select one of these:
  I am a stupid test of first-person syntax that tells you to select yes
  even though yes isn't an option in this prompt.
+
+Template: debconf/internal
+Type: boolean
+Description: For internal use only
+ We are testing that style checks are not applied to templates that are
+ marked as internal.

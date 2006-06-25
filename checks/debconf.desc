@@ -193,6 +193,9 @@ Info: The short description of a select, multiselect, string and password
  debconf template is a prompt and not a title. Avoid question style
  prompts ("IP Address?") in favour of "opened" prompts ("IP address:").
  The use of colons is recommended.
+ .
+ If this template is only used internally by the package and not displayed
+ to the user, put "for internal use" in the short description.
 Ref: devref 6.5.4.2
 
 Tag: malformed-title-in-templates
@@ -208,12 +211,18 @@ Info: The short description of a boolean debconf template should be
  phrased in the form of a question which should be kept short and should
  generally end with a question mark. Terse writing style is permitted and
  even encouraged if the question is rather long.
+ .
+ If this template is only used internally by the package and not displayed
+ to the user, put "for internal use" in the short description.
 Ref: devref 6.5.4.2.2
 
 Tag: using-question-in-extended-description-in-templates
 Type: warning
 Info: The extended description of a boolean debconf template should not
  include a question.
+ .
+ If this template is only used internally by the package and not displayed
+ to the user, put "for internal use" in the short description.
 Ref: devref 6.5.4.2.2
 
 Tag: using-imperative-form-in-templates
@@ -229,6 +238,9 @@ Info: You should avoid the use of first person ("I will do this..." or
  "We recommend..."). The computer is not a person and the Debconf
  templates do not speak for the Debian developers. You should use neutral
  construction and often the passive form.
+ .
+ If this template is only used internally by the package and not displayed
+ to the user, put "for internal use" in the short description.
 Ref: devref 6.5.2.5
 
 Tag: making-assumptions-about-interfaces-in-templates
