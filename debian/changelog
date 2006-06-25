@@ -29,11 +29,16 @@ lintian (1.23.22) UNRELEASED; urgency=low
     + [RA] Downgrade build-depends-without-arch-dep to info from warning.
       Policy doesn't require using Build-Depends-Indep for
       arch-independent packages and the test has a lot of false positives.
+    + [RA] Require ant in Build-Depends when using the CDBS ant rule.
+    + [RA] Bypass the build-depends-without-arch-dep check entirely when
+      using ant, since determining which Java dependencies are then
+      permissible in Build-Depends is too complex to do a proper job.
+      Reported by Peter Eisentraut.  (Closes: #372190)
   * checks/po-debconf:
     + [RA] Don't consider templates.in to be a stray translated template
       file.  Thanks, Thomas Huriaux.  (Closes: #367534)
 
- -- Russ Allbery <rra@debian.org>  Sat, 24 Jun 2006 21:02:32 -0700
+ -- Russ Allbery <rra@debian.org>  Sat, 24 Jun 2006 21:25:29 -0700
 
 lintian (1.23.21) unstable; urgency=low
 

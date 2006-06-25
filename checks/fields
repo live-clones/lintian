@@ -43,6 +43,7 @@ my $python_depend = 'python | python-dev | python-all-dev';
 # optional tags to use for reporting the problem if some information other
 # than the default is required.
 my @global_clean_depends = (
+	[ ant => '^include\s*/usr/share/cdbs/1/rules/ant.mk' ],
 	[ cdbs => '^include\s+/usr/share/cdbs/' ],
 	[ dbs => '^include\s+/usr/share/dbs/' ],
 	[ debhelper => '^include\s+/usr/share/cdbs/1/rules/debhelper.mk' ],
@@ -88,6 +89,14 @@ my @rule_clean_depends = (
 # Similar, but the resulting dependency is only allowed, not required.
 my @rule_clean_allowed = (
 	[ 'perl | perl-base (>= 5.6.0-16)' => '(^\t|\|\|)\s*(perl|\$\(PERL\))\s' ],
+);
+
+# A simple list of regular expressions which, if they match anywhere in
+# debian/rules, indicate the requirements for debian/rules clean are complex
+# enough that we can't know what packages are permitted in Build-Depends and
+# should bypass the build-depends-without-arch-dep check completely.
+my @global_clean_bypass = (
+	'^include\s*/usr/share/cdbs/1/rules/ant.mk'
 );
 
 sub run {
@@ -505,7 +514,7 @@ if ($type eq "source") {
 	# The keys in %needed and %needed_clean are the dependencies; the
 	# values are the tags to use or the empty string to use the default
 	# tag.
-	my (%needed, %needed_clean, %allowed_clean);
+	my (%needed, %needed_clean, %allowed_clean, $bypass_needed_clean);
 	open (RULES, "debfiles/rules") or fail("cannot read debfiles/rules: $!");
 	my $target = "none";
 	local $/ = "\n";	# Read this linewise
@@ -519,6 +528,11 @@ if ($type eq "source") {
 		for my $rule (@global_clean_allowed) {
 			if ($_ =~ /$rule->[1]/) {
 				$allowed_clean{$rule->[0]} = 1;
+			}
+		}
+		for my $rule (@global_clean_bypass) {
+			if ($_ =~ /$rule/) {
+				$bypass_needed_clean = 1;
 			}
 		}
 		for my $rule (@global_depends) {
@@ -650,7 +664,7 @@ if ($type eq "source") {
 	# packages so that the implications will work properly.
 	#
 	# This is confusing.  There should be a better way to do this.
-	if (-e "fields/build-depends" && $arch_dep_packages == 0) {
+	if (-e "fields/build-depends" && $arch_dep_packages == 0 && !$bypass_needed_clean) {
 		open(FH, "fields/build-depends") or fail("cannot read fields/build-depends: $!");
 		my $build_depends = <FH>;
 		close FH;
