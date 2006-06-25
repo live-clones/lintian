@@ -133,8 +133,10 @@ while(my $binpkg = readdir(BINPKGS)) {
     }
 }
 
-# If we got this far, they need to have #DEBHELPER# in their scripts.
-# search for scripts that look like maintainer scripts.
+# If we got this far, they need to have #DEBHELPER# in their scripts.  Search
+# for scripts that look like maintainer scripts.  Also collect dependency
+# information from debian/control and check compatibility level.
+my $depends;
 opendir(DEBIAN, 'debfiles')
     or fail("Can't open debfiles directory.");
 while (defined(my $file=readdir(DEBIAN))) {
@@ -174,22 +176,19 @@ while (defined(my $file=readdir(DEBIAN))) {
 	open(IN,"debfiles/$file")
 	    or fail("Can't open debfiles/$file: $!");
 	while (<IN>) {
-	    if (m/^(Build-Depends|Build-Depends-Indep):/i) {
-		if (m,debhelper\s*\(\s*>(?:>|=)\s*([^)]+),) {  
-		    $seenversiondepends = $1;
-	        }
-	    }
-	    if ($needbuilddepends and m/debhelper/) {
-		$needbuilddepends = 0; # seen them, all is good
-	    }
+	    if (s/^(Build-Depends|Build-Depends-Indep):\s*//i) {
+                $depends .= ', ' if $depends;
+                $depends .= $_;
+            }
 	    if (m/^\s*$/) { # end of first stanza
 		last;
 	    }
-	}
-	if ($needbuilddepends) {
+        }
+	close IN;
+        $depends = Dep::parse($depends);
+        if ($needbuilddepends && ! Dep::implies($depends, Dep::parse('debhelper'))) {
 	    tag "package-uses-debhelper-but-lacks-build-depends", "";
 	}
-	close IN;
     } elsif ($file =~ m/^ex\.|\.ex$/i) {
         tag "dh-make-template-in-source", "debian/$file";
     }
@@ -204,7 +203,7 @@ if ($needversiondepends < 4) {
     tag "package-uses-deprecated-debhelper-compat-version", $needversiondepends;
 }
 
-if ($needversiondepends > 4 and ! Dep::versions_lte($needversiondepends, $seenversiondepends)) {
+if ($needversiondepends > 4 and ! Dep::implies($depends, Dep::parse("debhelper (>= $needversiondepends)"))) {
     tag "package-lacks-versioned-build-depends-on-debhelper", $needversiondepends;
 }
 

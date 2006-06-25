@@ -1,3 +1,4 @@
+E: debug source: build-depends-indep-without-arch-indep
 E: hello: statically-linked-binary ./usr/bin/hello.dbg
 E: hello: unstripped-binary-or-object ./usr/bin/hello.dbg
 E: libhello0-dbg: binary-with-bad-dynamic-table ./usr/lib/libhello.so.dbg

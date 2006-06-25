@@ -9,6 +9,11 @@ lintian (1.23.22) UNRELEASED; urgency=low
       templates.  (Closes: #368206)
   * checks/common_data.pm:
     + [RA] Add amd64 to the standard architectures.  (Closes: #367324)
+  * checks/debhelper:
+    + [RA] Use the Dep library to check debhelper build dependencies
+      rather than parsing Build-Depends with regexes.  This avoids false
+      positives due to matching package names ending in debhelper.
+      Reported by Fabio Tranchitella.  (Closes: #366531)
   * checks/fields:
     + [RA] Allow build-depend on quilt if clean depends on the xsfclean
       rule, for packages maintained by the X Strike Force.

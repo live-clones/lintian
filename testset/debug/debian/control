@@ -3,6 +3,7 @@ Section: utils
 Priority: optional
 Maintainer: Russ Allbery <rra@debian.org>
 Build-Depends: debhelper (>= 5.0.0)
+Build-Depends-Indep: not-debhelper (>= 0.4.3)
 Standards-Version: 3.7.0
 
 Package: hello
