@@ -39,6 +39,8 @@ lintian (1.23.22) UNRELEASED; urgency=low
       using ant, since determining which Java dependencies are then
       permissible in Build-Depends is too complex to do a proper job.
       Reported by Peter Eisentraut.  (Closes: #372190)
+    + [RA] Only allow patch in Build-Depends for yada unpatch, don't
+      require it, since yada depends on patch.  (Closes: #375479)
   * checks/po-debconf:
     + [RA] Don't consider templates.in to be a stray translated template
       file.  Thanks, Thomas Huriaux.  (Closes: #367534)
