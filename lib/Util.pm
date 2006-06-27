@@ -139,7 +139,7 @@ sub get_deb_info {
     my $CONTROL = FileHandle->new;
     pipeline_open($CONTROL,
 		  (sub { exec 'ar', 'p', $file, 'control.tar.gz' }),
-		  (sub { exec 'tar', 'xfzO', '-', '*control' }))
+		  (sub { exec 'tar', '--wildcards', '-xzO', '-f', '-', '*control' }))
 	or fail("cannot fork to unpack $file: $!\n");
     my @data = parse_dpkg_control($CONTROL);
     close($CONTROL) or fail("broken input pipe for unpacking $file: $!");
