@@ -1,4 +1,4 @@
-lintian (1.23.22) UNRELEASED; urgency=low
+lintian (1.23.22) unstable; urgency=low
 
   * checks/debconf:
     + [JvW] Teach lintian to know about the 'error' debconf template
@@ -49,7 +49,7 @@ lintian (1.23.22) UNRELEASED; urgency=low
     + [RA] Pass the --wildcards option to tar, now required by a change in
       the default tar semantics.  (Closes: #375246)
 
- -- Russ Allbery <rra@debian.org>  Mon, 26 Jun 2006 17:45:25 -0700
+ -- Russ Allbery <rra@debian.org>  Tue, 27 Jun 2006 17:50:05 -0700
 
 lintian (1.23.21) unstable; urgency=low
 
