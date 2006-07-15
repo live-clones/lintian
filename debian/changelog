@@ -1,3 +1,13 @@
+lintian (1.23.23) UNRELEASED; urgency=low
+
+  * checks/nmu{.desc,}:
+    + [RA] When checking for an NMU changelog entry, require "NMU" be
+      surrounded by word boundaries.
+    + [RA] Warn if the changelog incorrectly indicates an NMU.  Thanks to
+      George Danchev for the report.
+
+ -- Russ Allbery <rra@debian.org>  Fri, 14 Jul 2006 17:55:28 -0700
+
 lintian (1.23.22) unstable; urgency=low
 
   * checks/debconf:
