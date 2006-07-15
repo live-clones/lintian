@@ -398,14 +398,17 @@ Info: The package declares a build-depends on an essential package, e.g. dpkg,
 
 Tag: virtual-package-depends-without-real-package-depends
 Type: warning
-Ref: policy 7.4
 Info: The package declares a depends on a virtual package without listing a
  real package as an alternative first.
  .
- A real package should be listed in the first part of the | dependency in
- order for the package to be installable by package management programs that
- can't or won't guess which alternative to select by default. In particular,
- it helps build daemons rebuild the package without manual overrides.
+ If this package could ever be a build dependency, it should list a real
+ package as the first alternative to any virtual package in its Depends.
+ Otherwise, the build daemons will not be able to provide a consistent
+ build environment.
+ .
+ If it will never be a build dependency, this isn't necessary, but you may
+ want to consider doing so anyway if there is a real package providing
+ that virtual package that most users will want to use.
 
 Tag: invalid-arch-string-in-source-relation
 Type: error

@@ -375,9 +375,10 @@ if (($type eq "binary") || ($type eq 'udeb')) {
 				push @seen_tkxs, $alternatives[0]->[0] if defined $known_tkxs{$alternatives[0]->[0]};
 				push @seen_libpngs, $alternatives[0]->[0] if defined $known_libpngs{$alternatives[0]->[0]};
 
+				# Only for (Pre-)?Depends.
 				tag "virtual-package-depends-without-real-package-depends", "$field: $alternatives[0]->[0]"
-				    if ($known_virtual_packages{$alternatives[0]->[0]} && &$is_dep_field($field)
-				        && $field ne "suggests"); #We don't wanna issue this for suggests, only for depends and recommends
+				    if ($known_virtual_packages{$alternatives[0]->[0]}
+					&& ($field eq "depends" || $field eq "pre-depends"));
 
 				for my $part_d (@alternatives) {
 					my ($d_pkg, $d_version, $d_arch, $rest, $part_d_orig) = @$part_d;
