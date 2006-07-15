@@ -22,6 +22,8 @@ binary-indep:
 	gzip -c9 <test.1p >$(tmp)/usr/share/man/man1/test.1p.gz
 	gzip -c9 <test.1p.de >$(tmp)/usr/share/man/man1/test-latin1-chars.1p.gz
 
+	gzip -c9 <true.1 >$(tmp)/usr/share/man/man1/true.1.gz
+
 	ln -s ../X11R6/bin/rstartd $(tmp)/usr/bin/rstartd
 	touch $(tmp)/usr/X11R6/man/man1/rstartd.1x.gz
 

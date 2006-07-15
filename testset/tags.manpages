@@ -43,3 +43,4 @@ W: manpages: manpage-has-bad-whatis-entry usr/share/man/man1/usr-bin-binary.1
 W: manpages: manpage-has-bad-whatis-entry usr/share/man/man1/usr-sbin-binary.1.gz
 W: manpages: manpage-has-bad-whatis-entry usr/share/man/man6/usr-games-binary.6.gz
 W: manpages: manpage-has-errors-from-man usr/share/man/man1/test-latin1-chars.1p.gz 9: warning: can't find numbered character 228
+W: manpages: manpage-has-useless-whatis-entry usr/share/man/man1/true.1.gz
