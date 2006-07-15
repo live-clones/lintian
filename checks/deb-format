@@ -38,43 +38,6 @@ if (open (LIST, "ar t deb |")) {
 	close LIST;
 }
 
-open INPUT, "dpkg-deb --fsys-tarfile deb |";
-
-my $chunk;
-# Previous was a LongLink?
-my $is_long = 0;
-while (read(INPUT, $chunk, 512)) {
-	last if length($chunk) != 512;
-	my ($name, $size, $htype) = unpack "A100x24A12x20A1", $chunk;
-	$size = oct($size);
-
-	if (!$is_long && length($name) == 100) {
-		# This should have been a LongLink, as now the filename isn't
-		# NUL-terminated, as dpkg -i expects.
-
-		# Remove the leading dot
-		$name =~ s/^\.//;
-
-		tag "deb-created-with-broken-tar", "file: $name";
-	}
-
-	$is_long = $htype eq 'L';
-
-	# eat data
-	if ($size) {
-		read(INPUT, $chunk, get_block_size($size)) or last;
-	}
-}
-
-close INPUT;
-
-} # </run>
-
-sub get_block_size {
-	my $size = shift;
-	my $nblocks = int($size / 512);
-	$nblocks ++ if (($size % 512) > 0);
-	return 512*$nblocks;
 }
 
 1;

@@ -6,16 +6,6 @@ Type: binary, udeb
 Unpack-Level: 1
 Info: This script checks the format of the deb ar archive itself.
 
-Tag: deb-created-with-broken-tar
-Type: error
-Info: The binary package was created with a broken version of tar.
- Some versions of tar contain a bug, which make the resulting .deb broken. On
- unpack, some filenames are going to be corrupted.
- .
- This package was build with such a version of tar, and the mentioned filename
- is corrupted. Refer to Debian bug #230910 for more information, or simply
- update your tar-version and rebuild.
-
 Tag: deb-data-member-wrongly-compressed
 Type: error
 Info: The binary package contains a data member not compressed with gzip.

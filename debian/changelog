@@ -1,5 +1,9 @@
 lintian (1.23.23) UNRELEASED; urgency=low
 
+  * checks/deb-format{.desc,}:
+    + [RA] Remove deb-created-with-broken-tar; the bug was actually in
+      dpkg, and the dpkg in stable has been fixed.  Thanks Jari Aalto and
+      Thijs Kinkhorst.  (Closes: #375638, #376030)
   * checks/fields{.desc,}:
     + [RA] Don't warn virtual-package-depends-without-real-package-depends
       for Recommends and rewrite the tag description to be more accurate.
@@ -13,7 +17,7 @@ lintian (1.23.23) UNRELEASED; urgency=low
     + [RA] Warn if the changelog incorrectly indicates an NMU.  Thanks to
       George Danchev for the report.
 
- -- Russ Allbery <rra@debian.org>  Fri, 14 Jul 2006 22:17:24 -0700
+ -- Russ Allbery <rra@debian.org>  Fri, 14 Jul 2006 22:34:10 -0700
 
 lintian (1.23.22) unstable; urgency=low
 
