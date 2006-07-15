@@ -229,7 +229,7 @@ while (<IN>) {
 
 	# If it's not a .so link, use lexgrog to find out if the man page
 	# parses correctly and make sure the short description is reasonable.
-        #
+	#
 	# This check is currently not applied to pages in language-specific
 	# hierarchies, because those pages are not currently scanned by
 	# mandb (bug #29448), and because lexgrog can't handle pages in all
@@ -237,24 +237,24 @@ while (<IN>) {
 	# negatives. When man-db is fixed, this limitation should be
 	# removed.
 	if ($path =~ m,/man/man\d/,) {
-            my $pid = open LEXGROG, '-|';
-            if (not defined $pid) {
-                fail("cannot run lexgrog: $!");
-            } elsif ($pid == 0) {
-                my %newenv = (LANG => 'C', PATH => $ENV{PATH});
-                undef %ENV;
-                %ENV = %newenv;
-                exec "lexgrog unpacked/\Q$file\E 2>&1"
-                    or fail("cannot run lexgrog: $!");
-            }
-            my $desc = <LEXGROG>;
-            $desc =~ s/^[^:]+: \"(.*)\"$/$1/;
-            if ($desc =~ /(\S+)\s+-\s+manual page for \1/i) {
-                tag "manpage-has-useless-whatis-entry", "$file";
-            }
-            1 while <LEXGROG>;
-            close LEXGROG;
-            tag "manpage-has-bad-whatis-entry", "$file" if $? != 0;
+	    my $pid = open LEXGROG, '-|';
+	    if (not defined $pid) {
+		fail("cannot run lexgrog: $!");
+	    } elsif ($pid == 0) {
+		my %newenv = (LANG => 'C', PATH => $ENV{PATH});
+		undef %ENV;
+		%ENV = %newenv;
+		exec "lexgrog unpacked/\Q$file\E 2>&1"
+		    or fail("cannot run lexgrog: $!");
+	    }
+	    my $desc = <LEXGROG>;
+	    $desc =~ s/^[^:]+: \"(.*)\"$/$1/;
+	    if ($desc =~ /(\S+)\s+-\s+manual page for \1/i) {
+		tag "manpage-has-useless-whatis-entry", "$file";
+	    }
+	    1 while <LEXGROG>;
+	    close LEXGROG;
+	    tag "manpage-has-bad-whatis-entry", "$file" if $? != 0;
 	}
 	# If it's not a .so link, run it through "man" to check for errors.
 	# If it is in a directory with the standard man layout, cd to the
