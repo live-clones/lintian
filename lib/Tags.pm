@@ -236,7 +236,9 @@ sub record_stats {
 
     for my $k (qw( severity significance tag )) {
 	$stats{$current}{$k}{$tag_info->{$k}}++
-	    unless $tag_info->{overridden}{$k};
+	    unless $tag_info->{overridden}{override}
+		|| $tag_info->{overridden}{severity}
+		|| $tag_info->{overridden}{significance};
     }
     for my $k (qw( severity significance override )) {
 	$stats{$current}{overrides}{$k}{$tag_info->{overridden}{$k}}++
