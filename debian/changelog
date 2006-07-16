@@ -16,6 +16,9 @@ lintian (1.23.23) UNRELEASED; urgency=low
       surrounded by word boundaries.
     + [RA] Warn if the changelog incorrectly indicates an NMU.  Thanks to
       George Danchev for the report.
+  * checks/scripts:
+    + [RA] Except mkstemp from possibly-insecure-handling-of-tmp-files for
+      maintainer scripts written in Perl.
 
   * lib/Tags.pm:
     + [RA] If a tag has been overriden via any mechanism, do not add it to
@@ -26,7 +29,7 @@ lintian (1.23.23) UNRELEASED; urgency=low
       therefore cause lintian to exit with non-zero status.  Thanks,
       Andree Leidenfrost and Martin F. Krafft.  (Closes: #377182, #374314)
 
- -- Russ Allbery <rra@debian.org>  Fri, 14 Jul 2006 23:41:45 -0700
+ -- Russ Allbery <rra@debian.org>  Sat, 15 Jul 2006 18:49:37 -0700
 
 lintian (1.23.22) unstable; urgency=low
 
