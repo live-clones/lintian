@@ -26,6 +26,9 @@ lintian (1.23.23) UNRELEASED; urgency=low
     + [RA] Except mkstemp from possibly-insecure-handling-of-tmp-files for
       maintainer scripts written in Perl.
 
+  * debian/copyright:
+    + [RA] Add Subversion repository location.
+
   * lib/Tags.pm:
     + [RA] If a tag has been overriden via any mechanism, do not add it to
       any of the statistics (tag, severity, or significance).  Before, the
@@ -35,7 +38,7 @@ lintian (1.23.23) UNRELEASED; urgency=low
       therefore cause lintian to exit with non-zero status.  Thanks,
       Andree Leidenfrost and Martin F. Krafft.  (Closes: #377182, #374314)
 
- -- Russ Allbery <rra@debian.org>  Tue, 25 Jul 2006 09:49:28 -0700
+ -- Russ Allbery <rra@debian.org>  Tue, 25 Jul 2006 15:41:51 -0700
 
 lintian (1.23.22) unstable; urgency=low
 
