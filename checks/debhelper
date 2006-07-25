@@ -173,18 +173,13 @@ while (defined(my $file=readdir(DEBIAN))) {
 	    tag "debhelper-compat-file-is-empty", "";
 	}
     } elsif ($file =~ m/^control$/) {
-	open(IN,"debfiles/$file")
-	    or fail("Can't open debfiles/$file: $!");
-	while (<IN>) {
-	    if (s/^(Build-Depends|Build-Depends-Indep):\s*//i) {
-                $depends .= ', ' if $depends;
-                $depends .= $_;
-            }
-	    if (m/^\s*$/) { # end of first stanza
-		last;
-	    }
+        my ($control) = read_dpkg_control("debfiles/$file");
+        $depends = '';
+        for my $field ('build-depends', 'build-depends-indep') {
+            next unless $control->{$field};
+            $depends .= ', ' if $depends;
+            $depends .= $control->{$field};
         }
-	close IN;
         $depends = Dep::parse($depends);
         if ($needbuilddepends && ! Dep::implies($depends, Dep::parse('debhelper'))) {
 	    tag "package-uses-debhelper-but-lacks-build-depends", "";
