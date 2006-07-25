@@ -2,11 +2,11 @@ E: binary source: debian-rules-missing-required-target binary-indep
 E: binary: changelog-file-not-compressed changelog
 E: binary: debian-changelog-file-missing-or-wrong-name
 E: binary: depends-on-x-metapackage depends: xorg
-E: binary: doc-base-file-references-missing-file binary:10 /usr/share/doc/binary/binary.sgml.gz
-E: binary: doc-base-file-references-missing-file binary:14 /usr/share/doc/binary/binary.txt
-E: binary: doc-base-file-references-missing-file binary:18 /usr/share/doc/binary/html/ch4.html
-E: binary: doc-base-file-references-missing-file binary:23 /usr/share/doc/binary/hml/*.html
-E: binary: doc-base-index-references-multiple-files binary:18
+E: binary: doc-base-file-references-missing-file binary:11 /usr/share/doc/binary/binary.sgml.gz
+E: binary: doc-base-file-references-missing-file binary:15 /usr/share/doc/binary/binary.txt
+E: binary: doc-base-file-references-missing-file binary:19 /usr/share/doc/binary/html/ch4.html
+E: binary: doc-base-file-references-missing-file binary:24 /usr/share/doc/binary/hml/*.html
+E: binary: doc-base-index-references-multiple-files binary:19
 E: binary: file-directly-in-usr-share usr/share/baz
 E: binary: lengthy-symlink usr/share/doc/binary/html/ch2.html ../html/./ch1.html
 E: binary: menu-item-missing-required-tag section /usr/lib/menu/binary:1
@@ -38,7 +38,7 @@ W: binary: binary-without-manpage hello-static
 W: binary: binary-without-manpage hello.static
 W: binary: binary-without-manpage iminusrbin
 W: binary: binary-without-manpage static-hello
-W: binary: doc-base-file-unknown-format binary:13 esp
+W: binary: doc-base-file-unknown-format binary:14 esp
 W: binary: executable-not-elf-or-script ./usr/bin/iminusrbin
 W: binary: file-in-unusual-dir usr/bar
 W: binary: menu-command-not-in-package /usr/lib/menu/binary:6 /imnothere

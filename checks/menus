@@ -209,10 +209,10 @@ if ($docbase_file) {		# postinst has to call install-docs
 	    if (/^\s/ && $field) {
 		push (@files, split ' ');
 	    }
-	    if (/^(Index|Files)\s*:\s*(.*)\s*$/i) {
+	    if (/^(Index|Files)\s*:\s*(.*?)\s*$/i) {
 		$field = lc $1;
 		@files = split (' ', $2);
-	    } elsif (/^Format\s*:\s*(.*)\s*$/i) {
+	    } elsif (/^Format\s*:\s*(.*?)\s*$/i) {
 		my $format = lc $1;
 		tag "doc-base-file-unknown-format", "$dbfile:$.", $format
 		    unless $known_doc_base_formats{$format};
