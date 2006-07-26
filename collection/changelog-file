@@ -46,22 +46,47 @@ my @changelogs = ("unpacked/usr/share/doc/$pkg/changelog.Debian.gz",
 my $chl;
 
 for (@changelogs) {
-    if (-f $_) {
+    if (-l $_ || -f $_) {
 	$chl = $_;
 	last;
     }
 }
 
+# If the changelog file we found was a symlink, we have to be careful.  It
+# could be a symlink to some file outside of the laboratory and we don't want
+# to end up reading that file by mistake.  Relative links within the same
+# directory or to a subdirectory we accept; anything else is replaced by an
+# intentinally broken symlink so that checks can do the right thing.
+if (defined ($chl) && -l $chl) {
+    my $link = readlink $chl or fail("cannot readlink $chl: $!");
+    if ($link =~ /\.\./ || ($link =~ m%/% && $link !~ m%^[^/]+(/+[^/]+)*\z%)) {
+	symlink('file-is-in-another-package', 'changelog')
+	    or fail("cannot create changelog symlink: $!");
+	undef $chl;
+    } elsif (! -f $chl) {
+        undef $chl;
+    }
+}
+
+# If the changelog was a broken symlink, it will be undefined and we'll now
+# treat it the same as if we didn't find a changelog and do nothing.  If it
+# was a symlink, copy the file, since otherwise the relative symlinks are
+# going to break things.
 if (not defined $chl) {
     # no changelog found
-    open(DUMMY, ">changelog");
-    close(DUMMY);
 } elsif ($chl =~ /\.gz$/) {
     use lib "$ENV{'LINTIAN_ROOT'}/lib";
     use Pipeline;
 
     pipeline((sub { exec 'gzip', '-dc', $chl }), "changelog") == 0
 	or fail("error in gzip");
+} elsif (-f $chl && -l $chl) {
+    local $_;
+    open (CHL, "< $chl") or fail("cannot open $chl: $!");
+    open (COPY, '> changelog') or fail("cannot create changelog: $!");
+    print COPY while <CHL>;
+    close CHL;
+    close COPY;
 } else {
     link($chl, "changelog")
 	or fail("cannot link $chl to changelog: $!");

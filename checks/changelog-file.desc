@@ -78,6 +78,19 @@ Info: Each Debian package (which provides a /usr/share/doc/<i>pkg</i>
  /usr/share/doc/<i>pkg</i>/changelog.Debian.gz
 Ref: policy 12.7
 
+Tag: debian-changelog-file-is-a-symlink
+Type: warning
+Info: The Debian changelog file is a symlink to a file in a different
+ directory or not found in this package. Please don't do this. It makes
+ package checking and manipulation unnecessarily difficult. Because it was
+ a symlink, the Debian changelog file was not checked for other
+ problems. (Symlinks to another file in /usr/share/doc/<i>pkg</i> or a
+ subdirectory thereof are fine and should not trigger this warning.)
+ .
+ To refer to the changelog, copyright, and other documentation files of
+ another package that this one depends on, please symlink the entire
+ /usr/share/doc/<i>pkg</i> directory rather than individual files.
+
 Tag: debian-changelog-file-missing-or-wrong-name
 Type: error
 Info: Each Debian package (which provides a /usr/share/doc/<i>pkg</i>

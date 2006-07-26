@@ -212,6 +212,19 @@ if ($native_pkg) {
     }
 }
 
+# Everything below involves opening and reading the changelog file, so bail
+# with a warning at this point if all we have is a symlink.
+if (-l 'changelog') {
+    tag "debian-changelog-file-is-a-symlink", "";
+    return 0;
+}
+
+# Bail at this point if the changelog file doesn't exist.  We will have
+# already warned about this.
+unless (-f 'changelog') {
+    return 0;
+}
+
 # check that changelog is UTF-8 encoded
 my $line = file_is_encoded_in_non_utf8("changelog", $type, $pkg);
 if ($line) {

@@ -27,9 +27,15 @@ binary-correct:
 	chmod a-x debian/libbaz2/usr/lib/*
 	
 	# General stuff that is tested in other testsets:
-	dh_installchangelogs -plibbaz2 -plibbaz2-dev
 	dh_installdocs -plibbaz2 -plibbaz2-dev
 	dh_compress -plibbaz2 -plibbaz2-dev
+
+	# Mess up the libbaz2 changelog files to test the symlink handling.
+	ln -s /usr/share/doc/lintian/changelog.gz \
+	    debian/libbaz2/usr/share/doc/libbaz2/changelog.gz
+	install -m 644 debian/changelog \
+	    debian/libbaz2-dev/usr/share/doc/libbaz2-dev/foo
+	ln -s foo debian/libbaz2-dev/usr/share/doc/libbaz2-dev/changelog
 
 	# Okay, if either line is omitted, it should be noted
 	dh_strip -plibbaz2 -plibbaz2-dev

@@ -1,5 +1,8 @@
 lintian (1.23.23) UNRELEASED; urgency=low
 
+  * checks/changelog-file{.desc,}:
+    + [RA] Diagnose changelog files that are symlinks, using the new way
+      the changelog-file collection script processes them.
   * checks/deb-format{.desc,}:
     + [RA] Remove deb-created-with-broken-tar; the bug was actually in
       dpkg, and the dpkg in stable has been fixed.  Thanks Jari Aalto and
@@ -26,6 +29,15 @@ lintian (1.23.23) UNRELEASED; urgency=low
     + [RA] Except mkstemp from possibly-insecure-handling-of-tmp-files for
       maintainer scripts written in Perl.
 
+  * collection/changelog-file:
+    + [RA] Be much more careful about changelog files that are symlinks.
+      Don't skip over changelog symlinks just because they point to
+      non-existant files, mark unsafe symlinks or symlinks to non-existent
+      files by creating copyright as a symlink to a non-existent file in
+      the lab, and don't create an empty dummy changelog if we couldn't
+      find a changelog.  Correctly handle changelog files that are
+      symlinks to other files in the same directory.
+
   * debian/copyright:
     + [RA] Add Subversion repository location.
 
@@ -38,7 +50,7 @@ lintian (1.23.23) UNRELEASED; urgency=low
       therefore cause lintian to exit with non-zero status.  Thanks,
       Andree Leidenfrost and Martin F. Krafft.  (Closes: #377182, #374314)
 
- -- Russ Allbery <rra@debian.org>  Tue, 25 Jul 2006 15:41:51 -0700
+ -- Russ Allbery <rra@debian.org>  Tue, 25 Jul 2006 17:20:15 -0700
 
 lintian (1.23.22) unstable; urgency=low
 
