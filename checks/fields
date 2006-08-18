@@ -756,7 +756,7 @@ sub _valid_version {
 
 	# epoch check means nothing here... This check is only useful to detect
 	# weird characters in version (and to get the debian revision)
-	if ($ver =~ m/^(\d+:)?([-\.+:A-Z0-9]+?)(-[\.+A-Z0-9]+)?$/i) {
+	if ($ver =~ m/^(\d+:)?([-\.+:~A-Z0-9]+?)(-[\.+~A-Z0-9]+)?$/i) {
 		return ($1, $2, $3);
 	} else {
 		return ();

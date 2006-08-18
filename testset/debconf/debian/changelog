@@ -1,4 +1,4 @@
-debconf (1) unstable; urgency=low
+debconf (1~rc1) unstable; urgency=low
 
   * Initial Release
 
