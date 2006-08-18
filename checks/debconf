@@ -232,15 +232,20 @@ foreach my $template (@templates) {
     # Check the description against the best practices in the Developer's
     # Reference, but skip all templates where the short description contains
     # the string "for internal use".
-    $template->{description} =~ m/^([^\n]*)\n(.*)$/s;
-    my ($short, $extended) = ($1, $2);
-    unless (defined $short) {
-	$short = $template->{description};
+    my ($short, $extended);
+    if (defined $template->{description}) {
+        $template->{description} =~ m/^([^\n]*)\n(.*)$/s;
+        ($short, $extended) = ($1, $2);
+        unless (defined $short) {
+            $short = $template->{description};
+        }
+    } else {
+        ($short, $extended) = ('', '');
     }
     unless ($short =~ /for internal use/i) {
 	my $isprompt = grep { $_ eq $template->{type} } qw(string select password multiselect);
 	if ($isprompt) {
-	    if ($short !~ m/:$/) {
+	    if ($short && $short !~ m/:$/) {
 		tag "malformed-prompt-in-templates", $template->{template};
 	    }
 	    if ($short =~ /^(Please|Cho+se|Enter|Select|Specify|Give)/) {
@@ -263,12 +268,14 @@ foreach my $template (@templates) {
 	if (length ($short) > 75) {
 	    tag "too-long-short-description-in-templates", $template->{template};
 	}
-	if ($template->{description} =~ /(\A|\s)(I|[Mm]y|[Ww]e|[Oo]ur|[Oo]urs|mine|myself|ourself|me|us) /) {
-	    tag "using-first-person-in-templates", $template->{template};
-	}
-	if ($template->{description} =~ /[ \'\"]([Yy]es)[ \'\",.]/) {
-	    tag "making-assumptions-about-interfaces-in-templates", $template->{template};
-	}
+        if (defined $template->{description}) {
+            if ($template->{description} =~ /(\A|\s)(I|[Mm]y|[Ww]e|[Oo]ur|[Oo]urs|mine|myself|ourself|me|us) /) {
+                tag "using-first-person-in-templates", $template->{template};
+            }
+            if ($template->{description} =~ /[ \'\"]([Yy]es)[ \'\",.]/) {
+                tag "making-assumptions-about-interfaces-in-templates", $template->{template};
+            }
+        }
 
 	# Check whether the extended description is too long.
 	if ($extended) {

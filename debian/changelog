@@ -7,6 +7,9 @@ lintian (1.23.23) UNRELEASED; urgency=low
     + [RA] Remove deb-created-with-broken-tar; the bug was actually in
       dpkg, and the dpkg in stable has been fixed.  Thanks Jari Aalto and
       Thijs Kinkhorst.  (Closes: #375638, #376030)
+  * checks/debconf:
+    + [RA] Diagnose a missing template description only once and avoid
+      Perl warnings.  Thanks, Thomas Huriaux.  (Closes: #377654)
   * checks/debhelper:
     + [RA] Use the standard control file parser rather than a custom
       parser that can't handle continuation lines.

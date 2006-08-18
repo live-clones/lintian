@@ -53,3 +53,6 @@ Type: boolean
 Description: For internal use only
  We are testing that style checks are not applied to templates that are
  marked as internal.
+
+Template: debconf/no-description
+Type: string
