@@ -360,6 +360,21 @@ Type: error
 Info: Debian packages should not install into <tt>/opt</tt>, because it
  is reserved for add-on software.
 
+Tag: dir-or-file-in-srv
+Type: error
+Ref: fhs 3
+Info: Debian packages should not install into <tt>/srv</tt>.  The
+ specification of <tt>/srv</tt> states that its structure is at the
+ discretion of the local administrator and no package should rely on any
+ particular structure.  Debian packages that install files directly into
+ <tt>/srv</tt> can't adjust for local policy about its structure and in
+ essence force a particular structure.
+ .
+ If a package wishes to put its data in <tt>/srv</tt>, it must do this in
+ a way that allows the local administrator to specify and preserve their
+ chosen directory structure (such as through post-install configuration,
+ setup scripts, debconf prompting, etc.).
+
 Tag: third-party-package-in-python-dir
 Type: warning
 Info: According to <a href="http://www.python.org/doc/essays/packages.html">

@@ -403,12 +403,17 @@ while (<IN>) {
 	    tag "subdir-in-bin", "$file";
 	}
     }
+    # ---------------- /srv
+    elsif ($file =~ m,^srv/.,) {
+	tag "dir-or-file-in-srv", "$file";
+    }
     # ---------------- FHS directory?
     elsif ($file =~ m,^[^/]+/$, and $file ne './' and
-	   $file !~ m,^(bin|boot|dev|etc|home|lib(64|32)?|mnt|opt|root|sbin|tmp|usr|var)/,) { # Make an exception for the base-files package here, because it
-	# installs a slew of top-level directories for setting up the
-	# base system.  (Specifically, /cdrom, /floppy, /initrd, and /proc
-	# are not mentioned in the FHS).
+	   $file !~ m,^(bin|boot|dev|etc|home|lib(64|32)?|mnt|opt|root|sbin|srv|tmp|usr|var)/,) {
+	# Make an exception for the base-files package here and other similar
+	# packages because they install a slew of top-level directories for
+	# setting up the base system.  (Specifically, /cdrom, /floppy,
+	# /initrd, and /proc are not mentioned in the FHS).
 	tag "non-standard-toplevel-dir", "$file"
 	    unless $pkg eq 'base-files' 
 	    or $pkg eq 'hurd' 
