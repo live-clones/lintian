@@ -196,8 +196,9 @@ name.
 
 .TP
 .BR \-\-archivedir " archivedir"
-Location of Debian archive to scan for packages.  Use this if you want
-Lintian to check the whole Debian archive instead of just single
+Location of Debian archive to scan for packages.  (See the FILES section
+for complete information on how the path is constructed.)  Use this if you
+want Lintian to check the whole Debian archive instead of just single
 packages. This option overrides the
 .B LINTIAN_ARCHIVEDIR
 environment variable and the configuration file entry of the same
@@ -207,8 +208,9 @@ name.
 .BR \-\-dist " distdir"
 Scan for packages in the
 .IR distdir
-directory.  Use this if you want Lintian to check the whole Debian
-archive instead of just single packages.  This option overrides the
+directory.  (See the FILES section for complete information on how the
+path is constructed.)  Use this if you want Lintian to check the whole
+Debian archive instead of just single packages.  This option overrides the
 .B LINTIAN_DIST
 environment variable and the configuration file entry of the same
 name.
@@ -601,6 +603,20 @@ environment variable or the
 .B \-\-root
 option.
 
+.PP
+When looking for packages in a Debian archive, lintian constructs the path
+to the archive from the
+.IR archivedir ,
+.IR distdir ,
+.IR release ,
+.RI and arch
+as follows:
+.sp
+.IR archivedir /dists/ distdir / release / arch
+.sp
+Lintian always expects the "/dists/" path component in paths to Debian
+archives.
+
 .SH EXIT STATUS
 .TP
 .B 0
@@ -625,6 +641,10 @@ Check source package foo given by foo.dsc.
 Search for package foo in the Debian archive and check it. (Depending
 on what is found, this command will check either the source or binary
 package foo, or both.)
+.TP
+.B "$ lintian --archivedir /var/packages --dist custom --section main"
+Check all packages found in the Debian archive at
+.IR /var/packages/dists/custom/main .
 .TP
 .B "$ lintian \-i foo.changes"
 Check the changes file and, if listed, the source and binary package
