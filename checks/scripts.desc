@@ -226,7 +226,7 @@ Tag: possible-bashism-in-maintainer-script
 Type: warning
 Ref: policy 10.4
 Info: This script is marked as running under <tt>/bin/sh</tt>, but it seems
- to use a feature found in bash.
+ to use a feature found in bash but not in the POSIX shell specification.
  .
  Examples:
   '==' in a test, it should use '=' instead
@@ -235,6 +235,7 @@ Info: This script is marked as running under <tt>/bin/sh</tt>, but it seems
   'source' instead of '.'
   '. command args', passing arguments to commands via 'source' is not supported
   '{foo,bar}' instead of 'foo bar'
+  '[[ test ]]' instead of '[ test ]' (requires a Korn shell)
 
 Tag: possible-non-posix-code-in-maintainer-script
 Type: info

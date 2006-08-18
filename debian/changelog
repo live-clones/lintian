@@ -26,9 +26,13 @@ lintian (1.23.23) UNRELEASED; urgency=low
       surrounded by word boundaries.
     + [RA] Warn if the changelog incorrectly indicates an NMU.  Thanks to
       George Danchev for the report.
-  * checks/scripts:
+  * checks/scripts{.desc,}:
     + [RA] Except mkstemp from possibly-insecure-handling-of-tmp-files for
       maintainer scripts written in Perl.
+    + [RA] Mention [[ ]] explicitly in the possible-bashism long
+      description as requiring a Korn shell and make it clearer that the
+      primary arbiter of this test is the POSIX shell specification.
+      (Closes: #381800 by clarification)
 
   * collection/changelog-file:
     + [RA] Be much more careful about changelog files that are symlinks.
@@ -51,7 +55,7 @@ lintian (1.23.23) UNRELEASED; urgency=low
       therefore cause lintian to exit with non-zero status.  Thanks,
       Andree Leidenfrost and Martin F. Krafft.  (Closes: #377182, #374314)
 
- -- Russ Allbery <rra@debian.org>  Fri, 18 Aug 2006 14:20:28 -0700
+ -- Russ Allbery <rra@debian.org>  Fri, 18 Aug 2006 14:30:36 -0700
 
 lintian (1.23.22) unstable; urgency=low
 
