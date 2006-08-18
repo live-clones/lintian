@@ -139,7 +139,7 @@ close(IN);
 
 my $wrong_directory_detected = 0;
 
-if (m/\<fill in ftp site\>/ or m/\<Must follow here\>/) {
+if (m,\<fill in (http/)?ftp site\>, or m/\<Must follow here\>/) {
     tag "helper-templates-in-copyright", "";
 }
 

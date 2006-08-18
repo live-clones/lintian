@@ -7,6 +7,9 @@ lintian (1.23.23) UNRELEASED; urgency=low
   * checks/changelog-file{.desc,}:
     + [RA] Diagnose changelog files that are symlinks, using the new way
       the changelog-file collection script processes them.
+  * checks/copyright-file:
+    + [RA] Catch "<fill in http/ftp site>" as well as the string without
+      "http/".  Thanks, Jari Aalto.  (Closes: #374167)
   * checks/deb-format{.desc,}:
     + [RA] Remove deb-created-with-broken-tar; the bug was actually in
       dpkg, and the dpkg in stable has been fixed.  Thanks Jari Aalto and
