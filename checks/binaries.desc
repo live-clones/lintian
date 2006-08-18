@@ -53,12 +53,24 @@ Info: The package contains a binary or shared library which is linked
 
 Tag: binary-or-shlib-defines-rpath
 Type: warning
-Info: The binary or shared library defines the `RPATH'. Usually this
- is a bad thing.  Most likely you will find a Makefile with a line like:
-     gcc test.o -o test -Wl,--rpath
+Ref: http://wiki.debian.org/RpathIssue
+Info: The binary or shared library sets RPATH.  This overrides the normal
+ library search path, possibly interfering with local policy and causing
+ problems for multilib, among other issues.
+ .
+ The only time a binary or shared library in a Debian package should set
+ RPATH is if it is linked to private shared libraries in the same package.
+ In that case, place those private shared libraries in
+ <tt>/usr/lib/<i>package</i></tt>.  Libraries used by binaries in other
+ packages should be placed in <tt>/lib</tt> or <tt>/usr/lib</tt> as
+ appropriate, with a proper SONAME, in which case RPATH is unncessary.
+ .
+ To fix this problem, look for link lines like:
+     gcc test.o -o test -Wl,--rpath,/usr/local/lib
  or
      gcc test.o -o test -R/usr/local/lib
- Please contact &debdev; if you have questions about this.
+ and remove the <tt>-Wl,--rpath</tt> or <t>-R</t> argument.  You can also
+ use the chrpath utility to remove the RPATH.
 
 Tag: binary-has-unneeded-section
 Type: info

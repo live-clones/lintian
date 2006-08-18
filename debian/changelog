@@ -1,5 +1,9 @@
 lintian (1.23.23) UNRELEASED; urgency=low
 
+  * checks/binaries.desc:
+    + [RA] Greatly expand the binary-or-shlib-defines-rpath long
+      description based on recent discussion in debian-policy.  Add a
+      reference to the wiki page.  (Closes: #378054, #378055)
   * checks/changelog-file{.desc,}:
     + [RA] Diagnose changelog files that are symlinks, using the new way
       the changelog-file collection script processes them.
