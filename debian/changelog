@@ -98,7 +98,11 @@ lintian (1.23.23) UNRELEASED; urgency=low
   * man/lintian-info.1:
     + [RA] Document the new -t or --tags option.
 
- -- Russ Allbery <rra@debian.org>  Sat, 19 Aug 2006 07:58:36 -0700
+  * reporting/html_reports:
+    + [RA] Include the lintian version in HTML page footers.  Thanks,
+      Thijs Kinkhorst.  (Closes: #377616)
+
+ -- Russ Allbery <rra@debian.org>  Sat, 19 Aug 2006 08:04:53 -0700
 
 lintian (1.23.22) unstable; urgency=low
 

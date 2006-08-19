@@ -58,7 +58,7 @@ my $close_text = <<"EOT_EOT_EOT";
 <div style="font-size: smaller">
 <p>Please send all comments about these web pages to
 <A HREF="mailto:lintian-maint\@debian.org">Lintian maintainer</A>.</p>
-<p>Page last updated: $timestamp</p>
+<p>Page last updated: $timestamp using Lintian $LINTIAN_VERSION</p>
 </div>
 </BODY></HTML>
 EOT_EOT_EOT
