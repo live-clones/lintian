@@ -48,6 +48,12 @@ lintian (1.23.23) UNRELEASED; urgency=low
       description as requiring a Korn shell and make it clearer that the
       primary arbiter of this test is the POSIX shell specification.
       (Closes: #381800 by clarification)
+  * checks/version-substvars{.desc,}:
+    + [RA] New check from Adeodato Simó for proper use of substvars for
+      versioned dependencies between packages built from the same source
+      package so that NMUs will work properly.  Also catch use of such a
+      substvar for a versioned dependency on a package not built from the
+      same source.  (Closes: #377141, #376596)
 
   * collection/changelog-file:
     + [RA] Be much more careful about changelog files that are symlinks.

@@ -12,7 +12,7 @@ Description: test handling of library packages
 
 Package: libbaz1-dev
 Architecture: any
-Depends: libbaz1
+Depends: libbaz1 (= ${source:Version})
 Description: development package
  Regression test for lintian's handling of libraries
 
@@ -24,6 +24,6 @@ Description: test handling of library packages
 
 Package: libbaz2-dev
 Architecture: any
-Depends: ${shlibs:Depends}, libbaz2
+Depends: ${shlibs:Depends}, libbaz2 (= ${Source-Version})
 Description: development package
  Regression test for lintian's handling of libraries

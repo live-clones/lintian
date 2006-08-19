@@ -53,9 +53,15 @@ binary-arch: build
 
 	dd if=/dev/zero of=$(tmp)/usr/share/binary/largefile bs=1024 count=2000
 
+	install -d debian/binary-data/DEBIAN
+	install -d debian/binary-data/usr/share/doc
+	ln -s binary debian/binary-data/usr/share/doc/binary-data
+
 	dpkg-shlibdeps $(tmp)/usr/bin/hello
-	dpkg-gencontrol -isp
+	dpkg-gencontrol -pbinary -isp
+	dpkg-gencontrol -pbinary-data -Pdebian/binary-data -isp
 	dpkg --build debian/tmp ..
+	dpkg --build debian/binary-data ..
 
 binary: binary-arch
 

@@ -26,13 +26,13 @@ E: binary: suidregister-used-in-maintainer-script postinst
 E: binary: symlink-contains-spurious-segments usr/share/doc/binary/html/ch2.html ../html/./ch1.html
 E: binary: symlink-should-be-relative usr/share/doc/binary/html/ch3.html /usr/share/doc/binary/htm/ch1.html
 E: binary: unstripped-binary-or-object ./usr/bin/hello
-I: binary source: non-standard-architecture kfreebsd-i386
-I: binary source: non-standard-architecture ppc64
 I: binary: arch-dep-package-has-big-usr-share
 I: binary: binary-has-unneeded-section ./usr/bin/hello-static .comment
 W: binary source: ancient-standards-version 3.2.1 (current is 3.7.2)
 W: binary source: maintainer-upload-has-incorrect-version-number 4-1.1
 W: binary source: native-package-with-dash-version
+W: binary source: not-binnmuable-all-depends-any binary-data -> binary
+W: binary source: not-binnmuable-any-depends-all binary -> binary-data
 W: binary: binary-without-manpage hello
 W: binary: binary-without-manpage hello-static
 W: binary: binary-without-manpage hello.static

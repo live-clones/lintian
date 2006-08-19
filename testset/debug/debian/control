@@ -7,21 +7,21 @@ Build-Depends-Indep: not-debhelper (>= 0.4.3)
 Standards-Version: 3.7.0
 
 Package: hello
-Architecture: any
+Architecture: alpha amd64 arm hppa hurd-i386 i386 ia64 kfreebsd-i386 m68k mips mipsel powerpc ppc64 s390 sparc
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Test for external debugging information
  lintian regression test for external debugging file handling.
 
 Package: hello-dbg
 Priority: extra
-Architecture: any
+Architecture: alpha amd64 arm hppa hurd-i386 i386 ia64 kfreebsd-i386 m68k mips mipsel powerpc ppc64 s390 sparc
 Depends: hello (= ${Source-Version}), ${shlibs:Depends}, ${misc:Depends}
 Description: Test for external debugging information
  lintian regression test for external debugging file handling.
 
 Package: libhello0
 Section: libs
-Architecture: any
+Architecture: alpha amd64 arm hppa hurd-i386 i386 ia64 kfreebsd-i386 m68k mips mipsel powerpc ppc64 s390 sparc
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Test for external debugging information
  lintian regression test for external debugging file handling.
@@ -29,7 +29,7 @@ Description: Test for external debugging information
 Package: libhello0-dbg
 Section: libdevel
 Priority: extra
-Architecture: any
+Architecture: alpha amd64 arm hppa hurd-i386 i386 ia64 kfreebsd-i386 m68k mips mipsel powerpc ppc64 s390 sparc
 Depends: libhello (= ${Source-Version}), ${shlibs:Depends}, ${misc:Depends}
 Description: Test for external debugging information
  lintian regression test for external debugging file handling.

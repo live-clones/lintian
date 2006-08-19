@@ -1,0 +1,43 @@
+Check-Script: version-substvars
+Author: Adeodato Simó <dato@net.com.org.es>
+Abbrev: v-s
+Standards-Version: 3.7.2
+Type: source
+Unpack-Level: 1
+Needs-Info: debfiles, source-control-file
+Info: This script checks for correct use of the various *Version
+ substvars, e.g. deprecated substvars, or usage that can cause
+ un-binNMUability
+
+Tag: not-binnmuable-any-depends-any
+Type: error
+Info: The package is not safely binNMUable because an arch:any package
+ depends on another arch:any package with a (= ${source:Version})
+ relationship. Please use (= ${binary:Version}) instead.
+
+Tag: not-binnmuable-any-depends-all
+Type: warning
+Info: The package is not safely binNMUable because an arch:any package
+ depends on an arch:all package with a (= ${Source-Version}) or
+ (= ${binary:Version}) relationship. Please use (= ${source:Version})
+ instead.
+
+Tag: not-binnmuable-all-depends-any
+Type: warning
+Info: The package is not safely binNMUable because an arch:all package
+ depends on an arch:any package with a strict (= ${Source-Version}), or
+ similar, relationship.
+ .
+ It is not possible for arch:all packages to depend so strictly on
+ arch:any packages while having the package binNMUable, so please use
+ one of these, whichever is more appropriate:
+ .
+   Depends: arch_any (>= ${source:Version})
+   Depends: arch_any (>= ${source:Version}), arch_any (<< ${source:Version}.1~)
+
+Tag: version-substvar-for-external-package
+Type: error
+Info: The first package has a dependency on the second package that uses
+ (= ${binary:Version}), (= ${source:Version}), or (= ${Source-Version}),
+ but the second package is not built from this source package.  Usually
+ this means there is a mistake in the package name in this dependency.

@@ -1,0 +1,86 @@
+# version-substvars -- lintian check script -*- perl -*-
+#
+# Copyright (C) 2006 Adeodato Simó
+# 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+# SUMMARY
+# =======
+#
+# What breaks
+# -----------
+# 
+# (b1) any -> any (= ${source:Version})		 -> use b:V
+# (b2) any -> all (= ${Source-Version}) [or b:V] -> use s:V
+# (b3) all -> any (= ${either-of-them})		 -> use (>= ${s:V}), optionally (<< ${s:V}.1~)
+
+
+package Lintian::version_substvars;
+use strict;
+
+use Util;
+use Tags;
+
+sub run {
+
+my $pkg = shift;
+my $type = shift;
+
+my @control_data = read_dpkg_control("debfiles/control");
+
+shift @control_data; # skip source info entry
+
+foreach (@control_data) {
+	my ($pkg1, $pkg1_is_any, $pkg2, $pkg2_is_any, $substvar_strips_binNMU);
+
+	$pkg1 = $_->{'package'};
+	$pkg1_is_any = ($_->{'architecture'} ne 'all');
+
+	foreach (split /,/, ($_->{'depends'} || "")) {
+		next unless m/(\S+)\s*\(\s*=\s*\${((?:Source-|source:|binary:)Version)}/x;
+
+		$pkg2 = $1;
+		$substvar_strips_binNMU = ($2 eq 'source:Version');
+
+		if (not -f "control/$pkg2/architecture") {
+			tag "version-substvar-for-external-package", "$pkg1 -> $pkg2";
+			next;
+		}
+		$pkg2_is_any = (slurp_entire_file("control/$pkg2/architecture") !~ m/^all$/);
+
+		if ($pkg1_is_any) {
+			if ($pkg2_is_any and $substvar_strips_binNMU) {
+				# (b1) any -> any (= ${source:Version})
+				tag "not-binnmuable-any-depends-any", "$pkg1 -> $pkg2";
+			} elsif (not $pkg2_is_any and not $substvar_strips_binNMU) {
+				# (b2) any -> all (= ${Source-Version}) [or b:V]
+				tag "not-binnmuable-any-depends-all", "$pkg1 -> $pkg2";
+			}
+		} elsif ($pkg2_is_any) {
+			# (b3) all -> any (= ${either-of-them})
+			tag "not-binnmuable-all-depends-any", "$pkg1 -> $pkg2";
+		}
+
+		# TODO (post-Etch?): warn/error about ${Source-Version} being deprecated
+	}
+}
+
+}
+
+1;
+
+# vim: syntax=perl sw=4 ts=4 noet shiftround
