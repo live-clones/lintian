@@ -15,7 +15,7 @@
 .\" Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301
 .\" USA
 .\"
-.TH LINTIAN-INFO 1 "March 1, 1998" "Debian GNU/Linux"
+.TH LINTIAN-INFO 1 "August 16, 2006" "Debian GNU/Linux"
 .if n .ad l
 .nh
 
@@ -27,14 +27,20 @@ lintian-info \- give detailed information about Lintian's error tags
 .RI [ log-file ]
 \&...
 
+.B lintian-info \-\-tags
+.I tag
+\&...
+
 .SH DESCRIPTION
 .PP
 The
 .B lintian-info
-command parses the output of the
+command either parses the output of the
 .B lintian
 command and gives verbose information about the listed Lintian error
-tags.
+tags or (if given the
+.BR \-t " or " \-\-tags
+option) explains a given tag or tags.
 .sp
 If no log-file is specified on the command line, this command expects
 its input on stdin. Thus, the output of
@@ -51,9 +57,18 @@ to automatically pipe its output through
 .BR lintian-info .
 Thus, you will rarely use this command directly.)
 
+.SH OPTIONS
+.TP
+.BR \-t ", " \-\-tags
+Rather than treating them as log file names, treat any command-line
+options as tag names and display the descriptions of each tag.
+
 .SH EXIT STATUS
 .PP
-This command always returns with exit code 0.
+If
+.BR \-t " or " \-\-tags
+was given and one or more of the tags specified were unknown, this command
+returns the exit code 1.  Otherwise, it always returns with exit code 0.
 
 .SH SEE ALSO
 .BR lintian (1)

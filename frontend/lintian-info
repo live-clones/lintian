@@ -22,6 +22,8 @@
 
 use strict;
 
+use Getopt::Long;
+
 # turn file buffering off:
 $| = 1;
 
@@ -40,6 +42,32 @@ my %already_displayed = ();
 
 my %tag_info = %{read_tag_info()};
 
+my ($tags);
+Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
+GetOptions('tags|t' => \$tags)
+    or die("error parsing options\n");
+
+# If tag mode was specified, read the arguments as tags and display the
+# descriptions for each one.  (We don't currently display the severity,
+# although that would be nice.)
+my $unknown;
+if ($tags) {
+    for my $tag (@ARGV) {
+        print "N: $tag\n";
+        print "N:\n";
+        if (exists $tag_info{$tag}) {
+            print wrap_paragraphs('N:   ', $tag_info{$tag});
+        } else {
+            print "N:   Unknown tag.\n";
+            $unknown = 1;
+        }
+        print "N:\n";
+    }
+    exit ($unknown ? 1 : 0);
+}
+
+# Otherwise, read input files or STDIN, watch for tags, and add descriptions
+# whenever we see one, can, and haven't already explained that tag.
 while (<>) {
     print;
     chomp;

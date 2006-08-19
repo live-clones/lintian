@@ -76,6 +76,10 @@ lintian (1.23.23) UNRELEASED; urgency=low
   * debian/copyright:
     + [RA] Add Subversion repository location.
 
+  * frontend/lintian-info:
+    + [RA] Add the -t or --tags option that, given a tag name, prints out
+      the description.  (Closes: #376109)
+
   * lib/Tags.pm:
     + [RA] If a tag has been overriden via any mechanism, do not add it to
       any of the statistics (tag, severity, or significance).  Before, the
@@ -89,8 +93,10 @@ lintian (1.23.23) UNRELEASED; urgency=low
     + [RA] Better document the --archivedir and --dist options and how
       lintian constructs the path to an archive.  (Closes: #383203)
     + [RA] Document new version-substvars check script.
+  * man/lintian-info.1:
+    + [RA] Document the new -t or --tags option.
 
- -- Russ Allbery <rra@debian.org>  Fri, 18 Aug 2006 21:43:33 -0700
+ -- Russ Allbery <rra@debian.org>  Fri, 18 Aug 2006 22:41:30 -0700
 
 lintian (1.23.22) unstable; urgency=low
 
