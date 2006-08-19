@@ -166,9 +166,10 @@ my %interpreter_dependencies = (
 # reported is maintainer-script-needs-depends-on-%s, so be sure to update
 # scripts.desc when adding a new rule.
 my @depends_needed = (
-        [ adduser => '\badduser\b' ],
-        [ netbase => '\bupdate-inetd\b' ],
-        [ ucf => '\bucf\s' ],
+	[ adduser => '\badduser\b' ],
+	[ 'gconf2 (>= 2.10.1-2)' => '\bgconf-schemas\b' ],
+	[ netbase => '\bupdate-inetd\b' ],
+	[ ucf => '\bucf\s' ],
 );
 
 my %executable = ();
@@ -584,7 +585,9 @@ while (<SCRIPTS>) {
 		if (/$regex/ && ! $warned{$package}) {
                     my $needed = Dep::parse($package);
                     unless (Dep::implies($deps{depends}, $needed) || Dep::implies($deps{'pre-depends'}, $needed)) {
-			tag "maintainer-script-needs-depends-on-$package", "$file";
+			my $shortpackage = $package;
+			$shortpackage =~ s/[ \(].*//;
+			tag "maintainer-script-needs-depends-on-$shortpackage", "$file";
 			$warned{$package} = 1;
 		    }
 		}
@@ -592,6 +595,9 @@ while (<SCRIPTS>) {
 	}
 	if (/invoke-rc.d.*\|\| exit 0/) {
 	    tag "maintainer-script-hides-init-failure", "$file:$.";
+	}
+	if (/\bgconftool(-2)?(\s|\Z)/) {
+	    tag "gconftool-used-in-maintainer-script", "$file:$.";
 	}
     }
 

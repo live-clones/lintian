@@ -63,3 +63,9 @@ fi
 
 # Example ucf invocation.
 ucf /usr/share/foo/configuration /etc/foo.conf
+
+# Calling gconftool directly.
+gconftool-2 --makefile-install-rule foo.schema
+
+# Calling gconf-schemas with no dependency.
+gconf-schemas --register foo.schema

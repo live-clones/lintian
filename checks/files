@@ -121,6 +121,10 @@ while (<IN>) {
 	       and $operm != 0644) {
 	    tag "bad-permissions-for-etc-emacs-script", sprintf("$file %04o != 0644",$operm);
 	}
+	# ---------------- /etc/gconf/schemas
+	elsif ($file =~ m,^etc/gconf/schemas/\S,) {
+	    tag "package-installs-into-etc-gconf-schemas", "$file";
+	}
 	# ---------------- /etc/init.d
 	elsif ($file =~ m,^etc/init\.d/\S, and $operm != 0755
 	       and $perm =~ m/^-/) {

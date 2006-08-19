@@ -100,6 +100,13 @@ Info: As of policy version 3.0.0.0, Debian no longer follows the FSSTND.
  Instead, the Filesystem Hierarchy Standard (FHS), version 2.3, is
  used. You can find it in /usr/share/doc/debian-policy/fhs/ .
 
+Tag: package-installs-into-etc-gconf-schemas
+Type: warning
+Info: The package installs files into the <tt>/etc/gconf/schemas</tt>
+ directory.  No package should do this; this directory is reserved for
+ local overrides.  Instead, schemas should be installed into
+ <tt>/usr/share/gconf/schemas</tt>.
+
 Tag: package-installs-into-etc-rc.d
 Type: error
 Info: The package installs files into the <tt>/etc/rc.d</tt> or

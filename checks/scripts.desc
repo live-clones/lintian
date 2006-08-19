@@ -276,6 +276,15 @@ Type: warning
 Info: This script calls adduser, but the package does not depend or
  pre-depend on the adduser package.
 
+Tag: maintainer-script-needs-depends-on-gconf2
+Type: warning
+Info: This script calls gconf-schemas, which comes from the gconf2 package
+ and was introduced with gconf2 2.10.1-2, but does not depend or
+ pre-depend on the appropriate version of gconf2.  Packages that call
+ gconf-schemas need to depend on gconf2 (>= 2.10.1-2).  If you are using
+ dh_gconf, add a dependency on ${misc:Depends} and dh_gconf will take care
+ of this for you.
+
 Tag: maintainer-script-needs-depends-on-ucf
 Type: warning
 Info: This script calls ucf, but the package does not depend or pre-depend
@@ -321,3 +330,8 @@ Info: This script apparently runs an init script directly rather than
  scripts may call the init script directly only if invoke-rc.d is not
  available.
 Ref: policy 9.3.3.2
+
+Tag: gconftool-used-in-maintainer-script
+Type: warning
+Info: This script apparently runs gconftool or gconftool-2.  It should
+ probably be calling gconf-schemas or update-gconf-defaults instead.
