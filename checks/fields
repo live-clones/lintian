@@ -187,6 +187,8 @@ if (not open (FH, "fields/architecture")) {
 	if ($type eq "binary") {
 		tag "too-many-architectures", "" if (@archs > 1);
 		tag "arch-any-in-binary-pkg", "" if (grep { $_ eq "any" } @archs);
+                tag "aspell-package-not-arch-all", ""
+                    if ($pkg =~ /^aspell-[a-z]{2}(-.*)?$/ && (@archs > 1 || $archs[0] ne 'all'));
 	}
 
 	# Used for later tests.

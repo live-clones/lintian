@@ -94,6 +94,14 @@ Info: The special architecture value `any' does not make sense in a binary
  package.
 Ref: policy 5.6.8
 
+Tag: aspell-package-not-arch-all
+Type: warning
+Info: This package appears to be an aspell dictionary package, but it is
+ not Architecture: all.  The binary hashes should be built at install-time
+ by calling aspell-autobuildhash, so the contents of the package should be
+ architecture-independent.
+Ref: aspell-autobuildhash(8)
+
 Tag: no-maintainer-field
 Type: error
 Info: The package does not have a `Maintainer:' field in its control file.
