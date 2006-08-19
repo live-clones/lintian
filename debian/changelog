@@ -86,8 +86,9 @@ lintian (1.23.23) UNRELEASED; urgency=low
   * man/lintian.1:
     + [RA] Better document the --archivedir and --dist options and how
       lintian constructs the path to an archive.  (Closes: #383203)
+    + [RA] Document new version-substvars check script.
 
- -- Russ Allbery <rra@debian.org>  Fri, 18 Aug 2006 14:54:33 -0700
+ -- Russ Allbery <rra@debian.org>  Fri, 18 Aug 2006 21:43:33 -0700
 
 lintian (1.23.22) unstable; urgency=low
 
