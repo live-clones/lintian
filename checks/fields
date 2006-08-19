@@ -562,6 +562,7 @@ if ($type eq "source") {
 		}
 	}
 	close RULES;
+	$/ = undef;             # Back to reading everything.
 
 	tag "build-depends-indep-without-arch-indep", ""
 		if (-e "fields/build-depends-indep" && $arch_indep_packages == 0);
@@ -678,7 +679,7 @@ if ($type eq "source") {
 			$name =~ s/[\[\(][^\)\]]+[\)\]]//g;
 			$name =~ s/\s+$//;
 			$name =~ s/\s+/ /g;
-			unless (Dep::implies($dep, Dep::parse ($name))) {
+			unless (Dep::implies($dep, Dep::parse($name))) {
 				tag "build-depends-without-arch-dep", $name;
 			}
 		}
