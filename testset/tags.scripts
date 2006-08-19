@@ -2,6 +2,8 @@ E: scripts source: package-uses-debhelper-but-lacks-build-depends
 E: scripts: calls-suidperl-directly ./usr/bin/suidperlfoo
 E: scripts: missing-dep-for-interpreter lefty => graphviz (./usr/bin/lefty-foo)
 E: scripts: no-copyright-file
+E: scripts: php-script-but-no-php-cli-dep ./usr/share/scripts/phpfoo
+E: scripts: php5-script-but-no-php5-cli-dep ./usr/share/scripts/php5foo
 E: scripts: python-script-but-no-python-dep ./usr/bin/py2foo
 E: scripts: python-script-but-no-python-dep ./usr/bin/pyfoo
 E: scripts: shell-script-fails-syntax-check ./usr/share/scripts/gccbug.dpatch

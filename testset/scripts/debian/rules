@@ -37,6 +37,10 @@ binary-indep:
 	install -m 755 gccbug.dpatch $(tmp)/usr/share/scripts/
 	install -m 755 gccbug.dpatch $(tmp)/usr/src/scripts/
 
+	install -m 755 phpfoo $(tmp)/usr/share/scripts/
+	sed 's/php$$/php5/' phpfoo > $(tmp)/usr/share/scripts/php5foo
+	chmod 755 $(tmp)/usr/share/scripts/php5foo
+
 	echo "#!/usr/bin/perl" >> $(tmp)/usr/share/scripts/foobar.in
 	chmod 644 $(tmp)/usr/share/scripts/foobar.in
 

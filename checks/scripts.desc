@@ -109,12 +109,12 @@ Info: Packages that use perl scripts that are suid must depend on the
  In some cases a weaker relationship, such as Suggests or Recommends, will
  be more appropriate.
 
-Tag: php-script-but-no-php4-cli-dep
+Tag: php-script-but-no-php-cli-dep
 Type: error
 Info: Packages that use PHP scripts with /usr/bin/php as interpreter must
- depend on the php4-cli package. Note that a dependency on php4-cgi is
- needlessly strict, and forces the user to install a package that isn't
- needed.
+ depend on a php-cli package (such as php4-cli or php5-cli). Note that a
+ dependency on a php-cgi package (such as php5-cgi) is needlessly strict,
+ and forces the user to install a package that isn't needed.
  .
  In some cases a weaker relationship, such as Suggests or Recommends, will
  be more appropriate.
@@ -123,6 +123,15 @@ Tag: php4-script-but-no-php4-cli-dep
 Type: error
 Info: Packages that use PHP4 scripts must depend on the php4-cli package. Note
  that a dependency on php4-cgi is needlessly strict, and forces the user to
+ install a package that isn't needed.
+ .
+ In some cases a weaker relationship, such as Suggests or Recommends, will
+ be more appropriate.
+
+Tag: php5-script-but-no-php5-cli-dep
+Type: error
+Info: Packages that use PHP5 scripts must depend on the php5-cli package. Note
+ that a dependency on php5-cgi is needlessly strict, and forces the user to
  install a package that isn't needed.
  .
  In some cases a weaker relationship, such as Suggests or Recommends, will

@@ -24,6 +24,7 @@
 
 package Lintian::scripts;
 use strict;
+use Dep;
 use Tags;
 use Util;
 
@@ -65,9 +66,10 @@ my %valid_interpreters = (
 			  'perl-5.005' => '/usr/bin/perl-5.005',
 			  'perl-5.004' => '/usr/bin/perl-5.004',
 			  'pforth' => '/usr/bin/pforth',
-			  'php3' => '/usr/bin/php3',
 			  'php' => '/usr/bin/php',
+			  'php3' => '/usr/bin/php3',
 			  'php4' => '/usr/bin/php4',
+			  'php5' => '/usr/bin/php5',
 			  'pike' => '/usr/bin/pike',
 			  'pike7' => '/usr/bin/pike7',
 			  'python' => '/usr/bin/python',
@@ -127,16 +129,17 @@ my %interpreter_dependencies = (
 				'lefty' => 'graphviz',
 				'lua50' => 'lua50',
 				'magicfilter' => 'magicfilter',
-				'make' => 'make,build-essential',
+				'make' => 'make | build-essential',
 				'mawk' => 'mawk',
 				'ocaml' => 'ocaml',
 				'parrot' => 'parrot',
 				'perl-5.005' => 'perl-5.005',
 				'perl-5.004' => 'perl-5.004',
 				'pforth' => 'pforth',
-				'php' => 'php4-cli',
+				'php' => 'php4-cli | php5-cli',
 				'php3' => 'php3-cgi',
 				'php4' => 'php4-cli',
+				'php5' => 'php5-cli',
 				'pike' => 'pike',
 				'pike7' => 'pike7',
 				'rc' => 'rc',
@@ -171,8 +174,8 @@ my @depends_needed = (
 my %executable = ();
 my %suid = ();
 my %ELF = ();
-my %deps = ();
 my %scripts = ();
+my %deps = ();
 
 # no dependency for install-menu, because the menu package specifically
 # says not to depend on it.
@@ -206,19 +209,21 @@ close(FILEINFO);
 # This is the best thing to do with the tk/tcl interpreters, which
 # are often listed with dependencies like tk41|tk42|wish.
 # They are also the only interpreters likely to be listed with alternatives.
+my $all_deps = '';
 foreach my $depfield ('suggests', 'recommends', 'depends', 'pre-depends',
 		   'provides') {
+    $deps{$depfield} = '';
     if (open(IN, "fields/$depfield")) {
 	$_ = join('', <IN>);
 	close(IN);
-	foreach (split /\s*[,|]\s*/) {
-	    # Lop off version number, if any
-	    s/(?:\s|\().*//s;
-	    $deps{$_} = $depfield;
-	}
+        $deps{$depfield} = $_;
+        $all_deps .= $_;
     }
+    $deps{$depfield} = Dep::parse($deps{$depfield});
 }
-$deps{$pkg} = 'self';	# Do this last because it should override all others.
+$all_deps .= ', ' if $all_deps;
+$all_deps .= $pkg;
+$deps{all} = Dep::parse($all_deps);
 
 open(SCRIPTS, "scripts") or fail("cannot open lintian scripts file: $!");
 while (<SCRIPTS>) {
@@ -279,38 +284,36 @@ while (<SCRIPTS>) {
 	if ($executable{$filename}) {
 	    if (exists $interpreter_dependencies{$base}) {
 		my @deps = split(/,/,$interpreter_dependencies{$base});
-		if ($base =~ /^(php\d?|(m|g)awk)/) {
+		if ($base eq 'php') {
+		    tag_error("php-script-but-no-php-cli-dep", $filename)
+			unless Dep::implies($deps{all}, Dep::parse($interpreter_dependencies{$base}));
+		} elsif ($base =~ /^(php\d?|(m|g)awk)/) {
 		    tag_error("$base-script-but-no-$deps[0]-dep", $filename)
-			unless (scalar map { $deps{$_}?$_:() } @deps);
+			unless Dep::implies($deps{all}, Dep::parse($interpreter_dependencies{$base}));
 		} else {
 		    tag_error("missing-dep-for-interpreter",
 			      "$base => $deps[0]", "($filename)")
-			unless (scalar map { $deps{$_}?$_:() } @deps);
+			unless Dep::implies($deps{all}, Dep::parse($interpreter_dependencies{$base}));
 		}
 	    } elsif ($base =~ /^python(\d.\d)?$/) {
 		my $ver = $1 ? $1 : "";
 		tag_error("python-script-but-no-python-dep", $filename)
-		    unless ($deps{"python$ver"}
-			    || $deps{"python${ver}-minimal"});
+                    unless Dep::implies($deps{all}, Dep::parse("python$ver | python${ver}-minimal"));
 	    } elsif ($base =~ /^ruby(\d.\d)?$/) {
 		my $ver = $1 ? $1 : "";
 		tag_error("ruby-script-but-no-ruby-dep", $filename)
-		    unless ($deps{"ruby$ver"});
+                    unless Dep::implies($deps{all}, Dep::parse("ruby$ver"));
 	    } elsif ($base eq 'perl' && $suid{$filename}) {
 		tag_error("suid-perl-script-but-no-perl-suid-dep", $filename)
-		    unless ($deps{'perl-suid'});
+                    unless Dep::implies($deps{all}, Dep::parse('perl-suid'));
 	    } elsif ($base =~ m/^wish(\d+\.\d+)?$/) {
-		my $has_deps = 0;
-		for my $key (keys(%deps)) {
-		    if ($key =~ m/^((tk\d+\.\d+)|(wish(\d+\.\d+)?))$/) {
-			# has a tk depends which provides wish,
-			# or just depends on wish itself
-			$has_deps = 1;
-			last;
-		    }
-		}
-		if (not $has_deps) {
-		    tag_error("wish-script-but-no-wish-dep", $filename);
+		my $ver = $1 ? $1 : "";
+		if ($ver) {
+		    tag_error("wish-script-but-no-wish-dep", $filename)
+			unless Dep::implies($deps{all}, Dep::parse('tcl8.3 | tcl8.4 | wish'));
+		} else {
+		    tag_error("wish-script-but-no-wish-dep", $filename)
+			unless Dep::implies($deps{all}, Dep::parse("tcl$ver"));
 		}
 	    }
 	}
@@ -390,17 +393,13 @@ while (<SCRIPTS>) {
 		    or $base eq 'perl');
 	
 	if (exists $interpreter_dependencies{$base}) {
-	    my @deps = split(/,/,$interpreter_dependencies{$base});
 	    tag_error("interpreter-without-predep", $filename,
 		      "#!$interpreter")
-		unless (scalar map { ($deps{$_} && $deps{$_} eq 'pre-depends')?$_:() } @deps);
+		unless Dep::implies($deps{'pre-depends'}, Dep::parse($interpreter_dependencies{$base}));
 	} elsif ($base eq 'python') {
 	    tag_error("interpreter-without-predep", $filename,
 		      "#!$interpreter")
-		unless ((exists $deps{'python'} and
-			 $deps{'python'} eq 'pre-depends') or
-			(exists $deps{'python-base'}
-			 and $deps{'python-base'} eq 'pre-depends'));
+		unless Dep::implies($deps{'pre-depends'}, Dep::parse('python | python-base'));
 	}
     } elsif ($interpreter =~ m|/usr/local/|) {
 	tag_error("interpreter-in-usr-local", $filename, "#!$interpreter");
@@ -583,8 +582,8 @@ while (<SCRIPTS>) {
 	    for my $rule (@depends_needed) {
 		my ($package, $regex) = @$rule;
 		if (/$regex/ && ! $warned{$package}) {
-		    my $type = $deps{$package};
-		    unless ($type and ($type eq 'depends' or $type eq 'pre-depends')) {
+                    my $needed = Dep::parse($package);
+                    unless (Dep::implies($deps{depends}, $needed) || Dep::implies($deps{'pre-depends'}, $needed)) {
 			tag "maintainer-script-needs-depends-on-$package", "$file";
 			$warned{$package} = 1;
 		    }
