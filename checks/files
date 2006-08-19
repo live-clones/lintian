@@ -457,6 +457,11 @@ while (<IN>) {
 	tag "package-installs-python-pyc", "$file"
     }
 
+    # ---------------- /usr/lib/site-python
+    if ($file =~ m,^usr/lib/site-python/\S,) {
+	tag "file-in-usr-lib-site-python", "$file";
+    }
+
     # ---------------- pythonX.Y extensions
     if ($file =~ m,^usr/lib/python\d\.\d/\S,
 	and not $file =~ m,^usr/lib/python\d\.\d/site-packages/,) {

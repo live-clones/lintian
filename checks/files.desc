@@ -566,6 +566,15 @@ Info: Architecture-independent Perl code should be placed in
  unless there is at least one architecture-dependent file
  in the module.
 
+Tag: file-in-usr-lib-site-python
+Type: error
+Ref: Python policy 1.4
+Info: The directory /usr/lib/site-python has been deprecated as a
+ location for installing Python modules and may be dropped from Python's
+ module search path in a future version.  Most likely this module is a
+ private module and should be packaged in a directory outside of Python's
+ default search path.
+
 Tag: package-installs-python-pyc
 Type: warning
 Info: Compiled python source files should not be included in the package.
