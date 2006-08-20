@@ -710,6 +710,41 @@ if (open(FH, "fields/bugs")) {
 	tag "redundant-bugs-field", "" if $bugs =~ m{^\s*debbugs://bugs.debian.org/?\s*$}i;
 }
 
+#----- Python-Version
+
+if (open(FH, "fields/python-version")) {
+	my $pyversion = <FH>;
+	close FH;
+
+	unfold('python-version', \$pyversion);
+
+	my @valid = ([ '\d+\.\d+', '\d+\.\d+' ],
+		     [ '\d+\.\d+' ],
+		     [ '\>=\s*\d+\.\d+', '\<\<\s*\d+\.\d+' ],
+		     [ '\>=\s*\d+\.\d+' ],
+		     [ 'current', '\>=\s*\d+\.\d+' ],
+		     [ 'current' ],
+		     [ 'all' ]);
+
+	my @pyversion = split(/\s*,\s*/, $pyversion);
+	if (@pyversion > 2) {
+		if (grep { !/^\d+\.\d+$/ } @pyversion) {
+			tag "malformed-python-version", "$pyversion";
+		}
+	} else {
+		my $okay = 0;
+		for my $rule (@valid) {
+			if ($pyversion[0] =~ /^$rule->[0]$/
+			    && (($pyversion[1] && $pyversion[1] =~ /^$rule->[1]$/)
+				 || (! $pyversion[1] && ! $rule->[1]))) {
+				$okay = 1;
+				last;
+			}
+		}
+		tag "malformed-python-version", "$pyversion" unless $okay;
+	}
+}
+
 #----- Field checks (without checking the value)
 
 for my $field (glob("fields/*")) {

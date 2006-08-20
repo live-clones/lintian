@@ -600,3 +600,19 @@ Type: error
 Ref: 7.6
 Info: You depends on the build-essential package, which is only a meta-package
  depending on build tools that have to be installed in all build environments.
+
+Tag: malformed-python-version
+Type: error
+Ref: Python policy 2.3
+Info: The Python-Version control field is not in one of the valid
+ formats.  It should be in one of the following formats:
+ .
+     all
+     current
+     current, >= X.Y
+     >= X.Y
+     >= A.B, << X.Y
+     A.B, X.Y
+ .
+ (One or more specific versions may be listed with the last form.)  A.B
+ and X.Y should be Python versions.

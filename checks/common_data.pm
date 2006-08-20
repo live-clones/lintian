@@ -65,13 +65,13 @@ use base qw(Exporter);
     ('source', 'version', 'maintainer', 'binary', 'architecture',
      'standards-version', 'files', 'build-depends', 'build-depends-indep',
      'build-conflicts', 'build-conflicts-indep', 'format', 'origin',
-     'uploaders' );
+     'uploaders', 'python-version' );
 
 %known_binary_fields = map { $_ => 1 }
     ('package', 'version', 'architecture', 'depends', 'pre-depends',
      'recommends', 'suggests', 'enhances', 'conflicts', 'provides',
      'replaces', 'essential', 'maintainer', 'section', 'priority',
-     'source', 'description', 'installed-size');
+     'source', 'description', 'installed-size', 'python-version');
 
 %known_udeb_fields = map { $_ => 1 }
     ('package', 'version', 'architecture', 'subarchitecture', 'depends',

@@ -7,6 +7,8 @@ lintian (1.23.23) UNRELEASED; urgency=low
   * checks/changelog-file{.desc,}:
     + [RA] Diagnose changelog files that are symlinks, using the new way
       the changelog-file collection script processes them.
+  * checks/common_data.pm:
+    + [RA] Add Python-Version as a known source and binary field.
   * checks/copyright-file:
     + [RA] Catch "<fill in http/ftp site>" as well as the string without
       "http/".  Thanks, Jari Aalto.  (Closes: #374167)
@@ -29,6 +31,7 @@ lintian (1.23.23) UNRELEASED; urgency=low
       from the clean target.  Thanks, James Westby.  (Closes: #380399)
     + [RA] Warn when encountering an aspell dictionary package that isn't
       arch: all.  Thanks, Piotr Engelking.  (Closes: #374899)
+    + [RA] Check the syntax of the new Python-Version field.
   * checks/files{.desc,}:
     + [RA] Provide a better explanation of why Debian packages shouldn't
       ship files in /srv.  (Closes: #379176)
@@ -102,7 +105,7 @@ lintian (1.23.23) UNRELEASED; urgency=low
     + [RA] Include the lintian version in HTML page footers.  Thanks,
       Thijs Kinkhorst.  (Closes: #377616)
 
- -- Russ Allbery <rra@debian.org>  Sat, 19 Aug 2006 08:04:53 -0700
+ -- Russ Allbery <rra@debian.org>  Sat, 19 Aug 2006 18:13:48 -0700
 
 lintian (1.23.22) unstable; urgency=low
 
