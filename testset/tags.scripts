@@ -14,6 +14,7 @@ W: scripts source: ancient-standards-version 3.2.1 (current is 3.7.2)
 W: scripts source: changelog-should-mention-nmu
 W: scripts source: package-uses-deprecated-debhelper-compat-version 1
 W: scripts source: source-nmu-has-incorrect-version-number 6
+W: scripts source: uses-dh-python-with-no-pycompat
 W: scripts: binary-without-manpage lefty-foo
 W: scripts: binary-without-manpage make-foo
 W: scripts: binary-without-manpage perl-bizarre-1

@@ -40,6 +40,8 @@ my $needversiondepends = '';
 my $seenversiondepends = '0';
 my $compat = '';
 my $usescdbs = '';
+my $seendhpython = '';
+my $usescdbspython = '';
 
 # If there is no debian/compat file present but cdbs is being used, cdbs will
 # create one automatically.  Currently it always uses compatibility level 4.
@@ -112,6 +114,11 @@ while (<RULES>) {
 	$needversiondepends = $dhcompatvalue if $dhcompatvalue;
     } elsif (/^\s*DH_COMPAT\s*:?=\s*(\d+)/) {
 	$dhcompatvalue = $1;
+    }
+    if (/^\s+dh_python\s/) {
+        $seendhpython = 1;
+    } elsif (m,^include\s+/usr/share/cdbs/1/class/python-distutils.mk,) {
+        $usescdbspython = 1;
     }
 }
 close RULES;
@@ -189,6 +196,23 @@ while (defined(my $file=readdir(DEBIAN))) {
     }
 }
 closedir(DEBIAN);
+
+# Check for Python policy usage and the required debhelper dependency for
+# dh_python policy support.  Assume people who intentionally set pycompat to
+# something earlier than 2 know what they're doing.  Skip CDBS packages since
+# CDBS creates pycompat internally at build time.
+if ($seendhpython && !$usescdbspython) {
+    if (open(PYCOMPAT, "debfiles/pycompat")) {
+	local $/;
+	my $pycompat = <PYCOMPAT>;
+	close PYCOMPAT;
+	if ($pycompat >= 2 && ! Dep::implies($depends, Dep::parse('debhelper (>= 5.0.37.2)'))) {
+	    tag "package-needs-python-policy-debhelper", "";
+	}
+    } else {
+	tag "uses-dh-python-with-no-pycompat", "";
+    }
+}
 
 if ($usescdbs and not $needversiondepends) {
     $needversiondepends = $cdbscompat;

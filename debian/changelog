@@ -22,6 +22,9 @@ lintian (1.23.23) UNRELEASED; urgency=low
   * checks/debhelper:
     + [RA] Use the standard control file parser rather than a custom
       parser that can't handle continuation lines.
+    + [RA] Warn if dh_python is used without debian/pycompat in non-CDBS
+      packages and check for the debhelper version required for Python
+      policy.  Thanks, Raphaël Hertzog.  (Closes: #375318)
   * checks/fields{.desc,}:
     + [RA] Don't warn virtual-package-depends-without-real-package-depends
       for Recommends and rewrite the tag description to be more accurate.
@@ -107,7 +110,7 @@ lintian (1.23.23) UNRELEASED; urgency=low
     + [RA] Include the lintian version in HTML page footers.  Thanks,
       Thijs Kinkhorst.  (Closes: #377616)
 
- -- Russ Allbery <rra@debian.org>  Sat, 19 Aug 2006 18:13:48 -0700
+ -- Russ Allbery <rra@debian.org>  Sat, 19 Aug 2006 19:58:42 -0700
 
 lintian (1.23.22) unstable; urgency=low
 
