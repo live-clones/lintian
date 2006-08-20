@@ -52,6 +52,8 @@ my @global_clean_depends = (
 	[ dpatch => '^include\s+/usr/share/dpatch/' ],
 	[ 'quilt (>= 0.40)' => '^include\s+/usr/share/quilt/' ],
 	[ $python_depend => '/usr/share/cdbs/1/class/python-distutils.mk' ],
+	[ 'python-central (>= 0.5)' => '^DEB_PYTHON_SYSTEM\s*:?=\s*pycentral' ],
+	[ 'python-support (>= 0.3)' => '^DEB_PYTHON_SYSTEM\s*:?=\s*pysupport' ],
 );
 
 # These are similar, but the resulting dependency is only allowed, not
@@ -70,8 +72,10 @@ my @global_clean_allowed = (
 # debian/rules file, this package must be listed in either Build-Depends or
 # Build-Depends-Indep as appropriate; and optional tags as above.
 my @global_depends = (
-        [ $python_depend => '^\t\s*dh_python\s', 'missing-dh_python-build-dependency' ],
-        [ 'debhelper (>= 5.0.31)' => '^\t\s*dh_installxfonts', 'missing-dh_installxfonts-build-dependency' ],
+	[ $python_depend => '^\t\s*dh_python\s', 'missing-dh_python-build-dependency' ],
+	[ 'debhelper (>= 5.0.31)' => '^\t\s*dh_installxfonts', 'missing-dh_installxfonts-build-dependency' ],
+	[ 'python-central (>= 0.5)' => '^\t\s*dh_pycentral\s' ],
+	[ 'python-support (>= 0.3)' => '^\t\s*dh_pysupport\s' ],
 );
 
 # Similarly, this list of packages, regexes, and optional tags say that if the
