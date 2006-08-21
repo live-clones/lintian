@@ -1,4 +1,6 @@
-lintian (1.23.23) UNRELEASED; urgency=low
+lintian (1.23.23) unstable; urgency=low
+
+  The "new Python policy" release
 
   * checks/binaries.desc:
     + [RA] Greatly expand the binary-or-shlib-defines-rpath long
@@ -117,7 +119,7 @@ lintian (1.23.23) UNRELEASED; urgency=low
     + [RA] Include the lintian version in HTML page footers.  Thanks,
       Thijs Kinkhorst.  (Closes: #377616)
 
- -- Russ Allbery <rra@debian.org>  Sat, 19 Aug 2006 19:58:42 -0700
+ -- Russ Allbery <rra@debian.org>  Mon, 21 Aug 2006 10:28:14 -0700
 
 lintian (1.23.22) unstable; urgency=low
 
