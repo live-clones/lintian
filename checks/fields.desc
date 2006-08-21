@@ -616,3 +616,16 @@ Info: The Python-Version control field is not in one of the valid
  .
  (One or more specific versions may be listed with the last form.)  A.B
  and X.Y should be Python versions.
+
+Tag: old-versioned-python-dependency
+Type: warning
+Info: This package appears to be an architecture-indepedent Python module
+ but has a dependency on a version of python less than a particular
+ version and no Python-Version control field.  This normally means that
+ the package isn't using the current Python policy; most
+ architecture-independent Python packages will work with any future
+ version of Python if they follow the new policy.
+ .
+ If this package really does require only a particular range of Python
+ versions, add a Python-Version control field (as described in 2.3 of the
+ Python policy) to resolve this warning.

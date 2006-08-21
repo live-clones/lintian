@@ -434,6 +434,10 @@ if (($type eq "binary") || ($type eq 'udeb')) {
 
 					tag "doc-package-depends-on-main-package", "$field"
 					    if ("$d_pkg-doc" eq $pkg && $field =~ /^(pre-)depends$/);
+
+					tag "old-versioned-python-dependency", "$field: $part_d_orig"
+					    if ($d_pkg eq 'python' && $d_version->[0] eq '<<' && &$is_dep_field($field)
+						&& $arch_indep && $pkg =~ /^python-/ && ! -f "fields/python-version");
 				}
 			}
 			tag "package-depends-on-multiple-libstdc-versions", @seen_libstdcs

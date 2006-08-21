@@ -37,6 +37,9 @@ lintian (1.23.23) UNRELEASED; urgency=low
     + [RA] Check the syntax of the new Python-Version field.
     + [RA] Check for missing build dependencies on python-central or
       python-support.  Thanks, Raphaël Hertzog.
+    + [RA] Check for old << dependencies on Python in Python packages that
+      lack a Python-Version control field, as these are probably packages
+      that don't follow the new Python policy.  Thanks, Raphaël Hertzog.
   * checks/files{.desc,}:
     + [RA] Provide a better explanation of why Debian packages shouldn't
       ship files in /srv.  (Closes: #379176)
