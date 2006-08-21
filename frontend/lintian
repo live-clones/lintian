@@ -623,6 +623,12 @@ while (my $arg = shift) {
 	    }
 
 	    Tags::set_pkg( $arg, $arg_name, "", "", 'binary' );
+
+	    # Description is mandated by dak
+	    if (!$data->{'description'}) {
+		tag("no-description-in-changes-file");
+	    }
+
 	    # check distribution field
 	    if (! (($data->{'distribution'} eq 'stable')
 		  or ($data->{'distribution'} eq 'testing')

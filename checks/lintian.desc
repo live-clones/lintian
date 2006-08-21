@@ -2,6 +2,11 @@ Check-Script: lintian
 Info: this description file is a special case: it contains the tag info
  for the tags produced by the lintian frontend itself
 
+Tag: no-description-in-changes-file
+Type: error
+Info: There is no "Description" field in your .changes file
+ A description is mandatory
+
 Tag: bad-distribution-in-changes-file
 Type: error
 Info: You've specified an unknown `target distribution' for your upload in

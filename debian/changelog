@@ -86,6 +86,10 @@ lintian (1.23.23) UNRELEASED; urgency=low
   * debian/copyright:
     + [RA] Add Subversion repository location.
 
+  * frontend/lintian:
+    + [JvW] Give error if there is no "Description" field in .changes, this is
+      required by dak
+
   * frontend/lintian-info:
     + [RA] Add the -t or --tags option that, given a tag name, prints out
       the description.  (Closes: #376109)
