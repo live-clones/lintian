@@ -1,3 +1,11 @@
+lintian (1.23.24) UNRELEASED; urgency=low
+
+  * checks/fields{.desc,}:
+    + [RA] Depending on versioned variants of python-minimal is also an
+      error.  Thanks, Adeodato Simó.  (Closes: #384476)
+
+ -- Russ Allbery <rra@debian.org>  Thu, 24 Aug 2006 09:28:04 -0700
+
 lintian (1.23.23) unstable; urgency=low
 
   The "new Python policy" release
