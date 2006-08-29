@@ -217,7 +217,9 @@ foreach my $depfield ('suggests', 'recommends', 'depends', 'pre-depends',
     if (open(IN, "fields/$depfield")) {
 	$_ = join('', <IN>);
 	close(IN);
+        chomp;
         $deps{$depfield} = $_;
+        $all_deps .= ', ' if $all_deps;
         $all_deps .= $_;
     }
     $deps{$depfield} = Dep::parse($deps{$depfield});
