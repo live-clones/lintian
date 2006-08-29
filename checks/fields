@@ -430,7 +430,7 @@ if (($type eq "binary") || ($type eq 'udeb')) {
 					    if ($d_pkg eq "libdb1-compat" && $pkg !~ /^libc(6|6.1|0.3)/ && $field =~ /^(pre-)depends$/);
 
 					tag "depends-on-python-minimal", "$field",
-					    if ($d_pkg =~ /python[\d.]*-minimal/ && &$is_dep_field($field));
+					    if ($d_pkg =~ /^python[\d.]*-minimal$/ && &$is_dep_field($field));
 
 					tag "doc-package-depends-on-main-package", "$field"
 					    if ("$d_pkg-doc" eq $pkg && $field =~ /^(pre-)depends$/);
