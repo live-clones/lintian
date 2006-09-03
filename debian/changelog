@@ -1,5 +1,7 @@
 lintian (1.23.24) UNRELEASED; urgency=low
 
+  The "LSB init script" release
+
   * checks/control-files:
     + [RA] perm2oct definition moved to Util.pm.
   * checks/cruft{.desc,}:
@@ -12,6 +14,11 @@ lintian (1.23.24) UNRELEASED; urgency=low
       error.  Thanks, Adeodato Simó.  (Closes: #384476)
   * checks/files:
     + [RA] perm2oct definition moved to Util.pm.
+  * checks/init.d{.desc,}:
+    + [RA] Added a warning for init scripts missing an LSB keyword
+      section, checks of the syntax of such a section if present, and
+      some basic semantic checks of the easiest fields.  Based on initial
+      work by Carlos Villegas.  (Closes: #377740)
   * checks/menus:
     + [RA] perm2oct definition moved to Util.pm.
   * checks/scripts:
@@ -25,7 +32,7 @@ lintian (1.23.24) UNRELEASED; urgency=low
     + [RA] Move perm2oct to here and improve recognition of s, S, t, and T
       characters.  Thanks to Justin B. Rye for patch.  (Closes: #376119)
 
- -- Russ Allbery <rra@debian.org>  Sun,  3 Sep 2006 14:55:54 -0700
+ -- Russ Allbery <rra@debian.org>  Sun,  3 Sep 2006 16:16:25 -0700
 
 lintian (1.23.23) unstable; urgency=low
 

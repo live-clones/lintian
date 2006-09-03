@@ -74,3 +74,87 @@ Info: The package installs an <tt>/etc/init.d</tt> script which is
  not registered in the <tt>postinst</tt> script. This is usually a bug,
  unless you omit the links intentionally for some reason or create the
  links some other way.
+
+Tag: init.d-script-has-duplicate-lsb-section
+Type: error
+Ref: http://wiki.debian.org/LSBInitScripts
+Info: This <tt>/etc/init.d</tt> script has more than one LSB keyword
+ section.  These sections start with <tt>### BEGIN INIT INFO</tt> and end
+ with <tt>### END INIT INFO</tt>.  There should be only one such section
+ per init script.
+
+Tag: init.d-script-has-unterminated-lsb-section
+Type: error
+Ref: http://wiki.debian.org/LSBInitScripts
+Info: This <tt>/etc/init.d</tt> script has an LSB keyword section starting
+ with <tt>### BEGIN INIT INFO</tt> but either has no matching <tt>### END
+ INIT INFO</tt> or has lines between those two markers that are not
+ comments.  The line number given is the first line that doesn't look like
+ part of an LSB keyword section.  There must be an end marker after all
+ the keyword settings and there must not be any lines between those
+ markers that do not begin with <tt>#</tt>.
+
+Tag: init.d-script-has-duplicate-lsb-keyword
+Type: warning
+Ref: http://wiki.debian.org/LSBInitScripts
+Info: The given keyword was set twice in the LSB keyword section in this
+ <tt>/etc/init.d</tt> script.  This is probably a mistake; the behavior of
+ setting the same keyword twice is undefined.
+
+Tag: init.d-script-has-unknown-lsb-keyword
+Type: warning
+Ref: http://wiki.debian.org/LSBInitScripts
+Info: The given keyword was set in the LSB keyword section in this
+ <tt>/etc/init.d</tt> script but isn't one of the known LSB keywords and
+ doesn't begin with <tt>X-</tt>.  One of the standard keywords may have
+ been misspelled.
+
+Tag: init.d-script-has-bad-lsb-line
+Type: warning
+Ref: http://wiki.debian.org/LSBInitScripts
+Info: This line in the LSB keyword section of an <tt>/etc/init.d</tt>
+ script doesn't match the required formatting of that section.  Note that
+ keyword settings must start with <tt>#</tt>, a single space, the keyword,
+ a colon, and some whitespace, followed by the value (if any).  Only the
+ Description keyword allows continuation lines, and continuation lines
+ must begin with <tt>#</tt> and either a tab or two or more spaces.
+
+Tag: init.d-script-missing-lsb-section
+Type: warning
+Ref: http://wiki.debian.org/LSBInitScripts
+Info: This <tt>/etc/init.d</tt> script does not have an LSB keyword
+ section (or the <tt>### BEGIN INIT INFO</tt> tag is incorrect).  This
+ section provides description and runlevel information in a standard
+ format and provides dependency information that can be used to
+ parallelize the boot process.  Please consider adding it.
+
+Tag: init.d-script-missing-lsb-keyword
+Type: warning
+Ref: http://wiki.debian.org/LSBInitScripts
+Info: This <tt>/etc/init.d</tt> script has an LSB keyword section, but it
+ is missing the given required LSB keyword.  If the value of this keyword
+ should be empty, please still include it in the LSB keyword section with
+ an empty value.
+
+Tag: init.d-script-has-bad-start-runlevel
+Type: warning
+Ref: http://wiki.debian.org/LSBInitScripts
+Info: The given runlevel specified in the Default-Start keyword of the LSB
+ keyword section of this <tt>/etc/init.d</tt> script isn't one of the
+ recognized standard runlevels (S, 0, 1, 2, 3, 4, 5, and 6).
+
+Tag: init.d-script-has-bad-stop-runlevel
+Type: warning
+Ref: http://wiki.debian.org/LSBInitScripts
+Info: The given runlevel specified in the Default-Stop keyword of the LSB
+ keyword section of this <tt>/etc/init.d</tt> script isn't one of the
+ recognized standard runlevels (S, 0, 1, 2, 3, 4, 5, and 6).
+
+Tag: init.d-script-has-conflicting-start-stop
+Type: warning
+Ref: http://wiki.debian.org/LSBInitScripts
+Info: The given runlevel was included in both the Default-Start and
+ Default-Stop keywords of the LSB keyword section of this
+ <tt>/etc/init.d</tt> script.  Since it doesn't make sense to both start
+ and stop a service in the same runlevel, there is probably an error in
+ one or the other of these keywords.

@@ -1,1 +1,3 @@
+/etc/init.d/lsb-broken
+/etc/init.d/no-lsb
 /etc/X11/Xsession.d/xsession-test

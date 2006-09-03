@@ -9,6 +9,7 @@ binary-arch:
 binary-indep:
 	install -d $(tmp)/usr/bin/
 	install -d $(tmp)/etc/X11/Xsession.d/
+	install -d $(tmp)/etc/init.d/
 	install -d $(tmp)/usr/share/scripts/
 	install -d $(tmp)/usr/share/doc/scripts/
 	install -d $(tmp)/usr/lib/python2.3/site-packages/
@@ -36,6 +37,10 @@ binary-indep:
 # First one should produce a warning; second one shouldn't.
 	install -m 755 gccbug.dpatch $(tmp)/usr/share/scripts/
 	install -m 755 gccbug.dpatch $(tmp)/usr/src/scripts/
+
+	install -m 755 init-skeleton $(tmp)/etc/init.d/skeleton
+	install -m 755 init-no-lsb $(tmp)/etc/init.d/no-lsb
+	install -m 755 init-lsb-broken $(tmp)/etc/init.d/lsb-broken
 
 	install -m 755 phpfoo $(tmp)/usr/share/scripts/
 	sed 's/php$$/php5/' phpfoo > $(tmp)/usr/share/scripts/php5foo
@@ -65,6 +70,8 @@ binary-indep:
 	gzip -9 $(tmp)/usr/share/doc/scripts/changelog
 
 	cp debian/scripts.conffiles $(tmp)/DEBIAN/conffiles
+	install -m 755 debian/postinst $(tmp)/DEBIAN/postinst
+	install -m 755 debian/postrm $(tmp)/DEBIAN/postrm
 	dpkg-gencontrol -isp
 	dpkg --build $(tmp) ..
 

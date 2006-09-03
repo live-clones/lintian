@@ -1,5 +1,10 @@
 E: scripts source: package-uses-debhelper-but-lacks-build-depends
 E: scripts: calls-suidperl-directly ./usr/bin/suidperlfoo
+E: scripts: file-in-etc-not-marked-as-conffile /etc/init.d/skeleton
+E: scripts: init.d-script-does-not-implement-required-option /etc/init.d/lsb-broken force-reload
+E: scripts: init.d-script-does-not-implement-required-option /etc/init.d/lsb-broken restart
+E: scripts: init.d-script-has-duplicate-lsb-section /etc/init.d/lsb-broken
+E: scripts: init.d-script-has-unterminated-lsb-section /etc/init.d/lsb-broken:15
 E: scripts: missing-dep-for-interpreter lefty => graphviz (./usr/bin/lefty-foo)
 E: scripts: no-copyright-file
 E: scripts: php-script-but-no-php-cli-dep ./usr/share/scripts/phpfoo
@@ -12,6 +17,8 @@ E: scripts: wrong-path-for-interpreter #!/usr/local/bin/lefty != /usr/bin/lefty 
 E: scripts: wrong-path-for-ruby ./usr/bin/rubyfoo #!/bin/ruby1.8
 W: scripts source: ancient-standards-version 3.2.1 (current is 3.7.2)
 W: scripts source: changelog-should-mention-nmu
+W: scripts source: maintainer-script-lacks-debhelper-token debian/postinst
+W: scripts source: maintainer-script-lacks-debhelper-token debian/postrm
 W: scripts source: package-uses-deprecated-debhelper-compat-version 1
 W: scripts source: source-nmu-has-incorrect-version-number 6
 W: scripts source: uses-dh-python-with-no-pycompat
@@ -31,6 +38,14 @@ W: scripts: binary-without-manpage tkfoo
 W: scripts: executable-is-not-world-readable usr/bin/perl-bizarre-2 0750 != 0755
 W: scripts: executable-is-not-world-readable usr/bin/suidperlfoo2 4751
 W: scripts: executable-not-elf-or-script ./usr/bin/perl-bizarre-3
+W: scripts: init.d-script-has-bad-lsb-line /etc/init.d/lsb-broken:4
+W: scripts: init.d-script-has-bad-lsb-line /etc/init.d/lsb-broken:9
+W: scripts: init.d-script-has-bad-stop-runlevel /etc/init.d/lsb-broken X
+W: scripts: init.d-script-has-conflicting-start-stop /etc/init.d/lsb-broken 1
+W: scripts: init.d-script-has-unknown-lsb-keyword /etc/init.d/lsb-broken:14 foo
+W: scripts: init.d-script-missing-lsb-keyword /etc/init.d/lsb-broken required-start
+W: scripts: init.d-script-missing-lsb-section /etc/init.d/no-lsb
+W: scripts: init.d-script-not-marked-as-conffile /etc/init.d/skeleton
 W: scripts: non-standard-executable-perm usr/bin/perl-bizarre-3 0754 != 0755
 W: scripts: non-standard-setuid-executable-perm usr/bin/suidperlfoo 4555
 W: scripts: package-installs-python-pyc usr/lib/python2.3/site-packages/test.pyc
