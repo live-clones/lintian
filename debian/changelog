@@ -1,5 +1,7 @@
 lintian (1.23.24) UNRELEASED; urgency=low
 
+  * checks/control-files:
+    + [RA] perm2oct definition moved to Util.pm.
   * checks/cruft{.desc,}:
     + [RA] Remove the (info-level) check for .cvsignore files in the
       source tarball.  This isn't an error; those files contain metadata
@@ -8,12 +10,22 @@ lintian (1.23.24) UNRELEASED; urgency=low
   * checks/fields{.desc,}:
     + [RA] Depending on versioned variants of python-minimal is also an
       error.  Thanks, Adeodato Simó.  (Closes: #384476)
+  * checks/files:
+    + [RA] perm2oct definition moved to Util.pm.
+  * checks/menus:
+    + [RA] perm2oct definition moved to Util.pm.
   * checks/scripts:
     + [RA] Properly concatenate the dependencies for a package when
       checking whether the dependency for an interpreter is included.
       Thanks, Vincent Danjean.  (Closes: #385178)
+  * checks/shared-libs:
+    + [RA] perm2oct definition moved to Util.pm.
 
- -- Russ Allbery <rra@debian.org>  Sun,  3 Sep 2006 13:01:15 -0700
+  * lib/Util.pm:
+    + [RA] Move perm2oct to here and improve recognition of s, S, t, and T
+      characters.  Thanks to Justin B. Rye for patch.  (Closes: #376119)
+
+ -- Russ Allbery <rra@debian.org>  Sun,  3 Sep 2006 14:55:54 -0700
 
 lintian (1.23.23) unstable; urgency=low
 

@@ -395,30 +395,6 @@ if (-f $postrm) {
 
 }
 
-# translate permission strings like `-rwxrwxrwx' into an octal number
-sub perm2oct {
-    my ($t) = @_;
-
-    my $o = 0;
-
-    $t =~ m/^.(.)(.)(.)(.)(.)(.)(.)(.)(.)/o;
-
-    $o += 04000 if $3 eq 's';	# set-uid
-    $o += 02000 if $6 eq 's';	# set-gid
-    $o += 01000 if $9 eq 't';	# sticky bit
-    $o += 00400 if $1 ne '-';	# owner read
-    $o += 00200 if $2 ne '-';	# owner write
-    $o += 00100 if $3 ne '-';	# owner execute
-    $o += 00040 if $4 ne '-';	# owner read
-    $o += 00020 if $5 ne '-';	# owner write
-    $o += 00010 if $6 ne '-';	# owner execute
-    $o += 00004 if $7 ne '-';	# owner read
-    $o += 00002 if $8 ne '-';	# owner write
-    $o += 00001 if $9 ne '-';	# owner execute
-
-    return $o;
-}
-
 # make /tmp/baz/baz.txt from /tmp/foo/../bar/../baz/baz.txt
 sub abs_path {
     my $path = shift;

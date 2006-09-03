@@ -32,7 +32,8 @@ our @EXPORT = qw(parse_dpkg_control
 	get_file_md5
 	file_is_encoded_in_non_utf8
 	fail
-	system_env);
+	system_env
+	perm2oct);
 
 use FileHandle;
 use Pipeline;
@@ -223,6 +224,33 @@ sub system_env {
 	waitpid $pid, 0;
 	return $?;
     }
+}
+
+# Translate permission strings like `-rwxrwxrwx' into an octal number.
+sub perm2oct {
+    my ($t) = @_;
+
+    my $o = 0;
+
+    $t =~ m/^.(.)(.)(.)(.)(.)(.)(.)(.)(.)/o;
+
+    $o += 00400 if $1 eq 'r';	# owner read
+    $o += 00200 if $2 eq 'w';	# owner write
+    $o += 00100 if $3 eq 'x';	# owner execute
+    $o += 04000 if $3 eq 'S';	# setuid
+    $o += 04100 if $3 eq 's';	# setuid + owner execute
+    $o += 00040 if $4 eq 'r';	# group read
+    $o += 00020 if $5 eq 'w';	# group write
+    $o += 00010 if $6 eq 'x';	# group execute
+    $o += 02000 if $6 eq 'S';	# setgid
+    $o += 02010 if $6 eq 's';	# setgid + group execute
+    $o += 00004 if $7 eq 'r';	# other read
+    $o += 00002 if $8 eq 'w';	# other write
+    $o += 00001 if $9 eq 'x';	# other execute
+    $o += 01000 if $9 eq 'T';	# stickybit
+    $o += 01001 if $9 eq 't';	# stickybit + other execute
+
+    return $o;
 }
 
 # ------------------------
