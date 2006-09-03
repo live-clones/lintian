@@ -1,5 +1,10 @@
 lintian (1.23.24) UNRELEASED; urgency=low
 
+  * checks/cruft{.desc,}:
+    + [RA] Remove the (info-level) check for .cvsignore files in the
+      source tarball.  This isn't an error; those files contain metadata
+      that may be useful for people making modifications and it's quite
+      common to distribute them.
   * checks/fields{.desc,}:
     + [RA] Depending on versioned variants of python-minimal is also an
       error.  Thanks, Adeodato Simó.  (Closes: #384476)
@@ -8,7 +13,7 @@ lintian (1.23.24) UNRELEASED; urgency=low
       checking whether the dependency for an interpreter is included.
       Thanks, Vincent Danjean.  (Closes: #385178)
 
- -- Russ Allbery <rra@debian.org>  Tue, 29 Aug 2006 16:03:33 -0700
+ -- Russ Allbery <rra@debian.org>  Sun,  3 Sep 2006 13:01:15 -0700
 
 lintian (1.23.23) unstable; urgency=low
 

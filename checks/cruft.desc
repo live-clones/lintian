@@ -49,13 +49,6 @@ Info: Package source contains a 'svn-commit(.NNN).tmp' file.  This file is
  almost certainly a left-over from a failed Subversion commit, and does not
  belong in a Debian package.
 
-Tag: cvsignore-file-in-source
-Type: info
-Info: Package contains a '.cvsignore' file.  It may have been included by
- accident. It is Version Control System metadata that should not be
- distributed normally. However, since upstream tarball often still contain
- those, it's only an informational tag.
-
 Tag: arch-inventory-file-in-source
 Type: info
 Info: Package contains a '.arch-inventory' file.  It may have been included by
