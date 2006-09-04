@@ -5,6 +5,8 @@ E: debconf-test: extended-description-is-empty
 E: debconf-test: mismatch-translated-choices debconf/testmulti choices-de.utf-8
 E: debconf-test: no-template-description debconf/no-description
 E: debconf-test: settitle-requires-versioned-depends config
+E: debconf-test: unknown-debconf-priority config:11 LOW
+E: debconf-test: unknown-debconf-priority config:12 normal
 E: debconf-udeb udeb: udeb-postinst-must-not-call-ldconfig
 W: debconf source: invalid-po-file debian/po/fr.po
 W: debconf source: maintainer-script-lacks-debhelper-token debian/debconf-test.postinst
@@ -23,6 +25,7 @@ W: debconf-test: malformed-question-in-templates debconf/testboolean
 W: debconf-test: malformed-title-in-templates debconf/testnote
 W: debconf-test: old-fsf-address-in-copyright-file
 W: debconf-test: partially-translated-question debconf/testmulti de.utf-8
+W: debconf-test: postinst-uses-db-input
 W: debconf-test: too-long-extended-description-in-templates debconf/teststring
 W: debconf-test: too-long-short-description-in-templates debconf/testnote
 W: debconf-test: using-first-person-in-templates debconf/1st-person

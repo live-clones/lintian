@@ -9,6 +9,9 @@ lintian (1.23.24) UNRELEASED; urgency=low
       source tarball.  This isn't an error; those files contain metadata
       that may be useful for people making modifications and it's quite
       common to distribute them.
+  * checks/debconf{.desc,}:
+    + [RA] Diagnose unknown priorities in db_input and db_text
+      invocations.  Patch from Thomas Huriaux.  (Closes: #386014)
   * checks/fields{.desc,}:
     + [RA] Depending on versioned variants of python-minimal is also an
       error.  Thanks, Adeodato Simó.  (Closes: #384476)
@@ -32,7 +35,7 @@ lintian (1.23.24) UNRELEASED; urgency=low
     + [RA] Move perm2oct to here and improve recognition of s, S, t, and T
       characters.  Thanks to Justin B. Rye for patch.  (Closes: #376119)
 
- -- Russ Allbery <rra@debian.org>  Sun,  3 Sep 2006 16:16:25 -0700
+ -- Russ Allbery <rra@debian.org>  Mon,  4 Sep 2006 12:03:16 -0700
 
 lintian (1.23.23) unstable; urgency=low
 
