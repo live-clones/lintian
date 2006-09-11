@@ -1,5 +1,8 @@
 lintian (1.23.25) UNRELEASED; urgency=low
 
+  * checks/debconf:
+    + [CW] Don't trigger partially-translated-question when Choices-C exists
+      but not Description-C.
   * checks/scripts:
     + [RA] Add /usr/bin/gosh from the gauche package to the list of valid
       interpreters.  Thanks, Tatsuya Kinoshita.  (Closes: #386798)

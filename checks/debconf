@@ -228,7 +228,15 @@ foreach my $template (@templates) {
     if (exists $template->{choices}
 	&& $template->{choices} !~ m/^\s*\$\{\w+\}\s*$/) {
 	foreach my $lang (sort keys %languages) {
-	    if ($languages{$lang}{choices} and not $languages{$lang}{description}) {
+	    # Choices-C is special. Normally, when it is present, the only
+	    # other Choices* field present will be Choices itself, and there
+	    # is not necessarily a Description-C. This is used by code that
+	    # wants to substitute into the untranslated choices and also
+	    # into all translated choices at once.
+	    # TODO: it's reasonable to have a full set of Choices-*, but
+	    # only Description-C and Description, for pretty much the same
+	    # reason as above. This shouldn't trigger this tag.
+	    if ($lang ne 'c' and $languages{$lang}{choices} and not $languages{$lang}{description}) {
 		tag "partially-translated-question", "$template->{template} $lang";
 	    }
 	}
