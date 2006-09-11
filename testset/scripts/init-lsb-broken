@@ -2,7 +2,7 @@
 ### BEGIN INIT INFO
 # Provides:          bad-lsb
 #  Required-Start:    $local_fs $remote_fs
-# Required-Stop:     $local_fs $remote_fs
+# Required-Stop:     
 # Default-Start:     1 2 3 4 5
 # Default-Stop:      S 0 1 6 X
 # Short-Description: Example initscript

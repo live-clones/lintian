@@ -176,10 +176,10 @@ for (keys %initd_postinst) {
 			my $keyword = lc $1;
 			my $value = $2;
 			tag "init.d-script-has-duplicate-lsb-keyword", "/etc/init.d/$_:$. $keyword"
-			    if $lsb{$keyword};
+			    if (defined $lsb{$keyword});
 			tag "init.d-script-has-unknown-lsb-keyword", "/etc/init.d/$_:$. $keyword"
 			    unless (defined ($lsb_keywords{$keyword}) || $keyword =~ /^x-/);
-			$lsb{$keyword} = $value;
+			$lsb{$keyword} = $value || '';
 			$last = $keyword;
 		    } elsif ($l =~ /^\#(\t|  )/ && $last eq 'description') {
 			my $value = $l;
@@ -202,7 +202,7 @@ for (keys %initd_postinst) {
 	    tag "init.d-script-missing-lsb-section", "/etc/init.d/$_";
 	} else {
 	    for my $keyword (keys %lsb_keywords) {
-		if ($lsb_keywords{$keyword} && !$lsb{$keyword}) {
+		if ($lsb_keywords{$keyword} && !defined $lsb{$keyword}) {
 		    tag "init.d-script-missing-lsb-keyword", "/etc/init.d/$_ $keyword";
 		}
 	    }
