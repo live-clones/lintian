@@ -3,6 +3,9 @@ lintian (1.23.25) UNRELEASED; urgency=low
   * checks/debconf:
     + [CW] Don't trigger partially-translated-question when Choices-C exists
       but not Description-C.
+  * checks/files:
+    + [RA] Don't consider files named license.rb to be extraneous
+      licenses.  Patch from NIIBE Yutaka.  (Closes: #387269)
   * checks/init.d:
     + [RA] Correctly handle LSB keywords which are present but have an
       empty value.  Reported by Erich Schubert.  (Closes: #386968)
@@ -10,7 +13,7 @@ lintian (1.23.25) UNRELEASED; urgency=low
     + [RA] Add /usr/bin/gosh from the gauche package to the list of valid
       interpreters.  Thanks, Tatsuya Kinoshita.  (Closes: #386798)
 
- -- Russ Allbery <rra@debian.org>  Mon, 11 Sep 2006 16:16:13 -0700
+ -- Russ Allbery <rra@debian.org>  Wed, 13 Sep 2006 09:36:44 -0700
 
 lintian (1.23.24) unstable; urgency=low
 

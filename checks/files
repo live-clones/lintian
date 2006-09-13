@@ -502,7 +502,7 @@ while (<IN>) {
 	# because a package had a HTML form for licenses called like that.
 	# Another exception is made for various picture formats since
 	# those are likely to just be simply pictures.
-	and not $file =~ m/\.(el|c|h|py|cc|pl|pm|html|php|xpm|png|jpe?g|gif|svg)$/
+	and not $file =~ m/\.(el|c|h|py|cc|pl|pm|html|php|rb|xpm|png|jpe?g|gif|svg)$/
         and not defined $link) {
 	tag "extra-license-file", "$file";
     }
