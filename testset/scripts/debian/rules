@@ -26,6 +26,7 @@ binary-indep:
 	install -m 4751 perlfoo $(tmp)/usr/bin/suidperlfoo2
 	install -m 4555 suidperlfoo $(tmp)/usr/bin/
 	install -m 755 tkfoo $(tmp)/usr/bin/
+	install -m 755 wishfoo $(tmp)/usr/bin/
 	install -m 644 xsession-test $(tmp)/etc/X11/Xsession.d/
 
 # Permissions here aren't part of what's being tested, but let us exercise

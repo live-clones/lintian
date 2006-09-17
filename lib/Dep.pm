@@ -114,7 +114,10 @@ sub implies {
 	}
 	return 1;
     } elsif ($q->[0] eq 'OR') {
-	# Any of q's clauses may be deduced from p.
+	# Any of q's clauses may be deduced from p.  This isn't entirely
+	# sufficient and will not correctly deduce that "a|b" implies "a|b|c".
+	# I don't see how to get that right using this code structure, or any
+	# simple change that would get it right.
 	$i = 1;
 	while ($i < @$q) {
 	    return 1 if Dep::implies($p, $q->[$i++]);

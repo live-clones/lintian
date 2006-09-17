@@ -35,6 +35,7 @@ W: scripts: binary-without-manpage suidperlfoo
 W: scripts: binary-without-manpage suidperlfoo2
 W: scripts: binary-without-manpage test.sh
 W: scripts: binary-without-manpage tkfoo
+W: scripts: binary-without-manpage wishfoo
 W: scripts: executable-is-not-world-readable usr/bin/perl-bizarre-2 0750 != 0755
 W: scripts: executable-is-not-world-readable usr/bin/suidperlfoo2 4751
 W: scripts: executable-not-elf-or-script ./usr/bin/perl-bizarre-3

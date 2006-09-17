@@ -181,7 +181,17 @@ Info: Packages with scripts that are executed with ruby must depend on the
 
 Tag: wish-script-but-no-wish-dep
 Type: error
-Info: Packages that use wish scripts must depend on the virtual package wish.
+Info: Packages that use wish scripts must depend on the virtual package wish
+ or, if they require a specific version of wish or tk, that version of tk.
+ .
+ In some cases a weaker relationship, such as Suggests or Recommends, will
+ be more appropriate.
+
+Tag: tclsh-script-but-no-tclsh-dep
+Type: error
+Info: Packages that use wish scripts must depend on the virtual package
+ tclsh or, if they require a specific version of wish or tk, that version
+ of tcl.
  .
  In some cases a weaker relationship, such as Suggests or Recommends, will
  be more appropriate.

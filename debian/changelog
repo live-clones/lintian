@@ -12,8 +12,15 @@ lintian (1.23.25) UNRELEASED; urgency=low
   * checks/scripts:
     + [RA] Add /usr/bin/gosh from the gauche package to the list of valid
       interpreters.  Thanks, Tatsuya Kinoshita.  (Closes: #386798)
+    + [RA] Add a separate tag for tclsh dependencies to explain about the
+      virtual package and improve the description of the wish virtual
+      package in its tag.  Fix inverted logic that got the wish dependency
+      backwards.  Restore the previous behavior of treating alternatives
+      as conjunction for script dependencies to work around a deficiency
+      in the dependency engine, manifesting as false positives for wish
+      and tclsh scripts.  Reported by Hamish Moffatt.  (Closes: #387845)
 
- -- Russ Allbery <rra@debian.org>  Wed, 13 Sep 2006 09:36:44 -0700
+ -- Russ Allbery <rra@debian.org>  Sat, 16 Sep 2006 18:56:42 -0700
 
 lintian (1.23.24) unstable; urgency=low
 

@@ -153,9 +153,6 @@ my %interpreter_dependencies = (
 				'slsh' => 'slsh',
 				'speedy' => 'speedy-cgi-perl',
 				'tcl' => 'tclx8.3',
-				'tclsh' => 'tclsh',
-				'tclsh8.3' => 'tcl8.3',
-				'tclsh8.4' => 'tcl8.4',
 				'tcsh' => 'tcsh',
 				'tixwish' => 'tix',
 				'trs' => 'konwert',
@@ -208,10 +205,13 @@ while (<FILEINFO>) {
 }
 close(FILEINFO);
 
-# If alternatives are used, they are each listed as a separate dependency.
-# This is the best thing to do with the tk/tcl interpreters, which
-# are often listed with dependencies like tk41|tk42|wish.
-# They are also the only interpreters likely to be listed with alternatives.
+# We transform alternatives separated by | into stronger dependencies
+# separated by ,.  This is done to avoid false positives with dependencies
+# like "tcl8.4 | tclsh" (sufficient for a tclsh script) and is required solely
+# because of deficiencies in our dependency evaluation engine.
+#
+# This may lead to false negatives when alternatives may allow necessary
+# packages to not be installed.  Hopefully those will be rare.
 my $all_deps = '';
 foreach my $depfield ('suggests', 'recommends', 'depends', 'pre-depends',
 		   'provides') {
@@ -220,6 +220,7 @@ foreach my $depfield ('suggests', 'recommends', 'depends', 'pre-depends',
 	$_ = join('', <IN>);
 	close(IN);
         chomp;
+        s/\|/,/g;
         $deps{$depfield} = $_;
         $all_deps .= ', ' if $all_deps;
         $all_deps .= $_;
@@ -311,14 +312,23 @@ while (<SCRIPTS>) {
 	    } elsif ($base eq 'perl' && $suid{$filename}) {
 		tag_error("suid-perl-script-but-no-perl-suid-dep", $filename)
                     unless Dep::implies($deps{all}, Dep::parse('perl-suid'));
+	    } elsif ($base =~ m/^tclsh(\d+\.\d+)?$/) {
+		my $ver = $1 ? $1 : "";
+		if ($ver) {
+		    tag_error("tclsh-script-but-no-tclsh-dep", "$filename $base")
+			unless Dep::implies($deps{all}, Dep::parse("tcl$ver"));
+		} else {
+		    tag_error("tclsh-script-but-no-tclsh-dep", "$filename $base")
+			unless Dep::implies($deps{all}, Dep::parse("tcl8.3 | tcl8.4 | tclsh"));
+		}
 	    } elsif ($base =~ m/^wish(\d+\.\d+)?$/) {
 		my $ver = $1 ? $1 : "";
 		if ($ver) {
-		    tag_error("wish-script-but-no-wish-dep", $filename)
-			unless Dep::implies($deps{all}, Dep::parse('tcl8.3 | tcl8.4 | wish'));
+		    tag_error("wish-script-but-no-wish-dep", "$filename $base")
+			unless Dep::implies($deps{all}, Dep::parse("tk$ver"));
 		} else {
-		    tag_error("wish-script-but-no-wish-dep", $filename)
-			unless Dep::implies($deps{all}, Dep::parse("tcl$ver"));
+		    tag_error("wish-script-but-no-wish-dep", "$filename $base")
+			unless Dep::implies($deps{all}, Dep::parse("tk8.3 | tk8.4 | wish"));
 		}
 	    }
 	}
