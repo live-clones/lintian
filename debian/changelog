@@ -3,6 +3,10 @@ lintian (1.23.25) UNRELEASED; urgency=low
   * checks/debconf:
     + [CW] Don't trigger partially-translated-question when Choices-C exists
       but not Description-C.
+  * checks/fields.desc:
+    + [RA] Improve the long descriptions of the warnings about dependencies
+      on essential or build-essential packages to make it clearer that the
+      correct resolution is normally to omit the dependency and why.
   * checks/files:
     + [RA] Don't consider files named license.rb to be extraneous
       licenses.  Patch from NIIBE Yutaka.  (Closes: #387269)
