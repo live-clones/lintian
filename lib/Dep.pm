@@ -58,19 +58,52 @@ sub Not { return ['NOT', $_[0]]; }
 
 # Convert a dependency line into the internal format.
 # Non-local callers may store the results of this routine.
-sub parse 
-{	my @deps;
-    for (split(/\s*,\s*/, $_[0])) 
-	{ 	my @alts;
-
-		if ( $_ =~ /^perl\s+\|\s+perl5$/ or $_ =~ /^perl5\s+\|\s+perl\s+/ )
-			{ $_ = "perl5"; }
-		for (split(/\s*\|\s*/, $_)) { push(@alts, Dep::Pred($_)); }
-		if (@alts == 1) { push(@deps, $alts[0]); } 
-		else { push(@deps, ['OR', @alts]); }
+sub parse {
+    my @deps;
+    for (split(/\s*,\s*/, $_[0])) {
+	my @alts;
+	if (/^perl\s+\|\s+perl5$/ or /^perl5\s+\|\s+perl\s+/) {
+	    $_ = 'perl5';
+	}
+	for (split(/\s*\|\s*/, $_)) {
+	    push(@alts, Dep::Pred($_));
+	}
+	if (@alts == 1) {
+	    push(@deps, $alts[0]);
+	} else {
+	    push(@deps, ['OR', @alts]);
+	}
     }
     return $deps[0] if @deps == 1;
     return ['AND', @deps];
+}
+
+# Take the internal format and convert it back to text.  Note that what this
+# generates for NOT isn't valid Debian dependency syntax.
+sub unparse {
+    my ($p) = @_;
+    if ($p->[0] eq 'PRED') {
+	my $text = $p->[1];
+	if (defined $p->[2]) {
+	    $text .= " ($p->[2] $p->[3])";
+	}
+	if (defined $p->[4]) {
+	    $text .= " [$p->[4]]";
+	}
+	return $text;
+    } elsif ($p->[0] eq 'AND' || $p->[0] eq 'OR') {
+	my $sep = ($p->[0] eq 'AND') ? ', ' : ' | ';
+	my $text = '';
+	my $i = 1;
+	while ($i < @$p) {
+	    $text .= $sep if $text;
+	    $text .= unparse($p->[$i++]);
+	}
+	return $text;
+    } elsif ($p->[0] eq 'NOT') {
+	return '! ' . unparse($p->[1]);
+    }
+    return undef;
 }
 
 # ---------------------------------
@@ -485,20 +518,60 @@ sub get_version_cmp {
     return ::spawn('dpkg', '--compare-versions', @_) == 0;
 }
 
-sub get_dups {
-    my $relation = shift;
+# ---------------------------------
 
-    if ($relation->[0] ne 'AND') {
+# Return a list of duplicated relations.  Each member of the list will be an
+# anonymous array holding the set of relations that are considered duplicated.
+# Two relations are considered duplicates if one implies the other.
+sub get_dups {
+    my $p = shift;
+
+    if ($p->[0] ne 'AND') {
 	return ();
     }
 
-    shift @$relation;
-    my %seen;
-    foreach my $i (@$relation) {
-	next if ($i->[0] eq 'OR');  #assume OR is always ok
-	$seen{$i->[1]}++;
+    # The logic here is a bit complex in order to merge sets of duplicate
+    # dependencies.  We want foo (<< 2), foo (>> 1), foo (= 1.5) to end up as
+    # one set of dupliactes, even though the first doesn't imply the second.
+    #
+    # $dups holds a hash, where the key is the earliest dependency in a set
+    # and the value is a hash whose keys are the other dependencies in the
+    # set.  $seen holds a map from package names to the duplicate sets that
+    # they're part of, if they're not the earliest package in a set.  If
+    # either of the dependencies in a duplicate pair were already seen, add
+    # the missing one of the pair to the existing set rather than creating a
+    # new one.
+    my (%dups, %seen);
+    for (my $i = 1; $i < @$p; $i++) {
+	for (my $j = $i + 1; $j < @$p; $j++) {
+	    if (Dep::implies($p->[$i], $p->[$j]) || Dep::implies($p->[$j], $p->[$i])) {
+		my $first = unparse($p->[$i]);
+		my $second = unparse($p->[$j]);
+		if ($seen{$first}) {
+		    $dups{$seen{$first}}->{$second} = $j;
+		    $seen{$second} = $seen{$first};
+		} elsif ($seen{$second}) {
+		    $dups{$seen{$second}}->{$first} = $i;
+		    $seen{$first} = $seen{$second};
+		} else {
+		    $dups{$first} ||= {};
+		    $dups{$first}->{$second} = $j;
+		    $seen{$second} = $first;
+		}
+	    }
+	}
     }
-    return grep {$seen{$_} > 1} keys(%seen);
+
+    # The sort maintains the original order in which we encountered the
+    # dependencies, just in case that helps the user find the problems,
+    # despite the fact we're using a hash.
+    return map {
+        [ $_,
+          sort {
+              $dups{$_}->{$a} <=> $dups{$_}->{$b}
+          } keys %{ $dups{$_} }
+        ]
+    } keys %dups;
 }
 
 # ---------------------------------

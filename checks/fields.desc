@@ -515,6 +515,12 @@ Info: The package seems to declare a relation on another package which is
  in that case, as it can only be fixed at the package-tools level (e.g., in
  dpkg)
 
+Tag: package-has-a-duplicate-build-relation
+Type: warning
+Info: The package declares the given build relations on the same package
+ in either Build-Depends or Build-Depends-Indep, but the build relations
+ imply each other and are therefore redundant.
+
 Tag: needlessly-depends-on-awk
 Type: error
 Info: The package seems to declare a relation on awk. awk is a virtual

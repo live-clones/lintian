@@ -626,10 +626,19 @@ if ($type eq "source") {
 			}
 		}
 	}
-	$depend{'build-depends'} = Dep::parse($depend{'build-depends'} || '');
-	$depend{'build-depends-indep'} = Dep::parse($depend{'build-depends-indep'} || '');
+
+	# Check for duplicates.
+	my $build_all = $depend{'build-depends'} || '';
+	$build_all .= ', ' if $depend{'build-depends'} && $depend{'build-depends-indep'};
+	$build_all .= $depend{'build-depends-indep'} || '';
+	my @dups = Dep::get_dups(Dep::parse($build_all));
+	for my $dup (@dups) {
+		tag "package-has-a-duplicate-build-relation", join (', ', @$dup);
+	}
 
 	# Make sure build dependencies and conflicts are consistent.
+	$depend{'build-depends'} = Dep::parse($depend{'build-depends'} || '');
+	$depend{'build-depends-indep'} = Dep::parse($depend{'build-depends-indep'} || '');
 	for ($depend{'build-conflicts'}, $depend{'build-conflicts-indep'}) {
 		next unless $_;
 		for my $conflict (split /\s*,\s*/, $_) {

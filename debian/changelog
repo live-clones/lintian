@@ -3,10 +3,11 @@ lintian (1.23.25) UNRELEASED; urgency=low
   * checks/debconf:
     + [CW] Don't trigger partially-translated-question when Choices-C exists
       but not Description-C.
-  * checks/fields.desc:
+  * checks/fields{.desc,}:
     + [RA] Improve the long descriptions of the warnings about dependencies
       on essential or build-essential packages to make it clearer that the
       correct resolution is normally to omit the dependency and why.
+    + [RA] Add a check for duplicate build dependencies.  (Closes: #359178)
   * checks/files:
     + [RA] Don't consider files named license.rb to be extraneous
       licenses.  Patch from NIIBE Yutaka.  (Closes: #387269)
@@ -29,8 +30,13 @@ lintian (1.23.25) UNRELEASED; urgency=low
       aa|bb implies aa|bb|cc.  Fix the comparison of dependencies for
       inverse implication to catch many more cases.  (The latter code
       isn't currently used in lintian.)
+    + [RA] Add an unparse function to take an internal representation and
+      convert it back to human-readable text.
+    + [RA] Significantly improve and rewrite the get_dups function to only
+      find relations that imply each other and to return the complete
+      duplicate dependencies in sets.
 
- -- Russ Allbery <rra@debian.org>  Sat, 23 Sep 2006 21:19:28 -0700
+ -- Russ Allbery <rra@debian.org>  Sat, 23 Sep 2006 22:57:34 -0700
 
 lintian (1.23.24) unstable; urgency=low
 
