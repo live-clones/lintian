@@ -88,7 +88,6 @@ sub implies {
     #use Data::Dumper;
 
     if ($q->[0] eq 'PRED') {
-	## N.B. AND and OR here do the same thing!!!
 	if ($p->[0] eq 'PRED') {
 	  	return Dep::pred_implies($p, $q);
 	} elsif ($p->[0] eq 'AND') {
@@ -114,15 +113,47 @@ sub implies {
 	}
 	return 1;
     } elsif ($q->[0] eq 'OR') {
-	# Any of q's clauses may be deduced from p.  This isn't entirely
-	# sufficient and will not correctly deduce that "a|b" implies "a|b|c".
-	# I don't see how to get that right using this code structure, or any
-	# simple change that would get it right.
-	$i = 1;
-	while ($i < @$q) {
-	    return 1 if Dep::implies($p, $q->[$i++]);
+	# If p is something other than OR, p needs to satisfy one of the
+	# clauses of q.	 If p is an AND clause, q is satisfied if any of the
+	# clauses of p satisfy it.
+	#
+	# The interesting case is OR.  In this case, do an OR to OR comparison
+	# to determine if q's clause is a superset of p's clause as follows:
+	# take each branch of p and see if it satisfies a branch of q.	If
+	# each branch of p satisfies some branch of q, return 1.  Otherwise,
+	# return 0.
+	#
+	# Simple logic that requires that p satisfy at least one of the
+	# clauses of q considered in isolation will miss that a|b satisfies
+	# a|b|c, since a|b doesn't satisfy any of a, b, or c in isolation.
+	if ($p->[0] eq 'PRED') {
+	    $i = 1;
+	    while ($i < @$q) {
+		return 1 if Dep::implies($p, $q->[$i++]);
+	    }
+	    return 0;
+	} elsif ($p->[0] eq 'AND') {
+	    $i = 1;
+	    while ($i < @$p) {
+		return 1 if Dep::implies($p->[$i++], $q);
+	    }
+	    return 0;
+	} elsif ($p->[0] eq 'OR') {
+	    for ($i = 1; $i < @$p; $i++) {
+		my $j = 1;
+		my $satisfies = 0;
+		while ($j < @$q) {
+		    if (Dep::implies($p->[$i], $q->[$j++])) {
+			$satisfies = 1;
+			last;
+		    }
+		}
+		return 0 unless $satisfies;
+	    }
+	    return 1;
+	} elsif ($p->[0] eq 'NOT') {
+	    return Dep::implies_inverse($p->[1], $q);
 	}
-	return 0;
     } elsif ($q->[0] eq 'NOT') {
 	if ($p->[0] eq 'NOT') {
 	    return Dep::implies($q->[1], $p->[1]);
@@ -131,8 +162,8 @@ sub implies {
     }
 }
 
-# Takes two predicate formulas and returns true iff the falsehood of
-# the second can be deduced from the truth of the first.
+# Takes two predicate formulas and returns true iff the falsehood of the
+# second can be deduced from the truth of the first.
 sub implies_inverse {
     my ($p, $q) = @_;
     my $i;
@@ -181,8 +212,10 @@ sub implies_inverse {
     }
 }
 
-# Takes two predicates and returns true iff the second can be deduced
-# from the first.
+# Takes two predicates and returns true iff the second can be deduced from the
+# first.  If the second is falsified by the first (in other words, if p
+# actually implies not q), return 0.  Otherwise, return undef.  The 0 return
+# is used by pred_implies_inverse.
 sub pred_implies {
     my ($p, $q) = @_;
     # If the names don't match, there is no relationship between them.
@@ -257,42 +290,74 @@ sub pred_implies {
     return 1 if not defined $$q[2];
 
     # If q does have a version clause, then p must also have one.
-    return 0 if not defined $$p[2];
+    return undef if not defined $$p[2];
 
+    # q wants an exact version, so p must provide that exact version.  p
+    # disproves q if q's version is outside the range enforced by p.
     if ($$q[2] eq '=') {
-	# q wants an exact version, so p must provide that exact version.
-	return ($$p[2] eq '=' and Dep::versions_equal($$p[3], $$q[3]));
+	if ($$p[2] eq '<<') {
+	    return Dep::versions_lte($$p[3], $$q[3]) ? 0 : undef;
+	} elsif ($$p[2] eq '<=') {
+	    return Dep::versions_lt($$p[3], $$q[3]) ? 0 : undef;
+	} elsif ($$p[2] eq '>>') {
+	    return Dep::versions_gte($$p[3], $$q[3]) ? 0 : undef;
+	} elsif ($$p[2] eq '>=') {
+	    return Dep::versions_gt($$p[3], $$q[3]) ? 0 : undef;
+	} elsif ($$p[2] eq '=') {
+	    return Dep::versions_equal($$p[3], $$q[3]);
+	}
     }
 
+    # A greater than clause may disprove a less than clause.  Otherwise, if
+    # p's clause is <<, <=, or =, the version must be <= q's to imply q.
     if ($$q[2] eq '<=') {
-	# A 'greater than' clause implies nothing about a 'lesser than'.
-	return undef if $$p[2] eq '>>' or $$p[2] eq '>=';
-	# If p's clause is << or <= or =, the version involved must be <= q's.
-	return Dep::versions_lte($$p[3], $$q[3]);
+	if ($$p[2] eq '>>') {
+	    return Dep::versions_gte($$p[3], $$q[3]) ? 0 : undef;
+	} elsif ($$p[2] eq '>=') {
+	    return Dep::versions_gt($$p[3], $$q[3]) ? 0 : undef;
+	} else {
+	    return Dep::versions_lte($$p[3], $$q[3]);
+	}
     }
 
+    # Similar, but << is stronger than <= so p's version must be << q's
+    # version if the p relation is <= or =.
     if ($$q[2] eq '<<') {
-	return undef if $$p[2] eq '>>' or $$p[2] eq '>=';
-	return Dep::versions_lte($$p[3], $$q[3]) if $$p[2] eq '<<';
-	return Dep::versions_lt($$p[3], $$q[3]);
+	if ($$p[2] eq '>>' or $$p[2] eq '>=') {
+	    return Dep::versions_gte($$p[3], $$p[3]) ? 0 : undef;
+	} elsif ($$p[2] eq '<<') {
+	    return Dep::versions_lte($$p[3], $$q[3]);
+	} else {
+	    return Dep::versions_lt($$p[3], $$q[3]);
+	}
     }
 
+    # Same logic as above, only inverted.
     if ($$q[2] eq '>=') {
-	return undef if $$p[2] eq '<<' or $$p[2] eq '<=';
-	return Dep::versions_gte($$p[3], $$q[3]);
+	if ($$p[2] eq '<<') {
+	    return Dep::versions_lte($$p[3], $$q[3]) ? 0 : undef;
+	} elsif ($$p[2] eq '<=') {
+	    return Dep::versions_lt($$p[3], $$q[3]) ? 0 : undef;
+	} else {
+	    return Dep::versions_gte($$p[3], $$q[3]);
+	}
     }
-
     if ($$q[2] eq '>>') {
-	return undef if $$p[2] eq '<<' or $$p[2] eq '<=';
-	return Dep::versions_gte($$p[3], $$q[3]) if $$p[2] eq '>>';
-	return Dep::versions_gt($$p[3], $$q[3]);
+	if ($$p[2] eq '<<' or $$p[2] eq '<=') {
+	    return Dep::versions_lte($$p[3], $$q[3]) ? 0 : undef;
+	} elsif ($$p[2] eq '>>') {
+	    return Dep::versions_gte($$p[3], $$q[3]);
+	} else {
+	    return Dep::versions_gt($$p[3], $$q[3]);
+	}
     }
 
     return undef;
 }
 
-# Takes two predicates and returns true iff the falsehood of the second
-# can be deduced from the truth of the first.
+# Takes two predicates and returns true iff the falsehood of the second can be
+# deduced from the truth of the first.  In other words, p implies not q, or
+# resstated, q implies not p.  (Since if a implies b, not b implies not a.)
 sub pred_implies_inverse {
     my ($p, $q) = @_;
     my $res = Dep::pred_implies($q, $p);

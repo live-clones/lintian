@@ -19,12 +19,15 @@ lintian (1.23.25) UNRELEASED; urgency=low
     + [RA] Add a separate tag for tclsh dependencies to explain about the
       virtual package and improve the description of the wish virtual
       package in its tag.  Fix inverted logic that got the wish dependency
-      backwards.  Restore the previous behavior of treating alternatives
-      as conjunction for script dependencies to work around a deficiency
-      in the dependency engine, manifesting as false positives for wish
-      and tclsh scripts.  Reported by Hamish Moffatt.  (Closes: #387845)
+      backwards.  Reported by Hamish Moffatt.  (Closes: #387845)
 
- -- Russ Allbery <rra@debian.org>  Sat, 16 Sep 2006 18:56:42 -0700
+  * lib/Dep.pm:
+    + [RA] Improve the dependency resolution engine so that it can prove
+      aa|bb implies aa|bb|cc.  Fix the comparison of dependencies for
+      inverse implication to catch many more cases.  (The latter code
+      isn't currently used in lintian.)
+
+ -- Russ Allbery <rra@debian.org>  Sat, 23 Sep 2006 20:57:02 -0700
 
 lintian (1.23.24) unstable; urgency=low
 

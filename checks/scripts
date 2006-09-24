@@ -205,13 +205,6 @@ while (<FILEINFO>) {
 }
 close(FILEINFO);
 
-# We transform alternatives separated by | into stronger dependencies
-# separated by ,.  This is done to avoid false positives with dependencies
-# like "tcl8.4 | tclsh" (sufficient for a tclsh script) and is required solely
-# because of deficiencies in our dependency evaluation engine.
-#
-# This may lead to false negatives when alternatives may allow necessary
-# packages to not be installed.  Hopefully those will be rare.
 my $all_deps = '';
 foreach my $depfield ('suggests', 'recommends', 'depends', 'pre-depends',
 		   'provides') {
@@ -220,7 +213,6 @@ foreach my $depfield ('suggests', 'recommends', 'depends', 'pre-depends',
 	$_ = join('', <IN>);
 	close(IN);
         chomp;
-        s/\|/,/g;
         $deps{$depfield} = $_;
         $all_deps .= ', ' if $all_deps;
         $all_deps .= $_;
