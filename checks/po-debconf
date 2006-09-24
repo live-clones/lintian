@@ -123,6 +123,10 @@ while (defined(my $file=readdir(DEBIAN))) {
                 last if m/^msgstr/m;
         }
         close(PO);
+	unless ($_) {
+		tag "invalid-po-file", "debian/po/$file";
+		next;
+	}
         s/"\n"//g;
         my $charset = '';
         if (m/charset=(.*?)\\n/) {

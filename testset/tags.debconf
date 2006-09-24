@@ -9,6 +9,7 @@ E: debconf-test: unknown-debconf-priority config:11 LOW
 E: debconf-test: unknown-debconf-priority config:12 normal
 E: debconf-udeb udeb: udeb-postinst-must-not-call-ldconfig
 W: debconf source: invalid-po-file debian/po/fr.po
+W: debconf source: invalid-po-file debian/po/sample-file.po
 W: debconf source: maintainer-script-lacks-debhelper-token debian/debconf-test.postinst
 W: debconf source: newer-debconf-templates
 W: debconf source: stray-translated-debconf-templates debconf-test.templates.de

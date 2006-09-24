@@ -13,6 +13,9 @@ lintian (1.23.25) UNRELEASED; urgency=low
   * checks/init.d:
     + [RA] Correctly handle LSB keywords which are present but have an
       empty value.  Reported by Erich Schubert.  (Closes: #386968)
+  * checks/po-debconf:
+    + [RA] Avoid Perl warnings on .po files that don't contain msgstr
+      lines.  Patch from Thomas Huriaux.  (Closes: #387357)
   * checks/scripts:
     + [RA] Add /usr/bin/gosh from the gauche package to the list of valid
       interpreters.  Thanks, Tatsuya Kinoshita.  (Closes: #386798)
@@ -27,7 +30,7 @@ lintian (1.23.25) UNRELEASED; urgency=low
       inverse implication to catch many more cases.  (The latter code
       isn't currently used in lintian.)
 
- -- Russ Allbery <rra@debian.org>  Sat, 23 Sep 2006 20:57:02 -0700
+ -- Russ Allbery <rra@debian.org>  Sat, 23 Sep 2006 21:19:28 -0700
 
 lintian (1.23.24) unstable; urgency=low
 
