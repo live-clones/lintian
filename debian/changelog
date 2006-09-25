@@ -3,6 +3,10 @@ lintian (1.23.25) UNRELEASED; urgency=low
   * checks/debconf:
     + [CW] Don't trigger partially-translated-question when Choices-C exists
       but not Description-C.
+  * checks/debdiff:
+    + [RA] Remove the source-tar-is-posix-tar tag.  This was only a
+      problem for woody and earlier, and woody support is no longer
+      needed.  Reported by Loïc Minier.  (Closes: #385833)
   * checks/fields{.desc,}:
     + [RA] Improve the long descriptions of the warnings about dependencies
       on essential or build-essential packages to make it clearer that the
@@ -14,6 +18,9 @@ lintian (1.23.25) UNRELEASED; urgency=low
   * checks/init.d:
     + [RA] Correctly handle LSB keywords which are present but have an
       empty value.  Reported by Erich Schubert.  (Closes: #386968)
+  * checks/lintian.desc:
+    + [RA] Add tags for missing and bad Urgency fields in *.changes files.
+    + [RA] Improve the no-description-in-changes-file information.
   * checks/po-debconf:
     + [RA] Avoid Perl warnings on .po files that don't contain msgstr
       lines.  Patch from Thomas Huriaux.  (Closes: #387357)
@@ -24,6 +31,10 @@ lintian (1.23.25) UNRELEASED; urgency=low
       virtual package and improve the description of the wish virtual
       package in its tag.  Fix inverted logic that got the wish dependency
       backwards.  Reported by Hamish Moffatt.  (Closes: #387845)
+
+  * frontend/lintian:
+    + [RA] Check the existence and value of the Urgency field in *.changes
+      files.  (Closes: #384219)
 
   * lib/Dep.pm:
     + [RA] Improve the dependency resolution engine so that it can prove
@@ -36,7 +47,7 @@ lintian (1.23.25) UNRELEASED; urgency=low
       find relations that imply each other and to return the complete
       duplicate dependencies in sets.
 
- -- Russ Allbery <rra@debian.org>  Sat, 23 Sep 2006 22:57:34 -0700
+ -- Russ Allbery <rra@debian.org>  Sun, 24 Sep 2006 20:42:56 -0700
 
 lintian (1.23.24) unstable; urgency=low
 

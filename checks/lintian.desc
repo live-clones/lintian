@@ -4,8 +4,10 @@ Info: this description file is a special case: it contains the tag info
 
 Tag: no-description-in-changes-file
 Type: error
-Info: There is no "Description" field in your .changes file
- A description is mandatory
+Info: There is no "Description" field in your .changes file.  A
+ description is mandatory and is usually constructed from the descriptions
+ in the control file of the package by the package build tools.
+Ref: policy 5.5
 
 Tag: bad-distribution-in-changes-file
 Type: error
@@ -16,6 +18,21 @@ Info: You've specified an unknown `target distribution' for your upload in
  are no longer valid. You'll have to use distribution
  `<tt>unstable</tt>' and `<tt>Section: non-free/xxx</tt>' or
  `<tt>Section: contrib/xxx</tt>' instead.
+
+Tag: no-urgency-in-changes-file
+Type: warning
+Info: There is no "Urgency" field in the .changes file.  This field is
+ recommended by policy and is usually derived from the first line of the
+ most recent changelog entry by the package build tools.
+Ref: policy 5.5
+
+Tag: bad-urgency-in-changes-file
+Type: error
+Info: The keyword value of the "Urgency" field in the .changes file is not
+ one of the allowed values of low, medium, and high (case-insensitive).
+ This value normally taken from the first line of the most recent entry in
+ <tt>debian/changelog</tt>, which is probably where the error is.
+Ref: policy 5.6.17
 
 Tag: file-size-mismatch-in-changes-file
 Type: error

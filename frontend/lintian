@@ -642,6 +642,17 @@ while (my $arg = shift) {
 		    $data->{'distribution'});
 	    }
 
+	    # Urgency is only recommended by Policy.
+	    if (!$data->{'urgency'}) {
+		tag("no-urgency-in-changes-file");
+	    } else {
+		my $urgency = lc $data->{'urgency'};
+		$urgency =~ s/ .*//;
+		unless ($urgency =~ /^(low|medium|high)$/) {
+		    tag("bad-urgency-in-changes-file", $data->{'urgency'});
+		}
+	    }
+
 	    # process all listed `files:'
 	    for (split(/\n/o,$data->{'files'})) {
 		chomp;

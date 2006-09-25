@@ -1,4 +1,4 @@
-# debdiff -- Lintian check script
+# debdiff -- Lintian check script -*- perl -*-
 
 # Copyright (C) 1998 Richard Braakman
 #
@@ -55,17 +55,6 @@ while (<STAT>) {
 	if ($file =~ m%^debian/substvars$%);
 }
 close(STAT) or fail("error reading diffstat file: $!");
-
-# Check whether a tar.gz file is accidentally POSIX tar, which woody's tar
-# can't cope with...
-for my $tar (<*.tar.gz>) {
-    open HEAD, '-|', 'zcat '.quotemeta($tar) or fail("Couldn't open ${tar}: $!");
-	my $head = "";
-    sysread HEAD, $head, 13 or fail("Couldn't read first part of $tar: $!");
-    tag "source-tar-is-posix-tar", "$tar"
-    	if $head eq './PaxHeaders.';
-    close HEAD;
-}
 
 } # </run>
 

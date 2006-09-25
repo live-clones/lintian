@@ -31,15 +31,3 @@ Info: Lintian found a substvars file in the Debian diff for this source
  dynamically by debian/rules targets, in which case it must be removed by
  the clean target.
 Ref: policy 4.9
-
-Tag: source-tar-is-posix-tar
-Type: error
-Info: The source tar archive of this package is made with tar --posix. This
- tar format is actually not understood by woody's tar.
- .
- Some automake 1.7 and 1.8 versions in Debian had this wrong tar option for a
- short time, re-autobuilding should solve this. Please see
- http://lists.debian.org/debian-devel/2004/debian-devel-200404/msg01376.html
- and
- http://lists.debian.org/debian-devel/2004/debian-devel-200404/msg01586.html
- for more details.
