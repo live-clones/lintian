@@ -113,7 +113,7 @@ my %interpreter_dependencies = (
 				'ash' => 'ash',
 				'bltwish' => 'blt',
 				'burlap' => 'felt',
-				'csh' => 'c-shell',
+				'csh' => 'c-shell | tcsh',
 				'dash' => 'dash',
 				'expect' => 'expect',
 				'expectk' => 'expectk',
@@ -657,7 +657,7 @@ sub script_is_evil_and_wrong {
 	next if /^#/o;
 	next if /^$/o;
         last if (++$i > 20);
-        if (/(^\s*|\beval\s*\'|;)?exec\s*.+\s*.?\$0.?\s*(--\s*)?(\${1\+)?.?\$\@/o) {
+        if (/(^\s*|\beval\s*\'|;)exec\s*.+\s*.?\$0.?\s*(--\s*)?(\${1:?\+)?.?\$\@/o) {
             $ret = 1;
             last;
         }

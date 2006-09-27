@@ -31,6 +31,10 @@ lintian (1.23.25) UNRELEASED; urgency=low
       virtual package and improve the description of the wish virtual
       package in its tag.  Fix inverted logic that got the wish dependency
       backwards.  Reported by Hamish Moffatt.  (Closes: #387845)
+    + [RA] Allow tcsh to satisfy a csh dependency.  Reported by Yann
+      Dirson.  (Closes: #389615)
+    + [RA] Improve the check for shell scripts that are actually exec
+      wrappers around scripts written in another language.
 
   * frontend/lintian:
     + [RA] Check the existence and value of the Urgency field in *.changes
