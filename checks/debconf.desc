@@ -87,11 +87,6 @@ Info: The long description of one of the templates provided by this package
  is a duplicate of the short description. If you cannot provide a good
  extended description, it is better to leave it blank.
 
-Tag: select-with-translated-default-field
-Type: warning
-Info: You do not need to translate `Default:' fields of `select' or
- `multiselect' questions in templates.
-
 Tag: partially-translated-question
 Type: warning
 Info: If you translate the `Choices:' fields in a template, you should

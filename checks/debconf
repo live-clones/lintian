@@ -215,10 +215,6 @@ foreach my $template (@templates) {
 	# Tests on translations
 	my ($mainfield, $lang) = split m/-/, $field, 2;
 	if (defined $lang) {
-	    if ($isselect and $mainfield eq 'default') {
-	        tag "select-with-translated-default-field",
-	              "$template->{template} $lang";
-	    }
 	    $languages{$lang}{$mainfield}=1;
 	}
 	unless ($template_fields{$mainfield}) { # Ignore language codes here
@@ -255,8 +251,9 @@ foreach my $template (@templates) {
     } else {
         ($short, $extended) = ('', '');
     }
+    my $type = $template->{type} || '';
     unless ($short =~ /for internal use/i) {
-	my $isprompt = grep { $_ eq $template->{type} } qw(string select password multiselect);
+	my $isprompt = grep { $_ eq $type } qw(string select password multiselect);
 	if ($isprompt) {
 	    if ($short && $short !~ m/:$/) {
 		tag "malformed-prompt-in-templates", $template->{template};
@@ -265,7 +262,7 @@ foreach my $template (@templates) {
 		tag "using-imperative-form-in-templates", $template->{template};
 	    }
 	}
-	if ($template->{type} eq 'boolean') {
+	if ($type eq 'boolean') {
 	    if ($short !~ /\?/) {
 		tag "malformed-question-in-templates", $template->{template};
 	    }
@@ -273,7 +270,7 @@ foreach my $template (@templates) {
 		tag "using-question-in-extended-description-in-templates", $template->{template};
 	    }
 	}
-	if ($template->{type} eq 'note') {
+	if ($type eq 'note') {
 	    if ($short =~ /[.?;:]$/) {
 		tag "malformed-title-in-templates", $template->{template};
 	    }

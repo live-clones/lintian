@@ -63,3 +63,14 @@ Info: debconf-updatepo has not been run since the last change to your
  This can be ensured by running debconf-updatepo in the 'clean' target
  of <tt>debian/rules</tt>. PO files will then always be up-to-date when
  building the source package.
+
+Tag: translated-default-field
+Type: warning
+Info: You should not mark as translatable "Default:" or "DefaultChoice:"
+ fields, unless explicitly needed (e.g. default country, default language,
+ etc.).  If this Default field really should be translated, you should
+ explain translators how they should translate it by using brackets.  For
+ example:
+ .
+   _Default: English[ Default language name, but not translated]
+Ref: po-debconf(7)

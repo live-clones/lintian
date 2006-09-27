@@ -3,6 +3,10 @@ lintian (1.23.25) UNRELEASED; urgency=low
   * checks/debconf:
     + [CW] Don't trigger partially-translated-question when Choices-C exists
       but not Description-C.
+    + [RA] Remove select-with-translated-default-field since there are
+      cases where this is correct and we can perform a better check
+      against the source package.  Patch from Thomas Huriaux.
+    + [RA] Fix Perl warnings when a template has no type.
   * checks/debdiff:
     + [RA] Remove the source-tar-is-posix-tar tag.  This was only a
       problem for woody and earlier, and woody support is no longer
@@ -24,6 +28,9 @@ lintian (1.23.25) UNRELEASED; urgency=low
   * checks/po-debconf:
     + [RA] Avoid Perl warnings on .po files that don't contain msgstr
       lines.  Patch from Thomas Huriaux.  (Closes: #387357)
+    + [RA] Check templates for a translatable Default or DefaultChoice
+      field and warn if there isn't a translator comment.  Patch from
+      Thomas Huriaux.  (Closes: #388824)
   * checks/scripts:
     + [RA] Add /usr/bin/gosh from the gauche package to the list of valid
       interpreters.  Thanks, Tatsuya Kinoshita.  (Closes: #386798)
@@ -55,7 +62,7 @@ lintian (1.23.25) UNRELEASED; urgency=low
     + [RA] Document setting TMPDIR to change the location of lintian's
       temporary lab.  (Closes: #388786)
 
- -- Russ Allbery <rra@debian.org>  Tue, 26 Sep 2006 20:43:59 -0700
+ -- Russ Allbery <rra@debian.org>  Tue, 26 Sep 2006 21:25:03 -0700
 
 lintian (1.23.24) unstable; urgency=low
 

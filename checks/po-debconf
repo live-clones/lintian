@@ -38,6 +38,13 @@ for my $file (readdir(DEB)) {
 	        $has_template = 1;
 		if ($file =~ m/templates\.\w\w(_\w\w)?$/) {
 			push (@lang_templates, $file);
+		} else {
+			open(PO, "< debfiles/$file")
+				or fail("Can't open debfiles/$file file.");
+			while (<PO>) {
+				tag "translated-default-field", "$file: $."
+					if (m/^_Default(Choice)?: [^[]*$/);
+			}
 		}
 	}
 }
