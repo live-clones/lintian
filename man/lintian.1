@@ -583,6 +583,16 @@ The directory given with the \-\-cfg option
 .PP
 Lintian uses the following directories:
 .TP
+.I /tmp
+If no lab location is specified via the LINTIAN_LAB environment variable,
+configuration, or the
+.B \-\-lab
+command-line option, lintian defaults to creating a temporary lab
+directory in
+.IR /tmp .
+To change the directory used, set the TMPDIR environment variable to a
+suitable directory.
+.TP
 .I /usr/share/lintian/checks
 Scripts that check aspects of a package.
 .TP

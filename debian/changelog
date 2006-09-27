@@ -51,7 +51,11 @@ lintian (1.23.25) UNRELEASED; urgency=low
       find relations that imply each other and to return the complete
       duplicate dependencies in sets.
 
- -- Russ Allbery <rra@debian.org>  Sun, 24 Sep 2006 20:42:56 -0700
+  * man/lintian.1:
+    + [RA] Document setting TMPDIR to change the location of lintian's
+      temporary lab.  (Closes: #388786)
+
+ -- Russ Allbery <rra@debian.org>  Tue, 26 Sep 2006 20:43:59 -0700
 
 lintian (1.23.24) unstable; urgency=low
 
