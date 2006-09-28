@@ -279,7 +279,7 @@ Info: This script calls suidregister which is no longer needed, a new
 Tag: maintainer-script-needs-depends-on-netbase
 Type: warning
 Info: This script calls update-inetd, but the package does not depend or
- pre-depend on netbase, which provides it.
+ pre-depend on either netbase or update-inetd, which provide it.
 
 Tag: maintainer-script-needs-depends-on-adduser
 Type: warning

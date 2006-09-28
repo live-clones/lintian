@@ -167,7 +167,7 @@ my %interpreter_dependencies = (
 my @depends_needed = (
 	[ adduser => '\badduser\b' ],
 	[ 'gconf2 (>= 2.10.1-2)' => '\bgconf-schemas\b' ],
-	[ netbase => '\bupdate-inetd\b' ],
+	[ 'netbase | update-inetd' => '\bupdate-inetd\b' ],
 	[ ucf => '\bucf\s' ],
 );
 

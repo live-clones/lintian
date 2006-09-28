@@ -42,6 +42,8 @@ lintian (1.23.25) UNRELEASED; urgency=low
       Dirson.  (Closes: #389615)
     + [RA] Improve the check for shell scripts that are actually exec
       wrappers around scripts written in another language.
+    + [RA] Allow update-inetd to fulfill the dependency requirements for
+      the update-inetd script.  Thanks, Michael Holzt.  (Closes: #389960)
 
   * frontend/lintian:
     + [RA] Check the existence and value of the Urgency field in *.changes
