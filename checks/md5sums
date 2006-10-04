@@ -94,7 +94,7 @@ for my $file (keys %control_entry) {
 }
 for my $file (keys %info_entry) {
     tag "file-missing-in-md5sums", "$file"
-	unless ($conffile{$file});
+	unless ($conffile{$file} || $file =~ m%^var/lib/aspell/.%);
 }
 
 }
