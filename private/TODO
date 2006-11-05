@@ -1,40 +1,24 @@
 Not intended for single bug fixes, use the confirmed and owner tags
 in the BTS, but for somewhat bigger tasks
 
-goals for 1.22.12 [08.03.2004 - surely in Sarge]
-================================================
-
-- bring the bug count down (normal/minor) -- I think we've done
-  this fairly well
-
-goals for 1.23.0 [04.2004 - should get into Sarge]
-===================================================
-
-- add .udeb support -- done
-  (#216117)
-- overhaul the overrides concept to enable source overrides -- done
-  (#129510)
-- update debian/copyright. List of authors seems rather outdated -- done
-- update doc/* to reflect current lintian versions and not some from
-  the last century ;) -- done
-
-goals for 1.23.1 [07.2004]
-==========================
-
-- fix anything we broke in 1.23.0 and that prevents us from
-  getting 1.23.0 to testing -- severest mistakes are done
-- go through all checks and try to move common code to modules
-  -- partly done
-
-goals for 1.23.2 [??]
-======================
-
 goals for 1.24.0 [???]
 ======================
 
+- go through all checks and try to move common code to modules
+  -- partly done
 - overhaul the Errors/Warnings concept
   (#197955, #189656)
-  -- wil make a proposal after 1.23.1 is released, djpig
+  -- will make a proposal after 1.23.1 is released, djpig
+  -- rra: I think we need to classify tags on three axes:
+     --- source of check (policy, devref, library, utility man page)
+     --- reliability (how sure is lintian the problem is present)
+     --- severity (how big of a problem is this)
+     where the last corresponds to the current errors/warnings concept and
+     the others aren't currently present.  We then need to allow users to
+     select what they want to see based on any of the three criteria; for
+     instance, ftp-master may want to run lintian in a mode that only does
+     Policy and "package would be broken" checks with severity error and
+     the top reliability rating.
 
 goals not targetted
 ===================
@@ -47,6 +31,21 @@ goals not targetted
 - Go through testset/libbaz/debian/rules, and make sure all TODO's are
   lintian-detected
 - move the SVN to Alioth and merge the old CVS rep in
+- go through all tags and make sure that any that should have Polcy
+  references have them, and more generally that appropriate references are
+  present
+- remove old unbalance `' quotes from all tag descriptions
+
+goals outside of the lintian source
+===================================
+
+- get lintian.debian.org working again with the current lintian
+- set up system for automatically filing bugs based on specific lintian
+  tags (the most reliable ones), with usertags to ensure the bugs aren't
+  repeatedly filed
+- set up lintian for use on ftp-master so that it can be used to
+  automatically REJECT packages with particular errors.  will require a
+  mode that only runs important checks that are highly reliable
 
 old todo list
 =============
