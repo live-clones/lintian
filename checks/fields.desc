@@ -483,6 +483,15 @@ Type: error
 Ref: policy 4.2
 Info: The package doesn't specify a build dependency on a package that is
  used in <tt>debian/rules</tt>.
+ .
+ lintian intentionally does not take into account transitive dependencies.
+ Even if the package build-depends on some package that in turn
+ build-depends on the needed package, an explicit build dependency should
+ be added.  Otherwise, a latent bug is created that will appear without
+ warning if the other package is ever updated to change its dependencies.
+ Even if this seems unlikely, please always add explicit build
+ dependencies on every non-essential, non-build-essential package that is
+ used directly during the build.
 
 Tag: missing-dh_python-build-dependency
 Type: error

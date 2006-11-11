@@ -1,3 +1,11 @@
+lintian (1.23.26) UNRELEASED; urgency=low
+
+  * checks/fields.desc:
+    + [RA] Clarify in missing-build-dependency why lintian does not take
+      into account transitive build dependencies.  (Closes: #393975)
+
+ -- Russ Allbery <rra@debian.org>  Fri, 10 Nov 2006 18:16:21 -0800
+
 lintian (1.23.25) unstable; urgency=low
 
   The "dependency and debconf" release
