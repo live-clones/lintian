@@ -8,34 +8,34 @@ Needs-Info: file-info, changelog-file
 Info: This script checks if a binary package conforms to policy
  with regards to changelog files.
  .
- Each binary package with a /usr/share/doc/&lt;foo&gt; directory must have a
- Debian changelog file in `changelog.Debian.gz' unless the Debian
+ Each binary package with a /usr/share/doc/&lt;foo&gt; directory must have
+ a Debian changelog file in "changelog.Debian.gz" unless the Debian
  changelog and the upstream one is the same file; in this case, it
- must be in `changelog.gz'.
+ must be in "changelog.gz".
  .
  If there is an upstream changelog file, it must be named
- `changelog.gz'.
+ "changelog.gz".
  .
- Both changelog files must be compressed using `gzip -9'.
+ Both changelog files should be compressed using "gzip -9".
  Even if they start out small, they will become large with time.
 
 Tag: html-changelog-without-text-version
 Type: error
-Info: If the upstream changelog file is HTML formatted, a text version must
- also be accessible as `changelog.gz'. (This can be created by
- `lynx -dump -nolist')
+Info: If the upstream changelog file is HTML formatted, a text version
+ should also be accessible as "changelog.gz". (This can be created by
+ "lynx -dump -nolist")
 Ref: policy 12.7
 
 Tag: changelog-file-not-compressed
-Type: error
-Info: Changelog files must be compressed using `gzip -9'.
- Even if they start out small, they will become large with time.
+Type: warning
+Info: Changelog files should be compressed using "gzip -9".  Even if they
+ start out small, they will become large with time.
 Ref: policy 12.7
 
 Tag: changelog-not-compressed-with-max-compression
-Type: error
-Info: Changelog files must be compressed using `gzip -9', i.e. using the
- maximum compression level via the `-9' option to gzip.
+Type: warning
+Info: Changelog files should be compressed using "gzip -9"; i.e., using
+ the maximum compression level via the -9 option to gzip.
 Ref: policy 12.7
 
 Tag: wrong-name-for-changelog-of-native-package
@@ -94,17 +94,16 @@ Info: The Debian changelog file is a symlink to a file in a different
 Tag: debian-changelog-file-missing-or-wrong-name
 Type: error
 Info: Each Debian package (which provides a /usr/share/doc/<i>pkg</i>
- directory) has to install a Debian changelog file
+ directory) must install a Debian changelog file in
  /usr/share/doc/<i>pkg</i>/changelog.Debian.gz
  .
- A common error is to name the Debian changelog like an upstream
- changelog (/usr/share/doc/<i>pkg</i>/changelog.gz) therefor
- lintian will apply further checks to such a file if it exists
- even after issuing this error.
+ A common error is to name the Debian changelog like an upstream changelog
+ (/usr/share/doc/<i>pkg</i>/changelog.gz); therefore, lintian will apply
+ further checks to such a file if it exists even after issuing this error.
 Ref: policy 12.7
 
 Tag: debian-changelog-file-contains-obsolete-user-emacs-settings
-Type: error
+Type: warning
 Info: The add-log-mailing-address variable is no longer honored in
  debian-changelog-mode, and should not appear in packages' changelog
  files.  Instead, put something like this in your ~/.emacs:
@@ -118,8 +117,8 @@ Info: The changelog file contains an email address (&lt;..@unknown&gt;)
 
 Tag: debian-changelog-file-contains-invalid-email-address
 Type: error
-Info: The changelog file contains an invalid email address: the domain needs
- at least one dot. This is looks like a mistake.
+Info: The changelog file contains an invalid email address: the domain
+ needs at least one dot. This is looks like a mistake.
 
 Tag: debian-changelog-file-uses-obsolete-national-encoding
 Type: error
@@ -134,8 +133,8 @@ Info: The Debian changelog file must be valid UTF-8, an encoding of
 
 Tag: latest-debian-changelog-entry-without-new-date
 Type: warning
-Info: The latest Debian changelog has either the same or even an older date
- as the entry before.
+Info: The latest Debian changelog has either the same or even an older
+ date as the entry before.
 
 Tag: syntax-error-in-debian-changelog
 Type: warning

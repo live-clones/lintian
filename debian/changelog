@@ -5,6 +5,12 @@ lintian (1.23.26) UNRELEASED; urgency=low
       Thanks, Bas Wijnen.  (Closes: #394419)
     + [RA] Add a special exception to the shared library dependency check
       for the dynamic loader itself.
+  * checks/changelog-file.desc:
+    + [RA] Downgrade to a warning several errors with changelog files,
+      including compression and a text version of HTML changelogs, that
+      are only shoulds in Policy.  (Closes: #289723)
+    + [RA] Cleaned up language and use of unbalanced single quotes in
+      numerous descriptions.
   * checks/control-file{.desc,}:
     + [RA] Diagnose a control file that creates binary packages in a
       different archive category from the source package or the other
@@ -31,7 +37,7 @@ lintian (1.23.26) UNRELEASED; urgency=low
       various subdirectories of its standard search path based on hardware
       capabilities.  Reported by Aurelien Jarno.  (Closes: #396278)
 
- -- Russ Allbery <rra@debian.org>  Fri, 10 Nov 2006 20:39:32 -0800
+ -- Russ Allbery <rra@debian.org>  Fri, 10 Nov 2006 20:56:37 -0800
 
 lintian (1.23.25) unstable; urgency=low
 

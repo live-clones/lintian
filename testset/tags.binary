@@ -1,5 +1,4 @@
 E: binary source: debian-rules-missing-required-target binary-indep
-E: binary: changelog-file-not-compressed changelog
 E: binary: debian-changelog-file-missing-or-wrong-name
 E: binary: depends-on-x-metapackage depends: xorg
 E: binary: doc-base-file-references-missing-file binary:11 /usr/share/doc/binary/binary.sgml.gz
@@ -38,6 +37,7 @@ W: binary: binary-without-manpage hello-static
 W: binary: binary-without-manpage hello.static
 W: binary: binary-without-manpage iminusrbin
 W: binary: binary-without-manpage static-hello
+W: binary: changelog-file-not-compressed changelog
 W: binary: doc-base-file-unknown-format binary:14 esp
 W: binary: executable-not-elf-or-script ./usr/bin/iminusrbin
 W: binary: file-in-unusual-dir usr/bar
