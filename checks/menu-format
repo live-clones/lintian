@@ -1,4 +1,4 @@
-# menu format -- lintian check script
+# menu format -- lintian check script -*- perl -*-
 
 # Copyright (C) 1998 by Joey Hess
 #
@@ -93,6 +93,9 @@ my @sections=qw(
 		WindowManagers/Modules
 		XShells
 	       );
+
+# Path in which to search for binaries referenced in menu entries.
+my @path = qw(/usr/local/bin/ /usr/bin/ /bin/ /usr/X11R6/bin/ /usr/games/);
 
 my %known_tags_hash;
 my %needs_tag_vals_hash;
@@ -316,8 +319,8 @@ sub VerifyLine {
 
     # Sanitize the section tag
     my $section = $vals{'section'};
-	$section =~ tr:/:/:s;	# eliminate duplicate slashes.
-	$section =~ s:/$::;	# remove trailing slash.
+    $section =~ tr:/:/:s;	# eliminate duplicate slashes.
+    $section =~ s:/$::;		# remove trailing slash.
 	
     # Read the file index:
     my %file_index;
@@ -327,48 +330,47 @@ sub VerifyLine {
     }
     close FILE_INDEX;
 
-	my @com=split(' ',$vals{'command'});
-	if ($com[0] eq "/usr/sbin/su-to-root") {
-	    tag "su-to-root-with-usr-sbin", "$fullname:$linecount";
-	} elsif ($com[0] =~ m,(/usr/bin/)?su-to-root,o) {
-	    shift @com;
-	    
-            my $cmd;
-            while (@com) {
-                if ($com[0]) {
-                    if ($com[0] eq '-p') {
-                        shift @com;
-                        shift @com;
-                    } elsif ($com[0] eq '-X') {
-                        shift @com;
-                    } elsif ($com[0] eq '-c') {
-                        $cmd = $com[1];
-                        shift @com;
-                        shift @com;
-                    } else {
-                        shift @com;
-                    }
-                } else {
-                    shift @com;
-                }
-            }
-            
-            unless ($cmd) {
-		tag "su-to-root-without--c", "$fullname:$linecount";
-	    } else {   
-		tag "menu-command-not-in-package", "$fullname:$linecount $cmd"
-		    if (!($file_index{".$cmd"} 
-			|| grep {$file_index{".".$_.$cmd}} qw(/usr/local/bin/ /usr/bin/ /bin/ /usr/X11R6/bin/ /usr/games/)) # Check for binary in PATH
-			&& ($tested_packages < 2)
-			&& ($section !~ m:^WindowManagers/Modules:));
+    # Handle su wrappers.  The option parsing here is ugly and dead-simple,
+    # but it's hopefully good enough for what will show up in menu files.
+    # su-to-root and sux require -c options, kdesu optionally allows one, and
+    # gksu has the command at the end of its arguments.
+    my @com = split(' ',$vals{'command'});
+    my $cmd;
+    if ($com[0] eq "/usr/sbin/su-to-root") {
+	tag "su-to-root-with-usr-sbin", "$fullname:$linecount";
+    } elsif ($com[0] =~ m,^(?:/usr/bin/)?(su-to-root|gksu|kdesu|sux)$,) {
+	my $wrapper = $1;
+	shift @com;
+	while (@com) {
+	    unless ($com[0]) {
+		shift @com;
+		next;
 	    }
-	} else {
-	    tag "menu-command-not-in-package", "$fullname:$linecount $com[0]"
-	        if ($com[0] && ! ($file_index{".$com[0]"}
-		    || grep {$file_index{".".$_.$com[0]}} qw(/usr/local/bin/ /usr/bin/ /bin/ /usr/X11R6/bin/ /usr/games/)) # Check for binary in PATH
-		    && ($tested_packages < 2)
-		    && ($section !~ m:^WindowManagers/Modules:));
+	    if ($com[0] eq '-c') {
+		$cmd = $com[1];
+		last;
+	    } elsif ($com[0] =~ /^-[Dfmupi]|^--(user|description|message)/) {
+		shift @com;
+		shift @com;
+	    } elsif ($com[0] =~ /^-/) {
+		shift @com;
+	    } else {
+		last;
+	    }
 	}
+	if (!$cmd && $wrapper =~ /^(gk|kde)su$/) {
+	    $cmd = $com[0];
+	} elsif (!$cmd) {
+	    tag "su-wrapper-without--c", "$fullname:$linecount $wrapper";
+	}
+    } else {
+	$cmd = $com[0];
+    }
+    tag "menu-command-not-in-package", "$fullname:$linecount $cmd"
+	if ($cmd
+	    && !($file_index{".$cmd"} || grep {$file_index{".".$_.$cmd}} @path)
+	    && ($tested_packages < 2)
+	    && ($section !~ m:^WindowManagers/Modules:));
 
     if (exists($vals{'icon'})) {
 	VerifyIcon($menufile, $fullname, $linecount, $vals{'icon'}, 32);

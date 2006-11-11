@@ -9,6 +9,8 @@ E: binary: doc-base-file-references-missing-file binary:24 /usr/share/doc/binary
 E: binary: doc-base-index-references-multiple-files binary:19
 E: binary: file-directly-in-usr-share usr/share/baz
 E: binary: lengthy-symlink usr/share/doc/binary/html/ch2.html ../html/./ch1.html
+E: binary: menu-item-missing-required-tag needs /usr/lib/menu/binary:6
+E: binary: menu-item-missing-required-tag needs /usr/share/menu/binary:6
 E: binary: menu-item-missing-required-tag section /usr/lib/menu/binary:1
 E: binary: menu-item-missing-required-tag section /usr/share/menu/binary:1
 E: binary: non-wm-in-windowmanager-menu-section x11 /usr/lib/menu/binary:4
@@ -18,10 +20,10 @@ E: binary: postinst-does-not-call-updatemenus usr/lib/menu/binary
 E: binary: postrm-does-not-call-updatemenus usr/lib/menu/binary
 E: binary: prerm-does-not-call-installdocs usr/share/doc-base/binary
 E: binary: statically-linked-binary ./usr/bin/static-hello
-E: binary: su-to-root-without--c /usr/lib/menu/binary:2
-E: binary: su-to-root-without--c /usr/lib/menu/binary:3
-E: binary: su-to-root-without--c /usr/share/menu/binary:2
-E: binary: su-to-root-without--c /usr/share/menu/binary:3
+E: binary: su-wrapper-without--c /usr/lib/menu/binary:2 su-to-root
+E: binary: su-wrapper-without--c /usr/lib/menu/binary:3 sux
+E: binary: su-wrapper-without--c /usr/share/menu/binary:2 su-to-root
+E: binary: su-wrapper-without--c /usr/share/menu/binary:3 sux
 E: binary: suidregister-used-in-maintainer-script postinst
 E: binary: symlink-contains-spurious-segments usr/share/doc/binary/html/ch2.html ../html/./ch1.html
 E: binary: symlink-should-be-relative usr/share/doc/binary/html/ch3.html /usr/share/doc/binary/htm/ch1.html
@@ -43,8 +45,10 @@ W: binary: changelog-file-not-compressed changelog
 W: binary: doc-base-file-unknown-format binary:14 esp
 W: binary: executable-not-elf-or-script ./usr/bin/iminusrbin
 W: binary: file-in-unusual-dir usr/bar
-W: binary: menu-command-not-in-package /usr/lib/menu/binary:6 /imnothere
-W: binary: menu-command-not-in-package /usr/share/menu/binary:6 /imnothere
+W: binary: menu-command-not-in-package /usr/lib/menu/binary:11 imnothere
+W: binary: menu-command-not-in-package /usr/lib/menu/binary:7 /imnothere
+W: binary: menu-command-not-in-package /usr/share/menu/binary:11 imnothere
+W: binary: menu-command-not-in-package /usr/share/menu/binary:7 /imnothere
 W: binary: menu-file-in-usr-lib usr/lib/menu/binary
 W: binary: menu-item-needs-tag-has-unknown-value wm /usr/lib/menu/binary:5
 W: binary: menu-item-needs-tag-has-unknown-value wm /usr/share/menu/binary:5

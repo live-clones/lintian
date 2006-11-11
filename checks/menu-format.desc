@@ -125,10 +125,11 @@ Info: The icon file could not be parsed.  Perhaps this means a bad XPM file,
  window managers and standard tools accept the file then probably it's the
  latter; please file a bug on lintian then.
 
-Tag: su-to-root-without--c
+Tag: su-wrapper-without--c
 Type: error
-Info: The menu item command uses su-to-root without the -c flag. This is
- a syntax error, see su-to-root(1) for more information.
+Info: The menu item command uses an su wrapper such as su-to-root without
+ the -c flag. This is a syntax error.
+Ref: su-to-root(1)
 
 Tag: su-to-root-with-usr-sbin
 Type: warning
