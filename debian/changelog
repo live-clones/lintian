@@ -16,6 +16,13 @@ lintian (1.23.26) UNRELEASED; urgency=low
       different archive category from the source package or the other
       binary packages.  Idea from Yann Dirson.  (Closes: #394720)
     + [RA] Close opened files.
+  * checks/cruft{.desc,}:
+    + [RA] Tighten the timestamp check on config.{sub,guess} to look for
+      files dated 2004 or newer, since that's when x86_64 was added.
+      Increase to an error at the request of Ryan Murray since we already
+      suppress this warning of config.{guess,sub} are modified by the
+      Debian patch or if the package build-depends on autotools-dev.
+      (Closes: #190897)
   * checks/debconf{.desc,}:
     + [RA] Take into account comma escaping when checking the number of
       translated choices.  Reported by Frans Pop.  (Closes: #395028)
@@ -59,7 +66,7 @@ lintian (1.23.26) UNRELEASED; urgency=low
       various subdirectories of its standard search path based on hardware
       capabilities.  Reported by Aurelien Jarno.  (Closes: #396278)
 
- -- Russ Allbery <rra@debian.org>  Fri, 10 Nov 2006 22:45:51 -0800
+ -- Russ Allbery <rra@debian.org>  Fri, 10 Nov 2006 23:50:52 -0800
 
 lintian (1.23.25) unstable; urgency=low
 
