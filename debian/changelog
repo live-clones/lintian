@@ -39,12 +39,16 @@ lintian (1.23.26) UNRELEASED; urgency=low
   * checks/menu.desc:
     + [RA] Remove stray commas in Ref strings since the reporting code
       considers commas to be separating two different references.
+  * checks/po-debconf{.desc,}:
+    + [RA] Check for misnamed PO files in debian/po, which cause
+      translations to be merged into the template with the wrong names and
+      not found.  Based on a patch by Thomas Huriaux.  (Closes: #387360)
   * checks/shared-libs:
     + [RA] Calling ldconfig is also required for libraries installed in
       various subdirectories of its standard search path based on hardware
       capabilities.  Reported by Aurelien Jarno.  (Closes: #396278)
 
- -- Russ Allbery <rra@debian.org>  Fri, 10 Nov 2006 22:02:45 -0800
+ -- Russ Allbery <rra@debian.org>  Fri, 10 Nov 2006 22:25:17 -0800
 
 lintian (1.23.25) unstable; urgency=low
 

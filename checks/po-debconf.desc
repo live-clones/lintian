@@ -51,6 +51,19 @@ Info: Errors were found in the listed PO file that will cause its content
  to be discarded. Run <tt>msgfmt</tt> on the file to see the error
  messages.
 
+Tag: misnamed-po-file
+Type: warning
+Info: The name of this PO file doesn't appear to be a valid language
+ code.  Any files in <tt>debian/po</tt> ending in <tt>.po</tt> will be
+ processed as translations by po2debconf for the language code equal to
+ the file name without the trailing <tt>.po</tt>.  If the file name does
+ not correct reflect the language of the translation, the translation will
+ not be accessible to users of that language.
+ .
+ If this file isn't actually a PO file, rename it to something that
+ doesn't end in <tt>.po</tt> or move it to another directory so that
+ translation merging programs will not be confused.
+
 Tag: newer-debconf-templates
 Type: warning
 Info: debconf-updatepo has not been run since the last change to your

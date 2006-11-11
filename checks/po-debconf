@@ -122,6 +122,8 @@ opendir(DEBIAN, 'debfiles/po')
         or fail("Can't open debfiles/po directory.");
 while (defined(my $file=readdir(DEBIAN))) {
         next unless $file =~ m/\.po$/;
+        tag "misnamed-po-file", "debian/po/$file"
+                unless ($file =~ /^[a-z]{2,2}(_[A-Z]{2,2})?\.po$/);
         local ($/) = "\n\n";
         $_ = '';
         open(PO, "< debfiles/po/$file")
