@@ -15,8 +15,12 @@ E: libbaz1: unstripped-binary-or-object ./usr/lib/libbaz1.so.1.0.3b
 E: libbaz1: unstripped-binary-or-object ./usr/lib/libfoo2.so.1.0.3b
 E: libbaz2: postinst-must-call-ldconfig usr/lib/libbaz2.so.1.0.3b
 E: libbaz2: symlink-should-be-relative usr/share/doc/libbaz2/changelog.gz /usr/share/doc/lintian/changelog.gz
+I: libbaz1-dev: no-md5sums-control-file
+I: libbaz1: no-md5sums-control-file
 I: libbaz1: possible-non-posix-code-in-maintainer-script postinst:6 '[ -d /usr/doc -a ! -e /usr/doc/$PKG -a '
 I: libbaz1: possible-non-posix-code-in-maintainer-script prerm:5 '[ \( "$1" = "upgrade" -o "$1" = "remove" \) -a '
+I: libbaz2-dev: no-md5sums-control-file
+I: libbaz2: no-md5sums-control-file
 W: libbaz source: ancient-standards-version 3.2.1 (current is 3.7.2)
 W: libbaz source: changelog-should-mention-nmu
 W: libbaz source: package-uses-deprecated-debhelper-compat-version 1

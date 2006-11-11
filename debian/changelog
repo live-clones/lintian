@@ -29,6 +29,13 @@ lintian (1.23.26) UNRELEASED; urgency=low
       into account transitive build dependencies.  (Closes: #393975)
     + [RA] Avoid Perl warning when diagnosing a Python-Version of the form
       "all, >= 2.4".  Thanks, Thijs Kinkhorst.  (Closes: #394104)
+  * checks/md5sums{.desc,}:
+    + [RA] Add a tag for a missing md5sums control file, but only at info
+      level, at least for now.  (Closes: #133027)
+    + [RA] Do better syntax checking of the md5sums control file and
+      report malformed lines as a tag rather than aborting lintian.
+    + [RA] Downgrade file-missing-in-md5sums to a warning since it doesn't
+      break the package or debsums and may be intentional.
   * checks/menu.desc:
     + [RA] Remove stray commas in Ref strings since the reporting code
       considers commas to be separating two different references.
@@ -37,7 +44,7 @@ lintian (1.23.26) UNRELEASED; urgency=low
       various subdirectories of its standard search path based on hardware
       capabilities.  Reported by Aurelien Jarno.  (Closes: #396278)
 
- -- Russ Allbery <rra@debian.org>  Fri, 10 Nov 2006 20:56:37 -0800
+ -- Russ Allbery <rra@debian.org>  Fri, 10 Nov 2006 22:02:45 -0800
 
 lintian (1.23.25) unstable; urgency=low
 

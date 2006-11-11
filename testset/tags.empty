@@ -5,6 +5,7 @@ E: empty: maintainer-address-missing empty
 E: empty: no-copyright-file
 E: empty: package-has-no-description
 E: empty_1_i386.changes: no-description-in-changes-file
+I: empty: no-md5sums-control-file
 W: empty source: changelog-should-mention-nmu
 W: empty source: maintainer-not-full-name empty
 W: empty source: source-nmu-has-incorrect-version-number 1

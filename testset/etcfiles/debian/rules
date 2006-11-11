@@ -21,6 +21,17 @@ binary-indep:
 	install -d $(tmp)/DEBIAN
 	install -m 644 debian/conffiles $(tmp)/DEBIAN
 
+	echo 'ab371382468880299e5ebd05921764ce  ./etc/proper' \
+	    > debian/tmp/DEBIAN/md5sums
+	echo 'ab371382468880299e5ebd05921764ce  etc/improper' \
+	    >> debian/tmp/DEBIAN/md5sums
+	echo 'ab371382468880299e5ebd05921764ce  usr/bin/foo' \
+	    >> debian/tmp/DEBIAN/md5sums
+	echo 'this is a malformed line' \
+	    >> debian/tmp/DEBIAN/md5sums
+	echo '07408b7e90981ddc95fda4080c259436  usr/share/doc/etcfiles/README.Debian' \
+	    >> debian/tmp/DEBIAN/md5sums
+
 	dpkg-gencontrol -isp
 	dpkg --build debian/tmp ..
 

@@ -25,6 +25,7 @@ E: manpages: package-installs-file-to-usr-x11r6-bin usr/X11R6/bin/
 E: manpages: package-installs-file-to-usr-x11r6-bin usr/X11R6/bin/rstartd
 E: manpages: stray-directory-in-manpage-directory usr/share/man/man1/not-a-man-page.1.gz/
 E: manpages: x11-games-should-be-in-usr-games usr/X11R6/man/man6/X11R6-binary.man
+I: manpages: no-md5sums-control-file
 W: manpages source: ancient-standards-version 3.2.1 (current is 3.7.2)
 W: manpages source: binary-nmu-debian-revision-in-source 4-0.0.1
 W: manpages source: changelog-should-mention-nmu
