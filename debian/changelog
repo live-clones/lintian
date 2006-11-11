@@ -1,8 +1,10 @@
 lintian (1.23.26) UNRELEASED; urgency=low
 
-  * checks/binaries.desc:
+  * checks/binaries{.desc,}:
     + [RA] Add a policy reference for unstripped-binary-or-object.
       Thanks, Bas Wijnen.  (Closes: #394419)
+    + [RA] Add a special exception to the shared library dependency check
+      for the dynamic loader itself.
   * checks/control-file{.desc,}:
     + [RA] Diagnose a control file that creates binary packages in a
       different archive category from the source package or the other
@@ -24,8 +26,12 @@ lintian (1.23.26) UNRELEASED; urgency=low
   * checks/menu.desc:
     + [RA] Remove stray commas in Ref strings since the reporting code
       considers commas to be separating two different references.
+  * checks/shared-libs:
+    + [RA] Calling ldconfig is also required for libraries installed in
+      various subdirectories of its standard search path based on hardware
+      capabilities.  Reported by Aurelien Jarno.  (Closes: #396278)
 
- -- Russ Allbery <rra@debian.org>  Fri, 10 Nov 2006 20:04:11 -0800
+ -- Russ Allbery <rra@debian.org>  Fri, 10 Nov 2006 20:39:32 -0800
 
 lintian (1.23.25) unstable; urgency=low
 

@@ -41,6 +41,12 @@ my %ldso_dir = map { $_ => 1 }
         lib/libc5-compat
       );
 
+# Libraries that should only be used in the presence of certain capabilities
+# may be located in subdirectories of the standard ldconfig search path with
+# one of the following names.
+my %hwcap_dir = map { $_ => 1 }
+    qw( i486 i586 i686 cmov tls );
+
 # The following architectures should always have a STACK setting in shared
 # libraries to disable executable stack.  Other architectures don't always add
 # this section and therefore can't be checked.
@@ -171,8 +177,16 @@ for (keys %files) {
             }
         }
 
-	# installed in a directory controlled by the dynamic linker?
-	if (exists $ldso_dir{dirname($cur_file)}) {
+	# Installed in a directory controlled by the dynamic linker?  We have
+	# to strip off directories named for hardware capabilities.
+	my $dirname = dirname($cur_file);
+	my $last;
+	do {
+	    $dirname =~ s%/([^/]+)$%%;
+	    $last = $1;
+	} while ($last && $hwcap_dir{$last});
+	$dirname .= "/$last" if $last;
+	if (exists $ldso_dir{$dirname}) {
 	    # yes! so postinst must call ldconfig
 	    $must_call_ldconfig = $real_file;
 	}

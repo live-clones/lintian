@@ -224,16 +224,20 @@ while (<IN>) {
     my %libc5_binary;
     my @needed;
     if (!exists($NEEDED{$file}) && !defined($NEEDED{$file})) {
-	if ($info =~ m/shared object/o && $file !~ m#^\./usr/lib/debug/#) {
+	if ($info =~ m/shared object/o) {
+            # Some exceptions: detached debugging information and the dynamic
+            # loader (which itself has no dependencies).
+            next if ($file =~ m%^\./usr/lib/debug/%);
+            next if ($file =~ m%^\./lib/(?:[\w/]+/)?ld-[\d.]+\.so$%);
 	    tag "shared-lib-without-dependency-information", "$file";
 	} else {
 	    # Some exceptions: files in /boot, /usr/lib/debug/*, named *-static or
 	    # *.static, or *-static as package-name.
-	    next if ($file =~ m#^./boot/#);
+	    next if ($file =~ m%^./boot/%);
 	    # klibc binaries appear to be static.
 	    next if ($KLIBC{$file});
 	    # Location of debugging symbols:
-	    next if ($file =~ m#^./usr/lib/debug/#);
+	    next if ($file =~ m%^./usr/lib/debug/%);
 	    next if ($file =~ /(\.|-)static$/);
 	    next if ($pkg =~ /-static$/);
 
