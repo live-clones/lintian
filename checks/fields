@@ -531,10 +531,20 @@ if ($type eq "source") {
 	my $target = "none";
 	local $/ = "\n";	# Read this linewise
 	my @rules = qw(clean binary-arch build-arch);
+        my $maybe_skipping;
 	while (<RULES>) {
+		if (/^ifn?(eq|def)\s/) {
+			$maybe_skipping++;
+		} elsif (/^endif\s/) {
+			$maybe_skipping--;
+		}
 		for my $rule (@global_clean_depends) {
 			if ($_ =~ /$rule->[1]/) {
-				$needed_clean{$rule->[0]} = $rule->[2] || $needed_clean{$rule->[0]} || '';
+				if ($maybe_skipping) {
+					$allowed_clean{$rule->[0]} = 1;
+				} else {
+					$needed_clean{$rule->[0]} = $rule->[2] || $needed_clean{$rule->[0]} || '';
+				}
 			}
 		}
 		for my $rule (@global_clean_allowed) {
@@ -548,7 +558,7 @@ if ($type eq "source") {
 			}
 		}
 		for my $rule (@global_depends) {
-			if ($_ =~ /$rule->[1]/) {
+			if ($_ =~ /$rule->[1]/ && !$maybe_skipping) {
 				$needed{$rule->[0]} = $rule->[2] || $needed{$rule->[0]} || '';
 			}
 		}
@@ -561,7 +571,11 @@ if ($type eq "source") {
 		if (grep ($_ eq $target, @rules)) {
 			for my $rule (@rule_clean_depends) {
 				if ($_ =~ /$rule->[1]/) {
-					$needed_clean{$rule->[0]} = $rule->[2] || $needed_clean{$rule->[0]} || '';
+					if ($maybe_skipping) {
+						$allowed_clean{$rule->[0]} = 1;
+					} else {
+						$needed_clean{$rule->[0]} = $rule->[2] || $needed_clean{$rule->[0]} || '';
+					}
 				}
 			}
 			for my $rule (@rule_clean_allowed) {

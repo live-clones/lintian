@@ -48,6 +48,12 @@ lintian (1.23.26) UNRELEASED; urgency=low
       into account transitive build dependencies.  (Closes: #393975)
     + [RA] Avoid Perl warning when diagnosing a Python-Version of the form
       "all, >= 2.4".  Thanks, Thijs Kinkhorst.  (Closes: #394104)
+    + [RA] Teach the debian/rules parsing about make conditionals and
+      don't require build dependencies for lines encountered inside a
+      conditional (in other words, assume people using conditionals know
+      what they're doing).  Fixes a false positive due to the unusual
+      arch-specific build dependencies for openoffice.org, reported by
+      Rene Engelhard.  (Closes: #380286)
   * checks/files{.desc,}:
     + [RA] Check for vim .swp files in the package.
     + [RA] Split the warning for NFS temporary files into a separate tag
@@ -76,7 +82,7 @@ lintian (1.23.26) UNRELEASED; urgency=low
       various subdirectories of its standard search path based on hardware
       capabilities.  Reported by Aurelien Jarno.  (Closes: #396278)
 
- -- Russ Allbery <rra@debian.org>  Sat, 11 Nov 2006 01:32:20 -0800
+ --
 
 lintian (1.23.25) unstable; urgency=low
 
