@@ -2,7 +2,7 @@ E: debconf source: declares-possibly-conflicting-debhelper-compat-versions rules
 E: debconf source: missing-dh_python-build-dependency python | python-dev | python-all-dev
 E: debconf source: package-needs-python-policy-debhelper
 E: debconf-test: extended-description-is-empty
-E: debconf-test: mismatch-translated-choices debconf/testmulti choices-de.utf-8
+E: debconf-test: mismatch-translated-choices debconf/testmulti-escape choices-de.utf-8
 E: debconf-test: no-template-description debconf/no-description
 E: debconf-test: no-template-type debconf/language
 E: debconf-test: settitle-requires-versioned-depends config
@@ -14,8 +14,8 @@ W: debconf source: invalid-po-file debian/po/sample-file.po
 W: debconf source: maintainer-script-lacks-debhelper-token debian/debconf-test.postinst
 W: debconf source: newer-debconf-templates
 W: debconf source: stray-translated-debconf-templates debconf-test.templates.de
-W: debconf source: translated-default-field debconf-test.templates: 62
 W: debconf source: translated-default-field debconf-test.templates: 67
+W: debconf source: translated-default-field debconf-test.templates: 72
 W: debconf source: unknown-encoding-in-po-file debian/po/fr.po
 W: debconf-test-noscripts: no-debconf-config
 W: debconf-test-noscripts: old-fsf-address-in-copyright-file
@@ -29,6 +29,7 @@ W: debconf-test: malformed-question-in-templates debconf/testboolean
 W: debconf-test: malformed-title-in-templates debconf/testnote
 W: debconf-test: old-fsf-address-in-copyright-file
 W: debconf-test: partially-translated-question debconf/testmulti de.utf-8
+W: debconf-test: partially-translated-question debconf/testmulti-escape de.utf-8
 W: debconf-test: postinst-uses-db-input
 W: debconf-test: too-long-extended-description-in-templates debconf/teststring
 W: debconf-test: too-long-short-description-in-templates debconf/testnote

@@ -53,6 +53,12 @@ msgstr "boo"
 msgid "test comma usages in choices fields"
 msgstr ""
 
+#. Type: multiselect
+#. Choices
+#: ../debconf-test.templates:11
+msgid "foo\\, bar, boo"
+msgstr "foo, bar, boo"
+
 #. Type: text
 #. description
 #: ../debconf-udeb.templates:3

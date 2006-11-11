@@ -7,6 +7,11 @@ Type: multiselect
 __Choices: foo, bar, boo
 _Description: test comma usages in choices fields
 
+Template: debconf/testmulti-escape
+Type: multiselect
+_Choices: foo\, bar, boo
+_Description: test escaped comma usages in choices fields:
+
 Template: debconf/testboolean
 Type: boolean
 _Description: Enter yes or no:
