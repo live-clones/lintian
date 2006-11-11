@@ -1,5 +1,5 @@
-# check for source package cruft -- lintian check script
-
+# cruft -- lintian check script -*- perl -*-
+#
 # based on debhelper check,
 # Copyright (C) 1999 Joey Hess
 # Copyright (C) 2000 Sean 'Shaleh' Perry
