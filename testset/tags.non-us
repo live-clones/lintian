@@ -1,5 +1,7 @@
 E: broken-crypto: no-copyright-file
 E: crypto-app: no-copyright-file
+E: non-us source: section-category-mismatch Package broken-crypto
+E: non-us source: section-category-mismatch Package nonfree-crypto-app
 E: nonfree-crypto-app: no-copyright-file
 E: patented-app: no-copyright-file
 I: patented-app: non-us-spelling

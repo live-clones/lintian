@@ -1,7 +1,7 @@
 # control-file -- lintian check script -*- perl -*-
 #
 # Copyright (C) 2004 Marc Brockschmidt
-# 
+#
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 of the License, or
@@ -53,7 +53,7 @@ while (<CONTROL>) {
 		if ($seen_fields->{$field}) {
 			tag "debian-control-with-duplicate-fields", "$field: $$seen_fields{$field}, $.";
 		}
-		$seen_fields->{$field} = $.; 
+		$seen_fields->{$field} = $.;
 	}
 }
 close CONTROL;
@@ -64,6 +64,35 @@ for my $binary_control (@binary_controls) {
 	tag "build-info-in-binary-control-file-section", "Package ".$binary_control->{"package"}
 	    if ($binary_control->{"build-depends"} || $binary_control->{"build-depends-indep"} ||
 	        $binary_control->{"build-conflicts"} || $binary_control->{"build-conflicts-indep"});
+}
+
+# Check that every package is in the same archive category.  The source
+# package may or may not have a section specified; if it doesn't, derive the
+# expected archive category from the first binary package by leaving $category
+# undefined until parsing the first binary section.  Missing sections will be
+# caught by other checks.
+my $category;
+if ($header->{'section'}) {
+	if ($header->{'section'} =~ m%^([^/]+)/%) {
+		$category = $1;
+	} else {
+		$category = '';
+	}
+}
+for my $binary_control (@binary_controls) {
+	next unless $binary_control->{'section'};
+	if (!defined ($category)) {
+		if ($binary_control->{'section'} =~ m%^([^/]+)/%) {
+			$category = $1;
+		} else {
+			$category = '';
+		}
+		next;
+	}
+	tag "section-category-mismatch", "Package " . $binary_control->{'package'}
+		if ($category && $binary_control->{'section'} !~ m%^$category/%);
+	tag "section-category-mismatch", "Package " . $binary_control->{'package'}
+		if (!$category && $binary_control->{'section'} =~ m%^[^/]+/%);
 }
 
 }

@@ -3,6 +3,10 @@ lintian (1.23.26) UNRELEASED; urgency=low
   * checks/binaries.desc:
     + [RA] Add a policy reference for unstripped-binary-or-object.
       Thanks, Bas Wijnen.  (Closes: #394419)
+  * checks/control-file{.desc,}:
+    + [RA] Diagnose a control file that creates binary packages in a
+      different archive category from the source package or the other
+      binary packages.  Idea from Yann Dirson.  (Closes: #394720)
   * checks/fields{.desc,}:
     + [RA] Clarify in missing-build-dependency why lintian does not take
       into account transitive build dependencies.  (Closes: #393975)
@@ -12,7 +16,7 @@ lintian (1.23.26) UNRELEASED; urgency=low
     + [RA] Remove stray commas in Ref strings since the reporting code
       considers commas to be separating two different references.
 
- -- Russ Allbery <rra@debian.org>  Fri, 10 Nov 2006 18:31:32 -0800
+ -- Russ Allbery <rra@debian.org>  Fri, 10 Nov 2006 19:00:34 -0800
 
 lintian (1.23.25) unstable; urgency=low
 

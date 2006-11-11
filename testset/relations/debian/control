@@ -31,6 +31,7 @@ Description: Strange dependency relationships
 
 Package: relations-multiple-libs
 Architecture: all
+Section: non-free/misc
 Depends: libstdc++2.10, libstdc++2.10-glibc2.2, libstdc++3.0, tk8.2, tk8.3, tcl8.0, tcl8.2, tkx8.2, tkx8.3, tclx8.2, libpng2, libpng3, xorg
 Provides: awk
 Provides: awk

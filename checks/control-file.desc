@@ -39,3 +39,13 @@ Info: The <tt>debian/control</tt> file is a symlink rather than a regular
  makes package checking and manipulation more difficult. If the control
  file should be available in the source package under multiple names, make
  <tt>debian/control</tt> the real file and the other names symlinks to it.
+
+Tag: section-category-mismatch
+Type: error
+Info: The <tt>debian/control</tt> file places the indicated binary package
+ in a different archive category (main, contrib, non-free) than its source
+ package or other binary packages built from the same source package.  The
+ source package and any binary packages it builds must be in the same
+ category of the archive.  A source package in main may only build binary
+ packages in main, a source package in non-free may only build binary
+ packages in non-free, and so forth.
