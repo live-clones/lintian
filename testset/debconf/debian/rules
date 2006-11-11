@@ -32,6 +32,7 @@ binary-arch:	build
 	dh_installdocs -a
 	dh_installdebconf -pdebconf-test
 	dh_installdebconf -pdebconf-test-noscripts --noscripts
+	dh_installdebconf -pdebconf-test-preinst --noscripts
 	dh_installdebconf -pdebconf-udeb
 
 	# Not needed, but it tests dh_python build dependencies.

@@ -16,6 +16,12 @@ Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Test package for the debconf checks of lintian
  Package missing postinst/postrm/config
 
+Package: debconf-test-preinst
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Test package for the debconf checks of lintian
+ Package uses debconf only in preinst
+
 Package: debconf-udeb
 Section: debian-installer
 XC-Package-Type: udeb

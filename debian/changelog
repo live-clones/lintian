@@ -7,9 +7,15 @@ lintian (1.23.26) UNRELEASED; urgency=low
     + [RA] Diagnose a control file that creates binary packages in a
       different archive category from the source package or the other
       binary packages.  Idea from Yann Dirson.  (Closes: #394720)
-  * checks/debconf:
+  * checks/debconf{.desc,}:
     + [RA] Take into account comma escaping when checking the number of
       translated choices.  Reported by Frans Pop.  (Closes: #395028)
+    + [RA] Only require debconf be loaded in the postinst script if a
+      config script exists.  Reported by Josselin Mouette.
+    + [RA] Require pre-depends on debconf if debconf is used in the
+      preinst script.  Update the long description to deprecate only
+      depending on debconf and falling back on another configuration
+      system.  Reported by Josselin Mouette.  (Closes: #395468)
   * checks/fields{.desc,}:
     + [RA] Clarify in missing-build-dependency why lintian does not take
       into account transitive build dependencies.  (Closes: #393975)
@@ -19,7 +25,7 @@ lintian (1.23.26) UNRELEASED; urgency=low
     + [RA] Remove stray commas in Ref strings since the reporting code
       considers commas to be separating two different references.
 
- -- Russ Allbery <rra@debian.org>  Fri, 10 Nov 2006 19:30:25 -0800
+ -- Russ Allbery <rra@debian.org>  Fri, 10 Nov 2006 20:04:11 -0800
 
 lintian (1.23.25) unstable; urgency=low
 

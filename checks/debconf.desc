@@ -14,9 +14,10 @@ Info: Packages using debconf should depend on it, since debconf is not an
 
 Tag: missing-debconf-dependency-for-preinst
 Type: warning
-Info: Packages using debconf in their preinst script must either pre-depend
- on debconf, with appropriate discussion on &debdev;, or else
- depend on debconf and fall back to a different configuration system.
+Info: Packages using debconf in their preinst script must pre-depend
+ on debconf, with appropriate discussion on &debdev;.  Since debconf is
+ almost always already installed, this is normally better than depending
+ on it and falling back to a different configuration system.
  
 Tag: duplicate-fields-in-templates
 Type: error
