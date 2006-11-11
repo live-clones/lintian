@@ -17,11 +17,11 @@ Info: If the <tt>patch</tt> utility cannot completely apply a diff,
 
 Tag: editor-backup-file-in-diff
 Type: info
-Info: The Debian diff contains a file ending in <tt>~</tt>, which is
- normally either an Emacs backup file or a backup file created by programs
- such as <tt>autoheader</tt> or <tt>debconf-updatepo</tt>.  This usually
- causes no harm, but it's messy and bloats the size of the Debian diff,
- usually to no useful purpose.
+Info: The Debian diff contains a file ending in <tt>~</tt> or of the form
+ <tt>.xxx.swp</tt>, which is normally either an Emacs or vim backup file
+ or a backup file created by programs such as <tt>autoheader</tt> or
+ <tt>debconf-updatepo</tt>.  This usually causes no harm, but it's messy
+ and bloats the size of the Debian diff to no useful purpose.
 
 Tag: native-package-with-dash-version
 Type: warning

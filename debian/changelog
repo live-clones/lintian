@@ -38,13 +38,18 @@ lintian (1.23.26) UNRELEASED; urgency=low
     + [RA] Close files after opening them, fixing incorrect line numbers
       when reporting problems with config scripts.
   * checks/debdiff{.desc,}:
-    + [RA] Check for creation of ~ backup files in the Debian diff, but
-      only at the info level for now since they cause no harm.
+    + [RA] Check for creation of ~ and .xxx.swp backup files in the Debian
+      diff, but only at the info level for now since they cause no harm.
+      (Closes: #332770)
   * checks/fields{.desc,}:
     + [RA] Clarify in missing-build-dependency why lintian does not take
       into account transitive build dependencies.  (Closes: #393975)
     + [RA] Avoid Perl warning when diagnosing a Python-Version of the form
       "all, >= 2.4".  Thanks, Thijs Kinkhorst.  (Closes: #394104)
+  * checks/files{.desc,}:
+    + [RA] Check for vim .swp files in the package.
+    + [RA] Split the warning for NFS temporary files into a separate tag
+      from the warning for editor backup files.
   * checks/infofiles:
     + [RA] Close opened files.
   * checks/md5sums{.desc,}:
@@ -66,7 +71,7 @@ lintian (1.23.26) UNRELEASED; urgency=low
       various subdirectories of its standard search path based on hardware
       capabilities.  Reported by Aurelien Jarno.  (Closes: #396278)
 
- -- Russ Allbery <rra@debian.org>  Fri, 10 Nov 2006 23:50:52 -0800
+ -- Russ Allbery <rra@debian.org>  Sat, 11 Nov 2006 00:10:16 -0800
 
 lintian (1.23.25) unstable; urgency=low
 

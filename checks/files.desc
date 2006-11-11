@@ -399,8 +399,16 @@ Ref: perl-policy 3.1
 
 Tag: backup-file-in-package
 Type: warning
-Info: There is a file in the package that matches the format emacs uses
- for backup and autosave files.  It may have been installed by accident.
+Info: There is a file in the package whose name matches the format emacs
+ or vim uses for backup and autosave files.  It may have been installed by
+ accident.
+
+Tag: nfs-temporary-file-in-package
+Type: warning
+Info: There is a file in the package whose name matches the format NFS
+ uses to temporarily save files that were deleted while another process
+ had them open.  It may have been included in the package by accident
+ while building the package in an NFS filesystem.
 
 Tag: package-installs-perllocal-pod
 Type: warning

@@ -512,8 +512,11 @@ while (<IN>) {
     if ($perm =~ m/^-/) {
 	my $wanted_operm;
 	# ---------------- backup files and autosave files
-	if ($file =~ /~$/ or $file =~ m,\#[^/]+\#$, or $file =~ m,/\.nfs[^/]+$,) {
+	if ($file =~ /~$/ or $file =~ m,\#[^/]+\#$, or $file =~ m,/\.[^/]+\.swp$,) {
 	    tag "backup-file-in-package", "$file";
+	}
+	if ($file =~ m,/\.nfs[^/]+$,) {
+	    tag "nfs-temporary-file-in-package", "$file";
 	}
 	
 	# ---------------- cvsignore files
