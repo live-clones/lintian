@@ -1,10 +1,12 @@
 lintian (1.23.26) UNRELEASED; urgency=low
 
-  * checks/fields.desc:
+  * checks/fields{.desc,}:
     + [RA] Clarify in missing-build-dependency why lintian does not take
       into account transitive build dependencies.  (Closes: #393975)
+    + [RA] Avoid Perl warning when diagnosing a Python-Version of the form
+      "all, >= 2.4".  Thanks, Thijs Kinkhorst.  (Closes: #394104)
 
- -- Russ Allbery <rra@debian.org>  Fri, 10 Nov 2006 18:16:21 -0800
+ -- Russ Allbery <rra@debian.org>  Fri, 10 Nov 2006 18:24:29 -0800
 
 lintian (1.23.25) unstable; urgency=low
 

@@ -752,7 +752,7 @@ if (open(FH, "fields/python-version")) {
 		my $okay = 0;
 		for my $rule (@valid) {
 			if ($pyversion[0] =~ /^$rule->[0]$/
-			    && (($pyversion[1] && $pyversion[1] =~ /^$rule->[1]$/)
+			    && (($pyversion[1] && $rule->[1] && $pyversion[1] =~ /^$rule->[1]$/)
 				 || (! $pyversion[1] && ! $rule->[1]))) {
 				$okay = 1;
 				last;
