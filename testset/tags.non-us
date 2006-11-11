@@ -6,6 +6,7 @@ E: nonfree-crypto-app: no-copyright-file
 E: patented-app: no-copyright-file
 I: broken-crypto: no-md5sums-control-file
 I: crypto-app: no-md5sums-control-file
+I: non-us source: no-section-field-for-source
 I: nonfree-crypto-app: no-md5sums-control-file
 I: patented-app: no-md5sums-control-file
 I: patented-app: non-us-spelling

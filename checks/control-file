@@ -78,6 +78,8 @@ if ($header->{'section'}) {
 	} else {
 		$category = '';
 	}
+} else {
+	tag "no-section-field-for-source", "";
 }
 for my $binary_control (@binary_controls) {
 	next unless $binary_control->{'section'};
