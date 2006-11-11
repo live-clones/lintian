@@ -2,6 +2,7 @@ E: diffs source: debian-files-list-in-source
 E: diffs: arch-independent-package-contains-binary-or-object ./usr/bin/diffs
 E: diffs: no-copyright-file
 E: diffs: unstripped-binary-or-object ./usr/bin/diffs
+I: diffs source: editor-backup-file-in-diff binary.c~
 I: diffs: no-md5sums-control-file
 W: diffs source: configure-generated-file-in-source config.cache
 W: diffs source: configure-generated-file-in-source config.log

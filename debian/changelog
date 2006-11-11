@@ -24,6 +24,9 @@ lintian (1.23.26) UNRELEASED; urgency=low
       preinst script.  Update the long description to deprecate only
       depending on debconf and falling back on another configuration
       system.  Reported by Josselin Mouette.  (Closes: #395468)
+  * checks/debdiff{.desc,}:
+    + [RA] Check for creation of ~ backup files in the Debian diff, but
+      only at the info level for now since they cause no harm.
   * checks/fields{.desc,}:
     + [RA] Clarify in missing-build-dependency why lintian does not take
       into account transitive build dependencies.  (Closes: #393975)
@@ -48,7 +51,7 @@ lintian (1.23.26) UNRELEASED; urgency=low
       various subdirectories of its standard search path based on hardware
       capabilities.  Reported by Aurelien Jarno.  (Closes: #396278)
 
- -- Russ Allbery <rra@debian.org>  Fri, 10 Nov 2006 22:25:17 -0800
+ -- Russ Allbery <rra@debian.org>  Fri, 10 Nov 2006 22:45:51 -0800
 
 lintian (1.23.25) unstable; urgency=low
 

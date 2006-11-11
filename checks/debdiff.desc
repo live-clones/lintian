@@ -4,7 +4,8 @@ Abbrev: dif
 Standards-Version: 3.6.1
 Type: source
 Unpack-Level: 1
-Info: This script checks the diff to the original source tarball of a debian package
+Info: This script checks the diff to the original source tarball of a
+ debian package
 Needs-Info: diffstat
 
 Tag: patch-failure-file-in-diff
@@ -13,6 +14,14 @@ Info: If the <tt>patch</tt> utility cannot completely apply a diff,
  it leaves certain files in the directory tree.  Lintian found such files
  in the Debian-diff for this source package.  This may indicate that the
  maintainer applied a patch that did not quite fit, and didn't notice.
+
+Tag: editor-backup-file-in-diff
+Type: info
+Info: The Debian diff contains a file ending in <tt>~</tt>, which is
+ normally either an Emacs backup file or a backup file created by programs
+ such as <tt>autoheader</tt> or <tt>debconf-updatepo</tt>.  This usually
+ causes no harm, but it's messy and bloats the size of the Debian diff,
+ usually to no useful purpose.
 
 Tag: native-package-with-dash-version
 Type: warning
