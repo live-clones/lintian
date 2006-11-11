@@ -6,8 +6,8 @@ E: debconf-test: mismatch-translated-choices debconf/testmulti-escape choices-de
 E: debconf-test: no-template-description debconf/no-description
 E: debconf-test: no-template-type debconf/language
 E: debconf-test: settitle-requires-versioned-depends config
-E: debconf-test: unknown-debconf-priority config:11 LOW
-E: debconf-test: unknown-debconf-priority config:12 normal
+E: debconf-test: unknown-debconf-priority config:10 LOW
+E: debconf-test: unknown-debconf-priority config:11 normal
 E: debconf-udeb udeb: udeb-postinst-must-not-call-ldconfig
 W: debconf source: invalid-po-file debian/po/fr.po
 W: debconf source: invalid-po-file debian/po/sample-file.po
@@ -32,6 +32,8 @@ W: debconf-test: malformed-title-in-templates debconf/testnote
 W: debconf-test: old-fsf-address-in-copyright-file
 W: debconf-test: partially-translated-question debconf/testmulti de.utf-8
 W: debconf-test: partially-translated-question debconf/testmulti-escape de.utf-8
+W: debconf-test: possible-debconf-note-abuse config:19 debconf/test
+W: debconf-test: possible-debconf-note-abuse postinst:8 debconf/test
 W: debconf-test: postinst-uses-db-input
 W: debconf-test: too-long-extended-description-in-templates debconf/teststring
 W: debconf-test: too-long-short-description-in-templates debconf/testnote

@@ -102,6 +102,7 @@ while (<IN>) {
 
 # for other maintainer scripts checks, see the scripts check
 }
+close IN;
 
 } # </run>
 

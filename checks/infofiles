@@ -182,6 +182,7 @@ sub check_script {
 	    }
 	}
     }
+    close IN;
 }
 
 1;

@@ -105,6 +105,7 @@ for my $field (qw(depends pre-depends)) {
     if (-f "fields/$field") {
 	open(IN, "fields/$field") or fail("Can't open fields/$field: $!");
 	chomp($_ = <IN>);
+	close IN;
 	$_ .= ", $version" if defined $version;
 	$_ =~ s/debconf-2\.0/debconf (>= 1.2.30)/go;
 	$_ =~ s/cdebconf(-\w+)?(-udeb)?\s*(\(.+?\))?/debconf (>= 1.2.30)/g;
@@ -170,6 +171,7 @@ if ($seentemplates) {
 # Lots of template checks.
 
 my @templates = $seentemplates ? read_dpkg_control("control/templates", "templates file") : ();
+my %potential_db_abuse;
 
 foreach my $template (@templates) {
     my $isselect='';
@@ -253,6 +255,11 @@ foreach my $template (@templates) {
 	}
     }
 
+    if ($template->{template} && $template->{type}) {
+        $potential_db_abuse{$template->{template}} = 1
+            if (($template->{type} eq "note") or ($template->{type} eq "text"));
+    }
+
     # Check the description against the best practices in the Developer's
     # Reference, but skip all templates where the short description contains
     # the string "for internal use".
@@ -330,6 +337,7 @@ foreach my $template (@templates) {
 # Check the maintainer scripts.
 
 for my $file (qw(config postinst)) {
+    my $potential_makedev = {};
     if (open(IN, "control/$file")) {
 	my $usesconfmodule='';
 	my $obsoleteconfmodule='';
@@ -338,12 +346,21 @@ for my $file (qw(config postinst)) {
 	my $usesseen='';
 	my $usessettitle='';
 
+	# Only check scripts.
 	my $fl = <IN>;
-	next unless $fl && ( $fl =~ /^#!/ ); # skip, if not a script
+	unless ($fl && $fl =~ /^\#!/) {
+	    close IN;
+	    next;
+	}
 
 	while (<IN>) {
 	    s/#.*//;    # Not perfect for Perl, but should be OK
 	    next unless m/\S/;
+	    while (s%\\$%%) {
+		my $next = <IN>;
+		last unless $next;
+		$_ .= $next;
+	    }
 	    if (m#(?:\.|source)\s+/usr/share/debconf/confmodule# ||
 	            m/use\s+Debconf::Client::ConfModule/) {
 	        $usesconfmodule=1;
@@ -361,10 +378,19 @@ for my $file (qw(config postinst)) {
 		    unless $type eq 'udeb';
 	        $db_input=1;
 	    }
-	    if (m/^\s*(?:db_input|db_text)\s+[\"\']?(\S+?)[\"\']?\s+\S+\s/) {
-		my $priority = $1;
-		tag "unknown-debconf-priority", "$file:$. $1"
-		    unless ($priority =~ /^\$\S+$/ || $valid_priorities{$priority});
+	    if (m%/dev/%) {
+	        $potential_makedev->{$.} = 1;
+	    }
+	    if (m/^\s*(?:db_input|db_text)\s+[\"\']?(\S+?)[\"\']?\s+(\S+)\s/) {
+		my ($priority, $template) = ($1, $2);
+		if ($priority !~ /^\$\S+$/) {
+		    tag "unknown-debconf-priority", "$file:$. $1"
+		        unless ($valid_priorities{$priority});
+		    tag "possible-debconf-note-abuse", "$file:$. $template"
+			if ($potential_db_abuse{$template}
+			    and (not ($potential_makedev->{($. - 1)} and ($priority eq "low")))
+			    and ($priority =~ /^(low|medium)$/));
+		}
 	    }
 	    if (not $isdefault and m/db_fset.*isdefault/) {
 	        # TODO: Perl?

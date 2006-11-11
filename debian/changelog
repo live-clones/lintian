@@ -15,6 +15,7 @@ lintian (1.23.26) UNRELEASED; urgency=low
     + [RA] Diagnose a control file that creates binary packages in a
       different archive category from the source package or the other
       binary packages.  Idea from Yann Dirson.  (Closes: #394720)
+    + [RA] Close opened files.
   * checks/debconf{.desc,}:
     + [RA] Take into account comma escaping when checking the number of
       translated choices.  Reported by Frans Pop.  (Closes: #395028)
@@ -24,6 +25,11 @@ lintian (1.23.26) UNRELEASED; urgency=low
       preinst script.  Update the long description to deprecate only
       depending on debconf and falling back on another configuration
       system.  Reported by Josselin Mouette.  (Closes: #395468)
+    + [RA] Warn of debconf notes displayed with low or medium priority,
+      with an exception for Policy-required device file warnings.  Based
+      on a patch by Thomas Huriaux.  (Closes: #389070)
+    + [RA] Close files after opening them, fixing incorrect line numbers
+      when reporting problems with config scripts.
   * checks/debdiff{.desc,}:
     + [RA] Check for creation of ~ backup files in the Debian diff, but
       only at the info level for now since they cause no harm.
@@ -32,6 +38,8 @@ lintian (1.23.26) UNRELEASED; urgency=low
       into account transitive build dependencies.  (Closes: #393975)
     + [RA] Avoid Perl warning when diagnosing a Python-Version of the form
       "all, >= 2.4".  Thanks, Thijs Kinkhorst.  (Closes: #394104)
+  * checks/infofiles:
+    + [RA] Close opened files.
   * checks/md5sums{.desc,}:
     + [RA] Add a tag for a missing md5sums control file, but only at info
       level, at least for now.  (Closes: #133027)
