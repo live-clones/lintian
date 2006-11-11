@@ -51,9 +51,10 @@ my $lintian_info = 0;		#flag for -i|--info switch
 our $display_infotags = 0;	#flag for -I|--display-info switch
 my $unpack_level = undef;	#flag for -l|--unpack-level switch
 our $no_override = 0;		#flag for -o|--no-override switch
-our $show_overrides = 0;		#flag for --show-overrides switch
+our $show_overrides = 0;	#flag for --show-overrides switch
 my $check_md5sums = 0;		#flag for -m|--md5sums switch
 my $allow_root = 0;		#flag for --allow-root swtich
+my $fail_on_warnings = 0;       #flag for --fail-on-warnings switch
 my $packages_file = 0;		#string for the -p option
 my $OPT_LINTIAN_LAB = "";	#string for the --lab option
 my $OPT_LINTIAN_ARCHIVEDIR = "";#string for the --archivedir option
@@ -145,6 +146,7 @@ Behaviour options:
     -U X, --unpack-info X     specify which info should be collected
     -m, --md5sums             check md5sums when processing a .changes file
     --allow-root              suppress lintian\'s warning when run as root
+    --fail-on-warnings        return a non-zero exit status if warnings found
 Configuration options:
     --cfg CONFIGFILE          read CONFIGFILE for configuration
     --lab LABDIR              use LABDIR as permanent laboratory
@@ -260,6 +262,7 @@ my %opthash = (			# ------------------ actions
 	       "unpack-info|U=s" => \&record_unpack_info,
 	       "md5sums|m" => \$check_md5sums,
 	       "allow-root" => \$allow_root,
+               "fail-on-warnings" => \$fail_on_warnings,
 	       # Note: Ubuntu has (and other derivatives might gain) a
 	       # -D/--debian option to make lintian behave like in Debian, that
 	       # is, to revert distribution-specific changes
@@ -706,6 +709,8 @@ while (my $arg = shift) {
 	    unless ($exit_code) {
 		my $stats = Tags::get_stats( $arg );
 		if ($stats->{severity}{4}) {
+		    $exit_code = 1;
+		} elsif ($fail_on_warnings && $stats->{severity}{2}) {
 		    $exit_code = 1;
 		}
 	    }
@@ -1316,6 +1321,8 @@ for (reverse sort @packages) {
 	unless ($exit_code) {
 	    my $stats = Tags::get_stats( $file );
 	    if ($stats->{severity}{4}) {
+		$exit_code = 1;
+	    } elsif ($fail_on_warnings && $stats->{severity}{2}) {
 		$exit_code = 1;
 	    }
 	}

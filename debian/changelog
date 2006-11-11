@@ -82,7 +82,14 @@ lintian (1.23.26) UNRELEASED; urgency=low
       various subdirectories of its standard search path based on hardware
       capabilities.  Reported by Aurelien Jarno.  (Closes: #396278)
 
- --
+  * frontend/lintian:
+    + [RA] Add --fail-on-warning option to exit with non-zero status if
+      any warnings were found.  Thanks, Daniel Bonniot.  (Closes: #189656)
+
+  * man/lintian.1:
+    + [RA] Document --fail-on-warning.
+
+ -- Russ Allbery <rra@debian.org>  Sat, 11 Nov 2006 02:11:18 -0800
 
 lintian (1.23.25) unstable; urgency=low
 

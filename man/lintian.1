@@ -172,6 +172,13 @@ Override
 .BR lintian 's
 warning when it is run with superuser privileges.
 
+.TP
+.BR \-\-fail\-on\-warnings
+By default,
+.B lintian
+exits with 0 status if only warnings were found.  If this flag is given,
+exit with a status of 1 if either warnings or errors are found.
+
 .PP
 
 Configuration options:
