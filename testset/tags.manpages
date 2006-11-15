@@ -7,6 +7,9 @@ E: manpages: empty-manual-page usr/share/man/man1/usr-bin-binary.1
 E: manpages: empty-manual-page usr/share/man/man1/usr-sbin-binary.1.gz
 E: manpages: empty-manual-page usr/share/man/man6/usr-games-binary.6.gz
 E: manpages: executable-manpage usr/share/man/de/man1/binary-without-english-manpage.1
+E: manpages: info-document-not-compressed usr/share/info/broken
+E: manpages: info-document-not-compressed-with-gzip usr/share/info/baz.broken.gz
+E: manpages: info-document-not-compressed-with-max-compression usr/share/info/bar.gz
 E: manpages: manpage-has-wrong-extension usr/X11R6/man/man6/X11R6-binary.man
 E: manpages: manpage-not-compressed usr/X11R6/man/man6/X11R6-binary.man
 E: manpages: manpage-not-compressed usr/share/man/de/man1/binary-without-english-manpage.1
@@ -35,6 +38,9 @@ W: manpages: executable-not-elf-or-script ./usr/bin/binary-without-english-manpa
 W: manpages: executable-not-elf-or-script ./usr/bin/usr-bin-binary-alt
 W: manpages: executable-not-elf-or-script ./usr/sbin/usr-sbin-binary
 W: manpages: executable-not-elf-or-script ./usr/share/man/de/man1/binary-without-english-manpage.1
+W: manpages: info-document-has-wrong-extension usr/share/info/baz.broken.gz
+W: manpages: info-document-missing-dir-section usr/share/info/bar.gz
+W: manpages: install-info-not-called-with-quiet-option
 W: manpages: link-to-undocumented-manpage usr/share/man/man1/bin-binary.1.gz
 W: manpages: link-to-undocumented-manpage usr/share/man/man3/function.3.gz
 W: manpages: manpage-has-bad-whatis-entry usr/X11R6/man/man1/rstartd.1x.gz

@@ -60,6 +60,14 @@ lintian (1.23.26) UNRELEASED; urgency=low
       from the warning for editor backup files.
   * checks/infofiles:
     + [RA] Close opened files.
+    + [RA] debhelper no longer adds a --section flag to install-info, so
+      don't warn about any install-info invocation without --section.
+      Instead, check each info file for INFO-DIR-SECTION and diagnose
+      calling install-info without --section if any info file is missing
+      this information.  (Closes: #97502, #398670)
+    + [RA] Checks for the compression and suffixes of info files were not
+      being run due to a mistake in specifying either /usr/info or
+      /usr/share/info as an info directory.  Re-enable them.
   * checks/md5sums{.desc,}:
     + [RA] Add a tag for a missing md5sums control file, but only at info
       level, at least for now.  (Closes: #133027)
@@ -89,7 +97,7 @@ lintian (1.23.26) UNRELEASED; urgency=low
   * man/lintian.1:
     + [RA] Document --fail-on-warning.
 
- -- Russ Allbery <rra@debian.org>  Sat, 11 Nov 2006 02:11:18 -0800
+ --
 
 lintian (1.23.25) unstable; urgency=low
 

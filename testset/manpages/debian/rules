@@ -53,10 +53,17 @@ binary-indep:
 	install -d $(tmp)/usr/share/lintian/overrides
 	install -m644 debian/overrides $(tmp)/usr/share/lintian/overrides/manpages
 
+	install -d $(tmp)/usr/share/info
+	touch $(tmp)/usr/share/info/broken
+	gzip -c9 <foo.info >$(tmp)/usr/share/info/foo.info.gz
+	gzip -c1 </dev/null >$(tmp)/usr/share/info/bar.gz
+	install -m644 foo.info $(tmp)/usr/share/info/baz.broken.gz
+
 	install -d $(tmp)/usr/share/doc/manpages
 	cp debian/changelog $(tmp)/usr/share/doc/manpages/changelog
 	gzip -9 $(tmp)/usr/share/doc/manpages/changelog
 	install -d $(tmp)/DEBIAN
+	install -m755 debian/postinst $(tmp)/DEBIAN/postinst
 	dpkg-gencontrol -isp
 	dpkg --build $(tmp) ..
 

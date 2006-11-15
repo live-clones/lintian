@@ -3,13 +3,13 @@ Author: Josip Rodin <jrodin@jagor.srce.hr>
 Abbrev: info
 Standards-Version: 3.5.6
 Type: binary
-Unpack-Level: 1
+Unpack-Level: 2
 Needs-Info: file-info
 Info: This script checks if a binary package conforms to info document policy.
 
 Tag: info-document-not-compressed
 Type: error
-Info: Info documents have to be installed compressed (using `<tt>gzip -9</tt>').
+Info: Info documents have to be installed compressed (using <tt>gzip -9</tt>).
 Ref: policy 12.2
 
 Tag: info-document-not-compressed-with-gzip
@@ -24,7 +24,27 @@ Ref: policy 12.2
 
 Tag: info-document-has-wrong-extension
 Type: warning
-Info: The info document has an extension other than `info*.gz'.
+Info: The info document has an extension other than info*.gz.
+Ref: policy 12.2
+
+Tag: info-document-missing-dir-section
+Type: warning
+Info: This info document has no INFO-DIR-SECTION line and no
+ <tt>--section</tt> option is passed to <tt>install-info</tt> in the
+ package <tt>postinst</tt> maintainer script.  <tt>install-info</tt> will
+ be unable to determine the section into which this info page should be
+ put.  The best solution is to add a line like:
+ .
+   @dircategory Development
+ .
+ to the texinfo source so that the generated info file will contain a
+ section.  See /usr/share/info/dir for sections to choose from.
+ .
+ Another alternative that doesn't require modifying the source is to
+ explicitly pass a <tt>--section</tt> option to <tt>install-info</tt> in
+ the <tt>postinst</tt> maintainer script, although in this case you will
+ need to write the <tt>postinst</tt> yourself and not use tools like
+ debhelper to do it for you.
 Ref: policy 12.2
 
 Tag: postrm-calls-install-info
@@ -45,15 +65,3 @@ Ref: policy 3.10
 Info: The package installation scripts should avoid producing output which it
  is unnecessary for the user to see.  Policy specifically mentions install-info
  output as unnecessary.
-
-Tag: install-info-not-called-with-section-option
-Type: warning
-Ref: policy 12.2
-Info: It is a good idea to specify a section for the location of your program;
- this is done with the --section switch. To determine which section to use,
- you should look at the info dir file on your system and choose the most
- relevant (or create a new section if none of the current sections are
- relevant). 
- .
- Note that this warning is spurious in case your info file contains an
- appropriate INFO-DIR-SECTION (@dircategory in Texinfo sources).

@@ -37,6 +37,8 @@ my %postinst;
 my %prerm;
 my %postrm;
 
+my %missing_section;
+
 # check maintainer scripts (for install-info invocation)
 check_script("preinst", \%preinst) if (-f "control/preinst");
 check_script("postinst", \%postinst) if (-f "control/postinst");
@@ -76,13 +78,12 @@ while (<IN>) {
     my ($fname, $path, $suffix) = fileparse($file);
 
     next unless ($perm =~ m,^[\-l],o)
-            and ($path =~ m,^usr/share/info,)
-            and ($path =~ m,^usr/info,);
+	    and ($path =~ m,^usr/share/info, or $path =~ m,^usr/info,);
 
     my @fname_pieces = split /\./, $fname;
     my $ext = pop @fname_pieces;
     if ($ext eq "gz") { # ok!
-        if ($perm =~ m,^-,o) { # compressed with maximum compression rate?
+	if ($perm =~ m,^-,o) { # compressed with maximum compression rate?
 	    my $info = $file_info{$file};
 	    if ($info !~ m/gzip compressed data/o) {
 		tag "info-document-not-compressed-with-gzip", "$file";
@@ -91,15 +92,38 @@ while (<IN>) {
 		    tag "info-document-not-compressed-with-max-compression", "$file";
 		}
 	    }
-        }
+	}
     } else {
+	push (@fname_pieces, $ext);
 	tag "info-document-not-compressed", "$file";
     }
     my $infoext = pop @fname_pieces;
-    unless ($infoext =~ /info(-\d)?/) { # it's not foo.info
-	unless (@fname_pieces) { # it's not foo{,-{1,2,3,...}}
+    unless ($infoext && $infoext =~ /info(-\d)?/) { # it's not foo.info
+	unless (!@fname_pieces) { # it's not foo{,-{1,2,3,...}}
 	    tag "info-document-has-wrong-extension", "$file";
 	}
+    }
+
+    # If this is the main info file (no numeric extension). make sure it has
+    # appropriate dir entry information.
+    if ($fname !~ /-\d+\.gz/ && $file_info{$file} =~ /gzip compressed data/) {
+	my $pid = open INFO, '-|';
+	if (not defined $pid) {
+	    fail("cannot fork: $!");
+	} elsif ($pid == 0) {
+	    my %newenv = (LANG => 'C', PATH => $ENV{PATH});
+	    undef %ENV;
+	    %ENV = %newenv;
+	    exec "zcat \Qunpacked/$file\E 2>&1"
+		or fail("cannot run zcat: $!");
+	}
+	local $_;
+	my ($section, $start, $end);
+	while (<INFO>) {
+	    $section = 1 if /INFO-DIR-SECTION\s+\S/;
+	}
+	close INFO;
+	$missing_section{$file} = 1 unless $section;
     }
 }
 close IN;
@@ -115,14 +139,18 @@ if ($preinst{'calls-install-info'}) {
 if ($postinst{'calls-install-info'}) {
     tag "install-info-not-called-with-quiet-option", ""
 	unless $postinst{'calls-install-info-quiet'};
-    tag "install-info-not-called-with-section-option", ""
-	unless ( $postinst{'calls-install-info-section'}
-		 || $postinst{'calls-install-info-remove'} ) ;
 }
 if ($prerm{'calls-install-info'}) {
     # it must use the --quiet option
     tag "install-info-not-called-with-quiet-option", ""
 	unless $prerm{'calls-install-info-quiet'};
+}
+
+# Currently we assume all the info pages are fine if any of them are.  It
+# would be nice to be stricter.
+for my $file (keys %missing_section) {
+    tag "info-document-missing-dir-section", "$file"
+	unless ($postinst{'calls-install-info-section'});
 }
 
 }
@@ -138,12 +166,12 @@ sub check_script {
 	fail("cannot open maintainer script control/$script for reading: $!");
     $interp = <IN>;
     if ($interp =~ m,^\#\!\s*/bin/(a|ba|k|pdk)?sh,) {
-        $interp = 'sh';
+	$interp = 'sh';
     } elsif ($interp =~ m,^\#\!\s*/usr/bin/perl,) {
-        $interp = 'perl';
+	$interp = 'perl';
     } else {
 	if ($interp =~ m,^\#\!\s*(.+),) {
-            $interp = $1;
+	    $interp = $1;
 	}
 	else { # hmm, doesn't seem to start with #!
 	    # is it a binary? look for ELF header
