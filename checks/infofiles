@@ -146,8 +146,8 @@ if ($prerm{'calls-install-info'}) {
 	unless $prerm{'calls-install-info-quiet'};
 }
 
-# Currently we assume all the info pages are fine if any of them are.  It
-# would be nice to be stricter.
+# Currently we assume all the info pages are fine if any of them are installed
+# with an explicit --section option.  It would be nice to be stricter.
 for my $file (keys %missing_section) {
     tag "info-document-missing-dir-section", "$file"
 	unless ($postinst{'calls-install-info-section'});
