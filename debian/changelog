@@ -81,6 +81,8 @@ lintian (1.23.26) UNRELEASED; urgency=low
   * checks/menu-format{.desc,}:
     + [RA] Support the sux, gksu, and kdesu wrappers in menu commands as
       well as su-to-root.  (Closes: #360227)
+    + [RA] Fix tag name for menu-icon-cannot-be-parsed.  Thanks, Bill
+      Allombert.  (Closes: #399245)
   * checks/po-debconf{.desc,}:
     + [RA] Check for misnamed PO files in debian/po, which cause
       translations to be merged into the template with the wrong names and
@@ -97,7 +99,7 @@ lintian (1.23.26) UNRELEASED; urgency=low
   * man/lintian.1:
     + [RA] Document --fail-on-warning.
 
- --
+ -- Russ Allbery <rra@debian.org>  Sat, 18 Nov 2006 16:53:50 -0800
 
 lintian (1.23.25) unstable; urgency=low
 

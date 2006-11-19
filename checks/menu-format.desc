@@ -118,7 +118,7 @@ Info: Icons in the Debian menu system should be at most 32x32 pixels
  (icon16x16 icons should of course be at most 16x16 pixels)
 Ref: menu manual 3.7
 
-Tag: menu-icon-cannot-parse
+Tag: menu-icon-cannot-be-parsed
 Type: warning
 Info: The icon file could not be parsed.  Perhaps this means a bad XPM file,
  or perhaps it means the lintian parsing needs to be improved.  If the
