@@ -1,3 +1,13 @@
+lintian (1.23.27) UNRELEASED; urgency=low
+
+  * collection/file-info:
+    + [RA] Unescape non-ASCII characters escaped by tar before running
+      file on the resulting filename.  Otherwise, file can't find the
+      file, exits with an error, and lintian aborts.  Reported by Bill
+      Allombert.  (Closes: #399392)
+
+ -- Russ Allbery <rra@debian.org>  Sun, 19 Nov 2006 12:30:28 -0800
+
 lintian (1.23.26) unstable; urgency=low
 
   * checks/binaries{.desc,}:

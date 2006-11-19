@@ -73,6 +73,13 @@ binary-indep:
 	install -d debian/tmp/usr/share/doc/filenames
 	touch debian/tmp/usr/share/doc/filenames/README.macosx
 
+	echo foo > debian/tmp/usr/share/doc/filenames/bokmÃ¥l
+	echo foo > debian/tmp/usr/share/doc/filenames/bokm\\Ã¥l
+	echo foo > debian/tmp/usr/share/doc/filenames/bokm\\\\Ã¥l
+	echo foo > debian/tmp/usr/share/doc/filenames/bokmål
+	echo foo > debian/tmp/usr/share/doc/filenames/bokm\\ål
+	echo foo > debian/tmp/usr/share/doc/filenames/bokm\\\\ål
+
 	install -d debian/tmp/usr/share/doc/filenames/examples
 	touch debian/tmp/usr/share/doc/filenames/examples/__init__.py
 	touch debian/tmp/usr/share/doc/filenames/examples/very_interesting_example
