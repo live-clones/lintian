@@ -1,4 +1,4 @@
-lintian (1.23.26) UNRELEASED; urgency=low
+lintian (1.23.26) unstable; urgency=low
 
   * checks/binaries{.desc,}:
     + [RA] Add a policy reference for unstripped-binary-or-object.
@@ -99,7 +99,7 @@ lintian (1.23.26) UNRELEASED; urgency=low
   * man/lintian.1:
     + [RA] Document --fail-on-warning.
 
- -- Russ Allbery <rra@debian.org>  Sat, 18 Nov 2006 16:53:50 -0800
+ -- Russ Allbery <rra@debian.org>  Sat, 18 Nov 2006 17:07:08 -0800
 
 lintian (1.23.25) unstable; urgency=low
 
