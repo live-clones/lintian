@@ -92,7 +92,7 @@ lintian (1.23.26) unstable; urgency=low
       various subdirectories of its standard search path based on hardware
       capabilities.  Reported by Aurelien Jarno.  (Closes: #396278)
 
-  * debian/ruls:
+  * debian/rules:
     + [RA] Exclude testset/diffs/binary.c~ from dh_clean.
 
   * frontend/lintian:
