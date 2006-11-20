@@ -83,7 +83,7 @@ while (<IN>) {
 		if ( ($sec =~ /^GLIBC_.*/) and ($sym eq '_mcount') ) {
 		    tag "binary-compiled-with-profiling-enabled", "$file";
 		}
-	    }    
+	    }
 
 	    if ($foo eq '.text' and $sec eq 'Base' and $sym eq 'caml_main') {
 		$OCAML{$file} = 1;
@@ -104,9 +104,9 @@ while (<IN>) {
 	} elsif (m/^DYNAMIC SYMBOL TABLE:/) {
 	    $dynsyms = 1;
 	} elsif (m/^objdump: (.*?): File format not recognized$/) {
-	    fail("file format not recognized for $1\nif you are checking non-i386 binaries, you'll need to install binutils-multiarch\n");
+            tag "apparently-corrupted-elf-binary", "$file";
 	} elsif (m/^objdump: \.(.*?): Packed with UPX$/) {
-	    tag "binary-file-compressed-with-upx", "$1";
+	    tag "binary-file-compressed-with-upx", "$file";
 	} elsif (m/^objdump: \.(.*?): Invalid operation$/) {
 	    tag "binary-with-bad-dynamic-table", "$file" unless $file =~ m%^\./usr/lib/debug/%;
 	} elsif (m/CXXABI/) {

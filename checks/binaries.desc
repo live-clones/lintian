@@ -158,3 +158,11 @@ Type: error
 Info: This appears to be an ELF file but objdump -T cannot parse it.
  If it is external debugging symbols for another file, it should be
  installed under /usr/lib/debug.
+
+Tag: apparently-corrupted-elf-binary
+Type: warning
+Info: This appears to be an ELF file but objdump -T doesn't recognize it
+ as valid.  This may be a mistake or a corrupted file, you may need to
+ install binutils-multiarch on the system running lintian so that
+ non-native binaries are handled correctly, or it may be a
+ misidentification of a file as ELF that actually isn't.

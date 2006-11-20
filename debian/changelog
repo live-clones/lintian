@@ -1,12 +1,22 @@
 lintian (1.23.27) UNRELEASED; urgency=low
 
+  * checks/binaries{.desc,}:
+    + [RA] Tag unrecognized ELF binaries as apparently corrupted rather
+      than failing with a note that binutils-multiarch is required.  Some
+      packages have had ELF binaries recognized by file but unreadable.
+      Reported by Bill Allombert.  (Closes: #399456)
+
   * collection/file-info:
     + [RA] Unescape non-ASCII characters escaped by tar before running
       file on the resulting filename.  Otherwise, file can't find the
       file, exits with an error, and lintian aborts.  Reported by Bill
       Allombert.  (Closes: #399392)
+  * collection/objdump-info:
+    + [RA] Include unrecognized format errors from objdump in the output
+      rather than aborting; some packages contain apparently corrupt ELF
+      binaries.
 
- -- Russ Allbery <rra@debian.org>  Sun, 19 Nov 2006 12:30:28 -0800
+ -- Russ Allbery <rra@debian.org>  Sun, 19 Nov 2006 20:27:49 -0800
 
 lintian (1.23.26) unstable; urgency=low
 

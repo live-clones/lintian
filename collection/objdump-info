@@ -43,6 +43,7 @@ touch ../objdump-info
 # output in the objdump-info file and let the check script deal with
 # it later.
 for bin in `grep ' ELF' <../file-info | cut -d\: -f1`; do
+    echo "Processing $bin" >> /tmp/debug
     echo "-- $bin" >> ../objdump-info
     if head $bin | grep -q 'packed.*with.*UPX'; then
 	echo "objdump: $bin: Packed with UPX" >> ../objdump-info
@@ -54,15 +55,17 @@ for bin in `grep ' ELF' <../file-info | cut -d\: -f1`; do
 	if objdump --headers --private-headers -T $bin >> ../objdump-info 2>&1 ; then
 	    # everything is ok
 	    :
-	else
+	elif objdump -T $bin 2>&1 | grep -q 'Invalid operation$' ; then
 	    # If the objdump error is "Invalid operation", we handle it later
 	    # in the check script, since this is the expected output (for now)
 	    # on detached debugging information in /usr/lib/debug.
-	    if objdump -T $bin 2>&1 | grep -q 'Invalid operation$' ; then
-		:
-	    else
-		exit 1
-	    fi
+	    :
+	elif objdump -T $bin 2>&1 | grep -q 'File format not recognized$' ; then
+	    # There are some files that file recognizes as ELF but which
+	    # aren't; those too are handled separately in the check script.
+	    :
+	else
+	    exit 1
 	fi
     fi
 done
