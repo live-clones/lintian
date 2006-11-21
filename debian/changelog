@@ -5,6 +5,11 @@ lintian (1.23.27) UNRELEASED; urgency=low
       than failing with a note that binutils-multiarch is required.  Some
       packages have had ELF binaries recognized by file but unreadable.
       Reported by Bill Allombert.  (Closes: #399456)
+  * checks/shared-libs:
+    + [RA] Don't report shlib-with-non-pic-code unless we're sure that
+      we're looking at a shared library.  Otherwise, we get many false
+      positives on some platforms where text relocations are normal for
+      binaries.  Reported by Bill Allombert.  (Closes: #399525)
 
   * collection/file-info:
     + [RA] Unescape non-ASCII characters escaped by tar before running
@@ -16,7 +21,7 @@ lintian (1.23.27) UNRELEASED; urgency=low
       rather than aborting; some packages contain apparently corrupt ELF
       binaries.
 
- -- Russ Allbery <rra@debian.org>  Sun, 19 Nov 2006 20:27:49 -0800
+ -- Russ Allbery <rra@debian.org>  Mon, 20 Nov 2006 17:53:25 -0800
 
 lintian (1.23.26) unstable; urgency=low
 

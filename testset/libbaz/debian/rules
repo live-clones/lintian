@@ -52,9 +52,10 @@ binary-correct:
 binary-arch: build binary-correct
 	# first, the lib package
 	install -d $(lib_tmp)/usr/lib
-	# resp. no soname (check) &no-pic (check) and wrong soname (check)
+	# resp. no soname (check), wrong soname (check), and no-pic (check)
 	cp -a libbaz1.so.1.0* $(lib_tmp)/usr/lib
 	cp -a libbaz2.so.1.0.3b $(lib_tmp)/usr/lib/libfoo2.so.1.0.3b
+	install -m644 libbaz3.so.1.0.3b $(lib_tmp)/usr/lib/libbaz3.so.1.0.3b
 	# let's include the .a in the non-dev too (TODO)
 	# Also, libbaz1.a hasn't a symbol table (TODO)
 	cp -a *.a $(lib_tmp)/usr/lib

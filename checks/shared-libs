@@ -70,6 +70,7 @@ my $shlibs_control_file = "control/shlibs";
 my %SONAME;
 my %INTERP;
 my %STACK;
+my %TEXTREL;
 my %objsomething;
 my %sharedobject;
 my %index_info;
@@ -96,7 +97,7 @@ while (<IN>) {
     } elsif (m/^\s*SONAME\s+(\S+)/o) {
 	$SONAME{$file} = $1;
     } elsif (m/^\s*TEXTREL\s/o) {
-	tag "shlib-with-non-pic-code", "$file";
+        $TEXTREL{$file} = 1;
     } elsif (m/^\s*INTERP\s/) {
 	$INTERP{$file} = 1;
     } elsif (m/^\s*STACK\s/) {
@@ -152,7 +153,7 @@ for (keys %files) {
     if (exists $SONAME{$cur_file} or 
 	($link_info{$cur_file} and exists $SONAME{abs_path(dirname($cur_file)."/".$link_info{$cur_file})})) {
 	# yes!!
-	
+
 	my ($real_file, $real_perm);
 	if ($SONAME{$cur_file}) {
 	    $real_file = $cur_file;
@@ -161,6 +162,12 @@ for (keys %files) {
 	    $real_file = abs_path(dirname($cur_file)."/".$link_info{$cur_file});
 	    $real_perm = $files{$real_file} || $perm;
 	}
+
+	# Now that we're sure this is really a shared library, report on
+	# non-PIC problems.
+        if ($cur_file eq $real_file and $TEXTREL{$cur_file}) {
+            tag "shlib-with-non-pic-code", "$file";
+        }
 
         # don't apply the permission checks to links
         # since this only results in doubled messages

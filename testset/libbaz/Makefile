@@ -5,7 +5,7 @@ CFLAGS=-Wall -Winline -O2
 
 OBJS=baz.o extra.o
 
-all: libbaz1.a libbaz2.a libbaz1.so.1.0.3b libbaz2.so
+all: libbaz1.a libbaz2.a libbaz1.so.1.0.3b libbaz2.so libbaz3.so.1.0.3b
 
 libbaz2.so: libbaz2.so.1.0
 	ln -sf $^ $@
@@ -18,6 +18,10 @@ libbaz1.so.1.0.3b: $(OBJS)
 
 libbaz2.so.1.0.3b: $(OBJS:%.o=%.sho)
 	$(CC) -o $@ -shared -Wl,-soname,libbaz2.so.1.0 $^ -lc
+
+# Non-PIC.
+libbaz3.so.1.0.3b: $(OBJS)
+	$(CC) -o $@ -shared -Wl,-soname,libbaz3.so.1 $^ -lc
 
 #%.o-noreentrant: %.c
 #	$(CC) $(CFLAGS) -o $@ -c $<
