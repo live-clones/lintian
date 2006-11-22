@@ -78,7 +78,7 @@ while (<IN>) {
     my ($fname, $path, $suffix) = fileparse($file);
 
     next unless ($perm =~ m,^[\-l],o)
-	    and ($path =~ m,^usr/share/info, or $path =~ m,^usr/info,);
+	    and ($path =~ m,^usr/share/info/, or $path =~ m,^usr/info/,);
 
     my @fname_pieces = split /\./, $fname;
     my $ext = pop @fname_pieces;

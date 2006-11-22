@@ -5,6 +5,9 @@ lintian (1.23.27) UNRELEASED; urgency=low
       than failing with a note that binutils-multiarch is required.  Some
       packages have had ELF binaries recognized by file but unreadable.
       Reported by Bill Allombert.  (Closes: #399456)
+  * checks/infofiles:
+    + [RA] Don't consider /usr/share/infon to be an info directory.
+      Reported by Joachim Breitner.  (Closes: #399857)
   * checks/shared-libs:
     + [RA] Don't report shlib-with-non-pic-code unless we're sure that
       we're looking at a shared library.  Otherwise, we get many false
@@ -21,7 +24,7 @@ lintian (1.23.27) UNRELEASED; urgency=low
       rather than aborting; some packages contain apparently corrupt ELF
       binaries.
 
- -- Russ Allbery <rra@debian.org>  Mon, 20 Nov 2006 17:53:25 -0800
+ -- Russ Allbery <rra@debian.org>  Wed, 22 Nov 2006 11:14:50 -0800
 
 lintian (1.23.26) unstable; urgency=low
 
