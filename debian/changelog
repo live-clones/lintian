@@ -8,6 +8,10 @@ lintian (1.23.27) UNRELEASED; urgency=low
   * checks/infofiles:
     + [RA] Don't consider /usr/share/infon to be an info directory.
       Reported by Joachim Breitner.  (Closes: #399857)
+  * checks/po-debconf:
+    + [RA] gettext 0.16's msgcmp requires --use-untranslated when checking
+      for newer templates than PO files or it gives false positives for
+      every package.  Thanks, Damyan Ivanov.  (Closes: #400957)
   * checks/shared-libs:
     + [RA] Don't report shlib-with-non-pic-code unless we're sure that
       we're looking at a shared library.  Otherwise, we get many false
@@ -24,7 +28,10 @@ lintian (1.23.27) UNRELEASED; urgency=low
       rather than aborting; some packages contain apparently corrupt ELF
       binaries.
 
- -- Russ Allbery <rra@debian.org>  Wed, 22 Nov 2006 11:14:50 -0800
+  * debian/control:
+    + [RA] Depend on gettext 0.16 or later for --use-untranslated.
+
+ -- Russ Allbery <rra@debian.org>  Sun,  3 Dec 2006 10:37:08 -0800
 
 lintian (1.23.26) unstable; urgency=low
 
