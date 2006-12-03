@@ -116,10 +116,14 @@ sub setup_force {
 	}
     }
 
-    # just create empty files
+    # Just create empty files if they don't already exist.  If they do already
+    # exist, we need to keep the old files so that the list-* unpack programs
+    # can analyze what changed.
     for my $pkgtype (qw( binary source udeb )) {
-	_touch("$dir/info/$pkgtype-packages")
-	    or fail("cannot create $pkgtype package list");
+	if (not -f "$dir/info/$pkgtype-packages") {
+	    _touch("$dir/info/$pkgtype-packages")
+		or fail("cannot create $pkgtype package list");
+	}
     }
 
     $self->{dir} = $dir;

@@ -37,11 +37,16 @@ lintian (1.23.27) UNRELEASED; urgency=low
   * debian/control:
     + [RA] Depend on gettext 0.16 or later for --use-untranslated.
 
+  * lib/Lab.pm:
+    + [RA] Preserve the old package lists when setting up a static lab so
+      that the unpack programs can build a list of changed packages and
+      incremental mode works.  Thanks, Bill Allmobert.  (Closes: #400342)
+
   * unpack/list-udebpkg:
     + [RA] Handle compressed udeb Packages files.  Thanks, Bill
       Allombert.  (Closes: #400338)
 
- -- Russ Allbery <rra@debian.org>  Sun,  3 Dec 2006 10:52:39 -0800
+ -- Russ Allbery <rra@debian.org>  Sun,  3 Dec 2006 11:06:33 -0800
 
 lintian (1.23.26) unstable; urgency=low
 
