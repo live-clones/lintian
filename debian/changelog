@@ -1,3 +1,13 @@
+lintian (1.23.28) UNRELEASED; urgency=low
+
+  * checks/scripts.desc:
+    + [RA] Mention SUSv3 in the bashism and non-posix tag descriptions,
+      note that use of test -a/-o and local aren't bugs but may still be
+      worth avoiding, and mention short circuiting of && and ||.  (Thanks
+      to Jari Aalto for the latter).
+
+ -- Russ Allbery <rra@debian.org>  Sun,  3 Dec 2006 14:16:40 -0800
+
 lintian (1.23.27) unstable; urgency=low
 
   The "we haven't run this against the whole archive in a while" release

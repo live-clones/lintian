@@ -245,7 +245,8 @@ Tag: possible-bashism-in-maintainer-script
 Type: warning
 Ref: policy 10.4
 Info: This script is marked as running under <tt>/bin/sh</tt>, but it seems
- to use a feature found in bash but not in the POSIX shell specification.
+ to use a feature found in bash but not in the SUSv3 or POSIX shell
+ specification.
  .
  Examples:
   '==' in a test, it should use '=' instead
@@ -258,16 +259,14 @@ Info: This script is marked as running under <tt>/bin/sh</tt>, but it seems
 
 Tag: possible-non-posix-code-in-maintainer-script
 Type: info
-Ref: policy 10.4
 Info: This script is marked as running under <tt>/bin/sh</tt>, but it seems
- to use a shell feature that is not defined in the POSIX standard. The
- feature is so common in current shells that this isn't currently
- considered an release critical bug and there are discussion wether
- policy should be amended to specifically allow the use of the feature.
+ to use a shell feature that is not defined in the SUSv3 or POSIX standard.
+ The feature is so common in current shells that this isn't necessarily a
+ bug, but you may wish to avoid this anyway for maximum portability.
  .
  Examples:
   '-a' and '-o' as operators of 'test'. You can use shell conditionals
-  (&& and ||) instead.
+  (&& and ||) instead, which also short-circuit correctly.
   'local' scoping of variables.
 
 Tag: suidregister-used-in-maintainer-script
