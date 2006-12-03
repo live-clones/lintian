@@ -16,6 +16,8 @@ lintian (1.23.27) UNRELEASED; urgency=low
     + [RA] gettext 0.16's msgcmp requires --use-untranslated when checking
       for newer templates than PO files or it gives false positives for
       every package.  Thanks, Damyan Ivanov.  (Closes: #400957)
+    + [RA] Don't consider directories to be stray template files even if
+      named template.  Thanks, Thomas Huriaux.  (Closes: #401442)
   * checks/shared-libs:
     + [RA] Don't report shlib-with-non-pic-code unless we're sure that
       we're looking at a shared library.  Otherwise, we get many false
@@ -35,7 +37,7 @@ lintian (1.23.27) UNRELEASED; urgency=low
   * debian/control:
     + [RA] Depend on gettext 0.16 or later for --use-untranslated.
 
- -- Russ Allbery <rra@debian.org>  Sun,  3 Dec 2006 10:44:00 -0800
+ -- Russ Allbery <rra@debian.org>  Sun,  3 Dec 2006 10:47:35 -0800
 
 lintian (1.23.26) unstable; urgency=low
 

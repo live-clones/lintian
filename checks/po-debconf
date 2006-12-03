@@ -34,6 +34,7 @@ opendir(DEB, 'debfiles')
 my $has_template = my $has_depends = my $has_config = 0;
 my @lang_templates;
 for my $file (readdir(DEB)) {
+	next if -d "debfiles/$file";
 	if ($file =~ m/^(.+\.)?templates(\..+)?$/) {
 	        $has_template = 1;
 		if ($file =~ m/templates\.\w\w(_\w\w)?$/) {
