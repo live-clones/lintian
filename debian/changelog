@@ -37,7 +37,11 @@ lintian (1.23.27) UNRELEASED; urgency=low
   * debian/control:
     + [RA] Depend on gettext 0.16 or later for --use-untranslated.
 
- -- Russ Allbery <rra@debian.org>  Sun,  3 Dec 2006 10:47:35 -0800
+  * unpack/list-udebpkg:
+    + [RA] Handle compressed udeb Packages files.  Thanks, Bill
+      Allombert.  (Closes: #400338)
+
+ -- Russ Allbery <rra@debian.org>  Sun,  3 Dec 2006 10:52:39 -0800
 
 lintian (1.23.26) unstable; urgency=low
 
