@@ -1,4 +1,6 @@
-lintian (1.23.27) UNRELEASED; urgency=low
+lintian (1.23.27) unstable; urgency=low
+
+  The "we haven't run this against the whole archive in a while" release
 
   * checks/binaries{.desc,}:
     + [RA] Tag unrecognized ELF binaries as apparently corrupted rather
