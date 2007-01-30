@@ -52,6 +52,7 @@ our $display_infotags = 0;	#flag for -I|--display-info switch
 my $unpack_level = undef;	#flag for -l|--unpack-level switch
 our $no_override = 0;		#flag for -o|--no-override switch
 our $show_overrides = 0;	#flag for --show-overrides switch
+our $no_colored_output = 0;	#flag for --no-colored-output switch
 my $check_md5sums = 0;		#flag for -m|--md5sums switch
 my $allow_root = 0;		#flag for --allow-root swtich
 my $fail_on_warnings = 0;       #flag for --fail-on-warnings switch
@@ -143,6 +144,7 @@ Behaviour options:
     -l X, --unpack-level X    set default unpack level to X
     -o, --no-override         ignore overrides
     --show-overrides          output tags that have been overriden
+    --no-colored-output       disable ANSI color output (default enabled)
     -U X, --unpack-info X     specify which info should be collected
     -m, --md5sums             check md5sums when processing a .changes file
     --allow-root              suppress lintian\'s warning when run as root
@@ -259,6 +261,7 @@ my %opthash = (			# ------------------ actions
 	       "unpack-level|l=i" => \$unpack_level,
 	       "no-override|o" => \$no_override,
 	       "show-overrides" => \$show_overrides,
+	       "no-colored-output" => \$no_colored_output,
 	       "unpack-info|U=s" => \&record_unpack_info,
 	       "md5sums|m" => \$check_md5sums,
 	       "allow-root" => \$allow_root,
@@ -915,6 +918,7 @@ if (defined $experimental_output_opts) {
 
 $Tags::show_info = $display_infotags;
 $Tags::show_overrides = $show_overrides;
+$Tags::no_colored_output = $no_colored_output;
 use warnings;
 
 # load information about checker scripts

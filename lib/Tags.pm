@@ -28,6 +28,9 @@ use Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT = qw(tag);
 
+# support for ANSI color output via colored()
+use Term::ANSIColor;
+
 # configuration variables and defaults
 our $verbose = $::verbose;
 our $debug = $::debug;
@@ -38,6 +41,7 @@ our $min_severity = 1;
 our $max_severity = 99;
 our $min_significance = 1;
 our $max_significance = 99;
+our $no_colored_output = 0;
 
 # The master hash with all tag info. Key is the tag name, value another hash
 # with the following keys:
@@ -75,6 +79,7 @@ our @sev_to_type = qw( info warning warning error error );
 
 my @sig_to_qualifier = ( '??', '?', '', '!' );
 my @sev_to_code = qw( I W W E E );
+my @sev_to_color = ( 'bold', 'yellow', 'yellow bold', 'red', 'red bold' );
 
 # Add a new tag, supplied as a hash reference
 sub add_tag {
@@ -261,11 +266,20 @@ sub print_tag {
     $extra = " @$information" if @$information;
     $extra = '' if $extra eq ' ';
     my $code = $codes{$tag_info->{type}};
+    # code -> severity -> color
+    my $severity = $type_to_sev{$tag_info->{type}};
+    my $color = $sev_to_color[$severity];
+    $color = '' if $no_colored_output;
+    # disable color output is STDOUT isn't a TTY
+    $color = '' if ! -t STDOUT;
     $code = 'O' if $tag_info->{overridden}{override};
     my $type = '';
     $type = " $pkg_info->{type}" if $pkg_info->{type} ne 'binary';
 
-    print "$code: $pkg_info->{pkg}$type: $tag_info->{tag}$extra\n";
+    my $output = "$code: $pkg_info->{pkg}$type: $tag_info->{tag}$extra\n";
+    $output = colored($output, $color) if $color;
+
+    print $output;
 }
 
 sub print_tag_new {
@@ -276,12 +290,19 @@ sub print_tag_new {
     $extra = '' if $extra eq ' ';
     my $code = $sev_to_code[$tag_info->{severity}];
     $code = 'O' if $tag_info->{overridden}{override};
+    my $color = $sev_to_color[$tag_info->{severity}];
+    $color = '' if $no_colored_output;
+    # disable color output is STDOUT isn't a TTY
+    $color = '' if ! -t STDOUT;
     my $qualifier = $sig_to_qualifier[$tag_info->{significance}];
     $qualifier = '' if $code eq 'O';
     my $type = '';
     $type = " $pkg_info->{type}" if $pkg_info->{type} ne 'binary';
 
-    print "$code$qualifier: $pkg_info->{pkg}$type: $tag_info->{tag}$extra\n";
+    my $output = "$code$qualifier: $pkg_info->{pkg}$type: $tag_info->{tag}$extra\n";
+    $output = colored($output, $color) if $color;
+
+    print $output;
 
 }
 
