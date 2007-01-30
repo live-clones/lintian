@@ -27,7 +27,10 @@ use Pipeline;
 use Tags;
 use Cwd 'cwd';
 
-my $LINTIAN_ROOT = $::LINTIAN_ROOT;
+# Quiet "Name "main::LINTIAN_ROOT" used only once"
+# The variable comes from 'lintian'
+() = $main::LINTIAN_ROOT;
+my $LINTIAN_ROOT = $main::LINTIAN_ROOT;
 
 # Can also be more precise later on (only verbose with checker actions) but for
 # now this will do --Jeroen

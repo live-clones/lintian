@@ -27,12 +27,16 @@ use Util;
 
 use File::Temp;
 
-my $LINTIAN_ROOT = $::LINTIAN_ROOT;
+# Quiet "Name "main::LINTIAN_ROOT" used only once"
+# The variables comes from 'lintian'
+() = ($main::LINTIAN_ROOT, $main::verbose, $main::debug);
+
+my $LINTIAN_ROOT = $main::LINTIAN_ROOT;
 
 # Can also be more precise later on (only verbose with lab actions) but for
 # now this will do --Jeroen
-my $verbose = $::verbose;
-my $debug = $::debug;
+my $verbose = $main::verbose;
+my $debug   = $main::debug;
 
 sub new {
     my ( $class, $dir, $dist ) = @_;

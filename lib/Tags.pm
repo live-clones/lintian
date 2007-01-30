@@ -25,11 +25,15 @@ use strict;
 use warnings;
 
 use Exporter;
-our @ISA = qw(Exporter);
+our @ISA    = qw(Exporter);
 our @EXPORT = qw(tag);
 
 # support for ANSI color output via colored()
 use Term::ANSIColor;
+
+# Quiet "Name "main::LINTIAN_ROOT" used only once"
+# The variables comes from 'lintian'
+() = ($main::verbose, $main::debug);
 
 # configuration variables and defaults
 our $verbose = $::verbose;

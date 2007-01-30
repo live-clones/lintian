@@ -2,15 +2,18 @@
 
 package common_data;
 use base qw(Exporter);
-@EXPORT=qw(%known_archs %known_sections %known_non_us_parts %known_archive_parts
-           %known_prios %known_source_fields %known_binary_fields %known_udeb_fields
-	   %known_obsolete_fields %known_essential %known_build_essential
-	   %known_obsolete_packages %known_virtual_packages
-	   %known_libstdcs %known_tcls %known_tclxs %known_tks %known_tkxs
-	   %known_libpngs %known_x_metapackages
-	   %non_standard_archs %all_cpus %all_oses
-	   %known_doc_base_formats
-          );
+
+our @EXPORT = qw
+(
+   %known_archs %known_sections %known_non_us_parts %known_archive_parts
+   %known_prios %known_source_fields %known_binary_fields %known_udeb_fields
+   %known_obsolete_fields %known_essential %known_build_essential
+   %known_obsolete_packages %known_virtual_packages
+   %known_libstdcs %known_tcls %known_tclxs %known_tks %known_tkxs
+   %known_libpngs %known_x_metapackages
+   %non_standard_archs %all_cpus %all_oses
+   %known_doc_base_formats
+);
 
 # To let "perl -cw" test know we use these variables;
 use vars qw
