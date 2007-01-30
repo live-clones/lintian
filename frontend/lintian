@@ -1,5 +1,5 @@
 #!/usr/bin/perl -w
-# {{{ Legal stuff 
+# {{{ Legal stuff
 # Lintian -- Debian package checker
 #
 # Copyright (C) 1998 Christian Schwarz and Richard Braakman
@@ -212,7 +212,7 @@ sub record_dont_check_part {
     }
     if ($checks) {
 	die("both -C or --check-part and -X or --dont-check-part options not allowed");
-    }    
+    }
     if ($action) {
 	die("too many actions specified: $_[0]");
     }
@@ -243,7 +243,7 @@ my %opthash = (			# ------------------ actions
 	       "remove-lab|R" => \&record_action,
 	       "check|c" => \&record_action,
 	       "check-part|C=s" => \&record_check_part,
-	       "dont-check-part|X=s" => \&record_dont_check_part,	       
+	       "dont-check-part|X=s" => \&record_dont_check_part,
 	       "unpack|u" => \&record_action,
 	       "remove|r" => \&record_action,
 
@@ -322,7 +322,7 @@ if (($check_everything or $packages_file) and $#ARGV+1 > 0) {
 # check specified action
 $action = 'check' if not $action;
 
-# }}} 
+# }}}
 
 # {{{ Setup Configuration
 #
@@ -564,7 +564,7 @@ fail("lintian lab has not been set up correctly (perhaps you forgot to run linti
 #XXX: There has to be a cleaner way to do this
 $LINTIAN_LAB = $LAB->{dir};
 
-# }}} 
+# }}}
 
 # {{{ Setup the lintian-info pipe
 
@@ -636,16 +636,17 @@ while (my $arg = shift) {
 	    }
 
 	    # check distribution field
-	    if (! (($data->{'distribution'} eq 'stable')
-		  or ($data->{'distribution'} eq 'testing')
-		  or ($data->{'distribution'} eq 'unstable')
-		  or ($data->{'distribution'} eq 'experimental')
-		  or ($data->{'distribution'} =~ /\w+-proposed-updates/)
-		  or ($data->{'distribution'} =~ /\w+-security/))
+	    if (defined $data->{distribution}
+                and ! (($data->{distribution} eq 'stable')
+                       or ($data->{distribution} eq 'testing')
+                       or ($data->{distribution} eq 'unstable')
+                       or ($data->{distribution} eq 'experimental')
+                       or ($data->{distribution} =~ /\w+-proposed-updates/)
+                       or ($data->{distribution} =~ /\w+-security/))
                ) {
 		# bad distribution entry
 		tag("bad-distribution-in-changes-file",
-		    $data->{'distribution'});
+		    $data->{distribution});
 	    }
 
 	    # Urgency is only recommended by Policy.
@@ -660,14 +661,16 @@ while (my $arg = shift) {
 	    }
 
 	    # process all listed `files:'
-	    for (split(/\n/o,$data->{'files'})) {
+            my $file_list = defined $data->{files} ? $data->{files} : '';
+
+	    for ( split /\n/, $file_list ) {
 		chomp;
 		s/^\s+//o;
 		next if $_ eq '';
 
 		my ($md5sum,$size,$section,$priority,$file) = split(/\s+/o, $_);
 		my $filename = $arg_dir . '/' . $file;
-	
+
 		# check size
 		if (not -f $filename) {
 		    warn "E: $file does not exist, exiting\n";
@@ -678,7 +681,7 @@ while (my $arg = shift) {
 
 		    tag( "file-size-mismatch-in-changes-file", $file );
 		}
-	
+
 		# check md5sums
 		if ($check_md5sums or $file =~ /\.dsc$/) {
 		    my $real_md5sum = get_file_md5($filename);
@@ -687,12 +690,12 @@ while (my $arg = shift) {
 			tag( "md5sum-mismatch-in-changes-file", $file );
 		    }
 		}
-	
+
 		# check section
 		if (($section eq 'non-free') or ($section eq 'contrib')) {
 		    tag( "bad-section-in-changes-file", $file, $section );
 		}
-	
+
 		# process file?
 		if ($file =~ /\.dsc$/) {
 		    my $info = get_dsc_info($filename);
@@ -725,7 +728,7 @@ while (my $arg = shift) {
 	# parameter is a package name--so look it up
 	# search the distribution first, then the lab
 	# special case: search only in lab if action is `remove'
-	
+
 	my $search;
 	if ($action eq 'remove') {
 	    # search only in lab--see below
@@ -843,7 +846,7 @@ for my $f (readdir COLLDIR) {
     print "N: Reading collector description file $f ...\n" if $debug >= 2;
     my @secs = read_dpkg_control("$LINTIAN_ROOT/collection/$f");
     my $script;
-    ($#secs+1 == 1) 
+    ($#secs+1 == 1)
 	or fail("syntax error in description file $f: too many sections");
 
     ($script = $secs[0]->{'collector-script'})
@@ -1267,7 +1270,7 @@ for (reverse sort @packages) {
 	Tags::set_pkg( $file, $pkg, "", "", $long_type );
 
 
-	unless ($no_override) 
+	unless ($no_override)
 	    { 	if ( open(O,"$base/override") )
 		    {
 			while (<O>) {
