@@ -18,7 +18,7 @@
 
 use strict;
 
-BEGIN { push @INC, "$ENV{LINTIAN_ROOT}/checks" if defined $ENV{LINTIAN_ROOT}; }
+use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Pipeline;
 
 package Dep;
@@ -27,7 +27,7 @@ package Dep;
 # public routines
 
 sub Pred {
-    $_[0] =~
+    $_[0] =~ 
 	    /^\s*                           # skip leading whitespace
 	      ([a-zA-Z0-9][a-zA-Z0-9+.-]+)  # package name
 	      (?:                           # start of optional part

@@ -35,7 +35,7 @@ BEGIN {
 }
 
 # import perl libraries
-BEGIN { push @INC, "$ENV{LINTIAN_ROOT}/checks" if defined $ENV{LINTIAN_ROOT}; }
+use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Read_taginfo;
 
 my %already_displayed = ();

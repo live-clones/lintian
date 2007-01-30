@@ -22,7 +22,7 @@
 my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'} || '/usr/share/lintian';
 my $debug = $ENV{'LINTIAN_DEBUG'} || 0;
 
-BEGIN { push @INC, "$ENV{LINTIAN_ROOT}/checks" if defined $ENV{LINTIAN_ROOT}; }
+use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Util;
 use Text_utils;
 use Manual_refs;
@@ -109,7 +109,7 @@ sub format_ref {
 	    $foo[$u] = "the $foo[$u] manual page";
 	}
     }
-
+	
     if ($#foo+1 > 2) {
 	$ref = sprintf "Refer to %s, and %s for details.",join(', ',splice(@foo,0,$#foo)),@foo;
     } elsif ($#foo+1 > 0) {

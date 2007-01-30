@@ -27,7 +27,7 @@ use vars qw($verbose);
 ($#ARGV == 0) or fail("syntax: unpack-binpkg-l2 <base-dir>");
 my $base_dir = shift;
 
-BEGIN { push @INC, "$ENV{LINTIAN_ROOT}/checks" if defined $ENV{LINTIAN_ROOT}; }
+use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Pipeline;
 
 print "N: Unpacking binary packages in directory $base_dir ...\n" if $verbose;

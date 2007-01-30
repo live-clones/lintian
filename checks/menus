@@ -22,7 +22,7 @@
 
 package Lintian::menus;
 use strict;
-BEGIN { push @INC, "$ENV{LINTIAN_ROOT}/checks/" if defined $ENV{LINTIAN_ROOT}; }
+use lib "$ENV{'LINTIAN_ROOT'}/checks/";
 use common_data;
 use Tags;
 use Util;

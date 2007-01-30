@@ -2,17 +2,17 @@
 # menu-files -- lintian collector script
 
 # Copyright (C) 1998 Richard Braakman
-#
+# 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 of the License, or
 # (at your option) any later version.
-#
+# 
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-#
+# 
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
 # Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
@@ -27,7 +27,7 @@ my $type = shift;
 
 -f "fields/package" or fail("menu-files invoked in wrong directory");
 
-BEGIN { push @INC, "$ENV{LINTIAN_ROOT}/checks" if defined $ENV{LINTIAN_ROOT}; }
+use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Pipeline;
 
 if (-e "menu") {
@@ -37,7 +37,7 @@ if (-e "menu") {
 
 mkdir("menu", 0777) or fail("cannot mkdir menu: $!");
 
-if (-d "unpacked/usr/lib/menu") {
+if (-d "unpacked/usr/lib/menu") {    
     spawn('cp', '-a', 'unpacked/usr/lib/menu', 'menu/lib') == 0
 	or fail("cannot copy unpacked/usr/lib/menu/ directory");
 } else {
@@ -45,7 +45,7 @@ if (-d "unpacked/usr/lib/menu") {
     mkdir("menu/lib", 0777) or fail("cannot mkdir menu/lib: $!");
 }
 
-if (-d "unpacked/usr/share/menu") {
+if (-d "unpacked/usr/share/menu") {    
     spawn('cp', '-a', 'unpacked/usr/share/menu', 'menu/share') == 0
 	or fail("cannot copy unpacked/usr/share/menu directory");
 } else {

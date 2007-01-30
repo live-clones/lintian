@@ -25,7 +25,7 @@ use strict;
 use vars qw($verbose);
 use FileHandle;
 
-BEGIN { push @INC, "$ENV{LINTIAN_ROOT}/checks" if defined $ENV{LINTIAN_ROOT}; }
+use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Pipeline;
 
 ($#ARGV == 0) or fail("syntax: unpack-srcpkg-l2 <base-dir>");

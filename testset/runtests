@@ -104,7 +104,7 @@ BEGIN {
 
 my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
 
-BEGIN { push @INC, "$ENV{LINTIAN_ROOT}/checks" if defined $ENV{LINTIAN_ROOT}; }
+use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Util;
 use Tags;
 
@@ -212,7 +212,7 @@ for (@tests) {
     close(CHANGELOG);
     $line =~ s/^.*\(//;
     $line =~ s/\).*$//;
-
+    
     my ($pkg, $ver) = ($pkgdir, $line);
     print "Running test on $pkg $ver: copying... ";
 

@@ -28,7 +28,7 @@ sub run {
 my $pkg = shift;
 my $type = shift;
 
-BEGIN { push @INC, "$ENV{LINTIAN_ROOT}/checks" if defined $ENV{LINTIAN_ROOT}; }
+use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Dep;
 
 my %commands;
@@ -148,7 +148,7 @@ opendir(DEBIAN, 'debfiles')
     or fail("Can't open debfiles directory.");
 while (defined(my $file=readdir(DEBIAN))) {
     if ($file =~ m/^(?:(.*)\.)?(?:post|pre)(?:inst|rm)$/) {
-
+	
         my $binpkg = $1 || '';
 	open(IN,"debfiles/$file")
 	    or fail("Can't open debfiles/$file: $!");
@@ -160,7 +160,7 @@ while (defined(my $file=readdir(DEBIAN))) {
 	    }
 	}
 	close IN;
-
+	
 	if ((! $seentag) and $needtomodifyscripts) {
 	    tag "maintainer-script-lacks-debhelper-token", "debian/$file" unless $binpkg && $pkgs{$binpkg} && ($pkgs{$binpkg} =~ /udeb/i);
 	}
