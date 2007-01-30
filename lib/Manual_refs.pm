@@ -19,22 +19,28 @@
 use strict;
 
 # define hash for manuals
-my %manual = (
-	   'policy' => 'Policy Manual',
-	   'devref' => 'Developers Reference',
-	   'fhs' => 'FHS',
-	   );
+my %manual =
+(
+ 'policy' => 'Policy Manual',
+ 'devref' => 'Developers Reference',
+ 'fhs'    => 'FHS',
+);
 
 my %url;
-open(REFS, "$ENV{'LINTIAN_ROOT'}/lib/manual_refs") or
-    die("Could not open manual_refs: $!");
+
+my $lib = defined $ENV{LINTIAN_ROOT} ?  "$ENV{LINTIAN_ROOT}/" : "";
+
+open REFS, "$ {lib}lib/manual_refs" or
+    die "Could not open manual_refs: $!";
+
 while(<REFS>) {
     chomp;
-    next if (m/^\s*\#/);
+    next if m/^\s*\#/;
 
     my ($key, $data) = split;
     $url{$key} = $data;
 }
-close(REFS);
+
+close REFS;
 
 1;
