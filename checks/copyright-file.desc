@@ -46,7 +46,7 @@ Info: The copyright file /usr/share/doc/<i>pkg</i>/copyright contains the
  <tt>/usr/share/common-licenses/GPL</tt> instead.
 Ref: policy 12.5
 
-Tag: usr-doc-symlink-without-dependency
+Tag: usr-share-doc-symlink-without-dependency
 Type: error
 Info: If the package installs a symbolic link /usr/share/doc/<i>pkg1</i> -&gt;
  <i>pkg2</i>, then <i>pkg1</i> has to depend on <i>pkg2</i> with the same
@@ -57,7 +57,7 @@ Info: If the package installs a symbolic link /usr/share/doc/<i>pkg1</i> -&gt;
  directory within <i>pkg1</i> and copy the copyright file into that directory.
 Ref: policy 12.5
 
-Tag: usr-doc-symlink-to-foreign-package
+Tag: usr-share-doc-symlink-to-foreign-package
 Type: error
 Info: If the package installs a symbolic link /usr/share/doc/<i>pkg1</i> -&gt;
  <i>pkg2</i>, then <i>pkg1</i> and <i>pkg2</i> must both come from the same
@@ -67,7 +67,7 @@ Info: If the package installs a symbolic link /usr/share/doc/<i>pkg1</i> -&gt;
  within <i>pkg1</i> and copy the copyright file to that directory.
 Ref: policy 12.5
 
-Tag: cannot-check-whether-usr-doc-symlink-points-to-foreign-package
+Tag: cannot-check-whether-usr-share-doc-symlink-points-to-foreign-package
 Type: info
 Info: There is a symlink /usr/share/doc/<i>pkg1</i> -&gt; <i>pkg2</i>
  in your package. This means that <i>pkg1</i> and <i>pkg2</i> must
@@ -103,7 +103,7 @@ Info: The /usr/share/doc/<i>pkg</i>/copyright file refers to a standard license
  file. Please update the reference (the licenses are installed
  uncompressed).
 
-Tag: usr-doc-symlink-points-outside-of-usr-doc
+Tag: usr-share-doc-symlink-points-outside-of-usr-share-doc
 Type: error
 Info: The /usr/share/doc/<i>pkg</i> symbolic link is pointing to a directory
  outside of <tt>/usr/share/doc</tt>.

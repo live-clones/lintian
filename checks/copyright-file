@@ -73,7 +73,7 @@ while (<IN>) {
 	
     	# check if this symlink references a directory elsewhere
     	if ($link =~ m,^(\.\.)?/,) {
-	    tag "usr-doc-symlink-points-outside-of-usr-doc", "$link";
+	    tag "usr-share-doc-symlink-points-outside-of-usr-share-doc", "$link";
 	    last;
     	}
 	
@@ -96,7 +96,7 @@ while (<IN>) {
 	         defined($known_essential{$link}))) {
 		# no, it does not.
 
-		tag "usr-doc-symlink-without-dependency", "$link";
+		tag "usr-share-doc-symlink-without-dependency", "$link";
 		last;
 	    }
     	}
@@ -110,10 +110,10 @@ while (<IN>) {
 		# yes, everything is ok.
 	    } else {
 		# no, it is not.
-		tag "usr-doc-symlink-to-foreign-package", "$link";
+		tag "usr-share-doc-symlink-to-foreign-package", "$link";
 	    }
     	} else {		# no, source is not available
-	    tag "cannot-check-whether-usr-doc-symlink-points-to-foreign-package", "";
+	    tag "cannot-check-whether-usr-share-doc-symlink-points-to-foreign-package", "";
     	}
 	
     	# everything is ok.
