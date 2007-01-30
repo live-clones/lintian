@@ -165,10 +165,11 @@ my %interpreter_dependencies = (
 # reported is maintainer-script-needs-depends-on-%s, so be sure to update
 # scripts.desc when adding a new rule.
 my @depends_needed = (
-	[ adduser => '\badduser\b' ],
-	[ 'gconf2 (>= 2.10.1-2)' => '\bgconf-schemas\b' ],
-	[ 'netbase | update-inetd' => '\bupdate-inetd\b' ],
-	[ ucf => '\bucf\s' ],
+	[ adduser                               => '\badduser\b'        ],
+	[ 'gconf2 (>= 2.10.1-2)'                => '\bgconf-schemas\b'  ],
+	[ 'netbase | update-inetd'              => '\bupdate-inetd\b'   ],
+        [ 'openbsd-inetd | inet-superserver'    => '\bupdate-inetd\b'   ],
+	[ ucf                                   => '\bucf\s'            ],
 );
 
 my %executable = ();
@@ -356,7 +357,7 @@ close(SCRIPTS);
 
 foreach (keys %executable) {
     tag_warn("executable-not-elf-or-script", $_)
-	unless ( $ELF{$_} 
+	unless ( $ELF{$_}
 		 or $scripts{$_}
 		 or $_ =~ m,^usr(/X11R6)?/man/,
 		 or $_ =~ m/\.exe$/ # mono convention
@@ -398,7 +399,7 @@ while (<SCRIPTS>) {
 	    unless ($base eq 'sh'
 		    or $base eq 'bash'
 		    or $base eq 'perl');
-	
+
 	if (exists $interpreter_dependencies{$base}) {
 	    tag_error("interpreter-without-predep", $filename,
 		      "#!$interpreter")
@@ -644,7 +645,7 @@ sub tag_warn {
     }
 }
 
-# Returns non-zero if the given file is not actually a shell script, 
+# Returns non-zero if the given file is not actually a shell script,
 # just looks like one.
 sub script_is_evil_and_wrong {
     my ($filename) = @_;
