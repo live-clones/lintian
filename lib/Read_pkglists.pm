@@ -21,7 +21,7 @@
 
 use strict;
 
-use lib "$ENV{'LINTIAN_ROOT'}/lib";
+BEGIN { push @INC, "$ENV{LINTIAN_ROOT}/checks" if defined $ENV{LINTIAN_ROOT}; }
 use Util;
 
 use vars qw($BINLIST_FORMAT $SRCLIST_FORMAT $UDEBLIST_FORMAT %source_info %binary_info %udeb_info %bin_src_ref);

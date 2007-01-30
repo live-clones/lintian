@@ -38,7 +38,7 @@ $ENV{'LINTIAN_LAB'} = $LINTIAN_LAB;
 $ENV{'LINTIAN_ROOT'} = $LINTIAN_ROOT;
 
 # Import perl libraries
-use lib "$ENV{'LINTIAN_ROOT'}/lib";
+BEGIN { push @INC, "$ENV{LINTIAN_ROOT}/checks" if defined $ENV{LINTIAN_ROOT}; }
 use Util;
 use Read_taginfo;
 my %tag_info = %{read_tag_info('html')};
@@ -114,12 +114,12 @@ while (<>) {
 
     if (not exists $source_info{$src}) {
 	# work around:
-	$source_info{$src}->{'maintainer'} = 
-	    $binary_info{$pkg}->{'maintainer'} || 
+	$source_info{$src}->{'maintainer'} =
+	    $binary_info{$pkg}->{'maintainer'} ||
 	    $udeb_info{$pkg}->{'maintainer'} || '(unknown)';
 	$source_info{$src}->{'version'} = $binary_info{$pkg}->{'version'};
     }
-  
+
     push(@{$by_src{$src}},$_);
     push(@{$by_tag{$tag}},$_);
 }
