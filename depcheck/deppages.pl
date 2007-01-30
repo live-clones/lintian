@@ -23,42 +23,45 @@
 
 require './config';
 
+# comes from './config'
+use vars qw( $LOG_DIR );
+
 # lintian binary will define these
-use vars qw( $LINTIAN_DIST $HTML_TMP_DIR $LINTIAN_ARCHIVEDIR);
+use vars qw($LINTIAN_DIST $HTML_TMP_DIR $LINTIAN_ARCHIVEDIR $LINTIAN_ROOT);
 
-@archs = ('i386', 'alpha', 'm68k', 'powerpc', 'sparc', 'arm', 'hurd-i386');
+my @archs = ('i386', 'alpha', 'm68k', 'powerpc', 'sparc', 'arm', 'hurd-i386');
 
-@logfiles = map { "$LOG_DIR/Depcheck-" . $_ } @archs;
+my @logfiles = map { "$LOG_DIR/Depcheck-" . $_ } @archs;
 system("savelog @logfiles >/dev/null") == 0
     or die("cannot rotate logfiles");
 
 # this stuff is most likely broken
-$BINARY = "$LINTIAN_ARCHIVEDIR/dists/$LINTIAN_DIST/main";
+my $BINARY = "$LINTIAN_ARCHIVEDIR/dists/$LINTIAN_DIST/main";
 
 my $libdir   = defined $LINTIAN_ROOT ? "$LINTIAN_ROOT/" : "";
-$DEPCHECKDIR = "${libdir}depcheck";
-$DEPCHECK    = "$DEPCHECKDIR/dependencies.py";
+my $DEPCHECKDIR = "${libdir}depcheck";
+my $DEPCHECK    = "$DEPCHECKDIR/dependencies.py";
 
 $ENV{'PYTHONPATH'} = $DEPCHECKDIR;
 
 system("$DEPCHECK $BINARY/binary-i386/Packages >$LOG_DIR/Depcheck-i386") == 0
     or die("depcheck failed for i386 architecture");
 
-for $arch (@archs) {
+for my $arch (@archs) {
     next if $arch eq 'i386';
 
     system("$DEPCHECK $BINARY/binary-$arch/Packages $LOG_DIR/Depcheck-i386 >$LOG_DIR/Depcheck-$arch") == 0
 	or die("depcheck failed for $arch architecture");
 }
 
-%bug_used = ();
-%bugs = ();
+my %bug_used = ();
+my %bugs = ();
 
 open(BUGS, "$LINTIAN_ROOT/depcheck/buglist") or die("buglist");
 while (<BUGS>) {
     chop;
-    $bugline = $_;
-    @b = ();
+    my $bugline = $_;
+    my @b;
     while ($bugline =~ s/^(\d+)\s//) {
 	push(@b, &make_bugref($1));
     }
@@ -101,13 +104,13 @@ The scan checks the Recommends, Depends, and Pre-Depends headers in
 all cases.<P>
 EOT
 
-for $arch (@archs) {
+for my $arch (@archs) {
     genarch($arch);
 }
 
 close(HTML);
 
-for $bug (keys %bugs) {
+for my $bug (keys %bugs) {
     unless ($bug_used{$bug}) {
 	print STDERR "Unused bugnumber: $bug\n";
     }
