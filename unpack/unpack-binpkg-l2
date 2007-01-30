@@ -22,6 +22,7 @@
 # MA 02110-1301, USA.
 
 use strict;
+use vars qw($verbose);
 
 ($#ARGV == 0) or fail("syntax: unpack-binpkg-l2 <base-dir>");
 my $base_dir = shift;
@@ -29,7 +30,7 @@ my $base_dir = shift;
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Pipeline;
 
-print "N: Unpacking binary packages in directory $base_dir ...\n" if $::verbose;
+print "N: Unpacking binary packages in directory $base_dir ...\n" if $verbose;
 mkdir("$base_dir/unpacked", 0777) or fail();
 
 # avoid using dpkg-deb -x; this pipeline is far faster.  I got a factor 2

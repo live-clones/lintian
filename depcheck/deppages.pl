@@ -23,6 +23,9 @@
 
 require './config';
 
+# lintian binary will define these
+use vars qw( $LINTIAN_DIST $HTML_TMP_DIR $LINTIAN_ARCHIVEDIR);
+
 @archs = ('i386', 'alpha', 'm68k', 'powerpc', 'sparc', 'arm', 'hurd-i386');
 
 @logfiles = map { "$LOG_DIR/Depcheck-" . $_ } @archs;
@@ -31,8 +34,10 @@ system("savelog @logfiles >/dev/null") == 0
 
 # this stuff is most likely broken
 $BINARY = "$LINTIAN_ARCHIVEDIR/dists/$LINTIAN_DIST/main";
-$DEPCHECKDIR = "$LINTIAN_ROOT/depcheck";
-$DEPCHECK = "$DEPCHECKDIR/dependencies.py";
+
+my $libdir   = defined $LINTIAN_ROOT ? "$LINTIAN_ROOT/" : "";
+$DEPCHECKDIR = "${libdir}depcheck";
+$DEPCHECK    = "$DEPCHECKDIR/dependencies.py";
 
 $ENV{'PYTHONPATH'} = $DEPCHECKDIR;
 
@@ -136,7 +141,7 @@ sub genreport {
     my $inlist = 0;
     my $brokendep;
     my $bug;
-    
+
     while (<REPORT>) {
 	chop;
 	if (s/^\s+//) {
@@ -161,7 +166,7 @@ sub genreport {
 	    $inlist = 1;
 	}
     }
-    
+
     if ($inlist) {
 	print(HTML "</UL>\n");
     }

@@ -22,7 +22,7 @@
 # MA 02110-1301, USA.
 
 use strict;
-
+use vars qw($verbose);
 use FileHandle;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
@@ -32,7 +32,7 @@ use Pipeline;
 my $base_dir = shift;
 my $unpack_dir;
 
-print "N: Unpacking source package in directory $base_dir ...\n" if $::verbose;
+print "N: Unpacking source package in directory $base_dir ...\n" if $verbose;
 chdir($base_dir);
 
 my $IN = FileHandle->new;

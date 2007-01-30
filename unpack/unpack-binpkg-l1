@@ -24,6 +24,7 @@
 # MA 02110-1301, USA.
 
 use strict;
+use vars qw($verbose);
 
 ($#ARGV == 1) or die "syntax: unpack-binpkg-l1 <base-dir> <deb-file>";
 my $base_dir = shift;
@@ -38,7 +39,7 @@ use Util;
 (my @stat = stat $file) or fail("$file: cannot stat: $!");
 
 # create directory in lab
-print "N: Creating directory $base_dir ...\n" if $::verbose;
+print "N: Creating directory $base_dir ...\n" if $verbose;
 mkdir("$base_dir", 0777) or fail("mkdir $base_dir: $!");
 mkdir("$base_dir/control", 0777) or fail("mkdir $base_dir/control: $!");
 mkdir("$base_dir/fields", 0777) or fail("mkdir $base_dir/fields: $!");
