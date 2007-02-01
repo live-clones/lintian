@@ -1,10 +1,52 @@
 lintian (1.23.28) UNRELEASED; urgency=low
 
-  * checks/scripts.desc:
+  * checks/copyright-file{.desc,}:
+    + [JA] Update usr-doc-* test to report user-share-doc-* instead.
+      New tests added: postinst-should-not-set-usr-doc-link,
+      doc-base-file-references-usr-doc.
+      Patch from Thijs Kinkhorst.  (Closes: #406349).
+  * checks/common_data.pm:
+    + [JA] Perl syntax corrections.
+    + [JA] Support the Autobuild: and Vcs-* fields in .dsc files.
+      Applied patch to implement this by Ian Beckwith.  (Closes: #403553).
+  * depcheck/deppages.pl:
+    + [JA] Perl syntax corrections.
+  * checks/menus:
+    + [JA] Perl syntax corrections.  Removed extra empty newlines.
+  * checks/scripts{.desc,}:
+    + [JA] Added check for `openbsd-inetd | inet-superserver'
+      which compliments the older check `netbase | update-inetd'.
+      Reported by Tatsuya Kinoshita.  (Closes: #402319).
     + [RA] Mention SUSv3 in the bashism and non-posix tag descriptions,
       note that use of test -a/-o and local aren't bugs but may still be
       worth avoiding, and mention short circuiting of && and ||.  (Thanks
       to Jari Aalto for the latter).
+
+  * doc/README:
+    + Document --no-colored-output option.  Patch from Loïc Minier.
+
+  * depcheck/report2html.pl:
+    + [JA]  perl syntax corrections.  Patch from Loïc Minier.
+
+  * frontend/lintian:
+    + [JA] Removed trailing spaces and other perl syntax corrections.
+    + [JA] Add --no-colored-output option to disable ANSI color output, even
+      when STDOUT is a TTY.  Patch from Loïc Minier.
+
+  * lib/Checker.pm
+    + [JA] Perl syntax corrections.
+  * lib/Lab.pm
+    + [JA] Perl syntax corrections.
+  * lib/Tags.pm
+    + [JA] Perl syntax corrections.
+    + [JA] Support for ANSI color output.
+      Patch from Loïc Minier.  (Closes #399714).
+
+  * man/lintian.1:
+    + [JA] Document --no-colored-output.  Patch from Loïc Minier.
+
+    * unpack/unpack-*pkg*
+    + [JA] Perl syntax corrections.
 
  -- Russ Allbery <rra@debian.org>  Sun,  3 Dec 2006 14:16:40 -0800
 
@@ -816,9 +858,9 @@ lintian (1.23.16) unstable; urgency=low
  -- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>  Sun, 26 Mar 2006 15:38:37 +0200
 
 lintian (1.23.15) unstable; urgency=low
-  
+
   * The "www.no-name-yet.eu" release
-  
+
   * debian/changelog:
     + [FL] Fix wrapping of last changelog entry (Closes: #344899)
 
@@ -867,18 +909,18 @@ lintian (1.23.15) unstable; urgency=low
  -- Frank Lichtenheld <djpig@debian.org>  Thu, 19 Jan 2006 15:13:02 +0100
 
 lintian (1.23.14) unstable; urgency=low
-  
+
   * The "fix those frontend regressions" release
 
   * frontend/lintian:
     + [FL] Fix exit status computing so that we exit with 1 again
       if we found any error. (Closes: #329458)
     + [FL] Re-enable reporting unused overrides.
-  
+
   * lib/Tags.pm:
     + [FL] Some fixes to the statistics code to make the fixes
       in frontend/lintian possible
-  
+
   * checks/binaries{.desc,}:
     + [FL] support c2a suffix in soname check, too (Closes: #340856)
     + [FL] fix typo in description of package-name-doesnt-match-sonames
@@ -925,11 +967,11 @@ lintian (1.23.13) unstable; urgency=low
 
   * The "doesn't contain all the fixes I would like but that's no
     reason to let the others wait forever" release
-  
+
   * debian/control:
     + [FL] Fix typo in description. Noted by Bill Allombert
       (Closes: #327859)
-  
+
   * checks/copyright-file:
     + [JvW] Demote FSF address check to warning
   * checks/description:
@@ -972,14 +1014,14 @@ lintian (1.23.13) unstable; urgency=low
 lintian (1.23.12) unstable; urgency=low
 
   * The "bad, bad SONAME check" release
-  
+
   * all files:
     + [FL] Update FSF address
-  
+
   * debian/control:
     + [FL] Depend on dpkg-dev since we use dpkg-source. How old exactly is
       this bug? (Closes: #324673)
-  
+
   * checks/binaries:
     + [FL] Only use sonames from files in common library directories for
       the soname checks. This avoids many false positives. Patch by
@@ -1037,12 +1079,12 @@ lintian (1.23.11) unstable; urgency=low
   * frontend/lintian:
     + [FL] Don't use dpkg --print-installation-architecture since
       it is deprecated, use dpkg --print-architecture instead.
-  
+
   * debian/control:
     + [FL] Depend on libparse-debianchangelog-perl, require
       >= 0.6 since prior versions have bugs regarding parse
       error handling
-  
+
   * checks/binaries:
     + [FL] Check that the package name of a shared library matches
       the SONAME as defined in the "Library Packaging guide"
@@ -1083,7 +1125,7 @@ lintian (1.23.11) unstable; urgency=low
     + [FL] Adjust check for positional arguments after ". file" to detect
       more shell control and piping commands that are all allowed.
       Noted by Thomas Hood. (Closes: #319212)
-  
+
   * reporting/html_reports:
     + [FL] Fix counting of binary package names
     + [FL] Generate mostly valid HTML (id and name attributes still
@@ -1113,7 +1155,7 @@ lintian (1.23.10) unstable; urgency=low
       print out an info message for those. (Closes: #253405, #311471)
 
   * checks/files:
-    + [HE] Allow backupninja configuration files in /etc/backup.d/ to be 
+    + [HE] Allow backupninja configuration files in /etc/backup.d/ to be
       0600. (Closes: #307639)
 
   * checks/scripts:
@@ -1140,7 +1182,7 @@ lintian (1.23.10) unstable; urgency=low
 lintian (1.23.9) unstable; urgency=low
 
   * The "Wow, so much time at hand" release
-  
+
   * [FL] Convert build process to debhelper
     - debian/rules    - adapted
     - debian/compat   - new
@@ -1152,7 +1194,7 @@ lintian (1.23.9) unstable; urgency=low
     - debian/prerm    - adapted
   * debian/control:
     + [FL] Update Standards-Version to 3.6.2
-  
+
   * checks/conffiles:
     + [JvW] Warn on /var files being a conffile too (Closes: #293443)
   * checks/debconf:
@@ -1171,7 +1213,7 @@ lintian (1.23.9) unstable; urgency=low
 
   * collections/menu-files:
     + [FL] Also collect files from /usr/share/menu
-  
+
  -- Frank Lichtenheld <djpig@debian.org>  Fri, 17 Jun 2005 02:17:52 +0200
 
 lintian (1.23.8) unstable; urgency=low
@@ -1220,7 +1262,7 @@ lintian (1.23.7) unstable; urgency=high
       failed in 1.23.6
     + In temporary lab mode, try to create the directory several
       times before giving up
-  
+
   * testset/runtests: Extend the static lab test
 
  -- Frank Lichtenheld <djpig@debian.org>  Sat,  8 Jan 2005 21:41:21 +0100
@@ -1243,7 +1285,7 @@ lintian (1.23.6) unstable; urgency=low
   * checks/files:
     + [HE] Check that .desktop files are placed in /usr/share/applications.
       This seems to be the standard place for those files that are used
-      to create menus. The check is called desktop-file-in-wrong-dir. 
+      to create menus. The check is called desktop-file-in-wrong-dir.
       (Closes: #200171)
   * checks/manpages:
     + [HE] Don't compare the manpage filename extension and the content of
@@ -1253,8 +1295,8 @@ lintian (1.23.6) unstable; urgency=low
       translated manpages for a binary. (Closes: #259227)
     + [HE] Skip all comment lines when checking for .so links in manpages.
       Thanks for the report and fix suggestion to Steinar H. Gunderson
-      <sgunderson@bigfoot.com>. (Closes: #284662)      
-  * checks/md5sums: 
+      <sgunderson@bigfoot.com>. (Closes: #284662)
+  * checks/md5sums:
     + [HE] Strip off ./ at the beginning of the filenames in md5sums
       files (this seems to happen on some systems, though we don't know
       how). (Closes: #284728)
@@ -1263,7 +1305,7 @@ lintian (1.23.6) unstable; urgency=low
       don't issue no-standards-version-field for them. (If they happen to
       have a Standards-Version field anyway, we still check that it's
       valid.)
-  
+
   * lib/Lab.pm, frontend/lintian:
     SECURITY (CAN-2004-1000):
     + [FL] Overhaul lab directory handling. This also fixes the issue
@@ -1274,7 +1316,7 @@ lintian (1.23.6) unstable; urgency=low
 lintian (1.23.5) unstable; urgency=low
 
   The "learn how to use intltool-debian correctly the hard way" release
-  
+
   * checks/po-debconf: Set INTLTOOL_EXTRACT to fix invocation
     of intltool-update (Closes: #285419, #285471)
 
@@ -1283,7 +1325,7 @@ lintian (1.23.5) unstable; urgency=low
 lintian (1.23.4) unstable; urgency=low
 
   The "A little pause from the sarge release work" release.
-  
+
   * checks/changelog-file:
     + [FL] file has apparently changed its output format for
       symlinks sometime in the past. This broke symlink detection.
@@ -1316,22 +1358,22 @@ lintian (1.23.4) unstable; urgency=low
     + [FL] Issue wrong-path-for-{ruby,python} even if the path contained
       a version number. Change the description of the tag to reflect that.
       (Closes: #257904)
-  
+
   * frontend/lintian-info:
     + [FL] Overrides start with O:, not with 0:, d'oh!
       (Closes: #258815)
-  
+
   * lib/Tags.pm:
     + [FL] Add missing "use Util;", noted by Robert Luberda
       (Closes: #278513)
-  
+
   * testset/debconf/*,testset/tags.debconf:
     + [FL] New test package for debconf and udeb tests
   * testset/diffs:
     + [JvW] Remove the shipped ELF binary, can be compiled at test-time
   * testset/runtests:
     + [FL] Make checks of udeb packages possible
-  
+
  -- Frank Lichtenheld <djpig@debian.org>  Mon,  6 Dec 2004 01:41:21 +0100
 
 lintian (1.23.3) unstable; urgency=low
@@ -1447,7 +1489,7 @@ lintian (1.23.1) unstable; urgency=low
   * checks/cruft{,.desc}:
     + [JvW] cvsignore-file-in-source is now info, because it happens so often
       by upstream, and is only very minor in size
-    + [HE] New check: source-contains-cvs-conflict-copy, triggered by 
+    + [HE] New check: source-contains-cvs-conflict-copy, triggered by
       .#file.version files. They are created by cvs when it tries to merge
       local changes and an update from the repo. (Closes: #246060)
     + [JvW] Also check for source-contains-svn-conflict-copy (for .r123 and
@@ -1462,10 +1504,10 @@ lintian (1.23.1) unstable; urgency=low
     + [JvW] For build-depends-without-arch-dep, fix detection of debhelper
       usage in clean when used by means of CDBS (combined with above change,
       now fully closes: #247171)
-    + [HE] Check Build-Depends(-Indep) for virtual packages without a 
+    + [HE] Check Build-Depends(-Indep) for virtual packages without a
       real dependency. Fix based on patch by Steinar H. Gunderson
       <sgunderson@bigfoot.com>. (Closes: #255593)
-    + [HE] Don't issue virtual-package-depends-without-real-package-depends 
+    + [HE] Don't issue virtual-package-depends-without-real-package-depends
       if this happens in Suggests. (Closes: #254367)
     + [FL] Allow whitespace in relations after the version number
   * checks/huge-usr-share:
@@ -1526,16 +1568,16 @@ lintian (1.23.1) unstable; urgency=low
       rather than executed as separate executables. Makes it easy to make
       common functions available, tags are done centrally, etc etc. Should
       also save quite a number of forks, thus more speedier.
-  
+
   * lib/Util.pm:
     + [FL] dpkg supports comments in control files now, handle them
       correctly
     + [FL] a space after the colon is not mandatory in dpkg control
       files
-  
+
   * man/lintian.1:
     + [FL] Document new control-file check script
-  
+
   * reporting/harness:
     + [FL] Correctly support udeb packages
   * reporting/html_reports:
@@ -1543,11 +1585,11 @@ lintian (1.23.1) unstable; urgency=low
     + [FL] Remove some unused code for bug references
   * reporting/bug.status:
     + [FL] Remove
-  
+
   * testset/filenames:
     + [JvW] Fix two lintian warnings in lintian itself by touching files only
       on clean target, and not distributing them in the source
-  
+
   * unpack/list-srcpkg:
     + [FL] Some packages don't specifiy a standards-version, e.g. d-i ones.
       Prevent Perl warnings.
@@ -1735,7 +1777,7 @@ lintian (1.23.0) unstable; urgency=low
       whitespace which do *not* separate to blocks. (Closes: #242479)
 
   * testset/runtests:
-    + [JvW] Rewrote so that it is actually useful: 
+    + [JvW] Rewrote so that it is actually useful:
       - sort output to nullify filesystem directory ordering differences
       - run lintian just once
       - check that all tests that are triggered have a description, if verbose
@@ -2307,7 +2349,7 @@ lintian (1.21.1) unstable; urgency=low
   * Added a doc-base file and run install-docs, closes: #129509.
   * Removed spurious no-manpage exception for binaries that end in
     numbers, closes: #118479.
-  * Fixed lintian-info's broken $ENV{LINTIAN_ROOT} use. 
+  * Fixed lintian-info's broken $ENV{LINTIAN_ROOT} use.
   * Fixed --setup-lab to ignore already-existing packages, thanks to
     Chris Tillman, closes #83593. Let's hope it all works out :o)
   * Updated the list of allowed distributions, closes: #150466.
@@ -2374,7 +2416,7 @@ lintian (1.20.18) unstable; urgency=low
   * removed global override file, it was getting ancient
   * converted all uses of 'require' to use statements
   * more use strict cleanups
-  
+
  -- Sean 'Shaleh' Perry <shaleh@debian.org>  Fri, 13 Sep 2002 09:49:24 -0700
 
 lintian (1.20.17) unstable; urgency=high
@@ -2736,7 +2778,7 @@ lintian (1.20.4) unstable; urgency=low
     encounters a newer standards version than it knows about. Closes: #84083
   * updated references to policy for policy 3.5.0. Closes: #84088, #83969
   * Added a warning for packages containing a link to undocumented(7) as
-    suggested on debian-policy list.  Also includes a testset (manpages) 
+    suggested on debian-policy list.  Also includes a testset (manpages)
     addition.
     Closes: #83188
   * At the moment checks/copyright-file just tests for a slash in the link;
@@ -2746,7 +2788,7 @@ lintian (1.20.4) unstable; urgency=low
     other /usr/share/doc directories.  Closes: #84066
   * It was unpacking to level 2 even though I had Unpack-Level: 1 and no
     associated collection scripts. Of course, it wanted override files from
-    /usr/share/lintian/overrides/$pkg. Fair enough - except that if I said 
+    /usr/share/lintian/overrides/$pkg. Fair enough - except that if I said
     --no-override it wanted the override file information anyway, and still
     unpacked to level 2.  No obeys non-overrides.  Closes: #84722
 
@@ -2794,7 +2836,7 @@ lintian (1.20.1) unstable; urgency=low
     interpreter (really), also allows bash,ksh,ash as valid sh shells. Also
     knows to look for an ELF header and stop parsing the script. Thanks
     Colin Watson.  Closes: #80348, #82541
-  * testet/binary-1 added.  This is a small C program to test lintian's 
+  * testet/binary-1 added.  This is a small C program to test lintian's
     handling of binary files.  See the changelog in this directory for info
   * fixed message for 'manpage-has-wrong-extension', Closes: #82452
   * 'N: Unknown interpreter' message now only printed once per script,
@@ -2905,7 +2947,7 @@ lintian (1.11.8) unstable; urgency=low
   * added documentation for zero-byte-file-in-doc-directory, Closes: #75744
   * renamed package-source-contains-debian/files to
     debian-files-list-in-source, Closes: #75746
-  
+
  -- Sean 'Shaleh' Perry <shaleh@debian.org>  Fri, 27 Oct 2000 16:09:09 -0700
 
 lintian (1.11.7) unstable; urgency=low
@@ -3033,7 +3075,7 @@ lintian (1.9.1) unstable; urgency=low
 
   * Richard's changes:
   * Darren's changes:
-    + Added a check for /etc/pam.conf.  Precursor for reserved 
+    + Added a check for /etc/pam.conf.  Precursor for reserved
       /etc/* files
     + Added a check of postinst and prerm for /usr/doc symlink manipulation
     + Added the /usr/doc symlink to lintians scripts
@@ -3096,7 +3138,7 @@ lintian (1.5) unstable; urgency=low
 	   Also added perl-5.004 and perl-5.005 since they are valid perls
 	   (closes: #41041, closes: #39835)
      + Remove a undefine causing spurious unknown-tag error (close: #40699)
-     + Ancient-ized standards-version 2.4.0 and 2.4.1 
+     + Ancient-ized standards-version 2.4.0 and 2.4.1
      + Added policy 2.5.1 to the accepted number for standards-version
      + Check for use of /etc/nntpserver.  Only major change in policy v2.5.1
      + Added perl-5.005 and perl-5.004 as valid interpreters (close: #39834)
@@ -3142,7 +3184,7 @@ lintian (1.3-1) unstable; urgency=low
       update-menus in postrm since it won't exist then.
     + added requested override for vtwm update menus.  Fixes bug#36457
       reported by Branden Robinson
-    + override requested by Oliver Elphick for postgresql-pl.  Has shared 
+    + override requested by Oliver Elphick for postgresql-pl.  Has shared
       libraries not loaded by ld.so
 
  -- Darren Benham <gecko@debian.org>  Mon, 05 Apr 1999 16:00:05 -0800
@@ -3164,7 +3206,7 @@ lintian (1.2-1) unstable; urgency=low
  -- Darren Benham <gecko@debian.org>  Mon, 29 Mar 1999 16:31:05 -0800
 
 lintian (1.1) unstable; urgency=low
-  
+
   * Zapped compiled-with-bad-libc check.
   * Corrected spelling error in spelling check (it flagged "interchangeable"
     as a bad word; this should have been "interchangable").  This fixes
@@ -3176,9 +3218,9 @@ lintian (1.1) unstable; urgency=low
     by James Troup
   * Silenced non-standard-dir-in-var check about /var/www/, since it's
     Debian policy to use it.
-  
+
  -- Richard Braakman <dark@xs4all.nl>  Thu, 25 Feb 1999 14:43:27 +0100
-  
+
 lintian (1.0) unstable; urgency=low
 
   * New tags:
@@ -3208,7 +3250,7 @@ lintian (1.0) unstable; urgency=low
     clear that they are errors in Lintian's execution, not in the package
     being checked.  This closes bug#31013, submitted by James Troup.
 
-  * (frontend/lintian) Select STDOUT again after closing OUTPUT_PIPE.  
+  * (frontend/lintian) Select STDOUT again after closing OUTPUT_PIPE.
     This fixes bug#31574, reported by Julian Gilbey.  Thanks for the patch!
 
   * (checks/copyright-file) Lintian was confused by "libident(=0.22-1)",
@@ -3320,7 +3362,7 @@ lintian (0.9.3) unstable; urgency=low
     (Suggestion by Stephane Bortzmeyer)
 
   * (checks/fields, checks/fields.desc)
-    New tag: depends-on-obsolete-package, to flag dependencies on 
+    New tag: depends-on-obsolete-package, to flag dependencies on
     old libraries.
 
  -- Richard Braakman <dark@xs4all.nl>  Tue, 27 Oct 1998 12:59:43 +0100
@@ -3432,7 +3474,7 @@ lintian (0.8.1) unstable; urgency=low
   * Renamed tag use-of-killall-in-maintainer-script to killall-is-dangerous.
 
   * More overrides.
- 
+
  -- Richard Braakman <dark@xs4all.nl>  Thu, 27 Aug 1998 18:56:03 +0200
 
 lintian (0.8) unstable; urgency=low
@@ -3587,7 +3629,7 @@ lintian (0.7.4) unstable; urgency=low
   * (frontend/lintian)
     Saner interrupt handling.  Lintian now dies immediately if ^C is hit,
     and does remove the temporary lab (if any).  This is mostly a side
-    effect of avoiding system() (in favour of the new functions in 
+    effect of avoiding system() (in favour of the new functions in
     lib/pipeline.pl), but did involve some tinkering about with perl's
     signal handling.  Thanks to Ruud de Rooij and Graydon Hoare for
     their help.  This closes bug#24975, reported by Yann Dirson.
@@ -3764,7 +3806,7 @@ lintian (0.6.1) unstable; urgency=low
 
   * (doc/TODO)
     Updated and restructured version of what used to be in private/TODO,
-    various bugreports and mailed suggestions.  This will become the 
+    various bugreports and mailed suggestions.  This will become the
     central place for potential improvements to lintian.  I hope that
     having it in /usr/doc/lintian will inspire some people to help.
 
@@ -3831,10 +3873,10 @@ lintian (0.5.2) unstable; urgency=low
     This really fixes bug#23683, reported by Joey Hess.
 
   * (checks/files)
-    New warning: package-installs-perllocal-pod, inspired by 
+    New warning: package-installs-perllocal-pod, inspired by
     Manoj Srivasta's recent bugreports about such files.
 
-  * (checks/fields.desc) 
+  * (checks/fields.desc)
     No longer experimental:
       E: alternates-not-allowed
       E: versioned-provides
@@ -3945,7 +3987,7 @@ lintian (0.4.7) unstable; urgency=low
 
   * Removed Christian's name wherever it appeared as a contact address.
 
-  * (depcheck/buglist) Entered newly reported bug numbers for dependency 
+  * (depcheck/buglist) Entered newly reported bug numbers for dependency
     problems.
 
   * (checks/menus) Distinguish between install-docs and install-docs -r.
@@ -4020,7 +4062,7 @@ lintian (0.4.5) unstable; urgency=low
     to Richard Braakman, and changed mail address to lintian-maint@debian.org.
 
   * (checks/standards-version) If checking a package with a Standards-Version
-    that is newer than the one lintian is written for, warn that lintian 
+    that is newer than the one lintian is written for, warn that lintian
     should be upgraded.  (closes: #22919).
   * (checks/standards-version.dsc)
     New tag: newer-standards-version
@@ -4116,14 +4158,14 @@ lintian (0.4.2) unstable; urgency=low
   * Fixed `changelog' check:
     - don't report not-max-compression tag if changelog file is a symbolic
       link (thanks to Santiago for noticing that! fixes:bug#20842)
-  
+
   * Improved `description' check:
     - recognize if extended description is `Missing'
       (fixes:bug#21091)
 
   * Changed `files' check:
     - symbolic links within /etc and /var have to be relative!
-  
+
   * Fixed `scripts' check:
     - package name is "blt4.2", not "btl4.2" :)
 
@@ -4131,21 +4173,21 @@ lintian (0.4.2) unstable; urgency=low
     - check if postinst calls ldconfig if shared libraries are installed
       in a directory controlled by ld.so
       (fixes:bug#20414)
-    [2 new tags]   
+    [2 new tags]
 
   * Changed `standards-version' check:
     - added Standards-Version 2.4.1
     - only check first there digits of Standards-Version field
-  
+
   * Changes to the `lintian' frontend:
     - unused overrides are displayed per package
     - display `Processing changes file...'
     - use $TMPDIR environment variable for creation of the temporary lab
       (fixes:bug#21092)
     - clean up lab if C-C is pressed
-  
+
   * Added more overrides
-  
+
  -- Christian Schwarz <schwarz@debian.org>  Wed, 15 Apr 1998 19:57:09 +0200
 
 lintian (0.4.1) unstable; urgency=low
@@ -4173,26 +4215,26 @@ lintian (0.4.0) unstable; urgency=low
     - changed meaning of command line option `-U': specifies info to
       collect _in addition to_ the usual info (necessary to extract
       the changelog files on master--see below)
- 
+
   * Improved `binaries' check:
     - objects and binaries in a *-dbg package may be unstripped
     - libraries in lib/profile or lib/debug may not be stripped
       (suggested by Fabrizio)
     [1 new tag]
-  
+
   * Added new `changelog' check
     (thanks to Juan Cespedes for the idea! fixes:bug#19695)
 
   * Improved `control-files' check:
     - improved RE that searches maintainer scripts for /tmp security bugs
-  
+
   * Improved `description' check:
     - fixed RE to check for description-starts-with-package-name
       (thanks to Roderick Schertler)
-  
+
   * Fixed `fields' check:
     - internal: check for source pkg using "-l dsc" instead of "-e dsc"
-  
+
   * Fixed `files' check:
     - disabled possible-name-space-pollution tag since policy is not
       defined yet
@@ -4202,7 +4244,7 @@ lintian (0.4.0) unstable; urgency=low
       (thanks to Robert Edmonds for noticing that!)
     - disabled tag binary-without-manpage for `versioned binaries'
       (thanks to Dirk for the suggestion! fixes:bug#20186)
-  
+
   * Fixed `menu' check:
     - report maintainer-script-does-not-check... tag only once per package
       and maintainer script
@@ -4214,33 +4256,33 @@ lintian (0.4.0) unstable; urgency=low
       (thanks to Adam P. Harris for pointing this out! fixes:bug#20759)
     - fixed tag infos
       (thanks to Adam P. Harris for the input! fixes:bug#19810)
-  
+
   * Improved `scripts' check:
-    - added new interpreters: 
+    - added new interpreters:
         nawk, pike, rexx, regina, burlap, wish8.0, bltwish
       (fixes:bug#20223)
-  
+
   * Improved `shared-libs' check:
     - added check if shared libraries contain non-pic code
       (thanks to Gregory S. Stark for the idea and the patch!
        fixes:bug#19249)
     [1 new tag]
-  
+
   * Added `changelog' collector script
     This makes it possible for Lintian to extract all changelog files
     on master for use by Apt (fixes:bug#20546)
 
   * Incremented LAB_FORMAT version to 3 because of
     incompatible changes in the objdump-info collector script
-  
+
   * Internal: fixed bug in read_dpkg_control() utility function: empty
     tags have not been handled correctly
-  
-  * Internal: html-reporting tool: don't chop of text after hash (#) 
+
+  * Internal: html-reporting tool: don't chop of text after hash (#)
 
   * Added a lot new overrides and removed unused overrides
     (fixes:bug#20017,bug#20082,bug#19562)
-  
+
  -- Christian Schwarz <schwarz@debian.org>  Mon,  6 Apr 1998 21:58:42 +0200
 
 lintian (0.3.4) unstable; urgency=low
@@ -4283,7 +4325,7 @@ lintian (0.3.2) unstable; urgency=low
   * Fixed `shared-libs' check:
     - removed `shared-library-uses-its-soname' check since this produced
       way too many false alarms (thanks to David Engel for the input!)
-  
+
   * Fixed `binaries' check:
     - skip `unstripped-binary-or-object' check for kernel modules
       (thanks to Michael Meskes for noticing that!)
@@ -4307,22 +4349,22 @@ lintian (0.3.2) unstable; urgency=low
     - no files may be installed into /tmp and /var/tmp
     - renamed file-directly-in-usr-share to
       file-directly-in-usr-share-not-in-a-sub-directory
-      (thanks to Santiago) 
+      (thanks to Santiago)
     - fix tag info for "symlink-should-be-absolute"
     [3 new tags]
 
   * Improved `description' check:
     - lists (starting with a dash or asterisk) have to be indented
       (thanks to cpb4@ukc.ac.uk for the idea and the patch!
-      fixes:bug#19481) 
+      fixes:bug#19481)
     [1 new tag]
-  
+
   * Fixed `scripts' check:
     - packages with python scripts might depend on python or python-base
       (thanks to Gregor Hoffleit for pointing this out and to Richard for
       the patch! fixes:bug#19162)
     - remove wrong policy quotation for `script-not-executable' tag
-  
+
   * Fixed `init.d' check:
     - ignore update-rc.d calls in preinst and postinst scripts, if
       "remove" option is specified (thanks to Roman Hodek and Herbert Xu
@@ -4343,27 +4385,27 @@ lintian (0.3.2) unstable; urgency=low
     - added architecture `arm' (thanks to Roman Hodek)
 
   * Fixed `lintian' frontend:
-    - run lintian scripts with LC_ALL=C 
+    - run lintian scripts with LC_ALL=C
       (thanks to Yann for pointing this out! fixes:bug#19166)
     - changed handling of `#' comments: for comments in the overrides
       file, the hash (#) has to be in the first column
     - changed all tags which used `#' for comments
-  
+
   * Fixed `lintian-info':
     - multiple HTML tags haven't been converted into text format in all
-      cases 
+      cases
     - preformatted text is now handled correctly
     - merged with code that produced the HTML reports
     - code much cleaner now
-  
+
   * Improved Lintian's documentation:
     - fixed libtool/rpath workaround file: don't wrap long line
       (Thanks to Yann for pointing this out!)
     - stress in docs that the "lintian-maint@debian.org" address should
       be used to contact the lintian authors (thanks to Adrian Bridgett
       for pointing this out!)
-  
-  * Added more overrides (fixes:bug#19163)  
+
+  * Added more overrides (fixes:bug#19163)
 
  -- Christian Schwarz <schwarz@debian.org>  Sun, 15 Mar 1998 23:00:31 +0100
 
@@ -4372,26 +4414,26 @@ lintian (0.3.1) unstable; urgency=low
   * Added `scripts' checks and collector, written by Richard. This check
     checks the #! lines of scripts in a package.
     [40 new tags]
-  
+
   * Added `spelling' checks, written by Richard. This check searches
     the "Description:" field and the "copyright" file for common spelling
     errors (typos).
     [2 new tags]
 
   * Improved `files' check: No package should install files directly into
-    /usr/share. 
+    /usr/share.
     New tag:
-      file-directly-in-usr-share  
-  
+      file-directly-in-usr-share
+
   * Fixed `files' check WRT files in /usr/lib/sgml and
-    /etc/emacs/site-start.d: 
+    /etc/emacs/site-start.d:
       -	ignore directories and symbolic links when checking for correct
         file permissions
       - display permissions in octal format
     (fixes:bug#18866,#19026)
-  
+
   * Fixed `control-files' check: really ignore `control' control file
-  
+
   * Improved `lintian' frontend:
       - parse command line parameters before reading the configuration
         file. With that, `lintian -h' even works if the cfg file has
@@ -4403,14 +4445,14 @@ lintian (0.3.1) unstable; urgency=low
         (fixes:bug#18851)
 
   * Fixed `md5sums' check to handle file names with spaces correctly
-  
+
   * Put conffile /etc/lintianrc back in (fixes:bug#19031)
-  
+
   * Include information about libtool/rpath workaround by Yann Dirson
     (Thanks Yann!)
-  
+
   * Added more overrides
-  
+
   * Internal changes:
       - Each error tag has a (bug) `Severity' field now which can be used
         to file bug reports with the correct severity
@@ -4697,7 +4739,7 @@ lintian (0.2.0) unstable; urgency=low
   * Fixed bug in shlibs check: Sometimes, ldconfig doesn't install any
     symbolic links at all (e.g., for `acroread' package).
 
-  * Changed lintian-setup: Don't remove the whole lab if it already 
+  * Changed lintian-setup: Don't remove the whole lab if it already
     exists--just remove the info/ directory.
 
   * Changed handling of critical Lintian errors (abort on error)
@@ -4705,7 +4747,7 @@ lintian (0.2.0) unstable; urgency=low
   * Built package using fakeroot (first time i tried fakeroot--it's great!!)
 
   * Checked package with latest Lintian :)
-  
+
  -- Christian Schwarz <schwarz@debian.org>  Sat, 14 Feb 1998 21:49:10 +0100
 
 lintian (0.1.3) unstable; urgency=low
@@ -4757,7 +4799,7 @@ lintian (0.1.3) unstable; urgency=low
   * Updated documentation
 
   * Lots of small changes
-  
+
  -- Christian Schwarz <schwarz@debian.org>  Fri, 13 Feb 1998 23:24:51 +0100
 
 lintian (0.1.2) unstable; urgency=low
@@ -4765,19 +4807,19 @@ lintian (0.1.2) unstable; urgency=low
   * Beta release
   * Two major bugs have been fixed
   * Debugging info increased
-  
+
  -- Christian Schwarz <schwarz@debian.org>  Fri, 13 Feb 1998 11:20:51 +0100
 
 lintian (0.1.1) unstable; urgency=low
 
   * Beta release
-  
+
  -- Christian Schwarz <schwarz@debian.org>  Thu, 12 Feb 1998 23:45:51 +0100
 
 lintian (0.1.0) unstable; urgency=low
 
   * First release
-  
+
  -- Christian Schwarz <schwarz@debian.org>  Wed, 11 Feb 1998 23:15:51 +0100
 
 vim: et
