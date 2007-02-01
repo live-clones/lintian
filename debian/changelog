@@ -9,8 +9,6 @@ lintian (1.23.28) UNRELEASED; urgency=low
     + [JA] Perl syntax corrections.
     + [JA] Support the Autobuild: and Vcs-* fields in .dsc files.
       Applied patch to implement this by Ian Beckwith.  (Closes: #403553).
-  * depcheck/deppages.pl:
-    + [JA] Perl syntax corrections.
   * checks/menus:
     + [JA] Perl syntax corrections.  Removed extra empty newlines.
   * checks/scripts{.desc,}:
@@ -25,8 +23,10 @@ lintian (1.23.28) UNRELEASED; urgency=low
   * doc/README:
     + Document --no-colored-output option.  Patch from Loïc Minier.
 
+  * depcheck/deppages.pl:
+    + [JA] Perl syntax corrections.
   * depcheck/report2html.pl:
-    + [JA]  perl syntax corrections.  Patch from Loïc Minier.
+    + [JA] Perl syntax corrections.
 
   * frontend/lintian:
     + [JA] Removed trailing spaces and other perl syntax corrections.
@@ -45,7 +45,7 @@ lintian (1.23.28) UNRELEASED; urgency=low
   * man/lintian.1:
     + [JA] Document --no-colored-output.  Patch from Loïc Minier.
 
-    * unpack/unpack-*pkg*
+  * unpack/unpack-*pkg*
     + [JA] Perl syntax corrections.
 
  -- Russ Allbery <rra@debian.org>  Sun,  3 Dec 2006 14:16:40 -0800
