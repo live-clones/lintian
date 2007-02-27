@@ -44,7 +44,8 @@ Info: If this upload is to orphan this package, please mention this fact on
 Tag: changelog-should-mention-nmu
 Type: warning
 Info: When you NMU a package, that fact should be mentioned on the first line
- in the changelog entry.
+ in the changelog entry.  Use the words "NMU" or "Non-maintainer upload"
+ (case insensitive).
  .
  Maybe you didn't intend this upload to be a NMU, in that case, please
  doublecheck that the most recent entry in the changelog is byte-for-byte
