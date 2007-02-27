@@ -160,16 +160,19 @@ my %interpreter_dependencies = (
 				'zsh' => 'zsh'
 			       );
 
+# Any of the following packages can satisfy an update-inetd dependency.
+my $update_inetd
+    = join (' | ', qw(update-inetd inet-superserver openbsd-inetd rlinetd));
+
 # Appearance of one of these regexes in a maintainer script means that there
 # must be a dependency (or pre-dependency) on the given package.  The tag
 # reported is maintainer-script-needs-depends-on-%s, so be sure to update
 # scripts.desc when adding a new rule.
 my @depends_needed = (
-	[ adduser                               => '\badduser\b'        ],
-	[ 'gconf2 (>= 2.10.1-2)'                => '\bgconf-schemas\b'  ],
-	[ 'netbase | update-inetd'              => '\bupdate-inetd\b'   ],
-        [ 'openbsd-inetd | inet-superserver'    => '\bupdate-inetd\b'   ],
-	[ ucf                                   => '\bucf\s'            ],
+	[ adduser                => '\badduser\b'        ],
+	[ 'gconf2 (>= 2.10.1-2)' => '\bgconf-schemas\b'  ],
+	[ $update_inetd		 => '\bupdate-inetd\b'	 ],
+	[ ucf                    => '\bucf\s'            ],
 );
 
 my %executable = ();

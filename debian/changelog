@@ -14,9 +14,11 @@ lintian (1.23.28) UNRELEASED; urgency=low
   * checks/lintian.desc:
     + [RA] List emergency as a valid urgency.
   * checks/scripts{.desc,}:
-    + [JA] Added check for `openbsd-inetd | inet-superserver'
-      which compliments the older check `netbase | update-inetd'.
-      Reported by Tatsuya Kinoshita.  (Closes: #402319).
+    + [RA] update-inetd is now its own package and netbase may not always
+      depend on it.  Update the check to require a dependency on
+      update-inetd, inet-superserver, or one of the inet-superserver
+      packages that provides update-inetd.  Reported by Tatsuya Kinoshita.
+      (Closes: #402319)
     + [RA] Mention SUSv3 in the bashism and non-posix tag descriptions,
       note that use of test -a/-o and local aren't bugs but may still be
       worth avoiding, and mention short circuiting of && and ||.  (Thanks
