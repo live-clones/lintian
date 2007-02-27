@@ -1,5 +1,9 @@
 lintian (1.23.28) UNRELEASED; urgency=low
 
+  * checks/changelog-file{.desc,}:
+    + [RA] Check for bug closers without a colon after closes, but only if
+      there are at least six digits in the bug number and no non-digits.
+      Suggestion from Jari Aalto.  (Closes: #373918)
   * checks/copyright-file{.desc,}:
     + [JA] Update usr-doc-* test to report user-share-doc-* instead.
       New tests added: postinst-should-not-set-usr-doc-link,

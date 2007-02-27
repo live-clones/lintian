@@ -7,5 +7,9 @@ diffs (1-1~lint1) unstable; urgency=low
   (Closes: #123nnn)
   (Closes: #1, #foo)
   (Closes: #1, Bug#2, #bar)
+  (Closes 1 bug)
+  (Closes 456712)
+  (Closes Bug# 123893)
+  (Closes #1239124)
 
  -- Lintian Maintainers <lintian-maint@debian.org>  Wed, 27 Nov 2002 14:15:00 +0100

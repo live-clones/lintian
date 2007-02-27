@@ -16,6 +16,9 @@ W: diffs source: configure-generated-file-in-source subdir-good/config.status
 W: diffs source: diff-contains-substvars debian/substvars
 W: diffs source: out-of-date-standards-version 3.5.9 (current is 3.7.2)
 W: diffs: binary-without-manpage diffs
+W: diffs: possible-missing-colon-in-closes l11:Closes 456712
+W: diffs: possible-missing-colon-in-closes l12:Closes Bug# 123893
+W: diffs: possible-missing-colon-in-closes l13:Closes #1239124
 W: diffs: wrong-bug-number-in-closes l6:#nnnnnn
 W: diffs: wrong-bug-number-in-closes l7:#123nnn
 W: diffs: wrong-bug-number-in-closes l8:#foo

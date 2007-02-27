@@ -280,6 +280,10 @@ while (<IN>) {
 	tag "wrong-bug-number-in-closes", "l$.:$1" if $2;
     }
 
+    if (/(closes\s*(?:bug)?\#?\s?\d{6,})[^\w]/i) {
+	tag "possible-missing-colon-in-closes", "l$.:$1" if $1;
+    }
+
     if (/^(.*)Local\ variables:(.*)$/i) {
 	$prefix = $1;
 	$suffix = $2;
