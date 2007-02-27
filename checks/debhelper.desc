@@ -68,8 +68,9 @@ Tag: declares-possibly-conflicting-debhelper-compat-versions
 Type: error
 Ref: debhelper(7)
 Info: The source package declares the debhelper compatibility version
- both in the debian/compat file and in the rules file. If these ever
- get out of synchronisation, the package may not build as expected.
+ both in the <tt>debian/compat</tt> file and in the <tt>debian/rules</tt>
+ file. If these ever get out of synchronisation, the package may not build
+ as expected.
 
 Tag: package-uses-deprecated-debhelper-compat-version
 Type: warning
