@@ -12,10 +12,14 @@ lintian (1.23.28) UNRELEASED; urgency=low
   * checks/control-file:
     + [RA] Allow source in main to generate contrib packages.  Thanks,
       Bdale Garbee.  (Closes: #401881)
-  * checks/cruft:
+  * checks/cruft{.desc,}:
     + [RA] Use Dep to check autotools-dev build dependency rather than
       rolling our own dependency parsing, thus avoiding problems when it's
       the first dependency.  Thanks, Tilman Koschnick.  (Closes: #412406)
+    + [RA] Mention that including CVS or .svn directories in a release
+      tarball should generally be reported as an upstream bug.  Qualify
+      the statement that export should be used instead of checkout to
+      refer to snapshot packaging.  Thanks, Jari Aalto.  (Closes: #373668)
   * checks/debhelper.desc:
     + [RA] Use consistent file naming when diagnosing possibly conflicting
       debhelper compat settings.  Thanks, Jari Aalto.  (Closes: #409122)
