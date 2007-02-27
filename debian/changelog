@@ -11,6 +11,8 @@ lintian (1.23.28) UNRELEASED; urgency=low
       Applied patch to implement this by Ian Beckwith.  (Closes: #403553).
   * checks/menus:
     + [JA] Perl syntax corrections.  Removed extra empty newlines.
+  * checks/lintian.desc:
+    + [RA] List emergency as a valid urgency.
   * checks/scripts{.desc,}:
     + [JA] Added check for `openbsd-inetd | inet-superserver'
       which compliments the older check `netbase | update-inetd'.
@@ -32,6 +34,9 @@ lintian (1.23.28) UNRELEASED; urgency=low
     + [JA] Removed trailing spaces and other perl syntax corrections.
     + [JA] Add --no-colored-output option to disable ANSI color output, even
       when STDOUT is a TTY.  Patch from Loïc Minier.
+    + [RA] Accept emergency as a valid urgency and check urgencies
+      case-insensitively since that's what Policy specifies.  Thanks, Joey
+      Hess.  (Closes: #412577)
 
   * lib/Checker.pm
     + [JA] Perl syntax corrections.
@@ -48,7 +53,7 @@ lintian (1.23.28) UNRELEASED; urgency=low
   * unpack/unpack-*pkg*
     + [JA] Perl syntax corrections.
 
- -- Russ Allbery <rra@debian.org>  Sun,  3 Dec 2006 14:16:40 -0800
+ -- Russ Allbery <rra@debian.org>  Mon, 26 Feb 2007 21:58:13 -0800
 
 lintian (1.23.27) unstable; urgency=low
 

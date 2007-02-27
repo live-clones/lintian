@@ -655,7 +655,7 @@ while (my $arg = shift) {
 	    } else {
 		my $urgency = lc $data->{'urgency'};
 		$urgency =~ s/ .*//;
-		unless ($urgency =~ /^(low|medium|high)$/) {
+		unless ($urgency =~ /^(low|medium|high|emergency)$/i) {
 		    tag("bad-urgency-in-changes-file", $data->{'urgency'});
 		}
 	    }
