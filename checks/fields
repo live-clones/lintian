@@ -671,7 +671,7 @@ if ($type eq "source") {
 		my $tag = $needed_clean{$package} || 'missing-build-dependency';
 		unless (Dep::implies($depend{'build-depends'}, $dep)) {
 			if (Dep::implies($depend{'build-depends-indep'}, $dep)) {
-				tag "build-depends-indep-should-be-build-depends", $package;
+				tag "clean-should-be-satisfied-by-build-depends", $package;
 			} else {
 				tag $tag, $package if $package ne 'debhelper';
 			}

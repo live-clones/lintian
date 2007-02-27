@@ -471,12 +471,13 @@ Info: The control file lists the given package in Build-Depends, but no
  debhelper if you use dh_clean). Other build dependencies should be listed
  in Build-Depends-Indep instead.
 
-Tag: build-depends-indep-should-be-build-depends
+Tag: clean-should-be-satisfied-by-build-depends
 Type: error
 Ref: policy 7.6
 Info: The specified package is required to run the clean target of
- <tt>debian/rules</tt> and therefore must be listed in Build-Depends, even
- if no architecture-dependent packages are built.
+ <tt>debian/rules</tt> and therefore must be listed in Build-Depends, not
+ Build-Depends-Indep, even if no architecture-dependent packages are
+ built.
 
 Tag: missing-build-dependency
 Type: error

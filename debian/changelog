@@ -12,10 +12,14 @@ lintian (1.23.28) UNRELEASED; urgency=low
   * checks/debhelper.desc:
     + [RA] Use consistent file naming when diagnosing possibly conflicting
       debhelper compat settings.  Thanks, Jari Aalto.  (Closes: #409122)
-  * checks/fields:
+  * checks/fields{.desc,}:
     + [RA] Add an exception to maintainer-not-full-name for Wookey and a
       comment to consider removing the check if we get more false
       positives.  Thanks, Neil Williams.  (Closes: #406731)
+    + [RA] Rename build-depends-indep-should-be-build-depends to
+      clean-should-be-satisfied-by-build-depends to make the reason for
+      the message clearer without running lintian -i.  Thanks to Osamu
+      Aoki for the suggestion.  (Closes: #405840)
   * checks/menus:
     + [JA] Perl syntax corrections.  Removed extra empty newlines.
   * checks/lintian.desc:
