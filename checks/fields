@@ -857,9 +857,11 @@ sub check_maint {
 	tag "$f-address-malformed", "$maintainer" if $crap;
 	tag "$f-address-looks-weird", "$maintainer" if ! $del && $name && $mail;
 
+	# Wookey really only has one name.  If we get more of these, consider
+	# removing the check.
 	if (! $name) {
 		tag "$f-name-missing", "$maintainer";
-	} elsif ($name !~ /^\S+\s+\S+/) {
+	} elsif ($name !~ /^\S+\s+\S+/ && $name ne 'Wookey') {
 		tag "$f-not-full-name", "$name";
 	}
 			

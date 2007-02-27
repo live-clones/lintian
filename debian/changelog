@@ -12,6 +12,10 @@ lintian (1.23.28) UNRELEASED; urgency=low
   * checks/debhelper.desc:
     + [RA] Use consistent file naming when diagnosing possibly conflicting
       debhelper compat settings.  Thanks, Jari Aalto.  (Closes: #409122)
+  * checks/fields:
+    + [RA] Add an exception to maintainer-not-full-name for Wookey and a
+      comment to consider removing the check if we get more false
+      positives.  Thanks, Neil Williams.  (Closes: #406731)
   * checks/menus:
     + [JA] Perl syntax corrections.  Removed extra empty newlines.
   * checks/lintian.desc:
