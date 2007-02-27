@@ -11,7 +11,7 @@ lintian (1.23.28) UNRELEASED; urgency=low
       Applied patch to implement this by Ian Beckwith.  (Closes: #403553).
   * checks/cruft:
     + [RA] Use Dep to check autotools-dev build dependency rather than
-      rolling our own dependency parsing, thus avoiding problems with it's
+      rolling our own dependency parsing, thus avoiding problems when it's
       the first dependency.  Thanks, Tilman Koschnick.  (Closes: #412406)
   * checks/debhelper.desc:
     + [RA] Use consistent file naming when diagnosing possibly conflicting
