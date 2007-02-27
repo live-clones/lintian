@@ -49,6 +49,8 @@ lintian (1.23.28) UNRELEASED; urgency=low
       note that use of test -a/-o and local aren't bugs but may still be
       worth avoiding, and mention short circuiting of && and ||.  (Thanks
       to Jari Aalto for the latter).
+    + [RA] Add /usr/bin/gbr2, provided by gambas2-runtime.  Thanks, José
+      "L. Redrejo" Rodríguez.  (Closes: #403515)
 
   * doc/README:
     + Document --no-colored-output option.  Patch from Loïc Minier.
