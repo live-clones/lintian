@@ -34,6 +34,11 @@ lintian (1.23.28) UNRELEASED; urgency=low
   * checks/nmu.desc:
     + [RA] List the exact phrases recognized by lintian as marking an NMU.
       Reported by Jari Aalto.  (Closes: #409108)
+  * checks/po-debconf:
+    + [RA] Now that we're passing --use-untranslated to msgcmp, we have to
+      compare the generated pot file with the one in the package both
+      directions to catch all out of date errors.  Thanks, Thomas
+      Huriaux.  (Closes: #402662)
   * checks/scripts{.desc,}:
     + [RA] update-inetd is now its own package and netbase may not always
       depend on it.  Update the check to require a dependency on
