@@ -66,7 +66,8 @@ for my $binary_control (@binary_controls) {
 	        $binary_control->{"build-conflicts"} || $binary_control->{"build-conflicts-indep"});
 }
 
-# Check that every package is in the same archive category.  The source
+# Check that every package is in the same archive category, except that
+# sources in main can deliver both main and contrib packages.  The source
 # package may or may not have a section specified; if it doesn't, derive the
 # expected archive category from the first binary package by leaving $category
 # undefined until parsing the first binary section.  Missing sections will be
@@ -85,7 +86,7 @@ for my $binary_control (@binary_controls) {
 	next unless $binary_control->{'section'};
 	if (!defined ($category)) {
 		if ($binary_control->{'section'} =~ m%^([^/]+)/%) {
-			$category = $1;
+			$category = ($1 eq 'contrib') ? '' : $1;
 		} else {
 			$category = '';
 		}
@@ -94,7 +95,7 @@ for my $binary_control (@binary_controls) {
 	tag "section-category-mismatch", "Package " . $binary_control->{'package'}
 		if ($category && $binary_control->{'section'} !~ m%^$category/%);
 	tag "section-category-mismatch", "Package " . $binary_control->{'package'}
-		if (!$category && $binary_control->{'section'} =~ m%^[^/]+/%);
+		if (!$category && $binary_control->{'section'} =~ m%^([^/]+)/% && $1 ne 'contrib');
 }
 
 }

@@ -15,6 +15,7 @@ Bugs: debbugs://bugs.debian.org/
 
 Package: relations
 Architecture: all
+Section: contrib/misc
 Depends: relations, relations(<< 3), dpkg, bash (>> 2.0 ), mail-transport-agent, gawk | awk, foo (>> 2.0), foo (<< 2.2), coreutils, null (>= 0)
 Provides: mail-reader
 Replaces: relations

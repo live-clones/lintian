@@ -9,6 +9,9 @@ lintian (1.23.28) UNRELEASED; urgency=low
     + [JA] Perl syntax corrections.
     + [JA] Support the Autobuild: and Vcs-* fields in .dsc files.
       Applied patch to implement this by Ian Beckwith.  (Closes: #403553).
+  * checks/control-file:
+    + [RA] Allow source in main to generate contrib packages.  Thanks,
+      Bdale Garbee.  (Closes: #401881)
   * checks/cruft:
     + [RA] Use Dep to check autotools-dev build dependency rather than
       rolling our own dependency parsing, thus avoiding problems when it's
