@@ -1,4 +1,4 @@
-lintian (1.23.28) UNRELEASED; urgency=low
+lintian (1.23.29) UNRELEASED; urgency=low
 
   * checks/changelog-file{.desc,}:
     + [RA] Check for bug closers without a colon after closes, but only if
@@ -92,6 +92,15 @@ lintian (1.23.28) UNRELEASED; urgency=low
     + [JA] Perl syntax corrections.
 
  -- Russ Allbery <rra@debian.org>  Mon, 26 Feb 2007 21:58:13 -0800
+
+lintian (1.23.28) unstable; urgency=high
+
+  * collection/objdump-info:
+    + [RA] Remove unsafe temporary file creation in left-over debugging
+      code added accidentally when fixing #399456.  Thanks, Josh
+      Triplett.  (Closes: #414237)
+
+ -- Russ Allbery <rra@debian.org>  Fri,  9 Mar 2007 22:58:59 -0800
 
 lintian (1.23.27) unstable; urgency=low
 
