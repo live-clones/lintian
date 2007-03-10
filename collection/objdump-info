@@ -43,7 +43,6 @@ touch ../objdump-info
 # output in the objdump-info file and let the check script deal with
 # it later.
 for bin in `grep ' ELF' <../file-info | cut -d\: -f1`; do
-    echo "Processing $bin" >> /tmp/debug
     echo "-- $bin" >> ../objdump-info
     if head $bin | grep -q 'packed.*with.*UPX'; then
 	echo "objdump: $bin: Packed with UPX" >> ../objdump-info
