@@ -20,7 +20,7 @@ Info: The file <tt>debian/rules</tt> is a symlink instead of a regular
 
 Tag: debian-rules-not-a-makefile
 Type: error
-Ref: policy 4.8
+Ref: policy 4.9
 Info: The <tt>debian/rules</tt> file for this package does not appear to
  be a makefile or does not start with the required line.
  <tt>debian/rules</tt> must be a valid makefile and must have
@@ -28,7 +28,7 @@ Info: The <tt>debian/rules</tt> file for this package does not appear to
 
 Tag: debian-rules-missing-required-target
 Type: error
-Ref: policy 4.8
+Ref: policy 4.9
 Info: The <tt>debian/rules</tt> file for this package does not provide one
  of the required targets.  All of build, binary, binary-arch,
  binary-indep, and clean must be provided, even if they don't do anything
