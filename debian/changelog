@@ -35,13 +35,16 @@ lintian (1.23.29) UNRELEASED; urgency=low
       clean-should-be-satisfied-by-build-depends to make the reason for
       the message clearer without running lintian -i.  Thanks to Osamu
       Aoki for the suggestion.  (Closes: #405840)
+    + [RA] Recognize the +bX convention for binary NMUs.  Warn about use
+      of the old three-part version numbers.
   * checks/menus:
     + [JA] Perl syntax corrections.  Removed extra empty newlines.
   * checks/lintian.desc:
     + [RA] List emergency as a valid urgency.
-  * checks/nmu.desc:
+  * checks/nmu{.desc,}:
     + [RA] List the exact phrases recognized by lintian as marking an NMU.
       Reported by Jari Aalto.  (Closes: #409108)
+    + [RA] Recognize the +bX convention for binary NMUs.
   * checks/po-debconf:
     + [RA] Now that we're passing --use-untranslated to msgcmp, we have to
       compare the generated pot file with the one in the package both

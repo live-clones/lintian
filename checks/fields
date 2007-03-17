@@ -5,7 +5,7 @@
 # Parts of the code were taken from the old check script, which
 # was Copyright (C) 1998 Richard Braakman (also licensed under the
 # GPL 2 or higher)
-# 
+#
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 of the License, or
@@ -155,9 +155,15 @@ if (not open (FH, "fields/version")) {
 			if (not defined $1 or defined $2) {
 				tag "debian-revision-not-well-formed", "$version";
 			}
-			if ($debian =~ /^-[^.]+\.[^.]+\./ && ($type eq "source")) {
-				tag "binary-nmu-debian-revision-in-source", "$version";
+			if ($debian =~ /^-[^.-]+\.[^.-]+\./) {
+				tag "binary-nmu-uses-old-version-style", "$version"
+					if $type eq 'binary';
+				tag "binary-nmu-debian-revision-in-source", "$version"
+					if $type eq 'source';
 			}
+		}
+		if ($version =~ /\+b\d+$/ && $type eq "source") {
+			tag "binary-nmu-debian-revision-in-source", "$version";
 		}
 	} else {
 		tag "bad-version-number", "$version";

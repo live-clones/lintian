@@ -66,6 +66,9 @@ if ($version =~ /-[^.-]+(\.[^.-]+)?(\.[^.-]+)?$/) {
 	$version_nmuness = 1 if defined $1;
 	$version_nmuness = 2 if defined $2;
 }
+if ($version =~ /\+b\d+$/) {
+	$version_nmuness = 2;
+}
 
 my $upload_is_nmu = $uploader ne $maintainer;
 if (defined $uploaders) {

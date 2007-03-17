@@ -606,11 +606,22 @@ Type: warning
 Info: You use the Origin field though the field value is the default (Debian).
  In this case the field is redundant and should be removed.
 
+Tag: binary-nmu-uses-old-version-style
+Type: warning
+Ref: devref 5.10.2.1
+Info: The version number of a binary NMU should be formed by appending
+ '+b' and a digit to the source version.  This version scheme is
+ special-cased by the archive software.  The -x.x.x version number style
+ is considered obsolete.
+
 Tag: binary-nmu-debian-revision-in-source
 Type: warning
 Ref: devref 5.10.2.1
-Info: The version number of your source package has a debian revision with
- three parts, which is usually used by binary NMUs.
+Info: The version number of your source package ends in +b and a number or
+ has a Debian revision containing three parts.  These version numbers are
+ used by binary NMUs and should not be used as the source version.  (The
+ +b form is the current standard; the three-part version number is the old
+ standard.)
 
 Tag: redundant-bugs-field
 Type: warning
