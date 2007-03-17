@@ -32,6 +32,7 @@ I: binary: arch-dep-package-has-big-usr-share
 I: binary: binary-has-unneeded-section ./usr/bin/hello-static .comment
 I: binary: no-md5sums-control-file
 W: binary source: ancient-standards-version 3.2.1 (current is 3.7.2)
+W: binary source: debian-rules-uses-pwd line 9
 W: binary source: maintainer-upload-has-incorrect-version-number 4-1.1
 W: binary source: native-package-with-dash-version
 W: binary source: not-binnmuable-all-depends-any binary-data -> binary

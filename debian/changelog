@@ -47,10 +47,11 @@ lintian (1.23.29) UNRELEASED; urgency=low
       compare the generated pot file with the one in the package both
       directions to catch all out of date errors.  Thanks, Thomas
       Huriaux.  (Closes: #402662)
-  * checks/rules.desc:
+  * checks/rules{.desc,}:
     + [RA] Fix the policy section for debian-rules-missing-required-target
       and debian-rules-not-a-makefile.  Thanks, Daniel Kahn Gillmor.
       (Closes: #414964)
+    + [RA] Warn about use of $(PWD) instead of $(CURDIR).
   * checks/scripts{.desc,}:
     + [RA] update-inetd is now its own package and netbase may not always
       depend on it.  Update the check to require a dependency on

@@ -55,9 +55,16 @@ my $includes = 0;
 my %seen;
 local $_;
 while (<RULES>) {
+    next if /^\s*\#/;
     $includes = 1 if /^ *[s-]?include\s+/;
 
-    # We're looking only for the required targets.  Ignore everything else.
+    # Check for problems that can occur anywhere in debian/rules.
+    if (/\$[\(\{]PWD[\)\}]/) {
+        tag "debian-rules-uses-pwd", "line $.";
+    }
+
+    # After this point, we're only doing target analysis, so skip everything
+    # else.
     next unless /^([^:]+):/;
     my @targets = split (' ', $1);
     for (@targets) {

@@ -2,8 +2,11 @@
 
 tmp=debian/tmp
 
+# This reference to $(PWD) should not cause an error but the one below
+# should.
 build:
 	make
+	echo $(PWD)
 
 clean:
 	make clean
