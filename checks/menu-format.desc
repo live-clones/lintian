@@ -105,12 +105,14 @@ Ref: menu manual 3.7
 
 Tag: menu-icon-missing
 Type: warning
-Info: This icon file couldn't be found in the standard icon locations
- within the package (<tt>/usr/X11R6/include/X11/pixmaps</tt> and
- <tt>/usr/X11R6/include/X11/bitmaps</tt>).
+Info: This icon file couldn't be found.  If the path to the icon in the
+ menu file is an absolute path, make sure that icon exists at that path in
+ the package.  If the path is relative or a simple filename, make sure the
+ icon is installed in <tt>/usr/share/pixmaps</tt>, the default location.
  .
- If the icon is in a dependent package then this warning can be ignored,
- since currently lintian cannot check icons in other packages.
+ If the icon is in a package this package depends on, add a lintian
+ override for this warning.  lintian cannot check icons in other packages.
+Ref: menu manual 3.7
 
 Tag: menu-icon-too-big
 Type: error
