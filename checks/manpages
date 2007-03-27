@@ -310,8 +310,13 @@ while (<IN>) {
 		    tag "manpage-section-mismatch", "$file:$lc $fn_section != $th_section";
 		}
 	    }
-	    if ($line =~ /^[^\.].*[^\w\\]--?\w+/o) {
-		# hyphen at the begin of a word, probably not!
+	    # Catch hyphens used as minus signs by looking for ones at the
+	    # beginning of a word, but don't generate false positives on \s-1
+	    # (small font) or \*(-- (pod2man long dash).
+	    if ($line =~ /^[^\.].*
+			   [^\w\\]
+			   (?<! \\s | \*\( | \(- )
+			   (--?\w+)/ox) {
 		$hc++;
 		tag "hyphen-used-as-minus-sign", "$file:$lc" if $hc <= 10 or $ENV{'LINTIAN_DEBUG'};
 	    }

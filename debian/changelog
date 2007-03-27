@@ -37,6 +37,9 @@ lintian (1.23.29) UNRELEASED; urgency=low
       Aoki for the suggestion.  (Closes: #405840)
     + [RA] Recognize the +bX convention for binary NMUs.  Warn about use
       of the old three-part version numbers.
+  * checks/manpages:
+    + [RA] When checking for hyphen used as a minus sign, avoid false
+      positives on \s-1 (small font) and \*(-- (pod2man long dash).
   * checks/menu-format{.desc,}:
     + [RA] If a menu icon isn't an absolute path, only look for it in
       /usr/share/pixmaps, not in the old X11R6 paths.  Update the long tag
