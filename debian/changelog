@@ -1,5 +1,10 @@
 lintian (1.23.29) UNRELEASED; urgency=low
 
+  * COPYING:
+    + [CW] Update to current text of GPL v2 (which talks about the GNU
+      Lesser General Public License rather than Library, etc.; no functional
+      changes).
+
   * checks/changelog-file{.desc,}:
     + [RA] Check for bug closers without a colon after closes, but only if
       there are at least six digits in the bug number and no non-digits.
