@@ -52,7 +52,6 @@ map { $valid_types{$_}=1 } qw(
 	title
 	error
 	);
-$valid_types{error} = 1 if $type eq 'udeb';
 
 # From debconf-devel(7), section 'THE DEBCONF PROTOCOL' under 'INPUT', up to
 # date with debconf version 1.5.3.
@@ -191,6 +190,11 @@ foreach my $template (@templates) {
     } elsif ($template->{type} eq 'multiselect') {
 	$isselect=1;
 	$usesmultiselect=1;
+    } elsif ($template->{type} eq 'error') {
+        unless (Dep::implies($alldependencies, Dep::parse('debconf (>= 1.4.69) | cdebconf (>= 0.39)'))) {
+            tag "debconf-error-requires-versioned-depends", "$template->{template}"
+                unless $type eq 'udeb';
+        }
     } elsif ($template->{type} eq 'boolean') {
 	tag "boolean-template-has-bogus-default",
 	    "$template->{template} $template->{default}"

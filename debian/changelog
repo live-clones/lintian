@@ -38,6 +38,9 @@ lintian (1.23.29) UNRELEASED; urgency=low
       comparison routines and check the full correct dependency.  This
       should really fix problems with checking the dependencies for
       settitle.  Patch from Damyan Ivanov.  (Closes: #349616)
+    + [RA] Check that an appropriate versioned dependency on debconf
+      and/or cdebconf is present if error template types are used.
+      Thanks, Christian Perrier.  (Closes: #416140)
   * checks/debhelper.desc:
     + [RA] Use consistent file naming when diagnosing possibly conflicting
       debhelper compat settings.  Thanks, Jari Aalto.  (Closes: #409122)

@@ -82,3 +82,8 @@ __Choices: English, Spanish, German, French
 _Default: English[ translators, see the comment in the PO files]
 _Description: The default language, an example of a default that should
  be translated.
+
+Template: debconf/error
+Type: error
+_Description: An error occurred
+ This is a sample Debconf error template.

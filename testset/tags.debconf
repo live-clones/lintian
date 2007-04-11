@@ -1,6 +1,7 @@
 E: debconf source: declares-possibly-conflicting-debhelper-compat-versions rules=4 compat=4
 E: debconf source: missing-dh_python-build-dependency python | python-dev | python-all-dev
 E: debconf source: package-needs-python-policy-debhelper
+E: debconf-test: debconf-error-requires-versioned-depends debconf/error
 E: debconf-test: extended-description-is-empty
 E: debconf-test: mismatch-translated-choices debconf/testmulti-escape choices-de.utf-8
 E: debconf-test: no-template-description debconf/no-description

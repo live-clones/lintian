@@ -183,6 +183,16 @@ Info: Debconf only supports the SETTITLE command as of version 1.3.22. To
  debconf-2.0 alternative to allow for cdebconf or other implementations.
  Instead, use <tt>debconf (>= 1.3.22) | cdebconf (>= 0.43)</tt>.
 
+Tag: debconf-error-requires-versioned-depends
+Type: error
+Info: Debconf only supports the error template type as of version 1.4.69.
+ Packages that use this template type should declare a dependency on that
+ version of debconf.
+ .
+ Since error types were added after debconf-2.0, one cannot use the normal
+ debconf-2.0 alternative to allow for cdebconf or other implementations.
+ Instead, use <tt>debconf (>= 1.4.69) | cdebconf (>= 0.39)</tt>.
+
 Tag: malformed-prompt-in-templates
 Type: warning
 Info: The short description of a select, multiselect, string and password
