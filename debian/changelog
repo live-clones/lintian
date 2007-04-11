@@ -1,4 +1,7 @@
-lintian (1.23.29) UNRELEASED; urgency=low
+lintian (1.23.29) unstable; urgency=low
+
+  The "look at all the stuff that accumulated during the etch freeze"
+  release.
 
   * COPYING:
     + [CW] Update to current text of GPL v2 (which talks about the GNU
