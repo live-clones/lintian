@@ -8,6 +8,6 @@ I: debug source: non-standard-architecture kfreebsd-i386
 I: debug source: non-standard-architecture ppc64
 W: debug source: changelog-should-not-mention-nmu
 W: debug source: out-of-date-standards-version 3.7.0 (current is 3.7.2)
-W: hello: binary-without-manpage hello
-W: hello: binary-without-manpage hello.dbg
+W: hello: binary-without-manpage usr/bin/hello
+W: hello: binary-without-manpage usr/bin/hello.dbg
 W: libhello0-dbg: shared-lib-without-dependency-information ./usr/lib/libhello.so.dbg

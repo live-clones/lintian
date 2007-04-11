@@ -98,6 +98,13 @@ binary-indep:
 	install -d debian/tmp/usr/include/X11
 	touch debian/tmp/usr/include/X11/foo.h
 
+	install -d debian/tmp/usr/bin/mh
+	touch debian/tmp/usr/bin/mh/read
+	chmod 755 debian/tmp/usr/bin/mh/read
+	install -d debian/tmp/usr/bin/bin
+	touch debian/tmp/usr/bin/bin/bad
+	chmod 755 debian/tmp/usr/bin/bin/bad
+
 	install -m 644 debian/changelog debian/tmp/usr/share/doc/filenames/Changes
 	gzip -9 debian/tmp/usr/share/doc/filenames/Changes
 	ln -s Changes.gz debian/tmp/usr/share/doc/filenames/changelog.gz

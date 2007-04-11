@@ -69,35 +69,26 @@ while (<IN>) {
 
     my ($fname,$path,$suffix) = fileparse($file);
 
-    # binary that wants a manual page?
+    # Binary that wants a manual page?
+    #
+    # It's tempting to check the section of the man page depending on the
+    # location of the binary, but there are too many mismatches between
+    # bin/sbin and 1/8 that it's not clear it's the right thing to do.
     if (($perm =~ m,^[\-l],o) and
-    	(($path =~ m,^bin/,o) or
-	 ($path =~ m,^sbin/,o) or
-	 ($path =~ m,^usr/bin/,o) or
-	 ($path =~ m,^usr/sbin/,o) or
-	 ($path =~ m,^usr/games/,o) or
-	 ($path =~ m,^usr/X11R6/bin/,o) )) {
+    	(($path =~ m,^bin/$,o) or
+	 ($path =~ m,^sbin/$,o) or
+	 ($path =~ m,^usr/bin/$,o) or
+	 ($path =~ m,^usr/bin/X11/$,o) or
+	 ($path =~ m,^usr/bin/mh/$,o) or
+	 ($path =~ m,^usr/sbin/$,o) or
+	 ($path =~ m,^usr/games/$,o) or
+	 ($path =~ m,^usr/X11R6/bin/$,o) )) {
 
 	my $bin = $fname;
 	
 	$binary{$bin} = $file;
 	$link{$bin} = $link if $link;
 
-#	for ($path) {
-#	    m,^(usr/(X11R6/)?)?bin/,o && do {
-#		$sect_by_binary{$bin} = 1;
-#		last;
-#	    };
-#	    m,^usr/games/,o && do {
-#		$sect_by_binary{$bin} = 6;
-#		last;
-#	    };
-#	    m,^(usr/)?sbin/,o && do {
-#		$sect_by_binary{$bin} = 8;
-#		last;
-#	    };
-#	}
-	
     	next;
     }
 
@@ -145,17 +136,14 @@ while (<IN>) {
 	if ($section_num != $section) {
 	    tag "manpage-in-wrong-directory", "$file";
 	}
-#	push @{$sect_by_manpage{$bin}}, $section_num; # array needed for cases like man(1), man(7)
     } else {
 	tag "manpage-has-wrong-extension", "$file";
     }
-    
+
     # special check for manual pages for X11 games
     if ($path =~ m,^usr/X11R6/man/man6/,o) {
 	tag "x11-games-should-be-in-usr-games", "$file";
     }
-
-    #  reformatted to here
 
     # check symbolic links to other manual pages
     if ($perm =~ m,^l,o) {
@@ -358,14 +346,10 @@ for my $f (sort keys %binary) {
 	}
 
 	if (not grep { $_->{lang} eq "" } @{$manpage{$f}}) {
-	    tag "binary-without-english-manpage", "$f";
+	    tag "binary-without-english-manpage", "$binary{$f}";
 	}
-
-#	unless (grep { $_ == $sect_by_binary{$f} } @{$sect_by_manpage{$f}}) {
-#	    tag "no-manpage-in-correct-directory", "$binary{$f} (@{$sect_by_manpage{$f}})";
-#	}
     } else {
-	tag "binary-without-manpage", "$f";
+	tag "binary-without-manpage", "$binary{$f}";
     }
 }
 

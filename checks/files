@@ -334,19 +334,25 @@ while (<IN>) {
 		tag "file-directly-in-usr-share", "$file";
 	    }
 	}
+        # ---------------- /usr/bin
+	elsif ($file =~ m,^usr/bin/,) {
+	    if ($perm =~ m/^d/ and $file =~ m,^usr/bin/., and $file !~ m,^usr/bin/(X11|mh)/,) {
+		tag "subdir-in-usr-bin", "$file";
+	    }
+	}
 	# ---------------- /usr subdirs
-	elsif ($type ne 'udeb' and $file =~ m,^usr/[^/]+/$, ) { # FSSTND dirs
+	elsif ($type ne 'udeb' and $file =~ m,^usr/[^/]+/$,) { # FSSTND dirs
 	    if ( $file =~ m,^usr/(dict|doc|etc|info|man|adm|preserve)/,) {
 		tag "FSSTND-dir-in-usr", "$file";
 	    }
 	    # FHS dirs
-	    elsif ( $file !~ m,^usr/(X11R6|X386|
-				     bin|games|include|
-				     lib|lib32|lib64|
-				     local|sbin|share|
-				     src|spool|tmp)/,x ) {
+	    elsif ($file !~ m,^usr/(X11R6|X386|
+				    bin|games|include|
+				    lib|lib32|lib64|
+				    local|sbin|share|
+				    src|spool|tmp)/,x) {
 		tag "non-standard-dir-in-usr", "$file";
-	    } elsif ( $file =~ m,^usr/share/doc, ) {
+	    } elsif ($file =~ m,^usr/share/doc,) {
 		tag "uses-FHS-doc-dir", "$file";
 	    }
 
@@ -401,8 +407,8 @@ while (<IN>) {
     elsif ($file =~ m,^mnt/.,) {
 	tag "dir-or-file-in-mnt", "$file";
     }
-    # ---------------- /bin, /usr/bin
-    elsif ($file =~ m,^bin/, or $file =~ m,^usr/bin/,) {
+    # ---------------- /bin
+    elsif ($file =~ m,^bin/,) {
 	if ($perm =~ m/^d/ and $file =~ m,^bin/.,) {
 	    tag "subdir-in-bin", "$file";
 	}

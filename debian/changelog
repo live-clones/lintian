@@ -42,9 +42,18 @@ lintian (1.23.29) UNRELEASED; urgency=low
       Aoki for the suggestion.  (Closes: #405840)
     + [RA] Recognize the +bX convention for binary NMUs.  Warn about use
       of the old three-part version numbers.
+  * checks/files{.desc,}:
+    + [RA] Diagnose creation of subdirectories of /usr/bin other than mh
+      and the legacy X11 directory.  (Closes: #417912)
   * checks/manpages:
     + [RA] When checking for hyphen used as a minus sign, avoid false
       positives on \s-1 (small font) and \*(-- (pod2man long dash).
+    + [RA] Display the full path for binary-without-manpage tags to make
+      it easier to track down problems.
+    + [RA] Ignore binaries in subdirectories of the normal binary
+      directories (other than /usr/bin/X11 and /usr/bin/mh).  These should
+      be caught by other checks and the man page warnings would likely be
+      confusing noise.
   * checks/menu-format{.desc,}:
     + [RA] If a menu icon isn't an absolute path, only look for it in
       /usr/share/pixmaps, not in the old X11R6 paths.  Update the long tag

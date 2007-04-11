@@ -435,6 +435,11 @@ Type: error
 Info: The Filesystem Hierarchy Standard forbids the installation of new
  directories in <tt>/bin</tt>.
 
+Tag: subdir-in-usr-bin
+Type: error
+Info: The Filesystem Hierarchy Standard forbids the installation of new
+ directories in <tt>/usr/bin</tt> other than <tt>/usr/bin/mh</tt>.
+
 Tag: non-standard-dir-in-usr
 Type: warning
 Info: The FHS says "No large software packages should use a direct

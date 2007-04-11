@@ -15,6 +15,7 @@ E: filenames: package-installs-file-to-usr-x11r6-bin usr/X11R6/bin/testxbin2
 E: filenames: package-installs-packlist usr/lib/perl5/foo/.packlist
 E: filenames: postinst-does-not-call-updatemenus usr/share/menu/menu
 E: filenames: postrm-does-not-call-updatemenus usr/share/menu/menu
+E: filenames: subdir-in-usr-bin usr/bin/bin/
 E: filenames: symlink-contains-spurious-segments usr/lib/filenames/symlink5wrong ../menu/../somethingelse
 E: filenames: symlink-contains-spurious-segments usr/lib/filenames/symlink6wrong ./file4
 E: filenames: symlink-contains-spurious-segments usr/lib/filenames/symlink7wrong ../menu/./something
@@ -40,9 +41,12 @@ W: filenames source: source-contains-svn-control-dir .svn
 W: filenames source: svn-commit-file-in-source files/svn-commit.tmp
 W: filenames: arch-inventory-file-in-package files/.arch-inventory
 W: filenames: bad-permissions-for-ali-file usr/lib/ada/adalib/test.ali
-W: filenames: binary-without-manpage testxbin
-W: filenames: binary-without-manpage testxbin2
+W: filenames: binary-without-manpage usr/X11R6/bin/testxbin2
+W: filenames: binary-without-manpage usr/bin/X11/testxbin
+W: filenames: binary-without-manpage usr/bin/mh/read
 W: filenames: cvsignore-file-in-package files/.cvsignore
+W: filenames: executable-not-elf-or-script ./usr/bin/bin/bad
+W: filenames: executable-not-elf-or-script ./usr/bin/mh/read
 W: filenames: extra-license-file usr/share/pixmaps/COPYING
 W: filenames: extra-license-file usr/share/pixmaps/license.foo
 W: filenames: extra-license-file usr/share/pixmaps/license.txt

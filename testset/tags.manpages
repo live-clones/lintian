@@ -27,6 +27,7 @@ E: manpages: package-installs-file-to-usr-x11r6 usr/X11R6/man/man6/X11R6-binary.
 E: manpages: package-installs-file-to-usr-x11r6-bin usr/X11R6/bin/
 E: manpages: package-installs-file-to-usr-x11r6-bin usr/X11R6/bin/rstartd
 E: manpages: stray-directory-in-manpage-directory usr/share/man/man1/not-a-man-page.1.gz/
+E: manpages: subdir-in-usr-bin usr/bin/bin/
 E: manpages: x11-games-should-be-in-usr-games usr/X11R6/man/man6/X11R6-binary.man
 I: manpages: no-md5sums-control-file
 W: manpages source: ancient-standards-version 3.2.1 (current is 3.7.2)
@@ -34,7 +35,8 @@ W: manpages source: binary-nmu-debian-revision-in-source 4-0.0.1
 W: manpages source: changelog-should-mention-nmu
 W: manpages source: source-nmu-has-incorrect-version-number 4-0.0.1
 W: manpages: binary-nmu-uses-old-version-style 4-0.0.1
-W: manpages: binary-without-english-manpage binary-without-english-manpage
+W: manpages: binary-without-english-manpage usr/bin/binary-without-english-manpage
+W: manpages: executable-not-elf-or-script ./usr/bin/bin/bad
 W: manpages: executable-not-elf-or-script ./usr/bin/binary-without-english-manpage
 W: manpages: executable-not-elf-or-script ./usr/bin/usr-bin-binary-alt
 W: manpages: executable-not-elf-or-script ./usr/sbin/usr-sbin-binary

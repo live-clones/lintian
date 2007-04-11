@@ -10,7 +10,8 @@ binary-indep:
 	install -d $(tmp)/usr/share/man/man1 $(tmp)/usr/share/man/man3 \
                   $(tmp)/usr/share/man/man6 $(tmp)/usr/X11R6/man/man6 \
                   $(tmp)/usr/bin $(tmp)/usr/sbin $(tmp)/usr/X11R6/bin \
-				  $(tmp)/usr/share/man/de/man1 $(tmp)/usr/X11R6/man/man1/
+		  $(tmp)/usr/share/man/de/man1 $(tmp)/usr/X11R6/man/man1/ \
+		  $(tmp)/usr/bin/bin
 	touch $(tmp)/usr/bin/usr-bin-binary-alt
 	chmod 755 $(tmp)/usr/bin/usr-bin-binary-alt
 	touch $(tmp)/usr/sbin/usr-sbin-binary
@@ -18,6 +19,8 @@ binary-indep:
 	touch $(tmp)/usr/X11R6/bin/rstartd
 	touch $(tmp)/usr/bin/binary-without-english-manpage
 	chmod 755 $(tmp)/usr/bin/binary-without-english-manpage
+	touch $(tmp)/usr/bin/bin/bad
+	chmod 755 $(tmp)/usr/bin/bin/bad
 
 	gzip -c9 <test.1p >$(tmp)/usr/share/man/man1/test.1p.gz
 	gzip -c9 <test.1p.de >$(tmp)/usr/share/man/man1/test-latin1-chars.1p.gz

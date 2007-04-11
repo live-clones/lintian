@@ -37,11 +37,11 @@ W: binary source: maintainer-upload-has-incorrect-version-number 4-1.1
 W: binary source: native-package-with-dash-version
 W: binary source: not-binnmuable-all-depends-any binary-data -> binary
 W: binary source: not-binnmuable-any-depends-all binary -> binary-data
-W: binary: binary-without-manpage hello
-W: binary: binary-without-manpage hello-static
-W: binary: binary-without-manpage hello.static
-W: binary: binary-without-manpage iminusrbin
-W: binary: binary-without-manpage static-hello
+W: binary: binary-without-manpage usr/bin/hello
+W: binary: binary-without-manpage usr/bin/hello-static
+W: binary: binary-without-manpage usr/bin/hello.static
+W: binary: binary-without-manpage usr/bin/iminusrbin
+W: binary: binary-without-manpage usr/bin/static-hello
 W: binary: changelog-file-not-compressed changelog
 W: binary: doc-base-file-unknown-format binary:14 esp
 W: binary: executable-not-elf-or-script ./usr/bin/iminusrbin
