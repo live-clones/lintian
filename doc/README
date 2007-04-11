@@ -73,7 +73,7 @@ Command line options of the lintian command
     -l X, --unpack-level X    set default unpack level to X
     -o, --no-override         ignore overrides
     --show-overrides          output tags that have been overriden
-    --no-colored-output       disable color output (default is enabled on TTY)
+    --color never/always/auto disable, enable, or enable color for TTY
     -U X, --unpack-info X     specify which info should be collected
     -m, --md5sums             check md5sums when processing a .changes file
     --allow-root              suppress lintian's warning when run as root

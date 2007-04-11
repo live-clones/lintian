@@ -104,7 +104,7 @@ lintian (1.23.29) UNRELEASED; urgency=low
       "L. Redrejo" Rodríguez.  (Closes: #403515)
 
   * doc/README:
-    + Document --no-colored-output option.  Patch from Loïc Minier.
+    + Document --color option.  Based on a patch from Loïc Minier.
 
   * depcheck/deppages.pl:
     + [JA] Perl syntax corrections.
@@ -113,11 +113,13 @@ lintian (1.23.29) UNRELEASED; urgency=low
 
   * frontend/lintian:
     + [JA] Removed trailing spaces and other perl syntax corrections.
-    + [JA] Add --no-colored-output option to disable ANSI color output, even
-      when STDOUT is a TTY.  Patch from Loïc Minier.
+    + [RA] Add --color option to optionally colorize lintian tags based on
+      their severity.  Based on a patch from Loïc Minier.
     + [RA] Accept emergency as a valid urgency and check urgencies
       case-insensitively since that's what Policy specifies.  Thanks, Joey
       Hess.  (Closes: #412577)
+  * frontend/lintian-info:
+    + [RA] Ignore ANSI color sequences when parsing lintian tags.
 
   * lib/Checker.pm
     + [JA] Perl syntax corrections.
@@ -125,16 +127,16 @@ lintian (1.23.29) UNRELEASED; urgency=low
     + [JA] Perl syntax corrections.
   * lib/Tags.pm
     + [JA] Perl syntax corrections.
-    + [JA] Support for ANSI color output.
-      Patch from Loïc Minier.  (Closes #399714).
+    + [RA] Support for colorizing lintian tags based on their severity.
+      Based on a patch from Loïc Minier.  (Closes: #399714)
 
   * man/lintian.1:
-    + [JA] Document --no-colored-output.  Patch from Loïc Minier.
+    + [RA] Document --color.  Based on a patch from Loïc Minier.
 
   * unpack/unpack-*pkg*
     + [JA] Perl syntax corrections.
 
- -- Russ Allbery <rra@debian.org>  Thu, 15 Mar 2007 16:24:02 -0700
+ -- Russ Allbery <rra@debian.org>  Tue, 10 Apr 2007 21:02:11 -0700
 
 lintian (1.23.28) unstable; urgency=high
 

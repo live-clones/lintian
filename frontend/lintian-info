@@ -67,10 +67,12 @@ if ($tags) {
 }
 
 # Otherwise, read input files or STDIN, watch for tags, and add descriptions
-# whenever we see one, can, and haven't already explained that tag.
+# whenever we see one, can, and haven't already explained that tag.  Strip off
+# color sequences.
 while (<>) {
     print;
     chomp;
+    s/\e[[\d;]*m//g;
 
     my $tag;
     my ($type, $pkg, @pieces) = split(/:\s+/);

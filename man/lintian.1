@@ -157,8 +157,11 @@ Don't use the overrides file.
 Output tags that have been overriden.
 
 .TP
-.BR \-\-no\-colored\-output
-Disable ANSI color output, even when stdout is a TTY.
+.BR \-\-color (never|always|auto)
+Whether to colorize tags in lintian output based on their severity.  The
+default is "never", which never uses color.  "always" will always use
+color, while "auto" will use color only if the output is going to a
+terminal.
 
 .TP
 .BR \-U " info1,info2,..., " \-\-unpack\-info " info1,info2,..."
