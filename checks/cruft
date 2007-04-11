@@ -53,13 +53,19 @@ if (open IN, "fields/architecture") {
     }
 }
 
-# read build-depends file and see if it depends on autotools-dev
+# Read build-depends file and see if it depends on autotools-dev or automake.
+# I'm not thrilled with having the automake exception as well, but people do
+# depend on autoconf and automake and then use autoreconf to update
+# config.guess and config.sub, and automake depends on autotools-dev.
+#
+# We may need to allow all the various versioned automake packages, but let's
+# hope not.
 $atdinbd = 0;
 if (open IN, "fields/build-depends") {
     my $bd;
     chop($bd = <IN>);
     close IN;
-    $atdinbd = 1 if Dep::implies(Dep::parse($bd), Dep::parse('autotools-dev'));
+    $atdinbd = 1 if Dep::implies(Dep::parse($bd), Dep::parse('autotools-dev | automake'));
 }
 
 my $cwd = cwd;

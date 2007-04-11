@@ -29,6 +29,9 @@ lintian (1.23.29) UNRELEASED; urgency=low
       tarball should generally be reported as an upstream bug.  Qualify
       the statement that export should be used instead of checkout to
       refer to snapshot packaging.  Thanks, Jari Aalto.  (Closes: #373668)
+    + [RA] Allow a build dependency on automake to satisfy the
+      autotools-dev requirement since users may use autoreconf to update
+      config.{sub,guess}.  Thanks, Jordà Polo.  (Closes: #417067)
   * checks/debhelper.desc:
     + [RA] Use consistent file naming when diagnosing possibly conflicting
       debhelper compat settings.  Thanks, Jari Aalto.  (Closes: #409122)

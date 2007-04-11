@@ -40,9 +40,9 @@ Info: Documentation packages usually shouldn't carry anything that requires
 Tag: outdated-autotools-helper-file
 Type: error
 Info: The referenced file has a time stamp older than year 2004 and the
- package does not build-depend on autotools-dev and therefore apparently
- does not update it. This usually means that the source package will not
- work correctly on all currently released architectures.
+ package does not build-depend on autotools-dev or automake and therefore
+ apparently does not update it. This usually means that the source package
+ will not work correctly on all currently released architectures.
 
 Tag: svn-commit-file-in-source
 Type: warning
