@@ -58,6 +58,13 @@ while (<RULES>) {
     next if /^\s*\#/;
     $includes = 1 if /^ *[s-]?include\s+/;
 
+    # Check for DH_COMPAT settings outside of any rule, which are now
+    # deprecated.  It's a bit easier structurally to do this here than in
+    # debhelper.
+    if (/^\s*(export\s+)?DH_COMPAT\s*:?=/ && keys(%seen) == 0) {
+        tag "debian-rules-sets-DH_COMPAT", "line $.";
+    }
+
     # Check for problems that can occur anywhere in debian/rules.
     if (/\$[\(\{]PWD[\)\}]/) {
         tag "debian-rules-uses-pwd", "line $.";
