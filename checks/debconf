@@ -59,6 +59,11 @@ $valid_types{error} = 1 if $type eq 'udeb';
 my %valid_priorities = map { $_ => 1 }
     qw(low medium high critical);
 
+# All the packages that provide debconf functionality.  Anything using debconf
+# needs to have dependencies that satisfy one of these.
+my @debconfs = qw(debconf debconf-2.0 cdebconf cdebconf-udeb libdebconfclient0
+                  libdebconfclient0-udeb);
+
 my $seenconfig='';
 my $seentemplates='';
 my $usespreinst='';
@@ -107,16 +112,10 @@ for my $field (qw(depends pre-depends)) {
 	chomp($_ = <IN>);
 	close IN;
 	$_ .= ", $version" if defined $version;
-	$_ =~ s/debconf-2\.0/debconf (>= 1.2.30)/go;
-	$_ =~ s/cdebconf(-\w+)?(-udeb)?\s*(\(.+?\))?/debconf (>= 1.2.30)/g;
-	$_ =~ s/libdebconfclient.?(-udeb)?\s*(\(.+?\))?/debconf (>= 1.2.30)/g;
         push @alldeps, $_;
 	$dependencies{$field} = Dep::parse($_);
     } else {
 	my $dep = $version;
-	$dep =~ s/debconf-2\.0/debconf (>= 1.2.30)/go;
-	$dep =~ s/cdebconf(-\w+)?(-udeb)?\s*(\(.+?\))?/debconf (>= 1.2.30)/g;
-	$dep =~ s/libdebconfclient.?(-udeb)?\s*(\(.+?\))?/debconf (>= 1.2.30)/g;
 	push @alldeps, $dep;
 	$dependencies{$field} = Dep::parse($dep);
     }
@@ -398,9 +397,8 @@ for my $file (qw(config postinst)) {
 	        $isdefault=1;
 	    }
 	    if (not $usessettitle and m/db_settitle\s+/) {
-		unless (Dep::implies($alldependencies,
-				     Dep::parse('debconf (>= 1.3.22)'))) {
-	           tag "settitle-requires-versioned-depends", "$file" 
+		unless (Dep::implies($alldependencies, Dep::parse('debconf (>= 1.3.22) | cdebconf (>= 0.43)'))) {
+	           tag "settitle-requires-versioned-depends", "$file"
 		       unless $type eq 'udeb';
 	       }
 	        $usessettitle = 1;
@@ -437,15 +435,17 @@ if (open(POSTRM, "control/postrm")) {
     tag "postrm-does-not-purge-debconf", "";
 }
 
-# Check that the right dependencies are in the control file.
+# Check that the right dependencies are in the control file.  Accept any
+# package that might provide debconf functionality.
 
+my $anydebconf = Dep::parse(join (' | ', @debconfs));
 if ($usespreinst) {
-    unless (Dep::implies($dependencies{'pre-depends'}, Dep::parse('debconf'))) {
+    unless (Dep::implies($dependencies{'pre-depends'}, $anydebconf)) {
 	tag "missing-debconf-dependency-for-preinst", ""
 	    unless $type eq 'udeb';
     }
 } else {
-    unless (Dep::implies($alldependencies, Dep::parse('debconf')) or $usesdbconfig) {
+    unless (Dep::implies($alldependencies, $anydebconf) or $usesdbconfig) {
 	tag "missing-debconf-dependency", "";
     }
 }

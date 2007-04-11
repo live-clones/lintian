@@ -32,6 +32,12 @@ lintian (1.23.29) UNRELEASED; urgency=low
     + [RA] Allow a build dependency on automake to satisfy the
       autotools-dev requirement since users may use autoreconf to update
       config.{sub,guess}.  Thanks, Jordà Polo.  (Closes: #417067)
+  * checks/debconf:
+    + [RA] Rather than munging dependencies to cope with the various
+      implementations of debconf, take advantage of our new dependency
+      comparison routines and check the full correct dependency.  This
+      should really fix problems with checking the dependencies for
+      settitle.  Patch from Damyan Ivanov.  (Closes: #349616)
   * checks/debhelper.desc:
     + [RA] Use consistent file naming when diagnosing possibly conflicting
       debhelper compat settings.  Thanks, Jari Aalto.  (Closes: #409122)
