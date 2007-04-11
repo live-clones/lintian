@@ -102,6 +102,8 @@ lintian (1.23.29) UNRELEASED; urgency=low
       to Jari Aalto for the latter).
     + [RA] Add /usr/bin/gbr2, provided by gambas2-runtime.  Thanks, José
       "L. Redrejo" Rodríguez.  (Closes: #403515)
+    + [RA] Add /usr/bin/jruby0.9, provided by jruby0.9.  Thanks, Sebastien
+      Delafond.  (Closes: #418105)
 
   * doc/README:
     + Document --color option.  Based on a patch from Loïc Minier.
@@ -136,7 +138,7 @@ lintian (1.23.29) UNRELEASED; urgency=low
   * unpack/unpack-*pkg*
     + [JA] Perl syntax corrections.
 
- -- Russ Allbery <rra@debian.org>  Tue, 10 Apr 2007 21:02:11 -0700
+ -- Russ Allbery <rra@debian.org>  Tue, 10 Apr 2007 21:08:23 -0700
 
 lintian (1.23.28) unstable; urgency=high
 
