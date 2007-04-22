@@ -4,11 +4,7 @@ E: non-us source: section-category-mismatch Package broken-crypto
 E: non-us source: section-category-mismatch Package nonfree-crypto-app
 E: nonfree-crypto-app: no-copyright-file
 E: patented-app: no-copyright-file
-I: broken-crypto: no-md5sums-control-file
-I: crypto-app: no-md5sums-control-file
 I: non-us source: no-section-field-for-source
-I: nonfree-crypto-app: no-md5sums-control-file
-I: patented-app: no-md5sums-control-file
 I: patented-app: non-us-spelling
 W: broken-crypto: unknown-section non-US/admin
 W: non-us source: ancient-standards-version 3.1.1 (current is 3.7.2)

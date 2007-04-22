@@ -30,10 +30,8 @@ I: relations source: build-depends-without-arch-dep findutils
 I: relations source: build-depends-without-arch-dep foo
 I: relations source: build-depends-without-arch-dep libc6-dev
 I: relations source: build-depends-without-arch-dep mail-transport-agent
-I: relations-multiple-libs: no-md5sums-control-file
 I: relations-multiple-libs: unknown-field-in-control bugs
 I: relations-multiple-libs: unknown-field-in-control origin
-I: relations: no-md5sums-control-file
 I: relations: unknown-field-in-control bugs
 I: relations: unknown-field-in-control origin
 W: relations source: ancient-standards-version 3.1.1 (current is 3.7.2)

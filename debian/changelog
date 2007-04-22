@@ -8,8 +8,12 @@ lintian (1.23.30) UNRELEASED; urgency=low
       Build-Depends-Indep.  Still allow them in Build-Depends, though,
       since that's where CDBS likes to put them.  Thanks, Tristan
       Seligmann.  (Closes: #420526)
+  * checks/md5sums:
+    + [RA] Don't warn about a missing md5sums file if the package contains
+      nothing for which we would generate an MD5 checksum.  Thanks,
+      Andreas Beckmann.  (Closes: #420465)
 
- -- Russ Allbery <rra@debian.org>  Sun, 22 Apr 2007 15:45:39 -0700
+ -- Russ Allbery <rra@debian.org>  Sun, 22 Apr 2007 16:00:33 -0700
 
 lintian (1.23.29) unstable; urgency=low
 

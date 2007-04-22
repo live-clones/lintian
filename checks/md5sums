@@ -36,7 +36,7 @@ my %conffile;
 
 # Is there a md5sums control file?
 unless (-f $control) {
-    tag "no-md5sums-control-file", "";
+    tag "no-md5sums-control-file", "" unless -z "md5sums";
     return 0;
 }
 
