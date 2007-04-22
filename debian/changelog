@@ -16,8 +16,13 @@ lintian (1.23.30) UNRELEASED; urgency=low
     + [RA] Listing a rule as a dependency of .PHONY is sufficient to mark
       it as present for GNU make and hence sufficient for Policy's
       requirement.  Thanks, Peter Eisentraut.  (Closes: #419446)
+  * checks/scripts{.desc,}:
+    + [RA] Packages calling update-xmlcatalog must depend on xml-core.
+      Also avoid false positives when a package itself provides the
+      program its maintainer scripts use.  Thanks, Daniel Leidert.
+      (Closes: #419461)
 
- -- Russ Allbery <rra@debian.org>  Sun, 22 Apr 2007 16:14:31 -0700
+ -- Russ Allbery <rra@debian.org>  Sun, 22 Apr 2007 16:22:54 -0700
 
 lintian (1.23.29) unstable; urgency=low
 

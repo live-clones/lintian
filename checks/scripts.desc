@@ -304,6 +304,14 @@ Type: warning
 Info: This script calls ucf, but the package does not depend or pre-depend
  on the ucf package.
 
+Tag: maintainer-script-needs-depends-on-xml-core
+Type: warning
+Info: This script calls update-xmlcatalog, which comes from the xml-core
+ package, but does not depend or pre-depend on xml-core.  Packages that call
+ update-xmlcatalog need to depend on xml-core.  If you are using
+ dh_installxmlcatalogs, add a dependency on ${misc:Depends} and
+ dh_installxmlcatalogs will take care of this for you.
+
 Tag: update-alternatives-remove-called-in-postrm
 Type: warning
 Info: 'update-alternatives --remove &lt;alternative&gt; foo' is called in the

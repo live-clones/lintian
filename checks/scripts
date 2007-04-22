@@ -173,10 +173,11 @@ my $update_inetd
 # reported is maintainer-script-needs-depends-on-%s, so be sure to update
 # scripts.desc when adding a new rule.
 my @depends_needed = (
-	[ adduser                => '\badduser\b'        ],
-	[ 'gconf2 (>= 2.10.1-2)' => '\bgconf-schemas\b'  ],
-	[ $update_inetd		 => '\bupdate-inetd\b'	 ],
-	[ ucf                    => '\bucf\s'            ],
+	[ adduser		 => '\badduser\b'	    ],
+	[ 'gconf2 (>= 2.10.1-2)' => '\bgconf-schemas\b'	    ],
+	[ $update_inetd		 => '\bupdate-inetd\b'	    ],
+	[ ucf			 => '\bucf\s'		    ],
+	[ 'xml-core'		 => '\bupdate-xmlcatalog\b' ],
 );
 
 my %executable = ();
@@ -596,7 +597,7 @@ while (<SCRIPTS>) {
 	} else {
 	    for my $rule (@depends_needed) {
 		my ($package, $regex) = @$rule;
-		if (/$regex/ && ! $warned{$package}) {
+		if ($pkg ne $package and /$regex/ and ! $warned{$package}) {
                     my $needed = Dep::parse($package);
                     unless (Dep::implies($deps{depends}, $needed) || Dep::implies($deps{'pre-depends'}, $needed)) {
 			my $shortpackage = $package;

@@ -69,3 +69,7 @@ gconftool-2 --makefile-install-rule foo.schema
 
 # Calling gconf-schemas with no dependency.
 gconf-schemas --register foo.schema
+
+# Calling update-xmlcatalog with no dependency.
+update-xmlcatalog --add --type system --id "/usr/share/sgml/dtd/foo" \
+    --package maintainer-scripts --root
