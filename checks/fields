@@ -52,8 +52,6 @@ my @global_clean_depends = (
 	[ dpatch => '^include\s+/usr/share/dpatch/' ],
 	[ 'quilt (>= 0.40)' => '^include\s+/usr/share/quilt/' ],
 	[ $python_depend => '/usr/share/cdbs/1/class/python-distutils.mk' ],
-	[ 'python-central (>= 0.5)' => '^DEB_PYTHON_SYSTEM\s*:?=\s*pycentral' ],
-	[ 'python-support (>= 0.3)' => '^DEB_PYTHON_SYSTEM\s*:?=\s*pysupport' ],
 );
 
 # These are similar, but the resulting dependency is only allowed, not
@@ -65,6 +63,8 @@ my @global_clean_allowed = (
 	[ patchutils => '^include\s+/usr/share/cdbs/1/rules/dpatch.mk' ],
 	[ patchutils => '^include\s+/usr/share/cdbs/1/rules/patchsys-quilt.mk' ],
 	[ patchutils => '^include\s+/usr/share/cdbs/1/rules/simple-patchsys.mk' ],
+	[ 'python-central (>= 0.5)' => '^DEB_PYTHON_SYSTEM\s*:?=\s*pycentral' ],
+	[ 'python-support (>= 0.3)' => '^DEB_PYTHON_SYSTEM\s*:?=\s*pysupport' ],
 	[ quilt => '^clean:\s+xsfclean\b' ],
 );
 
@@ -76,6 +76,8 @@ my @global_depends = (
 	[ 'debhelper (>= 5.0.31)' => '^\t\s*dh_installxfonts', 'missing-dh_installxfonts-build-dependency' ],
 	[ 'python-central (>= 0.5)' => '^\t\s*dh_pycentral\s' ],
 	[ 'python-support (>= 0.3)' => '^\t\s*dh_pysupport\s' ],
+	[ 'python-central (>= 0.5)' => '^DEB_PYTHON_SYSTEM\s*:?=\s*pycentral' ],
+	[ 'python-support (>= 0.3)' => '^DEB_PYTHON_SYSTEM\s*:?=\s*pysupport' ],
 );
 
 # Similarly, this list of packages, regexes, and optional tags say that if the
