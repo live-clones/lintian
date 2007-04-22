@@ -1,3 +1,10 @@
+lintian (1.23.30) UNRELEASED; urgency=low
+
+  * checks/common_data.pm:
+    + [RA] Add mktemp and sysvinit-utils as known essential packages.
+
+ -- Russ Allbery <rra@debian.org>  Sat, 21 Apr 2007 17:46:14 -0700
+
 lintian (1.23.29) unstable; urgency=low
 
   The "look at all the stuff that accumulated during the etch freeze"

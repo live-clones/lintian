@@ -103,8 +103,8 @@ use vars qw
 %known_essential = map { $_ => 1 }
     ('base-files', 'base-passwd', 'bash', 'bsdutils', 'coreutils',
      'debianutils', 'diff', 'dpkg', 'e2fsprogs', 'findutils', 'grep', 'gzip',
-     'hostname', 'login', 'mount', 'ncurses-base', 'ncurses-bin',
-     'perl-base', 'sed', 'sysvinit', 'tar', 'util-linux');
+     'hostname', 'login', 'mktemp', 'mount', 'ncurses-base', 'ncurses-bin',
+     'perl-base', 'sed', 'sysvinit', 'sysvinit-utils', 'tar', 'util-linux');
 
 %known_build_essential = map { $_ => 1 }
     ('libc6-dev', 'libc-dev', 'gcc', 'g++', 'make', 'dpkg-dev');
