@@ -98,4 +98,6 @@ binary-arch: build binary-correct
 
 binary: binary-arch
 
-.PHONY: build binary-arch binary clean
+# The mention of binary-indep here should be sufficient to suppress the
+# warning that it's not present.
+.PHONY: build binary-arch binary-indep binary clean

@@ -70,6 +70,16 @@ while (<RULES>) {
         tag "debian-rules-uses-pwd", "line $.";
     }
 
+    # Listing a rule as a dependency of .PHONY is sufficient to make it
+    # present for the purposes of GNU make and therefore the Policy
+    # requirement.
+    if (/^(?:[^:]+\s)?\.PHONY(?:\s[^:]+)?:(.+)/) {
+        my @targets = split (' ', $1);
+        for (@targets) {
+            $seen{$_}++ if $required{$_};
+        }
+    }
+
     # After this point, we're only doing target analysis, so skip everything
     # else.
     next unless /^([^:]+):/;

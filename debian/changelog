@@ -12,8 +12,12 @@ lintian (1.23.30) UNRELEASED; urgency=low
     + [RA] Don't warn about a missing md5sums file if the package contains
       nothing for which we would generate an MD5 checksum.  Thanks,
       Andreas Beckmann.  (Closes: #420465)
+  * checks/rules:
+    + [RA] Listing a rule as a dependency of .PHONY is sufficient to mark
+      it as present for GNU make and hence sufficient for Policy's
+      requirement.  Thanks, Peter Eisentraut.  (Closes: #419446)
 
- -- Russ Allbery <rra@debian.org>  Sun, 22 Apr 2007 16:00:33 -0700
+ -- Russ Allbery <rra@debian.org>  Sun, 22 Apr 2007 16:14:31 -0700
 
 lintian (1.23.29) unstable; urgency=low
 
