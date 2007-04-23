@@ -82,7 +82,8 @@ use vars qw
      'standards-version', 'files', 'build-depends', 'build-depends-indep',
      'build-conflicts', 'build-conflicts-indep', 'format', 'origin',
      'uploaders', 'python-version', 'autobuild', 'vcs-arch', 'vcs-bzr',
-     'vcs-cvs', 'vcs-darcs', 'vcs-git', 'vcs-hg', 'vcs-svn');
+     'vcs-cvs', 'vcs-darcs', 'vcs-git', 'vcs-hg', 'vcs-mtn', 'vcs-svn',
+     'vcs-browser');
 
 %known_binary_fields = map { $_ => 1 }
     ('package', 'version', 'architecture', 'depends', 'pre-depends',
