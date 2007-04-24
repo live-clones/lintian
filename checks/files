@@ -500,15 +500,19 @@ while (<IN>) {
 
     # ---------------- license files
     if ($file =~ m,(copying|licen[cs]e)(\.[^/]+)?$,i
-	# ignore some common extensions; there was at least one file
+	# Ignore some common extensions; there was at least one file
 	# named "license.el".  These are probably license-displaying
 	# code, not license files.
-        # Another exception is made for .html and .php because preserving
-        # working links is more important than saving some bytes, and
+	#
+	# Another exception is made for .html and .php because preserving
+	# working links is more important than saving some bytes, and
 	# because a package had a HTML form for licenses called like that.
 	# Another exception is made for various picture formats since
 	# those are likely to just be simply pictures.
-	and not $file =~ m/\.(el|c|h|py|cc|pl|pm|html|php|rb|xpm|png|jpe?g|gif|svg)$/
+	#
+	# DTD files are excluded at the request of the Mozilla suite
+	# maintainers.
+	and not $file =~ m/\.(el|c|h|py|cc|pl|pm|html|php|rb|xpm|png|jpe?g|gif|svg|dtd)$/
         and not defined $link) {
 	tag "extra-license-file", "$file";
     }

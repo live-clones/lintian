@@ -18,6 +18,8 @@ lintian (1.23.30) UNRELEASED; urgency=low
       Seligmann.  (Closes: #420526)
   * checks/files{.desc,}:
     + [RA] Check for svk commit message files.
+    + [RA] Don't consider {copying,license}.dtd extra license files; the
+      Mozilla suite uses them for non-licenses.  (Closes: #420558)
   * checks/md5sums:
     + [RA] Don't warn about a missing md5sums file if the package contains
       nothing for which we would generate an MD5 checksum.  Thanks,
@@ -32,7 +34,7 @@ lintian (1.23.30) UNRELEASED; urgency=low
       program its maintainer scripts use.  Thanks, Daniel Leidert.
       (Closes: #419461)
 
- -- Russ Allbery <rra@debian.org>  Tue, 24 Apr 2007 16:45:04 -0700
+ -- Russ Allbery <rra@debian.org>  Tue, 24 Apr 2007 16:55:44 -0700
 
 lintian (1.23.29) unstable; urgency=low
 
