@@ -535,9 +535,12 @@ while (<IN>) {
 	    tag "arch-inventory-file-in-package", "$file";
 	}
 
-	# ---------------- subversion commit message backups
+	# ---------------- subversion and svk commit message backups
 	if ($file =~ m/svn-commit.*\.tmp$/) {
 	    tag "svn-commit-file-in-package", "$file";
+	}
+	if ($file =~ m/svk-commit.+\.tmp$/) {
+	    tag "svk-commit-file-in-package", "$file";
 	}
 
 	# ---------------- executables with language extensions

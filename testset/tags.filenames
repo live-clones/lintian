@@ -38,6 +38,7 @@ W: filenames source: source-contains-cvs-conflict-copy files/.#Maelstrom Sound.1
 W: filenames source: source-contains-svn-conflict-copy files/Maelstrom Sounce.r121
 W: filenames source: source-contains-svn-conflict-copy files/Maelstrom Sound.mine
 W: filenames source: source-contains-svn-control-dir .svn
+W: filenames source: svk-commit-file-in-source files/svk-commitsEr9P.tmp
 W: filenames source: svn-commit-file-in-source files/svn-commit.tmp
 W: filenames: arch-inventory-file-in-package files/.arch-inventory
 W: filenames: bad-permissions-for-ali-file usr/lib/ada/adalib/test.ali
@@ -59,6 +60,7 @@ W: filenames: file-in-unusual-dir files/.cvsignore
 W: filenames: file-in-unusual-dir files/Maelstrom Sounce.r121
 W: filenames: file-in-unusual-dir files/Maelstrom Sound
 W: filenames: file-in-unusual-dir files/Maelstrom Sound.mine
+W: filenames: file-in-unusual-dir files/svk-commitsEr9P.tmp
 W: filenames: file-in-unusual-dir files/svn-commit.tmp
 W: filenames: file-in-unusual-dir srv/foo/bar
 W: filenames: menu-file-in-usr-lib usr/lib/menu/menu
@@ -74,6 +76,7 @@ W: filenames: package-contains-svn-control-dir usr/lib/perl5/.svn/
 W: filenames: package-installs-into-etc-gconf-schemas etc/gconf/schemas/test.schema
 W: filenames: package-installs-nonbinary-perl-in-usr-lib-perl5 usr/lib/perl5/foo/ancient.pm
 W: filenames: package-installs-nonbinary-perl-in-usr-lib-perl5 usr/lib/perl5/foo/bar.pm
+W: filenames: svk-commit-file-in-package files/svk-commitsEr9P.tmp
 W: filenames: svn-commit-file-in-package files/svn-commit.tmp
 W: filenames: symlink-is-self-recursive usr/lib/filenames/symlink10wrong ../../..
 W: filenames: symlink-is-self-recursive usr/lib/filenames/symlink5ok+warn ..

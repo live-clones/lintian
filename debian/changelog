@@ -8,12 +8,16 @@ lintian (1.23.30) UNRELEASED; urgency=low
     + [RA] Exclude the Affero General Public License from the check for
       references to the shared GPL copy.  (Closes: #420077)
     + [RA] Replace yet another hand-rolled dependency parser with Dep.
+  * checks/cruft{.desc,}:
+    + [RA] Check for svk commit message files.
   * checks/fields:
     + [RA] The CDBS Python rules only call pycentral or pysupport during
       the binary targets, so those dependencies can be safely moved to
       Build-Depends-Indep.  Still allow them in Build-Depends, though,
       since that's where CDBS likes to put them.  Thanks, Tristan
       Seligmann.  (Closes: #420526)
+  * checks/files{.desc,}:
+    + [RA] Check for svk commit message files.
   * checks/md5sums:
     + [RA] Don't warn about a missing md5sums file if the package contains
       nothing for which we would generate an MD5 checksum.  Thanks,
@@ -28,7 +32,7 @@ lintian (1.23.30) UNRELEASED; urgency=low
       program its maintainer scripts use.  Thanks, Daniel Leidert.
       (Closes: #419461)
 
- -- Russ Allbery <rra@debian.org>  Tue, 24 Apr 2007 15:58:03 -0700
+ -- Russ Allbery <rra@debian.org>  Tue, 24 Apr 2007 16:45:04 -0700
 
 lintian (1.23.29) unstable; urgency=low
 

@@ -97,6 +97,8 @@ sub find_cruft {
     # More or less copied from files, but this time it checks the source
     if ($name =~ m,^(.+/)?svn-commit\.(.+\.)?tmp$,) {
 	tag "svn-commit-file-in-source", "$name";
+    } elsif ($name =~ m,^(.+/)?svk-commit.+\.tmp$,) {
+        tag "svk-commit-file-in-source", "$name";
     } elsif ($name =~ m,^(.+/)?\.arch-inventory$,) {
 	tag "arch-inventory-file-in-source", "$name";
     } elsif ($name =~ m,^(.+/)?\.\#(.+?)\.\d+(\.\d+)*$,) {

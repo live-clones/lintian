@@ -20,7 +20,7 @@
 
 clean:
 	mkdir -p .svn CVS "{arch}" .arch-ids .bzr
-	touch files/.cvsignore files/svn-commit.tmp
+	touch files/.cvsignore files/svn-commit.tmp files/svk-commitsEr9P.tmp
 	touch files/.arch-inventory
 	touch 'files/.#Maelstrom Sound.1.1.1' 'files/Maelstrom Sounce.r121'
 	touch 'files/Maelstrom Sound.mine'
