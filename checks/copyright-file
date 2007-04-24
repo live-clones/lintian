@@ -196,6 +196,7 @@ if (m/(GNU General Public License|GPL)/ && !m,/usr/share/common-licenses,
     && !m/Zope Public License/ && !m/LICENSE AGREEMENT FOR PYTHON 1.6.1/
     && !m/LaTeX Project Public License/ && !m/GNU Free Documentation License/
     && !m/(^From:.*^To:|^To:.*^From:).*(GNU General Public License|GPL)/ms
+    && !m/AFFERO GENERAL PUBLIC LICENSE/
     && !$wrong_directory_detected) {
     tag "copyright-should-refer-to-common-license-file-for-gpl", "";
 }
