@@ -7,6 +7,7 @@ lintian (1.23.30) UNRELEASED; urgency=low
   * checks/copyright-file:
     + [RA] Exclude the Affero General Public License from the check for
       references to the shared GPL copy.  (Closes: #420077)
+    + [RA] Replace yet another hand-rolled dependency parser with Dep.
   * checks/fields:
     + [RA] The CDBS Python rules only call pycentral or pysupport during
       the binary targets, so those dependencies can be safely moved to
@@ -27,7 +28,7 @@ lintian (1.23.30) UNRELEASED; urgency=low
       program its maintainer scripts use.  Thanks, Daniel Leidert.
       (Closes: #419461)
 
- -- Russ Allbery <rra@debian.org>  Tue, 24 Apr 2007 15:51:23 -0700
+ -- Russ Allbery <rra@debian.org>  Tue, 24 Apr 2007 15:58:03 -0700
 
 lintian (1.23.29) unstable; urgency=low
 
