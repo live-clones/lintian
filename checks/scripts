@@ -452,7 +452,7 @@ while (<SCRIPTS>) {
 	or fail("cannot open maintainer script $filename for reading: $!");
 
     my %warned;
-    my ($saw_init, $saw_invoke);
+    my ($saw_init, $saw_invoke, $saw_debconf);
     my $cat_string = "";
 
     while (<C>) {
@@ -613,6 +613,12 @@ while (<SCRIPTS>) {
 	}
 	if (/\bgconftool(-2)?(\s|\Z)/) {
 	    tag "gconftool-used-in-maintainer-script", "$file:$.";
+	}
+	if (m,/usr/share/debconf/confmodule,) {
+	    $saw_debconf = 1;
+	}
+	if (m/^\s*read(?:\s|$)/ && !$saw_debconf && !$cat_string) {
+	    tag "read-in-maintainer-script", "$file:$.";
 	}
     }
 

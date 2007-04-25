@@ -2,8 +2,12 @@
 
 update-alternatives --remove dummy /usr/bin/dummy-alternative
 
-echo "Hit enter"
-read
+# Normally read in a maintainer script is not kosher, but here we're going
+# to do it only if debconf doesn't exist.
+if ! test -f /usr/share/debconf/confmodule ; then
+    echo "Hit enter"
+    read
+fi
 
 # neither of the following should be detected as postrm-unsafe-ldconfig
 # intended, without quotes

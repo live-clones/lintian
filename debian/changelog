@@ -33,8 +33,12 @@ lintian (1.23.30) UNRELEASED; urgency=low
       Also avoid false positives when a package itself provides the
       program its maintainer scripts use.  Thanks, Daniel Leidert.
       (Closes: #419461)
+    + [RA] Check for maintainer scripts calling read (but exclude those
+      that include /usr/share/debconf/confmodule on the grounds that
+      they're probably only using it as a fallback).  Based on a patch by
+      Luk Claes.  (Closes: #231770)
 
- -- Russ Allbery <rra@debian.org>  Tue, 24 Apr 2007 16:55:44 -0700
+ -- Russ Allbery <rra@debian.org>  Tue, 24 Apr 2007 21:18:56 -0700
 
 lintian (1.23.29) unstable; urgency=low
 
