@@ -24,6 +24,9 @@ lintian (1.23.30) UNRELEASED; urgency=low
     + [RA] Don't warn about a missing md5sums file if the package contains
       nothing for which we would generate an MD5 checksum.  Thanks,
       Andreas Beckmann.  (Closes: #420465)
+  * checks/manpages:
+    + [RA] Cope with more uses of - in *roff escapes that don't need
+      hyphen warnings.
   * checks/rules:
     + [RA] Listing a rule as a dependency of .PHONY is sufficient to mark
       it as present for GNU make and hence sufficient for Policy's
@@ -38,7 +41,7 @@ lintian (1.23.30) UNRELEASED; urgency=low
       they're probably only using it as a fallback).  Based on a patch by
       Luk Claes.  (Closes: #231770)
 
- -- Russ Allbery <rra@debian.org>  Tue, 24 Apr 2007 21:18:56 -0700
+ -- Russ Allbery <rra@debian.org>  Wed, 25 Apr 2007 13:22:11 -0700
 
 lintian (1.23.29) unstable; urgency=low
 
