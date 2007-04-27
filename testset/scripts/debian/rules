@@ -17,6 +17,7 @@ binary-indep:
 	install -d $(tmp)/usr/src/scripts
 	install -d $(tmp)/DEBIAN
 
+	install -m 755 envfoo $(tmp)/usr/bin/
 	install -m 755 pyfoo $(tmp)/usr/bin/
 	install -m 755 py2foo $(tmp)/usr/bin/
 	install -m 755 perlfoo $(tmp)/usr/bin/

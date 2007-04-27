@@ -23,6 +23,7 @@ W: scripts source: maintainer-script-lacks-debhelper-token debian/postrm
 W: scripts source: package-uses-deprecated-debhelper-compat-version 1
 W: scripts source: source-nmu-has-incorrect-version-number 6
 W: scripts source: uses-dh-python-with-no-pycompat
+W: scripts: binary-without-manpage usr/bin/envfoo
 W: scripts: binary-without-manpage usr/bin/lefty-foo
 W: scripts: binary-without-manpage usr/bin/make-foo
 W: scripts: binary-without-manpage usr/bin/perl-bizarre-1
@@ -51,6 +52,7 @@ W: scripts: init.d-script-not-marked-as-conffile /etc/init.d/skeleton
 W: scripts: non-standard-executable-perm usr/bin/perl-bizarre-3 0754 != 0755
 W: scripts: non-standard-setuid-executable-perm usr/bin/suidperlfoo 4555
 W: scripts: package-installs-python-pyc usr/lib/python2.3/site-packages/test.pyc
+W: scripts: script-uses-bin-env ./usr/bin/envfoo
 W: scripts: script-with-language-extension usr/bin/test.sh
 W: scripts: setuid-binary usr/bin/suidperlfoo 4555 root/root
 W: scripts: setuid-binary usr/bin/suidperlfoo2 4751 root/root

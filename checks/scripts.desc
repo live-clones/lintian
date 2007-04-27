@@ -37,6 +37,13 @@ Info: This package contains a script for an interpreter that the Lintian
  interpreter.  If not, please file a wishlist bug on lintian so that the
  Lintian maintainers can add this interpreter to their list.
 
+Tag: script-uses-bin-env
+Type: warning
+Info: This script uses /bin/env as its interpreter (used to find the
+ actual interpreter on the user's path).  There is no /bin/env on Debian
+ systems; env is instead installed as /usr/bin/env.  Usually, the path to
+ env in the script should be changed.
+
 Tag: forbidden-config-interpreter
 Type: error
 Info: This package contains a 'config' script for pre-configuring the package,

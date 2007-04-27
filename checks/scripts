@@ -75,6 +75,7 @@ my %valid_interpreters = (
 			  'php5' => '/usr/bin/php5',
 			  'pike' => '/usr/bin/pike',
 			  'pike7' => '/usr/bin/pike7',
+			  'pike7.6' => '/usr/bin/pike7.6',
 			  'python' => '/usr/bin/python',
 			  'python1.5' => '/usr/bin/python1.5',
 			  'python2.1' => '/usr/bin/python2.1',
@@ -91,6 +92,7 @@ my %valid_interpreters = (
 			  'ruby' => '/usr/bin/ruby',
 			  'ruby1.6' => '/usr/bin/ruby1.6',
 			  'ruby1.8' => '/usr/bin/ruby1.8',
+			  'ruby1.9' => '/usr/bin/ruby1.9',
 			  'scsh' => '/usr/bin/scsh',
 			  'sed' => '/bin/sed',
 			  'sh' => '/bin/sh',
@@ -148,6 +150,7 @@ my %interpreter_dependencies = (
 				'php5' => 'php5-cli',
 				'pike' => 'pike',
 				'pike7' => 'pike7',
+				'pike7.6' => 'pike7.6',
 				'rc' => 'rc',
 				'regina' => 'regina-rexx',
 				'rexx' => 'regina-rexx',
@@ -340,6 +343,8 @@ while (<SCRIPTS>) {
 	# Don't emit any tag for this.
     } elsif ($base eq 'suidperl') {
 	tag_error("calls-suidperl-directly", $filename);
+    } elsif ($interpreter eq '/bin/env') {
+	tag_warn("script-uses-bin-env", $filename);
     } else {
 	tag_warn("unusual-interpreter", $filename, "#!$interpreter");
     }
