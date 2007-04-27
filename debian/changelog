@@ -16,6 +16,8 @@ lintian (1.23.30) UNRELEASED; urgency=low
       Build-Depends-Indep.  Still allow them in Build-Depends, though,
       since that's where CDBS likes to put them.  Thanks, Tristan
       Seligmann.  (Closes: #420526)
+    + [RA] Allow the Python core packages themselves to depend on
+      python-minimal.
   * checks/files{.desc,}:
     + [RA] Check for svk commit message files.
     + [RA] Don't consider {copying,license}.dtd extra license files; the
@@ -30,6 +32,10 @@ lintian (1.23.30) UNRELEASED; urgency=low
   * checks/manpages:
     + [RA] Cope with more uses of - in *roff escapes that don't need
       hyphen warnings.
+    + [RA] Don't consider a binary an X binary if it's a symlink into
+      /etc/X11.  (seyon does something weird but probably legitimate.)
+    + [RA] Fix manpage-for-non-x11-binary-in-wrong-directory and
+      manpage-for-x11-binary-in-wrong-directory output.
   * checks/rules:
     + [RA] Listing a rule as a dependency of .PHONY is sufficient to mark
       it as present for GNU make and hence sufficient for Policy's
@@ -47,7 +53,7 @@ lintian (1.23.30) UNRELEASED; urgency=low
     + [RA] Diagnose use of /bin/env with a more specific message than the
       generic unusual interpreter tag.
 
- -- Russ Allbery <rra@debian.org>  Thu, 26 Apr 2007 19:26:18 -0700
+ -- Russ Allbery <rra@debian.org>  Thu, 26 Apr 2007 19:58:01 -0700
 
 lintian (1.23.29) unstable; urgency=low
 
