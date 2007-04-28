@@ -183,9 +183,9 @@ Info: Debconf only supports the error template type as of version 1.4.69.
  debconf-2.0 alternative to allow for cdebconf or other implementations.
  Instead, use <tt>debconf (>= 1.4.69) | cdebconf (>= 0.39)</tt>.
  .
- All versions of debconf back to etch (4.0) support error templates, but
- the debconf released with sarge (3.1) didn't, so this dependency is still
- helpful for oldstable backports.
+ All versions of debconf back to etch support error templates, but the
+ debconf released with sarge didn't, so this dependency is still helpful
+ for oldstable backports.
 
 Tag: malformed-prompt-in-templates
 Type: warning
