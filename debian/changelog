@@ -36,6 +36,10 @@ lintian (1.23.30) UNRELEASED; urgency=low
       /etc/X11.  (seyon does something weird but probably legitimate.)
     + [RA] Fix manpage-for-non-x11-binary-in-wrong-directory and
       manpage-for-x11-binary-in-wrong-directory output.
+  * checks/menus{.desc,}:
+    + [RA] In doc-base control files, check for Index fields for HTML and
+      Info documents and require that each section after the header have a
+      Format field.  Thanks, Bernhard R. Link.  (Closes: #419847)
   * checks/rules:
     + [RA] Listing a rule as a dependency of .PHONY is sufficient to mark
       it as present for GNU make and hence sufficient for Policy's
@@ -53,7 +57,7 @@ lintian (1.23.30) UNRELEASED; urgency=low
     + [RA] Diagnose use of /bin/env with a more specific message than the
       generic unusual interpreter tag.
 
- -- Russ Allbery <rra@debian.org>  Thu, 26 Apr 2007 19:58:01 -0700
+ -- Russ Allbery <rra@debian.org>  Fri, 27 Apr 2007 19:22:32 -0700
 
 lintian (1.23.29) unstable; urgency=low
 

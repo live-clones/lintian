@@ -2,10 +2,13 @@ E: binary source: debian-rules-missing-required-target binary-indep
 E: binary-data: md5sums-control-file-is-empty
 E: binary: debian-changelog-file-missing-or-wrong-name
 E: binary: depends-on-x-metapackage depends: xorg
+E: binary: doc-base-file-no-format binary:20
+E: binary: doc-base-file-no-index binary:27
 E: binary: doc-base-file-references-missing-file binary:11 /usr/share/doc/binary/binary.sgml.gz
 E: binary: doc-base-file-references-missing-file binary:15 /usr/share/doc/binary/binary.txt
 E: binary: doc-base-file-references-missing-file binary:19 /usr/share/doc/binary/html/ch4.html
 E: binary: doc-base-file-references-missing-file binary:24 /usr/share/doc/binary/hml/*.html
+E: binary: doc-base-file-references-missing-file binary:27 /usr/share/info/binary.info.gz
 E: binary: doc-base-index-references-multiple-files binary:19
 E: binary: file-directly-in-usr-share usr/share/baz
 E: binary: lengthy-symlink usr/share/doc/binary/html/ch2.html ../html/./ch1.html

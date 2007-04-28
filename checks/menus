@@ -161,7 +161,8 @@ if ($docbase_file) {		# postinst has to call install-docs
     # check the contents of the doc-base file(s)
     opendir DOCBASEDIR, "doc-base" or fail("cannot read doc-base directory.");
     while (my $dbfile = readdir DOCBASEDIR) {
-	next if -x "doc-base/$dbfile"; # don't try to parse executables, plus we already warned about it
+	# don't try to parse executables, plus we already warned about it
+	next if -x "doc-base/$dbfile";
 	open IN, "doc-base/$dbfile" or
 	    fail("cannot open doc-base file $dbfile for reading.");
 
@@ -176,7 +177,7 @@ if ($docbase_file) {		# postinst has to call install-docs
 	# lines for the field.	As a result, all tags will be reported on the
 	# last continuation line of the field, rather than possibly where the
 	# offending file name is.
-	my (@files, $field);
+	my (@files, $field, $sawindex, $sawdocument, $format);
 	while (1) {
 	    $_ = <IN>;
 	    if ((!defined ($_) || /^\S/ || /^$/) && $field) {
@@ -205,17 +206,32 @@ if ($docbase_file) {		# postinst has to call install-docs
 		undef @files;
 		undef $field;
 	    }
-	    last unless defined $_;
-	    if (/^\s/ && $field) {
-		push (@files, split ' ');
-	    }
-	    if (/^(Index|Files)\s*:\s*(.*?)\s*$/i) {
+	    if (defined ($_) && /^(Index|Files)\s*:\s*(.*?)\s*$/i) {
 		$field = lc $1;
 		@files = split (' ', $2);
-	    } elsif (/^Format\s*:\s*(.*?)\s*$/i) {
-		my $format = lc $1;
+		if ($field eq 'index') {
+		    $sawindex = 1;
+		}
+	    } elsif (defined ($_) && /^Format\s*:\s*(.*?)\s*$/i) {
+		$format = lc $1;
 		tag "doc-base-file-unknown-format", "$dbfile:$.", $format
 		    unless $known_doc_base_formats{$format};
+	    } elsif (defined ($_) && /^Document\s*:/i) {
+		$sawdocument = 1;
+	    } elsif (defined ($_) && /^\s/ && $field) {
+		push (@files, split ' ');
+	    }
+	    if (!defined ($_) || /^$/) {
+		tag "doc-base-file-no-format", "$dbfile:$."
+		    unless $format || $sawdocument;
+		if ($format && ($format eq 'html' || $format eq 'info')) {
+		    tag "doc-base-file-no-index", "$dbfile:$."
+			unless $sawindex;
+		}
+		last unless defined $_;
+		undef $format;
+		undef $sawdocument;
+		undef $sawindex;
 	    }
 	}
 	close IN;

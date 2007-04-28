@@ -22,3 +22,6 @@ Format: HTML
 Index: /usr/share/doc/binary/html/index.html
 Files: /usr/share/doc/binary/html/ch?.h*l
 	/usr/share/doc/binary/hml/*.html
+
+Format: inFO
+Files: /usr/share/info/binary.info.gz

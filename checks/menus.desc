@@ -177,3 +177,17 @@ Info: The Format field in this doc-base control file declares a format
  that is not supported.  Recognized formats are "HTML", "Text", "PDF",
  "PostScript", "Info", "DVI", and "DebianDoc-SGML" (case-insensitive).
 Ref: Debian doc-base Manual section 2.3
+
+Tag: doc-base-file-no-format
+Type: error
+Info: A format section of this doc-base control file didn't specify a
+ format.  Each section after the first must specify a format.
+Ref: Debian doc-base Manual section 2.3.2.2
+
+Tag: doc-base-file-no-index
+Type: error
+Info: Format sections in doc-base control files for HTML or Info documents
+ must contain an Index field specifying the starting document for the
+ documentation.  Even if the documentation is a single file, this field
+ must be present.
+Ref: Debian doc-base Manual section 2.3.2.2
