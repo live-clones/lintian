@@ -90,7 +90,19 @@ lintian (1.23.30) UNRELEASED; urgency=low
       file that cannot be satisfied by that package (including via
       Provides).  (Closes: #56440)
 
- -- Russ Allbery <rra@debian.org>  Fri, 27 Apr 2007 22:46:06 -0700
+  * reporting/harness:
+    + [RA] Include overridden tags in the lintian output so that we can do
+      statistical reporting on them and see them in lintian.log.
+  * reporting/html_reports:
+    + [RA] Create stub pages for maintainers with only lintian-clean
+      packages.  (Closes: #305173)
+    + [RA] Sort packages on each maintainer's page.
+    + [RA] Report statistics on info tags as well.
+    + [RA] Generate better file names for maintainer pages with weird
+      characters.
+    + [RA] Fix Perl warnings.
+
+ -- Russ Allbery <rra@debian.org>  Sat, 28 Apr 2007 16:29:27 -0700
 
 lintian (1.23.29) unstable; urgency=low
 

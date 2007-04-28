@@ -45,6 +45,10 @@ my %tag_info = %{read_tag_info('html')};
 use Read_pkglists;
 use vars qw(%binary_info %source_info %udeb_info %bin_src_ref); # from the above
 
+# These should really not be global.
+my $maint = "";
+my $maint_file = "";
+
 # Determine Lintian version
 chomp(my $LINTIAN_VERSION = `$LINTIAN_ROOT/frontend/lintian --print-version`);
 
@@ -73,8 +77,8 @@ get_bin_src_ref();
 mkdir($HTML_TMP_DIR,0777)
     or die "cannot create output directory $HTML_TMP_DIR: $!";
 
-my ($num_errors, $num_warnings, $num_experimental, $num_overridden);
-$num_errors = $num_warnings = $num_experimental = $num_overridden = 0;
+my ($num_errors, $num_warnings, $num_experimental, $num_overridden, $num_info);
+$num_errors = $num_warnings = $num_experimental = $num_overridden = $num_info = 0;
 my (%by_src, %by_tag);
 my %anchor;
 
@@ -96,6 +100,7 @@ while (<>) {
 	$num_overridden++;
 	next;
     } elsif ($code eq 'I') {
+	$num_info++;
 	next;
     }
 
@@ -114,12 +119,12 @@ while (<>) {
 
     if (not exists $source_info{$src}) {
 	# work around:
-	$source_info{$src}->{'maintainer'} = 
-	    $binary_info{$pkg}->{'maintainer'} || 
+	$source_info{$src}->{'maintainer'} =
+	    $binary_info{$pkg}->{'maintainer'} ||
 	    $udeb_info{$pkg}->{'maintainer'} || '(unknown)';
 	$source_info{$src}->{'version'} = $binary_info{$pkg}->{'version'};
     }
-  
+
     push(@{$by_src{$src}},$_);
     push(@{$by_tag{$tag}},$_);
 }
@@ -130,15 +135,24 @@ open_maintainer_index();
 my ($src_num_errors, $src_num_warnings);
 my ($num_binpkg, $num_udebpkg, $num_maint, $num_srcpkg);
 
+# Build a hash of all maintainers.  We use this to generate stub pages for
+# maintainers whose packages are all lintian-clean.
+my %maintainers;
+for my $src (keys %source_info) {
+    $maintainers{$source_info{$src}{maintainer}} = 1;
+}
+
 # Create per-maintainer list
 for my $src (sort by_maint keys %by_src) {
     my @tags;
     my ($lastpkg, $lasttag);
     $lastpkg = $lasttag = "";
 
-    warn "no maintainer for $src!\n" unless defined $source_info{$src}{maintainer};
+    warn "no maintainer for $src!\n"
+	unless defined $source_info{$src}{maintainer};
     set_maintainer($source_info{$src}{'maintainer'});
     new_src_package($src, $source_info{$src}{'version'});
+    delete $maintainers{$source_info{$src}{maintainer}};
 
     for (sort by_tag @{$by_src{$src}}) {
 	my ($code, $pkg, $type, $tag, $rest) =
@@ -177,6 +191,17 @@ for my $src (sort by_maint keys %by_src) {
 close_maintainer();
 close_maintainer_index();
 close_qa_list();
+
+# Now, generate stub pages for every maintainer who has only clean packages.
+# Opening the index to /dev/null is such a hack.  Code refactoring is
+# desperately needed here.
+open(I, '>/dev/null');
+for my $maintainer (keys %maintainers) {
+    set_maintainer($maintainer);
+    print P "<p>All of this maintainer's packages are lintian-clean.</p>\n";
+}
+close_maintainer();
+close I;
 
 # Create tag pages
 open_tag_index();
@@ -250,8 +275,7 @@ my $old_stat;
 if (-f $statistics_file) {
     ($old_stat) = read_dpkg_control($statistics_file);
 }
-
-#foreach (keys %old_stat) { print "old stat $_: $old_stat{$_}\n"; };
+$old_stat->{'info'} ||= 0;
 
 # Calculate changes
 my $delta_num_maint = sprintf "%+d",$num_maint-$old_stat->{'maintainers'};
@@ -261,6 +285,7 @@ my $delta_num_udebpkg = sprintf "%+d",$num_udebpkg-$old_stat->{'udeb-packages'};
 my $delta_num_warnings = sprintf "%+d",$num_warnings-$old_stat->{'warnings'};
 my $delta_num_errors = sprintf "%+d",$num_errors-$old_stat->{'errors'};
 my $delta_num_experimental = sprintf "%+d",$num_experimental-$old_stat->{'experimental'};
+my $delta_num_info = sprintf "%+d",$num_info-$old_stat->{'info'};
 my $delta_num_overridden = sprintf "%+d",$num_overridden-$old_stat->{'overridden'};
 
 # update statistics file
@@ -274,6 +299,7 @@ $stat->{'udeb-packages'} = $num_udebpkg;
 $stat->{'warnings'} = $num_warnings;
 $stat->{'errors'} = $num_errors;
 $stat->{'experimental'} = $num_experimental;
+$stat->{'info'} = $num_info;
 $stat->{'overridden'} = $num_overridden;
 $stat->{'lintian-version'} = $LINTIAN_VERSION;
 open(OUT,">$statistics_file")
@@ -343,6 +369,7 @@ Manual</a>.</p>
 <tr><td>Udeb packages listed:</td>		<td>$num_udebpkg ($delta_num_udebpkg)</td></tr>
 <tr><td>Warnings:</td>				<td>$num_warnings ($delta_num_warnings)</td></tr>
 <tr><td>Errors:</td>				<td>$num_errors ($delta_num_errors)</td></tr>
+<tr><td>Info tags:</td>				<td>$num_info ($delta_num_info)</td></tr>
 <tr><td>Overridden tags:</td>			<td>$num_overridden ($delta_num_overridden)</td></tr>
 <tr><td>Lintian version:</td>			<td>$LINTIAN_VERSION</td></tr>
 </table>
@@ -420,9 +447,6 @@ sub list_tag {
 
 # -------------------------------
 
-my $maint = "";
-my $maint_file = "";
-
 sub open_maintainer {
     return if $_[0] eq $maint_file;
     close_maintainer();
@@ -458,8 +482,8 @@ sub set_maintainer {
     if ($file) {
 	$file =~ s/^(.+)\<.*$/$1/;
 	$file =~ tr/A-Za-z0-9_.,/_/c;
-	$file =~ s/^_//g;
-	$file =~ s/_$//g;
+	$file =~ s/^_+//g;
+	$file =~ s/_+$//g;
 
 	$file = "m$file.html";
     } else {
@@ -621,7 +645,8 @@ EOH
 # -------------------------------
 
 sub by_maint {
-  $source_info{$a}->{'maintainer'} cmp $source_info{$b}->{'maintainer'};
+  $source_info{$a}->{'maintainer'} cmp $source_info{$b}->{'maintainer'}
+      || $a cmp $b;
 }
 
 sub by_tag {
