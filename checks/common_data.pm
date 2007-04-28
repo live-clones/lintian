@@ -95,7 +95,7 @@ use vars qw
     ('package', 'version', 'architecture', 'subarchitecture', 'depends',
      'recommends', 'enhances', 'provides', 'installer-menu-item',
      'replaces', 'maintainer', 'section', 'priority',
-     'source', 'description', 'installed-size');
+     'source', 'description', 'installed-size', 'kernel-version');
 
 %known_obsolete_fields = map { $_ => 1 }
     ('revision', 'package-revision', 'package_revision',

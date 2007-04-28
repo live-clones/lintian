@@ -4,6 +4,7 @@ lintian (1.23.30) UNRELEASED; urgency=low
     + [RA] Add mktemp and sysvinit-utils as known essential packages.
     + [RA] Add Vcs-Mtn and Vcs-Browser to the known source package
       fields.
+    + [RA] Add Kernel-Version to known udeb control fields.
   * checks/control-files:
     + [RA] Allow clilibs, but don't try to check the syntax of it yet.
       Thanks, Sebastian Dröge.  (Closes: #378088)
@@ -89,7 +90,7 @@ lintian (1.23.30) UNRELEASED; urgency=low
       file that cannot be satisfied by that package (including via
       Provides).  (Closes: #56440)
 
- -- Russ Allbery <rra@debian.org>  Fri, 27 Apr 2007 22:41:38 -0700
+ -- Russ Allbery <rra@debian.org>  Fri, 27 Apr 2007 22:46:06 -0700
 
 lintian (1.23.29) unstable; urgency=low
 
