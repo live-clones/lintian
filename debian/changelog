@@ -61,7 +61,7 @@ lintian (1.23.30) UNRELEASED; urgency=low
     + [RA] Don't consider a binary an X binary if it's a symlink into
       /etc/X11.  (seyon does something weird but probably legitimate.)
     + [RA] Fix manpage-for-non-x11-binary-in-wrong-directory and
-      manpage-for-x11-binary-in-wrong-directory output.
+      manpage-for-x11-binary-in-wrong-directory output.  (Closes: #295072)
   * checks/menus{.desc,}:
     + [RA] In doc-base control files, check for Index fields for HTML and
       Info documents and require that each section after the header have a
