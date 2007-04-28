@@ -20,7 +20,7 @@ lintian (1.23.30) UNRELEASED; urgency=low
       policy to info since all debhelpers back to stable support it.
     + [RA] Downgrade the dependency check for compatibility level V5 to
       info since all debhelpers back to stable support it.
-  * checks/fields:
+  * checks/fields{.desc,}:
     + [RA] The CDBS Python rules only call pycentral or pysupport during
       the binary targets, so those dependencies can be safely moved to
       Build-Depends-Indep.  Still allow them in Build-Depends, though,
@@ -28,6 +28,15 @@ lintian (1.23.30) UNRELEASED; urgency=low
       Seligmann.  (Closes: #420526)
     + [RA] Allow the Python core packages themselves to depend on
       python-minimal.
+    + [RA] Remove the version constraints for python-central and
+      python-support dependencies since stable released with a working
+      version and they weren't in oldstable.
+    + [RA] Remove the dependency check on dh_installxfonts for the X.Org
+      transition since the debhelper released with stable does the right
+      thing and this dependency is not useful for backports to oldstable.
+    + [RA] Remove the version on the quilt dependency check.  It's not
+      worth the effort to maintain a separate version check for oldstable
+      backports.  (Closes: #420160)
   * checks/files{.desc,}:
     + [RA] Check for svk commit message files.
     + [RA] Don't consider {copying,license}.dtd extra license files; the

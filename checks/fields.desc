@@ -503,12 +503,6 @@ Info: The package runs dh_python in <tt>debian/rules</tt> but doesn't
  build-depend on python (or python-dev or python-all-dev, which in turn
  depend on python), even if they don't otherwise need Python to build.
 
-Tag: missing-dh_installxfonts-build-dependency
-Type: error
-Info: dh_installxfonts prior to debhelper 5.0.31 does not correctly handle
- the paths and dependencies for the X.Org 7 modular tree.  Any package
- using dh_installxfonts must depend on at least debhelper (>= 5.0.31).
-
 Tag: build-conflicts-with-build-dependency
 Type: error
 Ref: policy 7.6
