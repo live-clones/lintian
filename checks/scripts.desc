@@ -307,12 +307,10 @@ Info: This script calls adduser, but the package does not depend or
 
 Tag: maintainer-script-needs-depends-on-gconf2
 Type: warning
-Info: This script calls gconf-schemas, which comes from the gconf2 package
- and was introduced with gconf2 2.10.1-2, but does not depend or
- pre-depend on the appropriate version of gconf2.  Packages that call
- gconf-schemas need to depend on gconf2 (>= 2.10.1-2).  If you are using
- dh_gconf, add a dependency on ${misc:Depends} and dh_gconf will take care
- of this for you.
+Info: This script calls gconf-schemas, which comes from the gconf2 package,
+ but does not depend or pre-depend on gconf2.  If you are using dh_gconf,
+ add a dependency on ${misc:Depends} and dh_gconf will take care of this
+ for you.
 
 Tag: maintainer-script-needs-depends-on-ucf
 Type: warning

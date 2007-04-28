@@ -75,12 +75,15 @@ lintian (1.23.30) UNRELEASED; urgency=low
     + [RA] Add pike7.6 and ruby1.9 as valid interpreters.
     + [RA] Diagnose use of /bin/env with a more specific message than the
       generic unusual interpreter tag.
+    + [RA] Remove the version constraint on the gconf-schemas check since
+      all versions of gconf2 back to stable provide this script and it's
+      not worth maintaining a separate check for oldstable backports.
   * checks/shared-libs{.desc,}:
     + [RA] Warn if a package declares dependencies in its shlibs control
       file that cannot be satisfied by that package (including via
       Provides).  (Closes: #56440)
 
- -- Russ Allbery <rra@debian.org>  Fri, 27 Apr 2007 20:02:07 -0700
+ -- Russ Allbery <rra@debian.org>  Fri, 27 Apr 2007 22:04:52 -0700
 
 lintian (1.23.29) unstable; urgency=low
 
