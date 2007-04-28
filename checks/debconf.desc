@@ -173,18 +173,8 @@ Info: In the Unix tradition, Debian packages should have human-readable and
  install an override. Other exceptions to this check include configuration
  scripts called from the package's post-installation script.
 
-Tag: settitle-requires-versioned-depends
-Type: error
-Info: Debconf only supports the SETTITLE command as of version 1.3.22. To
- ensure upgrades work correctly, packages that use this new command should
- declare a dependency on that version of debconf.
- .
- Since SETTITLE was added after debconf-2.0, one cannot use the normal
- debconf-2.0 alternative to allow for cdebconf or other implementations.
- Instead, use <tt>debconf (>= 1.3.22) | cdebconf (>= 0.43)</tt>.
-
 Tag: debconf-error-requires-versioned-depends
-Type: error
+Type: info
 Info: Debconf only supports the error template type as of version 1.4.69.
  Packages that use this template type should declare a dependency on that
  version of debconf.
@@ -192,6 +182,10 @@ Info: Debconf only supports the error template type as of version 1.4.69.
  Since error types were added after debconf-2.0, one cannot use the normal
  debconf-2.0 alternative to allow for cdebconf or other implementations.
  Instead, use <tt>debconf (>= 1.4.69) | cdebconf (>= 0.39)</tt>.
+ .
+ All versions of debconf back to etch (4.0) support error templates, but
+ the debconf released with sarge (3.1) didn't, so this dependency is still
+ helpful for oldstable backports.
 
 Tag: malformed-prompt-in-templates
 Type: warning

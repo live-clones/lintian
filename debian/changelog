@@ -10,6 +10,11 @@ lintian (1.23.30) UNRELEASED; urgency=low
     + [RA] Replace yet another hand-rolled dependency parser with Dep.
   * checks/cruft{.desc,}:
     + [RA] Check for svk commit message files.
+  * checks/debconf{.desc,}:
+    + [RA] Remove the dependency check for SETTITLE since all debconf
+      implementations back to oldstable support it.
+    + [RA] Reduce the dependency check for error templates to info since
+      all debconf implementations back to stable support it.
   * checks/fields:
     + [RA] The CDBS Python rules only call pycentral or pysupport during
       the binary targets, so those dependencies can be safely moved to
