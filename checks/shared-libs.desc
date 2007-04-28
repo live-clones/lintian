@@ -122,6 +122,21 @@ Info: The shlibs control file contains an entry for a shared library that
  is not installed by this package.
 Ref: policy 8.6
 
+Tag: shlibs-declares-dependency-on-other-package
+Type: warning
+Info: This package declares in its shlibs control file a dependency on
+ some other package (and not one listed in the Provides of this package).
+ .
+ Packages should normally only list in their shlibs control file the
+ shared libraries included in that package, and therefore the dependencies
+ listed there should normally be satisfied by either the package itself or
+ one of its Provides.
+ .
+ In unusual circumstances where it's necessary to declare more complex
+ dependencies in the shlibs control file, please add a lintian override
+ for this warning.
+Ref: policy 8.6
+
 Tag: ldconfig-symlink-referencing-wrong-file
 Type: error
 Info: The symbolic link references the wrong file. (It should reference

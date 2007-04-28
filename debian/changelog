@@ -56,8 +56,12 @@ lintian (1.23.30) UNRELEASED; urgency=low
     + [RA] Add pike7.6 and ruby1.9 as valid interpreters.
     + [RA] Diagnose use of /bin/env with a more specific message than the
       generic unusual interpreter tag.
+  * checks/shared-libs{.desc,}:
+    + [RA] Warn if a package declares dependencies in its shlibs control
+      file that cannot be satisfied by that package (including via
+      Provides).  (Closes: #56440)
 
- -- Russ Allbery <rra@debian.org>  Fri, 27 Apr 2007 19:22:32 -0700
+ -- Russ Allbery <rra@debian.org>  Fri, 27 Apr 2007 20:02:07 -0700
 
 lintian (1.23.29) unstable; urgency=low
 

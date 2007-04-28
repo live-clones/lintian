@@ -20,6 +20,7 @@
 
 package Lintian::shared_libs;
 use strict;
+use Dep;
 use Tags;
 use File::Basename;
 use Util;
@@ -309,6 +310,7 @@ if ($#shlibs == -1) {
     } else {
 	my %shlibs_control_used;
 	my %shlibs_control;
+	my @shlibs_depends;
 	open(SHLIBS,$shlibs_control_file) or fail("cannot open shlibs control file $shlibs_control_file for reading: $!");
 	while (<SHLIBS>) {
 	    chop;
@@ -321,6 +323,7 @@ if ($#shlibs == -1) {
 		tag "duplicate-entry-in-shlibs-control-file", $shlibs_string;
 	    } else {
 		$shlibs_control{$shlibs_string} = 1;
+		push (@shlibs_depends, join (' ', @words[2 .. $#words]));
 	    }
 	}
 	close(SHLIBS);
@@ -346,6 +349,35 @@ if ($#shlibs == -1) {
 	for $shlib_name (keys %shlibs_control) {
 	    tag "unused-shlib-entry-in-control-file", $shlib_name
 		unless $shlibs_control_used{$shlib_name};
+	}
+
+	# Check that all of the packages listed as dependencies in the shlibs
+	# file are satisfied by the current package or its Provides.
+	# Normally, packages should only declare dependencies in their shlibs
+	# that they themselves can satisfy.
+	#
+	# Deduplicate the list of dependencies before warning so that we don't
+	# dupliate warnings.
+	my $provides = $pkg;
+	if (open (VERSION, 'fields/version')) {
+	    my $version = <VERSION>;
+	    close VERSION;
+	    chomp $version;
+	    $provides .= " (= $version)";
+	}
+	if (open (PROVIDES, 'fields/provides')) {
+	    my $line = <PROVIDES>;
+	    close PROVIDES;
+	    chomp $line;
+	    $provides .= ", $line";
+	}
+	$provides = Dep::parse($provides);
+	my %seen;
+	@shlibs_depends = grep { !$seen{$_}++ } @shlibs_depends;
+	for my $depend (@shlibs_depends) {
+	    unless (Dep::implies($provides, Dep::parse($depend))) {
+		tag "shlibs-declares-dependency-on-other-package", $depend;
+	    }
 	}
     }
 }
