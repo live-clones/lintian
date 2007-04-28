@@ -1,6 +1,5 @@
 E: debconf source: declares-possibly-conflicting-debhelper-compat-versions rules=4 compat=4
 E: debconf source: missing-dh_python-build-dependency python | python-dev | python-all-dev
-E: debconf source: package-needs-python-policy-debhelper
 E: debconf-test: extended-description-is-empty
 E: debconf-test: mismatch-translated-choices debconf/testmulti-escape choices-de.utf-8
 E: debconf-test: no-template-description debconf/no-description
@@ -8,6 +7,7 @@ E: debconf-test: no-template-type debconf/language
 E: debconf-test: unknown-debconf-priority config:10 LOW
 E: debconf-test: unknown-debconf-priority config:11 normal
 E: debconf-udeb udeb: udeb-postinst-must-not-call-ldconfig
+I: debconf source: package-needs-python-policy-debhelper
 I: debconf-test: debconf-error-requires-versioned-depends debconf/error
 W: debconf source: debian-rules-sets-DH_COMPAT line 3
 W: debconf source: invalid-po-file debian/po/fr.po

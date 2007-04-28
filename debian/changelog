@@ -15,6 +15,11 @@ lintian (1.23.30) UNRELEASED; urgency=low
       implementations back to oldstable support it.
     + [RA] Reduce the dependency check for error templates to info since
       all debconf implementations back to stable support it.
+  * checks/debhelper{.desc,}:
+    + [RA] Downgrade the dependency check for dh_python and the Python
+      policy to info since all debhelpers back to stable support it.
+    + [RA] Downgrade the dependency check for compatibility level V5 to
+      info since all debhelpers back to stable support it.
   * checks/fields:
     + [RA] The CDBS Python rules only call pycentral or pysupport during
       the binary targets, so those dependencies can be safely moved to

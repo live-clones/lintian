@@ -1,6 +1,6 @@
 E: cdbs-test source: clean-should-be-satisfied-by-build-depends debhelper
 E: cdbs-test source: missing-build-dependency python | python-dev | python-all-dev
-E: cdbs-test source: package-lacks-versioned-build-depends-on-debhelper 5
 I: cdbs-test source: build-depends-without-arch-dep yada
+I: cdbs-test source: package-lacks-versioned-build-depends-on-debhelper 5
 W: cdbs-test source: native-package-with-dash-version
 W: cdbs-test source: package-has-a-duplicate-build-relation cdbs, cdbs

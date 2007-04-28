@@ -162,7 +162,8 @@ while (defined(my $file=readdir(DEBIAN))) {
 	close IN;
 	
 	if ((! $seentag) and $needtomodifyscripts) {
-	    tag "maintainer-script-lacks-debhelper-token", "debian/$file" unless $binpkg && $pkgs{$binpkg} && ($pkgs{$binpkg} =~ /udeb/i);
+	    tag "maintainer-script-lacks-debhelper-token", "debian/$file"
+		unless $binpkg && $pkgs{$binpkg} && ($pkgs{$binpkg} =~ /udeb/i);
 	}
     } elsif ($file =~ m/^compat$/) {
 	open IN, "debfiles/$file"

@@ -21,11 +21,15 @@ Info: If a package uses debhelper, it must declare a Build-Depends
  on debhelper.
 
 Tag: package-lacks-versioned-build-depends-on-debhelper
-Type: error
-Info: If a package sets debhelper's compatibility version to >= 1,
+Type: info
+Info: If a package sets debhelper's compatibility version to >= 5,
  either via DH_COMPAT, or via debian/compat, or via dh_testversion
- (which is deprecated), it must declare a versioned Build-Depends on
+ (which is deprecated), it should declare a versioned Build-Depends on
  the needed version of debhelper.
+ .
+ All versions of debhelper back to etch support compatibility version 5,
+ but the debhelper released with sarge did not, so this dependency is
+ still helpful for oldstable backports.
 
 Tag: dh-make-template-in-source
 Type: warning
@@ -85,11 +89,15 @@ Info: The debhelper compatibility version used by this package is marked
  defaults to the deprecated compatibility version 1.
 
 Tag: package-needs-python-policy-debhelper
-Type: error
+Type: info
 Info: The source package requests dh_python compatibility level 2 (or
  higher) in <tt>debian/pycompat</tt> but doesn't depend on a new enough
  debhelper.  A Build-Depends on debhelper (>= 5.0.37.2) is required for
  this support.
+ .
+ All versions of debhelper back to etch support this, but the debhelper
+ released with sarge did not, so this dependency is still helpful for
+ oldstable backports.
 
 Tag: uses-dh-python-with-no-pycompat
 Type: warning
