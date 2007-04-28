@@ -44,6 +44,9 @@ lintian (1.23.30) UNRELEASED; urgency=low
     + [RA] Use $pkg rather than reading fields/package for the x11-common
       pre-depend check.
     + [RA] Allow x11-common to install /usr/X11R6/bin.
+    + [RA] Downgrade the pre-depends on x11-common requirement for
+      packages installing into /usr/include/X11 or /usr/lib/X11 to info
+      since it's only needed for upgrades from sarge or early etch.
   * checks/md5sums:
     + [RA] Don't warn about a missing md5sums file if the package contains
       nothing for which we would generate an MD5 checksum.  Thanks,
@@ -83,7 +86,7 @@ lintian (1.23.30) UNRELEASED; urgency=low
       file that cannot be satisfied by that package (including via
       Provides).  (Closes: #56440)
 
- -- Russ Allbery <rra@debian.org>  Fri, 27 Apr 2007 22:04:52 -0700
+ -- Russ Allbery <rra@debian.org>  Fri, 27 Apr 2007 22:23:22 -0700
 
 lintian (1.23.29) unstable; urgency=low
 

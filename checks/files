@@ -238,8 +238,8 @@ while (<IN>) {
 	}
 
 	#----------------- /usr/{include,lib}/X11/
-	# Packages installing files here must pre-depend on x11-common
-	# so that the symlinks will be sorted out first.
+	# Packages installing files here will need to pre-depend on x11-common
+	# so that the symlinks will be sorted out first on a sarge upgrade.
 	elsif ($file =~ m,^usr/(?:include|lib)/X11/,
 	       && !$warned_x11_predepends && $pkg ne 'x11-common') {
 	    my $pre_depends = '';
