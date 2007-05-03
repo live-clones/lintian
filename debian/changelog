@@ -8,6 +8,8 @@ lintian (1.23.31) UNRELEASED; urgency=low
     + [RA] Require libmodule-build-perl in Build-Depends if the clean rule
       runs perl Build.  Hopefully this isn't too aggressive.  Thanks, Ian
       Beckwith.  (Closes: #421549)
+  * checks/scripts:
+    + [RA] Add pagsh, provided by openafs-client and heimdal-clients.
 
  -- Russ Allbery <rra@debian.org>  Wed,  2 May 2007 20:38:18 -0700
 
