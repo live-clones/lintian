@@ -1,5 +1,8 @@
 lintian (1.23.31) UNRELEASED; urgency=low
 
+  * checks/control-files.desc:
+    + [RA] Change unknown-control-file to a warning, since Policy only
+      discourages it and doesn't outlaw it.  (Closes: #287209)
   * checks/cruft:
     + [RA] Allow any automake package to satisfy the autotools-dev build
       dependency for suppressing warnings about out of date autotools
@@ -11,7 +14,7 @@ lintian (1.23.31) UNRELEASED; urgency=low
   * checks/scripts:
     + [RA] Add pagsh, provided by openafs-client and heimdal-clients.
 
- -- Russ Allbery <rra@debian.org>  Wed,  2 May 2007 20:38:18 -0700
+ -- Russ Allbery <rra@debian.org>  Wed,  2 May 2007 20:52:55 -0700
 
 lintian (1.23.30) unstable; urgency=low
 

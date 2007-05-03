@@ -6,9 +6,11 @@ Type: binary, udeb
 Unpack-Level: 1
 
 Tag: unknown-control-file
-Type: error
-Info: The package contains an `unknown' control file, which should be
- removed.
+Type: warning
+Ref: policy B.2
+Info: The package contains an unknown control file.  Policy says that
+ putting additional files in the package control area is not generally a
+ good idea.
 
 Tag: not-allowed-control-file
 Type: error
