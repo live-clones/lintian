@@ -30,6 +30,12 @@ use Cwd;
 use File::Find;
 use File::Basename;
 
+# All the packages that may provide config.{sub,guess} during the build, used
+# to suppress warnings about outdated autotools helper files.
+my $autotools_pkgs = join ' | ',
+    qw(autotools-dev automake automaken automake1.4 automake1.7 automake1.8
+       automake1.9 automake1.10);
+
 my $dir;
 my $pkg;
 my $atdinbd;
@@ -57,15 +63,12 @@ if (open IN, "fields/architecture") {
 # I'm not thrilled with having the automake exception as well, but people do
 # depend on autoconf and automake and then use autoreconf to update
 # config.guess and config.sub, and automake depends on autotools-dev.
-#
-# We may need to allow all the various versioned automake packages, but let's
-# hope not.
 $atdinbd = 0;
 if (open IN, "fields/build-depends") {
     my $bd;
     chop($bd = <IN>);
     close IN;
-    $atdinbd = 1 if Dep::implies(Dep::parse($bd), Dep::parse('autotools-dev | automake'));
+    $atdinbd = 1 if Dep::implies(Dep::parse($bd), Dep::parse($autotools_pkgs));
 }
 
 my $cwd = cwd;

@@ -1,11 +1,15 @@
 lintian (1.23.31) UNRELEASED; urgency=low
 
+  * checks/cruft:
+    + [RA] Allow any automake package to satisfy the autotools-dev build
+      dependency for suppressing warnings about out of date autotools
+      helper files.  (Closes: #417067)
   * checks/fields:
     + [RA] Require libmodule-build-perl in Build-Depends if the clean rule
       runs perl Build.  Hopefully this isn't too aggressive.  Thanks, Ian
       Beckwith.  (Closes: #421549)
 
- -- Russ Allbery <rra@debian.org>  Sun, 29 Apr 2007 19:58:44 -0700
+ -- Russ Allbery <rra@debian.org>  Wed,  2 May 2007 20:38:18 -0700
 
 lintian (1.23.30) unstable; urgency=low
 
