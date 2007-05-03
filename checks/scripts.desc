@@ -248,6 +248,12 @@ Ref: policy 10.6
 Info: Maintainer scripts must not create device files directly.  They
  should call MAKEDEV instead.
 
+Tag: maintainer-script-removes-device-files
+Type: error
+Ref: policy 10.6
+Info: Maintainer scripts must not remove device files.  This is left to
+ the system administrator.
+
 Tag: read-in-maintainer-script
 Type: warning
 Ref: policy 3.9.1 

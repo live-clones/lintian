@@ -34,3 +34,7 @@ echo "/etc/init.d/package stop to stop something"
 if which ucf >/dev/null; then
     ucf --purge /etc/foo.conf
 fi    
+
+# This isn't allowed.
+rm /tmp/foo /dev/device
+rm	/dev/device1

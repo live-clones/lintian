@@ -13,8 +13,10 @@ lintian (1.23.31) UNRELEASED; urgency=low
       Beckwith.  (Closes: #421549)
   * checks/scripts:
     + [RA] Add pagsh, provided by openafs-client and heimdal-clients.
+    + [RA] Diagnose removal of device files in maintainer scripts per
+      Policy 10.6.  (Closes: #268688)
 
- -- Russ Allbery <rra@debian.org>  Wed,  2 May 2007 20:52:55 -0700
+ -- Russ Allbery <rra@debian.org>  Wed,  2 May 2007 21:05:30 -0700
 
 lintian (1.23.30) unstable; urgency=low
 

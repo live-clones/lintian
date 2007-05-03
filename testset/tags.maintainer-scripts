@@ -8,6 +8,8 @@ E: maintainer-scripts: init.d-script-not-included-in-package /etc/init.d/foo
 E: maintainer-scripts: interpreter-without-predep control/config #!/usr/bin/python
 E: maintainer-scripts: maintainer-script-calls-init-script-directly prerm:54
 E: maintainer-scripts: maintainer-script-does-not-check-for-existence-of-wm-menu-config postinst:31
+E: maintainer-scripts: maintainer-script-removes-device-files postrm:39
+E: maintainer-scripts: maintainer-script-removes-device-files postrm:40
 E: maintainer-scripts: maintainer-shell-script-fails-syntax-check prerm
 E: maintainer-scripts: no-copyright-file
 E: maintainer-scripts: postrm-contains-additional-updaterc.d-calls /etc/init.d/bar
@@ -48,6 +50,7 @@ W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:33 '[['
 W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:34 '    kill -HUP'
 W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:51 '${line:3:1}'
 W: maintainer-scripts: possibly-insecure-handling-of-tmp-files-in-maintainer-script postinst:50
+W: maintainer-scripts: possibly-insecure-handling-of-tmp-files-in-maintainer-script postrm:39
 W: maintainer-scripts: postinst-does-not-load-confmodule
 W: maintainer-scripts: postinst-should-not-set-usr-doc-link
 W: maintainer-scripts: postrm-does-not-purge-debconf

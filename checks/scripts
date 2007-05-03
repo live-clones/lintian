@@ -471,12 +471,12 @@ while (<SCRIPTS>) {
 		unless $warned{tmp};
 	    $warned{tmp} = 1;
 	}
-	if (m/^\s*killall(?:\s|$)/) {
+	if (m/^\s*killall(?:\s|\z)/) {
 	    tag "killall-is-dangerous", "$file:$."
 		unless $warned{killall};
 	    $warned{killall} = 1;
 	}
-	if (m/^\s*mknod(?:\s|$)/ and not m/\sp\s/) {
+	if (m/^\s*mknod(?:\s|\z)/ and not m/\sp\s/) {
 	    tag "mknod-in-maintainer-script", "$file:$.";
 	}
 
@@ -624,8 +624,11 @@ while (<SCRIPTS>) {
 	if (m,/usr/share/debconf/confmodule,) {
 	    $saw_debconf = 1;
 	}
-	if (m/^\s*read(?:\s|$)/ && !$saw_debconf && !$cat_string) {
+	if (m/^\s*read(?:\s|\z)/ && !$saw_debconf && !$cat_string) {
 	    tag "read-in-maintainer-script", "$file:$.";
+	}
+	if (m,^\s*rm\s+(.*\s)?/dev/, && !$cat_string) {
+	    tag "maintainer-script-removes-device-files", "$file:$.";
 	}
     }
 
