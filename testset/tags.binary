@@ -2,14 +2,14 @@ E: binary source: debian-rules-missing-required-target binary-indep
 E: binary-data: md5sums-control-file-is-empty
 E: binary: debian-changelog-file-missing-or-wrong-name
 E: binary: depends-on-x-metapackage depends: xorg
-E: binary: doc-base-file-no-format binary:20
-E: binary: doc-base-file-no-index binary:27
-E: binary: doc-base-file-references-missing-file binary:11 /usr/share/doc/binary/binary.sgml.gz
-E: binary: doc-base-file-references-missing-file binary:15 /usr/share/doc/binary/binary.txt
-E: binary: doc-base-file-references-missing-file binary:19 /usr/share/doc/binary/html/ch4.html
-E: binary: doc-base-file-references-missing-file binary:24 /usr/share/doc/binary/hml/*.html
-E: binary: doc-base-file-references-missing-file binary:27 /usr/share/info/binary.info.gz
-E: binary: doc-base-index-references-multiple-files binary:19
+E: binary: doc-base-file-no-format binary:22
+E: binary: doc-base-file-no-index binary:31
+E: binary: doc-base-file-references-missing-file binary:13 /usr/share/doc/binary/binary.sgml.gz
+E: binary: doc-base-file-references-missing-file binary:17 /usr/share/doc/binary/binary.txt
+E: binary: doc-base-file-references-missing-file binary:21 /usr/share/doc/binary/html/ch4.html
+E: binary: doc-base-file-references-missing-file binary:27 /usr/share/doc/binary/hml/*.html
+E: binary: doc-base-file-references-missing-file binary:30 /usr/share/info/binary.info.gz
+E: binary: doc-base-index-references-multiple-files binary:21
 E: binary: file-directly-in-usr-share usr/share/baz
 E: binary: lengthy-symlink usr/share/doc/binary/html/ch2.html ../html/./ch1.html
 E: binary: menu-item-missing-required-tag needs /usr/lib/menu/binary:6
@@ -46,7 +46,7 @@ W: binary: binary-without-manpage usr/bin/hello.static
 W: binary: binary-without-manpage usr/bin/iminusrbin
 W: binary: binary-without-manpage usr/bin/static-hello
 W: binary: changelog-file-not-compressed changelog
-W: binary: doc-base-file-unknown-format binary:14 esp
+W: binary: doc-base-file-unknown-format binary:16 esp
 W: binary: executable-not-elf-or-script ./usr/bin/iminusrbin
 W: binary: file-in-unusual-dir usr/bar
 W: binary: menu-command-not-in-package /usr/lib/menu/binary:11 imnothere

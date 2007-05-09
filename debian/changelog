@@ -14,12 +14,16 @@ lintian (1.23.31) UNRELEASED; urgency=low
     + [RA] Require libmodule-build-perl in Build-Depends if the clean rule
       runs perl Build.  Hopefully this isn't too aggressive.  Thanks, Ian
       Beckwith.  (Closes: #421549)
+  * checks/menus:
+    + [RA] Allow multiple blank lines between doc-base sections and
+      trailing blank lines in the file.  fine with this.  Reported by Luis
+      Rodrigo Gallardo Cruz.  (Closes: #423096)
   * checks/scripts:
     + [RA] Add pagsh, provided by openafs-client and heimdal-clients.
     + [RA] Diagnose removal of device files in maintainer scripts per
       Policy 10.6.  (Closes: #268688)
 
- -- Russ Allbery <rra@debian.org>  Wed,  9 May 2007 11:44:52 -0700
+ -- Russ Allbery <rra@debian.org>  Wed,  9 May 2007 12:01:09 -0700
 
 lintian (1.23.30) unstable; urgency=low
 

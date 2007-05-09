@@ -177,7 +177,7 @@ if ($docbase_file) {		# postinst has to call install-docs
 	# lines for the field.	As a result, all tags will be reported on the
 	# last continuation line of the field, rather than possibly where the
 	# offending file name is.
-	my (@files, $field, $sawindex, $sawdocument, $format);
+	my (@files, $field, $sawindex, $sawdocument, $format, $insection);
 	while (1) {
 	    $_ = <IN>;
 	    if ((!defined ($_) || /^\S/ || /^$/) && $field) {
@@ -221,9 +221,12 @@ if ($docbase_file) {		# postinst has to call install-docs
 	    } elsif (defined ($_) && /^\s/ && $field) {
 		push (@files, split ' ');
 	    }
+	    if (defined ($_) && /^\s*\S/) {
+		$insection = 1;
+	    }
 	    if (!defined ($_) || /^$/) {
 		tag "doc-base-file-no-format", "$dbfile:$."
-		    unless $format || $sawdocument;
+		    if ($insection && !($format || $sawdocument));
 		if ($format && ($format eq 'html' || $format eq 'info')) {
 		    tag "doc-base-file-no-index", "$dbfile:$."
 			unless $sawindex;
@@ -232,6 +235,7 @@ if ($docbase_file) {		# postinst has to call install-docs
 		undef $format;
 		undef $sawdocument;
 		undef $sawindex;
+		undef $insection;
 	    }
 	}
 	close IN;
