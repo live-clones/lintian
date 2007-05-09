@@ -1,5 +1,8 @@
 lintian (1.23.31) UNRELEASED; urgency=low
 
+  * checks/common_data.pm:
+    + [RA] Update architectures to dpkg 1.14.1.  Remove all linux-*
+      architectures and add armel.  (Closes: #421995)
   * checks/control-files.desc:
     + [RA] Change unknown-control-file to a warning, since Policy only
       discourages it and doesn't outlaw it.  (Closes: #287209)
@@ -16,7 +19,7 @@ lintian (1.23.31) UNRELEASED; urgency=low
     + [RA] Diagnose removal of device files in maintainer scripts per
       Policy 10.6.  (Closes: #268688)
 
- -- Russ Allbery <rra@debian.org>  Wed,  2 May 2007 21:05:30 -0700
+ -- Russ Allbery <rra@debian.org>  Wed,  9 May 2007 11:44:52 -0700
 
 lintian (1.23.30) unstable; urgency=low
 

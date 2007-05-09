@@ -43,22 +43,24 @@ use vars qw
      'mips', 'mipsel', 'powerpc', 'ppc64', 's390', 's390x', 'sh3', 'sh3eb',
      'sh4', 'sh4eb', 'sparc');
 
-# From /usr/share/dpkg/ostable, included here to make lintian results
-# consistent no matter what dpkg one has installed.
+# From /usr/share/dpkg/triplettable, included here to make lintian results
+# consistent no matter what dpkg one has installed.  This lists all of the
+# foo-<cpu> rules.  Note that linux is not present in the current dpkg and
+# hence is not present here.
 %all_oses = map { $_ => 1 }
-    ('linux', 'darwin', 'freebsd', 'kfreebsd', 'knetbsd', 'netbsd', 'openbsd',
-     'hurd');
+    ('kfreebsd', 'knetbsd', 'hurd', 'freebsd', 'openbsd', 'netbsd', 'darwin');
 
 # Yes, this includes combinations that are rather unlikely to ever exist, like
 # hurd-sh3, but the chances of those showing up as errors are rather low and
 # this reduces the necessary updating.
 #
-# For right now, linux-* are non-standard architectures.  This probably isn't
-# strictly correct and will need to be revisited later.
+# armel is a special case, so handle it separately here.  (It's handled
+# separately in /usr/share/dpkg/triplettable.)
 %non_standard_archs = map { $_ => 1 }
     grep { !$known_archs{$_} }
         (keys %all_cpus,
-         map { my $os = $_; map { "$os-$_" } keys %all_cpus } keys %all_oses);
+         map { my $os = $_; map { "$os-$_" } keys %all_cpus } keys %all_oses),
+    ('armel');
 
 
 %known_sections = map { $_ => 1 }
