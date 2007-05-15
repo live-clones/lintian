@@ -23,6 +23,9 @@ lintian (1.23.31) UNRELEASED; urgency=low
     + [RA] Diagnose removal of device files in maintainer scripts per
       Policy 10.6.  (Closes: #268688)
 
+  * frontend/lintian-info:
+    + [CW] Fix uninitialized value warning after reading a blank line.
+
  -- Russ Allbery <rra@debian.org>  Wed,  9 May 2007 12:01:09 -0700
 
 lintian (1.23.30) unstable; urgency=low

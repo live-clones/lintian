@@ -76,7 +76,7 @@ while (<>) {
 
     my $tag;
     my ($type, $pkg, @pieces) = split(/:\s+/);
-    if ($type =~ m/^[OEWIX]$/) {
+    if (defined $type and $type =~ m/^[OEWIX]$/) {
 	$tag = shift @pieces;
 	next if not defined $tag;
 	($tag) = split(/\s+/, $tag, 2);
