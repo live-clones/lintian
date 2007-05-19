@@ -324,11 +324,11 @@ for my $f (sort keys %binary) {
     if (exists $manpage{$f}) {
 	# X11 binary?  This shouldn't happen any more; these are no longer
 	# allowed.
-	if ($binary{$f} =~ m,usr/X11, or 
-	     ($link{$f} && $link{$f} =~ m,(\.\.|usr)/X11,)) { #Link to a X11 dir
+	if ($binary{$f} =~ m,usr/X11R6, or
+	     ($link{$f} && $link{$f} =~ m,(\.\.|usr)/X11R6,)) {
 	    # yes. manpage in X11 too?
 	    for my $manp_info (@{$manpage{$f}}) {
-		if ($manp_info->{file} =~ m/X11/) {
+		if ($manp_info->{file} =~ m/X11R6/) {
 		    # ok.
 		} else {
 		    tag "manpage-for-x11-binary-in-wrong-directory", "$binary{$f} $manp_info->{file}";
@@ -338,7 +338,7 @@ for my $f (sort keys %binary) {
 	} else {
 	    for my $manp_info (@{$manpage{$f}}) {
 		# no. manpage in X11?
-		if ($manp_info->{file} =~ m/X11/) {
+		if ($manp_info->{file} =~ m/X11R6/) {
 		    tag "manpage-for-non-x11-binary-in-wrong-directory", "$binary{$f} $manp_info->{file}";
 		} else {
 		    # ok.
