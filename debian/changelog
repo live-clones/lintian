@@ -17,6 +17,9 @@ lintian (1.23.31) UNRELEASED; urgency=low
   * checks/manpages:
     + [RA] Avoid false positives on binaries with X11 in the name.  Patch
       from Kevin B. McCarty.  (Closes: #423229)
+  * checks/menu-format.desc:
+    + [RA] Improve the pkg-not-in-package-test long description and add a
+      manual reference.  (Closes: #423519)
   * checks/menus:
     + [RA] Allow multiple blank lines between doc-base sections and
       trailing blank lines in the file.  fine with this.  Reported by Luis

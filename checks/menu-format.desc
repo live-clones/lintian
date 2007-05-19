@@ -33,10 +33,17 @@ Info: An item of the menu file cannot be parsed as a series of tag=value
 
 Tag: pkg-not-in-package-test
 Type: warning
-Info: The menu item doesn't tests to see if the package that contains it
- is installed. This is probably an error. Perhaps it is spelled
- or capitalized wrong, or perhaps the menu file was copied from some other
- package and this was accidentally not changed.
+Info: This menu item doesn't test to see if the package containing it is
+ installed.  The start of any menu item is a conditional testing whether
+ the required packages are installed.  Normally this conditional should
+ always check at least the package containing it, since menu items should
+ be included in the package that provides the application the menu refers
+ to.
+ .
+ This error usually indicates a misspelling of the package name in the
+ menu entry or a copied menu entry from another package that doesn't apply
+ to this one.
+Ref: menu manual 3.2
 
 Tag: duplicated-tag-in-menu-item
 Type: warning
