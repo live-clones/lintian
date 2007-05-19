@@ -14,6 +14,9 @@ lintian (1.23.31) UNRELEASED; urgency=low
     + [RA] Require libmodule-build-perl in Build-Depends if the clean rule
       runs perl Build.  Hopefully this isn't too aggressive.  Thanks, Ian
       Beckwith.  (Closes: #421549)
+  * checks/files:
+    + [RA] Don't warn about LICENSE files in Zope products, since they may
+      be used for runtime display.  (Closes: #424164)
   * checks/manpages:
     + [RA] Avoid false positives on binaries with X11 in the name.  Patch
       from Kevin B. McCarty.  (Closes: #423229)
@@ -32,7 +35,7 @@ lintian (1.23.31) UNRELEASED; urgency=low
   * frontend/lintian-info:
     + [CW] Fix uninitialized value warning after reading a blank line.
 
- -- Russ Allbery <rra@debian.org>  Fri, 18 May 2007 22:14:39 -0700
+ -- Russ Allbery <rra@debian.org>  Fri, 18 May 2007 22:35:32 -0700
 
 lintian (1.23.30) unstable; urgency=low
 

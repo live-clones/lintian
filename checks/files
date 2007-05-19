@@ -504,8 +504,10 @@ while (<IN>) {
 	# those are likely to just be simply pictures.
 	#
 	# DTD files are excluded at the request of the Mozilla suite
-	# maintainers.
+	# maintainers.  Zope products include license files for runtime
+	# display.
 	and not $file =~ m/\.(el|c|h|py|cc|pl|pm|html|php|rb|xpm|png|jpe?g|gif|svg|dtd)$/
+        and not $file =~ m,^usr/share/zope/Products/,
         and not defined $link) {
 	tag "extra-license-file", "$file";
     }
