@@ -629,9 +629,12 @@ while (<SCRIPTS>) {
 		}
 	    }
 	}
-	if (/\bgconftool(-2)?(\s|\Z)/) {
+	if (m,\bgconftool(-2)?(\s|\Z),) {
 	    tag "gconftool-used-in-maintainer-script", "$file:$.";
 	}
+        if (m,/var/lib/dpkg/status\b, && $pkg ne 'base-files' && $pkg ne 'dpkg') {
+            tag "maintainer-script-uses-dpkg-status-directly", "$file";
+        }
     }
 
     if ($saw_init && ! $saw_invoke) {

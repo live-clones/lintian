@@ -10,6 +10,7 @@ E: maintainer-scripts: maintainer-script-calls-init-script-directly prerm:54
 E: maintainer-scripts: maintainer-script-does-not-check-for-existence-of-wm-menu-config postinst:31
 E: maintainer-scripts: maintainer-script-removes-device-files postrm:39
 E: maintainer-scripts: maintainer-script-removes-device-files postrm:40
+E: maintainer-scripts: maintainer-script-uses-dpkg-status-directly postinst
 E: maintainer-scripts: maintainer-shell-script-fails-syntax-check prerm
 E: maintainer-scripts: no-copyright-file
 E: maintainer-scripts: postrm-contains-additional-updaterc.d-calls /etc/init.d/bar

@@ -73,3 +73,8 @@ gconf-schemas --register foo.schema
 # Calling update-xmlcatalog with no dependency.
 update-xmlcatalog --add --type system --id "/usr/share/sgml/dtd/foo" \
     --package maintainer-scripts --root
+
+# Maintainer scripts shouldn't touch /var/lib/dpkg/status.  This is the old
+# recipe from the dpkg wiki that should be replaced with dpkg-query.
+sed -n -e \"/^Conffiles:/,/^[^ ]/{\\\\' /etc/conffile'{s/.* //;p}}\" \
+    /var/lib/dpkg/status

@@ -35,11 +35,13 @@ lintian (1.23.31) UNRELEASED; urgency=low
     + [RA] Move several maintainer script checks specific to shell scripts
       inside the conditional so that they won't run on maintainer scripts
       not written in shell.
+    + [RA] Diagnose maintainer scripts looking at /var/lib/dpkg/status
+      directly.  Thanks, Guillem Jover.  (Closes: #426628)
 
   * frontend/lintian-info:
     + [CW] Fix uninitialized value warning after reading a blank line.
 
- -- Russ Allbery <rra@debian.org>  Sun, 03 Jun 2007 20:27:18 -0700
+ -- Russ Allbery <rra@debian.org>  Sun, 03 Jun 2007 20:45:13 -0700
 
 lintian (1.23.30) unstable; urgency=low
 

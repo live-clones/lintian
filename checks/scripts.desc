@@ -376,3 +376,16 @@ Tag: gconftool-used-in-maintainer-script
 Type: warning
 Info: This script apparently runs gconftool or gconftool-2.  It should
  probably be calling gconf-schemas or update-gconf-defaults instead.
+
+Tag: maintainer-script-uses-dpkg-status-directly
+Type: error
+Info: The file /var/lib/dpkg/status is internal to dpkg, may disappear or
+ change formats, and is not always a correct and complete record of
+ installed packages while dpkg is running.  Maintainer scripts should use
+ dpkg-query instead.  For the most common case of retrieving conffile
+ information, use:
+ .
+  dpkg-query -W -f='${Conffiles}' &lt;package&gt;
+ .
+ instead.
+Ref: http://wiki.debian.org/DpkgConffileHandling
