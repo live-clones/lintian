@@ -35,6 +35,7 @@ lintian (1.23.31) UNRELEASED; urgency=low
     + [RA] Diagnose removal of device files in maintainer scripts per
       Policy 10.6.  (Closes: #268688)
     + [RA] Add jruby1.0.  Thanks, Sebastien Delafond.  (Closes: #426950)
+    + [RA] Add jed and friends.  Thanks, Jörg Sommer.  (Closes: #426469)
     + [RA] Move several maintainer script checks specific to shell scripts
       inside the conditional so that they won't run on maintainer scripts
       not written in shell.
@@ -44,7 +45,7 @@ lintian (1.23.31) UNRELEASED; urgency=low
   * frontend/lintian-info:
     + [CW] Fix uninitialized value warning after reading a blank line.
 
- -- Russ Allbery <rra@debian.org>  Sun, 03 Jun 2007 20:59:12 -0700
+ -- Russ Allbery <rra@debian.org>  Mon, 04 Jun 2007 10:01:17 -0700
 
 lintian (1.23.30) unstable; urgency=low
 
