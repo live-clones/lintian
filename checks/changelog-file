@@ -262,6 +262,13 @@ if (@entries) {
     }
 }
 
+# Some checks should only be done against the most recent changelog entry.
+if (@entries) {
+    my $entry = $entries[0]->Changes;
+    while ($entry =~ /(closes\s*(?:bug)?\#?\s?\d{6,})[^\w]/ig) {
+	tag "possible-missing-colon-in-closes", "$1" if $1;
+    }
+}
 
 # read the changelog itself
 #
@@ -278,10 +285,6 @@ while (<IN>) {
 	      (?:,\s*(?:bug)?\#?\s?\d+)*
 	      (?:,\s*(((?:bug)?\#?\s?\d*)[[:alpha:]]\w*))/iox) {
 	tag "wrong-bug-number-in-closes", "l$.:$1" if $2;
-    }
-
-    if (/(closes\s*(?:bug)?\#?\s?\d{6,})[^\w]/i) {
-	tag "possible-missing-colon-in-closes", "l$.:$1" if $1;
     }
 
     if (/^(.*)Local\ variables:(.*)$/i) {

@@ -1,5 +1,8 @@
 lintian (1.23.31) UNRELEASED; urgency=low
 
+  * checks/changelog-file:
+    + [RA] Only check for missing colons in bug closers in the most recent
+      changelog entry.  Thanks, Thijs Kinkhorst.  (Closes: #423171)
   * checks/common_data.pm:
     + [RA] Update architectures to dpkg 1.14.1.  Remove all linux-*
       architectures and add armel.  (Closes: #421995)
@@ -41,7 +44,7 @@ lintian (1.23.31) UNRELEASED; urgency=low
   * frontend/lintian-info:
     + [CW] Fix uninitialized value warning after reading a blank line.
 
- -- Russ Allbery <rra@debian.org>  Sun, 03 Jun 2007 20:45:13 -0700
+ -- Russ Allbery <rra@debian.org>  Sun, 03 Jun 2007 20:59:12 -0700
 
 lintian (1.23.30) unstable; urgency=low
 
