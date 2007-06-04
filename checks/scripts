@@ -595,6 +595,18 @@ while (<SCRIPTS>) {
 		    tag "possible-bashism-in-maintainer-script", "$file:$. \'$match\'";
 		}
 	    }
+	    if (/invoke-rc.d.*\|\| exit 0/) {
+		tag "maintainer-script-hides-init-failure", "$file:$.";
+	    }
+	    if (m,/usr/share/debconf/confmodule,) {
+		$saw_debconf = 1;
+	    }
+	    if (m/^\s*read(?:\s|\z)/ && !$saw_debconf && !$cat_string) {
+		tag "read-in-maintainer-script", "$file:$.";
+	    }
+	    if (m,^\s*rm\s+(.*\s)?/dev/, && !$cat_string) {
+		tag "maintainer-script-removes-device-files", "$file:$.";
+	    }
 	}
 	if (m,\bsuidregister\b,) {
 	    tag "suidregister-used-in-maintainer-script", "$file";
@@ -617,20 +629,8 @@ while (<SCRIPTS>) {
 		}
 	    }
 	}
-	if (/invoke-rc.d.*\|\| exit 0/) {
-	    tag "maintainer-script-hides-init-failure", "$file:$.";
-	}
 	if (/\bgconftool(-2)?(\s|\Z)/) {
 	    tag "gconftool-used-in-maintainer-script", "$file:$.";
-	}
-	if (m,/usr/share/debconf/confmodule,) {
-	    $saw_debconf = 1;
-	}
-	if (m/^\s*read(?:\s|\z)/ && !$saw_debconf && !$cat_string) {
-	    tag "read-in-maintainer-script", "$file:$.";
-	}
-	if (m,^\s*rm\s+(.*\s)?/dev/, && !$cat_string) {
-	    tag "maintainer-script-removes-device-files", "$file:$.";
 	}
     }
 
