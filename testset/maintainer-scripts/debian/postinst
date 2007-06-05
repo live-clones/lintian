@@ -78,3 +78,18 @@ update-xmlcatalog --add --type system --id "/usr/share/sgml/dtd/foo" \
 # recipe from the dpkg wiki that should be replaced with dpkg-query.
 sed -n -e \"/^Conffiles:/,/^[^ ]/{\\\\' /etc/conffile'{s/.* //;p}}\" \
     /var/lib/dpkg/status
+
+# Don't modify these files.
+echo 'broken    6714/tcp' >> /etc/services
+cp /nonexistent /etc/protocols
+mv /usr/share/doc/rpc /etc/rpc
+
+# But this is okay.
+cp /etc/protocols /etc/protocols.new
+
+# This is also wrong.
+echo 'broken' > /etc/inetd.conf
+cp /etc/inetd.conf.new /etc/inetd.conf
+
+# But this is fine.
+cp /etc/inetd.conf /srv/chroot/etc/inetd.conf

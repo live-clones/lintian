@@ -8,6 +8,11 @@ E: maintainer-scripts: init.d-script-not-included-in-package /etc/init.d/foo
 E: maintainer-scripts: interpreter-without-predep control/config #!/usr/bin/python
 E: maintainer-scripts: maintainer-script-calls-init-script-directly prerm:54
 E: maintainer-scripts: maintainer-script-does-not-check-for-existence-of-wm-menu-config postinst:31
+E: maintainer-scripts: maintainer-script-modifies-inetd-conf postinst:91
+E: maintainer-scripts: maintainer-script-modifies-inetd-conf postinst:92
+E: maintainer-scripts: maintainer-script-modifies-netbase-managed-file postinst:83 /etc/services
+E: maintainer-scripts: maintainer-script-modifies-netbase-managed-file postinst:84 /etc/protocols
+E: maintainer-scripts: maintainer-script-modifies-netbase-managed-file postinst:85 /etc/rpc
 E: maintainer-scripts: maintainer-script-removes-device-files postrm:39
 E: maintainer-scripts: maintainer-script-removes-device-files postrm:40
 E: maintainer-scripts: maintainer-script-uses-dpkg-status-directly postinst

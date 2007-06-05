@@ -41,6 +41,9 @@ lintian (1.23.31) UNRELEASED; urgency=low
       not written in shell.
     + [RA] Diagnose maintainer scripts looking at /var/lib/dpkg/status
       directly.  Thanks, Guillem Jover.  (Closes: #426628)
+    + [RA] Diagnose direct modifications to /etc/services, /etc/protocols,
+      /etc/rpc, and /etc/inetd.conf in maintainer scripts.  (Yes, an
+      eight-year-old bug!)  (Closes: #32532)
   * checks/version-substvars{.desc,}:
     + [RA] Add a check for deprecated ${Source-Version} substvars.  Patch
       from Guillem Jover.  (Closes: #427577)
@@ -48,7 +51,7 @@ lintian (1.23.31) UNRELEASED; urgency=low
   * frontend/lintian-info:
     + [CW] Fix uninitialized value warning after reading a blank line.
 
- -- Russ Allbery <rra@debian.org>  Mon, 04 Jun 2007 19:28:29 -0700
+ -- Russ Allbery <rra@debian.org>  Mon, 04 Jun 2007 20:25:15 -0700
 
 lintian (1.23.30) unstable; urgency=low
 
