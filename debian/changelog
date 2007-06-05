@@ -1,4 +1,6 @@
-lintian (1.23.31) UNRELEASED; urgency=low
+lintian (1.23.31) unstable; urgency=low
+
+  The "back under 100 open bugs" release.
 
   * checks/changelog-file:
     + [RA] Only check for missing colons in bug closers in the most recent
@@ -28,8 +30,8 @@ lintian (1.23.31) UNRELEASED; urgency=low
       manual reference.  (Closes: #423519)
   * checks/menus:
     + [RA] Allow multiple blank lines between doc-base sections and
-      trailing blank lines in the file.  fine with this.  Reported by Luis
-      Rodrigo Gallardo Cruz.  (Closes: #423096)
+      trailing blank lines in the file.  doc-base is fine with this.
+      Reported by Luis Rodrigo Gallardo Cruz.  (Closes: #423096)
   * checks/scripts:
     + [RA] Add pagsh, provided by openafs-client and heimdal-clients.
     + [RA] Diagnose removal of device files in maintainer scripts per
@@ -51,7 +53,7 @@ lintian (1.23.31) UNRELEASED; urgency=low
   * frontend/lintian-info:
     + [CW] Fix uninitialized value warning after reading a blank line.
 
- -- Russ Allbery <rra@debian.org>  Mon, 04 Jun 2007 20:25:15 -0700
+ -- Russ Allbery <rra@debian.org>  Mon, 04 Jun 2007 20:29:55 -0700
 
 lintian (1.23.30) unstable; urgency=low
 
