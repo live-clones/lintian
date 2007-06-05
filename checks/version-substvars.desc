@@ -41,3 +41,10 @@ Info: The first package has a dependency on the second package that uses
  (= ${binary:Version}), (= ${source:Version}), or (= ${Source-Version}),
  but the second package is not built from this source package.  Usually
  this means there is a mistake in the package name in this dependency.
+
+Tag: substvar-source-version-is-deprecated
+Type: warning
+Info: The package uses the now deprecated ${Source-Version} substvar,
+ which has misleading semantics. Please switch to ${binary:Version} or
+ ${source:Version} as appropriate. Support for ${Source-Version} may be
+ removed from dpkg-dev in the future.

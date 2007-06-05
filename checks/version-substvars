@@ -41,6 +41,7 @@ my $pkg = shift;
 my $type = shift;
 
 my @control_data = read_dpkg_control("debfiles/control");
+my @dep_fields = qw(depends pre-depends recommends suggests conflicts replaces);
 
 shift @control_data; # skip source info entry
 
@@ -49,6 +50,14 @@ foreach (@control_data) {
 
 	$pkg1 = $_->{'package'};
 	$pkg1_is_any = ($_->{'architecture'} ne 'all');
+
+	foreach my $field (@dep_fields) {
+		next unless $_->{$field};
+		if ($_->{$field} =~ m/\${Source-Version}/) {
+			tag "substvar-source-version-is-deprecated", $pkg1;
+			last;
+		}
+	}
 
 	foreach (split /,/, ($_->{'depends'} || "")) {
 		next unless m/(\S+)\s*\(\s*=\s*\${((?:Source-|source:|binary:)Version)}/x;
@@ -74,8 +83,6 @@ foreach (@control_data) {
 			# (b3) all -> any (= ${either-of-them})
 			tag "not-binnmuable-all-depends-any", "$pkg1 -> $pkg2";
 		}
-
-		# TODO (post-Etch?): warn/error about ${Source-Version} being deprecated
 	}
 }
 
