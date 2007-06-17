@@ -3,6 +3,9 @@ lintian (1.23.32) UNRELEASED; urgency=low
   * checks/binaries:
     + [RA] Sort the package SONAMEs to provide more stable lintian tags.
       Patch from Cyril Brulebois.  (Closes: #428681)
+  * checks/files:
+    + [RA] Limit the Zope license exception to only .dtml, .pt, and .cpt
+      files.  Thanks, Bernd Zeimetz.
   * checks/po-debconf:
     + [RA] Close the template file handle between files so that the line
       numbers for translated default fields are correct.
@@ -10,7 +13,7 @@ lintian (1.23.32) UNRELEASED; urgency=low
     + [RA] Add Octave as an interpreter, and allow both versioned and
       unversioned forms.  Thanks, Sebastian Harl.  (Closes: #428403)
 
- -- Russ Allbery <rra@debian.org>  Sun, 17 Jun 2007 07:42:58 -0700
+ -- Russ Allbery <rra@debian.org>  Sun, 17 Jun 2007 07:48:19 -0700
 
 lintian (1.23.31) unstable; urgency=low
 

@@ -507,7 +507,7 @@ while (<IN>) {
 	# maintainers.  Zope products include license files for runtime
 	# display.
 	and not $file =~ m/\.(el|c|h|py|cc|pl|pm|html|php|rb|xpm|png|jpe?g|gif|svg|dtd)$/
-        and not $file =~ m,^usr/share/zope/Products/,
+        and not $file =~ m,^usr/share/zope/Products/.*\.(dtml|pt|cpt)$,
         and not defined $link) {
 	tag "extra-license-file", "$file";
     }
