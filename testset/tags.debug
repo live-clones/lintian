@@ -5,6 +5,12 @@ E: hello: unstripped-binary-or-object ./usr/bin/hello.dbg
 E: libhello0-dbg: binary-with-bad-dynamic-table ./usr/lib/libhello.so.dbg
 E: libhello0-dbg: sharedobject-in-library-directory-not-actually-a-shlib usr/lib/libhello.so.dbg
 I: debug source: non-standard-architecture kfreebsd-i386
+I: debug source: non-standard-architecture kfreebsd-i386
+I: debug source: non-standard-architecture kfreebsd-i386
+I: debug source: non-standard-architecture kfreebsd-i386
+I: debug source: non-standard-architecture ppc64
+I: debug source: non-standard-architecture ppc64
+I: debug source: non-standard-architecture ppc64
 I: debug source: non-standard-architecture ppc64
 W: debug source: changelog-should-not-mention-nmu
 W: debug source: debian-rules-sets-DH_COMPAT line 5
