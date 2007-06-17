@@ -1,3 +1,11 @@
+lintian (1.23.32) UNRELEASED; urgency=low
+
+  * checks/binaries:
+    + [RA] Sort the package SONAMEs to provide more stable lintian tags.
+      Patch from Cyril Brulebois.  (Closes: #428681)
+
+ -- Russ Allbery <rra@debian.org>  Sun, 17 Jun 2007 03:03:19 -0700
+
 lintian (1.23.31) unstable; urgency=low
 
   The "back under 100 open bugs" release.

@@ -131,7 +131,7 @@ sub lib_soname_path {
     }
     return 0;
 }
-my @sonames = grep { lib_soname_path (@{$SONAME{$_}}) } keys %SONAME;
+my @sonames = sort grep { lib_soname_path (@{$SONAME{$_}}) } keys %SONAME;
 tag "several-sonames-in-same-package", "@sonames" if @sonames > 1;
 
 # try to identify transition strings
