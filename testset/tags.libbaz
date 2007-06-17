@@ -19,7 +19,7 @@ E: libbaz2: symlink-should-be-relative usr/share/doc/libbaz2/changelog.gz /usr/s
 I: libbaz1: no-md5sums-control-file
 I: libbaz1: possible-non-posix-code-in-maintainer-script postinst:6 '[ -d /usr/doc -a ! -e /usr/doc/$PKG -a '
 I: libbaz1: possible-non-posix-code-in-maintainer-script prerm:5 '[ \( "$1" = "upgrade" -o "$1" = "remove" \) -a '
-I: libbaz1: several-sonames-in-same-package libbaz3.so.1 libbaz2.so.1.0
+I: libbaz1: several-sonames-in-same-package libbaz2.so.1.0 libbaz3.so.1
 I: libbaz2-dev: no-md5sums-control-file
 I: libbaz2: no-md5sums-control-file
 W: libbaz source: ancient-standards-version 3.2.1 (current is 3.7.2)
@@ -28,7 +28,7 @@ W: libbaz source: package-uses-deprecated-debhelper-compat-version 1
 W: libbaz source: source-nmu-has-incorrect-version-number 1
 W: libbaz source: substvar-source-version-is-deprecated libbaz2-dev
 W: libbaz1: missing-depends-line
-W: libbaz1: package-name-doesnt-match-sonames libbaz3-1 libbaz2-1.0
+W: libbaz1: package-name-doesnt-match-sonames libbaz2-1.0 libbaz3-1
 W: libbaz1: postinst-should-not-set-usr-doc-link
 W: libbaz1: shlibs-declares-dependency-on-other-package libbaz1 (>> 1)
 W: libbaz1: shlibs-declares-dependency-on-other-package libbaz2
