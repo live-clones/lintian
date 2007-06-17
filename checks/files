@@ -76,7 +76,6 @@ my $warned_x11_predepends = 0;
 
 # Read package contents...
 open(IN,"index") or fail("cannot open index file index: $!");
-open(TEMP,">/tmp/output");
 while (<IN>) {
     chop;
 
