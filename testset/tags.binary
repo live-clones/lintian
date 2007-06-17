@@ -19,8 +19,8 @@ E: binary: menu-item-missing-required-tag section /usr/share/menu/binary:1
 E: binary: non-wm-in-windowmanager-menu-section x11 /usr/lib/menu/binary:4
 E: binary: non-wm-in-windowmanager-menu-section x11 /usr/share/menu/binary:4
 E: binary: postinst-does-not-call-installdocs usr/share/doc-base/binary
-E: binary: postinst-does-not-call-updatemenus usr/lib/menu/binary
-E: binary: postrm-does-not-call-updatemenus usr/lib/menu/binary
+E: binary: postinst-does-not-call-updatemenus usr/share/menu/binary
+E: binary: postrm-does-not-call-updatemenus usr/share/menu/binary
 E: binary: prerm-does-not-call-installdocs usr/share/doc-base/binary
 E: binary: statically-linked-binary ./usr/bin/static-hello
 E: binary: su-wrapper-without--c /usr/lib/menu/binary:2 su-to-root
@@ -51,6 +51,8 @@ W: binary: changelog-file-not-compressed changelog
 W: binary: doc-base-file-unknown-format binary:16 esp
 W: binary: executable-not-elf-or-script ./usr/bin/iminusrbin
 W: binary: file-in-unusual-dir usr/bar
+W: binary: file-in-unusual-dir usr/bar2
+W: binary: file-in-unusual-dir usr/foo
 W: binary: menu-command-not-in-package /usr/lib/menu/binary:11 imnothere
 W: binary: menu-command-not-in-package /usr/lib/menu/binary:7 /imnothere
 W: binary: menu-command-not-in-package /usr/share/menu/binary:11 imnothere

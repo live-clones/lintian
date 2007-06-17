@@ -76,6 +76,7 @@ my $warned_x11_predepends = 0;
 
 # Read package contents...
 open(IN,"index") or fail("cannot open index file index: $!");
+open(TEMP,">/tmp/output");
 while (<IN>) {
     chop;
 
@@ -90,12 +91,18 @@ while (<IN>) {
 	$link_target =~ s,^\./,,;
 	my $link_target_dir = $link_target;
 	$link_target_dir =~ s,[^/]*$,,;
+
+	# It may look weird to sort the file and link target here, but since
+	# it's a hard link, both files are equal and either could be
+	# legitimately reported first.	tar will generate different tar files
+	# depending on the hashing of the directory, and this sort produces
+	# stable lintian output despite that.
+	#
 	# TODO: actually, policy says 'conffile', not '/etc' -> extend!
-	tag "package-contains-hardlink", $file, "->", $link_target
+	tag "package-contains-hardlink", join (' -> ', sort ($file, $link_target))
 	    if $file =~ m,^etc/,
 		or $link_target =~ m,^etc/,
 		or $file !~ m,^\Q$link_target_dir\E[^/]*$,;
-	next;
     } elsif ($perm =~ m/^l/) {
 	($file, $link) = split(' -> ', $file);
     }

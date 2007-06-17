@@ -60,6 +60,7 @@ spawn("tar", "xf", "$base_dir/control.tar", "-C", "$base_dir/control") == 0
 
 # create index of control.tar.gz
 pipeline((sub { exec "tar", "tvf", "$base_dir/control.tar" }),
+	 (sub { exec "sort", "-k", "6" }),
 	 "$base_dir/control-index") == 0
     or fail();
 
@@ -75,6 +76,7 @@ spawn("chmod", "-R", "u+rX,o-w", "$base_dir/control") == 0
 pipeline((sub { exec "dpkg-deb", "--fsys-tarfile", $file }),
 	 (sub { exec "tar", "tfv", "-" }),
 	 (sub { exec "sed", "-e", "s/^h/-/" }),
+	 (sub { exec "sort", "-k", "6" }),
 	 "$base_dir/index") == 0
     or fail();
 
