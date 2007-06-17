@@ -3,8 +3,11 @@ lintian (1.23.32) UNRELEASED; urgency=low
   * checks/binaries:
     + [RA] Sort the package SONAMEs to provide more stable lintian tags.
       Patch from Cyril Brulebois.  (Closes: #428681)
+  * checks/po-debconf:
+    + [RA] Close the template file handle between files so that the line
+      numbers for translated default fields are correct.
 
- -- Russ Allbery <rra@debian.org>  Sun, 17 Jun 2007 03:03:19 -0700
+ -- Russ Allbery <rra@debian.org>  Sun, 17 Jun 2007 04:22:47 -0700
 
 lintian (1.23.31) unstable; urgency=low
 

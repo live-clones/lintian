@@ -46,6 +46,7 @@ for my $file (readdir(DEB)) {
 				tag "translated-default-field", "$file: $."
 					if (m/^_Default(Choice)?: [^[]*$/);
 			}
+			close PO;
 		}
 	}
 }
