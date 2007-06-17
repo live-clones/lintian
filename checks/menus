@@ -28,7 +28,7 @@ use Tags;
 use Util;
 
 my $pkg;
-my @all_files = ();
+my %all_files = ();
 my %all_links = ();
 
 sub run {
@@ -192,14 +192,24 @@ if ($docbase_file) {		# postinst has to call install-docs
 		    if ($file =~ m%^/usr/doc%) {
 			tag "doc-base-file-references-usr-doc", "$dbfile:$line";
 		    }
-		    my $regex = quotemeta (delink ($file));
-		    unless ($field eq 'index') {
-			next if $regex =~ /\[/;
-			$regex =~ s%\\\*%[^/]*%g;
-			$regex =~ s%\\\?%[^/]%g;
-			$regex .= '/?';
+		    my $realfile = delink ($file);
+
+		    # openoffic.org-dev-doc has thousands of files listed so
+		    # try to use the hash if possible.
+		    my $found;
+		    if ($realfile =~ /[*?]/) {
+			my $regex = quotemeta ($realfile);
+			unless ($field eq 'index') {
+			    next if $regex =~ /\[/;
+			    $regex =~ s%\\\*%[^/]*%g;
+			    $regex =~ s%\\\?%[^/]%g;
+			    $regex .= '/?';
+			}
+			$found = grep { /^$regex\z/ } keys %all_files;
+		    } else {
+			$found = $all_files{$realfile} || $all_files{"$realfile/"};
 		    }
-		    unless (grep { /^$regex\z/ } @all_files) {
+		    unless ($found) {
 			tag "doc-base-file-references-missing-file", "$dbfile:$line", $file;
 		    }
 		}
@@ -284,7 +294,7 @@ sub add_file_link_info {
     $file =~ s%/+%/%g;				 # remove duplicated `/'
     ($file, $link) = split(/ -> /, $file);
 
-    push (@all_files, $file);
+    $all_files{$file} = 1;
 
     if (defined $link) {
 	if (not $link =~ m,^/,) {		  # not absolute link

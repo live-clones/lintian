@@ -6,6 +6,10 @@ lintian (1.23.32) UNRELEASED; urgency=low
   * checks/files:
     + [RA] Limit the Zope license exception to only .dtml, .pt, and .cpt
       files.  Thanks, Bernd Zeimetz.
+  * checks/menus:
+    + [RA] Avoid a quadratic search of the files in the package on
+      doc-base files that list tons of files individually.  This speeds up
+      a lintian check of openoffice.org-dev-doc enormously.
   * checks/po-debconf:
     + [RA] Close the template file handle between files so that the line
       numbers for translated default fields are correct.
@@ -13,7 +17,7 @@ lintian (1.23.32) UNRELEASED; urgency=low
     + [RA] Add Octave as an interpreter, and allow both versioned and
       unversioned forms.  Thanks, Sebastian Harl.  (Closes: #428403)
 
- -- Russ Allbery <rra@debian.org>  Sun, 17 Jun 2007 07:48:19 -0700
+ -- Russ Allbery <rra@debian.org>  Sun, 17 Jun 2007 15:36:23 -0700
 
 lintian (1.23.31) unstable; urgency=low
 
