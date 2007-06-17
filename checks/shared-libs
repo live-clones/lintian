@@ -167,7 +167,7 @@ for (keys %files) {
 	# Now that we're sure this is really a shared library, report on
 	# non-PIC problems.
         if ($cur_file eq $real_file and $TEXTREL{$cur_file}) {
-            tag "shlib-with-non-pic-code", "$file";
+            tag "shlib-with-non-pic-code", "$cur_file";
         }
 
         # don't apply the permission checks to links

@@ -16,8 +16,10 @@ lintian (1.23.32) UNRELEASED; urgency=low
   * checks/scripts:
     + [RA] Add Octave as an interpreter, and allow both versioned and
       unversioned forms.  Thanks, Sebastian Harl.  (Closes: #428403)
+  * checks/shared_libs:
+    + [RA] Report the correct file for shlib-with-nonpic-code.
 
- -- Russ Allbery <rra@debian.org>  Sun, 17 Jun 2007 15:36:23 -0700
+ -- Russ Allbery <rra@debian.org>  Sun, 17 Jun 2007 15:37:38 -0700
 
 lintian (1.23.31) unstable; urgency=low
 
