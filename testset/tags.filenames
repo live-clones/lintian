@@ -63,6 +63,7 @@ W: filenames: file-in-unusual-dir files/Maelstrom Sound.mine
 W: filenames: file-in-unusual-dir files/svk-commitsEr9P.tmp
 W: filenames: file-in-unusual-dir files/svn-commit.tmp
 W: filenames: file-in-unusual-dir srv/foo/bar
+W: filenames: file-in-usr-lib-sgml usr/lib/sgml/package
 W: filenames: menu-file-in-usr-lib usr/lib/menu/menu
 W: filenames: no-priority-field
 W: filenames: no-section-field

@@ -344,10 +344,6 @@ Info: This package installs a pixmap or a bitmap within <tt>/usr/lib</tt>.
  According to the Filesystem Hierarchy Standard, architecture-independent
  files need to be placed within <tt>/usr/share</tt> instead.
 
-Tag: executable-in-usr-lib-sgml
-Type: error
-Info: Files in <tt>/usr/lib/sgml</tt> should not be marked executable.
-
 Tag: file-directly-in-usr-share-doc
 Type: error
 Info: Documentation files have to be installed in <tt>/usr/share/doc/<i>pkg</i>
@@ -649,3 +645,10 @@ Info: When scripts are installed into a directory in the system PATH, the
  leaving the name the same would be confusing and changing it would be
  disruptive.
 Ref: policy 10.4
+
+Tag: file-in-usr-lib-sgml
+Type: warning
+Ref: fhs 4
+Info: This package installs a file in <tt>/usr/lib/sgml</tt>.  This was
+ the old location for SGML catalogs and similar flies.  All those files
+ should now go into <tt>/usr/share/sgml</tt>.

@@ -404,3 +404,10 @@ Info: The maintainer script modifies <tt>/etc/inetd.conf</tt> directly.
  This file must not be modified directly; instead, use the
  <tt>update-inetd</tt> script or the <tt>DebianNet.pm</tt> Perl module.
 Ref: policy 10.7.4
+
+Tag: install-sgmlcatalog-deprecated
+Type: error
+Info: The maintainer script apparently runs install-sgmlcatalog with flags
+ other than <tt>--quiet</tt> and <tt>--remove</tt>.  install-sgmlcatalog
+ is deprecated and should only be used in prerm to remove the entries from
+ earlier packages.

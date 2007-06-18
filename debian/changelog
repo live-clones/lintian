@@ -3,7 +3,7 @@ lintian (1.23.32) UNRELEASED; urgency=low
   * checks/binaries:
     + [RA] Sort the package SONAMEs to provide more stable lintian tags.
       Patch from Cyril Brulebois.  (Closes: #428681)
-  * checks/files:
+  * checks/files{.desc,}:
     + [RA] Limit the Zope license exception to only .dtml, .pt, and .cpt
       files.  Thanks, Bernd Zeimetz.
     + [RA] Sort the files listed in package-contains-hardlink so that the
@@ -11,6 +11,9 @@ lintian (1.23.32) UNRELEASED; urgency=low
       directory when the tar file was built.
     + [RA] Don't incorrectly skip all other file location checks for hard
       links.
+    + [RA] Check for files installed in /usr/lib/sgml.  This transition
+      was probably completed long ago, but checking for regression can't
+      hurt.  (Closes: #90019)
   * checks/manpages{.desc,}:
     + [RA] Check for dh_make man page templates (by looking for the
       template whatis entry).  Thanks, Bill Allombert.  (Closes: #173583)
@@ -25,9 +28,10 @@ lintian (1.23.32) UNRELEASED; urgency=low
     + [RA] Check for ignoring all errors from make clean or make distclean
       and recommend skipping the call if there's no Makefile instead.
       Thanks, Branden Robinson.  (Closes: #325372)
-  * checks/scripts:
+  * checks/scripts{.desc,}:
     + [RA] Add Octave as an interpreter, and allow both versioned and
       unversioned forms.  Thanks, Sebastian Harl.  (Closes: #428403)
+    + [RA] Check for deprecated install-sgmlcatalog usage.
   * checks/shared_libs:
     + [RA] Report the correct file for shlib-with-nonpic-code.
 
@@ -36,7 +40,7 @@ lintian (1.23.32) UNRELEASED; urgency=low
       output will be stable regardless of the hash order of the directory
       when the tar file was built.
 
- -- Russ Allbery <rra@debian.org>  Mon, 18 Jun 2007 06:00:48 -0700
+ -- Russ Allbery <rra@debian.org>  Mon, 18 Jun 2007 10:44:45 -0700
 
 lintian (1.23.31) unstable; urgency=low
 

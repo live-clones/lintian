@@ -115,6 +115,9 @@ binary-indep:
 	install -d debian/tmp/etc/gconf/schemas
 	touch debian/tmp/etc/gconf/schemas/test.schema
 
+	install -d debian/tmp/usr/lib/sgml
+	touch debian/tmp/usr/lib/sgml/package
+
 	ln -s '../filenames/doc/version6.txt.gz' debian/tmp/usr/share/doc/filenames/version.txt.gz
 	ln -s ../../share/symlink debian/tmp/usr/lib/filenames/symlink1ok
 	ln -s ../../../etc/symlink debian/tmp/usr/lib/filenames/symlink1wrong
