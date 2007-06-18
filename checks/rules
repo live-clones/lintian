@@ -69,6 +69,9 @@ while (<RULES>) {
     if (/\$[\(\{]PWD[\)\}]/) {
         tag "debian-rules-uses-pwd", "line $.";
     }
+    if (/^\t\s*-(?:\$[\(\{]MAKE[\}\)]|make)\s.*(?:dist)?clean/) {
+        tag "debian-rules-ignores-make-clean-error", "line $.";
+    }
 
     # Listing a rule as a dependency of .PHONY is sufficient to make it
     # present for the purposes of GNU make and therefore the Policy

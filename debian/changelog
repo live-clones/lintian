@@ -21,6 +21,10 @@ lintian (1.23.32) UNRELEASED; urgency=low
   * checks/po-debconf:
     + [RA] Close the template file handle between files so that the line
       numbers for translated default fields are correct.
+  * checks/rules{.desc,}:
+    + [RA] Check for ignoring all errors from make clean or make distclean
+      and recommend skipping the call if there's no Makefile instead.
+      Thanks, Branden Robinson.  (Closes: #325372)
   * checks/scripts:
     + [RA] Add Octave as an interpreter, and allow both versioned and
       unversioned forms.  Thanks, Sebastian Harl.  (Closes: #428403)
@@ -32,7 +36,7 @@ lintian (1.23.32) UNRELEASED; urgency=low
       output will be stable regardless of the hash order of the directory
       when the tar file was built.
 
- -- Russ Allbery <rra@debian.org>  Mon, 18 Jun 2007 03:42:59 -0700
+ -- Russ Allbery <rra@debian.org>  Mon, 18 Jun 2007 06:00:48 -0700
 
 lintian (1.23.31) unstable; urgency=low
 
