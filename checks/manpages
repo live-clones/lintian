@@ -239,6 +239,8 @@ while (<IN>) {
 	    $desc =~ s/^[^:]+: \"(.*)\"$/$1/;
 	    if ($desc =~ /(\S+)\s+-\s+manual page for \1/i) {
 		tag "manpage-has-useless-whatis-entry", "$file";
+	    } elsif ($desc =~ /(\S+)\s+-\s+programs? to do something/i) {
+		tag "manpage-is-dh_make-template", "$file";
 	    }
 	    1 while <LEXGROG>;
 	    close LEXGROG;

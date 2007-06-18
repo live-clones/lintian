@@ -11,6 +11,9 @@ lintian (1.23.32) UNRELEASED; urgency=low
       directory when the tar file was built.
     + [RA] Don't incorrectly skip all other file location checks for hard
       links.
+  * checks/manpages{.desc,}:
+    + [RA] Check for dh_make man page templates (by looking for the
+      template whatis entry).  Thanks, Bill Allombert.  (Closes: #173583)
   * checks/menus:
     + [RA] Avoid a quadratic search of the files in the package on
       doc-base files that list tons of files individually.  This speeds up
@@ -29,7 +32,7 @@ lintian (1.23.32) UNRELEASED; urgency=low
       output will be stable regardless of the hash order of the directory
       when the tar file was built.
 
- -- Russ Allbery <rra@debian.org>  Sun, 17 Jun 2007 15:42:15 -0700
+ -- Russ Allbery <rra@debian.org>  Mon, 18 Jun 2007 03:42:59 -0700
 
 lintian (1.23.31) unstable; urgency=low
 
