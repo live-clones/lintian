@@ -1335,7 +1335,7 @@ for (reverse sort @packages) {
 	}
 
 	# report unused overrides
-	if (not $no_override and $verbose) {
+	if (not $no_override) {
 	    my $overrides = Tags::get_overrides( $file );
 
 	    for my $o (sort keys %$overrides) {
@@ -1400,15 +1400,6 @@ if ($lintian_info) {
     close(OUTPUT_PIPE) or fail("cannot close output pipe to $lintian_info_cmd: $!");
     select STDOUT;
 }
-# }}}
-
-# {{{ report unused overrides (disabled)
-#if ($check_everything and not $no_override and $verbose) {
-#    for my $o (sort keys %overridden) {
-#	next if $overridden{$o};
-#	print "I: general: unused-override $o\n";
-#    }
-#}
 # }}}
 
 exit $exit_code;

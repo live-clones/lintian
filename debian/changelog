@@ -35,6 +35,11 @@ lintian (1.23.32) UNRELEASED; urgency=low
   * checks/shared_libs:
     + [RA] Report the correct file for shlib-with-nonpic-code.
 
+  * frontend/lintian:
+    + [RA] Don't require -v in order to report unused overrides; they're
+      already info-level tags, which is enough hiding.
+    + [RA] Remove old dead unused override code.
+
   * reporting/html_reports:
     + [RA] Fix a Perl warning when generating the clean maintainer pages.
 
@@ -43,7 +48,7 @@ lintian (1.23.32) UNRELEASED; urgency=low
       output will be stable regardless of the hash order of the directory
       when the tar file was built.
 
- -- Russ Allbery <rra@debian.org>  Mon, 18 Jun 2007 22:33:12 -0700
+ -- Russ Allbery <rra@debian.org>  Mon, 18 Jun 2007 23:59:58 -0700
 
 lintian (1.23.31) unstable; urgency=low
 
