@@ -35,12 +35,15 @@ lintian (1.23.32) UNRELEASED; urgency=low
   * checks/shared_libs:
     + [RA] Report the correct file for shlib-with-nonpic-code.
 
+  * reporting/html_reports:
+    + [RA] Fix a Perl warning when generating the clean maintainer pages.
+
   * unpack/unpack-binpkg-l1:
     + [RA] Sort the output of tar tfv by filename so that the lintian
       output will be stable regardless of the hash order of the directory
       when the tar file was built.
 
- -- Russ Allbery <rra@debian.org>  Mon, 18 Jun 2007 10:44:45 -0700
+ -- Russ Allbery <rra@debian.org>  Mon, 18 Jun 2007 22:33:12 -0700
 
 lintian (1.23.31) unstable; urgency=low
 

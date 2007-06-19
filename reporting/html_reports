@@ -448,7 +448,7 @@ sub list_tag {
 # -------------------------------
 
 sub open_maintainer {
-    return if $_[0] eq $maint_file;
+    return if ($maint_file && $_[0] eq $maint_file);
     close_maintainer();
 
     $maint_file = $_[0];
