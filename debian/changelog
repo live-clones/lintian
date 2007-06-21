@@ -1,4 +1,6 @@
-lintian (1.23.32) UNRELEASED; urgency=low
+lintian (1.23.32) unstable; urgency=low
+
+  The "stability of output" release.
 
   * checks/binaries:
     + [RA] Sort the package SONAMEs to provide more stable lintian tags.
@@ -49,7 +51,7 @@ lintian (1.23.32) UNRELEASED; urgency=low
       output will be stable regardless of the hash order of the directory
       when the tar file was built.
 
- -- Russ Allbery <rra@debian.org>  Thu, 21 Jun 2007 01:46:28 -0700
+ -- Russ Allbery <rra@debian.org>  Thu, 21 Jun 2007 01:47:53 -0700
 
 lintian (1.23.31) unstable; urgency=low
 
