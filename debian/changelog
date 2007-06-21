@@ -33,7 +33,8 @@ lintian (1.23.32) UNRELEASED; urgency=low
       unversioned forms.  Thanks, Sebastian Harl.  (Closes: #428403)
     + [RA] Check for deprecated install-sgmlcatalog usage.
   * checks/shared_libs:
-    + [RA] Report the correct file for shlib-with-nonpic-code.
+    + [RA] Report the correct file for shlib-with-nonpic-code rather than
+      the last shlib in the package.  (Closes: #429840, #429528)
 
   * frontend/lintian:
     + [RA] Don't require -v in order to report unused overrides; they're
@@ -48,7 +49,7 @@ lintian (1.23.32) UNRELEASED; urgency=low
       output will be stable regardless of the hash order of the directory
       when the tar file was built.
 
- -- Russ Allbery <rra@debian.org>  Mon, 18 Jun 2007 23:59:58 -0700
+ -- Russ Allbery <rra@debian.org>  Thu, 21 Jun 2007 01:46:28 -0700
 
 lintian (1.23.31) unstable; urgency=low
 
