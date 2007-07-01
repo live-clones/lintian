@@ -613,7 +613,7 @@ while (<SCRIPTS>) {
 		if (m/^\s*read(?:\s|\z)/ && !$saw_debconf) {
 		    tag "read-in-maintainer-script", "$file:$.";
 		}
-		if (m,^\s*rm\s+(.*\s)?/dev/,) {
+		if (m,^\s*rm\s+([^>]*\s)?/dev/,) {
 		    tag "maintainer-script-removes-device-files", "$file:$.";
 		}
 		if (m,>\s*(/etc/(?:services|protocols|rpc))(\s|\Z),) {

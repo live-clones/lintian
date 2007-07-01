@@ -1,3 +1,11 @@
+lintian (1.23.33) UNRELEASED; urgency=low
+
+  * checks/scripts:
+    + [RA] If rm output is redirected to /dev/null, don't think that rm is
+      removing /dev/null.  Thanks, Robert Luberda.  (Closes: #431259)
+
+ -- Russ Allbery <rra@debian.org>  Sun, 01 Jul 2007 09:54:45 -0700
+
 lintian (1.23.32) unstable; urgency=low
 
   The "stability of output" release.

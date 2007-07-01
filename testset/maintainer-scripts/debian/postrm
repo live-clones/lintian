@@ -38,3 +38,6 @@ fi
 # This isn't allowed.
 rm /tmp/foo /dev/device
 rm	/dev/device1
+
+# But this is okay.
+rm /tmp/foo > /dev/null
