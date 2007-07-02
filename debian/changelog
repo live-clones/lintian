@@ -3,8 +3,12 @@ lintian (1.23.33) UNRELEASED; urgency=low
   * checks/scripts:
     + [RA] If rm output is redirected to /dev/null, don't think that rm is
       removing /dev/null.  Thanks, Robert Luberda.  (Closes: #431259)
+  * checks/shared-libs:
+    + [RA] Exclude udebs from dependency checking in the shlibs files
+      since binary packages may legitimately declare udeb dependencies on
+      other packages.  Thanks, Loïc Minier.  (Closes: #431395)
 
- -- Russ Allbery <rra@debian.org>  Sun, 01 Jul 2007 09:54:45 -0700
+ -- Russ Allbery <rra@debian.org>  Mon, 02 Jul 2007 10:00:52 -0700
 
 lintian (1.23.32) unstable; urgency=low
 

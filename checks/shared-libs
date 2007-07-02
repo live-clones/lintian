@@ -315,6 +315,10 @@ if ($#shlibs == -1) {
 	while (<SHLIBS>) {
 	    chop;
 	    next if m/^\s*$/ or /^#/;
+
+	    # We exclude udebs from the checks for correct shared library
+	    # dependencies, since packages may contain dependencies on
+	    # other udeb packages.
 	    my $udeb="";
 	    $udeb = "udeb: " if s/^udeb:\s+//o;
 	    @words = split(/\s+/o,$_);
@@ -323,7 +327,8 @@ if ($#shlibs == -1) {
 		tag "duplicate-entry-in-shlibs-control-file", $shlibs_string;
 	    } else {
 		$shlibs_control{$shlibs_string} = 1;
-		push (@shlibs_depends, join (' ', @words[2 .. $#words]));
+		push (@shlibs_depends, join (' ', @words[2 .. $#words]))
+		    unless $udeb;
 	    }
 	}
 	close(SHLIBS);
