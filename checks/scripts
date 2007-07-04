@@ -285,6 +285,7 @@ while (<SCRIPTS>) {
     tag_warn("script-not-executable", $filename)
 	unless ($executable{$filename} or
 		$filename =~ m,usr/(lib|share)/.*\.pm, or
+		$filename =~ m,usr/(lib|share)/ruby/.*\.rb, or
 		$filename =~ m,\.in$, or
 		$filename =~ m,etc/menu-methods, or
 		$filename =~ m,etc/X11/Xsession.d,);

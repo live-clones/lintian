@@ -5,12 +5,15 @@ lintian (1.23.33) UNRELEASED; urgency=low
       removing /dev/null.  Thanks, Robert Luberda.  (Closes: #431259)
     + [RA] xjed also provides jed-script.  Thanks, Jörg Sommer.
       (Closes: #431629)
+    + [RA] Don't complain about ruby libraries in /usr/lib/ruby that have
+      shebang lines.  This is a common means for embedding unit tests in
+      Ruby libraries.  Thanks, Paul van Tilburg.  (Closes: #431545)
   * checks/shared-libs:
     + [RA] Exclude udebs from dependency checking in the shlibs files
       since binary packages may legitimately declare udeb dependencies on
       other packages.  Thanks, Loïc Minier.  (Closes: #431395)
 
- -- Russ Allbery <rra@debian.org>  Tue, 03 Jul 2007 22:30:33 -0700
+ -- Russ Allbery <rra@debian.org>  Tue, 03 Jul 2007 22:39:37 -0700
 
 lintian (1.23.32) unstable; urgency=low
 
