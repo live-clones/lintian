@@ -141,7 +141,8 @@ use vars qw
      'debconf-2.0',
      'aspell-dictionary',
      'radius-server',
-     'libgl-dev', 'libglu-dev'
+     'libgl-dev', 'libglu-dev',
+     'automaken'
     );
 
 %known_libstdcs = map { $_ => 1 }

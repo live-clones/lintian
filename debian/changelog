@@ -1,5 +1,7 @@
 lintian (1.23.33) UNRELEASED; urgency=low
 
+  * checks/common_data.pm:
+    + [CW] Add automaken as a known virtual package.
   * checks/scripts:
     + [RA] If rm output is redirected to /dev/null, don't think that rm is
       removing /dev/null.  Thanks, Robert Luberda.  (Closes: #431259)
