@@ -15,7 +15,11 @@ lintian (1.23.33) UNRELEASED; urgency=low
       since binary packages may legitimately declare udeb dependencies on
       other packages.  Thanks, Loïc Minier.  (Closes: #431395)
 
- -- Russ Allbery <rra@debian.org>  Tue, 03 Jul 2007 22:39:37 -0700
+  * frontend/lintian:
+    + [RA] Add \w+-backports to the known distribution list.  Thanks,
+      Vincent Danjean.  (Closes: #432268)
+
+ -- Russ Allbery <rra@debian.org>  Mon, 23 Jul 2007 11:14:07 -0700
 
 lintian (1.23.32) unstable; urgency=low
 
