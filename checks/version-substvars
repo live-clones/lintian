@@ -1,7 +1,7 @@
 # version-substvars -- lintian check script -*- perl -*-
 #
 # Copyright (C) 2006 Adeodato Simó
-# 
+#
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 of the License, or
@@ -23,11 +23,14 @@
 #
 # What breaks
 # -----------
-# 
+#
 # (b1) any -> any (= ${source:Version})		 -> use b:V
 # (b2) any -> all (= ${Source-Version}) [or b:V] -> use s:V
-# (b3) all -> any (= ${either-of-them})		 -> use (>= ${s:V}), optionally (<< ${s:V}.1~)
-
+# (b3) all -> any (= ${either-of-them})		 -> use (>= ${s:V}),
+#						    optionally (<< ${s:V}.1~)
+#
+# Always warn on ${Source-Version} even if it doesn't break since the substvar
+# is now considered deprecated.
 
 package Lintian::version_substvars;
 use strict;
@@ -55,7 +58,6 @@ foreach (@control_data) {
 		next unless $_->{$field};
 		if ($_->{$field} =~ m/\${Source-Version}/) {
 			tag "substvar-source-version-is-deprecated", $pkg1;
-			last;
 		}
 	}
 

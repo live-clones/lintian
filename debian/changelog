@@ -14,12 +14,16 @@ lintian (1.23.33) UNRELEASED; urgency=low
     + [RA] Exclude udebs from dependency checking in the shlibs files
       since binary packages may legitimately declare udeb dependencies on
       other packages.  Thanks, Loïc Minier.  (Closes: #431395)
+  * checks/version-substvars:
+    + [RA] Don't skip other checks for binNMUability when warning about
+      the deprecated ${Source-Version} substvar.  Thanks, Lior Kaplan.
+      (Closes: #432959)
 
   * frontend/lintian:
     + [RA] Add \w+-backports to the known distribution list.  Thanks,
       Vincent Danjean.  (Closes: #432268)
 
- -- Russ Allbery <rra@debian.org>  Mon, 23 Jul 2007 11:14:07 -0700
+ -- Russ Allbery <rra@debian.org>  Mon, 23 Jul 2007 11:32:32 -0700
 
 lintian (1.23.32) unstable; urgency=low
 
