@@ -46,7 +46,7 @@ my @known_tags=qw(
 # These 'needs' tags are always valid, no matter the context, and no other
 # values are valid outside WindowManagers context
 # (It's case insensitive, use lower case here.).
-my @needs_tag_vals=qw(x11 text vc);
+my @needs_tag_vals=qw(x11 text vc wm);
 
 # Authorative source of menu sections:
 # http://www.debian.org/doc/packaging-manuals/menu-policy/ch2#s2.1
