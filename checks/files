@@ -527,7 +527,7 @@ while (<IN>) {
 	if ($file =~ m,/\.nfs[^/]+$,) {
 	    tag "nfs-temporary-file-in-package", "$file";
 	}
-	
+
 	# ---------------- cvsignore files
 	if ($file =~ m/\.cvsignore$/) {
 	    tag "cvsignore-file-in-package", "$file";
@@ -665,6 +665,9 @@ while (<IN>) {
 	if (($file =~ m,/\.arch-ids/?$,)
 	    || ($file =~ m,/\{arch\}/?$,)) {
 	    tag "package-contains-arch-control-dir", "$file";
+	}
+	if ($file =~ m,/\.git/?$,) {
+	    tag "package-contains-git-control-dir", "$file";
 	}
 	if ($file =~ m,/.xvpics/?$,) {
 	    tag "package-contains-xvpics-dir", "$file";

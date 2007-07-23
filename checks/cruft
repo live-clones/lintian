@@ -92,6 +92,8 @@ sub find_cruft {
 	    tag "source-contains-arch-control-dir", "$name";
 	} elsif ($name =~ m,^(.+/)?\.arch-ids$,) {
 	    tag "source-contains-arch-control-dir", "$name";
+	} elsif ($name =~ m,^(.+/)?\.git$,) {
+	    tag "source-contains-git-control-dir", "$name";
 	}
     }
 

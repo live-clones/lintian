@@ -2,6 +2,11 @@ lintian (1.23.33) UNRELEASED; urgency=low
 
   * checks/common_data.pm:
     + [CW] Add automaken as a known virtual package.
+  * checks/cruft{.desc,}:
+    + [RA] Check for .git directories in source packages.  Thanks, Julien
+      Cristau.  (Closes: #433516)
+  * checks/files{.desc,}:
+    + [RA] Check for .git directories in binary packages.
   * checks/menu-format:
     + [RA] wm is a valid needs value.  Thanks, Nico Golde.
   * checks/scripts:
@@ -25,7 +30,7 @@ lintian (1.23.33) UNRELEASED; urgency=low
     + [RA] Add \w+-backports to the known distribution list.  Thanks,
       Vincent Danjean.  (Closes: #432268)
 
- -- Russ Allbery <rra@debian.org>  Mon, 23 Jul 2007 11:32:32 -0700
+ -- Russ Allbery <rra@debian.org>  Mon, 23 Jul 2007 11:52:38 -0700
 
 lintian (1.23.32) unstable; urgency=low
 
