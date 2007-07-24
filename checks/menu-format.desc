@@ -86,24 +86,31 @@ Type: warning
 Info: The menu item has a line that specifies a section under "Apps/Games".
  This section has been moved to just "Games".
 
+Tag: menu-item-uses-apps-section
+Type: warning
+Info: The menu item has a line that specifies a section under "Apps".
+ This section has been moved to "Applications".
+
+Tag: menu-item-uses-windowmanagers-section
+Type: warning
+Info: The menu item has a line that specifies a section under
+ "WindowManagers".  This section has been moved to "Window Managers".
+
 Tag: menu-item-creates-new-section
 Type: warning
-Info: The menu item has a line that specifies a new section to put a menu 
- entry in. This may be ok, but most menu entries should go in one of the 
- sections listed in the menu documentation.
- .
- Note that most root sections have to be subsectioned, and should not be
- used as sections directly.
- .
- See: http://www.debian.org/doc/packaging-manuals/menu-policy/ch2#s2.1
+Info: The menu item has a line that specifies an unknown section or uses a
+ section that is intended only as a menu root, not as a section that
+ applications should use directly.  Check the spelling of the section and
+ check the section against the list in the menu policy.  (The menu
+ sections changed as of June of 2007.)
 Ref: Debian Menu sub-policy 2.1
 
 Tag: menu-item-creates-new-root-section
 Type: error
 Info: The menu item has a line that specifies a new section to put a menu
- entry in, and this section appears right in the root menu. This is almost
- certainly an error, no new sections should be added to the root menu
- without discussion with the author of menu.
+ entry in, and this section appears right in the root menu.  This is
+ almost certainly an error.  No new sections should be added to the root
+ menu without discussion with the author of menu.
 
 Tag: menu-icon-not-in-xpm-format
 Type: error
@@ -157,16 +164,16 @@ Info: The menu item has needs=dwww. This is deprecated. Instead, you should
 
 Tag: non-wm-in-windowmanager-menu-section
 Type: error
-Info: The menu item is in the WindowManager section but does not needs=wm.
+Info: The menu item is in the Window Manager section but does not needs=wm.
  Either it is a window manager and it should needs=wm, either it isn't and
  then it must be moved in another section.
 
 Tag: non-wm-module-in-wm-module-menu-section
 Type: error
-Info: The menu item is in the WindowManager/Modules section but does not use
- a window-manager specific needs, like needs="fvwmmodule", or needs="wmmaker".
- You should make it needs the window manager it is a module for and add
- support in the window-manager menu-method.
+Info: The menu item is in the FVWM Modules or Window Maker section but
+ does not use a window-manager specific needs, like needs="fvwmmodule", or
+ needs="wmmaker".  You should make it needs the window manager it is a
+ module for and add support in the window-manager menu-method.
 
 Tag: unquoted-string-in-menu-item
 Type: warning

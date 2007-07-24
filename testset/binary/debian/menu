@@ -1,11 +1,18 @@
 ?package(binary):needs=text title="Hello World" command="/usr/bin/hello"
-?package(binary):needs=text section="Apps/System" title="Run cfdisk (0)" command="/usr/bin/su-to-root cfdisk"
-?package(binary):needs="text" section="Apps/System" title="Run cfdisk (1)" command="sux -p cfdisk"
-?package(binary):needs="x11" section="WindowManagers" title="Run xfdisk" command="/usr/sbin/su-to-root -c xfdisk"
-?package(binary):needs="wm" section="Apps/System" title="Run fdisk-wm" command="su-to-root -c hello"
-?package(binary):section="Apps/System" title="I'm not root!" command="su-to-root -c imnothere"
+?package(binary):needs=text section="Applications/System" title="Run cfdisk (0)" command="/usr/bin/su-to-root cfdisk"
+?package(binary):needs="text" section="Applications/System/Hardware" title="Run cfdisk (1)" command="sux -p cfdisk"
+?package(binary):needs="x11" section="Window Managers" title="Run xfdisk" command="/usr/sbin/su-to-root -c xfdisk"
+?package(binary):needs="wm" section="Applications/System/Administration" title="Run fdisk-wm" command="su-to-root -c hello"
+?package(binary):section="Apps/Games" title="I'm not root!" command="su-to-root -c imnothere"
 ?package(binary):needs="text" section="Apps/System" title="I'm not here!" command="/imnothere"
-?package(binary,other-binary):needs="text" section="Apps/System" title="more than one required" command="other-bin -s omething"
+?package(binary,other-binary):\
+ needs="text"\
+ section="Applications/Shells"\
+ title="more than one required"\
+ command="other-bin -s omething"
 ?package(binary):needs="wmmodule" section="WindowManagers/Modules" title="somemodule" command="ModuleCmd"
-?package(binary):needs="text" section="Apps/System" title="I'm not in /usr/bin!" command="iminusrbin"
-?package(binary):needs="text" section="Apps/System" title="I'm not root!" command="su-to-root -c imnothere"
+?package(binary):needs="wmmodule" section="FVWM Modules" title="somemodule" command="ModuleCmd"
+?package(binary):needs="text" section="Applications/System/Administration" title="I'm not in /usr/bin!" command="iminusrbin"
+?package(binary):needs="text"\
+ section="Applications/System/Administration"\
+ title="I'm not root!" command="su-to-root -c imnothere"

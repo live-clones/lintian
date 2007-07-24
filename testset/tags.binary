@@ -53,13 +53,23 @@ W: binary: executable-not-elf-or-script ./usr/bin/iminusrbin
 W: binary: file-in-unusual-dir usr/bar
 W: binary: file-in-unusual-dir usr/bar2
 W: binary: file-in-unusual-dir usr/foo
-W: binary: menu-command-not-in-package /usr/lib/menu/binary:11 imnothere
+W: binary: menu-command-not-in-package /usr/lib/menu/binary:18 imnothere
 W: binary: menu-command-not-in-package /usr/lib/menu/binary:7 /imnothere
-W: binary: menu-command-not-in-package /usr/share/menu/binary:11 imnothere
+W: binary: menu-command-not-in-package /usr/share/menu/binary:18 imnothere
 W: binary: menu-command-not-in-package /usr/share/menu/binary:7 /imnothere
 W: binary: menu-file-in-usr-lib usr/lib/menu/binary
+W: binary: menu-item-creates-new-section Applications/System /usr/lib/menu/binary:2
+W: binary: menu-item-creates-new-section Applications/System /usr/share/menu/binary:2
+W: binary: menu-item-creates-new-section Apps/System /usr/lib/menu/binary:7
+W: binary: menu-item-creates-new-section Apps/System /usr/share/menu/binary:7
+W: binary: menu-item-creates-new-section WindowManagers/Modules /usr/lib/menu/binary:13
+W: binary: menu-item-creates-new-section WindowManagers/Modules /usr/share/menu/binary:13
 W: binary: menu-item-needs-tag-has-unknown-value wm /usr/lib/menu/binary:5
 W: binary: menu-item-needs-tag-has-unknown-value wm /usr/share/menu/binary:5
+W: binary: menu-item-uses-apps-section /usr/lib/menu/binary:7
+W: binary: menu-item-uses-apps-section /usr/share/menu/binary:7
+W: binary: menu-item-uses-windowmanagers-section /usr/lib/menu/binary:13
+W: binary: menu-item-uses-windowmanagers-section /usr/share/menu/binary:13
 W: binary: old-fsf-address-in-copyright-file
 W: binary: package-contains-hardlink usr/bar2 -> usr/share/baz
 W: binary: package-contains-upstream-install-documentation usr/share/doc/binary/INSTALL

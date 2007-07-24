@@ -7,8 +7,13 @@ lintian (1.23.33) UNRELEASED; urgency=low
       Cristau.  (Closes: #433516)
   * checks/files{.desc,}:
     + [RA] Check for .git directories in binary packages.
-  * checks/menu-format:
-    + [RA] wm is a valid needs value.  Thanks, Nico Golde.
+  * checks/menu-format{.desc,}:
+    + [RA] Switch to the new menu hierarchy, which will be in the next
+      release of Policy.  Add specific checks for the major renamings to
+      hopefully cut down on the confusion and provide some specific
+      guidance.  Remove the code that allowed for applications to create
+      new sub-menus, since the current menu documentation says not to do
+      that.  (Closes: #431844)
   * checks/scripts:
     + [RA] If rm output is redirected to /dev/null, don't think that rm is
       removing /dev/null.  Thanks, Robert Luberda.  (Closes: #431259)
@@ -30,7 +35,7 @@ lintian (1.23.33) UNRELEASED; urgency=low
     + [RA] Add \w+-backports to the known distribution list.  Thanks,
       Vincent Danjean.  (Closes: #432268)
 
- -- Russ Allbery <rra@debian.org>  Mon, 23 Jul 2007 11:52:38 -0700
+ -- Russ Allbery <rra@debian.org>  Mon, 23 Jul 2007 19:29:32 -0700
 
 lintian (1.23.32) unstable; urgency=low
 
