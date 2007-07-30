@@ -2,6 +2,7 @@ lintian (1.23.33) UNRELEASED; urgency=low
 
   * checks/common_data.pm:
     + [CW] Add automaken as a known virtual package.
+    + [CW] Update architectures to dpkg 1.14.5, adding solaris-* and lpia.
   * checks/cruft{.desc,}:
     + [RA] Check for .git directories in source packages.  Thanks, Julien
       Cristau.  (Closes: #433516)

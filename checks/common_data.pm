@@ -48,19 +48,20 @@ use vars qw
 # foo-<cpu> rules.  Note that linux is not present in the current dpkg and
 # hence is not present here.
 %all_oses = map { $_ => 1 }
-    ('kfreebsd', 'knetbsd', 'hurd', 'freebsd', 'openbsd', 'netbsd', 'darwin');
+    ('kfreebsd', 'knetbsd', 'hurd', 'freebsd', 'openbsd', 'netbsd', 'darwin',
+     'solaris');
 
 # Yes, this includes combinations that are rather unlikely to ever exist, like
 # hurd-sh3, but the chances of those showing up as errors are rather low and
 # this reduces the necessary updating.
 #
-# armel is a special case, so handle it separately here.  (It's handled
-# separately in /usr/share/dpkg/triplettable.)
+# armel and lpia are special cases, so handle them separately here.  (They're
+# handled separately in /usr/share/dpkg/triplettable.)
 %non_standard_archs = map { $_ => 1 }
     grep { !$known_archs{$_} }
         (keys %all_cpus,
          map { my $os = $_; map { "$os-$_" } keys %all_cpus } keys %all_oses),
-    ('armel');
+    ('armel', 'lpia');
 
 
 %known_sections = map { $_ => 1 }
