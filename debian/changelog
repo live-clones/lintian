@@ -15,7 +15,7 @@ lintian (1.23.33) UNRELEASED; urgency=low
       guidance.  Remove the code that allowed for applications to create
       new sub-menus, since the current menu documentation says not to do
       that.  (Closes: #431844)
-  * checks/scripts:
+  * checks/scripts{.desc,}:
     + [RA] If rm output is redirected to /dev/null, don't think that rm is
       removing /dev/null.  Thanks, Robert Luberda.  (Closes: #431259)
     + [RA] xjed also provides jed-script.  Thanks, Jörg Sommer.
@@ -23,6 +23,10 @@ lintian (1.23.33) UNRELEASED; urgency=low
     + [RA] Don't complain about ruby libraries in /usr/lib/ruby that have
       shebang lines.  This is a common means for embedding unit tests in
       Ruby libraries.  Thanks, Paul van Tilburg.  (Closes: #431545)
+    + [RA] Don't push depending directly on update-inetd in the long
+      description of maintainer-script-needs-depends-on-update-inetd.
+      Most packages should depend on inet-superserver.  Leave the check
+      the same for the time being, however.
   * checks/shared-libs:
     + [RA] Exclude udebs from dependency checking in the shlibs files
       since binary packages may legitimately declare udeb dependencies on
@@ -36,7 +40,7 @@ lintian (1.23.33) UNRELEASED; urgency=low
     + [RA] Add \w+-backports to the known distribution list.  Thanks,
       Vincent Danjean.  (Closes: #432268)
 
- -- Russ Allbery <rra@debian.org>  Mon, 23 Jul 2007 19:29:32 -0700
+ -- Russ Allbery <rra@debian.org>  Mon, 30 Jul 2007 17:43:24 -0700
 
 lintian (1.23.32) unstable; urgency=low
 

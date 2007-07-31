@@ -299,12 +299,12 @@ Info: This script calls suidregister which is no longer needed, a new
 Tag: maintainer-script-needs-depends-on-update-inetd
 Type: warning
 Info: This script calls update-inetd, but the package does not depend or
- pre-depend on update-inetd, inet-superserver, or any of the providers of
- inet-superserver which provide it.
+ pre-depend on inet-superserver, any of the providers of inet-superserver
+ which provide it, or update-inetd.
  .
  update-inetd has been moved from netbase into a separate package, so a
- dependency on netbase should be updated to depend either on update-inetd
- directly or on "openbsd-inetd | inet-superserver".
+ dependency on netbase should be updated to depend on "openbsd-inetd |
+ inet-superserver".
 
 Tag: maintainer-script-needs-depends-on-adduser
 Type: warning
