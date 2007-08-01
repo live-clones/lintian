@@ -6,11 +6,17 @@ lintian (1.23.33) UNRELEASED; urgency=low
   * checks/cruft{.desc,}:
     + [RA] Check for .git directories in source packages.  Thanks, Julien
       Cristau.  (Closes: #433516)
-    + [RA] Lower the severity of source-contains-CVS-dir to info, since
-      it's not worth repackaging upstream to fix this normally.  Thanks,
-      Thijs Kinkhorst.  (Closes: #434744)
-  * checks/debdiff:
-    + [RA] Replace all uses of tag_error and tag_warn with just tag.
+    + [RA] Substantially rewrite how all cruft checking against source
+      packages is done, incorporating debdiff in the process.  There are
+      now two tags for most source package cruft problems: one for files
+      introduced in the Debian diff or in a native package, and one for
+      files present upstream.  The former is at warning severity and the
+      latter is at info severity, since it's usually not worth repackaging
+      the upstream source to remove such files.  In the process,
+      standardize the names of all of the tags and pull the regexes out
+      into data instead of code for easier maintenance.  (Closes: #434744)
+  * checks/debdiff{.desc}:
+    + [RA] Removed, incorporated into checks/cruft.
   * checks/debian-readme:
     + [RA] Replace all uses of tag_error and tag_warn with just tag.
   * checks/files{.desc,}:
@@ -54,7 +60,7 @@ lintian (1.23.33) UNRELEASED; urgency=low
     + [RA] Replace any newlines in the extra information to the tag
       function with \n.
 
- --
+ -- Russ Allbery <rra@debian.org>  Tue, 31 Jul 2007 21:48:40 -0700
 
 lintian (1.23.32) unstable; urgency=low
 

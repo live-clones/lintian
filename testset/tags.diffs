@@ -2,7 +2,9 @@ E: diffs source: debian-files-list-in-source
 E: diffs: arch-independent-package-contains-binary-or-object ./usr/bin/diffs
 E: diffs: no-copyright-file
 E: diffs: unstripped-binary-or-object ./usr/bin/diffs
-I: diffs source: editor-backup-file-in-diff binary.c~
+I: diffs source: diff-contains-editor-backup-file binary.c~
+I: diffs source: source-contains-git-control-dir .git
+I: diffs source: source-contains-svn-commit-file svn-commit.tmp
 I: diffs: no-md5sums-control-file
 W: diffs source: configure-generated-file-in-source config.cache
 W: diffs source: configure-generated-file-in-source config.log
@@ -13,6 +15,8 @@ W: diffs source: configure-generated-file-in-source subdir-bad/config.status
 W: diffs source: configure-generated-file-in-source subdir-good/config.cache
 W: diffs source: configure-generated-file-in-source subdir-good/config.log
 W: diffs source: configure-generated-file-in-source subdir-good/config.status
+W: diffs source: diff-contains-bzr-control-dir .bzr
+W: diffs source: diff-contains-cvs-conflict-copy .#binary.c.1.34
 W: diffs source: diff-contains-substvars debian/substvars
 W: diffs source: out-of-date-standards-version 3.5.9 (current is 3.7.2)
 W: diffs: binary-without-manpage usr/bin/diffs

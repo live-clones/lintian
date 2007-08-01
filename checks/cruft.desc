@@ -1,11 +1,26 @@
 Check-Script: cruft
 Author: Sean 'Shaleh' Perry <shaleh@debian.org>
 Abbrev: deb
-Standards-Version: 3.6.1
+Standards-Version: 3.7.2
 Type: source
 Unpack-Level: 2
-Info: This looks for cruft in Debian packaging
-Needs-Info: debfiles
+Info: This looks for cruft in Debian packaging or upstream source
+Needs-Info: debfiles, diffstat
+
+Tag: native-package-with-dash-version
+Type: warning
+Info: Native packaging should only be used if a piece of software was
+ written specifically to be turned into a Debian package. In this case,
+ the version number should not contain a debian revision part.
+ .
+ Native source packages are sometimes created by accident. In most cases
+ the reason is the location of the original source tarball. dpkg-source
+ searches for this in ../package_upstream-version.orig.tar.gz.
+
+Tag: documentation-package-not-architecture-independent
+Type: warning
+Info: Documentation packages usually shouldn't carry anything that requires
+ recompiling on various architectures, in order to save space on mirrors.
 
 Tag: debian-files-list-in-source
 Type: error
@@ -14,6 +29,185 @@ Info: Leaving <tt>debian/files</tt> causes problems for the autobuilders,
  architecture, which will cause dpkg-buildpackage run by the buildd to fail.
  .
  The clean rule for the package should remove this file.
+
+Tag: diff-contains-cvs-control-dir
+Type: warning
+Info: The Debian diff or native package contains files in a CVS directory.
+ These are usually artifacts of the revision control system used by the
+ Debian maintainer and not useful in a diff or native package.  Passing
+ <tt>-i</tt> to <tt>dpkg-buildpackage</tt> or the equivalent will
+ automatically exclude them.
+
+Tag: source-contains-cvs-control-dir
+Type: info
+Info: The upstream source contains a CVS directory.  It was most likely
+ included by accident since CVS directories usually don't belong in
+ releases.  When packaging a CVS snapshot, export from CVS rather than use
+ a checkout.  If an upstream release tarball contains CVS directories, you
+ usually should report this as a bug to upstream.
+
+Tag: diff-contains-svn-control-dir
+Type: warning
+Info: The Debian diff or native package contains files in an .svn
+ directory.  These are usually artifacts of the revision control system
+ used by the Debian maintainer and not useful in a diff or native package.
+ Passing <tt>-i</tt> to <tt>dpkg-buildpackage</tt> or the equivalent will
+ automatically exclude them.
+
+Tag: source-contains-svn-control-dir
+Type: info
+Info: The upstream source contains an .svn directory.  It was most likely
+ included by accident since Subversion version control directories
+ usually don't belong in releases.  When packaging a Subversion snapshot,
+ export from subversion rather than checkout.  If an upstream release
+ tarball contains .svn directories, this should be reported as a bug to
+ upstream since it can double the size of the tarball to no purpose.
+
+Tag: diff-contains-bzr-control-dir
+Type: warning
+Info: The Debian diff or native package contains files in a .bzr
+ directory.  These are usually artifacts of the revision control system
+ used by the Debian maintainer and not useful in a diff or native package.
+ Passing <tt>-i</tt> to <tt>dpkg-buildpackage</tt> or the equivalent will
+ automatically exclude them.
+
+Tag: source-contains-bzr-control-dir
+Type: info
+Info: The upstream source contains a .bzr directory. It was most likely
+ included by accident since bazaar-ng version control directories usually
+ don't belong in releases and may contain the entire repository.  When
+ packaging a bzr snapshot, use bzr export to create a clean tree.  If an
+ upstream release tarball contains .bzr directories, you should usually
+ report this as a bug upstream.
+
+Tag: diff-contains-arch-control-dir
+Type: warning
+Info: The Debian diff or native package contains files in an {arch} or
+ .arch-ids directory or a directory starting with <tt>,,</tt> (used by baz
+ for debugging traces).  These are usually artifacts of the revision
+ control system used by the Debian maintainer and not useful in a diff or
+ native package.  Passing <tt>-i</tt> to <tt>dpkg-buildpackage</tt> or the
+ equivalent will automatically exclude them.
+
+Tag: source-contains-arch-control-dir
+Type: info
+Info: The upstream source contains an {arch} or .arch-ids directory or a
+ directory starting with <tt>,,</tt> (used by baz for debugging traces).
+ It was most likely included by accident since Arch version control
+ directories usually don't belong in releases.  If an upstream release
+ tarball contains these directories, you should usually report this as a
+ bug upstream.
+
+Tag: diff-contains-git-control-dir
+Type: warning
+Info: The Debian diff or native package contains files in a .git
+ directory.  These are usually artifacts of the revision control system
+ used by the Debian maintainer and not useful in a diff or native package.
+ Passing <tt>-i</tt> to <tt>dpkg-buildpackage</tt> or the equivalent will
+ automatically exclude them.
+
+Tag: source-contains-git-control-dir
+Type: info
+Info: The upstream source contains a .git directory. It was most likely
+ included by accident since git version control directories usually don't
+ belong in releases and may contain a complete copy of the repository.  If
+ an upstream release tarball contains .git directories, you should usually
+ report this as a bug upstream.
+
+Tag: diff-contains-svn-commit-file
+Type: warning
+Info: The Debian diff or native package contains an
+ <tt>svn-commit(.NNN).tmp</tt>, almost certainly a left-over from a failed
+ Subversion commit by the Debian package maintainer.
+
+Tag: source-contains-svn-commit-file
+Type: info
+Info: The upstream source contains an <tt>svn-commit(.NNN).tmp</tt>,
+ almost certainly a left-over from a failed Subversion commit.  You may
+ want to report this as an upstream bug.
+
+Tag: diff-contains-svk-commit-file
+Type: warning
+Info: The Debian diff or native package contains an
+ <tt>svk-commitNNN.tmp</tt>, almost certainly a left-over from a failed
+ svk commit by the Debian package maintainer.
+
+Tag: source-contains-svk-commit-file
+Type: info
+Info: The upstream source contains an <tt>svk-commitNNN.tmp</tt>,
+ almost certainly a left-over from a failed Subversion commit.  You may
+ want to report this as an upstream bug.
+ 
+Tag: diff-contains-arch-inventory-file
+Type: warning
+Info: The Debian diff or native package contains an
+ <tt>.arch-inventory</tt> file.  This is Arch metadata that should
+ normally not be distributed.
+
+Tag: source-contains-arch-inventory-file
+Type: info
+Info: The upstream source contains an <tt>.arch-inventory</tt> file.  This
+ is Arch metadata that should normally not be distributed.  You may want
+ to report this as an upstream bug.
+
+Tag: diff-contains-cvs-conflict-copy
+Type: warning
+info: The Debian diff or native package contains a CVS conflict copy.
+ These have file names like <tt>.#file.version</tt> and are generated by
+ CVS when a conflict was detected when merging local changes with updates
+ from a source repository.  They're useful only while resolving the
+ conflict and should not be included in the package.
+
+Tag: source-contains-cvs-conflict-copy
+Type: info
+info: The upstream source contains a CVS conflict copy.  These have file
+ names like <tt>.#file.version</tt> and are generated by CVS when a
+ conflict was detected when merging local changes with updates from a
+ source repository.  They're useful only while resolving the conflict and
+ were probably included by accident.  You may want to report this as an
+ upstream bug.
+ 
+Tag: diff-contains-svn-conflict-file
+Type: warning
+info: The Debian diff or native package contains a file that looks like a
+ Subversion conflict file.  These are generated by Subversion when a
+ conflict was detected while merging local changes with updates from a
+ source repository.  Use <tt>svn resolved</tt> to remove them and clear
+ the Subversion conflict state after you have resolved the conflict.
+
+Tag: source-contains-svn-conflict-file
+Type: info
+info: The upstream source contains a file that looks like a Subversion
+ conflict file.  These are generated by Subversion when a conflict was
+ detected while merging local changes with updates from a source
+ repository.  They're useful only while resolving the conflict and
+ were probably included by accident.  You may want to report this as an
+ upstream bug.
+
+Tag: diff-contains-patch-failure
+Type: warning
+Info: The Debian diff or native package contains a file that looks like
+ the files left behind by the <tt>patch</tt> utility when it cannot
+ completely apply a diff.  This may be left over from a patch applied by
+ the maintainer.  Normally such files should not be included in the
+ package.
+
+Tag: diff-contains-editor-backup-file
+Type: info
+Info: The Debian diff or native package contains a file ending in
+ <tt>~</tt> or of the form <tt>.xxx.swp</tt>, which is normally either an
+ Emacs or vim backup file or a backup file created by programs such as
+ <tt>autoheader</tt> or <tt>debconf-updatepo</tt>.  This usually causes no
+ harm, but it's messy and bloats the size of the Debian diff to no useful
+ purpose.
+
+Tag: diff-contains-substvars
+Type: warning
+Info: Lintian found a substvars file in the Debian diff for this source 
+ package. The debian/substvars file is usually generated and modified
+ dynamically by debian/rules targets, in which case it must be removed by
+ the clean target.
+Ref: policy 4.9
 
 Tag: configure-generated-file-in-source
 Type: warning
@@ -32,83 +226,9 @@ Info: Leaving config.cache/status causes autobuilders problems.
  Note that Lintian cannot reliably detect the removal in the clean rule,
  so once you fix this, please ignore or override this warning.
 
-Tag: documentation-package-not-architecture-independent
-Type: warning
-Info: Documentation packages usually shouldn't carry anything that requires
- recompiling on various architectures, in order to save space on mirrors.
-
 Tag: outdated-autotools-helper-file
 Type: error
 Info: The referenced file has a time stamp older than year 2004 and the
  package does not build-depend on autotools-dev or automake and therefore
  apparently does not update it. This usually means that the source package
  will not work correctly on all currently released architectures.
-
-Tag: svn-commit-file-in-source
-Type: warning
-Info: Package source contains a 'svn-commit(.NNN).tmp' file.  This file is
- almost certainly a left-over from a failed Subversion commit, and does not
- belong in a Debian package.
-
-Tag: svk-commit-file-in-source
-Type: warning
-Info: Package source contains a 'svk-commitNNN.tmp' file.  This file is
- almost certainly a left-over from a failed svk commit, and does not
- belong in a Debian package.
-
-Tag: arch-inventory-file-in-source
-Type: info
-Info: Package contains a '.arch-inventory' file.  It may have been included by
- accident. It is Version Control System metadata that should not be
- distributed normally.
-
-Tag: source-contains-svn-control-dir
-Type: warning
-Info: Source contains a .svn directory. It was most likely included by
- accident, since Subversion version control directories usually don't belong
- in packages.  When packaging a Subversion snapshot, export from
- subversion rather than checkout.  If an upstream release tarball contains
- .svn directories, this should be reported as a bug to upstream since it
- can double the size of the tarball to no purpose.
-
-Tag: source-contains-bzr-control-dir
-Type: warning
-Info: Source contains a .bzr directory. It was most likely included by
- accident, since bazaar-ng version control directories usually don't belong
- in packages.
-
-Tag: source-contains-arch-control-dir
-Type: warning
-Info: Source contains a {arch} or .arch-ids directory. It was most likely
- included by accident, since Arch version control directories usually don't
- belong in packages.
-
-Tag: source-contains-git-control-dir
-Type: warning
-Info: Source contains a .git directory.  It was most likely included by
- accident, since GIT version control directories usually don't belong in
- packages and may contain the entire GIT repository.
-
-Tag: source-contains-CVS-dir
-Type: info
-Info: Package contains a CVS directory.  It was most likely included by
- accident, since transient CVS data usually doesn't belong in packages.
- When packaging a CVS snapshot, export from CVS rather than use a
- checkout.  If an upstream release tarball contains CVS directories,
- you usually should report this as a bug to upstream.
-
-Tag: source-contains-cvs-conflict-copy
-Type: warning
-Info: Package contains a CVS conflict copy. These are generated by CVS
- when a conflict was detected while merging local changes with the updates
- from the source repository. The file name is `.#file.version', where 
- file is the original filename and version the revision your modifications
- were based on.
-
-Tag: source-contains-svn-conflict-copy
-Type: warning
-Info: Package contains a Subversion conflict copy. These are generated by
- Subversion when a conflict was detected while merging local changes with the
- updates from the source repository. Use <tt>svn resolved</tt> to indicate you
- resolved the conflict, after you have manually checked and worked out the
- conflict.

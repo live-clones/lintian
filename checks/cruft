@@ -4,6 +4,7 @@
 # Copyright (C) 1999 Joey Hess
 # Copyright (C) 2000 Sean 'Shaleh' Perry
 # Copyright (C) 2002 Josip Rodin
+# Copyright (C) 2007 Russ Allbery
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -23,8 +24,10 @@
 
 package Lintian::cruft;
 use strict;
+
 use Dep;
 use Tags;
+use Util;
 
 use Cwd;
 use File::Find;
@@ -36,6 +39,43 @@ my $autotools_pkgs = join ' | ',
     qw(autotools-dev automake automaken automake1.4 automake1.7 automake1.8
        automake1.9 automake1.10);
 
+# Directory checks.  These regexes match a directory that shouldn't be in the
+# source package and associate it with a tag (minus the leading
+# source-contains or diff-contains).  Note that only one of these regexes
+# should trigger for any single directory.
+my @directory_checks =
+    ([ qr,^(.+/)?CVS$,        => 'cvs-control-dir'  ],
+     [ qr,^(.+/)?\.svn$,      => 'svn-control-dir'  ],
+     [ qr,^(.+/)?\.bzr$,      => 'bzr-control-dir'  ],
+     [ qr,^(.+/)?\{arch\}$,   => 'arch-control-dir' ],
+     [ qr,^(.+/)?\.arch-ids$, => 'arch-control-dir' ],
+     [ qr!^(.+/)?,,.+$!       => 'arch-control-dir' ],
+     [ qr,^(.+/)?\.git$,      => 'git-control-dir'  ],
+    );
+
+# File checks.  These regexes match files that shouldn't be in the source
+# package and associate them with a tag (minus the leading source-contains or
+# diff-contains).  Note that only one of these regexes should trigger for any
+# given file.  If the third column is a true value, don't issue this tag
+# unless the file is included in the diff; it's too common in source packages
+# and not important enough to worry about.
+my @file_checks =
+    ([ qr,^(.+/)?svn-commit\.(.+\.)?tmp$, => 'svn-commit-file'        ],
+     [ qr,^(.+/)?svk-commit.+\.tmp$,      => 'svk-commit-file'        ],
+     [ qr,^(.+/)?\.arch-inventory$,       => 'arch-inventory-file'    ],
+     [ qr,^(.+/)?\.\#(.+?)\.\d+(\.\d+)*$, => 'cvs-conflict-copy'      ],
+     [ qr,^(.+/)?(.+?)\.(r\d+|mine)$,     => 'svn-conflict-file'      ],
+     [ qr,\.(orig|rej)$,                  => 'patch-failure-file',  1 ],
+     [ qr,((^|/)\.[^/]+\.swp|~)$,         => 'editor-backup-file',  1 ],
+    );
+
+# Records files warned about in the diff so that we don't warn about them
+# again in the source checks.
+my %warned;
+
+# Whether this is a native Debian package.
+my $native;
+
 my $dir;
 my $pkg;
 my $atdinbd;
@@ -45,17 +85,29 @@ sub run {
 $pkg = shift;
 my $type = shift;
 
-unless ((not -e "debfiles/files") or (-z "debfiles/files")) {
-    tag "debian-files-list-in-source", "";
+if (-e "debfiles/files" and not -z "debfiles/files") {
+    tag 'debian-files-list-in-source';
 }
 
-# read architecture file and see if it's a doc package
+# This doens't really belong here, but there isn't a better place at the
+# moment to put this check.
+open (VERSION, "fields/version") or fail("cannot open fields/version: $!");
+chomp(my $version = <VERSION>);
+close VERSION;
+$version =~ s/^\d+://; #Remove epoch
+$native = (! -f "${pkg}_${version}.diff.gz");
+if ($native and $version =~ /-/ and $version !~ /-0\.[^-]+$/) {
+    tag 'native-package-with-dash-version';
+}
+
+# Check if this is a documentation package that's not arch: all.  This doesn't
+# really belong here either.
 my $arch;
 if (open IN, "fields/architecture") {
     chop($arch = <IN>);
     close IN;
     if ($pkg =~ /-docs?$/ && $arch ne 'all') {
-	tag "documentation-package-not-architecture-independent", "";
+        tag 'documentation-package-not-architecture-independent';
     }
 }
 
@@ -74,57 +126,100 @@ if (open IN, "fields/build-depends") {
 my $cwd = cwd;
 $dir = readlink "$cwd/unpacked"; # File::Find in Perl 5.8 appears to need it
 
+check_diffstat("diffstat");
 find(\&find_cruft, "$dir");
 
 } # </run>
 
+# -----------------------------------
+
+# Check the diff for problems.  Record any files we warn about in %warned so
+# that we don't warn again when checking the full unpacked source.  Takes the
+# name of a file containing diffstat output.
+sub check_diffstat {
+    my ($diffstat) = @_;
+    open(STAT, $diffstat) or fail("cannot open $diffstat: $!");
+    local $_;
+    while (<STAT>) {
+        my ($file) = (m,^\s+(.*?)\s+\|,)
+            or fail("syntax error in diffstat file: $_");
+
+        # We only care about diffs that add files.  If the file is being
+        # modified, that's not a problem with the diff and we'll catch it
+        # later when we check the source.  This regex doesn't catch only file
+        # adds, just any diff that doesn't remove lines from a file, but it's
+        # a good guess.
+        next unless m,\|\s+\d+\s+\++$,;
+
+        # diffstat output contains only files, but we consider the directory
+        # checks to trigger if the diff adds any files in those directories.
+        my ($directory) = ($file =~ m,^(.*)/[^/]+$,);
+        if ($directory and not $warned{$directory}) {
+            for my $rule (@directory_checks) {
+                if ($directory =~ /$rule->[0]/) {
+                    tag "diff-contains-$rule->[1]", $directory;
+                    $warned{$directory} = 1;
+                }
+            }
+        }
+
+        # Now the simpler file checks.
+        for my $rule (@file_checks) {
+            if ($file =~ /$rule->[0]/) {
+                tag "diff-contains-$rule->[1]", $file;
+                $warned{$file} = 1;
+            }
+        }
+
+        # Additional special checks only for the diff, not the full source.
+        if ($file =~ m,^debian/substvars$,) {
+            tag 'diff-contains-substvars', $file;
+        }
+    }
+    close(STAT) or fail("error reading diffstat file: $!");
+}
+
+# Check each file in the source package for problems.  By the time we get to
+# this point, we've already checked the diff and warned about anything added
+# there, so we only warn about things that weren't in the diff here.
+#
+# Report problems with native packages using the "diff-contains" rather than
+# "source-contains" tag.  The tag isn't entirely accurate, but it's better
+# than creating yet a third set of tags, and this gets the severity right.
 sub find_cruft {
     (my $name = $File::Find::name) =~ s,^\Q$dir\E/,,;
-    if (-d) {
-	# More or less copied from files, but this time it checks the source
-	if ($name =~ m,^(.+/)?CVS$,) {
-	    tag "source-contains-CVS-dir", "$name";
-	} elsif ($name =~ m,^(.+/)?\.svn$,) {
-	    tag "source-contains-svn-control-dir", "$name";
-	} elsif ($name =~ m,^(.+/)?\.bzr$,) {
-	    tag "source-contains-bzr-control-dir", "$name";
-	} elsif ($name =~ m,^(.+/)?\{arch\}$,) {
-	    tag "source-contains-arch-control-dir", "$name";
-	} elsif ($name =~ m,^(.+/)?\.arch-ids$,) {
-	    tag "source-contains-arch-control-dir", "$name";
-	} elsif ($name =~ m,^(.+/)?\.git$,) {
-	    tag "source-contains-git-control-dir", "$name";
-	}
+    my $prefix = ($native ? "diff-contains" : "source-contains");
+    if (-d and not $warned{$name}) {
+        for my $rule (@directory_checks) {
+            if ($name =~ /$rule->[0]/) {
+                tag "${prefix}-$rule->[1]", $name;
+            }
+        }
+    }
+    -f or return; # we just need normal files for the rest
+
+    unless ($warned{$name}) {
+        for my $rule (@file_checks) {
+            next if ($rule->[2] and not $native);
+            if ($name =~ /$rule->[0]/) {
+                tag "${prefix}-$rule->[1]", $name;
+            }
+        }
     }
 
-    -f or return; # we just need normal files, for now
-
-    # More or less copied from files, but this time it checks the source
-    if ($name =~ m,^(.+/)?svn-commit\.(.+\.)?tmp$,) {
-	tag "svn-commit-file-in-source", "$name";
-    } elsif ($name =~ m,^(.+/)?svk-commit.+\.tmp$,) {
-        tag "svk-commit-file-in-source", "$name";
-    } elsif ($name =~ m,^(.+/)?\.arch-inventory$,) {
-	tag "arch-inventory-file-in-source", "$name";
-    } elsif ($name =~ m,^(.+/)?\.\#(.+?)\.\d+(\.\d+)*$,) {
-	tag "source-contains-cvs-conflict-copy", "$name";
-    } elsif ($name =~ m,^(.+/)?(.+?)\.(r\d+|mine)$,) {
-	tag "source-contains-svn-conflict-copy", "$name";
-    }
-
+    # Tests of autotools files are a special case.
     if ($name =~ m,^(.+/)?config.(?:cache|log|status)$, and $pkg ne "lintian") {
-	tag "configure-generated-file-in-source", "$name";
+        tag "configure-generated-file-in-source", $name;
     } elsif ($name =~ m,^(.+/)?config.(?:guess|sub)$, and not $atdinbd) {
-	my $b = basename $name;
-	my ($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,$atime,$mtime,$ctime,$blksize,$blocks) = stat $b;
-	open F, $b or die "can't open $name: $!";
-	while (<F>) {
+        my $b = basename $name;
+        open F, $b or die "can't open $name: $!";
+        while (<F>) {
             last if $. > 10; # it's on the 6th line, but be a bit more lenient
-	    if (/^(?:timestamp|version)='(\d+)(.+)'$/ and $1 < 2004) {
-		tag "outdated-autotools-helper-file", "$name $1$2";
-	    }
-	}
-	close F;
+            if (/^(?:timestamp|version)='(\d+)(.+)'$/ and $1 < 2004) {
+                tag "outdated-autotools-helper-file", $name, "$1$2";
+            }
+        }
+        close F;
     }
 }
 1;
