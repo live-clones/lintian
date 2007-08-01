@@ -27,10 +27,10 @@ E: filenames: symlink-should-be-relative usr/lib/filenames/symlink3wrong /usr/li
 E: filenames: use-of-compat-symlink usr/bin/X11/
 E: filenames: use-of-compat-symlink usr/bin/X11/testxbin
 I: filenames source: arch-inventory-file-in-source files/.arch-inventory
+I: filenames source: source-contains-CVS-dir CVS
 I: filenames: file-in-usr-something-x11-without-pre-depends usr/include/X11/
 I: filenames: no-md5sums-control-file
 W: filenames source: ancient-standards-version 3.1.1 (current is 3.7.2)
-W: filenames source: source-contains-CVS-dir CVS
 W: filenames source: source-contains-arch-control-dir .arch-ids
 W: filenames source: source-contains-arch-control-dir {arch}
 W: filenames source: source-contains-bzr-control-dir .bzr
