@@ -185,7 +185,7 @@ my %kde_desktop_keys = map { $_ => 1 }
 # Authorative source of desktop categories:
 # http://standards.freedesktop.org/menu-spec/1.0/apa.html
 
-# This is a list of all main categories for .desktop files.
+# This is a list of all Main Categories for .desktop files.
 my %main_categories = map { $_ => 1 }
     qw(
        AudioVideo
@@ -202,9 +202,9 @@ my %main_categories = map { $_ => 1 }
        Utility
       );
 
-# This is a list of all categories, main and additional, for .desktop files.
-# Ideally we should be checking the associated main categories as well, but we
-# don't have support for that yet.
+# This is a list of all Additional Categories for .desktop files.  Ideally we
+# should be checking to be sure the associated Main Categories are present,
+# but we don't have support for that yet.
 my %categories = map { $_ => 1 }
     qw(
        Building
