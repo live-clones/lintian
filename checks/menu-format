@@ -21,6 +21,16 @@
 # This script also checks desktop entries, since they share quite a bit of
 # code.  At some point, it would make sense to try to refactor this so that
 # shared code is in libraries.
+#
+# Further things that the desktop file validation should be checking:
+#
+#  - Encoding of the file should be UTF-8.
+#  - Additional Categories should be associated with Main Categories.
+#  - List entries (MimeType, Categories) should end with a semicolon.
+#  - Check for GNOME/GTK/X11/etc. dependencies and require the relevant
+#    Additional Category to be present.
+#  - Check all the escape characters supported by Exec.
+#  - Review desktop-file-validate to see what else we're missing.
 
 package Lintian::menu_format;
 use strict;
