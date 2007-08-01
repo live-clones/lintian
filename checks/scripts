@@ -275,14 +275,14 @@ while (<SCRIPTS>) {
              and !$is_absolute);
 
     if ($interpreter eq "") {
-	tag_error("script-without-interpreter", $filename);
+	tag("script-without-interpreter", $filename);
 	next;
     }
 
     # either they use an absolute path or they call it as '/usr/bin/env interp'
-    tag_error("interpreter-not-absolute", $filename, "#!$interpreter")
+    tag("interpreter-not-absolute", $filename, "#!$interpreter")
 	       unless $is_absolute;
-    tag_warn("script-not-executable", $filename)
+    tag("script-not-executable", $filename)
 	unless ($executable{$filename} or
 		$filename =~ m,usr/(lib|share)/.*\.pm, or
 		$filename =~ m,usr/(lib|share)/ruby/.*\.rb, or
@@ -295,11 +295,11 @@ while (<SCRIPTS>) {
 		defined $calls_env) {
 	    # save us from some copy and paste
 	    if ($base =~ /^(ruby|python)(?:\d\.\d)?$/) {
-		tag_error("wrong-path-for-$1", $filename, "#!$interpreter");
+		tag("wrong-path-for-$1", $filename, "#!$interpreter");
 	    } else {
-		tag_error("wrong-path-for-interpreter",
-			  "#!$interpreter != $valid_interpreters{$base}",
-			  "($filename)");
+		tag("wrong-path-for-interpreter",
+		    "#!$interpreter != $valid_interpreters{$base}",
+		    "($filename)");
 	    }
 	}
 
@@ -308,61 +308,61 @@ while (<SCRIPTS>) {
 	    if (exists $interpreter_dependencies{$base}) {
 		my @deps = split(/,/,$interpreter_dependencies{$base});
 		if ($base eq 'php') {
-		    tag_error("php-script-but-no-php-cli-dep", $filename)
+		    tag("php-script-but-no-php-cli-dep", $filename)
 			unless Dep::implies($deps{all}, Dep::parse($interpreter_dependencies{$base}));
 		} elsif ($base =~ /^(php\d?|(m|g)awk)/) {
-		    tag_error("$base-script-but-no-$deps[0]-dep", $filename)
+		    tag("$base-script-but-no-$deps[0]-dep", $filename)
 			unless Dep::implies($deps{all}, Dep::parse($interpreter_dependencies{$base}));
 		} else {
-		    tag_error("missing-dep-for-interpreter",
-			      "$base => $deps[0]", "($filename)")
+		    tag("missing-dep-for-interpreter",
+			"$base => $deps[0]", "($filename)")
 			unless Dep::implies($deps{all}, Dep::parse($interpreter_dependencies{$base}));
 		}
 	    } elsif ($base =~ /^python(\d.\d)?$/) {
 		my $ver = $1 ? $1 : "";
-		tag_error("python-script-but-no-python-dep", $filename)
+		tag("python-script-but-no-python-dep", $filename)
                     unless Dep::implies($deps{all}, Dep::parse("python$ver | python${ver}-minimal"));
 	    } elsif ($base =~ /^ruby(\d.\d)?$/) {
 		my $ver = $1 ? $1 : "";
-		tag_error("ruby-script-but-no-ruby-dep", $filename)
+		tag("ruby-script-but-no-ruby-dep", $filename)
                     unless Dep::implies($deps{all}, Dep::parse("ruby$ver"));
 	    } elsif ($base eq 'perl' && $suid{$filename}) {
-		tag_error("suid-perl-script-but-no-perl-suid-dep", $filename)
+		tag("suid-perl-script-but-no-perl-suid-dep", $filename)
                     unless Dep::implies($deps{all}, Dep::parse('perl-suid'));
 	    } elsif ($base =~ m/^tclsh(\d+\.\d+)?$/) {
 		my $ver = $1 ? $1 : "";
 		if ($ver) {
-		    tag_error("tclsh-script-but-no-tclsh-dep", "$filename $base")
+		    tag("tclsh-script-but-no-tclsh-dep", "$filename $base")
 			unless Dep::implies($deps{all}, Dep::parse("tcl$ver"));
 		} else {
-		    tag_error("tclsh-script-but-no-tclsh-dep", "$filename $base")
+		    tag("tclsh-script-but-no-tclsh-dep", "$filename $base")
 			unless Dep::implies($deps{all}, Dep::parse("tcl8.3 | tcl8.4 | tclsh"));
 		}
 	    } elsif ($base =~ m/^wish(\d+\.\d+)?$/) {
 		my $ver = $1 ? $1 : "";
 		if ($ver) {
-		    tag_error("wish-script-but-no-wish-dep", "$filename $base")
+		    tag("wish-script-but-no-wish-dep", "$filename $base")
 			unless Dep::implies($deps{all}, Dep::parse("tk$ver"));
 		} else {
-		    tag_error("wish-script-but-no-wish-dep", "$filename $base")
+		    tag("wish-script-but-no-wish-dep", "$filename $base")
 			unless Dep::implies($deps{all}, Dep::parse("tk8.3 | tk8.4 | wish"));
 		}
 	    }
 	}
     } elsif ($interpreter =~ m,/usr/local/,) {
-	tag_error("interpreter-in-usr-local", $filename, "#!$interpreter");
+	tag("interpreter-in-usr-local", $filename, "#!$interpreter");
     } elsif ($executable{'.' . $interpreter}) { # each key is './path/to/exe'
 	# Package installs the interpreter itself, so it's probably ok.
 	# Don't emit any tag for this.
     } elsif ($base eq 'suidperl') {
-	tag_error("calls-suidperl-directly", $filename);
+	tag("calls-suidperl-directly", $filename);
     } elsif ($interpreter eq '/bin/env') {
-	tag_warn("script-uses-bin-env", $filename);
+	tag("script-uses-bin-env", $filename);
     } else {
-	tag_warn("unusual-interpreter", $filename, "#!$interpreter");
+	tag("unusual-interpreter", $filename, "#!$interpreter");
     }
 
-    tag_warn("csh-considered-harmful", $filename)
+    tag("csh-considered-harmful", $filename)
         if (($base eq 'csh' or $base eq 'tcsh') and $executable{$filename});
 
     # Don't syntax-check scripts in /usr/src that end in .dpatch.  bash -n
@@ -372,7 +372,7 @@ while (<SCRIPTS>) {
 	if (-x "$interpreter" && ! script_is_evil_and_wrong("unpacked/$filename")) {
 	    if ($filename !~ m,^./usr/src/.*\.dpatch$,) {
 		if (check_script_syntax($interpreter, "unpacked/$filename")) {
-		    tag_error("shell-script-fails-syntax-check", $filename);
+		    tag("shell-script-fails-syntax-check", $filename);
 		}
 	    }
 	}
@@ -382,7 +382,7 @@ while (<SCRIPTS>) {
 close(SCRIPTS);
 
 foreach (keys %executable) {
-    tag_warn("executable-not-elf-or-script", $_)
+    tag("executable-not-elf-or-script", $_)
 	unless ( $ELF{$_}
 		 or $scripts{$_}
 		 or $_ =~ m,^usr(/X11R6)?/man/,
@@ -409,15 +409,15 @@ while (<SCRIPTS>) {
     my $base = $1;
 
     if ($interpreter eq "") {
-	tag_error("script-without-interpreter", $filename);
+	tag("script-without-interpreter", $filename);
 	next;
     }
 
-    tag_error("interpreter-not-absolute", $filename, "#!$interpreter")
+    tag("interpreter-not-absolute", $filename, "#!$interpreter")
 	unless ($interpreter =~ m|^/|);
 
     if (exists $valid_interpreters{$base}) {
-	tag_error("wrong-path-for-$base", $filename, "#!$interpreter")
+	tag("wrong-path-for-$base", $filename, "#!$interpreter")
 	    unless ($interpreter eq $valid_interpreters{$base});
 	tag $file eq 'config'?
 	    "forbidden-config-interpreter":"unusual-control-interpreter",
@@ -427,24 +427,23 @@ while (<SCRIPTS>) {
 		    or $base eq 'perl');
 
 	if (exists $interpreter_dependencies{$base}) {
-	    tag_error("interpreter-without-predep", $filename,
+	    tag("interpreter-without-predep", $filename,
 		      "#!$interpreter")
 		unless Dep::implies($deps{'pre-depends'}, Dep::parse($interpreter_dependencies{$base}));
 	} elsif ($base eq 'python') {
-	    tag_error("interpreter-without-predep", $filename,
-		      "#!$interpreter")
+	    tag("interpreter-without-predep", $filename, "#!$interpreter")
 		unless Dep::implies($deps{'pre-depends'}, Dep::parse('python | python-base'));
 	}
     } elsif ($interpreter =~ m|/usr/local/|) {
-	tag_error("interpreter-in-usr-local", $filename, "#!$interpreter");
+	tag("interpreter-in-usr-local", $filename, "#!$interpreter");
     } else {
-	tag_warn("unusual-interpreter", $filename, "#!$interpreter");
+	tag("unusual-interpreter", $filename, "#!$interpreter");
 	next; # no use doing further checks if it's not a known interpreter
     }
 
     # perhaps we should warn about *csh even if they're somehow screwed,
     # but that's not really important...
-    tag_warn("csh-considered-harmful", $filename)
+    tag("csh-considered-harmful", $filename)
 	if ($base eq 'csh' or $base eq 'tcsh');
 
     my $shellscript = $base =~ /^((b|d)?a|t?c|(pd)?k)?sh$/ ? 1 : 0;
@@ -455,7 +454,7 @@ while (<SCRIPTS>) {
 	$checkbashisms = $base eq "sh" ? 1 : 0;
 	if (-x $valid_interpreters{$base}) {
 	    if (check_script_syntax($interpreter, $filename)) {
-		tag_error("maintainer-shell-script-fails-syntax-check", $file);
+		tag("maintainer-shell-script-fails-syntax-check", $file);
 	    }
 	}
     }
@@ -677,30 +676,6 @@ close(SCRIPTS);
 }
 
 # -----------------------------------
-
-sub tag_error {
-    my $tag = shift;
-    if ($#_ >= 0) {
-	# We can't have newlines in a tag message, so turn them into \n
-	map { s,\n,\\n, } @_;
-	my $args = join(' ', @_);
-	tag "$tag", "$args";
-    } else {
-	tag "$tag", "";
-    }
-}
-
-sub tag_warn {
-    my $tag = shift;
-    if ($#_ >= 0) {
-	# We can't have newlines in a tag message, so turn them into \n
-	map { s,\n,\\n, } @_;
-	my $args = join(' ', @_);
-	tag "$tag", "$args";
-    } else {
-	tag "$tag", "";
-    }
-}
 
 # Returns non-zero if the given file is not actually a shell script,
 # just looks like one.

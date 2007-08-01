@@ -318,6 +318,9 @@ sub tag {
 	return 0;
     }
 
+    # Newlines in @information would cause problems, so replace them with \n.
+    @information = map { s,\n,\\n,; $_ } @information;
+
     my $tag_info = get_tag_info( $tag );
     unless ($tag_info) {
 	warn "Tried to issue unknown tag $tag\n";

@@ -35,43 +35,25 @@ $version =~ s/^\d+://; #Remove epoch
 
 if ((not -f "${pkg}_${version}.diff.gz") and
     ($version =~ /-/) and ($version !~ /-0\.[^-]+$/) ) {
-    tag_warn("native-package-with-dash-version");
+    tag("native-package-with-dash-version");
 }
 
 open(STAT, "diffstat") or fail("cannot open diffstat file: $!");
 
 while (<STAT>) {
-    chop;
-
-    my $file;
-
-    m/^\s+(.*?)\s+\|/
+    my ($file) = (m/^\s+(.*?)\s+\|/)
 	or fail("syntax error in diffstat file: $_");
-    $file = $1;
-    tag_warn("patch-failure-file-in-diff", $file)
+
+    tag("patch-failure-file-in-diff", $file)
 	if ($file =~ m/\.(orig|rej)$/);
-    tag_warn("editor-backup-file-in-diff", $file)
+    tag("editor-backup-file-in-diff", $file)
 	if ($file =~ m%((^|/)\.[^/]+\.swp|~)$% && /\|\s+\d+\s+\++$/);
 
-    tag_warn("diff-contains-substvars", $file)
+    tag("diff-contains-substvars", $file)
 	if ($file =~ m%^debian/substvars$%);
 }
 close(STAT) or fail("error reading diffstat file: $!");
 
 } # </run>
-
-# ---------------------------------
-
-sub tag_warn {
-    my $tag = shift;
-    if ($#_ >= 0) {
-        # We can't have newlines in a tag message, so turn them into \n
-        map { s,\n,\\n, } @_;
-        my $args = join(' ', @_);
-        tag "$tag", "$args";
-    } else {
-        tag "$tag", "";
-    }
-}
 
 1;

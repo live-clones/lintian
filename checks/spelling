@@ -356,28 +356,15 @@ if (open(RMD, "README.Debian")) {
 
 # -----------------------------------
 
-sub tag_error {
-    my $tag = shift;
-    if ($#_ >= 0) {
-	# We can't have newlines in a tag message, so turn them into \n
-	my @args = @_;
-	map { s,\n,\\n, } @args;
-	my $args = join ' ', @args;
-	tag "$tag", "$args";
-    } else {
-	tag "$tag", "";
-    }
-}
-
 sub spelling_check {
     my $tag = shift;
     my $file = shift;
-	
+
     foreach my $word (split(/\s+/, $file)) {
 	# before lowercasing the word, check if it's a non-uppercased
 	# language name
 	if (exists $corrections_language_names{$word}) {
-	    tag_error($tag, $word, $corrections_language_names{$word});
+	    tag($tag, $word, $corrections_language_names{$word});
         }
 	$word = lc $word;
 	# try deleting the non-alphabetic parts from the word.
@@ -385,13 +372,13 @@ sub spelling_check {
 	# at the beginning or end of the word.
 	$word =~ s/(^\')|[^\w\xc0-\xd6\xd8-\xf6\xf8-\xff\']+|(\'$)//g;
 	if (exists $corrections{$word}) {
-	    tag_error($tag, $word, $corrections{$word});
+	    tag($tag, $word, $corrections{$word});
         }
     }
     # special case for correcting a multi-word string
     # $corrections{'Debian/GNU Linux'} = 'Debian GNU/Linux';
     if ($file =~ m,Debian/GNU Linux,) {
-	tag_error($tag, "Debian/GNU Linux", "Debian GNU/Linux");
+	tag($tag, "Debian/GNU Linux", "Debian GNU/Linux");
     }
 }
 

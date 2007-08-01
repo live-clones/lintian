@@ -9,6 +9,10 @@ lintian (1.23.33) UNRELEASED; urgency=low
     + [RA] Lower the severity of source-contains-CVS-dir to info, since
       it's not worth repackaging upstream to fix this normally.  Thanks,
       Thijs Kinkhorst.  (Closes: #434744)
+  * checks/debdiff:
+    + [RA] Replace all uses of tag_error and tag_warn with just tag.
+  * checks/debian-readme:
+    + [RA] Replace all uses of tag_error and tag_warn with just tag.
   * checks/files{.desc,}:
     + [RA] Check for .git directories in binary packages.
   * checks/menu-format{.desc,}:
@@ -30,10 +34,13 @@ lintian (1.23.33) UNRELEASED; urgency=low
       description of maintainer-script-needs-depends-on-update-inetd.
       Most packages should depend on inet-superserver.  Leave the check
       the same for the time being, however.
+    + [RA] Replace all uses of tag_error and tag_warn with just tag.
   * checks/shared-libs:
     + [RA] Exclude udebs from dependency checking in the shlibs files
       since binary packages may legitimately declare udeb dependencies on
       other packages.  Thanks, Loïc Minier.  (Closes: #431395)
+  * checks/spelling:
+    + [RA] Replace all uses of tag_error and tag_warn with just tag.
   * checks/version-substvars:
     + [RA] Don't skip other checks for binNMUability when warning about
       the deprecated ${Source-Version} substvar.  Thanks, Lior Kaplan.
@@ -43,7 +50,11 @@ lintian (1.23.33) UNRELEASED; urgency=low
     + [RA] Add \w+-backports to the known distribution list.  Thanks,
       Vincent Danjean.  (Closes: #432268)
 
- -- Russ Allbery <rra@debian.org>  Tue, 31 Jul 2007 17:46:55 -0700
+  * lib/Tags.pm:
+    + [RA] Replace any newlines in the extra information to the tag
+      function with \n.
+
+ --
 
 lintian (1.23.32) unstable; urgency=low
 

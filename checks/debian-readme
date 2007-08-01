@@ -45,37 +45,13 @@ $template =
     ")\n\n" .
     ".*<.*>,.*\n";
 if ($readme =~ m/$template/iom) {
-    tag_warn("readme-debian-is-debmake-template");
+    tag("readme-debian-is-debmake-template");
 } elsif ($readme =~ m/^So far nothing to say/m) {
-    tag_warn("readme-debian-contains-debmake-template");
+    tag("readme-debian-contains-debmake-template");
 } elsif ($readme =~ m/^\s*-- [^<]*<[^> ]+.\@unknown>/m) {
-    tag_warn("readme-debian-contains-debmake-default-email-address");
+    tag("readme-debian-contains-debmake-default-email-address");
 }
 
-}
-
-sub tag_error {
-    my $tag = shift;
-    if ($#_ >= 0) {
-	# We can't have newlines in a tag message, so turn them into \n
-	map { s,\n,\\n, } @_;
-	my $args = join(' ', @_);
-	tag "$tag", "$args";
-    } else {
-	tag "$tag", "";
-    }
-}
-
-sub tag_warn {
-    my $tag = shift;
-    if ($#_ >= 0) {
-	# We can't have newlines in a tag message, so turn them into \n
-	map { s,\n,\\n, } @_;
-	my $args = join(' ', @_);
-	tag "$tag", "$args";
-    } else {
-	tag "$tag", "";
-    }
 }
 
 1;
