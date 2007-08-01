@@ -28,6 +28,9 @@ lintian (1.23.33) UNRELEASED; urgency=low
       guidance.  Remove the code that allowed for applications to create
       new sub-menus, since the current menu documentation says not to do
       that.  (Closes: #431844)
+    + [RA] Add checks of desktop files.  The checks so far are basic, but
+      do include key and category verification.  Based heavily on work by
+      Javier Fernández-Sanguino Peña.  (Closes: #277441, #433411)
   * checks/scripts{.desc,}:
     + [RA] If rm output is redirected to /dev/null, don't think that rm is
       removing /dev/null.  Thanks, Robert Luberda.  (Closes: #431259)
@@ -63,7 +66,7 @@ lintian (1.23.33) UNRELEASED; urgency=low
   * man/lintian.1:
     + [RA] Remove the mention of the debdiff check script.
 
- -- Russ Allbery <rra@debian.org>  Tue, 31 Jul 2007 21:57:52 -0700
+ -- Russ Allbery <rra@debian.org>  Wed, 01 Aug 2007 03:26:14 -0700
 
 lintian (1.23.32) unstable; urgency=low
 

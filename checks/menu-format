@@ -18,6 +18,10 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+# This script also checks desktop entries, since they share quite a bit of
+# code.  At some point, it would make sense to try to refactor this so that
+# shared code is in libraries.
+
 package Lintian::menu_format;
 use strict;
 use Tags;
@@ -116,13 +120,225 @@ my @sections = ('Applications/Accessibility',
 		'Window Maker'
 	       );
 
+# Authorative source of desktop keys:
+# http://standards.freedesktop.org/desktop-entry-spec/1.0/
+#
+# This is a list of all keys that should be in every desktop entry.
+my @req_desktop_keys = qw(Type Name);
+
+# This is a list of all known keys.
+my %known_desktop_keys = map { $_ => 1 }
+    qw(
+       Type
+       Version
+       Name
+       GenericName
+       NoDisplay
+       Comment
+       Icon
+       Hidden
+       OnlyShowIn
+       NotShowIn
+       TryExec
+       Exec
+       Path
+       Terminal
+       MimeType
+       Categories
+       MimeType
+       Categories
+       StartupNotify
+       StartupWMClass
+       URL
+      );
+
+my %deprecated_desktop_keys = map { $_ => 1 }
+    qw(
+       Encoding
+       MiniIcon
+       TerminalOptions
+       Protocols
+       Extensions
+       BinaryPattern
+       MapNotify
+       SwallowTitle
+       SwallowExec
+       SortOrder
+       FilePattern
+      );
+
+# KDE uses some additional keys that should start with X-KDE but don't for
+# historical reasons.
+my %kde_desktop_keys = map { $_ => 1 }
+    qw(
+       ServiceTypes
+       DocPath
+       Keywords
+       InitialPreference
+       Dev
+       FSType
+       MountPoint
+       ReadOnly
+       UnmountIcon
+      );
+
+# Authorative source of desktop categories:
+# http://standards.freedesktop.org/menu-spec/1.0/apa.html
+
+# This is a list of all main categories for .desktop files.
+my %main_categories = map { $_ => 1 }
+    qw(
+       AudioVideo
+       Audio
+       Video
+       Development
+       Education
+       Game
+       Graphics
+       Network
+       Office
+       Settings
+       System
+       Utility
+      );
+
+# This is a list of all categories, main and additional, for .desktop files.
+# Ideally we should be checking the associated main categories as well, but we
+# don't have support for that yet.
+my %categories = map { $_ => 1 }
+    qw(
+       Building
+       Debugger
+       IDE
+       GUIDesigner
+       Profiling
+       RevisionControl
+       Translation
+       Calendar
+       ContactManagement
+       Database
+       Dictionary
+       Chart
+       Email
+       Finance
+       FlowChart
+       PDA
+       ProjectManagement
+       Presentation
+       Spreadsheet
+       WordProcessor
+       2DGraphics
+       VectorGraphics
+       RasterGraphics
+       3DGraphics
+       Scanning
+       OCR
+       Photography
+       Publishing
+       Viewer
+       TextTools
+       DesktopSettings
+       HardwareSettings
+       Printing
+       PackageManager
+       Dialup
+       InstantMessaging
+       Chat
+       IRCClient
+       FileTransfer
+       HamRadio
+       News
+       P2P
+       RemoteAccess
+       Telephony
+       TelephonyTools
+       VideoConference
+       WebBrowser
+       WebDevelopment
+       Midi
+       Mixer
+       Sequencer
+       Tuner
+       TV
+       AudioVideoEditing
+       Player
+       Recorder
+       DiscBurning
+       ActionGame
+       AdventureGame
+       ArcadeGame
+       BoardGame
+       BlocksGame
+       CardGame
+       KidsGame
+       LogicGame
+       RolePlaying
+       Simulation
+       SportsGame
+       StrategyGame
+       Art
+       Construction
+       Music
+       Languages
+       Science
+       ArtificialIntelligence
+       Astronomy
+       Biology
+       Chemistry
+       ComputerScience
+       DataVisualization
+       Economy
+       Electricity
+       Geography
+       Geology
+       Geoscience
+       History
+       ImageProcessing
+       Literature
+       Math
+       NumericalAnalysis
+       MedicalSoftware
+       Physics
+       Robotics
+       Sports
+       ParallelComputing
+       Amusement
+       Archiving
+       Compression
+       Electronics
+       Emulator
+       Engineering
+       FileTools
+       FileManager
+       TerminalEmulator
+       Filesystem
+       Monitor
+       Security
+       Accessibility
+       Calculator
+       Clock
+       TextEditor
+       Documentation
+       Core
+       KDE
+       GNOME
+       GTK
+       Qt
+       Motif
+       Java
+       ConsoleOnly
+      );
+
 # Path in which to search for binaries referenced in menu entries.
 my @path = qw(/usr/local/bin/ /usr/bin/ /bin/ /usr/X11R6/bin/ /usr/games/);
 
-my %known_tags_hash;
-my %needs_tag_vals_hash;
-my %root_sections_hash;
-my %sections_hash;
+my %known_tags_hash = map { $_ => 1 } @known_tags;
+my %needs_tag_vals_hash = map { $_ => 1 } @needs_tag_vals;
+my %root_sections_hash = map { $_ => 1 } @root_sections;
+my %sections_hash = map { $_ => 1 } @sections;
+
+# Holds a hash of all files in the package, used for checking for executables.
+my %file_index;
 
 # -----------------------------------
 
@@ -130,20 +346,6 @@ sub run {
 
 my $pkg = shift;
 my $type = shift;
-
-# Things worth hashing.
-foreach my $tag (@known_tags) {
-    $known_tags_hash{$tag}=1;
-}
-foreach my $val (@needs_tag_vals) {
-    $needs_tag_vals_hash{$val}=1;
-}
-foreach my $section (@root_sections) {
-    $root_sections_hash{$section}=1;
-}
-foreach my $section (@sections) {
-    $sections_hash{$section}=1;
-}
 
 my @menufiles;
 opendir (MENUDIR, "menu/lib") or fail("cannot read menu/lib file directory.");
@@ -153,6 +355,35 @@ opendir (MENUDIR, "menu/share") or fail("cannot read menu/share file directory."
 push @menufiles, map { "menu/share/$_" } readdir(MENUDIR);
 closedir MENUDIR;
 
+# Find the desktop files in the package for verification and also build a hash
+# of every file in the package to use to verify that the command referenced by
+# a menu item or desktop entry is there.
+my @desktop_files;
+open(IN, "index") or fail("cannot open index file index: $!");
+while (<IN>) {
+    chomp;
+    my ($perm, $owner, $size, $date, $time, $file) = split(' ', $_, 6);
+    $file =~ s,^(\./),,;
+    $file =~ s/ link to .*//;
+    $file =~ s/ -> .*//;
+    my $operm = perm2oct($perm);
+    $file_index{$file} = 1;
+
+    if ($perm =~ m,^-,o && $file =~ m/\.desktop$/o) {
+        if ($perm =~ m,x,o) {
+            tag "executable-desktop-file", sprintf("$file %04o",$operm);
+        }
+        push (@desktop_files, $file);
+    }
+}
+close IN;
+
+# Verify all the desktop files.
+for my $desktop_file (@desktop_files) {
+    VerifyDesktopFile ($desktop_file, $desktop_file);
+}
+
+# Now all the menu files.
 foreach my $menufile (@menufiles) {
     next if -x $menufile; # don't try to parse executables
 
@@ -205,7 +436,6 @@ foreach my $menufile (@menufiles) {
 
     close IN;
 }
-
 
 }
 
@@ -344,55 +574,12 @@ sub VerifyLine {
     $section =~ tr:/:/:s;	# eliminate duplicate slashes.
     $section =~ s:/$::;		# remove trailing slash.
 
-    # Read the file index:
-    my %file_index;
-    open(FILE_INDEX,"index") or fail("cannot open index file index: $!");
-    while(<FILE_INDEX>) {
-	$file_index{(split /\s+/, $_)[5]} = 1;
-    }
-    close FILE_INDEX;
-
-    # Handle su wrappers.  The option parsing here is ugly and dead-simple,
-    # but it's hopefully good enough for what will show up in menu files.
-    # su-to-root and sux require -c options, kdesu optionally allows one, and
-    # gksu has the command at the end of its arguments.
-    my @com = split(' ',$vals{'command'});
-    my $cmd;
-    if ($com[0] eq "/usr/sbin/su-to-root") {
-	tag "su-to-root-with-usr-sbin", "$fullname:$linecount";
-    } elsif ($com[0] =~ m,^(?:/usr/bin/)?(su-to-root|gksu|kdesu|sux)$,) {
-	my $wrapper = $1;
-	shift @com;
-	while (@com) {
-	    unless ($com[0]) {
-		shift @com;
-		next;
-	    }
-	    if ($com[0] eq '-c') {
-		$cmd = $com[1];
-		last;
-	    } elsif ($com[0] =~ /^-[Dfmupi]|^--(user|description|message)/) {
-		shift @com;
-		shift @com;
-	    } elsif ($com[0] =~ /^-/) {
-		shift @com;
-	    } else {
-		last;
-	    }
-	}
-	if (!$cmd && $wrapper =~ /^(gk|kde)su$/) {
-	    $cmd = $com[0];
-	} elsif (!$cmd) {
-	    tag "su-wrapper-without--c", "$fullname:$linecount $wrapper";
-	}
-    } else {
-	$cmd = $com[0];
-    }
-    tag "menu-command-not-in-package", "$fullname:$linecount $cmd"
-	if ($cmd
-	    && !($file_index{".$cmd"} || grep {$file_index{".".$_.$cmd}} @path)
-	    && ($tested_packages < 2)
-	    && ($section !~ m:^(WindowManagers/Modules|FVWM Modules|Window Maker):));
+    # Be sure the command is provided by the package.
+    my ($okay, $command) = VerifyCmd ($fullname, $vals{'command'});
+    tag "menu-command-not-in-package", "$fullname:$linecount $command"
+        unless ($okay
+                or ($tested_packages >= 2)
+                or ($section =~ m:^(WindowManagers/Modules|FVWM Modules|Window Maker):));
 
     if (exists($vals{'icon'})) {
 	VerifyIcon($menufile, $fullname, $linecount, $vals{'icon'}, 32);
@@ -504,6 +691,134 @@ parse_error:
     close IN or die;
     tag "menu-icon-cannot-be-parsed", "$icon: looking for $parse";
     return;
+}
+
+
+# Syntax-checks a .desktop file.
+sub VerifyDesktopFile {
+    my ($desktopfile, $file) = @_;
+    my %vals;
+    open (DESKTOP, "unpacked/$file") or fail("cannot open desktop file $file: $!");
+    my ($line, $saw_first);
+    while (defined ($line = <DESKTOP>)) {
+        chomp $line;
+        next if ($line =~ m/^\s*\#/ or $line =~ m/^\s*$/);
+
+        # Err on the side of caution for now.  If the first non-comment line
+        # is not the required [Desktop Entry] group, ignore this file.  Also
+        # ignore any keys in other groups.
+        last if ($saw_first and $line =~ /^\[(.*)\]\s*$/);
+        unless ($saw_first) {
+            return unless $line =~ /^\[Desktop Entry\]\s*$/;
+            $saw_first = 1;
+        }
+
+        # Tag = Value
+        # TODO: We do not check for properly formatted localised values for
+        # keys but might be worth checking if they are properly formatted (not
+        # their value)
+        if ($line =~ /^(.*?)\s*=\s*(.*)$/) {
+            my ($tag, $value) = ($1, $2);
+            my $basetag = $tag;
+            my ($encoding) = ($basetag =~ s/\[([^\]]+)\]$//);
+            if (exists $vals{$tag}) {
+                tag "duplicated-key-in-desktop-entry", "$file:$. $tag";
+            } elsif ($deprecated_desktop_keys{$basetag}) {
+                if ($basetag eq 'Encoding') {
+                    tag "desktop-entry-contains-encoding-key", "$file:$. $tag";
+                } else {
+                    tag "desktop-entry-contains-deprecated-key", "$file:$. $tag";
+                }
+            } elsif (    not $known_desktop_keys{$basetag}
+                     and not $kde_desktop_keys{$basetag}
+                     and not $basetag =~ /^X-/) {
+                tag "desktop-entry-contains-unknown-key", "$file:$. $tag";
+            }
+            $vals{$tag} = $value;
+        }
+    }
+    close DESKTOP;
+
+    # Now validate the data in the desktop file.
+
+    # Test for important keys.
+    for my $tag (@req_desktop_keys) {
+        unless (defined $vals{$tag}) {
+            tag "desktop-entry-missing-required-key", "$file $tag";
+        }
+    }
+
+    # TODO:  Should check quoting and the check special field codes in Exec
+    # for desktiop files.
+    if (defined $vals{'Exec'}) {
+        my ($okay, $command) = VerifyCmd ($file, $vals{'Exec'});
+        tag "desktop-command-not-in-package", "$file $command"
+            unless $okay;
+    }
+
+    # Check the Category tag.
+    if (defined $vals{'Categories'}) {
+        my @cats = split (';', $vals{'Categories'});
+        my $saw_main;
+        for my $cat (@cats) {
+            if (not $categories{$cat} and not $main_categories{$cat}) {
+                tag "desktop-entry-invalid-category", "$cat $file";
+            } elsif ($main_categories{$cat}) {
+                $saw_main = 1;
+            }
+        }
+        unless ($saw_main) {
+            tag "desktop-entry-lacks-main-category", "$file";
+        }
+    }
+}
+
+# Verify whether a command is shipped as part of the package.  Takes the full
+# path to the file being checked (for error reporting) and the binary.
+# Returns a list whose first member is true if the command is present and
+# false otherwise, and whose second member is the command (minus any leading
+# su-to-root wrapper).  Shared between the desktop and menu code.
+sub VerifyCmd {
+    my ($file, $exec) = @_;
+
+    # This routine handles su wrappers.  The option parsing here is ugly and
+    # dead-simple, but it's hopefully good enough for what will show up in
+    # desktop files.  su-to-root and sux require -c options, kdesu optionally
+    # allows one, and gksu has the command at the end of its arguments.
+    my @com = split (' ', $exec);
+    my $cmd;
+    if ($com[0] eq "/usr/sbin/su-to-root") {
+        tag 'su-to-root-with-usr-sbin', $file;
+    } elsif ($com[0] =~ m,^(?:/usr/bin/)?(su-to-root|gksu|kdesu|sux)$,) {
+        my $wrapper = $1;
+        shift @com;
+        while (@com) {
+            unless ($com[0]) {
+                shift @com;
+                next;
+            }
+            if ($com[0] eq '-c') {
+                $cmd = $com[1];
+                last;
+            } elsif ($com[0] =~ /^-[Dfmupi]|^--(user|description|message)/) {
+                shift @com;
+                shift @com;
+            } elsif ($com[0] =~ /^-/) {
+                shift @com;
+            } else {
+                last;
+            }
+        }
+        if (!$cmd && $wrapper =~ /^(gk|kde)su$/) {
+            $cmd = $com[0];
+        } elsif (!$cmd) {
+            tag 'su-wrapper-without--c', "$file $wrapper";
+        }
+    } else {
+        $cmd = $com[0];
+    }
+    my $okay = $cmd and ($file_index{".$cmd"} or grep { $file_index{'.' . $_ . $cmd} } @path);
+    return ($okay, $cmd);
 }
 
 1;
