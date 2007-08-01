@@ -6,6 +6,9 @@ lintian (1.23.33) UNRELEASED; urgency=low
   * checks/cruft{.desc,}:
     + [RA] Check for .git directories in source packages.  Thanks, Julien
       Cristau.  (Closes: #433516)
+    + [RA] Lower the severity of source-contains-CVS-dir to info, since
+      it's not worth repackaging upstream to fix this normally.  Thanks,
+      Thijs Kinkhorst.  (Closes: #434744)
   * checks/files{.desc,}:
     + [RA] Check for .git directories in binary packages.
   * checks/menu-format{.desc,}:
@@ -40,7 +43,7 @@ lintian (1.23.33) UNRELEASED; urgency=low
     + [RA] Add \w+-backports to the known distribution list.  Thanks,
       Vincent Danjean.  (Closes: #432268)
 
- -- Russ Allbery <rra@debian.org>  Mon, 30 Jul 2007 17:43:24 -0700
+ -- Russ Allbery <rra@debian.org>  Tue, 31 Jul 2007 17:46:55 -0700
 
 lintian (1.23.32) unstable; urgency=low
 

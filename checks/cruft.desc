@@ -90,8 +90,8 @@ Info: Source contains a .git directory.  It was most likely included by
  packages and may contain the entire GIT repository.
 
 Tag: source-contains-CVS-dir
-Type: warning
-Info: Package contains a CVS directory. It was most likely included by
+Type: info
+Info: Package contains a CVS directory.  It was most likely included by
  accident, since transient CVS data usually doesn't belong in packages.
  When packaging a CVS snapshot, export from CVS rather than use a
  checkout.  If an upstream release tarball contains CVS directories,
