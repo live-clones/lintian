@@ -16,3 +16,5 @@
 ?package(binary):needs="text"\
  section="Applications/System/Administration"\
  title="I'm not root!" command="su-to-root -c imnothere"
+?package(binary):needs="text" section="Applications/System/Administration"\
+ title="Run cfdisk (0)" command="cfdisk"

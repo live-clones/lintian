@@ -187,6 +187,11 @@ Info: The menu item specifies a command which is not available in the package.
  In most cases this is a typo or after you moved a binary around, but forgot
  to update the menu file.
 
+Tag: executable-desktop-file
+Type: error
+Info: The desktop entry file is marked executable.  Desktop entries are
+ regular files and should be installed mode 0644.
+
 Tag: duplicated-key-in-desktop-entry
 Type: warning
 Info: The desktop entry contains two instances of the same key.  The

@@ -373,7 +373,6 @@ open(IN, "index") or fail("cannot open index file index: $!");
 while (<IN>) {
     chomp;
     my ($perm, $owner, $size, $date, $time, $file) = split(' ', $_, 6);
-    $file =~ s,^(\./),,;
     $file =~ s/ link to .*//;
     $file =~ s/ -> .*//;
     my $operm = perm2oct($perm);
@@ -585,9 +584,10 @@ sub VerifyLine {
     $section =~ s:/$::;		# remove trailing slash.
 
     # Be sure the command is provided by the package.
-    my ($okay, $command) = VerifyCmd ($fullname, $vals{'command'});
+    my ($okay, $command) = VerifyCmd ($fullname, $linecount, $vals{'command'});
     tag "menu-command-not-in-package", "$fullname:$linecount $command"
         unless ($okay
+                or not $command
                 or ($tested_packages >= 2)
                 or ($section =~ m:^(WindowManagers/Modules|FVWM Modules|Window Maker):));
 
@@ -761,7 +761,7 @@ sub VerifyDesktopFile {
     # TODO:  Should check quoting and the check special field codes in Exec
     # for desktiop files.
     if (defined $vals{'Exec'}) {
-        my ($okay, $command) = VerifyCmd ($file, $vals{'Exec'});
+        my ($okay, $command) = VerifyCmd ($file, undef, $vals{'Exec'});
         tag "desktop-command-not-in-package", "$file $command"
             unless $okay;
     }
@@ -789,7 +789,8 @@ sub VerifyDesktopFile {
 # false otherwise, and whose second member is the command (minus any leading
 # su-to-root wrapper).  Shared between the desktop and menu code.
 sub VerifyCmd {
-    my ($file, $exec) = @_;
+    my ($file, $line, $exec) = @_;
+    my $location = ($line ? "$file:$line" : $file);
 
     # This routine handles su wrappers.  The option parsing here is ugly and
     # dead-simple, but it's hopefully good enough for what will show up in
@@ -798,8 +799,9 @@ sub VerifyCmd {
     my @com = split (' ', $exec);
     my $cmd;
     if ($com[0] eq "/usr/sbin/su-to-root") {
-        tag 'su-to-root-with-usr-sbin', $file;
-    } elsif ($com[0] =~ m,^(?:/usr/bin/)?(su-to-root|gksu|kdesu|sux)$,) {
+        tag 'su-to-root-with-usr-sbin', $location;
+    }
+    if ($com[0] =~ m,^(?:/usr/s?bin/)?(su-to-root|gksu|kdesu|sux)$,) {
         my $wrapper = $1;
         shift @com;
         while (@com) {
@@ -820,14 +822,17 @@ sub VerifyCmd {
             }
         }
         if (!$cmd && $wrapper =~ /^(gk|kde)su$/) {
-            $cmd = $com[0];
-        } elsif (!$cmd) {
-            tag 'su-wrapper-without--c', "$file $wrapper";
+            if (@com) {
+                $cmd = $com[0];
+            } else {
+                $cmd = $wrapper;
+            }
         }
+        tag 'su-wrapper-without--c', "$location $wrapper" unless $cmd;
     } else {
         $cmd = $com[0];
     }
-    my $okay = $cmd and ($file_index{".$cmd"} or grep { $file_index{'.' . $_ . $cmd} } @path);
+    my $okay = $cmd && ($file_index{".$cmd"} || grep { $file_index{'.' . $_ . $cmd} } @path);
     return ($okay, $cmd);
 }
 

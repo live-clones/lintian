@@ -47,6 +47,12 @@ binary-arch: build
 	install -d $(tmp)/DEBIAN
 	install -m 755 debian/postinst $(tmp)/DEBIAN
 
+	install -d $(tmp)/usr/share/applications
+	install -m 644 debian/hello.desktop \
+	    $(tmp)/usr/share/applications/hello.desktop
+	install -m 755 debian/goodbye.desktop \
+	    $(tmp)/usr/share/applications/goodbye.desktop
+
 	# should be ok...
 	echo boe > $(tmp)/usr/bar
 	ln $(tmp)/usr/bar $(tmp)/usr/foo 
