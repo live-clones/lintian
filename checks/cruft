@@ -157,7 +157,7 @@ sub check_diffstat {
         # diffstat output contains only files, but we consider the directory
         # checks to trigger if the diff adds any files in those directories.
         my ($directory) = ($file =~ m,^(.*)/[^/]+$,);
-        if ($directory and not $warned{$directory} and $pkg ne 'lintian') {
+        if ($directory and not $warned{$directory}) {
             for my $rule (@directory_checks) {
                 if ($directory =~ /$rule->[0]/) {
                     tag "diff-contains-$rule->[1]", $directory;
@@ -168,7 +168,7 @@ sub check_diffstat {
 
         # Now the simpler file checks.
         for my $rule (@file_checks) {
-            if ($file =~ /$rule->[0]/ and $pkg ne 'lintian') {
+            if ($file =~ /$rule->[0]/) {
                 tag "diff-contains-$rule->[1]", $file;
                 $warned{$file} = 1;
             }
@@ -195,7 +195,7 @@ sub find_cruft {
     if (-d and not $warned{$name}) {
         for my $rule (@directory_checks) {
             if ($name =~ /$rule->[0]/) {
-                tag "${prefix}-$rule->[1]", $name;
+                tag "${prefix}-$rule->[1]", $name unless $pkg eq 'lintian';
             }
         }
     }
@@ -205,7 +205,7 @@ sub find_cruft {
         for my $rule (@file_checks) {
             next if ($rule->[2] and not $native);
             if ($name =~ /$rule->[0]/) {
-                tag "${prefix}-$rule->[1]", $name;
+                tag "${prefix}-$rule->[1]", $name unless $pkg eq 'lintian';
             }
         }
     }
