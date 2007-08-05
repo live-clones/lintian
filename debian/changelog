@@ -23,6 +23,9 @@ lintian (1.23.33) UNRELEASED; urgency=low
   * checks/fields{.desc,}:
     + [RA] Tag packages listing emacs21 as the preferred Emacs flavor in a
       dependency.  Thanks, Tatsuya Kinoshita.  (Closes: #434978)
+    + [RA] Start tagging unversioned dependencies on coreutils again since
+      the transition from fileutils is long-since finished.  Thanks,
+      Guillem Jover.  (Closes: #436058)
   * checks/files{.desc,}:
     + [RA] Check for .git directories in binary packages.
   * checks/menu-format{.desc,}:
@@ -70,7 +73,7 @@ lintian (1.23.33) UNRELEASED; urgency=low
   * man/lintian.1:
     + [RA] Remove the mention of the debdiff check script.
 
- -- Russ Allbery <rra@debian.org>  Sun, 05 Aug 2007 11:21:46 -0700
+ -- Russ Allbery <rra@debian.org>  Sun, 05 Aug 2007 11:47:45 -0700
 
 lintian (1.23.32) unstable; urgency=low
 

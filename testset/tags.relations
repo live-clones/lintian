@@ -20,6 +20,7 @@ E: relations-multiple-libs: usr-share-doc-symlink-without-dependency relations
 E: relations: bad-version-in-relation conflicts: foobar (<< 5&5)
 E: relations: conflicts-with-dependency foo
 E: relations: conflicts-with-dependency relations
+E: relations: depends-on-essential-package-without-using-version depends: coreutils
 E: relations: depends-on-essential-package-without-using-version depends: dpkg
 E: relations: needlessly-depends-on-awk depends
 E: relations: no-copyright-file
