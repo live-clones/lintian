@@ -136,6 +136,9 @@ find(\&find_cruft, "$dir");
 # Check the diff for problems.  Record any files we warn about in %warned so
 # that we don't warn again when checking the full unpacked source.  Takes the
 # name of a file containing diffstat output.
+#
+# Exclude the lintian package itself from many of these checks, since it
+# includes many of these problems in its test suite.
 sub check_diffstat {
     my ($diffstat) = @_;
     open(STAT, $diffstat) or fail("cannot open $diffstat: $!");
@@ -154,7 +157,7 @@ sub check_diffstat {
         # diffstat output contains only files, but we consider the directory
         # checks to trigger if the diff adds any files in those directories.
         my ($directory) = ($file =~ m,^(.*)/[^/]+$,);
-        if ($directory and not $warned{$directory}) {
+        if ($directory and not $warned{$directory} and $pkg ne 'lintian') {
             for my $rule (@directory_checks) {
                 if ($directory =~ /$rule->[0]/) {
                     tag "diff-contains-$rule->[1]", $directory;
@@ -165,7 +168,7 @@ sub check_diffstat {
 
         # Now the simpler file checks.
         for my $rule (@file_checks) {
-            if ($file =~ /$rule->[0]/) {
+            if ($file =~ /$rule->[0]/ and $pkg ne 'lintian') {
                 tag "diff-contains-$rule->[1]", $file;
                 $warned{$file} = 1;
             }
