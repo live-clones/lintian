@@ -1,5 +1,7 @@
-lintian (1.23.33) UNRELEASED; urgency=low
+lintian (1.23.33) unstable; urgency=low
 
+  The "menu and cruft reorganization" release.
+  
   * checks/common_data.pm:
     + [CW] Add automaken as a known virtual package.
     + [CW] Update architectures to dpkg 1.14.5, adding solaris-* and lpia.
@@ -73,7 +75,7 @@ lintian (1.23.33) UNRELEASED; urgency=low
   * man/lintian.1:
     + [RA] Remove the mention of the debdiff check script.
 
- -- Russ Allbery <rra@debian.org>  Sun, 05 Aug 2007 11:47:45 -0700
+ -- Russ Allbery <rra@debian.org>  Sun, 05 Aug 2007 11:59:15 -0700
 
 lintian (1.23.32) unstable; urgency=low
 
