@@ -23,6 +23,7 @@ Conflicts: foobar (<< 5&5), foo, relations,
            gnuwdf,
 Optional: everything
 Suggests: alpha, gnu (>= 44-3-4-8-11.4) | ung (<< 89beta) | nug | ngu, beta
+Recommends: emacs21 | emacsen
 Description: Strange dependency relationships
  This package declares relationships designed to tickle lintian's "fields"
  check.  It should generate a number of tags for these.

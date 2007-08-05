@@ -3,6 +3,7 @@ lintian (1.23.33) UNRELEASED; urgency=low
   * checks/common_data.pm:
     + [CW] Add automaken as a known virtual package.
     + [CW] Update architectures to dpkg 1.14.5, adding solaris-* and lpia.
+    + [RA] Add %known_obsolete_emacs.
   * checks/cruft{.desc,}:
     + [RA] Check for .git directories in source packages.  Thanks, Julien
       Cristau.  (Closes: #433516)
@@ -19,6 +20,9 @@ lintian (1.23.33) UNRELEASED; urgency=low
     + [RA] Removed, incorporated into checks/cruft.
   * checks/debian-readme:
     + [RA] Replace all uses of tag_error and tag_warn with just tag.
+  * checks/fields{.desc,}:
+    + [RA] Tag packages listing emacs21 as the preferred Emacs flavor in a
+      dependency.  Thanks, Tatsuya Kinoshita.  (Closes: #434978)
   * checks/files{.desc,}:
     + [RA] Check for .git directories in binary packages.
   * checks/menu-format{.desc,}:
@@ -66,7 +70,7 @@ lintian (1.23.33) UNRELEASED; urgency=low
   * man/lintian.1:
     + [RA] Remove the mention of the debdiff check script.
 
- -- Russ Allbery <rra@debian.org>  Wed, 01 Aug 2007 03:26:14 -0700
+ -- Russ Allbery <rra@debian.org>  Sun, 05 Aug 2007 11:21:46 -0700
 
 lintian (1.23.32) unstable; urgency=low
 
