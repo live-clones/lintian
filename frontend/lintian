@@ -641,7 +641,7 @@ while (my $arg = shift) {
                        or ($data->{distribution} eq 'testing')
                        or ($data->{distribution} eq 'unstable')
                        or ($data->{distribution} eq 'experimental')
-		       or ($data->{distribution} eq /\w+-backports/)
+		       or ($data->{distribution} =~ /\w+-backports/)
                        or ($data->{distribution} =~ /\w+-proposed-updates/)
                        or ($data->{distribution} =~ /\w+-security/))
                ) {
