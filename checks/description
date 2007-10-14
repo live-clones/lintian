@@ -105,6 +105,10 @@ while (<IN>) {
 	tag "description-contains-tabs", "" unless $tabs++;
     }
 
+    if (m,^\s*Homepage: https?://,i) {
+        tag "description-contains-homepage";
+    }
+
     if ($lines == 1) {
 	# checks for the first line of the extended description:
 	if (m/^\s/o) {

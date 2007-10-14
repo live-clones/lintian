@@ -35,6 +35,7 @@ E: binary: symlink-should-be-relative usr/share/doc/binary/html/ch3.html /usr/sh
 E: binary: unstripped-binary-or-object ./usr/bin/hello
 I: binary: arch-dep-package-has-big-usr-share
 I: binary: binary-has-unneeded-section ./usr/bin/hello-static .comment
+I: binary: description-contains-homepage
 I: binary: desktop-entry-contains-encoding-key ./usr/share/applications/goodbye.desktop:11 Encoding
 I: binary: desktop-entry-contains-encoding-key ./usr/share/applications/hello.desktop:13 Encoding
 I: binary: no-md5sums-control-file
