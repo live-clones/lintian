@@ -184,7 +184,7 @@ info: The upstream source contains a file that looks like a Subversion
  were probably included by accident.  You may want to report this as an
  upstream bug.
 
-Tag: diff-contains-patch-failure
+Tag: diff-contains-patch-failure-file
 Type: warning
 Info: The Debian diff or native package contains a file that looks like
  the files left behind by the <tt>patch</tt> utility when it cannot
