@@ -4,12 +4,16 @@ Priority: extra
 Maintainer: Lintian Maintainers <lintian-maint@debian.org>
 Uploaders: Co-maintainer one <one@debian.org>, Jeroen van Wolffelaar <jeroen@wolffelaar.nl>, Co-maintainer three <three@debian.org>
 Standards-Version: 3.2.1
+Homepage: http://lintian.debian.org/
+Vcs-Svn: http://svn.wolffelaar.nl/lintian/trunk
 
 Package: binary
 Architecture: any
 Depends: ${shlibs:Depends}, xorg, binary-data (= ${Source-Version})
 Description: test handling of binary files
  Regression test for lintian's handling of binary files.
+Homepage: http://lintian.debian.org/
+Vcs-Svn: http://svn.wolffelaar.nl/lintian/trunk
 
 Package: binary-data
 Architecture: all

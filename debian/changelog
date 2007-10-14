@@ -1,3 +1,10 @@
+lintian (1.23.35) UNRELEASED; urgency=low
+
+  * checks/common_data.pm:
+    + [RA] Allow Homepage in source and binary packages.
+
+ -- Russ Allbery <rra@debian.org>  Sun, 14 Oct 2007 16:19:03 -0700
+
 lintian (1.23.34) unstable; urgency=low
 
   The "brown paper operator" release.
