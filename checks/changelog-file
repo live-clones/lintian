@@ -97,17 +97,24 @@ while (<IN>) {
 	return 0;
     }
 
-
     # we are only interested in files or symlinks in /usr/(share/)?doc/$pkg
     if (m,usr/(share/)?doc/$ppkg/([^/\s]+), ) {
 	my $file = $2;
+	my $file1 = "usr/share/doc/$pkg/$file";
 
 	push(@doc_files, $file);
 
+	# Check a few things about the NEWS.Debian file.
+	if ($file =~ /^NEWS.Debian(\.gz)?$/i) {
+	    if (not $file =~ /\.gz$/) {
+		tag "debian-news-file-not-compressed", "$file1";
+	    } elsif ($file ne 'NEWS.Debian.gz') {
+		tag "wrong-name-for-debian-news-file", "$file1";
+	    }
+	}
+
 	# check if changelog files are compressed with gzip -9
 	next unless $file =~ m/^changelog(\.html)?(\.gz)?$|changelog.debian(\.gz)?$/i;
-
-	my $file1 = "usr/share/doc/$pkg/$file";
 
 	if (not $file =~ m/\.gz$/) {
 	    tag "changelog-file-not-compressed", "$file";
@@ -141,6 +148,30 @@ close(IN);
 # the copyright check will complain about this
 if ($#doc_files < 0) {
     return 0;
+}
+
+# Check a NEWS.Debian file if we have one.  We should additionally check here
+# that the entries don't begin with an asterisk, but that hasn't been done
+# yet.
+if (-f 'NEWS.Debian') {
+    my $line = file_is_encoded_in_non_utf8('NEWS.Debian', $type, $pkg);
+    if ($line) {
+	tag "debian-news-file-uses-obsolete-national-encoding", "at line $line"
+    }
+    my $changes = Parse::DebianChangelog->init( { infile => 'NEWS.Debian', quiet => 1 } );
+    if (my @errors = $changes->get_parse_errors) {
+	for (@errors) {
+	    tag "syntax-error-in-debian-news-file", "line $_->[1]", "\"$_->[2]\"";
+	}
+    }
+
+    # Some checks on the most recent entry.
+    if ($changes->data) {
+        my ($entry) = $changes->data;
+        if ($entry->Distribution =~ /unreleased/i) {
+            tag "debian-news-entry-has-strange-distribution", $entry->Distribution;
+        }
+    }
 }
 
 if ( $found_html && !$found_text ) {

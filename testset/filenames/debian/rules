@@ -80,6 +80,10 @@ binary-indep:
 	echo foo > debian/tmp/usr/share/doc/filenames/bokm\\ål
 	echo foo > debian/tmp/usr/share/doc/filenames/bokm\\\\ål
 
+	touch debian/tmp/usr/share/doc/filenames/news.debian
+	gzip debian/tmp/usr/share/doc/filenames/news.debian
+	touch debian/tmp/usr/share/doc/filenames/NEWS.Debian
+
 	install -d debian/tmp/usr/share/doc/filenames/examples
 	touch debian/tmp/usr/share/doc/filenames/examples/__init__.py
 	touch debian/tmp/usr/share/doc/filenames/examples/very_interesting_example

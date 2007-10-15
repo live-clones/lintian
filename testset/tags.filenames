@@ -46,6 +46,7 @@ W: filenames: binary-without-manpage usr/X11R6/bin/testxbin2
 W: filenames: binary-without-manpage usr/bin/X11/testxbin
 W: filenames: binary-without-manpage usr/bin/mh/read
 W: filenames: cvsignore-file-in-package files/.cvsignore
+W: filenames: debian-news-file-not-compressed usr/share/doc/filenames/NEWS.Debian
 W: filenames: executable-not-elf-or-script ./usr/bin/bin/bad
 W: filenames: executable-not-elf-or-script ./usr/bin/mh/read
 W: filenames: extra-license-file usr/share/pixmaps/COPYING
@@ -83,6 +84,9 @@ W: filenames: symlink-is-self-recursive usr/lib/filenames/symlink10wrong ../../.
 W: filenames: symlink-is-self-recursive usr/lib/filenames/symlink5ok+warn ..
 W: filenames: symlink-is-self-recursive usr/lib/filenames/symlink6ok+warn .
 W: filenames: symlink-is-self-recursive usr/lib/filenames/symlink7ok+warn /
+W: filenames: wrong-name-for-debian-news-file usr/share/doc/filenames/news.debian.gz
+W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/NEWS.Debian
 W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/README.macosx
 W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/examples/very_interesting_example
 W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/examples/very_interesting_example2.gz
+W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/news.debian.gz

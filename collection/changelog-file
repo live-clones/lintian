@@ -2,17 +2,17 @@
 # changelog-file -- lintian collector script
 
 # Copyright (C) 1998 Richard Braakman
-# 
+#
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
 # Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
@@ -90,6 +90,27 @@ if (not defined $chl) {
 } else {
     link($chl, "changelog")
 	or fail("cannot link $chl to changelog: $!");
+}
+
+# Extract NEWS.Debian files as well, with similar precautious.  Ignore any
+# symlinks to other packages here; in that case, we just won't check the file.
+my $news = "unpacked/usr/share/doc/$pkg/NEWS.Debian.gz";
+if (-f $news) {
+    if (-l $news) {
+        my $link = readlink $news or fail("cannot readlink $chl: $!");
+        if ($link =~ /\.\./ || ($link =~ m%/% && $link !~ m%^[^/]+(/+[^/]+)*\z%)) {
+            undef $news;
+        } elsif (! -f $news) {
+            undef $news;
+        }
+    }
+    if ($news) {
+        use lib "$ENV{'LINTIAN_ROOT'}/lib";
+        use Pipeline;
+
+        pipeline((sub { exec 'gzip', '-dc', $news }), "NEWS.Debian") == 0
+            or fail("error in gzip");
+    }
 }
 
 exit 0;

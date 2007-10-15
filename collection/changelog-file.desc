@@ -1,6 +1,8 @@
 Collector-Script: changelog-file
 Author: Richard Braakman <dark@xs4all.nl>
-Info: This script copies the `changelog' file of a package into the lintian directory.
+Info: This script copies the <tt>changelog</tt> file and
+ <tt>NEWS.Debian</tt> file (if any) of a package into the lintian
+ directory.
 Type: binary
 Unpack-Level: 2
 Output: changelog

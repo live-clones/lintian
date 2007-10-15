@@ -1,5 +1,9 @@
 lintian (1.23.35) UNRELEASED; urgency=low
 
+  * checks/changelog-file{.desc,}:
+    + [RA] Add some basic checks for NEWS.Debian files: naming,
+      compression, encoding, a syntax check with Parse::DebianChangelog,
+      and unreleased for the distribution.  (Closes: #437707)
   * checks/common_data.pm:
     + [RA] Allow Homepage in source and binary packages.
   * checks/cruft.desc:
@@ -9,7 +13,10 @@ lintian (1.23.35) UNRELEASED; urgency=low
     + [RA] Warn (at info level for now) about Homepage pseudo-fields in
       the extended description.  (Closes: #444336)
 
- -- Russ Allbery <rra@debian.org>  Sun, 14 Oct 2007 16:35:45 -0700
+  * collection/changelog-file{.desc,}:
+    + [RA] Collect NEWS.Debian as well as changelog.
+
+ -- Russ Allbery <rra@debian.org>  Sun, 14 Oct 2007 17:32:29 -0700
 
 lintian (1.23.34) unstable; urgency=low
 

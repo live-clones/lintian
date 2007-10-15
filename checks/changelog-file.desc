@@ -32,6 +32,12 @@ Info: Changelog files should be compressed using "gzip -9".  Even if they
  start out small, they will become large with time.
 Ref: policy 12.7
 
+Tag: debian-news-file-not-compressed
+Type: warning
+Info: NEWS.Debian files should be compressed using "gzip -9".  The file
+ must always have the same name.
+Ref: devref 6.3.4
+
 Tag: changelog-not-compressed-with-max-compression
 Type: warning
 Info: Changelog files should be compressed using "gzip -9"; i.e., using
@@ -70,6 +76,13 @@ Type: warning
 Info: The Debian changelog file should usually be installed as
  /usr/share/doc/<i>pkg</i>/changelog.Debian.gz
 Ref: policy 12.7
+
+Tag: wrong-name-for-debian-news-file
+Type: warning
+Info: The Debian news file must be installed as
+ /usr/share/doc/<i>pkg</i>/NEWS.Debian.gz with exactly that capitalization
+ or automated tools may not find it correctly.
+Ref: devref 6.3.4
 
 Tag: debian-changelog-file-missing
 Type: error
@@ -131,6 +144,17 @@ Info: The Debian changelog file must be valid UTF-8, an encoding of
   $ iconv -f ISO-8859-1 -t UTF-8 changelog > changelog.new
   $ mv changelog.new changelog
 
+Tag: debian-news-file-uses-obsolete-national-encoding
+Type: error
+Info: The NEWS.Debian file must be valid UTF-8, an encoding of the Unicode
+ character set.
+ .
+ There are many ways to convert a changelog from an obsoleted encoding
+ like ISO-8859-1; you may for example use "iconv" like:
+ .
+  $ iconv -f ISO-8859-1 -t UTF-8 NEWS.Debian > NEWS.Debian.new
+  $ mv NEWS.Debian.new NEWS.Debian
+
 Tag: latest-debian-changelog-entry-without-new-date
 Type: warning
 Info: The latest Debian changelog has either the same or even an older
@@ -140,6 +164,11 @@ Tag: syntax-error-in-debian-changelog
 Type: warning
 Info: While parsing the Debian changelog, an syntax error was found.
 Ref: policy 4.4
+
+Tag: syntax-error-in-debian-news-file
+Type: warning
+Info: While parsing the NEWS.Debian file, a syntax error was found.
+Ref: devref 6.3.4
 
 Tag: wrong-bug-number-in-closes
 Type: warning
@@ -152,3 +181,11 @@ Info: To close a bug in the Debian changelog, the word "closes" must be
  followed by a colon.  This entry looked like it was intended to close a
  bug, but there's no colon after "closes".
 Ref: policy 4.4
+
+Tag: debian-news-entry-has-strange-distribution
+Type: warning
+Info: The latest entry in NEWS.Debian has an unusual distribution name.
+ This field is ignored by the archive software, so its value doesn't truly
+ matter, but it may be confusing to users reading the entry if the
+ distribution doesn't match the distribution for the same entry in the
+ Debian changelog file.
