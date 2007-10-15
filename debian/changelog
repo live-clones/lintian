@@ -43,6 +43,7 @@ lintian (1.23.35) UNRELEASED; urgency=low
     + [RA] Improve the recommended command to remove .packlist files.
       Thanks, Justin Pryzby.
     + [RA] Don't think hard links are zero-length files.
+    + [RA] Diagnose files with names ending in whitespace.
   * checks/infofiles:
     + [RA] Emacs 22 now allows embedded images in info files, so accept
       and ignore PNG files in the info directory.  More image types may be
@@ -57,6 +58,10 @@ lintian (1.23.35) UNRELEASED; urgency=low
       is widely used.  Thanks, Raphael Geissert.  (Closes: #444651)
   * checks/menus:
     + [RA] Find the targets of hard links correctly.  (Closes: #444355)
+    + [RA] Use the three-argument form of open to not fail on doc-base
+      files ending in whitespace.  Error on doc-base files with Document
+      fields that end in whitespace, since currently they break multiple
+      tools.  Thanks, Ian Zimmerman.  (Closes: #444889)
   * checks/nmu.desc:
     + [RA] Remove obsolete note about binary NMUs.  Patch from Thijs
       Kinkhorst.  (Closes: #437925)
@@ -71,7 +76,7 @@ lintian (1.23.35) UNRELEASED; urgency=low
   * collection/changelog-file{.desc,}:
     + [RA] Collect NEWS.Debian as well as changelog.
 
- -- Russ Allbery <rra@debian.org>  Sun, 14 Oct 2007 20:40:24 -0700
+ -- Russ Allbery <rra@debian.org>  Sun, 14 Oct 2007 21:19:01 -0700
 
 lintian (1.23.34) unstable; urgency=low
 

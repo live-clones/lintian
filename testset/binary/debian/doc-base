@@ -1,4 +1,4 @@
-Document: binary!docs
+Document: binary!docs  
 Title: Broken binary doc-base control file
 Author: Russ Allbery
 Abstract: This control file exercises various tests of doc-base control

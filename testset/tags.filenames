@@ -65,6 +65,7 @@ W: filenames: file-in-unusual-dir files/svk-commitsEr9P.tmp
 W: filenames: file-in-unusual-dir files/svn-commit.tmp
 W: filenames: file-in-unusual-dir srv/foo/bar
 W: filenames: file-in-usr-lib-sgml usr/lib/sgml/package
+W: filenames: file-name-ends-in-whitespace files/'\\ 
 W: filenames: macos-ds-store-file-in-package usr/share/doc/filenames/.DS_Store
 W: filenames: menu-file-in-usr-lib usr/lib/menu/menu
 W: filenames: no-priority-field

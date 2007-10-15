@@ -191,3 +191,10 @@ Info: Format sections in doc-base control files for HTML or Info documents
  documentation.  Even if the documentation is a single file, this field
  must be present.
 Ref: Debian doc-base Manual section 2.3.2.2
+
+Tag: doc-base-document-field-ends-in-whitespace
+Type: error
+Info: The Document field in a doc-base file should not end in whitespace.
+ doc-base (at least as of 0.8.5) cannot cope with such fields and
+ debhelper 5.0.57 or earlier may create files ending in whitespace when
+ installing such files.

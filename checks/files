@@ -518,6 +518,10 @@ while (<IN>) {
 	tag "extra-license-file", "$file";
     }
 
+    # ---------------- weird file names
+    if ($file =~ m,\s+\z,) {
+	tag "file-name-ends-in-whitespace", "$file";
+    }
 
     # ---------------- plain files
     if ($perm =~ m/^-/) {
@@ -689,7 +693,7 @@ while (<IN>) {
     # ---------------- symbolic links
     elsif ($perm =~ m/^l/) {
 	# link
-	
+
 	my $mylink = $link;
 	if ($mylink =~ s,//+,/,g) {
 	    tag "symlink-has-double-slash", "$file $link";
@@ -779,7 +783,7 @@ while (<IN>) {
 	    }
 	}
     NEXT_LINK:
-	
+
 	if ($link =~ m,\.(gz|z|Z|bz|bz2|tgz|zip)\s*$,) {
 	    # symlink is pointing to a compressed file
 

@@ -668,3 +668,12 @@ Ref: fhs 4
 Info: This package installs a file in <tt>/usr/lib/sgml</tt>.  This was
  the old location for SGML catalogs and similar flies.  All those files
  should now go into <tt>/usr/share/sgml</tt>.
+
+Tag: file-name-ends-in-whitespace
+Type: warning
+Info: This package installs a file or directory whose name ends in
+ whitespace.  This might be intentional but it's normally a mistake.  If
+ it is intentional, add a lintian override.
+ .
+ One possible cause is using debhelper 5.0.57 or earlier to install a
+ doc-base file with a Document field that ends in whitespace.

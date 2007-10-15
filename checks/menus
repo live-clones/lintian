@@ -163,7 +163,7 @@ if ($docbase_file) {		# postinst has to call install-docs
     while (my $dbfile = readdir DOCBASEDIR) {
 	# don't try to parse executables, plus we already warned about it
 	next if -x "doc-base/$dbfile";
-	open IN, "doc-base/$dbfile" or
+	open (IN, '<', "doc-base/$dbfile") or
 	    fail("cannot open doc-base file $dbfile for reading.");
 
 	# Check if files referenced by doc-base are included in the package.
@@ -228,6 +228,8 @@ if ($docbase_file) {		# postinst has to call install-docs
 		    unless $known_doc_base_formats{$format};
 	    } elsif (defined ($_) && /^Document\s*:/i) {
 		$sawdocument = 1;
+                tag "doc-base-document-field-ends-in-whitespace", "$dbfile:$."
+                    if /[ \t]$/;
 	    } elsif (defined ($_) && /^\s/ && $field) {
 		push (@files, split ' ');
 	    }

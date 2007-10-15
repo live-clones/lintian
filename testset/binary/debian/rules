@@ -43,6 +43,7 @@ binary-arch: build
 	install -m 644 debian/menu $(tmp)/usr/lib/menu/binary
 	install -d $(tmp)/usr/share/doc-base
 	install -m 644 debian/doc-base $(tmp)/usr/share/doc-base/binary
+	touch '$(tmp)/usr/share/doc-base/space '
 	install -m 644 debian/README.Debian $(tmp)/usr/share/doc/binary
 	install -m 644 debian/NEWS.Debian $(tmp)/usr/share/doc/binary
 	gzip -9 $(tmp)/usr/share/doc/binary/NEWS.Debian
