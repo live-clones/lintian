@@ -28,11 +28,14 @@ lintian (1.23.35) UNRELEASED; urgency=low
   * checks/nmu.desc:
     + [RA] Remove obsolete note about binary NMUs.  Patch from Thijs
       Kinkhorst.  (Closes: #437925)
+  * checks/scripts:
+    + [RA] We now have a csh package.  Allow it as an alternative for csh
+      script dependencies.  Thanks, Bernd Zeimetz.  (Closes: #440825)
 
   * collection/changelog-file{.desc,}:
     + [RA] Collect NEWS.Debian as well as changelog.
 
- -- Russ Allbery <rra@debian.org>  Sun, 14 Oct 2007 18:06:47 -0700
+ -- Russ Allbery <rra@debian.org>  Sun, 14 Oct 2007 18:12:22 -0700
 
 lintian (1.23.34) unstable; urgency=low
 
