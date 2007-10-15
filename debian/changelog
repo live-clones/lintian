@@ -28,11 +28,15 @@ lintian (1.23.35) UNRELEASED; urgency=low
   * checks/description{.desc,}:
     + [RA] Warn (at info level for now) about Homepage pseudo-fields in
       the extended description.  (Closes: #444336)
+  * checks/fields.desc:
+    + [RA] Properly escape < and >.
   * checks/files{.desc,}:
     + [RA] Warn about Thumbs.db files, which are usually useless Windows
       thumbnail databases.  Thanks, Paul Wise.  (Closes: #438202)
     + [RA] Warn about .DS_Store files, used by Mac OS X to store extended
       folder attributes.  Thanks, Paul Wise.  (Closes: #438203)
+    + [RA] Improve the recommended command to remove .packlist files.
+      Thanks, Justin Pryzby.
   * checks/infofiles:
     + [RA] Emacs 22 now allows embedded images in info files, so accept
       and ignore PNG files in the info directory.  More image types may be
@@ -43,11 +47,13 @@ lintian (1.23.35) UNRELEASED; urgency=low
   * checks/scripts:
     + [RA] We now have a csh package.  Allow it as an alternative for csh
       script dependencies.  Thanks, Bernd Zeimetz.  (Closes: #440825)
+  * checks/version-substvars.desc:
+    + [RA] Properly escape < and >.
 
   * collection/changelog-file{.desc,}:
     + [RA] Collect NEWS.Debian as well as changelog.
 
- -- Russ Allbery <rra@debian.org>  Sun, 14 Oct 2007 19:00:30 -0700
+ -- Russ Allbery <rra@debian.org>  Sun, 14 Oct 2007 19:11:25 -0700
 
 lintian (1.23.34) unstable; urgency=low
 

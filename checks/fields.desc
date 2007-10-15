@@ -648,9 +648,9 @@ Info: The Python-Version control field is not in one of the valid
  .
      all
      current
-     current, >= X.Y
-     >= X.Y
-     >= A.B, << X.Y
+     current, &gt;= X.Y
+     &gt;= X.Y
+     &gt;= A.B, &lt;&lt; X.Y
      A.B, X.Y
  .
  (One or more specific versions may be listed with the last form.)  A.B
