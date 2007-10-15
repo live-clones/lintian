@@ -80,6 +80,9 @@ while (<IN>) {
     next unless ($perm =~ m,^[\-l],o)
 	    and ($path =~ m,^usr/share/info/, or $path =~ m,^usr/info/,);
 
+    # Analyze the file names making sure the documents are named properly.
+    # Note that Emacs 22 added support for images in info files, so we have to
+    # accept those and ignore them.  Just ignore .png files for now.
     my @fname_pieces = split /\./, $fname;
     my $ext = pop @fname_pieces;
     if ($ext eq "gz") { # ok!
@@ -93,6 +96,8 @@ while (<IN>) {
 		}
 	    }
 	}
+    } elsif ($ext eq 'png') {
+        next;
     } else {
 	push (@fname_pieces, $ext);
 	tag "info-document-not-compressed", "$file";

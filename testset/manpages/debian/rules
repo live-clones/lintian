@@ -63,6 +63,7 @@ binary-indep:
 	gzip -c9 <foo.info >$(tmp)/usr/share/info/foo.info.gz
 	gzip -c1 </dev/null >$(tmp)/usr/share/info/bar.gz
 	install -m644 foo.info $(tmp)/usr/share/info/baz.broken.gz
+	touch $(tmp)/usr/share/info/image.png
 
 	install -d $(tmp)/usr/share/doc/manpages
 	cp debian/changelog $(tmp)/usr/share/doc/manpages/changelog
