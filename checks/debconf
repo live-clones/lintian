@@ -191,7 +191,7 @@ foreach my $template (@templates) {
 	$isselect=1;
 	$usesmultiselect=1;
     } elsif ($template->{type} eq 'error') {
-        unless (Dep::implies($alldependencies, Dep::parse('debconf (>= 1.4.69) | cdebconf (>= 0.39)'))) {
+        unless (Dep::implies($alldependencies, Dep::parse('debconf (>= 1.4.69) | cdebconf'))) {
             tag "debconf-error-requires-versioned-depends", "$template->{template}"
                 unless $type eq 'udeb';
         }
