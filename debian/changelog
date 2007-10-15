@@ -12,11 +12,14 @@ lintian (1.23.35) UNRELEASED; urgency=low
   * checks/description{.desc,}:
     + [RA] Warn (at info level for now) about Homepage pseudo-fields in
       the extended description.  (Closes: #444336)
+  * checks/nmu.desc:
+    + [RA] Remove obsolete note about binary NMUs.  Patch from Thijs
+      Kinkhorst.  (Closes: #437925)
 
   * collection/changelog-file{.desc,}:
     + [RA] Collect NEWS.Debian as well as changelog.
 
- -- Russ Allbery <rra@debian.org>  Sun, 14 Oct 2007 17:32:29 -0700
+ -- Russ Allbery <rra@debian.org>  Sun, 14 Oct 2007 17:34:23 -0700
 
 lintian (1.23.34) unstable; urgency=low
 
