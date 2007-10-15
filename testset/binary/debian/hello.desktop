@@ -9,5 +9,6 @@ Exec=hello
 Icon=hello
 Terminal=true
 Type=Application
-Categories=GNOME;GTK;System;Settings;
+Categories=GNOME;GTK;System;Applet;Settings;
 Encoding=UTF-8
+OnlyShowIn=GNOME;

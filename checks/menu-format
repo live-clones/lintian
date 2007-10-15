@@ -339,6 +339,17 @@ my %categories = map { $_ => 1 }
        ConsoleOnly
       );
 
+# This is a list of Reserved Categories for .desktop files.  To use one of
+# these, the desktop entry must also have an OnlyShowIn key limiting the
+# environment to one that supports this category.
+my %reserved_categories = map { $_ => 1 }
+    qw(
+       Screensaver
+       TrayIcon
+       Applet
+       Shell
+      );
+
 # Path in which to search for binaries referenced in menu entries.
 my @path = qw(/usr/local/bin/ /usr/bin/ /bin/ /usr/X11R6/bin/ /usr/games/);
 
@@ -771,7 +782,10 @@ sub VerifyDesktopFile {
         my @cats = split (';', $vals{'Categories'});
         my $saw_main;
         for my $cat (@cats) {
-            if (not $categories{$cat} and not $main_categories{$cat}) {
+            if ($reserved_categories{$cat}) {
+                tag "desktop-entry-uses-reserved-category", "$cat $file"
+                    unless $vals{'OnlyShowIn'};
+            } elsif (not $categories{$cat} and not $main_categories{$cat}) {
                 tag "desktop-entry-invalid-category", "$cat $file";
             } elsif ($main_categories{$cat}) {
                 $saw_main = 1;

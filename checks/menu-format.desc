@@ -231,6 +231,15 @@ Info: The categories for this desktop entry do not contain any Main
  only be used on conjunction with one or more Main Categories.
 Ref: http://standards.freedesktop.org/menu-spec/1.0/apa.html
 
+Tag: desktop-entry-uses-reserved-category
+Type: warning
+Info: This desktop entry includes a Reserved Category, one which has a
+ desktop-specific meaning that has not yet been standardized, but does not
+ include an OnlyShowIn key.  Desktop entries using a Reserved Category
+ must include an OnlyShowIn key limiting the entry to those environments
+ that support the category.
+Ref: http://standards.freedesktop.org/menu-spec/1.0/apa.html
+
 Tag: desktop-entry-invalid-category
 Type: warning
 Info: This desktop entry lists a category that is not one of the

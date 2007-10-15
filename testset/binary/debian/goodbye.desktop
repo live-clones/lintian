@@ -7,7 +7,7 @@ Exec=goodbye
 icon=hello
 Terminal=true
 Type=Application
-Categories=WeirdStuff;
+Categories=WeirdStuff;Screensaver;
 Encoding=ISO-10646-1
 [Other Entry]
 Name=Goodbye

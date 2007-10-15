@@ -41,6 +41,10 @@ lintian (1.23.35) UNRELEASED; urgency=low
     + [RA] Emacs 22 now allows embedded images in info files, so accept
       and ignore PNG files in the info directory.  More image types may be
       needed.  Thanks, Andreas Metzler.  (Closes: #438602)
+  * checks/menu-format{.desc,}:
+    + [RA] Reserved categories are okay in .desktop files if OnlyShowIn is
+      present, and generally deserve their own separate tag regardless.
+      Thanks, Michael Biebl.  (Closes: #442709)
   * checks/nmu.desc:
     + [RA] Remove obsolete note about binary NMUs.  Patch from Thijs
       Kinkhorst.  (Closes: #437925)
@@ -53,7 +57,7 @@ lintian (1.23.35) UNRELEASED; urgency=low
   * collection/changelog-file{.desc,}:
     + [RA] Collect NEWS.Debian as well as changelog.
 
- -- Russ Allbery <rra@debian.org>  Sun, 14 Oct 2007 19:11:25 -0700
+ -- Russ Allbery <rra@debian.org>  Sun, 14 Oct 2007 19:24:56 -0700
 
 lintian (1.23.34) unstable; urgency=low
 
