@@ -84,6 +84,7 @@ W: filenames: symlink-is-self-recursive usr/lib/filenames/symlink10wrong ../../.
 W: filenames: symlink-is-self-recursive usr/lib/filenames/symlink5ok+warn ..
 W: filenames: symlink-is-self-recursive usr/lib/filenames/symlink6ok+warn .
 W: filenames: symlink-is-self-recursive usr/lib/filenames/symlink7ok+warn /
+W: filenames: windows-thumbnail-database-in-package usr/share/doc/filenames/Thumbs.db
 W: filenames: wrong-name-for-debian-news-file usr/share/doc/filenames/news.debian.gz
 W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/NEWS.Debian
 W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/README.macosx

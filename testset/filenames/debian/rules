@@ -80,6 +80,8 @@ binary-indep:
 	echo foo > debian/tmp/usr/share/doc/filenames/bokm\\ål
 	echo foo > debian/tmp/usr/share/doc/filenames/bokm\\\\ål
 
+	echo foo > debian/tmp/usr/share/doc/filenames/Thumbs.db
+
 	touch debian/tmp/usr/share/doc/filenames/news.debian
 	gzip debian/tmp/usr/share/doc/filenames/news.debian
 	touch debian/tmp/usr/share/doc/filenames/NEWS.Debian

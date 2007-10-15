@@ -410,6 +410,12 @@ Info: There is a file in the package whose name matches the format NFS
  had them open.  It may have been included in the package by accident
  while building the package in an NFS filesystem.
 
+Tag: windows-thumbnail-database-in-package
+Type: warning
+Info: There is a file in the package named <tt>Thumbs.db</tt> or
+ <tt>Thumbs.db.gz</tt>, which is normally a Windows image thumbnail
+ database.  Such databases are generally useless in Debian packages.
+
 Tag: package-installs-perllocal-pod
 Type: warning
 Info: This package installs a file <tt>perllocal.pod</tt>.  Since that

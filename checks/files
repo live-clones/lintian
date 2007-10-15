@@ -179,12 +179,12 @@ while (<IN>) {
 		if ($owner ne 'root/root') {
 		    tag "bad-owner-for-doc-file", "$file $owner != root/root";
 		}
-		
+
 		# file directly in /usr/share/doc ?
 		if ($perm =~ m/^-/ and $file =~ m,^usr/share/doc/[^/]+$,) {
 		    tag "file-directly-in-usr-share-doc", "$file";
 		}
-		
+
 		# executable in /usr/share/doc ?
 		if ($perm =~ m/^-.*[xs]/ and $file !~ m,^usr/share/doc/([^/]+/)?examples/,) {
 		    if ($script{$file}) {
@@ -193,7 +193,7 @@ while (<IN>) {
 			tag "executable-in-usr-share-doc", $file, (sprintf "%04o", $operm);
 		    }
 		}
-		
+
 		# zero byte file in /usr/share/doc/
 		if ($size == 0 and $perm =~ m,^-,) {
 		    # exception: __init__.py files are empty tagging files (see
@@ -217,7 +217,7 @@ while (<IN>) {
 		} elsif ($file =~ m,^usr/share/lintian/overrides/$tmp/.*,) {
 		    tag "override-file-in-wrong-location", "$file";
 		}
-		
+
 		# contains an INSTALL file?
 		if ($file =~ m,^usr/share/doc/$tmp/INSTALL(?:\..+)*$,) {
 		    tag "package-contains-upstream-install-documentation", "$file";
@@ -372,7 +372,7 @@ while (<IN>) {
 	elsif ($file =~ m,/usr/share/(?:gnome/apps|applink)/[^/]+\.desktop$,) {
 	    tag "desktop-file-in-wrong-dir", $file;
 	}
-	
+
     }
     # ---------------- /var subdirs
     elsif ($type ne 'udeb' and $file =~ m,^var/[^/]+/$,) { # FSSTND dirs
@@ -549,6 +549,11 @@ while (<IN>) {
 	# ---------------- executables with language extensions
 	if ($file =~ m,^(usr/)?(s?bin|games)/[^/]+\.(pl|sh|py)$,) {
 	    tag "script-with-language-extension", "$file";
+	}
+
+	# ---------------- Windows thumbnail databases
+	if ($file =~ m,/Thumbs\.db(\.gz)?$,) {
+	    tag "windows-thumbnail-database-in-package", "$file";
 	}
 
 	# ---------------- general: setuid/setgid files!
