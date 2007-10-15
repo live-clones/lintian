@@ -1,4 +1,6 @@
-lintian (1.23.35) UNRELEASED; urgency=low
+lintian (1.23.35) unstable; urgency=low
+
+  The "frantic bug catchup" release.
 
   * checks/changelog-file{.desc,}:
     + [RA] Add some basic checks for NEWS.Debian files: naming,
@@ -86,7 +88,7 @@ lintian (1.23.35) UNRELEASED; urgency=low
   * collection/changelog-file{.desc,}:
     + [RA] Collect NEWS.Debian as well as changelog.
 
- -- Russ Allbery <rra@debian.org>  Sun, 14 Oct 2007 22:18:41 -0700
+ -- Russ Allbery <rra@debian.org>  Sun, 14 Oct 2007 22:29:51 -0700
 
 lintian (1.23.34) unstable; urgency=low
 
