@@ -6,6 +6,7 @@ Uploaders: Co-maintainer one <one@debian.org>, Jeroen van Wolffelaar <jeroen@wol
 Standards-Version: 3.2.1
 Homepage: http://lintian.debian.org/
 Vcs-Svn: http://svn.wolffelaar.nl/lintian/trunk
+XS-Vcs-Browser: http://svn.wolffelaar.nl/lintian/trunk
 
 Package: binary
 Architecture: any

@@ -9,6 +9,8 @@ lintian (1.23.35) UNRELEASED; urgency=low
   * checks/control-file:
     + [RA] Support and ignore comments in debian/control.  Thanks, Julien
       Cristau.  (Closes: #440830)
+    + [RA] Check for XS-Vcs-* headers and recommend (at info level) that
+      they be changed to Vcs-* headers.  (Closes: #444661)
   * checks/cruft.desc:
     + [RA] Fix incorrect tag name for patch failure files.  Thanks, Romain
       Francoise.  (Closes: #437463)

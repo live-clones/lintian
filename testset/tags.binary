@@ -34,6 +34,7 @@ E: binary: suidregister-used-in-maintainer-script postinst
 E: binary: symlink-contains-spurious-segments usr/share/doc/binary/html/ch2.html ../html/./ch1.html
 E: binary: symlink-should-be-relative usr/share/doc/binary/html/ch3.html /usr/share/doc/binary/htm/ch1.html
 E: binary: unstripped-binary-or-object ./usr/bin/hello
+I: binary source: xs-vcs-header-in-debian-control xs-vcs-browser
 I: binary: arch-dep-package-has-big-usr-share
 I: binary: binary-has-unneeded-section ./usr/bin/hello-static .comment
 I: binary: description-contains-homepage

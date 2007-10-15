@@ -20,6 +20,8 @@
 
 package Lintian::control_file;
 use strict;
+use lib "$ENV{'LINTIAN_ROOT'}/checks/";
+use common_data;
 use Util;
 use Tags;
 
@@ -55,6 +57,12 @@ while (<CONTROL>) {
 			tag "debian-control-with-duplicate-fields", "$field: $$seen_fields{$field}, $.";
 		}
 		$seen_fields->{$field} = $.;
+		if ($field =~ /^xs-vcs-/) {
+			my $base = $field;
+			$base =~ s/^xs-//;
+			tag "xs-vcs-header-in-debian-control", "$field"
+			    if $known_source_fields{$base};
+		}
 	}
 }
 close CONTROL;

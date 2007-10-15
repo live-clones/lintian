@@ -21,8 +21,8 @@ Info: The Debian control file should be valid UTF-8, an encoding of
 Tag: build-info-in-binary-control-file-section
 Type: error
 Ref: policy 5.2
-Info: The control file has a `Build-Depends', `Build-Depends-Indep',
- `Build-Conflicts' or `Build-Conflicts-Indep' field in a binary
+Info: The control file has a Build-Depends, Build-Depends-Indep,
+ Build-Conflicts, or Build-Conflicts-Indep field in a binary
  section.  These specify source package relationships, and should be in
  the source section of the control file.
 
@@ -61,3 +61,10 @@ Info: The <tt>debian/control</tt> file places the indicated binary package
  category of the archive.  A source package in main may only build binary
  packages in main, a source package in non-free may only build binary
  packages in non-free, and so forth.
+
+Tag: xs-vcs-header-in-debian-control
+Type: info
+Info: There is an XS-Vcs-* field in the <tt>debian/control</tt> file.  As
+ of dpkg 1.14.6, the XS- prefix is no longer necessary.  dpkg now
+ recognizes these headers and handles them correctly.  Consider removing
+ the XS- prefix for this field.
