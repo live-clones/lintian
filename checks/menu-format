@@ -194,6 +194,15 @@ my %kde_desktop_keys = map { $_ => 1 }
        UnmountIcon
       );
 
+# Known types of desktop entries.
+# http://standards.freedesktop.org/desktop-entry-spec/1.0/ar01s05.html
+my %known_desktop_types = map { $_ => 1 }
+    qw(
+       Application
+       Link
+       Directory
+      );
+
 # Authorative source of desktop categories:
 # http://standards.freedesktop.org/menu-spec/1.0/apa.html
 
@@ -386,6 +395,7 @@ open(IN, "index") or fail("cannot open index file index: $!");
 while (<IN>) {
     chomp;
     my ($perm, $owner, $size, $date, $time, $file) = split(' ', $_, 6);
+    $file =~ s,^\./,,;
     $file =~ s/ link to .*//;
     $file =~ s/ -> .*//;
     my $operm = perm2oct($perm);
@@ -395,7 +405,9 @@ while (<IN>) {
         if ($perm =~ m,x,o) {
             tag "executable-desktop-file", sprintf("$file %04o",$operm);
         }
-        push (@desktop_files, $file);
+        unless (m,template, or m,^usr/share/doc/,) {
+            push (@desktop_files, $file);
+        }
     }
 }
 close IN;
@@ -762,7 +774,8 @@ sub VerifyDesktopFile {
     }
     close DESKTOP;
 
-    # Now validate the data in the desktop file.
+    # Now validate the data in the desktop file, but only if it's a known type.
+    next unless ($vals{'Type'} and $known_desktop_types{$vals{'Type'}});
 
     # Test for important keys.
     for my $tag (@req_desktop_keys) {
@@ -771,12 +784,16 @@ sub VerifyDesktopFile {
         }
     }
 
-    # TODO:  Should check quoting and the check special field codes in Exec
-    # for desktiop files.
-    if (defined $vals{'Exec'}) {
+    # Only test whether the binary is in the package if the desktop file is
+    # directly under /usr/share/applications.  Too many applications use
+    # desktop files for other purposes with custom paths.
+    #
+    # TODO:  Should check quoting and the check special field
+    # codes in Exec for desktop files.
+    if ($file =~ ,usr/share/applications/[^/]+$, and $vals{'Exec'} =~ /\S/) {
         my ($okay, $command) = VerifyCmd ($file, undef, $vals{'Exec'});
         tag "desktop-command-not-in-package", "$file $command"
-            unless $okay;
+            unless $okay or $command eq 'kcmshell';
     }
 
     # Check the Category tag.
@@ -816,10 +833,10 @@ sub VerifyCmd {
     # allows one, and gksu has the command at the end of its arguments.
     my @com = split (' ', $exec);
     my $cmd;
-    if ($com[0] eq "/usr/sbin/su-to-root") {
+    if ($com[0] and $com[0] eq "/usr/sbin/su-to-root") {
         tag 'su-to-root-with-usr-sbin', $location;
     }
-    if ($com[0] =~ m,^(?:/usr/s?bin/)?(su-to-root|gksu|kdesu|sux)$,) {
+    if ($com[0] and $com[0] =~ m,^(?:/usr/s?bin/)?(su-to-root|gksu|kdesu|sux)$,) {
         my $wrapper = $1;
         shift @com;
         while (@com) {

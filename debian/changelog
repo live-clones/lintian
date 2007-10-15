@@ -56,6 +56,16 @@ lintian (1.23.35) UNRELEASED; urgency=low
       extensions.  Thanks, Josselin Mouette.  (Closes: #443827)
     + [RA] Allow Actions keys.  This isn't in the desktop standard but
       is widely used.  Thanks, Raphael Geissert.  (Closes: #444651)
+    + [RA] Ignore desktop files not for one of the known types.  This
+      should significantly reduce the noise for KDE packages.
+    + [RA] Only check whether a program referenced by Exec is in the
+      package if the desktop file is in /usr/share/applications.  Too many
+      applications use Exec for desktop files elsewhere without the
+      standard PATH.
+    + [RA] Ignore Exec fields pointing to kcmshell.
+    + [RA] Ignore desktop files in /usr/share/doc or that appear to be
+      templates.
+    + [RA] Avoid uninitialized warnings on all-whitespace commands.
   * checks/menus:
     + [RA] Find the targets of hard links correctly.  (Closes: #444355)
     + [RA] Use the three-argument form of open to not fail on doc-base
@@ -76,7 +86,7 @@ lintian (1.23.35) UNRELEASED; urgency=low
   * collection/changelog-file{.desc,}:
     + [RA] Collect NEWS.Debian as well as changelog.
 
- -- Russ Allbery <rra@debian.org>  Sun, 14 Oct 2007 21:19:01 -0700
+ -- Russ Allbery <rra@debian.org>  Sun, 14 Oct 2007 22:18:41 -0700
 
 lintian (1.23.34) unstable; urgency=low
 
