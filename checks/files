@@ -36,6 +36,7 @@ my $is_perl;
 my $has_binary_perl_file;
 my @nonbinary_perl_files_in_lib;
 
+my %is_hard_link;
 my %linked_against_libvga;
 my %script = ();
 
@@ -86,6 +87,7 @@ while (<IN>) {
     $file =~ s,^\./,,;
 
     if ($file =~ s/ link to (.*)//) {
+        $is_hard_link{$file} = 1;
 	my $link_target = $1;
 	$link_target =~ s,^\./,,;
 	my $link_target_dir = $link_target;
@@ -195,7 +197,7 @@ while (<IN>) {
 		}
 
 		# zero byte file in /usr/share/doc/
-		if ($size == 0 and $perm =~ m,^-,) {
+		if ($size == 0 and $perm =~ m,^-, and not $is_hard_link{$file}) {
 		    # exception: __init__.py files are empty tagging files (see
 		    # bug #215234)
 		    unless ($file =~ m,^usr/share/doc/([^/]+/)?examples/(.+/)?__init__\.py$,) {

@@ -29,4 +29,9 @@ Files: /usr/share/doc/binary/html/ch?.h*l
 Format: inFO
 Files: /usr/share/info/binary.info.gz
 
+Format: HTML
+Index: /usr/share/doc/binary/html/index.html
+Files: /usr/share/doc/binary/html/ch5.html
+       /usr/share/doc/binary/html/ch6.html
+
 

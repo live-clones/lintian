@@ -292,12 +292,15 @@ sub add_file_link_info {
 
     $file = "/" . $file if (not $file =~ m%^/%); # make file absolute
     $file =~ s%/+%/%g;				 # remove duplicated `/'
-    ($file, $link) = split(/ -> /, $file);
+    my $ishard = ($file =~ / link to /);
+    ($file, $link) = split(/ (?:->|link to) /, $file);
 
     $all_files{$file} = 1;
 
     if (defined $link) {
-	if (not $link =~ m,^/,) {		  # not absolute link
+	if ($ishard) {
+	    $link =~ s,^\./,/,;
+	} elsif (not $link =~ m,^/,) {		  # not absolute link
 	    $link = "/" . $link;		  # make sure link starts with '/'
 	    $link =~ s,/+\./+,/,g;		  # remove all /./ parts
 	    my $dcount = 1;

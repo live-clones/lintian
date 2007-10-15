@@ -33,6 +33,9 @@ binary-arch: build
 	echo '<html></html>' > $(tmp)/usr/share/doc/binary/html/ch1.html
 	ln -s ../html/./ch1.html $(tmp)/usr/share/doc/binary/html/ch2.html
 	ln -s /usr/share/doc/binary/htm/ch1.html $(tmp)/usr/share/doc/binary/html/ch3.html
+	echo '<html></html>' > $(tmp)/usr/share/doc/binary/html/ch5.html
+	ln $(tmp)/usr/share/doc/binary/html/ch5.html \
+	    $(tmp)/usr/share/doc/binary/html/ch6.html
 	install -d $(tmp)/usr/share/menu
 	install -d $(tmp)/usr/lib/menu
 	install -d $(tmp)/usr/share/binary
