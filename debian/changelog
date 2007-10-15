@@ -15,6 +15,8 @@ lintian (1.23.35) UNRELEASED; urgency=low
   * checks/files{.desc,}:
     + [RA] Warn about Thumbs.db files, which are usually useless Windows
       thumbnail databases.  Thanks, Paul Wise.  (Closes: #438202)
+    + [RA] Warn about .DS_Store files, used by Mac OS X to store extended
+      folder attributes.  Thanks, Paul Wise.  (Closes: #438203)
   * checks/nmu.desc:
     + [RA] Remove obsolete note about binary NMUs.  Patch from Thijs
       Kinkhorst.  (Closes: #437925)
@@ -22,7 +24,7 @@ lintian (1.23.35) UNRELEASED; urgency=low
   * collection/changelog-file{.desc,}:
     + [RA] Collect NEWS.Debian as well as changelog.
 
- -- Russ Allbery <rra@debian.org>  Sun, 14 Oct 2007 17:47:43 -0700
+ -- Russ Allbery <rra@debian.org>  Sun, 14 Oct 2007 17:56:35 -0700
 
 lintian (1.23.34) unstable; urgency=low
 

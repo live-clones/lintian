@@ -416,6 +416,12 @@ Info: There is a file in the package named <tt>Thumbs.db</tt> or
  <tt>Thumbs.db.gz</tt>, which is normally a Windows image thumbnail
  database.  Such databases are generally useless in Debian packages.
 
+Tag: macos-ds-store-file-in-package
+Type: warning
+Info: There is a file in the package named <tt>.DS_Store</tt>, the file
+ name used by Mac OS X to store folder attributes.  Such files are
+ generally useless in Debian packages.
+
 Tag: package-installs-perllocal-pod
 Type: warning
 Info: This package installs a file <tt>perllocal.pod</tt>.  Since that
