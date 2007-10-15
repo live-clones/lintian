@@ -51,6 +51,8 @@ lintian (1.23.35) UNRELEASED; urgency=low
       Thanks, Michael Biebl.  (Closes: #442709)
     + [RA] Ignore categories beginning with "X-", reserved for category
       extensions.  Thanks, Josselin Mouette.  (Closes: #443827)
+    + [RA] Allow Actions keys.  This isn't in the desktop standard but
+      is widely used.  Thanks, Raphael Geissert.  (Closes: #444651)
   * checks/menus:
     + [RA] Find the targets of hard links correctly.  (Closes: #444355)
   * checks/nmu.desc:
@@ -67,7 +69,7 @@ lintian (1.23.35) UNRELEASED; urgency=low
   * collection/changelog-file{.desc,}:
     + [RA] Collect NEWS.Debian as well as changelog.
 
- -- Russ Allbery <rra@debian.org>  Sun, 14 Oct 2007 20:37:12 -0700
+ -- Russ Allbery <rra@debian.org>  Sun, 14 Oct 2007 20:40:24 -0700
 
 lintian (1.23.34) unstable; urgency=low
 

@@ -136,7 +136,8 @@ my @sections = ('Applications/Accessibility',
 # This is a list of all keys that should be in every desktop entry.
 my @req_desktop_keys = qw(Type Name);
 
-# This is a list of all known keys.
+# This is a list of all known keys.  Note that Actions isn't part of the
+# standard but appears to be widely used, so we include it anyway.
 my %known_desktop_keys = map { $_ => 1 }
     qw(
        Type
@@ -160,6 +161,7 @@ my %known_desktop_keys = map { $_ => 1 }
        StartupNotify
        StartupWMClass
        URL
+       Actions
       );
 
 my %deprecated_desktop_keys = map { $_ => 1 }
