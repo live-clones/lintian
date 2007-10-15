@@ -788,6 +788,7 @@ sub VerifyDesktopFile {
             if ($reserved_categories{$cat}) {
                 tag "desktop-entry-uses-reserved-category", "$cat $file"
                     unless $vals{'OnlyShowIn'};
+                $saw_main = 1;
             } elsif (not $categories{$cat} and not $main_categories{$cat}) {
                 tag "desktop-entry-invalid-category", "$cat $file";
             } elsif ($main_categories{$cat}) {
