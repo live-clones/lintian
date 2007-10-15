@@ -215,6 +215,9 @@ foreach my $template (@templates) {
 		}
 	    }
 	}
+	if ($template->{choices} =~ /^\s*(yes\s*,\s*no|no\s*,\s*yes)\s*$/i) {
+	    tag "select-with-boolean-choices", "$template->{template}";
+	}
     }
 
     if ($isselect and not exists $template->{choices}) {
@@ -280,7 +283,7 @@ foreach my $template (@templates) {
     unless ($short =~ /for internal use/i) {
 	my $isprompt = grep { $_ eq $type } qw(string select password multiselect);
 	if ($isprompt) {
-	    if ($short && $short !~ m/:$/) {
+	    if ($short && ($short !~ m/:$/ || $short =~ m/^(what|who|when|where|which|how)/i)) {
 		tag "malformed-prompt-in-templates", $template->{template};
 	    }
 	    if ($short =~ /^(Please|Cho+se|Enter|Select|Specify|Give)/) {
@@ -291,9 +294,9 @@ foreach my $template (@templates) {
 	    if ($short !~ /\?/) {
 		tag "malformed-question-in-templates", $template->{template};
 	    }
-	    if (defined ($extended) && $extended =~ /\?/) {
-		tag "using-question-in-extended-description-in-templates", $template->{template};
-	    }
+	}
+	if (defined ($extended) && $extended =~ /\?/) {
+	    tag "using-question-in-extended-description-in-templates", $template->{template};
 	}
 	if ($type eq 'note') {
 	    if ($short =~ /[.?;:]$/) {
@@ -304,10 +307,10 @@ foreach my $template (@templates) {
 	    tag "too-long-short-description-in-templates", $template->{template};
 	}
         if (defined $template->{description}) {
-            if ($template->{description} =~ /(\A|\s)(I|[Mm]y|[Ww]e|[Oo]ur|[Oo]urs|mine|myself|ourself|me|us) /) {
+            if ($template->{description} =~ /(\A|\s)(I|[Mm]y|[Ww]e|[Oo]ur|[Oo]urs|mine|myself|ourself|me|us)(\Z|\s)/) {
                 tag "using-first-person-in-templates", $template->{template};
             }
-            if ($template->{description} =~ /[ \'\"]([Yy]es)[ \'\",.]/) {
+            if ($template->{description} =~ /[ \'\"](yes|no)[ \'\",;.]/i and $type eq 'boolean') {
                 tag "making-assumptions-about-interfaces-in-templates", $template->{template};
             }
         }

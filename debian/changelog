@@ -13,6 +13,11 @@ lintian (1.23.35) UNRELEASED; urgency=low
     + [RA] A cdebconf that supported error was released with sarge, so
       don't require a versioned cdebconf dependency.  Thanks, Thijs
       Kinkhorst.  (Closes: #438860)
+    + [RA] Various improvements from Thomas Huriaux: Diagnose select
+      templates with only yes/no options, diagnose more question prompts,
+      warn on any questions in the extended description, allow yes/no
+      mentions in non-boolean templates, and catch more first-person
+      language.  (Closes: #439508)
   * checks/description{.desc,}:
     + [RA] Warn (at info level for now) about Homepage pseudo-fields in
       the extended description.  (Closes: #444336)
@@ -35,7 +40,7 @@ lintian (1.23.35) UNRELEASED; urgency=low
   * collection/changelog-file{.desc,}:
     + [RA] Collect NEWS.Debian as well as changelog.
 
- -- Russ Allbery <rra@debian.org>  Sun, 14 Oct 2007 18:12:22 -0700
+ -- Russ Allbery <rra@debian.org>  Sun, 14 Oct 2007 18:38:07 -0700
 
 lintian (1.23.34) unstable; urgency=low
 

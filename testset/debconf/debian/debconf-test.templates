@@ -87,3 +87,9 @@ Template: debconf/error
 Type: error
 _Description: An error occurred
  This is a sample Debconf error template.
+
+Template: debconf/should-be-boolean
+Type: select
+__Choices: yes, no
+_Description: Choose:
+ Pick yes or no.

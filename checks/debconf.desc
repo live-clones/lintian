@@ -218,12 +218,12 @@ Ref: devref 6.5.4.2.2
 
 Tag: using-question-in-extended-description-in-templates
 Type: warning
-Info: The extended description of a boolean debconf template should not
- include a question.
+Info: The extended description of a debconf template should never include
+ a question.
  .
  If this template is only used internally by the package and not displayed
  to the user, put "for internal use" in the short description.
-Ref: devref 6.5.4.2.2
+Ref: devref 6.5.3.2
 
 Tag: using-imperative-form-in-templates
 Type: warning
@@ -290,3 +290,9 @@ Info: Debconf notes should be used only for important notes that the
  needed (e.g. "welcome" notes). Changing the templates type to "error"
  can also be appropriate, such as for input validation errors.
 Ref: policy 3.9.1
+
+Tag: select-with-boolean-choices
+Type: warning
+Info: Select templates with only yes and no choices should use the boolean
+ type instead.
+Ref: debconf-devel(7)
