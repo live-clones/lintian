@@ -281,11 +281,14 @@ foreach my $template (@templates) {
     }
     my $type = $template->{type} || '';
     unless ($short =~ /for internal use/i) {
-	my $isprompt = grep { $_ eq $type } qw(string select password multiselect);
+	my $isprompt = grep { $_ eq $type } qw(string password);
+        my $isselect = grep { $_ eq $type } qw(select multiselect);
 	if ($isprompt) {
 	    if ($short && ($short !~ m/:$/ || $short =~ m/^(what|who|when|where|which|how)/i)) {
 		tag "malformed-prompt-in-templates", $template->{template};
 	    }
+        }
+        if ($isselect) {
 	    if ($short =~ /^(Please|Cho+se|Enter|Select|Specify|Give)/) {
 		tag "using-imperative-form-in-templates", $template->{template};
 	    }
