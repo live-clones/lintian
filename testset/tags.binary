@@ -3,7 +3,7 @@ E: binary-data: md5sums-control-file-is-empty
 E: binary: debian-changelog-file-missing-or-wrong-name
 E: binary: debian-news-file-uses-obsolete-national-encoding at line 3
 E: binary: depends-on-x-metapackage depends: xorg
-E: binary: desktop-entry-missing-required-key usr/share/applications/goodbye.desktop Name
+E: binary: desktop-entry-missing-required-key /usr/share/applications/goodbye.desktop Name
 E: binary: doc-base-document-field-ends-in-whitespace binary:1
 E: binary: doc-base-file-no-format binary:22
 E: binary: doc-base-file-no-index binary:31
@@ -13,7 +13,7 @@ E: binary: doc-base-file-references-missing-file binary:21 /usr/share/doc/binary
 E: binary: doc-base-file-references-missing-file binary:27 /usr/share/doc/binary/hml/*.html
 E: binary: doc-base-file-references-missing-file binary:30 /usr/share/info/binary.info.gz
 E: binary: doc-base-index-references-multiple-files binary:21
-E: binary: executable-desktop-file usr/share/applications/goodbye.desktop 0755
+E: binary: executable-desktop-file /usr/share/applications/goodbye.desktop 0755
 E: binary: file-directly-in-usr-share usr/share/baz
 E: binary: lengthy-symlink usr/share/doc/binary/html/ch2.html ../html/./ch1.html
 E: binary: menu-item-missing-required-tag needs /usr/lib/menu/binary:6
@@ -39,8 +39,8 @@ I: binary source: xs-vcs-header-in-debian-control xs-vcs-browser
 I: binary: arch-dep-package-has-big-usr-share
 I: binary: binary-has-unneeded-section ./usr/bin/hello-static .comment
 I: binary: description-contains-homepage
-I: binary: desktop-entry-contains-encoding-key usr/share/applications/goodbye.desktop:11 Encoding
-I: binary: desktop-entry-contains-encoding-key usr/share/applications/hello.desktop:13 Encoding
+I: binary: desktop-entry-contains-encoding-key /usr/share/applications/goodbye.desktop:11 Encoding
+I: binary: desktop-entry-contains-encoding-key /usr/share/applications/hello.desktop:13 Encoding
 I: binary: no-md5sums-control-file
 W: binary source: ancient-standards-version 3.2.1 (current is 3.7.2)
 W: binary source: debian-rules-uses-pwd line 9
@@ -57,11 +57,11 @@ W: binary: binary-without-manpage usr/bin/iminusrbin
 W: binary: binary-without-manpage usr/bin/static-hello
 W: binary: changelog-file-not-compressed changelog
 W: binary: debian-news-entry-has-strange-distribution UNRELEASED
-W: binary: desktop-command-not-in-package usr/share/applications/goodbye.desktop goodbye
-W: binary: desktop-entry-contains-unknown-key usr/share/applications/goodbye.desktop:5 SpecialTag
-W: binary: desktop-entry-contains-unknown-key usr/share/applications/goodbye.desktop:7 icon
-W: binary: desktop-entry-invalid-category WeirdStuff usr/share/applications/goodbye.desktop
-W: binary: desktop-entry-uses-reserved-category Screensaver usr/share/applications/goodbye.desktop
+W: binary: desktop-command-not-in-package /usr/share/applications/goodbye.desktop goodbye
+W: binary: desktop-entry-contains-unknown-key /usr/share/applications/goodbye.desktop:5 SpecialTag
+W: binary: desktop-entry-contains-unknown-key /usr/share/applications/goodbye.desktop:7 icon
+W: binary: desktop-entry-invalid-category WeirdStuff /usr/share/applications/goodbye.desktop
+W: binary: desktop-entry-uses-reserved-category Screensaver /usr/share/applications/goodbye.desktop
 W: binary: doc-base-file-unknown-format binary:16 esp
 W: binary: executable-not-elf-or-script ./usr/bin/iminusrbin
 W: binary: executable-not-elf-or-script ./usr/share/applications/goodbye.desktop

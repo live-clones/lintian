@@ -362,7 +362,7 @@ my %reserved_categories = map { $_ => 1 }
       );
 
 # Path in which to search for binaries referenced in menu entries.
-my @path = qw(usr/local/bin/ usr/bin/ bin/ usr/X11R6/bin/ usr/games/);
+my @path = qw(/usr/local/bin/ /usr/bin/ /bin/ /usr/X11R6/bin/ /usr/games/);
 
 my %known_tags_hash = map { $_ => 1 } @known_tags;
 my %needs_tag_vals_hash = map { $_ => 1 } @needs_tag_vals;
@@ -395,7 +395,7 @@ open(IN, "index") or fail("cannot open index file index: $!");
 while (<IN>) {
     chomp;
     my ($perm, $owner, $size, $date, $time, $file) = split(' ', $_, 6);
-    $file =~ s,^\./,,;
+    $file =~ s,^\./,/,;
     $file =~ s/ link to .*//;
     $file =~ s/ -> .*//;
     my $operm = perm2oct($perm);
@@ -867,7 +867,7 @@ sub VerifyCmd {
     } else {
         $cmd = $com[0];
     }
-    my $okay = $cmd && ($file_index{".$cmd"} || grep { $file_index{$_ . $cmd} } @path);
+    my $okay = $cmd && ($file_index{$cmd} || grep { $file_index{$_ . $cmd} } @path);
     return ($okay, $cmd);
 }
 
