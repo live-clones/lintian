@@ -656,7 +656,7 @@ while (<SCRIPTS>) {
 	if (m,\bgconftool(-2)?(\s|\Z),) {
 	    tag "gconftool-used-in-maintainer-script", "$file:$.";
 	}
-	if (m,\binstall-sgmlcatalog\b, && !(m,--remove, && $file eq 'prerm')) {
+	if (m,\binstall-sgmlcatalog\b, && !(m,--remove, && ($file eq 'prerm' || $file eq 'postinst'))) {
 	    tag "install-sgmlcatalog-deprecated", "$file:$.";
 	}
         if (m,/var/lib/dpkg/status\b, && $pkg ne 'base-files' && $pkg ne 'dpkg') {

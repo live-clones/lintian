@@ -45,19 +45,23 @@ lintian (1.23.35) UNRELEASED; urgency=low
     + [RA] Reserved categories are okay in .desktop files if OnlyShowIn is
       present, and generally deserve their own separate tag regardless.
       Thanks, Michael Biebl.  (Closes: #442709)
+    + [RA] Ignore categories beginning with "X-", reserved for category
+      extensions.  Thanks, Josselin Mouette.  (Closes: #443827)
   * checks/nmu.desc:
     + [RA] Remove obsolete note about binary NMUs.  Patch from Thijs
       Kinkhorst.  (Closes: #437925)
-  * checks/scripts:
+  * checks/scripts{.desc,}:
     + [RA] We now have a csh package.  Allow it as an alternative for csh
       script dependencies.  Thanks, Bernd Zeimetz.  (Closes: #440825)
+    + [RA] Allow install-sgmlcatalog --remove in postinst as well as
+      prerm and suggest removing it entirely in the long description.
   * checks/version-substvars.desc:
     + [RA] Properly escape < and >.
 
   * collection/changelog-file{.desc,}:
     + [RA] Collect NEWS.Debian as well as changelog.
 
- -- Russ Allbery <rra@debian.org>  Sun, 14 Oct 2007 19:24:56 -0700
+ -- Russ Allbery <rra@debian.org>  Sun, 14 Oct 2007 19:41:13 -0700
 
 lintian (1.23.34) unstable; urgency=low
 

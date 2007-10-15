@@ -782,6 +782,7 @@ sub VerifyDesktopFile {
         my @cats = split (';', $vals{'Categories'});
         my $saw_main;
         for my $cat (@cats) {
+            next if $cat =~ /^X-/;
             if ($reserved_categories{$cat}) {
                 tag "desktop-entry-uses-reserved-category", "$cat $file"
                     unless $vals{'OnlyShowIn'};

@@ -41,3 +41,6 @@ rm	/dev/device1
 
 # But this is okay.
 rm /tmp/foo > /dev/null
+
+# Not allowed here even with remove.
+install-sgmlcatalog --remove package
