@@ -6,6 +6,9 @@ lintian (1.23.35) UNRELEASED; urgency=low
       and unreleased for the distribution.  (Closes: #437707)
   * checks/common_data.pm:
     + [RA] Allow Homepage in source and binary packages.
+  * checks/control-file:
+    + [RA] Support and ignore comments in debian/control.  Thanks, Julien
+      Cristau.  (Closes: #440830)
   * checks/cruft.desc:
     + [RA] Fix incorrect tag name for patch failure files.  Thanks, Romain
       Francoise.  (Closes: #437463)
@@ -40,7 +43,7 @@ lintian (1.23.35) UNRELEASED; urgency=low
   * collection/changelog-file{.desc,}:
     + [RA] Collect NEWS.Debian as well as changelog.
 
- -- Russ Allbery <rra@debian.org>  Sun, 14 Oct 2007 18:38:07 -0700
+ -- Russ Allbery <rra@debian.org>  Sun, 14 Oct 2007 18:53:49 -0700
 
 lintian (1.23.34) unstable; urgency=low
 

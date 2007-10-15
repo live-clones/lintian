@@ -23,3 +23,11 @@ Depends: binary (= ${Source-Version})
 Description: test handling of binary relationships
  Regression test for lintian's checking of package relationships between
  arch:any and arch:all packages.
+
+#Package: binary-comment
+#Architecture: space-almonds
+#Depends: *
+#Depends: *
+#Description: test comment support
+# Yes, comments are actually allowed in debian/control, so none of the
+# above should produce errors.
