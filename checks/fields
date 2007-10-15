@@ -33,7 +33,7 @@ use Util;
 # The allowed Python dependencies currently.  This is the list of alternatives
 # that, either directly or through transitive dependencies that can be relied
 # upon, ensure /usr/bin/python will exist for the use of dh_python.
-my $python_depend = 'python | python-dev | python-all-dev';
+my $python_depend = 'python | python-dev | python-all | python-all-dev';
 
 # Certain build tools must be listed in Build-Depends even if there are no
 # arch-specific packages because they're required in order to run the clean

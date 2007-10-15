@@ -28,6 +28,9 @@ lintian (1.23.35) UNRELEASED; urgency=low
   * checks/description{.desc,}:
     + [RA] Warn (at info level for now) about Homepage pseudo-fields in
       the extended description.  (Closes: #444336)
+  * checks/fields:
+    + [RA] Allow python-all as yet another way of satisfying a Python
+      build dependency.  (Closes: #444642)
   * checks/fields.desc:
     + [RA] Properly escape < and >.
   * checks/files{.desc,}:
@@ -64,7 +67,7 @@ lintian (1.23.35) UNRELEASED; urgency=low
   * collection/changelog-file{.desc,}:
     + [RA] Collect NEWS.Debian as well as changelog.
 
- -- Russ Allbery <rra@debian.org>  Sun, 14 Oct 2007 20:29:58 -0700
+ -- Russ Allbery <rra@debian.org>  Sun, 14 Oct 2007 20:37:12 -0700
 
 lintian (1.23.34) unstable; urgency=low
 
