@@ -9,7 +9,12 @@ lintian (1.23.36) UNRELEASED; urgency=low
     + [RA] Fix detection of commands for menu entries when the command is
       given with its full path.  (Closes: #446796)
 
- -- Russ Allbery <rra@debian.org>  Mon, 15 Oct 2007 19:58:18 -0700
+  * lib/Dep.pm:
+    + [RA] Fix negative implication in some boundary cases when comparing
+      two versioned relationships in the same direction.  Thanks to
+      Raphael Hertzog for the analysis and fix.  (Closes: #446768)
+
+ -- Russ Allbery <rra@debian.org>  Mon, 15 Oct 2007 20:09:28 -0700
 
 lintian (1.23.35) unstable; urgency=low
 

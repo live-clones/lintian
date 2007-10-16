@@ -348,8 +348,10 @@ sub pred_implies {
 	    return Dep::versions_gte($$p[3], $$q[3]) ? 0 : undef;
 	} elsif ($$p[2] eq '>=') {
 	    return Dep::versions_gt($$p[3], $$q[3]) ? 0 : undef;
-	} else {
+	} elsif ($$p[2] eq '=') {
 	    return Dep::versions_lte($$p[3], $$q[3]);
+	} else {
+	    return Dep::versions_lte($$p[3], $$q[3]) ? 1 : undef;
 	}
     }
 
@@ -360,8 +362,10 @@ sub pred_implies {
 	    return Dep::versions_gte($$p[3], $$p[3]) ? 0 : undef;
 	} elsif ($$p[2] eq '<<') {
 	    return Dep::versions_lte($$p[3], $$q[3]);
-	} else {
+	} elsif ($$p[2] eq '=') {
 	    return Dep::versions_lt($$p[3], $$q[3]);
+	} else {
+	    return Dep::versions_lt($$p[3], $$q[3]) ? 1 : undef;
 	}
     }
 
@@ -371,8 +375,10 @@ sub pred_implies {
 	    return Dep::versions_lte($$p[3], $$q[3]) ? 0 : undef;
 	} elsif ($$p[2] eq '<=') {
 	    return Dep::versions_lt($$p[3], $$q[3]) ? 0 : undef;
-	} else {
+	} elsif ($$p[2] eq '=') {
 	    return Dep::versions_gte($$p[3], $$q[3]);
+	} else {
+	    return Dep::versions_gte($$p[3], $$q[3]) ? 1 : undef;
 	}
     }
     if ($$q[2] eq '>>') {
@@ -380,8 +386,10 @@ sub pred_implies {
 	    return Dep::versions_lte($$p[3], $$q[3]) ? 0 : undef;
 	} elsif ($$p[2] eq '>>') {
 	    return Dep::versions_gte($$p[3], $$q[3]);
-	} else {
+	} elsif ($$p[2] eq '=') {
 	    return Dep::versions_gt($$p[3], $$q[3]);
+	} else {
+	    return Dep::versions_gt($$p[3], $$q[3]) ? 1 : undef;
 	}
     }
 
