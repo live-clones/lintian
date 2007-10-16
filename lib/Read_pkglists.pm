@@ -49,7 +49,7 @@ sub read_src_list {
   $src_list or ($src_list = "$LINTIAN_LAB/info/source-packages");
   return unless -s $src_list;
 
-  open(IN,$src_list) or fail("cannot open source list file $src_list: $!");
+  open(IN, '<', $src_list) or fail("cannot open source list file $src_list: $!");
 
   # compatible file format?
   my $f;
@@ -98,7 +98,7 @@ sub read_bin_list {
   $bin_list or ($bin_list = "$LINTIAN_LAB/info/binary-packages");
   return unless -s $bin_list;
 
-  open(IN,$bin_list) or fail("cannot open binary list file $bin_list: $!");
+  open(IN, '<', $bin_list) or fail("cannot open binary list file $bin_list: $!");
 
   # compatible file format?
   my $f;
@@ -144,7 +144,7 @@ sub read_udeb_list {
   $udeb_list or ($udeb_list = "$LINTIAN_LAB/info/udeb-packages");
   return unless -s $udeb_list;
 
-  open(IN,$udeb_list) or fail("cannot open udeb list file $udeb_list: $!");
+  open(IN, '<', $udeb_list) or fail("cannot open udeb list file $udeb_list: $!");
 
   # compatible file format?
   my $f;

@@ -46,7 +46,8 @@ check_script("prerm", \%prerm) if (-f "control/prerm");
 check_script("postrm", \%postrm) if (-f "control/postrm");
 
 # Read file info...
-open IN, "file-info" or fail("cannot find file-info for $type package $pkg");
+open (IN, '<', "file-info")
+    or fail("cannot find file-info for $type package $pkg");
 while (<IN>) {
     chop;
 
@@ -61,7 +62,7 @@ while (<IN>) {
 close IN;
 
 # Read package contents...
-open IN, "index" or fail("cannot open index file index: $!");
+open (IN, '<', "index") or fail("cannot open index file index: $!");
 while (<IN>) {
     chop;
 
@@ -167,7 +168,7 @@ sub check_script {
     my ($no_check_menu,$no_check_installdocs);
     my $interp;
 
-    open(IN,"control/$script") or
+    open(IN, '<', "control/$script") or
 	fail("cannot open maintainer script control/$script for reading: $!");
     $interp = <IN>;
     if ($interp =~ m,^\#\!\s*/bin/(a|ba|k|pdk)?sh,) {

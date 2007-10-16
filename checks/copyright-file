@@ -37,47 +37,47 @@ use lib "$ENV{'LINTIAN_ROOT'}/checks/";
 use common_data;
 
 # Read package contents...
-open(IN,"index") or fail("cannot open index file index: $!");
+open(IN, '<', "index") or fail("cannot open index file index: $!");
 while (<IN>) {
     chop;
     if (m,usr/(share/)?doc/$ppkg/copyright(\.\S+)?(\s+\-\>\s+.*)?$,) {
 	my ($ext,$link) = ($2,$3);
-	
+
 	$ext = '' if (! defined $ext);
 	#an extension other than .gz doesn't count as copyright file
 	next unless ($ext eq '') or ($ext eq '.gz');
 	$found = 1;
-	
+
 	#search for an extension
 	if ($ext eq '.gz') {
 	    tag "copyright-file-compressed", "";
 	    last;
     	}
-	
+
 	#make sure copyright is not a symlink
     	if ($link) {
 	    tag "copyright-file-is-symlink", "";
 	    last;
     	}
-	
+
 	#otherwise, pass
     	if (($ext eq '') and not $link) {
 	    # everything is ok.
 	    last;
     	}
     	fail("unhandled case: $_");
-	
+
     } elsif (m,usr/share/doc/$ppkg \-\>\s+(\S+),) {
 	my ($link) = ($1);
-	
+
     	$found = 1;
-	
+
     	# check if this symlink references a directory elsewhere
     	if ($link =~ m,^(\.\.)?/,) {
 	    tag "usr-share-doc-symlink-points-outside-of-usr-share-doc", "$link";
 	    last;
     	}
-	
+
 	# link might point to a subdirectory of another /usr/share/doc
 	# directory
 	$link =~ s,/.*,,;
@@ -85,12 +85,12 @@ while (<IN>) {
     	# this case is allowed, if this package depends on link
     	# and both packages come from the same source package
 
-	if (not open (VERSION, "fields/version")) {
+	if (not open (VERSION, '<', "fields/version")) {
 	    fail("Can't open fields/version: $!");
 	} else {
-	    chomp(my $our_version = <VERSION>); 
+	    chomp(my $our_version = <VERSION>);
 	    close VERSION;
-	
+
 	    # depend on $link pkg?
 	    if ((not depends_on($link, $our_version)) &&
 	         not (exists($known_essential{$link}) &&
@@ -101,7 +101,7 @@ while (<IN>) {
 		last;
 	    }
     	}
-	
+
     	# We can only check if both packages come from the same source
     	# if our source package is currently unpacked in the lab, too!
     	if (-d "source") { 	# yes, it's unpacked
@@ -116,7 +116,7 @@ while (<IN>) {
     	} else {		# no, source is not available
 	    tag "cannot-check-whether-usr-share-doc-symlink-points-to-foreign-package", "";
     	}
-	
+
     	# everything is ok.
     	last;
     } elsif (m,usr/doc/copyright/$ppkg$,) {
@@ -132,7 +132,7 @@ if (not $found) {
 }
 
 # check contents of copyright file
-open(IN,"copyright") or fail("cannot open copyright file copyright: $!");
+open(IN, '<', "copyright") or fail("cannot open copyright file copyright: $!");
 # gulp whole file
 local $/ = undef;
 $_ = <IN>;
@@ -218,14 +218,14 @@ sub depends_on {
 
     my $f = "fields/depends";
     if (-f $f) {
-	open(I,$f) or die "cannot open depends file $f: $!";
+	open(I, '<', $f) or die "cannot open depends file $f: $!";
 	chop($deps = <I>);
 	close(I);
     }
 
     $f = "fields/pre-depends";
     if (-f $f) {
-	open(I,$f) or die "cannot open pre-depends file $f: $!";
+	open(I, '<', $f) or die "cannot open pre-depends file $f: $!";
 	chop($predeps = <I>);
 	close(I);
     }

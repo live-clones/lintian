@@ -58,7 +58,7 @@ my %ctrl = $type eq 'udeb' ? %ctrl_udeb : %ctrl_deb;
 my %ctrl_alt = $type eq 'udeb' ? %ctrl_deb : %ctrl_udeb;
 
 # process control-index file
-open(IN,"control-index") or fail("cannot open control-index file: $!");
+open(IN, '<', "control-index") or fail("cannot open control-index file: $!");
 while (<IN>) {
     chop;
 

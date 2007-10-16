@@ -42,7 +42,8 @@ if ($line) {
 
 # Check that each field is only used once:
 my $seen_fields = {};
-open (CONTROL, "debfiles/control") or fail "Couldn't read debfiles/control: $!";
+open (CONTROL, '<', "debfiles/control")
+    or fail "Couldn't read debfiles/control: $!";
 while (<CONTROL>) {
 	s/\s*\n$//;
 	next if /^\#/;

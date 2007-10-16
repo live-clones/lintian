@@ -36,7 +36,7 @@ if (-l "debfiles/rules") {
     return 0 unless -f "debfiles/rules";
 }
 
-open(RULES, '< debfiles/rules') or fail("Failed opening rules: $!");
+open(RULES, '<', 'debfiles/rules') or fail("Failed opening rules: $!");
 
 # Check for required #!/usr/bin/make -f opening line.  Allow -r or -e; a
 # strict reading of Policy doesn't allow either, but they seem harmless.

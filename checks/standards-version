@@ -89,7 +89,7 @@ if (not -f $std) {
     return 0;
 }
 
-open(IN,$std) or fail("cannot open $std for reading: $!");
+open(IN, '<', $std) or fail("cannot open $std for reading: $!");
 chop($_ = <IN>);
 close(IN);
 

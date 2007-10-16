@@ -73,7 +73,7 @@ system("savelog $log_file $changes_file $list_file $html_reports_log >/dev/null"
     or Die("cannot rotate log files");
 
 # create new log file
-open(LOG,">$log_file")
+open(LOG, '>', $log_file)
     or Die("cannot open log file $log_file for writing: $!");
 
 # export Lintian's configuration
@@ -149,9 +149,9 @@ if ($opt_i) { # process changes only
 
     # process changes file and create list of packages to process
     Log("Reading changes file...");
-    open(IN,$changes_file)
+    open(IN, '<', $changes_file)
 	or Die("cannot open changes file $changes_file for reading: $!");
-    open(OUT,">$list_file")
+    open(OUT, '>', $list_file)
 	or Die("cannot open list file $list_file for writing: $!");
     while (<IN>) {
 	chop;
@@ -203,9 +203,9 @@ if ($opt_i) { # process changes only
     # update lintian.log
     Log("Updating lintian.log...");
     rename $lintian_log, $old_lintian_log;
-    open(IN,$old_lintian_log)
+    open(IN, '<', $old_lintian_log)
 	or Die("cannot open old lintian.log $old_lintian_log for reading: $!");
-    open(OUT,">$lintian_log")
+    open(OUT, '>', $lintian_log)
 	or Die("cannot open lintian.log $lintian_log for writing: $!");
     my $copy_mode = 1;
     while (<IN>) {

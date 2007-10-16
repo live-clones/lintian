@@ -30,8 +30,8 @@ my %url;
 
 my $lib = defined $ENV{LINTIAN_ROOT} ?  "$ENV{LINTIAN_ROOT}/" : "";
 
-open REFS, "$ {lib}lib/manual_refs" or
-    die "Could not open manual_refs: $!";
+open (REFS, '<', "${lib}lib/manual_refs")
+    or die "Could not open manual_refs: $!";
 
 while(<REFS>) {
     chomp;

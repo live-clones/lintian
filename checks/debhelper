@@ -78,7 +78,7 @@ map { $commands{$_}=1 } qw(dh_desktop
 			   dh_usrlocal
 			   );
 
-open(RULES, "debfiles/rules") or fail("cannot read debian/rules: $!");
+open(RULES, '<', "debfiles/rules") or fail("cannot read debian/rules: $!");
 my $dhcompatvalue;
 while (<RULES>) {
     if (m/^\s+(dh_\w+)/) {
@@ -148,9 +148,8 @@ opendir(DEBIAN, 'debfiles')
     or fail("Can't open debfiles directory.");
 while (defined(my $file=readdir(DEBIAN))) {
     if ($file =~ m/^(?:(.*)\.)?(?:post|pre)(?:inst|rm)$/) {
-	
         my $binpkg = $1 || '';
-	open(IN,"debfiles/$file")
+	open(IN, '<', "debfiles/$file")
 	    or fail("Can't open debfiles/$file: $!");
 	my $seentag = '';
 	while (<IN>) {
@@ -160,13 +159,13 @@ while (defined(my $file=readdir(DEBIAN))) {
 	    }
 	}
 	close IN;
-	
+
 	if ((! $seentag) and $needtomodifyscripts) {
 	    tag "maintainer-script-lacks-debhelper-token", "debian/$file"
 		unless $binpkg && $pkgs{$binpkg} && ($pkgs{$binpkg} =~ /udeb/i);
 	}
     } elsif ($file =~ m/^compat$/) {
-	open IN, "debfiles/$file"
+	open (IN, '<', "debfiles/$file")
 	    or fail("Can't open debfiles/$file: $!");
 	$compat = <IN>;
 	close IN;
@@ -203,7 +202,7 @@ closedir(DEBIAN);
 # something earlier than 2 know what they're doing.  Skip CDBS packages since
 # CDBS creates pycompat internally at build time.
 if ($seendhpython && !$usescdbspython) {
-    if (open(PYCOMPAT, "debfiles/pycompat")) {
+    if (open(PYCOMPAT, '<', "debfiles/pycompat")) {
 	local $/;
 	my $pycompat = <PYCOMPAT>;
 	close PYCOMPAT;

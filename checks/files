@@ -41,7 +41,7 @@ my %linked_against_libvga;
 my %script = ();
 
 # read data from objdump-info file
-open(IN,"objdump-info")
+open(IN, '<', "objdump-info")
     or fail("cannot find objdump-info for $type package $pkg");
 while (<IN>) {
     chop;
@@ -59,12 +59,12 @@ while (<IN>) {
 close(IN);
 
 #Get source package name, if possible
-if (open (SOURCE, "fields/source")) {
+if (open (SOURCE, '<', "fields/source")) {
     chomp ($source_pkg = (<SOURCE> || ""));
 }
 
 # find out which files are scripts
-open(SCRIPTS, "scripts") or fail("cannot open lintian scripts file: $!");
+open(SCRIPTS, '<', "scripts") or fail("cannot open lintian scripts file: $!");
 while (<SCRIPTS>) {
     chop;
     m/^(\S*) (.*)$/ or fail("bad line in scripts file: $_");
@@ -76,7 +76,7 @@ close(SCRIPTS);
 my $warned_x11_predepends = 0;
 
 # Read package contents...
-open(IN,"index") or fail("cannot open index file index: $!");
+open(IN, '<', "index") or fail("cannot open index file index: $!");
 while (<IN>) {
     chop;
 
@@ -158,7 +158,7 @@ while (<IN>) {
 	# --------------- /etc/X11/Xresources/
 	elsif ($file =~ m,^etc/X11/Xresources,) {
 	    my $needs_conflicts = 1;
-	    if (open(CONFLICTS, "fields/conflicts")) {
+	    if (open(CONFLICTS, '<', "fields/conflicts")) {
 		my $line = <CONFLICTS>;
 		if ($line =~ m/xbase \(.+?\)/) {
 		    $needs_conflicts = 0;
@@ -251,7 +251,7 @@ while (<IN>) {
 	elsif ($file =~ m,^usr/(?:include|lib)/X11/,
 	       && !$warned_x11_predepends && $pkg ne 'x11-common') {
 	    my $pre_depends = '';
-	    if (open (FH, "fields/pre-depends")) {
+	    if (open (FH, '<', "fields/pre-depends")) {
 		$pre_depends = <FH>;
 		close FH;
 		$pre_depends =~ s/\n//g;
@@ -473,7 +473,7 @@ while (<IN>) {
         # check if it's one of the Python proper packages
 	unless (defined $is_python) {
 	    $is_python = 0;
-	    if (open(SOURCE, "fields/source")) {
+	    if (open(SOURCE, '<', "fields/source")) {
 		$_ = <SOURCE>;
 		$is_python = 1 if /^python(\d\.\d)?($|\s)/;
 		close(SOURCE);
@@ -487,7 +487,7 @@ while (<IN>) {
        # check if it's the "perl" package itself
        unless (defined $is_perl) {
            $is_perl = 0;
-           if (open(SOURCE, "fields/source")) {
+           if (open(SOURCE, '<', "fields/source")) {
                $_ = <SOURCE>;
                $is_perl = 1 if /^perl($|\s)/;
                close(SOURCE);

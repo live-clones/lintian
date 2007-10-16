@@ -68,7 +68,7 @@ my $seentemplates='';
 my $usespreinst='';
 my $usesmultiselect='';
 
-if (open(PREINST, "control/preinst")) {
+if (open(PREINST, '<', "control/preinst")) {
     while (<PREINST>) {
 	s/#.*//;    # Not perfect for Perl, but should be OK
 	if (m,/usr/share/debconf/confmodule, or
@@ -97,7 +97,7 @@ return unless $seenconfig or $seentemplates or $usespreinst;
 # Consider every package to depend on itself.
 my $version;
 if (-f "fields/version") {
-    open(IN, "fields/version") or fail("Can't open fields/version: $!");
+    open(IN, '<', "fields/version") or fail("Can't open fields/version: $!");
     chomp($_ = <IN>);
     $version = "$pkg (= $_)";
     close IN;
@@ -107,7 +107,7 @@ my (%dependencies, @alldeps);
 
 for my $field (qw(depends pre-depends)) {
     if (-f "fields/$field") {
-	open(IN, "fields/$field") or fail("Can't open fields/$field: $!");
+	open(IN, '<', "fields/$field") or fail("Can't open fields/$field: $!");
 	chomp($_ = <IN>);
 	close IN;
 	$_ .= ", $version" if defined $version;
@@ -140,7 +140,8 @@ if ($seenconfig and not -x "control/config") {
 
 # First check that templates look valid
 if ($seentemplates) {
-    open(TMPL, "control/templates") or fail("Can't open control/templates: $!");
+    open(TMPL, '<', "control/templates")
+        or fail("Can't open control/templates: $!");
     local $/ = "\n\n";
     while (<TMPL>) {
 	chomp;
@@ -347,7 +348,7 @@ foreach my $template (@templates) {
 
 for my $file (qw(config postinst)) {
     my $potential_makedev = {};
-    if (open(IN, "control/$file")) {
+    if (open(IN, '<', "control/$file")) {
 	my $usesconfmodule='';
 	my $obsoleteconfmodule='';
 	my $db_input='';
@@ -419,7 +420,7 @@ for my $file (qw(config postinst)) {
     }
 }
 
-if (open(POSTRM, "control/postrm")) {
+if (open(POSTRM, '<', "control/postrm")) {
     my $db_purge='';
 
     while (<POSTRM>) {
@@ -460,7 +461,7 @@ if ($usespreinst) {
 
 return 0 if ($pkg eq "debconf") || ($type eq 'udeb');
 
-open(SCRIPTS, "scripts") or fail("cannot open lintian scripts file: $!");
+open(SCRIPTS, '<', "scripts") or fail("cannot open lintian scripts file: $!");
 while (<SCRIPTS>) {
     chomp;
 
@@ -468,7 +469,7 @@ while (<SCRIPTS>) {
     my ($calls_env, $interpreter, $filename) = m/^(env )?(\S*) (.*)$/
 	or fail("bad line in scripts file: $_");
 
-    open(IN, "< unpacked/$filename") or fail("cannot open $filename: $!");
+    open(IN, '<', "unpacked/$filename") or fail("cannot open $filename: $!");
     while (<IN>) {
 	s/#.*//;    # Not perfect for Perl, but should be OK
 	if (m,/usr/share/debconf/confmodule, or

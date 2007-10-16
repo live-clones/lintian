@@ -40,7 +40,8 @@ my %file_info;
 my %is_a_symlink;
 
 # Read file info...
-open(IN,"file-info") or fail("cannot find file-info for $type package $pkg");
+open(IN, '<', "file-info")
+    or fail("cannot find file-info for $type package $pkg");
 while (<IN>) {
     chop;
 
@@ -87,7 +88,7 @@ for my $file (keys %file_info) {
 # together at random it seems here
 
 # Read package contents...
-open(IN,"index") or fail("cannot open index file index: $!");
+open(IN, '<', "index") or fail("cannot open index file index: $!");
 while (<IN>) {
     chop;
 
@@ -179,7 +180,8 @@ if ( $found_html && !$found_text ) {
 }
 
 # is this a native Debian package?
-open(IN,"fields/version") or fail("cannot open fields/version file for reading: $!");
+open(IN, '<', "fields/version")
+    or fail("cannot open fields/version file for reading: $!");
 chop(my $version = <IN>);
 close(IN);
 
@@ -307,7 +309,8 @@ if (@entries) {
 # one within 3000 chars of EOF and on the last page (^L), but that's a bit
 # pesky to replicate.  Demanding a match of $prefix and $suffix ought to
 # be enough to avoid false positives.
-open IN, "changelog" or fail("cannot find changelog for $type package $pkg");
+open (IN, '<', "changelog")
+    or fail("cannot find changelog for $type package $pkg");
 my ($prefix, $suffix);
 while (<IN>) {
 

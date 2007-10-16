@@ -242,7 +242,7 @@ sub delete_force {
 # create an empty file
 # --okay, okay, this is not exactly what `touch' does :-)
 sub _touch {
-    open(T,">$_[0]") or return 0;
+    open(T, '>', $_[0]) or return 0;
     close(T) or return 0;
 
     return 1;

@@ -38,7 +38,7 @@ use Pipeline;
 my $XARGS=FileHandle->new;
 pipeline_open($XARGS, (sub { exec 'xargs', '-0r', 'md5sum' }), "../md5sums")
     or fail("cannot fork: $!");
-open(INDEX, "../index")
+open(INDEX, '<', "../index")
     or fail("cannot open index file: $!");
 while (<INDEX>) {
     next unless m/^-/;

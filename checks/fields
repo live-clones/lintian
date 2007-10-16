@@ -125,14 +125,13 @@ unless (-d "fields") {
 #---- Package
 
 if ($type eq "binary"){
-	if (not open (FH, "fields/package")) {
+	if (not open (FH, '<', "fields/package")) {
 		tag "no-package-name", "";
 	} else {
 		my $name = <FH>;
 		close FH;
 
 		unfold("package", \$name);
-	
 		tag "bad-package-name", "" unless $name =~ /^[A-Z0-9][-+\.A-Z0-9]+$/i;
 		tag "package-not-lowercase", "" if ($name =~ /[A-Z]/)
 	}
@@ -140,7 +139,7 @@ if ($type eq "binary"){
 
 #---- Version
 
-if (not open (FH, "fields/version")) {
+if (not open (FH, '<', "fields/version")) {
 	tag "no-version-field", "";
 } else {
 	$version = <FH>;
@@ -177,7 +176,7 @@ if (not open (FH, "fields/version")) {
 
 #---- Architecture
 
-if (not open (FH, "fields/architecture")) {
+if (not open (FH, '<', "fields/architecture")) {
 	tag "no-architecture-field", "";
 } else {
 	my $archs = <FH>;
@@ -212,7 +211,7 @@ if (not open (FH, "fields/architecture")) {
 
 #---- Subarchitecture (udeb)
 
-if (open(FH, "fields/subarchitecture")) {
+if (open(FH, '<', "fields/subarchitecture")) {
 	my $subarch = <FH>;
 	close(FH);
 
@@ -223,7 +222,7 @@ if (open(FH, "fields/subarchitecture")) {
 #---- Uploaders
 
 for my $f (qw(maintainer uploaders)) {
-	if (not open (FH, "fields/$f")) {
+	if (not open (FH, '<', "fields/$f")) {
 		tag "no-maintainer-field", "" if $f eq "maintainer";
 	} else {
 		my $maintainer = <FH>;
@@ -246,14 +245,14 @@ for my $f (qw(maintainer uploaders)) {
 #---- Source
 
 if ($type eq "source") {
-	if (not open (FH, "fields/source")) {
+	if (not open (FH, '<', "fields/source")) {
 		tag "no-source-field", "";
 	} else {
 		my $source = <FH>;
 		close FH;
-	
+
 		unfold("source", \$source);
-	
+
 		if ($type eq 'source') {
 			if ($source ne $pkg) {
 				tag "source-field-does-not-match-pkg-name", "$_";
@@ -264,13 +263,13 @@ if ($type eq "source") {
 			                (?:\((?:\d+:)?(?:[-\.+:A-Z0-9]+?)(?:-[\.+A-Z0-9]+)?\))?\s*$/ix) { #Version
 				tag "source-field-malformed", "$source";
 			}
-		}	
+		}
 	}
 }
 
 #---- Essential
 
-if (open (FH, "fields/essential")) {
+if (open (FH, '<', "fields/essential")) {
 	my $essential = <FH>;
 	close FH;
 
@@ -284,7 +283,7 @@ if (open (FH, "fields/essential")) {
 
 #---- Section
 
-if (not open (FH, "fields/section")) {
+if (not open (FH, '<', "fields/section")) {
 	tag "no-section-field", "" if $type eq "binary";
 } else {
 	my $section = <FH>;
@@ -299,7 +298,7 @@ if (not open (FH, "fields/section")) {
 	} else {
 
 	    my @parts = split /\//, $section, 2;
-	    
+
 	    if ($parts[0] =~ /non-US/i) {
 		tag "non-us-spelling", "" if ($parts[0] ne "non-US");
 		if ($parts[1] and not $known_non_us_parts{$parts[1]}) {
@@ -318,7 +317,7 @@ if (not open (FH, "fields/section")) {
 
 #---- Priority
 
-if (not open (FH, "fields/priority")) {
+if (not open (FH, '<', "fields/priority")) {
 	tag "no-priority-field", "" if $type eq "binary";
 } else {
 	my $priority = <FH>;
@@ -337,7 +336,7 @@ if (not open (FH, "fields/priority")) {
 
 #---- Installer-Menu-Item (udeb)
 
-if (open(FH, "fields/installer-menu-item")) {
+if (open(FH, '<', "fields/installer-menu-item")) {
 	my $menu_item = <FH>;
 	close(FH);
 
@@ -355,7 +354,7 @@ if (open(FH, "fields/installer-menu-item")) {
 my $metapackage = 0;
 if ($type eq 'binary' && $arch_indep) {
 	$metapackage = 1;
-	open IN, "index" or fail("cannot open index file index: $!");
+	open (IN, '<', "index") or fail("cannot open index file index: $!");
 	local $_;
 	local $/ = "\n";
 	while (<IN>) {
@@ -368,7 +367,7 @@ if ($type eq 'binary' && $arch_indep) {
 if (($type eq "binary") || ($type eq 'udeb')) {
 	my (%deps, %fields);
 	for my $field (qw(depends pre-depends recommends suggests conflicts provides replaces)) {
-		if (open(FH, "fields/$field")) {
+		if (open(FH, '<', "fields/$field")) {
 			#Get data and clean it
 			my $data = <FH>;
 			unfold($field, \$data);
@@ -525,7 +524,7 @@ if ($type eq "source") {
 	#Get number of arch-indep packages:
 	my $arch_indep_packages = 0;
 	my $arch_dep_packages = 0;
-	if (not open(CONTROL, "debfiles/control")) {
+	if (not open(CONTROL, '<', "debfiles/control")) {
 		fail("Can't open debfiles/control: $!");
 	} else {
 		local $/ = "\n"; #Read this linewise
@@ -543,7 +542,8 @@ if ($type eq "source") {
 	# values are the tags to use or the empty string to use the default
 	# tag.
 	my (%needed, %needed_clean, %allowed_clean, $bypass_needed_clean);
-	open (RULES, "debfiles/rules") or fail("cannot read debfiles/rules: $!");
+	open (RULES, '<', "debfiles/rules")
+	    or fail("cannot read debfiles/rules: $!");
 	my $target = "none";
 	local $/ = "\n";	# Read this linewise
 	my @rules = qw(clean binary-arch build-arch);
@@ -611,7 +611,7 @@ if ($type eq "source") {
 
 	my %depend;
 	for my $field (qw(build-depends build-depends-indep build-conflicts build-conflicts-indep)) {
-		if (open(FH, "fields/$field")) {
+		if (open(FH, '<', "fields/$field")) {
 			#Get data and clean it
 			my $data = <FH>;
 			unfold($field, \$data);
@@ -717,7 +717,8 @@ if ($type eq "source") {
 	#
 	# This is confusing.  There should be a better way to do this.
 	if (-e "fields/build-depends" && $arch_dep_packages == 0 && !$bypass_needed_clean) {
-		open(FH, "fields/build-depends") or fail("cannot read fields/build-depends: $!");
+		open(FH, '<', "fields/build-depends")
+		    or fail("cannot read fields/build-depends: $!");
 		my $build_depends = <FH>;
 		close FH;
 		my @packages = split /\s*,\s*/, $build_depends;
@@ -737,7 +738,7 @@ if ($type eq "source") {
 
 #----- Origin
 
-if (open(FH, "fields/origin")) {
+if (open(FH, '<', "fields/origin")) {
 	my $origin = <FH>;
 	close(FH);
 
@@ -748,7 +749,7 @@ if (open(FH, "fields/origin")) {
 
 #----- Bugs
 
-if (open(FH, "fields/bugs")) {
+if (open(FH, '<', "fields/bugs")) {
 	my $bugs = <FH>;
 	close FH;
 
@@ -759,7 +760,7 @@ if (open(FH, "fields/bugs")) {
 
 #----- Python-Version
 
-if (open(FH, "fields/python-version")) {
+if (open(FH, '<', "fields/python-version")) {
 	my $pyversion = <FH>;
 	close FH;
 

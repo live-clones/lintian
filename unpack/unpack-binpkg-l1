@@ -87,7 +87,7 @@ $data->{'source'} or ($data->{'source'} = $data->{'package'});
 # create control field files
 for my $field (keys %$data) {
     my $field_file = "$base_dir/fields/$field";
-    open(F,">$field_file") or fail("cannot open file $field_file for writing: $!");
+    open(F, '>', $field_file) or fail("cannot open file $field_file for writing: $!");
     print F $data->{$field},"\n";
     close(F);
 }

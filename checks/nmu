@@ -40,7 +40,8 @@ if (-l "debfiles/changelog") {
     return 0 unless -f "debfiles/changelog";
 }
 
-open CHANGELOG, "debfiles/changelog" or fail("Failed opening changelog");
+open (CHANGELOG, '<', "debfiles/changelog")
+    or fail("Failed opening changelog");
 <CHANGELOG>;
 my $firstline = 1;
 while (<CHANGELOG>) {
@@ -97,7 +98,7 @@ if ($maintainer =~ /packages\@qa.debian.org/) {
 }
 
 sub getfield {
-	return undef if not open FIELD, "fields/".shift;
+	return undef if not open (FIELD, '<', "fields/" . shift);
 	my $field = <FIELD>;
 	close FIELD;
 	$field =~ s/\n$//;

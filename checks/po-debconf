@@ -40,7 +40,7 @@ for my $file (readdir(DEB)) {
 		if ($file =~ m/templates\.\w\w(_\w\w)?$/) {
 			push (@lang_templates, $file);
 		} else {
-			open(PO, "< debfiles/$file")
+			open(PO, '<', "debfiles/$file")
 				or fail("Can't open debfiles/$file file.");
 			while (<PO>) {
 				tag "translated-default-field", "$file: $."
@@ -73,7 +73,7 @@ for (@lang_templates) {
 # check).
 my $missing_files = 0;
 my $yada = 0;
-if (open (RULES, 'debfiles/rules')) {
+if (open (RULES, '<', 'debfiles/rules')) {
     local $_;
     while (<RULES>) {
 	if (m%^\t\s*(?:perl debian/)?yada\s%) {
@@ -84,7 +84,7 @@ if (open (RULES, 'debfiles/rules')) {
 }
 
 if (!$yada && -f "debfiles/po/POTFILES.in") {
-	open(POTFILES,"debfiles/po/POTFILES.in")
+	open(POTFILES, '<', "debfiles/po/POTFILES.in")
 		or fail("Can't open debfiles/po/POTFILES.in.");
 	while (<POTFILES>) {
 		chomp;
@@ -129,7 +129,7 @@ while (defined(my $file=readdir(DEBIAN))) {
                 unless ($file =~ /^[a-z]{2,2}(_[A-Z]{2,2})?\.po$/);
         local ($/) = "\n\n";
         $_ = '';
-        open(PO, "< debfiles/po/$file")
+        open(PO, '<', "debfiles/po/$file")
                 or fail("Can't open debfiles/po/$file file.");
         while (<PO>) {
                 last if m/^msgstr/m;

@@ -207,7 +207,7 @@ my %deps = ();
 my $pkg = shift;
 my $type = shift;
 
-open(INDEX, "index") or fail("cannot open lintian index file: $!");
+open(INDEX, '<', "index") or fail("cannot open lintian index file: $!");
 while (<INDEX>) {
     next unless (m/^-[rw-]*[xs]/);
     chop;
@@ -221,7 +221,8 @@ close(INDEX);
 # Urgle... this is ambiguous, since the sequence ": " can occur in
 # the output of file and also in the filename.
 # Fortunately no filenames containing ": " currently occur in Debian packages.
-open(FILEINFO, "file-info") or fail("cannot open lintian file-info file: $!");
+open(FILEINFO, '<', "file-info")
+    or fail("cannot open lintian file-info file: $!");
 while (<FILEINFO>) {
     m/^(.*?): (.*)/ or fail("bad line in file-info: $_");
     my $file = $1;
@@ -233,7 +234,7 @@ my $all_deps = '';
 foreach my $depfield ('suggests', 'recommends', 'depends', 'pre-depends',
 		   'provides') {
     $deps{$depfield} = '';
-    if (open(IN, "fields/$depfield")) {
+    if (open(IN, '<', "fields/$depfield")) {
 	$_ = join('', <IN>);
 	close(IN);
         chomp;
@@ -247,7 +248,7 @@ $all_deps .= ', ' if $all_deps;
 $all_deps .= $pkg;
 $deps{all} = Dep::parse($all_deps);
 
-open(SCRIPTS, "scripts") or fail("cannot open lintian scripts file: $!");
+open(SCRIPTS, '<', "scripts") or fail("cannot open lintian scripts file: $!");
 while (<SCRIPTS>) {
     chop;
 
@@ -390,7 +391,7 @@ foreach (keys %executable) {
 		 );
 }
 
-open(SCRIPTS, "control-scripts")
+open(SCRIPTS, '<', "control-scripts")
     or fail("cannot open lintian control-scripts file: $!");
 
 # Handle control scripts.  This is an edited version of the code for
@@ -465,7 +466,7 @@ while (<SCRIPTS>) {
 # print "E: something" unless exists $maintainer_scripts{$file}
 
     # now scan the file contents themselves
-    open C, "$filename"
+    open (C, '<', "$filename")
 	or fail("cannot open maintainer script $filename for reading: $!");
 
     my %warned;
@@ -682,7 +683,7 @@ close(SCRIPTS);
 sub script_is_evil_and_wrong {
     my ($filename) = @_;
     my $ret = 0;
-    open IN, $filename or fail("cannot open $filename: $!");
+    open (IN, '<', $filename) or fail("cannot open $filename: $!");
     my $i = 0;
     local $_;
     while (<IN>) {

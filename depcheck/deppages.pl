@@ -57,7 +57,7 @@ for my $arch (@archs) {
 my %bug_used = ();
 my %bugs = ();
 
-open(BUGS, "$LINTIAN_ROOT/depcheck/buglist") or die("buglist");
+open(BUGS, '<', "$LINTIAN_ROOT/depcheck/buglist") or die("buglist");
 while (<BUGS>) {
     chop;
     my $bugline = $_;
@@ -69,7 +69,7 @@ while (<BUGS>) {
 }
 close(BUGS);
 
-open(HTML, ">$HTML_TMP_DIR/depcheck.html") or die("depcheck.html");
+open(HTML, '>', "$HTML_TMP_DIR/depcheck.html") or die("depcheck.html");
 
 print HTML <<EOT;
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 2.0//EN">
@@ -135,7 +135,7 @@ sub genarch {
 
     print HTML "\n";
 
-    open(REPORT, "$LOG_DIR/Depcheck-$arch") or die("Depcheck-$arch");
+    open(REPORT, '<', "$LOG_DIR/Depcheck-$arch") or die("Depcheck-$arch");
     &genreport;
     close(REPORT);
 }

@@ -195,7 +195,7 @@ close_qa_list();
 # Now, generate stub pages for every maintainer who has only clean packages.
 # Opening the index to /dev/null is such a hack.  Code refactoring is
 # desperately needed here.
-open(I, '>/dev/null');
+open(I, '>', '/dev/null');
 for my $maintainer (keys %maintainers) {
     set_maintainer($maintainer);
     print P "<p>All of this maintainer's packages are lintian-clean.</p>\n";
@@ -302,7 +302,7 @@ $stat->{'experimental'} = $num_experimental;
 $stat->{'info'} = $num_info;
 $stat->{'overridden'} = $num_overridden;
 $stat->{'lintian-version'} = $LINTIAN_VERSION;
-open(OUT,">$statistics_file")
+open(OUT,'>', $statistics_file)
     or die "cannot open statistics file $statistics_file for writing: $!";
 for my $k (keys %$stat) {
   printf OUT "%s: %s\n",$k,$stat->{$k};
@@ -310,7 +310,7 @@ for my $k (keys %$stat) {
 close(OUT);
 
 # create index page
-open(OUT,">$HTML_TMP_DIR/report-index.html")
+open(OUT,'>', "$HTML_TMP_DIR/report-index.html")
     or die "cannot open index page $HTML_TMP_DIR/report-index.html for writing: $!";
 print OUT <<"EOT_EOT_EOT";
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
@@ -387,7 +387,7 @@ exit 0;
 # -------------------------------
 
 sub open_maintainer_index {
-    open(I,">$HTML_TMP_DIR/maintainers.html") or die "$!";
+    open(I, '>', "$HTML_TMP_DIR/maintainers.html") or die "$!";
     print I <<EOH;
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
     "http://www.w3.org/TR/html4/strict.dtd">
@@ -416,7 +416,7 @@ sub list_maintainer {
 # -------------------------------
 
 sub open_tag_index {
-    open(T,">$HTML_TMP_DIR/tags.html") or die "$!";
+    open(T, '>', "$HTML_TMP_DIR/tags.html") or die "$!";
     print T <<EOH;
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
     "http://www.w3.org/TR/html4/strict.dtd">
@@ -452,7 +452,7 @@ sub open_maintainer {
     close_maintainer();
 
     $maint_file = $_[0];
-    open(P,">$HTML_TMP_DIR/$maint_file") or die "$!";
+    open(P, '>', "$HTML_TMP_DIR/$maint_file") or die "$!";
 
     my $t = quotehtml($maint);
 
@@ -548,7 +548,7 @@ sub end_src_package {
 # -------------------------------
 
 sub open_qa_list {
-    open(Q,">$HTML_TMP_DIR/qa-list.txt") or die "$!";
+    open(Q, '>', "$HTML_TMP_DIR/qa-list.txt") or die "$!";
 }
 
 sub close_qa_list {
@@ -565,7 +565,7 @@ sub list_qa_entry {
 sub open_tag_file {
     my $tag = shift;
 
-    open(P,">$HTML_TMP_DIR/T$tag.html") or die "$!";
+    open(P, '>', "$HTML_TMP_DIR/T$tag.html") or die "$!";
     print P <<EOH;
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
     "http://www.w3.org/TR/html4/strict.dtd">
@@ -619,7 +619,7 @@ sub output_chunk {
 sub output_packages {
     my ($l,$f,$r) = @_;
 
-    open(I,">$HTML_TMP_DIR/$f") or die "$!";
+    open(I, '>', "$HTML_TMP_DIR/$f") or die "$!";
     print I <<EOH;
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
     "http://www.w3.org/TR/html4/strict.dtd">

@@ -55,7 +55,7 @@ my $action_r = qr/\w+/;
 my $exclude_r = qr/if\s+\[\s+-x\s+\S*update-rc\.d/;
 
 # read postinst control file
-if (open(IN,$postinst)) {
+if (open(IN, '<', $postinst)) {
     while (<IN>) {
 	next if /$exclude_r/o;
 	s/\#.*$//o;
@@ -75,7 +75,7 @@ if (open(IN,$postinst)) {
 close(IN);
 
 # read preinst control file
-if (open(IN,$preinst)) {
+if (open(IN, '<', $preinst)) {
     while (<IN>) {
 	next if /$exclude_r/o;
 	s/\#.*$//o;
@@ -88,7 +88,7 @@ if (open(IN,$preinst)) {
 }
 
 # read postrm control file
-if (open(IN,$postrm)) {
+if (open(IN, '<', $postrm)) {
     while (<IN>) {
 	next if /$exclude_r/o;
 	s/\#.*$//o;
@@ -105,7 +105,7 @@ if (open(IN,$postrm)) {
 }
 
 # read prerm control file
-if (open(IN,$prerm)) {
+if (open(IN, '<', $prerm)) {
     while (<IN>) {
 	next if /$exclude_r/o;
 	s/\#.*$//o;
@@ -128,7 +128,7 @@ for (keys %initd_postrm) {
 }
 
 # load conffiles
-if (open(IN,$conffiles)) {
+if (open(IN, '<', $conffiles)) {
     while (<IN>) {
 	chop;
 	next if m/^\s*$/o;
@@ -152,7 +152,8 @@ for (keys %initd_postinst) {
     my $initd_file = "init.d/$_";
     if (-f $initd_file) {
 	# yes! check it...
-	open(IN,$initd_file) or fail("cannot open init.d file $initd_file: $!");
+	open(IN, '<', $initd_file)
+	    or fail("cannot open init.d file $initd_file: $!");
 	my (%tag, %lsb);
 	while (defined(my $l = <IN>)) {
 	    if ($l =~ m/^\#\#\# BEGIN INIT INFO/) {

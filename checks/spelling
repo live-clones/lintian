@@ -324,28 +324,28 @@ local $/ = undef;
 # Check defined(), because for some reason <CPY> returns the undefined
 # value if the file is length 0.
 
-if (open(DESC, "fields/description")) {
+if (open(DESC, '<', "fields/description")) {
     my $description = <DESC>;
     close(DESC);
     spelling_check("spelling-error-in-description", $description)
 	if defined($description);
 }
 
-if (open(CPY, "copyright")) {
+if (open(CPY, '<', "copyright")) {
     my $copyright = <CPY>;
     close(CPY);
     spelling_check("spelling-error-in-copyright", $copyright)
 	if defined($copyright);
 }
 
-if (open(RMD, "README.Debian")) {
+if (open(RMD, '<', "README.Debian")) {
     my $readme = <RMD>;
     close(RMD);
     spelling_check("spelling-error-in-readme-debian", $readme)
 	if defined($readme);
 }
 
-#if (open(CHG, "changelog.Debian")) {
+#if (open(CHG, '<', "changelog.Debian")) {
 #    $changelog = <CHG>;
 #    close(CHG);
 #    spelling_check("spelling-error-in-debian-changelog", $changelog)

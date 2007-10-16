@@ -389,7 +389,7 @@ closedir MENUDIR;
 # of every file in the package to use to verify that the command referenced by
 # a menu item or desktop entry is there.
 my @desktop_files;
-open(IN, "index") or fail("cannot open index file index: $!");
+open(IN, '<', "index") or fail("cannot open index file index: $!");
 while (<IN>) {
     chomp;
     my ($perm, $owner, $size, $date, $time, $file) = split(' ', $_, 6);
@@ -426,7 +426,7 @@ foreach my $menufile (@menufiles) {
     next if $basename eq "README"; # README is a special case
 
     my $menufile_line ="";
-    open (IN, $menufile) or
+    open (IN, '<', $menufile) or
 	fail("cannot open menu file $menufile for reading.");
     # line below is commented out in favour of the while loop
     # do { $_=<IN>; } while defined && (m/^\s* \#/ || m/^\s*$/);
@@ -695,7 +695,7 @@ sub VerifyIcon {
 	$iconfile = "unpacked/usr/share/pixmaps/$icon";
     }
 
-    if (! open IN, $iconfile) {
+    if (! open (IN, '<', $iconfile)) {
 	tag "menu-icon-missing", "$icon";
 	return;
     }
@@ -731,7 +731,8 @@ parse_error:
 sub VerifyDesktopFile {
     my ($desktopfile, $file) = @_;
     my %vals;
-    open (DESKTOP, "unpacked/$file") or fail("cannot open desktop file $file: $!");
+    open (DESKTOP, '<', "unpacked/$file")
+	or fail("cannot open desktop file $file: $!");
     my ($line, $saw_first);
     while (defined ($line = <DESKTOP>)) {
         chomp $line;

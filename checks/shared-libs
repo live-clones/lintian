@@ -85,7 +85,7 @@ my $pkg = shift;
 my $type = shift;
 
 # 1st step: get info about shared libraries installed by this package
-open(IN,"objdump-info")
+open(IN, '<', "objdump-info")
     or fail("cannot find objdump-info for $type package $pkg");
 while (<IN>) {
     chop;
@@ -115,7 +115,8 @@ while (<IN>) {
 }
 close(IN);
 
-open IN, "file-info" or fail("cannot find file-info for $type package $pkg");
+open (IN, '<', "file-info")
+    or fail("cannot find file-info for $type package $pkg");
 while (<IN>) {
     chomp;
     # with file names containing colons and spaces, we're fucked.
@@ -129,7 +130,7 @@ close(IN);
 
 # 2nd step: read package contents
 my %files;
-open(IN,"index") or fail("cannot open index file index: $!");
+open(IN, '<', "index") or fail("cannot open index file index: $!");
 while (<IN>) {
     chop;
     @words = split(/\s+/o, $_, 6);
@@ -204,7 +205,7 @@ for (keys %files) {
 	# that's missing, we'll already be complaining elsewhere.
 	if (exists $objsomething{$cur_file}) {
 	    if (not defined $STACK{$cur_file}) {
-		if (open(FH, "fields/architecture")) {
+		if (open(FH, '<', "fields/architecture")) {
 		    my $arch = <FH>;
 		    close FH;
 		    chomp $arch;
@@ -311,7 +312,7 @@ if ($#shlibs == -1) {
 	my %shlibs_control_used;
 	my %shlibs_control;
 	my @shlibs_depends;
-	open(SHLIBS,$shlibs_control_file) or fail("cannot open shlibs control file $shlibs_control_file for reading: $!");
+	open(SHLIBS, '<', $shlibs_control_file) or fail("cannot open shlibs control file $shlibs_control_file for reading: $!");
 	while (<SHLIBS>) {
 	    chop;
 	    next if m/^\s*$/ or /^#/;
@@ -364,13 +365,13 @@ if ($#shlibs == -1) {
 	# Deduplicate the list of dependencies before warning so that we don't
 	# dupliate warnings.
 	my $provides = $pkg;
-	if (open (VERSION, 'fields/version')) {
+	if (open (VERSION, '<', 'fields/version')) {
 	    my $version = <VERSION>;
 	    close VERSION;
 	    chomp $version;
 	    $provides .= " (= $version)";
 	}
-	if (open (PROVIDES, 'fields/provides')) {
+	if (open (PROVIDES, '<', 'fields/provides')) {
 	    my $line = <PROVIDES>;
 	    close PROVIDES;
 	    chomp $line;

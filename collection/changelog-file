@@ -82,8 +82,8 @@ if (not defined $chl) {
 	or fail("error in gzip");
 } elsif (-f $chl && -l $chl) {
     local $_;
-    open (CHL, "< $chl") or fail("cannot open $chl: $!");
-    open (COPY, '> changelog') or fail("cannot create changelog: $!");
+    open (CHL, '<', $chl) or fail("cannot open $chl: $!");
+    open (COPY, '>', 'changelog') or fail("cannot create changelog: $!");
     print COPY while <CHL>;
     close CHL;
     close COPY;

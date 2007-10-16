@@ -21,8 +21,8 @@
 
 use strict;
 
-open(SCRIPTS, ">scripts") or fail("cannot open scripts output file: $!");
-open(INDEX, "index") or fail("cannot open index file: $!");
+open(SCRIPTS, '>', "scripts") or fail("cannot open scripts output file: $!");
+open(INDEX, '<', "index") or fail("cannot open index file: $!");
 
 my $file;
 my $magic;
@@ -39,7 +39,7 @@ while (<INDEX>) {
     $file =~ s/ link to .*//;    # cut off info about hard links
     # This used to call fail() instead of next.  However, the check to
     # see if all files in the index can be opened should be done elsewhere.
-    open(FILE, "unpacked/$file") or next;
+    open(FILE, '<', "unpacked/$file") or next;
     if (read(FILE, $magic, 2) and $magic eq '#!' and not eof(FILE)) {
 	$scriptpath = <FILE>;
 	chomp($scriptpath);
@@ -66,7 +66,7 @@ while (<INDEX>) {
 close(INDEX);
 close(SCRIPTS);
 
-open(SCRIPTS, ">control-scripts")
+open(SCRIPTS, '>', "control-scripts")
     or fail("cannot open control-scripts output file: $!");
 
 opendir(CONTROL, "control")
@@ -74,7 +74,7 @@ opendir(CONTROL, "control")
 
 for $file (readdir CONTROL) {
     next unless -f "control/$file";
-    open(FILE, "control/$file") or fail("cannot open control/$file: $!");
+    open(FILE, '<', "control/$file") or fail("cannot open control/$file: $!");
     if (read(FILE, $magic, 2) and $magic eq '#!') {
 	$scriptpath = <FILE>;
 	$scriptpath =~ s/^\s*(\S*).*/$1/s;

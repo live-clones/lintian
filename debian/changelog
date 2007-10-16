@@ -1,5 +1,10 @@
 lintian (1.23.36) UNRELEASED; urgency=low
 
+  * {checks,collection,depcheck,frontend,lib,reporting,unpack}/*:
+    + [RA] Use the three-argument form of open uniformly, whether needed
+      or not, to head off further quoting and whitespace interpretation
+      bugs.
+  
   * checks/files{.desc,}:
     + [RA] Catch .DS_Store.gz files as well.
     + [RA] Warn about ._ Mac OS X resource files in the package.
@@ -17,7 +22,7 @@ lintian (1.23.36) UNRELEASED; urgency=low
       two versioned relationships in the same direction.  Thanks to
       Raphael Hertzog for the analysis and fix.  (Closes: #446768)
 
- -- Russ Allbery <rra@debian.org>  Mon, 15 Oct 2007 20:11:15 -0700
+ -- Russ Allbery <rra@debian.org>  Mon, 15 Oct 2007 20:59:47 -0700
 
 lintian (1.23.35) unstable; urgency=low
 

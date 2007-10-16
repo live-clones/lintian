@@ -50,7 +50,7 @@ mkdir("$base_dir/fields", 0777) or fail("mkdir $base_dir/fields: $!");
 # create control field files
 for my $field (keys %$data) {
   my $field_file = "$base_dir/fields/$field";
-  open(F,">$field_file") or fail("cannot open file $field_file for writing: $!");
+  open(F, '>', $field_file) or fail("cannot open file $field_file for writing: $!");
   print F $data->{$field},"\n";
   close(F);
 }

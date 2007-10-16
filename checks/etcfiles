@@ -33,7 +33,7 @@ my %conffiles;
 my $conffiles = "control/conffiles";
 
 # load conffiles
-if (open(IN,$conffiles)) {
+if (open(IN, '<', $conffiles)) {
     while (<IN>) {
 	chop;
 	next if m/^\s*$/o;
@@ -44,7 +44,7 @@ if (open(IN,$conffiles)) {
 }
 
 # Read package contents...
-open(IN,"index") or fail("cannot open index file index: $!");
+open(IN, '<', "index") or fail("cannot open index file index: $!");
 while (<IN>) {
     chop;
 

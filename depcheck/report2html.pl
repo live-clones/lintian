@@ -20,7 +20,7 @@
 
 my %bugs;
 if (my $buglist = shift) {
-    open(BUGS, $buglist) or die($buglist);
+    open(BUGS, '<', $buglist) or die($buglist);
     while (<BUGS>) {
 	chop;
 	my $bugline = $_;

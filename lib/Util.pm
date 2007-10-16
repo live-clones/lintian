@@ -121,7 +121,7 @@ sub read_dpkg_control {
     }
 
     my $CONTROL = FileHandle->new;
-    open($CONTROL,$file)
+    open($CONTROL, '<', $file)
 	or fail("cannot open control file $file for reading: $!");
     my @data = parse_dpkg_control($CONTROL, $debconf_flag);
     close($CONTROL)
@@ -170,7 +170,7 @@ sub _ensure_file_is_sane {
 
 sub slurp_entire_file {
     my $file = shift;
-    open(C,$file)
+    open(C, '<', $file)
 	or fail("cannot open file $file for reading: $!");
     my $save = $/;
     undef $/;
@@ -182,7 +182,7 @@ sub slurp_entire_file {
 
 sub get_file_md5 {
 	my $file = shift;
-	open FILE, $file or fail("Couldn't open $file");
+	open (FILE, '<', $file) or fail("Couldn't open $file");
 	my $md5 = Digest::MD5->new;
 	$md5->addfile(*FILE);
 	close FILE or fail("Couldn't close $file");
@@ -192,8 +192,8 @@ sub get_file_md5 {
 sub file_is_encoded_in_non_utf8 {
 	my ($file, $type, $pkg) = @_;
 	my $non_utf8 = 0;
-	
-	open ICONV, "env LANG=C iconv -f utf8 -t utf8 $file 2>&1 |"
+
+	open (ICONV, '-|', "env LANG=C iconv -f utf8 -t utf8 $file 2>&1")
 	    or fail("failure while checking encoding of $file for $type package $pkg");
 	my $line = 1;
 	while (<ICONV>) {

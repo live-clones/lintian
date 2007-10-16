@@ -49,7 +49,7 @@ for (@readmes) {
 
 if (not defined $file) {
     # no README found
-    open(DUMMY, ">README.Debian");
+    open(DUMMY, '>', "README.Debian");
     close(DUMMY);
 } elsif ($file =~ m/\.gz$/) {
     use lib "$ENV{'LINTIAN_ROOT'}/lib";

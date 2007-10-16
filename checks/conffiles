@@ -37,7 +37,7 @@ unless (-f $cf) {
 
 my %conffiles = ();
 
-open(IN,$cf) or fail("cannot open $cf for reading: $!");
+open(IN, '<', $cf) or fail("cannot open $cf for reading: $!");
 while (<IN>) {
     chop;
     next if m/^\s*$/o;

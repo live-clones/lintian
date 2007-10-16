@@ -34,7 +34,7 @@ my $pkg = shift;
 
 -f "fields/version" or fail("diffstat invoked in wrong directory");
 
-open V, "fields/version" or fail("cannot open fields/version: $!");
+open (V, '<', "fields/version") or fail("cannot open fields/version: $!");
 my $ver = <V>; chomp $ver;
 close V;
 
@@ -43,7 +43,7 @@ $ver =~ s/^\d://; #Remove epoch for this
 my $diff_file = "${pkg}_${ver}.diff.gz";
 unless (-f $diff_file) {
 # we have to write an empty file so that the checks don't crap out. <sigh>
-  open D, ">diffstat"; close D;
+  open (D, '>', "diffstat"); close D;
   exit 0;
 }
 
@@ -53,11 +53,11 @@ pipeline((sub { exec('gzip', '-dc', $diff_file); }),
          "debian-patch"
         );
 
-open STAT, ">diffstat" or fail("cannot open scripts output file: $!");
+open (STAT, '>', "diffstat") or fail("cannot open scripts output file: $!");
 # diffstat is noisy on stderr if its stdout is not a tty.
 # Shut it up by redirecting stderr to /dev/null.
 open STDERR, ">/dev/null";
-open DIFF, "diffstat -p1 debian-patch |"
+open (DIFF, '-|', qw/diffstat -p1 debian-patch/)
   or fail("cannot open pipe to diffstat on debian-patch: $!");
 # Copy all except last line to the STAT file
 my $previous;

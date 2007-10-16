@@ -71,7 +71,7 @@ if ( -f "control/postrm" ) {
 }
 
 # read package contents
-open(IN,"index") or fail("cannot open index file index: $!");
+open(IN, '<', "index") or fail("cannot open index file index: $!");
 while (<IN>) {
     chomp;
     my ($perm,$owner,$size,$date,$time,$file) = split(' ', $_, 6);
@@ -194,7 +194,7 @@ if ($docbase_file) {		# postinst has to call install-docs
 		    }
 		    my $realfile = delink ($file);
 
-		    # openoffic.org-dev-doc has thousands of files listed so
+		    # openoffice.org-dev-doc has thousands of files listed so
 		    # try to use the hash if possible.
 		    my $found;
 		    if ($realfile =~ /[*?]/) {
@@ -370,7 +370,7 @@ sub check_script {
     my ($no_check_menu,$no_check_installdocs,$no_check_wmmenu,$calls_wmmenu);
     my $interp;
 
-    open(IN,"control/$script") or
+    open(IN, '<', "control/$script") or
 	fail("cannot open maintainer script control/$script for reading: $!");
     $interp = <IN>;
     if ($interp =~ m,^\#\!\s*/bin/(a|ba|k|pdk)?sh,) {

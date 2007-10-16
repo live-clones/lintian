@@ -47,7 +47,8 @@ if (-z $control) {
 }
 
 # read in md5sums control file
-open(C, $control) or fail("cannot open md5sums control file $control: $!");
+open(C, '<', $control)
+    or fail("cannot open md5sums control file $control: $!");
 while (<C>) {
     chop;
     next if m/^\s*$/;
@@ -60,7 +61,7 @@ while (<C>) {
 close(C);
 
 # read in md5sums info file
-open(C, "md5sums") or fail("cannot open md5sums info file: $!");
+open(C, '<', "md5sums") or fail("cannot open md5sums info file: $!");
 while (<C>) {
     chop;
     next if m/^\s*$/;
@@ -74,7 +75,7 @@ close(C);
 
 # read in conffiles
 if (-f "control/conffiles") {
-    open(C, "control/conffiles")
+    open(C, '<', "control/conffiles")
 	or fail("cannot open control file conffiles: $!");
     while (<C>) {
 	chop;

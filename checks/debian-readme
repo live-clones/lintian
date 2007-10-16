@@ -32,7 +32,7 @@ my $template;
 # read the file in one go
 local $/ = undef;
 
-if (open(IN,"README.Debian")) {
+if (open(IN, '<', "README.Debian")) {
     $readme = <IN>;
     close(IN);
 }

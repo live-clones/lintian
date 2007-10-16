@@ -38,7 +38,7 @@ use Pipeline;
 my $XARGS=FileHandle->new;
 pipeline_open($XARGS, (sub { exec 'xargs', '-0r', 'file' }), "../file-info")
     or fail("cannot fork: $!");
-open(INDEX, "../index")
+open(INDEX, '<', "../index")
     or fail("cannot open index file: $!");
 while (<INDEX>) {
     chop;

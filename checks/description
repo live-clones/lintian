@@ -42,7 +42,7 @@ unless (-f $cf) {
     return 0;
 }
 
-open(IN,$cf) or fail("cannot open $cf for reading: $!");
+open(IN, '<', $cf) or fail("cannot open $cf for reading: $!");
 
 # 1st line contains synopsis
 chop($synopsis = <IN>);

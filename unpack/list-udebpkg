@@ -83,7 +83,7 @@ for my $pkg (keys %udeb_info) {
 }
 
 # open output file
-open(OUT,">$output_file")
+open(OUT, '>', $output_file)
     or fail("cannot open list file $output_file for writing: $!");
 print OUT "$UDEBLIST_FORMAT\n";
 
@@ -92,10 +92,10 @@ my $packages = "$LINTIAN_ARCHIVEDIR/dists/$LINTIAN_DIST/$LINTIAN_SECTION/".
                "debian-installer/binary-$LINTIAN_ARCH/Packages";
 if (-e $packages) {
     print "N: Parsing $packages ...\n" if $verbose;
-    open(IN,"$packages") or fail("cannot open Packages file $packages: $!");
+    open(IN, '<', $packages) or fail("cannot open Packages file $packages: $!");
 } elsif (-e "$packages.gz") {
     print "N: Parsing $packages.gz ...\n" if $verbose;
-    open(IN,"gzip -dc \Q$packages\E.gz | ")
+    open(IN, '-|', 'gzip', '-dc', "$packages.gz")
         or fail("cannot open Packages file $packages.gz: $!");
 } else {
     fail("No packages file $packages");

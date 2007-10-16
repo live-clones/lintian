@@ -350,7 +350,7 @@ if ($LINTIAN_CFG) {
 
 # read configuration file
 if ($LINTIAN_CFG) {
-    open(CFG,$LINTIAN_CFG)
+    open(CFG, '<', $LINTIAN_CFG)
 	or fail("cannot open configuration file $LINTIAN_CFG for reading: $!");
     while (<CFG>) {
 	chop;
@@ -572,7 +572,7 @@ $LINTIAN_LAB = $LAB->{dir};
 # note: if any E:/W: lines are added above this point, this block needs to
 #       be moved up
 if ($lintian_info) {
-    open(OUTPUT_PIPE,"| $lintian_info_cmd") or fail("cannot open output pipe to $lintian_info_cmd: $!");
+    open(OUTPUT_PIPE, '|-', $lintian_info_cmd) or fail("cannot open output pipe to $lintian_info_cmd: $!");
     select OUTPUT_PIPE;
 }
 # }}}
@@ -1096,7 +1096,7 @@ if ($check_everything) {
 	print STDERR "warning: no packages found in distribution directory\n";
     }
 } elsif ($packages_file) {	# process all packages listed in packages file?
-    open(IN,$packages_file)
+    open(IN, '<', $packages_file)
 	or fail("cannot open packages file $packages_file for reading: $!");
     while (<IN>) {
 	chop;
@@ -1272,7 +1272,7 @@ for (reverse sort @packages) {
 
 
 	unless ($no_override)
-	    { 	if ( open(O,"$base/override") )
+	    { 	if ( open(O, '<', "$base/override") )
 		    {
 			while (<O>) {
 			    chomp;
@@ -1377,7 +1377,7 @@ for (reverse sort @packages) {
 	}
 	my $timestamp = $stat[9];
 
-	unless (open(STATUS,">$base/.lintian-status")) {
+	unless (open(STATUS, '>', "$base/.lintian-status")) {
 	    print STDERR "internal error: could not create status file $base/.lintian-status for package $pkg: $!\n";
 	    $exit_code = 2;
 	    next PACKAGE;
@@ -1575,7 +1575,7 @@ sub schedule_package {
 sub read_file {
     my $t;
 
-    open(T,$_[0]) or return;
+    open(T, '<', $_[0]) or return;
     chop($t = <T>);
     close(T) or return;
 
