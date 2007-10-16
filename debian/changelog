@@ -1,6 +1,6 @@
 lintian (1.23.36) unstable; urgency=low
 
-  The "grand open change" release.
+  The "grand open change and desktop cleanup" release.
 
   * {checks,collection,depcheck,frontend,lib,reporting,unpack}/*:
     + [RA] Use the three-argument form of open uniformly, whether needed
@@ -19,13 +19,15 @@ lintian (1.23.36) unstable; urgency=low
       root problem was our willingness to inspect desktop types other than
       Application (also fixed in the previous release).
     + [RA] Fix Perl flow error when skipping some desktop files.
+    + [RA] Skip unknown and deprecated key warnings and encoding key
+      warnings in desktop files if they were of an unknown type.
 
   * lib/Dep.pm:
     + [RA] Fix negative implication in some boundary cases when comparing
       two versioned relationships in the same direction.  Thanks to
       Raphael Hertzog for the analysis and fix.  (Closes: #446768)
 
- -- Russ Allbery <rra@debian.org>  Mon, 15 Oct 2007 21:17:15 -0700
+ -- Russ Allbery <rra@debian.org>  Mon, 15 Oct 2007 21:23:16 -0700
 
 lintian (1.23.35) unstable; urgency=low
 

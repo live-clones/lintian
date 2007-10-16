@@ -734,6 +734,7 @@ sub VerifyDesktopFile {
     open (DESKTOP, '<', "unpacked/$file")
 	or fail("cannot open desktop file $file: $!");
     my ($line, $saw_first);
+    my @pending;
     while (defined ($line = <DESKTOP>)) {
         chomp $line;
         next if ($line =~ m/^\s*\#/ or $line =~ m/^\s*$/);
@@ -747,34 +748,42 @@ sub VerifyDesktopFile {
             $saw_first = 1;
         }
 
-        # Tag = Value
-        # TODO: We do not check for properly formatted localised values for
-        # keys but might be worth checking if they are properly formatted (not
-        # their value)
-        if ($line =~ /^(.*?)\s*=\s*(.*)$/) {
-            my ($tag, $value) = ($1, $2);
-            my $basetag = $tag;
-            my ($encoding) = ($basetag =~ s/\[([^\]]+)\]$//);
-            if (exists $vals{$tag}) {
-                tag "duplicated-key-in-desktop-entry", "$file:$. $tag";
-            } elsif ($deprecated_desktop_keys{$basetag}) {
-                if ($basetag eq 'Encoding') {
-                    tag "desktop-entry-contains-encoding-key", "$file:$. $tag";
-                } else {
-                    tag "desktop-entry-contains-deprecated-key", "$file:$. $tag";
-                }
-            } elsif (    not $known_desktop_keys{$basetag}
-                     and not $kde_desktop_keys{$basetag}
-                     and not $basetag =~ /^X-/) {
-                tag "desktop-entry-contains-unknown-key", "$file:$. $tag";
-            }
-            $vals{$tag} = $value;
-        }
+	# Tag = Value.	For most errors, just add the error to pending rather
+	# than warning on it immediately since we want to not warn on tag
+	# errors if we didn't know the file type.
+	#
+	# TODO: We do not check for properly formatted localised values for
+	# keys but might be worth checking if they are properly formatted (not
+	# their value)
+	if ($line =~ /^(.*?)\s*=\s*(.*)$/) {
+	    my ($tag, $value) = ($1, $2);
+	    my $basetag = $tag;
+	    my ($encoding) = ($basetag =~ s/\[([^\]]+)\]$//);
+	    if (exists $vals{$tag}) {
+		tag "duplicated-key-in-desktop-entry", "$file:$. $tag";
+	    } elsif ($deprecated_desktop_keys{$basetag}) {
+		if ($basetag eq 'Encoding') {
+		    push (@pending, [ "desktop-entry-contains-encoding-key", "$file:$. $tag" ]);
+		} else {
+		    push (@pending, [ "desktop-entry-contains-deprecated-key", "$file:$. $tag" ]);
+		}
+	    } elsif (	 not $known_desktop_keys{$basetag}
+		     and not $kde_desktop_keys{$basetag}
+		     and not $basetag =~ /^X-/) {
+		push (@pending, [ "desktop-entry-contains-unknown-key", "$file:$. $tag" ]);
+	    }
+	    $vals{$tag} = $value;
+	}
     }
     close DESKTOP;
 
     # Now validate the data in the desktop file, but only if it's a known type.
     return unless ($vals{'Type'} and $known_desktop_types{$vals{'Type'}});
+
+    # Now we can issue any pending tags.
+    for my $pending (@pending) {
+	tag @$pending;
+    }
 
     # Test for important keys.
     for my $tag (@req_desktop_keys) {
