@@ -414,13 +414,25 @@ Tag: windows-thumbnail-database-in-package
 Type: warning
 Info: There is a file in the package named <tt>Thumbs.db</tt> or
  <tt>Thumbs.db.gz</tt>, which is normally a Windows image thumbnail
- database.  Such databases are generally useless in Debian packages.
+ database.  Such databases are generally useless in Debian packages and
+ were usually accidentally included by copying complete directories from
+ the source tarball.
 
 Tag: macos-ds-store-file-in-package
 Type: warning
-Info: There is a file in the package named <tt>.DS_Store</tt>, the file
- name used by Mac OS X to store folder attributes.  Such files are
- generally useless in Debian packages.
+Info: There is a file in the package named <tt>.DS_Store</tt> or
+ <tt>.DS_Store.gz</tt>, the file name used by Mac OS X to store folder
+ attributes.  Such files are generally useless in Debian packages and were
+ usually accidentally included by copying complete directories from the
+ source tarball.
+
+Tag: macos-resource-fork-file-in-package
+Type: warning
+Info: There is a file in the package with a name starting with
+ <tt>._</tt>, the file name pattern used by Mac OS X to store resource
+ forks in non-native file systems.  Such files are generally useless in
+ Debian packages and were usually accidentally included by copying
+ complete directories from the source tarball.
 
 Tag: package-installs-perllocal-pod
 Type: warning

@@ -1,10 +1,15 @@
 lintian (1.23.36) UNRELEASED; urgency=low
 
+  * checks/files{.desc,}:
+    + [RA] Catch .DS_Store.gz files as well.
+    + [RA] Warn about ._ Mac OS X resource files in the package.
+    + [RA] Add a hopefully helpful note about how cruft from other
+      operating systems can show up in binary packages.
   * checks/menu-format:
     + [RA] Fix detection of commands for menu entries when the command is
       given with its full path.  (Closes: #446796)
 
- -- Russ Allbery <rra@debian.org>  Mon, 15 Oct 2007 14:38:45 -0700
+ -- Russ Allbery <rra@debian.org>  Mon, 15 Oct 2007 19:58:18 -0700
 
 lintian (1.23.35) unstable; urgency=low
 

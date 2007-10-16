@@ -561,8 +561,11 @@ while (<IN>) {
 	if ($file =~ m,/Thumbs\.db(\.gz)?$,i) {
 	    tag "windows-thumbnail-database-in-package", "$file";
 	}
-	if ($file =~ m,/\.DS_Store$,) {
+	if ($file =~ m,/\.DS_Store(\.gz)?$,) {
 	    tag "macos-ds-store-file-in-package", "$file";
+	}
+	if ($file =~ m,/\._[^_/][^/]*$, and $file !~ m/\.swp$/) {
+	    tag "macos-resource-fork-file-in-package", "$file";
 	}
 
 	# ---------------- general: setuid/setgid files!
