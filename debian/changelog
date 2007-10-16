@@ -8,13 +8,16 @@ lintian (1.23.36) UNRELEASED; urgency=low
   * checks/menu-format:
     + [RA] Fix detection of commands for menu entries when the command is
       given with its full path.  (Closes: #446796)
+    + [RA] Remove Actions from known desktop keys again, as I believe the
+      root problem was our willingness to inspect desktop types other than
+      Application (also fixed in the previous release).
 
   * lib/Dep.pm:
     + [RA] Fix negative implication in some boundary cases when comparing
       two versioned relationships in the same direction.  Thanks to
       Raphael Hertzog for the analysis and fix.  (Closes: #446768)
 
- -- Russ Allbery <rra@debian.org>  Mon, 15 Oct 2007 20:09:28 -0700
+ -- Russ Allbery <rra@debian.org>  Mon, 15 Oct 2007 20:11:15 -0700
 
 lintian (1.23.35) unstable; urgency=low
 
