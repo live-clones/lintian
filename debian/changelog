@@ -1,3 +1,10 @@
+lintian (1.23.37) UNRELEASED; urgency=low
+
+  * debian/control:
+    + [TK] Add Vcs-* fields to point to Lintian's repository.
+
+ -- Thijs Kinkhorst <thijs@debian.org>  Sun,  4 Nov 2007 16:01:31 +0100
+
 lintian (1.23.36) unstable; urgency=low
 
   The "grand open change and desktop cleanup" release.
