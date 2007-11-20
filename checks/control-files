@@ -40,6 +40,7 @@ my %ctrl_deb =
      'postrm', 0755,
      'prerm', 0755,
      'shlibs', 0644,
+     'symbols', 0644,
      'templates', 0644,
     );
 
@@ -51,6 +52,7 @@ my %ctrl_udeb =
      'menutest', 0755,
      'postinst', 0755,
      'shlibs', 0644,
+     'symbols', 0644,
      'templates', 0644,
     );
 

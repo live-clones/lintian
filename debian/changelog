@@ -1,9 +1,12 @@
 lintian (1.23.37) UNRELEASED; urgency=low
 
+  * checks/control-files:
+    + [RA] Add symbols as a known control file for debs and udebs.
+
   * debian/control:
     + [TK] Add Vcs-* fields to point to Lintian's repository.
 
- -- Thijs Kinkhorst <thijs@debian.org>  Sun,  4 Nov 2007 16:01:31 +0100
+ -- Russ Allbery <rra@debian.org>  Tue, 20 Nov 2007 15:12:51 -0800
 
 lintian (1.23.36) unstable; urgency=low
 
