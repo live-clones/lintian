@@ -1,14 +1,32 @@
 E: empty source: debian-rules-missing-required-target binary-arch
 E: empty source: maintainer-address-missing empty
 E: empty source: no-standards-version-field
+E: empty-docs: maintainer-address-missing empty
+E: empty-docs: no-copyright-file
+E: empty-docs: package-has-no-description
+E: empty-perl: maintainer-address-missing empty
+E: empty-perl: no-copyright-file
+E: empty-perl: package-has-no-description
 E: empty: maintainer-address-missing empty
 E: empty: no-copyright-file
 E: empty: package-has-no-description
-E: empty_1_i386.changes: no-description-in-changes-file
+E: empty_2_i386.changes: no-description-in-changes-file
+E: pyempty: maintainer-address-missing empty
+E: pyempty: no-copyright-file
+E: pyempty: package-has-no-description
 I: empty source: no-section-field-for-source
 W: empty source: changelog-should-mention-nmu
 W: empty source: maintainer-not-full-name empty
-W: empty source: source-nmu-has-incorrect-version-number 1
+W: empty source: source-nmu-has-incorrect-version-number 2
+W: empty-docs: doc-package-should-be-section-doc empty-docs
+W: empty-docs: maintainer-not-full-name empty
+W: empty-docs: no-priority-field
+W: empty-perl: maintainer-not-full-name empty
+W: empty-perl: no-priority-field
+W: empty-perl: perl-package-should-be-section-perl empty-perl
 W: empty: maintainer-not-full-name empty
 W: empty: no-priority-field
 W: empty: no-section-field
+W: pyempty: maintainer-not-full-name empty
+W: pyempty: no-priority-field
+W: pyempty: python-package-should-be-section-python pyempty

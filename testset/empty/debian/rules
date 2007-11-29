@@ -21,12 +21,22 @@
 build:
 
 binary-indep:
-	install -d debian/tmp/DEBIAN
-	dpkg-gencontrol
-	dpkg --build debian/tmp ..
+	install -d debian/empty debian/empty/DEBIAN
+	dpkg-gencontrol -pempty -Pdebian/empty
+	dpkg --build debian/empty ..
+	install -d debian/empty-docs debian/empty-docs/DEBIAN
+	dpkg-gencontrol -pempty-docs -Pdebian/empty-docs
+	dpkg --build debian/empty-docs ..
+	install -d debian/empty-perl debian/empty-perl/DEBIAN
+	dpkg-gencontrol -pempty-perl -Pdebian/empty-perl
+	dpkg --build debian/empty-perl ..
+	install -d debian/pyempty debian/pyempty/DEBIAN
+	dpkg-gencontrol -ppyempty -Pdebian/pyempty
+	dpkg --build debian/pyempty ..
 
 binary: binary-indep
 
 clean:
+	rm -rf $(CURDIR)/debian/empty $(CURDIR)/debian/empty-docs $(CURDIR)/debian/empty-perl $(CURDIR)/debian/pyempty debian/files
 
 .PHONY: build binary-indep binary clean

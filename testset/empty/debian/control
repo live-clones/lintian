@@ -3,3 +3,15 @@ Maintainer: empty
 
 Package: empty
 Architecture: all
+
+Package: empty-docs
+Architecture: all
+Section: perl
+
+Package: empty-perl
+Architecture: all
+Section: doc
+
+Package: pyempty
+Architecture: all
+Section: doc

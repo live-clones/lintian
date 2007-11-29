@@ -312,6 +312,15 @@ if (not open (FH, '<', "fields/section")) {
 	    } else {
 		tag "unknown-section", "$section" unless $known_sections{$parts[0]};
 	    }
+
+	    #Check package name <-> section
+	    if ($pkg =~ m{-docs?$} && $parts[-1] ne "doc") {
+		tag "doc-package-should-be-section-doc", $pkg;
+	    } elsif ($pkg =~ m{-perl$} && $parts[-1] ne "perl") {
+		tag "perl-package-should-be-section-perl", $pkg;
+	    } elsif ($pkg =~ m{^py} && $parts[-1] ne "python") {
+		tag "python-package-should-be-section-python", $pkg;
+	    }
 	}
 }
 

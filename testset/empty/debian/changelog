@@ -1,3 +1,9 @@
+empty (2) unstable; urgency=low
+
+  * Add pyempty, empty-docs and empty-perl (to check for section errors)
+
+ -- Marc 'HE' Brockschmidt <he@debian.org>  Thu, 29 Nov 2007 12:48:13 +0100
+
 empty (1) unstable; urgency=low
 
   * Initial version

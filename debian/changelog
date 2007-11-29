@@ -7,6 +7,11 @@ lintian (1.23.37) UNRELEASED; urgency=low
     + [RA] Add Dm-Upload-Allowed as a recognized control field.
   * checks/control-files:
     + [RA] Add symbols as a known control file for debs and udebs.
+  * checks/fields:
+    + [HE] Add 'doc-package-should-be-section-doc',
+           'python-package-should-be-section-python',
+           'perl-package-should-be-section-perl'. Ideas shamelessy
+           stolen from linda. (Closes: #452839)
 
   * debian/control:
     + [TK] Add Vcs-* fields to point to Lintian's repository.

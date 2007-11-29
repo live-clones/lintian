@@ -668,3 +668,18 @@ Info: This package appears to be an architecture-indepedent Python module
  If this package really does require only a particular range of Python
  versions, add a Python-Version control field (as described in 2.3 of the
  Python policy) to resolve this warning.
+
+Tag: doc-package-should-be-section-doc
+Type: warning
+Info: This package has a name suggesting that it contains documentation,
+ so it should be in section "doc".
+
+Tag: python-package-should-be-section-python
+Type: warning
+Info: This package has a name suggesting that it is Python-based, so it
+ should be in section "python".
+
+Tag: perl-package-should-be-section-perl
+Type: warning
+Info: This package has a name suggest that it is Perl-based, so it should
+ be in section "perl".
