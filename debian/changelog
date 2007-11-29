@@ -1,5 +1,8 @@
 lintian (1.23.37) UNRELEASED; urgency=low
 
+  * checks/binaries:
+    + [HE] Fix RegEx to re-enable 'binary-in-etc' and
+           'arch-dependent-file-in-usr-share' checks. (Closes: #452336)
   * checks/common_data.pm:
     + [RA] Add Dm-Upload-Allowed as a recognized control field.
   * checks/control-files:

@@ -178,11 +178,11 @@ while (<IN>) {
     # ELF?
     next unless $info =~ m/^[^,]*\bELF\b/o;
 
-    if ($file =~ m,^etc/,) {
+    if ($file =~ m,^\./etc/,) {
 	tag "binary-in-etc", "$file";
     }
 
-    if ($file =~ m,^usr/share/,) {
+    if ($file =~ m,^\./usr/share/,) {
 	tag "arch-dependent-file-in-usr-share", "$file";
     }
 
