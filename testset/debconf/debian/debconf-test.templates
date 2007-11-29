@@ -93,3 +93,9 @@ Type: select
 __Choices: yes, no
 _Description: Choose:
  Pick yes or no.
+
+Template: debconf/should-be-no-longer-a-problem
+Type: boolean
+_Description: Decide, lintian
+ Using "no longer" should no longer be detected as 
+ making-assumptions-about-interfaces-in-templates by lintian.

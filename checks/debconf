@@ -314,7 +314,7 @@ foreach my $template (@templates) {
             if ($template->{description} =~ /(\A|\s)(I|[Mm]y|[Ww]e|[Oo]ur|[Oo]urs|mine|myself|ourself|me|us)(\Z|\s)/) {
                 tag "using-first-person-in-templates", $template->{template};
             }
-            if ($template->{description} =~ /[ \'\"](yes|no)[ \'\",;.]/i and $type eq 'boolean') {
+            if ($template->{description} =~ /[ \'\"](yes|no(?! longer))[ \'\",;.]/i and $type eq 'boolean') {
                 tag "making-assumptions-about-interfaces-in-templates", $template->{template};
             }
         }
