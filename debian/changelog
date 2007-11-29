@@ -12,6 +12,8 @@ lintian (1.23.37) UNRELEASED; urgency=low
            'python-package-should-be-section-python',
            'perl-package-should-be-section-perl'. Ideas shamelessy
            stolen from linda. (Closes: #452839)
+    + [HE] Check for Section field in source packages, for which it
+           is mandatory. Joerg Jaspert made me do this.
 
   * debian/control:
     + [TK] Add Vcs-* fields to point to Lintian's repository.
