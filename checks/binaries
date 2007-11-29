@@ -270,7 +270,7 @@ while (<IN>) {
 #		}
 #	    }
 
-	    if ($lib =~ m/^libc/o) {
+	    if ($lib =~ m/^libc\.so/o) {
 		$no_libc = 0;
 	    }
 	}

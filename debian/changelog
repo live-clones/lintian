@@ -3,6 +3,10 @@ lintian (1.23.37) UNRELEASED; urgency=low
   * checks/binaries:
     + [HE] Fix RegEx to re-enable 'binary-in-etc' and
            'arch-dependent-file-in-usr-share' checks. (Closes: #452336)
+    + [HE] When checking that a lib is linked against libc, search for
+           libc.so, not any library beginning with libc. Thanks for
+           the bug and patch to Ruben Porras <nahoo82@gmail.com>. (Closes:
+           #448652)
   * checks/common_data.pm:
     + [RA] Add Dm-Upload-Allowed as a recognized control field.
   * checks/control-files:
