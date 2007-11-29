@@ -1,12 +1,14 @@
 lintian (1.23.37) UNRELEASED; urgency=low
 
+  * checks/common_data.pm:
+    + [RA] Add Dm-Upload-Allowed as a recognized control field.
   * checks/control-files:
     + [RA] Add symbols as a known control file for debs and udebs.
 
   * debian/control:
     + [TK] Add Vcs-* fields to point to Lintian's repository.
 
- -- Russ Allbery <rra@debian.org>  Tue, 20 Nov 2007 15:12:51 -0800
+ -- Russ Allbery <rra@debian.org>  Wed, 28 Nov 2007 20:48:12 -0800
 
 lintian (1.23.36) unstable; urgency=low
 
