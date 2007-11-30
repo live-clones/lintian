@@ -158,3 +158,11 @@ Info: The Debian copyright file should be valid UTF-8, an encoding of
  .
   $ iconv -f ISO-8859-1 -t UTF-8 copyright > copyright.new
   $ mv copyright.new copyright
+
+Tag: copyright-contains-dh_make-todo-boilerplate
+Type: warning
+Ref: policy 12.5
+Info: The string "Please also look if..." appears in the copyright
+ file, which indicates that you either didn't check the whole source
+ to find additional copyright/license, or that you didn't remove that
+ paragraph after having done so.

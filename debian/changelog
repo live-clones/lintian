@@ -14,6 +14,10 @@ lintian (1.23.37) UNRELEASED; urgency=low
   * checks/copyright-file:
     + [HE] Check that encoding of copyright file is UTF-8. Patch by
            gregor herrmann <gregor+debian@comodo.priv.at>. (Closes: #451689)
+    + [HE] Add warning copyright-contains-dh_make-todo-boilerplate
+           if the maintainer left the dh_make boilerplate in the
+           copyright file. Based on patch by Cyril Brulebois
+           <cyril.brulebois@enst-bretagne.fr>. (Closes: #448677)
   * checks/deb-format:
     + [HE] Remove, not needed any more. (Closes: #447257)
   * checks/deconf:
