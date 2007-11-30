@@ -27,6 +27,8 @@ lintian (1.23.37) UNRELEASED; urgency=low
     + [HE] Allow packages to drop snippets into /etc/csh/login.d
            without a dependency on csh. Files there should also
            be allowed to have csh in the shebang line. (Closes: #453417)
+    + [HE] Allow packages to drop snippets into /etc/fish.d/ without
+           a dependecy on fish. (Closes: #453416)
 
   * debian/control:
     + [TK] Add Vcs-* fields to point to Lintian's repository.

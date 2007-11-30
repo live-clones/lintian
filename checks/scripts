@@ -318,7 +318,8 @@ while (<SCRIPTS>) {
 		    tag("missing-dep-for-interpreter",
 			"$base => $deps[0]", "($filename)")
 			unless (Dep::implies($deps{all}, Dep::parse($interpreter_dependencies{$base})) ||
-			($base eq "csh" && $filename =~ m,^./etc/csh/login.d/,));
+			($base eq "csh" && $filename =~ m,^./etc/csh/login.d/,) ||
+			($base eq "fish" && $filename =~ m,^./etc/fish.d/,));
 		}
 	    } elsif ($base =~ /^python(\d.\d)?$/) {
 		my $ver = $1 ? $1 : "";
