@@ -40,6 +40,10 @@ lintian (1.23.37) UNRELEASED; urgency=low
            problems when using patch systems. Start with three
            checks for common dpatch problems. Idea loosely based on
            patch by Carl Fürstenberg <azatoth@gmail.com>. (Closes: #437959)
+  * checks/rules:
+    + [HE] Implement 'binary-arch-rules-but-pkg-is-arch-indep', checking
+           for rules in binary-arch when the package is arch: all.
+           (Closes: #409109, #119097)
   * checks/scripts:
     + [HE] Allow packages to drop snippets into /etc/csh/login.d
            without a dependency on csh. Files there should also

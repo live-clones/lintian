@@ -5,6 +5,7 @@ tmp=debian/tmp
 build:
 
 binary-arch:
+	echo "Hi, in an arch: all package, I am a bug!"
 
 binary-indep:
 	install -d $(tmp)/usr/bin/

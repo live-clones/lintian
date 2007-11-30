@@ -36,6 +36,17 @@ if (-l "debfiles/rules") {
     return 0 unless -f "debfiles/rules";
 }
 
+#get architecture field:
+unless (-d "fields") {
+    fail("directory in lintian laboratory for $type package $pkg missing: fields");
+}
+
+my $architecture = "";
+if(open (IN, '<', "fields/architecture")) {
+    chomp($architecture = <IN>)
+}
+close(IN);
+
 open(RULES, '<', 'debfiles/rules') or fail("Failed opening rules: $!");
 
 # Check for required #!/usr/bin/make -f opening line.  Allow -r or -e; a
@@ -54,6 +65,8 @@ tag "debian-rules-not-a-makefile", ""
 my $includes = 0;
 my %seen;
 local $_;
+my @current_targets;
+my ($has_binary_indep_rules, $has_binary_arch_rules) = (0,0);
 while (<RULES>) {
     next if /^\s*\#/;
     $includes = 1 if /^ *[s-]?include\s+/;
@@ -83,12 +96,22 @@ while (<RULES>) {
         }
     }
 
-    # After this point, we're only doing target analysis, so skip everything
-    # else.
-    next unless /^([^:]+):/;
-    my @targets = split (' ', $1);
-    for (@targets) {
-        $seen{$_}++ if $required{$_};
+    if (/^([^\s:][^:]+):/) {
+	@current_targets = split (' ', $1);
+	for (@current_targets) {
+	    $seen{$_}++ if $required{$_};
+	}
+    } else {
+    	#if we have non-empty, non-comment lines, check if one of the
+	#"interesting" targets contains them:
+	if (m/^\s+[^#]/) {
+	    if (grep { $_ eq "binary-arch" } @current_targets) {
+		$has_binary_arch_rules = 1;
+	    } #not elsif, think of the children and 'binary-arch binary-indep:' (ewww)
+	    if (grep { $_ eq "binary-indep" } @current_targets) {
+		$has_binary_indep_rules = 1;
+	    }
+	}
     }
 }
 close RULES;
@@ -101,8 +124,11 @@ unless ($includes) {
     }
 }
 
+# Make sure we have no content for binary-arch if we are arch-indep:
+if ($architecture eq "all" && $has_binary_arch_rules) {
+    tag "binary-arch-rules-but-pkg-is-arch-indep";
 }
-
+}
 1;
 
 # vim: syntax=perl ts=8 sw=4

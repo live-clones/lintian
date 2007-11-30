@@ -18,6 +18,7 @@ E: scripts: wrong-path-for-interpreter #!/usr/local/bin/lefty != /usr/bin/lefty 
 E: scripts: wrong-path-for-ruby ./usr/bin/rubyfoo #!/bin/ruby1.8
 I: scripts: no-md5sums-control-file
 W: scripts source: ancient-standards-version 3.2.1 (current is 3.7.2)
+W: scripts source: binary-arch-rules-but-pkg-is-arch-indep
 W: scripts source: changelog-should-mention-nmu
 W: scripts source: dpatch-missing-description 02_i_dont_have_a_description.patch
 W: scripts source: maintainer-script-lacks-debhelper-token debian/postinst
