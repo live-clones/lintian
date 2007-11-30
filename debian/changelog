@@ -11,6 +11,9 @@ lintian (1.23.37) UNRELEASED; urgency=low
     + [RA] Add Dm-Upload-Allowed as a recognized control field.
   * checks/control-files:
     + [RA] Add symbols as a known control file for debs and udebs.
+  * checks/copyright-file:
+    + [HE] Check that encoding of copyright file is UTF-8. Patch by
+           gregor herrmann <gregor+debian@comodo.priv.at>. (Closes: #451689)
   * checks/deb-format:
     + [HE] Remove, not needed any more. (Closes: #447257)
   * checks/deconf:

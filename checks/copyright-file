@@ -131,6 +131,12 @@ if (not $found) {
     tag "no-copyright-file", "";
 }
 
+# check that copyright is UTF-8 encoded
+my $line = file_is_encoded_in_non_utf8("copyright", $type, $pkg);
+if ($line) {
+    tag "debian-copyright-file-uses-obsolete-national-encoding", "at line $line"
+}
+
 # check contents of copyright file
 open(IN, '<', "copyright") or fail("cannot open copyright file copyright: $!");
 # gulp whole file
