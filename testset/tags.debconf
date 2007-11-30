@@ -15,6 +15,7 @@ W: debconf source: invalid-po-file debian/po/sample-file.po
 W: debconf source: maintainer-script-lacks-debhelper-token debian/debconf-test.postinst
 W: debconf source: misnamed-po-file debian/po/sample-file.po
 W: debconf source: newer-debconf-templates
+W: debconf source: no-section-field
 W: debconf source: stray-translated-debconf-templates debconf-test.templates.de
 W: debconf source: translated-default-field debconf-test.templates: 67
 W: debconf source: translated-default-field debconf-test.templates: 72
@@ -26,6 +27,7 @@ W: debconf-test-preinst: missing-debconf-dependency-for-preinst
 W: debconf-test-preinst: old-fsf-address-in-copyright-file
 W: debconf-test: making-assumptions-about-interfaces-in-templates debconf/testboolean
 W: debconf-test: malformed-prompt-in-templates debconf/teststring
+W: debconf-test: malformed-question-in-templates debconf/should-be-no-longer-a-problem
 W: debconf-test: malformed-question-in-templates debconf/testboolean
 W: debconf-test: malformed-title-in-templates debconf/testnote
 W: debconf-test: old-fsf-address-in-copyright-file

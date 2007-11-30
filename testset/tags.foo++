@@ -16,6 +16,7 @@ E: foo++: no-copyright-file
 E: foo++: wrong-debian-qa-address-set-as-maintainer Lintian Maintainer <debian-qa@lists.debian.org>
 I: foo++: no-md5sums-control-file
 W: foo++ source: ancient-standards-version 3.1.1 (current is 3.7.2)
+W: foo++ source: no-section-field
 W: foo++ source: uploader-address-looks-weird Jeroen van Wolffelaar<jeroen@localhost.localdomain>
 W: foo++ source: uploader-not-full-name Frank
 W: foo++ source: uploader-not-full-name Josip

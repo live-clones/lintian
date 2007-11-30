@@ -37,6 +37,7 @@ I: relations-multiple-libs: unknown-field-in-control origin
 I: relations: unknown-field-in-control bugs
 I: relations: unknown-field-in-control origin
 W: relations source: ancient-standards-version 3.1.1 (current is 3.7.2)
+W: relations source: no-section-field
 W: relations source: package-has-a-duplicate-build-relation baz (= 2.0), baz (<= 2.0), baz
 W: relations source: package-has-a-duplicate-build-relation caz (>= 2.0) [i386], caz (= 2.0) [i386 powerpc]
 W: relations source: package-has-a-duplicate-build-relation foo (>> 2) [!amd64 !i386], foo (<< 4) [!amd64 !i386], foo (= 3) [!amd64 !i386]

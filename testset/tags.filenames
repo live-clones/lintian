@@ -40,6 +40,7 @@ W: filenames source: diff-contains-svn-commit-file files/svn-commit.tmp
 W: filenames source: diff-contains-svn-conflict-file files/Maelstrom Sounce.r121
 W: filenames source: diff-contains-svn-conflict-file files/Maelstrom Sound.mine
 W: filenames source: diff-contains-svn-control-dir .svn
+W: filenames source: no-section-field
 W: filenames: arch-inventory-file-in-package files/.arch-inventory
 W: filenames: bad-permissions-for-ali-file usr/lib/ada/adalib/test.ali
 W: filenames: binary-without-manpage usr/X11R6/bin/testxbin2

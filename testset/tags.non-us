@@ -8,3 +8,4 @@ I: non-us source: no-section-field-for-source
 I: patented-app: non-us-spelling
 W: broken-crypto: unknown-section non-US/admin
 W: non-us source: ancient-standards-version 3.1.1 (current is 3.7.2)
+W: non-us source: no-section-field

@@ -7,6 +7,7 @@ E: etcfiles: md5sum-mismatch etc/proper
 E: etcfiles: md5sums-lists-nonexisting-file usr/bin/foo
 E: etcfiles: no-copyright-file
 W: etcfiles source: ancient-standards-version 3.5.0 (current is 3.7.2)
+W: etcfiles source: no-section-field
 W: etcfiles: changelog-file-not-compressed changelog
 W: etcfiles: file-missing-in-md5sums etc/improper-link
 W: etcfiles: file-missing-in-md5sums usr/share/doc/etcfiles/changelog
