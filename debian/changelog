@@ -20,7 +20,7 @@ lintian (1.23.37) UNRELEASED; urgency=low
            <cyril.brulebois@enst-bretagne.fr>. (Closes: #448677)
   * checks/deb-format:
     + [HE] Remove, not needed any more. (Closes: #447257)
-  * checks/deconf:
+  * checks/debconf:
     + [HE] Explicitly allow the phrase "no longer" in boolean debconf
       questions. (Closes: #447718)
   * checks/fields:
