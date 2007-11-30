@@ -23,6 +23,8 @@ lintian (1.23.37) UNRELEASED; urgency=low
   * checks/debconf:
     + [HE] Explicitly allow the phrase "no longer" in boolean debconf
       questions. (Closes: #447718)
+  * checks/description.desc:
+    + [RA] Upgrade the legacy Homepage tag to a warning.
   * checks/fields:
     + [HE] Add 'doc-package-should-be-section-doc',
            'python-package-should-be-section-python',

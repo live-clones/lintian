@@ -99,7 +99,7 @@ Info: One or more lines in the extended part of the "Description:" field
 Ref: policy 3.4.1
 
 Tag: description-contains-homepage
-Type: info
+Type: warning
 Info: The extended description contains a "Homepage:" pseudo-header
  following the old Developer's Reference recommendation.  As of 1.14.6,
  dpkg now supports Homepage: as a regular field in
