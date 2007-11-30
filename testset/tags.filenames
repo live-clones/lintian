@@ -77,6 +77,11 @@ W: filenames: package-contains-CVS-dir usr/lib/perl5/CVS/
 W: filenames: package-contains-arch-control-dir usr/lib/perl5/.arch-ids/
 W: filenames: package-contains-arch-control-dir usr/lib/perl5/{arch}/
 W: filenames: package-contains-bzr-control-dir usr/lib/perl5/.bzr/
+W: filenames: package-contains-empty-directory usr/lib/perl5/.arch-ids/
+W: filenames: package-contains-empty-directory usr/lib/perl5/.bzr/
+W: filenames: package-contains-empty-directory usr/lib/perl5/.svn/
+W: filenames: package-contains-empty-directory usr/lib/perl5/CVS/
+W: filenames: package-contains-empty-directory usr/lib/perl5/{arch}/
 W: filenames: package-contains-readme-for-other-platform-or-distro usr/share/doc/filenames/README.macosx
 W: filenames: package-contains-svn-control-dir usr/lib/perl5/.svn/
 W: filenames: package-installs-into-etc-gconf-schemas etc/gconf/schemas/test.schema

@@ -75,6 +75,8 @@ close(SCRIPTS);
 # We only want to warn about this once.
 my $warned_x11_predepends = 0;
 
+my %dir_counts;
+
 # Read package contents...
 open(IN, '<', "index") or fail("cannot open index file index: $!");
 while (<IN>) {
@@ -114,6 +116,10 @@ while (<IN>) {
     if ( $year <= 1984 ) { # value from dak CVS: Dinstall::PastCutOffYear
 	tag "package-contains-ancient-file", "$file $date";
     }
+
+    #count directory contents:
+    $dir_counts{$file} ||= 0 if ($perm =~ m/^d/);
+    $dir_counts{$1} = ($dir_counts{$1} || 0) + 1 if ($file =~ m{^(.+/)[^/]+/?$});
 
     # ---------------- /etc
     if ($file =~ m,^etc/,) {
@@ -803,6 +809,15 @@ while (<IN>) {
     }
 }
 close(IN);
+
+foreach my $dir (keys %dir_counts) {
+    next if $dir eq "";
+    next if $dir eq "./usr/lib/perl5"; #this is so common we want to skip it for now
+    next if $dir =~ m{/var/}; #packages often create dirs to hold dynamically created data
+    if ($dir_counts{$dir} == 0) {
+	tag "package-contains-empty-directory", $dir;
+    }
+}
 
 if (!$has_binary_perl_file && @nonbinary_perl_files_in_lib) {
     foreach my $file (@nonbinary_perl_files_in_lib) {

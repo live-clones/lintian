@@ -32,6 +32,9 @@ lintian (1.23.37) UNRELEASED; urgency=low
            stolen from linda. (Closes: #452839)
     + [HE] Check for Section field in source packages, for which it
            is mandatory. Joerg Jaspert made me do this.
+  * checks/files:
+    + [HE] Add 'package-contains-empty-directory' check, but
+           ignore dirs in /var/* and /usr/lib/perl5/. (Closes: #452316)
   * checks/patch-systems:
     + [HE] Add complete new check script, intended to check for usual
            problems when using patch systems. Start with three

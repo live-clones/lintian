@@ -689,3 +689,8 @@ Info: This package installs a file or directory whose name ends in
  .
  One possible cause is using debhelper 5.0.57 or earlier to install a
  doc-base file with a Document field that ends in whitespace.
+
+Tag: package-contains-empty-directory
+Type: warning
+Info: This package installs an empty directory.  This might be intentional
+ but it's normally a mistake.  If it is intentional, add a lintian override.
