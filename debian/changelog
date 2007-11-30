@@ -23,6 +23,10 @@ lintian (1.23.37) UNRELEASED; urgency=low
            stolen from linda. (Closes: #452839)
     + [HE] Check for Section field in source packages, for which it
            is mandatory. Joerg Jaspert made me do this.
+  * checks/scripts:
+    + [HE] Allow packages to drop snippets into /etc/csh/login.d
+           without a dependency on csh. Files there should also
+           be allowed to have csh in the shebang line. (Closes: #453417)
 
   * debian/control:
     + [TK] Add Vcs-* fields to point to Lintian's repository.

@@ -317,7 +317,8 @@ while (<SCRIPTS>) {
 		} else {
 		    tag("missing-dep-for-interpreter",
 			"$base => $deps[0]", "($filename)")
-			unless Dep::implies($deps{all}, Dep::parse($interpreter_dependencies{$base}));
+			unless (Dep::implies($deps{all}, Dep::parse($interpreter_dependencies{$base})) ||
+			($base eq "csh" && $filename =~ m,^./etc/csh/login.d/,));
 		}
 	    } elsif ($base =~ /^python(\d.\d)?$/) {
 		my $ver = $1 ? $1 : "";
@@ -364,7 +365,8 @@ while (<SCRIPTS>) {
     }
 
     tag("csh-considered-harmful", $filename)
-        if (($base eq 'csh' or $base eq 'tcsh') and $executable{$filename});
+        if (($base eq 'csh' or $base eq 'tcsh') and $executable{$filename}
+	    and $filename !~ m,^./etc/csh/login.d/,);
 
     # Don't syntax-check scripts in /usr/src that end in .dpatch.  bash -n
     # doesn't stop checking at exit 0 and goes on to blow up on the patch
