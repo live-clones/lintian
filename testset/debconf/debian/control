@@ -1,7 +1,7 @@
 Source: debconf
 Section: utils
 Priority: optional
-Build-Depends: debhelper (>= 4)
+Build-Depends: debhelper (>= 4), dpatch
 Maintainer: Lintian Maintainers <lintian@packages.debian.org>
 Standards-Version: 3.7.2
 

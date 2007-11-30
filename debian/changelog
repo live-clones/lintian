@@ -30,6 +30,11 @@ lintian (1.23.37) UNRELEASED; urgency=low
            stolen from linda. (Closes: #452839)
     + [HE] Check for Section field in source packages, for which it
            is mandatory. Joerg Jaspert made me do this.
+  * checks/patch-systems:
+    + [HE] Add complete new check script, intended to check for usual
+           problems when using patch systems. Start with three
+           checks for common dpatch problems. Idea loosely based on
+           patch by Carl Fürstenberg <azatoth@gmail.com>. (Closes: #437959)
   * checks/scripts:
     + [HE] Allow packages to drop snippets into /etc/csh/login.d
            without a dependency on csh. Files there should also

@@ -1,0 +1,92 @@
+# patch-systems -- lintian check script -*- perl -*-
+#
+# Copyright (C) 2007 Marc Brockschmidt
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+package Lintian::patch_systems;
+use strict;
+use lib "$ENV{'LINTIAN_ROOT'}/checks/";
+use common_data;
+use Dep;
+use Tags;
+use Util;
+
+sub run {
+	my ($pkg, $type) = @_;
+
+	unless (-d "fields") {
+    	fail("directory in lintian laboratory for $type package $pkg missing: fields");
+	}
+
+	#Get build deps so we can decide which build system the maintainer
+	#meant to use:
+	my $build_deps = "";
+    if (open(IN, '<', "fields/build-depends")) {
+		local $/ = undef;
+        chomp($build_deps .= <IN>);
+		close(IN);
+    }
+	if (open(IN, '<', "fields/build-depends-indep")) {
+		local $/ = undef;
+		chomp($build_deps .= <IN>);
+		close(IN);
+	}
+	$build_deps = Dep::parse($build_deps);
+
+	#----- dpatch
+	if (Dep::implies($build_deps, Dep::parse("dpatch"))) {
+		#check for a debian/patches file:
+		if (! -r "debfiles/patches/00list") {
+			tag "dpatch-build-dep-but-no-patch-list", $pkg;
+		} else {
+			if (open(IN, '<', "debfiles/patches/00list")) {
+				my @patches;
+				while(<IN>) {
+					chomp;
+					next if (/^#/); #ignore comments
+					push @patches, $_;
+					if (! -r "debfiles/patches/$_") {
+						tag "dpatch-index-references-non-existant-patch", $_;
+					}
+				}
+				close(IN);
+
+				#check that we have comments everywhere
+				foreach my $patch_file (@patches) {
+					if (open(PATCH_FILE, '<', "debfiles/patches/" . $patch_file)) {
+						my $has_comment = 0;
+						while (<PATCH_FILE>) {
+							#stop if something looking like a patch starts:
+							last if /^---/;
+							#note comment if we find a proper one
+							$has_comment = 1 if (/^#+\s*DP:\s*(.*)$/ && $1 !~ /^no description\.?$/i)
+						}
+						close(PATCH_FILE);
+						unless ($has_comment) {
+							tag "dpatch-missing-description", $patch_file;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+1;
+
+# vim: syntax=perl sw=4 ts=4 noet shiftround
