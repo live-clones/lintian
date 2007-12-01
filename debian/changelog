@@ -8,7 +8,7 @@ lintian (1.23.37) UNRELEASED; urgency=low
            the bug and patch to Ruben Porras <nahoo82@gmail.com>. (Closes:
            #448652)
   * checks/common_data.pm:
-    + [RA] Add Dm-Upload-Allowed as a recognized control field.
+    + [RA] Add Dm-Upload-Allowed as a control field.  (Closes: #453779)
   * checks/control-files:
     + [RA] Add symbols as a known control file for debs and udebs.
   * checks/copyright-file:
