@@ -1,3 +1,5 @@
+E: filename-games: no-copyright-file
+E: filename-games: package-section-games-but-contains-no-game
 E: filenames: bad-menu-file-name usr/lib/menu/menu
 E: filenames: bad-menu-file-name usr/share/menu/menu
 E: filenames: dir-or-file-in-srv srv/foo/
@@ -26,8 +28,13 @@ E: filenames: symlink-should-be-absolute usr/lib/filenames/symlink1wrong ../../.
 E: filenames: symlink-should-be-relative usr/lib/filenames/symlink3wrong /usr/lib/filenames/symlink2
 E: filenames: use-of-compat-symlink usr/bin/X11/
 E: filenames: use-of-compat-symlink usr/bin/X11/testxbin
+E: more-filename-games: no-copyright-file
+I: filename-games: no-md5sums-control-file
 I: filenames: file-in-usr-something-x11-without-pre-depends usr/include/X11/
 I: filenames: no-md5sums-control-file
+I: more-filename-games: no-md5sums-control-file
+W: filename-games: binary-without-manpage usr/bin/test-game
+W: filename-games: package-contains-empty-directory usr/games/
 W: filenames source: ancient-standards-version 3.1.1 (current is 3.7.2)
 W: filenames source: diff-contains-arch-control-dir .arch-ids
 W: filenames source: diff-contains-arch-control-dir {arch}
@@ -100,3 +107,6 @@ W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/README.mac
 W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/examples/very_interesting_example
 W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/examples/very_interesting_example2.gz
 W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/news.debian.gz
+W: more-filename-games: binary-without-manpage usr/bin/another-test-game
+W: more-filename-games: binary-without-manpage usr/games/yet-another-test-game
+W: more-filename-games: package-section-games-but-has-usr-bin

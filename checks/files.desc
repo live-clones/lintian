@@ -694,3 +694,17 @@ Tag: package-contains-empty-directory
 Type: warning
 Info: This package installs an empty directory.  This might be intentional
  but it's normally a mistake.  If it is intentional, add a lintian override.
+
+Tag: package-section-games-but-contains-no-game
+Type: error
+Ref: policy 11.11
+Info: This package is marked as part of the section games, but doesn't
+ contain files in <tt>/usr/games</tt>.  Binaries of games must be installed
+ in <tt>/usr/games</tt>.
+
+Tag: package-section-games-but-has-usr-bin
+Type: warning
+Ref: policy 11.11
+Info: This package is marked as part of the section games, but contains
+ exectuables in <tt>/bin</tt> or <tt>/usr/bin/</tt>.  This can be intentional,
+ but is usually a mistake.

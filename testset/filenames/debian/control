@@ -18,3 +18,18 @@ Description: see how lintian reacts to weird filenames
  .
  Lintian also does not handle filenames that contain backslashes, or
  other characters that are mangled by tar's -tv output.
+
+Package: filename-games
+Architecture: all
+Depends: filenames
+Section: games
+Description: Test game filename/location checks
+ This package contains files with slightly less evil names than
+ filenames.
+
+Package: more-filename-games
+Architecture: all
+Depends: filenames, filename-games
+Section: games
+Description: More test for game filename/location checks
+ This package contains no evil names, only evil locations.

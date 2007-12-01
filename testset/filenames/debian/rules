@@ -152,8 +152,23 @@ binary-indep:
 # Running dpkg-gencontrol without any options used to omit the section and
 # priority from the .dsc file.  Now, as of 1.13.16, -isp is the default.
 # Stimulate the same lintian check by explicitly omitting the fields.
-	dpkg-gencontrol -Usection -Upriority
+	dpkg-gencontrol -Usection -Upriority -pfilenames -Pdebian/tmp
 	dpkg --build debian/tmp ..
+
+	install -d debian/filename-games debian/filename-games/DEBIAN
+	install -d debian/filename-games/usr debian/filename-games/usr/games debian/filename-games/usr/bin
+	echo '#! /bin/sh' > debian/filename-games/usr/bin/test-game
+	chmod 755 debian/filename-games/usr/bin/test-game
+	dpkg-gencontrol -pfilename-games -Pdebian/filename-games
+	dpkg --build debian/filename-games ..
+
+	install -d debian/more-filename-games debian/more-filename-games/DEBIAN
+	install -d debian/more-filename-games/usr debian/more-filename-games/usr/games debian/more-filename-games/usr/bin
+	echo '#! /bin/sh' > debian/more-filename-games/usr/bin/another-test-game
+	echo '#! /bin/sh' > debian/more-filename-games/usr/games/yet-another-test-game
+	chmod 755 debian/more-filename-games/usr/bin/another-test-game debian/more-filename-games/usr/games/yet-another-test-game
+	dpkg-gencontrol -pmore-filename-games -Pdebian/more-filename-games
+	dpkg --build debian/more-filename-games ..
 
 binary: binary-arch binary-indep
 

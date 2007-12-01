@@ -35,6 +35,10 @@ lintian (1.23.37) UNRELEASED; urgency=low
   * checks/files:
     + [HE] Add 'package-contains-empty-directory' check, but
            ignore dirs in /var/* and /usr/lib/perl5/. (Closes: #452316)
+    + [HE] Add checks for game packages that contain no game executables
+           (package-section-games-but-contains-no-game) or that contain
+           anything in usr/bin at all, which is usually a mistake.
+           (package-section-games-but-contains-no-game). (Closes: #451668)
   * checks/patch-systems:
     + [HE] Add complete new check script, intended to check for usual
            problems when using patch systems. Start with three

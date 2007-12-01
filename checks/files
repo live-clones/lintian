@@ -30,7 +30,8 @@ my $pkg = shift;
 my $type = shift;
 
 my $file;
-my $source_pkg;
+my $source_pkg = "";
+my $pkg_section = "";
 my $is_python;
 my $is_perl;
 my $has_binary_perl_file;
@@ -61,6 +62,11 @@ close(IN);
 #Get source package name, if possible
 if (open (SOURCE, '<', "fields/source")) {
     chomp ($source_pkg = (<SOURCE> || ""));
+}
+
+#get section:
+if (open (SECTION, '<', "fields/section")) {
+    chomp ($pkg_section = <SECTION>);
 }
 
 # find out which files are scripts
@@ -809,6 +815,20 @@ while (<IN>) {
     }
 }
 close(IN);
+
+#check for sect: games but nothing in /usr/games. Check for any binary to
+#save ourselves from game-data false positives:
+if ($pkg_section =~ m{games$} && 
+    (($dir_counts{"usr/games/"} || 0) == 0) &&
+    (($dir_counts{"bin/"} || 0) + ($dir_counts{"usr/bin/"} || 0)) > 0) {
+    tag "package-section-games-but-contains-no-game";
+}
+
+if ($pkg_section =~ m{games$} && 
+    (($dir_counts{"usr/games/"} || 0)> 0) &&
+    (($dir_counts{"bin/"} || 0) + ($dir_counts{"usr/bin/"} || 0)) > 0) {
+    tag "package-section-games-but-has-usr-bin";
+}
 
 foreach my $dir (keys %dir_counts) {
     next if $dir eq "";
