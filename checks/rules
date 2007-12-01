@@ -17,6 +17,7 @@ package Lintian::rules;
 use strict;
 use Tags;
 use Util;
+use Dep;
 
 # The following targets are required per Policy.
 my %required = map { $_ => 1 }
@@ -46,6 +47,21 @@ if(open (IN, '<', "fields/architecture")) {
     chomp($architecture = <IN>)
 }
 close(IN);
+
+#get build-depends:
+my $build_deps = "";
+if (open(IN, '<', "fields/build-depends")) {
+    local $/ = undef;
+    chomp($build_deps .= <IN>);
+    close(IN);
+}
+if (open(IN, '<', "fields/build-depends-indep")) {
+    local $/ = undef;
+    chomp($build_deps .= <IN>);
+    close(IN);
+}
+$build_deps = Dep::parse($build_deps);
+
 
 open(RULES, '<', 'debfiles/rules') or fail("Failed opening rules: $!");
 
@@ -113,11 +129,20 @@ while (<RULES>) {
 }
 close RULES;
 
-# Make sure all the required rules were seen.
 unless ($includes) {
+    # Make sure all the required rules were seen.
     for my $target (sort keys %required) {
 	tag "debian-rules-missing-required-target", $target
 	    unless $seen{$target};
+    }
+
+    #check if we should have seen some dh_ calls:
+    if (Dep::implies($build_deps, Dep::parse("debhelper"))) {
+        #.desktop files usually imply dh_desktop:
+	if (scalar @{[glob("debfiles/*.desktop")]} &&
+	    ! grep { /^\s*dh_desktop/ } map { @$_ } values %rules_per_target) {
+	    tag "desktop-file-but-no-dh_desktop-call";
+	}
     }
 }
 

@@ -48,6 +48,9 @@ lintian (1.23.37) UNRELEASED; urgency=low
     + [HE] Implement 'binary-arch-rules-but-pkg-is-arch-indep', checking
            for rules in binary-arch when the package is arch: all.
            (Closes: #409109, #119097)
+    + [HE] Implement 'desktop-file-but-no-dh_desktop-call', checking for
+           missing dh_desktop calls when .desktop files are installed in
+           a debhelperized package. (Closes: #409138)
   * checks/scripts:
     + [HE] Allow packages to drop snippets into /etc/csh/login.d
            without a dependency on csh. Files there should also
