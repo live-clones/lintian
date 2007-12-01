@@ -66,7 +66,7 @@ my $includes = 0;
 my %seen;
 local $_;
 my @current_targets;
-my ($has_binary_indep_rules, $has_binary_arch_rules) = (0,0);
+my %rules_per_target;
 while (<RULES>) {
     next if /^\s*\#/;
     $includes = 1 if /^ *[s-]?include\s+/;
@@ -102,14 +102,11 @@ while (<RULES>) {
 	    $seen{$_}++ if $required{$_};
 	}
     } else {
-    	#if we have non-empty, non-comment lines, check if one of the
-	#"interesting" targets contains them:
+    	#if we have non-empty, non-comment lines, store them for all current targets:
 	if (m/^\s+[^#]/) {
-	    if (grep { $_ eq "binary-arch" } @current_targets) {
-		$has_binary_arch_rules = 1;
-	    } #not elsif, think of the children and 'binary-arch binary-indep:' (ewww)
-	    if (grep { $_ eq "binary-indep" } @current_targets) {
-		$has_binary_indep_rules = 1;
+	    foreach my $target (@current_targets) {
+		$rules_per_target{$target} ||= [];
+		push @{$rules_per_target{$target}}, $_;
 	    }
 	}
     }
@@ -125,7 +122,7 @@ unless ($includes) {
 }
 
 # Make sure we have no content for binary-arch if we are arch-indep:
-if ($architecture eq "all" && $has_binary_arch_rules) {
+if ($architecture eq "all" && scalar @{$rules_per_target{'binary-arch'}}) {
     tag "binary-arch-rules-but-pkg-is-arch-indep";
 }
 }
