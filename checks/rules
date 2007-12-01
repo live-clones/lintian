@@ -122,7 +122,7 @@ unless ($includes) {
 }
 
 # Make sure we have no content for binary-arch if we are arch-indep:
-if ($architecture eq "all" && scalar @{$rules_per_target{'binary-arch'}}) {
+if ($architecture eq "all" && scalar @{$rules_per_target{'binary-arch'} || []}) {
     tag "binary-arch-rules-but-pkg-is-arch-indep";
 }
 }
