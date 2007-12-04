@@ -32,6 +32,9 @@ lintian (1.23.37) UNRELEASED; urgency=low
            stolen from linda. (Closes: #452839)
     + [HE] Check for Section field in source packages, for which it
            is mandatory. Joerg Jaspert made me do this.
+    + [RA] Allow Python dependencies in Build-Depends when using another
+      variant for calling Python in the clean target.  Thanks, Bernd
+      Zeimetz.  (Closes: #444642)
   * checks/files:
     + [HE,RA] Add 'package-contains-empty-directory' check, but ignore
       dirs in /var and /etc and handle /usr/lib/perl5 and /usr/share/perl5

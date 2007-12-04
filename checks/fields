@@ -88,6 +88,7 @@ my @rule_clean_depends = (
 	[ 'libmodule-build-perl' => '(^\t|\|\|)\s*(perl|\$\(PERL\))\s+Build\b' ],
 	[ "po-debconf" => '^\t\s*debconf-updatepo\s' ],
 	[ $python_depend => '^\t\s*python\s' ],
+	[ $python_depend => '\ssetup\.py\b' ],
 	[ quilt => '^\t\s*(\S+=\S+\s+)*quilt\s' ],
 	[ yada => '^\t\s*yada\s' ],
 );
