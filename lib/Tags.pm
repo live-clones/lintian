@@ -253,6 +253,9 @@ sub record_stats {
 	$stats{$current}{overrides}{$k}{$tag_info->{overridden}{$k}}++
 	    if $tag_info->{overridden}{$k};
     }
+    if ($tag_info->{overridden}{override}) {
+        $stats{$current}{overrides}{by_severity}{$tag_info->{severity}}++;
+    }
 }
 
 # get the statistics for a file (one argument) or for all files (no argument)

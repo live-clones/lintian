@@ -95,6 +95,8 @@ lintian (1.23.37) UNRELEASED; urgency=low
     + [RA] Add critical as a recognized urgency.
     + [RA] Diagnose malformed override entries; don't just ignore them.
     + [RA] Fix some odd formatting.
+    + [RA] Display a summary of overridden tags as an N: output line.
+      Requested by Steve McIntyre.  (Closes: #452804)
 
   * man/lintian.1:
     + [RA] Be clearer about what files lintian takes as arguments; in
@@ -106,13 +108,15 @@ lintian (1.23.37) UNRELEASED; urgency=low
     + [RA] Remove.  This isn't used by anything and would produce
       incorrect results (it doesn't understand ~), and Dep.pm provides
       version comparison routines that use dpkg.
+  * lib/Tags.pm:
+    + [RA] Keep statistics on overrides by severity.
 
   * unpack/list-srcpkg:
     + [RA] Escape ; and newline characters in all package fields before
       writing them to the index (uncovered when someone accidentally
       appended a package description to Standards-Version).
 
- -- Russ Allbery <rra@debian.org>  Tue, 04 Dec 2007 00:34:36 -0800
+ -- Russ Allbery <rra@debian.org>  Tue, 04 Dec 2007 00:59:20 -0800
 
 lintian (1.23.36) unstable; urgency=low
 

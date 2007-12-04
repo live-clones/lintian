@@ -33,6 +33,7 @@ E: manpages: subdir-in-usr-bin usr/bin/bin/
 E: manpages: x11-games-should-be-in-usr-games usr/X11R6/man/man6/X11R6-binary.man
 I: manpages: no-md5sums-control-file
 I: manpages: unused-override foo-tag-that-does-not-exist
+N: manpages_4-0.0.1_all.deb overrode 1 error
 W: manpages source: ancient-standards-version 3.2.1 (current is 3.7.3)
 W: manpages source: binary-nmu-debian-revision-in-source 4-0.0.1
 W: manpages source: changelog-should-mention-nmu

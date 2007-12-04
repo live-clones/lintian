@@ -1343,6 +1343,30 @@ for (reverse sort @packages) {
 		tag( "unused-override", $o );
 	    }
 	}
+
+        # Report override statistics.  The way pluralization is handled here
+        # is not even remotely good for translations, but lintian doesn't
+        # handle translations now anyway and this isn't the worst problem.
+        if (not $no_override and not $show_overrides) {
+            my $stats = Tags::get_stats($file);
+            my $short = $file;
+            $short =~ s%.*/%%;
+            my $errors = $stats->{overrides}{by_severity}{4};
+            my $warnings = $stats->{overrides}{by_severity}{2};
+            if ($errors) {
+                $errors = ($errors == 1) ? "$errors error" : "$errors errors";
+            }
+            if ($warnings) {
+                $warnings = ($warnings == 1) ? "$warnings warning" : "$warnings warnings";
+            }
+            if ($errors and $warnings) {
+                print "N: $short overrode $errors, $warnings\n";
+            } elsif ($errors) {
+                print "N: $short overrode $errors\n";
+            } elsif ($warnings) {
+                print "N: $short overrode $warnings\n";
+            }
+        }
     }
 
     # chdir to lintian root directory (to unlock $base so it can be removed below)
