@@ -12,6 +12,8 @@ binary-arch:
 binary-indep:
 	# patented-app
 	install -d debian/$(PATENT)-tmp/DEBIAN
+	install -d debian/$(PATENT)-tmp/usr/share/doc/$(PATENT)
+	gzip -9c debian/changelog > debian/$(PATENT)-tmp/usr/share/doc/$(PATENT)/changelog.gz
 	dpkg-gencontrol -isp -p$(PATENT) -Pdebian/$(PATENT)-tmp
 	dpkg --build debian/$(PATENT)-tmp ..
 

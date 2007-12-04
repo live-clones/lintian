@@ -157,8 +157,13 @@ Info: The NEWS.Debian file must be valid UTF-8, an encoding of the Unicode
 
 Tag: latest-debian-changelog-entry-without-new-date
 Type: warning
-Info: The latest Debian changelog has either the same or even an older
- date as the entry before.
+Info: The latest Debian changelog entry has either the same or even an
+ older date as the entry before.
+
+Tag: latest-debian-changelog-entry-without-new-version
+Type: warning
+Info: The latest Debian changelog entry has a version number that's either
+ the same or smaller than the version number of the entry before.
 
 Tag: syntax-error-in-debian-changelog
 Type: warning

@@ -10,6 +10,9 @@ lintian (1.23.37) UNRELEASED; urgency=low
     + [RA] Ignore the gf suffix from the gfortran migration when checking
       whether the package name matches the SONAME.  Thanks, Kevin
       B. McCarty.  (Closes: #448207)
+  * checks/changelog-file{.desc,}:
+    + [RA] Check that the latest changelog entry has a later version than
+      the previous entry.  Thanks, Thijs Kinkhorst.  (Closes: #449257)
   * checks/common_data.pm:
     + [RA] Add Dm-Upload-Allowed as a control field.  (Closes: #453779)
   * checks/control-file:

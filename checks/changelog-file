@@ -285,12 +285,19 @@ if (@entries) {
     }
 
     if (@entries > 1) {
-	my $first_timestamp = ($changes->data)[0]->Timestamp;
-	my $second_timestamp = ($changes->data)[1]->Timestamp;
+	my $first_timestamp = $entries[0]->Timestamp;
+	my $second_timestamp = $entries[1]->Timestamp;
 
-	if ( $first_timestamp && $second_timestamp ) {
+	if ($first_timestamp && $second_timestamp) {
 	    tag "latest-debian-changelog-entry-without-new-date"
 		unless (($first_timestamp - $second_timestamp) > 0);
+	}
+
+	my $first_version = $entries[0]->Version;
+	my $second_version = $entries[1]->Version;
+	if ($first_version and $second_version) {
+	    tag "latest-debian-changelog-entry-without-new-version"
+		unless Dep::versions_gt ($first_version, $second_version);
 	}
     }
 }

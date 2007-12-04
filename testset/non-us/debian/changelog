@@ -1,5 +1,11 @@
 non-us (1) unstable; urgency=low
 
+  * Another initial version.
+
+ -- Russ Allbery <rra@debian.org>  Mon, 03 Dec 2007 23:42:09 -0800
+
+non-us (1) unstable; urgency=low
+
   * Initial version
 
  -- Sean 'Shaleh' Perry <shaleh@debian.org>  Wed, 31 Jan 2001 14:27:20 -0800
