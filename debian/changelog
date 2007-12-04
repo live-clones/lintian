@@ -73,6 +73,11 @@ lintian (1.23.37) UNRELEASED; urgency=low
     + [TK] Add Vcs-* fields to point to Lintian's repository.
     + [RA] Update standards version to 3.7.3.
 
+  * man/lintian.1:
+    + [RA] Be clearer about what files lintian takes as arguments; in
+      particular, mention that source packages are checked by providing
+      the .dsc file as an argument.  (Closes: #441636)
+
   * unpack/list-srcpkg:
     + [RA] Escape ; and newline characters in all package fields before
       writing them to the index (uncovered when someone accidentally
