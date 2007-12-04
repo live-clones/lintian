@@ -175,9 +175,16 @@ if (m/(Free\s*Software\s*Foundation.*02139|02111-1307)/s) {
     tag "old-fsf-address-in-copyright-file", "";
 }
 
-if (length($_) > 12000 and
-    m/\bGNU GENERAL PUBLIC LICENSE\s*TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION\b/m and m/\bVersion 2\b/) {
-    tag "copyright-file-contains-full-gpl-license", "";
+if (length($_) > 12000
+    and ((m/\bGNU GENERAL PUBLIC LICENSE\s*TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION\b/m
+          and m/\bVersion 2\s/)
+         or (m/\bGNU GENERAL PUBLIC LICENSE\s*Version 3/ and m/\bTERMS AND CONDITIONS\s/))) {
+    tag "copyright-file-contains-full-gpl-license";
+}
+
+if (length($_) > 12000
+    and m/\bGNU Free Documentation License\s*Version 1\.2/ and m/\b1\. APPLICABILITY AND DEFINITIONS/) {
+    tag "copyright-file-contains-full-gfdl-license";
 }
 
 if (m/^This copyright info was automatically extracted from the perl module\./) {
@@ -199,20 +206,27 @@ if ((m,common-licenses(/\S+),) && (! m,/usr/share/common-licenses/,)) {
 # like mail headers, since sometimes e-mail discussions of licensing are
 # included in the copyright file but aren't referring to the license of the
 # package.
-if (m/(GNU General Public License|GPL)/ && !m,/usr/share/common-licenses,
-    && !m/Zope Public License/ && !m/LICENSE AGREEMENT FOR PYTHON 1.6.1/
-    && !m/LaTeX Project Public License/ && !m/GNU Free Documentation License/
-    && !m/(^From:.*^To:|^To:.*^From:).*(GNU General Public License|GPL)/ms
-    && !m/AFFERO GENERAL PUBLIC LICENSE/
-    && !$wrong_directory_detected) {
-    tag "copyright-should-refer-to-common-license-file-for-gpl", "";
+if (m,/usr/share/common-licenses,
+    || m/Zope Public License/
+    || m/LICENSE AGREEMENT FOR PYTHON 1.6.1/
+    || m/LaTeX Project Public License/
+    || m/(^From:.*^To:|^To:.*^From:).*(GNU General Public License|GPL)/ms
+    || m/AFFERO GENERAL PUBLIC LICENSE/
+    || $wrong_directory_detected) {
+    # False positive or correct reference.  Ignore.
+} elsif (m/GNU Free Documentation License/i or m/\bGFDL\b/) {
+    tag "copyright-should-refer-to-common-license-file-for-gfdl";
+} elsif (m/GNU (Lesser|Library) General Public License/i or m/\bLGPL\b/) {
+    tag "copyright-should-refer-to-common-license-file-for-lgpl";
+} elsif (m/GNU General Public License/i or m/\bGPL\b/) {
+    tag "copyright-should-refer-to-common-license-file-for-gpl";
 }
 
 if (m,Upstream Author\(s\),) {
-    tag "copyright-lists-upstream-authors-with-dh_make-boilerplate", "";
+    tag "copyright-lists-upstream-authors-with-dh_make-boilerplate";
 }
 
-if (m{# Please also look if there are files or directories which have a\n# different copyright/license attached and list them here\.}) {
+if (m{\# Please also look if there are files or directories which have a\n\# different copyright/license attached and list them here\.}) {
     tag "copyright-contains-dh_make-todo-boilerplate", "";
 }
 

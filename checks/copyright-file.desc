@@ -42,8 +42,15 @@ Ref: policy 12.5
 Tag: copyright-file-contains-full-gpl-license
 Type: error
 Info: The copyright file /usr/share/doc/<i>pkg</i>/copyright contains the
- complete text of the GPL.  It should refer to the file
- <tt>/usr/share/common-licenses/GPL</tt> instead.
+ complete text of the GPL v2 or v3.  It should refer to the file
+ <tt>/usr/share/common-licenses/GPL-2</tt> or <tt>GPL-3</tt> instead.
+Ref: policy 12.5
+
+Tag: copyright-file-contains-full-gfdl-license
+Type: error
+Info: The copyright file /usr/share/doc/<i>pkg</i>/copyright contains the
+ complete text of the GFDL v1.2.  It should refer to the file
+ <tt>/usr/share/common-licenses/GFDL-1.2</tt> instead.
 Ref: policy 12.5
 
 Tag: usr-share-doc-symlink-without-dependency
@@ -132,10 +139,27 @@ Info: If your package is released under the same terms as Perl itself,
 Tag: copyright-should-refer-to-common-license-file-for-gpl
 Type: error
 Ref: policy 12.5
-Info: The string "GNU General Public License" or "GPL" appears in the
+Info: The strings "GNU General Public License" or "GPL" appear in the
  copyright file for this package, but the copyright file does not
  reference <tt>/usr/share/common-licenses</tt> as the location of the GPL
  on Debian systems.
+
+Tag: copyright-should-refer-to-common-license-file-for-gfdl
+Type: error
+Ref: policy 12.5
+Info: The strings "GNU Free Documentation License" or "GFDL" appear in the
+ copyright file for this package, but the copyright file does not
+ reference <tt>/usr/share/common-licenses</tt> as the location of the GFDL
+ on Debian systems.
+
+Tag: copyright-should-refer-to-common-license-file-for-lgpl
+Type: error
+Ref: policy 12.5
+Info: The strings "GNU Lesser General Public License", "GNU Library
+ General Public License", or "LGPL" appear in the copyright file for this
+ package, but the copyright file does not reference
+ <tt>/usr/share/common-licenses</tt> as the location of the LGPL on Debian
+ systems.
 
 Tag: copyright-lists-upstream-authors-with-dh_make-boilerplate
 Type: warning

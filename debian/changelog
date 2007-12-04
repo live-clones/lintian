@@ -25,6 +25,10 @@ lintian (1.23.37) UNRELEASED; urgency=low
            if the maintainer left the dh_make boilerplate in the
            copyright file. Based on patch by Cyril Brulebois
            <cyril.brulebois@enst-bretagne.fr>. (Closes: #448677)
+    + [RA] Check for the complete GFDL included in the copyright file and
+      expand copyright-file-contains-full-gpl-license to look for GPL v3
+      references.  Also check for correct references to common-licenses
+      for the GFDL and LGPL.
   * checks/deb-format:
     + [HE] Remove, not needed any more. (Closes: #447257)
   * checks/debconf:
