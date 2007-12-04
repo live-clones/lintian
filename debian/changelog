@@ -99,12 +99,17 @@ lintian (1.23.37) UNRELEASED; urgency=low
       particular, mention that source packages are checked by providing
       the .dsc file as an argument.  (Closes: #441636)
 
+  * lib/DebVersions.pm:
+    + [RA] Remove.  This isn't used by anything and would produce
+      incorrect results (it doesn't understand ~), and Dep.pm provides
+      version comparison routines that use dpkg.
+
   * unpack/list-srcpkg:
     + [RA] Escape ; and newline characters in all package fields before
       writing them to the index (uncovered when someone accidentally
       appended a package description to Standards-Version).
 
- -- Russ Allbery <rra@debian.org>  Wed, 28 Nov 2007 20:48:12 -0800
+ -- Russ Allbery <rra@debian.org>  Tue, 04 Dec 2007 00:12:10 -0800
 
 lintian (1.23.36) unstable; urgency=low
 
