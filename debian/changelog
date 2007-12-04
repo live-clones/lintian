@@ -64,6 +64,11 @@ lintian (1.23.37) UNRELEASED; urgency=low
   * debian/control:
     + [TK] Add Vcs-* fields to point to Lintian's repository.
 
+  * unpack/list-srcpkg:
+    + [RA] Escape ; and newline characters in all package fields before
+      writing them to the index (uncovered when someone accidentally
+      appended a package description to Standards-Version).
+
  -- Russ Allbery <rra@debian.org>  Wed, 28 Nov 2007 20:48:12 -0800
 
 lintian (1.23.36) unstable; urgency=low

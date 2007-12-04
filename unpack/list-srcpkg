@@ -154,6 +154,9 @@ while (!eof(IN)) {
   }
 
   # write entry to output file
+  for (qw/version maintainer architecture standards-version binary files/) {
+    $data->{$_} =~ tr/;\n/__/;
+  }
   print OUT join(';',
 		 $pkg,
 		 $data->{'version'},
