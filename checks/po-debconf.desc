@@ -1,18 +1,21 @@
 Check-Script: po-debconf
 Author: Denis Barbier <barbier@linuxfr.org>
 Abbrev: pd
-Standards-Version: 3.5.8
+Standards-Version: 3.7.3
 Type: source
 Unpack-Level: 2
 Info: This looks for common mistakes in packages using po-debconf.
 Needs-Info: debfiles
 
 Tag: not-using-po-debconf
-Type: warning
-Info: Package seems to be using debconf templates, but it does not use
- po-debconf to make translations possible (<tt>debian/po</tt> doesn't
- exist).
-Ref: po-debconf(7)
+Type: error
+Info: This package seems to be using debconf templates, but it does not
+ use po-debconf to make translations possible (<tt>debian/po</tt> doesn't
+ exist).  Debian Policy requires that all packages using debconf use a
+ gettext-based translation system.  If this package uses one other than
+ po-debconf, please report this as a lintian bug along with how to detect
+ that system.
+Ref: 3.9.1
 
 Tag: stray-translated-debconf-templates
 Type: warning
