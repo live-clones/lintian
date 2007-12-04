@@ -65,6 +65,7 @@ lintian (1.23.37) UNRELEASED; urgency=low
 
   * debian/control:
     + [TK] Add Vcs-* fields to point to Lintian's repository.
+    + [RA] Update standards version to 3.7.3.
 
   * unpack/list-srcpkg:
     + [RA] Escape ; and newline characters in all package fields before
