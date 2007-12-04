@@ -33,8 +33,10 @@ lintian (1.23.37) UNRELEASED; urgency=low
     + [HE] Check for Section field in source packages, for which it
            is mandatory. Joerg Jaspert made me do this.
   * checks/files:
-    + [HE] Add 'package-contains-empty-directory' check, but
-           ignore dirs in /var/* and /usr/lib/perl5/. (Closes: #452316)
+    + [HE,RA] Add 'package-contains-empty-directory' check, but ignore
+      dirs in /var and /etc and handle /usr/lib/perl5 and /usr/share/perl5
+      directories separately with a lower priority level since they're
+      very common.  (Closes: #452316, #357838)
     + [HE] Add checks for game packages that contain no game executables
            (package-section-games-but-contains-no-game) or that contain
            anything in usr/bin at all, which is usually a mistake.

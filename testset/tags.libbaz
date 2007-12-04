@@ -28,6 +28,7 @@ W: libbaz source: no-section-field
 W: libbaz source: package-uses-deprecated-debhelper-compat-version 1
 W: libbaz source: source-nmu-has-incorrect-version-number 1
 W: libbaz source: substvar-source-version-is-deprecated libbaz2-dev
+W: libbaz1-dev: package-contains-empty-directory usr/include/
 W: libbaz1: missing-depends-line
 W: libbaz1: package-name-doesnt-match-sonames libbaz2-1.0 libbaz3-1
 W: libbaz1: postinst-should-not-set-usr-doc-link

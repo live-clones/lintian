@@ -52,6 +52,7 @@ binary-indep:
 	mkdir "debian/tmp/usr/lib/perl5/{arch}"
 	mkdir debian/tmp/usr/lib/perl5/.arch-ids
 	mkdir debian/tmp/usr/lib/perl5/.bzr
+	install -d debian/tmp/usr/share/perl5
 
 	touch debian/tmp/usr/lib/perl5/foo/.packlist
 	chmod 644 debian/tmp/usr/lib/perl5/foo/.packlist
