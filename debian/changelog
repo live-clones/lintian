@@ -12,6 +12,10 @@ lintian (1.23.37) UNRELEASED; urgency=low
       B. McCarty.  (Closes: #448207)
   * checks/common_data.pm:
     + [RA] Add Dm-Upload-Allowed as a control field.  (Closes: #453779)
+  * checks/control-file:
+    + [RA] Diagnose stronger dependencies that imply weaker dependencies,
+      such as the same dependency in both Depends and Recommends or
+      Recommends and Suggests.  Thanks, Joerg Jaspert.  (Closes: #453302)
   * checks/control-files:
     + [RA] Add symbols as a known control file for debs and udebs.
   * checks/copyright-file:
