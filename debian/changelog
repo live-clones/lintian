@@ -7,6 +7,9 @@ lintian (1.23.37) UNRELEASED; urgency=low
            libc.so, not any library beginning with libc. Thanks for
            the bug and patch to Ruben Porras <nahoo82@gmail.com>. (Closes:
            #448652)
+    + [RA] Ignore the gf suffix from the gfortran migration when checking
+      whether the package name matches the SONAME.  Thanks, Kevin
+      B. McCarty.  (Closes: #448207)
   * checks/common_data.pm:
     + [RA] Add Dm-Upload-Allowed as a control field.  (Closes: #453779)
   * checks/control-files:
