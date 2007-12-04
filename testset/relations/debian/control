@@ -1,11 +1,10 @@
 Source: relations
 Section: misc
 Priority: optional
-Build-Depends: mail-transport-agent, libc6-dev, findutils, foo (>> 2) [!amd64 !i386], bar, arch-test1 [i386], arch-test2 [!i386], quilt (>= 0.40), perl
+Build-Depends: mail-transport-agent, libc6-dev, findutils, foo (= 3) [!amd64 !i386], bar, arch-test1 [i386], arch-test2 [!i386], quilt (>= 0.40), perl
 Build-Depends-Indep: make, bash, debmake, build-essential, baz (= 2.0),
-  baz (<= 2.0), baz, car (>= 1.0), car (<= 2.0), caz (= 1.0) [amd64],
-  caz (>= 2.0) [i386], caz (= 2.0) [i386 powerpc], perl (>= 5.0),
-  foo (<< 4) [!amd64 !i386], foo (= 3) [!amd64 !i386]
+  car (>= 1.0), car (<= 2.0), caz (= 1.0) [amd64], caz (>= 2.0) [i386],
+  caz (= 2.0) [powerpc], perl (>= 5.0), foo (<< 4) [!amd64 !i386]
 Build-Conflicts: foo [amd64 i386], bar [alpha test], xlibs-dev, arch-test1 [powerpc], arch-test2 [!sparc]
 Build-Conflicts-Indep: debmake [!powerpc]
 Maintainer: Debian QA Group <packages@qa.debian.org>
@@ -16,12 +15,11 @@ Bugs: debbugs://bugs.debian.org/
 Package: relations
 Architecture: all
 Section: contrib/misc
-Depends: relations, relations(<< 3), dpkg, bash (>> 2.0 ), mail-transport-agent, gawk | awk, foo (>> 2.0), foo (<< 2.2), coreutils, null (>= 0)
+Depends: relations(<< 3), dpkg, bash (>> 2.0 ), mail-transport-agent, gawk | awk, foo (>> 2.0), foo (<< 2.2), coreutils, null (>= 0)
 Provides: mail-reader
 Replaces: relations
 Conflicts: foobar (<< 5&5), foo, relations,
            gnuwdf,
-Optional: everything
 Suggests: alpha, gnu (>= 44-3-4-8-11.4) | ung (<< 89beta) | nug | ngu, beta
 Recommends: emacs21 | emacsen
 Description: Strange dependency relationships
