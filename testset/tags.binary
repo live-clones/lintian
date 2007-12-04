@@ -38,11 +38,10 @@ E: binary: unstripped-binary-or-object ./usr/bin/hello
 I: binary source: xs-vcs-header-in-debian-control xs-vcs-browser
 I: binary: arch-dep-package-has-big-usr-share
 I: binary: binary-has-unneeded-section ./usr/bin/hello-static .comment
-I: binary: description-contains-homepage
 I: binary: desktop-entry-contains-encoding-key /usr/share/applications/goodbye.desktop:11 Encoding
 I: binary: desktop-entry-contains-encoding-key /usr/share/applications/hello.desktop:13 Encoding
 I: binary: no-md5sums-control-file
-W: binary source: ancient-standards-version 3.2.1 (current is 3.7.2)
+W: binary source: ancient-standards-version 3.2.1 (current is 3.7.3)
 W: binary source: debian-rules-uses-pwd line 9
 W: binary source: maintainer-upload-has-incorrect-version-number 4-1.1
 W: binary source: native-package-with-dash-version
@@ -59,6 +58,7 @@ W: binary: binary-without-manpage usr/bin/static-hello
 W: binary: changelog-file-not-compressed changelog
 W: binary: debian-copyright-file-uses-obsolete-national-encoding at line 10
 W: binary: debian-news-entry-has-strange-distribution UNRELEASED
+W: binary: description-contains-homepage
 W: binary: desktop-command-not-in-package /usr/share/applications/goodbye.desktop goodbye
 W: binary: desktop-entry-contains-unknown-key /usr/share/applications/goodbye.desktop:5 SpecialTag
 W: binary: desktop-entry-contains-unknown-key /usr/share/applications/goodbye.desktop:7 icon
