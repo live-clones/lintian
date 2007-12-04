@@ -57,6 +57,9 @@ lintian (1.23.37) UNRELEASED; urgency=low
            be allowed to have csh in the shebang line. (Closes: #453417)
     + [HE] Allow packages to drop snippets into /etc/fish.d/ without
            a dependecy on fish. (Closes: #453416)
+  * checks/standards-version:
+    + [RA] 3.7.3 is now the current Standards-Version and anything older
+      than 3.6.2 is ancient.
 
   * debian/control:
     + [TK] Add Vcs-* fields to point to Lintian's repository.
