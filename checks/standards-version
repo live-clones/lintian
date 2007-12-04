@@ -29,7 +29,7 @@ sub run {
 # 2 means old
 # 3 means ancient
 my %valid_standard = (
-                   '3.7.3', 1
+		   '3.7.3', 1,
 		   '3.7.2', 2,
 		   '3.7.1', 2,
 		   '3.7.0', 2,
