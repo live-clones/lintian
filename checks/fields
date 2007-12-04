@@ -375,7 +375,7 @@ if ($type eq 'binary' && $arch_indep) {
 	close IN;
 }
 if (($type eq "binary") || ($type eq 'udeb')) {
-	my (%deps, %fields);
+	my (%deps, %fields, %parsed);
 	for my $field (qw(depends pre-depends recommends suggests conflicts provides replaces)) {
 		if (open(FH, '<', "fields/$field")) {
 			#Get data and clean it
@@ -383,6 +383,7 @@ if (($type eq "binary") || ($type eq 'udeb')) {
 			unfold($field, \$data);
 			$data =~ s/^\s*(.+?)\s*$/$1/;
 			$fields{$field} = $data;
+			$parsed{$field} = Dep::parse ($data);
 
 			my (@seen_libstdcs, @seen_tcls, @seen_tclxs, @seen_tks, @seen_tkxs, @seen_libpngs);
 
@@ -484,11 +485,10 @@ if (($type eq "binary") || ($type eq 'udeb')) {
 	# dependency fields.
 	if ($fields{conflicts}) {
 		for my $field (qw(depends pre-depends recommends suggests)) {
-			next unless $fields{$field};
-			my $depend = Dep::parse($fields{$field});
+			next unless $parsed{$field};
 			for my $conflict (split /\s*,\s*/, $fields{conflicts}) {
 				tag "conflicts-with-dependency", $conflict
-				    if Dep::implies($depend, Dep::parse($conflict));
+				    if Dep::implies($parsed{$field}, Dep::parse($conflict));
 			}
 		}
 	}
@@ -497,7 +497,7 @@ if (($type eq "binary") || ($type eq 'udeb')) {
 		my $d_pkg = $deps{$d_pkg_name};
 		if (scalar @$d_pkg > 1) {
 			#Allow things like Depends: package1 (>= 1.3), package1 (<= 5.2)
-			unless ((scalar @$d_pkg == 2) && 
+			unless ((scalar @$d_pkg == 2) &&
 			        (($d_pkg->[0]->[1]->[0] =~ />=|>>|>/ && $d_pkg->[1]->[1]->[0] =~ /<=|<<|</) or
 			         ($d_pkg->[0]->[1]->[0] =~ /<=|<<|</ && $d_pkg->[1]->[1]->[0] =~ />=|>>|>/))) {
 				my @relations;
