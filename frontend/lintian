@@ -1248,12 +1248,12 @@ for (reverse sort @packages) {
 	    }
 
 	    # chdir to base directory
-	    unless (chdir($base))
-		{ 	print STDERR "internal error: could not chdir into directory $base: $!\n";
-			print "N: Skipping $action of $long_type package $pkg\n";
-			$exit_code = 2;
-			next PACKAGE;
-		    }
+	    unless (chdir($base)) {
+		print STDERR "internal error: could not chdir into directory $base: $!\n";
+		print "N: Skipping $action of $long_type package $pkg\n";
+		$exit_code = 2;
+		next PACKAGE;
+	    }
 
 	    # collect info
 	    remove_status_file($base);
@@ -1270,27 +1270,25 @@ for (reverse sort @packages) {
     if ($action eq 'check') { 	# read override file
 	Tags::set_pkg( $file, $pkg, "", "", $long_type );
 
+	unless ($no_override) {
+            if (open(O, '<', "$base/override")) {
+                while (<O>) {
+                    chomp;
+                    next if m,^\s*(\#|\z),o;
+                    s/^\s+//o;
+                    s/\s+$//o;
+                    s/\s+/ /go;
 
-	unless ($no_override)
-	    { 	if ( open(O, '<', "$base/override") )
-		    {
-			while (<O>) {
-			    chomp;
-			    next if m,^\s*(\#|$),o;
-
-			    # TODO: warn if no $pkg: thing is there...
-			    s/^\Q$pkg\E://;
-			    s/^\Q$pkg $long_type\E://;
-			    s/^\s+//o;
-			    s/\s+$//o;
-			    s/\s+/ /go;
-			    next if $_ eq '';
-
-			    Tags::add_override($_);
-			}
-			close(O);
-		    }
-	    }
+                    if (s/^\Q$pkg\E( \Q$long_type\E)?: //) {
+                        next if $_ eq '';
+                        Tags::add_override($_);
+                    } else {
+                        tag ('malformed-override', $_);
+                    }
+                }
+                close(O);
+            }
+        }
 
 	# perform checks
 	for my $check (keys %checks) {

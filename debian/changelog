@@ -93,6 +93,8 @@ lintian (1.23.37) UNRELEASED; urgency=low
 
   * frontend/lintian:
     + [RA] Add critical as a recognized urgency.
+    + [RA] Diagnose malformed override entries; don't just ignore them.
+    + [RA] Fix some odd formatting.
 
   * man/lintian.1:
     + [RA] Be clearer about what files lintian takes as arguments; in
@@ -110,7 +112,7 @@ lintian (1.23.37) UNRELEASED; urgency=low
       writing them to the index (uncovered when someone accidentally
       appended a package description to Standards-Version).
 
- -- Russ Allbery <rra@debian.org>  Tue, 04 Dec 2007 00:12:10 -0800
+ -- Russ Allbery <rra@debian.org>  Tue, 04 Dec 2007 00:34:36 -0800
 
 lintian (1.23.36) unstable; urgency=low
 
