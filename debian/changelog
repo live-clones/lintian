@@ -1,4 +1,6 @@
-lintian (1.23.37) UNRELEASED; urgency=low
+lintian (1.23.37) unstable; urgency=low
+
+  The "Policy 3.7.3" release.
 
   * checks/binaries:
     + [HE] Fix RegEx to re-enable 'binary-in-etc' and
@@ -125,7 +127,7 @@ lintian (1.23.37) UNRELEASED; urgency=low
       writing them to the index (uncovered when someone accidentally
       appended a package description to Standards-Version).
 
- -- Russ Allbery <rra@debian.org>  Tue, 04 Dec 2007 13:02:52 -0800
+ -- Russ Allbery <rra@debian.org>  Tue, 04 Dec 2007 13:04:23 -0800
 
 lintian (1.23.36) unstable; urgency=low
 
