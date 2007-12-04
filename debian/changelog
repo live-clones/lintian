@@ -51,6 +51,8 @@ lintian (1.23.37) UNRELEASED; urgency=low
            (package-section-games-but-contains-no-game) or that contain
            anything in usr/bin at all, which is usually a mistake.
            (package-section-games-but-contains-no-game). (Closes: #451668)
+  * checks/lintian.desc:
+    + [RA] Add critical as a recognized urgency.
   * checks/patch-systems:
     + [HE] Add complete new check script, intended to check for usual
            problems when using patch systems. Start with three
@@ -79,6 +81,9 @@ lintian (1.23.37) UNRELEASED; urgency=low
   * debian/control:
     + [TK] Add Vcs-* fields to point to Lintian's repository.
     + [RA] Update standards version to 3.7.3.
+
+  * frontend/lintian:
+    + [RA] Add critical as a recognized urgency.
 
   * man/lintian.1:
     + [RA] Be clearer about what files lintian takes as arguments; in

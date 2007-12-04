@@ -29,7 +29,7 @@ Ref: policy 5.5
 Tag: bad-urgency-in-changes-file
 Type: error
 Info: The keyword value of the "Urgency" field in the .changes file is not
- one of the allowed values of low, medium, high, and emergency
+ one of the allowed values of low, medium, high, critical, and emergency
  (case-insensitive).  This value normally taken from the first line of the
  most recent entry in <tt>debian/changelog</tt>, which is probably where
  the error is.
