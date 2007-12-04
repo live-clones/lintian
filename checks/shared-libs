@@ -312,7 +312,8 @@ if ($#shlibs == -1) {
 	my %shlibs_control_used;
 	my %shlibs_control;
 	my @shlibs_depends;
-	open(SHLIBS, '<', $shlibs_control_file) or fail("cannot open shlibs control file $shlibs_control_file for reading: $!");
+	open(SHLIBS, '<', $shlibs_control_file)
+	    or fail("cannot open shlibs control file $shlibs_control_file for reading: $!");
 	while (<SHLIBS>) {
 	    chop;
 	    next if m/^\s*$/ or /^#/;
@@ -333,7 +334,7 @@ if ($#shlibs == -1) {
 	    }
 	}
 	close(SHLIBS);
-	my $shlib_name; 
+	my $shlib_name;
 	for my $shlib (@shlibs) {
 	    $shlib_name = $SONAME{$shlib};
 	    # libfoo.so.X.X
