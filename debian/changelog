@@ -113,12 +113,19 @@ lintian (1.23.37) UNRELEASED; urgency=low
   * lib/Tags.pm:
     + [RA] Keep statistics on overrides by severity.
 
+  * reporting/html_reports:
+    + [RA] Change the layout of the per-maintainer lintian pages.  Now,
+      each report will be in /reports/maintainer/<email>.html where
+      <email> is the maintainer's e-mail address with unsafe characters
+      replaced by _.  This should allow better links from the QA pages.
+      Thanks, Stefano Zacchiroli.
+
   * unpack/list-srcpkg:
     + [RA] Escape ; and newline characters in all package fields before
       writing them to the index (uncovered when someone accidentally
       appended a package description to Standards-Version).
 
- -- Russ Allbery <rra@debian.org>  Tue, 04 Dec 2007 00:59:20 -0800
+ -- Russ Allbery <rra@debian.org>  Tue, 04 Dec 2007 13:02:52 -0800
 
 lintian (1.23.36) unstable; urgency=low
 

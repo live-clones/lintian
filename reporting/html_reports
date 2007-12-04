@@ -76,6 +76,8 @@ get_bin_src_ref();
 # Create output directories
 mkdir($HTML_TMP_DIR,0777)
     or die "cannot create output directory $HTML_TMP_DIR: $!";
+mkdir("$HTML_TMP_DIR/maintainer",0777)
+    or die "cannot create output directory $HTML_TMP_DIR/maintainer: $!";
 
 my ($num_errors, $num_warnings, $num_experimental, $num_overridden, $num_info);
 $num_errors = $num_warnings = $num_experimental = $num_overridden = $num_info = 0;
@@ -478,16 +480,15 @@ sub set_maintainer {
 
     $maint = $_[0];
 
-    my $file = $maint;
+    # The maintainer page should be maintainer/<email>.html where <email> is
+    # their email address with all characters other than a-z A-Z 0-9 - _ . @ =
+    # + replaced with _.  Don't change this without coordinating with QA.
+    my ($file) = ($maint =~ /<([^>]+)>/);
     if ($file) {
-	$file =~ s/^(.+)\<.*$/$1/;
-	$file =~ tr/A-Za-z0-9_.,/_/c;
-	$file =~ s/^_+//g;
-	$file =~ s/_+$//g;
-
-	$file = "m$file.html";
+	$file =~ tr/a-zA-Z0-9_.@=+-/_/c;
+	$file = "maintainer/$file.html";
     } else {
-	$file = "munsorted.html";
+	$file = "maintainer/unsorted.html";
     }
 
     open_maintainer($file);
