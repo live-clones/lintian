@@ -98,6 +98,7 @@ lintian (1.23.37) UNRELEASED; urgency=low
     + [RA] Be clearer about what files lintian takes as arguments; in
       particular, mention that source packages are checked by providing
       the .dsc file as an argument.  (Closes: #441636)
+    + [RA] Fix a slight spacing problem with the --color flag.
 
   * lib/DebVersions.pm:
     + [RA] Remove.  This isn't used by anything and would produce
