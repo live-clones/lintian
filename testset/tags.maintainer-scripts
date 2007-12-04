@@ -27,8 +27,6 @@ E: maintainer-scripts: prerm-calls-updaterc.d foo
 E: maintainer-scripts: wrong-debian-qa-group-name QA group <packages@qa.debian.org>
 I: maintainer-scripts: no-md5sums-control-file
 I: maintainer-scripts: output-of-updaterc.d-not-redirected-to-dev-null bar postrm
-I: maintainer-scripts: possible-non-posix-code-in-maintainer-script postinst:4 '[ -d /usr/doc -a ! -e /usr/doc/maintainer-scripts -a '
-I: maintainer-scripts: possible-non-posix-code-in-maintainer-script prerm:25 '   local '
 W: maintainer-scripts source: ancient-standards-version 3.1.1 (current is 3.7.3)
 W: maintainer-scripts source: changelog-should-mention-qa
 W: maintainer-scripts source: no-section-field

@@ -278,18 +278,6 @@ Info: This script is marked as running under <tt>/bin/sh</tt>, but it seems
   '{foo,bar}' instead of 'foo bar'
   '[[ test ]]' instead of '[ test ]' (requires a Korn shell)
 
-Tag: possible-non-posix-code-in-maintainer-script
-Type: info
-Info: This script is marked as running under <tt>/bin/sh</tt>, but it seems
- to use a shell feature that is not defined in the SUSv3 or POSIX standard.
- The feature is so common in current shells that this isn't necessarily a
- bug, but you may wish to avoid this anyway for maximum portability.
- .
- Examples:
-  '-a' and '-o' as operators of 'test'. You can use shell conditionals
-  (&& and ||) instead, which also short-circuit correctly.
-  'local' scoping of variables.
-
 Tag: suidregister-used-in-maintainer-script
 Type: error
 Info: This script calls suidregister which is no longer needed, a new

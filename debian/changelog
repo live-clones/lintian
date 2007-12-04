@@ -59,6 +59,9 @@ lintian (1.23.37) UNRELEASED; urgency=low
            be allowed to have csh in the shebang line. (Closes: #453417)
     + [HE] Allow packages to drop snippets into /etc/fish.d/ without
            a dependecy on fish. (Closes: #453416)
+    + [RA] Remove possible-non-posix-code-in-maintainer-script entirely.
+      Debian Policy now allows local and test -a/-o specifically and this
+      is pointless portability.
   * checks/standards-version:
     + [RA] 3.7.3 is now the current Standards-Version and anything older
       than 3.6.2 is ancient.

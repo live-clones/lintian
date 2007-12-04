@@ -526,7 +526,6 @@ while (<SCRIPTS>) {
 	    # check for things
 	    if ($cat_string eq "" and $checkbashisms and !$within_another_shell) {
 		my $found = 0;
-		my $found_strict = 0;
 		my $match = '';
 		my @bashism_string_regexs = (
 		  '\$\[\w+\]',		       # arith not allowed
@@ -548,10 +547,6 @@ while (<SCRIPTS>) {
 		  '\&>',		       # cshism
 		  '\[\[(?!:)',		       # alternative test command
 		);
-		my @strict_posix_regexs = (
-		  '((?:test|\[)\s+.+\s-[ao])\s',# test/[ -a/-o binary operators
-		  '(?:^\s*)local\s',	    # local scoping of variables
-					   );
 
 		# since this test is ugly, I have to do it by itself
 		# detect source (.) trying to pass args to the command it runs
@@ -590,20 +585,8 @@ while (<SCRIPTS>) {
 			}
 		    }
 		}
-		unless ($found) {
-		    for my $re (@strict_posix_regexs) {
-			if ($line =~ m/($re)/) {
-			    $found = 1;
-			    $found_strict = 1;
-			    ($match) = m/($re)/;
-			    last;
-			}
-		    }
-		}
 
-		if ($found && $found_strict) {
-		    tag "possible-non-posix-code-in-maintainer-script", "$file:$. \'$match\'";
-		} elsif ($found) {
+		if ($found) {
 		    tag "possible-bashism-in-maintainer-script", "$file:$. \'$match\'";
 		}
 	    }
