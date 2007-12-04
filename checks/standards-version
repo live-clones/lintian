@@ -72,7 +72,7 @@ my %valid_standard = (
 # version lintian is programmed for. ($valid_standard[0]?)
 my $MAJOR = 3;
 my $MINOR = 7;
-my $PATCH = 2;
+my $PATCH = 3;
 
 my $pkg = shift;
 my $type = shift;
