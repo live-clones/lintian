@@ -1,6 +1,4 @@
 Source: filenames
-Section: misc
-Priority: optional
 Maintainer: Lintian Maintainer <lintian-maint@debian.org>
 Standards-Version: 3.1.1
 
@@ -31,5 +29,6 @@ Package: more-filename-games
 Architecture: all
 Depends: filenames, filename-games
 Section: games
+Priority: optional
 Description: More test for game filename/location checks
  This package contains no evil names, only evil locations.

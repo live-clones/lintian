@@ -30,10 +30,12 @@ E: filenames: use-of-compat-symlink usr/bin/X11/
 E: filenames: use-of-compat-symlink usr/bin/X11/testxbin
 E: more-filename-games: no-copyright-file
 I: filename-games: no-md5sums-control-file
+I: filenames source: no-section-field-for-source
 I: filenames: file-in-usr-something-x11-without-pre-depends usr/include/X11/
 I: filenames: no-md5sums-control-file
 I: more-filename-games: no-md5sums-control-file
 W: filename-games: binary-without-manpage usr/bin/test-game
+W: filename-games: no-priority-field
 W: filename-games: package-contains-empty-directory usr/games/
 W: filenames source: ancient-standards-version 3.1.1 (current is 3.7.2)
 W: filenames source: diff-contains-arch-control-dir .arch-ids
@@ -77,6 +79,8 @@ W: filenames: file-name-ends-in-whitespace files/'\\
 W: filenames: macos-ds-store-file-in-package usr/share/doc/filenames/.DS_Store
 W: filenames: macos-resource-fork-file-in-package usr/share/doc/filenames/._NEWS.Debian
 W: filenames: menu-file-in-usr-lib usr/lib/menu/menu
+W: filenames: no-priority-field
+W: filenames: no-section-field
 W: filenames: non-standard-dir-perm usr/lib/filenames/readonly/ 0555 != 0755
 W: filenames: package-contains-CVS-dir usr/lib/perl5/CVS/
 W: filenames: package-contains-arch-control-dir usr/lib/perl5/.arch-ids/
