@@ -49,7 +49,7 @@ lintian (1.23.37) UNRELEASED; urgency=low
     + [RA] Allow Python dependencies in Build-Depends when using another
       variant for calling Python in the clean target.  Thanks, Bernd
       Zeimetz.  (Closes: #444642)
-  * checks/files:
+  * checks/files{.desc,}:
     + [HE,RA] Add 'package-contains-empty-directory' check, but ignore
       dirs in /var and /etc and handle /usr/lib/perl5 and /usr/share/perl5
       directories separately with a lower priority level since they're
@@ -58,6 +58,8 @@ lintian (1.23.37) UNRELEASED; urgency=low
            (package-section-games-but-contains-no-game) or that contain
            anything in usr/bin at all, which is usually a mistake.
            (package-section-games-but-contains-no-game). (Closes: #451668)
+    + [RA] Downgrade symlink-should-be-relative to a warning since it's a
+      Policy should.  Thanks, Thijs Kinkhorst.  (Closes: #454239)
   * checks/lintian.desc:
     + [RA] Add critical as a recognized urgency.
   * checks/patch-systems:

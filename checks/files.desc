@@ -276,10 +276,11 @@ Info: This symlink ends with a slash (/). This is in violation
 Ref: policy 10.5
 
 Tag: symlink-should-be-relative
-Type: error
-Info: Symlinks to files which are in the same top-level directory, should be
- relative according to policy (i.e., files within /usr, should be relative
- etc., while files from /usr to /etc should be absolute)
+Type: warning
+Info: Symlinks to files which are in the same top-level directory should be
+ relative according to policy.  (In other words, a link in /usr to another
+ file in /usr should be relative, while a link in /usr to a file in /etc
+ should be absolute.)
 Ref: policy 10.5
 
 Tag: symlink-should-be-absolute

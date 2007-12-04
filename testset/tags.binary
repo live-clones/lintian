@@ -33,7 +33,6 @@ E: binary: su-wrapper-without--c /usr/share/menu/binary:2 su-to-root
 E: binary: su-wrapper-without--c /usr/share/menu/binary:3 sux
 E: binary: suidregister-used-in-maintainer-script postinst
 E: binary: symlink-contains-spurious-segments usr/share/doc/binary/html/ch2.html ../html/./ch1.html
-E: binary: symlink-should-be-relative usr/share/doc/binary/html/ch3.html /usr/share/doc/binary/htm/ch1.html
 E: binary: unstripped-binary-or-object ./usr/bin/hello
 I: binary source: xs-vcs-header-in-debian-control xs-vcs-browser
 I: binary: arch-dep-package-has-big-usr-share
@@ -97,6 +96,7 @@ W: binary: package-contains-hardlink usr/bar2 -> usr/share/baz
 W: binary: package-contains-upstream-install-documentation usr/share/doc/binary/INSTALL
 W: binary: su-to-root-with-usr-sbin /usr/lib/menu/binary:4
 W: binary: su-to-root-with-usr-sbin /usr/share/menu/binary:4
+W: binary: symlink-should-be-relative usr/share/doc/binary/html/ch3.html /usr/share/doc/binary/htm/ch1.html
 W: binary: syntax-error-in-debian-changelog line 16 "couldn't parse date The, 15 Apr 2004 23:33:51 +0200"
 W: binary: syntax-error-in-debian-news-file line 11 "badly formatted trailer line"
 W: binary: syntax-error-in-debian-news-file line 11 "found eof where expected more change data or trailer"

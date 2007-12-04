@@ -25,7 +25,6 @@ E: filenames: symlink-has-double-slash usr/lib/filenames/symlink8wrong ../menu//
 E: filenames: symlink-has-too-many-up-segments usr/lib/filenames/symlink2wrong ../../../../etc/symlink
 E: filenames: symlink-should-be-absolute usr/lib/filenames/symlink10wrong ../../..
 E: filenames: symlink-should-be-absolute usr/lib/filenames/symlink1wrong ../../../etc/symlink
-E: filenames: symlink-should-be-relative usr/lib/filenames/symlink3wrong /usr/lib/filenames/symlink2
 E: filenames: use-of-compat-symlink usr/bin/X11/
 E: filenames: use-of-compat-symlink usr/bin/X11/testxbin
 E: more-filename-games: no-copyright-file
@@ -103,6 +102,7 @@ W: filenames: symlink-is-self-recursive usr/lib/filenames/symlink10wrong ../../.
 W: filenames: symlink-is-self-recursive usr/lib/filenames/symlink5ok+warn ..
 W: filenames: symlink-is-self-recursive usr/lib/filenames/symlink6ok+warn .
 W: filenames: symlink-is-self-recursive usr/lib/filenames/symlink7ok+warn /
+W: filenames: symlink-should-be-relative usr/lib/filenames/symlink3wrong /usr/lib/filenames/symlink2
 W: filenames: windows-thumbnail-database-in-package usr/share/doc/filenames/Thumbs.db
 W: filenames: wrong-name-for-debian-news-file usr/share/doc/filenames/news.debian.gz
 W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/NEWS.Debian
