@@ -17,10 +17,12 @@ lintian (1.23.37) unstable; urgency=low
       the previous entry.  Thanks, Thijs Kinkhorst.  (Closes: #449257)
   * checks/common_data.pm:
     + [RA] Add Dm-Upload-Allowed as a control field.  (Closes: #453779)
-  * checks/control-file:
+  * checks/control-file{.desc,}:
     + [RA] Diagnose stronger dependencies that imply weaker dependencies,
       such as the same dependency in both Depends and Recommends or
       Recommends and Suggests.  Thanks, Joerg Jaspert.  (Closes: #453302)
+    + [RA] Upgrade no-section-field-for-source to warning at the request
+      of Joerg Jaspert.
   * checks/control-files:
     + [RA] Add symbols as a known control file for debs and udebs.
   * checks/copyright-file:
@@ -46,8 +48,6 @@ lintian (1.23.37) unstable; urgency=low
            'python-package-should-be-section-python',
            'perl-package-should-be-section-perl'. Ideas shamelessy
            stolen from linda. (Closes: #452839)
-    + [HE] Check for Section field in source packages, for which it
-           is mandatory. Joerg Jaspert made me do this.
     + [RA] Allow Python dependencies in Build-Depends when using another
       variant for calling Python in the clean target.  Thanks, Bernd
       Zeimetz.  (Closes: #444642)

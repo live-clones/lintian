@@ -37,7 +37,6 @@ N: manpages_4-0.0.1_all.deb overrode 1 error
 W: manpages source: ancient-standards-version 3.2.1 (current is 3.7.3)
 W: manpages source: binary-nmu-debian-revision-in-source 4-0.0.1
 W: manpages source: changelog-should-mention-nmu
-W: manpages source: no-section-field
 W: manpages source: source-nmu-has-incorrect-version-number 4-0.0.1
 W: manpages: binary-nmu-uses-old-version-style 4-0.0.1
 W: manpages: binary-without-english-manpage usr/bin/binary-without-english-manpage

@@ -41,16 +41,11 @@ Info: The <tt>debian/control</tt> file is a symlink rather than a regular
  <tt>debian/control</tt> the real file and the other names symlinks to it.
 
 Tag: no-section-field-for-source
-Type: info
+Type: warning
 Ref: policy 5.2
 Info: The package does not have a "Section:" field in the source package
- section of its control file.
- .
- The Section field is optional for a source package and ignored by the
- Debian archive software, but it's recommended by Policy and not including
- it may cause problems if the package is ever handled by
- archive-processing software that doesn't support pools (private archives,
- for instance).
+ section of its control file.  The Section field is required for source
+ packages at the request of the Debian ftp-masters.
 
 Tag: section-category-mismatch
 Type: error

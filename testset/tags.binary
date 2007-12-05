@@ -44,7 +44,6 @@ W: binary source: ancient-standards-version 3.2.1 (current is 3.7.3)
 W: binary source: debian-rules-uses-pwd line 9
 W: binary source: maintainer-upload-has-incorrect-version-number 4-1.1
 W: binary source: native-package-with-dash-version
-W: binary source: no-section-field
 W: binary source: not-binnmuable-all-depends-any binary-data -> binary
 W: binary source: not-binnmuable-any-depends-all binary -> binary-data
 W: binary source: substvar-source-version-is-deprecated binary

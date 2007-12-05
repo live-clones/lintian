@@ -14,10 +14,9 @@ E: empty_2_i386.changes: no-description-in-changes-file
 E: pyempty: maintainer-address-missing empty
 E: pyempty: no-copyright-file
 E: pyempty: package-has-no-description
-I: empty source: no-section-field-for-source
 W: empty source: changelog-should-mention-nmu
 W: empty source: maintainer-not-full-name empty
-W: empty source: no-section-field
+W: empty source: no-section-field-for-source
 W: empty source: source-nmu-has-incorrect-version-number 2
 W: empty-docs: doc-package-should-be-section-doc empty-docs
 W: empty-docs: maintainer-not-full-name empty

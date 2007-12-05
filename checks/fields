@@ -285,7 +285,7 @@ if (open (FH, '<', "fields/essential")) {
 #---- Section
 
 if (not open (FH, '<', "fields/section")) {
-	tag "no-section-field", "";
+	tag 'no-section-field' if ($type eq 'binary');
 } else {
 	my $section = <FH>;
 	close FH;

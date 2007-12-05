@@ -36,7 +36,6 @@ I: relations-multiple-libs: unknown-field-in-control origin
 I: relations: unknown-field-in-control bugs
 I: relations: unknown-field-in-control origin
 W: relations source: ancient-standards-version 3.1.1 (current is 3.7.3)
-W: relations source: no-section-field
 W: relations source: package-has-a-duplicate-build-relation foo (= 3) [!amd64 !i386], foo (<< 4) [!amd64 !i386]
 W: relations source: package-has-a-duplicate-build-relation perl, perl (>= 5.0)
 W: relations source: redundant-origin-field
