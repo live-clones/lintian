@@ -1,3 +1,13 @@
+lintian (1.23.38) unstable; urgency=low
+
+  * The "HE's brown paper bag bug" release
+
+  * checks/patch-systems:
+    + [FL] Try appending .dpatch to patchnames found in 00list.
+           Patch by Leo Antunes. (Closes: #454516, #454518)
+
+ -- Frank Lichtenheld <djpig@debian.org>  Thu, 06 Dec 2007 00:40:17 +0100
+
 lintian (1.23.37) unstable; urgency=low
 
   The "Policy 3.7.3" release.

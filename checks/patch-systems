@@ -60,7 +60,7 @@ sub run {
 					chomp;
 					next if (/^#/); #ignore comments
 					push @patches, $_;
-					if (! -r "debfiles/patches/$_") {
+					if (! -r "debfiles/patches/$_" && ! -r "debfiles/patches/$_.dpatch") {
 						tag "dpatch-index-references-non-existant-patch", $_;
 					}
 				}
