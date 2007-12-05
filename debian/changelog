@@ -132,7 +132,7 @@ lintian (1.23.37) unstable; urgency=low
       writing them to the index (uncovered when someone accidentally
       appended a package description to Standards-Version).
 
- -- Russ Allbery <rra@debian.org>  Tue, 04 Dec 2007 13:04:23 -0800
+ -- Russ Allbery <rra@debian.org>  Tue, 04 Dec 2007 16:43:13 -0800
 
 lintian (1.23.36) unstable; urgency=low
 
