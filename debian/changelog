@@ -5,6 +5,9 @@ lintian (1.23.38) unstable; urgency=low
   * checks/patch-systems:
     + [FL] Try appending .dpatch to patchnames found in 00list.
            Patch by Leo Antunes. (Closes: #454516, #454518)
+  
+  * lib/Dep.pm:
+    + [FL] Fix "uninitialized value" warning in pred_implies().
 
  -- Frank Lichtenheld <djpig@debian.org>  Thu, 06 Dec 2007 00:40:17 +0100
 

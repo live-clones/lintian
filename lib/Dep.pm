@@ -252,6 +252,7 @@ sub implies_inverse {
 sub pred_implies {
     my ($p, $q) = @_;
     # If the names don't match, there is no relationship between them.
+    $$p[1] ||= ''; $$q[1] ||= '';
     return undef if $$p[1] ne $$q[1];
 
     # If the names match, then the only difference is in the architecture or
