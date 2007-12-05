@@ -94,6 +94,10 @@ lintian (1.23.37) unstable; urgency=low
   * debian/control:
     + [TK] Add Vcs-* fields to point to Lintian's repository.
     + [RA] Update standards version to 3.7.3.
+  * debian/dirs:
+    + [RA] Stop creating empty /usr/share/lintian/{overrides,info}
+      directories.  The latter is no longer used and the former is shipped
+      with packages that include overrides.
 
   * frontend/lintian:
     + [RA] Add critical as a recognized urgency.
@@ -107,6 +111,7 @@ lintian (1.23.37) unstable; urgency=low
       particular, mention that source packages are checked by providing
       the .dsc file as an argument.  (Closes: #441636)
     + [RA] Fix a slight spacing problem with the --color flag.
+    + [RA] Remove mention of unused /usr/share/lintian/info directory.
 
   * lib/DebVersions.pm:
     + [RA] Remove.  This isn't used by anything and would produce

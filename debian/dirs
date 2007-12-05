@@ -1,5 +1,3 @@
 usr/bin
 etc
 var/spool/lintian
-usr/share/lintian/overrides
-usr/share/lintian/info
