@@ -1,3 +1,9 @@
+cdbs-test (1-1~bpo40+1) unstable; urgency=low
+
+  * Backport.
+
+ -- Russ Allbery <rra@debian.org>  Wed, 05 Dec 2007 17:23:59 -0800
+
 cdbs-test (1-1) unstable; urgency=low
 
   * Initial release
