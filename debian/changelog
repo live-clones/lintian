@@ -2,6 +2,9 @@ lintian (1.23.38) unstable; urgency=low
 
   * The "HE's brown paper bag bug" release
 
+  * checks/changelog-file:
+    + [RA] Don't warn about version numbers going backwards in the
+      changelog file if the comment says this is a backport.
   * checks/patch-systems:
     + [FL] Try appending .dpatch to patchnames found in 00list.
            Patch by Leo Antunes. (Closes: #454516, #454518)
@@ -9,7 +12,7 @@ lintian (1.23.38) unstable; urgency=low
   * lib/Dep.pm:
     + [FL] Fix "uninitialized value" warning in pred_implies().
 
- -- Frank Lichtenheld <djpig@debian.org>  Thu, 06 Dec 2007 00:40:17 +0100
+ -- Russ Allbery <rra@debian.org>  Wed, 05 Dec 2007 17:21:44 -0800
 
 lintian (1.23.37) unstable; urgency=low
 
