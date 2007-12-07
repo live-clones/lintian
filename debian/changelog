@@ -9,6 +9,12 @@ lintian (1.23.39) UNRELEASED; urgency=low
     + [RA] Warn about debug packages that aren't priority: extra.  Thanks,
       Joerg Jaspert.  (Closes: #454358)
     + [RA] Ignore Original-Maintainer if the version contains ubuntu.
+    + [RA] Only warn about Section for Python packages starting with
+      python-, not py, since py picks up too many things that aren't
+      Python modules.
+    + [RA] Only warn about Section for Perl packages matching lib.*-perl
+      to avoid false positives for things like dh-make-perl.  Thanks,
+      Damyan Ivanov.  (Closes: #454723)
   * checks/files:
     + [RA] Warn about packages providing files in /usr/lib/debug that
       aren't named -dbg.  Thanks, Joerg Jaspert.
@@ -24,7 +30,7 @@ lintian (1.23.39) UNRELEASED; urgency=low
       against a different list of allowable distributions.  Merged from
       the Ubuntu patch.
 
- -- Russ Allbery <rra@debian.org>  Thu, 06 Dec 2007 21:01:51 -0800
+ -- Russ Allbery <rra@debian.org>  Fri, 07 Dec 2007 12:08:32 -0800
 
 lintian (1.23.38) unstable; urgency=low
 

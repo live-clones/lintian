@@ -27,9 +27,9 @@ binary-indep:
 	install -d debian/empty-docs debian/empty-docs/DEBIAN
 	dpkg-gencontrol -pempty-docs -Pdebian/empty-docs
 	dpkg --build debian/empty-docs ..
-	install -d debian/empty-perl debian/empty-perl/DEBIAN
-	dpkg-gencontrol -pempty-perl -Pdebian/empty-perl
-	dpkg --build debian/empty-perl ..
+	install -d debian/libempty-perl debian/libempty-perl/DEBIAN
+	dpkg-gencontrol -plibempty-perl -Pdebian/libempty-perl
+	dpkg --build debian/libempty-perl ..
 	install -d debian/python-empty debian/python-empty/DEBIAN
 	dpkg-gencontrol -ppython-empty -Pdebian/python-empty
 	dpkg --build debian/python-empty ..
@@ -38,7 +38,7 @@ binary: binary-indep
 
 clean:
 	rm -rf $(CURDIR)/debian/empty $(CURDIR)/debian/empty-docs \
-		$(CURDIR)/debian/empty-perl $(CURDIR)/debian/python-empty \
+		$(CURDIR)/debian/libempty-perl $(CURDIR)/debian/python-empty \
 		debian/files
 
 .PHONY: build binary-indep binary clean

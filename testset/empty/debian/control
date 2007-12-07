@@ -8,7 +8,7 @@ Package: empty-docs
 Architecture: all
 Section: perl
 
-Package: empty-perl
+Package: libempty-perl
 Architecture: all
 Section: doc
 

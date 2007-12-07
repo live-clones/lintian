@@ -317,7 +317,7 @@ if (not open (FH, '<', "fields/section")) {
 	    if ($pkg =~ /-docs?$/) {
 		tag "doc-package-should-be-section-doc", $pkg
 		    unless $parts[-1] eq 'doc';
-	    } elsif ($pkg =~ /-perl$/) {
+	    } elsif ($pkg =~ /^lib.*-perl$/) {
 		tag "perl-package-should-be-section-perl", $pkg
 		    unless $parts[-1] eq 'perl';
 	    } elsif ($pkg =~ /^python-/) {
