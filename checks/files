@@ -32,7 +32,6 @@ my $type = shift;
 my $file;
 my $source_pkg = "";
 my $pkg_section = "";
-my $pkg_priority = "";
 my $is_python;
 my $is_perl;
 my $has_binary_perl_file;
