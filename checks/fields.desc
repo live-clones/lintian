@@ -671,15 +671,27 @@ Info: This package appears to be an architecture-indepedent Python module
 
 Tag: doc-package-should-be-section-doc
 Type: warning
-Info: This package has a name suggesting that it contains documentation,
- so it should be in section "doc".
+Info: This package has a name suggesting that it contains only
+ documentation.  If so, it should be in section "doc".
 
 Tag: python-package-should-be-section-python
 Type: warning
-Info: This package has a name suggesting that it is Python-based, so it
- should be in section "python".
+Info: This package has a name suggesting that it is a Python extension or
+ part of the Python environment.  If so, it should be in section
+ "python".
 
 Tag: perl-package-should-be-section-perl
 Type: warning
-Info: This package has a name suggest that it is Perl-based, so it should
- be in section "perl".
+Info: This package has a name suggesting that it is a Perl module package.
+ If so, it should be in section "perl".
+
+Tag: dev-package-should-be-section-libdevel
+Type: warning
+Info: This package has a name suggesting that it is a library development
+ package.  If so, it should be in section "libdevel".
+
+Tag: debug-package-should-be-priority-extra
+Type: warning
+Info: This package has a name suggesting that it contains detached
+ debugging symbols.  If so, it should have priority "extra" since users
+ normally do not need such packages.

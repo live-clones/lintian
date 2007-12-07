@@ -12,6 +12,6 @@ Package: empty-perl
 Architecture: all
 Section: doc
 
-Package: pyempty
+Package: python-empty
 Architecture: all
 Section: doc

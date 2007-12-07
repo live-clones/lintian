@@ -30,13 +30,15 @@ binary-indep:
 	install -d debian/empty-perl debian/empty-perl/DEBIAN
 	dpkg-gencontrol -pempty-perl -Pdebian/empty-perl
 	dpkg --build debian/empty-perl ..
-	install -d debian/pyempty debian/pyempty/DEBIAN
-	dpkg-gencontrol -ppyempty -Pdebian/pyempty
-	dpkg --build debian/pyempty ..
+	install -d debian/python-empty debian/python-empty/DEBIAN
+	dpkg-gencontrol -ppython-empty -Pdebian/python-empty
+	dpkg --build debian/python-empty ..
 
 binary: binary-indep
 
 clean:
-	rm -rf $(CURDIR)/debian/empty $(CURDIR)/debian/empty-docs $(CURDIR)/debian/empty-perl $(CURDIR)/debian/pyempty debian/files
+	rm -rf $(CURDIR)/debian/empty $(CURDIR)/debian/empty-docs \
+		$(CURDIR)/debian/empty-perl $(CURDIR)/debian/python-empty \
+		debian/files
 
 .PHONY: build binary-indep binary clean

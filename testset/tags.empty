@@ -11,9 +11,9 @@ E: empty: maintainer-address-missing empty
 E: empty: no-copyright-file
 E: empty: package-has-no-description
 E: empty_2_i386.changes: no-description-in-changes-file
-E: pyempty: maintainer-address-missing empty
-E: pyempty: no-copyright-file
-E: pyempty: package-has-no-description
+E: python-empty: maintainer-address-missing empty
+E: python-empty: no-copyright-file
+E: python-empty: package-has-no-description
 W: empty source: changelog-should-mention-nmu
 W: empty source: maintainer-not-full-name empty
 W: empty source: no-section-field-for-source
@@ -27,6 +27,6 @@ W: empty-perl: perl-package-should-be-section-perl empty-perl
 W: empty: maintainer-not-full-name empty
 W: empty: no-priority-field
 W: empty: no-section-field
-W: pyempty: maintainer-not-full-name empty
-W: pyempty: no-priority-field
-W: pyempty: python-package-should-be-section-python pyempty
+W: python-empty: maintainer-not-full-name empty
+W: python-empty: no-priority-field
+W: python-empty: python-package-should-be-section-python python-empty

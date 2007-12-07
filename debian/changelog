@@ -1,3 +1,14 @@
+lintian (1.23.39) UNRELEASED; urgency=low
+
+  * checks/fields:
+    + [RA] Python documentation packages should still be in section doc.
+      Thanks, Michal Čihař.  (Closes: #454688)
+    + [RA] Warn about lib.*-dev packages not in section libdevel.
+    + [RA] Warn about debug packages that aren't priority: extra.  Thanks,
+      Joerg Jaspert.  (Closes: #454358)
+
+ -- Russ Allbery <rra@debian.org>  Thu, 06 Dec 2007 20:24:55 -0800
+
 lintian (1.23.38) unstable; urgency=low
 
   * The "HE's brown paper bag bug" release

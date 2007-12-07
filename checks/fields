@@ -297,7 +297,6 @@ if (not open (FH, '<', "fields/section")) {
 		tag "wrong-section-for-udeb", "$section";
 	    }
 	} else {
-
 	    my @parts = split /\//, $section, 2;
 
 	    if ($parts[0] =~ /non-US/i) {
@@ -314,15 +313,21 @@ if (not open (FH, '<', "fields/section")) {
 		tag "unknown-section", "$section" unless $known_sections{$parts[0]};
 	    }
 
-	    #Check package name <-> section
-	    if ($pkg =~ m{-docs?$} && $parts[-1] ne "doc") {
-		tag "doc-package-should-be-section-doc", $pkg;
-	    } elsif ($pkg =~ m{-perl$} && $parts[-1] ne "perl") {
-		tag "perl-package-should-be-section-perl", $pkg;
-	    } elsif ($pkg =~ m{^py} && $parts[-1] ne "python") {
-		tag "python-package-should-be-section-python", $pkg;
-	    }
-	}
+	    # Check package name <-> section.
+	    if ($pkg =~ /-docs?$/) {
+		tag "doc-package-should-be-section-doc", $pkg
+		    unless $parts[-1] eq 'doc';
+	    } elsif ($pkg =~ /-perl$/) {
+		tag "perl-package-should-be-section-perl", $pkg
+		    unless $parts[-1] eq 'perl';
+	    } elsif ($pkg =~ /^python-/) {
+		tag "python-package-should-be-section-python", $pkg
+		    unless $parts[-1] eq 'python';
+	    } elsif ($pkg =~ /^lib.*-dev$/) {
+                tag "dev-package-should-be-section-libdevel", $pkg
+                    unless $parts[-1] eq 'libdevel';
+            }
+        }
 }
 
 #---- Priority
@@ -336,6 +341,11 @@ if (not open (FH, '<', "fields/priority")) {
 	unfold("priority", \$priority);
 
 	tag "unknown-priority", "$priority" if (! $known_prios{$priority});
+
+	if ($pkg =~ /-dbg$/) {
+		tag "debug-package-should-be-priority-extra", $pkg
+		    unless $priority eq 'extra';
+        }
 }
 
 #---- Standards-Version
