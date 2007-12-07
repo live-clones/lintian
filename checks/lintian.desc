@@ -11,13 +11,20 @@ Ref: policy 5.5
 
 Tag: bad-distribution-in-changes-file
 Type: error
-Info: You've specified an unknown `target distribution' for your upload in
+Info: You've specified an unknown target distribution for your upload in
  the <tt>debian/changelog</tt> file.
  .
- Note, that the distributions <tt>non-free</tt> and <tt>contrib</tt>
- are no longer valid. You'll have to use distribution
- `<tt>unstable</tt>' and `<tt>Section: non-free/xxx</tt>' or
- `<tt>Section: contrib/xxx</tt>' instead.
+ Note that the distributions <tt>non-free</tt> and <tt>contrib</tt> are no
+ longer valid. You'll have to use distribution <tt>unstable</tt> and
+ <tt>Section: non-free/xxx</tt> or <tt>Section: contrib/xxx</tt> instead.
+
+Tag: bad-ubuntu-distribution-in-changes-file
+Type: error
+Info: You've specified an unknown target distribution for your upload in
+ the <tt>debian/changelog</tt> file.
+ .
+ Your version string suggests this package is for Ubuntu, so your
+ distribution should be one of hardy, gutsy, feisty, edgy or dapper.
 
 Tag: no-urgency-in-changes-file
 Type: warning

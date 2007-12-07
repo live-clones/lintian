@@ -77,6 +77,12 @@ if (defined $uploaders) {
 	$upload_is_nmu = 0 if grep /^\s*\Q$uploader\E\s*$/, @uploaders;
 }
 
+# No such thing as NMUs in Ubuntu-land.
+if ($version =~ /ubuntu/) {
+    $upload_is_nmu = 0;
+    $version_nmuness = 0;
+}
+
 if ($maintainer =~ /packages\@qa.debian.org/) {
 	tag "orphaned-package-should-not-have-uploaders", ""
 		if defined $uploaders;

@@ -80,6 +80,7 @@ use vars qw
 %known_prios = map { $_ => 1 }
     ('required', 'important', 'standard', 'optional', 'extra');
 
+# The Ubuntu original-maintainer field is handled separately.
 %known_source_fields = map { $_ => 1 }
     ('source', 'version', 'maintainer', 'binary', 'architecture',
      'standards-version', 'files', 'build-depends', 'build-depends-indep',
@@ -88,12 +89,14 @@ use vars qw
      'vcs-bzr', 'vcs-cvs', 'vcs-darcs', 'vcs-git', 'vcs-hg', 'vcs-mtn',
      'vcs-svn', 'vcs-browser', 'dm-upload-allowed');
 
+# The Ubuntu original-maintainer field is handled separately.
 %known_binary_fields = map { $_ => 1 }
     ('package', 'version', 'architecture', 'depends', 'pre-depends',
      'recommends', 'suggests', 'enhances', 'conflicts', 'provides',
      'replaces', 'essential', 'maintainer', 'section', 'priority',
      'source', 'description', 'installed-size', 'python-version', 'homepage');
 
+# The Ubuntu original-maintainer field is handled separately.
 %known_udeb_fields = map { $_ => 1 }
     ('package', 'version', 'architecture', 'subarchitecture', 'depends',
      'recommends', 'enhances', 'provides', 'installer-menu-item',

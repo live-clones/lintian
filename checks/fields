@@ -818,6 +818,8 @@ if (open(FH, '<', "fields/python-version")) {
 for my $field (glob("fields/*")) {
 	$field =~ s!^fields/!!;
 
+	next if ($field eq 'original-maintainer') and $version =~ /ubuntu/;
+
 	tag "obsolete-field", "$field"
 	    if $known_obsolete_fields{$field};
 

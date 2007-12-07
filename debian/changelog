@@ -8,11 +8,23 @@ lintian (1.23.39) UNRELEASED; urgency=low
     + [RA] Warn about lib.*-dev packages not in section libdevel.
     + [RA] Warn about debug packages that aren't priority: extra.  Thanks,
       Joerg Jaspert.  (Closes: #454358)
+    + [RA] Ignore Original-Maintainer if the version contains ubuntu.
   * checks/files:
     + [RA] Warn about packages providing files in /usr/lib/debug that
       aren't named -dbg.  Thanks, Joerg Jaspert.
+  * checks/lintian.desc:
+    + [RA] Add bad-ubuntu-distribution-in-changes-file, merged from the
+      Ubuntu patch.
+  * checks/nmu:
+    + [RA] No packages with ubuntu in the version number are NMUs.  Merged
+      from the Ubuntu patch.
 
- -- Russ Allbery <rra@debian.org>  Thu, 06 Dec 2007 20:43:36 -0800
+  * frontend/lintian:
+    + [RA] If the version number indicates an Ubuntu package, check
+      against a different list of allowable distributions.  Merged from
+      the Ubuntu patch.
+
+ -- Russ Allbery <rra@debian.org>  Thu, 06 Dec 2007 21:01:51 -0800
 
 lintian (1.23.38) unstable; urgency=low
 
