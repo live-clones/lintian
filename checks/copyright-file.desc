@@ -1,7 +1,6 @@
 Check-Script: copyright-file
 Author: Christian Schwarz <schwarz@debian.org>
 Abbrev: cpy
-Standards-Version: 3.2.0
 Type: binary
 Unpack-Level: 1
 Needs-Info: copyright-file

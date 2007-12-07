@@ -1,7 +1,6 @@
 Check-Script: manpages
 Author: Christian Schwarz <schwarz@debian.org>
 Abbrev: man
-Standards-Version: 3.2.0
 Type: binary
 Unpack-Level: 2
 Needs-Info: file-info

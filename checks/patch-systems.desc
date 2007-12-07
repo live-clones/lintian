@@ -1,7 +1,6 @@
 Check-Script: patch-systems
 Author: Marc Brockschmidt <he@debian.org>
 Abbrev: pat
-Standards-Version: 3.7.2
 Type: source
 Unpack-Level: 1
 Info: This script checks for various possible problems when using patch systems

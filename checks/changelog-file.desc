@@ -1,7 +1,6 @@
 Check-Script: changelog-file
 Author: Christian Schwarz <schwarz@debian.org>
 Abbrev: chg
-Standards-Version: 3.2.0
 Type: binary
 Unpack-Level: 1
 Needs-Info: file-info, changelog-file

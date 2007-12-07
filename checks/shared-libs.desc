@@ -1,7 +1,6 @@
 Check-Script: shared-libs
 Author: Christian Schwarz <schwarz@debian.org>
 Abbrev: shl
-Standards-Version: 3.7.2
 Type: binary, udeb
 Unpack-Level: 1
 Needs-Info: file-info, objdump-info

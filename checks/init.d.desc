@@ -1,7 +1,6 @@
 Check-Script: init.d
 Author: Christian Schwarz <schwarz@debian.org>
 Abbrev: ini
-Standards-Version: 3.2.0
 Type: binary
 Needs-Info: init.d
 Unpack-Level: 1

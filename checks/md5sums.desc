@@ -1,7 +1,6 @@
 Check-Script: md5sums
 Author: Christian Schwarz <schwarz@debian.org>
 Abbrev: md5
-Standards-Version: 3.2.0
 Type: binary
 Unpack-Level: 1
 Needs-Info: md5sums

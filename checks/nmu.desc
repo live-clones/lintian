@@ -1,7 +1,6 @@
 Check-Script: nmu
 Author: Jeroen van Wolffelaar <jeroen@wolffelaar.nl>
 Abbrev: nmu
-Standards-Version: 3.6.1
 Type: source
 Unpack-Level: 1
 Needs-Info: debfiles

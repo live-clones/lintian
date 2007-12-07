@@ -1,7 +1,6 @@
 Check-Script: etcfiles
 Author: Sean 'Shaleh' Perry <shaleh@debian.org>
 Abbrev: etc
-Standards-Version: 3.5.0.0
 Type: binary
 Needs-Info: etcfiles
 Unpack-Level: 1

@@ -1,7 +1,6 @@
 Check-Script: cruft
 Author: Sean 'Shaleh' Perry <shaleh@debian.org>
 Abbrev: deb
-Standards-Version: 3.7.2
 Type: source
 Unpack-Level: 2
 Info: This looks for cruft in Debian packaging or upstream source

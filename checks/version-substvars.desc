@@ -1,7 +1,6 @@
 Check-Script: version-substvars
 Author: Adeodato Simó <dato@net.com.org.es>
 Abbrev: v-s
-Standards-Version: 3.7.2
 Type: source
 Unpack-Level: 1
 Needs-Info: debfiles, source-control-file

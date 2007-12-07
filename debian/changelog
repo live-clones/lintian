@@ -1,5 +1,7 @@
 lintian (1.23.39) UNRELEASED; urgency=low
 
+  * checks/*.desc:
+    + [RA] Remove the unused Standards-Version header.
   * checks/fields:
     + [RA] Python documentation packages should still be in section doc.
       Thanks, Michal Čihař.  (Closes: #454688)
@@ -10,7 +12,7 @@ lintian (1.23.39) UNRELEASED; urgency=low
     + [RA] Warn about packages providing files in /usr/lib/debug that
       aren't named -dbg.  Thanks, Joerg Jaspert.
 
- -- Russ Allbery <rra@debian.org>  Thu, 06 Dec 2007 20:24:55 -0800
+ -- Russ Allbery <rra@debian.org>  Thu, 06 Dec 2007 20:43:36 -0800
 
 lintian (1.23.38) unstable; urgency=low
 

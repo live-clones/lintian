@@ -1,6 +1,5 @@
 Check-Script: rules
 Author: Russ Allbery <rra@debian.org>
-Standards-Version: 3.6.2
 Type: source
 Unpack-Level: 1
 Needs-Info: debfiles

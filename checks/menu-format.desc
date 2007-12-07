@@ -1,7 +1,6 @@
 Check-Script: menu-format
 Author: Joey Hess <joeyh@master.debian.org>
 Abbrev: mnf
-Standards-Version: 3.6.1
 Needs-Info: menu-files
 Type: binary
 Unpack-Level: 1

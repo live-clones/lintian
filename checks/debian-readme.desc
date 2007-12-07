@@ -1,7 +1,6 @@
 Check-Script: debian-readme
 Author: Richard Braakman <dark@xs4all.nl>
 Abbrev: drm
-Standards-Version: 3.2.0
 Type: binary
 Unpack-Level: 1
 Needs-Info: debian-readme

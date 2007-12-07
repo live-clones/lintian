@@ -1,7 +1,6 @@
 Check-Script: infofiles
 Author: Josip Rodin <jrodin@jagor.srce.hr>
 Abbrev: info
-Standards-Version: 3.5.6
 Type: binary
 Unpack-Level: 2
 Needs-Info: file-info
