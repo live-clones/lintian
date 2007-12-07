@@ -32,6 +32,7 @@ my $type = shift;
 my $file;
 my $source_pkg = "";
 my $pkg_section = "";
+my $pkg_priority = "";
 my $is_python;
 my $is_perl;
 my $has_binary_perl_file;
@@ -59,14 +60,16 @@ while (<IN>) {
 }
 close(IN);
 
-#Get source package name, if possible
+# Get source package name, if possible.
 if (open (SOURCE, '<', "fields/source")) {
     chomp ($source_pkg = (<SOURCE> || ""));
+    close SOURCE;
 }
 
-#get section:
+# Get section.
 if (open (SECTION, '<', "fields/section")) {
     chomp ($pkg_section = <SECTION>);
+    close SECTION;
 }
 
 # find out which files are scripts
@@ -78,8 +81,9 @@ while (<SCRIPTS>) {
 }
 close(SCRIPTS);
 
-# We only want to warn about this once.
+# We only want to warn about these once.
 my $warned_x11_predepends = 0;
+my $warned_debug_name = 0;
 
 my %dir_counts;
 
@@ -287,6 +291,15 @@ while (<IN>) {
 	elsif ($file =~ m,^usr/X11R6/, and
 	       $perm !~ m,^l,) { #links to FHS locations are allowed
 	    tag "package-installs-file-to-usr-x11r6", "$file";
+	}
+
+	# ---------------- /usr/lib/debug
+	elsif ($file =~ m,^usr/lib/debug/\S,) {
+	    unless ($warned_debug_name) {
+		tag "debug-package-should-be-named-dbg", "$file"
+		    unless ($pkg =~ /-dbg$/);
+		$warned_debug_name = 1;
+	    }
 	}
 
 	# ---------------- /usr/lib/sgml

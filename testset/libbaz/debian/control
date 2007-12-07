@@ -28,3 +28,10 @@ Architecture: any
 Depends: ${shlibs:Depends}, libbaz2 (= ${Source-Version})
 Description: development package
  Regression test for lintian's handling of libraries
+
+Package: libbaz2-dbg
+Architecture: any
+Depends: libbaz2 (= ${binary:Version})
+Priority: optional
+Description: debugging package
+ Regression test for lintian's handling of libraries

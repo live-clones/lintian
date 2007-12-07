@@ -6,6 +6,9 @@ lintian (1.23.39) UNRELEASED; urgency=low
     + [RA] Warn about lib.*-dev packages not in section libdevel.
     + [RA] Warn about debug packages that aren't priority: extra.  Thanks,
       Joerg Jaspert.  (Closes: #454358)
+  * checks/files:
+    + [RA] Warn about packages providing files in /usr/lib/debug that
+      aren't named -dbg.  Thanks, Joerg Jaspert.
 
  -- Russ Allbery <rra@debian.org>  Thu, 06 Dec 2007 20:24:55 -0800
 

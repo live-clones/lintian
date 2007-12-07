@@ -718,3 +718,10 @@ Ref: policy 11.11
 Info: This package is marked as part of the section games, but contains
  exectuables in <tt>/bin</tt> or <tt>/usr/bin/</tt>.  This can be intentional,
  but is usually a mistake.
+
+Tag: debug-package-should-be-named-dbg
+Type: warning
+Info: This package provides at least one file in <tt>/usr/lib/debug</tt>,
+ which is intended for detached debugging symbols, but the package name
+ does not end in "-dbg".  Detached debugging symbols should be put into a
+ separate package, Priority: extra, with a package name ending in "-dbg".
