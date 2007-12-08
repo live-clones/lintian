@@ -1290,7 +1290,7 @@ for (reverse sort @packages) {
                     s/\s+/ /go;
                     my $override = $_;
                     $override =~ s/^\Q$pkg\E( \Q$long_type\E)?: //;
-                    if ($override eq '' or $override !~ /^[a-z0-9-]+(\s+.*)?$/) {
+                    if ($override eq '' or $override !~ /^[\w0-9-]+(\s+.*)?$/) {
                         tag ('malformed-override', $_);
                     } else {
                         Tags::add_override($override);
