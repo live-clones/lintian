@@ -58,7 +58,8 @@ sub run {
 				my @patches;
 				while(<IN>) {
 					chomp;
-					next if (/^#/); #ignore comments
+					next if (/^\#/); #ignore comments
+					next if (/^\s*$/); #ignore blank lines
 					push @patches, $_;
 					if (! -r "debfiles/patches/$_" && ! -r "debfiles/patches/$_.dpatch") {
 						tag "dpatch-index-references-non-existant-patch", $_;
@@ -74,7 +75,7 @@ sub run {
 							#stop if something looking like a patch starts:
 							last if /^---/;
 							#note comment if we find a proper one
-							$has_comment = 1 if (/^#+\s*DP:\s*(.*)$/ && $1 !~ /^no description\.?$/i)
+							$has_comment = 1 if (/^\#+\s*DP:\s*(.*)$/ && $1 !~ /^no description\.?$/i)
 						}
 						close(PATCH_FILE);
 						unless ($has_comment) {

@@ -24,13 +24,16 @@ lintian (1.23.39) UNRELEASED; urgency=low
   * checks/nmu:
     + [RA] No packages with ubuntu in the version number are NMUs.  Merged
       from the Ubuntu patch.
+  * checks/patch-systems:
+    + [RA] Ignore blank lines in 00list and don't report them as patches
+      without descriptions.  Thanks, Julien BLACHE.  (Closes: #454730)
 
   * frontend/lintian:
     + [RA] If the version number indicates an Ubuntu package, check
       against a different list of allowable distributions.  Merged from
       the Ubuntu patch.
 
- -- Russ Allbery <rra@debian.org>  Fri, 07 Dec 2007 12:08:32 -0800
+ -- Russ Allbery <rra@debian.org>  Fri, 07 Dec 2007 16:02:27 -0800
 
 lintian (1.23.38) unstable; urgency=low
 
