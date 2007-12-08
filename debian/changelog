@@ -1,3 +1,17 @@
+lintian (1.23.40) unstable; urgency=low
+
+  The "Russ's brown paper bag bug" release.
+
+  * checks/doc-base:
+    + [RA] My mistaken precedence fiddling with the doc-base checks caused
+      them to warn about every abstract containing a period.  Patch from
+      Chris Lamb.  (Closes: #454941)
+
+  * lib/Spelling.pm:
+    + [RA] Add common mistakes for publicly and spelling.
+
+ -- Russ Allbery <rra@debian.org>  Sat, 08 Dec 2007 12:15:33 -0800
+
 lintian (1.23.39) unstable; urgency=low
 
   The "Ubuntu and doc-base patch merge, with extra fixes" release.

@@ -5,21 +5,21 @@ E: binary: debian-news-file-uses-obsolete-national-encoding at line 3
 E: binary: depends-on-x-metapackage depends: xorg
 E: binary: desktop-entry-missing-required-key /usr/share/applications/goodbye.desktop Name
 E: binary: doc-base-document-field-ends-in-whitespace binary:1
-E: binary: doc-base-file-duplicated-format binary:32 html
-E: binary: doc-base-file-lacks-required-field binary:18 files
+E: binary: doc-base-file-duplicated-format binary:36 html
 E: binary: doc-base-file-lacks-required-field binary:22 files
-E: binary: doc-base-file-lacks-required-field binary:22 format
-E: binary: doc-base-file-no-format binary:22
+E: binary: doc-base-file-lacks-required-field binary:26 files
+E: binary: doc-base-file-lacks-required-field binary:26 format
+E: binary: doc-base-file-no-format binary:26
 E: binary: doc-base-file-no-format-section space :0
-E: binary: doc-base-file-no-index binary:31
-E: binary: doc-base-file-references-missing-file binary:13 /usr/share/doc/binary/binary.sgml.gz
-E: binary: doc-base-file-references-missing-file binary:17 /usr/share/doc/binary/binary.txt
-E: binary: doc-base-file-references-missing-file binary:21 /usr/share/doc/binary/html/ch4.html
-E: binary: doc-base-file-references-missing-file binary:27 /usr/share/doc/binary/hml/*.html
-E: binary: doc-base-file-references-missing-file binary:30 /usr/share/info/binary.info.gz
-E: binary: doc-base-file-unknown-field binary:14 unknown
-E: binary: doc-base-file-unknown-field binary:8 unknown
-E: binary: doc-base-index-references-multiple-files binary:21
+E: binary: doc-base-file-no-index binary:35
+E: binary: doc-base-file-references-missing-file binary:17 /usr/share/doc/binary/binary.sgml.gz
+E: binary: doc-base-file-references-missing-file binary:21 /usr/share/doc/binary/binary.txt
+E: binary: doc-base-file-references-missing-file binary:25 /usr/share/doc/binary/html/ch4.html
+E: binary: doc-base-file-references-missing-file binary:31 /usr/share/doc/binary/hml/*.html
+E: binary: doc-base-file-references-missing-file binary:34 /usr/share/info/binary.info.gz
+E: binary: doc-base-file-unknown-field binary:12 unknown
+E: binary: doc-base-file-unknown-field binary:18 unknown
+E: binary: doc-base-index-references-multiple-files binary:25
 E: binary: doc-base-invalid-document-field binary:1 binary!docs  
 E: binary: executable-desktop-file /usr/share/applications/goodbye.desktop 0755
 E: binary: file-directly-in-usr-share usr/share/baz
@@ -34,6 +34,7 @@ E: binary: postinst-does-not-call-installdocs usr/share/doc-base/space
 E: binary: postinst-does-not-call-updatemenus usr/share/menu/binary
 E: binary: postrm-does-not-call-updatemenus usr/share/menu/binary
 E: binary: prerm-does-not-call-installdocs usr/share/doc-base/space 
+E: binary: spelling-error-in-doc-base-abstract-field binary:10 speling spelling
 E: binary: statically-linked-binary ./usr/bin/static-hello
 E: binary: su-wrapper-without--c /usr/lib/menu/binary:2 su-to-root
 E: binary: su-wrapper-without--c /usr/lib/menu/binary:3 sux
@@ -70,9 +71,8 @@ W: binary: desktop-entry-contains-unknown-key /usr/share/applications/goodbye.de
 W: binary: desktop-entry-contains-unknown-key /usr/share/applications/goodbye.desktop:7 icon
 W: binary: desktop-entry-invalid-category WeirdStuff /usr/share/applications/goodbye.desktop
 W: binary: desktop-entry-uses-reserved-category Screensaver /usr/share/applications/goodbye.desktop
-W: binary: doc-base-abstract-field-separator-extra-whitespaces binary:5
-W: binary: doc-base-abstract-field-separator-extra-whitespaces binary:6
-W: binary: doc-base-file-unknown-format binary:16 esp
+W: binary: doc-base-abstract-field-separator-extra-whitespaces binary:7
+W: binary: doc-base-file-unknown-format binary:20 esp
 W: binary: executable-not-elf-or-script ./usr/bin/iminusrbin
 W: binary: executable-not-elf-or-script ./usr/share/applications/goodbye.desktop
 W: binary: file-in-unusual-dir usr/bar
@@ -103,6 +103,7 @@ W: binary: menu-item-uses-windowmanagers-section /usr/share/menu/binary:13
 W: binary: old-fsf-address-in-copyright-file
 W: binary: package-contains-hardlink usr/bar2 -> usr/share/baz
 W: binary: package-contains-upstream-install-documentation usr/share/doc/binary/INSTALL
+W: binary: spelling-error-in-news-debian speling spelling
 W: binary: spelling-error-in-news-debian usefull useful
 W: binary: su-to-root-with-usr-sbin /usr/lib/menu/binary:4
 W: binary: su-to-root-with-usr-sbin /usr/share/menu/binary:4

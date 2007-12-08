@@ -4,6 +4,10 @@ Author: Russ Allbery
 Abstract: This control file exercises various tests of doc-base control
   files, including several things that aren't tested yet.  The third and
   fourth one has trailing whitespace.
+  .
+ This section has a speling error.
+ .
+ The above separator was fine.
 Section: Non/Existant
 Unknown: Some field
 

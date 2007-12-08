@@ -405,7 +405,7 @@ sub check_doc_base_field {
             if (/manage\s+online\s+manuals\s.*Debian/o) {
                 tag "doc-base-abstract-field-is-template", "$dbfile:$line"
                     unless $pkg eq "doc-base";
-            } elsif (/^(\s+)\.(\s*)$/o and $1 ne " " or $2) {
+            } elsif (/^(\s+)\.(\s*)$/o and ($1 ne " " or $2)) {
                 tag "doc-base-abstract-field-separator-extra-whitespaces",
                     "$dbfile:" . ($line - $#{@$vals} + $idx);
             } elsif (!$leadsp && /^(\s+)(\S)/o) {

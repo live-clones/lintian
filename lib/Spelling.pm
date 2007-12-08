@@ -247,6 +247,7 @@ our %CORRECTIONS = qw(
                       pronouce pronounce
                       protcol protocol
                       protocoll protocol
+                      publically publicly
                       recieve receive
                       recieved received
                       redircet redirect
@@ -269,6 +270,7 @@ our %CORRECTIONS = qw(
                       similiar similar
                       simliar similar
                       speach speech
+                      speling spelling
                       splitted split
                       standart standard
                       staically statically
