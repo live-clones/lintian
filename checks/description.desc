@@ -104,3 +104,9 @@ Info: The extended description contains a "Homepage:" pseudo-header
  dpkg now supports Homepage: as a regular field in
  <tt>debian/control</tt>.  This header should be moved from the extended
  description to the fields for the relevant source or binary packages.
+
+Tag: spelling-error-in-description
+Type: warning
+Info: Lintian found a spelling error in the package description.  Lintian
+ has a list of common misspellings that it looks for.  It does not have a
+ dictionary like a spelling checker does.

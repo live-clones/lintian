@@ -2,11 +2,20 @@ lintian (1.23.39) UNRELEASED; urgency=low
 
   * checks/*.desc:
     + [RA] Remove the unused Standards-Version header.
+  * checks/changelog-file{.desc,}:
+    + [RA] Check the latest entry of the Debian changelog and any
+      NEWS.Debian file for common spelling errors.  (Closes: #36017)
+  * checks/copyright-file{.desc,}:
+    + [RA] Moved spelling-error-in-copyright check to here.
   * checks/debconf:
     + [RA] Go back to not warning about "no" in boolean debconf
       questions.  The word is too common in normal English prose for
       reasons other than assuming a particular debconf interface.  Thanks,
       Rafael Laboissiere.  (Closes: #453177)
+  * checks/debian-readme{.desc,}:
+    + [RA] Moved spelling-error-in-readme-debian check to here.
+  * checks/description{.desc,}:
+    + [RA] Moved spelling-error-in-description check to here.
   * checks/fields:
     + [RA] Python documentation packages should still be in section doc.
       Thanks, Michal Čihař.  (Closes: #454688)
@@ -28,12 +37,17 @@ lintian (1.23.39) UNRELEASED; urgency=low
       Ubuntu patch.
     + [RA] Fix the malformed-override long description.  Thanks, Stefan
       Fritsch.
+  * checks/menus{.desc,}:
+    + [RA] Substantial overhaul and expansion of the doc-base control file
+      checks.  Patch from Robert Luberda.  (Closes: #448783)
   * checks/nmu:
     + [RA] No packages with ubuntu in the version number are NMUs.  Merged
       from the Ubuntu patch.
   * checks/patch-systems:
     + [RA] Ignore blank lines in 00list and don't report them as patches
       without descriptions.  Thanks, Julien BLACHE.  (Closes: #454730)
+  * checks/spelling{.desc,}:
+    + [RA] Subsumed into other check scripts and lib/Spelling.pm.
 
   * frontend/lintian:
     + [RA] If the version number indicates an Ubuntu package, check
@@ -45,7 +59,12 @@ lintian (1.23.39) UNRELEASED; urgency=low
       optional again.  Thanks, Stefan Fritsch.  (Closes: #454790)
     + [RA] Check overrides for implausible tags.
 
- -- Russ Allbery <rra@debian.org>  Fri, 07 Dec 2007 16:22:42 -0800
+  * lib/Spelling.pm:
+    + [RA] New module to do general spelling checks for specific
+      misspellings.  Based on the previous checks/spelling and a patch by
+      Robert Luberda.
+
+ -- Russ Allbery <rra@debian.org>  Fri, 07 Dec 2007 21:22:55 -0800
 
 lintian (1.23.38) unstable; urgency=low
 

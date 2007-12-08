@@ -161,7 +161,7 @@ Type: error
 Info: The Index field in a doc-base file should reference the single index
  file for that document.  Any other files belonging to the same document
  should be listed in the Files field.
-Ref: Debian doc-base Manual section 2.3
+Ref: Debian doc-base Manual section 2.3.2.2
 
 Tag: doc-base-file-references-missing-file
 Type: error
@@ -175,12 +175,18 @@ Type: warning
 Info: The Format field in this doc-base control file declares a format
  that is not supported.  Recognized formats are "HTML", "Text", "PDF",
  "PostScript", "Info", "DVI", and "DebianDoc-SGML" (case-insensitive).
-Ref: Debian doc-base Manual section 2.3
+Ref: Debian doc-base Manual section 2.3.2.2
 
 Tag: doc-base-file-no-format
 Type: error
 Info: A format section of this doc-base control file didn't specify a
  format.  Each section after the first must specify a format.
+Ref: Debian doc-base Manual section 2.3.2.2
+
+Tag: doc-base-file-no-format-section
+Type: error
+Info: This doc-base control file didn't specify any format
+ section.
 Ref: Debian doc-base Manual section 2.3.2.2
 
 Tag: doc-base-file-no-index
@@ -197,3 +203,86 @@ Info: The Document field in a doc-base file should not end in whitespace.
  doc-base (at least as of 0.8.5) cannot cope with such fields and
  debhelper 5.0.57 or earlier may create files ending in whitespace when
  installing such files.
+
+Tag: doc-base-document-field-not-in-first-line
+Type: error
+Info: The Document field in doc-base control file must be located at
+ first line of the file.  While unregistering documents, doc-base 0.8
+ and later parses only the first line of the control file for performance
+ reasons.
+Ref: Debian doc-base Manual section 2.3.2.1
+
+Tag: doc-base-file-unknown-field
+Type: error
+Info: The doc-base control file contains field which is either unknown
+ or not valid for the section where was found.  Possible reasons for this
+ error are: a typo in field name, missing empty line between control file
+ sections, or an extra empty line separating sections.
+Ref: Debian doc-base Manual sections 2.3.2.1 and 2.3.2.2
+
+Tag: doc-base-file-duplicated-field
+Type: error
+Info: The doc-base control file contains duplicated field.
+
+Tag: doc-base-file-duplicated-format
+Type: error
+Info: The doc-base control file contains a duplicated format.  Doc-base
+ files must not register different documents in one control file.
+Ref: Debian doc-base Manual section 2.3.2.2
+
+Tag: doc-base-file-lacks-required-field
+Type: error
+Info: The doc-base control file does not contain a required field for the
+ appropriate section.
+Ref: Debian doc-base Manual sections 2.3.2.1 and 2.3.2.2
+
+Tag: doc-base-invalid-document-field
+Type: error
+Info: The Document field should consists only of letters (a-z), digits
+ (0-9), plus (+) or minus (-) signs, and dots (.).  In particular,
+ uppercase letters are not allowed.
+Ref: Debian doc-base Manual section 2.2
+
+Tag: doc-base-abstract-field-is-template
+Type: warning
+Info: The Abstract field of doc-base contains a "manage online manuals"
+ phrase, which was copied verbatim from an example control file found in
+ section 2.3.1 of the Debian doc-base Manual.
+
+Tag: doc-base-abstract-might-contain-extra-leading-whitespaces
+Type: warning
+Info: Continuation lines of the Abstract field of doc-base control file
+ should start with only one space unless they are meant to be displayed
+ verbatim by fontends.
+Ref: Debian doc-base Manual section 2.3.2
+
+Tag: doc-base-abstract-field-separator-extra-whitespaces
+Type: warning
+Info: Unnecessary spaces were found in the paragraph separator line of the
+ doc-base's Abstract field.  The separator line should consist of a single
+ space followed by a single dot.
+Ref: Debian doc-base Manual section 2.3.2
+
+Tag: spelling-error-in-doc-base-title-field
+Type: error
+Info: Lintian found a spelling error in the Title field of this doc-base
+ control file.  Lintian has a list of common misspellings that it looks
+ for.  It does not have a dictionary like a spelling checker does.
+
+Tag: spelling-error-in-doc-base-abstract-field
+Type: error
+Info: Lintian found a spelling error in the Abstract field of this
+ doc-base control file.  Lintian has a list of common misspellings that
+ looks for.  It does not have a dictionary like a spelling checker does.
+
+Tag: doc-base-file-syntax-error
+Type: error
+Info: Lintian found a syntax error in the doc-base control file.
+Ref: Debian doc-base Manual section 2.3.2.2
+
+Tag: doc-base-file-separator-extra-whitespaces
+Type: warning
+Info: Unnecessary spaces were found in the doc-base file sections'
+ separator.  The section separator is an empty line and should not contain
+ any whitespace.
+Ref: Debian doc-base Manual section 2.3.2

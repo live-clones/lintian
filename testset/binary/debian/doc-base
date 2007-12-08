@@ -2,8 +2,8 @@ Document: binary!docs
 Title: Broken binary doc-base control file
 Author: Russ Allbery
 Abstract: This control file exercises various tests of doc-base control
- files, including several things that aren't tested yet.  The third and
- fourth one has trailing whitespace.
+  files, including several things that aren't tested yet.  The third and
+  fourth one has trailing whitespace.
 Section: Non/Existant
 Unknown: Some field
 

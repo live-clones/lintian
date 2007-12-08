@@ -20,6 +20,7 @@
 
 package Lintian::debian_readme;
 use strict;
+use Spelling;
 use Tags;
 
 sub run {
@@ -51,6 +52,8 @@ if ($readme =~ m/$template/iom) {
 } elsif ($readme =~ m/^\s*-- [^<]*<[^> ]+.\@unknown>/m) {
     tag("readme-debian-contains-debmake-default-email-address");
 }
+
+spelling_check('spelling-error-in-readme-debian', $readme);
 
 }
 

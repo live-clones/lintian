@@ -189,3 +189,9 @@ Info: The string "Please also look if..." appears in the copyright
  file, which indicates that you either didn't check the whole source
  to find additional copyright/license, or that you didn't remove that
  paragraph after having done so.
+
+Tag: spelling-error-in-copyright
+Type: warning
+Info: Lintian found a spelling error in the copyright file.  Lintian has a
+ list of common misspellings that it looks for.  It does not have a
+ dictionary like a spelling checker does.

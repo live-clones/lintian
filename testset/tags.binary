@@ -5,14 +5,22 @@ E: binary: debian-news-file-uses-obsolete-national-encoding at line 3
 E: binary: depends-on-x-metapackage depends: xorg
 E: binary: desktop-entry-missing-required-key /usr/share/applications/goodbye.desktop Name
 E: binary: doc-base-document-field-ends-in-whitespace binary:1
+E: binary: doc-base-file-duplicated-format binary:32 html
+E: binary: doc-base-file-lacks-required-field binary:18 files
+E: binary: doc-base-file-lacks-required-field binary:22 files
+E: binary: doc-base-file-lacks-required-field binary:22 format
 E: binary: doc-base-file-no-format binary:22
+E: binary: doc-base-file-no-format-section space :0
 E: binary: doc-base-file-no-index binary:31
 E: binary: doc-base-file-references-missing-file binary:13 /usr/share/doc/binary/binary.sgml.gz
 E: binary: doc-base-file-references-missing-file binary:17 /usr/share/doc/binary/binary.txt
 E: binary: doc-base-file-references-missing-file binary:21 /usr/share/doc/binary/html/ch4.html
 E: binary: doc-base-file-references-missing-file binary:27 /usr/share/doc/binary/hml/*.html
 E: binary: doc-base-file-references-missing-file binary:30 /usr/share/info/binary.info.gz
+E: binary: doc-base-file-unknown-field binary:14 unknown
+E: binary: doc-base-file-unknown-field binary:8 unknown
 E: binary: doc-base-index-references-multiple-files binary:21
+E: binary: doc-base-invalid-document-field binary:1 binary!docs  
 E: binary: executable-desktop-file /usr/share/applications/goodbye.desktop 0755
 E: binary: file-directly-in-usr-share usr/share/baz
 E: binary: lengthy-symlink usr/share/doc/binary/html/ch2.html ../html/./ch1.html
@@ -62,6 +70,8 @@ W: binary: desktop-entry-contains-unknown-key /usr/share/applications/goodbye.de
 W: binary: desktop-entry-contains-unknown-key /usr/share/applications/goodbye.desktop:7 icon
 W: binary: desktop-entry-invalid-category WeirdStuff /usr/share/applications/goodbye.desktop
 W: binary: desktop-entry-uses-reserved-category Screensaver /usr/share/applications/goodbye.desktop
+W: binary: doc-base-abstract-field-separator-extra-whitespaces binary:5
+W: binary: doc-base-abstract-field-separator-extra-whitespaces binary:6
 W: binary: doc-base-file-unknown-format binary:16 esp
 W: binary: executable-not-elf-or-script ./usr/bin/iminusrbin
 W: binary: executable-not-elf-or-script ./usr/share/applications/goodbye.desktop
@@ -93,12 +103,13 @@ W: binary: menu-item-uses-windowmanagers-section /usr/share/menu/binary:13
 W: binary: old-fsf-address-in-copyright-file
 W: binary: package-contains-hardlink usr/bar2 -> usr/share/baz
 W: binary: package-contains-upstream-install-documentation usr/share/doc/binary/INSTALL
+W: binary: spelling-error-in-news-debian usefull useful
 W: binary: su-to-root-with-usr-sbin /usr/lib/menu/binary:4
 W: binary: su-to-root-with-usr-sbin /usr/share/menu/binary:4
 W: binary: symlink-should-be-relative usr/share/doc/binary/html/ch3.html /usr/share/doc/binary/htm/ch1.html
 W: binary: syntax-error-in-debian-changelog line 16 "couldn't parse date The, 15 Apr 2004 23:33:51 +0200"
-W: binary: syntax-error-in-debian-news-file line 11 "badly formatted trailer line"
-W: binary: syntax-error-in-debian-news-file line 11 "found eof where expected more change data or trailer"
+W: binary: syntax-error-in-debian-news-file line 12 "badly formatted trailer line"
+W: binary: syntax-error-in-debian-news-file line 12 "found eof where expected more change data or trailer"
 W: binary: unquoted-string-in-menu-item /usr/lib/menu/binary needs:1
 W: binary: unquoted-string-in-menu-item /usr/lib/menu/binary needs:2
 W: binary: unquoted-string-in-menu-item /usr/share/menu/binary needs:1

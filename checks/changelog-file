@@ -20,6 +20,7 @@
 
 package Lintian::changelog_file;
 use strict;
+use Spelling;
 use Tags;
 use Util;
 use Parse::DebianChangelog;
@@ -172,6 +173,7 @@ if (-f 'NEWS.Debian') {
         if ($entry->Distribution =~ /unreleased/i) {
             tag "debian-news-entry-has-strange-distribution", $entry->Distribution;
         }
+        spelling_check('spelling-error-in-news-debian', $entry->Changes);
     }
 }
 
@@ -309,6 +311,7 @@ if (@entries) {
     while ($entry =~ /(closes\s*(?:bug)?\#?\s?\d{6,})[^\w]/ig) {
 	tag "possible-missing-colon-in-closes", "$1" if $1;
     }
+    spelling_check('spelling-error-in-changelog', $entry);
 }
 
 # read the changelog itself

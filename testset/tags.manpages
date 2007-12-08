@@ -59,3 +59,4 @@ W: manpages: manpage-has-bad-whatis-entry usr/share/man/man1/usr-sbin-binary.1.g
 W: manpages: manpage-has-bad-whatis-entry usr/share/man/man6/usr-games-binary.6.gz
 W: manpages: manpage-has-useless-whatis-entry usr/share/man/man1/true.1.gz
 W: manpages: package-contains-empty-directory usr/share/man/man1/not-a-man-page.1.gz/
+W: manpages: spelling-error-in-changelog english English

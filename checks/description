@@ -20,6 +20,7 @@
 
 package Lintian::description;
 use strict;
+use Spelling;
 use Tags;
 use Util;
 
@@ -35,6 +36,7 @@ my $lines = 0;
 my $template = 0;
 my $unindented_list = 0;
 my $synopsis;
+my $description;
 
 # description?
 unless (-f $cf) {
@@ -45,7 +47,9 @@ unless (-f $cf) {
 open(IN, '<', $cf) or fail("cannot open $cf for reading: $!");
 
 # 1st line contains synopsis
-chop($synopsis = <IN>);
+$synopsis = <IN>;
+$description = $synopsis;
+chomp $synopsis;
 
 if ($synopsis =~ m/^\s*$/) {
     tag "description-synopsis-is-empty", "";
@@ -73,7 +77,8 @@ if ($synopsis =~ m/^\s*$/) {
 }
 
 while (<IN>) {
-    chop;
+    $description .= $_;
+    chomp;
     next if m/^\s*$/o;
     next if m/^\.\s*$/o;
 
@@ -129,6 +134,10 @@ close(IN);
 
 if ($lines == 0) {
     tag "extended-description-is-empty", "" unless $type eq 'udeb';
+}
+
+if ($description) {
+    spelling_check('spelling-error-in-description', $description);
 }
 
 }
