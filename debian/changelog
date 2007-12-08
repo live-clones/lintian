@@ -1,4 +1,6 @@
-lintian (1.23.39) UNRELEASED; urgency=low
+lintian (1.23.39) unstable; urgency=low
+
+  The "Ubuntu and doc-base patch merge, with extra fixes" release.
 
   * checks/*.desc:
     + [RA] Remove the unused Standards-Version header.
@@ -69,7 +71,7 @@ lintian (1.23.39) UNRELEASED; urgency=low
       misspellings.  Based on the previous checks/spelling and a patch by
       Robert Luberda.
 
- -- Russ Allbery <rra@debian.org>  Fri, 07 Dec 2007 21:22:55 -0800
+ -- Russ Allbery <rra@debian.org>  Fri, 07 Dec 2007 22:12:56 -0800
 
 lintian (1.23.38) unstable; urgency=low
 
