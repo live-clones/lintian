@@ -5,6 +5,11 @@ lintian (1.23.39) UNRELEASED; urgency=low
   * checks/changelog-file{.desc,}:
     + [RA] Check the latest entry of the Debian changelog and any
       NEWS.Debian file for common spelling errors.  (Closes: #36017)
+    + [RA] If this looks like a new package (Debian revision of -1 and
+      only one changelog entry), warn if it doesn't close a bug.  Thanks,
+      Margarita Manterola.  (Closes: #356051)
+    + [RA] Check for lines over 80 columns in the most recent entry.
+      Thanks, Guillem Jover.  (Closes: #435963)
   * checks/copyright-file{.desc,}:
     + [RA] Moved spelling-error-in-copyright check to here.
   * checks/debconf:

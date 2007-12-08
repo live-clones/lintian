@@ -307,11 +307,22 @@ if (@entries) {
 
 # Some checks should only be done against the most recent changelog entry.
 if (@entries) {
-    my $entry = $entries[0]->Changes;
-    while ($entry =~ /(closes\s*(?:bug)?\#?\s?\d{6,})[^\w]/ig) {
+    my $entry = $entries[0];
+    if (@entries == 1 and $entry->Version =~ /-1$/) {
+        tag 'new-package-should-close-itp-bug'
+            unless @{ $entry->Closes };
+    }
+    my $changes = $entry->Changes;
+    while ($changes =~ /(closes\s*(?:bug)?\#?\s?\d{6,})[^\w]/ig) {
 	tag "possible-missing-colon-in-closes", "$1" if $1;
     }
-    spelling_check('spelling-error-in-changelog', $entry);
+    spelling_check('spelling-error-in-changelog', $changes);
+    my @lines = split ('\n', $changes);
+    for my $i (0 .. $#lines) {
+        if (length ($lines[$i]) > 80 && $lines[$i] =~ /\s/) {
+            tag 'debian-changelog-line-too-long', "line " . ($i + 1);
+        }
+    }
 }
 
 # read the changelog itself

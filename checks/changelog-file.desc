@@ -205,3 +205,21 @@ Type: warning
 Info: Lintian found a spelling error in the latest entry of the
  NEWS.Debian file.  Lintian has a list of common misspellings that it
  looks for.  It does not have a dictionary like a spelling checker does.
+
+Tag: new-package-should-close-itp-bug
+Type: warning
+Info: This package appears to be the first packaging of a new upstream
+ software package (there is only one changelog entry and the Debian
+ revision is 1), but it does not close any bugs.  The initial upload of a
+ new package should close the corresponding ITP bug for that package.
+ .
+ This warning can be ignored if the package is not intended for Debian or
+ if it is a split of an existing Debian package.
+Ref: devref 5.1
+
+Tag: debian-changelog-line-too-long
+Type: warning
+Info: The given line of the latest changelog entry is over 80 columns.
+ Such changelog entries may look poor in terminal windows and mail
+ messages and be annoying to read.  Please wrap changelog entries at 80
+ columns or less where possible.
