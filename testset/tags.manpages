@@ -10,7 +10,8 @@ E: manpages: executable-manpage usr/share/man/de/man1/binary-without-english-man
 E: manpages: info-document-not-compressed usr/share/info/broken
 E: manpages: info-document-not-compressed-with-gzip usr/share/info/baz.broken.gz
 E: manpages: info-document-not-compressed-with-max-compression usr/share/info/bar.gz
-E: manpages: malformed-override but-this-is-just-broken
+E: manpages: malformed-override but_this_is_just_broken
+E: manpages: malformed-override manpages:
 E: manpages: manpage-has-wrong-extension usr/X11R6/man/man6/X11R6-binary.man
 E: manpages: manpage-is-dh_make-template usr/share/man/man1/program.1.gz
 E: manpages: manpage-not-compressed usr/X11R6/man/man6/X11R6-binary.man

@@ -21,6 +21,8 @@ lintian (1.23.39) UNRELEASED; urgency=low
   * checks/lintian.desc:
     + [RA] Add bad-ubuntu-distribution-in-changes-file, merged from the
       Ubuntu patch.
+    + [RA] Fix the malformed-override long description.  Thanks, Stefan
+      Fritsch.
   * checks/nmu:
     + [RA] No packages with ubuntu in the version number are NMUs.  Merged
       from the Ubuntu patch.
@@ -32,8 +34,13 @@ lintian (1.23.39) UNRELEASED; urgency=low
     + [RA] If the version number indicates an Ubuntu package, check
       against a different list of allowable distributions.  Merged from
       the Ubuntu patch.
+    + [RA] Skip check and collection *.desc files whose names start with a
+      period (mostly to avoid testing artifacts from editor lock files).
+    + [RA] Restore previous override parsing and make the package name
+      optional again.  Thanks, Stefan Fritsch.  (Closes: #454790)
+    + [RA] Check overrides for implausible tags.
 
- -- Russ Allbery <rra@debian.org>  Fri, 07 Dec 2007 16:02:27 -0800
+ -- Russ Allbery <rra@debian.org>  Fri, 07 Dec 2007 16:22:42 -0800
 
 lintian (1.23.38) unstable; urgency=low
 

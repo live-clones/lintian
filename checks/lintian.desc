@@ -68,7 +68,7 @@ Type: error
 Info: Lintian discovered an override entry with an invalid format.  An
  override entry should have the format:
  .
-   <package>[ <type>]: <tag>[ <extra> ...]
+   &lt;package&gt;[ &lt;type&gt;]: &lt;tag&gt;[ &lt;extra&gt; ...]
  .
  where <package> is the package name, the optional <type> parameter
  specifies the package type (binary is the default), <tag> is the tag to

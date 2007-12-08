@@ -850,6 +850,7 @@ opendir(COLLDIR, "$LINTIAN_ROOT/collection")
     or fail("cannot read directory $LINTIAN_ROOT/collection");
 
 for my $f (readdir COLLDIR) {
+    next if $f =~ /^\./;
     next unless $f =~ /\.desc$/;
 
     print "N: Reading collector description file $f ...\n" if $debug >= 2;
@@ -938,6 +939,7 @@ opendir(CHECKDIR, "$LINTIAN_ROOT/checks")
     or fail("cannot read directory $LINTIAN_ROOT/checks");
 
 for my $f (readdir CHECKDIR) {
+    next if $f =~ /^\./;
     next unless $f =~ /\.desc$/;
     print "N: Reading checker description file $f ...\n" if $debug >= 2;
 
@@ -1286,12 +1288,12 @@ for (reverse sort @packages) {
                     s/^\s+//o;
                     s/\s+$//o;
                     s/\s+/ /go;
-
-                    if (s/^\Q$pkg\E( \Q$long_type\E)?: //) {
-                        next if $_ eq '';
-                        Tags::add_override($_);
+                    my $override = $_;
+                    $override =~ s/^\Q$pkg\E( \Q$long_type\E)?: //;
+                    if ($override eq '' or $override !~ /^[a-z0-9-]+(\s+.*)?$/) {
+                        tag ('malformed-override', $override);
                     } else {
-                        tag ('malformed-override', $_);
+                        Tags::add_override($override);
                     }
                 }
                 close(O);

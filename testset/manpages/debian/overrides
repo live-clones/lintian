@@ -1,8 +1,9 @@
    manpages:	no-copyright-file    
-manpages: foo-tag-that-does-not-exist
+foo-tag-that-does-not-exist
 # this is a valid comment
 
 
    
 #and some empty lines
-but-this-is-just-broken
+but_this_is_just_broken
+manpages:
