@@ -2,6 +2,11 @@ lintian (1.23.39) UNRELEASED; urgency=low
 
   * checks/*.desc:
     + [RA] Remove the unused Standards-Version header.
+  * checks/debconf:
+    + [RA] Go back to not warning about "no" in boolean debconf
+      questions.  The word is too common in normal English prose for
+      reasons other than assuming a particular debconf interface.  Thanks,
+      Rafael Laboissiere.  (Closes: #453177)
   * checks/fields:
     + [RA] Python documentation packages should still be in section doc.
       Thanks, Michal Čihař.  (Closes: #454688)
