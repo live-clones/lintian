@@ -11,7 +11,7 @@ Vcs-Browser: http://svn.wolffelaar.nl/wsvn/lintian/
 
 Package: lintian
 Architecture: all
-Depends: perl, libdigest-md5-perl | perl (>> 5.8), dpkg-dev (>= 1.13.17), file, binutils, diffstat (>= 1.27-1), man-db (>= 2.3.20-1), gettext (>= 0.16), intltool-debian, libparse-debianchangelog-perl (>= 0.6)
+Depends: perl, libdigest-md5-perl | perl (>> 5.8), dpkg-dev (>= 1.13.17), file, binutils, diffstat (>= 1.27-1), man-db (>= 2.3.20-1), gettext (>= 0.16), intltool-debian, libparse-debianchangelog-perl (>= 0.6), liburi-perl
 Suggests: binutils-multiarch
 Description: Debian package checker
  Lintian dissects Debian packages and reports bugs and policy

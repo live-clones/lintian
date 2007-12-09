@@ -354,6 +354,26 @@ if (not open (FH, '<', "fields/priority")) {
 #---- Description
 # handled in checks/description
 
+#--- Homepage
+
+if (open (FH, '<', "fields/homepage")) {
+	my $homepage = <FH>;
+	close(FH);
+
+	unfold("homepage", \$homepage);
+
+	if ($homepage =~ /^\s*<(?:UR[LI]:)?.*>\s*$/i) {
+		tag "superfluous-clutter-in-homepage", $homepage;
+	}
+
+	require URI;
+	my $uri = URI->new($homepage);
+
+	unless ($uri->scheme) { # not an absolute URI
+		tag "bad-homepage", $homepage;
+	}
+}
+
 #---- Installer-Menu-Item (udeb)
 
 if (open(FH, '<', "fields/installer-menu-item")) {

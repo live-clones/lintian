@@ -4,7 +4,7 @@ E: relations source: build-depends-on-build-essential build-depends-indep
 E: relations source: build-depends-on-essential-package-without-using-version build-depends-indep: bash
 E: relations source: build-depends-on-essential-package-without-using-version build-depends: findutils
 E: relations source: build-depends-on-obsolete-package build-depends-indep: debmake
-E: relations source: debian-control-with-duplicate-fields provides: 37, 38
+E: relations source: debian-control-with-duplicate-fields provides: 38, 39
 E: relations source: depends-on-build-essential-package-without-using-version libc6-dev [build-depends: libc6-dev]
 E: relations source: depends-on-build-essential-package-without-using-version make [build-depends-indep: make]
 E: relations source: invalid-arch-string-in-source-relation test [build-conflicts: bar [alpha test]]
@@ -36,6 +36,7 @@ I: relations-multiple-libs: unknown-field-in-control origin
 I: relations: unknown-field-in-control bugs
 I: relations: unknown-field-in-control origin
 W: relations source: ancient-standards-version 3.1.1 (current is 3.7.3)
+W: relations source: bad-homepage lintian.debian.org
 W: relations source: package-has-a-duplicate-build-relation foo (= 3) [!amd64 !i386], foo (<< 4) [!amd64 !i386]
 W: relations source: package-has-a-duplicate-build-relation perl, perl (>= 5.0)
 W: relations source: redundant-origin-field
@@ -44,9 +45,11 @@ W: relations source: stronger-dependency-implies-weaker depends -> recommends nu
 W: relations source: stronger-dependency-implies-weaker pre-depends -> depends gawk | awk
 W: relations source: stronger-dependency-implies-weaker recommends -> suggests some-other-package
 W: relations source: virtual-package-depends-without-real-package-depends build-depends: mail-transport-agent
+W: relations-multiple-libs: bad-homepage lintian.debian.org
 W: relations-multiple-libs: description-synopsis-might-not-be-phrased-properly
 W: relations-multiple-libs: redundant-bugs-field
 W: relations-multiple-libs: redundant-origin-field
+W: relations: bad-homepage lintian.debian.org
 W: relations: depends-on-old-emacs recommends: emacs21
 W: relations: package-relation-with-self depends: relations (<< 3)
 W: relations: package-relation-with-self replaces: relations

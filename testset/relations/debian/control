@@ -9,6 +9,7 @@ Build-Conflicts: foo [amd64 i386], bar [alpha test], xlibs-dev, arch-test1 [powe
 Build-Conflicts-Indep: debmake [!powerpc]
 Maintainer: Debian QA Group <packages@qa.debian.org>
 Standards-Version: 3.1.1
+Homepage: lintian.debian.org
 Origin: Debian
 Bugs: debbugs://bugs.debian.org/
 

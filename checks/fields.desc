@@ -277,6 +277,18 @@ Info: The `Priority:' field in this package's control file is not one of
  the priorities defined in the Policy Manual.
 Ref: policy 2.5
 
+Tag: superfluous-clutter-in-homepage
+Type: warning
+Info: The `Homepage:' field in this package's control file contains
+ superfluous markup around the URL, like enclosing &lt; and &gt;.
+ This is unnecessary and needlessly complicates using this information.
+
+Tag: bad-homepage
+Type: warning
+Info: The `Homepage:' field in this package's control file does not
+ contain a valid absolute URL. Most probably you forgot to specificy
+ the scheme (e.g. http).
+
 Tag: obsolete-field
 Type: error
 Info: This field is listed in the Policy Manual as obsolete and

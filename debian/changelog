@@ -3,6 +3,10 @@ lintian (1.23.41) UNRELEASED; urgency=low
   The "it would be lovely if there were an actual desktop file standard"
   release.
 
+  * checks/field{.desc,}:
+    + [FL] Add some checks for the Homepage field:
+      - warn about enclosing < and >
+      - warn about non-absolute URLs
   * checks/menu-format{.desc,}:
     + [RA] Add Actions to the KDE-specific desktop file keys.  Add
       Application as an acceptable Main Category even though it's not
@@ -13,6 +17,9 @@ lintian (1.23.41) UNRELEASED; urgency=low
     + [RA] Warn about desktop files containing CRLF line endings (and then
       strip the CR for later checks).  The standard is explicit that each
       line ends in only LF.
+  
+  * debian/control:
+    + [FL] Add liburi-perl to Depends for the Homepage checks.
 
  -- Russ Allbery <rra@debian.org>  Sat, 08 Dec 2007 20:35:56 -0800
 

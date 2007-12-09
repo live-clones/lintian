@@ -11,7 +11,7 @@ XS-Vcs-Browser: http://svn.wolffelaar.nl/lintian/trunk
 Package: binary
 Architecture: any
 Depends: ${shlibs:Depends}, xorg, binary-data (= ${Source-Version})
-Homepage: http://lintian.debian.org/
+Homepage: <http://lintian.debian.org/>
 Vcs-Svn: http://svn.wolffelaar.nl/lintian/trunk
 Description: test handling of binary files
  Regression test for lintian's handling of binary files.
