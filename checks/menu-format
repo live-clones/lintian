@@ -208,8 +208,9 @@ my %known_desktop_types = map { $_ => 1 }
 # http://standards.freedesktop.org/menu-spec/1.0/apa.html
 
 # This is a list of all Main Categories for .desktop files.  Application is
-# added as an exception; it's not listed in the standard, but it's widely
-# used and used as an example in the GNOME documentation.
+# added as an exception; it's not listed in the standard, but it's widely used
+# and used as an example in the GNOME documentation.  GNUstep is added as an
+# exception since it's used by GNUstep packages.
 my %main_categories = map { $_ => 1 }
     qw(
        AudioVideo
@@ -225,6 +226,7 @@ my %main_categories = map { $_ => 1 }
        System
        Utility
        Application
+       GNUstep
       );
 
 # This is a list of all Additional Categories for .desktop files.  Ideally we

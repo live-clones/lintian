@@ -6,8 +6,10 @@ lintian (1.23.41) UNRELEASED; urgency=low
       listed in the standard; given how widely it's used, it doesn't
       appear to be worth warning about right now.  It would be lovely if
       there were an actual desktop standard.  (Closes: #444651)
+    + [RA] Add GNUstep as an acceptable Main Category, since it's used as
+      a non-standard category by GNUstep applications.
 
- -- Russ Allbery <rra@debian.org>  Sat, 08 Dec 2007 20:12:13 -0800
+ -- Russ Allbery <rra@debian.org>  Sat, 08 Dec 2007 20:21:39 -0800
 
 lintian (1.23.40) unstable; urgency=low
 
