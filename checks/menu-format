@@ -741,11 +741,15 @@ sub VerifyDesktopFile {
     my %vals;
     open (DESKTOP, '<', "unpacked/$file")
 	or fail("cannot open desktop file $file: $!");
-    my ($line, $saw_first);
+    my ($line, $saw_first, $warned_cr);
     my @pending;
     while (defined ($line = <DESKTOP>)) {
         chomp $line;
         next if ($line =~ m/^\s*\#/ or $line =~ m/^\s*$/);
+        if ($line =~ s/\r//) {
+            tag 'desktop-entry-file-has-crs', "$file:$." unless $warned_cr;
+            $warned_cr = 1;
+        }
 
         # Err on the side of caution for now.  If the first non-comment line
         # is not the required [Desktop Entry] group, ignore this file.  Also

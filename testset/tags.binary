@@ -69,6 +69,7 @@ W: binary: description-contains-homepage
 W: binary: desktop-command-not-in-package /usr/share/applications/goodbye.desktop goodbye
 W: binary: desktop-entry-contains-unknown-key /usr/share/applications/goodbye.desktop:5 SpecialTag
 W: binary: desktop-entry-contains-unknown-key /usr/share/applications/goodbye.desktop:7 icon
+W: binary: desktop-entry-file-has-crs /usr/share/applications/hello.desktop:7
 W: binary: desktop-entry-invalid-category WeirdStuff /usr/share/applications/goodbye.desktop
 W: binary: desktop-entry-uses-reserved-category Screensaver /usr/share/applications/goodbye.desktop
 W: binary: doc-base-abstract-field-separator-extra-whitespaces binary:7

@@ -191,6 +191,13 @@ Type: error
 Info: The desktop entry file is marked executable.  Desktop entries are
  regular files and should be installed mode 0644.
 
+Tag: desktop-entry-file-has-crs
+Type: warning
+Info: The desktop entry file has lines ending in CRLF instead of just LF.
+ The Desktop Entry Specification is explicit that lines should end with
+ only LF.  The CR may be taken by some software as part of the field.
+Ref: http://standards.freedesktop.org/desktop-entry-spec/1.0/ar01s02.html
+
 Tag: duplicated-key-in-desktop-entry
 Type: warning
 Info: The desktop entry contains two instances of the same key.  The

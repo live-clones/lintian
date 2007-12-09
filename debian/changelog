@@ -1,15 +1,20 @@
 lintian (1.23.41) UNRELEASED; urgency=low
 
-  * checks/menu-format:
+  The "it would be lovely if there were an actual desktop file standard"
+  release.
+
+  * checks/menu-format{.desc,}:
     + [RA] Add Actions to the KDE-specific desktop file keys.  Add
       Application as an acceptable Main Category even though it's not
       listed in the standard; given how widely it's used, it doesn't
-      appear to be worth warning about right now.  It would be lovely if
-      there were an actual desktop standard.  (Closes: #444651)
+      appear to be worth warning about right now.  (Closes: #444651)
     + [RA] Add GNUstep as an acceptable Main Category, since it's used as
       a non-standard category by GNUstep applications.
+    + [RA] Warn about desktop files containing CRLF line endings (and then
+      strip the CR for later checks).  The standard is explicit that each
+      line ends in only LF.
 
- -- Russ Allbery <rra@debian.org>  Sat, 08 Dec 2007 20:21:39 -0800
+ -- Russ Allbery <rra@debian.org>  Sat, 08 Dec 2007 20:35:56 -0800
 
 lintian (1.23.40) unstable; urgency=low
 
