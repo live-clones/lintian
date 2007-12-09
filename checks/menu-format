@@ -178,7 +178,9 @@ my %deprecated_desktop_keys = map { $_ => 1 }
       );
 
 # KDE uses some additional keys that should start with X-KDE but don't for
-# historical reasons.
+# historical reasons.  Actions will in theory be in a later version of the
+# standard (it's not mentioned in the current standard, but is implemented by
+# KDE and widely used).
 my %kde_desktop_keys = map { $_ => 1 }
     qw(
        ServiceTypes
@@ -190,6 +192,7 @@ my %kde_desktop_keys = map { $_ => 1 }
        MountPoint
        ReadOnly
        UnmountIcon
+       Actions
       );
 
 # Known types of desktop entries.
@@ -204,7 +207,9 @@ my %known_desktop_types = map { $_ => 1 }
 # Authorative source of desktop categories:
 # http://standards.freedesktop.org/menu-spec/1.0/apa.html
 
-# This is a list of all Main Categories for .desktop files.
+# This is a list of all Main Categories for .desktop files.  Application is
+# added as an exception; it's not listed in the standard, but it's widely
+# used and used as an example in the GNOME documentation.
 my %main_categories = map { $_ => 1 }
     qw(
        AudioVideo
@@ -219,6 +224,7 @@ my %main_categories = map { $_ => 1 }
        Settings
        System
        Utility
+       Application
       );
 
 # This is a list of all Additional Categories for .desktop files.  Ideally we
