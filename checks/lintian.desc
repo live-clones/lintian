@@ -70,7 +70,7 @@ Info: Lintian discovered an override entry with an invalid format.  An
  .
    &lt;package&gt;[ &lt;type&gt;]: &lt;tag&gt;[ &lt;extra&gt; ...]
  .
- where <package> is the package name, the optional <type> parameter
- specifies the package type (binary is the default), <tag> is the tag to
- suppress, and <extra> is any specific information for the particular tag
- to suppress.
+ where &lt;package&gt; is the package name, the optional &lt;type&gt;
+ parameter specifies the package type (binary is the default), &lt;tag&gt;
+ is the tag to suppress, and &lt;extra&gt; is any specific information for
+ the particular tag to suppress.

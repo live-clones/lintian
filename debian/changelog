@@ -3,6 +3,9 @@ lintian (1.23.41) UNRELEASED; urgency=low
   The "it would be lovely if there were an actual desktop file standard"
   release.
 
+  * checks/*.desc:
+    + [RA] Escape all literal angle brackets and fix unclosed and unknown
+      HTML tags.  Based on a patch by Thijs Kinkhorst.  (Closes: #455211)
   * checks/field{.desc,}:
     + [FL] Add some checks for the Homepage field:
       - warn about enclosing < and >
@@ -21,7 +24,11 @@ lintian (1.23.41) UNRELEASED; urgency=low
   * debian/control:
     + [FL] Add liburi-perl to Depends for the Homepage checks.
 
- -- Russ Allbery <rra@debian.org>  Sat, 08 Dec 2007 20:35:56 -0800
+  * testset/runtests:
+    + [RA] Check all tag descriptions for unknown or unclosed HTML tags
+      and for stray angle brackets.
+
+ -- Russ Allbery <rra@debian.org>  Sun, 09 Dec 2007 12:54:51 -0800
 
 lintian (1.23.40) unstable; urgency=low
 

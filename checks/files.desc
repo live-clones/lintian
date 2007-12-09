@@ -29,9 +29,9 @@ Info: The standard location for X fonts has moved to /usr/share/fonts/X11.
  installed into the old /usr/X11R6/lib/X11/fonts path may not be seen by
  the X server.
  .
- If the package uses imake, it must build-depend on xutils-dev (>=
+ If the package uses imake, it must build-depend on xutils-dev (&gt;=
  1:1.0.2-2) for the correct paths. If it uses dh_installxfonts to handle X
- font installation, it must build-depend on debhelper (>= 5.0.31).
+ font installation, it must build-depend on debhelper (&gt;= 5.0.31).
 Ref: policy 11.8.5
 
 Tag: package-installs-file-to-usr-x11r6-bin
@@ -47,14 +47,14 @@ Info: Debian has switched to the modular X tree which now uses the regular
  successfully. However, such a package will be left in an inconsistent
  state and may orphan files when the compatibility link goes away.
  .
- If the package uses imake, it must build-depend on xutils-dev (>=
+ If the package uses imake, it must build-depend on xutils-dev (&gt;=
  1:1.0.2-2) for the correct paths.
 Ref: policy 11.8.7
 
 Tag: file-in-usr-something-x11-without-pre-depends
 Type: info
 Info: Packages that install files into /usr/include/X11 or /usr/lib/X11
- should pre-depend on at least x11-common (>= 1:7.0.0).  These directories
+ should pre-depend on at least x11-common (&gt;= 1:7.0.0).  These directories
  used to be symlinks and installing files in them while they are still
  symlinks will put files in the wrong locations and cause stranded files
  and other problems.  x11-common is responsible for converting the
@@ -73,7 +73,7 @@ Info: Packages using the X Window System should not be configured to install
  .
  Programs that use GNU autoconf and automake are usually easily configured
  at compile time to use /usr/ instead of /usr/X11R6/.  Packages that use
- imake must build-depend on xutils-dev (>= 1:1.0.2-2) for the correct
+ imake must build-depend on xutils-dev (&gt;= 1:1.0.2-2) for the correct
  paths.
 Ref: policy 11.8.7
 
@@ -346,7 +346,8 @@ Info: This package installs a pixmap or a bitmap within <tt>/usr/lib</tt>.
 
 Tag: file-directly-in-usr-share-doc
 Type: error
-Info: Documentation files have to be installed in <tt>/usr/share/doc/<i>pkg</i>
+Info: Documentation files have to be installed in
+ <tt>/usr/share/doc/<i>pkg</i></tt>.
 Ref: policy 12.3
 
 Tag: bad-owner-for-doc-file
@@ -526,7 +527,7 @@ Tag: xresources-file-in-etc-without-proper-conflicts
 Type: error
 Ref: policy 11.8.6
 Info: Packages that install files into the /etc/X11/Xresources/ directory must
- declare a conflict with xbase (<< 3.3.2.3a-2); if this is not done it is
+ declare a conflict with xbase (&lt;&lt; 3.3.2.3a-2); if this is not done it is
  possible for the installing package to destroy a previously-existing
  /etc/X11/Xresources file which had been customized by the system
  administrator.

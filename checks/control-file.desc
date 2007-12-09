@@ -14,7 +14,7 @@ Info: The Debian control file should be valid UTF-8, an encoding of
  There are many ways to convert a control from an obsoleted encoding
  like ISO-8859-1; you may for example use "iconv" like:
  .
-  $ iconv -f ISO-8859-1 -t UTF-8 control > control.new
+  $ iconv -f ISO-8859-1 -t UTF-8 control &gt; control.new
   $ mv control.new control
 
 Tag: build-info-in-binary-control-file-section

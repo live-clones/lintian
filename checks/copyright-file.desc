@@ -179,7 +179,7 @@ Info: The Debian copyright file should be valid UTF-8, an encoding of
  There are many ways to convert a copyright file from an obsoleted encoding
  like ISO-8859-1; you may for example use "iconv" like:
  .
-  $ iconv -f ISO-8859-1 -t UTF-8 copyright > copyright.new
+  $ iconv -f ISO-8859-1 -t UTF-8 copyright &gt; copyright.new
   $ mv copyright.new copyright
 
 Tag: copyright-contains-dh_make-todo-boilerplate

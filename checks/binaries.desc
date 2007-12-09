@@ -69,7 +69,7 @@ Info: The binary or shared library sets RPATH.  This overrides the normal
      gcc test.o -o test -Wl,--rpath,/usr/local/lib
  or
      gcc test.o -o test -R/usr/local/lib
- and remove the <tt>-Wl,--rpath</tt> or <t>-R</t> argument.  You can also
+ and remove the <tt>-Wl,--rpath</tt> or <tt>-R</tt> argument.  You can also
  use the chrpath utility to remove the RPATH.
 
 Tag: binary-has-unneeded-section

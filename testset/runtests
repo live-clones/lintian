@@ -138,8 +138,27 @@ for my $desc_file (<$LINTIAN_ROOT/checks/*.desc>) {
 		print "E: test-has-no-info $i->{'tag'} in $desc_file\n";
 		$testok = 0;
 	    }
-	    if (!exists($i->{'type'})
-		&& !exists($i->{'severity'})) {
+
+	    # Check the tag info for unescaped <> or for unknown tags (which
+	    # probably indicate the same thing).
+	    my $info = $i->{'info'};
+	    my @tags;
+	    while ($info =~ s,<([^\s>]+)(?:\s+href=\"[^\"]+\")?>.*?</\1>,,s) {
+		push (@tags, $1);
+	    }
+	    my %known = map { $_ => 1 } qw(a em i tt);
+            my %seen;
+	    @tags = grep { !$known{$_} && !$seen{$_}++ } @tags;
+	    if (@tags) {
+		print "E: test-info-has-unknown-html-tags $i->{'tag'} @tags"
+		    . " in $desc_file\n";
+	    }
+	    if ($info =~ /[<>]/) {
+		print "E: test-info-has-stray-angle-brackets $i->{'tag'}"
+		    . " in $desc_file\n";
+	    }
+
+	    if (!exists($i->{'type'}) && !exists($i->{'severity'})) {
 		use Data::Dumper;
 		print Dumper $i;
 		print "E: test-has-no-type $i->{'tag'} in $desc_file\n";

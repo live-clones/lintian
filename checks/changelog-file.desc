@@ -140,7 +140,7 @@ Info: The Debian changelog file must be valid UTF-8, an encoding of
  There are many ways to convert a changelog from an obsoleted encoding
  like ISO-8859-1; you may for example use "iconv" like:
  .
-  $ iconv -f ISO-8859-1 -t UTF-8 changelog > changelog.new
+  $ iconv -f ISO-8859-1 -t UTF-8 changelog &gt; changelog.new
   $ mv changelog.new changelog
 
 Tag: debian-news-file-uses-obsolete-national-encoding
@@ -151,7 +151,7 @@ Info: The NEWS.Debian file must be valid UTF-8, an encoding of the Unicode
  There are many ways to convert a changelog from an obsoleted encoding
  like ISO-8859-1; you may for example use "iconv" like:
  .
-  $ iconv -f ISO-8859-1 -t UTF-8 NEWS.Debian > NEWS.Debian.new
+  $ iconv -f ISO-8859-1 -t UTF-8 NEWS.Debian &gt; NEWS.Debian.new
   $ mv NEWS.Debian.new NEWS.Debian
 
 Tag: latest-debian-changelog-entry-without-new-date

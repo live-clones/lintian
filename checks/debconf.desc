@@ -180,7 +180,7 @@ Info: Debconf only supports the error template type as of version 1.4.69.
  .
  Since error types were added after debconf-2.0, one cannot use the normal
  debconf-2.0 alternative to allow for cdebconf or other implementations.
- Instead, use <tt>debconf (>= 1.4.69) | cdebconf (>= 0.39)</tt>.
+ Instead, use <tt>debconf (&gt;= 1.4.69) | cdebconf (&gt;= 0.39)</tt>.
  .
  All versions of debconf back to etch support error templates, but the
  debconf released with sarge didn't, so this dependency is still helpful

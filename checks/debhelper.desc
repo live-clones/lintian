@@ -21,7 +21,7 @@ Info: If a package uses debhelper, it must declare a Build-Depends
 
 Tag: package-lacks-versioned-build-depends-on-debhelper
 Type: info
-Info: If a package sets debhelper's compatibility version to >= 5,
+Info: If a package sets debhelper's compatibility version to &gt;= 5,
  either via DH_COMPAT, or via debian/compat, or via dh_testversion
  (which is deprecated), it should declare a versioned Build-Depends on
  the needed version of debhelper.
@@ -91,7 +91,7 @@ Tag: package-needs-python-policy-debhelper
 Type: info
 Info: The source package requests dh_python compatibility level 2 (or
  higher) in <tt>debian/pycompat</tt> but doesn't depend on a new enough
- debhelper.  A Build-Depends on debhelper (>= 5.0.37.2) is required for
+ debhelper.  A Build-Depends on debhelper (&gt;= 5.0.37.2) is required for
  this support.
  .
  All versions of debhelper back to etch support this, but the debhelper
