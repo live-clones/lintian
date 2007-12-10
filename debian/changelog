@@ -23,12 +23,13 @@ lintian (1.23.41) UNRELEASED; urgency=low
   
   * debian/control:
     + [FL] Add liburi-perl to Depends for the Homepage checks.
+    + [RA] Wrap Depends for readability.
 
   * testset/runtests:
     + [RA] Check all tag descriptions for unknown or unclosed HTML tags
       and for stray angle brackets.
 
- -- Russ Allbery <rra@debian.org>  Sun, 09 Dec 2007 12:54:51 -0800
+ -- Russ Allbery <rra@debian.org>  Sun, 09 Dec 2007 17:51:58 -0800
 
 lintian (1.23.40) unstable; urgency=low
 
