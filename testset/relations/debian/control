@@ -17,13 +17,13 @@ Package: relations
 Architecture: all
 Section: contrib/misc
 Pre-Depends: awk|gawk
-Depends: relations(<< 3), dpkg, bash (>> 2.0 ), mail-transport-agent, gawk | awk, foo (>> 2.0), foo (<< 2.2), coreutils, null (>= 0)
+Depends: relations(<< 3), dpkg, bash (>> 2.0 ), mail-transport-agent, gawk | awk, foo (>> 2.0), foo (<< 2.2), coreutils, null (>= 0), ${misc:Depends}
 Provides: mail-reader
 Replaces: relations
 Conflicts: foobar (<< 5&5), foo, relations,
            gnuwdf,
 Suggests: alpha, gnu (>= 44-3-4-8-11.4) | ung (<< 89beta) | nug | ngu, beta, some-other-package
-Recommends: emacs21 | emacsen, dpkg, null, some-other-package
+Recommends: emacs21 | emacsen, dpkg, null, some-other-package, ${f-oo:b-ar}
 Description: Strange dependency relationships
  This package declares relationships designed to tickle lintian's "fields"
  check.  It should generate a number of tags for these.
@@ -34,9 +34,10 @@ Description: Strange dependency relationships
 Package: relations-multiple-libs
 Architecture: all
 Section: non-free/misc
-Depends: libstdc++2.10, libstdc++2.10-glibc2.2, libstdc++3.0, tk8.2, tk8.3, tcl8.0, tcl8.2, tkx8.2, tkx8.3, tclx8.2, libpng2, libpng3, xorg
+Depends: libstdc++2.10, libstdc++2.10-glibc2.2, libstdc++3.0, tk8.2, tk8.3, tcl8.0, tcl8.2, tkx8.2, tkx8.3, tclx8.2, libpng2, libpng3, xorg, ${shlibs:Depends}
 Provides: awk
 Provides: awk
+Recommends: ${shlibs:Depends}
 Description: Duplicate library dependency relationships.
  Duplicate library dependency relationships.
  This tests the depending on different versions of the same library

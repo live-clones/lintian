@@ -26,10 +26,16 @@ package Dep;
 # ---------------------------------
 # public routines
 
+# We permit substvars for package names so that we can use the routines in
+# this library against the unparsed debian/control file.
 sub Pred {
     $_[0] =~ 
 	    /^\s*                           # skip leading whitespace
-	      ([a-zA-Z0-9][a-zA-Z0-9+.-]+)  # package name
+	      (                             # package name or substvar
+               [a-zA-Z0-9][a-zA-Z0-9+.-]+   #   package name
+               |                            #   or
+               (?:\$\{[a-zA-Z0-9:-]+\})     #   substvar
+              )                             # end of package name or substvar
 	      (?:                           # start of optional part
   	        \s* \(                      # open parenthesis for version part
                 \s* (<<|<=|=|>=|>>|<|>)     # relation part

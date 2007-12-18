@@ -40,6 +40,7 @@ W: relations source: bad-homepage lintian.debian.org
 W: relations source: package-has-a-duplicate-build-relation foo (= 3) [!amd64 !i386], foo (<< 4) [!amd64 !i386]
 W: relations source: package-has-a-duplicate-build-relation perl, perl (>= 5.0)
 W: relations source: redundant-origin-field
+W: relations source: stronger-dependency-implies-weaker depends -> recommends ${shlibs:Depends}
 W: relations source: stronger-dependency-implies-weaker depends -> recommends dpkg
 W: relations source: stronger-dependency-implies-weaker depends -> recommends null
 W: relations source: stronger-dependency-implies-weaker pre-depends -> depends gawk | awk
