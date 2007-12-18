@@ -1,11 +1,14 @@
 lintian (1.23.42) UNRELEASED; urgency=low
 
+  * checks/control-file{.desc,}:
+    + [RA] Include the package name in stronger-dependency-implies-weaker.
+  
   * lib/Dep.pm:
     + [RA] Allow substvars instead of package names so that dependency
       checks against the source debian/control file don't treat all
       substvars as equivalent.  Thanks, Julien Cristau.  (Closes: #456802)
 
- -- Russ Allbery <rra@debian.org>  Tue, 18 Dec 2007 12:02:01 -0800
+ -- Russ Allbery <rra@debian.org>  Tue, 18 Dec 2007 12:58:17 -0800
 
 lintian (1.23.41) unstable; urgency=low
 

@@ -89,7 +89,7 @@ for my $control (@binary_controls) {
         for my $weak (($strong + 1) .. $#dep_fields) {
             next unless $control->{$dep_fields[$weak]};
             for my $dependency (split /\s*,\s*/, $control->{$dep_fields[$weak]}) {
-                tag "stronger-dependency-implies-weaker", "$dep_fields[$strong] -> $dep_fields[$weak]", $dependency
+                tag "stronger-dependency-implies-weaker", $control->{package}, "$dep_fields[$strong] -> $dep_fields[$weak]", $dependency
                     if Dep::implies($parsed, Dep::parse($dependency));
             }
         }
