@@ -7,12 +7,19 @@ lintian (1.23.42) UNRELEASED; urgency=low
       particular about the exact formatting of the dh-make template.
       Triggering off the template text is enough and matches linda.
       Thanks, Joerg Jaspert.  (Closes: #458074)
+  * checks/description{.desc,}:
+    + [RA] Do picky spelling and capitalization checks on the description
+      and note and explain this in the long description.
   * checks/files.desc:
     + [RA] Remove a stray variable from the config-file-reserved tag.
   * checks/menu-format.desc:
     + [RA] Fix non-wm-module-in-wm-modules-menu-section pluralization to
       match the check and reword the long description to be hopefully
       clearer.  Thanks, Martín Ferrari.  (Closes: #457527)
+  * checks/menus{.desc,}:
+    + [RA] Spelling errors in doc-base files should only be warnings.  Do
+      picky spelling and capitalization checks on the abstract and title
+      fields.
   * checks/patch-systems:
     + [RA] dpatch permits multiple patches to be listed on the same line
       of 00list.  Patch by Chris Lamb.  (Closes: #457523)
@@ -34,6 +41,13 @@ lintian (1.23.42) UNRELEASED; urgency=low
     + [RA] Allow substvars instead of package names so that dependency
       checks against the source debian/control file don't treat all
       substvars as equivalent.  Thanks, Julien Cristau.  (Closes: #456802)
+  * lib/Spelling.pm:
+    + [RA] Stop doing capitalization checks on all files; there's too much
+      of a risk of false positives.  Instead, provide a separate picky
+      spelling check function for package descriptions and similar cases
+      where we're more sure of the contents.
+    + [RA] Expand the picky capitalization checks to catch Debian, GNOME,
+      KDE, and Linux.  (Closes: #456582)
 
   * reporting/html_reports:
     + [RA] Rewritten.

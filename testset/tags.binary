@@ -36,7 +36,6 @@ E: binary: postinst-does-not-call-installdocs usr/share/doc-base/space
 E: binary: postinst-does-not-call-updatemenus usr/share/menu/binary
 E: binary: postrm-does-not-call-updatemenus usr/share/menu/binary
 E: binary: prerm-does-not-call-installdocs usr/share/doc-base/space 
-E: binary: spelling-error-in-doc-base-abstract-field binary:10 speling spelling
 E: binary: statically-linked-binary ./usr/bin/static-hello
 E: binary: su-wrapper-without--c /usr/lib/menu/binary:2 su-to-root
 E: binary: su-wrapper-without--c /usr/lib/menu/binary:3 sux
@@ -106,6 +105,9 @@ W: binary: menu-item-uses-windowmanagers-section /usr/share/menu/binary:13
 W: binary: old-fsf-address-in-copyright-file
 W: binary: package-contains-hardlink usr/bar2 -> usr/share/baz
 W: binary: package-contains-upstream-install-documentation usr/share/doc/binary/INSTALL
+W: binary: spelling-error-in-description debian Debian
+W: binary: spelling-error-in-doc-base-abstract-field binary:10 speling spelling
+W: binary: spelling-error-in-doc-base-title-field binary:2 debian Debian
 W: binary: spelling-error-in-news-debian speling spelling
 W: binary: spelling-error-in-news-debian usefull useful
 W: binary: su-to-root-with-usr-sbin /usr/lib/menu/binary:4

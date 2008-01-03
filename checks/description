@@ -138,8 +138,15 @@ if ($lines == 0) {
 
 if ($description) {
     spelling_check('spelling-error-in-description', $description);
+    spelling_check_picky('spelling-error-in-description', $description);
 }
 
 }
 
 1;
+
+# Local Variables:
+# indent-tabs-mode: t
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 ts=8

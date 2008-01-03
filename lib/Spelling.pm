@@ -25,7 +25,7 @@ use Tags;
 
 use Exporter;
 our @ISA = qw(Exporter);
-our @EXPORT = qw(spelling_check);
+our @EXPORT = qw(spelling_check spelling_check_picky);
 
 # All spelling errors that have been observed "in the wild" in package
 # descriptions are added here, on the grounds that if they occurred once they
@@ -311,14 +311,19 @@ our %CORRECTIONS = qw(
 # The format above doesn't allow spaces.
 $CORRECTIONS{'alot'} = 'a lot';
 
-# Corrections to apply before lowercasing the word.  Be careful about adding
-# things to this list, since currently there's no detection of literal text
-# and one might get false positives on, for example, configuration fragments
-# in README.Debian.
+# Picky corrections, applied before lowercasing the word.  These are only
+# applied to things known to be entirely English text, such as package
+# descriptions, and should not be applied to files that may contain
+# configuration fragments or more informal files such as debian/copyright.
 our %CORRECTIONS_CASE = qw(
+                           debian Debian
                            english English
                            french French
                            german German
+                           Gnome GNOME
+                           gnome GNOME
+                           kde KDE
+                           linux Linux
                            russian Russian
                           );
 
@@ -336,10 +341,6 @@ sub spelling_check {
     my ($tag, $text, $filename) = @_;
 
     for my $word (split(/\s+/, $text)) {
-        if (exists $CORRECTIONS_CASE{$word}) {
-            _tag($tag, $filename, $word, $CORRECTIONS_CASE{$word});
-            next;
-        }
         $word = lc $word;
 
         # Try deleting the non-alphabetic parts from the word.  Treat
@@ -348,7 +349,7 @@ sub spelling_check {
         #
         # FIXME: Should do something that's aware of Unicode character
         # classes rather than only handling ISO 8859-15 characters.
-        $word =~ s/(^\')|[^\w\xc0-\xd6\xd8-\xf6\xf8-\xff\']+|(\'$)//g;
+        $word =~ s/(^\')|[^\w\xc0-\xd6\xd8-\xf6\xf8-\xff\']+|(\'\z)//g;
         if (exists $CORRECTIONS{$word}) {
             _tag($tag, $filename, $word, $CORRECTIONS{$word});
         }
@@ -357,6 +358,24 @@ sub spelling_check {
     # Special case for correcting a multi-word string.
     if ($text =~ m,Debian/GNU Linux,) {
         _tag($tag, $filename, "Debian/GNU Linux", "Debian GNU/Linux");
+    }
+}
+
+# Check spelling of $text against pickier corrections, such as common
+# capitalization mistakes.  This check is separate from spelling_check since
+# it isn't appropriate for some files (such as changelog).  Takes $text to
+# check spelling in and $tag to report if we find anything.  $filename, if
+# included, is given as the first argument to the tag.  If it's not defined,
+# it will be omitted.
+sub spelling_check_picky {
+    my ($tag, $text, $filename) = @_;
+
+    for my $word (split(/\s+/, $text)) {
+        $word =~ s/(^\')|[\"().,?!:;]+|(\'\z)//g;
+        if (exists $CORRECTIONS_CASE{$word}) {
+            _tag($tag, $filename, $word, $CORRECTIONS_CASE{$word});
+            next;
+        }
     }
 }
 

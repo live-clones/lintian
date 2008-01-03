@@ -14,7 +14,8 @@ Depends: ${shlibs:Depends}, xorg, binary-data (= ${Source-Version})
 Homepage: <http://lintian.debian.org/>
 Vcs-Svn: http://svn.wolffelaar.nl/lintian/trunk
 Description: test handling of binary files
- Regression test for lintian's handling of binary files.
+ Regression test for lintian's handling of binary files for debian.  This
+ is checked for picky spelling errors.
  .
   Homepage: http://lintian.debian.org/
 

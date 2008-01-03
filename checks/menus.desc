@@ -264,16 +264,18 @@ Info: Unnecessary spaces were found in the paragraph separator line of the
 Ref: Debian doc-base Manual section 2.3.2
 
 Tag: spelling-error-in-doc-base-title-field
-Type: error
-Info: Lintian found a spelling error in the Title field of this doc-base
- control file.  Lintian has a list of common misspellings that it looks
- for.  It does not have a dictionary like a spelling checker does.
+Type: warning
+Info: Lintian found a spelling or capitalization error in the Title field
+ of this doc-base control file.  Lintian has a list of common misspellings
+ that it looks for.  It does not have a dictionary like a spelling checker
+ does.
 
 Tag: spelling-error-in-doc-base-abstract-field
-Type: error
-Info: Lintian found a spelling error in the Abstract field of this
- doc-base control file.  Lintian has a list of common misspellings that
- looks for.  It does not have a dictionary like a spelling checker does.
+Type: warning
+Info: Lintian found a spelling or capitalization error in the Abstract
+ field of this doc-base control file.  Lintian has a list of common
+ misspellings that looks for.  It does not have a dictionary like a
+ spelling checker does.
 
 Tag: doc-base-file-syntax-error
 Type: error
