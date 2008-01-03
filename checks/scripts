@@ -60,7 +60,9 @@ my %valid_interpreters = (
 			  'kforth' => '/usr/bin/kforth',
 			  'ksh' => '/bin/ksh',
 			  'lefty' => '/usr/bin/lefty',
+			  'lua40' => '/usr/bin/lua40',
 			  'lua50' => '/usr/bin/lua50',
+			  'lua5.1' => '/usr/bin/lua5.1',
 			  'magicfilter' => '/usr/sbin/magicfilter',
 			  'make' => '/usr/bin/make',
 			  'mawk' => '/usr/bin/mawk',
@@ -144,7 +146,9 @@ my %interpreter_dependencies = (
 				'kforth' => 'kforth',
 				'ksh' => 'pdksh',
 				'lefty' => 'graphviz',
+				'lua40' => 'lua40',
 				'lua50' => 'lua50',
+				'lua5.1' => 'lua5.1',
 				'magicfilter' => 'magicfilter',
 				'make' => 'make | build-essential',
 				'mawk' => 'mawk',
@@ -706,4 +710,8 @@ sub check_script_syntax {
 
 1;
 
+# Local Variables:
+# indent-tabs-mode: t
+# cperl-indent-level: 4
+# End:
 # vim: syntax=perl ts=8 sw=4
