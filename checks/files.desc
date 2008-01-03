@@ -77,7 +77,7 @@ Info: Packages using the X Window System should not be configured to install
  paths.
 Ref: policy 11.8.7
 
-Tag: config-file-reserved $file
+Tag: config-file-reserved
 Type: error
 Info: This file is reserved by a specific package.  Please email the
  maintainer of the package in question if you have questions.

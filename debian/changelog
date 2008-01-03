@@ -7,12 +7,18 @@ lintian (1.23.42) UNRELEASED; urgency=low
       particular about the exact formatting of the dh-make template.
       Triggering off the template text is enough and matches linda.
       Thanks, Joerg Jaspert.  (Closes: #458074)
+  * debian/files.desc:
+    + [RA] Remove a stray variable from the config-file-reserved tag.
 
   * debian/control:
     + [RA] Suggest libtext-template-perl, needed for HTML reporting.
   * debian/copyright:
     + [RA] Add my copyright statement.
     + [RA] Reference GPL-2, not the GPL symlink, reflecting our license.
+
+  * frontend/lintian:
+    + [RA] Allow + and . in tag names in overrides.  Thanks, Stefan
+      Fritsch.  (Closes: #454790)
   
   * lib/Dep.pm:
     + [RA] Allow substvars instead of package names so that dependency
@@ -33,6 +39,9 @@ lintian (1.23.42) UNRELEASED; urgency=low
     + [RA] New minimal style sheet for the HTML reports.
   * reporting/templates/*:
     + [RA] New Text::Template page templates for the HTML reports.
+
+  * testset/runtests:
+    + [RA] Test tags for valid characters.
 
  -- Russ Allbery <rra@debian.org>  Wed, 02 Jan 2008 16:01:02 -0800
 

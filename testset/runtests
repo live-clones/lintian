@@ -134,6 +134,10 @@ for my $desc_file (<$LINTIAN_ROOT/checks/*.desc>) {
     for my $i (read_dpkg_control($desc_file)) {
 	$desc_file =~ s#.*/##;
 	if (exists $i->{'tag'}) {
+	    if ($i->{'tag'} !~ /^[\w0-9.+-]+$/) {
+		print "E: test-tag-has-invalid-characters $i->{'tag'}"
+		    . " in $desc_file\n";
+	    }
 	    if (not exists $i->{'info'}) {
 		print "E: test-has-no-info $i->{'tag'} in $desc_file\n";
 		$testok = 0;
@@ -321,4 +325,8 @@ sub runsystem_ok {
     return $errcode == 0;
 }
 
+# Local Variables:
+# indent-tabs-mode: t
+# cperl-indent-level: 4
+# End:
 # vim: ts=8 sw=4
