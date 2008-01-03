@@ -1,6 +1,8 @@
 cdbs-test (1-1~bpo40+1) unstable; urgency=low
 
   * Backport, but for some reason I go on and on for longer than 80 columns thus making the entry annoying to read.
+  * this-is-a-really-long-dpatch-name-that-contains-the-entire-bug-report-in-the-file-name.dpatch:
+    - New.
 
  -- Russ Allbery <rra@debian.org>  Wed, 05 Dec 2007 17:23:59 -0800
 

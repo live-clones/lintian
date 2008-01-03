@@ -3,6 +3,8 @@ lintian (1.23.42) UNRELEASED; urgency=low
   * checks/changelog-file{.desc,}:
     + [RA] Don't spell-check lines that include the word "spelling".
       Thanks, Andreas Hoenen.  (Closes: #456515)
+    + [RA] Allow long no-whitespace lines even when spaces or bullets
+      precede the text.
   * checks/common_data.pm:
     + [RA] Remove the obsolete base section.  (Policy change pending).
   * checks/control-file{.desc,}:

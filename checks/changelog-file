@@ -318,7 +318,7 @@ if (@entries) {
     }
     my @lines = split ('\n', $changes);
     for my $i (0 .. $#lines) {
-        if (length ($lines[$i]) > 80 && $lines[$i] =~ /\s/) {
+        if (length ($lines[$i]) > 80 && $lines[$i] !~ /^[\s.o*+-]*\S+$/) {
             tag 'debian-changelog-line-too-long', "line " . ($i + 1);
         }
     }
