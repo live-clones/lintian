@@ -618,7 +618,7 @@ if ($type eq "source") {
 				$needed{$rule->[0]} = $rule->[2] || $needed{$rule->[0]} || '';
 			}
 		}
-		if (/^(\S+):(.*)/) {
+		if (/^(\S+?):+(.*)/) {
 			$target = $1;
 			if (grep ($_ eq $target, @rules)) {
 				push (@rules, split (' ', $2));
@@ -945,4 +945,8 @@ sub check_maint {
 
 1;
 
+# Local Variables:
+# indent-tabs-mode: t
+# cperl-indent-level: 8
+# End:
 # vim: syntax=perl sw=4 ts=4 noet shiftround

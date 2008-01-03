@@ -15,6 +15,9 @@ lintian (1.23.42) UNRELEASED; urgency=low
   * checks/description{.desc,}:
     + [RA] Do picky spelling and capitalization checks on the description
       and note and explain this in the long description.
+  * checks/fields:
+    + [RA] Handle double-colon rules when checking that build dependencies
+      match debian/rules.  (Closes: #457501)
   * checks/files.desc:
     + [RA] Remove a stray variable from the config-file-reserved tag.
   * checks/menu-format.desc:

@@ -33,7 +33,7 @@ binary-indep:
 
 binary: binary-arch binary-indep
 
-clean:
+clean::
 	rm -rf debian/tmp debian/files
 
 # Test allowing quilt Build-Depends for manual quilt invocations.
