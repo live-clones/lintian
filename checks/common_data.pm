@@ -65,7 +65,7 @@ use vars qw
 
 
 %known_sections = map { $_ => 1 }
-    ('admin', 'base', 'comm', 'devel', 'doc', 'editors', 'electronics',
+    ('admin', 'comm', 'devel', 'doc', 'editors', 'electronics',
      'embedded', 'games', 'gnome', 'graphics', 'hamradio', 'interpreters',
      'kde', 'libdevel', 'libs', 'mail', 'math', 'misc', 'net', 'news',
      'oldlibs', 'otherosfs', 'perl', 'python', 'science', 'shells',
