@@ -316,13 +316,17 @@ if (@entries) {
     while ($changes =~ /(closes\s*(?:bug)?\#?\s?\d{6,})[^\w]/ig) {
 	tag "possible-missing-colon-in-closes", "$1" if $1;
     }
-    spelling_check('spelling-error-in-changelog', $changes);
     my @lines = split ('\n', $changes);
     for my $i (0 .. $#lines) {
         if (length ($lines[$i]) > 80 && $lines[$i] =~ /\s/) {
             tag 'debian-changelog-line-too-long', "line " . ($i + 1);
         }
     }
+
+    # Strip out all lines that contain the word spelling to avoid false
+    # positives on changelog entries for spelling fixes.
+    $changes =~ s/^.*spelling.*\n//gm;
+    spelling_check('spelling-error-in-changelog', $changes);
 }
 
 # read the changelog itself

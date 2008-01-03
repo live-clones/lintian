@@ -4,6 +4,7 @@ manpages (4-0.0.1) unstable; urgency=low
   * debian/rules: 
     + Fix a little bug creating a file named 755 in the source dir.
     + Add a new binary with no english manpage.
+  * Sample changelog fixing spelling: publically -> publicly
 
  -- Marc 'HE' Brockschmidt <he@debian.org>  Sat, 18 Dec 2004 13:32:29 +0100
 
