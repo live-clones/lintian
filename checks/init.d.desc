@@ -147,7 +147,7 @@ Type: warning
 Ref: http://wiki.debian.org/LSBInitScripts
 Info: The given runlevel specified in the Default-Stop keyword of the LSB
  keyword section of this <tt>/etc/init.d</tt> script isn't one of the
- recognized standard runlevels (S, 0, 1, 2, 3, 4, 5, and 6).
+ recognized standard runlevels (0, 1, 2, 3, 4, 5, and 6).
 
 Tag: init.d-script-has-conflicting-start-stop
 Type: warning
@@ -157,3 +157,11 @@ Info: The given runlevel was included in both the Default-Start and
  <tt>/etc/init.d</tt> script.  Since it doesn't make sense to both start
  and stop a service in the same runlevel, there is probably an error in
  one or the other of these keywords.
+
+Tag: init-d-script-stops-in-s-runlevel
+Type: warning
+Info: This <tt>/etc/init.d</tt> script specifies the S runlevel in
+ Default-Stop in its LSB keyword section.  The S runlevel is not a real
+ runlevel and is only used during boot.  There is no way to switch to it
+ and hence no use for stop scripts for it, so S should be removed from
+ Default-Stop.

@@ -24,6 +24,9 @@ lintian (1.23.42) UNRELEASED; urgency=low
       match debian/rules.  (Closes: #457501)
   * checks/files.desc:
     + [RA] Remove a stray variable from the config-file-reserved tag.
+  * checks/init.d{.desc,}:
+    + [RA] Warn of init scripts that list S in their Default-Stop LSB
+      keyword.  Thanks, Petter Reinholdtsen.  (Closes: #458596)
   * checks/menu-format.desc:
     + [RA] Fix non-wm-module-in-wm-modules-menu-section pluralization to
       match the check and reword the long description to be hopefully

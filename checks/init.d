@@ -226,6 +226,9 @@ for (keys %initd_postinst) {
 		    if ($start{$runlevel}) {
 			tag "init.d-script-has-conflicting-start-stop", "/etc/init.d/$_ $runlevel";
 		    }
+		    if ($runlevel =~ /[sS]/) {
+			tag "init-d-script-stops-in-s-runlevel", "/etc/init.d/$_";
+		    }
 		} else {
 		    tag "init.d-script-has-bad-stop-runlevel", "/etc/init.d/$_ $runlevel";
 		}
@@ -255,4 +258,8 @@ closedir(INITD);
 
 1;
 
+# Local Variables:
+# indent-tabs-mode: t
+# cperl-indent-level: 4
+# End:
 # vim: syntax=perl ts=8
