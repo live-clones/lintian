@@ -24,6 +24,8 @@ lintian (1.23.42) UNRELEASED; urgency=low
       match debian/rules.  (Closes: #457501)
   * checks/files:
     + [RA] Ignore zero-length files in /usr/share/doc/examples.
+    + [RA] The underFooLicense.docbook files from KDE are not license
+      files.  Thanks, Sune Vuorela.  (Closes: #458831)
   * checks/files.desc:
     + [RA] Remove a stray variable from the config-file-reserved tag.
   * checks/init.d{.desc,}:
