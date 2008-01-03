@@ -19,3 +19,6 @@
 ?package(binary):needs="text" section="Applications/System/Administration"\
  title="Run cfdisk (0)" command="cfdisk"
 ?package(binary):needs="text" section="Applications/System/Administration" title="Hello World" command="/usr/bin/hello"
+?package(binary):needs="wm" section="FVWM Modules" title="Fake Module" command="hello"
+?package(binary):needs="fvwmmodule" section="Window Maker" title="Fake Module"\
+ command="hello"

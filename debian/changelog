@@ -9,6 +9,10 @@ lintian (1.23.42) UNRELEASED; urgency=low
       Thanks, Joerg Jaspert.  (Closes: #458074)
   * checks/files.desc:
     + [RA] Remove a stray variable from the config-file-reserved tag.
+  * checks/menu-format.desc:
+    + [RA] Fix non-wm-module-in-wm-modules-menu-section pluralization to
+      match the check and reword the long description to be hopefully
+      clearer.  Thanks, Martín Ferrari.  (Closes: #457527)
   * checks/shared-libs{.desc,}:
     + [RA] New check for version numbers in symbol files.  Based on a
       patch from Raphael Hertzog.  (Closes: #457067)

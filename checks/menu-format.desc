@@ -167,12 +167,12 @@ Info: The menu item is in the Window Manager section but does not needs=wm.
  Either it is a window manager and it should needs=wm, either it isn't and
  then it must be moved in another section.
 
-Tag: non-wm-module-in-wm-module-menu-section
+Tag: non-wm-module-in-wm-modules-menu-section
 Type: error
 Info: The menu item is in the FVWM Modules or Window Maker section but
- does not use a window-manager specific needs, like needs="fvwmmodule", or
- needs="wmmaker".  You should make it needs the window manager it is a
- module for and add support in the window-manager menu-method.
+ does not declare that it needs a specific window manager (using the needs
+ key in the menu file).  Modules for Fvwm should have needs="fvwmmodule".
+ Modules for WindowMaker should have needs="wmmaker".
 
 Tag: unquoted-string-in-menu-item
 Type: warning

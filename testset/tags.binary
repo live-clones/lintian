@@ -30,6 +30,8 @@ E: binary: menu-item-missing-required-tag section /usr/lib/menu/binary:1
 E: binary: menu-item-missing-required-tag section /usr/share/menu/binary:1
 E: binary: non-wm-in-windowmanager-menu-section x11 /usr/lib/menu/binary:4
 E: binary: non-wm-in-windowmanager-menu-section x11 /usr/share/menu/binary:4
+E: binary: non-wm-module-in-wm-modules-menu-section wm /usr/lib/menu/binary:22
+E: binary: non-wm-module-in-wm-modules-menu-section wm /usr/share/menu/binary:22
 E: binary: postinst-does-not-call-installdocs usr/share/doc-base/space 
 E: binary: postinst-does-not-call-updatemenus usr/share/menu/binary
 E: binary: postrm-does-not-call-updatemenus usr/share/menu/binary
