@@ -7,7 +7,7 @@ lintian (1.23.42) UNRELEASED; urgency=low
       particular about the exact formatting of the dh-make template.
       Triggering off the template text is enough and matches linda.
       Thanks, Joerg Jaspert.  (Closes: #458074)
-  * debian/files.desc:
+  * checks/files.desc:
     + [RA] Remove a stray variable from the config-file-reserved tag.
 
   * debian/control:
