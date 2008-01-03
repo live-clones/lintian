@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Lintian Tag {$tag}</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" href="../lintian.css" type="text/css" />
+</head>
+
+<body>
+  <h1>Lintian Tag {$tag}</h1>
+
+  <p>
+    All reports of {$tag} for the archive.  The extended description of
+    this tag is:
+  </p>
+
+  <blockquote>
+{$description}
+  </blockquote>
+
+  <p>
+    The package names link to the relevant maintainer page and the
+    corresponding report for the source package.  The links go to the full
+    maintainer report page, which includes info and experimental tags and
+    overridden tags, rather than the default page that shows only errors
+    and warnings.
+  </p>
+
+{
+    # We get a list of tag data.  We create a separate paragraph for each
+    # package name.
+    my $last = '';
+    for my $info (sort { $a->{package} cmp $b->{package} } @tags) {
+        my $id = "$info->{package} $info->{type}";
+        if ($id ne $last) {
+            $OUT .= "</pre>\n" if $last;
+            $OUT .= qq(  <pre class="tags">\n);
+            $last = $id;
+        }
+        $id = qq(<a href="../full/$info->{xref}">$id</a>);
+        $OUT .= "$info->{code}: $id: $info->{tag} $info->{extra}\n";
+    }
+    $OUT .= '</pre>';
+}
+        
+  <hr />
+  <div class="footer">
+    <p>
+      Please send all comments about these web pages to the
+      <a href="mailto:lintian-maint\@debian.org">Lintian maintainers</a>.<br />
+      Page last updated: {$timestamp} using Lintian {$version}
+    </p>
+  </div>
+</body>
+</html>

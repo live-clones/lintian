@@ -2,13 +2,31 @@ lintian (1.23.42) UNRELEASED; urgency=low
 
   * checks/control-file{.desc,}:
     + [RA] Include the package name in stronger-dependency-implies-weaker.
+
+  * debian/control:
+    + [RA] Suggest libtext-template-perl, needed for HTML reporting.
   
   * lib/Dep.pm:
     + [RA] Allow substvars instead of package names so that dependency
       checks against the source debian/control file don't treat all
       substvars as equivalent.  Thanks, Julien Cristau.  (Closes: #456802)
 
- -- Russ Allbery <rra@debian.org>  Tue, 18 Dec 2007 12:58:17 -0800
+  * reporting/html_reports:
+    + [RA] Rewritten.
+      - Include info, experimental, and overridden tags in the tag pages.
+      - Generate a second report for each maintainer showing all tags.
+      - Correctly handle multiple different maintainer strings with the
+        same e-mail address.
+      - Correctly report the version number of a binary package when it
+        differs from the source package.  (Closes: #458036)
+      - Formatting changes (hopefully improvements) to the web pages.
+      - New template-driven system for easier revision of the HTML.
+  * reporting/lintian.css:
+    + [RA] New minimal style sheet for the HTML reports.
+  * reporting/templates/*:
+    + [RA] New Text::Template page templates for the HTML reports.
+
+ -- Russ Allbery <rra@debian.org>  Wed, 02 Jan 2008 16:01:02 -0800
 
 lintian (1.23.41) unstable; urgency=low
 

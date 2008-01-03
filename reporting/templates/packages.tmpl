@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Lintian Reports Package Index: {$section}</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" href="lintian.css" type="text/css" />
+</head>
+
+<body>
+  <h1>Lintian Reports Package Index: {$section}</h1>
+
+  <p>
+    This is a list of all source or binary packages that have at least one
+    lintian tag.  This includes all tags, even experimental and info tags
+    and tags that were overridden.  The list is huge, so it's broken into
+    four separate pages.  This page covers package names starting with
+    {$section}.
+  </p>
+
+  <p>
+      <a href="packages_1.html">0-9, A-F</a>
+    | <a href="packages_2.html">G-L</a>
+    | <a href="packages_3.html">M-R</a>
+    | <a href="packages_4.html">S-Z</a>
+  </p>
+
+{
+    # Put headings before each new initial letter.
+    my $letter = '';
+    for my $package (@list) {
+        my $first = uc substr($package, 0, 1);
+        if ($first ne $letter) {
+            $OUT .= "  </p>\n\n" if $letter;
+            $OUT .= qq(  <h2>$first</h2>\n\n  <p>\n);
+            $letter = $first;
+        }
+        $OUT .= qq(    <a href="full/$packages{$package}">$package</a>\n);
+    }
+}  </p>
+        
+  <hr />
+  <div class="footer">
+    <p>
+      Please send all comments about these web pages to the
+      <a href="mailto:lintian-maint@debian.org">Lintian maintainers</a>.<br />
+      Page last updated: {$timestamp} using Lintian {$version}
+    </p>
+  </div>
+</body>
+</html>

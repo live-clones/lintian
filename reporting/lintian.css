@@ -1,0 +1,9 @@
+/* lintian.css -- Style sheet for lintian.debian.org pages. */
+
+h1 {
+    text-align: center;
+}
+
+div.footer {
+    font-size: smaller;
+}

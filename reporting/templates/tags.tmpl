@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Lintian Tags</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" href="lintian.css" type="text/css" />
+</head>
+
+<body>
+  <h1>Lintian Tags</h1>
+
+  <p>
+    This is a list of all tags that occur at least once in the archive
+    with their frequency counts.  This includes all tags, even
+    experimental and info tags.
+  </p>
+
+  <p>
+{
+    for my $tag (sort keys %tags) {
+        my ($count, $overrides) = (0, 0);
+	my %seen;
+        for my $info (@{ $tags{$tag} }) {
+            if ($info->{code} eq 'O') {
+                $overrides++;
+            } else {
+                $count++;
+                $seen{$info->{xref}}++;
+            }
+        }
+        my $packages = scalar keys %seen;
+        $OUT .= qq(    <a href="tags/$tag.html">$tag</a>)
+            . " ($packages packages, $count tags, plus $overrides overrides)"
+            . "<br />\n";
+    }
+}  </p>
+        
+  <hr />
+  <div class="footer">
+    <p>
+      Please send all comments about these web pages to the
+      <a href="mailto:lintian-maint@debian.org">Lintian maintainers</a>.<br />
+      Page last updated: {$timestamp} using Lintian {$version}
+    </p>
+  </div>
+</body>
+</html>

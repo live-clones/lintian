@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Lintian Report for {$name}</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" href="../lintian.css" type="text/css" />
+</head>
+
+<body>
+  <h1>Lintian Report for {$name}</h1>
+
+  <p>
+    At the time of the last Lintian run, the following possible problems
+    were found in packages maintained by {$maintainer}, listed by source
+    package.
+{ 
+    if ($errors) {
+        qq(    See also the <a href="../full/$id">full report</a>, including)
+           . " info and overridden tags.";
+    } else {
+        qq(    See also the <a href="../maintainer/$id">report showing)
+           . " only errors and warnings</a>.";
+    }
+}
+  </p>
+
+  <p>
+    Also see their
+    <a href="http://qa.debian.org/developer.php?login={$email}">QA
+    overview</a>.
+  </p>
+
+  <dl>
+{
+    # We get a hash of package names to a hash of versions to a list of
+    # tags.  Create a description list with the package information as the
+    # title and the tags as the value.
+    for my $source (sort keys %packages) {
+        my $anchored;
+        for my $version (sort keys %{ $packages{$source} }) {
+            my $tags = $packages{$source}{$version};
+            my $last = '';
+            for my $info (@$tags) {
+                if ($errors) {
+                    next unless $info->{code} eq 'E' or $info->{code} eq 'W';
+                }
+                unless ($last) {
+                    if ($anchored) {
+                        $OUT .= qq(    <dt>);
+                    } else {
+                        $OUT .= qq(    <dt id="$source"><a name="$source">);
+                    }
+                    $OUT .= "<strong>$source ($version)</strong>";
+                    if ($anchored) {
+                        $OUT .= qq(</dt>\n    <dd>\n);
+                    } else {
+                        $OUT .= qq(</a></dt>\n    <dd>\n);
+                        $anchored = 1;
+                    }
+                }
+                my $id = "$info->{package} $info->{type}";
+                my $tag = qq(<a href="../tags/$info->{tag}.html">)
+                    . $info->{tag} . '</a>';
+                if ($id ne $last) {
+                    if ($last) {
+                        $OUT .= "</pre>\n\n";
+                    }
+                    $OUT .= "      <pre>\n";
+                }
+                $last = $id;
+                $OUT .= "$info->{code}: $id: $tag $info->{extra}\n";
+            }
+            $OUT .= "</pre>\n    </dd>\n";
+        }
+    }
+}  </dl>
+        
+  <hr />
+  <div class="footer">
+    <p>
+      Please send all comments about these web pages to the
+      <a href="mailto:lintian-maint\@debian.org">Lintian maintainers</a>.<br />
+      Page last updated: {$timestamp} using Lintian {$version}
+    </p>
+  </div>
+</body>
+</html>

@@ -3,6 +3,7 @@
 # Lintian HTML reporting tool -- Create Lintian web reports
 #
 # Copyright (C) 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 2007 Russ Allbery
 #
 # This program is free software.  It is distributed under the terms of
 # the GNU General Public License as published by the Free Software
@@ -21,643 +22,471 @@
 # MA 02110-1301, USA.
 
 use strict;
+use File::Copy qw(copy);
+use Text::Template ();
 
-# Maximum number of identical tags per package:
-my $max_tags = 8;
+# ------------------------------
+# Global variables and configuration
 
-my $debug = 0;
+# Maximum number of identical tags per package to display.  Any remaining tags
+# will be compressed into a "... reported %d more times" line.
+our $MAX_TAGS = 8;
 
-# Read configuration
-require './config';
-use vars qw($LINTIAN_ROOT $LINTIAN_ARCHIVEDIR $LINTIAN_DIST $LINTIAN_SECTION
-            $LINTIAN_ARCH $HTML_TMP_DIR $LINTIAN_LAB
-            $statistics_file);
+# These have no default and must be set in the configuration file.
+# FIXME: $statistics_file should be in all caps as well.
+our ($LINTIAN_ROOT, $LINTIAN_LAB, $LINTIAN_ARCHIVEDIR, $LINTIAN_DIST,
+     $LINTIAN_SECTION, $LINTIAN_ARCH, $HTML_TMP_DIR, $statistics_file);
 
-# Read_pkglists needs this
+# Read the configuration.
+require './config-testing';
+
+# The path to the mirror timestamp.
+our $LINTIAN_TIMESTAMP
+    = "$LINTIAN_ARCHIVEDIR/project/trace/ftp-master.debian.org";
+
+# FIXME: At least the lab should be a parameter to Read_pkglists rather
+# than an environment variable.
 $ENV{'LINTIAN_LAB'} = $LINTIAN_LAB;
 $ENV{'LINTIAN_ROOT'} = $LINTIAN_ROOT;
 
-# Import perl libraries
-use lib "$ENV{'LINTIAN_ROOT'}/lib";
-use Util;
-use Read_taginfo;
-my %tag_info = %{read_tag_info('html')};
+# Import Lintian Perl libraries.
+use lib "$ENV{LINTIAN_ROOT}/lib";
 use Read_pkglists;
-use vars qw(%binary_info %source_info %udeb_info %bin_src_ref); # from the above
+use Read_taginfo;
+use Util;
 
-# These should really not be global.
-my $maint = "";
-my $maint_file = "";
+# Global variables from Read_pkglists.  Ugh.
+# FIXME: Read_pkglists should return this information instead.
+our (%binary_info, %source_info, %udeb_info, %bin_src_ref);
 
-# Determine Lintian version
-chomp(my $LINTIAN_VERSION = `$LINTIAN_ROOT/frontend/lintian --print-version`);
+# Get the tag information from the Lintian *.desc files.
+our %tag_info = %{ read_tag_info('html') };
 
-# Determine timestamp
-chomp(my $timestamp = `date -u --rfc-822`);
-chomp(my $mirror_timestamp = `cat $LINTIAN_ARCHIVEDIR/project/trace/ftp-master.debian.org`);
+# Set the Lintian version, current timestamp, and archive timestamp.
+our $LINTIAN_VERSION = `$LINTIAN_ROOT/frontend/lintian --print-version`;
+our $timestamp = `date -u --rfc-822`;
+our $mirror_timestamp = slurp_entire_file($LINTIAN_TIMESTAMP);
+chomp ($LINTIAN_VERSION, $timestamp, $mirror_timestamp);
 
-# Footer for each html page:
-my $close_text = <<"EOT_EOT_EOT";
-<HR>
-<div style="font-size: smaller">
-<p>Please send all comments about these web pages to
-<A HREF="mailto:lintian-maint\@debian.org">Lintian maintainer</A>.</p>
-<p>Page last updated: $timestamp using Lintian $LINTIAN_VERSION</p>
-</div>
-</BODY></HTML>
-EOT_EOT_EOT
 
-# Read configuration file
-read_bin_list();
-read_udeb_list();
-# read_src_list(); # not necessary, get_bin_src_ref will run it
-get_bin_src_ref();
+# ------------------------------
+# Initialize templates
 
-# Create output directories
-mkdir($HTML_TMP_DIR,0777)
-    or die "cannot create output directory $HTML_TMP_DIR: $!";
-mkdir("$HTML_TMP_DIR/maintainer",0777)
-    or die "cannot create output directory $HTML_TMP_DIR/maintainer: $!";
+# The path to our templates.
+our $TEMPLATES = "$LINTIAN_ROOT/reporting/templates";
 
-my ($num_errors, $num_warnings, $num_experimental, $num_overridden, $num_info);
-$num_errors = $num_warnings = $num_experimental = $num_overridden = $num_info = 0;
-my (%by_src, %by_tag);
-my %anchor;
+# This only has to be done once, so do it at the start and then reuse the same
+# templates throughout.
+our %templates;
+for my $template (qw/clean index maintainer maintainers packages tag tags/) {
+    my %options = (TYPE => 'FILE', SOURCE => "$TEMPLATES/$template.tmpl");
+    $templates{$template} = Text::Template->new (%options)
+        or die "cannot load template $template: $Text::Template::ERROR\n";
+}
 
-# process input
+
+# ------------------------------
+# Main routine
+
+# Read the package lists.
+#
+# FIXME: get_bin_src_ref runs read_src_list unconditionally so we can't call
+# it directly, which is confusing.
+read_bin_list;
+read_udeb_list;
+get_bin_src_ref;
+
+# Create output directories.
+mkdir($HTML_TMP_DIR, 0777)
+    or die "cannot create output directory $HTML_TMP_DIR: $!\n";
+mkdir("$HTML_TMP_DIR/full", 0777)
+    or die "cannot create output directory $HTML_TMP_DIR/full: $!\n";
+mkdir("$HTML_TMP_DIR/maintainer", 0777)
+    or die "cannot create output directory $HTML_TMP_DIR/maintainer: $!\n";
+mkdir("$HTML_TMP_DIR/tags", 0777)
+    or die "cannot create output directory $HTML_TMP_DIR/tags: $!\n";
+copy("$LINTIAN_ROOT/reporting/lintian.css", "$HTML_TMP_DIR/lintian.css")
+    or die "cannot copy lintian.css to $HTML_TMP_DIR: $!\n";
+
+# This variable will accumulate statistics.  For tags: errors, warnings,
+# experimental, overridden, and info are the keys holding the count of tags of
+# that sort.  For packages: binary, udeb, and source are the number of
+# packages of each type with Lintian errors or warnings.  For maintainers:
+# maintainers is the number of maintainers with Lintian errors or warnings.
+my %statistics;
+
+# %by_maint holds a hash of maintainer names to packages and tags.  Each
+# maintainer is a key.  The value is a hash of package names to hashes.  Each
+# package hash is in turn a hash of versions to an anonymous array of hashes,
+# with each hash having keys code, package, type, tag, extra, and xref.  xref
+# gets the partial URL of the maintainer page for that source package.
+#
+# In other words, the lintian output line:
+#
+#     W: gnubg source: substvar-source-version-is-deprecated gnubg-data
+#
+# for gnubg 0.15~20061120-1 maintained by Russ Allbery <rra@debian.org> is
+# turned into the following structure:
+#
+# { 'gnubg' => {
+#       '0.15~20061120-1' => [
+#           { code    => 'W',
+#             package => 'gnubg',
+#             type    => 'source',
+#             tag     => 'substvar-source-version-is-deprecated',
+#             extra   => 'gnubg-data'
+#             xref    => 'rra@debian.org.html#gnubg' } ] } }
+#
+# and then stored under the key 'Russ Allbery <rra@debian.org>'
+#
+# %by_tag is a hash of tag names to an anonymous array of tag information
+# hashes just like the inside-most data structure above.
+my (%by_maint, %by_tag);
+
+# We take a lintian log file on either standard input or as the first
+# argument.  This log file contains all the tags lintian found, plus N: tags
+# with informational messages.  Ignore all the N: tags and load everything
+# else into the hashes we use for all web page generation.
+#
+# We keep track of a hash from maintainer page URLs to maintainer values so
+# that we don't have two maintainers who map to the same page and overwrite
+# each other's pages.  If we find two maintainers who map to the same URL,
+# just assume that the second maintainer is the same as the first (but warn
+# about it).
+my (%seen, %urlmap, %warned);
 while (<>) {
     chomp;
-    next unless /^([EWXOI]): (\S+)( \S+)?: (\S+)/;
-    my ($code, $pkg, $type, $tag) = ($1, $2, $3, $4);
-    $type = ' binary' unless (defined $type);
-    my $src;
+    next unless /^([EWIXO]): (\S+)(?: (\S+))?: (\S+)(?:\s+(.*))?/;
+    my ($code, $package, $type, $tag, $extra) = ($1, $2, $3, $4, $5);
+    $type = 'binary' unless (defined $type);
+    next unless ($type eq 'source' || $type eq 'binary' || $type eq 'udeb');
 
-    if ($code eq 'E') {
-	$num_errors++;
-    } elsif ($code eq 'W') {
-	$num_warnings++;
-    } elsif ($code eq 'X') {
-	$num_experimental++;
-    } elsif ($code eq 'O') {
-	$num_overridden++;
-	next;
-    } elsif ($code eq 'I') {
-	$num_info++;
-	next;
+    # Update statistics.
+    my $key = {
+        E => 'errors',
+        W => 'warnings',
+        I => 'info',
+        X => 'experimental',
+        O => 'overridden'
+    }->{$code};
+    $statistics{$key}++;
+    unless ($seen{"$package $type"}) {
+        $statistics{"$type-packages"}++;
+        $seen{"$package $type"} = 1;
     }
 
-    if ($type eq ' source') {
-	$src = $pkg;
-	unless (exists $source_info{$pkg}) {
-	    print STDERR "error: source package $pkg not listed!\n";
-	}
+    # Determine the source package for this package and warn if there appears
+    # to be no source package in the archive.  Determine the maintainer and
+    # version.  Work around a missing source package by pulling information
+    # from a binary package or udeb of the same name if there is any.
+    my ($source, $version, $maintainer);
+    if ($type eq 'source') {
+        $source = $package;
+        if (exists $source_info{$source}) {
+            $version = $source_info{$source}->{version};
+            $maintainer = $source_info{$source}->{maintainer};
+        } else {
+            warn "source package $package not listed!\n";
+        }
     } else {
-	$src = $bin_src_ref{$pkg};
-	unless ($src) {
-	    print STDERR "error: source for package $pkg not found!\n";
-	    $src = $pkg;
-	}
+        $source = $bin_src_ref{$package};
+        if ($source and exists $source_info{$source}) {
+            $maintainer = $source_info{$source}->{maintainer};
+        } else {
+            warn "source for package $package not found!\n";
+            $source = $package;
+            if ($type eq 'binary') {
+                $maintainer = $binary_info{$package}->{maintainer};
+            } elsif ($type eq 'udeb') {
+                $maintainer = $udeb_info{$package}->{maintainer};
+            }
+        }
+        if ($type eq 'binary') {
+            $version = $binary_info{$package}->{version};
+        } elsif ($type eq 'udeb') {
+            $version = $udeb_info{$package}->{version};
+        }
+    }
+    $maintainer ||= '(unknown)';
+    $version ||= 'unknown';
+
+    # Check if we've seen the URL for this maintainer before.
+    my $url = maintainer_url ($maintainer);
+    if ($urlmap{$url} && $urlmap{$url} ne $maintainer) {
+        warn "$maintainer has the same page as $urlmap{$url}\n"
+            unless ($warned{$maintainer}
+                    || lc ($maintainer) eq lc ($urlmap{$url})
+                    || $maintainer =~ /\@lists\.(alioth\.)?debian\.org>/);
+        $warned{$maintainer}++;
+        $maintainer = $urlmap{$url};
+    } else {
+        $urlmap{$url} = $maintainer;
     }
 
-    if (not exists $source_info{$src}) {
-	# work around:
-	$source_info{$src}->{'maintainer'} =
-	    $binary_info{$pkg}->{'maintainer'} ||
-	    $udeb_info{$pkg}->{'maintainer'} || '(unknown)';
-	$source_info{$src}->{'version'} = $binary_info{$pkg}->{'version'};
+    # Update maintainer statistics.
+    $statistics{maintainers}++ unless defined $by_maint{$maintainer};
+
+    # Sanitize, just out of paranoia.
+    $source =~ s/[^a-zA-Z0-9.+-]/_/g;
+    $version =~ s/[^a-zA-Z0-9.+:~-]/_/g;
+
+    # Add the tag information to our hashes.  Share the data between the
+    # hashes to save space (which means we can't later do destructive tricks
+    # with it).
+    my $info = {
+        code    => html_quote ($code),
+        package => html_quote ($package),
+        type    => html_quote ($type),
+        tag     => html_quote ($tag),
+        extra   => html_quote ($extra),
+        xref    => maintainer_url ($maintainer) . "#$source"
+    };
+    $by_maint{$maintainer}{$source}{$version} ||= [];
+    push(@{ $by_maint{$maintainer}{$source}{$version} }, $info);
+    $by_tag{$tag} ||= [];
+    push(@{ $by_tag{$tag} }, $info);
+}
+
+# Build a hash of all maintainers, not just those with Lintian tags.  We use
+# this later to generate stub pages for maintainers whose packages are all
+# Lintian-clean.
+my %clean;
+for my $source (keys %source_info) {
+    $clean{$source_info{$source}->{maintainer}} = 1;
+}
+
+# Now, walk through the tags by source package (sorted by maintainer).  Output
+# a summary page of errors and warnings for each maintainer, output a full
+# page that includes info, experimental, and overriden tags, and assemble the
+# maintainer index and the QA package list as we go.
+my (%qa, %maintainers, %packages);
+for my $maintainer (sort keys %by_maint) {
+    delete $clean{$maintainer};
+
+    # For each of this maintainer's packages, add statistical information
+    # about warnings and errors to the QA list and build the packages hash
+    # used for the package index.
+    my ($errors, $warnings) = (0, 0);
+    for my $source (keys %{ $by_maint{$maintainer} }) {
+        for my $version (keys %{ $by_maint{$maintainer}{$source} }) {
+            my $tags = $by_maint{$maintainer}{$source}{$version};
+            for my $tag (@$tags) {
+                $errors++ if $tag->{code} eq 'E';
+                $warnings++ if $tag->{code} eq 'W';
+                $packages{$tag->{package}} = $tag->{xref};
+            }
+        }
+        $qa{$source} = [ $errors, $warnings ];
     }
 
-    push(@{$by_src{$src}},$_);
-    push(@{$by_tag{$tag}},$_);
-}
+    # Determine the parts of the maintainer and the file name for the
+    # maintainer page.
+    my ($name, $email) = ($maintainer =~ /^(.*) <([^>]+)>/);
+    $email = 'unknown' unless $email;
+    my $id = maintainer_url ($maintainer);
+    my $regular = "maintainer/$id";
+    my $full = "full/$id";
 
-open_qa_list();
-open_maintainer_index();
-
-my ($src_num_errors, $src_num_warnings);
-my ($num_binpkg, $num_udebpkg, $num_maint, $num_srcpkg);
-
-# Build a hash of all maintainers.  We use this to generate stub pages for
-# maintainers whose packages are all lintian-clean.
-my %maintainers;
-for my $src (keys %source_info) {
-    $maintainers{$source_info{$src}{maintainer}} = 1;
-}
-
-# Create per-maintainer list
-for my $src (sort by_maint keys %by_src) {
-    my @tags;
-    my ($lastpkg, $lasttag);
-    $lastpkg = $lasttag = "";
-
-    warn "no maintainer for $src!\n"
-	unless defined $source_info{$src}{maintainer};
-    set_maintainer($source_info{$src}{'maintainer'});
-    new_src_package($src, $source_info{$src}{'version'});
-    delete $maintainers{$source_info{$src}{maintainer}};
-
-    for (sort by_tag @{$by_src{$src}}) {
-	my ($code, $pkg, $type, $tag, $rest) =
-	    /^(\S): (\S+)( \S+)?: (\S+)(.*)/;
-        $type = ' binary' unless (defined $type);
-	$rest = quotehtml($rest);
-
-	# Create a table of these for the debian-qa folks
-	$src_num_errors++ if $code eq 'E';
-	$src_num_warnings++ if $code eq 'W';
-
-	if ($pkg ne $lastpkg and $type eq ' binary') {
-	    $num_binpkg++;
-	    drop_anchor($pkg, "");
-	} elsif ($pkg ne $lastpkg and $type eq ' udeb') {
-	    $num_udebpkg++;
-	    drop_anchor($pkg, "");
-	}
-	if ($tag ne $lasttag or $pkg ne $lastpkg) {
-	    output_chunk(\@tags) if @tags;
-	    undef @tags;
-	}
-	$lastpkg = $pkg if $type ne ' source';
-	$lasttag = $tag;
-
-	$tag = make_tagref($tag);
-	push(@tags,"$code: $pkg$type: $tag$rest\n");
+    # Create the regular maintainer page (only errors and warnings) and the
+    # full maintainer page (all tags, including overrides and info tags).
+    my %data = (
+        email      => html_quote ($email),
+        errors     => 1,
+        id         => $id,
+        maintainer => html_quote ($maintainer),
+        name       => html_quote ($name),
+        packages   => $by_maint{$maintainer},
+        timestamp  => $timestamp,
+        version    => $LINTIAN_VERSION
+    );
+    my $template;
+    if ($errors || $warnings) {
+        $template = $templates{maintainer};
+    } else {
+        $template = $templates{clean};
     }
+    output_template ($regular, $template, \%data);
+    $template = $templates{maintainer};
+    $data{errors} = 0;
+    output_template ($full, $template, \%data);
 
-    output_chunk(\@tags) if @tags;
-    undef @tags;
-
-    end_src_package($src);
+    # Add this maintainer to the hash of maintainer to URL mappings.
+    $maintainers{$maintainer} = $id;
 }
 
-close_maintainer();
-close_maintainer_index();
-close_qa_list();
+# Write out the maintainer index.
+my %data = (
+    maintainers => \%maintainers,
+    timestamp   => $timestamp,
+    version     => $LINTIAN_VERSION
+);
+output_template ('maintainers.html', $templates{maintainers}, \%data);
+
+# Write out the QA package list.
+open (QA, '>', "$HTML_TMP_DIR/qa-list.txt")
+    or die "cannot create qa-list.txt: $!\n";
+for my $source (sort keys %qa) {
+    print QA "$source $qa{$source}[0] $qa{$source}[1]\n";
+}
+close QA or die "cannot write to qa-list: $!\n";
 
 # Now, generate stub pages for every maintainer who has only clean packages.
-# Opening the index to /dev/null is such a hack.  Code refactoring is
-# desperately needed here.
-open(I, '>', '/dev/null');
-for my $maintainer (keys %maintainers) {
-    set_maintainer($maintainer);
-    print P "<p>All of this maintainer's packages are lintian-clean.</p>\n";
+for my $maintainer (keys %clean) {
+    my ($name, $email) = ($maintainer =~ /^(.*) <([^>]+)>/);
+    $email = 'unknown' unless $email;
+    my %data = (
+        email      => html_quote ($email),
+        maintainer => html_quote ($maintainer),
+        name       => html_quote ($name),
+        timestamp  => $timestamp,
+        version    => $LINTIAN_VERSION
+    );
+    my $id = maintainer_url ($maintainer);
+    next if $urlmap{$id};
+    output_template ("maintainer/$id", $templates{clean}, \%data);
+    output_template ("full/$id", $templates{clean}, \%data);
 }
-close_maintainer();
-close I;
 
-# Create tag pages
-open_tag_index();
+# Create the pages for each tag.  Each page shows the extended description for
+# the tag and all the packages for which that tag was issued.
 for my $tag (sort keys %by_tag) {
-    my $lastpkg = "";
-    my $tag_pkgs = 0;
-    my @tags;
-
-    open_tag_file($tag);
-
-    for (sort @{$by_tag{$tag}}) {
-	my ($code, $pkg, $type, $tag, $rest) =
-	    /^(\S): (\S+)( \S+)?: (\S+)(.*)/;
-        $type = "" unless (defined $type); # probably...?
-	$rest = quotehtml($rest);
-
-	if ($pkg ne $lastpkg) {
-	    if (@tags) {
-		$tag_pkgs++;
-		output_chunk(\@tags);
-		undef @tags;
-	    }
-
-	}
-	$lastpkg = $pkg;
-
-	$pkg = make_anchor($pkg);
-	push(@tags,"$code: $pkg$type: $tag$rest\n");
+    my $description;
+    if ($tag_info{$tag}) {
+        $description = wrap_paragraphs('HTML', '    ', $tag_info{$tag});
+    } else {
+        $description = "    <p>Can't find description of tag $tag.</p>";
     }
-
-    if (@tags) {
-	$tag_pkgs++;
-	output_chunk(\@tags);
-	undef @tags;
-    }
-
-    close_tag_file($tag);
-    list_tag($tag, $#{$by_tag{$tag}} + 1, $tag_pkgs);
-}
-close_tag_index();
-
-# Create per-package list
-my %package_lists;
-for my $p (sort keys %anchor) {
-    my $c = uc substr($p,0,1);
-    push (@{$package_lists{$c}}, make_anchor($p));
+    my %data = (
+        description => $description,
+        tag         => html_quote ($tag),
+        tags        => $by_tag{$tag},
+        timestamp   => $timestamp,
+        version     => $LINTIAN_VERSION
+    );
+    output_template ("tags/$tag.html", $templates{tag}, \%data);
 }
 
-my (@list1, @list2, @list3, @list4);
-for my $c (sort keys %package_lists) {
-    my $list = join(', ', @{$package_lists{$c}});
-    $list = "<H1>$c</H1>\n<BLOCKQUOTE>\n$list</BLOCKQUOTE>\n";
-    if ($c le 'F') {
-	push(@list1, $list);
-    } elsif ($c le 'L') {
-	push(@list2, $list);
-    } elsif ($c le 'R') {
-	push(@list3, $list);
-    } elsif ($c le 'Z') {
-	push(@list4, $list);
-    }
+# Create the general tag index.
+%data = (
+    tags      => \%by_tag,
+    timestamp => $timestamp,
+    version   => $LINTIAN_VERSION
+);
+output_template ('tags.html', $templates{tags}, \%data);
+
+# Generate the package lists.  These are huge, so we break them into four
+# separate pages.
+#
+# FIXME: Does anyone actually use these pages?  They're basically unreadable.
+my %list;
+$list{'0-9, A-F'} = [];
+$list{'G-L'}      = [];
+$list{'M-R'}      = [];
+$list{'S-Z'}      = [];
+for my $package (sort keys %packages) {
+    my $first = uc substr($package, 0, 1);
+    if    ($first le 'F') { push(@{ $list{'0-9, A-F'} }, $package) }
+    elsif ($first le 'L') { push(@{ $list{'G-L'} },      $package) }
+    elsif ($first le 'R') { push(@{ $list{'M-R'} },      $package) }
+    else                  { push(@{ $list{'S-Z'} },      $package) }
+}
+%data = (
+    packages  => \%packages,
+    timestamp => $timestamp,
+    version   => $LINTIAN_VERSION
+);
+my $i = 1;
+for my $section (sort keys %list) {
+    $data{section} = $section;
+    $data{list} = $list{$section};
+    output_template ("packages_$i.html", $templates{packages}, \%data);
+    $i++;
 }
 
-output_packages(\@list1,'packages_1.html','0-9, A-F');
-output_packages(\@list2,'packages_2.html','G-L');
-output_packages(\@list3,'packages_3.html','M-R');
-output_packages(\@list4,'packages_4.html','S-Z');
-
-# Read old statistics file
-my $old_stat;
+# Finally, we can start creating the index page.  First, read in the old
+# statistics file so that we can calculate deltas for all of our statistics.
+my $old_statistics;
 if (-f $statistics_file) {
-    ($old_stat) = read_dpkg_control($statistics_file);
+    ($old_statistics) = read_dpkg_control($statistics_file);
 }
-$old_stat->{'info'} ||= 0;
-
-# Calculate changes
-my $delta_num_maint = sprintf "%+d",$num_maint-$old_stat->{'maintainers'};
-my $delta_num_srcpkg = sprintf "%+d",$num_srcpkg-$old_stat->{'source-packages'};
-my $delta_num_binpkg = sprintf "%+d",$num_binpkg-$old_stat->{'binary-packages'};
-my $delta_num_udebpkg = sprintf "%+d",$num_udebpkg-$old_stat->{'udeb-packages'};
-my $delta_num_warnings = sprintf "%+d",$num_warnings-$old_stat->{'warnings'};
-my $delta_num_errors = sprintf "%+d",$num_errors-$old_stat->{'errors'};
-my $delta_num_experimental = sprintf "%+d",$num_experimental-$old_stat->{'experimental'};
-my $delta_num_info = sprintf "%+d",$num_info-$old_stat->{'info'};
-my $delta_num_overridden = sprintf "%+d",$num_overridden-$old_stat->{'overridden'};
-
-# update statistics file
-my $stat;
-$stat->{'last-updated'} = $timestamp;
-$stat->{'mirror-timestamp'} = $mirror_timestamp;
-$stat->{'maintainers'} = $num_maint;
-$stat->{'source-packages'} = $num_srcpkg;
-$stat->{'binary-packages'} = $num_binpkg;
-$stat->{'udeb-packages'} = $num_udebpkg;
-$stat->{'warnings'} = $num_warnings;
-$stat->{'errors'} = $num_errors;
-$stat->{'experimental'} = $num_experimental;
-$stat->{'info'} = $num_info;
-$stat->{'overridden'} = $num_overridden;
-$stat->{'lintian-version'} = $LINTIAN_VERSION;
-open(OUT,'>', $statistics_file)
-    or die "cannot open statistics file $statistics_file for writing: $!";
-for my $k (keys %$stat) {
-  printf OUT "%s: %s\n",$k,$stat->{$k};
+my %delta;
+my @attrs = qw(maintainers source-packages binary-packages udeb-packages
+               errors warnings info experimental overridden);
+for my $attr (@attrs) {
+    my $old = $old_statistics->{$attr} || 0;
+    $statistics{$attr} ||= 0;
+    $delta{$attr} = sprintf("%d (%+d)", $statistics{$attr},
+                            $statistics{$attr} - $old);
 }
-close(OUT);
 
-# create index page
-open(OUT,'>', "$HTML_TMP_DIR/report-index.html")
-    or die "cannot open index page $HTML_TMP_DIR/report-index.html for writing: $!";
-print OUT <<"EOT_EOT_EOT";
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
-    "http://www.w3.org/TR/html4/strict.dtd">
-<html lang="en">
-<head>
-  <title>Lintian</title>
-</head>
-<body background="bg.gif">
+# Update the statistics file.
+open (STATS, '>', $statistics_file)
+    or die "cannot open $statistics_file for writing: $!\n";
+print STATS "last-updated: $timestamp\n";
+print STATS "mirror-timestamp: $mirror_timestamp\n";
+for my $attr (@attrs) {
+    print STATS "$attr: $statistics{$attr}\n";
+}
+print STATS "lintian-version: $LINTIAN_VERSION\n";
+close STATS or die "cannot write to $statistics_file: $!\n";
 
-<img align="left" src="logo.gif" alt="Lintian" width=300 height=200>
-
-<H1>Lintian</H1>
-
-<p>Lintian dissects <a href="http://www.debian.org/">Debian</a>
-<a href="http://packages.debian.org/">packages</a> and reports bugs
-and policy violations. It contains automated checks for many aspects
-of <a href="http://www.debian.org/doc/debian-policy/">Debian policy</a>
-as well as some checks for common errors.</p>
-
-<p>For more information, see the <a href="manual/index.html">User
-Manual</a>.</p>
-
-<p>Lintian is available in the
-<a href="http://packages.debian.org/lintian">lintian package</a>.</p>
-
-<hr size=1>
-
-<p>The following Lintian report indices are available:</p>
-
-<ul>
-  <li><strong><a href="reports/maintainers.html">Maintainers</a></strong></li>
-
-  <li><strong><a href="reports/tags.html">Tag types</a></strong></li>
-
-  <li><strong>Packages that have names starting with:</strong>
-    <ul>
-      <li><a href="reports/packages_1.html">0-9, A-F</a>
-      <li><a href="reports/packages_2.html">G-L</a>
-      <li><a href="reports/packages_3.html">M-R</a>
-      <li><a href="reports/packages_4.html">S-Z</a>
-    </ul>
-  </li>
-</ul>
-
-<p>Statistics:</p>
-
-<blockquote>
-<table>
-<tr><td>Last updated:</td>			<td>$timestamp</td></tr>
-<tr><td>Archive timestamp:</td>			<td>$mirror_timestamp</td></tr>
-<tr><td>Distribution/section/architecture:</td>	<td>$LINTIAN_DIST / $LINTIAN_SECTION / $LINTIAN_ARCH</td></tr>
-<tr><td>Maintainers listed:</td>		<td>$num_maint ($delta_num_maint)</td></tr>
-<tr><td>Source packages listed:</td>		<td>$num_srcpkg ($delta_num_srcpkg)</td></tr>
-<tr><td>Binary packages listed:</td>		<td>$num_binpkg ($delta_num_binpkg)</td></tr>
-<tr><td>Udeb packages listed:</td>		<td>$num_udebpkg ($delta_num_udebpkg)</td></tr>
-<tr><td>Warnings:</td>				<td>$num_warnings ($delta_num_warnings)</td></tr>
-<tr><td>Errors:</td>				<td>$num_errors ($delta_num_errors)</td></tr>
-<tr><td>Info tags:</td>				<td>$num_info ($delta_num_info)</td></tr>
-<tr><td>Overridden tags:</td>			<td>$num_overridden ($delta_num_overridden)</td></tr>
-<tr><td>Lintian version:</td>			<td>$LINTIAN_VERSION</td></tr>
-</table>
-</blockquote>
-
-<p>(The numbers in parentheses describe the changes since the last Lintian
-report, published on $old_stat->{'last-updated'}.)</p>
-
-$close_text
-EOT_EOT_EOT
-close(OUT);
-
+# Create the main page.
+%data = (
+    architecture => $LINTIAN_ARCH,
+    delta        => \%delta,
+    dist         => $LINTIAN_DIST,
+    mirror       => $mirror_timestamp,
+    previous     => $old_statistics->{'last-updated'},
+    section      => $LINTIAN_SECTION,
+    timestamp    => $timestamp,
+    version      => $LINTIAN_VERSION
+);
+output_template ('index.html', $templates{index}, \%data);
 exit 0;
 
-# -------------------------------
+# ------------------------------
+# Utility functions
 
-sub open_maintainer_index {
-    open(I, '>', "$HTML_TMP_DIR/maintainers.html") or die "$!";
-    print I <<EOH;
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
-    "http://www.w3.org/TR/html4/strict.dtd">
-<html lang="en">
-<head>
-<title>Lintian report, sorted by maintainers</title>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-</head>
-<body>
-<h1>Lintian report, sorted by maintainers</h1>
-EOH
-;
-
-}
-
-sub close_maintainer_index {
-    print I $close_text;
-    close(I);
-}
-
-sub list_maintainer {
-    print I "\n<p><a href=\"$_[0]\">$_[1]</a>\n";
-    $num_maint++;
-}
-
-# -------------------------------
-
-sub open_tag_index {
-    open(T, '>', "$HTML_TMP_DIR/tags.html") or die "$!";
-    print T <<EOH;
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
-    "http://www.w3.org/TR/html4/strict.dtd">
-<HTML lang="en">
-<HEAD>
-<TITLE>Lintian report, sorted by tags</TITLE>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-</HEAD>
-<BODY>
-<H1>Lintian report, sorted by tags</H1>
-EOH
-;
-
-}
-
-sub close_tag_index {
-    print T $close_text;
-    close(T);
-}
-
-sub list_tag {
-    my ($ts, $ps) = ( "", "" );
-
-    $ts = 's' if $_[1] != 1;
-    $ps = 's' if $_[2] != 1;
-    print T "\n" . make_tagref($_[0]) . " ($_[2] package$ps, $_[1] tag$ts)<P>\n";
-}
-
-# -------------------------------
-
-sub open_maintainer {
-    return if ($maint_file && $_[0] eq $maint_file);
-    close_maintainer();
-
-    $maint_file = $_[0];
-    open(P, '>', "$HTML_TMP_DIR/$maint_file") or die "$!";
-
-    my $t = quotehtml($maint);
-
-    print P <<EOH;
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
-    "http://www.w3.org/TR/html4/strict.dtd">
-<HTML lang="en">
-<HEAD>
-<title>Lintian report for $t</title>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-</HEAD>
-<body>
-<h2>Lintian report for</h2>
-<h1>$t</h1>
-EOH
-;
-
-    list_maintainer($maint_file, $t);
-}
-
-sub set_maintainer {
-    return if $_[0] eq $maint;
-
-    $maint = $_[0];
-
-    # The maintainer page should be maintainer/<email>.html where <email> is
-    # their email address with all characters other than a-z A-Z 0-9 - _ . @ =
-    # + replaced with _.  Don't change this without coordinating with QA.
-    my ($file) = ($maint =~ /<([^>]+)>/);
-    if ($file) {
-	$file =~ tr/a-zA-Z0-9_.@=+-/_/c;
-	$file = "maintainer/$file.html";
+# Determine the file name for the maintainer page given a maintainer.  It
+# should be <email>.html where <email> is their email address with all
+# characters other than a-z A-Z 0-9 - _ . @ = + replaced with _.  Don't change
+# this without coordinating with QA.
+sub maintainer_url {
+    my ($maintainer) = @_;
+    my ($email) = ($maintainer =~ /<([^>]+)>/);
+    my ($regular, $full);
+    if ($email) {
+        my $id = $email;
+        $id =~ tr/a-zA-Z0-9_.@=+-/_/c;
+        return "$id.html";
     } else {
-	$file = "maintainer/unsorted.html";
-    }
-
-    open_maintainer($file);
-}
-
-sub drop_anchor {
-    my ($anch, $text) = @_;
-    my $key = $anch;
-
-    if (exists $anchor{$key}) {
-	print P $text;
-    } else {
-	$anch =~ tr/-/_/;  # dashes don't work correctly in anchors
-	print P "<a id=\"$anch\" name=\"$anch\">$text</a>";
-
-	$anchor{$key} = "$maint_file#$anch";
+        return 'unsorted.html';
     }
 }
 
-sub make_anchor {
-    my $key = shift;
-    if ($anchor{$key}) {
-	return "<a href=\"$anchor{$key}\">$key</a>";
-    } else {
-	return $key;
-    }
+# Quote special characters for HTML output.
+sub html_quote {
+    my ($text) = @_;
+    $text ||= '';
+    $text =~ s/&/\&amp;/g;
+    $text =~ s/</\&lt;/g;
+    $text =~ s/>/\&gt;/g;
+    return $text;
 }
 
-sub close_maintainer {
-    return if not $maint_file;
-
-    print P $close_text;
-    close(P);
-
-    undef $maint_file;
+# Given a file name, a template, and a data hash, fill out the template with
+# that data hash and output the results to the file.
+sub output_template {
+    my ($file, $template, $data) = @_;
+    open (OUTPUT, '>', "$HTML_TMP_DIR/$file")
+        or die "creating $HTML_TMP_DIR/$file falied: $!\n";
+    $template->fill_in (OUTPUT => \*OUTPUT, HASH => $data)
+        or die "filling out $file failed: $Text::Template::ERROR\n";
+    close OUTPUT;
 }
 
-# -------------------------------
-
-sub new_src_package {
-    my ($src, $ver) = @_;
-
-    print P "\n<hr> <h2>";
-    drop_anchor($src, "Source package: $src ($ver)");
-    print P "</h2>\n";
-
-    $num_srcpkg++;
-    $src_num_errors = 0;
-    $src_num_warnings = 0;
-}
-
-sub end_src_package {
-    my ($src) = @_;
-
-    list_qa_entry($src, $src_num_errors, $src_num_warnings);
-}
-
-# -------------------------------
-
-sub open_qa_list {
-    open(Q, '>', "$HTML_TMP_DIR/qa-list.txt") or die "$!";
-}
-
-sub close_qa_list {
-    close(Q);
-}
-
-sub list_qa_entry {
-    my ($src, $errs, $warns) = @_;
-    print Q "$src $errs $warns\n";
-}
-
-# -------------------------------
-
-sub open_tag_file {
-    my $tag = shift;
-
-    open(P, '>', "$HTML_TMP_DIR/T$tag.html") or die "$!";
-    print P <<EOH;
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
-    "http://www.w3.org/TR/html4/strict.dtd">
-<HTML lang="en">
-<HEAD>
-<TITLE>Lintian report for $tag</TITLE>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-</HEAD>
-<BODY>
-<H2>Lintian report for</H2>
-<H1>$tag</H1>
-EOH
-;
-
-    # print explanation about tag, if available
-    if ($tag_info{$tag}) {
-	print P "<blockquote>\n";
-	print P wrap_paragraphs('HTML', '',$tag_info{$tag}),"\n";
-	print P "</blockquote>\n";
-    } else {
-	warn "Can't find info for tag $tag.\n";
-    }
-
-    print P "<HR>\n";
-}
-
-sub close_tag_file {
-    print P $close_text;
-    close(P);
-}
-
-sub make_tagref {
-    return "<a href=\"T$_[0].html\">$_[0]</a>";
-}
-
-# -------------------------------
-
-sub output_chunk {
-    my ($pbuf) = @_;
-
-    my $count = $#$pbuf+1;
-    if ($count > $max_tags) {
-	splice(@$pbuf,$max_tags-1);
-	push(@$pbuf, sprintf("   ... reported %d more times\n",
-			     $count-($max_tags-1)));
-    }
-
-    print P "<PRE>\n  " . join('  ', @$pbuf) . "</PRE>\n";
-}
-
-sub output_packages {
-    my ($l,$f,$r) = @_;
-
-    open(I, '>', "$HTML_TMP_DIR/$f") or die "$!";
-    print I <<EOH;
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
-    "http://www.w3.org/TR/html4/strict.dtd">
-<HTML lang="en">
-<HEAD>
-<TITLE>Lintian report, sorted by packages ($r)</TITLE>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-</HEAD>
-<BODY>
-<H1>Lintian report, sorted by packages ($r)</H1>
-<a href="packages_1.html">0-9, A-F</a> |
-<a href="packages_2.html">G-L</a> |
-<a href="packages_3.html">M-R</a> |
-<a href="packages_4.html">S-Z</a>
-EOH
-;
-    print I @$l;
-
-    print I $close_text;
-    close(I);
-}
-
-# -------------------------------
-
-sub by_maint {
-  $source_info{$a}->{'maintainer'} cmp $source_info{$b}->{'maintainer'}
-      || $a cmp $b;
-}
-
-sub by_tag {
-  substr($a,3) cmp substr($b,3);
-}
-
-sub quotehtml {
-    $_ = $_[0] . '';
-    s/&/\&amp;/g;
-    s/</\&lt;/g;
-    s/>/\&gt;/g;
-    return $_;
-}
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 ts=4 et shiftround
