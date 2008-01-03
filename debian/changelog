@@ -46,7 +46,13 @@ lintian (1.23.42) UNRELEASED; urgency=low
   * frontend/lintian:
     + [RA] Allow + and . in tag names in overrides.  Thanks, Stefan
       Fritsch.  (Closes: #454790)
-  
+    + [RA] Check that the argument to --color is valid.
+    + [RA] Warn about no package arguments unless --setup-lab or
+      --remove-lab are given.  Thanks, Damyan Ivanov.  (Closes: #455732)
+    + [RA] Add support for HTML coloring.  (Closes: #458376)
+  * frontend/lintian-info:
+    + [RA] Allow for HTML color tags.
+
   * lib/Dep.pm:
     + [RA] Allow substvars instead of package names so that dependency
       checks against the source debian/control file don't treat all
@@ -58,6 +64,11 @@ lintian (1.23.42) UNRELEASED; urgency=low
       where we're more sure of the contents.
     + [RA] Expand the picky capitalization checks to catch Debian, GNOME,
       KDE, and Linux.  (Closes: #456582)
+  * lib/Tags.pm:
+    + [RA] Add support for HTML coloring.
+
+  * man/lintian.1:
+    + [RA] Document the --color=html option.
 
   * reporting/html_reports:
     + [RA] Rewritten.

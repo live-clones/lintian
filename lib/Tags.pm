@@ -266,6 +266,12 @@ sub get_stats {
     return \%stats;
 }
 
+# Color tags with HTML.  Takes the tag and the color name.
+sub colored_html {
+    my ($tag, $color) = @_;
+    return qq(<span style="color: $color">$tag</span>);
+}
+
 sub print_tag {
     my ( $pkg_info, $tag_info, $information ) = @_;
 
@@ -281,6 +287,8 @@ sub print_tag {
     my $output = "$code: $pkg_info->{pkg}$type: ";
     if ($color eq 'always' || ($color eq 'auto' && -t STDOUT)) {
         $output .= colored($tag_info->{tag}, $sev_to_color[$severity]);
+    } elsif ($color eq 'html') {
+        $output .= colored_html($tag_info->{tag}, $sev_to_color[$severity]);
     } else {
         $output .= $tag_info->{tag};
     }
@@ -345,4 +353,8 @@ sub tag {
 
 1;
 
+# Local Variables:
+# indent-tabs-mode: t
+# cperl-indent-level: 4
+# End:
 # vim: ts=4 sw=4 noet

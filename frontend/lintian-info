@@ -68,11 +68,13 @@ if ($tags) {
 
 # Otherwise, read input files or STDIN, watch for tags, and add descriptions
 # whenever we see one, can, and haven't already explained that tag.  Strip off
-# color sequences.
+# color and HTML sequences.
 while (<>) {
     print;
     chomp;
-    s/\e[[\d;]*m//g;
+    s/\e[\[\d;]*m//g;
+    s/<span style=\"[^\"]+\">//g;
+    s,</span>,,g;
 
     my $tag;
     my ($type, $pkg, @pieces) = split(/:\s+/);
@@ -89,3 +91,9 @@ while (<>) {
 }
 
 exit 0;
+
+# Local Variables:
+# indent-tabs-mode: t
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 ts=8

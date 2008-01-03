@@ -103,11 +103,6 @@ $| = 1;
 # reset locale definition (necessary for tar)
 $ENV{'LC_ALL'} = 'C';
 
-# check for arguments
-if ($#ARGV == -1) {
-    syntax();
-}
-
 # }}}
 
 # {{{ Process Command Line
@@ -319,8 +314,18 @@ if (($check_everything or $packages_file) and $#ARGV+1 > 0) {
     undef $packages_file;
 }
 
+# check permitted values for --color
+if ($color and $color !~ /^(never|always|auto|html)$/) {
+    die "invalid argument to --color: $color\n";
+}
+
 # check specified action
 $action = 'check' if not $action;
+
+# check for arguments
+if ($action =~ /^(check|unpack|remove)$/ and $#ARGV == -1) {
+    syntax();
+}
 
 # }}}
 
@@ -1638,4 +1643,8 @@ sub interrupted {
 }
 # }}}
 
+# Local Variables:
+# indent-tabs-mode: t
+# cperl-indent-level: 4
+# End:
 # vim: sw=4 ts=8 noet fdm=marker
