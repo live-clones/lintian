@@ -60,15 +60,15 @@ sub run {
 					chomp;
 					next if (/^\#/); #ignore comments
 					next if (/^\s*$/); #ignore blank lines
-					push @patches, $_;
-					if (! -r "debfiles/patches/$_" && ! -r "debfiles/patches/$_.dpatch") {
-						tag "dpatch-index-references-non-existant-patch", $_;
-					}
+					push @patches, split(' ', $_);
 				}
 				close(IN);
 
-				#check that we have comments everywhere
+				# Check each patch.
 				foreach my $patch_file (@patches) {
+					if (! -r "debfiles/patches/$patch_file" && ! -r "debfiles/patches/$patch_file.dpatch") {
+						tag "dpatch-index-references-non-existant-patch", $patch_file;
+					}
 					if (open(PATCH_FILE, '<', "debfiles/patches/" . $patch_file)) {
 						my $has_comment = 0;
 						while (<PATCH_FILE>) {
@@ -90,4 +90,8 @@ sub run {
 
 1;
 
+# Local Variables:
+# indent-tabs-mode: t
+# cperl-indent-level: 8
+# End:
 # vim: syntax=perl sw=4 ts=4 noet shiftround
