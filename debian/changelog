@@ -5,6 +5,9 @@ lintian (1.23.42) UNRELEASED; urgency=low
 
   * debian/control:
     + [RA] Suggest libtext-template-perl, needed for HTML reporting.
+  * debian/copyright:
+    + [RA] Add my copyright statement.
+    + [RA] Reference GPL-2, not the GPL symlink, reflecting our license.
   
   * lib/Dep.pm:
     + [RA] Allow substvars instead of package names so that dependency
