@@ -24,7 +24,7 @@ lintian-info \- give detailed information about Lintian's error tags
 
 .SH SYNOPSIS
 .B lintian-info
-.RI [ log-file ]
+.RI [ log-file ... ]
 \&...
 
 .B lintian-info \-\-tags
@@ -35,10 +35,11 @@ lintian-info \- give detailed information about Lintian's error tags
 .PP
 The
 .B lintian-info
-command either parses the output of the
+command parses the output of the
 .B lintian
 command and gives verbose information about the listed Lintian error
-tags or (if given the
+tags, parses a Lintian override file and gives verbose information about
+the tags included, or (if given the
 .BR \-t " or " \-\-tags
 option) explains a given tag or tags.
 .sp
@@ -58,6 +59,12 @@ to automatically pipe its output through
 Thus, you will rarely use this command directly.)
 
 .SH OPTIONS
+.TP
+.BR \-a ", " \-\-annotate
+Read from standard input or any files specified on the command line and
+search the input for lines formatted like Lintian override entries.  For
+each one that was found, display verbose information about that tag.
+
 .TP
 .BR \-t ", " \-\-tags
 Rather than treating them as log file names, treat any command-line

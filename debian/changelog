@@ -63,6 +63,7 @@ lintian (1.23.42) UNRELEASED; urgency=low
     + [RA] Add support for HTML coloring.  (Closes: #458376)
   * frontend/lintian-info:
     + [RA] Allow for HTML color tags.
+    + [RA] Add -a to annotate an override file.
 
   * lib/Dep.pm:
     + [RA] Allow substvars instead of package names so that dependency
@@ -80,6 +81,8 @@ lintian (1.23.42) UNRELEASED; urgency=low
 
   * man/lintian.1:
     + [RA] Document the --color=html option.
+  * man/lintian-info.1:
+    + [RA] Document the --annotate option.
 
   * reporting/html_reports:
     + [RA] Rewritten.

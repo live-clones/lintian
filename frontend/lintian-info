@@ -42,9 +42,9 @@ my %already_displayed = ();
 
 my %tag_info = %{read_tag_info()};
 
-my ($tags);
+my ($annotate, $tags);
 Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
-GetOptions('tags|t' => \$tags)
+GetOptions('annotate|a' => \$annotate, 'tags|t' => \$tags)
     or die("error parsing options\n");
 
 # If tag mode was specified, read the arguments as tags and display the
@@ -72,14 +72,19 @@ if ($tags) {
 while (<>) {
     print;
     chomp;
+    next if /^\s*$/;
     s/\e[\[\d;]*m//g;
     s/<span style=\"[^\"]+\">//g;
     s,</span>,,g;
 
-    my $tag;
-    my ($type, $pkg, @pieces) = split(/:\s+/);
-    if (defined $type and $type =~ m/^[OEWIX]$/) {
-	$tag = shift @pieces;
+    my ($type, $pkg);
+    my @pieces = split(/:\s+/);
+    if ($annotate) {
+        $type = shift @pieces if ($pieces[0] =~ /^\w$/);
+        $pkg = shift @pieces if ($pieces[0] =~ /^\S+( (binary|udeb))?$/);
+    }
+    if ($annotate or (defined $type and $type =~ m/^[OEWIX]$/)) {
+	my $tag = shift @pieces;
 	next if not defined $tag;
 	($tag) = split(/\s+/, $tag, 2);
 
