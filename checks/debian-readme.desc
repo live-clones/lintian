@@ -4,20 +4,20 @@ Abbrev: drm
 Type: binary
 Unpack-Level: 1
 Needs-Info: debian-readme
-Info: This script looks at the README.Debian file installed by the
- package (if any) to see if it is the debmake template.
-
-Tag: readme-debian-is-debmake-template
-Type: warning
-Info: The README.Debian file installed by this package is merely the
- template provided by deb-make or dh_make, and contains no information.
- If there is nothing useful to say there, then the file is best removed.
+Info: This script checks the README.Debian file for various problems.
 
 Tag: readme-debian-contains-debmake-template
 Type: warning
-Info: The README.Debian file installed by this package contains the
- deb-make default phrase "So far nothing to say".  If there is nothing
- to say in the file, then it is best removed.
+Info: The README.Debian file installed by this package contains one of the
+ template phrases from the README.Debian provided by deb-make or dh_make:
+ .
+  Comments regarding the package
+  So far nothing to say
+  &lt;possible notes regarding this package - if none, delete this file&gt;
+ .
+ If there is real information in the file, please delete any generic
+ template phrases.  If there is nothing to say in the file, it is best
+ removed.
 
 Tag: readme-debian-contains-debmake-default-email-address
 Type: warning

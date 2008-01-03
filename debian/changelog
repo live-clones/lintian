@@ -2,6 +2,11 @@ lintian (1.23.42) UNRELEASED; urgency=low
 
   * checks/control-file{.desc,}:
     + [RA] Include the package name in stronger-dependency-implies-weaker.
+  * checks/debian-readme{.desc,}:
+    + Combine readme-debian-{is,contains}-debmake-template and be less
+      particular about the exact formatting of the dh-make template.
+      Triggering off the template text is enough and matches linda.
+      Thanks, Joerg Jaspert.  (Closes: #458074)
 
   * debian/control:
     + [RA] Suggest libtext-template-perl, needed for HTML reporting.

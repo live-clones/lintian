@@ -38,16 +38,12 @@ if (open(IN, '<', "README.Debian")) {
     close(IN);
 }
 
-$template =
-    ".* for DEBIAN\n" .
-    "-+\n\n" .
-    "(Comments regarding the Package|So far nothing to say\.|" .
-    "<possible notes regarding this package - if none, delete this file>" .
-    ")\n\n" .
-    ".*<.*>,.*\n";
-if ($readme =~ m/$template/iom) {
-    tag("readme-debian-is-debmake-template");
-} elsif ($readme =~ m/^So far nothing to say/m) {
+my @template =
+    ('Comments regarding the Package',
+     'So far nothing to say',
+     '<possible notes regarding this package - if none, delete this file>');
+my $regex = join ('|', @template);
+if ($readme =~ m/$regex/io) {
     tag("readme-debian-contains-debmake-template");
 } elsif ($readme =~ m/^\s*-- [^<]*<[^> ]+.\@unknown>/m) {
     tag("readme-debian-contains-debmake-default-email-address");
@@ -58,3 +54,9 @@ spelling_check('spelling-error-in-readme-debian', $readme);
 }
 
 1;
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 ts=4 et shiftround
