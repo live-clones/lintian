@@ -2,6 +2,8 @@ lintian (1.23.42) UNRELEASED; urgency=low
 
   * checks/control-file{.desc,}:
     + [RA] Include the package name in stronger-dependency-implies-weaker.
+    + [RA] Fix stronger-dependency-implies-weaker description cut and
+      paste error.  Thanks, Rafael Laboissiere.  (Closes: #456405)
   * checks/debian-readme{.desc,}:
     + Combine readme-debian-{is,contains}-debmake-template and be less
       particular about the exact formatting of the dh-make template.
