@@ -291,6 +291,12 @@ for my $shlib_file (keys %SONAME) {
 }
 
 # 4th step: check shlibs control file
+my $version;
+if (open (VERSION, '<', 'fields/version')) {
+    $version = <VERSION>;
+    close VERSION;
+    chomp $version;
+}
 @shlibs = keys %SONAME;
 if ($#shlibs == -1) {
     # no shared libraries included in package, thus shlibs control file should
@@ -365,13 +371,7 @@ if ($#shlibs == -1) {
 	#
 	# Deduplicate the list of dependencies before warning so that we don't
 	# dupliate warnings.
-	my $provides = $pkg;
-	if (open (VERSION, '<', 'fields/version')) {
-	    my $version = <VERSION>;
-	    close VERSION;
-	    chomp $version;
-	    $provides .= " (= $version)";
-	}
+	my $provides = $pkg . "( = $version)";
 	if (open (PROVIDES, '<', 'fields/provides')) {
 	    my $line = <PROVIDES>;
 	    close PROVIDES;
@@ -389,7 +389,47 @@ if ($#shlibs == -1) {
     }
 }
 
-# 5th step: check pre- and post- control files
+# 5th step: check symbols control file
+if (open(IN, '<', 'control/symbols')) {
+    my $version_wo_rev = $version;
+    $version_wo_rev =~ s/^(.+)-([^-]+)$/$1/;
+    my ($full_version_count, $full_version_sym) = (0, undef);
+    my ($debian_revision_count, $debian_revision_sym) = (0, undef);
+    while (<IN>) {
+	next if not /^\s+(\S+)\s(\S+)(?:\s(\d+))?/;
+	my ($sym, $v, $dep_order) = ($1, $2, $3);
+	if (($v eq $version) and ($version =~ /-/)) {
+	    $full_version_sym ||= $sym;
+	    $full_version_count++;
+	}
+	if (($v =~ /-/) and (not $v =~ /~$/) and ($v ne $version_wo_rev)) {
+	    $debian_revision_sym ||= $sym;
+	    $debian_revision_count++;
+	}
+    }
+    close IN;
+    if ($full_version_count) {
+	$full_version_count--;
+	my $others = '';
+	if ($full_version_count > 0) {
+	    $others = " and $full_version_count others";
+	}
+	tag "symbols-file-contains-current-version-with-debian-revision",
+	    "on symbol $full_version_sym$others"
+    }
+    if ($debian_revision_count) {
+	$debian_revision_count--;
+	my $others = '';
+	if ($debian_revision_count > 0) {
+	    $others = " and $debian_revision_count others";
+	}
+	tag "symbols-file-contains-debian-revision",
+	    "on symbol $debian_revision_sym$others";
+    }
+}
+
+
+# 6th step: check pre- and post- control files
 if (-f $preinst) {
     local $_ = slurp_entire_file($preinst);
     if (/^[^\#]*\bldconfig\b/m) {
@@ -464,4 +504,8 @@ sub abs_path {
 
 1;
 
+# Local Variables:
+# indent-tabs-mode: t
+# cperl-indent-level: 4
+# End:
 # vim: syntax=perl sw=4 ts=8

@@ -20,12 +20,12 @@ binary-correct:
 	install -d debian/libbaz2-dev/usr/lib
 	cp -a libbaz2.a libbaz2.so debian/libbaz2-dev/usr/lib
 	# usually, I'd also include some .h files to /usr/include
-	
+
 	# Now the correct libbaz2 package
 	install -d debian/libbaz2/usr/lib
 	cp -a libbaz2.so.* debian/libbaz2/usr/lib
 	chmod a-x debian/libbaz2/usr/lib/*
-	
+
 	# General stuff that is tested in other testsets:
 	dh_installdocs -plibbaz2 -plibbaz2-dev -plibbaz2-dbg
 	dh_compress -plibbaz2 -plibbaz2-dev -plibbaz2-dbg
@@ -61,8 +61,8 @@ binary-arch: build binary-correct
 	cp -a *.a $(lib_tmp)/usr/lib
 	# And a wrong .so symlink (wrong, only in -dev, TODO)
 	ln -s libfoo3.so.0.9 $(lib_tmp)/usr/lib/libfoo3.so
-	# And a wrong .so.X symlink (wrong, should point to a real existing shlib,
-	# TODO)
+	# And a wrong .so.X symlink (wrong, should point to a real existing
+	# shlib, TODO)
 	ln -s libfoo.so.0.9.1 $(lib_tmp)/usr/lib/libfoo.so.0.9
 	# And a plain .so (wrong, TODO)
 	touch $(lib_tmp)/usr/lib/libbar2.so
@@ -77,6 +77,7 @@ binary-arch: build binary-correct
 	touch $(lib_tmp)/usr/share/doc/README.Debian
 	#dpkg-shlibdeps $(lib_tmp)/usr/lib/libbaz.so.1.0
 	install -m 755 debian/lib.shlibs $(lib_tmp)/DEBIAN/shlibs
+	install -m 755 debian/lib.symbols $(lib_tmp)/DEBIAN/symbols
 	dpkg-gencontrol -isp -p$(LIB) -P$(lib_tmp)
 	dpkg --build $(lib_tmp) ..
 

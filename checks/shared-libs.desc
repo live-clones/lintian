@@ -207,3 +207,26 @@ Info: The listed shared libraries declares the stack as executable.
  from assembler files which don't define a proper .note.GNU-stack
  section.
 
+Tag: symbols-file-contains-current-version-with-debian-revision
+Type: error
+Info: Debian revisions should be stripped from versions in symbols files.
+ Not doing so leads to dependencies unsatisfiable by backports (1.0-1~bpo
+ &lt;&lt; 1.0-1 while 1.0-1~bpo &gt;= 1.0).  If the debian revision can't
+ be stripped because the symbol really appearead between two specific
+ Debian revisions, you should postfix the version with a single "~"
+ (example: 1.0-3~ if the symbol appeared in 1.0-3).
+ .
+ This problem normally means that the symbols were added automatically by
+ dpkg-gensymbols.  dpkg-gensymbols uses the full version number for the
+ dependency associated to any new symbol that it detects.  The maintainer
+ must update the <tt>debian/&lt;package&gt;.symbols</tt> file by adding
+ the new symbols with the corresponding upstream version.
+
+Tag: symbols-file-contains-debian-revision
+Type: warning
+Info: Debian revisions should be stripped from versions in symbols files.
+ Not doing so leads to dependencies unsatisfiable by backports (1.0-1~bpo
+ &lt;&lt; 1.0-1 while 1.0-1~bpo &gt;= 1.0).  If the debian revision can't
+ be stripped because the symbol really appearead between two specific
+ Debian revisions, you should postfix the version with a single "~"
+ (example: 1.0-3~ if the symbol appeared in 1.0-3).

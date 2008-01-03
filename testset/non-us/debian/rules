@@ -19,6 +19,8 @@ binary-indep:
 
 	# crypto-app
 	install -d debian/$(CRYPTO)-tmp/DEBIAN
+	install -d debian/$(CRYPTO)-tmp/usr/share/doc/$(CRYPTO)
+	echo copyright >  debian/$(CRYPTO)-tmp/usr/share/doc/$(CRYPTO)/copyright
 	dpkg-gencontrol -isp -p$(CRYPTO) -Pdebian/$(CRYPTO)-tmp
 	dpkg --build debian/$(CRYPTO)-tmp ..
 

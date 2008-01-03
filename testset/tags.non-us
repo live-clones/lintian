@@ -1,9 +1,10 @@
 E: broken-crypto: no-copyright-file
-E: crypto-app: no-copyright-file
+E: crypto-app: changelog-file-missing-in-native-package
 E: non-us source: section-category-mismatch Package broken-crypto
 E: non-us source: section-category-mismatch Package nonfree-crypto-app
 E: nonfree-crypto-app: no-copyright-file
 E: patented-app: no-copyright-file
+I: crypto-app: no-md5sums-control-file
 I: patented-app: no-md5sums-control-file
 I: patented-app: non-us-spelling
 W: broken-crypto: unknown-section non-US/admin
