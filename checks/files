@@ -213,9 +213,8 @@ while (<IN>) {
 
 		# zero byte file in /usr/share/doc/
 		if ($size == 0 and $perm =~ m,^-, and not $is_hard_link{$file}) {
-		    # exception: __init__.py files are empty tagging files (see
-		    # bug #215234)
-		    unless ($file =~ m,^usr/share/doc/([^/]+/)?examples/(.+/)?__init__\.py$,) {
+		    # exception: examples may contain empty files for various reasons
+		    unless ($file =~ m,^usr/share/doc/([^/]+/)?examples/,) {
 			tag "zero-byte-file-in-doc-directory", "$file";
 		    }
 		}
@@ -872,4 +871,8 @@ if (!$has_binary_perl_file && @nonbinary_perl_files_in_lib) {
 
 1;
 
+# Local Variables:
+# indent-tabs-mode: t
+# cperl-indent-level: 4
+# End:
 # vim: syntax=perl ts=8 sw=4

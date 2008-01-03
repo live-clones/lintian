@@ -106,7 +106,6 @@ W: filenames: windows-thumbnail-database-in-package usr/share/doc/filenames/Thum
 W: filenames: wrong-name-for-debian-news-file usr/share/doc/filenames/news.debian.gz
 W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/NEWS.Debian
 W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/README.macosx
-W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/examples/very_interesting_example
 W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/examples/very_interesting_example2.gz
 W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/news.debian.gz
 W: more-filename-games: binary-without-manpage usr/bin/another-test-game
