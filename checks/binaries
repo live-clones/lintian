@@ -213,7 +213,7 @@ while (<IN>) {
 
     # rpath is disallowed, except in private directories
     if (exists $RPATH{$file} &&
-        grep(!m#^/usr/lib/\Q$pkg\E(?:/|$)#, split(/:/, $RPATH{$file}))
+        grep { !m,^/usr/lib/(games/)?\Q$pkg\E(?:/|\z), } split(/:/, $RPATH{$file})
        ) {
 	tag "binary-or-shlib-defines-rpath", "$file $RPATH{$file}";
     }
