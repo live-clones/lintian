@@ -97,3 +97,17 @@ cp /etc/inetd.conf /srv/chroot/etc/inetd.conf
 # Deprecated and not allowed except the second one.
 install-sgmlcatalog --install package
 install-sgmlcatalog --remove package
+
+# This too is a heredoc.
+some-program > /etc/config-file <<'EOF'
+echo "All of the array is: ${H[@]}"
+EOF
+
+# But this isn't.
+cat '>>EOF'
+echo "All of the array is: ${H[@]}"
+EOF
+
+# Recognize single quotes even if they start at the beginning of a line.
+echo not a bashism \
+'/{ptex,tex}/{amstex,plain,generic,}'

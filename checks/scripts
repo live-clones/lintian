@@ -512,19 +512,12 @@ while (<SCRIPTS>) {
 	}
 
 	if ($shellscript) {
-	    if (m/^\s*cat\s*\<\<\s*(\w+)/) {
-		$cat_string = $1;
-	    }
-	    elsif ($cat_string ne "" and m/^$cat_string/) {
+	    if ($cat_string ne "" and m/^$cat_string/) {
 		$cat_string = "";
 	    }
 	    my $within_another_shell = 0;
 	    if (m,(^|\s+)((/usr)?/bin/)?((b|d)?a|k|z|t?c)sh\s+-c\s*.+,) {
 		$within_another_shell = 1;
-	    }
-	    #Don't use chown foo.bar:
-	    if (m{(chown\s+[-_A-Za-z0-9]+\.[-_A-Za-z0-9]+)\s+}) {
-	    	tag "deprecated-chown-usage", "$file:$. \'$1\'";
 	    }
 	    # if cat_string is set, we are in a HERE document and need not
 	    # check for things
@@ -566,8 +559,8 @@ while (<SCRIPTS>) {
 
 		# Ignore anything inside single quotes; it could be an
 		# argument to grep or the like.
-                my $line = $_;
-		$line =~ s/([^\\](?:\\\\)*)\'(?:\\.|[^\\\'])+\'/$1''/g;
+		my $line = $_;
+		$line =~ s/(^|[^\\](?:\\\\)*)\'(?:\\.|[^\\\'])+\'/$1''/g;
 
 		for my $re (@bashism_string_regexs) {
 		    if ($line =~ m/($re)/) {
@@ -580,7 +573,7 @@ while (<SCRIPTS>) {
 		# We've checked for all the things we still want to notice in
 		# double-quoted strings, so now remove those strings as well.
 		unless ($found) {
-		    $line =~ s/([^\\](?:\\\\)*)\"(?:\\.|[^\\\"])+\"/$1""/g;
+		    $line =~ s/(^|[^\\](?:\\\\)*)\"(?:\\.|[^\\\"])+\"/$1""/g;
 		    for my $re (@bashism_regexs) {
 			if ($line =~ m/($re)/) {
 			    $found = 1;
@@ -593,8 +586,18 @@ while (<SCRIPTS>) {
 		if ($found) {
 		    tag "possible-bashism-in-maintainer-script", "$file:$. \'$match\'";
 		}
+
+		# Only look for the beginning of a heredoc here, after we've
+		# stripped out quoted material, to avoid false positives.
+		if (m/\<\<\s*[\'\"]?(\w+)[\'\"]?/) {
+		    $cat_string = $1;
+		}
 	    }
 	    if (!$cat_string) {
+		# Don't use chown foo.bar
+		if (/(chown\s+[-_A-Za-z0-9]+\.[-_A-Za-z0-9]+)\s+/) {
+		    tag "deprecated-chown-usage", "$file:$. \'$1\'";
+		}
 		if (/invoke-rc.d.*\|\| exit 0/) {
 		    tag "maintainer-script-hides-init-failure", "$file:$.";
 		}

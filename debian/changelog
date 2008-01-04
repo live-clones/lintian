@@ -63,6 +63,8 @@ lintian (1.23.42) UNRELEASED; urgency=low
       of 00list.  Patch by Chris Lamb.  (Closes: #457523)
   * checks/scripts:
     + [RA] Add lua40 and lua5.1.  Thanks, Enrico Tassi.  (Closes: #457219)
+    + [RA] Improve recognition of heredocs.
+    + [RA] Recognize quoted strings that start at beginning of the line.
   * checks/shared-libs{.desc,}:
     + [RA] New check for version numbers in symbol files.  Based on a
       patch from Raphael Hertzog.  (Closes: #457067)

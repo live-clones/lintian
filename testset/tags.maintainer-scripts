@@ -42,6 +42,7 @@ W: maintainer-scripts: maintainer-script-needs-depends-on-ucf postinst
 W: maintainer-scripts: maintainer-script-needs-depends-on-xml-core postinst
 W: maintainer-scripts: missing-debconf-dependency
 W: maintainer-scripts: no-debconf-templates
+W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:108 '${H[@]}'
 W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:15 '. /usr/share/lintian/shell foo'
 W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:18 'read'
 W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:20 'H[0]='
