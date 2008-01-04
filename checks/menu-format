@@ -884,6 +884,9 @@ sub VerifyCmd {
             }
         }
         tag 'su-wrapper-without--c', "$location $wrapper" unless $cmd;
+	if ($wrapper !~ /su-to-root/) {
+	    tag 'su-wrapper-not-su-to-root', "$location $wrapper";
+	}
     } else {
         $cmd = $com[0];
     }
@@ -893,4 +896,8 @@ sub VerifyCmd {
 
 1;
 
+# Local Variables:
+# indent-tabs-mode: t
+# cperl-indent-level: 4
+# End:
 # vim: syntax=perl ts=8 sw=4

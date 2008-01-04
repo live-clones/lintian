@@ -36,10 +36,12 @@ lintian (1.23.42) UNRELEASED; urgency=low
   * checks/init.d{.desc,}:
     + [RA] Warn of init scripts that list S in their Default-Stop LSB
       keyword.  Thanks, Petter Reinholdtsen.  (Closes: #458596)
-  * checks/menu-format.desc:
+  * checks/menu-format{.desc,}:
     + [RA] Fix non-wm-module-in-wm-modules-menu-section pluralization to
       match the check and reword the long description to be hopefully
       clearer.  Thanks, Martín Ferrari.  (Closes: #457527)
+    + [RA] Warn about use of su wrappers other than su-to-root for desktop
+      and Live CD support.  Thanks, Daniel Baumann.  (Closes: #453931)
   * checks/menus{.desc,}:
     + [RA] Spelling errors in doc-base files should only be warnings.  Do
       picky spelling and capitalization checks on the abstract and title

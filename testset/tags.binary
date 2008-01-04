@@ -112,6 +112,8 @@ W: binary: spelling-error-in-news-debian speling spelling
 W: binary: spelling-error-in-news-debian usefull useful
 W: binary: su-to-root-with-usr-sbin /usr/lib/menu/binary:4
 W: binary: su-to-root-with-usr-sbin /usr/share/menu/binary:4
+W: binary: su-wrapper-not-su-to-root /usr/lib/menu/binary:3 sux
+W: binary: su-wrapper-not-su-to-root /usr/share/menu/binary:3 sux
 W: binary: superfluous-clutter-in-homepage <http://lintian.debian.org/>
 W: binary: symlink-should-be-relative usr/share/doc/binary/html/ch3.html /usr/share/doc/binary/htm/ch1.html
 W: binary: syntax-error-in-debian-changelog line 16 "couldn't parse date The, 15 Apr 2004 23:33:51 +0200"
