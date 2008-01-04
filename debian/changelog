@@ -1,5 +1,8 @@
 lintian (1.23.42) UNRELEASED; urgency=low
 
+  * checks/binaries:
+    + [RA] Some packages include debugging symbols in the main package, so
+      don't warn about unstripped binaries in ../lib/debug as well.
   * checks/changelog-file{.desc,}:
     + [RA] Don't spell-check lines that include the word "spelling".
       Thanks, Andreas Hoenen.  (Closes: #456515)

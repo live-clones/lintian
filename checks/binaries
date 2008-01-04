@@ -190,15 +190,15 @@ while (<IN>) {
     # stripped?
     if ($info =~ m,not stripped\s*$,o) {
 	# Is it an object file (which generally can not be stripped),
-	# a kernel module, or perhaps a debugging package? 
+	# a kernel module, debugging symbols, or perhaps a debugging package?
 	# Ocaml executables are exempted, see #252695
 	unless ($file =~ m,\.k?o$, or $pkg =~ m/-dbg$/ or $pkg =~ m/debug/
-		or exists $OCAML{$file}) {
+		or $file =~ m,/lib/debug/, or exists $OCAML{$file}) {
 	    tag "unstripped-binary-or-object", "$file";
 	}
     } else {
 	# stripped but a debug or profiling library?
-	if (($file =~ m,lib/debug/,o) or ($file =~ m,lib/profile/,o)) {
+	if (($file =~ m,/lib/debug/,o) or ($file =~ m,/lib/profile/,o)) {
 	    tag "library-in-debug-or-profile-should-not-be-stripped", "$file";
 	} else {
 	    # appropriately stripped, but is it stripped enough?
@@ -298,4 +298,8 @@ if ($needs_depends_line) {
 
 1;
 
+# Local Variables:
+# indent-tabs-mode: t
+# cperl-indent-level: 4
+# End:
 # vim: syntax=perl ts=8 sw=4
