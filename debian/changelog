@@ -20,6 +20,8 @@ lintian (1.23.42) UNRELEASED; urgency=low
     + [RA] Warn about packages covered by the GPL and linked with libssl
       that don't list other common licenses or mention a license exception
       or exemption.  Requested by Joerg Jaspert.  (Closes: #454238)
+  * checks/cruft:
+    + [RA] Ignore debian/config.cache.
   * checks/debian-readme{.desc,}:
     + Combine readme-debian-{is,contains}-debmake-template and be less
       particular about the exact formatting of the dh-make template.

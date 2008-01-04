@@ -211,9 +211,13 @@ sub find_cruft {
         }
     }
 
-    # Tests of autotools files are a special case.
-    if ($name =~ m,^(.+/)?config.(?:cache|log|status)$, and $pkg ne "lintian") {
-        tag "configure-generated-file-in-source", $name;
+    # Tests of autotools files are a special case.  Ignore debian/config.cache
+    # as anyone doing that probably knows what they're doing and is using it
+    # as part of the build.
+    if ($name =~ m,^(.+/)?config.(?:cache|log|status)$,) {
+        if ($name !~ m,^debian/config\.cache$, and $pkg ne 'lintian') {
+            tag "configure-generated-file-in-source", $name;
+        }
     } elsif ($name =~ m,^(.+/)?config.(?:guess|sub)$, and not $atdinbd) {
         my $b = basename $name;
         open (F, '<', $b) or die "can't open $name: $!";
@@ -228,4 +232,8 @@ sub find_cruft {
 }
 1;
 
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
 # vim: ts=8 sw=4 noet syntax=perl
