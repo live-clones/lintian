@@ -41,9 +41,9 @@ Ref: policy 5.6.12
 
 Tag: debian-revision-not-well-formed
 Type: warning
-Info: The debian version part (the part after the -) should consist of one to
- three dot-separated parts: one for maintainer release, two for source-NMU,
- three for binary NMU.
+Info: The debian version part (the part after the -) should consist of one
+ or two dot-separated parts: one for a regular maintainer release or two
+ for a source-NMU,
 
 Tag: debian-revision-should-not-be-zero
 Type: warning
@@ -52,7 +52,7 @@ Info: The debian version part (the part after the -) should start with one,
  always have a higher version number than a Non-Maintainer upload: a NMU could
  have been prepared which introduces this upstream version with
  Debian-revision -0.1
-Ref: devref 5.11.4.1
+Ref: devref 5.11.2
 
 Tag: no-architecture-field
 Type: error
@@ -626,9 +626,9 @@ Tag: binary-nmu-uses-old-version-style
 Type: warning
 Ref: devref 5.10.2.1
 Info: The version number of a binary NMU should be formed by appending
- '+b' and a digit to the source version.  This version scheme is
+ <tt>+b</tt> and a digit to the source version.  This version scheme is
  special-cased by the archive software.  The -x.x.x version number style
- is considered obsolete.
+ should no longer be used.
 
 Tag: binary-nmu-debian-revision-in-source
 Type: warning
@@ -636,8 +636,8 @@ Ref: devref 5.10.2.1
 Info: The version number of your source package ends in +b and a number or
  has a Debian revision containing three parts.  These version numbers are
  used by binary NMUs and should not be used as the source version.  (The
- +b form is the current standard; the three-part version number is the old
- standard.)
+ +b form is the current standard; the three-part version number now
+ obsolete.)
 
 Tag: redundant-bugs-field
 Type: warning
@@ -647,7 +647,7 @@ Info: You use the Bugs field though the field value is the default
 
 Tag: build-depends-on-build-essential
 Type: error
-Ref: 7.6
+Ref: policy 7.6
 Info: You depends on the build-essential package, which is only a meta-package
  depending on build tools that have to be installed in all build environments.
 

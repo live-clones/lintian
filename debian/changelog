@@ -31,6 +31,10 @@ lintian (1.23.42) UNRELEASED; urgency=low
   * checks/fields:
     + [RA] Handle double-colon rules when checking that build dependencies
       match debian/rules.  (Closes: #457501)
+  * checks/fields.desc:
+    + [RA] Remove X.X.X versions from the debian-revision-not-well-formed
+      long description.  (Closes: #456286)
+    + [RA] Update references and binary-NMU version descriptions.
   * checks/files:
     + [RA] Ignore zero-length files in /usr/share/doc/examples.
     + [RA] The underFooLicense.docbook files from KDE are not license
