@@ -5,6 +5,8 @@ lintian (1.23.42) UNRELEASED; urgency=low
       don't warn about unstripped binaries in ../lib/debug as well.
     + [RA] Allow rpath pointing to /usr/lib/games/<package>.  Thanks, Bas
       Wijnen.  (Closes: #456318)
+    + [RA] Exclude nsswitch modules from multiple SONAME and package
+      naming checks.
   * checks/changelog-file{.desc,}:
     + [RA] Don't spell-check lines that include the word "spelling".
       Thanks, Andreas Hoenen.  (Closes: #456515)
@@ -64,6 +66,7 @@ lintian (1.23.42) UNRELEASED; urgency=low
   * checks/shared-libs{.desc,}:
     + [RA] New check for version numbers in symbol files.  Based on a
       patch from Raphael Hertzog.  (Closes: #457067)
+    + [RA] Exclude nsswitch modules from shlibs file checks.
 
   * debian/control:
     + [RA] Suggest libtext-template-perl, needed for HTML reporting.

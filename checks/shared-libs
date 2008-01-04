@@ -94,7 +94,8 @@ while (<IN>) {
     next if m/^\s*$/o;
 
     if (m/^-- (\S+)\s*$/o) {
-	$file = $1; $file =~ s,^(\./)?,,;
+	$file = $1;
+	$file =~ s,^(\./)?,,;
     } elsif (m/^\s*SONAME\s+(\S+)/o) {
 	$SONAME{$file} = $1;
     } elsif (m/^\s*TEXTREL\s/o) {
@@ -297,7 +298,7 @@ if (open (VERSION, '<', 'fields/version')) {
     close VERSION;
     chomp $version;
 }
-@shlibs = keys %SONAME;
+@shlibs = grep { !m,^lib/libnss_[^.]+\.so(\.[0-9]+)$, } keys %SONAME;
 if ($#shlibs == -1) {
     # no shared libraries included in package, thus shlibs control file should
     # not be present

@@ -118,16 +118,18 @@ while (<IN>) {
 }
 close(IN);
 
-# For the package naming check, filter out SONAMEs where all the files are
-# at paths other than /lib, /usr/lib, or /usr/X11R6/lib.  This avoids false
-# positives with plugins like Apache modules, which may have their own
-# SONAMEs but which don't matter for the purposes of this check.
+# For the package naming check, filter out SONAMEs where all the files are at
+# paths other than /lib, /usr/lib, or /usr/X11R6/lib.  This avoids false
+# positives with plugins like Apache modules, which may have their own SONAMEs
+# but which don't matter for the purposes of this check.  Also filter out
+# nsswitch modules
 sub lib_soname_path {
     my (@paths) = @_;
     foreach my $path (@paths) {
 	return 1 if $path =~ m%^(\.?/)?lib/[^/]+$%;
 	return 1 if $path =~ m%^(\.?/)?usr/lib/[^/]+$%;
 	return 1 if $path =~ m%^(\.?/)?usr/X11R6/lib/[^/]+$%;
+	return 1 if $path =~ m%^(\.?/)?lib/libnss_[^.]+\.so(\.[0-9]+)$%;
     }
     return 0;
 }
