@@ -1,13 +1,13 @@
 E: scripts source: dpatch-index-references-non-existant-patch 01_not_here_right_now.dpatch
 E: scripts source: package-uses-debhelper-but-lacks-build-depends
 E: scripts: calls-suidperl-directly ./usr/bin/suidperlfoo
+E: scripts: copyright-file-lacks-pointer-to-perl-license
 E: scripts: file-in-etc-not-marked-as-conffile /etc/init.d/skeleton
 E: scripts: init.d-script-does-not-implement-required-option /etc/init.d/lsb-broken force-reload
 E: scripts: init.d-script-does-not-implement-required-option /etc/init.d/lsb-broken restart
 E: scripts: init.d-script-has-duplicate-lsb-section /etc/init.d/lsb-broken
 E: scripts: init.d-script-has-unterminated-lsb-section /etc/init.d/lsb-broken:15
 E: scripts: missing-dep-for-interpreter lefty => graphviz (./usr/bin/lefty-foo)
-E: scripts: no-copyright-file
 E: scripts: php-script-but-no-php-cli-dep ./usr/share/scripts/phpfoo
 E: scripts: php5-script-but-no-php5-cli-dep ./usr/share/scripts/php5foo
 E: scripts: python-script-but-no-python-dep ./usr/bin/py2foo

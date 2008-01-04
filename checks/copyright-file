@@ -176,11 +176,15 @@ if (m/(Free\s*Software\s*Foundation.*02139|02111-1307)/s) {
     tag "old-fsf-address-in-copyright-file", "";
 }
 
+# Whether the package is covered by the GPL, used later for the libssl check.
+my $gpl;
+
 if (length($_) > 12000
     and ((m/\bGNU GENERAL PUBLIC LICENSE\s*TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION\b/m
           and m/\bVersion 2\s/)
          or (m/\bGNU GENERAL PUBLIC LICENSE\s*Version 3/ and m/\bTERMS AND CONDITIONS\s/))) {
     tag "copyright-file-contains-full-gpl-license";
+    $gpl = 1;
 }
 
 if (length($_) > 12000
@@ -221,6 +225,7 @@ if (m,/usr/share/common-licenses,
     tag "copyright-should-refer-to-common-license-file-for-lgpl";
 } elsif (m/GNU General Public License/i or m/\bGPL\b/) {
     tag "copyright-should-refer-to-common-license-file-for-gpl";
+    $gpl = 1;
 }
 
 if (m,Upstream Author\(s\),) {
@@ -232,6 +237,22 @@ if (m{\# Please also look if there are files or directories which have a\n\# dif
 }
 
 spelling_check('spelling-error-in-copyright', $_);
+
+# Now, check for linking against libssl if the package is covered by the GPL.
+# (This check was requested by ftp-master.)  First, see if the package is
+# under the GPL alone and try to exclude packages with a mix of GPL and LGPL
+# or Artistic licensing or with an exception or exemption.
+if ($gpl || m,/usr/share/common-licenses/GPL,) {
+    unless (m,exception|exemption|/usr/share/common-licenses/(?!GPL)\S,) {
+        if (open(DEP, '<', 'fields/depends')) {
+            my @depends = split (/\s*,\s*/, scalar <DEP>);
+            close DEP;
+            if (grep { /^libssl[0-9.]+(\s|\z)/ && !/\|/ } @depends) {
+                tag 'possible-gpl-code-linked-with-openssl';
+            }
+        }
+    }
+}
 
 } # </run>
 
@@ -265,4 +286,8 @@ sub depends_on {
 
 1;
 
+# Local Variables:
+# indent-tabs-mode: t
+# cperl-indent-level: 4
+# End:
 # vim: syntax=perl ts=8 sw=4

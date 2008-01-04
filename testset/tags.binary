@@ -64,7 +64,7 @@ W: binary: binary-without-manpage usr/bin/hello.static
 W: binary: binary-without-manpage usr/bin/iminusrbin
 W: binary: binary-without-manpage usr/bin/static-hello
 W: binary: changelog-file-not-compressed changelog
-W: binary: debian-copyright-file-uses-obsolete-national-encoding at line 10
+W: binary: debian-copyright-file-uses-obsolete-national-encoding at line 13
 W: binary: debian-news-entry-has-strange-distribution UNRELEASED
 W: binary: description-contains-homepage
 W: binary: desktop-command-not-in-package /usr/share/applications/goodbye.desktop goodbye
@@ -105,6 +105,7 @@ W: binary: menu-item-uses-windowmanagers-section /usr/share/menu/binary:13
 W: binary: old-fsf-address-in-copyright-file
 W: binary: package-contains-hardlink usr/bar2 -> usr/share/baz
 W: binary: package-contains-upstream-install-documentation usr/share/doc/binary/INSTALL
+W: binary: possible-gpl-code-linked-with-openssl
 W: binary: spelling-error-in-description debian Debian
 W: binary: spelling-error-in-doc-base-abstract-field binary:10 speling spelling
 W: binary: spelling-error-in-doc-base-title-field binary:2 debian Debian

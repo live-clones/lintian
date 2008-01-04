@@ -16,6 +16,10 @@ lintian (1.23.42) UNRELEASED; urgency=low
     + [RA] Include the package name in stronger-dependency-implies-weaker.
     + [RA] Fix stronger-dependency-implies-weaker description cut and
       paste error.  Thanks, Rafael Laboissiere.  (Closes: #456405)
+  * checks/copyright-file{.desc,}:
+    + [RA] Warn about packages covered by the GPL and linked with libssl
+      that don't list other common licenses or mention a license exception
+      or exemption.  Requested by Joerg Jaspert.  (Closes: #454238)
   * checks/debian-readme{.desc,}:
     + Combine readme-debian-{is,contains}-debmake-template and be less
       particular about the exact formatting of the dh-make template.

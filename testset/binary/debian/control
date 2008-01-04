@@ -10,7 +10,7 @@ XS-Vcs-Browser: http://svn.wolffelaar.nl/lintian/trunk
 
 Package: binary
 Architecture: any
-Depends: ${shlibs:Depends}, xorg, binary-data (= ${Source-Version})
+Depends: ${shlibs:Depends}, xorg, binary-data (= ${Source-Version}), libssl0.9.8
 Homepage: <http://lintian.debian.org/>
 Vcs-Svn: http://svn.wolffelaar.nl/lintian/trunk
 Description: test handling of binary files
@@ -21,7 +21,8 @@ Description: test handling of binary files
 
 Package: binary-data
 Architecture: all
-Depends: binary (= ${Source-Version})
+Depends: binary (= ${Source-Version}), libssl-not-openssl,
+ libssl0.9.8 | or-something-else
 Description: test handling of binary relationships
  Regression test for lintian's checking of package relationships between
  arch:any and arch:all packages.

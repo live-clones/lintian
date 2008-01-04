@@ -19,7 +19,7 @@ Description: development package
 
 Package: libbaz2
 Architecture: any
-Depends: ${shlibs:Depends}
+Depends: ${shlibs:Depends}, libssl0.9.8
 Description: test handling of library packages
  Regression test for lintian's handling of libraries
 

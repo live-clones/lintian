@@ -195,3 +195,12 @@ Type: warning
 Info: Lintian found a spelling error in the copyright file.  Lintian has a
  list of common misspellings that it looks for.  It does not have a
  dictionary like a spelling checker does.
+
+Tag: possible-gpl-code-linked-with-openssl
+Type: warning
+Info: This package appears to be covered by the GNU GPL but depends on
+ the OpenSSL libssl package and does not mention a license exemption or
+ exception for OpenSSL in its copyright file.  The GPL (including version
+ 3) is incompatible with some terms of the OpenSSL license, and therefore
+ Debian does not allow GPL-licensed code linked with OpenSSL libraries
+ unless there is a license exception explicitly permitting this.

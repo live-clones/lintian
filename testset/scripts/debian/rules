@@ -75,6 +75,7 @@ binary-indep:
 	touch $(tmp)/usr/lib/python2.3/site-packages/test.pyc
 	cp debian/changelog $(tmp)/usr/share/doc/scripts/changelog
 	gzip -9 $(tmp)/usr/share/doc/scripts/changelog
+	cp debian/copyright $(tmp)/usr/share/doc/scripts/copyright
 
 	cp debian/scripts.conffiles $(tmp)/DEBIAN/conffiles
 	install -m 755 debian/postinst $(tmp)/DEBIAN/postinst
