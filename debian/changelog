@@ -49,6 +49,8 @@ lintian (1.23.42) UNRELEASED; urgency=low
     + [RA] Ignore zero-length files in /usr/share/doc/examples.
     + [RA] The underFooLicense.docbook files from KDE are not license
       files.  Thanks, Sune Vuorela.  (Closes: #458831)
+    + [RA] Allow /emul as a top-level directory and files in
+      /emul/ia32-linux/{lib,usr/lib}.  (Closes: #459254)
   * checks/files.desc:
     + [RA] Remove a stray variable from the config-file-reserved tag.
   * checks/init.d{.desc,}:
@@ -84,6 +86,7 @@ lintian (1.23.42) UNRELEASED; urgency=low
     + [RA] New check for version numbers in symbol files.  Based on a
       patch from Raphael Hertzog.  (Closes: #457067)
     + [RA] Exclude nsswitch modules from shlibs file checks.
+    + [RA] ld.so may also look in /emul/ia32-linux/{lib,usr/lib}.
 
   * debian/control:
     + [RA] Suggest libtext-template-perl, needed for HTML reporting.

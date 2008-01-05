@@ -40,6 +40,8 @@ my %ldso_dir = map { $_ => 1 }
         usr/X11R6/lib
         usr/lib/libc5-compat
         lib/libc5-compat
+	emul/ia32-linux/lib
+	emul/ia32-linux/usr/lib
       );
 
 # Libraries that should only be used in the presence of certain capabilities

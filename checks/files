@@ -446,10 +446,14 @@ while (<IN>) {
 	# packages because they install a slew of top-level directories for
 	# setting up the base system.  (Specifically, /cdrom, /floppy,
 	# /initrd, and /proc are not mentioned in the FHS).
+	#
+	# Also make an exception for /emul, which is used for multiarch
+	# support in Debian at the moment.
 	tag "non-standard-toplevel-dir", "$file"
 	    unless $pkg eq 'base-files'
-	    or $pkg eq 'hurd'
-	    or $pkg =~ /^rootskel(-bootfloppy)?/;
+		or $pkg eq 'hurd'
+		or $pkg =~ /^rootskel(-bootfloppy)?/
+		or $file =~ m,^emul/,;
     }
 
     # ---------------- compatibility symlinks should not be used
@@ -466,16 +470,17 @@ while (<IN>) {
 
     # ---------------- any files
     if ($perm !~ m/^d/) {
-	unless ($type eq 'udeb' or
-		$file =~ m,^usr/(bin|dict|doc|games|
-				 include|info|lib(32|64)?|
-				 man|sbin|share|src|X11R6)/,x or
-		$file =~ m,^lib(32|64)?/(modules/|libc5-compat/)?, or
-		$file =~ m,^var/(games|lib|www|named)/, or
-		$file =~ m,^(bin|boot|dev|etc|sbin)/, or
+	unless ($type eq 'udeb'
+		or $file =~ m,^usr/(bin|dict|doc|games|
+				    include|info|lib(32|64)?|
+				    man|sbin|share|src|X11R6)/,x
+		or $file =~ m,^lib(32|64)?/(modules/|libc5-compat/)?,
+		or $file =~ m,^var/(games|lib|www|named)/,
+		or $file =~ m,^(bin|boot|dev|etc|sbin)/,
 		# non-FHS, but still usual
-		$file =~ m,^usr/[^/]+-linux[^/]*/, or
-		$file =~ m,^usr/iraf/,) {
+		or $file =~ m,^usr/[^/]+-linux[^/]*/,
+		or $file =~ m,^usr/iraf/,
+		or $file =~ m,^emul/ia32-linux/(lib|usr/lib)/,) {
 	    tag "file-in-unusual-dir", "$file";
 	}
     }
