@@ -54,6 +54,8 @@ lintian (1.23.42) UNRELEASED; urgency=low
       clearer.  Thanks, Martín Ferrari.  (Closes: #457527)
     + [RA] Warn about use of su wrappers other than su-to-root for desktop
       and Live CD support.  Thanks, Daniel Baumann.  (Closes: #453931)
+    + [RA] Only check for desktop files in /usr/share/applications.  The
+      ones elsewhere are too strange.  (Closes: #459252)
   * checks/menus{.desc,}:
     + [RA] Spelling errors in doc-base files should only be warnings.  Do
       picky spelling and capitalization checks on the abstract and title

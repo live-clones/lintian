@@ -407,11 +407,11 @@ while (<IN>) {
     my $operm = perm2oct($perm);
     $file_index{$file} = 1;
 
-    if ($perm =~ m,^-,o && $file =~ m/\.desktop$/o) {
+    if ($perm =~ m,^-, && $file =~ m,/usr/share/applications/.*\.desktop$,) {
         if ($perm =~ m,x,o) {
             tag "executable-desktop-file", sprintf("$file %04o",$operm);
         }
-        unless (m,template, or m,^usr/share/doc/,) {
+        unless (m,template,) {
             push (@desktop_files, $file);
         }
     }
