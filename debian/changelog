@@ -1,8 +1,8 @@
 lintian (1.23.42) UNRELEASED; urgency=low
 
   * checks/binaries:
-    + [RA] Some packages include debugging symbols in the main package, so
-      don't warn about unstripped binaries in ../lib/debug as well.
+    + [RA] Don't warn about unstripped binaries in .../lib/debug.  Some
+      packages include debugging symbols in the main package.
     + [RA] Allow rpath pointing to /usr/lib/games/<package>.  Thanks, Bas
       Wijnen.  (Closes: #456318)
     + [RA] Exclude nsswitch modules from multiple SONAME and package
@@ -52,7 +52,7 @@ lintian (1.23.42) UNRELEASED; urgency=low
   * checks/files.desc:
     + [RA] Remove a stray variable from the config-file-reserved tag.
   * checks/init.d{.desc,}:
-    + [RA] Warn of init scripts that list S in their Default-Stop LSB
+    + [RA] Warn on init scripts that list S in their Default-Stop LSB
       keyword.  Thanks, Petter Reinholdtsen.  (Closes: #458596)
   * checks/menu-format{.desc,}:
     + [RA] Fix non-wm-module-in-wm-modules-menu-section pluralization to
