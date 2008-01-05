@@ -24,6 +24,10 @@ lintian (1.23.42) UNRELEASED; urgency=low
       or exemption.  Requested by Joerg Jaspert.  (Closes: #454238)
   * checks/cruft:
     + [RA] Ignore debian/config.cache.
+  * checks/debconf{.desc,}:
+    + Remove partially-translated-question at the request of Christian
+      Perrier.  Only the translator could fix this, and debconf doesn't
+      show the translation unless it's complete.  (Closes: #459293)
   * checks/debian-readme{.desc,}:
     + Combine readme-debian-{is,contains}-debmake-template and be less
       particular about the exact formatting of the dh-make template.

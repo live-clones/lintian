@@ -35,8 +35,6 @@ W: debconf-test: malformed-question-in-templates debconf/should-be-no-longer-a-p
 W: debconf-test: malformed-question-in-templates debconf/testboolean
 W: debconf-test: malformed-title-in-templates debconf/testnote
 W: debconf-test: old-fsf-address-in-copyright-file
-W: debconf-test: partially-translated-question debconf/testmulti de.utf-8
-W: debconf-test: partially-translated-question debconf/testmulti-escape de.utf-8
 W: debconf-test: possible-debconf-note-abuse config:19 debconf/test
 W: debconf-test: possible-debconf-note-abuse postinst:8 debconf/test
 W: debconf-test: postinst-uses-db-input

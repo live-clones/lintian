@@ -87,11 +87,6 @@ Info: The long description of one of the templates provided by this package
  is a duplicate of the short description. If you cannot provide a good
  extended description, it is better to leave it blank.
 
-Tag: partially-translated-question
-Type: warning
-Info: If you translate the `Choices:' fields in a template, you should
- translate the 'Description:' field as well
-
 Tag: config-does-not-load-confmodule
 Type: warning
 Info: The config script must load one of the debconf libraries.
