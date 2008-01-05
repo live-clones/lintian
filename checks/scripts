@@ -28,176 +28,153 @@ use Dep;
 use Tags;
 use Util;
 
-sub run {
+# This is a map of all known interpreters.  The key is the interpreter name
+# (the binary invoked on the #! line).  The value is an anonymous array of one
+# or two elements.  The first, mandatory argument is the path on a Debian
+# system where that interpreter would be installed.  The second, optional
+# argument is the dependency that provides that interpreter.  If the second
+# argument isn't given, the package name is assumed to be the same as the
+# interpreter name.  (Saves some typing.)
+#
+# Some interpreters list empty dependencies (as opposed to undefined ones).
+# Those interpreters should not have any dependency for one reason or another
+# (usually because they're essential packages or aren't used in a normal way).
+#
+# Do not list versioned patterns here (such as pythonX.Y, rubyX.Y, etc.).  For
+# those, see %versioned_interpreters below.
+our %interpreters =
+    (ash	    => [ '/bin' ],
+     awk	    => [ '/usr/bin', '' ],
+     bash	    => [ '/bin', '' ],
+     bltwish	    => [ '/usr/bin', 'blt' ],
+     csh	    => [ '/bin', 'tcsh | csh | c-shell' ],
+     dash	    => [ '/bin' ],
+     expect	    => [ '/usr/bin' ],
+     expectk	    => [ '/usr/bin' ],
+     fish	    => [ '/usr/bin' ],
+     gawk	    => [ '/usr/bin' ],
+     gbr2	    => [ '/usr/bin', 'gambas2-runtime' ],
+     gbx	    => [ '/usr/bin', 'gambas-runtime' ],
+     gbx2	    => [ '/usr/bin', 'gambas2-runtime' ],
+     gforth	    => [ '/usr/bin' ],
+     gnuplot	    => [ '/usr/bin' ],
+     gosh	    => [ '/usr/bin', 'gauche' ],
+     'install-menu' => [ '/usr/bin', '' ],
+     jed	    => [ '/usr/bin' ],
+     'jed-script'   => [ '/usr/bin', 'jed | xjed' ],
+     ksh	    => [ '/bin', 'mksh | pdksh' ],
+     lefty	    => [ '/usr/bin', 'graphviz' ],
+     magicfilter    => [ '/usr/sbin' ],
+     make	    => [ '/usr/bin', 'make | build-essential' ],
+     mawk	    => [ '/usr/bin' ],
+     ocamlrun	    => [ '/usr/bin', 'ocaml | ocaml-base-nox' ],
+     pagsh	    => [ '/usr/bin', 'openafs-client | heimdal-clients' ],
+     parrot	    => [ '/usr/bin' ],
+     perl	    => [ '/usr/bin', '' ],
+     python	    => [ '/usr/bin', 'python | python-minimal' ],
+     pforth	    => [ '/usr/bin' ],
+     rc		    => [ '/usr/bin' ],
+     regina	    => [ '/usr/bin', 'regina-rexx' ],
+     rexx	    => [ '/usr/bin', 'regina-rexx' ],
+     ruby	    => [ '/usr/bin' ],
+     runhugs	    => [ '/usr/bin', 'hugs | hugs98' ],
+     sed	    => [ '/bin', '' ],
+     sh		    => [ '/bin', '' ],
+     slsh	    => [ '/usr/bin' ],
+     speedy	    => [ '/usr/bin', 'speedy-cgi-perl' ],
+     tcl	    => [ '/usr/bin', 'tclx8.3' ],
+     tcsh	    => [ '/usr/bin' ],
+     tixwish	    => [ '/usr/bin', 'tix' ],
+     trs	    => [ '/usr/bin', 'konwert' ],
+     xjed	    => [ '/usr/bin', 'xjed' ],
+     yforth	    => [ '/usr/bin', 'yforth' ],
+     zsh	    => [ '/bin' ],
+    );
 
-# Don't forget to edit the scripts.desc file if you change these!
-
-my %valid_interpreters = (
-			  'ash' => '/bin/ash',
-			  'awk' => '/usr/bin/awk',
-			  'bash' => '/bin/bash',
-			  'bltwish' => '/usr/bin/bltwish',
-			  'burlap' => '/usr/bin/burlap',
-			  'csh' => '/bin/csh',
-			  'dash' => '/bin/dash',
-			  'expect' => '/usr/bin/expect',
-			  'expectk' => '/usr/bin/expectk',
-			  'fish' => '/usr/bin/fish',
-			  'gawk' => '/usr/bin/gawk',
-			  'gbr2' => '/usr/bin/gbr2',
-			  'gbx' => '/usr/bin/gbx',
-			  'gbx2' => '/usr/bin/gbx2',
-			  'gforth' => '/usr/bin/gforth',
-			  'gnuplot' => '/usr/bin/gnuplot',
-			  'gosh' => '/usr/bin/gosh',
-			  'guile' => '/usr/bin/guile',
-			  'install-menu' => '/usr/bin/install-menu',
-			  'jed' => '/usr/bin/jed',
-			  'jed-script' => '/usr/bin/jed-script',
-			  'jruby0.9' => '/usr/bin/jruby0.9',
-			  'jruby1.0' => '/usr/bin/jruby1.0',
-			  'js' => '/usr/bin/js',
-			  'kforth' => '/usr/bin/kforth',
-			  'ksh' => '/bin/ksh',
-			  'lefty' => '/usr/bin/lefty',
-			  'lua40' => '/usr/bin/lua40',
-			  'lua50' => '/usr/bin/lua50',
-			  'lua5.1' => '/usr/bin/lua5.1',
-			  'magicfilter' => '/usr/sbin/magicfilter',
-			  'make' => '/usr/bin/make',
-			  'mawk' => '/usr/bin/mawk',
-			  'nawk' => '/usr/bin/nawk',
-			  'ocaml' => '/usr/bin/ocamlrun',
-			  'ocamlrun' => '/usr/bin/ocamlrun',
-			  'octave' => '/usr/bin/octave',
-			  'pagsh' => '/usr/bin/pagsh',
-			  'parrot' => '/usr/bin/parrot',
-			  'perl' => '/usr/bin/perl',
-			  'perl-5.005' => '/usr/bin/perl-5.005',
-			  'perl-5.004' => '/usr/bin/perl-5.004',
-			  'pforth' => '/usr/bin/pforth',
-			  'php' => '/usr/bin/php',
-			  'php3' => '/usr/bin/php3',
-			  'php4' => '/usr/bin/php4',
-			  'php5' => '/usr/bin/php5',
-			  'pike' => '/usr/bin/pike',
-			  'pike7' => '/usr/bin/pike7',
-			  'pike7.6' => '/usr/bin/pike7.6',
-			  'python' => '/usr/bin/python',
-			  'python1.5' => '/usr/bin/python1.5',
-			  'python2.1' => '/usr/bin/python2.1',
-			  'python2.2' => '/usr/bin/python2.2',
-			  'python2.3' => '/usr/bin/python2.3',
-			  'python2.4' => '/usr/bin/python2.4',
-			  'python2.5' => '/usr/bin/python2.5',
-			  'rexx' => '/usr/bin/rexx',
-			  'regina' => '/usr/bin/regina',
-			  'rc' => '/usr/bin/rc',
-			  'runhugs1.4' => '/usr/bin/runhugs1.4',
-			  'runhugs98' => '/usr/bin/runhugs98',
-			  'runhugs' => '/usr/bin/runhugs',
-			  'ruby' => '/usr/bin/ruby',
-			  'ruby1.6' => '/usr/bin/ruby1.6',
-			  'ruby1.8' => '/usr/bin/ruby1.8',
-			  'ruby1.9' => '/usr/bin/ruby1.9',
-			  'scsh' => '/usr/bin/scsh',
-			  'sed' => '/bin/sed',
-			  'sh' => '/bin/sh',
-			  'slsh' => '/usr/bin/slsh',
-			  'speedy' => '/usr/bin/speedy',
-			  'tcl' => '/usr/bin/tcl',
-			  'tclsh' => '/usr/bin/tclsh',
-			  'tclsh8.3' => '/usr/bin/tclsh8.3',
-			  'tclsh8.4' => '/usr/bin/tclsh8.4',
-			  'tcsh' => '/usr/bin/tcsh',
-			  'tixwish' => '/usr/bin/tixwish',
-			  'trs' => '/usr/bin/trs',
-			  'wish' => '/usr/bin/wish',
-			  'wish8.0' => '/usr/bin/wish8.0',
-			  'wish8.3' => '/usr/bin/wish8.3',
-			  'wish8.4' => '/usr/bin/wish8.4',
-			  'xjed' => '/usr/bin/xjed',
-			  'yforth' => '/usr/bin/yforth',
-			  'zsh' => '/bin/zsh'
-			 );
-
-my %interpreter_dependencies = (
-				'ash' => 'ash',
-				'bltwish' => 'blt',
-				'burlap' => 'felt',
-				'csh' => 'c-shell | tcsh | csh',
-				'dash' => 'dash',
-				'expect' => 'expect',
-				'expectk' => 'expectk',
-				'fish' => 'fish',
-				'gawk' => 'gawk',
-				'gbr2' => 'gambas2-runtime',
-				'gbx' => 'gambas-runtime',
-				'gbx2' => 'gambas2-runtime',
-				'gforth' => 'gforth',
-				'gnuplot' => 'gnuplot',
-				'gosh' => 'gauche',
-				'guile' => 'guile',
-				'jed' => 'jed',
-				'jed-script' => 'jed | xjed',
-				'jruby0.9' => 'jruby0.9',
-				'jruby1.0' => 'jruby1.0',
-				'js' => 'ngs-js',
-				'kforth' => 'kforth',
-				'ksh' => 'pdksh',
-				'lefty' => 'graphviz',
-				'lua40' => 'lua40',
-				'lua50' => 'lua50',
-				'lua5.1' => 'lua5.1',
-				'magicfilter' => 'magicfilter',
-				'make' => 'make | build-essential',
-				'mawk' => 'mawk',
-				'ocaml' => 'ocaml',
-				'octave' => 'octave | octave2.1 | octave2.9',
-				'pagsh' => 'openafs-client | heimdal-clients',
-				'parrot' => 'parrot',
-				'perl-5.005' => 'perl-5.005',
-				'perl-5.004' => 'perl-5.004',
-				'pforth' => 'pforth',
-				'php' => 'php4-cli | php5-cli',
-				'php3' => 'php3-cgi',
-				'php4' => 'php4-cli',
-				'php5' => 'php5-cli',
-				'pike' => 'pike',
-				'pike7' => 'pike7',
-				'pike7.6' => 'pike7.6',
-				'rc' => 'rc',
-				'regina' => 'regina-rexx',
-				'rexx' => 'regina-rexx',
-				'runhugs1.4' => 'hugs',
-				'runhugs98' => 'hugs98',
-				'scsh' => 'scsh',
-				'slsh' => 'slsh',
-				'speedy' => 'speedy-cgi-perl',
-				'tcl' => 'tclx8.3',
-				'tcsh' => 'tcsh',
-				'tixwish' => 'tix',
-				'trs' => 'konwert',
-				'xjed' => 'xjed',
-				'yforth' => 'yforth',
-				'zsh' => 'zsh'
-			       );
+# The more complex case of interpreters that may have a version number.
+#
+# This is a hash from the base interpreter name to a list.  The base
+# interpreter name may appear by itself or followed by some combination of
+# dashes, digits, and periods.  The values are the directory in which the
+# interpreter is found, the dependency to add for a version-less interpreter,
+# a regular expression to match versioned interpreters and extract the version
+# number, the package dependency for a versioned interpreter, and the list of
+# known versions.
+#
+# An interpreter with a version must have a dependency on the specific package
+# formed by taking the fourth element of the list and replacing $1 with the
+# version number.  An interpreter without a version is rejected if the second
+# element is undef; otherwise, the package must depend on the disjunction of
+# the second argument (if non-empty) and all the packages formed by taking the
+# list of known versions (the fifth element and on) and replacing $1 in the
+# fourth argument with them.
+#
+# For example:
+#
+#    lua => [ '/usr/bin', 'lua', qr/^lua([\d.]+)$/, 'lua$1', qw(40 50 5.1) ]
+#
+# says that any lua interpreter must be in /usr/bin, a package using
+# /usr/bin/lua50 must depend on lua50, and a package using just /usr/bin/lua
+# must satisfy lua | lua40 | lusa50 | lua5.1.
+#
+# The list of known versions is the largest maintenance headache here, but
+# it's only used for the unversioned dependency handling, and then only when
+# someone uses the unversioned script but depends on a specific version for
+# some reason.  So it's not a huge problem if it's a little out of date.
+our %versioned_interpreters =
+    (guile   => [ '/usr/bin', 'guile',
+		  qr/^guile-([\d.]+)$/, 'guile-$1', qw(1.6 1.8)
+		],
+     jruby   => [ '/usr/bin', undef,
+		  qr/^jruby([\d.]+)$/, 'jruby$1', qw(0.9 1.0)
+		],
+     lua     => [ '/usr/bin', 'lua',
+		  qr/^lua([\d.]+)$/, 'lua$1', qw(40 50 5.1)
+		],
+     octave  => [ '/usr/bin', 'octave',
+		  qr/^octave([\d.]+)$/, 'octave$1', qw(2.1 2.9 3.0)
+		],
+     php     => [ '/usr/bin', '',
+		  qr/^php(\d+)$/, 'php$1-cli', qw(5)
+		],
+     pike    => [ '/usr/bin', '',
+		  qr/^pike([\d.]+)$/, 'pike$1 | pike$1-core', qw(7.6 7.7)
+		],
+     python  => [ '/usr/bin', undef,
+		  qr/^python([\d.]+)$/, 'python$1 | python$1-minimal',
+		  qw(2.4 2.5)
+		],
+     ruby    => [ '/usr/bin', undef,
+		  qr/^ruby([\d.]+)$/, 'ruby$1', qw(1.8 1.9)
+		],
+     scsh    => [ '/usr/bin', 'scsh',
+		  qr/^scsh-([\d.]+)$/, 'scsh-$1', qw(0.6)
+		],
+     tclsh   => [ '/usr/bin', 'tclsh',
+		  qr/^tclsh([\d.]+)$/, 'tcl$1', qw(8.3 8.4 8.5)
+		],
+     wish    => [ '/usr/bin', 'wish',
+		  qr/^wish([\d.]+)$/, 'tk$1', qw(8.3 8.4 8.5)
+		],
+    );
 
 # Any of the following packages can satisfy an update-inetd dependency.
-my $update_inetd
+our $update_inetd
     = join (' | ', qw(update-inetd inet-superserver openbsd-inetd rlinetd));
 
 # Appearance of one of these regexes in a maintainer script means that there
 # must be a dependency (or pre-dependency) on the given package.  The tag
 # reported is maintainer-script-needs-depends-on-%s, so be sure to update
 # scripts.desc when adding a new rule.
-my @depends_needed = (
+our @depends_needed = (
 	[ adduser	=> '\badduser\b'	   ],
 	[ gconf2	=> '\bgconf-schemas\b'	   ],
 	[ $update_inetd	=> '\bupdate-inetd\b'	   ],
 	[ ucf		=> '\bucf\s'		   ],
 	[ 'xml-core'	=> '\bupdate-xmlcatalog\b' ],
 );
+
+sub run {
 
 my %executable = ();
 my %suid = ();
@@ -235,18 +212,17 @@ while (<FILEINFO>) {
 close(FILEINFO);
 
 my $all_deps = '';
-foreach my $depfield ('suggests', 'recommends', 'depends', 'pre-depends',
-		   'provides') {
-    $deps{$depfield} = '';
-    if (open(IN, '<', "fields/$depfield")) {
+for my $field (qw/suggests recommends depends pre-depends provides/) {
+    $deps{$field} = '';
+    if (open(IN, '<', "fields/$field")) {
 	$_ = join('', <IN>);
 	close(IN);
         chomp;
-        $deps{$depfield} = $_;
+        $deps{$field} = $_;
         $all_deps .= ', ' if $all_deps;
         $all_deps .= $_;
     }
-    $deps{$depfield} = Dep::parse($deps{$depfield});
+    $deps{$field} = Dep::parse($deps{$field});
 }
 $all_deps .= ', ' if $all_deps;
 $all_deps .= $pkg;
@@ -284,83 +260,62 @@ while (<SCRIPTS>) {
 	next;
     }
 
-    # either they use an absolute path or they call it as '/usr/bin/env interp'
+    # Either they use an absolute path or they use '/usr/bin/env interp'.
     tag("interpreter-not-absolute", $filename, "#!$interpreter")
-	       unless $is_absolute;
+	unless $is_absolute;
     tag("script-not-executable", $filename)
-	unless ($executable{$filename} or
-		$filename =~ m,usr/(lib|share)/.*\.pm, or
-		$filename =~ m,usr/(lib|share)/ruby/.*\.rb, or
-		$filename =~ m,\.in$, or
-		$filename =~ m,etc/menu-methods, or
-		$filename =~ m,etc/X11/Xsession.d,);
+	unless ($executable{$filename}
+		or $filename =~ m,usr/(lib|share)/.*\.pm,
+		or $filename =~ m,usr/(lib|share)/ruby/.*\.rb,
+		or $filename =~ m,\.in$,
+		or $filename =~ m,etc/menu-methods,
+		or $filename =~ m,etc/X11/Xsession.d,);
 
-    if (exists $valid_interpreters{$base}) {
-	unless ($interpreter eq $valid_interpreters{$base} or
-		defined $calls_env) {
-	    # save us from some copy and paste
-	    if ($base =~ /^(ruby|python)(?:\d\.\d)?$/) {
-		tag("wrong-path-for-$1", $filename, "#!$interpreter");
-	    } else {
-		tag("wrong-path-for-interpreter",
-		    "#!$interpreter != $valid_interpreters{$base}",
-		    "($filename)");
+    # Warn about csh scripts.
+    tag("csh-considered-harmful", $filename)
+        if (($base eq 'csh' or $base eq 'tcsh')
+	    and $executable{$filename}
+	    and $filename !~ m,^./etc/csh/login.d/,);
+
+    # Syntax-check most shell scripts, but don't syntax-check scripts that end
+    # in .dpatch.  bash -n doesn't stop checking at exit 0 and goes on to blow
+    # up on the patch itself.
+    if ($base =~ /^(?:(?:b|d)?a|k|z)?sh$/) {
+	if (-x "$interpreter" && ! script_is_evil_and_wrong("unpacked/$filename")) {
+	    if ($filename !~ m,\.dpatch$,) {
+		if (check_script_syntax($interpreter, "unpacked/$filename")) {
+		    tag("shell-script-fails-syntax-check", $filename);
+		}
 	    }
 	}
+    }
 
-	# Do not complain about dependencies for non-executable scripts.
-	if ($executable{$filename}) {
-	    if (exists $interpreter_dependencies{$base}) {
-		my @deps = split(/,/,$interpreter_dependencies{$base});
-		if ($base eq 'php') {
-		    tag("php-script-but-no-php-cli-dep", $filename)
-			unless Dep::implies($deps{all}, Dep::parse($interpreter_dependencies{$base}));
-		} elsif ($base =~ /^(php\d?|(m|g)awk)/) {
-		    tag("$base-script-but-no-$deps[0]-dep", $filename)
-			unless Dep::implies($deps{all}, Dep::parse($interpreter_dependencies{$base}));
-		} else {
-		    tag("missing-dep-for-interpreter",
-			"$base => $deps[0]", "($filename)")
-			unless (Dep::implies($deps{all}, Dep::parse($interpreter_dependencies{$base})) ||
-			($base eq "csh" && $filename =~ m,^./etc/csh/login.d/,) ||
-			($base eq "fish" && $filename =~ m,^./etc/fish.d/,));
-		}
-	    } elsif ($base =~ /^python(\d.\d)?$/) {
-		my $ver = $1 ? $1 : "";
-		tag("python-script-but-no-python-dep", $filename)
-                    unless Dep::implies($deps{all}, Dep::parse("python$ver | python${ver}-minimal"));
-	    } elsif ($base =~ /^ruby(\d.\d)?$/) {
-		my $ver = $1 ? $1 : "";
-		tag("ruby-script-but-no-ruby-dep", $filename)
-                    unless Dep::implies($deps{all}, Dep::parse("ruby$ver"));
-	    } elsif ($base eq 'perl' && $suid{$filename}) {
-		tag("suid-perl-script-but-no-perl-suid-dep", $filename)
-                    unless Dep::implies($deps{all}, Dep::parse('perl-suid'));
-	    } elsif ($base =~ m/^tclsh(\d+\.\d+)?$/) {
-		my $ver = $1 ? $1 : "";
-		if ($ver) {
-		    tag("tclsh-script-but-no-tclsh-dep", "$filename $base")
-			unless Dep::implies($deps{all}, Dep::parse("tcl$ver"));
-		} else {
-		    tag("tclsh-script-but-no-tclsh-dep", "$filename $base")
-			unless Dep::implies($deps{all}, Dep::parse("tcl8.3 | tcl8.4 | tclsh"));
-		}
-	    } elsif ($base =~ m/^wish(\d+\.\d+)?$/) {
-		my $ver = $1 ? $1 : "";
-		if ($ver) {
-		    tag("wish-script-but-no-wish-dep", "$filename $base")
-			unless Dep::implies($deps{all}, Dep::parse("tk$ver"));
-		} else {
-		    tag("wish-script-but-no-wish-dep", "$filename $base")
-			unless Dep::implies($deps{all}, Dep::parse("tk8.3 | tk8.4 | wish"));
-		}
-	    }
+    # Try to find the expected path of the script to check.  First check
+    # %interpreters and %versioned_interpreters.  If not found there, see if
+    # it ends in a version number and the base is found in
+    # %versioned_interpreters.
+    my $data = $interpreters{$base};
+    my $versioned = 0;
+    if (not defined $data) {
+	$data = $versioned_interpreters{$base};
+	undef $data if ($data && not defined ($data->[1]));
+	if (not defined ($data) and $base =~ /^(.*[^\d.-])-?[\d.]+$/) {
+	    $data = $versioned_interpreters{$1};
+	    undef $data unless $base =~ /$data->[2]/;
+	}
+	$versioned = 1;
+    }
+    if ($data) {
+	my $expected = $data->[0] . '/' . $base;
+	unless ($interpreter eq $expected or defined $calls_env) {
+	    tag("wrong-path-for-interpreter",
+		"#!$interpreter != $expected", "($filename)");
 	}
     } elsif ($interpreter =~ m,/usr/local/,) {
 	tag("interpreter-in-usr-local", $filename, "#!$interpreter");
-    } elsif ($executable{'.' . $interpreter}) { # each key is './path/to/exe'
-	# Package installs the interpreter itself, so it's probably ok.
-	# Don't emit any tag for this.
+    } elsif ($executable{'.' . $interpreter}) {
+	# Package installs the interpreter itself, so it's probably ok.  Don't
+	# emit any tag for this.
     } elsif ($base eq 'suidperl') {
 	tag("calls-suidperl-directly", $filename);
     } elsif ($interpreter eq '/bin/env') {
@@ -369,22 +324,63 @@ while (<SCRIPTS>) {
 	tag("unusual-interpreter", $filename, "#!$interpreter");
     }
 
-    tag("csh-considered-harmful", $filename)
-        if (($base eq 'csh' or $base eq 'tcsh') and $executable{$filename}
-	    and $filename !~ m,^./etc/csh/login.d/,);
-
-    # Don't syntax-check scripts in /usr/src that end in .dpatch.  bash -n
-    # doesn't stop checking at exit 0 and goes on to blow up on the patch
-    # itself.
-    if ($base =~ /^(?:(?:b|d)?a|k|z)?sh$/) {
-	if (-x "$interpreter" && ! script_is_evil_and_wrong("unpacked/$filename")) {
-	    if ($filename !~ m,^./usr/src/.*\.dpatch$,) {
-		if (check_script_syntax($interpreter, "unpacked/$filename")) {
-		    tag("shell-script-fails-syntax-check", $filename);
-		}
+    # If we found the interpreter and the script is executable, check
+    # dependencies.  This should be the last thing we do in the loop so that
+    # we can use next for an early exit and reduce the nesting.
+    next unless ($data && $executable{$filename});
+    if (!$versioned) {
+	my $depends = $data->[1];
+	if (not defined $depends) {
+	    $depends = $base;
+	}
+	if ($depends && !Dep::implies($deps{all}, Dep::parse($depends))) {
+	    if ($base =~ /^(python|ruby|(m|g)awk)$/) {
+		tag("$base-script-but-no-$base-dep", $filename);
+	    } elsif ($base eq 'csh' && $filename =~ m,^\./etc/csh/login.d/,) {
+		# Initialization files for csh.
+	    } elsif ($base eq 'fish' && $filename =~ m,^./etc/fish.d/,) {
+		# Initialization files for fish.
+	    } else {
+		tag('missing-dep-for-interpreter', "$base => $depends",
+		    "($filename)");
 	    }
 	}
-	next;
+	if ($base eq 'perl' && $suid{$filename}) {
+	    tag("suid-perl-script-but-no-perl-suid-dep", $filename)
+		unless Dep::implies($deps{all}, Dep::parse('perl-suid'));
+	}
+    } elsif ($versioned_interpreters{$base}) {
+	my @versions = @$data[4 .. @$data - 1];
+	my @depends = map {
+	    my $d = $data->[3];
+	    $d =~ s/\$1/$_/g;
+	    $d;
+	} @versions;
+	my $depends = join (' | ', $data->[1], @depends);
+	unless (Dep::implies($deps{all}, Dep::parse($depends))) {
+	    if ($base eq 'php') {
+		tag('php-script-but-no-php-cli-dep', $filename);
+	    } elsif ($base =~ /^(wish|tclsh)/) {
+		tag("$1-script-but-no-$1-dep", $filename);
+	    } else {
+		tag("missing-dep-for-interpreter", "$base => $depends",
+		    "($filename)");
+	    }
+	}
+    } else {
+	my ($version) = ($base =~ /$data->[2]/);
+	my $depends = $data->[3];
+	$depends =~ s/\$1/$version/g;
+	unless (Dep::implies($deps{all}, Dep::parse($depends))) {
+	    if ($base =~ /^php/) {
+		tag('php-script-but-no-php-cli-dep', $filename);
+	    } elsif ($base =~ /^(python|ruby)/) {
+		tag("$1-script-but-no-$1-dep", $filename);
+	    } else {
+		tag("missing-dep-for-interpreter", "$base => $depends",
+		    "($filename)");
+	    }
+	}
     }
 }
 close(SCRIPTS);
@@ -424,23 +420,26 @@ while (<SCRIPTS>) {
     tag("interpreter-not-absolute", $filename, "#!$interpreter")
 	unless ($interpreter =~ m|^/|);
 
-    if (exists $valid_interpreters{$base}) {
-	tag("wrong-path-for-$base", $filename, "#!$interpreter")
-	    unless ($interpreter eq $valid_interpreters{$base});
-	tag $file eq 'config'?
-	    "forbidden-config-interpreter":"unusual-control-interpreter",
-	    "#!$interpreter"
-	    unless ($base eq 'sh'
-		    or $base eq 'bash'
-		    or $base eq 'perl');
-
-	if (exists $interpreter_dependencies{$base}) {
-	    tag("interpreter-without-predep", $filename,
-		      "#!$interpreter")
-		unless Dep::implies($deps{'pre-depends'}, Dep::parse($interpreter_dependencies{$base}));
-	} elsif ($base eq 'python') {
-	    tag("interpreter-without-predep", $filename, "#!$interpreter")
-		unless Dep::implies($deps{'pre-depends'}, Dep::parse('python | python-base'));
+    if (exists $interpreters{$base}) {
+	my $data = $interpreters{$base};
+	my $expected = $data->[0] . '/' . $base;
+	tag("wrong-path-for-interpreter", "#!$interpreter != $expected",
+	    "($filename)")
+	    unless ($interpreter eq $expected);
+	unless ($base eq 'sh' or $base eq 'bash' or $base eq 'perl') {
+	    my $tag;
+	    if ($file eq 'config') {
+		$tag = 'forbidden-config-interpreter';
+	    } else {
+		$tag = 'unusual-control-interpreter';
+	    }
+	    tag($tag, "#!$interpreter");
+	}
+	unless (defined ($data->[1]) and not $data->[1]) {
+	    my $depends = $data->[1] || $base;
+	    unless (Dep::implies($deps{'pre-depends'}, Dep::parse($depends))) {
+		tag("interpreter-without-predep", $filename, "#!$interpreter");
+	    }
 	}
     } elsif ($interpreter =~ m|/usr/local/|) {
 	tag("interpreter-in-usr-local", $filename, "#!$interpreter");
@@ -456,12 +455,12 @@ while (<SCRIPTS>) {
 
     my $shellscript = $base =~ /^((b|d)?a|t?c|(pd)?k)?sh$/ ? 1 : 0;
 
+    # Only syntax-check scripts we can check with bash.
     my $checkbashisms;
     if ($shellscript) {
-        # perhaps just do it when $base eq "sh" instead?
 	$checkbashisms = $base eq "sh" ? 1 : 0;
-	if (-x $valid_interpreters{$base}) {
-	    if (check_script_syntax($interpreter, $filename)) {
+	if ($base eq 'sh' or $base eq 'bash') {
+	    if (check_script_syntax("/bin/$base", $filename)) {
 		tag("maintainer-shell-script-fails-syntax-check", $file);
 	    }
 	}

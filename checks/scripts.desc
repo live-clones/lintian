@@ -32,7 +32,7 @@ Info: This script uses a relative path to locate its interpreter.
 Tag: unusual-interpreter
 Type: warning
 Info: This package contains a script for an interpreter that the Lintian
- maintainers have not thought of.  It could be a typo for a common 
+ maintainers have not heard of.  It could be a typo for a common
  interpreter.  If not, please file a wishlist bug on lintian so that the
  Lintian maintainers can add this interpreter to their list.
 
@@ -45,52 +45,35 @@ Info: This script uses /bin/env as its interpreter (used to find the
 
 Tag: forbidden-config-interpreter
 Type: error
-Info: This package contains a 'config' script for pre-configuring the package,
- however, at that time only essential packages are guaranteed to be installed,
- so you cannot use a non-essential interpreter
+Info: This package contains a <tt>config</tt> script for pre-configuring
+ the package.  During pre-configuration, however, only essential packages
+ are guaranteed to be installed, so you cannot use a non-essential
+ interpreter.
 
 Tag: unusual-control-interpreter
 Type: info
-Info: This package contains a control script for an interpreter that
- is not normally used for control scripts.
+Info: This package contains a control script for an interpreter that is
+ not normally used for control scripts.
 
 Tag: interpreter-in-usr-local
 Type: error
-Info: This package contains a script that looks for an interpreter
- in a directory in /usr/local.  Since Debian does not install anything
- in /usr/local, this is the wrong place to look.
+Info: This package contains a script that looks for an interpreter in a
+ directory in /usr/local.  Since Debian does not install anything in
+ /usr/local, this is the wrong place to look.
 
 Tag: interpreter-without-predep
 Type: error
-Info: The package contains a control script that uses an unusual interpreter,
- but does not declare a pre-dependency on the package that provides this
- interpreter.
+Info: The package contains a control script that uses an unusual
+ interpreter, but does not declare a pre-dependency on the package that
+ provides this interpreter.
  .
- A perusal of &packaging; section 6.2 shows that any of the control scripts
- can be called while the package is not configured.  Therefore, a
+ A perusal of &packaging; section 6.2 shows that any of the control
+ scripts can be called while the package is not configured.  Therefore, a
  pre-dependency is required to ensure that the interpreter is always
  available when the script is invoked.
  .
- Please do not add a pre-dependency without following the policy for doing so.
- (Policy section 3.5).
-
-Tag: gawk-script-but-no-gawk-dep
-Type: error
-Info: Packages that use gawk scripts must depend on the gawk package.
- If they don't need gawk-specific features, and can just as easily work
- with mawk, then they should be awk scripts instead.
- .
- In some cases a weaker relationship, such as Suggests or Recommends, will
- be more appropriate.
-
-Tag: mawk-script-but-no-mawk-dep
-Type: error
-Info: Packages that use mawk scripts must depend on the mawk package.
- If they don't need mawk-specific features, and can just as easily work
- with gawk, then they should be awk scripts instead.
- .
- In some cases a weaker relationship, such as Suggests or Recommends, will
- be more appropriate.
+ Please do not add a pre-dependency without following the policy for doing
+ so. (Policy section 3.5).
 
 Tag: missing-dep-for-interpreter
 Type: error
@@ -115,99 +98,91 @@ Info: Packages that use perl scripts that are suid must depend on the
  In some cases a weaker relationship, such as Suggests or Recommends, will
  be more appropriate.
 
-Tag: php-script-but-no-php-cli-dep
-Type: error
-Info: Packages that use PHP scripts with /usr/bin/php as interpreter must
- depend on a php-cli package (such as php4-cli or php5-cli). Note that a
- dependency on a php-cgi package (such as php5-cgi) is needlessly strict,
- and forces the user to install a package that isn't needed.
- .
- In some cases a weaker relationship, such as Suggests or Recommends, will
- be more appropriate.
-
-Tag: php4-script-but-no-php4-cli-dep
-Type: error
-Info: Packages that use PHP4 scripts must depend on the php4-cli package. Note
- that a dependency on php4-cgi is needlessly strict, and forces the user to
- install a package that isn't needed.
- .
- In some cases a weaker relationship, such as Suggests or Recommends, will
- be more appropriate.
-
-Tag: php5-script-but-no-php5-cli-dep
-Type: error
-Info: Packages that use PHP5 scripts must depend on the php5-cli package. Note
- that a dependency on php5-cgi is needlessly strict, and forces the user to
- install a package that isn't needed.
- .
- In some cases a weaker relationship, such as Suggests or Recommends, will
- be more appropriate.
-
-Tag: wrong-path-for-python
-Type: error
-Info: Python is installed as /usr/bin/python on Debian systems.
- .
- Specific Python versions are installed as /usr/bin/pythonX.Y
-
-Tag: wrong-path-for-ruby
-Type: error
-Info: Ruby is installed as /usr/bin/ruby on Debian systems.
- .
- Specific Ruby versions are installed as /usr/bin/rubyX.Y
-
 Tag: wrong-path-for-interpreter
 Type: error
-Info: The interpreter you used is installed at another location on Debian systems.
+Info: The interpreter you used is installed at another location on Debian
+ systems.
+
+Tag: gawk-script-but-no-gawk-dep
+Type: error
+Info: Packages that use gawk scripts must depend on the gawk package.
+ If they don't need gawk-specific features, and can just as easily work
+ with mawk, then they should be awk scripts instead.
+ .
+ In some cases a weaker relationship, such as Suggests or Recommends, will
+ be more appropriate.
+
+Tag: mawk-script-but-no-mawk-dep
+Type: error
+Info: Packages that use mawk scripts must depend on the mawk package.
+ If they don't need mawk-specific features, and can just as easily work
+ with gawk, then they should be awk scripts instead.
+ .
+ In some cases a weaker relationship, such as Suggests or Recommends, will
+ be more appropriate.
+
+Tag: php-script-but-no-php-cli-dep
+Type: error
+Info: Packages with PHP scripts must depend on a php-cli package such as
+ php5-cli.  Note that a dependency on a php-cgi package (such as php5-cgi)
+ is needlessly strict and forces the user to install a package that isn't
+ needed.
+ .
+ In some cases a weaker relationship, such as Suggests or Recommends, will
+ be more appropriate.
 
 Tag: python-script-but-no-python-dep
 Type: error
-Info: Packages with scripts that are executed with python must depend on the
- package python. Those that have scripts executed with a versioned python
- package need a dependency on the equivalent version of python.
+Info: Packages with Python scripts must depend on the package python.
+ Those that have scripts executed with a versioned python package need a
+ dependency on the equivalent version of python. 
  .
- For example, if a script in the package uses #!/usr/bin/python, then the
- package needs a dependency on "python". If a script uses
- #!/usr/bin/python2.2, then the package need a dependency on "python2.2".
+ For example, if a script in the package uses <tt>#!/usr/bin/python</tt>,
+ the package needs a dependency on "python".  If a script uses
+ <tt>#!/usr/bin/python2.5</tt>, the package need a dependency on
+ "python2.5".
  .
  In some cases a weaker relationship, such as Suggests or Recommends, will
  be more appropriate.
 
 Tag: ruby-script-but-no-ruby-dep
 Type: error
-Info: Packages with scripts that are executed with ruby must depend on the
- package ruby. Those that have scripts executed with a versioned ruby
- package need a dependency on the equivalent version of ruby.
+Info: Packages with Ruby scripts must depend on the package ruby. Those
+ that have Ruby scripts that run under a specific version of Ruby need a
+ dependency on the equivalent version of Ruby.
  .
- For example, if a script in the package uses #!/usr/bin/ruby, then the
- package needs a dependency on "ruby". If a script uses
- #!/usr/bin/ruby1.6, then the package need a dependency on "ruby1.6".
+ For example, if a script in the package uses <tt>#!/usr/bin/ruby</tt>,
+ the package needs a dependency on "ruby".  If a script uses
+ <tt>#!/usr/bin/ruby1.9</tt>, then the package need a dependency on
+ "ruby1.9".
  .
  In some cases a weaker relationship, such as Suggests or Recommends, will
  be more appropriate.
 
 Tag: wish-script-but-no-wish-dep
 Type: error
-Info: Packages that use wish scripts must depend on the virtual package wish
- or, if they require a specific version of wish or tk, that version of tk.
+Info: Packages that include wish scripts must depend on the virtual
+ package wish or, if they require a specific version of wish or tk, that
+ version of tk.
  .
  In some cases a weaker relationship, such as Suggests or Recommends, will
  be more appropriate.
 
 Tag: tclsh-script-but-no-tclsh-dep
 Type: error
-Info: Packages that use wish scripts must depend on the virtual package
- tclsh or, if they require a specific version of wish or tk, that version
- of tcl.
+Info: Packages that include tclsh scripts must depend on the virtual
+ package tclsh or, if they require a specific version of tcl, that
+ version of tcl.
  .
  In some cases a weaker relationship, such as Suggests or Recommends, will
  be more appropriate.
 
 Tag: calls-suidperl-directly
 Type: error
-Info: Since perl version 5.8.3-3, /usr/bin/suidperl shouldn't be called directly
- anymore (and doing so will lead to errors in most cases) but the script should
- just use /usr/bin/perl as interpreter which will call suidperl automatically if
- the script has the suid permission bit set.
+Info: Since perl version 5.8.3-3, /usr/bin/suidperl shouldn't be called
+ directly anymore (and doing so will lead to errors in most cases) but the
+ script should just use /usr/bin/perl as interpreter which will call
+ suidperl automatically if the script has the suid permission bit set.
 
 Tag: shell-script-fails-syntax-check
 Type: error
@@ -226,20 +201,19 @@ Info: Running this shell script with the shell's -n option set fails,
 
 Tag: possibly-insecure-handling-of-tmp-files-in-maintainer-script
 Type: warning
-Info: The maintainer script seems to access a file in <tt>/tmp</tt> or some
- other temporary directory. Since creating temporary files in a
+Info: The maintainer script seems to access a file in <tt>/tmp</tt> or
+ some other temporary directory. Since creating temporary files in a
  world-writable directory is very dangerous, this is likely to be a
- security bug. It's suggested that you use the <tt>tempfile</tt> or
- <tt>mktemp</tt> utilities to create temporary files in these
- directories.
+ security bug. Use the <tt>tempfile</tt> or <tt>mktemp</tt> utilities to
+ create temporary files in these directories.
 Ref: policy 10.4
 
 Tag: killall-is-dangerous
 Type: warning
 Info: The maintainer script seems to call <tt>killall</tt>.  Since this
  utility kills processes by name, it may well end up killing unrelated
- processes.  Most uses of <tt>killall</tt> should use
- <tt>start-stop-daemon</tt> instead.
+ processes.  Most uses of <tt>killall</tt> should use <tt>invoke-rc.d</tt>
+ instead.
 
 Tag: mknod-in-maintainer-script
 Type: error
@@ -279,9 +253,8 @@ Info: This script is marked as running under <tt>/bin/sh</tt>, but it seems
 
 Tag: suidregister-used-in-maintainer-script
 Type: error
-Info: This script calls suidregister which is no longer needed, a new
- command 'dpkg-statoverride' gives admins more flexibility.  Please see
- the documentation of suidmanager and dpkg-statoverride for details.
+Info: This script calls suidregister, a long-obsolete program that has
+ been replaced by dpkg-statoverride.
 
 Tag: maintainer-script-needs-depends-on-update-inetd
 Type: warning
@@ -320,24 +293,25 @@ Info: This script calls update-xmlcatalog, which comes from the xml-core
 
 Tag: update-alternatives-remove-called-in-postrm
 Type: warning
-Info: 'update-alternatives --remove &lt;alternative&gt; foo' is called in the
- postrm.  This can be dangerous because at the time the postrm is executed
- foo has already been deleted and update-alternatives will ignore it while
- constructing its list of available alternatives.  Then, if the
- /etc/alternatives symlink points at foo, update-alternatives won't
- recognize it and will mark the symlink as something site-specific.  As
- such, the symlink will no longer be updated automatically and will be
- left dangling until `update-alternatives --auto &lt;alternative&gt;' is
- run by hand.
+Info: <tt>update-alternatives --remove &lt;alternative&gt; foo</tt> is
+ called in the postrm.  This can be dangerous because at the time the
+ postrm is executed foo has already been deleted and update-alternatives
+ will ignore it while constructing its list of available alternatives.
+ Then, if the /etc/alternatives symlink points at foo, update-alternatives
+ won't recognize it and will mark the symlink as something site-specific.
+ As such, the symlink will no longer be updated automatically and will be
+ left dangling until <tt>update-alternatives --auto
+ &lt;alternative&gt;</tt> is run by hand.
  .
- update-alternatives --remove should be called in the prerm instead.
+ <tt>update-alternatives --remove</tt> should be called in the prerm
+ instead.
 
 Tag: deprecated-chown-usage
 Type: warning
-Info: 'chown user.group' is called in one of the maintainer scripts.
- This should be avoided, as the correct syntax is 'chown user:group'.
- Using "." as a separator is still supported by the GNU tools, but it will
- fail as soon as a system uses the "." in user or group names.
+Info: <tt>chown user.group</tt> is called in one of the maintainer
+ scripts.  The correct syntax is <tt>chown user:group</tt>. Using "." as a
+ separator is still supported by the GNU tools, but it will fail as soon
+ as a system uses the "." in user or group names.
 
 Tag: maintainer-script-hides-init-failure
 Type: warning

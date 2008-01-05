@@ -65,10 +65,17 @@ lintian (1.23.42) UNRELEASED; urgency=low
   * checks/patch-systems:
     + [RA] dpatch permits multiple patches to be listed on the same line
       of 00list.  Patch by Chris Lamb.  (Closes: #457523)
-  * checks/scripts:
+  * checks/scripts{.desc,}:
     + [RA] Add lua40 and lua5.1.  Thanks, Enrico Tassi.  (Closes: #457219)
     + [RA] Improve recognition of heredocs.
     + [RA] Recognize quoted strings that start at beginning of the line.
+    + [RA] Rewrite script path and dependency checking.  Remove scripts
+      and packages no longer in the archive.  Add new versions of
+      versioned scripts and packages.  Fix the dependencies for pike
+      interpreters.  (Closes: #458896)
+    + [RA] Reformat long descriptions and collapse some tags.
+    + [RA] For consistent results, only syntax-check sh and bash scripts.
+      Also ignore all dpatch files, not just those in /usr/src.
   * checks/shared-libs{.desc,}:
     + [RA] New check for version numbers in symbol files.  Based on a
       patch from Raphael Hertzog.  (Closes: #457067)

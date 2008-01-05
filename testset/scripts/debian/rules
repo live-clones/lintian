@@ -23,6 +23,7 @@ binary-indep:
 	install -m 755 csh-foo $(tmp)/etc/csh/login.d/ 
 	install -m 755 envfoo $(tmp)/usr/bin/
 	install -m 755 fish-foo $(tmp)/etc/fish.d/
+	install -m 755 jruby-broken $(tmp)/usr/bin/
 	install -m 755 pyfoo $(tmp)/usr/bin/
 	install -m 755 py2foo $(tmp)/usr/bin/
 	install -m 755 perlfoo $(tmp)/usr/bin/
@@ -30,6 +31,7 @@ binary-indep:
 	install -m 755 make-foo $(tmp)/usr/bin/
 	install -m 755 lefty-foo $(tmp)/usr/bin/
 	install -m 4751 perlfoo $(tmp)/usr/bin/suidperlfoo2
+	install -m 755 sh-broken $(tmp)/usr/bin/
 	install -m 4555 suidperlfoo $(tmp)/usr/bin/
 	install -m 755 tkfoo $(tmp)/usr/bin/
 	install -m 755 wishfoo $(tmp)/usr/bin/
