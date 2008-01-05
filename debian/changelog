@@ -35,6 +35,8 @@ lintian (1.23.42) UNRELEASED; urgency=low
   * checks/fields:
     + [RA] Handle double-colon rules when checking that build dependencies
       match debian/rules.  (Closes: #457501)
+    + [RA] Allow python-setuptools in Build-Depends for arch-independent
+      Python packages.  Thanks, Vincent Bernat.  (Closes: #459042)
   * checks/fields.desc:
     + [RA] Remove X.X.X versions from the debian-revision-not-well-formed
       long description.  (Closes: #456286)

@@ -65,6 +65,7 @@ my @global_clean_allowed = (
 	[ patchutils => '^include\s+/usr/share/cdbs/1/rules/simple-patchsys.mk' ],
 	[ 'python-central' => '^DEB_PYTHON_SYSTEM\s*:?=\s*pycentral' ],
 	[ 'python-support' => '^DEB_PYTHON_SYSTEM\s*:?=\s*pysupport' ],
+	[ 'python-setuptools' => '/usr/share/cdbs/1/class/python-distutils.mk' ],
 	[ quilt => '^clean:\s+xsfclean\b' ],
 );
 
@@ -100,6 +101,7 @@ my @rule_clean_depends = (
 my @rule_clean_allowed = (
 	[ patch => '^\t\s*(?:perl debian/)?yada\s+unpatch' ],
 	[ 'perl | perl-base (>= 5.6.0-16)' => '(^\t|\|\|)\s*(perl|\$\(PERL\))\s' ],
+	[ 'python-setuptools' => '\ssetup\.py\b' ],
 );
 
 # A simple list of regular expressions which, if they match anywhere in
