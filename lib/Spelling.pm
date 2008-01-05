@@ -371,7 +371,7 @@ sub spelling_check_picky {
     my ($tag, $text, $filename) = @_;
 
     for my $word (split(/\s+/, $text)) {
-        $word =~ s/(^\')|[\"().,?!:;]+|(\'\z)//g;
+        $word =~ s/^\(|[).,?!:;]+$//g;
         if (exists $CORRECTIONS_CASE{$word}) {
             _tag($tag, $filename, $word, $CORRECTIONS_CASE{$word});
             next;
