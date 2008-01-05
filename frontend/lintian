@@ -45,6 +45,7 @@ my $pkg_mode = 'a';		# auto -- automatically search for
 use vars qw($verbose);
 $verbose = 0;			#flag for -v|--verbose switch
 our $debug = 0;    	     	#flag for -d|--debug switch
+our $quiet = 0;			#flag for -q|--quiet switch
 my @debug;
 my $check_everything = 0;	#flag for -a|--all switch
 my $lintian_info = 0;		#flag for -i|--info switch
@@ -131,8 +132,9 @@ General options:
     -h, --help                display short help text
     -v, --verbose             verbose messages
     -V, --version             display Lintian version and exit
-    -d, --debug               turn Lintian\'s debug messages ON
     --print-version           print unadorned version number and exit
+    -d, --debug               turn Lintian\'s debug messages ON
+    -q, --quiet               suppress all informational messages
 Behaviour options:
     -i, --info                give detailed info about tags
     -I, --display-info        display "I:" tags (normally suppressed)
@@ -249,6 +251,7 @@ my %opthash = (			# ------------------ actions
 
 	       "verbose|v" => \$verbose,
 	       "debug|d" => \@debug, # Count the -d flags
+	       "quiet|q" => \$quiet,
 
 	       # ------------------ behaviour options
 	       "info|i" => \$lintian_info,
@@ -1143,6 +1146,7 @@ require Checker;
 # for each package (the `reverse sort' is to make sure that source packages are
 # before the corresponding binary packages--this has the advantage that binary
 # can use information from the source packages if these are unpacked)
+my %overrides;
 PACKAGE:
 for (reverse sort @packages) {
     m/^([bsu]) (\S+) (\S+) (.+)$/ or fail("internal error: syntax error in \@packages array: $_");
@@ -1359,28 +1363,15 @@ for (reverse sort @packages) {
 	    }
 	}
 
-        # Report override statistics.  The way pluralization is handled here
-        # is not even remotely good for translations, but lintian doesn't
-        # handle translations now anyway and this isn't the worst problem.
+        # Report override statistics.
         if (not $no_override and not $show_overrides) {
             my $stats = Tags::get_stats($file);
             my $short = $file;
             $short =~ s%.*/%%;
-            my $errors = $stats->{overrides}{by_severity}{4};
-            my $warnings = $stats->{overrides}{by_severity}{2};
-            if ($errors) {
-                $errors = ($errors == 1) ? "$errors error" : "$errors errors";
-            }
-            if ($warnings) {
-                $warnings = ($warnings == 1) ? "$warnings warning" : "$warnings warnings";
-            }
-            if ($errors and $warnings) {
-                print "N: $short overrode $errors, $warnings\n";
-            } elsif ($errors) {
-                print "N: $short overrode $errors\n";
-            } elsif ($warnings) {
-                print "N: $short overrode $warnings\n";
-            }
+            my $errors = $stats->{overrides}{by_severity}{4} || 0;
+            my $warnings = $stats->{overrides}{by_severity}{2} || 0;
+	    $overrides{errors} += $errors;
+	    $overrides{warnings} += $warnings;
         }
     }
 
@@ -1430,6 +1421,30 @@ for (reverse sort @packages) {
 	close(STATUS);
     }
 }
+if (not $quiet and not $no_override and not $show_overrides) {
+    my $errors = $overrides{errors};
+    my $warnings = $overrides{warnings};
+    my $total = $errors + $warnings;
+    if ($total > 0) {
+	my $total = ($total == 1)
+	    ? "$total tag overridden"
+	    : "$total tags overridden";
+	if ($errors) {
+	    $errors = ($errors == 1) ? "$errors error" : "$errors errors";
+	}
+	if ($warnings) {
+	    $warnings = ($warnings == 1) ? "$warnings warning" : "$warnings warnings";
+	}
+	if ($errors and $warnings) {
+	    print "N: $total ($errors, $warnings)\n";
+	} elsif ($errors) {
+	    print "N: $total ($errors)\n";
+	} elsif ($warnings) {
+	    print "N: $total ($warnings)\n";
+	}
+    }
+}
+
 # }}}
 
 # {{{ close up lintian-info pipe if needed

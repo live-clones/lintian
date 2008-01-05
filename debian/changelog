@@ -92,6 +92,8 @@ lintian (1.23.42) UNRELEASED; urgency=low
     + [RA] Reference GPL-2, not the GPL symlink, reflecting our license.
 
   * frontend/lintian:
+    + [RA] Merge all override messages into a single message per run.  Add
+      -q/--quiet option to suppress that message.  (Closes: #457513)
     + [RA] Allow + and . in tag names in overrides.  Thanks, Stefan
       Fritsch.  (Closes: #454790)
     + [RA] Check that the argument to --color is valid.
@@ -117,7 +119,7 @@ lintian (1.23.42) UNRELEASED; urgency=low
     + [RA] Add support for HTML coloring.
 
   * man/lintian.1:
-    + [RA] Document the --color=html option.
+    + [RA] Document the --color=html and -q/--quiet options.
   * man/lintian-info.1:
     + [RA] Document the --annotate option.
 

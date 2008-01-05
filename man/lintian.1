@@ -113,12 +113,16 @@ General options:
 Display usage information and exit.
 
 .TP
-.BR \-v ", " \-\-verbose
-Display verbose messages.
-
-.TP
 .BR \-V ", " \-\-version
 Display lintian version number and exit.
+
+.TP
+.BR \-\-print\-version
+Print unadorned version number and exit.
+
+.TP
+.BR \-v ", " \-\-verbose
+Display verbose messages.
 
 .TP
 .BR \-d ", " \-\-debug
@@ -126,8 +130,10 @@ Display debugging messages. (Implies
 .BR \-v ).
 
 .TP
-.BR \-\-print\-version
-Print unadorned version number and exit.
+.BR \-q ", " \-\-quiet
+Suppress all informational messages.  Currently, the only message this
+suppresses is the message at the end of the run giving the total count of
+overrides.
 
 .PP
 
