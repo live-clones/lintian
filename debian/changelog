@@ -1,4 +1,6 @@
-lintian (1.23.42) UNRELEASED; urgency=low
+lintian (1.23.42) unstable; urgency=low
+
+  The "what did you do on your Christmas vacation?" release.
 
   * checks/binaries:
     + [RA] Don't warn about unstripped binaries in .../lib/debug.  Some
@@ -144,7 +146,7 @@ lintian (1.23.42) UNRELEASED; urgency=low
   * testset/runtests:
     + [RA] Test tags for valid characters.
 
- -- Russ Allbery <rra@debian.org>  Wed, 02 Jan 2008 16:01:02 -0800
+ -- Russ Allbery <rra@debian.org>  Sat, 05 Jan 2008 17:16:32 -0800
 
 lintian (1.23.41) unstable; urgency=low
 
