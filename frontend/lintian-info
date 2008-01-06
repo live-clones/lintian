@@ -82,6 +82,9 @@ while (<>) {
     if ($annotate) {
         $type = shift @pieces if ($pieces[0] =~ /^\w$/);
         $pkg = shift @pieces if ($pieces[0] =~ /^\S+( (binary|udeb))?$/);
+    } else {
+	$type = shift @pieces;
+	$pkg = shift @pieces;
     }
     if ($annotate or (defined $type and $type =~ m/^[OEWIX]$/)) {
 	my $tag = shift @pieces;
