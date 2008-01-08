@@ -227,6 +227,7 @@ our %CORRECTIONS = qw(
                       ploting plotting
                       protable portable
                       posible possible
+                      postgressql PostgreSQL
                       powerfull powerful
                       prefered preferred
                       prefferably preferably
@@ -323,8 +324,17 @@ our %CORRECTIONS_CASE = qw(
                            Gnome GNOME
                            gnome GNOME
                            kde KDE
+                           MYSQL MySQL
+                           Mysql MySQL
+                           mysql MySQL
                            linux Linux
+                           Postgresql PostgreSQL   
+                           postgresql PostgreSQL
+                           python Python
                            russian Russian
+                           XFCE Xfce
+                           XFce Xfce
+                           xfce Xfce
                           );
 
 # -----------------------------------
