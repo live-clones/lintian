@@ -328,6 +328,9 @@ our %CORRECTIONS_CASE = qw(
                            Mysql MySQL
                            mysql MySQL
                            linux Linux
+                           OCAML OCaml
+                           Ocaml OCaml
+                           ocaml OCaml
                            Postgresql PostgreSQL   
                            postgresql PostgreSQL
                            python Python

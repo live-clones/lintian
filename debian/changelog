@@ -2,8 +2,8 @@ lintian (1.23.43) UNRELEASED; urgency=low
 
   * lib/Spelling.pm:
     + [RA] Add a spelling correction for PostgreSQL and capitalization
-      corrections for it, Xfce, Python, MySQL, Skolelinux, and Debian
-      Edu.
+      corrections for it, Xfce, Python, MySQL, Skolelinux, Debian Edu,
+      and OCaml.
 
  -- Russ Allbery <rra@debian.org>  Mon, 07 Jan 2008 23:58:47 -0800
 
