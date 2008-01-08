@@ -332,10 +332,16 @@ our %CORRECTIONS_CASE = qw(
                            postgresql PostgreSQL
                            python Python
                            russian Russian
+                           SkoleLinux Skolelinux
+                           skolelinux Skolelinux
                            XFCE Xfce
                            XFce Xfce
                            xfce Xfce
                           );
+
+# The format above doesn't allow spaces.
+$CORRECTIONS_CASE{'Debian-Edu'} = 'Debian Edu';
+$CORRECTIONS_CASE{'debian-edu'} = 'Debian Edu';
 
 # -----------------------------------
 
