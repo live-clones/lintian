@@ -48,7 +48,7 @@ my $usescdbspython = '';
 # It may be better to look at what version of cdbs the package depends on and
 # from that derive the compatibility level....
 
-my $cdbscompat = 4;
+my $cdbscompat = 5;
 
 # Parse the debian/rules file, and try to figure out if debhelper commands
 # are run in it that like to modify maintainer scripts. Those debhelper

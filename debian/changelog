@@ -1,5 +1,8 @@
 lintian (1.23.43) UNRELEASED; urgency=low
 
+  * checks/debhelper:
+    + [RA] CDBS now defaults to a debhelper compatibility level of V5.
+
   * lib/Spelling.pm:
     + [RA] Add a spelling correction for PostgreSQL and capitalization
       corrections for it, Xfce, Python, MySQL, Skolelinux, Debian Edu,
