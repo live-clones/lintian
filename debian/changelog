@@ -2,6 +2,9 @@ lintian (1.23.43) UNRELEASED; urgency=low
 
   * checks/debhelper:
     + [RA] CDBS now defaults to a debhelper compatibility level of V5.
+  * checks/fields:
+    + [RA] The CDBS ant rules are in class, not rules.  Thanks, Cyril
+      Brulebois.  (Closes: #460168)
 
   * lib/Spelling.pm:
     + [RA] Add a spelling correction for PostgreSQL and capitalization

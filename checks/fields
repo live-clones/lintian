@@ -109,7 +109,7 @@ my @rule_clean_allowed = (
 # enough that we can't know what packages are permitted in Build-Depends and
 # should bypass the build-depends-without-arch-dep check completely.
 my @global_clean_bypass = (
-	'^include\s*/usr/share/cdbs/1/rules/ant.mk'
+	'^include\s*/usr/share/cdbs/1/class/ant.mk'
 );
 
 sub run {
