@@ -5,6 +5,8 @@ lintian (1.23.43) UNRELEASED; urgency=low
   * checks/fields:
     + [RA] The CDBS ant rules are in class, not rules.  Thanks, Cyril
       Brulebois.  (Closes: #460168)
+  * checks/menu-format:
+    + [RA] Avoid a Perl warning for desktop entries without Exec.
 
   * lib/Spelling.pm:
     + [RA] Add a spelling correction for PostgreSQL and capitalization

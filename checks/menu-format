@@ -810,7 +810,7 @@ sub VerifyDesktopFile {
     #
     # TODO:  Should check quoting and the check special field
     # codes in Exec for desktop files.
-    if ($file =~ m,usr/share/applications/[^/]+$, and $vals{'Exec'} =~ /\S/) {
+    if ($file =~ m,usr/share/applications/[^/]+$, and $vals{'Exec'} and $vals{'Exec'} =~ /\S/) {
         my ($okay, $command) = VerifyCmd ($file, undef, $vals{'Exec'});
         tag "desktop-command-not-in-package", "$file $command"
             unless $okay or $command eq 'kcmshell';
