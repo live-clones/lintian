@@ -5,6 +5,9 @@ lintian (1.23.43) UNRELEASED; urgency=low
   * checks/fields:
     + [RA] The CDBS ant rules are in class, not rules.  Thanks, Cyril
       Brulebois.  (Closes: #460168)
+  * checks/files.desc:
+    + [RA] In many of the long descriptions for symlink-related tags,
+      mention that running dh_link will fix symlink problems.
   * checks/menu-format:
     + [RA] Avoid a Perl warning for desktop entries without Exec.
 

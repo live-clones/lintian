@@ -266,12 +266,18 @@ Tag: symlink-has-double-slash
 Type: error
 Info: This symlink contains two successive slashes (//). This is in violation
  of policy, where it is stated that symlinks should be as short as possible
+ .
+ If you use debhelper, running dh_link after creating the package structure
+ will fix this problem for you.
 Ref: policy 10.5
 
 Tag: symlink-ends-with-slash
 Type: error
 Info: This symlink ends with a slash (/). This is in violation
  of policy, where it is stated that symlinks should be as short as possible
+ .
+ If you use debhelper, running dh_link after creating the package structure
+ will fix this problem for you.
 Ref: policy 10.5
 
 Tag: symlink-should-be-relative
@@ -280,12 +286,18 @@ Info: Symlinks to files which are in the same top-level directory should be
  relative according to policy.  (In other words, a link in /usr to another
  file in /usr should be relative, while a link in /usr to a file in /etc
  should be absolute.)
+ .
+ If you use debhelper, running dh_link after creating the package structure
+ will fix this problem for you.
 Ref: policy 10.5
 
 Tag: symlink-should-be-absolute
 Type: error
 Info: Symbolic links between different top-level directories should be
  absolute.
+ .
+ If you use debhelper, running dh_link after creating the package structure
+ will fix this problem for you.
 Ref: policy 10.5
 
 Tag: udeb-contains-documentation-file
@@ -313,6 +325,9 @@ Type: error
 Info: This link goes up, and then back down into the same subdirectory.
  Making it shorter will improve its chances of finding the right file
  if the user's system has lots of symlinked directories.
+ .
+ If you use debhelper, running dh_link after creating the package structure
+ will fix this problem for you.
 Ref: policy 10.5
 
 Tag: symlink-is-self-recursive
@@ -326,6 +341,9 @@ Type: error
 Info: The symbolic link has needless segments like '..' and '.' in the middle.
  These are unneeded, and make the link longer than it could be, which is in
  violation of policy.
+ .
+ If you use debhelper, running dh_link after creating the package structure
+ will fix this problem for you.
 Ref: policy 10.5
 
 Tag: bad-permissions-for-etc-cron.d-script
