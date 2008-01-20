@@ -317,12 +317,30 @@ $CORRECTIONS{'alot'} = 'a lot';
 # descriptions, and should not be applied to files that may contain
 # configuration fragments or more informal files such as debian/copyright.
 our %CORRECTIONS_CASE = qw(
+                           DBUS D-Bus
+                           DBus D-Bus
+                           D-BUS D-Bus
+                           d-bus D-Bus
+                           dbus D-Bus
                            debian Debian
                            english English
                            french French
+                           Gconf GConf
+                           gconf GConf
                            german German
                            Gnome GNOME
                            gnome GNOME
+                           Gnome-VFS GnomeVFS
+                           Gnome-Vfs GnomeVFS
+                           GnomeVfs GnomeVFS
+                           gnome-vfs GnomeVFS
+                           gnomevfs GnomeVFS
+                           Gobject GObject
+                           gobject GObject
+                           Gstreamer GStreamer
+                           gstreamer GStreamer
+                           GTK GTK+
+                           gtk+ GTK+
                            kde KDE
                            MYSQL MySQL
                            Mysql MySQL
@@ -337,6 +355,17 @@ our %CORRECTIONS_CASE = qw(
                            russian Russian
                            SkoleLinux Skolelinux
                            skolelinux Skolelinux
+                           SLang S-Lang
+                           S-lang S-Lang
+                           s-lang S-Lang
+                           TCL Tcl
+                           tcl Tcl
+                           TEX TeX
+                           TeTeX teTeX
+                           Tetex teTeX
+                           tetex teTeX
+                           TK Tk
+                           tk Tk
                            XFCE Xfce
                            XFce Xfce
                            xfce Xfce
@@ -345,6 +374,12 @@ our %CORRECTIONS_CASE = qw(
 # The format above doesn't allow spaces.
 $CORRECTIONS_CASE{'Debian-Edu'} = 'Debian Edu';
 $CORRECTIONS_CASE{'debian-edu'} = 'Debian Edu';
+$CORRECTIONS_CASE{'TeXLive'} = 'TeX Live';
+$CORRECTIONS_CASE{'TeX-Live'} = 'TeX Live';
+$CORRECTIONS_CASE{'TeXlive'} = 'TeX Live';
+$CORRECTIONS_CASE{'TeX-live'} = 'TeX Live';
+$CORRECTIONS_CASE{'texlive'} = 'TeX Live';
+$CORRECTIONS_CASE{'tex-live'} = 'TeX Live';
 
 # -----------------------------------
 
