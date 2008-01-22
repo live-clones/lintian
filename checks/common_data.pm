@@ -87,21 +87,23 @@ use vars qw
      'build-conflicts', 'build-conflicts-indep', 'format', 'origin',
      'uploaders', 'python-version', 'autobuild', 'homepage', 'vcs-arch',
      'vcs-bzr', 'vcs-cvs', 'vcs-darcs', 'vcs-git', 'vcs-hg', 'vcs-mtn',
-     'vcs-svn', 'vcs-browser', 'dm-upload-allowed');
+     'vcs-svn', 'vcs-browser', 'dm-upload-allowed', 'bugs');
 
 # The Ubuntu original-maintainer field is handled separately.
 %known_binary_fields = map { $_ => 1 }
     ('package', 'version', 'architecture', 'depends', 'pre-depends',
      'recommends', 'suggests', 'enhances', 'conflicts', 'provides',
-     'replaces', 'essential', 'maintainer', 'section', 'priority',
-     'source', 'description', 'installed-size', 'python-version', 'homepage');
+     'replaces', 'breaks', 'essential', 'maintainer', 'section', 'priority',
+     'source', 'description', 'installed-size', 'python-version', 'homepage',
+     'bugs', 'origin');
 
 # The Ubuntu original-maintainer field is handled separately.
 %known_udeb_fields = map { $_ => 1 }
     ('package', 'version', 'architecture', 'subarchitecture', 'depends',
-     'recommends', 'enhances', 'provides', 'installer-menu-item',
-     'replaces', 'maintainer', 'section', 'priority',
-     'source', 'description', 'installed-size', 'kernel-version');
+     'recommends', 'enhances', 'provides', 'replaces', 'breaks', 'replaces',
+     'maintainer', 'section', 'priority', 'source', 'description',
+     'installed-size', 'kernel-version', 'installer-menu-item', 'bugs',
+     'origin');
 
 %known_obsolete_fields = map { $_ => 1 }
     ('revision', 'package-revision', 'package_revision',
@@ -183,3 +185,9 @@ use vars qw
     ( 'html', 'text', 'pdf', 'postscript', 'info', 'dvi', 'debiandoc-sgml' );
 
 1;
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 ts=4 et shiftround
