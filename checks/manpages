@@ -305,10 +305,10 @@ while (<IN>) {
 	    # beginning of a word, but don't generate false positives on \s-1
 	    # (small font), \*(-- (pod2man long dash), or things like \h'-1'.
 	    if ($line =~ /^(
-                            ([^\.].*)?
-                            [\s\'\"\`\(\[]
-                            (?<! \\s | \*\( | \(- | \w\' )
-                           )?
+			    ([^\.].*)?
+			    [\s\'\"\`\(\[]
+			    (?<! \\s | \*\( | \(- | \w\' )
+			   )?
 			   (--?\w+)/ox) {
 		$hc++;
 		tag "hyphen-used-as-minus-sign", "$file:$lc" if $hc <= 10 or $ENV{'LINTIAN_DEBUG'};
@@ -339,7 +339,6 @@ for my $f (sort keys %binary) {
 		    tag "manpage-for-x11-binary-in-wrong-directory", "$binary{$f} $manp_info->{file}";
 		}
 	    }
-	
 	} else {
 	    for my $manp_info (@{$manpage{$f}}) {
 		# no. manpage in X11?
@@ -363,4 +362,8 @@ for my $f (sort keys %binary) {
 
 1;
 
+# Local Variables:
+# indent-tabs-mode: t
+# cperl-indent-level: 4
+# End:
 # vim: syntax=perl sw=4 ts=8
