@@ -32,6 +32,9 @@ lintian (1.23.43) UNRELEASED; urgency=low
   * checks/menus:
     + [RA] Don't issue unknown-interpreter for maintainer scripts with
       weird interpreters.
+  * checks/rules.desc:
+    + [RA] To fix an ignores-make-clean-error, suggest removing "-" for
+      static makefiles.  Thanks, Andrea Colangelo.  (Closes: #458164)
 
   * frontend/lintian:
     + [RA] Include info tags in the broken-down description of the

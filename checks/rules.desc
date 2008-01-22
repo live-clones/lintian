@@ -52,7 +52,7 @@ Info: A rule in the <tt>debian/rules</tt> file for this package calls the
  .
   -$(MAKE) distclean
  .
- The leading - tells make to ignore all errors.  Normally this is done
+ The leading "-" tells make to ignore all errors.  Normally this is done
  for packages using Autoconf since Makefile may not exist.  However, this
  line ignores all other error messages, not just the missing Makefile
  error.  It's better to use:
@@ -60,7 +60,7 @@ Info: A rule in the <tt>debian/rules</tt> file for this package calls the
   [ ! -f Makefile ] || $(MAKE) distclean
  .
  so that other error messages from the clean or distclean rule will still
- be caught.
+ be caught (or just remove the "-" if the package uses a static makefile).
 
 Tag: debian-rules-sets-DH_COMPAT
 Type: warning
