@@ -106,6 +106,7 @@ our %CORRECTIONS = qw(
                       convertor converter
                       convinient convenient
                       cryptocraphic cryptographic
+                      dbus D-Bus
                       deamon daemon
                       debain Debian
                       debians Debian\'s
@@ -212,6 +213,7 @@ our %CORRECTIONS = qw(
                       necesary necessary
                       nescessary necessary
                       noticable noticeable
+                      o\'caml OCaml
                       optionnal optional
                       orientatied orientated
                       orientied oriented
@@ -317,11 +319,8 @@ $CORRECTIONS{'alot'} = 'a lot';
 # descriptions, and should not be applied to files that may contain
 # configuration fragments or more informal files such as debian/copyright.
 our %CORRECTIONS_CASE = qw(
-                           DBUS D-Bus
-                           DBus D-Bus
                            D-BUS D-Bus
                            d-bus D-Bus
-                           dbus D-Bus
                            debian Debian
                            english English
                            french French
@@ -349,7 +348,7 @@ our %CORRECTIONS_CASE = qw(
                            OCAML OCaml
                            Ocaml OCaml
                            ocaml OCaml
-                           Postgresql PostgreSQL   
+                           Postgresql PostgreSQL
                            postgresql PostgreSQL
                            python Python
                            russian Russian
