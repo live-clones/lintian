@@ -1423,10 +1423,10 @@ for (reverse sort @packages) {
 	close(STATUS);
     }
 }
-if (not $quiet and not $no_override and not $show_overrides) {
-    my $errors = $overrides{errors};
-    my $warnings = $overrides{warnings};
-    my $info = $overrides{info};
+if ($action eq 'check' and not $quiet and not $no_override and not $show_overrides) {
+    my $errors = $overrides{errors} || 0;
+    my $warnings = $overrides{warnings} || 0;
+    my $info = $overrides{info} || 0;
     my $total = $errors + $warnings + $info;
     if ($total > 0) {
 	my $total = ($total == 1)

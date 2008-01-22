@@ -26,6 +26,8 @@ lintian (1.23.43) UNRELEASED; urgency=low
     + [RA] Include info tags in the broken-down description of the
       override count since they're included in the total.  Based on a
       patch by Chris Lamb.  (Closes: #459851)
+    + [RA] Don't try to report overrides when not checking a package.
+      Thanks, Håkon Stordahl.  (Closes: #461978)
 
   * lib/Spelling.pm:
     + [RA] Add a spelling correction for PostgreSQL and lots of new
