@@ -23,6 +23,8 @@ use strict;
 use Spelling;
 use Tags;
 use Util;
+
+use Encode qw(decode);
 use Parse::DebianChangelog;
 
 sub run {
@@ -316,7 +318,12 @@ if (@entries) {
     while ($changes =~ /(closes\s*(?:bug)?\#?\s?\d{6,})[^\w]/ig) {
 	tag "possible-missing-colon-in-closes", "$1" if $1;
     }
-    my @lines = split ('\n', $changes);
+
+    # We have to decode into UTF-8 to get the right length for the length
+    # check.  For some reason, use open ':utf8' isn't sufficient.  If the
+    # changelog uses a non-UTF-8 encoding, this will mangle it, but it doesn't
+    # matter for the length check.
+    my @lines = split ('\n', decode ('utf-8', $changes));
     for my $i (0 .. $#lines) {
         if (length ($lines[$i]) > 80 && $lines[$i] !~ /^[\s.o*+-]*\S+$/) {
             tag 'debian-changelog-line-too-long', "line " . ($i + 1);
