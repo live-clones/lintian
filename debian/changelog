@@ -43,6 +43,8 @@ lintian (1.23.43) UNRELEASED; urgency=low
       interpreter tags about limitations and requested bug filings.
     + [RA] Remove tcl as a valid interpreter since tclx8.3 is obsolete.
       (tclsh is the standard interpreter name.)
+    + [RA] Require versioned dependencies for OCaml scripts.  Each version
+      is ABI-incompatible.  Thanks, Samuel Mimram.  (Closes: #462065)
 
   * frontend/lintian:
     + [RA] Include info tags in the broken-down description of the
