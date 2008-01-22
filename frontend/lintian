@@ -1160,6 +1160,9 @@ for (reverse sort @packages) {
 
     # determine base directory
     my $base = "$LINTIAN_LAB/$long_type/$pkg";
+    unless ($base =~ m,^/,) {
+	$base = "$cwd/$base";
+    }
     print "N: Base directory in lab: $base\n" if $debug;
 
     my $act_unpack_level = 0;

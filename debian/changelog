@@ -35,6 +35,8 @@ lintian (1.23.43) UNRELEASED; urgency=low
       patch by Chris Lamb.  (Closes: #459851)
     + [RA] Don't try to report overrides when not checking a package.
       Thanks, Håkon Stordahl.  (Closes: #461978)
+    + [RA] Cope with a relative path to the lab.  Patch from Håkon
+      Stordahl.  (Closes: #461982)
 
   * lib/Spelling.pm:
     + [RA] Add a spelling correction for PostgreSQL and lots of new
