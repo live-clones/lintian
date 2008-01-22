@@ -135,7 +135,7 @@ our %versioned_interpreters =
 		  qr/^octave([\d.]+)$/, 'octave$1', qw(2.1 2.9 3.0)
 		],
      php     => [ '/usr/bin', '',
-		  qr/^php(\d+)$/, 'php$1-cli', qw(5)
+		  qr/^php(\d+)$/, 'php$1-cli', qw(4 5)
 		],
      pike    => [ '/usr/bin', '',
 		  qr/^pike([\d.]+)$/, 'pike$1 | pike$1-core', qw(7.6 7.7)
@@ -359,7 +359,7 @@ while (<SCRIPTS>) {
 	my $depends = join (' | ', $data->[1], @depends);
 	unless (Dep::implies($deps{all}, Dep::parse($depends))) {
 	    if ($base eq 'php') {
-		tag('php-script-but-no-php-cli-dep', $filename);
+		tag('php-script-but-no-phpX-cli-dep', $filename);
 	    } elsif ($base =~ /^(wish|tclsh)/) {
 		tag("$1-script-but-no-$1-dep", $filename);
 	    } else {
@@ -373,7 +373,7 @@ while (<SCRIPTS>) {
 	$depends =~ s/\$1/$version/g;
 	unless (Dep::implies($deps{all}, Dep::parse($depends))) {
 	    if ($base =~ /^php/) {
-		tag('php-script-but-no-php-cli-dep', $filename);
+		tag('php-script-but-no-phpX-cli-dep', $filename);
 	    } elsif ($base =~ /^(python|ruby)/) {
 		tag("$1-script-but-no-$1-dep", $filename);
 	    } else {

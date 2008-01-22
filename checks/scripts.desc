@@ -78,8 +78,10 @@ Info: The package contains a control script that uses an unusual
 Tag: missing-dep-for-interpreter
 Type: error
 Info: You used an interpreter for a script that is not in an essential
- package. In most cases you will need to add a Dependency on the
- package that contains the interpreter.
+ package.  In most cases, you will need to add a Dependency on the
+ package that contains the interpreter.  If the dependency is already
+ present, please file a bug against Lintian with the details of your
+ package so that its database can be updated.
  .
  In some cases a weaker relationship, such as Suggests or Recommends, will
  be more appropriate.
@@ -121,15 +123,20 @@ Info: Packages that use mawk scripts must depend on the mawk package.
  In some cases a weaker relationship, such as Suggests or Recommends, will
  be more appropriate.
 
-Tag: php-script-but-no-php-cli-dep
+Tag: php-script-but-no-phpX-cli-dep
 Type: error
-Info: Packages with PHP scripts must depend on a php-cli package such as
+Info: Packages with PHP scripts must depend on a phpX-cli package such as
  php5-cli.  Note that a dependency on a php-cgi package (such as php5-cgi)
  is needlessly strict and forces the user to install a package that isn't
  needed.
  .
  In some cases a weaker relationship, such as Suggests or Recommends, will
  be more appropriate.
+ .
+ Lintian can only recognize phpX-cli dependencies for values of X that it
+ knows are available in the archive.  If this package depends on a php-cli
+ package that Lintian doesn't know about, please file a bug against
+ Lintian so that it can be updated.
 
 Tag: python-script-but-no-python-dep
 Type: error

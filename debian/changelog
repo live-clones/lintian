@@ -35,6 +35,12 @@ lintian (1.23.43) UNRELEASED; urgency=low
   * checks/rules.desc:
     + [RA] To fix an ignores-make-clean-error, suggest removing "-" for
       static makefiles.  Thanks, Andrea Colangelo.  (Closes: #458164)
+  * checks/scripts{.desc,}:
+    + [RA] Re-add php4-cli as a valid interpreter for those who want to
+      maintain stable compatibility.  Thanks, Thomas Goirand.
+    + [RA] Be clearer in the tag name that php-cli dependencies should be
+      versioned.  Add more explanation to the long description of several
+      interpreter tags about limitations and requested bug filings.
 
   * frontend/lintian:
     + [RA] Include info tags in the broken-down description of the
