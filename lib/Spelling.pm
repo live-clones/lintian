@@ -324,6 +324,7 @@ our %CORRECTIONS_CASE = qw(
                            debian Debian
                            english English
                            french French
+                           EMacs Emacs
                            Gconf GConf
                            gconf GConf
                            german German
@@ -365,6 +366,8 @@ our %CORRECTIONS_CASE = qw(
                            tetex teTeX
                            TK Tk
                            tk Tk
+                           Xemacs XEmacs
+                           XEMacs XEmacs
                            XFCE Xfce
                            XFce Xfce
                            xfce Xfce
