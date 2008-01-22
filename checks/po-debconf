@@ -154,4 +154,8 @@ while (defined(my $file=readdir(DEBIAN))) {
 
 1;
 
+# Local Variables:
+# indent-tabs-mode: t
+# cperl-indent-level: 8
+# End:
 # vim: syntax=perl
