@@ -9,3 +9,6 @@ fi
 if [ -x "/etc/init.d/skeleton" ] ; then
     update-rc.d skeleton defaults >/dev/null
 fi
+if [ -x "/etc/init.d/lsb-other" ] ; then
+    update-rc.d lsb-other defaults >/dev/null
+fi

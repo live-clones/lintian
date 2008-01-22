@@ -50,6 +50,7 @@ binary-indep:
 	install -m 755 init-skeleton $(tmp)/etc/init.d/skeleton
 	install -m 755 init-no-lsb $(tmp)/etc/init.d/no-lsb
 	install -m 755 init-lsb-broken $(tmp)/etc/init.d/lsb-broken
+	install -m 755 init-lsb-other $(tmp)/etc/init.d/lsb-other
 
 	install -m 755 phpfoo $(tmp)/usr/share/scripts/
 	sed 's/php$$/php5/' phpfoo > $(tmp)/usr/share/scripts/php5foo

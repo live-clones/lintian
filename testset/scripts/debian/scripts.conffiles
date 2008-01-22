@@ -1,4 +1,5 @@
 /etc/init.d/lsb-broken
+/etc/init.d/lsb-other
 /etc/init.d/no-lsb
 /etc/X11/Xsession.d/xsession-test
 /etc/csh/login.d/csh-foo

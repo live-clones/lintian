@@ -4,4 +4,6 @@ if [ "$1" = purge ] ; then
     update-rc.d lsb-broken remove >/dev/null
     update-rc.d no-lsb remove >/dev/null
     update-rc.d skeleton remove >/dev/null
+    update-rc.d lsb-other remove >/dev/null
+    update-rc.d lsb-other remove >/dev/null
 fi

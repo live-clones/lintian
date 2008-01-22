@@ -12,6 +12,10 @@ lintian (1.23.43) UNRELEASED; urgency=low
   * checks/files.desc:
     + [RA] In many of the long descriptions for symlink-related tags,
       mention that running dh_link will fix symlink problems.
+  * checks/init.d{.desc,}:
+    + [RA] Downgrade a missing LSB Short-Description keyword to info since
+      it's not required for functionality.  Thanks, Petter Reinholdtsen.
+      (Closes: #460499)
   * checks/menu-format:
     + [RA] Avoid a Perl warning for desktop entries without Exec.
 

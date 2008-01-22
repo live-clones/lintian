@@ -2,6 +2,7 @@ E: scripts source: dpatch-index-references-non-existant-patch 01_not_here_right_
 E: scripts source: package-uses-debhelper-but-lacks-build-depends
 E: scripts: calls-suidperl-directly ./usr/bin/suidperlfoo
 E: scripts: copyright-file-lacks-pointer-to-perl-license
+E: scripts: duplicate-updaterc.d-calls-in-postrm lsb-other
 E: scripts: file-in-etc-not-marked-as-conffile /etc/init.d/skeleton
 E: scripts: init.d-script-does-not-implement-required-option /etc/init.d/lsb-broken force-reload
 E: scripts: init.d-script-does-not-implement-required-option /etc/init.d/lsb-broken restart
@@ -16,6 +17,7 @@ E: scripts: shell-script-fails-syntax-check ./usr/bin/sh-broken
 E: scripts: suid-perl-script-but-no-perl-suid-dep ./usr/bin/suidperlfoo2
 E: scripts: wrong-path-for-interpreter #!/bin/ruby1.8 != /usr/bin/ruby1.8 (./usr/bin/rubyfoo)
 E: scripts: wrong-path-for-interpreter #!/usr/local/bin/lefty != /usr/bin/lefty (./usr/bin/lefty-foo)
+I: scripts: init.d-script-missing-lsb-short-description /etc/init.d/lsb-other
 I: scripts: no-md5sums-control-file
 W: scripts source: ancient-standards-version 3.2.1 (current is 3.7.3)
 W: scripts source: binary-arch-rules-but-pkg-is-arch-indep

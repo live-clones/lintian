@@ -204,7 +204,11 @@ for (keys %initd_postinst) {
 	} else {
 	    for my $keyword (keys %lsb_keywords) {
 		if ($lsb_keywords{$keyword} && !defined $lsb{$keyword}) {
-		    tag "init.d-script-missing-lsb-keyword", "/etc/init.d/$_ $keyword";
+		    if ($keyword eq 'short-description') {
+			tag "init.d-script-missing-lsb-short-description", "/etc/init.d/$_";
+		    } else {
+			tag "init.d-script-missing-lsb-keyword", "/etc/init.d/$_ $keyword";
+		    }
 		}
 	    }
 	}
