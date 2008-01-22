@@ -1363,15 +1363,17 @@ for (reverse sort @packages) {
 	    }
 	}
 
-        # Report override statistics.
-        if (not $no_override and not $show_overrides) {
-            my $stats = Tags::get_stats($file);
-            my $short = $file;
-            $short =~ s%.*/%%;
-            my $errors = $stats->{overrides}{by_severity}{4} || 0;
-            my $warnings = $stats->{overrides}{by_severity}{2} || 0;
+	# Report override statistics.
+	if (not $no_override and not $show_overrides) {
+	    my $stats = Tags::get_stats($file);
+	    my $short = $file;
+	    $short =~ s%.*/%%;
+	    my $errors = $stats->{overrides}{by_severity}{4} || 0;
+	    my $warnings = $stats->{overrides}{by_severity}{2} || 0;
+	    my $info = $stats->{overrides}{by_severity}{0} || 0;
 	    $overrides{errors} += $errors;
 	    $overrides{warnings} += $warnings;
+	    $overrides{info} += $info;
         }
     }
 
@@ -1424,24 +1426,23 @@ for (reverse sort @packages) {
 if (not $quiet and not $no_override and not $show_overrides) {
     my $errors = $overrides{errors};
     my $warnings = $overrides{warnings};
-    my $total = $errors + $warnings;
+    my $info = $overrides{info};
+    my $total = $errors + $warnings + $info;
     if ($total > 0) {
 	my $total = ($total == 1)
 	    ? "$total tag overridden"
 	    : "$total tags overridden";
+	my @output;
 	if ($errors) {
-	    $errors = ($errors == 1) ? "$errors error" : "$errors errors";
+	    push (@output, ($errors == 1) ? "$errors error" : "$errors errors");
 	}
 	if ($warnings) {
-	    $warnings = ($warnings == 1) ? "$warnings warning" : "$warnings warnings";
+	    push (@output, ($warnings == 1) ? "$warnings warning" : "$warnings warnings");
 	}
-	if ($errors and $warnings) {
-	    print "N: $total ($errors, $warnings)\n";
-	} elsif ($errors) {
-	    print "N: $total ($errors)\n";
-	} elsif ($warnings) {
-	    print "N: $total ($warnings)\n";
+	if ($info) {
+	    push (@output, "$info info");
 	}
+	print "N: $total (", join (', ', @output), ")\n";
     }
 }
 

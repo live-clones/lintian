@@ -65,6 +65,9 @@ binary-indep:
 	install -m644 foo.info $(tmp)/usr/share/info/baz.broken.gz
 	touch $(tmp)/usr/share/info/image.png
 
+# Emit an info tag to test override handling.
+	mkdir -p $(tmp)/usr/lib/perl5
+
 	install -d $(tmp)/usr/share/doc/manpages
 	cp debian/changelog $(tmp)/usr/share/doc/manpages/changelog
 	gzip -9 $(tmp)/usr/share/doc/manpages/changelog

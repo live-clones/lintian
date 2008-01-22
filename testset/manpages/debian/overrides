@@ -7,3 +7,6 @@ foo-tag-that-does-not-exist
 #and some empty lines
 but-this-is-just-broken!
 manpages:
+
+# An 'info' tag:
+package-contains-empty-perl-directory
