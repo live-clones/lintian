@@ -41,6 +41,8 @@ lintian (1.23.43) UNRELEASED; urgency=low
     + [RA] Be clearer in the tag name that php-cli dependencies should be
       versioned.  Add more explanation to the long description of several
       interpreter tags about limitations and requested bug filings.
+    + [RA] Remove tcl as a valid interpreter since tclx8.3 is obsolete.
+      (tclsh is the standard interpreter name.)
 
   * frontend/lintian:
     + [RA] Include info tags in the broken-down description of the

@@ -82,7 +82,6 @@ our %interpreters =
      sh		    => [ '/bin', '' ],
      slsh	    => [ '/usr/bin' ],
      speedy	    => [ '/usr/bin', 'speedy-cgi-perl' ],
-     tcl	    => [ '/usr/bin', 'tclx8.3' ],
      tcsh	    => [ '/usr/bin' ],
      tixwish	    => [ '/usr/bin', 'tix' ],
      trs	    => [ '/usr/bin', 'konwert' ],
