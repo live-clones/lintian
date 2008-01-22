@@ -23,6 +23,10 @@ lintian (1.23.43) UNRELEASED; urgency=low
     + [RA] Downgrade a missing LSB Short-Description keyword to info since
       it's not required for functionality.  Thanks, Petter Reinholdtsen.
       (Closes: #460499)
+  * checks/manpages:
+    + [RA] Make hyphen-used-as-minus-sign more conservative to avoid false
+      positives with non-ASCII text and catch hyphens at the start of
+      lines.  Thanks, Michal Čihař.  (Closes: #459871)
   * checks/menu-format:
     + [RA] Avoid a Perl warning for desktop entries without Exec.
   * checks/menus:

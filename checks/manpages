@@ -304,9 +304,11 @@ while (<IN>) {
 	    # Catch hyphens used as minus signs by looking for ones at the
 	    # beginning of a word, but don't generate false positives on \s-1
 	    # (small font), \*(-- (pod2man long dash), or things like \h'-1'.
-	    if ($line =~ /^[^\.].*
-			   [^\w\\]
-			   (?<! \\s | \*\( | \(- | \w\' )
+	    if ($line =~ /^(
+                            ([^\.].*)?
+                            [\s\'\"\`\(\[]
+                            (?<! \\s | \*\( | \(- | \w\' )
+                           )?
 			   (--?\w+)/ox) {
 		$hc++;
 		tag "hyphen-used-as-minus-sign", "$file:$lc" if $hc <= 10 or $ENV{'LINTIAN_DEBUG'};

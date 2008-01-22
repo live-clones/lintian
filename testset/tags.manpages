@@ -32,6 +32,11 @@ E: manpages: package-installs-file-to-usr-x11r6-bin usr/X11R6/bin/rstartd
 E: manpages: stray-directory-in-manpage-directory usr/share/man/man1/not-a-man-page.1.gz/
 E: manpages: subdir-in-usr-bin usr/bin/bin/
 E: manpages: x11-games-should-be-in-usr-games usr/X11R6/man/man6/X11R6-binary.man
+I: manpages: hyphen-used-as-minus-sign usr/share/man/man3/include.3.gz:11
+I: manpages: hyphen-used-as-minus-sign usr/share/man/man3/include.3.gz:12
+I: manpages: hyphen-used-as-minus-sign usr/share/man/man3/include.3.gz:13
+I: manpages: hyphen-used-as-minus-sign usr/share/man/man3/include.3.gz:14
+I: manpages: hyphen-used-as-minus-sign usr/share/man/man3/include.3.gz:9
 I: manpages: no-md5sums-control-file
 I: manpages: unused-override foo-tag-that-does-not-exist
 N: 2 tags overridden (1 error, 1 info)
