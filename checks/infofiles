@@ -186,7 +186,6 @@ sub check_script {
 	    }
 	    $interp = 'unknown';
 	}
-	tag "unknown-interpreter", $script, $interp;
     }
 
     my $hold;
