@@ -58,6 +58,8 @@ lintian (1.23.43) UNRELEASED; urgency=low
       Thanks, Håkon Stordahl.  (Closes: #461978)
     + [RA] Cope with a relative path to the lab.  Patch from Håkon
       Stordahl.  (Closes: #461982)
+    + [RA] Don't require *.changes files for source-only uploads to have a
+      Description field.  Thanks, Cyril Brulebois.  (Closes: #462586)
 
   * lib/Spelling.pm:
     + [RA] Add spelling corrections for PostgreSQL and OCaml and lots of

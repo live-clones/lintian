@@ -638,8 +638,9 @@ while (my $arg = shift) {
 
 	    Tags::set_pkg( $arg, $arg_name, "", "", 'binary' );
 
-	    # Description is mandated by dak
-	    if (!$data->{'description'}) {
+	    # Description is mandated by dak, but only makes sense if binary
+	    # packages are included.  Don't tag pure source uploads.
+	    if (!$data->{'description'} && $data->{'architecture'} ne 'source') {
 		tag("no-description-in-changes-file");
 	    }
 
