@@ -420,7 +420,7 @@ close IN;
 
 # Verify all the desktop files.
 for my $desktop_file (@desktop_files) {
-    VerifyDesktopFile ($desktop_file, $desktop_file);
+    VerifyDesktopFile ($desktop_file, $desktop_file, $pkg);
 }
 
 # Now all the menu files.
@@ -615,7 +615,7 @@ sub VerifyLine {
     $section =~ s:/$::;		# remove trailing slash.
 
     # Be sure the command is provided by the package.
-    my ($okay, $command) = VerifyCmd ($fullname, $linecount, $vals{'command'});
+    my ($okay, $command) = VerifyCmd ($fullname, $linecount, $vals{'command'}, $pkg);
     tag "menu-command-not-in-package", "$fullname:$linecount $command"
         unless ($okay
                 or not $command
@@ -737,7 +737,7 @@ parse_error:
 
 # Syntax-checks a .desktop file.
 sub VerifyDesktopFile {
-    my ($desktopfile, $file) = @_;
+    my ($desktopfile, $file, $pkg) = @_;
     my %vals;
     open (DESKTOP, '<', "unpacked/$file")
 	or fail("cannot open desktop file $file: $!");
@@ -810,8 +810,8 @@ sub VerifyDesktopFile {
     #
     # TODO:  Should check quoting and the check special field
     # codes in Exec for desktop files.
-    if ($file =~ m,usr/share/applications/[^/]+$, and $vals{'Exec'} and $vals{'Exec'} =~ /\S/) {
-        my ($okay, $command) = VerifyCmd ($file, undef, $vals{'Exec'});
+    if ($file =~ m,^/usr/share/applications/, and $vals{'Exec'} and $vals{'Exec'} =~ /\S/) {
+        my ($okay, $command) = VerifyCmd ($file, undef, $vals{'Exec'}, $pkg);
         tag "desktop-command-not-in-package", "$file $command"
             unless $okay or $command eq 'kcmshell';
     }
@@ -844,7 +844,7 @@ sub VerifyDesktopFile {
 # false otherwise, and whose second member is the command (minus any leading
 # su-to-root wrapper).  Shared between the desktop and menu code.
 sub VerifyCmd {
-    my ($file, $line, $exec) = @_;
+    my ($file, $line, $exec, $pkg) = @_;
     my $location = ($line ? "$file:$line" : $file);
 
     # This routine handles su wrappers.  The option parsing here is ugly and
@@ -881,10 +881,11 @@ sub VerifyCmd {
                 $cmd = $com[0];
             } else {
                 $cmd = $wrapper;
+		undef $wrapper;
             }
         }
         tag 'su-wrapper-without--c', "$location $wrapper" unless $cmd;
-	if ($wrapper !~ /su-to-root/) {
+	if ($wrapper && $wrapper !~ /su-to-root/ && $wrapper ne $pkg) {
 	    tag 'su-wrapper-not-su-to-root', "$location $wrapper";
 	}
     } else {

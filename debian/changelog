@@ -29,6 +29,10 @@ lintian (1.23.43) UNRELEASED; urgency=low
       lines.  Thanks, Michal Čihař.  (Closes: #459871)
   * checks/menu-format:
     + [RA] Avoid a Perl warning for desktop entries without Exec.
+    + [RA] Fix a bug that prevented Exec keys in desktop files from being
+      checked at all.  Thanks, Raphael Geissert.  (Closes: #462601)
+    + [RA] Exempt packages providing the su wrappers from the check for
+      using su-to-root.  Thanks, Raphael Geissert.
   * checks/menus:
     + [RA] Don't issue unknown-interpreter for maintainer scripts with
       weird interpreters.

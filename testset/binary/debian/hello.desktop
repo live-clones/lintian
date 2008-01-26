@@ -5,7 +5,7 @@
 Name=Hello
 Name[en_US]=Hello
 Comment=Say hello!
-Exec=hello
+Exec=kdesu hello
 Icon=hello
 Terminal=true
 Type=Application
