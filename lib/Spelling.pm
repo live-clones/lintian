@@ -349,6 +349,9 @@ our %CORRECTIONS_CASE = qw(
                            OCAML OCaml
                            Ocaml OCaml
                            ocaml OCaml
+                           OpenLdap OpenLDAP
+                           Openldap OpenLDAP
+                           openldap OpenLDAP
                            Postgresql PostgreSQL
                            postgresql PostgreSQL
                            python Python
