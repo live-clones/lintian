@@ -137,6 +137,14 @@ Info: This man page provokes warnings or errors from man.
  output.  See the groff_man (or groff_mdoc if using mdoc) man page for
  information on macros.
  .
+ This test uses <tt>man</tt>'s <tt>--warnings</tt> option to enable groff
+ warnings that catch common mistakes, such as putting <tt>.</tt> or
+ <tt>'</tt> characters at the start of a line when they are intended as
+ literal text rather than groff commands.  This can be fixed either by
+ reformatting the paragraph so that these characters are not at the start of
+ a line, or by adding a zero-width space (<tt>\&</tt>) immediately before
+ them.
+ .
  At worst, warning messages can be disabled with the .warn directive, see
  "Debugging" in the groff manual.
 
