@@ -57,6 +57,7 @@ my $cdbscompat = 5;
 
 map { $commands{$_}=1 } qw(dh_desktop
 			   dh_gconf
+			   dh_icons
 			   dh_installcatalogs
 			   dh_installdebconf
                            dh_installdefoma
@@ -67,11 +68,14 @@ map { $commands{$_}=1 } qw(dh_desktop
 			   dh_installmenu
 			   dh_installmime
 			   dh_installmodules
-			   dh_installtexfonts
+			   dh_installtex
+			   dh_installudev
 			   dh_installwm
 			   dh_installxfonts
 			   dh_installxmlcatalogs
 			   dh_makeshlibs
+			   dh_pycentral
+			   dh_pysupport
 			   dh_python
 			   dh_scrollkeeper
 			   dh_suidregister

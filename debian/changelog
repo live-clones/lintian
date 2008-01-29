@@ -9,6 +9,9 @@ lintian (1.23.43) UNRELEASED; urgency=low
       Raphaël Hertzog.  (Closes: #459787)
   * checks/debhelper:
     + [RA] CDBS now defaults to a debhelper compatibility level of V5.
+    + [FL] Update list of debhelper commands that modify maintainer
+       scripts. Add dh_icons, dh_installudev, dh_pysupport, dh_pycentral
+       and rename dh_installtexfonts to dh_installtex.
   * checks/fields:
     + [RA] The CDBS ant rules are in class, not rules.  Thanks, Cyril
       Brulebois.  (Closes: #460168)
