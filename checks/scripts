@@ -152,10 +152,10 @@ our %versioned_interpreters =
      scsh    => [ '/usr/bin', 'scsh',
 		  qr/^scsh-([\d.]+)$/, 'scsh-$1', qw(0.6)
 		],
-     tclsh   => [ '/usr/bin', 'tclsh',
+     tclsh   => [ '/usr/bin', 'tclsh | tcl',
 		  qr/^tclsh([\d.]+)$/, 'tcl$1', qw(8.3 8.4 8.5)
 		],
-     wish    => [ '/usr/bin', 'wish',
+     wish    => [ '/usr/bin', 'wish | tk',
 		  qr/^wish([\d.]+)$/, 'tk$1', qw(8.3 8.4 8.5)
 		],
     );

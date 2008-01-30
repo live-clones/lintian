@@ -56,6 +56,8 @@ lintian (1.23.43) UNRELEASED; urgency=low
       (tclsh is the standard interpreter name.)
     + [RA] Require versioned dependencies for OCaml scripts.  Each version
       is ABI-incompatible.  Thanks, Samuel Mimram.  (Closes: #462065)
+    + [RA] Add tcl and tk metapackages.  Thanks, Sergei Golovan.
+      (Closes: #463281)
 
   * frontend/lintian:
     + [RA] Include info tags in the broken-down description of the
