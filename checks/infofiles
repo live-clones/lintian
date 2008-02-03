@@ -171,6 +171,7 @@ sub check_script {
     open(IN, '<', "control/$script") or
 	fail("cannot open maintainer script control/$script for reading: $!");
     $interp = <IN>;
+    $interp = '' unless defined $interp;
     if ($interp =~ m,^\#\!\s*/bin/(a|ba|k|pdk)?sh,) {
 	$interp = 'sh';
     } elsif ($interp =~ m,^\#\!\s*/usr/bin/perl,) {

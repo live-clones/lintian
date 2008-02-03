@@ -84,6 +84,8 @@ binary-indep:
 	cp debian/scripts.conffiles $(tmp)/DEBIAN/conffiles
 	install -m 755 debian/postinst $(tmp)/DEBIAN/postinst
 	install -m 755 debian/postrm $(tmp)/DEBIAN/postrm
+	touch $(tmp)/DEBIAN/prerm
+	chmod 755 $(tmp)/DEBIAN/prerm
 	dpkg-gencontrol -isp
 	dpkg --build $(tmp) ..
 

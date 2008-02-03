@@ -27,6 +27,8 @@ lintian (1.23.43) UNRELEASED; urgency=low
     + [RA] Don't issue unknown-intepreter for maintainer scripts with
       weird interpreters.  checks/scripts already handles this and the tag
       wasn't defined.  Thanks, Thijs Kinkhorst.  (Closes: #460964)
+    + [RA] Fix Perl warnings given a zero-byte maintainer script.  Thanks,
+      Thijs Kinkhorst.  (Closes: #460966)
   * checks/init.d{.desc,}:
     + [RA] Downgrade a missing LSB Short-Description keyword to info since
       it's not required for functionality.  Thanks, Petter Reinholdtsen.
@@ -48,6 +50,7 @@ lintian (1.23.43) UNRELEASED; urgency=low
   * checks/menus:
     + [RA] Don't issue unknown-interpreter for maintainer scripts with
       weird interpreters.
+    + [RA] Fix Perl warnings given a zero-byte maintainer script.
   * checks/po-debconf:
     + [RA] Exclude from not-using-po-debconf template files with only the
       shared templates used for coordination with dictionaries-common.
