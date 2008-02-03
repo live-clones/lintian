@@ -516,6 +516,20 @@ Info: The package doesn't specify a build dependency on a package that is
  dependencies on every non-essential, non-build-essential package that is
  used directly during the build.
 
+Tag: missing-python-build-dependency
+Type: error
+Ref: policy 4.2
+Info: The package appears to use Python as part of its build process in
+ <tt>debian/rules</tt> but doesn't depend on Python.
+ .
+ Normally, packages that use Python as part of the build process should
+ build-depend on one of python, python-all, python-dev, or python-all-dev
+ depending on whether they support multiple versions of Python and whether
+ they're building modules or only using Python as part of the package
+ build process.  Packages that depend on a specific version of Python may
+ build-depend on the appropriate pythonX.Y or pythonX.Y-dev package
+ instead.
+
 Tag: missing-dh_python-build-dependency
 Type: error
 Ref: dh_python(1)

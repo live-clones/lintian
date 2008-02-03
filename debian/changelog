@@ -12,9 +12,14 @@ lintian (1.23.43) UNRELEASED; urgency=low
     + [FL] Update list of debhelper commands that modify maintainer
        scripts. Add dh_icons, dh_installudev, dh_pysupport, dh_pycentral
        and rename dh_installtexfonts to dh_installtex.
-  * checks/fields:
+  * checks/fields{.desc,}:
     + [RA] The CDBS ant rules are in class, not rules.  Thanks, Cyril
       Brulebois.  (Closes: #460168)
+    + [RA] Versioned Python dependencies satisfy a Python debian/rules
+      requirement.  Add a separate tag for Python build dependencies to
+      explain the dependency possibilities.  Ignore dh_python if
+      debian/pyversion or a Python-Version control field are present.
+      Thanks, Loïc Minier.  (Closes: #460625)
   * checks/files.desc:
     + [RA] In many of the long descriptions for symlink-related tags,
       mention that running dh_link will fix symlink problems.

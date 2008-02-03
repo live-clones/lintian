@@ -33,7 +33,8 @@ use Util;
 # The allowed Python dependencies currently.  This is the list of alternatives
 # that, either directly or through transitive dependencies that can be relied
 # upon, ensure /usr/bin/python will exist for the use of dh_python.
-my $python_depend = 'python | python-dev | python-all | python-all-dev';
+my $python_depend = 'python | python-dev | python-all | python-all-dev'
+    . join (' | ', map { "python$_ | python$_-dev" } qw(2.4 2.5));
 
 # Certain build tools must be listed in Build-Depends even if there are no
 # arch-specific packages because they're required in order to run the clean
@@ -51,7 +52,7 @@ my @global_clean_depends = (
 	[ quilt => '^include\s+/usr/share/cdbs/1/rules/patchsys-quilt.mk' ],
 	[ dpatch => '^include\s+/usr/share/dpatch/' ],
 	[ quilt => '^include\s+/usr/share/quilt/' ],
-	[ $python_depend => '/usr/share/cdbs/1/class/python-distutils.mk' ],
+	[ $python_depend => '/usr/share/cdbs/1/class/python-distutils.mk', 'missing-python-build-dependency' ],
 );
 
 # These are similar, but the resulting dependency is only allowed, not
@@ -88,8 +89,8 @@ my @rule_clean_depends = (
 	[ dpatch => '^\t\s*dpatch\s' ],
 	[ 'libmodule-build-perl' => '(^\t|\|\|)\s*(perl|\$\(PERL\))\s+Build\b' ],
 	[ "po-debconf" => '^\t\s*debconf-updatepo\s' ],
-	[ $python_depend => '^\t\s*python\s' ],
-	[ $python_depend => '\ssetup\.py\b' ],
+	[ $python_depend => '^\t\s*python\s', 'missing-python-build-dependency' ],
+	[ $python_depend => '\ssetup\.py\b', 'missing-python-build-dependency' ],
 	[ quilt => '^\t\s*(\S+=\S+\s+)*quilt\s' ],
 	[ yada => '^\t\s*yada\s' ],
 );
@@ -731,16 +732,31 @@ if ($type eq "source") {
 			if (Dep::implies($depend{'build-depends-indep'}, $dep)) {
 				tag "clean-should-be-satisfied-by-build-depends", $package;
 			} else {
-				tag $tag, $package if $package ne 'debhelper';
+				if ($tag eq 'missing-build-dependency') {
+					tag $tag, $package if $package ne 'debhelper';
+				} else {
+					tag $tag;
+				}
 			}
 		}
 	}
 	for my $package (keys %needed) {
 		my $dep = Dep::parse($package);
 		my $tag = $needed{$package} || 'missing-build-dependency';
+
+		# dh_python deactivates itself if the new Python build policy
+		# is enabled.
+		if ($tag eq 'missing-dh_python-build-dependency') {
+			next if -f 'debfiles/pycomat';
+			next if -f 'fields/python-version';
+		}
 		unless (Dep::implies($depend{'build-depends'}, $dep)) {
 			unless (Dep::implies($depend{'build-depends-indep'}, $dep)) {
-				tag $tag, $package;
+				if ($tag eq 'missing-build-dependency') {
+					tag $tag, $package;
+				} else {
+					tag $tag;
+				}
 			}
 		}
 	}
