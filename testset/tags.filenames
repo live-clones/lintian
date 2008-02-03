@@ -56,6 +56,7 @@ W: filenames: binary-without-manpage usr/bin/X11/testxbin
 W: filenames: binary-without-manpage usr/bin/mh/read
 W: filenames: cvsignore-file-in-package files/.cvsignore
 W: filenames: debian-news-file-not-compressed usr/share/doc/filenames/NEWS.Debian
+W: filenames: desktop-file-in-wrong-dir usr/share/gnome/apps/System/foo.desktop
 W: filenames: executable-not-elf-or-script ./usr/bin/bin/bad
 W: filenames: executable-not-elf-or-script ./usr/bin/mh/read
 W: filenames: extra-license-file usr/share/pixmaps/COPYING
@@ -85,6 +86,7 @@ W: filenames: package-contains-CVS-dir usr/lib/perl5/CVS/
 W: filenames: package-contains-arch-control-dir usr/lib/perl5/.arch-ids/
 W: filenames: package-contains-arch-control-dir usr/lib/perl5/{arch}/
 W: filenames: package-contains-bzr-control-dir usr/lib/perl5/.bzr/
+W: filenames: package-contains-devhelp-file-without-symlink usr/share/doc/filenames/bad-devhelp/c.devhelp.gz
 W: filenames: package-contains-empty-directory usr/lib/perl5/.arch-ids/
 W: filenames: package-contains-empty-directory usr/lib/perl5/.bzr/
 W: filenames: package-contains-empty-directory usr/lib/perl5/.svn/

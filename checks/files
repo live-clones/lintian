@@ -85,6 +85,8 @@ my $warned_x11_predepends = 0;
 my $warned_debug_name = 0;
 
 my %dir_counts;
+my @devhelp;
+my @devhelp_links;
 
 # Read package contents...
 open(IN, '<', "index") or fail("cannot open index file index: $!");
@@ -126,9 +128,27 @@ while (<IN>) {
 	tag "package-contains-ancient-file", "$file $date";
     }
 
+    # *.devhelp and *.devhelp2 files must be accessible from a directory in
+    # the devhelp search path: /usr/share/devhelp/books and
+    # /usr/share/gtk-doc/html.  We therefore look for any links in one of
+    # those directories to another directory.  The presence of such a link
+    # blesses any file below that other directory.
+    if ($link and $file =~ m,usr/share/(devhelp/books|gtk-doc/html)/,) {
+	my $blessed = $link;
+	if ($blessed !~ m,^/,) {
+	    my $base = $file;
+	    $base =~ s,/+[^/]+$,,;
+	    while ($blessed =~ s,^\.\./,,) {
+		$base =~ s,/+[^/]+$,,;
+	    }
+	    $blessed = "$base/$blessed";
+	}
+	push (@devhelp_links, $blessed);
+    }
+
     #count directory contents:
     $dir_counts{$file} ||= 0 if ($perm =~ m/^d/);
-    $dir_counts{$1} = ($dir_counts{$1} || 0) + 1 if ($file =~ m{^(.+/)[^/]+/?$});
+    $dir_counts{$1} = ($dir_counts{$1} || 0) + 1 if ($file =~ m,^(.+/)[^/]+/?$,);
 
     # ---------------- /etc
     if ($file =~ m,^etc/,) {
@@ -384,17 +404,16 @@ while (<IN>) {
 	    # at some point and are not worth moving.
 	}
 	# ---------------- .desktop files
-	# People have placed them everywhere, but nowadays the consensus 
-	# seems to be to stick to the fd.org standard drafts, which says
-	# that .desktop files intended for menus should be placed in 
-	# $XDG_DATA_DIRS/applications.
-	# The default for $XDG_DATA_DIRS is /usr/local/share/:/usr/share/,
-	# according to the basedir-spec on fd.org. As distributor, we 
-	# should only allow /usr/share.
+	# People have placed them everywhere, but nowadays the consensus seems
+	# to be to stick to the fd.org standard drafts, which says that
+	# .desktop files intended for menus should be placed in
+	# $XDG_DATA_DIRS/applications.  The default for $XDG_DATA_DIRS is
+	# /usr/local/share/:/usr/share/, according to the basedir-spec on
+	# fd.org. As distributor, we should only allow /usr/share.
 	#
-	# Other applications also use .desktop files (yay!), so we need to
-	# exclude them.
-	elsif ($file =~ m,/usr/share/(?:gnome/apps|applink)/[^/]+\.desktop$,) {
+	# KDE hasn't moved its files from /usr/share/applnk, so don't warn
+	# about this yet until KDE adopts the new location.
+	elsif ($file =~ m,^usr/share/gnome/apps/.*\.desktop$,) {
 	    tag "desktop-file-in-wrong-dir", $file;
 	}
 
@@ -545,6 +564,15 @@ while (<IN>) {
 	and not $file =~ m,/under\S+License\.docbook$,
 	and not defined $link) {
 	tag "extra-license-file", "$file";
+    }
+
+    # ---------------- .devhelp2? files
+    if ($file =~ m,\.devhelp2?(\.gz)?$,
+	# If the file is located in a directory not searched by devhelp, we
+	# check later to see if it's in a symlinked directory.
+	and not $file =~ m,^usr/share/(devhelp/books|gtk-doc/html)/,
+	and not $file =~ m,^usr/share/doc/[^/]+/examples/,) {
+	push (@devhelp, $file);
     }
 
     # ---------------- weird file names
@@ -835,15 +863,15 @@ close(IN);
 
 #check for sect: games but nothing in /usr/games. Check for any binary to
 #save ourselves from game-data false positives:
-if ($pkg_section =~ m{games$} && 
-    (($dir_counts{"usr/games/"} || 0) == 0) &&
-    (($dir_counts{"bin/"} || 0) + ($dir_counts{"usr/bin/"} || 0)) > 0) {
+if ($pkg_section =~ m,games$,
+    and (($dir_counts{"usr/games/"} || 0) == 0)
+    and (($dir_counts{"bin/"} || 0) + ($dir_counts{"usr/bin/"} || 0)) > 0) {
     tag "package-section-games-but-contains-no-game";
 }
 
-if ($pkg_section =~ m{games$} && 
-    (($dir_counts{"usr/games/"} || 0)> 0) &&
-    (($dir_counts{"bin/"} || 0) + ($dir_counts{"usr/bin/"} || 0)) > 0) {
+if ($pkg_section =~ m,games$,
+    and (($dir_counts{"usr/games/"} || 0)> 0)
+    and (($dir_counts{"bin/"} || 0) + ($dir_counts{"usr/bin/"} || 0)) > 0) {
     tag "package-section-games-but-has-usr-bin";
 }
 
@@ -871,6 +899,19 @@ if (!$has_binary_perl_file && @nonbinary_perl_files_in_lib) {
     foreach my $file (@nonbinary_perl_files_in_lib) {
 	tag "package-installs-nonbinary-perl-in-usr-lib-perl5", "$file";
     }
+}
+
+# Check for .devhelp2? files that aren't symlinked into paths searched by
+# devhelp.
+for my $file (@devhelp) {
+    my $found = 0;
+    for my $link (@devhelp_links) {
+	if ($file =~ m,^\Q$link,) {
+	    $found = 1;
+	    last;
+	}
+    }
+    tag 'package-contains-devhelp-file-without-symlink', $file unless $found;
 }
 
 }

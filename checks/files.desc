@@ -668,11 +668,10 @@ Info: package contains a README.(platform) file that contains instructions
 
 Tag: desktop-file-in-wrong-dir
 Type: warning
-Info: package contains a .desktop file in an obsolete directory.
- According to the menu-spec draft on freedesktop.org, those .desktop
- files that are intended to create a menu should be placed in 
- <tt>/usr/share/applications/</tt>, and no longer in
- <tt>/usr/share/gnome/apps</tt> or <tt>/usr/share/applnk</tt>
+Info: The package contains a .desktop file in an obsolete directory.
+ According to the menu-spec draft on freedesktop.org, those .desktop files
+ that are intended to create a menu should be placed in
+ <tt>/usr/share/applications</tt>, not <tt>/usr/share/gnome/apps</tt>.
 
 Tag: file-in-usr-lib-cgi-bin
 Type: warning
@@ -736,6 +735,18 @@ Ref: policy 11.11
 Info: This package is marked as part of the section games, but contains
  exectuables in <tt>/bin</tt> or <tt>/usr/bin/</tt>.  This can be intentional,
  but is usually a mistake.
+
+Tag: package-contains-devhelp-file-without-symlink
+Type: warning
+Info: This package contains a *.devhelp or *.devhelp2 file which is not in
+ the devhelp search path (<tt>/usr/share/devhelp/books</tt> and
+ <tt>/usr/share/gtk-doc/html</tt>) and is apparently not in a directory
+ linked into the devhelp search path.  This will prevent devhelp from
+ finding the documentation.
+ .
+ If the devhelp documentation is installed in a path outside the devhelp
+ search path (such as <tt>/usr/share/doc</tt>), create a symlink in
+ <tt>/usr/share/gtk-doc/html</tt> pointing to the documentation directory.
 
 Tag: debug-package-should-be-named-dbg
 Type: warning
