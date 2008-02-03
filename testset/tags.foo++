@@ -4,9 +4,7 @@ E: foo++ source: uploader-address-is-on-localhost Jeroen van Wolffelaar<jeroen@l
 E: foo++ source: uploader-address-malformed I am afraid of spam and think this helps <no_spam_please AT debian.org>
 E: foo++ source: uploader-address-malformed Marc 'HE' Brockschmidt <he@unknown>
 E: foo++ source: uploader-address-malformed Yama@gotchi
-E: foo++ source: uploader-address-missing
 E: foo++ source: uploader-address-missing Josip
-E: foo++ source: uploader-name-missing
 E: foo++ source: uploader-name-missing Yama@gotchi
 E: foo++ source: wrong-debian-qa-address-set-as-maintainer Lintian Maintainer <debian-qa@lists.debian.org>
 E: foo++-helper: wrong-debian-qa-address-set-as-maintainer Lintian Maintainer <debian-qa@lists.debian.org>
