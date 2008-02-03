@@ -43,6 +43,10 @@ lintian (1.23.43) UNRELEASED; urgency=low
   * checks/menus:
     + [RA] Don't issue unknown-interpreter for maintainer scripts with
       weird interpreters.
+  * checks/po-debconf:
+    + [RA] Exclude from not-using-po-debconf template files with only the
+      shared templates used for coordination with dictionaries-common.
+      Thanks, Thomas Bushnell BSG.  (Closes: #460731)
   * checks/rules.desc:
     + [RA] To fix an ignores-make-clean-error, suggest removing "-" for
       static makefiles.  Thanks, Andrea Colangelo.  (Closes: #458164)

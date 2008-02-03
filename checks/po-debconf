@@ -28,7 +28,9 @@ sub run {
 my $pkg = shift;
 my $type = shift;
 
-# First, check wether this package seems to use debconf but not po-debconf
+# First, check wether this package seems to use debconf but not po-debconf.
+# Read the templates file and look at the template names it provides, since
+# some shared templates aren't translated.
 opendir(DEB, 'debfiles')
 	or fail("Can't open debfiles directory.");
 my $has_template = my $has_depends = my $has_config = 0;
@@ -36,7 +38,6 @@ my @lang_templates;
 for my $file (readdir(DEB)) {
 	next if -d "debfiles/$file";
 	if ($file =~ m/^(.+\.)?templates(\..+)?$/) {
-	        $has_template = 1;
 		if ($file =~ m/templates\.\w\w(_\w\w)?$/) {
 			push (@lang_templates, $file);
 		} else {
@@ -44,7 +45,13 @@ for my $file (readdir(DEB)) {
 				or fail("Can't open debfiles/$file file.");
 			while (<PO>) {
 				tag "translated-default-field", "$file: $."
-					if (m/^_Default(Choice)?: [^[]*$/);
+					if (m/^_Default(Choice)?: [^\[]*$/);
+				if (/^Template: (\S+)/i) {
+					my $template = $1;
+					next if $template =~ m,^shared/packages-(wordlist|ispell)$,;
+					next if $template =~ m,/languages$,;
+					$has_template = 1;
+				}
 			}
 			close PO;
 		}
