@@ -42,6 +42,7 @@ binary-indep:
 	install -m 755 perl-bizarre-1 $(tmp)/usr/bin/
 	install -m 750 perl-bizarre-2 $(tmp)/usr/bin/
 	install -m 754 perl-bizarre-3 $(tmp)/usr/bin/
+	install -m 705 guile-bizarre $(tmp)/usr/bin/
 
 # First one should produce a warning; second one shouldn't.
 	install -m 755 gccbug.dpatch $(tmp)/usr/share/scripts/

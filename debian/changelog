@@ -58,6 +58,8 @@ lintian (1.23.43) UNRELEASED; urgency=low
       is ABI-incompatible.  Thanks, Samuel Mimram.  (Closes: #462065)
     + [RA] Add tcl and tk metapackages.  Thanks, Sergei Golovan.
       (Closes: #463281)
+    + [RA] Catch exec wrappers that use $* instead of $@ (not that this is
+      a good idea).  Thanks, Adam D. Barratt.  (Closes: #463476)
 
   * frontend/lintian:
     + [RA] Include info tags in the broken-down description of the
