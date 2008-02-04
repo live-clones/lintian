@@ -22,8 +22,7 @@ binary-arch: build
 	strip $(tmp)/usr/bin/hello-static
 	install -m 755 hello-static $(tmp)/usr/bin/hello.static
 	strip --remove-section=.comment --remove-section=.note $(tmp)/usr/bin/hello.static
-	install -m 755 hello-static $(tmp)/usr/bin/static-hello
-	strip --remove-section=.comment --remove-section=.note $(tmp)/usr/bin/static-hello
+	ln $(tmp)/usr/bin/hello.static $(tmp)/usr/bin/static-hello
 	install -m 755 hello-static $(tmp)/boot/hello
 	strip --remove-section=.comment --remove-section=.note $(tmp)/boot/hello/hello-static
 	install -d $(tmp)/usr/share/doc/binary
