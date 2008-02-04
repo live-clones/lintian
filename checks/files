@@ -619,7 +619,7 @@ while (<IN>) {
 	}
 
 	# ---------------- executables with language extensions
-	if ($file =~ m,^(usr/)?(s?bin|games)/[^/]+\.(pl|sh|py)$,) {
+	if ($file =~ m,^(usr/)?(s?bin|games)/[^/]+\.(pl|sh|py|php|rb|tcl|bsh|csh|tcl)$,) {
 	    tag "script-with-language-extension", "$file";
 	}
 

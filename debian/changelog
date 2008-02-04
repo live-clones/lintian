@@ -40,6 +40,8 @@ lintian (1.23.43) UNRELEASED; urgency=low
       Patch from Chris Lamb.  (Closes: #458742)
     + [RA] Warn of .gitignore files installed by the package.  Patch from
       Chris Lamb.  (Closes: #459502)
+    + [RA] Warn of more language extensions on files in the user's path.
+      Patch from Chris Lamb.  (Closes: #459514)
   * checks/infofiles:
     + [RA] Don't issue unknown-intepreter for maintainer scripts with
       weird interpreters.  checks/scripts already handles this and the tag
