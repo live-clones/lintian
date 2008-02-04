@@ -20,6 +20,7 @@
 
 package Lintian::manpages;
 use strict;
+use Dep;
 use Tags;
 use Util;
 
