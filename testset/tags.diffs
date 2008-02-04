@@ -1,5 +1,6 @@
 E: diffs source: debian-files-list-in-source
 E: diffs: arch-independent-package-contains-binary-or-object ./usr/bin/diffs
+E: diffs: missing-dependency-on-libc needed by ./usr/bin/diffs and 1 others
 E: diffs: no-copyright-file
 E: diffs: unstripped-binary-or-object ./usr/bin/diffs
 I: diffs source: diff-contains-editor-backup-file binary.c~

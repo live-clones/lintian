@@ -1,9 +1,13 @@
 lintian (1.23.43) UNRELEASED; urgency=low
 
-  * checks/binaries:
+  * checks/binaries{.desc,}:
     + [RA] Don't require objdump's errors on files with bad dynamic tables
       to start at the beginning of the line.  Patch from Chris Lamb.
       (Closes: #459509)
+    + [RA] Warn for packages that have binaries requiring libc but which
+      don't depend on libc.  Patch from Niko Tyni.  (Closes: #461350)
+    + [RA] Remove check for libc5 binaries.  libc5 is long-gone.
+    + [RA] Remove various dead tag descriptions we no longer issue.
   * checks/changelog-file:
     + [RA] Decode the changelog entry from UTF-8 before doing length
       checks.  Thanks, Cyril Brulebois.  (Closes: #461822)

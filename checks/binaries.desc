@@ -42,15 +42,6 @@ Type: warning
 Info: The package installs a binary which is not dynamically linked
  against libc.
 
-Tag: libc5-binary
-Type: warning
-Info: The package contains a binary or shared library which is linked
- against libc.so.5.
- .
- This could be a bug since all programs in Debian should use
- libc6. However, the packages in the oldlibs section might contain
- libc5 libs/binaries intentionally.
-
 Tag: binary-or-shlib-defines-rpath
 Type: warning
 Ref: http://wiki.debian.org/RpathIssue
@@ -101,17 +92,6 @@ Info: The listed shared library doesn't include information about which
  .
  If you have questions about this, please contact &debdev;.
 
-Tag: compiled-with-bad-libc
-Type: error
-Info: This file defines or requires `__register_frame_info' as a dynamic
- symbol, and is not linked with libstdc++.  This means that it was
- compiled with a buggy version of libc.  It should be recompiled with
- the fixed versions, libc6 2.0.7u-6 or higher.  (which may not yet be
- available; see debian-devel).
- .
- This was a problem in the second half of 1998.  If you get this tag
- much later than that, it may be a different problem, file a bug.
-
 Tag: arch-dependent-file-in-usr-share
 Type: error
 Info: This package installs an ELF binary in the <tt>/usr/share</tt>
@@ -130,12 +110,6 @@ Info: While profiling is useful for testing and debugging purposes, enabling
 Tag: binary-file-compressed-with-upx
 Type: error
 Info: Debian does not allow binaries to be compressed by UPX.
-
-Tag: binary-or-shlib-with-obsolete-c++-abi
-Type: warning
-Info: There is no CXXABI_* mark in the objdump output on this file,
- and it is linked against a libstdc++, meaning it's likely linking to
- an obsolete version of the C++ library.
 
 Tag: several-sonames-in-same-package
 Type: info
@@ -165,3 +139,17 @@ Info: This appears to be an ELF file but objdump -T doesn't recognize it
  install binutils-multiarch on the system running lintian so that
  non-native binaries are handled correctly, or it may be a
  misidentification of a file as ELF that actually isn't.
+
+Tag: missing-dependency-on-libc
+Type: error
+Ref: policy 8.6
+Info: The listed file appears to be linked against the C library, but the
+ package doesn't depend on the C library package.  Normally this indicates
+ that ${shlibs:Depends} was omitted from the Depends line for this package
+ in <tt>debian/control</tt>.
+ .
+ All shared libraries and compiled binaries must be run through
+ dpkg-shlibdeps to find out any libraries they are linked against (often
+ via the dh_shlibdeps debhelper command).  The package containing these
+ files must then depend on ${shlibs:Depends} in <tt>debian/control</tt> to
+ get the proper package dependencies for those libraries.

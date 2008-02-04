@@ -30,6 +30,9 @@ my $type = shift;
 
 my $arch;
 my $dynsyms = 0;
+my $needs_libc = '';
+my $needs_libc_file;
+my $needs_libc_count = 0;
 my $needs_depends_line = 0;
 
 my %COMMENT;
@@ -69,11 +72,6 @@ while (<IN>) {
 	# might be printed.  The symbol name should be the last word.
 	if (m/^[0-9a-fA-F]+.{6}\w\w?\s+(\S+)\s+[0-9a-zA-Z]+\s+(\S+)\s+(\S+)$/){
 	    my ($foo, $sec, $sym) = ($1, $2, $3);
-	#    # Add more symbols here when needed.
-	#    # We don't store them all, because the tables can be pretty large.
-	#    if ($sym =~ m/^(__register_frame_info)$/) {
-	#    	$DYNSYM{$file}{$sym} = $sec;
-	#    }
 	    if ($arch ne 'hppa') {
 		if ($foo eq '.text' and $sec eq 'Base' and
 		    $sym eq '__gmon_start__') {
@@ -227,7 +225,6 @@ while (<IN>) {
     next if $type eq 'udeb';
 
     # statically linked?
-    my %libc5_binary;
     my @needed;
     if (!exists($NEEDED{$file}) && !defined($NEEDED{$file})) {
 	if ($info =~ m/shared object/o) {
@@ -246,7 +243,6 @@ while (<IN>) {
 	    next if ($file =~ m%^./usr/lib/debug/%);
 	    next if ($file =~ /(\.|-)static$/);
 	    next if ($pkg =~ /-static$/);
-
 	    tag "statically-linked-binary", "$file";
 	}
     } else {
@@ -255,31 +251,13 @@ while (<IN>) {
 	$needs_depends_line = 1;
 	@needed = @{$NEEDED{$file}};
 	for $lib (@needed) {
-	    # linked against libc5?
-	    if ($lib =~ m/^libc\.so\.5/o) {
-		# yes.
-		# libc5-compat ?
-		if (($file =~ m/libc5-compat/) or
-		    ($file =~ m/i486-linuxlibc1/)) {
-		    # ok, ignore it
-		} else {
-		    tag "libc5-binary", "$file" unless $libc5_binary{$file}++;
-		}
-	    }
-
-	    # C++ ABI check
-# removed for not being reliable enough
-#	    if ($lib =~ /^libstdc\+\+/) {
-#		unless ($CXXABI{$file}) {
-#		    tag "binary-or-shlib-with-obsolete-c++-abi", "$file";
-#		}
-#	    }
-
-	    if ($lib =~ m/^libc\.so/o) {
+	    if ($lib =~ /^libc\.so\.(\d+.*)/) {
+		$needs_libc = "libc$1";
+		$needs_libc_file = $file unless $needs_libc_file;
+		$needs_libc_count++;
 		$no_libc = 0;
 	    }
 	}
-
 	if ($no_libc and not $file =~ m,/libc\b,) {
 	    if ($info =~ m/shared object/) {
 		tag "library-not-linked-against-libc", "$file";
@@ -292,9 +270,28 @@ while (<IN>) {
 close(IN);
 
 if ($needs_depends_line) {
-    if (not -e "fields/depends" and not -e "fields/pre-depends") {
-	tag "missing-depends-line", ""
-	    unless $pkg eq 'ldso';
+    my $depends = '';
+    if (-f 'fields/pre-depends') {
+	$depends = slurp_entire_file('fields/pre-depends');
+    }
+    if (-f 'fields/depends') {
+	$depends .= ', ' if $depends;
+	$depends .= slurp_entire_file('fields/depends');
+    }
+    $depends =~ s/\n/ /g;
+    if ($depends && $needs_libc && $pkg !~ /^libc[\d.]+(-|\z)/) {
+        # Match libcXX or libcXX-*, but not libc3p0.
+        my $re = qr/(?:^|,)\s*\Q$needs_libc\E\b/o;
+        if ($depends !~ /$re/) {
+            my $others = '';
+            if ($needs_libc_count > 0) {
+                $others = " and $needs_libc_count others";
+            }
+            tag "missing-dependency-on-libc",
+		"needed by $needs_libc_file$others";
+        }
+    } elsif (!$depends) {
+	tag "missing-depends-line";
     }
 }
 
