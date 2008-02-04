@@ -11,6 +11,10 @@ binary-indep:
 	install -d $(tmp)/etc
 	install -m 644 proper $(tmp)/etc
 	install -m 644 improper $(tmp)/etc
+	mkdir $(tmp)/etc/cron.daily
+	touch $(tmp)/etc/cron.daily/cronfile-normal
+	touch $(tmp)/etc/cron.daily/.cronfile-begins-with-fullstop
+	touch $(tmp)/etc/cron.daily/cronfile-contains.fullstop
 	ln $(tmp)/etc/improper $(tmp)/etc/improper-link
 	install -d $(tmp)/usr/share/doc/etcfiles
 	install -d $(tmp)/var/lib
@@ -21,6 +25,12 @@ binary-indep:
 	install -d $(tmp)/DEBIAN
 	install -m 644 debian/conffiles $(tmp)/DEBIAN
 
+	echo '68b329da9893e34099c7d8ad5cb9c940  ./etc/cron.daily/cronfile-normal' \
+	    > debian/tmp/DEBIAN/md5sums
+	echo '68b329da9893e34099c7d8ad5cb9c940  ./etc/cron.daily/.cronfile-begins-with-fullstop' \
+	    > debian/tmp/DEBIAN/md5sums
+	echo '68b329da9893e34099c7d8ad5cb9c940  ./etc/cron.daily/cronfile-contains.fullstop' \
+	    > debian/tmp/DEBIAN/md5sums
 	echo 'ab371382468880299e5ebd05921764ce  ./etc/proper' \
 	    > debian/tmp/DEBIAN/md5sums
 	echo 'ab371382468880299e5ebd05921764ce  etc/improper' \

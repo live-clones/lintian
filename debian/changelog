@@ -29,6 +29,9 @@ lintian (1.23.43) UNRELEASED; urgency=low
       not KDE appears to actively use it still.
     + [RA] Check for *.devhelp{2,} files not linked into devhelp's search
       path.  Based on a patch by Bradley Smith.  (Closes: #273309)
+    + [RA] Warn about /etc/cron.{hourly,daily,weekly,monthly} scripts that
+      won't be executed by run-parts because of periods in the name.
+      Patch from Chris Lamb.  (Closes: #458742)
   * checks/infofiles:
     + [RA] Don't issue unknown-intepreter for maintainer scripts with
       weird interpreters.  checks/scripts already handles this and the tag

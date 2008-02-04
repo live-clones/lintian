@@ -346,6 +346,11 @@ Info: The symbolic link has needless segments like '..' and '.' in the middle.
  will fix this problem for you.
 Ref: policy 10.5
 
+Tag: run-parts-cron-filename-contains-full-stop
+Type: warning
+Info: The script in /etc/cron.<time-interval> will not be executed by
+ run-parts(8) because the filename contains a "." (full stop).
+
 Tag: bad-permissions-for-etc-cron.d-script
 Type: error
 Info: Files in <tt>/etc/cron.d</tt> are configuration files for cron and not

@@ -155,6 +155,10 @@ while (<IN>) {
 	if ($file =~ m,^etc/nntpserver, ) {
 	    tag "package-uses-obsolete-file", "$file";
 	}
+	# ---------------- /etc/cron.daily, etc.
+	elsif ($file =~ m,^etc/cron\.(daily|hourly|monthly|weekly)/[^\.].*\., ) {
+	    tag "run-parts-cron-filename-contains-full-stop", "$file";
+	}
 	# ---------------- /etc/cron.d
 	elsif ($file =~ m,^etc/cron\.d/\S, and $operm != 0644) {
 	    tag "bad-permissions-for-etc-cron.d-script", sprintf("$file %04o != 0644",$operm);
