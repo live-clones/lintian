@@ -348,7 +348,7 @@ Ref: policy 10.5
 
 Tag: run-parts-cron-filename-contains-full-stop
 Type: warning
-Info: The script in /etc/cron.<time-interval> will not be executed by
+Info: The script in /etc/cron.&lt;time-interval&gt; will not be executed by
  run-parts(8) because the filename contains a "." (full stop).
 
 Tag: bad-permissions-for-etc-cron.d-script
