@@ -727,15 +727,6 @@ Type: warning
 Info: This package installs an empty directory.  This might be intentional
  but it's normally a mistake.  If it is intentional, add a lintian override.
 
-Tag: package-contains-empty-perl-directory
-Type: info
-Info: This package installs an empty /usr/lib/perl5 or /usr/share/perl5
- directory.  This is an artifact of ExtUtils::MakeMaker and isn't harmful,
- but it's messy.  It's preferrable to remove the directory the package
- doesn't use (/usr/share/perl5 for binary Perl modules and /usr/lib/perl5
- for pure Perl modules) in <tt>debian/rules</tt> after running make
- install.
-
 Tag: package-section-games-but-contains-no-game
 Type: error
 Ref: policy 11.11

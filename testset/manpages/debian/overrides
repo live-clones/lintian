@@ -9,4 +9,4 @@ but-this-is-just-broken!
 manpages:
 
 # An 'info' tag:
-package-contains-empty-perl-directory
+no-md5sums-control-file

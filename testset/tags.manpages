@@ -37,7 +37,6 @@ I: manpages: hyphen-used-as-minus-sign usr/share/man/man3/include.3.gz:12
 I: manpages: hyphen-used-as-minus-sign usr/share/man/man3/include.3.gz:13
 I: manpages: hyphen-used-as-minus-sign usr/share/man/man3/include.3.gz:14
 I: manpages: hyphen-used-as-minus-sign usr/share/man/man3/include.3.gz:9
-I: manpages: no-md5sums-control-file
 I: manpages: unused-override foo-tag-that-does-not-exist
 N: 2 tags overridden (1 error, 1 info)
 W: manpages source: ancient-standards-version 3.2.1 (current is 3.7.3)

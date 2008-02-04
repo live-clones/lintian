@@ -42,6 +42,9 @@ lintian (1.23.43) UNRELEASED; urgency=low
       Chris Lamb.  (Closes: #459502)
     + [RA] Warn of more language extensions on files in the user's path.
       Patch from Chris Lamb.  (Closes: #459514)
+    + [RA] Remove the tag for empty Perl directories.  The underlying
+      issue is fixed in Perl 5.10; there's no need to add code to
+      debian/rules when 5.10 is landing soon.  (Closes: #463138)
   * checks/infofiles:
     + [RA] Don't issue unknown-intepreter for maintainer scripts with
       weird interpreters.  checks/scripts already handles this and the tag
