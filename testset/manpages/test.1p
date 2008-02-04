@@ -7,3 +7,6 @@
 \&\fBTEST\fR tests lintian.
 .PP
 Use more up-level tools like human brains to understand lintian.
+Here's a bad undefined macro.
+Here's a serious syntax error.
+.dep

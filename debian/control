@@ -2,7 +2,11 @@ Source: lintian
 Section: devel
 Priority: optional
 Maintainer: Debian Lintian Maintainers <lintian-maint@debian.org>
-Uploaders: Josip Rodin <joy-packages@debian.org>, Jeroen van Wolffelaar <jeroen@wolffelaar.nl>, Frank Lichtenheld <djpig@debian.org>, Marc 'HE' Brockschmidt <he@debian.org>, Colin Watson <cjwatson@debian.org>, Russ Allbery <rra@debian.org>
+Uploaders: Josip Rodin <joy-packages@debian.org>,
+ Jeroen van Wolffelaar <jeroen@wolffelaar.nl>,
+ Frank Lichtenheld <djpig@debian.org>,
+ Marc 'HE' Brockschmidt <he@debian.org>,
+ Colin Watson <cjwatson@debian.org>, Russ Allbery <rra@debian.org>
 Build-Depends: debhelper (>= 4)
 Build-Depends-Indep: debiandoc-sgml, sed (>= 4.1-4)
 Standards-Version: 3.7.3
@@ -12,9 +16,9 @@ Vcs-Browser: http://svn.wolffelaar.nl/wsvn/lintian/
 Package: lintian
 Architecture: all
 Depends: perl, libdigest-md5-perl | perl (>> 5.8), dpkg-dev (>= 1.13.17),
- file, binutils, diffstat (>= 1.27-1), man-db (>= 2.5.1-1), gettext (>= 0.16),
+ file, binutils, diffstat (>= 1.27-1), man-db (>= 2.3.20-1), gettext (>= 0.16),
  intltool-debian, libparse-debianchangelog-perl (>= 0.6), liburi-perl
-Suggests: binutils-multiarch, libtext-template-perl
+Suggests: binutils-multiarch, libtext-template-perl, man-db (>= 2.5.1-1)
 Description: Debian package checker
  Lintian dissects Debian packages and reports bugs and policy
  violations. It contains automated checks for many aspects of Debian

@@ -65,8 +65,8 @@ lintian (1.23.43) UNRELEASED; urgency=low
       lines.  Thanks, Michal Čihař.  (Closes: #459871)
     + [CW] Use man's new --warnings option to catch use of undefined
       strings, macros, or diversions in manual pages, which usually indicate
-      mistaken use of "." or "'" at the start of a line. Requires man-db >=
-      2.5.1-1.
+      mistaken use of "." or "'" at the start of a line. This check is only
+      enabled if man 2.5.1 or later is installed.
   * checks/menu-format:
     + [RA] Avoid a Perl warning for desktop entries without Exec.
     + [RA] Fix a bug that prevented Exec keys in desktop files from being
@@ -98,6 +98,10 @@ lintian (1.23.43) UNRELEASED; urgency=low
       (Closes: #463281)
     + [RA] Catch exec wrappers that use $* instead of $@ (not that this is
       a good idea).  Thanks, Adam D. Barratt.  (Closes: #463476)
+
+  * debian/control:
+    + [RA] Suggest man-db >= 2.5.1 for better warning support.
+    + [RA] Wrap Uploaders.
 
   * frontend/lintian:
     + [RA] Include info tags in the broken-down description of the

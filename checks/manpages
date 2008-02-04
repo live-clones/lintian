@@ -23,6 +23,10 @@ use strict;
 use Tags;
 use Util;
 
+# Set to true if the man program supports --warnings based on its version
+# number.  This is probed if this variable is undefined and set to 0 or 1.
+our $MAN_WARNINGS;
+
 sub run {
 
 my $pkg = shift;
@@ -247,16 +251,29 @@ while (<IN>) {
 	    close LEXGROG;
 	    tag "manpage-has-bad-whatis-entry", "$file" if $? != 0;
 	}
+
+	# If we've not probed yet, determine if man supports --warnings.
+	# This can be removed once man 2.5.1 makes it to testing.
+	unless (defined $MAN_WARNINGS) {
+	    my $version = `man -V 2>&1`;
+	    if ($? == 0 && $version =~ / (\d+\.[\d.]+)(,|\Z)/) {
+		$MAN_WARNINGS = Dep::versions_gte($1, '2.5.1');
+	    } else {
+		$MAN_WARNINGS = 0;
+	    }
+	}
+
 	# If it's not a .so link, run it through "man" to check for errors.
 	# If it is in a directory with the standard man layout, cd to the
 	# parent directory before running man so that .so directives are
 	# processed properly.  (Yes, there are man pages that include other
 	# pages with .so but aren't simple links; rbash, for instance.)
 	my $cmd;
+	my $warnings = $MAN_WARNINGS ? ' --warnings' : '';
 	if ($file =~ m,^(.*)/(man\d/.*)$,) {
-	    $cmd = "cd unpacked/\Q$1\E && man --warnings -l \Q$2\E";
+	    $cmd = "cd unpacked/\Q$1\E && man$warnings -l \Q$2\E";
 	} else {
-	    $cmd = "man --warnings -l unpacked/\Q$file\E";
+	    $cmd = "man$warnings -l unpacked/\Q$file\E";
 	}
 	my $pid = open MANERRS, '-|';
 	if (not defined $pid) {
@@ -280,6 +297,8 @@ while (<IN>) {
 		next if /warning \[.*\]: cannot adjust line/;
 		next if /warning \[.*\]: can\'t break line/;
 	    }
+	    # ignore a common undefined macro from pod2man
+	    next if /warning: \`IX\' not defined/;
 	    chomp;
 	    s/^[^:]+://o;
 	    tag "manpage-has-errors-from-man", "$file", "$_";
