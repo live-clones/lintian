@@ -107,7 +107,9 @@ while (<IN>) {
             tag "apparently-corrupted-elf-binary", "$file";
 	} elsif (m/^objdump: \.(.*?): Packed with UPX$/) {
 	    tag "binary-file-compressed-with-upx", "$file";
-	} elsif (m/^objdump: \.(.*?): Invalid operation$/) {
+	} elsif (m/objdump: \.(.*?): Invalid operation$/) {
+	    # Don't anchor this regex since it can be interspersed with other
+	    # output and hence not on the beginning of a line.
 	    tag "binary-with-bad-dynamic-table", "$file" unless $file =~ m%^\./usr/lib/debug/%;
 	} elsif (m/CXXABI/) {
 	    $CXXABI{$file} = 1;

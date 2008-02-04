@@ -1,5 +1,9 @@
 lintian (1.23.43) UNRELEASED; urgency=low
 
+  * checks/binaries:
+    + [RA] Don't require objdump's errors on files with bad dynamic tables
+      to start at the beginning of the line.  Patch from Chris Lamb.
+      (Closes: #459509)
   * checks/changelog-file:
     + [RA] Decode the changelog entry from UTF-8 before doing length
       checks.  Thanks, Cyril Brulebois.  (Closes: #461822)
