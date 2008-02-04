@@ -620,6 +620,14 @@ Info: The python-minimal package (and versioned variants thereof) exists
  becomes Essential, there is no need to depend on it, and until then,
  packages that require Python must depend on python.
 
+Tag: dbg-package-missing-depends
+Type: warning
+Info: This package has a name of the form of "X-dbg", indicating it
+ contains detached debugging symbols for the package X.  If so, it should
+ depend on the corresponding package, generally with (= ${binary:Version})
+ since the debugging symbols are only useful with the binaries created by
+ the same build.
+
 Tag: conflicts-with-dependency
 Type: error
 Ref: 7.3
@@ -662,8 +670,9 @@ Info: You use the Bugs field though the field value is the default
 Tag: build-depends-on-build-essential
 Type: error
 Ref: policy 7.6
-Info: You depends on the build-essential package, which is only a meta-package
- depending on build tools that have to be installed in all build environments.
+Info: You depends on the build-essential package, which is only a
+ meta-package depending on build tools that have to be installed in all
+ build environments.
 
 Tag: malformed-python-version
 Type: error
