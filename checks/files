@@ -600,6 +600,11 @@ while (<IN>) {
 	    tag "cvsignore-file-in-package", "$file";
 	}
 
+	# ---------------- .gitignore files
+	if ($file =~ m/\.gitignore$/) {
+	    tag "gitignore-file-in-package", "$file";
+	}
+
 	# ---------------- arch-inventory files
 	if ($file =~ m/\.arch-inventory$/) {
 	    tag "arch-inventory-file-in-package", "$file";

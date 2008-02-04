@@ -604,13 +604,22 @@ Info: Package contains a .xvpics directory. It was most likely installed by
 
 Tag: cvsignore-file-in-package
 Type: warning
-Info: Package contains a '.cvsignore' file.  It may have been installed by
- accident.
+Info: Package contains a .cvsignore file.  This file is used by the CVS
+ revision control system to specify untracked files that it should ignore.
+ This file is generally useless in an installed package and was probably
+ installed by accident.
+
+Tag: gitignore-file-in-package
+Type: error
+Info: Package contains a .gitignore file. This file is used by the Git
+ revision control system to specify untracked files that it should ignore.
+ This file is generally useless in an installed package and was probably
+ installed by accident.
 
 Tag: arch-inventory-file-in-package
 Type: warning
-Info: Package contains a '.arch-inventory' file.  It may have been installed by
- accident.
+Info: Package contains a '.arch-inventory' file.  It may have been
+ installed by accident.
 
 Tag: svn-commit-file-in-package
 Type: warning
