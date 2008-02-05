@@ -82,8 +82,16 @@ map { $commands{$_}=1 } qw(dh_desktop
 			   dh_usrlocal
 			   );
 
+# The version at which debhelper commands were introduced.  Packages that use
+# one of these commands must have a dependency on that version of debhelper or
+# newer.
+my %versions
+    = (dh_icons           => '5.0.51~',
+       dh_installifupdown => '5.0.44~');
+
 open(RULES, '<', "debfiles/rules") or fail("cannot read debian/rules: $!");
 my $dhcompatvalue;
+my @versioncheck;
 while (<RULES>) {
     if (m/^\s+(dh_\w+)/) {
         my $dhcommand = $1;
@@ -101,6 +109,9 @@ while (<RULES>) {
 	if ($commands{$dhcommand} and not m/\s+\-n\s+/) {
 	    $needtomodifyscripts = 1;
 	}
+        if ($versions{$dhcommand}) {
+            push (@versioncheck, $dhcommand);
+        }
 	$seencommand = 1;
 	$needbuilddepends = 1;
     } elsif (m,^include\s+/usr/share/cdbs/1/rules/debhelper.mk,) {
@@ -224,10 +235,14 @@ if ($usescdbs and not $needversiondepends) {
 $needversiondepends ||= 1;
 if ($needversiondepends < 4) {
     tag "package-uses-deprecated-debhelper-compat-version", $needversiondepends;
-}
-
-if ($needversiondepends > 4 and ! Dep::implies($depends, Dep::parse("debhelper (>= $needversiondepends)"))) {
+} elsif ($needversiondepends > 4 and ! Dep::implies($depends, Dep::parse("debhelper (>= $needversiondepends)"))) {
     tag "package-lacks-versioned-build-depends-on-debhelper", $needversiondepends;
+} elsif (@versioncheck) {
+    for my $program (@versioncheck) {
+        my $required = $versions{$program};
+        tag 'debhelper-script-needs-versioned-build-depends', $program, "(>= $required)"
+            unless Dep::implies($depends, Dep::parse("debhelper (>= $required)"));
+    }
 }
 
 }

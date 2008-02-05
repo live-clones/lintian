@@ -20,6 +20,8 @@ lintian (1.23.43) UNRELEASED; urgency=low
     + [FL] Update list of debhelper commands that modify maintainer
        scripts. Add dh_icons, dh_installudev, dh_pysupport, dh_pycentral
        and rename dh_installtexfonts to dh_installtex.
+    + [RA] Add checks for versioned debhelper dependencies for dh_icons
+      and dh_installifupdown.  Thanks, Evgeni Golov.  (Closes: #463028)
   * checks/fields{.desc,}:
     + [RA] The CDBS ant rules are in class, not rules.  Thanks, Cyril
       Brulebois.  (Closes: #460168)

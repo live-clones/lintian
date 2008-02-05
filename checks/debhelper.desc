@@ -104,3 +104,11 @@ Info: This package uses dh_python but apparently does not tell it to use
  the current Python policy by putting 2 in <tt>debian/pycompat</tt>.  This
  may mean that the package has not been converted to the current Python
  policy, in which case it probably should be.
+
+Tag: debhelper-script-needs-versioned-build-depends
+Type: warning
+Info: The given debhelper script was introduced in a later version of
+ debhelper than the package Build-Depends on.  The package Build-Depends
+ should be updated to require that version of debhelper.  Giving the
+ version followed by <tt>~</tt> is recommended so that backports will
+ satisfy the dependency.

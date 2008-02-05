@@ -47,6 +47,9 @@ binary-arch: build-stamp install
 	cp $(CURDIR)/debian/libhello0-dbg/usr/lib/debug/usr/lib/libhello.so.0.0 \
 	    $(CURDIR)/debian/libhello0-dbg/usr/lib/libhello.so.dbg
 
+	# Requires a versioned dependency.
+	dh_icons
+
 	dh_link
 	dh_compress
 	dh_fixperms
