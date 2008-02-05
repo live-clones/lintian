@@ -32,6 +32,7 @@ lintian (1.23.43) UNRELEASED; urgency=low
       Thanks, Loïc Minier.  (Closes: #460625)
     + [RA] Check that -dbg packages depend on their base package.  Patch
       from Chris Lamb.  (Closes: #458785)
+    + [RA] Check the value of Dm-Upload-Allowed.
   * checks/files{.desc,}:
     + [RA] In many of the long descriptions for symlink-related tags,
       mention that running dh_link will fix symlink problems.

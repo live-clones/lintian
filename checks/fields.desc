@@ -703,6 +703,14 @@ Info: This package appears to be an architecture-indepedent Python module
  versions, add a Python-Version control field (as described in 2.3 of the
  Python policy) to resolve this warning.
 
+Tag: malformed-dm-upload-allowed
+Type: error
+Ref: http://www.debian.org/vote/2007/vote_003
+Info: The Dm-Upload-Allowed field in this package is set to something
+ other than "yes".  The only standardized value for this field in the
+ Debian GR is "yes" and other values (including capitalization varients)
+ may not work as expected.
+
 Tag: doc-package-should-be-section-doc
 Type: warning
 Info: This package has a name suggesting that it contains only

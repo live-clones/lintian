@@ -6,6 +6,7 @@ Uploaders: Marc 'HE' Brockschmidt <he@unknown>, Jeroen van Wolffelaar<jeroen@loc
  Frank <djpig@debian.org>, Yama@gotchi, Josip,
  I am afraid of spam and think this helps <no_spam_please AT debian.org>
 Standards-Version: 3.1.1
+XS-Dm-Upload-Allowed: no
 
 Package: foo++
 Architecture: all

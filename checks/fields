@@ -827,7 +827,8 @@ if (open(FH, '<', "fields/bugs")) {
 
 	unfold('bugs', \$bugs);
 
-	tag "redundant-bugs-field", "" if $bugs =~ m{^\s*debbugs://bugs.debian.org/?\s*$}i;
+	tag "redundant-bugs-field"
+	    if $bugs =~ m,^\s*debbugs://bugs.debian.org/?\s*$,i;
 }
 
 #----- Python-Version
@@ -862,6 +863,19 @@ if (open(FH, '<', "fields/python-version")) {
 			}
 		}
 		tag "malformed-python-version", "$pyversion" unless $okay;
+	}
+}
+
+#----- Dm-Upload-Allowed
+
+if (open(FH, '<', 'fields/dm-upload-allowed')) {
+	my $dmupload = <FH>;
+	close FH;
+
+	unfold('dm-upload-allowed', \$dmupload);
+
+	unless ($dmupload =~ /^\s*yes\s*$/) {
+		tag "malformed-dm-upload-allowed", "$dmupload";
 	}
 }
 
