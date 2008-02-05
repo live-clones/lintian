@@ -227,3 +227,10 @@ Info: The given line of the latest changelog entry is over 80 columns.
  Such changelog entries may look poor in terminal windows and mail
  messages and be annoying to read.  Please wrap changelog entries at 80
  columns or less where possible.
+
+Tag: changelog-news-debian-mismatch
+Type: warning
+Info: The latest entries in the Debian changelog file and NEWS.Debian file
+ are for the same version but the given field doesn't match.  The
+ changelog information is canonical and the NEWS.Debian information is
+ ignored, but it may be confusing to users to have them be different.

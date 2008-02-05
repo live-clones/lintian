@@ -156,7 +156,9 @@ if ($#doc_files < 0) {
 
 # Check a NEWS.Debian file if we have one.  We should additionally check here
 # that the entries don't begin with an asterisk, but that hasn't been done
-# yet.
+# yet.  Save the version, distribution, and urgency for later checks against
+# the changelog file.
+my $news;
 if (-f 'NEWS.Debian') {
     my $line = file_is_encoded_in_non_utf8('NEWS.Debian', $type, $pkg);
     if ($line) {
@@ -171,11 +173,11 @@ if (-f 'NEWS.Debian') {
 
     # Some checks on the most recent entry.
     if ($changes->data) {
-        my ($entry) = $changes->data;
-        if ($entry->Distribution =~ /unreleased/i) {
-            tag "debian-news-entry-has-strange-distribution", $entry->Distribution;
+        ($news) = $changes->data;
+        if ($news->Distribution =~ /unreleased/i) {
+            tag "debian-news-entry-has-strange-distribution", $news->Distribution;
         }
-        spelling_check('spelling-error-in-news-debian', $entry->Changes);
+        spelling_check('spelling-error-in-news-debian', $news->Changes);
     }
 }
 
@@ -305,10 +307,8 @@ if (@entries) {
                     or $entries[0]->Changes =~ /backport/i;
 	}
     }
-}
 
-# Some checks should only be done against the most recent changelog entry.
-if (@entries) {
+    # Some checks should only be done against the most recent changelog entry.
     my $entry = $entries[0];
     if (@entries == 1 and $entry->Version =~ /-1$/) {
         tag 'new-package-should-close-itp-bug'
@@ -317,6 +317,16 @@ if (@entries) {
     my $changes = $entry->Changes;
     while ($changes =~ /(closes\s*(?:bug)?\#?\s?\d{6,})[^\w]/ig) {
 	tag "possible-missing-colon-in-closes", "$1" if $1;
+    }
+
+    # Compare against NEWS.Debian if available.
+    if ($news and $entry->Version eq $news->Version) {
+        for my $field (qw/Distribution Urgency/) {
+            if ($entry->$field ne $news->$field) {
+                tag 'changelog-news-debian-mismatch', lc ($field),
+                    $entry->$field . ' != ' . $news->$field;
+            }
+        }
     }
 
     # We have to decode into UTF-8 to get the right length for the length

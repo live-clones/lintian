@@ -11,6 +11,9 @@ lintian (1.23.43) UNRELEASED; urgency=low
   * checks/changelog-file:
     + [RA] Decode the changelog entry from UTF-8 before doing length
       checks.  Thanks, Cyril Brulebois.  (Closes: #461822)
+    + [RA] Check for mismatches between the latest changelog and
+      NEWS.Debian entries if they're for the same package version.
+      Thanks, Cyril Brulebois.  (Closes: #461823)
   * checks/common_data.pm:
     + [RA] Add Bugs, Origin, and Breaks to known binary and udeb fields
       and Bugs to known source fields, matching current dpkg.  Thanks,

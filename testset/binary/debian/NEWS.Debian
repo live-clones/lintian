@@ -1,4 +1,4 @@
-binary (4-1.1) UNRELEASED; urgency=low
+binary (4-1.1) UNRELEASED; urgency=high
 
   This is a Debian NEWS entry that isn't encoded properly in UTF-8: ü.
   It also has a usefull speling error.

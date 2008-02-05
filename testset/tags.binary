@@ -64,6 +64,8 @@ W: binary: binary-without-manpage usr/bin/hello.static
 W: binary: binary-without-manpage usr/bin/iminusrbin
 W: binary: binary-without-manpage usr/bin/static-hello
 W: binary: changelog-file-not-compressed changelog
+W: binary: changelog-news-debian-mismatch distribution unstable != UNRELEASED
+W: binary: changelog-news-debian-mismatch urgency low != high
 W: binary: debian-copyright-file-uses-obsolete-national-encoding at line 13
 W: binary: debian-news-entry-has-strange-distribution UNRELEASED
 W: binary: description-contains-homepage
