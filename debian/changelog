@@ -80,7 +80,7 @@ lintian (1.23.43) UNRELEASED; urgency=low
     + [CW] Use man's new --warnings option to catch use of undefined
       strings, macros, or diversions in manual pages, which usually indicate
       mistaken use of "." or "'" at the start of a line. This check is only
-      enabled if man 2.5.1 or later is installed.
+      enabled if man 2.5.1 or later is installed.  (Closes: #377392)
   * checks/menu-format:
     + [RA] Avoid a Perl warning for desktop entries without Exec.
     + [RA] Fix a bug that prevented Exec keys in desktop files from being
