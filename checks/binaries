@@ -34,6 +34,7 @@ my $needs_libc = '';
 my $needs_libc_file;
 my $needs_libc_count = 0;
 my $needs_depends_line = 0;
+my $has_perl_lib = 0;
 
 my %COMMENT;
 my %NOTE;
@@ -48,10 +49,6 @@ my %KLIBC;
 if (open(IN, '<', "fields/architecture")) {
     chop($arch = <IN>);
     close(IN);
-} else {
-    # Don't display this tag, since `fields' check already checks for this!
-    # -> no-architecture-field
-    #tag "package-does-not-specify-architecture", "";
 }
 
 my $file;
@@ -148,7 +145,7 @@ $base_pkg =~ s/^lib64/lib/o;
 my $match_found = 0;
 foreach my $expected_name (@sonames) {
     $expected_name =~ s/([0-9])\.so\./$1-/;
-    $expected_name =~ s/\.so(\.|$)//o;
+    $expected_name =~ s/\.so(\.|\z)//o;
     $expected_name =~ s/_/-/o;
 
     if ((lc($expected_name) eq $pkg)
@@ -224,6 +221,11 @@ while (<IN>) {
     next unless ($info =~ m/executable/) or ($info =~ m/shared object/);
     next if $type eq 'udeb';
 
+    # Perl library?
+    if ($file =~ m,/usr/lib/perl5/.*\.so$,) {
+	$has_perl_lib = 1;
+    }
+
     # statically linked?
     my @needed;
     if (!exists($NEEDED{$file}) && !defined($NEEDED{$file})) {
@@ -269,16 +271,19 @@ while (<IN>) {
 }
 close(IN);
 
+# Find the package dependencies, which is used by various checks.
+my $depends = '';
+if (-f 'fields/pre-depends') {
+    $depends = slurp_entire_file('fields/pre-depends');
+}
+if (-f 'fields/depends') {
+    $depends .= ', ' if $depends;
+    $depends .= slurp_entire_file('fields/depends');
+}
+$depends =~ s/\n/ /g;
+
+# Check for a libc dependency.
 if ($needs_depends_line) {
-    my $depends = '';
-    if (-f 'fields/pre-depends') {
-	$depends = slurp_entire_file('fields/pre-depends');
-    }
-    if (-f 'fields/depends') {
-	$depends .= ', ' if $depends;
-	$depends .= slurp_entire_file('fields/depends');
-    }
-    $depends =~ s/\n/ /g;
     if ($depends && $needs_libc && $pkg !~ /^libc[\d.]+(-|\z)/) {
         # Match libcXX or libcXX-*, but not libc3p0.
         my $re = qr/(?:^|,)\s*\Q$needs_libc\E\b/o;
@@ -292,6 +297,14 @@ if ($needs_depends_line) {
         }
     } elsif (!$depends) {
 	tag "missing-depends-line";
+    }
+}
+
+# Check for a Perl dependency.
+if ($has_perl_lib) {
+    my $re = qr/(?:^|,)\s*perlapi-[\d.]+(?:\s*\[[^\]]+\])(?:\s*,|\z)/;
+    unless ($depends =~ /$re/) {
+	tag 'missing-dependency-on-perlapi';
     }
 }
 

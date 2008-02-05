@@ -8,6 +8,7 @@ E: libbaz1: file-directly-in-usr-share-doc usr/share/doc/README.Debian
 E: libbaz1: ldconfig-symlink-missing-for-shlib usr/lib/libbaz2.so.1.0 usr/lib/libfoo2.so.1.0.3b libbaz2.so.1.0
 E: libbaz1: ldconfig-symlink-missing-for-shlib usr/lib/libbaz3.so.1 usr/lib/libbaz3.so.1.0.3b libbaz3.so.1
 E: libbaz1: maintainer-shell-script-fails-syntax-check postinst
+E: libbaz1: missing-dependency-on-perlapi
 E: libbaz1: postinst-must-call-ldconfig usr/lib/libfoo2.so.1.0.3b
 E: libbaz1: sharedobject-in-library-directory-not-actually-a-shlib usr/lib/libbaz1.so.1.0.3b
 E: libbaz1: shlib-missing-in-control-file libbaz2 1.0 for usr/lib/libfoo2.so.1.0.3b
@@ -21,6 +22,7 @@ E: libbaz2-dbg: debian-changelog-file-missing
 E: libbaz2-dev: debian-changelog-file-missing-or-wrong-name
 E: libbaz2: debian-changelog-file-missing-or-wrong-name
 I: libbaz source: package-lacks-versioned-build-depends-on-debhelper 5
+I: libbaz1: binary-has-unneeded-section ./usr/lib/perl5/auto/Foo/Foo.so .comment
 I: libbaz1: no-md5sums-control-file
 I: libbaz1: several-sonames-in-same-package libbaz2.so.1.0 libbaz3.so.1
 I: libbaz2-dbg: no-md5sums-control-file

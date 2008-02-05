@@ -153,3 +153,14 @@ Info: The listed file appears to be linked against the C library, but the
  via the dh_shlibdeps debhelper command).  The package containing these
  files must then depend on ${shlibs:Depends} in <tt>debian/control</tt> to
  get the proper package dependencies for those libraries.
+
+Tag: missing-dependency-on-perlapi
+Type: error
+Ref: Perl policy 4.4.2
+Info: This package includes a *.so file in <tt>/usr/lib/perl5</tt>,
+ normally indicating that it includes a binary Perl module.  Binary Perl
+ modules must depend on perlapi-$Config{version} (from the Config module).
+ If the package is using debhelper, this problem is usually due to a
+ missing dh_perl call in <tt>debian/rules</tt> or a missing
+ ${perl:Depends} substitution variable in the Depends line in
+ <tt>debian/control</tt>.

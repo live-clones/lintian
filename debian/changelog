@@ -8,6 +8,8 @@ lintian (1.23.43) UNRELEASED; urgency=low
       don't depend on libc.  Patch from Niko Tyni.  (Closes: #461350)
     + [RA] Remove check for libc5 binaries.  libc5 is long-gone.
     + [RA] Remove various dead tag descriptions we no longer issue.
+    + [RA] Warn on packages that provide Perl modules but don't depend on
+      perlapi-*.  Thanks, Niko Tyni.  (Closes: #463142)
   * checks/changelog-file:
     + [RA] Decode the changelog entry from UTF-8 before doing length
       checks.  Thanks, Cyril Brulebois.  (Closes: #461822)
