@@ -1,7 +1,7 @@
 Source: cdbs-test
 Section: devel
 Priority: optional
-Maintainer: Russ Allbery <rra@debian.org>
+Maintainer: Lintian Maintainers <debian-lint-maint@lists.debian.org>
 Build-Depends: cdbs, yada, patchutils (>= 0.2.25)
 Build-Depends-Indep: debhelper, cdbs
 Standards-Version: 3.7.3

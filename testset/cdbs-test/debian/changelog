@@ -5,7 +5,7 @@ cdbs-test (1-1~bpo40+1) unstable; urgency=low
     - New.
   * Not really too long: “héhé”“héhé”“héhé”“héhé”“héhé”“héhé”
   
- -- Russ Allbery <rra@debian.org>  Wed, 05 Dec 2007 17:23:59 -0800
+ -- Lintian Maintainers <debian-lint-maint@lists.debian.org>  Wed, 05 Dec 2007 17:23:59 -0800
 
 cdbs-test (1-1) unstable; urgency=low
 

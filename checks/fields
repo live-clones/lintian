@@ -242,6 +242,11 @@ for my $f (qw(maintainer uploaders)) {
 			check_maint($_, "uploader") for (split /\s*,\s*/, $maintainer);
 		} else {
 			check_maint($maintainer, $f);
+			if ($type eq 'source'
+			    && $maintainer =~ /\@lists(\.alioth)?\.debian\.org\b/
+			    && ! -f 'fields/uploaders') {
+				tag 'no-human-maintainers';
+			}
 		}
 	}
 }

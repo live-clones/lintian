@@ -192,6 +192,12 @@ Info: Orphaned packages should have "Debian QA Group
  &lt;packages@qa.debian.org&gt;" in the maintainer field.
 Ref: devref 5.9.4
 
+Tag: no-human-maintainers
+Type: warning
+Info: The Maintainer address for this package is a mailing list and there
+ are no Uploaders listed.  Team-maintained packages should list the human
+ maintainers in the Uploaders field.
+
 Tag: no-source-field
 Type: error
 Info: The package does not have a `Source:' field in its control file.
