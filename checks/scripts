@@ -530,6 +530,10 @@ while (<SCRIPTS>) {
 		  '\$\{\w+\:\d+(?::\d+)?\}',   # ${foo:3[:1]}
 		  '\$\{\w+(/.+?){1,2}\}',      # ${parm/?/pat[/str]}
 		  '\$\{\#?\w+\[[0-9\*\@]+\]\}',# bash arrays, ${name[0|*|@]}
+		  '\$\{!\w+[\@*]\}',	       # ${!prefix[*|@]}
+		  '\$\{!\w+\}',		       # ${!name}
+		  '(\$\(|\`)\s*\<\s*\S.+(\)|\`)', # $(\< foo) should be $(cat foo)
+		  '\$RANDOM\b',		       # $RANDOM
 		);
 		my @bashism_regexs = (
 		  'function \w+\(\s*\)',       # function is useless
@@ -544,6 +548,13 @@ while (<SCRIPTS>) {
 		  '(?:^|\s+)trap\s+["\']?.*["\']?\s+.*[1-9]', # trap with signal numbers
 		  '\&>',		       # cshism
 		  '\[\[(?!:)',		       # alternative test command
+		  '(?:^|\s+)select\s+\w+',     # 'select' is not POSIX
+		  '\$\(\([A-Za-z]',	       # cnt=$((cnt + 1)) does not work in dash
+		  '(?:^|\s+)echo\s+-e',        # echo -e
+		  '(?:^|\s+)exec\s+-[acl]',    # exec -c/-l/-a name
+		  '(?:^|\s+)let\s',	       # let ...
+		  '(?<!\$)\(\(',	       # '((' should be '$(('
+		  '(\[|test)\s+-a',	       # test with unary -a (should be -e)
 		);
 
 		# since this test is ugly, I have to do it by itself

@@ -111,3 +111,19 @@ EOF
 # Recognize single quotes even if they start at the beginning of a line.
 echo not a bashism \
 '/{ptex,tex}/{amstex,plain,generic,}'
+
+# More bashisms.
+echo -e 'foo\n'
+echo "${!foo}"
+cat $(\< file)
+select foo in a b ; do echo $foo ; done
+cnt=$((cnt + 1))
+if false ; then
+    exec -l /bin/sh
+    exec -c /bin/sh
+    exec -a foo /bin/sh
+fi
+let cnt++
+if test -a /etc/default ; then
+    echo "$RANDOM|stuff"
+fi
