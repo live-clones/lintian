@@ -47,13 +47,22 @@ binary-arch: build-stamp install
 	cp $(CURDIR)/debian/libhello0-dbg/usr/lib/debug/usr/lib/libhello.so.0.0 \
 	    $(CURDIR)/debian/libhello0-dbg/usr/lib/libhello.so.dbg
 
+	# Put a full copy of the library in libhello0-dbg in /usr/lib/debug,
+	# which is okay.
+	install -m 644 libhello.so.0.0 \
+	    $(CURDIR)/debian/libhello0-dbg/usr/lib/debug/libhello.so.0.0
+
+	# Also put it in /usr/lib/debug/lib, which isn't.
+	install -D -m 644 libhello.so.0.0 \
+	    $(CURDIR)/debian/libhello0-dbg/usr/lib/debug/lib/libhello.so.0.0
+
 	# Requires a versioned dependency.
 	dh_icons
 
 	dh_link
 	dh_compress
 	dh_fixperms
-	dh_makeshlibs
+	dh_makeshlibs -X debug
 	dh_installdeb
 	dh_shlibdeps
 	dh_gencontrol

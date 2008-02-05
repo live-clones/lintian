@@ -10,6 +10,10 @@ lintian (1.23.43) UNRELEASED; urgency=low
     + [RA] Remove various dead tag descriptions we no longer issue.
     + [RA] Warn on packages that provide Perl modules but don't depend on
       perlapi-*.  Thanks, Niko Tyni.  (Closes: #463142)
+    + [RA] Check files in /usr/lib/debug directories mirroring the main
+      file system to verify they are detached debugging symbols and not
+      full libraries or executables.  Thanks, Neil Williams and Niko
+      Tyni.  (Closes: #462456)
   * checks/changelog-file:
     + [RA] Decode the changelog entry from UTF-8 before doing length
       checks.  Thanks, Cyril Brulebois.  (Closes: #461822)

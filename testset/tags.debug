@@ -3,6 +3,7 @@ E: debug source: version-substvar-for-external-package libhello0-dbg -> libhello
 E: hello: statically-linked-binary ./usr/bin/hello.dbg
 E: hello: unstripped-binary-or-object ./usr/bin/hello.dbg
 E: libhello0-dbg: binary-with-bad-dynamic-table ./usr/lib/libhello.so.dbg
+E: libhello0-dbg: missing-dependency-on-libc needed by ./usr/lib/debug/lib/libhello.so.0.0 and 1 others
 E: libhello0-dbg: sharedobject-in-library-directory-not-actually-a-shlib usr/lib/libhello.so.dbg
 I: debug source: non-standard-architecture kfreebsd-i386
 I: debug source: non-standard-architecture ppc64
@@ -13,4 +14,5 @@ W: debug source: out-of-date-standards-version 3.7.0 (current is 3.7.3)
 W: hello: binary-without-manpage usr/bin/hello
 W: hello: binary-without-manpage usr/bin/hello.dbg
 W: libhello0-dbg: dbg-package-missing-depends libhello0
+W: libhello0-dbg: debug-file-should-use-detached-symbols ./usr/lib/debug/lib/libhello.so.0.0
 W: libhello0-dbg: shared-lib-without-dependency-information ./usr/lib/libhello.so.dbg
