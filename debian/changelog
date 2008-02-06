@@ -1,4 +1,6 @@
-lintian (1.23.43) UNRELEASED; urgency=low
+lintian (1.23.43) unstable; urgency=low
+
+  The "37 bug fixes is enough for one release" release.
 
   * checks/binaries{.desc,}:
     + [RA] Don't require objdump's errors on files with bad dynamic tables
@@ -44,6 +46,9 @@ lintian (1.23.43) UNRELEASED; urgency=low
     + [RA] Check the value of Dm-Upload-Allowed.
     + [RA] Warn about packages with a list as the maintainer and no
       Uploaders.  Thanks, Sune Vuorela.  (Closes: #462635)
+    + [RA] Remove the package-has-duplicate-relation test.  It gets
+      relations with different version strictness in different levels of
+      dependency wrong and what it gets right dpkg-gencontrol strips out.
   * checks/files{.desc,}:
     + [RA] In many of the long descriptions for symlink-related tags,
       mention that running dh_link will fix symlink problems.
@@ -134,7 +139,7 @@ lintian (1.23.43) UNRELEASED; urgency=low
     + [RA] Add spelling corrections for PostgreSQL and OCaml and lots of
       new capitalization corrections.  (Closes: #460347)
 
- -- Russ Allbery <rra@debian.org>  Mon, 21 Jan 2008 17:36:01 -0800
+ -- Russ Allbery <rra@debian.org>  Tue, 05 Feb 2008 21:07:30 -0800
 
 lintian (1.23.42) unstable; urgency=low
 

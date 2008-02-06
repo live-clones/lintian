@@ -459,12 +459,6 @@ if (($type eq "binary") || ($type eq 'udeb')) {
 				for my $part_d (@alternatives) {
 					my ($d_pkg, $d_version, $d_arch, $rest, $part_d_orig) = @$part_d;
 
-					#Save the type of relationship (<<, <=, ...) and the field name:
-					if (&$is_dep_field($field) && scalar @alternatives == 1) {
-						$deps{$d_pkg} = [] if ! $deps{$d_pkg};
-						push @{$deps{$d_pkg}}, [$field, $d_version];
-					}
-
 					# We have found a Depends: on our non-dbg equivalent.
 					if ($debugpackage && $field eq "depends" && $d_pkg =~ /^\Q$debugbase/) {
 						$debugfound = 1;
@@ -544,45 +538,12 @@ if (($type eq "binary") || ($type eq 'udeb')) {
 			}
 		}
 	}
-
-	for my $d_pkg_name (keys %deps) {
-		my $d_pkg = $deps{$d_pkg_name};
-		if (scalar @$d_pkg > 1) {
-			#Allow things like Depends: package1 (>= 1.3), package1 (<= 5.2)
-			unless ((scalar @$d_pkg == 2) &&
-			        (($d_pkg->[0]->[1]->[0] =~ />=|>>|>/ && $d_pkg->[1]->[1]->[0] =~ /<=|<<|</) or
-			         ($d_pkg->[0]->[1]->[0] =~ /<=|<<|</ && $d_pkg->[1]->[1]->[0] =~ />=|>>|>/))) {
-				my @relations;
-				my $extra = '';
-			 	if ($d_pkg->[0][0] eq $d_pkg->[1][0]) {
-					$extra .= "$d_pkg->[0][0]: ";
-					for (@$d_pkg) {
-						if ($_->[1][0]) {
-							push @relations, "$d_pkg_name (".$_->[1][0]." ".$_->[1][1].")";
-						} else {
-							push @relations, "$d_pkg_name";
-						}
-					}
-				} else {
-					for (@$d_pkg) {
-						if ($_->[1][0]) {
-							push @relations, "$_->[0]: $d_pkg_name (".$_->[1][0]." ".$_->[1][1].")";
-						} else {
-							push @relations, "$_->[0]: $d_pkg_name";
-						}
-					}
-				}
-				$extra .= join( ", ", @relations );
-				tag "package-has-a-duplicate-relation", $extra;
-			}
-		}
-	}
 }
 
 #---- Package relations (source package)
 
 if ($type eq "source") {
-	
+
 	#Get number of arch-indep packages:
 	my $arch_indep_packages = 0;
 	my $arch_dep_packages = 0;
@@ -590,10 +551,10 @@ if ($type eq "source") {
 		fail("Can't open debfiles/control: $!");
 	} else {
 		local $/ = "\n"; #Read this linewise
-		while (<CONTROL>) {	
-			if (/^Architecture: all/) {			
+		while (<CONTROL>) {
+			if (/^Architecture: all/) {
 				$arch_indep_packages++;
-			} elsif (/^Architecture:/) {		
+			} elsif (/^Architecture:/) {
 				$arch_dep_packages++;
 			}
 		}
