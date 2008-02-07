@@ -1,3 +1,13 @@
+lintian (1.23.44) UNRELEASED; urgency=low
+
+  * lib/Spelling.pm:
+    + [RA] Don't strip hyphens before checking spelling.  Move all D-Bus
+      corrections to the picky list since the correction is too confusing
+      even if accurate without capitalization.  Thanks, Nelson A. de
+      Oliveira.  (Closes: #464461)
+
+ -- Russ Allbery <rra@debian.org>  Wed, 06 Feb 2008 18:34:36 -0800
+
 lintian (1.23.43) unstable; urgency=low
 
   The "37 bug fixes is enough for one release" release.

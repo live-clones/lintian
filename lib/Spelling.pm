@@ -106,7 +106,6 @@ our %CORRECTIONS = qw(
                       convertor converter
                       convinient convenient
                       cryptocraphic cryptographic
-                      dbus D-Bus
                       deamon daemon
                       debain Debian
                       debians Debian\'s
@@ -321,6 +320,7 @@ $CORRECTIONS{'alot'} = 'a lot';
 our %CORRECTIONS_CASE = qw(
                            D-BUS D-Bus
                            d-bus D-Bus
+                           dbus D-Bus
                            debian Debian
                            english English
                            french French
@@ -408,7 +408,7 @@ sub spelling_check {
         #
         # FIXME: Should do something that's aware of Unicode character
         # classes rather than only handling ISO 8859-15 characters.
-        $word =~ s/(^\')|[^\w\xc0-\xd6\xd8-\xf6\xf8-\xff\']+|(\'\z)//g;
+        $word =~ s/(^\')|[^\w\xc0-\xd6\xd8-\xf6\xf8-\xff\'-]+|(\'\z)//g;
         if (exists $CORRECTIONS{$word}) {
             _tag($tag, $filename, $word, $CORRECTIONS{$word});
         }
