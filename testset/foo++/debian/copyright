@@ -3,3 +3,5 @@ package is under the GPL and trigger the OpenSSL warning.
 
 However, there is also a reference to /usr/share/common-licenses/LGPL, so
 who knows what bits actually depend on libssl.
+
+Copr. 2007 Somebody.

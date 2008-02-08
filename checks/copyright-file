@@ -33,6 +33,7 @@ my $type = shift;
 my $ppkg = quotemeta($pkg);
 
 my $found = 0;
+my $linked = 0;
 
 use lib "$ENV{'LINTIAN_ROOT'}/checks/";
 use common_data;
@@ -72,6 +73,7 @@ while (<IN>) {
 	my ($link) = ($1);
 
     	$found = 1;
+	$linked = 1;
 
     	# check if this symlink references a directory elsewhere
     	if ($link =~ m,^(\.\.)?/,) {
@@ -234,6 +236,10 @@ if (m,Upstream Author\(s\),) {
 
 if (m{\# Please also look if there are files or directories which have a\n\# different copyright/license attached and list them here\.}) {
     tag "copyright-contains-dh_make-todo-boilerplate", "";
+}
+
+if ($found && !$linked && !/(Copyright|Copr\.|\302\251)(.*|[:\s]+)\b\d{4}\b|\bpublic\s+domain\b/) {
+    tag 'copyright-without-copyright-notice';
 }
 
 spelling_check('spelling-error-in-copyright', $_);

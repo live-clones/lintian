@@ -8,6 +8,7 @@ W: dh-test source: dh_testversion-is-deprecated
 W: dh-test source: native-package-with-dash-version
 W: dh-test source: out-of-date-standards-version 3.6.2 (current is 3.7.3)
 W: dh-test source: package-uses-deprecated-debhelper-compat-version 3
+W: dh-test: copyright-without-copyright-notice
 W: dh-test: new-package-should-close-itp-bug
 W: dh-test: readme-debian-contains-debmake-template
 W: dh-test: wrong-bug-number-in-closes l3:#nnnn

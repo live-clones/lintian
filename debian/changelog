@@ -3,6 +3,12 @@ lintian (1.23.44) UNRELEASED; urgency=low
   * checks/binaries:
     + [RA] Make an architecture specification after perlapi optional.
       Thanks, gregor herrmann.  (Closes: #464626)
+  * checks/copyright-file{.desc,}:
+    + [RA] Check the copyright file to ensure it contains at least one
+      copyright statement with a date or the term "public domain".  It's
+      hard to be thorough without false positives, but this should catch
+      the most obvious omissions.  Thanks, Justin Pryzby and Jari Aalto.
+      (Closes: #286842, #409131)
   * checks/fields:
     + [RA] Warn of build-dependencies on a Debian revision of -1.  They
       make backporting unnecessarily difficult.  Thanks, Erich Schubert.
@@ -17,7 +23,7 @@ lintian (1.23.44) UNRELEASED; urgency=low
       even if accurate without capitalization.  Thanks, Nelson A. de
       Oliveira.  (Closes: #464461)
 
- -- Russ Allbery <rra@debian.org>  Wed, 06 Feb 2008 18:34:36 -0800
+ -- Russ Allbery <rra@debian.org>  Thu, 07 Feb 2008 20:03:20 -0800
 
 lintian (1.23.43) unstable; urgency=low
 
