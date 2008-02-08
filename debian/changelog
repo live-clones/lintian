@@ -1,3 +1,11 @@
+lintian (1.23.45) UNRELEASED; urgency=low
+
+  * checks/po-debconf:
+    + [RA] Also accept nnn_NN names for po files.  nds_DE and nds_NL are
+      valid locales.  Thanks, Christian Perrier.
+
+ -- Russ Allbery <rra@debian.org>  Fri, 08 Feb 2008 10:21:55 -0800
+
 lintian (1.23.44) unstable; urgency=low
 
   The "I can't release a quick fix without *some* other work" release.
