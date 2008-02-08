@@ -298,8 +298,8 @@ while (<IN>) {
 		next if /warning \[.*\]: cannot adjust line/;
 		next if /warning \[.*\]: can\'t break line/;
 	    }
-	    # ignore a common undefined macro from pod2man
-	    next if /warning: \`IX\' not defined/;
+	    # ignore common undefined macros from pod2man << Perl 5.10
+	    next if /warning: \`(Tr|IX)\' not defined/;
 	    chomp;
 	    s/^[^:]+://o;
 	    tag "manpage-has-errors-from-man", "$file", "$_";
