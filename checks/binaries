@@ -310,7 +310,7 @@ if ($needs_depends_line) {
 
 # Check for a Perl dependency.
 if ($has_perl_lib) {
-    my $re = qr/(?:^|,)\s*perlapi-[\d.]+(?:\s*\[[^\]]+\])(?:\s*,|\z)/;
+    my $re = qr/(?:^|,)\s*perlapi-[\d.]+(?:\s*\[[^\]]+\])?\s*(?:,|\z)/;
     unless ($depends =~ /$re/) {
 	tag 'missing-dependency-on-perlapi';
     }

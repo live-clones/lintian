@@ -92,6 +92,10 @@ binary-arch: build binary-correct
 	cp -a *.a *.so.* $(lib_tmp)/usr/lib
 	# and fuck up permission (TODO)
 	chmod a+x $(lib_tmp)/usr/lib/*.a
+	# Pretend to be a Perl module to test a lack of Perl dependencies.
+	install -d $(dev_tmp)/usr/lib/perl5/auto/Foo
+	install -m 644 libbaz2.so.1.0.3b $(dev_tmp)/usr/lib/perl5/auto/Foo/Foo.so
+	strip $(dev_tmp)/usr/lib/perl5/auto/Foo/Foo.so
 	install -d $(dev_tmp)/usr/share/doc
 	ln -s $(LIB) $(dev_tmp)/usr/share/doc/$(DEV) 
 	install -d $(dev_tmp)/DEBIAN

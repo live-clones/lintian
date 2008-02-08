@@ -1,5 +1,9 @@
 lintian (1.23.44) UNRELEASED; urgency=low
 
+  * checks/binaries:
+    + [RA] Make an architecture specification after perlapi optional.
+      Thanks, gregor herrmann.  (Closes: #464626)
+
   * lib/Spelling.pm:
     + [RA] Don't strip hyphens before checking spelling.  Move all D-Bus
       corrections to the picky list since the correction is too confusing

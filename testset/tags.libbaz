@@ -1,4 +1,5 @@
 E: libbaz source: not-binnmuable-any-depends-any libbaz1-dev -> libbaz1
+E: libbaz1-dev: missing-dependency-on-libc needed by ./usr/lib/perl5/auto/Foo/Foo.so
 E: libbaz1: control-file-has-bad-permissions shlibs 0755 != 0644
 E: libbaz1: control-file-has-bad-permissions symbols 0755 != 0644
 E: libbaz1: debian-changelog-file-missing-or-wrong-name
@@ -22,6 +23,8 @@ E: libbaz2-dbg: debian-changelog-file-missing
 E: libbaz2-dev: debian-changelog-file-missing-or-wrong-name
 E: libbaz2: debian-changelog-file-missing-or-wrong-name
 I: libbaz source: package-lacks-versioned-build-depends-on-debhelper 5
+I: libbaz1-dev: binary-has-unneeded-section ./usr/lib/perl5/auto/Foo/Foo.so .comment
+I: libbaz1-dev: no-md5sums-control-file
 I: libbaz1: binary-has-unneeded-section ./usr/lib/perl5/auto/Foo/Foo.so .comment
 I: libbaz1: no-md5sums-control-file
 I: libbaz1: several-sonames-in-same-package libbaz2.so.1.0 libbaz3.so.1

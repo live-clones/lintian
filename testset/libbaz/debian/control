@@ -13,7 +13,7 @@ Description: test handling of library packages
 
 Package: libbaz1-dev
 Architecture: any
-Depends: libbaz1 (= ${source:Version})
+Depends: libbaz1 (= ${source:Version}), perlapi-5.8.8
 Description: development package
  Regression test for lintian's handling of libraries
 
