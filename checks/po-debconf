@@ -133,7 +133,7 @@ opendir(DEBIAN, 'debfiles/po')
 while (defined(my $file=readdir(DEBIAN))) {
         next unless $file =~ m/\.po$/;
         tag "misnamed-po-file", "debian/po/$file"
-                unless ($file =~ /^[a-z]{2,2}(_[A-Z]{2,2})?\.po$/);
+                unless ($file =~ /^([a-z]{2}(_[A-Z]{2})?|[a-z]{3})\.po$/);
         local ($/) = "\n\n";
         $_ = '';
         open(PO, '<', "debfiles/po/$file")

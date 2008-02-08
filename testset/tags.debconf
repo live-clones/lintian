@@ -14,6 +14,7 @@ W: debconf source: dpatch-build-dep-but-no-patch-list debconf
 W: debconf source: invalid-po-file debian/po/fr.po
 W: debconf source: invalid-po-file debian/po/sample-file.po
 W: debconf source: maintainer-script-lacks-debhelper-token debian/debconf-test.postinst
+W: debconf source: misnamed-po-file debian/po/lang.po
 W: debconf source: misnamed-po-file debian/po/sample-file.po
 W: debconf source: newer-debconf-templates
 W: debconf source: out-of-date-standards-version 3.7.2 (current is 3.7.3)
