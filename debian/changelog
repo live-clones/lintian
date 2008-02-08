@@ -3,8 +3,11 @@ lintian (1.23.45) UNRELEASED; urgency=low
   * checks/po-debconf:
     + [RA] Also accept nnn_NN names for po files.  nds_DE and nds_NL are
       valid locales.  Thanks, Christian Perrier.
+  * checks/fields:
+    + [RA] Fix coding error that didn't allow python-all-dev to satisfy a
+      Python build dependency.  Thanks, Joerg Jaspert.  (Closes: #464709)
 
- -- Russ Allbery <rra@debian.org>  Fri, 08 Feb 2008 10:21:55 -0800
+ -- Russ Allbery <rra@debian.org>  Fri, 08 Feb 2008 10:27:18 -0800
 
 lintian (1.23.44) unstable; urgency=low
 

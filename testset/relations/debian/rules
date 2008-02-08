@@ -36,6 +36,9 @@ binary: binary-arch binary-indep
 clean::
 	rm -rf debian/tmp debian/files
 
+# Test that python-all-dev satisfies a Python requirement.
+	python -V || true
+
 # Test allowing quilt Build-Depends for manual quilt invocations.
 	TESTING=foo ANOTHER=bar quilt || true
 
