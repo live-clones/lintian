@@ -3,6 +3,10 @@ lintian (1.23.44) UNRELEASED; urgency=low
   * checks/binaries:
     + [RA] Make an architecture specification after perlapi optional.
       Thanks, gregor herrmann.  (Closes: #464626)
+  * checks/fields:
+    + [RA] Warn of build-dependencies on a Debian revision of -1.  They
+      make backporting unnecessarily difficult.  Thanks, Erich Schubert.
+      (Closes: #345487)
   * checks/po-debconf:
     + [RA] Accept three-character language codes for po files.  Thanks,
       Patrick Winnertz and Eddy Petrișor.  (Closes: #464511)

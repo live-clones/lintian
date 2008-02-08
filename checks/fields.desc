@@ -557,6 +557,16 @@ Info: The package declares the given build relations on the same package
  in either Build-Depends or Build-Depends-Indep, but the build relations
  imply each other and are therefore redundant.
 
+Tag: build-depends-on-1-revision
+Type: warning
+Info: The package declares a build dependency on a version of a package
+ with a -1 Debian revision such as "libfoo (&gt;= 1.2-1)".  Such a
+ dependency will not be satisfied by a backport of libfoo 1.2-1 and
+ therefore makes backporting unnecessarily difficult.  Normally, the -1
+ version is unneeded and a dependency such as "libfoo (&gt;= 1.2)" would
+ be sufficient.  If there was an earlier -0.X version of libfoo that would
+ not satisfy the dependency, use "libfoo (&gt;= 1.2-1~)" instead.
+
 Tag: needlessly-depends-on-awk
 Type: error
 Info: The package seems to declare a relation on awk. awk is a virtual

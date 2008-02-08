@@ -660,7 +660,7 @@ if ($type eq "source") {
 					}
 
 					tag "build-depends-on-build-essential", $field
-						if ($d_pkg eq "build-essential");
+					    if ($d_pkg eq "build-essential");
 
 					tag "depends-on-build-essential-package-without-using-version", "$d_pkg [$field: $part_d_orig]"
 					    if ($known_build_essential{$d_pkg} && ! $d_version->[1]);
@@ -672,6 +672,9 @@ if ($type eq "source") {
 
 					tag "build-depends-on-x-metapackage", "$field: $part_d_orig"
 					    if ($known_x_metapackages{$d_pkg} && &$is_dep_field($field));
+
+					tag "build-depends-on-1-revision", "$field: $part_d_orig"
+					    if ($d_version->[0] eq '>=' && $d_version->[1] =~ /-1$/ && &$is_dep_field($field));
 
 					tag "bad-relation", "$field: $part_d_orig"
 					    if $rest;
