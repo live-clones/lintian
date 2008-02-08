@@ -5,7 +5,7 @@ lintian (1.23.44) UNRELEASED; urgency=low
       Thanks, gregor herrmann.  (Closes: #464626)
   * checks/po-debconf:
     + [RA] Accept three-character language codes for po files.  Thanks,
-      Patrick Winnertz.  (Closes: #464511)
+      Patrick Winnertz and Eddy Petrișor.  (Closes: #464511)
 
   * lib/Spelling.pm:
     + [RA] Don't strip hyphens before checking spelling.  Move all D-Bus
