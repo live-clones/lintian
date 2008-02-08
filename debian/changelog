@@ -1,5 +1,8 @@
 lintian (1.23.45) UNRELEASED; urgency=low
 
+  * checks/debconf:
+    + [RA] Recognize require as well as use when loading debconf modules
+      in Perl.  Thanks, Manoj Srivastava.  (Closes: #464775)
   * checks/fields:
     + [RA] Fix coding error that didn't allow python-all-dev to satisfy a
       Python build dependency.  Thanks, Joerg Jaspert.  (Closes: #464709)

@@ -355,7 +355,7 @@ for my $file (qw(config postinst)) {
 		$_ .= $next;
 	    }
 	    if (m#(?:\.|source)\s+/usr/share/debconf/confmodule# ||
-	            m/use\s+Debconf::Client::ConfModule/) {
+	            m/(use|require)\s+Debconf::Client::ConfModule/) {
 	        $usesconfmodule=1;
 	    }
 	    if (not $obsoleteconfmodule and
