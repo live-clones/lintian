@@ -1,4 +1,6 @@
-lintian (1.23.44) UNRELEASED; urgency=low
+lintian (1.23.44) unstable; urgency=low
+
+  The "I can't release a quick fix without *some* other work" release.
 
   * checks/binaries:
     + [RA] Make an architecture specification after perlapi optional.
@@ -23,7 +25,7 @@ lintian (1.23.44) UNRELEASED; urgency=low
       even if accurate without capitalization.  Thanks, Nelson A. de
       Oliveira.  (Closes: #464461)
 
- -- Russ Allbery <rra@debian.org>  Thu, 07 Feb 2008 20:03:20 -0800
+ -- Russ Allbery <rra@debian.org>  Thu, 07 Feb 2008 20:07:45 -0800
 
 lintian (1.23.43) unstable; urgency=low
 
