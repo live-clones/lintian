@@ -3,6 +3,8 @@ lintian (1.23.46) unstable; urgency=low
   * checks/control-files{.desc,}:
     + [FL] Warn about empty control files. I can't see any use for
       them. Exclude udebs though, since they might differ there.
+  * checks/cruft{.desc,}:
+    + [FL] Add hg to the list of <vcs>-control-dir tags.
   * checks/md5sums{.desc,}:
     + [FL] Remove tag md5sums-control-file-is-empty in favour of
       a more general tag in control-files.

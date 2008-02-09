@@ -51,6 +51,7 @@ my @directory_checks =
      [ qr,^(.+/)?\.arch-ids$, => 'arch-control-dir' ],
      [ qr!^(.+/)?,,.+$!       => 'arch-control-dir' ],
      [ qr,^(.+/)?\.git$,      => 'git-control-dir'  ],
+     [ qr,^(.+/)?\.hg$,       => 'hg-control-dir'   ],
     );
 
 # File checks.  These regexes match files that shouldn't be in the source
