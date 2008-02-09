@@ -46,6 +46,7 @@ W: scripts: binary-without-manpage usr/bin/suidperlfoo2
 W: scripts: binary-without-manpage usr/bin/test.sh
 W: scripts: binary-without-manpage usr/bin/tkfoo
 W: scripts: binary-without-manpage usr/bin/wishfoo
+W: scripts: control-file-is-empty prerm
 W: scripts: executable-is-not-world-readable usr/bin/guile-bizarre 0705 != 0755
 W: scripts: executable-is-not-world-readable usr/bin/perl-bizarre-2 0750 != 0755
 W: scripts: executable-is-not-world-readable usr/bin/suidperlfoo2 4751

@@ -1,5 +1,4 @@
 E: binary source: debian-rules-missing-required-target binary-indep
-E: binary-data: md5sums-control-file-is-empty
 E: binary: debian-changelog-file-missing-or-wrong-name
 E: binary: debian-news-file-uses-obsolete-national-encoding at line 3
 E: binary: depends-on-x-metapackage depends: xorg
@@ -58,6 +57,7 @@ W: binary source: not-binnmuable-all-depends-any binary-data -> binary
 W: binary source: not-binnmuable-any-depends-all binary -> binary-data
 W: binary source: substvar-source-version-is-deprecated binary
 W: binary source: substvar-source-version-is-deprecated binary-data
+W: binary-data: control-file-is-empty md5sums
 W: binary: binary-without-manpage usr/bin/hello
 W: binary: binary-without-manpage usr/bin/hello-static
 W: binary: binary-without-manpage usr/bin/hello.static

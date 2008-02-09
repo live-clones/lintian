@@ -18,6 +18,11 @@ Info: The package contains a control file that is not allowed in this
  or .udeb packages and must not be included in packages of the other
  type. You should probably just remove the file.
 
+Tag: control-file-is-empty
+Type: warning
+Info: The package contains an empty control file, which is most probably
+ an error.
+
 Tag: control-file-has-bad-permissions
 Type: error
 Info: The postinst, postrm, preinst, and prerm control files should use

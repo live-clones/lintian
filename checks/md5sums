@@ -40,9 +40,8 @@ unless (-f $control) {
     return 0;
 }
 
-# Is it empty?
+# Is it empty? Then skip it. Tag will be issued by control-files
 if (-z $control) {
-    tag "md5sums-control-file-is-empty", "";
     return 0;
 }
 

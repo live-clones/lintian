@@ -86,6 +86,12 @@ while (<IN>) {
 	}
     }
 
+    # I'm not sure about the udeb case
+    if ($type ne 'udeb' and $size == 0) {
+	tag "control-file-is-empty", "$file";
+    }
+
+
     # skip `control' control file (that's an exception: dpkg doesn't care and
     # this file isn't installed on the systems anyways)
     next if $file eq 'control';

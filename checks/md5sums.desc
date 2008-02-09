@@ -19,10 +19,6 @@ Info: This package does not contain an md5sums control file.  This control
  <tt>dh_md5sums</tt> at the end of your binary-indep or binary-arch
  target, right before <tt>dh_builddeb</tt>.
 
-Tag: md5sums-control-file-is-empty
-Type: error
-Info: The package contains an md5sums control file, but it lists no files.
-
 Tag: malformed-md5sums-control-file
 Type: error
 Info: The indicated line of the md5sums control file for this package was
