@@ -3,6 +3,11 @@ lintian (1.23.46) unstable; urgency=low
   * checks/control-files{.desc,}:
     + [FL] Warn about empty control files. I can't see any use for
       them. Exclude udebs though, since they might differ there.
+  * checks/files{.desc,}:
+    + [FL] Merge all the tags for vcs ignore files and vcs control
+      dirs. Since the explanations don't actually differ, different
+      tags make no sense. While at it, add the mercurial equivalents
+      as well.
   * checks/cruft{.desc,}:
     + [FL] Add hg to the list of <vcs>-control-dir tags.
   * checks/md5sums{.desc,}:

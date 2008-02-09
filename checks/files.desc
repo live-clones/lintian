@@ -568,51 +568,21 @@ Info: The package contains a hardlink in <tt>/etc</tt> or across different
  .
  A better solution might be using symlinks here.
 
-Tag: package-contains-CVS-dir
+Tag: package-contains-vcs-control-dir
 Type: warning
-Info: Package contains a CVS directory. It was most likely installed by
- accident, since transient CVS data usually doesn't belong in packages.
-
-Tag: package-contains-svn-control-dir
-Type: warning
-Info: Package contains a .svn directory. It was most likely installed by
- accident, since Subversion version control directories usually don't belong
- in packages.
-
-Tag: package-contains-bzr-control-dir
-Type: warning
-Info: Package contains a .bzr directory. It was most likely installed by
- accident, since bazaar-ng version control directories usually don't belong
- in packages.
-
-Tag: package-contains-arch-control-dir
-Type: warning
-Info: Package contains a {arch} or .arch-ids directory. It was most likely
- installed by accident, since Arch version control directories usually don't
- belong in packages.
-
-Tag: package-contains-git-control-dir
-Type: warning
-Info: Package contains a .git directory.  It was most likely included by
- accident, since GIT version control directories usually don't belong in
- packages.
+Info: Package contains a control directory for a version control system.
+ It was most likely installed by accident, since version control directories
+ usually don't belong in packages.
 
 Tag: package-contains-xvpics-dir
 Type: error
 Info: Package contains a .xvpics directory. It was most likely installed by
  accident, since thumbnails usually don't belong in packages.
 
-Tag: cvsignore-file-in-package
+Tag: vcs-ignore-file-in-package
 Type: warning
-Info: Package contains a .cvsignore file.  This file is used by the CVS
- revision control system to specify untracked files that it should ignore.
- This file is generally useless in an installed package and was probably
- installed by accident.
-
-Tag: gitignore-file-in-package
-Type: error
-Info: Package contains a .gitignore file. This file is used by the Git
- revision control system to specify untracked files that it should ignore.
+Info: Package contains a .(cvs|git|hg)ignore file.  This file is used by
+ the revision control system to specify untracked files that it should ignore.
  This file is generally useless in an installed package and was probably
  installed by accident.
 

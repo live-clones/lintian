@@ -595,14 +595,9 @@ while (<IN>) {
 	    tag "nfs-temporary-file-in-package", "$file";
 	}
 
-	# ---------------- cvsignore files
-	if ($file =~ m/\.cvsignore$/) {
-	    tag "cvsignore-file-in-package", "$file";
-	}
-
-	# ---------------- .gitignore files
-	if ($file =~ m/\.gitignore$/) {
-	    tag "gitignore-file-in-package", "$file";
+	# ---------------- ignore files
+	if ($file =~ m/\.(cvs|git|hg)ignore$/) {
+	    tag "vcs-ignore-file-in-package", "$file";
 	}
 
 	# ---------------- arch-inventory files
@@ -737,20 +732,14 @@ while (<IN>) {
 		sprintf("%04o != 0755", $operm);
 	}
 	if ($file =~ m,/CVS/?$,) {
-	    tag "package-contains-CVS-dir", "$file";
+	    tag "package-contains-vcs-control-dir", "$file";
 	}
-	if ($file =~ m,/\.svn/?$,) {
-	    tag "package-contains-svn-control-dir", "$file";
-	}
-	if ($file =~ m,/\.bzr/?$,) {
-	    tag "package-contains-bzr-control-dir", "$file";
+	if ($file =~ m,/\.(svn|bzr|git|hg)/?$,) {
+	    tag "package-contains-vcs-control-dir", "$file";
 	}
 	if (($file =~ m,/\.arch-ids/?$,)
 	    || ($file =~ m,/\{arch\}/?$,)) {
-	    tag "package-contains-arch-control-dir", "$file";
-	}
-	if ($file =~ m,/\.git/?$,) {
-	    tag "package-contains-git-control-dir", "$file";
+	    tag "package-contains-vcs-control-dir", "$file";
 	}
 	if ($file =~ m,/.xvpics/?$,) {
 	    tag "package-contains-xvpics-dir", "$file";
