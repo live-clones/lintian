@@ -74,4 +74,5 @@ W: maintainer-scripts: postinst-should-not-set-usr-doc-link
 W: maintainer-scripts: postrm-does-not-purge-debconf
 W: maintainer-scripts: postrm-has-useless-call-to-ldconfig
 W: maintainer-scripts: read-in-maintainer-script postinst:18
+W: maintainer-scripts: start-stop-daemon-in-maintainer-script postinst:132
 W: maintainer-scripts: update-alternatives-remove-called-in-postrm

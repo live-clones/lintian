@@ -478,7 +478,7 @@ while (<SCRIPTS>) {
 	or fail("cannot open maintainer script $filename for reading: $!");
 
     my %warned;
-    my ($saw_init, $saw_invoke, $saw_debconf);
+    my ($saw_init, $saw_invoke, $saw_start_stop, $saw_debconf);
     my $cat_string = "";
 
     while (<C>) {
@@ -491,8 +491,7 @@ while (<SCRIPTS>) {
 	    $warned{tmp} = 1;
 	}
 	if (m/^\s*killall(?:\s|\z)/) {
-	    tag "killall-is-dangerous", "$file:$."
-		unless $warned{killall};
+	    tag "killall-is-dangerous", "$file:$." unless $warned{killall};
 	    $warned{killall} = 1;
 	}
 	if (m/^\s*mknod(?:\s|\z)/ and not m/\sp\s/) {
@@ -606,6 +605,9 @@ while (<SCRIPTS>) {
 		}
 	    }
 	    if (!$cat_string) {
+		if (/^\s*start-stop-daemon\s+/ && !/\s--stop\b/) {
+		    tag 'start-stop-daemon-in-maintainer-script', "$file:$.";
+		}
 		# Don't use chown foo.bar
 		if (/(chown\s+[-_A-Za-z0-9]+\.[-_A-Za-z0-9]+)\s+/) {
 		    tag "deprecated-chown-usage", "$file:$. \'$1\'";

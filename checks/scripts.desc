@@ -228,6 +228,13 @@ Ref: policy 10.6
 Info: Maintainer scripts must not create device files directly.  They
  should call MAKEDEV instead.
 
+Tag: start-stop-daemon-in-maintainer-script
+Type: warning
+Info: The maintainer script seems to calll <tt>start-stop-daemon</tt>
+ directly.  Long-running daemons should be started and stopped via init
+ scripts using <tt>invoke-rc.d</tt> rather than directly in maintainer
+ scripts.
+
 Tag: maintainer-script-removes-device-files
 Type: error
 Ref: policy 10.6

@@ -1,4 +1,6 @@
-lintian (1.23.45) UNRELEASED; urgency=low
+lintian (1.23.45) unstable; urgency=low
+
+  The "100 open bugs is magical" release.
 
   * checks/debconf:
     + [RA] Recognize require as well as use when loading debconf modules
@@ -12,8 +14,11 @@ lintian (1.23.45) UNRELEASED; urgency=low
   * checks/po-debconf:
     + [RA] Also accept nnn_NN names for po files.  nds_DE and nds_NL are
       valid locales.  Thanks, Christian Perrier.
+  * checks/scripts{.desc,}:
+    + [RA] Warn of use of start-stop-daemon in maintainer scripts unless
+      used with --stop.  Thanks, Kurt Roeckx.  (Closes: #381180)
 
- -- Russ Allbery <rra@debian.org>  Fri, 08 Feb 2008 14:26:10 -0800
+ -- Russ Allbery <rra@debian.org>  Fri, 08 Feb 2008 22:58:32 -0800
 
 lintian (1.23.44) unstable; urgency=low
 
