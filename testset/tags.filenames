@@ -5,7 +5,6 @@ E: filenames: bad-menu-file-name usr/share/menu/menu
 E: filenames: dir-or-file-in-srv srv/foo/
 E: filenames: dir-or-file-in-srv srv/foo/bar
 E: filenames: file-in-etc-not-marked-as-conffile /etc/gconf/schemas/test.schema
-E: filenames: gitignore-file-in-package usr/lib/perl5/foo/.gitignore
 E: filenames: lengthy-symlink usr/lib/filenames/symlink4wrong ../filenames/symlink2
 E: filenames: lengthy-symlink usr/share/doc/filenames/version.txt.gz ../filenames/doc/version6.txt.gz
 E: filenames: no-copyright-file
@@ -54,7 +53,6 @@ W: filenames: bad-permissions-for-ali-file usr/lib/ada/adalib/test.ali
 W: filenames: binary-without-manpage usr/X11R6/bin/testxbin2
 W: filenames: binary-without-manpage usr/bin/X11/testxbin
 W: filenames: binary-without-manpage usr/bin/mh/read
-W: filenames: cvsignore-file-in-package files/.cvsignore
 W: filenames: debian-news-file-not-compressed usr/share/doc/filenames/NEWS.Debian
 W: filenames: desktop-file-in-wrong-dir usr/share/gnome/apps/System/foo.desktop
 W: filenames: executable-not-elf-or-script ./usr/bin/bin/bad
@@ -82,10 +80,6 @@ W: filenames: menu-file-in-usr-lib usr/lib/menu/menu
 W: filenames: no-priority-field
 W: filenames: no-section-field
 W: filenames: non-standard-dir-perm usr/lib/filenames/readonly/ 0555 != 0755
-W: filenames: package-contains-CVS-dir usr/lib/perl5/CVS/
-W: filenames: package-contains-arch-control-dir usr/lib/perl5/.arch-ids/
-W: filenames: package-contains-arch-control-dir usr/lib/perl5/{arch}/
-W: filenames: package-contains-bzr-control-dir usr/lib/perl5/.bzr/
 W: filenames: package-contains-devhelp-file-without-symlink usr/share/doc/filenames/bad-devhelp/c.devhelp.gz
 W: filenames: package-contains-empty-directory usr/lib/perl5/.arch-ids/
 W: filenames: package-contains-empty-directory usr/lib/perl5/.bzr/
@@ -93,7 +87,11 @@ W: filenames: package-contains-empty-directory usr/lib/perl5/.svn/
 W: filenames: package-contains-empty-directory usr/lib/perl5/CVS/
 W: filenames: package-contains-empty-directory usr/lib/perl5/{arch}/
 W: filenames: package-contains-readme-for-other-platform-or-distro usr/share/doc/filenames/README.macosx
-W: filenames: package-contains-svn-control-dir usr/lib/perl5/.svn/
+W: filenames: package-contains-vcs-control-dir usr/lib/perl5/.arch-ids/
+W: filenames: package-contains-vcs-control-dir usr/lib/perl5/.bzr/
+W: filenames: package-contains-vcs-control-dir usr/lib/perl5/.svn/
+W: filenames: package-contains-vcs-control-dir usr/lib/perl5/CVS/
+W: filenames: package-contains-vcs-control-dir usr/lib/perl5/{arch}/
 W: filenames: package-installs-into-etc-gconf-schemas etc/gconf/schemas/test.schema
 W: filenames: package-installs-nonbinary-perl-in-usr-lib-perl5 usr/lib/perl5/foo/ancient.pm
 W: filenames: package-installs-nonbinary-perl-in-usr-lib-perl5 usr/lib/perl5/foo/bar.pm
@@ -104,6 +102,8 @@ W: filenames: symlink-is-self-recursive usr/lib/filenames/symlink5ok+warn ..
 W: filenames: symlink-is-self-recursive usr/lib/filenames/symlink6ok+warn .
 W: filenames: symlink-is-self-recursive usr/lib/filenames/symlink7ok+warn /
 W: filenames: symlink-should-be-relative usr/lib/filenames/symlink3wrong /usr/lib/filenames/symlink2
+W: filenames: vcs-ignore-file-in-package files/.cvsignore
+W: filenames: vcs-ignore-file-in-package usr/lib/perl5/foo/.gitignore
 W: filenames: windows-thumbnail-database-in-package usr/share/doc/filenames/Thumbs.db
 W: filenames: wrong-name-for-debian-news-file usr/share/doc/filenames/news.debian.gz
 W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/NEWS.Debian
