@@ -478,7 +478,7 @@ while (<SCRIPTS>) {
 	or fail("cannot open maintainer script $filename for reading: $!");
 
     my %warned;
-    my ($saw_init, $saw_invoke, $saw_start_stop, $saw_debconf);
+    my ($saw_init, $saw_invoke, $saw_debconf);
     my $cat_string = "";
 
     while (<C>) {
