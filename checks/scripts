@@ -478,13 +478,22 @@ while (<SCRIPTS>) {
 	or fail("cannot open maintainer script $filename for reading: $!");
 
     my %warned;
-    my ($saw_init, $saw_invoke, $saw_debconf);
+    my ($saw_init, $saw_invoke, $saw_debconf, $has_code);
     my $cat_string = "";
 
     while (<C>) {
+	next if m,^\s*$,;  # skip empty lines
 	next if m,^\s*\#,; # skip comment lines
 	s/\#.*$//;         # eat comments
 	chomp();
+
+	unless ($has_code
+		|| m/^\s*[:;]+\s*$/
+		|| m/^\s*set\s+-\w+\s*$/
+		|| m/^\s*exit\s+\d+\s*$/) {
+	    $has_code = 1;
+	}
+
 	if (m,[^\w=](/var)?/tmp\b, and not m/\bmktemp\b/ and not m/\btempfile\b/ and not m/\bmkdir\b/ and not m/\bmkstemp\b/) {
 	    tag "possibly-insecure-handling-of-tmp-files-in-maintainer-script", "$file:$."
 		unless $warned{tmp};
@@ -674,6 +683,9 @@ while (<SCRIPTS>) {
 
     if ($saw_init && ! $saw_invoke) {
 	tag "maintainer-script-calls-init-script-directly", "$file:$saw_init";
+    }
+    unless ($has_code) {
+	tag "maintainer-script-empty", $file;
     }
 
     close C;

@@ -82,6 +82,7 @@ binary-indep:
 	cp debian/copyright $(tmp)/usr/share/doc/scripts/copyright
 
 	cp debian/scripts.conffiles $(tmp)/DEBIAN/conffiles
+	install -m 755 debian/preinst $(tmp)/DEBIAN/preinst
 	install -m 755 debian/postinst $(tmp)/DEBIAN/postinst
 	install -m 755 debian/postrm $(tmp)/DEBIAN/postrm
 	touch $(tmp)/DEBIAN/prerm

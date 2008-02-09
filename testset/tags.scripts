@@ -60,6 +60,7 @@ W: scripts: init.d-script-has-unknown-lsb-keyword /etc/init.d/lsb-broken:14 foo
 W: scripts: init.d-script-missing-lsb-keyword /etc/init.d/lsb-broken required-start
 W: scripts: init.d-script-missing-lsb-section /etc/init.d/no-lsb
 W: scripts: init.d-script-not-marked-as-conffile /etc/init.d/skeleton
+W: scripts: maintainer-script-empty preinst
 W: scripts: non-standard-executable-perm usr/bin/perl-bizarre-3 0754 != 0755
 W: scripts: non-standard-setuid-executable-perm usr/bin/suidperlfoo 4555
 W: scripts: package-installs-python-pyc usr/lib/python2.3/site-packages/test.pyc

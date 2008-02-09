@@ -388,3 +388,10 @@ Info: The maintainer script apparently runs install-sgmlcatalog with flags
  and should only be used in postinst or prerm to remove the entries from
  earlier packages.  Given how long ago this transition was, consider
  removing it entirely.
+
+Tag: maintainer-script-empty
+Type: warning
+Info: The maintainer script doesn't seem to contain any code. While this
+ is harmless in most cases it is probably not what you wanted and may even
+ lead to problems in rare situations where dpkg would fail if no maintainer
+ script was present.
