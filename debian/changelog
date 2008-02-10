@@ -1,8 +1,11 @@
-lintian (1.23.46) unstable; urgency=low
+lintian (1.23.46) UNRELEASED; urgency=low
 
   * checks/control-files{.desc,}:
     + [FL] Warn about empty control files. I can't see any use for
       them. Exclude udebs though, since they might differ there.
+  * checks/copyright-file:
+    + [RA] Tests for copyright notices must be case-insensitive.  Patch
+      from Chris Lamb.  (Closes: #464992)
   * checks/files{.desc,}:
     + [FL] Merge all the tags for vcs ignore files and vcs control
       dirs. Since the explanations don't actually differ, different

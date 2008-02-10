@@ -238,7 +238,7 @@ if (m{\# Please also look if there are files or directories which have a\n\# dif
     tag "copyright-contains-dh_make-todo-boilerplate", "";
 }
 
-if ($found && !$linked && !/(Copyright|Copr\.|\302\251)(.*|[:\s]+)\b\d{4}\b|\bpublic\s+domain\b/) {
+if ($found && !$linked && !/(Copyright|Copr\.|\302\251)(.*|[:\s]+)\b\d{4}\b|\bpublic\s+domain\b/i) {
     tag 'copyright-without-copyright-notice';
 }
 
