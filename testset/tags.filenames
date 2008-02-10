@@ -48,7 +48,6 @@ W: filenames source: diff-contains-svn-conflict-file files/Maelstrom Sounce.r121
 W: filenames source: diff-contains-svn-conflict-file files/Maelstrom Sound.mine
 W: filenames source: diff-contains-svn-control-dir .svn
 W: filenames source: no-section-field-for-source
-W: filenames: arch-inventory-file-in-package files/.arch-inventory
 W: filenames: bad-permissions-for-ali-file usr/lib/ada/adalib/test.ali
 W: filenames: binary-without-manpage usr/X11R6/bin/testxbin2
 W: filenames: binary-without-manpage usr/bin/X11/testxbin
@@ -92,6 +91,12 @@ W: filenames: package-contains-vcs-control-dir usr/lib/perl5/.bzr/
 W: filenames: package-contains-vcs-control-dir usr/lib/perl5/.svn/
 W: filenames: package-contains-vcs-control-dir usr/lib/perl5/CVS/
 W: filenames: package-contains-vcs-control-dir usr/lib/perl5/{arch}/
+W: filenames: package-contains-vcs-control-file files/.arch-inventory
+W: filenames: package-contains-vcs-control-file files/.cvsignore
+W: filenames: package-contains-vcs-control-file usr/lib/perl5/foo/.gitignore
+W: filenames: package-contains-vcs-control-file usr/lib/perl5/foo/.hg_archival.txt
+W: filenames: package-contains-vcs-control-file usr/lib/perl5/foo/.hgignore
+W: filenames: package-contains-vcs-control-file usr/lib/perl5/foo/.hgtags
 W: filenames: package-installs-into-etc-gconf-schemas etc/gconf/schemas/test.schema
 W: filenames: package-installs-nonbinary-perl-in-usr-lib-perl5 usr/lib/perl5/foo/ancient.pm
 W: filenames: package-installs-nonbinary-perl-in-usr-lib-perl5 usr/lib/perl5/foo/bar.pm
@@ -102,8 +107,6 @@ W: filenames: symlink-is-self-recursive usr/lib/filenames/symlink5ok+warn ..
 W: filenames: symlink-is-self-recursive usr/lib/filenames/symlink6ok+warn .
 W: filenames: symlink-is-self-recursive usr/lib/filenames/symlink7ok+warn /
 W: filenames: symlink-should-be-relative usr/lib/filenames/symlink3wrong /usr/lib/filenames/symlink2
-W: filenames: vcs-ignore-file-in-package files/.cvsignore
-W: filenames: vcs-ignore-file-in-package usr/lib/perl5/foo/.gitignore
 W: filenames: windows-thumbnail-database-in-package usr/share/doc/filenames/Thumbs.db
 W: filenames: wrong-name-for-debian-news-file usr/share/doc/filenames/news.debian.gz
 W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/NEWS.Debian

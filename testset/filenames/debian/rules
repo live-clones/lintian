@@ -54,6 +54,9 @@ binary-indep:
 	mkdir debian/tmp/usr/lib/perl5/.bzr
 	install -d debian/tmp/usr/share/perl5
 	echo foo > debian/tmp/usr/lib/perl5/foo/.gitignore
+	echo foo > debian/tmp/usr/lib/perl5/foo/.hgignore
+	echo foo > debian/tmp/usr/lib/perl5/foo/.hgtags
+	echo foo > debian/tmp/usr/lib/perl5/foo/.hg_archival.txt
 
 	touch debian/tmp/usr/lib/perl5/foo/.packlist
 	chmod 644 debian/tmp/usr/lib/perl5/foo/.packlist

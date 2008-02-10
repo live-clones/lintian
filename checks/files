@@ -595,14 +595,9 @@ while (<IN>) {
 	    tag "nfs-temporary-file-in-package", "$file";
 	}
 
-	# ---------------- ignore files
-	if ($file =~ m/\.(cvs|git|hg)ignore$/) {
-	    tag "vcs-ignore-file-in-package", "$file";
-	}
-
-	# ---------------- arch-inventory files
-	if ($file =~ m/\.arch-inventory$/) {
-	    tag "arch-inventory-file-in-package", "$file";
+	# ---------------- vcs control files
+	if ($file =~ m/\.((cvs|git|hg)ignore|arch-inventory|hgtags|hg_archival\.txt)$/) {
+	    tag "package-contains-vcs-control-file", "$file";
 	}
 
 	# ---------------- subversion and svk commit message backups
