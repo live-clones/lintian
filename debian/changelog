@@ -9,7 +9,7 @@ lintian (1.23.46) UNRELEASED; urgency=low
   * checks/cruft{.desc,}:
     + [FL] Add hg to the list of <vcs>-control-dir tags.
     + [RA] In the long description of outdated-autotools-helper-file,
-      point to autotool-dev's documentation.
+      point to autotool-dev's documentation.  (Closes: #465132)
   * checks/files{.desc,}:
     + [FL,RA] Merge all the tags for vcs ignore files, inventory files,
       and vcs control dirs. Since the explanations don't actually differ,
