@@ -6,14 +6,14 @@ lintian (1.23.46) UNRELEASED; urgency=low
   * checks/copyright-file:
     + [RA] Tests for copyright notices must be case-insensitive.  Patch
       from Chris Lamb.  (Closes: #464992)
+  * checks/cruft{.desc,}:
+    + [FL] Add hg to the list of <vcs>-control-dir tags.
   * checks/files{.desc,}:
     + [FL,RA] Merge all the tags for vcs ignore files, inventory files,
       and vcs control dirs. Since the explanations don't actually differ,
       different tags make no sense. While at it, add the mercurial
       equivalents as well and update some of the tag descriptions. Partly
       based on a patch by Chris Lamb.
-  * checks/cruft{.desc,}:
-    + [FL] Add hg to the list of <vcs>-control-dir tags.
   * checks/md5sums{.desc,}:
     + [FL] Remove tag md5sums-control-file-is-empty in favour of
       a more general tag in control-files.
