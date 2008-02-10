@@ -64,7 +64,7 @@ binary-arch: build-stamp install
 	dh_fixperms
 	dh_makeshlibs -X debug
 	dh_installdeb
-	dh_shlibdeps
+	dh_shlibdeps -X debug
 	dh_gencontrol
 	dh_md5sums
 	dh_builddeb
