@@ -247,3 +247,6 @@ Info: The referenced file has a time stamp older than year 2004 and the
  package does not build-depend on autotools-dev or automake and therefore
  apparently does not update it. This usually means that the source package
  will not work correctly on all currently released architectures.
+ .
+ Read /usr/share/doc/autotools-dev/README.Debian.gz (from the
+ autotools-dev package) for information on how to fix this problem.
