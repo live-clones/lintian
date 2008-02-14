@@ -19,6 +19,10 @@ lintian (1.23.46) UNRELEASED; urgency=low
   * checks/md5sums{.desc,}:
     + [FL] Remove tag md5sums-control-file-is-empty in favour of
       a more general tag in control-files.
+  * checks/manpages.desc:
+    + [RA] Mention in binary-without-manpage that if the man pages are
+      provided by another package on which this package depends, a lintian
+      override is appropriate.
   * checks/scripts{.desc,}:
     + [FL] Warn if a maintainer script is a valid shell script but
       doesn't seem to have any actual code.  Based on an idea

@@ -35,11 +35,17 @@ Type: warning
 Info: Each binary in <tt>/usr/bin</tt>, <tt>/usr/sbin</tt>, <tt>/bin</tt>,
  <tt>/sbin</tt> or <tt>/usr/games</tt> should have a manual page
  .
- Note, that though the `man' program has the capability to check for
+ Note that though the man program has the capability to check for
  several program names in the NAMES section, each of these programs
  should have its own manual page (a symbolic link to the appropriate
  manual page is sufficient) because other manual page viewers such as
  xman or tkman don't support this.
+ .
+ If the man pages are provided by another package on which this package
+ depends, lintian may not be able to determine that man pages are
+ available.  In this case, after confirming that all binaries do have
+ man pages after this package and its dependencies are installed, please
+ add a lintian override.
 Ref: policy 12.1
 
 Tag: manpage-in-wrong-directory
