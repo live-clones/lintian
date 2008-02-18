@@ -646,7 +646,7 @@ while (my $arg = shift) {
 
 	    # check distribution field
 	    if (defined $data->{distribution}) {
-		if ($data->{'version'} =~ /ubuntu/) {
+		if ($data->{'version'} =~ /ubuntu|hardy|gutsy|feisty|edgy|dapper/) {
 		    my @ubuntu_dists = qw(hardy gutsy feisty edgy dapper);
 		    my $regex = '^(' . join ('|', @ubuntu_dists) . ')';
 		    if ($data->{distribution} !~ /^$regex(-(proposed|updates|backports|security))?$/ ) {
