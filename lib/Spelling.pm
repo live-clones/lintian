@@ -49,6 +49,7 @@ our %CORRECTIONS = qw(
                       adress address
                       adresses addresses
                       adviced advised
+                      afecting affecting
                       albumns albums
                       alegorical allegorical
                       algorith algorithm

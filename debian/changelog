@@ -37,6 +37,9 @@ lintian (1.23.46) UNRELEASED; urgency=low
     + [CW] Make the presence of an Ubuntu release name in the version number
       trigger the Ubuntu distribution field checks.
 
+  * lib/Spelling.pm:
+    + [RA] Add another spelling correction.
+
  -- Frank Lichtenheld <djpig@debian.org>  Sat, 09 Feb 2008 16:24:49 +0100
 
 lintian (1.23.45) unstable; urgency=low
