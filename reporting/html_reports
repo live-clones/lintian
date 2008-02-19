@@ -38,7 +38,7 @@ our ($LINTIAN_ROOT, $LINTIAN_LAB, $LINTIAN_ARCHIVEDIR, $LINTIAN_DIST,
      $LINTIAN_SECTION, $LINTIAN_ARCH, $HTML_TMP_DIR, $statistics_file);
 
 # Read the configuration.
-require './config-testing';
+require './config';
 
 # The path to the mirror timestamp.
 our $LINTIAN_TIMESTAMP

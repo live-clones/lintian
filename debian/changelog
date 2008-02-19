@@ -45,6 +45,9 @@ lintian (1.23.46) UNRELEASED; urgency=low
   * lib/Spelling.pm:
     + [RA] Add another spelling correction.
 
+  * reporting/html_reports:
+    + [RA] Load the correct configuration file.
+
  -- Frank Lichtenheld <djpig@debian.org>  Sat, 09 Feb 2008 16:24:49 +0100
 
 lintian (1.23.45) unstable; urgency=low
