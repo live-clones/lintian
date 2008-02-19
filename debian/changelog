@@ -39,6 +39,8 @@ lintian (1.23.46) UNRELEASED; urgency=low
   * frontend/lintian:
     + [CW] Make the presence of an Ubuntu release name in the version number
       trigger the Ubuntu distribution field checks.
+    + [RA] Fix option parsing bug leading lintian to incorrectly reject -a
+      without a package.
 
   * lib/Spelling.pm:
     + [RA] Add another spelling correction.

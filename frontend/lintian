@@ -326,7 +326,7 @@ if ($color and $color !~ /^(never|always|auto|html)$/) {
 $action = 'check' if not $action;
 
 # check for arguments
-if ($action =~ /^(check|unpack|remove)$/ and $#ARGV == -1) {
+if ($action =~ /^(check|unpack|remove)$/ and $#ARGV == -1 and not $check_everything) {
     syntax();
 }
 
