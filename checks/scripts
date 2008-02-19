@@ -561,7 +561,7 @@ while (<SCRIPTS>) {
 		  '(?:^|\s+)echo\s+-e',        # echo -e
 		  '(?:^|\s+)exec\s+-[acl]',    # exec -c/-l/-a name
 		  '(?:^|\s+)let\s',	       # let ...
-		  '(?<!\$)\(\(.*\)\)',	       # '((' should be '$(('
+		  '(?<![\$\(])\(\(.*\)\)',     # '((' should be '$(('
 		  '(\[|test)\s+-a',	       # test with unary -a (should be -e)
 		);
 
