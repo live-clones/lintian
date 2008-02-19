@@ -51,8 +51,10 @@ lintian (1.23.46) UNRELEASED; urgency=low
 
   * reporting/html_reports:
     + [RA] Load the correct configuration file.
+  * reporting/templates:
+    + [TK] Correct Lintian maintainers address in page footers.
 
- -- Frank Lichtenheld <djpig@debian.org>  Sat, 09 Feb 2008 16:24:49 +0100
+ -- Thijs Kinkhorst <thijs@debian.org>  Tue, 19 Feb 2008 11:31:41 +0100
 
 lintian (1.23.45) unstable; urgency=low
 
