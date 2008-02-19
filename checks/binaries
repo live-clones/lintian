@@ -222,12 +222,12 @@ while (<IN>) {
     next if $type eq 'udeb';
 
     # Perl library?
-    if ($file =~ m,/usr/lib/perl5/.*\.so$,) {
+    if ($file =~ m,^\./usr/lib/perl5/.*\.so$,) {
 	$has_perl_lib = 1;
     }
 
     # Something other than detached debugging symbols in /usr/lib/debug paths.
-    if ($file =~ m,/usr/lib/debug/(lib\d*|s?bin|usr|opt|dev|emul)/,) {
+    if ($file =~ m,^\./usr/lib/debug/(lib\d*|s?bin|usr|opt|dev|emul)/,) {
 	if (exists($NEEDED{$file})) {
 	    tag "debug-file-should-use-detached-symbols", $file;
 	}

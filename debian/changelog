@@ -1,5 +1,9 @@
 lintian (1.23.46) UNRELEASED; urgency=low
 
+  * checks/binaries:
+    + [RA] Anchor file matches for Perl libraries and debugging symbols so
+      as to not match partial paths.  Based on a patch from Niko Tyni.
+      (Closes: #466501)
   * checks/control-files{.desc,}:
     + [FL] Warn about empty control files. I can't see any use for
       them. Exclude udebs though, since they might differ there.
