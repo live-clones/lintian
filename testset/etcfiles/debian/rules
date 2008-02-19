@@ -39,7 +39,7 @@ binary-indep:
 	    >> debian/tmp/DEBIAN/md5sums
 	echo 'this is a malformed line' \
 	    >> debian/tmp/DEBIAN/md5sums
-	echo '07408b7e90981ddc95fda4080c259436  usr/share/doc/etcfiles/README.Debian' \
+	echo '56fb27e455dd86d8801f1ecd3a4cee49  usr/share/doc/etcfiles/README.Debian' \
 	    >> debian/tmp/DEBIAN/md5sums
 
 	dpkg-gencontrol -isp

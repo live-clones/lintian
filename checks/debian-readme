@@ -30,11 +30,14 @@ my $type = shift;
 my $readme = "";
 my $template;
 
-# read the file in one go
-local $/ = undef;
-
 if (open(IN, '<', "README.Debian")) {
-    $readme = <IN>;
+    local $_;
+    while (<IN>) {
+        if (m,/usr/doc\b,) {
+            tag 'readme-debian-mentions-usr-doc', "line $.";
+        }
+        $readme .= $_;
+    }
     close(IN);
 }
 
