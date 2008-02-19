@@ -6,6 +6,9 @@ lintian (1.23.46) UNRELEASED; urgency=low
   * checks/copyright-file:
     + [RA] Tests for copyright notices must be case-insensitive.  Patch
       from Chris Lamb.  (Closes: #464992)
+    + [RA] When looking for cases where Copyright is separated from a year
+      by a newline, also allow (C) before or after the newline.  Thanks,
+      Michael Meskes.  (Closes: #465258)
   * checks/cruft{.desc,}:
     + [FL] Add hg to the list of <vcs>-control-dir tags.
     + [RA] In the long description of outdated-autotools-helper-file,
