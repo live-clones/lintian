@@ -27,6 +27,8 @@ lintian (1.23.46) UNRELEASED; urgency=low
     + [FL] Warn if a maintainer script is a valid shell script but
       doesn't seem to have any actual code.  Based on an idea
       by Justin Pryzby.  (Closes: #410042)
+    + [RA] Update regexes based on checkbashisms to remove additional
+      false positives.  Thanks, Adam D. Barratt.
 
   * frontend/lintian:
     + [CW] Make the presence of an Ubuntu release name in the version number

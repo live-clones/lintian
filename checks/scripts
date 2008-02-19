@@ -561,13 +561,13 @@ while (<SCRIPTS>) {
 		  '(?:^|\s+)echo\s+-e',        # echo -e
 		  '(?:^|\s+)exec\s+-[acl]',    # exec -c/-l/-a name
 		  '(?:^|\s+)let\s',	       # let ...
-		  '(?<!\$)\(\(',	       # '((' should be '$(('
+		  '(?<!\$)\(\(.*\)\)',	       # '((' should be '$(('
 		  '(\[|test)\s+-a',	       # test with unary -a (should be -e)
 		);
 
 		# since this test is ugly, I have to do it by itself
 		# detect source (.) trying to pass args to the command it runs
-		if (not $found and m/^\s*(\.\s+[^\s]+\s+([^\s]+))/) {
+		if (not $found and m/^\s*(\.\s+[^\s;\`]+\s+([^\s]+))/) {
 		    if ($2 =~ /^(\&|\||\d?>|<)/) {
 			# everything is ok
 			;
@@ -710,7 +710,7 @@ sub script_is_evil_and_wrong {
 	next if /^#/o;
 	next if /^$/o;
         last if (++$i > 20);
-        if (/(^\s*|\beval\s*\'|;)exec\s*.+\s*.?\$0.?\s*(--\s*)?(\${1:?\+)?.?\$(\@|\*)/o) {
+        if (/(^\s*|\beval\s*\'|;\s*)exec\s*.+\s*.?\$0.?\s*(--\s*)?(\${1:?\+)?.?\$(\@|\*)/o) {
             $ret = 1;
             last;
         }
