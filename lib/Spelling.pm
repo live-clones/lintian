@@ -250,7 +250,6 @@ our %CORRECTIONS = qw(
                       pronouce pronounce
                       protcol protocol
                       protocoll protocol
-                      publically publicly
                       recieve receive
                       recieved received
                       redircet redirect

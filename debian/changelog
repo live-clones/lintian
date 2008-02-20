@@ -48,6 +48,8 @@ lintian (1.23.46) UNRELEASED; urgency=low
 
   * lib/Spelling.pm:
     + [RA] Add another spelling correction.
+    + [RA] Merriam-Webster and the OED have both given up on publically
+      vs. publicly, so we should as well.  (Closes: #466617)
 
   * reporting/html_reports:
     + [RA] Load the correct configuration file.
