@@ -62,6 +62,7 @@ our %interpreters =
      'install-menu' => [ '/usr/bin', '' ],
      jed	    => [ '/usr/bin' ],
      'jed-script'   => [ '/usr/bin', 'jed | xjed' ],
+     kaptain        => [ '/usr/bin' ],
      ksh	    => [ '/bin', 'mksh | pdksh' ],
      lefty	    => [ '/usr/bin', 'graphviz' ],
      magicfilter    => [ '/usr/sbin' ],
