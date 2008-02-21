@@ -22,3 +22,4 @@
 ?package(binary):needs="wm" section="FVWM Modules" title="Fake Module" command="hello"
 ?package(binary):needs="fvwmmodule" section="Window Maker" title="Fake Module"\
  command="hello"
+?package(binary):needs="x11" section="Applications/System/Hardware" title="Run xfdisk" command="su-to-root -c 'xfdisk -f'"

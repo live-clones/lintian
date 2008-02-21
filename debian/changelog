@@ -35,6 +35,10 @@ lintian (1.23.46) UNRELEASED; urgency=low
     + [RA] Mention in binary-without-manpage that if the man pages are
       provided by another package on which this package depends, a lintian
       override is appropriate.
+  * checks/menu-format:
+    + [RA] When the menu or desktop file invokes a quoted command via an
+      su program, don't try to check whether the command is in the
+      package.  Thanks, Paul Wise.  (Closes: #466665)
   * checks/scripts{.desc,}:
     + [FL] Warn if a maintainer script is a valid shell script but
       doesn't seem to have any actual code.  Based on an idea
