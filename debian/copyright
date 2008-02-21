@@ -12,6 +12,7 @@ It is now maintained by a goup of people, namely:
  Marc 'HE' Brockschmidt <he@debian.org>
  Colin Watson <cjwatson@debian.org>
  Russ Allbery <rra@debian.org>
+ Thijs Kinkhorst <thijs@debian.org>
 Contact address is <lintian-maint@debian.org>.
 
 Lintian is maintained in Subversion.  The current development version may
