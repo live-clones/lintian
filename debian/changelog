@@ -7,6 +7,10 @@ lintian (1.23.46) UNRELEASED; urgency=low
   * checks/changelog-file:
     + [RA] Adjust for the extra space added by Parse::DebianChangelog when
       checking line length.  Thanks, Robert Millan.  (Closes: #467019)
+  * checks/common_data.pm:
+    + [RA] Accept (and ignore for now) the new Checksums-Sha1,
+      Checksums-Sha256, and Checksums-Md5 fields in source packages.
+      Thanks, Raphael Hertzog.  (Closes: #466979)
   * checks/control-files{.desc,}:
     + [FL] Warn about empty control files. I can't see any use for
       them. Exclude udebs though, since they might differ there.

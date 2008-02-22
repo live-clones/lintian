@@ -87,7 +87,8 @@ use vars qw
      'build-conflicts', 'build-conflicts-indep', 'format', 'origin',
      'uploaders', 'python-version', 'autobuild', 'homepage', 'vcs-arch',
      'vcs-bzr', 'vcs-cvs', 'vcs-darcs', 'vcs-git', 'vcs-hg', 'vcs-mtn',
-     'vcs-svn', 'vcs-browser', 'dm-upload-allowed', 'bugs');
+     'vcs-svn', 'vcs-browser', 'dm-upload-allowed', 'bugs', 'checksums-sha1',
+     'checksums-sha256', 'checksums-md5');
 
 # The Ubuntu original-maintainer field is handled separately.
 %known_binary_fields = map { $_ => 1 }
