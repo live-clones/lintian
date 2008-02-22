@@ -333,9 +333,12 @@ if (@entries) {
     # check.  For some reason, use open ':utf8' isn't sufficient.  If the
     # changelog uses a non-UTF-8 encoding, this will mangle it, but it doesn't
     # matter for the length check.
-    my @lines = split ('\n', decode ('utf-8', $changes));
+    #
+    # Parse::DebianChangelog adds an additional space to the beginning of each
+    # line, so we have to adjust for that in the length check.
+    my @lines = split ("\n", decode ('utf-8', $changes));
     for my $i (0 .. $#lines) {
-        if (length ($lines[$i]) > 80 && $lines[$i] !~ /^[\s.o*+-]*\S+$/) {
+        if (length ($lines[$i]) > 81 && $lines[$i] !~ /^[\s.o*+-]*\S+$/) {
             tag 'debian-changelog-line-too-long', "line " . ($i + 1);
         }
     }

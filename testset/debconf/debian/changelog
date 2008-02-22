@@ -1,5 +1,6 @@
 debconf (1~rc1) unstable; urgency=low
 
   * Initial Release
+  * Changelog line with exactly 80 characters which tests the line-too-long tag.
 
  -- Lintian Maintainers <lintian@packages.debian.org>  Sat, 13 Nov 2004 22:45:05 +0100
