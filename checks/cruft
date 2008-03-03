@@ -125,11 +125,8 @@ if (open IN, '<', "fields/build-depends") {
     $atdinbd = 1 if Dep::implies(Dep::parse($bd), Dep::parse($autotools_pkgs));
 }
 
-my $cwd = cwd;
-$dir = readlink "$cwd/unpacked"; # File::Find in Perl 5.8 appears to need it
-
 check_diffstat("diffstat");
-find(\&find_cruft, "$dir");
+find(\&find_cruft, 'unpacked');
 
 } # </run>
 
@@ -192,7 +189,7 @@ sub check_diffstat {
 # "source-contains" tag.  The tag isn't entirely accurate, but it's better
 # than creating yet a third set of tags, and this gets the severity right.
 sub find_cruft {
-    (my $name = $File::Find::name) =~ s,^\Q$dir\E/,,;
+    (my $name = $File::Find::name) =~ s,^(\./)?unpacked/,,;
     my $prefix = ($native ? "diff-contains" : "source-contains");
     if (-d and not $warned{$name}) {
         for my $rule (@directory_checks) {

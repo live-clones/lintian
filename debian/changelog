@@ -26,6 +26,8 @@ lintian (1.23.46) UNRELEASED; urgency=low
     + [FL] Add hg to the list of <vcs>-control-dir tags.
     + [RA] In the long description of outdated-autotools-helper-file,
       point to autotool-dev's documentation.  (Closes: #465132)
+    + [RA] Remove now-unnecessary workarounds for calling File::Find with
+      symlink starting directory.
   * checks/debian-readme{.desc,}:
     + [RA] Warn of references to /usr/doc in README.Debian.  Thanks,
       Guillem Jover.  (Closes: #465192)
@@ -72,6 +74,14 @@ lintian (1.23.46) UNRELEASED; urgency=low
     + [RA] Load the correct configuration file.
   * reporting/templates:
     + [TK] Correct Lintian maintainers address in page footers.
+
+  * unpack/unpack-srcpkg-l2:
+    + [RA] Don't rely on the output format of dpkg-source to learn the
+      source directory and create a symlink.  Instead, tell dpkg-source to
+      unpack the source directly into the unpacked directory.  Discard
+      output of dpkg-source to allow for the current version, which prints
+      things even with -q (fixed in later versions).  Thanks, Raphael
+      Hertzog.  (Closes: #468927)
 
  -- Thijs Kinkhorst <thijs@debian.org>  Tue, 19 Feb 2008 11:31:41 +0100
 

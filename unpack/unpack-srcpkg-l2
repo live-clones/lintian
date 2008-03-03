@@ -30,31 +30,27 @@ use Pipeline;
 
 ($#ARGV == 0) or fail("syntax: unpack-srcpkg-l2 <base-dir>");
 my $base_dir = shift;
-my $unpack_dir;
 
 print "N: Unpacking source package in directory $base_dir ...\n" if $verbose;
-chdir($base_dir);
 
-my $IN = FileHandle->new;
-pipeline_open($IN, sub {
-	my $ret=exec 'dpkg-source', '-q', '-x', 'dsc';
-	$ret;
-    }) or fail("cannot run dpkg-source: $!");
-
-while (<$IN>) {
-    chop;
-    $unpack_dir = $1
-	if (/^dpkg-source: extracting [^\s]+ in (\S+)/);
+# We can't use spawn yet because older versions of dpkg-source print things
+# out even with -q.  This can be fixed to use spawn once that newer version of
+# dpkg is in oldstable.
+my $pid = fork;
+if (not defined $pid) {
+    fail("cannot fork: $!");
+} elsif ($pid == 0) {
+    open(STDOUT, '>', '/dev/null');
+    exec('dpkg-source', '-q', '-x', "$base_dir/dsc", "$base_dir/unpacked");
+} else {
+    waitpid($pid, 0);
+    unless ($? == 0) {
+        fail("cannot run dpkg-source: $!");
+    }
 }
-close($IN) or fail("error occured during execution of dpkg-source in $base_dir: $!");
-$unpack_dir or fail("dpkg-source didn't report unpack directory");
-
-# create link to unpack directory
-symlink($unpack_dir, "unpacked")
-    or fail("cannot symlink to unpack directory $unpack_dir");
 
 # fix permissions
-spawn('chmod', '-R', 'u+rwX,o+rX,o-w', $unpack_dir) == 0 or fail();
+spawn('chmod', '-R', 'u+rwX,o+rX,o-w', "$base_dir/unpacked") == 0 or fail();
 
 exit 0;
 
@@ -70,3 +66,9 @@ sub fail {
   }
   exit 1;
 }
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 ts=4 et shiftround
