@@ -91,6 +91,7 @@ our %interpreters =
      trs	    => [ '/usr/bin', 'konwert' ],
      xjed	    => [ '/usr/bin', 'xjed' ],
      yforth	    => [ '/usr/bin', 'yforth' ],
+     yorick	    => [ '/usr/bin' ],
      zsh	    => [ '/bin', 'zsh | zsh-beta' ],
     );
 
