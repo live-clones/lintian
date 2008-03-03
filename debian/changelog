@@ -13,6 +13,8 @@ lintian (1.23.46) UNRELEASED; urgency=low
     + [RA] Accept (and ignore for now) the new Checksums-Sha1,
       Checksums-Sha256, and Checksums-Md5 fields in source packages.
       Thanks, Raphael Hertzog.  (Closes: #466979)
+  * checks/control-file:
+    + [RA] Skip empty dependencies for stronger-dependency-implies-weaker.
   * checks/control-files{.desc,}:
     + [FL] Warn about empty control files. I can't see any use for
       them. Exclude udebs though, since they might differ there.
@@ -80,6 +82,10 @@ lintian (1.23.46) UNRELEASED; urgency=low
     + [RA] Fix option parsing bug leading lintian to incorrectly reject -a
       or -p without a package.
 
+  * lib/Dep.pm:
+    + [RA] Skip empty dependencies, avoiding false positives for
+      stronger-dependency-implies-weaker.  Patch from Adam D. Barratt.
+      (Closes: #469222)
   * lib/Spelling.pm:
     + [RA] Add another spelling correction.
     + [RA] Merriam-Webster and the OED have both given up on publically

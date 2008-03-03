@@ -67,6 +67,7 @@ sub Not { return ['NOT', $_[0]]; }
 sub parse {
     my @deps;
     for (split(/\s*,\s*/, $_[0])) {
+	next if /^$/;
 	my @alts;
 	if (/^perl\s+\|\s+perl5$/ or /^perl5\s+\|\s+perl\s+/) {
 	    $_ = 'perl5';
@@ -615,3 +616,9 @@ sub debugprint {
 }
 
 1;
+
+# Local Variables:
+# indent-tabs-mode: t
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 ts=8
