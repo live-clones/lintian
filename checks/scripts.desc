@@ -391,7 +391,36 @@ Info: The maintainer script apparently runs install-sgmlcatalog with flags
 
 Tag: maintainer-script-empty
 Type: warning
-Info: The maintainer script doesn't seem to contain any code. While this
- is harmless in most cases it is probably not what you wanted and may even
- lead to problems in rare situations where dpkg would fail if no maintainer
- script was present.
+Info: The maintainer script doesn't seem to contain any code other than
+ comments and boilerplate (set -e, exit statements, and the case statement
+ to parse options).  While this is harmless in most cases, it is probably
+ not what you wanted, may mean the package will leave unnecessary files
+ behind until purged, and may even lead to problems in rare situations
+ where dpkg would fail if no maintainer script was present.
+ .
+ If the package currently doesn't need to do anything in this maintainer
+ script, it shouldn't be included in the package.
+
+Tag: ancient-dpkg-predepends-check
+Type: warning
+Info: The package calls dpkg --assert-support-predepends in a maintainer
+ script.  This check is obsolete and has always returned true since dpkg
+ 1.1.0, released 1996-02-11.
+
+Tag: ancient-dpkg-epoch-check
+Type: warning
+Info: The package calls dpkg --assert-working-epoch in a maintainer
+ script.  This check is obsolete and has always returned true since dpkg
+ 1.4.0.7, released 1997-01-25.
+
+Tag: ancient-dpkg-long-filenames-check
+Type: warning
+Info: The package calls dpkg --assert-long-filenames in a maintainer
+ script.  This check is obsolete and has always returned true since dpkg
+ 1.4.1.17, released 1999-10-21.
+
+Tag: ancient-dpkg-multi-conrep-check
+Type: warning
+Info: The package calls dpkg --assert-multi-conrep in a maintainer
+ script.  This check is obsolete and has always returned true since dpkg
+ 1.4.1.19, released 1999-10-30.

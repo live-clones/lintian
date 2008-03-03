@@ -470,11 +470,6 @@ while (<SCRIPTS>) {
 	}
     }
 
-# the control-files check already has an unknown-control-file error
-# so there's no need for anything like this here:
-# my %maintainer_scripts = map { $_ => 1 } qw(preinst postinst prerm postrm config);
-# print "E: something" unless exists $maintainer_scripts{$file}
-
     # now scan the file contents themselves
     open (C, '<', "$filename")
 	or fail("cannot open maintainer script $filename for reading: $!");
@@ -489,9 +484,16 @@ while (<SCRIPTS>) {
 	s/\#.*$//;         # eat comments
 	chomp();
 
+	# Don't consider the standard dh-make boilerplate to be code.  This
+	# means ignoring the framework of a case statement, the labels, the
+	# echo complaining about unknown arguments, and an exit.
 	unless ($has_code
-		|| m/^\s*[:;]+\s*$/
 		|| m/^\s*set\s+-\w+\s*$/
+		|| m/^\s*case\s+\"?\$1\"?\s+in\s*$/
+		|| m/^\s*(?:[a-z|-]+|\*)\)\s*$/
+		|| m/^\s*[:;]+\s*$/
+		|| m/^\s*echo\s+\"[^\"]+\"(?:\s*>&2)?\s*$/
+		|| m/^\s*esac\s*$/
 		|| m/^\s*exit\s+\d+\s*$/) {
 	    $has_code = 1;
 	}
@@ -654,6 +656,20 @@ while (<SCRIPTS>) {
 		if (m,^\s*(?:cp|mv)\s+(?:.*\s)?/etc/inetd\.conf\s*$,) {
 		    tag "maintainer-script-modifies-inetd-conf", "$file:$."
 			unless Dep::implies($deps{provides}, Dep::parse('inet-superserver'));
+		}
+
+		# Ancient dpkg feature tests.
+		if (m/^\s*dpkg\s+--assert-support-predepends\b/) {
+		    tag "ancient-dpkg-predepends-check", "$file:$.";
+		}
+		if (m/^\s*dpkg\s+--assert-working-epoch\b/) {
+		    tag "ancient-dpkg-epoch-check", "$file:$.";
+		}
+		if (m/^dpkg\s+--assert-long-filenames\b/) {
+		    tag "ancient-dpkg-long-filenames-check", "$file:$.";
+		}
+		if (m/^dpkg\s+--assert-multi-conrep\b/) {
+		    tag "ancient-dpkg-multi-conrep-check", "$file:$.";
 		}
 	    }
 	}
