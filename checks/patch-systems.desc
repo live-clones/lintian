@@ -26,3 +26,7 @@ Type: warning
 Info: dpatch files should carry a description of the function of the included
  patch. Description lines start with "## DP:".
 
+Tag: patch-system-but-direct-changes-in-diff
+Type: warning
+Info: The package uses a patch-system, but the Debian diff.gz contains changes
+ made on files without being separated out in a patch.

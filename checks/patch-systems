@@ -33,6 +33,9 @@ sub run {
     	fail("directory in lintian laboratory for $type package $pkg missing: fields");
 	}
 
+	#Some (cruft) checks are valid for every patch system, so we need to record that:
+	my $uses_patch_system = 0;
+
 	#Get build deps so we can decide which build system the maintainer
 	#meant to use:
 	my $build_deps = "";
@@ -50,6 +53,7 @@ sub run {
 
 	#----- dpatch
 	if (Dep::implies($build_deps, Dep::parse("dpatch"))) {
+		$uses_patch_system++;
 		#check for a debian/patches file:
 		if (! -r "debfiles/patches/00list") {
 			tag "dpatch-build-dep-but-no-patch-list", $pkg;
@@ -85,6 +89,24 @@ sub run {
 				}
 			}
 		}
+	}
+
+	#----- general cruft checking:
+	if ($uses_patch_system) {
+		if ($uses_patch_system > 1) {
+			#probably a bug too use more than one system, but we don't check anything but dpatch at the moment
+		}
+
+		open(STAT, '<', "diffstat") or fail("cannot open diffstat file: $!");
+		while (<STAT>) {
+			my ($file) = (m,^\s+(.*?)\s+\|,)
+			     or fail("syntax error in diffstat file: $_");
+
+			if ($file !~ /^debian/) {
+				tag "patch-system-but-direct-changes-in-diff", $file;
+			}
+		}
+		close (STAT) or fail("error reading diffstat file: $!");
 	}
 }
 

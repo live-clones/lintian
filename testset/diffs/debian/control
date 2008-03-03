@@ -2,6 +2,7 @@ Source: diffs
 Section: interpreters
 Priority: extra
 Maintainer: Lintian Maintainers <lintian-maint@debian.org>
+Build-Depends: dpatch
 Standards-Version: 3.5.9
 
 Package: diffs
