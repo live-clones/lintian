@@ -222,7 +222,7 @@ for (keys %files) {
     } elsif (exists $objsomething{$cur_file} &&
 	     exists $ldso_dir{dirname($cur_file)} &&
 	     exists $sharedobject{$cur_file}) {
-	tag "sharedobject-in-library-directory-not-actually-a-shlib", "$cur_file";
+	tag "sharedobject-in-library-directory-missing-soname", "$cur_file";
     }
 }
 

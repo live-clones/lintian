@@ -179,7 +179,7 @@ Info: The package installs shared libraries in a directory controlled by
  in its postrm script.
 Ref: policy 8.1.1
 
-Tag: sharedobject-in-library-directory-not-actually-a-shlib
+Tag: sharedobject-in-library-directory-missing-soname
 Type: error
 Info: A shared object was identified in a library directory (i.e. a
  directory in the standard linker path) which doesn't have a SONAME.

@@ -66,6 +66,10 @@ lintian (1.23.46) UNRELEASED; urgency=low
     + [RA] Add warnings for dpkg --assert* flags for features that have
       been guaranteed for nearly a decade.  Thanks, Bernhard R. Link.
       (Closes: #467642)
+  * checks/shared-libs{,desc}:
+    + [RA] Rename sharedobject-in-library-directory-not-actually-a-shlib
+      to sharedobject-in-library-directory-missing-soname for clarity.
+      Thanks, Peter Eisentraut.  (Closes: #467425)
 
   * frontend/lintian:
     + [CW] Make the presence of an Ubuntu release name in the version number
