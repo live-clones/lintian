@@ -4,6 +4,8 @@ lintian (1.23.46) UNRELEASED; urgency=low
     + [RA] Anchor file matches for Perl libraries and debugging symbols so
       as to not match partial paths.  Based on a patch from Niko Tyni.
       (Closes: #466501)
+    + [RA] Also check for make -i when checking if errors from make clean or
+      distclean are ignored.  Thanks, Jörg Sommer.  (Closes: #469024)
   * checks/changelog-file:
     + [RA] Adjust for the extra space added by Parse::DebianChangelog when
       checking line length.  Thanks, Robert Millan.  (Closes: #467019)

@@ -9,7 +9,7 @@ build:
 	echo $(PWD)
 
 clean:
-	make clean
+	make -i clean
 	rm -f debian/files debian/substvars
 
 binary-arch: build

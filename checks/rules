@@ -98,7 +98,8 @@ while (<RULES>) {
     if (/\$[\(\{]PWD[\)\}]/) {
         tag "debian-rules-uses-pwd", "line $.";
     }
-    if (/^\t\s*-(?:\$[\(\{]MAKE[\}\)]|make)\s.*(?:dist)?clean/) {
+    if (/^\t\s*-(?:\$[\(\{]MAKE[\}\)]|make)\s.*(?:dist)?clean/ ||
+	/^\t\s*(?:\$[\(\{]MAKE[\}\)]|make)\s(?:.*\s)?-\w*i.*(?:dist)?clean/) {
         tag "debian-rules-ignores-make-clean-error", "line $.";
     }
 

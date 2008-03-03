@@ -24,7 +24,7 @@ binary: binary-arch binary-indep
 
 clean:
 	rm -rf $(tmp)
-#	make clean
+	make clean
 	rm -f subdir-good/config.cache subdir-good/config.log subdir-good/config.status
 
 .PHONY: build binary-arch binary-indep binary clean
