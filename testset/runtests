@@ -22,13 +22,15 @@ use strict;
 
 sub usage {
     print <<END;
-Usage: $0 [-k] [-v] testset-directory testing-directory [test]
+Usage: $0 [-k] [-v] [-d] testset-directory testing-directory [test]
 
 The -k option means do not stop after one failed test, but try
 them all and report all errors.
 
 The -v option will also display those tests that have a description, but are
 not tested in any testset-package.
+
+The -d option will display debugging information.
 
 The optional 3rd parameter causes runtests to only run that particular test.
 END
@@ -70,6 +72,8 @@ while ($#ARGV >= 0 && $ARGV[0] =~ m/^-/) {
 	$run_all_tests = 1;
     } elsif ($ARGV[0] eq '-v') {
 	$verbose = 1;
+    } elsif ($ARGV[0] eq '-d') {
+	$debug = 1;
     } else {
 	usage;
     }
