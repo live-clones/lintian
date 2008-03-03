@@ -91,7 +91,7 @@ our %interpreters =
      trs	    => [ '/usr/bin', 'konwert' ],
      xjed	    => [ '/usr/bin', 'xjed' ],
      yforth	    => [ '/usr/bin', 'yforth' ],
-     zsh	    => [ '/bin' ],
+     zsh	    => [ '/bin', 'zsh | zsh-beta' ],
     );
 
 # The more complex case of interpreters that may have a version number.
