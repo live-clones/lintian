@@ -32,6 +32,7 @@ use Pipeline;
 my $base_dir = shift;
 
 print "N: Unpacking source package in directory $base_dir ...\n" if $verbose;
+chdir($base_dir);
 
 # We can't use spawn yet because older versions of dpkg-source print things
 # out even with -q.  This can be fixed to use spawn once that newer version of
@@ -41,7 +42,7 @@ if (not defined $pid) {
     fail("cannot fork: $!");
 } elsif ($pid == 0) {
     open(STDOUT, '>', '/dev/null');
-    exec('dpkg-source', '-q', '-x', "$base_dir/dsc", "$base_dir/unpacked");
+    exec('dpkg-source', '-q', '-x', 'dsc', 'unpacked');
 } else {
     waitpid($pid, 0);
     unless ($? == 0) {
@@ -50,7 +51,7 @@ if (not defined $pid) {
 }
 
 # fix permissions
-spawn('chmod', '-R', 'u+rwX,o+rX,o-w', "$base_dir/unpacked") == 0 or fail();
+spawn('chmod', '-R', 'u+rwX,o+rX,o-w', 'unpacked') == 0 or fail();
 
 exit 0;
 
