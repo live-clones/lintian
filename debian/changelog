@@ -51,7 +51,7 @@ lintian (1.23.46) UNRELEASED; urgency=low
       doesn't seem to have any actual code.  Based on an idea
       by Justin Pryzby.  (Closes: #410042)
     + [RA] Update regexes based on checkbashisms to remove additional
-      false positives.  Thanks, Adam D. Barratt.
+      false positives and add additional checks.  Thanks, Adam D. Barratt.
     + [RA] Add kaptain.  Thanks, Tobias Toedter.  (Closes: #466701)
 
   * frontend/lintian:

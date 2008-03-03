@@ -541,8 +541,12 @@ while (<SCRIPTS>) {
 		  '\$\{\#?\w+\[[0-9\*\@]+\]\}',# bash arrays, ${name[0|*|@]}
 		  '\$\{!\w+[\@*]\}',	       # ${!prefix[*|@]}
 		  '\$\{!\w+\}',		       # ${!name}
-		  '(\$\(|\`)\s*\<\s*\S.+(\)|\`)', # $(\< foo) should be $(cat foo)
+		  '(\$\(|\`)\s*\<\s*\S+\s*(\)|\`)', # $(\< foo) should be $(cat foo)
 		  '\$RANDOM\b',		       # $RANDOM
+		  '\$(OS|MACH)TYPE\b',         # $(OS|MACH)TYPE
+		  '\$HOST(TYPE|NAME)\b',       # $HOST(TYPE|NAME)
+		  '\$DIRSTACK\b',              # $DIRSTACK
+		  '\$EUID\b',                  # $EUID should be "id -u"
 		);
 		my @bashism_regexs = (
 		  'function \w+\(\s*\)',       # function is useless
@@ -556,6 +560,7 @@ while (<SCRIPTS>) {
 		  '(?:^|\s+)kill\s+-[^sl]\w*', # kill -[0-9] or -[A-Z]
 		  '(?:^|\s+)trap\s+["\']?.*["\']?\s+.*[1-9]', # trap with signal numbers
 		  '\&>',		       # cshism
+		  '(<\&|>\&)\s*((-|\d+)[^\s;|\)\`&]|[^-\d])', # should be >word 2>&1
 		  '\[\[(?!:)',		       # alternative test command
 		  '(?:^|\s+)select\s+\w+',     # 'select' is not POSIX
 		  '\$\(\([A-Za-z]',	       # cnt=$((cnt + 1)) does not work in dash
@@ -564,6 +569,7 @@ while (<SCRIPTS>) {
 		  '(?:^|\s+)let\s',	       # let ...
 		  '(?<![\$\(])\(\(.*\)\)',     # '((' should be '$(('
 		  '(\[|test)\s+-a',	       # test with unary -a (should be -e)
+		  '<<<',                       # <<< here string
 		);
 
 		# since this test is ugly, I have to do it by itself
@@ -610,7 +616,7 @@ while (<SCRIPTS>) {
 
 		# Only look for the beginning of a heredoc here, after we've
 		# stripped out quoted material, to avoid false positives.
-		if (m/\<\<\s*[\'\"]?(\w+)[\'\"]?/) {
+		if (m/(?:^|[^<])\<\<\s*[\'\"]?(\w+)[\'\"]?/) {
 		    $cat_string = $1;
 		}
 	    }
