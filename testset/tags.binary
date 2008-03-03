@@ -18,6 +18,7 @@ E: binary: doc-base-file-references-missing-file binary:31 /usr/share/doc/binary
 E: binary: doc-base-file-references-missing-file binary:34 /usr/share/info/binary.info.gz
 E: binary: doc-base-file-unknown-field binary:12 unknown
 E: binary: doc-base-file-unknown-field binary:18 unknown
+E: binary: doc-base-file-uses-obsolete-national-encoding binary:8
 E: binary: doc-base-index-references-multiple-files binary:25
 E: binary: doc-base-invalid-document-field binary:1 binary!docs  
 E: binary: executable-desktop-file /usr/share/applications/goodbye.desktop 0755

@@ -122,7 +122,6 @@ while (<IN>) {
 	    if ($perm =~ m,x,o) {
 		tag "executable-in-usr-share-docbase", $file, sprintf("%04o",$operm);
 	    }
-
 	    $docbase_file = $file;
 	}
 	#menu-methods file?
@@ -180,7 +179,7 @@ if ($docbase_file) {		# postinst has to call install-docs
     while (defined ($dbfile = readdir DOCBASEDIR)) {
 	# don't try to parse executables, plus we already warned about it
 	next if -x "doc-base/$dbfile";
-	check_doc_base_file($dbfile);
+	check_doc_base_file($dbfile, $pkg, $type);
     }
     closedir DOCBASEDIR;
 } else {
@@ -217,14 +216,19 @@ if ($anymenu_file) {
 # -----------------------------------
 
 sub check_doc_base_file {
-    my $dbfile = shift;
+    my ($dbfile, $pkg, $type) = @_;
+
+    my $line = file_is_encoded_in_non_utf8("doc-base/$dbfile", $type, $pkg);
+    if ($line) {
+	tag 'doc-base-file-uses-obsolete-national-encoding', "$dbfile:$line";
+    }
 
     open (IN, '<', "doc-base/$dbfile")
         or fail("cannot open doc-base file $dbfile for reading.");
 
     my (@files, $field, @vals);
     my $knownfields = \%known_docbase_main_fields;
-    my $line        = 0;  # global
+    $line           = 0;  # global
     my %sawfields   = (); # local for each section of control file
     my %sawformats  = (); # global for control file
 

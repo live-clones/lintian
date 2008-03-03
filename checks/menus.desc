@@ -288,3 +288,14 @@ Info: Unnecessary spaces were found in the doc-base file sections'
  separator.  The section separator is an empty line and should not contain
  any whitespace.
 Ref: Debian doc-base Manual section 2.3.2
+
+Tag: doc-base-file-uses-obsolete-national-encoding
+Type: error
+Info: doc-base files must be valid UTF-8, an encoding of the Unicode
+ character set.
+ .
+ There are many ways to convert a doc-base file from an obsolete encoding
+ like ISO-8859-1.  You may, for example, use "iconv" like:
+ .
+  $ iconv -f ISO-8859-1 -t UTF-8 doc-base &gt; doc-base.new
+  $ mv doc-base.new doc-base

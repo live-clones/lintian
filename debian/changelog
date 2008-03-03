@@ -50,6 +50,9 @@ lintian (1.23.46) UNRELEASED; urgency=low
     + [RA] When the menu or desktop file invokes a quoted command via an
       su program, don't try to check whether the command is in the
       package.  Thanks, Paul Wise.  (Closes: #466665)
+  * checks/menus{,desc}:
+    + [RA] Check that doc-base files are encoded in UTF-8.  Thanks, Robert
+      Luberda.  (Closes: #468759)
   * check/patch-systems:
     + [HE] Warn if the .diff.gz contains changes while the package uses
       a patch system. (Closes: #452215)
