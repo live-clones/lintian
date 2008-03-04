@@ -1,0 +1,31 @@
+# The list of directories searched by default by the dynamic linker.
+# Packages installing shared libraries into these directories must call
+# ldconfig, must have shlibs files, and must ensure those libraries have
+# proper SONAMEs.
+#
+# Directories listed here must not have leading slashes.
+
+# Standard library directories.
+lib
+usr/lib
+usr/local/lib
+
+# For 32-bit/64-bit multiarch support.
+lib32
+lib64
+usr/lib32
+usr/lib64
+
+# Used by the Debian amd64 port for 32-bit libraries.
+emul/ia32-linux/lib
+emul/ia32-linux/usr/lib
+
+# This is now obsolete, but is still in the standard ld.so.conf.
+usr/X11R6/lib
+
+# We intentionally do not include the multiarch directories like
+# /lib/i486-linux-gnu since libraries installed there may be only for
+# cross-compilation and not intended for the host operating system.  To
+# determine whether they're for the host, we'd need to apply more complex
+# logic to map the architecture of the Debian package to the appropriate
+# multiarch directory name.

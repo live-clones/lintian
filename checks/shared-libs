@@ -20,29 +20,15 @@
 
 package Lintian::shared_libs;
 use strict;
+
+use File::Basename;
+
+use Lintian::Data;
 use Dep;
 use Tags;
-use File::Basename;
 use Util;
 
 sub run {
-
-my %ldso_dir = map { $_ => 1 }
-    qw( lib
-	lib32
-	lib64
-        usr/lib
-	usr/lib32
-	usr/lib64
-        usr/lib/libg++-dbg
-        usr/X11R6/lib/Xaw3d
-        usr/local/lib
-        usr/X11R6/lib
-        usr/lib/libc5-compat
-        lib/libc5-compat
-	emul/ia32-linux/lib
-	emul/ia32-linux/usr/lib
-      );
 
 # Libraries that should only be used in the presence of certain capabilities
 # may be located in subdirectories of the standard ldconfig search path with
@@ -63,6 +49,7 @@ my %stack_arches = map { $_ => 1 }
 	sparc
       );
 
+my $ldconfig_dirs = Lintian::Data->new('shared-libs/ldconfig-dirs');
 my $file;
 my $must_call_ldconfig;
 my $postrm = "control/postrm";
@@ -198,7 +185,7 @@ for (keys %files) {
 	    $last = $1;
 	} while ($last && $hwcap_dir{$last});
 	$dirname .= "/$last" if $last;
-	if (exists $ldso_dir{$dirname}) {
+	if ($ldconfig_dirs->known($dirname)) {
 	    # yes! so postinst must call ldconfig
 	    $must_call_ldconfig = $real_file;
 	}
@@ -219,9 +206,9 @@ for (keys %files) {
 		tag "shlib-with-executable-stack", $cur_file;
 	    }
 	}
-    } elsif (exists $objsomething{$cur_file} &&
-	     exists $ldso_dir{dirname($cur_file)} &&
-	     exists $sharedobject{$cur_file}) {
+    } elsif (exists $objsomething{$cur_file}
+	     && $ldconfig_dirs->known(dirname($cur_file))
+	     && exists $sharedobject{$cur_file}) {
 	tag "sharedobject-in-library-directory-missing-soname", "$cur_file";
     }
 }
@@ -238,7 +225,7 @@ for my $shlib_file (keys %SONAME) {
     my ($dir, $shlib_name) = $shlib_file =~ m,(.*)/([^/]+)$,;
 
     # not a public shared library, skip it
-    next unless defined $ldso_dir{$dir};
+    next unless $ldconfig_dirs->known($dir);
 
     # symlink found?
     my $link_file = "$dir/$SONAME{$shlib_file}";
@@ -313,7 +300,7 @@ if ($#shlibs == -1) {
 	if ($type ne 'udeb') {
 	    for my $shlib (@shlibs) {
 		# skip it if it's not a public shared library
-		next unless defined $ldso_dir{dirname($shlib)};
+		next unless $ldconfig_dirs->known(dirname($shlib));
 		tag "no-shlibs-control-file", "$shlib";
 	    }
 	}
@@ -357,7 +344,7 @@ if ($#shlibs == -1) {
 	    $shlibs_control_used{"udeb: ".$shlib_name} = 1;
 	    unless (exists $shlibs_control{$shlib_name}) {
 		# skip it if it's not a public shared library
- 		next unless defined $ldso_dir{dirname($shlib)};
+ 		next unless $ldconfig_dirs->known(dirname($shlib));
 		# no!!
 		tag "shlib-missing-in-control-file", $shlib_name, 'for', $shlib;
 	    }
