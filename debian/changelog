@@ -55,6 +55,8 @@ lintian (1.23.46) UNRELEASED; urgency=low
   * checks/menus{,desc}:
     + [RA] Check that doc-base files are encoded in UTF-8.  Thanks, Robert
       Luberda.  (Closes: #468759)
+    + [RA] Check doc-base sections against the new canonical list.
+      Thanks, Robert Luberda.  (Closes: #463474)
   * check/patch-systems:
     + [HE] Warn if the .diff.gz contains changes while the package uses
       a patch system. (Closes: #452215)
@@ -76,6 +78,17 @@ lintian (1.23.46) UNRELEASED; urgency=low
       to sharedobject-in-library-directory-missing-soname for clarity.
       Thanks, Peter Eisentraut.  (Closes: #467425)
 
+  * data/doc-base/sections:
+    + [RA] New file listing known doc-base sections.
+
+  * debian/dirs:
+    + [RA] Install the base directory for the Lintian root here.
+  * debian/rules:
+    + [RA] Redo the installation rules to support arbitrary nesting under
+      the copied directories.  As a side effect, install
+      lib/Tags/ColonSeparated.pm, unbreaking the experimental
+      colon-separated output format.
+
   * frontend/lintian:
     + [CW] Make the presence of an Ubuntu release name in the version number
       trigger the Ubuntu distribution field checks.
@@ -86,6 +99,8 @@ lintian (1.23.46) UNRELEASED; urgency=low
     + [RA] Skip empty dependencies, avoiding false positives for
       stronger-dependency-implies-weaker.  Patch from Adam D. Barratt.
       (Closes: #469222)
+  * lib/Lintian/Data.pm:
+    + [RA] New module for loading and querying lists of keywords.
   * lib/Spelling.pm:
     + [RA] Add another spelling correction.
     + [RA] Merriam-Webster and the OED have both given up on publically

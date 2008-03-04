@@ -299,3 +299,11 @@ Info: doc-base files must be valid UTF-8, an encoding of the Unicode
  .
   $ iconv -f ISO-8859-1 -t UTF-8 doc-base &gt; doc-base.new
   $ mv doc-base.new doc-base
+Ref: Debian doc-base Manual section 2.3.2
+
+Tag: doc-base-unknown-section
+Type: warning
+Info: The section indicated in this doc-base control file is not one of
+ the standard doc-base sections.  The doc-base sections are based on the
+ menu sections but are not exactly the same.
+Ref: Debian doc-base Manual section 2.3.3

@@ -45,11 +45,9 @@ binary-indep: $(neededfiles) build
 	install -m 755 frontend/lintian-info $(tmp)/usr/bin/
 # library files
 	@echo .... install library files ....
-	for d in checks collection lib unpack; do \
-	  install -d $(usl)/$$d; \
-	  find $$d -type f ! -path '*/CVS/*' ! -path '*/.svn/*' \
-	  	| xargs -iFILE cp -p FILE $(usl)/$$d/; \
-	done
+	find checks collection data lib unpack \
+	    \( -path '*/CVS' -o -path '*/.svn' \) -prune -o -print \
+		| cpio -admp $(usl)
 # documentation
 	@echo .... install documentation ....
 	dh_installdocs

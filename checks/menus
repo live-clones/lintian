@@ -24,6 +24,8 @@ package Lintian::menus;
 use strict;
 use lib "$ENV{'LINTIAN_ROOT'}/checks/";
 use common_data;
+
+use Lintian::Data;
 use Spelling;
 use Tags;
 use Util;
@@ -383,6 +385,13 @@ sub check_doc_base_field {
             spelling_check_picky("spelling-error-in-doc-base-title-field",
                                  join (' ', @$vals), "$dbfile:$line");
         }
+
+    # Section field.
+    } elsif ($field eq 'section') {
+	my $sections = Lintian::Data->new('doc-base/sections');
+	$_ = join (' ', @$vals);
+	tag "doc-base-unknown-section", "$dbfile:$line", $_
+	    unless $sections->known($_);
 
     # Abstract field.
     } elsif ($field eq 'abstract') {

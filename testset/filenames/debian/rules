@@ -175,6 +175,9 @@ binary-indep:
 	ln -s ../../doc/filenames/good-devhelp debian/tmp/usr/share/gtk-doc/html/good
 	ln -s ../doc/filenames/bad-devhelp debian/tmp/usr/share/gtk-doc/html/bad
 
+	install -d debian/tmp/usr/share/doc-base
+	install -m 644 debian/doc-base debian/tmp/usr/share/doc-base/filenames
+
 	dpkg-gencontrol -pfilenames -Pdebian/tmp
 	dpkg --build debian/tmp ..
 

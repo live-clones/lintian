@@ -1,3 +1,4 @@
-usr/bin
 etc
+usr/bin
+usr/share/lintian
 var/spool/lintian
