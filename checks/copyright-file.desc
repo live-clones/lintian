@@ -222,3 +222,8 @@ Info: This package appears to be covered by the GNU GPL but depends on
  3) is incompatible with some terms of the OpenSSL license, and therefore
  Debian does not allow GPL-licensed code linked with OpenSSL libraries
  unless there is a license exception explicitly permitting this.
+ .
+ If only the Debian packaging, or some other part of the package not
+ linked with OpenSSL, is covered by the GNU GPL, please add a lintian
+ override for this tag.  Lintian currently has no good way of
+ distinguishing between that case and problematic packages.

@@ -26,6 +26,9 @@ lintian (1.23.46) UNRELEASED; urgency=low
       Michael Meskes.  (Closes: #465258)
     + [RA] Further explain why lintian looks for a valid copyright notice.
       (Closes: #466714)
+    + [RA] Suggest an override if only the Debian packaging or some other
+      part of the package not linked with OpenSSL is covered by the GPL.
+      Thanks, Andrew Pollock.  (Closes: #469106)
   * checks/cruft{.desc,}:
     + [FL] Add hg to the list of <vcs>-control-dir tags.
     + [RA] In the long description of outdated-autotools-helper-file,
