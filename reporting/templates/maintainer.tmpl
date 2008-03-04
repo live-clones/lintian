@@ -39,23 +39,31 @@
     # We get a hash of package names to a hash of versions to a list of
     # tags.  Create a description list with the package information as the
     # title and the tags as the value.
-    for my $source (sort keys %packages) {
-        my $anchored;
-        for my $version (sort keys %{ $packages{$source} }) {
-            my $tags = $packages{$source}{$version};
+    for my $source (sort (keys (%packages), keys (%uploads))) {
+        my ($anchored, $data, $upload);
+        if ($packages{$source}) {
+            $data = $packages{$source};
+        } else {
+            $data = $uploads{$source};
+            $upload = 1;
+        }
+        for my $version (sort keys %$data) {
+            my $tags = $data->{$version};
             my $last = '';
             for my $info (@$tags) {
                 if ($errors) {
                     next unless $info->{code} eq 'E' or $info->{code} eq 'W';
                 }
                 unless ($last) {
-                    if ($anchored) {
+                    if ($anchored || $upload) {
                         $OUT .= qq(    <dt>);
                     } else {
                         $OUT .= qq(    <dt id="$source"><a name="$source">);
                     }
-                    $OUT .= "<strong>$source ($version)</strong>";
-                    if ($anchored) {
+                    $OUT .= "<strong>$source ($version)";
+                    $OUT .= ' (Uploader)' if $upload;
+                    $OUT .= '</strong>';
+                    if ($anchored || $upload) {
                         $OUT .= qq(</dt>\n    <dd>\n);
                     } else {
                         $OUT .= qq(</a></dt>\n    <dd>\n);

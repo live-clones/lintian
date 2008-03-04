@@ -101,6 +101,8 @@ lintian (1.23.46) UNRELEASED; urgency=low
       (Closes: #469222)
   * lib/Lintian/Data.pm:
     + [RA] New module for loading and querying lists of keywords.
+  * lib/Read_pkglists.pm:
+    + [RA] Extract Uploaders from the source package list.
   * lib/Spelling.pm:
     + [RA] Add another spelling correction.
     + [RA] Merriam-Webster and the OED have both given up on publically
@@ -108,9 +110,15 @@ lintian (1.23.46) UNRELEASED; urgency=low
 
   * reporting/html_reports:
     + [RA] Load the correct configuration file.
-  * reporting/templates:
+    + [RA] Include packages for which one is an uploader in one's
+      maintainer page, marked accordingly.  (Closes: #421011)
+  * reporting/templates/*:
     + [TK] Correct Lintian maintainers address in page footers.
+  * reporting/templates/maintainer.html:
+    + [RA] Include packages for which the maintainer is an uploader.
 
+  * unpack/list-srcpkg:
+    + [RA] Include Uploaders in the package list.
   * unpack/unpack-srcpkg-l2:
     + [RA] Don't rely on the output format of dpkg-source to learn the
       source directory and create a symlink.  Instead, tell dpkg-source to

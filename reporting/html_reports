@@ -139,9 +139,12 @@ my %statistics;
 #
 # and then stored under the key 'Russ Allbery <rra@debian.org>'
 #
+# %by_uploader holds the same thing except for packages for which the person
+# is only an uploader.
+#
 # %by_tag is a hash of tag names to an anonymous array of tag information
 # hashes just like the inside-most data structure above.
-my (%by_maint, %by_tag);
+my (%by_maint, %by_uploader, %by_tag);
 
 # We take a lintian log file on either standard input or as the first
 # argument.  This log file contains all the tags lintian found, plus N: tags
@@ -153,7 +156,7 @@ my (%by_maint, %by_tag);
 # each other's pages.  If we find two maintainers who map to the same URL,
 # just assume that the second maintainer is the same as the first (but warn
 # about it).
-my (%seen, %urlmap, %warned);
+my (%seen, %saw_maintainer);
 while (<>) {
     chomp;
     next unless /^([EWIXO]): (\S+)(?: (\S+))?: (\S+)(?:\s+(.*))?/;
@@ -179,12 +182,13 @@ while (<>) {
     # to be no source package in the archive.  Determine the maintainer and
     # version.  Work around a missing source package by pulling information
     # from a binary package or udeb of the same name if there is any.
-    my ($source, $version, $maintainer);
+    my ($source, $version, $maintainer, $uploaders);
     if ($type eq 'source') {
         $source = $package;
         if (exists $source_info{$source}) {
             $version = $source_info{$source}->{version};
             $maintainer = $source_info{$source}->{maintainer};
+            $uploaders = $source_info{$source}->{uploaders};
         } else {
             warn "source package $package not listed!\n";
         }
@@ -192,6 +196,7 @@ while (<>) {
         $source = $bin_src_ref{$package};
         if ($source and exists $source_info{$source}) {
             $maintainer = $source_info{$source}->{maintainer};
+            $uploaders = $source_info{$source}->{uploaders};
         } else {
             warn "source for package $package not found!\n";
             $source = $package;
@@ -210,18 +215,10 @@ while (<>) {
     $maintainer ||= '(unknown)';
     $version ||= 'unknown';
 
-    # Check if we've seen the URL for this maintainer before.
-    my $url = maintainer_url ($maintainer);
-    if ($urlmap{$url} && $urlmap{$url} ne $maintainer) {
-        warn "$maintainer has the same page as $urlmap{$url}\n"
-            unless ($warned{$maintainer}
-                    || lc ($maintainer) eq lc ($urlmap{$url})
-                    || $maintainer =~ /\@lists\.(alioth\.)?debian\.org>/);
-        $warned{$maintainer}++;
-        $maintainer = $urlmap{$url};
-    } else {
-        $urlmap{$url} = $maintainer;
-    }
+    # Check if we've seen the URL for this maintainer before and, if so, map
+    # them to the same person as the previous one.
+    $maintainer = map_maintainer ($maintainer);
+    $saw_maintainer{$maintainer} = 1;
 
     # Update maintainer statistics.
     $statistics{maintainers}++ unless defined $by_maint{$maintainer};
@@ -245,6 +242,19 @@ while (<>) {
     push(@{ $by_maint{$maintainer}{$source}{$version} }, $info);
     $by_tag{$tag} ||= [];
     push(@{ $by_tag{$tag} }, $info);
+
+    # If the package had uploaders listed, also add the information to
+    # %by_uploaders (still sharing the data between hashes).
+    if ($uploaders) {
+        my @uploaders = split (/\s*,\s*/, $uploaders);
+        for (@uploaders) {
+            my $uploader = map_maintainer ($_);
+            next if $uploader eq $maintainer;
+            $saw_maintainer{$uploader} = 1;
+            $by_uploader{$uploader}{$source}{$version} ||= [];
+            push(@{ $by_uploader{$uploader}{$source}{$version} }, $info);
+        }
+    }
 }
 
 # Build a hash of all maintainers, not just those with Lintian tags.  We use
@@ -260,12 +270,19 @@ for my $source (keys %source_info) {
 # page that includes info, experimental, and overriden tags, and assemble the
 # maintainer index and the QA package list as we go.
 my (%qa, %maintainers, %packages);
-for my $maintainer (sort keys %by_maint) {
+my @maintainers;
+{
+    my %seen;
+    @maintainers =
+        sort grep { !$seen{$_}++ } keys (%by_maint), keys (%by_uploader);
+}
+for my $maintainer (@maintainers) {
     delete $clean{$maintainer};
 
     # For each of this maintainer's packages, add statistical information
     # about warnings and errors to the QA list and build the packages hash
-    # used for the package index.
+    # used for the package index.  We only do this for the maintainer
+    # packages, not the uploader packages, to avoid double-counting.
     my ($errors, $warnings) = (0, 0);
     for my $source (keys %{ $by_maint{$maintainer} }) {
         for my $version (keys %{ $by_maint{$maintainer}{$source} }) {
@@ -296,6 +313,7 @@ for my $maintainer (sort keys %by_maint) {
         maintainer => html_quote ($maintainer),
         name       => html_quote ($name),
         packages   => $by_maint{$maintainer},
+        uploads    => $by_uploader{$maintainer},
         timestamp  => $timestamp,
         version    => $LINTIAN_VERSION
     );
@@ -342,7 +360,7 @@ for my $maintainer (keys %clean) {
         version    => $LINTIAN_VERSION
     );
     my $id = maintainer_url ($maintainer);
-    next if $urlmap{$id};
+    next if $saw_maintainer{$id};
     output_template ("maintainer/$id", $templates{clean}, \%data);
     output_template ("full/$id", $templates{clean}, \%data);
 }
@@ -461,6 +479,28 @@ sub maintainer_url {
         return "$id.html";
     } else {
         return 'unsorted.html';
+    }
+}
+
+# Deduplicate maintainers.  Maintains a cache of the maintainers we've seen
+# with a given e-mail address, issues a warning if two maintainers have the
+# same e-mail address, and returns the maintainer string that we should use
+# (which is whatever maintainer we saw first with that e-mail).
+{
+    my (%urlmap, %warned);
+    sub map_maintainer {
+        my ($maintainer) = @_;
+        my $url = maintainer_url ($maintainer);
+        if ($urlmap{$url} && $urlmap{$url} ne $maintainer) {
+            warn "$maintainer has the same page as $urlmap{$url}\n"
+                unless ($warned{$maintainer}
+                        || lc ($maintainer) eq lc ($urlmap{$url})
+                        || $maintainer =~ /\@lists\.(alioth\.)?debian\.org>/);
+            $warned{$maintainer}++;
+            $maintainer = $urlmap{$url};
+        } else {
+            $urlmap{$url} = $maintainer;
+        }
     }
 }
 

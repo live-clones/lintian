@@ -96,7 +96,7 @@ while (!eof(IN)) {
   do { $line = <IN> } until ($line =~ m/^ [0-9a-f]{32} [0-9]+ (.+\.dsc)$/m);
   my $dsc_file = "$pkg_dir/$1";
   do { $line = <IN> } until ($line =~ m/^\s*$/m);
-  
+
   my @stat;
   # get timestamp...
   unless (@stat = stat "$LINTIAN_ARCHIVEDIR/$dsc_file") {
@@ -154,13 +154,14 @@ while (!eof(IN)) {
   }
 
   # write entry to output file
-  for (qw/version maintainer architecture standards-version binary files/) {
-    $data->{$_} =~ tr/;\n/__/;
+  for (qw/version maintainer uploaders architecture standards-version binary files/) {
+    $data->{$_} =~ tr/;\n/_ / if $data->{$_};
   }
   print OUT join(';',
 		 $pkg,
 		 $data->{'version'},
 		 $data->{'maintainer'},
+                 $data->{'uploaders'} || '';
                  $data->{'architecture'},
                  $data->{'standards-version'},
                  $data->{'binary'},
@@ -187,3 +188,9 @@ if ($verbose) {
 }
 
 exit 0;
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 2
+# End:
+# vim: syntax=perl sw=2 sts=2 ts=2 et shiftround

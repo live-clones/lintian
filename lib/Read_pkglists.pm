@@ -29,7 +29,7 @@ use vars qw($BINLIST_FORMAT $SRCLIST_FORMAT $UDEBLIST_FORMAT %source_info %binar
 # these banner lines have to be changed with every incompatible change of the
 # binary and source list file formats
 $BINLIST_FORMAT = "Lintian's list of binary packages in the archive--V2";
-$SRCLIST_FORMAT = "Lintian's list of source packages in the archive--V2";
+$SRCLIST_FORMAT = "Lintian's list of source packages in the archive--V3";
 $UDEBLIST_FORMAT = "Lintian's list of udeb packages in the archive--V1";
 
 %source_info = ();
@@ -64,7 +64,7 @@ sub read_src_list {
   while (<IN>) {
     chop;
     next if /^\s*$/o;
-    my ($src,$ver,$maint,$arch,$std,$bin,$files,$file,$timestamp) = split(/\;/,$_);
+    my ($src,$ver,$maint,$uploaders,$arch,$std,$bin,$files,$file,$timestamp) = split(/\;/,$_);
 
     my $src_struct;
     %$src_struct =
@@ -72,6 +72,7 @@ sub read_src_list {
        'source' => $src,
        'version' => $ver,
        'maintainer' => $maint,
+       'uploaders' => $uploaders,
        'architecture' => $arch,
        'standards-version' => $std,
        'binary' => $bin,
@@ -190,3 +191,9 @@ sub get_bin_src_ref {
 }
 
 1;
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 2
+# End:
+# vim: syntax=perl sw=2 sts=2 ts=2 et shiftround
