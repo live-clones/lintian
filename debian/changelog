@@ -1,4 +1,6 @@
-lintian (1.23.46) UNRELEASED; urgency=low
+lintian (1.23.46) unstable; urgency=low
+
+  The "five Lintian committers!" release.
 
   * checks/binaries:
     + [RA] Anchor file matches for Perl libraries and debugging symbols so
@@ -130,7 +132,7 @@ lintian (1.23.46) UNRELEASED; urgency=low
       things even with -q (fixed in later versions).  Thanks, Raphael
       Hertzog.  (Closes: #468927)
 
- -- Thijs Kinkhorst <thijs@debian.org>  Tue, 19 Feb 2008 11:31:41 +0100
+ -- Russ Allbery <rra@debian.org>  Mon, 03 Mar 2008 18:21:32 -0800
 
 lintian (1.23.45) unstable; urgency=low
 
