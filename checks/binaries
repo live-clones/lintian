@@ -170,9 +170,15 @@ while (<IN>) {
     # binary or object file?
     next unless ($info =~ m/^[^,]*\bELF\b/) or ($info =~ m/\bcurrent ar archive\b/);
 
+    # Warn about Architecture: all packages that contain shared libraries, but
+    # only if those libraries aren't installed in a multiarch directory.  The
+    # package may be a support package for cross-compiles.
     if ($arch eq 'all') {
-	# package is `Architecture: all' but contains libs!?
-	tag "arch-independent-package-contains-binary-or-object", "$file";
+	my ($arch) = ($file =~ m,^\./(?:usr/)?lib/([^/]+)/,);
+	my $multiarch = Lintian::Data->new('binaries/multiarch');
+	unless ($arch and $multiarch->known($arch)) {
+	    tag "arch-independent-package-contains-binary-or-object", "$file";
+	}
     }
 
     # ELF?

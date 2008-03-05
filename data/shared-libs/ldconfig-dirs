@@ -23,9 +23,31 @@ emul/ia32-linux/usr/lib
 # This is now obsolete, but is still in the standard ld.so.conf.
 usr/X11R6/lib
 
-# We intentionally do not include the multiarch directories like
-# /lib/i486-linux-gnu since libraries installed there may be only for
-# cross-compilation and not intended for the host operating system.  To
-# determine whether they're for the host, we'd need to apply more complex
-# logic to map the architecture of the Debian package to the appropriate
-# multiarch directory name.
+# Multiarch directories.  Currently, these aren't used officially by the
+# project but ld.so looks in the ones native to the local platform.
+# Hopefully including the ones not native to the local platform won't
+# hurt.
+#
+# See Bug#469301 and Bug#464796 for more details.
+lib/arm-linux-gnu
+lib/arm-linux-gnueabi
+lib/i486-linux-gnu
+lib/hppa-linux-gnu
+lib/m68k-linux-gnu
+lib/mips-linux-gnu
+lib/mipsel-linux-gnu
+lib/powerpc-linux-gnu
+lib/s390-linux-gnu
+lib/sparc-linux-gnu
+lib/x86_64-linux-gnu
+usr/lib/arm-linux-gnu
+usr/lib/arm-linux-gnueabi
+usr/lib/i486-linux-gnu
+usr/lib/hppa-linux-gnu
+usr/lib/m68k-linux-gnu
+usr/lib/mips-linux-gnu
+usr/lib/mipsel-linux-gnu
+usr/lib/powerpc-linux-gnu
+usr/lib/s390-linux-gnu
+usr/lib/sparc-linux-gnu
+usr/lib/x86_64-linux-gnu

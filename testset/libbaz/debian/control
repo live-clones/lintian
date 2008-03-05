@@ -35,3 +35,9 @@ Depends: libbaz2 (= ${binary:Version})
 Priority: optional
 Description: debugging package
  Regression test for lintian's handling of libraries
+
+Package: ia32-libbaz2
+Architecture: all
+Depends: ${shlibs:Depends}
+Description: multiarch package
+ Regression test for lintian's handling of libraries

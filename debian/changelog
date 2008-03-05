@@ -1,12 +1,19 @@
 lintian (1.23.47) UNRELEASED; urgency=low
 
+  * checks/binaries:
+    + [RA] Permit architecture: all packages to have binaries in the
+      multiarch directories.  (Closes: #469301)
   * checks/scripts:
     + [RA] Attempt to quash some Perl warnings.
   * checks/shared-libs:
     + [RA] Move the default ld.so search path into data.  Drop obsolete
       /usr/lib/libg++-dbg, /usr/X11R6/lib/Xaw3d, and libc5 compatibility
       directories in the process.
+    + [RA] Allow and expect ldconfig, SONAMEs, and shlibs treatment of
+      libraries in multiarch directories.
 
+  * data/binaries/multiarch:
+    + [RA] New file listing multiarch binary directories.
   * data/shared-libs/ldconfig-dirs:
     + [RA] New file listing directories searched by ld.so.
 
