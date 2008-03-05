@@ -1,8 +1,10 @@
 lintian (1.23.47) UNRELEASED; urgency=low
 
-  * checks/binaries:
+  * checks/binaries{.desc,}
     + [RA] Permit architecture: all packages to have binaries in the
       multiarch directories.  (Closes: #469301)
+    + [RA] Suggest an override for arch: all packages containing binaries
+      independent of the host architecture (such as for cross-compiles).
   * checks/scripts:
     + [RA] Attempt to quash some Perl warnings.
   * checks/shared-libs:

@@ -9,7 +9,11 @@ Info: This script checks binaries and object files for bugs.
 Tag: arch-independent-package-contains-binary-or-object
 Type: error
 Info: The package contains a binary or object file but is tagged
- `Architecture: all'.
+ Architecture: all.
+ .
+ If this package contains binaries or objects for cross-compiling or
+ binary blobs for other purposes independent of the host architecture
+ (such as BIOS updates or firmware), please add a Lintian override.
 
 Tag: unstripped-binary-or-object
 Type: error
