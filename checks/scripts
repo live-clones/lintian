@@ -47,6 +47,7 @@ our %interpreters =
      awk	    => [ '/usr/bin', '' ],
      bash	    => [ '/bin', '' ],
      bltwish	    => [ '/usr/bin', 'blt' ],
+     clisp	    => [ '/usr/bin' ],
      csh	    => [ '/bin', 'tcsh | csh | c-shell' ],
      dash	    => [ '/bin' ],
      expect	    => [ '/usr/bin' ],
@@ -75,11 +76,13 @@ our %interpreters =
      pagsh	    => [ '/usr/bin', 'openafs-client | heimdal-clients' ],
      parrot	    => [ '/usr/bin' ],
      perl	    => [ '/usr/bin', '' ],
+     procmail	    => [ '/usr/bin' ],
      python	    => [ '/usr/bin', 'python | python-minimal' ],
      pforth	    => [ '/usr/bin' ],
      rc		    => [ '/usr/bin' ],
      regina	    => [ '/usr/bin', 'regina-rexx' ],
      rexx	    => [ '/usr/bin', 'regina-rexx' ],
+     rrdcgi	    => [ '/usr/bin', 'rrdtool' ],
      ruby	    => [ '/usr/bin' ],
      runhugs	    => [ '/usr/bin', 'hugs | hugs98' ],
      sed	    => [ '/bin', '' ],
@@ -249,7 +252,7 @@ while (<SCRIPTS>) {
     my ($base) = $interpreter =~ m,([^/]*)$,;
 
     # allow exception for .in files that have stuff like #!@PERL@
-    next if ($filename =~ m,\.in$, and $interpreter =~ m,^\@[A-Z_]+\@$,);
+    next if ($filename =~ m,\.in$, and $interpreter =~ m,^(\@|<\<)[A-Z_]+(\@|>\>)$,);
 
     my $is_absolute = ($interpreter =~ m,^/, or defined $calls_env);
 

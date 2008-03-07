@@ -21,6 +21,8 @@ lintian (1.23.47) UNRELEASED; urgency=low
     + [RA] Attempt to quash some Perl warnings.
     + [RA] *.py files in /usr/{lib,share}, /etc/init.d/skeleton, and *.ex
       files do not need to be executable even if they look like scripts.
+    + [RA] Add clisp, procmail, and rrdcgi, and another way interpretors
+      are templated in *.in files.
   * checks/shared-libs:
     + [RA] Move the default ld.so search path into data.  Drop obsolete
       /usr/lib/libg++-dbg, /usr/X11R6/lib/Xaw3d, and libc5 compatibility
