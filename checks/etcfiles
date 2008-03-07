@@ -61,8 +61,12 @@ while (<IN>) {
     # skip it unless it is a file in /etc
     next unless $file =~ m,^etc, and $perm =~ m,^-,;
 
-    # if there is a /etc/foo, it must be a conffile
-    if (not exists($conffiles{$file})) {
+    # If there is a /etc/foo, it must be a conffile (with a few exceptions).
+    if (not exists($conffiles{$file})
+	and $file !~ m,/README$,
+	and $file ne 'etc/init.d/skeleton'
+	and $file ne 'etc/init.d/rc'
+	and $file ne 'etc/init.d/rcS') {
 	tag "file-in-etc-not-marked-as-conffile", "/$file";
     }
 }

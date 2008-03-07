@@ -12,6 +12,9 @@ lintian (1.23.47) UNRELEASED; urgency=low
     + [RA] Subversion conflicts generate three files, two with revision
       numbers and one with .mine.  Only warn about the revision numbers;
       .mine probably won't occur alone and may be a false positive.
+  * checks/etcfiles:
+    + [RA] /etc/init.d/{skeleton,rc,rcS} are not conffiles, and README
+      files in /etc need not be.
   * checks/scripts:
     + [RA] Attempt to quash some Perl warnings.
   * checks/shared-libs:
