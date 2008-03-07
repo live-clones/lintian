@@ -219,6 +219,7 @@ if (m,/usr/share/common-licenses,
     || m/LaTeX Project Public License/
     || m/(^From:.*^To:|^To:.*^From:).*(GNU General Public License|GPL)/ms
     || m/AFFERO GENERAL PUBLIC LICENSE/
+    || m/GNU Free Documentation License\s*Version 1\.1/
     || $wrong_directory_detected) {
     # False positive or correct reference.  Ignore.
 } elsif (m/GNU Free Documentation License/i or m/\bGFDL\b/) {

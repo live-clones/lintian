@@ -142,6 +142,11 @@ Info: The strings "GNU General Public License" or "GPL" appear in the
  copyright file for this package, but the copyright file does not
  reference <tt>/usr/share/common-licenses</tt> as the location of the GPL
  on Debian systems.
+ .
+ If the package uses some other license that just mentions the GPL and
+ that Lintian should detect as an exception, please file a Lintian bug.
+ If the copyright file must mention the GPL for reasons other than stating
+ the license of the package, please add a Lintian override.
 
 Tag: copyright-should-refer-to-common-license-file-for-gfdl
 Type: error
@@ -150,6 +155,11 @@ Info: The strings "GNU Free Documentation License" or "GFDL" appear in the
  copyright file for this package, but the copyright file does not
  reference <tt>/usr/share/common-licenses</tt> as the location of the GFDL
  on Debian systems.
+ .
+ If the package uses some other license that just mentions the GFDL and
+ that Lintian should detect as an exception, please file a Lintian bug.
+ If the copyright file must mention the GPL for reasons other than stating
+ the license of the package, please add a Lintian override.
 
 Tag: copyright-should-refer-to-common-license-file-for-lgpl
 Type: error
@@ -159,6 +169,11 @@ Info: The strings "GNU Lesser General Public License", "GNU Library
  package, but the copyright file does not reference
  <tt>/usr/share/common-licenses</tt> as the location of the LGPL on Debian
  systems.
+ .
+ If the package uses some other license that just mentions the LGPL and
+ that Lintian should detect as an exception, please file a Lintian bug.
+ If the copyright file must mention the GPL for reasons other than stating
+ the license of the package, please add a Lintian override.
 
 Tag: copyright-lists-upstream-authors-with-dh_make-boilerplate
 Type: warning
