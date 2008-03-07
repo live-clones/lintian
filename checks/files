@@ -173,7 +173,9 @@ while (<IN>) {
 	    tag "package-installs-into-etc-gconf-schemas", "$file";
 	}
 	# ---------------- /etc/init.d
-	elsif ($file =~ m,^etc/init\.d/\S, and $operm != 0755
+	elsif ($file =~ m,^etc/init\.d/\S,
+	       and $file !~ m,^etc/init\.d/(README|skeleton)$,
+	       and $operm != 0755
 	       and $perm =~ m/^-/) {
 	    tag "non-standard-file-permissions-for-etc-init.d-script",
 		sprintf("$file %04o != 0755",$operm);

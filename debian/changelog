@@ -15,8 +15,12 @@ lintian (1.23.47) UNRELEASED; urgency=low
   * checks/etcfiles:
     + [RA] /etc/init.d/{skeleton,rc,rcS} are not conffiles, and README
       files in /etc need not be.
+  * checks/files:
+    + [RA] /etc/init.d/{skeleton,README} don't need to be executable.
   * checks/scripts:
     + [RA] Attempt to quash some Perl warnings.
+    + [RA] *.py files in /usr/{lib,share}, /etc/init.d/skeleton, and *.ex
+      files do not need to be executable even if they look like scripts.
   * checks/shared-libs:
     + [RA] Move the default ld.so search path into data.  Drop obsolete
       /usr/lib/libg++-dbg, /usr/X11R6/lib/Xaw3d, and libc5 compatibility

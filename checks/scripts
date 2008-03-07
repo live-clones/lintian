@@ -269,11 +269,14 @@ while (<SCRIPTS>) {
 	unless $is_absolute;
     tag("script-not-executable", $filename)
 	unless ($executable{$filename}
-		or $filename =~ m,usr/(lib|share)/.*\.pm,
-		or $filename =~ m,usr/(lib|share)/ruby/.*\.rb,
+		or $filename =~ m,^\./usr/(lib|share)/.*\.pm,
+		or $filename =~ m,^\./usr/(lib|share)/.*\.py,
+		or $filename =~ m,^\./usr/(lib|share)/ruby/.*\.rb,
 		or $filename =~ m,\.in$,
-		or $filename =~ m,etc/menu-methods,
-		or $filename =~ m,etc/X11/Xsession.d,);
+		or $filename =~ m,\.ex$,
+		or $filename eq './etc/init.d/skeleton'
+		or $filename =~ m,^\./etc/menu-methods,
+		or $filename =~ m,^\./etc/X11/Xsession.d,);
 
     # Warn about csh scripts.
     tag("csh-considered-harmful", $filename)
