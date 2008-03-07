@@ -65,7 +65,7 @@ my @file_checks =
      [ qr,^(.+/)?svk-commit.+\.tmp$,      => 'svk-commit-file'        ],
      [ qr,^(.+/)?\.arch-inventory$,       => 'arch-inventory-file'    ],
      [ qr,^(.+/)?\.\#(.+?)\.\d+(\.\d+)*$, => 'cvs-conflict-copy'      ],
-     [ qr,^(.+/)?(.+?)\.(r\d+|mine)$,     => 'svn-conflict-file'      ],
+     [ qr,^(.+/)?(.+?)\.(r\d+)$,          => 'svn-conflict-file'      ],
      [ qr,\.(orig|rej)$,                  => 'patch-failure-file',  1 ],
      [ qr,((^|/)\.[^/]+\.swp|~)$,         => 'editor-backup-file',  1 ],
     );
