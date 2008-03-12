@@ -48,6 +48,9 @@ lintian (1.23.47) UNRELEASED; urgency=low
     + [RA] Qualify relative --root directories so that we don't break
       later.  Patch from Håkon Stordahl.  (Closes: #469925)
 
+  * lib/Spelling.pm:
+    + [RA] Avoid Perl warnings when called with an uninitialized value.
+
   * unpack/list-srcpkg:
     + [RA] Fix syntax error introduced by Uploaders support.
   * unpack/unpack-binpkg-l1:
