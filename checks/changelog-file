@@ -172,9 +172,9 @@ if (-f 'NEWS.Debian') {
     }
 
     # Some checks on the most recent entry.
-    if ($changes->data) {
+    if ($changes->data and defined (($changes->data)[0])) {
         ($news) = $changes->data;
-        if ($news->Distribution =~ /unreleased/i) {
+        if ($news->Distribution && $news->Distribution =~ /unreleased/i) {
             tag "debian-news-entry-has-strange-distribution", $news->Distribution;
         }
         spelling_check('spelling-error-in-news-debian', $news->Changes);
@@ -320,7 +320,7 @@ if (@entries) {
     }
 
     # Compare against NEWS.Debian if available.
-    if ($news and $entry->Version eq $news->Version) {
+    if ($news and $news->Version and $entry->Version eq $news->Version) {
         for my $field (qw/Distribution Urgency/) {
             if ($entry->$field ne $news->$field) {
                 tag 'changelog-news-debian-mismatch', lc ($field),

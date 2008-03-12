@@ -5,6 +5,8 @@ lintian (1.23.47) UNRELEASED; urgency=low
       multiarch directories.  (Closes: #469301)
     + [RA] Suggest an override for arch: all packages containing binaries
       independent of the host architecture (such as for cross-compiles).
+  * checks/changelog-file:
+    + [RA] Quash more Perl warnings on badly malformed NEWS.Debian files.
   * checks/copyright-file{.desc,}:
     + [RA] Document handling of false positives for GPL, GFDL, and LGPL
       license references and catch the GFDL 1.1 false positive.
