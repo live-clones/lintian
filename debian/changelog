@@ -21,6 +21,9 @@ lintian (1.23.47) UNRELEASED; urgency=low
       the archive.  Thanks, Y Giridhar Appaji Nag.  (Closes: #469603)
     + [RA] Check for numeric owners or groups outside of the reserved
       static ranges.  Patch from Håkon Stordahl.  (Closes: #469924)
+    + [RA] Issue errors for installing files under /var/www.  This isn't
+      in FHS, may not be the document root, and may break local files if
+      it is the document root.  Thanks, Joerg Jaspert.  (Closes: #470403)
   * checks/scripts:
     + [RA] Attempt to quash some Perl warnings.
     + [RA] *.py files in /usr/{lib,share}, /etc/init.d/skeleton, and *.ex
