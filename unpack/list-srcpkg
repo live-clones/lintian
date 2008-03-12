@@ -161,7 +161,7 @@ while (!eof(IN)) {
 		 $pkg,
 		 $data->{'version'},
 		 $data->{'maintainer'},
-                 $data->{'uploaders'} || '';
+                 $data->{'uploaders'} || '',
                  $data->{'architecture'},
                  $data->{'standards-version'},
                  $data->{'binary'},

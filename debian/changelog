@@ -35,6 +35,9 @@ lintian (1.23.47) UNRELEASED; urgency=low
   * data/shared-libs/ldconfig-dirs:
     + [RA] New file listing directories searched by ld.so.
 
+  * unpack/list-srcpkg:
+    + [RA] Fix syntax error introduced by Uploaders support.
+
  -- Russ Allbery <rra@debian.org>  Tue, 04 Mar 2008 13:07:18 -0800
 
 lintian (1.23.46) unstable; urgency=low
