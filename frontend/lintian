@@ -295,9 +295,16 @@ Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
 GetOptions(%opthash)
     or die("error parsing options\n");
 
+# determine current working directory--we'll need this later
+chop($cwd = `pwd`);
+
 # determine LINTIAN_ROOT if it was not set with --root.
 $LINTIAN_ROOT = $LINTIAN_ROOT || $ENV{'LINTIAN_ROOT'};
-if (defined $LINTIAN_ROOT) { # see if it has a frontend directory
+if (defined $LINTIAN_ROOT) {
+    unless ($LINTIAN_ROOT =~ m,^/,) {
+	$LINTIAN_ROOT = "$cwd/$LINTIAN_ROOT";
+    }
+    # see if it has a frontend directory
     if (-d "$LINTIAN_ROOT/frontend") {
         $lintian_info_cmd = "$LINTIAN_ROOT/frontend/lintian-info";
     }
@@ -339,9 +346,6 @@ if ($action =~ /^(check|unpack|remove)$/ and $#ARGV == -1 and not $check_everyth
 if ($> == 0 and not $allow_root) {
     print STDERR "warning: lintian's authors do not recommend running it with root privileges!\n";
 }
-
-# determine current working directory--we'll need this later
-chop($cwd = `pwd`);
 
 # search for configuration file if it was not set with --cfg
 # do not search the default locations if it was set.
