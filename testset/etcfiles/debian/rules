@@ -18,7 +18,7 @@ binary-indep:
 	ln $(tmp)/etc/improper $(tmp)/etc/improper-link
 	install -d $(tmp)/usr/share/doc/etcfiles
 	install -d $(tmp)/var/lib
-	cp proper $(tmp)/var/lib/foo
+	install -m 644 proper $(tmp)/var/lib/foo
 	install -m 644 debian/README.Debian $(tmp)/usr/share/doc/etcfiles
 	install -m 644 debian/changelog $(tmp)/usr/share/doc/etcfiles
 	#gzip -9 $(tmp)/usr/share/doc/etcfiles/changelog

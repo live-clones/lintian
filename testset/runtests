@@ -104,6 +104,10 @@ BEGIN {
     delete $ENV{'LINTIAN_DIST'};
     delete $ENV{'LINTIAN_UNPACK_LEVEL'};
     $ENV{'LC_COLLATE'} = 'C';
+
+    # Set standard umask because many of the test packages rely on this
+    # when creating files from the debian/rules script.
+    umask(022);
 }
 
 my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};

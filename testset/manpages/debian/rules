@@ -69,7 +69,7 @@ binary-indep:
 	mkdir -p $(tmp)/usr/lib/perl5
 
 	install -d $(tmp)/usr/share/doc/manpages
-	cp debian/changelog $(tmp)/usr/share/doc/manpages/changelog
+	install -m644 debian/changelog $(tmp)/usr/share/doc/manpages/changelog
 	gzip -9 $(tmp)/usr/share/doc/manpages/changelog
 	install -d $(tmp)/DEBIAN
 	install -m755 debian/postinst $(tmp)/DEBIAN/postinst
