@@ -80,6 +80,15 @@ pipeline((sub { exec "dpkg-deb", "--fsys-tarfile", $file }),
 	 "$base_dir/index") == 0
     or fail();
 
+# (replaces dpkg-deb -c)
+# create index file for package with owner IDs instead of names
+pipeline((sub { exec "dpkg-deb", "--fsys-tarfile", $file }),
+	 (sub { exec "tar", "--numeric-owner", "-tvf", "-" }),
+	 (sub { exec "sed", "-e", "s/^h/-/" }),
+	 (sub { exec "sort", "-k", "6" }),
+	 "$base_dir/index-owner-id") == 0
+    or fail();
+
 # get package control information
 my $data = (read_dpkg_control("$base_dir/control/control"))[0];
 $data->{'source'} or ($data->{'source'} = $data->{'package'});

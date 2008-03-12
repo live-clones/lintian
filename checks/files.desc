@@ -732,3 +732,13 @@ Info: This package contains a linda override file in
  <tt>/usr/share/linda/overrides</tt>.  Linda is obsolete and has been
  removed from the archive as of 2008-03-04.  Linda overrides should
  probably be dropped from packages.
+
+Tag: wrong-file-owner-uid-or-gid
+Type: error
+Info: The user or group ID of the owner of the file is invalid. The
+ owner user and group IDs must be in the set of globally allocated
+ IDs, because other IDs are dynamically allocated and might be used
+ for varying purposes on different systems, or are reserved. The set
+ of the allowed, globally allocated IDs consists of the ranges 0-99,
+ 64000-64999 and 65534.
+Ref: policy 9.2

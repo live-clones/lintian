@@ -125,6 +125,13 @@ binary-indep:
 	touch debian/tmp/usr/bin/bin/bad
 	chmod 755 debian/tmp/usr/bin/bin/bad
 
+	# Create some files with invalid ownership.
+	set -e; for owner in 100:0 0:2001 30001:65535 65535:65001; do \
+	      touch debian/tmp/usr/lib/filenames/wrong-owner-$$owner ; \
+	      chmod 644 debian/tmp/usr/lib/filenames/wrong-owner-$$owner ; \
+	      chown "$$owner" debian/tmp/usr/lib/filenames/wrong-owner-$$owner ; \
+	done
+
 	install -m 644 debian/changelog debian/tmp/usr/share/doc/filenames/Changes
 	gzip -9 debian/tmp/usr/share/doc/filenames/Changes
 	ln -s Changes.gz debian/tmp/usr/share/doc/filenames/changelog.gz

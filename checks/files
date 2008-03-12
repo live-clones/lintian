@@ -90,12 +90,21 @@ my @devhelp_links;
 
 # Read package contents...
 open(IN, '<', "index") or fail("cannot open index file index: $!");
+open(NUMERIC, '<', "index-owner-id")
+    or fail("cannot open index file index-owner-id: $!");
 while (<IN>) {
     chop;
 
     my ($perm,$owner,$size,$date,$time,$file) = split(' ', $_, 6);
     my $link;
     my $operm;
+
+    my $numeric = <NUMERIC>;
+    chop $numeric;
+    fail("cannot read index file index-owner-id") unless defined $numeric;
+    my ($owner_id, $file_chk) = (split(' ', $numeric, 6))[1, 5];
+    fail("mismatching contents of index files: $file $file_chk")
+	if $file ne $file_chk;
 
     $file =~ s,^\./,,;
 
@@ -126,6 +135,14 @@ while (<IN>) {
     my ($year) = ($date =~ /^(\d{4})/);
     if ( $year <= 1984 ) { # value from dak CVS: Dinstall::PastCutOffYear
 	tag "package-contains-ancient-file", "$file $date";
+    }
+
+    my ($owner_uid, $owner_gid) = split ('/', $owner_id);
+    if (!($owner_uid < 100 || $owner_uid == 65534
+	  || ($owner_uid >= 60000 && $owner_uid < 65000))
+	|| !($owner_gid < 100 || $owner_gid == 65534
+	     || ($owner_gid >= 60000 && $owner_gid < 65000))) {
+	tag "wrong-file-owner-uid-or-gid", $file, $owner_id;
     }
 
     # *.devhelp and *.devhelp2 files must be accessible from a directory in
@@ -859,6 +876,9 @@ while (<IN>) {
     }
 }
 close(IN);
+
+fail("mismatching contents of index files") if <NUMERIC>;
+close(NUMERIC);
 
 #check for sect: games but nothing in /usr/games. Check for any binary to
 #save ourselves from game-data false positives:

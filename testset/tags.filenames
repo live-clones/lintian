@@ -29,6 +29,10 @@ E: filenames: symlink-should-be-absolute usr/lib/filenames/symlink10wrong ../../
 E: filenames: symlink-should-be-absolute usr/lib/filenames/symlink1wrong ../../../etc/symlink
 E: filenames: use-of-compat-symlink usr/bin/X11/
 E: filenames: use-of-compat-symlink usr/bin/X11/testxbin
+E: filenames: wrong-file-owner-uid-or-gid usr/lib/filenames/wrong-owner-0:2001 0/2001
+E: filenames: wrong-file-owner-uid-or-gid usr/lib/filenames/wrong-owner-100:0 100/0
+E: filenames: wrong-file-owner-uid-or-gid usr/lib/filenames/wrong-owner-30001:65535 30001/65535
+E: filenames: wrong-file-owner-uid-or-gid usr/lib/filenames/wrong-owner-65535:65001 65535/65001
 E: more-filename-games: no-copyright-file
 I: filename-games: no-md5sums-control-file
 I: filenames: file-in-usr-something-x11-without-pre-depends usr/include/X11/
