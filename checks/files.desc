@@ -725,3 +725,10 @@ Info: This package provides at least one file in <tt>/usr/lib/debug</tt>,
  which is intended for detached debugging symbols, but the package name
  does not end in "-dbg".  Detached debugging symbols should be put into a
  separate package, Priority: extra, with a package name ending in "-dbg".
+
+Tag: package-contains-linda-override
+Type: warning
+Info: This package contains a linda override file in
+ <tt>/usr/share/linda/overrides</tt>.  Linda is obsolete and has been
+ removed from the archive as of 2008-03-04.  Linda overrides should
+ probably be dropped from packages.

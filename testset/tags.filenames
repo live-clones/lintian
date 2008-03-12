@@ -86,6 +86,7 @@ W: filenames: package-contains-empty-directory usr/lib/perl5/.bzr/
 W: filenames: package-contains-empty-directory usr/lib/perl5/.svn/
 W: filenames: package-contains-empty-directory usr/lib/perl5/CVS/
 W: filenames: package-contains-empty-directory usr/lib/perl5/{arch}/
+W: filenames: package-contains-linda-override usr/share/linda/overrides/filenames
 W: filenames: package-contains-readme-for-other-platform-or-distro usr/share/doc/filenames/README.macosx
 W: filenames: package-contains-vcs-control-dir usr/lib/perl5/.arch-ids/
 W: filenames: package-contains-vcs-control-dir usr/lib/perl5/.bzr/

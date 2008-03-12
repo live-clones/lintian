@@ -376,6 +376,10 @@ while (<IN>) {
 		tag "documentation-file", "$file";
 	    }
 	}
+	# ---------------- /usr/share/linda/overrides
+	elsif ($file =~ m,^usr/share/linda/overrides/\S+,) {
+	    tag "package-contains-linda-override", $file;
+	}
 	# ---------------- /usr/share
 	elsif ($file =~ m,^usr/share/[^/]+$,) {
 	    if ($perm =~ m/^-/) {

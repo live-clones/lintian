@@ -75,6 +75,9 @@ binary-indep:
 	touch debian/tmp/usr/share/pixmaps/license.foo
 	touch debian/tmp/usr/share/pixmaps/COPYING
 
+	install -d debian/tmp/usr/share/linda/overrides
+	echo 'foo' > debian/tmp/usr/share/linda/overrides/filenames
+
 	install -d debian/tmp/usr/share/doc/filenames
 	touch debian/tmp/usr/share/doc/filenames/README.macosx
 
