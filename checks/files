@@ -884,7 +884,7 @@ while (<IN>) {
 }
 close(IN);
 
-fail("mismatching contents of index files") if <NUMERIC>;
+fail("mismatching contents of index files") if defined <NUMERIC>;
 close(NUMERIC);
 
 #check for sect: games but nothing in /usr/games. Check for any binary to
