@@ -398,7 +398,7 @@ sub _tag {
 # not defined, it will be omitted.
 sub spelling_check {
     my ($tag, $text, $filename) = @_;
-    next unless $text;
+    return unless $text;
 
     for my $word (split(/\s+/, $text)) {
         $word = lc $word;
