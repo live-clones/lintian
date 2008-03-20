@@ -580,9 +580,9 @@ while (<IN>) {
 
     # ---------------- license files
     if ($file =~ m,(copying|licen[cs]e)(\.[^/]+)?$,i
-	# Ignore some common extensions; there was at least one file
-	# named "license.el".  These are probably license-displaying
-	# code, not license files.
+	# Ignore some common extensions; there was at least one file named
+	# "license.el".  These are probably license-displaying code, not
+	# license files.  Also ignore binaries in /usr/bin and friends.
 	#
 	# Another exception is made for .html and .php because preserving
 	# working links is more important than saving some bytes, and
@@ -596,6 +596,7 @@ while (<IN>) {
 	and not $file =~ m/\.(el|c|h|py|cc|pl|pm|html|php|rb|xpm|png|jpe?g|gif|svg|dtd)$/
 	and not $file =~ m,^usr/share/zope/Products/.*\.(dtml|pt|cpt)$,
 	and not $file =~ m,/under\S+License\.docbook$,
+	and not $file =~ m,^(usr/)?s?bin/,
 	and not defined $link) {
 	tag "extra-license-file", "$file";
     }

@@ -26,6 +26,8 @@ lintian (1.23.47) UNRELEASED; urgency=low
     + [RA] Issue errors for installing files under /var/www.  This isn't
       in FHS, may not be the document root, and may break local files if
       it is the document root.  Thanks, Joerg Jaspert.  (Closes: #470403)
+    + [RA] Don't consider files in bin directories that contain "copying"
+      or "license" to be extra license files.
   * checks/scripts:
     + [RA] Attempt to quash some Perl warnings.
     + [RA] *.py files in /usr/{lib,share}, /etc/init.d/skeleton, and *.ex
