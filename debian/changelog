@@ -28,6 +28,9 @@ lintian (1.23.47) UNRELEASED; urgency=low
       it is the document root.  Thanks, Joerg Jaspert.  (Closes: #470403)
     + [RA] Don't consider files in bin directories that contain "copying"
       or "license" to be extra license files.
+    + [FL] Don't complain about empty directories under
+      /usr/share/python-support since those might be needed.  Thanks,
+      Josselin Mouette.  (Closes: #473428)
   * checks/scripts:
     + [RA] Attempt to quash some Perl warnings.
     + [RA] *.py files in /usr/{lib,share}, /etc/init.d/skeleton, and *.ex

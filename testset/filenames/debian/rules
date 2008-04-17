@@ -75,6 +75,8 @@ binary-indep:
 	touch debian/tmp/usr/share/pixmaps/license.foo
 	touch debian/tmp/usr/share/pixmaps/COPYING
 
+	install -d debian/tmp/usr/share/python-support/filenames
+
 	install -d debian/tmp/usr/share/linda/overrides
 	echo 'foo' > debian/tmp/usr/share/linda/overrides/filenames
 
