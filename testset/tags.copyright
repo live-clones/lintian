@@ -1,0 +1,17 @@
+E: copyright.compressed: copyright-file-compressed
+E: copyright.full-gfdl: copyright-file-contains-full-gfdl-license
+E: copyright.full-gfdl: copyright-should-refer-to-common-license-file-for-gfdl
+E: copyright.full-gpl: copyright-file-contains-full-gpl-license
+E: copyright.full-gpl: copyright-should-refer-to-common-license-file-for-gpl
+E: copyright.iso-8859-1: copyright-refers-to-old-directory
+E: copyright.misc-errors: copyright-refers-to-compressed-license usr/share/common-licenses/BSD.gz
+E: copyright.misc-errors: copyright-refers-to-incorrect-directory usr/share/common-licences
+E: copyright.misc-errors: copyright-refers-to-old-directory
+E: copyright.old-style: FSSTND-dir-in-usr usr/doc/
+E: copyright.old-style: old-style-copyright-file
+E: copyright.symlink: copyright-file-is-symlink
+W: copyright.compressed: copyright-without-copyright-notice
+W: copyright.iso-8859-1: debian-copyright-file-uses-obsolete-national-encoding at line 3
+W: copyright.misc-errors: copyright-lists-upstream-authors-with-dh_make-boilerplate
+W: copyright.old-style: copyright-without-copyright-notice
+W: copyright.symlink: copyright-without-copyright-notice

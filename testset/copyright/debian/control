@@ -1,0 +1,47 @@
+Source: copyright
+Section: text
+Priority: optional
+Maintainer: Lintian Maintainers <lintian-maint@debian.org>
+Uploaders: Tobias Toedter <t.toedter@gmx.net>
+Build-Depends-Indep: debhelper (>5)
+Standards-Version: 3.7.3
+
+Package: copyright.iso-8859-1
+Architecture: all
+Description: checks for non-utf-8-encodings
+ This is just a sentence.
+
+Package: copyright.full-gpl
+Architecture: all
+Description: checks inclusion of GPL in full text
+ This is just a sentence.
+
+Package: copyright.full-gfdl
+Architecture: all
+Description: checks inclusion of GFDL in full text
+ This is just a sentence.
+
+Package: copyright.misc-errors
+Architecture: all
+Description: checks various errors in copyright files
+ This is just a sentence.
+
+Package: copyright.no-errors
+Architecture: all
+Description: this should not emit any error
+ This is just a sentence.
+
+Package: copyright.symlink
+Architecture: all
+Description: just use a symlink for the copyright file
+ This is just a sentence.
+
+Package: copyright.compressed
+Architecture: all
+Description: include a valid copyright file and compress it
+ This is just a sentence.
+
+Package: copyright.old-style
+Architecture: all
+Description: use an old-style directory structure
+ This is just a sentence.

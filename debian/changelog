@@ -59,6 +59,9 @@ lintian (1.23.47) UNRELEASED; urgency=low
   * man/lintian.1:
     + [FL] Drop linda from SEE ALSO since it is obsolete now. Suggested
       by Hideki Yamane. (Closes: #474478)
+  
+  * testset/copyright:
+    + [FL] New testcases by Tobias Toedter.  (Closes: #472665)
 
   * unpack/list-srcpkg:
     + [RA] Fix syntax error introduced by Uploaders support.
