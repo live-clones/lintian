@@ -246,7 +246,7 @@ Tag: unknown-section
 Type: warning
 Info: The `Section:' field in this package's control file is not one of
  the sections in use on the ftp archive.  Valid sections are currently
- admin, base, comm, devel, doc, editors, electronics, embedded, games,
+ admin, comm, devel, doc, editors, electronics, embedded, games,
  gnome, graphics, hamradio, interpreters, kde, libdevel, libs, mail, 
  math, misc, net, news, oldlibs, otherosfs, perl, python, science, shells, 
  sound, tex, text, utils, web, and x11.

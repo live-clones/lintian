@@ -20,6 +20,9 @@ lintian (1.23.47) UNRELEASED; urgency=low
   * checks/etcfiles:
     + [RA] /etc/init.d/{skeleton,rc,rcS} are not conffiles, and README
       files in /etc need not be.
+  * checks/fields.desc:
+    + [FL] Remove obsolete section base from list of valid sections in
+      unknown-section.  (Closes: #471751)
   * checks/files{.desc,}:
     + [RA] /etc/init.d/{skeleton,README} don't need to be executable.
     + [RA] Warn about linda overrides since linda has been removed from
