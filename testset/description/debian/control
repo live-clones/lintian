@@ -1,0 +1,34 @@
+Source: description
+Section: text
+Priority: extra
+Maintainer: Lintian Maintainers <lintian-maint@debian.org>
+Uploaders: Tobias Toedter <t.toedter@gmx.net>
+Standards-Version: 3.7.3
+
+Package: description
+Architecture: all
+Description: description is a package which tests lintian's description checks.
+ missing
+ The synopsis should not start with the package's name. Moreover,
+ the long description
+ 	should
+ 	not
+ contain tabs.
+ .control statements are not allowed as well.
+
+Package: description-foo
+Architecture: all
+Description: Don't use tabs	in the synopsis and restrict yourself to less than 80 characters, otherwise Lintian will complain
+    Oh, and don't start the long description with spaces.
+ Now here comes a list:
+ - which is
+ - unfortunately
+ - not correctly indented.
+
+Package: description-bar
+Architecture: all
+Description:
+ There should really be a synopsis.
+ . and please avoid control statements in the long description.
+ The line in an extended description should be less than 80 characters, otherwise you'll get
+ a Lintian warning.

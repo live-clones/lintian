@@ -1,0 +1,23 @@
+E: description source: debian-rules-missing-required-target binary-arch
+E: description-bar: description-contains-invalid-control-statement
+E: description-bar: description-synopsis-is-empty
+E: description-bar: no-copyright-file
+E: description-foo: description-contains-tabs
+E: description-foo: description-too-long
+E: description-foo: no-copyright-file
+E: description: description-contains-invalid-control-statement
+E: description: description-contains-tabs
+E: description: description-is-debmake-template
+E: description: description-starts-with-package-name
+E: description: no-copyright-file
+I: description-bar: no-md5sums-control-file
+I: description-foo: no-md5sums-control-file
+I: description: no-md5sums-control-file
+W: description source: native-package-with-dash-version
+W: description-bar: extended-description-line-too-long
+W: description-foo: description-starts-with-leading-spaces
+W: description-foo: possible-unindented-list-in-extended-description
+W: description: changelog-not-compressed-with-max-compression changelog.Debian.gz
+W: description: debian-changelog-file-contains-obsolete-user-emacs-settings
+W: description: description-synopsis-might-not-be-phrased-properly
+W: description: new-package-should-close-itp-bug
