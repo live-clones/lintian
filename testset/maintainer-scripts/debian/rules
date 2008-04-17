@@ -11,6 +11,7 @@ binary-indep:
 	install -m 0755 debian/postinst debian/tmp/DEBIAN
 	install -m 0755 debian/prerm debian/tmp/DEBIAN
 	install -m 0755 debian/postrm debian/tmp/DEBIAN
+	install -m 0644 debian/triggers debian/tmp/DEBIAN
 	install -d debian/tmp/usr/share/doc/maintainer-scripts
 	install -m 0644 debian/changelog \
 	  debian/tmp/usr/share/doc/maintainer-scripts/changelog

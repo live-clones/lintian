@@ -42,6 +42,7 @@ my %ctrl_deb =
      'shlibs', 0644,
      'symbols', 0644,
      'templates', 0644,
+     'triggers', 0644,
     );
 
 my %ctrl_udeb =
