@@ -165,7 +165,8 @@ our %versioned_interpreters =
 
 # Any of the following packages can satisfy an update-inetd dependency.
 our $update_inetd
-    = join (' | ', qw(update-inetd inet-superserver openbsd-inetd rlinetd));
+    = join (' | ', qw(update-inetd inet-superserver openbsd-inetd
+                      inetutils-inetd rlinetd xinetd));
 
 # Appearance of one of these regexes in a maintainer script means that there
 # must be a dependency (or pre-dependency) on the given package.  The tag

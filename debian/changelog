@@ -50,6 +50,8 @@ lintian (1.23.47) UNRELEASED; urgency=low
       versioned dependencies since the version changes frequently and
       unversioned dependencies are what people are already using.  Thanks,
       Hideki Yamane.  (Closes: #476417)
+    + [RA] Add inetutils-inetd and xinetd as additional update-inetd
+      providers.  Patch from Guillem Jover.  (Closes: #474077)
   * checks/shared-libs:
     + [RA] Move the default ld.so search path into data.  Drop obsolete
       /usr/lib/libg++-dbg, /usr/X11R6/lib/Xaw3d, and libc5 compatibility
