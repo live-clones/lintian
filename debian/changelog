@@ -46,6 +46,10 @@ lintian (1.23.47) UNRELEASED; urgency=low
       files do not need to be executable even if they look like scripts.
     + [RA] Add clisp, procmail, and rrdcgi, and another way interpretors
       are templated in *.in files.
+    + [RA] Expect unversioned dependencies on OCaml packages rather than
+      versioned dependencies since the version changes frequently and
+      unversioned dependencies are what people are already using.  Thanks,
+      Hideki Yamane.  (Closes: #476417)
   * checks/shared-libs:
     + [RA] Move the default ld.so search path into data.  Drop obsolete
       /usr/lib/libg++-dbg, /usr/X11R6/lib/Xaw3d, and libc5 compatibility

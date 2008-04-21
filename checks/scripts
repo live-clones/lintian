@@ -70,9 +70,7 @@ our %interpreters =
      make	    => [ '/usr/bin', 'make | build-essential' ],
      mawk	    => [ '/usr/bin' ],
      ocamlrun	    => [ '/usr/bin',
-			 join (' | ', map { "$_-3.10.0" }
-			       qw/ocaml-base-nox ocaml-base ocaml-nox ocaml/)
-		       ],
+			 'ocaml-base-nox | ocaml-base | ocaml-nox | ocaml' ],
      pagsh	    => [ '/usr/bin', 'openafs-client | heimdal-clients' ],
      parrot	    => [ '/usr/bin' ],
      perl	    => [ '/usr/bin', '' ],
