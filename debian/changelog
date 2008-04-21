@@ -40,6 +40,9 @@ lintian (1.23.47) UNRELEASED; urgency=low
     + [FL] Don't complain about empty directories under
       /usr/share/python-support since those might be needed.  Thanks,
       Josselin Mouette.  (Closes: #473428)
+  * checks/nmu{.desc,}:
+    + [RA] Add support for +nmuX versioning for NMUs of native packages.
+      Patch from James Vega.  (Closes: #475026)
   * checks/scripts:
     + [RA] Attempt to quash some Perl warnings.
     + [RA] *.py files in /usr/{lib,share}, /etc/init.d/skeleton, and *.ex

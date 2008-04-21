@@ -67,6 +67,9 @@ if ($version =~ /-[^.-]+(\.[^.-]+)?(\.[^.-]+)?$/) {
 	$version_nmuness = 1 if defined $1;
 	$version_nmuness = 2 if defined $2;
 }
+if ($version =~ /\+nmu\d+$/) {
+	$version_nmuness = 1;
+}
 if ($version =~ /\+b\d+$/) {
 	$version_nmuness = 2;
 }
