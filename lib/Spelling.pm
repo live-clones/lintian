@@ -342,6 +342,7 @@ our %CORRECTIONS_CASE = qw(
                            GTK GTK+
                            gtk+ GTK+
                            kde KDE
+                           meta-package metapackage
                            MYSQL MySQL
                            Mysql MySQL
                            mysql MySQL
@@ -416,8 +417,11 @@ sub spelling_check {
     }
 
     # Special case for correcting a multi-word string.
-    if ($text =~ m,Debian/GNU Linux,) {
+    if ($text =~ m,Debian/GNU\s+Linux,) {
         _tag($tag, $filename, "Debian/GNU Linux", "Debian GNU/Linux");
+    }
+    if ($text =~ m,meta\s+package,) {
+        _tag($tag, $filename, "meta package", "metapackage");
     }
 }
 

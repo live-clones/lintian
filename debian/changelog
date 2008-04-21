@@ -75,6 +75,8 @@ lintian (1.23.47) UNRELEASED; urgency=low
 
   * lib/Spelling.pm:
     + [RA] Avoid Perl warnings when called with an uninitialized value.
+    + [RA] Correct "meta package" and "meta-package" in descriptions to
+      "metapackage".  Thanks, Frank S. Thomas.  (Closes: #476681)
 
   * man/lintian.1:
     + [FL] Drop linda from SEE ALSO since it is obsolete now. Suggested
