@@ -2,7 +2,7 @@ Source: description
 Section: text
 Priority: extra
 Maintainer: Lintian Maintainers <lintian-maint@debian.org>
-Uploaders: Tobias Toedter <t.toedter@gmx.net>
+Uploaders: Tobias Toedter <toddy@debian.org>
 Standards-Version: 3.7.3
 
 Package: description
@@ -32,3 +32,8 @@ Description:
  . and please avoid control statements in the long description.
  The line in an extended description should be less than 80 characters, otherwise you'll get
  a Lintian warning.
+
+Package: description-baz
+Architecture: all
+Description:    the synopsis starts with spaces
+ This is a real Lintian bug which has been discovered with this testset.

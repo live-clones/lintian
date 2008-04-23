@@ -85,7 +85,7 @@ lintian (1.23.47) UNRELEASED; urgency=low
   * testset/copyright:
     + [FL] New testcases by Tobias Toedter.  (Closes: #472665)
   * testset/description:
-    + [FL] New testcases by Tobias Toedter.  (Closes: #471838)
+    + [FL] New testcases by Tobias Toedter.  (Closes: #471838, #477471)
 
   * unpack/list-srcpkg:
     + [RA] Fix syntax error introduced by Uploaders support.

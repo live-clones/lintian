@@ -54,6 +54,8 @@ chomp $synopsis;
 if ($synopsis =~ m/^\s*$/) {
     tag "description-synopsis-is-empty", "";
 } else {
+    # Current dpkg-gencontrol appears to fix this automatically so this
+    # tag will never trigger with a current dpkg-dev.
     if ($synopsis =~ m/^\s/) {
 	tag "description-synopsis-has-leading-spaces", "";
     }

@@ -1,3 +1,12 @@
+description (1.1-1) unstable; urgency=low
+
+  * Add the following tests of tags never seen:
+    - description-synopsis-has-leading-spaces
+      This is not yet recognized by Lintian, so the testset currently
+      fails.
+
+ -- Tobias Toedter <toddy@debian.org>  Wed, 23 Apr 2008 13:12:32 +0200
+
 description (1.0-1) unstable; urgency=low
 
   * Initial release.
