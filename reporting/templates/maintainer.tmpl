@@ -55,7 +55,7 @@
                     next unless $info->{code} eq 'E' or $info->{code} eq 'W';
                 }
                 unless ($last) {
-                    if ($anchored || $upload) {
+                    if ($anchored) {
                         $OUT .= qq(    <dt>);
                     } else {
                         $OUT .= qq(    <dt id="$source"><a name="$source">);
@@ -63,7 +63,7 @@
                     $OUT .= "<strong>$source ($version)";
                     $OUT .= ' (Uploader)' if $upload;
                     $OUT .= '</strong>';
-                    if ($anchored || $upload) {
+                    if ($anchored) {
                         $OUT .= qq(</dt>\n    <dd>\n);
                     } else {
                         $OUT .= qq(</a></dt>\n    <dd>\n);

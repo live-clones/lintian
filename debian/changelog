@@ -94,6 +94,8 @@ lintian (1.23.47) UNRELEASED; urgency=low
       respects.
     + [RA] Don't consider a maintainer's page error/warning free if there
       are errors or warnings in their co-maintained packages.
+  * reporting/templates/maintainer.tmpl:
+    + [RA] Always add anchors to the package names even for uploaders.
   
   * testset/copyright:
     + [FL] New testcases by Tobias Toedter.  (Closes: #472665)
