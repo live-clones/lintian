@@ -262,7 +262,9 @@ while (<>) {
 # Lintian-clean.
 my %clean;
 for my $source (keys %source_info) {
-    $clean{$source_info{$source}->{maintainer}} = 1;
+    my $maintainer = $source_info{$source}->{maintainer};
+    my $id = maintainer_url ($maintainer);
+    $clean{$id} = $maintainer;
 }
 
 # Now, walk through the tags by source package (sorted by maintainer).  Output
@@ -277,14 +279,15 @@ my @maintainers;
         sort grep { !$seen{$_}++ } keys (%by_maint), keys (%by_uploader);
 }
 for my $maintainer (@maintainers) {
-    delete $clean{$maintainer};
+    my $id = maintainer_url ($maintainer);
+    delete $clean{$id};
 
     # For each of this maintainer's packages, add statistical information
     # about warnings and errors to the QA list and build the packages hash
     # used for the package index.  We only do this for the maintainer
     # packages, not the uploader packages, to avoid double-counting.
-    my ($errors, $warnings) = (0, 0);
     for my $source (keys %{ $by_maint{$maintainer} }) {
+        my ($errors, $warnings) = (0, 0);
         for my $version (keys %{ $by_maint{$maintainer}{$source} }) {
             my $tags = $by_maint{$maintainer}{$source}{$version};
             for my $tag (@$tags) {
@@ -296,16 +299,33 @@ for my $maintainer (@maintainers) {
         $qa{$source} = [ $errors, $warnings ];
     }
 
+    # Determine if the maintainer's page is clean.  Check all packages for
+    # which they're either maintainer or uploader and set $error_clean if
+    # they have no errors or warnings.
+    my $error_clean = 1;
+    for my $source (keys %{ $by_maint{$maintainer} },
+                    keys %{ $by_uploader{$maintainer} }) {
+        my $versions = $by_maint{$maintainer}{$source}
+            || $by_uploader{$maintainer}{$source};
+        for my $version (keys %$versions) {
+            my $tags = $versions->{$version};
+            for my $tag (@$tags) {
+                $error_clean = 0 if ($tag->{code} eq 'E');
+                $error_clean = 0 if ($tag->{code} eq 'W');
+            }
+        }
+    }
+
     # Determine the parts of the maintainer and the file name for the
     # maintainer page.
     my ($name, $email) = ($maintainer =~ /^(.*) <([^>]+)>/);
     $email = 'unknown' unless $email;
-    my $id = maintainer_url ($maintainer);
     my $regular = "maintainer/$id";
     my $full = "full/$id";
 
     # Create the regular maintainer page (only errors and warnings) and the
     # full maintainer page (all tags, including overrides and info tags).
+    print "Generating page for $id\n";
     my %data = (
         email      => html_quote ($email),
         errors     => 1,
@@ -318,10 +338,10 @@ for my $maintainer (@maintainers) {
         version    => $LINTIAN_VERSION
     );
     my $template;
-    if ($errors || $warnings) {
-        $template = $templates{maintainer};
-    } else {
+    if ($error_clean) {
         $template = $templates{clean};
+    } else {
+        $template = $templates{maintainer};
     }
     output_template ($regular, $template, \%data);
     $template = $templates{maintainer};
@@ -349,7 +369,8 @@ for my $source (sort keys %qa) {
 close QA or die "cannot write to qa-list: $!\n";
 
 # Now, generate stub pages for every maintainer who has only clean packages.
-for my $maintainer (keys %clean) {
+for my $id (keys %clean) {
+    my $maintainer = $clean{$id};
     my ($name, $email) = ($maintainer =~ /^(.*) <([^>]+)>/);
     $email = 'unknown' unless $email;
     my %data = (
@@ -359,8 +380,7 @@ for my $maintainer (keys %clean) {
         timestamp  => $timestamp,
         version    => $LINTIAN_VERSION
     );
-    my $id = maintainer_url ($maintainer);
-    next if $saw_maintainer{$id};
+    print "Generating clean page for $id\n";
     output_template ("maintainer/$id", $templates{clean}, \%data);
     output_template ("full/$id", $templates{clean}, \%data);
 }
@@ -501,6 +521,7 @@ sub maintainer_url {
         } else {
             $urlmap{$url} = $maintainer;
         }
+        return $maintainer;
     }
 }
 
