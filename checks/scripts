@@ -691,12 +691,16 @@ while (<SCRIPTS>) {
 	    for my $rule (@depends_needed) {
 		my ($package, $regex) = @$rule;
 		if ($pkg ne $package and /$regex/ and ! $warned{$package}) {
-                    my $needed = Dep::parse($package);
-                    unless (Dep::implies($deps{depends}, $needed) || Dep::implies($deps{'pre-depends'}, $needed)) {
-			my $shortpackage = $package;
-			$shortpackage =~ s/[ \(].*//;
-			tag "maintainer-script-needs-depends-on-$shortpackage", "$file";
+		    if (m,-x\s+\S*$regex, or m,which\s+$regex, or m,command\s+.*?$regex,) {
 			$warned{$package} = 1;
+		    } else {
+			my $needed = Dep::parse($package);
+			unless (Dep::implies($deps{depends}, $needed) || Dep::implies($deps{'pre-depends'}, $needed)) {
+			    my $shortpackage = $package;
+			    $shortpackage =~ s/[ \(].*//;
+			    tag "maintainer-script-needs-depends-on-$shortpackage", "$file";
+			    $warned{$package} = 1;
+			}
 		    }
 		}
 	    }

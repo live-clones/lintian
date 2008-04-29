@@ -59,6 +59,9 @@ lintian (1.23.47) UNRELEASED; urgency=low
       Hideki Yamane.  (Closes: #476417)
     + [RA] Add inetutils-inetd and xinetd as additional update-inetd
       providers.  Patch from Guillem Jover.  (Closes: #474077)
+    + [RA] If the call to some supporting program like update-inetd is
+      conditional on the existence of the program, assume the maintainer
+      knows what they're doing and don't warn.
   * checks/shared-libs:
     + [RA] Move the default ld.so search path into data.  Drop obsolete
       /usr/lib/libg++-dbg, /usr/X11R6/lib/Xaw3d, and libc5 compatibility
