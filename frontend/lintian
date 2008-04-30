@@ -54,7 +54,7 @@ my $unpack_level = undef;	#flag for -l|--unpack-level switch
 our $no_override = 0;		#flag for -o|--no-override switch
 our $show_overrides = 0;	#flag for --show-overrides switch
 our $color = 'never';		#flag for --color switch
-my $check_md5sums = 0;		#flag for -m|--md5sums switch
+my $check_checksums = 0;	#flag for -m|--md5sums|--checksums switch
 my $allow_root = 0;		#flag for --allow-root swtich
 my $fail_on_warnings = 0;       #flag for --fail-on-warnings switch
 my $packages_file = 0;		#string for the -p option
@@ -143,7 +143,7 @@ Behaviour options:
     --show-overrides          output tags that have been overriden
     --color never/always/auto disable, enable, or enable color for TTY
     -U X, --unpack-info X     specify which info should be collected
-    -m, --md5sums             check md5sums when processing a .changes file
+    -m, --md5sums, --checksums check checksums when processing a .changes file
     --allow-root              suppress lintian\'s warning when run as root
     --fail-on-warnings        return a non-zero exit status if warnings found
 Configuration options:
@@ -261,7 +261,7 @@ my %opthash = (			# ------------------ actions
 	       "show-overrides" => \$show_overrides,
 	       "color=s" => \$color,
 	       "unpack-info|U=s" => \&record_unpack_info,
-	       "md5sums|m" => \$check_md5sums,
+	       "checksums|md5sums|m" => \$check_checksums,
 	       "allow-root" => \$allow_root,
                "fail-on-warnings" => \$fail_on_warnings,
 	       # Note: Ubuntu has (and other derivatives might gain) a
@@ -683,14 +683,42 @@ while (my $arg = shift) {
 	    }
 
 	    # process all listed `files:'
-            my $file_list = defined $data->{files} ? $data->{files} : '';
+	    my %files;
 
+	    my $file_list = $data->{files} || '';
 	    for ( split /\n/, $file_list ) {
 		chomp;
 		s/^\s+//o;
 		next if $_ eq '';
 
 		my ($md5sum,$size,$section,$priority,$file) = split(/\s+/o, $_);
+		$files{$file}{md5} = $md5sum;
+		$files{$file}{size} = $size;
+
+		# check section
+		if (($section eq 'non-free') or ($section eq 'contrib')) {
+		    tag( "bad-section-in-changes-file", $file, $section );
+		}
+
+	    }
+
+	    foreach my $alg (qw(sha1 sha256)) {
+		my $list = $data->{"checksums-$alg"} || '';
+		for ( split /\n/, $list ) {
+		    chomp;
+		    s/^\s+//o;
+		    next if $_ eq '';
+
+		    my ($checksum,$size,$file) = split(/\s+/o, $_);
+		    $files{$file}{$alg} = $checksum;
+		    if ($files{$file}{size} != $size) {
+			tag( "file-size-mismatch-in-changes-file", $file );
+		    }
+		}
+	    }
+
+
+	    foreach my $file (keys %files) {
 		my $filename = $arg_dir . '/' . $file;
 
 		# check size
@@ -698,24 +726,23 @@ while (my $arg = shift) {
 		    warn "E: $file does not exist, exiting\n";
 		    exit(-1);
 		}
-		if (-s $filename ne $size) {
-		    print "N: size is $size, argname is $arg_name, filename is $filename\n";
+		if (-s _ ne $files{$file}{size}) {
+		    print "N: size is $files{$file}{size}, argname is $arg_name, filename is $filename\n";
 
 		    tag( "file-size-mismatch-in-changes-file", $file );
 		}
 
-		# check md5sums
-		if ($check_md5sums or $file =~ /\.dsc$/) {
-		    my $real_md5sum = get_file_md5($filename);
+		# check checksums
+		if ($check_checksums or $file =~ /\.dsc$/) {
+		    foreach my $alg (qw(md5 sha1 sha256)) {
+			next unless exists $files{$file}{$alg};
 
-		    if ($real_md5sum ne $md5sum) {
-			tag( "md5sum-mismatch-in-changes-file", $file );
+			my $real_checksum = get_file_checksum($alg, $filename);
+
+			if ($real_checksum ne $files{$file}{$alg}) {
+			    tag( "checksum-mismatch-in-changes-file", $alg, $file );
+			}
 		    }
-		}
-
-		# check section
-		if (($section eq 'non-free') or ($section eq 'contrib')) {
-		    tag( "bad-section-in-changes-file", $file, $section );
 		}
 
 		# process file?

@@ -47,9 +47,9 @@ Type: error
 Info: The actual file size does not match what's listed in the
  <tt>.changes</tt> file.
 
-Tag: md5sum-mismatch-in-changes-file
+Tag: checksum-mismatch-in-changes-file
 Type: error
-Info: The actual md5sum checksum does not match what's listed in the
+Info: The actual checksum does not match what's listed in the
  <tt>.changes</tt> file.
 
 Tag: bad-section-in-changes-file

@@ -42,6 +42,9 @@ lintian (1.23.47) UNRELEASED; urgency=low
       Josselin Mouette.  (Closes: #473428)
     + [RA] Ignore extra license files in examples subdirectories of
       /usr/share/doc.  Thanks, Daniel Jacobowitz.  (Closes: #476149)
+  * checks/lintian.desc:
+    + [FL] Rename md5sum-mismatch-in-changes-file to
+      checksum-mismatch-in-changes-file.
   * checks/nmu{.desc,}:
     + [RA] Add support for +nmuX versioning for NMUs of native packages.
       Patch from James Vega.  (Closes: #475026)
@@ -74,15 +77,24 @@ lintian (1.23.47) UNRELEASED; urgency=low
   * data/shared-libs/ldconfig-dirs:
     + [RA] New file listing directories searched by ld.so.
 
+  * debian/control:
+    + [FL] Add dependency on libdigest-sha-perl.
+
   * frontend/lintian:
     + [RA] Qualify relative --root directories so that we don't break
       later.  Patch from Håkon Stordahl.  (Closes: #469925)
     + [CW] Add intrepid as an allowable distribution for Ubuntu.
+    + [FL] Support Checksums-* fields in .changes files. Follows
+      the same rules as the md5sum check. Add new option --checksums
+      as alias for --md5sums.  (Closes: #476565)
 
   * lib/Spelling.pm:
     + [RA] Avoid Perl warnings when called with an uninitialized value.
     + [RA] Correct "meta package" and "meta-package" in descriptions to
       "metapackage".  Thanks, Frank S. Thomas.  (Closes: #476681)
+  * lib/Util.pm:
+    + [FL] Rename function get_file_md5sum to get_file_checksum and
+      support SHA1 and SHA256.
 
   * man/lintian.1:
     + [FL] Drop linda from SEE ALSO since it is obsolete now. Suggested
@@ -111,7 +123,7 @@ lintian (1.23.47) UNRELEASED; urgency=low
     + [RA] Extract a tar listing with numeric owners and groups into
       index-owner-id in the lab.
 
- -- Frank Lichtenheld <djpig@debian.org>  Thu, 17 Apr 2008 21:52:27 +0200
+ -- Frank Lichtenheld <djpig@debian.org>  Wed, 30 Apr 2008 22:55:20 +0200
 
 lintian (1.23.46) unstable; urgency=low
 

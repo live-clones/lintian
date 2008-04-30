@@ -29,7 +29,7 @@ our @EXPORT = qw(parse_dpkg_control
 	get_deb_info
 	get_dsc_info
 	slurp_entire_file
-	get_file_md5
+	get_file_checksum
 	file_is_encoded_in_non_utf8
 	fail
 	system_env
@@ -38,6 +38,7 @@ our @EXPORT = qw(parse_dpkg_control
 use FileHandle;
 use Pipeline;
 use Digest::MD5;
+use Digest::SHA;
 
 # general function to read dpkg control files
 # this function can parse output of `dpkg-deb -f', .dsc,
@@ -180,13 +181,18 @@ sub slurp_entire_file {
     return $_;
 }
 
-sub get_file_md5 {
-	my $file = shift;
+sub get_file_checksum {
+	my ($alg, $file) = @_;
 	open (FILE, '<', $file) or fail("Couldn't open $file");
-	my $md5 = Digest::MD5->new;
-	$md5->addfile(*FILE);
+	my $digest;
+	if ($alg eq 'md5') {
+	    $digest = Digest::MD5->new;
+	} elsif ($alg =~ /sha(\d+)/) {
+	    $digest = Digest::SHA->new($1);
+	}
+	$digest->addfile(*FILE);
 	close FILE or fail("Couldn't close $file");
-	return $md5->hexdigest;
+	return $digest->hexdigest;
 }
 
 sub file_is_encoded_in_non_utf8 {
