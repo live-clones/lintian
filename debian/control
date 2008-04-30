@@ -7,7 +7,7 @@ Uploaders: Josip Rodin <joy-packages@debian.org>,
  Frank Lichtenheld <djpig@debian.org>,
  Marc 'HE' Brockschmidt <he@debian.org>,
  Colin Watson <cjwatson@debian.org>, Russ Allbery <rra@debian.org>
-Build-Depends: debhelper (>= 4)
+Build-Depends: debhelper (>= 5)
 Build-Depends-Indep: debiandoc-sgml, sed (>= 4.1-4)
 Standards-Version: 3.7.3
 Vcs-Svn: http://svn.wolffelaar.nl/lintian/trunk/

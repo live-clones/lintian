@@ -77,8 +77,12 @@ lintian (1.23.47) UNRELEASED; urgency=low
   * data/shared-libs/ldconfig-dirs:
     + [RA] New file listing directories searched by ld.so.
 
+  * debian/compat:
+    + [FL] Increase debhelper compat level to 5. There is really
+      no need anymore to support building on sarge.
   * debian/control:
     + [FL] Add dependency on libdigest-sha-perl.
+    + [FL] Increase debhelper dependency to >= 5
 
   * frontend/lintian:
     + [RA] Qualify relative --root directories so that we don't break
