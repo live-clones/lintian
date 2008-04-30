@@ -99,6 +99,7 @@ lintian (1.23.47) UNRELEASED; urgency=low
   * man/lintian.1:
     + [FL] Drop linda from SEE ALSO since it is obsolete now. Suggested
       by Hideki Yamane. (Closes: #474478)
+    + [FL] Add new --checksums option.
 
   * reporting/html_reports:
     + [RA] Base the generation of clean report pages on the maintainer URL
@@ -123,7 +124,7 @@ lintian (1.23.47) UNRELEASED; urgency=low
     + [RA] Extract a tar listing with numeric owners and groups into
       index-owner-id in the lab.
 
- -- Frank Lichtenheld <djpig@debian.org>  Wed, 30 Apr 2008 22:55:20 +0200
+ -- Frank Lichtenheld <djpig@debian.org>  Wed, 30 Apr 2008 23:05:19 +0200
 
 lintian (1.23.46) unstable; urgency=low
 
