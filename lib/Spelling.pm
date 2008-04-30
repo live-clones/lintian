@@ -420,9 +420,6 @@ sub spelling_check {
     if ($text =~ m,Debian/GNU\s+Linux,) {
         _tag($tag, $filename, "Debian/GNU Linux", "Debian GNU/Linux");
     }
-    if ($text =~ m,meta\s+package,) {
-        _tag($tag, $filename, "meta package", "metapackage");
-    }
 }
 
 # Check spelling of $text against pickier corrections, such as common
@@ -440,6 +437,9 @@ sub spelling_check_picky {
             _tag($tag, $filename, $word, $CORRECTIONS_CASE{$word});
             next;
         }
+    }
+    if ($text =~ m,meta\s+package,) {
+        _tag($tag, $filename, "meta package", "metapackage");
     }
 }
 
