@@ -1,5 +1,7 @@
 lintian (1.23.48) UNRELEASED; urgency=low
 
+  * checks/common_data.pm:
+    + [FL] Add 8.5 versions to known_tcls and known_tks.
   * checks/copyright-file:
     + [FL] Also apply the "possible-gpl-code-linked-with-openssl" checks
       to Pre-Depends.
@@ -7,7 +9,7 @@ lintian (1.23.48) UNRELEASED; urgency=low
     + [FL] Also apply the "not-binnmuable-*" checks to Pre-Depends.
       (Closes: #472247)
 
- -- Frank Lichtenheld <djpig@debian.org>  Thu, 01 May 2008 19:18:35 +0200
+ -- Frank Lichtenheld <djpig@debian.org>  Thu, 01 May 2008 22:13:07 +0200
 
 lintian (1.23.47) unstable; urgency=low
 

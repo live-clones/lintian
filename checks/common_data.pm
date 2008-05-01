@@ -163,13 +163,13 @@ use vars qw
     );
 
 %known_tcls = map { $_ => 1 }
-    ( 'tcl74', 'tcl8.0', 'tcl8.2', 'tcl8.3', 'tcl8.4', );
+    ( 'tcl74', 'tcl8.0', 'tcl8.2', 'tcl8.3', 'tcl8.4', 'tcl8.5', );
 
 %known_tclxs = map { $_ => 1 }
     ( 'tclx76', 'tclx8.0.4', 'tclx8.2', 'tclx8.3', 'tclx8.4', );
 
 %known_tks = map { $_ => 1 }
-    ( 'tk40', 'tk8.0', 'tk8.2', 'tk8.3', 'tk8.4', );
+    ( 'tk40', 'tk8.0', 'tk8.2', 'tk8.3', 'tk8.4', 'tk8.5', );
 
 %known_tkxs = map { $_ => 1 }
     ( 'tkx8.2', 'tkx8.3', );
