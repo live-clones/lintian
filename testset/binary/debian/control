@@ -11,7 +11,7 @@ XS-Dm-Upload-Allowed: yes
 
 Package: binary
 Architecture: any
-Depends: ${shlibs:Depends}, xorg, binary-data (= ${Source-Version}), libssl0.9.8
+Pre-Depends: ${shlibs:Depends}, xorg, binary-data (= ${Source-Version}), libssl0.9.8
 Homepage: <http://lintian.debian.org/>
 Vcs-Svn: http://svn.wolffelaar.nl/lintian/trunk
 Description: test handling of binary files

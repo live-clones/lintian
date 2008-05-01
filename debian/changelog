@@ -1,3 +1,11 @@
+lintian (1.23.48) UNRELEASED; urgency=low
+
+  * checks/version-substvars:
+    + [FL] Also apply the "not-binnmuable-*" checks to Pre-Depends.
+      (Closes: #472247)
+
+ -- Frank Lichtenheld <djpig@debian.org>  Thu, 01 May 2008 19:18:35 +0200
+
 lintian (1.23.47) unstable; urgency=low
 
   The "long time no upload" release.

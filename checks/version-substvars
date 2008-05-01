@@ -61,7 +61,8 @@ foreach (@control_data) {
 		}
 	}
 
-	foreach (split /,/, ($_->{'depends'} || "")) {
+	foreach (split(m/,/, ($_->{'pre-depends'} || "").", ".
+		       ($_->{'depends'} || ""))) {
 		next unless m/(\S+)\s*\(\s*=\s*\${((?:Source-|source:|binary:)Version)}/x;
 
 		$pkg2 = $1;
