@@ -1,5 +1,8 @@
 lintian (1.23.48) UNRELEASED; urgency=low
 
+  * checks/copyright-file:
+    + [FL] Also apply the "possible-gpl-code-linked-with-openssl" checks
+      to Pre-Depends.
   * checks/version-substvars:
     + [FL] Also apply the "not-binnmuable-*" checks to Pre-Depends.
       (Closes: #472247)

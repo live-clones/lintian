@@ -252,13 +252,17 @@ spelling_check('spelling-error-in-copyright', $_);
 # or Artistic licensing or with an exception or exemption.
 if ($gpl || m,/usr/share/common-licenses/GPL,) {
     unless (m,exception|exemption|/usr/share/common-licenses/(?!GPL)\S,) {
-        if (open(DEP, '<', 'fields/depends')) {
-            my @depends = split (/\s*,\s*/, scalar <DEP>);
-            close DEP;
-            if (grep { /^libssl[0-9.]+(\s|\z)/ && !/\|/ } @depends) {
-                tag 'possible-gpl-code-linked-with-openssl';
-            }
-        }
+	my @depends;
+	if (open(DEP, '<', 'fields/depends')) {
+	    @depends = split (/\s*,\s*/, scalar <DEP>);
+	}
+	if (open(DEP, '<', 'fields/pre-depends')) {
+	    push @depends, split (/\s*,\s*/, scalar <DEP>);
+	}
+	close DEP;
+	if (grep { /^libssl[0-9.]+(\s|\z)/ && !/\|/ } @depends) {
+	    tag 'possible-gpl-code-linked-with-openssl';
+	}
     }
 }
 
