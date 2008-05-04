@@ -415,14 +415,14 @@ sub check_doc_base_field {
         my $leadsp_ok = 1;     # are spaces OK?
 
         # Intentionally skipping the first line.
-        for my $idx (1 .. $#{@$vals}) {
+        for my $idx (1 .. $#{$vals}) {
             $_ = $vals->[$idx];
             if (/manage\s+online\s+manuals\s.*Debian/o) {
                 tag "doc-base-abstract-field-is-template", "$dbfile:$line"
                     unless $pkg eq "doc-base";
             } elsif (/^(\s+)\.(\s*)$/o and ($1 ne " " or $2)) {
                 tag "doc-base-abstract-field-separator-extra-whitespaces",
-                    "$dbfile:" . ($line - $#{@$vals} + $idx);
+                    "$dbfile:" . ($line - $#{$vals} + $idx);
             } elsif (!$leadsp && /^(\s+)(\S)/o) {
                 # The regexp should always match.
                 ($leadsp, $charafter) = ($1, $2);
