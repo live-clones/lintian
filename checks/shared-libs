@@ -475,8 +475,7 @@ if (-f $postrm) {
     s/^if\[.?remove.?="\$1"\];?\n*then\n*BldconfigB//gm;
     s/^\["\$1"=.?remove.?\]\&&BldconfigB//gm;
     s/^\[.?remove.?="\$1"\]&&BldconfigB//gm;
-
-	s!remove(?:|[^)]+)*\).*?BldconfigB.*?(;;|esac)!!s;
+    s/remove(?:\|[^)]+)*\).*?BldconfigB.*?(;;|esac)//s;
 
     if (/^[^\#]*BldconfigB/m) {
         tag "postrm-unsafe-ldconfig", "";
