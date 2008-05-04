@@ -182,7 +182,7 @@ sub record_action {
     if ($action) {
 	die("too many actions specified: $_[0]");
     }
-    $action = $_[0];
+    $action = "$_[0]";
 }
 
 # Record Parts requested for checking
@@ -198,7 +198,7 @@ sub record_check_part {
 	die("too many actions specified: $_[0]");
     }
     $action = 'check';
-    $checks = $_[1];
+    $checks = "$_[1]";
 }
 
 # Record Parts requested not to check
@@ -214,7 +214,7 @@ sub record_dont_check_part {
 	die("too many actions specified: $_[0]");
     }
     $action = 'check';
-    $dont_check = $_[1];
+    $dont_check = "$_[1]";
 }
 
 
@@ -223,7 +223,7 @@ sub record_unpack_info {
     if ($unpack_info) {
 	die("multiple -U or --unpack-info options not allowed");
     }
-    $unpack_info = $_[1];
+    $unpack_info = "$_[1]";
 }
 
 # Record what type of data is specified
@@ -330,7 +330,7 @@ if ($color and $color !~ /^(never|always|auto|html)$/) {
 }
 
 # check specified action
-$action = 'check' if not $action;
+$action = 'check' unless $action;
 
 # check for arguments
 if ($action =~ /^(check|unpack|remove)$/ and $#ARGV == -1 and not $check_everything and not $packages_file) {

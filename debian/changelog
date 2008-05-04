@@ -12,6 +12,9 @@ lintian (1.23.48) UNRELEASED; urgency=low
     + [FL] Also apply the "not-binnmuable-*" checks to Pre-Depends.
       (Closes: #472247)
 
+  * frontend/lintian:
+    + [RA] Work around a Perl 5.10 bug with Getopt::Long and sub handlers.
+
  -- Frank Lichtenheld <djpig@debian.org>  Thu, 01 May 2008 22:13:07 +0200
 
 lintian (1.23.47) unstable; urgency=low
