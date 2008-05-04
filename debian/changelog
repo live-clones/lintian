@@ -1,4 +1,6 @@
-lintian (1.23.48) UNRELEASED; urgency=low
+lintian (1.23.48) unstable; urgency=low
+
+  The "Perl 5.10 compatibility" release.
 
   * checks/common_data.pm:
     + [FL] Add 8.5 versions to known_tcls and known_tks.
@@ -24,7 +26,7 @@ lintian (1.23.48) UNRELEASED; urgency=low
       Replace the defaults with ones that never match so that we can
       continue testing for cruft left in source packages.
 
- -- Frank Lichtenheld <djpig@debian.org>  Thu, 01 May 2008 22:13:07 +0200
+ -- Russ Allbery <rra@debian.org>  Sun, 04 May 2008 12:57:48 -0700
 
 lintian (1.23.47) unstable; urgency=low
 
