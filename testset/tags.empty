@@ -7,7 +7,6 @@ E: empty-docs: package-has-no-description
 E: empty: maintainer-address-missing empty
 E: empty: no-copyright-file
 E: empty: package-has-no-description
-E: empty_2_i386.changes: no-description-in-changes-file
 E: libempty-perl: maintainer-address-missing empty
 E: libempty-perl: no-copyright-file
 E: libempty-perl: package-has-no-description
