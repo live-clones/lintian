@@ -19,6 +19,11 @@ lintian (1.23.48) UNRELEASED; urgency=low
   * frontend/lintian:
     + [RA] Work around a Perl 5.10 bug with Getopt::Long and sub handlers.
 
+  * testset/runtests:
+    + [RA] dpkg-source now enables the -i and -I regexes by default.
+      Replace the defaults with ones that never match so that we can
+      continue testing for cruft left in source packages.
+
  -- Frank Lichtenheld <djpig@debian.org>  Thu, 01 May 2008 22:13:07 +0200
 
 lintian (1.23.47) unstable; urgency=low

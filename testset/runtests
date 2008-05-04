@@ -119,7 +119,8 @@ use Tags;
 # --- Set the ways to call lintian and dpkg-buildpackage
 my $lintian_options = '-I';
 my $lintian_info_options = '-I -i';
-my $dpkg_buildpackage_options = '-rfakeroot -us -uc -d';
+my $dpkg_buildpackage_options = '-rfakeroot -us -uc -d -iNEVER_MATCH_ANYTHING'
+    . ' -INEVER_MATCH_ANYTHING';
 my $lintian_path = $LINTIAN_ROOT . "/frontend/lintian";
 
 my $testok = 0;
