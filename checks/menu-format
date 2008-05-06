@@ -452,6 +452,10 @@ foreach my $menufile (@menufiles) {
 	tag "old-format-menu-file", $fullname;
 	close IN;
 	next;
+    } elsif ($menufile_line =~ m/^!C\s*menu-2/o) {
+	# we can't parse that yet
+	close IN;
+	next;
     }
 
     # Parse entire file as a new format menu file.
@@ -464,7 +468,7 @@ foreach my $menufile (@menufiles) {
 	if ($menufile_line =~ m/^\s*\#/o) {
 	    next;
 	}
-	    $line .= $menufile_line;
+	$line .= $menufile_line;
 	# Note that I allow whitespace after the continuation character.
 	# This is caught by VerifyLine().
 	if (! ($menufile_line =~ m/\\\s*?$/)) {

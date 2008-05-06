@@ -3,8 +3,11 @@ lintian (1.23.49) UNRELEASED; urgency=low
   * checks/debhelper:
     + [FL] dh_lintian needs debhelper >= 6.0.7. Patch by David Paleino.
       (Closes: #479088)
+  * checks/menu-format:
+    + [FL] Don't issue false positives about menu files in format menu-2.
+      We don't check them for errors yet, though.  (Closes: #478578)
 
- -- Frank Lichtenheld <djpig@debian.org>  Tue, 06 May 2008 19:04:39 +0200
+ -- Frank Lichtenheld <djpig@debian.org>  Tue, 06 May 2008 20:01:56 +0200
 
 lintian (1.23.48) unstable; urgency=low
 
