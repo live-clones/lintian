@@ -87,7 +87,8 @@ map { $commands{$_}=1 } qw(dh_desktop
 # newer.
 my %versions
     = (dh_icons           => '5.0.51~',
-       dh_installifupdown => '5.0.44~');
+       dh_installifupdown => '5.0.44~',
+       dh_lintian         => '6.0.7~');
 
 open(RULES, '<', "debfiles/rules") or fail("cannot read debian/rules: $!");
 my $dhcompatvalue;

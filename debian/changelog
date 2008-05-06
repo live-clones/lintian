@@ -1,3 +1,11 @@
+lintian (1.23.49) UNRELEASED; urgency=low
+
+  * checks/debhelper:
+    + [FL] dh_lintian needs debhelper >= 6.0.7. Patch by David Paleino.
+      (Closes: #479088)
+
+ -- Frank Lichtenheld <djpig@debian.org>  Tue, 06 May 2008 19:04:39 +0200
+
 lintian (1.23.48) unstable; urgency=low
 
   The "Perl 5.10 compatibility" release.
