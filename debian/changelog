@@ -8,6 +8,12 @@ lintian (1.23.49) UNRELEASED; urgency=low
   * checks/menu-format:
     + [FL] Don't issue false positives about menu files in format menu-2.
       We don't check them for errors yet, though.  (Closes: #478578)
+  
+  * frontend/lintian:
+    + [FL] Don't issue a warning about Distribution: UNRELEASED in
+      .changes files.  It can be annoying to have to ignore this error
+      during testing and dupload/dput/dak/etc... all will error out
+      on it anyway.  Suggested by martin f krafft.  (Closes: #382327)
 
  -- Frank Lichtenheld <djpig@debian.org>  Tue, 06 May 2008 20:01:56 +0200
 
