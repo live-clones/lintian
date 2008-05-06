@@ -1,0 +1,6 @@
+W: dh7-test source: changelog-should-mention-nmu
+W: dh7-test source: debhelper-script-needs-versioned-build-depends dh (>= 7)
+W: dh7-test source: native-package-with-dash-version
+W: dh7-test source: no-human-maintainers
+W: dh7-test source: source-nmu-has-incorrect-version-number 1-1
+W: dh7-test: new-package-should-close-itp-bug

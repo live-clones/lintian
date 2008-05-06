@@ -1,0 +1,12 @@
+Source: dh7-test
+Section: devel
+Priority: optional
+Maintainer: Lintian Maintainers <debian-lint-maint@lists.debian.org>
+Build-Depends: debhelper (>= 6)
+Standards-Version: 3.7.3
+
+Package: dh7-test
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Checks related to the dh build utility
+ New in debhelper 7.

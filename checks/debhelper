@@ -88,7 +88,8 @@ map { $commands{$_}=1 } qw(dh_desktop
 my %versions
     = (dh_icons           => '5.0.51~',
        dh_installifupdown => '5.0.44~',
-       dh_lintian         => '6.0.7~');
+       dh_lintian         => '6.0.7~',
+       dh                 => '7');
 
 open(RULES, '<', "debfiles/rules") or fail("cannot read debian/rules: $!");
 my $dhcompatvalue;
@@ -115,6 +116,10 @@ while (<RULES>) {
         }
 	$seencommand = 1;
 	$needbuilddepends = 1;
+    } elsif (m,^\s+dh\s+,) {
+	$seencommand = 1;
+	$needbuilddepends = 1;
+	push (@versioncheck, 'dh');
     } elsif (m,^include\s+/usr/share/cdbs/1/rules/debhelper.mk,) {
 	$seencommand = 1;
 	$needbuilddepends = 1;

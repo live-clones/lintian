@@ -1,0 +1,9 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+export DH_VERBOSE = 1
+
+clean build binary-indep binary:
+	dh $@
+
+.PHONY: clean build binary-arch binary-indep binary
