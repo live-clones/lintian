@@ -1,5 +1,7 @@
 lintian (1.23.49) UNRELEASED; urgency=low
 
+  * checks/copyright-file{,.desc}:
+    + [FL] Implement new check for dh-make-perl boilerplate.
   * checks/debhelper:
     + [FL] dh_lintian needs debhelper >= 6.0.7. Patch by David Paleino.
       (Closes: #479088)

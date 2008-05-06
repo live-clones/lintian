@@ -10,3 +10,7 @@ It's wrong to reference a compressed license, like this:
 /usr/share/common-licenses/BSD.gz
 
 This path /usr/share/doc/copyright is obsolete.
+
+This copyright info was automatically extracted from the perl module.
+It may not be accurate, so you better check the module sources
+if you don't want to get into legal troubles.

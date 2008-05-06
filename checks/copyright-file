@@ -239,6 +239,9 @@ if (m,Upstream Author\(s\),) {
 if (m{\# Please also look if there are files or directories which have a\n\# different copyright/license attached and list them here\.}) {
     tag "copyright-contains-dh_make-todo-boilerplate", "";
 }
+if (m{This copyright info was automatically extracted from the perl module\.\nIt may not be accurate, so you better check the module sources\nif you don\'t want to get into legal troubles\.}) {
+    tag "copyright-contains-dh-make-perl-boilerplate", "";
+}
 
 if ($found && !$linked && !/(Copyright|Copr\.|\302\251)(.*|[\(C\):\s]+)\b\d{4}\b|\bpublic\s+domain\b/i) {
     tag 'copyright-without-copyright-notice';
