@@ -565,15 +565,6 @@ Info: Binary packages do not need to contain the instructions for building
  If the info contained is important for configuration perhaps it could be
  summarized in README.Debian, otherwise an override may be added.
 
-Tag: xresources-file-in-etc-without-proper-conflicts
-Type: error
-Ref: policy 11.8.6
-Info: Packages that install files into the /etc/X11/Xresources/ directory must
- declare a conflict with xbase (&lt;&lt; 3.3.2.3a-2); if this is not done it is
- possible for the installing package to destroy a previously-existing
- /etc/X11/Xresources file which had been customized by the system
- administrator.
-
 Tag: package-contains-hardlink
 Type: warning
 Info: The package contains a hardlink in <tt>/etc</tt> or across different

@@ -7,6 +7,10 @@ lintian (1.23.49) UNRELEASED; urgency=low
       (Closes: #479088)
     + [FL] Add basic support for debhelpers new dh utility.
       (Closes: #477628)
+  * checks/files:
+    + [FL] Drop xresources-file-in-etc-without-proper-conflicts, since
+      the last package that conflict applies to was released with hamm!
+      Reported by Julien Cristau.  (Closes: #480574)
   * checks/menu-format:
     + [FL] Don't issue false positives about menu files in format menu-2.
       We don't check them for errors yet, though.  (Closes: #478578)

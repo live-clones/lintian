@@ -213,20 +213,6 @@ while (<IN>) {
 	elsif ($file =~ m,^etc/rc\.boot/\S,) {
 	    tag "package-installs-into-etc-rc.boot", "$file";
 	}
-	# --------------- /etc/X11/Xresources/
-	elsif ($file =~ m,^etc/X11/Xresources,) {
-	    my $needs_conflicts = 1;
-	    if (open(CONFLICTS, '<', "fields/conflicts")) {
-		my $line = <CONFLICTS>;
-		if ($line =~ m/xbase \(.+?\)/) {
-		    $needs_conflicts = 0;
-		}
-		close(CONFLICTS);
-	    }
-	    if ($needs_conflicts) {
-		tag "xresources-file-in-etc-without-proper-conflicts", "$file";
-	    }
-	}
     }
     # ---------------- /usr
     elsif ($file =~ m,^usr/,) {
