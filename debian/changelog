@@ -20,6 +20,12 @@ lintian (1.23.49) UNRELEASED; urgency=low
       .changes files.  It can be annoying to have to ignore this error
       during testing and dupload/dput/dak/etc... all will error out
       on it anyway.  Suggested by martin f krafft.  (Closes: #382327)
+  
+  * reporting/html_reports:
+    + [FL] Escape $email variable for usage in URI query strings.  
+      Currently it is not used for anything else, so it is most simple
+      to do it in the actual code.  Reported by Sandro Tosi.
+      (Closes: #481256)
 
  -- Frank Lichtenheld <djpig@debian.org>  Tue, 06 May 2008 20:01:56 +0200
 

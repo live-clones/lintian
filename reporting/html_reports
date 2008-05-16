@@ -23,6 +23,7 @@
 
 use strict;
 use File::Copy qw(copy);
+use URI::Escape;
 use Text::Template ();
 
 # ------------------------------
@@ -327,7 +328,7 @@ for my $maintainer (@maintainers) {
     # full maintainer page (all tags, including overrides and info tags).
     print "Generating page for $id\n";
     my %data = (
-        email      => html_quote ($email),
+        email      => html_quote (uri_escape ($email)),
         errors     => 1,
         id         => $id,
         maintainer => html_quote ($maintainer),
@@ -374,7 +375,7 @@ for my $id (keys %clean) {
     my ($name, $email) = ($maintainer =~ /^(.*) <([^>]+)>/);
     $email = 'unknown' unless $email;
     my %data = (
-        email      => html_quote ($email),
+        email      => html_quote (uri_escape ($email)),
         maintainer => html_quote ($maintainer),
         name       => html_quote ($name),
         timestamp  => $timestamp,
