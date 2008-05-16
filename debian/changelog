@@ -21,6 +21,11 @@ lintian (1.23.49) UNRELEASED; urgency=low
       during testing and dupload/dput/dak/etc... all will error out
       on it anyway.  Suggested by martin f krafft.  (Closes: #382327)
   
+  * lib/Util.pm:
+    + [FL] Only require Digest::SHA if the code path is really used.
+      This makes it unnessesary to install libdigest-sha-perl on
+      lintian.debian.org for now.
+  
   * reporting/html_reports:
     + [FL] Escape $email variable for usage in URI query strings.  
       Currently it is not used for anything else, so it is most simple

@@ -38,7 +38,6 @@ our @EXPORT = qw(parse_dpkg_control
 use FileHandle;
 use Pipeline;
 use Digest::MD5;
-use Digest::SHA;
 
 # general function to read dpkg control files
 # this function can parse output of `dpkg-deb -f', .dsc,
@@ -188,6 +187,7 @@ sub get_file_checksum {
 	if ($alg eq 'md5') {
 	    $digest = Digest::MD5->new;
 	} elsif ($alg =~ /sha(\d+)/) {
+	    require Digest::SHA;
 	    $digest = Digest::SHA->new($1);
 	}
 	$digest->addfile(*FILE);
