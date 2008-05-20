@@ -41,6 +41,11 @@ lintian (1.23.49) UNRELEASED; urgency=low
       This makes it unnessesary to install libdigest-sha-perl on
       lintian.debian.org for now.
   
+  * man/lintian.1:
+    + [FL] Document --keep-lab option.
+    + [FL] Fix error in checkname: s/patch-system/patch-systems/.
+      Reported by Jörg Sommer.
+  
   * reporting/html_reports:
     + [FL] Escape $email variable for usage in URI query strings.  
       Currently it is not used for anything else, so it is most simple
