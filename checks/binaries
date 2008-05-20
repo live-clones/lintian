@@ -177,9 +177,6 @@ while (<IN>) {
 }
 close IN;
 
-#use Data::Dumper;
-#warn Dumper(\%directories);
-
 # process all files in package
 open(IN,, '<', "file-info")
     or fail("cannot find file-info for $type package $pkg");
