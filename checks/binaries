@@ -23,8 +23,6 @@ use strict;
 use Tags;
 use Util;
 
-use File::Basename;
-
 sub run {
 
 my $pkg = shift;
