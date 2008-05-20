@@ -1,4 +1,6 @@
-lintian (1.23.49) UNRELEASED; urgency=low
+lintian (1.23.49) unstable; urgency=low
+
+  The "Business as usual" release.
 
   * checks/binaries:
     + [FL] Ignore rpaths to directories present in the same binary
@@ -54,7 +56,7 @@ lintian (1.23.49) UNRELEASED; urgency=low
       to do it in the actual code.  Reported by Sandro Tosi.
       (Closes: #481256)
 
- -- Frank Lichtenheld <djpig@debian.org>  Tue, 06 May 2008 20:01:56 +0200
+ -- Frank Lichtenheld <djpig@debian.org>  Tue, 20 May 2008 22:03:58 +0200
 
 lintian (1.23.48) unstable; urgency=low
 
