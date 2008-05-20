@@ -11,6 +11,8 @@ lintian (1.23.49) UNRELEASED; urgency=low
       (Closes: #479088)
     + [FL] Add basic support for debhelpers new dh utility.
       (Closes: #477628)
+    + [FL] Suppress maintainer-script-lacks-debhelper-token for
+      single-udeb-only packages as well.  (Closes: #471853)
   * checks/files:
     + [FL] Drop xresources-file-in-etc-without-proper-conflicts, since
       the last package that conflict applies to was released with hamm!
