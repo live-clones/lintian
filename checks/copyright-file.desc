@@ -186,6 +186,15 @@ Info: There is "Upstream Author(s)" in your copyright file. This was most
  .
  o/~ join us now and carefully edit debian/copyright files! o/~
 
+Tag: copyright-has-url-from-dh_make-boilerplate
+Type: warning
+Ref: 12.5
+Info: There is "url://example.com" in your copyright file. This was most
+ likely a remnant from the dh_make template.
+ .
+ Make sure you include the real location where you obtained the
+ upstream sources (if any).
+
 Tag: debian-copyright-file-uses-obsolete-national-encoding
 Type: warning
 Info: The Debian copyright file should be valid UTF-8, an encoding of

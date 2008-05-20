@@ -236,6 +236,10 @@ if (m,Upstream Author\(s\),) {
     tag "copyright-lists-upstream-authors-with-dh_make-boilerplate";
 }
 
+if (m,url://example\.com,) {
+    tag "copyright-has-url-from-dh_make-boilerplate";
+}
+
 if (m{\# Please also look if there are files or directories which have a\n\# different copyright/license attached and list them here\.}) {
     tag "copyright-contains-dh_make-todo-boilerplate", "";
 }

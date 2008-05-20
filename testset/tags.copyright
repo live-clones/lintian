@@ -13,6 +13,7 @@ E: copyright.symlink: copyright-file-is-symlink
 W: copyright.compressed: copyright-without-copyright-notice
 W: copyright.iso-8859-1: debian-copyright-file-uses-obsolete-national-encoding at line 3
 W: copyright.misc-errors: copyright-contains-dh-make-perl-boilerplate
+W: copyright.misc-errors: copyright-has-url-from-dh_make-boilerplate
 W: copyright.misc-errors: copyright-lists-upstream-authors-with-dh_make-boilerplate
 W: copyright.old-style: copyright-without-copyright-notice
 W: copyright.symlink: copyright-without-copyright-notice
