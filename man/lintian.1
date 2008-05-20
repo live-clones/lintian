@@ -194,6 +194,17 @@ By default,
 exits with 0 status if only warnings were found.  If this flag is given,
 exit with a status of 1 if either warnings or errors are found.
 
+.TP
+.BR \-\-keep\-lab
+By default, temporary labs will be removed after lintian is finished.
+Specifying this options will leave the lab behind, which might be
+useful for debugging purposes.  You can find out where the temporary
+lab is located by running lintian with the
+.B \-\-verbose
+option.  Implies
+.B \-\-unpack\-level=2
+unless another unpack level is specified directly.
+
 .PP
 
 Configuration options:

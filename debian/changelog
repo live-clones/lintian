@@ -20,6 +20,8 @@ lintian (1.23.49) UNRELEASED; urgency=low
       .changes files.  It can be annoying to have to ignore this error
       during testing and dupload/dput/dak/etc... all will error out
       on it anyway.  Suggested by martin f krafft.  (Closes: #382327)
+    + [FL] Add a --keep-lab option to make it easier to debug temporary
+      labs.  (Closes: #401046)
   
   * lib/Util.pm:
     + [FL] Only require Digest::SHA if the code path is really used.

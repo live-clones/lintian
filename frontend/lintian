@@ -55,8 +55,9 @@ our $no_override = 0;		#flag for -o|--no-override switch
 our $show_overrides = 0;	#flag for --show-overrides switch
 our $color = 'never';		#flag for --color switch
 my $check_checksums = 0;	#flag for -m|--md5sums|--checksums switch
-my $allow_root = 0;		#flag for --allow-root swtich
+my $allow_root = 0;		#flag for --allow-root switch
 my $fail_on_warnings = 0;       #flag for --fail-on-warnings switch
+my $keep_lab = 0;		#flag for --keep-lab switch
 my $packages_file = 0;		#string for the -p option
 my $OPT_LINTIAN_LAB = "";	#string for the --lab option
 my $OPT_LINTIAN_ARCHIVEDIR = "";#string for the --archivedir option
@@ -146,6 +147,7 @@ Behaviour options:
     -m, --md5sums, --checksums check checksums when processing a .changes file
     --allow-root              suppress lintian\'s warning when run as root
     --fail-on-warnings        return a non-zero exit status if warnings found
+    --keep-lab                keep lab after run, even if temporary
 Configuration options:
     --cfg CONFIGFILE          read CONFIGFILE for configuration
     --lab LABDIR              use LABDIR as permanent laboratory
@@ -263,7 +265,8 @@ my %opthash = (			# ------------------ actions
 	       "unpack-info|U=s" => \&record_unpack_info,
 	       "checksums|md5sums|m" => \$check_checksums,
 	       "allow-root" => \$allow_root,
-               "fail-on-warnings" => \$fail_on_warnings,
+	       "fail-on-warnings" => \$fail_on_warnings,
+	       "keep-lab" => \$keep_lab,
 	       # Note: Ubuntu has (and other derivatives might gain) a
 	       # -D/--debian option to make lintian behave like in Debian, that
 	       # is, to revert distribution-specific changes
@@ -315,6 +318,12 @@ if (defined $LINTIAN_ROOT) {
 $debug = $#debug + 1;
 $verbose = 1 if $debug;
 $::verbose = $verbose; # that's $main::verbose
+
+# keep-lab implies unpack-level=2 unless explicetly
+# given otherwise
+if ($keep_lab and not defined $unpack_level) {
+    $unpack_level = 2;
+}
 
 # option --all and packages specified at the same time?
 if (($check_everything or $packages_file) and $#ARGV+1 > 0) {
@@ -1687,7 +1696,7 @@ sub END {
     $SIG{'INT'} = 'DEFAULT';
     $SIG{'QUIT'} = 'DEFAULT';
 
-    $LAB->delete() if $LAB;
+    $LAB->delete() if $LAB and not $keep_lab;
 }
 
 sub interrupted {
