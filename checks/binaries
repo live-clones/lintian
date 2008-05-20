@@ -23,6 +23,8 @@ use strict;
 use Tags;
 use Util;
 
+use File::Basename;
+
 sub run {
 
 my $pkg = shift;
@@ -88,7 +90,9 @@ while (<IN>) {
 	if (m/^\s*NEEDED\s*(\S+)/o) {
 	    push @{$NEEDED{$file}}, $1;
 	} elsif (m/^\s*RPATH\s*(\S+)/o) {
-	    $RPATH{$file} = $1;
+	    foreach (split m/:/, $1) {
+		$RPATH{$file}{$_}++;
+	    }
 	} elsif (m/^\s*SONAME\s*(\S+)/o) {
 	    $SONAME{$1} ||= [];
 	    push @{$SONAME{$1}}, $file;
@@ -158,6 +162,24 @@ foreach my $expected_name (@sonames) {
 tag "package-name-doesnt-match-sonames", "@sonames"
     if @sonames && !$match_found;
 
+my %directories;
+open(IN, '<', "index") or fail("cannot open index file index: $!");
+while (<IN>) {
+    chomp;
+    next unless /^[dl]/;
+    my $dir = (split(' ', $_, 6))[-1];
+    $dir =~ s,^\./,/,;
+    $dir =~ s,/+$,,;
+    $dir =~ s/ link to .*//;
+    $dir =~ s/ -> .*//;
+
+    $directories{$dir}++;
+}
+close IN;
+
+#use Data::Dumper;
+#warn Dumper(\%directories);
+
 # process all files in package
 open(IN,, '<', "file-info")
     or fail("cannot find file-info for $type package $pkg");
@@ -217,10 +239,13 @@ while (<IN>) {
     }
 
     # rpath is disallowed, except in private directories
-    if (exists $RPATH{$file} &&
-        grep { !m,^/usr/lib/(games/)?\Q$pkg\E(?:/|\z), } split(/:/, $RPATH{$file})
-       ) {
-	tag "binary-or-shlib-defines-rpath", "$file $RPATH{$file}";
+    if (exists $RPATH{$file}) {
+	foreach my $rpath (keys %{$RPATH{$file}}) {
+	    next if $rpath =~ m,^/usr/lib/(games/)?\Q$pkg\E(?:/|\z),;
+	    next if $rpath =~ m,^\$ORIGIN$,;
+	    next if $directories{$rpath};
+	    tag "binary-or-shlib-defines-rpath", "$file $rpath";
+	}
     }
 
     # binary or shared object?

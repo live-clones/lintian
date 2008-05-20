@@ -1,5 +1,9 @@
 lintian (1.23.49) UNRELEASED; urgency=low
 
+  * checks/binaries:
+    + [FL] Ignore rpaths to directories present in the same binary
+      package.  Also ignore $ORIGIN since that obviously fulfills
+      that criterion.  (Closes: #480636)
   * checks/copyright-file{,.desc}:
     + [FL] Implement new check for dh-make-perl boilerplate.
   * checks/debhelper:
