@@ -469,7 +469,7 @@ while (<SCRIPTS>) {
     if ($shellscript) {
 	$checkbashisms = $base eq "sh" ? 1 : 0;
 	if ($base eq 'sh' or $base eq 'bash') {
-	    if (check_script_syntax("/bin/$base", $filename)) {
+	    if (check_script_syntax("/bin/bash", $filename)) {
 		tag("maintainer-shell-script-fails-syntax-check", $file);
 	    }
 	}

@@ -21,6 +21,10 @@ lintian (1.23.49) UNRELEASED; urgency=low
   * checks/patch-systems:
     + [FL] Add basic support for dpatch list files which use cpp for
       preprocessing.  Patch by Jörg Sommer.  (Closes: #477057)
+  * checks/scripts:
+    + [FL] Always use /bin/bash for shell script syntax check to give
+      consistent errors on systems with changed /bin/sh.  Suggested
+      by Raphael Geissert.  (Closes: #478192)
   
   * frontend/lintian:
     + [FL] Don't issue a warning about Distribution: UNRELEASED in
