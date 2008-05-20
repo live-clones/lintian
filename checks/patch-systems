@@ -58,11 +58,27 @@ sub run {
 		if (! -r "debfiles/patches/00list") {
 			tag "dpatch-build-dep-but-no-patch-list", $pkg;
 		} else {
+			my $list_uses_cpp = 0;
+			if (open(OPTS, '<', "debfiles/patches/00options")) {
+				while(<OPTS>) {
+					if (/DPATCH_OPTION_CPP=1/) {
+						$list_uses_cpp = 1;
+						last;
+					}
+				}
+				close(OPTS);
+			}
 			if (open(IN, '<', "debfiles/patches/00list")) {
 				my @patches;
 				while(<IN>) {
 					chomp;
-					next if (/^\#/); #ignore comments
+					next if (/^\#/); #ignore comments or CPP directive
+					s%//.*%% if $list_uses_cpp; # remove C++ style comments
+					if ($list_uses_cpp && m%/\*%) {
+						# remove C style comments
+						$_ .= <IN> while($_ !~ m%\*/%);
+						s%/\*[^*]*\*/%%g;
+					}
 					next if (/^\s*$/); #ignore blank lines
 					push @patches, split(' ', $_);
 				}

@@ -18,6 +18,9 @@ lintian (1.23.49) UNRELEASED; urgency=low
   * checks/menu-format:
     + [FL] Don't issue false positives about menu files in format menu-2.
       We don't check them for errors yet, though.  (Closes: #478578)
+  * checks/patch-systems:
+    + [FL] Add basic support for dpatch list files which use cpp for
+      preprocessing.  Patch by Jörg Sommer.  (Closes: #477057)
   
   * frontend/lintian:
     + [FL] Don't issue a warning about Distribution: UNRELEASED in
