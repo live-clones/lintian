@@ -1078,7 +1078,7 @@ for my $c (keys %check_info) {
 
 # {{{ determine which checks have been requested
 if ($action eq 'check') {
-    my %dont_check = map { $_ => 1 } (split /,/, ($dont_check || ""));
+    my %dont_check = map { $_ => 1 } (split m/,/, ($dont_check || ""));
     $checks or ($checks = join(',',keys %check_info));
     for my $c (split(/,/,$checks)) {
 	if ($check_info{$c}) {
