@@ -9,3 +9,8 @@ Architecture: any
 Depends: ${shlibs:Depends}
 Description: test handling of files in /etc
  Regression test for lintian's handling of files in /etc.
+
+Package: only-etcfiles
+Architecture: all
+Depends: etcfiles (= ${source:Version})
+Description: test handling of conffile-only package

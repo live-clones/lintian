@@ -34,31 +34,6 @@ my %control_entry;
 my %info_entry;
 my %conffile;
 
-# Is there a md5sums control file?
-unless (-f $control) {
-    tag "no-md5sums-control-file", "" unless -z "md5sums";
-    return 0;
-}
-
-# Is it empty? Then skip it. Tag will be issued by control-files
-if (-z $control) {
-    return 0;
-}
-
-# read in md5sums control file
-open(C, '<', $control)
-    or fail("cannot open md5sums control file $control: $!");
-while (<C>) {
-    chop;
-    next if m/^\s*$/;
-    if (m{^([a-f0-9]+)\s*(?:\./)?(\S.*)$} && length($1) == 32) {
-	$control_entry{$2} = $1;
-    } else {
-	tag "malformed-md5sums-control-file", "line $.";
-    }
-}
-close(C);
-
 # read in md5sums info file
 open(C, '<', "md5sums") or fail("cannot open md5sums info file: $!");
 while (<C>) {
@@ -84,6 +59,46 @@ if (-f "control/conffiles") {
     }
     close(C);
 }
+
+# Is there a md5sums control file?
+unless (-f $control) {
+    # ignore if package contains no files
+    return 0 if -z "md5sums";
+
+    # check if package contains non-conffiles
+    # debhelper doesn't create entries in md5sums
+    # for conffiles since this information would
+    # be redundant
+    my $only_conffiles = 1;
+    foreach my $file (keys %info_entry) {
+	unless ($conffile{$file}) {
+	    $only_conffiles = 0;
+	    last;
+	}
+    }
+
+    tag "no-md5sums-control-file", "" unless $only_conffiles;
+    return 0;
+}
+
+# Is it empty? Then skip it. Tag will be issued by control-files
+if (-z $control) {
+    return 0;
+}
+
+# read in md5sums control file
+open(C, '<', $control)
+    or fail("cannot open md5sums control file $control: $!");
+while (<C>) {
+    chop;
+    next if m/^\s*$/;
+    if (m{^([a-f0-9]+)\s*(?:\./)?(\S.*)$} && length($1) == 32) {
+	$control_entry{$2} = $1;
+    } else {
+	tag "malformed-md5sums-control-file", "line $.";
+    }
+}
+close(C);
 
 for my $file (keys %control_entry) {
 

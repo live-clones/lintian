@@ -1,5 +1,9 @@
 lintian (1.23.50) unstable; urgency=low
 
+  * checks/md5sums:
+    + [FL] Don't complain about missing md5sums file if the
+      package only contains conffiles.  (Closes: #482869)
+  
   * reporting/templates/clean.tmpl:
     + [FL] Include link to full maintainer report.  Suggested by
       Kartik Mistry.

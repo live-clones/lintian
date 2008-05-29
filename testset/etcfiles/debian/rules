@@ -1,10 +1,12 @@
 #!/usr/bin/make -f
 
 tmp=debian/tmp
+tmponly=debian/only-etcfiles
 
 clean:
 	rm -f debian/files debian/substvars
 	rm -rf debian/tmp
+	rm -rf debian/only-etcfiles
 
 build:
 binary-indep:
@@ -42,8 +44,18 @@ binary-indep:
 	echo '56fb27e455dd86d8801f1ecd3a4cee49  usr/share/doc/etcfiles/README.Debian' \
 	    >> debian/tmp/DEBIAN/md5sums
 
-	dpkg-gencontrol -isp
-	dpkg --build debian/tmp ..
+	install -d $(tmponly)/etc/etcfiles
+	touch $(tmponly)/etc/etcfiles/foo
+	touch $(tmponly)/etc/etcfiles/bar
+	install -d $(tmponly)/usr/share/doc
+	cd $(tmponly)/usr/share/doc && ln -s etcfiles only-etcfiles
+	install -d $(tmponly)/DEBIAN
+	install -m 644 debian/conffiles.only $(tmponly)/DEBIAN/conffiles
+
+	dpkg-gencontrol -isp -petcfiles
+	dpkg-gencontrol -isp -ponly-etcfiles -P$(tmponly)
+	dpkg --build $(tmp) ..
+	dpkg --build $(tmponly) ..
 
 binary: binary-indep
 
