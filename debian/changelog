@@ -1,3 +1,11 @@
+lintian (1.23.50) unstable; urgency=low
+
+  * reporting/templates/clean.tmpl:
+    + [FL] Include link to full maintainer report.  Suggested by
+      Kartik Mistry.
+
+ -- Frank Lichtenheld <djpig@debian.org>  Thu, 29 May 2008 17:31:41 +0200
+
 lintian (1.23.49) unstable; urgency=low
 
   The "Business as usual" release.
