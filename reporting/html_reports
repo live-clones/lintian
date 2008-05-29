@@ -160,7 +160,7 @@ my (%by_maint, %by_uploader, %by_tag);
 my (%seen, %saw_maintainer);
 while (<>) {
     chomp;
-    next unless /^([EWIXO]): (\S+)(?: (\S+))?: (\S+)(?:\s+(.*))?/;
+    next unless m/^([EWIXO]): (\S+)(?: (\S+))?: (\S+)(?:\s+(.*))?/;
     my ($code, $package, $type, $tag, $extra) = ($1, $2, $3, $4, $5);
     $type = 'binary' unless (defined $type);
     next unless ($type eq 'source' || $type eq 'binary' || $type eq 'udeb');
