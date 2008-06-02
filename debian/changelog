@@ -1,5 +1,9 @@
 lintian (1.23.50) unstable; urgency=low
 
+  * checks/control-file{.desc,}:
+    + [RA] Check for self-dependencies in the source package since the
+      current dpkg-gencontrol silently fixes them but they may indicate
+      other problems.  Thanks, Patrick Matthäi.  (Closes: #471740)
   * checks/md5sums:
     + [FL] Don't complain about missing md5sums file if the
       package only contains conffiles.  (Closes: #482869)

@@ -81,11 +81,17 @@ for my $binary_control (@binary_controls) {
 # of a weaker dependency field.  dpkg-gencontrol will fix this up for us, but
 # we want to check the source package since dpkg-gencontrol may silently "fix"
 # something that's a more subtle bug.
+#
+# Also check if a package declares a simple dependency on itself, since
+# similarly dpkg-gencontrol will clean this up for us but it may be a sign of
+# another problem.
 my @dep_fields = qw(pre-depends depends recommends suggests);
 for my $control (@binary_controls) {
     for my $strong (0 .. ($#dep_fields - 1)) {
         next unless $control->{$dep_fields[$strong]};
         my $parsed = Dep::parse ($control->{$dep_fields[$strong]});
+        tag "package-depends-on-itself", $control->{package}, $dep_fields[$strong]
+            if Dep::implies($parsed, Dep::parse($control->{package}));
         for my $weak (($strong + 1) .. $#dep_fields) {
             next unless $control->{$dep_fields[$weak]};
             for my $dependency (split /\s*,\s*/, $control->{$dep_fields[$weak]}) {

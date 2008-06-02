@@ -65,7 +65,7 @@ Info: There is an XS-Vcs-* field in the <tt>debian/control</tt> file.  As
 
 Tag: stronger-dependency-implies-weaker
 Type: warning
-Ref: 7.2
+Ref: policy 7.2
 Info: In the <tt>debian/control</tt> stanza for the given package, a
  stronger dependency field implies one of the dependencies in a weaker
  dependency field.  In other words, the Depends field of the package
@@ -76,3 +76,12 @@ Info: In the <tt>debian/control</tt> stanza for the given package, a
  removing the weaker dependency, but it may indicate a more subtle bug
  (misspelling or forgetting to remove the stronger dependency when it was
  moved to the weaker field).
+
+Tag: package-depends-on-itself
+Type: warning
+Ref: policy 7.2
+Info: The given package declares a dependency on itself in its
+ <tt>debian/control</tt> stanza.  Current versions of dpkg-gencontrol will
+ silently fix this problem by removing the dependency, but it may indicate
+ a more subtle bug (misspelling or cutting and pasting the wrong package
+ name).
