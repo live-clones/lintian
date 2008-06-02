@@ -120,7 +120,7 @@ while (<RULES>) {
 	}
     } else {
     	#if we have non-empty, non-comment lines, store them for all current targets:
-	if (m/^\s+[^#]/) {
+	if (m/^\s+[^\#]/) {
 	    foreach my $target (@current_targets) {
 		$rules_per_target{$target} ||= [];
 		push @{$rules_per_target{$target}}, $_;
