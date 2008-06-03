@@ -1,5 +1,7 @@
 lintian (1.23.50) unstable; urgency=low
 
+  * checks/common_data.pm:
+    + [RA] armel is now a standard architecture.
   * checks/control-file{.desc,}:
     + [RA] Check for self-dependencies in the source package since the
       current dpkg-gencontrol silently fixes them but they may indicate

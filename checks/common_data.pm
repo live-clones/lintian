@@ -33,7 +33,7 @@ use vars qw
 # From /usr/share/dpkg/archtable, included here to make lintian results
 # consistent no matter what dpkg one has installed.
 %known_archs = map { $_ => 1 }
-    ('i386', 'ia64', 'alpha', 'amd64', 'arm', 'hppa', 'm68k', 'mips',
+    ('i386', 'ia64', 'alpha', 'amd64', 'arm', 'armel', 'hppa', 'm68k', 'mips',
      'mipsel', 'powerpc', 's390', 'sparc', 'hurd-i386', 'any', 'all');
 
 # From /usr/share/dpkg/cputable, included here to make lintian results
