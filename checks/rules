@@ -23,6 +23,16 @@ use Dep;
 my %required = map { $_ => 1 }
     qw(build binary binary-arch binary-indep clean);
 
+# Rules about required debhelper command ordering.  Each command is put into a
+# class and the tag is issued if they're called in the wrong order for the
+# classes.  Unknown commands won't trigger this flag.
+my %debhelper_order =
+    (dh_makeshlibs => 1,
+     dh_shlibdeps  => 2,
+     dh_installdeb => 2,
+     dh_gencontrol => 2,
+     dh_builddeb   => 3);
+
 sub run {
 
 my $pkg = shift;
@@ -83,6 +93,7 @@ my %seen;
 local $_;
 my @current_targets;
 my %rules_per_target;
+my $debhelper_group;
 while (<RULES>) {
     next if /^\s*\#/;
     $includes = 1 if /^ *[s-]?include\s+/;
@@ -118,13 +129,26 @@ while (<RULES>) {
 	for (@current_targets) {
 	    $seen{$_}++ if $required{$_};
 	}
+        $debhelper_group = 0;
     } else {
-    	#if we have non-empty, non-comment lines, store them for all current targets:
+    	# If we have non-empty, non-comment lines, store them for all current
+    	# targets and check whether debhelper programs are called in a
+    	# reasonable order.
 	if (m/^\s+[^\#]/) {
 	    foreach my $target (@current_targets) {
 		$rules_per_target{$target} ||= [];
 		push @{$rules_per_target{$target}}, $_;
 	    }
+            if (m/^\s+(dh_\S+)\b/ and $debhelper_order{$1}) {
+                my $command = $1;
+                my $group = $debhelper_order{$command};
+                if ($group < $debhelper_group) {
+                    tag "debian-rules-calls-debhelper-in-odd-order",
+                        $command, "(line $.)";
+                } else {
+                    $debhelper_group = $group;
+                }
+            }
 	}
     }
 }
