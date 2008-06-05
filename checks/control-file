@@ -87,20 +87,20 @@ for my $binary_control (@binary_controls) {
 # another problem.
 my @dep_fields = qw(pre-depends depends recommends suggests);
 for my $control (@binary_controls) {
-    for my $strong (0 .. ($#dep_fields - 1)) {
-        next unless $control->{$dep_fields[$strong]};
-        my $parsed = Dep::parse ($control->{$dep_fields[$strong]});
-        tag "package-depends-on-itself", $control->{package}, $dep_fields[$strong]
-            if Dep::implies($parsed, Dep::parse($control->{package}));
-        for my $weak (($strong + 1) .. $#dep_fields) {
-            next unless $control->{$dep_fields[$weak]};
-            for my $dependency (split /\s*,\s*/, $control->{$dep_fields[$weak]}) {
-                next unless $dependency;
-                tag "stronger-dependency-implies-weaker", $control->{package}, "$dep_fields[$strong] -> $dep_fields[$weak]", $dependency
-                    if Dep::implies($parsed, Dep::parse($dependency));
-            }
-        }
-    }
+	for my $strong (0 .. ($#dep_fields - 1)) {
+		next unless $control->{$dep_fields[$strong]};
+		my $parsed = Dep::parse ($control->{$dep_fields[$strong]});
+		tag "package-depends-on-itself", $control->{package}, $dep_fields[$strong]
+		    if Dep::implies($parsed, Dep::parse($control->{package}));
+		for my $weak (($strong + 1) .. $#dep_fields) {
+			next unless $control->{$dep_fields[$weak]};
+			for my $dependency (split /\s*,\s*/, $control->{$dep_fields[$weak]}) {
+				next unless $dependency;
+				tag "stronger-dependency-implies-weaker", $control->{package}, "$dep_fields[$strong] -> $dep_fields[$weak]", $dependency
+				    if Dep::implies($parsed, Dep::parse($dependency));
+			}
+		}
+	}
 }
 
 # Check that every package is in the same archive category, except that
@@ -139,4 +139,8 @@ for my $binary_control (@binary_controls) {
 
 1;
 
+# Local Variables:
+# indent-tabs-mode: t
+# cperl-indent-level: 8
+# End:
 # vim: syntax=perl sw=4 ts=4 noet shiftround
