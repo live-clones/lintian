@@ -240,3 +240,13 @@ Info: Each binary in <tt>/usr/bin</tt>, <tt>/usr/sbin</tt>, <tt>/bin</tt>,
  provide an english, only a translated manpage. Since english is fallback,
  shipping only a non-english man page leaves most users without a man page
  at all.
+
+Tag: manpage-locale-dir-country-specific
+Type: warning
+Ref: policy 12.1
+Info: This package installs a manual page in a locale directory that
+ includes the country name.  A country name should not be included in the
+ directory name unless it indicates a significant difference in the
+ language.  The known cases where country names are appropriate are pt_BR,
+ zh_CN, zh_TW, and zh_SG.  Please file a bug against Lintian if this is
+ another case where a country name is appropriate.

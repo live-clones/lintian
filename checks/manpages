@@ -118,6 +118,13 @@ while (<IN>) {
     my $lang = "";
        $lang = $1 if $t =~ m,^/([^/]+)/man\d/$,o;
 
+    # The country should not be part of the man page locale directory unless
+    # it's one of the known cases where the language is significantly
+    # different between countries.
+    if ($lang =~ /_/ && $lang !~ /^(pt_BR|zh_(CN|TW))$/) {
+	tag "manpage-locale-dir-country-specific", "$file";
+    }
+
     my @pieces = split(/\./, $name);
     my $ext = pop @pieces;
     if ($ext ne 'gz') {

@@ -22,6 +22,8 @@ lintian (1.23.50) unstable; urgency=low
       set errors for all man pages with old versions of man and no man
       pages with current versions of man since the new character set
       handling should cope.  (Closes: #474052)
+    + [RA] Warn about inclusion of the country name in the localized man
+      page directory unless it's one of the known exceptions.
   * checks/md5sums:
     + [FL] Don't complain about missing md5sums file if the
       package only contains conffiles.  (Closes: #482869)
