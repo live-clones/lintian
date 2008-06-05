@@ -4,5 +4,6 @@ I: cdbs-test source: build-depends-without-arch-dep yada
 I: cdbs-test source: package-lacks-versioned-build-depends-on-debhelper 5
 W: cdbs-test source: native-package-with-dash-version
 W: cdbs-test source: no-human-maintainers
+W: cdbs-test source: out-of-date-standards-version 3.7.3 (current is 3.8.0)
 W: cdbs-test source: package-has-a-duplicate-build-relation cdbs, cdbs
 W: cdbs-test: debian-changelog-line-too-long line 1
