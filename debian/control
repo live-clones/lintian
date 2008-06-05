@@ -9,7 +9,7 @@ Uploaders: Josip Rodin <joy-packages@debian.org>,
  Colin Watson <cjwatson@debian.org>, Russ Allbery <rra@debian.org>
 Build-Depends: debhelper (>= 5)
 Build-Depends-Indep: debiandoc-sgml, sed (>= 4.1-4)
-Standards-Version: 3.7.3
+Standards-Version: 3.8.0
 Vcs-Svn: http://svn.wolffelaar.nl/lintian/trunk/
 Vcs-Browser: http://svn.wolffelaar.nl/wsvn/lintian/
 
@@ -36,4 +36,4 @@ Description: Debian package checker
  should check packages with this tool before uploading them to the
  archive.
  .
- This version of Lintian is calibrated for policy version 3.7.3.
+ This version of Lintian is calibrated for policy version 3.8.0.

@@ -12,6 +12,12 @@ lintian (1.23.50) unstable; urgency=low
   * checks/rules{.desc,}:
     + [RA] Add some basic checks for whether debhelper programs are called
       in a reasonable order.  (Closes: #471869)
+  * checks/standards-version:
+    + [RA] Policy 3.8.0 is now current and anything older than 3.7.2 is
+      now ancient.
+
+  * debian/control:
+    + [RA] Update standards version to 3.8.0.
   
   * reporting/templates/clean.tmpl:
     + [FL] Include link to full maintainer report.  Suggested by
