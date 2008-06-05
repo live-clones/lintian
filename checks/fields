@@ -421,7 +421,7 @@ if (($type eq "binary") || ($type eq 'udeb')) {
 		$debugpackage = 1;
 		$debugbase = $1;
 	}
-	for my $field (qw(depends pre-depends recommends suggests conflicts provides replaces)) {
+	for my $field (qw(depends pre-depends recommends suggests conflicts provides replaces breaks)) {
 		if (open(FH, '<', "fields/$field")) {
 			#Get data and clean it
 			my $data = <FH>;
@@ -434,6 +434,8 @@ if (($type eq "binary") || ($type eq 'udeb')) {
 
 			my $is_dep_field = sub { grep { $_ eq $_[0] } qw(depends pre-depends recommends suggests) };
 
+			tag "package-uses-breaks" if $field eq "breaks";
+
 			tag "alternates-not-allowed", "$field"
 			    if ($data =~ /\|/ && ! &$is_dep_field($field));
 
@@ -441,12 +443,20 @@ if (($type eq "binary") || ($type eq 'udeb')) {
 				my @alternatives;
 				push @alternatives, [_split_dep($_), $_] for (split /\s*\|\s*/, $dep);
 
-				push @seen_libstdcs, $alternatives[0]->[0] if defined $known_libstdcs{$alternatives[0]->[0]};
-				push @seen_tcls, $alternatives[0]->[0] if defined $known_tcls{$alternatives[0]->[0]};
-				push @seen_tclxs, $alternatives[0]->[0] if defined $known_tclxs{$alternatives[0]->[0]};
-				push @seen_tks, $alternatives[0]->[0] if defined $known_tks{$alternatives[0]->[0]};
-				push @seen_tkxs, $alternatives[0]->[0] if defined $known_tkxs{$alternatives[0]->[0]};
-				push @seen_libpngs, $alternatives[0]->[0] if defined $known_libpngs{$alternatives[0]->[0]};
+				if (&$is_dep_field($field)) {
+					push @seen_libstdcs, $alternatives[0]->[0]
+					    if defined $known_libstdcs{$alternatives[0]->[0]};
+					push @seen_tcls, $alternatives[0]->[0]
+					    if defined $known_tcls{$alternatives[0]->[0]};
+					push @seen_tclxs, $alternatives[0]->[0]
+					    if defined $known_tclxs{$alternatives[0]->[0]};
+					push @seen_tks, $alternatives[0]->[0]
+					    if defined $known_tks{$alternatives[0]->[0]};
+					push @seen_tkxs, $alternatives[0]->[0]
+					    if defined $known_tkxs{$alternatives[0]->[0]};
+					push @seen_libpngs, $alternatives[0]->[0]
+					    if defined $known_libpngs{$alternatives[0]->[0]};
+				}
 
 				# Only for (Pre-)?Depends.
 				tag "virtual-package-depends-without-real-package-depends", "$field: $alternatives[0]->[0]"
@@ -467,6 +477,9 @@ if (($type eq "binary") || ($type eq 'udeb')) {
 
 					tag "versioned-provides", "$part_d_orig"
 					    if ($field eq "provides" && $d_version->[0]);
+
+					tag "breaks-without-version", "$part_d_orig"
+					    if ($field eq "breaks" && !$d_version->[0]);
 
 					tag "obsolete-relation-form", "$field: $part_d_orig"
 					    if ($d_version && grep { $d_version->[0] eq $_ } ("<", ">"));
@@ -528,14 +541,15 @@ if (($type eq "binary") || ($type eq 'udeb')) {
 	tag "dbg-package-missing-depends", $debugbase
 		if ($debugpackage && !$debugfound);
 
-	# If Conflicts is set, make sure it's not inconsistent with the other
-	# dependency fields.
-	if ($fields{conflicts}) {
+	# If Conflicts or Breaks is set, make sure it's not inconsistent with
+	# the other dependency fields.
+	for my $conflict (qw/conflicts breaks/) {
+		next unless $fields{$conflict};
 		for my $field (qw(depends pre-depends recommends suggests)) {
 			next unless $parsed{$field};
-			for my $conflict (split /\s*,\s*/, $fields{conflicts}) {
-				tag "conflicts-with-dependency", $conflict
-				    if Dep::implies($parsed{$field}, Dep::parse($conflict));
+			for my $package (split /\s*,\s*/, $fields{$conflict}) {
+				tag "conflicts-with-dependency", $field, $package
+				    if Dep::implies($parsed{$field}, Dep::parse($package));
 			}
 		}
 	}

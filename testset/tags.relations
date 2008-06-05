@@ -9,6 +9,7 @@ E: relations source: depends-on-build-essential-package-without-using-version ma
 E: relations source: invalid-arch-string-in-source-relation test [build-conflicts: bar [alpha test]]
 E: relations source: missing-build-dependency libmodule-build-perl
 E: relations source: section-category-mismatch Package relations-multiple-libs
+E: relations-multiple-libs: conflicts-with-dependency depends libpng2
 E: relations-multiple-libs: description-synopsis-is-duplicated
 E: relations-multiple-libs: package-depends-on-multiple-libpng-versions libpng2 libpng3
 E: relations-multiple-libs: package-depends-on-multiple-libstdc-versions libstdc++2.10 libstdc++2.10-glibc2.2 libstdc++3.0
@@ -17,8 +18,8 @@ E: relations-multiple-libs: package-depends-on-multiple-tk-versions tk8.2 tk8.3
 E: relations-multiple-libs: package-depends-on-multiple-tkx-versions tkx8.2 tkx8.3
 E: relations-multiple-libs: usr-share-doc-symlink-without-dependency relations
 E: relations: bad-version-in-relation conflicts: foobar (<< 5&5)
-E: relations: conflicts-with-dependency foo
-E: relations: conflicts-with-dependency relations
+E: relations: conflicts-with-dependency depends foo
+E: relations: conflicts-with-dependency depends relations
 E: relations: depends-on-essential-package-without-using-version depends: coreutils
 E: relations: depends-on-essential-package-without-using-version depends: dpkg
 E: relations: needlessly-depends-on-awk pre-depends
@@ -45,7 +46,9 @@ W: relations source: stronger-dependency-implies-weaker relations recommends -> 
 W: relations source: stronger-dependency-implies-weaker relations-multiple-libs depends -> recommends ${shlibs:Depends}
 W: relations source: virtual-package-depends-without-real-package-depends build-depends: mail-transport-agent
 W: relations-multiple-libs: bad-homepage lintian.debian.org
+W: relations-multiple-libs: breaks-without-version libpng2
 W: relations-multiple-libs: description-synopsis-might-not-be-phrased-properly
+W: relations-multiple-libs: package-uses-breaks
 W: relations-multiple-libs: redundant-bugs-field
 W: relations-multiple-libs: redundant-origin-field
 W: relations: bad-homepage lintian.debian.org

@@ -636,9 +636,24 @@ Info: This package has a name of the form of "X-dbg", indicating it
 
 Tag: conflicts-with-dependency
 Type: error
-Ref: 7.3
+Ref: policy 7.4
 Info: The package seems to conflict with one of its dependencies,
- recommendations, or suggestions.
+ recommendations, or suggestions by listing it in Conflicts or Breaks.
+
+Tag: package-uses-breaks
+Type: warning
+Ref: policy 7.3
+Info: This package uses the Breaks control field.  This control field
+ should not be used until the stable release of Debian supports Breaks.
+
+Tag: breaks-without-version
+Type: warning
+Ref: policy 7.3
+Info: This package declares a Breaks relationship with another package
+ that has no version number.  Normally, Breaks should be used to indicate
+ an incompatibility with a specific version of another package, or with
+ all versions predating a fix.  If the two packages can never be installed
+ at the same time, Conflicts should normally be uesd instead.
 
 Tag: bad-menu-item
 Type: error

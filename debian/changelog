@@ -6,6 +6,13 @@ lintian (1.23.50) unstable; urgency=low
     + [RA] Check for self-dependencies in the source package since the
       current dpkg-gencontrol silently fixes them but they may indicate
       other problems.  Thanks, Patrick Matthäi.  (Closes: #471740)
+  * checks/fields:
+    + [RA] Syntax-check Breaks like other relationship fields.  Warn if
+      any packages use Breaks for right now.  Only check for duplicate
+      libraries and Tcl versions in dependency fields, not Breaks,
+      Conflicts, and other similar fields.  Warn if Breaks is used without
+      a version.  Check that Breaks is not inconsistent with other
+      dependency fields.
   * checks/md5sums:
     + [FL] Don't complain about missing md5sums file if the
       package only contains conffiles.  (Closes: #482869)
