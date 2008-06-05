@@ -8,6 +8,6 @@ I: crypto-app: no-md5sums-control-file
 I: patented-app: no-md5sums-control-file
 I: patented-app: non-us-spelling
 W: broken-crypto: unknown-section non-US/admin
-W: non-us source: ancient-standards-version 3.1.1 (current is 3.7.3)
+W: non-us source: ancient-standards-version 3.1.1 (current is 3.8.0)
 W: non-us source: no-section-field-for-source
 W: patented-app: latest-debian-changelog-entry-without-new-version

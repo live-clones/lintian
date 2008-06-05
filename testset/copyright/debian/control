@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Lintian Maintainers <lintian-maint@debian.org>
 Uploaders: Tobias Toedter <t.toedter@gmx.net>
 Build-Depends-Indep: debhelper (>5)
-Standards-Version: 3.7.3
+Standards-Version: 3.8.0
 
 Package: copyright.iso-8859-1
 Architecture: all

@@ -39,7 +39,7 @@ I: manpages: hyphen-used-as-minus-sign usr/share/man/man3/include.3.gz:14
 I: manpages: hyphen-used-as-minus-sign usr/share/man/man3/include.3.gz:9
 I: manpages: unused-override foo-tag-that-does-not-exist
 N: 2 tags overridden (1 error, 1 info)
-W: manpages source: ancient-standards-version 3.2.1 (current is 3.7.3)
+W: manpages source: ancient-standards-version 3.2.1 (current is 3.8.0)
 W: manpages source: binary-nmu-debian-revision-in-source 4-0.0.1
 W: manpages source: changelog-should-mention-nmu
 W: manpages source: source-nmu-has-incorrect-version-number 4-0.0.1

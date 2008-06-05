@@ -19,7 +19,7 @@ W: debconf source: maintainer-script-lacks-debhelper-token debian/debconf-test.p
 W: debconf source: misnamed-po-file debian/po/lang.po
 W: debconf source: misnamed-po-file debian/po/sample-file.po
 W: debconf source: newer-debconf-templates
-W: debconf source: out-of-date-standards-version 3.7.2 (current is 3.7.3)
+W: debconf source: out-of-date-standards-version 3.7.2 (current is 3.8.0)
 W: debconf source: stray-translated-debconf-templates debconf-test.templates.de
 W: debconf source: translated-default-field debconf-test.templates: 67
 W: debconf source: translated-default-field debconf-test.templates: 72

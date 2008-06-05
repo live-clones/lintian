@@ -3,7 +3,7 @@ Section: devel
 Priority: optional
 Maintainer: Lintian Maintainers <debian-lint-maint@lists.debian.org>
 Build-Depends: debhelper (>= 6)
-Standards-Version: 3.7.3
+Standards-Version: 3.8.0
 
 Package: dh7-test
 Architecture: all
