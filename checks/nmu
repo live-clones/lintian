@@ -47,7 +47,7 @@ my $firstline = 1;
 while (<CHANGELOG>) {
 	if ($firstline) {
 		$changelog_mentions_nmu = 1
-			if (/\bnmu\b/i or /non-maintainer upload/i) and not /(ackno|confir|incorporat)/i;
+			if (/\bnmu\b/i or /non-maintainer upload/i) and not /(ackno|\back\b|confir|incorporat)/i;
 		$changelog_mentions_qa = 1 if /orphan/i or /qa (?:group )?upload/i;
 		$firstline = 0 if /^\s+\S/;
 	}
