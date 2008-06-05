@@ -1,4 +1,5 @@
 E: copyright.compressed: copyright-file-compressed
+E: copyright.full-apache-2: copyright-file-contains-full-apache-2-license
 E: copyright.full-gfdl: copyright-file-contains-full-gfdl-license
 E: copyright.full-gfdl: copyright-should-refer-to-common-license-file-for-gfdl
 E: copyright.full-gpl: copyright-file-contains-full-gpl-license
@@ -11,6 +12,7 @@ E: copyright.old-style: FSSTND-dir-in-usr usr/doc/
 E: copyright.old-style: old-style-copyright-file
 E: copyright.symlink: copyright-file-is-symlink
 W: copyright.compressed: copyright-without-copyright-notice
+W: copyright.full-apache-2: copyright-without-copyright-notice
 W: copyright.iso-8859-1: debian-copyright-file-uses-obsolete-national-encoding at line 3
 W: copyright.misc-errors: copyright-contains-dh-make-perl-boilerplate
 W: copyright.misc-errors: copyright-has-url-from-dh_make-boilerplate

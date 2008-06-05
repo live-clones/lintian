@@ -194,6 +194,12 @@ if (length($_) > 12000
     tag "copyright-file-contains-full-gfdl-license";
 }
 
+if (length($_) > 10000
+    and m/\bApache License\s+Version 2\.0,/
+    and m/TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION/) {
+    tag "copyright-file-contains-full-apache-2-license";
+}
+
 if (m/^This copyright info was automatically extracted from the perl module\./) {
     tag "helper-templates-in-copyright", "";
 }

@@ -21,6 +21,11 @@ Architecture: all
 Description: checks inclusion of GFDL in full text
  This is just a sentence.
 
+Package: copyright.full-apache-2
+Architecture: all
+Description: checks inclusion of Apache 2.0 in full text
+ This is just a sentence.
+
 Package: copyright.misc-errors
 Architecture: all
 Description: checks various errors in copyright files

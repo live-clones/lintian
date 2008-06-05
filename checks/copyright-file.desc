@@ -52,6 +52,13 @@ Info: The copyright file /usr/share/doc/<i>pkg</i>/copyright contains the
  <tt>/usr/share/common-licenses/GFDL-1.2</tt> instead.
 Ref: policy 12.5
 
+Tag: copyright-file-contains-full-apache-2-license
+Type: error
+Info: The copyright file /usr/share/doc/<i>pkg</i>/copyright contains the
+ complete text of the Apache 2.0 license.  It should refer to the file
+ <tt>/usr/share/common-licenses/Apache-2.0</tt> instead.
+Ref: policy 12.5
+
 Tag: usr-share-doc-symlink-without-dependency
 Type: error
 Info: If the package installs a symbolic link /usr/share/doc/<i>pkg1</i> -&gt;
