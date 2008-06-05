@@ -16,6 +16,12 @@ lintian (1.23.50) unstable; urgency=low
       Conflicts, and other similar fields.  Warn if Breaks is used without
       a version.  Check that Breaks is not inconsistent with other
       dependency fields.
+  * checks/manpages:
+    + [RA] Only ignore errors about wrapping lines for Asian locale man
+      pages, since that's where the groff trouble lies.  Ignore character
+      set errors for all man pages with old versions of man and no man
+      pages with current versions of man since the new character set
+      handling should cope.  (Closes: #474052)
   * checks/md5sums:
     + [FL] Don't complain about missing md5sums file if the
       package only contains conffiles.  (Closes: #482869)

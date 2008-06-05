@@ -292,12 +292,15 @@ while (<IN>) {
 	    next if /^\s*$/;
 	    # ignore errors from gzip, will be dealt with at other places
 	    next if /^(man|gzip)/;
-	    # ignore 8bit character errors on localized man pages
-	    if ($lang ne "") {
-		next if /warning: can\'t find numbered character/;
+	    # ignore wrapping failures for Asian man pages (groff problem)
+	    if ($lang =~ /^(?:ja|ko|zh)/) {
 		next if /warning \[.*\]: cannot adjust line/;
 		next if /warning \[.*\]: can\'t break line/;
 	    }
+	    # ignore charset issues with old versions of man for all man pages
+	    # since we can't know, with old versions, whether that was just a
+	    # Unicode issue
+	    next if !$MAN_WARNINGS && /warning: can\'t find numbered character/;
 	    # ignore common undefined macros from pod2man << Perl 5.10
 	    next if /warning: \`(Tr|IX)\' not defined/;
 	    chomp;

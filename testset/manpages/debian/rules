@@ -50,6 +50,9 @@ binary-indep:
 	chmod 755 $(tmp)/usr/share/man/de/man1/binary-without-english-manpage.1
 	gzip -c9 <test.1p.de >$(tmp)/usr/share/man/de/man1/test-latin1-chars.1p.gz
 
+	install -d $(tmp)/usr/share/man/de_DE/man1
+	gzip -c9 <test.1p.utf-8 >$(tmp)/usr/share/man/de_DE/man1/test-utf8-chars.1p.gz
+
 	gzip -c9 <include.3 >$(tmp)/usr/share/man/man3/include.3.gz
 	gzip -c9 <included.3 >$(tmp)/usr/share/man/man3/included.3.gz
 
