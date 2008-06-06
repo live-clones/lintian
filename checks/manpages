@@ -307,7 +307,12 @@ while (<IN>) {
 	    # ignore charset issues with old versions of man for all man pages
 	    # since we can't know, with old versions, whether that was just a
 	    # Unicode issue
-	    next if !$MAN_WARNINGS && /warning: can\'t find numbered character/;
+	    if (!$MAN_WARNINGS and
+		(m/warning: can\'t find numbered character/
+		 or m/a magic token is not allowed in a name/
+		 or m/name expected \(got a magic token\)/)) {
+		next;
+	    }
 	    # ignore common undefined macros from pod2man << Perl 5.10
 	    next if /warning: \`(Tr|IX)\' not defined/;
 	    chomp;
