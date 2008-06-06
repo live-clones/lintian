@@ -121,7 +121,7 @@ while (<IN>) {
     # The country should not be part of the man page locale directory unless
     # it's one of the known cases where the language is significantly
     # different between countries.
-    if ($lang =~ /_/ && $lang !~ /^(pt_BR|zh_(CN|TW))$/) {
+    if ($lang =~ /_/ && $lang !~ /^(pt_BR|zh_[A-Z][A-Z])$/) {
 	tag "manpage-locale-dir-country-specific", "$file";
     }
 

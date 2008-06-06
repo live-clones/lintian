@@ -247,6 +247,6 @@ Ref: policy 12.1
 Info: This package installs a manual page in a locale directory that
  includes the country name.  A country name should not be included in the
  directory name unless it indicates a significant difference in the
- language.  The known cases where country names are appropriate are pt_BR,
- zh_CN, zh_TW, and zh_SG.  Please file a bug against Lintian if this is
- another case where a country name is appropriate.
+ language.  The known cases where country names are appropriate are pt_BR
+ and zh_*.  Please file a bug against Lintian if this is another case
+ where a country name is appropriate.
