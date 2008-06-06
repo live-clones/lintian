@@ -59,7 +59,7 @@ if (open(IN, '<', $postinst)) {
     while (<IN>) {
 	next if /$exclude_r/o;
 	s/\#.*$//o;
-	next unless /^(?:.+;)?\s*update-rc\.d\s+
+	next unless /^(?:.+;|^\s*system[\s\(\']+)?\s*update-rc\.d\s+
 	    (?:$opts_r)*($name_r)\s+($action_r)/xo;
 	my ($name,$opt) = ($1,$2);
 	next if $opt eq 'remove';

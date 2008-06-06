@@ -16,6 +16,9 @@ lintian (1.23.50) unstable; urgency=low
       Conflicts, and other similar fields.  Warn if Breaks is used without
       a version.  Check that Breaks is not inconsistent with other
       dependency fields.
+  * checks/init.d:
+    + [RA] Try to allow for postinst scripts written in Perl and still
+      recognize the update-rc.d calls.
   * checks/manpages:
     + [RA] Only ignore errors about wrapping lines for Asian locale man
       pages, since that's where the groff trouble lies.  Ignore character
