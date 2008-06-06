@@ -41,6 +41,10 @@ Info: Each binary in <tt>/usr/bin</tt>, <tt>/usr/sbin</tt>, <tt>/bin</tt>,
  manual page is sufficient) because other manual page viewers such as
  xman or tkman don't support this.
  .
+ If the name of the man page differs from the binary by case, man may
+ be able to find it anyway; however, it is still best practice to make the
+ case of the man page match the case of the binary.
+ .
  If the man pages are provided by another package on which this package
  depends, lintian may not be able to determine that man pages are
  available.  In this case, after confirming that all binaries do have

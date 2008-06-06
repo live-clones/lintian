@@ -23,7 +23,7 @@ lintian (1.23.50) unstable; urgency=low
   * checks/init.d:
     + [RA] Try to allow for postinst scripts written in Perl and still
       recognize the update-rc.d calls.
-  * checks/manpages:
+  * checks/manpages{.desc,}:
     + [RA] Only ignore errors about wrapping lines for Asian locale man
       pages, since that's where the groff trouble lies.  Ignore character
       set errors for all man pages with old versions of man and no man
@@ -32,6 +32,9 @@ lintian (1.23.50) unstable; urgency=low
     + [FL] Ignore more unicode issues with old man.
     + [RA] Warn about inclusion of the country name in the localized man
       page directory unless it's one of the known exceptions.
+    + [RA] Mention in binary-without-manpage that the case of the man page
+      should match the case of the binary even if man can find it anyway.
+      (Closes: #484028)
   * checks/md5sums:
     + [FL] Don't complain about missing md5sums file if the
       package only contains conffiles.  (Closes: #482869)
