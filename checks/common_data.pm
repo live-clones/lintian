@@ -119,11 +119,6 @@ use vars qw
 %known_build_essential = map { $_ => 1 }
     ('libc6-dev', 'libc-dev', 'gcc', 'g++', 'make', 'dpkg-dev');
 
-%known_obsolete_packages = map { $_ => 1 }
-    ('libstdc++2.8', 'ncurses3.4', 'slang0.99.38', 'newt0.25', 'mesag2',
-     'libjpegg6a', 'gmp2', 'libgtop0', 'libghttp0', 'libpgsql', 'tk4.2',
-     'tcl7.6', 'libpng0g', 'xbase', 'xlibs-dev', 'debmake', 'gcc-2.95');
-
 # Still in the archive but shouldn't be the primary Emacs dependency.
 %known_obsolete_emacs = map { $_ => 1 }
     ('emacs21');

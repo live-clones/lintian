@@ -38,6 +38,7 @@ Depends: libstdc++2.10, libstdc++2.10-glibc2.2, libstdc++3.0, tk8.2, tk8.3, tcl8
 Provides: awk
 Recommends: ${shlibs:Depends}, relations-multiple-libs
 Breaks: libpng3 (<< 1.0), libpng2
+Suggests: x-dev
 Description: Duplicate library dependency relationships.
  Duplicate library dependency relationships.
  This tests the depending on different versions of the same library

@@ -1,0 +1,45 @@
+# Known obsolete packages.  Not all packages are added to this list, only
+# ones for which it's helpful for Lintian to warn about, such as
+# significant transitions or transitional packages that we're trying to
+# remove from the archive.
+#
+# Each list of packages should be tagged with the last Debian release in
+# which the package appeared so that we can remove long-obsolete entries
+# that are no longer worth checking for.
+
+# Last seen in sarge.
+xlibs-dev
+
+# Last seen in etch.
+debmake
+gcc-2.95
+
+# Last seen in lenny.
+cdrecord
+gaim
+gnomemeeting
+gs
+gs-aladdin
+gs-esp
+gs-gpl
+libglu1-xorg
+libglu1-xorg-dev
+libmime-perl
+libungif4-dev
+libxerces28
+libxerces28-dev
+mailx
+mkisofs
+netcdfg-dev
+pcmcia-cs
+python-pyopenssl
+ssh-krb5
+tetex-base
+tetex-bin
+tetex-extra
+x-dev
+xbase-clients
+xlibmesa-gl
+xlibmesa-gl-dev
+xlibmesa-glu
+xutils

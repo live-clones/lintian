@@ -10,6 +10,7 @@ E: relations source: invalid-arch-string-in-source-relation test [build-conflict
 E: relations source: missing-build-dependency libmodule-build-perl
 E: relations source: section-category-mismatch Package relations-multiple-libs
 E: relations-multiple-libs: conflicts-with-dependency depends libpng2
+E: relations-multiple-libs: depends-on-obsolete-package suggests: x-dev
 E: relations-multiple-libs: description-synopsis-is-duplicated
 E: relations-multiple-libs: package-depends-on-multiple-libpng-versions libpng2 libpng3
 E: relations-multiple-libs: package-depends-on-multiple-libstdc-versions libstdc++2.10 libstdc++2.10-glibc2.2 libstdc++3.0

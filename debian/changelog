@@ -4,6 +4,7 @@ lintian (1.23.50) unstable; urgency=low
     + [RA] Fix code for filtering out NSS modules from SONAME checks.
   * checks/common_data.pm:
     + [RA] armel is now a standard architecture.
+    + [RA] Remove %known_obsolete_packages, now handled via data.
   * checks/control-file{.desc,}:
     + [RA] Check for self-dependencies in the source package since the
       current dpkg-gencontrol silently fixes them but they may indicate
@@ -18,6 +19,7 @@ lintian (1.23.50) unstable; urgency=low
       Conflicts, and other similar fields.  Warn if Breaks is used without
       a version.  Check that Breaks is not inconsistent with other
       dependency fields.
+    + [RA] Use Lintian::Data to load the obsolete package list.
   * checks/init.d:
     + [RA] Try to allow for postinst scripts written in Perl and still
       recognize the update-rc.d calls.
@@ -42,6 +44,11 @@ lintian (1.23.50) unstable; urgency=low
   * checks/standards-version:
     + [RA] Policy 3.8.0 is now current and anything older than 3.7.2 is
       now ancient.
+
+  * data/fields/obsolete-packages:
+    + [RA] Moved from common_data.pm.  Removed many very old packages that
+      nothing depends on and added many new packages identified by Riku
+      Voipio.  (Closes: #475400)
 
   * debian/control:
     + [RA] Update standards version to 3.8.0.
