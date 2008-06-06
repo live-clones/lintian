@@ -1,5 +1,7 @@
 lintian (1.23.50) unstable; urgency=low
 
+  * checks/binaries:
+    + [RA] Fix code for filtering out NSS modules from SONAME checks.
   * checks/common_data.pm:
     + [RA] armel is now a standard architecture.
   * checks/control-file{.desc,}:
