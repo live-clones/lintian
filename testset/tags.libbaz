@@ -27,7 +27,6 @@ I: libbaz1-dev: binary-has-unneeded-section ./usr/lib/perl5/auto/Foo/Foo.so .com
 I: libbaz1-dev: no-md5sums-control-file
 I: libbaz1: binary-has-unneeded-section ./usr/lib/perl5/auto/Foo/Foo.so .comment
 I: libbaz1: no-md5sums-control-file
-I: libbaz1: several-sonames-in-same-package libbaz2.so.1.0 libbaz3.so.1
 I: libbaz2-dbg: no-md5sums-control-file
 I: libbaz2-dev: no-md5sums-control-file
 I: libbaz2: no-md5sums-control-file

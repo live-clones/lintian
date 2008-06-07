@@ -5,6 +5,8 @@ lintian (1.23.50) unstable; urgency=low
     + [RA] When checking SONAMEs against package names, convert all
       underscores to dashes, not just the first one.  Thanks, Gonéri Le
       Bouder.  (Closes: #482450)
+    + [RA] Remove several-sonames-in-same-package.  This is frequently not
+      an error and Lintian doesn't have enough information to know.
   * checks/common_data.pm:
     + [RA] armel is now a standard architecture.
     + [RA] Remove %known_obsolete_packages, now handled via data.

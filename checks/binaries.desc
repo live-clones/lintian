@@ -115,12 +115,6 @@ Tag: binary-file-compressed-with-upx
 Type: error
 Info: Debian does not allow binaries to be compressed by UPX.
 
-Tag: several-sonames-in-same-package
-Type: info
-Info: There are several shared libraries in this package and they
- have different sonames. This is usually discouraged because it is
- inherently error-prone.
-
 Tag: package-name-doesnt-match-sonames
 Type: warning
 Info: The package name of a library package should usually reflect
