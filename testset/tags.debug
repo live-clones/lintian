@@ -5,8 +5,6 @@ E: hello: unstripped-binary-or-object ./usr/bin/hello.dbg
 E: libhello0-dbg: binary-with-bad-dynamic-table ./usr/lib/libhello.so.dbg
 E: libhello0-dbg: missing-dependency-on-libc needed by ./usr/lib/debug/lib/libhello.so.0.0 and 1 others
 E: libhello0-dbg: sharedobject-in-library-directory-missing-soname usr/lib/libhello.so.dbg
-I: debug source: non-standard-architecture kfreebsd-i386
-I: debug source: non-standard-architecture ppc64
 W: debug source: ancient-standards-version 3.7.0 (current is 3.8.0)
 W: debug source: changelog-should-not-mention-nmu
 W: debug source: debhelper-script-needs-versioned-build-depends dh_icons (>= 5.0.51~)

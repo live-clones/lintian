@@ -201,11 +201,7 @@ if (not open (FH, '<', "fields/architecture")) {
 	}
 
 	for my $arch (@archs) {
-		if ($non_standard_archs{$arch}) {
-			tag "non-standard-architecture", "$arch";
-		} elsif (! $known_archs{$arch}) {
-			tag "unknown-architecture", "$arch";
-		}
+		tag "unknown-architecture", "$arch" unless $known_archs{$arch};
 	}
 
 	if ($type eq "binary") {
@@ -672,9 +668,7 @@ if ($type eq "source") {
 					my ($d_pkg, $d_version, $d_arch, $rest, $part_d_orig) = @$part_d;
 
 					for my $arch (@{$d_arch->[0]}) {
-						if ($non_standard_archs{$arch}) {
-							tag "non-standard-arch-in-source-relation", "$arch [$field: $part_d_orig]";
-						} elsif (!$known_archs{$arch} && $arch ne "any" && $arch ne "all") {
+						if (!$known_archs{$arch}) {
 							tag "invalid-arch-string-in-source-relation", "$arch [$field: $part_d_orig]"
 						}
 					}

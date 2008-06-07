@@ -21,20 +21,14 @@ use vars qw
   %known_archs %known_sections %known_non_us_parts %known_archive_parts
   %known_prios %known_source_fields %known_binary_fields %known_udeb_fields
   %known_obsolete_fields %known_essential %known_build_essential
-  %known_obsolete_packages %known_obsolete_emacs %known_virtual_packages
+  %known_obsolete_emacs %known_virtual_packages
   %known_libstdcs %known_tcls %known_tclxs %known_tks %known_tkxs
   %known_libpngs %known_x_metapackages
-  %non_standard_archs %all_cpus %all_oses
+  %all_cpus %all_oses
   %known_doc_base_formats
 );
 
 # simple defines for commonly needed data
-
-# From /usr/share/dpkg/archtable, included here to make lintian results
-# consistent no matter what dpkg one has installed.
-%known_archs = map { $_ => 1 }
-    ('i386', 'ia64', 'alpha', 'amd64', 'arm', 'armel', 'hppa', 'm68k', 'mips',
-     'mipsel', 'powerpc', 's390', 'sparc', 'hurd-i386', 'any', 'all');
 
 # From /usr/share/dpkg/cputable, included here to make lintian results
 # consistent no matter what dpkg one has installed.
@@ -56,13 +50,13 @@ use vars qw
 # this reduces the necessary updating.
 #
 # armel and lpia are special cases, so handle them separately here.  (They're
-# handled separately in /usr/share/dpkg/triplettable.)
-%non_standard_archs = map { $_ => 1 }
+# handled separately in /usr/share/dpkg/triplettable.)  any and all are also
+# special cases.
+%known_archs = map { $_ => 1 }
     grep { !$known_archs{$_} }
         (keys %all_cpus,
          map { my $os = $_; map { "$os-$_" } keys %all_cpus } keys %all_oses),
-    ('armel', 'lpia');
-
+    ('armel', 'lpia', 'any', 'all');
 
 %known_sections = map { $_ => 1 }
     ('admin', 'comm', 'devel', 'doc', 'editors', 'electronics',

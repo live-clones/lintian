@@ -4,7 +4,7 @@ Priority: optional
 Build-Depends: mail-transport-agent, libc6-dev, findutils, foo (= 3) [!amd64 !i386], bar, arch-test1 [i386], arch-test2 [!i386], quilt (>= 0.40), perl, python-all-dev
 Build-Depends-Indep: make, bash, debmake, build-essential, baz (= 2.0),
   car (>= 1.0), car (<= 2.0), caz (= 1.0) [amd64], caz (>= 2.0) [i386],
-  caz (= 2.0) [powerpc], perl (>= 5.0), foo (<< 4) [!amd64 !i386], libfoo (>= 1.2-1)
+  caz (= 2.0) [powerpc], perl (>= 5.0), foo (<< 4) [!amd64 !i386], libfoo (>= 1.2-1), bozzle [kfreebsd-i386]
 Build-Conflicts: foo [amd64 i386], bar [alpha test], xlibs-dev, arch-test1 [powerpc], arch-test2 [!sparc]
 Build-Conflicts-Indep: debmake [!powerpc]
 Maintainer: Debian QA Group <packages@qa.debian.org>

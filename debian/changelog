@@ -10,6 +10,7 @@ lintian (1.23.50) unstable; urgency=low
   * checks/common_data.pm:
     + [RA] armel is now a standard architecture.
     + [RA] Remove %known_obsolete_packages, now handled via data.
+    + [RA] Merge %non_standard_archs into %known_archs.
   * checks/control-file{.desc,}:
     + [RA] Check for self-dependencies in the source package since the
       current dpkg-gencontrol silently fixes them but they may indicate
@@ -34,6 +35,8 @@ lintian (1.23.50) unstable; urgency=low
       allow a dependency on any package name that starts the same as the
       debug package up to the first dash.  This will hopefully produce
       fewer false positives.  Thanks, Josselin Mouette.  (Closes: #476587)
+    + [RA] Remove non-standard-architecture-in-source-relation and
+      non-standard-architecture.  These aren't bugs.
   * checks/filenames{.desc,}:
     + [RA] Warn about BTS data directories in packages (.be and
       .ditrack).  Patch by Ben Finney.  (Closes: #481787)

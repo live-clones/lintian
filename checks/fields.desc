@@ -67,19 +67,11 @@ Ref:  policy 5.6.8
 
 Tag: unknown-architecture
 Type: warning
-Info: In addition to the special values `all' and `any', the architecture
- names alpha, arm, hppa, hurd-i386, i386, ia64, m68k, mips, mipsel, powerpc,
- s390, and sparc are currently in use.  The special value `source' is only 
- used in .changes files and does not make sense in a binary package or a 
- .dsc file.
-
-Tag: non-standard-architecture
-Type: info
-Info: In addition to the special values `all', `any' and the names of the
- architectures already in the archive (alpha, arm, hppa, hurd-386, i386, 
- ia64, m68k, mips, mipsel, powerpc, s390, sparc), there are some 
- architectures still waiting to be included in the archive. Examples
- include kfreebsd-i386 and ppc64.
+Info: This package claims to be for an unknown architecture.  The
+ architecture should be one of the values supported by dpkg or one of the
+ special values "all" or "any".  The special value "source" is only used
+ in *.changes files and does not make sense in a binary package or a *.dsc
+ file.
 
 Tag: too-many-architectures
 Type: error
@@ -456,11 +448,6 @@ Ref: policy 5.6.8
 Info: The architecture string in the source relation does not follow policy.
  A common cause of this is a comma in the arch, i.e. [i386, m68k], it should
  be [i386 m68k].
-
-Tag: non-standard-arch-in-source-relation
-Type: info
-Info: The architecture string in the source relation is one of the
- architectures still waiting to be included in the archive.
 
 Tag: depends-on-build-essential-package-without-using-version
 Type: error
