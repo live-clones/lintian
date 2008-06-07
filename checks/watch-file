@@ -29,7 +29,7 @@ sub run {
 
 my $pkg = shift;
 my $type = shift;
-my $collect = Lintian::Collect->new($pkg, $type);
+my $collect = shift;
 
 unless ($collect->native) {
     unless (-f "debfiles/watch") {

@@ -87,6 +87,13 @@ lintian (1.23.50) unstable; urgency=low
     + [RA] Update standards version to 3.8.0.
     + [RA] Depend on libtimedate-perl for convenient date parsing.
 
+  * frontend/lintian:
+    + [RA] Create a new Lintian::Collect object for each package being
+      checked and pass it into Checker::runcheck.
+
+  * lib/Checker.pm:
+    + [RA] Pass a Lintian::Collect object as the third argument to the run
+      function of each check.
   * lib/Lintian/Collect.pm:
     + [RA] New module to retrieve package information.
   * lib/Lintian/Collect/Source.pm:

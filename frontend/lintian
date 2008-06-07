@@ -1185,6 +1185,7 @@ if ($debug) {
 }
 
 require Checker;
+require Lintian::Collect;
 
 # for each package (the `reverse sort' is to make sure that source packages are
 # before the corresponding binary packages--this has the advantage that binary
@@ -1356,6 +1357,7 @@ for (reverse sort @packages) {
         }
 
 	# perform checks
+	my $collect = Lintian::Collect->new($pkg, $long_type);
 	for my $check (keys %checks) {
 	    my $ci = $check_info{$check};
 
@@ -1379,7 +1381,7 @@ for (reverse sort @packages) {
 		next PACKAGE;
 	    }
 
-	    my $returnvalue = Checker::runcheck($pkg, $long_type, $check);
+	    my $returnvalue = Checker::runcheck($pkg, $long_type, $collect, $check);
 	    # Set exit_code correctly if there was not yet an exit code
 	    $exit_code = $returnvalue unless $exit_code;
 

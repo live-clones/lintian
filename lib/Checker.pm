@@ -51,9 +51,7 @@ sub register {
 }
 
 sub runcheck {
-	my $pkg = shift;
-	my $type = shift;
-	my $name = shift;
+	my ($pkg, $type, $collect, $name) = @_;
 
 	# Will be set to 2 if error is encountered
 	my $return = 0;
@@ -67,7 +65,7 @@ sub runcheck {
 
 	#print STDERR "Now running $name...\n";
 	$name =~ s/[-.]/_/g;
-	eval { &{'Lintian::'.$name.'::run'}($pkg, $type) };
+	eval { &{'Lintian::'.$name.'::run'}($pkg, $type, $collect) };
 	if ( $@ ) {
 	    print STDERR $@;
 	    print STDERR "internal error: cannot run $name check on package $pkg\n";
@@ -79,4 +77,8 @@ sub runcheck {
 
 1;
 
+# Local Variables:
+# indent-tabs-mode: t
+# cperl-indent-level: 8
+# End:
 # vim: ts=4 sw=4 noet
