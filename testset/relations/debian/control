@@ -8,7 +8,7 @@ Build-Depends-Indep: make, bash, debmake, build-essential, baz (= 2.0),
 Build-Conflicts: foo [amd64 i386], bar [alpha test], xlibs-dev, arch-test1 [powerpc], arch-test2 [!sparc]
 Build-Conflicts-Indep: debmake [!powerpc]
 Maintainer: Debian QA Group <packages@qa.debian.org>
-Standards-Version: 3.1.1
+Standards-Version: 3.7.3
 Homepage: lintian.debian.org
 Origin: Debian
 Bugs: debbugs://bugs.debian.org/

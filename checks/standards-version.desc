@@ -4,49 +4,45 @@ Abbrev: std
 Type: source
 Unpack-Level: 1
 Info: This script checks if a source package contains a valid
- `Standards-Version' field.
+ Standards-Version field.
+Needs-Info: debfiles
 
 Tag: no-standards-version-field
 Type: error
-Info: The source package does not have a `Standards-Version' control field.
- Please update your package to latest policy and set this control field
+Ref: policy 5.6.11
+Info: The source package does not have a Standards-Version control field.
+ Please update your package to latest Policy and set this control field
  appropriately.
-Tested: empty
 
 Tag: invalid-standards-version
 Type: error
-Info: The source package refers to a `Standards-Version' which never
- existed. Please update your package to latest policy and set this
+Info: The source package refers to a Standards-Version which never
+ existed.  Please update your package to latest Policy and set this
  control field appropriately.
 
 Tag: newer-standards-version
 Type: warning
-Info: The source package refers to a `Standards-Version' which is
+Info: The source package refers to a Standards-Version which is
  newer than the highest one lintian is programmed to check.  If the source
  package is correct, then please upgrade lintian to the newest version.
- (If there is no newer lintian version, then please bug &maint; to
- make one.)
+ (If there is no newer lintian version, then please bug &maint; to make
+ one.)
 
 Tag: ancient-standards-version
 Type: warning
-Info: The source package refers to a `Standards-Version' older than one
- year.  Please update your package to latest policy and set this
+Info: The source package refers to a Standards-Version that is more than
+ two years old.  Please update your package to latest Policy and set this
  control field appropriately.
  .
- If the package is already compliant with the current standards, you
- don't have to re-upload the package just to adjust the
- Standards-Version control field. However, please remember to update
- this field next time you upload the package.
+ If the package is already compliant with the current standards, you don't
+ have to re-upload the package just to adjust the Standards-Version
+ control field.  However, please remember to update this field next time
+ you upload the package.
 
 Tag: out-of-date-standards-version
 Type: warning
-Info: The source package refers to a 'Standards-Version' that is starting
- to get out of date, compared to current Policy. You can safely ignore this
- warning, but please consider updating the package to current Policy.
-
-Tag: package-declares-source-relation-but-has-older-standards-version
-Type: error
-Info: Source relations were added in 3.1.0, packages with an older standards
- version should not have them.  Most likely the standards version of the
- package simply needs updating.  However, policy should be referred to before
- assuming the package is completely up-to-date.
+Info: The source package refers to a Standards-Version older than the one
+ that was current at the time the package was created (according to the
+ timestamp of the latest <tt>debian/changelog</tt> entry).  Please
+ consider updating the package to current Policy and setting this control
+ field appropriately.

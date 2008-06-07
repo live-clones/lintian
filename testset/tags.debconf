@@ -9,6 +9,7 @@ E: debconf-test: unknown-debconf-priority config:11 normal
 E: debconf-udeb udeb: udeb-postinst-must-not-call-ldconfig
 I: debconf source: package-needs-python-policy-debhelper
 I: debconf-test: debconf-error-requires-versioned-depends debconf/error
+W: debconf source: ancient-standards-version 3.7.2 (current is 3.8.0)
 W: debconf source: debian-rules-calls-debhelper-in-odd-order dh_makeshlibs (line 48)
 W: debconf source: debian-rules-calls-debhelper-in-odd-order dh_makeshlibs (line 52)
 W: debconf source: debian-rules-sets-DH_COMPAT line 3
@@ -19,7 +20,6 @@ W: debconf source: maintainer-script-lacks-debhelper-token debian/debconf-test.p
 W: debconf source: misnamed-po-file debian/po/lang.po
 W: debconf source: misnamed-po-file debian/po/sample-file.po
 W: debconf source: newer-debconf-templates
-W: debconf source: out-of-date-standards-version 3.7.2 (current is 3.8.0)
 W: debconf source: stray-translated-debconf-templates debconf-test.templates.de
 W: debconf source: translated-default-field debconf-test.templates: 67
 W: debconf source: translated-default-field debconf-test.templates: 72

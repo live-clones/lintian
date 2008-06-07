@@ -64,9 +64,14 @@ lintian (1.23.50) unstable; urgency=low
       chown.  Patch by Raphael Geissert.  (Closes: #483775)
     + [RA] $((var+1)) now works in dash and is in POSIX, so remove it from
       bashisms.  Patch by Adam D. Barratt.  (Closes: #473156)
-  * checks/standards-version:
-    + [RA] Policy 3.8.0 is now current and anything older than 3.7.2 is
-      now ancient.
+  * checks/standards-version{.desc,}:
+    + [RA] Largely rewritten.  Now contains a list of standards versions
+      with the date when they were released, adding 3.8.0.  Only emit tag
+      out-of-date-standards-version if the newer version predates the date
+      of the package.  Base ancient-standards-version on whether the
+      standards version of the package is more than two years old.  Remove
+      package-declares-source-relation-but-has-older-standards-version;
+      policy 3.1.0 was a long time ago.  (Closes: #472513)
 
   * data/fields/obsolete-packages:
     + [RA] Moved from common_data.pm.  Removed many very old packages that
