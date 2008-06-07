@@ -90,7 +90,7 @@ if ($maintainer =~ /packages\@qa.debian.org/) {
 	tag "orphaned-package-should-not-have-uploaders", ""
 		if defined $uploaders;
 	tag "qa-upload-has-incorrect-version-number", "$version"
-		if $version_nmuness;
+		if $version_nmuness == 1;
 	tag "changelog-should-mention-qa", ""
 		if !$changelog_mentions_qa;
 } else {

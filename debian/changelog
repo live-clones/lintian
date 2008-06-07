@@ -54,6 +54,7 @@ lintian (1.23.50) unstable; urgency=low
   * checks/nmu:
     + [RA] Don't treat "Ack NMU" as an NMU declaration.  Thanks, Joe
       Nahmias.  (Closes: #484600)
+    + [RA] Binary NMUs of QA-maintained packages are fine.
   * checks/rules{.desc,}:
     + [RA] Add some basic checks for whether debhelper programs are called
       in a reasonable order.  (Closes: #471869)
