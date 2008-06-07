@@ -1,0 +1,5 @@
+# watch file with no version mangling, even though there's a dfsg in the
+# package version number.
+
+version=2
+http://www.example.com/dist/ dh7-test\.([\d.]+)\.tar\.gz

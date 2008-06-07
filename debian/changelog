@@ -74,6 +74,9 @@ lintian (1.23.50) unstable; urgency=low
       standards version of the package is more than two years old.  Remove
       package-declares-source-relation-but-has-older-standards-version;
       policy 3.1.0 was a long time ago.  (Closes: #472513)
+  * checks/watch-file{.desc,}:
+    + [RA] New checks for watch files, based on work by Patrick
+      Schoenfeld.  (Closes: #234202, #409104, #456629, #472499)
 
   * data/fields/obsolete-packages:
     + [RA] Moved from common_data.pm.  Removed many very old packages that

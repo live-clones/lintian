@@ -1,0 +1,4 @@
+# Test of multiple and unknown version numbers in a watch file.
+version=2
+version=4
+http://example.com/cdbs-test-(.*)\.tar\.gz

@@ -1,0 +1,91 @@
+# watch-file -- lintian check script -*- perl -*-
+#
+# Copyright (C) 2008 Patrick Schoenfeld
+# Copyright (C) 2008 Russ Allbery
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+package Lintian::watch_file;
+use strict;
+
+use Lintian::Collect;
+use Tags;
+
+sub run {
+
+my $pkg = shift;
+my $type = shift;
+my $collect = Lintian::Collect->new($pkg, $type);
+
+unless ($collect->native) {
+    unless (-f "debfiles/watch") {
+        tag 'debian-watch-file-is-missing';
+        return;
+    }
+
+    # Gather information from the watch file and look for problems we can
+    # diagnose on the first time through.
+    open(WATCH, '<', 'debfiles/watch') or fail("cannot open watch file: $!");
+    local $_;
+    my ($watchver, $mangle);
+    while (<WATCH>) {
+        next if /^\s*\#/;
+        next if /^\s*$/;
+        if (/^version=(\d+)(\s|\Z)/) {
+            if (defined $watchver) {
+                tag 'debian-watch-file-declares-multiple-versions', "line $.";
+            }
+            $watchver = $1;
+            if ($watchver ne '2' and $watchver ne '3') {
+                tag 'debian-watch-file-unknown-version', $watchver;
+            }
+        } else {
+            unless ($watchver) {
+                tag 'debian-watch-file-missing-version';
+                $watchver = 1;
+            }
+            while (s/\\\s*$//) {
+                $_ .= <WATCH>;
+            }
+            chomp;
+            my ($opts, @opts);
+            if (s/^opts=(\S+)\s*// || s/^opts=\"([^\"]+)\"//) {
+                $opts = $1;
+                @opts = split(',', $opts);
+                $mangle = 1 if grep { /^[ud]versionmangle/ } @opts;
+            }
+        }
+    }
+    close WATCH;
+
+    # If the version of the package contains dfsg, assume that it needs to be
+    # mangled to get reasonable matches with upstream.
+    my $version = $collect->field('version');
+    if ($version =~ /dfsg/ and not $mangle) {
+        tag 'debian-watch-file-should-mangle-version';
+    }
+}
+
+}
+
+1;
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 ts=4 et shiftround

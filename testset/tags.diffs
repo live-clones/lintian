@@ -4,6 +4,7 @@ E: diffs: missing-dependency-on-libc needed by ./usr/bin/diffs
 E: diffs: no-copyright-file
 E: diffs: unstripped-binary-or-object ./usr/bin/diffs
 I: diffs source: build-depends-without-arch-dep dpatch
+I: diffs source: debian-watch-file-is-missing
 I: diffs source: diff-contains-editor-backup-file binary.c~
 I: diffs source: source-contains-git-control-dir .git
 I: diffs source: source-contains-svn-commit-file svn-commit.tmp

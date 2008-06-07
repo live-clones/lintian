@@ -1,0 +1,52 @@
+Check-Script: watch-file
+Author: Patrick Schoenfeld <schoenfeld@in-medisa-res.com>
+Abbrev: watch
+Type: source
+Unpack-Level: 1
+Needs-Info: debfiles
+Info: Check debian/watch files in source packages.
+
+Tag: debian-watch-file-is-missing
+Type: info
+Ref: policy 4.11, uscan(1)
+Info: This source package is not Debian-native but it does not have a
+ <tt>debian/watch</tt> file.  This file is used for automatic detection of
+ new upstream versions by the Debian External Health Status project and
+ other project infrastructure.  If this package is maintained upstream,
+ please consider adding a <tt>debian/watch</tt> file to detect new
+ releases.  If the package is not maintained upstream, consider adding a
+ <tt>debian/watch</tt> file containing only comments to document this.
+
+Tag: debian-watch-file-declares-multiple-versions
+Type: warning
+Ref: uscan(1)
+Info: The <tt>debian/watch</tt> file in this package contains multiple
+ lines starting with <tt>version=</tt>.  There should be only one version
+ declaration in a watch file, on the first non-comment line of the file.
+
+Tag: debian-watch-file-unknown-version
+Type: warning
+Ref: uscan(1)
+Info: The <tt>version=</tt> line in the <tt>debian/watch</tt> file in this
+ package declares an unknown version.  The currently known watch file
+ versions are 2 and 3.
+
+Tag: debian-watch-file-missing-version
+Type: warning
+Ref: uscan(1)
+Info: The <tt>debian/watch</tt> file in this package doesn't start a
+ <tt>version=</tt> line.  The first non-comment line of
+ <tt>debian/watch</tt> should be a <tt>version=</tt> declaration.  This
+ may mean that this is an old version one watch file that should be
+ updated to the current version.
+
+Tag: debian-watch-file-should-mangle-version
+Type: warning
+Ref: uscan(1)
+Info: The version of this package contains <tt>dfsg</tt>, which normally
+ indicates that the upstream source has been repackaged to comply with the
+ Debian Free Software Guidelines, but there is no version mangling in the
+ <tt>debian/watch</tt> file.  Since the <tt>dfsg</tt> string is not
+ part of the upstream version, the <tt>debian/watch</tt> file should
+ normally use the dversionmangle option to remove the <tt>dfsg</tt> before
+ version number comparison.

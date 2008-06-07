@@ -2,7 +2,8 @@ E: cdbs-test source: clean-should-be-satisfied-by-build-depends debhelper
 E: cdbs-test source: missing-python-build-dependency
 I: cdbs-test source: build-depends-without-arch-dep yada
 I: cdbs-test source: package-lacks-versioned-build-depends-on-debhelper 5
-W: cdbs-test source: native-package-with-dash-version
+W: cdbs-test source: debian-watch-file-declares-multiple-versions line 3
+W: cdbs-test source: debian-watch-file-unknown-version 4
 W: cdbs-test source: no-human-maintainers
 W: cdbs-test source: out-of-date-standards-version 3.7.3 (current is 3.8.0)
 W: cdbs-test source: package-has-a-duplicate-build-relation cdbs, cdbs
