@@ -77,16 +77,15 @@ sub run {
 
 my $pkg = shift;
 my $type = shift;
+my $collect = shift;
 
 # udebs aren't required to conform to policy, so they don't need
 # Standards-Version. (If they have it, though, it should be valid.)
-unless (open(STANDARD, '<', 'fields/standards-version')) {
+my $version = $collect->field('standards-version');
+if (not defined $version) {
     tag 'no-standards-version-field' unless $type eq 'udeb';
     return 0;
 }
-my $version = <STANDARD>;
-close STANDARD;
-chomp $version;
 
 # Check basic syntax and strip off the fourth digit.  People are allowed to
 # include the fourth digit if they want, but it indicates a non-normative
@@ -99,13 +98,14 @@ unless ($version =~ m/^\s*(\d+\.\d+\.\d+)(?:\.\d+)?\s*$/) {
 my $stdver = $1;
 my ($major, $minor, $patch) = $stdver =~ m/^(\d+)\.(\d+)\.(\d+)/;
 
+my $tag = "$version (current is $current)";
 if (not exists $standards{$stdver}) {
     # Unknown standards version.  Perhaps newer?
     if (   ($major > $current[0])
         or ($major == $current[0] and $minor > $current[1])
         or ($major == $current[0] and $minor == $current[1]
             and $patch > $current[2])) {
-        tag 'newer-standards-version', "$version (current is $current)";
+        tag 'newer-standards-version', $tag;
     } else {
         tag 'invalid-standards-version', $version;
     }
@@ -118,24 +118,21 @@ if (not exists $standards{$stdver}) {
     # time the package was uploaded.
     my $stddate = $standards{$stdver};
     if (str2time($stddate) < time - (60 * 60 * 24 * 365 * 2)) {
-        tag 'ancient-standards-version', "$version (current is $current)";
+        tag 'ancient-standards-version', $tag;
     } else {
         # We have to get the package date from the changelog file.  If we
         # can't find the changelog file, always issue the tag.
-        if (-l 'debfiles/changelog' || ! -f 'debfiles/changelog') {
-            tag 'out-of-date-standards-version',
-                "$version (current is $current)";
+        my $changes = $collect->changelog;
+        if (not defined $changes) {
+            tag 'out-of-date-standards-version', $tag;
             return 0;
         }
-        my %opts = (infile => 'debfiles/changelog', quiet => 1);
-        my $changes = Parse::DebianChangelog->init(\%opts);
         my ($entry) = $changes->data;
         my $timestamp = $entry ? $entry->Timestamp : 0;
         for my $standard (@standards) {
             last if $standard->[0] eq $stdver;
             if (str2time($standard->[1]) < $timestamp) {
-                tag 'out-of-date-standards-version',
-                    "$version (current is $current)";
+                tag 'out-of-date-standards-version', $tag;
             }
         }
     }

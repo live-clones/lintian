@@ -19,6 +19,9 @@
 package Lintian::Collect::Source;
 use strict;
 
+use Lintian::Collect;
+use Parse::DebianChangelog;
+
 our @ISA = qw(Lintian::Collect);
 
 # Initialize a new source package collect object.  Takes the package name,
@@ -28,6 +31,20 @@ sub new {
     my $self = {};
     bless($self, $class);
     return $self;
+}
+
+# Get the changelog file of a source package as a Parse::DebianChangelog
+# object.  Returns undef if the changelog file couldn't be found.
+sub changelog {
+    my ($self) = @_;
+    return $self->{changelog} if exists $self->{changelog};
+    if (-l 'debfiles/changelog' || ! -f 'debfiles/changelog') {
+        $self->{changelog} = undef;
+    } else {
+        my %opts = (infile => 'debfiles/changelog', quiet => 1);
+        $self->{changelog} = Parse::DebianChangelog->init(\%opts);
+    }
+    return $self->{changelog};
 }
 
 # Returns whether the package is a native package.  For everything except
@@ -89,6 +106,13 @@ In addition to the instance methods listed below, all instance methods
 documented in the Lintian::Collect module are also available.
 
 =over 4
+
+=item changelog()
+
+Returns the changelog of the source package as a Parse::DebianChangelog
+object, or undef if the changelog is a symlink or doesn't exist.  The
+debfiles collection script must have been run to create the changelog
+file, which this method expects to find in F<debfiles/changelog>.
 
 =item native()
 
