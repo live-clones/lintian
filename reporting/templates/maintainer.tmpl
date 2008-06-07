@@ -8,16 +8,29 @@
   <title>Lintian Report for {$name}</title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <link rel="stylesheet" href="../lintian.css" type="text/css" />
+  <link rel="icon" href="../ico.png" type="image/png" />
 </head>
 
 <body>
-  <h1>Lintian Report for {$name}</h1>
+
+<div id="header">
+  <p><a href="../index.html">Lintian Reports</a></p>
+  <ul id="nav">
+    <li><a href="../maintainers.html">Maintainers</a></li>
+    <li><a href="../tags.html">Tags</a></li>
+    <li><a href="../packages_1.html">Packages</a></li>
+  </ul>
+  <div class="clear"></div>
+</div>
+
+<div id="main">
+  <h1>{$name}</h1>
 
   <p>
     At the time of the last Lintian run, the following possible problems
     were found in packages maintained by {$maintainer}, listed by source
     package.
-{ 
+{
     if ($errors) {
         qq(    See also the <a href="../full/$id">full report</a>, including)
            . " info and overridden tags.";
@@ -26,21 +39,31 @@
            . " only errors and warnings</a>.";
     }
 }
-  </p>
-
-  <p>
     Also see their
     <a href="http://qa.debian.org/developer.php?login={$email}">QA
     overview</a>.
   </p>
 
-  <dl>
 {
-    # We get a hash of package names to a hash of versions to a list of
-    # tags.  Create a description list with the package information as the
-    # title and the tags as the value.
+    # Show the summary only if the number of packages is within a certain
+    # range.
+    my $num_packages = length(%packages);
+    if ($num_packages > 1 and $num_packages < 20) {
+        $OUT .= qq(  <div id="summary">\n    <ul>\n);
+        foreach $source (keys (%packages)) {
+            $OUT .= qq(      <li><a href="#$source">$source</a></li>\n);
+        }
+        $OUT .= "    </ul>\n  </div>\n";
+    }
+}
+  <div class="clear"></div>
+
+{
+    # We get a hash of package names to a hash of versions to a list of tags.
+    # Create a list with the package information as the title and the tags as
+    # the value.
     for my $source (sort (keys (%packages), keys (%uploads))) {
-        my ($anchored, $data, $upload);
+        my ($data, $upload);
         if ($packages{$source}) {
             $data = $packages{$source};
         } else {
@@ -49,51 +72,64 @@
         }
         for my $version (sort keys %$data) {
             my $tags = $data->{$version};
-            my $last = '';
+            my $first = 1;
+            my $binary = '';
+            my $tag = '';
             for my $info (@$tags) {
                 if ($errors) {
                     next unless $info->{code} eq 'E' or $info->{code} eq 'W';
                 }
-                unless ($last) {
-                    if ($anchored) {
-                        $OUT .= qq(    <dt>);
-                    } else {
-                        $OUT .= qq(    <dt id="$source"><a name="$source">);
-                    }
-                    $OUT .= "<strong>$source ($version)";
-                    $OUT .= ' (Uploader)' if $upload;
-                    $OUT .= '</strong>';
-                    if ($anchored) {
-                        $OUT .= qq(</dt>\n    <dd>\n);
-                    } else {
-                        $OUT .= qq(</a></dt>\n    <dd>\n);
-                        $anchored = 1;
-                    }
+
+                my $is_binary = $info->{type} eq "binary";
+                my $new_binary = $info->{package} ne $binary if $is_binary;
+
+                if ($first) {
+                    $OUT .= qq(  <h2 id="$source">);
+                    $OUT .= "$source ($version)";
+                    $OUT .= " [Uploader]" if $upload;
+                    $OUT .= "</h2>\n";
+                    $OUT .= qq(  <ul class="report">\n) unless $is_binary;
                 }
-                my $id = "$info->{package} $info->{type}";
-                my $tag = qq(<a href="../tags/$info->{tag}.html">)
-                    . $info->{tag} . '</a>';
-                if ($id ne $last) {
-                    if ($last) {
-                        $OUT .= "</pre>\n\n";
-                    }
-                    $OUT .= "      <pre>\n";
+
+                if ($new_binary) {
+                    $OUT .= "</ul>\n    </li>\n  </ul>\n" unless $first;
+                    $OUT .= qq(  <h3>$info->{package}</h3>\n);
+                    $OUT .= qq(  <ul class="report">\n);
                 }
-                $last = $id;
-                $OUT .= "$info->{code}: $id: $tag $info->{extra}\n";
+
+                # Display tag name only once.
+                if ($tag ne $info->{tag}) {
+                    $OUT .= "</ul>\n    </li>\n" unless $first or $new_binary;
+                    $OUT .= "    <li>\n";
+                    $OUT .= qq(      <span class="type-$info->{code}">);
+                    $OUT .= "$info->{code}</span> ";
+                    $OUT .= qq(<a href="../tags/$info->{tag}.html">);
+                    $OUT .= "$info->{tag}</a>\n";
+                    $OUT .= qq(      <ul class="extra">);
+                }
+
+                if ($info->{extra}) {
+                    $OUT .= "<li>$info->{extra}</li>";
+                }
+
+                $first = 0;
+                $binary = $info->{package};
+                $tag = $info->{tag};
             }
-            $OUT .= "</pre>\n    </dd>\n";
+            $OUT .= "</ul>\n    </li>\n  </ul>\n";
         }
     }
-}  </dl>
-        
-  <hr />
-  <div class="footer">
-    <p>
-      Please send all comments about these web pages to the
-      <a href="mailto:lintian-maint@debian.org">Lintian maintainers</a>.<br />
-      Page last updated: {$timestamp} using Lintian {$version}
-    </p>
-  </div>
+}</div> <!-- main -->
+
+<hr/>
+
+<div id="footer">
+  <p>
+    Please send all comments about these web pages to the
+    <a href="mailto:lintian-maint@debian.org">Lintian maintainers</a>.
+  </p>
+  <p>Page last updated: {$timestamp} using Lintian {$version}.</p>
+</div>
+
 </body>
 </html>

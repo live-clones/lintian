@@ -108,6 +108,10 @@ mkdir("$HTML_TMP_DIR/tags", 0777)
     or die "cannot create output directory $HTML_TMP_DIR/tags: $!\n";
 copy("$LINTIAN_ROOT/reporting/lintian.css", "$HTML_TMP_DIR/lintian.css")
     or die "cannot copy lintian.css to $HTML_TMP_DIR: $!\n";
+for my $image (qw/ico.png l.png logo-small.png/) {
+    copy("$LINTIAN_ROOT/reporting/images/$image", "$HTML_TMP_DIR/$image")
+        or die "cannot copy images/$image to $HTML_TMP_DIR: $!\n";
+}
 
 # This variable will accumulate statistics.  For tags: errors, warnings,
 # experimental, overridden, and info are the keys holding the count of tags of
@@ -320,6 +324,7 @@ for my $maintainer (@maintainers) {
     # Determine the parts of the maintainer and the file name for the
     # maintainer page.
     my ($name, $email) = ($maintainer =~ /^(.*) <([^>]+)>/);
+    $name = 'Unknown Maintainer' unless $name;
     $email = 'unknown' unless $email;
     my $regular = "maintainer/$id";
     my $full = "full/$id";
@@ -398,6 +403,7 @@ for my $tag (sort keys %by_tag) {
     my %data = (
         description => $description,
         tag         => html_quote ($tag),
+        code        => $by_tag{$tag}[0]->{code},
         tags        => $by_tag{$tag},
         timestamp   => $timestamp,
         version     => $LINTIAN_VERSION

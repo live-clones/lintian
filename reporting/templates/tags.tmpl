@@ -8,10 +8,23 @@
   <title>Lintian Tags</title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <link rel="stylesheet" href="lintian.css" type="text/css" />
+  <link rel="icon" href="ico.png" type="image/png" />
 </head>
 
 <body>
-  <h1>Lintian Tags</h1>
+
+<div id="header">
+  <p><a href="index.html">Lintian Reports</a></p>
+  <ul id="nav">
+    <li><a href="maintainers.html">Maintainers</a></li>
+    <li><a href="tags.html">Tags</a></li>
+    <li><a href="packages_1.html">Packages</a></li>
+  </ul>
+  <div class="clear"></div>
+</div>
+
+<div id="main">
+  <h1>Tags</h1>
 
   <p>
     This is a list of all tags that occur at least once in the archive
@@ -19,11 +32,11 @@
     experimental and info tags.
   </p>
 
-  <p>
+  <ul>
 {
     for my $tag (sort keys %tags) {
         my ($count, $overrides) = (0, 0);
-	my %seen;
+        my %seen;
         for my $info (@{ $tags{$tag} }) {
             if ($info->{code} eq 'O') {
                 $overrides++;
@@ -33,19 +46,22 @@
             }
         }
         my $packages = scalar keys %seen;
-        $OUT .= qq(    <a href="tags/$tag.html">$tag</a>)
+        $OUT .= qq(    <li><a href="tags/$tag.html">$tag</a>)
             . " ($packages packages, $count tags, plus $overrides overrides)"
-            . "<br />\n";
+            . "</li>\n";
     }
-}  </p>
-        
-  <hr />
-  <div class="footer">
-    <p>
-      Please send all comments about these web pages to the
-      <a href="mailto:lintian-maint@debian.org">Lintian maintainers</a>.<br />
-      Page last updated: {$timestamp} using Lintian {$version}
-    </p>
-  </div>
+}  </ul>
+</div> <!-- main -->
+
+<hr/>
+
+<div id="footer">
+  <p>
+    Please send all comments about these web pages to the
+    <a href="mailto:lintian-maint@debian.org">Lintian maintainers</a>.
+  </p>
+  <p>Page last updated: {$timestamp} using Lintian {$version}.</p>
+</div>
+
 </body>
 </html>

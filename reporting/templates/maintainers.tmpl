@@ -5,13 +5,26 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-  <title>Lintian Report by Maintainer</title>
+  <title>Lintian Reports by Maintainer</title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <link rel="stylesheet" href="lintian.css" type="text/css" />
+  <link rel="icon" href="ico.png" type="image/png" />
 </head>
 
 <body>
-  <h1>Lintian Report by Maintainer</h1>
+
+<div id="header">
+  <p><a href="index.html">Lintian Reports</a></p>
+  <ul id="nav">
+    <li><a href="maintainers.html">Maintainers</a></li>
+    <li><a href="tags.html">Tags</a></li>
+    <li><a href="packages_1.html">Packages</a></li>
+  </ul>
+  <div class="clear"></div>
+</div>
+
+<div id="main">
+  <h1>Maintainers</h1>
 
   <p>
     Maintainers are listed sorted case-insensitively by package maintainer
@@ -53,14 +66,17 @@
             . qq{ (<a href="full/$url">full report</a>)<br />\n};
     }
 }  </p>
-        
-  <hr />
-  <div class="footer">
-    <p>
-      Please send all comments about these web pages to the
-      <a href="mailto:lintian-maint@debian.org">Lintian maintainers</a>.<br />
-      Page last updated: {$timestamp} using Lintian {$version}
-    </p>
-  </div>
+</div> <!-- main -->
+
+<hr/>
+
+<div id="footer">
+  <p>
+    Please send all comments about these web pages to the
+    <a href="mailto:lintian-maint@debian.org">Lintian maintainers</a>.
+  </p>
+  <p>Page last updated: {$timestamp} using Lintian {$version}.</p>
+</div>
+
 </body>
 </html>

@@ -1,9 +1,337 @@
 /* lintian.css -- Style sheet for lintian.debian.org pages. */
 
-h1 {
+/*
+ # Table of Contents:
+ #
+ # 1. General styles (links, lists, titles, tables...)
+ # 2. Header
+ # 3. Navigation
+ # 4. Main content
+ # 5. Footer
+ # 6. Other
+ */
+
+/*
+ # Order:
+ #
+ # example {
+ #   display
+ #   position
+ #   width
+ #   height
+ #   margin
+ #   padding
+ #   background
+ #   color
+ #   font
+ #   text
+ #   line-height
+ #   border
+ # }
+ */
+
+
+/*
+ * 1. General styles
+ */
+
+body {
+    margin: 0;
+    padding: 0;
+    color: #222;
+    font-family: sans-serif;
+}
+
+h1, h2 {
+    font-family: "Junicode", "FreeSerif", serif;
+}
+
+h2 {
+    margin-bottom: 14px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid #AAA;
+}
+
+h3 {
+    margin: 5px 0 5px 10px;
+    color: #444;
+    font-size: 1.0em;
+}
+
+p {
+    line-height: 1.4em;
+}
+
+a {
+    color: #3252B2;
+}
+
+ul {
+    margin: 0;
+}
+
+li {
+    color: #333;
+}
+
+hr {
+    display: none;
+}
+
+
+/*
+ * 2. Header title
+ */
+
+#header {
+    margin: 0 0 28px 0;
+    padding: 5px 20px;
+    /* TODO: Needs full path or url... */
+    background: #F3F3F3 url('logo-small.png') no-repeat right;
+    border-bottom: 1px solid #AAA;
+}
+
+#header p {
+    float: left;
+    margin: 5px 0;
+    color: #444;
+    font-size: 1.0em;
+    font-family: sans-serif;
+    font-weight: bold;
+}
+
+#header p a {
+    color: #444;
+    text-decoration: none;
+}
+
+
+/*
+ * 3. Navigation bar
+ */
+
+#nav {
+    float: right;
+    margin: 5px 55px 5px 0;
+    padding: 0;
+}
+
+#nav li {
+    display: inline;
+    margin-left: 5px;
+}
+
+#nav a {
+    padding: 3px 5px;
+    color: #333;
+    font-size: 0.9em;
+    text-decoration: none;
+}
+
+#nav a:hover {
+    background-color: #FBFBFB;
+    border-bottom: 2px solid #D70751;
+}
+
+
+/*
+ * 4. Main content
+ */
+
+#main {
+    margin: 0 25px;
+    font-size: 0.9em;
+    line-height: 1.4em;
+}
+
+/* Front page */
+
+#logo {
     text-align: center;
 }
 
-div.footer {
-    font-size: smaller;
+#index h2, #stats h2 {
+    margin: 1.4em 0 0.4em 0;
+    border: none;
+}
+
+#info {
+    margin: 25px 0;
+    padding: 20px;
+    background: #EFF4F8 url(l.png) no-repeat left;
+    border: 1px solid #DFE4E8;
+}
+
+#info p {
+    margin-left: 130px;
+}
+
+#stats table {
+    border-collapse: collapse;
+}
+
+#stats table tr td {
+    padding: 3px 5px;
+    background-color: #FDFDFD;
+    border: 1px solid #CCC;
+}
+
+#stats td span {
+    margin: 0 3px 0 0;
+    padding: 1px 3px;
+    font-family: monospace;
+}
+
+/* Maintainer reports */
+
+#summary {
+    font-size: 0.9em;
+}
+
+#summary p {
+    margin-top: 5px;
+    font-size: 0.95em;
+}
+
+#summary ul {
+    padding-left: 20px;
+}
+
+ul.report {
+    padding-left: 20px;
+    padding-bottom: 1em;
+}
+
+ul.tag {
+    padding-bottom: 1em;
+}
+
+ul.report li {
+    padding-left: 5px;
+    padding-bottom: 6px;
+    list-style: none;
+}
+
+ul.tag li {
+    list-style: square;
+}
+
+li span {
+    margin: 0 3px 0 0;
+    padding: 1px 3px;
+    font-family: monospace;
+}
+
+h1 span {
+    padding: 1px 5px;
+    font-family: monospace;
+    font-size: 0.85em;
+    font-weight: normal;
+}
+
+ul.extra {
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+ul.report li ul.extra li {
+    padding-left: 0;
+    padding-bottom: 1px;
+    color: #444;
+    list-style: square;
+}
+
+/* Tag type */
+
+h2.tag {
+    margin: 5px 0;
+    padding: 0;
+    color: #444;
+    font-family: sans-serif;
+    font-size: 1.0em;
+    font-weight: normal;
+    border: none;
+}
+
+h2.tag a {
+    font-weight: bold;
+}
+
+/* E/W/I colors */
+
+span.type-I {
+    color: #111;
+    background-color: #C7EA3C;
+}
+
+span.type-W {
+    color: #111;
+    background-color: #FFEB44;
+}
+
+span.type-E {
+    color: #111;
+    background-color: #FF6700;
+}
+
+span.type-X {
+    color: #111;
+    background-color: #EE99EE;
+}
+
+span.type-O {
+    color: #111;
+    background-color: #DDD;
+}
+
+blockquote {
+    padding: 6px 16px;
+    background-color: #EEE;
+    border: 1px solid #DDD;
+}
+
+blockquote.type-I {
+    background-color: #DFA;
+    border: 1px solid #C7EA3C;
+}
+
+blockquote.type-W {
+    background-color: #FFD;
+    border: 1px solid #FFEB44;
+}
+
+blockquote.type-E {
+    background-color: #FE9;
+    border: 1px solid #FF6700;
+}
+
+blockquote.type-X {
+    background-color: #FECCFE;
+    border: 1px solid #DE66DE;
+}
+
+
+/*
+ * 5. Footer
+ */
+
+#footer {
+    margin: 20px 20px;
+    padding: 10px 0 0 0;
+    font-size: 0.85em;
+    border-top: 1px solid #AAA;
+}
+
+#footer p {
+    margin: 0;
+    padding: 0;
+}
+
+
+/*
+ * 6. Other
+ */
+
+div.clear {
+    clear: both;
 }

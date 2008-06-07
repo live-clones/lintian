@@ -8,83 +8,113 @@
   <title>Lintian</title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <link rel="stylesheet" href="lintian.css" type="text/css" />
+  <link rel="icon" href="ico.png" type="image/png" />
 </head>
 
-<body background="bg.gif">
-  <img align="left" src="logo.gif" alt="Lintian" width="300" height="200">
+<body>
 
-  <h1>Lintian</h1>
-
-  <p>
-    Lintian dissects <a href="http://www.debian.org/">Debian</a>
-    <a href="http://packages.debian.org/">packages</a> and tries to find
-    bugs and policy violations. It contains automated checks for many
-    aspects of <a href="http://www.debian.org/doc/debian-policy/">Debian
-    policy</a> as well as some checks for common errors.
-  </p>
-
-  <p>
-    For more information, see the <a href="manual/index.html">User
-    Manual</a>.
-  </p>
-
-  <p>
-    Lintian is available in the Debian
-    <a href="http://packages.debian.org/lintian">lintian package</a>.
-  </p>
-
-  <hr />
-
-  <p>The following Lintian report indices are available:</p>
-
-  <ul>
-    <li><strong><a href="reports/maintainers.html">Maintainers</a></strong></li>
-    <li><strong><a href="reports/tags.html">Tag types</a></strong></li>
-    <li><strong>Packages that have names starting with:</strong>
-      <ul>
-        <li><a href="reports/packages_1.html">0-9, A-F</a></li>
-        <li><a href="reports/packages_2.html">G-L</a></li>
-        <li><a href="reports/packages_3.html">M-R</a></li>
-        <li><a href="reports/packages_4.html">S-Z</a></li>
-      </ul>
-    </li>
+<div id="header">
+  <p><a href="index.html">Lintian Reports</a></p>
+  <ul id="nav">
+    <li><a href="maintainers.html">Maintainers</a></li>
+    <li><a href="tags.html">Tags</a></li>
+    <li><a href="packages_1.html">Packages</a></li>
   </ul>
+  <div class="clear"></div>
+</div>
 
-  <dl>
-    <dt>Statistics:</dt>
-    <dd>
-      <table>
-        <tr><td>Last updated:</td>     <td>{$timestamp}</td></tr>
-        <tr><td>Archive timestamp:</td><td>{$mirror}</td></tr>
-        <tr><td>Distribution:</td>     <td>{$dist}</td></tr>
-        <tr><td>Section:</td>          <td>{$section}</td></tr>
-        <tr><td>Architecture:</td>     <td>{$architecture}</td></tr>
-        <tr><td>Maintainers:</td>      <td>{$delta{maintainers}}</td></tr>
-        <tr><td>Source packages:</td>  <td>{$delta{'source-packages'}}</td></tr>
-        <tr><td>Binary packages:</td>  <td>{$delta{'binary-packages'}}</td></tr>
-        <tr><td>&mu;deb packages:</td>    <td>{$delta{'udeb-packages'}}</td></tr>
-        <tr><td>Warnings:</td>         <td>{$delta{warnings}}</td></tr>
-        <tr><td>Errors:</td>           <td>{$delta{errors}}</td></tr>
-        <tr><td>Info tags:</td>        <td>{$delta{info}}</td></tr>
-        <tr><td>Overridden tags:</td>  <td>{$delta{overridden}}</td></tr>
-        <tr><td>Experimental tags:</td><td>{$delta{experimental}}</td></tr>
-        <tr><td>Lintian version:</td>  <td>{$version}</td></tr>
-      </table>
-    </dd>
-  </dl>
+<div id="main">
+  <div id="front">
+    <div id="info">
+      <p>
+        Lintian dissects <a href="http://www.debian.org/">Debian</a>
+        <a href="http://packages.debian.org/">packages</a> and tries to find
+        bugs and policy violations. It contains automated checks for many
+        aspects of <a href="http://www.debian.org/doc/debian-policy/">Debian
+        policy</a> as well as some checks for common errors.
+      </p>
 
-  <p>
-    (The numbers in parentheses describe the changes since the last Lintian
-    report, published on {$previous}).
-  </p>
+      <p>
+        For more information, see the <a href="manual/index.html">User
+        Manual</a>.
+      </p>
 
-  <hr />
-  <div class="footer">
+      <p>
+        Lintian is available in the Debian
+        <a href="http://packages.debian.org/lintian">lintian package</a>.
+      </p>
+    </div> <!-- info -->
+    <div class="clear"></div>
+  </div> <!-- front -->
+
+  <div id="index">
+    <h2>Indices</h2>
+
+    <ul>
+      <li><a href="reports/maintainers.html">Maintainers</a></li>
+      <li><a href="reports/tags.html">Tag types</a></li>
+      <li>Packages that have names starting with:
+        <ul>
+          <li><a href="reports/packages_1.html">0-9, A-F</a></li>
+          <li><a href="reports/packages_2.html">G-L</a></li>
+          <li><a href="reports/packages_3.html">M-R</a></li>
+          <li><a href="reports/packages_4.html">S-Z</a></li>
+        </ul>
+      </li>
+    </ul>
+  </div> <!-- index -->
+
+  <div id="stats">
+    <h2>Statistics</h2>
+    <table>
+      <tr><td>Last updated:</td>     <td>{$timestamp}</td></tr>
+      <tr><td>Archive timestamp:</td><td>{$mirror}</td></tr>
+      <tr><td>Distribution:</td>     <td>{$dist}</td></tr>
+      <tr><td>Section:</td>          <td>{$section}</td></tr>
+      <tr><td>Architecture:</td>     <td>{$architecture}</td></tr>
+      <tr><td>Maintainers:</td>      <td>{$delta{maintainers}}</td></tr>
+      <tr><td>Source packages:</td>  <td>{$delta{'source-packages'}}</td></tr>
+      <tr><td>Binary packages:</td>  <td>{$delta{'binary-packages'}}</td></tr>
+      <tr><td>&mu;deb packages:</td> <td>{$delta{'udeb-packages'}}</td></tr>
+      <tr>
+        <td><span class="type-E">E</span> Errors:</td>
+        <td>{$delta{errors}}</td>
+      </tr>
+      <tr>
+        <td><span class="type-W">W</span> Warnings:</td>
+        <td>{$delta{warnings}}</td>
+      </tr>
+      <tr>
+        <td><span class="type-I">I</span> Info tags:</td>
+        <td>{$delta{info}}</td>
+      </tr>
+      <tr>
+        <td><span class="type-O">O</span> Overridden tags:</td>
+        <td>{$delta{overridden}}</td>
+      </tr>
+      <tr>
+        <td><span class="type-X">X</span> Experimental tags:</td>
+        <td>{$delta{experimental}}</td>
+      </tr>
+      <tr><td>Lintian version:</td>  <td>{$version}</td></tr>
+    </table>
+
     <p>
-      Please send all comments about these web pages to the
-      <a href="mailto:lintian-maint@debian.org">Lintian maintainers</a>.<br />
-      Page last updated: {$timestamp} using Lintian {$version}
+      (The numbers in parentheses describe the changes since the last Lintian
+      report, published on {$previous}).
     </p>
-  </div>
+  </div> <!-- stats -->
+</div> <!-- main -->
+
+<hr/>
+
+<div id="footer">
+  <p>
+    Please send all comments about these web pages to the
+    <a href="mailto:lintian-maint@debian.org">Lintian maintainers</a>.
+  </p>
+  <p>Page last updated: {$timestamp} using Lintian {$version}.</p>
+</div>
+
 </body>
 </html>
