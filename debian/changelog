@@ -18,6 +18,8 @@ lintian (1.23.50) unstable; urgency=low
   * checks/cruft:
     + [RA] Format: 3.0 (quilt) packages are not native even though they
       have no *.diff.gz.  Thanks, Raphael Hertzog.  (Closes: #483384)
+    + [RA] Use the new Lintian::Collect interface to check whether a
+      package is native.
   * checks/fields:
     + [RA] Syntax-check Breaks like other relationship fields.  Warn if
       any packages use Breaks for right now.  Only check for duplicate
@@ -81,7 +83,12 @@ lintian (1.23.50) unstable; urgency=low
   * debian/control:
     + [RA] Update standards version to 3.8.0.
     + [RA] Depend on libtimedate-perl for convenient date parsing.
-  
+
+  * lib/Lintian/Collect.pm:
+    + [RA] New module to retrieve package information.
+  * lib/Lintian/Collect/Source.pm:
+    + [RA] New module to retrieve source package information.
+
   * reporting/html_reports:
     + [RA] Copy over images.  Set the maintainer name to "Unknown
       Maintainer" if not known.  Pass the code for a tag into the per-tag

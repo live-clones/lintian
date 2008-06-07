@@ -78,13 +78,17 @@ my %warned;
 my $native;
 
 my $dir;
-my $pkg;
 my $atdinbd;
+
+# Used in the find function.
+my $pkg;
+my $collect;
 
 sub run {
 
 $pkg = shift;
 my $type = shift;
+$collect = Lintian::Collect->new($pkg, $type);
 
 if (-e "debfiles/files" and not -z "debfiles/files") {
     tag 'debian-files-list-in-source';
@@ -92,21 +96,9 @@ if (-e "debfiles/files" and not -z "debfiles/files") {
 
 # This doens't really belong here, but there isn't a better place at the
 # moment to put this check.
-open (FORMAT, '<', "fields/format")
-    or fail("cannot open fields/format: $!");
-my $format = <FORMAT>;
-chomp $format;
-close FORMAT;
-if ($format =~ /^\s*3\.0\s+\(quilt\)\s*$/) {
-    $native = 0;
-} else {
-    open (VERSION, '<', "fields/version")
-        or fail("cannot open fields/version: $!");
-    chomp(my $version = <VERSION>);
-    close VERSION;
-    $version =~ s/^\d+://; #Remove epoch
-    $native = (! -f "${pkg}_${version}.diff.gz");
-    if ($native and $version =~ /-/ and $version !~ /-0\.[^-]+$/) {
+if ($collect->native) {
+    my $version = $collect->field('version');
+    if ($version =~ /-/ and $version !~ /-0\.[^-]+$/) {
         tag 'native-package-with-dash-version';
     }
 }
@@ -199,7 +191,7 @@ sub check_diffstat {
 # than creating yet a third set of tags, and this gets the severity right.
 sub find_cruft {
     (my $name = $File::Find::name) =~ s,^(\./)?unpacked/,,;
-    my $prefix = ($native ? "diff-contains" : "source-contains");
+    my $prefix = ($collect->native ? "diff-contains" : "source-contains");
     if (-d and not $warned{$name}) {
         for my $rule (@directory_checks) {
             if ($name =~ /$rule->[0]/) {
@@ -211,7 +203,7 @@ sub find_cruft {
 
     unless ($warned{$name}) {
         for my $rule (@file_checks) {
-            next if ($rule->[2] and not $native);
+            next if ($rule->[2] and not $collect->native);
             if ($name =~ /$rule->[0]/) {
                 tag "${prefix}-$rule->[1]", $name unless $pkg eq 'lintian';
             }
