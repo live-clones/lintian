@@ -124,10 +124,18 @@ while (<RULES>) {
         }
     }
 
-    if (/^([^\s:][^:]+):/) {
+    if (/^([^\s:][^:]*):/) {
 	@current_targets = split (' ', $1);
 	for (@current_targets) {
-	    $seen{$_}++ if $required{$_};
+            if (m/%/) {
+                my $pattern = quotemeta $_;
+                $pattern =~ s/\\%/.*/g;
+                for my $target (keys %required) {
+                    $seen{$target}++ if $target =~ m/$pattern/;
+                }
+            } else {
+                $seen{$_}++ if $required{$_};
+            }
 	}
         $debhelper_group = 0;
     } else {

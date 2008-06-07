@@ -54,6 +54,7 @@ lintian (1.23.50) unstable; urgency=low
   * checks/rules{.desc,}:
     + [RA] Add some basic checks for whether debhelper programs are called
       in a reasonable order.  (Closes: #471869)
+    + [RA] Support pattern rules.  (Closes: #483475)
   * checks/scripts:
     + [RA] Catch deprecated chown syntax even when options are given to
       chown.  Patch by Raphael Geissert.  (Closes: #483775)

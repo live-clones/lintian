@@ -1,0 +1,12 @@
+Source: dh7-minimal
+Section: devel
+Priority: optional
+Maintainer: Russ Allbery <rra@debian.org>
+Build-Depends: debhelper (>= 7)
+Standards-Version: 3.9.0
+
+Package: dh7-test
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Checks related to debhelper rule minimization
+ New in debhelper 7.
