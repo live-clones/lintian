@@ -80,6 +80,7 @@ lintian (1.23.50) unstable; urgency=low
 
   * debian/control:
     + [RA] Update standards version to 3.8.0.
+    + [RA] Depend on libtimedate-perl for convenient date parsing.
   
   * reporting/html_reports:
     + [RA] Copy over images.  Set the maintainer name to "Unknown
