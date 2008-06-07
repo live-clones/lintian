@@ -53,7 +53,6 @@ W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:108 '${H[@
 W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:116 'echo -e'
 W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:117 '${!foo}'
 W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:119 'select foo'
-W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:120 '$((c'
 W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:122 '    exec -l'
 W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:123 '    exec -c'
 W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:124 '    exec -a'

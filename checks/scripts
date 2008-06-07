@@ -571,7 +571,6 @@ while (<SCRIPTS>) {
 		  '(<\&|>\&)\s*((-|\d+)[^\s;|\)\`&]|[^-\d])', # should be >word 2>&1
 		  '\[\[(?!:)',		       # alternative test command
 		  '(?:^|\s+)select\s+\w+',     # 'select' is not POSIX
-		  '\$\(\([A-Za-z]',	       # cnt=$((cnt + 1)) does not work in dash
 		  '(?:^|\s+)echo\s+-e',        # echo -e
 		  '(?:^|\s+)exec\s+-[acl]',    # exec -c/-l/-a name
 		  '(?:^|\s+)let\s',	       # let ...

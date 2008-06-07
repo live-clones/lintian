@@ -53,6 +53,8 @@ lintian (1.23.50) unstable; urgency=low
   * checks/scripts:
     + [RA] Catch deprecated chown syntax even when options are given to
       chown.  Patch by Raphael Geissert.  (Closes: #483775)
+    + [RA] $((var+1)) now works in dash and is in POSIX, so remove it from
+      bashisms.  Patch by Adam D. Barratt.  (Closes: #473156)
   * checks/standards-version:
     + [RA] Policy 3.8.0 is now current and anything older than 3.7.2 is
       now ancient.
