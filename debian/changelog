@@ -23,6 +23,10 @@ lintian (1.23.50) unstable; urgency=low
       a version.  Check that Breaks is not inconsistent with other
       dependency fields.
     + [RA] Use Lintian::Data to load the obsolete package list.
+    + [RA] When checking whether a debug package has proper dependencies,
+      allow a dependency on any package name that starts the same as the
+      debug package up to the first dash.  This will hopefully produce
+      fewer false positives.  Thanks, Josselin Mouette.  (Closes: #476587)
   * checks/filenames{.desc,}:
     + [RA] Warn about BTS data directories in packages (.be and
       .ditrack).  Patch by Ben Finney.  (Closes: #481787)

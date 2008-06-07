@@ -422,7 +422,7 @@ if (($type eq "binary") || ($type eq 'udeb')) {
 	my (%deps, %fields, %parsed);
 	my $debugpackage = 0;
 	my ($debugbase, $debugfound);
-	if ($pkg =~ /^(.*)-dbg$/) {
+	if ($pkg =~ /^([^-]+)(?:-.*)?-dbg$/) {
 		$debugpackage = 1;
 		$debugbase = $1;
 	}
