@@ -22,6 +22,12 @@ Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Test package for the debconf checks of lintian
  Package uses debconf only in preinst
 
+Package: debconf-test-postinst
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Test package for the debconf checks of lintian
+ Package uses debconf only in postinst
+
 Package: debconf-udeb
 Section: debian-installer
 XC-Package-Type: udeb

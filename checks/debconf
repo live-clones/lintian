@@ -330,6 +330,7 @@ foreach my $template (@templates) {
 
 # Check the maintainer scripts.
 
+my $config_calls_db_input;
 for my $file (qw(config postinst)) {
     my $potential_makedev = {};
     if (open(IN, '<', "control/$file")) {
@@ -354,18 +355,22 @@ for my $file (qw(config postinst)) {
 		last unless $next;
 		$_ .= $next;
 	    }
-	    if (m#(?:\.|source)\s+/usr/share/debconf/confmodule# ||
+	    if (m,(?:\.|source)\s+/usr/share/debconf/confmodule, ||
 	            m/(use|require)\s+Debconf::Client::ConfModule/) {
 	        $usesconfmodule=1;
 	    }
 	    if (not $obsoleteconfmodule and
-	        m#(/usr/share/debconf/confmodule\.sh|
-	           Debian::DebConf::Client::ConfModule)#x) {
+	        m,(/usr/share/debconf/confmodule\.sh|
+	           Debian::DebConf::Client::ConfModule),x) {
 	        tag "$file-loads-obsolete-confmodule", "$1";
 	        $usesconfmodule=1;
 	        $obsoleteconfmodule=1;
 	    }
-	    if ($file eq 'postinst' and not $db_input and m/db_input/) {
+	    if ($file eq 'config' and m/db_input/) {
+		$config_calls_db_input = 1;
+	    }
+	    if ($file eq 'postinst' and not $db_input and m/db_input/
+		and not $config_calls_db_input) {
 	        # TODO: Perl?
 	        tag "postinst-uses-db-input", ""
 		    unless $type eq 'udeb';
@@ -492,4 +497,8 @@ sub count_choices {
 
 1;
 
+# Local Variables:
+# indent-tabs-mode: t
+# cperl-indent-level: 4
+# End:
 # vim: syntax=perl ts=8
