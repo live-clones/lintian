@@ -133,3 +133,6 @@ start-stop-daemon --start --quiet --name foo --startas /usr/bin/foo
 
 # But stopping it is fine -- we may be working around something else.
 start-stop-daemon --stop --quiet --name foo --startas /usr/bin/foo
+
+# Deprecated chown use with flags.
+chown -R root.root /usr/share/doc/maintainer-scripts

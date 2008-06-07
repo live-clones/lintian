@@ -635,7 +635,7 @@ while (<SCRIPTS>) {
 		    tag 'start-stop-daemon-in-maintainer-script', "$file:$.";
 		}
 		# Don't use chown foo.bar
-		if (/(chown\s+[-_A-Za-z0-9]+\.[-_A-Za-z0-9]+)\s+/) {
+		if (/(chown(\s+--?[A-Za-z-]+)*\s+[-_A-Za-z0-9]+\.[-_A-Za-z0-9]+)\s+/) {
 		    tag "deprecated-chown-usage", "$file:$. \'$1\'";
 		}
 		if (/invoke-rc.d.*\|\| exit 0/) {

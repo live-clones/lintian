@@ -37,6 +37,7 @@ W: maintainer-scripts: ancient-dpkg-long-filenames-check preinst:9
 W: maintainer-scripts: ancient-dpkg-multi-conrep-check preinst:10
 W: maintainer-scripts: ancient-dpkg-predepends-check preinst:7
 W: maintainer-scripts: config-does-not-load-confmodule
+W: maintainer-scripts: deprecated-chown-usage postinst:138 'chown -R root.root'
 W: maintainer-scripts: deprecated-chown-usage postinst:33 'chown root.root'
 W: maintainer-scripts: gconftool-used-in-maintainer-script postinst:68
 W: maintainer-scripts: init.d-script-not-marked-as-conffile /etc/init.d/foo
