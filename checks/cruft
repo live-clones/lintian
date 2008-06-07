@@ -92,14 +92,23 @@ if (-e "debfiles/files" and not -z "debfiles/files") {
 
 # This doens't really belong here, but there isn't a better place at the
 # moment to put this check.
-open (VERSION, '<', "fields/version")
-    or fail("cannot open fields/version: $!");
-chomp(my $version = <VERSION>);
-close VERSION;
-$version =~ s/^\d+://; #Remove epoch
-$native = (! -f "${pkg}_${version}.diff.gz");
-if ($native and $version =~ /-/ and $version !~ /-0\.[^-]+$/) {
-    tag 'native-package-with-dash-version';
+open (FORMAT, '<', "fields/format")
+    or fail("cannot open fields/format: $!");
+my $format = <FORMAT>;
+chomp $format;
+close FORMAT;
+if ($format =~ /^\s*3\.0\s+\(quilt\)\s*$/) {
+    $native = 0;
+} else {
+    open (VERSION, '<', "fields/version")
+        or fail("cannot open fields/version: $!");
+    chomp(my $version = <VERSION>);
+    close VERSION;
+    $version =~ s/^\d+://; #Remove epoch
+    $native = (! -f "${pkg}_${version}.diff.gz");
+    if ($native and $version =~ /-/ and $version !~ /-0\.[^-]+$/) {
+        tag 'native-package-with-dash-version';
+    }
 }
 
 # Check if this is a documentation package that's not arch: all.  This doesn't
