@@ -23,6 +23,9 @@ lintian (1.23.50) unstable; urgency=low
       a version.  Check that Breaks is not inconsistent with other
       dependency fields.
     + [RA] Use Lintian::Data to load the obsolete package list.
+  * checks/filenames{.desc,}:
+    + [RA] Warn about BTS data directories in packages (.be and
+      .ditrack).  Patch by Ben Finney.  (Closes: #481787)
   * checks/init.d:
     + [RA] Try to allow for postinst scripts written in Perl and still
       recognize the update-rc.d calls.

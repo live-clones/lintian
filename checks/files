@@ -757,6 +757,9 @@ while (<IN>) {
 	    || ($file =~ m,/\{arch\}/?$,)) {
 	    tag "package-contains-vcs-control-dir", "$file";
 	}
+	if ($file =~ m,/\.(be|ditrack)/?$,) {
+	    tag "package-contains-bts-control-dir", "$file";
+	}
 	if ($file =~ m,/.xvpics/?$,) {
 	    tag "package-contains-xvpics-dir", "$file";
 	}

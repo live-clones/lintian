@@ -85,9 +85,13 @@ W: filenames: menu-file-in-usr-lib usr/lib/menu/menu
 W: filenames: no-priority-field
 W: filenames: no-section-field
 W: filenames: non-standard-dir-perm usr/lib/filenames/readonly/ 0555 != 0755
+W: filenames: package-contains-bts-control-dir usr/lib/perl5/.be/
+W: filenames: package-contains-bts-control-dir usr/lib/perl5/.ditrack/
 W: filenames: package-contains-devhelp-file-without-symlink usr/share/doc/filenames/bad-devhelp/c.devhelp.gz
 W: filenames: package-contains-empty-directory usr/lib/perl5/.arch-ids/
+W: filenames: package-contains-empty-directory usr/lib/perl5/.be/
 W: filenames: package-contains-empty-directory usr/lib/perl5/.bzr/
+W: filenames: package-contains-empty-directory usr/lib/perl5/.ditrack/
 W: filenames: package-contains-empty-directory usr/lib/perl5/.svn/
 W: filenames: package-contains-empty-directory usr/lib/perl5/CVS/
 W: filenames: package-contains-empty-directory usr/lib/perl5/{arch}/

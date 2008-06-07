@@ -52,6 +52,8 @@ binary-indep:
 	mkdir "debian/tmp/usr/lib/perl5/{arch}"
 	mkdir debian/tmp/usr/lib/perl5/.arch-ids
 	mkdir debian/tmp/usr/lib/perl5/.bzr
+	mkdir debian/tmp/usr/lib/perl5/.be
+	mkdir debian/tmp/usr/lib/perl5/.ditrack
 	install -d debian/tmp/usr/share/perl5
 	echo foo > debian/tmp/usr/lib/perl5/foo/.gitignore
 	echo foo > debian/tmp/usr/lib/perl5/foo/.hgignore
