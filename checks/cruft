@@ -82,13 +82,13 @@ my $atdinbd;
 
 # Used in the find function.
 my $pkg;
-my $collect;
+my $info;
 
 sub run {
 
 $pkg = shift;
 my $type = shift;
-$collect = shift;
+$info = shift;
 
 if (-e "debfiles/files" and not -z "debfiles/files") {
     tag 'debian-files-list-in-source';
@@ -96,8 +96,8 @@ if (-e "debfiles/files" and not -z "debfiles/files") {
 
 # This doens't really belong here, but there isn't a better place at the
 # moment to put this check.
-if ($collect->native) {
-    my $version = $collect->field('version');
+if ($info->native) {
+    my $version = $info->field('version');
     if ($version =~ /-/ and $version !~ /-0\.[^-]+$/) {
         tag 'native-package-with-dash-version';
     }
@@ -191,7 +191,7 @@ sub check_diffstat {
 # than creating yet a third set of tags, and this gets the severity right.
 sub find_cruft {
     (my $name = $File::Find::name) =~ s,^(\./)?unpacked/,,;
-    my $prefix = ($collect->native ? "diff-contains" : "source-contains");
+    my $prefix = ($info->native ? "diff-contains" : "source-contains");
     if (-d and not $warned{$name}) {
         for my $rule (@directory_checks) {
             if ($name =~ /$rule->[0]/) {
@@ -203,7 +203,7 @@ sub find_cruft {
 
     unless ($warned{$name}) {
         for my $rule (@file_checks) {
-            next if ($rule->[2] and not $collect->native);
+            next if ($rule->[2] and not $info->native);
             if ($name =~ /$rule->[0]/) {
                 tag "${prefix}-$rule->[1]", $name unless $pkg eq 'lintian';
             }

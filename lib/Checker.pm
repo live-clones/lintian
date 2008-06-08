@@ -51,7 +51,7 @@ sub register {
 }
 
 sub runcheck {
-	my ($pkg, $type, $collect, $name) = @_;
+	my ($pkg, $type, $info, $name) = @_;
 
 	# Will be set to 2 if error is encountered
 	my $return = 0;
@@ -65,7 +65,7 @@ sub runcheck {
 
 	#print STDERR "Now running $name...\n";
 	$name =~ s/[-.]/_/g;
-	eval { &{'Lintian::'.$name.'::run'}($pkg, $type, $collect) };
+	eval { &{'Lintian::'.$name.'::run'}($pkg, $type, $info) };
 	if ( $@ ) {
 	    print STDERR $@;
 	    print STDERR "internal error: cannot run $name check on package $pkg\n";

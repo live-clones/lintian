@@ -77,11 +77,11 @@ sub run {
 
 my $pkg = shift;
 my $type = shift;
-my $collect = shift;
+my $info = shift;
 
 # udebs aren't required to conform to policy, so they don't need
 # Standards-Version. (If they have it, though, it should be valid.)
-my $version = $collect->field('standards-version');
+my $version = $info->field('standards-version');
 if (not defined $version) {
     tag 'no-standards-version-field' unless $type eq 'udeb';
     return 0;
@@ -122,7 +122,7 @@ if (not exists $standards{$stdver}) {
     } else {
         # We have to get the package date from the changelog file.  If we
         # can't find the changelog file, always issue the tag.
-        my $changes = $collect->changelog;
+        my $changes = $info->changelog;
         if (not defined $changes) {
             tag 'out-of-date-standards-version', $tag;
             return 0;

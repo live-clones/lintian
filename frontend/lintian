@@ -1357,7 +1357,7 @@ for (reverse sort @packages) {
         }
 
 	# perform checks
-	my $collect = Lintian::Collect->new($pkg, $long_type);
+	my $info = Lintian::Collect->new($pkg, $long_type);
 	for my $check (keys %checks) {
 	    my $ci = $check_info{$check};
 
@@ -1381,7 +1381,7 @@ for (reverse sort @packages) {
 		next PACKAGE;
 	    }
 
-	    my $returnvalue = Checker::runcheck($pkg, $long_type, $collect, $check);
+	    my $returnvalue = Checker::runcheck($pkg, $long_type, $info, $check);
 	    # Set exit_code correctly if there was not yet an exit code
 	    $exit_code = $returnvalue unless $exit_code;
 

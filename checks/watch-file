@@ -29,9 +29,9 @@ sub run {
 
 my $pkg = shift;
 my $type = shift;
-my $collect = shift;
+my $info = shift;
 
-unless ($collect->native) {
+unless ($info->native) {
     unless (-f "debfiles/watch") {
         tag 'debian-watch-file-is-missing';
         return;
@@ -74,7 +74,7 @@ unless ($collect->native) {
 
     # If the version of the package contains dfsg, assume that it needs to be
     # mangled to get reasonable matches with upstream.
-    my $version = $collect->field('version');
+    my $version = $info->field('version');
     if ($version =~ /dfsg/ and not $mangle) {
         tag 'debian-watch-file-should-mangle-version';
     }
