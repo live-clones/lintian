@@ -1,3 +1,11 @@
+lintian (1.24.1) unstable; urgency=low
+
+  * unpack/unpack-binpkg-l1:
+    + [FL] Don't include version number from Source: field in
+      the source symlink.  Noted by RA.  (Closes: #485474)
+
+ --
+
 lintian (1.24.0) unstable; urgency=low
 
   The "Policy 3.8.0, infrastructure evolution, and real web design"

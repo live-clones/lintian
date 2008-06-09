@@ -102,6 +102,8 @@ for my $field (keys %$data) {
 }
 
 # create symlink to source package
-symlink("../../source/$data->{'source'}","$base_dir/source") or fail("symlink: $!");
+$data->{'source'} =~ s/\s*\(.*\)\s*$//;
+symlink("../../source/$data->{'source'}","$base_dir/source")
+    or fail("symlink: $!");
 
 exit 0;
