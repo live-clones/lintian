@@ -126,7 +126,7 @@ Originally written by Russ Allbery <rra@debian.org> for Lintian.
 
 =head1 SEE ALSO
 
-lintian(1), Lintian::Collect::Source(3)
+lintian(1), Lintian::Collect(3)
 
 =cut
 
