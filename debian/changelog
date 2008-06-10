@@ -17,12 +17,12 @@ lintian (1.24.1) unstable; urgency=low
       dynamically, so that we don't need the reports subdirectory
       anymore.  Also generate a reports -> . symlink for
       backwards compatibility.
-  * reporting/{head,foot}.tmpl:
+  * reporting/templates/{head,foot}.tmpl:
     + [FL] New templates meant for inclusion by other templates
       for common header and footer parts
-  * reporting/index.tmpl:
+  * reporting/templates/index.tmpl:
     + [FL] Remove obsolete reports/ subdirectory from the links.    
-  * reporting/*.tmpl:
+  * reporting/templates/*.tmpl:
     + [FL] Replace common headers/footers with calls to the
       new head()/foot() functions.
 
