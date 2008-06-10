@@ -6,13 +6,22 @@ lintian (1.24.1) unstable; urgency=low
   
   * reporting/checkout-release:
     + [FL] New helper script for lintian.d.o maintainance.
-  * reporting/{head,foot}.tmpl:
-    + [FL] New templates meant for inclusion by other templates
-      for common header and footer parts
+  * reporting/config:
+    + [FL] Generate files in $HOME/www directly instead
+      of $HOME/www/reports.
   * reporting/html_reports:
     + [FL] Allow inclusion of the new shared templates by
       convenient functions. Remove some duplicated data
       setting while I'm on it.
+    + [FL] Generate the manual and lintian.log symlinks
+      dynamically, so that we don't need the reports subdirectory
+      anymore.  Also generate a reports -> . symlink for
+      backwards compatibility.
+  * reporting/{head,foot}.tmpl:
+    + [FL] New templates meant for inclusion by other templates
+      for common header and footer parts
+  * reporting/index.tmpl:
+    + [FL] Remove obsolete reports/ subdirectory from the links.    
   * reporting/*.tmpl:
     + [FL] Replace common headers/footers with calls to the
       new head()/foot() functions.
