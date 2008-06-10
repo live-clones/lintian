@@ -4,6 +4,9 @@ lintian (1.24.1) unstable; urgency=low
     + [FL] Don't include version number from Source: field in
       the source symlink.  Noted by RA.  (Closes: #485474)
   
+  * lib/Lintian/Collect/Binary.pm:
+    + [FL] New module for retrieving binary package information.
+  
   * reporting/checkout-release:
     + [FL] New helper script for lintian.d.o maintainance.
   * reporting/config:
