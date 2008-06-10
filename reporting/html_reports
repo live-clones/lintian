@@ -79,7 +79,7 @@ our $TEMPLATES = "$LINTIAN_ROOT/reporting/templates";
 # This only has to be done once, so do it at the start and then reuse the same
 # templates throughout.
 our %templates;
-for my $template (qw/clean index maintainer maintainers packages tag tags/) {
+for my $template (qw/head foot clean index maintainer maintainers packages tag tags/) {
     my %options = (TYPE => 'FILE', SOURCE => "$TEMPLATES/$template.tmpl");
     $templates{$template} = Text::Template->new (%options)
         or die "cannot load template $template: $Text::Template::ERROR\n";
@@ -340,8 +340,6 @@ for my $maintainer (@maintainers) {
         name       => html_quote ($name),
         packages   => $by_maint{$maintainer},
         uploads    => $by_uploader{$maintainer},
-        timestamp  => $timestamp,
-        version    => $LINTIAN_VERSION
     );
     my $template;
     if ($error_clean) {
@@ -361,8 +359,6 @@ for my $maintainer (@maintainers) {
 # Write out the maintainer index.
 my %data = (
     maintainers => \%maintainers,
-    timestamp   => $timestamp,
-    version     => $LINTIAN_VERSION
 );
 output_template ('maintainers.html', $templates{maintainers}, \%data);
 
@@ -383,8 +379,6 @@ for my $id (keys %clean) {
         email      => html_quote (uri_escape ($email)),
         maintainer => html_quote ($maintainer),
         name       => html_quote ($name),
-        timestamp  => $timestamp,
-        version    => $LINTIAN_VERSION
     );
     print "Generating clean page for $id\n";
     output_template ("maintainer/$id", $templates{clean}, \%data);
@@ -405,8 +399,6 @@ for my $tag (sort keys %by_tag) {
         tag         => html_quote ($tag),
         code        => $by_tag{$tag}[0]->{code},
         tags        => $by_tag{$tag},
-        timestamp   => $timestamp,
-        version     => $LINTIAN_VERSION
     );
     output_template ("tags/$tag.html", $templates{tag}, \%data);
 }
@@ -414,8 +406,6 @@ for my $tag (sort keys %by_tag) {
 # Create the general tag index.
 %data = (
     tags      => \%by_tag,
-    timestamp => $timestamp,
-    version   => $LINTIAN_VERSION
 );
 output_template ('tags.html', $templates{tags}, \%data);
 
@@ -437,8 +427,6 @@ for my $package (sort keys %packages) {
 }
 %data = (
     packages  => \%packages,
-    timestamp => $timestamp,
-    version   => $LINTIAN_VERSION
 );
 my $i = 1;
 for my $section (sort keys %list) {
@@ -483,8 +471,6 @@ close STATS or die "cannot write to $statistics_file: $!\n";
     mirror       => $mirror_timestamp,
     previous     => $old_statistics->{'last-updated'},
     section      => $LINTIAN_SECTION,
-    timestamp    => $timestamp,
-    version      => $LINTIAN_VERSION
 );
 output_template ('index.html', $templates{index}, \%data);
 exit 0;
@@ -546,6 +532,12 @@ sub html_quote {
 # that data hash and output the results to the file.
 sub output_template {
     my ($file, $template, $data) = @_;
+    $data->{version} ||= $LINTIAN_VERSION;
+    $data->{timestamp} ||= $timestamp;
+    $data->{head} ||= sub { $templates{head}->fill_in (HASH => { page_title => $_[0],
+                                                                 path_prefix => '../' x ($_[1]||0),
+                                                                 %$data }) };
+    $data->{foot} ||= sub { $templates{foot}->fill_in (HASH => $data) };
     open (OUTPUT, '>', "$HTML_TMP_DIR/$file")
         or die "creating $HTML_TMP_DIR/$file falied: $!\n";
     $template->fill_in (OUTPUT => \*OUTPUT, HASH => $data)

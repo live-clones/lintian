@@ -3,6 +3,19 @@ lintian (1.24.1) unstable; urgency=low
   * unpack/unpack-binpkg-l1:
     + [FL] Don't include version number from Source: field in
       the source symlink.  Noted by RA.  (Closes: #485474)
+  
+  * reporting/checkout-release:
+    + [FL] New helper script for lintian.d.o maintainance.
+  * reporting/{head,foot}.tmpl:
+    + [FL] New templates meant for inclusion by other templates
+      for common header and footer parts
+  * reporting/html_reports:
+    + [FL] Allow inclusion of the new shared templates by
+      convenient functions. Remove some duplicated data
+      setting while I'm on it.
+  * reporting/*.tmpl:
+    + [FL] Replace common headers/footers with calls to the
+      new head()/foot() functions.
 
  --
 

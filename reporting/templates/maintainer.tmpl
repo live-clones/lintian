@@ -1,29 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html
-    PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-<head>
-  <title>Lintian Report for {$name}</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <link rel="stylesheet" href="../lintian.css" type="text/css" />
-  <link rel="icon" href="../ico.png" type="image/png" />
-</head>
-
-<body>
-
-<div id="header">
-  <p><a href="../index.html">Lintian Reports</a></p>
-  <ul id="nav">
-    <li><a href="../maintainers.html">Maintainers</a></li>
-    <li><a href="../tags.html">Tags</a></li>
-    <li><a href="../packages_1.html">Packages</a></li>
-  </ul>
-  <div class="clear"></div>
-</div>
-
-<div id="main">
+{ head("Lintian Report for $name", 1) }
   <h1>{$name}</h1>
 
   <p>
@@ -119,17 +94,5 @@
             $OUT .= "</ul>\n    </li>\n  </ul>\n";
         }
     }
-}</div> <!-- main -->
-
-<hr/>
-
-<div id="footer">
-  <p>
-    Please send all comments about these web pages to the
-    <a href="mailto:lintian-maint@debian.org">Lintian maintainers</a>.
-  </p>
-  <p>Page last updated: {$timestamp} using Lintian {$version}.</p>
-</div>
-
-</body>
-</html>
+}
+{ foot() }
