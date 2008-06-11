@@ -73,7 +73,7 @@
                 }
 
                 # Display tag name only once.
-                if ($tag ne $info->{tag}) {
+                if ($tag ne $info->{tag} or $new_binary) {
                     $OUT .= "</ul>\n    </li>\n" unless $first or $new_binary;
                     $OUT .= "    <li>\n";
                     $OUT .= qq(      <span class="type-$info->{code}">);
