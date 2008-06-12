@@ -63,7 +63,7 @@ unless ($info->native) {
             }
             chomp;
             my ($opts, @opts);
-            if (s/^opts=(\S+)\s*// || s/^opts=\"([^\"]+)\"//) {
+            if (s/^opts=\"([^\"]+)\"// || s/^opts=(\S+)\s*//) {
                 $opts = $1;
                 @opts = split(',', $opts);
                 $mangle = 1 if grep { /^[ud]versionmangle/ } @opts;

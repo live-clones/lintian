@@ -8,6 +8,11 @@ lintian (1.24.1) unstable; urgency=medium
       (i.e. not on harness -i runs) it only got noticed now.
       Use urgency=medium for this fix.
   
+  * checks/watch-file:
+    + [FL] Fix the order of two regular expression to use
+      the more specific one first.  Patch by Raphael Geissert.
+      (Closes: #485884)
+  
   * unpack/unpack-binpkg-l1:
     + [FL] Don't include version number from Source: field in
       the source symlink.  Noted by RA.  (Closes: #485474)
