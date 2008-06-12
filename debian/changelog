@@ -1,4 +1,6 @@
 lintian (1.24.1) unstable; urgency=medium
+  
+  The "mostly for the benefit of lintian.debian.org only" release.
 
   * frontend/lintian:
     + [FL] Increase LAB_FORMAT to 8. This should have happened
@@ -46,7 +48,7 @@ lintian (1.24.1) unstable; urgency=medium
     + [FL] Replace common headers/footers with calls to the
       new head()/foot() functions.
 
- --
+ -- Frank Lichtenheld <djpig@debian.org>  Thu, 12 Jun 2008 17:28:44 +0200
 
 lintian (1.24.0) unstable; urgency=low
 
