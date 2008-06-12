@@ -32,7 +32,7 @@ use FileHandle;
 my $lintian_info_cmd = 'lintian-info'; #Command to run for ?
 my $LINTIAN_VERSION = "<VERSION>";	#External Version number
 my $BANNER = "Lintian v$LINTIAN_VERSION"; #Version Banner - text form
-my $LAB_FORMAT = 7;		#Lab format Version Number
+my $LAB_FORMAT = 8;		#Lab format Version Number
 				#increased whenever incompatible
 				#changes are done to the lab
 				#so that all packages are re-unpacked

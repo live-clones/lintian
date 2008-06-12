@@ -1,5 +1,13 @@
-lintian (1.24.1) unstable; urgency=low
+lintian (1.24.1) unstable; urgency=medium
 
+  * frontend/lintian:
+    + [FL] Increase LAB_FORMAT to 8. This should have happened
+      in 1.23.47, since the unpack-binpkg-l1 then produced a
+      new file which checks depend upon.  Since this only
+      affects static labs and only if packages get rechecked
+      (i.e. not on harness -i runs) it only got noticed now.
+      Use urgency=medium for this fix.
+  
   * unpack/unpack-binpkg-l1:
     + [FL] Don't include version number from Source: field in
       the source symlink.  Noted by RA.  (Closes: #485474)
