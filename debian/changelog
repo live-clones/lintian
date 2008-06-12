@@ -23,7 +23,7 @@ lintian (1.24.1) unstable; urgency=medium
     + [FL] New module for retrieving binary package information.
   
   * reporting/checkout-release:
-    + [FL] New helper script for lintian.d.o maintainance.
+    + [FL] New helper script for lintian.d.o maintenance.
   * reporting/config:
     + [FL] Generate files in $HOME/www directly instead
       of $HOME/www/reports.
