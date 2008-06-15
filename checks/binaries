@@ -23,6 +23,8 @@ use strict;
 use Tags;
 use Util;
 
+use File::Spec;
+
 sub run {
 
 my $pkg = shift;
@@ -234,7 +236,7 @@ while (<IN>) {
 
     # rpath is disallowed, except in private directories
     if (exists $RPATH{$file}) {
-	foreach my $rpath (keys %{$RPATH{$file}}) {
+	foreach my $rpath (map {File::Spec->canonpath($_)} keys %{$RPATH{$file}}) {
 	    next if $rpath =~ m,^/usr/lib/(games/)?\Q$pkg\E(?:/|\z),;
 	    next if $rpath =~ m,^\$ORIGIN$,;
 	    next if $directories{$rpath};

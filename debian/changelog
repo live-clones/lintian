@@ -1,3 +1,11 @@
+lintian (1.24.2) unstable; urgency=low
+
+  * checks/scripts:
+    + [FL] Apply File::Spec->canonpath() to rpaths to improve
+      matching with directories.
+
+ --
+
 lintian (1.24.1) unstable; urgency=medium
   
   The "mostly for the benefit of lintian.debian.org only" release.
