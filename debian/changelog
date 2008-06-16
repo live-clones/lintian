@@ -3,6 +3,9 @@ lintian (1.24.2) unstable; urgency=low
   * checks/scripts:
     + [FL] Apply File::Spec->canonpath() to rpaths to improve
       matching with directories.
+    + [FL] Do not check zsh scripts, since zsh -n gives false
+      positives.  Downgrades #485885 to wishlist.  Also see
+      #175467.  Patch by Raphael Geissert.
 
  --
 

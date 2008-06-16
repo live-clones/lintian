@@ -289,7 +289,8 @@ while (<SCRIPTS>) {
     # Syntax-check most shell scripts, but don't syntax-check scripts that end
     # in .dpatch.  bash -n doesn't stop checking at exit 0 and goes on to blow
     # up on the patch itself.
-    if ($base =~ /^(?:(?:b|d)?a|k|z)?sh$/) {
+    # zsh -n is broken, see #485885
+    if ($base =~ /^(?:(?:b|d)?a|k)?sh$/) {
 	if (-x "$interpreter" && ! script_is_evil_and_wrong("unpacked/$filename")) {
 	    if ($filename !~ m,\.dpatch$,) {
 		if (check_script_syntax($interpreter, "unpacked/$filename")) {
