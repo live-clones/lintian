@@ -11,6 +11,9 @@ lintian (1.24.2) unstable; urgency=low
       non-obsolete alternatives specified and if the obsolete
       package is not listed first.  Issue an info tag for them
       though.  Patch by Adam D. Barratt.  (Closes: #486145)
+  
+  * doc/CREDITS:
+    + [FL] Add Raphael Geissert and Adam D. Barratt.
 
  --
 
