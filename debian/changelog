@@ -14,6 +14,9 @@ lintian (1.24.2) unstable; urgency=low
   
   * doc/CREDITS:
     + [FL] Add Raphael Geissert and Adam D. Barratt.
+  
+  * debian/copyright:
+    + [FL] Add Patrick Schoenfeld (for checks/watch-file).
 
  --
 
