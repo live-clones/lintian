@@ -441,7 +441,7 @@ if (($type eq "binary") || ($type eq 'udeb')) {
 			    if ($data =~ /\|/ && ! &$is_dep_field($field));
 
 			for my $dep (split /\s*,\s*/, $data) {
-				my @alternatives;
+				my (@alternatives, @seen_obsolete_packages);
 				push @alternatives, [_split_dep($_), $_] for (split /\s*\|\s*/, $dep);
 
 				if (&$is_dep_field($field)) {
@@ -494,7 +494,7 @@ if (($type eq "binary") || ($type eq 'udeb')) {
 					tag "bad-relation", "$field: $part_d_orig"
 					    if $rest;
 
-					tag "depends-on-obsolete-package", "$field: $part_d_orig"
+					push @seen_obsolete_packages, $part_d_orig
 					    if ($obsolete_packages->known($d_pkg) && &$is_dep_field($field));
 
 					tag "depends-on-x-metapackage", "$field: $part_d_orig"
@@ -522,6 +522,15 @@ if (($type eq "binary") || ($type eq 'udeb')) {
 					tag "old-versioned-python-dependency", "$field: $part_d_orig"
 					    if ($d_pkg eq 'python' && $d_version->[0] eq '<<' && &$is_dep_field($field)
 						&& $arch_indep && $pkg =~ /^python-/ && ! -f "fields/python-version");
+				}
+
+				for my $pkg (@seen_obsolete_packages) {
+					if ($pkg eq $alternatives[0]->[0] or
+					    scalar @seen_obsolete_packages == scalar @alternatives) {
+						tag "depends-on-obsolete-package", "$field: $pkg";
+					} else {
+						tag "ored-depends-on-obsolete-package", "$field: $pkg";
+					}
 				}
 			}
 			tag "package-depends-on-multiple-libstdc-versions", @seen_libstdcs
