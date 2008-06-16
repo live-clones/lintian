@@ -42,11 +42,22 @@ Info: The <tt>debian/watch</tt> file in this package doesn't start a
 
 Tag: debian-watch-file-should-mangle-version
 Type: warning
-Ref: uscan(1)
-Info: The version of this package contains <tt>dfsg</tt>, which normally
- indicates that the upstream source has been repackaged to comply with the
- Debian Free Software Guidelines, but there is no version mangling in the
+Ref: uscan(1), http://wiki.debian.org/DEHS
+Info: The version of this package contains <tt>dfsg</tt>, <tt>ds</tt>,
+ or <tt>debian</tt>, which normally indicates that the upstream source
+ has been repackaged to comply with the Debian Free Software Guidelines
+ (or similar reason), but there is no version mangling in the
  <tt>debian/watch</tt> file.  Since the <tt>dfsg</tt> string is not
  part of the upstream version, the <tt>debian/watch</tt> file should
- normally use the dversionmangle option to remove the <tt>dfsg</tt> before
+ use the dversionmangle option to remove the <tt>dfsg</tt> before
  version number comparison.
+
+Tag: debian-watch-file-should-dversionmangle-not-uversionmangle
+Type: info
+Ref: http://wiki.debian.org/DEHS
+Info: The version of this package contains <tt>dfsg</tt>, <tt>ds</tt>,
+ or <tt>debian</tt>, but a misleading upstream version mangling occurs in the
+ <tt>debian/watch</tt> file.  Since the upstream source code is not
+ <tt>dfsg</tt>-free as-is, the <tt>debian/watch</tt> file should
+ use the dversionmangle option to remove, instead of adding in uversionmangle,
+ the <tt>dfsg</tt> before version number comparison.

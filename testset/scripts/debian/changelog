@@ -1,4 +1,4 @@
-scripts (6) unstable; urgency=low
+scripts (6ds-1) unstable; urgency=low
 
   * I'm also not able to write my name.
   * Added a script in /etc/Xsession.d

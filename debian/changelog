@@ -11,6 +11,11 @@ lintian (1.24.2) unstable; urgency=low
       non-obsolete alternatives specified and if the obsolete
       package is not listed first.  Issue an info tag for them
       though.  Patch by Adam D. Barratt.  (Closes: #486145)
+  * checks/watch-file{,.desc}:
+     + [FL] Check for more Debian specific strings in version
+       number.  Issue an info tag if the watch file uses
+       uversionsmangle to add the Debian specific string. Patch
+       by Raphael Geissert.  (Closes: #485879)
   
   * doc/CREDITS:
     + [FL] Add Raphael Geissert and Adam D. Barratt.

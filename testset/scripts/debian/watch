@@ -1,0 +1,6 @@
+# watch file with upstream version mangling
+
+version=2
+opts="uversionmangle=s/$/ds/" \
+http://www.example.com/dist/ scripts\.([\d.]+)\.tar\.gz
+

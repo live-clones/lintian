@@ -37,11 +37,19 @@ unless ($info->native) {
         return;
     }
 
+    my $version = $info->field('version');
+    # Check if the Debian version contains anything that resembles a repackaged
+    # source package sign, for fine grained version mangling check
+    my $repack;
+    if ($version =~ /(dfsg|debian|ds)/) {
+        $repack = $1;
+    }
+
     # Gather information from the watch file and look for problems we can
     # diagnose on the first time through.
     open(WATCH, '<', 'debfiles/watch') or fail("cannot open watch file: $!");
     local $_;
-    my ($watchver, $mangle);
+    my ($watchver, $mangle, $dmangle);
     while (<WATCH>) {
         next if /^\s*\#/;
         next if /^\s*$/;
@@ -66,7 +74,8 @@ unless ($info->native) {
             if (s/^opts=\"([^\"]+)\"// || s/^opts=(\S+)\s*//) {
                 $opts = $1;
                 @opts = split(',', $opts);
-                $mangle = 1 if grep { /^[ud]versionmangle/ } @opts;
+                $mangle = 1 if grep { /^[ud]versionmangle.*=.*($repack)/ } @opts;
+                $dmangle = 1 if grep { /^dversionmangle.*=.*($repack)/ } @opts;
             }
         }
     }
@@ -74,9 +83,12 @@ unless ($info->native) {
 
     # If the version of the package contains dfsg, assume that it needs to be
     # mangled to get reasonable matches with upstream.
-    my $version = $info->field('version');
-    if ($version =~ /dfsg/ and not $mangle) {
+    if ($repack and not $mangle) {
         tag 'debian-watch-file-should-mangle-version';
+    }
+
+    if ($repack and $mangle and not $dmangle) {
+        tag 'debian-watch-file-should-dversionmangle-not-uversionmangle';
     }
 }
 
