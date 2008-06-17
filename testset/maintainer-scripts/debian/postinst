@@ -104,9 +104,36 @@ echo "All of the array is: ${H[@]}"
 EOF
 
 # But this isn't.
-cat '>>EOF'
+cat '<<EOF'
 echo "All of the array is: ${H[@]}"
 EOF
+
+# This is a heredoc
+cat <<-EOF
+echo "All of the arry is ${H[@]}"
+EOF
+
+# As is this
+cat <<';'
+echo "All of the array is ${H[@]}"
+;
+
+# and this
+cat <<foo
+echo "All of the array is ${H[@]}"
+foobar
+echo $HOSTNAME
+foo
+
+# and again
+cat <<\bar
+echo "All of the array is ${H[@]}"
+bar
+
+# yet another
+cat <<"x++"
+echo "All of the array is ${H[@]}"
+x++
 
 # Recognize single quotes even if they start at the beginning of a line.
 echo not a bashism \

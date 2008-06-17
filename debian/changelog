@@ -17,6 +17,7 @@ lintian (1.24.2) unstable; urgency=low
       them for their own sake and removing them makes finding
       the limits of the outer pair far easier.  Patch by
       Adam D. Barratt.
+    + [FL] Improve heredoc detection.  Patch by Adam D. Barratt.
   * checks/watch-file{,.desc}:
      + [FL] Check for more Debian specific strings in version
        number.  Issue an info tag if the watch file uses
