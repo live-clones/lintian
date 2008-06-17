@@ -597,7 +597,14 @@ while (<SCRIPTS>) {
 		# argument to grep or the like.
 		my $line = $_;
 		unless ($found) {
-		    $line =~ s/(^|[^\\](?:\\\\)*)\'(?:\\.|[^\\\'])+\'/$1''/g;
+		    # Remove "quoted quotes". They're likely to be inside
+		    # another pair of quotes; we're not interested in
+		    # them for their own sake and removing them makes finding
+		    # the limits of the outer pair far easier.
+		    $line =~ s/(^|[^\\\'\"])\"\'\"/$1/g;
+		    $line =~ s/(^|[^\\\'\"])\'\"\'/$1/g;
+
+		    $line =~ s/(^|[^\\\"](?:\\\\)*)\'(?:\\.|[^\\\'])+\'/$1''/g;
 		    for my $re (@bashism_string_regexs) {
 			if ($line =~ m/($re)/) {
 			    $found = 1;
@@ -610,7 +617,7 @@ while (<SCRIPTS>) {
 		# We've checked for all the things we still want to notice in
 		# double-quoted strings, so now remove those strings as well.
 		unless ($found) {
-		    $line =~ s/(^|[^\\](?:\\\\)*)\"(?:\\.|[^\\\"])+\"/$1""/g;
+		    $line =~ s/(^|[^\\\'](?:\\\\)*)\"(?:\\.|[^\\\"])+\"/$1""/g;
 		    for my $re (@bashism_regexs) {
 			if ($line =~ m/($re)/) {
 			    $found = 1;
