@@ -610,7 +610,7 @@ while (<SCRIPTS>) {
 		# can match "foo <<-?'xyz'" as a heredoc later
 		# The check is a little more greedy than we'd like, but the
 		# heredoc test itself will weed out any false positives
-		$cat_line =~ s/(^|[^<\\\"-](?:\\\\)*)\'(?:\\.|[^\\\'])+\'"/$1''/g;
+		$cat_line =~ s/(^|[^<\\\"-](?:\\\\)*)\'(?:\\.|[^\\\'])+\'/$1''/g;
 
 		unless ($found) {
 		    # Remove "quoted quotes". They're likely to be inside
@@ -620,7 +620,7 @@ while (<SCRIPTS>) {
 		    $line =~ s/(^|[^\\\'\"])\"\'\"/$1/g;
 		    $line =~ s/(^|[^\\\'\"])\'\"\'/$1/g;
 
-		    $line =~ s/(^|[^\\\"](?:\\\\)*)\'(?:\\.|[^\\\'])+\'"/$1''/g;
+		    $line =~ s/(^|[^\\\"](?:\\\\)*)\'(?:\\.|[^\\\'])+\'/$1''/g;
 		    for my $re (@bashism_string_regexs) {
 			if ($line =~ m/($re)/) {
 			    $found = 1;
