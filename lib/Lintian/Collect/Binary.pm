@@ -100,6 +100,32 @@ sub index {
     return $self->{index};
 }
 
+# Returns the information from collect/file-info
+sub file_info {
+    my ($self) = @_;
+    return $self->{file_info} if exists $self->{file_info};
+
+    my %file_info;
+    open(my $idx, '<', "file-info")
+        or fail("cannot open file-info: $!");
+    while (<$idx>) {
+        chomp;
+
+        m/^(.+?):\s+(.*)$/o
+            or fail("an error in the file pkg is preventing lintian from checking this package: $_");
+        my ($file, $info) = ($1,$2);
+
+        $file =~ s,^./,,o;
+        $file =~ s,/+$,,o;
+
+        $file_info{$file} = $info;
+    }
+    close $idx;
+    $self->{file_info} = \%file_info;
+
+    return $self->{file_info};
+}
+
 =head1 NAME
 
 Lintian::Collect::Binary - Lintian interface to binary package data collection
