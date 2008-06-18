@@ -604,16 +604,13 @@ while (<SCRIPTS>) {
 		my $cat_line = $line;
 		$cat_line =~ s/(<\<-?)\s+/$1/g;
 
-		my $sq_string_with_prefix = qr"(^|[^<\\\"-](?:\\\\)*)\'(?:\\.|[^\\\'])+\'";
-		my $dq_string_with_prefix = qr"(^|[^<\\\'-](?:\\\\)*)\"(?:\\.|[^\\\"])+\"";
-
 		# Remove single quoted strings, with the exception that we
 		# don't remove the string
 		# if the quote is immediately preceeded by a < or a -, so we
 		# can match "foo <<-?'xyz'" as a heredoc later
 		# The check is a little more greedy than we'd like, but the
 		# heredoc test itself will weed out any false positives
-		$cat_line =~ s/$sq_string_with_prefix/$1''/g;
+		$cat_line =~ s/(^|[^<\\\"-](?:\\\\)*)\'(?:\\.|[^\\\'])+\'"/$1''/g;
 
 		unless ($found) {
 		    # Remove "quoted quotes". They're likely to be inside
@@ -623,7 +620,7 @@ while (<SCRIPTS>) {
 		    $line =~ s/(^|[^\\\'\"])\"\'\"/$1/g;
 		    $line =~ s/(^|[^\\\'\"])\'\"\'/$1/g;
 
-		    $line =~ s/$sq_string_with_prefix/$1''/g;
+		    $line =~ s/(^|[^\\\"](?:\\\\)*)\'(?:\\.|[^\\\'])+\'"/$1''/g;
 		    for my $re (@bashism_string_regexs) {
 			if ($line =~ m/($re)/) {
 			    $found = 1;
@@ -635,9 +632,9 @@ while (<SCRIPTS>) {
 
 		# We've checked for all the things we still want to notice in
 		# double-quoted strings, so now remove those strings as well.
-		$cat_line =~ s/$dq_string_with_prefix/$1""/g;
+		$cat_line =~ s/(^|[^<\\\'-](?:\\\\)*)\"(?:\\.|[^\\\"])+\"/$1""/g;
 		unless ($found) {
-		    $line =~ s/$dq_string_with_prefix/$1""/g;
+		    $line =~ s/(^|[^\\\'](?:\\\\)*)\"(?:\\.|[^\\\"])+\"/$1""/g;
 		    for my $re (@bashism_regexs) {
 			if ($line =~ m/($re)/) {
 			    $found = 1;
