@@ -20,21 +20,19 @@
 {
     # We get a list of tag data.  We create a separate paragraph for each
     # package name.
-    my $last = '';
-    my $tag = '';
-    my $has_nonoverridden = 0;
+    my ($last, $tag, $has_nonoverridden);
     for my $info (sort { $a->{package} cmp $b->{package} } @tags) {
-	my $id = "$info->{package} $info->{type}";
-        if ($id ne $last) {
-	    if ($tag) {
+        if (!$last
+	    or "$info->{package} $info->{type}" ne "$last->{package} $last->{type}") {
+	    if ($last) {
 		my $overridden = $has_nonoverridden ? '' : qq{<span class="type-O">O</span> };
-		$OUT .= qq(  <h2 class="tag">$overridden<a href="../full/$info->{xref}">);
-		$OUT .= "$info->{package}</a> ($info->{type})</h2>\n";
+		$OUT .= qq(  <h2 class="tag">$overridden<a href="../full/$last->{xref}">);
+		$OUT .= "$last->{package}</a> ($last->{type})</h2>\n";
         	$OUT .= qq(  <ul class="tag">\n);
+	        $OUT .= $tag;
+	        $OUT .= "</ul>\n";
 	    }
-	    $OUT .= $tag;
-	    $OUT .= "</ul>\n";
-	    $last = $id;
+	    $last = $info;
 	    $tag = '';
 	    $has_nonoverridden = 0;
 	}

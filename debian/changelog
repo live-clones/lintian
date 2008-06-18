@@ -31,6 +31,9 @@ lintian (1.24.2) unstable; urgency=low
   
   * debian/copyright:
     + [FL] Add Patrick Schoenfeld (for checks/watch-file).
+  
+  * reporting/templates/tag.tmpl:
+    + [FL] Mark overridden tags.
 
  --
 
