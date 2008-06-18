@@ -39,7 +39,6 @@ body {
     margin: 0;
     padding: 0;
     color: #222;
-    background-color: white;
     font-family: sans-serif;
 }
 
@@ -283,6 +282,10 @@ span.type-X {
 span.type-O {
     color: #111;
     background-color: #DDD;
+}
+
+li.type-O {
+    color: #444;
 }
 
 blockquote {

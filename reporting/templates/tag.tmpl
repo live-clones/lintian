@@ -21,16 +21,29 @@
     # We get a list of tag data.  We create a separate paragraph for each
     # package name.
     my $last = '';
+    my $tag = '';
+    my $has_nonoverridden = 0;
     for my $info (sort { $a->{package} cmp $b->{package} } @tags) {
-        my $id = "$info->{package} $info->{type}";
+	my $id = "$info->{package} $info->{type}";
         if ($id ne $last) {
-            $OUT .= "</ul>\n" if $last;
-            $OUT .= qq(  <h2 class="tag"><a href="../full/$info->{xref}">);
-            $OUT .= "$info->{package}</a> ($info->{type})</h2>\n";
-            $OUT .= qq(  <ul class="tag">\n);
-            $last = $id;
-        }
-        $OUT .= "<li>$info->{extra}</li>\n" if $info->{extra};
+	    if ($tag) {
+		my $overridden = $has_nonoverridden ? '' : qq{<span class="type-O">O</span> };
+		$OUT .= qq(  <h2 class="tag">$overridden<a href="../full/$info->{xref}">);
+		$OUT .= "$info->{package}</a> ($info->{type})</h2>\n";
+        	$OUT .= qq(  <ul class="tag">\n);
+	    }
+	    $OUT .= $tag;
+	    $OUT .= "</ul>\n";
+	    $last = $id;
+	    $tag = '';
+	    $has_nonoverridden = 0;
+	}
+	$has_nonoverridden = 1 if $info->{code} ne 'O';
+	if ($info->{extra}) {
+	    $tag .= qq{    <li class="type-$info->{code}">};
+	    $tag .= qq{<span class="type-O">O</span> } if $info->{code} eq 'O';
+	    $tag .= "$info->{extra}</li>\n";
+	}
     }
     $OUT .= "  </ul>\n";
 }
