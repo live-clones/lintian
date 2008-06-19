@@ -241,6 +241,10 @@ ul.report li ul.extra li {
     list-style: square;
 }
 
+.info-links {
+    margin-top: 0;
+}
+
 /* Tag type */
 
 h2.tag {

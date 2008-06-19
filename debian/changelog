@@ -39,6 +39,8 @@ lintian (1.24.2) unstable; urgency=low
     + [FL] Mark the tag pages with the correct code.
   * reporting/templates/tag.tmpl:
     + [FL] Mark overridden tags.
+  * reporting/templates/maintainer.tmpl:
+    + [FL] Add links to p.d.o and PTS for each source package.
 
  --
 

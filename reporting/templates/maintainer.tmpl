@@ -63,6 +63,8 @@
                     $OUT .= "$source ($version)";
                     $OUT .= " [Uploader]" if $upload;
                     $OUT .= "</h2>\n";
+                    $OUT .= qq(<p class="info-links"><a href="http://packages.debian.org/src:$source">Info</a>\n);
+                    $OUT .= qq(  <a href="http://packages.qa.debian.org/$source">PTS</a></p>);
                     $OUT .= qq(  <ul class="report">\n) unless $is_binary;
                 }
 
