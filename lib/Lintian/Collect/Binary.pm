@@ -126,6 +126,71 @@ sub file_info {
     return $self->{file_info};
 }
 
+# Returns the information from collect/objdump-info
+sub objdump_info {
+    my ($self) = @_;
+    return $self->{objdump_info} if exists $self->{objdump_info};
+
+    my %objdump_info;
+    my ($dynsyms, $file);
+    open(my $idx, '<', "objdump-info")
+        or fail("cannot open objdump-info: $!");
+    while (<$idx>) {
+        chomp;
+
+        next if m/^\s*$/o;
+
+        if (m,^-- \./(\S+)\s*$,o) {
+            if ($file) {
+                $objdump_info{$file->{name}} = $file;
+            }
+            $file = { name => $1 };
+            $dynsyms = 0;
+        } elsif ($dynsyms) {
+            # The .*? near the end is added because a number of optional fields
+            # might be printed.  The symbol name should be the last word.
+            if (m/^[0-9a-fA-F]+.{6}\w\w?\s+(\S+)\s+[0-9a-zA-Z]+\s+(\S+)\s+(\S+)$/){
+                my ($foo, $sec, $sym) = ($1, $2, $3);
+                push @{$file->{SYMBOLS}}, [ $foo, $sec, $sym ];
+            }
+        } else {
+            if (m/^\s*NEEDED\s*(\S+)/o) {
+                push @{$file->{NEEDED}}, $1;
+            } elsif (m/^\s*RPATH\s*(\S+)/o) {
+                foreach (split m/:/, $1) {
+                    $file->{RPATH}{$_}++;
+                }
+            } elsif (m/^\s*SONAME\s*(\S+)/o) {
+                push @{$file->{SONAME}}, $1;
+            } elsif (m/^\s*\d+\s+\.comment\s+/o) {
+                $file->{COMMENT_SECTION} = 1;
+            } elsif (m/^\s*\d+\s+\.note\s+/o) {
+                $file->{NOTE_SECTION} = 1;
+            } elsif (m/^DYNAMIC SYMBOL TABLE:/) {
+                $dynsyms = 1;
+            } elsif (m/^objdump: (.*?): File format not recognized$/) {
+                push @{$file->{NOTES}}, "File format not recognized";
+            } elsif (m/^objdump: \.(.*?): Packed with UPX$/) {
+                push @{$file->{NOTES}}, "Packed with UPX";
+            } elsif (m/objdump: \.(.*?): Invalid operation$/) {
+                # Don't anchor this regex since it can be interspersed with other
+                # output and hence not on the beginning of a line.
+                push @{$file->{NOTES}}, "Invalid operation";
+            } elsif (m/CXXABI/) {
+                $file->{CXXABI} = 1;
+            } elsif (m%Requesting program interpreter:\s+/lib/klibc-\S+\.so%) {
+                $file->{KLIBC} = 1;
+            }
+        }
+    }
+    if ($file) {
+        $objdump_info{$file->{name}} = $file;
+    }
+    $self->{objdump_info} = \%objdump_info;
+
+    return $self->{objdump_info};
+}
+
 =head1 NAME
 
 Lintian::Collect::Binary - Lintian interface to binary package data collection

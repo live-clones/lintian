@@ -34,6 +34,7 @@ lintian (1.24.2) unstable; urgency=low
   
   * lib/Lintian/Collect/Binary.pm:
     + [FL] Add support for file-info file.
+    + [FL] Add support for objdump-info file.
   
   * reporting/html_reports:
     + [FL] Mark the tag pages with the correct code.
