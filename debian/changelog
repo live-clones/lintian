@@ -40,7 +40,8 @@ lintian (1.24.2) unstable; urgency=low
   * reporting/templates/tag.tmpl:
     + [FL] Mark overridden tags.
   * reporting/templates/maintainer.tmpl:
-    + [FL] Add links to p.d.o and PTS for each source package.
+    + [FL] Add useful links for each source package.
+      With layout help by Jordà Polo.
 
  --
 

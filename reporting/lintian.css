@@ -241,8 +241,24 @@ ul.report li ul.extra li {
     list-style: square;
 }
 
+div.source-header {
+    width: 100%;
+    margin: 1.4em 0 14px 0;
+    padding-bottom: 6px;
+    border-bottom: 2px solid #AAA;
+}
+
+div.source-header p, div.source-header h2 {
+    display: inline;
+    border: none;
+}
+
 .info-links {
     margin-top: 0;
+}
+
+.info-links:before {
+    content: "– ";
 }
 
 /* Tag type */

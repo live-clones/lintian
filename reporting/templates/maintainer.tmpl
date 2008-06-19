@@ -59,12 +59,16 @@
                 my $new_binary = $info->{package} ne $binary if $is_binary;
 
                 if ($first) {
-                    $OUT .= qq(  <h2 id="$source">);
+                    $OUT .= qq(  <div class="source-header">\n);
+                    $OUT .= qq(   <h2 id="$source">);
                     $OUT .= "$source ($version)";
                     $OUT .= " [Uploader]" if $upload;
                     $OUT .= "</h2>\n";
-                    $OUT .= qq(<p class="info-links"><a href="http://packages.debian.org/src:$source">Info</a>\n);
-                    $OUT .= qq(  <a href="http://packages.qa.debian.org/$source">PTS</a></p>);
+                    $OUT .= qq(   <p class="info-links">\n);
+                    $OUT .= qq(    <a href="http://packages.debian.org/src:$source">Info</a>\n);
+                    $OUT .= qq(    <a href="http://packages.qa.debian.org/$source">PTS</a>\n);
+                    $OUT .= qq(    <a href="http://bugs.debian.org/src:$source">Bugs</a>\n);
+                    $OUT .= qq(   </p>\n  </div>\n);
                     $OUT .= qq(  <ul class="report">\n) unless $is_binary;
                 }
 
