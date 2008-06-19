@@ -262,7 +262,7 @@ while (<IN>) {
 
     # statically linked?
     my @needed;
-    if (!exists($NEEDED{$file}) && !defined($NEEDED{$file})) {
+    if (!exists($NEEDED{$file}) || !defined($NEEDED{$file})) {
 	if ($info =~ m/shared object/o) {
             # Some exceptions: detached debugging information and the dynamic
             # loader (which itself has no dependencies).
