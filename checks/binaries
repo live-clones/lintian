@@ -261,7 +261,6 @@ while (<IN>) {
     }
 
     # statically linked?
-    my @needed;
     if (!exists($NEEDED{$file}) || !defined($NEEDED{$file})) {
 	if ($info =~ m/shared object/o) {
             # Some exceptions: detached debugging information and the dynamic
@@ -285,8 +284,7 @@ while (<IN>) {
 	my $lib;
 	my $no_libc = 1;
 	$needs_depends_line = 1;
-	@needed = @{$NEEDED{$file}};
-	for $lib (@needed) {
+	for $lib (@{$NEEDED{$file}}) {
 	    if ($lib =~ /^libc\.so\.(\d+.*)/) {
 		$needs_libc = "libc$1";
 		$needs_libc_file = $file unless $needs_libc_file;
