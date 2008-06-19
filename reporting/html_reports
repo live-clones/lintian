@@ -402,10 +402,17 @@ for my $tag (sort keys %by_tag) {
     } else {
         $description = "    <p>Can't find description of tag $tag.</p>";
     }
+    my $code = 'O';
+    foreach (@{$by_tag{$tag}}) {
+        if ($_->{code} ne 'O') {
+            $code = $_->{code};
+            last;
+        }
+    }
     my %data = (
         description => $description,
         tag         => html_quote ($tag),
-        code        => $by_tag{$tag}[0]->{code},
+        code        => $code,
         tags        => $by_tag{$tag},
     );
     output_template ("tags/$tag.html", $templates{tag}, \%data);

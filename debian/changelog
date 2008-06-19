@@ -35,6 +35,8 @@ lintian (1.24.2) unstable; urgency=low
   * lib/Lintian/Collect/Binary.pm:
     + [FL] Add support for file-info file.
   
+  * reporting/html_reports:
+    + [FL] Mark the tag pages with the correct code.
   * reporting/templates/tag.tmpl:
     + [FL] Mark overridden tags.
 
