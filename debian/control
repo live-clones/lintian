@@ -10,8 +10,8 @@ Uploaders: Josip Rodin <joy-packages@debian.org>,
 Build-Depends: debhelper (>= 5)
 Build-Depends-Indep: debiandoc-sgml, sed (>= 4.1-4)
 Standards-Version: 3.8.0
-Vcs-Svn: http://svn.wolffelaar.nl/lintian/trunk/
-Vcs-Browser: http://svn.wolffelaar.nl/wsvn/lintian/
+Vcs-Git: git://git.debian.org/git/lintian/lintian.git
+Vcs-Browser: http://git.debian.org/?p=lintian/lintian.git
 
 Package: lintian
 Architecture: all

@@ -29,6 +29,8 @@ lintian (1.24.2) unstable; urgency=low
   * doc/CREDITS:
     + [FL] Add Raphael Geissert and Adam D. Barratt.
   
+  * debian/control:
+    + [FL] Adapt VCS-* headers for move from SVN to git.
   * debian/copyright:
     + [FL] Add Patrick Schoenfeld (for checks/watch-file).
   
