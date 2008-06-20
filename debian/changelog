@@ -43,6 +43,9 @@ lintian (1.24.2) unstable; urgency=low
   * reporting/templates/maintainer.tmpl:
     + [FL] Add useful links for each source package.
       With layout help by Jordà Polo.
+    + [FL] Include Co-maintained packages in the summary
+      at the top of the page.  Also sort the list.  Patch
+      by Jordà Polo.
 
  --
 

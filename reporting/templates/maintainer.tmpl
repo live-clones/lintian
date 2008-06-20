@@ -22,10 +22,10 @@
 {
     # Show the summary only if the number of packages is within a certain
     # range.
-    my $num_packages = length(%packages);
+    my $num_packages = keys(%packages) + keys(%uploads);
     if ($num_packages > 1 and $num_packages < 20) {
         $OUT .= qq(  <div id="summary">\n    <ul>\n);
-        foreach $source (keys (%packages)) {
+        foreach $source (sort(keys(%packages), keys(%uploads))) {
             $OUT .= qq(      <li><a href="#$source">$source</a></li>\n);
         }
         $OUT .= "    </ul>\n  </div>\n";
