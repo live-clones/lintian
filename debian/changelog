@@ -1,17 +1,16 @@
 lintian (1.24.2) unstable; urgency=low
 
-  * checks/scripts:
-    + [FL] Apply File::Spec->canonpath() to rpaths to improve
-      matching with directories.
-    + [FL] Do not check zsh scripts, since zsh -n gives false
-      positives.  Downgrades #485885 to wishlist.  Also see
-      #175467.  Patch by Raphael Geissert.
   * checks/fields{,.desc}:
     + [FL] Do not complain about obsolete packages if there are
       non-obsolete alternatives specified and if the obsolete
       package is not listed first.  Issue an info tag for them
       though.  Patch by Adam D. Barratt.  (Closes: #486145)
   * checks/scripts:
+    + [FL] Apply File::Spec->canonpath() to rpaths to improve
+      matching with directories.
+    + [FL] Do not check zsh scripts, since zsh -n gives false
+      positives.  Downgrades #485885 to wishlist.  Also see
+      #175467.  Patch by Raphael Geissert.
     + [FL] Remove "quoted quotes". They're likely to be inside
       another pair of quotes; we're not interested in
       them for their own sake and removing them makes finding
