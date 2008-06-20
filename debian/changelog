@@ -34,6 +34,7 @@ lintian (1.24.2) unstable; urgency=low
     + [FL] Adapt VCS-* headers for move from SVN to git.
   * debian/copyright:
     + [FL] Add Patrick Schoenfeld (for checks/watch-file).
+    + [ADB] Update repository information and GPL2 URL.
   
   * lib/Lintian/Collect/Binary.pm:
     + [FL] Add support for file-info file.
