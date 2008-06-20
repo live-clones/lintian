@@ -307,3 +307,9 @@ Info: The section indicated in this doc-base control file is not one of
  the standard doc-base sections.  The doc-base sections are based on the
  menu sections but are not exactly the same.
 Ref: Debian doc-base Manual section 2.3.3
+
+Tag: menu-method-should-include-menu-h
+Type: error
+Info: A menu-method file must include the menu.h configuration file
+ (using "!include menu.h").
+Ref: Debian Menu System manual 5

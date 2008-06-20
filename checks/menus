@@ -132,7 +132,20 @@ while (<IN>) {
 	    # is made executable in the postinst as recommended by
 	    # the menu manual
 
+	    my $menumethod_includes_menu_h = 0;
 	    $menumethod_file = $file;
+
+	    open(MM, '<', "unpacked/$file") or fail("cannot open menu-method file $file: $!");
+	    while (<MM>) {
+		chomp;
+		if (m,^!include menu.h,o) {
+		    $menumethod_includes_menu_h = 1;
+		    last;
+		}
+	    }
+	    close MM;
+	    tag "menu-method-should-include-menu-h", "$file"
+		unless $menumethod_includes_menu_h or $pkg eq 'menu';
 	}
     }
 }

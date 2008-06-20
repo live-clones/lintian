@@ -40,6 +40,8 @@ binary-arch: build
 	install -d $(tmp)/usr/share/binary
 	install -m 644 debian/menu $(tmp)/usr/share/menu/binary
 	install -m 644 debian/menu $(tmp)/usr/lib/menu/binary
+	install -d $(tmp)/etc/menu-methods
+	install -m 755 debian/menu-method $(tmp)/etc/menu-methods/lintian
 	install -d $(tmp)/usr/share/doc-base
 	install -m 644 debian/doc-base $(tmp)/usr/share/doc-base/binary
 	touch '$(tmp)/usr/share/doc-base/space '
@@ -51,6 +53,7 @@ binary-arch: build
 	#gzip -9 $(tmp)/usr/share/doc/binary/changelog
 	install -d $(tmp)/DEBIAN
 	install -m 755 debian/postinst $(tmp)/DEBIAN
+	install -m 644 debian/conffiles $(tmp)/DEBIAN
 
 	install -d $(tmp)/usr/share/applications
 	install -m 644 debian/hello.desktop \

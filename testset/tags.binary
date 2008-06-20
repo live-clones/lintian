@@ -28,6 +28,7 @@ E: binary: menu-item-missing-required-tag needs /usr/lib/menu/binary:6
 E: binary: menu-item-missing-required-tag needs /usr/share/menu/binary:6
 E: binary: menu-item-missing-required-tag section /usr/lib/menu/binary:1
 E: binary: menu-item-missing-required-tag section /usr/share/menu/binary:1
+E: binary: menu-method-should-include-menu-h etc/menu-methods/lintian
 E: binary: non-wm-in-windowmanager-menu-section x11 /usr/lib/menu/binary:4
 E: binary: non-wm-in-windowmanager-menu-section x11 /usr/share/menu/binary:4
 E: binary: non-wm-module-in-wm-modules-menu-section wm /usr/lib/menu/binary:22
