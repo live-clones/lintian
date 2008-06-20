@@ -543,41 +543,86 @@ while (<SCRIPTS>) {
 	    if ($cat_string eq "" and $checkbashisms and !$within_another_shell) {
 		my $found = 0;
 		my $match = '';
+		my $LEADIN = qr'(?:(^|[`&;(|{])\s*|(if|do|while)\s+)';
+		my @bashism_single_quote_regexs = (
+		  $LEADIN . qr'echo\s+(?:-[^e]+\s+)?([\'])[^\']*(\\[\\abcEfnrtv0])+.*?[\']',
+			# unsafe echo with backslashes
+		);
 		my @bashism_string_regexs = (
-		  '\$\[\w+\]',		       # arith not allowed
-		  '\$\{\w+\:\d+(?::\d+)?\}',   # ${foo:3[:1]}
-		  '\$\{\w+(/.+?){1,2}\}',      # ${parm/?/pat[/str]}
-		  '\$\{\#?\w+\[[0-9\*\@]+\]\}',# bash arrays, ${name[0|*|@]}
-		  '\$\{!\w+[\@*]\}',	       # ${!prefix[*|@]}
-		  '\$\{!\w+\}',		       # ${!name}
-		  '(\$\(|\`)\s*\<\s*\S+\s*(\)|\`)', # $(\< foo) should be $(cat foo)
-		  '\$RANDOM\b',		       # $RANDOM
-		  '\$(OS|MACH)TYPE\b',         # $(OS|MACH)TYPE
-		  '\$HOST(TYPE|NAME)\b',       # $HOST(TYPE|NAME)
-		  '\$DIRSTACK\b',              # $DIRSTACK
-		  '\$EUID\b',                  # $EUID should be "id -u"
+		  qr'\$\[\w+\]',		 # arith not allowed
+		  qr'\$\{\w+\:\d+(?::\d+)?\}',   # ${foo:3[:1]}
+		  qr'\$\{\w+(/.+?){1,2}\}',	 # ${parm/?/pat[/str]}
+		  qr'\$\{\#?\w+\[[0-9\*\@]+\]\}',# bash arrays, ${name[0|*|@]}
+		  qr'\$\{!\w+[\@*]\}',		 # ${!prefix[*|@]}
+		  qr'\$\{!\w+\}',		 # ${!name}
+		  qr'(\$\(|\`)\s*\<\s*\S+\s*(\)|\`)', # $(\< foo) should be $(cat foo)
+		  qr'\$\{?RANDOM\}?\b',	         # $RANDOM
+		  qr'\$\{?(OS|MACH)TYPE\}?\b',   # $(OS|MACH)TYPE
+		  qr'\$\{?HOST(TYPE|NAME)\}?\b', # $HOST(TYPE|NAME)
+		  qr'\$\{?DIRSTACK\}?\b',        # $DIRSTACK
+		  qr'\$\{?EUID\}?\b',            # $EUID should be "id -u"
+		  qr'\$\{?UID\}?\b',	         # $UID should be "id -ru"
+		  qr'\$\{?SECONDS\}?\b',	 # $SECONDS
+		  qr'\$\{?BASH_[A-Z]+\}?\b',     # $BASH_SOMETHING
+		  qr'\$\{?SHELLOPTS\}?\b',       # $SHELLOPTS
+		  qr'\$\{?PIPESTATUS\}?\b',      # $PIPESTATUS
+		  qr'\$\{?SHLVL\}?\b',	         # $SHLVL
+		  qr'<<<',                       # <<< here string
+		  $LEADIN . qr'echo\s+(?:-[^e]+\s+)?([\"])[^\"]*(\\[\\abcEfnrtv0])+.*?[\"]',
+			# unsafe echo with backslashes
 		);
 		my @bashism_regexs = (
-		  'function \w+\(\s*\)',       # function is useless
-					       # should be '.', not 'source'
-		  '(?:^|\s+)source\s+(?:\.\/|\/|\$)[^\s]+',
-		  '(\[|test|-o|-a)\s*[^\s]+\s+==\s', # should be 'b = a'
-		  '\s(\|\&)',		       # pipelining is not POSIX
-		  '[^\\\]\{([^\s]+?,)+[^\\\}\s]+\}', # brace expansion
-		  '(?:^|\s+)\w+\[\d+\]=',      # bash arrays, H[0]
-		  '(?:^|\s+)read\s*(?:;|$)',   # read without variable
-		  '(?:^|\s+)kill\s+-[^sl]\w*', # kill -[0-9] or -[A-Z]
-		  '(?:^|\s+)trap\s+["\']?.*["\']?\s+.*[1-9]', # trap with signal numbers
-		  '\&>',		       # cshism
-		  '(<\&|>\&)\s*((-|\d+)[^\s;|\)\`&]|[^-\d])', # should be >word 2>&1
-		  '\[\[(?!:)',		       # alternative test command
-		  '(?:^|\s+)select\s+\w+',     # 'select' is not POSIX
-		  '(?:^|\s+)echo\s+-e',        # echo -e
-		  '(?:^|\s+)exec\s+-[acl]',    # exec -c/-l/-a name
-		  '(?:^|\s+)let\s',	       # let ...
-		  '(?<![\$\(])\(\(.*\)\)',     # '((' should be '$(('
-		  '(\[|test)\s+-a',	       # test with unary -a (should be -e)
-		  '<<<',                       # <<< here string
+		  qr'function \w+\(\s*\)',       # function is useless
+					         # should be '.', not 'source'
+		  $LEADIN . qr'source\s+(?:\.\/|\/|\$)[^\s]+',
+		  qr'(test|-o|-a)\s*[^\s]+\s+==\s', # should be 'b = a'
+		  qr'\[\s+[^\]]+\s+==\s',        # should be 'b = a'
+		  qr'\s(\|\&)',		         # pipelining is not POSIX
+		  qr'[^\\]\{(?:[^\s\\\}]+?,)+[^\\\}\s]+\}', # brace expansion
+		  qr'(?:^|\s+)\w+\[\d+\]=',      # bash arrays, H[0]
+		  $LEADIN . qr'(read\s*(-[^r]+)*(?:;|$))',
+			# read without variable or with option other than -r
+		  $LEADIN . qr'kill\s+-[^sl]\w*',# kill -[0-9] or -[A-Z]
+		  $LEADIN . qr'trap\s+["\']?.*["\']?\s+.*[1-9]', # trap with signal numbers
+		  qr'\&>',		         # cshism
+		  qr'(<\&|>\&)\s*((-|\d+)[^\s;|)`&\\\\]|[^-\d\s]+)', # should be >word 2>&1
+		  qr'\[\[(?!:)',		 # alternative test command
+		  $LEADIN . qr'select\s+\w+',    # 'select' is not POSIX
+		  $LEADIN . qr'echo\s+(-n\s+)?-n?en?',  # echo -e
+		  $LEADIN . qr'exec\s+-[acl]',   # exec -c/-l/-a name
+		  qr'(?:^|\s+)let\s',	         # let ...
+		  qr'(?<![\$\(])\(\(.*\)\)',     # '((' should be '$(('
+		  qr'\$\[[^][]+\]',	         # '$[' should be '$(('
+		  qr'(\[|test)\s+-a',	         # test with unary -a (should be -e)
+		  qr'/dev/(tcp|udp)',	         # /dev/(tcp|udp)
+		  $LEADIN . qr'\w+\+=',	         # should be "VAR="${VAR}foo"
+		  $LEADIN . qr'suspend\s',
+		  $LEADIN . qr'caller\s',
+		  $LEADIN . qr'complete\s',
+		  $LEADIN . qr'compgen\s',
+		  $LEADIN . qr'declare\s',
+		  $LEADIN . qr'typeset\s',
+		  $LEADIN . qr'disown\s',
+		  $LEADIN . qr'builtin\s',
+		  $LEADIN . qr'set\s+-[BHT]+',   # set -[BHT]
+		  $LEADIN . qr'alias\s+-p',      # alias -p
+		  $LEADIN . qr'unalias\s+-a',    # unalias -a
+		  $LEADIN . qr'local\s+-[a-zA-Z]+', # local -opt
+		  $LEADIN . qr'local\s+\w+=',    # local foo=bar
+		  qr'(?:^|\s+)\s*\(?\w*[^\(\w\s]+\S*?\s*\(\)[^\"]?',
+			# function names should only contain [a-z0-9_]
+		  $LEADIN . qr'(push|pop)d\b',   # (push|pod)d
+		  $LEADIN . qr'export\s+-[^p]',  # export only takes -p as an option
+		  $LEADIN . qr'ulimit\b',
+		  $LEADIN . qr'shopt\b',
+		  $LEADIN . qr'type\s',
+		  $LEADIN . qr'time\s',
+		  $LEADIN . qr'dirs\b',
+		  qr'(?:^|\s+)[<>]\(.*?\)',      # <() process substituion
+		  qr'(?:^|\s+)readonly\s+-[af]', # readonly -[af]
+		  $LEADIN . qr'(sh|\$\{?SHELL\}?) -[rD]', # sh -[rD]
+		  $LEADIN . qr'(sh|\$\{?SHELL\}?) --\w+', # sh --long-option
+		  $LEADIN . qr'(sh|\$\{?SHELL\}?) [-+]O', # sh [-+]O
 		);
 
 		# since this test is ugly, I have to do it by itself
@@ -593,9 +638,20 @@ while (<SCRIPTS>) {
 		    }
 		}
 
+		my $line = $_;
+
+		unless ($found) {
+		    for my $re (@bashism_single_quote_regexs) {
+			if ($line =~ m/($re)/) {
+			    $found = 1;
+			    ($match) = m/($re)/;
+			    last;
+			}
+		    }
+		}
+		
 		# Ignore anything inside single quotes; it could be an
 		# argument to grep or the like.
-		my $line = $_;
 
 		# $cat_line contains the version of the line we'll check
 		# for heredoc delimiters later. Initially, remove any

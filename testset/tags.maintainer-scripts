@@ -9,7 +9,7 @@ E: maintainer-scripts: init.d-script-not-included-in-package /etc/init.d/foo
 E: maintainer-scripts: install-sgmlcatalog-deprecated postinst:98
 E: maintainer-scripts: install-sgmlcatalog-deprecated postrm:46
 E: maintainer-scripts: interpreter-without-predep control/config #!/usr/bin/python
-E: maintainer-scripts: maintainer-script-calls-init-script-directly prerm:54
+E: maintainer-scripts: maintainer-script-calls-init-script-directly prerm:55
 E: maintainer-scripts: maintainer-script-does-not-check-for-existence-of-wm-menu-config postinst:31
 E: maintainer-scripts: maintainer-script-modifies-inetd-conf postinst:91
 E: maintainer-scripts: maintainer-script-modifies-inetd-conf postinst:92
@@ -64,6 +64,40 @@ W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:18 'read'
 W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:20 'H[0]='
 W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:21 '${H[0]}'
 W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:23 '${H[@]}'
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:102 '  echo "abc\nxyz"'
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:103 '  echo 'xyz\rabc''
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:106 '  echo -e'
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:107 '  echo -ne'
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:108 '  echo -e'
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:111 'foobar.() '
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:112 '  suspend '
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:114 '  caller '
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:115 '  complete '
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:116 '  compgen '
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:117 '  declare '
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:120 '.foobar() '
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:121 '  typeset '
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:122 '  disown '
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:123 '  builtin '
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:124 '  set -B'
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:125 '  alias -p'
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:126 '  unalias -a'
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:131 'ulimit'
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:132 'shopt'
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:133 'type '
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:134 'time '
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:135 'dirs'
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:136 ' <(tac a)'
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:138 'pushd'
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:140 'local foo='
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:141 'local -x'
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:143 'popd'
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:145 'readonly -f'
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:147 '/dev/tcp'
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:149 'export -x'
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:153 'sh -D'
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:154 'sh --foo'
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:155 'sh +O'
 W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:19 '[ "$2" == '
 W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:23 'function foo( )'
 W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:26 '&>'
@@ -71,7 +105,29 @@ W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:29 'source $F
 W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:31 'trap "echo hi" EXIT HUP 3'
 W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:33 '[['
 W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:34 '    kill -HUP'
-W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:51 '${line:3:1}'
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:52 '${line:3:1}'
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:62 'read -x foo'
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:63 'read -x'
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:66 'read'
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:68 'echo "a\\b"'
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:69 'echo 'a\nb''
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:71 '${UID'
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:72 '$EUID'
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:73 '$SHLVL'
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:74 '$DIRSTACK'
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:75 '$SECONDS'
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:77 '$BASH_FOO'
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:78 '$SHELLOPTS'
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:79 '$PIPESTATUS'
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:81 '<<<'
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:84 'VAR+='
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:87 '  echo -n -e'
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:88 '  echo -e'
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:89 '  echo -en'
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:90 '  echo -ne'
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:95 'ech.os() '
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:97 '>&bar'
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:98 '>& bar'
 W: maintainer-scripts: possibly-insecure-handling-of-tmp-files-in-maintainer-script postinst:50
 W: maintainer-scripts: possibly-insecure-handling-of-tmp-files-in-maintainer-script postrm:39
 W: maintainer-scripts: postinst-does-not-load-confmodule
@@ -79,5 +135,10 @@ W: maintainer-scripts: postinst-should-not-set-usr-doc-link
 W: maintainer-scripts: postrm-does-not-purge-debconf
 W: maintainer-scripts: postrm-has-useless-call-to-ldconfig
 W: maintainer-scripts: read-in-maintainer-script postinst:18
+W: maintainer-scripts: read-in-maintainer-script prerm:62
+W: maintainer-scripts: read-in-maintainer-script prerm:63
+W: maintainer-scripts: read-in-maintainer-script prerm:64
+W: maintainer-scripts: read-in-maintainer-script prerm:65
+W: maintainer-scripts: read-in-maintainer-script prerm:66
 W: maintainer-scripts: start-stop-daemon-in-maintainer-script postinst:159
 W: maintainer-scripts: update-alternatives-remove-called-in-postrm

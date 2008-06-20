@@ -20,6 +20,8 @@ lintian (1.24.2) unstable; urgency=low
     + [FL] Improve heredoc detection.  Patch by Adam D. Barratt.
     + [FL] Improve script_is_evil_and_wrong() to catch more scripts.
       Patch by Adam D. Barratt.
+    + [ADB] Update bashism regexes to add new checks, improve performance
+      and reduce false positives.
   * checks/watch-file{,.desc}:
      + [FL] Check for more Debian specific strings in version
        number.  Issue an info tag if the watch file uses
