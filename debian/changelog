@@ -42,6 +42,9 @@ lintian (1.24.2) unstable; urgency=low
     + [FL] Add support for file-info file.
     + [FL] Add support for objdump-info file.
   
+  * man/lintian.1:
+    + [FL] Document watch-file check.
+  
   * reporting/html_reports:
     + [FL] Mark the tag pages with the correct code.
   * reporting/templates/tag.tmpl:
