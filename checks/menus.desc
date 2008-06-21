@@ -312,4 +312,4 @@ Tag: menu-method-should-include-menu-h
 Type: error
 Info: A menu-method file must include the menu.h configuration file
  (using "!include menu.h").
-Ref: Debian Menu System manual 5
+Ref: Debian Menu System manual section 5
