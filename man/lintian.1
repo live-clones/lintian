@@ -15,7 +15,7 @@
 .\" Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301
 .\" USA
 .\"
-.TH LINTIAN 1 "July 11, 2004" "Debian GNU/Linux"
+.TH LINTIAN 1 "June 21, 2008" "Debian GNU/Linux"
 .if n .ad l
 .nh
 
@@ -387,7 +387,7 @@ Check if a binary package conforms to policy with respect to
 the copyright file.  Each binary package must either have a 
 .RI /usr/share/doc/ package /copyright
 file or must have a symlink
-.RI /usr/share/doc/ package \-> foo,
+.RI /usr/share/doc/ package \-> foo ,
 where
 .I foo
 comes from the same source package, and this package declares a 
@@ -527,6 +527,10 @@ file.
 .B version\-substvars (v\-s)
 Check use of version substvars in a source package, particularly whether
 the relationships between packages allow safe binary NMUs.
+
+.TP
+.B watch\-file (watch)
+Check \fIdebian/watch\fP files in source packages.
 
 .SH COLLECTION
 
