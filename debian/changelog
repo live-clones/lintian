@@ -10,7 +10,7 @@ lintian (1.24.2) unstable; urgency=low
       but the prerm doesn't remove them.  (Closes: #182512)
     + [ADB] Treat --remove-exactly as indicating removal of an info directory
       entry as well as --remove.
-  * checks/menus:
+  * checks/menus{,.desc}:
     + [ADB] Check that menu-method files include menu.h (Closes: #184104)
   * checks/scripts:
     + [FL] Apply File::Spec->canonpath() to rpaths to improve
