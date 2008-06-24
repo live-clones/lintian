@@ -64,3 +64,10 @@ Ref: policy 3.10
 Info: The package installation scripts should avoid producing output which it
  is unnecessary for the user to see.  Policy specifically mentions install-info
  output as unnecessary.
+
+Tag: info-documents-not-removed
+Type: error
+Ref: policy 12.2
+Info: The preinst script calls the <tt>install-info</tt> command, but the
+ documents installed are not then removed by the <tt>postinst</tt>  maintainer
+ script.

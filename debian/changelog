@@ -5,6 +5,11 @@ lintian (1.24.2) unstable; urgency=low
       non-obsolete alternatives specified and if the obsolete
       package is not listed first.  Issue an info tag for them
       though.  Patch by Adam D. Barratt.  (Closes: #486145)
+  * checks/infofiles{,.desc}:
+    + [ADB] Warn if the package's postinst installs info directory entries
+      but the prerm doesn't remove them.  (Closes: #182512)
+    + [ADB] Treat --remove-exactly as indicating removal of an info directory
+      entry as well as --remove.
   * checks/menus:
     + [ADB] Check that menu-method files include menu.h (Closes: #184104)
   * checks/scripts:

@@ -159,6 +159,13 @@ for my $file (keys %missing_section) {
 	unless ($postinst{'calls-install-info-section'});
 }
 
+# Ideally we'd check whether all documents installed are removed,
+# but for now we assume that if any are removed then they all are
+if ($postinst{'calls-install-info'}) {
+    tag "info-documents-not-removed", ""
+	unless ($prerm{'calls-install-info-remove'});
+}
+
 }
 
 # -----------------------------------
@@ -210,7 +217,7 @@ sub check_script {
 		    $pres->{'calls-install-info-quiet'} = 1;
 		} elsif ($piece eq '--section') {
 		    $pres->{'calls-install-info-section'} = 1;
-		} elsif ($piece eq '--remove') {
+		} elsif ($piece eq '--remove' or $piece eq '--remove-exactly') {
 		    $pres->{'calls-install-info-remove'} = 1;
 		}
 	    }
