@@ -134,6 +134,7 @@ our %CORRECTIONS = qw(
                       editting editing
                       eletronic electronic
                       enchanced enhanced
+                      enhaced enhanced
                       encorporating incorporating
                       enlightnment enlightenment
                       enterily entirely
@@ -283,6 +284,7 @@ our %CORRECTIONS = qw(
                       suport support
                       suppport support
                       supportin supporting
+                      synax syntax
                       synchonized synchronized
                       syncronize synchronize
                       syncronizing synchronizing
@@ -347,6 +349,8 @@ our %CORRECTIONS_CASE = qw(
                            Mysql MySQL
                            mysql MySQL
                            linux Linux
+                           Latex LaTeX
+                           latex LaTeX
                            OCAML OCaml
                            Ocaml OCaml
                            ocaml OCaml
@@ -365,6 +369,7 @@ our %CORRECTIONS_CASE = qw(
                            TCL Tcl
                            tcl Tcl
                            TEX TeX
+                           Tex TeX
                            TeTeX teTeX
                            Tetex teTeX
                            tetex teTeX

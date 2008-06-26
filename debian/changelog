@@ -50,6 +50,9 @@ lintian (1.24.2) unstable; urgency=low
   * lib/Lintian/Collect/Binary.pm:
     + [FL] Add support for file-info file.
     + [FL] Add support for objdump-info file.
+  * lib/Spelling.pm:
+    + [RA] Add a couple more spelling corrections and capitalization
+      checks for LaTeX and TeX.  Thanks, Raphael Geissert.
   
   * man/lintian.1:
     + [FL] Document watch-file check.
