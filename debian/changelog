@@ -38,14 +38,14 @@ lintian (1.24.2) unstable; urgency=low
     + [RA] mailx is not obsolete.  It's a virtual package.  Thanks, martin
       f krafft.  (Closes: #488114)
   
-  * doc/CREDITS:
-    + [FL] Add Raphael Geissert and Adam D. Barratt.
-  
   * debian/control:
     + [FL] Adapt VCS-* headers for move from SVN to git.
   * debian/copyright:
     + [FL] Add Patrick Schoenfeld (for checks/watch-file).
     + [ADB] Update repository information and GPL2 URL.
+  
+  * doc/CREDITS:
+    + [FL] Add Raphael Geissert and Adam D. Barratt.
   
   * lib/Lintian/Collect/Binary.pm:
     + [FL] Add support for file-info file.
