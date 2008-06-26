@@ -5,7 +5,6 @@ E: maintainer-scripts: control-file-has-bad-permissions config 0644 != 0755
 E: maintainer-scripts: debconf-config-not-executable
 E: maintainer-scripts: debian-changelog-file-contains-invalid-email-address jeroen@mordor
 E: maintainer-scripts: forbidden-config-interpreter #!/usr/bin/python
-E: maintainer-scripts: info-documents-not-removed
 E: maintainer-scripts: init.d-script-not-included-in-package /etc/init.d/foo
 E: maintainer-scripts: install-sgmlcatalog-deprecated postinst:98
 E: maintainer-scripts: install-sgmlcatalog-deprecated postrm:46
@@ -41,6 +40,7 @@ W: maintainer-scripts: config-does-not-load-confmodule
 W: maintainer-scripts: deprecated-chown-usage postinst:165 'chown -R root.root'
 W: maintainer-scripts: deprecated-chown-usage postinst:33 'chown root.root'
 W: maintainer-scripts: gconftool-used-in-maintainer-script postinst:68
+W: maintainer-scripts: info-documents-not-removed
 W: maintainer-scripts: init.d-script-not-marked-as-conffile /etc/init.d/foo
 W: maintainer-scripts: maintainer-script-calls-deprecated-wm-menu-config postinst:31
 W: maintainer-scripts: maintainer-script-empty config

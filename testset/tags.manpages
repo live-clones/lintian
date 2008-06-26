@@ -52,6 +52,7 @@ W: manpages: executable-not-elf-or-script ./usr/sbin/usr-sbin-binary
 W: manpages: executable-not-elf-or-script ./usr/share/man/de/man1/binary-without-english-manpage.1
 W: manpages: info-document-has-wrong-extension usr/share/info/baz.broken.gz
 W: manpages: info-document-missing-dir-section usr/share/info/bar.gz
+W: manpages: info-documents-not-removed
 W: manpages: install-info-not-called-with-quiet-option
 W: manpages: link-to-undocumented-manpage usr/share/man/man1/bin-binary.1.gz
 W: manpages: link-to-undocumented-manpage usr/share/man/man3/function.3.gz
