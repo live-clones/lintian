@@ -12,6 +12,11 @@ lintian (1.24.2) unstable; urgency=low
       entry as well as --remove.
   * checks/menus{,.desc}:
     + [ADB] Check that menu-method files include menu.h (Closes: #184104)
+  * checks/patch-systems{,.desc}:
+    + [RA] Check quilt patches as well as dpatch patches, and also check
+      quilt patches when using the 3.0 (quilt) package format.  Fix build
+      dependency checking and check all dpatch files.  Patch from Raphaël
+      Hertzog.  (Closes: #484549)
   * checks/scripts:
     + [FL] Apply File::Spec->canonpath() to rpaths to improve
       matching with directories.

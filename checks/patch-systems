@@ -1,6 +1,7 @@
 # patch-systems -- lintian check script -*- perl -*-
 #
 # Copyright (C) 2007 Marc Brockschmidt
+# Copyright (C) 2008 Raphael Hertzog
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -46,10 +47,19 @@ sub run {
     }
 	if (open(IN, '<', "fields/build-depends-indep")) {
 		local $/ = undef;
+		$build_deps .= ", " if $build_deps;
 		chomp($build_deps .= <IN>);
 		close(IN);
 	}
 	$build_deps = Dep::parse($build_deps);
+	# Get source package format
+	my $format = "";
+	if (open(IN, '<', "fields/format")) {
+		local $/ = undef;
+		chomp($format .= <IN>);
+		close(IN);
+	}
+	my $quilt_format = ($format =~ /3\.\d+ \(quilt\)/) ? 1 : 0;
 
 	#----- dpatch
 	if (Dep::implies($build_deps, Dep::parse("dpatch"))) {
@@ -86,10 +96,13 @@ sub run {
 
 				# Check each patch.
 				foreach my $patch_file (@patches) {
-					if (! -r "debfiles/patches/$patch_file" && ! -r "debfiles/patches/$patch_file.dpatch") {
+					$patch_file .= ".dpatch" if -e "debfiles/patches/$patch_file.dpatch"
+						and not -e "debfiles/patches/$patch_file";
+					if (! -r "debfiles/patches/$patch_file") {
 						tag "dpatch-index-references-non-existant-patch", $patch_file;
+						next;
 					}
-					if (open(PATCH_FILE, '<', "debfiles/patches/" . $patch_file)) {
+					if (open(PATCH_FILE, '<', "debfiles/patches/$patch_file")) {
 						my $has_comment = 0;
 						while (<PATCH_FILE>) {
 							#stop if something looking like a patch starts:
@@ -102,15 +115,61 @@ sub run {
 							tag "dpatch-missing-description", $patch_file;
 						}
 					}
+					check_patch($patch_file);
 				}
 			}
 		}
 	}
 
+	#----- quilt
+	if (Dep::implies($build_deps, Dep::parse("quilt")) or $quilt_format) {
+		$uses_patch_system++;
+		#check for a debian/patches file:
+		if (! -r "debfiles/patches/series") {
+			tag "quilt-build-dep-but-no-series-file", $pkg unless $quilt_format;
+		} else {
+			if (open(IN, '<', "debfiles/patches/series")) {
+				my @patches;
+				my @badopts;
+				while(<IN>) {
+					chomp; s/^\s+//; s/\s+$//; # Strip leading/trailing spaces
+					s/(^|\s+)#.*$//; # Strip comment
+					next unless $_;
+					if (/^(\S+)\s+(\S.*)$/) {
+						$_ = $1;
+						if ($2 ne '-p1') {
+							push @badopts, $_;
+						}
+					}
+					push @patches, $_;
+				}
+				close(IN);
+				if (scalar(@badopts)) {
+					tag "quilt-patch-with-non-standard-options", @badopts;
+				}
+
+				# Check each patch.
+				foreach my $patch_file (@patches) {
+					if (! -r "debfiles/patches/$patch_file") {
+						tag "quilt-series-references-non-existant-patch", $patch_file;
+						next;
+					}
+					check_patch($patch_file);
+				}
+			}
+		}
+	} else {
+		if (-r "debfiles/patches/series") {
+			# 3.0 (quilt) sources don't need quilt as dpkg-source will do the work
+			tag "quilt-series-but-no-build-dep" unless $quilt_format;
+		}
+	}
+
+
 	#----- general cruft checking:
 	if ($uses_patch_system) {
 		if ($uses_patch_system > 1) {
-			#probably a bug too use more than one system, but we don't check anything but dpatch at the moment
+			tag "more-than-one-patch-system";
 		}
 
 		open(STAT, '<', "diffstat") or fail("cannot open diffstat file: $!");
@@ -124,6 +183,20 @@ sub run {
 		}
 		close (STAT) or fail("error reading diffstat file: $!");
 	}
+}
+
+# Checks on patches common to all build systems
+sub check_patch($) {
+	my $patch_file = shift;
+	open(DIFFSTAT, "-|", "diffstat -p0 -l debfiles/patches/$patch_file")
+	  or fail("can't fork diffstat");
+	while (<DIFFSTAT>) {
+		chomp;
+		if (m|^(\./)?debian/| or m|^(\./)?[^/]+/debian/|) {
+			tag "patch-modifying-debian-files", $patch_file, $_;
+		}
+	}
+	close(DIFFSTAT) or fail("cannot close pipe to diffstat on $patch_file: $!");
 }
 
 1;

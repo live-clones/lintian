@@ -26,7 +26,65 @@ Type: warning
 Info: dpatch files should carry a description of the function of the included
  patch. Description lines start with "## DP:".
 
+Tag: quilt-build-dep-but-no-series-file
+Type: warning
+Info: Using quilt requires you to explicitly list all patches you want
+ to apply in debian/patches/series. This package build-depends on quilt,
+ but does not provide a patch list.
+ .
+ You should either remove the quilt build dependency or add a series
+ file.
+
+Tag: quilt-series-but-no-build-dep
+Type: warning
+Info: The package contains a debian/patches/series file usually used by
+ quilt to apply patches at build time, but quilt is not listed in the
+ build dependencies.
+ .
+ You should either remove the series file if it's effectively not useful
+ or add quilt to the build-dependencies if quilt is used during the build
+ process.
+ .
+ If you don't need quilt during build but only during maintenance work,
+ then you can override this warning.
+
+Tag: quilt-patch-with-non-standard-options
+Type: warning
+Info: The quilt series file contains non-standard options to apply some of
+ the listed patches. Quilt uses '-p1' by default if nothing is specified
+ after the name of the patch and the current series file specify something
+ else for some of the patches listed.
+ .
+ For compatibility with the source "3.0 (quilt)" source package format,
+ you should avoid using any option at all and make sure that your patches
+ apply with "-p1". This can be done by refreshing all patches like this:
+ quilt pop -a; while quilt push; do quilt refresh -pab; done
+
+Tag: quilt-series-references-non-existant-patch
+Type: error
+Info: In the series file listing all your quilt patches, you referenced a
+ file that is not existant. This will lead to a fatal error when calling
+ quilt.
+
+Tag: patch-modifying-debian-files
+Type: error
+Info: A patch stored in debian/patches/ should never modify files
+ in the debian directory (even when it's only creating new files) because
+ the debian directory is always directly provided by the Debian packaging.
+ And you shouldn't have to modify what you choose to provide in the first
+ place.
+ .
+ If the patch provides a new file (say a manual page), place that file
+ in the upstream directory hierarchy as if it was ready to be submitted.
+
 Tag: patch-system-but-direct-changes-in-diff
 Type: warning
 Info: The package uses a patch-system, but the Debian diff.gz contains changes
  made on files without being separated out in a patch.
+
+Tag: more-than-one-patch-system
+Type: warning
+Info: The build-dependencies list more than one patch system and it's
+ unlikely that you need both at the same time.
+ .
+ Currently lintian knows only dpatch and quilt.
