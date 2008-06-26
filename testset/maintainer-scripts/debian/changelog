@@ -1,4 +1,4 @@
-maintainer-scripts (7-0.1) unstable; urgency=low
+maintainer-scripts (7+dfsg-0.1) unstable; urgency=low
 
   * Doing an upload for QA  but I fail to give it a correct version number,
     have some uploaders, and also fail to mention it... Bad me ;)

@@ -31,65 +31,76 @@ my $pkg = shift;
 my $type = shift;
 my $info = shift;
 
-unless ($info->native) {
-    unless (-f "debfiles/watch") {
-        tag 'debian-watch-file-is-missing';
-        return;
+if (! -f "debfiles/watch") {
+    tag 'debian-watch-file-is-missing' unless ($info->native);
+    return;
+}
+
+# Perform the other checks even if it is a native package
+tag 'debian-watch-file-in-native-package' if ($info->native);
+
+# Check if the Debian version contains anything that resembles a repackaged
+# source package sign, for fine grained version mangling check
+my $version = $info->field('version');
+my $repack;
+if ($version =~ /(dfsg|debian|ds)/) {
+    $repack = $1;
+}
+
+# Gather information from the watch file and look for problems we can
+# diagnose on the first time through.
+open(WATCH, '<', 'debfiles/watch') or fail("cannot open watch file: $!");
+local $_;
+my ($watchver, $mangle, $dmangle);
+while (<WATCH>) {
+    next if /^\s*\#/;
+    next if /^\s*$/;
+    s/^\s*//;
+    if (s/(?<!\\)\\$//) {
+        # This is caught by uscan.
+        last if eof(WATCH);
+        $_ .= <WATCH>;
     }
 
-    my $version = $info->field('version');
-    # Check if the Debian version contains anything that resembles a repackaged
-    # source package sign, for fine grained version mangling check
-    my $repack;
-    if ($version =~ /(dfsg|debian|ds)/) {
-        $repack = $1;
-    }
-
-    # Gather information from the watch file and look for problems we can
-    # diagnose on the first time through.
-    open(WATCH, '<', 'debfiles/watch') or fail("cannot open watch file: $!");
-    local $_;
-    my ($watchver, $mangle, $dmangle);
-    while (<WATCH>) {
-        next if /^\s*\#/;
-        next if /^\s*$/;
-        if (/^version=(\d+)(\s|\Z)/) {
-            if (defined $watchver) {
-                tag 'debian-watch-file-declares-multiple-versions', "line $.";
-            }
-            $watchver = $1;
-            if ($watchver ne '2' and $watchver ne '3') {
-                tag 'debian-watch-file-unknown-version', $watchver;
-            }
-        } else {
-            unless ($watchver) {
-                tag 'debian-watch-file-missing-version';
-                $watchver = 1;
-            }
-            while (s/\\\s*$//) {
-                $_ .= <WATCH>;
-            }
-            chomp;
-            my ($opts, @opts);
-            if (s/^opts=\"([^\"]+)\"// || s/^opts=(\S+)\s*//) {
-                $opts = $1;
-                @opts = split(',', $opts);
-                $mangle = 1 if grep { /^[ud]versionmangle.*=.*($repack)/ } @opts;
-                $dmangle = 1 if grep { /^dversionmangle.*=.*($repack)/ } @opts;
+    if (/^version\s*=\s*(\d+)(\s|\Z)/) {
+        if (defined $watchver) {
+            tag 'debian-watch-file-declares-multiple-versions', "line $.";
+        }
+        $watchver = $1;
+        if ($watchver ne '2' and $watchver ne '3') {
+            tag 'debian-watch-file-unknown-version', $watchver;
+        }
+    } else {
+        unless (defined($watchver)) {
+            tag 'debian-watch-file-missing-version';
+            $watchver = 1;
+        }
+        while (s/\\\s*$//) {
+            $_ .= <WATCH>;
+        }
+        chomp;
+        my ($opts, @opts);
+        if (s/^opt(ion)?s=\"([^\"]+)\"\s+// || s/^opt(ion)?s=(\S+)\s+//) {
+            $opts = $2;
+            @opts = split(',', $opts);
+            if (defined $repack) {
+                for (@opts) {
+                    $mangle = 1 if /^[ud]versionmangle.*=.*($repack)/;
+                    $dmangle = 1 if /^dversionmangle.*=.*($repack)/;
+                }
             }
         }
     }
-    close WATCH;
+}
+close WATCH;
 
-    # If the version of the package contains dfsg, assume that it needs to be
-    # mangled to get reasonable matches with upstream.
-    if ($repack and not $mangle) {
-        tag 'debian-watch-file-should-mangle-version';
-    }
-
-    if ($repack and $mangle and not $dmangle) {
-        tag 'debian-watch-file-should-dversionmangle-not-uversionmangle';
-    }
+# If the version of the package contains dfsg, assume that it needs to be
+# mangled to get reasonable matches with upstream.
+if ($repack and not $mangle) {
+    tag 'debian-watch-file-should-mangle-version';
+}
+if ($repack and $mangle and not $dmangle) {
+    tag 'debian-watch-file-should-dversionmangle-not-uversionmangle';
 }
 
 }
