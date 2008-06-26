@@ -24,7 +24,6 @@ W: diffs source: diff-contains-cvs-conflict-copy .#binary.c.1.34
 W: diffs source: diff-contains-substvars debian/substvars
 W: diffs source: patch-system-but-direct-changes-in-diff .#binary.c.1.34
 W: diffs source: patch-system-but-direct-changes-in-diff .bzr/dummy
-W: diffs source: patch-system-but-direct-changes-in-diff .git/dummy
 W: diffs source: patch-system-but-direct-changes-in-diff binary.c~
 W: diffs: binary-without-manpage usr/bin/diffs
 W: diffs: possible-missing-colon-in-closes Closes #1239124
