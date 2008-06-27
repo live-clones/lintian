@@ -30,7 +30,6 @@ goals not targetted
 - Fix experimental support back in
 - Go through testset/libbaz/debian/rules, and make sure all TODO's are
   lintian-detected
-- move the SVN to Alioth and merge the old CVS rep in
 - go through all tags and make sure that any that should have Polcy
   references have them, and more generally that appropriate references are
   present
