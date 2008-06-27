@@ -57,6 +57,7 @@ my $postinst = "control/postinst";
 my $preinst = "control/preinst";
 my $prerm = "control/prerm";
 my $shlibs_control_file = "control/shlibs";
+my $symbols_control_file = "control/symbols";
 my %SONAME;
 my %INTERP;
 my %STACK;
@@ -287,6 +288,18 @@ if (open (VERSION, '<', 'fields/version')) {
     close VERSION;
     chomp $version;
 }
+my $provides = $pkg . "( = $version)";
+if (open (PROVIDES, '<', 'fields/provides')) {
+    my $line = <PROVIDES>;
+    close PROVIDES;
+    chomp $line;
+    $provides .= ", $line";
+}
+$provides = Dep::parse($provides);
+
+my %shlibs_control;
+my %symbols_control;
+
 @shlibs = grep { !m,^lib/libnss_[^.]+\.so(\.[0-9]+)$, } keys %SONAME;
 if ($#shlibs == -1) {
     # no shared libraries included in package, thus shlibs control file should
@@ -306,7 +319,6 @@ if ($#shlibs == -1) {
 	}
     } else {
 	my %shlibs_control_used;
-	my %shlibs_control;
 	my @shlibs_depends;
 	open(SHLIBS, '<', $shlibs_control_file)
 	    or fail("cannot open shlibs control file $shlibs_control_file for reading: $!");
@@ -333,13 +345,7 @@ if ($#shlibs == -1) {
 	my $shlib_name;
 	for my $shlib (@shlibs) {
 	    $shlib_name = $SONAME{$shlib};
-	    # libfoo.so.X.X
-	    if ($shlib_name =~ m/(.+)\.so\.(.*)$/) {
-		$shlib_name = "$1 $2";
-	    # libfoo-X.X.so
-	    } elsif ($shlib_name =~ m/(.+)\-(\w[\w\.]*)\.so$/) {
-		$shlib_name = "$1 $2";
-	    }
+	    $shlib_name = format_soname($shlib_name);
 	    $shlibs_control_used{$shlib_name} = 1;
 	    $shlibs_control_used{"udeb: ".$shlib_name} = 1;
 	    unless (exists $shlibs_control{$shlib_name}) {
@@ -361,14 +367,6 @@ if ($#shlibs == -1) {
 	#
 	# Deduplicate the list of dependencies before warning so that we don't
 	# dupliate warnings.
-	my $provides = $pkg . "( = $version)";
-	if (open (PROVIDES, '<', 'fields/provides')) {
-	    my $line = <PROVIDES>;
-	    close PROVIDES;
-	    chomp $line;
-	    $provides .= ", $line";
-	}
-	$provides = Dep::parse($provides);
 	my %seen;
 	@shlibs_depends = grep { !$seen{$_}++ } @shlibs_depends;
 	for my $depend (@shlibs_depends) {
@@ -380,21 +378,99 @@ if ($#shlibs == -1) {
 }
 
 # 5th step: check symbols control file
-if (open(IN, '<', 'control/symbols')) {
+if ($#shlibs == -1) {
+    # no shared libraries included in package, thus symbols control file should
+    # not be present
+    if (-f $symbols_control_file) {
+        tag "pkg-has-symbols-control-file-but-no-shared-libs", "";
+    }
+} elsif (not -f $symbols_control_file) {
+    if ($type ne 'udeb') {
+	for my $shlib (@shlibs) {
+	    # skip it if it's not a public shared library
+	    next unless $ldconfig_dirs->known(dirname($shlib));
+	    tag "no-symbols-control-file", "$shlib";
+	}
+    }
+} elsif (open(IN, '<', $symbols_control_file)) {
     my $version_wo_rev = $version;
     $version_wo_rev =~ s/^(.+)-([^-]+)$/$1/;
     my ($full_version_count, $full_version_sym) = (0, undef);
     my ($debian_revision_count, $debian_revision_sym) = (0, undef);
+    my ($soname, $dep_package, $dep);
+    my %symbols_control_used;
+    my @symbols_depends;
+    my $dep_templates = 0;
+    my $meta_info_seen = 0;
+
     while (<IN>) {
-	next if not /^\s+(\S+)\s(\S+)(?:\s(\d+))?/;
-	my ($sym, $v, $dep_order) = ($1, $2, $3);
-	if (($v eq $version) and ($version =~ /-/)) {
-	    $full_version_sym ||= $sym;
-	    $full_version_count++;
-	}
-	if (($v =~ /-/) and (not $v =~ /~$/) and ($v ne $version_wo_rev)) {
-	    $debian_revision_sym ||= $sym;
-	    $debian_revision_count++;
+	chomp;
+	next if m/^\s*$/ or /^#/;
+
+	if (m/^([^\s|*]\S+)\s(\S+)(?:\s(\S+))?/) {
+	    # soname, main dependency template
+
+	    ($soname, $dep_package, $dep) = ($1, $2, $3);
+	    $dep ||= '';
+	    $soname = format_soname($soname);
+
+	    if ($symbols_control{$soname}) {
+		tag "duplicate-entry-in-symbols-control-file", $soname;
+	    } else {
+		$symbols_control{$soname} = 1;
+		push @symbols_depends, $dep_package . ' ' . $dep;
+	    }
+
+	    $dep_templates = 0;
+	    $meta_info_seen = 0;
+	} elsif (m/^\|\s+(\S+)\s(\S+(\s\S+)?)$/) {
+	    # alternative dependency template
+
+	    if ($meta_info_seen or not defined $soname) {
+		tag "syntax-error-in-symbols-file", $.;
+	    }
+
+	    ($dep_package, $dep) = ($1, $2);
+	    push @symbols_depends, $dep_package . ' ' . $dep;
+	    $dep_templates++;
+	} elsif (m/^\*\s(\S+):\s(\S+)/) {
+	    # meta-information
+
+	    # This should probably be in a hash, but there's
+	    # only one supported value currently
+	    tag "unknown-meta-field-in-symbols-file", "$1, line $."
+		unless $1 eq 'Build-Depends-Package';
+	    tag "syntax-error-in-symbols-file", $.
+		if $dep_templates > 0;
+
+	    $meta_info_seen = 1;
+	} elsif (m/^\s+(\S+)\s(\S+)(?:\s(\S+(\s\S+)?))?$/) {
+	    # Symbol definition
+
+	    tag "syntax-error-in-symbols-file", $.
+		unless defined $soname;
+
+	    my ($sym, $v, $dep_order) = ($1, $2, $3);
+	    $dep_order ||= '';
+
+	    if (($v eq $version) and ($version =~ /-/)) {
+		$full_version_sym ||= $sym;
+		$full_version_count++;
+	    }
+	    if (($v =~ /-/) and (not $v =~ /~$/) and ($v ne $version_wo_rev)) {
+		$debian_revision_sym ||= $sym;
+		$debian_revision_count++;
+	    }
+
+	    if (length $dep_order) {
+		if ($dep_order !~ /^\d+$/ or $dep_order > $dep_templates) {
+		    tag "invalid-template-id-in-symbols-file", $.;
+		}
+	    }
+	} else {
+	    # Unparseable line
+
+	    tag "syntax-error-in-symbols-file", $.;
 	}
     }
     close IN;
@@ -405,7 +481,7 @@ if (open(IN, '<', 'control/symbols')) {
 	    $others = " and $full_version_count others";
 	}
 	tag "symbols-file-contains-current-version-with-debian-revision",
-	    "on symbol $full_version_sym$others"
+	    "on symbol $full_version_sym$others";
     }
     if ($debian_revision_count) {
 	$debian_revision_count--;
@@ -416,8 +492,47 @@ if (open(IN, '<', 'control/symbols')) {
 	tag "symbols-file-contains-debian-revision",
 	    "on symbol $debian_revision_sym$others";
     }
+    my $shlib_name;
+    for my $shlib (@shlibs) {
+	$shlib_name = $SONAME{$shlib};
+	$shlib_name = format_soname($shlib_name);
+	$symbols_control_used{$shlib_name} = 1;
+	$symbols_control_used{"udeb: ".$shlib_name} = 1;
+	unless (exists $symbols_control{$shlib_name}) {
+	    # skip it if it's not a public shared library
+	    next unless $ldconfig_dirs->known(dirname($shlib));
+	    tag "shlib-missing-in-symbols-control-file", $shlib_name, 'for', $shlib;
+	}
+    }
+    for $shlib_name (keys %symbols_control) {
+	tag "unused-shlib-entry-in-symbols-control-file", $shlib_name
+	    unless $symbols_control_used{$shlib_name};
+    }
+
+    # Check that all of the packages listed as dependencies in the symbols
+    # file are satisfied by the current package or its Provides.
+    # Normally, packages should only declare dependencies in their symbols
+    # files that they themselves can satisfy.
+    #
+    # Deduplicate the list of dependencies before warning so that we don't
+    # dupliate warnings.
+    my %seen;
+    @symbols_depends = grep { !$seen{$_}++ } @symbols_depends;
+    for my $depend (@symbols_depends) {
+	unless (Dep::implies($provides, Dep::parse($depend))) {
+	    tag "symbols-declares-dependency-on-other-package", $depend;
+	}
+    } 
 }
 
+# Compare the contents of the shlibs and symbols control files
+if (keys %shlibs_control and keys %symbols_control) {
+    for my $key (keys %symbols_control) {
+	unless (exists $shlibs_control{$key}) {
+	    tag "symbols-declared-but-not-shlib", $key;
+	}
+    }
+}
 
 # 6th step: check pre- and post- control files
 if (-f $preinst) {
@@ -489,6 +604,20 @@ sub abs_path {
     my $path = shift;
     while($path =~ s!/[^/]*/\.\./!/!g){1};
     return $path;
+}
+
+sub format_soname {
+    my $soname = shift;
+
+    # libfoo.so.X.X
+    if ($soname =~ m/(.+)\.so\.(.*)$/) {
+	$soname = "$1 $2";
+    # libfoo-X.X.so
+    } elsif ($soname =~ m/(.+)\-(\w[\w\.]*)\.so$/) {
+	$soname = "$1 $2";
+    }
+
+    return $soname
 }
 
 1;

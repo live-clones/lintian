@@ -65,6 +65,21 @@ binary-arch: build-stamp install
 	dh_makeshlibs -X debug
 	dh_installdeb
 	dh_shlibdeps -X debug
+
+	# We do this by hand as otherwise dpkg-gensymbols
+	# will error due to the broken symbols file
+	# and abort the build; similarly the file in
+	# the source tree is _symbols so that dpkg
+	# doesn't attempt to sanity check it
+	install -d $(CURDIR)/debian/libhello0/DEBIAN
+	install -m 644 $(CURDIR)/debian/_symbols \
+	    $(CURDIR)/debian/libhello0/DEBIAN/symbols
+	# hello doesn't contain any shlibs, but we
+	# make it contain a symbols file
+	install -d $(CURDIR)/debian/hello/DEBIAN
+	install -m 644 $(CURDIR)/debian/_symbols \
+	    $(CURDIR)/debian/hello/DEBIAN/symbols
+
 	dh_gencontrol
 	dh_md5sums
 	dh_builddeb

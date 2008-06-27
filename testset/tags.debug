@@ -1,10 +1,24 @@
 E: debug source: build-depends-indep-without-arch-indep
 E: debug source: version-substvar-for-external-package libhello0-dbg -> libhello
+E: hello: pkg-has-symbols-control-file-but-no-shared-libs
 E: hello: statically-linked-binary ./usr/bin/hello.dbg
 E: hello: unstripped-binary-or-object ./usr/bin/hello.dbg
 E: libhello0-dbg: binary-with-bad-dynamic-table ./usr/lib/libhello.so.dbg
 E: libhello0-dbg: missing-dependency-on-libc needed by ./usr/lib/debug/lib/libhello.so.0.0 and 1 others
 E: libhello0-dbg: sharedobject-in-library-directory-missing-soname usr/lib/libhello.so.dbg
+E: libhello0: duplicate-entry-in-symbols-control-file libhello 0
+E: libhello0: invalid-template-id-in-symbols-file 11
+E: libhello0: invalid-template-id-in-symbols-file 13
+E: libhello0: invalid-template-id-in-symbols-file 4
+E: libhello0: symbols-declared-but-not-shlib libhello 2
+E: libhello0: syntax-error-in-symbols-file 1
+E: libhello0: syntax-error-in-symbols-file 10
+E: libhello0: syntax-error-in-symbols-file 14
+E: libhello0: syntax-error-in-symbols-file 18
+E: libhello0: syntax-error-in-symbols-file 3
+E: libhello0: syntax-error-in-symbols-file 4
+E: libhello0: syntax-error-in-symbols-file 8
+E: libhello0: unknown-meta-field-in-symbols-file Build-Dep-Foo, line 10
 W: debug source: ancient-standards-version 3.7.0 (current is 3.8.0)
 W: debug source: changelog-should-not-mention-nmu
 W: debug source: debhelper-script-needs-versioned-build-depends dh_icons (>= 5.0.51~)
@@ -14,3 +28,7 @@ W: hello: binary-without-manpage usr/bin/hello.dbg
 W: libhello0-dbg: dbg-package-missing-depends libhello0
 W: libhello0-dbg: debug-file-should-use-detached-symbols ./usr/lib/debug/lib/libhello.so.0.0
 W: libhello0-dbg: shared-lib-without-dependency-information ./usr/lib/libhello.so.dbg
+W: libhello0: symbols-declares-dependency-on-other-package libhello0c2 (>= 1.2)
+W: libhello0: symbols-declares-dependency-on-other-package libhello2 #MINVER#
+W: libhello0: symbols-declares-dependency-on-other-package libhello2 (>= 1:2.3)
+W: libhello0: unused-shlib-entry-in-symbols-control-file libhello 2
