@@ -21,6 +21,7 @@
 package Lintian::changelog_file;
 use strict;
 use Spelling;
+use Dep;
 use Tags;
 use Util;
 
