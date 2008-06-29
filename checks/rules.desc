@@ -64,6 +64,12 @@ Info: A rule in the <tt>debian/rules</tt> file for this package calls the
  so that other error messages from the clean or distclean rule will still
  be caught (or just remove the "-" if the package uses a static makefile).
 
+Tag: debian-rules-uses-DEB_BUILD_OPTS
+Type: warning
+Info: The standard environment variable for build options is
+ DEB_BUILD_OPTIONS.  Usually, referring to DEB_BUILD_OPTS is a mistake and
+ DEB_BUILD_OPTIONS was intended instead.
+
 Tag: debian-rules-sets-DH_COMPAT
 Type: warning
 Ref: debhelper(7)

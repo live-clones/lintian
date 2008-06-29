@@ -113,6 +113,9 @@ while (<RULES>) {
 	/^\t\s*(?:\$[\(\{]MAKE[\}\)]|make)\s(?:.*\s)?-\w*i.*(?:dist)?clean/) {
         tag "debian-rules-ignores-make-clean-error", "line $.";
     }
+    if (/$[\(\{]DEB_BUILD_OPTS[\)\}]/) {
+        tag "debian-rules-uses-DEB_BUILD_OPTS", "line $.";
+    }
 
     # Listing a rule as a dependency of .PHONY is sufficient to make it
     # present for the purposes of GNU make and therefore the Policy
