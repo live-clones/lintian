@@ -44,6 +44,7 @@ W: relations source: package-depends-on-itself relations depends
 W: relations source: package-depends-on-itself relations-multiple-libs recommends
 W: relations source: package-has-a-duplicate-build-relation foo (= 3) [!amd64 !i386], foo (<< 4) [!amd64 !i386]
 W: relations source: package-has-a-duplicate-build-relation perl, perl (>= 5.0)
+W: relations source: quilt-build-dep-but-no-series-file relations
 W: relations source: redundant-origin-field
 W: relations source: stronger-dependency-implies-weaker relations depends -> recommends dpkg
 W: relations source: stronger-dependency-implies-weaker relations depends -> recommends null
