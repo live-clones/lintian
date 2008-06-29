@@ -30,7 +30,7 @@ goals not targetted
 - Fix experimental support back in
 - Go through testset/libbaz/debian/rules, and make sure all TODO's are
   lintian-detected
-- go through all tags and make sure that any that should have Polcy
+- go through all tags and make sure that any that should have Policy
   references have them, and more generally that appropriate references are
   present
 - remove old unbalance `' quotes from all tag descriptions
