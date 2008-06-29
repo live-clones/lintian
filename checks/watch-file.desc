@@ -70,3 +70,10 @@ Info: The package ships a watch file although it is a Debian native
  package.  DEHS does not process watch files in native packages based on
  the reasoning that native packages do not have upstreams to check for new
  releases.
+
+Tag: debian-watch-file-uses-deprecated-sf-redirector-method
+Type: warning
+Info: The watch file seems to be passing arguments to the redirector
+ other than a path. Calling the SourceForge redirector with parameters like
+ <tt>project</tt> prevents uscan from generating working uri's to the files
+ and thus has been deprecated and is no longer supported by the redirector.

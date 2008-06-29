@@ -2,5 +2,5 @@
 
 version=2
 opts="uversionmangle=s/$/ds/" \
-http://www.example.com/dist/ scripts\.([\d.]+)\.tar\.gz
+http://qa.debian.org/watch/sf.php?project=foo scripts\.([\d.]+)\.tar\.gz
 

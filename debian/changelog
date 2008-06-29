@@ -49,6 +49,8 @@ lintian (1.24.2) unstable; urgency=low
       files for other problems anyway.  Allow whitespace around the
       version declaration.  More correctly handle continuation lines.
       Patch from Raphael Geissert.
+    + [RA] Check for using the Sourceforge QA redirector with deprecated
+      arguments.  Patch from Raphael Geissert.
 
   * data/fields/obsolete-packages:
     + [RA] mailx is not obsolete.  It's a virtual package.  Thanks, martin

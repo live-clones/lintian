@@ -90,6 +90,9 @@ while (<WATCH>) {
                 }
             }
         }
+        if (m%qa\.debian\.org/watch/sf\.php\?%) {
+            tag 'debian-watch-file-uses-deprecated-sf-redirector-method';
+        }
     }
 }
 close WATCH;

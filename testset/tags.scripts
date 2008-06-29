@@ -22,6 +22,7 @@ I: scripts: no-md5sums-control-file
 W: scripts source: ancient-standards-version 3.2.1 (current is 3.8.0)
 W: scripts source: binary-arch-rules-but-pkg-is-arch-indep
 W: scripts source: changelog-should-mention-nmu
+W: scripts source: debian-watch-file-uses-deprecated-sf-redirector-method
 W: scripts source: dpatch-missing-description 02_i_dont_have_a_description.patch
 W: scripts source: maintainer-script-lacks-debhelper-token debian/postinst
 W: scripts source: maintainer-script-lacks-debhelper-token debian/postrm
