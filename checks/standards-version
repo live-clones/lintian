@@ -133,6 +133,7 @@ if (not exists $standards{$stdver}) {
             last if $standard->[0] eq $stdver;
             if (str2time($standard->[1]) < $timestamp) {
                 tag 'out-of-date-standards-version', $tag;
+                last;
             }
         }
     }
