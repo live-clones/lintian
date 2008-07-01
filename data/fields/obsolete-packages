@@ -16,12 +16,18 @@ gcc-2.95
 
 # Last seen in lenny.
 cdrecord
+cupsys
+cupsys-bsd
+cupsys-client
+cupsys-common
 gaim
 gnomemeeting
 gs
 gs-aladdin
 gs-esp
 gs-gpl
+libcupsys2
+libcupsys2-dev
 libglu1-xorg
 libglu1-xorg-dev
 libmime-perl

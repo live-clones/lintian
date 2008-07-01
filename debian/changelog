@@ -57,6 +57,8 @@ lintian (1.24.2) unstable; urgency=low
   * data/fields/obsolete-packages:
     + [RA] mailx is not obsolete.  It's a virtual package.  Thanks, martin
       f krafft.  (Closes: #488114)
+    + [RA] Add the cupsys packages, all of which have been renamed to cups.
+      Patch from Raphael Geissert.
   
   * debian/control:
     + [FL] Adapt VCS-* headers for move from SVN to git.
