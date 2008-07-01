@@ -68,6 +68,29 @@ my $seentemplates='';
 my $usespreinst='';
 my $usesmultiselect='';
 
+if ($type eq 'source') {
+    open(BINARY, '<', "fields/binary") or fail("Can't open fields/binary: $!");
+    my $binaries = <BINARY>;
+    close BINARY;
+    foreach my $binary (split /,\s+/, $binaries) {
+	chomp $binary;
+	my $templates_file = "debfiles/$binary.templates";
+	if (-f $templates_file) {
+	    my @templates = read_dpkg_control($templates_file, "templates file");
+
+	    foreach my $template (@templates) {
+		if (exists $template->{template} and exists $template->{_choices}) {
+		    tag "template-uses-unsplit-choices",
+			"$binary - $template->{template}";
+		}
+	    }
+	}
+    }
+
+    # The remainder of the checks are for binary packages, so we exit now
+    return 0;
+}
+
 if (open(PREINST, '<', "control/preinst")) {
     while (<PREINST>) {
 	s/#.*//;    # Not perfect for Perl, but should be OK
