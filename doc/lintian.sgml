@@ -346,6 +346,7 @@ of Lintian, and might still give surprising results.  Feel free to
 ignore Experimental messages that do not seem to make sense, though of
 course bug reports are always welcomed.
 
+They are not displayed unless the <tt>-E</tt> option is set.
 <p>
 
 <tag><em>Overridden (O)</em>

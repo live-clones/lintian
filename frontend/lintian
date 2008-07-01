@@ -50,6 +50,7 @@ my @debug;
 my $check_everything = 0;	#flag for -a|--all switch
 my $lintian_info = 0;		#flag for -i|--info switch
 our $display_infotags = 0;	#flag for -I|--display-info switch
+our $display_experimentaltags = 0; #flag for -E|--display-experimental switch
 my $unpack_level = undef;	#flag for -l|--unpack-level switch
 our $no_override = 0;		#flag for -o|--no-override switch
 our $show_overrides = 0;	#flag for --show-overrides switch
@@ -139,6 +140,7 @@ General options:
 Behaviour options:
     -i, --info                give detailed info about tags
     -I, --display-info        display "I:" tags (normally suppressed)
+    -E, --display-experimental display "X:" tags (normally suppressed)
     -l X, --unpack-level X    set default unpack level to X
     -o, --no-override         ignore overrides
     --show-overrides          output tags that have been overriden
@@ -258,6 +260,7 @@ my %opthash = (			# ------------------ actions
 	       # ------------------ behaviour options
 	       "info|i" => \$lintian_info,
 	       "display-info|I" => \$display_infotags,
+	       "display-experimental|E" => \$display_experimentaltags,
 	       "unpack-level|l=i" => \$unpack_level,
 	       "no-override|o" => \$no_override,
 	       "show-overrides" => \$show_overrides,
@@ -981,6 +984,7 @@ if (defined $experimental_output_opts) {
 }
 
 $Tags::show_info = $display_infotags;
+$Tags::show_experimental = $display_experimentaltags;
 $Tags::show_overrides = $show_overrides;
 $Tags::color = $color;
 use warnings;

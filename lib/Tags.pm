@@ -39,6 +39,7 @@ use Term::ANSIColor;
 our $verbose = $::verbose;
 our $debug = $::debug;
 our $show_info = 0;
+our $show_experimental = 0;
 our $show_overrides = 0;
 our $output_formatter = \&print_tag;
 our $min_severity = 1;
@@ -280,6 +281,7 @@ sub print_tag {
     $extra = '' if $extra eq ' ';
     my $code = $codes{$tag_info->{type}};
     my $severity = $type_to_sev{$tag_info->{type}};
+    $code = 'X' if exists $tag_info->{experimental};
     $code = 'O' if $tag_info->{overridden}{override};
     my $type = '';
     $type = " $pkg_info->{type}" if $pkg_info->{type} ne 'binary';
@@ -304,6 +306,7 @@ sub print_tag_new {
     $extra = " @$information" if @$information;
     $extra = '' if $extra eq ' ';
     my $code = $sev_to_code[$tag_info->{severity}];
+    $code = 'X' if exists $tag_info->{experimental};
     $code = 'O' if $tag_info->{overridden}{override};
     my $qualifier = $sig_to_qualifier[$tag_info->{significance}];
     $qualifier = '' if $code eq 'O';
@@ -340,6 +343,9 @@ sub tag {
     check_need_to_show( $tag_info, \@information );
 
     record_stats( $tag_info );
+
+    return 0 if
+	exists $tag_info->{experimental} and !$show_experimental;
 
     return 1 if
 	$tag_info->{overridden}{severity} != 0

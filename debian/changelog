@@ -74,19 +74,32 @@ lintian (1.24.2) unstable; urgency=low
   
   * doc/CREDITS:
     + [FL] Add Raphael Geissert and Adam D. Barratt.
-  
+  * doc/lintian.sgml:
+    + [ADB] Add reference to new option to display experimental tags.
+
+  * frontend/lintian:
+    + [ADB] Add a new --show-experimental / -E option which indicates
+      that experimental tags should be displayed.
+
   * lib/Lintian/Collect/Binary.pm:
     + [FL] Add support for file-info file.
     + [FL] Add support for objdump-info file.
   * lib/Spelling.pm:
     + [RA] Add a couple more spelling corrections and capitalization
       checks for LaTeX and TeX.  Thanks, Raphael Geissert.
+  * lib/Tags.pm:
+    + [ADB] (Re-)Add support for experimental tags.
   
   * man/lintian.1:
     + [FL] Document watch-file check.
+    + [ADB] Document new option to display experimental tags.
   
+  * reporting/harness:
+    + [ADB] Process packages using -E so that experimental tags are included.
   * reporting/html_reports:
     + [FL] Mark the tag pages with the correct code.
+  * reporting/templates/clean.tmpl:
+    + [ADB] Note that the full report includes experimental tags.
   * reporting/templates/tag.tmpl:
     + [FL] Mark overridden tags.
   * reporting/templates/maintainer.tmpl:
@@ -95,6 +108,7 @@ lintian (1.24.2) unstable; urgency=low
     + [FL] Include Co-maintained packages in the summary
       at the top of the page.  Also sort the list.  Patch
       by Jordà Polo.
+    + [ADB] Note that the full report includes experimental tags.
 
  --
 
