@@ -43,13 +43,11 @@
 	    $tag .= "$info->{extra}</li>\n";
 	}
     }
-    if ($tag) {
-	my $overridden = $has_nonoverridden ? '' : qq{<span class="type-O">O</span> };
-	$OUT .= qq(  <h2 class="tag">$overridden<a href="../full/$last->{xref}">);
-	$OUT .= "$last->{package}</a> ($last->{type})</h2>\n";
-       	$OUT .= qq(  <ul class="tag">\n);
-        $OUT .= $tag;
-        $OUT .= "</ul>\n";
-    }
+    my $overridden = $has_nonoverridden ? '' : qq{<span class="type-O">O</span> };
+    $OUT .= qq(  <h2 class="tag">$overridden<a href="../full/$last->{xref}">);
+    $OUT .= "$last->{package}</a> ($last->{type})</h2>\n";
+    $OUT .= qq(  <ul class="tag">\n);
+    $OUT .= $tag;
+    $OUT .= "</ul>\n";
 }
 { foot() }
