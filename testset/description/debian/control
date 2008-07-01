@@ -9,7 +9,7 @@ Package: description
 Architecture: all
 Description: description is a package which tests lintian's description checks.
  missing
- The synopsis should not start with the package's name. Moreover,
+ The the synopsis should not start with the package's name. Moreover,
  the long description
  	should
  	not
@@ -32,6 +32,9 @@ Description:
  . and please avoid control statements in the long description.
  The line in an extended description should be less than 80 characters, otherwise you'll get
  a Lintian warning.
+ .
+ And the old man said "he he is the one!"
+ "No, I am am not", he replied
 
 Package: description-baz
 Architecture: all

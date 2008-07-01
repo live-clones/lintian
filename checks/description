@@ -116,6 +116,12 @@ while (<IN>) {
         tag "description-contains-homepage";
     }
 
+    my $wo_quotes = $_;
+    $wo_quotes =~ s,(\"|\').*(\1),,;
+    if ($wo_quotes =~ m,(?:\W|^)((\w+)\s+(\2))(?:\W|$),i) {
+        tag "description-contains-duplicated-word", "$1";
+    }
+
     if ($lines == 1) {
 	# checks for the first line of the extended description:
 	if (m/^\s/o) {

@@ -2,6 +2,9 @@ lintian (1.24.2) unstable; urgency=low
 
   * checks/changelog-file:
     + [ADB] Add missing "use Dep". Thanks gregor herrmann (Closes: #488397)
+  * checks/description{,.desc}:
+    + [RA] Warn about duplicated words in the description.  Patch from
+      Raphael Geissert.  (Closes: #424746)
   * checks/fields{,.desc}:
     + [FL] Do not complain about obsolete packages if there are
       non-obsolete alternatives specified and if the obsolete

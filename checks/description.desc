@@ -112,3 +112,8 @@ Info: Lintian found a spelling or capitalization error in the package
  for.  It does not have a dictionary like a spelling checker does.  It is
  particularly picky about spelling and capitalization in package
  descriptions since they're very visible to end users.
+
+Tag: description-contains-duplicated-word
+Type: warning
+Info: The description contains a duplicated word.  Usually this is a
+ mistake, or at least an awkward phrasing.
