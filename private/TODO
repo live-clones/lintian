@@ -27,7 +27,6 @@ goals not targetted
   should be tackled, don't know when, though
 - go through the test suite and organise it more cleanly
 - update doc/CREDITS file
-- Fix experimental support back in
 - Go through testset/libbaz/debian/rules, and make sure all TODO's are
   lintian-detected
 - go through all tags and make sure that any that should have Policy
