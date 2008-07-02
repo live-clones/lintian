@@ -813,9 +813,9 @@ while (my $arg = shift) {
 
 	    unless ($exit_code) {
 		my $stats = Tags::get_stats( $arg );
-		if ($stats->{severity}{4}) {
+		if ($stats->{types}{error}) {
 		    $exit_code = 1;
-		} elsif ($fail_on_warnings && $stats->{severity}{2}) {
+		} elsif ($fail_on_warnings && $stats->{types}{warning}) {
 		    $exit_code = 1;
 		}
 	    }
@@ -1005,7 +1005,6 @@ closedir(COLLDIR);
 
 no warnings 'once';
 if (defined $experimental_output_opts) {
-    $Tags::output_formatter = \&Tags::print_tag_new;
     my %opts = map { split(/=/) } split( /,/, $experimental_output_opts );
     foreach (keys %opts) {
 	if ($_ eq 'format') {
@@ -1453,9 +1452,9 @@ for (reverse sort @packages) {
 	}
 	unless ($exit_code) {
 	    my $stats = Tags::get_stats( $file );
-	    if ($stats->{severity}{4}) {
+	    if ($stats->{types}{error}) {
 		$exit_code = 1;
-	    } elsif ($fail_on_warnings && $stats->{severity}{2}) {
+	    } elsif ($fail_on_warnings && $stats->{types}{warning}) {
 		$exit_code = 1;
 	    }
 	}
@@ -1476,9 +1475,9 @@ for (reverse sort @packages) {
 	    my $stats = Tags::get_stats($file);
 	    my $short = $file;
 	    $short =~ s%.*/%%;
-	    my $errors = $stats->{overrides}{by_severity}{4} || 0;
-	    my $warnings = $stats->{overrides}{by_severity}{2} || 0;
-	    my $info = $stats->{overrides}{by_severity}{0} || 0;
+	    my $errors = $stats->{overrides}{types}{error} || 0;
+	    my $warnings = $stats->{overrides}{types}{warning} || 0;
+	    my $info = $stats->{overrides}{types}{info} || 0;
 	    $overrides{errors} += $errors;
 	    $overrides{warnings} += $warnings;
 	    $overrides{info} += $info;

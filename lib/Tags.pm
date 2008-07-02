@@ -42,10 +42,6 @@ our $show_info = 0;
 our $show_experimental = 0;
 our $show_overrides = 0;
 our $output_formatter = \&print_tag;
-our $min_severity = 1;
-our $max_severity = 99;
-our $min_significance = 1;
-our $max_significance = 99;
 our $color = 'never';
 our %only_issue_tags;
 
@@ -62,8 +58,7 @@ my %tags;
 # following keys:
 # - overrides
 # - tags
-# - severity
-# - significance
+# - types
 my %stats;
 
 # Info about a specific file. Key is the the filename, value another hash
@@ -78,14 +73,8 @@ my %info;
 # Currently selected file (not package!)
 my $current;
 
-# Compatibility stuff
 my %codes = ( 'error' => 'E' , 'warning' => 'W' , 'info' => 'I' );
-our %type_to_sev = ( error => 4, warning => 2, info => 0 );
-our @sev_to_type = qw( info warning warning error error );
-
-my @sig_to_qualifier = ( '??', '?', '', '!' );
-my @sev_to_code = qw( I W W E E );
-my @sev_to_color = ( 'cyan', 'yellow', 'yellow', 'red', 'red' );
+my %colors = ( 'error' => 'red' , 'warning' => 'yellow' , 'info' => 'cyan' );
 
 # Add a new tag, supplied as a hash reference
 sub add_tag {
@@ -95,12 +84,6 @@ sub add_tag {
 	    return 0;
 	}
 
-	# smooth transition
-	$newtag->{type} = $sev_to_type[$newtag->{severity}]
-	    unless $newtag->{type};
-	$newtag->{significance} = 2 unless exists $newtag->{significance};
-	$newtag->{severity} = $type_to_sev{$newtag->{type}}
-	    unless exists $newtag->{severity};
 	$tags{$newtag->{'tag'}} = $newtag;
 	return 1;
 }
@@ -124,8 +107,7 @@ sub set_pkg {
 	overrides => {},
     };
     $stats{$file} = {
-	severity => {},
-	significance => {},
+	types => {},
 	tags => {},
 	overrides => {},
     };
@@ -232,31 +214,18 @@ sub check_need_to_show {
     my ( $tag_info, $information ) = @_;
     $tag_info->{overridden}{override} = check_overrides( $tag_info,
 							 $information );
-    my $min_sev = $show_info ? 0 : $min_severity; # compat hack
-    $tag_info->{overridden}{severity} = check_range( $tag_info->{severity},
-						     $min_sev,
-						     $max_severity );
-    $tag_info->{overridden}{significance} = check_range( $tag_info->{significance},
-							 $min_significance,
-							 $max_significance );
 }
 
 # records the stats for a given tag_info hash
 sub record_stats {
     my ( $tag_info ) = @_;
 
-    for my $k (qw( severity significance tag )) {
-	$stats{$current}{$k}{$tag_info->{$k}}++
-	    unless $tag_info->{overridden}{override}
-		|| $tag_info->{overridden}{severity}
-		|| $tag_info->{overridden}{significance};
-    }
-    for my $k (qw( severity significance override )) {
-	$stats{$current}{overrides}{$k}{$tag_info->{overridden}{$k}}++
-	    if $tag_info->{overridden}{$k};
-    }
     if ($tag_info->{overridden}{override}) {
-        $stats{$current}{overrides}{by_severity}{$tag_info->{severity}}++;
+        $stats{$current}{overrides}{tags}{$tag_info->{overridden}{override}}++;
+        $stats{$current}{overrides}{types}{$tag_info->{type}}++;
+    } else {
+        $stats{$current}{tags}{$tag_info->{tag}}++;
+        $stats{$current}{types}{$tag_info->{type}}++;
     }
 }
 
@@ -281,7 +250,6 @@ sub print_tag {
     $extra = " @$information" if @$information;
     $extra = '' if $extra eq ' ';
     my $code = $codes{$tag_info->{type}};
-    my $severity = $type_to_sev{$tag_info->{type}};
     $code = 'X' if exists $tag_info->{experimental};
     $code = 'O' if $tag_info->{overridden}{override};
     my $type = '';
@@ -289,41 +257,15 @@ sub print_tag {
 
     my $output = "$code: $pkg_info->{pkg}$type: ";
     if ($color eq 'always' || ($color eq 'auto' && -t STDOUT)) {
-        $output .= colored($tag_info->{tag}, $sev_to_color[$severity]);
+        $output .= colored($tag_info->{tag}, $colors{$tag_info->{type}});
     } elsif ($color eq 'html') {
-        $output .= colored_html($tag_info->{tag}, $sev_to_color[$severity]);
+        $output .= colored_html($tag_info->{tag}, $colors{$tag_info->{type}});
     } else {
         $output .= $tag_info->{tag};
     }
     $output .= "$extra\n";
 
     print $output;
-}
-
-sub print_tag_new {
-    my ( $pkg_info, $tag_info, $information ) = @_;
-
-    my $extra = '';
-    $extra = " @$information" if @$information;
-    $extra = '' if $extra eq ' ';
-    my $code = $sev_to_code[$tag_info->{severity}];
-    $code = 'X' if exists $tag_info->{experimental};
-    $code = 'O' if $tag_info->{overridden}{override};
-    my $qualifier = $sig_to_qualifier[$tag_info->{significance}];
-    $qualifier = '' if $code eq 'O';
-    my $type = '';
-    $type = " $pkg_info->{type}" if $pkg_info->{type} ne 'binary';
-
-    my $output = "$code$qualifier: $pkg_info->{pkg}$type: ";
-    if ($color eq 'always' || ($color eq 'auto' && -t STDOUT)) {
-        $output .= colored($tag_info->{tag}, $sev_to_color[$tag_info->{severity}]);
-    } else {
-        $output .= $tag_info->{tag};
-    }
-    $output .= "$extra\n";
-
-    print $output;
-
 }
 
 sub tag {
@@ -351,11 +293,7 @@ sub tag {
     return 0 if
 	exists $tag_info->{experimental} and !$show_experimental;
 
-    return 1 if
-	$tag_info->{overridden}{severity} != 0
-	|| $tag_info->{overridden}{significance} != 0
-	|| ( $tag_info->{overridden}{override} &&
-	     !$show_overrides);
+    return 1 if $tag_info->{overridden}{override} && !$show_overrides;
 
     &$output_formatter( $info{$current}, $tag_info, \@information );
     return 1;
