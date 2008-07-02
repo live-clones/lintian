@@ -1,2 +1,3 @@
 debian/tests
 runtests
+!testset/runtests
