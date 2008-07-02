@@ -117,15 +117,15 @@ use Util;
 use Tags;
 
 # --- Set the ways to call lintian and dpkg-buildpackage
-my $lintian_options = '-I';
-my $lintian_info_options = '-I -i';
+my $lintian_options = '-I -E';
+my $lintian_info_options = '-I -E -i';
 my $dpkg_buildpackage_options = '-rfakeroot -us -uc -d -iNEVER_MATCH_ANYTHING'
     . ' -INEVER_MATCH_ANYTHING';
 my $lintian_path = $LINTIAN_ROOT . "/frontend/lintian";
 
 my $testok = 0;
 my %tags;
-my %types = ( 'E' => 'error', 'W' => 'warning', 'I' => 'info' );
+my %types = ( 'E' => 'error', 'W' => 'warning', 'I' => 'info', 'X' => 'experimental' );
 
 # --- Display output immediately
 $| = 1;

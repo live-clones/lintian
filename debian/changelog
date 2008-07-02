@@ -113,6 +113,9 @@ lintian (1.24.2) unstable; urgency=low
       by Jordà Polo.
     + [ADB] Note that the full report includes experimental tags.
 
+  * testset/runtests:
+    + [ADB] Support experimental tags
+
  --
 
 lintian (1.24.1) unstable; urgency=medium
