@@ -16,3 +16,9 @@ This path /usr/share/doc/copyright is obsolete.
 This copyright info was automatically extracted from the perl module.
 It may not be accurate, so you better check the module sources
 if you don't want to get into legal troubles.
+
+This line is overly long. It should be less than 80 characters so that it fits nicely in an 80x25 terminal.
+
+This line isn't too long, but ćōňţăĭņş a number of UTF-8 characters which
+could make it appear to be if improperly decoded.
+
