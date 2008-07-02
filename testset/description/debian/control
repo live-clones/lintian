@@ -15,6 +15,8 @@ Description: description is a package which tests lintian's description checks.
  	not
  contain tabs.
  .control statements are not allowed as well.
+ .
+ All all all of of these these should be matched matched matched
 
 Package: description-foo
 Architecture: all

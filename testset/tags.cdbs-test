@@ -8,4 +8,4 @@ W: cdbs-test source: no-human-maintainers
 W: cdbs-test source: out-of-date-standards-version 3.7.3 (current is 3.8.0)
 W: cdbs-test source: package-has-a-duplicate-build-relation cdbs, cdbs
 W: cdbs-test: debian-changelog-line-too-long line 1
-W: cdbs-test: description-contains-duplicated-word bla bla
+W: cdbs-test: description-contains-duplicated-word bla bla bla

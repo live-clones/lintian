@@ -21,5 +21,9 @@ W: description-foo: description-starts-with-leading-spaces
 W: description-foo: possible-unindented-list-in-extended-description
 W: description: changelog-not-compressed-with-max-compression changelog.Debian.gz
 W: description: debian-changelog-file-contains-obsolete-user-emacs-settings
+W: description: description-contains-duplicated-word All all all
 W: description: description-contains-duplicated-word The the
+W: description: description-contains-duplicated-word matched matched matched
+W: description: description-contains-duplicated-word of of
+W: description: description-contains-duplicated-word these these
 W: description: description-synopsis-might-not-be-phrased-properly

@@ -117,9 +117,11 @@ while (<IN>) {
     }
 
     my $wo_quotes = $_;
-    $wo_quotes =~ s,(\"|\').*(\1),,;
-    if ($wo_quotes =~ m,(?:\W|^)((\w+)\s+(\2))(?:\W|$),i) {
-        tag "description-contains-duplicated-word", "$1";
+    $wo_quotes =~ s,(\"|\')(.*?)(\1),,;
+    while ($wo_quotes =~ m,(?:\W|^)((\w+)(\s+(\2))+)(?:\W|$),i) {
+	my $words = $1;
+	$wo_quotes =~ s/\Q$words//;
+        tag "description-contains-duplicated-word", "$words";
     }
 
     if ($lines == 1) {
