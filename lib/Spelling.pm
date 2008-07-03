@@ -254,6 +254,7 @@ our %CORRECTIONS = qw(
                       recieve receive
                       recieved received
                       redircet redirect
+                      refence reference
                       regulamentations regulations
                       remoote remote
                       repectively respectively
