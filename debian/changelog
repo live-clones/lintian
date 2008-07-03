@@ -15,6 +15,9 @@ lintian (1.24.2) unstable; urgency=low
       non-obsolete alternatives specified and if the obsolete
       package is not listed first.  Issue an info tag for them
       though.  Patch by Adam D. Barratt.  (Closes: #486145)
+  * checks/files{,.desc}:
+    + [ADB] Warn if the package contains embedded copies of separately
+      packaged Javascript libraries.  Patch by Chris Lamb.  (Closes: #489191)
   * checks/infofiles{,.desc}:
     + [ADB] Warn if the package's postinst installs info directory entries
       but the prerm doesn't remove them.  (Closes: #182512)

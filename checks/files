@@ -645,6 +645,17 @@ while (<IN>) {
 	    tag "macos-resource-fork-file-in-package", "$file";
 	}
 
+	# ---------------- embedded Javascript libraries
+	if ($file =~ m,/(mochikit|
+			 jquery(\.(min|lite|pack))?|
+			 prototype(-[\d\.]+)?|
+			 scriptaculous|
+			 fckeditor|
+			 cropper(\.uncompressed)?
+			)\.js(\.gz)?$,ix) {
+	    tag "embedded-javascript-library", "$file";
+	}
+
 	# ---------------- general: setuid/setgid files!
 	if ($perm =~ m/s/) {
 	    my ($setuid, $setgid) = ("","");

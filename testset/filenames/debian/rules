@@ -155,6 +155,17 @@ binary-indep:
 	install -d debian/tmp/usr/share/gnome/apps/System
 	touch debian/tmp/usr/share/gnome/apps/System/foo.desktop
 
+	install -d debian/tmp/usr/share/filenames
+	touch debian/tmp/usr/share/filenames/jquery.js
+	touch debian/tmp/usr/share/filenames/jquery.lite.js
+	touch debian/tmp/usr/share/filenames/jquery.min.js
+	touch debian/tmp/usr/share/filenames/jquery.pack.js
+	touch debian/tmp/usr/share/filenames/mochikit.js
+	touch debian/tmp/usr/share/filenames/prototype-1.2.3.4.js
+	touch debian/tmp/usr/share/filenames/prototype.js
+	touch debian/tmp/usr/share/filenames/prototype.js.gz
+	touch debian/tmp/usr/share/filenames/scriptaculous.js
+
 	ln -s '../filenames/doc/version6.txt.gz' debian/tmp/usr/share/doc/filenames/version.txt.gz
 	ln -s ../../share/symlink debian/tmp/usr/lib/filenames/symlink1ok
 	ln -s ../../../etc/symlink debian/tmp/usr/lib/filenames/symlink1wrong

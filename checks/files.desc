@@ -758,3 +758,11 @@ Info: The user or group ID of the owner of the file is invalid. The
  of the allowed, globally allocated IDs consists of the ranges 0-99,
  64000-64999 and 65534.
 Ref: policy 9.2
+
+Tag: embedded-javascript-library
+Type: warning
+Info: This package contains an embedded copy of the JQuery, Prototype,
+ Mochikit or "Cropper" JavaScript libraries that are now available in their
+ own packages. Please depend on the appropriate package and symlink the
+ library into the appropriate location.
+Ref: policy 4.13
