@@ -250,3 +250,16 @@ Info: The referenced file has a time stamp older than year 2004 and the
  .
  Read /usr/share/doc/autotools-dev/README.Debian.gz (from the
  autotools-dev package) for information on how to fix this problem.
+
+Tag: diff-contains-bts-control-dir
+Type: warning
+Info: The Debian diff or native package contains files in a directory
+ used by a bug tracking system, which are not useful in a diff or native
+ package. Passing <tt>-i</tt> to <tt>dpkg-buildpackage</tt> or the
+ equivalent will automatically exclude them.
+
+Tag: source-contains-bts-control-dir
+Type: info
+Info: The upstream source contains a directory used by a bug tracking
+ system. It was most likely included by accident since bug tracking system
+ directories usually don't belong in releases.

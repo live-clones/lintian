@@ -4,6 +4,9 @@ lintian (1.24.2) unstable; urgency=low
     + [ADB] Add missing "use Dep". Thanks gregor herrmann (Closes: #488397)
   * checks/copyright-file{,.desc}:
     + [ADB] Check for over-long lines in copyright files.  (Closes: #479651)
+  * checks/cruft{,.desc}:
+    + [ADB] Check for BTS control directories in source packages and diffs
+      in addition to the existing binary package checks.  (Closes: #481787)
   * checks/debconf{,.desc}:
     + [ADB] Warn about the use of "_Choices" in templates file and suggest
       using "__Choices" instead (Closes: #481152)
