@@ -180,8 +180,12 @@ for my $desc_file (<$LINTIAN_ROOT/checks/*.desc>) {
 	    }
 
 	    $tags{$i->{'tag'}}{'desc_file'} = $desc_file;
-	    $tags{$i->{'tag'}}{'desc_type'} = $i->{'type'} ||
-		$Tags::sev_to_type[$i->{'severity'}];
+	    if (exists $i->{'experimental'}) {
+		$tags{$i->{'tag'}}{'desc_type'} = "experimental";
+	    } else {
+		$tags{$i->{'tag'}}{'desc_type'} = $i->{'type'} ||
+		    $Tags::sev_to_type[$i->{'severity'}];
+	    }
 	}
     }
 }
