@@ -543,7 +543,7 @@ while (<SCRIPTS>) {
 	    if ($cat_string eq "" and $checkbashisms and !$within_another_shell) {
 		my $found = 0;
 		my $match = '';
-		my $LEADIN = qr'(?:(^|[`&;(|{])\s*|(if|do|while)\s+)';
+		my $LEADIN = qr'(?:(^|[`&;(|{])\s*|(if|then|do|while)\s+)';
 		my @bashism_single_quote_regexs = (
 		  $LEADIN . qr'echo\s+(?:-[^e]+\s+)?([\'])[^\']*(\\[\\abcEfnrtv0])+.*?[\']',
 			# unsafe echo with backslashes
