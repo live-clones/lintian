@@ -72,9 +72,23 @@ if ($type eq 'source') {
     open(BINARY, '<', "fields/binary") or fail("Can't open fields/binary: $!");
     my $binaries = <BINARY>;
     close BINARY;
+    my @files;
     foreach my $binary (split /,\s+/, $binaries) {
 	chomp $binary;
-	my $templates_file = "debfiles/$binary.templates";
+	push @files, "$binary.templates";
+    }
+    push @files, "templates";
+
+    foreach my $file (@files) {
+	my $templates_file = "debfiles/$file";
+	my $binary = $file;
+	$binary =~ s/\.?templates$//;
+	# Single binary package (so @files contains "templates" and
+	# "binary.templates")?
+	if (!$binary and $#files > 1) {
+	    $binary = $binaries;
+	}
+
 	if (-f $templates_file) {
 	    my @templates = read_dpkg_control($templates_file, "templates file");
 
