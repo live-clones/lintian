@@ -72,11 +72,8 @@ if ($type eq 'source') {
     open(BINARY, '<', "fields/binary") or fail("Can't open fields/binary: $!");
     my $binaries = <BINARY>;
     close BINARY;
-    my @files;
-    foreach my $binary (split /,\s+/, $binaries) {
-	chomp $binary;
-	push @files, "$binary.templates";
-    }
+    chomp $binaries;
+    my @files = map { "$_.templates" } split /,\s+/, $binaries;
     push @files, "templates";
 
     foreach my $file (@files) {
@@ -85,7 +82,7 @@ if ($type eq 'source') {
 	$binary =~ s/\.?templates$//;
 	# Single binary package (so @files contains "templates" and
 	# "binary.templates")?
-	if (!$binary and $#files > 1) {
+	if (!$binary and $#files == 1) {
 	    $binary = $binaries;
 	}
 
