@@ -68,6 +68,6 @@ Info: The package installation scripts should avoid producing output which it
 Tag: info-documents-not-removed
 Type: warning
 Ref: policy 12.2
-Info: The preinst script calls the <tt>install-info</tt> command, but the
- documents installed are not then removed by the <tt>postinst</tt>  maintainer
+Info: The postinst script calls the <tt>install-info</tt> command, but the
+ documents installed are not then removed by the <tt>prerm</tt>  maintainer
  script.
