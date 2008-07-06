@@ -13,6 +13,9 @@ lintian (1.24.2) unstable; urgency=low
     + [ADB] Check all maintainer scripts for issues, rather than just config
       and postinst.
     + [ADB] Detect debconf templates which appear to be unused.
+    + [ADB] Replace the {config,postinst}-loads-obsolete-confmodule tags
+      with a new loads-obsolete-confmodule test which is used for all
+      maintainer scripts and outputs the script name as part of its extra data.
   * checks/description{,.desc}:
     + [RA] Warn about duplicated words in the description.  Patch from
       Raphael Geissert.  (Closes: #424746)

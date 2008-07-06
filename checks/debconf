@@ -400,11 +400,10 @@ for my $file (qw(config prerm postrm preinst postinst)) {
 	            m/(use|require)\s+Debconf::Client::ConfModule/) {
 	        $usesconfmodule=1;
 	    }
-	    if (($file eq 'postinst' or $file eq 'config') and
-		not $obsoleteconfmodule and
+	    if (not $obsoleteconfmodule and
 	        m,(/usr/share/debconf/confmodule\.sh|
 	           Debian::DebConf::Client::ConfModule),x) {
-	        tag "$file-loads-obsolete-confmodule", "$1";
+		tag "loads-obsolete-confmodule", "$file:$. $1";
 	        $usesconfmodule=1;
 	        $obsoleteconfmodule=1;
 	    }

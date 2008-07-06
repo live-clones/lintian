@@ -49,9 +49,10 @@ W: debconf-test-postinst: old-fsf-address-in-copyright-file
 W: debconf-test-postinst: possible-debconf-note-abuse postinst:6 debconf/test
 W: debconf-test-postinst: postinst-uses-db-input
 W: debconf-test-preinst: copyright-contains-dh_make-todo-boilerplate
+W: debconf-test-preinst: loads-obsolete-confmodule preinst:5 /usr/share/debconf/confmodule.sh
 W: debconf-test-preinst: missing-debconf-dependency-for-preinst
 W: debconf-test-preinst: old-fsf-address-in-copyright-file
-W: debconf-test-preinst: possible-debconf-note-abuse preinst:6 debconf/test
+W: debconf-test-preinst: possible-debconf-note-abuse preinst:9 debconf/test
 W: debconf-test: copyright-contains-dh_make-todo-boilerplate
 W: debconf-test: making-assumptions-about-interfaces-in-templates debconf/testboolean
 W: debconf-test: malformed-prompt-in-templates debconf/teststring

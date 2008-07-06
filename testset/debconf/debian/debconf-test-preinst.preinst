@@ -1,6 +1,9 @@
 #!/bin/sh
 set -e
 
+# Obsolete name for the confmodule
+. /usr/share/debconf/confmodule.sh
+
 . /usr/share/debconf/confmodule
 
 db_input medium debconf/test
