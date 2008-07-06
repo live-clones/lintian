@@ -545,7 +545,7 @@ while (<SCRIPTS>) {
 		my $match = '';
 		my $LEADIN = qr'(?:(^|[`&;(|{])\s*|(if|then|do|while)\s+)';
 		my @bashism_single_quote_regexs = (
-		  $LEADIN . qr'echo\s+(?:-[^e]+\s+)?([\'])[^\']*(\\[\\abcEfnrtv0])+.*?[\']',
+		  $LEADIN . qr'echo\s+(?:-[^e\s]+\s+)?\'[^\']*(\\[\\abcEfnrtv0])+.*?[\']',
 			# unsafe echo with backslashes
 		);
 		my @bashism_string_regexs = (
@@ -568,7 +568,7 @@ while (<SCRIPTS>) {
 		  qr'\$\{?PIPESTATUS\}?\b',      # $PIPESTATUS
 		  qr'\$\{?SHLVL\}?\b',	         # $SHLVL
 		  qr'<<<',                       # <<< here string
-		  $LEADIN . qr'echo\s+(?:-[^e]+\s+)?([\"])[^\"]*(\\[\\abcEfnrtv0])+.*?[\"]',
+		  $LEADIN . qr'echo\s+(?:-[^e\s]+\s+)?\"[^\"]*(\\[\\abcEfnrtv0])+.*?[\"]',
 			# unsafe echo with backslashes
 		);
 		my @bashism_regexs = (
