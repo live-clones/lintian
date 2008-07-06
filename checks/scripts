@@ -611,13 +611,13 @@ while (<SCRIPTS>) {
 		  $LEADIN . qr'local\s+\w+=',    # local foo=bar
 		  qr'(?:^|\s+)\s*\(?\w*[^\(\w\s]+\S*?\s*\(\)[^\"]?',
 			# function names should only contain [a-z0-9_]
-		  $LEADIN . qr'(push|pop)d\b',   # (push|pod)d
+		  $LEADIN . qr'(push|pop)d(\s|\Z)',   # (push|pod)d
 		  $LEADIN . qr'export\s+-[^p]',  # export only takes -p as an option
-		  $LEADIN . qr'ulimit\b',
-		  $LEADIN . qr'shopt\b',
+		  $LEADIN . qr'ulimit(\s|\Z)',
+		  $LEADIN . qr'shopt(\s|\Z)',
 		  $LEADIN . qr'type\s',
 		  $LEADIN . qr'time\s',
-		  $LEADIN . qr'dirs\b',
+		  $LEADIN . qr'dirs(\s|\Z)',
 		  qr'(?:^|\s+)[<>]\(.*?\)',      # <() process substituion
 		  qr'(?:^|\s+)readonly\s+-[af]', # readonly -[af]
 		  $LEADIN . qr'(sh|\$\{?SHELL\}?) -[rD]', # sh -[rD]
