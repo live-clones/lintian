@@ -205,6 +205,7 @@ if ($seentemplates) {
 
 my @templates = $seentemplates ? read_dpkg_control("control/templates", "templates file") : ();
 my %potential_db_abuse;
+my @templates_seen;
 
 foreach my $template (@templates) {
     my $isselect='';
@@ -212,8 +213,11 @@ foreach my $template (@templates) {
     if (not exists $template->{template}) {
 	tag "no-template-name", "";
 	$template->{template} = 'no-template-name';
-    } elsif ($template->{template}!~m|[A-Za-z0-9.+-](?:/[A-Za-z0-9.+-])|) {
-	tag "malformed-template-name", "$template->{template}";
+    } else {
+	push @templates_seen, $template->{template};
+	if ($template->{template}!~m|[A-Za-z0-9.+-](?:/[A-Za-z0-9.+-])|) {
+	    tag "malformed-template-name", "$template->{template}";
+	}
     }
 
     if (not exists $template->{type}) {
@@ -365,7 +369,10 @@ foreach my $template (@templates) {
 # Check the maintainer scripts.
 
 my $config_calls_db_input;
-for my $file (qw(config postinst)) {
+my $db_purge;
+my %templates_used;
+my %template_aliases;
+for my $file (qw(config prerm postrm preinst postinst)) {
     my $potential_makedev = {};
     if (open(IN, '<', "control/$file")) {
 	my $usesconfmodule='';
@@ -393,7 +400,8 @@ for my $file (qw(config postinst)) {
 	            m/(use|require)\s+Debconf::Client::ConfModule/) {
 	        $usesconfmodule=1;
 	    }
-	    if (not $obsoleteconfmodule and
+	    if (($file eq 'postinst' or $file eq 'config') and
+		not $obsoleteconfmodule and
 	        m,(/usr/share/debconf/confmodule\.sh|
 	           Debian::DebConf::Client::ConfModule),x) {
 	        tag "$file-loads-obsolete-confmodule", "$1";
@@ -415,6 +423,7 @@ for my $file (qw(config postinst)) {
 	    }
 	    if (m/^\s*(?:db_input|db_text)\s+[\"\']?(\S+?)[\"\']?\s+(\S+)\s/) {
 		my ($priority, $template) = ($1, $2);
+		$templates_used{$template} = 1;
 		if ($priority !~ /^\$\S+$/) {
 		    tag "unknown-debconf-priority", "$file:$. $1"
 		        unless ($valid_priorities{$priority});
@@ -424,41 +433,61 @@ for my $file (qw(config postinst)) {
 			    and ($priority =~ /^(low|medium)$/));
 		}
 	    }
+	    if (m/^\s*(?:db_get|db_set(?:title)?)\s+[\"\']?(\S+?)[\"\']?(\s|\Z)/) {
+		$templates_used{$1} = 1;
+	    }
+	    if (m/^\s*db_register\s+[\"\']?(\S+?)[\"\']?\s+(\S+)\s/) {
+		my ($template, $question) = ($1, $2);
+		push @{$template_aliases{$template}}, $question;
+	    }
 	    if (not $isdefault and m/db_fset.*isdefault/) {
 	        # TODO: Perl?
 	        tag "isdefault-flag-is-deprecated", "$file";
 	        $isdefault=1;
 	    }
+	    if (not $db_purge and m/db_purge/) {    # TODO: Perl?
+		$db_purge=1;
+	    }
 	}
 
-	unless ($usesconfmodule) {
-	    tag "$file-does-not-load-confmodule", ""
-		unless ($type eq 'udeb' || ($file eq 'postinst' && !$seenconfig));
+	if ($file eq 'postinst' or $file eq 'config') {
+	    unless ($usesconfmodule) {
+		tag "$file-does-not-load-confmodule", ""
+		    unless ($type eq 'udeb' || ($file eq 'postinst' && !$seenconfig));
+	    }
+	}
+
+	if ($file eq 'postrm') {
+	    unless ($db_purge) {
+		tag "postrm-does-not-purge-debconf", "";
+	    }
 	}
 
 	close IN;
     } elsif ($file eq 'postinst') {
 	tag "$file-does-not-load-confmodule", ""
 	    unless ($type eq 'udeb' || !$seenconfig);
+    } elsif ($file eq 'postrm') {
+	tag "postrm-does-not-purge-debconf", ""
+	    unless ($type eq 'udeb');
     }
 }
 
-if (open(POSTRM, '<', "control/postrm")) {
-    my $db_purge='';
+foreach my $template (@templates_seen) {
+    my $used = 0;
 
-    while (<POSTRM>) {
-	s/#.*//;    # Not perfect for Perl, but should be OK
-	if (not $db_purge and m/db_purge/) {    # TODO: Perl?
-	    $db_purge=1;
-	    last;
+    if ($templates_used{$template}) {
+	$used = 1;
+    } else {
+	foreach my $alias (@{$template_aliases{$template}}) {
+	    if ($templates_used{$alias}) {
+		$used = 1;
+		last;
+	    }
 	}
     }
-
-    unless ($db_purge) {
-	tag "postrm-does-not-purge-debconf", "";
-    }
-} elsif ($type ne 'udeb') {
-    tag "postrm-does-not-purge-debconf", "";
+    tag "unused-debconf-template", $template
+	unless $used and $pkg ne "debconf";
 }
 
 # Check that the right dependencies are in the control file.  Accept any

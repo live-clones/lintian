@@ -10,6 +10,9 @@ lintian (1.24.2) unstable; urgency=low
   * checks/debconf{,.desc}:
     + [ADB] Warn about the use of "_Choices" in templates file and suggest
       using "__Choices" instead (Closes: #481152)
+    + [ADB] Check all maintainer scripts for issues, rather than just config
+      and postinst.
+    + [ADB] Detect debconf templates which appear to be unused.
   * checks/description{,.desc}:
     + [RA] Warn about duplicated words in the description.  Patch from
       Raphael Geissert.  (Closes: #424746)

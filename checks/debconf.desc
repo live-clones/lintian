@@ -306,3 +306,24 @@ Info: The use of _Choices in templates is deprecated.
  .
  If in doubt, please ask for help on the debian-i18n mailing list.
 Ref: po-debconf(7)
+
+Tag: unused-debconf-template
+Type: info
+Info: Templates which are not used by the package should be removed from
+ the templates file.
+ .
+ This will reduce the size of the templates database and prevent
+ translators from unnecessarily translating the template's text.
+ .
+ In some cases, the template is used but lintian is unable to determine
+ this.  Common causes are:
+ .
+ - the maintainer scripts embed a variable in to the template name in
+   order to allow a template to be selected from a range of similar
+   templates (e.g. 'db_input low start_$service_at_boot')
+ - the template is not used by the maintainer scripts but is used by
+   a program in the package
+ - the maintainer scripts are written in perl.  lintian currently only
+   understands the shell script debconf functions.
+ .
+ If any of the above applies, please install an override.
