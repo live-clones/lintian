@@ -27,6 +27,7 @@ lintian (1.24.2) unstable; urgency=low
   * checks/files{,.desc}:
     + [ADB] Warn if the package contains embedded copies of separately
       packaged Javascript libraries.  Patch by Chris Lamb.  (Closes: #489191)
+    + [ADB] Fix a typo in the description of executable-is-not-world-readable
   * checks/infofiles{,.desc}:
     + [ADB] Warn if the package's postinst installs info directory entries
       but the prerm doesn't remove them.  (Closes: #182512)
