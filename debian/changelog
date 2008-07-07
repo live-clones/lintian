@@ -39,6 +39,9 @@ lintian (1.24.2) unstable; urgency=low
       quilt patches when using the 3.0 (quilt) package format.  Fix build
       dependency checking and check all dpatch files.  Patch from Raphaël
       Hertzog.  (Closes: #484549)
+    + [ADB] Treat 00list* as dpatch series files rather than just 00list.
+      (Closes: #482040). Also rename dpatch-index-references-non-existant-patch
+      to dpatch-index-references-non-existent-patch.
   * checks/rules{,.desc}:
     + [RA] Warn about use of DEB_BUILD_OPTS.  Patch from Raphael Geissert.
   * checks/scripts:

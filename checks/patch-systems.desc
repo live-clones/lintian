@@ -15,11 +15,10 @@ Info: Using dpatch requires you to explicitly list all patches you want
  You should either remove the dpatch build dependency or add a patch
  list.
 
-Tag: dpatch-index-references-non-existant-patch
+Tag: dpatch-index-references-non-existent-patch
 Type: error
 Info: In the 00list file listing all your dpatches, you referenced a file
- that is not existant. This will lead to a fatal error when calling
- dpatch.
+ that does not exist. This will lead to a fatal error when calling dpatch.
 
 Tag: dpatch-missing-description
 Type: warning
@@ -60,11 +59,10 @@ Info: The quilt series file contains non-standard options to apply some of
  apply with "-p1". This can be done by refreshing all patches like this:
  quilt pop -a; while quilt push; do quilt refresh -pab; done
 
-Tag: quilt-series-references-non-existant-patch
+Tag: quilt-series-references-non-existent-patch
 Type: error
 Info: In the series file listing all your quilt patches, you referenced a
- file that is not existant. This will lead to a fatal error when calling
- quilt.
+ file that does not exist. This will lead to a fatal error when calling quilt.
 
 Tag: patch-modifying-debian-files
 Type: error

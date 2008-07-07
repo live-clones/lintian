@@ -78,28 +78,30 @@ sub run {
 				}
 				close(OPTS);
 			}
-			if (open(IN, '<', "debfiles/patches/00list")) {
+			foreach my $listfile (glob("debfiles/patches/00list*")) {
 				my @patches;
-				while(<IN>) {
-					chomp;
-					next if (/^\#/); #ignore comments or CPP directive
-					s%//.*%% if $list_uses_cpp; # remove C++ style comments
-					if ($list_uses_cpp && m%/\*%) {
-						# remove C style comments
-						$_ .= <IN> while($_ !~ m%\*/%);
-						s%/\*[^*]*\*/%%g;
+				if (open(IN, '<', "$listfile")) {
+					while(<IN>) {
+						chomp;
+						next if (/^\#/); #ignore comments or CPP directive
+						s%//.*%% if $list_uses_cpp; # remove C++ style comments
+						if ($list_uses_cpp && m%/\*%) {
+							# remove C style comments
+							$_ .= <IN> while($_ !~ m%\*/%);
+							s%/\*[^*]*\*/%%g;
+						}
+						next if (/^\s*$/); #ignore blank lines
+						push @patches, split(' ', $_);
 					}
-					next if (/^\s*$/); #ignore blank lines
-					push @patches, split(' ', $_);
+					close(IN);
 				}
-				close(IN);
 
 				# Check each patch.
 				foreach my $patch_file (@patches) {
 					$patch_file .= ".dpatch" if -e "debfiles/patches/$patch_file.dpatch"
 						and not -e "debfiles/patches/$patch_file";
 					if (! -r "debfiles/patches/$patch_file") {
-						tag "dpatch-index-references-non-existant-patch", $patch_file;
+						tag "dpatch-index-references-non-existent-patch", $patch_file;
 						next;
 					}
 					if (open(PATCH_FILE, '<', "debfiles/patches/$patch_file")) {
@@ -151,7 +153,7 @@ sub run {
 				# Check each patch.
 				foreach my $patch_file (@patches) {
 					if (! -r "debfiles/patches/$patch_file") {
-						tag "quilt-series-references-non-existant-patch", $patch_file;
+						tag "quilt-series-references-non-existent-patch", $patch_file;
 						next;
 					}
 					check_patch($patch_file);
