@@ -11,8 +11,10 @@ fi
 . /usr/share/lintian/shell >/dev/null
 . /usr/share/lintian/shell 2>/dev/null
 . /usr/share/lintian/shell </dev/null
+. "$(dirname $0)/shell" ; bar
 # invalid
 . /usr/share/lintian/shell foo
+. "$(dirname $0)/shell" bar
 
 print "Hit enter to continue"
 read

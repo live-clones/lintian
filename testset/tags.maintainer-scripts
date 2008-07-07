@@ -6,16 +6,16 @@ E: maintainer-scripts: debconf-config-not-executable
 E: maintainer-scripts: debian-changelog-file-contains-invalid-email-address jeroen@mordor
 E: maintainer-scripts: forbidden-config-interpreter #!/usr/bin/python
 E: maintainer-scripts: init.d-script-not-included-in-package /etc/init.d/foo
-E: maintainer-scripts: install-sgmlcatalog-deprecated postinst:98
+E: maintainer-scripts: install-sgmlcatalog-deprecated postinst:100
 E: maintainer-scripts: install-sgmlcatalog-deprecated postrm:46
 E: maintainer-scripts: interpreter-without-predep control/config #!/usr/bin/python
 E: maintainer-scripts: maintainer-script-calls-init-script-directly prerm:55
-E: maintainer-scripts: maintainer-script-does-not-check-for-existence-of-wm-menu-config postinst:31
-E: maintainer-scripts: maintainer-script-modifies-inetd-conf postinst:91
-E: maintainer-scripts: maintainer-script-modifies-inetd-conf postinst:92
-E: maintainer-scripts: maintainer-script-modifies-netbase-managed-file postinst:83 /etc/services
-E: maintainer-scripts: maintainer-script-modifies-netbase-managed-file postinst:84 /etc/protocols
-E: maintainer-scripts: maintainer-script-modifies-netbase-managed-file postinst:85 /etc/rpc
+E: maintainer-scripts: maintainer-script-does-not-check-for-existence-of-wm-menu-config postinst:33
+E: maintainer-scripts: maintainer-script-modifies-inetd-conf postinst:93
+E: maintainer-scripts: maintainer-script-modifies-inetd-conf postinst:94
+E: maintainer-scripts: maintainer-script-modifies-netbase-managed-file postinst:85 /etc/services
+E: maintainer-scripts: maintainer-script-modifies-netbase-managed-file postinst:86 /etc/protocols
+E: maintainer-scripts: maintainer-script-modifies-netbase-managed-file postinst:87 /etc/rpc
 E: maintainer-scripts: maintainer-script-removes-device-files postrm:39
 E: maintainer-scripts: maintainer-script-removes-device-files postrm:40
 E: maintainer-scripts: maintainer-script-uses-dpkg-status-directly postinst
@@ -40,46 +40,47 @@ W: maintainer-scripts: ancient-dpkg-long-filenames-check preinst:9
 W: maintainer-scripts: ancient-dpkg-multi-conrep-check preinst:10
 W: maintainer-scripts: ancient-dpkg-predepends-check preinst:7
 W: maintainer-scripts: config-does-not-load-confmodule
-W: maintainer-scripts: deprecated-chown-usage postinst:165 'chown -R root.root'
-W: maintainer-scripts: deprecated-chown-usage postinst:33 'chown root.root'
-W: maintainer-scripts: gconftool-used-in-maintainer-script postinst:68
+W: maintainer-scripts: deprecated-chown-usage postinst:167 'chown -R root.root'
+W: maintainer-scripts: deprecated-chown-usage postinst:35 'chown root.root'
+W: maintainer-scripts: gconftool-used-in-maintainer-script postinst:70
 W: maintainer-scripts: info-documents-not-removed
 W: maintainer-scripts: init.d-script-not-marked-as-conffile /etc/init.d/foo
-W: maintainer-scripts: maintainer-script-calls-deprecated-wm-menu-config postinst:31
+W: maintainer-scripts: maintainer-script-calls-deprecated-wm-menu-config postinst:33
 W: maintainer-scripts: maintainer-script-empty config
-W: maintainer-scripts: maintainer-script-hides-init-failure postinst:55
+W: maintainer-scripts: maintainer-script-hides-init-failure postinst:57
 W: maintainer-scripts: maintainer-script-needs-depends-on-gconf2 postinst
 W: maintainer-scripts: maintainer-script-needs-depends-on-ucf postinst
 W: maintainer-scripts: maintainer-script-needs-depends-on-xml-core postinst
 W: maintainer-scripts: missing-debconf-dependency
 W: maintainer-scripts: no-debconf-templates
-W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:108 '${H[@]}'
-W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:143 'echo -e'
-W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:144 '${!foo}'
-W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:146 'select foo'
-W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:149 '    exec -l'
-W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:15 '. /usr/share/lintian/shell foo'
-W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:150 '    exec -c'
-W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:151 '    exec -a'
-W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:153 'let '
-W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:154 'test -a'
-W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:155 '$RANDOM'
-W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:18 'read'
-W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:20 'H[0]='
-W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:21 '${H[0]}'
-W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:23 '${H[@]}'
+W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:110 '${H[@]}'
+W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:145 'echo -e'
+W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:146 '${!foo}'
+W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:148 'select foo'
+W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:151 '    exec -l'
+W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:152 '    exec -c'
+W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:153 '    exec -a'
+W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:155 'let '
+W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:156 'test -a'
+W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:157 '$RANDOM'
+W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:16 '. /usr/share/lintian/shell foo'
+W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:17 '. "$(dirname $0)/shell"'
+W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:20 'read'
+W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:22 'H[0]='
+W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:23 '${H[0]}'
+W: maintainer-scripts: possible-bashism-in-maintainer-script postinst:25 '${H[@]}'
 W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:102 '  echo "abc\nxyz"'
 W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:103 '  echo 'xyz\rabc''
 W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:106 '  echo -e'
 W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:107 '  echo -ne'
 W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:108 '  echo -e'
-W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:111 'foobar.() '
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:111 'foobar.() {'
 W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:112 '  suspend '
 W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:114 '  caller '
 W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:115 '  complete '
 W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:116 '  compgen '
 W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:117 '  declare '
-W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:120 '.foobar() '
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:120 '.foobar() {'
 W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:121 '  typeset '
 W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:122 '  disown '
 W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:123 '  builtin '
@@ -102,6 +103,9 @@ W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:149 'export -
 W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:153 'sh -D'
 W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:154 'sh --foo'
 W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:155 'sh +O'
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:158 ' {a,b}'
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:166 ' foo.bar()'
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:171 'foobar@()    '
 W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:19 '[ "$2" == '
 W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:23 'function foo( )'
 W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:26 '&>'
@@ -129,20 +133,20 @@ W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:87 '  echo -n
 W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:88 '  echo -e'
 W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:89 '  echo -en'
 W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:90 '  echo -ne'
-W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:95 'ech.os() '
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:95 'ech.os() {'
 W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:97 '>&bar'
 W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:98 '>& bar'
-W: maintainer-scripts: possibly-insecure-handling-of-tmp-files-in-maintainer-script postinst:50
+W: maintainer-scripts: possibly-insecure-handling-of-tmp-files-in-maintainer-script postinst:52
 W: maintainer-scripts: possibly-insecure-handling-of-tmp-files-in-maintainer-script postrm:39
 W: maintainer-scripts: postinst-does-not-load-confmodule
 W: maintainer-scripts: postinst-should-not-set-usr-doc-link
 W: maintainer-scripts: postrm-does-not-purge-debconf
 W: maintainer-scripts: postrm-has-useless-call-to-ldconfig
-W: maintainer-scripts: read-in-maintainer-script postinst:18
+W: maintainer-scripts: read-in-maintainer-script postinst:20
 W: maintainer-scripts: read-in-maintainer-script prerm:62
 W: maintainer-scripts: read-in-maintainer-script prerm:63
 W: maintainer-scripts: read-in-maintainer-script prerm:64
 W: maintainer-scripts: read-in-maintainer-script prerm:65
 W: maintainer-scripts: read-in-maintainer-script prerm:66
-W: maintainer-scripts: start-stop-daemon-in-maintainer-script postinst:159
+W: maintainer-scripts: start-stop-daemon-in-maintainer-script postinst:161
 W: maintainer-scripts: update-alternatives-remove-called-in-postrm

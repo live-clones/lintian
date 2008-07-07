@@ -153,3 +153,22 @@ sh -x
 sh -D
 sh --foo
 sh +O
+
+# Brace expansion checks
+echo {a,b}
+echo {abc},{bcd}
+
+foobar()
+{
+  # This is a function
+}
+
+ foo.bar()
+(
+  # This is a function with a bad name
+)
+
+foobar@()    
+{
+  # As is this
+}
