@@ -1,7 +1,0 @@
-#!/bin/sh -e
-
-if [ "$1" = "purge" ]; then
-  lintian --remove-lab
-fi
-
-#DEBHELPER#

@@ -92,6 +92,11 @@ lintian (1.24.2) unstable; urgency=low
   * debian/copyright:
     + [FL] Add Patrick Schoenfeld (for checks/watch-file).
     + [ADB] Update repository information and GPL2 URL.
+  * debian/{prerm,postrm}:
+    + [RA] Move prerm to postrm and remove the default /var/spool/lintian
+      lab using shell instead of lintian.  We only want to remove the lab
+      on purge, and purge is only passed to postrm, not prerm, by which
+      point the lintian frontend is gone.  (Closes: #489860)
   
   * doc/CREDITS:
     + [FL] Add Raphael Geissert and Adam D. Barratt.
