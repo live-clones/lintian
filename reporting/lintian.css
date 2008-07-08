@@ -277,6 +277,17 @@ h2.tag a {
     font-weight: bold;
 }
 
+h2.tag span.type-O {
+    margin: 0 3px 0 0;
+    padding: 2px 4px;
+    color: #555;
+    background: #EEE;
+    font-family: monospace;
+    font-size: 1.1em;
+    font-weight: bold;
+    border: 1px solid #DDD;
+}
+
 /* E/W/I colors */
 
 span.type-I {

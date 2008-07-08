@@ -25,9 +25,9 @@
         if (!$last
 	    or "$info->{package} $info->{type}" ne "$last->{package} $last->{type}") {
 	    if ($last) {
-		my $overridden = $has_nonoverridden ? '' : qq{<span class="type-O">O</span> };
-		$OUT .= qq(  <h2 class="tag">$overridden<a href="../full/$last->{xref}">);
-		$OUT .= "$last->{package}</a> ($last->{type})</h2>\n";
+		my $overridden = $has_nonoverridden ? '' : qq{ <span class="type-O">overridden</span>};
+		$OUT .= qq(  <h2 class="tag"><a href="../full/$last->{xref}">);
+		$OUT .= "$last->{package}</a> ($last->{type})$overridden</h2>\n";
         	$OUT .= qq(  <ul class="tag">\n);
 	        $OUT .= $tag;
 	        $OUT .= "</ul>\n";
@@ -43,9 +43,9 @@
 	    $tag .= "$info->{extra}</li>\n";
 	}
     }
-    my $overridden = $has_nonoverridden ? '' : qq{<span class="type-O">O</span> };
-    $OUT .= qq(  <h2 class="tag">$overridden<a href="../full/$last->{xref}">);
-    $OUT .= "$last->{package}</a> ($last->{type})</h2>\n";
+    my $overridden = $has_nonoverridden ? '' : qq{ <span class="type-O">overridden</span>};
+    $OUT .= qq(  <h2 class="tag"><a href="../full/$last->{xref}">);
+    $OUT .= "$last->{package}</a> ($last->{type})$overridden</h2>\n";
     $OUT .= qq(  <ul class="tag">\n);
     $OUT .= $tag;
     $OUT .= "</ul>\n";

@@ -124,10 +124,15 @@ lintian (1.24.2) unstable; urgency=low
     + [ADB] Process packages using -E so that experimental tags are included.
   * reporting/html_reports:
     + [FL] Mark the tag pages with the correct code.
+  * reporting/lintian.css:
+    + [RA] New style for marking packages that override a tag on the tag
+      summary page.  Patch from Jordà Polo.
   * reporting/templates/clean.tmpl:
     + [ADB] Note that the full report includes experimental tags.
   * reporting/templates/tag.tmpl:
     + [FL] Mark overridden tags.
+    + [RA] Mark packages that override all instances of a given tag.
+      Patch from Jordà Polo.
   * reporting/templates/maintainer.tmpl:
     + [FL] Add useful links for each source package.
       With layout help by Jordà Polo.
