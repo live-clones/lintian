@@ -8,6 +8,8 @@ Info: This script checks if the `conffiles' control file of a binary
 
 Tag: file-in-usr-marked-as-conffile
 Type: error
+Severity: important
+Certainty: certain
 Info: Files below <tt>/usr</tt> may not be marked as conffiles, since
  <tt>/usr</tt> might be mounted read-only and thus, the local system
  administrator would not have a chance to modify this configuration
@@ -15,6 +17,8 @@ Info: Files below <tt>/usr</tt> may not be marked as conffiles, since
 
 Tag: non-etc-file-marked-as-conffile
 Type: warning
+Severity: important
+Certainty: possible
 Info: A file installed in some other directory than <tt>/etc</tt>
  is marked as conffile. A conffile typically implies a configuration file, and
  policy mandates such files to be in /etc
@@ -23,12 +27,16 @@ Ref: policy 10.7.2
 
 Tag: relative-conffile
 Type: error
+Severity: important
+Certainty: certain
 Ref: policy E.1
 Info: All entries in the conffile control file should have an absolute
  path specification.
 
 Tag: duplicate-conffile
 Type: error
+Severity: important
+Certainty: certain
 Info: The file is listed more than once in your <tt>debian/conffiles</tt> file.
  Usually, this is because debhelper (dh_installdeb, compat level 3 or higher)
  will add any files in your package located in /etc automatically to the list
