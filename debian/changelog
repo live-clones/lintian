@@ -80,6 +80,10 @@ lintian (1.24.2) unstable; urgency=low
       Patch from Raphael Geissert.
     + [RA] Check for using the Sourceforge QA redirector with deprecated
       arguments.  Patch from Raphael Geissert.
+    + [RA] Be more explicit when warning about missing watch files that
+      Lintian recommends adding a watch file containing only comments for
+      any non-native package where it's not possible to write a meaningful
+      watch file, not only for packages unmaintained upstream.
 
   * data/fields/obsolete-packages:
     + [RA] mailx is not obsolete.  It's a virtual package.  Thanks, martin
