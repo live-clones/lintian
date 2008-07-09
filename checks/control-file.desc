@@ -8,6 +8,8 @@ Info: This script checks debian/control files in source packages
 
 Tag: debian-control-file-uses-obsolete-national-encoding
 Type: error
+Severity: important
+Certainty: certain
 Info: The Debian control file should be valid UTF-8, an encoding of
  the Unicode character set.
  .
@@ -19,6 +21,8 @@ Info: The Debian control file should be valid UTF-8, an encoding of
 
 Tag: build-info-in-binary-control-file-section
 Type: error
+Severity: important
+Certainty: certain
 Ref: policy 5.2
 Info: The control file has a Build-Depends, Build-Depends-Indep,
  Build-Conflicts, or Build-Conflicts-Indep field in a binary
@@ -27,12 +31,16 @@ Info: The control file has a Build-Depends, Build-Depends-Indep,
 
 Tag: debian-control-with-duplicate-fields
 Type: error
+Severity: important
+Certainty: certain
 Info: One of the paragraphs of your debian/control contains the same
  field more than once. This can lead to an unexpected behaviour of dpkg
  and apt.
 
 Tag: debian-control-file-is-a-symlink
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The <tt>debian/control</tt> file is a symlink rather than a regular
  file. Using symlinks for required source package files is unnecessary and
  makes package checking and manipulation more difficult. If the control
@@ -41,6 +49,8 @@ Info: The <tt>debian/control</tt> file is a symlink rather than a regular
 
 Tag: no-section-field-for-source
 Type: warning
+Severity: normal
+Certainty: certain
 Ref: policy 5.2
 Info: The package does not have a "Section:" field in the source package
  section of its control file.  The Section field is required for source
@@ -48,6 +58,8 @@ Info: The package does not have a "Section:" field in the source package
 
 Tag: section-category-mismatch
 Type: error
+Severity: important
+Certainty: certain
 Info: The <tt>debian/control</tt> file places the indicated binary package
  in a different archive category (main, contrib, non-free) than its source
  package or other binary packages built from the same source package.  The
@@ -58,6 +70,8 @@ Info: The <tt>debian/control</tt> file places the indicated binary package
 
 Tag: xs-vcs-header-in-debian-control
 Type: info
+Severity: wishlist
+Certainty: certain
 Info: There is an XS-Vcs-* field in the <tt>debian/control</tt> file.  As
  of dpkg 1.14.6, the XS- prefix is no longer necessary.  dpkg now
  recognizes these headers and handles them correctly.  Consider removing
@@ -65,6 +79,8 @@ Info: There is an XS-Vcs-* field in the <tt>debian/control</tt> file.  As
 
 Tag: stronger-dependency-implies-weaker
 Type: warning
+Severity: normal
+Certainty: certain
 Ref: policy 7.2
 Info: In the <tt>debian/control</tt> stanza for the given package, a
  stronger dependency field implies one of the dependencies in a weaker
@@ -79,6 +95,8 @@ Info: In the <tt>debian/control</tt> stanza for the given package, a
 
 Tag: package-depends-on-itself
 Type: warning
+Severity: normal
+Certainty: certain
 Ref: policy 7.2
 Info: The given package declares a dependency on itself in its
  <tt>debian/control</tt> stanza.  Current versions of dpkg-gencontrol will
