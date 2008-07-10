@@ -1,7 +1,11 @@
-#!/bin/sh
+#!/usr/bin/perl -w
 # objdump-info -- lintian collection script
 
+# The original shell script version of this script is
 # Copyright (C) 1998 Christian Schwarz
+# 
+# This version, including support for etch's binutils, is
+# Copyright (C) 2008 Adam D. Barratt
 # 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,56 +23,198 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-set -e
+use strict;
 
-# sanity check
-if [ -f "fields/package" ]; then
-    # everything is ok
-    :
-else
-    echo "error: collection script called in wrong directory!"
-    exit 2
-fi
+# Sanity check
+unless (-f "fields/package") {
+    print STDERR "error: collection script called in wrong directory!\n";
+    exit 2;
+}
 
-CDPATH=
-cd unpacked
+my $failed = 0;
 
-rm -f ../objdump-info
-touch ../objdump-info
-# objdump error output is combined with standard output here.
-# I can't send it to the console, because objdump complains when it's
-# asked to -T a non-dynamic object.  I can't ignore it either, because
-# objdump doesn't give an error code if it meets a real problem,
-# such as being unable to parse the file format.  So I put the error
-# output in the objdump-info file and let the check script deal with
-# it later.
-for bin in `grep ' ELF' <../file-info | cut -d\: -f1`; do
-    echo "-- $bin" >> ../objdump-info
-    if head $bin | grep -q 'packed.*with.*UPX'; then
-	echo "objdump: $bin: Packed with UPX" >> ../objdump-info
-    else
-	# readelf is for interpreter information only; ignore failure.
-	readelf -l "$bin" >> ../objdump-info 2>&1 || true
+open (FILES, '<', "file-info")
+    or fail("cannot open file-info: $!");
 
-	# The main data of interest.
-	if objdump --headers --private-headers -T $bin >> ../objdump-info 2>&1 ; then
-	    # everything is ok
-	    :
-	elif objdump -T $bin 2>&1 | grep -q 'Invalid operation$' ; then
+open (OUT, '>', "objdump-info")
+    or fail("cannot open objdump-info: $!");
+
+open(PIPE, '-|', "dpkg-query -W -f='\${Version}\n' binutils")
+    or fail("unable to run dpkg-query: $!");
+my $binutils_version = <PIPE>;
+chomp $binutils_version;
+close PIPE;
+
+chdir ("unpacked")
+    or fail ("unable to chdir to unpacked: $!\n");
+
+while (<FILES>) {
+    if (m/^(.+?):\s.*ELF/) {
+	my $bin = $1;
+
+	print OUT "-- $bin\n";
+
+	system("head $bin | grep -q 'packed.*with.*UPX'");
+	print OUT "objdump: $bin: Packed with UPX" if $? == 0;
+
+	if (open(PIPE, '-|', "readelf -l $bin 2>&1")) {
+	    local $/;
+	    local $_ = <PIPE>;
+	    print OUT $_;
+	    close PIPE;
+	}
+
+	system("objdump -T $bin >/dev/null 2>&1");
+	if ($? == 0) {
+	    # Seems happy so slurp the full output
+	    if (open(PIPE, '-|', "objdump --headers --private-headers -T $bin 2>&1")) {
+		local $/;
+		local $_ = <PIPE>;
+		print OUT $_;
+		close PIPE;
+	    }
+	} elsif ($binutils_version !~ m/^2\.17/) {
+	    # etch's binutils (2.17) can't read 64-bit binaries on 32-bit
+	    # platforms so we special-case that below
+	    #
+	    # Otherwise we allow the two specific errors "Invalid operation" and
+	    # "File format not recognized" as the checks scripts handle them
+
+	    # From the original script:
 	    # If the objdump error is "Invalid operation", we handle it later
 	    # in the check script, since this is the expected output (for now)
 	    # on detached debugging information in /usr/lib/debug.
-	    :
-	elif objdump -T $bin 2>&1 | grep -q 'File format not recognized$' ; then
-	    # There are some files that file recognizes as ELF but which
-	    # aren't; those too are handled separately in the check script.
-	    :
-	else
-	    exit 1
-	fi
-    fi
-done
 
-exit 0
+	    $failed = 1;
+	    if (open(PIPE, '-|', "objdump --headers --private-headers -T $bin 2>&1")) {
+		while(<PIPE>) {
+		    $failed = 0 if m/Invalid operation$/;
+		    $failed = 0 if m/File format not recognized$/;
 
-# -----------------------------------
+		    print OUT $_;
+		}
+		close PIPE;
+	    }
+
+	    last if $failed;
+	} else {
+	    # We're using etch's binutils so attempt to build an output file
+	    # in the expected format without using objcopy; we lose some
+	    # data but none that our later checks actually use
+	    my @sections;
+	    my @symbol_versions;
+
+	    if (system("readelf -l $bin 2>&1 | grep -q 'Error: Not an ELF file'") == 0) {
+		print OUT "objdump: $bin: File format not recognized\n";
+		next;
+	    } elsif (open(PIPE, '-|', "readelf -W -l -t -d -V $bin")) {
+		my $section = '';
+		my %program_headers;
+
+		while(<PIPE>) {
+		    chomp;
+		    if (m/^Program Headers:/) {
+			$section = 'PH';
+			print OUT "$_\n";
+		    } elsif (m/^Section Headers:/) {
+			$section = 'SH';
+			print OUT "$_\n";
+		    } elsif (m/^Dynamic section at offset .*:/) {
+			$section = 'DS';
+			print OUT "$_\n";
+		    } elsif (m/^Version symbols section /) {
+			$section = 'VS';
+		    } elsif (m/^\s*$/) {
+			$section = '';
+		    } elsif (m/^\s*(\S+)\s*(?:(?:\S+\s+){4})\S+\s(...)/
+			     and $section eq 'PH') {
+			my ($header, $flags) = ($1, $2);
+			$header =~ s/^GNU_//g;
+			next if $header eq 'Type';
+
+			my $newflags = '';
+			$newflags .= ($flags =~ m/R/) ? 'r' : '-';
+			$newflags .= ($flags =~ m/W/) ? 'w' : '-';
+			$newflags .= ($flags =~ m/E/) ? 'x' : '-';
+
+			$program_headers{$header} = $newflags;
+
+			print OUT "  $header off 0x0 X 0x0 X 0x0\n  flags $newflags\n";
+		    } elsif (m/^\s*\[(\d+)\]\s*(\S+)(?:\s|\Z)/
+			     and $section eq 'SH') {
+			$sections[$1] = $2;
+		    } elsif (m/^\s*0x(?:[0-9A-F]+)\s+\((.*?)\)\s+(\S.*)\Z/i
+			     and $section eq 'DS') {
+			my ($type, $value) = ($1, $2);
+
+			$value =~ s/^(?:Shared library|Library soname): \[(.*)\]/$1/;
+			print OUT "  $type   $value\n";
+		    } elsif (m/^\s*[0-9A-F]+:\s*(\S+)\s*\((\S+)\)\s/i
+			     and $section eq 'VS') {
+			while (m/\s(\S+)\s*\((\S+)\)(\s|\Z)/gc) {
+			    my ($vernum, $verstring) = ($1, $2);
+			    push @symbol_versions, $verstring;
+			}
+		    } elsif (m/^There is no dynamic section in this file/
+			     and exists $program_headers{DYNAMIC}) {
+			# The headers declare a dynamic section but it's
+			# empty. Generate the same error as objdump,
+			# the checks scripts special-case the string.
+			print OUT "\n\nobjdump: $bin: Invalid operation\n";
+		    }
+		}
+		close PIPE;
+	    }
+
+	    if (open(PIPE, '-|', "readelf -W -s -D $bin")) {
+		print OUT "DYNAMIC SYMBOL TABLE:\n";
+
+		while(<PIPE>) {
+		    last if m/^Symbol table of/;
+
+		    if (m/^\s*(\d+)\s+\d+:\s*[0-9a-f]+\s+\d+\s+(?:(?:\S+\s+){3})(\S+)\s+(.*)\Z/) {
+			my ($symnum, $seg, $sym, $ver) = ($1, $2, $3, '');
+
+			if ($sym =~ m/^(.*)@(.*)$/) {
+			    $sym = $1;
+			    $ver = $2;
+			} else {
+			    $ver = $symbol_versions[$symnum];
+
+			    if ($ver eq '*local*' or $ver eq '*global*') {
+				if ($seg eq 'UND') {
+				    $ver = '   ';
+				} else {
+				    $ver = 'Base';
+				}
+			    }
+			}
+
+			if ($seg =~ m/^\d+$/ and defined $sections[$seg]) {
+			    $seg = $sections[$seg];
+			}
+
+			print OUT "00      XX $seg  000000  $ver  $sym\n";
+		    }
+		}
+
+		close PIPE;
+	    }
+	}
+    }
+}
+close FILES;
+close OUT;
+
+exit $failed;
+
+sub fail {
+    if ($_[0]) {
+        print STDERR "internal error: $_[0]\n";
+    } elsif ($!) {
+        print STDERR "internal error: $!\n";
+    } else {
+        print STDERR "internal error.\n";
+    }
+    exit 1;
+}

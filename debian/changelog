@@ -85,6 +85,12 @@ lintian (1.24.2) unstable; urgency=low
       any non-native package where it's not possible to write a meaningful
       watch file, not only for packages unmaintained upstream.
 
+  * collection/objdump-info:
+    + [ADB] If objdump from binutils 2.17 fails to parse a file then
+      attempt to gather the required information using readelf instead.
+      This allows us to process 64-bit packages on etch/i386 again
+      (i.e. on lintian.d.o)  (Closes: #487746)
+
   * data/fields/obsolete-packages:
     + [RA] mailx is not obsolete.  It's a virtual package.  Thanks, martin
       f krafft.  (Closes: #488114)
