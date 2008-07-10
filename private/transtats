@@ -1,0 +1,96 @@
+#!/usr/bin/perl -w
+
+# transtats - tag classification transition statistics
+#
+# This script displays statistics and data related to the experimental tag
+# classification based on Severity/Certainty headers, as well as its
+# transition from the Type based classification.
+
+use strict;
+use warnings;
+
+my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
+unshift @INC, "$LINTIAN_ROOT/lib";
+
+require Read_pkglists;
+
+my @severities = qw(serious important normal minor wishlist);
+my @certainties = qw(certain possible wild-guess);
+my @types = qw(error warning info);
+
+my %stats;
+my $num_tags = 0;
+my $num_done = 0;
+my $per_done = 0;
+
+opendir(CHECKDIR, "$LINTIAN_ROOT/checks")
+    or fail("cannot read directory $LINTIAN_ROOT/checks");
+
+for my $check (readdir CHECKDIR) {
+    next unless $check =~ /\.desc$/;
+
+    my @tags = read_dpkg_control("$LINTIAN_ROOT/checks/$check");
+    shift(@tags);
+
+    foreach my $tag (@tags) {
+        my $type = $tag->{type};
+        my $severity = $tag->{severity};
+        my $certainty = $tag->{certainty};
+        my $done = $severity and $certainty ? 1 : 0;
+
+        $severity = 'unclassified' if not $severity;
+        $certainty = 'unclassified' if not $certainty;
+
+        $stats{severity}{$severity}++;
+        $stats{certainty}{$certainty}++;
+        $stats{both}{$severity}{$certainty}++;
+        $stats{type}{severity}{$type}{$severity}++;
+        $stats{type}{both}{$type}{$severity}{$certainty}++;
+
+        $num_tags++;
+        $num_done++ if $done;
+    }
+}
+
+closedir(CHECKDIR);
+
+$per_done = sprintf("%.2f", ($num_done/$num_tags)*100);
+print "Number of classified tags\n";
+print " $num_done/$num_tags ($per_done%)\n";
+
+print "\nSeverity\n";
+foreach my $s (@severities) {
+    print " $s: $stats{severity}{$s}\n";
+}
+
+print "\nCertainty\n";
+foreach my $c (@certainties) {
+    print " $c: $stats{certainty}{$c}\n";
+}
+
+print "\nSeverity/Certainty\n";
+foreach my $s (@severities) {
+    foreach my $c (@certainties) {
+        print " $s/$c: $stats{both}{$s}{$c}\n" if exists $stats{both}{$s}{$c};
+    }
+}
+
+foreach my $t (@types) {
+    print "\nType $t Severity\n";
+    foreach my $s (@severities) {
+        my $num = $stats{type}{severity}{$t}{$s};
+        print " $s: $num\n" if $num;
+    }
+}
+
+foreach my $t (@types) {
+    print "\nType $t Severity/Certainty\n";
+    foreach my $s (@severities) {
+        foreach my $c (@certainties) {
+            my $num = $stats{type}{both}{$t}{$s}{$c};
+            print " $s/$c: $num\n" if $num;
+        }
+    }
+}
+
+# vim: sw=4 sts=4 ts=4 et sr
