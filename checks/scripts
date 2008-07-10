@@ -572,7 +572,7 @@ while (<SCRIPTS>) {
 			# unsafe echo with backslashes
 		);
 		my @bashism_regexs = (
-		  qr'function \w+\(\s*\)',       # function is useless
+		  qr'(?:^|\s+)function \w+(\s|\(|\Z)',  # function is useless
 					         # should be '.', not 'source'
 		  $LEADIN . qr'source\s+(?:\.\/|\/|\$)[^\s]+',
 		  qr'(test|-o|-a)\s*[^\s]+\s+==\s', # should be 'b = a'

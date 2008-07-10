@@ -60,7 +60,7 @@ lintian (1.24.2) unstable; urgency=low
     + [FL] Improve script_is_evil_and_wrong() to catch more scripts.
       Patch by Adam D. Barratt.
     + [ADB] Update bashism regexes to add new checks, improve performance
-      and reduce false positives.
+      and reduce false positives. (Closes: #490227)
   * checks/shared-libs{,.desc}:
     + [ADB] Implement syntax and sanity checking for symbols files
       (Closes: #452216)
