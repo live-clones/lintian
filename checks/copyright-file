@@ -240,6 +240,7 @@ if (m,/usr/share/common-licenses,
     || m/AFFERO GENERAL PUBLIC LICENSE/
     || m/GNU Free Documentation License\s*Version 1\.1/
     || m/CeCILL FREE SOFTWARE LICENSE AGREEMENT/
+    || m/CNRI OPEN SOURCE GPL-COMPATIBLE LICENSE AGREEMENT/
     || $wrong_directory_detected) {
     # False positive or correct reference.  Ignore.
 } elsif (m/GNU Free Documentation License/i or m/\bGFDL\b/) {

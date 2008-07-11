@@ -2,6 +2,9 @@ lintian (1.24.2) unstable; urgency=low
 
   * checks/changelog-file:
     + [ADB] Add missing "use Dep". Thanks gregor herrmann (Closes: #488397)
+    + [RA] Ignore "CNRI OPEN SOURCE GPL-COMPATIBLE LICENSE AGREEMENT" when
+      looking for missing GPL references.  Thanks, Scott Kitterman.
+      (Closes: #490264)
   * checks/copyright-file{,.desc}:
     + [ADB] Check for over-long lines in copyright files.  (Closes: #479651)
   * checks/cruft{,.desc}:
