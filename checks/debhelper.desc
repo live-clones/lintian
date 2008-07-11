@@ -8,6 +8,8 @@ Needs-Info: debfiles, source-control-file
 
 Tag: maintainer-script-lacks-debhelper-token
 Type: warning
+Severity: normal
+Certainty: possible
 Info: This package is built using debhelper commands that may modify
  maintainer scripts, but the maintainer scripts do not contain
  the "#DEBHELPER#" token debhelper uses to modify them.
@@ -16,11 +18,15 @@ Info: This package is built using debhelper commands that may modify
 
 Tag: package-uses-debhelper-but-lacks-build-depends
 Type: error
+Severity: important
+Certainty: possible
 Info: If a package uses debhelper, it must declare a Build-Depends
  on debhelper.
 
 Tag: package-lacks-versioned-build-depends-on-debhelper
 Type: info
+Severity: minor
+Certainty: possible
 Info: If a package sets debhelper's compatibility version to &gt;= 5,
  either via DH_COMPAT, or via debian/compat, or via dh_testversion
  (which is deprecated), it should declare a versioned Build-Depends on
@@ -32,6 +38,8 @@ Info: If a package sets debhelper's compatibility version to &gt;= 5,
 
 Tag: dh-make-template-in-source
 Type: warning
+Severity: normal
+Certainty: possible
 Info: This package contains debian/*.ex and/or debian/ex.* files
  installed by dh_make. These are intended to be filled in with the
  package's details and renamed for use by various debhelper commands.
@@ -39,6 +47,8 @@ Info: This package contains debian/*.ex and/or debian/ex.* files
 
 Tag: dh_testversion-is-deprecated
 Type: warning
+Severity: normal
+Certainty: certain
 Ref: dh_testversion(1)
 Info: This package calls dh_testversion in its <tt>debian/rules</tt> file.
  dh_testversion is deprecated. Packages using debhelper should use
@@ -47,6 +57,8 @@ Info: This package calls dh_testversion in its <tt>debian/rules</tt> file.
 
 Tag: dh_dhelp-is-deprecated
 Type: warning
+Severity: normal
+Certainty: certain
 Info: This package calls dh_dhelp in its <tt>debian/rules</tt> file.
  dh_dhelp is deprecated as it is not part of the canonical debhelper suite
  and due to be removed since it supports only one single documentation
@@ -57,18 +69,24 @@ Info: This package calls dh_dhelp in its <tt>debian/rules</tt> file.
 
 Tag: dh_suidregister-is-obsolete
 Type: warning
+Severity: normal
+Certainty: certain
 Ref: dh_suidregister(1)
 Info: suidregister is obsoleted by dpkg-statoverride, so registration of
  files in with dh_suidregister is unnecessary, and even harmful.
 
 Tag: debhelper-compat-file-is-empty
 Type: error
+Severity: important
+Certainty: certain
 Ref: debhelper(7)
 Info: The source package has an empty debian/compat file. This is an error,
  the compat level of debhelper should be in there.
 
 Tag: declares-possibly-conflicting-debhelper-compat-versions
 Type: error
+Severity: important
+Certainty: possible
 Ref: debhelper(7)
 Info: The source package declares the debhelper compatibility version
  both in the <tt>debian/compat</tt> file and in the <tt>debian/rules</tt>
@@ -77,6 +95,8 @@ Info: The source package declares the debhelper compatibility version
 
 Tag: package-uses-deprecated-debhelper-compat-version
 Type: warning
+Severity: normal
+Certainty: certain
 Ref: debhelper(7)
 Info: The debhelper compatibility version used by this package is marked
  as deprecated by the debhelper developer. You should really consider
@@ -89,6 +109,8 @@ Info: The debhelper compatibility version used by this package is marked
 
 Tag: package-needs-python-policy-debhelper
 Type: info
+Severity: minor
+Certainty: certain
 Info: The source package requests dh_python compatibility level 2 (or
  higher) in <tt>debian/pycompat</tt> but doesn't depend on a new enough
  debhelper.  A Build-Depends on debhelper (&gt;= 5.0.37.2) is required for
@@ -100,6 +122,8 @@ Info: The source package requests dh_python compatibility level 2 (or
 
 Tag: uses-dh-python-with-no-pycompat
 Type: warning
+Severity: normal
+Certainty: possible
 Info: This package uses dh_python but apparently does not tell it to use
  the current Python policy by putting 2 in <tt>debian/pycompat</tt>.  This
  may mean that the package has not been converted to the current Python
@@ -107,6 +131,8 @@ Info: This package uses dh_python but apparently does not tell it to use
 
 Tag: debhelper-script-needs-versioned-build-depends
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The given debhelper script was introduced in a later version of
  debhelper than the package Build-Depends on.  The package Build-Depends
  should be updated to require that version of debhelper.  Giving the
