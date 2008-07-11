@@ -108,6 +108,8 @@ lintian (1.24.2) unstable; urgency=low
   * debian/copyright:
     + [FL] Add Patrick Schoenfeld (for checks/watch-file).
     + [ADB] Update repository information and GPL2 URL.
+    + [RA] Add Adam D. Barratt to the maintainer list so that readers can
+      expand initials in the changelog.
   * debian/{prerm,postrm}:
     + [RA] Move prerm to postrm and remove the default /var/spool/lintian
       lab using shell instead of lintian.  We only want to remove the lab

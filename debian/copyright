@@ -13,6 +13,7 @@ It is now maintained by a goup of people, namely:
  Colin Watson <cjwatson@debian.org>
  Russ Allbery <rra@debian.org>
  Thijs Kinkhorst <thijs@debian.org>
+ Adam D. Barratt <adam@adam-barratt.org.uk>
 Contact address is <lintian-maint@debian.org>.
 
 Lintian is maintained in git.  The current development version may
