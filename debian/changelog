@@ -38,6 +38,9 @@ lintian (1.24.2) unstable; urgency=low
       entry as well as --remove.
   * checks/menus{,.desc}:
     + [ADB] Check that menu-method files include menu.h (Closes: #184104)
+  * checks/nmu:
+    + [RA] When comparing maintainers, treat the right-hand side of the
+      e-mail address as case-insensitive.  (Closes: #486795)
   * checks/patch-systems{,.desc}:
     + [RA] Check quilt patches as well as dpatch patches, and also check
       quilt patches when using the 3.0 (quilt) package format.  Fix build

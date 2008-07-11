@@ -2,7 +2,7 @@ Source: copyright
 Section: text
 Priority: optional
 Maintainer: Lintian Maintainers <lintian-maint@debian.org>
-Uploaders: Tobias Toedter <t.toedter@gmx.net>
+Uploaders: Tobias Toedter <t.toedter@GMX.NET>
 Build-Depends-Indep: debhelper (>5)
 Standards-Version: 3.8.0
 

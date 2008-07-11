@@ -52,14 +52,14 @@ while (<CHANGELOG>) {
 		$firstline = 0 if /^\s+\S/;
 	}
 	if (/^ -- ([^>]+>)/) {
-		$uploader = $1;
+		$uploader = canonicalize($1);
 		last;
 	}
 }
 close CHANGELOG;
 
 my $version = getfield("version");
-my $maintainer = getfield("maintainer");
+my $maintainer = canonicalize(getfield("maintainer"));
 my $uploaders = getfield("uploaders");
 
 my $version_nmuness = 0;
@@ -76,7 +76,7 @@ if ($version =~ /\+b\d+$/) {
 
 my $upload_is_nmu = $uploader ne $maintainer;
 if (defined $uploaders) {
-	my @uploaders = split /,/, $uploaders;
+	my @uploaders = map { canonicalize($_) } split /,/, $uploaders;
 	$upload_is_nmu = 0 if grep /^\s*\Q$uploader\E\s*$/, @uploaders;
 }
 
@@ -114,6 +114,18 @@ sub getfield {
 	return $field;
 }
 
+# Canonicalize a maintainer address with respect to case.  E-mail addresses
+# are case-insensitive in the right-hand side.
+sub canonicalize {
+	my ($maintainer) = @_;
+	$maintainer =~ s/(<[^>\@]+\@)([\w.-]+)>/$1 . lc ($2)/e;
+	return $maintainer;
+}
+
 1;
 
+# Local Variables:
+# indent-tabs-mode: t
+# cperl-indent-level: 8
+# End:
 # vim: ts=4 sw=4
