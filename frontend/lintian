@@ -882,7 +882,7 @@ while (my $arg = shift) {
 
 if (not $check_everything and not $packages_file and ($#packages == -1)) {
     print "N: No packages selected.\n" if $verbose;
-    exit 0;
+    exit $exit_code;
 }
 # }}}
 

@@ -116,6 +116,8 @@ lintian (1.24.2) unstable; urgency=low
   * frontend/lintian:
     + [ADB] Add a new --show-experimental / -E option which indicates
       that experimental tags should be displayed.
+    + [RA] Exit with the correct exit status if no packages were found
+      because non-existent packages were specified on the command line.
 
   * lib/Lintian/Collect/Binary.pm:
     + [FL] Add support for file-info file.
