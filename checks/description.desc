@@ -6,37 +6,51 @@ Unpack-Level: 1
 
 Tag: package-has-no-description
 Type: error
+Severity: serious
+Certainty: certain
 Info: The binary package does not have a "Description:" control field.
 Tested: empty
 
 Tag: description-synopsis-is-empty
 Type: error
+Severity: serious
+Certainty: certain
 Info: The first line in the "Description:" is empty.
 
 Tag: extended-description-is-empty
 Type: error
+Severity: serious
+Certainty: certain
 Status: untested
 Info: The extended description (the lines after the first line of the
  "Description:" field) is empty.
 
 Tag: description-contains-invalid-control-statement
 Type: error
+Severity: serious
+Certainty: certain
 Info: The description contains a line starting with a dot (.). This is
  not allowed.
 Ref: policy 5.6.13
 
 Tag: description-too-long
 Type: error
+Severity: important
+Certainty: certain
 Info: The first line of the "Description:" must not exceed 80 characters.
 Ref: policy 3.4.1
 
 Tag: description-synopsis-has-leading-spaces
 Type: error
+Severity: important
+Certainty: certain
 Status: untested
 Info: The first line of the "Description:" should not have leading spaces.
 
 Tag: description-starts-with-package-name
 Type: error
+Severity: important
+Certainty: certain
 Info: The first line of the "Description:" should not start with the
  package name. For example, the package <tt>foo</tt> should not
  have a description like this: `foo is a program that...'.
@@ -44,17 +58,23 @@ Ref: policy 3.4.1
 
 Tag: description-contains-tabs
 Type: error
+Severity: important
+Certainty: certain
 Info: The package "Description:" must not contain tab characters.
 Ref: policy 5.6.13
 
 Tag: description-starts-with-leading-spaces
 Type: warning
+Severity: normal
+Certainty: possible
 Info: The package "Description:" starts with leading spaces. Usually,
  leading spaces are used to switch `verbatim display' on (i.e., lines
  are not wrapped) so this might be a bug in the package.
 
 Tag: possible-unindented-list-in-extended-description
 Type: warning
+Severity: normal
+Certainty: possible
 Info: The package "Description:" contains an unindented line which
  starts with a dash (-) or asterisk (*). If this was meant to be a
  list of items these lines need to be indented (dselect would
@@ -63,16 +83,22 @@ Ref: policy 5.6.13
 
 Tag: description-is-debmake-template
 Type: error
+Severity: important
+Certainty: certain
 Info: The synopsis or the extended description just says "Missing",
  which is a template provided by debmake.
 
 Tag: description-is-dh_make-template
 Type: error
+Severity: important
+Certainty: certain
 Info: The synopsis or the extended description has not been changed
  from the template provided by dh_make.
 
 Tag: description-synopsis-might-not-be-phrased-properly
 Type: warning
+Severity: normal
+Certainty: possible
 Info: The synopsis (first line in the package "Description:" field, the
  short description) ends with a full stop "." character. This is not
  necessary, as the synopsis doesn't need to be a full sentence. It is
@@ -84,6 +110,8 @@ Ref: policy 3.4.1
 
 Tag: description-synopsis-is-duplicated
 Type: error
+Severity: important
+Certainty: certain
 Info: The first line of the extended Description: should not repeat the
  synopsis exactly. This indicates that either the synopsis is badly formed
  or that the extended description has been wrongly copied and pasted.
@@ -91,6 +119,8 @@ Ref: policy 3.4.2
 
 Tag: extended-description-line-too-long
 Type: warning
+Severity: normal
+Certainty: certain
 Info: One or more lines in the extended part of the "Description:" field
  have been found to contain more than 80 characters. For the benefit of
  users of 80x25 terminals, it is recommended that the lines do not exceed
@@ -99,6 +129,8 @@ Ref: policy 3.4.1
 
 Tag: description-contains-homepage
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The extended description contains a "Homepage:" pseudo-header
  following the old Developer's Reference recommendation.  As of 1.14.6,
  dpkg now supports Homepage: as a regular field in
@@ -107,6 +139,8 @@ Info: The extended description contains a "Homepage:" pseudo-header
 
 Tag: spelling-error-in-description
 Type: warning
+Severity: normal
+Certainty: possible
 Info: Lintian found a spelling or capitalization error in the package
  description.  Lintian has a list of common misspellings that it looks
  for.  It does not have a dictionary like a spelling checker does.  It is
@@ -115,5 +149,7 @@ Info: Lintian found a spelling or capitalization error in the package
 
 Tag: description-contains-duplicated-word
 Type: warning
+Severity: normal
+Certainty: possible
 Info: The description contains a duplicated word.  Usually this is a
  mistake, or at least an awkward phrasing.
