@@ -139,6 +139,8 @@ lintian (1.24.2) unstable; urgency=low
   * man/lintian.1:
     + [FL] Document watch-file check.
     + [ADB] Document new option to display experimental tags.
+    + [RA] Refer to lintian-info(1) for printing tag descriptions.  Patch
+      from Chris Lamb.  (Closes: #490374)
   
   * reporting/harness:
     + [ADB] Process packages using -E so that experimental tags are included.
