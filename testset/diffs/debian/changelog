@@ -12,4 +12,4 @@ diffs (1-1~lint1) unstable; urgency=low
   (Closes Bug# 123893)
   (Closes #1239124)
 
- -- Lintian Maintainers <lintian-maint@debian.org>  Wed, 27 Nov 2002 14:15:00 +0100
+ -- Lintian Maintainers <lintian-maint@debian.org>  Thu,  6 Mar 2003 18:00:00 -0600

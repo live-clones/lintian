@@ -23,6 +23,7 @@ W: debug source: ancient-standards-version 3.7.0 (current is 3.8.0)
 W: debug source: changelog-should-not-mention-nmu
 W: debug source: debhelper-script-needs-versioned-build-depends dh_icons (>= 5.0.51~)
 W: debug source: debian-rules-sets-DH_COMPAT line 5
+W: debug source: timewarp-standards-version (2006-03-05 < 2006-04-26)
 W: hello: binary-without-manpage usr/bin/hello
 W: hello: binary-without-manpage usr/bin/hello.dbg
 W: libhello0-dbg: dbg-package-missing-depends libhello0

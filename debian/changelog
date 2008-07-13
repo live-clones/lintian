@@ -84,6 +84,9 @@ lintian (1.24.2) unstable; urgency=low
     + [RA] Base the two-year clock for ancient-standards-version on when
       the Policy version was superseded, not when it was issued.  Thanks,
       Scott Kitterman.  (Closes: #487780)
+    + [RA] Warn for packages declaring a standards version released after
+      the date of the most recent changelog entry.  Based on a patch by
+      Raphael Geissert.
   * checks/watch-file{,.desc}:
     + [FL] Check for more Debian specific strings in version
       number.  Issue an info tag if the watch file uses

@@ -22,6 +22,7 @@ package Lintian::standards_version;
 use strict;
 
 use Date::Parse qw(str2time);
+use POSIX qw(strftime);
 use Parse::DebianChangelog;
 
 use Tags;
@@ -31,38 +32,38 @@ use Util;
 # their dates of publication.
 my @standards =
     ([ '3.8.0'  => '2008-06-04' ],
-     [ '3.7.3'  => '2007-12-02' ],
+     [ '3.7.3'  => '2007-12-03' ],
      [ '3.7.2'  => '2006-05-03' ],
      [ '3.7.1'  => '2006-05-03' ],
-     [ '3.7.0'  => '2006-04-25' ],
-     [ '3.6.2'  => '2005-06-16' ],
+     [ '3.7.0'  => '2006-04-26' ],
+     [ '3.6.2'  => '2005-06-17' ],
      [ '3.6.1'  => '2003-08-19' ],
      [ '3.6.0'  => '2003-07-09' ],
      [ '3.5.10' => '2003-05-10' ],
      [ '3.5.9'  => '2003-03-07' ],
      [ '3.5.8'  => '2002-11-15' ],
      [ '3.5.7'  => '2002-08-31' ],
-     [ '3.5.6'  => '2001-07-24' ],
-     [ '3.5.5'  => '2001-07-01' ],
+     [ '3.5.6'  => '2001-07-25' ],
+     [ '3.5.5'  => '2001-06-01' ],
      [ '3.5.4'  => '2001-04-28' ],
      [ '3.5.3'  => '2001-04-15' ],
      [ '3.5.2'  => '2001-02-18' ],
      [ '3.5.1'  => '2001-02-15' ],
-     [ '3.5.0'  => '2001-01-28' ],
+     [ '3.5.0'  => '2001-01-29' ],
      [ '3.2.1'  => '2000-08-24' ],
      [ '3.2.0'  => '2000-07-30' ],
      [ '3.1.1'  => '1999-11-16' ],
      [ '3.1.0'  => '1999-11-04' ],
      [ '3.0.1'  => '1999-07-15' ],
-     [ '3.0.0'  => '1999-06-30' ],
+     [ '3.0.0'  => '1999-07-01' ],
      [ '2.5.1'  => '1999-04-27' ],
      [ '2.5.0'  => '1998-10-29' ],
      [ '2.4.1'  => '1998-04-14' ],
      [ '2.4.0'  => '1998-01-30' ],
-     [ '2.3.0'  => '1997-09-02' ],
+     [ '2.3.0'  => '1997-09-01' ],
      [ '2.2.0'  => '1997-07-13' ],
      [ '2.1.3'  => '1997-03-15' ],
-     [ '2.1.2'  => '1996-11-22' ],
+     [ '2.1.2'  => '1996-11-23' ],
      [ '2.1.1'  => '1996-09-12' ],
      [ '2.1.0'  => '1996-09-01' ],
      [ '2.0.1'  => '1996-08-31' ],
@@ -98,6 +99,25 @@ unless ($version =~ m/^\s*(\d+\.\d+\.\d+)(?:\.\d+)?\s*$/) {
 my $stdver = $1;
 my ($major, $minor, $patch) = $stdver =~ m/^(\d+)\.(\d+)\.(\d+)/;
 
+# To do some date checking, we have to get the package date from the changelog
+# file.  If we can't find the changelog file, assume that the package was
+# released today, since that activates the most tags.
+my $changes = $info->changelog;
+my $pkgdate;
+if (defined $changes) {
+    my ($entry) = $changes->data;
+    $pkgdate = $entry ? $entry->Timestamp : 0;
+} else {
+    $pkgdate = time;
+}
+
+# Check for packages dated prior to the date of release of the standards
+# version with which they claim to comply.
+if ($standards{$stdver} && str2time($standards{$stdver}, '+0000') > $pkgdate) {
+    my $pretty = strftime ('%Y-%m-%d', gmtime $pkgdate);
+    tag 'timewarp-standards-version', "($pretty < $standards{$stdver})";
+}
+
 my $tag = "$version (current is $current)";
 if (not exists $standards{$stdver}) {
     # Unknown standards version.  Perhaps newer?
@@ -127,7 +147,7 @@ if (not exists $standards{$stdver}) {
             last;
         }
     }
-    if (str2time($obsdate) + (60 * 60 * 24 * 365 * 2) < time) {
+    if (str2time($obsdate, '+0000') + (60 * 60 * 24 * 365 * 2) < time) {
         tag 'ancient-standards-version', $tag;
     } else {
         # We have to get the package date from the changelog file.  If we
@@ -141,7 +161,7 @@ if (not exists $standards{$stdver}) {
         my $timestamp = $entry ? $entry->Timestamp : 0;
         for my $standard (@standards) {
             last if $standard->[0] eq $stdver;
-            if (str2time($standard->[1]) < $timestamp) {
+            if (str2time($standard->[1], '+0000') < $timestamp) {
                 tag 'out-of-date-standards-version', $tag;
                 last;
             }

@@ -51,3 +51,10 @@ Info: The source package refers to a Standards-Version older than the one
  have to re-upload the package just to adjust the Standards-Version
  control field.  However, please remember to update this field next time
  you upload the package.
+
+Tag: timewarp-standards-version
+Type: warning
+Info: The source package refers to a Standards-Version that was released
+ after the date of the most recent <tt>debian/changelog</tt> entry.
+ Perhaps you forgot to update the timestamp in <tt>debian/changelog</tt>
+ before building the package?

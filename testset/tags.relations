@@ -51,6 +51,7 @@ W: relations source: stronger-dependency-implies-weaker relations depends -> rec
 W: relations source: stronger-dependency-implies-weaker relations pre-depends -> depends gawk | awk
 W: relations source: stronger-dependency-implies-weaker relations recommends -> suggests some-other-package
 W: relations source: stronger-dependency-implies-weaker relations-multiple-libs depends -> recommends ${shlibs:Depends}
+W: relations source: timewarp-standards-version (2007-12-02 < 2007-12-03)
 W: relations source: virtual-package-depends-without-real-package-depends build-depends: mail-transport-agent
 W: relations-multiple-libs: bad-homepage lintian.debian.org
 W: relations-multiple-libs: breaks-without-version libpng2
