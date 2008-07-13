@@ -166,7 +166,7 @@ Info: The latest Debian changelog entry has a version number that's either
 
 Tag: syntax-error-in-debian-changelog
 Type: warning
-Info: While parsing the Debian changelog, an syntax error was found.
+Info: While parsing the Debian changelog, a syntax error was found.
 Ref: policy 4.4
 
 Tag: syntax-error-in-debian-news-file

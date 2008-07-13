@@ -98,11 +98,13 @@ Info: The listed shared library doesn't include information about which
 
 Tag: arch-dependent-file-in-usr-share
 Type: error
+Ref: fhs 4.11
 Info: This package installs an ELF binary in the <tt>/usr/share</tt>
  hierarchy, which is reserved for architecture-independent files.
 
 Tag: binary-in-etc
 Type: error
+Ref: fhs 3.7
 Info: This package installs an ELF binary in <tt>/etc</tt>.
  The Filesystem Hierarchy Standard forbids this.
 

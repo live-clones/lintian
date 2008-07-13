@@ -189,6 +189,7 @@ Type: warning
 Info: The Maintainer address for this package is a mailing list and there
  are no Uploaders listed.  Team-maintained packages should list the human
  maintainers in the Uploaders field.
+Ref: devref 5.12
 
 Tag: no-source-field
 Type: error
@@ -479,13 +480,13 @@ Ref: policy 11.8.5
 
 Tag: build-depends-indep-without-arch-indep
 Type: error
-Ref: policy 7.6
+Ref: policy 7.7
 Info: The control file specifies source relations for architecture-independent
  packages, but no architecture-independent packages are built.
 
 Tag: build-depends-without-arch-dep
 Type: info
-Ref: policy 7.6
+Ref: policy 7.7
 Info: The control file lists the given package in Build-Depends, but no
  architecture-dependent packages are built. If all the packages built are
  architecture-independent, the only packages that should be listed in
@@ -495,7 +496,7 @@ Info: The control file lists the given package in Build-Depends, but no
 
 Tag: clean-should-be-satisfied-by-build-depends
 Type: error
-Ref: policy 7.6
+Ref: policy 7.7
 Info: The specified package is required to run the clean target of
  <tt>debian/rules</tt> and therefore must be listed in Build-Depends, not
  Build-Depends-Indep, even if no architecture-dependent packages are
@@ -541,7 +542,7 @@ Info: The package runs dh_python in <tt>debian/rules</tt> but doesn't
 
 Tag: build-conflicts-with-build-dependency
 Type: error
-Ref: policy 7.6
+Ref: policy 7.7
 Info: The package build-conflicts with a package that it also
  build-depends on.
 
@@ -647,7 +648,7 @@ Info: This package declares a Breaks relationship with another package
  that has no version number.  Normally, Breaks should be used to indicate
  an incompatibility with a specific version of another package, or with
  all versions predating a fix.  If the two packages can never be installed
- at the same time, Conflicts should normally be uesd instead.
+ at the same time, Conflicts should normally be used instead.
 
 Tag: bad-menu-item
 Type: error
@@ -684,8 +685,8 @@ Info: You use the Bugs field though the field value is the default
 
 Tag: build-depends-on-build-essential
 Type: error
-Ref: policy 7.6
-Info: You depends on the build-essential package, which is only a
+Ref: policy 7.7
+Info: You depend on the build-essential package, which is only a
  meta-package depending on build tools that have to be installed in all
  build environments.
 

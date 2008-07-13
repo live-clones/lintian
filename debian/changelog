@@ -1,10 +1,14 @@
 lintian (1.24.2) unstable; urgency=low
 
-  * checks/changelog-file:
+  * checks/binaries.desc:
+    + [ADB] Add some FHS references.  Thanks Jordà Polo.
+  * checks/changelog-file{,.desc}:
     + [ADB] Add missing "use Dep". Thanks gregor herrmann (Closes: #488397)
     + [RA] Ignore "CNRI OPEN SOURCE GPL-COMPATIBLE LICENSE AGREEMENT" when
       looking for missing GPL references.  Thanks, Scott Kitterman.
       (Closes: #490264)
+    + [ADB] Fix a typo in the description of syntax-error-in-debian-changelog.
+      Thanks Jordà Polo.
   * checks/copyright-file{,.desc}:
     + [ADB] Check for over-long lines in copyright files.  (Closes: #479651)
   * checks/cruft{,.desc}:
@@ -27,6 +31,8 @@ lintian (1.24.2) unstable; urgency=low
       non-obsolete alternatives specified and if the obsolete
       package is not listed first.  Issue an info tag for them
       though.  Patch by Adam D. Barratt.  (Closes: #486145)
+    + [ADB] Update and add some Policy and DevRef references and fix some
+      typoes.  Thanks Jordà Polo.
   * checks/files{,.desc}:
     + [ADB] Warn if the package contains embedded copies of separately
       packaged Javascript libraries.  Patch by Chris Lamb.  (Closes: #489191)
