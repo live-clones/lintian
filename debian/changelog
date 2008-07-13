@@ -78,9 +78,12 @@ lintian (1.24.2) unstable; urgency=low
       (Closes: #452216)
     + [ADB] Check symbols files for dependencies that are not satisfied by
       the package itself (Closes: #461575)
-  * checks/standards-version:
+  * checks/standards-version{.desc,}:
     + [RA] Only issue out-of-date-standards-version once.  Noticed by
       Raphael Geissert.
+    + [RA] Base the two-year clock for ancient-standards-version on when
+      the Policy version was superseded, not when it was issued.  Thanks,
+      Scott Kitterman.  (Closes: #487780)
   * checks/watch-file{,.desc}:
     + [FL] Check for more Debian specific strings in version
       number.  Issue an info tag if the watch file uses

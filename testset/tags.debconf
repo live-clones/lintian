@@ -24,7 +24,6 @@ I: debconf-test: unused-debconf-template debconf/testnote
 I: debconf-test: unused-debconf-template debconf/teststring
 I: debconf-test: unused-debconf-template debconf/translate
 I: debconf-udeb udeb: unused-debconf-template debian-installer/debconf-udeb/title
-W: debconf source: ancient-standards-version 3.7.2 (current is 3.8.0)
 W: debconf source: debian-rules-calls-debhelper-in-odd-order dh_makeshlibs (line 49)
 W: debconf source: debian-rules-calls-debhelper-in-odd-order dh_makeshlibs (line 53)
 W: debconf source: debian-rules-sets-DH_COMPAT line 3

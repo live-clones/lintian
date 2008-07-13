@@ -116,8 +116,18 @@ if (not exists $standards{$stdver}) {
     # Otherwise, we need to see if the standard that this package declares is
     # both new enough to not be ancient and was the current standard at the
     # time the package was uploaded.
-    my $stddate = $standards{$stdver};
-    if (str2time($stddate) < time - (60 * 60 * 24 * 365 * 2)) {
+    #
+    # A given standards version is considered obsolete if the version
+    # following it has been out for at least two years (so the current version
+    # is never obsolete).
+    my $obsdate = time;
+    for my $index (0 .. $#standards) {
+        if ($standards[$index][0] eq $stdver) {
+            $obsdate = $standards[$index - 1][1] if $index > 0;
+            last;
+        }
+    }
+    if (str2time($obsdate) + (60 * 60 * 24 * 365 * 2) < time) {
         tag 'ancient-standards-version', $tag;
     } else {
         # We have to get the package date from the changelog file.  If we

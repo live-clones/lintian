@@ -30,9 +30,9 @@ Info: The source package refers to a Standards-Version which is
 
 Tag: ancient-standards-version
 Type: warning
-Info: The source package refers to a Standards-Version that is more than
- two years old.  Please update your package to latest Policy and set this
- control field appropriately.
+Info: The source package refers to a Standards-Version that has been
+ obsolete for more than two years.  Please update your package to latest
+ Policy and set this control field appropriately.
  .
  If the package is already compliant with the current standards, you don't
  have to re-upload the package just to adjust the Standards-Version
@@ -46,3 +46,8 @@ Info: The source package refers to a Standards-Version older than the one
  timestamp of the latest <tt>debian/changelog</tt> entry).  Please
  consider updating the package to current Policy and setting this control
  field appropriately.
+ .
+ If the package is already compliant with the current standards, you don't
+ have to re-upload the package just to adjust the Standards-Version
+ control field.  However, please remember to update this field next time
+ you upload the package.
