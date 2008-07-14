@@ -33,6 +33,8 @@ lintian (1.24.2) unstable; urgency=low
       though.  Patch by Adam D. Barratt.  (Closes: #486145)
     + [ADB] Update and add some Policy and DevRef references and fix some
       typoes.  Thanks Jordà Polo.
+    + [RA] Recognize and do not warn about Ubuntu security update version
+      numbers for multiple releases.  (Closes: #489222)
   * checks/files{,.desc}:
     + [ADB] Warn if the package contains embedded copies of separately
       packaged Javascript libraries.  Patch by Chris Lamb.  (Closes: #489191)

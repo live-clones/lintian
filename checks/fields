@@ -164,12 +164,19 @@ if (not open (FH, '<', "fields/version")) {
 		}
 		if (defined $debian) {
 			tag "debian-revision-should-not-be-zero", "$version"
-				if $debian eq '0';
-			$debian =~ /^-([^.]+)?(?:\.[^.]+)?(?:\.[^.]+)?(\..*)?$/;
-			if (not defined $1 or defined $2) {
+				if $debian eq '-0';
+			my $ubuntu;
+			$debian =~ /^-([^.]+)(?:\.[^.]+)?(?:\.[^.]+)?(\..*)?$/;
+			my $extra = $2;
+			if (defined $extra) {
+				$debian =~ /^-([^.]+ubuntu[^.]+)(?:\.\d+){1,3}(\..*)?$/;
+				$ubuntu = 1;
+				$extra = $2;
+			}
+			if (not defined $1 or defined $extra) {
 				tag "debian-revision-not-well-formed", "$version";
 			}
-			if ($debian =~ /^-[^.-]+\.[^.-]+\./) {
+			if ($debian =~ /^-[^.-]+\.[^.-]+\./ and not $ubuntu) {
 				tag "binary-nmu-uses-old-version-style", "$version"
 					if $type eq 'binary';
 				tag "binary-nmu-debian-revision-in-source", "$version"

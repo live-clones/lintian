@@ -1,7 +1,9 @@
-scripts (6ds-1) unstable; urgency=low
+scripts (6ds-1ubuntu0.5.10.1) unstable; urgency=low
 
   * I'm also not able to write my name.
   * Added a script in /etc/Xsession.d
+  * Bizarre version number courtesy of
+    https://wiki.ubuntu.com/SecurityUpdateProcedures#Prepare
 
  -- Mark 'HE' Brokschmitt <he@debian.org>  Thu, 23 Jun 2005 14:32:39 +0200
 

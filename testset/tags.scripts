@@ -17,18 +17,17 @@ E: scripts: shell-script-fails-syntax-check ./usr/bin/sh-broken
 E: scripts: suid-perl-script-but-no-perl-suid-dep ./usr/bin/suidperlfoo2
 E: scripts: wrong-path-for-interpreter #!/bin/ruby1.8 != /usr/bin/ruby1.8 (./usr/bin/rubyfoo)
 E: scripts: wrong-path-for-interpreter #!/usr/local/bin/lefty != /usr/bin/lefty (./usr/bin/lefty-foo)
+E: scripts_6ds-1ubuntu0.5.10.1_i386.changes: bad-ubuntu-distribution-in-changes-file unstable
 I: scripts source: debian-watch-file-should-dversionmangle-not-uversionmangle
 I: scripts: init.d-script-missing-lsb-short-description /etc/init.d/lsb-other
 I: scripts: no-md5sums-control-file
 W: scripts source: ancient-standards-version 3.2.1 (current is 3.8.0)
 W: scripts source: binary-arch-rules-but-pkg-is-arch-indep
-W: scripts source: changelog-should-mention-nmu
 W: scripts source: debian-watch-file-uses-deprecated-sf-redirector-method
 W: scripts source: dpatch-missing-description 02_i_dont_have_a_description.patch
 W: scripts source: maintainer-script-lacks-debhelper-token debian/postinst
 W: scripts source: maintainer-script-lacks-debhelper-token debian/postrm
 W: scripts source: package-uses-deprecated-debhelper-compat-version 1
-W: scripts source: source-nmu-has-incorrect-version-number 6ds-1
 W: scripts source: uses-dh-python-with-no-pycompat
 W: scripts: binary-without-manpage usr/bin/envfoo
 W: scripts: binary-without-manpage usr/bin/guile-bizarre
