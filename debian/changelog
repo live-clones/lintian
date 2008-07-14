@@ -1,5 +1,7 @@
 lintian (1.24.2) unstable; urgency=low
 
+  The "welcome Adam D. Barratt!" release.
+  
   * checks/binaries.desc:
     + [ADB] Add some FHS references.  Thanks Jordà Polo.
   * checks/changelog-file{,.desc}:
@@ -180,7 +182,7 @@ lintian (1.24.2) unstable; urgency=low
   * testset/runtests:
     + [ADB] Support experimental tags
 
- --
+ -- Russ Allbery <rra@debian.org>  Sun, 13 Jul 2008 17:28:08 -0700
 
 lintian (1.24.1) unstable; urgency=medium
   
