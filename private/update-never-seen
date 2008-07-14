@@ -1,0 +1,17 @@
+#!/usr/bin/perl -w
+#
+# This simple filter takes the output from runtests -v and mangles it into the
+# format for the tags-never-seen file.
+
+use POSIX qw(strftime);
+
+my @untested;
+while (<>) {
+    next unless /^I: tag-is-not-tested (\S+) in (\S+)/;
+    push (@untested, [ $2, $1 ]);
+}
+@untested = sort { $a->[0] cmp $b->[0] || $a->[1] cmp $b->[1] } @untested;
+print "Last generated ", strftime ('%Y-%m-%d', gmtime), "\n\n";
+for my $tag (@untested) {
+    print "$tag->[0] $tag->[1]\n";
+}

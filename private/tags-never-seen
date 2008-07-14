@@ -1,4 +1,4 @@
-Last generated 2008-05-15 for lintian 1.23.48
+Last generated 2008-07-14
 
 binaries.desc apparently-corrupted-elf-binary
 binaries.desc arch-dependent-file-in-usr-share
@@ -44,7 +44,6 @@ cruft.desc source-contains-svk-commit-file
 cruft.desc source-contains-svn-conflict-file
 cruft.desc source-contains-svn-control-dir
 debconf.desc boolean-template-has-bogus-default
-debconf.desc config-loads-obsolete-confmodule
 debconf.desc debconf-is-not-a-registry
 debconf.desc duplicate-fields-in-templates
 debconf.desc duplicate-long-description-in-template
@@ -52,13 +51,12 @@ debconf.desc empty-translated-choices
 debconf.desc isdefault-flag-is-deprecated
 debconf.desc malformed-template-name
 debconf.desc no-template-name
-debconf.desc postinst-loads-obsolete-confmodule
 debconf.desc select-without-choices
 debconf.desc unknown-field-in-templates
 debconf.desc unknown-template-type
 debhelper.desc debhelper-compat-file-is-empty
-debhelper.desc dh_dhelp-is-deprecated
 debhelper.desc dh-make-template-in-source
+debhelper.desc dh_dhelp-is-deprecated
 debian-readme.desc spelling-error-in-readme-debian
 description.desc description-synopsis-has-leading-spaces
 fields.desc alternates-not-allowed
@@ -72,7 +70,6 @@ fields.desc build-depends-on-x-metapackage
 fields.desc debian-revision-not-well-formed
 fields.desc debian-revision-should-not-be-zero
 fields.desc depends-on-libdb1-compat
-fields.desc depends-on-obsolete-package
 fields.desc depends-on-python-minimal
 fields.desc doc-package-depends-on-main-package
 fields.desc essential-in-source-package
@@ -87,7 +84,6 @@ fields.desc multiline-field
 fields.desc new-essential-package
 fields.desc no-architecture-field
 fields.desc no-maintainer-field
-fields.desc non-standard-arch-in-source-relation
 fields.desc no-package-name
 fields.desc no-source-field
 fields.desc no-version-field
@@ -108,6 +104,7 @@ fields.desc unknown-priority
 fields.desc upstream-version-not-numeric
 fields.desc versioned-provides
 fields.desc wrong-section-for-udeb
+files.desc FSSTND-dir-in-var
 files.desc backup-file-in-package
 files.desc bad-owner-for-doc-file
 files.desc bad-permissions-for-etc-cron.d-script
@@ -124,7 +121,6 @@ files.desc file-in-opt
 files.desc file-in-usr-lib-cgi-bin
 files.desc file-in-usr-lib-site-python
 files.desc file-in-usr-local
-files.desc FSSTND-dir-in-var
 files.desc image-file-in-usr-lib
 files.desc nested-examples-directory
 files.desc nfs-temporary-file-in-package
@@ -160,14 +156,13 @@ init.d.desc init.d-script-has-duplicate-lsb-keyword
 init.d.desc script-in-etc-init.d-not-registered-via-update-rc.d
 lintian.desc bad-distribution-in-changes-file
 lintian.desc bad-section-in-changes-file
-lintian.desc bad-ubuntu-distribution-in-changes-file
 lintian.desc bad-urgency-in-changes-file
 lintian.desc checksum-mismatch-in-changes-file
 lintian.desc file-size-mismatch-in-changes-file
 lintian.desc no-description-in-changes-file
 lintian.desc no-urgency-in-changes-file
-manpages.desc bad-so-link-within-manual-page
 manpages.desc FSSTND-dir-in-manual-page
+manpages.desc bad-so-link-within-manual-page
 manpages.desc manpage-for-non-x11-binary-in-wrong-directory
 manpages.desc manpage-for-x11-binary-in-wrong-directory
 manpages.desc manpage-in-wrong-directory
@@ -212,12 +207,18 @@ menus.desc preinst-calls-updatemenus
 menus.desc prerm-calls-updatemenus
 menus.desc prerm-has-useless-call-to-install-docs
 nmu.desc changelog-is-symlink
+patch-systems.desc more-than-one-patch-system
+patch-systems.desc patch-modifying-debian-files
+patch-systems.desc quilt-patch-with-non-standard-options
+patch-systems.desc quilt-series-but-no-build-dep
+patch-systems.desc quilt-series-references-non-existent-patch
 po-debconf.desc missing-file-from-potfiles-in
 po-debconf.desc missing-potfiles-in
 po-debconf.desc missing-templates-pot
 po-debconf.desc not-using-po-debconf
 rules.desc debian-rules-is-symlink
 rules.desc debian-rules-not-a-makefile
+rules.desc debian-rules-uses-DEB_BUILD_OPTS
 rules.desc desktop-file-but-no-dh_desktop-call
 scripts.desc csh-considered-harmful
 scripts.desc gawk-script-but-no-gawk-dep
@@ -238,8 +239,8 @@ shared-libs.desc dev-pkg-without-shlib-symlink
 shared-libs.desc ldconfig-symlink-before-shlib-in-deb
 shared-libs.desc ldconfig-symlink-is-not-a-symlink
 shared-libs.desc ldconfig-symlink-referencing-wrong-file
-shared-libs.desc non-dev-pkg-with-shlib-symlink
 shared-libs.desc no-shlibs-control-file
+shared-libs.desc non-dev-pkg-with-shlib-symlink
 shared-libs.desc pkg-has-shlibs-control-file-but-no-actual-shared-libs
 shared-libs.desc postinst-has-useless-call-to-ldconfig
 shared-libs.desc postrm-should-call-ldconfig
@@ -250,5 +251,4 @@ shared-libs.desc shlib-with-bad-permissions
 shared-libs.desc shlib-with-executable-stack
 shared-libs.desc shlib-without-PT_GNU_STACK-section
 standards-version.desc invalid-standards-version
-standards-version.desc newer-standards-version
-standards-version.desc package-declares-source-relation-but-has-older-standards-version
+watch-file.desc debian-watch-file-missing-version
