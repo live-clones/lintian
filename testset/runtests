@@ -306,13 +306,13 @@ $testok = 1;
 for (keys %tags) {
     my $values = $tags{$_};
     if (not defined $values->{'desc_type'}) {
-	print "E: test-has-no-description $_ in $values->{'tested_package'}\n";
+	print "E: tag-has-no-description $_ in $values->{'tested_package'}\n";
 	$testok = 0;
     } elsif (not defined $values->{'tested_type'}) {
-	print "I: test-is-not-tested $_ in $values->{'desc_file'}\n"
+	print "I: tag-is-not-tested $_ in $values->{'desc_file'}\n"
 	    if $verbose;
     } elsif ($values->{'desc_type'} ne $values->{'tested_type'}) {
-	print "E: test-has-inconsistent-type $_ $values->{'tested_type'} vs ".
+	print "E: tag-has-inconsistent-type $_ $values->{'tested_type'} vs ".
 	    "$values->{'desc_type'}\n";
 	$testok = 0;
     }
