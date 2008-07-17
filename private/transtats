@@ -5,6 +5,9 @@
 # This script displays statistics and data related to the experimental tag
 # classification based on Severity/Certainty headers, as well as its
 # transition from the Type based classification.
+#
+# The verbose options (-v, -vv, -vvv) can be used to display a detailed list
+# of which tags are assigned to each category.
 
 use strict;
 use warnings;
@@ -23,6 +26,8 @@ my $num_tags = 0;
 my $num_done = 0;
 my $per_done = 0;
 
+my $verbose = $ARGV[0] ? ($ARGV[0] =~ s/v/v/g) : 0;
+
 opendir(CHECKDIR, "$LINTIAN_ROOT/checks")
     or fail("cannot read directory $LINTIAN_ROOT/checks");
 
@@ -33,6 +38,7 @@ for my $check (readdir CHECKDIR) {
     shift(@tags);
 
     foreach my $tag (@tags) {
+        my $name = $tag->{tag};
         my $type = $tag->{type};
         my $severity = $tag->{severity};
         my $certainty = $tag->{certainty};
@@ -41,11 +47,11 @@ for my $check (readdir CHECKDIR) {
         $severity = 'unclassified' if not $severity;
         $certainty = 'unclassified' if not $certainty;
 
-        $stats{severity}{$severity}++;
-        $stats{certainty}{$certainty}++;
-        $stats{both}{$severity}{$certainty}++;
-        $stats{type}{severity}{$type}{$severity}++;
-        $stats{type}{both}{$type}{$severity}{$certainty}++;
+        push(@{$stats{severity}{$severity}}, $name);
+        push(@{$stats{certainty}{$certainty}}, $name);
+        push(@{$stats{both}{$severity}{$certainty}}, $name);
+        push(@{$stats{type}{severity}{$type}{$severity}}, $name);
+        push(@{$stats{type}{both}{$type}{$severity}{$certainty}}, $name);
 
         $num_tags++;
         $num_done++ if $done;
@@ -56,30 +62,39 @@ closedir(CHECKDIR);
 
 $per_done = sprintf("%.2f", ($num_done/$num_tags)*100);
 print "Number of classified tags\n";
-print " $num_done/$num_tags ($per_done%)\n";
+print "  $num_done/$num_tags ($per_done%)\n";
 
 print "\nSeverity\n";
 foreach my $s (@severities) {
-    print " $s: $stats{severity}{$s}\n";
+    my $tags = $stats{severity}{$s};
+    print "  $s: ". @{$tags} ."\n";
+    print "    ". join("\n    ", @{$tags}) ."\n" if $verbose >= 3;
 }
 
 print "\nCertainty\n";
 foreach my $c (@certainties) {
-    print " $c: $stats{certainty}{$c}\n";
+    my $tags = $stats{certainty}{$c};
+    print "  $c: ". @{$tags} ."\n";
+    print "    ". join("\n    ", @{$tags}) ."\n" if $verbose >= 3;
 }
 
 print "\nSeverity/Certainty\n";
 foreach my $s (@severities) {
     foreach my $c (@certainties) {
-        print " $s/$c: $stats{both}{$s}{$c}\n" if exists $stats{both}{$s}{$c};
+        if (my $tags = $stats{both}{$s}{$c}) {
+            print "  $s/$c: ". @{$tags} ."\n";
+            print "    ". join("\n    ", @{$tags}) ."\n" if $verbose >= 2;
+        }
     }
 }
 
 foreach my $t (@types) {
     print "\nType $t Severity\n";
     foreach my $s (@severities) {
-        my $num = $stats{type}{severity}{$t}{$s};
-        print " $s: $num\n" if $num;
+        if (my $tags = $stats{type}{severity}{$t}{$s}) {
+            print "  $s: ". @{$tags} ."\n";
+            print "    ". join("\n    ", @{$tags}) ."\n" if $verbose >= 2;
+        }
     }
 }
 
@@ -87,8 +102,10 @@ foreach my $t (@types) {
     print "\nType $t Severity/Certainty\n";
     foreach my $s (@severities) {
         foreach my $c (@certainties) {
-            my $num = $stats{type}{both}{$t}{$s}{$c};
-            print " $s/$c: $num\n" if $num;
+            if (my $tags = $stats{type}{both}{$t}{$s}{$c}) {
+                print "  $s/$c: ". @{$tags} ."\n";
+                print "    ". join("\n    ", @{$tags}) ."\n" if $verbose >= 1;
+            }
         }
     }
 }
