@@ -486,7 +486,7 @@ foreach my $template (@templates_seen) {
 	}
     }
     tag "unused-debconf-template", $template
-	unless $used or $pkg eq "debconf";
+	unless $used or $pkg eq "debconf" or $type eq 'udeb';
 }
 
 # Check that the right dependencies are in the control file.  Accept any
