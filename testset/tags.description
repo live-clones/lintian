@@ -6,6 +6,7 @@ E: description-baz: no-copyright-file
 E: description-foo: description-contains-tabs
 E: description-foo: description-too-long
 E: description-foo: no-copyright-file
+E: description-qux: no-copyright-file
 E: description: description-contains-invalid-control-statement
 E: description: description-contains-tabs
 E: description: description-is-debmake-template
@@ -14,6 +15,7 @@ E: description: no-copyright-file
 I: description-bar: no-md5sums-control-file
 I: description-baz: no-md5sums-control-file
 I: description-foo: no-md5sums-control-file
+I: description-qux: no-md5sums-control-file
 I: description: no-md5sums-control-file
 W: description source: native-package-with-dash-version
 W: description-bar: extended-description-line-too-long

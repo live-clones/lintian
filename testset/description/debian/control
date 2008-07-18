@@ -42,3 +42,8 @@ Package: description-baz
 Architecture: all
 Description:    the synopsis starts with spaces
  This is a real Lintian bug which has been discovered with this testset.
+
+Package: description-qux
+Architecture: all
+Description: This description ends, etc.
+ This is a real Lintian bug which has been discovered with this testset.

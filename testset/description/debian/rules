@@ -4,6 +4,7 @@ description=debian/description
 description-foo=debian/description-foo
 description-bar=debian/description-bar
 description-baz=debian/description-baz
+description-qux=debian/description-qux
 
 build:
 
@@ -48,10 +49,19 @@ binary-indep:
 	dpkg-gencontrol -pdescription-baz -P$(description-baz)
 	dpkg --build $(description-baz) ..
 
+	# Create package description-qux
+	install -d $(description-qux)
+	install -d $(description-qux)/DEBIAN
+	install -d $(description-qux)/usr/share/doc/description
+	install -m 644 debian/changelog \
+	  $(description-qux)/usr/share/doc/description/changelog.Debian
+	gzip -9 $(description-qux)/usr/share/doc/description/changelog.Debian
+	dpkg-gencontrol -pdescription-qux -P$(description-qux)
+	dpkg --build $(description-qux) ..
 binary: binary-indep
 
 clean:
 	rm -rf debian/files $(description) $(description-foo) \
-	  $(description-bar) $(description-baz) debian/substvars
+	  $(description-bar) $(description-baz) $(description-qux) debian/substvars
 
 .PHONY: build binary-indep binary clean
