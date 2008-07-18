@@ -9,6 +9,9 @@ lintian (1.24.3) unstable; urgency=low
   * checks/description:
     + [RA] Don't warn about a synopsis that ends in "etc."  Patch from
       Chris Lamb.  (Closes: #491252)
+  * checks/po-debconf{,.desc}:
+    + [ADB] Check that at least one complete translation exists.  Thanks Jordà
+      Polo.
   * checks/shared-libs.desc:
     + [ADB] Improve the description of no-symbols-control-file.
 

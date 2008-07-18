@@ -28,6 +28,8 @@ sub run {
 my $pkg = shift;
 my $type = shift;
 
+my $full_translation = 0;
+
 # First, check wether this package seems to use debconf but not po-debconf.
 # Read the templates file and look at the template names it provides, since
 # some shared templates aren't translated.
@@ -155,7 +157,14 @@ while (defined(my $file=readdir(DEBIAN))) {
                 unless length($charset);
 	system_env("msgfmt -o /dev/null debfiles/po/$file 2>/dev/null") == 0
 		or tag "invalid-po-file", "debian/po/$file";
+
+	my $stats = `LANG=C msgfmt -o /dev/null --statistics debfiles/po/$file 2>&1`;
+	if (!$full_translation && $stats =~ m/^\w+ \w+ \w+\.$/) {
+		$full_translation = 1;
+	}
 }
+
+tag "no-complete-translation", "" if !$full_translation;
 
 }
 

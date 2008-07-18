@@ -89,3 +89,10 @@ Info: You should not mark as translatable "Default:" or "DefaultChoice:"
  .
    _Default: English[ Default language name, but not translated]
 Ref: po-debconf(7)
+
+Tag: no-complete-translation
+Type: info
+Info: Even though this package provides translation support, there are no
+ translations or none of the translations are complete. This may mean that
+ translators weren't properly warned about new strings.
+Ref: devref 6.5.2.2
