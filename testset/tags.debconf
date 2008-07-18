@@ -7,6 +7,7 @@ E: debconf-test: no-template-type debconf/language
 E: debconf-test: unknown-debconf-priority config:10 LOW
 E: debconf-test: unknown-debconf-priority config:11 normal
 E: debconf-udeb udeb: udeb-postinst-must-not-call-ldconfig
+I: debconf source: no-complete-translation
 I: debconf source: package-needs-python-policy-debhelper
 I: debconf-test-noscripts: unused-debconf-template debconf/test
 I: debconf-test: debconf-error-requires-versioned-depends debconf/error
@@ -23,7 +24,6 @@ I: debconf-test: unused-debconf-template debconf/testmulti-escape
 I: debconf-test: unused-debconf-template debconf/testnote
 I: debconf-test: unused-debconf-template debconf/teststring
 I: debconf-test: unused-debconf-template debconf/translate
-I: debconf-udeb udeb: unused-debconf-template debian-installer/debconf-udeb/title
 W: debconf source: debian-rules-calls-debhelper-in-odd-order dh_makeshlibs (line 49)
 W: debconf source: debian-rules-calls-debhelper-in-odd-order dh_makeshlibs (line 53)
 W: debconf source: debian-rules-sets-DH_COMPAT line 3
