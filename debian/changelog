@@ -1,5 +1,8 @@
 lintian (1.24.3) unstable; urgency=low
 
+  * checks/copyright:
+    + [ADB] Exclude "Format-Specification" lines when checking for overly-long
+      lines.  Patch from Peter Pentchev.  (Closes: #491302)
   * checks/debconf:
     + [ADB] Don't complain about unused debconf templates in udebs.
       (Closes: #491135)

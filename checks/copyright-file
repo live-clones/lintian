@@ -155,7 +155,8 @@ close(IN);
 # matter for the length check.
 my @lines = split ("\n", decode ('utf-8', $_));
 for my $i (0 .. $#lines) {
-    if (length ($lines[$i]) > 80) {
+    if (length ($lines[$i]) > 80 &&
+	$lines[$i] !~ m{^Format-Specification:\s*http://wiki.debian.org/Proposals/CopyrightFormat}) {) {
 	tag "debian-copyright-line-too-long", "line " . ($i+1);
     }
 }
