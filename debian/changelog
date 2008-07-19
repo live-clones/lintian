@@ -18,6 +18,10 @@ lintian (1.24.3) unstable; urgency=low
   * checks/shared-libs.desc:
     + [ADB] Improve the description of no-symbols-control-file.
 
+  * data/doc-base/sections:
+    + [ADB] Resynchronize with doc-base's section list (adding
+      Programming/OCaml).  (Closes: #491440)
+
  -- 
 
 lintian (1.24.2) unstable; urgency=low
