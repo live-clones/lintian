@@ -174,16 +174,18 @@ sub run {
 			tag "more-than-one-patch-system";
 		}
 
+		my @direct;
 		open(STAT, '<', "diffstat") or fail("cannot open diffstat file: $!");
 		while (<STAT>) {
 			my ($file) = (m,^\s+(.*?)\s+\|,)
 			     or fail("syntax error in diffstat file: $_");
-
-			if ($file !~ /^debian/) {
-				tag "patch-system-but-direct-changes-in-diff", $file;
-			}
+			push (@direct, $file) if ($file !~ m,^debian/,);
 		}
 		close (STAT) or fail("error reading diffstat file: $!");
+		if (@direct) {
+			my $files = (@direct > 1) ? "$direct[0] and $#direct more" : $direct[0];
+			tag "patch-system-but-direct-changes-in-diff", $files;
+		}
 	}
 }
 

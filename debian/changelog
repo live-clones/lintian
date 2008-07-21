@@ -1,6 +1,6 @@
 lintian (1.24.3) unstable; urgency=low
 
-  * checks/copyright:
+  * checks/copyright-file:
     + [ADB,RA] Exclude header-like lines where the value has no whitespace
       when checking for long lines.  This will avoid false positives for
       the Format-Specification: line and similar cases.  Based on a patch
@@ -8,12 +8,19 @@ lintian (1.24.3) unstable; urgency=low
     + [ADB] Don't flag lines only containing one word as overly long.  They're
       likely to be URLs and may not be easily shortenable to under 80
       characters.  (Closes: #491365)
+    + [RA] Suppress warnings about long lines beyond the first five to cut
+      down on volume from badly formatted files.
   * checks/debconf:
     + [ADB] Don't complain about unused debconf templates in udebs.
       (Closes: #491135)
   * checks/description:
     + [RA] Don't warn about a synopsis that ends in "etc."  Patch from
       Chris Lamb.  (Closes: #491252)
+  * checks/patch-systems:
+    + [RA] Combine all patch-system-but-direct-changes-in-diff instances
+      into a single message to reduce the noise from packages that rebuild
+      all auto-generated files outside the patch system.  Thanks, Julien
+      Cristau.  (Closes: #491296)
   * checks/po-debconf{,.desc}:
     + [ADB] Check that at least one complete translation exists.  Thanks Jordà
       Polo.

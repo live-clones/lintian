@@ -154,12 +154,19 @@ close(IN);
 # file uses a non-UTF-8 encoding, this will mangle it, but it doesn't
 # matter for the length check.
 my @lines = split ("\n", decode ('utf-8', $_));
+my $longcount = 0;
 for my $i (0 .. $#lines) {
     if (length ($lines[$i]) > 80
 	and $lines[$i] !~ m/^[\s.o*+-]*\S+$/
 	and $lines[$i] !~ m/^[^:]+:\s+\S+$/) {
-	tag "debian-copyright-line-too-long", "line " . ($i + 1);
+	$longcount++;
+	tag "debian-copyright-line-too-long", "line " . ($i + 1)
+	    if ($longcount <= 5 or $ENV{LINTIAN_DEBUG});
     }
+}
+if ($longcount > 5) {
+    tag "debian-copyright-line-too-long", ($longcount - 5),
+	"more occurrences not shown";
 }
 
 my $wrong_directory_detected = 0;
