@@ -304,6 +304,9 @@ while (<IN>) {
 		next if /warning \[.*\]: cannot adjust line/;
 		next if /warning \[.*\]: can\'t break line/;
 	    }
+	    # ignore wrapping failures if they contain URLs
+	    next if /:(\d+): warning \[.*\]: can\'t break line/
+		and $manfile[$1 - 1] =~ m,(?:http|ftp)://.+,i;
 	    # ignore charset issues with old versions of man for all man pages
 	    # since we can't know, with old versions, whether that was just a
 	    # Unicode issue
