@@ -76,9 +76,6 @@ my %info;
 # Currently selected file (not package!)
 my $current;
 
-my %codes = ( 'error' => 'E' , 'warning' => 'W' , 'info' => 'I' );
-my %colors = ( 'error' => 'red' , 'warning' => 'yellow' , 'info' => 'cyan' );
-
 my %severity_level = (
     'serious' => 4,
     'important' => 3,
@@ -92,6 +89,16 @@ my %certainty_level = (
     'possible' => 1,
     'wild-guess' => 0
 );
+
+my @codes = (
+    [ 'I', 'I', 'I' ], # wishlist (wild-guess, possible, certain)
+    [ 'I', 'I', 'W' ], # minor
+    [ 'I', 'W', 'W' ], # normal
+    [ 'W', 'E', 'E' ], # important
+    [ 'E', 'E', 'E' ], # serious
+);
+
+my %colors = ( 'E' => 'red' , 'W' => 'yellow' , 'I' => 'cyan' );
 
 my %type_to_sev = (
     'error' => 'important',
@@ -265,11 +272,13 @@ sub colored_html {
 
 sub print_tag {
     my ( $pkg_info, $tag_info, $information ) = @_;
+    my $sev = $tag_info->{severity};
+    my $cer = $tag_info->{certainty};
 
     my $extra = '';
     $extra = " @$information" if @$information;
     $extra = '' if $extra eq ' ';
-    my $code = $codes{$tag_info->{type}};
+    my $code = $codes[$severity_level{$sev}][$certainty_level{$cer}];
     $code = 'X' if exists $tag_info->{experimental};
     $code = 'O' if $tag_info->{overridden}{override};
     my $type = '';
@@ -277,9 +286,9 @@ sub print_tag {
 
     my $output = "$code: $pkg_info->{pkg}$type: ";
     if ($color eq 'always' || ($color eq 'auto' && -t STDOUT)) {
-        $output .= colored($tag_info->{tag}, $colors{$tag_info->{type}});
+        $output .= colored($tag_info->{tag}, $colors{$code});
     } elsif ($color eq 'html') {
-        $output .= colored_html($tag_info->{tag}, $colors{$tag_info->{type}});
+        $output .= colored_html($tag_info->{tag}, $colors{$code});
     } else {
         $output .= $tag_info->{tag};
     }
