@@ -17,14 +17,31 @@ unshift @INC, "$LINTIAN_ROOT/lib";
 
 require Read_pkglists;
 
-my @severities = qw(serious important normal minor wishlist);
-my @certainties = qw(certain possible wild-guess);
-my @types = qw(error warning info);
+my @severities = qw(wishlist minor normal important serious);
+my @certainties = qw(wild-guess possible certain);
+my @types = qw(info warning error);
+my @codes = qw(I W E);
+
+my %severity_index;
+@severity_index{@severities} = (0 .. $#severities);
+my %certainty_index;
+@certainty_index{@certainties} = (0 .. $#certainties);
+
+my %old_codes = ( info => 'I', warning => 'W', error => 'E' );
+my @new_codes = (
+    [ 'I', 'I', 'I' ],
+    [ 'I', 'I', 'W' ],
+    [ 'I', 'W', 'W' ],
+    [ 'W', 'E', 'E' ],
+    [ 'E', 'E', 'E' ],
+);
 
 my %stats;
 my $num_tags = 0;
 my $num_done = 0;
-my $per_done = 0;
+my %num_code;
+my $num_ok = 0;
+my $percent = 0;
 
 my $verbose = $ARGV[0] ? ($ARGV[0] =~ s/v/v/g) : 0;
 
@@ -54,15 +71,30 @@ for my $check (readdir CHECKDIR) {
         push(@{$stats{type}{both}{$type}{$severity}{$certainty}}, $name);
 
         $num_tags++;
-        $num_done++ if $done;
+
+        next if not $done;
+
+        my $sev = $severity_index{$severity};
+        my $cer = $certainty_index{$certainty};
+        my $old_code = $old_codes{$type};
+        my $new_code = $new_codes[$sev][$cer];
+        push(@{$stats{code}{$old_code}{$new_code}}, $name);
+
+        $num_ok++ if $old_code eq $new_code;
+        $num_done++;
+        $num_code{$old_code}++;
     }
 }
 
 closedir(CHECKDIR);
 
-$per_done = sprintf("%.2f", ($num_done/$num_tags)*100);
+$percent = sprintf("%.2f", ($num_done/$num_tags)*100);
 print "Number of classified tags\n";
-print "  $num_done/$num_tags ($per_done%)\n";
+print "  $num_done/$num_tags ($percent%)\n";
+
+$percent = sprintf("%.2f", ($num_ok/$num_done)*100);
+print "\nBackwards compatibilty accuracy\n";
+print "  $num_ok/$num_done ($percent%)\n";
 
 print "\nSeverity\n";
 foreach my $s (@severities) {
@@ -106,6 +138,19 @@ foreach my $t (@types) {
                 print "  $s/$c: ". @{$tags} ."\n";
                 print "    ". join("\n    ", @{$tags}) ."\n" if $verbose >= 1;
             }
+        }
+    }
+}
+
+foreach my $old (@codes) {
+    $num_ok = @{$stats{code}{$old}{$old}};
+    $percent = sprintf("%.2f", ($num_ok/$num_code{$old})*100);
+    print "\nCode $old ($percent%)\n";
+    foreach my $new (@codes) {
+        if (my $codes = $stats{code}{$old}{$new}) {
+            print "  $new: ". @{$codes} ."\n";
+            print "    ". join("\n    ", @{$codes}) ."\n"
+                if ($verbose >= 1 and $old ne $new) or ($verbose >= 2);
         }
     }
 }
