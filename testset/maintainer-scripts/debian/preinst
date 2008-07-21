@@ -8,3 +8,5 @@ dpkg --assert-support-predepends || exit 1
 dpkg --assert-working-epoch || exit 1
 dpkg --assert-long-filenames || exit 1
 dpkg --assert-multi-conrep || exit 1
+
+/bin/egrep --mmap "^Package: foo$" /var/lib/dpkg/status

@@ -401,6 +401,15 @@ Info: The maintainer script doesn't seem to contain any code other than
  If the package currently doesn't need to do anything in this maintainer
  script, it shouldn't be included in the package.
 
+Tag: command-with-path-in-maintainer-script
+Type: warning
+Info: The indicated program run in a maintainer script has a prepended
+ path.  Programs called from maintainer scripts normally should not have a
+ path prepended.  dpkg ensures that the PATH is set to a reasonable value,
+ and prepending a path may prevent the local administrator from using a
+ replacement version of a command for some local reason.
+Ref: policy 6.1
+
 Tag: ancient-dpkg-predepends-check
 Type: warning
 Info: The package calls dpkg --assert-support-predepends in a maintainer

@@ -19,6 +19,7 @@ E: maintainer-scripts: maintainer-script-modifies-netbase-managed-file postinst:
 E: maintainer-scripts: maintainer-script-removes-device-files postrm:39
 E: maintainer-scripts: maintainer-script-removes-device-files postrm:40
 E: maintainer-scripts: maintainer-script-uses-dpkg-status-directly postinst
+E: maintainer-scripts: maintainer-script-uses-dpkg-status-directly preinst
 E: maintainer-scripts: maintainer-shell-script-fails-syntax-check prerm
 E: maintainer-scripts: no-copyright-file
 E: maintainer-scripts: postrm-contains-additional-updaterc.d-calls /etc/init.d/bar
@@ -39,6 +40,7 @@ W: maintainer-scripts: ancient-dpkg-epoch-check preinst:8
 W: maintainer-scripts: ancient-dpkg-long-filenames-check preinst:9
 W: maintainer-scripts: ancient-dpkg-multi-conrep-check preinst:10
 W: maintainer-scripts: ancient-dpkg-predepends-check preinst:7
+W: maintainer-scripts: command-with-path-in-maintainer-script preinst:12 /bin/egrep
 W: maintainer-scripts: config-does-not-load-confmodule
 W: maintainer-scripts: deprecated-chown-usage postinst:167 'chown -R root.root'
 W: maintainer-scripts: deprecated-chown-usage postinst:35 'chown root.root'
