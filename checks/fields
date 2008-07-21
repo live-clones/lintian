@@ -529,6 +529,9 @@ if (($type eq "binary") || ($type eq 'udeb')) {
 					tag "old-versioned-python-dependency", "$field: $part_d_orig"
 					    if ($d_pkg eq 'python' && $d_version->[0] eq '<<' && &$is_dep_field($field)
 						&& $arch_indep && $pkg =~ /^python-/ && ! -f "fields/python-version");
+
+					tag "depends-exclusively-on-makedev", "$field",
+					    if ($field eq 'depends' && $d_pkg eq 'makedev' && @alternatives == 1);
 				}
 
 				for my $pkg (@seen_obsolete_packages) {

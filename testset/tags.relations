@@ -60,6 +60,7 @@ W: relations-multiple-libs: package-uses-breaks
 W: relations-multiple-libs: redundant-bugs-field
 W: relations-multiple-libs: redundant-origin-field
 W: relations: bad-homepage lintian.debian.org
+W: relations: depends-exclusively-on-makedev depends
 W: relations: depends-on-old-emacs recommends: emacs21
 W: relations: package-relation-with-self depends: relations (<< 3)
 W: relations: package-relation-with-self replaces: relations

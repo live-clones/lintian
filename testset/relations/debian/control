@@ -17,7 +17,7 @@ Package: relations
 Architecture: all
 Section: contrib/misc
 Pre-Depends: awk|gawk
-Depends: relations(<< 3), dpkg, bash (>> 2.0 ), mail-transport-agent, gawk | awk, foo (>> 2.0), foo (<< 2.2), coreutils, ,null (>= 0), ${misc:Depends}
+Depends: relations(<< 3), dpkg, bash (>> 2.0 ), mail-transport-agent, gawk | awk, foo (>> 2.0), foo (<< 2.2), coreutils, ,null (>= 0), ${misc:Depends}, makedev
 Provides: mail-reader
 Replaces: relations
 Conflicts: foobar (<< 5&5), foo, relations,
@@ -34,9 +34,9 @@ Description: Strange dependency relationships
 Package: relations-multiple-libs
 Architecture: all
 Section: non-free/misc
-Depends: libstdc++2.10, libstdc++2.10-glibc2.2, libstdc++3.0, tk8.2, tk8.3, tcl8.0, tcl8.2, tkx8.2, tkx8.3, tclx8.2, libpng2, libpng3, xorg, ${shlibs:Depends}
+Depends: libstdc++2.10, libstdc++2.10-glibc2.2, libstdc++3.0, tk8.2, tk8.3, tcl8.0, tcl8.2, tkx8.2, tkx8.3, tclx8.2, libpng2, libpng3, xorg, ${shlibs:Depends}, makedev | udev
 Provides: awk
-Recommends: ${shlibs:Depends}, relations-multiple-libs, gs | gs-gpl
+Recommends: ${shlibs:Depends}, relations-multiple-libs, gs | gs-gpl, makedev
 Breaks: libpng3 (<< 1.0), libpng2
 Suggests: x-dev, ghostscript | gs
 Description: Duplicate library dependency relationships.
