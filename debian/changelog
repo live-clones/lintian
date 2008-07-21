@@ -1,8 +1,10 @@
 lintian (1.24.3) unstable; urgency=low
 
   * checks/copyright:
-    + [ADB] Exclude "Format-Specification" lines when checking for overly-long
-      lines.  Patch from Peter Pentchev.  (Closes: #491302)
+    + [ADB,RA] Exclude header-like lines where the value has no whitespace
+      when checking for long lines.  This will avoid false positives for
+      the Format-Specification: line and similar cases.  Based on a patch
+      from Peter Pentchev.  (Closes: #491302)
     + [ADB] Don't flag lines only containing one word as overly long.  They're
       likely to be URLs and may not be easily shortenable to under 80
       characters.  (Closes: #491365)
