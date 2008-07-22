@@ -1,6 +1,11 @@
 lintian (1.24.2.1) unstable; urgency=low
 
   The "for the sake of stable users" release.
+  
+  * checks/copyright-file{,.desc}:
+    + [ADB] Drop the "copyright line too long" check.  Most of the issues
+      it flags aren't easily fixable, particularly where the copyright file
+      is (semi)automatically generated.  (Closes: #491302, #491365, #491685)
 
   * debian/postrm:
     + [FL] Do not try to remove /var/spool/lintian if it doesn't exist
