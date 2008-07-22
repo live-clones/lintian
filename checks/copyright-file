@@ -149,26 +149,6 @@ local $/ = undef;
 $_ = <IN>;
 close(IN);
 
-# We have to decode into UTF-8 to get the right length for the length
-# check.  For some reason, use open ':utf8' isn't sufficient.  If the
-# file uses a non-UTF-8 encoding, this will mangle it, but it doesn't
-# matter for the length check.
-my @lines = split ("\n", decode ('utf-8', $_));
-my $longcount = 0;
-for my $i (0 .. $#lines) {
-    if (length ($lines[$i]) > 80
-	and $lines[$i] !~ m/^[\s.o*+-]*\S+$/
-	and $lines[$i] !~ m/^[^:]+:\s+\S+$/) {
-	$longcount++;
-	tag "debian-copyright-line-too-long", "line " . ($i + 1)
-	    if ($longcount <= 5 or $ENV{LINTIAN_DEBUG});
-    }
-}
-if ($longcount > 5) {
-    tag "debian-copyright-line-too-long", ($longcount - 5),
-	"more occurrences not shown";
-}
-
 my $wrong_directory_detected = 0;
 
 if (m,\<fill in (http/)?ftp site\>, or m/\<Must follow here\>/) {
