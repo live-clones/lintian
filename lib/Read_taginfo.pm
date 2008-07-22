@@ -61,6 +61,12 @@ sub read_tag_info {
 		push(@foo,format_ref($secs[$i]->{'ref'}));
 	    }
 
+	    if ($secs[$i]->{'severity'} and $secs[$i]->{'certainty'}) {
+		push(@foo, "");
+		push(@foo, "Severity: $secs[$i]->{'severity'};");
+		push(@foo, "Certainty: $secs[$i]->{'certainty'}");
+	    }
+
 	    if ($secs[$i]->{'experimental'}) {
 		push(@foo,"");
 		push(@foo,"Please note that this tag is marked Experimental, which "
