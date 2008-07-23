@@ -435,6 +435,10 @@ for my $file (qw(config prerm postrm preinst postinst)) {
 	    if (m/^\s*(?:db_get|db_set(?:title)?)\s+[\"\']?(\S+?)[\"\']?(\s|\Z)/) {
 		$templates_used{$1} = 1;
 	    }
+	    # Try to handle Perl somewhat.
+	    if (m/^\s*(?:.*=\s*get|set)\s*\(\s*[\"\'](\S+?)[\"\']/) {
+		$templates_used{$1} = 1;
+	    }
 	    if (m/^\s*db_register\s+[\"\']?(\S+?)[\"\']?\s+(\S+)\s/) {
 		my ($template, $question) = ($1, $2);
 		push @{$template_aliases{$template}}, $question;

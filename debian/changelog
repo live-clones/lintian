@@ -7,6 +7,7 @@ lintian (1.24.3) unstable; urgency=low
   * checks/debconf:
     + [ADB] Don't complain about unused debconf templates in udebs.
       (Closes: #491135)
+    + [RA] Try to recognize at least some debconf template uses in Perl.
   * checks/description:
     + [RA] Don't warn about a synopsis that ends in "etc."  Patch from
       Chris Lamb.  (Closes: #491252)
