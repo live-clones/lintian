@@ -17,7 +17,7 @@ E: scripts: shell-script-fails-syntax-check ./usr/bin/sh-broken
 E: scripts: suid-perl-script-but-no-perl-suid-dep ./usr/bin/suidperlfoo2
 E: scripts: wrong-path-for-interpreter #!/bin/ruby1.8 != /usr/bin/ruby1.8 (./usr/bin/rubyfoo)
 E: scripts: wrong-path-for-interpreter #!/usr/local/bin/lefty != /usr/bin/lefty (./usr/bin/lefty-foo)
-E: scripts_6ds-1ubuntu0.5.10.1_i386.changes: bad-ubuntu-distribution-in-changes-file unstable
+E: scripts_6ds-1ubuntu0.5.10.1_arch.changes: bad-ubuntu-distribution-in-changes-file unstable
 I: scripts source: debian-watch-file-should-dversionmangle-not-uversionmangle
 I: scripts: init.d-script-missing-lsb-short-description /etc/init.d/lsb-other
 I: scripts: no-md5sums-control-file
