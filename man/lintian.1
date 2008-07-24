@@ -406,22 +406,17 @@ Looks for cruft in source packages, like files of version control
 systems and temporary files from the build process.
 
 .TP
-.B deb\-format (dfmt)
-Checks if a binary package was build with a broken version of tar so
-that dpkg can't handle it correctly.
-
-.TP
 .B debconf (dc)
 Looks for common mistakes in packages using debconf, like missing
 dependencies or errors in the template file.
 
 .TP
-.B debian\-readme (drm)
-Check if the README.Debian file is merely the debmake template.
-
-.TP
 .B debhelper (dh)
 Looks for common mistakes in source packages using debhelper.
+
+.TP
+.B debian\-readme (drm)
+Check if the README.Debian file is merely the debmake template.
 
 .TP
 .B description (des)
@@ -488,14 +483,13 @@ files.
 Check the syntax of menu files installed by the package.
 
 .TP
-.B patch\-systems (pat)
-Check source package use of patch systems.
+.B nmu (nmu)
+Checks whether the package is consistent as to whether it
+is an NMU.
 
 .TP
-.B perl (prl)
-Check perl scripts installed by the package for the usage of perl
-modules, and check that the package declares the appropriate
-dependencies.
+.B patch\-systems (pat)
+Check source package use of patch systems.
 
 .TP
 .B po\-debconf (pd)
