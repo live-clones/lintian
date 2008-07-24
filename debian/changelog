@@ -18,6 +18,8 @@ lintian (1.24.3) unstable; urgency=low
     + [RA] Suppress warnings about inability to break a line that contains
       a URL.  URLs often can't be usefully broken.  Based on a patch by
       Damyan Ivanov.  (Closes: #491578)
+  * checks/nmu:
+    + [ADB] Use Lintian::Collect for maintainer / uploader information
   * checks/patch-systems:
     + [RA] Combine all patch-system-but-direct-changes-in-diff instances
       into a single message to reduce the noise from packages that rebuild

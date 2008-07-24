@@ -27,6 +27,7 @@ sub run {
 
 my $pkg = shift;
 my $type = shift;
+my $info = shift;
 my $changelog_mentions_nmu = 0;
 my $changelog_mentions_qa = 0;
 my $uploader = undef;
@@ -58,9 +59,9 @@ while (<CHANGELOG>) {
 }
 close CHANGELOG;
 
-my $version = getfield("version");
-my $maintainer = canonicalize(getfield("maintainer"));
-my $uploaders = getfield("uploaders");
+my $version = $info->field("version");
+my $maintainer = canonicalize($info->field("maintainer"));
+my $uploaders = $info->field("uploaders");
 
 my $version_nmuness = 0;
 if ($version =~ /-[^.-]+(\.[^.-]+)?(\.[^.-]+)?$/) {
@@ -104,14 +105,6 @@ if ($maintainer =~ /packages\@qa.debian.org/) {
 		if !$upload_is_nmu && $version_nmuness;
 }
 
-}
-
-sub getfield {
-	return undef if not open (FIELD, '<', "fields/" . shift);
-	my $field = <FIELD>;
-	close FIELD;
-	$field =~ s/\n$//;
-	return $field;
 }
 
 # Canonicalize a maintainer address with respect to case.  E-mail addresses
