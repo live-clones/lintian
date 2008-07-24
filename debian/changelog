@@ -36,6 +36,9 @@ lintian (1.24.3) unstable; urgency=low
     + [ADB] Resynchronize with doc-base's section list (adding
       Programming/OCaml).  (Closes: #491440)
 
+  * doc/desc-files:
+    + [ADB] Update the description of tags to include experimental and info
+      tags.
   * doc/README:
     + [ADB] Add -E / --show-experimental to the option list
 

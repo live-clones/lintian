@@ -22,7 +22,8 @@ Description record for `checker' scripts:
 Description record of a `Lintian tag':
 
   Tag: <tag>
-  Type: <warning | error>
+  Type: <warning | error | info>
   Info: <description of this tag>
   Ref: <reference>
   Status: <untested | <empty> >
+  [ Experimental: <yes> ]
