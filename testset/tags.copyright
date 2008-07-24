@@ -17,11 +17,5 @@ W: copyright.iso-8859-1: debian-copyright-file-uses-obsolete-national-encoding a
 W: copyright.misc-errors: copyright-contains-dh-make-perl-boilerplate
 W: copyright.misc-errors: copyright-has-url-from-dh_make-boilerplate
 W: copyright.misc-errors: copyright-lists-upstream-authors-with-dh_make-boilerplate
-W: copyright.misc-errors: debian-copyright-line-too-long 2 more occurrences not shown
-W: copyright.misc-errors: debian-copyright-line-too-long line 20
-W: copyright.misc-errors: debian-copyright-line-too-long line 32
-W: copyright.misc-errors: debian-copyright-line-too-long line 33
-W: copyright.misc-errors: debian-copyright-line-too-long line 34
-W: copyright.misc-errors: debian-copyright-line-too-long line 35
 W: copyright.old-style: copyright-without-copyright-notice
 W: copyright.symlink: copyright-without-copyright-notice
