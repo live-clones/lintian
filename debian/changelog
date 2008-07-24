@@ -1,5 +1,8 @@
 lintian (1.24.3) unstable; urgency=low
 
+  * checks/binaries:
+    + [ADB] Use Lintian::Collect throughout rather than reparsing file-info
+      and objdump-info.
   * checks/copyright-file{,.desc}:
     + [ADB] Drop the "copyright line too long" check.  Most of the issues
       it flags aren't easily fixable, particularly where the copyright file
@@ -43,6 +46,10 @@ lintian (1.24.3) unstable; urgency=low
       tags.
   * doc/README:
     + [ADB] Add -E / --show-experimental to the option list
+
+  * lib/Lintian/Collect/Binary.pm:
+    + [ADB] When parsing objdump-info, indicate whether a shared object is
+      an Ocaml executable.
 
   * man/lintian.1
     + [ADB] Update the list of check scripts, removing the no longer present

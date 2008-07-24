@@ -29,6 +29,7 @@ sub run {
 
 my $pkg = shift;
 my $type = shift;
+my $info = shift;
 
 my $arch;
 my $dynsyms = 0;
@@ -38,86 +39,39 @@ my $needs_libc_count = 0;
 my $needs_depends_line = 0;
 my $has_perl_lib = 0;
 
-my %COMMENT;
-my %NOTE;
-my %RPATH;
-my %NEEDED;
-my %CXXABI;
-my %OCAML;
 my %SONAME;
-my %KLIBC;
 
-# read architecture file
-if (open(IN, '<', "fields/architecture")) {
-    chop($arch = <IN>);
-    close(IN);
-}
+$arch = $info->field('architecture');
 
-my $file;
+foreach my $file (keys %{$info->objdump_info}) {
+    my $objdump = $info->objdump_info->{$file};
+    $file = './' . $file;
 
-# read data from objdump-info file
-open(IN, '<', "objdump-info")
-    or fail("cannot find objdump-info for $type package $pkg");
-while (<IN>) {
-    chop;
+    $SONAME{$file} = $objdump->{SONAME};
 
-    next if m/^\s*$/o;
-
-    if (m/^-- (\S+)\s*$/o) {
-	$file = $1;
-	$dynsyms = 0;
-    } elsif ($dynsyms) {
-	# The .*? near the end is added because a number of optional fields
-	# might be printed.  The symbol name should be the last word.
-	if (m/^[0-9a-fA-F]+.{6}\w\w?\s+(\S+)\s+[0-9a-zA-Z]+\s+(\S+)\s+(\S+)$/){
-	    my ($foo, $sec, $sym) = ($1, $2, $3);
-	    if ($arch ne 'hppa') {
-		if ($foo eq '.text' and $sec eq 'Base' and
-		    $sym eq '__gmon_start__') {
-		    tag "binary-compiled-with-profiling-enabled", "$file";
-		}
-	    } else {
-		if ( ($sec =~ /^GLIBC_.*/) and ($sym eq '_mcount') ) {
-		    tag "binary-compiled-with-profiling-enabled", "$file";
-		}
+    foreach my $symbol (@{$objdump->{SYMBOLS}}) {
+	my ($foo, $sec, $sym) = @{$symbol};
+	if ($arch ne 'hppa') {
+	    if ($foo eq '.text' and $sec eq 'Base' and
+		$sym eq '__gmon_start__') {
+		tag "binary-compiled-with-profiling-enabled", "$file";
 	    }
-
-	    if ($foo eq '.text' and $sec eq 'Base' and $sym eq 'caml_main') {
-		$OCAML{$file} = 1;
+	} else {
+	    if ( ($sec =~ /^GLIBC_.*/) and ($sym eq '_mcount') ) {
+		tag "binary-compiled-with-profiling-enabled", "$file";
 	    }
 	}
-    } else {
-	if (m/^\s*NEEDED\s*(\S+)/o) {
-	    push @{$NEEDED{$file}}, $1;
-	} elsif (m/^\s*RPATH\s*(\S+)/o) {
-	    foreach (split m/:/, $1) {
-		$RPATH{$file}{$_}++;
-	    }
-	} elsif (m/^\s*SONAME\s*(\S+)/o) {
-	    $SONAME{$1} ||= [];
-	    push @{$SONAME{$1}}, $file;
-	} elsif (m/^\s*\d+\s+\.comment\s+/o) {
-	    $COMMENT{$file} = 1;
-	} elsif (m/^\s*\d+\s+\.note\s+/o) {
-	    $NOTE{$file} = 1;
-	} elsif (m/^DYNAMIC SYMBOL TABLE:/) {
-	    $dynsyms = 1;
-	} elsif (m/^objdump: (.*?): File format not recognized$/) {
+    }
+    foreach (@{$objdump->{NOTES}}) {
+	if (m/^File format not recognized$/) {
             tag "apparently-corrupted-elf-binary", "$file";
-	} elsif (m/^objdump: \.(.*?): Packed with UPX$/) {
+	} elsif (m/^Packed with UPX$/) {
 	    tag "binary-file-compressed-with-upx", "$file";
-	} elsif (m/objdump: \.(.*?): Invalid operation$/) {
-	    # Don't anchor this regex since it can be interspersed with other
-	    # output and hence not on the beginning of a line.
+	} elsif (m/^Invalid operation$/) {
 	    tag "binary-with-bad-dynamic-table", "$file" unless $file =~ m%^\./usr/lib/debug/%;
-	} elsif (m/CXXABI/) {
-	    $CXXABI{$file} = 1;
-	} elsif (m%Requesting program interpreter:\s+/lib/klibc-\S+\.so%) {
-	    $KLIBC{$file} = 1;
 	}
     }
 }
-close(IN);
 
 # For the package naming check, filter out SONAMEs where all the files are at
 # paths other than /lib, /usr/lib, or /usr/X11R6/lib.  This avoids false
@@ -162,31 +116,22 @@ tag "package-name-doesnt-match-sonames", "@sonames"
     if @sonames && !$match_found;
 
 my %directories;
-open(IN, '<', "index") or fail("cannot open index file index: $!");
-while (<IN>) {
-    chomp;
-    next unless /^[dl]/;
-    my $dir = (split(' ', $_, 6))[-1];
-    $dir =~ s,^\./,/,;
-    $dir =~ s,/+$,,;
-    $dir =~ s/ link to .*//;
-    $dir =~ s/ -> .*//;
-
-    $directories{$dir}++;
+foreach (keys %{$info->file_info}) {
+    next unless length $_;
+    my $data = $info->file_info->{$_};
+    next unless $data =~ /^directory$/ or $data =~ / link to /;
+    $directories{$_}++;
 }
-close IN;
 
 # process all files in package
-open(IN,, '<', "file-info")
-    or fail("cannot find file-info for $type package $pkg");
-while (<IN>) {
-    chop;
+foreach my $file (keys %{$info->file_info}) {
+    my $fileinfo = $info->file_info->{$file};
+    my $objdump = $info->objdump_info->{$file};
 
-    m/^(.+?):\s+(.*)$/o or fail("an error in the file pkg is preventing lintian from checking this package: $_");
-    my ($file,$info) = ($1,$2);
+    $file = './' . $file;
 
     # binary or object file?
-    next unless ($info =~ m/^[^,]*\bELF\b/) or ($info =~ m/\bcurrent ar archive\b/);
+    next unless ($fileinfo =~ m/^[^,]*\bELF\b/) or ($fileinfo =~ m/\bcurrent ar archive\b/);
 
     # Warn about Architecture: all packages that contain shared libraries, but
     # only if those libraries aren't installed in a multiarch directory.  The
@@ -200,7 +145,7 @@ while (<IN>) {
     }
 
     # ELF?
-    next unless $info =~ m/^[^,]*\bELF\b/o;
+    next unless $fileinfo =~ m/^[^,]*\bELF\b/o;
 
     if ($file =~ m,^\./etc/,) {
 	tag "binary-in-etc", "$file";
@@ -211,12 +156,12 @@ while (<IN>) {
     }
 
     # stripped?
-    if ($info =~ m,not stripped\s*$,o) {
+    if ($fileinfo =~ m,not stripped\s*$,o) {
 	# Is it an object file (which generally can not be stripped),
 	# a kernel module, debugging symbols, or perhaps a debugging package?
 	# Ocaml executables are exempted, see #252695
 	unless ($file =~ m,\.k?o$, or $pkg =~ m/-dbg$/ or $pkg =~ m/debug/
-		or $file =~ m,/lib/debug/, or exists $OCAML{$file}) {
+		or $file =~ m,/lib/debug/, or exists $objdump->{OCAML}) {
 	    tag "unstripped-binary-or-object", "$file";
 	}
     } else {
@@ -225,18 +170,18 @@ while (<IN>) {
 	    tag "library-in-debug-or-profile-should-not-be-stripped", "$file";
 	} else {
 	    # appropriately stripped, but is it stripped enough?
-	    if (exists $NOTE{$file}) {
+	    if (exists $objdump->{NOTE_SECTION}) {
 		tag "binary-has-unneeded-section", "$file .note";
 	    }
-	    if (exists $COMMENT{$file}) {
+	    if (exists $objdump->{COMMENT_SECTION}) {
 		tag "binary-has-unneeded-section", "$file .comment";
 	    }
 	}
     }
 
     # rpath is disallowed, except in private directories
-    if (exists $RPATH{$file}) {
-	foreach my $rpath (map {File::Spec->canonpath($_)} keys %{$RPATH{$file}}) {
+    if (exists $objdump->{RPATH}) {
+	foreach my $rpath (map {File::Spec->canonpath($_)} keys %{$objdump->{RPATH}}) {
 	    next if $rpath =~ m,^/usr/lib/(games/)?\Q$pkg\E(?:/|\z),;
 	    next if $rpath =~ m,^\$ORIGIN$,;
 	    next if $directories{$rpath};
@@ -245,7 +190,7 @@ while (<IN>) {
     }
 
     # binary or shared object?
-    next unless ($info =~ m/executable/) or ($info =~ m/shared object/);
+    next unless ($fileinfo =~ m/executable/) or ($fileinfo =~ m/shared object/);
     next if $type eq 'udeb';
 
     # Perl library?
@@ -255,14 +200,14 @@ while (<IN>) {
 
     # Something other than detached debugging symbols in /usr/lib/debug paths.
     if ($file =~ m,^\./usr/lib/debug/(lib\d*|s?bin|usr|opt|dev|emul)/,) {
-	if (exists($NEEDED{$file})) {
+	if (exists($objdump->{NEEDED})) {
 	    tag "debug-file-should-use-detached-symbols", $file;
 	}
     }
 
     # statically linked?
-    if (!exists($NEEDED{$file}) || !defined($NEEDED{$file})) {
-	if ($info =~ m/shared object/o) {
+    if (!exists($objdump->{NEEDED}) || !defined($objdump->{NEEDED})) {
+	if ($fileinfo =~ m/shared object/o) {
             # Some exceptions: detached debugging information and the dynamic
             # loader (which itself has no dependencies).
             next if ($file =~ m%^\./usr/lib/debug/%);
@@ -273,7 +218,7 @@ while (<IN>) {
 	    # *.static, or *-static as package-name.
 	    next if ($file =~ m%^./boot/%);
 	    # klibc binaries appear to be static.
-	    next if ($KLIBC{$file});
+	    next if ($objdump->{KLIBC});
 	    # Location of debugging symbols:
 	    next if ($file =~ m%^./usr/lib/debug/%);
 	    next if ($file =~ /(\.|-)static$/);
@@ -284,7 +229,7 @@ while (<IN>) {
 	my $lib;
 	my $no_libc = 1;
 	$needs_depends_line = 1;
-	for $lib (@{$NEEDED{$file}}) {
+	for $lib (@{$objdump->{NEEDED}}) {
 	    if ($lib =~ /^libc\.so\.(\d+.*)/) {
 		$needs_libc = "libc$1";
 		$needs_libc_file = $file unless $needs_libc_file;
@@ -293,7 +238,7 @@ while (<IN>) {
 	    }
 	}
 	if ($no_libc and not $file =~ m,/libc\b,) {
-	    if ($info =~ m/shared object/) {
+	    if ($fileinfo =~ m/shared object/) {
 		tag "library-not-linked-against-libc", "$file";
 	    } else {
 		tag "program-not-linked-against-libc", "$file";
@@ -305,12 +250,12 @@ close(IN);
 
 # Find the package dependencies, which is used by various checks.
 my $depends = '';
-if (-f 'fields/pre-depends') {
-    $depends = slurp_entire_file('fields/pre-depends');
+if (defined $info->field('pre-depends')) {
+    $depends = $info->field('pre-depends');
 }
-if (-f 'fields/depends') {
+if (defined $info->field('depends')) {
     $depends .= ', ' if $depends;
-    $depends .= slurp_entire_file('fields/depends');
+    $depends .= $info->field('depends');
 }
 $depends =~ s/\n/ /g;
 
