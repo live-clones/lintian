@@ -39,6 +39,7 @@ lintian (1.24.3) unstable; urgency=low
   * man/lintian.1
     + [ADB] Update the list of check scripts, removing the no longer present
       deb-format and perl and adding the nmu script.
+
  -- 
 
 lintian (1.24.2) unstable; urgency=low
