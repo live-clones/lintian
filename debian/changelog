@@ -3,6 +3,8 @@ lintian (1.24.3) unstable; urgency=low
   * checks/binaries:
     + [ADB] Use Lintian::Collect throughout rather than reparsing file-info
       and objdump-info.
+  * checks/changelog-file:
+    + [ADB] Use Lintian::Collect::field() instead of reading the fields/ files
   * checks/copyright-file{,.desc}:
     + [ADB] Drop the "copyright line too long" check.  Most of the issues
       it flags aren't easily fixable, particularly where the copyright file

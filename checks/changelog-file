@@ -32,6 +32,7 @@ sub run {
 
 my $pkg = shift;
 my $type = shift;
+my $info = shift;
 my $found_html=0;
 my $found_text=0;
 my $native_pkg;
@@ -187,12 +188,14 @@ if ( $found_html && !$found_text ) {
 }
 
 # is this a native Debian package?
-open(IN, '<', "fields/version")
-    or fail("cannot open fields/version file for reading: $!");
-chop(my $version = <IN>);
-close(IN);
+my $version;
+if (defined $info->field('version')) {
+    $version = $info->field('version');
+} else {
+    fail "Unable to determine version!";
+}
 
-$native_pkg  = ($version !~ m/-/);
+$native_pkg  = $info->native;
 $foreign_pkg = (!$native_pkg and $version !~ m/-0\./);
 # A version of 1.2.3-0.1 could be either, so in that
 # case, both vars are false
