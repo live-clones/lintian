@@ -27,10 +27,14 @@ use Util;
 
 use Encode qw(decode);
 
+# Used in depends_on()
+my $info;
+
 sub run {
 
 my $pkg = shift;
 my $type = shift;
+$info = shift;
 
 my $ppkg = quotemeta($pkg);
 
@@ -292,20 +296,13 @@ sub depends_on {
 
     my ($deps, $predeps) = ("", "");
 
-    my $f = "fields/depends";
-    if (-f $f) {
-	open(I, '<', $f) or die "cannot open depends file $f: $!";
-	chop($deps = <I>);
-	close(I);
+    if (defined $info->field('depends')) {
+	$deps = $info->field('depends');
     }
 
-    $f = "fields/pre-depends";
-    if (-f $f) {
-	open(I, '<', $f) or die "cannot open pre-depends file $f: $!";
-	chop($predeps = <I>);
-	close(I);
+    if (defined $info->field('pre-depends')) {
+	$predeps = $info->field('pre-depends');
     }
-
     return 1 if Dep::implies(Dep::parse($deps), Dep::parse($package));
     return 1 if Dep::implies(Dep::parse($predeps), Dep::parse($package));
 
