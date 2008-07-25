@@ -8,6 +8,8 @@ Needs-Info: debfiles
 
 Tag: dpatch-build-dep-but-no-patch-list
 Type: warning
+Severity: normal
+Certainty: possible
 Info: Using dpatch requires you to explicitly list all patches you want
  to apply in debian/patches/00list. This package build-depends on dpatch,
  but does not provide a patch list.
@@ -17,16 +19,22 @@ Info: Using dpatch requires you to explicitly list all patches you want
 
 Tag: dpatch-index-references-non-existent-patch
 Type: error
+Severity: important
+Certainty: certain
 Info: In the 00list file listing all your dpatches, you referenced a file
  that does not exist. This will lead to a fatal error when calling dpatch.
 
 Tag: dpatch-missing-description
 Type: warning
+Severity: minor
+Certainty: certain
 Info: dpatch files should carry a description of the function of the included
  patch. Description lines start with "## DP:".
 
 Tag: quilt-build-dep-but-no-series-file
 Type: warning
+Severity: normal
+Certainty: possible
 Info: Using quilt requires you to explicitly list all patches you want
  to apply in debian/patches/series. This package build-depends on quilt,
  but does not provide a patch list.
@@ -36,6 +44,8 @@ Info: Using quilt requires you to explicitly list all patches you want
 
 Tag: quilt-series-but-no-build-dep
 Type: warning
+Severity: normal
+Certainty: possible
 Info: The package contains a debian/patches/series file usually used by
  quilt to apply patches at build time, but quilt is not listed in the
  build dependencies.
@@ -49,6 +59,8 @@ Info: The package contains a debian/patches/series file usually used by
 
 Tag: quilt-patch-with-non-standard-options
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The quilt series file contains non-standard options to apply some of
  the listed patches. Quilt uses '-p1' by default if nothing is specified
  after the name of the patch and the current series file specify something
@@ -61,11 +73,15 @@ Info: The quilt series file contains non-standard options to apply some of
 
 Tag: quilt-series-references-non-existent-patch
 Type: error
+Severity: important
+Certainty: certain
 Info: In the series file listing all your quilt patches, you referenced a
  file that does not exist. This will lead to a fatal error when calling quilt.
 
 Tag: patch-modifying-debian-files
 Type: error
+Severity: important
+Certainty: certain
 Info: A patch stored in debian/patches/ should never modify files
  in the debian directory (even when it's only creating new files) because
  the debian directory is always directly provided by the Debian packaging.
@@ -77,11 +93,15 @@ Info: A patch stored in debian/patches/ should never modify files
 
 Tag: patch-system-but-direct-changes-in-diff
 Type: warning
+Severity: minor
+Certainty: certain
 Info: The package uses a patch-system, but the Debian diff.gz contains changes
  made on files without being separated out in a patch.
 
 Tag: more-than-one-patch-system
 Type: warning
+Severity: minor
+Certainty: certain
 Info: The build-dependencies list more than one patch system and it's
  unlikely that you need both at the same time.
  .
