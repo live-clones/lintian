@@ -26,6 +26,7 @@ sub run {
 
 my $pkg = shift;
 my $type = shift;
+my $info = shift;
 
 # Threshold in kB of /usr/share to trigger this warning
 # Consider that the changelog alone can be quite big, and cannot be moved away
@@ -35,10 +36,9 @@ my $THRESHOLD_PERC = 50;
 
 my $arch;
 
-# read architecture file
-if (open(IN, '<', "fields/architecture")) {
-    chop($arch = <IN>);
-    close(IN);
+# read architecture
+if (defined $info->field('architecture')) {
+    $arch = $info->field('architecture');
 }
 
 # If this is a arch-independent package, this test doesn't apply
