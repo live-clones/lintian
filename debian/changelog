@@ -21,6 +21,9 @@ lintian (1.24.3) unstable; urgency=low
   * checks/fields{,.desc}:
     + [RA] Warn about packages that depend exclusively on makedev.
       Thanks, Josh Triplett.  (Closes: #491625)
+  * checks/files:
+    + [ADB] Begin switching to Lintian::Collect.  Currently objdump-info
+      parsing and fields/* reading have been migrated.
   * checks/manpages:
     + [RA] Suppress warnings about inability to break a line that contains
       a URL.  URLs often can't be usefully broken.  Based on a patch by

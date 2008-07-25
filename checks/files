@@ -28,6 +28,7 @@ sub run {
 
 my $pkg = shift;
 my $type = shift;
+my $info = shift;
 
 my $file;
 my $source_pkg = "";
@@ -42,33 +43,25 @@ my %linked_against_libvga;
 my %script = ();
 
 # read data from objdump-info file
-open(IN, '<', "objdump-info")
-    or fail("cannot find objdump-info for $type package $pkg");
-while (<IN>) {
-    chop;
+foreach my $file (keys %{$info->objdump_info}) {
+    my $objdump = $info->objdump_info->{$file};
+    $file = './' . $file;
 
-    next if m/^\s*$/;
-
-    if (m,^-- (?:\./)?(\S+)\s*$,) {
-	$file = $1;
-    } elsif (m,^\s*NEEDED\s*(\S+),) {
-	my $lib = $1;
+    if (defined $objdump->{NEEDED}) {
+	my $lib = $objdump->{NEEDED};
 	$linked_against_libvga{$file} = 1
 	    if $lib =~ m/libvga/;
     }
 }
-close(IN);
 
 # Get source package name, if possible.
-if (open (SOURCE, '<', "fields/source")) {
-    chomp ($source_pkg = (<SOURCE> || ""));
-    close SOURCE;
+if (defined $info->field('source')) {
+    $source_pkg = $info->field('source') || "";
 }
 
 # Get section.
-if (open (SECTION, '<', "fields/section")) {
-    chomp ($pkg_section = <SECTION>);
-    close SECTION;
+if (defined $info->field('section')) {
+   $pkg_section = $info->field('section');
 }
 
 # find out which files are scripts
@@ -294,10 +287,8 @@ while (<IN>) {
 	elsif ($file =~ m,^usr/(?:include|lib)/X11/,
 	       && !$warned_x11_predepends && $pkg ne 'x11-common') {
 	    my $pre_depends = '';
-	    if (open (FH, '<', "fields/pre-depends")) {
-		$pre_depends = <FH>;
-		close FH;
-		$pre_depends =~ s/\n//g;
+	    if (defined $info->field('pre-depends')) {
+		$pre_depends = $info->field('pre-depends');
 	    }
 	    $pre_depends = Dep::parse($pre_depends);
 	    tag "file-in-usr-something-x11-without-pre-depends", "$file"
@@ -540,10 +531,9 @@ while (<IN>) {
         # check if it's one of the Python proper packages
 	unless (defined $is_python) {
 	    $is_python = 0;
-	    if (open(SOURCE, '<', "fields/source")) {
-		$_ = <SOURCE>;
+	    if (defined $info->field('source')) {
+		$_ = $info->field('source');
 		$is_python = 1 if /^python(\d\.\d)?($|\s)/;
-		close(SOURCE);
 	    }
 	}
 	tag "third-party-package-in-python-dir", "$file"
@@ -554,10 +544,9 @@ while (<IN>) {
        # check if it's the "perl" package itself
        unless (defined $is_perl) {
            $is_perl = 0;
-           if (open(SOURCE, '<', "fields/source")) {
-               $_ = <SOURCE>;
+	   if (defined $info->field('source')) {
+               $_ = $info->field('source');;
                $is_perl = 1 if /^perl($|\s)/;
-               close(SOURCE);
            }
        }
        tag "perl-module-in-core-directory", "$file"
