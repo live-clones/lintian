@@ -94,11 +94,10 @@ while (<IN>) {
     	# this case is allowed, if this package depends on link
     	# and both packages come from the same source package
 
-	if (not open (VERSION, '<', "fields/version")) {
+	if (not defined $info->field('version')) {
 	    fail("Can't open fields/version: $!");
 	} else {
-	    chomp(my $our_version = <VERSION>);
-	    close VERSION;
+	    my $our_version = $info->field('version');
 
 	    # depend on $link pkg?
 	    if ((not depends_on($link, $our_version)) &&
@@ -273,11 +272,11 @@ spelling_check('spelling-error-in-copyright', $_);
 if ($gpl || m,/usr/share/common-licenses/GPL,) {
     unless (m,exception|exemption|/usr/share/common-licenses/(?!GPL)\S,) {
 	my @depends;
-	if (open(DEP, '<', 'fields/depends')) {
-	    @depends = split (/\s*,\s*/, scalar <DEP>);
+	if (defined $info->field('depends')) {
+	    @depends = split (/\s*,\s*/, scalar $info->field('depends'));
 	}
-	if (open(DEP, '<', 'fields/pre-depends')) {
-	    push @depends, split (/\s*,\s*/, scalar <DEP>);
+	if (defined $info->field('pre-depends')) {
+	    push @depends, split (/\s*,\s*/, scalar $info->field('pre-depends'));
 	}
 	close DEP;
 	if (grep { /^libssl[0-9.]+(\s|\z)/ && !/\|/ } @depends) {
