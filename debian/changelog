@@ -37,6 +37,7 @@ lintian (1.24.3) unstable; urgency=low
       into a single message to reduce the noise from packages that rebuild
       all auto-generated files outside the patch system.  Thanks, Julien
       Cristau.  (Closes: #491296)
+    + [ADB] Migrate fields/* reading to use ::Collect::field().
   * checks/po-debconf{,.desc}:
     + [ADB] Check that at least one complete translation exists.  Thanks Jordà
       Polo.

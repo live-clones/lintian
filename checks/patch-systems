@@ -28,7 +28,7 @@ use Tags;
 use Util;
 
 sub run {
-	my ($pkg, $type) = @_;
+	my ($pkg, $type, $info) = @_;
 
 	unless (-d "fields") {
     	fail("directory in lintian laboratory for $type package $pkg missing: fields");
@@ -40,24 +40,18 @@ sub run {
 	#Get build deps so we can decide which build system the maintainer
 	#meant to use:
 	my $build_deps = "";
-    if (open(IN, '<', "fields/build-depends")) {
-		local $/ = undef;
-        chomp($build_deps .= <IN>);
-		close(IN);
-    }
-	if (open(IN, '<', "fields/build-depends-indep")) {
-		local $/ = undef;
+	if (defined $info->field('build-depends')) {
+		$build_deps = $info->field('build-depends');
+	}
+	if (defined $info->field('build-depends-indep')) {
 		$build_deps .= ", " if $build_deps;
-		chomp($build_deps .= <IN>);
-		close(IN);
+		$build_deps .= $info->field('build-depends-indep');
 	}
 	$build_deps = Dep::parse($build_deps);
 	# Get source package format
 	my $format = "";
-	if (open(IN, '<', "fields/format")) {
-		local $/ = undef;
-		chomp($format .= <IN>);
-		close(IN);
+	if (defined $info->field('format')) {
+		$format = $info->field('format');
 	}
 	my $quilt_format = ($format =~ /3\.\d+ \(quilt\)/) ? 1 : 0;
 
