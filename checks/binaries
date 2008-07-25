@@ -47,7 +47,7 @@ foreach my $file (keys %{$info->objdump_info}) {
     my $objdump = $info->objdump_info->{$file};
     $file = './' . $file;
 
-    $SONAME{$file} = $objdump->{SONAME};
+    $SONAME{$file} = $objdump->{SONAME} if defined $objdump->{SONAME};
 
     foreach my $symbol (@{$objdump->{SYMBOLS}}) {
 	my ($foo, $sec, $sym) = @{$symbol};
