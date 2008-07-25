@@ -184,8 +184,21 @@ sub objdump_info {
                 $file->{CXXABI} = 1;
             } elsif (m%Requesting program interpreter:\s+/lib/klibc-\S+\.so%) {
                 $file->{KLIBC} = 1;
-            }
-        }
+	    } elsif (m/^\s*TEXTREL\s/o) {
+		$file->{TEXTREL} = 1;
+	    } elsif (m/^\s*INTERP\s/) {
+		$file->{INTERP} = 1;
+	    } elsif (m/^\s*STACK\s/) {
+		$file->{STACK} = 0;
+	    } else {
+		if (defined $file->{STACK} and $file->{STACK} eq 0) {
+		    m/\sflags\s+(\S+)/o;
+		    $file->{STACK} = $1;
+		} else {
+		    $file->{OTHER_DATA} = 1;
+		}
+	    }
+	}
     }
     if ($file) {
         $objdump_info{$file->{name}} = $file;
