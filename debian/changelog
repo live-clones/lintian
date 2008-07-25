@@ -7,6 +7,8 @@ lintian (1.24.3) unstable; urgency=low
     + [ADB] Drop the "copyright line too long" check.  Most of the issues
       it flags aren't easily fixable, particularly where the copyright file
       is (semi)automatically generated.  (Closes: #491302, #491365, #491685)
+  * checks/cruft:
+    + [ADB] Use Lintian::Collect for accessing control fields
   * checks/debconf:
     + [ADB] Don't complain about unused debconf templates in udebs.
       (Closes: #491135)

@@ -76,9 +76,6 @@ my @file_checks =
 # again in the source checks.
 my %warned;
 
-# Whether this is a native Debian package.
-my $native;
-
 my $dir;
 my $atdinbd;
 
@@ -108,9 +105,9 @@ if ($info->native) {
 # Check if this is a documentation package that's not arch: all.  This doesn't
 # really belong here either.
 my $arch;
-if (open IN, '<', "fields/architecture") {
-    chop($arch = <IN>);
-    close IN;
+if (defined $info->field('architecture')) {
+    my $arch;
+    chop($arch = $info->field('architecture'));
     if ($pkg =~ /-docs?$/ && $arch ne 'all') {
         tag 'documentation-package-not-architecture-independent';
     }
@@ -121,10 +118,9 @@ if (open IN, '<', "fields/architecture") {
 # depend on autoconf and automake and then use autoreconf to update
 # config.guess and config.sub, and automake depends on autotools-dev.
 $atdinbd = 0;
-if (open IN, '<', "fields/build-depends") {
+if (defined $info->field('build-depends')) {
     my $bd;
-    chop($bd = <IN>);
-    close IN;
+    chop($bd = $info->field('build-depends'));
     $atdinbd = 1 if Dep::implies(Dep::parse($bd), Dep::parse($autotools_pkgs));
 }
 
