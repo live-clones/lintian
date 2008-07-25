@@ -164,7 +164,7 @@ while (defined(my $file=readdir(DEBIAN))) {
 	}
 }
 
-tag "no-complete-translation", "" if !$full_translation;
+tag "no-complete-debconf-translation", "" if !$full_translation;
 
 }
 
