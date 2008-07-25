@@ -37,6 +37,7 @@ sub run {
 
 my $pkg = shift;
 my $type = shift;
+my $info = shift;
 
 # Policy could be read as allowing debian/rules to be a symlink to some other
 # file, and in a native Debian package it could be a symlink to a file that we
@@ -52,23 +53,16 @@ unless (-d "fields") {
     fail("directory in lintian laboratory for $type package $pkg missing: fields");
 }
 
-my $architecture = "";
-if(open (IN, '<', "fields/architecture")) {
-    chomp($architecture = <IN>)
-}
-close(IN);
+my $architecture = ""; 
+$architecture = $info->field('architecture') || "";
 
 #get build-depends:
 my $build_deps = "";
-if (open(IN, '<', "fields/build-depends")) {
-    local $/ = undef;
-    chomp($build_deps .= <IN>);
-    close(IN);
+if (defined $info->field('build-depends')) {
+    $build_deps = $info->field('build-depends');
 }
-if (open(IN, '<', "fields/build-depends-indep")) {
-    local $/ = undef;
-    chomp($build_deps .= <IN>);
-    close(IN);
+if (defined $info->field('build-depends-indep')) {
+    $build_deps .= $info->field('build-depends-indep');
 }
 $build_deps = Dep::parse($build_deps);
 

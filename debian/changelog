@@ -41,6 +41,8 @@ lintian (1.24.3) unstable; urgency=low
   * checks/po-debconf{,.desc}:
     + [ADB] Check that at least one complete translation exists.  Thanks Jordà
       Polo.
+  * checks/rules:
+    + [ADB] Use ::Collect for field access.
   * checks/scripts{,.desc}:
     + [RA] Warn about maintainer scripts that prepend a path to commands.
       Based on a patch by Raphael Geissert.  (Closes: #376184)
