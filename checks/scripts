@@ -193,6 +193,7 @@ my %deps = ();
 
 my $pkg = shift;
 my $type = shift;
+my $info = shift;
 
 open(INDEX, '<', "index") or fail("cannot open lintian index file: $!");
 while (<INDEX>) {
@@ -220,10 +221,8 @@ close(FILEINFO);
 my $all_deps = '';
 for my $field (qw/suggests recommends depends pre-depends provides/) {
     $deps{$field} = '';
-    if (open(IN, '<', "fields/$field")) {
-	$_ = join('', <IN>);
-	close(IN);
-        chomp;
+    if (defined $info->field($field)) {
+	$_ = $info->field($field);
         $deps{$field} = $_;
         $all_deps .= ', ' if $all_deps;
         $all_deps .= $_;
