@@ -106,8 +106,7 @@ if ($info->native) {
 # really belong here either.
 my $arch;
 if (defined $info->field('architecture')) {
-    my $arch;
-    chop($arch = $info->field('architecture'));
+    my $arch = $info->field('architecture');
     if ($pkg =~ /-docs?$/ && $arch ne 'all') {
         tag 'documentation-package-not-architecture-independent';
     }
@@ -119,8 +118,7 @@ if (defined $info->field('architecture')) {
 # config.guess and config.sub, and automake depends on autotools-dev.
 $atdinbd = 0;
 if (defined $info->field('build-depends')) {
-    my $bd;
-    chop($bd = $info->field('build-depends'));
+    my $bd = $info->field('build-depends');
     $atdinbd = 1 if Dep::implies(Dep::parse($bd), Dep::parse($autotools_pkgs));
 }
 
