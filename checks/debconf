@@ -29,6 +29,7 @@ sub run {
 
 my $pkg = shift;
 my $type = shift;
+my $info = shift;
 
 # From debconf-devel(7), section 'THE TEMPLATES FILE', up to date with debconf
 # version 1.3.22.  Added indices for cdebconf (indicates sort order for
@@ -69,9 +70,7 @@ my $usespreinst='';
 my $usesmultiselect='';
 
 if ($type eq 'source') {
-    open(BINARY, '<', "fields/binary") or fail("Can't open fields/binary: $!");
-    my $binaries = <BINARY>;
-    close BINARY;
+    my $binaries = $info->field('binary');
     chomp $binaries;
     my @files = map { "$_.templates" } split /,\s+/, $binaries;
     push @files, "templates";
@@ -130,9 +129,8 @@ return unless $seenconfig or $seentemplates or $usespreinst;
 
 # Consider every package to depend on itself.
 my $version;
-if (-f "fields/version") {
-    open(IN, '<', "fields/version") or fail("Can't open fields/version: $!");
-    chomp($_ = <IN>);
+if (defined $info->field('version')) {
+    $_ = $info->field('version');
     $version = "$pkg (= $_)";
     close IN;
 }
@@ -140,10 +138,8 @@ if (-f "fields/version") {
 my (%dependencies, @alldeps);
 
 for my $field (qw(depends pre-depends)) {
-    if (-f "fields/$field") {
-	open(IN, '<', "fields/$field") or fail("Can't open fields/$field: $!");
-	chomp($_ = <IN>);
-	close IN;
+    if (defined $info->field($field)) {
+	$_ = $info->field($field);
 	$_ .= ", $version" if defined $version;
         push @alldeps, $_;
 	$dependencies{$field} = Dep::parse($_);
