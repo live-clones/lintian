@@ -59,10 +59,6 @@ my $prerm = "control/prerm";
 my $shlibs_control_file = "control/shlibs";
 my $symbols_control_file = "control/symbols";
 my %SONAME;
-my %INTERP;
-my %STACK;
-my %TEXTREL;
-my %objsomething;
 my %sharedobject;
 my %index_info;
 my %link_info;
@@ -73,38 +69,13 @@ my @words;
 
 my $pkg = shift;
 my $type = shift;
+my $info = shift;
 
 # 1st step: get info about shared libraries installed by this package
-open(IN, '<', "objdump-info")
-    or fail("cannot find objdump-info for $type package $pkg");
-while (<IN>) {
-    chop;
-
-    #skip blank lines
-    next if m/^\s*$/o;
-
-    if (m/^-- (\S+)\s*$/o) {
-	$file = $1;
-	$file =~ s,^(\./)?,,;
-    } elsif (m/^\s*SONAME\s+(\S+)/o) {
-	$SONAME{$file} = $1;
-    } elsif (m/^\s*TEXTREL\s/o) {
-        $TEXTREL{$file} = 1;
-    } elsif (m/^\s*INTERP\s/) {
-	$INTERP{$file} = 1;
-    } elsif (m/^\s*STACK\s/) {
-	$STACK{$file} = 0;
-    } else {
-        if (defined $STACK{$file} and $STACK{$file} eq 0) {
-	    m/\sflags\s+(\S+)/o;
-	    $STACK{$file} = $1;
-	}
-	else {
-	    $objsomething{$file} = 1;
-	}
-    }
+foreach my $file (keys %{$info->objdump_info}) {
+    my $objdump = $info->objdump_info->{$file};
+    $SONAME{$file} = $objdump->{SONAME}[0] if defined $objdump->{SONAME};
 }
-close(IN);
 
 open (IN, '<', "file-info")
     or fail("cannot find file-info for $type package $pkg");
@@ -112,8 +83,8 @@ while (<IN>) {
     chomp;
     # with file names containing colons and spaces, we're fucked.
     m/^(?:\.\/)?(.+?):\s+(.*)$/o or fail("unrecognized file(1) output: $_");
-    my ($file,$info) = ($1,$2);
-    if ($info =~ m/^[^,]*\bELF\b/ && $info =~ m/shared object/) {
+    my ($file,$fileinfo) = ($1,$2);
+    if ($fileinfo =~ m/^[^,]*\bELF\b/ && $fileinfo =~ m/shared object/) {
 	$sharedobject{$file} = 1;
     }
 }
@@ -158,7 +129,7 @@ for (keys %files) {
 
 	# Now that we're sure this is really a shared library, report on
 	# non-PIC problems.
-        if ($cur_file eq $real_file and $TEXTREL{$cur_file}) {
+        if ($cur_file eq $real_file and $info->objdump_info->{$cur_file}->{TEXTREL}) {
             tag "shlib-with-non-pic-code", "$cur_file";
         }
 
@@ -170,7 +141,7 @@ for (keys %files) {
                 # yes.  But if the library has an INTERP section, it's designed
                 # to do something useful when executed, so don't report an error.
                 tag "shlib-with-executable-bit", $cur_file, sprintf("%04o",perm2oct($real_perm))
-                    unless $INTERP{$real_file};
+                    unless $info->objdump_info->{$real_file}->{INTERP};
             } elsif ($real_perm ne '-rw-r--r--') {
                 # bad permissions
                 tag "shlib-with-bad-permissions", $cur_file, sprintf("%04o",perm2oct($real_perm));
@@ -194,20 +165,18 @@ for (keys %files) {
 	# executable stack.  We can only warn about a missing section on some
 	# architectures.  Only warn if there's an Architecture field; if
 	# that's missing, we'll already be complaining elsewhere.
-	if (exists $objsomething{$cur_file}) {
-	    if (not defined $STACK{$cur_file}) {
-		if (open(FH, '<', "fields/architecture")) {
-		    my $arch = <FH>;
-		    close FH;
-		    chomp $arch;
+	if (exists $info->objdump_info->{$cur_file}->{OTHER_DATA}) {
+	    if (not defined $info->objdump_info->{$cur_file}->{STACK}) {
+		if (defined $info->field('architecture')) {
+		    my $arch = $info->field('architecture');
 		    tag "shlib-without-PT_GNU_STACK-section", $cur_file
 			if $stack_arches{$arch};
 		}
-	    } elsif ($STACK{$cur_file} ne "rw-") {
+	    } elsif ($info->objdump_info->{$cur_file}->{STACK} ne "rw-") {
 		tag "shlib-with-executable-stack", $cur_file;
 	    }
 	}
-    } elsif (exists $objsomething{$cur_file}
+    } elsif (exists $info->objdump_info->{$cur_file}->{OTHER_DATA}
 	     && $ldconfig_dirs->known(dirname($cur_file))
 	     && exists $sharedobject{$cur_file}) {
 	tag "sharedobject-in-library-directory-missing-soname", "$cur_file";
@@ -283,17 +252,12 @@ for my $shlib_file (keys %SONAME) {
 
 # 4th step: check shlibs control file
 my $version;
-if (open (VERSION, '<', 'fields/version')) {
-    $version = <VERSION>;
-    close VERSION;
-    chomp $version;
+if (defined $info->field('version')) {
+    $version = $info->field('version');
 }
 my $provides = $pkg . "( = $version)";
-if (open (PROVIDES, '<', 'fields/provides')) {
-    my $line = <PROVIDES>;
-    close PROVIDES;
-    chomp $line;
-    $provides .= ", $line";
+if (defined $info->field('provides')) {
+    $provides .= ", " . $info->field('provides');
 }
 $provides = Dep::parse($provides);
 

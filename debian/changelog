@@ -48,8 +48,9 @@ lintian (1.24.3) unstable; urgency=low
       Based on a patch by Raphael Geissert.  (Closes: #376184)
     + [ADB] Don't read fields/* directly as the contents have almost certainly
       been cached in Lintian::Collect already.
-  * checks/shared-libs.desc:
+  * checks/shared-libs.{,desc}:
     + [ADB] Improve the description of no-symbols-control-file.
+    + [ADB] Migrate to using ::Collect for objdump info and field content
 
   * data/doc-base/sections:
     + [ADB] Resynchronize with doc-base's section list (adding
