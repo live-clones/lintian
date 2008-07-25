@@ -120,13 +120,12 @@ sub run {
 
 my $pkg = shift;
 my $type = shift;
+my $info = shift;
 my $version;
 my $arch_indep;
 
 # Load obsolete packages list.
 my $obsolete_packages = Lintian::Data->new ('fields/obsolete-packages');
-
-local $/ = undef; #Read everything in one go
 
 unless (-d "fields") {
 	fail("directory in lintian laboratory for $type package $pkg missing: fields");
@@ -135,11 +134,10 @@ unless (-d "fields") {
 #---- Package
 
 if ($type eq "binary"){
-	if (not open (FH, '<', "fields/package")) {
+	if (not defined $info->field('package')) {
 		tag "no-package-name", "";
 	} else {
-		my $name = <FH>;
-		close FH;
+		my $name = $info->field('package');
 
 		unfold("package", \$name);
 		tag "bad-package-name", "" unless $name =~ /^[A-Z0-9][-+\.A-Z0-9]+$/i;
@@ -149,11 +147,10 @@ if ($type eq "binary"){
 
 #---- Version
 
-if (not open (FH, '<', "fields/version")) {
+if (not defined $info->field('version')) {
 	tag "no-version-field", "";
 } else {
-	$version = <FH>;
-	close FH;
+	$version = $info->field('version');
 
 	unfold("version", \$version);
 
@@ -193,11 +190,10 @@ if (not open (FH, '<', "fields/version")) {
 
 #---- Architecture
 
-if (not open (FH, '<', "fields/architecture")) {
+if (not defined $info->field('architecture')) {
 	tag "no-architecture-field", "";
 } else {
-	my $archs = <FH>;
-	close FH;
+	my $archs = $info->field('architecture');
 
 	unfold("architecture", \$archs);
 
@@ -224,9 +220,8 @@ if (not open (FH, '<', "fields/architecture")) {
 
 #---- Subarchitecture (udeb)
 
-if (open(FH, '<', "fields/subarchitecture")) {
-	my $subarch = <FH>;
-	close(FH);
+if (defined $info->field('subarchitecture')) {
+	my $subarch = $info->field('subarchitecture');
 
 	unfold("subarchitecture", \$subarch);
 }
@@ -235,11 +230,10 @@ if (open(FH, '<', "fields/subarchitecture")) {
 #---- Uploaders
 
 for my $f (qw(maintainer uploaders)) {
-	if (not open (FH, '<', "fields/$f")) {
+	if (not defined $info->field($f)) {
 		tag "no-maintainer-field", "" if $f eq "maintainer";
 	} else {
-		my $maintainer = <FH>;
-		close FH;
+		my $maintainer = $info->field($f);
 
 		# Note, not expected to hit on uploaders anymore, as dpkg now strips
 		# newlines for the .dsc, and the newlines don't hurt in debian/control
@@ -253,7 +247,7 @@ for my $f (qw(maintainer uploaders)) {
 			check_maint($maintainer, $f);
 			if ($type eq 'source'
 			    && $maintainer =~ /\@lists(\.alioth)?\.debian\.org\b/
-			    && ! -f 'fields/uploaders') {
+			    && ! defined $info->field('uploaders')) {
 				tag 'no-human-maintainers';
 			}
 		}
@@ -263,11 +257,10 @@ for my $f (qw(maintainer uploaders)) {
 #---- Source
 
 if ($type eq "source") {
-	if (not open (FH, '<', "fields/source")) {
+	if (not defined $info->field('source')) {
 		tag "no-source-field", "";
 	} else {
-		my $source = <FH>;
-		close FH;
+		my $source = $info->field('source');
 
 		unfold("source", \$source);
 
@@ -287,9 +280,8 @@ if ($type eq "source") {
 
 #---- Essential
 
-if (open (FH, '<', "fields/essential")) {
-	my $essential = <FH>;
-	close FH;
+if (defined $info->field('essential')) {
+	my $essential = $info->field('essential');
 
 	unfold("essential", \$essential);
 
@@ -301,11 +293,10 @@ if (open (FH, '<', "fields/essential")) {
 
 #---- Section
 
-if (not open (FH, '<', "fields/section")) {
+if (not defined $info->field('section')) {
 	tag 'no-section-field' if ($type eq 'binary');
 } else {
-	my $section = <FH>;
-	close FH;
+	my $section = $info->field('section');
 
 	unfold("section", \$section);
 
@@ -349,11 +340,10 @@ if (not open (FH, '<', "fields/section")) {
 
 #---- Priority
 
-if (not open (FH, '<', "fields/priority")) {
+if (not defined $info->field('priority')) {
 	tag "no-priority-field", "" if $type eq "binary";
 } else {
-	my $priority = <FH>;
-	close FH;
+	my $priority = $info->field('priority');
 
 	unfold("priority", \$priority);
 
@@ -373,9 +363,8 @@ if (not open (FH, '<', "fields/priority")) {
 
 #--- Homepage
 
-if (open (FH, '<', "fields/homepage")) {
-	my $homepage = <FH>;
-	close(FH);
+if (defined $info->field('homepage')) {
+	my $homepage = $info->field('homepage');
 
 	unfold("homepage", \$homepage);
 
@@ -393,9 +382,8 @@ if (open (FH, '<', "fields/homepage")) {
 
 #---- Installer-Menu-Item (udeb)
 
-if (open(FH, '<', "fields/installer-menu-item")) {
-	my $menu_item = <FH>;
-	close(FH);
+if (defined $info->field('installer-menu-item')) {
+	my $menu_item = $info->field('installer-menu-item');
 
 	unfold('installer-menu-item', \$menu_item);
 
@@ -430,9 +418,9 @@ if (($type eq "binary") || ($type eq 'udeb')) {
 		$debugbase = $1;
 	}
 	for my $field (qw(depends pre-depends recommends suggests conflicts provides replaces breaks)) {
-		if (open(FH, '<', "fields/$field")) {
+		if (defined $info->field($field)) {
 			#Get data and clean it
-			my $data = <FH>;
+			my $data = $info->field($field);;
 			unfold($field, \$data);
 			$data =~ s/^\s*(.+?)\s*$/$1/;
 			$fields{$field} = $data;
@@ -528,7 +516,7 @@ if (($type eq "binary") || ($type eq 'udeb')) {
 
 					tag "old-versioned-python-dependency", "$field: $part_d_orig"
 					    if ($d_pkg eq 'python' && $d_version->[0] eq '<<' && &$is_dep_field($field)
-						&& $arch_indep && $pkg =~ /^python-/ && ! -f "fields/python-version");
+						&& $arch_indep && $pkg =~ /^python-/ && ! defined $info->field('python-version'));
 
 					tag "depends-exclusively-on-makedev", "$field",
 					    if ($field eq 'depends' && $d_pkg eq 'makedev' && @alternatives == 1);
@@ -663,15 +651,15 @@ if ($type eq "source") {
 	$/ = undef;             # Back to reading everything.
 
 	tag "build-depends-indep-without-arch-indep", ""
-		if (-e "fields/build-depends-indep" && $arch_indep_packages == 0);
+		if (defined $info->field('build-depends-indep') && $arch_indep_packages == 0);
 
 	my $is_dep_field = sub { grep { $_ eq $_[0] } qw(build-depends build-depends-indep) };
 
 	my %depend;
 	for my $field (qw(build-depends build-depends-indep build-conflicts build-conflicts-indep)) {
-		if (open(FH, '<', "fields/$field")) {
+		if (defined $info->field($field)) {
 			#Get data and clean it
-			my $data = <FH>;
+			my $data = $info->field($field);;
 			unfold($field, \$data);
 			$data =~ s/^\s*(.+?)\s*$/$1/;
 			$depend{$field} = $data;
@@ -764,7 +752,7 @@ if ($type eq "source") {
 		# is enabled.
 		if ($tag eq 'missing-dh_python-build-dependency') {
 			next if -f 'debfiles/pycomat';
-			next if -f 'fields/python-version';
+			next if defined $info->field('python-version');
 		}
 		unless (Dep::implies($depend{'build-depends'}, $dep)) {
 			unless (Dep::implies($depend{'build-depends-indep'}, $dep)) {
@@ -790,11 +778,8 @@ if ($type eq "source") {
 	# packages so that the implications will work properly.
 	#
 	# This is confusing.  There should be a better way to do this.
-	if (-e "fields/build-depends" && $arch_dep_packages == 0 && !$bypass_needed_clean) {
-		open(FH, '<', "fields/build-depends")
-		    or fail("cannot read fields/build-depends: $!");
-		my $build_depends = <FH>;
-		close FH;
+	if (defined $info->field('build-depends') && $arch_dep_packages == 0 && !$bypass_needed_clean) {
+		my $build_depends = $info->field('build-depends');
 		my @packages = split /\s*,\s*/, $build_depends;
 		my @allowed = map { s/[\(\[][^\)\]]+[\)\]]//g; s/\|/,/g; $_ } keys (%needed_clean), keys (%allowed_clean);
 		my $dep = Dep::parse (join (',', @allowed));
@@ -812,9 +797,8 @@ if ($type eq "source") {
 
 #----- Origin
 
-if (open(FH, '<', "fields/origin")) {
-	my $origin = <FH>;
-	close(FH);
+if (defined $info->field('origin')) {
+	my $origin = $info->field('origin');
 
 	unfold('origin', \$origin);
 
@@ -823,9 +807,8 @@ if (open(FH, '<', "fields/origin")) {
 
 #----- Bugs
 
-if (open(FH, '<', "fields/bugs")) {
-	my $bugs = <FH>;
-	close FH;
+if (defined $info->field('bugs')) {
+	my $bugs = $info->field('bugs');
 
 	unfold('bugs', \$bugs);
 
@@ -835,9 +818,8 @@ if (open(FH, '<', "fields/bugs")) {
 
 #----- Python-Version
 
-if (open(FH, '<', "fields/python-version")) {
-	my $pyversion = <FH>;
-	close FH;
+if (defined $info->field('python-version')) {
+	my $pyversion = $info->field('python-version');
 
 	unfold('python-version', \$pyversion);
 
@@ -870,9 +852,8 @@ if (open(FH, '<', "fields/python-version")) {
 
 #----- Dm-Upload-Allowed
 
-if (open(FH, '<', 'fields/dm-upload-allowed')) {
-	my $dmupload = <FH>;
-	close FH;
+if (defined $info->field('dm-upload-allowed')) {
+	my $dmupload = $info->field('dm-upload-allowed');
 
 	unfold('dm-upload-allowed', \$dmupload);
 
