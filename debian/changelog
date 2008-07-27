@@ -17,6 +17,8 @@ lintian (1.24.3) unstable; urgency=low
       (Closes: #491135)
     + [RA] Try to recognize at least some debconf template uses in Perl.
     + [ADB] Replace fields/* access with Lintian::Collect::field()
+    + [ADB] Don't flag the shared templates used for dictionaries-common
+      co-ordination as unused.
   * checks/description:
     + [RA] Don't warn about a synopsis that ends in "etc."  Patch from
       Chris Lamb.  (Closes: #491252)

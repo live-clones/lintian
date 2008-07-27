@@ -485,8 +485,12 @@ foreach my $template (@templates_seen) {
 	    }
 	}
     }
-    tag "unused-debconf-template", $template
-	unless $used or $pkg eq "debconf" or $type eq 'udeb';
+
+    unless ($used or $pkg eq "debconf" or $type eq 'udeb') {
+	tag "unused-debconf-template", $template
+	    unless $template =~ m,^shared/packages-(wordlist|ispell)$,
+	        or $template =~ m,/languages$,;
+    }
 }
 
 # Check that the right dependencies are in the control file.  Accept any
