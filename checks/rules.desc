@@ -8,6 +8,8 @@ Abbrev: rul
 
 Tag: debian-rules-is-symlink
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The file <tt>debian/rules</tt> is a symlink instead of a regular
  file. This is unnecessary and makes package checking and manipulation
  more difficult. If the rules file should be available in the source
@@ -19,6 +21,8 @@ Info: The file <tt>debian/rules</tt> is a symlink instead of a regular
 
 Tag: debian-rules-not-a-makefile
 Type: error
+Severity: serious
+Certainty: certain
 Ref: policy 4.9
 Info: The <tt>debian/rules</tt> file for this package does not appear to
  be a makefile or does not start with the required line.
@@ -27,6 +31,8 @@ Info: The <tt>debian/rules</tt> file for this package does not appear to
 
 Tag: debian-rules-missing-required-target
 Type: error
+Severity: serious
+Certainty: certain
 Ref: policy 4.9
 Info: The <tt>debian/rules</tt> file for this package does not provide one
  of the required targets.  All of build, binary, binary-arch,
@@ -35,6 +41,8 @@ Info: The <tt>debian/rules</tt> file for this package does not provide one
 
 Tag: debian-rules-uses-pwd
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The <tt>debian/rules</tt> file for this package appears to use the
  variable $(PWD) to refer to the current directory.  This variable is not
  set by GNU make and therefore will have whatever value it has in the
@@ -47,6 +55,8 @@ Info: The <tt>debian/rules</tt> file for this package appears to use the
 
 Tag: debian-rules-ignores-make-clean-error
 Type: warning
+Severity: normal
+Certainty: certain
 Info: A rule in the <tt>debian/rules</tt> file for this package calls the
  package's clean or distclean target with a line like:
  .
@@ -66,12 +76,16 @@ Info: A rule in the <tt>debian/rules</tt> file for this package calls the
 
 Tag: debian-rules-uses-DEB_BUILD_OPTS
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The standard environment variable for build options is
  DEB_BUILD_OPTIONS.  Usually, referring to DEB_BUILD_OPTS is a mistake and
  DEB_BUILD_OPTIONS was intended instead.
 
 Tag: debian-rules-sets-DH_COMPAT
 Type: warning
+Severity: normal
+Certainty: certain
 Ref: debhelper(7)
 Info: As of debhelper version 4, the DH_COMPAT environment variable is
  only to be used for temporarily overriding <tt>debian/compat</tt>.  Any
@@ -80,18 +94,24 @@ Info: As of debhelper version 4, the DH_COMPAT environment variable is
 
 Tag: binary-arch-rules-but-pkg-is-arch-indep
 Type: warning
+Severity: normal
+Certainty: certain
 Info: It looks like you try to run code in the binary-arch target of 
  <tt>debian/rules</tt>, even though your package is architecture-
  independent.
 
 Tag: desktop-file-but-no-dh_desktop-call
 Type: warning
+Severity: minor
+Certainty: certain
 Info: It looks like your package includes a .desktop file and you use
  debhelper to build it, but you don't call dh_desktop in your rules
  file.
 
 Tag: debian-rules-calls-debhelper-in-odd-order
 Type: warning
+Severity: normal
+Certainty: certain
 Info: One of the targets in the <tt>debian/rules</tt> file for this
  package calls debhelper programs in an odd order.  Normally,
  dh_makeshlibs should be called before dh_shlibdeps or dh_installdeb,
