@@ -21,6 +21,8 @@ E: scripts_6ds-1ubuntu0.5.10.1_arch.changes: bad-ubuntu-distribution-in-changes-
 I: scripts source: debian-watch-file-should-dversionmangle-not-uversionmangle
 I: scripts: init.d-script-missing-lsb-short-description /etc/init.d/lsb-other
 I: scripts: no-md5sums-control-file
+I: scripts: script-in-usr-share-doc usr/share/doc/scripts/py2foo
+I: scripts: script-in-usr-share-doc usr/share/doc/scripts/rubyfoo
 W: scripts source: ancient-standards-version 3.2.1 (current is 3.8.0)
 W: scripts source: binary-arch-rules-but-pkg-is-arch-indep
 W: scripts source: debian-watch-file-uses-deprecated-sf-redirector-method
