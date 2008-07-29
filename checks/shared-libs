@@ -60,8 +60,6 @@ my $shlibs_control_file = "control/shlibs";
 my $symbols_control_file = "control/symbols";
 my %SONAME;
 my %sharedobject;
-my %index_info;
-my %link_info;
 my @shlibs;
 my @words;
 
@@ -77,54 +75,30 @@ foreach my $file (keys %{$info->objdump_info}) {
     $SONAME{$file} = $objdump->{SONAME}[0] if defined $objdump->{SONAME};
 }
 
-open (IN, '<', "file-info")
-    or fail("cannot find file-info for $type package $pkg");
-while (<IN>) {
-    chomp;
-    # with file names containing colons and spaces, we're fucked.
-    m/^(?:\.\/)?(.+?):\s+(.*)$/o or fail("unrecognized file(1) output: $_");
-    my ($file,$fileinfo) = ($1,$2);
+foreach my $file (keys %{$info->file_info}) {
+    next unless length $file;
+    my $fileinfo = $info->file_info->{$file};
     if ($fileinfo =~ m/^[^,]*\bELF\b/ && $fileinfo =~ m/shared object/) {
 	$sharedobject{$file} = 1;
     }
 }
-close(IN);
 
 # 2nd step: read package contents
-my %files;
-open(IN, '<', "index") or fail("cannot open index file index: $!");
-while (<IN>) {
-    chop;
-    @words = split(/\s+/o, $_, 6);
-    my $perm = $words[0];
-    my $cur_file = $words[5];
-    $cur_file =~ s,^(\./),,;
-    $cur_file =~ s/ link to .*//;
 
-    if ($perm =~ m/^l/) {
-	my $link;
-	($cur_file, $link) = split(' -> ', $cur_file);
-	$link_info{$cur_file} = $link;
-    }
-    $index_info{$cur_file} = 1;
-    $files{$cur_file} = $perm;
-}
-
-for (keys %files) {
-    my ($cur_file, $perm) = ($_, $files{$_});
-
+for my $cur_file (keys %{$info->index}) {
     # shared library?
-    if (exists $SONAME{$cur_file} or 
-	($link_info{$cur_file} and exists $SONAME{abs_path(dirname($cur_file)."/".$link_info{$cur_file})})) {
-	# yes!!
+    my $cur_file_data = $info->index->{$cur_file};
 
+    if (exists $SONAME{$cur_file} or 
+	(defined $cur_file_data->{link} and exists $SONAME{abs_path(dirname($cur_file)."/".$cur_file_data->{link})})) {
+	# yes!!
 	my ($real_file, $real_perm);
 	if ($SONAME{$cur_file}) {
 	    $real_file = $cur_file;
-	    $real_perm = $perm;
+	    $real_perm = $cur_file_data->{operm};
 	} else {
-	    $real_file = abs_path(dirname($cur_file)."/".$link_info{$cur_file});
-	    $real_perm = $files{$real_file} || $perm;
+	    $real_file = abs_path(dirname($cur_file)."/".$cur_file_data->{link});
+	    $real_perm = $info->index->{$real_file}->{operm} || $cur_file_data->{operm};
 	}
 
 	# Now that we're sure this is really a shared library, report on
@@ -137,14 +111,14 @@ for (keys %files) {
         # since this only results in doubled messages
         if ($cur_file eq $real_file) { 
             # executable?
-            if ($real_perm =~ m/x/) {
+            if ($real_perm & 0100 or $real_perm & 010 or $real_perm & 01) {
                 # yes.  But if the library has an INTERP section, it's designed
                 # to do something useful when executed, so don't report an error.
-                tag "shlib-with-executable-bit", $cur_file, sprintf("%04o",perm2oct($real_perm))
+                tag "shlib-with-executable-bit", $cur_file, sprintf("%04o", $real_perm)
                     unless $info->objdump_info->{$real_file}->{INTERP};
-            } elsif ($real_perm ne '-rw-r--r--') {
+            } elsif ($real_perm != 0644) {
                 # bad permissions
-                tag "shlib-with-bad-permissions", $cur_file, sprintf("%04o",perm2oct($real_perm));
+                tag "shlib-with-bad-permissions", $cur_file, sprintf("%04o", $real_perm);
             }
         }
 
@@ -188,7 +162,7 @@ close(IN);
 # 3rd step: check if shlib symlinks are present and in correct order
 for my $shlib_file (keys %SONAME) {
     # file found?
-    if (not exists $index_info{$shlib_file}) {
+    if (not exists $info->index->{$shlib_file}) {
 	fail("shlib $shlib_file not found in package (should not happen!)");
     }
 
@@ -199,7 +173,7 @@ for my $shlib_file (keys %SONAME) {
 
     # symlink found?
     my $link_file = "$dir/$SONAME{$shlib_file}";
-    if (not exists $index_info{$link_file}) {
+    if (not exists $info->index->{$link_file}) {
 	tag "ldconfig-symlink-missing-for-shlib", "$link_file $shlib_file $SONAME{$shlib_file}";
     } else {
 	# $link_file really another file?
@@ -207,23 +181,24 @@ for my $shlib_file (keys %SONAME) {
 	    # the library file uses its SONAME, this is ok...
 	} else {
 	    # $link_file really a symlink?
-	    if (exists $link_info{$link_file}) {
+	    if (exists $info->index->{$link_file}->{link}) {
 		# yes.
 
 		# $link_file pointing to correct file?
-		if ($link_info{$link_file} eq $shlib_name) {
+		if ($info->index->{$link_file}->{link} eq $shlib_name) {
 		    # ok.
 		} else {
-		    tag "ldconfig-symlink-referencing-wrong-file", "$link_file -> $link_info{$link_file} instead of $shlib_name";
+		    tag "ldconfig-symlink-referencing-wrong-file",
+			"$link_file -> " . $info->index->{$link_file}->{link} . " instead of $shlib_name";
 		}
 	    } else {
 		tag "ldconfig-symlink-is-not-a-symlink", "$shlib_file $link_file";
 	    }
 
 	    # symlink after shlib?
-	    if ($index_info{$link_file} < $index_info{$shlib_file}) {
-		tag "ldconfig-symlink-before-shlib-in-deb", "$link_file";
-	    }
+	    #if ($info->index->{$link_file} < $info->index->{$shlib_file}) {
+	    #    tag "ldconfig-symlink-before-shlib-in-deb", "$link_file";
+	    #}
 	}
     }
 
@@ -235,7 +210,7 @@ for my $shlib_file (keys %SONAME) {
 	# yes!!
 
 	# need shlib symlink
-	if (not exists $index_info{$link_file}) {
+	if (not exists $info->index->{$link_file}) {
 	    tag "dev-pkg-without-shlib-symlink", "$shlib_file $link_file";
 	}
     } else {
@@ -244,7 +219,7 @@ for my $shlib_file (keys %SONAME) {
 	# shlib symlink may not exist.
 	# if shlib doesn't _have_ a version, then $link_file and $shlib_file will
 	# be equal, and it's not a development link, so don't complain.
-	if (exists $index_info{$link_file} and $link_file ne $shlib_file) {
+	if (exists $info->index->{$link_file} and $link_file ne $shlib_file) {
 	    tag "non-dev-pkg-with-shlib-symlink", "$shlib_file $link_file";
 	}
     }

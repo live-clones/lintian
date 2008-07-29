@@ -61,7 +61,11 @@ lintian (1.24.3) unstable; urgency=low
       been cached in Lintian::Collect already.
   * checks/shared-libs.{,desc}:
     + [ADB] Improve the description of no-symbols-control-file.
-    + [ADB] Migrate to using ::Collect for objdump info and field content
+    + [ADB] Migrate to using ::Collect instead of parsing the index, file-info
+      and objdump-info files directly.
+    + [ADB] Disable ldconfig-symlink-is-not-a-symlink as it can never be
+      tested correctly using the information currently available to the
+      scripts
 
   * data/doc-base/sections:
     + [ADB] Resynchronize with doc-base's section list (adding
