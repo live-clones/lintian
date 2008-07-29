@@ -49,7 +49,7 @@ sub index {
     my ($self) = @_;
     return $self->{index} if exists $self->{index};
 
-    my (@idx, %dir_counts);
+    my (%idx, %dir_counts);
     open my $idx, '<', "index"
         or fail("cannot open index file index: $!");
     open my $num_idx, '<', "index-owner-id"
@@ -88,14 +88,14 @@ sub index {
         $dir_counts{$1} = ($dir_counts{$1} || 0) + 1
             if $name =~ m,^(.+/)[^/]+/?$,;
 
-        push @idx, \%file;
+        $idx{$name} = \%file;
     }
-    foreach my $file (@idx) {
-        if ($dir_counts{$file->{name}}) {
-            $file->{count} = $dir_counts{$file->{name}};
+    foreach my $file (keys %idx) {
+        if ($dir_counts{$idx{$file}->{name}}) {
+            $idx{$file}->{count} = $dir_counts{$idx{$file}->{name}};
         }
     }
-    $self->{index} = \@idx;
+    $self->{index} = \%idx;
 
     return $self->{index};
 }
