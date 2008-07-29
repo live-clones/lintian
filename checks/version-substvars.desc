@@ -10,12 +10,16 @@ Info: This script checks for correct use of the various *Version
 
 Tag: not-binnmuable-any-depends-any
 Type: error
+Severity: important
+Certainty: certain
 Info: The package is not safely binNMUable because an arch:any package
  depends on another arch:any package with a (= ${source:Version})
  relationship. Please use (= ${binary:Version}) instead.
 
 Tag: not-binnmuable-any-depends-all
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The package is not safely binNMUable because an arch:any package
  depends on an arch:all package with a (= ${Source-Version}) or
  (= ${binary:Version}) relationship. Please use (= ${source:Version})
@@ -23,6 +27,8 @@ Info: The package is not safely binNMUable because an arch:any package
 
 Tag: not-binnmuable-all-depends-any
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The package is not safely binNMUable because an arch:all package
  depends on an arch:any package with a strict (= ${Source-Version}), or
  similar, relationship.
@@ -37,6 +43,8 @@ Info: The package is not safely binNMUable because an arch:all package
 
 Tag: version-substvar-for-external-package
 Type: error
+Severity: important
+Certainty: certain
 Info: The first package has a dependency on the second package that uses
  (= ${binary:Version}), (= ${source:Version}), or (= ${Source-Version}),
  but the second package is not built from this source package.  Usually
@@ -44,6 +52,8 @@ Info: The first package has a dependency on the second package that uses
 
 Tag: substvar-source-version-is-deprecated
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The package uses the now deprecated ${Source-Version} substvar,
  which has misleading semantics. Please switch to ${binary:Version} or
  ${source:Version} as appropriate. Support for ${Source-Version} may be
