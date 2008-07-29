@@ -47,8 +47,12 @@ foreach my $file (keys %{$info->objdump_info}) {
     my $objdump = $info->objdump_info->{$file};
     $file = './' . $file;
 
-    $SONAME{$file} = $objdump->{SONAME} if defined $objdump->{SONAME};
-
+    if (defined $objdump->{SONAME}) {
+	foreach my $soname (@{$objdump->{SONAME}}) {
+	    $SONAME{$soname} ||= [];
+	    push @{$SONAME{$soname}}, $file;
+	}
+    }
     foreach my $symbol (@{$objdump->{SYMBOLS}}) {
 	my ($foo, $sec, $sym) = @{$symbol};
 	if ($arch ne 'hppa') {
