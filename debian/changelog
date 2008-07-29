@@ -63,7 +63,7 @@ lintian (1.24.3) unstable; urgency=low
     + [ADB] Improve the description of no-symbols-control-file.
     + [ADB] Migrate to using ::Collect instead of parsing the index, file-info
       and objdump-info files directly.
-    + [ADB] Disable ldconfig-symlink-is-not-a-symlink as it can never be
+    + [ADB] Disable ldconfig-symlink-before-shlib-in-deb as it can never be
       tested correctly using the information currently available to the
       scripts
 
