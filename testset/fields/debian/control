@@ -12,8 +12,9 @@ Description: Generate some errors
  Field testing is fun!
 
 Package: another-version
+Essential: yes
 Section: admin
 Architecture: all
-Depends: nothing
 Description: Also generate some errors
- This package gets another version number.
+ This package gets another version number and tries to sneak in a new
+ essential package.
