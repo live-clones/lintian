@@ -1,0 +1,10 @@
+Source: fields
+Section: does-not-exist
+Priority: standard
+Maintainer: Lintian Maintainers <lintian-maint@debian.org>
+Standards-Version: 3.8.0
+
+Package: fields
+Architecture: all
+Description: Generate some errors
+ Field testing is fun!

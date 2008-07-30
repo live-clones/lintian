@@ -1,0 +1,23 @@
+#!/usr/bin/make -f
+
+tmp=debian/tmp
+
+build:
+
+binary-arch:
+
+binary-indep:
+	install -d $(tmp)/usr/share/doc/fields
+	install -m 644 debian/changelog \
+	  $(tmp)/usr/share/doc/fields/changelog
+	gzip -9 $(tmp)/usr/share/doc/fields/changelog
+	dh_md5sums
+	dpkg-gencontrol
+	dpkg --build $(tmp) ..
+
+binary: binary-arch binary-indep
+
+clean:
+	rm -rf debian/files $(tmp) debian/substvars
+
+.PHONY: build binary-arch binary-indep binary clean
