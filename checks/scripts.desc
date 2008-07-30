@@ -371,14 +371,14 @@ Info: The maintainer script modifies at least one of the files
  <tt>/etc/services</tt>, <tt>/etc/protocols</tt>, and <tt>/etc/rpc</tt>,
  which are managed by the netbase package. Instead of doing this, please
  file a wishlist bug against netbase to have an appropriate entry added.
-Ref: policy 10.7.4
+Ref: policy 11.2
 
 Tag: maintainer-script-modifies-inetd-conf
 Type: error
 Info: The maintainer script modifies <tt>/etc/inetd.conf</tt> directly.
  This file must not be modified directly; instead, use the
  <tt>update-inetd</tt> script or the <tt>DebianNet.pm</tt> Perl module.
-Ref: policy 10.7.4
+Ref: policy 11.2
 
 Tag: install-sgmlcatalog-deprecated
 Type: error

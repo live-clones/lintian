@@ -49,6 +49,7 @@ Info: When you NMU a package, that fact should be mentioned on the first line
  Maybe you didn't intend this upload to be a NMU, in that case, please
  doublecheck that the most recent entry in the changelog is byte-for-byte
  identical to the maintainer or one of the uploaders.
+Ref: devref 5.11.3
 
 Tag: changelog-should-not-mention-nmu
 Type: warning

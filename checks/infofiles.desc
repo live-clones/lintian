@@ -60,7 +60,7 @@ Info: The preinst script calls the <tt>install-info</tt> command. Usually,
 
 Tag: install-info-not-called-with-quiet-option
 Type: warning
-Ref: policy 3.10
+Ref: policy 3.9
 Info: The package installation scripts should avoid producing output which it
  is unnecessary for the user to see.  Policy specifically mentions install-info
  output as unnecessary.

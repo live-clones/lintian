@@ -19,7 +19,7 @@ Type: error
 Info: The app-defaults files have moved to /etc/X11/app-defaults/. Files in
  the old directory, /usr/X11R6/lib/X11/app-defaults/, will no longer be
  used by X. The old directory should not exist in packages at all;
- this prevents X from replacing it with a compatability symlink.
+ this prevents X from replacing it with a compatibility symlink.
 Ref: policy 11.8.6
 
 Tag: package-installs-font-to-usr-x11r6
@@ -205,6 +205,7 @@ Info: The file is owned by the games group but is not mode 2755.  If a
  game does not have to be setgid games, it should be owned by the root
  group like any other executable.  This executable is either owned by the
  wrong group or is not setgid when it should be.
+Ref: policy 11.11
 
 Tag: non-standard-setuid-executable-perm
 Type: warning
@@ -253,6 +254,7 @@ Type: error
 Info: The package installs some files into the old
  <tt>/usr/doc/examples</tt> directory.  The new location for examples
  is <tt>/usr/share/doc/<i>pkg</i>/examples</tt>.
+Ref: policy 12.6
 
 Tag: compressed-symlink-with-wrong-ext
 Type: error

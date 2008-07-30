@@ -57,6 +57,7 @@ Type: error
 Info: The sections <tt>non-free</tt> and <tt>contrib</tt> are no longer
  valid. Please use section <tt>non-free/xxx</tt> or
  <tt>contrib/xxx</tt> instead.
+Ref: policy 2.4
 
 Tag: unused-override
 Type: info

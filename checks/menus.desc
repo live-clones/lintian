@@ -253,7 +253,7 @@ Tag: doc-base-abstract-might-contain-extra-leading-whitespaces
 Type: warning
 Info: Continuation lines of the Abstract field of doc-base control file
  should start with only one space unless they are meant to be displayed
- verbatim by fontends.
+ verbatim by frontends.
 Ref: Debian doc-base Manual section 2.3.2
 
 Tag: doc-base-abstract-field-separator-extra-whitespaces

@@ -15,7 +15,4 @@ Info: The package has a significant amount of architecture-independent data in
  .
  If the data in /usr/share is not architecture-independent, it is a policy
  violation, and in this case, you should move that data elsewhere.
- .
- See also: http://www.debian.org/doc/developers-reference/ch-best-pkging-practices#s-bpp-archindepdata
-
-
+Ref: devref 6.7.5
