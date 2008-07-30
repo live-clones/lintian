@@ -10,3 +10,10 @@ Architecture: all
 Depends: python-minimal
 Description: Generate some errors
  Field testing is fun!
+
+Package: another-version
+Section: admin
+Architecture: all
+Depends: nothing
+Description: Also generate some errors
+ This package gets another version number.

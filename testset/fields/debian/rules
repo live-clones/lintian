@@ -11,8 +11,14 @@ binary-indep:
 	install -m 644 debian/changelog \
 	  $(tmp)/usr/share/doc/fields/changelog
 	gzip -9 $(tmp)/usr/share/doc/fields/changelog
-	dh_md5sums
-	dpkg-gencontrol
+	dh_md5sums -pfields -P$(tmp)
+	dpkg-gencontrol -pfields -P$(tmp)
+	dpkg --build $(tmp) ..
+	rm -rf $(tmp)
+
+	# Create another package with a different version
+	dh_md5sums -panother-version -P$(tmp)
+	dpkg-gencontrol -panother-version -v123.4-0 -P$(tmp)
 	dpkg --build $(tmp) ..
 
 binary: binary-arch binary-indep
