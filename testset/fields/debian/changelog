@@ -2,5 +2,6 @@ fields (1.5-.3) unstable; urgency=low
 
   * This package adds tests for the following tags:
     - debian-revision-not-well-formed
+    - depends-on-python-minimal
 
  -- Tobias Quathamer <toddy@debian.org>  Wed, 30 Jul 2008 12:35:09 +0200

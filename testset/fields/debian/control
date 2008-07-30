@@ -6,5 +6,6 @@ Standards-Version: 3.8.0
 
 Package: fields
 Architecture: all
+Depends: python-minimal
 Description: Generate some errors
  Field testing is fun!
