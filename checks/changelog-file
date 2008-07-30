@@ -44,24 +44,12 @@ my @doc_files;
 my %file_info;
 my %is_a_symlink;
 
-# Read file info...
-open(IN, '<', "file-info")
-    or fail("cannot find file-info for $type package $pkg");
-while (<IN>) {
-    chop;
-
-    m/^(.*?):\s+(.*)$/o or
-	fail("an error in the file pkg is preventing lintian from checking this package: $_");
-    my ($file,$info) = ($1,$2);
-
-    next unless $file =~ m/doc/o;
-    $file =~ s,^(\./)?,,;
-    $file_info{$file} = $info;
-}
-close(IN);
-
 # Modify the file_info by following symbolic links.
-for my $file (keys %file_info) {
+for my $file (keys %{$info->file_info}) {
+    next unless $file =~ m/doc/o;
+
+    $file_info{$file} = $info->file_info->{$file};
+
     if ($file_info{$file} =~ m/^(?:broken )?symbolic link to (.*)/) {
 	$is_a_symlink{$file} = 1;
 	# Figure out the link destination.  This algorithm is
@@ -83,8 +71,8 @@ for my $file (keys %file_info) {
 	    # concatenate the results
 	    $newfile .= '/' . $link;
 	}
-	if (exists $file_info{$newfile}) {
-	    $file_info{$file} = $file_info{$newfile};
+	if (exists $info->file_info->{$newfile}) {
+	    $file_info{$file} = $info->file_info->{$newfile};
 	}
     }
 }
@@ -93,13 +81,10 @@ for my $file (keys %file_info) {
 # together at random it seems here
 
 # Read package contents...
-open(IN, '<', "index") or fail("cannot open index file index: $!");
-while (<IN>) {
-    chop;
-
-    s,^(\./),,;
+foreach (keys %{$info->index}) { 
+    next unless length $_;
     # skip packages which have a /usr/share/doc/$pkg -> foo symlink
-    if (m, usr/share/doc/$ppkg -> ,) {
+    if (m,usr/share/doc/$ppkg$, and defined $info->index->{$_}->{link}) {
 	return 0;
     }
 
@@ -148,7 +133,6 @@ while (<IN>) {
 
     #  next unless m,^(\S+).*usr/share/doc/$ppkg/([^/\s]+)( -> [^/\s]+)?$,o;
 }
-close(IN);
 
 # ignore packages which don't have a /usr/share/doc/$pkg directory, since
 # the copyright check will complain about this
