@@ -155,4 +155,9 @@ foreach my $old (@codes) {
     }
 }
 
+if ($verbose >= 1 and exists $stats{severity}{unclassified}) {
+    print "\nUnclassified tags\n";
+    print "  ". join("\n  ", @{$stats{severity}{unclassified}}) ."\n"
+}
+
 # vim: sw=4 sts=4 ts=4 et sr
