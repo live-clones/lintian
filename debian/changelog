@@ -38,6 +38,9 @@ lintian (1.24.3) unstable; urgency=low
       being incorrectly tagged as executable-in-usr-share-doc.
   * checks/huge-usr-share:
     + [ADB] Replace (the single) direct access to fields/* with ::field()
+  * checks/infofiles:
+    + [ADB] Use Lintian::Collect to retrieve information about the files
+      being processed.
   * checks/manpages:
     + [RA] Suppress warnings about inability to break a line that contains
       a URL.  URLs often can't be usefully broken.  Based on a patch by

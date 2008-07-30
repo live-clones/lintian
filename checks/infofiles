@@ -29,8 +29,7 @@ sub run {
 
 my $pkg = shift;
 my $type = shift;
-
-my %file_info;
+my $info = shift;
 
 my %preinst;
 my %postinst;
@@ -45,40 +44,14 @@ check_script("postinst", \%postinst) if (-f "control/postinst");
 check_script("prerm", \%prerm) if (-f "control/prerm");
 check_script("postrm", \%postrm) if (-f "control/postrm");
 
-# Read file info...
-open (IN, '<', "file-info")
-    or fail("cannot find file-info for $type package $pkg");
-while (<IN>) {
-    chop;
-
-    m/^(.*?):\s+(.*)$/o or fail("an error in the file pkg is preventing lintian from checking this package: $_");
-    my ($file,$info) = ($1,$2);
-
-    next unless $file =~ m,/info/,o;
-    $file =~ s,^(\./)?,,;
-
-    $file_info{$file} = $info;
-}
-close IN;
-
 # Read package contents...
-open (IN, '<', "index") or fail("cannot open index file index: $!");
-while (<IN>) {
-    chop;
-
-    my ($perm,$owner,$size,$date,$time,$file) = split(' ', $_, 6);
-    my $link;
-
-    $file =~ s,^(\./),,;
-    $file =~ s/ link to .*//;
-
-    if ($perm =~ m/^l/) {
-	($file, $link) = split(' -> ', $file);
-    }
-
+foreach my $file (keys %{$info->index}) {
+    my $index_info = $info->index->{$file};
+    my $file_info = $info->file_info->{$file};
+    my $link = $index_info->{link} || '';
     my ($fname, $path, $suffix) = fileparse($file);
 
-    next unless ($perm =~ m,^[\-l],o)
+    next unless ($index_info->{type} =~ m,^[\-l],o)
 	    and ($path =~ m,^usr/share/info/, or $path =~ m,^usr/info/,);
 
     # Analyze the file names making sure the documents are named properly.
@@ -87,12 +60,11 @@ while (<IN>) {
     my @fname_pieces = split /\./, $fname;
     my $ext = pop @fname_pieces;
     if ($ext eq "gz") { # ok!
-	if ($perm =~ m,^-,o) { # compressed with maximum compression rate?
-	    my $info = $file_info{$file};
-	    if ($info !~ m/gzip compressed data/o) {
+	if ($index_info->{type} =~ m,^-,o) { # compressed with maximum compression rate?
+	    if ($file_info !~ m/gzip compressed data/o) {
 		tag "info-document-not-compressed-with-gzip", "$file";
 	    } else {
-		if ($info !~ m/max compression/o) {
+		if ($file_info !~ m/max compression/o) {
 		    tag "info-document-not-compressed-with-max-compression", "$file";
 		}
 	    }
@@ -112,7 +84,7 @@ while (<IN>) {
 
     # If this is the main info file (no numeric extension). make sure it has
     # appropriate dir entry information.
-    if ($fname !~ /-\d+\.gz/ && $file_info{$file} =~ /gzip compressed data/) {
+    if ($fname !~ /-\d+\.gz/ && $file_info =~ /gzip compressed data/) {
 	my $pid = open INFO, '-|';
 	if (not defined $pid) {
 	    fail("cannot fork: $!");
@@ -132,7 +104,6 @@ while (<IN>) {
 	$missing_section{$file} = 1 unless $section;
     }
 }
-close IN;
 
 # policy 13.2 says prerm and postinst
 if ($postrm{'calls-install-info'}) {
