@@ -66,6 +66,9 @@ lintian (1.24.3) unstable; urgency=low
     + [ADB] Disable ldconfig-symlink-before-shlib-in-deb as it can never be
       tested correctly using the information currently available to the
       scripts
+  * checks/watch-file:
+    + [FL] Do not issue debian-watch-file-should-mangle-version for
+      empty watch files.
 
   * data/doc-base/sections:
     + [ADB] Resynchronize with doc-base's section list (adding

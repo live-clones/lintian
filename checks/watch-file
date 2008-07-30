@@ -51,7 +51,7 @@ if ($version =~ /(dfsg|debian|ds)/) {
 # diagnose on the first time through.
 open(WATCH, '<', 'debfiles/watch') or fail("cannot open watch file: $!");
 local $_;
-my ($watchver, $mangle, $dmangle);
+my ($watchver, $mangle, $dmangle, $nonempty);
 while (<WATCH>) {
     next if /^\s*\#/;
     next if /^\s*$/;
@@ -71,6 +71,8 @@ while (<WATCH>) {
             tag 'debian-watch-file-unknown-version', $watchver;
         }
     } else {
+        $nonempty = 1;
+
         unless (defined($watchver)) {
             tag 'debian-watch-file-missing-version';
             $watchver = 1;
@@ -99,7 +101,7 @@ close WATCH;
 
 # If the version of the package contains dfsg, assume that it needs to be
 # mangled to get reasonable matches with upstream.
-if ($repack and not $mangle) {
+if ($nonempty and $repack and not $mangle) {
     tag 'debian-watch-file-should-mangle-version';
 }
 if ($repack and $mangle and not $dmangle) {
