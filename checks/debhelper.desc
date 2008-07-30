@@ -109,7 +109,7 @@ Info: The debhelper compatibility version used by this package is marked
 
 Tag: package-needs-python-policy-debhelper
 Type: info
-Severity: minor
+Severity: wishlist
 Certainty: certain
 Info: The source package requests dh_python compatibility level 2 (or
  higher) in <tt>debian/pycompat</tt> but doesn't depend on a new enough

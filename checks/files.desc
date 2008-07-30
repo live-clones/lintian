@@ -61,7 +61,7 @@ Ref: policy 11.8.7
 
 Tag: file-in-usr-something-x11-without-pre-depends
 Type: info
-Severity: minor
+Severity: wishlist
 Certainty: certain
 Info: Packages that install files into /usr/include/X11 or /usr/lib/X11
  should pre-depend on at least x11-common (&gt;= 1:7.0.0).  These directories
