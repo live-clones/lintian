@@ -8,17 +8,23 @@ Info: This script checks if a source package is consistent about its NMU-ness.
 
 Tag: orphaned-package-should-not-have-uploaders
 Type: error
+Severity: important
+Certainty: certain
 Info: Packages with their maintainer set to packages@qa.debian.org, i.e.
  orphaned packages, should not have uploaders. Adopt the package properly if
  you want to resume its maintenance.
 
 Tag: qa-upload-has-incorrect-version-number
 Type: warning
+Severity: normal
+Certainty: certain
 Info: A QA upload (uploading an orphaned package without adopting it) is
  always a maintainer upload: it should not get a NMU revision number.
 
 Tag: source-nmu-has-incorrect-version-number
 Type: warning
+Severity: normal
+Certainty: certain
 Info: A source NMU should have a Debian revision of "-x.x" (or "+nmuX" for a
  native package). This is to prevent stealing version numbers from the
  maintainer.
@@ -30,6 +36,8 @@ Ref: devref 5.11.2
 
 Tag: maintainer-upload-has-incorrect-version-number
 Type: warning
+Severity: normal
+Certainty: certain
 Info: A maintainer upload should have a Debian revision without dots.
  Revisions with dots are reserved for Non-Maintainer Uploads (NMU's), if you
  do a maintainer-upload with dots, a potential NMU'er has problems choosing a
@@ -37,12 +45,16 @@ Info: A maintainer upload should have a Debian revision without dots.
 
 Tag: changelog-should-mention-qa
 Type: warning
+Severity: normal
+Certainty: certain
 Info: If this upload is to orphan this package, please mention this fact on
  the first line of the changelog. If this is a QA upload, please mention "QA
  (group) upload" there.
 
 Tag: changelog-should-mention-nmu
 Type: warning
+Severity: normal
+Certainty: certain
 Info: When you NMU a package, that fact should be mentioned on the first line
  in the changelog entry.  Use the words "NMU" or "Non-maintainer upload"
  (case insensitive).
@@ -54,6 +66,8 @@ Ref: devref 5.11.3
 
 Tag: changelog-should-not-mention-nmu
 Type: warning
+Severity: normal
+Certainty: possible
 Info: The first line of the changelog entry for this package appears to
  indicate it is a non-maintainer upload (by including either that string
  or the string "NMU" and not saying that it's an acknowledgement), but the
@@ -66,6 +80,8 @@ Info: The first line of the changelog entry for this package appears to
 
 Tag: changelog-is-symlink
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The file <tt>debian/changelog</tt> is a symlink instead of a regular
  file. This is unnecessary and makes package checking and manipulation
  more difficult. If the changelog should be available in the source
