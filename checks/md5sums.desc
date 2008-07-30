@@ -9,6 +9,8 @@ Info: This script checks if md5sum control files are valid, if they are
 
 Tag: no-md5sums-control-file
 Type: info
+Severity: wishlist
+Certainty: certain
 Info: This package does not contain an md5sums control file.  This control
  file listing the MD5 checksums of the contents of the package is not
  required, but if present debsums can use it to verify that no files
@@ -21,6 +23,8 @@ Info: This package does not contain an md5sums control file.  This control
 
 Tag: malformed-md5sums-control-file
 Type: error
+Severity: important
+Certainty: certain
 Info: The indicated line of the md5sums control file for this package was
  malformed.  Each line of an md5sums control file should contain an MD5
  checksum, some whitespace, and then the path to the file corresponding to
@@ -28,6 +32,8 @@ Info: The indicated line of the md5sums control file for this package was
 
 Tag: md5sum-mismatch
 Type: error
+Severity: important
+Certainty: certain
 Info: The md5sum listed for the file does not match the actual file
  contents.
  .
@@ -37,6 +43,8 @@ Info: The md5sum listed for the file does not match the actual file
 
 Tag: md5sums-lists-nonexisting-file
 Type: error
+Severity: important
+Certainty: certain
 Info: The md5sums control file lists a file which is not included in the
  package.
  .
@@ -51,6 +59,8 @@ Info: The md5sums control file lists a file which is not included in the
 
 Tag: file-missing-in-md5sums
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The package contains a file which isn't listed in the md5sums control
  file.
  .
