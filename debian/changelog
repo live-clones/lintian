@@ -90,6 +90,9 @@ lintian (1.24.3) unstable; urgency=low
     + [ADB] Update the list of check scripts, removing the no longer present
       deb-format and perl and adding the nmu script.
 
+  * testset/fields:
+    + [ADB] New testset from Tobias Quathamer (including some tags which
+      previously weren't tested)
   * testset/tags.scripts{,.sed}:
     + [ADB] Munge .changes filenames so that the tests produce consistent
       output across architectures
