@@ -1,6 +1,7 @@
 E: fields source: package-uses-debhelper-but-lacks-build-depends
 E: fields: debian-changelog-file-missing-or-wrong-name
 E: fields: depends-on-python-minimal depends
+E: fields: essential-no-not-needed
 E: fields: no-copyright-file
 W: fields source: changelog-should-mention-nmu
 W: fields source: debian-revision-not-well-formed 1.5-.3

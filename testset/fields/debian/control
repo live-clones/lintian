@@ -5,6 +5,7 @@ Maintainer: Lintian Maintainers <lintian-maint@debian.org>
 Standards-Version: 3.8.0
 
 Package: fields
+Essential: no
 Architecture: all
 Depends: python-minimal
 Description: Generate some errors
