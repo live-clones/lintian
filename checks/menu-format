@@ -405,7 +405,7 @@ foreach my $file (keys %{$info->index}) {
     $file = '/' . $file;
     $file_index{$file} = 1;
 
-    if ($index_info->{type} eq '-' &&
+    if ($index_info->{type} =~ m/[-h]/ &&
 	$file =~ m,/usr/share/applications/.*\.desktop$,) {
 
 	if ($operm & 0100 or $operm & 010 or $operm & 01) {
