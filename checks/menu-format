@@ -384,6 +384,7 @@ sub run {
 
 my $pkg = shift;
 my $type = shift;
+my $info = shift;
 
 my @menufiles;
 opendir (MENUDIR, "menu/lib") or fail("cannot read menu/lib file directory.");
@@ -397,26 +398,24 @@ closedir MENUDIR;
 # of every file in the package to use to verify that the command referenced by
 # a menu item or desktop entry is there.
 my @desktop_files;
-open(IN, '<', "index") or fail("cannot open index file index: $!");
-while (<IN>) {
-    chomp;
-    my ($perm, $owner, $size, $date, $time, $file) = split(' ', $_, 6);
-    $file =~ s,^\./,/,;
-    $file =~ s/ link to .*//;
-    $file =~ s/ -> .*//;
-    my $operm = perm2oct($perm);
+foreach my $file (keys %{$info->index}) {
+    my $index_info = $info->index->{$file};
+    my $operm = $index_info->{operm};
+
+    $file = '/' . $file;
     $file_index{$file} = 1;
 
-    if ($perm =~ m,^-, && $file =~ m,/usr/share/applications/.*\.desktop$,) {
-        if ($perm =~ m,x,o) {
-            tag "executable-desktop-file", sprintf("$file %04o",$operm);
-        }
-        unless (m,template,) {
+    if ($index_info->{type} eq '-' &&
+	$file =~ m,/usr/share/applications/.*\.desktop$,) {
+
+	if ($operm & 0100 or $operm & 010 or $operm & 01) {
+           tag "executable-desktop-file", sprintf("$file %04o",$operm);
+	}
+        unless ($file =~ m,template,) {
             push (@desktop_files, $file);
         }
     }
 }
-close IN;
 
 # Verify all the desktop files.
 for my $desktop_file (@desktop_files) {

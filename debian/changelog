@@ -61,6 +61,8 @@ lintian (1.24.3) unstable; urgency=low
       a URL.  URLs often can't be usefully broken.  Based on a patch by
       Damyan Ivanov.  (Closes: #491578)
     + [ADB] Update the Policy reference for manpage-has-wrong-extension.
+  * checks/menu-format:
+    + [ADB] Use Lintian::Collect to parse the list of files in the package.
   * checks/menus.desc:
     + [ADB] Fix a typo; thanks Jordà Polo.
   * checks/nmu{,.desc}:
