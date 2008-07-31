@@ -647,6 +647,18 @@ while (<IN>) {
 	    tag "embedded-javascript-library", "$file";
 	}
 
+	# ---------------- embedded Feedparser library
+	if ($file =~ m,/feedparser\.py$, and $pkg ne "python-feedparser") {
+	    open(FEEDPARSER, "unpacked/$file") or fail("cannot open feedparser.py file: $!");
+	    while (<FEEDPARSER>) {
+		if (m,Universal feed parser,) {
+		    tag "embedded-feedparser-library", "$file";
+		    last;
+		}
+	    }
+	    close(FEEDPARSER);
+	}
+
 	# ---------------- general: setuid/setgid files!
 	if ($perm =~ m/s/) {
 	    my ($setuid, $setgid) = ("","");

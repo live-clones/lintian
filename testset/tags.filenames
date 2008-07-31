@@ -61,6 +61,7 @@ W: filenames: binary-without-manpage usr/bin/X11/testxbin
 W: filenames: binary-without-manpage usr/bin/mh/read
 W: filenames: debian-news-file-not-compressed usr/share/doc/filenames/NEWS.Debian
 W: filenames: desktop-file-in-wrong-dir usr/share/gnome/apps/System/foo.desktop
+W: filenames: embedded-feedparser-library files/feedparser.py
 W: filenames: embedded-javascript-library usr/share/filenames/jquery.js
 W: filenames: embedded-javascript-library usr/share/filenames/jquery.lite.js
 W: filenames: embedded-javascript-library usr/share/filenames/jquery.min.js
@@ -84,6 +85,7 @@ W: filenames: file-in-unusual-dir files/.cvsignore
 W: filenames: file-in-unusual-dir files/Maelstrom Sounce.r121
 W: filenames: file-in-unusual-dir files/Maelstrom Sound
 W: filenames: file-in-unusual-dir files/Maelstrom Sound.mine
+W: filenames: file-in-unusual-dir files/feedparser.py
 W: filenames: file-in-unusual-dir files/svk-commitsEr9P.tmp
 W: filenames: file-in-unusual-dir files/svn-commit.tmp
 W: filenames: file-in-unusual-dir srv/foo/bar
@@ -121,6 +123,7 @@ W: filenames: package-contains-vcs-control-file usr/lib/perl5/foo/.hgtags
 W: filenames: package-installs-into-etc-gconf-schemas etc/gconf/schemas/test.schema
 W: filenames: package-installs-nonbinary-perl-in-usr-lib-perl5 usr/lib/perl5/foo/ancient.pm
 W: filenames: package-installs-nonbinary-perl-in-usr-lib-perl5 usr/lib/perl5/foo/bar.pm
+W: filenames: script-not-executable ./files/feedparser.py
 W: filenames: svk-commit-file-in-package files/svk-commitsEr9P.tmp
 W: filenames: svn-commit-file-in-package files/svn-commit.tmp
 W: filenames: symlink-is-self-recursive usr/lib/filenames/symlink10wrong ../../..

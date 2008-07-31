@@ -768,3 +768,10 @@ Info: This package contains an embedded copy of the JQuery, Prototype,
  own packages. Please depend on the appropriate package and symlink the
  library into the appropriate location.
 Ref: policy 4.13
+
+Tag: embedded-feedparser-library
+Type: warning
+Info: This package contains an embedded copy of Mark Pilgrim's Universal
+ Feed Parser. Please depend on the "python-feedparser" package and symlink
+ the library into the appropriate location.
+Ref: policy 4.13
