@@ -51,7 +51,7 @@ foreach my $file (keys %{$info->index}) {
     my $link = $index_info->{link} || '';
     my ($fname, $path, $suffix) = fileparse($file);
 
-    next unless ($index_info->{type} =~ m,^[\-l],o)
+    next unless ($index_info->{type} =~ m,^[\-lh],o)
 	    and ($path =~ m,^usr/share/info/, or $path =~ m,^usr/info/,);
 
     # Analyze the file names making sure the documents are named properly.
@@ -60,7 +60,7 @@ foreach my $file (keys %{$info->index}) {
     my @fname_pieces = split /\./, $fname;
     my $ext = pop @fname_pieces;
     if ($ext eq "gz") { # ok!
-	if ($index_info->{type} =~ m,^-,o) { # compressed with maximum compression rate?
+	if ($index_info->{type} =~ m,^[-h],o) { # compressed with maximum compression rate?
 	    if ($file_info !~ m/gzip compressed data/o) {
 		tag "info-document-not-compressed-with-gzip", "$file";
 	    } else {
