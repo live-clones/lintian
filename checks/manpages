@@ -32,55 +32,30 @@ sub run {
 
 my $pkg = shift;
 my $type = shift;
+my $info = shift;
 
 use File::Basename;
 
-my %file_info;
 my %binary;
 my %link;
 # my %sect_by_binary;
 # my %sect_by_manpage;
 my %manpage;
 
-# Read file info...
-open(IN, '<', "file-info")
-    or fail("cannot find file-info for $type package $pkg");
-while (<IN>) {
-    chop;
-
-    m/^(.*?):\s+(.*)$/o or fail("an error in the file pkg is preventing lintian from checking this package: $_");
-    my ($file,$info) = ($1,$2);
-
-    next unless $file =~ m/man/o;
-    $file =~ s,^(\./)?,,;
-
-    $file_info{$file} = $info;
-}
-close(IN);
-
 # Read package contents...
-open(IN, '<', "index") or fail("cannot open index file index: $!");
-while (<IN>) {
-    chop;
-
-    my ($perm,$owner,$size,$date,$time,$file) = split(' ', $_, 6);
-    my $link;
-
-    $file =~ s,^(\./),,;
-    $file =~ s/ link to .*//;
-
-    if ($perm =~ m/^l/) {
-	($file, $link) = split(' -> ', $file);
-    }
-
-    my ($fname,$path,$suffix) = fileparse($file);
+foreach my $file (keys %{$info->index}) {
+    my $index_info = $info->index->{$file};
+    my $file_info = $info->file_info->{$file};
+    my $link = $index_info->{link} || '';
+    my $perm = $index_info->{type};
+    my ($fname, $path, $suffix) = fileparse($file);
 
     # Binary that wants a manual page?
     #
     # It's tempting to check the section of the man page depending on the
     # location of the binary, but there are too many mismatches between
     # bin/sbin and 1/8 that it's not clear it's the right thing to do.
-    if (($perm =~ m,^[\-l],o) and
+    if (($perm =~ m,^[\-lh],o) and
     	(($path =~ m,^bin/$,o) or
 	 ($path =~ m,^sbin/$,o) or
 	 ($path =~ m,^usr/bin/$,o) or
@@ -91,7 +66,6 @@ while (<IN>) {
 	 ($path =~ m,^usr/X11R6/bin/$,o) )) {
 
 	my $bin = $fname;
-	
 	$binary{$bin} = $file;
 	$link{$bin} = $link if $link;
 
@@ -104,7 +78,7 @@ while (<IN>) {
     }
 
     # manual page?
-    next unless ($perm =~ m,^[\-l],o) and
+    next unless ($perm =~ m,^[\-lh],o) and
 	(($path =~ m,^usr/man(/\S+),o)
 	 or ($path =~ m,^usr/X11R6/man(/\S+),o)
 	 or ($path =~ m,^usr/share/man(/\S+),o) );
@@ -130,11 +104,10 @@ while (<IN>) {
     if ($ext ne 'gz') {
         push @pieces, $ext;
 	tag "manpage-not-compressed", "$file";
-    } elsif ($perm =~ m,^-,o) { # so it's .gz... files first; links later
-	my $info = $file_info{$file};
-	if ($info !~ m/gzip compressed data/o) {
+    } elsif ($perm =~ m,^[-h],o) { # so it's .gz... files first; links later
+	if ($file_info !~ m/gzip compressed data/o) {
 	    tag "manpage-not-compressed-with-gzip", "$file";
-	} elsif ($info !~ m/max compression/o) {
+	} elsif ($file_info !~ m/max compression/o) {
 	    tag "manpage-not-compressed-with-max-compression", "$file";
 	}
     }
@@ -197,7 +170,7 @@ while (<IN>) {
 	while (<MANFILE>) { push @manfile, $_; }
 	close MANFILE;
 	# Is it a .so link?
-	if ($size < 256) {
+	if ($index_info->{size} < 256) {
 	    my ($i, $first) = (0, "");
 	    do {
 		$first = $manfile[$i++] || ""; 
@@ -361,7 +334,6 @@ while (<IN>) {
 	tag "hyphen-used-as-minus-sign", $file, ($hc-10), "more occurrences not shown" if $hc > 10 and ! $ENV{'LINTIAN_DEBUG'};
     }
 }
-close(IN);
 
 for my $f (sort keys %binary) {
     if (exists $manpage{$f}) {
