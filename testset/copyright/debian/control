@@ -50,3 +50,14 @@ Package: copyright.old-style
 Architecture: all
 Description: use an old-style directory structure
  This is just a sentence.
+
+Package: copyright.full-gpl-1
+Architecture: all
+Description: checks inclusion of GPL1
+ This should not trigger any errors as the common license
+ files only cover GPL >= 2
+
+Package: copyright.w3c
+Architecture: all
+Description: the w3c license claims to be "gpl compatible"
+ This is just a sentence.
