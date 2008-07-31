@@ -63,6 +63,8 @@ lintian (1.24.3) unstable; urgency=low
     + [ADB] Update the Policy reference for manpage-has-wrong-extension.
   * checks/menu-format:
     + [ADB] Use Lintian::Collect to parse the list of files in the package.
+    + [ADB] Don't raise menu-command-not-in-package for 'sensible-browser'
+      or 'sh'.  Thanks Raphael Geissert.
   * checks/menus.desc:
     + [ADB] Fix a typo; thanks Jordà Polo.
   * checks/nmu{,.desc}:

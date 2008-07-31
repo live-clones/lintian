@@ -894,7 +894,9 @@ sub VerifyCmd {
     } else {
         $cmd = $com[0];
     }
-    my $okay = $cmd && ($cmd =~ /^[\'\"]/ || $file_index{$cmd} || grep { $file_index{$_ . $cmd} } @path);
+    my $okay = $cmd && ($cmd =~ /^[\'\"]/ || $file_index{$cmd} || $cmd =~ m,^(/bin/)?sh,
+	|| $cmd =~ m,^(/usr/bin/)?sensible-(pager|editor|browser),
+	|| grep { $file_index{$_ . $cmd} } @path);
     return ($okay, $cmd);
 }
 

@@ -23,3 +23,4 @@
 ?package(binary):needs="fvwmmodule" section="Window Maker" title="Fake Module"\
  command="hello"
 ?package(binary):needs="x11" section="Applications/System/Hardware" title="Run xfdisk" command="su-to-root -c 'xfdisk -f'"
+?package(binary):needs="text" section="Applications/System/Administration" title="foo" command="sh /path/to/foo"
