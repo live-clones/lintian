@@ -399,15 +399,10 @@ if (defined $info->field('installer-menu-item')) {
 my $metapackage = 0;
 if ($type eq 'binary' && $arch_indep) {
 	$metapackage = 1;
-	open (IN, '<', "index") or fail("cannot open index file index: $!");
-	local $_;
-	local $/ = "\n";
-	while (<IN>) {
-		my ($mode, $file) = (split(' ', $_, 6))[0,5];
-		next unless $file;
-		$metapackage = 0 unless ($mode =~ /^d/ || $file =~ m%^\./usr/share/doc/%);
+	foreach my $file (keys %{$info->{index}}) {
+		$metapackage = 0 unless ($info->{index}->{$file}->{type} =~ /^d/
+		    || $file =~ m%^usr/share/doc/%);
 	}
-	close IN;
 }
 if (($type eq "binary") || ($type eq 'udeb')) {
 	my (%deps, %fields, %parsed);
