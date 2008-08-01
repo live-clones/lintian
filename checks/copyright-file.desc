@@ -195,7 +195,7 @@ Info: There is "Upstream Author(s)" in your copyright file. This was most
 
 Tag: copyright-has-url-from-dh_make-boilerplate
 Type: warning
-Ref: 12.5
+Ref: policy 12.5
 Info: There is "url://example.com" in your copyright file. This was most
  likely a remnant from the dh_make template.
  .

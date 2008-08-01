@@ -98,13 +98,13 @@ Info: The listed shared library doesn't include information about which
 
 Tag: arch-dependent-file-in-usr-share
 Type: error
-Ref: fhs 4.11
+Ref: fhs usrsharearchitectureindependentdata
 Info: This package installs an ELF binary in the <tt>/usr/share</tt>
  hierarchy, which is reserved for architecture-independent files.
 
 Tag: binary-in-etc
 Type: error
-Ref: fhs 3.7
+Ref: fhs etchostspecificsystemconfiguration
 Info: This package installs an ELF binary in <tt>/etc</tt>.
  The Filesystem Hierarchy Standard forbids this.
 
@@ -124,7 +124,7 @@ Info: The package name of a library package should usually reflect
  from the library file name with the following code snippet:
  .
   $ objdump -p /path/to/libfoo-bar.so.1.2.3 | sed -n -e's/^[[:space:]]*SONAME[[:space:]]*//p' | sed -e's/\([0-9]\)\.so\./\1-/; s/\.so\.//'
-Ref: Library Packaging guide 5
+Ref: libpkg-guide 5
 
 Tag: binary-with-bad-dynamic-table
 Type: error
@@ -156,7 +156,7 @@ Info: The listed file appears to be linked against the C library, but the
 
 Tag: missing-dependency-on-perlapi
 Type: error
-Ref: Perl policy 4.4.2
+Ref: perl-policy 4.4.2
 Info: This package includes a *.so file in <tt>/usr/lib/perl5</tt>,
  normally indicating that it includes a binary Perl module.  Binary Perl
  modules must depend on perlapi-$Config{version} (from the Config module).

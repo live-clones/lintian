@@ -64,7 +64,7 @@ Tag: magic-arch-in-arch-list
 Type: error
 Info: The special architecture values `all' and `any' only make sense if
  they occur alone.
-Ref:  policy 5.6.8
+Ref: policy 5.6.8
 
 Tag: unknown-architecture
 Type: warning
@@ -702,7 +702,7 @@ Info: You depend on the build-essential package, which is only a
 
 Tag: malformed-python-version
 Type: error
-Ref: Python policy 2.3
+Ref: python-policy 2.3
 Info: The Python-Version control field is not in one of the valid
  formats.  It should be in one of the following formats:
  .
