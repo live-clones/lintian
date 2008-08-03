@@ -270,3 +270,17 @@ Info: The desktop entry specifies a command that is not available in the
  desktop file after the install location of the binary was changed.  A
  desktop file for a command should be included in the same package as that
  command.
+
+Tag: desktop-contains-deprecated-header
+Type: warning
+Info: The header on this line of the desktop entry has been deprecated in the
+ FreeDesktop specification.  If the header is "KDE Desktop Entry", the right
+ fix is normally changing it to "Desktop Entry".
+Ref: http://standards.freedesktop.org/desktop-entry-spec/1.0/apc.html
+
+Tag: deprecated-kdelnk-file
+Type: error
+Info: kdelnk files were used by KDE 1 and since KDE 2 desktop files are used
+ instead.  Renaming the file and removing the deprecated header and keys
+ is often all that needs to be done.
+Ref: http://standards.freedesktop.org/desktop-entry-spec/1.0/apc.html

@@ -405,6 +405,8 @@ foreach my $file (keys %{$info->index}) {
     $file = '/' . $file;
     $file_index{$file} = 1;
 
+    tag 'deprecated-kdelnk-file', $file if ($file =~ m,\.kdelnk$,);
+
     if ($index_info->{type} =~ m/[-h]/ &&
 	$file =~ m,/usr/share/applications/.*\.desktop$,) {
 
@@ -759,8 +761,9 @@ sub VerifyDesktopFile {
         # ignore any keys in other groups.
         last if ($saw_first and $line =~ /^\[(.*)\]\s*$/);
         unless ($saw_first) {
-            return unless $line =~ /^\[Desktop Entry\]\s*$/;
+            return unless $line =~ /^\[(KDE )?Desktop Entry\]\s*$/;
             $saw_first = 1;
+            tag 'desktop-contains-deprecated-header', "$file:$." if ($line =~ /^\[KDE Desktop Entry\]\s*$/);
         }
 
 	# Tag = Value.	For most errors, just add the error to pending rather

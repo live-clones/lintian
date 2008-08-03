@@ -2,6 +2,7 @@ E: binary source: debian-rules-missing-required-target binary-indep
 E: binary: debian-changelog-file-missing-or-wrong-name
 E: binary: debian-news-file-uses-obsolete-national-encoding at line 3
 E: binary: depends-on-x-metapackage pre-depends: xorg
+E: binary: deprecated-kdelnk-file /usr/share/applications/hello.kdelnk
 E: binary: desktop-entry-missing-required-key /usr/share/applications/goodbye.desktop Name
 E: binary: doc-base-document-field-ends-in-whitespace binary:1
 E: binary: doc-base-file-duplicated-format binary:36 html
@@ -73,6 +74,7 @@ W: binary: debian-copyright-file-uses-obsolete-national-encoding at line 13
 W: binary: debian-news-entry-has-strange-distribution UNRELEASED
 W: binary: description-contains-homepage
 W: binary: desktop-command-not-in-package /usr/share/applications/goodbye.desktop goodbye
+W: binary: desktop-contains-deprecated-header /usr/share/applications/hello.desktop:4
 W: binary: desktop-entry-contains-unknown-key /usr/share/applications/goodbye.desktop:5 SpecialTag
 W: binary: desktop-entry-contains-unknown-key /usr/share/applications/goodbye.desktop:7 icon
 W: binary: desktop-entry-file-has-crs /usr/share/applications/hello.desktop:7
