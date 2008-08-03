@@ -6,14 +6,16 @@ usl := $(tmp)/usr/share/lintian
 neededfiles := debian/rules frontend/lintian
 allchecks := $(wildcard checks/*)
 allcollect := $(wildcard collection/*)
-tagfiles := $(wildcard testset/tags.*)
+tagfiles := $(wildcard testset/tags.* t/*/tags)
+testfiles := $(wildcard t/tests/*.desc)
 onlyrun =
 
-runtests: $(neededfiles) $(allchecks) $(allcollect) $(tagfiles)
+runtests: $(neededfiles) $(allchecks) $(allcollect) $(tagfiles) $(testfiles)
 	@echo .... running tests ....
 	[ -d debian/tests ] || mkdir debian/tests
 	LINTIAN_ROOT="" /usr/bin/perl testset/runtests -k testset debian/tests $(onlyrun)
-	touch $@
+	LINTIAN_ROOT="" /usr/bin/perl t/runtests -k t debian/tests $(onlyrun)
+	if [ "$(onlyrun)" != "" ]; then touch $@; fi
 
 build: $(neededfiles)
 	@echo .... running build ....

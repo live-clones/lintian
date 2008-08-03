@@ -1,0 +1,395 @@
+#!/usr/bin/perl
+
+# Copyright © 1998 Richard Braakman
+# Copyright © 2008 Frank Lichtenheld
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+use strict;
+use warnings;
+
+sub usage {
+    print <<END;
+Usage: $0 [-k] [-v] [-d] testset-directory testing-directory [test]
+
+The -k option means do not stop after one failed test, but try
+them all and report all errors.
+
+The -v option will also display those tests that have a description, but are
+not tested in any testset-package.
+
+The -d option will display debugging information.
+
+The optional 3rd parameter causes runtests to only run that particular test.
+END
+    exit 2;
+}
+
+# for debugging:
+my $debug = 0;
+
+# Tests layout:
+# XXX FIXME XXX
+
+# The build output is directed to build.pkgname in the testing-directory.
+
+# Exit codes:
+# 0 - success
+# 1 - one or more tests failed
+# 2 - an error prevented proper running of the tests
+
+# Turns out I might as well have written this in bash.  Oh well.
+
+my $run_all_tests = 0;
+my $verbose = 0;
+
+# --- Parse options, such as they are.
+while ($#ARGV >= 0 && $ARGV[0] =~ m/^-/) {
+    if ($ARGV[0] eq '-k') {
+	$run_all_tests = 1;
+    } elsif ($ARGV[0] eq '-v') {
+	$verbose = 1;
+    } elsif ($ARGV[0] eq '-d') {
+	$debug = 1;
+    } else {
+	usage;
+    }
+    shift;
+}
+
+# --- Parse directory arguments
+if ($#ARGV < 1 || $#ARGV > 2) {
+    usage;
+}
+
+my $testset = shift;
+my $rundir = shift;
+my $singletest;
+if ($#ARGV == 0) {
+    $singletest = shift;
+}
+
+# --- Set and unset environment variables that lintian is sensitive to
+BEGIN {
+    my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
+    if (not $LINTIAN_ROOT) {
+	use Cwd ();
+	$ENV{'LINTIAN_ROOT'} = $LINTIAN_ROOT = Cwd::cwd();
+    }
+    delete $ENV{'LINTIAN_CFG'};
+    delete $ENV{'LINTIAN_LAB'};
+    delete $ENV{'LINTIAN_DIST'};
+    delete $ENV{'LINTIAN_UNPACK_LEVEL'};
+    $ENV{'LC_COLLATE'} = 'C';
+
+    # Set standard umask because many of the test packages rely on this
+    # when creating files from the debian/rules script.
+    umask(022);
+}
+
+my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
+
+use lib "$ENV{'LINTIAN_ROOT'}/lib";
+use Util;
+use Tags;
+
+# --- Set the ways to call lintian and dpkg-buildpackage
+my $lintian_options = '-I -E';
+my $lintian_info_options = '-I -E -i';
+my $dpkg_buildpackage_options = '-rfakeroot -us -uc -d -iNEVER_MATCH_ANYTHING'
+    . ' -INEVER_MATCH_ANYTHING';
+my $lintian_path = $LINTIAN_ROOT . "/frontend/lintian";
+
+my $testok = 0;
+my %tags;
+my %types = ( 'E' => 'error', 'W' => 'warning', 'I' => 'info', 'X' => 'experimental' );
+
+# --- Display output immediately
+$| = 1;
+
+# --- Let's play.
+
+-d $rundir
+    or fail("test directory $rundir does not exist\n");
+
+# does every tag have an info section?
+print "Checking for missing info tags ... ";
+
+$testok = 1;
+for my $desc_file (<$LINTIAN_ROOT/checks/*.desc>) {
+    for my $i (read_dpkg_control($desc_file)) {
+	$desc_file =~ s#.*/##;
+	if (exists $i->{'tag'}) {
+	    if ($i->{'tag'} !~ /^[\w0-9.+-]+$/) {
+		print "E: test-tag-has-invalid-characters $i->{'tag'}"
+		    . " in $desc_file\n";
+	    }
+	    if (not exists $i->{'info'}) {
+		print "E: test-has-no-info $i->{'tag'} in $desc_file\n";
+		$testok = 0;
+	    }
+
+	    # Check the tag info for unescaped <> or for unknown tags (which
+	    # probably indicate the same thing).
+	    my $info = $i->{'info'};
+	    my @tags;
+	    while ($info =~ s,<([^\s>]+)(?:\s+href=\"[^\"]+\")?>.*?</\1>,,s) {
+		push (@tags, $1);
+	    }
+	    my %known = map { $_ => 1 } qw(a em i tt);
+            my %seen;
+	    @tags = grep { !$known{$_} && !$seen{$_}++ } @tags;
+	    if (@tags) {
+		print "E: test-info-has-unknown-html-tags $i->{'tag'} @tags"
+		    . " in $desc_file\n";
+	    }
+	    if ($info =~ /[<>]/) {
+		print "E: test-info-has-stray-angle-brackets $i->{'tag'}"
+		    . " in $desc_file\n";
+	    }
+
+	    if (!exists($i->{'type'}) && !exists($i->{'severity'})) {
+		use Data::Dumper;
+		print Dumper $i;
+		print "E: test-has-no-type $i->{'tag'} in $desc_file\n";
+		$testok = 0;
+		next;
+	    }
+
+	    $tags{$i->{'tag'}}{'desc_file'} = $desc_file;
+	    if (exists $i->{'experimental'}) {
+		$tags{$i->{'tag'}}{'desc_type'} = "experimental";
+	    } else {
+		$tags{$i->{'tag'}}{'desc_type'} = $i->{'type'} ||
+		    $Tags::sev_to_type[$i->{'severity'}];
+	    }
+	}
+    }
+}
+
+if ($testok) {
+    print "done.\n";
+} else {
+    print "FAILED!\n";
+    exit 1 unless $run_all_tests;
+}
+
+# can I make a lab?
+print "Running static lab test ... create ... ";
+$testok = runsystem_ok("$lintian_path --lab $rundir/test_lab --setup-lab");
+# can I renew a lab?
+print " renew ... ";
+$testok = runsystem_ok("$lintian_path --lab $rundir/test_lab --setup-lab")
+    if $testok;
+# can I remove a lab?
+print " remove ...";
+$testok = runsystem_ok("$lintian_path --lab $rundir/test_lab --remove-lab")
+    if $testok;
+# should be empty now
+print " rmdir ...";
+$testok = runsystem_ok("rmdir $rundir/test_lab")
+    if $testok;
+# cleanup
+runsystem("rm -r $rundir/test_lab") if -d "$rundir/test_lab";
+if ($testok) {
+    print "done.\n";
+} else {
+    print "FAILED!\n";
+    exit 1 unless $run_all_tests;
+}
+
+# ok, I can make a static lab, now let's test the package checks
+# in temporary labs
+my @tests;
+if ($singletest) {
+    @tests = map { s/\.desc$// } ( $singletest );
+} else {
+    -d $testset
+	or fail("cannot find $testset: $!\n");
+
+    @tests = map { s#^\Q$testset/tests/\E## ;s/\.desc$//; $_ } sort(<$testset/tests/*.desc>);
+}
+
+print "found the following tests: @tests\n" if $debug;
+for (@tests) {
+    my $testdesc = "$testset/tests/$_.desc";
+
+    print "process $testdesc...\n" if $debug;
+    my $testdata = (read_dpkg_control($testdesc))[0];
+
+    check_test_is_sane($testset, $testdata);
+    print "Running test $testdata->{testname} $testdata->{version}... ";
+
+    my $pkg = $testdata->{srcpkg};
+    my $pkgdir = "$pkg-$testdata->{version}";
+    my $origdir = "$testset/tests/$testdata->{testname}";
+    my $targetdir = "$rundir/$pkgdir";
+    my $tmpldir = "$testset/templates";
+
+    my $is_native = ($testdata->{type} eq 'native');
+
+    print "Cleaning up and repopulating $targetdir...\n" if $debug;
+    runsystem_ok("rm", "-rf", $targetdir);
+    if ($is_native) {
+	runsystem("cp", "-rp", "$tmpldir/skel", $targetdir);
+	runsystem("rm", "-f", "$targetdir/debian/changelog");
+	runsystem("rsync", "-rp", "$origdir/debian/", "$targetdir/")
+	    if -d "$origdir/debian/";
+    } else {
+	runsystem("cp", "-rp", "$tmpldir/skel.upstream", $targetdir);
+	runsystem("rm", "-f", "$targetdir/.dummy");
+	runsystem("rsync", "-rp", "$origdir/upstream/", "$targetdir/");
+	runsystem("cd $rundir && ".
+		  "tar czf ${pkg}_$testdata->{version}.orig.tar.gz $pkgdir");
+	runsystem("rsync", "-rp", "--exclude=debian/changelog",
+		  "$tmpldir/skel/", "$targetdir/");
+	runsystem("rsync", "-rp", "$origdir/debian/", "$targetdir/")
+	    if -d "$origdir/debian/";
+    }
+
+    unless (-e "$targetdir/debian/changelog") {
+	fill_in_tmpl("$targetdir/debian/changelog", $testdata);
+    }
+    unless (-e "$targetdir/debian/control") {
+	fill_in_tmpl("$targetdir/debian/control", $testdata);
+    }
+    unless ($is_native || -e "$targetdir/debian/watch") {
+	runsystem("echo >$targetdir/debian/watch");
+    }
+    if (-x "$origdir/pre_build") {
+	print "running pre_build hook...\n";
+	runsystem("$origdir/pre_build", $targetdir);
+    }
+
+    print "building... ";
+    runsystem("cd $rundir/$pkgdir && dpkg-buildpackage $dpkg_buildpackage_options >../build.$pkg 2>&1");
+
+     print "testing... ";
+     runsystem_ok("$lintian_path $lintian_options $rundir/$pkg\_$testdata->{version}*.changes".
+		  " 2>&1 | sort > $rundir/tags.$pkg");
+
+    # Run a sed-script if it exists, for tests that have slightly variable
+    # output
+    runsystem_ok("sed -i -f $origdir/post_test $rundir/tags.$pkg")
+	if -e "$origdir/post_test";
+
+    $testok = runsystem_ok("cmp", "-s", "$rundir/tags.$pkg", "$origdir/tags");
+    if ($testok) {
+	print "done.\n";
+    } else {
+	print "FAILED:\n";
+	runsystem_ok("diff", "-u", "$origdir/tags", "$rundir/tags.$pkg");
+	exit 1 unless $run_all_tests;
+	next;
+    }
+
+    open TAGS, "$rundir/tags.$pkg" or fail("Cannot open $rundir/tags.$pkg");
+    while (<TAGS>) {
+	next if m/^N: /;
+	if (not /^(.): (\S+)(?: (?:source|udeb))?: (\S+)/) {
+	    print "E: Invalid line:\n$_";
+	    next;
+	}
+	$tags{$3}{'tested_type'} = $types{$1};
+	$tags{$3}{'tested_package'} = $2;
+    }
+     close TAGS;
+}
+
+print "Checking whether all tags are tested and tags have description ... \n";
+$testok = 1;
+for (keys %tags) {
+    my $values = $tags{$_};
+    if (not defined $values->{'desc_type'}) {
+	print "E: tag-has-no-description $_ in $values->{'tested_package'}\n";
+	$testok = 0;
+    } elsif (not defined $values->{'tested_type'}) {
+	print "I: tag-is-not-tested $_ in $values->{'desc_file'}\n"
+	    if $verbose;
+    } elsif ($values->{'desc_type'} ne $values->{'tested_type'}) {
+	print "E: tag-has-inconsistent-type $_ $values->{'tested_type'} vs ".
+	    "$values->{'desc_type'}\n";
+	$testok = 0;
+    }
+}
+
+if ($testok) {
+    print "done.\n";
+} else {
+    print "FAILED\n";
+    exit 1 unless $run_all_tests;
+}
+
+# --------------
+sub runsystem {
+    print "runsystem(@_)\n" if $debug;
+    system(@_) == 0
+	or fail("failed: @_\n");
+}
+
+sub runsystem_ok {
+    print "runsystem_ok(@_)\n" if $debug;
+    my $errcode = system(@_);
+    $errcode == 0 or $errcode == (1 << 8)
+	or fail("failed: @_\n");
+    return $errcode == 0;
+}
+
+use Text::Template;
+sub fill_in_tmpl {
+    my ($file, $data) = @_;
+    my $tmpl = "$file.in";
+
+    my $template = Text::Template->new(TYPE => 'FILE',  SOURCE => $tmpl);
+    open my $out, '>', $file
+	or fail("cannot open $file: $!");
+
+    unless ($template->fill_in(OUTPUT => $out, HASH => $data)) {
+	fail("cannout create $file");
+    }
+    close $out;
+}
+
+use Data::Dumper;
+sub check_test_is_sane {
+    my ($dir, $data) = @_;
+
+    if ($debug) {
+	print "check_test_is_sane <= ".Dumper($data);
+    }
+
+    unless ($data->{testname} && $data->{version}) {
+	fail("Name or Version missing");
+    }
+
+    $data->{srcpkg} ||= $data->{testname};
+    $data->{type} ||= 'native';
+    $data->{date} ||= `date -R`; chomp $data->{date};
+    $data->{description} ||= 'No Description Available';
+    $data->{author} ||= 'Debian Lintian Maintainers <lintian-maint@debian.org>';
+    $data->{architecture} ||= 'all';
+
+    if ($debug) {
+	print "check_test_is_sane => ".Dumper($data);
+    }
+}
+
+# Local Variables:
+# indent-tabs-mode: t
+# cperl-indent-level: 4
+# End:
+# vim: ts=8 sw=4

@@ -160,6 +160,9 @@ lintian (1.24.3) unstable; urgency=low
   * reporting/templates/index.tmpl:
     + [RA] Add a link to lintian.log.  Suggested by Stefano Zacchiroli.
 
+  * t/:
+    + [FL] Begin work on a new testsuite.
+  
   * testset/fields:
     + [ADB] New testset from Tobias Quathamer (including some tags which
       previously weren't tested)

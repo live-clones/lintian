@@ -1,3 +1,4 @@
 debian/tests
 runtests
 !testset/runtests
+!t/runtests
