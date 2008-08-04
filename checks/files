@@ -24,11 +24,14 @@ use Dep;
 use Tags;
 use Util;
 
+# used by dir_counts()
+my $info;
+
 sub run {
 
 my $pkg = shift;
 my $type = shift;
-my $info = shift;
+$info = shift;
 
 my $file;
 my $source_pkg = "";
@@ -38,7 +41,6 @@ my $is_perl;
 my $has_binary_perl_file;
 my @nonbinary_perl_files_in_lib;
 
-my %is_hard_link;
 my %linked_against_libvga;
 my %script = ();
 
@@ -79,35 +81,18 @@ close(SCRIPTS);
 my $warned_x11_predepends = 0;
 my $warned_debug_name = 0;
 
-my %dir_counts;
 my @devhelp;
 my @devhelp_links;
 
 # Read package contents...
-open(IN, '<', "index") or fail("cannot open index file index: $!");
-open(NUMERIC, '<', "index-owner-id")
-    or fail("cannot open index file index-owner-id: $!");
-while (<IN>) {
-    chop;
-
-    my ($perm,$owner,$size,$date,$time,$file) = split(' ', $_, 6);
-    my $link;
-    my $operm;
-
-    my $numeric = <NUMERIC>;
-    chop $numeric;
-    fail("cannot read index file index-owner-id") unless defined $numeric;
-    my ($owner_id, $file_chk) = (split(' ', $numeric, 6))[1, 5];
-    fail("mismatching contents of index files: $file $file_chk")
-	if $file ne $file_chk;
-
-    $file =~ s,^\./,,;
-
-    if ($file =~ s/ link to (.*)//) {
-        $is_hard_link{$file} = 1;
-	my $link_target = $1;
-	$link_target =~ s,^\./,,;
-	my $link_target_dir = $link_target;
+foreach my $file (keys %{$info->index}) {
+    next if $file eq "";
+    my $index_info = $info->index->{$file};
+    my $owner = $index_info->{owner} . '/' . $index_info->{group};
+    my $operm = $index_info->{operm};
+    my $link = $index_info->{link};
+    if ($index_info->{type} eq 'h') {
+	my $link_target_dir = $link;
 	$link_target_dir =~ s,[^/]*$,,;
 
 	# It may look weird to sort the file and link target here, but since
@@ -117,27 +102,22 @@ while (<IN>) {
 	# stable lintian output despite that.
 	#
 	# TODO: actually, policy says 'conffile', not '/etc' -> extend!
-	tag "package-contains-hardlink", join (' -> ', sort ($file, $link_target))
+	tag "package-contains-hardlink", join (' -> ', sort ($file, $link))
 	    if $file =~ m,^etc/,
-		or $link_target =~ m,^etc/,
+		or $link =~ m,^etc/,
 		or $file !~ m,^\Q$link_target_dir\E[^/]*$,;
-    } elsif ($perm =~ m/^l/) {
-	($file, $link) = split(' -> ', $file);
     }
 
-    $operm = perm2oct($perm);
-
-    my ($year) = ($date =~ /^(\d{4})/);
+    my ($year) = ($index_info->{date} =~ /^(\d{4})/);
     if ( $year <= 1984 ) { # value from dak CVS: Dinstall::PastCutOffYear
-	tag "package-contains-ancient-file", "$file $date";
+	tag "package-contains-ancient-file", "$file " . $index_info->{date};
     }
 
-    my ($owner_uid, $owner_gid) = split ('/', $owner_id);
-    if (!($owner_uid < 100 || $owner_uid == 65534
-	  || ($owner_uid >= 60000 && $owner_uid < 65000))
-	|| !($owner_gid < 100 || $owner_gid == 65534
-	     || ($owner_gid >= 60000 && $owner_gid < 65000))) {
-	tag "wrong-file-owner-uid-or-gid", $file, $owner_id;
+    if (!($index_info->{uid} < 100 || $index_info->{uid} == 65534
+	  || ($index_info->{uid} >= 60000 && $index_info->{uid} < 65000))
+	|| !($index_info->{gid} < 100 || $index_info->{gid} == 65534
+	     || ($index_info->{gid} >= 60000 && $index_info->{gid} < 65000))) {
+	tag "wrong-file-owner-uid-or-gid", $file, $index_info->{uid} . '/' . $index_info->{gid};
     }
 
     # *.devhelp and *.devhelp2 files must be accessible from a directory in
@@ -145,7 +125,7 @@ while (<IN>) {
     # /usr/share/gtk-doc/html.  We therefore look for any links in one of
     # those directories to another directory.  The presence of such a link
     # blesses any file below that other directory.
-    if ($link and $file =~ m,usr/share/(devhelp/books|gtk-doc/html)/,) {
+    if (defined $link and $file =~ m,usr/share/(devhelp/books|gtk-doc/html)/,) {
 	my $blessed = $link;
 	if ($blessed !~ m,^/,) {
 	    my $base = $file;
@@ -157,10 +137,6 @@ while (<IN>) {
 	}
 	push (@devhelp_links, $blessed);
     }
-
-    #count directory contents:
-    $dir_counts{$file} ||= 0 if ($perm =~ m/^d/);
-    $dir_counts{$1} = ($dir_counts{$1} || 0) + 1 if ($file =~ m,^(.+/)[^/]+/?$,);
 
     # ---------------- /etc
     if ($file =~ m,^etc/,) {
@@ -176,7 +152,7 @@ while (<IN>) {
 	    tag "bad-permissions-for-etc-cron.d-script", sprintf("$file %04o != 0644",$operm);
 	}
 	# ---------------- /etc/emacs.*
-	elsif ($file =~ m,^etc/emacs.*/\S, and $perm =~ m/^-/
+	elsif ($file =~ m,^etc/emacs.*/\S, and $index_info->{type} =~ m,^[-h],
 	       and $operm != 0644) {
 	    tag "bad-permissions-for-etc-emacs-script", sprintf("$file %04o != 0644",$operm);
 	}
@@ -188,7 +164,7 @@ while (<IN>) {
 	elsif ($file =~ m,^etc/init\.d/\S,
 	       and $file !~ m,^etc/init\.d/(README|skeleton)$,
 	       and $operm != 0755
-	       and $perm =~ m/^-/) {
+	       and $index_info->{type} =~ m,^[-h],) {
 	    tag "non-standard-file-permissions-for-etc-init.d-script",
 		sprintf("$file %04o != 0755",$operm);
 	}
@@ -222,12 +198,14 @@ while (<IN>) {
 		}
 
 		# file directly in /usr/share/doc ?
-		if ($perm =~ m/^-/ and $file =~ m,^usr/share/doc/[^/]+$,) {
+		if ($index_info->{type} =~ m/^[-h]/ and $file =~ m,^usr/share/doc/[^/]+$,) {
 		    tag "file-directly-in-usr-share-doc", "$file";
 		}
 
 		# executable in /usr/share/doc ?
-		if ($perm =~ m/^-.*[xs]/ and $file !~ m,^usr/share/doc/([^/]+/)?examples/,) {
+		if ($index_info->{type} =~ m/^[-h]/ and
+		    $file !~ m,^usr/share/doc/([^/]+/)?examples/, and
+		    ($operm & 01 or $operm & 010 or $operm & 0100)) {
 		    if ($script{$file}) {
 			tag "script-in-usr-share-doc", "$file";
 		    } else {
@@ -236,7 +214,7 @@ while (<IN>) {
 		}
 
 		# zero byte file in /usr/share/doc/
-		if ($size == 0 and $perm =~ m,^-, and not $is_hard_link{$file}) {
+		if ($index_info->{size} == 0 and $index_info->{type} =~ m,^-,) {
 		    # exception: examples may contain empty files for various reasons
 		    unless ($file =~ m,^usr/share/doc/([^/]+/)?examples/,) {
 			tag "zero-byte-file-in-doc-directory", "$file";
@@ -244,7 +222,7 @@ while (<IN>) {
 		}
 		# gzipped zero byte files:
 		# 276 is 255 bytes (maximal length for a filename) + gzip overhead
-		if ($file =~ m,.gz$, and $size <= 276 and $perm =~ m,^-,) {
+		if ($file =~ m,.gz$, and $index_info->{size} <= 276 and $index_info->{type} =~ m,^[-h],) {
 		    unless (`gzip -dc unpacked/$file`) {
 			tag "zero-byte-file-in-doc-directory", "$file";
 		    }
@@ -274,7 +252,7 @@ while (<IN>) {
 	}
 	# ---------------- /usr/doc
 	elsif ($file =~ m,^usr/doc/\S,) {
-	    if ($file =~ m,^usr/doc/examples/\S+, and $perm =~ m/^d/) {
+	    if ($file =~ m,^usr/doc/examples/\S+, and $index_info->{type} eq 'd') {
 		tag "old-style-example-dir", "$file";
 	    }
 	}
@@ -286,7 +264,7 @@ while (<IN>) {
 	#----------------- /usr/{include,lib}/X11/
 	# Packages installing files here will need to pre-depend on x11-common
 	# so that the symlinks will be sorted out first on a sarge upgrade.
-	elsif ($file =~ m,^usr/(?:include|lib)/X11/,
+	elsif ($file =~ m,^usr/(?:include|lib)/X11(/|\Z),
 	       && !$warned_x11_predepends && $pkg ne 'x11-common') {
 	    my $pre_depends = '';
 	    if (defined $info->field('pre-depends')) {
@@ -309,7 +287,7 @@ while (<IN>) {
 	    tag "package-installs-font-to-usr-x11r6", "$file";
 	}
 	elsif ($file =~ m,^usr/X11R6/, and
-	       $perm !~ m,^l,) { #links to FHS locations are allowed
+	       $index_info->{type} !~ m,^l,) { #links to FHS locations are allowed
 	    tag "package-installs-file-to-usr-x11r6", "$file";
 	}
 
@@ -348,7 +326,7 @@ while (<IN>) {
 	}
 	# ---------------- /usr/local
 	elsif ($file =~ m,^usr/local/\S+,) {
-	    if ($perm =~ m/^d/) {
+	    if ($index_info->{type} =~ m/^d/) {
 		tag "dir-in-usr-local", "$file";
 	    } else {
 		tag "file-in-usr-local", "$file";
@@ -359,10 +337,11 @@ while (<IN>) {
 	    if ($type eq 'udeb') {
 		tag "documentation-file", "$file";
 	    }
-	    if ($perm =~ m/^d/) {
+	    if ($index_info->{type} =~ m/^d/) {
 		tag "stray-directory-in-manpage-directory", "$file"
 		    if ($file !~ m,^usr/(X11R6|share)/man/(?:[^/]+/)?(man\d/)?$,);
-	    } elsif ($perm =~ m/^-.*[xt]/) {
+	    } elsif ($index_info->{type} =~ m,^[-h], and
+		($operm & 01 or $operm & 010 or $operm & 0100)) {
 		tag "executable-manpage", "$file";
 	    }
 	}
@@ -378,13 +357,13 @@ while (<IN>) {
 	}
 	# ---------------- /usr/share
 	elsif ($file =~ m,^usr/share/[^/]+$,) {
-	    if ($perm =~ m/^-/) {
+	    if ($index_info->{type} =~ m/^[-h]/) {
 		tag "file-directly-in-usr-share", "$file";
 	    }
 	}
         # ---------------- /usr/bin
 	elsif ($file =~ m,^usr/bin/,) {
-	    if ($perm =~ m/^d/ and $file =~ m,^usr/bin/., and $file !~ m,^usr/bin/(X11|mh)/,) {
+	    if ($index_info->{type} =~ m/^d/ and $file =~ m,^usr/bin/., and $file !~ m,^usr/bin/(X11|mh)/,) {
 		tag "subdir-in-usr-bin", "$file";
 	    }
 	}
@@ -463,7 +442,7 @@ while (<IN>) {
     }
     # ---------------- /bin
     elsif ($file =~ m,^bin/,) {
-	if ($perm =~ m/^d/ and $file =~ m,^bin/.,) {
+	if ($index_info->{type} =~ m/^d/ and $file =~ m,^bin/.,) {
 	    tag "subdir-in-bin", "$file";
 	}
     }
@@ -501,7 +480,7 @@ while (<IN>) {
     }
 
     # ---------------- any files
-    if ($perm !~ m/^d/) {
+    if ($index_info->{type} !~ m/^d/) {
 	unless ($type eq 'udeb'
 		or $file =~ m,^usr/(bin|dict|doc|games|
 				    include|info|lib(32|64)?|
@@ -597,7 +576,7 @@ while (<IN>) {
     }
 
     # ---------------- plain files
-    if ($perm =~ m/^-/) {
+    if ($index_info->{type} =~ m/^[-h]/) {
 	my $wanted_operm;
 	# ---------------- backup files and autosave files
 	if ($file =~ /~$/ or $file =~ m,\#[^/]+\#$, or $file =~ m,/\.[^/]+\.swp$,) {
@@ -660,17 +639,11 @@ while (<IN>) {
 	}
 
 	# ---------------- general: setuid/setgid files!
-	if ($perm =~ m/s/) {
+	if ($operm & 04000 or $operm & 02000) {
 	    my ($setuid, $setgid) = ("","");
 	    # get more info:
-	    my ($user,$group) = ("", "");
-
-	    if ($owner =~ m,^(.*)/(.*)$,) {
-		$user = $1;
-		$group = $2;
-	    }
-	    $setuid = $user if ($operm & 04000);
-	    $setgid = $group if ($operm & 02000);
+	    $setuid = $index_info->{owner} if ($operm & 04000);
+	    $setgid = $index_info->{group} if ($operm & 02000);
 
 	    # 1st special case: program is using svgalib:
 	    if (exists $linked_against_libvga{$file}) {
@@ -712,7 +685,7 @@ while (<IN>) {
 	    }
 	}
 	# ---------------- general: executable files
-	elsif ($perm =~ m/[xt]/) {
+	elsif ($operm & 01 or $operm & 010 or $operm & 0100) {
 	    # executable
 	    if ($owner =~ m,root/games,) {
 		if ($operm != 2755) {
@@ -749,7 +722,7 @@ while (<IN>) {
 	}
     }
     # ---------------- directories
-    elsif ($perm =~ m/^d/) {
+    elsif ($index_info->{type} =~ m/^d/) {
 	# special cases first:
         # game directory with setgid bit
 	if ($file =~ m,var/(lib/)?games/\S+, and $operm == 02775
@@ -782,7 +755,7 @@ while (<IN>) {
 	}
     }
     # ---------------- symbolic links
-    elsif ($perm =~ m/^l/) {
+    elsif ($index_info->{type} =~ m/^l/) {
 	# link
 
 	my $mylink = $link;
@@ -890,22 +863,18 @@ while (<IN>) {
 	tag "special-file", $file, sprintf("%04o",$operm);
     }
 }
-close(IN);
-
-fail("mismatching contents of index files") if defined <NUMERIC>;
-close(NUMERIC);
 
 #check for sect: games but nothing in /usr/games. Check for any binary to
 #save ourselves from game-data false positives:
 if ($pkg_section =~ m,games$,
-    and (($dir_counts{"usr/games/"} || 0) == 0)
-    and (($dir_counts{"bin/"} || 0) + ($dir_counts{"usr/bin/"} || 0)) > 0) {
+    and ((dir_counts("usr/games/") || 0) == 0)
+    and ((dir_counts("bin/") || 0) + (dir_counts("usr/bin/") || 0)) > 0) {
     tag "package-section-games-but-contains-no-game";
 }
 
 if ($pkg_section =~ m,games$,
-    and (($dir_counts{"usr/games/"} || 0)> 0)
-    and (($dir_counts{"bin/"} || 0) + ($dir_counts{"usr/bin/"} || 0)) > 0) {
+    and ((dir_counts("usr/games/") || 0)> 0)
+    and ((dir_counts("bin/") || 0) + (dir_counts("usr/bin/") || 0)) > 0) {
     tag "package-section-games-but-has-usr-bin";
 }
 
@@ -919,11 +888,11 @@ if ($pkg_section =~ m,games$,
 # so just ignore them.
 #
 # python-support needs a directory for each package even it might be empty
-foreach my $dir (keys %dir_counts) {
-    next if $dir eq "";
+foreach my $dir (keys %{$info->index}) {
+    next if $dir eq "" or $info->index->{$dir}->{type} ne 'd';
     next if ($dir =~ m{^var/} or $dir =~ m{^etc/});
     next if $pkg eq 'base-files';
-    if ($dir_counts{$dir} == 0) {
+    if (dir_counts($dir) == 0) {
 	if ($dir ne 'usr/lib/perl5/'
 	    and $dir ne 'usr/share/perl5/'
 	    and $dir !~ m;^usr/share/python-support/;) {
@@ -951,6 +920,16 @@ for my $file (@devhelp) {
     tag 'package-contains-devhelp-file-without-symlink', $file unless $found;
 }
 
+}
+
+sub dir_counts {
+    my $dir = shift;
+
+    if (defined $info->index->{$dir}) {
+	return $info->index->{$dir}->{count} || 0;
+    } else {
+	return 0;
+    }
 }
 
 1;
