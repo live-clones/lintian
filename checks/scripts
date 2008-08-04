@@ -195,28 +195,20 @@ my $pkg = shift;
 my $type = shift;
 my $info = shift;
 
-open(INDEX, '<', "index") or fail("cannot open lintian index file: $!");
-while (<INDEX>) {
-    next unless (m/^-[rw-]*[xs]/);
-    chop;
-    s/ link to .*//;
-    my $is_suid = m/^-[rw-]*s/;
-    $executable{(split(' ', $_, 6))[5]} = 1;
-    $suid{(split(' ', $_, 6))[5]} = $is_suid;
+foreach (keys %{$info->index}) {
+    next if $_ eq "";
+    my $index_info = $info->index->{$_};
+    my $operm = $index_info->{operm};
+    next unless ($index_info->{type} =~ m,^[-h], and ($operm & 01 or
+	$operm & 010 or $operm & 0100));
+    my $is_suid = $operm & 04000;
+    $executable{'./' . $_} = 1;
+    $suid{'./' . $_} = $is_suid;
 }
-close(INDEX);
 
-# Urgle... this is ambiguous, since the sequence ": " can occur in
-# the output of file and also in the filename.
-# Fortunately no filenames containing ": " currently occur in Debian packages.
-open(FILEINFO, '<', "file-info")
-    or fail("cannot open lintian file-info file: $!");
-while (<FILEINFO>) {
-    m/^(.*?): (.*)/ or fail("bad line in file-info: $_");
-    my $file = $1;
-    $ELF{$file} = 1 if $2 =~ /^[^,]*\bELF\b/o;
+for my $file (keys %{$info->file_info}) {
+    $ELF{'./' . $file} = 1 if $info->file_info->{$file} =~ /^[^,]*\bELF\b/o;
 }
-close(FILEINFO);
 
 my $all_deps = '';
 for my $field (qw/suggests recommends depends pre-depends provides/) {

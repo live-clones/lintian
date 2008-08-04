@@ -91,8 +91,8 @@ lintian (1.24.3) unstable; urgency=low
   * checks/scripts{,.desc}:
     + [RA] Warn about maintainer scripts that prepend a path to commands.
       Based on a patch by Raphael Geissert.  (Closes: #376184)
-    + [ADB] Don't read fields/* directly as the contents have almost certainly
-      been cached in Lintian::Collect already.
+    + [ADB] Don't read fields/*, index or file-info directly as the contents
+      have almost certainly been cached in Lintian::Collect already.
     + [ADB] Update a couple of Policy references.  Thanks Jordà Polo.
   * checks/shared-libs.{,desc}:
     + [ADB] Improve the description of no-symbols-control-file.
