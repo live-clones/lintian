@@ -250,7 +250,6 @@ foreach my $file (keys %{$info->file_info}) {
 	}
     }
 }
-close(IN);
 
 # Find the package dependencies, which is used by various checks.
 my $depends = '';

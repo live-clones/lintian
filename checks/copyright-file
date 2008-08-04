@@ -132,7 +132,6 @@ foreach (keys %{$info->{index}}) {
     	last;
     }
 }
-close(IN);
 
 if (not $found) {
     tag "no-copyright-file", "";
