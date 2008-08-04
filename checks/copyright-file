@@ -45,11 +45,10 @@ use lib "$ENV{'LINTIAN_ROOT'}/checks/";
 use common_data;
 
 # Read package contents...
-open(IN, '<', "index") or fail("cannot open index file index: $!");
-while (<IN>) {
-    chop;
-    if (m,usr/(share/)?doc/$ppkg/copyright(\.\S+)?(\s+\-\>\s+.*)?$,) {
-	my ($ext,$link) = ($2,$3);
+foreach (keys %{$info->{index}}) {
+    my $index_info = $info->{index}->{$_};
+    if (m,usr/(share/)?doc/$ppkg/copyright(\.\S+)?$,) {
+	my $ext = $2;
 
 	$ext = '' if (! defined $ext);
 	#an extension other than .gz doesn't count as copyright file
@@ -63,20 +62,20 @@ while (<IN>) {
     	}
 
 	#make sure copyright is not a symlink
-    	if ($link) {
+    	if ($index_info->{link}) {
 	    tag "copyright-file-is-symlink", "";
 	    last;
     	}
 
 	#otherwise, pass
-    	if (($ext eq '') and not $link) {
+    	if (($ext eq '') and not $index_info->{link}) {
 	    # everything is ok.
 	    last;
     	}
     	fail("unhandled case: $_");
 
-    } elsif (m,usr/share/doc/$ppkg \-\>\s+(\S+),) {
-	my ($link) = ($1);
+    } elsif (m,usr/share/doc/$ppkg$, and $index_info->{link}) {
+	my $link = $index_info->{link};
 
     	$found = 1;
 	$linked = 1;

@@ -10,7 +10,8 @@ lintian (1.24.3) unstable; urgency=low
     + [ADB] Drop the "copyright line too long" check.  Most of the issues
       it flags aren't easily fixable, particularly where the copyright file
       is (semi)automatically generated.  (Closes: #491302, #491365, #491685)
-    + [ADB] Use Lintian::Collect for accessing control fields
+    + [ADB] Use Lintian::Collect for accessing control fields and reading the
+      list of files in the package.
     + [ADB] Don't flag use of version 1 of the GPL, or licenses using phrases
       such as "compatible with the GPL" (for example, the W3C Software
       License) as missing a reference to common-licenses
