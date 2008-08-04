@@ -27,6 +27,8 @@ lintian (1.24.3) unstable; urgency=low
   * checks/description:
     + [RA] Don't warn about a synopsis that ends in "etc."  Patch from
       Chris Lamb.  (Closes: #491252)
+  * checks/etcfiles:
+    + [ADB] Walk Lintian::Collect->index instead of reading the "index" file.
   * checks/fields{,.desc}:
     + [RA] Warn about packages that depend exclusively on makedev.
       Thanks, Josh Triplett.  (Closes: #491625)

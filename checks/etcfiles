@@ -27,6 +27,7 @@ sub run {
 
 my $pkg = shift;
 my $type = shift;
+my $info = shift;
 
 my %conffiles;
 
@@ -44,22 +45,9 @@ if (open(IN, '<', $conffiles)) {
 }
 
 # Read package contents...
-open(IN, '<', "index") or fail("cannot open index file index: $!");
-while (<IN>) {
-    chop;
-
-    my ($perm,$owner,$size,$date,$time,$file) = split(' ', $_, 6);
-    my $link;
-
-    $file =~ s,^(\./),,;
-    $file =~ s/ link to .*//;
-
-    if ($perm =~ m/^l/) {
-	($file, $link) = split(' -> ', $file);
-    }
-
-    # skip it unless it is a file in /etc
-    next unless $file =~ m,^etc, and $perm =~ m,^-,;
+foreach my $file (keys %{$info->index}) {
+    my $index_info = $info->index->{$file};
+    next unless $file =~ m,^etc, and $index_info->{type}=~ m/^[-h]/;
 
     # If there is a /etc/foo, it must be a conffile (with a few exceptions).
     if (not exists($conffiles{$file})
@@ -70,7 +58,6 @@ while (<IN>) {
 	tag "file-in-etc-not-marked-as-conffile", "/$file";
     }
 }
-close(IN);
 
 }
 
