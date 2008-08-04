@@ -36,7 +36,7 @@ E: filenames: wrong-file-owner-uid-or-gid usr/lib/filenames/wrong-owner-30001:65
 E: filenames: wrong-file-owner-uid-or-gid usr/lib/filenames/wrong-owner-65535:65001 65535/65001
 E: more-filename-games: no-copyright-file
 I: filename-games: no-md5sums-control-file
-I: filenames: file-in-usr-something-x11-without-pre-depends usr/include/X11/
+I: filenames: file-in-usr-something-x11-without-pre-depends usr/include/X11/foo.h
 I: filenames: no-md5sums-control-file
 I: more-filename-games: no-md5sums-control-file
 W: filename-games: binary-without-manpage usr/bin/test-game
