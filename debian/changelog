@@ -71,8 +71,9 @@ lintian (1.24.3) unstable; urgency=low
       or 'sh'.  Thanks Raphael Geissert.
     + [RA] Warn about .kdelnk files and [KDE Desktop Entry] headings in
       desktop files.  Patch from Raphael Geissert.
-  * checks/menus.desc:
+  * checks/menus{,.desc}:
     + [ADB] Fix a typo; thanks Jordà Polo.
+    + [ADB] Use the file list from Lintian::Collect.
   * checks/nmu{,.desc}:
     + [ADB] Use Lintian::Collect for maintainer / uploader information
     + [ADB] Add a DevRef reference to changelog-should-mention-nmu.  Thanks
