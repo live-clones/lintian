@@ -195,7 +195,7 @@ my $pkg = shift;
 my $type = shift;
 my $info = shift;
 
-foreach (keys %{$info->index}) {
+foreach (sort keys %{$info->index}) {
     next if $_ eq "";
     my $index_info = $info->index->{$_};
     my $operm = $index_info->{operm};
@@ -206,7 +206,7 @@ foreach (keys %{$info->index}) {
     $suid{'./' . $_} = $is_suid;
 }
 
-for my $file (keys %{$info->file_info}) {
+for my $file (sort keys %{$info->file_info}) {
     $ELF{'./' . $file} = 1 if $info->file_info->{$file} =~ /^[^,]*\bELF\b/o;
 }
 

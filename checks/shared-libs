@@ -70,12 +70,12 @@ my $type = shift;
 my $info = shift;
 
 # 1st step: get info about shared libraries installed by this package
-foreach my $file (keys %{$info->objdump_info}) {
+foreach my $file (sort keys %{$info->objdump_info}) {
     my $objdump = $info->objdump_info->{$file};
     $SONAME{$file} = $objdump->{SONAME}[0] if defined $objdump->{SONAME};
 }
 
-foreach my $file (keys %{$info->file_info}) {
+foreach my $file (sort keys %{$info->file_info}) {
     next unless length $file;
     my $fileinfo = $info->file_info->{$file};
     if ($fileinfo =~ m/^[^,]*\bELF\b/ && $fileinfo =~ m/shared object/) {
@@ -85,7 +85,7 @@ foreach my $file (keys %{$info->file_info}) {
 
 # 2nd step: read package contents
 
-for my $cur_file (keys %{$info->index}) {
+for my $cur_file (sort keys %{$info->index}) {
     # shared library?
     my $cur_file_data = $info->index->{$cur_file};
 

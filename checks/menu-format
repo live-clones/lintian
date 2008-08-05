@@ -398,7 +398,7 @@ closedir MENUDIR;
 # of every file in the package to use to verify that the command referenced by
 # a menu item or desktop entry is there.
 my @desktop_files;
-foreach my $file (keys %{$info->index}) {
+foreach my $file (sort keys %{$info->index}) {
     my $index_info = $info->index->{$file};
     my $operm = $index_info->{operm};
 

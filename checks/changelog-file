@@ -45,7 +45,7 @@ my %file_info;
 my %is_a_symlink;
 
 # Modify the file_info by following symbolic links.
-for my $file (keys %{$info->file_info}) {
+for my $file (sort keys %{$info->file_info}) {
     next unless $file =~ m/doc/o;
 
     $file_info{$file} = $info->file_info->{$file};
@@ -81,7 +81,7 @@ for my $file (keys %{$info->file_info}) {
 # together at random it seems here
 
 # Read package contents...
-foreach (keys %{$info->index}) { 
+foreach (sort keys %{$info->index}) { 
     next unless length $_;
     # skip packages which have a /usr/share/doc/$pkg -> foo symlink
     if (m,usr/share/doc/$ppkg$, and defined $info->index->{$_}->{link}) {

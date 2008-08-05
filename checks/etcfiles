@@ -45,7 +45,7 @@ if (open(IN, '<', $conffiles)) {
 }
 
 # Read package contents...
-foreach my $file (keys %{$info->index}) {
+foreach my $file (sort keys %{$info->index}) {
     my $index_info = $info->index->{$file};
     next unless $file =~ m,^etc, and $index_info->{type}=~ m/^[-h]/;
 

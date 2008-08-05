@@ -43,7 +43,7 @@ my %SONAME;
 
 $arch = $info->field('architecture');
 
-foreach my $file (keys %{$info->objdump_info}) {
+foreach my $file (sort keys %{$info->objdump_info}) {
     my $objdump = $info->objdump_info->{$file};
     $file = './' . $file;
 
@@ -120,7 +120,7 @@ tag "package-name-doesnt-match-sonames", "@sonames"
     if @sonames && !$match_found;
 
 my %directories;
-foreach (keys %{$info->file_info}) {
+foreach (sort keys %{$info->file_info}) {
     next unless length $_;
     my $data = $info->file_info->{$_};
     next unless $data =~ /^directory$/ or $data =~ / link to /;
@@ -128,7 +128,7 @@ foreach (keys %{$info->file_info}) {
 }
 
 # process all files in package
-foreach my $file (keys %{$info->file_info}) {
+foreach my $file (sort keys %{$info->file_info}) {
     my $fileinfo = $info->file_info->{$file};
     my $objdump = $info->objdump_info->{$file};
 

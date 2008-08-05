@@ -4,7 +4,7 @@ E: hello: pkg-has-symbols-control-file-but-no-shared-libs
 E: hello: statically-linked-binary ./usr/bin/hello.dbg
 E: hello: unstripped-binary-or-object ./usr/bin/hello.dbg
 E: libhello0-dbg: binary-with-bad-dynamic-table ./usr/lib/libhello.so.dbg
-E: libhello0-dbg: missing-dependency-on-libc needed by ./usr/lib/debug/libhello.so.0.0 and 1 others
+E: libhello0-dbg: missing-dependency-on-libc needed by ./usr/lib/debug/lib/libhello.so.0.0 and 1 others
 E: libhello0-dbg: sharedobject-in-library-directory-missing-soname usr/lib/libhello.so.dbg
 E: libhello0: duplicate-entry-in-symbols-control-file libhello 0
 E: libhello0: invalid-template-id-in-symbols-file 11
