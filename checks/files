@@ -85,7 +85,7 @@ my @devhelp;
 my @devhelp_links;
 
 # Read package contents...
-foreach my $file (keys %{$info->index}) {
+foreach my $file (sort keys %{$info->index}) {
     next if $file eq "";
     my $index_info = $info->index->{$file};
     my $owner = $index_info->{owner} . '/' . $index_info->{group};
