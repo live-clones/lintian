@@ -157,6 +157,9 @@ Info: This man page provokes warnings or errors from man.
  .
  At worst, warning messages can be disabled with the .warn directive, see
  "Debugging" in the groff manual.
+ .
+ To test this for yourself you can use the following command:
+  LANG=C man --warnings -l manpage-file &gt;/dev/null
 
 Tag: manpage-for-x11-binary-in-wrong-directory
 Type: error

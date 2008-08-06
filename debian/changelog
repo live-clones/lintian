@@ -70,6 +70,8 @@ lintian (1.24.3) unstable; urgency=low
     + [ADB] Update the Policy reference for manpage-has-wrong-extension.
     + [ADB] Use Lintian::Collect rather than parsing the "index" and
       "file-info" files.
+    + [FL] In description for manpage-has-errors-from-man note how to
+      reproduce this errors outside of lintian.  (Closes: #492930)
   * checks/menu-format{,.desc}:
     + [ADB] Use Lintian::Collect to parse the list of files in the package.
     + [ADB] Don't raise menu-command-not-in-package for 'sensible-browser'
