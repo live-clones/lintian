@@ -28,9 +28,9 @@ sub run {
 
 my $pkg = shift;
 my $type = shift;
+my $info = shift;
 
 my $ppkg = quotemeta($pkg);
-my $cf = "fields/description";
 my $tabs = 0;
 my $lines = 0;
 my $template = 0;
@@ -39,17 +39,18 @@ my $synopsis;
 my $description;
 
 # description?
-unless (-f $cf) {
+my $full_description = $info->field('description');
+unless (defined $full_description) {
     tag "package-has-no-description", "";
     return 0;
 }
 
-open(IN, '<', $cf) or fail("cannot open $cf for reading: $!");
-
-# 1st line contains synopsis
-$synopsis = <IN>;
-$description = $synopsis;
-chomp $synopsis;
+$full_description =~ m/^([^\n]*)\n(.*)$/s;
+($synopsis, $description) = ($1, $2);
+unless (defined $synopsis) {
+    $synopsis = $full_description;
+    $description = '';
+}
 
 if ($synopsis =~ m/^\s*$/) {
     tag "description-synopsis-is-empty", "";
@@ -78,9 +79,7 @@ if ($synopsis =~ m/^\s*$/) {
     }
 }
 
-while (<IN>) {
-    $description .= $_;
-    chomp;
+foreach (split /\n/, $description) {
     next if m/^\s*$/o;
     next if m/^\.\s*$/o;
 
@@ -140,7 +139,6 @@ while (<IN>) {
 	tag "extended-description-line-too-long", "";
     }
 }
-close(IN);
 
 if ($lines == 0) {
     tag "extended-description-is-empty", "" unless $type eq 'udeb';
