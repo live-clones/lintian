@@ -491,7 +491,9 @@ foreach my $file (sort keys %{$info->index}) {
 		# non-FHS, but still usual
 		or $file =~ m,^usr/[^/]+-linux[^/]*/,
 		or $file =~ m,^usr/iraf/,
-		or $file =~ m,^emul/ia32-linux/(lib|usr/lib)/,) {
+		or $file =~ m,^emul/ia32-linux/(lib|usr/lib)/,
+		# not allowed, but tested indivudually
+		or $file =~ m,^(mnt|opt|srv|(var/)?tmp)/,) {
 	    tag "file-in-unusual-dir", "$file";
 	}
     }

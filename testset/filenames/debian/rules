@@ -145,6 +145,8 @@ binary-indep:
 
 	install -d debian/tmp/srv/foo
 	touch debian/tmp/srv/foo/bar
+	install -d debian/tmp/opt/foo
+	touch debian/tmp/opt/foo/bar
 
 	install -d debian/tmp/etc/gconf/schemas
 	touch debian/tmp/etc/gconf/schemas/test.schema
