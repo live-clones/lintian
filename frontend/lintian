@@ -130,6 +130,7 @@ Actions:
     -C X, --check-part X      check only certain aspects
     -X X, --dont-check-part X don\'t check certain aspects
     -T X, --tags X            only run checks needed for requested tags
+    --tags-from-file X        like --tags, but read list from file
     -u, --unpack              only unpack packages in the lab
     -r, --remove              remove package from the lab
 General options:
@@ -226,6 +227,17 @@ sub record_check_tags {
     $check_tags = "$_[1]";
 }
 
+# Record Parts requested for checking
+# Options: --tags-from-file
+sub record_check_tags_from_file {
+    open my $file, '<', $_[1]
+	or fail("failed to open $_[1]: $!");
+    my $tags =  join(',', map { chomp($_); $_ } <$file>);
+    close $file;
+
+    record_check_tags($_[0], $tags);
+}
+
 
 # Record Parts requested not to check
 # Options: -X|--dont-check-part X
@@ -267,6 +279,7 @@ my %opthash = (			# ------------------ actions
 	       "check|c" => \&record_action,
 	       "check-part|C=s" => \&record_check_part,
 	       "tags|T=s" => \&record_check_tags,
+	       "tags-from-file=s" => \&record_check_tags_from_file,
 	       "dont-check-part|X=s" => \&record_dont_check_part,
 	       "unpack|u" => \&record_action,
 	       "remove|r" => \&record_action,

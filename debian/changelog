@@ -126,6 +126,8 @@ lintian (1.24.3) unstable; urgency=low
       run not by check names but by names of tags you're interested
       in. This will not suppress other tags in the selected checks!
       Requested by Joerg Jaspert for ftpmaster.  (Closes: #493903)
+    + [FL] Add --tags-from-file option to make it easier to specify
+      a long list of tags.
 
   * lib/Lintian/Collect/Binary.pm:
     + [ADB] When parsing objdump-info, indicate whether a shared object is
@@ -139,6 +141,7 @@ lintian (1.24.3) unstable; urgency=low
     + [ADB] Update the list of check scripts, removing the no longer present
       deb-format and perl and adding the nmu script.
     + [FL] Document the new --tags/-T option.
+    + [FL] Document the new --tags-from-file option.
 
   * testset/fields:
     + [ADB] New testset from Tobias Quathamer (including some tags which
