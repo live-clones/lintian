@@ -126,6 +126,33 @@ sub file_info {
     return $self->{file_info};
 }
 
+sub scripts {
+    my ($self) = @_;
+    return $self->{scripts} if exists $self->{scripts};
+
+    my %scripts;
+    open(SCRIPTS, '<', "scripts")
+	or fail("cannot open scripts file: $!");
+    while (<SCRIPTS>) {
+	chomp;
+	my (%file, $name);
+
+	m/^(env )?(\S*) (.*)$/o
+	    or fail("bad line in scripts file: $_");
+	($file{calls_env}, $file{interpreter}, $name) = ($1, $2, $3);
+
+	$name =~ s,^\./,,o;
+	$name =~ s,/+$,,o;
+	$file{name} = $name;
+	$scripts{$name} = \%file;
+    }
+    close SCRIPTS;
+    $self->{scripts} = \%scripts;
+
+    return $self->{scripts};
+}
+
+
 # Returns the information from collect/objdump-info
 sub objdump_info {
     my ($self) = @_;
