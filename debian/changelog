@@ -124,6 +124,8 @@ lintian (1.24.3) unstable; urgency=low
       an Ocaml executable.  Also add information on segments which various
       checks scripts use which hadn't made it here yet.
     + [ADB] Make index() return a hash rather than an array
+  * lib/Read_taginfo.pm:
+    + [FL] Handle URLs in the Ref: field.
 
   * man/lintian.1
     + [ADB] Update the list of check scripts, removing the no longer present
