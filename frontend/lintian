@@ -75,6 +75,7 @@ my @packages;
 
 my $action;
 my $checks;
+my $check_tags;
 my $dont_check;
 my $unpack_info;
 my $cwd;
@@ -128,6 +129,7 @@ Actions:
     -c, --check               check packages (default action)
     -C X, --check-part X      check only certain aspects
     -X X, --dont-check-part X don\'t check certain aspects
+    -T X, --tags X            only run checks needed for requested tags
     -u, --unpack              only unpack packages in the lab
     -r, --remove              remove package from the lab
 General options:
@@ -205,6 +207,26 @@ sub record_check_part {
     $checks = "$_[1]";
 }
 
+# Record Parts requested for checking
+# Options: -T|--tags
+sub record_check_tags {
+    if (defined $action and $action eq 'check' and $check_tags) {
+	die("multiple -T or --tags options not allowed");
+    }
+    if ($checks) {
+	die("both -T or --tags and -C or --check-part options not allowed");
+    }
+    if ($dont_check) {
+	die("both -T or --tags and -X or --dont-check-part options not allowed");
+    }
+    if ($action) {
+	die("too many actions specified: $_[0]");
+    }
+    $action = 'check';
+    $check_tags = "$_[1]";
+}
+
+
 # Record Parts requested not to check
 # Options: -X|--dont-check-part X
 sub record_dont_check_part {
@@ -244,6 +266,7 @@ my %opthash = (			# ------------------ actions
 	       "remove-lab|R" => \&record_action,
 	       "check|c" => \&record_action,
 	       "check-part|C=s" => \&record_check_part,
+	       "tags|T=s" => \&record_check_tags,
 	       "dont-check-part|X=s" => \&record_dont_check_part,
 	       "unpack|u" => \&record_action,
 	       "remove|r" => \&record_action,
@@ -1053,7 +1076,7 @@ for my $f (readdir CHECKDIR) {
 	}
 
 	shift(@secs);
-	map Tags::add_tag($_), @secs;
+	map { $_->{'script'}=$script; Tags::add_tag($_) } @secs;
     } # end: if ne lintian
 
 }
@@ -1082,20 +1105,38 @@ for my $c (keys %check_info) {
 
 # {{{ determine which checks have been requested
 if ($action eq 'check') {
-    my %dont_check = map { $_ => 1 } (split m/,/, ($dont_check || ""));
-    $checks or ($checks = join(',',keys %check_info));
-    for my $c (split(/,/,$checks)) {
-	if ($check_info{$c}) {
-	    if ($dont_check{$c} || ($check_info{$c}->{'abbrev'} && $dont_check{$check_info{$c}->{'abbrev'}})) {
-		#user requested not to run this check
+    if ($check_tags) {
+	foreach my $t (split(/,/, $check_tags)) {
+	    my $info = Tags::get_tag_info($t);
+
+	    fail("unknown tag specified: $t") unless defined($info);
+	    my $script = $info->{'script'};
+	    next if $script eq 'lintian';
+	    if ($check_info{$script}) {
+		$checks{$script} = 1;
 	    } else {
-		$checks{$c} = 1;
+		# should never happen
+		fail("no info for script $script");
 	    }
-	} elsif (exists $check_abbrev{$c}) {
-	    #abbrevs only used when -C is given, so we don't need %dont_check
-	    $checks{$check_abbrev{$c}} = 1;
-	} else {
-	    fail("unknown check specified: $c");
+	}
+    } else {
+	my %dont_check = map { $_ => 1 } (split m/,/, ($dont_check || ""));
+	$checks or ($checks = join(',',keys %check_info));
+	for my $c (split(/,/,$checks)) {
+	    if ($check_info{$c}) {
+		if ($dont_check{$c}
+		    || ($check_info{$c}->{'abbrev'}
+			&& $dont_check{$check_info{$c}->{'abbrev'}})) {
+		    #user requested not to run this check
+		} else {
+		    $checks{$c} = 1;
+		}
+	    } elsif (exists $check_abbrev{$c}) {
+		#abbrevs only used when -C is given, so we don't need %dont_check
+		$checks{$check_abbrev{$c}} = 1;
+	    } else {
+		fail("unknown check specified: $c");
+	    }
 	}
     }
 
