@@ -225,15 +225,10 @@ $all_deps .= ', ' if $all_deps;
 $all_deps .= $pkg;
 $deps{all} = Dep::parse($all_deps);
 
-open(SCRIPTS, '<', "scripts") or fail("cannot open lintian scripts file: $!");
-while (<SCRIPTS>) {
-    chop;
-
-    # This used to be split(' ', $_, 2), but that didn't handle empty
-    # interpreter lines correctly.
-    my ($calls_env, $interpreter, $filename) = m/^(env )?(\S*) (.*)$/ or
-	 fail("bad line in scripts file: $_");
-
+for my $filename (sort keys %{$info->scripts}) {
+    my $interpreter = $info->scripts->{$filename}->{interpreter};
+    my $calls_env = $info->scripts->{$filename}->{calls_env};
+    $filename = './' . $filename;
     $scripts{$filename} = 1;
 
     # no checks necessary at all for scripts in /usr/share/doc/
@@ -384,7 +379,6 @@ while (<SCRIPTS>) {
 	}
     }
 }
-close(SCRIPTS);
 
 foreach (keys %executable) {
     tag("executable-not-elf-or-script", $_)

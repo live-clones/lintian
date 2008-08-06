@@ -42,7 +42,6 @@ my $has_binary_perl_file;
 my @nonbinary_perl_files_in_lib;
 
 my %linked_against_libvga;
-my %script = ();
 
 # read data from objdump-info file
 foreach my $file (sort keys %{$info->objdump_info}) {
@@ -67,15 +66,7 @@ if (defined $info->field('section')) {
 }
 
 # find out which files are scripts
-open(SCRIPTS, '<', "scripts") or fail("cannot open lintian scripts file: $!");
-while (<SCRIPTS>) {
-    chop;
-    m/^(?:env )?(\S*) (.*)$/ or fail("bad line in scripts file: $_");
-    my $filename = $2;
-    $filename =~ s%^\./%%;
-    $script{$filename} = 1;
-}
-close(SCRIPTS);
+my %script = map {$_ => 1} (sort keys %{$info->scripts});
 
 # We only want to warn about these once.
 my $warned_x11_predepends = 0;
