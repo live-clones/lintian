@@ -209,7 +209,7 @@ sub record_check_part {
 # Options: -X|--dont-check-part X
 sub record_dont_check_part {
     if (defined $action and $action eq 'check' and $dont_check) {
-	die("multiple -x or --dont-check-part options not allowed");
+	die("multiple -X or --dont-check-part options not allowed");
     }
     if ($checks) {
 	die("both -C or --check-part and -X or --dont-check-part options not allowed");
@@ -1005,7 +1005,7 @@ for my $f (readdir CHECKDIR) {
 
     # ignore check `lintian' (this check is a special case and contains the
     # tag info for the lintian frontend--this script here)
-    if ($secs[0]->{'check-script'} ne 'lintian') {
+    if ($script ne 'lintian') {
 
 	delete $secs[0]->{'check-script'};
 	$check_info{$script}->{'script'} = $script;
@@ -1197,7 +1197,7 @@ require Lintian::Collect;
 my %overrides;
 PACKAGE:
 for (reverse sort @packages) {
-    m/^([bsu]) (\S+) (\S+) (.+)$/ or fail("internal error: syntax error in \@packages array: $_");
+    m/^([bsu]) (\S+) (\S+) (.+)$/ or fail("syntax error in \@packages array: $_");
     my ($type,$pkg,$ver,$file) = ($1,$2,$3,$4);
     my $long_type = ($type eq 'b' ? 'binary' : ($type eq 's' ? 'source' : 'udeb' ));
 
