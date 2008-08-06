@@ -45,8 +45,8 @@ use lib "$ENV{'LINTIAN_ROOT'}/checks/";
 use common_data;
 
 # Read package contents...
-foreach (sort keys %{$info->{index}}) {
-    my $index_info = $info->{index}->{$_};
+foreach (sort keys %{$info->index}) {
+    my $index_info = $info->index->{$_};
     if (m,usr/(share/)?doc/$ppkg/copyright(\.\S+)?$,) {
 	my $ext = $2;
 

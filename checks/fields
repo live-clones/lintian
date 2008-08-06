@@ -399,8 +399,8 @@ if (defined $info->field('installer-menu-item')) {
 my $metapackage = 0;
 if ($type eq 'binary' && $arch_indep) {
 	$metapackage = 1;
-	foreach my $file (keys %{$info->{index}}) {
-		$metapackage = 0 unless ($info->{index}->{$file}->{type} =~ /^d/
+	foreach my $file (keys %{$info->index}) {
+		$metapackage = 0 unless ($info->index->{$file}->{type} =~ /^d/
 		    || $file =~ m%^usr/share/doc/%);
 	}
 }
