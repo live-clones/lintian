@@ -47,7 +47,7 @@ lintian (1.24.3) unstable; urgency=low
     + [ADB] Update a couple of Policy references.  Thanks Jordà Polo.
     + [ADB] Warn when a package embeds a copy of the Universal Feed Parser.
       Patch from Chris Lamb.  (Closes: #493156)
-    + [FL] Don't issue tag file-in-unusal-dir for files where we already
+    + [FL, ADB] Don't issue tag file-in-unusal-dir for files where we already
       issued one of the specific dir-or-file-in-* tags.  (Closes: #493921)
   * checks/huge-usr-share:
     + [ADB] Replace (the single) direct access to fields/* with ::field()

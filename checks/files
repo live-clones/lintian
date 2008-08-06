@@ -493,7 +493,7 @@ foreach my $file (sort keys %{$info->index}) {
 		or $file =~ m,^usr/iraf/,
 		or $file =~ m,^emul/ia32-linux/(lib|usr/lib)/,
 		# not allowed, but tested indivudually
-		or $file =~ m,^(mnt|opt|srv|(var/)?tmp)/,) {
+		or $file =~ m,^(mnt|opt|srv|((usr|var)/)?tmp)|var/www/,) {
 	    tag "file-in-unusual-dir", "$file";
 	}
     }
