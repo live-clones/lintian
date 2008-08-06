@@ -141,10 +141,6 @@ Info: The package installs a file in <tt>/usr/local/...</tt> which is
  not allowed.
 Ref: policy 9.1.2
 
-Tag: file-in-opt
-Type: error
-Info: The package installs a file in <tt>/opt/...</tt> which is not allowed.
-
 Tag: stray-directory-in-manpage-directory
 Type: error
 Info: This package installs a directory under <tt>/usr/share/man</tt> or
