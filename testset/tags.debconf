@@ -10,7 +10,6 @@ E: debconf-udeb udeb: udeb-postinst-must-not-call-ldconfig
 I: debconf source: no-complete-debconf-translation
 I: debconf source: package-needs-python-policy-debhelper
 I: debconf-test-noscripts: unused-debconf-template debconf/test
-I: debconf-test: debconf-error-requires-versioned-depends debconf/error
 I: debconf-test: unused-debconf-template debconf/1st-person
 I: debconf-test: unused-debconf-template debconf/error
 I: debconf-test: unused-debconf-template debconf/internal

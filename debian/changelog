@@ -24,6 +24,9 @@ lintian (1.24.3) unstable; urgency=low
     + [ADB] Replace fields/* access with Lintian::Collect::field()
     + [ADB] Don't flag the shared templates used for dictionaries-common
       co-ordination as unused.
+    + [FL] Remove debconf-error-requires-versioned-depends since post-lenny
+      a tag for the sake of sarge-backports clearly makes no sense anymore.
+      (Closes: #493920)
   * checks/description:
     + [RA] Don't warn about a synopsis that ends in "etc."  Patch from
       Chris Lamb.  (Closes: #491252)

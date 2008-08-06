@@ -225,11 +225,6 @@ foreach my $template (@templates) {
     } elsif ($template->{type} eq 'multiselect') {
 	$isselect=1;
 	$usesmultiselect=1;
-    } elsif ($template->{type} eq 'error') {
-        unless (Dep::implies($alldependencies, Dep::parse('debconf (>= 1.4.69) | cdebconf'))) {
-            tag "debconf-error-requires-versioned-depends", "$template->{template}"
-                unless $type eq 'udeb';
-        }
     } elsif ($template->{type} eq 'boolean') {
 	tag "boolean-template-has-bogus-default",
 	    "$template->{template} $template->{default}"
