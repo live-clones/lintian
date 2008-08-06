@@ -29,35 +29,68 @@ use warnings;
 # For each manual, we need:
 #  * Location of the manual directory on the local filesystem
 #  * Base URL for the eventual target of the reference
-#  * Regex to match the title
 #  * Regex to match the possible references
-#  * Mapping from regex fields to reference fields
+#  * Mapping from regex fields to reference fields (array of arrays of
+#    keywords: url, section title; the position of each keyword in the array
+#    defines which is its corresponding group in the regex)
 
-my $ddoc_title = qr/<title>(.+?)<\/title>/;
-my $ddoc_ref = qr/<a href="(.+?)">([A-Z]|[A-Z]?[\d\.]+?)\.?\s+([\w\s[:punct:]]+?)<\/a>/;
-my $ddoc_fields = [ [ 'url' ], [ 'section' ], [ 'title' ] ];
+my $title_re = qr/<title\s?>(.+?)<\/title\s?>/i;
+my $link_re = qr/<link href="(.+?)" rel="[\w]+" title="([A-Z]|[A-Z]?[\d\.]+?)\.?\s+([\w\s[:punct:]]+?)">/;
+my $index_re = qr/<a href="(.+?)">([A-Z]|[A-Z]?[\d\.]+?)\.?\s+([\w\s[:punct:]]+?)<\/a>/;
+my $fields = [ [ 'url' ], [ 'section' ], [ 'title' ] ];
 
 my %manuals = (
-    'policy' => [ '/usr/share/doc/debian-policy/policy.html/index.html',
-                  'http://www.debian.org/doc/debian-policy/',
-                  $ddoc_title, $ddoc_ref, $ddoc_fields ],
-    'devref' => [ '/usr/share/doc/developers-reference/index.html',
-                  'http://www.debian.org/doc/developers-reference/',
-                  $ddoc_title, $ddoc_ref, $ddoc_fields ],
-    'menu'   => [ '/usr/share/doc/menu/html/index.html',
-                  'http://www.debian.org/doc/packaging-manuals/menu.html/',
-                  $ddoc_title, $ddoc_ref, $ddoc_fields ],
-    'fhs'    => [ '/usr/share/doc/debian-policy/fhs/fhs-2.3.html',
-                  'http://www.pathname.com/fhs/pub/fhs-2.3.html',
-                  qr/<title\s*>(.+?)<\/title\s*>/i,
-                  qr/<a\s*href="(#.+?)"\s*>([\w\s[:punct:]]+?)<\/a\s*>/i,
-                  [ [ 'section', 'url' ], [ 'title' ] ] ],
+    'policy' => [
+        '/usr/share/doc/debian-policy/policy.html/index.html',
+        'http://www.debian.org/doc/debian-policy/',
+        $link_re, $fields
+    ],
+    'menu-policy' => [
+        '/usr/share/doc/debian-policy/menu-policy.html/index.html',
+        'http://www.debian.org/doc/packaging-manuals/menu-policy/',
+        $link_re, $fields
+    ],
+    'perl-policy' => [
+        '/usr/share/doc/debian-policy/perl-policy.html/index.html',
+        'http://www.debian.org/doc/packaging-manuals/perl-policy/',
+        $link_re, $fields
+    ],
+    'python-policy' => [
+        '/usr/share/doc/python/python-policy.html/index.html',
+        'http://www.debian.org/doc/packaging-manuals/python-policy/',
+        $link_re, $fields
+    ],
+    'devref' => [
+        '/usr/share/doc/developers-reference/index.html',
+        'http://www.debian.org/doc/developers-reference/',
+        $index_re, $fields
+    ],
+    'menu' => [
+        '/usr/share/doc/menu/html/index.html',
+        'http://www.debian.org/doc/packaging-manuals/menu.html/',
+        $index_re, $fields
+    ],
+    # Extract chapters only, since the HTML available in netfort.gr.jp isn't
+    # exactly the same with regards to section IDs as the version included in
+    # the package.
+    'libpkg-guide' => [
+        '/usr/share/doc/libpkg-guide/libpkg-guide.html',
+        'http://www.netfort.gr.jp/~dancer/column/libpkg-guide/libpkg-guide.html',
+        qr/class="chapter"><a href="(.+?)">([\d\.]+?)\.? ([\w\s[:punct:]]+?)<\/a>/,
+        $fields
+    ],
+    'fhs' => [
+        '/usr/share/doc/debian-policy/fhs/fhs-2.3.html',
+        'http://www.pathname.com/fhs/pub/fhs-2.3.html',
+        qr/<a\s*href="(#.+?)"\s*>([\w\s[:punct:]]+?)<\/a\s*>/i,
+        [ [ 'section', 'url' ], [ 'title' ] ]
+    ],
 );
 
 # Collect all possible references from available manuals.
 
 for my $manual (keys %manuals) {
-    my ($index, $url, $title_re, $ref_re, $fields) = @{$manuals{$manual}};
+    my ($index, $url, $ref_re, $fields) = @{$manuals{$manual}};
     my $title = 0;
 
     unless (-f $index) {
