@@ -95,6 +95,7 @@ Info: As of policy version 3.0.0.0, Debian no longer follows the FSSTND.
  .
  Instead, the Filesystem Hierarchy Standard (FHS), version 2.3, is
  used. You can find it in /usr/share/doc/debian-policy/fhs/ .
+Ref: policy 9.1.1
 
 Tag: FSSTND-dir-in-var
 Type: error
@@ -102,6 +103,7 @@ Info: As of policy version 3.0.0.0, Debian no longer follows the FSSTND.
  .
  Instead, the Filesystem Hierarchy Standard (FHS), version 2.3, is
  used. You can find it in /usr/share/doc/debian-policy/fhs/ .
+Ref: policy 9.1.1
 
 Tag: package-installs-into-etc-gconf-schemas
 Type: warning
@@ -348,6 +350,7 @@ Tag: run-parts-cron-filename-contains-full-stop
 Type: warning
 Info: The script in /etc/cron.&lt;time-interval&gt; will not be executed by
  run-parts(8) because the filename contains a "." (full stop).
+Ref: run-parts(8)
 
 Tag: bad-permissions-for-etc-cron.d-script
 Type: error
@@ -493,17 +496,20 @@ Info: All license information should be collected in the
 Tag: non-standard-toplevel-dir
 Type: error
 Info: The Filesystem Hierarchy Standard forbids the installation of new
- files or directories in the root directory, in section 3.
+ files or directories in the root directory.
+Ref: fhs therootfilesystem
 
 Tag: subdir-in-bin
 Type: error
 Info: The Filesystem Hierarchy Standard forbids the installation of new
  directories in <tt>/bin</tt>.
+Ref: fhs binessentialusercommandbinaries
 
 Tag: subdir-in-usr-bin
 Type: error
 Info: The Filesystem Hierarchy Standard forbids the installation of new
  directories in <tt>/usr/bin</tt> other than <tt>/usr/bin/mh</tt>.
+Ref: fhs usrbinmostusercommands
 
 Tag: non-standard-dir-in-usr
 Type: warning
@@ -511,6 +517,7 @@ Info: The FHS says "No large software packages should use a direct
  subdirectory under the <tt>/usr</tt> hierarchy".  This package contains
  a directory in <tt>/usr</tt> that is not mentioned in the Filesystem
  Hierarchy Standard.
+Ref: fhs theusrhierarchy
 
 Tag: non-standard-dir-in-var
 Type: error
@@ -518,6 +525,7 @@ Info: The FHS says "Applications should generally not add directories to
  the top level of <tt>/var</tt>.  Such directories should only be added
  if they have some system-wide implication, and in consultation with the
  FHS mailing list."
+Ref: fhs thevarhierarchy
 
 Tag: use-of-compat-symlink
 Type: error
@@ -544,6 +552,7 @@ Info: Packages built using the perl MakeMaker package will have a file
  .
  or by telling MakeMaker to use vendor install dirs; consult a recent
  version of Perl policy. Perl 5.6.0-12 or higher supports this.
+Ref: perl-policy 4.1
 
 Tag: zero-byte-file-in-doc-directory
 Type: warning
@@ -554,6 +563,7 @@ Type: error
 Info: Location of per package overrides the file
  /usr/share/lintian/overrides/package.  See the lintian documentation for more
  info on proper naming and format.
+Ref: lintian 2.4
 
 Tag: package-contains-upstream-install-documentation
 Type: warning
@@ -575,6 +585,7 @@ Info: The package contains a hardlink in <tt>/etc</tt> or across different
  does dpkg in certain cases.
  .
  A better solution might be using symlinks here.
+Ref: policy 10.7.3
 
 Tag: package-contains-bts-control-dir
 Type: warning
@@ -625,6 +636,7 @@ Info: Architecture-independent Perl code should be placed in
  <tt>/usr/share/perl5</tt>, not <tt>/usr/lib/perl5</tt>
  unless there is at least one architecture-dependent file
  in the module.
+Ref: perl-policy 2.3
 
 Tag: file-in-usr-lib-site-python
 Type: error
@@ -739,6 +751,7 @@ Info: This package provides at least one file in <tt>/usr/lib/debug</tt>,
  which is intended for detached debugging symbols, but the package name
  does not end in "-dbg".  Detached debugging symbols should be put into a
  separate package, Priority: extra, with a package name ending in "-dbg".
+Ref: devref 6.7.9
 
 Tag: package-contains-linda-override
 Type: warning

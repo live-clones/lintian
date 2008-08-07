@@ -234,6 +234,7 @@ Info: The maintainer script seems to calll <tt>start-stop-daemon</tt>
  directly.  Long-running daemons should be started and stopped via init
  scripts using <tt>invoke-rc.d</tt> rather than directly in maintainer
  scripts.
+Ref: policy 9.3.3.2
 
 Tag: maintainer-script-removes-device-files
 Type: error
@@ -319,6 +320,7 @@ Info: <tt>update-alternatives --remove &lt;alternative&gt; foo</tt> is
  .
  <tt>update-alternatives --remove</tt> should be called in the prerm
  instead.
+Ref: policy F, update-alternatives(8)
 
 Tag: deprecated-chown-usage
 Type: warning
@@ -326,6 +328,7 @@ Info: <tt>chown user.group</tt> is called in one of the maintainer
  scripts.  The correct syntax is <tt>chown user:group</tt>. Using "." as a
  separator is still supported by the GNU tools, but it will fail as soon
  as a system uses the "." in user or group names.
+Ref: chown(1)
 
 Tag: maintainer-script-hides-init-failure
 Type: warning

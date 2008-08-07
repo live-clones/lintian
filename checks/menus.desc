@@ -42,9 +42,9 @@ Info: The maintainer script calls the <tt>install-docs</tt> command without
 
 Tag: maintainer-script-calls-deprecated-wm-menu-config
 Type: warning
-Info: The use of the wm-menu-config script is deprecated because it's
- design had some serious flaws. Please see the menu documentation,
- chapter 5 for more information.
+Info: The use of the wm-menu-config script is deprecated because its design
+ had some serious flaws.
+Ref: menu 5
 
 Tag: preinst-calls-updatemenus
 Type: error
@@ -77,6 +77,7 @@ Info: As of menu, version 2.1.25, /usr/lib/menu as location for menu
  files is deprecated (but still works perfectly). Menu files should
  now be placed in /usr/share/menu instead. Only menu files that are
  actually binary executables still need to go to /usr/lib/menu.
+Ref: menu 3.1
 
 Tag: executable-in-usr-share-docbase
 Type: error
@@ -92,6 +93,7 @@ Info: Since the package installs a file in <tt>/usr/share/doc-base</tt>, the
   if [ -x /usr/sbin/install-docs ]; then
     /usr/sbin/install-docs -i /usr/share/doc-base/&lt;your-package&gt;
   fi
+Ref: doc-base 2.4
 
 Tag: prerm-does-not-call-installdocs
 Type: error
@@ -103,6 +105,7 @@ Info: Since the package installs a file in <tt>/usr/share/doc-base</tt>, the
   if [ -x /usr/sbin/install-docs ]; then
     /usr/sbin/install-docs -r &lt;your-package&gt; || true
   fi
+Ref: doc-base 2.4
 
 Tag: postinst-does-not-call-updatemenus
 Type: error
@@ -112,6 +115,7 @@ Info: Since the package installs a file in either <tt>/usr/lib/menu</tt> or
  .
  For example, use the following code in your maintainer script:
   if [ -x /usr/bin/update-menus ] ; then update-menus ; fi
+Ref: menu 4.2
 
 Tag: postrm-does-not-call-updatemenus
 Type: error
@@ -121,6 +125,7 @@ Info: Since the package installs a file in either <tt>/usr/lib/menu</tt> or
  .
  For example, use the following code in your maintainer script:
   if [ -x /usr/bin/update-menus ] ; then update-menus ; fi
+Ref: menu 4.2
 
 Tag: postinst-has-useless-call-to-update-menus
 Type: warning

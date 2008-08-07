@@ -167,6 +167,7 @@ Info: This package includes a *.so file in <tt>/usr/lib/perl5</tt>,
 
 Tag: debug-file-should-use-detached-symbols
 Type: warning
+Ref: devref 6.7.9
 Info: This file is in a location generally used for detached debugging
  symbols, but it appears to contain a complete copy of the executable or
  library instead of only the debugging symbols.  Files in subdirectories
