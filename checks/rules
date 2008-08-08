@@ -90,7 +90,7 @@ my %rules_per_target;
 my $debhelper_group;
 while (<RULES>) {
     next if /^\s*\#/;
-    $includes = 1 if /^ *[s-]?include\s+/;
+    $includes = 1 if m/^ *[s-]?include\s+/;
 
     # Check for DH_COMPAT settings outside of any rule, which are now
     # deprecated.  It's a bit easier structurally to do this here than in
@@ -177,8 +177,17 @@ unless ($includes) {
 }
 
 # Make sure we have no content for binary-arch if we are arch-indep:
-if ($architecture eq "all" && scalar @{$rules_per_target{'binary-arch'} || []}) {
-    tag "binary-arch-rules-but-pkg-is-arch-indep";
+$rules_per_target{'binary-arch'} ||= [];
+if ($architecture eq "all" && scalar @{$rules_per_target{'binary-arch'}}) {
+    my $nonempty = 0;
+    foreach (@{$rules_per_target{'binary-arch'}}) {
+	# dh binary-arch is actually a no-op if there is no
+	# Architecture: any package in the control file
+	unless (m/^\s*dh\s+(?:binary-arch|\$\@)/) {
+	    $nonempty = 1;
+	}
+    }
+    tag "binary-arch-rules-but-pkg-is-arch-indep" if $nonempty;
 }
 }
 1;

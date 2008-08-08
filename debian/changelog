@@ -104,6 +104,7 @@ lintian (1.24.3) unstable; urgency=low
       Polo.
   * checks/rules:
     + [ADB] Use ::Collect for field access.
+    + [FL] Do not complain about using dh in a unused binary-* target.
   * checks/scripts{,.desc}:
     + [RA] Warn about maintainer scripts that prepend a path to commands.
       Based on a patch by Raphael Geissert.  (Closes: #376184)
