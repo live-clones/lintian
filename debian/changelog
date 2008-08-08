@@ -122,13 +122,13 @@ lintian (1.24.3) unstable; urgency=low
     + [ADB] Update the description of tags to include experimental and info
       tags.
   * doc/README:
-    + [ADB] Add -E / --show-experimental to the option list
+    + [ADB] Add -E / --show-experimental, -T / --tags and --tags-from-file
+      to the option list.
   
   * frontend/lintian:
-    + [FL] Add new --tags/-T option to limit the amount of checks
+    + [FL, ADB] Add new --tags/-T option to limit the amount of checks
       run not by check names but by names of tags you're interested
-      in. This will not suppress other tags in the selected checks!
-      Requested by Joerg Jaspert for ftpmaster.  (Closes: #493903)
+      in.  Requested by Joerg Jaspert for ftpmaster.  (Closes: #493903)
     + [FL] Add --tags-from-file option to make it easier to specify
       a long list of tags.
 
@@ -140,6 +140,9 @@ lintian (1.24.3) unstable; urgency=low
     + [ADB] Add support for parsing the "scripts" index file
   * lib/Read_taginfo.pm:
     + [FL] Handle URLs in the Ref: field.
+  * lib/Tags.pm:
+    + [ADB] If --tags was used, don't issue tags that aren't in the provided
+      list.
 
   * man/lintian.1
     + [ADB] Update the list of check scripts, removing the no longer present

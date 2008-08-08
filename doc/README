@@ -59,6 +59,8 @@ Command line options of the lintian command
     -c, --check                check packages (default action)
     -C X, --check-part X       check only certain aspects
     -X X, --dont-check-part X  don't check certain aspects
+    -T X, --tags X             only run checks needed for requested tags
+    --tags-from-file X         like --tags, but read list from file
     -u, --unpack               only unpack packages in the lab
     -r, --remove               remove package from the lab
   General options:

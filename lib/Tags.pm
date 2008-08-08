@@ -47,6 +47,7 @@ our $max_severity = 99;
 our $min_significance = 1;
 our $max_significance = 99;
 our $color = 'never';
+our %only_issue_tags;
 
 # The master hash with all tag info. Key is the tag name, value another hash
 # with the following keys:
@@ -331,6 +332,9 @@ sub tag {
 	warn "Tried to issue tag $tag without setting package\n";
 	return 0;
     }
+
+    return 0 unless
+	! keys %only_issue_tags or exists $only_issue_tags{$tag};
 
     # Newlines in @information would cause problems, so replace them with \n.
     @information = map { s,\n,\\n,; $_ } @information;

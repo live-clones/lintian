@@ -89,12 +89,13 @@ For details, see the CHECKS section below.
 
 .TP
 .BR \-T " tag1,tag2,...m " \-\-tags " tag1,tag2,..."
-Run only the checks that issue the requested tags.  This
-will not supress other tags issues by the checks' run!
+Run only the checks that issue the requested tags.  The tests for
+other tags within the check scripts will be run but the tags will
+not be issued.
 
 .TP
 .BR \-\-tags\-from\-file " filename"
-Same functionality like
+Same functionality as
 .BR \-\-tags ,
 but read the list of tags from a file, one per line.
 

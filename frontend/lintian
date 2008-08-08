@@ -1023,6 +1023,8 @@ $Tags::show_info = $display_infotags;
 $Tags::show_experimental = $display_experimentaltags;
 $Tags::show_overrides = $show_overrides;
 $Tags::color = $color;
+%Tags::only_issue_tags = map { $_ => 1 } (split(/,/, $check_tags))
+    if defined $check_tags;
 use warnings;
 
 # load information about checker scripts
