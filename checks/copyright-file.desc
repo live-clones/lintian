@@ -133,7 +133,7 @@ Tag: copyright-refers-to-incorrect-directory
 Type: error
 Ref: policy 12.5
 Info: In the directory name /usr/share/common-licenses, licenses is spelled
- with an `s', not with as licences with a `c'.
+ with an `s', not as licences with a `c'.
 
 Tag: copyright-file-lacks-pointer-to-perl-license
 Type: error
@@ -165,7 +165,7 @@ Info: The strings "GNU Free Documentation License" or "GFDL" appear in the
  .
  If the package uses some other license that just mentions the GFDL and
  that Lintian should detect as an exception, please file a Lintian bug.
- If the copyright file must mention the GPL for reasons other than stating
+ If the copyright file must mention the GFDL for reasons other than stating
  the license of the package, please add a Lintian override.
 
 Tag: copyright-should-refer-to-common-license-file-for-lgpl
@@ -179,7 +179,7 @@ Info: The strings "GNU Lesser General Public License", "GNU Library
  .
  If the package uses some other license that just mentions the LGPL and
  that Lintian should detect as an exception, please file a Lintian bug.
- If the copyright file must mention the GPL for reasons other than stating
+ If the copyright file must mention the LGPL for reasons other than stating
  the license of the package, please add a Lintian override.
 
 Tag: copyright-lists-upstream-authors-with-dh_make-boilerplate

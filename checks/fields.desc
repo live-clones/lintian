@@ -43,7 +43,7 @@ Tag: debian-revision-not-well-formed
 Type: warning
 Info: The debian version part (the part after the -) should consist of one
  or two dot-separated parts: one for a regular maintainer release or two
- for a source-NMU,
+ for a source-NMU.
 
 Tag: debian-revision-should-not-be-zero
 Type: warning
@@ -375,13 +375,13 @@ Info: The name of this package suggests that it is a documentation package.
 Tag: depends-on-obsolete-package
 Type: error
 Info: The package depends on a package that has been superseded.
-  If the superseded package is part of an ORed group, it should not be
-  the first package in the group.
+ If the superseded package is part of an ORed group, it should not be
+ the first package in the group.
 
 Tag: ored-depends-on-obsolete-package
 Type: info
 Info: The package depends on an ORed group of packages which includes
-  a package that has been superseded.
+ a package that has been superseded.
 
 Tag: build-depends-on-obsolete-package
 Type: error

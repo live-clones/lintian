@@ -295,10 +295,10 @@ Info: Templates which are not used by the package should be removed from
  This will reduce the size of the templates database and prevent
  translators from unnecessarily translating the template's text.
  .
- In some cases, the template is used but lintian is unable to determine
+ In some cases, the template is used but Lintian is unable to determine
  this.  Common causes are:
  .
- - the maintainer scripts embed a variable in to the template name in
+ - the maintainer scripts embed a variable in the template name in
  order to allow a template to be selected from a range of similar
  templates (e.g. 'db_input low start_$service_at_boot')
  .
@@ -308,4 +308,4 @@ Info: Templates which are not used by the package should be removed from
  - the maintainer scripts are written in perl.  lintian currently only
  understands the shell script debconf functions.
  .
- If any of the above applies, please install an override.
+ If any of the above apply, please install an override.

@@ -3,9 +3,11 @@ lintian (1.24.3) unstable; urgency=low
   * checks/binaries:
     + [ADB] Use Lintian::Collect throughout rather than reparsing file-info
       and objdump-info.
-  * checks/changelog-file:
+  * checks/changelog-file{,.desc}:
     + [ADB] Use Lintian::Collect instead of reading the fields/*, file-info
       and objdump-info files.
+    + [ADB] Remove a misplaced word from the description of the tag
+      "debian-changelog-file-contains-invalid-email-address".
   * checks/copyright-file{,.desc}:
     + [ADB] Drop the "copyright line too long" check.  Most of the issues
       it flags aren't easily fixable, particularly where the copyright file
@@ -15,6 +17,8 @@ lintian (1.24.3) unstable; urgency=low
     + [ADB] Don't flag use of version 1 of the GPL, or licenses using phrases
       such as "compatible with the GPL" (for example, the W3C Software
       License) as missing a reference to common-licenses
+    + [ADB] Replace references to the GPL in GFDL and LGPL related tags
+      with the appropriate license.  Also remove a misplaced word.
   * checks/cruft:
     + [ADB] Use Lintian::Collect for accessing control fields
   * checks/debconf:
@@ -40,6 +44,7 @@ lintian (1.24.3) unstable; urgency=low
       from control files rather than reading the fields/* files. This and
       similar changes to other scripts should improve performance as the
       Collect object caches the lookup result.
+    + [ADB] Reformat a couple of tags' descriptions.
   * checks/files{,.desc}:
     + [ADB] Switch to using Lintian::Collect.
     + [ADB] Fix a couple of bugs in the parsing of the list of scripts
@@ -50,6 +55,8 @@ lintian (1.24.3) unstable; urgency=low
       Patch from Chris Lamb.  (Closes: #493156)
     + [FL, ADB] Don't issue tag file-in-unusal-dir for files where we already
       issued one of the specific dir-or-file-in-* tags.  (Closes: #493921)
+    + [ADB] Add a missing "have" to package-contains-ancient-file's
+      description.
   * checks/huge-usr-share:
     + [ADB] Replace (the single) direct access to fields/* with ::field()
     + [ADB] Replace an outdated link to the Developer's Reference.
