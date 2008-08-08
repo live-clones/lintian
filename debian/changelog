@@ -147,6 +147,9 @@ lintian (1.24.3) unstable; urgency=low
     + [FL] Document the new --tags/-T option.
     + [FL] Document the new --tags-from-file option.
 
+  * reporting/templates/index.tmpl:
+    + [RA] Add a link to lintian.log.  Suggested by Stefano Zacchiroli.
+
   * testset/fields:
     + [ADB] New testset from Tobias Quathamer (including some tags which
       previously weren't tested)
