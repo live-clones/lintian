@@ -123,8 +123,9 @@ Ref: policy 8.6
 
 Tag: shlibs-declares-dependency-on-other-package
 Type: warning
-Info: This package declares in its shlibs control file a dependency on
- some other package (and not one listed in the Provides of this package).
+Info: This package declares in its shlibs control file either a dependency
+ on some other package not listed in the Provides of this package or on a
+ version of this package that the package version doesn't satisfy.
  .
  Packages should normally only list in their shlibs control file the
  shared libraries included in that package, and therefore the dependencies

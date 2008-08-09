@@ -1,3 +1,11 @@
+lintian (1.24.4) UNRELEASED; urgency=low
+
+  * checks/shared-libs.desc:
+    + [RA] Clarify that shlibs-declares-dependency-on-other-package can be
+      issued for a version mismatch.  (Closes: #494400)
+
+ --
+
 lintian (1.24.3) unstable; urgency=low
   
   The "greetings from Argentina" release.
