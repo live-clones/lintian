@@ -172,3 +172,10 @@ foobar@()
 {
   # As is this
 }
+
+# This is ok
+read -r foo
+# but these aren't
+read -r
+read -p "Would you like to restart the service?" foo bar
+read --fish
