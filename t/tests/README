@@ -12,15 +12,17 @@ lintian-info-...
 The .desc file names should start with a number to get a more
 deterministic order. You do not need to use unique numbers, only
 enough to make the order deterministic and to your liking!
+You should use the middle of the assigned range as default
+number and only divert from it if you have a reason to.
 
 Number ranges:
 
 0000 - 0999	Basic test, that generally just assure that the test
 		suite and lintian are not completly broken
-1000 - 1999	Tests for lib/
-2000 - 2999	Tests for frontend/
-3000 - 3999	Tests for unpack/
-4000 - 4999	Tests for collection/
-5000 - 6999	Tests for checks/
+1000 - 1999	Tests for lib/       [1500]
+2000 - 2999	Tests for frontend/  [2500]
+3000 - 3999	Tests for unpack/    [3500]
+4000 - 4999	Tests for collection/[4500]
+5000 - 6999	Tests for checks/    [6000]
 7000 - 8999	<unused>
-9000 - 9999	Tests for reporting/
+9000 - 9999	Tests for reporting/ [9500]
