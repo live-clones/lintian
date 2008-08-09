@@ -1,5 +1,8 @@
 lintian (1.24.4) UNRELEASED; urgency=low
 
+  * checks/cruft{,.desc}:
+    + [FL] Add new check for outdated libtool files.
+      (Closes: #293296)
   * checks/scripts:
     + [ADB] Split the "read without variable or with invalid options" bashism
       test in two, thus enabling the checks to be more accurate and avoiding

@@ -223,6 +223,26 @@ sub find_cruft {
             }
         }
         close F;
+    } elsif ($name =~ m,^(.+/)?ltconfig$,) {
+        tag "ancient-libtool", $name;
+    } elsif ($name =~ m,^(.+/)?ltmain\.sh$,) {
+        my $b = basename $name;
+        open (F, '<', $b) or die "can't open $name: $!";
+        while (<F>) {
+            if (/^VERSION=["']?(1\.(\d)\.(\d+)(?:-(\d))?)/) {
+                my ($version, $major, $minor, $debian) = ($1, $2, $3, $4);
+                if ($major < 5 or ($major == 5 and $minor < 2)) {
+                    tag "ancient-libtool", $name, $version;
+                } elsif ($minor == 2 and (!$debian or $debian < 2)) {
+                    tag "ancient-libtool", $name, $version;
+                } elsif ($minor < 24) {
+                    # not entirely sure whether that would be good idea
+#                    tag "outdated-libtool", $name, $version;
+                }
+                last;
+            }
+        }
+        close F;
     }
 }
 1;

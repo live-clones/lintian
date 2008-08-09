@@ -251,6 +251,21 @@ Info: The referenced file has a time stamp older than year 2004 and the
  Read /usr/share/doc/autotools-dev/README.Debian.gz (from the
  autotools-dev package) for information on how to fix this problem.
 
+Tag: ancient-libtool
+Type: warning
+Info: The referenced file seems to be from a libtool version
+ older than 1.5.2-2.  This might lead to build errors on some
+ newer architectures not known to this libtool.
+ .
+ Please ask your upstream maintainer to re-libtoolize the
+ package or do it yourself in case there is no active upstream
+ anymore.  Beware that might mean you need to update autoconf, too,
+ if you use a very old version there as well.
+ .
+ If you have not updated the file but fixed architecture-specific
+ issues with minimal patches and verified that it builds correctly
+ please override this tag.  lintian will not be able to verify that.
+
 Tag: diff-contains-bts-control-dir
 Type: warning
 Info: The Debian diff or native package contains files in a directory
