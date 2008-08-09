@@ -1,4 +1,6 @@
 lintian (1.24.3) unstable; urgency=low
+  
+  The "greetings from Argentina" release.
 
   * checks/binaries:
     + [ADB] Use Lintian::Collect throughout rather than reparsing file-info
@@ -171,7 +173,7 @@ lintian (1.24.3) unstable; urgency=low
     + [ADB] Munge .changes filenames so that the tests produce consistent
       output across architectures
 
- -- 
+ -- Frank Lichtenheld <djpig@debian.org>  Fri, 08 Aug 2008 20:32:56 -0300
 
 lintian (1.24.2) unstable; urgency=low
 
