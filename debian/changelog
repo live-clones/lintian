@@ -128,6 +128,10 @@ lintian (1.24.3) unstable; urgency=low
     + [ADB] Resynchronize with doc-base's section list (adding
       Programming/OCaml).  (Closes: #491440)
 
+  * debian/postrm:
+    + [FL] Do not try to remove /var/spool/lintian if it doesn't exist
+      (dpkg might already removed it at this point).
+
   * doc/desc-files:
     + [ADB] Update the description of tags to include experimental and info
       tags.
@@ -173,7 +177,7 @@ lintian (1.24.3) unstable; urgency=low
     + [ADB] Munge .changes filenames so that the tests produce consistent
       output across architectures
 
- -- Frank Lichtenheld <djpig@debian.org>  Fri, 08 Aug 2008 20:32:56 -0300
+ -- Frank Lichtenheld <djpig@debian.org>  Sat, 09 Aug 2008 00:35:13 -0300
 
 lintian (1.24.2) unstable; urgency=low
 
