@@ -2,6 +2,10 @@ lintian (1.24.2.1) unstable; urgency=low
 
   The "for the sake of stable users" release.
 
+  * debian/postrm:
+    + [FL] Do not try to remove /var/spool/lintian if it doesn't exist
+      (dpkg might already removed it at this point).
+
  -- Frank Lichtenheld <djpig@debian.org>  Sat, 09 Aug 2008 10:46:44 -0300
 
 lintian (1.24.2) unstable; urgency=low

@@ -11,7 +11,7 @@ if [ "$1" = "purge" ]; then
         rm -rf /var/spool/lintian/udeb
         rm -rf /var/spool/lintian/info
     fi
-    rmdir --ignore-fail-on-non-empty /var/spool/lintian
+    [ ! -d /var/spool/lintian ] || rmdir --ignore-fail-on-non-empty /var/spool/lintian
 fi
 
 #DEBHELPER#
