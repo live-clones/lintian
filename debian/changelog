@@ -1,5 +1,9 @@
 lintian (1.24.4) UNRELEASED; urgency=low
 
+  * checks/scripts:
+    + [ADB] Split the "read without variable or with invalid options" bashism
+      test in two, thus enabling the checks to be more accurate and avoiding
+      an uninitialized variable warning.  (Closes: #494450)
   * checks/shared-libs.desc:
     + [RA] Clarify that shlibs-declares-dependency-on-other-package can be
       issued for a version mismatch.  (Closes: #494400)

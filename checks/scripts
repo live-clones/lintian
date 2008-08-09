@@ -565,8 +565,10 @@ while (<SCRIPTS>) {
 		  qr'\s(\|\&)',		         # pipelining is not POSIX
 		  qr'[^\\\$]\{(?:[^\s\\\}]+?,)+[^\\\}\s]+\}', # brace expansion
 		  qr'(?:^|\s+)\w+\[\d+\]=',      # bash arrays, H[0]
-		  $LEADIN . qr'(read\s*(-[^r]+)*(?:;|$))',
-			# read without variable or with option other than -r
+		  $LEADIN . qr'read\s+(?:-[a-qs-zA-Z\d-]+)',
+			# read with option other than -r
+		  $LEADIN . qr'read\s*(?:-\w+\s*)*(?:\".*?\"|[\'].*?[\'])?\s*(?:;|$)',
+			# read without variable
 		  $LEADIN . qr'kill\s+-[^sl]\w*',# kill -[0-9] or -[A-Z]
 		  $LEADIN . qr'trap\s+["\']?.*["\']?\s+.*[1-9]', # trap with signal numbers
 		  qr'\&>',		         # cshism
