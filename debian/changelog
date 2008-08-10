@@ -10,6 +10,10 @@ lintian (1.24.4) UNRELEASED; urgency=low
   * checks/shared-libs.desc:
     + [RA] Clarify that shlibs-declares-dependency-on-other-package can be
       issued for a version mismatch.  (Closes: #494400)
+  
+  * frontend/lintian:
+    + [FL] Do not try to use fail() before the lintian libraries are
+      loaded.
 
  --
 

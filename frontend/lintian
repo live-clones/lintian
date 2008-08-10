@@ -411,7 +411,7 @@ if ($LINTIAN_CFG) {
 # read configuration file
 if ($LINTIAN_CFG) {
     open(CFG, '<', $LINTIAN_CFG)
-	or fail("cannot open configuration file $LINTIAN_CFG for reading: $!");
+	or die("cannot open configuration file $LINTIAN_CFG for reading: $!");
     while (<CFG>) {
 	chop;
 	s/\#.*$//go;
@@ -435,7 +435,7 @@ if ($LINTIAN_CFG) {
 	} elsif (m/^\s*LINTIAN_ARCH\s*=\s*(.*\S)\s*$/i) {
 	    $LINTIAN_ARCH = $1;
 	} else {
-	    fail("syntax error in configuration file: $_","(Note, that the syntax of the configuration file has been changed\nwith Lintian v0.3.0. In most cases, you don't need a configuration\nfile anymore -- just remove it.)");
+	    die("syntax error in configuration file: $_","(Note, that the syntax of the configuration file has been changed\nwith Lintian v0.3.0. In most cases, you don't need a configuration\nfile anymore -- just remove it.)");
 	}
     }
     close(CFG);
@@ -529,7 +529,7 @@ if (defined($unpack_level)) {
     }
 }
 unless (($unpack_level == 0) or ($unpack_level == 1) or ($unpack_level == 2)) {
-    fail("bad unpack level $unpack_level specified");
+    die("bad unpack level $unpack_level specified");
 }
 
 $LINTIAN_UNPACK_LEVEL = $unpack_level;
