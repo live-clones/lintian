@@ -59,21 +59,21 @@ Ref: menu 5
 Tag: preinst-calls-updatemenus
 Type: error
 Severity: important
-Certainty: possible
+Certainty: certain
 Info: The preinst script calls the <tt>update-menus</tt> command. Usually,
  this command should be called from the <tt>postinst</tt> maintainer script.
 
 Tag: preinst-calls-installdocs
 Type: error
 Severity: important
-Certainty: possible
+Certainty: certain
 Info: The preinst script calls the <tt>install-docs</tt> command. Usually,
  this command should be called from the <tt>postinst</tt> maintainer script.
 
 Tag: prerm-calls-updatemenus
 Type: error
 Severity: important
-Certainty: possible
+Certainty: certain
 Info: The prerm script calls the <tt>update-menus</tt> command. Usually,
  this command should be called from the <tt>postrm</tt> maintainer script.
 
@@ -290,7 +290,7 @@ Tag: doc-base-file-duplicated-field
 Type: error
 Severity: important
 Certainty: certain
-Info: The doc-base control file contains duplicated field.
+Info: The doc-base control file contains a duplicated field.
 
 Tag: doc-base-file-duplicated-format
 Type: error

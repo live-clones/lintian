@@ -10,7 +10,7 @@ Info: This script checks if a binary package conforms to policy
 Tag: package-contains-ancient-file
 Type: error
 Severity: important
-Certainty: possible
+Certainty: certain
 Info: Your package contains a file that claims to have been generated
  more than 20 years ago. This is most probably an error. Your package
  will be rejected by the Debian archive scripts if it contains a file
@@ -292,7 +292,7 @@ Info: The file is tagged SETUID and SETGID. In some cases this is
 Tag: non-standard-file-perm
 Type: warning
 Severity: normal
-Certainty: possible
+Certainty: certain
 Info: The file has a mode different from 0644. In some cases this is
  intentional, but in other cases this is a bug.
 Ref: policy 10.9
@@ -890,7 +890,7 @@ Info: This package installs a file in <tt>/usr/lib/sgml</tt>.  This was
 Tag: file-name-ends-in-whitespace
 Type: warning
 Severity: normal
-Certainty: possible
+Certainty: certain
 Info: This package installs a file or directory whose name ends in
  whitespace.  This might be intentional but it's normally a mistake.  If
  it is intentional, add a lintian override.
@@ -900,8 +900,8 @@ Info: This package installs a file or directory whose name ends in
 
 Tag: package-contains-empty-directory
 Type: warning
-Severity: normal
-Certainty: possible
+Severity: wishlist
+Certainty: certain
 Info: This package installs an empty directory.  This might be intentional
  but it's normally a mistake.  If it is intentional, add a lintian override.
  .

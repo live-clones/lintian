@@ -9,7 +9,7 @@ Info: This script checks whether an architecture-dependent package doesn't
 Tag: arch-dep-package-has-big-usr-share
 Type: info
 Severity: wishlist
-Certainty: possible
+Certainty: certain
 Info: The package has a significant amount of architecture-independent data in
  /usr/share, while it is an architecture-dependent package.
  This is wasteful of mirror space and bandwidth, as we then end up with

@@ -9,7 +9,7 @@ Needs-Info: debfiles
 Tag: dpatch-build-dep-but-no-patch-list
 Type: warning
 Severity: normal
-Certainty: possible
+Certainty: certain
 Info: Using dpatch requires you to explicitly list all patches you want
  to apply in debian/patches/00list. This package build-depends on dpatch,
  but does not provide a patch list.
@@ -34,7 +34,7 @@ Info: dpatch files should carry a description of the function of the included
 Tag: quilt-build-dep-but-no-series-file
 Type: warning
 Severity: normal
-Certainty: possible
+Certainty: certain
 Info: Using quilt requires you to explicitly list all patches you want
  to apply in debian/patches/series. This package build-depends on quilt,
  but does not provide a patch list.

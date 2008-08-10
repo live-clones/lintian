@@ -8,7 +8,7 @@ Info: This script checks binaries and object files for bugs.
 
 Tag: arch-independent-package-contains-binary-or-object
 Type: error
-Severity: important
+Severity: serious
 Certainty: certain
 Info: The package contains a binary or object file but is tagged
  Architecture: all.
@@ -29,7 +29,7 @@ Info: The package installs an unstripped binary or object file.
 
 Tag: library-in-debug-or-profile-should-not-be-stripped
 Type: error
-Severity: normal
+Severity: important
 Certainty: certain
 Info: Libraries in <tt>.../lib/debug</tt> or in
  <tt>.../lib/profile</tt> usually should not be stripped.
@@ -176,7 +176,7 @@ Info: This appears to be an ELF file but objdump -T doesn't recognize it
 
 Tag: missing-dependency-on-libc
 Type: error
-Severity: important
+Severity: serious
 Certainty: certain
 Ref: policy 8.6
 Info: The listed file appears to be linked against the C library, but the
@@ -192,7 +192,7 @@ Info: The listed file appears to be linked against the C library, but the
 
 Tag: missing-dependency-on-perlapi
 Type: error
-Severity: important
+Severity: serious
 Certainty: certain
 Ref: perl-policy 4.4.2
 Info: This package includes a *.so file in <tt>/usr/lib/perl5</tt>,

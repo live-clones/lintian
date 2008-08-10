@@ -122,13 +122,13 @@ Info: The long description of one of the templates provided by this package
 Tag: config-does-not-load-confmodule
 Type: warning
 Severity: normal
-Certainty: possible
+Certainty: certain
 Info: The config script must load one of the debconf libraries.
 
 Tag: postinst-uses-db-input
 Type: warning
 Severity: normal
-Certainty: possible
+Certainty: certain
 Info: It is generally not a good idea for postinst scripts to use debconf
  commands like <tt>db_input</tt>. Typically, they should restrict themselves
  to <tt>db_get</tt> to request previously acquired information, and have the
@@ -182,7 +182,7 @@ Info: The debconf `config' script in the package control area must be
 
 Tag: no-debconf-config
 Type: warning
-Severity: normal
+Severity: important
 Certainty: possible
 Info: The package contains a `templates' file in its control area but has no
  corresponding `config' script. This is occasionally OK, but is usually an
@@ -218,7 +218,7 @@ Ref: devref 6.5.1, debconf-devel(7)
 Tag: malformed-prompt-in-templates
 Type: warning
 Severity: normal
-Certainty: possible
+Certainty: certain
 Info: The short description of a select, multiselect, string and password
  debconf template is a prompt and not a title. Avoid question style
  prompts ("IP Address?") in favour of "opened" prompts ("IP address:").
@@ -231,7 +231,7 @@ Ref: devref 6.5.4.2
 Tag: malformed-title-in-templates
 Type: warning
 Severity: normal
-Certainty: possible
+Certainty: certain
 Info: The short description of a note debconf template should be written
  as a title and therefore should not end with a period, question mark,
  colon, or semicolon.
@@ -240,7 +240,7 @@ Ref: devref 6.5.4.2.4
 Tag: malformed-question-in-templates
 Type: warning
 Severity: normal
-Certainty: possible
+Certainty: certain
 Info: The short description of a boolean debconf template should be
  phrased in the form of a question which should be kept short and should
  generally end with a question mark. Terse writing style is permitted and
@@ -253,7 +253,7 @@ Ref: devref 6.5.4.2.2
 Tag: using-question-in-extended-description-in-templates
 Type: warning
 Severity: normal
-Certainty: possible
+Certainty: certain
 Info: The extended description of a debconf template should never include
  a question.
  .
@@ -264,7 +264,7 @@ Ref: devref 6.5.3.2
 Tag: using-imperative-form-in-templates
 Type: warning
 Severity: normal
-Certainty: possible
+Certainty: certain
 Info: Do not use useless imperative constructions such as "Please choose...",
  "Enter...". The interface will make it obvious that the user needs to
  choose or enter something.

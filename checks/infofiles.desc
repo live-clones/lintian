@@ -59,7 +59,7 @@ Ref: policy 12.2
 Tag: postrm-calls-install-info
 Type: warning
 Severity: normal
-Certainty: possible
+Certainty: certain
 Ref: policy 12.2
 Info: The postrm script calls the <tt>install-info</tt> command. Usually,
  this command should be called from the <tt>prerm</tt> maintainer script.
@@ -67,7 +67,7 @@ Info: The postrm script calls the <tt>install-info</tt> command. Usually,
 Tag: preinst-calls-install-info
 Type: error
 Severity: important
-Certainty: possible
+Certainty: certain
 Ref: policy 12.2
 Info: The preinst script calls the <tt>install-info</tt> command. Usually,
  this command should be called from the <tt>postinst</tt> maintainer script.

@@ -311,7 +311,7 @@ Info: Lintian found a spelling error in the copyright file.  Lintian has a
 
 Tag: possible-gpl-code-linked-with-openssl
 Type: warning
-Severity: important
+Severity: serious
 Certainty: wild-guess
 Info: This package appears to be covered by the GNU GPL but depends on
  the OpenSSL libssl package and does not mention a license exemption or

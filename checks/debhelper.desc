@@ -86,7 +86,7 @@ Info: The source package has an empty debian/compat file. This is an error,
 Tag: declares-possibly-conflicting-debhelper-compat-versions
 Type: error
 Severity: important
-Certainty: possible
+Certainty: certain
 Ref: debhelper(7)
 Info: The source package declares the debhelper compatibility version
  both in the <tt>debian/compat</tt> file and in the <tt>debian/rules</tt>

@@ -9,7 +9,7 @@ Needs-Info: debfiles, diffstat
 Tag: native-package-with-dash-version
 Type: warning
 Severity: normal
-Certainty: possible
+Certainty: certain
 Info: Native packaging should only be used if a piece of software was
  written specifically to be turned into a Debian package. In this case,
  the version number should not contain a debian revision part.
@@ -21,14 +21,14 @@ Info: Native packaging should only be used if a piece of software was
 Tag: documentation-package-not-architecture-independent
 Type: warning
 Severity: normal
-Certainty: possible
+Certainty: certain
 Info: Documentation packages usually shouldn't carry anything that requires
  recompiling on various architectures, in order to save space on mirrors.
 
 Tag: debian-files-list-in-source
 Type: error
 Severity: important
-Certainty: possible
+Certainty: certain
 Info: Leaving <tt>debian/files</tt> causes problems for the autobuilders,
  since that file will likely include the list of .deb files for another
  architecture, which will cause dpkg-buildpackage run by the buildd to fail.
@@ -274,7 +274,7 @@ Info: The Debian diff or native package contains a file ending in
 Tag: diff-contains-substvars
 Type: warning
 Severity: normal
-Certainty: possible
+Certainty: certain
 Info: Lintian found a substvars file in the Debian diff for this source 
  package. The debian/substvars file is usually generated and modified
  dynamically by debian/rules targets, in which case it must be removed by
@@ -284,7 +284,7 @@ Ref: policy 4.9
 Tag: configure-generated-file-in-source
 Type: warning
 Severity: normal
-Certainty: possible
+Certainty: certain
 Info: Leaving config.cache/status causes autobuilders problems.
  config.cache and config.status are produced by GNU autoconf's configure
  scripts. If they are left in the source package, autobuilders may pick
@@ -303,7 +303,7 @@ Info: Leaving config.cache/status causes autobuilders problems.
 Tag: outdated-autotools-helper-file
 Type: error
 Severity: important
-Certainty: possible
+Certainty: certain
 Info: The referenced file has a time stamp older than year 2004 and the
  package does not build-depend on autotools-dev or automake and therefore
  apparently does not update it. This usually means that the source package

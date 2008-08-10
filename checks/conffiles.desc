@@ -18,11 +18,10 @@ Info: Files below <tt>/usr</tt> may not be marked as conffiles, since
 Tag: non-etc-file-marked-as-conffile
 Type: warning
 Severity: important
-Certainty: possible
+Certainty: certain
 Info: A file installed in some other directory than <tt>/etc</tt>
  is marked as conffile. A conffile typically implies a configuration file, and
  policy mandates such files to be in /etc
-Status: untested
 Ref: policy 10.7.2
 
 Tag: relative-conffile

@@ -89,7 +89,7 @@ Ref: policy 5.6.8
 Tag: unknown-architecture
 Type: warning
 Severity: normal
-Certainty: certain
+Certainty: possible
 Info: This package claims to be for an unknown architecture.  The
  architecture should be one of the values supported by dpkg or one of the
  special values "all" or "any".  The special value "source" is only used
@@ -115,7 +115,7 @@ Ref: policy 5.6.8
 Tag: aspell-package-not-arch-all
 Type: warning
 Severity: normal
-Certainty: possible
+Certainty: certain
 Info: This package appears to be an aspell dictionary package, but it is
  not Architecture: all.  The binary hashes should be built at install-time
  by calling aspell-autobuildhash, so the contents of the package should be
@@ -128,7 +128,6 @@ Severity: serious
 Certainty: certain
 Info: The package does not have a `Maintainer:' field in its control file.
 Ref: policy 5.3
-Tested: empty
 
 Tag: maintainer-name-missing
 Type: error
