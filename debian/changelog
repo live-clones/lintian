@@ -13,6 +13,21 @@ lintian (1.24.4) UNRELEASED; urgency=low
 
  --
 
+lintian (1.24.2.1) testing; urgency=high
+
+  The "for the sake of lenny users" release.
+
+  * checks/copyright-file{,.desc}:
+    + [ADB] Drop the "copyright line too long" check.  Most of the issues
+      it flags aren't easily fixable, particularly where the copyright file
+      is (semi)automatically generated.  (Closes: #491302, #491365, #491685)
+
+  * debian/postrm:
+    + [FL] Do not try to remove /var/spool/lintian if it doesn't exist
+      (dpkg might already removed it at this point).
+
+ -- Frank Lichtenheld <djpig@debian.org>  Sat, 09 Aug 2008 19:31:26 -0300
+
 lintian (1.24.3) unstable; urgency=low
   
   The "greetings from Argentina" release.
