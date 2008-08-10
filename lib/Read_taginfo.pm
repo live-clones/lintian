@@ -111,8 +111,9 @@ sub format_ref {
     foreach my $ref (split(/,\s?/, $header)) {
         if ($ref =~ /^([\w-]+)\s(.+)$/) {
             $text = manual_ref($1, $2);
-        } elsif ($ref =~ /^[\w_-]+\(\d\)$/) {
-            $text = "the $ref manual page";
+        } elsif ($ref =~ /^([\w_-]+)\((\d)\)$/) {
+            $text = "the <a href='http://manpages.debian.net/cgi-bin/".
+                    "man.cgi?query=$1&sektion=$2'>$ref</a> manual page";
         } elsif ($ref =~ /^(?:ftp|https?):\/\//) {
             $text = "<a href='$ref'>$ref</a>";
         }
