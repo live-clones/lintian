@@ -1,6 +1,7 @@
 #!/usr/bin/perl -w
 
-# Copyright (C) 2001 Colin Watson
+# Copyright © 2001 Colin Watson
+# Copyright © 2008 Jordà Polo
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,87 +19,83 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-# Invoke as ./manual_refs_update.pl manual_refs > manual_refs.new
+# Invoke as ./manual_refs_update.pl > manual_refs.new
 # You need copies of all the relevant manuals installed in the standard
 # places locally.
 
-# Currently, this is only likely to work with the HTML output by
-# DebianDoc-SGML. This seems to be OK for all the necessary manuals for now.
-
 use strict;
+use warnings;
 
-# Location of the manual directory on the local filesystem, and base URL for
-# the eventual target of the reference.
+# For each manual, we need:
+#  * Location of the manual directory on the local filesystem
+#  * Base URL for the eventual target of the reference
+#  * Regex to match the title
+#  * Regex to match the possible references
+#  * Mapping from regex fields to reference fields
+
+my $ddoc_title = qr/<title>(.+?)<\/title>/;
+my $ddoc_ref = qr/<a href="(.+?)">([A-Z]|[A-Z]?[\d\.]+?)\.?\s+([\w\s[:punct:]]+?)<\/a>/;
+my $ddoc_fields = [ [ 'url' ], [ 'section' ], [ 'title' ] ];
 
 my %manuals = (
-    'policy'    => [ '/usr/share/doc/debian-policy/policy.html',
-                     'http://www.debian.org/doc/debian-policy' ],
-    'devref'    => [ '/usr/share/doc/developers-reference/' .
-                        'developers-reference.html',
-                     'http://www.debian.org/doc/packaging-manuals/' .
-                        'developers-reference' ],
-    'menu'      => [ '/usr/share/doc/menu/html',
-                     'http://www.debian.org/doc/packaging-manuals/menu.html' ],
+    'policy' => [ '/usr/share/doc/debian-policy/policy.html/index.html',
+                  'http://www.debian.org/doc/debian-policy/',
+                  $ddoc_title, $ddoc_ref, $ddoc_fields ],
+    'devref' => [ '/usr/share/doc/developers-reference/index.html',
+                  'http://www.debian.org/doc/developers-reference/',
+                  $ddoc_title, $ddoc_ref, $ddoc_fields ],
+    'menu'   => [ '/usr/share/doc/menu/html/index.html',
+                  'http://www.debian.org/doc/packaging-manuals/menu.html/',
+                  $ddoc_title, $ddoc_ref, $ddoc_fields ],
+    'fhs'    => [ '/usr/share/doc/debian-policy/fhs/fhs-2.3.html',
+                  'http://www.pathname.com/fhs/pub/fhs-2.3.html',
+                  qr/<title\s*>(.+?)<\/title\s*>/i,
+                  qr/<a\s*href="(#.+?)"\s*>([\w\s[:punct:]]+?)<\/a\s*>/i,
+                  [ [ 'section', 'url' ], [ 'title' ] ] ],
 );
 
-my %refs;
+# Collect all possible references from available manuals.
 
 for my $manual (keys %manuals) {
-    my ($dir, $url) = @{$manuals{$manual}};
-    my @chapter_refs;
+    my ($index, $url, $title_re, $ref_re, $fields) = @{$manuals{$manual}};
+    my $title = 0;
 
-    unless (-d $dir) {
+    unless (-f $index) {
         print STDERR "Manual '$manual' not installed; not updating.\n";
         next;
     }
-    $refs{$manual} = [ "$manual $url/index.html" ];
 
-    local *DIR;
-    opendir DIR, $dir or die "Couldn't open $dir: $!";
-    while (defined(my $file = readdir DIR)) {
-        next unless -f "$dir/$file";
-        my $chapter;
-        local *FILE;
-        open FILE, "< $dir/$file" or
-            die "Couldn't open $dir/$file: $!";
-        while (<FILE>) {
-            if (m/^Chapter (\d+)/ and not defined $chapter) {
-                $chapter = $1;
-                push @{$chapter_refs[$chapter]}, "$manual-$1 $url/$file";
-            }
-            elsif (m/<a name="(.+?)">(\d.*?) /) {
-                if (defined $chapter) {
-                    push @{$chapter_refs[$chapter]},
-                         "$manual-$2 $url/$file#$1";
-                } else {
-                    print STDERR "No 'Chapter' line in $dir/$file; ",
-                                 "ignoring this file.\n";
-                    next;
+    open(INDEX, "$index") or die "Couldn't open $index: $!";
+
+    # Read until there are 2 newlines. This hack is needed since some lines in
+    # the Developer's Reference are cut in the middle of <a>...</a>.
+    local $/ = "\n\n";
+
+    while (<INDEX>) {
+        if (not $title and m/$title_re/) {
+            $title = 1;
+            my @out = ( $manual, '', $1, $url );
+            print join('::', @out) . "\n";
+        }
+
+        while (m/$ref_re/g) {
+            my %ref;
+            for(my $i = 0; $i < scalar @{$fields}; $i++) {
+                foreach my $c (@{$fields->[$i]}) {
+                    my $v = $i + 1;
+                    $ref{$c} = eval '$' . $v;
                 }
             }
+
+            $ref{section} =~ s/^\#(.+)$/\L$1/;
+            $ref{title} =~ s/\n//g;
+            $ref{url} = "$url$ref{url}";
+            my @out = ( $manual, $ref{section}, $ref{title}, $ref{url} );
+            print join('::', @out) . "\n";
         }
-        close FILE;
     }
-    closedir DIR;
 
-    for my $chapter_ref (@chapter_refs) {
-        next unless defined $chapter_ref;
-        push @{$refs{$manual}}, @$chapter_ref;
-    }
+    close(INDEX);
 }
 
-# Replace all lines for manuals for which we have up-to-date information.
-
-my %seen;
-
-while (<>) {
-    next unless m/^(\w+)/;
-    my $manual = $1;
-    next if $seen{$manual};
-    if (exists $manuals{$manual} and exists $refs{$manual}) {
-        $seen{$manual} = 1;
-        print join("\n", @{$refs{$manual}}), "\n";
-    } else {
-        print;
-    }
-}
+# vim: sw=4 sts=4 ts=4 et sr
