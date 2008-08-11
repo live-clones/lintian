@@ -60,6 +60,11 @@ my %manuals = (
         'http://www.debian.org/doc/packaging-manuals/python-policy/',
         $link_re, $fields
     ],
+    'lintian' => [
+        '/usr/share/doc/lintian/lintian.html/index.html',
+        'http://lintian.debian.org/manual/',
+        $link_re, $fields
+    ],
     'devref' => [
         '/usr/share/doc/developers-reference/index.html',
         'http://www.debian.org/doc/developers-reference/',
@@ -69,6 +74,12 @@ my %manuals = (
         '/usr/share/doc/menu/html/index.html',
         'http://www.debian.org/doc/packaging-manuals/menu.html/',
         $index_re, $fields
+    ],
+    'debconf-spec' => [
+        '/usr/share/doc/debian-policy/debconf_specification.html',
+        'http://www.debian.org/doc/packaging-manuals/debconf_specification.html',
+        qr/<a href="(#.+?)">([\w\s[:punct:]]+?)<\/a>/,
+        [ [ 'section', 'url' ], [ 'title' ] ]
     ],
     # Extract chapters only, since the HTML available in netfort.gr.jp isn't
     # exactly the same with regards to section IDs as the version included in
@@ -89,7 +100,7 @@ my %manuals = (
 
 # Collect all possible references from available manuals.
 
-for my $manual (keys %manuals) {
+for my $manual (sort keys %manuals) {
     my ($index, $url, $ref_re, $fields) = @{$manuals{$manual}};
     my $title = 0;
 
@@ -122,6 +133,7 @@ for my $manual (keys %manuals) {
 
             $ref{section} =~ s/^\#(.+)$/\L$1/;
             $ref{title} =~ s/\n//g;
+            $ref{title} =~ s/\s+/ /g;
             $ref{url} = "$url$ref{url}";
             my @out = ( $manual, $ref{section}, $ref{title}, $ref{url} );
             print join('::', @out) . "\n";
