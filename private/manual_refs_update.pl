@@ -28,7 +28,8 @@ use warnings;
 
 # For each manual, we need:
 #  * Location of the manual directory on the local filesystem
-#  * Base URL for the eventual target of the reference
+#  * Base URL for the eventual target of the reference (or empty string if no
+#    public URL is available)
 #  * Regex to match the possible references
 #  * Mapping from regex fields to reference fields (array of arrays of
 #    keywords: url, section title; the position of each keyword in the array
@@ -73,6 +74,10 @@ my %manuals = (
     'menu' => [
         '/usr/share/doc/menu/html/index.html',
         'http://www.debian.org/doc/packaging-manuals/menu.html/',
+        $index_re, $fields
+    ],
+    'doc-base' => [
+        '/usr/share/doc/doc-base/doc-base.html/index.html', '',
         $index_re, $fields
     ],
     'debconf-spec' => [
@@ -135,6 +140,7 @@ for my $manual (sort keys %manuals) {
             $ref{title} =~ s/\n//g;
             $ref{title} =~ s/\s+/ /g;
             $ref{url} = "$url$ref{url}";
+            $ref{url} = '' if not $url;
             my @out = ( $manual, $ref{section}, $ref{title}, $ref{url} );
             print join('::', @out) . "\n";
         }

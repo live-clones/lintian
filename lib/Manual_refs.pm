@@ -27,7 +27,7 @@ open (REFS, '<', "${lib}lib/manual_refs")
 
 while(<REFS>) {
     chomp;
-    next if not m/^(.+?)::(.*?)::(.+?)::(.+?)$/;
+    next if not m/^(.+?)::(.*?)::(.+?)::(.*?)$/;
 
     my ($man, $section, $title, $u) = split('::');
     $section = '0' if $section eq "";

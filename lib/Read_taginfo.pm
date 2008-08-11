@@ -100,6 +100,11 @@ sub manual_ref {
         $text .= " $div(<a href='$sub_url'>$sub_title</a>)";
     }
 
+    if (not $man_url) {
+        my @arr = ( $text );
+        $text = join('', dtml_to_text(@arr));
+    }
+
     return $text;
 }
 
