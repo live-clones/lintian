@@ -28,6 +28,7 @@ Info: Leaving <tt>debian/files</tt> causes problems for the autobuilders,
  architecture, which will cause dpkg-buildpackage run by the buildd to fail.
  .
  The clean rule for the package should remove this file.
+Ref: policy 4.12
 
 Tag: diff-contains-cvs-control-dir
 Type: warning

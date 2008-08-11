@@ -24,11 +24,13 @@ Type: error
 Info: The menu file contains an item that does not start with the text
  "?package(somepackage):". All menu file lines must test for the existence
  of a package in this way.
+Ref: menu 3.2
 
 Tag: unparsable-menu-item
 Type: error
 Info: An item of the menu file cannot be parsed as a series of tag=value
  pairs. This could be because you didn't close a set of double quotes.
+Ref: menu 3.2
 
 Tag: pkg-not-in-package-test
 Type: warning
@@ -48,6 +50,7 @@ Tag: duplicated-tag-in-menu-item
 Type: warning
 Info: The menu item contains two instances of the same tag. This is just a
  waste of space, as menu will only use one of them.
+Ref: menu 3.2
 
 Tag: menu-item-missing-required-tag
 Type: error
@@ -84,16 +87,19 @@ Tag: menu-item-uses-apps-games-section
 Type: warning
 Info: The menu item has a line that specifies a section under "Apps/Games".
  This section has been moved to just "Games".
+Ref: menu-policy 2.1
 
 Tag: menu-item-uses-apps-section
 Type: warning
 Info: The menu item has a line that specifies a section under "Apps".
  This section has been moved to "Applications".
+Ref: menu-policy 2.1
 
 Tag: menu-item-uses-windowmanagers-section
 Type: warning
 Info: The menu item has a line that specifies a section under
  "WindowManagers".  This section has been moved to "Window Managers".
+Ref: menu-policy 2.1
 
 Tag: menu-item-creates-new-section
 Type: warning
