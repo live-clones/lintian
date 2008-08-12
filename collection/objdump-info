@@ -149,7 +149,7 @@ while (<FILES>) {
 
 			$value =~ s/^(?:Shared library|Library soname): \[(.*)\]/$1/;
 			print OUT "  $type   $value\n";
-		    } elsif (m/^\s*[0-9A-F]+:\s*(\S+)\s*\((\S+)\)\s/i
+		    } elsif (m/^\s*[0-9A-F]+:\s*(\S+)\s*\((\S+)\)(\s|\Z)/i
 			     and $section eq 'VS') {
 			while (m/\s(\S+)\s*\((\S+)\)(\s|\Z)/gc) {
 			    my ($vernum, $verstring) = ($1, $2);
