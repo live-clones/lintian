@@ -1,5 +1,9 @@
 lintian (1.24.4) UNRELEASED; urgency=low
 
+  The "[JP] is Jordà Polo" release.
+  
+  * checks/*.desc:
+    + [JP] Update, fix and unify various manual references. 
   * checks/cruft{,.desc}:
     + [FL] Add new check for outdated libtool files.
       (Closes: #293296)
@@ -21,6 +25,18 @@ lintian (1.24.4) UNRELEASED; urgency=low
   * frontend/lintian:
     + [FL] Do not try to use fail() before the lintian libraries are
       loaded.
+  
+  * lib/manual_refs:
+    + [JP] Regenerate with new manual_refs_update.pl script.
+      (Closes: #493660)
+  * lib/Read_taginfo.pm, lib/Manual_refs.pm:
+    + [JP] Add support for new manuals, allow specifying manual
+      sections by id and not only by section number.
+    + [JP] Link manpages to manpages.debian.net.
+  
+  * private/manual_refs_update.pl:
+    + [JP] Add support for many more manuals (FHS, debconf-spec,
+      {menu,python,perl}-policy, libpkg-guide).
 
  --
 
