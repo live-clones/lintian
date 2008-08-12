@@ -26,18 +26,12 @@ use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Util;
 use Text_utils;
 use Manual_refs;
-use vars qw(%url); # from the above
 
 use strict;
 
-# define hash for manuals
-my %manual = (
-	      'policy' => 'Policy Manual',
-	      'devref' => 'Developers Reference',
-	      'fhs' => 'FHS',
-	     );
-
 srand;
+
+our %refs; # from Manual_refs
 
 # load information about checker scripts
 sub read_tag_info {
@@ -83,42 +77,65 @@ sub read_tag_info {
     return \%tag_info;
 }
 
+sub manual_ref {
+    my ($man, $sub) = @_;
+    my $numbered = ($sub =~ /[A-Z\d\.]+/) ? 1 : 0;
+    my $chapter = ($sub =~ /^[\d]+$/) ? 1 : 0;
+    my $appendix = ($sub =~ /^[A-Z]+$/) ? 1 : 0;
+
+    return "" if not exists $refs{$man}{0};
+
+    my $man_title = $refs{$man}{0}{title};
+    my $man_url = $refs{$man}{0}{url};
+    my $text = "<a href='$man_url'>$man_title</a>";
+
+    my $div = '';
+    $div = "section $sub " if $numbered;
+    $div = "chapter $sub " if $chapter;
+    $div = "appendix $sub " if $appendix;
+
+    if (exists $refs{$man}{$sub}) {
+        my $sub_title = $refs{$man}{$sub}{title};
+        my $sub_url = $refs{$man}{$sub}{url};
+        $text .= " $div(<a href='$sub_url'>$sub_title</a>)";
+    }
+
+    if (not $man_url) {
+        my @arr = ( $text );
+        $text = join('', dtml_to_text(@arr));
+    }
+
+    return $text;
+}
+
 sub format_ref {
-    my ($ref) = @_;
+    my ($header) = @_;
+    my $text = '';
+    my @list;
 
-    my @foo = split(/\s*,\s*/o,$ref);
-    my $u;
-    for ($u=0; $u<=$#foo; $u++) {
-	if ($foo[$u] =~ m,^\s*(policy|devref|fhs)\s*([\d\.]+)?\s*$,oi) {
-	    my ($man,$sec) = ($1,$2);
-
-	    $foo[$u] = $manual{lc $man};
-
-	    if ($sec =~ m,^\d+$,o) {
-		$foo[$u] .= ", chapter $sec";
-	    } elsif ($sec) {
-		$foo[$u] .= ", section $sec";
-	    }
-
-	    if (exists $url{"$man-$sec"}) {
-		$foo[$u] = "<a href=\"$url{\"$man-$sec\"}\">$foo[$u]</a>";
-	    } elsif (exists $url{$man}) {
-		$foo[$u] = "<a href=\"$url{$man}\">$foo[$u]</a>";
-	    }
-	} elsif ($foo[$u] =~ m,^\s*((?:ftp|https?)://[\S~-]+?/?)\s*$,i) {
-	    $foo[$u] = "<a href=\"$1\">$1</a>";
-	} elsif ($foo[$u] =~ m,\s*([\w_-]+\(\d+\w*\))\s*$,i) {
-	    $foo[$u] = "the $foo[$u] manual page";
-	}
-    }
-	
-    if ($#foo+1 > 2) {
-	$ref = sprintf "Refer to %s, and %s for details.",join(', ',splice(@foo,0,$#foo)),@foo;
-    } elsif ($#foo+1 > 0) {
-	$ref = sprintf "Refer to %s for details.",join(' and ',@foo);
+    foreach my $ref (split(/,\s?/, $header)) {
+        if ($ref =~ /^([\w-]+)\s(.+)$/) {
+            $text = manual_ref($1, $2);
+        } elsif ($ref =~ /^([\w_-]+)\((\d)\)$/) {
+            $text = "the <a href='http://manpages.debian.net/cgi-bin/".
+                    "man.cgi?query=$1&sektion=$2'>$ref</a> manual page";
+        } elsif ($ref =~ /^(?:ftp|https?):\/\//) {
+            $text = "<a href='$ref'>$ref</a>";
+        }
+        push(@list, $text) if $text;
     }
 
-    return $ref;
+    if ($#list >= 2) {
+        $text = join(', ', splice(@list , 0, $#list));
+        $text = "Refer to $text, and @list for details.";
+    } elsif ($#list >= 0) {
+        $text = join(' and ', @list);
+        $text = "Refer to $text for details.";
+    }
+
+    return $text;
 }
 
 1;
+
+# vim: sw=4 sts=4 ts=4 et sr

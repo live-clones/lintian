@@ -148,7 +148,7 @@ Type: error
 Info: This package installs a directory under <tt>/usr/share/man</tt> or
  <tt>/usr/X11R6/man</tt> that isn't a manual section directory or locale
  directory.
-Ref: fhs 4.11.5
+Ref: fhs usrsharemanmanualpages
 
 Tag: executable-manpage
 Type: error
@@ -380,7 +380,7 @@ Info: Documentation files should be owned by <tt>root/root</tt>.
 
 Tag: dir-or-file-in-var-www
 Type: error
-Ref: fhs 5
+Ref: fhs thevarhierarchy
 Info: Debian packages should not install files under <tt>/var/www</tt>.
  This is not one of the <tt>/var</tt> directories in the File Hierarchy
  Standard and is under the control of the local administrator.  Packages
@@ -413,7 +413,7 @@ Info: Debian packages should not install into <tt>/opt</tt>, because it
 
 Tag: dir-or-file-in-srv
 Type: error
-Ref: fhs 3
+Ref: fhs therootfilesystem
 Info: Debian packages should not install into <tt>/srv</tt>.  The
  specification of <tt>/srv</tt> states that its structure is at the
  discretion of the local administrator and no package should rely on any
@@ -640,7 +640,7 @@ Ref: perl-policy 2.3
 
 Tag: file-in-usr-lib-site-python
 Type: error
-Ref: Python policy 1.4
+Ref: python-policy 1.4
 Info: The directory /usr/lib/site-python has been deprecated as a
  location for installing Python modules and may be dropped from Python's
  module search path in a future version.  Most likely this module is a
@@ -700,7 +700,7 @@ Ref: policy 10.4
 
 Tag: file-in-usr-lib-sgml
 Type: warning
-Ref: fhs 4
+Ref: fhs theusrhierarchy
 Info: This package installs a file in <tt>/usr/lib/sgml</tt>.  This was
  the old location for SGML catalogs and similar flies.  All those files
  should now go into <tt>/usr/share/sgml</tt>.

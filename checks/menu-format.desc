@@ -44,7 +44,7 @@ Info: This menu item doesn't test to see if the package containing it is
  This error usually indicates a misspelling of the package name in the
  menu entry or a copied menu entry from another package that doesn't apply
  to this one.
-Ref: menu manual 3.2
+Ref: menu 3.2
 
 Tag: duplicated-tag-in-menu-item
 Type: warning
@@ -108,7 +108,7 @@ Info: The menu item has a line that specifies an unknown section or uses a
  applications should use directly.  Check the spelling of the section and
  check the section against the list in the menu policy.  (The menu
  sections changed as of June of 2007.)
-Ref: Debian Menu sub-policy 2.1
+Ref: menu-policy 2.1
 
 Tag: menu-item-creates-new-root-section
 Type: error
@@ -120,7 +120,7 @@ Info: The menu item has a line that specifies a new section to put a menu
 Tag: menu-icon-not-in-xpm-format
 Type: error
 Info: Icons in the Debian menu system should be in XPM format.
-Ref: menu manual 3.7
+Ref: menu 3.7
 
 Tag: menu-icon-missing
 Type: warning
@@ -131,13 +131,13 @@ Info: This icon file couldn't be found.  If the path to the icon in the
  .
  If the icon is in a package this package depends on, add a lintian
  override for this warning.  lintian cannot check icons in other packages.
-Ref: menu manual 3.7
+Ref: menu 3.7
 
 Tag: menu-icon-too-big
 Type: error
 Info: Icons in the Debian menu system should be at most 32x32 pixels
  (icon16x16 icons should of course be at most 16x16 pixels)
-Ref: menu manual 3.7
+Ref: menu 3.7
 
 Tag: menu-icon-cannot-be-parsed
 Type: warning
@@ -194,7 +194,7 @@ Tag: unquoted-string-in-menu-item
 Type: warning
 Info: The menu item includes a tag with an unquoted string like section=Games
  instead of section="Games". This is deprecated. Use a quoted string instead.
-Ref: menu manual 3.2
+Ref: menu 3.2
 
 Tag: menu-command-not-in-package
 Type: warning

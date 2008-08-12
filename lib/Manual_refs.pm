@@ -18,15 +18,7 @@
 
 use strict;
 
-# define hash for manuals
-my %manual =
-(
- 'policy' => 'Policy Manual',
- 'devref' => 'Developers Reference',
- 'fhs'    => 'FHS',
-);
-
-my %url;
+our %refs;
 
 my $lib = defined $ENV{LINTIAN_ROOT} ?  "$ENV{LINTIAN_ROOT}/" : "";
 
@@ -35,12 +27,16 @@ open (REFS, '<', "${lib}lib/manual_refs")
 
 while(<REFS>) {
     chomp;
-    next if m/^\s*\#/;
+    next if not m/^(.+?)::(.*?)::(.+?)::(.*?)$/;
 
-    my ($key, $data) = split;
-    $url{$key} = $data;
+    my ($man, $section, $title, $u) = split('::');
+    $section = '0' if $section eq "";
+    $refs{$man}{$section}{title} = $title;
+    $refs{$man}{$section}{url} = $u;
 }
 
 close REFS;
 
 1;
+
+# vim: sw=4 sts=4 ts=4 et sr
