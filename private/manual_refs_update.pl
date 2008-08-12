@@ -21,19 +21,25 @@
 
 # Invoke as ./manual_refs_update.pl > manual_refs.new
 # You need copies of all the relevant manuals installed in the standard
-# places locally.
+# places locally (packages debian-policy, developers-reference, doc-base,
+# python, lintian, menu and libpkg-guide).
 
 use strict;
 use warnings;
+use File::Basename;
 
 # For each manual, we need:
-#  * Location of the manual directory on the local filesystem
+#  * Location of the manual index on the local filesystem
 #  * Base URL for the eventual target of the reference (or empty string if no
 #    public URL is available)
 #  * Regex to match the possible references
 #  * Mapping from regex fields to reference fields (array of arrays of
 #    keywords: url, section title; the position of each keyword in the array
 #    defines which is its corresponding group in the regex)
+#
+# Optionally, if there are subsections that aren't available in the index, an
+# additional regex can be defined to match possible references on other pages
+# of the manual.
 
 my $title_re = qr/<title\s?>(.+?)<\/title\s?>/i;
 my $link_re = qr/<link href="(.+?)" rel="[\w]+" title="([A-Z]|[A-Z]?[\d\.]+?)\.?\s+([\w\s[:punct:]]+?)">/;
@@ -69,7 +75,8 @@ my %manuals = (
     'devref' => [
         '/usr/share/doc/developers-reference/index.html',
         'http://www.debian.org/doc/developers-reference/',
-        $index_re, $fields
+        $index_re, $fields,
+        qr/<h[45] class="title"><a id="(.+?)"><\/a>([\d\.]+?)\.? ([\w\s[:punct:]]+?)<\/h[45]>/
     ],
     'menu' => [
         '/usr/share/doc/menu/html/index.html',
@@ -103,24 +110,23 @@ my %manuals = (
     ],
 );
 
-# Collect all possible references from available manuals.
+# extract_refs -- Extract manual references from HTML file.
+#
+# This function takes the path to the page and the regex to match, and prints
+# references to stdout. The second argument is used to decide whether to look
+# for the title (0) or not (1). It returns a list of pages linked by the
+# extracted references.
+sub extract_refs {
+    my ($manual, $title, $page, $url, $ref_re, $fields) = @_;
+    my @linked_pages = ();
 
-for my $manual (sort keys %manuals) {
-    my ($index, $url, $ref_re, $fields) = @{$manuals{$manual}};
-    my $title = 0;
-
-    unless (-f $index) {
-        print STDERR "Manual '$manual' not installed; not updating.\n";
-        next;
-    }
-
-    open(INDEX, "$index") or die "Couldn't open $index: $!";
+    open(PAGE, "$page") or die "Couldn't open $page: $!";
 
     # Read until there are 2 newlines. This hack is needed since some lines in
     # the Developer's Reference are cut in the middle of <a>...</a>.
     local $/ = "\n\n";
 
-    while (<INDEX>) {
+    while (<PAGE>) {
         if (not $title and m/$title_re/) {
             $title = 1;
             my @out = ( $manual, '', $1, $url );
@@ -129,11 +135,21 @@ for my $manual (sort keys %manuals) {
 
         while (m/$ref_re/g) {
             my %ref;
-            for(my $i = 0; $i < scalar @{$fields}; $i++) {
+            for (my $i = 0; $i < scalar @{$fields}; $i++) {
                 foreach my $c (@{$fields->[$i]}) {
                     my $v = $i + 1;
                     $ref{$c} = eval '$' . $v;
                 }
+            }
+
+            if ($ref{url} =~ m/^(.+?\.html)#?/i) {
+                push(@linked_pages, $1) if not grep(m/$1/, @linked_pages);
+            }
+
+            # If the extracted URL part doesn't look like a URL, assume it is
+            # an anchor and convert to URL accordingly.
+            if ($ref{url} and not $ref{url} =~ m/(?:#|\.html$)/i) {
+                $ref{url} = basename($page) . "#$ref{url}";
             }
 
             $ref{section} =~ s/^\#(.+)$/\L$1/;
@@ -141,12 +157,33 @@ for my $manual (sort keys %manuals) {
             $ref{title} =~ s/\s+/ /g;
             $ref{url} = "$url$ref{url}";
             $ref{url} = '' if not $url;
+
             my @out = ( $manual, $ref{section}, $ref{title}, $ref{url} );
             print join('::', @out) . "\n";
         }
     }
 
-    close(INDEX);
+    close(PAGE);
+
+    return @linked_pages;
+}
+
+for my $manual (sort keys %manuals) {
+    my ($index, $url, $ref_re, $fields, $sub_re) = @{$manuals{$manual}};
+
+    if (not -f $index) {
+        die "Manual '$manual' not installed, aborting.\n";
+    }
+
+    # Extract references from the index.
+    my @subpages = extract_refs($manual, 0, $index, $url, $ref_re, $fields);
+
+    # Extract additional subsection references if not available in the index.
+    next if not $sub_re;
+    foreach my $pagename (@subpages) {
+        my $page = dirname($index) . "/$pagename";
+        extract_refs($manual, 1, $page, $url, $sub_re, $fields);
+    }
 }
 
 # vim: sw=4 sts=4 ts=4 et sr
