@@ -42,6 +42,7 @@ otherwise, it's full.
 
 Report bugs to <lintian-maint\@debian.org>.
 END
+#'# for cperl-mode
   exit;
 }
 
