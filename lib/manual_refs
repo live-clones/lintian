@@ -201,6 +201,58 @@ devref::A.8.1::<code class="systemitem">debiandoc-sgml</code>::http://www.debian
 devref::A.8.2::<code class="systemitem">debian-keyring</code>::http://www.debian.org/doc/developers-reference/tools.html#debian-keyring
 devref::A.8.3::<code class="systemitem">debian-maintainers</code>::http://www.debian.org/doc/developers-reference/tools.html#debian-maintainers
 devref::A.8.4::<code class="systemitem">debview</code>::http://www.debian.org/doc/developers-reference/tools.html#debview
+devref::4.6.4.1::Stable, testing, and unstable::http://www.debian.org/doc/developers-reference/resources.html#sec-dists
+devref::4.6.4.2::More information about the testing distribution::http://www.debian.org/doc/developers-reference/resources.html#s4.6.4.2
+devref::4.6.4.3::Experimental::http://www.debian.org/doc/developers-reference/resources.html#experimental
+devref::5.8.5.1::Confidentiality::http://www.debian.org/doc/developers-reference/pkgs.html#bug-security-confidentiality
+devref::5.8.5.2::Security Advisories::http://www.debian.org/doc/developers-reference/pkgs.html#bug-security-advisories
+devref::5.8.5.3::Preparing packages to address security issues::http://www.debian.org/doc/developers-reference/pkgs.html#bug-security-building
+devref::5.8.5.4::Uploading the fixed package::http://www.debian.org/doc/developers-reference/pkgs.html#bug-security-upload
+devref::5.9.2.1::Removing packages from <code class="filename">Incoming</code>::http://www.debian.org/doc/developers-reference/pkgs.html#s5.9.2.1
+devref::5.10.2.1::Recompilation or binary-only NMU::http://www.debian.org/doc/developers-reference/pkgs.html#binary-only-nmu
+devref::5.10.2.2::When to do a source NMU if you are a porter::http://www.debian.org/doc/developers-reference/pkgs.html#source-nmu-when-porter
+devref::5.10.3.1::Mailing lists and web pages::http://www.debian.org/doc/developers-reference/pkgs.html#s5.10.3.1
+devref::5.10.3.2::Porter tools::http://www.debian.org/doc/developers-reference/pkgs.html#s5.10.3.2
+devref::5.10.3.3::<code class="systemitem">wanna-build</code>::http://www.debian.org/doc/developers-reference/pkgs.html#wanna-build
+devref::5.13.2.1::out-of-date::http://www.debian.org/doc/developers-reference/pkgs.html#outdated
+devref::5.13.2.2::Removals from testing::http://www.debian.org/doc/developers-reference/pkgs.html#removals
+devref::5.13.2.3::circular dependencies::http://www.debian.org/doc/developers-reference/pkgs.html#circular
+devref::5.13.2.4::influence of package in testing::http://www.debian.org/doc/developers-reference/pkgs.html#s5.13.2.4
+devref::5.13.2.5::details::http://www.debian.org/doc/developers-reference/pkgs.html#details
+devref::5.13.4.1::What are release-critical bugs, and how do they get counted?::http://www.debian.org/doc/developers-reference/pkgs.html#rc
+devref::5.13.4.2::How could installing a package into <code class="literal">testing</code> possiblybreak other packages?::http://www.debian.org/doc/developers-reference/pkgs.html#s5.13.4.2
+devref::6.2.5.1::Vcs-Browser::http://www.debian.org/doc/developers-reference/best-pkging-practices.html#s6.2.5.1
+devref::6.2.5.2::Vcs-*::http://www.debian.org/doc/developers-reference/best-pkging-practices.html#s6.2.5.2
+devref::6.5.2.1::Write correct English::http://www.debian.org/doc/developers-reference/best-pkging-practices.html#s6.5.2.1
+devref::6.5.2.2::Be kind to translators::http://www.debian.org/doc/developers-reference/best-pkging-practices.html#s6.5.2.2
+devref::6.5.2.3::Unfuzzy complete translations when correcting typos and spelling::http://www.debian.org/doc/developers-reference/best-pkging-practices.html#s6.5.2.3
+devref::6.5.2.4::Do not make assumptions about interfaces::http://www.debian.org/doc/developers-reference/best-pkging-practices.html#s6.5.2.4
+devref::6.5.2.5::Do not use first person::http://www.debian.org/doc/developers-reference/best-pkging-practices.html#s6.5.2.5
+devref::6.5.2.6::Be gender neutral::http://www.debian.org/doc/developers-reference/best-pkging-practices.html#s6.5.2.6
+devref::6.5.3.1::Type::http://www.debian.org/doc/developers-reference/best-pkging-practices.html#s6.5.3.1
+devref::6.5.3.1.1::string:::http://www.debian.org/doc/developers-reference/best-pkging-practices.html#s6.5.3.1.1
+devref::6.5.3.1.2::password:::http://www.debian.org/doc/developers-reference/best-pkging-practices.html#s6.5.3.1.2
+devref::6.5.3.1.3::boolean:::http://www.debian.org/doc/developers-reference/best-pkging-practices.html#s6.5.3.1.3
+devref::6.5.3.1.4::select:::http://www.debian.org/doc/developers-reference/best-pkging-practices.html#s6.5.3.1.4
+devref::6.5.3.1.5::multiselect:::http://www.debian.org/doc/developers-reference/best-pkging-practices.html#s6.5.3.1.5
+devref::6.5.3.1.6::note:::http://www.debian.org/doc/developers-reference/best-pkging-practices.html#s6.5.3.1.6
+devref::6.5.3.1.7::text:::http://www.debian.org/doc/developers-reference/best-pkging-practices.html#s6.5.3.1.7
+devref::6.5.3.1.8::error:::http://www.debian.org/doc/developers-reference/best-pkging-practices.html#s6.5.3.1.8
+devref::6.5.3.2::Description: short and extended description::http://www.debian.org/doc/developers-reference/best-pkging-practices.html#s6.5.3.2
+devref::6.5.3.3::Choices::http://www.debian.org/doc/developers-reference/best-pkging-practices.html#s6.5.3.3
+devref::6.5.3.4::Default::http://www.debian.org/doc/developers-reference/best-pkging-practices.html#s6.5.3.4
+devref::6.5.4.1::Type field::http://www.debian.org/doc/developers-reference/best-pkging-practices.html#s6.5.4.1
+devref::6.5.4.2::Description field::http://www.debian.org/doc/developers-reference/best-pkging-practices.html#s6.5.4.2
+devref::6.5.4.2.1::String/password templates::http://www.debian.org/doc/developers-reference/best-pkging-practices.html#s6.5.4.2.1
+devref::6.5.4.2.2::Boolean templates::http://www.debian.org/doc/developers-reference/best-pkging-practices.html#s6.5.4.2.2
+devref::6.5.4.2.3::Select/Multiselect::http://www.debian.org/doc/developers-reference/best-pkging-practices.html#s6.5.4.2.3
+devref::6.5.4.2.4::Notes::http://www.debian.org/doc/developers-reference/best-pkging-practices.html#s6.5.4.2.4
+devref::6.5.4.3::Choices field::http://www.debian.org/doc/developers-reference/best-pkging-practices.html#s6.5.4.3
+devref::6.5.4.4::Default field::http://www.debian.org/doc/developers-reference/best-pkging-practices.html#s6.5.4.4
+devref::6.5.4.5::Default field::http://www.debian.org/doc/developers-reference/best-pkging-practices.html#s6.5.4.5
+devref::6.7.8.1::Pristine source::http://www.debian.org/doc/developers-reference/best-pkging-practices.html#pristinesource
+devref::6.7.8.2::Repackaged upstream source::http://www.debian.org/doc/developers-reference/best-pkging-practices.html#repackagedorigtargz
+devref::6.7.8.3::Changing binary files in <code class="literal">diff.gz</code>::http://www.debian.org/doc/developers-reference/best-pkging-practices.html#changed-binfiles
 doc-base::::Debian doc-base Manual::
 doc-base::1::About <code>doc-base</code>::
 doc-base::2::The packages interface::
