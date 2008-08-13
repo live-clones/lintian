@@ -24,6 +24,7 @@ lintian (1.24.4) UNRELEASED; urgency=low
       issued for a version mismatch.  (Closes: #494400)
     + [ADB] Correctly match alternative dependency templates in symbols
     files which specify an unversioned dependency.
+
   * collection/objdump-info:
     + [ADB] Correctly parse a readelf symbol version block containing the
       definition of a single symbol.
