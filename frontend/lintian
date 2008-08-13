@@ -1011,6 +1011,9 @@ if (defined $experimental_output_opts) {
 	    if ($opts{$_} eq 'colons') {
 		require Tags::ColonSeparated;
 		$Tags::output_formatter = \&Tags::ColonSeparated::print_tag;
+	    } elsif ($opts{$_} eq 'letterqualifier') {
+		require Tags::LetterQualifier;
+		$Tags::output_formatter = \&Tags::LetterQualifier::print_tag;
 	    }
 	}
 	no strict 'refs';
