@@ -35,6 +35,8 @@ lintian (1.24.4) UNRELEASED; urgency=low
       issued for a version mismatch.  (Closes: #494400)
     + [ADB] Correctly match alternative dependency templates in symbols
       files which specify an unversioned dependency.
+  * checks/standards-version:
+    + [FL] Avoid Perl warning if only the timestamp could not be parsed.
 
   * collection/objdump-info:
     + [ADB] Correctly parse a readelf symbol version block containing the

@@ -106,7 +106,7 @@ my $changes = $info->changelog;
 my $pkgdate;
 if (defined $changes) {
     my ($entry) = $changes->data;
-    $pkgdate = $entry ? $entry->Timestamp : 0;
+    $pkgdate = ($entry && $entry->Timestamp) ? $entry->Timestamp : time;
 } else {
     $pkgdate = time;
 }
