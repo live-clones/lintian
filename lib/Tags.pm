@@ -76,20 +76,16 @@ my %info;
 # Currently selected file (not package!)
 my $current;
 
-my %severity_level = (
-    'serious' => 4,
-    'important' => 3,
-    'normal' => 2,
-    'minor' => 1,
-    'wishlist' => 0
-);
+# Possible Severity: and Certainty: values, sorted from lowest to highest.
+our @severity_list = qw(wishlist minor normal important serious);
+our @certainty_list = qw(wild-guess possible certain);
 
-my %certainty_level = (
-    'certain' => 2,
-    'possible' => 1,
-    'wild-guess' => 0
-);
+my %severity_level;
+@severity_level{@severity_list} = (0 .. $#severity_list);
+my %certainty_level;
+@certainty_level{@certainty_list} = (0 .. $#certainty_list);
 
+# Map Severity/Certainty levels to E|W|I codes.
 my @codes = (
     [ 'I', 'I', 'I' ], # wishlist (wild-guess, possible, certain)
     [ 'I', 'I', 'W' ], # minor
@@ -218,6 +214,20 @@ sub get_tag_info {
     return undef;
 }
 
+# Returns the E|W|I code for a given tag.
+sub get_tag_code {
+    my ( $tag_info ) = @_;
+    return get_tag_value($tag_info, \@codes);
+}
+
+# Returns the value in a Severity/Certainty mapping for a given tag.
+sub get_tag_value {
+    my ( $tag_info, $map ) = @_;
+    my $sev = $tag_info->{severity};
+    my $cer = $tag_info->{certainty};
+    return $map->[$severity_level{$sev}][$certainty_level{$cer}];
+}
+
 # check if a certain tag has a override for the 'current' package
 sub check_overrides {
     my ( $tag_info, $information ) = @_;
@@ -272,13 +282,11 @@ sub colored_html {
 
 sub print_tag {
     my ( $pkg_info, $tag_info, $information ) = @_;
-    my $sev = $tag_info->{severity};
-    my $cer = $tag_info->{certainty};
 
     my $extra = '';
     $extra = " @$information" if @$information;
     $extra = '' if $extra eq ' ';
-    my $code = $codes[$severity_level{$sev}][$certainty_level{$cer}];
+    my $code = get_tag_code($tag_info);
     $code = 'X' if exists $tag_info->{experimental};
     $code = 'O' if $tag_info->{overridden}{override};
     my $type = '';

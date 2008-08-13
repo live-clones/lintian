@@ -13,28 +13,17 @@ use strict;
 use warnings;
 
 my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
-unshift @INC, "$LINTIAN_ROOT/lib";
 
-require Read_pkglists;
+use lib "$ENV{'LINTIAN_ROOT'}/lib";
+use Read_pkglists;
+use Tags;
 
-my @severities = qw(wishlist minor normal important serious);
-my @certainties = qw(wild-guess possible certain);
+my @severities = @Tags::severity_list;
+my @certainties = @Tags::certainty_list;
 my @types = qw(info warning error);
 my @codes = qw(I W E);
 
-my %severity_index;
-@severity_index{@severities} = (0 .. $#severities);
-my %certainty_index;
-@certainty_index{@certainties} = (0 .. $#certainties);
-
 my %old_codes = ( info => 'I', warning => 'W', error => 'E' );
-my @new_codes = (
-    [ 'I', 'I', 'I' ],
-    [ 'I', 'I', 'W' ],
-    [ 'I', 'W', 'W' ],
-    [ 'W', 'E', 'E' ],
-    [ 'E', 'E', 'E' ],
-);
 
 my %stats;
 my $num_tags = 0;
@@ -74,10 +63,8 @@ for my $check (readdir CHECKDIR) {
 
         next if not $done;
 
-        my $sev = $severity_index{$severity};
-        my $cer = $certainty_index{$certainty};
         my $old_code = $old_codes{$type};
-        my $new_code = $new_codes[$sev][$cer];
+        my $new_code = Tags::get_tag_code($tag);
         push(@{$stats{code}{$old_code}{$new_code}}, $name);
 
         $num_ok++ if $old_code eq $new_code;
