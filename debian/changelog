@@ -18,6 +18,7 @@ lintian (1.24.4) UNRELEASED; urgency=low
     + [RA] Add dash to the recognized characters in a command in
       command-with-path-in-maintainer-script to avoid truncation.  Thanks,
       Thijs Kinkhorst.  (Closes: #494723)
+    + [RA] Add jruby1.1, thanks Sebastien Delafond.  (Closes: #494919)
   * checks/shared-libs.desc:
     + [RA] Clarify that shlibs-declares-dependency-on-other-package can be
       issued for a version mismatch.  (Closes: #494400)

@@ -131,7 +131,7 @@ our %versioned_interpreters =
 		  qr/^guile-([\d.]+)$/, 'guile-$1', qw(1.6 1.8)
 		],
      jruby   => [ '/usr/bin', undef,
-		  qr/^jruby([\d.]+)$/, 'jruby$1', qw(0.9 1.0)
+		  qr/^jruby([\d.]+)$/, 'jruby$1', qw(0.9 1.0 1.1)
 		],
      lua     => [ '/usr/bin', 'lua',
 		  qr/^lua([\d.]+)$/, 'lua$1', qw(40 50 5.1)
