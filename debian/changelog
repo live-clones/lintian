@@ -4,6 +4,10 @@ lintian (1.24.4) UNRELEASED; urgency=low
   
   * checks/*.desc:
     + [JP] Update, fix and unify various manual references. 
+  * checks/copyright-file:
+    + [ADB] Don't flag copyright files using phrases such as "previously
+      distributed under the GNU GPL" as lacking a reference to the license.
+      Thanks Raphael Geissert.
   * checks/cruft{,.desc}:
     + [FL] Add new check for outdated libtool files.
       (Closes: #293296)
