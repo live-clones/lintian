@@ -41,6 +41,12 @@ for my $check (readdir CHECKDIR) {
     next unless $check =~ /\.desc$/;
 
     my @tags = read_dpkg_control("$LINTIAN_ROOT/checks/$check");
+    my $desc = $tags[0];
+    my @needs = ();
+    if ($desc and exists $desc->{'needs-info'}) {
+        @needs = split(/\s*,\s*/, $desc->{'needs-info'});
+    }
+
     shift(@tags);
 
     foreach my $tag (@tags) {
@@ -58,6 +64,8 @@ for my $check (readdir CHECKDIR) {
         push(@{$stats{both}{$severity}{$certainty}}, $name);
         push(@{$stats{type}{severity}{$type}{$severity}}, $name);
         push(@{$stats{type}{both}{$type}{$severity}{$certainty}}, $name);
+
+        map { $stats{needs}{$severity}{$certainty}{$_} = 1 } @needs;
 
         $num_tags++;
 
@@ -138,6 +146,18 @@ foreach my $old (@codes) {
             print "  $new: ". @{$codes} ."\n";
             print "    ". join("\n    ", @{$codes}) ."\n"
                 if ($verbose >= 1 and $old ne $new) or ($verbose >= 2);
+        }
+    }
+}
+
+print "\nCollections\n";
+foreach my $s (@severities) {
+    foreach my $c (@certainties) {
+        if (my $needs = $stats{needs}{$s}{$c}) {
+            my $size = scalar keys %{$needs};
+            my @list = keys %{$needs};
+            print "  $s/$c: $size\n";
+            print "    ". join("\n    ", @list) ."\n" if $verbose >= 2;
         }
     }
 }
