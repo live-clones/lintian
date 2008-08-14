@@ -554,7 +554,7 @@ import Tags;
 
 my @l_secs = read_dpkg_control("$LINTIAN_ROOT/checks/lintian.desc");
 shift(@l_secs);
-map Tags::add_tag($_), @l_secs;
+map { $_->{'script'} = 'lintian'; Tags::add_tag($_) } @l_secs;
 
 # }}}
 

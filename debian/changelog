@@ -36,6 +36,7 @@ lintian (1.24.4) UNRELEASED; urgency=low
   * frontend/lintian:
     + [FL] Do not try to use fail() before the lintian libraries are
       loaded.
+    + [JP] Allow tags from the "lintian" checkset to be specified with --tags.
   
   * lib/manual_refs:
     + [JP] Regenerate with new manual_refs_update.pl script.
