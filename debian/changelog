@@ -45,6 +45,7 @@ lintian (1.24.4) UNRELEASED; urgency=low
   * debian/rules:
     + [FL] Use $(PERL) instead of a hardcoded path.
     + [FL] Clean-up the binary-indep code.
+    + [FL] Add build stamp file.
   
   * doc/README{,.in}:
     + [FL] Move README to README.in and add the listing of lintian

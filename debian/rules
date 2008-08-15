@@ -5,6 +5,7 @@ PERL ?= /usr/bin/perl
 VER := $(shell head -1 debian/changelog | sed -e 's/^.*(//' -e 's/).*$$//')
 tmp := $(CURDIR)/debian/lintian
 neededfiles := debian/rules frontend/lintian
+docsource := doc/lintian.sgml doc/README.in
 allchecks := $(wildcard checks/*)
 allcollect := $(wildcard collection/*)
 tagfiles := $(wildcard testset/tags.* t/*/tags)
@@ -18,7 +19,8 @@ runtests: $(neededfiles) $(allchecks) $(allcollect) $(tagfiles) $(testfiles)
 	LINTIAN_ROOT="" $(PERL) t/runtests -k t debian/tests $(onlyrun)
 	if [ "$(onlyrun)" != "" ]; then touch $@; fi
 
-build: $(neededfiles)
+build: build-stamp
+build-stamp: $(neededfiles) $(docsource)
 	@echo .... running build ....
 	dh_testdir
 	cd doc && LANG=C debiandoc2html lintian.sgml
@@ -26,12 +28,13 @@ build: $(neededfiles)
 	LINTIAN_ROOT="" ./frontend/lintian --help \
 		| tail -n +3 | $(PERL) -n -e 'print "  $$_"' >doc/help.tmp
 	$(PERL) -p -e 'BEGIN { open HELP, "<", "doc/help.tmp" or die; local $$/ = undef; $$h = <HELP> }; s/%LINTIAN_HELP%/$$h/' doc/README.in >doc/README
+	touch $@
 
 clean: $(neededfiles)
 	@echo .... cleaning ....
 	dh_testdir
 	dh_testroot
-	rm -f runtests
+	rm -f runtests build-stamp
 	rm -f doc/help.tmp doc/README
 	rm -rf doc/lintian.html/ doc/lintian.txt
 	rm -rf debian/tests
