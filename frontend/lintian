@@ -73,6 +73,7 @@ my $experimental_output_opts = undef;
 my @severities = qw(wishlist minor normal important serious);
 my @certainties = qw(wild-guess possible certain);
 my %display_level = ();
+my %display_source = ();
 
 my @packages;
 
@@ -148,6 +149,7 @@ Behaviour options:
     -I, --display-info        display "I:" tags (normally suppressed)
     -E, --display-experimental display "X:" tags (normally suppressed)
     -L, --display-level       display tags with the specified level
+    --display-source X        restrict displayed tags by source
     -l X, --unpack-level X    set default unpack level to X
     -o, --no-override         ignore overrides
     --show-overrides          output tags that have been overriden
@@ -329,6 +331,7 @@ my %opthash = (			# ------------------ actions
 	       "display-info|I" => \&display_infotags,
 	       "display-experimental|E" => \$display_experimentaltags,
 	       "display-level|L=s" => \&record_display_level,
+	       "display-source=s" => \&record_display_source,
 	       "unpack-level|l=i" => \$unpack_level,
 	       "no-override|o" => \$no_override,
 	       "show-overrides" => \$show_overrides,
@@ -430,6 +433,10 @@ sub display_infotags {
     foreach my $s (@severities) {
 	set_display_level($s, 1);
     }
+}
+
+sub record_display_source {
+    $display_source{$_[1]} = 1;
 }
 
 # check permitted values for --color
@@ -637,6 +644,7 @@ if (defined $experimental_output_opts) {
 $Tags::show_experimental = $display_experimentaltags;
 $Tags::show_overrides = $show_overrides;
 %Tags::display_level = %display_level;
+%Tags::display_source = %display_source;
 $Tags::color = $color;
 %Tags::only_issue_tags = map { $_ => 1 } (split(/,/, $check_tags))
     if defined $check_tags;
@@ -1157,7 +1165,7 @@ for my $f (readdir CHECKDIR) {
 	foreach my $tag (@secs) {
 	    $tag->{'script'} = $script;
 	    Tags::add_tag($tag);
-	    $p->{'requested-tags'}++ if Tags::check_level($tag);
+	    $p->{'requested-tags'}++ if Tags::display_tag($tag);
 	}
     } # end: if ne lintian
 

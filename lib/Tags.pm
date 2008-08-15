@@ -43,6 +43,7 @@ our $show_overrides = 0;
 our $output_formatter = \&print_tag;
 our $color = 'never';
 our %display_level;
+our %display_source;
 our %only_issue_tags;
 
 # The master hash with all tag info. Key is the tag name, value another hash
@@ -302,20 +303,48 @@ sub print_tag {
     print $output;
 }
 
-# Checks if the Severity/Certainty level of a given tag passes the threshold
-# of requested tags (returns 1) or not (returns 0).
-sub check_level {
+# Extract manual sources from a given tag. Returns a hash that has manual
+# names as keys and sections/ids has values.
+sub get_tag_source {
     my ( $tag_info ) = @_;
-    my $severity = $tag_info->{severity};
-    my $certainty = $tag_info->{certainty};
-    return $display_level{$severity}{$certainty};
+    my $ref = $tag_info->{'ref'};
+    return undef if not $ref;
+
+    my @refs = split(',', $ref);
+    my %source = ();
+    foreach my $r (@refs) {
+        $source{$1} = $2 if $r =~ /^([\w-]+)\s(.+)$/;
+    }
+    return \%source;
+}
+
+# Checks if the Severity/Certainty level of a given tag passes the threshold
+# of requested tags (returns 1) or not (returns 0). If there are restrictions
+# by source, references will be also checked. The result is also saved in the
+# tag structure to avoid unnecessarily checking later.
+sub display_tag {
+    my ( $tag_info ) = @_;
+    return $tag_info->{'display'} if defined $tag_info->{'display'};
+
+    my $severity = $tag_info->{'severity'};
+    my $certainty = $tag_info->{'certainty'};
+    my $level = $display_level{$severity}{$certainty};
+
+    $tag_info->{'display'} = $level;
+    return $level if not keys %display_source;
+
+    my $tag_source = get_tag_source($tag_info);
+    my %in = map { $_ => 1 } grep { $tag_source->{$_} } keys %display_source;
+
+    $tag_info->{'display'} = ($level and keys %in) ? 1 : 0;
+    return $tag_info->{'display'};
 }
 
 sub skip_print {
     my ( $tag_info ) = @_;
     return 1 if exists $tag_info->{experimental} && !$show_experimental;
     return 1 if $tag_info->{overridden}{override} && !$show_overrides;
-    return 1 if not check_level( $tag_info );
+    return 1 if not display_tag( $tag_info );
     return 0;
 }
 
