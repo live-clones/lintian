@@ -41,6 +41,9 @@ our $debug = $::debug;
 our $show_info = 0;
 our $show_experimental = 0;
 our $show_overrides = 0;
+our $experimental_class = 0;
+our $min_severity = 'normal';
+our $min_certainty = 'possible';
 our $output_formatter = \&print_tag;
 our $color = 'never';
 our %only_issue_tags;
@@ -76,6 +79,26 @@ my $current;
 my %codes = ( 'error' => 'E' , 'warning' => 'W' , 'info' => 'I' );
 my %colors = ( 'error' => 'red' , 'warning' => 'yellow' , 'info' => 'cyan' );
 
+my %severity_level = (
+    'serious' => 4,
+    'important' => 3,
+    'normal' => 2,
+    'minor' => 1,
+    'wishlist' => 0
+);
+
+my %certainty_level = (
+    'certain' => 2,
+    'possible' => 1,
+    'wild-guess' => 0
+);
+
+my %type_to_sev = (
+    'error' => 'important',
+    'warning' => 'normal',
+    'info' => 'minor'
+);
+
 # Add a new tag, supplied as a hash reference
 sub add_tag {
 	my $newtag = shift;
@@ -83,6 +106,11 @@ sub add_tag {
 	    warn "Duplicate tag: $newtag->{tag}\n";
 	    return 0;
 	}
+
+	# Temporary default mapping for experimental Severity/Certainty based
+	# tag classification.
+	$newtag->{severity} = $type_to_sev{$newtag->{type}} if !$newtag->{severity};
+	$newtag->{certainty} = "possible" if !$newtag->{certainty};
 
 	$tags{$newtag->{'tag'}} = $newtag;
 	return 1;
@@ -183,14 +211,6 @@ sub get_tag_info {
     return undef;
 }
 
-sub check_range {
-    my ( $x, $min, $max ) = @_;
-
-    return -1 if $x < $min;
-    return 1 if $x > $max;
-    return 0;
-}
-
 # check if a certain tag has a override for the 'current' package
 sub check_overrides {
     my ( $tag_info, $information ) = @_;
@@ -210,7 +230,7 @@ sub check_overrides {
 }
 
 # sets all the overridden fields of a tag_info hash correctly
-sub check_need_to_show {
+sub set_overrides {
     my ( $tag_info, $information ) = @_;
     $tag_info->{overridden}{override} = check_overrides( $tag_info,
 							 $information );
@@ -268,6 +288,33 @@ sub print_tag {
     print $output;
 }
 
+# Checks if the Severity/Certainty level of a given tag passes the threshold
+# of requested tags (returns 1) or not (returns 0).
+sub check_level {
+    my ( $tag_info ) = @_;
+    my $sev = $severity_level{$tag_info->{severity}};
+    my $cert = $certainty_level{$tag_info->{certainty}};
+    my $min_sev = $severity_level{$min_severity};
+    my $min_cert = $certainty_level{$min_certainty};
+    return 0 if $sev < $min_sev || $cert < $min_cert;
+    return 1;
+}
+
+sub skip_print {
+    my ( $tag_info ) = @_;
+
+    return 1 if exists $tag_info->{experimental} && !$show_experimental;
+    return 1 if $tag_info->{overridden}{override} && !$show_overrides;
+
+    if ($experimental_class) {
+        return 1 if not check_level( $tag_info );
+    } else {
+        return 1 if $tag_info->{type} eq "info" && !$show_info;
+    }
+
+    return 0;
+}
+
 sub tag {
     my ( $tag, @information ) = @_;
     unless ($current) {
@@ -286,14 +333,12 @@ sub tag {
 	warn "Tried to issue unknown tag $tag\n";
 	return 0;
     }
-    check_need_to_show( $tag_info, \@information );
+
+    set_overrides( $tag_info, \@information );
 
     record_stats( $tag_info );
 
-    return 0 if
-	exists $tag_info->{experimental} and !$show_experimental;
-
-    return 1 if $tag_info->{overridden}{override} && !$show_overrides;
+    return 1 if skip_print( $tag_info );
 
     &$output_formatter( $info{$current}, $tag_info, \@information );
     return 1;
