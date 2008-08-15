@@ -1,5 +1,7 @@
 #!/usr/bin/make -f
 
+PERL ?= /usr/bin/perl
+
 VER := $(shell head -1 debian/changelog | sed -e 's/^.*(//' -e 's/).*$$//')
 tmp := $(CURDIR)/debian/lintian
 usl := $(tmp)/usr/share/lintian
@@ -13,8 +15,8 @@ onlyrun =
 runtests: $(neededfiles) $(allchecks) $(allcollect) $(tagfiles) $(testfiles)
 	@echo .... running tests ....
 	[ -d debian/tests ] || mkdir debian/tests
-	LINTIAN_ROOT="" /usr/bin/perl testset/runtests -k testset debian/tests $(onlyrun)
-	LINTIAN_ROOT="" /usr/bin/perl t/runtests -k t debian/tests $(onlyrun)
+	LINTIAN_ROOT="" $(PERL) testset/runtests -k testset debian/tests $(onlyrun)
+	LINTIAN_ROOT="" $(PERL) t/runtests -k t debian/tests $(onlyrun)
 	if [ "$(onlyrun)" != "" ]; then touch $@; fi
 
 build: $(neededfiles)
