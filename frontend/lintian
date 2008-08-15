@@ -1093,7 +1093,12 @@ for my $f (readdir CHECKDIR) {
 	}
 
 	shift(@secs);
-	map { $_->{'script'}=$script; Tags::add_tag($_) } @secs;
+	$p->{'requested-tags'} = 0;
+	foreach my $tag (@secs) {
+	    $tag->{'script'} = $script;
+	    Tags::add_tag($tag);
+	    $p->{'requested-tags'}++ if Tags::check_level($tag);
+	}
     } # end: if ne lintian
 
 }
@@ -1145,6 +1150,9 @@ if ($action eq 'check') {
 		    || ($check_info{$c}->{'abbrev'}
 			&& $dont_check{$check_info{$c}->{'abbrev'}})) {
 		    #user requested not to run this check
+		} elsif ($Tags::experimental_class
+			 && $check_info{$c}->{'requested-tags'} == 0) {
+		    #no need to run this check, no tags will be issued
 		} else {
 		    $checks{$c} = 1;
 		}
