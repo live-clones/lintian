@@ -4,7 +4,6 @@ PERL ?= /usr/bin/perl
 
 VER := $(shell head -1 debian/changelog | sed -e 's/^.*(//' -e 's/).*$$//')
 tmp := $(CURDIR)/debian/lintian
-usl := $(tmp)/usr/share/lintian
 neededfiles := debian/rules frontend/lintian
 allchecks := $(wildcard checks/*)
 allcollect := $(wildcard collection/*)
@@ -46,28 +45,13 @@ binary-indep: $(neededfiles) build
 	dh_clean -k -Xtestset/diffs/binary.c~
 	dh_installdirs
 
-# frontends
-	@echo .... install frontends ....
-	install -m 755 frontend/lintian $(tmp)/usr/bin/
+	dh_install
+# some manual work
 	sed -i 's/<VERSION>/$(VER)/' $(tmp)/usr/bin/lintian
-	install -m 755 frontend/lintian-info $(tmp)/usr/bin/
-# library files
-	@echo .... install library files ....
-	find checks collection data lib unpack \
-	    \( -path '*/CVS' -o -path '*/.svn' \) -prune -o -print \
-		| cpio -admp $(usl)
-# documentation
-	@echo .... install documentation ....
+	install -m 644 doc/lintianrc.example $(tmp)/etc/lintianrc
 	dh_installdocs
 	dh_installchangelogs
-# manual pages
-	@echo .... install manual pages ....
-	dh_installman man/*.1
-# config file
-	@echo .... install config file ....
-	install -m 644 doc/lintianrc.example $(tmp)/etc/lintianrc
-# control files
-	@echo .... fix things up and build packages ....
+	dh_installman
 	dh_compress
 	dh_fixperms
 	dh_installdeb
