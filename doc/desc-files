@@ -23,6 +23,8 @@ Description record of a `Lintian tag':
 
   Tag: <tag>
   Type: <warning | error | info>
+  Severity: <serious | important | normal | minor | wishlist>
+  Certainty: <certain | possible | wild-guess>
   Info: <description of this tag>
   Ref: <reference>
   Status: <untested | <empty> >
