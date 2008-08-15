@@ -618,6 +618,7 @@ foreach my $file (sort keys %{$info->index}) {
 	    [ qr,(?i)scriptaculous\.js(\.gz)?$, => 'libjs-scriptaculous' ],
 	    [ qr,(?i)fckeditor\.js(\.gz)?$, => 'fckeditor' ],
 	    [ qr,(?i)cropper(\.uncompressed)?\.js(\.gz)?$, => 'libjs-cropper' ],
+	    [ qr,(?i)yahoo-(dom-event|min)\.js(\.gz)?$, => 'libjs-yui' ],
 	);
 	foreach my $jslibrary (@jslibraries) {
 	    if ($file =~ m,$jslibrary->[0], and $pkg ne $jslibrary->[1]) {

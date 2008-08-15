@@ -18,6 +18,10 @@ lintian (1.24.4) UNRELEASED; urgency=low
     + [ADB] Enhance the description of package-contains-empty-directory to
       mention how to remove such directories when building the package.
       Thanks Chris Lamb.  (Closes: #495153)
+    + [ADB] Add libjs-yui (the Yahoo User Interface Library) to the list of
+      packages which contain Javascript libraries and should be depended upon
+      rather than embedded in other packages.  Patch from Chris Lamb.
+      (Closes: #495155)
   * checks/scripts:
     + [ADB] Split the "read without variable or with invalid options" bashism
       test in two, thus enabling the checks to be more accurate and avoiding

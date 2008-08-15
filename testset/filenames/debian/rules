@@ -167,6 +167,8 @@ binary-indep:
 	touch debian/tmp/usr/share/filenames/prototype.js
 	touch debian/tmp/usr/share/filenames/prototype.js.gz
 	touch debian/tmp/usr/share/filenames/scriptaculous.js
+	touch debian/tmp/usr/share/filenames/yahoo-dom-event.js
+	touch debian/tmp/usr/share/filenames/yahoo-min.js
 
 	ln -s '../filenames/doc/version6.txt.gz' debian/tmp/usr/share/doc/filenames/version.txt.gz
 	ln -s ../../share/symlink debian/tmp/usr/lib/filenames/symlink1ok

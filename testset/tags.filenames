@@ -73,6 +73,8 @@ W: filenames: embedded-javascript-library usr/share/filenames/prototype-1.2.3.4.
 W: filenames: embedded-javascript-library usr/share/filenames/prototype.js
 W: filenames: embedded-javascript-library usr/share/filenames/prototype.js.gz
 W: filenames: embedded-javascript-library usr/share/filenames/scriptaculous.js
+W: filenames: embedded-javascript-library usr/share/filenames/yahoo-dom-event.js
+W: filenames: embedded-javascript-library usr/share/filenames/yahoo-min.js
 W: filenames: executable-not-elf-or-script ./usr/bin/bin/bad
 W: filenames: executable-not-elf-or-script ./usr/bin/mh/read
 W: filenames: extra-license-file usr/share/pixmaps/COPYING
