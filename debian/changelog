@@ -45,6 +45,10 @@ lintian (1.24.4) UNRELEASED; urgency=low
   * debian/rules:
     + [FL] Use $(PERL) instead of a hardcoded path.
   
+  * doc/README{,.in}:
+    + [FL] Move README to README.in and add the listing of lintian
+      options on build time from lintian --help.
+  
   * frontend/lintian:
     + [FL] Do not try to use fail() before the lintian libraries are
       loaded.

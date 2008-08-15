@@ -53,47 +53,7 @@ Command line options of the lintian command
 
   (Please refer to the manual page lintian(1) for details.)
 
-  Actions:
-    -S, --setup-lab            set up static lab
-    -R, --remove-lab           remove static lab
-    -c, --check                check packages (default action)
-    -C X, --check-part X       check only certain aspects
-    -X X, --dont-check-part X  don't check certain aspects
-    -T X, --tags X             only run checks needed for requested tags
-    --tags-from-file X         like --tags, but read list from file
-    -u, --unpack               only unpack packages in the lab
-    -r, --remove               remove package from the lab
-  General options:
-    -h, --help                 display short help text
-    -v, --verbose              verbose messages
-    -V, --version              display Lintian version and exit
-    -d, --debug                turn Lintian's debug messages ON
-    --print-version            print unadorned version number and exit
-  Behaviour options:
-    -i, --info                 give detailed info about tags
-    -I, --display-info         display "I:" tags (normally suppressed)
-    -E, --display-experimental display "X:" tags (normally suppressed)
-    -l X, --unpack-level X     set default unpack level to X
-    -o, --no-override          ignore overrides
-    --show-overrides           output tags that have been overriden
-    --color never/always/auto   disable, enable, or enable color for TTY
-    -U X, --unpack-info X      specify which info should be collected
-    -m, --md5sums              check md5sums when processing a .changes file
-    --allow-root               suppress lintian's warning when run as root
-  Configuration options:
-    --cfg CONFIGFILE           read CONFIGFILE for configuration
-    --lab LABDIR               use LABDIR as permanent laboratory
-    --archivedir ARCHIVEDIR    location of Debian archive to scan for packages
-    --dist DIST                scan packages in this distribution (e.g. sid)
-    --section RELEASE          scan packages in this section (e.g. main)
-    --arch ARCH                scan packages with architecture ARCH
-    --root ROOTDIR             use ROOTDIR instead of /usr/share/lintian
-  Package selection options:
-    -a, --all                  process all packages in distribution
-    -b, --binary               process only binary packages
-    -s, --source               process only source packages
-    --udeb                     process only udeb packages
-    -p X, --packages-file X    process all files in file (special syntax!)
+%LINTIAN_HELP%
 
 
 Where to find more information

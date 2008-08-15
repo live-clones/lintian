@@ -24,12 +24,16 @@ build: $(neededfiles)
 	dh_testdir
 	cd doc && LANG=C debiandoc2html lintian.sgml
 	cd doc && LANG=C debiandoc2text lintian.sgml
+	LINTIAN_ROOT="" ./frontend/lintian --help \
+		| tail -n +3 | $(PERL) -n -e 'print "  $$_"' >doc/help.tmp
+	$(PERL) -p -e 'BEGIN { open HELP, "<", "doc/help.tmp" or die; local $$/ = undef; $$h = <HELP> }; s/%LINTIAN_HELP%/$$h/' doc/README.in >doc/README
 
 clean: $(neededfiles)
 	@echo .... cleaning ....
 	dh_testdir
 	dh_testroot
 	rm -f runtests
+	rm -f doc/help.tmp doc/README
 	rm -rf doc/lintian.html/ doc/lintian.txt
 	rm -rf debian/tests
 	find -name "*.py?" -print0 | xargs -0r rm
