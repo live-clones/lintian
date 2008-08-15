@@ -718,6 +718,11 @@ Tag: package-contains-empty-directory
 Type: warning
 Info: This package installs an empty directory.  This might be intentional
  but it's normally a mistake.  If it is intentional, add a lintian override.
+ .
+ If a package ships with or installs empty directories, you can remove them
+ in debian/rules by calling:
+ .
+  $ find path/to/base/dir -type d -empty -delete
 
 Tag: package-section-games-but-contains-no-game
 Type: error

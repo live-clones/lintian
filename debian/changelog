@@ -11,10 +11,13 @@ lintian (1.24.4) UNRELEASED; urgency=low
   * checks/cruft{,.desc}:
     + [FL] Add new check for outdated libtool files.
       (Closes: #293296)
-  * checks/files:
+  * checks/files{,.desc}:
     + [ADB] Don't warn about embedded Javascript libraries in the package
       that actually provides the library. Thanks Raphael Geissert for
       pointing out the problem.  (Closes: #494577)
+    + [ADB] Enhance the description of package-contains-empty-directory to
+      mention how to remove such directories when building the package.
+      Thanks Chris Lamb.  (Closes: #495153)
   * checks/scripts:
     + [ADB] Split the "read without variable or with invalid options" bashism
       test in two, thus enabling the checks to be more accurate and avoiding
