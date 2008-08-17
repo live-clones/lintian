@@ -1,15 +1,15 @@
+E: another-version: debian-revision-should-not-be-zero 123.4-0
+E: another-version: new-essential-package
 E: another-version: no-copyright-file
 E: fields source: package-uses-debhelper-but-lacks-build-depends
 E: fields: debian-changelog-file-missing-or-wrong-name
 E: fields: depends-on-python-minimal depends
-E: fields: essential-no-not-needed
 E: fields: no-copyright-file
-W: another-version: debian-revision-should-not-be-zero 123.4-0
-W: another-version: new-essential-package
 W: fields source: changelog-should-mention-nmu
 W: fields source: debian-revision-not-well-formed 1.5-.3
 W: fields source: native-package-with-dash-version
 W: fields source: package-uses-deprecated-debhelper-compat-version 1
 W: fields source: source-nmu-has-incorrect-version-number 1.5-.3
 W: fields: debian-revision-not-well-formed 1.5-.3
+W: fields: essential-no-not-needed
 W: fields: unknown-section does-not-exist

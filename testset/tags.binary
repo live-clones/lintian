@@ -1,4 +1,7 @@
 E: binary source: debian-rules-missing-required-target binary-indep
+E: binary source: not-binnmuable-all-depends-any binary-data -> binary
+E: binary source: not-binnmuable-any-depends-all binary -> binary-data
+E: binary: changelog-file-not-compressed changelog
 E: binary: debian-changelog-file-missing-or-wrong-name
 E: binary: debian-news-file-uses-obsolete-national-encoding at line 3
 E: binary: depends-on-x-metapackage pre-depends: xorg
@@ -34,6 +37,7 @@ E: binary: non-wm-in-windowmanager-menu-section x11 /usr/lib/menu/binary:4
 E: binary: non-wm-in-windowmanager-menu-section x11 /usr/share/menu/binary:4
 E: binary: non-wm-module-in-wm-modules-menu-section wm /usr/lib/menu/binary:22
 E: binary: non-wm-module-in-wm-modules-menu-section wm /usr/share/menu/binary:22
+E: binary: possible-gpl-code-linked-with-openssl
 E: binary: postinst-does-not-call-installdocs usr/share/doc-base/space 
 E: binary: postinst-does-not-call-updatemenus usr/share/menu/binary
 E: binary: postrm-does-not-call-updatemenus usr/share/menu/binary
@@ -57,8 +61,6 @@ W: binary source: debian-rules-ignores-make-clean-error line 12
 W: binary source: debian-rules-uses-pwd line 9
 W: binary source: maintainer-upload-has-incorrect-version-number 4-1.1
 W: binary source: native-package-with-dash-version
-W: binary source: not-binnmuable-all-depends-any binary-data -> binary
-W: binary source: not-binnmuable-any-depends-all binary -> binary-data
 W: binary source: substvar-source-version-is-deprecated binary
 W: binary source: substvar-source-version-is-deprecated binary-data
 W: binary-data: control-file-is-empty md5sums
@@ -67,7 +69,6 @@ W: binary: binary-without-manpage usr/bin/hello-static
 W: binary: binary-without-manpage usr/bin/hello.static
 W: binary: binary-without-manpage usr/bin/iminusrbin
 W: binary: binary-without-manpage usr/bin/static-hello
-W: binary: changelog-file-not-compressed changelog
 W: binary: changelog-news-debian-mismatch distribution unstable != UNRELEASED
 W: binary: changelog-news-debian-mismatch urgency low != high
 W: binary: debian-copyright-file-uses-obsolete-national-encoding at line 13
@@ -113,7 +114,6 @@ W: binary: menu-item-uses-windowmanagers-section /usr/share/menu/binary:13
 W: binary: old-fsf-address-in-copyright-file
 W: binary: package-contains-hardlink usr/bar2 -> usr/share/baz
 W: binary: package-contains-upstream-install-documentation usr/share/doc/binary/INSTALL
-W: binary: possible-gpl-code-linked-with-openssl
 W: binary: spelling-error-in-description debian Debian
 W: binary: spelling-error-in-doc-base-abstract-field binary:10 speling spelling
 W: binary: spelling-error-in-doc-base-title-field binary:2 debian Debian

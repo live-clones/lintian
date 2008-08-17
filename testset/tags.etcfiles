@@ -1,4 +1,6 @@
 E: etcfiles source: debian-rules-missing-required-target binary-arch
+E: etcfiles source: not-binnmuable-all-depends-any only-etcfiles -> etcfiles
+E: etcfiles: changelog-file-not-compressed changelog
 E: etcfiles: file-in-etc-not-marked-as-conffile /etc/improper
 E: etcfiles: file-in-etc-not-marked-as-conffile /etc/improper-link
 E: etcfiles: malformed-md5sums-control-file line 4
@@ -6,13 +8,11 @@ E: etcfiles: md5sum-mismatch etc/improper
 E: etcfiles: md5sum-mismatch etc/proper
 E: etcfiles: md5sums-lists-nonexisting-file usr/bin/foo
 E: etcfiles: no-copyright-file
+E: etcfiles: non-etc-file-marked-as-conffile /var/lib/foo
 E: only-etcfiles: extended-description-is-empty
 W: etcfiles source: ancient-standards-version 3.5.0 (current is 3.8.0)
-W: etcfiles source: not-binnmuable-all-depends-any only-etcfiles -> etcfiles
-W: etcfiles: changelog-file-not-compressed changelog
 W: etcfiles: file-missing-in-md5sums etc/improper-link
 W: etcfiles: file-missing-in-md5sums usr/share/doc/etcfiles/changelog
-W: etcfiles: non-etc-file-marked-as-conffile /var/lib/foo
 W: etcfiles: package-contains-hardlink etc/improper -> etc/improper-link
 W: etcfiles: readme-debian-mentions-usr-doc line 2
 W: etcfiles: run-parts-cron-filename-contains-full-stop etc/cron.daily/cronfile-contains.fullstop
