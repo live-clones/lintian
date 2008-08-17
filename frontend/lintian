@@ -616,6 +616,32 @@ my @l_secs = read_dpkg_control("$LINTIAN_ROOT/checks/lintian.desc");
 shift(@l_secs);
 map { $_->{'script'} = 'lintian'; Tags::add_tag($_) } @l_secs;
 
+no warnings 'once';
+if (defined $experimental_output_opts) {
+    my %opts = map { split(/=/) } split( /,/, $experimental_output_opts );
+    foreach (keys %opts) {
+	if ($_ eq 'format') {
+	    if ($opts{$_} eq 'colons') {
+		require Tags::ColonSeparated;
+		$Tags::output_formatter = \&Tags::ColonSeparated::print_tag;
+	    } elsif ($opts{$_} eq 'letterqualifier') {
+		require Tags::LetterQualifier;
+		$Tags::output_formatter = \&Tags::LetterQualifier::print_tag;
+	    }
+	}
+	no strict 'refs';
+	${"Tags::$_"} = $opts{$_};
+    }
+}
+
+$Tags::show_experimental = $display_experimentaltags;
+$Tags::show_overrides = $show_overrides;
+%Tags::display_level = %display_level;
+$Tags::color = $color;
+%Tags::only_issue_tags = map { $_ => 1 } (split(/,/, $check_tags))
+    if defined $check_tags;
+use warnings;
+
 # }}}
 
 # {{{ No clue why this code is here...
@@ -1062,32 +1088,6 @@ closedir(COLLDIR);
 # }}}
 
 # {{{ Now we're ready to load info about checks & tags
-
-no warnings 'once';
-if (defined $experimental_output_opts) {
-    my %opts = map { split(/=/) } split( /,/, $experimental_output_opts );
-    foreach (keys %opts) {
-	if ($_ eq 'format') {
-	    if ($opts{$_} eq 'colons') {
-		require Tags::ColonSeparated;
-		$Tags::output_formatter = \&Tags::ColonSeparated::print_tag;
-	    } elsif ($opts{$_} eq 'letterqualifier') {
-		require Tags::LetterQualifier;
-		$Tags::output_formatter = \&Tags::LetterQualifier::print_tag;
-	    }
-	}
-	no strict 'refs';
-	${"Tags::$_"} = $opts{$_};
-    }
-}
-
-$Tags::show_experimental = $display_experimentaltags;
-$Tags::show_overrides = $show_overrides;
-%Tags::display_level = %display_level;
-$Tags::color = $color;
-%Tags::only_issue_tags = map { $_ => 1 } (split(/,/, $check_tags))
-    if defined $check_tags;
-use warnings;
 
 # load information about checker scripts
 opendir(CHECKDIR, "$LINTIAN_ROOT/checks")
