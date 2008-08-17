@@ -1,4 +1,4 @@
-lintian (1.24.4) UNRELEASED; urgency=low
+lintian (1.24.4) unstable; urgency=low
 
   The "[JP] is Jordà Polo" release.
   
@@ -71,7 +71,7 @@ lintian (1.24.4) UNRELEASED; urgency=low
     + [JP] Add support for many more manuals (FHS, debconf-spec,
       {menu,python,perl}-policy, libpkg-guide).
 
- --
+ -- Frank Lichtenheld <djpig@debian.org>  Fri, 22 Aug 2008 07:43:52 +0200
 
 lintian (1.24.3) unstable; urgency=low
   
