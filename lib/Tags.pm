@@ -38,14 +38,11 @@ use Term::ANSIColor;
 # configuration variables and defaults
 our $verbose = $::verbose;
 our $debug = $::debug;
-our $show_info = 0;
 our $show_experimental = 0;
 our $show_overrides = 0;
-our $experimental_class = 0;
-our $min_severity = 'normal';
-our $min_certainty = 'possible';
 our $output_formatter = \&print_tag;
 our $color = 'never';
+our %display_level;
 our %only_issue_tags;
 
 # The master hash with all tag info. Key is the tag name, value another hash
@@ -309,26 +306,16 @@ sub print_tag {
 # of requested tags (returns 1) or not (returns 0).
 sub check_level {
     my ( $tag_info ) = @_;
-    my $sev = $severity_level{$tag_info->{severity}};
-    my $cert = $certainty_level{$tag_info->{certainty}};
-    my $min_sev = $severity_level{$min_severity};
-    my $min_cert = $certainty_level{$min_certainty};
-    return 0 if $sev < $min_sev || $cert < $min_cert;
-    return 1;
+    my $severity = $tag_info->{severity};
+    my $certainty = $tag_info->{certainty};
+    return $display_level{$severity}{$certainty};
 }
 
 sub skip_print {
     my ( $tag_info ) = @_;
-
     return 1 if exists $tag_info->{experimental} && !$show_experimental;
     return 1 if $tag_info->{overridden}{override} && !$show_overrides;
-
-    if ($experimental_class) {
-        return 1 if not check_level( $tag_info );
-    } else {
-        return 1 if $tag_info->{type} eq "info" && !$show_info;
-    }
-
+    return 1 if not check_level( $tag_info );
     return 0;
 }
 
