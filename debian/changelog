@@ -22,6 +22,9 @@ lintian (1.24.4) UNRELEASED; urgency=low
       packages which contain Javascript libraries and should be depended upon
       rather than embedded in other packages.  Patch from Chris Lamb.
       (Closes: #495155)
+  * checks/manpages:
+    + [RA] Also ignore "cannot adjust line" errors from man for lines that
+      contain URLs.  Thanks, Stéphane Glondu.  (Closes: #491578)
   * checks/scripts:
     + [ADB] Split the "read without variable or with invalid options" bashism
       test in two, thus enabling the checks to be more accurate and avoiding
