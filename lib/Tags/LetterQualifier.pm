@@ -24,20 +24,60 @@ use warnings;
 use Term::ANSIColor;
 use Tags;
 
-my @codes = (
-    [ 'W?', 'W ', 'W!' ], # wishlist (wild-guess, possible, certain)
-    [ 'M?', 'M ', 'M!' ], # minor
-    [ 'N?', 'N ', 'N!' ], # normal
-    [ 'I?', 'I ', 'I!' ], # important
-    [ 'S?', 'S ', 'S!' ], # serious
+my %codes = (
+    'wishlist' => {
+        'wild-guess' => 'W?',
+        'possible' => 'W ',
+        'certain' => 'W!'
+    },
+    'minor' => {
+        'wild-guess' => 'M?',
+        'possible' => 'M ',
+        'certain' => 'M!'
+    },
+    'normal' => {
+        'wild-guess' => 'N?',
+        'possible' => 'N ',
+        'certain' => 'N!'
+    },
+    'important' => {
+        'wild-guess' => 'I?',
+        'possible' => 'I ',
+        'certain' => 'I!'
+    },
+    'serious' => {
+        'wild-guess' => 'S?',
+        'possible' => 'S ',
+        'certain' => 'S!'
+    },
 );
 
-my @colors = (
-    [  'green',   'green',    'cyan' ],
-    [  'green',    'cyan',  'yellow' ],
-    [   'cyan',  'yellow',  'yellow' ],
-    [ 'yellow',     'red',     'red' ],
-    [ 'yellow',     'red', 'magenta' ]
+my %colors = (
+    'wishlist' => {
+        'wild-guess' => 'green',
+        'possible' => 'green',
+        'certain' => 'cyan'
+    },
+    'minor' => {
+        'wild-guess' => 'green',
+        'possible' => 'cyan',
+        'certain' => 'yellow'
+    },
+    'normal' => {
+        'wild-guess' => 'cyan',
+        'possible' => 'yellow',
+        'certain' => 'yellow'
+    },
+    'important' => {
+        'wild-guess' => 'yellow',
+        'possible' => 'red',
+        'certain' => 'red'
+    },
+    'serious' => {
+        'wild-guess' => 'yellow',
+        'possible' => 'red',
+        'certain' => 'magenta'
+    },
 );
 
 sub print_tag {
@@ -46,7 +86,10 @@ sub print_tag {
     my $code = Tags::get_tag_code($tag_info);
     $code = 'X' if exists $tag_info->{experimental};
     $code = 'O' if $tag_info->{overridden}{override};
-    my $lq = Tags::get_tag_value($tag_info, \@codes);
+
+    my $sev = $tag_info->{severity};
+    my $cer = $tag_info->{certainty};
+    my $lq = $codes{$sev}{$cer};
 
     my $pkg = $pkg_info->{pkg};
     my $type = ($pkg_info->{type} ne 'binary') ? " $pkg_info->{type}" : '';
@@ -57,7 +100,7 @@ sub print_tag {
     $extra = '' if $extra eq ' ';
 
     if ($Tags::color eq 'always' || ($Tags::color eq 'auto' && -t STDOUT)) {
-        my $color = Tags::get_tag_value($tag_info, \@colors);
+        my $color = $colors{$sev}{$cer};
         $lq = colored($lq, $color);
         $tag = colored($tag, $color);
     }

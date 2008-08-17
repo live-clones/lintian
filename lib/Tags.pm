@@ -78,18 +78,13 @@ my $current;
 our @severity_list = qw(wishlist minor normal important serious);
 our @certainty_list = qw(wild-guess possible certain);
 
-my %severity_level;
-@severity_level{@severity_list} = (0 .. $#severity_list);
-my %certainty_level;
-@certainty_level{@certainty_list} = (0 .. $#certainty_list);
-
 # Map Severity/Certainty levels to E|W|I codes.
-my @codes = (
-    [ 'I', 'I', 'I' ], # wishlist (wild-guess, possible, certain)
-    [ 'I', 'I', 'W' ], # minor
-    [ 'I', 'W', 'W' ], # normal
-    [ 'W', 'E', 'E' ], # important
-    [ 'E', 'E', 'E' ], # serious
+my %codes = (
+    'wishlist'  => { 'wild-guess' => 'I', 'possible' => 'I', 'certain' => 'I' },
+    'minor'     => { 'wild-guess' => 'I', 'possible' => 'I', 'certain' => 'W' },
+    'normal'    => { 'wild-guess' => 'I', 'possible' => 'W', 'certain' => 'W' },
+    'important' => { 'wild-guess' => 'W', 'possible' => 'E', 'certain' => 'E' },
+    'serious'   => { 'wild-guess' => 'E', 'possible' => 'E', 'certain' => 'E' },
 );
 
 my %colors = ( 'E' => 'red' , 'W' => 'yellow' , 'I' => 'cyan' );
@@ -214,16 +209,8 @@ sub get_tag_info {
 
 # Returns the E|W|I code for a given tag.
 sub get_tag_code {
-    my ( $tag_info ) = @_;
-    return get_tag_value($tag_info, \@codes);
-}
-
-# Returns the value in a Severity/Certainty mapping for a given tag.
-sub get_tag_value {
     my ( $tag_info, $map ) = @_;
-    my $sev = $tag_info->{severity};
-    my $cer = $tag_info->{certainty};
-    return $map->[$severity_level{$sev}][$certainty_level{$cer}];
+    return $codes{$tag_info->{severity}}{$tag_info->{certainty}};
 }
 
 # check if a certain tag has a override for the 'current' package
