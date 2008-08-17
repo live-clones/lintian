@@ -63,8 +63,8 @@ sub read_tag_info {
 
 	    if ($secs[$i]->{'severity'} and $secs[$i]->{'certainty'}) {
 		push(@foo, "");
-		push(@foo, "Severity: $secs[$i]->{'severity'};");
-		push(@foo, "Certainty: $secs[$i]->{'certainty'}");
+		push(@foo, "Severity: $secs[$i]->{'severity'}; " .
+		           "Certainty: $secs[$i]->{'certainty'}");
 	    }
 
 	    if ($secs[$i]->{'experimental'}) {

@@ -78,10 +78,15 @@
                     $OUT .= qq(  <ul class="report">\n);
                 }
 
+                my $class = '';
+                if ($info->{severity} and $info->{certainty}) {
+                    $class = qq( title="$info->{severity}, $info->{certainty}");
+                }
+
                 # Display tag name only once.
                 if ($tag ne $info->{tag} or $new_binary) {
                     $OUT .= "</ul>\n    </li>\n" unless $first or $new_binary;
-                    $OUT .= "    <li>\n";
+                    $OUT .= "    <li$class>\n";
                     $OUT .= qq(      <span class="type-$info->{code}">);
                     $OUT .= "$info->{code}</span> ";
                     $OUT .= qq(<a href="../tags/$info->{tag}.html">);

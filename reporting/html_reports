@@ -63,6 +63,26 @@ our (%binary_info, %source_info, %udeb_info, %bin_src_ref);
 # Get the tag information from the Lintian *.desc files.
 our %tag_info = %{ read_tag_info('html') };
 
+# Get additional tag information.
+our %tag_extra = ();
+
+opendir(CHECKDIR, "$LINTIAN_ROOT/checks")
+    or fail("cannot read directory $LINTIAN_ROOT/checks");
+
+for my $check (readdir CHECKDIR) {
+    next unless $check =~ /\.desc$/;
+    my @tags = read_dpkg_control("$LINTIAN_ROOT/checks/$check");
+    shift(@tags);
+    foreach my $tag (@tags) {
+        next unless $tag->{severity} and $tag->{certainty};
+        my $name = $tag->{tag};
+        $tag_extra{$name}{severity} = $tag->{severity};
+        $tag_extra{$name}{certainty} = $tag->{certainty};
+    }
+}
+
+closedir(CHECKDIR);
+
 # Set the Lintian version, current timestamp, and archive timestamp.
 our $LINTIAN_VERSION = `$LINTIAN_ROOT/frontend/lintian --print-version`;
 our $timestamp = `date -u --rfc-822`;
@@ -244,12 +264,14 @@ while (<>) {
     # hashes to save space (which means we can't later do destructive tricks
     # with it).
     my $info = {
-        code    => html_quote ($code),
-        package => html_quote ($package),
-        type    => html_quote ($type),
-        tag     => html_quote ($tag),
-        extra   => html_quote ($extra),
-        xref    => maintainer_url ($maintainer) . "#$source"
+        code      => html_quote ($code),
+        package   => html_quote ($package),
+        type      => html_quote ($type),
+        tag       => html_quote ($tag),
+        severity  => html_quote ($tag_extra{$tag}{severity}),
+        certainty => html_quote ($tag_extra{$tag}{certainty}),
+        extra     => html_quote ($extra),
+        xref      => maintainer_url ($maintainer) . "#$source"
     };
     $by_maint{$maintainer}{$source}{$version} ||= [];
     push(@{ $by_maint{$maintainer}{$source}{$version} }, $info);
