@@ -17,7 +17,6 @@ E: libhello0: syntax-error-in-symbols-file 14
 E: libhello0: syntax-error-in-symbols-file 18
 E: libhello0: syntax-error-in-symbols-file 3
 E: libhello0: syntax-error-in-symbols-file 4
-E: libhello0: syntax-error-in-symbols-file 8
 E: libhello0: unknown-meta-field-in-symbols-file Build-Dep-Foo, line 10
 W: debug source: ancient-standards-version 3.7.0 (current is 3.8.0)
 W: debug source: changelog-should-not-mention-nmu
@@ -29,6 +28,7 @@ W: hello: binary-without-manpage usr/bin/hello.dbg
 W: libhello0-dbg: dbg-package-missing-depends libhello0
 W: libhello0-dbg: debug-file-should-use-detached-symbols ./usr/lib/debug/lib/libhello.so.0.0
 W: libhello0-dbg: shared-lib-without-dependency-information ./usr/lib/libhello.so.dbg
+W: libhello0: symbols-declares-dependency-on-other-package hello-dbg 
 W: libhello0: symbols-declares-dependency-on-other-package libhello0c2 (>= 1.2)
 W: libhello0: symbols-declares-dependency-on-other-package libhello2 #MINVER#
 W: libhello0: symbols-declares-dependency-on-other-package libhello2 (>= 1:2.3)
