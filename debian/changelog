@@ -11,6 +11,7 @@ lintian (1.24.4) unstable; urgency=low
   * checks/cruft{,.desc}:
     + [FL] Add new check for outdated libtool files.
       (Closes: #293296)
+    + [FL] Don't exclude all of lintian, but only files in the test suites.
   * checks/files{,.desc}:
     + [ADB] Don't warn about embedded Javascript libraries in the package
       that actually provides the library. Thanks Raphael Geissert for

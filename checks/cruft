@@ -132,9 +132,6 @@ find(\&find_cruft, 'unpacked');
 # Check the diff for problems.  Record any files we warn about in %warned so
 # that we don't warn again when checking the full unpacked source.  Takes the
 # name of a file containing diffstat output.
-#
-# Exclude the lintian package itself from many of these checks, since it
-# includes many of these problems in its test suite.
 sub check_diffstat {
     my ($diffstat) = @_;
     open(STAT, '<', $diffstat) or fail("cannot open $diffstat: $!");
@@ -185,13 +182,17 @@ sub check_diffstat {
 # Report problems with native packages using the "diff-contains" rather than
 # "source-contains" tag.  The tag isn't entirely accurate, but it's better
 # than creating yet a third set of tags, and this gets the severity right.
+#
+# Exclude the lintian test suites from these checks.
 sub find_cruft {
     (my $name = $File::Find::name) =~ s,^(\./)?unpacked/,,;
+    return if $name =~ m,^t(?:estset)?/, and $pkg eq 'lintian';
+
     my $prefix = ($info->native ? "diff-contains" : "source-contains");
     if (-d and not $warned{$name}) {
         for my $rule (@directory_checks) {
             if ($name =~ /$rule->[0]/) {
-                tag "${prefix}-$rule->[1]", $name unless $pkg eq 'lintian';
+                tag "${prefix}-$rule->[1]", $name;
             }
         }
     }
@@ -201,7 +202,7 @@ sub find_cruft {
         for my $rule (@file_checks) {
             next if ($rule->[2] and not $info->native);
             if ($name =~ /$rule->[0]/) {
-                tag "${prefix}-$rule->[1]", $name unless $pkg eq 'lintian';
+                tag "${prefix}-$rule->[1]", $name;
             }
         }
     }
@@ -210,7 +211,7 @@ sub find_cruft {
     # as anyone doing that probably knows what they're doing and is using it
     # as part of the build.
     if ($name =~ m,^(.+/)?config.(?:cache|log|status)$,) {
-        if ($name !~ m,^debian/config\.cache$, and $pkg ne 'lintian') {
+        if ($name !~ m,^debian/config\.cache$,) {
             tag "configure-generated-file-in-source", $name;
         }
     } elsif ($name =~ m,^(.+/)?config.(?:guess|sub)$, and not $atdinbd) {
