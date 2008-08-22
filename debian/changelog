@@ -18,6 +18,10 @@ lintian (1.25.0) unstable; urgency=low
       very few cases where this would produce false negatives
       but there are reported false positives for the current
       expressions.
+    + [RA] Improve the check for possibly insecure /tmp files to check
+      variable assignment as well and reduce false positives by ignoring
+      uses with $RANDOM or without a filename.  Based on a patch from
+      Raphael Geissert.
 
   * frontend/lintian:
     + [RA] Ensure we close the pipe to lintian-info before exiting, since

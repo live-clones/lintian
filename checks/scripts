@@ -490,7 +490,7 @@ while (<SCRIPTS>) {
 	    $has_code = 1;
 	}
 
-	if (m,[^\w=](/var)?/tmp\b, and not m/\bmktemp\b/ and not m/\btempfile\b/ and not m/\bmkdir\b/ and not m/\bmkstemp\b/) {
+	if (m,[^\w]((/var)?/tmp|\$TMPDIR)/[^)\]}\s], and not m/\bmks?temp\b/ and not m/\btempfile\b/ and not m/\bmkdir\b/ and not m/\$RANDOM/) {
 	    tag "possibly-insecure-handling-of-tmp-files-in-maintainer-script", "$file:$."
 		unless $warned{tmp};
 	    $warned{tmp} = 1;
