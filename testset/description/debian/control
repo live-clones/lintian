@@ -1,8 +1,8 @@
 Source: description
 Section: text
 Priority: extra
-Maintainer: Lintian Maintainers <lintian-maint@debian.org>
-Uploaders: Tobias Toedter <toddy@debian.org>
+Maintainer: Tobias Toedter <toddy@debian.org>
+Uploaders: Tobias Toedter <toddy@debian.org>, Foo Bar Moo <foo@debian.org>
 Standards-Version: 3.8.0
 
 Package: description

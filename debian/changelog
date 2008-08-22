@@ -6,6 +6,9 @@ lintian (1.25.0) unstable; urgency=low
     The default output is unchanged, see the documentation on
     how to utilize the new features.
   
+  * checks/fields{,.desc}:
+    + [RA] Check for a maintainer also listed in uploaders.  Patch from
+      Raphael Geissert.
   * checks/files:
     + [RA] Check for embedding copies of jsjac and jsMath.  Patch from
       Raphael Geissert.

@@ -974,3 +974,13 @@ Certainty: certain
 Info: This package has a name suggesting that it contains detached
  debugging symbols.  If so, it should have priority "extra" since users
  normally do not need such packages.
+
+Tag: maintainer-also-in-uploaders
+Type: warning
+Severity: minor
+Certainty: certain
+Info: The maintainer value also appears on the <tt>Uploaders</tt> field.
+ There were some reasons why this was useful when Uploaders support was
+ first introduced, but those have long-since been fixed and there is no
+ longer any need to list the maintainer in Uploaders.  The duplicate
+ information should probably be removed.

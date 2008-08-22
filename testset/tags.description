@@ -17,6 +17,7 @@ I: description-baz: no-md5sums-control-file
 I: description-foo: no-md5sums-control-file
 I: description-qux: no-md5sums-control-file
 I: description: no-md5sums-control-file
+W: description source: maintainer-also-in-uploaders
 W: description source: native-package-with-dash-version
 W: description-bar: extended-description-line-too-long
 W: description-foo: description-starts-with-leading-spaces

@@ -254,6 +254,12 @@ for my $f (qw(maintainer uploaders)) {
 	}
 }
 
+if (defined $info->field('uploaders') && defined $info->field('maintainer')) {
+	my $maint = $info->field('maintainer');
+	tag 'maintainer-also-in-uploaders'
+		if $info->field('uploaders') =~ m/\Q$maint/;
+}
+
 #---- Source
 
 if ($type eq "source") {
