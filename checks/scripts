@@ -173,11 +173,11 @@ our $update_inetd
 # reported is maintainer-script-needs-depends-on-%s, so be sure to update
 # scripts.desc when adding a new rule.
 our @depends_needed = (
-	[ adduser	=> '\badduser\b'	   ],
-	[ gconf2	=> '\bgconf-schemas\b'	   ],
-	[ $update_inetd	=> '\bupdate-inetd\b'	   ],
+	[ adduser	=> '\badduser\s'	   ],
+	[ gconf2	=> '\bgconf-schemas\s'	   ],
+	[ $update_inetd	=> '\bupdate-inetd\s'	   ],
 	[ ucf		=> '\bucf\s'		   ],
-	[ 'xml-core'	=> '\bupdate-xmlcatalog\b' ],
+	[ 'xml-core'	=> '\bupdate-xmlcatalog\s' ],
 );
 
 sub run {
