@@ -5,6 +5,9 @@ lintian (1.25.0) unstable; urgency=low
     dimensions (Severity and Certainty).
     The default output is unchanged, see the documentation on
     how to utilize the new features.
+  
+  * t/runtests:
+    + [FL] Copy the changes to testset/runtests from JP's branch.
 
  -- Frank Lichtenheld <djpig@debian.org>  Sat, 23 Aug 2008 22:55:44 +0200
 
