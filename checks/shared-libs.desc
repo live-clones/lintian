@@ -8,16 +8,22 @@ Info: This script checks if a binary package conforms to shared library policy.
 
 Tag: shlib-with-executable-bit
 Type: error
+Severity: important
+Certainty: certain
 Info: Shared libraries should be mode 0644.
 Ref: policy 8.1
 
 Tag: shlib-with-bad-permissions
 Type: warning
+Severity: normal
+Certainty: certain
 Info: Shared libraries should be mode 0644.
 Ref: policy 8.1
 
 Tag: shlib-with-non-pic-code
 Type: error
+Severity: serious
+Certainty: certain
 Ref: policy 10.2
 Info: The listed shared libraries contain object code that was compiled 
  without -fPIC. All object code in shared libraries should be recompiled
@@ -32,6 +38,8 @@ Info: The listed shared libraries contain object code that was compiled
 
 Tag: ldconfig-symlink-missing-for-shlib
 Type: error
+Severity: important
+Certainty: certain
 Info: The package should not only include the shared library itself, but also
  the symbolic link which ldconfig would produce. (This is necessary, so 
  that the link gets removed by dpkg automatically when the package
@@ -41,12 +49,16 @@ Ref: policy 8.1
 
 Tag: ldconfig-symlink-before-shlib-in-deb
 Type: error
+Severity: important
+Certainty: certain
 Info: In the package contents list, the shared library has to come before
  any symbolic links referencing the shared library.
 Ref: policy 8.1
 
 Tag: dev-pkg-without-shlib-symlink
 Type: warning
+Severity: normal
+Certainty: certain
 Info: A `-dev' package is supposed to install a `libsomething.so' symbolic
  link referencing the corresponding shared library. Notice how the link name
  doesn't include the version number -- this is because such a link is used
@@ -55,6 +67,8 @@ Ref: policy 8.4
 
 Tag: non-dev-pkg-with-shlib-symlink
 Type: warning
+Severity: normal
+Certainty: possible
 Info: Although this package is not a `-dev' package, it installs a
  `libsomething.so' symbolic link referencing the corresponding shared
  library. When the link doesn't include the version number, it is used by
@@ -71,24 +85,32 @@ Ref: policy 8.4
 
 Tag: preinst-calls-ldconfig
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The preinst script calls ldconfig.  Calls to ldconfig should only be
  in postinst and postrm scripts.
 Ref: policy 8.1.1
 
 Tag: prerm-calls-ldconfig
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The prerm script calls ldconfig.  Calls to ldconfig should only
  be in postinst and postrm scripts.
 Ref: policy 8.1.1
 
 Tag: postrm-unsafe-ldconfig
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The postrm script calls ldconfig unsafely.  The postrm
  must only call ldconfig when given the argument "remove".
 Ref: policy 8.1.1
 
 Tag: no-shlibs-control-file
 Type: error
+Severity: serious
+Certainty: certain
 Info: Although the package includes a shared library, the package does not
  have a shlibs control file. If this is intentional, please override this
  error.
@@ -96,6 +118,8 @@ Ref: policy 8.6
 
 Tag: pkg-has-shlibs-control-file-but-no-actual-shared-libs
 Type: error
+Severity: important
+Certainty: certain
 Info: Although the package does not include any shared libraries, it does
  have a shlibs control file. If you did include a shared library, check that
  the SONAME of the library is set and that it matches the contents of the
@@ -107,22 +131,30 @@ Info: Although the package does not include any shared libraries, it does
 
 Tag: duplicate-entry-in-shlibs-control-file
 Type: error
+Severity: important
+Certainty: certain
 Info: The shlibs control file contains a duplicate entry.
 
 Tag: shlib-missing-in-control-file
 Type: error
+Severity: important
+Certainty: certain
 Info: The package contains a shared library that is not listed in the
  shlibs control file. If this is intentional, please override this error.
 Ref: policy 8.6
 
 Tag: unused-shlib-entry-in-control-file
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The shlibs control file contains an entry for a shared library that
  is not installed by this package.
 Ref: policy 8.6
 
 Tag: shlibs-declares-dependency-on-other-package
 Type: warning
+Severity: normal
+Certainty: possible
 Info: This package declares in its shlibs control file either a dependency
  on some other package not listed in the Provides of this package or on a
  version of this package that the package version doesn't satisfy.
@@ -139,35 +171,47 @@ Ref: policy 8.6
 
 Tag: ldconfig-symlink-referencing-wrong-file
 Type: error
+Severity: important
+Certainty: certain
 Info: The symbolic link references the wrong file. (It should reference
  the shared library.)
 Ref: policy 8.1
 
 Tag: ldconfig-symlink-is-not-a-symlink
 Type: error
+Severity: important
+Certainty: certain
 Info: The package installs a file with the name, ldconfig would use for
  the symbolic link to reference the shared library.
 Ref: policy 8.1
 
 Tag: postinst-has-useless-call-to-ldconfig
 Type: warning
+Severity: minor
+Certainty: certain
 Info: The postinst script calls ldconfig even though no shared libraries are
  installed in a directory controlled by the dynamic library loader.
 Ref: policy 8.1.1
 
 Tag: udeb-postinst-must-not-call-ldconfig
 Type: error
+Severity: important
+Certainty: certain
 Info: The postinst script calls ldconfig, which is an error in udebs.
  ldconfig is not available and not needed in debian-installer
 
 Tag: postrm-has-useless-call-to-ldconfig
 Type: warning
+Severity: minor
+Certainty: certain
 Info: The postrm script calls ldconfig even though no shared libraries are
  installed in a directory controlled by the dynamic library loader.
 Ref: policy 8.1.1
 
 Tag: postinst-must-call-ldconfig
 Type: error
+Severity: serious
+Certainty: certain
 Info: The package installs shared libraries in a directory controlled by
  the dynamic library loader. Therefore, the package must call `ldconfig' in
  its postinst script.
@@ -175,6 +219,8 @@ Ref: policy 8.1.1
 
 Tag: postrm-should-call-ldconfig
 Type: warning
+Severity: important
+Certainty: certain
 Info: The package installs shared libraries in a directory controlled by
  the dynamic library loader. Therefore, the package should call `ldconfig'
  in its postrm script.
@@ -182,6 +228,8 @@ Ref: policy 8.1.1
 
 Tag: sharedobject-in-library-directory-missing-soname
 Type: error
+Severity: important
+Certainty: possible
 Info: A shared object was identified in a library directory (i.e. a
  directory in the standard linker path) which doesn't have a SONAME.
  This is usually an error.
@@ -192,6 +240,8 @@ Info: A shared object was identified in a library directory (i.e. a
 
 Tag: shlib-without-PT_GNU_STACK-section
 Type: error
+Severity: important
+Certainty: certain
 Info: The listed shared libraries lacks a PT_GNU_STACK section. This forces
  the dynamic linker to make the stack executable.
  .
@@ -200,6 +250,8 @@ Info: The listed shared libraries lacks a PT_GNU_STACK section. This forces
 
 Tag: shlib-with-executable-stack
 Type: warning
+Severity: normal
+Certainty: possible
 Info: The listed shared libraries declares the stack as executable.
  .
  Executable stack is usualy an error as it is only needed if the code
@@ -210,6 +262,8 @@ Info: The listed shared libraries declares the stack as executable.
 
 Tag: symbols-file-contains-current-version-with-debian-revision
 Type: error
+Severity: important
+Certainty: certain
 Info: Debian revisions should be stripped from versions in symbols files.
  Not doing so leads to dependencies unsatisfiable by backports (1.0-1~bpo
  &lt;&lt; 1.0-1 while 1.0-1~bpo &gt;= 1.0).  If the debian revision can't
@@ -225,6 +279,8 @@ Info: Debian revisions should be stripped from versions in symbols files.
 
 Tag: symbols-file-contains-debian-revision
 Type: warning
+Severity: normal
+Certainty: certain
 Info: Debian revisions should be stripped from versions in symbols files.
  Not doing so leads to dependencies unsatisfiable by backports (1.0-1~bpo
  &lt;&lt; 1.0-1 while 1.0-1~bpo &gt;= 1.0).  If the debian revision can't
@@ -234,6 +290,8 @@ Info: Debian revisions should be stripped from versions in symbols files.
 
 Tag: syntax-error-in-symbols-file
 Type: error
+Severity: important
+Certainty: certain
 Info: The symbols file contains an entry that does not follow the syntax
  rules for symbols files.
  .
@@ -242,10 +300,14 @@ Ref: deb-symbols(5)
 
 Tag: duplicate-entry-in-symbols-control-file
 Type: error
+Severity: important
+Certainty: certain
 Info: The symbols control file contains a duplicate entry.
 
 Tag: no-symbols-control-file
 Type: info
+Severity: wishlist
+Certainty: certain
 Info: Although the package includes a shared library, the package does not
  have a symbols control file.
  .
@@ -256,6 +318,8 @@ Ref: dpkg-gensymbols(1)
 
 Tag: pkg-has-symbols-control-file-but-no-shared-libs
 Type: error
+Severity: important
+Certainty: certain
 Info: Although the package does not include any shared libraries, it does
  have a symbols control file. If you did include a shared library, check that
  the SONAME of the library is set and that it matches the contents of the
@@ -267,17 +331,23 @@ Info: Although the package does not include any shared libraries, it does
 
 Tag: shlib-missing-in-symbols-control-file
 Type: warning
+Severity: normal
+Certainty: possible
 Info: The package contains a shared library that is not listed in the
  symbols control file. This may not be a problem if, for example,
  the library is a C++ library.
 
 Tag: unused-shlib-entry-in-symbols-control-file
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The symbols control file contains an entry for a shared library that
  is not installed by this package.
 
 Tag: symbols-declares-dependency-on-other-package
 Type: warning
+Severity: normal
+Certainty: possible
 Info: This package declares in its symbols control file a dependency on
  some other package (and not one listed in the Provides of this package).
  .
@@ -293,6 +363,8 @@ Ref: policy 8.6
 
 Tag: invalid-template-id-in-symbols-file
 Type: error
+Severity: important
+Certainty: certain
 Info: The symbol definition refers to an alternative dependency template
  which is not defined for the library containing the symbol.
  .
@@ -302,6 +374,8 @@ Info: The symbol definition refers to an alternative dependency template
 
 Tag: unknown-meta-field-in-symbols-file
 Type: error
+Severity: important
+Certainty: certain
 Info: The symbols control file contains an unknown meta-information field.
  .
  A list of currently supported fields may be found in deb-control(5).
@@ -309,5 +383,7 @@ Ref: deb-control(5)
 
 Tag: symbols-declared-but-not-shlib
 Type: error
+Severity: important
+Certainty: certain
 Info: The symbols control file contains dependency and symbol information
  for a shared library which is not listed in the shlibs control file.

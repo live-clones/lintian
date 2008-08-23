@@ -38,12 +38,19 @@ E: filenames: wrong-file-owner-uid-or-gid usr/lib/filenames/wrong-owner-30001:65
 E: filenames: wrong-file-owner-uid-or-gid usr/lib/filenames/wrong-owner-65535:65001 65535/65001
 E: more-filename-games: no-copyright-file
 I: filename-games: no-md5sums-control-file
+I: filename-games: package-contains-empty-directory usr/games/
 I: filenames: file-in-usr-something-x11-without-pre-depends usr/include/X11/
 I: filenames: no-md5sums-control-file
+I: filenames: package-contains-empty-directory usr/lib/perl5/.arch-ids/
+I: filenames: package-contains-empty-directory usr/lib/perl5/.be/
+I: filenames: package-contains-empty-directory usr/lib/perl5/.bzr/
+I: filenames: package-contains-empty-directory usr/lib/perl5/.ditrack/
+I: filenames: package-contains-empty-directory usr/lib/perl5/.svn/
+I: filenames: package-contains-empty-directory usr/lib/perl5/CVS/
+I: filenames: package-contains-empty-directory usr/lib/perl5/{arch}/
 I: more-filename-games: no-md5sums-control-file
 W: filename-games: binary-without-manpage usr/bin/test-game
 W: filename-games: no-priority-field
-W: filename-games: package-contains-empty-directory usr/games/
 W: filenames source: ancient-standards-version 3.1.1 (current is 3.8.0)
 W: filenames source: diff-contains-arch-control-dir .arch-ids
 W: filenames source: diff-contains-arch-control-dir {arch}
@@ -103,13 +110,6 @@ W: filenames: non-standard-dir-perm usr/lib/filenames/readonly/ 0555 != 0755
 W: filenames: package-contains-bts-control-dir usr/lib/perl5/.be/
 W: filenames: package-contains-bts-control-dir usr/lib/perl5/.ditrack/
 W: filenames: package-contains-devhelp-file-without-symlink usr/share/doc/filenames/bad-devhelp/c.devhelp.gz
-W: filenames: package-contains-empty-directory usr/lib/perl5/.arch-ids/
-W: filenames: package-contains-empty-directory usr/lib/perl5/.be/
-W: filenames: package-contains-empty-directory usr/lib/perl5/.bzr/
-W: filenames: package-contains-empty-directory usr/lib/perl5/.ditrack/
-W: filenames: package-contains-empty-directory usr/lib/perl5/.svn/
-W: filenames: package-contains-empty-directory usr/lib/perl5/CVS/
-W: filenames: package-contains-empty-directory usr/lib/perl5/{arch}/
 W: filenames: package-contains-linda-override usr/share/linda/overrides/filenames
 W: filenames: package-contains-readme-for-other-platform-or-distro usr/share/doc/filenames/README.macosx
 W: filenames: package-contains-vcs-control-dir usr/lib/perl5/.arch-ids/

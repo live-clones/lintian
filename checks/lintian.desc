@@ -4,6 +4,8 @@ Info: this description file is a special case: it contains the tag info
 
 Tag: no-description-in-changes-file
 Type: error
+Severity: serious
+Certainty: certain
 Info: There is no "Description" field in your .changes file.  A
  description is mandatory and is usually constructed from the descriptions
  in the control file of the package by the package build tools.
@@ -11,6 +13,8 @@ Ref: policy 5.5
 
 Tag: bad-distribution-in-changes-file
 Type: error
+Severity: important
+Certainty: certain
 Info: You've specified an unknown target distribution for your upload in
  the <tt>debian/changelog</tt> file.
  .
@@ -21,6 +25,8 @@ Ref: policy 5.6.14
 
 Tag: bad-ubuntu-distribution-in-changes-file
 Type: error
+Severity: important
+Certainty: certain
 Info: You've specified an unknown target distribution for your upload in
  the <tt>debian/changelog</tt> file.
  .
@@ -29,6 +35,8 @@ Info: You've specified an unknown target distribution for your upload in
 
 Tag: no-urgency-in-changes-file
 Type: warning
+Severity: normal
+Certainty: certain
 Info: There is no "Urgency" field in the .changes file.  This field is
  recommended by policy and is usually derived from the first line of the
  most recent changelog entry by the package build tools.
@@ -36,6 +44,8 @@ Ref: policy 5.5
 
 Tag: bad-urgency-in-changes-file
 Type: error
+Severity: important
+Certainty: certain
 Info: The keyword value of the "Urgency" field in the .changes file is not
  one of the allowed values of low, medium, high, critical, and emergency
  (case-insensitive).  This value normally taken from the first line of the
@@ -45,16 +55,22 @@ Ref: policy 5.6.17
 
 Tag: file-size-mismatch-in-changes-file
 Type: error
+Severity: serious
+Certainty: certain
 Info: The actual file size does not match what's listed in the
  <tt>.changes</tt> file.
 
 Tag: checksum-mismatch-in-changes-file
 Type: error
+Severity: serious
+Certainty: certain
 Info: The actual checksum does not match what's listed in the
  <tt>.changes</tt> file.
 
 Tag: bad-section-in-changes-file
 Type: error
+Severity: important
+Certainty: certain
 Info: The sections <tt>non-free</tt> and <tt>contrib</tt> are no longer
  valid. Please use section <tt>non-free/xxx</tt> or
  <tt>contrib/xxx</tt> instead.
@@ -62,11 +78,15 @@ Ref: policy 2.4
 
 Tag: unused-override
 Type: info
+Severity: wishlist
+Certainty: certain
 Info: Lintian discovered an unused override entry in its database.
  Please remove it from the overrides file if it is not needed anymore.
 
 Tag: malformed-override
 Type: error
+Severity: important
+Certainty: certain
 Info: Lintian discovered an override entry with an invalid format.  An
  override entry should have the format:
  .

@@ -38,15 +38,12 @@ use Term::ANSIColor;
 # configuration variables and defaults
 our $verbose = $::verbose;
 our $debug = $::debug;
-our $show_info = 0;
 our $show_experimental = 0;
 our $show_overrides = 0;
 our $output_formatter = \&print_tag;
-our $min_severity = 1;
-our $max_severity = 99;
-our $min_significance = 1;
-our $max_significance = 99;
 our $color = 'never';
+our %display_level;
+our %display_source;
 our %only_issue_tags;
 
 # The master hash with all tag info. Key is the tag name, value another hash
@@ -62,8 +59,7 @@ my %tags;
 # following keys:
 # - overrides
 # - tags
-# - severity
-# - significance
+# - types
 my %stats;
 
 # Info about a specific file. Key is the the filename, value another hash
@@ -78,14 +74,26 @@ my %info;
 # Currently selected file (not package!)
 my $current;
 
-# Compatibility stuff
-my %codes = ( 'error' => 'E' , 'warning' => 'W' , 'info' => 'I' );
-our %type_to_sev = ( error => 4, warning => 2, info => 0 );
-our @sev_to_type = qw( info warning warning error error );
+# Possible Severity: and Certainty: values, sorted from lowest to highest.
+our @severity_list = qw(wishlist minor normal important serious);
+our @certainty_list = qw(wild-guess possible certain);
 
-my @sig_to_qualifier = ( '??', '?', '', '!' );
-my @sev_to_code = qw( I W W E E );
-my @sev_to_color = ( 'cyan', 'yellow', 'yellow', 'red', 'red' );
+# Map Severity/Certainty levels to E|W|I codes.
+my %codes = (
+    'wishlist'  => { 'wild-guess' => 'I', 'possible' => 'I', 'certain' => 'I' },
+    'minor'     => { 'wild-guess' => 'I', 'possible' => 'I', 'certain' => 'W' },
+    'normal'    => { 'wild-guess' => 'I', 'possible' => 'W', 'certain' => 'W' },
+    'important' => { 'wild-guess' => 'W', 'possible' => 'E', 'certain' => 'E' },
+    'serious'   => { 'wild-guess' => 'E', 'possible' => 'E', 'certain' => 'E' },
+);
+
+my %colors = ( 'E' => 'red' , 'W' => 'yellow' , 'I' => 'cyan' );
+
+my %type_to_sev = (
+    'error' => 'important',
+    'warning' => 'normal',
+    'info' => 'minor'
+);
 
 # Add a new tag, supplied as a hash reference
 sub add_tag {
@@ -95,12 +103,11 @@ sub add_tag {
 	    return 0;
 	}
 
-	# smooth transition
-	$newtag->{type} = $sev_to_type[$newtag->{severity}]
-	    unless $newtag->{type};
-	$newtag->{significance} = 2 unless exists $newtag->{significance};
-	$newtag->{severity} = $type_to_sev{$newtag->{type}}
-	    unless exists $newtag->{severity};
+	# Temporary default mapping for experimental Severity/Certainty based
+	# tag classification.
+	$newtag->{severity} = $type_to_sev{$newtag->{type}} if !$newtag->{severity};
+	$newtag->{certainty} = "possible" if !$newtag->{certainty};
+
 	$tags{$newtag->{'tag'}} = $newtag;
 	return 1;
 }
@@ -124,8 +131,7 @@ sub set_pkg {
 	overrides => {},
     };
     $stats{$file} = {
-	severity => {},
-	significance => {},
+	types => {},
 	tags => {},
 	overrides => {},
     };
@@ -201,12 +207,10 @@ sub get_tag_info {
     return undef;
 }
 
-sub check_range {
-    my ( $x, $min, $max ) = @_;
-
-    return -1 if $x < $min;
-    return 1 if $x > $max;
-    return 0;
+# Returns the E|W|I code for a given tag.
+sub get_tag_code {
+    my ( $tag_info, $map ) = @_;
+    return $codes{$tag_info->{severity}}{$tag_info->{certainty}};
 }
 
 # check if a certain tag has a override for the 'current' package
@@ -228,35 +232,22 @@ sub check_overrides {
 }
 
 # sets all the overridden fields of a tag_info hash correctly
-sub check_need_to_show {
+sub set_overrides {
     my ( $tag_info, $information ) = @_;
     $tag_info->{overridden}{override} = check_overrides( $tag_info,
 							 $information );
-    my $min_sev = $show_info ? 0 : $min_severity; # compat hack
-    $tag_info->{overridden}{severity} = check_range( $tag_info->{severity},
-						     $min_sev,
-						     $max_severity );
-    $tag_info->{overridden}{significance} = check_range( $tag_info->{significance},
-							 $min_significance,
-							 $max_significance );
 }
 
 # records the stats for a given tag_info hash
 sub record_stats {
     my ( $tag_info ) = @_;
 
-    for my $k (qw( severity significance tag )) {
-	$stats{$current}{$k}{$tag_info->{$k}}++
-	    unless $tag_info->{overridden}{override}
-		|| $tag_info->{overridden}{severity}
-		|| $tag_info->{overridden}{significance};
-    }
-    for my $k (qw( severity significance override )) {
-	$stats{$current}{overrides}{$k}{$tag_info->{overridden}{$k}}++
-	    if $tag_info->{overridden}{$k};
-    }
     if ($tag_info->{overridden}{override}) {
-        $stats{$current}{overrides}{by_severity}{$tag_info->{severity}}++;
+        $stats{$current}{overrides}{tags}{$tag_info->{overridden}{override}}++;
+        $stats{$current}{overrides}{types}{$tag_info->{type}}++;
+    } else {
+        $stats{$current}{tags}{$tag_info->{tag}}++;
+        $stats{$current}{types}{$tag_info->{type}}++;
     }
 }
 
@@ -280,8 +271,7 @@ sub print_tag {
     my $extra = '';
     $extra = " @$information" if @$information;
     $extra = '' if $extra eq ' ';
-    my $code = $codes{$tag_info->{type}};
-    my $severity = $type_to_sev{$tag_info->{type}};
+    my $code = get_tag_code($tag_info);
     $code = 'X' if exists $tag_info->{experimental};
     $code = 'O' if $tag_info->{overridden}{override};
     my $type = '';
@@ -289,9 +279,9 @@ sub print_tag {
 
     my $output = "$code: $pkg_info->{pkg}$type: ";
     if ($color eq 'always' || ($color eq 'auto' && -t STDOUT)) {
-        $output .= colored($tag_info->{tag}, $sev_to_color[$severity]);
+        $output .= colored($tag_info->{tag}, $colors{$code});
     } elsif ($color eq 'html') {
-        $output .= colored_html($tag_info->{tag}, $sev_to_color[$severity]);
+        $output .= colored_html($tag_info->{tag}, $colors{$code});
     } else {
         $output .= $tag_info->{tag};
     }
@@ -300,30 +290,49 @@ sub print_tag {
     print $output;
 }
 
-sub print_tag_new {
-    my ( $pkg_info, $tag_info, $information ) = @_;
+# Extract manual sources from a given tag. Returns a hash that has manual
+# names as keys and sections/ids has values.
+sub get_tag_source {
+    my ( $tag_info ) = @_;
+    my $ref = $tag_info->{'ref'};
+    return undef if not $ref;
 
-    my $extra = '';
-    $extra = " @$information" if @$information;
-    $extra = '' if $extra eq ' ';
-    my $code = $sev_to_code[$tag_info->{severity}];
-    $code = 'X' if exists $tag_info->{experimental};
-    $code = 'O' if $tag_info->{overridden}{override};
-    my $qualifier = $sig_to_qualifier[$tag_info->{significance}];
-    $qualifier = '' if $code eq 'O';
-    my $type = '';
-    $type = " $pkg_info->{type}" if $pkg_info->{type} ne 'binary';
-
-    my $output = "$code$qualifier: $pkg_info->{pkg}$type: ";
-    if ($color eq 'always' || ($color eq 'auto' && -t STDOUT)) {
-        $output .= colored($tag_info->{tag}, $sev_to_color[$tag_info->{severity}]);
-    } else {
-        $output .= $tag_info->{tag};
+    my @refs = split(',', $ref);
+    my %source = ();
+    foreach my $r (@refs) {
+        $source{$1} = $2 if $r =~ /^([\w-]+)\s(.+)$/;
     }
-    $output .= "$extra\n";
+    return \%source;
+}
 
-    print $output;
+# Checks if the Severity/Certainty level of a given tag passes the threshold
+# of requested tags (returns 1) or not (returns 0). If there are restrictions
+# by source, references will be also checked. The result is also saved in the
+# tag structure to avoid unnecessarily checking later.
+sub display_tag {
+    my ( $tag_info ) = @_;
+    return $tag_info->{'display'} if defined $tag_info->{'display'};
 
+    my $severity = $tag_info->{'severity'};
+    my $certainty = $tag_info->{'certainty'};
+    my $level = $display_level{$severity}{$certainty};
+
+    $tag_info->{'display'} = $level;
+    return $level if not keys %display_source;
+
+    my $tag_source = get_tag_source($tag_info);
+    my %in = map { $_ => 1 } grep { $tag_source->{$_} } keys %display_source;
+
+    $tag_info->{'display'} = ($level and keys %in) ? 1 : 0;
+    return $tag_info->{'display'};
+}
+
+sub skip_print {
+    my ( $tag_info ) = @_;
+    return 1 if exists $tag_info->{experimental} && !$show_experimental;
+    return 1 if $tag_info->{overridden}{override} && !$show_overrides;
+    return 1 if not display_tag( $tag_info );
+    return 0;
 }
 
 sub tag {
@@ -344,18 +353,12 @@ sub tag {
 	warn "Tried to issue unknown tag $tag\n";
 	return 0;
     }
-    check_need_to_show( $tag_info, \@information );
+
+    set_overrides( $tag_info, \@information );
 
     record_stats( $tag_info );
 
-    return 0 if
-	exists $tag_info->{experimental} and !$show_experimental;
-
-    return 1 if
-	$tag_info->{overridden}{severity} != 0
-	|| $tag_info->{overridden}{significance} != 0
-	|| ( $tag_info->{overridden}{override} &&
-	     !$show_overrides);
+    return 1 if skip_print( $tag_info );
 
     &$output_formatter( $info{$current}, $tag_info, \@information );
     return 1;

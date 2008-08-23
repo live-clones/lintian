@@ -49,7 +49,6 @@ our $quiet = 0;			#flag for -q|--quiet switch
 my @debug;
 my $check_everything = 0;	#flag for -a|--all switch
 my $lintian_info = 0;		#flag for -i|--info switch
-our $display_infotags = 0;	#flag for -I|--display-info switch
 our $display_experimentaltags = 0; #flag for -E|--display-experimental switch
 my $unpack_level = undef;	#flag for -l|--unpack-level switch
 our $no_override = 0;		#flag for -o|--no-override switch
@@ -70,6 +69,11 @@ my $LINTIAN_CFG = "";		#config file to use
 our $LINTIAN_ROOT;		#location of the lintian modules
 
 my $experimental_output_opts = undef;
+
+my @severities = qw(wishlist minor normal important serious);
+my @certainties = qw(wild-guess possible certain);
+my %display_level = ();
+my %display_source = ();
 
 my @packages;
 
@@ -144,6 +148,8 @@ Behaviour options:
     -i, --info                give detailed info about tags
     -I, --display-info        display "I:" tags (normally suppressed)
     -E, --display-experimental display "X:" tags (normally suppressed)
+    -L, --display-level       display tags with the specified level
+    --display-source X        restrict displayed tags by source
     -l X, --unpack-level X    set default unpack level to X
     -o, --no-override         ignore overrides
     --show-overrides          output tags that have been overriden
@@ -272,6 +278,33 @@ sub record_pkgmode {
     $pkg_mode = 'u' if $_[0] eq 'udeb';
 }
 
+# Clears current display level information, disabling all severities and
+# certainties
+sub reset_display_level {
+    foreach my $s (@severities) {
+	foreach my $c (@certainties) {
+	    $display_level{$s}{$c} = 0;
+	}
+    }
+}
+
+# Parse input display level to enable (val 1) or disable (val 0) it
+# accordingly
+sub set_display_level {
+    my ($level, $val) = @_;
+    my $severity = join("|", @severities);
+    my $certainty = join("|", @certainties);
+    if ($level =~ m/^($severity)$/) {
+	map { $display_level{$1}{$_} = $val } @certainties;
+    } elsif ($level =~ m/^($certainty)$/) {
+	map { $display_level{$_}{$1} = $val } @severities;
+    } elsif ($level =~ m/^($severity)\/($certainty)$/) {
+	$display_level{$1}{$2} = $val;
+    } else {
+	die "invalid argument to --display-level: $level\n";
+    }
+}
+
 # Hash used to process commandline options
 my %opthash = (			# ------------------ actions
 	       "setup-lab|S" => \&record_action,
@@ -295,8 +328,10 @@ my %opthash = (			# ------------------ actions
 
 	       # ------------------ behaviour options
 	       "info|i" => \$lintian_info,
-	       "display-info|I" => \$display_infotags,
+	       "display-info|I" => \&display_infotags,
 	       "display-experimental|E" => \$display_experimentaltags,
+	       "display-level|L=s" => \&record_display_level,
+	       "display-source=s" => \&record_display_source,
 	       "unpack-level|l=i" => \$unpack_level,
 	       "no-override|o" => \$no_override,
 	       "show-overrides" => \$show_overrides,
@@ -329,6 +364,14 @@ my %opthash = (			# ------------------ actions
 	       # ------------------ experimental
 	       "exp-output:s" => \$experimental_output_opts,
 	      );
+
+# init display level settings
+reset_display_level();
+set_display_level('serious', 1);
+set_display_level('important', 1);
+set_display_level('normal/certain', 1);
+set_display_level('normal/possible', 1);
+set_display_level('minor/certain', 1);
 
 # init commandline parser
 Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
@@ -370,6 +413,30 @@ if (($check_everything or $packages_file) and $#ARGV+1 > 0) {
     print STDERR "(will ignore -a or -p option)\n";
     undef $check_everything;
     undef $packages_file;
+}
+
+sub record_display_level {
+    my $level = $_[1];
+    if ($level =~ m/^\+(.+)/) {
+	set_display_level($1, 1);
+    } elsif ($level =~ m/^\-(.+)/) {
+	set_display_level($1, 0);
+    } elsif ($level =~ m/^\=?(.+)/) {
+	reset_display_level();
+	set_display_level($1, 1);
+    } else {
+	die "invalid argument to --display-level: $level\n";
+    }
+}
+
+sub display_infotags {
+    foreach my $s (@severities) {
+	set_display_level($s, 1);
+    }
+}
+
+sub record_display_source {
+    $display_source{$_[1]} = 1;
 }
 
 # check permitted values for --color
@@ -555,6 +622,33 @@ import Tags;
 my @l_secs = read_dpkg_control("$LINTIAN_ROOT/checks/lintian.desc");
 shift(@l_secs);
 map { $_->{'script'} = 'lintian'; Tags::add_tag($_) } @l_secs;
+
+no warnings 'once';
+if (defined $experimental_output_opts) {
+    my %opts = map { split(/=/) } split( /,/, $experimental_output_opts );
+    foreach (keys %opts) {
+	if ($_ eq 'format') {
+	    if ($opts{$_} eq 'colons') {
+		require Tags::ColonSeparated;
+		$Tags::output_formatter = \&Tags::ColonSeparated::print_tag;
+	    } elsif ($opts{$_} eq 'letterqualifier') {
+		require Tags::LetterQualifier;
+		$Tags::output_formatter = \&Tags::LetterQualifier::print_tag;
+	    }
+	}
+	no strict 'refs';
+	${"Tags::$_"} = $opts{$_};
+    }
+}
+
+$Tags::show_experimental = $display_experimentaltags;
+$Tags::show_overrides = $show_overrides;
+%Tags::display_level = %display_level;
+%Tags::display_source = %display_source;
+$Tags::color = $color;
+%Tags::only_issue_tags = map { $_ => 1 } (split(/,/, $check_tags))
+    if defined $check_tags;
+use warnings;
 
 # }}}
 
@@ -813,9 +907,9 @@ while (my $arg = shift) {
 
 	    unless ($exit_code) {
 		my $stats = Tags::get_stats( $arg );
-		if ($stats->{severity}{4}) {
+		if ($stats->{types}{error}) {
 		    $exit_code = 1;
-		} elsif ($fail_on_warnings && $stats->{severity}{2}) {
+		} elsif ($fail_on_warnings && $stats->{types}{warning}) {
 		    $exit_code = 1;
 		}
 	    }
@@ -1003,30 +1097,6 @@ closedir(COLLDIR);
 
 # {{{ Now we're ready to load info about checks & tags
 
-no warnings 'once';
-if (defined $experimental_output_opts) {
-    $Tags::output_formatter = \&Tags::print_tag_new;
-    my %opts = map { split(/=/) } split( /,/, $experimental_output_opts );
-    foreach (keys %opts) {
-	if ($_ eq 'format') {
-	    if ($opts{$_} eq 'colons') {
-		require Tags::ColonSeparated;
-		$Tags::output_formatter = \&Tags::ColonSeparated::print_tag;
-	    }
-	}
-	no strict 'refs';
-	${"Tags::$_"} = $opts{$_};
-    }
-}
-
-$Tags::show_info = $display_infotags;
-$Tags::show_experimental = $display_experimentaltags;
-$Tags::show_overrides = $show_overrides;
-$Tags::color = $color;
-%Tags::only_issue_tags = map { $_ => 1 } (split(/,/, $check_tags))
-    if defined $check_tags;
-use warnings;
-
 # load information about checker scripts
 opendir(CHECKDIR, "$LINTIAN_ROOT/checks")
     or fail("cannot read directory $LINTIAN_ROOT/checks");
@@ -1091,7 +1161,12 @@ for my $f (readdir CHECKDIR) {
 	}
 
 	shift(@secs);
-	map { $_->{'script'}=$script; Tags::add_tag($_) } @secs;
+	$p->{'requested-tags'} = 0;
+	foreach my $tag (@secs) {
+	    $tag->{'script'} = $script;
+	    Tags::add_tag($tag);
+	    $p->{'requested-tags'}++ if Tags::display_tag($tag);
+	}
     } # end: if ne lintian
 
 }
@@ -1143,6 +1218,8 @@ if ($action eq 'check') {
 		    || ($check_info{$c}->{'abbrev'}
 			&& $dont_check{$check_info{$c}->{'abbrev'}})) {
 		    #user requested not to run this check
+		} elsif ($check_info{$c}->{'requested-tags'} == 0) {
+		    #no need to run this check, no tags will be issued
 		} else {
 		    $checks{$c} = 1;
 		}
@@ -1453,9 +1530,9 @@ for (reverse sort @packages) {
 	}
 	unless ($exit_code) {
 	    my $stats = Tags::get_stats( $file );
-	    if ($stats->{severity}{4}) {
+	    if ($stats->{types}{error}) {
 		$exit_code = 1;
-	    } elsif ($fail_on_warnings && $stats->{severity}{2}) {
+	    } elsif ($fail_on_warnings && $stats->{types}{warning}) {
 		$exit_code = 1;
 	    }
 	}
@@ -1476,9 +1553,9 @@ for (reverse sort @packages) {
 	    my $stats = Tags::get_stats($file);
 	    my $short = $file;
 	    $short =~ s%.*/%%;
-	    my $errors = $stats->{overrides}{by_severity}{4} || 0;
-	    my $warnings = $stats->{overrides}{by_severity}{2} || 0;
-	    my $info = $stats->{overrides}{by_severity}{0} || 0;
+	    my $errors = $stats->{overrides}{types}{error} || 0;
+	    my $warnings = $stats->{overrides}{types}{warning} || 0;
+	    my $info = $stats->{overrides}{types}{info} || 0;
 	    $overrides{errors} += $errors;
 	    $overrides{warnings} += $warnings;
 	    $overrides{info} += $info;

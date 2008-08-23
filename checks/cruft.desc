@@ -8,6 +8,8 @@ Needs-Info: debfiles, diffstat
 
 Tag: native-package-with-dash-version
 Type: warning
+Severity: normal
+Certainty: certain
 Info: Native packaging should only be used if a piece of software was
  written specifically to be turned into a Debian package. In this case,
  the version number should not contain a debian revision part.
@@ -18,11 +20,15 @@ Info: Native packaging should only be used if a piece of software was
 
 Tag: documentation-package-not-architecture-independent
 Type: warning
+Severity: normal
+Certainty: certain
 Info: Documentation packages usually shouldn't carry anything that requires
  recompiling on various architectures, in order to save space on mirrors.
 
 Tag: debian-files-list-in-source
 Type: error
+Severity: important
+Certainty: certain
 Info: Leaving <tt>debian/files</tt> causes problems for the autobuilders,
  since that file will likely include the list of .deb files for another
  architecture, which will cause dpkg-buildpackage run by the buildd to fail.
@@ -32,6 +38,8 @@ Ref: policy 4.12
 
 Tag: diff-contains-cvs-control-dir
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The Debian diff or native package contains files in a CVS directory.
  These are usually artifacts of the revision control system used by the
  Debian maintainer and not useful in a diff or native package.  Passing
@@ -40,6 +48,8 @@ Info: The Debian diff or native package contains files in a CVS directory.
 
 Tag: source-contains-cvs-control-dir
 Type: info
+Severity: wishlist
+Certainty: certain
 Info: The upstream source contains a CVS directory.  It was most likely
  included by accident since CVS directories usually don't belong in
  releases.  When packaging a CVS snapshot, export from CVS rather than use
@@ -48,6 +58,8 @@ Info: The upstream source contains a CVS directory.  It was most likely
 
 Tag: diff-contains-svn-control-dir
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The Debian diff or native package contains files in an .svn
  directory.  These are usually artifacts of the revision control system
  used by the Debian maintainer and not useful in a diff or native package.
@@ -56,6 +68,8 @@ Info: The Debian diff or native package contains files in an .svn
 
 Tag: source-contains-svn-control-dir
 Type: info
+Severity: wishlist
+Certainty: certain
 Info: The upstream source contains an .svn directory.  It was most likely
  included by accident since Subversion version control directories
  usually don't belong in releases.  When packaging a Subversion snapshot,
@@ -65,6 +79,8 @@ Info: The upstream source contains an .svn directory.  It was most likely
 
 Tag: diff-contains-bzr-control-dir
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The Debian diff or native package contains files in a .bzr
  directory.  These are usually artifacts of the revision control system
  used by the Debian maintainer and not useful in a diff or native package.
@@ -73,6 +89,8 @@ Info: The Debian diff or native package contains files in a .bzr
 
 Tag: source-contains-bzr-control-dir
 Type: info
+Severity: wishlist
+Certainty: certain
 Info: The upstream source contains a .bzr directory. It was most likely
  included by accident since bazaar-ng version control directories usually
  don't belong in releases and may contain the entire repository.  When
@@ -82,6 +100,8 @@ Info: The upstream source contains a .bzr directory. It was most likely
 
 Tag: diff-contains-arch-control-dir
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The Debian diff or native package contains files in an {arch} or
  .arch-ids directory or a directory starting with <tt>,,</tt> (used by baz
  for debugging traces).  These are usually artifacts of the revision
@@ -91,6 +111,8 @@ Info: The Debian diff or native package contains files in an {arch} or
 
 Tag: source-contains-arch-control-dir
 Type: info
+Severity: wishlist
+Certainty: certain
 Info: The upstream source contains an {arch} or .arch-ids directory or a
  directory starting with <tt>,,</tt> (used by baz for debugging traces).
  It was most likely included by accident since Arch version control
@@ -100,6 +122,8 @@ Info: The upstream source contains an {arch} or .arch-ids directory or a
 
 Tag: diff-contains-git-control-dir
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The Debian diff or native package contains files in a .git
  directory.  These are usually artifacts of the revision control system
  used by the Debian maintainer and not useful in a diff or native package.
@@ -108,6 +132,8 @@ Info: The Debian diff or native package contains files in a .git
 
 Tag: source-contains-git-control-dir
 Type: info
+Severity: wishlist
+Certainty: certain
 Info: The upstream source contains a .git directory. It was most likely
  included by accident since git version control directories usually don't
  belong in releases and may contain a complete copy of the repository.  If
@@ -116,6 +142,8 @@ Info: The upstream source contains a .git directory. It was most likely
 
 Tag: diff-contains-hg-control-dir
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The Debian diff or native package contains files in a .hg
  directory.  These are usually artifacts of the revision control system
  used by the Debian maintainer and not useful in a diff or native package.
@@ -124,6 +152,8 @@ Info: The Debian diff or native package contains files in a .hg
 
 Tag: source-contains-hg-control-dir
 Type: info
+Severity: wishlist
+Certainty: certain
 Info: The upstream source contains a .hg directory. It was most likely
  included by accident since hg version control directories usually don't
  belong in releases and may contain a complete copy of the repository.  If
@@ -132,42 +162,56 @@ Info: The upstream source contains a .hg directory. It was most likely
 
 Tag: diff-contains-svn-commit-file
 Type: warning
+Severity: minor
+Certainty: certain
 Info: The Debian diff or native package contains an
  <tt>svn-commit(.NNN).tmp</tt>, almost certainly a left-over from a failed
  Subversion commit by the Debian package maintainer.
 
 Tag: source-contains-svn-commit-file
 Type: info
+Severity: wishlist
+Certainty: certain
 Info: The upstream source contains an <tt>svn-commit(.NNN).tmp</tt>,
  almost certainly a left-over from a failed Subversion commit.  You may
  want to report this as an upstream bug.
 
 Tag: diff-contains-svk-commit-file
 Type: warning
+Severity: minor
+Certainty: certain
 Info: The Debian diff or native package contains an
  <tt>svk-commitNNN.tmp</tt>, almost certainly a left-over from a failed
  svk commit by the Debian package maintainer.
 
 Tag: source-contains-svk-commit-file
 Type: info
+Severity: wishlist
+Certainty: certain
 Info: The upstream source contains an <tt>svk-commitNNN.tmp</tt>,
  almost certainly a left-over from a failed Subversion commit.  You may
  want to report this as an upstream bug.
  
 Tag: diff-contains-arch-inventory-file
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The Debian diff or native package contains an
  <tt>.arch-inventory</tt> file.  This is Arch metadata that should
  normally not be distributed.
 
 Tag: source-contains-arch-inventory-file
 Type: info
+Severity: wishlist
+Certainty: certain
 Info: The upstream source contains an <tt>.arch-inventory</tt> file.  This
  is Arch metadata that should normally not be distributed.  You may want
  to report this as an upstream bug.
 
 Tag: diff-contains-cvs-conflict-copy
 Type: warning
+Severity: normal
+Certainty: certain
 info: The Debian diff or native package contains a CVS conflict copy.
  These have file names like <tt>.#file.version</tt> and are generated by
  CVS when a conflict was detected when merging local changes with updates
@@ -176,6 +220,8 @@ info: The Debian diff or native package contains a CVS conflict copy.
 
 Tag: source-contains-cvs-conflict-copy
 Type: info
+Severity: wishlist
+Certainty: certain
 info: The upstream source contains a CVS conflict copy.  These have file
  names like <tt>.#file.version</tt> and are generated by CVS when a
  conflict was detected when merging local changes with updates from a
@@ -185,6 +231,8 @@ info: The upstream source contains a CVS conflict copy.  These have file
  
 Tag: diff-contains-svn-conflict-file
 Type: warning
+Severity: normal
+Certainty: certain
 info: The Debian diff or native package contains a file that looks like a
  Subversion conflict file.  These are generated by Subversion when a
  conflict was detected while merging local changes with updates from a
@@ -193,6 +241,8 @@ info: The Debian diff or native package contains a file that looks like a
 
 Tag: source-contains-svn-conflict-file
 Type: info
+Severity: wishlist
+Certainty: certain
 info: The upstream source contains a file that looks like a Subversion
  conflict file.  These are generated by Subversion when a conflict was
  detected while merging local changes with updates from a source
@@ -202,6 +252,8 @@ info: The upstream source contains a file that looks like a Subversion
 
 Tag: diff-contains-patch-failure-file
 Type: warning
+Severity: normal
+Certainty: possible
 Info: The Debian diff or native package contains a file that looks like
  the files left behind by the <tt>patch</tt> utility when it cannot
  completely apply a diff.  This may be left over from a patch applied by
@@ -210,6 +262,8 @@ Info: The Debian diff or native package contains a file that looks like
 
 Tag: diff-contains-editor-backup-file
 Type: info
+Severity: minor
+Certainty: certain
 Info: The Debian diff or native package contains a file ending in
  <tt>~</tt> or of the form <tt>.xxx.swp</tt>, which is normally either an
  Emacs or vim backup file or a backup file created by programs such as
@@ -219,6 +273,8 @@ Info: The Debian diff or native package contains a file ending in
 
 Tag: diff-contains-substvars
 Type: warning
+Severity: normal
+Certainty: certain
 Info: Lintian found a substvars file in the Debian diff for this source 
  package. The debian/substvars file is usually generated and modified
  dynamically by debian/rules targets, in which case it must be removed by
@@ -227,6 +283,8 @@ Ref: policy 4.9
 
 Tag: configure-generated-file-in-source
 Type: warning
+Severity: normal
+Certainty: certain
 Info: Leaving config.cache/status causes autobuilders problems.
  config.cache and config.status are produced by GNU autoconf's configure
  scripts. If they are left in the source package, autobuilders may pick
@@ -244,6 +302,8 @@ Info: Leaving config.cache/status causes autobuilders problems.
 
 Tag: outdated-autotools-helper-file
 Type: error
+Severity: important
+Certainty: certain
 Info: The referenced file has a time stamp older than year 2004 and the
  package does not build-depend on autotools-dev or automake and therefore
  apparently does not update it. This usually means that the source package
@@ -254,6 +314,8 @@ Info: The referenced file has a time stamp older than year 2004 and the
 
 Tag: ancient-libtool
 Type: warning
+Severity: normal
+Certainty: possible
 Info: The referenced file seems to be from a libtool version
  older than 1.5.2-2.  This might lead to build errors on some
  newer architectures not known to this libtool.
@@ -269,6 +331,8 @@ Info: The referenced file seems to be from a libtool version
 
 Tag: diff-contains-bts-control-dir
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The Debian diff or native package contains files in a directory
  used by a bug tracking system, which are not useful in a diff or native
  package. Passing <tt>-i</tt> to <tt>dpkg-buildpackage</tt> or the
@@ -276,6 +340,8 @@ Info: The Debian diff or native package contains files in a directory
 
 Tag: source-contains-bts-control-dir
 Type: info
+Severity: wishlist
+Certainty: certain
 Info: The upstream source contains a directory used by a bug tracking
  system. It was most likely included by accident since bug tracking system
  directories usually don't belong in releases.

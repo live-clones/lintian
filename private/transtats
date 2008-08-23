@@ -1,0 +1,170 @@
+#!/usr/bin/perl -w
+
+# transtats - tag classification transition statistics
+#
+# This script displays statistics and data related to the experimental tag
+# classification based on Severity/Certainty headers, as well as its
+# transition from the Type based classification.
+#
+# The verbose options (-v, -vv, -vvv) can be used to display a detailed list
+# of which tags are assigned to each category.
+
+use strict;
+use warnings;
+
+my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
+
+use lib "$ENV{'LINTIAN_ROOT'}/lib";
+use Read_pkglists;
+use Tags;
+
+my @severities = @Tags::severity_list;
+my @certainties = @Tags::certainty_list;
+my @types = qw(info warning error);
+my @codes = qw(I W E);
+
+my %old_codes = ( info => 'I', warning => 'W', error => 'E' );
+
+my %stats;
+my $num_tags = 0;
+my $num_done = 0;
+my %num_code;
+my $num_ok = 0;
+my $percent = 0;
+
+my $verbose = $ARGV[0] ? ($ARGV[0] =~ s/v/v/g) : 0;
+
+opendir(CHECKDIR, "$LINTIAN_ROOT/checks")
+    or fail("cannot read directory $LINTIAN_ROOT/checks");
+
+for my $check (readdir CHECKDIR) {
+    next unless $check =~ /\.desc$/;
+
+    my @tags = read_dpkg_control("$LINTIAN_ROOT/checks/$check");
+    my $desc = $tags[0];
+    my @needs = ();
+    if ($desc and exists $desc->{'needs-info'}) {
+        @needs = split(/\s*,\s*/, $desc->{'needs-info'});
+    }
+
+    shift(@tags);
+
+    foreach my $tag (@tags) {
+        my $name = $tag->{tag};
+        my $type = $tag->{type};
+        my $severity = $tag->{severity};
+        my $certainty = $tag->{certainty};
+        my $done = $severity and $certainty ? 1 : 0;
+
+        $severity = 'unclassified' if not $severity;
+        $certainty = 'unclassified' if not $certainty;
+
+        push(@{$stats{severity}{$severity}}, $name);
+        push(@{$stats{certainty}{$certainty}}, $name);
+        push(@{$stats{both}{$severity}{$certainty}}, $name);
+        push(@{$stats{type}{severity}{$type}{$severity}}, $name);
+        push(@{$stats{type}{both}{$type}{$severity}{$certainty}}, $name);
+
+        map { $stats{needs}{$severity}{$certainty}{$_} = 1 } @needs;
+
+        $num_tags++;
+
+        next if not $done;
+
+        my $old_code = $old_codes{$type};
+        my $new_code = Tags::get_tag_code($tag);
+        push(@{$stats{code}{$old_code}{$new_code}}, $name);
+
+        $num_ok++ if $old_code eq $new_code;
+        $num_done++;
+        $num_code{$old_code}++;
+    }
+}
+
+closedir(CHECKDIR);
+
+$percent = sprintf("%.2f", ($num_done/$num_tags)*100);
+print "Number of classified tags\n";
+print "  $num_done/$num_tags ($percent%)\n";
+
+$percent = sprintf("%.2f", ($num_ok/$num_done)*100);
+print "\nBackwards compatibilty accuracy\n";
+print "  $num_ok/$num_done ($percent%)\n";
+
+print "\nSeverity\n";
+foreach my $s (@severities) {
+    my $tags = $stats{severity}{$s};
+    print "  $s: ". @{$tags} ."\n";
+    print "    ". join("\n    ", @{$tags}) ."\n" if $verbose >= 3;
+}
+
+print "\nCertainty\n";
+foreach my $c (@certainties) {
+    my $tags = $stats{certainty}{$c};
+    print "  $c: ". @{$tags} ."\n";
+    print "    ". join("\n    ", @{$tags}) ."\n" if $verbose >= 3;
+}
+
+print "\nSeverity/Certainty\n";
+foreach my $s (@severities) {
+    foreach my $c (@certainties) {
+        if (my $tags = $stats{both}{$s}{$c}) {
+            print "  $s/$c: ". @{$tags} ."\n";
+            print "    ". join("\n    ", @{$tags}) ."\n" if $verbose >= 2;
+        }
+    }
+}
+
+foreach my $t (@types) {
+    print "\nType $t Severity\n";
+    foreach my $s (@severities) {
+        if (my $tags = $stats{type}{severity}{$t}{$s}) {
+            print "  $s: ". @{$tags} ."\n";
+            print "    ". join("\n    ", @{$tags}) ."\n" if $verbose >= 2;
+        }
+    }
+}
+
+foreach my $t (@types) {
+    print "\nType $t Severity/Certainty\n";
+    foreach my $s (@severities) {
+        foreach my $c (@certainties) {
+            if (my $tags = $stats{type}{both}{$t}{$s}{$c}) {
+                print "  $s/$c: ". @{$tags} ."\n";
+                print "    ". join("\n    ", @{$tags}) ."\n" if $verbose >= 1;
+            }
+        }
+    }
+}
+
+foreach my $old (@codes) {
+    $num_ok = @{$stats{code}{$old}{$old}};
+    $percent = sprintf("%.2f", ($num_ok/$num_code{$old})*100);
+    print "\nCode $old ($percent%)\n";
+    foreach my $new (@codes) {
+        if (my $codes = $stats{code}{$old}{$new}) {
+            print "  $new: ". @{$codes} ."\n";
+            print "    ". join("\n    ", @{$codes}) ."\n"
+                if ($verbose >= 1 and $old ne $new) or ($verbose >= 2);
+        }
+    }
+}
+
+print "\nCollections\n";
+foreach my $s (@severities) {
+    foreach my $c (@certainties) {
+        if (my $needs = $stats{needs}{$s}{$c}) {
+            my $size = scalar keys %{$needs};
+            my @list = keys %{$needs};
+            print "  $s/$c: $size\n";
+            print "    ". join("\n    ", @list) ."\n" if $verbose >= 2;
+        }
+    }
+}
+
+if ($verbose >= 1 and exists $stats{severity}{unclassified}) {
+    print "\nUnclassified tags\n";
+    print "  ". join("\n  ", @{$stats{severity}{unclassified}}) ."\n"
+}
+
+# vim: sw=4 sts=4 ts=4 et sr

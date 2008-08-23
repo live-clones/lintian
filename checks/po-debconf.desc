@@ -8,6 +8,8 @@ Needs-Info: debfiles
 
 Tag: not-using-po-debconf
 Type: error
+Severity: serious
+Certainty: certain
 Info: This package seems to be using debconf templates, but it does not
  use po-debconf to make translations possible (<tt>debian/po</tt> doesn't
  exist).  Debian Policy requires that all packages using debconf use a
@@ -18,6 +20,8 @@ Ref: 3.9.1
 
 Tag: stray-translated-debconf-templates
 Type: warning
+Severity: normal
+Certainty: certain
 Info: This package contains a file named *templates.XX or
  *templates.XX_XX.  This was the naming convention for the translated
  templates merged using debconf-mergetemplate.  Since the package is using
@@ -26,35 +30,47 @@ Info: This package contains a file named *templates.XX or
 
 Tag: missing-potfiles-in
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The required file <tt>POTFILES.in</tt> is missing from
  <tt>debian/po</tt>.
 Ref: po-debconf(7)
 
 Tag: missing-file-from-potfiles-in
 Type: warning
+Severity: normal
+Certainty: certain
 Info: A file listed in <tt>debian/po/POTFILES.in</tt> could not be found
  in the source package.
 Ref: po-debconf(7)
 
 Tag: missing-templates-pot
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The required file <tt>templates.pot</tt> is missing from
  <tt>debian/po</tt>.
 Ref: po-debconf(7)
 
 Tag: unknown-encoding-in-po-file
 Type: warning
+Severity: normal
+Certainty: certain
 Info: Encoding must be declared in PO files. Otherwise, charset
  conversions cannot be performed.
 
 Tag: invalid-po-file
 Type: warning
+Severity: normal
+Certainty: certain
 Info: Errors were found in the listed PO file that will cause its content
  to be discarded. Run <tt>msgfmt</tt> on the file to see the error
  messages.
 
 Tag: misnamed-po-file
 Type: warning
+Severity: normal
+Certainty: possible
 Info: The name of this PO file doesn't appear to be a valid language
  code.  Any files in <tt>debian/po</tt> ending in <tt>.po</tt> will be
  processed as translations by po2debconf for the language code equal to
@@ -68,6 +84,8 @@ Info: The name of this PO file doesn't appear to be a valid language
 
 Tag: newer-debconf-templates
 Type: warning
+Severity: normal
+Certainty: possible
 Info: debconf-updatepo has not been run since the last change to your
  debconf templates.
  .
@@ -81,6 +99,8 @@ Info: debconf-updatepo has not been run since the last change to your
 
 Tag: translated-default-field
 Type: warning
+Severity: normal
+Certainty: possible
 Info: You should not mark as translatable "Default:" or "DefaultChoice:"
  fields, unless explicitly needed (e.g. default country, default language,
  etc.).  If this Default field really should be translated, you should
@@ -92,6 +112,8 @@ Ref: po-debconf(7)
 
 Tag: no-complete-debconf-translation
 Type: info
+Severity: wishlist
+Certainty: possible
 Info: Even though this package provides debconf translation support, there 
  are no  translations or none of the translations are complete. This may 
  mean that translators weren't properly warned about new strings.

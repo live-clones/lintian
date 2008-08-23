@@ -8,11 +8,15 @@ Needs-Info: file-info, scripts
 
 Tag: script-without-interpreter
 Type: error
+Severity: important
+Certainty: certain
 Info: This file starts with the #! sequence that identifies scripts, but
  it does not name an interpreter.
 
 Tag: executable-not-elf-or-script
 Type: warning
+Severity: normal
+Certainty: certain
 Info: This executable file is not an ELF format binary, and does not start
  with the #! sequence that marks interpreted scripts.  It might be a sh script
  that fails to name /bin/sh as its shell.
@@ -20,17 +24,23 @@ Ref: policy 10.4
 
 Tag: script-not-executable
 Type: warning
+Severity: normal
+Certainty: certain
 Info: This file starts with the #! sequence that marks interpreted scripts,
  but it is not executable.
 
 Tag: interpreter-not-absolute
 Type: warning
+Severity: normal
+Certainty: certain
 Info: This script uses a relative path to locate its interpreter.
  This path will be taken relative to the caller's current directory, not
  the script's, so it is not likely to be what was intended.
 
 Tag: unusual-interpreter
 Type: warning
+Severity: normal
+Certainty: possible
 Info: This package contains a script for an interpreter that the Lintian
  maintainers have not heard of.  It could be a typo for a common
  interpreter.  If not, please file a wishlist bug on lintian so that the
@@ -38,6 +48,8 @@ Info: This package contains a script for an interpreter that the Lintian
 
 Tag: script-uses-bin-env
 Type: warning
+Severity: normal
+Certainty: certain
 Info: This script uses /bin/env as its interpreter (used to find the
  actual interpreter on the user's path).  There is no /bin/env on Debian
  systems; env is instead installed as /usr/bin/env.  Usually, the path to
@@ -45,6 +57,8 @@ Info: This script uses /bin/env as its interpreter (used to find the
 
 Tag: forbidden-config-interpreter
 Type: error
+Severity: important
+Certainty: certain
 Info: This package contains a <tt>config</tt> script for pre-configuring
  the package.  During pre-configuration, however, only essential packages
  are guaranteed to be installed, so you cannot use a non-essential
@@ -52,17 +66,23 @@ Info: This package contains a <tt>config</tt> script for pre-configuring
 
 Tag: unusual-control-interpreter
 Type: info
+Severity: minor
+Certainty: possible
 Info: This package contains a control script for an interpreter that is
  not normally used for control scripts.
 
 Tag: interpreter-in-usr-local
 Type: error
+Severity: important
+Certainty: certain
 Info: This package contains a script that looks for an interpreter in a
  directory in /usr/local.  Since Debian does not install anything in
  /usr/local, this is the wrong place to look.
 
 Tag: interpreter-without-predep
 Type: error
+Severity: important
+Certainty: certain
 Info: The package contains a control script that uses an unusual
  interpreter, but does not declare a pre-dependency on the package that
  provides this interpreter.
@@ -77,6 +97,8 @@ Info: The package contains a control script that uses an unusual
 
 Tag: missing-dep-for-interpreter
 Type: error
+Severity: important
+Certainty: possible
 Info: You used an interpreter for a script that is not in an essential
  package.  In most cases, you will need to add a Dependency on the
  package that contains the interpreter.  If the dependency is already
@@ -88,12 +110,16 @@ Info: You used an interpreter for a script that is not in an essential
 
 Tag: csh-considered-harmful
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The Debian policy for scripts explicitly warns against using csh
  and tcsh as scripting languages.
 Ref: policy 10.4
 
 Tag: suid-perl-script-but-no-perl-suid-dep
 Type: error
+Severity: important
+Certainty: certain
 Info: Packages that use perl scripts that are suid must depend on the
  perl-suid package.
  .
@@ -102,11 +128,15 @@ Info: Packages that use perl scripts that are suid must depend on the
 
 Tag: wrong-path-for-interpreter
 Type: error
+Severity: important
+Certainty: certain
 Info: The interpreter you used is installed at another location on Debian
  systems.
 
 Tag: gawk-script-but-no-gawk-dep
 Type: error
+Severity: important
+Certainty: certain
 Info: Packages that use gawk scripts must depend on the gawk package.
  If they don't need gawk-specific features, and can just as easily work
  with mawk, then they should be awk scripts instead.
@@ -116,6 +146,8 @@ Info: Packages that use gawk scripts must depend on the gawk package.
 
 Tag: mawk-script-but-no-mawk-dep
 Type: error
+Severity: important
+Certainty: certain
 Info: Packages that use mawk scripts must depend on the mawk package.
  If they don't need mawk-specific features, and can just as easily work
  with gawk, then they should be awk scripts instead.
@@ -125,6 +157,8 @@ Info: Packages that use mawk scripts must depend on the mawk package.
 
 Tag: php-script-but-no-phpX-cli-dep
 Type: error
+Severity: important
+Certainty: certain
 Info: Packages with PHP scripts must depend on a phpX-cli package such as
  php5-cli.  Note that a dependency on a php-cgi package (such as php5-cgi)
  is needlessly strict and forces the user to install a package that isn't
@@ -140,6 +174,8 @@ Info: Packages with PHP scripts must depend on a phpX-cli package such as
 
 Tag: python-script-but-no-python-dep
 Type: error
+Severity: important
+Certainty: certain
 Info: Packages with Python scripts must depend on the package python.
  Those that have scripts executed with a versioned python package need a
  dependency on the equivalent version of python. 
@@ -154,6 +190,8 @@ Info: Packages with Python scripts must depend on the package python.
 
 Tag: ruby-script-but-no-ruby-dep
 Type: error
+Severity: important
+Certainty: certain
 Info: Packages with Ruby scripts must depend on the package ruby. Those
  that have Ruby scripts that run under a specific version of Ruby need a
  dependency on the equivalent version of Ruby.
@@ -168,6 +206,8 @@ Info: Packages with Ruby scripts must depend on the package ruby. Those
 
 Tag: wish-script-but-no-wish-dep
 Type: error
+Severity: important
+Certainty: certain
 Info: Packages that include wish scripts must depend on the virtual
  package wish or, if they require a specific version of wish or tk, that
  version of tk.
@@ -177,6 +217,8 @@ Info: Packages that include wish scripts must depend on the virtual
 
 Tag: tclsh-script-but-no-tclsh-dep
 Type: error
+Severity: important
+Certainty: certain
 Info: Packages that include tclsh scripts must depend on the virtual
  package tclsh or, if they require a specific version of tcl, that
  version of tcl.
@@ -186,6 +228,8 @@ Info: Packages that include tclsh scripts must depend on the virtual
 
 Tag: calls-suidperl-directly
 Type: error
+Severity: important
+Certainty: certain
 Info: Since perl version 5.8.3-3, /usr/bin/suidperl shouldn't be called
  directly anymore (and doing so will lead to errors in most cases) but the
  script should just use /usr/bin/perl as interpreter which will call
@@ -193,6 +237,8 @@ Info: Since perl version 5.8.3-3, /usr/bin/suidperl shouldn't be called
 
 Tag: shell-script-fails-syntax-check
 Type: error
+Severity: important
+Certainty: certain
 Info: Running this shell script with the shell's -n option set fails,
  which means that the script has syntax errors.
  .
@@ -200,6 +246,8 @@ Info: Running this shell script with the shell's -n option set fails,
 
 Tag: maintainer-shell-script-fails-syntax-check
 Type: error
+Severity: serious
+Certainty: certain
 Info: Running this shell script with the shell's -n option set fails,
  which means that the script has syntax errors. This will likely make
  the package uninstallable.
@@ -208,6 +256,8 @@ Info: Running this shell script with the shell's -n option set fails,
 
 Tag: possibly-insecure-handling-of-tmp-files-in-maintainer-script
 Type: warning
+Severity: normal
+Certainty: possible
 Info: The maintainer script seems to access a file in <tt>/tmp</tt> or
  some other temporary directory. Since creating temporary files in a
  world-writable directory is very dangerous, this is likely to be a
@@ -217,6 +267,8 @@ Ref: policy 10.4
 
 Tag: killall-is-dangerous
 Type: warning
+Severity: normal
+Certainty: possible
 Info: The maintainer script seems to call <tt>killall</tt>.  Since this
  utility kills processes by name, it may well end up killing unrelated
  processes.  Most uses of <tt>killall</tt> should use <tt>invoke-rc.d</tt>
@@ -224,12 +276,16 @@ Info: The maintainer script seems to call <tt>killall</tt>.  Since this
 
 Tag: mknod-in-maintainer-script
 Type: error
+Severity: serious
+Certainty: certain
 Ref: policy 10.6
 Info: Maintainer scripts must not create device files directly.  They
  should call MAKEDEV instead.
 
 Tag: start-stop-daemon-in-maintainer-script
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The maintainer script seems to calll <tt>start-stop-daemon</tt>
  directly.  Long-running daemons should be started and stopped via init
  scripts using <tt>invoke-rc.d</tt> rather than directly in maintainer
@@ -238,12 +294,16 @@ Ref: policy 9.3.3.2
 
 Tag: maintainer-script-removes-device-files
 Type: error
+Severity: serious
+Certainty: certain
 Ref: policy 10.6
 Info: Maintainer scripts must not remove device files.  This is left to
  the system administrator.
 
 Tag: read-in-maintainer-script
 Type: warning
+Severity: normal
+Certainty: certain
 Ref: policy 3.9.1 
 Info: This maintainer script appears to use read to get information from
  the user.  Prompting in maintainer scripts should be done by
@@ -252,6 +312,8 @@ Info: This maintainer script appears to use read to get information from
 
 Tag: possible-bashism-in-maintainer-script
 Type: warning
+Severity: normal
+Certainty: possible
 Ref: policy 10.4
 Info: This script is marked as running under <tt>/bin/sh</tt>, but it seems
  to use a feature found in bash but not in the SUSv3 or POSIX shell
@@ -268,11 +330,15 @@ Info: This script is marked as running under <tt>/bin/sh</tt>, but it seems
 
 Tag: suidregister-used-in-maintainer-script
 Type: error
+Severity: important
+Certainty: certain
 Info: This script calls suidregister, a long-obsolete program that has
  been replaced by dpkg-statoverride.
 
 Tag: maintainer-script-needs-depends-on-update-inetd
 Type: warning
+Severity: normal
+Certainty: certain
 Info: This script calls update-inetd, but the package does not depend or
  pre-depend on inet-superserver, any of the providers of inet-superserver
  which provide it, or update-inetd.
@@ -283,11 +349,15 @@ Info: This script calls update-inetd, but the package does not depend or
 
 Tag: maintainer-script-needs-depends-on-adduser
 Type: warning
+Severity: normal
+Certainty: certain
 Info: This script calls adduser, but the package does not depend or
  pre-depend on the adduser package.
 
 Tag: maintainer-script-needs-depends-on-gconf2
 Type: warning
+Severity: normal
+Certainty: certain
 Info: This script calls gconf-schemas, which comes from the gconf2 package,
  but does not depend or pre-depend on gconf2.  If you are using dh_gconf,
  add a dependency on ${misc:Depends} and dh_gconf will take care of this
@@ -295,11 +365,15 @@ Info: This script calls gconf-schemas, which comes from the gconf2 package,
 
 Tag: maintainer-script-needs-depends-on-ucf
 Type: warning
+Severity: normal
+Certainty: certain
 Info: This script calls ucf, but the package does not depend or pre-depend
  on the ucf package.
 
 Tag: maintainer-script-needs-depends-on-xml-core
 Type: warning
+Severity: normal
+Certainty: certain
 Info: This script calls update-xmlcatalog, which comes from the xml-core
  package, but does not depend or pre-depend on xml-core.  Packages that call
  update-xmlcatalog need to depend on xml-core.  If you are using
@@ -308,6 +382,8 @@ Info: This script calls update-xmlcatalog, which comes from the xml-core
 
 Tag: update-alternatives-remove-called-in-postrm
 Type: warning
+Severity: normal
+Certainty: certain
 Info: <tt>update-alternatives --remove &lt;alternative&gt; foo</tt> is
  called in the postrm.  This can be dangerous because at the time the
  postrm is executed foo has already been deleted and update-alternatives
@@ -324,6 +400,8 @@ Ref: policy F, update-alternatives(8)
 
 Tag: deprecated-chown-usage
 Type: warning
+Severity: normal
+Certainty: certain
 Info: <tt>chown user.group</tt> is called in one of the maintainer
  scripts.  The correct syntax is <tt>chown user:group</tt>. Using "." as a
  separator is still supported by the GNU tools, but it will fail as soon
@@ -332,6 +410,8 @@ Ref: chown(1)
 
 Tag: maintainer-script-hides-init-failure
 Type: warning
+Severity: normal
+Certainty: certain
 Info: This script calls invoke-rc.d to run an init script but then, if the
  init script fails, exits successfully (using || exit 0).  If the init
  script fails, the maintainer script should probably fail.
@@ -343,6 +423,8 @@ Info: This script calls invoke-rc.d to run an init script but then, if the
 
 Tag: maintainer-script-calls-init-script-directly
 Type: error
+Severity: serious
+Certainty: certain
 Info: This script apparently runs an init script directly rather than
  using invoke-rc.d.  The use of invoke-rc.d to invoke the /etc/init.d/*
  initscripts instead of calling them directly is required.  Maintainer
@@ -352,11 +434,15 @@ Ref: policy 9.3.3.2
 
 Tag: gconftool-used-in-maintainer-script
 Type: warning
+Severity: normal
+Certainty: possible
 Info: This script apparently runs gconftool or gconftool-2.  It should
  probably be calling gconf-schemas or update-gconf-defaults instead.
 
 Tag: maintainer-script-uses-dpkg-status-directly
 Type: error
+Severity: important
+Certainty: certain
 Info: The file /var/lib/dpkg/status is internal to dpkg, may disappear or
  change formats, and is not always a correct and complete record of
  installed packages while dpkg is running.  Maintainer scripts should use
@@ -370,6 +456,8 @@ Ref: http://wiki.debian.org/DpkgConffileHandling
 
 Tag: maintainer-script-modifies-netbase-managed-file
 Type: error
+Severity: serious
+Certainty: certain
 Info: The maintainer script modifies at least one of the files
  <tt>/etc/services</tt>, <tt>/etc/protocols</tt>, and <tt>/etc/rpc</tt>,
  which are managed by the netbase package. Instead of doing this, please
@@ -378,6 +466,8 @@ Ref: policy 11.2
 
 Tag: maintainer-script-modifies-inetd-conf
 Type: error
+Severity: serious
+Certainty: certain
 Info: The maintainer script modifies <tt>/etc/inetd.conf</tt> directly.
  This file must not be modified directly; instead, use the
  <tt>update-inetd</tt> script or the <tt>DebianNet.pm</tt> Perl module.
@@ -385,6 +475,8 @@ Ref: policy 11.2
 
 Tag: install-sgmlcatalog-deprecated
 Type: error
+Severity: important
+Certainty: certain
 Info: The maintainer script apparently runs install-sgmlcatalog with flags
  other than <tt>--quiet</tt> and <tt>--remove</tt> or in a maintainer
  script other than postinst or prerm.  install-sgmlcatalog is deprecated
@@ -394,6 +486,8 @@ Info: The maintainer script apparently runs install-sgmlcatalog with flags
 
 Tag: maintainer-script-empty
 Type: warning
+Severity: minor
+Certainty: certain
 Info: The maintainer script doesn't seem to contain any code other than
  comments and boilerplate (set -e, exit statements, and the case statement
  to parse options).  While this is harmless in most cases, it is probably
@@ -406,6 +500,8 @@ Info: The maintainer script doesn't seem to contain any code other than
 
 Tag: command-with-path-in-maintainer-script
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The indicated program run in a maintainer script has a prepended
  path.  Programs called from maintainer scripts normally should not have a
  path prepended.  dpkg ensures that the PATH is set to a reasonable value,
@@ -415,24 +511,32 @@ Ref: policy 6.1
 
 Tag: ancient-dpkg-predepends-check
 Type: warning
+Severity: minor
+Certainty: certain
 Info: The package calls dpkg --assert-support-predepends in a maintainer
  script.  This check is obsolete and has always returned true since dpkg
  1.1.0, released 1996-02-11.
 
 Tag: ancient-dpkg-epoch-check
 Type: warning
+Severity: minor
+Certainty: certain
 Info: The package calls dpkg --assert-working-epoch in a maintainer
  script.  This check is obsolete and has always returned true since dpkg
  1.4.0.7, released 1997-01-25.
 
 Tag: ancient-dpkg-long-filenames-check
 Type: warning
+Severity: minor
+Certainty: certain
 Info: The package calls dpkg --assert-long-filenames in a maintainer
  script.  This check is obsolete and has always returned true since dpkg
  1.4.1.17, released 1999-10-21.
 
 Tag: ancient-dpkg-multi-conrep-check
 Type: warning
+Severity: minor
+Certainty: certain
 Info: The package calls dpkg --assert-multi-conrep in a maintainer
  script.  This check is obsolete and has always returned true since dpkg
  1.4.1.19, released 1999-10-30.

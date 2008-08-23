@@ -37,6 +37,7 @@ I: manpages: hyphen-used-as-minus-sign usr/share/man/man3/include.3.gz:12
 I: manpages: hyphen-used-as-minus-sign usr/share/man/man3/include.3.gz:13
 I: manpages: hyphen-used-as-minus-sign usr/share/man/man3/include.3.gz:14
 I: manpages: hyphen-used-as-minus-sign usr/share/man/man3/include.3.gz:9
+I: manpages: package-contains-empty-directory usr/share/man/man1/not-a-man-page.1.gz/
 I: manpages: unused-override foo-tag-that-does-not-exist
 N: 2 tags overridden (1 error, 1 info)
 W: manpages source: ancient-standards-version 3.2.1 (current is 3.8.0)
@@ -66,4 +67,3 @@ W: manpages: manpage-has-errors-from-man usr/share/man/man1/test.1p.gz 12: warni
 W: manpages: manpage-has-errors-from-man usr/share/man/man3/included.3.gz 6: warning: `zY' not defined
 W: manpages: manpage-has-useless-whatis-entry usr/share/man/man1/true.1.gz
 W: manpages: manpage-locale-dir-country-specific usr/share/man/de_DE/man1/test-utf8-chars.1p.gz
-W: manpages: package-contains-empty-directory usr/share/man/man1/not-a-man-page.1.gz/

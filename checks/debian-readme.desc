@@ -8,6 +8,8 @@ Info: This script checks the README.Debian file for various problems.
 
 Tag: readme-debian-mentions-usr-doc
 Type: warning
+Severity: normal
+Certainty: possible
 Info: The README.Debian file installed by this package apparently points
  users at /usr/doc.  /usr/doc has been retired and all documentation
  migrated to /usr/share/doc.  This reference should probably also be
@@ -15,6 +17,8 @@ Info: The README.Debian file installed by this package apparently points
 
 Tag: readme-debian-contains-debmake-template
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The README.Debian file installed by this package contains one of the
  template phrases from the README.Debian provided by deb-make or dh_make:
  .
@@ -28,11 +32,15 @@ Info: The README.Debian file installed by this package contains one of the
 
 Tag: readme-debian-contains-debmake-default-email-address
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The README.Debian file contains an email address (&lt;..@unknown&gt;)
  that was not updated to the maintainer's real address.
 
 Tag: spelling-error-in-readme-debian
 Type: warning
+Severity: normal
+Certainty: certain
 Info: Lintian found a spelling error in the README.Debian file.  Lintian
  has a list of common misspellings that it looks for.  It does not have a
  dictionary like a spelling checker does.

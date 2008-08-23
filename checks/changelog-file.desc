@@ -20,6 +20,8 @@ Info: This script checks if a binary package conforms to policy
 
 Tag: html-changelog-without-text-version
 Type: error
+Severity: important
+Certainty: certain
 Info: If the upstream changelog file is HTML formatted, a text version
  should also be accessible as "changelog.gz". (This can be created by
  "lynx -dump -nolist")
@@ -27,24 +29,32 @@ Ref: policy 12.7
 
 Tag: changelog-file-not-compressed
 Type: warning
+Severity: important
+Certainty: certain
 Info: Changelog files should be compressed using "gzip -9".  Even if they
  start out small, they will become large with time.
 Ref: policy 12.7
 
 Tag: debian-news-file-not-compressed
 Type: warning
+Severity: normal
+Certainty: certain
 Info: NEWS.Debian files should be compressed using "gzip -9".  The file
  must always have the same name.
 Ref: devref 6.3.4
 
 Tag: changelog-not-compressed-with-max-compression
 Type: warning
+Severity: normal
+Certainty: certain
 Info: Changelog files should be compressed using "gzip -9"; i.e., using
  the maximum compression level via the -9 option to gzip.
 Ref: policy 12.7
 
 Tag: wrong-name-for-changelog-of-native-package
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The changelog file of a native Debian package (i.e., if there is
  no upstream source) should usually be installed as
  /usr/share/doc/<i>pkg</i>/changelog.gz
@@ -52,6 +62,8 @@ Ref: policy 12.7
 
 Tag: changelog-file-missing-in-native-package
 Type: error
+Severity: important
+Certainty: certain
 Info: Each Debian package (which provides a /usr/share/doc/<i>pkg</i>
  directory) has to install a changelog file. Since this package seems
  to be a native Debian package (i.e., there is no upstream source),
@@ -61,23 +73,31 @@ Ref: policy 12.7
 
 Tag: wrong-name-for-upstream-changelog
 Type: warning
+Severity: normal
+Certainty: possible
 Info: If there is an upstream changelog file, it should usually be
  installed as /usr/share/doc/<i>pkg</i>/changelog.gz
 Ref: policy 12.7
 
 Tag: no-upstream-changelog
 Type: warning
+Severity: minor
+Certainty: wild-guess
 Info: The package does not install an upstream changelog file. 
 Ref: policy 12.7
 
 Tag: wrong-name-for-debian-changelog-file
 Type: warning
+Severity: important
+Certainty: certain
 Info: The Debian changelog file should usually be installed as
  /usr/share/doc/<i>pkg</i>/changelog.Debian.gz
 Ref: policy 12.7
 
 Tag: wrong-name-for-debian-news-file
 Type: warning
+Severity: normal
+Certainty: possible
 Info: The Debian news file must be installed as
  /usr/share/doc/<i>pkg</i>/NEWS.Debian.gz with exactly that capitalization
  or automated tools may not find it correctly.
@@ -85,6 +105,8 @@ Ref: devref 6.3.4
 
 Tag: debian-changelog-file-missing
 Type: error
+Severity: serious
+Certainty: certain
 Info: Each Debian package (which provides a /usr/share/doc/<i>pkg</i>
  directory) has to install a Debian changelog file
  /usr/share/doc/<i>pkg</i>/changelog.Debian.gz
@@ -92,6 +114,8 @@ Ref: policy 12.7
 
 Tag: debian-changelog-file-is-a-symlink
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The Debian changelog file is a symlink to a file in a different
  directory or not found in this package. Please don't do this. It makes
  package checking and manipulation unnecessarily difficult. Because it was
@@ -105,6 +129,8 @@ Info: The Debian changelog file is a symlink to a file in a different
 
 Tag: debian-changelog-file-missing-or-wrong-name
 Type: error
+Severity: serious
+Certainty: certain
 Info: Each Debian package (which provides a /usr/share/doc/<i>pkg</i>
  directory) must install a Debian changelog file in
  /usr/share/doc/<i>pkg</i>/changelog.Debian.gz
@@ -116,6 +142,8 @@ Ref: policy 12.7
 
 Tag: debian-changelog-file-contains-obsolete-user-emacs-settings
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The add-log-mailing-address variable is no longer honored in
  debian-changelog-mode, and should not appear in packages' changelog
  files.  Instead, put something like this in your ~/.emacs:
@@ -124,16 +152,22 @@ Info: The add-log-mailing-address variable is no longer honored in
 
 Tag: debian-changelog-file-contains-debmake-default-email-address
 Type: error
+Severity: important
+Certainty: certain
 Info: The changelog file contains an email address (&lt;..@unknown&gt;)
  that was not updated to the maintainer's real address.
 
 Tag: debian-changelog-file-contains-invalid-email-address
 Type: error
+Severity: important
+Certainty: certain
 Info: The changelog file contains an invalid email address: the domain
  needs at least one dot. This looks like a mistake.
 
 Tag: debian-changelog-file-uses-obsolete-national-encoding
 Type: error
+Severity: important
+Certainty: certain
 Info: The Debian changelog file must be valid UTF-8, an encoding of
  the Unicode character set.
  .
@@ -145,6 +179,8 @@ Info: The Debian changelog file must be valid UTF-8, an encoding of
 
 Tag: debian-news-file-uses-obsolete-national-encoding
 Type: error
+Severity: important
+Certainty: certain
 Info: The NEWS.Debian file must be valid UTF-8, an encoding of the Unicode
  character set.
  .
@@ -156,31 +192,43 @@ Info: The NEWS.Debian file must be valid UTF-8, an encoding of the Unicode
 
 Tag: latest-debian-changelog-entry-without-new-date
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The latest Debian changelog entry has either the same or even an
  older date as the entry before.
 
 Tag: latest-debian-changelog-entry-without-new-version
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The latest Debian changelog entry has a version number that's either
  the same or smaller than the version number of the entry before.
 
 Tag: syntax-error-in-debian-changelog
 Type: warning
+Severity: normal
+Certainty: possible
 Info: While parsing the Debian changelog, a syntax error was found.
 Ref: policy 4.4
 
 Tag: syntax-error-in-debian-news-file
 Type: warning
+Severity: normal
+Certainty: possible
 Info: While parsing the NEWS.Debian file, a syntax error was found.
 Ref: devref 6.3.4
 
 Tag: wrong-bug-number-in-closes
 Type: warning
+Severity: normal
+Certainty: certain
 Info: Bug numbers can only contain digits.
 Ref: policy 4.4
 
 Tag: possible-missing-colon-in-closes
 Type: warning
+Severity: important
+Certainty: possible
 Info: To close a bug in the Debian changelog, the word "closes" must be
  followed by a colon.  This entry looked like it was intended to close a
  bug, but there's no colon after "closes".
@@ -188,6 +236,8 @@ Ref: policy 4.4
 
 Tag: debian-news-entry-has-strange-distribution
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The latest entry in NEWS.Debian has an unusual distribution name.
  This field is ignored by the archive software, so its value doesn't truly
  matter, but it may be confusing to users reading the entry if the
@@ -196,6 +246,8 @@ Info: The latest entry in NEWS.Debian has an unusual distribution name.
 
 Tag: spelling-error-in-changelog
 Type: warning
+Severity: normal
+Certainty: certain
 Info: Lintian found a spelling error in the latest entry of the Debian
  changelog.  Lintian has a list of common misspellings that it looks for.
  It does not have a dictionary like a spelling checker does.
@@ -206,12 +258,16 @@ Info: Lintian found a spelling error in the latest entry of the Debian
 
 Tag: spelling-error-in-news-debian
 Type: warning
+Severity: normal
+Certainty: certain
 Info: Lintian found a spelling error in the latest entry of the
  NEWS.Debian file.  Lintian has a list of common misspellings that it
  looks for.  It does not have a dictionary like a spelling checker does.
 
 Tag: new-package-should-close-itp-bug
 Type: warning
+Severity: normal
+Certainty: certain
 Info: This package appears to be the first packaging of a new upstream
  software package (there is only one changelog entry and the Debian
  revision is 1), but it does not close any bugs.  The initial upload of a
@@ -223,6 +279,8 @@ Ref: devref 5.1
 
 Tag: debian-changelog-line-too-long
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The given line of the latest changelog entry is over 80 columns.
  Such changelog entries may look poor in terminal windows and mail
  messages and be annoying to read.  Please wrap changelog entries at 80
@@ -230,6 +288,8 @@ Info: The given line of the latest changelog entry is over 80 columns.
 
 Tag: changelog-news-debian-mismatch
 Type: warning
+Severity: normal
+Certainty: possible
 Info: The latest entries in the Debian changelog file and NEWS.Debian file
  are for the same version but the given field doesn't match.  The
  changelog information is canonical and the NEWS.Debian information is

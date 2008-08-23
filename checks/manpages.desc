@@ -8,6 +8,8 @@ Info: This script checks if a binary package conforms to manual page policy.
 
 Tag: bad-link-to-undocumented-manpage
 Type: error
+Severity: important
+Certainty: certain
 Info: The symbolic link should reference
  `<tt>../man[237]/undocumented.[237].gz</tt>' for manual pages in
  <tt>/usr/share/man</tt> or
@@ -16,6 +18,8 @@ Info: The symbolic link should reference
 
 Tag: link-to-undocumented-manpage
 Type: warning
+Severity: normal
+Certainty: certain
 Info: Symbolic links to the undocumented(7) manual page may be provided
  if no manual page is available, but that is deprecated.
  .
@@ -32,6 +36,8 @@ Ref: policy 12.1
 
 Tag: binary-without-manpage
 Type: warning
+Severity: normal
+Certainty: possible
 Info: Each binary in <tt>/usr/bin</tt>, <tt>/usr/sbin</tt>, <tt>/bin</tt>,
  <tt>/sbin</tt> or <tt>/usr/games</tt> should have a manual page
  .
@@ -54,6 +60,8 @@ Ref: policy 12.1
 
 Tag: manpage-in-wrong-directory
 Type: error
+Severity: important
+Certainty: certain
 Info: The manual page should be installed in the correct directory below
  <tt>/usr/share/man/</tt> or <tt>/usr/share/man/<i>locale</i></tt>.
  Only sections 1 through 9 should be used.
@@ -64,17 +72,23 @@ Ref: policy 12.1
 
 Tag: manpage-has-wrong-extension
 Type: error
+Severity: important
+Certainty: certain
 Info: The manual page has an extension other than
  `<i>section</i>[<i>program</i>].gz'.
 Ref: policy 12.1
 
 Tag: manpage-not-compressed
 Type: error
+Severity: important
+Certainty: certain
 Info: Manual pages have to be installed compressed (using `<tt>gzip -9</tt>').
 Ref: policy 12.1
 
 Tag: x11-games-should-be-in-usr-games
 Type: error
+Severity: important
+Certainty: certain
 Info: Since X11 games should be installed in <tt>/usr/games</tt> (and
  not in <tt>/usr/X11R6/bin</tt>) and the game's manual pages should be
  installed in <tt>/usr/share/man/man6</tt>, the directory
@@ -83,16 +97,22 @@ Ref: policy 11.11
 
 Tag: manpage-not-compressed-with-gzip
 Type: error
+Severity: important
+Certainty: certain
 Info: Manual pages should be compressed with <tt>gzip -9</tt>.
 Ref: policy 12.1
 
 Tag: manpage-not-compressed-with-max-compression
 Type: error
+Severity: important
+Certainty: certain
 Info: Manual pages should be compressed with <tt>gzip -9</tt>.
 Ref: policy 12.1
 
 Tag: manpage-has-bad-whatis-entry
 Type: warning
+Severity: normal
+Certainty: certain
 Info: Each manual page should start with a `NAME' section, which lists the
  name and a brief description of the page seperated by '\-'. These sections
  are parsed by `mandb' and stored in a database for the use of `apropos' and
@@ -102,6 +122,8 @@ Ref: lexgrog(1), groff_man(7), groff_mdoc(7)
 
 Tag: manpage-has-useless-whatis-entry
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The whatis entry for this manual page (the brief description found
  in the NAME section) is of the form:
  .
@@ -117,6 +139,8 @@ Info: The whatis entry for this manual page (the brief description found
 
 Tag: manpage-is-dh_make-template
 Type: error
+Severity: important
+Certainty: certain
 Info: This manual page appears to be an unmodified or insufficiently
  modified copy of the dh_make manual page template.  It has a whatis entry
  (the brief description found in the NAME section) of the form:
@@ -128,6 +152,8 @@ Info: This manual page appears to be an unmodified or insufficiently
 
 Tag: manpage-has-errors-from-man
 Type: warning
+Severity: normal
+Certainty: certain
 Info: This man page provokes warnings or errors from man.
  .
  "cannot adjust" or "can't break" are trouble with paragraph filling,
@@ -160,6 +186,8 @@ Info: This man page provokes warnings or errors from man.
 
 Tag: manpage-for-x11-binary-in-wrong-directory
 Type: error
+Severity: important
+Certainty: certain
 Info: Manual pages for binaries which are located in <tt>/usr/X11R6/bin</tt>
  should be installed below <tt>/usr/X11R6/man</tt>.
  .
@@ -170,6 +198,8 @@ Ref: fhs usrsharemanmanualpages
 
 Tag: manpage-for-non-x11-binary-in-wrong-directory
 Type: error
+Severity: important
+Certainty: certain
 Info: Manual pages for binaries that are not located in <tt>/usr/X11R6/bin</tt>
  should not be installed below <tt>/usr/X11R6/man</tt>, but below
  <tt>/usr/share/man</tt>.
@@ -180,6 +210,8 @@ Ref: fhs usrsharemanmanualpages
 
 Tag: no-manpage-in-correct-directory
 Type: warning
+Severity: normal
+Certainty: certain
 Info: Manpages for executables in /sbin and /usr/sbin should be placed in
  section 8; manpages for executables in /bin and /usr/bin in section 1;
  manpages for executables in /usr/games in section 6. For the noted
@@ -190,6 +222,8 @@ Info: Manpages for executables in /sbin and /usr/sbin should be placed in
 
 Tag: bad-so-link-within-manual-page
 Type: error
+Severity: important
+Certainty: certain
 Info: Manual files that use the .so links to include other pages should
  only point to a path relative to the top-level manual hierarchy, e.g.
  .
@@ -197,10 +231,14 @@ Info: Manual files that use the .so links to include other pages should
 
 Tag: empty-manual-page
 Type: error
+Severity: important
+Certainty: certain
 Info: The referenced manual page is empty.
 
 Tag: manpage-section-mismatch
 Type: warning
+Severity: normal
+Certainty: certain
 Info: A man page usually should contain a <tt>.TH</tt> header, specifying the
  section.  The section in this manpage doesn't match with the section in the
  filename.
@@ -208,6 +246,8 @@ Ref: groff_man(7), man(1)
 
 Tag: hyphen-used-as-minus-sign
 Type: info
+Severity: wishlist
+Certainty: certain
 Info: Manual page seems to contain a hyphen where a minus sign was intended.
  '-' chars are interpreted as hyphens (U+2010) by groff, not as minus signs
  (U+002D). Since options to programs use minus signs (U+002D), this means for
@@ -231,6 +271,8 @@ Info: Manual page seems to contain a hyphen where a minus sign was intended.
 
 Tag: FSSTND-dir-in-manual-page
 Type: info
+Severity: wishlist
+Certainty: certain
 Info: The manual page references a directory that is specified
  in the FSSTND but not in the FHS which is used by Debian.
  This can be an indicator of a mismatch of the location of
@@ -241,6 +283,8 @@ Info: The manual page references a directory that is specified
 
 Tag: binary-without-english-manpage
 Type: warning
+Severity: normal
+Certainty: certain
 Info: Each binary in <tt>/usr/bin</tt>, <tt>/usr/sbin</tt>, <tt>/bin</tt>,
  <tt>/sbin</tt> or <tt>/usr/games</tt> should have a manual page. You don't
  provide an english, only a translated manpage. Since english is fallback,
@@ -249,6 +293,8 @@ Info: Each binary in <tt>/usr/bin</tt>, <tt>/usr/sbin</tt>, <tt>/bin</tt>,
 
 Tag: manpage-locale-dir-country-specific
 Type: warning
+Severity: normal
+Certainty: certain
 Ref: policy 12.1
 Info: This package installs a manual page in a locale directory that
  includes the country name.  A country name should not be included in the

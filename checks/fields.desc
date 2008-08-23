@@ -9,11 +9,15 @@ Info: This script checks the syntax of the fields in package control files,
 
 Tag: no-package-name
 Type: error
+Severity: serious
+Certainty: certain
 Info: The package does not have a `Package:' field in its control file.
 Ref: policy 5.3
 
 Tag: bad-package-name
 Type: error
+Severity: serious
+Certainty: certain
 Info: A package name should be at least two characters long, must consist
  of the alphanumerics and `+' `-' and `.', and must start with an
  alphanumeric character.
@@ -21,26 +25,36 @@ Ref: policy 5.6.7
 
 Tag: package-not-lowercase
 Type: error
+Severity: serious
+Certainty: certain
 Info: New packages should not use uppercase characters in their names.
 Ref: policy 5.6.7
 
 Tag: no-version-field
 Type: error
+Severity: serious
+Certainty: certain
 Info: The package does not have a `Version:' field in its control file.
 Ref: policy 5.3
 
 Tag: bad-version-number
 Type: error
+Severity: serious
+Certainty: certain
 Info: The version number fails one of the syntactic requirements of dpkg.
 Ref: policy 5.6.12
 
 Tag: upstream-version-not-numeric
 Type: error
+Severity: important
+Certainty: certain
 Info: The upstream version number should start with a digit. 
 Ref: policy 5.6.12
 
 Tag: debian-revision-not-well-formed
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The debian version part (the part after the -) should consist of one
  or two dot-separated parts: one for a regular maintainer release or two
  for a source-NMU.
@@ -48,6 +62,8 @@ Ref: devref 5.11.2, policy 5.6.12
 
 Tag: debian-revision-should-not-be-zero
 Type: warning
+Severity: important
+Certainty: certain
 Info: The debian version part (the part after the -) should start with one,
  not with zero. This is to ensure that a correctly-done Maintainer Upload will
  always have a higher version number than a Non-Maintainer upload: a NMU could
@@ -57,17 +73,23 @@ Ref: devref 5.11.2
 
 Tag: no-architecture-field
 Type: error
+Severity: serious
+Certainty: certain
 Info: The package does not have an `Architecture:' field in its control file.
 Ref: policy 5.3
 
 Tag: magic-arch-in-arch-list
 Type: error
+Severity: serious
+Certainty: certain
 Info: The special architecture values `all' and `any' only make sense if
  they occur alone.
 Ref: policy 5.6.8
 
 Tag: unknown-architecture
 Type: warning
+Severity: normal
+Certainty: possible
 Info: This package claims to be for an unknown architecture.  The
  architecture should be one of the values supported by dpkg or one of the
  special values "all" or "any".  The special value "source" is only used
@@ -76,18 +98,24 @@ Info: This package claims to be for an unknown architecture.  The
 
 Tag: too-many-architectures
 Type: error
+Severity: serious
+Certainty: certain
 Info: A binary package should list exactly one architecture (the one it is
  compiled for), or the special value `all' if it is architecture-independent.
 Ref: policy 5.6.8
 
 Tag: arch-any-in-binary-pkg
 Type: error
+Severity: serious
+Certainty: certain
 Info: The special architecture value `any' does not make sense in a binary
  package.
 Ref: policy 5.6.8
 
 Tag: aspell-package-not-arch-all
 Type: warning
+Severity: normal
+Certainty: certain
 Info: This package appears to be an aspell dictionary package, but it is
  not Architecture: all.  The binary hashes should be built at install-time
  by calling aspell-autobuildhash, so the contents of the package should be
@@ -96,18 +124,23 @@ Ref: aspell-autobuildhash(8)
 
 Tag: no-maintainer-field
 Type: error
+Severity: serious
+Certainty: certain
 Info: The package does not have a `Maintainer:' field in its control file.
 Ref: policy 5.3
-Tested: empty
 
 Tag: maintainer-name-missing
 Type: error
+Severity: serious
+Certainty: certain
 Info: The maintainer field seems to contain just an email address. It must
  contain the package maintainer's name and email address.
 Ref: policy 5.6.2
 
 Tag: maintainer-address-missing
 Type: error
+Severity: serious
+Certainty: certain
 Info: The maintainer field should contain the package maintainer's name and
  email address, with the name followed by the address inside angle
  brackets (&lt; and &gt;).  The address seems to be missing.
@@ -115,34 +148,46 @@ Ref: policy 5.6.2
 
 Tag: maintainer-address-malformed
 Type: error
+Severity: important
+Certainty: certain
 Info: The maintainer field could not be parsed according to the rules in
  the Policy Manual.
 Ref: policy 5.6.2
 
 Tag: maintainer-not-full-name
 Type: warning
+Severity: normal
+Certainty: possible
 Info: The `name' part of this maintainer field is just one word, so it
  might not be a full name.
 
 Tag: maintainer-address-looks-weird
 Type: warning
+Severity: normal
+Certainty: possible
 Info: The maintainer address does not have whitespace between the name
  and the email address.
 
 Tag: maintainer-address-is-on-localhost
 Type: error
+Severity: important
+Certainty: certain
 Info: The maintainer address includes localhost(.localdomain), which is
  an invalid e-mail address.
 Ref: policy 5.6.2
 
 Tag: uploader-name-missing
 Type: error
+Severity: important
+Certainty: certain
 Info: The uploader field seems to contain just an email address. It must
  contain the package uploader's name and email address.
 Ref: policy 5.6.2
 
 Tag: uploader-address-missing
 Type: error
+Severity: important
+Certainty: certain
 Info: The uploader field should contain the package uploader's name and
  email address, with the name followed by the address inside angle
  brackets (&lt; and &gt;).  The address seems to be missing.
@@ -150,28 +195,38 @@ Ref: policy 5.6.2
 
 Tag: uploader-address-malformed
 Type: error
+Severity: important
+Certainty: certain
 Info: The uploader field could not be parsed according to the rules in
  the Policy Manual.
 Ref: policy 5.6.2
 
 Tag: uploader-not-full-name
 Type: warning
+Severity: normal
+Certainty: possible
 Info: The `name' part of this uploader field is just one word, so it
  might not be a full name.
 
 Tag: uploader-address-looks-weird
 Type: warning
+Severity: normal
+Certainty: possible
 Info: The uploader address does not have whitespace between the name
  and the email address.
 
 Tag: uploader-address-is-on-localhost
 Type: error
+Severity: important
+Certainty: certain
 Info: The uploader address includes localhost(.localdomain), which is
  an invalid e-mail address.
 Ref: policy 5.6.2
 
 Tag: wrong-debian-qa-address-set-as-maintainer
 Type: error
+Severity: important
+Certainty: certain
 Info: Orphaned packages should no longer have the address
  &lt;debian-qa@lists.debian.org&gt; in the Maintainer field.
  .
@@ -181,12 +236,16 @@ Ref: devref 5.9.4
 
 Tag: wrong-debian-qa-group-name
 Type: error
+Severity: important
+Certainty: certain
 Info: Orphaned packages should have "Debian QA Group
  &lt;packages@qa.debian.org&gt;" in the maintainer field.
 Ref: devref 5.9.4
 
 Tag: no-human-maintainers
 Type: warning
+Severity: normal
+Certainty: possible
 Info: The Maintainer address for this package is a mailing list and there
  are no Uploaders listed.  Team-maintained packages should list the human
  maintainers in the Uploaders field.
@@ -194,17 +253,23 @@ Ref: devref 5.12
 
 Tag: no-source-field
 Type: error
+Severity: serious
+Certainty: certain
 Info: The package does not have a `Source:' field in its control file.
 Ref: policy 5.2
 
 Tag: source-field-does-not-match-pkg-name
 Type: error
+Severity: serious
+Certainty: certain
 Info: The source package's filename is not the same as the name given
  in its Source field.  The Source field should name the package.
 Ref: policy 5.6.1
 
 Tag: source-field-malformed
 Type: error
+Severity: important
+Certainty: certain
 Info: In a binary package, the Source field should identify the source
  package from which the package was compiled.  It should be the
  source package name, optionally followed by a version number
@@ -213,22 +278,30 @@ Ref: policy 5.6.1
 
 Tag: essential-in-source-package
 Type: error
+Severity: important
+Certainty: certain
 Info: This field should only appear in binary packages.
 Ref: policy 5.6.9
  
 Tag: essential-no-not-needed
 Type: error
+Severity: normal
+Certainty: certain
 Info: Having `Essential: no' is the same as not having the field at all,
  so it just makes the Packages file longer with no benefit.
 Ref: policy 5.6.9
 
 Tag: unknown-essential-value
 Type: error
+Severity: important
+Certainty: certain
 Info: The only valid values for the Essential field are yes and no.
 Ref: policy 5.6.9
 
 Tag: no-section-field
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The package does not have a `Section:' field in its control file.
  .
  The field is mandatory for source packages and optional for binary
@@ -238,6 +311,8 @@ Ref: policy 5.3
 
 Tag: unknown-section
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The `Section:' field in this package's control file is not one of
  the sections in use on the ftp archive.  Valid sections are currently
  admin, comm, devel, doc, editors, electronics, embedded, games,
@@ -252,6 +327,8 @@ Ref: policy 2.4
 
 Tag: section-is-dh_make-template
 Type: error
+Severity: important
+Certainty: certain
 Info: The `Section:' field in this package's control file is set to
  unknown.  This is not a valid section, and usually means a dh_make
  template control file was used and never modified to set the correct
@@ -260,10 +337,14 @@ Ref: policy 2.4
 
 Tag: wrong-section-for-udeb
 Type: warning
+Severity: normal
+Certainty: certain
 Info: udeb packages should have `Section: debian-installer'.
 
 Tag: no-priority-field
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The package does not have a `Priority:' field in its control file.
  .
  The Priority field can be included in a binary package by passing
@@ -273,12 +354,16 @@ Ref: policy 5.3
 
 Tag: unknown-priority
 Type: error
+Severity: important
+Certainty: certain
 Info: The `Priority:' field in this package's control file is not one of
  the priorities defined in the Policy Manual.
 Ref: policy 2.5
 
 Tag: superfluous-clutter-in-homepage
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The `Homepage:' field in this package's control file contains
  superfluous markup around the URL, like enclosing &lt; and &gt;.
  This is unnecessary and needlessly complicates using this information.
@@ -286,24 +371,32 @@ Ref: policy 5.6.23
 
 Tag: bad-homepage
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The `Homepage:' field in this package's control file does not
  contain a valid absolute URL. Most probably you forgot to specificy
  the scheme (e.g. http).
 
 Tag: obsolete-field
 Type: error
+Severity: important
+Certainty: certain
 Info: This field is listed in the Policy Manual as obsolete and
  not-to-be-present in any package.
 Ref: policy D.2.6
 
 Tag: unknown-field-in-dsc
 Type: info
+Severity: minor
+Certainty: certain
 Info: See the Policy Manual for a list of the possible fields in
  a source package control file.
 Ref: policy 5.4
 
 Tag: unknown-field-in-control
 Type: info
+Severity: minor
+Certainty: possible
 Info: See the Policy Manual for a list of the possible fields in
  a binary package control file.
  .
@@ -314,23 +407,31 @@ Ref: policy 5.3
 
 Tag: multiline-field
 Type: error
+Severity: important
+Certainty: certain
 Info: Most control fields must have only a single line of data.
 Ref: policy 5.1
 
 Tag: alternates-not-allowed
 Type: error
+Severity: important
+Certainty: certain
 Info: Only the `Depends', `Recommends', `Suggests' and `Pre-Depends'
  fields may specify alternate dependencies using the `|' symbol.
 Ref: policy 7.1
 
 Tag: versioned-provides
 Type: error
+Severity: important
+Certainty: certain
 Ref: policy 7.1
 Info: The `Provides' field may not specify a version range.
 
 Tag: obsolete-relation-form
 Ref: policy 7.1
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The forms `&lt;' and `&gt;' mean `&lt;=' and `&gt;=', not `&lt;&lt;'
  and `&gt;&gt;' as one might expect.  For that reason these forms are
  obsolete, and should not be used in new packages.  Use the longer forms
@@ -339,23 +440,31 @@ Info: The forms `&lt;' and `&gt;' mean `&lt;=' and `&gt;=', not `&lt;&lt;'
 Tag: bad-version-in-relation
 Ref: policy 5.6.12
 Type: error
+Severity: important
+Certainty: certain
 Info: The version number used in this relationship does not match the
  defined format of a version number.
 
 Tag: package-relation-with-self
 Type: warning
+Severity: normal
+Certainty: possible
 Info: The package declares a relationship with itself.  This is not very
  useful, except in the case of a package Conflicting with itself, if its
  package name doubles as a virtual package.
 
 Tag: bad-relation
 Type: error
+Severity: important
+Certainty: certain
 Info: The package declares a relationship that could not be parsed according
  to the rules given in the Policy Manual.
 Ref: policy 7.1
 
 Tag: new-essential-package
 Type: warning
+Severity: important
+Certainty: possible
 Info: This package has the Essential flag set.  New Essential packages
  are sufficiently rare that it seems worth warning about.  They should
  be discussed on debian-devel first.
@@ -363,10 +472,14 @@ Ref: policy 3.8
 
 Tag: non-us-spelling
 Type: info
+Severity: minor
+Certainty: certain
 Info: Although non-us works for a section name, non-US is preferred.
 
 Tag: doc-package-depends-on-main-package
 Type: warning
+Severity: normal
+Certainty: possible
 Info: The name of this package suggests that it is a documentation package.
  It is usually not desirable for documentation packages to depend on the
  packages they document, because users may want to install the docs before
@@ -376,21 +489,29 @@ Info: The name of this package suggests that it is a documentation package.
 
 Tag: depends-on-obsolete-package
 Type: error
+Severity: important
+Certainty: possible
 Info: The package depends on a package that has been superseded.
  If the superseded package is part of an ORed group, it should not be
  the first package in the group.
 
 Tag: ored-depends-on-obsolete-package
 Type: info
+Severity: minor
+Certainty: possible
 Info: The package depends on an ORed group of packages which includes
  a package that has been superseded.
 
 Tag: build-depends-on-obsolete-package
 Type: error
+Severity: important
+Certainty: possible
 Info: The package build-depends on a package that has been superseded.
 
 Tag: depends-on-old-emacs
 Type: warning
+Severity: normal
+Certainty: possible
 Info: The package lists an old version of Emacs as its first dependency.
  It should probably be updated to support the current version of Emacs
  in the archive and then list that version first in the list of Emacs
@@ -402,6 +523,8 @@ Info: The package lists an old version of Emacs as its first dependency.
 
 Tag: depends-on-x-metapackage
 Type: error
+Severity: important
+Certainty: certain
 Info: Packages that are not themselves metapackages must not depend on X
  Window System metapackages.
  .
@@ -412,6 +535,8 @@ Info: Packages that are not themselves metapackages must not depend on X
 
 Tag: build-depends-on-x-metapackage
 Type: error
+Severity: important
+Certainty: certain
 Info: Packages must not build-depend on X Window System metapackages.
  .
  The metapackages xorg, xorg-dev, x-window-system, x-window-system-dev, and
@@ -420,6 +545,8 @@ Info: Packages must not build-depend on X Window System metapackages.
 
 Tag: depends-on-essential-package-without-using-version
 Type: error
+Severity: important
+Certainty: certain
 Ref: policy 3.5
 Info: The package declares a depends on an essential package, e.g. dpkg,
  without using a versioned depends.  Packages do not need to depend on
@@ -430,6 +557,8 @@ Info: The package declares a depends on an essential package, e.g. dpkg,
 
 Tag: build-depends-on-essential-package-without-using-version
 Type: error
+Severity: important
+Certainty: certain
 Ref: policy 4.2
 Info: The package declares a build-depends on an essential package, e.g. dpkg,
  without using a versioned depends.  Packages do not need to build-depend on
@@ -440,6 +569,8 @@ Info: The package declares a build-depends on an essential package, e.g. dpkg,
 
 Tag: virtual-package-depends-without-real-package-depends
 Type: warning
+Severity: normal
+Certainty: possible
 Info: The package declares a depends on a virtual package without listing a
  real package as an alternative first.
  .
@@ -454,6 +585,8 @@ Info: The package declares a depends on a virtual package without listing a
 
 Tag: invalid-arch-string-in-source-relation
 Type: error
+Severity: important
+Certainty: possible
 Ref: policy 5.6.8
 Info: The architecture string in the source relation does not follow policy.
  A common cause of this is a comma in the arch, i.e. [i386, m68k], it should
@@ -461,6 +594,8 @@ Info: The architecture string in the source relation does not follow policy.
 
 Tag: depends-on-build-essential-package-without-using-version
 Type: error
+Severity: important
+Certainty: certain
 Ref: policy 4.2
 Info: The package declares a depends on a build essential package without
  using a versioned depends.  Packages do not have to build-depend on any
@@ -472,6 +607,8 @@ Info: The package declares a depends on a build essential package without
 
 Tag: package-depends-on-an-x-font-package
 Type: error
+Severity: important
+Certainty: certain
 Info: Packages must not depend on X Window System font packages.
  .
  If one or more of the fonts so packaged are necessary for proper operation
@@ -482,12 +619,16 @@ Ref: policy 11.8.5
 
 Tag: build-depends-indep-without-arch-indep
 Type: error
+Severity: important
+Certainty: certain
 Ref: policy 7.7
 Info: The control file specifies source relations for architecture-independent
  packages, but no architecture-independent packages are built.
 
 Tag: build-depends-without-arch-dep
 Type: info
+Severity: minor
+Certainty: possible
 Ref: policy 7.7
 Info: The control file lists the given package in Build-Depends, but no
  architecture-dependent packages are built. If all the packages built are
@@ -498,6 +639,8 @@ Info: The control file lists the given package in Build-Depends, but no
 
 Tag: clean-should-be-satisfied-by-build-depends
 Type: error
+Severity: important
+Certainty: certain
 Ref: policy 7.7
 Info: The specified package is required to run the clean target of
  <tt>debian/rules</tt> and therefore must be listed in Build-Depends, not
@@ -506,6 +649,8 @@ Info: The specified package is required to run the clean target of
 
 Tag: missing-build-dependency
 Type: error
+Severity: important
+Certainty: certain
 Ref: policy 4.2
 Info: The package doesn't specify a build dependency on a package that is
  used in <tt>debian/rules</tt>.
@@ -521,6 +666,8 @@ Info: The package doesn't specify a build dependency on a package that is
 
 Tag: missing-python-build-dependency
 Type: error
+Severity: important
+Certainty: certain
 Ref: policy 4.2
 Info: The package appears to use Python as part of its build process in
  <tt>debian/rules</tt> but doesn't depend on Python.
@@ -535,6 +682,8 @@ Info: The package appears to use Python as part of its build process in
 
 Tag: missing-dh_python-build-dependency
 Type: error
+Severity: important
+Certainty: certain
 Ref: dh_python(1)
 Info: The package runs dh_python in <tt>debian/rules</tt> but doesn't
  build-depend on python or python-dev. dh_python requires
@@ -544,18 +693,24 @@ Info: The package runs dh_python in <tt>debian/rules</tt> but doesn't
 
 Tag: build-conflicts-with-build-dependency
 Type: error
+Severity: important
+Certainty: certain
 Ref: policy 7.7
 Info: The package build-conflicts with a package that it also
  build-depends on.
 
 Tag: package-has-a-duplicate-build-relation
 Type: warning
+Severity: normal
+Certainty: possible
 Info: The package declares the given build relations on the same package
  in either Build-Depends or Build-Depends-Indep, but the build relations
  imply each other and are therefore redundant.
 
 Tag: build-depends-on-1-revision
 Type: warning
+Severity: normal
+Certainty: possible
 Info: The package declares a build dependency on a version of a package
  with a -1 Debian revision such as "libfoo (&gt;= 1.2-1)".  Such a
  dependency will not be satisfied by a backport of libfoo 1.2-1 and
@@ -566,6 +721,8 @@ Info: The package declares a build dependency on a version of a package
 
 Tag: needlessly-depends-on-awk
 Type: error
+Severity: important
+Certainty: certain
 Info: The package seems to declare a relation on awk. awk is a virtual
  package, but it is special since it's de facto essential. If you don't
  need to depend on a specific version of awk (which wouldn't work anyway,
@@ -574,42 +731,56 @@ Info: The package seems to declare a relation on awk. awk is a virtual
 
 Tag: package-depends-on-multiple-libstdc-versions
 Type: error
+Severity: important
+Certainty: possible
 Info: The package seems to declare several relations to a libstdc version.
  This is not only sloppy but in the case of libraries, it may well break
  the runtime execution of programs.
 
 Tag: package-depends-on-multiple-tcl-versions
 Type: error
+Severity: important
+Certainty: possible
 Info: The package seems to declare several relations to a tcl version.
  This is not only sloppy but in the case of libraries, it may well break
  the runtime execution of programs.
 
 Tag: package-depends-on-multiple-tclx-versions
 Type: error
+Severity: important
+Certainty: possible
 Info: The package seems to declare several relations to a tclx version.
  This is not only sloppy but in the case of libraries, it may well break
  the runtime execution of programs.
 
 Tag: package-depends-on-multiple-tk-versions
 Type: error
+Severity: important
+Certainty: possible
 Info: The package seems to declare several relations to a tk version.
  This is not only sloppy but in the case of libraries, it may well break
  the runtime execution of programs.
 
 Tag: package-depends-on-multiple-tkx-versions
 Type: error
+Severity: important
+Certainty: possible
 Info: The package seems to declare several relations to a tkx version.
  This is not only sloppy but in the case of libraries, it may well break
  the runtime execution of programs.
 
 Tag: package-depends-on-multiple-libpng-versions
 Type: error
+Severity: important
+Certainty: possible
 Info: The package seems to declare several relations to a libpng version.
  This is not only sloppy but in the case of libraries, it may well break
  the runtime execution of programs.
 
 Tag: depends-on-libdb1-compat
 Type: error
+Severity: important
+Certainty: certain
 Info: The package seems to declare a relation on libdb1-compat.
  This library exists for compatibility with applications built against
  glibc 2.0 or 2.1. There is intentionally no corresponding development
@@ -617,6 +788,8 @@ Info: The package seems to declare a relation on libdb1-compat.
 
 Tag: depends-on-python-minimal
 Type: error
+Severity: important
+Certainty: certain
 Info: The python-minimal package (and versioned variants thereof) exists
  only to possibly become an Essential package.  Depending on it is always
  an error since it should never be installed without python.  If it
@@ -625,6 +798,8 @@ Info: The python-minimal package (and versioned variants thereof) exists
 
 Tag: depends-exclusively-on-makedev
 Type: warning
+Severity: normal
+Certainty: certain
 Info: This package depends on makedev without a udev alternative.  This
  probably means that it doesn't have udev rules and relies on makedev to
  create devices, which won't work if udev is installed and running.
@@ -633,6 +808,8 @@ Info: This package depends on makedev without a udev alternative.  This
 
 Tag: dbg-package-missing-depends
 Type: warning
+Severity: normal
+Certainty: possible
 Info: This package has a name of the form of "X-dbg", indicating it
  contains detached debugging symbols for the package X.  If so, it should
  depend on the corresponding package, generally with (= ${binary:Version})
@@ -641,18 +818,24 @@ Info: This package has a name of the form of "X-dbg", indicating it
 
 Tag: conflicts-with-dependency
 Type: error
+Severity: important
+Certainty: certain
 Ref: policy 7.4
 Info: The package seems to conflict with one of its dependencies,
  recommendations, or suggestions by listing it in Conflicts or Breaks.
 
 Tag: package-uses-breaks
 Type: warning
+Severity: normal
+Certainty: certain
 Ref: policy 7.3
 Info: This package uses the Breaks control field.  This control field
  should not be used until the stable release of Debian supports Breaks.
 
 Tag: breaks-without-version
 Type: warning
+Severity: normal
+Certainty: possible
 Ref: policy 7.3
 Info: This package declares a Breaks relationship with another package
  that has no version number.  Normally, Breaks should be used to indicate
@@ -662,16 +845,22 @@ Info: This package declares a Breaks relationship with another package
 
 Tag: bad-menu-item
 Type: error
+Severity: important
+Certainty: certain
 Info: The field Installer-Menu-Item should only contain positive integer
  values.
 
 Tag: redundant-origin-field
 Type: warning
+Severity: normal
+Certainty: certain
 Info: You use the Origin field though the field value is the default (Debian).
  In this case the field is redundant and should be removed.
 
 Tag: binary-nmu-uses-old-version-style
 Type: warning
+Severity: normal
+Certainty: certain
 Ref: devref 5.10.2.1
 Info: The version number of a binary NMU should be formed by appending
  <tt>+b</tt> and a digit to the source version.  This version scheme is
@@ -680,6 +869,8 @@ Info: The version number of a binary NMU should be formed by appending
 
 Tag: binary-nmu-debian-revision-in-source
 Type: warning
+Severity: normal
+Certainty: certain
 Ref: devref 5.10.2.1
 Info: The version number of your source package ends in +b and a number or
  has a Debian revision containing three parts.  These version numbers are
@@ -689,19 +880,25 @@ Info: The version number of your source package ends in +b and a number or
 
 Tag: redundant-bugs-field
 Type: warning
+Severity: normal
+Certainty: certain
 Info: You use the Bugs field though the field value is the default 
  (debbugs://bugs.debian.org/). In this case the field is redundant and
  should be removed.
 
 Tag: build-depends-on-build-essential
 Type: error
-Ref: policy 7.7
 Info: You depend on the build-essential package, which is only a
+Severity: important
+Certainty: certain
+Ref: policy 7.7
  meta-package depending on build tools that have to be installed in all
  build environments.
 
 Tag: malformed-python-version
 Type: error
+Severity: important
+Certainty: certain
 Ref: python-policy 2.3
 Info: The Python-Version control field is not in one of the valid
  formats.  It should be in one of the following formats:
@@ -718,6 +915,8 @@ Info: The Python-Version control field is not in one of the valid
 
 Tag: old-versioned-python-dependency
 Type: warning
+Severity: normal
+Certainty: certain
 Info: This package appears to be an architecture-indepedent Python module
  but has a dependency on a version of python less than a particular
  version and no Python-Version control field.  This normally means that
@@ -731,6 +930,8 @@ Info: This package appears to be an architecture-indepedent Python module
 
 Tag: malformed-dm-upload-allowed
 Type: error
+Severity: important
+Certainty: certain
 Ref: http://www.debian.org/vote/2007/vote_003
 Info: The Dm-Upload-Allowed field in this package is set to something
  other than "yes".  The only standardized value for this field in the
@@ -739,27 +940,37 @@ Info: The Dm-Upload-Allowed field in this package is set to something
 
 Tag: doc-package-should-be-section-doc
 Type: warning
+Severity: normal
+Certainty: certain
 Info: This package has a name suggesting that it contains only
  documentation.  If so, it should be in section "doc".
 
 Tag: python-package-should-be-section-python
 Type: warning
+Severity: normal
+Certainty: certain
 Info: This package has a name suggesting that it is a Python extension or
  part of the Python environment.  If so, it should be in section
  "python".
 
 Tag: perl-package-should-be-section-perl
 Type: warning
+Severity: normal
+Certainty: certain
 Info: This package has a name suggesting that it is a Perl module package.
  If so, it should be in section "perl".
 
 Tag: dev-package-should-be-section-libdevel
 Type: warning
+Severity: normal
+Certainty: certain
 Info: This package has a name suggesting that it is a library development
  package.  If so, it should be in section "libdevel".
 
 Tag: debug-package-should-be-priority-extra
 Type: warning
+Severity: normal
+Certainty: certain
 Info: This package has a name suggesting that it contains detached
  debugging symbols.  If so, it should have priority "extra" since users
  normally do not need such packages.

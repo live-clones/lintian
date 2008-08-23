@@ -8,12 +8,16 @@ Info: This script validates the format of menu files.
 
 Tag: old-format-menu-file
 Type: error
+Severity: important
+Certainty: certain
 Info: The package contains a menu file that is in the old menu file format.
  This format is deprecated. Convert the menu file to the new menu format.
  Note that lintian will not test this file for any other problems.
 
 Tag: whitespace-after-continuation-character
 Type: error
+Severity: important
+Certainty: certain
 Info: The menu item is split up over 2 or more lines using '\' at the end of
  the line to join them together. However, there is some whitespace after
  the '\' character, which is not guaranteed to be handled correctly.
@@ -21,6 +25,8 @@ Info: The menu item is split up over 2 or more lines using '\' at the end of
 
 Tag: bad-test-in-menu-item
 Type: error
+Severity: important
+Certainty: certain
 Info: The menu file contains an item that does not start with the text
  "?package(somepackage):". All menu file lines must test for the existence
  of a package in this way.
@@ -28,12 +34,16 @@ Ref: menu 3.2
 
 Tag: unparsable-menu-item
 Type: error
+Severity: important
+Certainty: certain
 Info: An item of the menu file cannot be parsed as a series of tag=value
  pairs. This could be because you didn't close a set of double quotes.
 Ref: menu 3.2
 
 Tag: pkg-not-in-package-test
 Type: warning
+Severity: normal
+Certainty: possible
 Info: This menu item doesn't test to see if the package containing it is
  installed.  The start of any menu item is a conditional testing whether
  the required packages are installed.  Normally this conditional should
@@ -48,18 +58,24 @@ Ref: menu 3.2
 
 Tag: duplicated-tag-in-menu-item
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The menu item contains two instances of the same tag. This is just a
  waste of space, as menu will only use one of them.
 Ref: menu 3.2
 
 Tag: menu-item-missing-required-tag
 Type: error
+Severity: important
+Certainty: certain
 Info: The menu item has a line that is missing a required tag. It's likely
  that the line will have no effect without this tag. <tt>install-menu</tt> may
  report this as an error during package installation.
 
 Tag: menu-item-contains-unknown-tag
 Type: warning
+Severity: minor
+Certainty: certain
 Info: The menu item has a line that has a tag in it that is not one
  of the standard tags (needs=, section=, title=, longtitle=, command=, etc).
  While other tags can be used for specialized purposes, this is rare and
@@ -67,17 +83,23 @@ Info: The menu item has a line that has a tag in it that is not one
 
 Tag: menu-item-uses-icon-none
 Type: warning
+Severity: minor
+Certainty: certain
 Info: The menu item has a line that uses icon=none. This is redundant and
  deprecated -- if there is no icon, just leave off the icon tag.
 
 Tag: menu-item-needs-tag-has-unknown-value
 Type: warning
+Severity: minor
+Certainty: certain
 Info: The menu item has a line that has a needs= field with a strange value.
  This may be intentional, but it's probably a typo that will make menu
  ignore the line.
 
 Tag: menu-item-adds-to-root-menu
 Type: error
+Severity: important
+Certainty: certain
 Info: The menu item has a line that specifies a section that will put a menu
  item right in the root menu. Packages should never add items directly to the
  root menu. Note that if you specify an empty section, this error will
@@ -85,24 +107,32 @@ Info: The menu item has a line that specifies a section that will put a menu
 
 Tag: menu-item-uses-apps-games-section
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The menu item has a line that specifies a section under "Apps/Games".
  This section has been moved to just "Games".
 Ref: menu-policy 2.1
 
 Tag: menu-item-uses-apps-section
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The menu item has a line that specifies a section under "Apps".
  This section has been moved to "Applications".
 Ref: menu-policy 2.1
 
 Tag: menu-item-uses-windowmanagers-section
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The menu item has a line that specifies a section under
  "WindowManagers".  This section has been moved to "Window Managers".
 Ref: menu-policy 2.1
 
 Tag: menu-item-creates-new-section
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The menu item has a line that specifies an unknown section or uses a
  section that is intended only as a menu root, not as a section that
  applications should use directly.  Check the spelling of the section and
@@ -112,6 +142,8 @@ Ref: menu-policy 2.1
 
 Tag: menu-item-creates-new-root-section
 Type: error
+Severity: important
+Certainty: certain
 Info: The menu item has a line that specifies a new section to put a menu
  entry in, and this section appears right in the root menu.  This is
  almost certainly an error.  No new sections should be added to the root
@@ -119,11 +151,15 @@ Info: The menu item has a line that specifies a new section to put a menu
 
 Tag: menu-icon-not-in-xpm-format
 Type: error
+Severity: important
+Certainty: certain
 Info: Icons in the Debian menu system should be in XPM format.
 Ref: menu 3.7
 
 Tag: menu-icon-missing
 Type: warning
+Severity: normal
+Certainty: possible
 Info: This icon file couldn't be found.  If the path to the icon in the
  menu file is an absolute path, make sure that icon exists at that path in
  the package.  If the path is relative or a simple filename, make sure the
@@ -135,12 +171,16 @@ Ref: menu 3.7
 
 Tag: menu-icon-too-big
 Type: error
+Severity: important
+Certainty: certain
 Info: Icons in the Debian menu system should be at most 32x32 pixels
  (icon16x16 icons should of course be at most 16x16 pixels)
 Ref: menu 3.7
 
 Tag: menu-icon-cannot-be-parsed
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The icon file could not be parsed.  Perhaps this means a bad XPM file,
  or perhaps it means the lintian parsing needs to be improved.  If the
  window managers and standard tools accept the file then probably it's the
@@ -148,12 +188,16 @@ Info: The icon file could not be parsed.  Perhaps this means a bad XPM file,
 
 Tag: su-wrapper-without--c
 Type: error
+Severity: important
+Certainty: certain
 Info: The menu item command or desktop file uses an su wrapper such as
  su-to-root without the -c flag. This is a syntax error.
 Ref: su-to-root(1)
 
 Tag: su-to-root-with-usr-sbin
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The menu item or desktop file command uses su-to-root as
  /usr/sbin/su-to-root. Since sarge su-to-root is located in /usr/bin and
  /usr/sbin/su-to-root is only a compatibility symlink that may get dropped
@@ -164,6 +208,8 @@ Info: The menu item or desktop file command uses su-to-root as
 
 Tag: su-wrapper-not-su-to-root
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The menu item or desktop file command uses an su wrapper other than
  su-to-root.  On Debian systems, please use <tt>su-to-root -X</tt>, which
  will pick the correct wrapper based on what's installed on the system and
@@ -173,18 +219,24 @@ Info: The menu item or desktop file command uses an su wrapper other than
 
 Tag: menu-item-needs-dwww
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The menu item has needs=dwww. This is deprecated. Instead, you should
  register your documentation with doc-base, and dwww entries will be 
  automatically generated.
 
 Tag: non-wm-in-windowmanager-menu-section
 Type: error
+Severity: important
+Certainty: certain
 Info: The menu item is in the Window Manager section but does not needs=wm.
  Either it is a window manager and it should needs=wm, either it isn't and
  then it must be moved in another section.
 
 Tag: non-wm-module-in-wm-modules-menu-section
 Type: error
+Severity: important
+Certainty: certain
 Info: The menu item is in the FVWM Modules or Window Maker section but
  does not declare that it needs a specific window manager (using the needs
  key in the menu file).  Modules for Fvwm should have needs="fvwmmodule".
@@ -192,23 +244,31 @@ Info: The menu item is in the FVWM Modules or Window Maker section but
 
 Tag: unquoted-string-in-menu-item
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The menu item includes a tag with an unquoted string like section=Games
  instead of section="Games". This is deprecated. Use a quoted string instead.
 Ref: menu 3.2
 
 Tag: menu-command-not-in-package
 Type: warning
+Severity: normal
+Certainty: possible
 Info: The menu item specifies a command which is not available in the package.
  In most cases this is a typo or after you moved a binary around, but forgot
  to update the menu file.
 
 Tag: executable-desktop-file
 Type: error
+Severity: important
+Certainty: certain
 Info: The desktop entry file is marked executable.  Desktop entries are
  regular files and should be installed mode 0644.
 
 Tag: desktop-entry-file-has-crs
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The desktop entry file has lines ending in CRLF instead of just LF.
  The Desktop Entry Specification is explicit that lines should end with
  only LF.  The CR may be taken by some software as part of the field.
@@ -216,16 +276,22 @@ Ref: http://standards.freedesktop.org/desktop-entry-spec/1.0/ar01s02.html
 
 Tag: duplicated-key-in-desktop-entry
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The desktop entry contains two instances of the same key.  The
  behavior of such desktop entries is not well-defined by the standard.
 
 Tag: desktop-entry-missing-required-key
 Type: error
+Severity: important
+Certainty: certain
 Info: Desktop entries must contain, at a minimum, the keys Type and Name.
 Ref: http://standards.freedesktop.org/desktop-entry-spec/1.0/ar01s05.html
 
 Tag: desktop-entry-contains-unknown-key
 Type: warning
+Severity: minor
+Certainty: certain
 Info: The key on this line of the desktop entry is not one of the standard
  keys defined in the FreeDesktop specification, not one of the legacy KDE
  keywords, and one that does not begin with <tt>X-</tt>.  It's most likely
@@ -234,12 +300,16 @@ Ref: http://standards.freedesktop.org/desktop-entry-spec/1.0/ar01s05.html
 
 Tag: desktop-entry-contains-deprecated-key
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The key on this line of the desktop entry has been deprecated in the
  FreeDesktop specification.
 Ref: http://standards.freedesktop.org/desktop-entry-spec/1.0/apc.html
 
 Tag: desktop-entry-contains-encoding-key
 Type: info
+Severity: wishlist
+Certainty: certain
 Info: The Encoding key is now deprecated by the FreeDesktop standard and
  all strings are required to be encoded in UTF-8.  This desktop entry
  explicitly specifies an Encoding of UTF-8, which is harmless but no
@@ -248,6 +318,8 @@ Ref: http://standards.freedesktop.org/desktop-entry-spec/1.0/apc.html
 
 Tag: desktop-entry-lacks-main-category
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The categories for this desktop entry do not contain any Main
  Categories, only Additional Categories.  Additional Categories should
  only be used on conjunction with one or more Main Categories.
@@ -255,6 +327,8 @@ Ref: http://standards.freedesktop.org/menu-spec/1.0/apa.html
 
 Tag: desktop-entry-uses-reserved-category
 Type: warning
+Severity: normal
+Certainty: certain
 Info: This desktop entry includes a Reserved Category, one which has a
  desktop-specific meaning that has not yet been standardized, but does not
  include an OnlyShowIn key.  Desktop entries using a Reserved Category
@@ -264,6 +338,8 @@ Ref: http://standards.freedesktop.org/menu-spec/1.0/apa.html
 
 Tag: desktop-entry-invalid-category
 Type: warning
+Severity: normal
+Certainty: certain
 Info: This desktop entry lists a category that is not one of the
  registered Main or Additional Categories in the FreeDesktop
  specification.
@@ -271,6 +347,8 @@ Ref: http://standards.freedesktop.org/menu-spec/1.0/apa.html
 
 Tag: desktop-command-not-in-package
 Type: warning
+Severity: normal
+Certainty: possible
 Info: The desktop entry specifies a command that is not available in the
  package.  In most cases, this is a typo or a forgotten update of the
  desktop file after the install location of the binary was changed.  A
@@ -279,6 +357,8 @@ Info: The desktop entry specifies a command that is not available in the
 
 Tag: desktop-contains-deprecated-header
 Type: warning
+Severity: normal
+Certainty: certain
 Info: The header on this line of the desktop entry has been deprecated in the
  FreeDesktop specification.  If the header is "KDE Desktop Entry", the right
  fix is normally changing it to "Desktop Entry".
@@ -286,6 +366,8 @@ Ref: http://standards.freedesktop.org/desktop-entry-spec/1.0/apc.html
 
 Tag: deprecated-kdelnk-file
 Type: error
+Severity: important
+Certainty: certain
 Info: kdelnk files were used by KDE 1 and since KDE 2 desktop files are used
  instead.  Renaming the file and removing the deprecated header and keys
  is often all that needs to be done.

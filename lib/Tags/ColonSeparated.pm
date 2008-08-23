@@ -40,11 +40,8 @@ sub print_tag {
     my $extra = "@$information";
 
     print join(':', quote_char( ':',
-				$tag_info->{severity},
-				$tag_info->{significance},
-				@{$tag_info->{overridden}}{'override',
-							   'severity',
-							   'significance'},
+				$tag_info->{type},
+				$tag_info->{overridden}{override},
 				@{$pkg_info}{'pkg','version','arch','type'},
 				$tag_info->{tag},
 				$extra,
