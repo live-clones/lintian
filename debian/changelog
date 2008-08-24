@@ -6,6 +6,9 @@ lintian (1.25.0) unstable; urgency=low
     The default output is unchanged, see the documentation on
     how to utilize the new features.
   
+  * checks/files:
+    + [RA] Check for embedding copies of jsjac and jsMath.  Patch from
+      Raphael Geissert.
   * checks/scripts:
     + [FL] Change all regular expressions in depends_needed to
       require spaces after the command and not \b. There are
