@@ -272,6 +272,7 @@ sub print_tag {
     $extra = " @$information" if @$information;
     $extra = '' if $extra eq ' ';
     my $code = get_tag_code($tag_info);
+    my $tag_color = $colors{$code};
     $code = 'X' if exists $tag_info->{experimental};
     $code = 'O' if $tag_info->{overridden}{override};
     my $type = '';
@@ -279,9 +280,9 @@ sub print_tag {
 
     my $output = "$code: $pkg_info->{pkg}$type: ";
     if ($color eq 'always' || ($color eq 'auto' && -t STDOUT)) {
-        $output .= colored($tag_info->{tag}, $colors{$code});
+        $output .= colored($tag_info->{tag}, $tag_color);
     } elsif ($color eq 'html') {
-        $output .= colored_html($tag_info->{tag}, $colors{$code});
+        $output .= colored_html($tag_info->{tag}, $tag_color);
     } else {
         $output .= $tag_info->{tag};
     }
