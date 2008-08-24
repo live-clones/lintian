@@ -640,6 +640,47 @@ foreach my $file (sort keys %{$info->index}) {
 	    close(FEEDPARSER);
 	}
 
+	# ---------------- embedded PEAR modules
+	# A list of known packaged PEAR modules
+	# and the packages providing them
+	my @pearmodules = (
+	    [ qr,(?<!Auth/)HTTP\.php$, => 'php-http' ],
+	    [ qr,Auth\.php$, => 'php-auth' ],
+	    [ qr,Auth/HTTP\.php$, => 'php-auth-http' ],
+	    [ qr,Benchmark/(Timer|Profiler|Iterate)\.php$, => 'php-benchmark' ],
+	    [ qr,Cache\.php$, => 'php-cache' ],
+	    [ qr,Cache/Lite\.php$, => 'php-cache-lite' ],
+	    [ qr,Compat\.php$, => 'php-compat' ],
+	    [ qr,Config\.php$, => 'php-config' ],
+	    [ qr,CBC\.php$, => 'php-crypt-cbc' ],
+	    [ qr,Date\.php$, => 'php-date' ],
+	    [ qr,(?<!Container)/DB\.php$, => 'php-db' ],
+	    [ qr,(?<!Container)/File\.php$, => 'php-file' ],
+	    [ qr,Log\.php$, => 'php-log' ],
+	    [ qr,Log/(file|error_log|null|syslog|sql\w*)\.php$, => 'php-log' ],
+	    [ qr,Mail\.php$, => 'php-mail' ],
+	    [ qr,(?i)mime(Part)?\.php$, => 'php-mail-mime' ],
+	    [ qr,mimeDecode\.php$, => 'php-mail-mimedecode' ],
+	    [ qr,FTP\.php$, => 'php-net-ftp' ],
+	    [ qr,(?<!Container/)IMAP\.php$, => 'php-net-imap' ],
+	    [ qr,SMTP\.php$, => 'php-net-smtp' ],
+	    [ qr,(?<!FTP/)Socket\.php$, => 'php-net-socket' ],
+	    [ qr,IPv4\.php$, => 'php-net-ipv4' ],
+	    [ qr,(?<!Container/)LDAP\.php$, => 'php-net-ldap' ],
+	);
+	foreach my $pearmodule (@pearmodules) {
+	    if ($file =~ m,$pearmodule->[0], and $pkg ne $pearmodule->[1]) {
+		open (PEAR, "unpacked/$file") or fail("cannot open PHP file: $!");
+		while (<PEAR>) {
+		    if (m,/pear\.php\.net/,i) {
+			tag "embedded-pear-module", "$file";
+			last;
+		    }
+		}
+		close(PEAR);
+	    }
+	}
+
 	# ---------------- general: setuid/setgid files!
 	if ($operm & 04000 or $operm & 02000) {
 	    my ($setuid, $setgid) = ("","");

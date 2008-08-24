@@ -2,7 +2,7 @@ Check-Script: files
 Author: Christian Schwarz <schwarz@debian.org>
 Abbrev: fil
 Type: binary, udeb
-Unpack-Level: 1
+Unpack-Level: 2
 Needs-Info: objdump-info, scripts
 Info: This script checks if a binary package conforms to policy
  WRT to files and directories.
@@ -990,4 +990,14 @@ Certainty: certain
 Info: This package contains an embedded copy of Mark Pilgrim's Universal
  Feed Parser. Please depend on the "python-feedparser" package and symlink
  the library into the appropriate location.
+Ref: policy 4.13
+
+Tag: embedded-pear-module
+Type: warning
+Severity: normal
+Certainty: possible
+Experimental: yes
+Info: This package appears to contain an embedded copy of a PEAR module.
+ Please depend on the respective PEAR package providing the module and
+ symlink the library into the appropriate location.
 Ref: policy 4.13
