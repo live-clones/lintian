@@ -729,6 +729,18 @@ if ($lintian_info) {
     open(OUTPUT_PIPE, '|-', $lintian_info_cmd) or fail("cannot open output pipe to $lintian_info_cmd: $!");
     select OUTPUT_PIPE;
 }
+
+# Close the OUTPUT_PIPE in an END block so that we can ensure that
+# lintian-info exits before we do.  Otherwise, we may get output from
+# lintian-info after lintian exits, which can confuse the shell output.
+END {
+    if ($lintian_info) {
+        my $status = $?;
+        close OUTPUT_PIPE;
+        select STDOUT;
+        $? = $status;
+    }
+}
 # }}}
 
 # {{{ Compile list of files to process
