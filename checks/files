@@ -672,7 +672,7 @@ foreach my $file (sort keys %{$info->index}) {
 	    if ($file =~ m,$pearmodule->[0], and $pkg ne $pearmodule->[1]) {
 		open (PEAR, "unpacked/$file") or fail("cannot open PHP file: $!");
 		while (<PEAR>) {
-		    if (m,/pear\.php\.net/,i) {
+		    if (m,/pear[/.],i) {
 			tag "embedded-pear-module", "$file";
 			last;
 		    }
