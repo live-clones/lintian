@@ -226,7 +226,7 @@ if ($testok) {
 # in temporary labs
 my @tests;
 if ($singletest) {
-    @tests = map { s/\.desc$// } ( $singletest );
+    @tests = map { s/\.desc$//; $_ } ( $singletest );
 } else {
     -d $testset
 	or fail("cannot find $testset: $!\n");

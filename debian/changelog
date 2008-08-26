@@ -33,6 +33,7 @@ lintian (1.25.0) unstable; urgency=low
   
   * t/runtests:
     + [FL] Copy the changes to testset/runtests from JP's branch.
+    + [RA] Fix single test mode.
 
  -- Frank Lichtenheld <djpig@debian.org>  Sat, 23 Aug 2008 22:55:44 +0200
 
