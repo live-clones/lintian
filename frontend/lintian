@@ -1645,14 +1645,6 @@ if ($action eq 'check' and not $quiet and not $no_override and not $show_overrid
 
 # }}}
 
-# {{{ close up lintian-info pipe if needed
-# did I pipe output through lintian-info?
-if ($lintian_info) {
-    close(OUTPUT_PIPE) or fail("cannot close output pipe to $lintian_info_cmd: $!");
-    select STDOUT;
-}
-# }}}
-
 exit $exit_code;
 
 # {{{ Some subroutines
