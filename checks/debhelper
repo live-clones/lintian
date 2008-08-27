@@ -246,7 +246,7 @@ if ($usescdbs and not $needversiondepends) {
 $needversiondepends ||= 1;
 if ($needversiondepends < 4) {
     tag "package-uses-deprecated-debhelper-compat-version", $needversiondepends;
-} elsif ($needversiondepends > 4 and ! Dep::implies($depends, Dep::parse("debhelper (>= $needversiondepends)"))) {
+} elsif ($needversiondepends > 5 and ! Dep::implies($depends, Dep::parse("debhelper (>= $needversiondepends)"))) {
     tag "package-lacks-versioned-build-depends-on-debhelper", $needversiondepends;
 } elsif (@versioncheck) {
     for my $program (@versioncheck) {

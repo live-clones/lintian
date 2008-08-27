@@ -27,14 +27,14 @@ Tag: package-lacks-versioned-build-depends-on-debhelper
 Type: info
 Severity: minor
 Certainty: possible
-Info: If a package sets debhelper's compatibility version to &gt;= 5,
+Info: If a package sets debhelper's compatibility version to &gt;= 6,
  either via DH_COMPAT, or via debian/compat, or via dh_testversion
  (which is deprecated), it should declare a versioned Build-Depends on
  the needed version of debhelper.
  .
- All versions of debhelper back to etch support compatibility version 5,
- but the debhelper released with sarge did not, so this dependency is
- still helpful for oldstable backports.
+ etch was released with debhelper version 5.0.42, so every package that
+ assumes a newer version should explicetly declare so for the sake of
+ etch backports.
 
 Tag: dh-make-template-in-source
 Type: warning
@@ -138,3 +138,7 @@ Info: The given debhelper script was introduced in a later version of
  should be updated to require that version of debhelper.  Giving the
  version followed by <tt>~</tt> is recommended so that backports will
  satisfy the dependency.
+ .
+ etch was released with debhelper version 5.0.42, so every package that
+ assumes a newer version should explicetly declare so for the sake of
+ etch backports.
