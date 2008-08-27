@@ -44,7 +44,7 @@ my $seendhpython = '';
 my $usescdbspython = '';
 
 # If there is no debian/compat file present but cdbs is being used, cdbs will
-# create one automatically.  Currently it always uses compatibility level 4.
+# create one automatically.  Currently it always uses compatibility level 5.
 # It may be better to look at what version of cdbs the package depends on and
 # from that derive the compatibility level....
 
