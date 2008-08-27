@@ -232,9 +232,6 @@ if ($seendhpython && !$usescdbspython) {
 	local $/;
 	my $pycompat = <PYCOMPAT>;
 	close PYCOMPAT;
-	if ($pycompat >= 2 && ! Dep::implies($depends, Dep::parse('debhelper (>= 5.0.37.2)'))) {
-	    tag "package-needs-python-policy-debhelper", "";
-	}
     } else {
 	tag "uses-dh-python-with-no-pycompat", "";
     }

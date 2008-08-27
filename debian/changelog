@@ -9,6 +9,8 @@ lintian (1.25.0) unstable; urgency=low
   * checks/debhelper{,.desc}:
     + [FL] Do not require versioned build-depends for compat level 5
       anymore.  Sarge is not supported anymore.  (Closes: #496826)
+    + [FL] Drop package-needs-python-policy-debhelper.  Sarge is not
+      supported anymore.
   * checks/fields{,.desc}:
     + [RA] Check for a maintainer also listed in uploaders.  Patch from
       Raphael Geissert.

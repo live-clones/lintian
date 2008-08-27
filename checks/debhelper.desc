@@ -107,19 +107,6 @@ Info: The debhelper compatibility version used by this package is marked
  <tt>debian/rules</tt>.  If it is not set in either place, debhelper
  defaults to the deprecated compatibility version 1.
 
-Tag: package-needs-python-policy-debhelper
-Type: info
-Severity: wishlist
-Certainty: certain
-Info: The source package requests dh_python compatibility level 2 (or
- higher) in <tt>debian/pycompat</tt> but doesn't depend on a new enough
- debhelper.  A Build-Depends on debhelper (&gt;= 5.0.37.2) is required for
- this support.
- .
- All versions of debhelper back to etch support this, but the debhelper
- released with sarge did not, so this dependency is still helpful for
- oldstable backports.
-
 Tag: uses-dh-python-with-no-pycompat
 Type: warning
 Severity: normal
