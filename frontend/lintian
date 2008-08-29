@@ -59,13 +59,13 @@ my $allow_root = 0;		#flag for --allow-root switch
 my $fail_on_warnings = 0;       #flag for --fail-on-warnings switch
 my $keep_lab = 0;		#flag for --keep-lab switch
 my $packages_file = 0;		#string for the -p option
-my $OPT_LINTIAN_LAB = "";	#string for the --lab option
-my $OPT_LINTIAN_ARCHIVEDIR = "";#string for the --archivedir option
-my $OPT_LINTIAN_DIST = "";	#string for the --dist option
-my $OPT_LINTIAN_ARCH = "";	#string for the --arch option
-my $OPT_LINTIAN_SECTION = "";	#string for the --release option
+our $OPT_LINTIAN_LAB = "";	#string for the --lab option
+our $OPT_LINTIAN_ARCHIVEDIR = "";#string for the --archivedir option
+our $OPT_LINTIAN_DIST = "";	#string for the --dist option
+our $OPT_LINTIAN_ARCH = "";	#string for the --arch option
+our $OPT_LINTIAN_SECTION = "";	#string for the --release option
 # These options can also be used via default or environment variables
-my $LINTIAN_CFG = "";		#config file to use
+our $LINTIAN_CFG = "";		#config file to use
 our $LINTIAN_ROOT;		#location of the lintian modules
 
 my $experimental_output_opts = undef;
@@ -95,12 +95,12 @@ my %unpack_infos;
 my %check_info;
 
 # reset configuration variables
-my $LINTIAN_LAB = undef;
-my $LINTIAN_ARCHIVEDIR = undef;
-my $LINTIAN_DIST = undef;
-my $LINTIAN_UNPACK_LEVEL = undef;
-my $LINTIAN_ARCH = undef;
-my $LINTIAN_SECTION = undef;
+our $LINTIAN_LAB = undef;
+our $LINTIAN_ARCHIVEDIR = undef;
+our $LINTIAN_DIST = undef;
+our $LINTIAN_UNPACK_LEVEL = undef;
+our $LINTIAN_ARCH = undef;
+our $LINTIAN_SECTION = undef;
 # }}}
 
 # {{{ Setup Code
@@ -475,6 +475,7 @@ if ($LINTIAN_CFG) {
     undef $LINTIAN_CFG;
 }
 
+use constant VARS => qw(LAB ARCHIVEDIR DIST UNPACK_LEVEL SECTION ARCH);
 # read configuration file
 if ($LINTIAN_CFG) {
     open(CFG, '<', $LINTIAN_CFG)
@@ -482,46 +483,39 @@ if ($LINTIAN_CFG) {
     while (<CFG>) {
 	chop;
 	s/\#.*$//go;
-	s/\"//go;		# " for emacs :)
+	s/\"//go;
 	next if m/^\s*$/o;
 
 	# substitute some special variables
 	s,\$HOME/,$ENV{'HOME'}/,go;
 	s,\~/,$ENV{'HOME'}/,go;
 
-	if (m/^\s*LINTIAN_LAB\s*=\s*(.*\S)\s*$/i) {
-	    $LINTIAN_LAB = $1;
-	} elsif (m/^\s*LINTIAN_ARCHIVEDIR\s*=\s*(.*\S)\s*$/i) {
-	    $LINTIAN_ARCHIVEDIR = $1;
-	} elsif (m/^\s*LINTIAN_DIST\s*=\s*(.*\S)\s*$/i) {
-	    $LINTIAN_DIST = $1;
-	} elsif (m/^\s*LINTIAN_UNPACK_LEVEL\s*=\s*(.*\S)\s*$/i) {
-	    $LINTIAN_UNPACK_LEVEL = $1;
-	} elsif (/^\s*LINTIAN_SECTION\s*=\s*(.*\S)\s*$/i) {
-	    $LINTIAN_SECTION = $1;
-	} elsif (m/^\s*LINTIAN_ARCH\s*=\s*(.*\S)\s*$/i) {
-	    $LINTIAN_ARCH = $1;
-	} else {
-	    die("syntax error in configuration file: $_","(Note, that the syntax of the configuration file has been changed\nwith Lintian v0.3.0. In most cases, you don't need a configuration\nfile anymore -- just remove it.)");
+	my $found = 0;
+	foreach (VARS) {
+	    no strict 'refs';
+	    my $var = "LINTIAN_$_";
+	    if (m/^\s*$var\s*=\s*(.*\S)\s*$/i) {
+		$$var = $1;
+		$found = 1;
+		last;
+	    }
+	}
+	unless ($found) {
+	    die("syntax error in configuration file: $_",
+		"(Note, that the syntax of the configuration file has been changed\nwith Lintian v0.3.0. In most cases, you don't need a configuration\nfile anymore -- just remove it.)");
 	}
     }
     close(CFG);
 }
 
 # environment variables overwrite settings in conf file:
-$LINTIAN_LAB = $ENV{'LINTIAN_LAB'} if $ENV{'LINTIAN_LAB'};
-$LINTIAN_ARCHIVEDIR = $ENV{'LINTIAN_ARCHIVEDIR'} if $ENV{'LINTIAN_ARCHIVEDIR'};
-$LINTIAN_DIST = $ENV{'LINTIAN_DIST'} if $ENV{'LINTIAN_DIST'};
-$LINTIAN_UNPACK_LEVEL = $ENV{'LINTIAN_UNPACK_LEVEL'} if $ENV{'LINTIAN_UNPACK_LEVEL'};
-$LINTIAN_SECTION = $ENV{'LINTIAN_SECTION'} if $ENV{'LINTIAN_SECTION'};
-$LINTIAN_ARCH = $ENV{'LINTIAN_ARCH'} if $ENV{'LINTIAN_ARCH'};
-
-# command-line options override everything
-$LINTIAN_LAB = $OPT_LINTIAN_LAB if $OPT_LINTIAN_LAB;
-$LINTIAN_ARCHIVEDIR = $OPT_LINTIAN_ARCHIVEDIR if $OPT_LINTIAN_ARCHIVEDIR;
-$LINTIAN_DIST = $OPT_LINTIAN_DIST if $OPT_LINTIAN_DIST;
-$LINTIAN_SECTION = $OPT_LINTIAN_SECTION if $OPT_LINTIAN_SECTION;
-$LINTIAN_ARCH = $OPT_LINTIAN_ARCH if $OPT_LINTIAN_ARCH;
+foreach (VARS) {
+    no strict 'refs';
+    my $var = "LINTIAN_$_";
+    my $opt_var = "OPT_$var";
+    $$var = $ENV{$var} if $ENV{$var};
+    $$var = $$opt_var if $$opt_var;
+}
 
 # LINTIAN_ARCH must have a value.
 unless (defined $LINTIAN_ARCH) {
@@ -531,55 +525,6 @@ unless (defined $LINTIAN_ARCH) {
 	$LINTIAN_ARCH = 'any';
     }
 }
-
-# export current settings for our helper scripts
-if ($LINTIAN_ROOT) {
-    $ENV{'LINTIAN_ROOT'} = $LINTIAN_ROOT;
-} else {
-    $ENV{'LINTIAN_ROOT'} = "";
-}
-
-if ($LINTIAN_CFG) {
-    $ENV{'LINTIAN_CFG'} = $LINTIAN_CFG;
-} else {
-    $ENV{'LINTIAN_CFG'} = "";
-}
-
-if ($LINTIAN_LAB) {
-    $ENV{'LINTIAN_LAB'} = $LINTIAN_LAB;
-} else {
-    $ENV{'LINTIAN_LAB'} = "";
-    $LINTIAN_LAB = "";
-}
-
-if ($LINTIAN_ARCHIVEDIR) {
-    $ENV{'LINTIAN_ARCHIVEDIR'} = $LINTIAN_ARCHIVEDIR;
-} else {
-    $ENV{'LINTIAN_ARCHIVEDIR'} = "";
-    $LINTIAN_ARCHIVEDIR = "";
-}
-
-if ($LINTIAN_DIST) {
-    $ENV{'LINTIAN_DIST'} = $LINTIAN_DIST;
-} else {
-    $ENV{'LINTIAN_DIST'} = "";
-    $LINTIAN_DIST = "";
-}
-
-if ($LINTIAN_SECTION) {
-    $ENV{'LINTIAN_SECTION'} = $LINTIAN_SECTION;
-} else {
-    $ENV{'LINTIAN_SECTION'} = "";
-    $LINTIAN_SECTION = "";
-}
-
-if ($LINTIAN_ARCH) {
-    $ENV{'LINTIAN_ARCH'} = $LINTIAN_ARCH;
-} else {
-    $ENV{'LINTIAN_ARCH'} = "";
-}
-
-$ENV{'LINTIAN_DEBUG'} = $debug;
 
 # determine requested unpack level
 if (defined($unpack_level)) {
@@ -600,7 +545,34 @@ unless (($unpack_level == 0) or ($unpack_level == 1) or ($unpack_level == 2)) {
 }
 
 $LINTIAN_UNPACK_LEVEL = $unpack_level;
-$ENV{'LINTIAN_UNPACK_LEVEL'} = $LINTIAN_UNPACK_LEVEL;
+
+# export current settings for our helper scripts
+foreach (('ROOT', 'CFG', VARS)) {
+    no strict 'refs';
+    my $var = "LINTIAN_$_";
+    if ($$var) {
+	$ENV{$var} = $$var;
+    } else {
+	$ENV{$var} = "";
+	$$var = "";
+    }
+}
+
+$ENV{'LINTIAN_DEBUG'} = $debug;
+
+# Print Debug banner, now that we're finished determining
+# the values
+if ($debug) {
+    print "N: $BANNER\n";
+    print "N: Lintian root directory: $LINTIAN_ROOT\n";
+    print "N: Configuration file: $LINTIAN_CFG\n";
+    print "N: Laboratory: $LINTIAN_LAB\n";
+    print "N: Archive directory: $LINTIAN_ARCHIVEDIR\n";
+    print "N: Distribution: $LINTIAN_DIST\n";
+    print "N: Default unpack level: $LINTIAN_UNPACK_LEVEL\n";
+    print "N: Architecture: $LINTIAN_ARCH\n";
+    print "N: ----\n";
+}
 
 # }}}
 
@@ -655,19 +627,6 @@ use warnings;
 # {{{ No clue why this code is here...
 
 use vars qw(%source_info %binary_info %udeb_info); # from the above
-
-# Print Debug banner
-if ($debug) {
-    print "N: $BANNER\n";
-    print "N: Lintian root directory: $LINTIAN_ROOT\n";
-    print "N: Configuration file: $LINTIAN_CFG\n";
-    print "N: Laboratory: $LINTIAN_LAB\n";
-    print "N: Archive directory: $LINTIAN_ARCHIVEDIR\n";
-    print "N: Distribution: $LINTIAN_DIST\n";
-    print "N: Default unpack level: $LINTIAN_UNPACK_LEVEL\n";
-    print "N: Architecture: $LINTIAN_ARCH\n";
-    print "N: ----\n";
-}
 
 # Set up clean-up handlers.
 undef $cleanup_filename;
