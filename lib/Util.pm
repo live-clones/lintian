@@ -172,10 +172,8 @@ sub slurp_entire_file {
     my $file = shift;
     open(C, '<', $file)
 	or fail("cannot open file $file for reading: $!");
-    my $save = $/;
-    undef $/;
+    local $/;
     local $_ = <C>;
-    $/ = $save;
     close(C);
     return $_;
 }
