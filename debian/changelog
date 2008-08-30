@@ -13,6 +13,8 @@ lintian (1.25.0) unstable; urgency=low
       anymore.  Sarge is not supported anymore.  (Closes: #496826)
     + [FL] Drop package-needs-python-policy-debhelper.  Sarge is not
       supported anymore.
+  * checks/description{,.desc}:
+    + [FL] Warn about left-over dh-make-perl statement.
   * checks/fields{,.desc}:
     + [RA] Check for a maintainer also listed in uploaders.  Patch from
       Raphael Geissert.

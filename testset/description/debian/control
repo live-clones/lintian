@@ -17,6 +17,10 @@ Description: description is a package which tests lintian's description checks.
  .control statements are not allowed as well.
  .
  All all all of of these these should be matched matched matched
+ .
+ This description was automagically extracted from the module by dh-make-perl
+ .
+ No, not really...
 
 Package: description-foo
 Architecture: all

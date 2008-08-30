@@ -95,6 +95,15 @@ Certainty: certain
 Info: The synopsis or the extended description has not been changed
  from the template provided by dh_make.
 
+Tag: description-contains-dh-make-perl-template
+Type: warning
+Severity: normal
+Certainty: certain
+Info: The extended description contains the statement that it was
+ automagically extracted by dh-make-perl.  Please check the description
+ for correctness and usefulness and remove the dh-make-perl statement
+ to signal that you have done so. 
+
 Tag: description-synopsis-might-not-be-phrased-properly
 Type: warning
 Severity: normal

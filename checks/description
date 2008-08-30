@@ -115,6 +115,10 @@ foreach (split /\n/, $description) {
         tag "description-contains-homepage";
     }
 
+    if (m,This description was automagically extracted from the module by dh-make-perl,i) {
+	tag "description-contains-dh-make-perl-template";
+    }
+
     my $wo_quotes = $_;
     $wo_quotes =~ s,(\"|\')(.*?)(\1),,;
     while ($wo_quotes =~ m,(?:\W|^)((\w+)(\s+(\2))+)(?:\W|$),i) {
