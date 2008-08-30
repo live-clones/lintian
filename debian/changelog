@@ -23,6 +23,9 @@ lintian (1.25.0) unstable; urgency=low
       Raphael Geissert.
     + [RA] Add experimental check for embedded copies of PEAR PHP modules.
       Patch from Raphael Geissert.
+    + [ADB] Rework the description for embedded-javascript-library to make
+      it clear that the listed libraries are examples rather than an
+      exclusive list.  Also fix a spelling mistake.
   * checks/scripts:
     + [FL] Change all regular expressions in depends_needed to
       require spaces after the command and not \b. There are

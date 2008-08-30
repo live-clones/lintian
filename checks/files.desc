@@ -925,7 +925,7 @@ Severity: normal
 Certainty: possible
 Ref: policy 11.11
 Info: This package is marked as part of the section games, but contains
- exectuables in <tt>/bin</tt> or <tt>/usr/bin/</tt>.  This can be intentional,
+ executables in <tt>/bin</tt> or <tt>/usr/bin/</tt>.  This can be intentional,
  but is usually a mistake.
 
 Tag: package-contains-devhelp-file-without-symlink
@@ -977,10 +977,10 @@ Tag: embedded-javascript-library
 Type: warning
 Severity: normal
 Certainty: certain
-Info: This package contains an embedded copy of the JQuery, Prototype,
- Mochikit or "Cropper" JavaScript libraries that are now available in their
- own packages. Please depend on the appropriate package and symlink the
- library into the appropriate location.
+Info: This package contains an embedded copy of JavaScript libraries
+ that are now available in their own packages (for example, JQuery,
+ Prototype, Mochikit or "Cropper"). Please depend on the appropriate
+ package and symlink the library into the appropriate location.
 Ref: policy 4.13
 
 Tag: embedded-feedparser-library
