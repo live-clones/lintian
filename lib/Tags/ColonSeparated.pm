@@ -41,10 +41,14 @@ sub print_tag {
 
     print join(':', quote_char( ':',
 				$tag_info->{type},
-				$tag_info->{overridden}{override},
+				$tag_info->{severity},
+				$tag_info->{certainty},
+				(exists($tag_info->{experimental}) ? 'X' : '').
+				($tag_info->{overridden}{override} ? 'O' : ''),
 				@{$pkg_info}{'pkg','version','arch','type'},
 				$tag_info->{tag},
 				$extra,
+				$tag_info->{overridden}{override},
 				))."\n";
 }
 

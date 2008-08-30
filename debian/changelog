@@ -50,6 +50,15 @@ lintian (1.25.0) unstable; urgency=low
       lintian exits, producing confusing output interleaved with the
       shell prompt.  (Closes: #496295)
   
+  * lib/Tags/ColonSeparated.pm:
+    + [FL] Update for new features and make a little bit easier to read
+      for humans:
+      - Update the format to include the new severity/certainty info.
+      - Include information whether the tag is experimental.
+      - Move the detailled override info to the end but include info
+        flag about the override status in the same column that also
+        includes the experimental flag info.
+  
   * t/runtests:
     + [FL] Copy the changes to testset/runtests from JP's branch.
     + [RA] Fix single test mode.
