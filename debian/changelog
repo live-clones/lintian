@@ -25,6 +25,8 @@ lintian (1.25.0) unstable; urgency=low
   * checks/files{,.desc}:
     + [RA] Check for embedding copies of jsjac and jsMath.  Patch from
       Raphael Geissert.
+    + [FL] Check for embedded copies of tinymce/2 and allow the usage of
+      regexes on pkgs names.  Patch from Raphael Geissert.
     + [RA] Add experimental check for embedded copies of PEAR PHP modules.
       Patch from Raphael Geissert.
     + [ADB] Rework the description for embedded-javascript-library to make
