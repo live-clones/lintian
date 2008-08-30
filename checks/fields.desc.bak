@@ -507,15 +507,6 @@ Type: error
 Severity: important
 Certainty: possible
 Info: The package build-depends on a package that has been superseded.
- If the superseded package is part of an ORed group, it should not be
- the first package in the group.
-
-Tag: ored-build-depends-on-obsolete-package
-Type: info
-Severity: minor
-Certainty: possible
-Info: The package build-depends on an ORed group of packages which includes
- a package that has been superseded.
 
 Tag: depends-on-old-emacs
 Type: warning

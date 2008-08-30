@@ -4,7 +4,6 @@ E: relations source: build-depends-on-build-essential build-depends-indep
 E: relations source: build-depends-on-essential-package-without-using-version build-depends-indep: bash
 E: relations source: build-depends-on-essential-package-without-using-version build-depends: findutils
 E: relations source: build-depends-on-obsolete-package build-depends-indep: debmake
-E: relations source: build-depends-on-obsolete-package build-depends-indep: gs
 E: relations source: depends-on-build-essential-package-without-using-version libc6-dev [build-depends: libc6-dev]
 E: relations source: depends-on-build-essential-package-without-using-version make [build-depends-indep: make]
 E: relations source: invalid-arch-string-in-source-relation test [build-conflicts: bar [alpha test]]
@@ -36,6 +35,7 @@ I: relations source: build-depends-without-arch-dep findutils
 I: relations source: build-depends-without-arch-dep foo
 I: relations source: build-depends-without-arch-dep libc6-dev
 I: relations source: build-depends-without-arch-dep mail-transport-agent
+I: relations source: ored-build-depends-on-obsolete-package build-depends-indep: gs
 I: relations-multiple-libs: ored-depends-on-obsolete-package suggests: gs
 I: relations: ored-depends-on-obsolete-package recommends: gs-aladdin
 W: relations source: bad-homepage lintian.debian.org

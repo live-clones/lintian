@@ -666,7 +666,7 @@ if ($type eq "source") {
 			$depend{$field} = $data;
 
 			for my $dep (split /\s*,\s*/, $data) {
-				my @alternatives;
+				my (@alternatives, @seen_obsolete_packages);
 				push @alternatives, [_split_dep($_), $_] for (split /\s*\|\s*/, $dep);
 
 				tag "virtual-package-depends-without-real-package-depends", "$field: $alternatives[0]->[0]"
@@ -689,7 +689,7 @@ if ($type eq "source") {
 
 					tag "build-depends-on-essential-package-without-using-version", "$field: $part_d_orig"
 					    if ($d_pkg ne "coreutils" && $known_essential{$d_pkg} && ! $d_version->[0]);
-					tag "build-depends-on-obsolete-package", "$field: $part_d_orig"
+					push @seen_obsolete_packages, $part_d_orig
 					    if ($obsolete_packages->known($d_pkg) && &$is_dep_field($field));
 
 					tag "build-depends-on-x-metapackage", "$field: $part_d_orig"
@@ -700,6 +700,15 @@ if ($type eq "source") {
 
 					tag "bad-relation", "$field: $part_d_orig"
 					    if $rest;
+				}
+
+				for my $pkg (@seen_obsolete_packages) {
+					if ($pkg eq $alternatives[0]->[0] or
+					    scalar @seen_obsolete_packages == scalar @alternatives) {
+						tag "build-depends-on-obsolete-package", "$field: $pkg";
+					} else {
+						tag "ored-build-depends-on-obsolete-package", "$field: $pkg";
+					}
 				}
 			}
 		}

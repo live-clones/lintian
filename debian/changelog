@@ -14,6 +14,10 @@ lintian (1.25.0) unstable; urgency=low
   * checks/fields{,.desc}:
     + [RA] Check for a maintainer also listed in uploaders.  Patch from
       Raphael Geissert.
+    + [ADB] Don't issue an error tag for obsolete packages in Build-Depends
+      fields if the package is part of an "ORed group" of packages and is
+      not listed first.  As with Depends, an info tag will still be issued
+      for such packages.  (Closes: #496875)
   * checks/files{,.desc}:
     + [RA] Check for embedding copies of jsjac and jsMath.  Patch from
       Raphael Geissert.
