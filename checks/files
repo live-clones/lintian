@@ -684,6 +684,25 @@ foreach my $file (sort keys %{$info->index}) {
 	    }
 	}
 
+	# ---------------- embedded php libraries
+	# A list of known packaged php (!PEAR) libraries
+	# and the packages providing them
+	my @phplibraries = (
+	    [ qr,(?i)adodb\.inc\.php$, => 'libphp-adodb' ],
+	    [ qr,(?i)Smarty(_Compiler)?\.class\.php$, => 'smarty' ],
+	    [ qr,(?i)class\.phpmailer\.php$, => 'libphp-phpmailer' ],
+	    [ qr,(?i)phpsysinfo\.dtd$, => 'phpsysinfo' ],
+	    [ qr,(?i)class\.(Linux|(Open|Net|Free|)BSD)\.inc\.php$, => 'phpsysinfo' ],
+	    [ qr,Auth/(OpenID|Yadis/Yadis)\.php$, => 'php-openid' ],
+# not yet available in unstable:
+#	    [ qr,(?i)markdown\.php$, => 'libmarkdown-php' ],
+	);
+	foreach my $phplibrary (@phplibraries) {
+	    if ($file =~ m,$phplibrary->[0], and $pkg ne $phplibrary->[1]) {
+		tag "embedded-php-library", "$file";
+	    }
+	}
+
 	# ---------------- general: setuid/setgid files!
 	if ($operm & 04000 or $operm & 02000) {
 	    my ($setuid, $setgid) = ("","");

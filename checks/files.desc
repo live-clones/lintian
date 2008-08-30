@@ -1001,3 +1001,12 @@ Info: This package appears to contain an embedded copy of a PEAR module.
  Please depend on the respective PEAR package providing the module and
  make sure the library can be found by the scripts via the include_path.
 Ref: policy 4.13
+
+Tag: embedded-php-library
+Type: warning
+Severity: normal
+Certainty: certain
+Info: This package appears to contain an embedded copy of a PHP library.
+ Please depend on the respective package providing the library and
+ make sure it can be found by the scripts via the include_path.
+Ref: policy 4.13
