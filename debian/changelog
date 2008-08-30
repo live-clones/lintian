@@ -1,4 +1,4 @@
-lintian (1.25.0) unstable; urgency=low
+lintian (2.0.0~rc1) experimental; urgency=low
 
   * [FL] Merge the results of the GSoC project by Jordà Polo,
     which fully implements a tag classification system in two
