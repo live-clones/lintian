@@ -286,7 +286,7 @@ Tag: start-stop-daemon-in-maintainer-script
 Type: warning
 Severity: normal
 Certainty: certain
-Info: The maintainer script seems to calll <tt>start-stop-daemon</tt>
+Info: The maintainer script seems to call <tt>start-stop-daemon</tt>
  directly.  Long-running daemons should be started and stopped via init
  scripts using <tt>invoke-rc.d</tt> rather than directly in maintainer
  scripts.

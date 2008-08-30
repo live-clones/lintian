@@ -33,7 +33,7 @@ Info: If a package sets debhelper's compatibility version to &gt;= 6,
  the needed version of debhelper.
  .
  etch was released with debhelper version 5.0.42, so every package that
- assumes a newer version should explicetly declare so for the sake of
+ assumes a newer version should explicitly declare so for the sake of
  etch backports.
 
 Tag: dh-make-template-in-source

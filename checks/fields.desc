@@ -374,7 +374,7 @@ Type: warning
 Severity: normal
 Certainty: certain
 Info: The `Homepage:' field in this package's control file does not
- contain a valid absolute URL. Most probably you forgot to specificy
+ contain a valid absolute URL. Most probably you forgot to specify
  the scheme (e.g. http).
 
 Tag: obsolete-field
@@ -926,7 +926,7 @@ Tag: old-versioned-python-dependency
 Type: warning
 Severity: normal
 Certainty: certain
-Info: This package appears to be an architecture-indepedent Python module
+Info: This package appears to be an architecture-independent Python module
  but has a dependency on a version of python less than a particular
  version and no Python-Version control field.  This normally means that
  the package isn't using the current Python policy; most
@@ -944,7 +944,7 @@ Certainty: certain
 Ref: http://www.debian.org/vote/2007/vote_003
 Info: The Dm-Upload-Allowed field in this package is set to something
  other than "yes".  The only standardized value for this field in the
- Debian GR is "yes" and other values (including capitalization varients)
+ Debian GR is "yes" and other values (including capitalization variants)
  may not work as expected.
 
 Tag: doc-package-should-be-section-doc

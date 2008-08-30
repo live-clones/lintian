@@ -12,7 +12,7 @@ Severity: normal
 Certainty: certain
 Info: Native packaging should only be used if a piece of software was
  written specifically to be turned into a Debian package. In this case,
- the version number should not contain a debian revision part.
+ the version number should not contain a Debian revision part.
  .
  Native source packages are sometimes created by accident. In most cases
  the reason is the location of the original source tarball. dpkg-source

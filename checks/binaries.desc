@@ -72,7 +72,7 @@ Info: The binary or shared library sets RPATH.  This overrides the normal
  In that case, place those private shared libraries in
  <tt>/usr/lib/<i>package</i></tt>.  Libraries used by binaries in other
  packages should be placed in <tt>/lib</tt> or <tt>/usr/lib</tt> as
- appropriate, with a proper SONAME, in which case RPATH is unncessary.
+ appropriate, with a proper SONAME, in which case RPATH is unnecessary.
  .
  To fix this problem, look for link lines like:
      gcc test.o -o test -Wl,--rpath,/usr/local/lib

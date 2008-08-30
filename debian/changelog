@@ -6,6 +6,8 @@ lintian (1.25.0) unstable; urgency=low
     The default output is unchanged, see the documentation on
     how to utilize the new features.
   
+  * checks/*.desc:
+    + [ADB] Fix a number of spelling mistakes and typoes.
   * checks/debhelper{,.desc}:
     + [FL] Do not require versioned build-depends for compat level 5
       anymore.  Sarge is not supported anymore.  (Closes: #496826)
