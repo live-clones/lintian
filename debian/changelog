@@ -23,12 +23,13 @@ lintian (1.25.0) unstable; urgency=low
       not listed first.  As with Depends, an info tag will still be issued
       for such packages.  (Closes: #496875)
   * checks/files{,.desc}:
-    + [RA] Check for embedding copies of jsjac and jsMath.  Patch from
-      Raphael Geissert.
-    + [FL] Check for embedded copies of tinymce/2 and allow the usage of
-      regexes on pkgs names.  Patch from Raphael Geissert.
-    + [RA] Add experimental check for embedded copies of PEAR PHP modules.
-      Patch from Raphael Geissert.
+    + [RA,FL] Patches from Raphael Geissert:
+      - Check for embedding copies of jsjac and jsMath.
+      - Check for embedded copies of tinymce/2 and allow the usage of
+        regexes on pkgs names.
+      - Add xinha on the embedded js lib check, which is not yet in the archive
+        thus disabled.
+      - Add experimental check for embedded copies of PEAR PHP modules.
     + [ADB] Rework the description for embedded-javascript-library to make
       it clear that the listed libraries are examples rather than an
       exclusive list.  Also fix a spelling mistake.
