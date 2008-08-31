@@ -33,6 +33,8 @@ lintian (2.0.0~rc1) experimental; urgency=low
     + [ADB] Rework the description for embedded-javascript-library to make
       it clear that the listed libraries are examples rather than an
       exclusive list.  Also fix a spelling mistake.
+    + [ADB] Re-add an accidentally removed slash to the check for embedded
+      Javascript libraries, removing some false positives.  (Closes: #497215)
   * checks/scripts:
     + [FL] Change all regular expressions in depends_needed to
       require spaces after the command and not \b. There are

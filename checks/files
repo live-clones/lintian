@@ -626,7 +626,7 @@ foreach my $file (sort keys %{$info->index}) {
 #	    [ qr,(?i)(htmlarea|Xinha(Loader|Core))\.js$, => 'xinha' ],
 	);
 	foreach my $jslibrary (@jslibraries) {
-	    if ($file =~ m,$jslibrary->[0], and $pkg !~ m,^$jslibrary->[1]$,) {
+	    if ($file =~ m,/$jslibrary->[0], and $pkg !~ m,^$jslibrary->[1]$,) {
 		tag "embedded-javascript-library", "$file";
 	    }
 	}
