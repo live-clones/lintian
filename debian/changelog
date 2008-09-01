@@ -10,7 +10,7 @@ lintian (2.0.0~rc1) experimental; urgency=low
     + [ADB] Fix a number of spelling mistakes and typoes.
   * checks/changelog-file{,.desc}:
     + [RA] Warn about closing a bug number less than 100; this is likely
-      a typo or placeholder.  Thanks, Raphael Gessiert.  (Closes: #497350)
+      a typo or placeholder.  Thanks, Raphael Geissert.  (Closes: #497350)
   * checks/debconf:
     + [ADB] Avoid flagging a template as unused if its definition is
       followed by a string of whitespace.
