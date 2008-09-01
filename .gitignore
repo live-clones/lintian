@@ -2,3 +2,8 @@ debian/tests
 runtests
 !testset/runtests
 !t/runtests
+build-stamp
+doc/README
+doc/help.tmp
+doc/lintian.html/
+doc/lintian.txt
