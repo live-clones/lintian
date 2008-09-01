@@ -1431,10 +1431,11 @@ foreach my $pkg_info ($schedule->get_all) {
                     s/\s+/ /go;
                     my $override = $_;
                     $override =~ s/^\Q$pkg\E( \Q$long_type\E)?: //;
-                    if ($override eq '' or $override !~ /^[\w0-9.+-]+(\s+.*)?$/) {
+		    if ($override eq '' or $override !~ /^[\w.+-]+(\s.*)?$/) {
                         tag ('malformed-override', $_);
                     } else {
-                        Tags::add_override($override);
+			my ($tag, $extra) = split(/ /, $override, 2);
+			Tags::add_override($tag, $extra);
                     }
                 }
                 close(O);
@@ -1489,10 +1490,12 @@ foreach my $pkg_info ($schedule->get_all) {
 	if (not $no_override) {
 	    my $overrides = Tags::get_overrides( $file );
 
-	    for my $o (sort keys %$overrides) {
-		next if $overrides->{$o};
+	    for my $tag (sort keys %$overrides) {
+		for my $extra (sort keys %{$overrides->{$tag}}) {
+		    next if $overrides->{$tag}{$extra};
 
-		tag( "unused-override", $o );
+		    tag( "unused-override", $tag, $extra );
+		}
 	    }
 	}
 

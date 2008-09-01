@@ -105,6 +105,9 @@ lintian (2.0.0~rc1) experimental; urgency=low
       separate packages.
   * private/refresh-perl-provides:
     + [FL] Script to update data/fields/perl-provides.  By Niko Tyni.
+  
+  * doc/lintian.sgml:
+    + [FL] Document wildcard support in overrides.
 
   * frontend/lintian:
     + [RA] Ensure we close the pipe to lintian-info before exiting, since
@@ -117,6 +120,9 @@ lintian (2.0.0~rc1) experimental; urgency=low
       available to output formatters if possible.
       Currently used only by experimental colon-separated output.
   
+  * lib/Tags.pm:
+    + [FL] Add support for specifying wildcards in overrides.
+      (Closes: #253884)
   * lib/Tags/ColonSeparated.pm:
     + [FL] Update for new features and make a little bit easier to read
       for humans:

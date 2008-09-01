@@ -8,7 +8,7 @@
 <author>Sean 'Shaleh' Perry <email>shaleh@debian.org</email>
 <author>Frank Lichtenheld <email>djpig@debian.org</email>
 <author>Contact address: <email>lintian-maint@debian.org</email>
-<version>version 1.23.8, 31 January 2005
+<version>version 2.0.0, 02 September 2008
 
 <abstract>
 This manual describes Lintian, the Debian package checker.
@@ -16,7 +16,7 @@ This manual describes Lintian, the Debian package checker.
 
 <copyright>Copyright &copy; 1998 Christian Schwarz and Richard Braakman
            Copyright &copy; 2000 Sean 'Shaleh' Perry
-           Copyright &copy; 2004 Frank Lichtenheld
+           Copyright &copy; 2004,2008 Frank Lichtenheld
 <p>
 
 This manual is free software; you may redistribute it and/or
@@ -456,7 +456,7 @@ not used in current Lintian versions.
 The format of the overrides file is simple, it consists of one override per
 line (and may contain empty lines and comments, starting with a #, on others):
 <tt>[&lt;package&gt;[ &lt;type&gt;]: ]&lt;lintian-tag&gt;[
-&lt;lintian-info&gt;]</tt>.  <tt>&lt;package&gt;</tt> is the package name;
+[*]&lt;lintian-info&gt;[*]]</tt>.  <tt>&lt;package&gt;</tt> is the package name;
 <tt>&lt;type&gt;</tt> is one of <tt>binary</tt>, <tt>udeb</tt> and
 <tt>source</tt>, and <tt>&lt;lintian-info&gt;</tt> is all additional
 information provided by Lintian except for the tag. What's inside brackets is
@@ -489,7 +489,10 @@ Many tags can occour more than once (e.g. if the same error is found
 in more than one file). You can override a tag either completly by
 specifying its name (first line in the examples) or only one
 occurrence of it by specifying the additional info, too (second line
-in the examples).
+in the examples).  If you add an asterisk (<tt>*</tt>) at the start and/or
+end of the additional info, this will match arbitrary strings similar to
+the shell wildcard.  Asterisks located at any other place in the info have
+no special meaning.  This wildcard support was added in Lintian version 2.0.0.
 
 <chapt>Advanced usage
 

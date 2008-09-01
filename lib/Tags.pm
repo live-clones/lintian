@@ -171,19 +171,20 @@ sub reset {
 # Add an override. If you specifiy two arguments, the first will be taken
 # as file to add the override to, otherwise 'current' will be assumed
 sub add_override {
-    my ($tag, $file) = ( "", "" );
-    if (@_ > 1) {
-	($file, $tag) = @_;
+    my ($tag, $extra, $file) = ( "", "", "" );
+    if (@_ > 2) {
+	($file, $tag, $extra) = @_;
     } else {
-	($file, $tag) = ($current, @_);
+	($file, $tag, $extra) = ($current, @_);
     }
+    $extra ||= "";
 
     unless ($file) {
 	warn "Don't know which package to add override $tag to";
 	return 0;
     }
 
-    $info{$file}{overrides}{$tag} = 0;
+    $info{$file}{overrides}{$tag}{$extra} = 0;
 
     return 1;
 }
@@ -218,14 +219,30 @@ sub check_overrides {
     my ( $tag_info, $information ) = @_;
 
     my $extra = '';
-    $extra = " @$information" if @$information;
-    $extra = '' if $extra eq ' ';
-    if( exists $info{$current}{overrides}{$tag_info->{tag}}) {
-	$info{$current}{overrides}{$tag_info->{tag}}++;
-	return $tag_info->{tag};
-    } elsif( exists $info{$current}{overrides}{"$tag_info->{tag}$extra"} ) {
-	$info{$current}{overrides}{"$tag_info->{tag}$extra"}++;
-	return "$tag_info->{tag}$extra";
+    $extra = "@$information" if @$information;
+    my $tag = $tag_info->{tag};
+    my $overrides = $info{$current}{overrides}{$tag};
+    return unless $overrides;
+
+    if( exists $overrides->{''} ) {
+	$overrides->{''}++;
+	return $tag;
+    } elsif( $extra and exists $overrides->{$extra} ) {
+	$overrides->{$extra}++;
+	return "$tag $extra";
+    } elsif ( $extra ) {
+	foreach (keys %$overrides) {
+	    my $regex = $_;
+	    if (m/^\*/ or m/\*$/) {
+		my ($start, $end) = ("","");
+		$start = '.*' if $regex =~ s/^\*//;
+		$end   = '.*' if $regex =~ s/\*$//;
+		if ($extra =~ /^$start\Q$regex\E$end$/) {
+		    $overrides->{$_}++;
+		    return "$tag $_";
+		}
+	    }
+	}
     }
 
     return '';
