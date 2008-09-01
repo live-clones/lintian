@@ -8,6 +8,9 @@ lintian (2.0.0~rc1) experimental; urgency=low
   
   * checks/*.desc:
     + [ADB] Fix a number of spelling mistakes and typoes.
+  * checks/changelog-file{,.desc}:
+    + [RA] Warn about closing a bug number less than 100; this is likely
+      a typo or placeholder.  Thanks, Raphael Gessiert.  (Closes: #497350)
   * checks/debhelper{,.desc}:
     + [FL] Do not require versioned build-depends for compat level 5
       anymore.  Sarge is not supported anymore.  (Closes: #496826)

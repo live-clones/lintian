@@ -218,6 +218,14 @@ Certainty: possible
 Info: While parsing the NEWS.Debian file, a syntax error was found.
 Ref: devref 6.3.4
 
+Tag: improbable-bug-number-in-closes
+Type: warning
+Severity: normal
+Certainty: possible
+Info: The most recent changelog closes a bug numbered less than 100.
+ While this is distantly possible, it's more likely a typo or a
+ placeholder value that mistakenly wasn't filled in.
+
 Tag: wrong-bug-number-in-closes
 Type: warning
 Severity: normal
