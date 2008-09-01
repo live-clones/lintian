@@ -401,8 +401,17 @@ sub check_doc_base_field {
     } elsif ($field eq 'section') {
 	my $sections = Lintian::Data->new('doc-base/sections');
 	$_ = join (' ', @$vals);
-	tag "doc-base-unknown-section", "$dbfile:$line", $_
-	    unless $sections->known($_);
+	unless ($sections->known($_)) {
+	    if (m;^App(?:lication)?s/(.+)$;
+		and $sections->known($1)) {
+		tag "doc-base-uses-applications-section", "$dbfile:$line", $_;
+	    } elsif (m;^(.+)/([^/]+)$;
+		    and $sections->known($1)) {
+		# allows creating a new subsection to a known section
+	    } else {
+		tag "doc-base-unknown-section", "$dbfile:$line", $_;
+	    }
+	}
 
     # Abstract field.
     } elsif ($field eq 'abstract') {

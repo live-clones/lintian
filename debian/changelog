@@ -41,6 +41,12 @@ lintian (2.0.0~rc1) experimental; urgency=low
       exclusive list.  Also fix a spelling mistake.
     + [ADB] Re-add an accidentally removed slash to the check for embedded
       Javascript libraries, removing some false positives.  (Closes: #497215)
+  * checks/menus{,.desc}:
+    + [FL] Do not complain if the unknown doc-base section is the subsection
+      of a known section.  The doc-base documentation seems to suggest that
+      this is o.k.  (Closes: #495836)
+    + [FL] Issue a special tag if the doc-base section would be valid except
+      for a prefixed App(lication)s.
   * checks/scripts:
     + [FL] Change all regular expressions in depends_needed to
       require spaces after the command and not \b. There are

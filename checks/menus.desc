@@ -391,6 +391,16 @@ Info: doc-base files must be valid UTF-8, an encoding of the Unicode
   $ mv doc-base.new doc-base
 Ref: doc-base 2.3.2
 
+Tag: doc-base-uses-applications-section
+Type: warning
+Severity: normal
+Certainty: certain
+Info: The section indicated in this doc-base control file has a top-level
+ section of Apps or Applications. This section is only used in menu, not
+ in doc-base. Simply removing the top-level section will lead to a valid
+ doc-base section.
+Ref: doc-base 2.3.3
+
 Tag: doc-base-unknown-section
 Type: warning
 Severity: normal
