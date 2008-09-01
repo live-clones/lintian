@@ -468,6 +468,8 @@ for my $file (qw(config prerm postrm preinst postinst)) {
 }
 
 foreach my $template (@templates_seen) {
+    $template =~ s/\s+\Z//;
+
     my $used = 0;
 
     if ($templates_used{$template}) {
