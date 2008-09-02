@@ -99,7 +99,7 @@ while (<FILES>) {
 	    last if $failed;
 	} else {
 	    # We're using etch's binutils so attempt to build an output file
-	    # in the expected format without using objcopy; we lose some
+	    # in the expected format without using objdump; we lose some
 	    # data but none that our later checks actually use
 	    my @sections;
 	    my @symbol_versions;
