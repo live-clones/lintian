@@ -57,6 +57,8 @@ lintian (2.0.0~rc1) experimental; urgency=low
       variable assignment as well and reduce false positives by ignoring
       uses with $RANDOM or without a filename.  Based on a patch from
       Raphael Geissert.
+    + [FL] Update lists of available interpreter versions (remove: jruby1.1,
+      pike7.7, php4, octave2.9, add: tcl8.6, tk8.6).  (Closes: #485954)
 
   * frontend/lintian:
     + [RA] Ensure we close the pipe to lintian-info before exiting, since

@@ -131,19 +131,19 @@ our %versioned_interpreters =
 		  qr/^guile-([\d.]+)$/, 'guile-$1', qw(1.6 1.8)
 		],
      jruby   => [ '/usr/bin', undef,
-		  qr/^jruby([\d.]+)$/, 'jruby$1', qw(0.9 1.0 1.1)
+		  qr/^jruby([\d.]+)$/, 'jruby$1', qw(0.9 1.0)
 		],
      lua     => [ '/usr/bin', 'lua',
 		  qr/^lua([\d.]+)$/, 'lua$1', qw(40 50 5.1)
 		],
      octave  => [ '/usr/bin', 'octave',
-		  qr/^octave([\d.]+)$/, 'octave$1', qw(2.1 2.9 3.0)
+		  qr/^octave([\d.]+)$/, 'octave$1', qw(2.1 3.0)
 		],
      php     => [ '/usr/bin', '',
-		  qr/^php(\d+)$/, 'php$1-cli', qw(4 5)
+		  qr/^php(\d+)$/, 'php$1-cli', qw(5)
 		],
      pike    => [ '/usr/bin', '',
-		  qr/^pike([\d.]+)$/, 'pike$1 | pike$1-core', qw(7.6 7.7)
+		  qr/^pike([\d.]+)$/, 'pike$1 | pike$1-core', qw(7.6)
 		],
      python  => [ '/usr/bin', undef,
 		  qr/^python([\d.]+)$/, 'python$1 | python$1-minimal',
@@ -156,10 +156,10 @@ our %versioned_interpreters =
 		  qr/^scsh-([\d.]+)$/, 'scsh-$1', qw(0.6)
 		],
      tclsh   => [ '/usr/bin', 'tclsh | tcl',
-		  qr/^tclsh([\d.]+)$/, 'tcl$1', qw(8.3 8.4 8.5)
+		  qr/^tclsh([\d.]+)$/, 'tcl$1', qw(8.3 8.4 8.5 8.6)
 		],
      wish    => [ '/usr/bin', 'wish | tk',
-		  qr/^wish([\d.]+)$/, 'tk$1', qw(8.3 8.4 8.5)
+		  qr/^wish([\d.]+)$/, 'tk$1', qw(8.3 8.4 8.5 8.6)
 		],
     );
 
