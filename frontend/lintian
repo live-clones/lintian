@@ -1305,10 +1305,11 @@ for (reverse sort @packages) {
     my ($type,$pkg,$ver,$file) = ($1,$2,$3,$4);
     my $long_type = ($type eq 'b' ? 'binary' : ($type eq 's' ? 'source' : 'udeb' ));
 
-    print "N: ----\n" if $verbose;
     if ($verbose) {
+	print "N: ----\n";
 	print "N: Processing $long_type package $pkg (version $ver) ...\n";
     }
+    Tags::set_pkg( $file, $pkg, $ver, "", $long_type );
 
     # determine base directory
     my $base = "$LINTIAN_LAB/$long_type/$pkg";
@@ -1442,7 +1443,6 @@ for (reverse sort @packages) {
     }
 
     if ($action eq 'check') { 	# read override file
-	Tags::set_pkg( $file, $pkg, "", "", $long_type );
 
 	unless ($no_override) {
             if (open(O, '<', "$base/override")) {

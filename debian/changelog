@@ -65,6 +65,8 @@ lintian (2.0.0~rc1) experimental; urgency=low
       otherwise lintian-info may print the rest of our output after
       lintian exits, producing confusing output interleaved with the
       shell prompt.  (Closes: #496295)
+    + [FL] Actually make package version available to output formatters.
+      Currently used only by experimental colon-separated output.
   
   * lib/Tags/ColonSeparated.pm:
     + [FL] Update for new features and make a little bit easier to read
