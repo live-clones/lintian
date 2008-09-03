@@ -62,6 +62,10 @@ lintian (2.0.0~rc1) experimental; urgency=low
     + [FL] Add . and + to regex for command-with-path-in-maintainer-script.
       Based on a patch from Raphael Geissert.
 
+  * collection/objdump-info:
+    + [ADB] Correctly handle shared objects with no symbol versioning when
+      using readelf.
+
   * frontend/lintian:
     + [RA] Ensure we close the pipe to lintian-info before exiting, since
       otherwise lintian-info may print the rest of our output after

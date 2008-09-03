@@ -178,6 +178,9 @@ while (<FILES>) {
 			if ($sym =~ m/^(.*)@(.*)$/) {
 			    $sym = $1;
 			    $ver = $2;
+			} elsif (@symbol_versions == 0) {
+			    # No versioned symbols...
+			    $ver = '';
 			} else {
 			    $ver = $symbol_versions[$symnum];
 
