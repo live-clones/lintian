@@ -151,8 +151,9 @@ my %statistics;
 # %by_maint holds a hash of maintainer names to packages and tags.  Each
 # maintainer is a key.  The value is a hash of package names to hashes.  Each
 # package hash is in turn a hash of versions to an anonymous array of hashes,
-# with each hash having keys code, package, type, tag, extra, and xref.  xref
-# gets the partial URL of the maintainer page for that source package.
+# with each hash having keys code, package, type, tag, severity, certainty,
+# extra, and xref.  xref gets the partial URL of the maintainer page for that
+# source package.
 #
 # In other words, the lintian output line:
 #
@@ -163,12 +164,14 @@ my %statistics;
 #
 # { 'gnubg' => {
 #       '0.15~20061120-1' => [
-#           { code    => 'W',
-#             package => 'gnubg',
-#             type    => 'source',
-#             tag     => 'substvar-source-version-is-deprecated',
-#             extra   => 'gnubg-data'
-#             xref    => 'rra@debian.org.html#gnubg' } ] } }
+#           { code      => 'W',
+#             package   => 'gnubg',
+#             type      => 'source',
+#             tag       => 'substvar-source-version-is-deprecated',
+#             severity  => 'normal',
+#             certainty => 'certain',
+#             extra     => 'gnubg-data'
+#             xref      => 'rra@debian.org.html#gnubg' } ] } }
 #
 # and then stored under the key 'Russ Allbery <rra@debian.org>'
 #
