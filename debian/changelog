@@ -67,6 +67,9 @@ lintian (2.0.0~rc1) experimental; urgency=low
       shell prompt.  (Closes: #496295)
     + [FL] Actually make package version available to output formatters.
       Currently used only by experimental colon-separated output.
+    + [FL] Use new module Lintian::Schedule and make package architecture
+      available to output formatters if possible.
+      Currently used only by experimental colon-separated output.
   
   * lib/Tags/ColonSeparated.pm:
     + [FL] Update for new features and make a little bit easier to read
@@ -76,6 +79,8 @@ lintian (2.0.0~rc1) experimental; urgency=low
       - Move the detailled override info to the end but include info
         flag about the override status in the same column that also
         includes the experimental flag info.
+  * lib/Lintian/Schedule.pm:
+    + [FL] Factor out some scheduling code.
   
   * t/runtests:
     + [FL] Copy the changes to testset/runtests from JP's branch.

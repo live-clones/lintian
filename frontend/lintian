@@ -75,7 +75,7 @@ my @certainties = qw(wild-guess possible certain);
 my %display_level = ();
 my %display_source = ();
 
-my @packages;
+my $schedule;
 
 my $action;
 my $checks;
@@ -591,6 +591,8 @@ import Pipeline;
 require Tags;
 import Tags;
 
+require Lintian::Schedule;
+
 my @l_secs = read_dpkg_control("$LINTIAN_ROOT/checks/lintian.desc");
 shift(@l_secs);
 map { $_->{'script'} = 'lintian'; Tags::add_tag($_) } @l_secs;
@@ -704,6 +706,7 @@ END {
 
 # {{{ Compile list of files to process
 
+$schedule = new Lintian::Schedule(verbose => $verbose);
 # process package/file arguments
 while (my $arg = shift) {
     # file?
@@ -715,30 +718,18 @@ while (my $arg = shift) {
 
 	# .deb file?
 	if ($arg =~ /\.deb$/) {
-	    my $info = get_deb_info($arg);
-	    if (not defined $info) {
-		print STDERR "$arg is a zero-byte file, skipping\n";
-		next;
-	    }
-	    schedule_package('b', $info->{'package'}, $info->{'version'}, $arg);
+	    $schedule->add_deb('b', $arg)
+		or warn "$arg is a zero-byte file, skipping\n";
 	}
 	# .udeb file?
 	elsif ($arg =~ /\.udeb$/) {
-	    my $info = get_deb_info($arg);
-	    if (not defined $info) {
-		print STDERR "$arg is a zero-byte file, skipping\n";
-		next;
-	    }
-	    schedule_package('u', $info->{'package'}, $info->{'version'}, $arg);
+	    $schedule->add_deb('u', $arg)
+		or warn "$arg is a zero-byte file, skipping\n";
 	}
 	# .dsc file?
 	elsif ($arg =~ /\.dsc$/) {
-	    my $info = get_dsc_info($arg);
-	    if (not defined $info) {
-		print STDERR "$arg is a zero-byte file, skipping\n";
-		next;
-	    }
-	    schedule_package('s', $info->{'source'}, $info->{'version'}, $arg);
+	    $schedule->add_dsc($arg)
+		or warn "$arg is a zero-byte file, skipping\n";
 	}
 	# .changes file?
 	elsif ($arg =~ /\.changes$/) {
@@ -862,17 +853,11 @@ while (my $arg = shift) {
 
 		# process file?
 		if ($file =~ /\.dsc$/) {
-		    my $info = get_dsc_info($filename);
-		    schedule_package('s', $info->{'source'},
-				     $info->{'version'}, $filename);
+		    $schedule->add_dsc($filename);
 		} elsif ($file =~ /\.deb$/) {
-		    my $info = get_deb_info($filename);
-		    schedule_package('b', $info->{'package'},
-				     $info->{'version'}, $filename);
+		    $schedule->add_deb('b', $filename);
 		} elsif ($file =~ /\.udeb$/) {
-		    my $info = get_deb_info($filename);
-		    schedule_package('u', $info->{'package'},
-				     $info->{'version'}, $filename);
+		    $schedule->add_deb('u', $filename);
 		}
 	    }
 
@@ -910,25 +895,22 @@ while (my $arg = shift) {
 
 	    if (($pkg_mode eq 'b') or ($pkg_mode eq 'a')) {
 		if ($binary_info{$arg}) {
-		    schedule_package('b', $binary_info{$arg}->{'package'},
-				     $binary_info{$arg}->{'version'},
-				     "$LINTIAN_ARCHIVEDIR/$binary_info{$arg}->{'file'}");
+		    $schedule->add_file('b', "$LINTIAN_ARCHIVEDIR/$binary_info{$arg}->{'file'}",
+					%{$binary_info{$arg}});
 		    $found = 1;
 		}
 	    }
 	    if (($pkg_mode eq 'u') or ($pkg_mode eq 'a')) {
 		if ($udeb_info{$arg}) {
-		    schedule_package('u', $udeb_info{$arg}->{'package'},
-				     $udeb_info{$arg}->{'version'},
-				     "$LINTIAN_ARCHIVEDIR/$udeb_info{$arg}->{'file'}");
+		    $schedule->add_file('u', "$LINTIAN_ARCHIVEDIR/$udeb_info{$arg}->{'file'}",
+					%{$udeb_info{$arg}});
 		    $found = 1;
 		}
 	    }
 	    if (($pkg_mode eq 's') or ($pkg_mode eq 'a')) {
 		if ($source_info{$arg}) {
-		    schedule_package('s', $source_info{$arg}->{'source'},
-				     $source_info{$arg}->{'version'},
-				     "$LINTIAN_ARCHIVEDIR/$source_info{$arg}->{'file'}");
+		    $schedule->add_file('s', "$LINTIAN_ARCHIVEDIR/$source_info{$arg}->{'file'}",
+					%{$source_info{$arg}});
 		    $found = 1;
 		}
 	    }
@@ -970,18 +952,18 @@ while (my $arg = shift) {
 	}
 
 	if (($pkg_mode eq 'b') or (($pkg_mode eq 'a') and (-d $b))) {
-	    schedule_package('b', get_bin_info_from_lab($b));
+	    $schedule->add_file('b', get_bin_info_from_lab($b));
 	}
 	if (($pkg_mode eq 's') or (($pkg_mode eq 'a') and (-d $s))) {
-	    schedule_package('s', get_src_info_from_lab($s));
+	    $schedule->add_file('s', get_src_info_from_lab($s));
 	}
 	if (($pkg_mode eq 'u') or (($pkg_mode eq 'a') and (-d $u))) {
-	    schedule_package('u', get_bin_info_from_lab($u));
+	    $schedule->add_file('u', get_bin_info_from_lab($u));
 	}
     }
 }
 
-if (not $check_everything and not $packages_file and ($#packages == -1)) {
+if (not $check_everything and not $packages_file and not $schedule->count) {
     print "N: No packages selected.\n" if $verbose;
     exit $exit_code;
 }
@@ -1244,39 +1226,36 @@ if ($check_everything) {
     if (($pkg_mode eq 'a') or ($pkg_mode eq 's')) {
 	for my $arg (keys %source_info) {
 	    print STDERR "doing stuff with $LINTIAN_ARCHIVEDIR/$source_info{$arg}->{'file'}\n" if $debug;
-	    push(@packages,"s $source_info{$arg}->{'source'} $source_info{$arg}->{'version'} $LINTIAN_ARCHIVEDIR/$source_info{$arg}->{'file'}");
+	    $schedule->add_file('s', "$LINTIAN_ARCHIVEDIR/$source_info{$arg}->{'file'}",
+				%{$source_info{$arg}});
 	}
     }
     if (($pkg_mode eq 'a') or ($pkg_mode eq 'b')) {
 	for my $arg (keys %binary_info) {
 	    print STDERR "doing stuff with $LINTIAN_ARCHIVEDIR/$binary_info{$arg}->{'file'}\n" if $debug;
-	    push(@packages,"b $binary_info{$arg}->{'package'} $binary_info{$arg}->{'version'} $LINTIAN_ARCHIVEDIR/$binary_info{$arg}->{'file'}");
+	    $schedule->add_file('b', "$LINTIAN_ARCHIVEDIR/$binary_info{$arg}->{'file'}",
+				%{$binary_info{$arg}});
 	}
     }
     if (($pkg_mode eq 'a') or ($pkg_mode eq 'u')) {
 	for my $arg (keys %udeb_info) {
 	    print STDERR "doing stuff with $LINTIAN_ARCHIVEDIR/$udeb_info{$arg}->{'file'}\n" if $debug;
-	    push(@packages,"u $udeb_info{$arg}->{'package'} $udeb_info{$arg}->{'version'} $LINTIAN_ARCHIVEDIR/$udeb_info{$arg}->{'file'}");
+	    $schedule->add_file('u', "$LINTIAN_ARCHIVEDIR/$udeb_info{$arg}->{'file'}",
+				%{$udeb_info{$arg}});
 	}
     }
 
     # package list still empty?
-    if ($#packages == -1) {
+    unless ($schedule->count) {
 	print STDERR "warning: no packages found in distribution directory\n";
     }
 } elsif ($packages_file) {	# process all packages listed in packages file?
-    open(IN, '<', $packages_file)
-	or fail("cannot open packages file $packages_file for reading: $!");
-    while (<IN>) {
-	chop;
-	push(@packages,$_);
-    }
-    close(IN);
+    $schedule->add_pkg_list($packages_file);
 }
 # }}}
 
 # {{{ Some silent exit
-if ($#packages == -1) {
+unless ($schedule->count) {
     print "N: No packages selected.\n" if $verbose;
     exit 0;
 }
@@ -1284,7 +1263,7 @@ if ($#packages == -1) {
 
 # {{{ Okay, now really processing the packages in one huge loop
 $unpack_infos{ "override-file" } = 1 unless $no_override;
-printf "N: Processing %d packages...\n",$#packages+1 if $verbose;
+printf "N: Processing %d packages...\n", $schedule->count if $verbose;
 if ($debug) {
     print "N: Selected action: $action\n";
     print "N: Requested unpack level: $unpack_level\n";
@@ -1295,21 +1274,19 @@ if ($debug) {
 require Checker;
 require Lintian::Collect;
 
-# for each package (the `reverse sort' is to make sure that source packages are
-# before the corresponding binary packages--this has the advantage that binary
-# can use information from the source packages if these are unpacked)
 my %overrides;
 PACKAGE:
-for (reverse sort @packages) {
-    m/^([bsu]) (\S+) (\S+) (.+)$/ or fail("syntax error in \@packages array: $_");
-    my ($type,$pkg,$ver,$file) = ($1,$2,$3,$4);
-    my $long_type = ($type eq 'b' ? 'binary' : ($type eq 's' ? 'source' : 'udeb' ));
+foreach my $pkg_info ($schedule->get_all) {
+    my ($type, $pkg, $ver, $arch, $file) =
+	@$pkg_info{qw(type package version architecture file)};
+    my $long_type = ($type eq 'b' ? 'binary' :
+		     ($type eq 's' ? 'source' : 'udeb' ));
 
     if ($verbose) {
 	print "N: ----\n";
 	print "N: Processing $long_type package $pkg (version $ver) ...\n";
     }
-    Tags::set_pkg( $file, $pkg, $ver, "", $long_type );
+    Tags::set_pkg( $file, $pkg, $ver, $arch, $long_type );
 
     # determine base directory
     my $base = "$LINTIAN_LAB/$long_type/$pkg";
@@ -1722,7 +1699,7 @@ sub remove_status_file {
 # get package name, version, and file name from the lab
 sub get_bin_info_from_lab {
     my ($base_dir) = @_;
-    my ($pkg,$ver,$file);
+    my ($pkg,$ver,$arch,$file);
 
     ($pkg = read_file("$base_dir/fields/package"))
 	or fail("cannot read file $base_dir/fields/package: $!");
@@ -1730,10 +1707,13 @@ sub get_bin_info_from_lab {
     ($ver = read_file("$base_dir/fields/version"))
 	or fail("cannot read file $base_dir/fields/version: $!");
 
+    ($arch = read_file("$base_dir/fields/architecture"))
+	or fail("cannot read file $base_dir/fields/architecture: $!");
+
     ($file = readlink("$base_dir/deb"))
 	or fail("cannot read link $base_dir/deb: $!");
 
-    return ($pkg,$ver,$file);
+    return ($file, package => $pkg, version => $ver, architecture => $arch);
 }
 
 # get package name, version, and file name from the lab
@@ -1750,24 +1730,7 @@ sub get_src_info_from_lab {
     ($file = readlink("$base_dir/dsc"))
 	or fail("cannot read link $base_dir/dsc: $!");
 
-    return ($pkg,$ver,$file);
-}
-
-# schedule a package for processing
-sub schedule_package {
-    my ($type,$pkg,$ver,$file) = @_;
-
-    my $s = "$type $pkg $ver $file";
-
-    if ( $already_scheduled{$s}++ ) {
-	if ($verbose) {
-	    printf "N: Ignoring duplicate %s package $pkg (version $ver)\n",
-		$type eq 'b' ? 'binary' : ($type eq 's' ? 'source': 'udeb');
-	}
-	return;
-    }
-
-    push(@packages,$s);
+    return ($file, source => $pkg, version => $ver);
 }
 
 # -------------------------------
