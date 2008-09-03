@@ -149,10 +149,14 @@ while (<FILES>) {
 
 			$value =~ s/^(?:Shared library|Library soname): \[(.*)\]/$1/;
 			print OUT "  $type   $value\n";
-		    } elsif (m/^\s*[0-9A-F]+:\s*(\S+)\s*\((\S+)\)(\s|\Z)/i
+		    } elsif (m/^\s*[0-9A-F]+:\s+(\S+)\s*(?:\((\S+)\))?(\s|\Z)/i
 			     and $section eq 'VS') {
-			while (m/\s(\S+)\s*\((\S+)\)(\s|\Z)/gc) {
+			while (m/([0-9A-F]+h?)\s*(?:\((\S+)\))?(\s|\Z)/gci) {
 			    my ($vernum, $verstring) = ($1, $2);
+			    $verstring ||= '';
+			    if ($vernum =~ m/h$/) {
+				$verstring = "($verstring)";
+			    }
 			    push @symbol_versions, $verstring;
 			}
 		    } elsif (m/^There is no dynamic section in this file/
@@ -190,6 +194,8 @@ while (<FILES>) {
 				} else {
 				    $ver = 'Base';
 				}
+			    } elsif ($ver eq '()') {
+				$ver = '(Base)';
 			    }
 			}
 
