@@ -672,7 +672,7 @@ foreach my $file (sort keys %{$info->index}) {
 	    [ qr,(?<!Container/)LDAP\.php$, => 'php-net-ldap' ],
 	);
 	foreach my $pearmodule (@pearmodules) {
-	    if ($file =~ m,$pearmodule->[0], and $pkg ne $pearmodule->[1]) {
+	    if ($file =~ m,/$pearmodule->[0], and $pkg ne $pearmodule->[1]) {
 		open (PEAR, "unpacked/$file") or fail("cannot open PHP file: $!");
 		while (<PEAR>) {
 		    if (m,/pear[/.],i) {
@@ -698,7 +698,7 @@ foreach my $file (sort keys %{$info->index}) {
 #	    [ qr,(?i)markdown\.php$, => 'libmarkdown-php' ],
 	);
 	foreach my $phplibrary (@phplibraries) {
-	    if ($file =~ m,$phplibrary->[0], and $pkg ne $phplibrary->[1]) {
+	    if ($file =~ m,/$phplibrary->[0], and $pkg ne $phplibrary->[1]) {
 		tag "embedded-php-library", "$file";
 	    }
 	}
