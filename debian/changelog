@@ -59,6 +59,8 @@ lintian (2.0.0~rc1) experimental; urgency=low
       Raphael Geissert.
     + [FL] Update lists of available interpreter versions (remove: jruby1.1,
       pike7.7, php4, octave2.9, add: tcl8.6, tk8.6).  (Closes: #485954)
+    + [FL] Add . and + to regex for command-with-path-in-maintainer-script.
+      Based on a patch from Raphael Geissert.
 
   * frontend/lintian:
     + [RA] Ensure we close the pipe to lintian-info before exiting, since
