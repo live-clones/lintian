@@ -17,7 +17,7 @@ runtests: $(neededfiles) $(allchecks) $(allcollect) $(tagfiles) $(testfiles)
 	[ -d debian/tests ] || mkdir debian/tests
 	LINTIAN_ROOT="" $(PERL) testset/runtests -k testset debian/tests $(onlyrun)
 	LINTIAN_ROOT="" $(PERL) t/runtests -k t debian/tests $(onlyrun)
-	if [ "$(onlyrun)" != "" ]; then touch $@; fi
+	if [ "$(onlyrun)" = "" ]; then touch $@; fi
 
 build: build-stamp
 build-stamp: $(neededfiles) $(docsource)
