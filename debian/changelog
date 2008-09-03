@@ -82,6 +82,9 @@ lintian (2.0.0~rc1) experimental; urgency=low
   * lib/Lintian/Schedule.pm:
     + [FL] Factor out some scheduling code.
   
+  * man/lintian.1:
+    + [FL] Document udeb support in description for --packages-file.
+  
   * t/runtests:
     + [FL] Copy the changes to testset/runtests from JP's branch.
     + [RA] Fix single test mode.
