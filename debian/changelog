@@ -19,6 +19,7 @@ lintian (2.0.0~rc1) experimental; urgency=low
       - manpage-has-errors-from-pod2man
       - ored-build-depends-on-obsolete-package (actually a split of
          build-depends-on-obsolete-package in two tags)
+      - windows-devel-file-in-package
     + Removed:
       - package-needs-python-policy-debhelper
   
@@ -61,6 +62,8 @@ lintian (2.0.0~rc1) experimental; urgency=low
       exclusive list.  Also fix a spelling mistake.
     + [ADB] Re-add an accidentally removed slash to the check for embedded
       Javascript libraries, removing some false positives.  (Closes: #497215)
+    + [FL] Check for Windows Development files in packages.  Based on a patch
+      by Raphael Geissert.
   * checks/manpages{,.desc}:
     + [FL] Warn about the POD ERRORS sections pod2man generates.
       (Closes: #497864)

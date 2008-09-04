@@ -1,0 +1,6 @@
+Testname: files-windows-devel-file-in-package
+Type: non-native
+Version: 1.0
+Description: Test tag windows-devel-file-in-package
+Test-Against: windows-devel-file-in-package
+Test-For: windows-devel-file-in-package

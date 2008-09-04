@@ -1010,3 +1010,12 @@ Info: This package appears to contain an embedded copy of a PHP library.
  Please depend on the respective package providing the library and
  make sure it can be found by the scripts via the include_path.
 Ref: policy 4.13
+
+Tag: windows-devel-file-in-package
+Type: warning
+Severity: normal
+Certainty: possible
+Info: This package appears to contain development files only meaningful to
+ Windows environments.  Such files are generally useless in Debian packages and
+ were usually accidentally included by copying complete directories from the
+ source tarball.
