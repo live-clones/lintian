@@ -1,5 +1,5 @@
-#!/bin/sh
-set -e
+#!/bin/sh -e
+
 if [ "$1" = purge ] ; then
     update-rc.d lsb-broken remove >/dev/null
     update-rc.d no-lsb remove >/dev/null

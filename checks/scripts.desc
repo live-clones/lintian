@@ -498,6 +498,15 @@ Info: The maintainer script doesn't seem to contain any code other than
  If the package currently doesn't need to do anything in this maintainer
  script, it shouldn't be included in the package.
 
+Tag: maintainer-script-ignores-errors
+Type: warning
+Severity: normal
+Certainty: certain
+Ref: policy 3.9
+Info: The maintainer script doesn't seem to set the <tt>-e</tt> flag which
+ ensures that the script's execution is aborted when any executed command
+ fails.
+
 Tag: command-with-path-in-maintainer-script
 Type: warning
 Severity: normal

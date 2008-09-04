@@ -466,11 +466,15 @@ while (<SCRIPTS>) {
 	or fail("cannot open maintainer script $filename for reading: $!");
 
     my %warned;
-    my ($saw_init, $saw_invoke, $saw_debconf, $has_code);
+    my ($saw_init, $saw_invoke, $saw_debconf, $saw_sete, $has_code);
     my $cat_string = "";
     my $LEADIN = qr'(?:(?:^|[`&;(|{])\s*|(?:if|then|do|while)\s+)';
 
     while (<C>) {
+	if ($. == 1 && $shellscript && m,/$base\s*.*\s-\w*e\w*\b,) {
+	    $saw_sete = 1;
+	}
+
 	next if m,^\s*$,;  # skip empty lines
 	next if m,^\s*\#,; # skip comment lines
 	s/\#.*$//;         # eat comments
@@ -488,6 +492,10 @@ while (<SCRIPTS>) {
 		|| m/^\s*esac\s*$/
 		|| m/^\s*exit\s+\d+\s*$/) {
 	    $has_code = 1;
+	}
+
+	if ($shellscript && m,${LEADIN}set\s*(\s+-(-.*|[^e]+))*\s-\w*e,) {
+	    $saw_sete = 1;
 	}
 
 	if (m,[^\w]((/var)?/tmp|\$TMPDIR)/[^)\]}\s], and not m/\bmks?temp\b/ and not m/\btempfile\b/ and not m/\bmkdir\b/ and not m/\$RANDOM/) {
@@ -796,6 +804,9 @@ while (<SCRIPTS>) {
     }
     unless ($has_code) {
 	tag "maintainer-script-empty", $file;
+    }
+    if ($shellscript && !$saw_sete) {
+	tag 'maintainer-script-ignores-errors', $file;
     }
 
     close C;

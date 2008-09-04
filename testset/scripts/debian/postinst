@@ -1,5 +1,5 @@
 #!/bin/sh
-set -e
+
 if [ -x "/etc/init.d/lsb-broken" ] ; then
     update-rc.d lsb-broken defaults >/dev/null
 fi

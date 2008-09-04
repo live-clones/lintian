@@ -62,6 +62,8 @@ lintian (2.0.0~rc1) experimental; urgency=low
       pike7.7, php4, octave2.9, add: tcl8.6, tk8.6).  (Closes: #485954)
     + [FL] Add . and + to regex for command-with-path-in-maintainer-script.
       Based on a patch from Raphael Geissert.
+    + [FL] Check for missing set -e in maintainer scripts. Patch by
+      Raphael Geissert.
 
   * collection/objdump-info:
     + [ADB] Correctly handle shared objects with no symbol versioning when
