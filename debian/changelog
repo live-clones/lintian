@@ -64,7 +64,7 @@ lintian (2.0.0~rc1) experimental; urgency=low
 
   * collection/objdump-info:
     + [ADB] Correctly handle shared objects with no symbol versioning when
-      using readelf. 
+      using readelf.
     + [ADB] Update the readelf version table parsing code to handle hidden
       symbols.
 
