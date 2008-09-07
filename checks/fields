@@ -263,24 +263,22 @@ if (defined $info->field('uploaders') && defined $info->field('maintainer')) {
 
 #---- Source
 
-if ($type eq "source") {
-	if (not defined $info->field('source')) {
-		tag "no-source-field", "";
+if (not defined $info->field('source')) {
+	tag "no-source-field" if $type eq "source";
+} else {
+	my $source = $info->field('source');
+
+	unfold("source", \$source);
+
+	if ($type eq 'source') {
+		if ($source ne $pkg) {
+			tag "source-field-does-not-match-pkg-name", "$source != $pkg";
+		}
 	} else {
-		my $source = $info->field('source');
-
-		unfold("source", \$source);
-
-		if ($type eq 'source') {
-			if ($source ne $pkg) {
-				tag "source-field-does-not-match-pkg-name", "$_";
-			}
-		} else {
-			if ($source !~ /[A-Z0-9][-+\.A-Z0-9]+                      #Package name
-			                \s*
-			                (?:\((?:\d+:)?(?:[-\.+:A-Z0-9]+?)(?:-[\.+A-Z0-9]+)?\))?\s*$/ix) { #Version
-				tag "source-field-malformed", "$source";
-			}
+		if ($source !~ /[A-Z0-9][-+\.A-Z0-9]+                      #Package name
+		                \s*
+		                (?:\((?:\d+:)?(?:[-\.+:A-Z0-9]+?)(?:-[\.+A-Z0-9]+)?\))?\s*$/ix) { #Version
+			tag "source-field-malformed", "$source";
 		}
 	}
 }
