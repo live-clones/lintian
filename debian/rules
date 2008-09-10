@@ -10,6 +10,7 @@ allchecks := $(wildcard checks/*)
 allcollect := $(wildcard collection/*)
 tagfiles := $(wildcard testset/tags.* t/*/tags)
 testfiles := $(wildcard t/tests/*.desc)
+perlprovides := data/fields/perl-provides
 onlyrun =
 
 runtests: $(neededfiles) $(allchecks) $(allcollect) $(tagfiles) $(testfiles)
@@ -18,6 +19,10 @@ runtests: $(neededfiles) $(allchecks) $(allcollect) $(tagfiles) $(testfiles)
 	LINTIAN_ROOT="" $(PERL) testset/runtests -k testset debian/tests $(onlyrun)
 	LINTIAN_ROOT="" $(PERL) t/runtests -k t debian/tests $(onlyrun)
 	if [ "$(onlyrun)" = "" ]; then touch $@; fi
+
+# this target is only run manually
+refresh-perl-provides:
+	perl private/refresh-perl-provides > $(perlprovides)
 
 build: build-stamp
 build-stamp: $(neededfiles) $(docsource)
@@ -28,6 +33,10 @@ build-stamp: $(neededfiles) $(docsource)
 	LINTIAN_ROOT="" ./frontend/lintian --help \
 		| tail -n +3 | $(PERL) -n -e 'print "  $$_"' >doc/help.tmp
 	$(PERL) -p -e 'BEGIN { open HELP, "<", "doc/help.tmp" or die; local $$/ = undef; $$h = <HELP> }; s/%LINTIAN_HELP%/$$h/' doc/README.in >doc/README
+
+	# check that the static data about perl core modules is up to date
+	$(PERL) -ne '/PERL_VERSION=(.+)/ and $$] > $$1 and warn q{*}x60 . qq{\n$(perlprovides) needs an update, please run\n  debian/rules refresh-perl-provides\n(which needs the libapt-pkg-perl package)\n} . q{*}x60 . qq{\n}' $(perlprovides)
+
 	touch $@
 
 clean: $(neededfiles)
@@ -66,5 +75,5 @@ binary-arch:
 
 binary:	binary-indep binary-arch
 
-.PHONY: build binary binary-arch binary-indep clean
+.PHONY: build binary binary-arch binary-indep clean refresh-perl-provides
 .DELETE_ON_ERROR: runtests

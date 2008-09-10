@@ -1,0 +1,116 @@
+#!/usr/bin/perl -w
+use strict;
+
+# Generate a list of packages that are provided by the Perl core packages
+# and also packaged separately at a (hopefully) newer version.
+# The list will have the package name and the upstream version of the
+# corresponding module integrated in the currently installed Perl version.
+
+# Copyright (C) 2008 Niko Tyni
+#
+# This program is free software; you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by the Free
+# Software Foundation; either version 2 of the License, or (at your option)
+# any later version.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+# more details.
+#
+# You should have received a copy of the GNU General Public License along with
+# this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# from /usr/share/doc/libapt-pkg-perl/examples/apt-cache
+use AptPkg::Config '$_config';
+use AptPkg::System '$_system';
+use AptPkg::Cache;
+
+(my $self = $0) =~ s#.*/##;
+
+# initialise the global config object with the default values and
+# setup the $_system object
+$_config->init;
+$_system = $_config->system;
+
+# supress cache building messages
+$_config->{quiet} = 2;
+
+# set up the cache
+my $cache = AptPkg::Cache->new;
+# end from /usr/share/doc/libapt-pkg-perl/examples/apt-cache
+
+use Module::CoreList;
+my $versioning = $_system->versioning;
+
+# we look at packages provided by these
+my @core_packages = (qw(perl-base perl perl-modules));
+
+# check we have a cache of Debian sid packages available
+warn("Warning: this list should only be updated on a system with an up to date APT cache of the Debian unstable distribution")
+    if !grep { defined $_->{Origin} &&
+               defined $_->{Archive} &&
+               $_->{Origin} eq "Debian" &&
+               $_->{Archive} eq "unstable" }
+       @{$cache->files};
+
+print <<EOF;
+# virtual packages provided by the Perl core packages that also have a
+# separate binary package available
+#
+# the listed version is the one included in the Perl core
+#
+# regenerate by running
+#   debian/rules refresh-perl-provides
+# in the lintian source tree
+#
+# last updated for PERL_VERSION=$]
+EOF
+
+for my $pkg (@core_packages) {
+    my $cached_versions = $cache->{$pkg}
+        or die("no such binary package found in the APT cache: $pkg");
+    my $latest = bin_latest($cached_versions);
+
+    for my $provides (@{$latest->{ProvidesList}}) {
+        my $name = $provides->{Name};
+        # skip virtual-only packages
+        next if (!$cache->{$name}{VersionList});
+        my $version = find_core_version($name);
+        next if !$version;
+
+        # the underscore notates a CPAN development version;
+        # these may need special casing with some packages
+        $version =~ s/_/./g;
+        print "$name $version\n";
+    }
+}
+
+# look up the version of a package in the core
+sub find_core_version {
+    my $module = shift;
+    my $ret;
+    return if $module =~ /^perl(5|api)/;
+
+    # mangle the package name into the module name
+    $module =~ s/^lib//;
+    $module =~ s/-perl$//;
+    $module =~ s/-/::/g;
+
+    for (Module::CoreList->find_modules(qr/^\Q$module\E$/i, 0+$])) {
+        $ret = $Module::CoreList::version{0+$]}{$_};
+        last;
+    }
+
+    return $ret;
+}
+
+sub bin_latest {
+    my $p = shift;
+    return (sort bin_byversion @{$p->{VersionList}})[-1];
+}
+
+sub bin_byversion {
+    return $versioning->compare($a->{VerStr}, $b->{VerStr});
+}
+
