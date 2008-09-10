@@ -993,3 +993,24 @@ Info: The maintainer value also appears on the <tt>Uploaders</tt> field.
  first introduced, but those have long-since been fixed and there is no
  longer any need to list the maintainer in Uploaders.  The duplicate
  information should probably be removed.
+
+Tag: versioned-dependency-satisfied-by-perl
+Type: warning
+Severity: normal
+Certainty: certain
+Info: This package declares an unnecessary versioned dependency
+ on a package that is also provided by one of the Perl core packages
+ (perl, perl-base, perl-modules) with at least the required version.
+ .
+ As versioned dependencies are not satisfied by provided packages,
+ this unnecessarily pulls in a separately packaged newer version
+ of the module.
+ .
+ The recommended way to express the dependency without needless
+ complications on backporting packages is to use alternative dependencies.
+ The Perl core package should be the preferred alternative and the
+ versioned dependency a secondary one.
+ .
+ Example: perl-modules (&gt;= 5.10.0) | libmodule-build-perl (&gt;= 0.26)
+Ref: policy 7.5
+

@@ -117,6 +117,9 @@ my @global_clean_bypass = (
 	'^\s+dh\s+'
 );
 
+# Load package versions provided by the Perl core modules
+my $perl_core_provides = Lintian::Data->new ('fields/perl-provides', '\s+');
+
 sub run {
 
 my $pkg = shift;
@@ -518,6 +521,11 @@ if (($type eq "binary") || ($type eq 'udeb')) {
 					    if ($d_pkg eq 'python' && $d_version->[0] eq '<<' && &$is_dep_field($field)
 						&& $arch_indep && $pkg =~ /^python-/ && ! defined $info->field('python-version'));
 
+					# only trigger this for the the preferred alternative
+					tag "versioned-dependency-satisfied-by-perl", "$field: $part_d_orig"
+						if $alternatives[0][-1] eq $part_d_orig
+						&& perl_core_has_version($d_pkg, $d_version->[0], $d_version->[1]);
+
 					tag "depends-exclusively-on-makedev", "$field",
 					    if ($field eq 'depends' && $d_pkg eq 'makedev' && @alternatives == 1);
 				}
@@ -699,6 +707,11 @@ if ($type eq "source") {
 
 					tag "bad-relation", "$field: $part_d_orig"
 					    if $rest;
+
+					# only trigger this for the the preferred alternative
+					tag "versioned-dependency-satisfied-by-perl", "$field: $part_d_orig"
+						if $alternatives[0][-1] eq $part_d_orig
+						&& perl_core_has_version($d_pkg, $d_version->[0], $d_version->[1]);
 				}
 
 				for my $pkg (@seen_obsolete_packages) {
@@ -928,6 +941,15 @@ sub _valid_version {
 	} else {
 		return ();
 	}
+}
+
+sub perl_core_has_version {
+	my ($package, $op, $version) = @_;
+	my $core_version = $perl_core_provides->value($package);
+	return 0 if !defined $core_version;
+	my @version = _valid_version($version);
+	return 0 if !@version;
+	return Dep::get_version_cmp($core_version, $op, $version);
 }
 
 sub unfold {
