@@ -9,6 +9,7 @@ E: relations source: depends-on-build-essential-package-without-using-version ma
 E: relations source: invalid-arch-string-in-source-relation test [build-conflicts: bar [alpha test]]
 E: relations source: missing-build-dependency libmodule-build-perl
 E: relations source: section-category-mismatch Package relations-multiple-libs
+E: relations-multiple-libs: alternates-not-allowed enhances
 E: relations-multiple-libs: conflicts-with-dependency depends libpng2
 E: relations-multiple-libs: depends-on-obsolete-package recommends: gs
 E: relations-multiple-libs: depends-on-obsolete-package recommends: gs-gpl

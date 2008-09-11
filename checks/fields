@@ -418,7 +418,7 @@ if (($type eq "binary") || ($type eq 'udeb')) {
 		$debugpackage = 1;
 		$debugbase = $1;
 	}
-	for my $field (qw(depends pre-depends recommends suggests conflicts provides replaces breaks)) {
+	for my $field (qw(depends pre-depends recommends suggests conflicts provides enhances replaces breaks)) {
 		if (defined $info->field($field)) {
 			#Get data and clean it
 			my $data = $info->field($field);;
