@@ -83,6 +83,7 @@ lintian (2.0.0~rc1) experimental; urgency=low
       Based on a patch from Raphael Geissert.
     + [FL] Check for missing set -e in maintainer scripts. Patch by
       Raphael Geissert.
+    + [FL] Add mksh as a valid interpreter.  (Closes: #498075)
 
   * collection/objdump-info:
     + [ADB] Correctly handle shared objects with no symbol versioning when

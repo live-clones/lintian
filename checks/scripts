@@ -69,6 +69,7 @@ our %interpreters =
      magicfilter    => [ '/usr/sbin' ],
      make	    => [ '/usr/bin', 'make | build-essential' ],
      mawk	    => [ '/usr/bin' ],
+     mksh	    => [ '/bin' ],
      ocamlrun	    => [ '/usr/bin',
 			 'ocaml-base-nox | ocaml-base | ocaml-nox | ocaml' ],
      pagsh	    => [ '/usr/bin', 'openafs-client | heimdal-clients' ],
