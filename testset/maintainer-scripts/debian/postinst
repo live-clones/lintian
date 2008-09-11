@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /bin/sh -e
 
 if [ "$1" = "configure" ]; then
         if [ -d /usr/doc -a ! -e /usr/doc/maintainer-scripts -a -d /usr/share/doc/maintainer-scripts ]; then

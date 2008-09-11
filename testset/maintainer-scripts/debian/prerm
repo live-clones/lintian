@@ -179,3 +179,5 @@ read -r foo
 read -r
 read -p "Would you like to restart the service?" foo bar
 read --fish
+
+set -e

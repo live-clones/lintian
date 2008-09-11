@@ -1,4 +1,5 @@
 #!/bin/bash
+#set -e
 
 update-alternatives --remove dummy /usr/bin/dummy-alternative
 
