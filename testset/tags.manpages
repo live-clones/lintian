@@ -65,5 +65,6 @@ W: manpages: manpage-has-bad-whatis-entry usr/share/man/man1/usr-sbin-binary.1.g
 W: manpages: manpage-has-bad-whatis-entry usr/share/man/man6/usr-games-binary.6.gz
 W: manpages: manpage-has-errors-from-man usr/share/man/man1/test.1p.gz 12: warning: `dep' not defined (probable missing space after `de')
 W: manpages: manpage-has-errors-from-man usr/share/man/man3/included.3.gz 6: warning: `zY' not defined
+W: manpages: manpage-has-errors-from-pod2man usr/share/man/man1/test.1p.gz:17
 W: manpages: manpage-has-useless-whatis-entry usr/share/man/man1/true.1.gz
 W: manpages: manpage-locale-dir-country-specific usr/share/man/de_DE/man1/test-utf8-chars.1p.gz

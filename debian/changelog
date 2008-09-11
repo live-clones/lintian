@@ -16,6 +16,7 @@ lintian (2.0.0~rc1) experimental; urgency=low
       - improbable-bug-number-in-closes
       - maintainer-also-in-uploaders
       - maintainer-script-ignores-errors
+      - manpage-has-errors-from-pod2man
       - ored-build-depends-on-obsolete-package (actually a split of
          build-depends-on-obsolete-package in two tags)
     + Removed:
@@ -57,6 +58,9 @@ lintian (2.0.0~rc1) experimental; urgency=low
       exclusive list.  Also fix a spelling mistake.
     + [ADB] Re-add an accidentally removed slash to the check for embedded
       Javascript libraries, removing some false positives.  (Closes: #497215)
+  * checks/manpages{,.desc}:
+    + [FL] Warn about the POD ERRORS sections pod2man generates.
+      (Closes: #497864)
   * checks/menus{,.desc}:
     + [FL] Do not complain if the unknown doc-base section is the subsection
       of a known section.  The doc-base documentation seems to suggest that

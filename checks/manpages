@@ -330,6 +330,9 @@ foreach my $file (sort keys %{$info->index}) {
 		# regexes taken from checks/files
 		tag "FSSTND-dir-in-manual-page", "$file:$lc $1";
 	    }
+	    if ($line =~ m/^.SH "POD ERRORS"$/) {
+		tag "manpage-has-errors-from-pod2man", "$file:$lc";
+	    }
 	}
 	tag "hyphen-used-as-minus-sign", $file, ($hc-10), "more occurrences not shown" if $hc > 10 and ! $ENV{'LINTIAN_DEBUG'};
     }
