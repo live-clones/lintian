@@ -45,6 +45,7 @@ lintian (2.0.0~rc1) experimental; urgency=low
       not listed first.  As with Depends, an info tag will still be issued
       for such packages.  (Closes: #496875)
     + [FL] Check Enhances together with the other relational fields.
+    + [FL] Add ant to @rule_clean_depends.  (Closes: #498135)
   * checks/files{,.desc}:
     + [RA,FL] Patches from Raphael Geissert:
       - Check for embedding copies of jsjac and jsMath.
