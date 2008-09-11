@@ -29,7 +29,7 @@ use Carp qw(croak);
 {
     my %data;
     sub new {
-        my ($class, $type) = @_;
+        my ($class, $type, $separator) = @_;
         croak('no data type specified') unless $type;
         unless (exists $data{$type}) {
             my $dir = $ENV{LINTIAN_ROOT} . '/data';
@@ -41,7 +41,13 @@ use Carp qw(croak);
                 s/^\s+//;
                 next if /^\#/;
                 next if /^$/;
-                $data{$type}{$_} = 1;
+                my ($key, $val);
+                if (defined $separator) {
+                    ($key, $val) = split(/$separator/, $_, 2);
+                } else {
+                    ($key, $val) = ($_ => 1);
+                }
+                $data{$type}{$key} = $val;
             }
         }
         my $self = { data => $data{$type} };
@@ -56,6 +62,15 @@ sub known {
     return (exists $self->{data}{$keyword}) ? 1 : undef;
 }
 
+
+# Query a data object for the value attached to a particular keyword.
+sub value {
+    my ($self, $keyword) = @_;
+    return (exists $self->{data}{$keyword}) ? $self->{data}{$keyword} : undef;
+}
+
+1;
+
 =head1 NAME
 
 Lintian::Data - Lintian interface to query lists of keywords
@@ -66,15 +81,23 @@ Lintian::Data - Lintian interface to query lists of keywords
     if ($list->known($keyword)) {
         # do something ...
     }
+    my $hash = Lintian::Data->new('another-type', '\s+');
+    if ($list->value($keyword) > 1) {
+        # do something ...
+    }
 
 =head1 DESCRIPTION
 
-Lintian::Data provides a way of loading a list of keywords from a file in
-the Lintian root and then querying that list.  The lists are stored in the
-F<data> directory of the Lintian root and consist of one keyword per line.
-Blank lines and lines beginning with C<#> are ignored.  Leading and
-trailing whitespace is stripped; other than that, keywords are taken
-verbatim as they are listed in the file and may include spaces.
+Lintian::Data provides a way of loading a list of keywords or key/value
+pairs from a file in the Lintian root and then querying that list.
+The lists are stored in the F<data> directory of the Lintian root and
+consist of one keyword or key/value pair per line.  Blank lines and
+lines beginning with C<#> are ignored.  Leading and trailing whitespace
+is stripped.
+
+If requested, the lines are split into key/value pairs with a given
+separator regular expression.  Otherwise, keywords are taken verbatim
+as they are listed in the file and may include spaces.
 
 This module allows lists such as menu sections, doc-base sections,
 obsolete packages, package fields, and so forth to be stored in simple,
@@ -84,13 +107,16 @@ easily editable files.
 
 =over 4
 
-=item new(TYPE)
+=item new(TYPE [,SEPARATOR])
 
 Creates a new Lintian::Data object for the given TYPE.  TYPE is a partial
 path relative to the F<data> directory and should correspond to a file in
 that directory.  The contents of that file will be loaded into memory and
 returned as part of the newly created object.  On error, new() throws an
 exception.
+
+If SEPARATOR is given, it will be used as a regular expression for splitting
+the lines into key/value pairs.
 
 A given file will only be loaded once.  If new() is called again with the
 same TYPE argument, the data previously loaded will be reused, avoiding
@@ -106,6 +132,12 @@ multiple file reads.
 
 Returns true if KEYWORD was listed in the data file represented by this
 Lintian::Data instance and false otherwise.
+
+=item value(KEYWORD)
+
+Returns the value attached to KEYWORD if it was listed in the data
+file represented by this Lintian::Data instance and the undefined value
+otherwise. If SEPARATOR was not given, the value will '1'.
 
 =back
 
