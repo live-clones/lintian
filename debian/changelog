@@ -6,6 +6,21 @@ lintian (2.0.0~rc1) experimental; urgency=low
     The default output is unchanged, see the documentation on
     how to utilize the new features.
   
+  * Summary of tag changes:
+    + Added:
+      - description-contains-dh-make-perl-template
+      - doc-base-uses-applications-section (actually a split of
+         doc-base-unknown-section in two tags)
+      - embedded-pear-module
+      - embedded-php-library
+      - improbable-bug-number-in-closes
+      - maintainer-also-in-uploaders
+      - maintainer-script-ignores-errors
+      - ored-build-depends-on-obsolete-package (actually a split of
+         build-depends-on-obsolete-package in two tags)
+    + Removed:
+      - package-needs-python-policy-debhelper
+  
   * checks/*.desc:
     + [ADB] Fix a number of spelling mistakes and typoes.
   * checks/changelog-file{,.desc}:
