@@ -19,6 +19,7 @@ lintian (2.0.0~rc1) experimental; urgency=low
       - manpage-has-errors-from-pod2man
       - ored-build-depends-on-obsolete-package (actually a split of
          build-depends-on-obsolete-package in two tags)
+      - versioned-dependency-satisfied-by-perl
       - windows-devel-file-in-package
     + Removed:
       - package-needs-python-policy-debhelper
