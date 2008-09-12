@@ -138,9 +138,11 @@ if ($singletest) {
     @tests = map { s#^\Q$testset/tests/\E## ;s/\.desc$//; $_ } sort(<$testset/tests/*.desc>);
 }
 
-print "found the following tests: @tests\n" if $debug;
+print "Found the following tests: @tests\n" if $debug;
+my $tests_run = 0;
 for (@tests) {
     my $testdesc = "$testset/tests/$_.desc";
+    next unless -f $testdesc;
 
     print "process $testdesc...\n" if $debug;
     my $testdata = (read_dpkg_control($testdesc))[0];
@@ -202,6 +204,7 @@ for (@tests) {
 	if -e "$origdir/post_test";
 
     $testok = runsystem_ok("cmp", "-s", "$rundir/tags.$pkg", "$origdir/tags");
+    $tests_run++;
     if ($testok) {
 	print "done.\n";
     } else {
@@ -222,6 +225,14 @@ for (@tests) {
 	$tags{$3}{'tested_package'} = $2;
     }
      close TAGS;
+}
+
+if (!$tests_run) {
+    if ($singletest) {
+	print "W: No tests run, did you specify a valid test name?\n";
+    } else {
+	print "E: No tests run, did you specify a valid testset directory?\n";
+    }
 }
 
 # --------------

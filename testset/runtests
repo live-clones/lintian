@@ -245,6 +245,7 @@ if ($singletest) {
 	closedir(TESTDIR);
 }
 
+my $tests_run = 0;
 for (@tests) {
     next if $_ eq '.' or $_ eq '..' or $_ eq 'CVS' or $_ eq '.svn';
     next unless -d "$testset/$_";
@@ -289,6 +290,7 @@ for (@tests) {
 	if -e "$testset/tags.$pkg.sed";
 
     $testok = runsystem_ok("cmp -s $rundir/tags.$pkg $testset/tags.$pkg");
+    $tests_run++;
     if ($testok) {
 	print "done.\n";
     } else {
@@ -300,7 +302,7 @@ for (@tests) {
 
     open TAGS, "$rundir/tags.$pkg" or fail("Cannot open $rundir/tags.$pkg");
     while (<TAGS>) {
-	next if /^N: /;
+	next if m/^N: /;
 	if (not /^(.): (\S+)(?: (?:source|udeb))?: (\S+)/) {
 	    print "E: Invalid line:\n$_";
 	    next;
@@ -309,6 +311,14 @@ for (@tests) {
 	$tags{$3}{'tested_package'} = $2;
     }
     close TAGS;
+}
+
+if (!$tests_run) {
+    if ($singletest) {
+	print "W: No tests run, did you specify a valid test name?\n";
+    } else {
+	print "E: No tests run, did you specify a valid testset directory?\n";
+    }
 }
 
 print "Checking whether all tags are tested and tags have description ... \n";
