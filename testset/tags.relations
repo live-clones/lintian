@@ -67,5 +67,6 @@ W: relations: package-relation-with-self depends: relations (<< 3)
 W: relations: package-relation-with-self replaces: relations
 W: relations: redundant-bugs-field
 W: relations: redundant-origin-field
+W: relations: versioned-dependency-satisfied-by-perl depends: libfile-temp-perl (>= 0.18)
 W: relations: virtual-package-depends-without-real-package-depends depends: mail-transport-agent
 W: relations: virtual-package-depends-without-real-package-depends pre-depends: awk

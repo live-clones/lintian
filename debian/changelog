@@ -49,6 +49,8 @@ lintian (2.0.0~rc1) experimental; urgency=low
     + [FL] Add ant to @rule_clean_depends.  (Closes: #498135)
     + [FL] Due to a logical error "source-field-malformed" was never actually
       checked.  Patch by Raphael Geissert.  (Closes: #498197)
+    + [FL] Check for unnecessary versioned dependencies on Perl core modules.
+      Patch by Niko Tyni.  (Closes: #497887)
   * checks/files{,.desc}:
     + [RA,FL] Patches from Raphael Geissert:
       - Check for embedding copies of jsjac and jsMath.
@@ -96,6 +98,12 @@ lintian (2.0.0~rc1) experimental; urgency=low
       using readelf.
     + [ADB] Update the readelf version table parsing code to handle hidden
       symbols.
+  
+  * data/fields/perl-provides:
+    + [FL] Data about Perl modules that are available both in Perl and as
+      separate packages.
+  * private/refresh-perl-provides:
+    + [FL] Script to update data/fields/perl-provides.  By Niko Tyni.
 
   * frontend/lintian:
     + [RA] Ensure we close the pipe to lintian-info before exiting, since
@@ -118,6 +126,9 @@ lintian (2.0.0~rc1) experimental; urgency=low
         includes the experimental flag info.
   * lib/Lintian/Schedule.pm:
     + [FL] Factor out some scheduling code.
+  * lib/Lintian/Data.pm:
+    + [FL] Extend Lintian::Data to handle key/value pairs.  Patch by
+      Niko Tyni.
   
   * man/lintian.1:
     + [FL] Document udeb support in description for --packages-file.
