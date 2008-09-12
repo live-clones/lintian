@@ -124,6 +124,8 @@ lintian (2.0.0~rc1) experimental; urgency=low
   
   * t/runtests:
     + [FL] Copy the changes to testset/runtests from JP's branch.
+    + [FL] Remove global tests that were duplicated from testset/runtests,
+      which will not go away in the forseeable future.
     + [RA] Fix single test mode.
 
  -- Frank Lichtenheld <djpig@debian.org>  Sat, 23 Aug 2008 22:55:44 +0200
