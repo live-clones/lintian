@@ -47,6 +47,12 @@ sub add_file {
     } else {
 	($pkg, $ver, $arch) =
 	    @pkg_info{qw(package version architecture)};
+
+	if (!defined $arch) {
+	    $arch = $file;
+	    $arch =~ s/\.u?deb$//;
+	    $arch =~ s/.*_//;
+	}
     }
 
     my $s = "$type $pkg $ver $arch $file";
