@@ -30,17 +30,17 @@
             # displaying the full report, or the package has error
             # or warning tags
             my $interesting = 0;
-            if ($errors) {
+            if (!$errors) {
+                # Full report, so include the package
                 $interesting = 1;
             } else {
-                my $versions = $by_maint{$maintainer}{$source}
-                    || $by_uploader{$maintainer}{$source};
-                for my $version (keys %$versions) {
+                my $versions = $packages{$source} || $uploads{$source};
+                VERSIONS: for my $version (sort keys %$versions) {
                     my $tags = $versions->{$version};
                     for my $tag (@$tags) {
-                        if (($tag->{code} ne 'E') and ($tag->{code} ne 'W')) {
+                        if (($tag->{code} eq 'E') or ($tag->{code} eq 'W')) {
                             $interesting = 1;
-                            last;
+                            last VERSIONS;
                         }
                     }
                 }
