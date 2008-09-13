@@ -13,6 +13,7 @@ our @EXPORT = qw
    %known_libpngs %known_x_metapackages
    %non_standard_archs %all_cpus %all_oses
    %known_doc_base_formats
+   $known_shells_regex
 );
 
 # To let "perl -cw" test know we use these variables;
@@ -26,6 +27,7 @@ use vars qw
   %known_libpngs %known_x_metapackages
   %all_cpus %all_oses
   %known_doc_base_formats
+  $known_shells_regex
 );
 
 # simple defines for commonly needed data
@@ -173,6 +175,8 @@ use vars qw
 # Supported documentation formats for doc-base files.
 %known_doc_base_formats = map { $_ => 1 }
     ( 'html', 'text', 'pdf', 'postscript', 'info', 'dvi', 'debiandoc-sgml' );
+
+$known_shells_regex = qr'(?:(?:b|d)?a|t?c|(?:pd|m)?k|z)?sh';
 
 1;
 

@@ -24,6 +24,9 @@
 
 package Lintian::scripts;
 use strict;
+
+use lib "$ENV{'LINTIAN_ROOT'}/checks/";
+use common_data;
 use Dep;
 use Tags;
 use Util;
@@ -276,13 +279,15 @@ for my $filename (sort keys %{$info->scripts}) {
     # Syntax-check most shell scripts, but don't syntax-check scripts that end
     # in .dpatch.  bash -n doesn't stop checking at exit 0 and goes on to blow
     # up on the patch itself.
-    # zsh -n is broken, see #485885
-    if ($base =~ /^(?:(?:b|d)?a|k)?sh$/) {
-	if (-x "$interpreter" && ! script_is_evil_and_wrong("unpacked/$filename")) {
-	    if ($filename !~ m,\.dpatch$,) {
-		if (check_script_syntax($interpreter, "unpacked/$filename")) {
-		    tag("shell-script-fails-syntax-check", $filename);
-		}
+    if ($base =~ /^$known_shells_regex$/) {
+	if (-x $interpreter
+	    and ! script_is_evil_and_wrong("unpacked/$filename")
+	    and $filename !~ m,\.dpatch$,
+	    # exclude some shells. zsh -n is broken, see #485885
+	    and $base !~ m/^(z|t?c)sh$/) {
+
+	    if (check_script_syntax($interpreter, "unpacked/$filename")) {
+		tag("shell-script-fails-syntax-check", $filename);
 	    }
 	}
     }
@@ -451,7 +456,7 @@ while (<SCRIPTS>) {
     tag("csh-considered-harmful", $filename)
 	if ($base eq 'csh' or $base eq 'tcsh');
 
-    my $shellscript = $base =~ /^((b|d)?a|t?c|(pd)?k)?sh$/ ? 1 : 0;
+    my $shellscript = $base =~ /^$known_shells_regex$/ ? 1 : 0;
 
     # Only syntax-check scripts we can check with bash.
     my $checkbashisms;
@@ -544,7 +549,8 @@ while (<SCRIPTS>) {
 		$cat_string = "";
 	    }
 	    my $within_another_shell = 0;
-	    if (m,(^|\s+)((/usr)?/bin/)?((b|d)?a|k|z|t?c)sh\s+-c\s*.+,) {
+	    if (m,(?:^|\s+)(?:(?:/usr)?/bin/)?($known_shells_regex)\s+-c\s*.+,
+		and $1 ne 'sh') {
 		$within_another_shell = 1;
 	    }
 	    # if cat_string is set, we are in a HERE document and need not
