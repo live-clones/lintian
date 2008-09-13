@@ -126,9 +126,6 @@ lintian (2.0.0~rc1) experimental; urgency=low
         includes the experimental flag info.
   * lib/Lintian/Schedule.pm:
     + [FL] Factor out some scheduling code.
-    + [ADB] Ensure that the schedule hash contains the package's
-      architecture when processing package lists from the laboratory
-      (which don't contain an explicit architecture field).
   * lib/Lintian/Data.pm:
     + [FL] Extend Lintian::Data to handle key/value pairs.  Patch by
       Niko Tyni.
