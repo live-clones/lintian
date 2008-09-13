@@ -47,6 +47,7 @@ sub add_file {
     } else {
 	($pkg, $ver, $arch) =
 	    @pkg_info{qw(package version architecture)};
+	$arch ||= "";
     }
 
     my $s = "$type $pkg $ver $arch $file";
