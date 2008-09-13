@@ -1,0 +1,10 @@
+# override without extra information
+manpage-has-bad-whatis-entry
+# exact extra information
+hyphen-used-as-minus-sign usr/share/man/man1/foo.1.gz:4
+# wildcards
+hyphen-used-as-minus-sign usr/share/man/man1/foo.1.gz:2*
+hyphen-used-as-minus-sign */foo.1.gz:5
+hyphen-used-as-minus-sign */foo.1.gz:3*
+# misused wildcard
+hyphen-used-as-minus-sign usr/share/man/man1/foo.1.gz * more occurrences not shown
