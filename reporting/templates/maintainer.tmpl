@@ -26,7 +26,29 @@
     if ($num_packages > 1 and $num_packages < 20) {
         $OUT .= qq(  <div id="summary">\n    <ul>\n);
         foreach $source (sort(keys(%packages), keys(%uploads))) {
-            $OUT .= qq(      <li><a href="#$source">$source</a></li>\n);
+            # Only display a link for the package if either we're
+            # displaying the full report, or the package has error
+            # or warning tags
+            my $interesting = 0;
+            if ($errors) {
+                $interesting = 1;
+            } else {
+                my $versions = $by_maint{$maintainer}{$source}
+                    || $by_uploader{$maintainer}{$source};
+                for my $version (keys %$versions) {
+                    my $tags = $versions->{$version};
+                    for my $tag (@$tags) {
+                        if (($tag->{code} ne 'E') and ($tag->{code} ne 'W')) {
+                            $interesting = 1;
+                            last;
+                        }
+                    }
+                }
+            }
+
+            if ($interesting) {
+                $OUT .= qq(      <li><a href="#$source">$source</a></li>\n);
+            }
         }
         $OUT .= "    </ul>\n  </div>\n";
     }
