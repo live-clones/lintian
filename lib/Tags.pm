@@ -364,7 +364,7 @@ sub tag {
 	! keys %only_issue_tags or exists $only_issue_tags{$tag};
 
     # Newlines in @information would cause problems, so replace them with \n.
-    @information = map { s,\n,\\n,; $_ } @information;
+    @information = grep { defined($_) and $_ ne '' } map { s,\n,\\n,; $_ } @information;
 
     my $tag_info = get_tag_info( $tag );
     unless ($tag_info) {
