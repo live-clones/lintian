@@ -471,6 +471,7 @@ while (<SCRIPTS>) {
     my $cat_string = "";
     my $LEADIN = qr'(?:(?:^|[`&;(|{])\s*|(?:if|then|do|while)\s+)';
 
+    my $previous_line = "";
     while (<C>) {
 	if ($. == 1 && $shellscript && m,/$base\s*.*\s-\w*e\w*\b,) {
 	    $saw_sete = 1;
@@ -479,7 +480,18 @@ while (<SCRIPTS>) {
 	next if m,^\s*$,;  # skip empty lines
 	next if m,^\s*\#,; # skip comment lines
 	s/\#.*$//;         # eat comments
-	chomp();
+
+	# Concatenate lines containing continuation character (\) at the end
+	if ($shellscript && /\\$/) {
+	    s/\\//;
+	    chomp;
+	    $previous_line .= $_;
+	    next;
+	}
+
+	chomp;
+	$_ = $previous_line . $_;
+	$previous_line = "";
 
 	# Don't consider the standard dh-make boilerplate to be code.  This
 	# means ignoring the framework of a case statement, the labels, the
