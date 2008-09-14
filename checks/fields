@@ -187,6 +187,12 @@ if (not defined $info->field('version')) {
 		if ($version =~ /\+b\d+$/ && $type eq "source") {
 			tag "binary-nmu-debian-revision-in-source", "$version";
 		}
+		my $name = $info->field('package');
+		if ($name && $perl_core_provides->known($name) &&
+		    perl_core_has_version($name, '>=', $upstream)) {
+			my $core_version = $perl_core_provides->value($name);
+			tag "package-superseded-by-perl", "with $core_version"
+		}
 	} else {
 		tag "bad-version-number", "$version";
 	}
