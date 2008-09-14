@@ -158,7 +158,7 @@ lintian (2.0.0~rc1) experimental; urgency=low
     + [FL] Print a warning if no tests were run.  Based on a patch by
       Raphael Geissert.
 
- -- Frank Lichtenheld <djpig@debian.org>  Sat, 23 Aug 2008 22:55:44 +0200
+ -- Frank Lichtenheld <djpig@debian.org>  Sun, 14 Sep 2008 03:31:54 +0200
 
 lintian (1.24.4) unstable; urgency=low
 
