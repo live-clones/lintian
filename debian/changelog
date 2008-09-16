@@ -3,6 +3,9 @@ lintian (2.0.0) unstable; urgency=low
   * checks/copyright-file:
     + [FL] Also detect v1.1 of CeCILL license, not only v2.0.
       (Closes: #498994)
+  
+  * frontend/lintian:
+    + [FL] Add support for ranges to --display-level.
 
  -- Frank Lichtenheld <djpig@debian.org>  Tue, 16 Sep 2008 19:34:29 +0200
 

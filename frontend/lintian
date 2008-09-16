@@ -288,10 +288,71 @@ sub reset_display_level {
     }
 }
 
+sub set_display_level_multi {
+    my ($op, $level, $val) = @_;
+
+    my @inc_severities = @severities;
+    my @inc_certainties = @certainties;
+    my $inc_border = ($op =~ /^[<>]=$/) ? 1 : 0;
+    if ($op =~ /^>/) {
+	@inc_severities = reverse @inc_severities;
+	@inc_certainties = reverse @inc_certainties;
+    }
+    my $severity = join("|", @severities);
+    my $certainty = join("|", @certainties);
+    if ($level =~ m/^($severity)$/) {
+	foreach my $s (cut_list($level, $inc_border, @inc_severities)) {
+	    map { $display_level{$s}{$_} = $val } @certainties;
+	}
+    } elsif ($level =~ m/^($certainty)$/) {
+	foreach my $c (cut_list($level, $inc_border, @inc_certainties)) {
+	    map { $display_level{$_}{$c} = $val } @severities;
+	}
+    } elsif ($level =~ m/^($severity)\/($certainty)$/) {
+	foreach my $s (cut_list($1, $inc_border, @inc_severities)) {
+	    foreach my $c (cut_list($2, $inc_border, @inc_certainties)) {
+		$display_level{$s}{$c} = $val;
+	    }
+	}
+    } else {
+	die "invalid argument to --display-level: $level\n";
+    }
+
+}
+
+sub cut_list {
+    my ($border, $inc_border, @list) = @_;
+
+    my (@newlist, $found);
+    foreach (@list) {
+	if ($_ eq $border) {
+	    push @newlist, $_ if $inc_border;
+	    $found = 1;
+	    last;
+	} else {
+	    push @newlist, $_;
+	}
+    }
+    die "internal error: cut_list did not find border $border\n"
+	unless $found;
+    if (!$inc_border and !@newlist
+	and $border eq $list[0]) {
+	warn "warning: display level $border specified with > (or <) is empty set, assuming >= (or <=)\n";
+	push @newlist, $list[0];
+    }
+
+    return @newlist;
+}
+
 # Parse input display level to enable (val 1) or disable (val 0) it
 # accordingly
 sub set_display_level {
     my ($level, $val) = @_;
+    if ($level =~ m/^([<>]=?)(.+)/) {
+	set_display_level_multi($1, $2, $val);
+	return;
+    }
+
     my $severity = join("|", @severities);
     my $certainty = join("|", @certainties);
     if ($level =~ m/^($severity)$/) {
