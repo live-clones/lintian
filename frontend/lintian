@@ -278,6 +278,33 @@ sub record_pkgmode {
     $pkg_mode = 'u' if $_[0] eq 'udeb';
 }
 
+# Process -L|--display-level flag
+sub record_display_level {
+    my $level = $_[1];
+    if ($level =~ m/^\+(.+)/) {
+	set_display_level($1, 1);
+    } elsif ($level =~ m/^\-(.+)/) {
+	set_display_level($1, 0);
+    } elsif ($level =~ m/^\=?(.+)/) {
+	reset_display_level();
+	set_display_level($1, 1);
+    } else {
+	die "invalid argument to --display-level: $level\n";
+    }
+}
+
+# Process -I|--display-info flag
+sub display_infotags {
+    foreach my $s (@severities) {
+	set_display_level($s, 1);
+    }
+}
+
+# Process --display-source flag
+sub record_display_source {
+    $display_source{$_[1]} = 1;
+}
+
 # Clears current display level information, disabling all severities and
 # certainties
 sub reset_display_level {
@@ -472,30 +499,6 @@ if (($check_everything or $packages_file) and $#ARGV+1 > 0) {
     print STDERR "(will ignore -a or -p option)\n";
     undef $check_everything;
     undef $packages_file;
-}
-
-sub record_display_level {
-    my $level = $_[1];
-    if ($level =~ m/^\+(.+)/) {
-	set_display_level($1, 1);
-    } elsif ($level =~ m/^\-(.+)/) {
-	set_display_level($1, 0);
-    } elsif ($level =~ m/^\=?(.+)/) {
-	reset_display_level();
-	set_display_level($1, 1);
-    } else {
-	die "invalid argument to --display-level: $level\n";
-    }
-}
-
-sub display_infotags {
-    foreach my $s (@severities) {
-	set_display_level($s, 1);
-    }
-}
-
-sub record_display_source {
-    $display_source{$_[1]} = 1;
 }
 
 # check permitted values for --color
