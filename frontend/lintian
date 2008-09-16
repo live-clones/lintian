@@ -428,10 +428,8 @@ my %opthash = (			# ------------------ actions
 
 # init display level settings
 reset_display_level();
-set_display_level('serious', 1);
-set_display_level('important', 1);
-set_display_level('normal/certain', 1);
-set_display_level('normal/possible', 1);
+set_display_level_multi('>=', 'important', 1);
+set_display_level_multi('>=', 'normal/possible', 1);
 set_display_level('minor/certain', 1);
 
 # init commandline parser

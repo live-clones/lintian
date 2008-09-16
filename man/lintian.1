@@ -162,6 +162,8 @@ without running lintian, see
 .TP
 .BR \-I ", " \-\-display\-info
 Display informational ("I:") tags as well.  They are normally suppressed.
+(This is \equivalent to
+.BR \-L " \(dq>=wishlist\(dq)."
 
 .TP
 .BR \-E ", " \-\-display\-experimental
@@ -172,7 +174,8 @@ Display experimental ("X:") tags as well.  They are normally suppressed.
 Fine-grained selection of tags to be displayed. It is possible to add, remove
 or set the levels to display, specifying a severity (S: serious, important,
 normal, minor, wishlist), a certainty (C: certain, possible, wild-guess), or
-both (S/C).
+both (S/C).  The default settings are equivalent to
+.BR \-L " \(dq>=important\(dq " \-L " \(dq+>=normal/possible\(dq " \-L " +minor/certain)."
 
 .TP
 .BR \-l " n, " \-\-unpack\-level " n"
