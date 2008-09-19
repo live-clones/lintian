@@ -24,19 +24,14 @@ use strict;
 
 use Pipeline;
 use Util;
+use Lintian::Output qw(:messages);
 
 use File::Temp;
 
 # Quiet "Name "main::LINTIAN_ROOT" used only once"
-# The variables comes from 'lintian'
-() = ($main::LINTIAN_ROOT, $main::verbose, $main::debug);
+() = ($main::LINTIAN_ROOT);
 
 my $LINTIAN_ROOT = $main::LINTIAN_ROOT;
-
-# Can also be more precise later on (only verbose with lab actions) but for
-# now this will do --Jeroen
-my $verbose = $main::verbose;
-my $debug   = $main::debug;
 
 sub new {
     my ( $class, $dir, $dist ) = @_;
@@ -90,7 +85,7 @@ sub setup_static {
     my ( $self ) = @_;
 
     unless ( $self->{mode} eq 'static' and $self->{dir} ) {
-	print STDERR "no laboratory specified (need to define LINTIAN_LAB)";
+	warning("no laboratory specified (need to define LINTIAN_LAB)");
 	return 0;
     }
 
@@ -103,7 +98,7 @@ sub setup_force {
 
     return unless $dir;
 
-    print "N: Setting up lab in $dir ...\n" if $verbose;
+    v_msg("Setting up lab in $dir ...");
 
     # create lab directory
     # (Note, that the mode 0777 is reduced by the current umask.)
@@ -145,7 +140,7 @@ sub populate_with_dist {
 
     print STDERR "spawning list-binpkg, list-udebpkg and list-srcpkg since LINTIAN_DIST=$dist\n" if ($debug >= 2);
 
-    my $v = $verbose ? '-v' : '';
+    my $v = $Lintian::Output::GLOBAL->verbose ? '-v' : '';
 
     spawn("$LINTIAN_ROOT/unpack/list-binpkg",
 	  "$self->{dir}/info/binary-packages", $v) == 0
@@ -164,7 +159,7 @@ sub delete_static {
     my ( $self ) = @_;
 
     unless ( $self->{mode} eq 'static' and $self->{dir} ) {
-	print STDERR "warning: no laboratory specified (need to define LINTIAN_LAB)";
+	warning("no laboratory specified (need to define LINTIAN_LAB)");
 	return 0;
     }
 
@@ -185,7 +180,7 @@ sub delete_force {
 
     return 0 unless $self->{dir};
 
-    print "N: Removing $self->{dir} ...\n" if $verbose;
+    v_msg("Removing $self->{dir} ...");
 
     # since we will chdir in a moment, make the path of the lab absolute
     unless ( $self->{dir} =~ m,^/, ) {
@@ -200,7 +195,7 @@ sub delete_force {
     # does the lab exist?
     unless (-d $self->{dir}) {
 		# no.
-		print STDERR "warning: cannot remove lab in directory $self->{dir} ! (directory does not exist)\n";
+		warning("cannot remove lab in directory $self->{dir} ! (directory does not exist)");
 		return 0;
     }
 
@@ -213,7 +208,7 @@ sub delete_force {
 			return 1;
 		} else {
 			# non-empty directory that does not look like a lintian lab!
-			print STDERR "warning: directory $self->{dir} does not look like a lab! (please remove it yourself)\n";
+			warning("directory $self->{dir} does not look like a lab! (please remove it yourself)");
 			return 0;
 		}
     }
@@ -224,13 +219,13 @@ sub delete_force {
 	      "$self->{dir}/source",
 	      "$self->{dir}/udeb",
 	      "$self->{dir}/info") != 0) {
-		print STDERR "warning: cannot remove lab directory $self->{dir} (please remove it yourself)\n";
+		warning("cannot remove lab directory $self->{dir} (please remove it yourself)");
     }
 
     # dynamic lab?
     if ($self->{mode} eq 'temporary') {
 		if (rmdir($self->{dir}) != 1) {
-			print STDERR "warning: cannot remove lab directory $self->{dir} (please remove it yourself)\n";
+			warning("cannot remove lab directory $self->{dir} (please remove it yourself)");
 		}
     }
 

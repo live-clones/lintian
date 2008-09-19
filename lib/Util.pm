@@ -37,6 +37,7 @@ our @EXPORT = qw(parse_dpkg_control
 
 use FileHandle;
 use Pipeline;
+use Lintian::Output qw(string);
 use Digest::MD5;
 
 # general function to read dpkg control files
@@ -260,17 +261,16 @@ sub perm2oct {
 # ------------------------
 
 sub fail {
-    my $str = "internal error";
+    my $str;
     if (@_) {
-	$str .= ": ".join( "\n", @_)."\n";
+	$str = string('internal error', @_);
     } elsif ($!) {
-	$str .= ": $!\n";
+	$str = string('internal error', "$!");
     } else {
-	$str .= ".\n";
+	$str = string('internal error');
     }
     $! = 2; # set return code outside eval()
     die $str;
-
 }
 
 1;
