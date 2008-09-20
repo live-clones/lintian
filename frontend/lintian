@@ -880,7 +880,8 @@ while (my $arg = shift) {
 		    my ($checksum,$size,$file) = split(/\s+/o, $_);
 		    $files{$file}{$alg} = $checksum;
 		    if ($files{$file}{size} != $size) {
-			tag( "file-size-mismatch-in-changes-file", $file );
+			tag( "file-size-mismatch-in-changes-file", $file,
+			     "$files{$file}{size} != $size" );
 		    }
 		}
 	    }
@@ -894,10 +895,10 @@ while (my $arg = shift) {
 		    warn "E: $file does not exist, exiting\n";
 		    exit(-1);
 		}
-		if (-s _ ne $files{$file}{size}) {
-		    print "N: size is $files{$file}{size}, argname is $arg_name, filename is $filename\n";
-
-		    tag( "file-size-mismatch-in-changes-file", $file );
+		my $size = -s _;
+		if ($size ne $files{$file}{size}) {
+		    tag( "file-size-mismatch-in-changes-file", $file,
+			 "$files{$file}{size} != $size");
 		}
 
 		# check checksums
