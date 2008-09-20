@@ -894,8 +894,8 @@ while (my $arg = shift) {
 
 		# check size
 		if (not -f $filename) {
-		    warn "E: $file does not exist, exiting\n";
-		    exit(-1);
+		    warning("$file does not exist, exiting");
+		    exit 2;
 		}
 		my $size = -s _;
 		if ($size ne $files{$file}{size}) {
@@ -997,20 +997,20 @@ while (my $arg = shift) {
 	    }
 	} elsif ($pkg_mode eq 's') {
 	    unless (-d $s) {
-		warn "error: cannot find source package $arg in $search (skipping)\n";
+		warning("cannot find source package $arg in $search (skipping)");
 		$exit_code = 2;
 		next;
 	    }
 	} elsif ($pkg_mode eq 'u') {
 	    unless (-d $u) {
-		warn "error: cannot find udeb package $arg in $search (skipping)\n";
+		warning("cannot find udeb package $arg in $search (skipping)");
 		$exit_code = 2;
 		next;
 	    }
 	} else {
 	    # $pkg_mode eq 'a'
 	    unless (-d $b or -d $s or -d $u) {
-		warn "error: cannot find binary, udeb or source package $arg in $search (skipping)\n";
+		warning("cannot find binary, udeb or source package $arg in $search (skipping)");
 		$exit_code = 2;
 		next;
 	    }
@@ -1389,7 +1389,7 @@ foreach my $pkg_info ($schedule->get_all) {
 
 	# unpack level defined?
 	unless (exists $data->{'unpack-level'}) {
-	    print "N: warning: cannot determine unpack-level of package\n" if $verbose;
+	    warning("cannot determine unpack-level of package");
 	    $remove_basedir = 1;
 	    goto REMOVE_BASEDIR;
         } else {
@@ -1400,7 +1400,7 @@ foreach my $pkg_info ($schedule->get_all) {
 	my $timestamp;
 	my @stat;
 	unless (@stat = stat $file) {
-	    print "N: Cannot stat file $file: $!\n";
+	    warning("cannot stat file $file: $!");
 	} else {
 	    $timestamp = $stat[9];
 	}
@@ -1414,7 +1414,7 @@ foreach my $pkg_info ($schedule->get_all) {
 	if ($remove_basedir) {
 	    v_msg("Removing $pkg");
 	    unless (remove_pkg($base)) {
-		print "N: Skipping $action of $long_type package $pkg\n";
+		warning("skipping $action of $long_type package $pkg");
 		$exit_code = 2;
 		next PACKAGE;
 	    }
@@ -1426,8 +1426,8 @@ foreach my $pkg_info ($schedule->get_all) {
     $act_unpack_level = unpack_pkg($type,$base,$file,$act_unpack_level,
 				   $unpack_level);
     if ($act_unpack_level == -1) {
-	print STDERR "internal error: could not unpack package to desired level: $!\n";
-	print "N: Skipping $action of $long_type package $pkg\n";
+	warning("could not unpack package to desired level: $!",
+		"skipping $action of $long_type package $pkg");
 	$exit_code = 2;
 	next PACKAGE;
     }
@@ -1445,16 +1445,16 @@ foreach my $pkg_info ($schedule->get_all) {
 	    # unpack to desired unpack level (if necessary)
 	    $act_unpack_level = unpack_pkg($type,$base,$file,$act_unpack_level,$ci->{'unpack-level'});
 	    if ($act_unpack_level == -1) {
-		print STDERR "internal error: could not unpack package to desired level: $!\n";
-		print "N: Skipping $action of $long_type package $pkg\n";
+		warning("could not unpack package to desired level: $!",
+			"skipping $action of $long_type package $pkg");
 		$exit_code = 2;
 		next PACKAGE;
 	    }
 
 	    # chdir to base directory
 	    unless (chdir($base)) {
-		print STDERR "internal error: could not chdir into directory $base: $!\n";
-		print "N: Skipping $action of $long_type package $pkg\n";
+		warning("could not chdir into directory $base: $!",
+			"skipping $action of $long_type package $pkg");
 		$exit_code = 2;
 		next PACKAGE;
 	    }
@@ -1463,8 +1463,8 @@ foreach my $pkg_info ($schedule->get_all) {
 	    remove_status_file($base);
 	    debug_msg(1, "Collecting info: $coll ...");
 	    if (spawn("$LINTIAN_ROOT/collection/$ci->{'script'}", $pkg, $long_type) != 0) {
-		print STDERR "internal error: collect info $coll about package $pkg: $?\n";
-		print "N: Skipping $action of $long_type package $pkg\n";
+		warning("collect info $coll about package $pkg: $?",
+			"skipping $action of $long_type package $pkg");
 		$exit_code = 2;
 		next PACKAGE;
 	    }
@@ -1505,16 +1505,16 @@ foreach my $pkg_info ($schedule->get_all) {
 	    # unpack to desired unpack level (if necessary)
 	    $act_unpack_level = unpack_pkg($type,$base,$file,$act_unpack_level,$ci->{'unpack-level'});
 	    if ($act_unpack_level == -1) {
-		print STDERR "internal error: could not unpack package to desired level: $!\n";
-		print "N: Skipping $action of $long_type package $pkg\n";
+		warning("could not unpack package to desired level: $!",
+			"skipping $action of $long_type package $pkg");
 		$exit_code = 2;
 		next PACKAGE;
 	    }
 
 	    # chdir to base directory
 	    unless (chdir($base)) {
-		print STDERR "internal error: could not chdir into directory $base: $!\n";
-		print "N: Skipping $action of $long_type package $pkg\n";
+		warning("could not chdir into directory $base: $!",
+			"skipping $action of $long_type package $pkg");
 		$exit_code = 2;
 		next PACKAGE;
 	    }
@@ -1524,7 +1524,7 @@ foreach my $pkg_info ($schedule->get_all) {
 	    $exit_code = $returnvalue unless $exit_code;
 
 	    if ($returnvalue == 2) {
-		print "N: Skipping $action of $long_type package $pkg\n";
+		warning("skipping $action of $long_type package $pkg");
 		next PACKAGE;
 	    }
 
@@ -1567,8 +1567,8 @@ foreach my $pkg_info ($schedule->get_all) {
 
     # chdir to lintian root directory (to unlock $base so it can be removed below)
     unless (chdir($LINTIAN_ROOT)) {
-	print STDERR "internal error: could not chdir into directory $LINTIAN_ROOT: $!\n";
-	print "N: Skipping $action of $long_type package $pkg\n";
+	warning("could not chdir into directory $LINTIAN_ROOT: $!",
+		"skipping $action of $long_type package $pkg");
 	$exit_code = 2;
 	next PACKAGE;
     }
@@ -1577,8 +1577,8 @@ foreach my $pkg_info ($schedule->get_all) {
     if ($act_unpack_level > $unpack_level) {
 	$act_unpack_level = clean_pkg($type,$base,$file,$act_unpack_level,$unpack_level);
 	if ($act_unpack_level == -1) {
-	    print STDERR "error: could not clean up laboratory for package $pkg: $!\n";
-	    print "N: Skipping clean up\n";
+	    warning("could not clean up laboratory for package $pkg: $!",
+		    "skipping clean up");
 	    $exit_code = 2;
 	    next PACKAGE;
 	}
@@ -1588,15 +1588,15 @@ foreach my $pkg_info ($schedule->get_all) {
     if (($act_unpack_level > 0) and (not -f "$base/.lintian-status")) {
 	my @stat;
 	unless (@stat = stat $file) {
-	    print STDERR "internal error: cannot stat file $file: $!\n";
-	    print "N: Skipping creation of status file\n";
+	    warning("cannot stat file $file: $!",
+		    "skipping creation of status file");
 	    $exit_code = 2;
 	    next PACKAGE;
 	}
 	my $timestamp = $stat[9];
 
 	unless (open(STATUS, '>', "$base/.lintian-status")) {
-	    print STDERR "internal error: could not create status file $base/.lintian-status for package $pkg: $!\n";
+	    warning("could not create status file $base/.lintian-status for package $pkg: $!");
 	    $exit_code = 2;
 	    next PACKAGE;
 	}
@@ -1726,7 +1726,7 @@ sub remove_pkg {
 
     debug_msg(1, "Removing package in lab ...");
     if (spawn('rm', '-rf', '--', $base) != 0) {
-	print STDERR "error: cannot remove directory $base: $!\n";
+	warning("cannot remove directory $base: $!");
 	return 0;
     }
 
@@ -1742,7 +1742,7 @@ sub remove_status_file {
     }
 
     if (not unlink("$base/.lintian-status")) {
-	print STDERR "internal error: cannot remove status file $base/.lintian-status: $!\n";
+	warning("cannot remove status file $base/.lintian-status: $!");
 	return 0;
     }
 
