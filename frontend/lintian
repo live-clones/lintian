@@ -51,7 +51,7 @@ our $display_experimentaltags = 0; #flag for -E|--display-experimental switch
 my $unpack_level = undef;	#flag for -l|--unpack-level switch
 our $no_override = 0;		#flag for -o|--no-override switch
 our $show_overrides = 0;	#flag for --show-overrides switch
-our $color = 'never';		#flag for --color switch
+my $color = 'never';		#flag for --color switch
 my $check_checksums = 0;	#flag for -m|--md5sums|--checksums switch
 my $allow_root = 0;		#flag for --allow-root switch
 my $fail_on_warnings = 0;       #flag for --fail-on-warnings switch
@@ -644,11 +644,11 @@ if (defined $experimental_output_opts) {
     foreach (keys %opts) {
 	if ($_ eq 'format') {
 	    if ($opts{$_} eq 'colons') {
-		require Tags::ColonSeparated;
-		$Tags::output_formatter = \&Tags::ColonSeparated::print_tag;
+		require Lintian::Output::ColonSeparated;
+		$Lintian::Output::GLOBAL = new Lintian::Output::ColonSeparated;
 	    } elsif ($opts{$_} eq 'letterqualifier') {
-		require Tags::LetterQualifier;
-		$Tags::output_formatter = \&Tags::LetterQualifier::print_tag;
+		require Lintian::Output::LetterQualifier;
+		$Lintian::Output::GLOBAL = new Lintian::Output::LetterQualifier;
 	    }
 	}
 	no strict 'refs';
@@ -683,7 +683,6 @@ $Tags::show_experimental = $display_experimentaltags;
 $Tags::show_overrides = $show_overrides;
 %Tags::display_level = %display_level;
 %Tags::display_source = %display_source;
-$Tags::color = $color;
 %Tags::only_issue_tags = map { $_ => 1 } (split(/,/, $check_tags))
     if defined $check_tags;
 use warnings;

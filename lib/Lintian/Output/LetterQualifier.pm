@@ -16,13 +16,16 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Tags::LetterQualifier;
+package Lintian::Output::LetterQualifier;
 
 use strict;
 use warnings;
 
-use Term::ANSIColor;
-use Tags;
+use Term::ANSIColor qw(colored);
+use Tags ();
+
+use Lintian::Output qw(:util);
+use base qw(Lintian::Output);
 
 my %codes = (
     'wishlist' => {
@@ -52,7 +55,7 @@ my %codes = (
     },
 );
 
-my %colors = (
+my %lq_default_colors = (
     'wishlist' => {
         'wild-guess' => 'green',
         'possible' => 'green',
@@ -80,8 +83,17 @@ my %colors = (
     },
 );
 
+sub new {
+    my $self = Lintian::Output::new('Lintian::Output::LetterQualifier');
+
+    $self->colors({%lq_default_colors});
+
+    return $self;
+}
+
+
 sub print_tag {
-    my ( $pkg_info, $tag_info, $information ) = @_;
+    my ( $self, $pkg_info, $tag_info, $information ) = @_;
 
     my $code = Tags::get_tag_code($tag_info);
     $code = 'X' if exists $tag_info->{experimental};
@@ -99,13 +111,13 @@ sub print_tag {
     my $extra = @$information ? " @$information" : '';
     $extra = '' if $extra eq ' ';
 
-    if ($Tags::color eq 'always' || ($Tags::color eq 'auto' && -t STDOUT)) {
-        my $color = $colors{$sev}{$cer};
+    if ($self->_do_color) {
+        my $color = $self->colors->{$sev}{$cer};
         $lq = colored($lq, $color);
         $tag = colored($tag, $color);
     }
 
-    print "$code\[$lq\]: $pkg$type: $tag$extra\n";
+    $self->_print('', "$code\[$lq\]: $pkg$type", "$tag$extra");
 }
 
 1;

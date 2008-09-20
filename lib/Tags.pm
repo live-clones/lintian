@@ -28,20 +28,11 @@ use Exporter;
 our @ISA    = qw(Exporter);
 our @EXPORT = qw(tag);
 
-# support for ANSI color output via colored()
-use Term::ANSIColor;
-
-# Quiet "Name "main::LINTIAN_ROOT" used only once"
-# The variables comes from 'lintian'
-() = ($main::verbose, $main::debug);
+use Lintian::Output;
 
 # configuration variables and defaults
-our $verbose = $::verbose;
-our $debug = $::debug;
 our $show_experimental = 0;
 our $show_overrides = 0;
-our $output_formatter = \&print_tag;
-our $color = 'never';
 our %display_level;
 our %display_source;
 our %only_issue_tags;
@@ -86,8 +77,6 @@ my %codes = (
     'important' => { 'wild-guess' => 'W', 'possible' => 'E', 'certain' => 'E' },
     'serious'   => { 'wild-guess' => 'E', 'possible' => 'E', 'certain' => 'E' },
 );
-
-my %colors = ( 'E' => 'red' , 'W' => 'yellow' , 'I' => 'cyan' );
 
 my %type_to_sev = (
     'error' => 'important',
@@ -276,38 +265,6 @@ sub get_stats {
     return \%stats;
 }
 
-# Color tags with HTML.  Takes the tag and the color name.
-sub colored_html {
-    my ($tag, $color) = @_;
-    return qq(<span style="color: $color">$tag</span>);
-}
-
-sub print_tag {
-    my ( $pkg_info, $tag_info, $information ) = @_;
-
-    my $extra = '';
-    $extra = " @$information" if @$information;
-    $extra = '' if $extra eq ' ';
-    my $code = get_tag_code($tag_info);
-    my $tag_color = $colors{$code};
-    $code = 'X' if exists $tag_info->{experimental};
-    $code = 'O' if $tag_info->{overridden}{override};
-    my $type = '';
-    $type = " $pkg_info->{type}" if $pkg_info->{type} ne 'binary';
-
-    my $output = "$code: $pkg_info->{pkg}$type: ";
-    if ($color eq 'always' || ($color eq 'auto' && -t STDOUT)) {
-        $output .= colored($tag_info->{tag}, $tag_color);
-    } elsif ($color eq 'html') {
-        $output .= colored_html($tag_info->{tag}, $tag_color);
-    } else {
-        $output .= $tag_info->{tag};
-    }
-    $output .= "$extra\n";
-
-    print $output;
-}
-
 # Extract manual sources from a given tag. Returns a hash that has manual
 # names as keys and sections/ids has values.
 sub get_tag_source {
@@ -378,7 +335,8 @@ sub tag {
 
     return 1 if skip_print( $tag_info );
 
-    &$output_formatter( $info{$current}, $tag_info, \@information );
+    $Lintian::Output::GLOBAL->print_tag( $info{$current}, $tag_info,
+					 \@information );
     return 1;
 }
 

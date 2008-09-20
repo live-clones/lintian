@@ -113,14 +113,21 @@ sub print_tag {
     $type = " $pkg_info->{type}" if $pkg_info->{type} ne 'binary';
 
     my $tag;
-    if ($self->color eq 'always'
-	|| ($self->color eq 'auto' && -t $self->stdout)) {
+    if ($self->_do_color) {
 	$tag .= Term::ANSIColor::colored($tag_info->{tag}, $tag_color);
     } else {
 	$tag .= $tag_info->{tag};
     }
 
     $self->_print('', "$code: $pkg_info->{pkg}$type", "$tag$extra");
+}
+
+sub _do_color {
+    my ($self) = @_;
+
+    return ($self->color eq 'always'
+	    || ($self->color eq 'auto'
+		&& -t $self->stdout));
 }
 
 sub delimiter {
