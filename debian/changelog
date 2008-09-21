@@ -7,6 +7,8 @@ lintian (2.0.0) unstable; urgency=low
   * checks/copyright-file:
     + [FL] Also detect v1.1 of CeCILL license, not only v2.0.
       (Closes: #498994)
+  * checks/debhelper:
+    + [FL] Use new Lintian::Collect::Source->binaries method.
   * checks/fields{,.desc}:
     + [FL] Warn about Perl module packages superseded by Perl
       core.  Patch by Niko Tyni.  (Closes: #498897)
@@ -16,6 +18,10 @@ lintian (2.0.0) unstable; urgency=low
   
   * frontend/lintian:
     + [FL] Add support for ranges to --display-level.
+  
+  * lib/Lintian/Collect/Source.pm:
+    + [FL] New binaries method that returns a hash with binary package
+      names and types.
 
  -- Frank Lichtenheld <djpig@debian.org>  Tue, 16 Sep 2008 19:34:29 +0200
 

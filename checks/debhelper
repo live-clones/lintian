@@ -27,6 +27,7 @@ sub run {
 
 my $pkg = shift;
 my $type = shift;
+my $info = shift;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Dep;
@@ -146,23 +147,8 @@ close RULES;
 
 return unless $seencommand;
 
-# We may need to make a difference between deb and udeb packages
-# so try to find out
-my (%pkgs, $single_pkg);
-opendir(BINPKGS, 'control')
-    or fail("Can't open control directory.");
-while(my $binpkg = readdir(BINPKGS)) {
-    next if $binpkg =~ /^\.\.?$/;
-    if (-d "control/$binpkg") {
-        if (open TYPE, "<", "control/$binpkg/xc-package-type") {
-            $pkgs{$binpkg} = <TYPE> || 'deb';
-        } else {
-            $pkgs{$binpkg} = 'deb';
-        }
-	$single_pkg = $pkgs{$binpkg};
-    }
-}
-$single_pkg = undef unless keys(%pkgs) == 1;
+my $pkgs = $info->binaries;
+my $single_pkg = keys(%$pkgs) == 1 ? $pkgs->{(keys(%$pkgs))[0]} : '';
 
 # If we got this far, they need to have #DEBHELPER# in their scripts.  Search
 # for scripts that look like maintainer scripts.  Also collect dependency
@@ -185,8 +171,9 @@ while (defined(my $file=readdir(DEBIAN))) {
 	close IN;
 
 	if ((! $seentag) and $needtomodifyscripts) {
-	    unless (($binpkg && $pkgs{$binpkg} && ($pkgs{$binpkg} =~ /udeb/i))
-		    or (!$binpkg && $single_pkg && ($single_pkg =~ /udeb/i))) {
+	    unless (($binpkg && exists($pkgs->{$binpkg})
+		     && ($pkgs->{$binpkg} eq 'udeb'))
+		    or (!$binpkg && ($single_pkg eq 'udeb'))) {
 		tag "maintainer-script-lacks-debhelper-token", "debian/$file";
 	    }
 	}

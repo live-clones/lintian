@@ -66,6 +66,35 @@ sub native {
     return $self->{native};
 }
 
+# List of binary packages and their type if specified
+sub binaries {
+    my ($self) = @_;
+    return $self->{binaries} if exists $self->{binaries};
+
+    my %pkgs;
+    opendir(BINPKGS, 'control')
+        or fail("Can't open control directory.");
+    while (my $binpkg = readdir(BINPKGS)) {
+        next if $binpkg =~ /^\.\.?$/;
+        if (-d "control/$binpkg") {
+            if (open TYPE, "<", "control/$binpkg/xc-package-type") {
+                my $type = <TYPE> || '';
+                chomp $type;
+                $type = lc $type;
+                $pkgs{$binpkg} = $type || 'deb';
+                close TYPE;
+            } else {
+                $pkgs{$binpkg} = 'deb';
+            }
+        }
+    }
+    closedir BINPKGS;
+
+    $self->{binaries} = \%pkgs;
+
+    return $self->{binaries};
+}
+
 =head1 NAME
 
 Lintian::Collect::Source - Lintian interface to source package data collection
@@ -117,6 +146,11 @@ file, which this method expects to find in F<debfiles/changelog>.
 =item native()
 
 Returns true if the source package is native and false otherwise.
+
+=item binaries()
+
+Returns a hash reference with the binary package names as keys and the
+Package-Type as value (which should be either 'deb' or 'udeb' currently).
 
 =back
 
