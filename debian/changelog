@@ -1,8 +1,15 @@
 lintian (2.0.0) unstable; urgency=low
 
+  * Summary of tag changes:
+    + Added:
+      - package-superseded-by-perl
+  
   * checks/copyright-file:
     + [FL] Also detect v1.1 of CeCILL license, not only v2.0.
       (Closes: #498994)
+  * checks/fields{,.desc}:
+    + [FL] Warn about Perl module packages superseded by Perl
+      core.  Patch by Niko Tyni.  (Closes: #498897)
   
   * frontend/lintian:
     + [FL] Add support for ranges to --display-level.
