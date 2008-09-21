@@ -15,6 +15,10 @@ lintian (2.0.0) unstable; urgency=low
   * checks/scripts:
     + [FL] Accept the ocaml virtual packages as providing ocamlrun.
       Based on a patch by Stephane Glondu.  (Closes: #495431)
+  * checks/standards-version:
+    + [FL] Use new Lintian::Collect::Source->binaries method to
+      fix udeb detection.  Thanks to Raphael Geissert.
+      (Closes: #498096)
   
   * frontend/lintian:
     + [FL] Add support for ranges to --display-level.
