@@ -1,4 +1,4 @@
-lintian (2.0.0) unstable; urgency=low
+lintian (2.0.0~rc2) experimental; urgency=low
 
   * Summary of tag changes:
     + Added:
@@ -27,7 +27,7 @@ lintian (2.0.0) unstable; urgency=low
     + [FL] New binaries method that returns a hash with binary package
       names and types.
 
- -- Frank Lichtenheld <djpig@debian.org>  Tue, 16 Sep 2008 19:34:29 +0200
+ -- Frank Lichtenheld <djpig@debian.org>  Sun, 21 Sep 2008 15:56:51 +0200
 
 lintian (2.0.0~rc1) experimental; urgency=low
 
