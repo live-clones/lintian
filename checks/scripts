@@ -245,7 +245,7 @@ for my $filename (sort keys %{$info->scripts}) {
     # Skip files that have the #! line, but are not executable and do not have
     # an absolute path and are not in a bin/ directory (/usr/bin, /bin etc)
     # They are probably not scripts after all.
-    next if ($filename !~ m,(bin/|etc/init.d/), and !$executable{$filename}
+    next if ($filename !~ m,(bin/|etc/init\.d/), and !$executable{$filename}
              and !$is_absolute);
 
     if ($interpreter eq "") {
@@ -265,13 +265,13 @@ for my $filename (sort keys %{$info->scripts}) {
 		or $filename =~ m,\.ex$,
 		or $filename eq './etc/init.d/skeleton'
 		or $filename =~ m,^\./etc/menu-methods,
-		or $filename =~ m,^\./etc/X11/Xsession.d,);
+		or $filename =~ m,^\./etc/X11/Xsession\.d,);
 
     # Warn about csh scripts.
     tag("csh-considered-harmful", $filename)
         if (($base eq 'csh' or $base eq 'tcsh')
 	    and $executable{$filename}
-	    and $filename !~ m,^./etc/csh/login.d/,);
+	    and $filename !~ m,^\./etc/csh/login\.d/,);
 
     # Syntax-check most shell scripts, but don't syntax-check scripts that end
     # in .dpatch.  bash -n doesn't stop checking at exit 0 and goes on to blow
@@ -333,9 +333,9 @@ for my $filename (sort keys %{$info->scripts}) {
 	if ($depends && !Dep::implies($deps{all}, Dep::parse($depends))) {
 	    if ($base =~ /^(python|ruby|(m|g)awk)$/) {
 		tag("$base-script-but-no-$base-dep", $filename);
-	    } elsif ($base eq 'csh' && $filename =~ m,^\./etc/csh/login.d/,) {
+	    } elsif ($base eq 'csh' && $filename =~ m,^\./etc/csh/login\.d/,) {
 		# Initialization files for csh.
-	    } elsif ($base eq 'fish' && $filename =~ m,^./etc/fish.d/,) {
+	    } elsif ($base eq 'fish' && $filename =~ m,^\./etc/fish\.d/,) {
 		# Initialization files for fish.
 	    } else {
 		tag('missing-dep-for-interpreter', "$base => $depends",
@@ -530,10 +530,10 @@ while (<SCRIPTS>) {
 	# doesn't exist, only tag direct invocations where invoke-rc.d is
 	# never used in the same script.  Lots of false negatives, but
 	# hopefully not many false positives.
-	if (m%^\s*/etc/init.d/(\S+)\s+[\"\']?(\S+)[\"\']?%) {
+	if (m%^\s*/etc/init\.d/(\S+)\s+[\"\']?(\S+)[\"\']?%) {
 	    $saw_init = $.;
 	}
-	if (m%^\s*invoke-rc.d\s+%) {
+	if (m%^\s*invoke-rc\.d\s+%) {
 	    $saw_invoke = $.;
 	}
 
