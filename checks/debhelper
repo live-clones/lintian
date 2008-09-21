@@ -20,29 +20,11 @@
 
 package Lintian::debhelper;
 use strict;
-use Tags;
-use Util;
-
-sub run {
-
-my $pkg = shift;
-my $type = shift;
-my $info = shift;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Dep;
-
-my %commands;
-
-my $seencommand = '';
-my $needbuilddepends = '';
-my $needtomodifyscripts = '';
-my $needversiondepends = '';
-my $seenversiondepends = '0';
-my $compat = '';
-my $usescdbs = '';
-my $seendhpython = '';
-my $usescdbspython = '';
+use Tags;
+use Util;
 
 # If there is no debian/compat file present but cdbs is being used, cdbs will
 # create one automatically.  Currently it always uses compatibility level 5.
@@ -56,6 +38,7 @@ my $cdbscompat = 5;
 # commands can be found by "grep -l autoscript /usr/bin/dh_*", but I'll
 # hardcode them here.
 
+my %commands;
 map { $commands{$_}=1 } qw(dh_desktop
 			   dh_gconf
 			   dh_icons
@@ -91,6 +74,23 @@ my %versions
        dh_installifupdown => '5.0.44~',
        dh_lintian         => '6.0.7~',
        dh                 => '7');
+
+
+sub run {
+
+my $pkg = shift;
+my $type = shift;
+my $info = shift;
+
+my $seencommand = '';
+my $needbuilddepends = '';
+my $needtomodifyscripts = '';
+my $needversiondepends = '';
+my $seenversiondepends = '0';
+my $compat = '';
+my $usescdbs = '';
+my $seendhpython = '';
+my $usescdbspython = '';
 
 open(RULES, '<', "debfiles/rules") or fail("cannot read debian/rules: $!");
 my $dhcompatvalue;
