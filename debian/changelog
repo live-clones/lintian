@@ -10,6 +10,9 @@ lintian (2.0.0) unstable; urgency=low
   * checks/fields{,.desc}:
     + [FL] Warn about Perl module packages superseded by Perl
       core.  Patch by Niko Tyni.  (Closes: #498897)
+  * checks/scripts:
+    + [FL] Accept the ocaml virtual packages as providing ocamlrun.
+      Based on a patch by Stephane Glondu.  (Closes: #495431)
   
   * frontend/lintian:
     + [FL] Add support for ranges to --display-level.

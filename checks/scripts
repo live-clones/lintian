@@ -337,6 +337,8 @@ for my $filename (sort keys %{$info->scripts}) {
 		# Initialization files for csh.
 	    } elsif ($base eq 'fish' && $filename =~ m,^\./etc/fish\.d/,) {
 		# Initialization files for fish.
+	    } elsif ($base eq 'ocamlrun' && $all_deps =~ /\bocaml(-base)?(-nox)?-\d\.[\d.]+/) {
+		# ABI-versioned virtual packages for ocaml
 	    } else {
 		tag('missing-dep-for-interpreter', "$base => $depends",
 		    "($filename)");
