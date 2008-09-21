@@ -12,6 +12,9 @@ lintian (2.0.0~rc2) experimental; urgency=low
   * checks/fields{,.desc}:
     + [FL] Warn about Perl module packages superseded by Perl
       core.  Patch by Niko Tyni.  (Closes: #498897)
+  * checks/rules:
+    + [FL] Do not issue desktop-file-but-no-dh_desktop-call if the
+      package uses dh.  (Closes: #497247)
   * checks/scripts:
     + [FL] Accept the ocaml virtual packages as providing ocamlrun.
       Based on a patch by Stephane Glondu.  (Closes: #495431)
