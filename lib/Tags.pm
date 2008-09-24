@@ -111,8 +111,8 @@ sub set_pkg {
 	return 0;
     }
 
-    $current = $file;
     $info{$file} = {
+	file => $file,
 	pkg => $pkg,
 	version => $version,
 	arch => $arch,
@@ -125,6 +125,7 @@ sub set_pkg {
 	overrides => {},
     };
 
+    select_pkg($file);
     return 1;
 }
 
@@ -138,12 +139,19 @@ sub select_pkg {
 	return 0;
     }
 
+    if ($current) {
+	$Lintian::Output::GLOBAL->print_end_pkg($info{$current});
+    }
     $current = $file;
+    $Lintian::Output::GLOBAL->print_start_pkg($info{$current});
     return 1;
 }
 
 # only delete the value of 'current' without deleting any stored information
 sub reset_pkg {
+    if ($current) {
+	$Lintian::Output::GLOBAL->print_end_pkg($info{$current});
+    }
     undef $current;
     return 1;
 }

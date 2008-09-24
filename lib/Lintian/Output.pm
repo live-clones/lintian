@@ -209,16 +209,47 @@ sub delimiter {
     return $self->_delimiter;
 }
 
+=item C<string($lead, @args)>
+
+TODO: Is this part of the public interface?
+
+=cut
+
+sub string {
+    my ($self, $lead, @args) = _global_or_object(@_);
+
+    my $output = '';
+    if (@args) {
+	foreach (@args) {
+	    $output .= $lead.': '.$_."\n";
+	}
+    } elsif ($lead) {
+	$output .= $lead.".\n";
+    }
+
+    return $output;
+}
+
+=back
+
+=head1 INSTANCE METHODS FOR CONTEXT-AWARE OUTPUT
+
+The following methods are designed to be called at specific points
+during program execution and require very specific arguments.  They
+can only be called as instance methods.
+
+=over 4
+
 =item C<print_tag($pkg_info, $tag_info, $extra)>
 
 Print a tag.  The first two arguments are hash reference with the information
 about the package and the tag, $extra is the extra information for the tag
-(if any) as an array reference.  Tags::tag() is a wrapper around this.
+(if any) as an array reference.  Called from Tags::tag().
 
 =cut
 
 sub print_tag {
-    my ( $self, $pkg_info, $tag_info, $information ) = _global_or_object(@_);
+    my ($self, $pkg_info, $tag_info, $information) = @_;
 
     my $extra = '';
     $extra = " @$information" if @$information;
@@ -240,33 +271,38 @@ sub print_tag {
     $self->_print('', "$code: $pkg_info->{pkg}$type", "$tag$extra");
 }
 
-=item C<string($lead, @args)>
+=item C<print_start_pkg($pkg_info)>
 
-TODO: Is the part of the public interface?
+Called before lintian starts to handle each package.  The version in
+Lintian::Output uses v_msg() for output.  Called from Tags::select_pkg().
 
 =cut
 
-sub string {
-    my ($self, $lead, @args) = _global_or_object(@_);
+sub print_start_pkg {
+    my ($self, $pkg_info) = @_;
 
-    my $output = '';
-    if (@args) {
-	foreach (@args) {
-	    $output .= $lead.': '.$_."\n";
-	}
-    } elsif ($lead) {
-	$output .= $lead.".\n";
-    }
+    $self->v_msg($self->delimiter,
+		 "Processing $pkg_info->{type} package $pkg_info->{pkg} (version $pkg_info->{version}) ...");
+}
 
-    return $output;
+=item C<print_start_pkg($pkg_info)>
+
+Called after lintian is finished with a package.  The version in
+Lintian::Output does nothing.  Called from Tags::select_pkg() and
+Tags::reset_pkg().
+
+=cut
+
+sub print_end_pkg {
 }
 
 =back
 
-=head1 INSTANCE METHODS (for subclassing)
+=head1 INSTANCE METHODS FOR SUBCLASSING
 
 The following methods are only intended for subclassing and are
-only available as instance methods.  The methods mentioned above
+only available as instance methods.  The methods mentioned in
+L<CLASS/INSTANCE METHODS>
 usually only check whether they should do anything at all (according
 to the values of quiet, verbose, and debug) and then call one of
 the following methods to do the actual printing. Allmost all of them

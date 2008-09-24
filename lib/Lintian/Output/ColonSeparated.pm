@@ -27,7 +27,7 @@ use Lintian::Output qw(:util);
 use base qw(Lintian::Output);
 
 sub print_tag {
-    my ( $self, $pkg_info, $tag_info, $information ) = _global_or_object(@_);
+    my ($self, $pkg_info, $tag_info, $information) = @_;
 
     my $extra = "@$information";
 

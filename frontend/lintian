@@ -1336,7 +1336,6 @@ foreach my $pkg_info ($schedule->get_all) {
     my $long_type = ($type eq 'b' ? 'binary' :
 		     ($type eq 's' ? 'source' : 'udeb' ));
 
-    v_msg(delimiter(), "Processing $long_type package $pkg (version $ver) ...");
     Tags::set_pkg( $file, $pkg, $ver, $arch, $long_type );
 
     # determine base directory
@@ -1610,6 +1609,7 @@ foreach my $pkg_info ($schedule->get_all) {
 	close(STATUS);
     }
 }
+Tags::reset_pkg();
 if ($action eq 'check' and not $no_override and not $show_overrides) {
     my $errors = $overrides{errors} || 0;
     my $warnings = $overrides{warnings} || 0;

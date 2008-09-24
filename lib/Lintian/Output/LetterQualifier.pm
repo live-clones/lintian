@@ -93,7 +93,7 @@ sub new {
 
 
 sub print_tag {
-    my ( $self, $pkg_info, $tag_info, $information ) = @_;
+    my ($self, $pkg_info, $tag_info, $information) = @_;
 
     my $code = Tags::get_tag_code($tag_info);
     $code = 'X' if exists $tag_info->{experimental};
