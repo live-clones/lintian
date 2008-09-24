@@ -1,3 +1,11 @@
+lintian (2.0.0) UNRELEASED; urgency=low
+
+  * checks/fields:
+    + [RA] Allow tildes in the optional version number in the Source
+      field.  Thanks, Rene Engelhard.  (Closes: #500063)
+
+ -- Russ Allbery <rra@debian.org>  Wed, 24 Sep 2008 11:13:27 -0700
+
 lintian (2.0.0~rc2) experimental; urgency=low
 
   * Summary of tag changes:

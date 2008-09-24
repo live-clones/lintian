@@ -286,7 +286,7 @@ if (not defined $info->field('source')) {
 	} else {
 		if ($source !~ /[A-Z0-9][-+\.A-Z0-9]+                      #Package name
 		                \s*
-		                (?:\((?:\d+:)?(?:[-\.+:A-Z0-9]+?)(?:-[\.+A-Z0-9]+)?\))?\s*$/ix) { #Version
+		                (?:\((?:\d+:)?(?:[-\.+:A-Z0-9~]+?)(?:-[\.+A-Z0-9~]+)?\))?\s*$/ix) { #Version
 			tag "source-field-malformed", "$source";
 		}
 	}
