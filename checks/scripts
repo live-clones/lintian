@@ -586,7 +586,7 @@ while (<SCRIPTS>) {
 		  qr'(test|-o|-a)\s*[^\s]+\s+==\s', # should be 'b = a'
 		  qr'\[\s+[^\]]+\s+==\s',        # should be 'b = a'
 		  qr'\s(\|\&)',		         # pipelining is not POSIX
-		  qr'[^\\\$]\{(?:[^\s\\\}]+?,)+[^\\\}\s]+\}', # brace expansion
+		  qr'[^\\\$]\{(?:[^\s\\\}]*?,)+[^\\\}\s]*\}', # brace expansion
 		  qr'(?:^|\s+)\w+\[\d+\]=',      # bash arrays, H[0]
 		  $LEADIN . qr'read\s+(?:-[a-qs-zA-Z\d-]+)',
 			# read with option other than -r
