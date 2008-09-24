@@ -649,6 +649,9 @@ if (defined $experimental_output_opts) {
 	    } elsif ($opts{$_} eq 'letterqualifier') {
 		require Lintian::Output::LetterQualifier;
 		$Lintian::Output::GLOBAL = new Lintian::Output::LetterQualifier;
+	    } elsif ($opts{$_} eq 'xml') {
+		require Lintian::Output::XML;
+		$Lintian::Output::GLOBAL = new Lintian::Output::XML;
 	    }
 	}
 	no strict 'refs';
