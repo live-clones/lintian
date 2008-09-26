@@ -14,6 +14,9 @@ lintian (2.0.0) UNRELEASED; urgency=low
 
   * man/lintian.1:
     + [FL] Remove a stray backslash.
+  
+  * reporting/harness:
+    + [FL] Include STDERR output in lintian.log.
 
  -- Russ Allbery <rra@debian.org>  Wed, 24 Sep 2008 11:13:27 -0700
 
