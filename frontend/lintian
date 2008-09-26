@@ -553,9 +553,9 @@ if ($LINTIAN_CFG) {
 	s,\~/,$ENV{'HOME'}/,go;
 
 	my $found = 0;
-	foreach (VARS) {
+	foreach my $var (VARS) {
 	    no strict 'refs';
-	    my $var = "LINTIAN_$_";
+	    $var = "LINTIAN_$var";
 	    if (m/^\s*$var\s*=\s*(.*\S)\s*$/i) {
 		$$var = $1;
 		$found = 1;
@@ -563,8 +563,7 @@ if ($LINTIAN_CFG) {
 	    }
 	}
 	unless ($found) {
-	    die("syntax error in configuration file: $_",
-		"(Note, that the syntax of the configuration file has been changed\nwith Lintian v0.3.0. In most cases, you don't need a configuration\nfile anymore -- just remove it.)");
+	    die "syntax error in configuration file: $_\n";
 	}
     }
     close(CFG);

@@ -8,6 +8,9 @@ lintian (2.0.0) UNRELEASED; urgency=low
     + [ADB] Detect brace expansions with either a leading or trailing
       blank component (e.g. "{foo,}"). Thanks to Jonny Lamb for pointing
       this out.
+  
+  * frontend/lintian:
+    + [FL] Fix config file parsing which I completly broke in ~rc1.
 
   * man/lintian.1:
     + [FL] Remove a stray backslash.
