@@ -1,31 +1,19 @@
 Not intended for single bug fixes, use the confirmed and owner tags
 in the BTS, but for somewhat bigger tasks
 
-goals for 1.24.0 [???]
-======================
+goals for 2.0.0
+===============
 
 - go through all checks and try to move common code to modules
   -- partly done
-- overhaul the Errors/Warnings concept
-  (#197955, #189656)
-  -- will make a proposal after 1.23.1 is released, djpig
-  -- rra: I think we need to classify tags on three axes:
-     --- source of check (policy, devref, library, utility man page)
-     --- reliability (how sure is lintian the problem is present)
-     --- severity (how big of a problem is this)
-     where the last corresponds to the current errors/warnings concept and
-     the others aren't currently present.  We then need to allow users to
-     select what they want to see based on any of the three criteria; for
-     instance, ftp-master may want to run lintian in a mode that only does
-     Policy and "package would be broken" checks with severity error and
-     the top reliability rating.
+- overhaul the Errors/Warnings concept (#243976)
+  -- mostly done
+  We still need official support for alternative output formats.
+  The current stuff is still experimental. [2.1.0?]
 
 goals not targetted
 ===================
 
-- #118170: [frontend] lintian needs lots of space in /tmp
-  should be tackled, don't know when, though
-- go through the test suite and organise it more cleanly
 - update doc/CREDITS file
 - Go through testset/libbaz/debian/rules, and make sure all TODO's are
   lintian-detected
@@ -37,13 +25,13 @@ goals not targetted
 goals outside of the lintian source
 ===================================
 
-- get lintian.debian.org working again with the current lintian
 - set up system for automatically filing bugs based on specific lintian
   tags (the most reliable ones), with usertags to ensure the bugs aren't
   repeatedly filed
 - set up lintian for use on ftp-master so that it can be used to
   automatically REJECT packages with particular errors.  will require a
   mode that only runs important checks that are highly reliable
+  -- our side mostly done, needs to be implemented by ftp-master now
 
 old todo list
 =============
