@@ -90,7 +90,11 @@ sub add_pkg_list {
     while (<IN>) {
 	chomp;
 	my ($type, $pkg, $ver, $file) = split(/\s+/, $_, 4);
-	$self->add_file($type, $file, package => $pkg, version => $ver);
+	if ($type eq 's') {
+	    $self->add_file($type, $file, source => $pkg, version => $ver);
+	} else {
+	    $self->add_file($type, $file, package => $pkg, version => $ver);
+	}
     }
     close(IN);
 }

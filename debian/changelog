@@ -11,6 +11,9 @@ lintian (2.0.0) UNRELEASED; urgency=low
   
   * frontend/lintian:
     + [FL] Fix config file parsing which I completly broke in ~rc1.
+  
+  * lib/Lintian/Schedule.pm:
+    + [FL] Fix parsing of source package entries in package lists.
 
   * man/lintian.1:
     + [FL] Remove a stray backslash.
