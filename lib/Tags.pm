@@ -207,7 +207,7 @@ sub get_tag_info {
 
 # Returns the E|W|I code for a given tag.
 sub get_tag_code {
-    my ( $tag_info, $map ) = @_;
+    my ( $tag_info ) = @_;
     return $codes{$tag_info->{severity}}{$tag_info->{certainty}};
 }
 
