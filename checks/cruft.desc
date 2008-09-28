@@ -7,7 +7,6 @@ Info: This looks for cruft in Debian packaging or upstream source
 Needs-Info: debfiles, diffstat
 
 Tag: native-package-with-dash-version
-Type: warning
 Severity: normal
 Certainty: certain
 Info: Native packaging should only be used if a piece of software was
@@ -19,14 +18,12 @@ Info: Native packaging should only be used if a piece of software was
  searches for this in ../package_upstream-version.orig.tar.gz.
 
 Tag: documentation-package-not-architecture-independent
-Type: warning
 Severity: normal
 Certainty: certain
 Info: Documentation packages usually shouldn't carry anything that requires
  recompiling on various architectures, in order to save space on mirrors.
 
 Tag: debian-files-list-in-source
-Type: error
 Severity: important
 Certainty: certain
 Info: Leaving <tt>debian/files</tt> causes problems for the autobuilders,
@@ -37,7 +34,6 @@ Info: Leaving <tt>debian/files</tt> causes problems for the autobuilders,
 Ref: policy 4.12
 
 Tag: diff-contains-cvs-control-dir
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The Debian diff or native package contains files in a CVS directory.
@@ -47,7 +43,6 @@ Info: The Debian diff or native package contains files in a CVS directory.
  automatically exclude them.
 
 Tag: source-contains-cvs-control-dir
-Type: info
 Severity: wishlist
 Certainty: certain
 Info: The upstream source contains a CVS directory.  It was most likely
@@ -57,7 +52,6 @@ Info: The upstream source contains a CVS directory.  It was most likely
  usually should report this as a bug to upstream.
 
 Tag: diff-contains-svn-control-dir
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The Debian diff or native package contains files in an .svn
@@ -67,7 +61,6 @@ Info: The Debian diff or native package contains files in an .svn
  automatically exclude them.
 
 Tag: source-contains-svn-control-dir
-Type: info
 Severity: wishlist
 Certainty: certain
 Info: The upstream source contains an .svn directory.  It was most likely
@@ -78,7 +71,6 @@ Info: The upstream source contains an .svn directory.  It was most likely
  upstream since it can double the size of the tarball to no purpose.
 
 Tag: diff-contains-bzr-control-dir
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The Debian diff or native package contains files in a .bzr
@@ -88,7 +80,6 @@ Info: The Debian diff or native package contains files in a .bzr
  automatically exclude them.
 
 Tag: source-contains-bzr-control-dir
-Type: info
 Severity: wishlist
 Certainty: certain
 Info: The upstream source contains a .bzr directory. It was most likely
@@ -99,7 +90,6 @@ Info: The upstream source contains a .bzr directory. It was most likely
  report this as a bug upstream.
 
 Tag: diff-contains-arch-control-dir
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The Debian diff or native package contains files in an {arch} or
@@ -110,7 +100,6 @@ Info: The Debian diff or native package contains files in an {arch} or
  equivalent will automatically exclude them.
 
 Tag: source-contains-arch-control-dir
-Type: info
 Severity: wishlist
 Certainty: certain
 Info: The upstream source contains an {arch} or .arch-ids directory or a
@@ -121,7 +110,6 @@ Info: The upstream source contains an {arch} or .arch-ids directory or a
  bug upstream.
 
 Tag: diff-contains-git-control-dir
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The Debian diff or native package contains files in a .git
@@ -131,7 +119,6 @@ Info: The Debian diff or native package contains files in a .git
  automatically exclude them.
 
 Tag: source-contains-git-control-dir
-Type: info
 Severity: wishlist
 Certainty: certain
 Info: The upstream source contains a .git directory. It was most likely
@@ -141,7 +128,6 @@ Info: The upstream source contains a .git directory. It was most likely
  report this as a bug upstream.
 
 Tag: diff-contains-hg-control-dir
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The Debian diff or native package contains files in a .hg
@@ -151,7 +137,6 @@ Info: The Debian diff or native package contains files in a .hg
  automatically exclude them.
 
 Tag: source-contains-hg-control-dir
-Type: info
 Severity: wishlist
 Certainty: certain
 Info: The upstream source contains a .hg directory. It was most likely
@@ -161,7 +146,6 @@ Info: The upstream source contains a .hg directory. It was most likely
  report this as a bug upstream.
 
 Tag: diff-contains-svn-commit-file
-Type: warning
 Severity: minor
 Certainty: certain
 Info: The Debian diff or native package contains an
@@ -169,7 +153,6 @@ Info: The Debian diff or native package contains an
  Subversion commit by the Debian package maintainer.
 
 Tag: source-contains-svn-commit-file
-Type: info
 Severity: wishlist
 Certainty: certain
 Info: The upstream source contains an <tt>svn-commit(.NNN).tmp</tt>,
@@ -177,7 +160,6 @@ Info: The upstream source contains an <tt>svn-commit(.NNN).tmp</tt>,
  want to report this as an upstream bug.
 
 Tag: diff-contains-svk-commit-file
-Type: warning
 Severity: minor
 Certainty: certain
 Info: The Debian diff or native package contains an
@@ -185,7 +167,6 @@ Info: The Debian diff or native package contains an
  svk commit by the Debian package maintainer.
 
 Tag: source-contains-svk-commit-file
-Type: info
 Severity: wishlist
 Certainty: certain
 Info: The upstream source contains an <tt>svk-commitNNN.tmp</tt>,
@@ -193,7 +174,6 @@ Info: The upstream source contains an <tt>svk-commitNNN.tmp</tt>,
  want to report this as an upstream bug.
  
 Tag: diff-contains-arch-inventory-file
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The Debian diff or native package contains an
@@ -201,7 +181,6 @@ Info: The Debian diff or native package contains an
  normally not be distributed.
 
 Tag: source-contains-arch-inventory-file
-Type: info
 Severity: wishlist
 Certainty: certain
 Info: The upstream source contains an <tt>.arch-inventory</tt> file.  This
@@ -209,7 +188,6 @@ Info: The upstream source contains an <tt>.arch-inventory</tt> file.  This
  to report this as an upstream bug.
 
 Tag: diff-contains-cvs-conflict-copy
-Type: warning
 Severity: normal
 Certainty: certain
 info: The Debian diff or native package contains a CVS conflict copy.
@@ -219,7 +197,6 @@ info: The Debian diff or native package contains a CVS conflict copy.
  conflict and should not be included in the package.
 
 Tag: source-contains-cvs-conflict-copy
-Type: info
 Severity: wishlist
 Certainty: certain
 info: The upstream source contains a CVS conflict copy.  These have file
@@ -230,7 +207,6 @@ info: The upstream source contains a CVS conflict copy.  These have file
  upstream bug.
  
 Tag: diff-contains-svn-conflict-file
-Type: warning
 Severity: normal
 Certainty: certain
 info: The Debian diff or native package contains a file that looks like a
@@ -240,7 +216,6 @@ info: The Debian diff or native package contains a file that looks like a
  the Subversion conflict state after you have resolved the conflict.
 
 Tag: source-contains-svn-conflict-file
-Type: info
 Severity: wishlist
 Certainty: certain
 info: The upstream source contains a file that looks like a Subversion
@@ -251,7 +226,6 @@ info: The upstream source contains a file that looks like a Subversion
  upstream bug.
 
 Tag: diff-contains-patch-failure-file
-Type: warning
 Severity: normal
 Certainty: possible
 Info: The Debian diff or native package contains a file that looks like
@@ -261,7 +235,6 @@ Info: The Debian diff or native package contains a file that looks like
  package.
 
 Tag: diff-contains-editor-backup-file
-Type: info
 Severity: minor
 Certainty: certain
 Info: The Debian diff or native package contains a file ending in
@@ -272,7 +245,6 @@ Info: The Debian diff or native package contains a file ending in
  purpose.
 
 Tag: diff-contains-substvars
-Type: warning
 Severity: normal
 Certainty: certain
 Info: Lintian found a substvars file in the Debian diff for this source 
@@ -282,7 +254,6 @@ Info: Lintian found a substvars file in the Debian diff for this source
 Ref: policy 4.9
 
 Tag: configure-generated-file-in-source
-Type: warning
 Severity: normal
 Certainty: certain
 Info: Leaving config.cache/status causes autobuilders problems.
@@ -301,7 +272,6 @@ Info: Leaving config.cache/status causes autobuilders problems.
  so once you fix this, please ignore or override this warning.
 
 Tag: outdated-autotools-helper-file
-Type: error
 Severity: important
 Certainty: certain
 Info: The referenced file has a time stamp older than year 2004 and the
@@ -313,7 +283,6 @@ Info: The referenced file has a time stamp older than year 2004 and the
  autotools-dev package) for information on how to fix this problem.
 
 Tag: ancient-libtool
-Type: warning
 Severity: normal
 Certainty: possible
 Info: The referenced file seems to be from a libtool version
@@ -330,7 +299,6 @@ Info: The referenced file seems to be from a libtool version
  please override this tag.  lintian will not be able to verify that.
 
 Tag: diff-contains-bts-control-dir
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The Debian diff or native package contains files in a directory
@@ -339,7 +307,6 @@ Info: The Debian diff or native package contains files in a directory
  equivalent will automatically exclude them.
 
 Tag: source-contains-bts-control-dir
-Type: info
 Severity: wishlist
 Certainty: certain
 Info: The upstream source contains a directory used by a bug tracking

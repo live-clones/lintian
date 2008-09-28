@@ -5,7 +5,6 @@ Type: binary, udeb
 Unpack-Level: 1
 
 Tag: unknown-control-file
-Type: warning
 Severity: normal
 Certainty: possible
 Ref: policy B.2
@@ -14,7 +13,6 @@ Info: The package contains an unknown control file.  Policy says that
  good idea.
 
 Tag: not-allowed-control-file
-Type: error
 Severity: important
 Certainty: certain
 Info: The package contains a control file that is not allowed in this
@@ -23,21 +21,18 @@ Info: The package contains a control file that is not allowed in this
  type. You should probably just remove the file.
 
 Tag: control-file-is-empty
-Type: warning
 Severity: normal
 Certainty: possible
 Info: The package contains an empty control file, which is most probably
  an error.
 
 Tag: control-file-has-bad-permissions
-Type: error
 Severity: important
 Certainty: certain
 Info: The postinst, postrm, preinst, and prerm control files should use
  mode 0755; all other control files should use 0644.
 
 Tag: control-file-has-bad-owner
-Type: error
 Severity: important
 Certainty: certain
 Info: All control files should be owned by root/root.

@@ -13,7 +13,6 @@ Info: This script checks if a binary package conforms to policy
  on bar.
 
 Tag: no-copyright-file
-Type: error
 Severity: serious
 Certainty: certain
 Info: Each binary package has to include a plain file
@@ -22,7 +21,6 @@ Ref: policy 12.5
 Tested: empty
 
 Tag: copyright-refers-to-old-directory
-Type: error
 Severity: important
 Certainty: certain
 Info: The common licenses (GPL, BSD, Artistic, etc) have been moved from
@@ -31,7 +29,6 @@ Info: The common licenses (GPL, BSD, Artistic, etc) have been moved from
 Ref: policy 12.5
 
 Tag: copyright-file-compressed
-Type: error
 Severity: serious
 Certainty: certain
 Info: The copyright file /usr/share/doc/<i>pkg</i>/copyright must not be
@@ -39,7 +36,6 @@ Info: The copyright file /usr/share/doc/<i>pkg</i>/copyright must not be
 Ref: policy 12.5
 
 Tag: copyright-file-is-symlink
-Type: error
 Severity: serious
 Certainty: certain
 Info: The copyright file /usr/share/doc/<i>pkg</i>/copyright must not be a
@@ -47,7 +43,6 @@ Info: The copyright file /usr/share/doc/<i>pkg</i>/copyright must not be a
 Ref: policy 12.5
 
 Tag: copyright-file-contains-full-gpl-license
-Type: error
 Severity: important
 Certainty: certain
 Info: The copyright file /usr/share/doc/<i>pkg</i>/copyright contains the
@@ -56,7 +51,6 @@ Info: The copyright file /usr/share/doc/<i>pkg</i>/copyright contains the
 Ref: policy 12.5
 
 Tag: copyright-file-contains-full-gfdl-license
-Type: error
 Severity: important
 Certainty: certain
 Info: The copyright file /usr/share/doc/<i>pkg</i>/copyright contains the
@@ -65,7 +59,6 @@ Info: The copyright file /usr/share/doc/<i>pkg</i>/copyright contains the
 Ref: policy 12.5
 
 Tag: copyright-file-contains-full-apache-2-license
-Type: error
 Severity: important
 Certainty: certain
 Info: The copyright file /usr/share/doc/<i>pkg</i>/copyright contains the
@@ -74,7 +67,6 @@ Info: The copyright file /usr/share/doc/<i>pkg</i>/copyright contains the
 Ref: policy 12.5
 
 Tag: usr-share-doc-symlink-without-dependency
-Type: error
 Severity: important
 Certainty: certain
 Info: If the package installs a symbolic link /usr/share/doc/<i>pkg1</i> -&gt;
@@ -87,7 +79,6 @@ Info: If the package installs a symbolic link /usr/share/doc/<i>pkg1</i> -&gt;
 Ref: policy 12.5
 
 Tag: usr-share-doc-symlink-to-foreign-package
-Type: error
 Severity: important
 Certainty: certain
 Info: If the package installs a symbolic link /usr/share/doc/<i>pkg1</i> -&gt;
@@ -99,7 +90,6 @@ Info: If the package installs a symbolic link /usr/share/doc/<i>pkg1</i> -&gt;
 Ref: policy 12.5
 
 Tag: cannot-check-whether-usr-share-doc-symlink-points-to-foreign-package
-Type: info
 Severity: minor
 Certainty: possible
 Info: There is a symlink /usr/share/doc/<i>pkg1</i> -&gt; <i>pkg2</i>
@@ -110,7 +100,6 @@ Info: There is a symlink /usr/share/doc/<i>pkg1</i> -&gt; <i>pkg2</i>
  package.
 
 Tag: old-style-copyright-file
-Type: error
 Severity: important
 Certainty: certain
 Info: The package installs a /usr/doc/copyright/<i>pkg</i> file. Instead,
@@ -118,7 +107,6 @@ Info: The package installs a /usr/doc/copyright/<i>pkg</i> file. Instead,
 Ref: policy 12.5
 
 Tag: old-fsf-address-in-copyright-file
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The /usr/share/doc/<i>pkg</i>/copyright file refers to the old postal
@@ -128,7 +116,6 @@ Info: The /usr/share/doc/<i>pkg</i>/copyright file refers to the old postal
    MA 02110-1301, USA.
 
 Tag: helper-templates-in-copyright
-Type: error
 Severity: important
 Certainty: certain
 Info: The /usr/share/doc/<i>pkg</i>/copyright file still contains the template
@@ -136,7 +123,6 @@ Info: The /usr/share/doc/<i>pkg</i>/copyright file still contains the template
  download information about the package.
 
 Tag: copyright-refers-to-compressed-license
-Type: error
 Severity: important
 Certainty: certain
 Info: The /usr/share/doc/<i>pkg</i>/copyright file refers to a standard license
@@ -145,7 +131,6 @@ Info: The /usr/share/doc/<i>pkg</i>/copyright file refers to a standard license
  uncompressed).
 
 Tag: usr-share-doc-symlink-points-outside-of-usr-share-doc
-Type: error
 Severity: important
 Certainty: certain
 Info: The /usr/share/doc/<i>pkg</i> symbolic link is pointing to a directory
@@ -153,7 +138,6 @@ Info: The /usr/share/doc/<i>pkg</i> symbolic link is pointing to a directory
 Ref: policy 12.5
 
 Tag: copyright-does-not-refer-to-common-license-file
-Type: warning
 Severity: normal
 Certainty: certain
 Info: If your package uses any one of the licenses in
@@ -162,7 +146,6 @@ Info: If your package uses any one of the licenses in
 Ref: policy 12.5
 
 Tag: copyright-refers-to-incorrect-directory
-Type: error
 Severity: important
 Certainty: certain
 Ref: policy 12.5
@@ -170,7 +153,6 @@ Info: In the directory name /usr/share/common-licenses, licenses is spelled
  with an `s', not as licences with a `c'.
 
 Tag: copyright-file-lacks-pointer-to-perl-license
-Type: error
 Severity: important
 Certainty: possible
 Ref: policy 12.5
@@ -179,7 +161,6 @@ Info: If your package is released under the same terms as Perl itself,
  <tt>/usr/share/common-licenses</tt> directory.
 
 Tag: copyright-should-refer-to-common-license-file-for-gpl
-Type: error
 Severity: important
 Certainty: possible
 Ref: policy 12.5
@@ -194,7 +175,6 @@ Info: The strings "GNU General Public License" or "GPL" appear in the
  the license of the package, please add a Lintian override.
 
 Tag: copyright-should-refer-to-common-license-file-for-gfdl
-Type: error
 Severity: important
 Certainty: possible
 Ref: policy 12.5
@@ -209,7 +189,6 @@ Info: The strings "GNU Free Documentation License" or "GFDL" appear in the
  the license of the package, please add a Lintian override.
 
 Tag: copyright-should-refer-to-common-license-file-for-lgpl
-Type: error
 Severity: important
 Certainty: possible
 Ref: policy 12.5
@@ -225,7 +204,6 @@ Info: The strings "GNU Lesser General Public License", "GNU Library
  the license of the package, please add a Lintian override.
 
 Tag: copyright-lists-upstream-authors-with-dh_make-boilerplate
-Type: warning
 Severity: normal
 Certainty: certain
 Info: There is "Upstream Author(s)" in your copyright file. This was most
@@ -238,7 +216,6 @@ Info: There is "Upstream Author(s)" in your copyright file. This was most
  o/~ join us now and carefully edit debian/copyright files! o/~
 
 Tag: copyright-has-url-from-dh_make-boilerplate
-Type: warning
 Severity: normal
 Certainty: certain
 Ref: policy 12.5
@@ -249,7 +226,6 @@ Info: There is "url://example.com" in your copyright file. This was most
  upstream sources (if any).
 
 Tag: debian-copyright-file-uses-obsolete-national-encoding
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The Debian copyright file should be valid UTF-8, an encoding of
@@ -262,7 +238,6 @@ Info: The Debian copyright file should be valid UTF-8, an encoding of
   $ mv copyright.new copyright
 
 Tag: copyright-contains-dh_make-todo-boilerplate
-Type: warning
 Severity: normal
 Certainty: certain
 Ref: policy 12.5
@@ -272,7 +247,6 @@ Info: The string "Please also look if..." appears in the copyright
  paragraph after having done so.
 
 Tag: copyright-contains-dh-make-perl-boilerplate
-Type: warning
 Severity: normal
 Certainty: certain
 Ref: policy 12.5
@@ -282,7 +256,6 @@ Info: The string "This copyright info was automatically extracted..."
  you didn't remove that paragraph after having done so.
 
 Tag: copyright-without-copyright-notice
-Type: warning
 Severity: normal
 Certainty: certain
 Ref: http://ftp-master.debian.org/REJECT-FAQ.html
@@ -302,7 +275,6 @@ Info: The copyright file for this package does not appear to contain a
  product of a United States government agency.
 
 Tag: spelling-error-in-copyright
-Type: warning
 Severity: normal
 Certainty: possible
 Info: Lintian found a spelling error in the copyright file.  Lintian has a
@@ -310,7 +282,6 @@ Info: Lintian found a spelling error in the copyright file.  Lintian has a
  dictionary like a spelling checker does.
 
 Tag: possible-gpl-code-linked-with-openssl
-Type: warning
 Severity: serious
 Certainty: wild-guess
 Info: This package appears to be covered by the GNU GPL but depends on

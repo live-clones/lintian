@@ -6,7 +6,6 @@ Needs-Info: etcfiles
 Unpack-Level: 1
 
 Tag: file-in-etc-not-marked-as-conffile
-Type: error
 Severity: important
 Certainty: certain
 Ref: policy 10.7

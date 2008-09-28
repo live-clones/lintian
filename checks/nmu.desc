@@ -7,7 +7,6 @@ Needs-Info: debfiles
 Info: This script checks if a source package is consistent about its NMU-ness.
 
 Tag: orphaned-package-should-not-have-uploaders
-Type: error
 Severity: important
 Certainty: certain
 Info: Packages with their maintainer set to packages@qa.debian.org, i.e.
@@ -15,14 +14,12 @@ Info: Packages with their maintainer set to packages@qa.debian.org, i.e.
  you want to resume its maintenance.
 
 Tag: qa-upload-has-incorrect-version-number
-Type: warning
 Severity: normal
 Certainty: certain
 Info: A QA upload (uploading an orphaned package without adopting it) is
  always a maintainer upload: it should not get a NMU revision number.
 
 Tag: source-nmu-has-incorrect-version-number
-Type: warning
 Severity: normal
 Certainty: certain
 Info: A source NMU should have a Debian revision of "-x.x" (or "+nmuX" for a
@@ -35,7 +32,6 @@ Info: A source NMU should have a Debian revision of "-x.x" (or "+nmuX" for a
 Ref: devref 5.11.2
 
 Tag: maintainer-upload-has-incorrect-version-number
-Type: warning
 Severity: normal
 Certainty: certain
 Info: A maintainer upload should have a Debian revision without dots.
@@ -44,7 +40,6 @@ Info: A maintainer upload should have a Debian revision without dots.
  correct version number.
 
 Tag: changelog-should-mention-qa
-Type: warning
 Severity: normal
 Certainty: certain
 Info: If this upload is to orphan this package, please mention this fact on
@@ -52,7 +47,6 @@ Info: If this upload is to orphan this package, please mention this fact on
  (group) upload" there.
 
 Tag: changelog-should-mention-nmu
-Type: warning
 Severity: normal
 Certainty: certain
 Info: When you NMU a package, that fact should be mentioned on the first line
@@ -65,7 +59,6 @@ Info: When you NMU a package, that fact should be mentioned on the first line
 Ref: devref 5.11.3
 
 Tag: changelog-should-not-mention-nmu
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The first line of the changelog entry for this package appears to
@@ -79,7 +72,6 @@ Info: The first line of the changelog entry for this package appears to
  confusion.
 
 Tag: changelog-is-symlink
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The file <tt>debian/changelog</tt> is a symlink instead of a regular

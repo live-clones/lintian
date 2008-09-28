@@ -40,7 +40,6 @@ our %only_issue_tags;
 # The master hash with all tag info. Key is the tag name, value another hash
 # with the following keys:
 # - tag: short name
-# - type: error/warning/info/experimental
 # - info: Description in HTML
 # - ref: Any references
 # - experimental: experimental status (possibly undef)
@@ -78,12 +77,6 @@ my %codes = (
     'serious'   => { 'wild-guess' => 'E', 'possible' => 'E', 'certain' => 'E' },
 );
 
-my %type_to_sev = (
-    'error' => 'important',
-    'warning' => 'normal',
-    'info' => 'minor'
-);
-
 # Add a new tag, supplied as a hash reference
 sub add_tag {
 	my $newtag = shift;
@@ -91,11 +84,6 @@ sub add_tag {
 	    warn "Duplicate tag: $newtag->{tag}\n";
 	    return 0;
 	}
-
-	# Temporary default mapping for experimental Severity/Certainty based
-	# tag classification.
-	$newtag->{severity} = $type_to_sev{$newtag->{type}} if !$newtag->{severity};
-	$newtag->{certainty} = "possible" if !$newtag->{certainty};
 
 	$tags{$newtag->{'tag'}} = $newtag;
 	return 1;
@@ -257,11 +245,15 @@ sub record_stats {
     my ( $tag_info ) = @_;
 
     if ($tag_info->{overridden}{override}) {
-        $stats{$current}{overrides}{tags}{$tag_info->{overridden}{override}}++;
-        $stats{$current}{overrides}{types}{$tag_info->{type}}++;
+	$stats{$current}{overrides}{tags}{$tag_info->{overridden}{override}}++;
+	$stats{$current}{overrides}{severity}{$tag_info->{severity}}++;
+	$stats{$current}{overrides}{certainty}{$tag_info->{severity}}++;
+	$stats{$current}{overrides}{types}{get_tag_code($tag_info)}++;
     } else {
-        $stats{$current}{tags}{$tag_info->{tag}}++;
-        $stats{$current}{types}{$tag_info->{type}}++;
+	$stats{$current}{tags}{$tag_info->{tag}}++;
+	$stats{$current}{severity}{$tag_info->{severity}}++;
+	$stats{$current}{certainty}{$tag_info->{severity}}++;
+	$stats{$current}{types}{get_tag_code($tag_info)}++;
     }
 }
 

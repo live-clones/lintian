@@ -7,14 +7,12 @@ Info: This looks for common mistakes in packages using debconf.
 Needs-Info: scripts
 
 Tag: missing-debconf-dependency
-Type: warning
 Severity: normal
 Certainty: possible
 Info: Packages using debconf should depend on it, since debconf is not an
  essential package.
 
 Tag: missing-debconf-dependency-for-preinst
-Type: warning
 Severity: normal
 Certainty: possible
 Info: Packages using debconf in their preinst script must pre-depend
@@ -23,7 +21,6 @@ Info: Packages using debconf in their preinst script must pre-depend
  on it and falling back to a different configuration system.
  
 Tag: duplicate-fields-in-templates
-Type: error
 Severity: important
 Certainty: certain
 Info: A template contains two identical fields (with identical values or
@@ -31,7 +28,6 @@ Info: A template contains two identical fields (with identical values or
  not properly separated by a lone newline.
 
 Tag: unknown-field-in-templates
-Type: error
 Severity: important
 Certainty: certain
 Info: Valid fields are currently `Template:', `Type:', `Choices:', `Default:',
@@ -39,13 +35,11 @@ Info: Valid fields are currently `Template:', `Type:', `Choices:', `Default:',
 Ref: debconf-spec aen45, debconf-devel(7)
 
 Tag: no-template-name
-Type: error
 Severity: important
 Certainty: certain
 Info: The templates file contains a template without a `Template:' field.
 
 Tag: malformed-template-name
-Type: error
 Severity: important
 Certainty: certain
 Info: The `Template:' field should contain more than one component, each
@@ -53,13 +47,11 @@ Info: The `Template:' field should contain more than one component, each
  alphanumeric characters, `+', `-', and `.'.
 
 Tag: no-template-type
-Type: error
 Severity: important
 Certainty: certain
 Info: The templates file contains a template without a `Type:' field.
 
 Tag: unknown-template-type
-Type: error
 Severity: important
 Certainty: certain
 Info: A `Type:' field in a templates file provided by this package uses an
@@ -67,7 +59,6 @@ Info: A `Type:' field in a templates file provided by this package uses an
  `multiselect', `note', `text', and `password'.
 
 Tag: empty-translated-choices
-Type: error
 Severity: important
 Certainty: possible
 Info: When the translation of a Choices: field is empty, the whole question
@@ -75,7 +66,6 @@ Info: When the translation of a Choices: field is empty, the whole question
  you're using is valid.
 
 Tag: mismatch-translated-choices
-Type: error
 Severity: important
 Certainty: certain
 Info: A `Choices:' field is a comma separated list, and translated
@@ -89,7 +79,6 @@ Info: A `Choices:' field is a comma separated list, and translated
  also supported by debconf.
 
 Tag: select-without-choices
-Type: error
 Severity: important
 Certainty: certain
 Info: Templates using the `select' or `multiselect' data types must provide
@@ -97,7 +86,6 @@ Info: Templates using the `select' or `multiselect' data types must provide
 Ref: debconf-spec aen45, debconf-devel(7)
 
 Tag: boolean-template-has-bogus-default
-Type: error
 Severity: important
 Certainty: certain
 Info: The `boolean' type in a debconf template, can have only two values: true
@@ -105,14 +93,12 @@ Info: The `boolean' type in a debconf template, can have only two values: true
 Ref: debconf-spec aen45, debconf-devel(7)
 
 Tag: no-template-description
-Type: error
 Severity: important
 Certainty: certain
 Info: The templates file contains a template without a `Description:' field.
 Ref: debconf-spec aen45, debconf-devel(7)
 
 Tag: duplicate-long-description-in-template
-Type: warning
 Severity: minor
 Certainty: certain
 Info: The long description of one of the templates provided by this package
@@ -120,13 +106,11 @@ Info: The long description of one of the templates provided by this package
  extended description, it is better to leave it blank.
 
 Tag: config-does-not-load-confmodule
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The config script must load one of the debconf libraries.
 
 Tag: postinst-uses-db-input
-Type: warning
 Severity: normal
 Certainty: certain
 Info: It is generally not a good idea for postinst scripts to use debconf
@@ -135,7 +119,6 @@ Info: It is generally not a good idea for postinst scripts to use debconf
  config script do the actual prompting.
 
 Tag: postinst-does-not-load-confmodule
-Type: warning
 Severity: normal
 Certainty: certain
 Info: Even if your postinst does not involve debconf, you currently need to
@@ -143,7 +126,6 @@ Info: Even if your postinst does not involve debconf, you currently need to
  the future.
 
 Tag: loads-obsolete-confmodule
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The maintainer script uses an obsolete name for a debconf confmodule.
@@ -152,7 +134,6 @@ Info: The maintainer script uses an obsolete name for a debconf confmodule.
 Ref: debconf-devel(7)
 
 Tag: postrm-does-not-purge-debconf
-Type: warning
 Severity: normal
 Certainty: certain
 Info: Packages using debconf should call <tt>db_purge</tt> or its equivalent
@@ -160,7 +141,6 @@ Info: Packages using debconf should call <tt>db_purge</tt> or its equivalent
  take care of this.
 
 Tag: isdefault-flag-is-deprecated
-Type: warning
 Severity: normal
 Certainty: possible
 Info: The 'isdefault' flag on debconf questions is deprecated as of debconf
@@ -174,14 +154,12 @@ Info: The 'isdefault' flag on debconf questions is deprecated as of debconf
  carefully to make sure this does not happen.
 
 Tag: debconf-config-not-executable
-Type: error
 Severity: important
 Certainty: certain
 Info: The debconf `config' script in the package control area must be
  executable.
 
 Tag: no-debconf-config
-Type: warning
 Severity: important
 Certainty: possible
 Info: The package contains a `templates' file in its control area but has no
@@ -189,7 +167,6 @@ Info: The package contains a `templates' file in its control area but has no
  error.
 
 Tag: no-debconf-templates
-Type: warning
 Severity: normal
 Certainty: possible
 Info: The package contains a `config' script in its control area but has no
@@ -197,7 +174,6 @@ Info: The package contains a `config' script in its control area but has no
  error.
 
 Tag: debconf-is-not-a-registry
-Type: warning
 Severity: important
 Certainty: wild-guess
 Info: In the Unix tradition, Debian packages should have human-readable and
@@ -216,7 +192,6 @@ Info: In the Unix tradition, Debian packages should have human-readable and
 Ref: devref 6.5.1, debconf-devel(7)
 
 Tag: malformed-prompt-in-templates
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The short description of a select, multiselect, string and password
@@ -229,7 +204,6 @@ Info: The short description of a select, multiselect, string and password
 Ref: devref 6.5.4.2
 
 Tag: malformed-title-in-templates
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The short description of a note debconf template should be written
@@ -238,7 +212,6 @@ Info: The short description of a note debconf template should be written
 Ref: devref 6.5.4.2.4
 
 Tag: malformed-question-in-templates
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The short description of a boolean debconf template should be
@@ -251,7 +224,6 @@ Info: The short description of a boolean debconf template should be
 Ref: devref 6.5.4.2.2
 
 Tag: using-question-in-extended-description-in-templates
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The extended description of a debconf template should never include
@@ -262,7 +234,6 @@ Info: The extended description of a debconf template should never include
 Ref: devref 6.5.3.2
 
 Tag: using-imperative-form-in-templates
-Type: warning
 Severity: normal
 Certainty: certain
 Info: Do not use useless imperative constructions such as "Please choose...",
@@ -271,7 +242,6 @@ Info: Do not use useless imperative constructions such as "Please choose...",
 Ref: devref 6.5.4.2
 
 Tag: using-first-person-in-templates
-Type: warning
 Severity: normal
 Certainty: possible
 Info: You should avoid the use of first person ("I will do this..." or
@@ -284,7 +254,6 @@ Info: You should avoid the use of first person ("I will do this..." or
 Ref: devref 6.5.2.5
 
 Tag: making-assumptions-about-interfaces-in-templates
-Type: warning
 Severity: normal
 Certainty: possible
 Info: Template text should not make reference to widgets belonging to
@@ -294,7 +263,6 @@ Info: Template text should not make reference to widgets belonging to
 Ref: devref 6.5.2.4
 
 Tag: too-long-short-description-in-templates
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The short description should be kept short (50 characters or so) so
@@ -304,7 +272,6 @@ Info: The short description should be kept short (50 characters or so) so
 Ref: devref 6.5.3.2
 
 Tag: too-long-extended-description-in-templates
-Type: warning
 Severity: normal
 Certainty: certain
 Info: Some debconf interfaces cannot deal very well with descriptions of
@@ -313,7 +280,6 @@ Info: Some debconf interfaces cannot deal very well with descriptions of
 Ref: devref 6.5.3.2
 
 Tag: unknown-debconf-priority
-Type: error
 Severity: important
 Certainty: certain
 Info: The given maintainer script calls db_input or or db_text with a
@@ -322,7 +288,6 @@ Info: The given maintainer script calls db_input or or db_text with a
 Ref: debconf-devel(7)
 
 Tag: possible-debconf-note-abuse
-Type: warning
 Severity: normal
 Certainty: possible
 Info: Debconf notes should be used only for important notes that the
@@ -342,7 +307,6 @@ Info: Debconf notes should be used only for important notes that the
 Ref: policy 3.9.1
 
 Tag: select-with-boolean-choices
-Type: warning
 Severity: normal
 Certainty: possible
 Info: Select templates with only yes and no choices should use the boolean
@@ -350,7 +314,6 @@ Info: Select templates with only yes and no choices should use the boolean
 Ref: debconf-devel(7)
 
 Tag: template-uses-unsplit-choices
-Type: warning
 Severity: normal
 Certainty: possible
 Experimental: yes
@@ -368,7 +331,6 @@ Info: The use of _Choices in templates is deprecated.
 Ref: po-debconf(7)
 
 Tag: unused-debconf-template
-Type: info
 Severity: minor
 Certainty: possible
 Info: Templates which are not used by the package should be removed from

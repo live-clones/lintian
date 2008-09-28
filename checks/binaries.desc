@@ -7,7 +7,6 @@ Needs-Info: objdump-info, file-info
 Info: This script checks binaries and object files for bugs.
 
 Tag: arch-independent-package-contains-binary-or-object
-Type: error
 Severity: serious
 Certainty: certain
 Info: The package contains a binary or object file but is tagged
@@ -18,7 +17,6 @@ Info: The package contains a binary or object file but is tagged
  (such as BIOS updates or firmware), please add a Lintian override.
 
 Tag: unstripped-binary-or-object
-Type: error
 Severity: important
 Certainty: certain
 Ref: policy 10.1, policy 10.2
@@ -28,14 +26,12 @@ Info: The package installs an unstripped binary or object file.
  <tt>--strip-unneeded</tt> option.
 
 Tag: library-in-debug-or-profile-should-not-be-stripped
-Type: error
 Severity: important
 Certainty: certain
 Info: Libraries in <tt>.../lib/debug</tt> or in
  <tt>.../lib/profile</tt> usually should not be stripped.
 
 Tag: statically-linked-binary
-Type: error
 Severity: important
 Certainty: certain
 Info: The package installs a statically linked binary or object file.
@@ -45,21 +41,18 @@ Info: The package installs a statically linked binary or object file.
  excluded, just as any binaries in packages named *-static.
 
 Tag: library-not-linked-against-libc
-Type: warning
 Severity: minor
 Certainty: certain
 Info: The package installs a library which is not dynamically linked
  against libc.
 
 Tag: program-not-linked-against-libc
-Type: warning
 Severity: minor
 Certainty: certain
 Info: The package installs a binary which is not dynamically linked
  against libc.
 
 Tag: binary-or-shlib-defines-rpath
-Type: warning
 Severity: normal
 Certainty: certain
 Ref: http://wiki.debian.org/RpathIssue
@@ -82,7 +75,6 @@ Info: The binary or shared library sets RPATH.  This overrides the normal
  use the chrpath utility to remove the RPATH.
 
 Tag: binary-has-unneeded-section
-Type: info
 Severity: wishlist
 Certainty: certain
 Info: The binary or shared library is stripped, but still contains a
@@ -94,7 +86,6 @@ Info: The binary or shared library is stripped, but still contains a
  <tt>install -s</tt> not because it calls strip without any arguments.
 
 Tag: missing-depends-line
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The package contains an ELF binary with dynamic dependencies,
@@ -103,7 +94,6 @@ Info: The package contains an ELF binary with dynamic dependencies,
  package's <tt>debian/rules</tt> file.
 
 Tag: shared-lib-without-dependency-information
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The listed shared library doesn't include information about which
@@ -117,7 +107,6 @@ Info: The listed shared library doesn't include information about which
  If you have questions about this, please contact &debdev;.
 
 Tag: arch-dependent-file-in-usr-share
-Type: error
 Severity: important
 Certainty: certain
 Ref: fhs usrsharearchitectureindependentdata
@@ -125,7 +114,6 @@ Info: This package installs an ELF binary in the <tt>/usr/share</tt>
  hierarchy, which is reserved for architecture-independent files.
 
 Tag: binary-in-etc
-Type: error
 Severity: important
 Certainty: certain
 Ref: fhs etchostspecificsystemconfiguration
@@ -133,20 +121,17 @@ Info: This package installs an ELF binary in <tt>/etc</tt>.
  The Filesystem Hierarchy Standard forbids this.
 
 Tag: binary-compiled-with-profiling-enabled
-Type: warning
 Severity: normal
 Certainty: certain
 Info: While profiling is useful for testing and debugging purposes, enabling
  it causes a program to leave gmon.out files whenever a user runs it.
 
 Tag: binary-file-compressed-with-upx
-Type: error
 Severity: important
 Certainty: certain
 Info: Debian does not allow binaries to be compressed by UPX.
 
 Tag: package-name-doesnt-match-sonames
-Type: warning
 Severity: normal
 Certainty: possible
 Info: The package name of a library package should usually reflect
@@ -157,7 +142,6 @@ Info: The package name of a library package should usually reflect
 Ref: libpkg-guide 5
 
 Tag: binary-with-bad-dynamic-table
-Type: error
 Severity: important
 Certainty: possible
 Info: This appears to be an ELF file but objdump -T cannot parse it.
@@ -165,7 +149,6 @@ Info: This appears to be an ELF file but objdump -T cannot parse it.
  installed under /usr/lib/debug.
 
 Tag: apparently-corrupted-elf-binary
-Type: warning
 Severity: normal
 Certainty: possible
 Info: This appears to be an ELF file but objdump -T doesn't recognize it
@@ -175,7 +158,6 @@ Info: This appears to be an ELF file but objdump -T doesn't recognize it
  misidentification of a file as ELF that actually isn't.
 
 Tag: missing-dependency-on-libc
-Type: error
 Severity: serious
 Certainty: certain
 Ref: policy 8.6
@@ -191,7 +173,6 @@ Info: The listed file appears to be linked against the C library, but the
  get the proper package dependencies for those libraries.
 
 Tag: missing-dependency-on-perlapi
-Type: error
 Severity: serious
 Certainty: certain
 Ref: perl-policy 4.4.2
@@ -204,7 +185,6 @@ Info: This package includes a *.so file in <tt>/usr/lib/perl5</tt>,
  <tt>debian/control</tt>.
 
 Tag: debug-file-should-use-detached-symbols
-Type: warning
 Severity: normal
 Certainty: certain
 Ref: devref 6.7.9

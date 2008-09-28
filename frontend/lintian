@@ -930,9 +930,9 @@ while (my $arg = shift) {
 
 	    unless ($exit_code) {
 		my $stats = Tags::get_stats( $arg );
-		if ($stats->{types}{error}) {
+		if ($stats->{types}{E}) {
 		    $exit_code = 1;
-		} elsif ($fail_on_warnings && $stats->{types}{warning}) {
+		} elsif ($fail_on_warnings && $stats->{types}{W}) {
 		    $exit_code = 1;
 		}
 	    }
@@ -1532,9 +1532,9 @@ foreach my $pkg_info ($schedule->get_all) {
 	}
 	unless ($exit_code) {
 	    my $stats = Tags::get_stats( $file );
-	    if ($stats->{types}{error}) {
+	    if ($stats->{types}{E}) {
 		$exit_code = 1;
-	    } elsif ($fail_on_warnings && $stats->{types}{warning}) {
+	    } elsif ($fail_on_warnings && $stats->{types}{W}) {
 		$exit_code = 1;
 	    }
 	}
@@ -1557,9 +1557,9 @@ foreach my $pkg_info ($schedule->get_all) {
 	    my $stats = Tags::get_stats($file);
 	    my $short = $file;
 	    $short =~ s%.*/%%;
-	    my $errors = $stats->{overrides}{types}{error} || 0;
-	    my $warnings = $stats->{overrides}{types}{warning} || 0;
-	    my $info = $stats->{overrides}{types}{info} || 0;
+	    my $errors = $stats->{overrides}{types}{E} || 0;
+	    my $warnings = $stats->{overrides}{types}{W} || 0;
+	    my $info = $stats->{overrides}{types}{I} || 0;
 	    $overrides{errors} += $errors;
 	    $overrides{warnings} += $warnings;
 	    $overrides{info} += $info;

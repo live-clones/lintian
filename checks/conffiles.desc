@@ -7,7 +7,6 @@ Info: This script checks if the `conffiles' control file of a binary
  package is correct.
 
 Tag: file-in-usr-marked-as-conffile
-Type: error
 Severity: important
 Certainty: certain
 Info: Files below <tt>/usr</tt> may not be marked as conffiles, since
@@ -16,7 +15,6 @@ Info: Files below <tt>/usr</tt> may not be marked as conffiles, since
  file.
 
 Tag: non-etc-file-marked-as-conffile
-Type: warning
 Severity: important
 Certainty: certain
 Info: A file installed in some other directory than <tt>/etc</tt>
@@ -25,7 +23,6 @@ Info: A file installed in some other directory than <tt>/etc</tt>
 Ref: policy 10.7.2
 
 Tag: relative-conffile
-Type: error
 Severity: important
 Certainty: certain
 Ref: policy E.1
@@ -33,7 +30,6 @@ Info: All entries in the conffile control file should have an absolute
  path specification.
 
 Tag: duplicate-conffile
-Type: error
 Severity: important
 Certainty: certain
 Info: The file is listed more than once in your <tt>debian/conffiles</tt> file.

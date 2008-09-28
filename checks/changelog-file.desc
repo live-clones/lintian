@@ -19,7 +19,6 @@ Info: This script checks if a binary package conforms to policy
  Even if they start out small, they will become large with time.
 
 Tag: html-changelog-without-text-version
-Type: error
 Severity: important
 Certainty: certain
 Info: If the upstream changelog file is HTML formatted, a text version
@@ -28,7 +27,6 @@ Info: If the upstream changelog file is HTML formatted, a text version
 Ref: policy 12.7
 
 Tag: changelog-file-not-compressed
-Type: warning
 Severity: important
 Certainty: certain
 Info: Changelog files should be compressed using "gzip -9".  Even if they
@@ -36,7 +34,6 @@ Info: Changelog files should be compressed using "gzip -9".  Even if they
 Ref: policy 12.7
 
 Tag: debian-news-file-not-compressed
-Type: warning
 Severity: normal
 Certainty: certain
 Info: NEWS.Debian files should be compressed using "gzip -9".  The file
@@ -44,7 +41,6 @@ Info: NEWS.Debian files should be compressed using "gzip -9".  The file
 Ref: devref 6.3.4
 
 Tag: changelog-not-compressed-with-max-compression
-Type: warning
 Severity: normal
 Certainty: certain
 Info: Changelog files should be compressed using "gzip -9"; i.e., using
@@ -52,7 +48,6 @@ Info: Changelog files should be compressed using "gzip -9"; i.e., using
 Ref: policy 12.7
 
 Tag: wrong-name-for-changelog-of-native-package
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The changelog file of a native Debian package (i.e., if there is
@@ -61,7 +56,6 @@ Info: The changelog file of a native Debian package (i.e., if there is
 Ref: policy 12.7
 
 Tag: changelog-file-missing-in-native-package
-Type: error
 Severity: important
 Certainty: certain
 Info: Each Debian package (which provides a /usr/share/doc/<i>pkg</i>
@@ -72,7 +66,6 @@ Info: Each Debian package (which provides a /usr/share/doc/<i>pkg</i>
 Ref: policy 12.7
 
 Tag: wrong-name-for-upstream-changelog
-Type: warning
 Severity: normal
 Certainty: possible
 Info: If there is an upstream changelog file, it should usually be
@@ -80,14 +73,12 @@ Info: If there is an upstream changelog file, it should usually be
 Ref: policy 12.7
 
 Tag: no-upstream-changelog
-Type: warning
 Severity: minor
 Certainty: wild-guess
 Info: The package does not install an upstream changelog file. 
 Ref: policy 12.7
 
 Tag: wrong-name-for-debian-changelog-file
-Type: warning
 Severity: important
 Certainty: certain
 Info: The Debian changelog file should usually be installed as
@@ -95,7 +86,6 @@ Info: The Debian changelog file should usually be installed as
 Ref: policy 12.7
 
 Tag: wrong-name-for-debian-news-file
-Type: warning
 Severity: normal
 Certainty: possible
 Info: The Debian news file must be installed as
@@ -104,7 +94,6 @@ Info: The Debian news file must be installed as
 Ref: devref 6.3.4
 
 Tag: debian-changelog-file-missing
-Type: error
 Severity: serious
 Certainty: certain
 Info: Each Debian package (which provides a /usr/share/doc/<i>pkg</i>
@@ -113,7 +102,6 @@ Info: Each Debian package (which provides a /usr/share/doc/<i>pkg</i>
 Ref: policy 12.7
 
 Tag: debian-changelog-file-is-a-symlink
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The Debian changelog file is a symlink to a file in a different
@@ -128,7 +116,6 @@ Info: The Debian changelog file is a symlink to a file in a different
  /usr/share/doc/<i>pkg</i> directory rather than individual files.
 
 Tag: debian-changelog-file-missing-or-wrong-name
-Type: error
 Severity: serious
 Certainty: certain
 Info: Each Debian package (which provides a /usr/share/doc/<i>pkg</i>
@@ -141,7 +128,6 @@ Info: Each Debian package (which provides a /usr/share/doc/<i>pkg</i>
 Ref: policy 12.7
 
 Tag: debian-changelog-file-contains-obsolete-user-emacs-settings
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The add-log-mailing-address variable is no longer honored in
@@ -151,21 +137,18 @@ Info: The add-log-mailing-address variable is no longer honored in
  (setq debian-changelog-mailing-address "userid@debian.org")
 
 Tag: debian-changelog-file-contains-debmake-default-email-address
-Type: error
 Severity: important
 Certainty: certain
 Info: The changelog file contains an email address (&lt;..@unknown&gt;)
  that was not updated to the maintainer's real address.
 
 Tag: debian-changelog-file-contains-invalid-email-address
-Type: error
 Severity: important
 Certainty: certain
 Info: The changelog file contains an invalid email address: the domain
  needs at least one dot. This looks like a mistake.
 
 Tag: debian-changelog-file-uses-obsolete-national-encoding
-Type: error
 Severity: important
 Certainty: certain
 Info: The Debian changelog file must be valid UTF-8, an encoding of
@@ -178,7 +161,6 @@ Info: The Debian changelog file must be valid UTF-8, an encoding of
   $ mv changelog.new changelog
 
 Tag: debian-news-file-uses-obsolete-national-encoding
-Type: error
 Severity: important
 Certainty: certain
 Info: The NEWS.Debian file must be valid UTF-8, an encoding of the Unicode
@@ -191,35 +173,30 @@ Info: The NEWS.Debian file must be valid UTF-8, an encoding of the Unicode
   $ mv NEWS.Debian.new NEWS.Debian
 
 Tag: latest-debian-changelog-entry-without-new-date
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The latest Debian changelog entry has either the same or even an
  older date as the entry before.
 
 Tag: latest-debian-changelog-entry-without-new-version
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The latest Debian changelog entry has a version number that's either
  the same or smaller than the version number of the entry before.
 
 Tag: syntax-error-in-debian-changelog
-Type: warning
 Severity: normal
 Certainty: possible
 Info: While parsing the Debian changelog, a syntax error was found.
 Ref: policy 4.4
 
 Tag: syntax-error-in-debian-news-file
-Type: warning
 Severity: normal
 Certainty: possible
 Info: While parsing the NEWS.Debian file, a syntax error was found.
 Ref: devref 6.3.4
 
 Tag: improbable-bug-number-in-closes
-Type: warning
 Severity: normal
 Certainty: possible
 Info: The most recent changelog closes a bug numbered less than 100.
@@ -227,14 +204,12 @@ Info: The most recent changelog closes a bug numbered less than 100.
  placeholder value that mistakenly wasn't filled in.
 
 Tag: wrong-bug-number-in-closes
-Type: warning
 Severity: normal
 Certainty: certain
 Info: Bug numbers can only contain digits.
 Ref: policy 4.4
 
 Tag: possible-missing-colon-in-closes
-Type: warning
 Severity: important
 Certainty: possible
 Info: To close a bug in the Debian changelog, the word "closes" must be
@@ -243,7 +218,6 @@ Info: To close a bug in the Debian changelog, the word "closes" must be
 Ref: policy 4.4
 
 Tag: debian-news-entry-has-strange-distribution
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The latest entry in NEWS.Debian has an unusual distribution name.
@@ -253,7 +227,6 @@ Info: The latest entry in NEWS.Debian has an unusual distribution name.
  Debian changelog file.
 
 Tag: spelling-error-in-changelog
-Type: warning
 Severity: normal
 Certainty: certain
 Info: Lintian found a spelling error in the latest entry of the Debian
@@ -265,7 +238,6 @@ Info: Lintian found a spelling error in the latest entry of the Debian
  misspelled word to avoid triggering this warning.
 
 Tag: spelling-error-in-news-debian
-Type: warning
 Severity: normal
 Certainty: certain
 Info: Lintian found a spelling error in the latest entry of the
@@ -273,7 +245,6 @@ Info: Lintian found a spelling error in the latest entry of the
  looks for.  It does not have a dictionary like a spelling checker does.
 
 Tag: new-package-should-close-itp-bug
-Type: warning
 Severity: normal
 Certainty: certain
 Info: This package appears to be the first packaging of a new upstream
@@ -286,7 +257,6 @@ Info: This package appears to be the first packaging of a new upstream
 Ref: devref 5.1
 
 Tag: debian-changelog-line-too-long
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The given line of the latest changelog entry is over 80 columns.
@@ -295,7 +265,6 @@ Info: The given line of the latest changelog entry is over 80 columns.
  columns or less where possible.
 
 Tag: changelog-news-debian-mismatch
-Type: warning
 Severity: normal
 Certainty: possible
 Info: The latest entries in the Debian changelog file and NEWS.Debian file

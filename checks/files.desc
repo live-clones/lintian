@@ -8,7 +8,6 @@ Info: This script checks if a binary package conforms to policy
  WRT to files and directories.
 
 Tag: package-contains-ancient-file
-Type: error
 Severity: important
 Certainty: certain
 Info: Your package contains a file that claims to have been generated
@@ -17,7 +16,6 @@ Info: Your package contains a file that claims to have been generated
  with such a timestamp.
 
 Tag: old-app-defaults-directory
-Type: error
 Severity: important
 Certainty: certain
 Info: The app-defaults files have moved to /etc/X11/app-defaults/. Files in
@@ -27,7 +25,6 @@ Info: The app-defaults files have moved to /etc/X11/app-defaults/. Files in
 Ref: policy 11.8.6
 
 Tag: package-installs-font-to-usr-x11r6
-Type: error
 Severity: important
 Certainty: certain
 Info: The standard location for X fonts has moved to /usr/share/fonts/X11.
@@ -41,7 +38,6 @@ Info: The standard location for X fonts has moved to /usr/share/fonts/X11.
 Ref: policy 11.8.5
 
 Tag: package-installs-file-to-usr-x11r6-bin
-Type: error
 Severity: important
 Certainty: certain
 Info: Debian has switched to the modular X tree which now uses the regular
@@ -60,7 +56,6 @@ Info: Debian has switched to the modular X tree which now uses the regular
 Ref: policy 11.8.7
 
 Tag: file-in-usr-something-x11-without-pre-depends
-Type: info
 Severity: wishlist
 Certainty: certain
 Info: Packages that install files into /usr/include/X11 or /usr/lib/X11
@@ -76,7 +71,6 @@ Info: Packages that install files into /usr/include/X11 or /usr/lib/X11
 Ref: policy 11.8.7
 
 Tag: package-installs-file-to-usr-x11r6
-Type: error
 Severity: important
 Certainty: certain
 Info: Packages using the X Window System should not be configured to install
@@ -90,14 +84,12 @@ Info: Packages using the X Window System should not be configured to install
 Ref: policy 11.8.7
 
 Tag: config-file-reserved
-Type: error
 Severity: important
 Certainty: certain
 Info: This file is reserved by a specific package.  Please email the
  maintainer of the package in question if you have questions.
 
 Tag: package-uses-obsolete-file
-Type: warning
 Severity: normal
 Certainty: certain
 Info: the file, /etc/nntpserver, is no longer recommenced.  As of policy
@@ -106,7 +98,6 @@ Info: the file, /etc/nntpserver, is no longer recommenced.  As of policy
 Ref: policy 11.7
 
 Tag: FSSTND-dir-in-usr
-Type: error
 Severity: serious
 Certainty: certain
 Info: As of policy version 3.0.0.0, Debian no longer follows the FSSTND.  
@@ -116,7 +107,6 @@ Info: As of policy version 3.0.0.0, Debian no longer follows the FSSTND.
 Ref: policy 9.1.1
 
 Tag: FSSTND-dir-in-var
-Type: error
 Severity: serious
 Certainty: certain
 Info: As of policy version 3.0.0.0, Debian no longer follows the FSSTND.  
@@ -126,7 +116,6 @@ Info: As of policy version 3.0.0.0, Debian no longer follows the FSSTND.
 Ref: policy 9.1.1
 
 Tag: package-installs-into-etc-gconf-schemas
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The package installs files into the <tt>/etc/gconf/schemas</tt>
@@ -135,7 +124,6 @@ Info: The package installs files into the <tt>/etc/gconf/schemas</tt>
  <tt>/usr/share/gconf/schemas</tt>.
 
 Tag: package-installs-into-etc-rc.d
-Type: error
 Severity: serious
 Certainty: certain
 Info: The package installs files into the <tt>/etc/rc.d</tt> or
@@ -143,7 +131,6 @@ Info: The package installs files into the <tt>/etc/rc.d</tt> or
 Ref: policy 9.3.3
 
 Tag: package-installs-into-etc-rc.boot
-Type: error
 Severity: serious
 Certainty: certain
 Info: The package installs files in the <tt>/etc/rc.boot</tt> directory,
@@ -151,14 +138,12 @@ Info: The package installs files in the <tt>/etc/rc.boot</tt> directory,
 Ref: policy 9.3.4
 
 Tag: non-standard-file-permissions-for-etc-init.d-script
-Type: error
 Severity: important
 Certainty: certain
 Info: Usually, scripts in the <tt>/etc/init.d</tt> directory should have
  mode 0755.
 
 Tag: file-directly-in-usr-share
-Type: error
 Severity: serious
 Certainty: certain
 Info: Packages should not install files directly in <tt>/usr/share</tt>,
@@ -168,7 +153,6 @@ Info: Packages should not install files directly in <tt>/usr/share</tt>,
  package or place the file in <tt>/usr/share/misc</tt>.
 
 Tag: file-in-usr-local
-Type: error
 Severity: serious
 Certainty: certain
 Info: The package installs a file in <tt>/usr/local/...</tt> which is
@@ -176,7 +160,6 @@ Info: The package installs a file in <tt>/usr/local/...</tt> which is
 Ref: policy 9.1.2
 
 Tag: stray-directory-in-manpage-directory
-Type: error
 Severity: important
 Certainty: certain
 Info: This package installs a directory under <tt>/usr/share/man</tt> or
@@ -185,13 +168,11 @@ Info: This package installs a directory under <tt>/usr/share/man</tt> or
 Ref: fhs usrsharemanmanualpages
 
 Tag: executable-manpage
-Type: error
 Severity: important
 Certainty: certain
 Info: Manual pages are not meant to be executed.
 
 Tag: dir-in-usr-local
-Type: error
 Severity: serious
 Certainty: certain
 Info: The package installs a directory in <tt>/usr/local/...</tt> which is
@@ -205,7 +186,6 @@ Info: The package installs a directory in <tt>/usr/local/...</tt> which is
 Ref: policy 9.1.2
 
 Tag: possible-name-space-pollution
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The package installs a binary which uses a very short file name (one
@@ -215,7 +195,6 @@ Info: The package installs a binary which uses a very short file name (one
  should consider giving these binaries a longer name.
 
 Tag: non-standard-dir-perm
-Type: warning
 Severity: normal
 Certainty: possible
 Info: The directory has a mode different from 0755, and it's not one of the
@@ -223,7 +202,6 @@ Info: The directory has a mode different from 0755, and it's not one of the
 Ref: policy 10.9
 
 Tag: executable-is-not-world-readable
-Type: warning
 Severity: normal
 Certainty: certain
 Info: All executables should be readable by any user.  Since anyone can
@@ -234,7 +212,6 @@ Info: All executables should be readable by any user.  Since anyone can
 Ref: policy 10.9
 
 Tag: non-standard-executable-perm
-Type: warning
 Severity: normal
 Certainty: certain
 Info: Executables that are not setuid or setgid should always have a mode
@@ -244,7 +221,6 @@ Info: Executables that are not setuid or setgid should always have a mode
 Ref: policy 10.9
 
 Tag: non-standard-game-executable-perm
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The file is owned by the games group but is not mode 2755.  If a
@@ -254,7 +230,6 @@ Info: The file is owned by the games group but is not mode 2755.  If a
 Ref: policy 11.11
 
 Tag: non-standard-setuid-executable-perm
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The file is setuid or setgid and has a mode different from any of
@@ -266,7 +241,6 @@ Info: The file is setuid or setgid and has a mode different from any of
 Ref: policy 10.9
 
 Tag: setuid-binary
-Type: warning
 Severity: normal
 Certainty: possible
 Info: The file is tagged SETUID. In some cases this is intentional, but in
@@ -274,7 +248,6 @@ Info: The file is tagged SETUID. In some cases this is intentional, but in
  override to document this fact.
 
 Tag: setgid-binary
-Type: warning
 Severity: normal
 Certainty: possible
 Info: The file is tagged SETGID. In some cases this is intentional, but in
@@ -282,7 +255,6 @@ Info: The file is tagged SETGID. In some cases this is intentional, but in
  override to document this fact.
 
 Tag: setuid-gid-binary
-Type: warning
 Severity: normal
 Certainty: possible
 Info: The file is tagged SETUID and SETGID. In some cases this is
@@ -290,7 +262,6 @@ Info: The file is tagged SETUID and SETGID. In some cases this is
  please add a lintian override to document this fact.
 
 Tag: non-standard-file-perm
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The file has a mode different from 0644. In some cases this is
@@ -298,7 +269,6 @@ Info: The file has a mode different from 0644. In some cases this is
 Ref: policy 10.9
 
 Tag: special-file
-Type: error
 Severity: serious
 Certainty: certain
 Info: The package contains a <i>special</i> file (e.g., a device file).
@@ -308,7 +278,6 @@ Info: The package contains a <i>special</i> file (e.g., a device file).
 Ref: policy 10.6
 
 Tag: old-style-example-dir
-Type: error
 Severity: important
 Certainty: certain
 Info: The package installs some files into the old
@@ -317,7 +286,6 @@ Info: The package installs some files into the old
 Ref: policy 12.6
 
 Tag: compressed-symlink-with-wrong-ext
-Type: error
 Severity: important
 Certainty: certain
 Info: The package installs a symbolic link pointing to a compressed file,
@@ -327,7 +295,6 @@ Info: The package installs a symbolic link pointing to a compressed file,
 Ref: policy 10.5
 
 Tag: symlink-has-double-slash
-Type: error
 Severity: important
 Certainty: certain
 Info: This symlink contains two successive slashes (//). This is in violation
@@ -338,7 +305,6 @@ Info: This symlink contains two successive slashes (//). This is in violation
 Ref: policy 10.5
 
 Tag: symlink-ends-with-slash
-Type: error
 Severity: important
 Certainty: certain
 Info: This symlink ends with a slash (/). This is in violation
@@ -349,7 +315,6 @@ Info: This symlink ends with a slash (/). This is in violation
 Ref: policy 10.5
 
 Tag: symlink-should-be-relative
-Type: warning
 Severity: normal
 Certainty: certain
 Info: Symlinks to files which are in the same top-level directory should be
@@ -362,7 +327,6 @@ Info: Symlinks to files which are in the same top-level directory should be
 Ref: policy 10.5
 
 Tag: symlink-should-be-absolute
-Type: error
 Severity: important
 Certainty: certain
 Info: Symbolic links between different top-level directories should be
@@ -373,13 +337,11 @@ Info: Symbolic links between different top-level directories should be
 Ref: policy 10.5
 
 Tag: udeb-contains-documentation-file
-Type: error
 Severity: important
 Certainty: certain
 Info: udeb packages should not contain any documentation.
 
 Tag: executable-in-usr-share-doc
-Type: error
 Severity: important
 Certainty: certain
 Info: Usually, documentation files in <tt>/usr/share/doc</tt> should have mode
@@ -387,7 +349,6 @@ Info: Usually, documentation files in <tt>/usr/share/doc</tt> should have mode
  <tt>/usr/share/doc/<i>pkg</i>/examples</tt>.
 
 Tag: script-in-usr-share-doc
-Type: info
 Severity: wishlist
 Certainty: certain
 Info: Scripts are usually not documentation files, unless they are
@@ -395,13 +356,11 @@ Info: Scripts are usually not documentation files, unless they are
  <tt>/usr/share/doc/<i>pkg</i>/examples</tt> directory.
 
 Tag: symlink-has-too-many-up-segments
-Type: error
 Severity: important
 Certainty: certain
 Info: The symlink references a directory beyond the root directory `/'.
 
 Tag: lengthy-symlink
-Type: error
 Severity: important
 Certainty: certain
 Info: This link goes up, and then back down into the same subdirectory.
@@ -413,7 +372,6 @@ Info: This link goes up, and then back down into the same subdirectory.
 Ref: policy 10.5
 
 Tag: symlink-is-self-recursive
-Type: warning
 Severity: normal
 Certainty: possible
 Info: The symbolic link is recursive to a higher directory of the symlink
@@ -421,7 +379,6 @@ Info: The symbolic link is recursive to a higher directory of the symlink
  usually not okay, but sometimes wanted behaviour.
 
 Tag: symlink-contains-spurious-segments
-Type: error
 Severity: important
 Certainty: certain
 Info: The symbolic link has needless segments like '..' and '.' in the middle.
@@ -433,7 +390,6 @@ Info: The symbolic link has needless segments like '..' and '.' in the middle.
 Ref: policy 10.5
 
 Tag: run-parts-cron-filename-contains-full-stop
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The script in /etc/cron.&lt;time-interval&gt; will not be executed by
@@ -441,21 +397,18 @@ Info: The script in /etc/cron.&lt;time-interval&gt; will not be executed by
 Ref: run-parts(8)
 
 Tag: bad-permissions-for-etc-cron.d-script
-Type: error
 Severity: important
 Certainty: certain
 Info: Files in <tt>/etc/cron.d</tt> are configuration files for cron and not
  scripts. Thus, they should not be marked executable.
 
 Tag: bad-permissions-for-etc-emacs-script
-Type: error
 Severity: important
 Certainty: certain
 Info: Files in the <tt>/etc/emacs*</tt> directories should not be marked
  executable.
 
 Tag: image-file-in-usr-lib
-Type: warning
 Severity: normal
 Certainty: certain
 Info: This package installs a pixmap or a bitmap within <tt>/usr/lib</tt>.
@@ -463,7 +416,6 @@ Info: This package installs a pixmap or a bitmap within <tt>/usr/lib</tt>.
  files need to be placed within <tt>/usr/share</tt> instead.
 
 Tag: file-directly-in-usr-share-doc
-Type: error
 Severity: serious
 Certainty: certain
 Info: Documentation files have to be installed in
@@ -471,13 +423,11 @@ Info: Documentation files have to be installed in
 Ref: policy 12.3
 
 Tag: bad-owner-for-doc-file
-Type: error
 Severity: important
 Certainty: certain
 Info: Documentation files should be owned by <tt>root/root</tt>.
 
 Tag: dir-or-file-in-var-www
-Type: error
 Severity: important
 Certainty: certain
 Ref: fhs thevarhierarchy
@@ -498,27 +448,23 @@ Info: Debian packages should not install files under <tt>/var/www</tt>.
  should at most copy over a default file in postinst for a new install.
 
 Tag: dir-or-file-in-tmp
-Type: error
 Severity: important
 Certainty: certain
 Info: Packages should not install into <tt>/tmp</tt> or <tt>/var/tmp</tt>.
 
 Tag: dir-or-file-in-mnt
-Type: error
 Severity: important
 Certainty: certain
 Info: Packages should not install into <tt>/mnt</tt>.  The FHS states that
  the contents of this directory is a local issue.
 
 Tag: dir-or-file-in-opt
-Type: error
 Severity: important
 Certainty: certain
 Info: Debian packages should not install into <tt>/opt</tt>, because it
  is reserved for add-on software.
 
 Tag: dir-or-file-in-srv
-Type: error
 Severity: important
 Certainty: certain
 Ref: fhs therootfilesystem
@@ -535,7 +481,6 @@ Info: Debian packages should not install into <tt>/srv</tt>.  The
  setup scripts, debconf prompting, etc.).
 
 Tag: third-party-package-in-python-dir
-Type: warning
 Severity: normal
 Certainty: certain
 Info: According to <a href="http://www.python.org/doc/essays/packages.html">
@@ -545,7 +490,6 @@ Info: According to <a href="http://www.python.org/doc/essays/packages.html">
  <tt>/usr/lib/python1.5</tt> are for use by the core python packages.
  
 Tag: perl-module-in-core-directory
-Type: error
 Severity: important
 Certainty: certain
 Info: Packaged modules must not be installed into the core perl
@@ -554,7 +498,6 @@ Info: Packaged modules must not be installed into the core perl
 Ref: perl-policy 3.1
 
 Tag: backup-file-in-package
-Type: warning
 Severity: normal
 Certainty: certain
 Info: There is a file in the package whose name matches the format emacs
@@ -562,7 +505,6 @@ Info: There is a file in the package whose name matches the format emacs
  accident.
 
 Tag: nfs-temporary-file-in-package
-Type: warning
 Severity: normal
 Certainty: certain
 Info: There is a file in the package whose name matches the format NFS
@@ -571,7 +513,6 @@ Info: There is a file in the package whose name matches the format NFS
  while building the package in an NFS filesystem.
 
 Tag: windows-thumbnail-database-in-package
-Type: warning
 Severity: normal
 Certainty: certain
 Info: There is a file in the package named <tt>Thumbs.db</tt> or
@@ -581,7 +522,6 @@ Info: There is a file in the package named <tt>Thumbs.db</tt> or
  the source tarball.
 
 Tag: macos-ds-store-file-in-package
-Type: warning
 Severity: normal
 Certainty: certain
 Info: There is a file in the package named <tt>.DS_Store</tt> or
@@ -591,7 +531,6 @@ Info: There is a file in the package named <tt>.DS_Store</tt> or
  source tarball.
 
 Tag: macos-resource-fork-file-in-package
-Type: warning
 Severity: normal
 Certainty: certain
 Info: There is a file in the package with a name starting with
@@ -601,7 +540,6 @@ Info: There is a file in the package with a name starting with
  complete directories from the source tarball.
 
 Tag: package-installs-perllocal-pod
-Type: warning
 Severity: normal
 Certainty: certain
 Info: This package installs a file <tt>perllocal.pod</tt>.  Since that
@@ -611,7 +549,6 @@ Info: This package installs a file <tt>perllocal.pod</tt>.  Since that
  existed there.
 
 Tag: extra-license-file
-Type: warning
 Severity: normal
 Certainty: possible
 Ref: policy 12.5
@@ -620,7 +557,6 @@ Info: All license information should be collected in the
  for the package to install this information in other places as well.
 
 Tag: non-standard-toplevel-dir
-Type: error
 Severity: important
 Certainty: certain
 Info: The Filesystem Hierarchy Standard forbids the installation of new
@@ -628,7 +564,6 @@ Info: The Filesystem Hierarchy Standard forbids the installation of new
 Ref: fhs therootfilesystem
 
 Tag: subdir-in-bin
-Type: error
 Severity: serious
 Certainty: certain
 Info: The Filesystem Hierarchy Standard forbids the installation of new
@@ -636,7 +571,6 @@ Info: The Filesystem Hierarchy Standard forbids the installation of new
 Ref: fhs binessentialusercommandbinaries
 
 Tag: subdir-in-usr-bin
-Type: error
 Severity: serious
 Certainty: certain
 Info: The Filesystem Hierarchy Standard forbids the installation of new
@@ -644,7 +578,6 @@ Info: The Filesystem Hierarchy Standard forbids the installation of new
 Ref: fhs usrbinmostusercommands
 
 Tag: non-standard-dir-in-usr
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The FHS says "No large software packages should use a direct
@@ -654,7 +587,6 @@ Info: The FHS says "No large software packages should use a direct
 Ref: fhs theusrhierarchy
 
 Tag: non-standard-dir-in-var
-Type: error
 Severity: important
 Certainty: certain
 Info: The FHS says "Applications should generally not add directories to
@@ -664,7 +596,6 @@ Info: The FHS says "Applications should generally not add directories to
 Ref: fhs thevarhierarchy
 
 Tag: use-of-compat-symlink
-Type: error
 Severity: important
 Certainty: certain
 Info: This package uses a directory that, according to the Filesystem
@@ -673,14 +604,12 @@ Info: This package uses a directory that, according to the Filesystem
  should use the standard directories instead.
 
 Tag: file-in-unusual-dir
-Type: warning
 Severity: normal
 Certainty: certain
 Info: This file or symbolic link is in a directory where files are not
  normally installed by Debian packages.
 
 Tag: package-installs-packlist
-Type: error
 Severity: important
 Certainty: certain
 Info: Packages built using the perl MakeMaker package will have a file
@@ -697,13 +626,11 @@ Info: Packages built using the perl MakeMaker package will have a file
 Ref: perl-policy 4.1
 
 Tag: zero-byte-file-in-doc-directory
-Type: warning
 Severity: normal
 Certainty: certain
 Info: Package contains a file which is empty.
 
 Tag: override-file-in-wrong-location
-Type: error
 Severity: important
 Certainty: certain
 Info: Location of per package overrides the file
@@ -712,7 +639,6 @@ Info: Location of per package overrides the file
 Ref: lintian 2.4
 
 Tag: package-contains-upstream-install-documentation
-Type: warning
 Severity: normal
 Certainty: certain
 Ref: policy 12.3
@@ -722,7 +648,6 @@ Info: Binary packages do not need to contain the instructions for building
  summarized in README.Debian, otherwise an override may be added.
 
 Tag: package-contains-hardlink
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The package contains a hardlink in <tt>/etc</tt> or across different
@@ -738,7 +663,6 @@ Info: The package contains a hardlink in <tt>/etc</tt> or across different
 Ref: policy 10.7.3
 
 Tag: package-contains-bts-control-dir
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The package contains a control directory for a bug tracking system.
@@ -746,7 +670,6 @@ Info: The package contains a control directory for a bug tracking system.
  usually don't belong in packages.
 
 Tag: package-contains-vcs-control-dir
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The package contains a control directory for a version control system.
@@ -754,14 +677,12 @@ Info: The package contains a control directory for a version control system.
  usually don't belong in packages.
 
 Tag: package-contains-xvpics-dir
-Type: error
 Severity: important
 Certainty: certain
 Info: Package contains a .xvpics directory. It was most likely installed by
  accident, since thumbnails usually don't belong in packages.
 
 Tag: package-contains-vcs-control-file
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The package contains a VCS control file such as .(cvs|git|hg)ignore.
@@ -771,7 +692,6 @@ Info: The package contains a VCS control file such as .(cvs|git|hg)ignore.
  by accident.
 
 Tag: svn-commit-file-in-package
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The package contains an svn-commit(.NNN).tmp file.  This file is
@@ -779,7 +699,6 @@ Info: The package contains an svn-commit(.NNN).tmp file.  This file is
  not belong in a Debian package.
 
 Tag: svk-commit-file-in-package
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The package contains an svk-commitNNN.tmp file.  This file is almost
@@ -787,7 +706,6 @@ Info: The package contains an svk-commitNNN.tmp file.  This file is almost
  belong in a Debian package.
 
 Tag: nested-examples-directory
-Type: error
 Severity: important
 Certainty: certain
 Info: Package contains a <tt>usr/share/doc/something/examples/examples</tt>
@@ -795,7 +713,6 @@ Info: Package contains a <tt>usr/share/doc/something/examples/examples</tt>
  directory should be enough for everybody(tm).
 
 Tag: package-installs-nonbinary-perl-in-usr-lib-perl5
-Type: warning
 Severity: normal
 Certainty: certain
 Info: Architecture-independent Perl code should be placed in
@@ -805,7 +722,6 @@ Info: Architecture-independent Perl code should be placed in
 Ref: perl-policy 2.3
 
 Tag: file-in-usr-lib-site-python
-Type: error
 Severity: important
 Certainty: certain
 Ref: python-policy 1.4
@@ -816,7 +732,6 @@ Info: The directory /usr/lib/site-python has been deprecated as a
  default search path.
 
 Tag: package-installs-python-pyc
-Type: warning
 Severity: normal
 Certainty: certain
 Info: Compiled python source files should not be included in the package.
@@ -824,7 +739,6 @@ Info: Compiled python source files should not be included in the package.
  installation time in the postinst. 
 
 Tag: bad-permissions-for-ali-file
-Type: warning
 Severity: normal
 Certainty: certain
 Info: Ada Library Information (*.ali) files are required to be read-only
@@ -837,7 +751,6 @@ Info: Ada Library Information (*.ali) files are required to be read-only
  library packages, which provide *.a and *.so libraries to link against).
 
 Tag: package-contains-readme-for-other-platform-or-distro
-Type: warning
 Severity: normal
 Certainty: certain
 Info: package contains a README.(platform) file that contains instructions
@@ -847,7 +760,6 @@ Info: package contains a README.(platform) file that contains instructions
  existing README file.
 
 Tag: desktop-file-in-wrong-dir
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The package contains a .desktop file in an obsolete directory.
@@ -856,7 +768,6 @@ Info: The package contains a .desktop file in an obsolete directory.
  <tt>/usr/share/applications</tt>, not <tt>/usr/share/gnome/apps</tt>.
 
 Tag: file-in-usr-lib-cgi-bin
-Type: warning
 Severity: normal
 Certainty: certain
 Info: Packages shipping web server CGI files should install them in
@@ -867,7 +778,6 @@ Info: Packages shipping web server CGI files should install them in
 Ref: policy 11.5
 
 Tag: script-with-language-extension
-Type: warning
 Severity: normal
 Certainty: certain
 Info: When scripts are installed into a directory in the system PATH, the
@@ -879,7 +789,6 @@ Info: When scripts are installed into a directory in the system PATH, the
 Ref: policy 10.4
 
 Tag: file-in-usr-lib-sgml
-Type: warning
 Severity: normal
 Certainty: certain
 Ref: fhs theusrhierarchy
@@ -888,7 +797,6 @@ Info: This package installs a file in <tt>/usr/lib/sgml</tt>.  This was
  should now go into <tt>/usr/share/sgml</tt>.
 
 Tag: file-name-ends-in-whitespace
-Type: warning
 Severity: normal
 Certainty: certain
 Info: This package installs a file or directory whose name ends in
@@ -899,7 +807,6 @@ Info: This package installs a file or directory whose name ends in
  doc-base file with a Document field that ends in whitespace.
 
 Tag: package-contains-empty-directory
-Type: warning
 Severity: wishlist
 Certainty: certain
 Info: This package installs an empty directory.  This might be intentional
@@ -911,7 +818,6 @@ Info: This package installs an empty directory.  This might be intentional
   $ find path/to/base/dir -type d -empty -delete
 
 Tag: package-section-games-but-contains-no-game
-Type: error
 Severity: important
 Certainty: certain
 Ref: policy 11.11
@@ -920,7 +826,6 @@ Info: This package is marked as part of the section games, but doesn't
  in <tt>/usr/games</tt>.
 
 Tag: package-section-games-but-has-usr-bin
-Type: warning
 Severity: normal
 Certainty: possible
 Ref: policy 11.11
@@ -929,7 +834,6 @@ Info: This package is marked as part of the section games, but contains
  but is usually a mistake.
 
 Tag: package-contains-devhelp-file-without-symlink
-Type: warning
 Severity: normal
 Certainty: certain
 Info: This package contains a *.devhelp or *.devhelp2 file which is not in
@@ -943,7 +847,6 @@ Info: This package contains a *.devhelp or *.devhelp2 file which is not in
  <tt>/usr/share/gtk-doc/html</tt> pointing to the documentation directory.
 
 Tag: debug-package-should-be-named-dbg
-Type: warning
 Severity: normal
 Certainty: certain
 Info: This package provides at least one file in <tt>/usr/lib/debug</tt>,
@@ -953,7 +856,6 @@ Info: This package provides at least one file in <tt>/usr/lib/debug</tt>,
 Ref: devref 6.7.9
 
 Tag: package-contains-linda-override
-Type: warning
 Severity: normal
 Certainty: certain
 Info: This package contains a linda override file in
@@ -962,7 +864,6 @@ Info: This package contains a linda override file in
  probably be dropped from packages.
 
 Tag: wrong-file-owner-uid-or-gid
-Type: error
 Severity: serious
 Certainty: certain
 Info: The user or group ID of the owner of the file is invalid. The
@@ -974,7 +875,6 @@ Info: The user or group ID of the owner of the file is invalid. The
 Ref: policy 9.2
 
 Tag: embedded-javascript-library
-Type: warning
 Severity: normal
 Certainty: certain
 Info: This package contains an embedded copy of JavaScript libraries
@@ -984,7 +884,6 @@ Info: This package contains an embedded copy of JavaScript libraries
 Ref: policy 4.13
 
 Tag: embedded-feedparser-library
-Type: warning
 Severity: normal
 Certainty: certain
 Info: This package contains an embedded copy of Mark Pilgrim's Universal
@@ -993,7 +892,6 @@ Info: This package contains an embedded copy of Mark Pilgrim's Universal
 Ref: policy 4.13
 
 Tag: embedded-pear-module
-Type: warning
 Severity: normal
 Certainty: possible
 Experimental: yes
@@ -1003,7 +901,6 @@ Info: This package appears to contain an embedded copy of a PEAR module.
 Ref: policy 4.13
 
 Tag: embedded-php-library
-Type: warning
 Severity: normal
 Certainty: certain
 Info: This package appears to contain an embedded copy of a PHP library.
@@ -1012,7 +909,6 @@ Info: This package appears to contain an embedded copy of a PHP library.
 Ref: policy 4.13
 
 Tag: windows-devel-file-in-package
-Type: warning
 Severity: normal
 Certainty: possible
 Info: This package appears to contain development files only meaningful to

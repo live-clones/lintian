@@ -7,7 +7,6 @@ Needs-Info: debfiles
 Info: Check debian/watch files in source packages.
 
 Tag: debian-watch-file-is-missing
-Type: info
 Severity: wishlist
 Certainty: certain
 Ref: policy 4.11, uscan(1)
@@ -25,7 +24,6 @@ Info: This source package is not Debian-native but it does not have a
  situation.
 
 Tag: debian-watch-file-declares-multiple-versions
-Type: warning
 Severity: normal
 Certainty: certain
 Ref: uscan(1)
@@ -34,7 +32,6 @@ Info: The <tt>debian/watch</tt> file in this package contains multiple
  declaration in a watch file, on the first non-comment line of the file.
 
 Tag: debian-watch-file-unknown-version
-Type: warning
 Severity: normal
 Certainty: certain
 Ref: uscan(1)
@@ -43,7 +40,6 @@ Info: The <tt>version=</tt> line in the <tt>debian/watch</tt> file in this
  versions are 2 and 3.
 
 Tag: debian-watch-file-missing-version
-Type: warning
 Severity: normal
 Certainty: certain
 Ref: uscan(1)
@@ -54,7 +50,6 @@ Info: The <tt>debian/watch</tt> file in this package doesn't start a
  updated to the current version.
 
 Tag: debian-watch-file-should-mangle-version
-Type: warning
 Severity: normal
 Certainty: certain
 Ref: uscan(1), http://wiki.debian.org/DEHS
@@ -68,7 +63,6 @@ Info: The version of this package contains <tt>dfsg</tt>, <tt>ds</tt>,
  version number comparison.
 
 Tag: debian-watch-file-should-dversionmangle-not-uversionmangle
-Type: info
 Severity: wishlist
 Certainty: certain
 Ref: http://wiki.debian.org/DEHS
@@ -81,7 +75,6 @@ Info: The version of this package contains <tt>dfsg</tt>, <tt>ds</tt>,
  comparing version numbers.
 
 Tag: debian-watch-file-in-native-package
-Type: warning
 Severity: normal
 Certainty: certain
 Ref: http://wiki.debian.org/DEHS
@@ -91,7 +84,6 @@ Info: The package ships a watch file although it is a Debian native
  releases.
 
 Tag: debian-watch-file-uses-deprecated-sf-redirector-method
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The watch file seems to be passing arguments to the redirector

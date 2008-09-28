@@ -7,35 +7,30 @@ Needs-Info: file-info
 Info: This script checks if a binary package conforms to info document policy.
 
 Tag: info-document-not-compressed
-Type: error
 Severity: important
 Certainty: certain
 Info: Info documents have to be installed compressed (using <tt>gzip -9</tt>).
 Ref: policy 12.2
 
 Tag: info-document-not-compressed-with-gzip
-Type: error
 Severity: important
 Certainty: certain
 Info: Info documents should be compressed with <tt>gzip -9</tt>.
 Ref: policy 12.2
 
 Tag: info-document-not-compressed-with-max-compression
-Type: error
 Severity: important
 Certainty: certain
 Info: Info documents should be compressed with <tt>gzip -9</tt>.
 Ref: policy 12.2
 
 Tag: info-document-has-wrong-extension
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The info document has an extension other than info*.gz.
 Ref: policy 12.2
 
 Tag: info-document-missing-dir-section
-Type: warning
 Severity: normal
 Certainty: certain
 Info: This info document has no INFO-DIR-SECTION line and no
@@ -57,7 +52,6 @@ Info: This info document has no INFO-DIR-SECTION line and no
 Ref: policy 12.2
 
 Tag: postrm-calls-install-info
-Type: warning
 Severity: normal
 Certainty: certain
 Ref: policy 12.2
@@ -65,7 +59,6 @@ Info: The postrm script calls the <tt>install-info</tt> command. Usually,
  this command should be called from the <tt>prerm</tt> maintainer script.
 
 Tag: preinst-calls-install-info
-Type: error
 Severity: important
 Certainty: certain
 Ref: policy 12.2
@@ -73,7 +66,6 @@ Info: The preinst script calls the <tt>install-info</tt> command. Usually,
  this command should be called from the <tt>postinst</tt> maintainer script.
 
 Tag: install-info-not-called-with-quiet-option
-Type: warning
 Severity: normal
 Certainty: certain
 Ref: policy 3.9
@@ -82,7 +74,6 @@ Info: The package installation scripts should avoid producing output which it
  output as unnecessary.
 
 Tag: info-documents-not-removed
-Type: warning
 Severity: normal
 Certainty: certain
 Ref: policy 12.2

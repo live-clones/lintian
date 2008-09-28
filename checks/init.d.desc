@@ -6,14 +6,12 @@ Needs-Info: init.d
 Unpack-Level: 1
 
 Tag: duplicate-updaterc.d-calls-in-postinst
-Type: error
 Severity: important
 Certainty: certain
 Info: The <tt>postinst</tt> script calls <tt>update-rc.d</tt> several
  times for the same <tt>/etc/init.d</tt> script.
 
 Tag: output-of-updaterc.d-not-redirected-to-dev-null
-Type: info
 Severity: wishlist
 Certainty: certain
 Info: The output messages of the <tt>update-rc.d</tt> command should be
@@ -21,7 +19,6 @@ Info: The output messages of the <tt>update-rc.d</tt> command should be
  per default.
 
 Tag: preinst-calls-updaterc.d
-Type: error
 Severity: important
 Certainty: certain
 Info: The <tt>preinst</tt> package calls <tt>update-rc.d</tt>. Instead,
@@ -29,14 +26,12 @@ Info: The <tt>preinst</tt> package calls <tt>update-rc.d</tt>. Instead,
 Ref: policy 9.3.3.1
 
 Tag: duplicate-updaterc.d-calls-in-postrm
-Type: error
 Severity: important
 Certainty: certain
 Info: The <tt>postrm</tt> script calls <tt>update-rc.d</tt> several
  times for the same <tt>/etc/init.d</tt> script.
 
 Tag: prerm-calls-updaterc.d
-Type: error
 Severity: important
 Certainty: certain
 Info: The <tt>prerm</tt> package calls <tt>update-rc.d</tt>. Instead,
@@ -44,7 +39,6 @@ Info: The <tt>prerm</tt> package calls <tt>update-rc.d</tt>. Instead,
 Ref: policy 9.3.3.1
 
 Tag: postrm-does-not-call-updaterc.d-for-init.d-script
-Type: error
 Severity: important
 Certainty: certain
 Info: An <tt>/etc/init.d</tt> script which has been registered in the
@@ -53,21 +47,18 @@ Info: An <tt>/etc/init.d</tt> script which has been registered in the
 Ref: policy 9.3.3.1
 
 Tag: postrm-contains-additional-updaterc.d-calls
-Type: error
 Severity: important
 Certainty: certain
 Info: The <tt>postrm</tt> de-registers an <tt>/etc/init.d</tt> script which
  has not been registered in the <tt>postinst</tt> script before.
 
 Tag: file-in-etc-rc.d-marked-as-conffile
-Type: error
 Severity: important
 Certainty: certain
 Ref: policy 9.3.3
 Info: The symbolic links in <tt>/etc/rc?.d</tt> may not be marked as conffiles.
 
 Tag: init.d-script-not-marked-as-conffile
-Type: warning
 Severity: important
 Certainty: wild-guess
 Ref: policy 9.3.2
@@ -77,7 +68,6 @@ Info: <tt>/etc/init.d</tt> scripts should be marked as conffiles.
  manually in maintainer scripts and Lintian cannot reliably detect that.
 
 Tag: init.d-script-does-not-implement-required-option
-Type: error
 Severity: important
 Certainty: certain
 Ref: policy 9.3.2
@@ -85,14 +75,12 @@ Info: The <tt>/etc/init.d</tt> scripts have to support the following
  command line arguments: start, stop, restart, force-reload.
 
 Tag: init.d-script-not-included-in-package
-Type: error
 Severity: important
 Certainty: certain
 Info: The <tt>/etc/init.d</tt> script is registered in the
  <tt>postinst</tt> script, but is not included in the package.
 
 Tag: script-in-etc-init.d-not-registered-via-update-rc.d
-Type: warning
 Severity: normal
 Certainty: possible
 Info: The package installs an <tt>/etc/init.d</tt> script which is
@@ -101,7 +89,6 @@ Info: The package installs an <tt>/etc/init.d</tt> script which is
  links some other way.
 
 Tag: init.d-script-has-duplicate-lsb-section
-Type: error
 Severity: important
 Certainty: certain
 Ref: http://wiki.debian.org/LSBInitScripts
@@ -111,7 +98,6 @@ Info: This <tt>/etc/init.d</tt> script has more than one LSB keyword
  per init script.
 
 Tag: init.d-script-has-unterminated-lsb-section
-Type: error
 Severity: important
 Certainty: certain
 Ref: http://wiki.debian.org/LSBInitScripts
@@ -124,7 +110,6 @@ Info: This <tt>/etc/init.d</tt> script has an LSB keyword section starting
  markers that do not begin with <tt>#</tt>.
 
 Tag: init.d-script-has-duplicate-lsb-keyword
-Type: warning
 Severity: normal
 Certainty: certain
 Ref: http://wiki.debian.org/LSBInitScripts
@@ -133,7 +118,6 @@ Info: The given keyword was set twice in the LSB keyword section in this
  setting the same keyword twice is undefined.
 
 Tag: init.d-script-has-unknown-lsb-keyword
-Type: warning
 Severity: minor
 Certainty: certain
 Ref: http://wiki.debian.org/LSBInitScripts
@@ -143,7 +127,6 @@ Info: The given keyword was set in the LSB keyword section in this
  been misspelled.
 
 Tag: init.d-script-has-bad-lsb-line
-Type: warning
 Severity: normal
 Certainty: certain
 Ref: http://wiki.debian.org/LSBInitScripts
@@ -155,7 +138,6 @@ Info: This line in the LSB keyword section of an <tt>/etc/init.d</tt>
  must begin with <tt>#</tt> and either a tab or two or more spaces.
 
 Tag: init.d-script-missing-lsb-section
-Type: warning
 Severity: normal
 Certainty: certain
 Ref: http://wiki.debian.org/LSBInitScripts
@@ -166,7 +148,6 @@ Info: This <tt>/etc/init.d</tt> script does not have an LSB keyword
  parallelize the boot process.  Please consider adding it.
 
 Tag: init.d-script-missing-lsb-keyword
-Type: warning
 Severity: normal
 Certainty: certain
 Ref: http://wiki.debian.org/LSBInitScripts
@@ -176,7 +157,6 @@ Info: This <tt>/etc/init.d</tt> script has an LSB keyword section, but it
  an empty value.
 
 Tag: init.d-script-missing-lsb-short-description
-Type: info
 Severity: wishlist
 Certainty: certain
 Ref: http://wiki.debian.org/LSBInitScripts
@@ -186,7 +166,6 @@ Info: This <tt>/etc/init.d</tt> script has an LSB keyword section, but it
  purposes.
 
 Tag: init.d-script-has-bad-start-runlevel
-Type: warning
 Severity: normal
 Certainty: certain
 Ref: http://wiki.debian.org/LSBInitScripts
@@ -195,7 +174,6 @@ Info: The given runlevel specified in the Default-Start keyword of the LSB
  recognized standard runlevels (S, 0, 1, 2, 3, 4, 5, and 6).
 
 Tag: init.d-script-has-bad-stop-runlevel
-Type: warning
 Severity: normal
 Certainty: certain
 Ref: http://wiki.debian.org/LSBInitScripts
@@ -204,7 +182,6 @@ Info: The given runlevel specified in the Default-Stop keyword of the LSB
  recognized standard runlevels (0, 1, 2, 3, 4, 5, and 6).
 
 Tag: init.d-script-has-conflicting-start-stop
-Type: warning
 Severity: normal
 Certainty: certain
 Ref: http://wiki.debian.org/LSBInitScripts
@@ -215,7 +192,6 @@ Info: The given runlevel was included in both the Default-Start and
  one or the other of these keywords.
 
 Tag: init-d-script-stops-in-s-runlevel
-Type: warning
 Severity: normal
 Certainty: certain
 Info: This <tt>/etc/init.d</tt> script specifies the S runlevel in

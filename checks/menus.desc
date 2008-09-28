@@ -6,7 +6,6 @@ Unpack-Level: 1
 Needs-Info: doc-base-files
 
 Tag: postinst-should-not-set-usr-doc-link
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The technical committee chose the symlink transition method to move
@@ -14,7 +13,6 @@ Info: The technical committee chose the symlink transition method to move
  this link is no longer required.
 
 Tag: maintainer-script-does-not-check-for-existence-of-updatemenus
-Type: error
 Severity: important
 Certainty: possible
 Info: The maintainer script calls the <tt>update-menus</tt> command without
@@ -25,7 +23,6 @@ Info: The maintainer script calls the <tt>update-menus</tt> command without
   if [ -x /usr/bin/update-menus ] ; then update-menus ; fi
 
 Tag: maintainer-script-does-not-check-for-existence-of-wm-menu-config
-Type: error
 Severity: important
 Certainty: possible
 Info: The maintainer script calls the <tt>wm-menu-config</tt> command without
@@ -36,7 +33,6 @@ Info: The maintainer script calls the <tt>wm-menu-config</tt> command without
   if [ -x /usr/sbin/wm-menu ]; then /usr/sbin/wm-menu-config; fi
 
 Tag: maintainer-script-does-not-check-for-existence-of-installdocs
-Type: error
 Severity: important
 Certainty: possible
 Info: The maintainer script calls the <tt>install-docs</tt> command without
@@ -49,7 +45,6 @@ Info: The maintainer script calls the <tt>install-docs</tt> command without
   fi
 
 Tag: maintainer-script-calls-deprecated-wm-menu-config
-Type: warning
 Severity: normal
 Certainty: possible
 Info: The use of the wm-menu-config script is deprecated because its design
@@ -57,42 +52,36 @@ Info: The use of the wm-menu-config script is deprecated because its design
 Ref: menu 5
 
 Tag: preinst-calls-updatemenus
-Type: error
 Severity: important
 Certainty: certain
 Info: The preinst script calls the <tt>update-menus</tt> command. Usually,
  this command should be called from the <tt>postinst</tt> maintainer script.
 
 Tag: preinst-calls-installdocs
-Type: error
 Severity: important
 Certainty: certain
 Info: The preinst script calls the <tt>install-docs</tt> command. Usually,
  this command should be called from the <tt>postinst</tt> maintainer script.
 
 Tag: prerm-calls-updatemenus
-Type: error
 Severity: important
 Certainty: certain
 Info: The prerm script calls the <tt>update-menus</tt> command. Usually,
  this command should be called from the <tt>postrm</tt> maintainer script.
 
 Tag: postrm-calls-installdocs
-Type: error
 Severity: important
 Certainty: certain
 Info: The postrm script calls the <tt>install-docs</tt> command. Usually,
  this command should be called from the <tt>prerm</tt> maintainer script.
 
 Tag: executable-menu-file
-Type: warning
 Severity: normal
 Certainty: certain
 Info: Menu files should normally not be marked as executables. You only
  need to do this if your package has to generate menu entries dynamically.
 
 Tag: menu-file-in-usr-lib
-Type: warning
 Severity: normal
 Certainty: certain
 Info: As of menu, version 2.1.25, /usr/lib/menu as location for menu
@@ -102,13 +91,11 @@ Info: As of menu, version 2.1.25, /usr/lib/menu as location for menu
 Ref: menu 3.1
 
 Tag: executable-in-usr-share-docbase
-Type: error
 Severity: important
 Certainty: certain
 Info: Files in <tt>/usr/share/doc-base</tt> may not be marked as executables.
 
 Tag: postinst-does-not-call-installdocs
-Type: error
 Severity: important
 Certainty: certain
 Info: Since the package installs a file in <tt>/usr/share/doc-base</tt>, the
@@ -122,7 +109,6 @@ Info: Since the package installs a file in <tt>/usr/share/doc-base</tt>, the
 Ref: doc-base 2.4
 
 Tag: prerm-does-not-call-installdocs
-Type: error
 Severity: important
 Certainty: certain
 Info: Since the package installs a file in <tt>/usr/share/doc-base</tt>, the
@@ -136,7 +122,6 @@ Info: Since the package installs a file in <tt>/usr/share/doc-base</tt>, the
 Ref: doc-base 2.4
 
 Tag: postinst-does-not-call-updatemenus
-Type: error
 Severity: important
 Certainty: certain
 Info: Since the package installs a file in either <tt>/usr/lib/menu</tt> or
@@ -148,7 +133,6 @@ Info: Since the package installs a file in either <tt>/usr/lib/menu</tt> or
 Ref: menu 4.2
 
 Tag: postrm-does-not-call-updatemenus
-Type: error
 Severity: important
 Certainty: certain
 Info: Since the package installs a file in either <tt>/usr/lib/menu</tt> or
@@ -160,7 +144,6 @@ Info: Since the package installs a file in either <tt>/usr/lib/menu</tt> or
 Ref: menu 4.2
 
 Tag: postinst-has-useless-call-to-update-menus
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The <tt>postinst</tt> script calls the <tt>update-menus</tt> program
@@ -168,7 +151,6 @@ Info: The <tt>postinst</tt> script calls the <tt>update-menus</tt> program
  <tt>/etc/menu-methods</tt>.
 
 Tag: postrm-has-useless-call-to-update-menus
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The <tt>postrm</tt> script calls the <tt>update-menus</tt> program
@@ -176,21 +158,18 @@ Info: The <tt>postrm</tt> script calls the <tt>update-menus</tt> program
  <tt>/etc/menu-methods</tt>
 
 Tag: postinst-has-useless-call-to-install-docs
-Type: error
 Severity: important
 Certainty: certain
 Info: The <tt>postinst</tt> script calls the <tt>install-docs</tt> program
  though no file is installed in <tt>/usr/share/doc-base</tt>.
 
 Tag: prerm-has-useless-call-to-install-docs
-Type: error
 Severity: important
 Certainty: certain
 Info: The <tt>prerm</tt> script calls the <tt>install-docs</tt> program
  though no file is installed in <tt>/usr/share/doc-base</tt>.
 
 Tag: bad-menu-file-name
-Type: error
 Severity: important
 Certainty: certain
 Info: The package installs a file <tt>/usr/lib/menu/menu</tt>, which is
@@ -198,14 +177,12 @@ Info: The package installs a file <tt>/usr/lib/menu/menu</tt>, which is
  be named after the package that installs it.
 
 Tag: doc-base-file-references-usr-doc
-Type: warning
 Severity: normal
 Certainty: certain
 Info: Files in <tt>/usr/share/doc-base</tt> should only contain links to
  files in the <tt>/usr/share/doc</tt> directory.
 
 Tag: doc-base-index-references-multiple-files
-Type: error
 Severity: important
 Certainty: certain
 Info: The Index field in a doc-base file should reference the single index
@@ -214,7 +191,6 @@ Info: The Index field in a doc-base file should reference the single index
 Ref: doc-base 2.3.2.2
 
 Tag: doc-base-file-references-missing-file
-Type: error
 Severity: important
 Certainty: certain
 Info: One of the files referenced in an Index or Files field in this
@@ -223,7 +199,6 @@ Info: One of the files referenced in an Index or Files field in this
  documents they are registering.
 
 Tag: doc-base-file-unknown-format
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The Format field in this doc-base control file declares a format
@@ -232,7 +207,6 @@ Info: The Format field in this doc-base control file declares a format
 Ref: doc-base 2.3.2.2
 
 Tag: doc-base-file-no-format
-Type: error
 Severity: important
 Certainty: certain
 Info: A format section of this doc-base control file didn't specify a
@@ -240,7 +214,6 @@ Info: A format section of this doc-base control file didn't specify a
 Ref: doc-base 2.3.2.2
 
 Tag: doc-base-file-no-format-section
-Type: error
 Severity: important
 Certainty: certain
 Info: This doc-base control file didn't specify any format
@@ -248,7 +221,6 @@ Info: This doc-base control file didn't specify any format
 Ref: doc-base 2.3.2.2
 
 Tag: doc-base-file-no-index
-Type: error
 Severity: important
 Certainty: certain
 Info: Format sections in doc-base control files for HTML or Info documents
@@ -258,7 +230,6 @@ Info: Format sections in doc-base control files for HTML or Info documents
 Ref: doc-base 2.3.2.2
 
 Tag: doc-base-document-field-ends-in-whitespace
-Type: error
 Severity: important
 Certainty: certain
 Info: The Document field in a doc-base file should not end in whitespace.
@@ -267,7 +238,6 @@ Info: The Document field in a doc-base file should not end in whitespace.
  installing such files.
 
 Tag: doc-base-document-field-not-in-first-line
-Type: error
 Severity: important
 Certainty: certain
 Info: The Document field in doc-base control file must be located at
@@ -277,7 +247,6 @@ Info: The Document field in doc-base control file must be located at
 Ref: doc-base 2.3.2.1
 
 Tag: doc-base-file-unknown-field
-Type: error
 Severity: important
 Certainty: certain
 Info: The doc-base control file contains field which is either unknown
@@ -287,13 +256,11 @@ Info: The doc-base control file contains field which is either unknown
 Ref: doc-base 2.3.2.1, doc-base 2.3.2.2
 
 Tag: doc-base-file-duplicated-field
-Type: error
 Severity: important
 Certainty: certain
 Info: The doc-base control file contains a duplicated field.
 
 Tag: doc-base-file-duplicated-format
-Type: error
 Severity: important
 Certainty: certain
 Info: The doc-base control file contains a duplicated format.  Doc-base
@@ -301,7 +268,6 @@ Info: The doc-base control file contains a duplicated format.  Doc-base
 Ref: doc-base 2.3.2.2
 
 Tag: doc-base-file-lacks-required-field
-Type: error
 Severity: important
 Certainty: certain
 Info: The doc-base control file does not contain a required field for the
@@ -309,7 +275,6 @@ Info: The doc-base control file does not contain a required field for the
 Ref: doc-base 2.3.2.1, doc-base 2.3.2.2
 
 Tag: doc-base-invalid-document-field
-Type: error
 Severity: important
 Certainty: certain
 Info: The Document field should consists only of letters (a-z), digits
@@ -318,7 +283,6 @@ Info: The Document field should consists only of letters (a-z), digits
 Ref: doc-base 2.2
 
 Tag: doc-base-abstract-field-is-template
-Type: warning
 Severity: normal
 Certainty: possible
 Info: The Abstract field of doc-base contains a "manage online manuals"
@@ -326,7 +290,6 @@ Info: The Abstract field of doc-base contains a "manage online manuals"
  section 2.3.1 of the Debian doc-base Manual.
 
 Tag: doc-base-abstract-might-contain-extra-leading-whitespaces
-Type: warning
 Severity: normal
 Certainty: possible
 Info: Continuation lines of the Abstract field of doc-base control file
@@ -335,7 +298,6 @@ Info: Continuation lines of the Abstract field of doc-base control file
 Ref: doc-base 2.3.2
 
 Tag: doc-base-abstract-field-separator-extra-whitespaces
-Type: warning
 Severity: normal
 Certainty: certain
 Info: Unnecessary spaces were found in the paragraph separator line of the
@@ -344,7 +306,6 @@ Info: Unnecessary spaces were found in the paragraph separator line of the
 Ref: doc-base 2.3.2
 
 Tag: spelling-error-in-doc-base-title-field
-Type: warning
 Severity: normal
 Certainty: possible
 Info: Lintian found a spelling or capitalization error in the Title field
@@ -353,7 +314,6 @@ Info: Lintian found a spelling or capitalization error in the Title field
  does.
 
 Tag: spelling-error-in-doc-base-abstract-field
-Type: warning
 Severity: normal
 Certainty: possible
 Info: Lintian found a spelling or capitalization error in the Abstract
@@ -362,14 +322,12 @@ Info: Lintian found a spelling or capitalization error in the Abstract
  spelling checker does.
 
 Tag: doc-base-file-syntax-error
-Type: error
 Severity: important
 Certainty: certain
 Info: Lintian found a syntax error in the doc-base control file.
 Ref: doc-base 2.3.2.2
 
 Tag: doc-base-file-separator-extra-whitespaces
-Type: warning
 Severity: normal
 Certainty: certain
 Info: Unnecessary spaces were found in the doc-base file sections'
@@ -378,7 +336,6 @@ Info: Unnecessary spaces were found in the doc-base file sections'
 Ref: doc-base 2.3.2
 
 Tag: doc-base-file-uses-obsolete-national-encoding
-Type: error
 Severity: important
 Certainty: certain
 Info: doc-base files must be valid UTF-8, an encoding of the Unicode
@@ -392,7 +349,6 @@ Info: doc-base files must be valid UTF-8, an encoding of the Unicode
 Ref: doc-base 2.3.2
 
 Tag: doc-base-uses-applications-section
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The section indicated in this doc-base control file has a top-level
@@ -402,7 +358,6 @@ Info: The section indicated in this doc-base control file has a top-level
 Ref: doc-base 2.3.3
 
 Tag: doc-base-unknown-section
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The section indicated in this doc-base control file is not one of
@@ -411,7 +366,6 @@ Info: The section indicated in this doc-base control file is not one of
 Ref: doc-base 2.3.3
 
 Tag: menu-method-should-include-menu-h
-Type: error
 Severity: important
 Certainty: certain
 Info: A menu-method file must include the menu.h configuration file

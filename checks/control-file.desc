@@ -7,7 +7,6 @@ Needs-Info: debfiles
 Info: This script checks debian/control files in source packages
 
 Tag: debian-control-file-uses-obsolete-national-encoding
-Type: error
 Severity: important
 Certainty: certain
 Info: The Debian control file should be valid UTF-8, an encoding of
@@ -20,7 +19,6 @@ Info: The Debian control file should be valid UTF-8, an encoding of
   $ mv control.new control
 
 Tag: build-info-in-binary-control-file-section
-Type: error
 Severity: important
 Certainty: certain
 Ref: policy 5.2
@@ -30,7 +28,6 @@ Info: The control file has a Build-Depends, Build-Depends-Indep,
  the source section of the control file.
 
 Tag: debian-control-with-duplicate-fields
-Type: error
 Severity: important
 Certainty: certain
 Info: One of the paragraphs of your debian/control contains the same
@@ -38,7 +35,6 @@ Info: One of the paragraphs of your debian/control contains the same
  and apt.
 
 Tag: debian-control-file-is-a-symlink
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The <tt>debian/control</tt> file is a symlink rather than a regular
@@ -48,7 +44,6 @@ Info: The <tt>debian/control</tt> file is a symlink rather than a regular
  <tt>debian/control</tt> the real file and the other names symlinks to it.
 
 Tag: no-section-field-for-source
-Type: warning
 Severity: normal
 Certainty: certain
 Ref: policy 5.2
@@ -57,7 +52,6 @@ Info: The package does not have a "Section:" field in the source package
  packages at the request of the Debian ftp-masters.
 
 Tag: section-category-mismatch
-Type: error
 Severity: important
 Certainty: certain
 Info: The <tt>debian/control</tt> file places the indicated binary package
@@ -69,7 +63,6 @@ Info: The <tt>debian/control</tt> file places the indicated binary package
  packages in non-free, and so forth.
 
 Tag: xs-vcs-header-in-debian-control
-Type: info
 Severity: wishlist
 Certainty: certain
 Info: There is an XS-Vcs-* field in the <tt>debian/control</tt> file.  As
@@ -78,7 +71,6 @@ Info: There is an XS-Vcs-* field in the <tt>debian/control</tt> file.  As
  the XS- prefix for this field.
 
 Tag: stronger-dependency-implies-weaker
-Type: warning
 Severity: normal
 Certainty: certain
 Ref: policy 7.2
@@ -94,7 +86,6 @@ Info: In the <tt>debian/control</tt> stanza for the given package, a
  moved to the weaker field).
 
 Tag: package-depends-on-itself
-Type: warning
 Severity: normal
 Certainty: certain
 Ref: policy 7.2

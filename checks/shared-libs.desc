@@ -7,21 +7,18 @@ Needs-Info: file-info, objdump-info
 Info: This script checks if a binary package conforms to shared library policy.
 
 Tag: shlib-with-executable-bit
-Type: error
 Severity: important
 Certainty: certain
 Info: Shared libraries should be mode 0644.
 Ref: policy 8.1
 
 Tag: shlib-with-bad-permissions
-Type: warning
 Severity: normal
 Certainty: certain
 Info: Shared libraries should be mode 0644.
 Ref: policy 8.1
 
 Tag: shlib-with-non-pic-code
-Type: error
 Severity: serious
 Certainty: certain
 Ref: policy 10.2
@@ -37,7 +34,6 @@ Info: The listed shared libraries contain object code that was compiled
  the exception by adding a lintian override to this package.
 
 Tag: ldconfig-symlink-missing-for-shlib
-Type: error
 Severity: important
 Certainty: certain
 Info: The package should not only include the shared library itself, but also
@@ -48,7 +44,6 @@ Info: The package should not only include the shared library itself, but also
 Ref: policy 8.1
 
 Tag: ldconfig-symlink-before-shlib-in-deb
-Type: error
 Severity: important
 Certainty: certain
 Info: In the package contents list, the shared library has to come before
@@ -56,7 +51,6 @@ Info: In the package contents list, the shared library has to come before
 Ref: policy 8.1
 
 Tag: dev-pkg-without-shlib-symlink
-Type: warning
 Severity: normal
 Certainty: certain
 Info: A `-dev' package is supposed to install a `libsomething.so' symbolic
@@ -66,7 +60,6 @@ Info: A `-dev' package is supposed to install a `libsomething.so' symbolic
 Ref: policy 8.4
 
 Tag: non-dev-pkg-with-shlib-symlink
-Type: warning
 Severity: normal
 Certainty: possible
 Info: Although this package is not a `-dev' package, it installs a
@@ -84,7 +77,6 @@ Info: Although this package is not a `-dev' package, it installs a
 Ref: policy 8.4
 
 Tag: preinst-calls-ldconfig
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The preinst script calls ldconfig.  Calls to ldconfig should only be
@@ -92,7 +84,6 @@ Info: The preinst script calls ldconfig.  Calls to ldconfig should only be
 Ref: policy 8.1.1
 
 Tag: prerm-calls-ldconfig
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The prerm script calls ldconfig.  Calls to ldconfig should only
@@ -100,7 +91,6 @@ Info: The prerm script calls ldconfig.  Calls to ldconfig should only
 Ref: policy 8.1.1
 
 Tag: postrm-unsafe-ldconfig
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The postrm script calls ldconfig unsafely.  The postrm
@@ -108,7 +98,6 @@ Info: The postrm script calls ldconfig unsafely.  The postrm
 Ref: policy 8.1.1
 
 Tag: no-shlibs-control-file
-Type: error
 Severity: serious
 Certainty: certain
 Info: Although the package includes a shared library, the package does not
@@ -117,7 +106,6 @@ Info: Although the package includes a shared library, the package does not
 Ref: policy 8.6
 
 Tag: pkg-has-shlibs-control-file-but-no-actual-shared-libs
-Type: error
 Severity: important
 Certainty: certain
 Info: Although the package does not include any shared libraries, it does
@@ -130,13 +118,11 @@ Info: Although the package does not include any shared libraries, it does
  then libtool invoked with the right options should be doing this.
 
 Tag: duplicate-entry-in-shlibs-control-file
-Type: error
 Severity: important
 Certainty: certain
 Info: The shlibs control file contains a duplicate entry.
 
 Tag: shlib-missing-in-control-file
-Type: error
 Severity: important
 Certainty: certain
 Info: The package contains a shared library that is not listed in the
@@ -144,7 +130,6 @@ Info: The package contains a shared library that is not listed in the
 Ref: policy 8.6
 
 Tag: unused-shlib-entry-in-control-file
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The shlibs control file contains an entry for a shared library that
@@ -152,7 +137,6 @@ Info: The shlibs control file contains an entry for a shared library that
 Ref: policy 8.6
 
 Tag: shlibs-declares-dependency-on-other-package
-Type: warning
 Severity: normal
 Certainty: possible
 Info: This package declares in its shlibs control file either a dependency
@@ -170,7 +154,6 @@ Info: This package declares in its shlibs control file either a dependency
 Ref: policy 8.6
 
 Tag: ldconfig-symlink-referencing-wrong-file
-Type: error
 Severity: important
 Certainty: certain
 Info: The symbolic link references the wrong file. (It should reference
@@ -178,7 +161,6 @@ Info: The symbolic link references the wrong file. (It should reference
 Ref: policy 8.1
 
 Tag: ldconfig-symlink-is-not-a-symlink
-Type: error
 Severity: important
 Certainty: certain
 Info: The package installs a file with the name, ldconfig would use for
@@ -186,7 +168,6 @@ Info: The package installs a file with the name, ldconfig would use for
 Ref: policy 8.1
 
 Tag: postinst-has-useless-call-to-ldconfig
-Type: warning
 Severity: minor
 Certainty: certain
 Info: The postinst script calls ldconfig even though no shared libraries are
@@ -194,14 +175,12 @@ Info: The postinst script calls ldconfig even though no shared libraries are
 Ref: policy 8.1.1
 
 Tag: udeb-postinst-must-not-call-ldconfig
-Type: error
 Severity: important
 Certainty: certain
 Info: The postinst script calls ldconfig, which is an error in udebs.
  ldconfig is not available and not needed in debian-installer
 
 Tag: postrm-has-useless-call-to-ldconfig
-Type: warning
 Severity: minor
 Certainty: certain
 Info: The postrm script calls ldconfig even though no shared libraries are
@@ -209,7 +188,6 @@ Info: The postrm script calls ldconfig even though no shared libraries are
 Ref: policy 8.1.1
 
 Tag: postinst-must-call-ldconfig
-Type: error
 Severity: serious
 Certainty: certain
 Info: The package installs shared libraries in a directory controlled by
@@ -218,7 +196,6 @@ Info: The package installs shared libraries in a directory controlled by
 Ref: policy 8.1.1
 
 Tag: postrm-should-call-ldconfig
-Type: warning
 Severity: important
 Certainty: certain
 Info: The package installs shared libraries in a directory controlled by
@@ -227,7 +204,6 @@ Info: The package installs shared libraries in a directory controlled by
 Ref: policy 8.1.1
 
 Tag: sharedobject-in-library-directory-missing-soname
-Type: error
 Severity: important
 Certainty: possible
 Info: A shared object was identified in a library directory (i.e. a
@@ -239,7 +215,6 @@ Info: A shared object was identified in a library directory (i.e. a
  then libtool invoked with the right options should be doing this.
 
 Tag: shlib-without-PT_GNU_STACK-section
-Type: error
 Severity: important
 Certainty: certain
 Info: The listed shared libraries lacks a PT_GNU_STACK section. This forces
@@ -249,7 +224,6 @@ Info: The listed shared libraries lacks a PT_GNU_STACK section. This forces
  older than two years. This problem can be fixed with a rebuild.
 
 Tag: shlib-with-executable-stack
-Type: warning
 Severity: normal
 Certainty: possible
 Info: The listed shared libraries declares the stack as executable.
@@ -261,7 +235,6 @@ Info: The listed shared libraries declares the stack as executable.
  section.
 
 Tag: symbols-file-contains-current-version-with-debian-revision
-Type: error
 Severity: important
 Certainty: certain
 Info: Debian revisions should be stripped from versions in symbols files.
@@ -278,7 +251,6 @@ Info: Debian revisions should be stripped from versions in symbols files.
  the new symbols with the corresponding upstream version.
 
 Tag: symbols-file-contains-debian-revision
-Type: warning
 Severity: normal
 Certainty: certain
 Info: Debian revisions should be stripped from versions in symbols files.
@@ -289,7 +261,6 @@ Info: Debian revisions should be stripped from versions in symbols files.
  (example: 1.0-3~ if the symbol appeared in 1.0-3).
 
 Tag: syntax-error-in-symbols-file
-Type: error
 Severity: important
 Certainty: certain
 Info: The symbols file contains an entry that does not follow the syntax
@@ -299,13 +270,11 @@ Info: The symbols file contains an entry that does not follow the syntax
 Ref: deb-symbols(5)
 
 Tag: duplicate-entry-in-symbols-control-file
-Type: error
 Severity: important
 Certainty: certain
 Info: The symbols control file contains a duplicate entry.
 
 Tag: no-symbols-control-file
-Type: info
 Severity: wishlist
 Certainty: certain
 Info: Although the package includes a shared library, the package does not
@@ -317,7 +286,6 @@ Info: Although the package includes a shared library, the package does not
 Ref: dpkg-gensymbols(1)
 
 Tag: pkg-has-symbols-control-file-but-no-shared-libs
-Type: error
 Severity: important
 Certainty: certain
 Info: Although the package does not include any shared libraries, it does
@@ -330,7 +298,6 @@ Info: Although the package does not include any shared libraries, it does
  then libtool invoked with the right options should be doing this.
 
 Tag: shlib-missing-in-symbols-control-file
-Type: warning
 Severity: normal
 Certainty: possible
 Info: The package contains a shared library that is not listed in the
@@ -338,14 +305,12 @@ Info: The package contains a shared library that is not listed in the
  the library is a C++ library.
 
 Tag: unused-shlib-entry-in-symbols-control-file
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The symbols control file contains an entry for a shared library that
  is not installed by this package.
 
 Tag: symbols-declares-dependency-on-other-package
-Type: warning
 Severity: normal
 Certainty: possible
 Info: This package declares in its symbols control file a dependency on
@@ -362,7 +327,6 @@ Info: This package declares in its symbols control file a dependency on
 Ref: policy 8.6
 
 Tag: invalid-template-id-in-symbols-file
-Type: error
 Severity: important
 Certainty: certain
 Info: The symbol definition refers to an alternative dependency template
@@ -373,7 +337,6 @@ Info: The symbol definition refers to an alternative dependency template
  sequence.
 
 Tag: unknown-meta-field-in-symbols-file
-Type: error
 Severity: important
 Certainty: certain
 Info: The symbols control file contains an unknown meta-information field.
@@ -382,7 +345,6 @@ Info: The symbols control file contains an unknown meta-information field.
 Ref: deb-control(5)
 
 Tag: symbols-declared-but-not-shlib
-Type: error
 Severity: important
 Certainty: certain
 Info: The symbols control file contains dependency and symbol information

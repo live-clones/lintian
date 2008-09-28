@@ -8,7 +8,6 @@ Info: This script checks if a source package contains a valid
 Needs-Info: debfiles
 
 Tag: no-standards-version-field
-Type: error
 Severity: important
 Certainty: certain
 Ref: policy 5.6.11
@@ -17,7 +16,6 @@ Info: The source package does not have a Standards-Version control field.
  appropriately.
 
 Tag: invalid-standards-version
-Type: error
 Severity: important
 Certainty: certain
 Info: The source package refers to a Standards-Version which never
@@ -25,7 +23,6 @@ Info: The source package refers to a Standards-Version which never
  control field appropriately.
 
 Tag: newer-standards-version
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The source package refers to a Standards-Version which is
@@ -35,7 +32,6 @@ Info: The source package refers to a Standards-Version which is
  one.)
 
 Tag: ancient-standards-version
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The source package refers to a Standards-Version that has been
@@ -48,7 +44,6 @@ Info: The source package refers to a Standards-Version that has been
  you upload the package.
 
 Tag: out-of-date-standards-version
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The source package refers to a Standards-Version older than the one
@@ -63,7 +58,6 @@ Info: The source package refers to a Standards-Version older than the one
  you upload the package.
 
 Tag: timewarp-standards-version
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The source package refers to a Standards-Version that was released

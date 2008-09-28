@@ -8,7 +8,6 @@ Info: This script checks if md5sum control files are valid, if they are
  provided by a binary package.
 
 Tag: no-md5sums-control-file
-Type: info
 Severity: wishlist
 Certainty: certain
 Info: This package does not contain an md5sums control file.  This control
@@ -22,7 +21,6 @@ Info: This package does not contain an md5sums control file.  This control
  target, right before <tt>dh_builddeb</tt>.
 
 Tag: malformed-md5sums-control-file
-Type: error
 Severity: important
 Certainty: certain
 Info: The indicated line of the md5sums control file for this package was
@@ -31,7 +29,6 @@ Info: The indicated line of the md5sums control file for this package was
  that checksum.
 
 Tag: md5sum-mismatch
-Type: error
 Severity: important
 Certainty: certain
 Info: The md5sum listed for the file does not match the actual file
@@ -42,7 +39,6 @@ Info: The md5sum listed for the file does not match the actual file
  <tt>debstd</tt> is run.
 
 Tag: md5sums-lists-nonexisting-file
-Type: error
 Severity: important
 Certainty: certain
 Info: The md5sums control file lists a file which is not included in the
@@ -58,7 +54,6 @@ Info: The md5sums control file lists a file which is not included in the
  updated debstd should fix the problem.
 
 Tag: file-missing-in-md5sums
-Type: warning
 Severity: normal
 Certainty: certain
 Info: The package contains a file which isn't listed in the md5sums control
