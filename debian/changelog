@@ -10,6 +10,24 @@ lintian (2.1.0) unstable; urgency=low
     + [FL] Use $known_shells_regex from common_data.
   * check/scripts:
     + [FL] Use $known_shells_regex from common_data.
+  
+  * frontend/lintian:
+    + [FL] Convert to use Lintian::Output.
+  
+  * lib/Lintian/Output:
+    + [FL] New module to bundle output methods.
+  * lib/Tags/{ColonSeparated,LetterQualifier}.pm:
+    + [FL] Move to lib/Lintian/Output and convert to subclasses of
+      Lintian::Output.
+  * lib/Lintian/Output/XML.pm:
+    + [FL] New experimental output format.
+  
+  * lib/Lab.pm:
+    + [FL] Convert to use Lintian::Output.
+  * lib/Tags.pm:
+    + [FL] Convert to use Lintian::Output.
+  * lib/Util.pm:
+    + [FL] Convert to use Lintian::Output.
 
  -- Frank Lichtenheld <djpig@debian.org>  Sun, 28 Sep 2008 10:35:47 +0200
 
