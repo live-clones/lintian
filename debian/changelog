@@ -11,6 +11,13 @@ lintian (2.1.0) unstable; urgency=low
   * check/scripts:
     + [FL] Use $known_shells_regex from common_data.
   
+  * collection/objdump-info:
+    + [ADB] Only use readelf to emulate objdump if objdump returned "file
+      format not recognized".  In cases where the objdump output was "invalid
+      operation", the output of etch's readelf is not particularly useful
+      and it's easier to simply let the checks scripts handle the objdump
+      output.
+
   * frontend/lintian:
     + [FL] Convert to use Lintian::Output.
   

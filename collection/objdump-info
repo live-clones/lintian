@@ -98,16 +98,44 @@ while (<FILES>) {
 
 	    last if $failed;
 	} else {
-	    # We're using etch's binutils so attempt to build an output file
-	    # in the expected format without using objdump; we lose some
-	    # data but none that our later checks actually use
 	    my @sections;
 	    my @symbol_versions;
 
-	    if (system("readelf -l $bin 2>&1 | grep -q 'Error: Not an ELF file'") == 0) {
+	    # If the error wasn't one of the two we special-case, abort
+	    $failed = 1;
+	    my $invalidop = 0;
+	    my $objdumpout = '';
+	    if (open(PIPE, '-|', "objdump --headers --private-headers -T $bin 2>&1")) {
+		while(<PIPE>) {
+		    $objdumpout .= $_;
+		    if (m/Invalid operation$/) {
+			$invalidop = 1;
+			$failed = 0;
+		    } elsif (m/File format not recognized$/) {
+			$failed = 0;
+		    }
+		}
+		close PIPE;
+	    }
+
+	    last if $failed;
+
+	    if ($invalidop) {
+		# If objdump returned "invalid operation" then the
+		# readelf code will tend to produce false positives
+		# so just return the objdump output and let the scripts
+		# handle it
+
+		print OUT $objdumpout;
+		next;
+	    } elsif (system("readelf -l $bin 2>&1 | grep -q 'Error: Not an ELF file'") == 0) {
 		print OUT "objdump: $bin: File format not recognized\n";
 		next;
 	    } elsif (open(PIPE, '-|', "readelf -W -l -t -d -V $bin")) {
+		# We're using etch's binutils so attempt to build an output file
+		# in the expected format without using objdump; we lose some
+		# data but none that our later checks actually use
+
 		my $section = '';
 		my %program_headers;
 
