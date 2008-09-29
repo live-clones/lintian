@@ -73,35 +73,7 @@ while (<FILES>) {
 		print OUT $_;
 		close PIPE;
 	    }
-	} elsif ($binutils_version !~ m/^2\.17/) {
-	    # etch's binutils (2.17) can't read 64-bit binaries on 32-bit
-	    # platforms so we special-case that below
-	    #
-	    # Otherwise we allow the two specific errors "Invalid operation" and
-	    # "File format not recognized" as the checks scripts handle them
-
-	    # From the original script:
-	    # If the objdump error is "Invalid operation", we handle it later
-	    # in the check script, since this is the expected output (for now)
-	    # on detached debugging information in /usr/lib/debug.
-
-	    $failed = 1;
-	    if (open(PIPE, '-|', "objdump --headers --private-headers -T $bin 2>&1")) {
-		while(<PIPE>) {
-		    $failed = 0 if m/Invalid operation$/;
-		    $failed = 0 if m/File format not recognized$/;
-
-		    print OUT $_;
-		}
-		close PIPE;
-	    }
-
-	    last if $failed;
 	} else {
-	    my @sections;
-	    my @symbol_versions;
-
-	    # If the error wasn't one of the two we special-case, abort
 	    $failed = 1;
 	    my $invalidop = 0;
 	    my $objdumpout = '';
@@ -120,126 +92,135 @@ while (<FILES>) {
 
 	    last if $failed;
 
-	    if ($invalidop) {
-		# If objdump returned "invalid operation" then the
-		# readelf code will tend to produce false positives
-		# so just return the objdump output and let the scripts
-		# handle it
+	    if ($invalidop or $binutils_version !~ m/^2\.17/) {
+		# If we're using a binutils newer than etch's then either
+		# "invalid operation" or "file format not recognized"
+		# are simply passed through to the checks scripts
+		# which handle the output themselves
+		#
+		# If objdump returned "invalid operation" and we are
+		# using etch's binutils then the readelf code will tend
+		# to produce false positives so we just return the
+		# objdump output and let the scripts handle it
 
 		print OUT $objdumpout;
-		next;
 	    } elsif (system("readelf -l $bin 2>&1 | grep -q 'Error: Not an ELF file'") == 0) {
 		print OUT "objdump: $bin: File format not recognized\n";
-		next;
-	    } elsif (open(PIPE, '-|', "readelf -W -l -t -d -V $bin")) {
-		# We're using etch's binutils so attempt to build an output file
-		# in the expected format without using objdump; we lose some
-		# data but none that our later checks actually use
+	    } else {
+		# We're using etch's binutils so attempt to build an output
+		# file in the expected format without using objdump; we lose
+		# some data but none that our later checks actually use
 
-		my $section = '';
-		my %program_headers;
+		my @sections;
+		my @symbol_versions;
 
-		while(<PIPE>) {
-		    chomp;
-		    if (m/^Program Headers:/) {
-			$section = 'PH';
-			print OUT "$_\n";
-		    } elsif (m/^Section Headers:/) {
-			$section = 'SH';
-			print OUT "$_\n";
-		    } elsif (m/^Dynamic section at offset .*:/) {
-			$section = 'DS';
-			print OUT "$_\n";
-		    } elsif (m/^Version symbols section /) {
-			$section = 'VS';
-		    } elsif (m/^\s*$/) {
-			$section = '';
-		    } elsif (m/^\s*(\S+)\s*(?:(?:\S+\s+){4})\S+\s(...)/
-			     and $section eq 'PH') {
-			my ($header, $flags) = ($1, $2);
-			$header =~ s/^GNU_//g;
-			next if $header eq 'Type';
+		if (open(PIPE, '-|', "readelf -W -l -t -d -V $bin")) {
+		    my $section = '';
+		    my %program_headers;
 
-			my $newflags = '';
-			$newflags .= ($flags =~ m/R/) ? 'r' : '-';
-			$newflags .= ($flags =~ m/W/) ? 'w' : '-';
-			$newflags .= ($flags =~ m/E/) ? 'x' : '-';
+		    while(<PIPE>) {
+			chomp;
+			if (m/^Program Headers:/) {
+			    $section = 'PH';
+			    print OUT "$_\n";
+			} elsif (m/^Section Headers:/) {
+			    $section = 'SH';
+			    print OUT "$_\n";
+			} elsif (m/^Dynamic section at offset .*:/) {
+			    $section = 'DS';
+			    print OUT "$_\n";
+			} elsif (m/^Version symbols section /) {
+			    $section = 'VS';
+			} elsif (m/^\s*$/) {
+			    $section = '';
+			} elsif (m/^\s*(\S+)\s*(?:(?:\S+\s+){4})\S+\s(...)/
+			      and $section eq 'PH') {
+			    my ($header, $flags) = ($1, $2);
+			    $header =~ s/^GNU_//g;
+			    next if $header eq 'Type';
 
-			$program_headers{$header} = $newflags;
+			    my $newflags = '';
+			    $newflags .= ($flags =~ m/R/) ? 'r' : '-';
+			    $newflags .= ($flags =~ m/W/) ? 'w' : '-';
+			    $newflags .= ($flags =~ m/E/) ? 'x' : '-';
 
-			print OUT "  $header off 0x0 X 0x0 X 0x0\n  flags $newflags\n";
-		    } elsif (m/^\s*\[(\d+)\]\s*(\S+)(?:\s|\Z)/
-			     and $section eq 'SH') {
-			$sections[$1] = $2;
-		    } elsif (m/^\s*0x(?:[0-9A-F]+)\s+\((.*?)\)\s+(\S.*)\Z/i
-			     and $section eq 'DS') {
-			my ($type, $value) = ($1, $2);
+			    $program_headers{$header} = $newflags;
 
-			$value =~ s/^(?:Shared library|Library soname): \[(.*)\]/$1/;
-			print OUT "  $type   $value\n";
-		    } elsif (m/^\s*[0-9A-F]+:\s+(\S+)\s*(?:\((\S+)\))?(\s|\Z)/i
-			     and $section eq 'VS') {
-			while (m/([0-9A-F]+h?)\s*(?:\((\S+)\))?(\s|\Z)/gci) {
-			    my ($vernum, $verstring) = ($1, $2);
-			    $verstring ||= '';
-			    if ($vernum =~ m/h$/) {
-				$verstring = "($verstring)";
-			    }
-			    push @symbol_versions, $verstring;
-			}
-		    } elsif (m/^There is no dynamic section in this file/
-			     and exists $program_headers{DYNAMIC}) {
-			# The headers declare a dynamic section but it's
-			# empty. Generate the same error as objdump,
-			# the checks scripts special-case the string.
-			print OUT "\n\nobjdump: $bin: Invalid operation\n";
-		    }
-		}
-		close PIPE;
-	    }
+			    print OUT "  $header off 0x0 X 0x0 X 0x0\n  flags $newflags\n";
+			} elsif (m/^\s*\[(\d+)\]\s*(\S+)(?:\s|\Z)/
+			      and $section eq 'SH') {
+			    $sections[$1] = $2;
+			} elsif (m/^\s*0x(?:[0-9A-F]+)\s+\((.*?)\)\s+(\S.*)\Z/i
+			      and $section eq 'DS') {
+			    my ($type, $value) = ($1, $2);
 
-	    if (open(PIPE, '-|', "readelf -W -s -D $bin")) {
-		print OUT "DYNAMIC SYMBOL TABLE:\n";
-
-		while(<PIPE>) {
-		    last if m/^Symbol table of/;
-
-		    if (m/^\s*(\d+)\s+\d+:\s*[0-9a-f]+\s+\d+\s+(?:(?:\S+\s+){3})(\S+)\s+(.*)\Z/) {
-			my ($symnum, $seg, $sym, $ver) = ($1, $2, $3, '');
-
-			if ($sym =~ m/^(.*)@(.*)$/) {
-			    $sym = $1;
-			    $ver = $2;
-			} elsif (@symbol_versions == 0) {
-			    # No versioned symbols...
-			    $ver = '';
-			} else {
-			    $ver = $symbol_versions[$symnum];
-
-			    if ($ver eq '*local*' or $ver eq '*global*') {
-				if ($seg eq 'UND') {
-				    $ver = '   ';
-				} else {
-				    $ver = 'Base';
+			    $value =~ s/^(?:Shared library|Library soname): \[(.*)\]/$1/;
+			    print OUT "  $type   $value\n";
+			} elsif (m/^\s*[0-9A-F]+:\s+(\S+)\s*(?:\((\S+)\))?(\s|\Z)/i
+			      and $section eq 'VS') {
+			    while (m/([0-9A-F]+h?)\s*(?:\((\S+)\))?(\s|\Z)/gci) {
+				my ($vernum, $verstring) = ($1, $2);
+				$verstring ||= '';
+				if ($vernum =~ m/h$/) {
+				    $verstring = "($verstring)";
 				}
-			    } elsif ($ver eq '()') {
-				$ver = '(Base)';
+				push @symbol_versions, $verstring;
 			    }
+			} elsif (m/^There is no dynamic section in this file/
+			      and exists $program_headers{DYNAMIC}) {
+			    # The headers declare a dynamic section but it's
+			    # empty. Generate the same error as objdump,
+			    # the checks scripts special-case the string.
+			    print OUT "\n\nobjdump: $bin: Invalid operation\n";
 			}
-
-			if ($seg =~ m/^\d+$/ and defined $sections[$seg]) {
-			    $seg = $sections[$seg];
-			}
-
-			print OUT "00      XX $seg  000000  $ver  $sym\n";
 		    }
+		    close PIPE;
 		}
 
-		close PIPE;
+		if (open(PIPE, '-|', "readelf -W -s -D $bin")) {
+		    print OUT "DYNAMIC SYMBOL TABLE:\n";
+
+		    while(<PIPE>) {
+			last if m/^Symbol table of/;
+
+			if (m/^\s*(\d+)\s+\d+:\s*[0-9a-f]+\s+\d+\s+(?:(?:\S+\s+){3})(\S+)\s+(.*)\Z/) {
+			    my ($symnum, $seg, $sym, $ver) = ($1, $2, $3, '');
+
+			    if ($sym =~ m/^(.*)@(.*)$/) {
+				$sym = $1;
+				$ver = $2;
+			    } elsif (@symbol_versions == 0) {
+				# No versioned symbols...
+				$ver = '';
+			    } else {
+				$ver = $symbol_versions[$symnum];
+
+				if ($ver eq '*local*' or $ver eq '*global*') {
+				    if ($seg eq 'UND') {
+					$ver = '   ';
+				    } else {
+					$ver = 'Base';
+				    }
+				} elsif ($ver eq '()') {
+				    $ver = '(Base)';
+				}
+			    }
+
+			    if ($seg =~ m/^\d+$/ and defined $sections[$seg]) {
+				$seg = $sections[$seg];
+			    }
+
+			    print OUT "00      XX $seg  000000  $ver  $sym\n";
+			}
+		    }
+
+		    close PIPE;
+		}
 	    }
 	}
     }
 }
+
 close FILES;
 close OUT;
 
