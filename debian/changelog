@@ -4,6 +4,10 @@ lintian (2.1.0) unstable; urgency=low
     + [FL] Knew variable $known_shells_regex which matches known shell
       names.  This removes some synchronisation issues between the
       different regexes in use.
+  * checks/fields:
+    + [ADB] Ignore non-dependency fields when considering whether a
+      versioned dependency is satisfied by the perl core packages.
+      Based on a patch by Niko Tyni.  (Closes: #500720)
   * checks/infofiles:
     + [FL] Use $known_shells_regex from common_data.
   * checks/menus:

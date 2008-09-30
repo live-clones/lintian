@@ -530,6 +530,7 @@ if (($type eq "binary") || ($type eq 'udeb')) {
 					# only trigger this for the the preferred alternative
 					tag "versioned-dependency-satisfied-by-perl", "$field: $part_d_orig"
 						if $alternatives[0][-1] eq $part_d_orig
+						&& &$is_dep_field($field)
 						&& perl_core_has_version($d_pkg, $d_version->[0], $d_version->[1]);
 
 					tag "depends-exclusively-on-makedev", "$field",
@@ -717,6 +718,7 @@ if ($type eq "source") {
 					# only trigger this for the the preferred alternative
 					tag "versioned-dependency-satisfied-by-perl", "$field: $part_d_orig"
 						if $alternatives[0][-1] eq $part_d_orig
+						&& &$is_dep_field($field)
 						&& perl_core_has_version($d_pkg, $d_version->[0], $d_version->[1]);
 				}
 
