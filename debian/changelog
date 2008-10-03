@@ -1,7 +1,7 @@
 lintian (2.1.0) unstable; urgency=low
 
   * checks/common_data.pm:
-    + [FL] Knew variable $known_shells_regex which matches known shell
+    + [FL] New variable $known_shells_regex which matches known shell
       names.  This removes some synchronisation issues between the
       different regexes in use.
   * checks/fields:
