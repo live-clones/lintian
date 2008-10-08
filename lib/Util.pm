@@ -33,6 +33,10 @@ our @EXPORT = qw(parse_dpkg_control
 	file_is_encoded_in_non_utf8
 	fail
 	system_env
+	delete_dir
+	copy_dir
+	gunzip_file
+	touch_file
 	perm2oct);
 
 use FileHandle;
@@ -258,7 +262,30 @@ sub perm2oct {
     return $o;
 }
 
-# ------------------------
+
+sub delete_dir {
+    return spawn(undef, ['rm', '-rf', '--', @_]);
+}
+
+sub copy_dir {
+    return spawn(undef, ['cp', '-a', '--', @_]);
+}
+
+sub gunzip_file {
+    my ($in, $out) = @_;
+    spawn({out => $out},
+	  ['gzip', '-dc', $in])
+	or fail("error in gzip");
+}
+
+# create an empty file
+# --okay, okay, this is not exactly what `touch' does :-)
+sub touch_file {
+    open(T, '>', $_[0]) or return 0;
+    close(T) or return 0;
+
+    return 1;
+}
 
 sub fail {
     my $str;

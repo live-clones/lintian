@@ -120,7 +120,7 @@ sub setup_force {
     # can analyze what changed.
     for my $pkgtype (qw( binary source udeb )) {
 	if (not -f "$dir/info/$pkgtype-packages") {
-	    _touch("$dir/info/$pkgtype-packages")
+	    touch_file("$dir/info/$pkgtype-packages")
 		or fail("cannot create $pkgtype package list");
 	}
     }
@@ -214,11 +214,10 @@ sub delete_force {
     }
 
     # looks ok.
-    unless (spawn(undef, ['rm', '-rf', '--',
-			  "$self->{dir}/binary",
-			  "$self->{dir}/source",
-			  "$self->{dir}/udeb",
-			  "$self->{dir}/info"])) {
+    unless (delete_dir("$self->{dir}/binary",
+		       "$self->{dir}/source",
+		       "$self->{dir}/udeb",
+		       "$self->{dir}/info")) {
 		warning("cannot remove lab directory $self->{dir} (please remove it yourself)");
     }
 
@@ -233,16 +232,6 @@ sub delete_force {
 
     return 1;
 }
-
-# create an empty file
-# --okay, okay, this is not exactly what `touch' does :-)
-sub _touch {
-    open(T, '>', $_[0]) or return 0;
-    close(T) or return 0;
-
-    return 1;
-}
-
 
 1;
 
