@@ -36,7 +36,7 @@ our @EXPORT = qw(parse_dpkg_control
 	perm2oct);
 
 use FileHandle;
-use Pipeline;
+use Lintian::Command qw(spawn);
 use Lintian::Output qw(string);
 use Digest::MD5;
 
@@ -138,13 +138,13 @@ sub get_deb_info {
     }
 
     # `dpkg-deb -f $file' is very slow. Instead, we use ar and tar.
-    my $CONTROL = FileHandle->new;
-    pipeline_open($CONTROL,
-		  (sub { exec 'ar', 'p', $file, 'control.tar.gz' }),
-		  (sub { exec 'tar', '--wildcards', '-xzO', '-f', '-', '*control' }))
-	or fail("cannot fork to unpack $file: $!\n");
-    my @data = parse_dpkg_control($CONTROL);
-    close($CONTROL) or fail("broken input pipe for unpacking $file: $!");
+    my $opts = { pipe_out => FileHandle->new };
+    spawn($opts,
+	  ['ar', 'p', $file, 'control.tar.gz'],
+	  '|', ['tar', '--wildcards', '-xzO', '-f', '-', '*control'])
+	or fail("cannot fork to unpack $file: $opts->{exception}\n");
+    my @data = parse_dpkg_control($opts->{pipe_out});
+    $opts->{harness}->finish();
     return $data[0];
 }
 

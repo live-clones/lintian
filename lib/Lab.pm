@@ -22,9 +22,9 @@
 package Lab;
 use strict;
 
-use Pipeline;
 use Util;
 use Lintian::Output qw(:messages);
+use Lintian::Command qw(spawn);
 
 use File::Temp;
 
@@ -142,15 +142,15 @@ sub populate_with_dist {
 
     my $v = $Lintian::Output::GLOBAL->verbose ? '-v' : '';
 
-    spawn("$LINTIAN_ROOT/unpack/list-binpkg",
-	  "$self->{dir}/info/binary-packages", $v) == 0
-	      or fail("cannot create binary package list");
-    spawn("$LINTIAN_ROOT/unpack/list-srcpkg",
-	  "$self->{dir}/info/source-packages", $v) == 0
-	      or fail("cannot create source package list");
-    spawn("$LINTIAN_ROOT/unpack/list-udebpkg",
-	  "$self->{dir}/info/udeb-packages", $v) == 0
-	      or fail("cannot create udeb package list");
+    spawn(undef, ["$LINTIAN_ROOT/unpack/list-binpkg",
+		  "$self->{dir}/info/binary-packages", $v])
+	or fail("cannot create binary package list");
+    spawn(undef, ["$LINTIAN_ROOT/unpack/list-srcpkg",
+		  "$self->{dir}/info/source-packages", $v])
+	or fail("cannot create source package list");
+    spawn(undef, ["$LINTIAN_ROOT/unpack/list-udebpkg",
+		  "$self->{dir}/info/udeb-packages", $v])
+	or fail("cannot create udeb package list");
 
     return 1;
 }
@@ -214,11 +214,11 @@ sub delete_force {
     }
 
     # looks ok.
-    if (spawn('rm', '-rf', '--',
-	      "$self->{dir}/binary",
-	      "$self->{dir}/source",
-	      "$self->{dir}/udeb",
-	      "$self->{dir}/info") != 0) {
+    unless (spawn(undef, ['rm', '-rf', '--',
+			  "$self->{dir}/binary",
+			  "$self->{dir}/source",
+			  "$self->{dir}/udeb",
+			  "$self->{dir}/info"])) {
 		warning("cannot remove lab directory $self->{dir} (please remove it yourself)");
     }
 

@@ -16,12 +16,12 @@
 # "packagename (=version)", or if it has a Provides line, as
 # "packagename (=version) | provide1 | provide2 | provide3".
 
+package Dep;
+
 use strict;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
-use Pipeline;
-
-package Dep;
+use Lintian::Command qw(spawn);
 
 # ---------------------------------
 # public routines
@@ -531,7 +531,7 @@ sub versions_gt {
 }
 
 sub get_version_cmp {
-    return ::spawn('dpkg', '--compare-versions', @_) == 0;
+    return spawn(undef, ['dpkg', '--compare-versions', @_]);
 }
 
 # ---------------------------------
