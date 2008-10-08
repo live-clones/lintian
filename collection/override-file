@@ -22,6 +22,9 @@
 
 use strict;
 
+use lib "$ENV{'LINTIAN_ROOT'}/lib";
+use Util;
+
 ($#ARGV == 1) or fail("syntax: override-file <pkg> <type>");
 my $pkg = shift;
 my $type = shift;
@@ -46,27 +49,8 @@ if ( ! -f $file )
 if ( $file eq '' ) {
     # no override found
 } elsif ($file =~ /\.gz$/) {
-    use lib "$ENV{'LINTIAN_ROOT'}/lib";
-    use Pipeline;
-
-    pipeline((sub { exec 'gzip', '-dc', $file }), "override") == 0
-	or fail("error in gzip");
+    gunzip_file($file, "override");
 } else {
     link($file, "override")
 	or fail("cannot link $file to override: $!");
-}
-
-exit 0;
-
-# -----------------------------------
-
-sub fail {
-    if ($_[0]) {
-        print STDERR "internal error: $_[0]\n";
-    } elsif ($!) {
-        print STDERR "internal error: $!\n";
-    } else {
-        print STDERR "internal error.\n";
-    }
-    exit 1;
 }

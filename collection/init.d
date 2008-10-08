@@ -28,32 +28,17 @@ my $type = shift;
 -f "fields/package" or fail("init.d invoked in wrong directory");
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
-use Pipeline;
+use Util;
 
 if (-e "init.d") {
-    spawn('rm', '-rf', 'init.d') == 0
+    delete_dir("init.d")
 	or fail("cannot rm old init.d directory");
 }
 
 if (-d "unpacked/etc/init.d") {
-    spawn('cp', '-a', 'unpacked/etc/init.d', 'init.d') == 0
+    copy_dir('unpacked/etc/init.d', 'init.d')
 	or fail("cannot copy init.d directory");
 } else {
     # no etc/init.d
     mkdir("init.d", 0777) or fail("cannot mkdir init.d: $!");
-}
-
-exit 0;
-
-# -----------------------------------
-
-sub fail {
-    if ($_[0]) {
-        print STDERR "internal error: $_[0]\n";
-    } elsif ($!) {
-        print STDERR "internal error: $!\n";
-    } else {
-        print STDERR "internal error.\n";
-    }
-    exit 1;
 }

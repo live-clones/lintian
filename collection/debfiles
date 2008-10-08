@@ -28,10 +28,10 @@ my $type = shift;
 -e "unpacked" or fail("debfiles invoked in wrong directory");
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
-use Pipeline;
+use Util;
 
 if (-e "debfiles") {
-    spawn('rm', '-rf', 'debfiles') == 0
+    delete_dir('debfiles')
 	or fail("cannot rm old debfiles directory");
 }
 
@@ -42,22 +42,7 @@ opendir(DEBIAN, 'unpacked/debian')
 	or fail("cannot open unpacked/debian/ directory: $!");
 while (my $file=readdir(DEBIAN)) {
 	next if -d $file;
-	spawn('cp', '-a', "unpacked/debian/$file", 'debfiles/') == 0
+	copy_dir("unpacked/debian/$file", 'debfiles/')
 		or fail("cannot copy unpacked/debian/$file: $!");
 }
 closedir(DEBIAN);
-
-exit 0;
-
-# -----------------------------------
-
-sub fail {
-    if ($_[0]) {
-        print STDERR "internal error: $_[0]\n";
-    } elsif ($!) {
-        print STDERR "internal error: $!\n";
-    } else {
-        print STDERR "internal error.\n";
-    }
-    exit 1;
-}

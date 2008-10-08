@@ -21,6 +21,9 @@
 
 use strict;
 
+use lib "$ENV{'LINTIAN_ROOT'}/lib";
+use Util;
+
 ($#ARGV == 1) or fail("syntax: changelog-file <pkg> <type>");
 my $pkg = shift;
 my $type = shift;
@@ -75,11 +78,7 @@ if (defined ($chl) && -l $chl) {
 if (not defined $chl) {
     # no changelog found
 } elsif ($chl =~ /\.gz$/) {
-    use lib "$ENV{'LINTIAN_ROOT'}/lib";
-    use Pipeline;
-
-    pipeline((sub { exec 'gzip', '-dc', $chl }), "changelog") == 0
-	or fail("error in gzip");
+    gunzip_file($chl, 'changelog');
 } elsif (-f $chl && -l $chl) {
     local $_;
     open (CHL, '<', $chl) or fail("cannot open $chl: $!");
@@ -105,25 +104,6 @@ if (-f $news) {
         }
     }
     if ($news) {
-        use lib "$ENV{'LINTIAN_ROOT'}/lib";
-        use Pipeline;
-
-        pipeline((sub { exec 'gzip', '-dc', $news }), "NEWS.Debian") == 0
-            or fail("error in gzip");
+	gunzip_file($news, "NEWS.Debian");
     }
-}
-
-exit 0;
-
-# -----------------------------------
-
-sub fail {
-    if ($_[0]) {
-        print STDERR "internal error: $_[0]\n";
-    } elsif ($!) {
-        print STDERR "internal error: $!\n";
-    } else {
-        print STDERR "internal error.\n";
-    }
-    exit 1;
 }

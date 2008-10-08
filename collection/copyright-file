@@ -21,6 +21,9 @@
 
 use strict;
 
+use lib "$ENV{'LINTIAN_ROOT'}/lib";
+use Util;
+
 ($#ARGV == 1) or fail("syntax: copyright-file <pkg> <type>");
 my $pkg = shift;
 my $type = shift;
@@ -40,28 +43,8 @@ if (-f $file) {
     link($file, "copyright")
 	or fail("cannot link $file to copyright: $!");
 } elsif (-f "$file.gz") {
-    use lib "$ENV{'LINTIAN_ROOT'}/lib";
-    use Pipeline;
-
-    pipeline((sub { exec 'gzip', '-dc', $file }), "copyright") == 0
-	or fail("error in gzip");
+    gunzip_file($file, 'copyright');
 } else {
     # no copyright file found
-    open(DUMMY, ">copyright");
-    close(DUMMY);
-}
-
-exit 0;
-
-# -----------------------------------
-
-sub fail {
-    if ($_[0]) {
-        print STDERR "internal error: $_[0]\n";
-    } elsif ($!) {
-        print STDERR "internal error: $!\n";
-    } else {
-        print STDERR "internal error.\n";
-    }
-    exit 1;
+    touch_file('copyright');
 }

@@ -21,6 +21,9 @@
 
 use strict;
 
+use lib "$ENV{'LINTIAN_ROOT'}/lib";
+use Util;
+
 ($#ARGV == 1) or fail("syntax: debian-readme <pkg> <type>");
 my $pkg = shift;
 my $type = shift;
@@ -34,7 +37,7 @@ my @readmes = ("unpacked/usr/share/doc/$pkg/README.Debian.gz",
 	    "unpacked/usr/share/doc/$pkg/README.Debian",
 	    "unpacked/usr/share/doc/$pkg/README.debian.gz",
 	    "unpacked/usr/share/doc/$pkg/README.debian",
-        "unpacked/usr/doc/$pkg/README.Debian.gz",
+	    "unpacked/usr/doc/$pkg/README.Debian.gz",
 	    "unpacked/usr/doc/$pkg/README.Debian",
 	    "unpacked/usr/doc/$pkg/README.debian.gz",
 	    "unpacked/usr/doc/$pkg/README.debian");
@@ -49,30 +52,10 @@ for (@readmes) {
 
 if (not defined $file) {
     # no README found
-    open(DUMMY, '>', "README.Debian");
-    close(DUMMY);
+    touch_file("README.Debian");
 } elsif ($file =~ m/\.gz$/) {
-    use lib "$ENV{'LINTIAN_ROOT'}/lib";
-    use Pipeline;
-
-    pipeline((sub { exec 'gzip', '-dc', $file }), "README.Debian") == 0
-	or fail("error in gzip");
+    gunzip_file($file, "README.Debian");
 } else {
     link($file, "README.Debian")
 	or fail("cannot link $file to README.Debian: $!");
-}
-
-exit 0;
-
-# -----------------------------------
-
-sub fail {
-    if ($_[0]) {
-        print STDERR "internal error: $_[0]\n";
-    } elsif ($!) {
-        print STDERR "internal error: $!\n";
-    } else {
-        print STDERR "internal error.\n";
-    }
-    exit 1;
 }

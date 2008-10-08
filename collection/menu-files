@@ -28,17 +28,17 @@ my $type = shift;
 -f "fields/package" or fail("menu-files invoked in wrong directory");
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
-use Pipeline;
+use Util;
 
 if (-e "menu") {
-    spawn('rm', '-rf', 'menu') == 0
+    delete_dir('menu')
 	or fail("cannot rm old menu directory");
 }
 
 mkdir("menu", 0777) or fail("cannot mkdir menu: $!");
 
 if (-d "unpacked/usr/lib/menu") {    
-    spawn('cp', '-a', 'unpacked/usr/lib/menu', 'menu/lib') == 0
+     copy_dir('unpacked/usr/lib/menu', 'menu/lib')
 	or fail("cannot copy unpacked/usr/lib/menu/ directory");
 } else {
     # no menu directory
@@ -46,25 +46,9 @@ if (-d "unpacked/usr/lib/menu") {
 }
 
 if (-d "unpacked/usr/share/menu") {    
-    spawn('cp', '-a', 'unpacked/usr/share/menu', 'menu/share') == 0
+    copy_dir('unpacked/usr/share/menu', 'menu/share')
 	or fail("cannot copy unpacked/usr/share/menu directory");
 } else {
     # no menu directory
     mkdir("menu/share", 0777) or fail("cannot mkdir menu/share: $!");
-}
-
-
-exit 0;
-
-# -----------------------------------
-
-sub fail {
-    if ($_[0]) {
-        print STDERR "internal error: $_[0]\n";
-    } elsif ($!) {
-        print STDERR "internal error: $!\n";
-    } else {
-        print STDERR "internal error.\n";
-    }
-    exit 1;
 }

@@ -29,32 +29,17 @@ my $type = shift;
 -f "fields/package" or fail("doc-base-files invoked in wrong directory");
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
-use Pipeline;
+use Util;
 
 if (-e "doc-base") {
-    spawn('rm', '-rf', 'doc-base') == 0
+    delete_dir("doc-base")
 	or fail("cannot rm old doc-base directory");
 }
 
 if (-d "unpacked/usr/share/doc-base") {
-    spawn('cp', '-a', 'unpacked/usr/share/doc-base', 'doc-base') == 0
+    copy_dir('unpacked/usr/share/doc-base', 'doc-base')
 	or fail("cannot copy directory unpacked/usr/share/doc-base");
 } else {
     # no doc-base directory
     mkdir("doc-base", 0777) or fail("cannot mkdir doc-base: $!");
-}
-
-exit 0;
-
-# -----------------------------------
-
-sub fail {
-    if ($_[0]) {
-        print STDERR "internal error: $_[0]\n";
-    } elsif ($!) {
-        print STDERR "internal error: $!\n";
-    } else {
-        print STDERR "internal error.\n";
-    }
-    exit 1;
 }
