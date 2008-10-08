@@ -23,7 +23,6 @@ package Checker;
 use strict;
 no strict 'refs';
 
-use Pipeline;
 use Tags;
 use Cwd 'cwd';
 

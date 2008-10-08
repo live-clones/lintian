@@ -62,7 +62,6 @@ unless ($output_file) {
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Read_pkglists;
 use vars qw(%binary_info $BINLIST_FORMAT); # from the above
-use Pipeline;
 use Util;
 
 # get variables out of environment
