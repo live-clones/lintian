@@ -100,9 +100,7 @@ process to end properly.
 
 =item err
 
-STDERR of all forked childs.  Will be set to a newly created
-scalar reference by default which can be used to retrieve the output
-after the call.
+STDERR of all forked childs.  Defaults to STDERR of the parent.
 
 =item pipe_err
 
@@ -164,7 +162,7 @@ sub spawn {
 	@err = ('2>pipe', $opts->{pipe_err});
 	$pipe = 1;
     } else {
-	$opts->{err} ||= \$err;
+	$opts->{err} ||= \*STDERR;
 	@err = ('2>', $opts->{err});
     }
 
