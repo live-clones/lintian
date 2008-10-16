@@ -22,7 +22,7 @@ use warnings;
 
 use base qw(Exporter);
 our @EXPORT = ();
-our @EXPORT_OK = qw(spawn);
+our @EXPORT_OK = qw(spawn reap);
 
 use IPC::Run qw(run harness);
 
@@ -57,9 +57,10 @@ Lintian::Command - Utilities to execute other commands from lintian code
 Lintian::Command is a thin wrapper around IPC::Run, that catches exception
 and implements a useful default behaviour for input and output redirection.
 
-Lintian::Command provides a single function spawn() which is a wrapper
+Lintian::Command provides a function spawn() which is a wrapper
 around IPC::Run::run() resp. IPC::Run::start() (depending on whether a
-pipe is requested).
+pipe is requested).  To wait for finished child processes, it also
+provides the reap() function as a wrapper around IPC::Run::finish().
 
 =head2 C<spawn($opts, @cmds)>
 
@@ -214,13 +215,69 @@ sub spawn {
     return $opts->{success};
 }
 
+=head 2 C<reap($opts)>
+
+If you used one of the C<pipe_*> options to spawn(), you will need to wait
+for your child processes to finish.  For this you can use the reap() function,
+which you can call with the $opts hash reference you gave to spawn() and which
+will do the right thing.
+
+Note however that this function will not close any of the pipes for you, so
+you probably want to do that first before calling this function.
+
+The following keys of the $opts hash have roughly the same function as
+for spawn():
+
+=over 4
+
+=item harness
+
+=item fail
+
+=item success
+
+=item exception
+
+=back
+
+All other keys are probably just ignored.
+
+=cut
+
+sub reap {
+    my ($opts) = @_;
+
+    return unless defined($opts->{harness});
+
+    eval {
+	$opts->{success} = $opts->{harness}->finish;
+    };
+    if ($@) {
+	require Util;
+	Util::fail($@) if $opts->{fail} ne 'never';
+	$opts->{success} = 0;
+	$opts->{exception} = $@;
+    } elsif ($opts->{fail} eq 'error'
+	     and !$opts->{success}) {
+	require Util;
+	if ($opts->{description}) {
+	    Util::fail("$opts->{description} failed with error code ".
+		       $opts->{harness}->result);
+	} else {
+	    Util::fail("command failed with error code ".
+		       $opts->{harness}->result);
+	}
+    }
+    return $opts->{success};
+}
+
 1;
 __END__
 
 =head1 EXPORTS
 
 Lintian::Command exports nothing by default, but you can export the
-spawn() function.
+spawn() and reap() functions.
 
 =head1 AUTHOR
 
