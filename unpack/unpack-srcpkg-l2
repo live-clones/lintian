@@ -23,10 +23,10 @@
 
 use strict;
 use vars qw($verbose);
-use FileHandle;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
-use Pipeline;
+use Lintian::Command qw(spawn);
+use Util;
 
 ($#ARGV == 0) or fail("syntax: unpack-srcpkg-l2 <base-dir>");
 my $base_dir = shift;
@@ -34,39 +34,14 @@ my $base_dir = shift;
 print "N: Unpacking source package in directory $base_dir ...\n" if $verbose;
 chdir($base_dir);
 
-# We can't use spawn yet because older versions of dpkg-source print things
-# out even with -q.  This can be fixed to use spawn once that newer version of
-# dpkg is in oldstable.
-my $pid = fork;
-if (not defined $pid) {
-    fail("cannot fork: $!");
-} elsif ($pid == 0) {
-    open(STDOUT, '>', '/dev/null');
-    exec('dpkg-source', '-q', '-x', 'dsc', 'unpacked');
-} else {
-    waitpid($pid, 0);
-    unless ($? == 0) {
-        fail("cannot run dpkg-source: $!");
-    }
-}
+# Ignore STDOUT of the child process because older versions of dpkg-source
+# print things out even with -q.
+spawn({ fail => 'error', out => '/dev/null' },
+      ['dpkg-source', '-q', '-x', 'dsc', 'unpacked']);
 
 # fix permissions
-spawn('chmod', '-R', 'u+rwX,o+rX,o-w', 'unpacked') == 0 or fail();
-
-exit 0;
-
-# -------------------------------
-
-sub fail {
-  if ($_[0]) {
-    print STDERR "internal error: $_[0]\n";
-  } elsif ($!) {
-    print STDERR "internal error: $!\n";
-  } else {
-    print STDERR "internal error.\n";
-  }
-  exit 1;
-}
+spawn({ fail => 'error' },
+      ['chmod', '-R', 'u+rwX,o+rX,o-w', 'unpacked']);
 
 # Local Variables:
 # indent-tabs-mode: nil

@@ -32,8 +32,8 @@ my $file = shift;
 
 # import perl libraries
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
-use Pipeline;
 use Util;
+use Lintian::Command qw(spawn);
 
 # stat $file
 (my @stat = stat $file) or fail("$file: cannot stat: $!");
@@ -49,45 +49,41 @@ symlink($file,"$base_dir/deb") or fail("symlink: $!");
 
 # (replaces dpkg-deb -e)
 # extract control files' tarball
-pipeline((sub { exec 'ar', 'p', $file, 'control.tar.gz' }),
-	 (sub { exec 'gzip', '-dc' }),
-	 "$base_dir/control.tar") == 0
-    or fail();
+spawn({ fail => 'error', out => "$base_dir/control.tar" },
+      ['ar', 'p', $file, 'control.tar.gz'],
+      '|', ['gzip', '-dc']);
 
 # extract the tarball's contents
-spawn("tar", "xf", "$base_dir/control.tar", "-C", "$base_dir/control") == 0
-    or fail();
+spawn({ fail =>'error' },
+      ["tar", "xf", "$base_dir/control.tar", "-C", "$base_dir/control"]);
 
 # create index of control.tar.gz
-pipeline((sub { exec "tar", "tvf", "$base_dir/control.tar" }),
-	 (sub { exec "sort", "-k", "6" }),
-	 "$base_dir/control-index") == 0
-    or fail();
+spawn({ fail => 'error', out => "$base_dir/control-index" },
+      ["tar", "tvf", "$base_dir/control.tar"],
+      '|', ["sort", "-k", "6"]);
 
 # clean up control.tar
 unlink("$base_dir/control.tar") or fail();
 
 # fix permissions
-spawn("chmod", "-R", "u+rX,o-w", "$base_dir/control") == 0
-    or fail();
+spawn({ fail => 'error' },
+      ["chmod", "-R", "u+rX,o-w", "$base_dir/control"]);
 
 # (replaces dpkg-deb -c)
 # create index file for package
-pipeline((sub { exec "dpkg-deb", "--fsys-tarfile", $file }),
-	 (sub { exec "tar", "tfv", "-" }),
-	 (sub { exec "sed", "-e", "s/^h/-/" }),
-	 (sub { exec "sort", "-k", "6" }),
-	 "$base_dir/index") == 0
-    or fail();
+spawn({ fail => 'error', out => "$base_dir/index" },
+      ["dpkg-deb", "--fsys-tarfile", $file ],
+      '|', ["tar", "tfv", "-"],
+      '|', ["sed", "-e", "s/^h/-/"],
+      '|', ["sort", "-k", "6"]);
 
 # (replaces dpkg-deb -c)
 # create index file for package with owner IDs instead of names
-pipeline((sub { exec "dpkg-deb", "--fsys-tarfile", $file }),
-	 (sub { exec "tar", "--numeric-owner", "-tvf", "-" }),
-	 (sub { exec "sed", "-e", "s/^h/-/" }),
-	 (sub { exec "sort", "-k", "6" }),
-	 "$base_dir/index-owner-id") == 0
-    or fail();
+spawn({ fail => 'error', out => "$base_dir/index-owner-id" },
+      ["dpkg-deb", "--fsys-tarfile", $file],
+      '|', ["tar", "--numeric-owner", "-tvf", "-"],
+      '|', ["sed", "-e", "s/^h/-/"],
+      '|', ["sort", "-k", "6"]);
 
 # get package control information
 my $data = (read_dpkg_control("$base_dir/control/control"))[0];

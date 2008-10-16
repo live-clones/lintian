@@ -28,7 +28,8 @@ use vars qw($verbose);
 my $base_dir = shift;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
-use Pipeline;
+use Lintian::Command qw(spawn);
+use Util;
 
 print "N: Unpacking binary packages in directory $base_dir ...\n" if $verbose;
 mkdir("$base_dir/unpacked", 0777) or fail();
@@ -37,24 +38,10 @@ mkdir("$base_dir/unpacked", 0777) or fail();
 # improvement on large debs, and factor 1.5 on small debs.  I heard
 # it's because dpkg-deb syncs while writing.  -- Richard
 
-pipeline((sub { exec 'dpkg-deb', '--fsys-tarfile', "$base_dir/deb" }),
-	 (sub { exec 'tar', 'xf', '-', '-C', "$base_dir/unpacked" })) == 0
-    or fail();
+spawn({ fail => 'error' },
+      ['dpkg-deb', '--fsys-tarfile', "$base_dir/deb"],
+      '|', ['tar', 'xf', '-', '-C', "$base_dir/unpacked"]);
 
 # fix permissions
-spawn('chmod', '-R', 'u+rwX,go-w', "$base_dir/unpacked") == 0 or fail();
-
-exit 0;
-
-# -------------------------------
-
-sub fail {
-  if ($_[0]) {
-    print STDERR "internal error: $_[0]\n";
-  } elsif ($!) {
-    print STDERR "internal error: $!\n";
-  } else {
-    print STDERR "internal error.\n";
-  }
-  exit 1;
-}
+spawn({ fail => 'error' },
+      ['chmod', '-R', 'u+rwX,go-w', "$base_dir/unpacked"]);
