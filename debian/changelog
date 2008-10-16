@@ -21,6 +21,9 @@ lintian (2.1.0) unstable; urgency=low
       operation", the output of etch's readelf is not particularly useful
       and it's easier to simply let the checks scripts handle the objdump
       output.
+  
+  * debian/control:
+    + [FL] Add dependency on libipc-run-perl for Lintian::Command.
 
   * frontend/lintian:
     + [FL] Convert to use Lintian::Output.
@@ -32,13 +35,20 @@ lintian (2.1.0) unstable; urgency=low
       Lintian::Output.
   * lib/Lintian/Output/XML.pm:
     + [FL] New experimental output format.
+  * lib/Lintian/Command:
+    + [FL] New utility module as a replacement for Pipeline. Provides
+      a convenient wrapper around IPC::Run.
   
   * lib/Lab.pm:
     + [FL] Convert to use Lintian::Output.
   * lib/Tags.pm:
     + [FL] Convert to use Lintian::Output.
+  * lib/Pipeline.pm:
+    + [FL] Remove, replaced by Lintian::Command.
   * lib/Util.pm:
     + [FL] Convert to use Lintian::Output.
+    + [FL] Add some new utility functions: delete_dir copy_dir gunzip_file
+      touch_file.
 
  -- Frank Lichtenheld <djpig@debian.org>  Sun, 28 Sep 2008 10:35:47 +0200
 
