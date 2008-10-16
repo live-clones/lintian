@@ -625,11 +625,9 @@ unshift @INC, "$LINTIAN_ROOT/lib";
 require Lab;
 
 require Util;
-require Pipeline;
 require Read_pkglists;
 
 import Util;
-import Pipeline;
 
 require Tags;
 import Tags;
@@ -637,6 +635,8 @@ import Tags;
 require Lintian::Schedule;
 require Lintian::Output;
 import Lintian::Output qw(:messages);
+require Lintian::Command;
+import Lintian::Command qw(spawn);
 
 no warnings 'once';
 if (defined $experimental_output_opts) {
@@ -1463,7 +1463,7 @@ foreach my $pkg_info ($schedule->get_all) {
 	    # collect info
 	    remove_status_file($base);
 	    debug_msg(1, "Collecting info: $coll ...");
-	    if (spawn("$LINTIAN_ROOT/collection/$ci->{'script'}", $pkg, $long_type) != 0) {
+	    unless (spawn({}, ["$LINTIAN_ROOT/collection/$ci->{'script'}", $pkg, $long_type])) {
 		warning("collect info $coll about package $pkg: $?",
 			"skipping $action of $long_type package $pkg");
 		$exit_code = 2;
@@ -1662,10 +1662,10 @@ sub unpack_pkg {
 	# create new directory
 	debug_msg(1, "Unpacking package to level 1 ...");
 	if (($type eq 'b') || ($type eq 'u')) {
-	    spawn("$LINTIAN_ROOT/unpack/unpack-binpkg-l1", $base, $file) == 0
+	    spawn({}, ["$LINTIAN_ROOT/unpack/unpack-binpkg-l1", $base, $file])
 		or return -1;
 	} else {
-	    spawn("$LINTIAN_ROOT/unpack/unpack-srcpkg-l1", $base, $file) == 0
+	    spawn({}, ["$LINTIAN_ROOT/unpack/unpack-srcpkg-l1", $base, $file])
 		or return -1;
 	}
 	$cur_level = 1;
@@ -1676,11 +1676,11 @@ sub unpack_pkg {
 	# unpack package contents
 	debug_msg(1, "Unpacking package to level 2 ...");
 	if (($type eq 'b') || ($type eq 'u')) {
-	    spawn("$LINTIAN_ROOT/unpack/unpack-binpkg-l2", $base) == 0
+	    spawn({}, ["$LINTIAN_ROOT/unpack/unpack-binpkg-l2", $base])
 		or return -1;
 	} else {
 	    debug_msg(1, "$LINTIAN_ROOT/unpack/unpack-srcpkg-l2 $base");
-	    spawn("$LINTIAN_ROOT/unpack/unpack-srcpkg-l2", $base) == 0
+	    spawn({}, ["$LINTIAN_ROOT/unpack/unpack-srcpkg-l2", $base])
 		or return -1;
 	}
 	$cur_level = 2;
@@ -1709,11 +1709,11 @@ sub clean_pkg {
 	# remove unpacked/ directory
 	debug_msg(1, "Decreasing unpack level to 1 (removing files) ...");
 	if ( -l "$base/unpacked" ) {
-	    spawn('rm', '-rf', '--', "$base/".readlink( "$base/unpacked" )) == 0
+	    delete_dir("$base/".readlink("$base/unpacked"))
 		or return -1;
-	    spawn('rm', '-rf', '--', "$base/unpacked") == 0 or return -1;
+	    delete_dir("$base/unpacked") or return -1;
 	} else {
-	    spawn('rm', '-rf', '--', "$base/unpacked") == 0 or return -1;
+	    delete_dir("$base/unpacked") or return -1;
 	}
 
 	$cur_level = 1;
@@ -1727,7 +1727,7 @@ sub remove_pkg {
     my ($base) = @_;
 
     debug_msg(1, "Removing package in lab ...");
-    if (spawn('rm', '-rf', '--', $base) != 0) {
+    unless (delete_dir($base)) {
 	warning("cannot remove directory $base: $!");
 	return 0;
     }
