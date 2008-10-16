@@ -108,6 +108,15 @@ Use a pipe for STDERR and start the process in the background.
 You will need to call $opts->{harness}->finish in order for the started
 process to end properly.
 
+=item fail
+
+Configures the behaviour in case of errors. The default is 'exception',
+which will cause spawn() to die in case of exceptions thrown by IPC::Run.
+If set to 'error' instead, it will also die if the command exits
+with a non-zero error code.  If exceptions should be handled by the caller,
+setting it to 'never' will cause it to store the exception in the
+C<exception> key instead.
+
 =back
 
 The following additional keys will be set during the execution of spawn():
@@ -122,8 +131,9 @@ full_results()) and to wait for processes started in the background.
 
 =item exception
 
-If an exception is raised during the execution of the commands, it
-will be catched and stored under this key.
+If an exception is raised during the execution of the commands,
+and if C<fail> is set to 'never', the exception will be catched and
+stored under this key.
 
 =item success
 
@@ -136,13 +146,12 @@ Will contain the return value of spawn().
 sub spawn {
     my ($opts, @cmds) = @_;
 
-    my $fail_on_error;
     if (ref($opts) ne 'HASH') {
 	$opts = {};
-	$fail_on_error = 1;
     }
+    $opts->{fail} ||= 'exception';
 
-    my ($out, $err, $pipe);
+    my ($out, $pipe);
     my (@out, @in, @err);
     if ($opts->{pipe_in}) {
 	@in = ('<pipe', $opts->{pipe_in});
@@ -184,9 +193,22 @@ sub spawn {
     };
     if ($@) {
 	require Util;
-	Util::fail($@) if $fail_on_error;
+	Util::fail($@) if $opts->{fail} ne 'never';
 	$opts->{success} = 0;
 	$opts->{exception} = $@;
+    } elsif ($opts->{fail} eq 'error'
+	     and !$opts->{success}) {
+	require Util;
+	if ($opts->{description}) {
+	    Util::fail("$opts->{description} failed with error code ".
+		       $opts->{harness}->result);
+	} elsif (@cmds == 1) {
+	    Util::fail("$cmds[0][0] failed with error code ".
+		       $opts->{harness}->result);
+	} else {
+	    Util::fail("command failed with error code ".
+		       $opts->{harness}->result);
+	}
     }
 #    print STDERR Dumper($opts, \@cmds);
     return $opts->{success};

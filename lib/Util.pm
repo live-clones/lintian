@@ -273,9 +273,8 @@ sub copy_dir {
 
 sub gunzip_file {
     my ($in, $out) = @_;
-    spawn({out => $out},
-	  ['gzip', '-dc', $in])
-	or fail("error in gzip");
+    spawn({out => $out, fail => 'error'},
+	  ['gzip', '-dc', $in]);
 }
 
 # create an empty file
