@@ -21,6 +21,11 @@
 
 use strict;
 
+use FileHandle;
+use lib "$ENV{'LINTIAN_ROOT'}/lib";
+use Lintian::Command qw(spawn reap);
+use Util;
+
 ($#ARGV == 1) or fail("syntax: md5sums <pkg> <type>");
 my $pkg = shift;
 my $type = shift;
@@ -31,13 +36,10 @@ unlink("md5sums");
 chdir("unpacked")
     or fail("cannot chdir to unpacked directory: $!");
 
-use FileHandle;
-use lib "$ENV{'LINTIAN_ROOT'}/lib";
-use Pipeline;
-
-my $XARGS=FileHandle->new;
-pipeline_open($XARGS, (sub { exec 'xargs', '-0r', 'md5sum' }), "../md5sums")
-    or fail("cannot fork: $!");
+my %opts = ( pipe_in => FileHandle->new,
+	     out => '../md5sums',
+	     fail => 'error' );
+spawn(\%opts, ['xargs', '-0r', 'md5sum'] );
 open(INDEX, '<', "../index")
     or fail("cannot open index file: $!");
 while (<INDEX>) {
@@ -47,23 +49,10 @@ while (<INDEX>) {
     s/ link to .*//;
     s/\\(\d+)/chr(oct($1))/eg;
     s/\\\\/\\/g;
-    printf $XARGS "%s\0", $_;
+    printf {$opts{pipe_in}} "%s\0", $_;
 }
 close(INDEX);
 
-close($XARGS) or fail("xargs for md5sum exited with code $?");
+close $opts{pipe_in};
+reap(\%opts);
 
-exit 0;
-
-# -----------------------------------
-
-sub fail {
-    if ($_[0]) {
-        print STDERR "internal error: $_[0]\n";
-    } elsif ($!) {
-        print STDERR "internal error: $!\n";
-    } else {
-        print STDERR "internal error.\n";
-    }
-    exit 1;
-}

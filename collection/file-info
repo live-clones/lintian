@@ -21,6 +21,11 @@
 
 use strict;
 
+use FileHandle;
+use lib "$ENV{'LINTIAN_ROOT'}/lib";
+use Util;
+use Lintian::Command qw(spawn reap);
+
 ($#ARGV == 1) or fail("syntax: file-info <pkg> <type>");
 my $pkg = shift;
 my $type = shift;
@@ -31,13 +36,12 @@ unlink("file-info");
 chdir("unpacked")
     or fail("cannot chdir to unpacked directory: $!");
 
-use FileHandle;
-use lib "$ENV{'LINTIAN_ROOT'}/lib";
-use Pipeline;
 
 my $XARGS=FileHandle->new;
-pipeline_open($XARGS, (sub { exec 'xargs', '-0r', 'file' }), "../file-info")
-    or fail("cannot fork: $!");
+my %opts = ( pipe_in => FileHandle->new,
+	     out => '../file-info',
+	     fail => 'error' );
+spawn(\%opts, ['xargs', '-0r', 'file']);
 open(INDEX, '<', "../index")
     or fail("cannot open index file: $!");
 while (<INDEX>) {
@@ -47,23 +51,9 @@ while (<INDEX>) {
     s/ -> .*//;
     s/(\G|[^\\](?:\\\\)*)\\(\d{3})/"$1" . chr(oct $2)/ge;
     s/\\\\/\\/;
-    printf $XARGS "%s\0", $_;
+    printf {$opts{pipe_in}} "%s\0", $_;
 }
 close(INDEX);
 
-close($XARGS) or fail("xargs for file exited with code $?");
-
-exit 0;
-
-# -----------------------------------
-
-sub fail {
-    if ($_[0]) {
-        print STDERR "internal error: $_[0]\n";
-    } elsif ($!) {
-        print STDERR "internal error: $!\n";
-    } else {
-        print STDERR "internal error.\n";
-    }
-    exit 1;
-}
+close $opts{pipe_in};
+reap(\%opts);
