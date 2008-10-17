@@ -37,7 +37,6 @@ chdir("unpacked")
     or fail("cannot chdir to unpacked directory: $!");
 
 
-my $XARGS=FileHandle->new;
 my %opts = ( pipe_in => FileHandle->new,
 	     out => '../file-info',
 	     fail => 'error' );
