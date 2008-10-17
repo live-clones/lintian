@@ -133,7 +133,7 @@ full_results()) and to wait for processes started in the background.
 =item exception
 
 If an exception is raised during the execution of the commands,
-and if C<fail> is set to 'never', the exception will be catched and
+and if C<fail> is set to 'never', the exception will be caught and
 stored under this key.
 
 =item success
