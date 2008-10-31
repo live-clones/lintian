@@ -12,6 +12,10 @@ lintian (2.1.0) unstable; urgency=low
     + [FL] Use $known_shells_regex from common_data.
   * checks/menus:
     + [FL] Use $known_shells_regex from common_data.
+  * checks/patch-systems:
+    + [ADB] Don't include dpatch comment lines containing no content
+      when determining whether the patch includes a description.
+      (Closes: #503695)
   * check/scripts:
     + [FL] Use $known_shells_regex from common_data.
   

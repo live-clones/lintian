@@ -104,7 +104,7 @@ sub run {
 							#stop if something looking like a patch starts:
 							last if /^---/;
 							#note comment if we find a proper one
-							$has_comment = 1 if (/^\#+\s*DP:\s*(.*)$/ && $1 !~ /^no description\.?$/i)
+							$has_comment = 1 if (/^\#+\s*DP:\s*(\S.*)$/ && $1 !~ /^no description\.?$/i)
 						}
 						close(PATCH_FILE);
 						unless ($has_comment) {
