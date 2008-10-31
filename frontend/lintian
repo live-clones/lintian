@@ -822,8 +822,8 @@ while (my $arg = shift) {
 	    if (defined $data->{distribution}) {
 		if ($data->{distribution} eq 'UNRELEASED') {
 		    # ignore
-		} elsif ($data->{'version'} =~ /ubuntu|intrepid|hardy|gutsy|feisty|edgy|dapper/) {
-		    my @ubuntu_dists = qw(intrepid hardy gutsy feisty edgy dapper);
+		} elsif ($data->{'version'} =~ /ubuntu|jaunty|intrepid|hardy|gutsy|dapper/) {
+		    my @ubuntu_dists = qw(jaunty intrepid hardy gutsy dapper);
 		    my $regex = '^(' . join ('|', @ubuntu_dists) . ')';
 		    if ($data->{distribution} !~ /^$regex(-(proposed|updates|backports|security))?$/ ) {
 			tag("bad-ubuntu-distribution-in-changes-file",

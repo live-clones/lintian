@@ -27,6 +27,8 @@ lintian (2.1.0) unstable; urgency=low
 
   * frontend/lintian:
     + [FL] Convert to use Lintian::Output.
+    + [CW] Add jaunty as an allowable distribution for Ubuntu, and remove
+      the EOLed edgy and feisty.
   
   * lib/Lintian/Output:
     + [FL] New module to bundle output methods.

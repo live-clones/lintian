@@ -28,7 +28,7 @@ Info: You've specified an unknown target distribution for your upload in
  the <tt>debian/changelog</tt> file.
  .
  Your version string suggests this package is for Ubuntu, so your
- distribution should be one of intrepid, hardy, gutsy, feisty, edgy or dapper.
+ distribution should be one of jaunty, intrepid, hardy, gutsy or dapper.
 
 Tag: no-urgency-in-changes-file
 Severity: normal
