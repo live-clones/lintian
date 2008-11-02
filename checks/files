@@ -703,6 +703,7 @@ foreach my $file (sort keys %{$info->index}) {
 	    [ qr,(?i)Snoopy\.class\.(php|inc)$, => 'libphp-snoopy' ],
 # not yet available in unstable:
 #	    [ qr,(?i)markdown\.php$, => 'libmarkdown-php' ],
+#	    [ qr,(?i)IXR_Library(\.inc|\.php)+$, => 'libphp-ixr' ],
 	);
 	foreach my $phplibrary (@phplibraries) {
 	    if ($file =~ m,/$phplibrary->[0], and $pkg ne $phplibrary->[1]) {
