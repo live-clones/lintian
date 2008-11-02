@@ -704,6 +704,7 @@ foreach my $file (sort keys %{$info->index}) {
 # not yet available in unstable:
 #	    [ qr,(?i)markdown\.php$, => 'libmarkdown-php' ],
 #	    [ qr,(?i)IXR_Library(\.inc|\.php)+$, => 'libphp-ixr' ],
+#	    [ qr,(?i)(class\.)?kses\.php$, => 'libphp-kses' ],
 	);
 	foreach my $phplibrary (@phplibraries) {
 	    if ($file =~ m,/$phplibrary->[0], and $pkg ne $phplibrary->[1]) {
