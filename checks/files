@@ -696,11 +696,11 @@ foreach my $file (sort keys %{$info->index}) {
 	my @phplibraries = (
 	    [ qr,(?i)adodb\.inc\.php$, => 'libphp-adodb' ],
 	    [ qr,(?i)Smarty(_Compiler)?\.class\.php$, => 'smarty' ],
-	    [ qr,(?i)class\.phpmailer\.php$, => 'libphp-phpmailer' ],
+	    [ qr,(?i)class\.phpmailer\.(php|inc)$, => 'libphp-phpmailer' ],
 	    [ qr,(?i)phpsysinfo\.dtd$, => 'phpsysinfo' ],
 	    [ qr,(?i)class\.(Linux|(Open|Net|Free|)BSD)\.inc\.php$, => 'phpsysinfo' ],
 	    [ qr,Auth/(OpenID|Yadis/Yadis)\.php$, => 'php-openid' ],
-	    [ qr,(?i)Snoopy\.class\.php$, => 'libphp-snoopy' ],
+	    [ qr,(?i)Snoopy\.class\.(php|inc)$, => 'libphp-snoopy' ],
 # not yet available in unstable:
 #	    [ qr,(?i)markdown\.php$, => 'libmarkdown-php' ],
 	);
