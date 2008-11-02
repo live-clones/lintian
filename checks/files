@@ -701,8 +701,8 @@ foreach my $file (sort keys %{$info->index}) {
 	    [ qr,(?i)class\.(Linux|(Open|Net|Free|)BSD)\.inc\.php$, => 'phpsysinfo' ],
 	    [ qr,Auth/(OpenID|Yadis/Yadis)\.php$, => 'php-openid' ],
 	    [ qr,(?i)Snoopy\.class\.(php|inc)$, => 'libphp-snoopy' ],
-# not yet available in unstable:
-#	    [ qr,(?i)markdown\.php$, => 'libmarkdown-php' ],
+	    [ qr,(?i)markdown\.php$, => 'libmarkdown-php' ]
+# not yet available in unstable:,
 #	    [ qr,(?i)IXR_Library(\.inc|\.php)+$, => 'libphp-ixr' ],
 #	    [ qr,(?i)(class\.)?kses\.php$, => 'libphp-kses' ],
 	);
