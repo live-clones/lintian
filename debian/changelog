@@ -33,6 +33,9 @@ lintian (2.1.0) unstable; urgency=low
     + [FL] Convert to use Lintian::Output.
     + [CW] Add jaunty as an allowable distribution for Ubuntu, and remove
       the EOLed edgy and feisty.
+    + [ADB] Don't complain about unused overrides if the check script
+      for the overriden tag hasn't been run (or --tags was used and
+      the overriden tag not specified).  (Closes: #501722)
   
   * lib/Lintian/Output:
     + [FL] New module to bundle output methods.

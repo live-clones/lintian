@@ -1544,6 +1544,16 @@ foreach my $pkg_info ($schedule->get_all) {
 	    my $overrides = Tags::get_overrides( $file );
 
 	    for my $tag (sort keys %$overrides) {
+		my $taginfo = Tags::get_tag_info{$tag};
+		if (defined $taginfo) {
+		    # Did we run the check script containing the tag?
+		    next unless $checks{$taginfo->{'script'}};
+
+		    # If only checking specific tags, is this one of them?
+		    next unless (scalar keys %Tags::only_issue_tags == 0)
+			or exists $Tags::only_issue_tags{$tag};
+		}
+
 		for my $extra (sort keys %{$overrides->{$tag}}) {
 		    next if $overrides->{$tag}{$extra};
 
