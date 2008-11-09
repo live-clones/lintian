@@ -1,5 +1,5 @@
 Check-Script: debconf
-Author: Colin Watson <cjw44@flatline.org.uk>
+Author: Colin Watson <cjwatson@debian.org>
 Abbrev: dc
 Type: binary, udeb, source
 Unpack-Level: 2
