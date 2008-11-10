@@ -4,7 +4,7 @@ Abbrev: pat
 Type: source
 Unpack-Level: 1
 Info: This script checks for various possible problems when using patch systems
-Needs-Info: debfiles
+Needs-Info: debfiles, diffstat
 
 Tag: dpatch-build-dep-but-no-patch-list
 Severity: normal
