@@ -19,6 +19,8 @@ lintian (2.1.0) unstable; urgency=low
       when determining whether the patch includes a description.
       (Closes: #503695)
     + [ADB] Add missing "diffstat" to the Needs-Info field.
+    + [ADB] Check whether quilt patches include a description.
+      (Closes: #498892)
   * check/scripts:
     + [FL] Use $known_shells_regex from common_data.
   

@@ -1,0 +1,14 @@
+Source: {$srcpkg}
+Priority: extra
+Section: devel
+Maintainer: {$author}
+Standards-Version: 3.8.0
+Build-Depends: quilt, debhelper (>= 7)
+
+Package: {$srcpkg}
+Architecture: {$architecture}
+Depends: $\{shlib:Depends\}, $\{misc:Depends\}
+Description: {$description}
+ .
+ Part of the lintian test suite.
+

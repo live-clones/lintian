@@ -71,6 +71,13 @@ Certainty: certain
 Info: In the series file listing all your quilt patches, you referenced a
  file that does not exist. This will lead to a fatal error when calling quilt.
 
+Tag: quilt-patch-missing-description
+Severity: minor
+Certainty: certain
+Info: quilt patch files should carry a description of the function of the
+ included patch. Description lines may be included before the start of the
+ patch itself.
+
 Tag: patch-modifying-debian-files
 Severity: important
 Certainty: certain

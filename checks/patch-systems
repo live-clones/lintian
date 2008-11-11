@@ -150,6 +150,20 @@ sub run {
 						tag "quilt-series-references-non-existent-patch", $patch_file;
 						next;
 					}
+					if (open(PATCH_FILE, '<', "debfiles/patches/$patch_file")) {
+						my $has_description = 0;
+						while (<PATCH_FILE>) {
+							# stop if something looking like a patch starts:
+							last if /^---/;
+							next if /^\s*$/;
+							# Skip common "lead-in" lines
+							$has_description = 1 unless (/^(Index: |=+$|diff .+)/);
+						}
+						close(PATCH_FILE);
+						unless ($has_description) {
+							tag "quilt-patch-missing-description", $patch_file;
+						}
+					}
 					check_patch($patch_file);
 				}
 			}
