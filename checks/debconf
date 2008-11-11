@@ -312,7 +312,7 @@ foreach my $template (@templates) {
 		tag "malformed-question-in-templates", $template->{template};
 	    }
 	}
-	if (defined ($extended) && $extended =~ /\?/) {
+	if (defined ($extended) && $extended =~ /[^\?]\?(\s+|$)/) {
 	    tag "using-question-in-extended-description-in-templates", $template->{template};
 	}
 	if ($type eq 'note') {

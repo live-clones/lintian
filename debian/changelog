@@ -4,8 +4,11 @@ lintian (2.1.0) unstable; urgency=low
     + [FL] New variable $known_shells_regex which matches known shell
       names.  This removes some synchronisation issues between the
       different regexes in use.
-  * checks/debconf.desc:
+  * checks/debconf{,.desc}:
     + [CW] Update my e-mail address.
+    + [ADB] Don't detect the use of "?" as a literal character or wildcard
+      as part of a question in an extended template description.
+      (Closes: #500661)
   * checks/fields:
     + [ADB] Ignore non-dependency fields when considering whether a
       versioned dependency is satisfied by the perl core packages.
