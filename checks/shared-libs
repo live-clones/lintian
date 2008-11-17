@@ -395,8 +395,7 @@ if ($#shlibs == -1) {
 	    if (($v eq $version) and ($version =~ /-/)) {
 		$full_version_sym ||= $sym;
 		$full_version_count++;
-	    }
-	    if (($v =~ /-/) and (not $v =~ /~$/) and ($v ne $version_wo_rev)) {
+	    } elsif (($v =~ /-/) and (not $v =~ /~$/) and ($v ne $version_wo_rev)) {
 		$debian_revision_sym ||= $sym;
 		$debian_revision_count++;
 	    }

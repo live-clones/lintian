@@ -51,7 +51,7 @@ W: libbaz1: shlib-missing-in-symbols-control-file libbaz2 1.0 for usr/lib/libfoo
 W: libbaz1: shlib-missing-in-symbols-control-file libbaz3 1 for usr/lib/libbaz3.so.1.0.3b
 W: libbaz1: shlibs-declares-dependency-on-other-package libbaz1 (>> 1-1)
 W: libbaz1: shlibs-declares-dependency-on-other-package libbaz2
-W: libbaz1: symbols-file-contains-debian-revision on symbol pw and 1 others
+W: libbaz1: symbols-file-contains-debian-revision on symbol foo
 W: libbaz1: unused-shlib-entry-in-control-file libbaz2 1.1
 W: libbaz1: unused-shlib-entry-in-control-file libbaz4 1
 W: libbaz1: unused-shlib-entry-in-control-file libbaz5 1

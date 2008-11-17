@@ -26,6 +26,11 @@ lintian (2.1.0) unstable; urgency=low
       (Closes: #498892)
   * check/scripts:
     + [FL] Use $known_shells_regex from common_data.
+  * checks/shared-libs:
+    + [ADB] Don't issue both symbols-file-contains-debian-revision and
+      symbols-file-contains-current-version-with-debian-revision for any
+      given symbol, as the latter implies the former and may thus create
+      noise in the tests' output.  (Closes: #505826)
   
   * collection/objdump-info:
     + [ADB] Only use readelf to emulate objdump if objdump returned "file
