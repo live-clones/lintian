@@ -1,5 +1,9 @@
 lintian (2.1.0) unstable; urgency=low
 
+  * Summary of tag changes:
+    + Added
+      - shlib-calls-exit
+
   * checks/common_data.pm:
     + [FL] New variable $known_shells_regex which matches known shell
       names.  This removes some synchronisation issues between the
@@ -26,11 +30,15 @@ lintian (2.1.0) unstable; urgency=low
       (Closes: #498892)
   * check/scripts:
     + [FL] Use $known_shells_regex from common_data.
-  * checks/shared-libs:
+  * checks/shared-libs{,.desc}:
     + [ADB] Don't issue both symbols-file-contains-debian-revision and
       symbols-file-contains-current-version-with-debian-revision for any
       given symbol, as the latter implies the former and may thus create
       noise in the tests' output.  (Closes: #505826)
+    + [ADB] Add an experimental tag flagging shared libraries that call
+      _exit() or exit() without at some point calling fork() (a somewhat
+      inaccurate heuristic, but one which should weed out a number of
+      false positives).  (Closes: #504257)
   
   * collection/objdump-info:
     + [ADB] Only use readelf to emulate objdump if objdump returned "file

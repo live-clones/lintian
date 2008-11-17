@@ -107,6 +107,11 @@ for my $cur_file (sort keys %{$info->index}) {
             tag "shlib-with-non-pic-code", "$cur_file";
         }
 
+	my @symbol_names = map { @{$_}[2] } @{$info->objdump_info->{$cur_file}->{SYMBOLS}};
+	if (grep /^_?exit$/, @symbol_names and !grep /^fork$/, @symbol_names) {
+	    tag "shlib-calls-exit", "$cur_file";
+	}
+
         # don't apply the permission checks to links
         # since this only results in doubled messages
         if ($cur_file eq $real_file) { 
