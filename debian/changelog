@@ -2,6 +2,7 @@ lintian (2.1.0) unstable; urgency=low
 
   * Summary of tag changes:
     + Added
+      - quilt-patch-missing-description
       - shlib-calls-exit
 
   * checks/common_data.pm:
