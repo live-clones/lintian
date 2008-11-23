@@ -18,6 +18,9 @@ lintian (2.1.0) unstable; urgency=low
     + [ADB] Ignore non-dependency fields when considering whether a
       versioned dependency is satisfied by the perl core packages.
       Based on a patch by Niko Tyni.  (Closes: #500720)
+    + [RA] Stop checking for a libmodule-build-perl build dependency since
+      Module::Build now comes with Perl.  Thanks, Raphael Hertzog.
+      (Closes: #506697)
   * checks/infofiles:
     + [FL] Use $known_shells_regex from common_data.
   * checks/menus:

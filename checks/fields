@@ -90,7 +90,6 @@ my @rule_clean_depends = (
 	[ ant => '^\t\s*ant\s' ],
 	[ debhelper => '^\t\s*dh_.+' ],
 	[ dpatch => '^\t\s*dpatch\s' ],
-	[ 'libmodule-build-perl' => '(^\t|\|\|)\s*(perl|\$\(PERL\))\s+Build\b' ],
 	[ "po-debconf" => '^\t\s*debconf-updatepo\s' ],
 	[ $python_depend => '^\t\s*python\s', 'missing-python-build-dependency' ],
 	[ $python_depend => '\ssetup\.py\b', 'missing-python-build-dependency' ],
