@@ -82,6 +82,9 @@ lintian (2.1.0) unstable; urgency=low
   * lib/Spelling.pm:
     + [RA] Add subversion to Subversion correction for package descriptions.
       Thanks, Sandro Tosi.  (Closes: #506793)
+    + [ADB] Don't check text contained within square brackets for
+      capitalisation mistakes.  This allows for lists such as "[ cvs |
+      subversion ]" to be included.
   * lib/Util.pm:
     + [FL] Convert to use Lintian::Output.
     + [FL] Add some new utility functions: delete_dir copy_dir gunzip_file

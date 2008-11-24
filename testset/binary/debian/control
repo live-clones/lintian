@@ -18,6 +18,9 @@ Description: test handling of binary files
  Regression test for lintian's handling of binary files for debian.  This
  is checked for picky spelling errors.
  .
+ This package list [ subversion | gconf ] should not be flagged as a spelling
+ mistake.
+ .
   Homepage: http://lintian.debian.org/
 
 Package: binary-data
@@ -27,6 +30,8 @@ Depends: binary (= ${Source-Version}), libssl-not-openssl,
 Description: test handling of binary relationships
  Regression test for lintian's checking of package relationships between
  arch:any and arch:all packages.
+ .
+ This mention of subversion should be flagged as a spelling mistake.
 
 #Package: binary-comment
 #Architecture: space-almonds

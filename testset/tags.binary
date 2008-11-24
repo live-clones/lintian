@@ -64,6 +64,7 @@ W: binary source: native-package-with-dash-version
 W: binary source: substvar-source-version-is-deprecated binary
 W: binary source: substvar-source-version-is-deprecated binary-data
 W: binary-data: control-file-is-empty md5sums
+W: binary-data: spelling-error-in-description subversion Subversion
 W: binary: binary-without-manpage usr/bin/hello
 W: binary: binary-without-manpage usr/bin/hello-static
 W: binary: binary-without-manpage usr/bin/hello.static

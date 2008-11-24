@@ -438,15 +438,22 @@ sub spelling_check {
 sub spelling_check_picky {
     my ($tag, $text, $filename) = @_;
 
+    # Check this first in case it's contained in square brackets and
+    # removed below.
+    if ($text =~ m,meta\s+package,) {
+        _tag($tag, $filename, "meta package", "metapackage");
+    }
+
+    # Exclude text enclosed in square brackets as it could be a package list
+    # or similar which may legitimately contain lower-cased versions of
+    # the words.
+    $text =~ s/\[.+?\]//sg;
     for my $word (split(/\s+/, $text)) {
         $word =~ s/^\(|[).,?!:;]+$//g;
         if (exists $CORRECTIONS_CASE{$word}) {
             _tag($tag, $filename, $word, $CORRECTIONS_CASE{$word});
             next;
         }
-    }
-    if ($text =~ m,meta\s+package,) {
-        _tag($tag, $filename, "meta package", "metapackage");
     }
 }
 
