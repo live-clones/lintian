@@ -367,6 +367,7 @@ our %CORRECTIONS_CASE = qw(
                            SLang S-Lang
                            S-lang S-Lang
                            s-lang S-Lang
+                           subversion Subversion
                            TCL Tcl
                            tcl Tcl
                            TEX TeX
