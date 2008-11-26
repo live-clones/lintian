@@ -21,6 +21,14 @@ lintian (2.1.0) unstable; urgency=low
     + [RA] Stop checking for a libmodule-build-perl build dependency since
       Module::Build now comes with Perl.  Thanks, Raphael Hertzog.
       (Closes: #506697)
+  * checks/files:
+    + [ADB] Apply patches from Raphael Geissert to update the list of
+      embedded PHP libraries:
+      - Add detection for the Snoopy library and the use of phpmailer.inc
+        (rather than .php).
+      - Enable the libmarkdown-php check, as the package is now in unstable.
+      - Add support for the (not currently packaged and thus disabled) IXR
+        and kses libraries.
   * checks/infofiles:
     + [FL] Use $known_shells_regex from common_data.
   * checks/menus:
