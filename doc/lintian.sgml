@@ -435,7 +435,7 @@ reading of policy. Please do not override bugs in lintian, they should rather
 be fixed than overridden.
 
 Once it has been decided that an override is needed, you can easily add one by
-supply a overrides file. If the override is for a binary or udeb
+supplying an overrides file. If the override is for a binary or udeb
 package, you have to place it at
 <file>/usr/share/lintian/overrides/&lt;package&gt;</file> inside the
 package. If the override is for a source package, you have to place
@@ -485,8 +485,8 @@ foo source: configure-generated-file-in-source config.cache
 
 <p>
 
-Many tags can occour more than once (e.g. if the same error is found
-in more than one file). You can override a tag either completly by
+Many tags can occur more than once (e.g. if the same error is found
+in more than one file). You can override a tag either completely by
 specifying its name (first line in the examples) or only one
 occurrence of it by specifying the additional info, too (second line
 in the examples).  If you add an asterisk (<tt>*</tt>) at the start and/or

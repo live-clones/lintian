@@ -62,6 +62,9 @@ lintian (2.1.0) unstable; urgency=low
   * debian/control:
     + [FL] Add dependency on libipc-run-perl for Lintian::Command.
 
+  * doc/lintian.sgml:
+    + [ADB] Correct a few typos in the "overrides" section.
+
   * frontend/lintian:
     + [FL] Convert to use Lintian::Output.
     + [CW] Add jaunty as an allowable distribution for Ubuntu, and remove
