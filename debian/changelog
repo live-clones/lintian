@@ -24,7 +24,7 @@ lintian (2.1.0) unstable; urgency=low
   * checks/files:
     + [ADB] Apply patches from Raphael Geissert to update the list of
       embedded PHP libraries:
-      - Add detection for the Snoopy and Geshi libraries and the use of
+      - Add detection for the Snoopy and GeSHi libraries and the use of
         phpmailer.inc (rather than .php).
       - Enable the libmarkdown-php check, as the package is now in unstable.
       - Add support for the (not currently packaged and thus disabled) IXR
