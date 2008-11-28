@@ -125,7 +125,7 @@ lintian (2.1.0) unstable; urgency=low
          packages they are contained in
 
   * testset/{diffs,filenames}:
-    + [ADB] Generate the files "files/'\ " and "binary.c~" at build time 
+    + [ADB] Generate the files "files/'\ " and "filenames.c~" at build time 
       instead of including it in the source package, to allow lintian to be
       imported in to Bazaar.
 
