@@ -1,5 +1,9 @@
 lintian (2.1.1) unstable; urgency=low
 
+  * Summary of tag changes:
+    + Added
+      - latest-debian-changelog-entry-changed-to-native
+
   * checks/changelog{,.desc}:
     + [ADB] Warn when the version of a package changes to Debian native.
       Based on a patch by Michal Čihař.  (Closes: #504070)
