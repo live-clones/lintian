@@ -42,6 +42,8 @@ lintian (2.1.0) unstable; urgency=low
       (Closes: #498892)
   * check/scripts:
     + [FL] Use $known_shells_regex from common_data.
+    + [FL] Add icmake as a known interpreter as requested by
+      Frank B. Brokken.  (Closes: #505868)
   * checks/shared-libs{,.desc}:
     + [ADB] Don't issue both symbols-file-contains-debian-revision and
       symbols-file-contains-current-version-with-debian-revision for any

@@ -63,6 +63,7 @@ our %interpreters =
      gforth	    => [ '/usr/bin' ],
      gnuplot	    => [ '/usr/bin' ],
      gosh	    => [ '/usr/bin', 'gauche' ],
+     icmake	    => [ '/usr/bin', 'icmake' ],
      'install-menu' => [ '/usr/bin', '' ],
      jed	    => [ '/usr/bin' ],
      'jed-script'   => [ '/usr/bin', 'jed | xjed' ],
