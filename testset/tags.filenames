@@ -59,6 +59,7 @@ W: filenames source: diff-contains-bts-control-dir debian/.be
 W: filenames source: diff-contains-bzr-control-dir .bzr
 W: filenames source: diff-contains-cvs-conflict-copy files/.#Maelstrom Sound.1.1.1
 W: filenames source: diff-contains-cvs-control-dir CVS
+W: filenames source: diff-contains-editor-backup-file filenames.c~
 W: filenames source: diff-contains-svk-commit-file files/svk-commitsEr9P.tmp
 W: filenames source: diff-contains-svn-commit-file files/svn-commit.tmp
 W: filenames source: diff-contains-svn-conflict-file files/Maelstrom Sounce.r121

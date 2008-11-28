@@ -124,10 +124,10 @@ lintian (2.1.0) unstable; urgency=low
       - data/debhelper/dh_commands: mapping of debhelper commands to
          packages they are contained in
 
-  * testset/files:
-    + [ADB] Generate the file "files/'\ " at build time instead of
-      including it in the source package, to allow lintian to be imported
-      in to Bazaar.
+  * testset/{diffs,filenames}:
+    + [ADB] Generate the files "files/'\ " and "binary.c~" at build time 
+      instead of including it in the source package, to allow lintian to be
+      imported in to Bazaar.
 
  -- Frank Lichtenheld <djpig@debian.org>  Sun, 28 Sep 2008 10:35:47 +0200
 

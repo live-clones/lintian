@@ -23,10 +23,8 @@ W: diffs source: configure-generated-file-in-source subdir-good/config.cache
 W: diffs source: configure-generated-file-in-source subdir-good/config.log
 W: diffs source: configure-generated-file-in-source subdir-good/config.status
 W: diffs source: diff-contains-bzr-control-dir .bzr
-W: diffs source: diff-contains-cvs-conflict-copy .#binary.c.1.34
-W: diffs source: diff-contains-editor-backup-file binary.c~
 W: diffs source: diff-contains-substvars debian/substvars
-W: diffs source: patch-system-but-direct-changes-in-diff .#binary.c.1.34 and 2 more
+W: diffs source: patch-system-but-direct-changes-in-diff .bzr/dummy
 W: diffs: binary-without-manpage usr/bin/diffs
 W: diffs: wrong-bug-number-in-closes l6:#nnnnnn
 W: diffs: wrong-bug-number-in-closes l7:#123nnn

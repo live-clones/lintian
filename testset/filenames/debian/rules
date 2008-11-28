@@ -25,6 +25,7 @@ clean:
 	touch 'files/.#Maelstrom Sound.1.1.1' 'files/Maelstrom Sounce.r121'
 	touch 'files/Maelstrom Sound.mine'
 	touch "files/'\\ "
+	touch filenames.c~
 
 build:
 
