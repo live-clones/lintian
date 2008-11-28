@@ -102,6 +102,16 @@ lintian (2.1.0) unstable; urgency=low
     + [FL] Convert to use Lintian::Output.
     + [FL] Add some new utility functions: delete_dir copy_dir gunzip_file
       touch_file.
+  
+  * private/refresh-debhelper-data:
+    + [FL] New script to update debhelper related data by Raphael Geissert.
+      - data/debhelper/miscDepends_commands: debhelper commands that set
+         misc:Depends
+      - data/debhelper/maint_commands: debhelper commands that edit
+         maintainer scripts
+      - data/debhelper/dh_packages: packages that contain debhelper commands
+      - data/debhelper/dh_commands: mapping of debhelper commands to
+         packages they are contained in
 
   * testset/files:
     + [ADB] Generate the file "files/'\ " at build time instead of

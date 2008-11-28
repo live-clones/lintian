@@ -1,0 +1,142 @@
+#!/bin/sh
+
+####################
+#    Copyright (C) 2008 by Raphael Geissert <atomo64@gmail.com>
+#
+#
+#    This file is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 2 of the License, or
+#    (at your option) any later version.
+#
+#    This file is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this file.  If not, see <http://www.gnu.org/licenses/>.
+####################
+
+set -e
+
+if [ -z "$1" ]; then
+    printf "Usage: %s path/to/lintian/data [Contents-arch.(gz|bz2|)]\n" \
+	"$(basename "$0")"
+    cat <<INFO
+
+If the Contents file is specified, the list of dh_ commands found there will
+be compared with the list at lintian/data/debhelper/dh_commands and will
+indicate if the list is up to date with an exit status of zero.
+
+If the Contents file is not specified, the script will download the following
+files from a mirror (which should be specified via the DEB_MIRROR env var, 
+which defaults to http://i386-geomirror.debian.net/debian and is used directly
+without any kind of parsing so one can play with it):
+* Contents-i386.gz, main/binary-i386/Packages.gz
+* Binary packages found at Contents shipping dh_ commands
+Any special parameter can be passed to wget via WGET_ARGS, if needed.
+
+Other options:
+Other variables such as GREP_OPTIONS can be used to enable things like --mmap.
+INFO
+    exit
+fi
+
+readonly lintian_data="$(readlink -f "$1")"
+readonly contents="$(readlink -f "$2")"
+readonly dh_regex='^usr/bin/dh_.'
+readonly dh_perl_regex='^usr/bin/(dh_[^\s]+)\s+\w+/([^,]+).*'
+offline=0
+
+[ -d "$lintian_data" ] || {
+    printf "%s is not a directory, aborting" "$lintiandata" >&2
+    exit 1
+}
+
+[ ! -z "$contents" -a ! -f "$contents" ] && {
+    printf "%s is not a file, aborting" "$contents" >&2
+    exit 1
+}
+
+[ -z "$contents" ] || offline=1
+
+readonly workdir="$(mktemp -d)"
+
+cleanup () {
+        [ ! -d "$workdir" ] || rm -rf "$workdir"
+}; trap cleanup EXIT
+
+if [ $offline -eq 1 ]; then
+    known_commands="$lintian_data/debhelper/dh_commands"
+    [ -f "$known_commands" ] || exit 1
+    new_commands="$workdir/new"
+
+    case "$contents" in
+	*.gz)
+	    command="zgrep"
+	;;
+	*.bz2)
+	    command="bzgrep"
+	;;
+	*)
+	    command="grep"
+	;;
+    esac
+    which "$command" 2>&1 1>/dev/null || exit 2
+
+    $command -E "$dh_regex" "$contents" \
+	| perl -p -w -E 's#'"$dh_perl_regex"'#$1=$2#g;' \
+	| sort > "$new_commands"
+    cmp -s "$known_commands" "$new_commands"
+    exit
+else
+    mirror="${DEB_MIRROR:=http://i386-geomirror.debian.net/debian}"
+    WGET_ARGS="${WGET_ARGS:=-nv}"
+    wget() {
+	echo wget "$mirror"/"$1"
+	/usr/bin/wget $WGET_ARGS "$mirror"/"$1"
+    }
+    mkdir -p "$lintian_data/debhelper"
+
+    cd "$workdir"
+    wget dists/sid/Contents-i386.gz
+    zgrep -E "$dh_regex" Contents-i386.gz > dh_entries
+    cat dh_entries \
+	| perl -p -w -E 's#'"$dh_perl_regex"'#$1=$2#g;' \
+	| sort > dh_commands
+    cat dh_entries \
+	| perl -p -w -E 's#'"$dh_perl_regex"'#$2#g;' \
+	| sort -u > dh_packages
+
+    for f in commands packages; do
+	rf="$lintian_data/debhelper/dh_$f"
+	[ ! -f "$rf" ] ||
+	    mv "$rf" "${rf}.old"
+	cp -a "dh_$f" "$rf"
+    done
+
+    wget dists/sid/main/binary-i386/Packages.gz
+    gunzip Packages.gz
+    for package in $(cat dh_packages); do
+	fn="$(grep-dctrl -n -P -X "$package" -sFilename Packages)"
+	wget "$fn"
+	file="$(basename "$fn")"
+	dpkg-deb -x "$file" "$(mktemp -d -p .)"
+	rm -rf "$file"
+	find */ | grep -Ev '^[^/]+/usr/bin/dh_.+$' \
+	    | xargs rm >/dev/null 2>&1 || true
+    done
+
+    grep -lr autoscript */ \
+	| sed 's,.*/usr/bin/,,g' | sort -u > maint_commands
+    grep -lr misc:Depends */ \
+	| sed 's,.*/usr/bin/,,g' | sort -u > miscDepends_commands
+
+    for f in maint miscDepends; do
+	rf="$lintian_data/debhelper/${f}_commands"
+	[ ! -f "$rf" ] ||
+	    mv "$rf" "${rf}.old"
+	cp -a "${f}_commands" "$rf"
+    done
+fi
