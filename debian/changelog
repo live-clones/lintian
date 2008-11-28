@@ -101,6 +101,11 @@ lintian (2.1.0) unstable; urgency=low
     + [FL] Add some new utility functions: delete_dir copy_dir gunzip_file
       touch_file.
 
+  * testset/files:
+    + [ADB] Generate the file "files/'\ " at build time instead of
+      including it in the source package, to allow lintian to be imported
+      in to Bazaar.
+
  -- Frank Lichtenheld <djpig@debian.org>  Sun, 28 Sep 2008 10:35:47 +0200
 
 lintian (2.0.0) unstable; urgency=low
