@@ -40,6 +40,7 @@ W: maintainer-scripts: ancient-dpkg-epoch-check preinst:8
 W: maintainer-scripts: ancient-dpkg-long-filenames-check preinst:9
 W: maintainer-scripts: ancient-dpkg-multi-conrep-check preinst:10
 W: maintainer-scripts: ancient-dpkg-predepends-check preinst:7
+W: maintainer-scripts: command-with-path-in-maintainer-script postinst:173 /usr/bin/baz
 W: maintainer-scripts: command-with-path-in-maintainer-script preinst:12 /bin/egrep
 W: maintainer-scripts: config-does-not-load-confmodule
 W: maintainer-scripts: deprecated-chown-usage postinst:167 'chown -R root.root'
