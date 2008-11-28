@@ -96,7 +96,7 @@ open(RULES, '<', "debfiles/rules") or fail("cannot read debian/rules: $!");
 my $dhcompatvalue;
 my @versioncheck;
 while (<RULES>) {
-    if (m/^\s+(dh_\w+)/) {
+    if (m/^\s+-?(dh_\w+)/) {
         my $dhcommand = $1;
     	if ($dhcommand =~ /dh_testversion(?:\s+(.+))?/) {
 	    $needversiondepends = $1 if ($1);
