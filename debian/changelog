@@ -1,3 +1,12 @@
+lintian (2.1.1) unstable; urgency=low
+
+  * checks/scripts:
+    + [ADB] Enhance the test for command-with-path-in-maintainer-script to
+      better match executions of the command rather than the use of its name
+      in pattern matching expressions.  (Closes: #499847)
+
+ -- Adam D. Barratt <adam@adam-barratt.org.uk>  Fri, 28 Nov 2008 21:47:33 +0000
+
 lintian (2.1.0) unstable; urgency=low
 
   * Summary of tag changes:

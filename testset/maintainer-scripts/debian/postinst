@@ -165,3 +165,9 @@ start-stop-daemon --stop --quiet --name foo --startas /usr/bin/foo
 
 # Deprecated chown use with flags.
 chown -R root.root /usr/share/doc/maintainer-scripts
+
+case $mainscript in
+	/usr/bin/foo) foobarbaz;;
+esac
+
+/usr/bin/baz; echo bar
