@@ -4,6 +4,12 @@ CC=gcc
 CFLAGS=-Wall -Winline -O2
 
 OBJS=baz.o extra.o
+SHOBJS=baz.sho extra.sho
+NOPICOBJS = $(OBJS)
+DEB_HOST_ARCH := $(shell dpkg-architecture -qDEB_HOST_ARCH)
+ifneq ($(DEB_HOST_ARCH),i386)
+NOPICOBJS = $(SHOBJS)
+endif
 
 all: libbaz1.a libbaz2.a libbaz1.so.1.0.3b libbaz2.so libbaz3.so.1.0.3b
 
@@ -13,14 +19,14 @@ libbaz2.so.1.0: libbaz2.so.1.0.3b
 	ln -sf $^ $@
 
 # Oops, forget the soname altogether
-libbaz1.so.1.0.3b: $(OBJS)
+libbaz1.so.1.0.3b: $(NOPICOBJS)
 	$(CC) -o $@ -shared $^ -lc
 
-libbaz2.so.1.0.3b: $(OBJS:%.o=%.sho)
+libbaz2.so.1.0.3b: $(SHOBJS)
 	$(CC) -o $@ -shared -Wl,-soname,libbaz2.so.1.0 $^ -lc
 
-# Non-PIC.
-libbaz3.so.1.0.3b: $(OBJS)
+# Non-PIC. We can't test this on all architectures
+libbaz3.so.1.0.3b: $(NOPICOBJS)
 	$(CC) -o $@ -shared -Wl,-soname,libbaz3.so.1 $^ -lc
 
 #%.o-noreentrant: %.c
@@ -37,7 +43,7 @@ libbaz2.a: $(OBJS)
 	ranlib $@
 
 # The pic one in the .a (wrong), no archive table
-libbaz1.a: $(OBJS:%.o=%.sho)
+libbaz1.a: $(SHOBJS)
 	ar cqS $@ $^
 
 clean:
