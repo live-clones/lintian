@@ -25,6 +25,7 @@ use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Dep;
 use Tags;
 use Util;
+use Lintian::Data;
 
 # If there is no debian/compat file present but cdbs is being used, cdbs will
 # create one automatically.  Currently it always uses compatibility level 5.
@@ -33,38 +34,7 @@ use Util;
 
 my $cdbscompat = 5;
 
-# Parse the debian/rules file, and try to figure out if debhelper commands
-# are run in it that like to modify maintainer scripts. Those debhelper
-# commands can be found by "grep -l autoscript /usr/bin/dh_*", but I'll
-# hardcode them here.
-
-my %commands;
-map { $commands{$_}=1 } qw(dh_desktop
-			   dh_gconf
-			   dh_icons
-			   dh_installcatalogs
-			   dh_installdebconf
-                           dh_installdefoma
-                           dh_installdocs
-			   dh_installemacsen
-			   dh_installinfo
-			   dh_installinit
-			   dh_installmenu
-			   dh_installmime
-			   dh_installmodules
-			   dh_installtex
-			   dh_installudev
-			   dh_installwm
-			   dh_installxfonts
-			   dh_installxmlcatalogs
-			   dh_makeshlibs
-			   dh_pycentral
-			   dh_pysupport
-			   dh_python
-			   dh_scrollkeeper
-			   dh_suidregister
-			   dh_usrlocal
-			   );
+my $maint_commands = Lintian::Data->new ('debhelper/maint_commands');
 
 # The version at which debhelper commands were introduced.  Packages that use
 # one of these commands must have a dependency on that version of debhelper or
@@ -109,7 +79,7 @@ while (<RULES>) {
 	    tag "dh_suidregister-is-obsolete", "";
 	}
 	# if command is passed -n, it does not modify the scripts
-	if ($commands{$dhcommand} and not m/\s+\-n\s+/) {
+	if ($maint_commands->known($dhcommand) and not m/\s+\-n\s+/) {
 	    $needtomodifyscripts = 1;
 	}
         if ($versions{$dhcommand}) {
