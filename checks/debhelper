@@ -35,6 +35,7 @@ use Lintian::Data;
 my $cdbscompat = 5;
 
 my $maint_commands = Lintian::Data->new ('debhelper/maint_commands');
+my $miscDeps_commands = Lintian::Data->new ('debhelper/miscDepends_commands');
 my $dh_commands_depends = Lintian::Data->new ('debhelper/dh_commands', '=');
 
 # The version at which debhelper commands were introduced.  Packages that use
@@ -62,6 +63,7 @@ my $compat = '';
 my $usescdbs = '';
 my $seendhpython = '';
 my $usescdbspython = '';
+my $needmiscdepends = 0;
 my %missingbdeps;
 
 open(RULES, '<', "debfiles/rules") or fail("cannot read debian/rules: $!");
@@ -84,23 +86,28 @@ while (<RULES>) {
 	if ($maint_commands->known($dhcommand) and not m/\s+\-n\s+/) {
 	    $needtomodifyscripts = 1;
 	}
+	if ($miscDeps_commands->known($dhcommand)) {
+	    $needmiscdepends = 1;
+	}
 	if ($dh_commands_depends->known($dhcommand)) {
 	    my $dep = $dh_commands_depends->value($dhcommand);
 	    $missingbdeps{$dep} = $dhcommand;
 	}
-        if ($versions{$dhcommand}) {
-            push (@versioncheck, $dhcommand);
-        }
+	if ($versions{$dhcommand}) {
+	    push (@versioncheck, $dhcommand);
+	}
 	$seencommand = 1;
 	$needbuilddepends = 1;
     } elsif (m,^\s+dh\s+,) {
 	$seencommand = 1;
 	$needbuilddepends = 1;
+	$needmiscdepends = 1;
 	push (@versioncheck, 'dh');
     } elsif (m,^include\s+/usr/share/cdbs/1/rules/debhelper.mk,) {
 	$seencommand = 1;
 	$needbuilddepends = 1;
 	$needtomodifyscripts = 1;
+	$needmiscdepends = 1;
 
 	# CDBS sets DH_COMPAT but doesn't export it.  It does, however, create
 	# a debian/compat file if none was found; that logic is handled later.
@@ -125,6 +132,22 @@ return unless $seencommand;
 
 my $pkgs = $info->binaries;
 my $single_pkg = keys(%$pkgs) == 1 ? $pkgs->{(keys(%$pkgs))[0]} : '';
+
+for my $binpkg (keys %$pkgs) {
+    my $depends = '';
+    local $/;
+
+    foreach my $field (qw(depends recommends suggests)) {
+	if (open DEPENDS, '<', "control/$binpkg/$field") {
+	    chomp ($depends .= <DEPENDS>);
+	    close(DEPENDS);
+	}
+    }
+
+    tag 'debhelper-but-no-misc-depends', $binpkg
+        if $needmiscdepends and $depends !~ m/\$\{misc:Depends\}/
+	   and $pkgs->{$binpkg} eq 'deb';
+}
 
 # If we got this far, they need to have #DEBHELPER# in their scripts.  Search
 # for scripts that look like maintainer scripts.  Also collect dependency

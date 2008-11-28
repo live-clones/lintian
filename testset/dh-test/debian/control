@@ -7,6 +7,6 @@ Standards-Version: 3.6.2
 
 Package: dh-test
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Depends: ${shlibs:Depends}
 Description: <insert up to 60 chars description>
  <insert long description, indented with spaces>
