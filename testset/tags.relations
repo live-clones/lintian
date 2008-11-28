@@ -7,7 +7,6 @@ E: relations source: build-depends-on-obsolete-package build-depends-indep: debm
 E: relations source: depends-on-build-essential-package-without-using-version libc6-dev [build-depends: libc6-dev]
 E: relations source: depends-on-build-essential-package-without-using-version make [build-depends-indep: make]
 E: relations source: invalid-arch-string-in-source-relation test [build-conflicts: bar [alpha test]]
-E: relations source: missing-build-dependency libmodule-build-perl
 E: relations source: section-category-mismatch Package relations-multiple-libs
 E: relations-multiple-libs: alternates-not-allowed enhances
 E: relations-multiple-libs: conflicts-with-dependency depends libpng2
