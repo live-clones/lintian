@@ -1,0 +1,12 @@
+dh_gconf
+dh_gtkmodules
+dh_installcatalogs
+dh_installdebconf
+dh_installlisting
+dh_installtex
+dh_installxfonts
+dh_installxmlcatalogs
+dh_lisp
+dh_nativejava
+dh_pangomodules
+dh_pidgin
