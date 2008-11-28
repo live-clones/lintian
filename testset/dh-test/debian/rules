@@ -81,7 +81,9 @@ binary-arch: build install
 #	dh_installinit
 #	dh_installcron
 #	dh_installinfo
+	dh_installxfonts
 	dh_installman
+	-dh_gnustep
 #	dh_dhelp
 	dh_suidregister
 	dh_link
@@ -89,6 +91,7 @@ binary-arch: build install
 	dh_compress
 	dh_fixperms
 #	dh_perl
+	-dh_lisp
 #	dh_python
 #	dh_makeshlibs
 	dh_installdeb

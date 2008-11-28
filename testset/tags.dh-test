@@ -1,3 +1,5 @@
+E: dh-test source: missing-build-dependency-for-dh_-command dh_gnustep=gnustep-make
+E: dh-test source: missing-build-dependency-for-dh_-command dh_lisp=dh-lisp
 E: dh-test: description-is-dh_make-template
 E: dh-test: helper-templates-in-copyright
 E: dh-test: section-is-dh_make-template

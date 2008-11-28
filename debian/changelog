@@ -2,6 +2,7 @@ lintian (2.1.0) unstable; urgency=low
 
   * Summary of tag changes:
     + Added
+      - missing-build-dependency-for-dh_-command
       - quilt-patch-missing-description
       - shlib-calls-exit
 
@@ -17,6 +18,9 @@ lintian (2.1.0) unstable; urgency=low
   * checks/debhelper:
     + [FL] Use Lintian::Data for list of debhelper commands that modify
       maintainer scripts.  Patch by Raphael Geissert.
+    + [FL] Add new tag missing-build-dependency-for-dh_-command for
+      debhelper commands that are not from the debhelper package.
+      Patch by Raphael Geissert.
   * checks/fields:
     + [ADB] Ignore non-dependency fields when considering whether a
       versioned dependency is satisfied by the perl core packages.

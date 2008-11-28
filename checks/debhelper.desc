@@ -105,6 +105,14 @@ Info: This package uses dh_python but apparently does not tell it to use
  may mean that the package has not been converted to the current Python
  policy, in which case it probably should be.
 
+Tag: missing-build-dependency-for-dh_-command
+Type: error
+Severity: important
+Certainty: possible
+Info: The source package appears to be using a dh_ command but doesn't build
+ depend on the package that actually provides it.  If it uses it, it must
+ build depend on it.
+
 Tag: debhelper-script-needs-versioned-build-depends
 Severity: normal
 Certainty: certain

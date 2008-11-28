@@ -35,6 +35,7 @@ use Lintian::Data;
 my $cdbscompat = 5;
 
 my $maint_commands = Lintian::Data->new ('debhelper/maint_commands');
+my $dh_commands_depends = Lintian::Data->new ('debhelper/dh_commands', '=');
 
 # The version at which debhelper commands were introduced.  Packages that use
 # one of these commands must have a dependency on that version of debhelper or
@@ -61,6 +62,7 @@ my $compat = '';
 my $usescdbs = '';
 my $seendhpython = '';
 my $usescdbspython = '';
+my %missingbdeps;
 
 open(RULES, '<', "debfiles/rules") or fail("cannot read debian/rules: $!");
 my $dhcompatvalue;
@@ -81,6 +83,10 @@ while (<RULES>) {
 	# if command is passed -n, it does not modify the scripts
 	if ($maint_commands->known($dhcommand) and not m/\s+\-n\s+/) {
 	    $needtomodifyscripts = 1;
+	}
+	if ($dh_commands_depends->known($dhcommand)) {
+	    my $dep = $dh_commands_depends->value($dhcommand);
+	    $missingbdeps{$dep} = $dhcommand;
 	}
         if ($versions{$dhcommand}) {
             push (@versioncheck, $dhcommand);
@@ -173,6 +179,11 @@ while (defined(my $file=readdir(DEBIAN))) {
         $bdepends = Dep::parse($bdepends);
         if ($needbuilddepends && ! Dep::implies($bdepends, Dep::parse('debhelper'))) {
 	    tag "package-uses-debhelper-but-lacks-build-depends", "";
+	}
+	while (my ($dep, $command) = each %missingbdeps) {
+	    next if $dep eq 'debhelper'; #handled above
+	    tag 'missing-build-dependency-for-dh_-command', "$command=$dep"
+		unless (Dep::implies($bdepends, Dep::parse($dep)));
 	}
     } elsif ($file =~ m/^ex\.|\.ex$/i) {
         tag "dh-make-template-in-source", "debian/$file";
