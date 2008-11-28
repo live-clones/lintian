@@ -123,7 +123,7 @@ my $single_pkg = keys(%$pkgs) == 1 ? $pkgs->{(keys(%$pkgs))[0]} : '';
 # If we got this far, they need to have #DEBHELPER# in their scripts.  Search
 # for scripts that look like maintainer scripts.  Also collect dependency
 # information from debian/control and check compatibility level.
-my $depends;
+my $bdepends;
 opendir(DEBIAN, 'debfiles')
     or fail("Can't open debfiles directory.");
 while (defined(my $file=readdir(DEBIAN))) {
@@ -164,14 +164,14 @@ while (defined(my $file=readdir(DEBIAN))) {
 	}
     } elsif ($file =~ m/^control$/) {
         my ($control) = read_dpkg_control("debfiles/$file");
-        $depends = '';
+        $bdepends = '';
         for my $field ('build-depends', 'build-depends-indep') {
             next unless $control->{$field};
-            $depends .= ', ' if $depends;
-            $depends .= $control->{$field};
+            $bdepends .= ', ' if $bdepends;
+            $bdepends .= $control->{$field};
         }
-        $depends = Dep::parse($depends);
-        if ($needbuilddepends && ! Dep::implies($depends, Dep::parse('debhelper'))) {
+        $bdepends = Dep::parse($bdepends);
+        if ($needbuilddepends && ! Dep::implies($bdepends, Dep::parse('debhelper'))) {
 	    tag "package-uses-debhelper-but-lacks-build-depends", "";
 	}
     } elsif ($file =~ m/^ex\.|\.ex$/i) {
@@ -200,13 +200,13 @@ if ($usescdbs and not $needversiondepends) {
 $needversiondepends ||= 1;
 if ($needversiondepends < 4) {
     tag "package-uses-deprecated-debhelper-compat-version", $needversiondepends;
-} elsif ($needversiondepends > 5 and ! Dep::implies($depends, Dep::parse("debhelper (>= $needversiondepends)"))) {
+} elsif ($needversiondepends > 5 and ! Dep::implies($bdepends, Dep::parse("debhelper (>= $needversiondepends)"))) {
     tag "package-lacks-versioned-build-depends-on-debhelper", $needversiondepends;
 } elsif (@versioncheck) {
     for my $program (@versioncheck) {
         my $required = $versions{$program};
         tag 'debhelper-script-needs-versioned-build-depends', $program, "(>= $required)"
-            unless Dep::implies($depends, Dep::parse("debhelper (>= $required)"));
+            unless Dep::implies($bdepends, Dep::parse("debhelper (>= $required)"));
     }
 }
 
