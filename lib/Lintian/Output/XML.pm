@@ -32,7 +32,7 @@ sub print_tag {
 		      qq{<tag severity="$tag_info->{severity}" certainty="$tag_info->{certainty}"},
 		      'flags="'.(exists($tag_info->{experimental}) ? 'experimental' : ''),
 		      ($tag_info->{overridden}{override} ? 'overridden' : '').'"',
-		      qq{name="$tag_info->{tag}">}.encode_entities("@$information","<>&\"'").qq{</tag},
+		      qq{name="$tag_info->{tag}">}.encode_entities("@$information","<>&\"'").qq{</tag>},
 	);
 }
 

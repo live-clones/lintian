@@ -12,11 +12,15 @@ lintian (2.1.1) unstable; urgency=low
       better match executions of the command rather than the use of its name
       in pattern matching expressions.  (Closes: #499847)
 
-  * lib/Lab.pm:
-    + [FL] Fix breakage of populate_with_dist() I introduced in 2.1.0.
   * lib/Lintian/Output.pm:
     + [ADB] Make sure the default list of colours is initialised before
       attempting to use it.  Thanks, gregor herrmann.  (Closes: #507241)
+  * lib/Lintian/Output/XML.pm:
+    + [ADB] Add a missing angle bracket to the closing "tag" tag, so that
+      the XML is well-formed.
+
+  * lib/Lab.pm:
+    + [FL] Fix breakage of populate_with_dist() I introduced in 2.1.0.
 
  -- Adam D. Barratt <adam@adam-barratt.org.uk>  Fri, 28 Nov 2008 21:47:33 +0000
 
