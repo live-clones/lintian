@@ -21,6 +21,9 @@ lintian (2.1.1) unstable; urgency=low
 
   * lib/Lab.pm:
     + [FL] Fix breakage of populate_with_dist() I introduced in 2.1.0.
+  * lib/Tags.pm:
+    + [ADB] Don't output a "Processing binary package foo.changes" message.
+      Thanks Sandro Tosi for pointing the issue out.
 
  -- Adam D. Barratt <adam@adam-barratt.org.uk>  Fri, 28 Nov 2008 21:47:33 +0000
 

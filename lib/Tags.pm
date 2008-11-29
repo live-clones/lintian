@@ -131,7 +131,9 @@ sub select_pkg {
 	$Lintian::Output::GLOBAL->print_end_pkg($info{$current});
     }
     $current = $file;
-    $Lintian::Output::GLOBAL->print_start_pkg($info{$current});
+    if ($file !~ /.changes$/) {
+	$Lintian::Output::GLOBAL->print_start_pkg($info{$current});
+    }
     return 1;
 }
 
