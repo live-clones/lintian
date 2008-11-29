@@ -12,6 +12,9 @@ lintian (2.1.1) unstable; urgency=low
       better match executions of the command rather than the use of its name
       in pattern matching expressions.  (Closes: #499847)
 
+  * lib/Lab.pm:
+    + [FL] Fix breakage of populate_with_dist() I introduced in 2.1.0.
+  
  -- Adam D. Barratt <adam@adam-barratt.org.uk>  Fri, 28 Nov 2008 21:47:33 +0000
 
 lintian (2.1.0) unstable; urgency=low

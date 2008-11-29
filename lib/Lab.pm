@@ -138,7 +138,7 @@ sub populate_with_dist {
     return 0 unless $dist;
     return 0 unless $self->{dir};
 
-    debug(2, "spawning list-binpkg, list-udebpkg and list-srcpkg since LINTIAN_DIST=$dist");
+    debug_msg(2, "spawning list-binpkg, list-udebpkg and list-srcpkg since LINTIAN_DIST=$dist");
 
     my $v = $Lintian::Output::GLOBAL->verbose ? '-v' : '';
 
