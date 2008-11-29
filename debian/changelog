@@ -14,7 +14,10 @@ lintian (2.1.1) unstable; urgency=low
 
   * lib/Lab.pm:
     + [FL] Fix breakage of populate_with_dist() I introduced in 2.1.0.
-  
+  * lib/Lintian/Output.pm:
+    + [ADB] Make sure the default list of colours is initialised before
+      attempting to use it.  Thanks, gregor herrmann.  (Closes: #507241)
+
  -- Adam D. Barratt <adam@adam-barratt.org.uk>  Fri, 28 Nov 2008 21:47:33 +0000
 
 lintian (2.1.0) unstable; urgency=low

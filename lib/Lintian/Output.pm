@@ -113,9 +113,9 @@ our @EXPORT_OK = (@{$EXPORT_TAGS{messages}},
 		  'string');
 
 # for the non-OO interface
-our $GLOBAL = new Lintian::Output;
-
 my %default_colors = ( 'E' => 'red' , 'W' => 'yellow' , 'I' => 'cyan' );
+
+our $GLOBAL = new Lintian::Output;
 
 sub new {
     my ($class, %options) = @_;
