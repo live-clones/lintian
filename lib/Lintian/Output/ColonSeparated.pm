@@ -33,7 +33,7 @@ sub print_tag {
 
     $self->_print(
 	'tag',
-	$tag_info->{type},
+	Tags::get_tag_code($tag_info),
 	$tag_info->{severity},
 	$tag_info->{certainty},
 	(exists($tag_info->{experimental}) ? 'X' : '').
@@ -41,7 +41,7 @@ sub print_tag {
 	@{$pkg_info}{'pkg','version','arch','type'},
 	$tag_info->{tag},
 	$extra,
-	$tag_info->{overridden}{override},
+	$tag_info->{overridden}{override} || '',
 	);
 }
 

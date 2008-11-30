@@ -15,6 +15,10 @@ lintian (2.1.1) unstable; urgency=low
   * lib/Lintian/Output.pm:
     + [ADB] Make sure the default list of colours is initialised before
       attempting to use it.  Thanks, gregor herrmann.  (Closes: #507241)
+  * lib/Lintian/Output/ColonSeparated.pm:
+    + [ADB] Fix uninitialized value warnings by displaying the type code
+      rather than the (no longer present in description files) Type field
+      and handling non-overriden tags.
   * lib/Lintian/Output/XML.pm:
     + [ADB] Add a missing angle bracket to the closing "tag" tag, so that
       the XML is well-formed.
