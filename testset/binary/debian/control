@@ -19,7 +19,7 @@ Description: test handling of binary files
  is checked for picky spelling errors.
  .
  This package list [ subversion | gconf ] should not be flagged as a spelling
- mistake.
+ mistake.  The spelling correction for dont should be correct.
  .
   Homepage: http://lintian.debian.org/
 

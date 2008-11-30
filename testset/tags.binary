@@ -116,6 +116,7 @@ W: binary: old-fsf-address-in-copyright-file
 W: binary: package-contains-hardlink usr/bar2 -> usr/share/baz
 W: binary: package-contains-upstream-install-documentation usr/share/doc/binary/INSTALL
 W: binary: spelling-error-in-description debian Debian
+W: binary: spelling-error-in-description dont don't
 W: binary: spelling-error-in-doc-base-abstract-field binary:10 speling spelling
 W: binary: spelling-error-in-doc-base-title-field binary:2 debian Debian
 W: binary: spelling-error-in-news-debian speling spelling

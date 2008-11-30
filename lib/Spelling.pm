@@ -109,7 +109,7 @@ our %CORRECTIONS = qw(
                       cryptocraphic cryptographic
                       deamon daemon
                       debain Debian
-                      debians Debian\'s
+                      debians Debian's
                       decompres decompress
                       definate definite
                       definately definitely
@@ -127,7 +127,7 @@ our %CORRECTIONS = qw(
                       documentaion documentation
                       docuentation documentation
                       documantation documentation
-                      dont don\'t
+                      dont don't
                       easilly easily
                       ecspecially especially
                       edditable editable
@@ -214,7 +214,7 @@ our %CORRECTIONS = qw(
                       necesary necessary
                       nescessary necessary
                       noticable noticeable
-                      o\'caml OCaml
+                      o'caml OCaml
                       optionnal optional
                       orientatied orientated
                       orientied oriented

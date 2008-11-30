@@ -21,6 +21,10 @@ lintian (2.1.1) unstable; urgency=low
 
   * lib/Lab.pm:
     + [FL] Fix breakage of populate_with_dist() I introduced in 2.1.0.
+  * lib/Spelling.pm:
+    + [RA] Don't add unnecessary backslashes in the list of spelling
+      corrections.  They're copied into the output.  Thanks, Micah
+      Anderson.  (Closes: #507331)
   * lib/Tags.pm:
     + [ADB] Don't output a "Processing binary package foo.changes" message.
       Thanks Sandro Tosi for pointing the issue out.
