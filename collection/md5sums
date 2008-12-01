@@ -40,6 +40,7 @@ my %opts = ( pipe_in => FileHandle->new,
 	     out => '../md5sums',
 	     fail => 'error' );
 spawn(\%opts, ['xargs', '-0r', 'md5sum'] );
+$opts{pipe_in}->blocking(1);
 open(INDEX, '<', "../index")
     or fail("cannot open index file: $!");
 while (<INDEX>) {

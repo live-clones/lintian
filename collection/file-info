@@ -41,6 +41,7 @@ my %opts = ( pipe_in => FileHandle->new,
 	     out => '../file-info',
 	     fail => 'error' );
 spawn(\%opts, ['xargs', '-0r', 'file']);
+$opts{pipe_in}->blocking(1);
 open(INDEX, '<', "../index")
     or fail("cannot open index file: $!");
 while (<INDEX>) {

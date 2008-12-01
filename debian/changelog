@@ -12,6 +12,11 @@ lintian (2.1.1) unstable; urgency=low
       better match executions of the command rather than the use of its name
       in pattern matching expressions.  (Closes: #499847)
 
+  * collection/{fileinfo,md5sums}:
+    + [ADB] Use blocking filehandles to pass the list of filenames to check
+      to the spawned file / md5sum.  By default the handles were non-blocking
+      which could lead to problems with larger file lists.  (Closes: #507461)
+
   * lib/Lintian/Output.pm:
     + [ADB] Make sure the default list of colours is initialised before
       attempting to use it.  Thanks, gregor herrmann.  (Closes: #507241)
