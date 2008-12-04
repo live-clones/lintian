@@ -7,6 +7,10 @@ lintian (2.1.1) unstable; urgency=low
   * checks/changelog{,.desc}:
     + [ADB] Warn when the version of a package changes to Debian native.
       Based on a patch by Michal Čihař.  (Closes: #504070)
+  * checks/patch-systems:
+    + [ADB] Don't complain about a missing quilt build-dependency if
+      the package contains a directory named debian/patches/series.
+      (Closes: #507761)
   * checks/scripts:
     + [ADB] Enhance the test for command-with-path-in-maintainer-script to
       better match executions of the command rather than the use of its name

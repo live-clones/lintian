@@ -169,7 +169,8 @@ sub run {
 			}
 		}
 	} else {
-		if (-r "debfiles/patches/series") {
+		if (-r "debfiles/patches/series" and
+		    -f "debfiles/patches/series") {
 			# 3.0 (quilt) sources don't need quilt as dpkg-source will do the work
 			tag "quilt-series-but-no-build-dep" unless $quilt_format;
 		}
