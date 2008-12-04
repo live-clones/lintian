@@ -734,6 +734,17 @@ Info: This package has a name of the form of "X-dbg", indicating it
  depend on the corresponding package, generally with (= ${binary:Version})
  since the debugging symbols are only useful with the binaries created by
  the same build.
+ .
+ If this package provides debugging symbols for multiple other
+ packages, it should normally depend on all of those packages as
+ alternatives.  In other words, <tt>pkga (= ${binary:Version}) | pkgb (=
+ ${binary:Version)</tt> and so forth.  Provided that the non-dbg portion
+ of the package name matches a prefix of the names of the packages on
+ which it depends, Lintian should be able to recognize this dependency as
+ correct.
+ .
+ In some cases, it may be necessary to override this tag because Lintian
+ can't tell the correct dependency is in place.
 
 Tag: conflicts-with-dependency
 Severity: important
