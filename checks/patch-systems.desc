@@ -23,7 +23,7 @@ Info: In the 00list file listing all your dpatches, you referenced a file
  that does not exist. This will lead to a fatal error when calling dpatch.
 
 Tag: dpatch-missing-description
-Severity: minor
+Severity: wishlist
 Certainty: certain
 Info: dpatch files should carry a description of the function of the included
  patch. Description lines start with "## DP:".
@@ -72,7 +72,7 @@ Info: In the series file listing all your quilt patches, you referenced a
  file that does not exist. This will lead to a fatal error when calling quilt.
 
 Tag: quilt-patch-missing-description
-Severity: minor
+Severity: wishlist
 Certainty: certain
 Info: quilt patch files should carry a description of the function of the
  included patch. Description lines may be included before the start of the

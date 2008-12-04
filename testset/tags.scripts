@@ -19,6 +19,8 @@ E: scripts: wrong-path-for-interpreter #!/bin/ruby1.8 != /usr/bin/ruby1.8 (./usr
 E: scripts: wrong-path-for-interpreter #!/usr/local/bin/lefty != /usr/bin/lefty (./usr/bin/lefty-foo)
 E: scripts_6ds-1ubuntu0.5.10.1_arch.changes: bad-ubuntu-distribution-in-changes-file unstable
 I: scripts source: debian-watch-file-should-dversionmangle-not-uversionmangle
+I: scripts source: dpatch-missing-description 02_i_dont_have_a_description.patch
+I: scripts source: dpatch-missing-description 04_i_dont_have_a_description_either.patch
 I: scripts: init.d-script-missing-lsb-short-description /etc/init.d/lsb-other
 I: scripts: no-md5sums-control-file
 I: scripts: script-in-usr-share-doc usr/share/doc/scripts/py2foo
@@ -26,8 +28,6 @@ I: scripts: script-in-usr-share-doc usr/share/doc/scripts/rubyfoo
 W: scripts source: ancient-standards-version 3.2.1 (current is 3.8.0)
 W: scripts source: binary-arch-rules-but-pkg-is-arch-indep
 W: scripts source: debian-watch-file-uses-deprecated-sf-redirector-method
-W: scripts source: dpatch-missing-description 02_i_dont_have_a_description.patch
-W: scripts source: dpatch-missing-description 04_i_dont_have_a_description_either.patch
 W: scripts source: maintainer-script-lacks-debhelper-token debian/postinst
 W: scripts source: maintainer-script-lacks-debhelper-token debian/postrm
 W: scripts source: package-uses-deprecated-debhelper-compat-version 1
