@@ -41,8 +41,6 @@ sub read_tag_info {
     my %tag_info;
     if (defined $type && $type eq 'html') {
 	$dtml_convert = \&dtml_to_html;
-    } else {
-	$dtml_convert = \&dtml_to_text;
     }
 
  #   $debug = 2;
@@ -54,33 +52,49 @@ sub read_tag_info {
 
 	for (my $i=1; $i<=$#secs; $i++) {
 	    (my $tag = $secs[$i]->{'tag'}) or fail("error in description file $f: section $i does not have a `Tag:'");
-
-	    my @foo = split_paragraphs($secs[$i]->{'info'});
-	    if ($secs[$i]->{'ref'}) {
-		push(@foo,"");
-		push(@foo,format_ref($secs[$i]->{'ref'}));
-	    }
-
-	    if ($secs[$i]->{'severity'} and $secs[$i]->{'certainty'}) {
-		push(@foo, "");
-		push(@foo, "Severity: $secs[$i]->{'severity'}; " .
-		           "Certainty: $secs[$i]->{'certainty'}");
-	    }
-
-	    if ($secs[$i]->{'experimental'}) {
-		push(@foo,"");
-		push(@foo,"Please note that this tag is marked Experimental, which "
-		     . "means that the code that generates it is not as well tested "
-		     . "as the rest of Lintian, and might still give surprising "
-		     . "results.  Feel free to ignore Experimental tags that do not "
-		     . "seem to make sense, though of course bug reports are always "
-		     . "welcomed.");
-	    }
-
-	    $tag_info{$tag} = join("\n",&$dtml_convert(@foo));
+	    $tag_info{$tag} = format_tag_description($secs[$i], 0, $dtml_convert);
 	}
     }
+
     return \%tag_info;
+}
+
+sub format_tag_description {
+    my $tag=shift;
+    my $indent=shift;
+    my $dtml_convert=shift;
+
+    if (not defined $dtml_convert) {
+	$dtml_convert = \&dtml_to_text;
+    }
+
+    my @foo = split_paragraphs($tag->{'info'});
+    if ($tag->{'ref'}) {
+	push(@foo,"");
+	push(@foo,format_ref($tag->{'ref'}));
+    }
+
+    if ($tag->{'severity'} and $tag->{'certainty'}) {
+	push(@foo, "");
+	push(@foo, "Severity: $tag->{'severity'}; " .
+	           "Certainty: $tag->{'certainty'}");
+    }
+
+    if ($tag->{'experimental'}) {
+	push(@foo,"");
+	push(@foo,"Please note that this tag is marked Experimental, which "
+	     . "means that the code that generates it is not as well tested "
+	     . "as the rest of Lintian, and might still give surprising "
+	     . "results.  Feel free to ignore Experimental tags that do not "
+	     . "seem to make sense, though of course bug reports are always "
+	     . "welcomed.");
+    }
+
+    if ($indent) {
+	return wrap_paragraphs(" " x $indent, join("\n",&$dtml_convert(@foo)));
+    } else {
+	return join("\n",&$dtml_convert(@foo));
+    }
 }
 
 sub manual_ref {
