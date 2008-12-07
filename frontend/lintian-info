@@ -37,6 +37,7 @@ BEGIN {
 # import perl libraries
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Read_taginfo;
+use Text_utils;
 
 my %already_displayed = ();
 
