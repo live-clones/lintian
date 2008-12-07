@@ -62,6 +62,7 @@ $Lintian::Output::GLOBAL unless their first argument C<isa('Lintian::Output')>.
 # support for ANSI color output via colored()
 use Term::ANSIColor ();
 use Tags ();
+use Read_taginfo qw(format_tag_description);
 
 =head1 ACCESSORS
 
@@ -98,12 +99,21 @@ I/O handle to use for output of messages and tags.  Defaults to C<\*STDOUT>.
 
 I/O handle to use for warnings.  Defaults to C<\*STDERR>.
 
+=item showdescription
+
+Whether to show the description of a tag when printing it.
+
+=item issuedtags
+
+Hash containing the names of tags which have been issued.
+
 =back
 
 =cut
 
 use base qw(Class::Accessor Exporter);
-Lintian::Output->mk_accessors(qw(verbose debug quiet color colors stdout stderr));
+Lintian::Output->mk_accessors(qw(verbose debug quiet color colors stdout
+    stderr showdescription issuedtags));
 
 our @EXPORT = ();
 our %EXPORT_TAGS = ( messages => [qw(msg v_msg warning debug_msg delimiter)],
@@ -126,6 +136,7 @@ sub new {
     $self->stdout(\*STDOUT);
     $self->stderr(\*STDERR);
     $self->colors({%default_colors});
+    $self->issuedtags({});
 
     return $self;
 }
@@ -209,6 +220,19 @@ sub delimiter {
     return $self->_delimiter;
 }
 
+=item C<issued_tag($tag_name)>
+
+Indicate that the named tag has been issued.  Returns a boolean value
+indicating whether the tag had previously been issued by the object.
+
+=cut
+
+sub issued_tag {
+    my ($self, $tag_name) = _global_or_object(@_);
+
+    return $self->issuedtags->{$tag_name}++ ? 1 : 0;
+}
+
 =item C<string($lead, @args)>
 
 TODO: Is this part of the public interface?
@@ -269,6 +293,11 @@ sub print_tag {
     }
 
     $self->_print('', "$code: $pkg_info->{pkg}$type", "$tag$extra");
+    if (!$self->issued_tag($tag_info->{tag}) and $self->showdescription) {
+	$self->_print('', 'N', '');
+	$self->_print('', 'N', split("\n", format_tag_description($tag_info, 3)));
+	$self->_print('', 'N', '');
+    }
 }
 
 =item C<print_start_pkg($pkg_info)>

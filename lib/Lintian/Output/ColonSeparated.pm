@@ -31,6 +31,7 @@ sub print_tag {
 
     my $extra = "@$information";
 
+    $self->issued_tag($tag_info->{tag});
     $self->_print(
 	'tag',
 	Tags::get_tag_code($tag_info),

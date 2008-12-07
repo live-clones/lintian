@@ -28,6 +28,7 @@ use base qw(Lintian::Output);
 sub print_tag {
     my ($self, $pkg_info, $tag_info, $information) = @_;
 
+    $self->issued_tag($tag_info->{tag});
     $self->_print_xml('',
 		      qq{<tag severity="$tag_info->{severity}" certainty="$tag_info->{certainty}"},
 		      'flags="'.(exists($tag_info->{experimental}) ? 'experimental' : ''),

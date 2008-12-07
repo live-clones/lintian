@@ -21,6 +21,7 @@ package Lintian::Output::LetterQualifier;
 use strict;
 use warnings;
 
+use Read_taginfo qw(format_tag_description);
 use Term::ANSIColor qw(colored);
 use Tags ();
 
@@ -118,6 +119,11 @@ sub print_tag {
     }
 
     $self->_print('', "$code\[$lq\]: $pkg$type", "$tag$extra");
+    if (!$self->issued_tag($tag_info->{tag}) and $self->showdescription) {
+	$self->_print('', 'N', '');
+	$self->_print('', 'N', split("\n", format_tag_description($tag_info, 3)));
+	$self->_print('', 'N', '');
+    }
 }
 
 1;
