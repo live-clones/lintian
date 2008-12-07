@@ -29,7 +29,6 @@ use FileHandle;
 # }}}
 
 # {{{ Global Variables
-my $lintian_info_cmd = 'lintian-info'; #Command to run for ?
 my $LINTIAN_VERSION = "<VERSION>";	#External Version number
 my $BANNER = "Lintian v$LINTIAN_VERSION"; #Version Banner - text form
 my $LAB_FORMAT = 8;		#Lab format Version Number
@@ -473,10 +472,6 @@ if (defined $LINTIAN_ROOT) {
     unless ($LINTIAN_ROOT =~ m,^/,) {
 	$LINTIAN_ROOT = "$cwd/$LINTIAN_ROOT";
     }
-    # see if it has a frontend directory
-    if (-d "$LINTIAN_ROOT/frontend") {
-        $lintian_info_cmd = "$LINTIAN_ROOT/frontend/lintian-info";
-    }
 } else {
     $LINTIAN_ROOT = '/usr/share/lintian';
 }
@@ -663,6 +658,7 @@ $Lintian::Output::GLOBAL->verbose($verbose);
 $Lintian::Output::GLOBAL->debug($debug);
 $Lintian::Output::GLOBAL->quiet($quiet);
 $Lintian::Output::GLOBAL->color($color);
+$Lintian::Output::GLOBAL->showdescription($lintian_info);
 
 # Print Debug banner, now that we're finished determining
 # the values and have Lintian::Output available
@@ -745,29 +741,6 @@ fail("lintian lab has not been set up correctly (perhaps you forgot to run linti
 #XXX: There has to be a cleaner way to do this
 $LINTIAN_LAB = $LAB->{dir};
 
-# }}}
-
-# {{{ Setup the lintian-info pipe
-
-# pipe output through lintian-info?
-# note: if any E:/W: lines are added above this point, this block needs to
-#       be moved up
-if ($lintian_info) {
-    open(OUTPUT_PIPE, '|-', $lintian_info_cmd) or fail("cannot open output pipe to $lintian_info_cmd: $!");
-    $Lintian::Output::GLOBAL->stdout(\*OUTPUT_PIPE);
-}
-
-# Close the OUTPUT_PIPE in an END block so that we can ensure that
-# lintian-info exits before we do.  Otherwise, we may get output from
-# lintian-info after lintian exits, which can confuse the shell output.
-END {
-    if ($lintian_info) {
-	my $status = $?;
-	close OUTPUT_PIPE;
-	$Lintian::Output::GLOBAL->stdout(\*STDOUT);
-	$? = $status;
-    }
-}
 # }}}
 
 # {{{ Compile list of files to process
