@@ -19,6 +19,12 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+package Text_utils;
+
+use Exporter;
+our @ISA    = qw(Exporter);
+our @EXPORT = qw(split_paragraphs wrap_paragraphs dtml_to_html dtml_to_text);
+
 use strict;
 
 # requires wrap() function

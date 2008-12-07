@@ -19,6 +19,12 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+package Read_taginfo;
+
+use Exporter;
+our @ISA    = qw(Exporter);
+our @EXPORT = qw(read_tag_info format_tag_description);
+
 my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'} || '/usr/share/lintian';
 my $debug = $ENV{'LINTIAN_DEBUG'} || 0;
 
@@ -47,7 +53,7 @@ sub read_tag_info {
     for my $f (<$LINTIAN_ROOT/checks/*.desc>) {
 	print "N: Reading checker description file $f ...\n" if $debug >= 2;
 
-	my @secs = read_dpkg_control($f);
+	my @secs = Util::read_dpkg_control($f);
 	$secs[0]->{'check-script'} or fail("error in description file $f: `Check-Script:' not defined");
 
 	for (my $i=1; $i<=$#secs; $i++) {
