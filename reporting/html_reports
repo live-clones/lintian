@@ -54,6 +54,7 @@ $ENV{'LINTIAN_ROOT'} = $LINTIAN_ROOT;
 use lib "$ENV{LINTIAN_ROOT}/lib";
 use Read_pkglists;
 use Read_taginfo;
+use Text_utils;
 use Util;
 
 # Global variables from Read_pkglists.  Ugh.
