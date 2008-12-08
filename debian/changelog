@@ -11,6 +11,9 @@ lintian (2.1.1) unstable; urgency=low
     + [RA] Improve the recommendation for dependencies in debug packages
       to include the case of a debug package corresponding to multiple
       other packages.
+  * checks/files:
+    + [ADB] Add tests for several more embedded PHP libraries.  Patch
+      by Raphael Geissert.
   * checks/patch-systems{,.desc}:
     + [ADB] Don't complain about a missing quilt build-dependency if
       the package contains a directory named debian/patches/series.
