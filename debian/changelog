@@ -27,6 +27,9 @@ lintian (2.1.1) unstable; urgency=low
       to the spawned file / md5sum.  By default the handles were non-blocking
       which could lead to problems with larger file lists.  (Closes: #507461)
 
+  * debian/{control,copyright}:
+    + [ADB] Add Adam D. Barratt to Uploaders and copyright.
+
   * frontend/lintian:
     + [ADB] Don't call lintian-info when --info is specified.  Set a new
       flag on the Lintian::Output module instead.
