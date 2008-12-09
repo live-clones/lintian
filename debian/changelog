@@ -79,7 +79,7 @@ lintian (2.1.1) unstable; urgency=low
     + [ADB] Add missing "use Text_Utils".  It used to be indirectly pulled
       in via Read_taginfo.
 
- -- Adam D. Barratt <adam@adam-barratt.org.uk>  Fri, 28 Nov 2008 21:47:33 +0000
+ -- Adam D. Barratt <adam@adam-barratt.org.uk>  Mon,  9 Dec 2008 00:09:21 +0000
 
 lintian (2.1.0) unstable; urgency=low
 
