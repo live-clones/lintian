@@ -1,4 +1,4 @@
-lintian (2.1.2) UNRELEASED; urgency=low
+lintian (2.1.2) unstable; urgency=low
 
   * frontend/lintian:
     + [ADB] Accept "html" as a valid argument for --color again.
@@ -9,7 +9,7 @@ lintian (2.1.2) UNRELEASED; urgency=low
   * man/lintian.1:
     + [ADB] Document that "--color=html" is supported again.
 
- -- Adam D. Barratt <adam@adam-barratt.org.uk>  Wed, 10 Dec 2008 19:16:04 +0000
+ -- Adam D. Barratt <adam@adam-barratt.org.uk>  Wed, 10 Dec 2008 20:12:48 +0000
 
 lintian (2.1.1) unstable; urgency=low
 
