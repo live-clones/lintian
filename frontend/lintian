@@ -491,7 +491,7 @@ if (($check_everything or $packages_file) and $#ARGV+1 > 0) {
 }
 
 # check permitted values for --color
-if ($color and $color !~ /^(never|always|auto)$/) {
+if ($color and $color !~ /^(never|always|auto|html)$/) {
     die "invalid argument to --color: $color\n";
 }
 

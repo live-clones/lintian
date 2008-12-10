@@ -1,3 +1,16 @@
+lintian (2.1.2) UNRELEASED; urgency=low
+
+  * frontend/lintian:
+    + [ADB] Accept "html" as a valid argument for --color again.
+
+  * lib/Lintian/Output.pm:
+    + [ADB] Re-introduce support for HTML coloured output.  (Closes: #508341)
+
+  * man/lintian.1:
+    + [ADB] Document that "--color=html" is supported again.
+
+ -- Adam D. Barratt <adam@adam-barratt.org.uk>  Wed, 10 Dec 2008 19:16:04 +0000
+
 lintian (2.1.1) unstable; urgency=low
 
   * Summary of tag changes:

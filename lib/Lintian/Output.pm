@@ -85,11 +85,14 @@ a level lower or equal to its value.
 
 =item color
 
-Can take the values "never", "always", or "auto".
+Can take the values "never", "always", "auto" or "html".
 
 Whether to colorize tags based on their severity.  The default is "never",
 which never uses color.  "always" will always use color, "auto" will use
-color only if the output is going to a terminal,
+color only if the output is going to a terminal.
+
+"html" will output HTML <span> tags with a color style attribute (instead
+of ANSI color escape sequences).
 
 =item stdout
 
@@ -287,7 +290,11 @@ sub print_tag {
 
     my $tag;
     if ($self->_do_color) {
-	$tag .= Term::ANSIColor::colored($tag_info->{tag}, $tag_color);
+	if ($self->color eq 'html') {
+	    $tag .= qq(<span style="color: $tag_color">$tag_info->{tag}</span>)
+	} else {
+	    $tag .= Term::ANSIColor::colored($tag_info->{tag}, $tag_color);
+	}
     } else {
 	$tag .= $tag_info->{tag};
     }
@@ -409,7 +416,7 @@ output.
 sub _do_color {
     my ($self) = @_;
 
-    return ($self->color eq 'always'
+    return ($self->color eq 'always' || $self->color eq 'html'
 	    || ($self->color eq 'auto'
 		&& -t $self->stdout));
 }
