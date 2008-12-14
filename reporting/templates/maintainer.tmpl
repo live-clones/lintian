@@ -121,7 +121,7 @@
                 }
 
                 $first = 0;
-                $binary = $info->{package};
+                $binary = $info->{package} if $is_binary;
                 $tag = $info->{tag};
             }
             $OUT .= "</ul>\n    </li>\n  </ul>\n";

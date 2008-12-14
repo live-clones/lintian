@@ -5,6 +5,9 @@ lintian (2.1.3) UNRELEASED; urgency=low
       package, rather than merging them in to whichever binary package
       was last displayed (or the source package if the udeb is first
       alphabetically).
+    + [ADB] Separate tags affecting a binary package from those of a source
+      package with the same name when the binary is the first package produced
+      from the source for which there are issues.
 
  -- Adam D. Barratt <adam@adam-barratt.org.uk>  Sun, 14 Dec 2008 17:20:38 +0000
 
