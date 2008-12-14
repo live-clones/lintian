@@ -77,7 +77,7 @@
                     next unless $info->{code} eq 'E' or $info->{code} eq 'W';
                 }
 
-                my $is_binary = $info->{type} eq "binary";
+                my $is_binary = ($info->{type} eq "binary" or $info->{type} eq "udeb");
                 my $new_binary = $info->{package} ne $binary if $is_binary;
 
                 if ($first) {

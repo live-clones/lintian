@@ -1,3 +1,13 @@
+lintian (2.1.3) UNRELEASED; urgency=low
+
+  * reporting/templates/maintainer.tmpl:
+    + [ADB] Print tags affecting udeb packages under a heading for that
+      package, rather than merging them in to whichever binary package
+      was last displayed (or the source package if the udeb is first
+      alphabetically).
+
+ -- Adam D. Barratt <adam@adam-barratt.org.uk>  Sun, 14 Dec 2008 17:20:38 +0000
+
 lintian (2.1.2) unstable; urgency=low
 
   * frontend/lintian:
