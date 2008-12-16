@@ -156,11 +156,18 @@ while (!eof(IN)) {
 	next;
     }
 
+    my $source_version = $data->{'version'};
+    if ($data->{'source'} =~ /^([-+\.\w]+)\s+\((.+)\)$/) {
+	$data->{'source'} = $1;
+	$source_version = $2;
+    }
+
     # write entry to output file
     print OUT join(';',
 		   $pkg,
 		   $data->{'version'},
 		   $data->{'source'},
+		   $source_version,
 		   $deb_file,
 		   $timestamp,
 		   ),"\n";

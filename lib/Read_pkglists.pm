@@ -28,9 +28,9 @@ use vars qw($BINLIST_FORMAT $SRCLIST_FORMAT $UDEBLIST_FORMAT %source_info %binar
 
 # these banner lines have to be changed with every incompatible change of the
 # binary and source list file formats
-$BINLIST_FORMAT = "Lintian's list of binary packages in the archive--V2";
+$BINLIST_FORMAT = "Lintian's list of binary packages in the archive--V3";
 $SRCLIST_FORMAT = "Lintian's list of source packages in the archive--V3";
-$UDEBLIST_FORMAT = "Lintian's list of udeb packages in the archive--V1";
+$UDEBLIST_FORMAT = "Lintian's list of udeb packages in the archive--V2";
 
 %source_info = ();
 %binary_info = ();
@@ -115,7 +115,7 @@ sub read_bin_list {
     chop;
 
     next if /^\s*$/o;
-    my ($bin,$ver,$source,$file,$timestamp) = split(/\;/o,$_);
+    my ($bin,$ver,$source,$source_ver,$file,$timestamp) = split(/\;/o,$_);
 
     my $bin_struct;
     %$bin_struct =
@@ -123,6 +123,7 @@ sub read_bin_list {
        'package' => $bin,
        'version' => $ver,
        'source' => $source,
+       'source-version' => $source_ver,
        'file' => $file,
        'timestamp' => $timestamp,
        );
@@ -161,7 +162,7 @@ sub read_udeb_list {
     chop;
 
     next if /^\s*$/o;
-    my ($udeb,$ver,$source,$file,$timestamp) = split(/\;/o,$_);
+    my ($udeb,$ver,$source,$source_ver,$file,$timestamp) = split(/\;/o,$_);
 
     my $udeb_struct;
     %$udeb_struct =
@@ -169,6 +170,7 @@ sub read_udeb_list {
        'package' => $udeb,
        'version' => $ver,
        'source' => $source,
+       'source-version' => $source_ver,
        'file' => $file,
        'timestamp' => $timestamp,
        );
