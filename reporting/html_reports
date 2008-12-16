@@ -219,7 +219,7 @@ while (<>) {
     # to be no source package in the archive.  Determine the maintainer and
     # version.  Work around a missing source package by pulling information
     # from a binary package or udeb of the same name if there is any.
-    my ($source, $version, $maintainer, $uploaders);
+    my ($source, $version, $source_version, $maintainer, $uploaders);
     if ($type eq 'source') {
         $source = $package;
         if (exists $source_info{$source}) {
@@ -245,12 +245,15 @@ while (<>) {
         }
         if ($type eq 'binary') {
             $version = $binary_info{$package}->{version};
+            $source_version = $binary_info{$package}->{'source-version'};
         } elsif ($type eq 'udeb') {
             $version = $udeb_info{$package}->{version};
+            $source_version = $udeb_info{$package}->{'source-version'};
         }
     }
     $maintainer ||= '(unknown)';
     $version ||= 'unknown';
+    $source_version ||= $version;
 
     # Check if we've seen the URL for this maintainer before and, if so, map
     # them to the same person as the previous one.
@@ -270,6 +273,7 @@ while (<>) {
     my $info = {
         code      => html_quote ($code),
         package   => html_quote ($package),
+        version   => html_quote ($version),
         type      => html_quote ($type),
         tag       => html_quote ($tag),
         severity  => html_quote ($tag_extra{$tag}{severity}),
@@ -277,8 +281,8 @@ while (<>) {
         extra     => html_quote ($extra),
         xref      => maintainer_url ($maintainer) . "#$source"
     };
-    $by_maint{$maintainer}{$source}{$version} ||= [];
-    push(@{ $by_maint{$maintainer}{$source}{$version} }, $info);
+    $by_maint{$maintainer}{$source}{$source_version} ||= [];
+    push(@{ $by_maint{$maintainer}{$source}{$source_version} }, $info);
     $by_tag{$tag} ||= [];
     push(@{ $by_tag{$tag} }, $info);
 
@@ -290,8 +294,8 @@ while (<>) {
             my $uploader = map_maintainer ($_);
             next if $uploader eq $maintainer;
             $saw_maintainer{$uploader} = 1;
-            $by_uploader{$uploader}{$source}{$version} ||= [];
-            push(@{ $by_uploader{$uploader}{$source}{$version} }, $info);
+            $by_uploader{$uploader}{$source}{$source_version} ||= [];
+            push(@{ $by_uploader{$uploader}{$source}{$source_version} }, $info);
         }
     }
 }

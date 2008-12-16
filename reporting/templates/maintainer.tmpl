@@ -94,9 +94,12 @@
                     $OUT .= qq(  <ul class="report">\n) unless $is_binary;
                 }
 
+                my $bin_version = "";
+                $bin_version = " ($info->{version})" if $info->{version} ne $version;
+
                 if ($new_binary) {
                     $OUT .= "</ul>\n    </li>\n  </ul>\n" unless $first;
-                    $OUT .= qq(  <h3>$info->{package}</h3>\n);
+                    $OUT .= qq(  <h3>$info->{package}$bin_version</h3>\n);
                     $OUT .= qq(  <ul class="report">\n);
                 }
 
