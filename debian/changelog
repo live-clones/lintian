@@ -1,5 +1,25 @@
 lintian (2.1.3) UNRELEASED; urgency=low
 
+  * Summary of tag changes:
+    + Added
+      - debian-watch-file-should-use-sf-redirector
+      - debian-watch-file-specifies-wrong-upstream-version
+      - debian-watch-file-specifies-old-upstream-version
+
+  * checks/watch-file{,.desc}:
+    + [RA] Merge a set of changes by Raphael Geissert:
+      - Correctly parse multiple line continuations.
+      - Don't attempt any detailed checks on version one watch files.
+      - Recognize versionmangle in addition to [du]versionmangle.
+      - Add line information to some of the tags.
+      - Detect watch files that specify SourceForge download servers
+        directly and suggest use of the QA sf.net redirector instead.
+      - Detect watch files specifying an upstream version that matches a
+        non-native Debian package version in debian/changelog.
+      - Detect watch files specifying an upstream version for an older
+        changelog entry when the current changelog entry has a newer
+        upstream version.
+
   * reporting/templates/maintainer.tmpl:
     + [ADB] Print tags affecting udeb packages under a heading for that
       package, rather than merging them in to whichever binary package

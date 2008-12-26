@@ -2,6 +2,7 @@
 #
 # Copyright (C) 2008 Patrick Schoenfeld
 # Copyright (C) 2008 Russ Allbery
+# Copyright (C) 2008 Raphael Geissert
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -51,15 +52,19 @@ if ($version =~ /(dfsg|debian|ds)/) {
 # diagnose on the first time through.
 open(WATCH, '<', 'debfiles/watch') or fail("cannot open watch file: $!");
 local $_;
-my ($watchver, $mangle, $dmangle, $nonempty);
+my ($watchver, $mangle, $dmangle, $nonempty, %dversions);
 while (<WATCH>) {
     next if /^\s*\#/;
     next if /^\s*$/;
     s/^\s*//;
+
+  CHOMP:
+    chomp;
     if (s/(?<!\\)\\$//) {
         # This is caught by uscan.
         last if eof(WATCH);
         $_ .= <WATCH>;
+        goto CHOMP;
     }
 
     if (/^version\s*=\s*(\d+)(\s|\Z)/) {
@@ -77,24 +82,39 @@ while (<WATCH>) {
             tag 'debian-watch-file-missing-version';
             $watchver = 1;
         }
-        while (s/\\\s*$//) {
-            $_ .= <WATCH>;
-        }
-        chomp;
+        # Version 1 watch files are too broken to try checking them.
+        next if ($watchver == 1);
+
         my ($opts, @opts);
-        if (s/^opt(ion)?s=\"([^\"]+)\"\s+// || s/^opt(ion)?s=(\S+)\s+//) {
-            $opts = $2;
+        if (s/^opt(?:ion)?s=\"([^\"]+)\"\s+// || s/^opt(?:ion)?s=(\S+)\s+//) {
+            $opts = $1;
             @opts = split(',', $opts);
             if (defined $repack) {
                 for (@opts) {
-                    $mangle = 1 if /^[ud]versionmangle.*=.*($repack)/;
-                    $dmangle = 1 if /^dversionmangle.*=.*($repack)/;
+                    $mangle = 1 if /^[ud]?versionmangle\s*=.*($repack)/;
+                    $dmangle = 1 if /^dversionmangle\s*=.*($repack)/;
                 }
             }
         }
         if (m%qa\.debian\.org/watch/sf\.php\?%) {
-            tag 'debian-watch-file-uses-deprecated-sf-redirector-method';
+            tag 'debian-watch-file-uses-deprecated-sf-redirector-method',
+                "line $.";
         }
+
+        if (m%(https?|ftp)://((.+\.)?dl|(pr)?downloads?|ftp\d?)\.(sourceforge|sf)\.net%) {
+            tag 'debian-watch-file-should-use-sf-redirector', "line $.";
+        }
+
+        # This bit is as-is from uscan.pl:
+        my ($base, $filepattern, $lastversion, $action) = split ' ', $_, 4;
+        if ($base =~ s%/([^/]*\([^/]*\)[^/]*)$%/%) {
+            # Last component of $base has a pair of parentheses, so no
+            # separate filepattern field; we remove the filepattern from the
+            # end of $base and rescan the rest of the line
+            $filepattern = $1;
+            (undef, $lastversion, $action) = split ' ', $_, 3;
+        }
+        push @{$dversions{$lastversion}}, $. if (defined($lastversion));
     }
 }
 close WATCH;
@@ -104,8 +124,43 @@ close WATCH;
 if ($nonempty and $repack and not $mangle) {
     tag 'debian-watch-file-should-mangle-version';
 }
+
 if ($repack and $mangle and not $dmangle) {
     tag 'debian-watch-file-should-dversionmangle-not-uversionmangle';
+}
+
+my $changes = $info->changelog;
+if (defined $changes and %dversions) {
+    my $data = $changes->data;
+    my %changelog_versions;
+    my $count = 1;
+    for my $entry (@{$data}) {
+        my $uversion = $entry->Version;
+        $uversion =~ s/-[^-]+$//; # revision
+        $uversion =~ s/^\d+://; # epoch
+        $changelog_versions{'orig'}{$entry->Version} = $count;
+
+        # Preserve the first value here to correctly detect old versions.
+        $changelog_versions{'mangled'}{$uversion} = $count
+            unless (exists($changelog_versions{'mangled'}{$uversion}));
+        $count++;
+    }
+
+    while (my ($dversion, $lines) = each %dversions) {
+        next if (!defined($dversion) || $dversion eq 'debian');
+        local $" = ', ';
+        if (!$info->native && exists($changelog_versions{'orig'}{$dversion})) {
+            tag 'debian-watch-file-specifies-wrong-upstream-version',
+                "$dversion: @{$lines}";
+            next;
+        }
+        if (exists($changelog_versions{'mangled'}{$dversion})
+            && $changelog_versions{'mangled'}{$dversion} != 1) {
+            tag 'debian-watch-file-specifies-old-upstream-version',
+                "$dversion: @{$lines}";
+            next;
+        }
+    }
 }
 
 }

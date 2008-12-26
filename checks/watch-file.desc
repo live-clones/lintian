@@ -88,5 +88,42 @@ Severity: normal
 Certainty: certain
 Info: The watch file seems to be passing arguments to the redirector
  other than a path. Calling the SourceForge redirector with parameters like
- <tt>project</tt> prevents uscan from generating working uri's to the files
+ <tt>project</tt> prevents uscan from generating working URIs to the files
  and thus has been deprecated and is no longer supported by the redirector.
+
+Tag: debian-watch-file-should-use-sf-redirector
+Severity: normal
+Certainty: certain
+Ref: uscan(1)
+Info: The watch file specifies a SourceForge download server directly.
+ This is not recommended; SourceForge changes their download servers
+ periodically, requiring watch files to be modified every time.  Instead,
+ use the qa.debian.org redirector by using the magic URL:
+ .
+   http://sf.net/&lt;project&gt;/&lt;tar-name&gt;-(.+)\.tar\.gz
+ .
+ replacing <tt>&lt;project&gt;</tt> with the name of the SourceForge
+ project and <tt>&lt;tar-name&gt;</tt> with the name of the tarball
+ distributed within that project.
+
+Tag: debian-watch-file-specifies-wrong-upstream-version
+Severity: normal
+Certainty: certain
+Ref: uscan(1)
+Info: The watch file specifies an upstream version which exactly matches
+ the version of a <tt>debian/changelog</tt> entry, this is not a
+ native package, and no version mangling is being done.  The version
+ field in a watch file should specify the expected upstream version, not
+ the version of the Debian package.  Any epochs and Debian revisions
+ should be removed first or mangled away.
+
+Tag: debian-watch-file-specifies-old-upstream-version
+Severity: normal
+Certainty: certain
+Info: The watch file specifies an upstream version number which matches
+ the upstream portion of an old <tt>debian/changelog</tt> entry, and the
+ current <tt>debian/changelog</tt> entry specifies a newer upstream
+ version.  The version number in the watch file is very likely to be
+ incorrect and probably should be replaced with the current expected
+ upstream version.  Otherwise, DEHS and similar projects will think the
+ package is out of date even when it may not be.
