@@ -24,6 +24,10 @@ Section: games
 Description: Test game filename/location checks
  This package contains files with slightly less evil names than
  filenames.
+ .
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.
 
 Package: more-filename-games
 Architecture: all
@@ -32,3 +36,7 @@ Section: games
 Priority: optional
 Description: More test for game filename/location checks
  This package contains no evil names, only evil locations.
+ .
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.

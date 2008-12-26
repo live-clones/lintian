@@ -11,4 +11,6 @@ Architecture: all
 Depends: test, ruby1.8, build-essential, libssl0.9.7
 Recommends: tk8.4 | wish
 Description: test lintian's script file checks
- Regression test lintian's script file checks.
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.

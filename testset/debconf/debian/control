@@ -14,19 +14,31 @@ Package: debconf-test-noscripts
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Test package for the debconf checks of lintian
- Package missing postinst/postrm/config
+ Package missing postinst/postrm/config.
+ .
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.
 
 Package: debconf-test-preinst
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Test package for the debconf checks of lintian
- Package uses debconf only in preinst
+ Package uses debconf only in preinst.
+ .
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.
 
 Package: debconf-test-postinst
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Test package for the debconf checks of lintian
- Package uses debconf only in postinst
+ Package uses debconf only in postinst.
+ .
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.
 
 Package: debconf-udeb
 Section: debian-installer

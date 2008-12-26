@@ -121,7 +121,7 @@ foreach (split /\n/, $description) {
 
     my $wo_quotes = $_;
     $wo_quotes =~ s,(\"|\')(.*?)(\1),,;
-    while ($wo_quotes =~ m,(?:\W|^)((\w+)(\s+(\2))+)(?:\W|$),i) {
+    while ($wo_quotes =~ m,(?:\W|^)((\w+)(\s+(\2))+)(?:\W|\z),i) {
 	my $words = $1;
 	$wo_quotes =~ s/\Q$words//;
         tag "description-contains-duplicated-word", "$words";
@@ -144,8 +144,12 @@ foreach (split /\n/, $description) {
     }
 }
 
-if ($lines == 0) {
-    tag "extended-description-is-empty", "" unless $type eq 'udeb';
+if ($type ne 'udeb') {
+    if ($lines == 0) {
+	tag "extended-description-is-empty";
+    } elsif ($lines <= 2) {
+	tag "extended-description-is-probably-too-short";
+    }
 }
 
 if ($description) {

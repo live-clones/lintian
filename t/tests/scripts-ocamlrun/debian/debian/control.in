@@ -9,5 +9,6 @@ Package: {$srcpkg}
 Architecture: {$architecture}
 Depends: ocaml-nox-3.10.2, $\{shlib:Depends\}, $\{misc:Depends\}
 Description: {$description}
- .
- Part of the lintian test suite.
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.
