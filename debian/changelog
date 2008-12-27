@@ -49,6 +49,11 @@ lintian (2.1.3) UNRELEASED; urgency=low
       check them against the correct set of distributions.  Based on a
       patch by Adrien Cunin.  (Closes: #507740)
 
+  * lib/Lab.pm:
+    + [ADB] Ensure that the output of unpack/list-*pkg is correctly captured
+      so that the reporting harness can use the information to decide which
+      packages to process in an incremental run.
+
   * lib/Lintian/Data.pm:
     + [RA] New all() method that returns all valid keywords.
 

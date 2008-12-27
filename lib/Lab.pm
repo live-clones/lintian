@@ -141,14 +141,14 @@ sub populate_with_dist {
     debug_msg(2, "spawning list-binpkg, list-udebpkg and list-srcpkg since LINTIAN_DIST=$dist");
 
     my $v = $Lintian::Output::GLOBAL->verbose ? '-v' : '';
-
-    spawn(undef, ["$LINTIAN_ROOT/unpack/list-binpkg",
+    my %opts = ( out => $Lintian::Output::GLOBAL->stdout );
+    spawn(\%opts, ["$LINTIAN_ROOT/unpack/list-binpkg",
 		  "$self->{dir}/info/binary-packages", $v])
 	or fail("cannot create binary package list");
-    spawn(undef, ["$LINTIAN_ROOT/unpack/list-srcpkg",
+    spawn(\%opts, ["$LINTIAN_ROOT/unpack/list-srcpkg",
 		  "$self->{dir}/info/source-packages", $v])
 	or fail("cannot create source package list");
-    spawn(undef, ["$LINTIAN_ROOT/unpack/list-udebpkg",
+    spawn(\%opts, ["$LINTIAN_ROOT/unpack/list-udebpkg",
 		  "$self->{dir}/info/udeb-packages", $v])
 	or fail("cannot create udeb package list");
 
