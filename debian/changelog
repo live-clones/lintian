@@ -28,6 +28,10 @@ lintian (2.1.3) UNRELEASED; urgency=low
       - Detect watch files specifying an upstream version for an older
         changelog entry when the current changelog entry has a newer
         upstream version.
+  * checks/version-substvars:
+    + [RA] Skip version substvar checks when the dependency is on a
+      package whose name is formed by expanding substvars at build time.
+      Thanks, Bastian Blank.  (Closes: #507763)
 
   * data/changelog-file/ubuntu-dists:
     + [RA] New shared list of Ubuntu distributions.

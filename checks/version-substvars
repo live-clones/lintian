@@ -68,8 +68,12 @@ foreach (@control_data) {
 		$pkg2 = $1;
 		$substvar_strips_binNMU = ($2 eq 'source:Version');
 
+		# We can't test dependencies on packages whose names are
+		# formed via substvars expanded during the build.  Assume
+		# those maintainers know what they're doing.
 		if (not -f "control/$pkg2/architecture") {
-			tag "version-substvar-for-external-package", "$pkg1 -> $pkg2";
+			tag "version-substvar-for-external-package", "$pkg1 -> $pkg2"
+				unless ($pkg2 =~ /\$\{\S+\}/);
 			next;
 		}
 		$pkg2_is_any = (slurp_entire_file("control/$pkg2/architecture") !~ m/^all$/);
@@ -93,4 +97,8 @@ foreach (@control_data) {
 
 1;
 
+# Local Variables:
+# indent-tabs-mode: t
+# cperl-indent-level: 8
+# End:
 # vim: syntax=perl sw=4 ts=4 noet shiftround
