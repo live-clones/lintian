@@ -206,8 +206,12 @@ foreach my $file (sort keys %{$info->index}) {
 
 		# zero byte file in /usr/share/doc/
 		if ($index_info->{size} == 0 and $index_info->{type} =~ m,^-,) {
-		    # exception: examples may contain empty files for various reasons
-		    unless ($file =~ m,^usr/share/doc/([^/]+/)?examples/,) {
+		    # Exceptions: examples may contain empty files for various
+		    # reasons, Doxygen generates empty *.map files, and Python
+		    # uses __init__.py to mark module directories.
+		    unless ($file =~ m,^usr/share/doc/([^/]+/)?examples/,
+			    or $file =~ m,^usr/share/doc/(.+/)?html/.*\.map$,
+			    or $file =~ m,^usr/share/doc/(.+/)?__init__\.py$,) {
 			tag "zero-byte-file-in-doc-directory", "$file";
 		    }
 		}

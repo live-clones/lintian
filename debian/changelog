@@ -12,6 +12,11 @@ lintian (2.1.3) UNRELEASED; urgency=low
     + [RA] Check for extended descriptions shorter than three lines; they
       probably don't contain enough information.  Patch from Raphael
       Geissert.
+  * checks/files{,.desc}:
+    + [RA] Exclude __init__.py files and Doxygen-generated *.map files
+      from zero-byte-file-in-doc-directory.  Improve the tag description
+      to add a rationale and a suggestion for when overrides are
+      appropriate.  Lower the certainty to possible.  (Closes: #507273)
   * checks/nmu:
     + [RA] Recognize Ubuntu native packages by the target distribution and
       suppress NMU tags for them.  Based on a patch by Adrien Cunin.
