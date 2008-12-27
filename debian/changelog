@@ -33,9 +33,11 @@ lintian (2.1.3) UNRELEASED; urgency=low
     + [RA] Remove special shlibs exception for NSS modules.  libc6 now
       includes shlibs entries for them.
     + [RA] Report a more specialized tag for shared libraries with SONAMEs
-      that have no version and exclude them from the shlibs and symbols
-      file tests since they cannot be represented there.  Reported by
-      Raphael Hertzog.  (Closes: #506673)
+      that have no version and exclude them from the shlibs file tests
+      since they cannot be represented there.  Reported by Raphael
+      Hertzog.  (Closes: #506673)
+    + [RA] Use the same regexes as dpkg-shlibdeps when parsing version
+      information from SONAMEs.
   * checks/version-substvars:
     + [RA] Skip version substvar checks when the dependency is on a
       package whose name is formed by expanding substvars at build time.

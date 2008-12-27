@@ -47,6 +47,7 @@ W: libbaz1: missing-depends-line
 W: libbaz1: new-package-should-close-itp-bug
 W: libbaz1: package-name-doesnt-match-sonames libbaz libbaz2-1.0 libbaz3-1
 W: libbaz1: postinst-should-not-set-usr-doc-link
+W: libbaz1: shlib-missing-in-symbols-control-file libbaz.so for usr/lib/libbaz.so
 W: libbaz1: shlib-missing-in-symbols-control-file libbaz2 1.0 for usr/lib/libfoo2.so.1.0.3b
 W: libbaz1: shlib-missing-in-symbols-control-file libbaz3 1 for usr/lib/libbaz3.so.1.0.3b
 W: libbaz1: shlib-without-versioned-soname usr/lib/libbaz.so libbaz.so

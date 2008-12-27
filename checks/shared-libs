@@ -244,14 +244,14 @@ $provides = Dep::parse($provides);
 my %shlibs_control;
 my %symbols_control;
 
-# Libraries with no version information can't be represented by the shlibs and
-# symbols format and are on their own, but we can warn about that if they
-# appear in public directories.  If they're in private directories, assume
-# they're plugins and ignore them.
+# Libraries with no version information can't be represented by the shlibs
+# format (but can be represented by symbols).  We want to warn about them if
+# they appear in public directories.  If they're in private directories,
+# assume they're plugins or private libraries and are safe.
 my %unversioned_shlibs;
 for (keys %SONAME) {
-    my $soname = $SONAME{$_};
-    if ($soname !~ /\.so\.[0-9]+/ and $soname !~ /.+-\w[\w\.]*\.so$/) {
+    my $soname = format_soname($SONAME{$_});
+    if ($soname !~ / /) {
 	$unversioned_shlibs{$_} = 1;
 	tag 'shlib-without-versioned-soname', $_, $soname
 	    if $ldconfig_dirs->known(dirname($_));
@@ -335,8 +335,9 @@ if ($#shlibs == -1) {
     }
 }
 
-# 5th step: check symbols control file
-if ($#shlibs == -1) {
+# 5th step: check symbols control file.  Add back in the unversioned shared
+# libraries, since they can still have symbols files.
+if ($#shlibs == -1 and not %unversioned_shlibs) {
     # no shared libraries included in package, thus symbols control file should
     # not be present
     if (-f $symbols_control_file) {
@@ -344,7 +345,7 @@ if ($#shlibs == -1) {
     }
 } elsif (not -f $symbols_control_file) {
     if ($type ne 'udeb') {
-	for my $shlib (@shlibs) {
+	for my $shlib (@shlibs, keys %unversioned_shlibs) {
 	    # skip it if it's not a public shared library
 	    next unless $ldconfig_dirs->known(dirname($shlib));
 	    tag "no-symbols-control-file", "$shlib";
@@ -450,7 +451,7 @@ if ($#shlibs == -1) {
 	    "on symbol $debian_revision_sym$others";
     }
     my $shlib_name;
-    for my $shlib (@shlibs) {
+    for my $shlib (@shlibs, keys %unversioned_shlibs) {
 	$shlib_name = $SONAME{$shlib};
 	$shlib_name = format_soname($shlib_name);
 	$symbols_control_used{$shlib_name} = 1;
@@ -482,10 +483,12 @@ if ($#shlibs == -1) {
     } 
 }
 
-# Compare the contents of the shlibs and symbols control files
+# Compare the contents of the shlibs and symbols control files, but exclude
+# from this check shared libraries whose SONAMEs has no version.  Those can
+# only be represented in symbols files and aren't expected in shlibs files.
 if (keys %shlibs_control and keys %symbols_control) {
     for my $key (keys %symbols_control) {
-	unless (exists $shlibs_control{$key}) {
+	unless (exists $shlibs_control{$key} or $key !~ / /) {
 	    tag "symbols-declared-but-not-shlib", $key;
 	}
     }
@@ -563,14 +566,17 @@ sub abs_path {
     return $path;
 }
 
+# Extract the library name and the version from an SONAME and return them
+# separated by a space.  This code should match the split_soname function in
+# dpkg-shlibdeps.
 sub format_soname {
     my $soname = shift;
 
     # libfoo.so.X.X
-    if ($soname =~ m/(.+)\.so\.(.*)$/) {
+    if ($soname =~ /^(.*)\.so\.(.*)$/) {
 	$soname = "$1 $2";
     # libfoo-X.X.so
-    } elsif ($soname =~ m/(.+)\-(\w[\w\.]*)\.so$/) {
+    } elsif ($soname =~ /^(.*)-(\d.*)\.so$/) {
 	$soname = "$1 $2";
     }
 
