@@ -1,3 +1,11 @@
+skel (1.1) unstable; urgency=low
+
+  * Expand the default long description to three lines to not trigger
+    extended-description-is-probably-too-short.  Tell anyone looking at a
+    test package that it shouldn't be installed like a normal package.
+
+ -- Russ Allbery <rra@debian.org>  Fri, 26 Dec 2008 22:12:23 -0800
+
 skel (1.0) unstable; urgency=low
 
   * Initial design.
