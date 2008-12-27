@@ -17,6 +17,9 @@ lintian (2.1.3) UNRELEASED; urgency=low
       from zero-byte-file-in-doc-directory.  Improve the tag description
       to add a rationale and a suggestion for when overrides are
       appropriate.  Lower the certainty to possible.  (Closes: #507273)
+    + [RA] Move the check for override files in the wrong location so that
+      the check for subdirectories of /usr/share/lintian/overrides works
+      and improve the tag description.
   * checks/nmu:
     + [RA] Recognize Ubuntu native packages by the target distribution and
       suppress NMU tags for them.  Based on a patch by Adrien Cunin.

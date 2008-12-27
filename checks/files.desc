@@ -640,9 +640,11 @@ Info: The documentation directory for this package contains an empty
 Tag: override-file-in-wrong-location
 Severity: important
 Certainty: certain
-Info: Location of per package overrides the file
- /usr/share/lintian/overrides/package.  See the lintian documentation for more
- info on proper naming and format.
+Info: Lintian overrides should be put in a regular file named
+ /usr/share/lintian/overrides/<tt>package</tt>, not in a subdirectory
+ named for the package or in the obsolete location under /usr/share/doc.
+ See the Lintian documentation for more information on proper naming and
+ format.
 Ref: lintian 2.4
 
 Tag: package-contains-upstream-install-documentation

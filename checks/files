@@ -223,15 +223,8 @@ foreach my $file (sort keys %{$info->index}) {
 		    }
 		}
 
-		# override files have moved
-		my $tmp = quotemeta($pkg);
-		if ($file =~ m,^usr/share/doc/$tmp/override\.[lL]intian(\.gz)?$,) {
-		    tag "override-file-in-wrong-location", "$file";
-		} elsif ($file =~ m,^usr/share/lintian/overrides/$tmp/.*,) {
-		    tag "override-file-in-wrong-location", "$file";
-		}
-
 		# contains an INSTALL file?
+		my $tmp = quotemeta($pkg);
 		if ($file =~ m,^usr/share/doc/$tmp/INSTALL(?:\..+)*$,) {
 		    tag "package-contains-upstream-install-documentation", "$file";
 		}
@@ -570,6 +563,13 @@ foreach my $file (sort keys %{$info->index}) {
     # ---------------- weird file names
     if ($file =~ m,\s+\z,) {
 	tag "file-name-ends-in-whitespace", "$file";
+    }
+
+    # ---------------- misplaced lintian overrides
+    my $tmp = quotemeta($pkg);
+    if ($file =~ m,^usr/share/doc/$tmp/override\.[lL]intian(\.gz)?$, or
+	$file =~ m,^usr/share/lintian/overrides/$tmp/.+,) {
+	tag "override-file-in-wrong-location", "$file";
     }
 
     # ---------------- plain files
