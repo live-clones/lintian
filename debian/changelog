@@ -1,4 +1,4 @@
-lintian (2.1.3) UNRELEASED; urgency=low
+lintian (2.1.3) unstable; urgency=low
 
   * Summary of tag changes:
     + Added
@@ -89,7 +89,7 @@ lintian (2.1.3) UNRELEASED; urgency=low
   * unpack/list-{bin,udeb}pkg:
     + [JP] Extract source package version from source field.
 
- -- Adam D. Barratt <adam@adam-barratt.org.uk>  Sun, 14 Dec 2008 17:20:38 +0000
+ -- Russ Allbery <rra@debian.org>  Sat, 27 Dec 2008 14:17:18 -0800
 
 lintian (2.1.2) unstable; urgency=low
 
