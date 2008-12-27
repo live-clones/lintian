@@ -16,19 +16,6 @@ lintian (2.1.3) UNRELEASED; urgency=low
     + [RA] Recognize Ubuntu native packages by the target distribution and
       suppress NMU tags for them.  Based on a patch by Adrien Cunin.
       (Closes: #507740)
-  * checks/watch-file{,.desc}:
-    + [RA] Merge a set of changes by Raphael Geissert:
-      - Correctly parse multiple line continuations.
-      - Don't attempt any detailed checks on version one watch files.
-      - Recognize versionmangle in addition to [du]versionmangle.
-      - Add line information to some of the tags.
-      - Detect watch files that specify SourceForge download servers
-        directly and suggest use of the QA sf.net redirector instead.
-      - Detect watch files specifying an upstream version that matches a
-        non-native Debian package version in debian/changelog.
-      - Detect watch files specifying an upstream version for an older
-        changelog entry when the current changelog entry has a newer
-        upstream version.
   * checks/shared-libs{,.desc}:
     + [RA] Remove special shlibs exception for NSS modules.  libc6 now
       includes shlibs entries for them.
@@ -42,6 +29,19 @@ lintian (2.1.3) UNRELEASED; urgency=low
     + [RA] Skip version substvar checks when the dependency is on a
       package whose name is formed by expanding substvars at build time.
       Thanks, Bastian Blank.  (Closes: #507763)
+  * checks/watch-file{,.desc}:
+    + [RA] Merge a set of changes by Raphael Geissert:
+      - Correctly parse multiple line continuations.
+      - Don't attempt any detailed checks on version one watch files.
+      - Recognize versionmangle in addition to [du]versionmangle.
+      - Add line information to some of the tags.
+      - Detect watch files that specify SourceForge download servers
+        directly and suggest use of the QA sf.net redirector instead.
+      - Detect watch files specifying an upstream version that matches a
+        non-native Debian package version in debian/changelog.
+      - Detect watch files specifying an upstream version for an older
+        changelog entry when the current changelog entry has a newer
+        upstream version.
 
   * data/changelog-file/ubuntu-dists:
     + [RA] New shared list of Ubuntu distributions.
