@@ -6,6 +6,7 @@ lintian (2.1.3) UNRELEASED; urgency=low
       - debian-watch-file-specifies-wrong-upstream-version
       - debian-watch-file-specifies-old-upstream-version
       - extended-description-is-probably-too-short
+      - shlib-without-versioned-soname
 
   * checks/description{,.desc}:
     + [RA] Check for extended descriptions shorter than three lines; they
@@ -28,6 +29,13 @@ lintian (2.1.3) UNRELEASED; urgency=low
       - Detect watch files specifying an upstream version for an older
         changelog entry when the current changelog entry has a newer
         upstream version.
+  * checks/shared-libs{,.desc}:
+    + [RA] Remove special shlibs exception for NSS modules.  libc6 now
+      includes shlibs entries for them.
+    + [RA] Report a more specialized tag for shared libraries with SONAMEs
+      that have no version and exclude them from the shlibs and symbols
+      file tests since they cannot be represented there.  Reported by
+      Raphael Hertzog.  (Closes: #506673)
   * checks/version-substvars:
     + [RA] Skip version substvar checks when the dependency is on a
       package whose name is formed by expanding substvars at build time.

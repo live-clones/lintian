@@ -11,7 +11,8 @@ ifneq ($(DEB_HOST_ARCH),i386)
 NOPICOBJS = $(SHOBJS)
 endif
 
-all: libbaz1.a libbaz2.a libbaz1.so.1.0.3b libbaz2.so libbaz3.so.1.0.3b
+all: libbaz1.a libbaz2.a libbaz1.so.1.0.3b libbaz2.so libbaz3.so.1.0.3b \
+	libbaz.so
 
 libbaz2.so: libbaz2.so.1.0
 	ln -sf $^ $@
@@ -28,6 +29,10 @@ libbaz2.so.1.0.3b: $(SHOBJS)
 # Non-PIC. We can't test this on all architectures
 libbaz3.so.1.0.3b: $(NOPICOBJS)
 	$(CC) -o $@ -shared -Wl,-soname,libbaz3.so.1 $^ -lc
+
+# Non-versioned SONAME.
+libbaz.so: $(SHOBJS)
+	$(CC) -o $@ -shared -Wl,-soname,libbaz.so $^ -lc
 
 #%.o-noreentrant: %.c
 #	$(CC) $(CFLAGS) -o $@ -c $<

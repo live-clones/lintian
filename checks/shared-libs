@@ -244,7 +244,21 @@ $provides = Dep::parse($provides);
 my %shlibs_control;
 my %symbols_control;
 
-@shlibs = grep { !m,^lib/libnss_[^.]+\.so(\.[0-9]+)$, } keys %SONAME;
+# Libraries with no version information can't be represented by the shlibs and
+# symbols format and are on their own, but we can warn about that if they
+# appear in public directories.  If they're in private directories, assume
+# they're plugins and ignore them.
+my %unversioned_shlibs;
+for (keys %SONAME) {
+    my $soname = $SONAME{$_};
+    if ($soname !~ /\.so\.[0-9]+/ and $soname !~ /.+-\w[\w\.]*\.so$/) {
+	$unversioned_shlibs{$_} = 1;
+	tag 'shlib-without-versioned-soname', $_, $soname
+	    if $ldconfig_dirs->known(dirname($_));
+    }
+}
+@shlibs = grep { !$unversioned_shlibs{$_} } keys %SONAME;
+
 if ($#shlibs == -1) {
     # no shared libraries included in package, thus shlibs control file should
     # not be present

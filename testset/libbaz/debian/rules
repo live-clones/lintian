@@ -74,6 +74,9 @@ binary-arch: build binary-correct
 	ln -s libfoo.so.0.9.1 $(lib_tmp)/usr/lib/libfoo.so.0.9
 	# And a plain .so (wrong, TODO)
 	touch $(lib_tmp)/usr/lib/libbar2.so
+	# And a non-versioned SONAME.
+	install -m644 libbaz.so $(lib_tmp)/usr/lib/libbaz.so
+	strip --remove-section=.comment --strip-unneeded $(lib_tmp)/usr/lib/libbaz.so
 	# Pretend to be a Perl module to test a lack of Perl dependencies.
 	install -d $(lib_tmp)/usr/lib/perl5/auto/Foo
 	install -m 644 libbaz2.so.1.0.3b $(lib_tmp)/usr/lib/perl5/auto/Foo/Foo.so
