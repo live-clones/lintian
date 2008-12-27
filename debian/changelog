@@ -11,6 +11,10 @@ lintian (2.1.3) UNRELEASED; urgency=low
     + [RA] Check for extended descriptions shorter than three lines; they
       probably don't contain enough information.  Patch from Raphael
       Geissert.
+  * checks/nmu:
+    + [RA] Recognize Ubuntu native packages by the target distribution and
+      suppress NMU tags for them.  Based on a patch by Adrien Cunin.
+      (Closes: #507740)
   * checks/watch-file{,.desc}:
     + [RA] Merge a set of changes by Raphael Geissert:
       - Correctly parse multiple line continuations.
@@ -25,6 +29,17 @@ lintian (2.1.3) UNRELEASED; urgency=low
         changelog entry when the current changelog entry has a newer
         upstream version.
 
+  * data/changelog-file/ubuntu-dists:
+    + [RA] New shared list of Ubuntu distributions.
+
+  * frontend/lintian:
+    + [RA] Recognize Ubuntu native packages by the target distribution and
+      check them against the correct set of distributions.  Based on a
+      patch by Adrien Cunin.  (Closes: #507740)
+  
+  * lib/Lintian/Data.pm:
+    + [RA] New all() method that returns all valid keywords.
+  
   * reporting/templates/maintainer.tmpl:
     + [ADB] Print tags affecting udeb packages under a heading for that
       package, rather than merging them in to whichever binary package

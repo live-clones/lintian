@@ -627,6 +627,7 @@ import Util;
 require Tags;
 import Tags;
 
+require Lintian::Data;
 require Lintian::Schedule;
 require Lintian::Output;
 import Lintian::Output qw(:messages);
@@ -793,12 +794,13 @@ while (my $arg = shift) {
 
 	    # check distribution field
 	    if (defined $data->{distribution}) {
+		my $ubuntu_dists = Lintian::Data->new ('changelog-file/ubuntu-dists');
+		my $ubuntu_regex = join('|', $ubuntu_dists->all);
 		if ($data->{distribution} eq 'UNRELEASED') {
 		    # ignore
-		} elsif ($data->{'version'} =~ /ubuntu|jaunty|intrepid|hardy|gutsy|dapper/) {
-		    my @ubuntu_dists = qw(jaunty intrepid hardy gutsy dapper);
-		    my $regex = '^(' . join ('|', @ubuntu_dists) . ')';
-		    if ($data->{distribution} !~ /^$regex(-(proposed|updates|backports|security))?$/ ) {
+		} elsif ($data->{version} =~ /ubuntu|$ubuntu_regex/
+			 or $data->{distribution} =~ /$ubuntu_regex/) {
+		    if ($data->{distribution} !~ /^($ubuntu_regex)(-(proposed|updates|backports|security))?$/ ) {
 			tag("bad-ubuntu-distribution-in-changes-file",
 			    $data->{distribution});
 		    }

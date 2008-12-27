@@ -62,6 +62,11 @@ sub known {
     return (exists $self->{data}{$keyword}) ? 1 : undef;
 }
 
+# Return all known keywords (in no particular order).
+sub all {
+    my ($self) = @_;
+    return keys(%{ $self->{data} });
+}
 
 # Query a data object for the value attached to a particular keyword.
 sub value {
@@ -85,6 +90,7 @@ Lintian::Data - Lintian interface to query lists of keywords
     if ($list->value($keyword) > 1) {
         # do something ...
     }
+    my @keywords = $list->all;
 
 =head1 DESCRIPTION
 
@@ -127,6 +133,12 @@ multiple file reads.
 =head1 INSTANCE METHODS
 
 =over 4
+
+=item all()
+
+Returns all keywords listed in the data file as a list (in no particular
+order; the original order is not preserved).  In a scalar context, returns
+the number of keywords.
 
 =item known(KEYWORD)
 
