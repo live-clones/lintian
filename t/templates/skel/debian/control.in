@@ -1,6 +1,6 @@
 Source: {$srcpkg}
 Priority: extra
-Section: devel
+Section: {$section}
 Maintainer: {$author}
 Standards-Version: 3.8.0
 Build-Depends: debhelper (>= 7)

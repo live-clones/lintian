@@ -283,6 +283,7 @@ sub check_test_is_sane {
     $data->{description} ||= 'No Description Available';
     $data->{author} ||= 'Debian Lintian Maintainers <lintian-maint@debian.org>';
     $data->{architecture} ||= 'all';
+    $data->{section} ||= 'devel';
 
     if ($debug) {
 	print "check_test_is_sane => ".Dumper($data);

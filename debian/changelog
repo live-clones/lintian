@@ -55,10 +55,8 @@ lintian (2.1.3) UNRELEASED; urgency=low
     + [ADB] Ensure that the output of unpack/list-*pkg is correctly captured
       so that the reporting harness can use the information to decide which
       packages to process in an incremental run.
-
   * lib/Lintian/Data.pm:
     + [RA] New all() method that returns all valid keywords.
-
   * lib/Read_pkglists.pm:
     + [JP] Add a new "source version" field to binary and udeb info files.
       Bump binary and udeb format version to 3 and 2 respectively.
@@ -66,7 +64,6 @@ lintian (2.1.3) UNRELEASED; urgency=low
   * reporting/html_reports:
     + [JP] Group packages by source version instead of binary version.
       (Closes: #507849)
-
   * reporting/templates/maintainer.tmpl:
     + [ADB] Print tags affecting udeb packages under a heading for that
       package, rather than merging them in to whichever binary package
@@ -77,6 +74,9 @@ lintian (2.1.3) UNRELEASED; urgency=low
       from the source for which there are issues.
     + [JP] Include binary package version in subtitles when it isn't the same
       as the source version.
+
+  * t/runtests:
+    + [RA] Parameterize the package section in the skeleton.
 
   * unpack/list-{bin,udeb}pkg:
     + [JP] Extract source package version from source field.

@@ -1,16 +1,13 @@
-skel (1.2) unstable; urgency=low
-
-  * ${shlibs:Depends}, not ${shlib:Depends}, in the control template.
-
- -- Russ Allbery <rra@debian.org>  Sat, 27 Dec 2008 11:19:20 -0800
-
 skel (1.1) unstable; urgency=low
 
+  * Parameterize the package section to make it easier to avoid spurious
+    tags for section mismatches when testing some types of packages.
+  * ${shlibs:Depends}, not ${shlib:Depends}, in the control template.
   * Expand the default long description to three lines to not trigger
     extended-description-is-probably-too-short.  Tell anyone looking at a
     test package that it shouldn't be installed like a normal package.
 
- -- Russ Allbery <rra@debian.org>  Fri, 26 Dec 2008 22:12:23 -0800
+ -- Russ Allbery <rra@debian.org>  Sat, 27 Dec 2008 13:16:40 -0800
 
 skel (1.0) unstable; urgency=low
 
