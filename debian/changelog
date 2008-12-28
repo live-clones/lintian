@@ -1,3 +1,30 @@
+lintian (2.1.4) UNRELEASED; urgency=low
+
+  * Summary of tag changes:
+    + Added
+      - control-interpreter-in-usr-local (split from
+         interpreter-in-usr-local)
+      - control-interpreter-without-depends
+      - forbidden-postrm-interpreter
+      - preinst-interpreter-without-predepends
+      - unknown-control-interpreter (split from unusual-interpreter)
+    + Removed
+      - interpreter-without-predep
+
+  * checks/scripts{,.desc}:
+    + [RA] Overhaul checking of maintainer script and config interpreters:
+      - postrm scripts must use an essential interpreter.
+      - Only preinst scripts require Pre-Depends; Depends is sufficient for
+        postinst and prerm scripts.  (Closes: #508307)
+      - Separate unknown-control-interpreter from unusual-interpreter
+        since it's much more likely to be an error.
+      - Separate control-interpreter-in-usr-local from
+        interpreter-in-usr-local since the severity is higher.
+      - unusual-control-interpreter is certain, not possible.
+      - Suppress some cases of multiple tags about the same basic problem.
+
+ -- Russ Allbery <rra@debian.org>  Sun, 28 Dec 2008 13:02:03 -0800
+
 lintian (2.1.3) unstable; urgency=low
 
   * Summary of tag changes:

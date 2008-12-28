@@ -57,11 +57,31 @@ Info: This package contains a <tt>config</tt> script for pre-configuring
  are guaranteed to be installed, so you cannot use a non-essential
  interpreter.
 
+Tag: forbidden-postrm-interpreter
+Severity: serious
+Certainty: certain
+Info: This package contains a <tt>postrm</tt> maintainer script that uses
+ an interpreter that isn't essential.  The <tt>purge</tt> action of
+ <tt>postrm</tt> can only rely on essential packages, which means the
+ interpreter used by <tt>postrm</tt> must be one of the essential ones
+ (<tt>sh</tt>, <tt>bash</tt>, or <tt>perl</tt>).
+Ref: policy 7.2
+
 Tag: unusual-control-interpreter
 Severity: minor
-Certainty: possible
+Certainty: certain
 Info: This package contains a control script for an interpreter that is
- not normally used for control scripts.
+ not normally used for control scripts.  This is permissible but not
+ recommended.  It makes it harder for other developers to understand your
+ package.
+
+Tag: unknown-control-interpreter
+Severity: important
+Certainty: possible
+Info: This package contains a maintainer script that uses an interpreter
+ that the Lintian maintainers have not heard of.  This is usually a typo
+ for a common interpreter.  If not, please file a wishlist bug on lintian
+ so that the Lintian maintainers can add this interpreter to their list.
 
 Tag: interpreter-in-usr-local
 Severity: important
@@ -70,20 +90,34 @@ Info: This package contains a script that looks for an interpreter in a
  directory in /usr/local.  Since Debian does not install anything in
  /usr/local, this is the wrong place to look.
 
-Tag: interpreter-without-predep
-Severity: important
+Tag: control-interpreter-in-usr-local
+Severity: serious
 Certainty: certain
-Info: The package contains a control script that uses an unusual
- interpreter, but does not declare a pre-dependency on the package that
- provides this interpreter.
+Info: A control script for this package references an interpreter in a
+ directory in <tt>/usr/local</tt>.  Control scripts must use interpreters
+ provided by Debian packages, and Debian packages do not install anything
+ in <tt>/usr/local</tt>.
+
+Tag: preinst-interpreter-without-predepends
+Severity: serious
+Certainty: certain
+Info: The package contains a <tt>preinst</tt> maintainer script that uses
+ an unusual and non-essential interpreter but does not declare a
+ pre-dependency on the package that provides this interpreter.
  .
- A perusal of &packaging; section 6.2 shows that any of the control
- scripts can be called while the package is not configured.  Therefore, a
- pre-dependency is required to ensure that the interpreter is always
- available when the script is invoked.
- .
- Please do not add a pre-dependency without following the policy for doing
- so. (Policy section 3.5).
+ <tt>preinst</tt> scripts should be written using only essential
+ interpreters to avoid additional dependency complexity.  Please do not
+ add a pre-dependency without following the policy for doing so (Policy
+ section 3.5).
+Ref: policy 7.2
+
+Tag: control-interpreter-without-depends
+Severity: serious
+Certainty: possible
+Info: The package contains a maintainer script that uses an unusual and
+ non-essential interpreter but does not declare a dependency on the
+ package that provides this interpreter.
+Ref: policy 7.2
 
 Tag: missing-dep-for-interpreter
 Severity: important

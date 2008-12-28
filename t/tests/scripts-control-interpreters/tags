@@ -1,0 +1,15 @@
+E: scripts-control-interpreters-forbidden: control-interpreter-without-depends control/postinst #!/usr/bin/python
+E: scripts-control-interpreters-forbidden: forbidden-config-interpreter #!/usr/bin/python
+E: scripts-control-interpreters-forbidden: forbidden-postrm-interpreter #!/usr/bin/python
+E: scripts-control-interpreters-paths: control-interpreter-in-usr-local control/preinst #!/usr/local/bin/bash
+E: scripts-control-interpreters-paths: control-interpreter-without-depends control/prerm #!/bin/python
+E: scripts-control-interpreters-paths: wrong-path-for-interpreter #!/bin/python != /usr/bin/python (control/prerm)
+E: scripts-control-interpreters-paths: wrong-path-for-interpreter #!/usr/bin/bash != /bin/bash (control/postinst)
+E: scripts-control-interpreters-python: preinst-interpreter-without-predepends #!/usr/bin/python
+E: scripts-control-interpreters-unknown: unknown-control-interpreter control/postinst #!/usr/bin/unknown
+W: scripts-control-interpreters-forbidden: unusual-control-interpreter control/postinst #!/usr/bin/python
+W: scripts-control-interpreters-paths: unusual-control-interpreter control/prerm #!/bin/python
+W: scripts-control-interpreters-prepython: unusual-control-interpreter control/postinst #!/usr/bin/python
+W: scripts-control-interpreters-prepython: unusual-control-interpreter control/preinst #!/usr/bin/python
+W: scripts-control-interpreters-python: unusual-control-interpreter control/postinst #!/usr/bin/python
+W: scripts-control-interpreters-python: unusual-control-interpreter control/preinst #!/usr/bin/python

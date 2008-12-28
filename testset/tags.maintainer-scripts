@@ -8,7 +8,6 @@ E: maintainer-scripts: forbidden-config-interpreter #!/usr/bin/python
 E: maintainer-scripts: init.d-script-not-included-in-package /etc/init.d/foo
 E: maintainer-scripts: install-sgmlcatalog-deprecated postinst:100
 E: maintainer-scripts: install-sgmlcatalog-deprecated postrm:47
-E: maintainer-scripts: interpreter-without-predep control/config #!/usr/bin/python
 E: maintainer-scripts: maintainer-script-calls-init-script-directly prerm:55
 E: maintainer-scripts: maintainer-script-does-not-check-for-existence-of-wm-menu-config postinst:33
 E: maintainer-scripts: maintainer-script-modifies-inetd-conf postinst:93
