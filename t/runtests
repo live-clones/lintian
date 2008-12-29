@@ -194,6 +194,10 @@ for (@tests) {
 	next;
     }
 
+    # Check the output for invalid lines.  Also verify that all Test-For tags
+    # are seen and all Test-Against tags are not.
+    my %test_for = map { $_ => 1 } split(' ', $testdata->{'test-for'});
+    my %test_against = map { $_ => 1 } split(' ', $testdata->{'test-against'});
     open TAGS, "$rundir/tags.$pkg" or fail("Cannot open $rundir/tags.$pkg");
     while (<TAGS>) {
 	next if m/^N: /;
@@ -201,8 +205,18 @@ for (@tests) {
 	    print "E: Invalid line:\n$_";
 	    next;
 	}
+	my $tag = $3;
+	if ($test_against{$tag}) {
+	    print "E: Tag $tag seen but listed in Test-Against\n";
+	}
+	delete $test_for{$tag};
     }
     close TAGS;
+    if (%test_for) {
+	for my $tag (sort keys %test_for) {
+	    print "E: Tag $tag listed in Test-For but not found\n";
+	}
+    }
 }
 
 if (!$tests_run) {
@@ -260,6 +274,9 @@ sub check_test_is_sane {
     $data->{author} ||= 'Debian Lintian Maintainers <lintian-maint@debian.org>';
     $data->{architecture} ||= 'all';
     $data->{section} ||= 'devel';
+
+    $data->{'test-for'} ||= '';
+    $data->{'test-against'} ||= '';
 
     if ($debug) {
 	print "check_test_is_sane => ".Dumper($data);

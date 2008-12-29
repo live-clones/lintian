@@ -32,6 +32,10 @@ lintian (2.1.4) UNRELEASED; urgency=low
       - unusual-control-interpreter is certain, not possible.
       - Suppress some cases of multiple tags about the same basic problem.
 
+  * t/runtests:
+    + [RA] Check that a test produces all tags listed in Test-For and
+      doesn't produce any tages listed in Test-Against.
+  
  -- Russ Allbery <rra@debian.org>  Sun, 28 Dec 2008 13:02:03 -0800
 
 lintian (2.1.3) unstable; urgency=low
