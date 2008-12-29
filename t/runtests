@@ -22,6 +22,10 @@
 use strict;
 use warnings;
 
+use Data::Dumper;
+use Getopt::Long qw(GetOptions);
+use Text::Template;
+
 sub usage {
     print <<END;
 Usage: $0 [-k] [-v] [-d] testset-directory testing-directory [test]
@@ -52,36 +56,18 @@ my $debug = 0;
 # 1 - one or more tests failed
 # 2 - an error prevented proper running of the tests
 
-# Turns out I might as well have written this in bash.  Oh well.
-
 my $run_all_tests = 0;
 my $verbose = 0;
 
-# --- Parse options, such as they are.
-while ($#ARGV >= 0 && $ARGV[0] =~ m/^-/) {
-    if ($ARGV[0] eq '-k') {
-	$run_all_tests = 1;
-    } elsif ($ARGV[0] eq '-v') {
-	$verbose = 1;
-    } elsif ($ARGV[0] eq '-d') {
-	$debug = 1;
-    } else {
-	usage;
-    }
-    shift;
-}
-
-# --- Parse directory arguments
+# --- Parse options and arguments
+Getopt::Long::Configure('bundling');
+GetOptions('d|debug'      => \$debug,
+	   'k|keep-going' => \$run_all_tests,
+	   'v|verbose'    => \$verbose) or usage;
 if ($#ARGV < 1 || $#ARGV > 2) {
     usage;
 }
-
-my $testset = shift;
-my $rundir = shift;
-my $singletest;
-if ($#ARGV == 0) {
-    $singletest = shift;
-}
+my ($testset, $rundir, $singletest) = @ARGV;
 
 # --- Set and unset environment variables that lintian is sensitive to
 BEGIN {
@@ -109,15 +95,9 @@ use Tags;
 
 # --- Set the ways to call lintian and dpkg-buildpackage
 my $lintian_options = '-I -E';
-my $lintian_info_options = '-I -E -i';
 my $dpkg_buildpackage_options = '-rfakeroot -us -uc -d -iNEVER_MATCH_ANYTHING'
     . ' -INEVER_MATCH_ANYTHING';
 my $lintian_path = $LINTIAN_ROOT . "/frontend/lintian";
-
-my $testok = 0;
-my %tags;
-my %severities = map { $_ => 1 } @Tags::severity_list;
-my %certainties = map { $_ => 1 } @Tags::certainty_list;
 
 # --- Display output immediately
 $| = 1;
@@ -203,7 +183,7 @@ for (@tests) {
     runsystem_ok("sed -i -f $origdir/post_test $rundir/tags.$pkg")
 	if -e "$origdir/post_test";
 
-    $testok = runsystem_ok("cmp", "-s", "$rundir/tags.$pkg", "$origdir/tags");
+    my $testok = runsystem_ok("cmp", "-s", "$rundir/tags.$pkg", "$origdir/tags");
     $tests_run++;
     if ($testok) {
 	print "done.\n";
@@ -221,10 +201,8 @@ for (@tests) {
 	    print "E: Invalid line:\n$_";
 	    next;
 	}
-	$tags{$3}{'tested_type'} = $1;
-	$tags{$3}{'tested_package'} = $2;
     }
-     close TAGS;
+    close TAGS;
 }
 
 if (!$tests_run) {
@@ -250,7 +228,6 @@ sub runsystem_ok {
     return $errcode == 0;
 }
 
-use Text::Template;
 sub fill_in_tmpl {
     my ($file, $data) = @_;
     my $tmpl = "$file.in";
@@ -265,7 +242,6 @@ sub fill_in_tmpl {
     close $out;
 }
 
-use Data::Dumper;
 sub check_test_is_sane {
     my ($dir, $data) = @_;
 
