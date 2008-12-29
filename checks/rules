@@ -162,8 +162,8 @@ close RULES;
 unless ($includes) {
     # Make sure all the required rules were seen.
     for my $target (sort keys %required) {
-	tag "debian-rules-missing-required-target", $target
-	    unless $seen{$target};
+        tag "debian-rules-missing-required-target", $target
+            unless $seen{$target};
     }
 }
 
@@ -172,15 +172,19 @@ $rules_per_target{'binary-arch'} ||= [];
 if ($architecture eq "all" && scalar @{$rules_per_target{'binary-arch'}}) {
     my $nonempty = 0;
     foreach (@{$rules_per_target{'binary-arch'}}) {
-	# dh binary-arch is actually a no-op if there is no
-	# Architecture: any package in the control file
-	unless (m/^\s*dh\s+(?:binary-arch|\$\@)/) {
-	    $nonempty = 1;
-	}
+        # dh binary-arch is actually a no-op if there is no
+        # Architecture: any package in the control file
+        unless (m/^\s*dh\s+(?:binary-arch|\$\@)/) {
+            $nonempty = 1;
+        }
     }
     tag "binary-arch-rules-but-pkg-is-arch-indep" if $nonempty;
 }
 }
 1;
 
-# vim: syntax=perl ts=8 sw=4
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 ts=4 et shiftround
