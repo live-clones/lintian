@@ -267,6 +267,4 @@ shared-libs shlib-with-bad-permissions
 shared-libs shlib-with-executable-stack
 shared-libs shlib-without-PT_GNU_STACK-section
 
-standards-version invalid-standards-version
-
 watch-file debian-watch-file-missing-version
