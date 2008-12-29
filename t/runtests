@@ -28,7 +28,8 @@ use Text::Template;
 
 sub usage {
     print <<END;
-Usage: $0 [-k] [-v] [-d] testset-directory testing-directory [test]
+Usage: $0 [-dkv] testset-directory testing-directory [test]
+       $0 [-dkv] [-t tag] testset-directory testing-directory
 
 The -k option means do not stop after one failed test, but try
 them all and report all errors.
@@ -37,6 +38,8 @@ The -v option will also display those tests that have a description, but are
 not tested in any testset-package.
 
 The -d option will display debugging information.
+
+The -t tag option will only run tests that test for or against that tag.
 
 The optional 3rd parameter causes runtests to only run that particular test.
 END
@@ -58,16 +61,21 @@ my $debug = 0;
 
 my $run_all_tests = 0;
 my $verbose = 0;
+my $tag;
 
 # --- Parse options and arguments
 Getopt::Long::Configure('bundling');
 GetOptions('d|debug'      => \$debug,
 	   'k|keep-going' => \$run_all_tests,
+	   't|tag=s'      => \$tag,
 	   'v|verbose'    => \$verbose) or usage;
 if ($#ARGV < 1 || $#ARGV > 2) {
     usage;
 }
 my ($testset, $rundir, $singletest) = @ARGV;
+if ($tag and $singletest) {
+    usage;
+}
 
 # --- Set and unset environment variables that lintian is sensitive to
 BEGIN {
@@ -111,6 +119,8 @@ $| = 1;
 my @tests;
 if ($singletest) {
     @tests = map { s/\.desc$//; $_ } ( $singletest );
+} elsif ($tag) {
+    @tests = find_tests_for_tag($tag);
 } else {
     -d $testset
 	or fail("cannot find $testset: $!\n");
@@ -222,6 +232,8 @@ for (@tests) {
 if (!$tests_run) {
     if ($singletest) {
 	print "W: No tests run, did you specify a valid test name?\n";
+    } elsif ($tag) {
+	print "I: No tests found for that tag.\n";
     } else {
 	print "E: No tests run, did you specify a valid testset directory?\n";
     }
@@ -281,6 +293,32 @@ sub check_test_is_sane {
     if ($debug) {
 	print "check_test_is_sane => ".Dumper($data);
     }
+}
+
+# Find all tests that check a particular tag, either for its presence or
+# absence.  Returns a list of names of the *.desc files, without the *.desc at
+# the end.
+sub find_tests_for_tag {
+    my ($tag) = @_;
+    my @tests;
+    for my $test (<$testset/tests/*.desc>) {
+	my ($testname) = ($test =~ m,.*/([^/]+)\.desc$,);
+	my ($data) = read_dpkg_control($test);
+	if ($data->{'test-for'}) {
+	    my %for = map { $_ => 1 } split(' ', $data->{'test-for'});
+	    if ($for{$tag}) {
+		push (@tests, $testname);
+		next;
+	    }
+	}
+	if ($data->{'test-against'}) {
+	    my %against = map { $_ => 1 } split(' ', $data->{'test-against'});
+	    if ($against{$tag}) {
+		push (@tests, $testname);
+	    }
+	}
+    }
+    return @tests;
 }
 
 # Local Variables:

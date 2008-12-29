@@ -12,6 +12,7 @@ tagfiles := $(wildcard testset/tags.* t/*/tags)
 testfiles := $(wildcard t/tests/*.desc)
 perlprovides := data/fields/perl-provides
 onlyrun =
+tag =
 
 runtests: $(neededfiles) $(allchecks) $(allcollect) $(tagfiles) $(testfiles)
 	@echo .... running tests ....
@@ -19,6 +20,14 @@ runtests: $(neededfiles) $(allchecks) $(allcollect) $(tagfiles) $(testfiles)
 	LINTIAN_ROOT="" $(PERL) testset/runtests -k testset debian/tests $(onlyrun)
 	LINTIAN_ROOT="" $(PERL) t/runtests -k t debian/tests $(onlyrun)
 	if [ "$(onlyrun)" = "" ]; then touch $@; fi
+
+# Like runtests but only runs tests affecting a particular tag.  That tag
+# should be specified by setting the tag makefile variable.
+check-tag:
+	@if [ "$(tag)" = "" ]; then \
+		echo 'Specify tag to test with tag=<tag>'; exit 1; \
+	fi
+	LINTIAN_ROOT="" $(PERL) t/runtests -k -t $(tag) t debian/tests
 
 # this target is only run manually
 refresh-perl-provides:
