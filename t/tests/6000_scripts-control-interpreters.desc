@@ -7,7 +7,7 @@ Test-For: control-interpreter-in-usr-local
  wrong-path-for-interpreter
  forbidden-config-interpreter
  forbidden-postrm-interpreter
- unusual-control-interpeter
+ unusual-control-interpreter
  preinst-interpreter-without-predepends
  control-interpreter-without-depends
  unknown-control-interpreter
