@@ -186,7 +186,7 @@ for (@tests) {
     my $testok = runsystem_ok("cmp", "-s", "$rundir/tags.$pkg", "$origdir/tags");
     $tests_run++;
     if ($testok) {
-	print "done.\n";
+	print "ok.\n";
     } else {
 	print "FAILED:\n";
 	runsystem_ok("diff", "-u", "$origdir/tags", "$rundir/tags.$pkg");
