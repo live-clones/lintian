@@ -1251,26 +1251,23 @@ if ($check_everything) {
     read_udeb_list("$LINTIAN_LAB/info/udeb-packages", 0);
 
     debug_msg(2, "pkg_mode = $pkg_mode");
-    for my $arg (keys %source_info) {
-	debug_msg(2, keys %source_info);
-    }
 
     if (($pkg_mode eq 'a') or ($pkg_mode eq 's')) {
-	for my $arg (keys %source_info) {
+	for my $arg (sort keys %source_info) {
 	    debug_msg(1, "doing stuff with $LINTIAN_ARCHIVEDIR/$source_info{$arg}->{'file'}");
 	    $schedule->add_file('s', "$LINTIAN_ARCHIVEDIR/$source_info{$arg}->{'file'}",
 				%{$source_info{$arg}});
 	}
     }
     if (($pkg_mode eq 'a') or ($pkg_mode eq 'b')) {
-	for my $arg (keys %binary_info) {
+	for my $arg (sort keys %binary_info) {
 	    debug_msg(1, "doing stuff with $LINTIAN_ARCHIVEDIR/$binary_info{$arg}->{'file'}");
 	    $schedule->add_file('b', "$LINTIAN_ARCHIVEDIR/$binary_info{$arg}->{'file'}",
 				%{$binary_info{$arg}});
 	}
     }
     if (($pkg_mode eq 'a') or ($pkg_mode eq 'u')) {
-	for my $arg (keys %udeb_info) {
+	for my $arg (sort keys %udeb_info) {
 	    debug_msg(1, "doing stuff with $LINTIAN_ARCHIVEDIR/$udeb_info{$arg}->{'file'}");
 	    $schedule->add_file('u', "$LINTIAN_ARCHIVEDIR/$udeb_info{$arg}->{'file'}",
 				%{$udeb_info{$arg}});
