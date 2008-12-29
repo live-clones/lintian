@@ -5,12 +5,21 @@ lintian (2.1.4) UNRELEASED; urgency=low
       - control-interpreter-in-usr-local (split from
          interpreter-in-usr-local)
       - control-interpreter-without-depends
+      - desktop-mimetype-without-update-call
       - forbidden-postrm-interpreter
       - preinst-interpreter-without-predepends
       - unknown-control-interpreter (split from unusual-interpreter)
     + Removed
+      - desktop-file-but-no-dh_desktop-call
       - interpreter-without-predep
 
+  * checks/menu-format{,.desc}:
+    + [RA] If a *.desktop file contains a MimeType key, check that the
+      postinst calls update-desktop-database.  (Closes: #488832)
+  * checks/rules{,.desc}:
+    + [RA] Remove desktop-file-but-no-dh_desktop-call.  The only action of
+      dh_desktop is now checked by desktop-mimetype-without-update-call;
+      dh_desktop is unnecessary with other *.desktop files.
   * checks/scripts{,.desc}:
     + [RA] Overhaul checking of maintainer script and config interpreters:
       - postrm scripts must use an essential interpreter.

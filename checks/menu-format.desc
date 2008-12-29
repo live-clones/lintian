@@ -331,3 +331,17 @@ Info: kdelnk files were used by KDE 1 and since KDE 2 desktop files are used
  instead.  Renaming the file and removing the deprecated header and keys
  is often all that needs to be done.
 Ref: http://standards.freedesktop.org/desktop-entry-spec/1.0/apc.html
+
+Tag: desktop-mimetype-without-update-call
+Severity: minor
+Certainty: certain
+Info: Your package installs a .desktop file which contains a
+ <tt>MimeType</tt> setting, but it doesn't call
+ <tt>update-desktop-database</tt> in the package <tt>postinst</tt>
+ maintainer script.  This program updates the MIME type cache and should
+ be called whenever installing a package with a new <tt>MimeType</tt>
+ registration.
+ .
+ If you are using debhelper, you can add the necessary fragment to your
+ <tt>postinst</tt> by calling <tt>dh_desktop</tt> in
+ <tt>debian/rules</tt>.

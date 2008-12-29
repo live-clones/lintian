@@ -378,6 +378,9 @@ my %sections_hash = map { $_ => 1 } @sections;
 # Holds a hash of all files in the package, used for checking for executables.
 my %file_index;
 
+# Whether the postinst script calls update-desktop-database.
+my $postinst_calls_update;
+
 # -----------------------------------
 
 sub run {
@@ -417,6 +420,20 @@ foreach my $file (sort keys %{$info->index}) {
             push (@desktop_files, $file);
         }
     }
+}
+
+# If we saw any desktop files, we may want to know whether postinst calls
+# update-desktop-database.
+if (@desktop_files) {
+    $postinst_calls_update = 0;
+    if (open(IN, '<', "control/postinst")) {
+	local $_;
+	while (<IN>) {
+	    next if /^\s*\#/;
+	    $postinst_calls_update = 1 if /\bupdate-desktop-database\b/;
+	}
+    }
+    close IN;
 }
 
 # Verify all the desktop files.
@@ -841,6 +858,12 @@ sub VerifyDesktopFile {
         unless ($saw_main) {
             tag "desktop-entry-lacks-main-category", "$file";
         }
+    }
+
+    # If there is a MimeType key, the package should call
+    # update-desktop-database in the postinst.
+    if ($vals{'MimeType'} and not $postinst_calls_update) {
+	tag "desktop-mimetype-without-update-call", $file;
     }
 }
 

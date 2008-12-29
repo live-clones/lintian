@@ -165,15 +165,6 @@ unless ($includes) {
 	tag "debian-rules-missing-required-target", $target
 	    unless $seen{$target};
     }
-
-    #check if we should have seen some dh_ calls:
-    if (Dep::implies($build_deps, Dep::parse("debhelper"))) {
-        #.desktop files usually imply dh_desktop:
-	if (scalar @{[glob("debfiles/*.desktop")]} &&
-	    ! grep { /^\s*(dh_desktop|dh\s+.*(\$\@|binary))/ } map { @$_ } values %rules_per_target) {
-	    tag "desktop-file-but-no-dh_desktop-call";
-	}
-    }
 }
 
 # Make sure we have no content for binary-arch if we are arch-indep:
