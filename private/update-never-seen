@@ -1,17 +1,81 @@
 #!/usr/bin/perl -w
 #
-# This simple filter takes the output from runtests -v and mangles it into the
-# format for the tags-never-seen file.
+# Check all tags mentioned in Test-For in the new test suite and all tags seen
+# by the old test suite against the list of all documented tags and generate
+# output suitable for tags-never-seen that lists the untested tags.
+#
+# Should be run from the top level of the Lintian source tree or with
+# LINTIAN_ROOT set appropriately.
+
+use strict;
+use warnings;
 
 use POSIX qw(strftime);
 
+BEGIN {
+    my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
+    if (not $LINTIAN_ROOT) {
+        use Cwd ();
+        $ENV{'LINTIAN_ROOT'} = $LINTIAN_ROOT = Cwd::cwd();
+    }
+}
+
+my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
+
+use lib "$ENV{'LINTIAN_ROOT'}/lib";
+use Util;
+
+# Gather a list of all tags.
+my %tags;
+for my $desc (<$LINTIAN_ROOT/checks/*.desc>) {
+    for my $data (read_dpkg_control($desc)) {
+        $desc =~ s,.*/,,;
+        $desc =~ s/\.desc$//;
+        if (exists $data->{tag}) {
+            $tags{$data->{tag}} = $desc;
+        }
+    }
+}
+
+# Parse all test configuration files from the new test suite looking for
+# Test-For configuration options and remove those from the %tags hash.
+for my $desc (<$LINTIAN_ROOT/t/tests/*.desc>) {
+    my ($data) = read_dpkg_control($desc);
+    if (exists $data->{'test-for'}) {
+        for my $tag (split(' ', $data->{'test-for'})) {
+            delete $tags{$tag};
+        }
+    }
+}
+
+# Now parse all tags files from the old test suite looking for what tags that
+# test reveals.
+for my $tagfile (<$LINTIAN_ROOT/testset/tags.*>) {
+    next if $tagfile =~ /\.sed$/;
+    open (IN, '<', $tagfile) or die "Cannot open $tagfile: $!\n";
+    local $_;
+    while (<IN>) {
+        if (/^(.): (\S+)(?: (?:source|udeb))?: (\S+)/) {
+            delete $tags{$3};
+        }
+    }
+    close IN;
+}
+
+# Whatever is left in the %tags hash are untested.  Print them out sorted by
+# checks file.
 my @untested;
-while (<>) {
-    next unless /^I: tag-is-not-tested (\S+) in (\S+)/;
-    push (@untested, [ $2, $1 ]);
+for my $tag (keys %tags) {
+    push (@untested, [ $tags{$tag}, $tag ]);
 }
 @untested = sort { $a->[0] cmp $b->[0] || $a->[1] cmp $b->[1] } @untested;
-print "Last generated ", strftime ('%Y-%m-%d', gmtime), "\n\n";
-for my $tag (@untested) {
-    print "$tag->[0] $tag->[1]\n";
+print "Last generated ", strftime ('%Y-%m-%d', gmtime), "\n";
+my $last = '';
+for my $data (@untested) {
+    my ($file, $tag) = @$data;
+    if ($file ne $last) {
+        print "\n";
+        $last = $file;
+    }
+    print "$file $tag\n";
 }
