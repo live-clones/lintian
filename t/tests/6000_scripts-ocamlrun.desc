@@ -1,5 +1,4 @@
 Testname: scripts-ocamlrun
-Type: non-native
 Version: 1.0
 Description: Test correct handling of ocamlrun scripts
 Test-Against: missing-dep-for-interpreter
