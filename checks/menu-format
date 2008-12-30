@@ -367,19 +367,14 @@ my %reserved_categories = map { $_ => 1 }
        Shell
       );
 
-# Path in which to search for binaries referenced in menu entries.
-my @path = qw(/usr/local/bin/ /usr/bin/ /bin/ /usr/X11R6/bin/ /usr/games/);
+# Path in which to search for binaries referenced in menu entries.  These must
+# not have leading slashes.
+my @path = qw(usr/local/bin/ usr/bin/ bin/ usr/X11R6/bin/ usr/games/);
 
 my %known_tags_hash = map { $_ => 1 } @known_tags;
 my %needs_tag_vals_hash = map { $_ => 1 } @needs_tag_vals;
 my %root_sections_hash = map { $_ => 1 } @root_sections;
 my %sections_hash = map { $_ => 1 } @sections;
-
-# Holds a hash of all files in the package, used for checking for executables.
-my %file_index;
-
-# Whether the postinst script calls update-desktop-database.
-my $postinst_calls_update;
 
 # -----------------------------------
 
@@ -389,6 +384,9 @@ my $pkg = shift;
 my $type = shift;
 my $info = shift;
 
+# Whether the postinst script calls update-desktop-database.
+my $postinst_calls_update;
+
 my @menufiles;
 opendir (MENUDIR, "menu/lib") or fail("cannot read menu/lib file directory.");
 push @menufiles, map { "menu/lib/$_" } readdir(MENUDIR);
@@ -397,24 +395,19 @@ opendir (MENUDIR, "menu/share") or fail("cannot read menu/share file directory."
 push @menufiles, map { "menu/share/$_" } readdir(MENUDIR);
 closedir MENUDIR;
 
-# Find the desktop files in the package for verification and also build a hash
-# of every file in the package to use to verify that the command referenced by
-# a menu item or desktop entry is there.
+# Find the desktop files in the package for verification.
 my @desktop_files;
 foreach my $file (sort keys %{$info->index}) {
     my $index_info = $info->index->{$file};
     my $operm = $index_info->{operm};
 
-    $file = '/' . $file;
-    $file_index{$file} = 1;
-
-    tag 'deprecated-kdelnk-file', $file if ($file =~ m,\.kdelnk$,);
+    tag 'deprecated-kdelnk-file', "/$file" if ($file =~ m,\.kdelnk$,);
 
     if ($index_info->{type} =~ m/[-h]/ &&
-	$file =~ m,/usr/share/applications/.*\.desktop$,) {
+	$file =~ m,usr/share/applications/.*\.desktop$,) {
 
 	if ($operm & 0100 or $operm & 010 or $operm & 01) {
-           tag "executable-desktop-file", sprintf("$file %04o",$operm);
+           tag "executable-desktop-file", sprintf("/$file %04o",$operm);
 	}
         unless ($file =~ m,template,) {
             push (@desktop_files, $file);
@@ -438,7 +431,8 @@ if (@desktop_files) {
 
 # Verify all the desktop files.
 for my $desktop_file (@desktop_files) {
-    VerifyDesktopFile ($desktop_file, $desktop_file, $pkg);
+    VerifyDesktopFile($desktop_file, $desktop_file, $pkg, $info,
+		      $postinst_calls_update);
 }
 
 # Now all the menu files.
@@ -490,11 +484,11 @@ foreach my $menufile (@menufiles) {
 	# Note that I allow whitespace after the continuation character.
 	# This is caught by VerifyLine().
 	if (! ($menufile_line =~ m/\\\s*?$/)) {
-	    VerifyLine($pkg,$type,$menufile,$fullname,$line,$lc);
+	    VerifyLine($pkg, $info, $type, $menufile, $fullname, $line, $lc);
 	    $line="";
 	}
     } while ($menufile_line = <IN>);
-    VerifyLine($pkg,$type,$menufile,$fullname,$line,$lc);
+    VerifyLine($pkg, $info, $type, $menufile, $fullname, $line, $lc);
 
     close IN;
 }
@@ -506,7 +500,7 @@ foreach my $menufile (@menufiles) {
 # Pass this a line of a menu file, it sanitizes it and
 # verifies that it is correct.
 sub VerifyLine {
-    my ( $pkg, $type, $menufile, $fullname, $line, $linecount ) = @_;
+    my ($pkg, $info, $type, $menufile, $fullname, $line, $linecount) = @_;
 
     my %vals;
 
@@ -637,7 +631,8 @@ sub VerifyLine {
     $section =~ s:/$::;		# remove trailing slash.
 
     # Be sure the command is provided by the package.
-    my ($okay, $command) = VerifyCmd ($fullname, $linecount, $vals{'command'}, $pkg);
+    my ($okay, $command) = VerifyCmd ($fullname, $linecount, $vals{'command'},
+				      $pkg, $info);
     tag "menu-command-not-in-package", "$fullname:$linecount $command"
         unless ($okay
                 or not $command
@@ -759,7 +754,7 @@ parse_error:
 
 # Syntax-checks a .desktop file.
 sub VerifyDesktopFile {
-    my ($desktopfile, $file, $pkg) = @_;
+    my ($desktopfile, $file, $pkg, $info, $postinst_calls_update) = @_;
     my %vals;
     open (DESKTOP, '<', "unpacked/$file")
 	or fail("cannot open desktop file $file: $!");
@@ -769,7 +764,7 @@ sub VerifyDesktopFile {
         chomp $line;
         next if ($line =~ m/^\s*\#/ or $line =~ m/^\s*$/);
         if ($line =~ s/\r//) {
-            tag 'desktop-entry-file-has-crs', "$file:$." unless $warned_cr;
+            tag 'desktop-entry-file-has-crs', "/$file:$." unless $warned_cr;
             $warned_cr = 1;
         }
 
@@ -780,7 +775,7 @@ sub VerifyDesktopFile {
         unless ($saw_first) {
             return unless $line =~ /^\[(KDE )?Desktop Entry\]\s*$/;
             $saw_first = 1;
-            tag 'desktop-contains-deprecated-header', "$file:$." if ($line =~ /^\[KDE Desktop Entry\]\s*$/);
+            tag 'desktop-contains-deprecated-header', "/$file:$." if ($line =~ /^\[KDE Desktop Entry\]\s*$/);
         }
 
 	# Tag = Value.	For most errors, just add the error to pending rather
@@ -795,17 +790,17 @@ sub VerifyDesktopFile {
 	    my $basetag = $tag;
 	    my ($encoding) = ($basetag =~ s/\[([^\]]+)\]$//);
 	    if (exists $vals{$tag}) {
-		tag "duplicated-key-in-desktop-entry", "$file:$. $tag";
+		tag "duplicated-key-in-desktop-entry", "/$file:$. $tag";
 	    } elsif ($deprecated_desktop_keys{$basetag}) {
 		if ($basetag eq 'Encoding') {
-		    push (@pending, [ "desktop-entry-contains-encoding-key", "$file:$. $tag" ]);
+		    push (@pending, [ "desktop-entry-contains-encoding-key", "/$file:$. $tag" ]);
 		} else {
 		    push (@pending, [ "desktop-entry-contains-deprecated-key", "$file:$. $tag" ]);
 		}
 	    } elsif (	 not $known_desktop_keys{$basetag}
 		     and not $kde_desktop_keys{$basetag}
 		     and not $basetag =~ /^X-/) {
-		push (@pending, [ "desktop-entry-contains-unknown-key", "$file:$. $tag" ]);
+		push (@pending, [ "desktop-entry-contains-unknown-key", "/$file:$. $tag" ]);
 	    }
 	    $vals{$tag} = $value;
 	}
@@ -823,7 +818,7 @@ sub VerifyDesktopFile {
     # Test for important keys.
     for my $tag (@req_desktop_keys) {
         unless (defined $vals{$tag}) {
-            tag "desktop-entry-missing-required-key", "$file $tag";
+            tag "desktop-entry-missing-required-key", "/$file $tag";
         }
     }
 
@@ -833,9 +828,10 @@ sub VerifyDesktopFile {
     #
     # TODO:  Should check quoting and the check special field
     # codes in Exec for desktop files.
-    if ($file =~ m,^/usr/share/applications/, and $vals{'Exec'} and $vals{'Exec'} =~ /\S/) {
-        my ($okay, $command) = VerifyCmd ($file, undef, $vals{'Exec'}, $pkg);
-        tag "desktop-command-not-in-package", "$file $command"
+    if ($file =~ m,^usr/share/applications/, and $vals{'Exec'} and $vals{'Exec'} =~ /\S/) {
+        my ($okay, $command) = VerifyCmd ($file, undef, $vals{'Exec'}, $pkg,
+					  $info);
+        tag "desktop-command-not-in-package", "/$file $command"
             unless $okay or $command eq 'kcmshell';
     }
 
@@ -846,24 +842,24 @@ sub VerifyDesktopFile {
         for my $cat (@cats) {
             next if $cat =~ /^X-/;
             if ($reserved_categories{$cat}) {
-                tag "desktop-entry-uses-reserved-category", "$cat $file"
+                tag "desktop-entry-uses-reserved-category", "$cat /$file"
                     unless $vals{'OnlyShowIn'};
                 $saw_main = 1;
             } elsif (not $categories{$cat} and not $main_categories{$cat}) {
-                tag "desktop-entry-invalid-category", "$cat $file";
+                tag "desktop-entry-invalid-category", "$cat /$file";
             } elsif ($main_categories{$cat}) {
                 $saw_main = 1;
             }
         }
         unless ($saw_main) {
-            tag "desktop-entry-lacks-main-category", "$file";
+            tag "desktop-entry-lacks-main-category", "/$file";
         }
     }
 
     # If there is a MimeType key, the package should call
     # update-desktop-database in the postinst.
     if ($vals{'MimeType'} and not $postinst_calls_update) {
-	tag "desktop-mimetype-without-update-call", $file;
+	tag "desktop-mimetype-without-update-call", "/$file";
     }
 }
 
@@ -873,7 +869,8 @@ sub VerifyDesktopFile {
 # false otherwise, and whose second member is the command (minus any leading
 # su-to-root wrapper).  Shared between the desktop and menu code.
 sub VerifyCmd {
-    my ($file, $line, $exec, $pkg) = @_;
+    my ($file, $line, $exec, $pkg, $info) = @_;
+    $file = '/' . $file unless $file =~ m,^/,;
     my $location = ($line ? "$file:$line" : $file);
 
     # This routine handles su wrappers.  The option parsing here is ugly and
@@ -920,9 +917,16 @@ sub VerifyCmd {
     } else {
         $cmd = $com[0];
     }
-    my $okay = $cmd && ($cmd =~ /^[\'\"]/ || $file_index{$cmd} || $cmd =~ m,^(/bin/)?sh,
-	|| $cmd =~ m,^(/usr/bin/)?sensible-(pager|editor|browser),
-	|| grep { $file_index{$_ . $cmd} } @path);
+    my $cmd_file = $cmd;
+    if ($cmd_file) {
+	$cmd_file =~ s,^/,,;
+    }
+    my $okay = $cmd
+	&& ($cmd =~ /^[\'\"]/
+	    || $info->index->{$cmd_file}
+	    || $cmd =~ m,^(/bin/)?sh,
+	    || $cmd =~ m,^(/usr/bin/)?sensible-(pager|editor|browser),
+	    || grep { $info->index->{$_ . $cmd} } @path);
     return ($okay, $cmd);
 }
 
