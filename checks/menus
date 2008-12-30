@@ -31,11 +31,6 @@ use Spelling;
 use Tags;
 use Util;
 
-my $pkg;
-my $info;
-my %all_files = ();
-my %all_links = ();
-
 # Known fields for doc-base files.  The value is 1 for required fields and 0
 # for optional fields.
 my %known_docbase_main_fields = (
@@ -53,9 +48,12 @@ my %known_docbase_format_fields = (
 
 sub run {
 
-$pkg = shift;
+my $pkg = shift;
 my $type = shift;
-$info = shift;
+my $info = shift;
+
+my %all_files = ();
+my %all_links = ();
 
 my %preinst;
 my %postinst;
@@ -67,35 +65,24 @@ my $menu_file;
 my $menumethod_file;
 my $anymenu_file;
 
-# check preinst script
-if ( -f "control/preinst" ) {
-    # parse script...
-    check_script("preinst",\%preinst);
+if (-f 'control/preinst') {
+    check_script($pkg, 'preinst', \%preinst);
 }
-
-# check postinst script
-if ( -f "control/postinst" ) {
-    # parse script...
-    check_script("postinst",\%postinst);
+if (-f 'control/postinst') {
+    check_script($pkg, 'postinst', \%postinst);
 }
-
-# check prerm script
-if ( -f "control/prerm" ) {
-    # parse script...
-    check_script("prerm",\%prerm);
+if (-f 'control/prerm') {
+    check_script($pkg, 'prerm', \%prerm);
 }
-
-# check postrm script
-if ( -f "control/postrm" ) {
-    # parse script...
-    check_script("postrm",\%postrm);
+if (-f 'control/postrm') {
+    check_script($pkg, 'postrm', \%postrm);
 }
 
 # read package contents
 for my $file (sort keys %{$info->index}) {
     next if $file eq "";
 
-    add_file_link_info ($file);
+    add_file_link_info ($info, $file, \%all_files, \%all_links);
     my $index_info = $info->index->{$file};
     my $operm = $index_info->{operm};
 
@@ -193,7 +180,7 @@ if ($docbase_file) {		# postinst has to call install-docs
     while (defined ($dbfile = readdir DOCBASEDIR)) {
 	# don't try to parse executables, plus we already warned about it
 	next if -x "doc-base/$dbfile";
-	check_doc_base_file($dbfile, $pkg, $type);
+	check_doc_base_file($dbfile, $pkg, $type, \%all_files, \%all_links);
     }
     closedir DOCBASEDIR;
 } else {
@@ -230,7 +217,7 @@ if ($anymenu_file) {
 # -----------------------------------
 
 sub check_doc_base_file {
-    my ($dbfile, $pkg, $type) = @_;
+    my ($dbfile, $pkg, $type, $all_files, $all_links) = @_;
 
     my $line = file_is_encoded_in_non_utf8("doc-base/$dbfile", $type, $pkg);
     if ($line) {
@@ -253,8 +240,9 @@ sub check_doc_base_file {
         if (/^(\S+)\s*:\s*(.*)$/) {
             my (@new) = ($1, $2);
             if ($field) {
-                check_doc_base_field($dbfile, $line, $field, \@vals,
-                                     \%sawfields, \%sawformats, $knownfields);
+		check_doc_base_field($pkg, $dbfile, $line, $field, \@vals,
+				     \%sawfields, \%sawformats, $knownfields,
+				     $all_files, $all_links);
             }
             $field = lc $new[0];
             @vals  = ($new[1]);
@@ -275,8 +263,9 @@ sub check_doc_base_file {
             next unless $field; # skip successive empty lines
 
             # Check previously defined field and section.
-            check_doc_base_field($dbfile, $line, $field, \@vals, \%sawfields,
-                                 \%sawformats, $knownfields);
+	    check_doc_base_field($pkg, $dbfile, $line, $field, \@vals,
+				 \%sawfields, \%sawformats, $knownfields,
+				 $all_files, $all_links);
             check_doc_base_file_section($dbfile, $line + 1, \%sawfields,
                                         \%sawformats, $knownfields);
 
@@ -297,8 +286,9 @@ sub check_doc_base_file {
 
     # Check the last field/section of the control file.
     if ($field) {
-        check_doc_base_field($dbfile, $line, $field, \@vals, \%sawfields,
-                             \%sawformats, $knownfields);
+	check_doc_base_field($pkg, $dbfile, $line, $field, \@vals, \%sawfields,
+			     \%sawformats, $knownfields, $all_files,
+			     $all_links);
         check_doc_base_file_section($dbfile, $line, \%sawfields, \%sawformats,
                                     $knownfields);
     }
@@ -312,8 +302,8 @@ sub check_doc_base_file {
 # Checks one field of a doc-base control file.  $vals is array ref containing
 # all lines of the field.  Modifies $sawfields and $sawformats.
 sub check_doc_base_field {
-    my ($dbfile, $line, $field, $vals, $sawfields, $sawformats,
-        $knownfields) = @_;
+    my ($pkg, $dbfile, $line, $field, $vals, $sawfields, $sawformats,
+        $knownfields, $all_files, $all_links) = @_;
 
     tag "doc-base-file-unknown-field", "$dbfile:$line", "$field"
         unless defined $knownfields->{$field};
@@ -340,7 +330,7 @@ sub check_doc_base_field {
             if ($file =~ m%^/usr/doc%) {
                 tag "doc-base-file-references-usr-doc", "$dbfile:$line";
             }
-            my $realfile = delink ($file);
+            my $realfile = delink ($file, $all_links);
             # openoffice.org-dev-doc has thousands of files listed so try to
             # use the hash if possible.
             my $found;
@@ -352,9 +342,9 @@ sub check_doc_base_field {
                     $regex =~ s%\\\?%[^/]%g;
                     $regex .= '/?';
                 }
-                $found = grep { /^$regex\z/ } keys %all_files;
+                $found = grep { /^$regex\z/ } keys %$all_files;
             } else {
-                $found = $all_files{$realfile} || $all_files{"$realfile/"};
+                $found = $all_files->{$realfile} || $all_files->{"$realfile/"};
             }
             unless ($found) {
                 tag "doc-base-file-references-missing-file", "$dbfile:$line",
@@ -492,17 +482,16 @@ sub check_doc_base_file_section {
     }
 }
 
-# Add file and link to %all_files and %all_links.  Note that both files and
+# Add file and link to $all_files and $all_links.  Note that both files and
 # links have to include a leading /.
 sub add_file_link_info {
-    my $file = shift;
-    my $link = undef;
-    $link = $info->index->{$file}->{link};
+    my ($info, $file, $all_files, $all_links) = @_;
+    my $link = $info->index->{$file}->{link};
     my $ishard = ($info->index->{$file}->{type} eq 'h');
 
     $file = "/" . $file if (not $file =~ m%^/%); # make file absolute
     $file =~ s%/+%/%g;				 # remove duplicated `/'
-    $all_files{$file} = 1;
+    $all_files->{$file} = 1;
 
     if (defined $link) {
 	$link = './' . $link if $link !~ m,^/,;
@@ -521,17 +510,17 @@ sub add_file_link_info {
 	    }
 	    $link = $f . $link;			  # now we should have absolute link
 	}
-	$all_links{$file} = $link unless ($link eq $file);
+	$all_links->{$file} = $link unless ($link eq $file);
     }
 }
 
 
-# Dereference all symlinks in file.  Uses %all_links.
+# Dereference all symlinks in file.
 sub delink {
-    my $file = shift;
+    my ($file, $all_links) = @_;
 
     $file =~ s%/+%/%g;				  # remove duplicated '/'
-    return $file unless %all_links;		  # package doesn't symlinks
+    return $file unless %$all_links;		  # package doesn't symlinks
 
     my $p1 = "";
     my $p2 = $file;
@@ -557,9 +546,9 @@ sub delink {
 
     while (($p2 =~ s%^(/[^/]*)%%g) > 0) {
 	$p1 .= $1;
-	if (defined $all_links{$p1}) {
+	if (defined $all_links->{$p1}) {
 	    return '!!! SYMLINK LOOP !!!' if defined $used_links{$p1};
-	    $p2 = $all_links{$p1} . $p2;
+	    $p2 = $all_links->{$p1} . $p2;
 	    $p1 = "";
 	    $used_links{$p1} = 1;
 	}
@@ -572,7 +561,7 @@ sub delink {
 }
 
 sub check_script {
-    my ($script,$pres) = @_;
+    my ($pkg, $script, $pres) = @_;
     my ($no_check_menu,$no_check_installdocs,$no_check_wmmenu,$calls_wmmenu);
     my $interp;
 

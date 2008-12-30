@@ -38,6 +38,10 @@ lintian (2.1.4) UNRELEASED; urgency=low
       use Lintian::Collect information.  The hash was being reused across
       packages, possibly leading to excessive memory consumption and false
       negatives for archive-wide runs.
+  * checks/menus:
+    + [RA] Keep the hash of files and symlinks local to each package,
+      reducing memory consumption and false negatives for archive-wide
+      runs.
   * checks/rules{,.desc}:
     + [RA] Remove desktop-file-but-no-dh_desktop-call.  The only action of
       dh_desktop is now checked by desktop-mimetype-without-update-call;
