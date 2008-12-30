@@ -20,6 +20,8 @@ lintian (2.1.4) UNRELEASED; urgency=low
     + [RA] Warn (severity: wishlist) about the old dh_make packaging
       copyright, which used (C) without the word or symbol.  Based on a
       patch by Raphael Geissert.  (Closes: #497347)
+    + [RA] Clean up checks of a symlinked /usr/share/doc directory and
+      avoid making package info global.
   * checks/debhelper{,.desc}:
     + [RA] Check for use of shell brace expansion in debhelper config
       files that list filenames, which is not supported.  Based on a patch

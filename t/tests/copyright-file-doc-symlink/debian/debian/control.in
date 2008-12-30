@@ -1,0 +1,35 @@
+Source: {$srcpkg}
+Priority: extra
+Section: {$section}
+Maintainer: {$author}
+Standards-Version: 3.8.0
+Build-Depends: debhelper (>= 7)
+
+Package: {$srcpkg}
+Architecture: {$architecture}
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Description: {$description}
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.
+
+Package: {$srcpkg}-helper
+Architecture: {$architecture}
+Depends: {$srcpkg} (= {$version}), $\{shlibs:Depends\}, $\{misc:Depends\}
+Description: {$description} (symlink)
+ Helper package with a legitimate /usr/share/doc symlink.
+ .
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.
+
+Package: {$srcpkg}-weak
+Architecture: {$architecture}
+Depends: {$srcpkg}, $\{shlibs:Depends\}, $\{misc:Depends\}
+Description: {$description} (weak)
+ Helper package with a /usr/share/doc symlink but an insufficiently
+ strong dependency.  We intentionally don't diagnose this.
+ .
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.
