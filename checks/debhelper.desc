@@ -135,3 +135,12 @@ Info: The given debhelper script was introduced in a later version of
  etch was released with debhelper version 5.0.42, so every package that
  assumes a newer version should explicetly declare so for the sake of
  etch backports.
+
+Tag: brace-expansion-in-debhelper-config-file
+Severity: normal
+Certainty: possible
+Info: This debhelper config file appears to use shell brace expansion
+ (such as <tt>{foo,bar}</tt>) to specify files.  This happens to work due
+ to an accident of implementation but is not a supported feature.  Only
+ <tt>?</tt>, <tt>*</tt>, and <tt>[...]</tt> are supported.
+Ref: debhelper(1)

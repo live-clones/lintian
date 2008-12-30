@@ -1,0 +1,9 @@
+#!/usr/bin/make -f
+%:
+	dh $@
+
+# Skip dh_install since there are braces in the install configuration file and
+# it would error out on at least some systems.
+binary:
+	dh binary --before dh_install
+	dh binary --after dh_install

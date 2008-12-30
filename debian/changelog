@@ -2,6 +2,7 @@ lintian (2.1.4) UNRELEASED; urgency=low
 
   * Summary of tag changes:
     + Added
+      - brace-expansion-in-debhelper-config-file
       - control-interpreter-in-usr-local (split from
          interpreter-in-usr-local)
       - control-interpreter-without-depends
@@ -19,6 +20,10 @@ lintian (2.1.4) UNRELEASED; urgency=low
     + [RA] Warn (severity: wishlist) about the old dh_make packaging
       copyright, which used (C) without the word or symbol.  Based on a
       patch by Raphael Geissert.  (Closes: #497347)
+  * checks/debhelper{,.desc}:
+    + [RA] Check for use of shell brace expansion in debhelper config
+      files that list filenames, which is not supported.  Based on a patch
+      from Raphael Geissert.  (Closes: #480939)
   * checks/menu-format{,.desc}:
     + [RA] If a *.desktop file contains a MimeType key, check that the
       postinst calls update-desktop-database.  (Closes: #488832)
@@ -44,6 +49,9 @@ lintian (2.1.4) UNRELEASED; urgency=low
   * debian/rules:
     + [RA] New check-tag target which runs all test cases in the new test
       suite that check for or against a particular tag.
+
+  * data/debhelper/filename-config-files:
+    + [RA] New file listing debhelper config files containing filenames.
 
   * frontend/lintian:
     + [RA] When processing the entire archive, do so in sorted order.

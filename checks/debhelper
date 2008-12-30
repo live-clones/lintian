@@ -31,12 +31,12 @@ use Lintian::Data;
 # create one automatically.  Currently it always uses compatibility level 5.
 # It may be better to look at what version of cdbs the package depends on and
 # from that derive the compatibility level....
-
 my $cdbscompat = 5;
 
 my $maint_commands = Lintian::Data->new ('debhelper/maint_commands');
 my $miscDeps_commands = Lintian::Data->new ('debhelper/miscDepends_commands');
 my $dh_commands_depends = Lintian::Data->new ('debhelper/dh_commands', '=');
+my $filename_configs = Lintian::Data->new ('debhelper/filename-config-files');
 
 # The version at which debhelper commands were introduced.  Packages that use
 # one of these commands must have a dependency on that version of debhelper or
@@ -59,7 +59,7 @@ my $needbuilddepends = '';
 my $needtomodifyscripts = '';
 my $needversiondepends = '';
 my $seenversiondepends = '0';
-my $compat = '';
+my $compat = 0;
 my $usescdbs = '';
 my $seendhpython = '';
 my $usescdbspython = '';
@@ -149,14 +149,35 @@ for my $binpkg (keys %$pkgs) {
 	   and $pkgs->{$binpkg} eq 'deb';
 }
 
-# If we got this far, they need to have #DEBHELPER# in their scripts.  Search
-# for scripts that look like maintainer scripts.  Also collect dependency
-# information from debian/control and check compatibility level.
+# Check the compat file.  Do this separately from looping over all of the
+# other files since we use the compat value when checking for brace expansion.
+if (-f 'debfiles/compat') {
+    $compat = slurp_entire_file('debfiles/compat');
+    $compat =~ s/^\s+$//;
+    if ($compat) {
+	$compat =~ s/\s+$//;
+	if ($needversiondepends) {
+	    tag 'declares-possibly-conflicting-debhelper-compat-versions',
+		"rules=$needversiondepends compat=$compat";
+	} else {
+	    $needversiondepends = $compat;
+	}
+    } else {
+	tag 'debhelper-compat-file-is-empty';
+    }
+}
+
+# Check the files in the debian directory for various debhelper-related
+# things.
 my $bdepends;
 opendir(DEBIAN, 'debfiles')
     or fail("Can't open debfiles directory.");
 while (defined(my $file=readdir(DEBIAN))) {
     if ($file =~ m/^(?:(.*)\.)?(?:post|pre)(?:inst|rm)$/) {
+	next unless $needtomodifyscripts;
+
+	# They need to have #DEBHELPER# in their scripts.  Search for scripts
+	# that look like maintainer scripts and make sure the token is there.
         my $binpkg = $1 || '';
 	open(IN, '<', "debfiles/$file")
 	    or fail("Can't open debfiles/$file: $!");
@@ -168,31 +189,17 @@ while (defined(my $file=readdir(DEBIAN))) {
 	    }
 	}
 	close IN;
-
-	if ((! $seentag) and $needtomodifyscripts) {
+	if (!$seentag) {
 	    unless (($binpkg && exists($pkgs->{$binpkg})
 		     && ($pkgs->{$binpkg} eq 'udeb'))
 		    or (!$binpkg && ($single_pkg eq 'udeb'))) {
 		tag "maintainer-script-lacks-debhelper-token", "debian/$file";
 	    }
 	}
-    } elsif ($file =~ m/^compat$/) {
-	open (IN, '<', "debfiles/$file")
-	    or fail("Can't open debfiles/$file: $!");
-	$compat = <IN>;
-	close IN;
-	if ($compat) {
-	    chomp $compat;
-	    if ($needversiondepends) {
-		tag "declares-possibly-conflicting-debhelper-compat-versions", "rules=$needversiondepends compat=$compat";
-	    } else {
-		$needversiondepends = $compat;
-	    }
-	} else {
-	    tag "debhelper-compat-file-is-empty", "";
-	}
     } elsif ($file =~ m/^control$/) {
         my ($control) = read_dpkg_control("debfiles/$file");
+
+	# Collect dependency information from debian/control.
         $bdepends = '';
         for my $field ('build-depends', 'build-depends-indep') {
             next unless $control->{$field};
@@ -210,6 +217,28 @@ while (defined(my $file=readdir(DEBIAN))) {
 	}
     } elsif ($file =~ m/^ex\.|\.ex$/i) {
         tag "dh-make-template-in-source", "debian/$file";
+    } else {
+	my $base = $file;
+	$base =~ s/^[.]+\.//;
+
+	# Check whether this is a debhelper config file that takes a list of
+	# filenames.  If so, check it for brace expansions, which aren't
+	# supported.
+	if ($filename_configs->known($base)) {
+	    next if $compat < 3;
+	    open (IN, '<', "debfiles/$file")
+		or fail("Can't open debfiles/$file: $!");
+	    local $_;
+	    while (<IN>) {
+		next if /^\s*$/;
+		next if (/^\#/ and $compat >= 5);
+		if (m/(?<!\\)\{(?:[^\s\\\}]+?,)+[^\\\}\s]+\}/) {
+		    tag 'brace-expansion-in-debhelper-config-file',
+			"debian/$file";
+		}
+	    }
+	    close IN;
+	}
     }
 }
 closedir(DEBIAN);
@@ -248,4 +277,8 @@ if ($needversiondepends < 4) {
 
 1;
 
-# vim: syntax=perl
+# Local Variables:
+# indent-tabs-mode: t
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 ts=8 noet shiftround
