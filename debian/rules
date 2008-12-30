@@ -27,6 +27,7 @@ check-tag:
 	@if [ "$(tag)" = "" ]; then \
 		echo 'Specify tag to test with tag=<tag>'; exit 1; \
 	fi
+	[ -d debian/tests ] || mkdir debian/tests
 	LINTIAN_ROOT="" $(PERL) t/runtests -k -t $(tag) t debian/tests
 
 # this target is only run manually
