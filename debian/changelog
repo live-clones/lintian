@@ -8,6 +8,7 @@ lintian (2.1.4) UNRELEASED; urgency=low
       - desktop-mimetype-without-update-call
       - forbidden-postrm-interpreter
       - preinst-interpreter-without-predepends
+      - script-calls-init-script-directly
       - unknown-control-interpreter (split from unusual-interpreter)
     + Removed
       - desktop-file-but-no-dh_desktop-call
@@ -31,6 +32,9 @@ lintian (2.1.4) UNRELEASED; urgency=low
         interpreter-in-usr-local since the severity is higher.
       - unusual-control-interpreter is certain, not possible.
       - Suppress some cases of multiple tags about the same basic problem.
+    + [RA] Check for scripts in /etc that call init scripts directly
+      without using invoke-rc.d.  Based on a patch by Raphael Geissert.
+      (Closes: #381485)
 
   * debian/rules:
     + [RA] New check-tag target which runs all test cases in the new test

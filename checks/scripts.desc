@@ -425,6 +425,15 @@ Info: This script apparently runs an init script directly rather than
  available.
 Ref: policy 9.3.3.2
 
+Tag: script-calls-init-script-directly
+Severity: normal
+Certainty: possible
+Info: This script apparently runs an init script directly rather than
+ using <tt>invoke-rc.d</tt>.  While use of <tt>invoke-rc.d</tt> is only
+ required for maintainer scripts, supporting the policy layer that it
+ implements is a good idea in any script.
+Ref: policy 9.3.3.2
+
 Tag: gconftool-used-in-maintainer-script
 Severity: normal
 Certainty: possible

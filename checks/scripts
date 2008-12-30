@@ -185,6 +185,11 @@ our @depends_needed = (
 	[ 'xml-core'	=> '\bupdate-xmlcatalog\s' ],
 );
 
+# When detecting commands inside shell scripts, use this regex to match the
+# beginning of the command rather than checking whether the command is at the
+# beginning of a line.
+our $LEADIN = qr'(?:(?:^|[`&;(|{])\s*|(?:if|then|do|while)\s+)';
+
 sub run {
 
 my %executable = ();
@@ -325,6 +330,41 @@ for my $filename (sort keys %{$info->scripts}) {
 	tag("script-uses-bin-env", $filename);
     } else {
 	tag("unusual-interpreter", $filename, "#!$interpreter");
+    }
+
+    # Do some additional checks on shell scripts in /etc.  This should
+    # probably be extended eventually to any script in a public directory.
+    # This also needs smarter processing of multiline quoted strings,
+    # heredocs, and so forth.  Hopefully it will do for right now.
+    if ($filename =~ m,^./etc/, and $base =~ /^$known_shells_regex$/) {
+	my ($saw_init, $saw_invoke);
+	local $.;
+	open(FH, '<', 'unpacked/' . $filename);
+	while (<FH>) {
+	    next if m,^\s*$,;  # skip empty lines
+	    next if m,^\s*\#,; # skip comment lines
+	    s/\#.*$//;         # eat comments
+	    chomp;
+
+	    # Check for running init scripts directly instead of via
+	    # invoke-rc.d.  Scripts are allowed to reinvoke themselves with a
+	    # different argument; some init scripts implement actions that
+	    # way.  Scripts are also allowed to do this for actions other than
+	    # those defined for invoke-rc.d.
+	    if (m,$LEADIN/etc/init.d/(\S+)\s+[\"\']?(\S+)[\"\']?,) {
+		my ($script, $action) = ($1, $2);
+		next if "./etc/init.d/$script" eq $filename;
+		next unless $action =~ /^(force-)?(start|stop|restart|reload|status)$/;
+		$saw_init = $.;
+	    }
+	    if (m%^\s*invoke-rc\.d\s+%) {
+		$saw_invoke = 1;
+	    }
+	}
+	close(FH);
+	if ($saw_init and not $saw_invoke) {
+	    tag 'script-calls-init-script-directly', "$filename:$saw_init";
+	}
     }
 
     # If we found the interpreter and the script is executable, check
@@ -491,7 +531,6 @@ while (<SCRIPTS>) {
     my %warned;
     my ($saw_init, $saw_invoke, $saw_debconf, $saw_sete, $has_code);
     my $cat_string = "";
-    my $LEADIN = qr'(?:(?:^|[`&;(|{])\s*|(?:if|then|do|while)\s+)';
 
     my $previous_line = "";
     while (<C>) {
@@ -547,7 +586,7 @@ while (<SCRIPTS>) {
 	}
 
 	# Collect information about init script invocations to catch running
-	# init scripts directory rather than through invoke-rc.d.  Since the
+	# init scripts directly rather than through invoke-rc.d.  Since the
 	# script is allowed to run the init script directly if invoke-rc.d
 	# doesn't exist, only tag direct invocations where invoke-rc.d is
 	# never used in the same script.  Lots of false negatives, but
