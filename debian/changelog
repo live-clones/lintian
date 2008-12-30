@@ -46,6 +46,7 @@ lintian (2.1.4) UNRELEASED; urgency=low
     + [RA] Check for scripts in /etc that call init scripts directly
       without using invoke-rc.d.  Based on a patch by Raphael Geissert.
       (Closes: #381485)
+    + [RA] Allow dpkg-dev to satisfy a make dependency.  (Closes: #510190)
 
   * debian/rules:
     + [RA] New check-tag target which runs all test cases in the new test
