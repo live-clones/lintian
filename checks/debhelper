@@ -101,6 +101,7 @@ while (<RULES>) {
     } elsif (m,^\s+dh\s+,) {
 	$seencommand = 1;
 	$needbuilddepends = 1;
+	$needtomodifyscripts = 1;
 	$needmiscdepends = 1;
 	push (@versioncheck, 'dh');
     } elsif (m,^include\s+/usr/share/cdbs/1/rules/debhelper.mk,) {

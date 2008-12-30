@@ -24,6 +24,7 @@ lintian (2.1.4) UNRELEASED; urgency=low
     + [RA] Check for use of shell brace expansion in debhelper config
       files that list filenames, which is not supported.  Based on a patch
       from Raphael Geissert.  (Closes: #480939)
+    + [RA] If dh is used, require debhelper tokens in maintainer scripts.
   * checks/menu-format{,.desc}:
     + [RA] If a *.desktop file contains a MimeType key, check that the
       postinst calls update-desktop-database.  (Closes: #488832)

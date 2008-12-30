@@ -5,3 +5,6 @@ This is here to fool Lintian to avoid additional tags about debconf.
 . /usr/share/debconf/confmodule
 """
 sys.exit(0)
+"""
+#DEBHELPER#
+"""
