@@ -1,0 +1,35 @@
+E: generic-dh-make-2008: description-is-dh_make-template
+E: generic-dh-make-2008: section-is-dh_make-template
+I: generic-dh-make-2008 source: debian-watch-file-is-missing
+I: generic-dh-make-2008: extended-description-is-probably-too-short
+I: generic-dh-make-2008: package-contains-empty-directory usr/bin/
+I: generic-dh-make-2008: package-contains-empty-directory usr/sbin/
+W: generic-dh-make-2008 source: bad-homepage <insert the upstream URL, if relevant>
+W: generic-dh-make-2008 source: dh-make-template-in-source debian/cron.d.ex
+W: generic-dh-make-2008 source: dh-make-template-in-source debian/emacsen-install.ex
+W: generic-dh-make-2008 source: dh-make-template-in-source debian/emacsen-remove.ex
+W: generic-dh-make-2008 source: dh-make-template-in-source debian/emacsen-startup.ex
+W: generic-dh-make-2008 source: dh-make-template-in-source debian/generic-dh-make-2008.default.ex
+W: generic-dh-make-2008 source: dh-make-template-in-source debian/generic-dh-make-2008.doc-base.EX
+W: generic-dh-make-2008 source: dh-make-template-in-source debian/init.d.ex
+W: generic-dh-make-2008 source: dh-make-template-in-source debian/init.d.lsb.ex
+W: generic-dh-make-2008 source: dh-make-template-in-source debian/manpage.1.ex
+W: generic-dh-make-2008 source: dh-make-template-in-source debian/manpage.sgml.ex
+W: generic-dh-make-2008 source: dh-make-template-in-source debian/manpage.xml.ex
+W: generic-dh-make-2008 source: dh-make-template-in-source debian/menu.ex
+W: generic-dh-make-2008 source: dh-make-template-in-source debian/postinst.ex
+W: generic-dh-make-2008 source: dh-make-template-in-source debian/postrm.ex
+W: generic-dh-make-2008 source: dh-make-template-in-source debian/preinst.ex
+W: generic-dh-make-2008 source: dh-make-template-in-source debian/prerm.ex
+W: generic-dh-make-2008 source: dh-make-template-in-source debian/watch.ex
+W: generic-dh-make-2008 source: out-of-date-standards-version 3.7.3 (current is 3.8.0)
+W: generic-dh-make-2008 source: superfluous-clutter-in-homepage <insert the upstream URL, if relevant>
+W: generic-dh-make-2008: bad-homepage <insert the upstream URL, if relevant>
+W: generic-dh-make-2008: copyright-contains-dh_make-todo-boilerplate
+W: generic-dh-make-2008: copyright-has-url-from-dh_make-boilerplate
+W: generic-dh-make-2008: copyright-lists-upstream-authors-with-dh_make-boilerplate
+W: generic-dh-make-2008: copyright-without-copyright-notice
+W: generic-dh-make-2008: new-package-should-close-itp-bug
+W: generic-dh-make-2008: readme-debian-contains-debmake-template
+W: generic-dh-make-2008: superfluous-clutter-in-homepage <insert the upstream URL, if relevant>
+W: generic-dh-make-2008: wrong-bug-number-in-closes l3:#nnnn

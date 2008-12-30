@@ -1,4 +1,4 @@
-Last generated 2008-12-29
+Last generated 2008-12-30
 
 binaries apparently-corrupted-elf-binary
 binaries arch-dependent-file-in-usr-share
@@ -64,7 +64,6 @@ debconf unknown-field-in-templates
 debconf unknown-template-type
 
 debhelper debhelper-compat-file-is-empty
-debhelper dh-make-template-in-source
 debhelper dh_dhelp-is-deprecated
 
 debian-readme spelling-error-in-readme-debian

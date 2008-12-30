@@ -1,0 +1,6 @@
+#!/bin/sh
+#
+# dh_make 0.46 only provides an example watch file, so remove the one that
+# is copied over from the template.
+
+rm -f "$1"/debian/watch
