@@ -22,17 +22,17 @@ package Lintian::huge_usr_share;
 use strict;
 use Tags;
 
+# Threshold in kB of /usr/share to trigger this warning.  Consider that the
+# changelog alone can be quite big, and cannot be moved away.
+my $THRESHOLD_SIZE_SOFT = 1024;
+my $THRESHOLD_SIZE_HARD = 2048;
+my $THRESHOLD_PERC = 50;
+
 sub run {
 
 my $pkg = shift;
 my $type = shift;
 my $info = shift;
-
-# Threshold in kB of /usr/share to trigger this warning
-# Consider that the changelog alone can be quite big, and cannot be moved away
-my $THRESHOLD_SIZE_SOFT = 1024;
-my $THRESHOLD_SIZE_HARD = 2048;
-my $THRESHOLD_PERC = 50;
 
 my $arch;
 

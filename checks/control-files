@@ -23,39 +23,35 @@ use strict;
 use Tags;
 use Util;
 
+my %ctrl_deb =
+    (clilibs   => 0644,
+     config    => 0755,
+     control   => 0644,
+     conffiles => 0644,
+     md5sums   => 0644,
+     postinst  => 0755,
+     preinst   => 0755,
+     postrm    => 0755,
+     prerm     => 0755,
+     shlibs    => 0644,
+     symbols   => 0644,
+     templates => 0644,
+     triggers  => 0644);
+
+my %ctrl_udeb =
+    (config        => 0755,
+     control       => 0644,
+     isinstallable => 0755,
+     menutest      => 0755,
+     postinst      => 0755,
+     shlibs        => 0644,
+     symbols       => 0644,
+     templates     => 0644);
+
 sub run {
 
 my $pkg = shift;
 my $type = shift;
-
-my %ctrl_deb =
-    (
-     'clilibs', 0644,
-     'config', 0755,
-     'control', 0644,
-     'conffiles', 0644,
-     'md5sums', 0644,
-     'postinst', 0755,
-     'preinst', 0755,
-     'postrm', 0755,
-     'prerm', 0755,
-     'shlibs', 0644,
-     'symbols', 0644,
-     'templates', 0644,
-     'triggers', 0644,
-    );
-
-my %ctrl_udeb =
-    (
-     'config', 0755,
-     'control', 0644,
-     'isinstallable', 0755,
-     'menutest', 0755,
-     'postinst', 0755,
-     'shlibs', 0644,
-     'symbols', 0644,
-     'templates', 0644,
-    );
 
 my %ctrl = $type eq 'udeb' ? %ctrl_udeb : %ctrl_deb;
 my %ctrl_alt = $type eq 'udeb' ? %ctrl_deb : %ctrl_udeb;

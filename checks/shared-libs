@@ -28,36 +28,32 @@ use Dep;
 use Tags;
 use Util;
 
-sub run {
-
 # Libraries that should only be used in the presence of certain capabilities
 # may be located in subdirectories of the standard ldconfig search path with
 # one of the following names.
 my %hwcap_dir = map { $_ => 1 }
-    qw( i486 i586 i686 cmov tls );
+    qw(i486 i586 i686 cmov tls);
 
 # The following architectures should always have a STACK setting in shared
 # libraries to disable executable stack.  Other architectures don't always add
 # this section and therefore can't be checked.
-my %stack_arches = map { $_ => 1 }
-    qw( alpha
-	amd64
-	i386
-	m68k
-	powerpc
-	s390
-	sparc
+our %stack_arches = map { $_ => 1 }
+    qw(
+       alpha
+       amd64
+       i386
+       m68k
+       powerpc
+       s390
+       sparc
       );
 
-my $ldconfig_dirs = Lintian::Data->new('shared-libs/ldconfig-dirs');
+our $ldconfig_dirs = Lintian::Data->new('shared-libs/ldconfig-dirs');
+
+sub run {
+
 my $file;
 my $must_call_ldconfig;
-my $postrm = "control/postrm";
-my $postinst = "control/postinst";
-my $preinst = "control/preinst";
-my $prerm = "control/prerm";
-my $shlibs_control_file = "control/shlibs";
-my $symbols_control_file = "control/symbols";
 my %SONAME;
 my %sharedobject;
 my @shlibs;
@@ -262,12 +258,12 @@ for (keys %SONAME) {
 if ($#shlibs == -1) {
     # no shared libraries included in package, thus shlibs control file should
     # not be present
-    if (-f $shlibs_control_file) {
+    if (-f 'control/shlibs') {
 	tag "pkg-has-shlibs-control-file-but-no-actual-shared-libs", "";
     }
 } else {
     # shared libraries included, thus shlibs control file has to exist
-    if (not -f $shlibs_control_file) {
+    if (not -f 'control/shlibs') {
 	if ($type ne 'udeb') {
 	    for my $shlib (@shlibs) {
 		# skip it if it's not a public shared library
@@ -278,8 +274,8 @@ if ($#shlibs == -1) {
     } else {
 	my %shlibs_control_used;
 	my @shlibs_depends;
-	open(SHLIBS, '<', $shlibs_control_file)
-	    or fail("cannot open shlibs control file $shlibs_control_file for reading: $!");
+	open(SHLIBS, '<', 'control/shlibs')
+	    or fail("cannot open control/shlibs for reading: $!");
 	while (<SHLIBS>) {
 	    chop;
 	    next if m/^\s*$/ or /^#/;
@@ -340,10 +336,10 @@ if ($#shlibs == -1) {
 if ($#shlibs == -1 and not %unversioned_shlibs) {
     # no shared libraries included in package, thus symbols control file should
     # not be present
-    if (-f $symbols_control_file) {
+    if (-f 'control/symbols') {
         tag "pkg-has-symbols-control-file-but-no-shared-libs", "";
     }
-} elsif (not -f $symbols_control_file) {
+} elsif (not -f 'control/symbols') {
     if ($type ne 'udeb') {
 	for my $shlib (@shlibs, keys %unversioned_shlibs) {
 	    # skip it if it's not a public shared library
@@ -351,7 +347,7 @@ if ($#shlibs == -1 and not %unversioned_shlibs) {
 	    tag "no-symbols-control-file", "$shlib";
 	}
     }
-} elsif (open(IN, '<', $symbols_control_file)) {
+} elsif (open(IN, '<', 'control/symbols')) {
     my $version_wo_rev = $version;
     $version_wo_rev =~ s/^(.+)-([^-]+)$/$1/;
     my ($full_version_count, $full_version_sym) = (0, undef);
@@ -495,16 +491,16 @@ if (keys %shlibs_control and keys %symbols_control) {
 }
 
 # 6th step: check pre- and post- control files
-if (-f $preinst) {
-    local $_ = slurp_entire_file($preinst);
+if (-f 'control/preinst') {
+    local $_ = slurp_entire_file('control/preinst');
     if (/^[^\#]*\bldconfig\b/m) {
 	tag "preinst-calls-ldconfig", ""
     }
 }
 
 my $we_call_postinst=0;
-if (-f $postinst) {
-    local $_ = slurp_entire_file($postinst);
+if (-f 'control/postinst') {
+    local $_ = slurp_entire_file('control/postinst');
 
     # Decide if we call ldconfig
     if (/^[^\#]*\bldconfig\b/m) {
@@ -522,15 +518,15 @@ if ($type eq 'udeb') {
 	if not $we_call_postinst and $must_call_ldconfig;
 }
 
-if (-f $prerm) {
-    local $_ = slurp_entire_file($prerm);
+if (-f 'control/prerm') {
+    local $_ = slurp_entire_file('control/prerm');
     if (/^[^\#]*\bldconfig\b/m) {
 	tag "prerm-calls-ldconfig", "";
     }
 }
 
-if (-f $postrm) {
-    local $_ = slurp_entire_file($postrm);
+if (-f 'control/postrm') {
+    local $_ = slurp_entire_file('control/postrm');
 
     # Decide if we call ldconfig
     if (/^[^\#]*\bldconfig\b/m) {
