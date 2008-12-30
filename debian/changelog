@@ -52,6 +52,7 @@ lintian (2.1.4) UNRELEASED; urgency=low
       doesn't produce any tages listed in Test-Against.
     + [RA] Support finding and running all tests for or against a
       particular tag.
+    + [RA] Correctly set up non-native packages for dpkg-source.
 
  -- Russ Allbery <rra@debian.org>  Sun, 28 Dec 2008 13:02:03 -0800
 

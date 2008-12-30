@@ -147,6 +147,17 @@ for (@tests) {
     my $tmpldir = "$testset/templates";
 
     my $is_native = ($testdata->{type} eq 'native');
+    my $orig_version = $testdata->{version};
+
+    # Strip the Debian revision off of the name of the target directory and
+    # the *.orig.tar.gz file if the package is non-native.  Otherwise, it
+    # confuses dpkg-source, which then fails to find the upstream tarball and
+    # builds a native package.
+    unless ($is_native) {
+	for ($orig_version, $pkgdir, $targetdir) {
+	    s/-[^-]+$//;
+	}
+    }
 
     print "Cleaning up and repopulating $targetdir...\n" if $debug;
     runsystem_ok("rm", "-rf", $targetdir);
@@ -160,7 +171,7 @@ for (@tests) {
 	runsystem("rm", "-f", "$targetdir/.dummy");
 	runsystem("rsync", "-rp", "$origdir/upstream/", "$targetdir/");
 	runsystem("cd $rundir && ".
-		  "tar czf ${pkg}_$testdata->{version}.orig.tar.gz $pkgdir");
+		  "tar czf ${pkg}_${orig_version}.orig.tar.gz $pkgdir");
 	runsystem("rsync", "-rp", "--exclude=debian/changelog",
 		  "$tmpldir/skel/", "$targetdir/");
 	runsystem("rsync", "-rp", "$origdir/debian/", "$targetdir/")
@@ -177,7 +188,7 @@ for (@tests) {
 	runsystem("echo >$targetdir/debian/watch");
     }
     if (-x "$origdir/pre_build") {
-	print "running pre_build hook...\n";
+	print "running pre_build hook... " if $verbose;
 	runsystem("$origdir/pre_build", $targetdir);
     }
 
