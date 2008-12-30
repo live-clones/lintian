@@ -9,6 +9,11 @@ e.g.
 lintian-...
 lintian-info-...
 
+Use generic- as a prefix for test cases that don't cover a
+specific portion of Lintian but instead test Lintian's behavior
+on a useful special case of package (such as a generic dh-make
+template).
+
 The .desc file names should start with a number to get a more
 deterministic order. You do not need to use unique numbers, only
 enough to make the order deterministic and to your liking!
