@@ -72,22 +72,14 @@ my @file_checks =
      [ qr,((^|/)\.[^/]+\.swp|~)$,         => 'editor-backup-file',  1 ],
     );
 
-# Records files warned about in the diff so that we don't warn about them
-# again in the source checks.
-my %warned;
-
 my $dir;
 my $atdinbd;
 
-# Used in the find function.
-my $pkg;
-my $info;
-
 sub run {
 
-$pkg = shift;
+my $pkg = shift;
 my $type = shift;
-$info = shift;
+my $info = shift;
 
 if (-e "debfiles/files" and not -z "debfiles/files") {
     tag 'debian-files-list-in-source';
@@ -122,18 +114,23 @@ if (defined $info->field('build-depends')) {
     $atdinbd = 1 if Dep::implies(Dep::parse($bd), Dep::parse($autotools_pkgs));
 }
 
-check_diffstat("diffstat");
-find(\&find_cruft, 'unpacked');
+# Create a closure so that we can pass our lexical variables into the find
+# wanted function.  We don't want to make them global because we'll then leak
+# that data across packages in a large Lintian run.
+my %warned;
+check_diffstat("diffstat", \%warned);
+my $wanted = sub { find_cruft($pkg, $info, \%warned, $atdinbd) };
+find($wanted, 'unpacked');
 
 } # </run>
 
 # -----------------------------------
 
-# Check the diff for problems.  Record any files we warn about in %warned so
+# Check the diff for problems.  Record any files we warn about in $warned so
 # that we don't warn again when checking the full unpacked source.  Takes the
 # name of a file containing diffstat output.
 sub check_diffstat {
-    my ($diffstat) = @_;
+    my ($diffstat, $warned) = @_;
     open(STAT, '<', $diffstat) or fail("cannot open $diffstat: $!");
     local $_;
     while (<STAT>) {
@@ -150,11 +147,11 @@ sub check_diffstat {
         # diffstat output contains only files, but we consider the directory
         # checks to trigger if the diff adds any files in those directories.
         my ($directory) = ($file =~ m,^(.*)/[^/]+$,);
-        if ($directory and not $warned{$directory}) {
+        if ($directory and not $warned->{$directory}) {
             for my $rule (@directory_checks) {
                 if ($directory =~ /$rule->[0]/) {
                     tag "diff-contains-$rule->[1]", $directory;
-                    $warned{$directory} = 1;
+                    $warned->{$directory} = 1;
                 }
             }
         }
@@ -163,7 +160,7 @@ sub check_diffstat {
         for my $rule (@file_checks) {
             if ($file =~ /$rule->[0]/) {
                 tag "diff-contains-$rule->[1]", $file;
-                $warned{$file} = 1;
+                $warned->{$file} = 1;
             }
         }
 
@@ -185,11 +182,12 @@ sub check_diffstat {
 #
 # Exclude the lintian test suites from these checks.
 sub find_cruft {
+    my ($pkg, $info, $warned, $atdinbd) = @_;
     (my $name = $File::Find::name) =~ s,^(\./)?unpacked/,,;
     return if $name =~ m,^t(?:estset)?/, and $pkg eq 'lintian';
 
     my $prefix = ($info->native ? "diff-contains" : "source-contains");
-    if (-d and not $warned{$name}) {
+    if (-d and not $warned->{$name}) {
         for my $rule (@directory_checks) {
             if ($name =~ /$rule->[0]/) {
                 tag "${prefix}-$rule->[1]", $name;
@@ -198,7 +196,7 @@ sub find_cruft {
     }
     -f or return; # we just need normal files for the rest
 
-    unless ($warned{$name}) {
+    unless ($warned->{$name}) {
         for my $rule (@file_checks) {
             next if ($rule->[2] and not $info->native);
             if ($name =~ /$rule->[0]/) {
@@ -230,7 +228,7 @@ sub find_cruft {
         my $b = basename $name;
         open (F, '<', $b) or die "can't open $name: $!";
         while (<F>) {
-            if (/^VERSION=["']?(1\.(\d)\.(\d+)(?:-(\d))?)/) {
+            if (/^VERSION=[\"\']?(1\.(\d)\.(\d+)(?:-(\d))?)/) {
                 my ($version, $major, $minor, $debian) = ($1, $2, $3, $4);
                 if ($major < 5 or ($major == 5 and $minor < 2)) {
                     tag "ancient-libtool", $name, $version;
@@ -246,6 +244,7 @@ sub find_cruft {
         close F;
     }
 }
+
 1;
 
 # Local Variables:

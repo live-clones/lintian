@@ -22,6 +22,10 @@ lintian (2.1.4) UNRELEASED; urgency=low
       patch by Raphael Geissert.  (Closes: #497347)
     + [RA] Clean up checks of a symlinked /usr/share/doc directory and
       avoid making package info global.
+  * checks/cruft:
+    + [RA] Keep the hash of files for which warnings were already issued
+      local to each package, reducing memory consumption and false
+      negatives for archive-wide runs.
   * checks/debhelper{,.desc}:
     + [RA] Check for use of shell brace expansion in debhelper config
       files that list filenames, which is not supported.  Based on a patch
