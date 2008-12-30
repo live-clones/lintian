@@ -313,6 +313,28 @@ if (@entries) {
         tag "improbable-bug-number-in-closes", $bug if ($bug < 100);
     }
 
+    # unstable, testing, and stable shouldn't be used in Debian version
+    # numbers.  unstable should get a normal version increment and testing and
+    # stable should get suite-specific versions.
+    #
+    # NMUs get a free pass because they need to work with the version number
+    # that was already there.
+    my $version;
+    if ($info->native) {
+        $version = $entry->Version;
+    } else {
+        ($version) = (split('-', $entry->Version))[-1];
+    }
+    unless (not $info->native and $version =~ /\./) {
+        if ($info->native and $version =~ /testing|(un)?stable/i) {
+            tag 'version-refers-to-distribution', $entry->Version;
+        } elsif ($version =~ /woody|sarge|etch|lenny|squeeze/) {
+            if ($entry->Distribution =~ /^(unstable|experimental)$/) {
+                tag 'version-refers-to-distribution', $entry->Version;
+            }
+        }
+    }
+
     # Compare against NEWS.Debian if available.
     if ($news and $news->Version and $entry->Version eq $news->Version) {
         for my $field (qw/Distribution Urgency/) {

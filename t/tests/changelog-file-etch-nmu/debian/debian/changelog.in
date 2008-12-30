@@ -1,0 +1,7 @@
+{$srcpkg} ({$version}) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Lintian Test Suite.
+  * Test: {$testname}
+
+ -- Russ Allbery <rra@debian.org>  {$date}

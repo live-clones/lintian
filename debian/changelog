@@ -12,10 +12,16 @@ lintian (2.1.4) UNRELEASED; urgency=low
       - preinst-interpreter-without-predepends
       - script-calls-init-script-directly
       - unknown-control-interpreter (split from unusual-interpreter)
+      - version-refers-to-distribution
     + Removed
       - desktop-file-but-no-dh_desktop-call
       - interpreter-without-predep
 
+  * checks/changelog-file{,.desc}:
+    + [RA] Warn of Debian version numbers containing "testing", "stable",
+      or "unstable", or with release code names for uploads not targeted
+      at that release, except in NMUs.  Based on a patch by Raphael
+      Geissert.  (Closes: #498876)
   * checks/copyright-file{,.desc}:
     + [RA] Warn (severity: wishlist) about the old dh_make packaging
       copyright, which used (C) without the word or symbol.  Based on a
