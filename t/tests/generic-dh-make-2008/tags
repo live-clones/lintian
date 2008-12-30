@@ -1,6 +1,7 @@
 E: generic-dh-make-2008: description-is-dh_make-template
 E: generic-dh-make-2008: section-is-dh_make-template
 I: generic-dh-make-2008 source: debian-watch-file-is-missing
+I: generic-dh-make-2008: copyright-with-old-dh-make-debian-copyright
 I: generic-dh-make-2008: extended-description-is-probably-too-short
 I: generic-dh-make-2008: package-contains-empty-directory usr/bin/
 I: generic-dh-make-2008: package-contains-empty-directory usr/sbin/

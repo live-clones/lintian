@@ -255,6 +255,15 @@ Info: The string "This copyright info was automatically extracted..."
  check the whole source to find additional copyright/license, or that
  you didn't remove that paragraph after having done so.
 
+Tag: copyright-with-old-dh-make-debian-copyright
+Severity: wishlist
+Certainty: certain
+Info: The copyright file contains the incomplete Debian packaging
+ copyright boilerplate from older versions of <tt>dh_make</tt>.
+ <tt>(C)</tt> is not considered as a valid way to express the copyright
+ ownership.  The word <tt>Copyright</tt> or the © symbol should be used
+ instead or in addition to <tt>(C)</tt>.
+
 Tag: copyright-without-copyright-notice
 Severity: normal
 Certainty: certain

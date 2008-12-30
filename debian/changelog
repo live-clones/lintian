@@ -5,6 +5,7 @@ lintian (2.1.4) UNRELEASED; urgency=low
       - control-interpreter-in-usr-local (split from
          interpreter-in-usr-local)
       - control-interpreter-without-depends
+      - copyright-with-old-dh-make-debian-copyright
       - desktop-mimetype-without-update-call
       - forbidden-postrm-interpreter
       - preinst-interpreter-without-predepends
@@ -14,6 +15,10 @@ lintian (2.1.4) UNRELEASED; urgency=low
       - desktop-file-but-no-dh_desktop-call
       - interpreter-without-predep
 
+  * checks/copyright-file{,.desc}:
+    + [RA] Warn (severity: wishlist) about the old dh_make packaging
+      copyright, which used (C) without the word or symbol.  Based on a
+      patch by Raphael Geissert.  (Closes: #497347)
   * checks/menu-format{,.desc}:
     + [RA] If a *.desktop file contains a MimeType key, check that the
       postinst calls update-desktop-database.  (Closes: #488832)
