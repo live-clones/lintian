@@ -1,0 +1,4 @@
+W: fields-wrong-section-doc: doc-package-should-be-section-doc fields-wrong-section-doc
+W: libfields-wrong-section-dev: dev-package-should-be-section-libdevel libfields-wrong-section-dev
+W: libfields-wrong-section-perl: perl-package-should-be-section-perl libfields-wrong-section-perl
+W: python-fields-wrong-section: python-package-should-be-section-python python-fields-wrong-section

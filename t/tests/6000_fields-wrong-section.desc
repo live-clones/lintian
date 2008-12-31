@@ -1,4 +1,4 @@
-Testname: files-wrong-section
+Testname: fields-wrong-section
 Version: 1.0
 Description: Packages placed in the wrong sections
 Test-For:
