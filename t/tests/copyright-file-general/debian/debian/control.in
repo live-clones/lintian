@@ -96,6 +96,16 @@ Description: checks inclusion of GPL1
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
 
+Package: copyright-php
+Architecture: all
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Description: checks problematic PHP licenses
+ The PHP licenses are problematic for any software that isn't PHP.
+ .
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.
+
 Package: copyright-w3c
 Architecture: all
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}

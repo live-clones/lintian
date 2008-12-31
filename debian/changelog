@@ -6,6 +6,8 @@ lintian (2.1.4) UNRELEASED; urgency=low
       - control-interpreter-in-usr-local (split from
          interpreter-in-usr-local)
       - control-interpreter-without-depends
+      - copyright-refers-to-bad-php-license
+      - copyright-refers-to-problematic-php-license
       - copyright-with-old-dh-make-debian-copyright
       - desktop-mimetype-without-update-call
       - forbidden-postrm-interpreter
@@ -28,6 +30,8 @@ lintian (2.1.4) UNRELEASED; urgency=low
       patch by Raphael Geissert.  (Closes: #497347)
     + [RA] Clean up checks of a symlinked /usr/share/doc directory and
       avoid making package info global.
+    + [RA] Warn about older PHP licenses.  Based on a patch by Raphael
+      Geissert.  (Closes: #498875)
   * checks/cruft:
     + [RA] Keep the hash of files for which warnings were already issued
       local to each package, reducing memory consumption and false

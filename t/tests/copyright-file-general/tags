@@ -9,6 +9,8 @@ E: copyright-misc-errors: copyright-refers-to-incorrect-directory usr/share/comm
 E: copyright-misc-errors: copyright-refers-to-old-directory
 E: copyright-old-style: FSSTND-dir-in-usr usr/doc/
 E: copyright-old-style: old-style-copyright-file
+E: copyright-php: copyright-refers-to-bad-php-license
+E: copyright-php: copyright-refers-to-problematic-php-license
 E: copyright-symlink: copyright-file-is-symlink
 W: copyright-compressed: copyright-without-copyright-notice
 W: copyright-full-apache-2: copyright-without-copyright-notice

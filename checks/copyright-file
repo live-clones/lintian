@@ -197,15 +197,6 @@ if (length($_) > 10000
     tag "copyright-file-contains-full-apache-2-license";
 }
 
-if (m/^This copyright info was automatically extracted from the perl module\./) {
-    tag "helper-templates-in-copyright", "";
-}
-
-if (m,(under )?(the )?(same )?(terms )?as Perl itself,i &&
-    !m,usr/share/common-licenses/,) {
-    tag "copyright-file-lacks-pointer-to-perl-license", "";
-}
-
 # wtf?
 if ((m,common-licenses(/\S+),) && (! m,/usr/share/common-licenses/,)) {
     tag "copyright-does-not-refer-to-common-license-file", "$1";
@@ -240,6 +231,16 @@ if (m,/usr/share/common-licenses,
     tag "copyright-should-refer-to-common-license-file-for-gpl";
     $gpl = 1;
 }
+if (m,(under )?(the )?(same )?(terms )?as Perl itself,i &&
+    !m,usr/share/common-licenses/,) {
+    tag "copyright-file-lacks-pointer-to-perl-license";
+}
+
+# Checks for various packaging helper boilerplate.
+
+if (m/^This copyright info was automatically extracted from the perl module\./) {
+    tag "helper-templates-in-copyright", "";
+}
 
 if (m,Upstream Author\(s\),) {
     tag "copyright-lists-upstream-authors-with-dh_make-boilerplate";
@@ -259,6 +260,16 @@ if (m{This copyright info was automatically extracted from the perl module\.\nIt
 if (m,The\s+Debian\s+packaging\s+is\s+\(C\)\s+\d+,i) {
     tag 'copyright-with-old-dh-make-debian-copyright';
 }
+
+# Bad licenses.
+if (m/(The\s+PHP\s+Licen[cs]e,?\s+version\s+2)/si) {
+    tag 'copyright-refers-to-bad-php-license';
+}
+if (m/(The\s+PHP\s+Licen[cs]e,?\s+version\s+3\.0[^\d])/si) {
+    tag 'copyright-refers-to-problematic-php-license';
+}
+
+# Other flaws in the copyright phrasing or contents.
 
 if ($found && !$linked && !/(Copyright|Copr\.|\302\251)(.*|[\(C\):\s]+)\b\d{4}\b|\bpublic\s+domain\b/i) {
     tag 'copyright-without-copyright-notice';

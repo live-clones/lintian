@@ -264,6 +264,21 @@ Info: The copyright file contains the incomplete Debian packaging
  ownership.  The word <tt>Copyright</tt> or the © symbol should be used
  instead or in addition to <tt>(C)</tt>.
 
+Tag: copyright-refers-to-bad-php-license
+Severity: serious
+Certainty: possible
+Info: This package appears to be covered by version 2.x of the PHP license,
+ which is not appropriate for anything other than PHP itself.
+Ref: http://ftp-master.debian.org/REJECT-FAQ.html
+
+Tag: copyright-refers-to-problematic-php-license
+Severity: serious
+Certainty: wild-guess
+Info: This package appears to be covered by version 3.0 (exactly) of the
+ PHP license.  This license is not applicable to anything that is not PHP
+ and has no contributions from the PHP Group.
+Ref: http://ftp-master.debian.org/REJECT-FAQ.html
+
 Tag: copyright-without-copyright-notice
 Severity: normal
 Certainty: certain
@@ -304,4 +319,3 @@ Info: This package appears to be covered by the GNU GPL but depends on
  linked with OpenSSL, is covered by the GNU GPL, please add a lintian
  override for this tag.  Lintian currently has no good way of
  distinguishing between that case and problematic packages.
-
