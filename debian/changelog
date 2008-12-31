@@ -2,6 +2,7 @@ lintian (2.1.4) UNRELEASED; urgency=low
 
   * Summary of tag changes:
     + Added
+      - binary-control-field-duplicates-source
       - brace-expansion-in-debhelper-config-file
       - control-interpreter-in-usr-local (split from
          interpreter-in-usr-local)
@@ -24,6 +25,9 @@ lintian (2.1.4) UNRELEASED; urgency=low
       or "unstable", or with release code names for uploads not targeted
       at that release, except in NMUs.  Based on a patch by Raphael
       Geissert.  (Closes: #498876)
+  * checks/control-file{,.desc}:
+    + [RA] Warn (severity: wishlist) of binary control stanzas duplicating
+      fields of the source control stanza.  (Closes: #497348)
   * checks/copyright-file{,.desc}:
     + [RA] Warn (severity: wishlist) about the old dh_make packaging
       copyright, which used (C) without the word or symbol.  Based on a

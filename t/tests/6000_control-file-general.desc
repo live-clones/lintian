@@ -1,0 +1,9 @@
+Testname: control-file-general
+Version: 1.0
+Description: Various problems with debian/control
+Test-For:
+ binary-control-field-duplicates-source
+ build-info-in-binary-control-file-section
+ no-section-field-for-source
+ package-depends-on-itself
+ stronger-dependency-implies-weaker
