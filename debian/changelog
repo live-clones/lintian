@@ -46,6 +46,10 @@ lintian (2.1.4) UNRELEASED; urgency=low
       files that list filenames, which is not supported.  Based on a patch
       from Raphael Geissert.  (Closes: #480939)
     + [RA] If dh is used, require debhelper tokens in maintainer scripts.
+  * checks/fields:
+    + [RA] dh-make-php provides a CDBS rule fragment and hence should go
+      into Build-Depends, not Build-Depends-Indep.  Thanks, Mathieu
+      Parent.  (Closes: #509286)
   * checks/files{,.desc}:
     + [RA] Packages whose executables are all in /usr/games should
       probably be in section games.  (Closes: #509147)

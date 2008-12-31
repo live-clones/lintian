@@ -46,15 +46,16 @@ my $python_depend = 'python | python-dev | python-all | python-all-dev | '
 # optional tags to use for reporting the problem if some information other
 # than the default is required.
 my @global_clean_depends = (
-	[ ant => '^include\s*/usr/share/cdbs/1/rules/ant.mk' ],
+	[ ant => '^include\s*/usr/share/cdbs/1/rules/ant\.mk' ],
 	[ cdbs => '^include\s+/usr/share/cdbs/' ],
 	[ dbs => '^include\s+/usr/share/dbs/' ],
-	[ debhelper => '^include\s+/usr/share/cdbs/1/rules/debhelper.mk' ],
-	[ dpatch => '^include\s+/usr/share/cdbs/1/rules/dpatch.mk' ],
-	[ quilt => '^include\s+/usr/share/cdbs/1/rules/patchsys-quilt.mk' ],
+	[ 'dh-make-php' => '^include\s+/usr/share/cdbs/1/class/pear\.mk' ],
+	[ debhelper => '^include\s+/usr/share/cdbs/1/rules/debhelper\.mk' ],
+	[ dpatch => '^include\s+/usr/share/cdbs/1/rules/dpatch\.mk' ],
+	[ quilt => '^include\s+/usr/share/cdbs/1/rules/patchsys-quilt\.mk' ],
 	[ dpatch => '^include\s+/usr/share/dpatch/' ],
 	[ quilt => '^include\s+/usr/share/quilt/' ],
-	[ $python_depend => '/usr/share/cdbs/1/class/python-distutils.mk', 'missing-python-build-dependency' ],
+	[ $python_depend => '/usr/share/cdbs/1/class/python-distutils\.mk', 'missing-python-build-dependency' ],
 );
 
 # These are similar, but the resulting dependency is only allowed, not
@@ -63,12 +64,12 @@ my @global_clean_depends = (
 # The xsfclean rule is specific to the packages maintained by the X Strike
 # Force, but there are enough of those to make the rule worthwhile.
 my @global_clean_allowed = (
-	[ patchutils => '^include\s+/usr/share/cdbs/1/rules/dpatch.mk' ],
-	[ patchutils => '^include\s+/usr/share/cdbs/1/rules/patchsys-quilt.mk' ],
-	[ patchutils => '^include\s+/usr/share/cdbs/1/rules/simple-patchsys.mk' ],
+	[ patchutils => '^include\s+/usr/share/cdbs/1/rules/dpatch\.mk' ],
+	[ patchutils => '^include\s+/usr/share/cdbs/1/rules/patchsys-quilt\.mk' ],
+	[ patchutils => '^include\s+/usr/share/cdbs/1/rules/simple-patchsys\.mk' ],
 	[ 'python-central' => '^DEB_PYTHON_SYSTEM\s*:?=\s*pycentral' ],
 	[ 'python-support' => '^DEB_PYTHON_SYSTEM\s*:?=\s*pysupport' ],
-	[ 'python-setuptools' => '/usr/share/cdbs/1/class/python-distutils.mk' ],
+	[ 'python-setuptools' => '/usr/share/cdbs/1/class/python-distutils\.mk' ],
 	[ quilt => '^clean:\s+xsfclean\b' ],
 );
 
@@ -112,7 +113,7 @@ my @rule_clean_allowed = (
 # enough that we can't know what packages are permitted in Build-Depends and
 # should bypass the build-depends-without-arch-dep check completely.
 my @global_clean_bypass = (
-	'^include\s*/usr/share/cdbs/1/class/ant.mk',
+	'^include\s*/usr/share/cdbs/1/class/ant\.mk',
 	'^\s+dh\s+'
 );
 
