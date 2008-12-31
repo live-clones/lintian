@@ -9,6 +9,8 @@ Test-For:
  copyright-file-contains-full-gfdl-license
  copyright-file-contains-full-gpl-license
  copyright-file-is-symlink
+ copyright-file-refers-to-bad-php-license
+ copyright-file-refers-to-problematic-php-license
  copyright-has-url-from-dh_make-boilerplate
  copyright-lists-upstream-authors-with-dh_make-boilerplate
  copyright-refers-to-compressed-license
