@@ -1,4 +1,4 @@
-Last generated 2008-12-30
+Last generated 2008-12-31
 
 binaries apparently-corrupted-elf-binary
 binaries arch-dependent-file-in-usr-share
@@ -164,7 +164,6 @@ init.d script-in-etc-init.d-not-registered-via-update-rc.d
 
 lintian bad-distribution-in-changes-file
 lintian bad-section-in-changes-file
-lintian bad-urgency-in-changes-file
 lintian checksum-mismatch-in-changes-file
 lintian file-size-mismatch-in-changes-file
 lintian no-description-in-changes-file

@@ -1,0 +1,15 @@
+E: generic-empty source: debian-rules-missing-required-target binary-arch
+E: generic-empty source: debian-rules-missing-required-target binary-indep
+E: generic-empty source: maintainer-address-missing a
+E: generic-empty source: no-standards-version-field
+E: generic-empty: maintainer-address-missing a
+E: generic-empty: no-copyright-file
+E: generic-empty: package-has-no-description
+E: generic-empty_1.0_arch.changes: bad-urgency-in-changes-file unknown
+W: generic-empty source: changelog-should-mention-nmu
+W: generic-empty source: maintainer-not-full-name a
+W: generic-empty source: no-section-field-for-source
+W: generic-empty source: source-nmu-has-incorrect-version-number 1.0
+W: generic-empty: maintainer-not-full-name a
+W: generic-empty: no-priority-field
+W: generic-empty: no-section-field

@@ -1,0 +1,5 @@
+Source: {$srcpkg}
+Maintainer: a
+
+Package: {$srcpkg}
+Architecture: {$architecture}
