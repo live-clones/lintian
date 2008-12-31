@@ -56,6 +56,9 @@ lintian (2.1.4) UNRELEASED; urgency=low
     + [RA] Keep the hash of files and symlinks local to each package,
       reducing memory consumption and false negatives for archive-wide
       runs.
+  * checks/patch-systems.desc:
+    + [RA] Improve the patch-system-but-direct-changes-in-diff long
+      description.  (Closes: #496516)
   * checks/rules{,.desc}:
     + [RA] Remove desktop-file-but-no-dh_desktop-call.  The only action of
       dh_desktop is now checked by desktop-mimetype-without-update-call;
