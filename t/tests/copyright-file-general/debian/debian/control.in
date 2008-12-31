@@ -1,76 +1,93 @@
-Source: copyright
-Section: text
-Priority: optional
-Maintainer: Lintian Maintainers <lintian-maint@debian.org>
-Uploaders: Tobias Toedter <t.toedter@GMX.NET>
-Build-Depends-Indep: debhelper (>5)
+Source: {$srcpkg}
+Priority: extra
+Section: {$section}
+Maintainer: {$author}
 Standards-Version: 3.8.0
+Build-Depends: debhelper (>= 7)
 
-Package: copyright.iso-8859-1
+Package: copyright-iso-8859-1
 Architecture: all
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: checks for non-utf-8-encodings
+ Tests non-UTF-8 encodings.
+ .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
 
-Package: copyright.full-gpl
+Package: copyright-full-gpl
 Architecture: all
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: checks inclusion of GPL in full text
+ Tests the tag for including all of the GPL.
+ .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
 
-Package: copyright.full-gfdl
+Package: copyright-full-gfdl
 Architecture: all
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: checks inclusion of GFDL in full text
+ Tests the tag for including all of the GFDL.
+ .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
 
-Package: copyright.full-apache-2
+Package: copyright-full-apache-2
 Architecture: all
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: checks inclusion of Apache 2.0 in full text
+ Tests the tag for including all of the Apache 2.0 license.
+ .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
 
-Package: copyright.misc-errors
+Package: copyright-misc-errors
 Architecture: all
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: checks various errors in copyright files
+ Tests various random errors in copyright files.
+ .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
 
-Package: copyright.no-errors
+Package: copyright-symlink
 Architecture: all
-Description: this should not emit any error
- This is a test package designed to exercise some feature or tag of
- Lintian.  It is part of the Lintian test suite and may do very odd
- things.  It should not be installed like a regular package.
-
-Package: copyright.symlink
-Architecture: all
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: just use a symlink for the copyright file
+ Tests the check for a symlinked copyright file.
+ .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
 
-Package: copyright.compressed
+Package: copyright-compressed
 Architecture: all
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: include a valid copyright file and compress it
+ Tests the check for a compressed copyright file.
+ .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
 
-Package: copyright.old-style
+Package: copyright-old-style
 Architecture: all
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: use an old-style directory structure
+ Tests a copyright file using an old-style directory structure.
+ .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
 
-Package: copyright.full-gpl-1
+Package: copyright-full-gpl-1
 Architecture: all
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: checks inclusion of GPL1
  This should not trigger any errors as the common license
  files only cover GPL >= 2
@@ -79,9 +96,23 @@ Description: checks inclusion of GPL1
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
 
-Package: copyright.w3c
+Package: copyright-w3c
 Architecture: all
-Description: the w3c license claims to be "gpl compatible"
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Description: checks inclusion of the W3C license
+ The W3C license text claims to be "GPL compatible", which shouldn't
+ trigger warnings.
+ .
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.
+
+Package: copyright-no-errors
+Architecture: all
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Description: this should not emit any error
+ This copyright file should be fine.
+ .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
