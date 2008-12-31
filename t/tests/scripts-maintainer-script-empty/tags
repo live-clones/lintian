@@ -1,0 +1,4 @@
+W: scripts-maintainer-script-empty: maintainer-script-empty postinst
+W: scripts-maintainer-script-empty: maintainer-script-empty postrm
+W: scripts-maintainer-script-empty: maintainer-script-empty preinst
+W: scripts-maintainer-script-empty: maintainer-script-empty prerm
