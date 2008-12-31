@@ -962,6 +962,9 @@ if ($pkg_section =~ m,games$, and $games == 0 and $other > 0) {
 if ($pkg_section =~ m,games$, and $games > 0 and $other > 0) {
     tag "package-section-games-but-has-usr-bin";
 }
+if ($pkg_section !~ m,games$, and $games > 0 and $other == 0) {
+    tag 'games-package-should-be-section-games';
+}
 
 # Warn about empty directories, but ignore empty directories in /var (packages
 # create directories to hold dynamically created data) or /etc (configuration

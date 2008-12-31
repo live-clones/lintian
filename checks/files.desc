@@ -842,6 +842,13 @@ Info: This package is marked as part of the section games, but contains
  executables in <tt>/bin</tt> or <tt>/usr/bin/</tt>.  This can be intentional,
  but is usually a mistake.
 
+Tag: games-package-should-be-section-games
+Severity: normal
+Certainty: possible
+Info: All the executables in this package are in <tt>/usr/games</tt>, but
+ the package is not in section games.  This can be intentional but is
+ usually a mistake.
+
 Tag: package-contains-devhelp-file-without-symlink
 Severity: normal
 Certainty: certain

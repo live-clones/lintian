@@ -12,6 +12,7 @@ lintian (2.1.4) UNRELEASED; urgency=low
       - copyright-with-old-dh-make-debian-copyright
       - desktop-mimetype-without-update-call
       - forbidden-postrm-interpreter
+      - games-package-should-be-section-games
       - preinst-interpreter-without-predepends
       - script-calls-init-script-directly
       - unknown-control-interpreter (split from unusual-interpreter)
@@ -45,6 +46,9 @@ lintian (2.1.4) UNRELEASED; urgency=low
       files that list filenames, which is not supported.  Based on a patch
       from Raphael Geissert.  (Closes: #480939)
     + [RA] If dh is used, require debhelper tokens in maintainer scripts.
+  * checks/files{,.desc}:
+    + [RA] Packages whose executables are all in /usr/games should
+      probably be in section games.  (Closes: #509147)
   * checks/menu-format{,.desc}:
     + [RA] If a *.desktop file contains a MimeType key, check that the
       postinst calls update-desktop-database.  (Closes: #488832)

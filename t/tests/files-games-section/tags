@@ -1,0 +1,3 @@
+E: files-games-section-no-games: package-section-games-but-contains-no-game
+W: files-games-section-both: package-section-games-but-has-usr-bin
+W: files-games-section-wrong: games-package-should-be-section-games
