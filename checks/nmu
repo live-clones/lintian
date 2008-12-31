@@ -46,7 +46,7 @@ if (-l "debfiles/changelog") {
 
 open (CHANGELOG, '<', "debfiles/changelog")
     or fail("Failed opening changelog");
-$distribution = $1 if (<CHANGELOG> =~ /^.* \(.*\) (.*); .*$/);
+$distribution = $1 if (<CHANGELOG> =~ /^.* \(.*\) (.*);.*$/);
 my $firstline = 1;
 while (<CHANGELOG>) {
 	if ($firstline) {
