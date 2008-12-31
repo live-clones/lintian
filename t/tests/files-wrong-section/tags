@@ -1,0 +1,4 @@
+W: files-wrong-section-doc: doc-package-should-be-section-doc files-wrong-section-doc
+W: libfiles-wrong-section-dev: dev-package-should-be-section-libdevel libfiles-wrong-section-dev
+W: libfiles-wrong-section-perl: perl-package-should-be-section-perl libfiles-wrong-section-perl
+W: python-files-wrong-section: python-package-should-be-section-python python-files-wrong-section
