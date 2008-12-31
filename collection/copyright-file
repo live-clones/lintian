@@ -24,6 +24,8 @@ use strict;
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Util;
 
+use File::Copy qw(copy);
+
 ($#ARGV == 1) or fail("syntax: copyright-file <pkg> <type>");
 my $pkg = shift;
 my $type = shift;
@@ -39,7 +41,17 @@ my $file;
 if (-f $file1 ) { $file = $file1; }
 else { $file = $file2; }
 
-if (-f $file) {
+# If copyright was a symlink, we need to make a copy of it.  Just hardlinking
+# to the symlink may leave a relative symlink into a directory we can't
+# unpack.  Be careful about what symlinks we allow, though.
+if (-l $file) {
+    my $link = readlink($file) or fail("cannot readlink $file: $!");
+    if ($link =~ /\.\./ || ($link =~ m%/% && $link !~ m%^[^/]+(/+[^/]+)*\z%)) {
+        touch_file("copyright");
+    } else {
+        copy($file, "copyright") or fail("cannot copy $file: $!");
+    }
+} elsif (-f $file) {
     link($file, "copyright")
 	or fail("cannot link $file to copyright: $!");
 } elsif (-f "$file.gz") {
