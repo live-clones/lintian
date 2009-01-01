@@ -1,5 +1,4 @@
-
-Description record for `collector' scripts:
+Description record for collection scripts:
 
   Collector-Script: <file name of collector script>
   Info: <description of what this script does>
@@ -9,7 +8,7 @@ Description record for `collector' scripts:
   Order: <order--necessary if this script needs info from other scripts, see Needs-Info>
   Needs-Info: <info this scripts needs from other collector scripts>
 
-Description record for `checker' scripts:
+Description record for checks scripts:
 
   Check-Script: <file name of checker script>
   Abbrev: <abbrev>
@@ -19,13 +18,26 @@ Description record for `checker' scripts:
   Unpack-Level: <1 | 2>
   Needs-Info: <info this script needs>
 
-Description record of a `Lintian tag':
+Description record of a Lintian tag:
 
   Tag: <tag>
-  Type: <warning | error | info>
   Severity: <serious | important | normal | minor | wishlist>
   Certainty: <certain | possible | wild-guess>
   Info: <description of this tag>
   Ref: <reference>
-  Status: <untested | <empty> >
+  [ Status: <untested> ]
   [ Experimental: <yes> ]
+
+Description record of a test case:
+
+  Testname: <directory name of test>
+  Version: <package version>
+  Description: <description of test case>
+  [ Type: <native | non-native> ]
+  [ Test-For: <whitespace-separated list of tags> ]
+  [ Test-Against: <whitespace-separated list of tags> ]
+  [ References: <Debian Bug#nnnn | <msg-id>>[, ... ] ]
+  [ Date: <date for changelog entry> ]
+  [ Author: <maintainer for control and changelog> ]
+  [ Architecture: <architecture for control> ]
+  [ Section: <section for package> ]
