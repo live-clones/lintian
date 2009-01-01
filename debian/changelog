@@ -125,6 +125,8 @@ lintian (2.1.4) UNRELEASED; urgency=low
     + [RA] Support finding and running all tests for or against a
       particular tag.
     + [RA] Correctly set up non-native packages for dpkg-source.
+  * t/tests/README:
+    + [RA] Add documentation of the new test suite.
 
  -- Russ Allbery <rra@debian.org>  Sun, 28 Dec 2008 13:02:03 -0800
 
