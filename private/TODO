@@ -1,7 +1,7 @@
 Not intended for single bug fixes, use the confirmed and owner tags
 in the BTS, but for somewhat bigger tasks
 
-goals for 2.0.0
+goals for 2.2.0
 ===============
 
 - go through all checks and try to move common code to modules
@@ -9,7 +9,11 @@ goals for 2.0.0
 - overhaul the Errors/Warnings concept (#243976)
   -- mostly done
   We still need official support for alternative output formats.
-  The current stuff is still experimental. [2.1.0?]
+  The current stuff is still experimental. [2.2.0?]
+- add additional test suite types
+  + normal TAP-style Perl tests
+  + raw directories for building Debian packages via dpkg -b
+  + changes files
 
 goals not targetted
 ===================
@@ -21,6 +25,12 @@ goals not targetted
   references have them, and more generally that appropriate references are
   present
 - remove old unbalance `' quotes from all tag descriptions
+- rewrite the Lintian manual in something other than DebianDoc-SGML
+- update the Lintian manual
+  + document severity/certainty
+  + document other output formats
+  + document the reporting framework
+  + developer documentation of the test suite, submitting patches, etc.
 
 goals outside of the lintian source
 ===================================
@@ -36,19 +46,6 @@ goals outside of the lintian source
 old todo list
 =============
 
-reorganize regression suite:
-  valid
-  invalid
-  <in between, odd, etc>
-
-  whenever a check is touched or added, add a valid and invalid example
-
 rewrite into a more sane layout.  What I would really like is a set of modules
 that the controller script can open and use.  Probably some OO design.
 I am leaning towards python, but will give OO perl a look first.
-
-various items require the policy team to make a new policy or update existing
-need to keep on them about this
-  * libs v. plugins
-  * X policy
-
