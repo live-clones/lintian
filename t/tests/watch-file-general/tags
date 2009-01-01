@@ -1,0 +1,8 @@
+W: watch-file-general source: debian-watch-file-declares-multiple-versions line 18
+W: watch-file-general source: debian-watch-file-declares-multiple-versions line 7
+W: watch-file-general source: debian-watch-file-should-use-sf-redirector line 12
+W: watch-file-general source: debian-watch-file-should-use-sf-redirector line 14
+W: watch-file-general source: debian-watch-file-should-use-sf-redirector line 15
+W: watch-file-general source: debian-watch-file-should-use-sf-redirector line 8
+W: watch-file-general source: debian-watch-file-unknown-version 42
+W: watch-file-general source: debian-watch-file-uses-deprecated-sf-redirector-method line 5

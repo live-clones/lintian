@@ -101,7 +101,9 @@ while (<WATCH>) {
                 "line $.";
         }
 
-        if (m%(https?|ftp)://((.+\.)?dl|(pr)?downloads?|ftp\d?)\.(sourceforge|sf)\.net%) {
+        if (m%(https?|ftp)://((.+\.)?dl|(pr)?downloads?|ftp\d?|upload)\.(sourceforge|sf)\.net%
+            or m%https?://(www\.)?(sourceforge|sf)\.net/project/showfiles\.php%
+            or m%https?://(www\.)?(sourceforge|sf)\.net/projects/.+/files%) {
             tag 'debian-watch-file-should-use-sf-redirector', "line $.";
         }
 
