@@ -7,7 +7,7 @@ Build-Depends: debhelper (>= 4)
 
 Package: {$srcpkg}
 Architecture: {$architecture}
-Depends: $\{shlibs:Depends\}
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description}
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
