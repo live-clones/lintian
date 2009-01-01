@@ -5,15 +5,20 @@ The latest version of Lintian can always be found at:
 Lintian was designed and written by Christian Schwarz and Richard Braakman.
 The package was previously maintained by Darren Benham,
 Sean 'Shaleh' Perry and Josip Rodin.
-It is now maintained by a group of people, namely:
- Josip Rodin <joy-packages@debian.org>
- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>
- Frank Lichtenheld <djpig@debian.org>
- Marc 'HE' Brockschmidt <he@debian.org>
- Colin Watson <cjwatson@debian.org>
- Russ Allbery <rra@debian.org>
- Thijs Kinkhorst <thijs@debian.org>
- Adam D. Barratt <adam@adam-barratt.org.uk>
+
+It is now maintained by a group of people, with changes noted by initials
+in the changelog.  Key to frequent committers:
+
+ JvW == Jeroen van Wolffelaar <jeroen@wolffelaar.nl>
+ FL  == Frank Lichtenheld <djpig@debian.org>
+ HE  == Marc 'HE' Brockschmidt <he@debian.org>
+ CW  == Colin Watson <cjwatson@debian.org>
+ RA  == Russ Allbery <rra@debian.org>
+ TK  == Thijs Kinkhorst <thijs@debian.org>
+ ADB == Adam D. Barratt <adam@adam-barratt.org.uk>
+ JP  == Jordà Polo <jorda@ettin.org>
+ JA  == Jari Aalto <jari.aalto@cante.net>
+
 Contact address is <lintian-maint@debian.org>.
 
 Lintian is maintained in git.  The current development version may
@@ -24,19 +29,19 @@ Copyright (C) 1998 Christian Schwarz and Richard Braakman
 Portions Copyright (C) 1998-1999 Joey Hess
 Portions Copyright (C) 1999 Darren Benham
 Portions Copyright (C) 2000 Sean 'Shaleh' Perry
-Portions Copyright (C) 2001 Colin Watson
-Portions Copyright (C) 2001-2002 Josip Rodin
+Portions Copyright (C) 2001-2008 Colin Watson
+Portions Copyright (C) 2001-2003 Josip Rodin
 Portions Copyright (C) 2002-2004 Denis Barbier
-Portions Copyright (C) 2004 Marc Brockschmidt
+Portions Copyright (C) 2004-2008 Marc Brockschmidt
 Portions Copyright (C) 2004-2008 Frank Lichtenheld
-Portions Copyright (C) 2004 Jeroen van Wolffelaar
+Portions Copyright (C) 2004-2006 Jeroen van Wolffelaar
 Portions Copyright (C) 2005 René van Bevern
 Portions Copyright (C) 2006 Adeodato Simó
-Portions Copyright (C) 2007, 2008 Russ Allbery
+Portions Copyright (C) 2007-2009 Russ Allbery
 Portions Copyright (C) 2008 Patrick Schoenfeld
 Portions Copyright (C) 2008 Niko Tyni
 Portions Copyright (C) 2008 Raphael Geissert
-Portions Copyright (C) 2008 Adam D. Barratt
+Portions Copyright (C) 2008-2009 Adam D. Barratt
 
 This program is free software; you may redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
