@@ -10,6 +10,7 @@ lintian (2.1.4) UNRELEASED; urgency=low
       - copyright-refers-to-bad-php-license
       - copyright-refers-to-problematic-php-license
       - copyright-with-old-dh-make-debian-copyright
+      - dh-clean-k-is-deprecated
       - desktop-mimetype-without-update-call
       - forbidden-postrm-interpreter
       - games-package-should-be-section-games
@@ -46,6 +47,9 @@ lintian (2.1.4) UNRELEASED; urgency=low
       files that list filenames, which is not supported.  Based on a patch
       from Raphael Geissert.  (Closes: #480939)
     + [RA] If dh is used, require debhelper tokens in maintainer scripts.
+    + [ADB] Warn about packages declaring a debhelper compatibility level
+      of 7 or above and using dh_clean -k, which has been deprecated in
+      favour of dh_prep.
   * checks/fields:
     + [RA] dh-make-php provides a CDBS rule fragment and hence should go
       into Build-Depends, not Build-Depends-Indep.  Thanks, Mathieu

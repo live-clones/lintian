@@ -1,0 +1,7 @@
+Testname: debhelper-dh-clean-k-ok
+Version: 1.0
+Description: Test that debhelper < 7 packages can use dh_clean -k
+Test-For:
+ debhelper-but-no-misc-depends
+Test-Against:
+ dh-clean-k-is-deprecated

@@ -68,6 +68,15 @@ Ref: dh_suidregister(1)
 Info: suidregister is obsoleted by dpkg-statoverride, so registration of
  files in with dh_suidregister is unnecessary, and even harmful.
 
+Tag: dh-clean-k-is-deprecated
+Severity: normal
+Certainty: certain
+Ref: dh_clean(1)
+Info: This package calls dh_clean -k in its <tt>debian/rules</tt> file
+ and declares a debhelper compatibility version of at least 7.
+ .
+ debhelper 7 deprecated dh_clean -k in favour of dh_prep.
+
 Tag: debhelper-compat-file-is-empty
 Severity: important
 Certainty: certain

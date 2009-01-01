@@ -63,6 +63,7 @@ my $compat = 0;
 my $usescdbs = '';
 my $seendhpython = '';
 my $usescdbspython = '';
+my $seendhcleank = '';
 my $needmiscdepends = 0;
 my %missingbdeps;
 
@@ -81,6 +82,9 @@ while (<RULES>) {
 	}
 	if ($dhcommand eq 'dh_suidregister') {
 	    tag "dh_suidregister-is-obsolete", "";
+	}
+	if ($dhcommand eq 'dh_clean' and m/\s+\-k(\s+.*)?$/) {
+	    $seendhcleank = 1;
 	}
 	# if command is passed -n, it does not modify the scripts
 	if ($maint_commands->known($dhcommand) and not m/\s+\-n\s+/) {
@@ -272,6 +276,10 @@ if ($needversiondepends < 4) {
         tag 'debhelper-script-needs-versioned-build-depends', $program, "(>= $required)"
             unless Dep::implies($bdepends, Dep::parse("debhelper (>= $required)"));
     }
+}
+
+if ($seendhcleank and $compat >= 7) {
+    tag "dh-clean-k-is-deprecated";
 }
 
 }

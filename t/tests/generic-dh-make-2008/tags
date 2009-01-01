@@ -6,6 +6,7 @@ I: generic-dh-make-2008: extended-description-is-probably-too-short
 I: generic-dh-make-2008: package-contains-empty-directory usr/bin/
 I: generic-dh-make-2008: package-contains-empty-directory usr/sbin/
 W: generic-dh-make-2008 source: bad-homepage <insert the upstream URL, if relevant>
+W: generic-dh-make-2008 source: dh-clean-k-is-deprecated
 W: generic-dh-make-2008 source: dh-make-template-in-source debian/cron.d.ex
 W: generic-dh-make-2008 source: dh-make-template-in-source debian/emacsen-install.ex
 W: generic-dh-make-2008 source: dh-make-template-in-source debian/emacsen-remove.ex
