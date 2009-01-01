@@ -1,0 +1,120 @@
+#!/usr/bin/perl -w
+#
+# Check all tags mentioned in Test-For in the new test suite and all tags seen
+# by the old test suite against the list of all documented tags and generate
+# output suitable for tags-never-seen that lists the untested tags.  Updates
+# t/COVERAGE.
+#
+# Should be run from the top level of the Lintian source tree or with
+# LINTIAN_ROOT set appropriately.
+
+use strict;
+use warnings;
+
+use POSIX qw(strftime);
+
+BEGIN {
+    my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
+    if (not $LINTIAN_ROOT) {
+        use Cwd ();
+        $ENV{'LINTIAN_ROOT'} = $LINTIAN_ROOT = Cwd::cwd();
+    } else {
+        chdir $LINTIAN_ROOT or die "Cannot chdir to $LINTIAN_ROOT: $!\n";
+    }
+}
+
+my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
+
+use lib "$ENV{'LINTIAN_ROOT'}/lib";
+use Util;
+
+# Check that we're being run from the right place (although the above probably
+# died if we weren't).
+unless (-f 't/runtests') {
+    warn "update-never-seen source be run from the top level of the Lintian\n";
+    warn "source tree or LINTIAN_ROOT must be set in the environment.\n\n";
+    die "Cannot find t/runtests -- run from the right directory?\n";
+}
+
+# Gather a list of all tags.
+my %tags;
+for my $desc (<checks/*.desc>) {
+    for my $data (read_dpkg_control($desc)) {
+        $desc =~ s,.*/,,;
+        $desc =~ s/\.desc$//;
+        if (exists $data->{tag}) {
+            $tags{$data->{tag}} = $desc;
+        }
+    }
+}
+
+# Parse all test configuration files from the new test suite looking for
+# Test-For configuration options and remove those from the %tags hash.
+for my $desc (<t/tests/*.desc>) {
+    my ($data) = read_dpkg_control($desc);
+    if (exists $data->{'test-for'}) {
+        for my $tag (split(' ', $data->{'test-for'})) {
+            delete $tags{$tag};
+        }
+    }
+}
+
+# Now parse all tags files from the old test suite looking for what tags that
+# test reveals.
+my %legacy;
+for my $tagfile (<testset/tags.*>) {
+    next if $tagfile =~ /\.sed$/;
+    open (IN, '<', $tagfile) or die "Cannot open $tagfile: $!\n";
+    local $_;
+    while (<IN>) {
+        if (/^(.): (\S+)(?: (?:source|udeb))?: (\S+)/) {
+            if (exists $tags{$3}) {
+                $legacy{$3} = $tags{$3};
+                delete $tags{$3};
+            }
+        }
+    }
+    close IN;
+}
+
+# Open COVERAGE and print out a date stamp.
+open(OUT, '>', 't/COVERAGE') or die "Cannot create t/COVERAGE: $!\n";
+print OUT "Last generated ", strftime ('%Y-%m-%d', gmtime), "\n\n";
+
+# Whatever is left in the %tags hash are untested.  Print them out sorted by
+# checks file.
+print OUT "The following tags are not tested by the test suite:\n";
+print_tags(\%tags, \*OUT);
+
+# The contents of the %legacy hash are only tested by the legacy test suite.
+print OUT "\nThe following tags are only tested by the legacy test suite:\n";
+print_tags(\%legacy, \*OUT);
+close OUT;
+
+# -----------------------------------
+
+# Given a reference to a hash whose keys are tags and whose values are file
+# names, print out a report to the provide output file handle.
+sub print_tags {
+    my ($tags, $out) = @_;
+    my @untested;
+    for my $tag (keys %$tags) {
+        push (@untested, [ $tags->{$tag}, $tag ]);
+    }
+    @untested = sort { $a->[0] cmp $b->[0] || $a->[1] cmp $b->[1] } @untested;
+    my $last = '';
+    for my $data (@untested) {
+        my ($file, $tag) = @$data;
+        if ($file ne $last) {
+            print $out "\n";
+            $last = $file;
+        }
+        print $out "$file $tag\n";
+    }
+}
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 ts=4 et shiftround
