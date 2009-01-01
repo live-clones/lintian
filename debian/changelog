@@ -111,6 +111,9 @@ lintian (2.1.4) UNRELEASED; urgency=low
     + [RA] Merge data from both test suites and use the tag files for the
       old test suite rather than relying on runtests -v.
 
+  * reporting/html_reports:
+    + [RA] We only care about the first line of the archive timestamp.
+
   * t/runtests:
     + [RA] Check that a test produces all tags listed in Test-For and
       doesn't produce any tages listed in Test-Against.

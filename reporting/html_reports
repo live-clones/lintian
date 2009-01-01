@@ -88,7 +88,8 @@ closedir(CHECKDIR);
 our $LINTIAN_VERSION = `$LINTIAN_ROOT/frontend/lintian --print-version`;
 our $timestamp = `date -u --rfc-822`;
 our $mirror_timestamp = slurp_entire_file($LINTIAN_TIMESTAMP);
-chomp ($LINTIAN_VERSION, $timestamp, $mirror_timestamp);
+chomp ($LINTIAN_VERSION, $timestamp);
+$mirror_timestamp =~ s/\n.*//s;
 
 
 # ------------------------------
