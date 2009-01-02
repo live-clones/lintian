@@ -181,3 +181,6 @@ read -p "Would you like to restart the service?" foo bar
 read --fish
 
 set -e
+
+source "$BAR"
+source '$BAR'

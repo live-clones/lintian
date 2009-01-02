@@ -93,6 +93,7 @@ lintian (2.1.4) UNRELEASED; urgency=low
     + [ADB] More intelligently remove comments from shell scripts, to avoid
       removing some constructs that aren't comments, such as those in
       [ $# -gt 2 ] and "foo # bar".
+    + [ADB] Flag the source bashism when its argument is quoted.
   * checks/watch-file:
     + [RA] Recognize additional SourceForge URLs and recommend the
       redirector.  Thanks, Riccardo Stagni.  (Closes: #510398)

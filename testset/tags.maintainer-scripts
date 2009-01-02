@@ -115,6 +115,8 @@ W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:171 'foobar@(
 W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:179 'read -r'
 W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:180 'read -p'
 W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:181 'read --fish'
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:185 'source "$BAR"'
+W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:186 'source '$BAR''
 W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:19 '[ "$2" == '
 W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:23 'function foo('
 W: maintainer-scripts: possible-bashism-in-maintainer-script prerm:26 '&>'

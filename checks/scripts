@@ -615,6 +615,8 @@ while (<SCRIPTS>) {
 		my @bashism_single_quote_regexs = (
 		  $LEADIN . qr'echo\s+(?:-[^e\s]+\s+)?\'[^\']*(\\[\\abcEfnrtv0])+.*?[\']',
 			# unsafe echo with backslashes
+		  $LEADIN . qr'source\s+[\"\']?(?:\.\/|\/|\$)[^\s]+',
+			# should be '.', not 'source'
 		);
 		my @bashism_string_regexs = (
 		  qr'\$\[\w+\]',		 # arith not allowed
@@ -641,8 +643,6 @@ while (<SCRIPTS>) {
 		);
 		my @bashism_regexs = (
 		  qr'(?:^|\s+)function \w+(\s|\(|\Z)',  # function is useless
-					         # should be '.', not 'source'
-		  $LEADIN . qr'source\s+(?:\.\/|\/|\$)[^\s]+',
 		  qr'(test|-o|-a)\s*[^\s]+\s+==\s', # should be 'b = a'
 		  qr'\[\s+[^\]]+\s+==\s',        # should be 'b = a'
 		  qr'\s(\|\&)',		         # pipelining is not POSIX
