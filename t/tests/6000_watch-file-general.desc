@@ -1,6 +1,6 @@
 Testname: watch-file-general
 Type: non-native
-Version: 2.0-1
+Version: 2.0.ds1-1
 Description: General watch file checks
 Test-For:
  debian-watch-file-declares-multiple-versions
