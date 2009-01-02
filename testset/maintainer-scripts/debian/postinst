@@ -171,3 +171,12 @@ case $mainscript in
 esac
 
 /usr/bin/baz; echo bar
+
+# Some comment checking
+# This should flag $RANDOM
+test $# -gt 2 && echo $RANDOM
+# But these shouldn't
+test 1=1 # echo $RANDOM
+(test 1=1)# echo $RANDOM
+test 1=1;# echo $RANDOM
+backgroundtask &#echo $RA

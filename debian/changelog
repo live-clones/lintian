@@ -90,6 +90,9 @@ lintian (2.1.4) UNRELEASED; urgency=low
       without using invoke-rc.d.  Based on a patch by Raphael Geissert.
       (Closes: #381485)
     + [RA] Allow dpkg-dev to satisfy a make dependency.  (Closes: #510190)
+    + [ADB] More intelligently remove comments from shell scripts, to avoid
+      removing some constructs that aren't comments, such as those in
+      [ $# -gt 2 ] and "foo # bar".
   * checks/watch-file:
     + [RA] Recognize additional SourceForge URLs and recommend the
       redirector.  Thanks, Riccardo Stagni.  (Closes: #510398)
