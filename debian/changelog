@@ -54,6 +54,10 @@ lintian (2.1.4) UNRELEASED; urgency=low
       a particular version of debhelper.
     + [RA] De-duplicate the list of scripts with specific version
       requirements before issuing tags.
+    + [RA] Upgrade package-lacks-versioned-build-depends-on-debhelper to
+      certain (although still minor), making it a warning.  debhelper(7)
+      explicitly recommends a versioned build dependency on debhelper.
+      Rewrite the tag description accordingly.
   * checks/fields:
     + [RA] dh-make-php provides a CDBS rule fragment and hence should go
       into Build-Depends, not Build-Depends-Indep.  Thanks, Mathieu

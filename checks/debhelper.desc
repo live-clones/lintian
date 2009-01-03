@@ -23,15 +23,15 @@ Info: If a package uses debhelper, it must declare a Build-Depends
 
 Tag: package-lacks-versioned-build-depends-on-debhelper
 Severity: minor
-Certainty: possible
-Info: If a package sets debhelper's compatibility version to &gt;= 6,
- either via DH_COMPAT, or via debian/compat, or via dh_testversion
- (which is deprecated), it should declare a versioned Build-Depends on
- the needed version of debhelper.
- .
- etch was released with debhelper version 5.0.42, so every package that
- assumes a newer version should explicitly declare so for the sake of
- etch backports.
+Certainty: certain
+Info: The package doesn't declare a versioned build dependency on
+ debhelper.  Recommended practice is to always declare an explicit
+ versioned dependency on debhelper equal to or greater than the
+ compatiiblity level used by the package, even if the versioned dependency
+ isn't strictly necessary.  Having a versioned dependency also helps with
+ backports to older releases and correct builds on partially updated
+ systems.
+Ref: debhelper(7)
 
 Tag: dh-make-template-in-source
 Severity: normal
