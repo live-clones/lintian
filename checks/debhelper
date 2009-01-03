@@ -42,11 +42,15 @@ my $filename_configs = Lintian::Data->new ('debhelper/filename-config-files');
 # one of these commands must have a dependency on that version of debhelper or
 # newer.
 my %versions
-    = (dh_icons           => '5.0.51~',
+    = (dh                 => '7',
+       dh_auto_configure  => '7',
+       dh_auto_build      => '7',
+       dh_auto_clean      => '7',
+       dh_auto_install    => '7',
+       dh_icons           => '5.0.51~',
        dh_installifupdown => '5.0.44~',
        dh_lintian         => '6.0.7~',
-       dh                 => '7');
-
+       dh_prep            => '7');
 
 sub run {
 
@@ -271,6 +275,8 @@ if ($needversiondepends < 4) {
 } elsif ($needversiondepends > 5 and ! Dep::implies($bdepends, Dep::parse("debhelper (>= $needversiondepends)"))) {
     tag "package-lacks-versioned-build-depends-on-debhelper", $needversiondepends;
 } elsif (@versioncheck) {
+    my %seen;
+    @versioncheck = grep { !$seen{$_}++ } @versioncheck;
     for my $program (@versioncheck) {
         my $required = $versions{$program};
         tag 'debhelper-script-needs-versioned-build-depends', $program, "(>= $required)"

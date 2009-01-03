@@ -50,6 +50,10 @@ lintian (2.1.4) UNRELEASED; urgency=low
     + [ADB] Warn about packages declaring a debhelper compatibility level
       of 7 or above and using dh_clean -k, which has been deprecated in
       favour of dh_prep.
+    + [RA] Add dh_auto_* and dh_prep to the debhelper scripts that require
+      a particular version of debhelper.
+    + [RA] De-duplicate the list of scripts with specific version
+      requirements before issuing tags.
   * checks/fields:
     + [RA] dh-make-php provides a CDBS rule fragment and hence should go
       into Build-Depends, not Build-Depends-Indep.  Thanks, Mathieu

@@ -1,4 +1,4 @@
-Last generated 2009-01-01
+Last generated 2009-01-03
 
 The following tags are not tested by the test suite:
 
@@ -367,7 +367,6 @@ debconf using-first-person-in-templates
 debconf using-imperative-form-in-templates
 debconf using-question-in-extended-description-in-templates
 
-debhelper debhelper-script-needs-versioned-build-depends
 debhelper declares-possibly-conflicting-debhelper-compat-versions
 debhelper uses-dh-python-with-no-pycompat
 
