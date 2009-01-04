@@ -2,5 +2,5 @@ E: debhelper-no-depends source: missing-build-dependency-for-dh_-command dh_clid
 E: debhelper-no-depends source: missing-build-dependency-for-dh_-command dh_gtkmodules=libgtk2.0-dev
 E: debhelper-no-depends source: missing-build-dependency-for-dh_-command dh_lisp=dh-lisp
 E: debhelper-no-depends source: package-uses-debhelper-but-lacks-build-depends
-I: debhelper-no-depends source: package-lacks-versioned-build-depends-on-debhelper 7
 W: debhelper-no-depends source: debhelper-but-no-misc-depends debhelper-no-depends
+W: debhelper-no-depends source: package-lacks-versioned-build-depends-on-debhelper 7
