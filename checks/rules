@@ -135,6 +135,12 @@ while (<RULES>) {
             }
 	}
         $debhelper_group = 0;
+    } elsif (/^define /) {
+        # We don't want to think the body of the define is part of the
+        # previous rule or we'll get false positives on tags like
+        # binary-arch-rules-but-pkg-is-arch-indep.  Treat a define as the
+        # end of the current rule, although that isn't very accurate either.
+        @current_targets = ();
     } else {
     	# If we have non-empty, non-comment lines, store them for all current
     	# targets and check whether debhelper programs are called in a
