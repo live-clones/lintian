@@ -113,6 +113,9 @@ for my $control (@binary_controls) {
 # expected archive category from the first binary package by leaving $category
 # undefined until parsing the first binary section.  Missing sections will be
 # caught by other checks.
+#
+# Also accumulate short and long descriptions for each package so that we can
+# check for duplication.
 my $category;
 if ($header->{'section'}) {
 	if ($header->{'section'} =~ m%^([^/]+)/%) {
@@ -123,7 +126,10 @@ if ($header->{'section'}) {
 } else {
 	tag "no-section-field-for-source", "";
 }
+my @descriptions;
 for my $binary_control (@binary_controls) {
+	push(@descriptions, [ $binary_control->{'package'}, split("\n", $binary_control->{'description'}, 2) ])
+	    if $binary_control->{'description'};
 	next unless $binary_control->{'section'};
 	if (!defined ($category)) {
 		if ($binary_control->{'section'} =~ m%^([^/]+)/%) {
@@ -137,6 +143,31 @@ for my $binary_control (@binary_controls) {
 		if ($category && $binary_control->{'section'} !~ m%^$category/%);
 	tag "section-category-mismatch", "Package " . $binary_control->{'package'}
 		if (!$category && $binary_control->{'section'} =~ m%^([^/]+)/% && $1 ne 'contrib');
+}
+
+# Check for duplicate descriptions.
+my (%seen_short, %seen_long);
+for my $i (0 .. $#descriptions) {
+	my (@short, @long);
+	for my $j (($i + 1) .. $#descriptions) {
+		if ($descriptions[$i][1] eq $descriptions[$j][1]) {
+			my $package = $descriptions[$j][0];
+			push(@short, $package) unless $seen_short{$package};
+		}
+		next unless ($descriptions[$i][2] and $descriptions[$j][2]);
+		if ($descriptions[$i][2] eq $descriptions[$j][2]) {
+			my $package = $descriptions[$j][0];
+			push(@long, $package) unless $seen_long{$package};
+		}
+	}
+	if (@short) {
+		tag 'duplicate-short-description', $descriptions[$i][0], @short;
+		for (@short) { $seen_short{$_} = 1 }
+	}
+	if (@long) {
+		tag 'duplicate-long-description', $descriptions[$i][0], @long;
+		for (@long) { $seen_long{$_} = 1 }
+	}
 }
 
 }

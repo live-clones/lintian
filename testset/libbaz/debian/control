@@ -19,7 +19,7 @@ Package: libbaz1-dev
 Architecture: any
 Depends: libbaz1 (= ${source:Version}), perlapi-5.8.8
 Description: development package
- Regression test for lintian's handling of libraries.
+ Regression test for lintian's handling of libraries (dev).
  .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -28,8 +28,8 @@ Description: development package
 Package: libbaz2
 Architecture: any
 Depends: ${shlibs:Depends}, libssl0.9.8
-Description: test handling of library packages
- Regression test for lintian's handling of libraries.
+Description: test handling of library packages (good)
+ Regression test for lintian's handling of libraries (good).
  .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -38,8 +38,8 @@ Description: test handling of library packages
 Package: libbaz2-dev
 Architecture: any
 Depends: ${shlibs:Depends}, libbaz2 (= ${Source-Version})
-Description: development package
- Regression test for lintian's handling of libraries.
+Description: development package (good)
+ Regression test for lintian's handling of libraries (dev good).
  .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -50,7 +50,7 @@ Architecture: any
 Depends: libbaz2 (= ${binary:Version})
 Priority: optional
 Description: debugging package
- Regression test for lintian's handling of libraries.
+ Regression test for lintian's handling of libraries (debug).
  .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -60,7 +60,7 @@ Package: ia32-libbaz2
 Architecture: all
 Depends: ${shlibs:Depends}
 Description: multiarch package
- Regression test for lintian's handling of libraries.
+ Regression test for lintian's handling of libraries (multiarch).
  .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd

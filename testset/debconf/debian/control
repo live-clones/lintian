@@ -13,7 +13,7 @@ Description: Test package for the debconf checks of lintian
 Package: debconf-test-noscripts
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: Test package for the debconf checks of lintian
+Description: Test package for the debconf checks of lintian (noscripts)
  Package missing postinst/postrm/config.
  .
  This is a test package designed to exercise some feature or tag of
@@ -23,7 +23,7 @@ Description: Test package for the debconf checks of lintian
 Package: debconf-test-preinst
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: Test package for the debconf checks of lintian
+Description: Test package for the debconf checks of lintian (preinst)
  Package uses debconf only in preinst.
  .
  This is a test package designed to exercise some feature or tag of
@@ -33,7 +33,7 @@ Description: Test package for the debconf checks of lintian
 Package: debconf-test-postinst
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: Test package for the debconf checks of lintian
+Description: Test package for the debconf checks of lintian (postinst)
  Package uses debconf only in postinst.
  .
  This is a test package designed to exercise some feature or tag of

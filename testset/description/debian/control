@@ -50,4 +50,5 @@ Description:    the synopsis starts with spaces
 Package: description-qux
 Architecture: all
 Description: This description ends, etc.
- This is a real Lintian bug which has been discovered with this testset.
+ This is another real Lintian bug which has been discovered with this
+ testset.

@@ -1,5 +1,7 @@
 E: control-file-general source: build-info-in-binary-control-file-section Package control-file-general
 I: control-file-general source: binary-control-field-duplicates-source maintainer in package control-file-general
+I: control-file-general source: duplicate-long-description control-file-general control-file-general-1 control-file-general-2
+I: control-file-general source: duplicate-short-description control-file-general control-file-general-1
 W: control-file-general source: no-section-field-for-source
 W: control-file-general source: package-depends-on-itself control-file-general depends
 W: control-file-general source: stronger-dependency-implies-weaker control-file-general depends -> recommends foo

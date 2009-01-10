@@ -9,6 +9,8 @@ Package: {$srcpkg}-paths
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description} (paths)
+ Interpreters with bad paths.
+ .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
@@ -17,6 +19,8 @@ Package: {$srcpkg}-forbidden
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description} (forbidden)
+ Forbidden control interpreters.
+ .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
@@ -24,7 +28,9 @@ Description: {$description} (forbidden)
 Package: {$srcpkg}-unknown
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
-Description: {$description} (forbidden)
+Description: {$description} (unknown)
+ Unknown control interpreters.
+ .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
@@ -33,6 +39,8 @@ Package: {$srcpkg}-python
 Architecture: {$architecture}
 Depends: python, $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description} (python)
+ Python control interpreters with depends.
+ .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
@@ -41,7 +49,9 @@ Package: {$srcpkg}-prepython
 Architecture: {$architecture}
 Pre-Depends: python
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
-Description: {$description} (python)
+Description: {$description} (python preinst)
+ Python control interpreters with pre-depends.
+ .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.

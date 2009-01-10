@@ -9,6 +9,8 @@ Package: patented-app
 Architecture: all
 Section: non-us
 Description: test for non-us checks
+ non-US test.
+ .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
@@ -17,6 +19,8 @@ Package: crypto-app
 Architecture: all
 Section: non-US
 Description: proper non-US app
+ A proper non-US app.
+ .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
@@ -25,6 +29,8 @@ Package: broken-crypto
 Architecture: all
 Section: non-US/admin
 Description: broken non-US app
+ A broken non-US app.
+ .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
@@ -33,6 +39,8 @@ Package: nonfree-crypto-app
 Architecture: all
 Section: non-US/non-free
 Description: proper non-US/non-free app
+ A proper non-US/non-free app.
+ .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.

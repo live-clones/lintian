@@ -1,5 +1,13 @@
 lintian (2.1.5) UNRELEASED; urgency=low
 
+  * Summary of tag changes:
+    + Added
+      - duplicate-long-description
+      - duplicate-short-description
+
+  * checks/control-file{,.desc}:
+    + [RA] Tag (severity: wishlist) duplicate short or long descriptions
+      in packages built from the same source.  (Closes: #30020)
   * checks/rules:
     + [RA] Consider a define command to be the end of a list of target
       commands, avoiding binary-arch-rules-but-pkg-is-arch-indep false

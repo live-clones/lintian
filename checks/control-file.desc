@@ -103,3 +103,21 @@ Info: The given package declares a dependency on itself in its
  silently fix this problem by removing the dependency, but it may indicate
  a more subtle bug (misspelling or cutting and pasting the wrong package
  name).
+
+Tag: duplicate-short-description
+Severity: wishlist
+Certainty: possible
+Info: The listed binary packages all share the same short description (the
+ first line of the Description control field).  The package names may
+ provide enough additional information to distinguish between the
+ packages, but it's common to also add a word or two to the short
+ description to clarify the difference.
+
+Tag: duplicate-long-description
+Severity: wishlist
+Certainty: certain
+Info: The listed binary packages all share the same extended description.
+ Some additional information in the extended description explaining what
+ is in each package and how it differs from the other packages is useful,
+ particularly for users who arne't familiar with Debian's package naming
+ conventions.

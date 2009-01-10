@@ -8,7 +8,9 @@ Build-Depends: debhelper (>= 7)
 Package: {$srcpkg}-doc
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
-Description: {$description}
+Description: {$description} (doc)
+ Test for doc section.
+ .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
@@ -16,7 +18,9 @@ Description: {$description}
 Package: lib{$srcpkg}-dev
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
-Description: {$description}
+Description: {$description} (dev)
+ Test for libdevel section.
+ .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
@@ -24,7 +28,9 @@ Description: {$description}
 Package: lib{$srcpkg}-perl
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
-Description: {$description}
+Description: {$description} (perl)
+ Test for perl section.
+ .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
@@ -32,7 +38,9 @@ Description: {$description}
 Package: python-{$srcpkg}
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
-Description: {$description}
+Description: {$description} (Python)
+ Test for Python section.
+ .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
