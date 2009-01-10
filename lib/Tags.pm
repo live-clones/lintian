@@ -30,6 +30,7 @@ our @EXPORT = qw(tag);
 use Lintian::Output;
 
 # configuration variables and defaults
+our $show_pedantic = 0;
 our $show_experimental = 0;
 our $show_overrides = 0;
 our %display_level;
@@ -64,11 +65,12 @@ my %info;
 my $current;
 
 # Possible Severity: and Certainty: values, sorted from lowest to highest.
-our @severity_list = qw(wishlist minor normal important serious);
+our @severity_list = qw(pedantic wishlist minor normal important serious);
 our @certainty_list = qw(wild-guess possible certain);
 
 # Map Severity/Certainty levels to E|W|I codes.
 my %codes = (
+    'pedantic'  => { 'wild-guess' => 'P', 'possible' => 'P', 'certain' => 'P' },
     'wishlist'  => { 'wild-guess' => 'I', 'possible' => 'I', 'certain' => 'I' },
     'minor'     => { 'wild-guess' => 'I', 'possible' => 'I', 'certain' => 'W' },
     'normal'    => { 'wild-guess' => 'I', 'possible' => 'W', 'certain' => 'W' },
@@ -297,6 +299,9 @@ sub display_tag {
 	$level = 1;
     }
 
+    # Pedantic is just a pseudo severity, skip level checks
+    $level = 1 if ($severity eq 'pedantic' and $show_pedantic);
+
     $tag_info->{'display'} = $level;
     return $level if not keys %display_source;
 
@@ -310,6 +315,7 @@ sub display_tag {
 sub skip_print {
     my ( $tag_info ) = @_;
     return 1 if exists $tag_info->{experimental} && !$show_experimental;
+    return 1 if $tag_info->{severity} eq 'pedantic' && !$show_pedantic;
     return 1 if $tag_info->{overridden}{override} && !$show_overrides;
     return 1 if not display_tag( $tag_info );
     return 0;
