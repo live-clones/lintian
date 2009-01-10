@@ -1,0 +1,2 @@
+E: changed-by-malformed.changes: changed-by-address-malformed Foo<bar> Baz
+W: changed-by-malformed.changes: changed-by-address-looks-weird Foo<bar> Baz

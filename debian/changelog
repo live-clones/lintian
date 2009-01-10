@@ -2,6 +2,11 @@ lintian (2.1.5) UNRELEASED; urgency=low
 
   * Summary of tag changes:
     + Added
+      - changed-by-address-is-on-localhost
+      - changed-by-address-looks-weird
+      - changed-by-address-malformed
+      - changed-by-address-missing
+      - changed-by-name-missing
       - duplicate-long-description
       - duplicate-short-description
 
@@ -9,15 +14,22 @@ lintian (2.1.5) UNRELEASED; urgency=low
     + [RA] Tag (severity: wishlist) duplicate short or long descriptions
       in packages built from the same source.  (Closes: #30020)
   * checks/fields:
-    + [RA] Use check_maintainer from Lintian::Check.
+    + [RA] Use check_maintainer from Lintian::Check, which suppresses
+      duplicate tags for some ill-formed maintainer fields.
+  * checks/lintian.desc:
+    + [RA] New tag descriptions for Changed-By field tests.
   * checks/rules:
     + [RA] Consider a define command to be the end of a list of target
       commands, avoiding binary-arch-rules-but-pkg-is-arch-indep false
       positives when an empty rule is followed by a definition.
       (Closes: #510869)
 
+  * frontend/lintian:
+    + [RA] Run maintainer well-formedness checks on the Changed-By field
+      of the *.changes file.  (Closes: #183642)
+
   * lib/Lintian/Check.pm:
-    + [RA] New module collecting checks run from multiple places.
+    + [RA] New module for checks run from multiple places.
 
   * t/runtests:
     + [RA] Add support for running lintian on changes files in t/changes

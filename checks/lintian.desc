@@ -68,6 +68,41 @@ Info: The sections <tt>non-free</tt> and <tt>contrib</tt> are no longer
  <tt>contrib/xxx</tt> instead.
 Ref: policy 2.4
 
+Tag: changed-by-name-missing
+Severity: serious
+Certainty: certain
+Info: The Changed-By field seems to contain just an email address. It must
+ contain the package maintainer's name and email address.
+Ref: policy 5.6.4
+
+Tag: changed-by-address-missing
+Severity: serious
+Certainty: certain
+Info: The Changed-By field should contain the package builder's name and
+ email address, with the name followed by the address inside angle
+ brackets (&lt; and &gt;).  The address seems to be missing.
+Ref: policy 5.6.4
+
+Tag: changed-by-address-malformed
+Severity: important
+Certainty: certain
+Info: The Changed-By field could not be parsed according to the rules in
+ the Policy Manual.
+Ref: policy 5.6.4
+
+Tag: changed-by-address-looks-weird
+Severity: normal
+Certainty: possible
+Info: The Changed-By field does not have whitespace between the name
+ and the email address.
+
+Tag: changed-by-address-is-on-localhost
+Severity: important
+Certainty: certain
+Info: The Changed-By address includes localhost(.localdomain), which is
+ an invalid e-mail address.
+Ref: policy 5.6.2
+
 Tag: unused-override
 Severity: wishlist
 Certainty: certain

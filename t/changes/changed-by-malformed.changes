@@ -1,0 +1,12 @@
+Format: 1.8
+Date: Sat, 10 Jan 2009 10:50:38 -0800
+Source: changed-by-malformed
+Binary: changed-by-malformed
+Architecture: source all
+Version: 1.0
+Distribution: unstable
+Urgency: low
+Maintainer: Debian Lintian Maintainers <lintian-maint@debian.org>
+Changed-By: Foo<bar> Baz
+Description:
+ changed-by-malformed - Test malformed Changed-By field

@@ -3,6 +3,8 @@ Version: 1.0
 Description: Pathological empty package
 Test-For:
  bad-urgency-in-changes-file
+ changed-by-address-malformed
+ changed-by-address-missing
  changelog-should-mention-nmu
  debian-rules-missing-required-target
  maintainer-address-missing

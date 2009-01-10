@@ -633,6 +633,8 @@ require Lintian::Output;
 import Lintian::Output qw(:messages);
 require Lintian::Command;
 import Lintian::Command qw(spawn);
+require Lintian::Check;
+import Lintian::Check qw(check_maintainer);
 
 no warnings 'once';
 if (defined $experimental_output_opts) {
@@ -827,6 +829,12 @@ while (my $arg = shift) {
 		unless ($urgency =~ /^(low|medium|high|critical|emergency)$/i) {
 		    tag("bad-urgency-in-changes-file", $data->{'urgency'});
 		}
+	    }
+
+	    # Changed-By is optional in Policy, but if set, must be
+	    # syntactically correct.  It's also used by dak.
+	    if ($data->{'changed-by'}) {
+		check_maintainer($data->{'changed-by'}, 'changed-by');
 	    }
 
 	    # process all listed `files:'

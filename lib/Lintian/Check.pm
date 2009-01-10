@@ -64,7 +64,7 @@ Checks the maintainer name and address MAINTAINER for Policy compliance
 and other issues.  FIELD is the context in which the maintainer name and
 address was seen and should be one of C<maintainer> (the Maintainer field
 in a control file), C<uploader> (the Uploaders field in a control file),
-or C<changes> (the Changed-By field in a changes file).
+or C<changed-by> (the Changed-By field in a changes file).
 
 The following tags may be issued by this function.  The string C<%s> in
 the tags below will be replaced with the value of FIELD.
@@ -99,7 +99,7 @@ address was not in angle brackets.
 =item %s-not-full-name
 
 The name portion of MAINTAINER is a single word.  This tag is not issued
-for a FIELD of C<changes>.
+for a FIELD of C<changed-by>.
 
 =item wrong-debian-qa-address-set-as-maintainer
 
@@ -133,8 +133,11 @@ sub check_maintainer {
     }
 
     # Some basic tests.
-    tag "$field-address-malformed", $maintainer
-        if $extra;
+    my $malformed;
+    if ($extra) {
+        tag "$field-address-malformed", $maintainer;
+        $malformed = 1;
+    }
     tag "$field-address-looks-weird", $maintainer
         if (not $del and $name and $mail);
 
@@ -146,14 +149,15 @@ sub check_maintainer {
         tag "$field-name-missing", $maintainer;
     } elsif ($name !~ /^\S+\s+\S+/ and $name ne 'Wookey') {
         tag "$field-not-full-name", $name
-            if $field ne 'changes';
+            if $field ne 'changed-by';
     }
 
-    # This should really be done with Email::Valid.
+    # This should really be done with Email::Valid.  Don't issue the malformed
+    # tag twice if we already saw problems.
     if (not $mail) {
         tag "$field-address-missing", $maintainer;
     } else {
-	if ($mail !~ /^[^()<>@,;:\\\"\[\]]+@(\S+\.)+\S+/) {
+	if (not $malformed and $mail !~ /^[^()<>@,;:\\\"\[\]]+@(\S+\.)+\S+/) {
             tag "$field-address-malformed", $maintainer;
 	}
 	if ($mail =~ /(?:localhost|\.localdomain|\.localnet)$/) {
