@@ -8,11 +8,16 @@ lintian (2.1.5) UNRELEASED; urgency=low
   * checks/control-file{,.desc}:
     + [RA] Tag (severity: wishlist) duplicate short or long descriptions
       in packages built from the same source.  (Closes: #30020)
+  * checks/fields:
+    + [RA] Use check_maintainer from Lintian::Check.
   * checks/rules:
     + [RA] Consider a define command to be the end of a list of target
       commands, avoiding binary-arch-rules-but-pkg-is-arch-indep false
       positives when an empty rule is followed by a definition.
       (Closes: #510869)
+
+  * lib/Lintian/Check.pm:
+    + [RA] New module collecting checks run from multiple places.
 
  -- Russ Allbery <rra@debian.org>  Mon, 05 Jan 2009 10:41:18 -0800
 

@@ -30,7 +30,9 @@ use common_data;
 use Dep;
 use Tags;
 use Util;
+
 use Lintian::Data;
+use Lintian::Check qw(check_maintainer);
 
 # The allowed Python dependencies currently.  This is the list of alternatives
 # that, either directly or through transitive dependencies that can be relied
@@ -252,9 +254,9 @@ for my $f (qw(maintainer uploaders)) {
 		$maintainer =~ s/^\s*(.+?)\s*$/$1/; #Remove leading and trailing whitespace
 
 		if ($f eq "uploaders") {
-			check_maint($_, "uploader") for (split /\s*,\s*/, $maintainer);
+			check_maintainer($_, "uploader") for (split /\s*,\s*/, $maintainer);
 		} else {
-			check_maint($maintainer, $f);
+			check_maintainer($maintainer, $f);
 			if ($type eq 'source'
 			    && $maintainer =~ /\@lists(\.alioth)?\.debian\.org\b/
 			    && ! defined $info->field('uploaders')) {
@@ -968,46 +970,6 @@ sub unfold {
 
 	if ($$line =~ s/\n//g) {
 		tag "multiline-field", "$field";
-	}
-}
-
-sub check_maint {
-	my ($maintainer, $f) = @_;
-	$maintainer =~ /^([^<\s]*(?:\s+[^<\s]+)*)?(\s*)(?:<(.+)>)?(.*)$/, 
-	my ($name, $del, $mail, $crap) = ($1, $2, $3, $4);
-
-	if (!$mail && $name =~ m/@/) { # name probably missing and address has no <>
-		$mail = $name;
-		$name = undef;
-	}
-
-	tag "$f-address-malformed", "$maintainer" if $crap;
-	tag "$f-address-looks-weird", "$maintainer" if ! $del && $name && $mail;
-
-	# Wookey really only has one name.  If we get more of these, consider
-	# removing the check.
-	if (! $name) {
-		tag "$f-name-missing", "$maintainer";
-	} elsif ($name !~ /^\S+\s+\S+/ && $name ne 'Wookey') {
-		tag "$f-not-full-name", "$name";
-	}
-			
-	#This should be done with Email::Valid:
-	if (!$mail) {
-		tag "$f-address-missing", "$maintainer";
-	} else {
-		tag "$f-address-malformed", "$maintainer" 
-		    unless ($mail =~ /^[^()<>@,;:\\"[\]]+@(\S+\.)+\S+/); #"
-
-		tag "$f-address-is-on-localhost", "$maintainer"
-		    if ($mail =~ /(?:localhost|\.localdomain|\.localnet)$/);
-
-		tag "wrong-debian-qa-address-set-as-maintainer", "$maintainer"
-		    if ($f eq "maintainer" && $mail eq 'debian-qa@lists.debian.org');
-
-		tag "wrong-debian-qa-group-name", "$maintainer"
-		    if ($f eq "maintainer" && $mail eq 'packages@qa.debian.org' &&
-				$name ne 'Debian QA Group');
 	}
 }
 

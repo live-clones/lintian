@@ -262,7 +262,6 @@ sub perm2oct {
     return $o;
 }
 
-
 sub delete_dir {
     return spawn(undef, ['rm', '-rf', '--', @_]);
 }
@@ -300,3 +299,9 @@ sub fail {
 }
 
 1;
+
+# Local Variables:
+# indent-tabs-mode: t
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 ts=8
