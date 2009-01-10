@@ -59,6 +59,18 @@ for my $desc (<t/tests/*.desc>) {
     }
 }
 
+# Parse all tags files for the changes test suite.
+for my $tagfile (<t/changes/*.tags>) {
+    open(IN, '<', $tagfile) or die "Cannot open $tagfile: $!\n";
+    local $_;
+    while (<IN>) {
+        if (/^(.): (\S+)(?: (?:source|udeb))?: (\S+)/) {
+            delete $tags{$3};
+        }
+    }
+    close IN;
+}
+
 # Now parse all tags files from the old test suite looking for what tags that
 # test reveals.
 my %legacy;

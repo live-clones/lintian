@@ -23,6 +23,8 @@
 # The harness for Lintian's new test suite.  Normally run through the runtests
 # or check-tag targets in debian/rules.  For detailed information on the test
 # suite layout and naming conventions, see t/tests/README.
+#
+# The build output is directed to build.pkgname in the testing-directory.
 
 use strict;
 use warnings;
@@ -31,53 +33,6 @@ use Data::Dumper;
 use Getopt::Long qw(GetOptions);
 use Text::Template;
 
-sub usage {
-    print <<END;
-Usage: $0 [-dkv] testset-directory testing-directory [test]
-       $0 [-dkv] [-t tag] testset-directory testing-directory
-
-The -k option means do not stop after one failed test, but try
-them all and report all errors.
-
-The -v option will also display those tests that have a description, but are
-not tested in any testset-package.
-
-The -d option will display debugging information.
-
-The -t tag option will only run tests that test for or against that tag.
-
-The optional 3rd parameter causes runtests to only run that particular test.
-END
-    exit 2;
-}
-
-# The build output is directed to build.pkgname in the testing-directory.
-
-# Exit codes:
-# 0 - success
-# 1 - one or more tests failed
-# 2 - an error prevented proper running of the tests
-
-my $debug = 0;
-my $run_all_tests = 0;
-my $tag;
-my $verbose = 0;
-
-# --- Parse options and arguments
-Getopt::Long::Configure('bundling');
-GetOptions('d|debug'      => \$debug,
-	   'k|keep-going' => \$run_all_tests,
-	   't|tag=s'      => \$tag,
-	   'v|verbose'    => \$verbose) or usage;
-if ($#ARGV < 1 || $#ARGV > 2) {
-    usage;
-}
-my ($testset, $rundir, $singletest) = @ARGV;
-if ($tag and $singletest) {
-    usage;
-}
-
-# --- Set and unset environment variables that lintian is sensitive to
 BEGIN {
     my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
     if (not $LINTIAN_ROOT) {
@@ -95,56 +50,205 @@ BEGIN {
     umask(022);
 }
 
-my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
-
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Util;
 use Tags;
 
-# --- Set the ways to call lintian and dpkg-buildpackage
-my $lintian_options = '-I -E';
-my $dpkg_buildpackage_options = '-rfakeroot -us -uc -d -iNEVER_MATCH_ANYTHING'
-    . ' -INEVER_MATCH_ANYTHING';
-my $lintian_path = $LINTIAN_ROOT . "/frontend/lintian";
+# --- Global configuration
+
+our $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
+
+our $LINTIAN = $LINTIAN_ROOT . '/frontend/lintian -I -E';
+our $DPKG_BUILDPACKAGE = 'dpkg-buildpackage -rfakeroot -us -uc -d'
+    . ' -iNEVER_MATCH_ANYTHING -INEVER_MATCH_ANYTHING';
+
+# --- Usage information
+
+sub usage {
+    print unquote(<<"END");
+:       Usage: $0 [-dkv] <testset-directory> <testing-directory> [<test>]
+:              $0 [-dkv] [-t <tag>] <testset-directory> <testing-directory>
+:
+:         -d        Display additional debugging information
+:         -k        Do not stop after one failed test
+:         -t <tag>  Run only tests for or against <tag>
+:         -v        Be more verbose
+:
+:       The optional 3rd parameter causes runtests to only run that particular
+:       test.
+END
+    exit 2;
+}
+
+# --- Parse options and arguments
+
+our $DEBUG = 0;
+our $VERBOSE = 0;
+our $RUNDIR;
+our $TESTSET;
+
+my ($run_all_tests, $tag);
+Getopt::Long::Configure('bundling');
+GetOptions('d|debug'      => \$DEBUG,
+	   'k|keep-going' => \$run_all_tests,
+	   't|tag=s'      => \$tag,
+	   'v|verbose'    => \$VERBOSE) or usage;
+if ($#ARGV < 1 || $#ARGV > 2) {
+    usage;
+}
+my $singletest;
+($TESTSET, $RUNDIR, $singletest) = @ARGV;
+if ($tag and $singletest) {
+    usage;
+}
+unless (-d $RUNDIR) {
+    fail("test directory $RUNDIR does not exist");
+}
+unless (-d $TESTSET) {
+    fail("test set directory $TESTSET does not exist");
+}
 
 # --- Display output immediately
+
 $| = 1;
 
-# --- Let's play.
+# --- Exit status for the test suite driver
 
--d $rundir
-    or fail("test directory $rundir does not exist\n");
+# Exit codes:
+# 0 - success
+# 1 - one or more tests failed
+# 2 - an error prevented proper running of the tests
+my $status = 0;
 
-# in temporary labs
+# If we don't run any tests, we'll want to warn that we couldn't find
+# anything.
+my $tests_run = 0;
+
+# --- Run all changes tests
+
 my @tests;
 if ($singletest) {
-    @tests = map { s/\.desc$//; $_ } ( $singletest );
+    my $test = $singletest;
+    $test =~ s/\.changes$//;
+    if (-f "$TESTSET/changes/$test.changes") {
+	@tests = ($test);
+    }
+} elsif ($tag) {
+    @tests = find_changes_for_tag($tag);
+} else {
+    unless (-d "$TESTSET/changes") {
+	fail("cannot find $TESTSET/changes: $!");
+    }
+    @tests = map {
+	s,^\Q$TESTSET/changes/\E,,;
+	s/\.changes$//;
+	$_;
+    } sort(<$TESTSET/changes/*.changes>);
+}
+print "Found the following changes tests: @tests\n" if $DEBUG;
+print "Changes tests:\n" if @tests;
+for (@tests) {
+    my $okay = test_changes($_);
+    unless ($okay) {
+	exit 1 unless $run_all_tests;
+	$status = 1;
+    }
+    $tests_run++;
+}
+
+# --- Run all package tests
+
+@tests = ();
+if ($singletest) {
+    my $test = $singletest;
+    $test =~ s/\.desc$//;
+    if (-f "$TESTSET/tests/$test.desc") {
+	@tests = ($test);
+    }
 } elsif ($tag) {
     @tests = find_tests_for_tag($tag);
 } else {
-    -d $testset
-	or fail("cannot find $testset: $!\n");
-
-    @tests = map { s#^\Q$testset/tests/\E## ;s/\.desc$//; $_ } sort(<$testset/tests/*.desc>);
+    unless (-d $TESTSET) {
+	fail("cannot find $TESTSET: $!");
+    }
+    @tests = map {
+	s,^\Q$TESTSET/tests/\E,,;
+	s/\.desc$//;
+	$_;
+    } sort(<$TESTSET/tests/*.desc>);
+}
+print "\n" if ($tests_run and @tests);
+print "Found the following tests: @tests\n" if $DEBUG;
+print "Package tests:\n" if @tests;
+for (@tests) {
+    my $testdesc = "$TESTSET/tests/$_.desc";
+    next unless -f $testdesc;
+    my $okay = test_package($_, $testdesc);
+    unless ($okay) {
+	exit 1 unless $run_all_tests;
+	$status = 1;
+    }
+    $tests_run++;
 }
 
-print "Found the following tests: @tests\n" if $debug;
-my $tests_run = 0;
-for (@tests) {
-    my $testdesc = "$testset/tests/$_.desc";
-    next unless -f $testdesc;
+# --- Check whether we ran any tests
 
-    print "process $testdesc...\n" if $debug;
+if (!$tests_run) {
+    if ($singletest) {
+	print "W: No tests run, did you specify a valid test name?\n";
+    } elsif ($tag) {
+	print "I: No tests found for that tag.\n";
+    } else {
+	print "E: No tests run, did you specify a valid testset directory?\n";
+    }
+}
+exit $status;
+
+# --- Full package testing
+
+# Find all tests that check a particular tag, either for its presence or
+# absence.  Returns a list of names of the *.desc files, without the *.desc at
+# the end.
+sub find_tests_for_tag {
+    my ($tag) = @_;
+    my @tests;
+    for my $test (<$TESTSET/tests/*.desc>) {
+	my ($testname) = ($test =~ m,.*/([^/]+)\.desc$,);
+	my ($data) = read_dpkg_control($test);
+	if ($data->{'test-for'}) {
+	    my %for = map { $_ => 1 } split(' ', $data->{'test-for'});
+	    if ($for{$tag}) {
+		push (@tests, $testname);
+		next;
+	    }
+	}
+	if ($data->{'test-against'}) {
+	    my %against = map { $_ => 1 } split(' ', $data->{'test-against'});
+	    if ($against{$tag}) {
+		push (@tests, $testname);
+	    }
+	}
+    }
+    return @tests;
+}
+
+# Run a package test and show any diffs in the expected tags or any other
+# errors detected.  Takes the test name and the description file.  Returns
+# true if the test passes and false if it fails.
+sub test_package {
+    my ($test, $testdesc) = @_;
+
+    print "process $testdesc...\n" if $DEBUG;
     my $testdata = (read_dpkg_control($testdesc))[0];
 
-    check_test_is_sane($testset, $testdata);
+    check_test_is_sane($TESTSET, $testdata);
     print "Running test $testdata->{testname} $testdata->{version}... ";
 
     my $pkg = $testdata->{srcpkg};
     my $pkgdir = "$pkg-$testdata->{version}";
-    my $origdir = "$testset/tests/$testdata->{testname}";
-    my $targetdir = "$rundir/$pkgdir";
-    my $tmpldir = "$testset/templates";
+    my $origdir = "$TESTSET/tests/$testdata->{testname}";
+    my $targetdir = "$RUNDIR/$pkgdir";
+    my $tmpldir = "$TESTSET/templates";
 
     my $is_native = ($testdata->{type} eq 'native');
     my $orig_version = $testdata->{version};
@@ -159,7 +263,7 @@ for (@tests) {
 	}
     }
 
-    print "Cleaning up and repopulating $targetdir...\n" if $debug;
+    print "Cleaning up and repopulating $targetdir...\n" if $DEBUG;
     runsystem_ok("rm", "-rf", $targetdir);
     if ($is_native) {
 	runsystem("cp", "-rp", "$tmpldir/skel", $targetdir);
@@ -170,7 +274,7 @@ for (@tests) {
 	runsystem("cp", "-rp", "$tmpldir/skel.upstream", $targetdir);
 	runsystem("rm", "-f", "$targetdir/.dummy");
 	runsystem("rsync", "-rp", "$origdir/upstream/", "$targetdir/");
-	runsystem("cd $rundir && ".
+	runsystem("cd $RUNDIR && ".
 		  "tar czf ${pkg}_${orig_version}.orig.tar.gz $pkgdir");
 	runsystem("rsync", "-rp", "--exclude=debian/changelog",
 		  "$tmpldir/skel/", "$targetdir/");
@@ -188,47 +292,49 @@ for (@tests) {
 	runsystem("echo >$targetdir/debian/watch");
     }
     if (-x "$origdir/pre_build") {
-	print "running pre_build hook... " if $verbose;
+	print "running pre_build hook... " if $VERBOSE;
 	runsystem("$origdir/pre_build", $targetdir);
     }
 
     print "building... ";
-    runsystem("cd $rundir/$pkgdir && dpkg-buildpackage $dpkg_buildpackage_options >../build.$pkg 2>&1");
+    runsystem("cd $RUNDIR/$pkgdir && $DPKG_BUILDPACKAGE >../build.$pkg 2>&1");
 
-     print "testing... ";
-     runsystem_ok("$lintian_path $lintian_options $rundir/$pkg\_$testdata->{version}*.changes".
-		  " 2>&1 | sort > $rundir/tags.$pkg");
+    print "testing... ";
+    runsystem_ok("$LINTIAN $RUNDIR/$pkg\_$testdata->{version}*.changes".
+		 " 2>&1 | sort > $RUNDIR/tags.$pkg");
 
     # Run a sed-script if it exists, for tests that have slightly variable
     # output
-    runsystem_ok("sed -i -f $origdir/post_test $rundir/tags.$pkg")
+    runsystem_ok("sed -i -f $origdir/post_test $RUNDIR/tags.$pkg")
 	if -e "$origdir/post_test";
 
-    my $testok = runsystem_ok("cmp", "-s", "$rundir/tags.$pkg", "$origdir/tags");
-    $tests_run++;
+    # Compare the output to the expected tags.
+    my $testok = runsystem_ok(qw(cmp -s), "$RUNDIR/tags.$pkg", "$origdir/tags");
     if ($testok) {
 	print "ok.\n";
     } else {
 	print "FAILED:\n";
-	runsystem_ok("diff", "-u", "$origdir/tags", "$rundir/tags.$pkg");
-	exit 1 unless $run_all_tests;
-	next;
+	runsystem_ok("diff", "-u", "$origdir/tags", "$RUNDIR/tags.$pkg");
+	return;
     }
 
     # Check the output for invalid lines.  Also verify that all Test-For tags
     # are seen and all Test-Against tags are not.
     my %test_for = map { $_ => 1 } split(' ', $testdata->{'test-for'});
     my %test_against = map { $_ => 1 } split(' ', $testdata->{'test-against'});
-    open TAGS, "$rundir/tags.$pkg" or fail("Cannot open $rundir/tags.$pkg");
+    my $okay = 1;
+    open TAGS, "$RUNDIR/tags.$pkg" or fail("Cannot open $RUNDIR/tags.$pkg");
     while (<TAGS>) {
 	next if m/^N: /;
 	if (not /^(.): (\S+)(?: (?:source|udeb))?: (\S+)/) {
 	    print "E: Invalid line:\n$_";
+	    $okay = 0;
 	    next;
 	}
 	my $tag = $3;
 	if ($test_against{$tag}) {
 	    print "E: Tag $tag seen but listed in Test-Against\n";
+	    $okay = 0;
 	}
 	delete $test_for{$tag};
     }
@@ -236,29 +342,79 @@ for (@tests) {
     if (%test_for) {
 	for my $tag (sort keys %test_for) {
 	    print "E: Tag $tag listed in Test-For but not found\n";
+	    $okay = 0;
 	}
     }
+    return 1 if $okay;
+    return;
 }
 
-if (!$tests_run) {
-    if ($singletest) {
-	print "W: No tests run, did you specify a valid test name?\n";
-    } elsif ($tag) {
-	print "I: No tests found for that tag.\n";
+# --- Changes file testing
+
+# Find all changes tests that check a particular tag, either for its presence
+# or absence.  Returns a list of check names.
+sub find_changes_for_tag {
+    my ($tag) = @_;
+    my @tests;
+    for my $test (<$TESTSET/*.tags>) {
+	my ($testname) = ($test =~ m,.*/([^/]+)\.tags$,);
+	open(TAGS, '<', $test) or fail("Cannot open $test");
+	local $_;
+	while (<TAGS>) {
+	    next if /^N: /;
+	    if (not /^.: \S+(?: (?:source|udeb))?: (\S+)/) {
+		next;
+	    }
+	}
+	push(@tests, $1);
+    }
+    return @tests;
+}
+
+# Run a test on a changes file and show any diffs in the expected tags or any
+# other errors detected.  Takes the test name.  Returns true if the test
+# passes and false if it fails.
+sub test_changes {
+    my ($test) = @_;
+    print "Running test $test... ";
+
+    my $testdir = "$TESTSET/changes";
+
+    print "testing... ";
+    runsystem_ok("$LINTIAN $testdir/$test.changes 2>&1".
+		 " | sort > $RUNDIR/tags.changes-$test");
+
+    # Compare the output to the expected tags.
+    my $testok = runsystem_ok('cmp', '-s', "$testdir/$test.tags",
+			      "$RUNDIR/tags.changes-$test");
+    if ($testok) {
+	print "ok.\n";
+	return 1;
     } else {
-	print "E: No tests run, did you specify a valid testset directory?\n";
+	print "FAILED:\n";
+	runsystem_ok("diff", "-u", "$testdir/$test.tags",
+		     "$RUNDIR/tags.changes-$test");
+	return;
     }
 }
 
 # --------------
+
+# Unquote a heredoc, used to make them a bit more readable in Perl code.
+sub unquote {
+    my ($string) = @_;
+    $string =~ s/^:( {0,7}|\t)//gm;
+    return $string
+}
+
 sub runsystem {
-    print "runsystem(@_)\n" if $debug;
+    print "runsystem(@_)\n" if $DEBUG;
     system(@_) == 0
 	or fail("failed: @_\n");
 }
 
 sub runsystem_ok {
-    print "runsystem_ok(@_)\n" if $debug;
+    print "runsystem_ok(@_)\n" if $DEBUG;
     my $errcode = system(@_);
     $errcode == 0 or $errcode == (1 << 8)
 	or fail("failed: @_\n");
@@ -282,7 +438,7 @@ sub fill_in_tmpl {
 sub check_test_is_sane {
     my ($dir, $data) = @_;
 
-    if ($debug) {
+    if ($DEBUG) {
 	print "check_test_is_sane <= ".Dumper($data);
     }
 
@@ -301,35 +457,9 @@ sub check_test_is_sane {
     $data->{'test-for'} ||= '';
     $data->{'test-against'} ||= '';
 
-    if ($debug) {
+    if ($DEBUG) {
 	print "check_test_is_sane => ".Dumper($data);
     }
-}
-
-# Find all tests that check a particular tag, either for its presence or
-# absence.  Returns a list of names of the *.desc files, without the *.desc at
-# the end.
-sub find_tests_for_tag {
-    my ($tag) = @_;
-    my @tests;
-    for my $test (<$testset/tests/*.desc>) {
-	my ($testname) = ($test =~ m,.*/([^/]+)\.desc$,);
-	my ($data) = read_dpkg_control($test);
-	if ($data->{'test-for'}) {
-	    my %for = map { $_ => 1 } split(' ', $data->{'test-for'});
-	    if ($for{$tag}) {
-		push (@tests, $testname);
-		next;
-	    }
-	}
-	if ($data->{'test-against'}) {
-	    my %against = map { $_ => 1 } split(' ', $data->{'test-against'});
-	    if ($against{$tag}) {
-		push (@tests, $testname);
-	    }
-	}
-    }
-    return @tests;
 }
 
 # Local Variables:
