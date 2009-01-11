@@ -1,5 +1,4 @@
 # Checker -- Perl checker functions for lintian
-# $Id$
 
 # Copyright (C) 2004 Jeroen van Wolffelaar
 #

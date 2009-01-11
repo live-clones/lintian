@@ -1,5 +1,4 @@
 # Tags -- Perl tags functions for lintian
-# $Id$
 
 # Copyright (C) 1998-2004 Various authors
 # Copyright (C) 2005 Frank Lichtenheld <frank@lichtenheld.de>

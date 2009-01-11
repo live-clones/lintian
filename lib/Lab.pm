@@ -1,5 +1,4 @@
 # Lab -- Perl laboratory functions for lintian
-# $Id$
 
 # Copyright (C) 1998-2004 Various authors
 #
