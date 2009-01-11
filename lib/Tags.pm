@@ -292,15 +292,17 @@ sub display_tag {
     my $severity = $tag_info->{'severity'};
     my $certainty = $tag_info->{'certainty'};
     my $level;
-    if ($severity and $certainty) {
+
+    # Pedantic is just a pseudo severity, skip level checks
+    if ($severity eq 'pedantic') {
+	$level = 1 ;
+    } elsif ($severity and $certainty) {
 	$level = $display_level{$severity}{$certainty};
     } else {
 	# Shouldn't happen, but avoid Perl warnings anyway.
 	$level = 1;
     }
 
-    # Pedantic is just a pseudo severity, skip level checks
-    $level = 1 if ($severity eq 'pedantic' and $show_pedantic);
 
     $tag_info->{'display'} = $level;
     return $level if not keys %display_source;
