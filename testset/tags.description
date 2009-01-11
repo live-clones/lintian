@@ -19,6 +19,7 @@ I: description-foo: no-md5sums-control-file
 I: description-qux: extended-description-is-probably-too-short
 I: description-qux: no-md5sums-control-file
 I: description: no-md5sums-control-file
+W: description source: duplicate-uploader Tobias Toedter <toddy@debian.org>
 W: description source: maintainer-also-in-uploaders
 W: description source: native-package-with-dash-version
 W: description-bar: extended-description-line-too-long

@@ -12,6 +12,9 @@ lintian (2.1.6) UNRELEASED; urgency=low
       Thanks, Joerg Jaspert.  (Closes: #510957)
     + [RA] Warn about .hgtags files in the diff and source.  Thanks,
       Holger Levsen and Chris Lamb.  (Closes: #464837)
+  * checks/fields{,.desc}:
+    + [ADB] Warn about an individual uploader appearing multiple times
+      in Uploaders.  Thanks, Joerg Jaspert.  (Closes: #511536)
   * checks/lintian.desc:
     + [RA] Add tag description for malformed-changes-file.
   * checks/nmu{,.desc}:

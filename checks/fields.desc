@@ -897,6 +897,12 @@ Info: The maintainer value also appears on the <tt>Uploaders</tt> field.
  longer any need to list the maintainer in Uploaders.  The duplicate
  information should probably be removed.
 
+Tag: duplicate-uploader
+Severity: minor
+Certainty: certain
+Info: The uploader appears more than once in the <tt>Uploaders</tt>
+ field.  The duplicate information should be removed.
+
 Tag: versioned-dependency-satisfied-by-perl
 Severity: normal
 Certainty: certain

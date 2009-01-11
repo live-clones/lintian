@@ -2,7 +2,8 @@ Source: description
 Section: text
 Priority: extra
 Maintainer: Tobias Toedter <toddy@debian.org>
-Uploaders: Tobias Toedter <toddy@debian.org>, Foo Bar Moo <foo@debian.org>
+Uploaders: Tobias Toedter <toddy@debian.org>, Foo Bar Moo <foo@debian.org>,
+ Tobias Toedter <toddy@debian.org>
 Standards-Version: 3.8.0
 
 Package: description
