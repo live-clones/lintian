@@ -277,10 +277,7 @@ about the package and the tag, $extra is the extra information for the tag
 
 sub print_tag {
     my ($self, $pkg_info, $tag_info, $information) = @_;
-
-    my $extra = '';
-    $extra = " @$information" if @$information;
-    $extra = '' if $extra eq ' ';
+    $information = ' ' . $information if $information ne '';
     my $code = Tags::get_tag_code($tag_info);
     my $tag_color = $self->{colors}{$code};
     $code = 'X' if exists $tag_info->{experimental};
@@ -299,7 +296,7 @@ sub print_tag {
 	$tag .= $tag_info->{tag};
     }
 
-    $self->_print('', "$code: $pkg_info->{pkg}$type", "$tag$extra");
+    $self->_print('', "$code: $pkg_info->{pkg}$type", "$tag$information");
     if (!$self->issued_tag($tag_info->{tag}) and $self->showdescription) {
 	$self->_print('', 'N', '');
 	$self->_print('', 'N', split("\n", format_tag_description($tag_info, 3)));

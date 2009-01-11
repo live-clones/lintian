@@ -29,8 +29,6 @@ use base qw(Lintian::Output);
 sub print_tag {
     my ($self, $pkg_info, $tag_info, $information) = @_;
 
-    my $extra = "@$information";
-
     $self->issued_tag($tag_info->{tag});
     $self->_print(
 	'tag',
@@ -41,7 +39,7 @@ sub print_tag {
 	($tag_info->{overridden}{override} ? 'O' : ''),
 	@{$pkg_info}{'pkg','version','arch','type'},
 	$tag_info->{tag},
-	$extra,
+	$information,
 	$tag_info->{overridden}{override} || '',
 	);
 }

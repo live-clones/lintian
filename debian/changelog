@@ -38,6 +38,9 @@ lintian (2.1.5) UNRELEASED; urgency=low
 
   * lib/Lintian/Check.pm:
     + [RA] New module for checks run from multiple places.
+  * lib/Lintian/{Output.pm,Output/*.pm}:
+    + [RA] Expect a single string of extra information rather than an
+      array, removing duplicate code to convert it to a string.
   * lib/Lintian/Schedule.pm:
     + [RA] Fix Perl warnings triggered by missing fields in the control
       file of a binary package.
@@ -45,6 +48,11 @@ lintian (2.1.5) UNRELEASED; urgency=low
     + [RA] Avoid Perl warnings if Severity or Certainty isn't set for a
       tag.  (Closes: #507278)
     + [RA] Record statistics for certainty correctly.
+    + [RA] Canonicalize the extra tag information once and pass it as a
+      string to the other output methods.  Based on a patch by Raphael
+      Geissert.  (Closes: #498883)
+    + [RA] Fix override checking with extra tag information that Perl
+      evaluates to false (such as a bare 0).
 
   * man/lintian.1:
     + [RA] Document new deb-format check script.

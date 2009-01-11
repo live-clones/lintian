@@ -109,8 +109,7 @@ sub print_tag {
 
     my $tag = $tag_info->{tag};
 
-    my $extra = @$information ? " @$information" : '';
-    $extra = '' if $extra eq ' ';
+    $information = ' ' . $information if $information ne '';
 
     if ($self->_do_color) {
         my $color = $self->colors->{$sev}{$cer};
@@ -118,7 +117,7 @@ sub print_tag {
         $tag = colored($tag, $color);
     }
 
-    $self->_print('', "$code\[$lq\]: $pkg$type", "$tag$extra");
+    $self->_print('', "$code\[$lq\]: $pkg$type", "$tag$information");
     if (!$self->issued_tag($tag_info->{tag}) and $self->showdescription) {
 	$self->_print('', 'N', '');
 	$self->_print('', 'N', split("\n", format_tag_description($tag_info, 3)));

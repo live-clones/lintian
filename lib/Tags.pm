@@ -205,8 +205,6 @@ sub get_tag_code {
 sub check_overrides {
     my ( $tag_info, $information ) = @_;
 
-    my $extra = '';
-    $extra = "@$information" if @$information;
     my $tag = $tag_info->{tag};
     my $overrides = $info{$current}{overrides}{$tag};
     return unless $overrides;
@@ -214,17 +212,17 @@ sub check_overrides {
     if( exists $overrides->{''} ) {
 	$overrides->{''}++;
 	return $tag;
-    } elsif( $extra and exists $overrides->{$extra} ) {
-	$overrides->{$extra}++;
-	return "$tag $extra";
-    } elsif ( $extra ) {
+    } elsif( $information ne '' and exists $overrides->{$information} ) {
+	$overrides->{$information}++;
+	return "$tag $information";
+    } elsif ( $information ne '' ) {
 	foreach (keys %$overrides) {
 	    my $regex = $_;
 	    if (m/^\*/ or m/\*$/) {
 		my ($start, $end) = ("","");
 		$start = '.*' if $regex =~ s/^\*//;
 		$end   = '.*' if $regex =~ s/\*$//;
-		if ($extra =~ /^$start\Q$regex\E$end$/) {
+		if ($information =~ /^$start\Q$regex\E$end$/) {
 		    $overrides->{$_}++;
 		    return "$tag $_";
 		}
@@ -328,8 +326,13 @@ sub tag {
     return 0 unless
 	! keys %only_issue_tags or exists $only_issue_tags{$tag};
 
-    # Newlines in @information would cause problems, so replace them with \n.
-    @information = grep { defined($_) and $_ ne '' } map { s,\n,\\n,; $_ } @information;
+    # Clean up @information and collapse it to a string.  Lintian code doesn't
+    # treat the distinction between extra arguments to tag() as significant,
+    # so we may as well take care of this up front.
+    @information = grep { defined($_) and $_ ne '' }
+	map { s,\n,\\n,; $_ } @information;
+    my $information = join(' ', @information);
+    $information = '' unless defined $information;
 
     my $tag_info = get_tag_info( $tag );
     unless ($tag_info) {
@@ -337,14 +340,14 @@ sub tag {
 	return 0;
     }
 
-    set_overrides( $tag_info, \@information );
+    set_overrides( $tag_info, $information );
 
     record_stats( $tag_info );
 
     return 1 if skip_print( $tag_info );
 
     $Lintian::Output::GLOBAL->print_tag( $info{$current}, $tag_info,
-					 \@information );
+					 $information );
     return 1;
 }
 
