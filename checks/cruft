@@ -137,11 +137,18 @@ sub check_diffstat {
         my ($file) = (m,^\s+(.*?)\s+\|,)
             or fail("syntax error in diffstat file: $_");
 
-        # We only care about diffs that add files.  If the file is being
-        # modified, that's not a problem with the diff and we'll catch it
-        # later when we check the source.  This regex doesn't catch only file
-        # adds, just any diff that doesn't remove lines from a file, but it's
-        # a good guess.
+        # Check for CMake cache files.  These embed the source path and hence
+        # will cause FTBFS on buildds, so they should never be touched in the
+        # diff.
+        if ($file =~ m,(^|/)CMakeCache.txt\z,) {
+            tag 'diff-contains-cmake-cache-file', $file;
+        }
+
+        # For everything else, we only care about diffs that add files.  If
+        # the file is being modified, that's not a problem with the diff and
+        # we'll catch it later when we check the source.  This regex doesn't
+        # catch only file adds, just any diff that doesn't remove lines from a
+        # file, but it's a good guess.
         next unless m,\|\s+\d+\s+\++$,;
 
         # diffstat output contains only files, but we consider the directory

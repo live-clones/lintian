@@ -1,4 +1,4 @@
-Last generated 2009-01-10
+Last generated 2009-01-11
 
 The following tags are not tested by the test suite:
 
@@ -38,9 +38,6 @@ copyright-file spelling-error-in-copyright
 copyright-file usr-share-doc-symlink-points-outside-of-usr-share-doc
 copyright-file usr-share-doc-symlink-to-foreign-package
 
-cruft diff-contains-git-control-dir
-cruft diff-contains-hg-control-dir
-cruft diff-contains-patch-failure-file
 cruft documentation-package-not-architecture-independent
 cruft outdated-autotools-helper-file
 cruft source-contains-arch-control-dir
@@ -321,19 +318,6 @@ copyright-file possible-gpl-code-linked-with-openssl
 copyright-file usr-share-doc-symlink-without-dependency
 
 cruft configure-generated-file-in-source
-cruft debian-files-list-in-source
-cruft diff-contains-arch-control-dir
-cruft diff-contains-arch-inventory-file
-cruft diff-contains-bts-control-dir
-cruft diff-contains-bzr-control-dir
-cruft diff-contains-cvs-conflict-copy
-cruft diff-contains-cvs-control-dir
-cruft diff-contains-editor-backup-file
-cruft diff-contains-substvars
-cruft diff-contains-svk-commit-file
-cruft diff-contains-svn-commit-file
-cruft diff-contains-svn-conflict-file
-cruft diff-contains-svn-control-dir
 cruft native-package-with-dash-version
 cruft source-contains-bts-control-dir
 cruft source-contains-git-control-dir

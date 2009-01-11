@@ -1,0 +1,10 @@
+#!/usr/bin/make -f
+%:
+	dh $@
+
+build:
+	dh_prep -X~ -Xrej
+	dh build --remaining
+
+clean:
+	@echo 'Do nothing'

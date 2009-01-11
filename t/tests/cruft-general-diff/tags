@@ -1,0 +1,17 @@
+E: cruft-general-diff source: debian-files-list-in-source
+E: cruft-general-diff source: diff-contains-cmake-cache-file CMakeCache.txt
+W: cruft-general-diff source: diff-contains-arch-control-dir {arch}
+W: cruft-general-diff source: diff-contains-arch-inventory-file .arch-inventory
+W: cruft-general-diff source: diff-contains-bts-control-dir .be
+W: cruft-general-diff source: diff-contains-bzr-control-dir .bzr
+W: cruft-general-diff source: diff-contains-cvs-conflict-copy .#foo.1.1
+W: cruft-general-diff source: diff-contains-cvs-control-dir CVS
+W: cruft-general-diff source: diff-contains-editor-backup-file foo~
+W: cruft-general-diff source: diff-contains-git-control-dir .git
+W: cruft-general-diff source: diff-contains-hg-control-dir .hg
+W: cruft-general-diff source: diff-contains-patch-failure-file foo.rej
+W: cruft-general-diff source: diff-contains-substvars debian/substvars
+W: cruft-general-diff source: diff-contains-svk-commit-file svk-commit444.tmp
+W: cruft-general-diff source: diff-contains-svn-commit-file svn-commit.tmp
+W: cruft-general-diff source: diff-contains-svn-conflict-file foo.r1352
+W: cruft-general-diff source: diff-contains-svn-control-dir .svn

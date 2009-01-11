@@ -1,3 +1,15 @@
+lintian (2.1.6) UNRELEASED; urgency=low
+
+  * Summary of tag changes:
+    + Added
+      - diff-contains-cmake-cache-file
+
+  * checks/cruft{,.desc}:
+    + [RA] Error on CMakeCache.txt files added or modified in the diff.
+      Thanks, Joerg Jaspert.  (Closes: #510957)
+
+ -- Russ Allbery <rra@debian.org>  Sat, 10 Jan 2009 23:47:46 -0800
+
 lintian (2.1.5) unstable; urgency=low
 
   * Summary of tag changes:
