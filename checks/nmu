@@ -32,6 +32,7 @@ my $type = shift;
 my $info = shift;
 my $distribution = undef;
 my $changelog_mentions_nmu = 0;
+my $changelog_mentions_local = 0;
 my $changelog_mentions_qa = 0;
 my $uploader = undef;
 
@@ -52,6 +53,7 @@ while (<CHANGELOG>) {
 	if ($firstline) {
 		$changelog_mentions_nmu = 1
 			if (/\bnmu\b/i or /non-maintainer upload/i) and not /(ackno|\back\b|confir|incorporat)/i;
+		$changelog_mentions_local = 1 if /\blocal\s+package\b/i;
 		$changelog_mentions_qa = 1 if /orphan/i or /qa (?:group )?upload/i;
 		$firstline = 0 if /^\s+\S/;
 	}
@@ -67,6 +69,7 @@ my $maintainer = canonicalize($info->field("maintainer"));
 my $uploaders = $info->field("uploaders");
 
 my $version_nmuness = 0;
+my $version_local = 0;
 if ($version =~ /-[^.-]+(\.[^.-]+)?(\.[^.-]+)?$/) {
 	$version_nmuness = 1 if defined $1;
 	$version_nmuness = 2 if defined $2;
@@ -76,6 +79,9 @@ if ($version =~ /\+nmu\d+$/) {
 }
 if ($version =~ /\+b\d+$/) {
 	$version_nmuness = 2;
+}
+if ($version =~ /local/i) {
+	$version_local = 1;
 }
 
 my $upload_is_nmu = $uploader ne $maintainer;
@@ -100,12 +106,15 @@ if ($maintainer =~ /packages\@qa.debian.org/) {
 	tag "changelog-should-mention-qa", ""
 		if !$changelog_mentions_qa;
 } else {
-	tag "changelog-should-mention-nmu", ""
-		if !$changelog_mentions_nmu && $upload_is_nmu;
+	# Local packages may be either NMUs or not.
+	unless ($changelog_mentions_local || $version_local) {
+		tag "changelog-should-mention-nmu", ""
+		    if !$changelog_mentions_nmu && $upload_is_nmu;
+		tag "source-nmu-has-incorrect-version-number", "$version"
+		    if $upload_is_nmu && $version_nmuness != 1;
+	}
 	tag "changelog-should-not-mention-nmu", ""
 		if $changelog_mentions_nmu && !$upload_is_nmu;
-	tag "source-nmu-has-incorrect-version-number", "$version"
-		if $upload_is_nmu && $version_nmuness != 1;
 	tag "maintainer-upload-has-incorrect-version-number", "$version"
 		if !$upload_is_nmu && $version_nmuness;
 }

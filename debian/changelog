@@ -14,6 +14,10 @@ lintian (2.1.6) UNRELEASED; urgency=low
       Holger Levsen and Chris Lamb.  (Closes: #464837)
   * checks/lintian.desc:
     + [RA] Add tag description for malformed-changes-file.
+  * checks/nmu{,.desc}:
+    + [RA] Suppress NMU warnings for packages with "local" in the version
+      number or "local package" in the first line of the changelog.
+      Thanks, Zack Weinberg.  (Closes: #501523)
 
   * frontend/lintian:
     + [RA] Check that .changes files have at least a Format key.  If not,
