@@ -249,12 +249,12 @@ sub record_stats {
     if ($tag_info->{overridden}{override}) {
 	$stats{$current}{overrides}{tags}{$tag_info->{overridden}{override}}++;
 	$stats{$current}{overrides}{severity}{$tag_info->{severity}}++;
-	$stats{$current}{overrides}{certainty}{$tag_info->{severity}}++;
+	$stats{$current}{overrides}{certainty}{$tag_info->{certainty}}++;
 	$stats{$current}{overrides}{types}{get_tag_code($tag_info)}++;
     } else {
 	$stats{$current}{tags}{$tag_info->{tag}}++;
 	$stats{$current}{severity}{$tag_info->{severity}}++;
-	$stats{$current}{certainty}{$tag_info->{severity}}++;
+	$stats{$current}{certainty}{$tag_info->{certainty}}++;
 	$stats{$current}{types}{get_tag_code($tag_info)}++;
     }
 }
