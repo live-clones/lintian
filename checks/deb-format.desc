@@ -1,0 +1,17 @@
+Check-Script: deb-format
+Author: Russ Allbery <rra@debian.org>
+Abbrev: dfmt
+Type: binary, udeb
+Unpack-Level: 1
+Info: This script checks the format of the deb ar archive itself.
+
+Tag: malformed-deb-archive
+Severity: serious
+Certainty: certain
+Info: The binary package is not a correctly constructed archive.  A binary
+ Debian package must be an ar archive with exactly three members:
+ <tt>debian-control</tt>, <tt>control.tar.gz</tt>, and
+ <tt>data.tar.gz</tt> or <tt>data.tar.bz2</tt> in exactly that order.  The
+ <tt>debian-control</tt> member must start with a single line containing
+ the version number, with a major revision of 2.
+Ref: deb(5)

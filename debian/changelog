@@ -9,10 +9,16 @@ lintian (2.1.5) UNRELEASED; urgency=low
       - changed-by-name-missing
       - duplicate-long-description
       - duplicate-short-description
+      - malformed-deb-archive
 
   * checks/control-file{,.desc}:
     + [RA] Tag (severity: wishlist) duplicate short or long descriptions
       in packages built from the same source.  (Closes: #30020)
+  * checks/deb-format{,.desc}:
+    + [RA] New check for the format of *.deb ar archives.  Most cases will
+      fail during unpack, but dpkg-deb is more forgiving than dak and
+      allows ordering problems and extra members that dak rejects.
+      (Closes: #292055)
   * checks/fields:
     + [RA] Use check_maintainer from Lintian::Check, which suppresses
       duplicate tags for some ill-formed maintainer fields.
@@ -31,9 +37,15 @@ lintian (2.1.5) UNRELEASED; urgency=low
   * lib/Lintian/Check.pm:
     + [RA] New module for checks run from multiple places.
 
+  * man/lintian.1:
+    + [RA] Document new deb-format check script.
+
   * t/runtests:
     + [RA] Add support for running lintian on changes files in t/changes
       and checking the tag output.
+    + [RA] Add support for building a Debian package using basic tools,
+      with more complete control over the contents, and running lintian on
+      the results.
     + [RA] Fix exit status when a test fails but -k was given.
 
  -- Russ Allbery <rra@debian.org>  Mon, 05 Jan 2009 10:41:18 -0800
