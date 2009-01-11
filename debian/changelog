@@ -41,6 +41,9 @@ lintian (2.1.5) UNRELEASED; urgency=low
   * lib/Lintian/Schedule.pm:
     + [RA] Fix Perl warnings triggered by missing fields in the control
       file of a binary package.
+  * lib/Tags.pm:
+    + [RA] Avoid Perl warnings if Severity or Certainty isn't set for a
+      tag.  (Closes: #507278)
 
   * man/lintian.1:
     + [RA] Document new deb-format check script.

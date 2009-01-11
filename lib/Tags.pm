@@ -292,7 +292,13 @@ sub display_tag {
 
     my $severity = $tag_info->{'severity'};
     my $certainty = $tag_info->{'certainty'};
-    my $level = $display_level{$severity}{$certainty};
+    my $level;
+    if ($severity and $certainty) {
+	$level = $display_level{$severity}{$certainty};
+    } else {
+	# Shouldn't happen, but avoid Perl warnings anyway.
+	$level = 1;
+    }
 
     $tag_info->{'display'} = $level;
     return $level if not keys %display_source;
