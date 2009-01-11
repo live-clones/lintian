@@ -60,7 +60,7 @@ for my $desc (<t/tests/*.desc>) {
 }
 
 # Parse all tags files for the changes and debs test suite.
-for my $tagfile (<t/changes/*.tags> <t/debs/*/tags) {
+for my $tagfile (<t/changes/*.tags>, <t/debs/*/tags>) {
     open(IN, '<', $tagfile) or die "Cannot open $tagfile: $!\n";
     local $_;
     while (<IN>) {
