@@ -40,15 +40,6 @@ copyright-file usr-share-doc-symlink-to-foreign-package
 
 cruft documentation-package-not-architecture-independent
 cruft outdated-autotools-helper-file
-cruft source-contains-arch-control-dir
-cruft source-contains-arch-inventory-file
-cruft source-contains-bzr-control-dir
-cruft source-contains-cvs-conflict-copy
-cruft source-contains-cvs-control-dir
-cruft source-contains-hg-control-dir
-cruft source-contains-svk-commit-file
-cruft source-contains-svn-conflict-file
-cruft source-contains-svn-control-dir
 
 debconf boolean-template-has-bogus-default
 debconf debconf-is-not-a-registry
@@ -317,11 +308,7 @@ copyright-file old-fsf-address-in-copyright-file
 copyright-file possible-gpl-code-linked-with-openssl
 copyright-file usr-share-doc-symlink-without-dependency
 
-cruft configure-generated-file-in-source
 cruft native-package-with-dash-version
-cruft source-contains-bts-control-dir
-cruft source-contains-git-control-dir
-cruft source-contains-svn-commit-file
 
 debconf config-does-not-load-confmodule
 debconf debconf-config-not-executable

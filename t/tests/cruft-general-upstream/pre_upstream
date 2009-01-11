@@ -1,0 +1,31 @@
+#!/bin/sh
+#
+# Create all the various junk that shouldn't exist upstream.  We do much of it
+# here rather than in the template so that Lintian itself can be imported into
+# revision control systems.
+
+set -e
+dir="$1"
+
+mkdir "${dir}/CVS"
+echo 'source-contains-cvs-control-dir' > "${dir}/CVS/Entries"
+mkdir "${dir}/.svn"
+echo 'source-contains-svn-control-dir' > "${dir}/.svn/format"
+mkdir "${dir}/.bzr"
+echo 'source-contains-bzr-control-dir' > "${dir}/.bzr/foo"
+mkdir "${dir}/{arch}"
+echo 'source-contains-arch-control-dir' > "${dir}/{arch}/foo"
+mkdir "${dir}/.git"
+echo 'source-contains-git-control-dir' > "${dir}/.git/foo"
+mkdir "${dir}/.hg"
+echo 'source-contains-hg-control-dir' > "${dir}/.hg/foo"
+mkdir "${dir}/.be"
+echo 'source-contains-bts-control-dir' > "${dir}/.be/foo"
+
+echo 'source-contains-svn-commit-file' > "${dir}/svn-commit.tmp"
+echo 'source-contains-svk-commit-file' > "${dir}/svk-commit444.tmp"
+echo 'source-contains-arch-inventory-file' > "${dir}/.arch-inventory"
+echo 'source-contains-cvs-conflict-copy' > "${dir}/.#foo.1.1"
+echo 'source-contains-svn-conflict-file' > "${dir}/foo.r1352"
+
+echo 'configure-generated-file-in-source' > "${dir}/config.cache"
