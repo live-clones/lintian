@@ -14,6 +14,8 @@ lintian (2.1.5) UNRELEASED; urgency=low
   * checks/control-file{,.desc}:
     + [RA] Tag (severity: wishlist) duplicate short or long descriptions
       in packages built from the same source.  (Closes: #30020)
+    + [RA] Clarify the binary-control-field-duplicates-source tag.
+      (Closes: #511213)
   * checks/deb-format{,.desc}:
     + [RA] New check for the format of *.deb ar archives.  Most cases will
       fail during unpack, but dpkg-deb is more forgiving than dak and

@@ -76,7 +76,7 @@ for my $binary_control (@binary_controls) {
 	    if ($binary_control->{"build-depends"} || $binary_control->{"build-depends-indep"} ||
 	        $binary_control->{"build-conflicts"} || $binary_control->{"build-conflicts-indep"});
 	for my $field (keys %$binary_control) {
-		tag 'binary-control-field-duplicates-source', $field, "in package ".$binary_control->{'package'},
+		tag 'binary-control-field-duplicates-source', "field \"$field\" in package ".$binary_control->{'package'},
 		    if ($header->{$field} && $binary_control->{$field} eq $header->{$field});
 	}
 }
