@@ -402,6 +402,8 @@ if (defined $info->field('homepage')) {
 	unless ($uri->scheme) { # not an absolute URI
 		tag "bad-homepage", $homepage;
 	}
+} elsif ($type eq "binary") {
+	tag "no-homepage-field";
 }
 
 #---- Installer-Menu-Item (udeb)

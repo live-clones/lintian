@@ -942,3 +942,11 @@ Info: This package is also provided by one of the Perl core packages
  .
  Example: perl-modules (&gt;= 5.10.0) | libmodule-build-perl (&gt;= 0.26)
 Ref: policy 7.5
+
+Tag: no-homepage-field
+Severity: pedantic
+Certainty: possible
+Info: The package lacks the <tt>Homepage</tt> field which, if it contains
+ useful information or resources to the end user, should be provided in the
+ <tt>control</tt> file.
+Ref: policy 5.6.23
