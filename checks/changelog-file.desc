@@ -73,7 +73,7 @@ Info: If there is an upstream changelog file, it should usually be
 Ref: policy 12.7
 
 Tag: no-upstream-changelog
-Severity: minor
+Severity: pedantic
 Certainty: wild-guess
 Info: The package does not install an upstream changelog file. 
 Ref: policy 12.7

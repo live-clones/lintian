@@ -214,10 +214,7 @@ if ($native_pkg) {
 	    }
     	}
 	if (not $found) {
-	    # This tag is disabled for now since a lot of packages fail this
-	    # aspect of policy and I want to clarify policy WRT multi-binary
-	    # packages first.
-	    #tag "no-upstream-changelog", "";
+	    tag "no-upstream-changelog";
 	}
     }
 
