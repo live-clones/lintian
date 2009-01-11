@@ -178,23 +178,24 @@ sub run {
 
 
 	#----- general cruft checking:
-	if ($uses_patch_system) {
-		if ($uses_patch_system > 1) {
-			tag "more-than-one-patch-system";
-		}
+	if ($uses_patch_system > 1) {
+		tag "more-than-one-patch-system";
+	}
+	my @direct;
+	open(STAT, '<', "diffstat") or fail("cannot open diffstat file: $!");
+	while (<STAT>) {
+		my ($file) = (m,^\s+(.*?)\s+\|,)
+		     or fail("syntax error in diffstat file: $_");
+		push (@direct, $file) if ($file !~ m,^debian/,);
+	}
+	close (STAT) or fail("error reading diffstat file: $!");
+	if (@direct) {
+		my $files = (@direct > 1) ? "$direct[0] and $#direct more" : $direct[0];
 
-		my @direct;
-		open(STAT, '<', "diffstat") or fail("cannot open diffstat file: $!");
-		while (<STAT>) {
-			my ($file) = (m,^\s+(.*?)\s+\|,)
-			     or fail("syntax error in diffstat file: $_");
-			push (@direct, $file) if ($file !~ m,^debian/,);
-		}
-		close (STAT) or fail("error reading diffstat file: $!");
-		if (@direct) {
-			my $files = (@direct > 1) ? "$direct[0] and $#direct more" : $direct[0];
-			tag "patch-system-but-direct-changes-in-diff", $files;
-		}
+		tag "patch-system-but-direct-changes-in-diff", $files
+			if ($uses_patch_system);
+		tag "direct-changes-in-diff-but-no-patch-system", $files
+			if (not $uses_patch_system);
 	}
 }
 
