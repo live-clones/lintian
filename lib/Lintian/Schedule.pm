@@ -40,15 +40,17 @@ sub new {
 sub add_file {
     my ($self, $type, $file, %pkg_info) = @_;
 
-    my ($pkg, $ver, $arch) = ("", "", "");
+    my ($pkg, $ver, $arch);
     if ($type eq 's') {
 	($pkg, $ver, $arch) =
 	    (@pkg_info{qw(source version)}, 'source');
     } else {
 	($pkg, $ver, $arch) =
 	    @pkg_info{qw(package version architecture)};
-	$arch ||= "";
     }
+    $pkg  ||= '';
+    $ver  ||= '';
+    $arch ||= '';
 
     my $s = "$type $pkg $ver $arch $file";
     my %h = ( type => $type, package => $pkg, version => $ver,

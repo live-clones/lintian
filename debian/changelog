@@ -36,6 +36,9 @@ lintian (2.1.5) UNRELEASED; urgency=low
 
   * lib/Lintian/Check.pm:
     + [RA] New module for checks run from multiple places.
+  * lib/Lintian/Schedule.pm:
+    + [RA] Fix Perl warnings triggered by missing fields in the control
+      file of a binary package.
 
   * man/lintian.1:
     + [RA] Document new deb-format check script.
