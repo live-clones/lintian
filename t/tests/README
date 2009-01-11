@@ -86,6 +86,14 @@ tags
     lexicographically sorted before comparing it with tags.  This file
     may be empty if the test case should produce no Lintian output.
 
+pre_upstream
+    If present and executable, this script is run for a non-native test
+    type after preparing the upstream directory but before creating the
+    tarball.  It receives the path to the package directory as its first
+    argument and can make any modifications that can't easily be
+    represented in the template system (such as creating files that
+    shouldn't be stored in a revision control system).
+
 pre_build
     If present and executable, this script is run after preparing the
     upstream tarball (if any) and the package directory, but before

@@ -8,6 +8,10 @@ lintian (2.1.6) UNRELEASED; urgency=low
     + [RA] Error on CMakeCache.txt files added or modified in the diff.
       Thanks, Joerg Jaspert.  (Closes: #510957)
 
+  * t/runtests:
+    + [RA] Add pre_upstream hook to modify the upstream source before
+      generation of the .orig.tar.gz.
+
  -- Russ Allbery <rra@debian.org>  Sat, 10 Jan 2009 23:47:46 -0800
 
 lintian (2.1.5) unstable; urgency=low

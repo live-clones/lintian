@@ -314,6 +314,10 @@ sub test_package {
 	runsystem("cp", "-rp", "$tmpldir/skel.upstream", $targetdir);
 	runsystem("rm", "-f", "$targetdir/.dummy");
 	runsystem("rsync", "-rp", "$origdir/upstream/", "$targetdir/");
+	if (-x "$origdir/pre_upstream") {
+	    print "running pre_upstream hook... " if $VERBOSE;
+	    runsystem("$origdir/pre_upstream", $targetdir);
+	}
 	runsystem("cd $RUNDIR && ".
 		  "tar czf ${pkg}_${orig_version}.orig.tar.gz $pkgdir");
 	runsystem("rsync", "-rp", "--exclude=debian/changelog",
