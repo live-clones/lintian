@@ -14,6 +14,7 @@ Test-For:
  diff-contains-editor-backup-file
  diff-contains-git-control-dir
  diff-contains-hg-control-dir
+ diff-contains-hg-tags-file
  diff-contains-patch-failure-file
  diff-contains-substvars
  diff-contains-svk-commit-file

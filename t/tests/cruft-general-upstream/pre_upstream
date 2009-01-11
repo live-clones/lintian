@@ -25,6 +25,7 @@ echo 'source-contains-bts-control-dir' > "${dir}/.be/foo"
 echo 'source-contains-svn-commit-file' > "${dir}/svn-commit.tmp"
 echo 'source-contains-svk-commit-file' > "${dir}/svk-commit444.tmp"
 echo 'source-contains-arch-inventory-file' > "${dir}/.arch-inventory"
+echo 'source-contains-hg-tags-file' > "${dir}/.hgtags"
 echo 'source-contains-cvs-conflict-copy' > "${dir}/.#foo.1.1"
 echo 'source-contains-svn-conflict-file' > "${dir}/foo.r1352"
 

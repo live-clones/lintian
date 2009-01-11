@@ -156,6 +156,21 @@ Info: The upstream source contains a .hg directory. It was most likely
  an upstream release tarball contains .hg directories, you should usually
  report this as a bug upstream.
 
+Tag: diff-contains-bts-control-dir
+Severity: normal
+Certainty: certain
+Info: The Debian diff or native package contains files in a directory
+ used by a bug tracking system, which are not useful in a diff or native
+ package. Passing <tt>-i</tt> to <tt>dpkg-buildpackage</tt> or the
+ equivalent will automatically exclude them.
+
+Tag: source-contains-bts-control-dir
+Severity: wishlist
+Certainty: certain
+Info: The upstream source contains a directory used by a bug tracking
+ system. It was most likely included by accident since bug tracking system
+ directories usually don't belong in releases.
+
 Tag: diff-contains-svn-commit-file
 Severity: minor
 Certainty: certain
@@ -197,6 +212,23 @@ Certainty: certain
 Info: The upstream source contains an <tt>.arch-inventory</tt> file.  This
  is Arch metadata that should normally not be distributed.  You may want
  to report this as an upstream bug.
+
+Tag: diff-contains-hg-tags-file
+Severity: normal
+Certainty: certain
+Info: The Debian diff or native package contains an <tt>.htgags</tt>
+ file.  This file is Mercurial metadata that should normally not be
+ distributed.  It stores hashes of tagged commits in a Mercurial
+ repository and isn't therefore useful without the repository.
+
+Tag: source-contains-hg-tags-file
+Severity: wishlist
+Certainty: certain
+Info: The upstream source contains an <tt>.htgags</tt> file.  This file is
+ Mercurial metadata that should normally not be distributed.  It stores
+ hashes of tagged commits in a Mercurial repository and isn't therefore
+ useful without the repository.  You may want to report this as an
+ upstream bug.
 
 Tag: diff-contains-cvs-conflict-copy
 Severity: normal
@@ -308,18 +340,3 @@ Info: The referenced file seems to be from a libtool version
  If you have not updated the file but fixed architecture-specific
  issues with minimal patches and verified that it builds correctly
  please override this tag.  lintian will not be able to verify that.
-
-Tag: diff-contains-bts-control-dir
-Severity: normal
-Certainty: certain
-Info: The Debian diff or native package contains files in a directory
- used by a bug tracking system, which are not useful in a diff or native
- package. Passing <tt>-i</tt> to <tt>dpkg-buildpackage</tt> or the
- equivalent will automatically exclude them.
-
-Tag: source-contains-bts-control-dir
-Severity: wishlist
-Certainty: certain
-Info: The upstream source contains a directory used by a bug tracking
- system. It was most likely included by accident since bug tracking system
- directories usually don't belong in releases.

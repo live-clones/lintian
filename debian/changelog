@@ -3,11 +3,15 @@ lintian (2.1.6) UNRELEASED; urgency=low
   * Summary of tag changes:
     + Added
       - diff-contains-cmake-cache-file
+      - diff-contains-hg-tags-file
       - malformed-changes-file
+      - source-contains-hg-tags-file
 
   * checks/cruft{,.desc}:
     + [RA] Error on CMakeCache.txt files added or modified in the diff.
       Thanks, Joerg Jaspert.  (Closes: #510957)
+    + [RA] Warn about .hgtags files in the diff and source.  Thanks,
+      Holger Levsen and Chris Lamb.  (Closes: #464837)
   * checks/lintian.desc:
     + [RA] Add tag description for malformed-changes-file.
 

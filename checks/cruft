@@ -66,6 +66,7 @@ my @file_checks =
     ([ qr,^(.+/)?svn-commit\.(.+\.)?tmp$, => 'svn-commit-file'        ],
      [ qr,^(.+/)?svk-commit.+\.tmp$,      => 'svk-commit-file'        ],
      [ qr,^(.+/)?\.arch-inventory$,       => 'arch-inventory-file'    ],
+     [ qr,^(.+/)?\.hgtags$,               => 'hg-tags-file'           ],
      [ qr,^(.+/)?\.\#(.+?)\.\d+(\.\d+)*$, => 'cvs-conflict-copy'      ],
      [ qr,^(.+/)?(.+?)\.(r\d+)$,          => 'svn-conflict-file'      ],
      [ qr,\.(orig|rej)$,                  => 'patch-failure-file',  1 ],

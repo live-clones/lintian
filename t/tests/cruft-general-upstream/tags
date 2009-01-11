@@ -6,6 +6,7 @@ I: cruft-general-upstream source: source-contains-cvs-conflict-copy .#foo.1.1
 I: cruft-general-upstream source: source-contains-cvs-control-dir CVS
 I: cruft-general-upstream source: source-contains-git-control-dir .git
 I: cruft-general-upstream source: source-contains-hg-control-dir .hg
+I: cruft-general-upstream source: source-contains-hg-tags-file .hgtags
 I: cruft-general-upstream source: source-contains-svk-commit-file svk-commit444.tmp
 I: cruft-general-upstream source: source-contains-svn-commit-file svn-commit.tmp
 I: cruft-general-upstream source: source-contains-svn-conflict-file foo.r1352
