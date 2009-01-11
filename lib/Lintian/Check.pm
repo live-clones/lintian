@@ -1,7 +1,7 @@
 # -*- perl -*-
 # Lintian::Check -- Lintian checks shared between multiple scripts
 
-# Copyright (C) 2008 Russ Allbery
+# Copyright (C) 2009 Russ Allbery
 # Copyright (C) 2004 Marc Brockschmidt
 # Copyright (C) 1998 Richard Braakman
 #
