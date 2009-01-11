@@ -1,0 +1,68 @@
+WRITING A TEST
+==============
+
+A test in this framework consists of two components: a .changes file
+on which lintian is run and a .tags file giving the sorted expected
+output of lintian when run on that .changes file.  Both files should
+have the same name prior to the extension.  If the .changes file
+references additional files, they should also have the same name up
+to the extension and shouldn't end in .changes or .tags.
+
+This framework should be used to test the checks performed by the
+lintian front-end itself on the .changes file.  Do not include .deb,
+.dsc, .orig.tar.gz, .tar.gz, or .diff.gz files in this test framework.
+To build a complete package, the tests framework is more appropriate.
+
+
+TEST NAMING CONVENTIONS
+=======================
+
+Try to avoid naming conflicts between checks in this directory and
+checks in the other frameworks.  Otherwise, there is no strict naming
+convention here since there are few enough tags to check that require
+a custom .changes file that there shouldn't be too many tests in this
+framework.
+
+
+RUNNING THE TEST SUITE
+======================
+
+The complete test suite will be run with debian/rules runtests, but
+this can take quite a lot of time.  Normally this is only necessary
+after significant structural changes or before a release as a final
+check.
+
+To run a specific test case, run:
+
+    debian/rules runtests onlyrun=<desc-name>
+
+You can omit the .desc from the end of <desc-name>, but you need to
+include the leading sequence number and underscore.  Give only the
+file name, not the full path.
+
+It's often more useful to run every test that is relevant to a
+particular tag.  To do that, run:
+
+    debian/rules check-tag tag=<tag>
+
+This will run all tests that list that tag in the .tags file.
+
+
+TEST WRITING TIPS
+=================
+
+Please keep each test case focused.  One of the problems that
+developed with the old test suite is that each test was serving many
+separate purposes and testing large swaths of Lintian, which made it
+difficult to know what could be changed and what would destroy some
+other useful test.  Test cases should only test a set of closely
+related tags and new tests should be added for new issues that aren't
+part of that closely-related set.
+
+Test cases should be as Lintian-clean as possible except for the tags
+that they're testing for.  The template is intended to help with this.
+It generates a Lintian-clean basic package for you to start with.  You
+should override only the minimal required to trigger your test, and
+try to fix any unrelated problems.  Sometimes this won't be possible
+and the only way to trigger a tag is to also trigger another tag, and
+that's fine, but it shouldn't be the normal case.
