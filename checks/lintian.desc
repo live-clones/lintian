@@ -1,6 +1,18 @@
 Check-Script: lintian
-Info: this description file is a special case: it contains the tag info
- for the tags produced by the lintian frontend itself
+Info: This description file is a special case.  It contains the tag info
+ for the tags produced by the lintian frontend itself.
+
+Tag: malformed-changes-file
+Severity: serious
+Certainty: certain
+Info: There is no "Format" field in your .changes file.  This probably
+ indicates some serious problem with the file.  Perhaps it's not actually
+ a changes file, or it's not in the proper format, or it's PGP-signed
+ twice.
+ .
+ Since Lintian was unable to parse this .changes file, it and any files
+ that it would have referenced were skipped.
+Ref: policy 5.5
 
 Tag: no-description-in-changes-file
 Severity: serious

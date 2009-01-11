@@ -3,10 +3,18 @@ lintian (2.1.6) UNRELEASED; urgency=low
   * Summary of tag changes:
     + Added
       - diff-contains-cmake-cache-file
+      - malformed-changes-file
 
   * checks/cruft{,.desc}:
     + [RA] Error on CMakeCache.txt files added or modified in the diff.
       Thanks, Joerg Jaspert.  (Closes: #510957)
+  * checks/lintian.desc:
+    + [RA] Add tag description for malformed-changes-file.
+
+  * frontend/lintian:
+    + [RA] Check that .changes files have at least a Format key.  If not,
+      issue malformed-changes-file and skip them.  This catches .changes
+      files that were PGP-signed twice.  (Closes: #315538)
 
   * t/runtests:
     + [RA] Add pre_upstream hook to modify the upstream source before

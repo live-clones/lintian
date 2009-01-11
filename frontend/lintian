@@ -785,8 +785,14 @@ while (my $arg = shift) {
 		warning("$arg is a zero-byte file, skipping");
 		next;
 	    }
-
 	    Tags::set_pkg( $arg, $arg_name, "", "", 'binary' );
+
+	    # If we don't have a Format key, something went seriously wrong.
+	    # Tag the file and skip remaining processing.
+	    if (!$data->{'format'}) {
+		tag('malformed-changes-file');
+		next;
+	    }
 
 	    # Description is mandated by dak, but only makes sense if binary
 	    # packages are included.  Don't tag pure source uploads.
