@@ -132,11 +132,13 @@ find($wanted, 'unpacked');
 # name of a file containing diffstat output.
 sub check_diffstat {
     my ($diffstat, $warned) = @_;
+    my $saw_file;
     open(STAT, '<', $diffstat) or fail("cannot open $diffstat: $!");
     local $_;
     while (<STAT>) {
         my ($file) = (m,^\s+(.*?)\s+\|,)
             or fail("syntax error in diffstat file: $_");
+        $saw_file = 1;
 
         # Check for CMake cache files.  These embed the source path and hence
         # will cause FTBFS on buildds, so they should never be touched in the
@@ -178,6 +180,10 @@ sub check_diffstat {
         }
     }
     close(STAT) or fail("error reading diffstat file: $!");
+
+    # If there was nothing in the diffstat output, there was nothing in the
+    # diff, which is probably a mistake.
+    tag 'empty-debian-diff' unless $saw_file;
 }
 
 # Check each file in the source package for problems.  By the time we get to

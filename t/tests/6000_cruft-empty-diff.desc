@@ -1,0 +1,5 @@
+Testname: cruft-empty-diff
+Version: 1.0
+Description: Test an empty Debian diff
+Test-For: empty-debian-diff
+References: Debian Bug#498668
