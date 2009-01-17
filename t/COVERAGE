@@ -1,4 +1,4 @@
-Last generated 2009-01-11
+Last generated 2009-01-17
 
 The following tags are not tested by the test suite:
 
@@ -388,6 +388,7 @@ fields depends-on-obsolete-package
 fields depends-on-old-emacs
 fields depends-on-python-minimal
 fields depends-on-x-metapackage
+fields duplicate-uploader
 fields essential-no-not-needed
 fields invalid-arch-string-in-source-relation
 fields maintainer-also-in-uploaders
