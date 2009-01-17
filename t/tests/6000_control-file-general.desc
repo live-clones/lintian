@@ -6,7 +6,8 @@ Test-For:
  build-info-in-binary-control-file-section
  duplicate-long-description
  duplicate-short-description
+ missing-comma-after-substvar
  no-section-field-for-source
  package-depends-on-itself
  stronger-dependency-implies-weaker
-References: Debian Bug#30020
+References: Debian Bug#30020, Debian Bug#409099

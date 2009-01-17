@@ -7,8 +7,12 @@ lintian (2.1.6) UNRELEASED; urgency=low
       - duplicate-uploader
       - empty-debian-diff
       - malformed-changes-file
+      - missing-comma-after-substvar
       - source-contains-hg-tags-file
 
+  * checks/control-file{,.desc}:
+    + [RA] Check for missing commas after substvars in dependency fields.
+      Thanks, Jari Aalto.  (Closes: #409099)
   * checks/cruft{,.desc}:
     + [RA] Error on CMakeCache.txt files added or modified in the diff.
       Thanks, Joerg Jaspert.  (Closes: #510957)

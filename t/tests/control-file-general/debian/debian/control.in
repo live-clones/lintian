@@ -10,7 +10,7 @@ Section: {$section}
 Maintainer: {$author}
 Build-Conflicts: foo
 Architecture: {$architecture}
-Depends: {$srcpkg}, foo, baz, $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: {$srcpkg}, foo, baz, $\{shlibs:Depends\} $\{misc:Depends\}
 Recommends: foo, bar
 Suggests: bar | baz
 Description: {$description}

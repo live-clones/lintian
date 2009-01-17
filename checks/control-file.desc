@@ -121,3 +121,14 @@ Info: The listed binary packages all share the same extended description.
  is in each package and how it differs from the other packages is useful,
  particularly for users who arne't familiar with Debian's package naming
  conventions.
+
+Tag: missing-comma-after-substvar
+Severity: normal
+Certainty: possible
+Info: The given field in the <tt>debian/control</tt> file has a substvar
+ (something of the form <tt>${Variable}</tt>) that isn't followed by a
+ comma.  This is normally a lurking bug.  As long as the variable isn't
+ defined or expands to an empty string, the generated control file will be
+ syntactically valid, but as soon as the variable has a non-empty value,
+ the control file will have a syntax error.  You probably meant to put a
+ comma after the substvar expansion.

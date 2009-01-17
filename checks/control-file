@@ -79,6 +79,21 @@ for my $binary_control (@binary_controls) {
 		tag 'binary-control-field-duplicates-source', "field \"$field\" in package ".$binary_control->{'package'},
 		    if ($header->{$field} && $binary_control->{$field} eq $header->{$field});
 	}
+
+	# If two substvars aren't separated by a comma, but at least one of
+	# them expands to an empty string, there will be a lurking bug.  The
+	# result will be syntactically correct, but as soon as both expand
+	# into something non-empty, there will be a syntax error.  Catch that
+	# mistake to avoid problems later.
+	#
+	# Only check the fields that use comma-separated values.
+	for my $field (qw(pre-depends depends recommends suggests breaks
+			  conflicts provides replaces enhances)) {
+		next unless $binary_control->{$field};
+		if ($binary_control->{$field} =~ /(\$\{\S+\})\s+[a-zA-Z0-9\$]/) {
+			tag 'missing-comma-after-substvar', "in $field field near $1";
+		}
+	}
 }
 
 # Make sure that a stronger dependency field doesn't imply any of the elements
