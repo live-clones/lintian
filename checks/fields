@@ -754,13 +754,14 @@ if ($type eq "source") {
 	}
 
 	# Make sure build dependencies and conflicts are consistent.
-	$depend{'build-depends'} = Dep::parse($depend{'build-depends'} || '');
-	$depend{'build-depends-indep'} = Dep::parse($depend{'build-depends-indep'} || '');
+	my %parsed;
+	$parsed{'build-depends'} = Dep::parse($depend{'build-depends'} || '');
+	$parsed{'build-depends-indep'} = Dep::parse($depend{'build-depends-indep'} || '');
 	for ($depend{'build-conflicts'}, $depend{'build-conflicts-indep'}) {
 		next unless $_;
 		for my $conflict (split /\s*,\s*/, $_) {
-			if (Dep::implies($depend{'build-depends'}, Dep::parse($conflict))
-			    || Dep::implies($depend{'build-depends-indep'}, Dep::parse($conflict))) {
+			if (Dep::implies($parsed{'build-depends'}, Dep::parse($conflict))
+			    || Dep::implies($parsed{'build-depends-indep'}, Dep::parse($conflict))) {
 				tag "build-conflicts-with-build-dependency", $conflict;
 			}
 		}
@@ -772,8 +773,8 @@ if ($type eq "source") {
 	for my $package (keys %needed_clean) {
 		my $dep = Dep::parse($package);
 		my $tag = $needed_clean{$package} || 'missing-build-dependency';
-		unless (Dep::implies($depend{'build-depends'}, $dep)) {
-			if (Dep::implies($depend{'build-depends-indep'}, $dep)) {
+		unless (Dep::implies($parsed{'build-depends'}, $dep)) {
+			if (Dep::implies($parsed{'build-depends-indep'}, $dep)) {
 				tag "clean-should-be-satisfied-by-build-depends", $package;
 			} else {
 				if ($tag eq 'missing-build-dependency') {
@@ -784,8 +785,11 @@ if ($type eq "source") {
 			}
 		}
 	}
+	my $deps = $depend{'build-depends'} || '';
+	$deps .= ', ' if $deps && $depend{'build-depends-indep'};
+	$deps .= $depend{'build-depends-indep'} || '';
+	$deps = Dep::parse_noarch($deps);
 	for my $package (keys %needed) {
-		my $dep = Dep::parse($package);
 		my $tag = $needed{$package} || 'missing-build-dependency';
 
 		# dh_python deactivates itself if the new Python build policy
@@ -794,13 +798,11 @@ if ($type eq "source") {
 			next if -f 'debfiles/pycomat';
 			next if defined $info->field('python-version');
 		}
-		unless (Dep::implies($depend{'build-depends'}, $dep)) {
-			unless (Dep::implies($depend{'build-depends-indep'}, $dep)) {
-				if ($tag eq 'missing-build-dependency') {
-					tag $tag, $package;
-				} else {
-					tag $tag;
-				}
+		unless (Dep::implies($deps, Dep::parse($package))) {
+			if ($tag eq 'missing-build-dependency') {
+				tag $tag, $package;
+			} else {
+				tag $tag;
 			}
 		}
 	}

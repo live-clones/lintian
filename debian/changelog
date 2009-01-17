@@ -16,9 +16,16 @@ lintian (2.1.6) UNRELEASED; urgency=low
       Holger Levsen and Chris Lamb.  (Closes: #464837)
     + [RA] Warn if the Debian diff or a non-native package is entirely
       empty.  (Closes: #498668)
+  * checks/debhelper:
+    + [RA] Ignore architecture when checking whether sufficient build
+      dependencies are present for dh_* commands.  If the maintainer has
+      architecture-restricted build dependencies, they presumably know
+      what they're doing.  (Closes: #511859)
   * checks/fields{,.desc}:
     + [ADB] Warn about an individual uploader appearing multiple times
       in Uploaders.  Thanks, Joerg Jaspert.  (Closes: #511536)
+    + [RA] Ignore architecture qualifications when checking for missing
+      build dependencies.
   * checks/lintian.desc:
     + [RA] Add tag description for malformed-changes-file.
   * checks/menus:
@@ -42,6 +49,10 @@ lintian (2.1.6) UNRELEASED; urgency=low
     + [RA] Check that .changes files have at least a Format key.  If not,
       issue malformed-changes-file and skip them.  This catches .changes
       files that were PGP-signed twice.  (Closes: #315538)
+
+  * lib/Dep.pm:
+    + [RA] New function, parse_noarch(), which ignores architecture
+      qualifications when parsing a dependency field.
 
   * t/runtests:
     + [RA] Add pre_upstream hook to modify the upstream source before

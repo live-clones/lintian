@@ -215,6 +215,7 @@ while (defined(my $file=readdir(DEBIAN))) {
             $bdepends .= ', ' if $bdepends;
             $bdepends .= $control->{$field};
         }
+	my $bdepends_noarch = Dep::parse_noarch($bdepends);
         $bdepends = Dep::parse($bdepends);
         if ($needbuilddepends && ! Dep::implies($bdepends, Dep::parse('debhelper'))) {
 	    tag "package-uses-debhelper-but-lacks-build-depends", "";
@@ -222,7 +223,7 @@ while (defined(my $file=readdir(DEBIAN))) {
 	while (my ($dep, $command) = each %missingbdeps) {
 	    next if $dep eq 'debhelper'; #handled above
 	    tag 'missing-build-dependency-for-dh_-command', "$command=$dep"
-		unless (Dep::implies($bdepends, Dep::parse($dep)));
+		unless (Dep::implies($bdepends_noarch, Dep::parse($dep)));
 	}
     } elsif ($file =~ m/^ex\.|\.ex$/i) {
         tag "dh-make-template-in-source", "debian/$file";

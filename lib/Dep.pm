@@ -31,20 +31,20 @@ use Lintian::Command qw(spawn);
 sub Pred {
     $_[0] =~ 
 	    /^\s*                           # skip leading whitespace
-	      (                             # package name or substvar
+	      (                             # package name or substvar (1)
                [a-zA-Z0-9][a-zA-Z0-9+.-]+   #   package name
                |                            #   or
                (?:\$\{[a-zA-Z0-9:-]+\})     #   substvar
               )                             # end of package name or substvar
 	      (?:                           # start of optional part
   	        \s* \(                      # open parenthesis for version part
-                \s* (<<|<=|=|>=|>>|<|>)     # relation part
-                \s* (.*?)                   # do not attempt to parse version
+                \s* (<<|<=|=|>=|>>|<|>)     # relation part (2)
+                \s* (.*?)                   # version (3)
                 \s* \)                      # closing parenthesis
 	      )?                            # end of optional part
               (?:                           # start of optional architecture
                 \s* \[                      # open bracket for architecture
-                \s* (.*?)                   # don't parse architectures now
+                \s* (.*?)                   # architectures (4)
                 \s* \]                      # closing bracket
               )?                            # end of optional architecture
 	    /x;
@@ -83,6 +83,18 @@ sub parse {
     }
     return $deps[0] if @deps == 1;
     return ['AND', @deps];
+}
+
+# Convert a dependency line into the internal format, ignoring architectures.
+# This should be used in cases where we only care if a dependency is present
+# in some cases and we don't want to require that the architectures match
+# (such as when checking for proper build dependencies, since if there are
+# architecture constraints the maintainer is doing something beyond Lintian's
+# ability to analyze).
+sub parse_noarch {
+    my ($dep) = @_;
+    $dep =~ s/\[[^\]]*\]//g;
+    return parse($dep);
 }
 
 # Take the internal format and convert it back to text.  Note that what this
