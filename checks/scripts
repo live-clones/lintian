@@ -849,7 +849,7 @@ while (<SCRIPTS>) {
 	    for my $rule (@depends_needed) {
 		my ($package, $regex) = @$rule;
 		if ($pkg ne $package and /$regex/ and ! $warned{$package}) {
-		    if (m,-x\s+\S*$regex, or m,which\s+$regex, or m,command\s+.*?$regex,) {
+		    if (m,-x\s+\S*$regex, or m,(which|type)\s+$regex, or m,command\s+.*?$regex,) {
 			$warned{$package} = 1;
 		    } else {
 			my $needed = Dep::parse($package);

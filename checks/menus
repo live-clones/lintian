@@ -596,7 +596,8 @@ sub check_script {
 	##
 
 	# does the script check whether update-menus exists?
-	if (/-x\s+\S*update-menus/o or /(which|command)(\s+\S+)?\s+update-menus/o) {
+	if (/-x\s+\S*update-menus/o or /(which|type)\s+update-menus/o
+	    or /command\s+.*?update-menus/o) {
 	    # yes, it does.
 	    $pres->{'checks-for-updatemenus'} = 1;
 	}
@@ -615,7 +616,7 @@ sub check_script {
 	}
 
 	# does the script check whether wm-menu-config exists?
-	if (s/-x\s+\S*wm-menu-config//o or /which\s+wm-menu-config/o
+	if (s/-x\s+\S*wm-menu-config//o or /(which|type)\s+wm-menu-config/o
 	    or s/command\s+.*?wm-menu-config//o) {
 	    # yes, it does.
 	    $pres->{'checks-for-wmmenuconfig'} = 1;
@@ -653,7 +654,7 @@ sub check_script {
 	}
 
 	# does the script check whether install-docs exists?
-	if (s/-x\s+\S*install-docs//o or /which\s+install-docs/o
+	if (s/-x\s+\S*install-docs//o or /(which|type)\s+install-docs/o
 	    or s/command\s+.*?install-docs//o) {
 	    # yes, it does.
 	    $pres->{'checks-for-installdocs'} = 1;

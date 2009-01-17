@@ -20,12 +20,19 @@ lintian (2.1.6) UNRELEASED; urgency=low
       in Uploaders.  Thanks, Joerg Jaspert.  (Closes: #511536)
   * checks/lintian.desc:
     + [RA] Add tag description for malformed-changes-file.
+  * checks/menus:
+    + [RA] Recognize type as a way of checking for binaries, even though
+      it's a bashism, so that we don't issue confusing duplicate tags for
+      one same problem.  (Closes: #512119)
   * checks/nmu{,.desc}:
     + [RA] Suppress NMU warnings for packages with "local" in the version
       number or "local package" in the first line of the changelog.
       Thanks, Zack Weinberg.  (Closes: #501523)
-  * checks/scripts.desc:
+  * checks/scripts{,.desc}:
     + [RA] Mention type as a bashism and recommend which or command -v.
+    + [RA] Recognize type as a way of checking for binaries, even though
+      it's a bashism, so that we don't issue confusing duplicate tags for
+      one same problem.
 
   * frontend/lintian:
     + [RA] Check that .changes files have at least a Format key.  If not,
