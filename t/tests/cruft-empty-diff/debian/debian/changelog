@@ -1,4 +1,4 @@
-cruft-empty-diff (1.0) unstable; urgency=low
+cruft-empty-diff (1.0-1) unstable; urgency=low
 
   * Lintian Test Suite.
   * Test: basic
