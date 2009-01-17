@@ -33,6 +33,9 @@ lintian (2.1.6) UNRELEASED; urgency=low
     + [RA] Recognize type as a way of checking for binaries, even though
       it's a bashism, so that we don't issue confusing duplicate tags for
       one same problem.
+  * checks/standards-version.desc:
+    + [RA] Add a pointer to the debian-policy upgrading-checklist.txt.gz
+      in out-of-date-standards-version and ancient-standards-version.
 
   * frontend/lintian:
     + [RA] Check that .changes files have at least a Format key.  If not,
