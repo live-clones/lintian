@@ -5,6 +5,7 @@ lintian (2.1.6) UNRELEASED; urgency=low
       - diff-contains-cmake-cache-file
       - diff-contains-hg-tags-file
       - duplicate-uploader
+      - empty-debian-diff
       - malformed-changes-file
       - source-contains-hg-tags-file
 
