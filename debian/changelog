@@ -24,6 +24,8 @@ lintian (2.1.6) UNRELEASED; urgency=low
     + [RA] Suppress NMU warnings for packages with "local" in the version
       number or "local package" in the first line of the changelog.
       Thanks, Zack Weinberg.  (Closes: #501523)
+  * checks/scripts.desc:
+    + [RA] Mention type as a bashism and recommend which or command -v.
 
   * frontend/lintian:
     + [RA] Check that .changes files have at least a Format key.  If not,

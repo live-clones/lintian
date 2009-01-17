@@ -330,6 +330,7 @@ Info: This script is marked as running under <tt>/bin/sh</tt>, but it seems
   '. command args', passing arguments to commands via 'source' is not supported
   '{foo,bar}' instead of 'foo bar'
   '[[ test ]]' instead of '[ test ]' (requires a Korn shell)
+  'type' instead of 'which' or 'command -v'
 
 Tag: suidregister-used-in-maintainer-script
 Severity: important
