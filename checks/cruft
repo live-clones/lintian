@@ -119,7 +119,7 @@ if (defined $info->field('build-depends')) {
 # wanted function.  We don't want to make them global because we'll then leak
 # that data across packages in a large Lintian run.
 my %warned;
-check_diffstat("diffstat", \%warned);
+check_diffstat("diffstat", \%warned) unless $info->native;
 my $wanted = sub { find_cruft($pkg, $info, \%warned, $atdinbd) };
 find($wanted, 'unpacked');
 
