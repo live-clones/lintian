@@ -122,6 +122,21 @@ for my $control (@binary_controls) {
 	}
 }
 
+# Check that packages do not hardcode a depend on any variant of libc
+@dep_fields = qw(pre-depends depends);
+my @libcs = qw(libc6 libc6.1 libc0.1 libc0.3);
+for my $control (@binary_controls) {
+	for my $field (0 .. ($#dep_fields)) {
+		next unless $control->{$dep_fields[$field]};
+		my $parsed = Dep::parse ($control->{$dep_fields[$field]});
+		for my $libc (@libcs) {
+			tag "packages-depends-on-hardcoded-libc", $control->{package}, $dep_fields[$field], $libc
+				if Dep::implies($parsed, Dep::parse($libc));
+		}
+		
+	}
+}
+
 # Check that every package is in the same archive category, except that
 # sources in main can deliver both main and contrib packages.  The source
 # package may or may not have a section specified; if it doesn't, derive the
