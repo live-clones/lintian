@@ -131,7 +131,7 @@ for my $control (@binary_controls) {
 		my $parsed = Dep::parse ($control->{$dep_fields[$field]});
 		for my $libc (@libcs) {
 			tag "packages-depends-on-hardcoded-libc", $control->{package}, $dep_fields[$field], $libc
-				if Dep::implies($parsed, Dep::parse($libc));
+				if Dep::implies($parsed, Dep::parse($libc)) and $control->{package} ne "glibc";
 		}
 		
 	}
