@@ -151,3 +151,12 @@ Info: This debhelper config file appears to use shell brace expansion
  to an accident of implementation but is not a supported feature.  Only
  <tt>?</tt>, <tt>*</tt>, and <tt>[...]</tt> are supported.
 Ref: debhelper(1)
+
+Tag: weak-dependency-on-misc-depends
+Severity: normal
+Certainty: possible
+Ref: debhelper(7)
+Info: The source package declares a weak dependecy on ${misc:Depends} in
+ the given binary package's debian/control entry.  A stronger dependency, that
+ is one that ensures the package's installation, is required so that the
+ additional commands are available to the maintainer scripts when they are run.

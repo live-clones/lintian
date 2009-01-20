@@ -10,3 +10,21 @@ Description: {$description}
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
+
+Package: debhelper-pre-depends
+Architecture: {$architecture}
+Pre-Depends: $\{misc:Depends\}
+Description: {$description} extra string
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package. Extra
+ string to not to trigger duplicated description tags.
+
+Package: debhelper-suggests
+Architecture: {$architecture}
+Suggests: $\{misc:Depends\}
+Description: {$description} another extra string
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package. Extra
+ string.

@@ -4,3 +4,4 @@ E: debhelper-no-depends source: missing-build-dependency-for-dh_-command dh_lisp
 E: debhelper-no-depends source: package-uses-debhelper-but-lacks-build-depends
 W: debhelper-no-depends source: debhelper-but-no-misc-depends debhelper-no-depends
 W: debhelper-no-depends source: package-lacks-versioned-build-depends-on-debhelper 7
+W: debhelper-no-depends source: weak-dependency-on-misc-depends debhelper-suggests

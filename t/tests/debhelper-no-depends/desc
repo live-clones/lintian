@@ -7,3 +7,4 @@ Test-For:
  missing-build-dependency-for-dh_-command
  package-lacks-versioned-build-depends-on-debhelper
  package-uses-debhelper-but-lacks-build-depends
+ weak-dependency-on-misc-depends

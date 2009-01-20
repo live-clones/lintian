@@ -143,18 +143,29 @@ my $pkgs = $info->binaries;
 my $single_pkg = keys(%$pkgs) == 1 ? $pkgs->{(keys(%$pkgs))[0]} : '';
 
 for my $binpkg (keys %$pkgs) {
-    my $depends = '';
+    my ($weak_depends, $strong_depends, $depends) = ('','','');
     local $/;
 
-    foreach my $field (qw(pre-depends depends recommends)) {
+    foreach my $field (qw(pre-depends depends)) {
 	if (open DEPENDS, '<', "control/$binpkg/$field") {
-	    chomp ($depends .= <DEPENDS>);
+	    chomp ($strong_depends .= <DEPENDS>);
 	    close(DEPENDS);
 	}
     }
+    foreach my $field (qw(recommends suggests)) {
+	if (open DEPENDS, '<', "control/$binpkg/$field") {
+	    chomp ($weak_depends .= <DEPENDS>);
+	    close(DEPENDS);
+	}
+    }
+    $depends = $weak_depends . $strong_depends;
 
     tag 'debhelper-but-no-misc-depends', $binpkg
-        if $needmiscdepends and $depends !~ m/\$\{misc:Depends\}/
+	if $needmiscdepends and $depends !~ m/\$\{misc:Depends\}/
+	   and $pkgs->{$binpkg} eq 'deb';
+
+    tag 'weak-dependency-on-misc-depends', $binpkg
+	if $weak_depends =~ m/\$\{misc:Depends\}/
 	   and $pkgs->{$binpkg} eq 'deb';
 }
 
