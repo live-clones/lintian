@@ -625,6 +625,7 @@ foreach my $file (sort keys %{$info->index}) {
 	    [ qr,(?i)scriptaculous\.js(\.gz)?$, => 'libjs-scriptaculous' ],
 	    [ qr,(?i)fckeditor\.js(\.gz)?$, => 'fckeditor' ],
 	    [ qr,(?i)cropper(\.uncompressed)?\.js(\.gz)?$, => 'libjs-cropper' ],
+	    [ qr,(?i)swfobject\.js(\.gz)?$, => 'libjs-yui' ],
 	    [ qr,(?i)yahoo(-(dom-event|min))?\.js(\.gz)?$, => 'libjs-yui' ],
 	    [ qr,(?i)jsjac(\.packed)?\.js(\.gz)?$, => 'libjs-jac' ],
 	    [ qr,(?i)jsMath(-fallback-\w+)?\.js(\.gz)?$, => 'jsmath' ],
