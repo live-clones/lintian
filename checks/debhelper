@@ -146,7 +146,7 @@ for my $binpkg (keys %$pkgs) {
     my $depends = '';
     local $/;
 
-    foreach my $field (qw(depends recommends suggests)) {
+    foreach my $field (qw(pre-depends depends recommends)) {
 	if (open DEPENDS, '<', "control/$binpkg/$field") {
 	    chomp ($depends .= <DEPENDS>);
 	    close(DEPENDS);
