@@ -32,6 +32,13 @@ multiple tags:
 
 with the tags listed in alphabetical order.
 
+If testing the results of the different command line options lintian provides
+use the Options key.  When not specified, the default options are -I -E.
+For example, to test the -T option when used in combination with
+--show-overrides one would use:
+
+    Options: --show-overrides -T no-copyright-file
+
 By default, all tests are built as native Debian packages.  To build
 the test case as a non-native package, add:
 

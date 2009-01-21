@@ -58,7 +58,7 @@ use Tags;
 
 our $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
 
-our $LINTIAN = $LINTIAN_ROOT . '/frontend/lintian -I -E';
+our $LINTIAN = $LINTIAN_ROOT . '/frontend/lintian';
 our $DPKG_BUILDPACKAGE = 'dpkg-buildpackage -rfakeroot -us -uc -d'
     . ' -iNEVER_MATCH_ANYTHING -INEVER_MATCH_ANYTHING';
 
@@ -344,7 +344,7 @@ sub test_package {
     runsystem("cd $RUNDIR/$pkgdir && $DPKG_BUILDPACKAGE >../build.$pkg 2>&1");
 
     print "testing... ";
-    runsystem_ok("$LINTIAN $RUNDIR/$pkg\_$testdata->{version}*.changes".
+    runsystem_ok("$LINTIAN $testdata->{options} $RUNDIR/$pkg\_$testdata->{version}*.changes".
 		 " 2>&1 | sort > $RUNDIR/tags.$pkg");
 
     # Run a sed-script if it exists, for tests that have slightly variable
@@ -429,7 +429,7 @@ sub test_changes {
     my $testdir = "$TESTSET/changes";
 
     print "testing... ";
-    runsystem_ok("$LINTIAN $testdir/$test.changes 2>&1".
+    runsystem_ok("$LINTIAN -I -E $testdir/$test.changes 2>&1".
 		 " | sort > $RUNDIR/tags.changes-$test");
 
     # Compare the output to the expected tags.
@@ -490,7 +490,7 @@ sub test_deb {
     runsystem("cd $targetdir && fakeroot make >../build.$test 2>&1");
 
     print "testing... ";
-    runsystem_ok("$LINTIAN $targetdir/$test.deb 2>&1" .
+    runsystem_ok("$LINTIAN -I -E $targetdir/$test.deb 2>&1" .
 		 " | sort > $RUNDIR/tags.$test");
 
     # Compare the output to the expected tags.
@@ -564,6 +564,7 @@ sub check_test_is_sane {
 
     $data->{'test-for'} ||= '';
     $data->{'test-against'} ||= '';
+    $data->{options} ||= '-I -E';
 
     if ($DEBUG) {
 	print "check_test_is_sane => ".Dumper($data);
