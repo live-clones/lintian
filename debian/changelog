@@ -3,6 +3,9 @@ lintian (2.1.7) UNRELEASED; urgency=low
   * checks/files:
     + [RA] Add swfobject.js to embedded-javascript-library.  Thanks, Paul
       Wise.  (Closes: #512363)
+  * checks/standards-version.desc:
+    + [ADB] Add source-control-file to the list of information needed by
+      the script.  Thanks, Raphael Geissert.  (Closes: #512563)
 
   * lib/Lintian/Collect/Source.pm: Add a missing "use Util" as the module
     uses the fail() function from that module.  Thanks, Raphael Geissert.
