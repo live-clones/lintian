@@ -4,6 +4,12 @@ lintian (2.1.7) UNRELEASED; urgency=low
     + [RA] Add swfobject.js to embedded-javascript-library.  Thanks, Paul
       Wise.  (Closes: #512363)
 
+  * lib/Lintian/Collect/Source.pm: Add a missing "use Util" as the module
+    uses the fail() function from that module.  Thanks, Raphael Geissert.
+    (Closes: #512560)
+  * lib/Text_utils.pm:  Add a missing "use Util" as the module uses the
+    fail() function from that module.  Thanks, Raphael Geissert.
+
  -- Russ Allbery <rra@debian.org>  Mon, 19 Jan 2009 20:45:31 -0800
 
 lintian (2.1.6) unstable; urgency=low

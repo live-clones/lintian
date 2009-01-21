@@ -29,6 +29,8 @@ use strict;
 
 # requires wrap() function
 use Text::Wrap;
+# requires fail() function
+use Util;
 
 # html_wrap -- word-wrap a paragaph.  The wrap() function from Text::Wrap
 # is not suitable, because it chops words that are longer than the line

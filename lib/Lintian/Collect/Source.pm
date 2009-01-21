@@ -21,6 +21,7 @@ use strict;
 
 use Lintian::Collect;
 use Parse::DebianChangelog;
+use Util;
 
 our @ISA = qw(Lintian::Collect);
 
