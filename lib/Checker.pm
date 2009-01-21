@@ -22,31 +22,11 @@ package Checker;
 use strict;
 no strict 'refs';
 
-use Tags;
-use Cwd 'cwd';
-
 # Quiet "Name "main::LINTIAN_ROOT" used only once"
 # The variable comes from 'lintian'
 () = $main::LINTIAN_ROOT;
 my $LINTIAN_ROOT = $main::LINTIAN_ROOT;
-
-# Can also be more precise later on (only verbose with checker actions) but for
-# now this will do --Jeroen
-my $verbose = $::verbose;
 my $debug = $::debug;
-
-my %checks;
-# For source, binary, udeb, the names of applicable checks
-my %checks_per_type;
-
-# Register a check. Argument is a hash with info
-sub register {
-	my $info = $_[0];
-	fail("Duplicate check $info->{'check-script'}")
-		if exists $checks{$info->{'check-script'}};
-
-	$checks{$info->{'check-script'}} = $info;
-}
 
 sub runcheck {
 	my ($pkg, $type, $info, $name) = @_;
@@ -56,12 +36,9 @@ sub runcheck {
 
 	print "N: Running check: $name ...\n" if $debug;
 
-	my $check = $checks{$name};
-
 	# require has an anti-require-twice cache
 	require "$LINTIAN_ROOT/checks/$name";
 
-	#print STDERR "Now running $name...\n";
 	$name =~ s/[-.]/_/g;
 	eval { &{'Lintian::'.$name.'::run'}($pkg, $type, $info) };
 	if ( $@ ) {

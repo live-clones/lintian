@@ -13,6 +13,8 @@ lintian (2.1.7) UNRELEASED; urgency=low
     + [ADB] Add source-control-file to the list of information needed by
       the script.  Thanks, Raphael Geissert.  (Closes: #512563)
 
+  * lib/Checker.pm:
+    + [ADB] Remove some unused code.
   * lib/Lintian/Collect/Source.pm:
     + [ADB] Add a missing "use Util" as the module uses the fail() function
       from that module.  Thanks, Raphael Geissert.  (Closes: #512560)
