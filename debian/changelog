@@ -1,5 +1,8 @@
 lintian (2.1.7) UNRELEASED; urgency=low
 
+  * checks/debhelper.desc:
+    + [ADB] Remove no longer required "Type" fields from a couple of
+      entries.  Thanks, Raphael Geissert.
   * checks/files:
     + [RA] Add swfobject.js to embedded-javascript-library.  Thanks, Paul
       Wise.  (Closes: #512363)

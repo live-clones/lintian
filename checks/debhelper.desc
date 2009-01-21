@@ -115,7 +115,6 @@ Info: This package uses dh_python but apparently does not tell it to use
  policy, in which case it probably should be.
 
 Tag: debhelper-but-no-misc-depends
-Type: warning
 Severity: normal
 Certainty: certain
 Ref: debhelper(7)
@@ -125,7 +124,6 @@ Info: The source package uses debhelper but it does not use ${misc:Depends} in
  commands cause the package to depend on another package.
 
 Tag: missing-build-dependency-for-dh_-command
-Type: error
 Severity: important
 Certainty: possible
 Info: The source package appears to be using a dh_ command but doesn't build
