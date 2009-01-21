@@ -27,7 +27,7 @@ Certainty: certain
 Info: The package doesn't declare a versioned build dependency on
  debhelper.  Recommended practice is to always declare an explicit
  versioned dependency on debhelper equal to or greater than the
- compatiiblity level used by the package, even if the versioned dependency
+ compatibility level used by the package, even if the versioned dependency
  isn't strictly necessary.  Having a versioned dependency also helps with
  backports to older releases and correct builds on partially updated
  systems.
@@ -140,7 +140,7 @@ Info: The given debhelper script was introduced in a later version of
  satisfy the dependency.
  .
  etch was released with debhelper version 5.0.42, so every package that
- assumes a newer version should explicetly declare so for the sake of
+ assumes a newer version should explicitly declare so for the sake of
  etch backports.
 
 Tag: brace-expansion-in-debhelper-config-file

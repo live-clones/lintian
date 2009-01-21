@@ -58,7 +58,7 @@ sub runcheck {
 
 	my $check = $checks{$name};
 
-	# require has a anti-require-twice cache
+	# require has an anti-require-twice cache
 	require "$LINTIAN_ROOT/checks/$name";
 
 	#print STDERR "Now running $name...\n";

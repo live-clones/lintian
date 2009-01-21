@@ -1,8 +1,11 @@
 lintian (2.1.7) UNRELEASED; urgency=low
 
+  * checks/control-file.desc:
+    + [ADB] Fix a typo ("arne't").  Thanks, Raphael Geissert.
   * checks/debhelper.desc:
     + [ADB] Remove no longer required "Type" fields from a couple of
       entries.  Thanks, Raphael Geissert.
+    + [ADB] Fix a couple of typoes.  Thanks, Raphael Geissert.
   * checks/files:
     + [RA] Add swfobject.js to embedded-javascript-library.  Thanks, Paul
       Wise.  (Closes: #512363)
