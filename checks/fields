@@ -402,7 +402,7 @@ if (defined $info->field('homepage')) {
 	unless ($uri->scheme) { # not an absolute URI
 		tag "bad-homepage", $homepage;
 	}
-} elsif ($type eq "binary") {
+} elsif ($type eq "binary" and not $info->native) {
 	tag "no-homepage-field";
 }
 

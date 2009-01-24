@@ -946,7 +946,8 @@ Ref: policy 7.5
 Tag: no-homepage-field
 Severity: pedantic
 Certainty: possible
-Info: The package lacks the <tt>Homepage</tt> field which, if it contains
- useful information or resources to the end user, should be provided in the
- <tt>control</tt> file.
+Info: This non-native package lacks a <tt>Homepage</tt> field.  If the
+ package has an upstream home page that contains useful information or
+ resources for the end user, consider adding a <tt>Homepage</tt> control
+ field to <tt>debian/control</tt>.
 Ref: policy 5.6.23
