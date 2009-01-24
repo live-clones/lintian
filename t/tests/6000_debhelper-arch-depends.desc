@@ -1,4 +1,0 @@
-Testname: debhelper-arch-depends
-Version: 1.0
-Description: Test arch-specific dependencies on dh commands
-Test-Against: missing-build-dependency-for-dh_-command

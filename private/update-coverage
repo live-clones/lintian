@@ -50,7 +50,7 @@ for my $desc (<checks/*.desc>) {
 
 # Parse all test configuration files from the new test suite looking for
 # Test-For configuration options and remove those from the %tags hash.
-for my $desc (<t/tests/*.desc>) {
+for my $desc (<t/tests/*/desc>) {
     my ($data) = read_dpkg_control($desc);
     if (exists $data->{'test-for'}) {
         for my $tag (split(' ', $data->{'test-for'})) {

@@ -200,10 +200,9 @@ for (@tests) {
 $prev = $prev || scalar(@tests);
 @tests = ();
 if ($singletest) {
-    my $test = $singletest;
-    $test =~ s/\.desc$//;
-    if (-f "$TESTSET/tests/$test.desc") {
-	@tests = ($test);
+    my $desc = "$TESTSET/tests/$singletest/desc";
+    if (-f $desc) {
+	@tests = read_dpkg_control($desc);
     }
 } elsif ($tag) {
     @tests = find_tests_for_tag($tag);
@@ -211,19 +210,21 @@ if ($singletest) {
     unless (-d $TESTSET) {
 	fail("cannot find $TESTSET: $!");
     }
-    @tests = map {
-	s,^\Q$TESTSET/tests/\E,,;
-	s/\.desc$//;
-	$_;
-    } sort(<$TESTSET/tests/*.desc>);
+    @tests = map { read_dpkg_control($_) } <$TESTSET/tests/*/desc>;
 }
+@tests = sort {
+    $a->{sequence} <=> $b->{sequence}
+	|| $a->{testname} cmp $b->{testname}
+    } @tests;
 print "\n" if ($prev and @tests);
-print "Found the following tests: @tests\n" if $DEBUG;
+if ($DEBUG) {
+    print "Found the following tests: ";
+    print join(' ', map { $_->{testname} } @tests);
+    print "\n";
+}
 print "Package tests:\n" if @tests;
-for (@tests) {
-    my $testdesc = "$TESTSET/tests/$_.desc";
-    next unless -f $testdesc;
-    my $okay = test_package($_, $testdesc);
+for my $test (@tests) {
+    my $okay = test_package($test);
     unless ($okay) {
 	exit 1 unless $run_all_tests;
 	$status = 1;
@@ -252,20 +253,19 @@ exit $status;
 sub find_tests_for_tag {
     my ($tag) = @_;
     my @tests;
-    for my $test (<$TESTSET/tests/*.desc>) {
-	my ($testname) = ($test =~ m,.*/([^/]+)\.desc$,);
-	my ($data) = read_dpkg_control($test);
+    for my $desc (<$TESTSET/tests/*/desc>) {
+	my ($data) = read_dpkg_control($desc);
 	if ($data->{'test-for'}) {
 	    my %for = map { $_ => 1 } split(' ', $data->{'test-for'});
 	    if ($for{$tag}) {
-		push (@tests, $testname);
+		push (@tests, $data);
 		next;
 	    }
 	}
 	if ($data->{'test-against'}) {
 	    my %against = map { $_ => 1 } split(' ', $data->{'test-against'});
 	    if ($against{$tag}) {
-		push (@tests, $testname);
+		push (@tests, $data);
 	    }
 	}
     }
@@ -273,13 +273,10 @@ sub find_tests_for_tag {
 }
 
 # Run a package test and show any diffs in the expected tags or any other
-# errors detected.  Takes the test name and the description file.  Returns
-# true if the test passes and false if it fails.
+# errors detected.  Takes the description data for the test.  Returns true if
+# the test passes and false if it fails.
 sub test_package {
-    my ($test, $testdesc) = @_;
-
-    print "process $testdesc...\n" if $DEBUG;
-    my $testdata = (read_dpkg_control($testdesc))[0];
+    my ($testdata) = @_;
 
     check_test_is_sane($TESTSET, $testdata);
     print "Running test $testdata->{testname} $testdata->{version}... ";
@@ -547,7 +544,7 @@ sub check_test_is_sane {
     my ($dir, $data) = @_;
 
     if ($DEBUG) {
-	print "check_test_is_sane <= ".Dumper($data);
+	print "check_test_is_sane <= " . Dumper($data);
     }
 
     unless ($data->{testname} && $data->{version}) {

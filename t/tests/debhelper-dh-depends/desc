@@ -1,0 +1,5 @@
+Testname: debhelper-dh-depends
+Sequence: 6000
+Version: 1.0
+Description: Test required dependencies for dh* scripts
+Test-For: debhelper-script-needs-versioned-build-depends

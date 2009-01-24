@@ -1,5 +1,0 @@
-Testname: nmu-ubuntu-native
-Version: 1.0
-Description: Test NMU tag suppression for Ubuntu native packages
-Test-Against: changelog-should-mention-nmu
-References: Debian Bug #507740

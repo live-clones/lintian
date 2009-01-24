@@ -1,0 +1,5 @@
+Testname: debhelper-script-token
+Sequence: 6000
+Version: 1.0
+Description: Check debhelper script token with rule minimization
+Test-For: maintainer-script-lacks-debhelper-token

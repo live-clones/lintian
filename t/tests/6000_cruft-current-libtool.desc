@@ -1,5 +1,0 @@
-Testname: cruft-current-libtool
-Version: 1.0
-Description: Test that a current ltmain.sh is detected correctly
-Test-Against: ancient-libtool
-References: Debian Bug#293296

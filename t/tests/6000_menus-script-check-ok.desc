@@ -1,7 +1,0 @@
-Testname: menus-script-check-ok
-Version: 1.0
-Description: Correct program checks in maintainer scripts
-Test-Against:
- maintainer-script-does-not-check-for-existence-of-installdocs
- maintainer-script-does-not-check-for-existence-of-updatemenus
- maintainer-script-does-not-check-for-existence-of-wm-menu-config

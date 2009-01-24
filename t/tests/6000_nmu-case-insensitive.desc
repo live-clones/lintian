@@ -1,8 +1,0 @@
-Testname: nmu-case-insensitive
-Version: 1.0
-Author: Russ Allbery <rra@debian.ORG>
-Description: Test case-insensitive matching of e-mail addresses
-Test-Against:
- changelog-should-mention-nmu
- source-nmu-has-incorrect-version-number
-References: Debian Bug#486795

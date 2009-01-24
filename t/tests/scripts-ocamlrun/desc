@@ -1,0 +1,6 @@
+Testname: scripts-ocamlrun
+Sequence: 6000
+Version: 1.0
+Description: Test correct handling of ocamlrun scripts
+Test-Against: missing-dep-for-interpreter
+References: Debian Bug#495431

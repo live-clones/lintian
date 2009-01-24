@@ -1,0 +1,7 @@
+Testname: menu-format-desktop-mimetype
+Sequence: 6000
+Version: 1.0
+Section: doc
+Description: Check update-desktop-detabase and MimeType *.desktop
+Test-For: desktop-mimetype-without-update-call
+References: Debian Bug#488832

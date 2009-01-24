@@ -1,0 +1,7 @@
+Testname: files-zero-byte-doc
+Sequence: 6000
+Version: 1.0
+Section: doc
+Description: Check detection of zero-byte files in doc directories
+Test-For: zero-byte-file-in-doc-directory
+References: Debian Bug#507273

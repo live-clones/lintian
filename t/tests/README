@@ -1,30 +1,60 @@
 WRITING A TEST
 ==============
 
-A test in this framework consists of two components: a .desc file
-providing metadata about the test and a directory containing the files
-used to build the test package.
+A test in this framework is a directory containing a desc file, providing
+metadata about the test, and other files used to build the test package.
 
-The .desc file
---------------
+Naming conventions
+------------------
 
-The .desc file is formatted like a Debian control file and should be
-named with a sequence number, an underscore, and the name of the test
-directory.  See "TEST NAMING CONVENTIONS" below for information about
-the sequence number and test and directory naming.
+Each test name should begin with the name of the part tested, e.g.
 
-The required fields are:
+<checkname>-...
+<unpackname>-...
+lintian-...
+lintian-info-...
+
+Use generic- as a prefix for test cases that don't cover a specific
+portion of Lintian but instead test Lintian's behavior on a useful special
+case of package (such as a generic dh-make template).
+
+Sequence numbers
+----------------
+
+Each test should have a sequence number to get a more deterministic order.
+You do not need to use unique numbers, only enough to make the order
+deterministic and to your liking!  You should use the middle of the
+assigned range as default number and only divert from it if you have a
+reason to.
+
+Number ranges:
+
+0000 - 0999	Basic test, that generally just assure that the test
+		suite and lintian are not completly broken
+1000 - 1999	Tests for lib/       [1500]
+2000 - 2999	Tests for frontend/  [2500]
+3000 - 3999	Tests for unpack/    [3500]
+4000 - 4999	Tests for collection/[4500]
+5000 - 6999	Tests for checks/    [6000]
+7000 - 8999	<unused>
+9000 - 9999	Tests for reporting/ [9500]
+
+The desc file
+-------------
+
+The desc file is formatted like a Debian control file.  The required
+fields are:
 
     Testname: <should match the directory name>
+    Sequence: <sequence number>
     Version: <version number of package>
     Description: <description of the purpose of the test>
 
-In addition, the tags (if any) that the test case is testing for
-should be listed in a Test-For key.  The tags that the test case is
-testing are not issued (checking againts false positives) should be
-listed in a Test-Against key.  In both cases, the tags should be
-separated by whitespace.  The following format is suggested for
-multiple tags:
+In addition, the tags (if any) that the test case is testing for should be
+listed in a Test-For key.  The tags that the test case is testing are not
+issued (checking againts false positives) should be listed in a
+Test-Against key.  In both cases, the tags should be separated by
+whitespace.  The following format is suggested for multiple tags:
 
     Test-For:
      lintian-tag-1
@@ -32,10 +62,10 @@ multiple tags:
 
 with the tags listed in alphabetical order.
 
-If testing the results of the different command line options lintian provides
-use the Options key.  When not specified, the default options are -I -E.
-For example, to test the -T option when used in combination with
---show-overrides one would use:
+The default lintian command-line options are -I -E.  You can change these
+options with an Options field specifying the lintian options to use.  This
+overrides the default, so add -I -E if you want to include those options.
+For example, to test --show-overrides with the -T option, use:
 
     Options: --show-overrides -T no-copyright-file
 
@@ -47,12 +77,11 @@ the test case as a non-native package, add:
 to the .desc file.  You will also want to change the version number to
 be non-native unless you're testing a mismatch.
 
-Unless you're writing a test case just to improve Lintian's test
-coverage, you will normally want to add a References field giving the
-source of the test or the bug that you're testing for.  This should be
-one of "Debian Bug#nnnn" for a bug report, a URL into the
-debian-lint-maint mailing list archives, or a message ID for the
-message to the list.
+Unless you're writing a test case just to improve Lintian's test coverage,
+you will normally want to add a References field giving the source of the
+test or the bug that you're testing for.  This should be one of "Debian
+Bug#nnnn" for a bug report, a URL into the debian-lint-maint mailing list
+archives, or a message ID for the message to the list.
 
 All other fields in the .desc file are optional and control the values
 filled into the template control and changelog files by the test suite
@@ -126,41 +155,6 @@ directory must contain at least one file to exist in a fresh Git
 checkout.  Test cases that just use the template must therefore still
 have some file in the debian directory.  Normally, this is handled by
 creating a small README file; see t/tests/basic for an example.
-
-
-TEST NAMING CONVENTIONS
-=======================
-
-Each test name should begin with the name of the part tested,
-e.g.
-
-<checkname>-...
-<unpackname>-...
-lintian-...
-lintian-info-...
-
-Use generic- as a prefix for test cases that don't cover a
-specific portion of Lintian but instead test Lintian's behavior
-on a useful special case of package (such as a generic dh-make
-template).
-
-The .desc file names should start with a number to get a more
-deterministic order. You do not need to use unique numbers, only
-enough to make the order deterministic and to your liking!
-You should use the middle of the assigned range as default
-number and only divert from it if you have a reason to.
-
-Number ranges:
-
-0000 - 0999	Basic test, that generally just assure that the test
-		suite and lintian are not completly broken
-1000 - 1999	Tests for lib/       [1500]
-2000 - 2999	Tests for frontend/  [2500]
-3000 - 3999	Tests for unpack/    [3500]
-4000 - 4999	Tests for collection/[4500]
-5000 - 6999	Tests for checks/    [6000]
-7000 - 8999	<unused>
-9000 - 9999	Tests for reporting/ [9500]
 
 
 RUNNING THE TEST SUITE

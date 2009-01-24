@@ -1,5 +1,0 @@
-Testname: files-embedded-pear-module
-Version: 1.0
-Description: Check for detection of embedded PEAR modules
-Test-For: embedded-pear-module
-References: <g8t2fb$r9t$4@ger.gmane.org>

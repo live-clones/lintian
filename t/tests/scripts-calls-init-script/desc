@@ -1,0 +1,8 @@
+Testname: scripts-calls-init-script
+Sequence: 6000
+Version: 1.0
+Description: Test proper use of invoke-rc.d
+Test-For:
+ maintainer-script-calls-init-script-directly
+ script-calls-init-script-directly
+References: Debian Bug#381485

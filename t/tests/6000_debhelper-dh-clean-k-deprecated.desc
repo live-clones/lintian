@@ -1,5 +1,0 @@
-Testname: debhelper-dh-clean-k-deprecated
-Version: 1.0
-Description: Test for debhelper >=7 packages using dh_clean -k
-Test-For:
- dh-clean-k-is-deprecated

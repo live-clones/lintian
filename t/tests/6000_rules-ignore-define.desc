@@ -1,5 +1,0 @@
-Testname: rules-ignore-define
-Version: 1.0
-Description: Ignore define blocks when checking rule files
-Test-Against: binary-arch-rules-but-pkg-is-arch-indep
-References: Debian Bug#510869

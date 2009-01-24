@@ -1,0 +1,14 @@
+Testname: control-file-general
+Sequence: 6000
+Version: 1.0
+Description: Various problems with debian/control
+Test-For:
+ binary-control-field-duplicates-source
+ build-info-in-binary-control-file-section
+ duplicate-long-description
+ duplicate-short-description
+ missing-comma-after-substvar
+ no-section-field-for-source
+ package-depends-on-itself
+ stronger-dependency-implies-weaker
+References: Debian Bug#30020, Debian Bug#409099

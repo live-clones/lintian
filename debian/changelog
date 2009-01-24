@@ -74,6 +74,10 @@ lintian (2.2.0) UNRELEASED; urgency=low
     + [RA] Add support for specifying the Lintian options to use when
       checking a test package.  Patch from Raphael Geissert.
       (Closes: #512678)
+    + [RA] Expect the desc files for tests to be in the test directory
+      rather than at the top level and move the sequence number to an
+      attribute in the test description rather than in the desc file
+      name.
 
  -- Russ Allbery <rra@debian.org>  Mon, 19 Jan 2009 20:45:31 -0800
 

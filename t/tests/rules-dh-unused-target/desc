@@ -1,0 +1,6 @@
+Testname: rules-dh-unused-target
+Sequence: 6000
+Version: 1.0
+Description: Allow dh in unused targets
+Test-Against: binary-arch-rules-but-pkg-is-arch-indep
+References: <20080806175819.GV11882@mail-vs.djpig.de>

@@ -1,5 +1,0 @@
-Testname: package-version-became-native
-Version: 1.0
-Description: Test for packages where the version suddenly becomes native
-Test-For: latest-debian-changelog-entry-changed-to-native
-References: Debian Bug #504070

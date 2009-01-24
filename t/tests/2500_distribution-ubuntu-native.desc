@@ -1,5 +1,0 @@
-Testname: distribution-ubuntu-native
-Version: 1.0
-Description: Check *.changes distribution checking for Ubuntu
-Test-Against: bad-distribution-in-changes-file
-References: Debian Bug#507740

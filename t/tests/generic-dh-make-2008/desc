@@ -1,0 +1,24 @@
+Testname: generic-dh-make-2008
+Sequence: 6500
+Type: non-native
+Author: Russ Allbery <rra@debian.org>
+Version: 1.0-1
+Description: Generic dh_make template generated in 2008
+Test-For:
+ bad-homepage
+ copyright-contains-dh_make-todo-boilerplate
+ copyright-has-url-from-dh_make-boilerplate
+ copyright-lists-upstream-authors-with-dh_make-boilerplate
+ copyright-with-old-dh-make-debian-copyright
+ copyright-without-copyright-notice
+ debian-watch-file-is-missing
+ description-is-dh_make-template
+ dh-make-template-in-source
+ extended-description-is-probably-too-short
+ new-package-should-close-itp-bug
+ package-contains-empty-directory
+ readme-debian-contains-debmake-template
+ section-is-dh_make-template
+ superfluous-clutter-in-homepage
+ wrong-bug-number-in-closes
+References: Debian Bug#497347

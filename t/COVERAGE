@@ -1,4 +1,4 @@
-Last generated 2009-01-17
+Last generated 2009-01-24
 
 The following tags are not tested by the test suite:
 
@@ -79,6 +79,7 @@ fields malformed-python-version
 fields missing-build-dependency
 fields multiline-field
 fields no-architecture-field
+fields no-homepage-field
 fields no-maintainer-field
 fields no-package-name
 fields no-source-field
@@ -209,6 +210,7 @@ menus prerm-has-useless-call-to-install-docs
 
 nmu changelog-is-symlink
 
+patch-systems direct-changes-in-diff-but-no-patch-system
 patch-systems more-than-one-patch-system
 patch-systems patch-modifying-debian-files
 patch-systems quilt-patch-with-non-standard-options

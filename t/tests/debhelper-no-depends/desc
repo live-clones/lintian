@@ -1,0 +1,9 @@
+Testname: debhelper-no-depends
+Sequence: 6000
+Version: 1.0
+Description: Test dependency requirements for debhelper
+Test-For:
+ debhelper-but-no-misc-depends
+ missing-build-dependency-for-dh_-command
+ package-lacks-versioned-build-depends-on-debhelper
+ package-uses-debhelper-but-lacks-build-depends

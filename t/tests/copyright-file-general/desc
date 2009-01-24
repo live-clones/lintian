@@ -1,0 +1,24 @@
+Testname: copyright-file-general
+Sequence: 6000
+Version: 1.0
+Description: Test checking of copyright files
+Test-For:
+ FSSTND-dir-in-usr
+ copyright-contains-dh-make-perl-boilerplate
+ copyright-file-compressed
+ copyright-file-contains-full-apache-2-license
+ copyright-file-contains-full-gfdl-license
+ copyright-file-contains-full-gpl-license
+ copyright-file-is-symlink
+ copyright-has-url-from-dh_make-boilerplate
+ copyright-lists-upstream-authors-with-dh_make-boilerplate
+ copyright-refers-to-bad-php-license
+ copyright-refers-to-compressed-license
+ copyright-refers-to-incorrect-directory
+ copyright-refers-to-old-directory
+ copyright-refers-to-problematic-php-license
+ copyright-should-refer-to-common-license-file-for-gfdl
+ copyright-should-refer-to-common-license-file-for-gpl
+ copyright-without-copyright-notice
+ debian-copyright-file-uses-obsolete-national-encoding
+ old-style-copyright-file

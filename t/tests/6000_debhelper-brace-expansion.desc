@@ -1,5 +1,0 @@
-Testname: debhelper-brace-expansion
-Version: 1.0
-Description: Check for brace expansion in debhelper config files
-Test-For: brace-expansion-in-debhelper-config-file
-References: Debian Bug#480939
