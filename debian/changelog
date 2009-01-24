@@ -15,6 +15,8 @@ lintian (2.1.7) UNRELEASED; urgency=low
   * checks/files:
     + [RA] Add swfobject.js to embedded-javascript-library.  Thanks, Paul
       Wise.  (Closes: #512363)
+  * checks/nmu:
+    + [RA] Use Lintian::Collect to read the changelog.
   * checks/standards-version{,.desc}:
     + [ADB] Add source-control-file to the list of information needed by
       the script.  Thanks, Raphael Geissert.  (Closes: #512563)

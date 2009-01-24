@@ -30,11 +30,10 @@ sub run {
 my $pkg = shift;
 my $type = shift;
 my $info = shift;
-my $distribution = undef;
+
 my $changelog_mentions_nmu = 0;
 my $changelog_mentions_local = 0;
 my $changelog_mentions_qa = 0;
-my $uploader = undef;
 
 # This isn't really an NMU check, but right now no other check looks at
 # debian/changelog in source packages.  Catch a debian/changelog file that's a
@@ -45,24 +44,25 @@ if (-l "debfiles/changelog") {
     return 0 unless -f "debfiles/changelog";
 }
 
-open (CHANGELOG, '<', "debfiles/changelog")
-    or fail("Failed opening changelog");
-$distribution = $1 if (<CHANGELOG> =~ /^.* \(.*\) (.*);.*$/);
-my $firstline = 1;
-while (<CHANGELOG>) {
-	if ($firstline) {
-		$changelog_mentions_nmu = 1
-			if (/\bnmu\b/i or /non-maintainer upload/i) and not /(ackno|\back\b|confir|incorporat)/i;
-		$changelog_mentions_local = 1 if /\blocal\s+package\b/i;
-		$changelog_mentions_qa = 1 if /orphan/i or /qa (?:group )?upload/i;
-		$firstline = 0 if /^\s+\S/;
+# Get some data from the changelog file.
+my ($entry) = $info->changelog->data;
+my $distribution = $entry->Distribution;
+my $uploader = canonicalize($entry->Maintainer);
+my $changes = $entry->Changes;
+$changes =~ s/^(\s*\n)+//;
+my $firstline = (split('\n', $changes))[0];
+
+# Check the first line for QA and NMU mentions.
+if ($firstline) {
+	local $_ = $firstline;
+	if (/\bnmu\b/i or /non-maintainer upload/i) {
+		unless (/(ackno|\back\b|confir|incorporat)/i) {
+			$changelog_mentions_nmu = 1;
+		}
 	}
-	if (/^ -- ([^>]+>)/) {
-		$uploader = canonicalize($1);
-		last;
-	}
+	$changelog_mentions_local = 1 if /\blocal\s+package\b/i;
+	$changelog_mentions_qa = 1 if /orphan/i or /qa (?:group )?upload/i;
 }
-close CHANGELOG;
 
 my $version = $info->field("version");
 my $maintainer = canonicalize($info->field("maintainer"));
