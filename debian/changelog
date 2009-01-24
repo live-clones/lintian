@@ -32,8 +32,12 @@ lintian (2.2.0) UNRELEASED; urgency=low
   * checks/files:
     + [RA] Add swfobject.js to embedded-javascript-library.  Thanks, Paul
       Wise.  (Closes: #512363)
-  * checks/nmu:
+  * checks/nmu{,.desc}:
     + [RA] Use Lintian::Collect to read the changelog.
+    + [RA] Only treat the mention of NMU as a maintainer acknowldegement
+      if the "ack" string appears before the mention of NMU.  Avoids
+      changelog-should-mention-nmu false positives for "NMU with ACK from
+      maintainer."  Thanks, Evgeni Golov.  (Closes: #512738)
   * checks/patch-systems{,.desc}:
     + [RA] Add pedantic check for changes to the upstream source in the
       diff without using a patch system.  Thanks, Raphael Geissert.

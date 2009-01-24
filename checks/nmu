@@ -56,7 +56,7 @@ my $firstline = (split('\n', $changes))[0];
 if ($firstline) {
 	local $_ = $firstline;
 	if (/\bnmu\b/i or /non-maintainer upload/i) {
-		unless (/(ackno|\back\b|confir|incorporat)/i) {
+		unless (/(ackno|\back\b|confir|incorporat).*(\bnmu\b|non-maintainer)/i) {
 			$changelog_mentions_nmu = 1;
 		}
 	}

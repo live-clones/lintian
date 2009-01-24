@@ -66,7 +66,7 @@ Ref: devref 5.11.3
 
 Tag: changelog-should-not-mention-nmu
 Severity: normal
-Certainty: certain
+Certainty: possible
 Info: The first line of the changelog entry for this package appears to
  indicate it is a non-maintainer upload (by including either that string
  or the string "NMU" and not saying that it's an acknowledgement), but the
