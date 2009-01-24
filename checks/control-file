@@ -103,14 +103,19 @@ for my $binary_control (@binary_controls) {
 #
 # Also check if a package declares a simple dependency on itself, since
 # similarly dpkg-gencontrol will clean this up for us but it may be a sign of
-# another problem.
+# another problem, and check that the package doesn't hard-code a dependency
+# on libc.  We have to do the latter check here rather than in checks/fields
+# to distinguish from dependencies created by ${shlibs:Depends}.
 my @dep_fields = qw(pre-depends depends recommends suggests);
+my $libcs = Dep::parse(join(' | ', qw(libc6 libc6.1 libc0.1 libc0.3)));
 for my $control (@binary_controls) {
-	for my $strong (0 .. ($#dep_fields - 1)) {
+	for my $strong (0 .. $#dep_fields) {
 		next unless $control->{$dep_fields[$strong]};
 		my $parsed = Dep::parse ($control->{$dep_fields[$strong]});
 		tag "package-depends-on-itself", $control->{package}, $dep_fields[$strong]
 		    if Dep::implies($parsed, Dep::parse($control->{package}));
+		tag 'package-depends-on-hardcoded-libc', $control->{package}, $dep_fields[$strong]
+		    if (Dep::implies($parsed, $libcs) and $control->{package} ne "glibc");
 		for my $weak (($strong + 1) .. $#dep_fields) {
 			next unless $control->{$dep_fields[$weak]};
 			for my $dependency (split /\s*,\s*/, $control->{$dep_fields[$weak]}) {
@@ -119,21 +124,6 @@ for my $control (@binary_controls) {
 				    if Dep::implies($parsed, Dep::parse($dependency));
 			}
 		}
-	}
-}
-
-# Check that packages do not hardcode a depend on any variant of libc
-@dep_fields = qw(pre-depends depends);
-my @libcs = qw(libc6 libc6.1 libc0.1 libc0.3);
-for my $control (@binary_controls) {
-	for my $field (0 .. ($#dep_fields)) {
-		next unless $control->{$dep_fields[$field]};
-		my $parsed = Dep::parse ($control->{$dep_fields[$field]});
-		for my $libc (@libcs) {
-			tag "package-depends-on-hardcoded-libc", $control->{package}, $dep_fields[$field], $libc
-				if Dep::implies($parsed, Dep::parse($libc)) and $control->{package} ne "glibc";
-		}
-		
 	}
 }
 

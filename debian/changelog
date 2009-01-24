@@ -17,8 +17,11 @@ lintian (2.2.0) UNRELEASED; urgency=low
     + [RA] Enable no-upstream-changelog as a pedantic check, since it's
       often incorrect for multiple binary packages generated from the same
       source.  Patch from Raphael Geissert.  (Closes: #470912)
-  * checks/control-file.desc:
+  * checks/control-file{,.desc}:
     + [ADB] Fix a typo ("arne't").  Thanks, Raphael Geissert.
+    + [RA] Check for hard-coded package dependencies on libc.  Patch from
+      Evgeni Golov.  (Closes: #512196)
+    + [RA] Check package-depends-on-itself for Suggests as well.
   * checks/debhelper.desc:
     + [ADB] Remove no longer required "Type" fields from a couple of
       entries.  Thanks, Raphael Geissert.

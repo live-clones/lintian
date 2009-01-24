@@ -1,0 +1,4 @@
+W: control-file-hardcoded-libc source: package-depends-on-hardcoded-libc control-file-hardcoded-libc depends
+W: control-file-hardcoded-libc source: package-depends-on-hardcoded-libc control-file-hardcoded-libc pre-depends
+W: control-file-hardcoded-libc source: package-depends-on-hardcoded-libc control-file-hardcoded-libc recommends
+W: control-file-hardcoded-libc source: package-depends-on-hardcoded-libc control-file-hardcoded-libc suggests
