@@ -5,6 +5,7 @@ lintian (2.2.0) UNRELEASED; urgency=low
       - direct-changes-in-diff-but-no-patch-system (pedantic)
       - no-homepage-field (pedantic)
       - no-upstream-changelog (pedantic)
+      - package-depends-on-hardcoded-libc
 
   * checks/*.desc:
     + [RA] Replace `' "balanced" quotes with straight double-quotes.  The
