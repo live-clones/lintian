@@ -1,4 +1,10 @@
-lintian (2.1.7) UNRELEASED; urgency=low
+lintian (2.2.0) UNRELEASED; urgency=low
+
+  * Summary of tag changes:
+    + Added
+      - direct-changes-in-diff-but-no-patch-system (pedantic)
+      - no-homepage-field (pedantic)
+      - no-upstream-changelog (pedantic)
 
   * checks/*.desc:
     + [RA] Replace `' "balanced" quotes with straight double-quotes.  The
@@ -6,19 +12,28 @@ lintian (2.1.7) UNRELEASED; urgency=low
       Geissert.
   * checks/binaries:
     + [FL] Fix check for directories in the package in RPATH check.
-  * checks/changelog-file:
+  * checks/changelog-file{,.desc}:
     + [RA] Use Lintian::Collect to read the changelog.
+    + [RA] Enable no-upstream-changelog as a pedantic check, since it's
+      often incorrect for multiple binary packages generated from the same
+      source.  Patch from Raphael Geissert.  (Closes: #470912)
   * checks/control-file.desc:
     + [ADB] Fix a typo ("arne't").  Thanks, Raphael Geissert.
   * checks/debhelper.desc:
     + [ADB] Remove no longer required "Type" fields from a couple of
       entries.  Thanks, Raphael Geissert.
     + [ADB] Fix a couple of typoes.  Thanks, Raphael Geissert.
+  * checks/fields{,.desc}:
+    + [RA] Add pedantic check for no Homepage control field.  Patch from
+      Raphael Geissert.
   * checks/files:
     + [RA] Add swfobject.js to embedded-javascript-library.  Thanks, Paul
       Wise.  (Closes: #512363)
   * checks/nmu:
     + [RA] Use Lintian::Collect to read the changelog.
+  * checks/patch-systems{,.desc}:
+    + [RA] Add pedantic check for changes to the upstream source in the
+      diff without using a patch system.  Thanks, Raphael Geissert.
   * checks/standards-version{,.desc}:
     + [ADB] Add source-control-file to the list of information needed by
       the script.  Thanks, Raphael Geissert.  (Closes: #512563)
@@ -35,6 +50,10 @@ lintian (2.1.7) UNRELEASED; urgency=low
     + [RA] Known standards versions and their release dates in seconds
       since epoch, taken from checks/standards-version.
 
+  * frontend/lintian:
+    + [RA] Add --pedantic option to display pedantic tags.  Patch from
+      Raphael Geissert.  (Closes: #373767)
+
   * lib/Checker.pm:
     + [ADB] Remove some unused code.
   * lib/Lintian/Collect/Binary.pm:
@@ -45,6 +64,8 @@ lintian (2.1.7) UNRELEASED; urgency=low
   * lib/Text_utils.pm:
     + [ADB] Add a missing "use Util" as the module uses the fail() function
       from that module.  Thanks, Raphael Geissert.
+  * lib/Tags.pm:
+    + [RA] Add support for pedantic tags.  Patch from Raphael Geissert.
 
  -- Russ Allbery <rra@debian.org>  Mon, 19 Jan 2009 20:45:31 -0800
 
