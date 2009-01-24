@@ -67,6 +67,11 @@ lintian (2.2.0) UNRELEASED; urgency=low
   * lib/Tags.pm:
     + [RA] Add support for pedantic tags.  Patch from Raphael Geissert.
 
+  * t/runtests:
+    + [RA] Add support for specifying the Lintian options to use when
+      checking a test package.  Patch from Raphael Geissert.
+      (Closes: #512678)
+
  -- Russ Allbery <rra@debian.org>  Mon, 19 Jan 2009 20:45:31 -0800
 
 lintian (2.1.6) unstable; urgency=low
