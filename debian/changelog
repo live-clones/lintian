@@ -4,6 +4,8 @@ lintian (2.1.7) UNRELEASED; urgency=low
     + [RA] Replace `' "balanced" quotes with straight double-quotes.  The
       old style looks strange with modern fonts.  Based on work by Raphael
       Geissert.
+  * checks/binaries:
+    + [FL] Fix check for directories in the package in RPATH check.
   * checks/changelog-file:
     + [RA] Use Lintian::Collect to read the changelog.
   * checks/control-file.desc:

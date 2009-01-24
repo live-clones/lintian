@@ -124,7 +124,7 @@ foreach (sort keys %{$info->file_info}) {
     next unless length $_;
     my $data = $info->file_info->{$_};
     next unless $data =~ /^directory$/ or $data =~ / link to /;
-    $directories{$_}++;
+    $directories{"/$_"}++;
 }
 
 # process all files in package
