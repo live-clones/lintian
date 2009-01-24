@@ -1,6 +1,7 @@
 # standards-version -- lintian check script -*- perl -*-
 
 # Copyright (C) 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 2008-2009 Russ Allbery
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,58 +22,24 @@
 package Lintian::standards_version;
 use strict;
 
-use Date::Parse qw(str2time);
 use POSIX qw(strftime);
 use Parse::DebianChangelog;
 
+use Lintian::Data;
 use Tags;
 use Util;
 
-# This is a list of all known standards versions, current and older, with
-# their dates of publication.
-my @standards =
-    ([ '3.8.0'  => '2008-06-04' ],
-     [ '3.7.3'  => '2007-12-03' ],
-     [ '3.7.2'  => '2006-05-03' ],
-     [ '3.7.1'  => '2006-05-03' ],
-     [ '3.7.0'  => '2006-04-26' ],
-     [ '3.6.2'  => '2005-06-17' ],
-     [ '3.6.1'  => '2003-08-19' ],
-     [ '3.6.0'  => '2003-07-09' ],
-     [ '3.5.10' => '2003-05-10' ],
-     [ '3.5.9'  => '2003-03-07' ],
-     [ '3.5.8'  => '2002-11-15' ],
-     [ '3.5.7'  => '2002-08-31' ],
-     [ '3.5.6'  => '2001-07-25' ],
-     [ '3.5.5'  => '2001-06-01' ],
-     [ '3.5.4'  => '2001-04-28' ],
-     [ '3.5.3'  => '2001-04-15' ],
-     [ '3.5.2'  => '2001-02-18' ],
-     [ '3.5.1'  => '2001-02-15' ],
-     [ '3.5.0'  => '2001-01-29' ],
-     [ '3.2.1'  => '2000-08-24' ],
-     [ '3.2.0'  => '2000-07-30' ],
-     [ '3.1.1'  => '1999-11-16' ],
-     [ '3.1.0'  => '1999-11-04' ],
-     [ '3.0.1'  => '1999-07-15' ],
-     [ '3.0.0'  => '1999-07-01' ],
-     [ '2.5.1'  => '1999-04-27' ],
-     [ '2.5.0'  => '1998-10-29' ],
-     [ '2.4.1'  => '1998-04-14' ],
-     [ '2.4.0'  => '1998-01-30' ],
-     [ '2.3.0'  => '1997-09-01' ],
-     [ '2.2.0'  => '1997-07-13' ],
-     [ '2.1.3'  => '1997-03-15' ],
-     [ '2.1.2'  => '1996-11-23' ],
-     [ '2.1.1'  => '1996-09-12' ],
-     [ '2.1.0'  => '1996-09-01' ],
-     [ '2.0.1'  => '1996-08-31' ],
-     [ '2.0.0'  => '1996-08-26' ],
-     [ '0.2.1'  => '1996-08-23' ],
-     [ '0.2.0'  => '1996-08-21' ]);
-my %standards = map { $$_[0] => $$_[1] } @standards;
-my $current = $standards[0][0];
-my @current = split (/\./, $current);
+our $STANDARDS = Lintian::Data->new('standards-version/release-dates', '\s+');
+
+# In addition to the normal Lintian::Data structure, we also want a list of
+# all standards and their release dates so that we can check things like the
+# release date of the standard released after the one a package declared.  Do
+# that by pulling all data out of the Lintian::Data structure and sorting it
+# by release date.  We can also use this to get the current standards version.
+our @STANDARDS = sort { $b->[1] <=> $a->[1] }
+    map { [ $_, $STANDARDS->value($_) ] } $STANDARDS->all;
+our $CURRENT   = $STANDARDS[0][0];
+our @CURRENT   = split(/\./, $CURRENT);
 
 sub run {
 
@@ -121,23 +88,24 @@ if (defined $changes) {
 
 # Check for packages dated prior to the date of release of the standards
 # version with which they claim to comply.
-if ($standards{$stdver} && str2time($standards{$stdver}, '+0000') > $pkgdate) {
-    my $pretty = strftime ('%Y-%m-%d', gmtime $pkgdate);
-    tag 'timewarp-standards-version', "($pretty < $standards{$stdver})";
+if ($STANDARDS->known($stdver) && $STANDARDS->value($stdver) > $pkgdate) {
+    my $package = strftime('%Y-%m-%d', gmtime $pkgdate);
+    my $release = strftime('%Y-%m-%d', gmtime $STANDARDS->value($stdver));
+    tag 'timewarp-standards-version', "($package < $release)";
 }
 
-my $tag = "$version (current is $current)";
-if (not exists $standards{$stdver}) {
+my $tag = "$version (current is $CURRENT)";
+if (not $STANDARDS->known($stdver)) {
     # Unknown standards version.  Perhaps newer?
-    if (   ($major > $current[0])
-        or ($major == $current[0] and $minor > $current[1])
-        or ($major == $current[0] and $minor == $current[1]
-            and $patch > $current[2])) {
+    if (   ($major > $CURRENT[0])
+        or ($major == $CURRENT[0] and $minor > $CURRENT[1])
+        or ($major == $CURRENT[0] and $minor == $CURRENT[1]
+            and $patch > $CURRENT[2])) {
         tag 'newer-standards-version', $tag;
     } else {
         tag 'invalid-standards-version', $version;
     }
-} elsif ($stdver eq $current) {
+} elsif ($stdver eq $CURRENT) {
     # Current standard.  Nothing more to check.
     return 0;
 } else {
@@ -149,13 +117,13 @@ if (not exists $standards{$stdver}) {
     # following it has been out for at least two years (so the current version
     # is never obsolete).
     my $obsdate = time;
-    for my $index (0 .. $#standards) {
-        if ($standards[$index][0] eq $stdver) {
-            $obsdate = $standards[$index - 1][1] if $index > 0;
+    for my $index (0 .. $#STANDARDS) {
+        if ($STANDARDS[$index][0] eq $stdver) {
+            $obsdate = $STANDARDS[$index - 1][1] if $index > 0;
             last;
         }
     }
-    if (str2time($obsdate, '+0000') + (60 * 60 * 24 * 365 * 2) < time) {
+    if ($obsdate + (60 * 60 * 24 * 365 * 2) < time) {
         tag 'ancient-standards-version', $tag;
     } else {
         # We have to get the package date from the changelog file.  If we
@@ -167,9 +135,9 @@ if (not exists $standards{$stdver}) {
         }
         my ($entry) = $changes->data;
         my $timestamp = $entry ? $entry->Timestamp : 0;
-        for my $standard (@standards) {
+        for my $standard (@STANDARDS) {
             last if $standard->[0] eq $stdver;
-            if (str2time($standard->[1], '+0000') < $timestamp) {
+            if ($standard->[1] < $timestamp) {
                 tag 'out-of-date-standards-version', $tag;
                 last;
             }

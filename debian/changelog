@@ -13,14 +13,21 @@ lintian (2.1.7) UNRELEASED; urgency=low
   * checks/files:
     + [RA] Add swfobject.js to embedded-javascript-library.  Thanks, Paul
       Wise.  (Closes: #512363)
-  * checks/standards-version.desc:
+  * checks/standards-version{,.desc}:
     + [ADB] Add source-control-file to the list of information needed by
       the script.  Thanks, Raphael Geissert.  (Closes: #512563)
+    + [RA] Use Lintian::Data to get the standards versions and release
+      dates.  Dates are now in seconds since epoch, so remove the date
+      conversion code.
 
   * collection/*.desc:
     + [RA] Replace `' "balanced" quotes with straight double-quotes.  The
       old style looks strange with modern fonts.  Based on work by Raphael
       Geissert.
+
+  * data/standards-version/release-dates:
+    + [RA] Known standards versions and their release dates in seconds
+      since epoch, taken from checks/standards-version.
 
   * lib/Checker.pm:
     + [ADB] Remove some unused code.
