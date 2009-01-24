@@ -20,6 +20,7 @@
 
 package Lintian::changelog_file;
 use strict;
+
 use Spelling;
 use Dep;
 use Tags;
@@ -258,8 +259,7 @@ if ($line) {
     tag "debian-changelog-file-uses-obsolete-national-encoding", "at line $line"
 }
 
-my $changes = Parse::DebianChangelog->init( { infile => 'changelog',
-					      quiet => 1 } );
+my $changes = $info->changelog;
 if (my @errors = $changes->get_parse_errors) {
     foreach (@errors) {
 	tag "syntax-error-in-debian-changelog", "line $_->[1]", "\"$_->[2]\"";

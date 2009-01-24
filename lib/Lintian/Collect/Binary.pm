@@ -1,7 +1,7 @@
 # -*- perl -*-
 # Lintian::Collect::Binary -- interface to binary package data collection
 
-# Copyright (C) 2008 Russ Allbery
+# Copyright (C) 2008, 2009 Russ Allbery
 # Copyright (C) 2008 Frank Lichtenheld
 #
 # This program is free software; you can redistribute it and/or modify it
@@ -41,6 +41,20 @@ sub native {
     return $self->{native} if exists $self->{native};
     my $version = $self->field('version');
     $self->{native} = ($version !~ m/-/);
+}
+
+# Get the changelog file of a binary package as a Parse::DebianChangelog
+# object.  Returns undef if the changelog file couldn't be found.
+sub changelog {
+    my ($self) = @_;
+    return $self->{changelog} if exists $self->{changelog};
+    if (-l 'changelog' || ! -f 'changelog') {
+        $self->{changelog} = undef;
+    } else {
+        my %opts = (infile => 'changelog', quiet => 1);
+        $self->{changelog} = Parse::DebianChangelog->init(\%opts);
+    }
+    return $self->{changelog};
 }
 
 # Returns the information from the indices
@@ -275,6 +289,13 @@ In addition to the instance methods listed below, all instance methods
 documented in the Lintian::Collect module are also available.
 
 =over 4
+
+=item changelog()
+
+Returns the changelog of the binary package as a Parse::DebianChangelog
+object, or undef if the changelog doesn't exist.  The changelog-file
+collection script must have been run to create the changelog file, which
+this method expects to find in F<changelog>.
 
 =item native()
 

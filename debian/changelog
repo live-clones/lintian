@@ -4,6 +4,8 @@ lintian (2.1.7) UNRELEASED; urgency=low
     + [RA] Replace `' "balanced" quotes with straight double-quotes.  The
       old style looks strange with modern fonts.  Based on work by Raphael
       Geissert.
+  * checks/changelog-file:
+    + [RA] Use Lintian::Collect to read the changelog.
   * checks/control-file.desc:
     + [ADB] Fix a typo ("arne't").  Thanks, Raphael Geissert.
   * checks/debhelper.desc:
@@ -31,6 +33,8 @@ lintian (2.1.7) UNRELEASED; urgency=low
 
   * lib/Checker.pm:
     + [ADB] Remove some unused code.
+  * lib/Lintian/Collect/Binary.pm:
+    + [RA] Add a changelog() method to return the parsed changelog.
   * lib/Lintian/Collect/Source.pm:
     + [ADB] Add a missing "use Util" as the module uses the fail() function
       from that module.  Thanks, Raphael Geissert.  (Closes: #512560)
