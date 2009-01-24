@@ -6,6 +6,7 @@ lintian (2.2.0) UNRELEASED; urgency=low
       - no-homepage-field (pedantic)
       - no-upstream-changelog (pedantic)
       - package-depends-on-hardcoded-libc
+      - weak-dependency-on-misc-depends
 
   * checks/*.desc:
     + [RA] Replace `' "balanced" quotes with straight double-quotes.  The
@@ -23,10 +24,13 @@ lintian (2.2.0) UNRELEASED; urgency=low
     + [RA] Check for hard-coded package dependencies on libc.  Patch from
       Evgeni Golov.  (Closes: #512196)
     + [RA] Check package-depends-on-itself for Suggests as well.
-  * checks/debhelper.desc:
+  * checks/debhelper{,.desc}:
     + [ADB] Remove no longer required "Type" fields from a couple of
       entries.  Thanks, Raphael Geissert.
     + [ADB] Fix a couple of typoes.  Thanks, Raphael Geissert.
+    + [RA] Allow ${misc:Depends} in Pre-Depends and warn of
+      ${misc:Depends} in Recommends or Suggests.  Patch from Raphael
+      Geissert.  (Closes: #512478)
   * checks/fields{,.desc}:
     + [RA] Add pedantic check for no Homepage control field.  Patch from
       Raphael Geissert.
