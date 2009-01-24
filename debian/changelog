@@ -40,6 +40,9 @@ lintian (2.2.0) UNRELEASED; urgency=low
     + [RA] Use Lintian::Data to get the standards versions and release
       dates.  Dates are now in seconds since epoch, so remove the date
       conversion code.
+  * checks/version-substvars.desc:
+    + [RA] Mention when the binary:Version and source:Version substvars
+      were introduced.  Thanks, Steffen Moeller.
 
   * collection/*.desc:
     + [RA] Replace `' "balanced" quotes with straight double-quotes.  The

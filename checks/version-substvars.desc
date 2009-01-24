@@ -50,6 +50,7 @@ Tag: substvar-source-version-is-deprecated
 Severity: normal
 Certainty: certain
 Info: The package uses the now deprecated ${Source-Version} substvar,
- which has misleading semantics. Please switch to ${binary:Version} or
- ${source:Version} as appropriate. Support for ${Source-Version} may be
- removed from dpkg-dev in the future.
+ which has misleading semantics.  Please switch to ${binary:Version} or
+ ${source:Version} as appropriate (introduced in dpkg 1.13.19, released
+ with etch).  Support for ${Source-Version} may be removed from dpkg-dev
+ in the future.
