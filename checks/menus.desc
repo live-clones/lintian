@@ -17,7 +17,7 @@ Severity: important
 Certainty: possible
 Info: The maintainer script calls the <tt>update-menus</tt> command without
  checking for existence first. (The <tt>menu</tt> package which provides the
- command is not marked as `essential' package.)
+ command is not marked as "essential" package.)
  .
  For example, use the following code in your maintainer script:
   if [ -x /usr/bin/update-menus ] ; then update-menus ; fi
@@ -27,7 +27,7 @@ Severity: important
 Certainty: possible
 Info: The maintainer script calls the <tt>wm-menu-config</tt> command without
  checking for existence first. (The <tt>menu</tt> package which provides
- the command is not marked as `essential' package.)
+ the command is not marked as "essential" package.)
  .
  For example, use the following code in your maintainer script:
   if [ -x /usr/sbin/wm-menu ]; then /usr/sbin/wm-menu-config; fi
@@ -37,7 +37,7 @@ Severity: important
 Certainty: possible
 Info: The maintainer script calls the <tt>install-docs</tt> command without
  checking for existence first. (The <tt>doc-base</tt> package which provides
- the command is not marked as `essential' package.)
+ the command is not marked as "essential" package.)
  .
  For example, use the following code in your maintainer script:
   if [ -x /usr/sbin/install-docs ]; then

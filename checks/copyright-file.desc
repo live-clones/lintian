@@ -7,10 +7,11 @@ Needs-Info: copyright-file
 Info: This script checks if a binary package conforms to policy
  with regard to copyright files.
  .
- Each binary package must either have a /usr/share/doc/&lt;foo&gt;/copyright file
- or must have a symlink /usr/share/doc/&lt;foo&gt; -&gt; &lt;bar&gt;, where &lt;bar&gt; comes
- from the same source package and pkg foo declares a "Depends" relation
- on bar.
+ Each binary package must either have a
+ /usr/share/doc/&lt;foo&gt;/copyright file or must have a symlink
+ /usr/share/doc/&lt;foo&gt; -&gt; &lt;bar&gt;, where &lt;bar&gt; comes
+ from the same source package and pkg foo declares a "Depends" relation on
+ bar.
 
 Tag: no-copyright-file
 Severity: serious
@@ -150,7 +151,7 @@ Severity: important
 Certainty: certain
 Ref: policy 12.5
 Info: In the directory name /usr/share/common-licenses, licenses is spelled
- with an `s', not as licences with a `c'.
+ with an "s", not as licences with a "c".
 
 Tag: copyright-file-lacks-pointer-to-perl-license
 Severity: important

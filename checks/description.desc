@@ -57,7 +57,7 @@ Severity: important
 Certainty: certain
 Info: The first line of the "Description:" should not start with the
  package name. For example, the package <tt>foo</tt> should not
- have a description like this: `foo is a program that...'.
+ have a description like this: "foo is a program that...".
 Ref: policy 3.4.1
 
 Tag: description-contains-tabs
@@ -70,7 +70,7 @@ Tag: description-starts-with-leading-spaces
 Severity: normal
 Certainty: possible
 Info: The package "Description:" starts with leading spaces. Usually,
- leading spaces are used to switch `verbatim display' on (i.e., lines
+ leading spaces are used to switch "verbatim display" on (i.e., lines
  are not wrapped) so this might be a bug in the package.
 
 Tag: possible-unindented-list-in-extended-description

@@ -10,9 +10,9 @@ Tag: bad-link-to-undocumented-manpage
 Severity: important
 Certainty: certain
 Info: The symbolic link should reference
- `<tt>../man[237]/undocumented.[237].gz</tt>' for manual pages in
+ "<tt>../man[237]/undocumented.[237].gz</tt>" for manual pages in
  <tt>/usr/share/man</tt> or
- `<tt>../../../share/man/man[237]/undocumented.[237].gz</tt>' for manual
+ "<tt>../../../share/man/man[237]/undocumented.[237].gz</tt>" for manual
  pages in <tt>/usr/X11R6/man</tt>.
 
 Tag: link-to-undocumented-manpage
@@ -70,13 +70,13 @@ Tag: manpage-has-wrong-extension
 Severity: important
 Certainty: certain
 Info: The manual page has an extension other than
- `<i>section</i>[<i>program</i>].gz'.
+ "<i>section</i>[<i>program</i>].gz".
 Ref: policy 12.1
 
 Tag: manpage-not-compressed
 Severity: important
 Certainty: certain
-Info: Manual pages have to be installed compressed (using `<tt>gzip -9</tt>').
+Info: Manual pages have to be installed compressed (using "<tt>gzip -9</tt>").
 Ref: policy 12.1
 
 Tag: x11-games-should-be-in-usr-games
@@ -103,11 +103,11 @@ Ref: policy 12.1
 Tag: manpage-has-bad-whatis-entry
 Severity: normal
 Certainty: certain
-Info: Each manual page should start with a `NAME' section, which lists the
- name and a brief description of the page separated by '\-'. These sections
- are parsed by `mandb' and stored in a database for the use of `apropos' and
- `whatis', so they must be in a certain format. This manual page apparently
- uses the wrong format and cannot be parsed by `mandb'.
+Info: Each manual page should start with a "NAME" section, which lists the
+ name and a brief description of the page separated by "\-". These sections
+ are parsed by "mandb" and stored in a database for the use of "apropos" and
+ "whatis", so they must be in a certain format. This manual page apparently
+ uses the wrong format and cannot be parsed by "mandb".
 Ref: lexgrog(1), groff_man(7), groff_mdoc(7)
 
 Tag: manpage-has-useless-whatis-entry
@@ -236,20 +236,20 @@ Tag: hyphen-used-as-minus-sign
 Severity: wishlist
 Certainty: certain
 Info: Manual page seems to contain a hyphen where a minus sign was intended.
- '-' chars are interpreted as hyphens (U+2010) by groff, not as minus signs
+ "-" chars are interpreted as hyphens (U+2010) by groff, not as minus signs
  (U+002D). Since options to programs use minus signs (U+002D), this means for
  example in UTF-8 locales that you cannot cut&amp;paste options, nor search for
  them easily.
  .
- '-' must be escaped ('\-') to be interpreted as minus. If you really intend a
- hyphen, write it as '\(hy' to emphasise that fact. See groff(7) and
+ "-" must be escaped ("\-") to be interpreted as minus. If you really intend a
+ hyphen, write it as "\(hy" to emphasise that fact. See groff(7) and
  especially groff_char(7) for details, and also the thread starting with
  http://lists.debian.org/debian-devel/2003/debian-devel-200303/msg01481.html
  .
  If you use some tool that converts your documentation to groff format, it
  might be possible that this tool converts dashes of any kind to groff
  hyphens, while the safe way of converting dashes is usually to convert them
- to '\-'.
+ to "\-".
  .
  Because this error can occur <em>very</em> often we show only the
  first 10 occurrences for each man page and give the number of

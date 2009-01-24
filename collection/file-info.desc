@@ -1,6 +1,6 @@
 Collector-Script: file-info
 Author: Richard Braakman <dark@xs4all.nl>
-Info: This script runs the `file' command over all files of a binary package.
+Info: This script runs the "file" command over all files of a binary package.
 Type: binary, udeb
 Unpack-Level: 2
 Output: file-info

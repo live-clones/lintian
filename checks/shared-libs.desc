@@ -73,7 +73,7 @@ Ref: policy 8.1
 Tag: dev-pkg-without-shlib-symlink
 Severity: normal
 Certainty: certain
-Info: A `-dev' package is supposed to install a `libsomething.so' symbolic
+Info: A "-dev" package is supposed to install a "libsomething.so" symbolic
  link referencing the corresponding shared library. Notice how the link name
  doesn't include the version number -- this is because such a link is used
  by the linker when other programs are built against this shared library.
@@ -82,13 +82,13 @@ Ref: policy 8.4
 Tag: non-dev-pkg-with-shlib-symlink
 Severity: normal
 Certainty: possible
-Info: Although this package is not a `-dev' package, it installs a
- `libsomething.so' symbolic link referencing the corresponding shared
+Info: Although this package is not a "-dev" package, it installs a
+ "libsomething.so" symbolic link referencing the corresponding shared
  library. When the link doesn't include the version number, it is used by
  the linker when other programs are built against this shared library.
  .
  Shared libraries are supposed to place such symbolic links in their
- respective `-dev' packages, so it is a bug to include it with the main
+ respective "-dev" packages, so it is a bug to include it with the main
  library package.
  .
  However, if this is a small package which includes the runtime and the
@@ -211,7 +211,7 @@ Tag: postinst-must-call-ldconfig
 Severity: serious
 Certainty: certain
 Info: The package installs shared libraries in a directory controlled by
- the dynamic library loader. Therefore, the package must call `ldconfig' in
+ the dynamic library loader. Therefore, the package must call "ldconfig" in
  its postinst script.
 Ref: policy 8.1.1
 
@@ -219,7 +219,7 @@ Tag: postrm-should-call-ldconfig
 Severity: important
 Certainty: certain
 Info: The package installs shared libraries in a directory controlled by
- the dynamic library loader. Therefore, the package should call `ldconfig'
+ the dynamic library loader. Therefore, the package should call "ldconfig"
  in its postrm script.
 Ref: policy 8.1.1
 

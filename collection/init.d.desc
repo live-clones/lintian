@@ -1,6 +1,7 @@
 Collector-Script: init.d
 Author: Richard Braakman <dark@xs4all.nl>
-Info: This script copies the `etc/init.d' directory into the lintian directory.
+Info: This script copies the "etc/init.d" directory into the lintian
+ directory.
 Type: binary
 Unpack-Level: 2
 Output: init.d

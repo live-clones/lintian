@@ -191,7 +191,7 @@ Certainty: certain
 Info: The package installs a binary which uses a very short file name (one
  or two characters). This is not forbidden by policy, but short names
  should be reserved for the user.  Unless this short name has been used
- for a while already (like the famous `ls', `rm', `cp' commands), you
+ for a while already (like the famous "ls", "rm", "cp" commands), you
  should consider giving these binaries a longer name.
 
 Tag: non-standard-dir-perm
@@ -358,7 +358,7 @@ Info: Scripts are usually not documentation files, unless they are
 Tag: symlink-has-too-many-up-segments
 Severity: important
 Certainty: certain
-Info: The symlink references a directory beyond the root directory `/'.
+Info: The symlink references a directory beyond the root directory "/".
 
 Tag: lengthy-symlink
 Severity: important
@@ -381,7 +381,7 @@ Info: The symbolic link is recursive to a higher directory of the symlink
 Tag: symlink-contains-spurious-segments
 Severity: important
 Certainty: certain
-Info: The symbolic link has needless segments like '..' and '.' in the middle.
+Info: The symbolic link has needless segments like ".." and "." in the middle.
  These are unneeded, and make the link longer than it could be, which is in
  violation of policy.
  .

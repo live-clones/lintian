@@ -3,7 +3,7 @@ Author: Christian Schwarz <schwarz@debian.org>
 Abbrev: cnf
 Type: binary
 Unpack-Level: 1
-Info: This script checks if the `conffiles' control file of a binary
+Info: This script checks if the conffiles control file of a binary
  package is correct.
 
 Tag: file-in-usr-marked-as-conffile
@@ -26,8 +26,8 @@ Tag: relative-conffile
 Severity: important
 Certainty: certain
 Ref: policy E.1
-Info: All entries in the conffile control file should have an absolute
- path specification.
+Info: All entries in the <tt>debian/conffiles</tt> control file should
+ have an absolute path specification.
 
 Tag: duplicate-conffile
 Severity: important

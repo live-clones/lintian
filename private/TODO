@@ -24,7 +24,6 @@ goals not targetted
 - go through all tags and make sure that any that should have Policy
   references have them, and more generally that appropriate references are
   present
-- remove old unbalance `' quotes from all tag descriptions
 - rewrite the Lintian manual in something other than DebianDoc-SGML
 - update the Lintian manual
   + document severity/certainty

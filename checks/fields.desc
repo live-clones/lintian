@@ -10,14 +10,14 @@ Info: This script checks the syntax of the fields in package control files,
 Tag: no-package-name
 Severity: serious
 Certainty: certain
-Info: The package does not have a `Package:' field in its control file.
+Info: The package does not have a "Package:" field in its control file.
 Ref: policy 5.3
 
 Tag: bad-package-name
 Severity: serious
 Certainty: certain
 Info: A package name should be at least two characters long, must consist
- of the alphanumerics and `+' `-' and `.', and must start with an
+ of the alphanumerics and "+" "-" and ".", and must start with an
  alphanumeric character.
 Ref: policy 5.6.7
 
@@ -30,7 +30,7 @@ Ref: policy 5.6.7
 Tag: no-version-field
 Severity: serious
 Certainty: certain
-Info: The package does not have a `Version:' field in its control file.
+Info: The package does not have a "Version:" field in its control file.
 Ref: policy 5.3
 
 Tag: bad-version-number
@@ -66,13 +66,13 @@ Ref: devref 5.11.2
 Tag: no-architecture-field
 Severity: serious
 Certainty: certain
-Info: The package does not have an `Architecture:' field in its control file.
+Info: The package does not have an "Architecture:" field in its control file.
 Ref: policy 5.3
 
 Tag: magic-arch-in-arch-list
 Severity: serious
 Certainty: certain
-Info: The special architecture values `all' and `any' only make sense if
+Info: The special architecture values "all" and "any" only make sense if
  they occur alone.
 Ref: policy 5.6.8
 
@@ -89,13 +89,13 @@ Tag: too-many-architectures
 Severity: serious
 Certainty: certain
 Info: A binary package should list exactly one architecture (the one it is
- compiled for), or the special value `all' if it is architecture-independent.
+ compiled for), or the special value "all" if it is architecture-independent.
 Ref: policy 5.6.8
 
 Tag: arch-any-in-binary-pkg
 Severity: serious
 Certainty: certain
-Info: The special architecture value `any' does not make sense in a binary
+Info: The special architecture value "any" does not make sense in a binary
  package.
 Ref: policy 5.6.8
 
@@ -111,7 +111,7 @@ Ref: aspell-autobuildhash(8)
 Tag: no-maintainer-field
 Severity: serious
 Certainty: certain
-Info: The package does not have a `Maintainer:' field in its control file.
+Info: The package does not have a "Maintainer:" field in its control file.
 Ref: policy 5.3
 
 Tag: maintainer-name-missing
@@ -139,7 +139,7 @@ Ref: policy 5.6.2
 Tag: maintainer-not-full-name
 Severity: normal
 Certainty: possible
-Info: The `name' part of this maintainer field is just one word, so it
+Info: The "name" part of this maintainer field is just one word, so it
  might not be a full name.
 
 Tag: maintainer-address-looks-weird
@@ -180,7 +180,7 @@ Ref: policy 5.6.2
 Tag: uploader-not-full-name
 Severity: normal
 Certainty: possible
-Info: The `name' part of this uploader field is just one word, so it
+Info: The "name" part of this uploader field is just one word, so it
  might not be a full name.
 
 Tag: uploader-address-looks-weird
@@ -224,7 +224,7 @@ Ref: devref 5.12
 Tag: no-source-field
 Severity: serious
 Certainty: certain
-Info: The package does not have a `Source:' field in its control file.
+Info: The package does not have a "Source:" field in its control file.
 Ref: policy 5.2
 
 Tag: source-field-does-not-match-pkg-name
@@ -252,7 +252,7 @@ Ref: policy 5.6.9
 Tag: essential-no-not-needed
 Severity: normal
 Certainty: certain
-Info: Having `Essential: no' is the same as not having the field at all,
+Info: Having "Essential: no" is the same as not having the field at all,
  so it just makes the Packages file longer with no benefit.
 Ref: policy 5.6.9
 
@@ -265,7 +265,7 @@ Ref: policy 5.6.9
 Tag: no-section-field
 Severity: normal
 Certainty: certain
-Info: The package does not have a `Section:' field in its control file.
+Info: The package does not have a "Section:" field in its control file.
  .
  The field is mandatory for source packages and optional for binary
  packages, which use the source package's value as default is nothing
@@ -275,22 +275,22 @@ Ref: policy 5.3
 Tag: unknown-section
 Severity: normal
 Certainty: certain
-Info: The `Section:' field in this package's control file is not one of
+Info: The "Section:" field in this package's control file is not one of
  the sections in use on the ftp archive.  Valid sections are currently
  admin, comm, devel, doc, editors, electronics, embedded, games,
  gnome, graphics, hamradio, interpreters, kde, libdevel, libs, mail, 
  math, misc, net, news, oldlibs, otherosfs, perl, python, science, shells, 
  sound, tex, text, utils, web, and x11.
  .
- The section name should be preceded by `non-free/' if the package
- is in the non-free distribution, and by `contrib/' if the package
+ The section name should be preceded by "non-free/" if the package
+ is in the non-free distribution, and by "contrib/" if the package
  is in the contrib distribution.
 Ref: policy 2.4
 
 Tag: section-is-dh_make-template
 Severity: important
 Certainty: certain
-Info: The `Section:' field in this package's control file is set to
+Info: The "Section:" field in this package's control file is set to
  unknown.  This is not a valid section, and usually means a dh_make
  template control file was used and never modified to set the correct
  section.
@@ -299,12 +299,12 @@ Ref: policy 2.4
 Tag: wrong-section-for-udeb
 Severity: normal
 Certainty: certain
-Info: udeb packages should have `Section: debian-installer'.
+Info: udeb packages should have "Section: debian-installer".
 
 Tag: no-priority-field
 Severity: normal
 Certainty: certain
-Info: The package does not have a `Priority:' field in its control file.
+Info: The package does not have a "Priority:" field in its control file.
  .
  The Priority field can be included in a binary package by passing
  the -ip or -isp flags to dpkg-gencontrol when building the package.
@@ -314,14 +314,14 @@ Ref: policy 5.3
 Tag: unknown-priority
 Severity: important
 Certainty: certain
-Info: The `Priority:' field in this package's control file is not one of
+Info: The "Priority:" field in this package's control file is not one of
  the priorities defined in the Policy Manual.
 Ref: policy 2.5
 
 Tag: superfluous-clutter-in-homepage
 Severity: normal
 Certainty: certain
-Info: The `Homepage:' field in this package's control file contains
+Info: The "Homepage:" field in this package's control file contains
  superfluous markup around the URL, like enclosing &lt; and &gt;.
  This is unnecessary and needlessly complicates using this information.
 Ref: policy 5.6.23
@@ -329,7 +329,7 @@ Ref: policy 5.6.23
 Tag: bad-homepage
 Severity: normal
 Certainty: certain
-Info: The `Homepage:' field in this package's control file does not
+Info: The "Homepage:" field in this package's control file does not
  contain a valid absolute URL. Most probably you forgot to specify
  the scheme (e.g. http).
 
@@ -367,22 +367,22 @@ Ref: policy 5.1
 Tag: alternates-not-allowed
 Severity: important
 Certainty: certain
-Info: Only the `Depends', `Recommends', `Suggests' and `Pre-Depends'
- fields may specify alternate dependencies using the `|' symbol.
+Info: Only the "Depends", "Recommends", "Suggests" and "Pre-Depends"
+ fields may specify alternate dependencies using the "|" symbol.
 Ref: policy 7.1
 
 Tag: versioned-provides
 Severity: important
 Certainty: certain
 Ref: policy 7.1
-Info: The `Provides' field may not specify a version range.
+Info: The "Provides" field may not specify a version range.
 
 Tag: obsolete-relation-form
 Ref: policy 7.1
 Severity: normal
 Certainty: certain
-Info: The forms `&lt;' and `&gt;' mean `&lt;=' and `&gt;=', not `&lt;&lt;'
- and `&gt;&gt;' as one might expect.  For that reason these forms are
+Info: The forms "&lt;" and "&gt;" mean "&lt;=" and "&gt;=", not "&lt;&lt;"
+ and "&gt;&gt;" as one might expect.  For that reason these forms are
  obsolete, and should not be used in new packages.  Use the longer forms
  instead.
 

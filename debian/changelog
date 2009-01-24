@@ -1,5 +1,9 @@
 lintian (2.1.7) UNRELEASED; urgency=low
 
+  * checks/*.desc:
+    + [RA] Replace `' "balanced" quotes with straight double-quotes.  The
+      old style looks strange with modern fonts.  Based on work by Raphael
+      Geissert.
   * checks/control-file.desc:
     + [ADB] Fix a typo ("arne't").  Thanks, Raphael Geissert.
   * checks/debhelper.desc:
@@ -12,6 +16,11 @@ lintian (2.1.7) UNRELEASED; urgency=low
   * checks/standards-version.desc:
     + [ADB] Add source-control-file to the list of information needed by
       the script.  Thanks, Raphael Geissert.  (Closes: #512563)
+
+  * collection/*.desc:
+    + [RA] Replace `' "balanced" quotes with straight double-quotes.  The
+      old style looks strange with modern fonts.  Based on work by Raphael
+      Geissert.
 
   * lib/Checker.pm:
     + [ADB] Remove some unused code.
