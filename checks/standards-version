@@ -23,7 +23,6 @@ package Lintian::standards_version;
 use strict;
 
 use POSIX qw(strftime);
-use Parse::DebianChangelog;
 
 use Lintian::Data;
 use Tags;
