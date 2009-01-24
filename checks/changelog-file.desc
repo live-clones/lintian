@@ -75,7 +75,16 @@ Ref: policy 12.7
 Tag: no-upstream-changelog
 Severity: pedantic
 Certainty: wild-guess
-Info: The package does not install an upstream changelog file. 
+Info: The package does not install an upstream changelog file.  If upstream
+ provides a changelog, it should be accessible as
+ <tt>/usr/share/doc/<i>pkg</i>/changelog.gz</tt>.
+ .
+ It's currently unclear how best to handle multiple binary packages from
+ the same source.  Some maintainers put a copy of the upstream changelog
+ in each package, but it can be quite long.  Some include it in one
+ package and add symlinks to the other packages, but this requires there
+ be dependencies between the packages.  Some only include it in a "central"
+ binary package and omit it from more ancillary packages.
 Ref: policy 12.7
 
 Tag: wrong-name-for-debian-changelog-file
