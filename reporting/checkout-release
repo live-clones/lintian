@@ -18,7 +18,7 @@ release=$1
 set -x
 
 cd root
-git pull
+git fetch
 git merge "$release"
 perl -i -pe "s/(LINTIAN_VERSION = )\S+/$1\"$release\";/" root/frontend/lintian
 debian/rules build
