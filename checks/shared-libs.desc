@@ -279,6 +279,7 @@ Info: Debian revisions should be stripped from versions in symbols files.
  be stripped because the symbol really appeared between two specific
  Debian revisions, you should postfix the version with a single "~"
  (example: 1.0-3~ if the symbol appeared in 1.0-3).
+Ref: dpkg-gensymbols(1), http://wiki.debian.org/UsingSymbolsFiles
 
 Tag: syntax-error-in-symbols-file
 Severity: important
@@ -303,7 +304,7 @@ Info: Although the package includes a shared library, the package does not
  dpkg can use symbols files in order to generate more accurate library
  dependencies for applications, based on the symbols from the library that
  are actually used by the application.
-Ref: dpkg-gensymbols(1)
+Ref: dpkg-gensymbols(1), http://wiki.debian.org/UsingSymbolsFiles
 
 Tag: pkg-has-symbols-control-file-but-no-shared-libs
 Severity: important

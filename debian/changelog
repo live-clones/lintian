@@ -1,3 +1,11 @@
+lintian (2.2.1) UNRELEASED; urgency=low
+
+  * checks/shared-libs.desc:
+    + [RA] Add references to the UsingSymbolsFiles wiki page in the tags
+      requesting generation of a symbols file.
+
+ -- Russ Allbery <rra@debian.org>  Sun, 25 Jan 2009 12:51:40 -0800
+
 lintian (2.2.0) unstable; urgency=low
 
   * Summary of tag changes:
