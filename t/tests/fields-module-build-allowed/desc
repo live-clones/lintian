@@ -1,0 +1,5 @@
+Testname: fields-module-build-allowed
+Sequence: 6000
+Version: 1.0
+Description: Test that libmodule-build-perl dependencies are allowed
+Test-Against: build-depends-without-arch-dep

@@ -107,6 +107,7 @@ my @rule_clean_depends = (
 my @rule_clean_allowed = (
 	[ patch => '^\t\s*(?:perl debian/)?yada\s+unpatch' ],
 	[ 'perl | perl-base (>= 5.6.0-16)' => '(^\t|\|\|)\s*(perl|\$\(PERL\))\s' ],
+	[ 'perl-modules (>= 5.10) | libmodule-build-perl' => '(^\t|\|\|)\s*(perl|\$\(PERL\))\s+Build\b' ],
 	[ 'python-setuptools' => '\ssetup\.py\b' ],
 );
 
