@@ -2,5 +2,6 @@ Testname: patch-systems-no-patch-system
 Sequence: 6000
 Type: non-native
 Version: 1.0-1
+Description: Diagnose lack of a patch system
 Options: -I -E --pedantic
 Test-For: direct-changes-in-diff-but-no-patch-system
