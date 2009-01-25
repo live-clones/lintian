@@ -85,6 +85,14 @@ lintian (2.2.0) UNRELEASED; urgency=low
   * man/lintian.1:
     + [RA] Document the new --pedantic option.
 
+  * reporting/html_reports:
+    + [RA] Add support for a new tag index sorted by severity and
+      certainty.  (Closes: #511496)
+  * reporting/templates/index.tmpl:
+    + [RA] Link to the new tag index.
+  * reporting/templates/tags-severity.tmpl:
+    + [RA] Template for a tag index sorted by severity and certainty.
+
   * t/runtests:
     + [RA] Add support for specifying the Lintian options to use when
       checking a test package.  Patch from Raphael Geissert.

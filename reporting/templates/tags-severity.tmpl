@@ -1,0 +1,46 @@
+{ head("Lintian Tags") }
+  <h1>Tags</h1>
+
+  <p>
+    This is a list of all tags that occur at least once in the archive
+    sorted by severity and then by certainty.  This includes all tags,
+    even experimental and info tags.
+  </p>
+
+{
+    my @tags = sort keys %tags;
+    for my $severity (qw/serious important normal minor wishlist/) {
+        for my $certainty (qw/certain possible wild-guess/) {
+            my $heading = 0;
+            for my $tag (@tags) {
+                my ($first) = @{ $tags{$tag} };
+                next unless $first->{severity} eq $severity;
+                next unless $first->{certainty} eq $certainty;
+                my ($count, $overrides) = (0, 0);
+                my %seen;
+                for my $info (@{ $tags{$tag} }) {
+                    if ($info->{code} eq 'O') {
+                        $overrides++;
+                    } else {
+                        $count++;
+                        $seen{$info->{xref}}++;
+                    }
+                }
+                my $packages = scalar keys %seen;
+                unless ($heading) {
+                    $OUT .= "  <h2>Severity: $severity,";
+                    $OUT .= " Certainty: $certainty</h2>\n\n";
+                    $OUT .= "  <ul>\n";
+                    $heading = 1;
+                }
+                $OUT .= qq(    <li><a href="tags/$tag.html">$tag</a>)
+                    . " ($packages packages, $count tags, plus $overrides"
+                    . " overrides)</li>\n";
+            }
+            if ($heading) {
+                $OUT .= "  </ul>\n\n";
+            }
+        }
+    }
+}
+{ foot() }
