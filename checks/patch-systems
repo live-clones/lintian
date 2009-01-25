@@ -21,8 +21,7 @@
 
 package Lintian::patch_systems;
 use strict;
-use lib "$ENV{'LINTIAN_ROOT'}/checks/";
-use common_data;
+
 use Dep;
 use Tags;
 use Util;
