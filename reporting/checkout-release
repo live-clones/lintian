@@ -1,9 +1,11 @@
 #!/bin/sh
 # Copyright 2008 Frank Lichtenheld <djpig@debian.org>, if at all copyrightable
+# Copyright 2009 Russ Allbery <rra@debian.org>
 
 # Helper script for updating lintian.debian.org to the latest lintian release
 # Call with the release number as only argument, e.g.
-# $ cd /org/lintian.debian.org && ./root/reporting/checkout-release 1.25.0
+#
+#   $ cd /org/lintian.debian.org && ./root/reporting/checkout-release 1.25.0
 
 set -e
 
@@ -11,16 +13,12 @@ if [ $# -ne 1 ]; then
 	echo "Usage: checkout-release <version-number>"
 	exit 2
 fi
-
 release=$1
 
 set -x
 
-svn co http://svn.wolffelaar.nl/lintian/releases/$release lintian-$release
-
-sed -i "s/<VERSION>/$release/" lintian-$release/frontend/lintian
-
-(cd lintian-$release/doc && LANG=C debiandoc2html lintian.sgml)
-
-rm root && ln -s lintian-$release root
-
+cd root
+git pull
+git merge "$release"
+perl -i -pe "s/(LINTIAN_VERSION = )\S+/$1\"$release\";/" root/frontend/lintian
+debian/rules build
