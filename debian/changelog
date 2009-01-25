@@ -1,4 +1,4 @@
-lintian (2.2.0) UNRELEASED; urgency=low
+lintian (2.2.0) unstable; urgency=low
 
   * Summary of tag changes:
     + Added
@@ -102,7 +102,7 @@ lintian (2.2.0) UNRELEASED; urgency=low
       attribute in the test description rather than in the desc file
       name.
 
- -- Russ Allbery <rra@debian.org>  Mon, 19 Jan 2009 20:45:31 -0800
+ -- Russ Allbery <rra@debian.org>  Sat, 24 Jan 2009 16:43:32 -0800
 
 lintian (2.1.6) unstable; urgency=low
 
