@@ -73,8 +73,6 @@ my @file_checks =
      [ qr,((^|/)\.[^/]+\.swp|~)$,         => 'editor-backup-file',  1 ],
     );
 
-my $dir;
-my $atdinbd;
 
 sub run {
 
@@ -109,7 +107,7 @@ if (defined $info->field('architecture')) {
 # I'm not thrilled with having the automake exception as well, but people do
 # depend on autoconf and automake and then use autoreconf to update
 # config.guess and config.sub, and automake depends on autotools-dev.
-$atdinbd = 0;
+my $atdinbd = 0;
 if (defined $info->field('build-depends')) {
     my $bd = $info->field('build-depends');
     $atdinbd = 1 if Dep::implies(Dep::parse($bd), Dep::parse($autotools_pkgs));
