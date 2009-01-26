@@ -8,6 +8,10 @@ lintian (2.2.1) UNRELEASED; urgency=low
     + [RA] Add references to the UsingSymbolsFiles wiki page in the tags
       requesting generation of a symbols file.
 
+  * man/lintian.1:
+    + [ADB] Fix the spelling of "pedantic".  Thanks, Michal Čihař.
+      (Closes: #513083)
+
  -- Russ Allbery <rra@debian.org>  Sun, 25 Jan 2009 12:51:40 -0800
 
 lintian (2.2.0) unstable; urgency=low
