@@ -12,6 +12,8 @@ lintian (2.2.1) UNRELEASED; urgency=low
     + [ADB] Add a colour for pedantic tags to avoid warnings when colourised
       output is used and make the combination more useful.  Thanks, gregor
       herrmann.  (Closes: #513132)
+  * lib/Lintian/Output/LetterQualifier.pm:
+    + [ADB] Add support for pedantic tags.
 
   * man/lintian.1:
     + [ADB] Fix the spelling of "pedantic".  Thanks, Michal Čihař.

@@ -29,6 +29,11 @@ use Lintian::Output qw(:util);
 use base qw(Lintian::Output);
 
 my %codes = (
+    'pedantic' => {
+	'wild-guess' => 'P?',
+	'possible' => 'P ',
+	'certain' => 'P!'
+    },
     'wishlist' => {
         'wild-guess' => 'W?',
         'possible' => 'W ',
@@ -57,6 +62,11 @@ my %codes = (
 );
 
 my %lq_default_colors = (
+    'pedantic' => {
+	'wild-guess' => 'green',
+	'possible' => 'green',
+	'certain' => 'green'
+    },
     'wishlist' => {
         'wild-guess' => 'green',
         'possible' => 'green',
