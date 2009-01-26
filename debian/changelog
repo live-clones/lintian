@@ -8,6 +8,11 @@ lintian (2.2.1) UNRELEASED; urgency=low
     + [RA] Add references to the UsingSymbolsFiles wiki page in the tags
       requesting generation of a symbols file.
 
+  * lib/Lintian/Output.pm:
+    + [ADB] Add a colour for pedantic tags to avoid warnings when colourised
+      output is used and make the combination more useful.  Thanks, gregor
+      herrmann.  (Closes: #513132)
+
   * man/lintian.1:
     + [ADB] Fix the spelling of "pedantic".  Thanks, Michal Čihař.
       (Closes: #513083)
