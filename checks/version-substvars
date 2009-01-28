@@ -42,27 +42,27 @@ sub run {
 
 my $pkg = shift;
 my $type = shift;
+my $info = shift;
 
-my @control_data = read_dpkg_control("debfiles/control");
+my $binpkgs = $info->binaries;
+
 my @dep_fields = qw(depends pre-depends recommends suggests conflicts replaces);
 
-shift @control_data; # skip source info entry
-
-foreach (@control_data) {
+foreach (keys %$binpkgs) {
 	my ($pkg1, $pkg1_is_any, $pkg2, $pkg2_is_any, $substvar_strips_binNMU);
 
-	$pkg1 = $_->{'package'};
-	$pkg1_is_any = ($_->{'architecture'} ne 'all');
+	$pkg1 = $_;
+	$pkg1_is_any = ($info->binary_field($pkg1, 'architecture') ne 'all');
 
 	foreach my $field (@dep_fields) {
-		next unless $_->{$field};
-		if ($_->{$field} =~ m/\${Source-Version}/) {
+		next unless $info->binary_field($pkg1, $field);
+		if ($info->binary_field($pkg1, $field) =~ m/\${Source-Version}/) {
 			tag "substvar-source-version-is-deprecated", $pkg1;
 		}
 	}
 
-	foreach (split(m/,/, ($_->{'pre-depends'} || "").", ".
-		       ($_->{'depends'} || ""))) {
+	foreach (split(m/,/, $info->binary_field($pkg1, 'pre-depends').", ".
+		       $info->binary_field($pkg1, 'depends'))) {
 		next unless m/(\S+)\s*\(\s*=\s*\${((?:Source-|source:|binary:)Version)}/x;
 
 		$pkg2 = $1;
@@ -71,12 +71,12 @@ foreach (@control_data) {
 		# We can't test dependencies on packages whose names are
 		# formed via substvars expanded during the build.  Assume
 		# those maintainers know what they're doing.
-		if (not -f "control/$pkg2/architecture") {
+		if (not $info->binary_field($pkg2, 'architecture')) {
 			tag "version-substvar-for-external-package", "$pkg1 -> $pkg2"
 				unless ($pkg2 =~ /\$\{\S+\}/);
 			next;
 		}
-		$pkg2_is_any = (slurp_entire_file("control/$pkg2/architecture") !~ m/^all$/);
+		$pkg2_is_any = ($info->binary_field($pkg2, 'architecture') !~ m/^all$/);
 
 		if ($pkg1_is_any) {
 			if ($pkg2_is_any and $substvar_strips_binNMU) {
