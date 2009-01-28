@@ -147,16 +147,10 @@ for my $binpkg (keys %$pkgs) {
     local $/;
 
     foreach my $field (qw(pre-depends depends)) {
-	if (open DEPENDS, '<', "control/$binpkg/$field") {
-	    chomp ($strong_depends .= <DEPENDS>);
-	    close(DEPENDS);
-	}
+	$strong_depends .= $info->binary_field($binpkg, $field);
     }
     foreach my $field (qw(recommends suggests)) {
-	if (open DEPENDS, '<', "control/$binpkg/$field") {
-	    chomp ($weak_depends .= <DEPENDS>);
-	    close(DEPENDS);
-	}
+	$weak_depends .= $info->binary_field($binpkg, $field);
     }
     $depends = $weak_depends . $strong_depends;
 
