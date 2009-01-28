@@ -3,7 +3,7 @@ Author: Marc 'HE' Brockschmidt <marc@marcbrockschmidt.de>
 Abbrev: fld
 Type: binary, udeb, source
 Unpack-Level: 1
-Needs-Info: debfiles
+Needs-Info: debfiles, source-control-fields
 Info: This script checks the syntax of the fields in package control files,
  as described in the Policy Manual.
 
@@ -728,8 +728,8 @@ Info: This package depends on makedev without a udev alternative.  This
 
 Tag: dbg-package-missing-depends
 Severity: normal
-Certainty: possible
-Info: This package has a name of the form of "X-dbg", indicating it
+Certainty: certain
+Info: The given binary package has a name of the form of "X-dbg", indicating it
  contains detached debugging symbols for the package X.  If so, it should
  depend on the corresponding package, generally with (= ${binary:Version})
  since the debugging symbols are only useful with the binaries created by
@@ -738,13 +738,7 @@ Info: This package has a name of the form of "X-dbg", indicating it
  If this package provides debugging symbols for multiple other
  packages, it should normally depend on all of those packages as
  alternatives.  In other words, <tt>pkga (= ${binary:Version}) | pkgb (=
- ${binary:Version)</tt> and so forth.  Provided that the non-dbg portion
- of the package name matches a prefix of the names of the packages on
- which it depends, Lintian should be able to recognize this dependency as
- correct.
- .
- In some cases, it may be necessary to override this tag because Lintian
- can't tell the correct dependency is in place.
+ ${binary:Version)</tt> and so forth.
 
 Tag: conflicts-with-dependency
 Severity: important

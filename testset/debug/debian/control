@@ -53,3 +53,30 @@ Description: Test for external debugging information (library symbols)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
+
+Package: hi-dbg
+Section: libdevel
+Priority: extra
+Architecture: any
+Depends: foo-pkg, not-libhello0
+Description: Test for external debugging symbols
+ Lintian regression test for external debugging files handling.  This test
+ contains the library symbols.
+ .
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.
+
+Package: hello-hello-dbg
+Section: devel
+Priority: extra
+Architecture: any
+Depends: foo-pkg, not-libhello0, hello
+Description: Test for external debugging symbols - another try
+ Lintian regression test for external debugging files handling.  This test
+ contains the library symbols. This package actually tests a combination of
+ the above.
+ .
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.

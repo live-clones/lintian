@@ -433,12 +433,6 @@ if ($type eq 'binary' && $arch_indep) {
 }
 if (($type eq "binary") || ($type eq 'udeb')) {
 	my (%deps, %fields, %parsed);
-	my $debugpackage = 0;
-	my ($debugbase, $debugfound);
-	if ($pkg =~ /^([^-]+)(?:-.*)?-dbg$/) {
-		$debugpackage = 1;
-		$debugbase = $1;
-	}
 	for my $field (qw(depends pre-depends recommends suggests conflicts provides enhances replaces breaks)) {
 		if (defined $info->field($field)) {
 			#Get data and clean it
@@ -487,11 +481,6 @@ if (($type eq "binary") || ($type eq 'udeb')) {
 
 				for my $part_d (@alternatives) {
 					my ($d_pkg, $d_version, $d_arch, $rest, $part_d_orig) = @$part_d;
-
-					# We have found a Depends: on our non-dbg equivalent.
-					if ($debugpackage && $field eq "depends" && $d_pkg =~ /^\Q$debugbase/) {
-						$debugfound = 1;
-					}
 
 					tag "versioned-provides", "$part_d_orig"
 					    if ($field eq "provides" && $d_version->[0]);
@@ -573,9 +562,6 @@ if (($type eq "binary") || ($type eq 'udeb')) {
 			    if (scalar @seen_libpngs > 1);
 		}
 	}
-
-	tag "dbg-package-missing-depends", $debugbase
-		if ($debugpackage && !$debugfound);
 
 	# If Conflicts or Breaks is set, make sure it's not inconsistent with
 	# the other dependency fields.
@@ -835,6 +821,22 @@ if ($type eq "source") {
 				tag "build-depends-without-arch-dep", $name;
 			}
 		}
+	}
+
+	my (@arch_dep_pkgs, @dbg_pkgs);
+	foreach my $binpkg (keys %$binpkgs) {
+		if ($binpkg =~ m/-dbg$/) {
+			push @dbg_pkgs, $binpkg;
+		} elsif ($info->binary_field($binpkg, 'architecture') ne 'all') {
+			push @arch_dep_pkgs, $binpkg;
+		}
+	}
+	foreach (@dbg_pkgs) {
+		my $deps;
+		$deps  = $info->binary_field($_, 'pre-depends') . ', ';
+		$deps .= $info->binary_field($_, 'depends');
+		tag 'dbg-package-missing-depends', $_
+		    unless (grep {my $quoted_name = qr<\Q$_>; $deps =~ m/(\s|^)$quoted_name(\s|$)/} @arch_dep_pkgs);
 	}
 }
 
