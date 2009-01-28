@@ -595,19 +595,17 @@ if (($type eq "binary") || ($type eq 'udeb')) {
 
 if ($type eq "source") {
 
+	my $binpkgs = $info->binaries;
+
 	#Get number of arch-indep packages:
 	my $arch_indep_packages = 0;
 	my $arch_dep_packages = 0;
-	if (not open(CONTROL, '<', "debfiles/control")) {
-		fail("Can't open debfiles/control: $!");
-	} else {
-		local $/ = "\n"; #Read this linewise
-		while (<CONTROL>) {
-			if (/^Architecture: all/) {
-				$arch_indep_packages++;
-			} elsif (/^Architecture:/) {
-				$arch_dep_packages++;
-			}
+	foreach my $binpkg (keys %$binpkgs) {
+		my $arch = $info->binary_field($binpkg, 'architecture');
+		if ($arch eq 'all') {
+			$arch_indep_packages++;
+		} else {
+			$arch_dep_packages++;
 		}
 	}
 
