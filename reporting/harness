@@ -52,13 +52,13 @@ die "Can't use other modes with reports only." if ($opt_r && ($opt_i || $opt_f |
 
 # read configuration
 require './config';
-use vars qw($LINTIAN_ROOT $LINTIAN_LAB $LINTIAN_ARCHIVEDIR $LINTIAN_DIST 
+use vars qw($LINTIAN_ROOT $LINTIAN_LAB $LINTIAN_ARCHIVEDIR $LINTIAN_DIST
             $LINTIAN_SECTION $LINTIAN_ARCH $LINTIAN_UNPACK_LEVEL $LINTIAN_CFG
             $lintian_cmd $html_reports_cmd
             $log_file $lintian_log $old_lintian_log
             $changes_file $list_file $html_reports_log
             $LOG_DIR $statistics_file
-            $HTML_DIR $HTML_TMP_DIR);
+            $HTML_DIR $HTML_TMP_DIR $LINTIAN_BIN_DIR $LINTIAN_GPG_CHECK);
 
 # import perl libraries
 unshift @INC, "$LINTIAN_ROOT/lib";
@@ -77,6 +77,8 @@ system("savelog $log_file $changes_file $list_file $html_reports_log >/dev/null"
 open(LOG, '>', $log_file)
     or Die("cannot open log file $log_file for writing: $!");
 
+system("mkdir -p -m 775 $LINTIAN_BIN_DIR") == 0 || die "$!";
+
 # export Lintian's configuration
 $ENV{'LINTIAN_ROOT'} = $LINTIAN_ROOT;
 $ENV{'LINTIAN_CFG'} = $LINTIAN_CFG;
@@ -86,6 +88,18 @@ $ENV{'LINTIAN_DIST'} = $LINTIAN_DIST;
 $ENV{'LINTIAN_UNPACK_LEVEL'} = $LINTIAN_UNPACK_LEVEL;
 $ENV{'LINTIAN_SECTION'} = $LINTIAN_SECTION;
 $ENV{'LINTIAN_ARCH'} = $LINTIAN_ARCH;
+$ENV{'PATH'} = $LINTIAN_BIN_DIR . ':' . $ENV{'PATH'};
+
+unless ($LINTIAN_GPG_CHECK) {
+  link '/bin/true', $LINTIAN_BIN_DIR . '/gpg'
+    unless(-f $LINTIAN_BIN_DIR . '/gpg');
+} else {
+  if (-l $LINTIAN_BIN_DIR . '/gpg') {
+    unlink($LINTIAN_BIN_DIR . '/gpg');
+  } else {
+    rename($LINTIAN_BIN_DIR . '/gpg', $LINTIAN_BIN_DIR . '/gpg.bkp');
+  }
+}
 
 if ($opt_c) { # purge the old packages
   system("rm -rf $LINTIAN_LAB/binary") == 0 || die "$!";

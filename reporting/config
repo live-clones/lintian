@@ -14,6 +14,8 @@ $HTML_DIR = "$HOME/www";
 $HTML_TMP_DIR = "$HTML_DIR.new";
 $LINTIAN_CFG = "$LINTIAN_ROOT/reporting/lintian-dummy.cfg";  # this config file has to be empty!
 $LINTIAN_UNPACK_LEVEL = "";
+$LINTIAN_BIN_DIR = "$HOME/bin";
+$LINTIAN_GPG_CHECK = 0;
 
 $log_file = "$LOG_DIR/harness.log";
 $changes_file = "$LOG_DIR/setup-lab.log";
