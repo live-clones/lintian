@@ -1,0 +1,69 @@
+#!/bin/sh
+
+####################
+#    Copyright (C) 2008, 2009 by Raphael Geissert <atomo64@gmail.com>
+#
+#
+#    This file is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 2 of the License, or
+#    (at your option) any later version.
+#
+#    This file is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this file.  If not, see <http://www.gnu.org/licenses/>.
+####################
+
+set -e
+
+if [ -z "$1" ]; then
+    printf "Usage: %s path/to/lintian/data\n" \
+	"$(basename "$0")"
+    cat <<INFO
+
+The script will download the following file from a mirror (which should be
+specified via the DEB_MIRROR env var, which defaults to
+http://i386-geomirror.debian.net/debian and is used directly without any kind
+of parsing so one can play with it):
+* Contents-i386.gz
+Any special parameter can be passed to wget via WGET_ARGS, if needed.
+
+Other options:
+Other variables such as GREP_OPTIONS can be used to enable things like --mmap.
+INFO
+    exit
+fi
+
+readonly lintian_data="$(readlink -f "$1")"
+readonly contents="$(readlink -f "$2")"
+
+[ -d "$lintian_data" ] || {
+    printf "%s is not a directory, aborting" "$lintiandata" >&2
+    exit 1
+}
+
+readonly workdir="$(mktemp -d)"
+
+cleanup () {
+        [ ! -d "$workdir" ] || rm -rf "$workdir"
+}; trap cleanup EXIT
+
+mirror="${DEB_MIRROR:=http://i386-geomirror.debian.net/debian}"
+WGET_ARGS="${WGET_ARGS:=-nv}"
+wget() {
+    echo wget "$mirror"/"$1"
+    /usr/bin/wget $WGET_ARGS "$mirror"/"$1"
+}
+mkdir -p "$lintian_data/files"
+
+cd "$workdir"
+wget dists/sid/Contents-i386.gz
+zcat Contents-i386.gz \
+    | perl -n -w -E 'print lc $_ if (s#^.+/([\w-]+\.(?:[to]tf|pfb|pcf))\s+\w+/([to]tf.+)$#$1=$2#i);' \
+    | sort > fonts
+
+mv fonts "$lintian_data/files/"

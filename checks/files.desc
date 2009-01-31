@@ -942,3 +942,10 @@ Info: This package contains a *.ttf or *.otf file, file extensions
  already packaged, you should depend on that package instead.  Otherwise,
  normally the font should be packaged separately, since fonts are usually
  useful outside of the package that embeds them.
+
+Tag: duplicate-font-file
+Severity: normal
+Certainty: certain
+Info: This package appears to be shipping a font file that is already provided
+ by another package, on which it should depend and symlink the font, if
+ necessary.
