@@ -5,10 +5,21 @@ lintian (2.2.1) UNRELEASED; urgency=low
       - duplicate-font-file
       - font-in-non-font-package
 
+  * checks/debhelper:
+    + [RA] Use binary_field() to read control fields for binary packages.
+      Patch from Raphael Geissert.
   * checks/fields:
     + [RA] Allow but do not require a libmodule-build-perl dependency if
       the Build script is referenced in clean.  Thanks, Charles Plessy and
       gregor herrmann.  (Closes: #421549)
+  * checks/fields{,.desc}:
+    + [RA] Run dbg-package-missing-depends against the source package
+      instead of the binary package and check that it has a dependency
+      against another binary package built from the same source rather
+      than making assumptions about the package name.  Patch from Raphael
+      Geissert.  (Closes: #513336)
+    + [RA] Use binary_field() to read control fields for binary packages.
+      Patch from Raphael Geissert.
   * checks/files{,.desc}:
     + [RA] Add check for fonts in non-font packages.  Thanks, Paul Wise
       and Raphael Geissert.  (Closes: #513650)
@@ -20,6 +31,9 @@ lintian (2.2.1) UNRELEASED; urgency=low
       requesting generation of a symbols file.
     + [RA] Provide details on how to manually check some of the shared
       library problems that Lintian diagnoses.  (Closes: #513086)
+  * checks/version-substvars:
+    + [RA] Use binary_field() to read control fields for binary packages.
+      Patch from Raphael Geissert.
 
   * lib/Lintian/Collect/Source.pm:
     + [RA] Add binary_field() method to return a binary package field from
