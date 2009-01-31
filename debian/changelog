@@ -36,6 +36,9 @@ lintian (2.2.1) UNRELEASED; urgency=low
     + [ADB] Fix the spelling of "pedantic".  Thanks, Michal Čihař.
       (Closes: #513083)
 
+  * t/runtests:
+    + [RA] Add support for selecting a different test package skeleton.
+
  -- Russ Allbery <rra@debian.org>  Sun, 25 Jan 2009 12:51:40 -0800
 
 lintian (2.2.0) unstable; urgency=low

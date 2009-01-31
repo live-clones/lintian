@@ -302,13 +302,14 @@ sub test_package {
 
     print "Cleaning up and repopulating $targetdir...\n" if $DEBUG;
     runsystem_ok("rm", "-rf", $targetdir);
+    my $skel = $testdata->{skeleton};
     if ($is_native) {
-	runsystem("cp", "-rp", "$tmpldir/skel", $targetdir);
+	runsystem("cp", "-rp", "$tmpldir/$skel", $targetdir);
 	runsystem("rm", "-f", "$targetdir/debian/changelog");
 	runsystem("rsync", "-rp", "$origdir/debian/", "$targetdir/")
 	    if -d "$origdir/debian/";
     } else {
-	runsystem("cp", "-rp", "$tmpldir/skel.upstream", $targetdir);
+	runsystem("cp", "-rp", "$tmpldir/${skel}.upstream", $targetdir);
 	runsystem("rm", "-f", "$targetdir/.dummy");
 	runsystem("rsync", "-rp", "$origdir/upstream/", "$targetdir/");
 	if (-x "$origdir/pre_upstream") {
@@ -318,7 +319,7 @@ sub test_package {
 	runsystem("cd $RUNDIR && ".
 		  "tar czf ${pkg}_${orig_version}.orig.tar.gz $pkgdir");
 	runsystem("rsync", "-rp", "--exclude=debian/changelog",
-		  "$tmpldir/skel/", "$targetdir/");
+		  "$tmpldir/$skel/", "$targetdir/");
 	runsystem("rsync", "-rp", "$origdir/debian/", "$targetdir/")
 	    if -d "$origdir/debian/";
     }
@@ -561,6 +562,8 @@ sub check_test_is_sane {
 
     $data->{'test-for'} ||= '';
     $data->{'test-against'} ||= '';
+
+    $data->{skeleton} ||= 'skel';
     $data->{options} ||= '-I -E';
 
     if ($DEBUG) {
