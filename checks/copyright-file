@@ -150,6 +150,15 @@ if (m,usr/share/common-licenses/(GPL|LGPL|BSD|Artistic)\.gz,) {
     tag "copyright-refers-to-compressed-license", "$&";
 }
 
+if (m,(usr/share/common-licenses/(L?GPL|GFDL))[^-],i) {
+    my $ref = $1;
+    if (m,\b(any|or)\s+later(\s+version)?\b,i) {
+	tag "copyright-refers-to-symlink-license", $ref;
+    } else {
+	tag "copyright-refers-to-versionless-license-file", $ref;
+    }
+}
+
 if (m,usr/share/common-licences,) {
     tag "copyright-refers-to-incorrect-directory", "$&";
     $wrong_directory_detected = 1;

@@ -320,3 +320,31 @@ Info: This package appears to be covered by the GNU GPL but depends on
  linked with OpenSSL, is covered by the GNU GPL, please add a lintian
  override for this tag.  Lintian currently has no good way of
  distinguishing between that case and problematic packages.
+
+Tag: copyright-refers-to-symlink-license
+Severity: pedantic
+Certainty: possible
+Info: The copyright file refers to GPL, LGPL, or GFDL licenses by pointing
+ to the versionless license file in <tt>/usr/share/common-licenses</tt>.
+ Even when it is said that the package is covered by a specific version or
+ later, it should refer to the license file which has the version of the
+ license mentioned in the copyright file in its name. Otherwise as soon as the
+ symbolic link changes it would be pointing to a version which is not the one
+ under which it was licensed.
+ .
+ That is, if the source code was released under the GNU GPL 3 it should refer
+ to <tt>/usr/share/common-licenses/GPL-3</tt>, and not to <tt>/GPL</tt>.
+
+Tag: copyright-refers-to-versionless-license-file
+Severity: normal
+Certainty: possible
+Info: The copyright file refers to GPL, LGPL, or GFDL licenses by pointing
+ to the versionless license file in <tt>/usr/share/common-licenses</tt>.
+ As the copyright file does not appear to state that the content was released
+ under a specific version or any later version of those licenses, it should
+ refer to the file which has the version of the license mentioned in the
+ copyright file in its name. Otherwise it could point to a version which is not
+ the one under which it was licensed.
+ .
+ That is, if the source code was released under the GNU GPL 3 it should refer
+ to <tt>/usr/share/common-licenses/GPL-3</tt>, and not to <tt>/GPL</tt>.
