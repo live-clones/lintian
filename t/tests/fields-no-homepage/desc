@@ -4,4 +4,5 @@ Type: non-native
 Description: Test pedantic check for no Homepage field
 Version: 1.0-1
 Options: -I -E --pedantic
+Skeleton: pedantic
 Test-For: no-homepage-field

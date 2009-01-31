@@ -38,6 +38,8 @@ lintian (2.2.1) UNRELEASED; urgency=low
 
   * t/runtests:
     + [RA] Add support for selecting a different test package skeleton.
+  * t/templates/pedantic{,.upstream}:
+    + [RA] New template that passes all pedantic checks.
 
  -- Russ Allbery <rra@debian.org>  Sun, 25 Jan 2009 12:51:40 -0800
 
