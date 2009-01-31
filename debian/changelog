@@ -21,6 +21,12 @@ lintian (2.2.1) UNRELEASED; urgency=low
     + [RA] Provide details on how to manually check some of the shared
       library problems that Lintian diagnoses.  (Closes: #513086)
 
+  * lib/Lintian/Collect/Source.pm:
+    + [RA] Add binary_field() method to return a binary package field from
+      debian/control for a source package.  Based on a patch by Raphael
+      Geissert.
+    + [RA] Rewrite the binaries() method to use binary_field().  Based on
+      a patch by Raphael Geissert.
   * lib/Lintian/Output.pm:
     + [ADB] Add a colour for pedantic tags to avoid warnings when colourised
       output is used and make the combination more useful.  Thanks, gregor

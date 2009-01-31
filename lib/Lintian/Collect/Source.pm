@@ -2,6 +2,7 @@
 # Lintian::Collect::Source -- interface to source package data collection
 
 # Copyright (C) 2008 Russ Allbery
+# Copyright (C) 2009 Raphael Geissert
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -67,33 +68,37 @@ sub native {
     return $self->{native};
 }
 
-# List of binary packages and their type if specified
+# Returns a hash of binaries to the package type, assuming a type of deb
+# unless the package type field is present.
 sub binaries {
     my ($self) = @_;
     return $self->{binaries} if exists $self->{binaries};
-
-    my %pkgs;
-    opendir(BINPKGS, 'control')
-        or fail("Can't open control directory.");
-    while (my $binpkg = readdir(BINPKGS)) {
+    my %binaries;
+    opendir(BINPKGS, 'control') or fail("can't open control directory: $!");
+    for my $package (readdir BINPKGS) {
         next if $binpkg =~ /^\.\.?$/;
-        if (-d "control/$binpkg") {
-            if (open TYPE, "<", "control/$binpkg/xc-package-type") {
-                my $type = <TYPE> || '';
-                chomp $type;
-                $type = lc $type;
-                $pkgs{$binpkg} = $type || 'deb';
-                close TYPE;
-            } else {
-                $pkgs{$binpkg} = 'deb';
-            }
-        }
+        my $type = $self->binary_field($package, 'xc-package-type') || 'deb';
+        $binaries{$package} = lc $type;
     }
     closedir BINPKGS;
-
-    $self->{binaries} = \%pkgs;
-
+    $self->{binaries} = \%binaries;
     return $self->{binaries};
+}
+
+# Returns the value of a control field for a binary package or the empty
+# string if that control field isn't present.  This does not implement
+# inheritance from the settings in the source stanza.
+sub binary_field {
+    my ($self, $package, $field) = @_;
+    return $self->{binary_field}{$package}{$field}
+        if exists $self->{binary_field}{$package}{$field};
+    my $value = '';
+    if (-f "control/$package/$field") {
+        $value = slurp_entire_file("control/$package/$field");
+        chomp $value;
+    }
+    $self->{binary_field}{$package}{$field} = $value;
+    return $self->{binary_field}{$package}{$field};
 }
 
 =head1 NAME
@@ -137,6 +142,25 @@ documented in the Lintian::Collect module are also available.
 
 =over 4
 
+=item binaries()
+
+Returns a hash reference with the binary package names as keys and the
+Package-Type as value (which should be either C<deb> or C<udeb>
+currently).  The source-control-file collection script must have been run
+to parse the F<debian/control> file and put the fields in the F<control>
+directory in the lab.
+
+=item binary_field(PACKAGE, FIELD)
+
+Returns the content of the field FIELD for the binary package PACKAGE in
+the F<debian/control> file, or an empty string if that field isn't set.
+Inheritance of field values from the source section of the control file is
+not implemented.  Only the literal value of the field is returned.
+
+The source-control-file collection script must have been run to parse the
+F<debian/control> file and put the fields in the F<control> directory in
+the lab.
+
 =item changelog()
 
 Returns the changelog of the source package as a Parse::DebianChangelog
@@ -147,11 +171,6 @@ file, which this method expects to find in F<debfiles/changelog>.
 =item native()
 
 Returns true if the source package is native and false otherwise.
-
-=item binaries()
-
-Returns a hash reference with the binary package names as keys and the
-Package-Type as value (which should be either 'deb' or 'udeb' currently).
 
 =back
 
