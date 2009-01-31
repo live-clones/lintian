@@ -138,11 +138,7 @@ if ($line) {
 }
 
 # check contents of copyright file
-open(IN, '<', "copyright") or fail("cannot open copyright file copyright: $!");
-# gulp whole file
-local $/ = undef;
-$_ = <IN>;
-close(IN);
+$_ = slurp_entire_file('copyright');
 
 my $wrong_directory_detected = 0;
 
