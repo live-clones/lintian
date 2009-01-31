@@ -32,6 +32,10 @@ Info: The listed shared libraries contain object code that was compiled
  In some cases, exceptions to this rule are warranted. If this is such a
  case, follow the procedure outlined in Policy and then please document
  the exception by adding a lintian override to this package.
+ .
+ To check whether a shared library has this problem, run <tt>readelf
+ -d</tt> on the shared library.  If a tag of type TEXTREL is present, the
+ shared library contains non-PIC code.
 
 Tag: shlib-without-versioned-soname
 Severity: normal
@@ -48,6 +52,9 @@ Info: The listed shared library in a public library directory has an
  particular application and is not meant for general use.  Policy
  recommends that such libraries be installed in a subdirectory of
  <tt>/usr/lib</tt> rather than in a public shared library directory.
+ .
+ To view the SONAME of a shared library, run <tt>readelf -d</tt> on the
+ shared library and look for the tag of type SONAME.
  .
  There are some special stub libraries or special-purpose shared objects
  for which an ABI version is not meaningful.  If this is one of those
@@ -226,13 +233,16 @@ Ref: policy 8.1.1
 Tag: sharedobject-in-library-directory-missing-soname
 Severity: important
 Certainty: possible
-Info: A shared object was identified in a library directory (i.e. a
- directory in the standard linker path) which doesn't have a SONAME.
- This is usually an error.
+Info: A shared object was identified in a library directory (a directory
+ in the standard linker path) which doesn't have a SONAME.  This is
+ usually an error.
  .
  SONAMEs are set with something like <tt>gcc -Wl,-soname,libfoo.so.0</tt>,
  where 0 is the major version of the library. If your package uses libtool,
  then libtool invoked with the right options should be doing this.
+ .
+ To view the SONAME of a shared library, run <tt>readelf -d</tt> on the
+ shared library and look for the tag of type SONAME.
 
 Tag: shlib-without-PT_GNU_STACK-section
 Severity: important
@@ -241,7 +251,10 @@ Info: The listed shared libraries lacks a PT_GNU_STACK section. This forces
  the dynamic linker to make the stack executable.
  .
  The shared lib is linked either with a non-GNU linker or a linker which is
- older than two years. This problem can be fixed with a rebuild.
+ very old. This problem can be fixed with a rebuild.
+ .
+ To see whether a shared library has this section, run <tt>readelf -l</tt>
+ on it and look for a program header of type GNU_STACK.
 
 Tag: shlib-with-executable-stack
 Severity: normal
@@ -253,6 +266,10 @@ Info: The listed shared libraries declares the stack as executable.
  stack. One possible source for false positives are object files built
  from assembler files which don't define a proper .note.GNU-stack
  section.
+ .
+ To see the permissions on the stack, run <tt>readelf -l</tt> on the
+ shared library and look for the program header of type GNU_STACK.  In the
+ flag column, there should not be an E flag set.
 
 Tag: symbols-file-contains-current-version-with-debian-revision
 Severity: important

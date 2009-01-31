@@ -7,6 +7,8 @@ lintian (2.2.1) UNRELEASED; urgency=low
   * checks/shared-libs.desc:
     + [RA] Add references to the UsingSymbolsFiles wiki page in the tags
       requesting generation of a symbols file.
+    + [RA] Provide details on how to manually check some of the shared
+      library problems that Lintian diagnoses.  (Closes: #513086)
 
   * lib/Lintian/Output.pm:
     + [ADB] Add a colour for pedantic tags to avoid warnings when colourised
