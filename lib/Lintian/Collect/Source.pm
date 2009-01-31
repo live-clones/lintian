@@ -76,7 +76,7 @@ sub binaries {
     my %binaries;
     opendir(BINPKGS, 'control') or fail("can't open control directory: $!");
     for my $package (readdir BINPKGS) {
-        next if $binpkg =~ /^\.\.?$/;
+        next if $package =~ /^\.\.?$/;
         my $type = $self->binary_field($package, 'xc-package-type') || 'deb';
         $binaries{$package} = lc $type;
     }
