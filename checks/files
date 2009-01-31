@@ -25,7 +25,7 @@ use Tags;
 use Util;
 use Lintian::Data;
 
-my $font_packages = Lintian::Data->new ('files/fonts', '=');
+our $FONT_PACKAGES = Lintian::Data->new('files/fonts', '\s+');
 
 sub run {
 
@@ -733,9 +733,9 @@ foreach my $file (sort keys %{$info->index}) {
 	# ---------------- fonts
 	if ($file =~ m,/([\w-]+\.(?:[to]tf|pfb|pcf))$,i) {
 	    my $font = lc $1;
-	    if ($font_packages->known($font)) {
-		tag 'duplicate-font-file', "$file also in", $font_packages->value($font)
-		    if ($pkg ne $font_packages->value($font));
+	    if ($FONT_PACKAGES->known($font)) {
+		tag 'duplicate-font-file', "$file also in", $FONT_PACKAGES->value($font)
+		    if ($pkg ne $FONT_PACKAGES->value($font));
 	    } elsif ($pkg !~ m/^[ot]tf-/) {
 		tag 'font-in-non-font-package', $file;
 	    }

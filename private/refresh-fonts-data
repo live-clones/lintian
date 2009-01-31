@@ -1,39 +1,43 @@
 #!/bin/sh
+# refresh-fonts-data -- Refresh data about font packages in Debian
 
-####################
-#    Copyright (C) 2008, 2009 by Raphael Geissert <atomo64@gmail.com>
+# Copyright (C) 2008, 2009 Raphael Geissert <atomo64@gmail.com>
 #
+# This file is free software: you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 2 of the License, or
+# (at your option) any later version.
 #
-#    This file is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 2 of the License, or
-#    (at your option) any later version.
+# This file is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
 #
-#    This file is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
-#    You should have received a copy of the GNU General Public License
-#    along with this file.  If not, see <http://www.gnu.org/licenses/>.
-####################
+# You should have received a copy of the GNU General Public License
+# along with this file.  If not, see <http://www.gnu.org/licenses/>.
 
 set -e
 
 if [ -z "$1" ]; then
-    printf "Usage: %s path/to/lintian/data\n" \
-	"$(basename "$0")"
+    printf "Usage: %s <path-to-data> [<contents>]\n" "$(basename "$0")"
     cat <<INFO
 
-The script will download the following file from a mirror (which should be
-specified via the DEB_MIRROR env var, which defaults to
-http://i386-geomirror.debian.net/debian and is used directly without any kind
-of parsing so one can play with it):
-* Contents-i386.gz
-Any special parameter can be passed to wget via WGET_ARGS, if needed.
+If <contents> is specified, it should be the path to the Contents file
+from the current unstable distribution.  It will be used to find all
+font files already packaged for Debian and update the list of known
+font files and the packages that contain them.  <path-to-data> should
+be the path to the root of the Lintian data directory to update.
 
-Other options:
-Other variables such as GREP_OPTIONS can be used to enable things like --mmap.
+If the Contents file is not specified, the script will download the
+following files from a mirror.  The mirror can be specified with the
+DEB_MIRROR environment variable.  If it is not set, the default is
+http://i386-geomirror.debian.net/debian.
+
+* Contents-i386.gz
+
+Any necessary special parameters for wget can be set via the
+environment variable WGET_ARGS.  The default arguments are -nv.
+
 INFO
     exit
 fi
@@ -49,7 +53,7 @@ readonly contents="$(readlink -f "$2")"
 readonly workdir="$(mktemp -d)"
 
 cleanup () {
-        [ ! -d "$workdir" ] || rm -rf "$workdir"
+    [ ! -d "$workdir" ] || rm -rf "$workdir"
 }; trap cleanup EXIT
 
 mirror="${DEB_MIRROR:=http://i386-geomirror.debian.net/debian}"
@@ -60,10 +64,17 @@ wget() {
 }
 mkdir -p "$lintian_data/files"
 
+cat > "$lintian_data/files/fonts" <<EOF
+# The list of known font filenames already packaged for Debian and the
+# package that contains the font.  Only packages starting with ttf- or
+# otf- are searched for fonts.
+#
+# Last updated: $(date -u +'%Y-%m-%d')
+
+EOF
+
 cd "$workdir"
 wget dists/sid/Contents-i386.gz
 zcat Contents-i386.gz \
-    | perl -n -w -E 'print lc $_ if (s#^.+/([\w-]+\.(?:[to]tf|pfb|pcf))\s+\w+/([to]tf.+)$#$1=$2#i);' \
-    | sort > fonts
-
-mv fonts "$lintian_data/files/"
+    | perl -n -w -E 'print lc $_ if (s,^.+/([\w-]+\.(?:[to]tf|pfb|pcf))\s+\w+/([to]tf-[^,]+(,.+)?)$,$1 $2,i);' \
+    | sort >> "$lintian_data/files/fonts"
