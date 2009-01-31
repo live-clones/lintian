@@ -1,9 +1,16 @@
 lintian (2.2.1) UNRELEASED; urgency=low
 
+  * Summary of tag changes:
+    + Added
+      - font-in-non-font-package (pedantic)
+
   * checks/fields:
     + [RA] Allow but do not require a libmodule-build-perl dependency if
       the Build script is referenced in clean.  Thanks, Charles Plessy and
       gregor herrmann.  (Closes: #421549)
+  * checks/files{,.desc}:
+    + [RA] Add pedantic check for fonts in non-font packages.  Thanks,
+      Paul Wise.  (Closes: #513650)
   * checks/shared-libs.desc:
     + [RA] Add references to the UsingSymbolsFiles wiki page in the tags
       requesting generation of a symbols file.

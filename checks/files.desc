@@ -931,3 +931,16 @@ Info: This package appears to contain development files only meaningful to
  Windows environments.  Such files are generally useless in Debian packages and
  were usually accidentally included by copying complete directories from the
  source tarball.
+
+Tag: font-in-non-font-package
+Severity: pedantic
+Certainty: possible
+Info: This package contains a *.ttf or *.otf file, file extensions
+ normally used for TrueType or OpenType fonts, but the package does not
+ appear to be a font package.  Font package names should begin with
+ <tt>ttf-</tt> or <tt>otf-</tt>.
+ .
+ Normally fonts should be packaged separate from their applications since
+ they are usually useful outside of the package that embeds them.  Fonts
+ are also frequently duplicated, and often the font is already available
+ as a separate Debian package.

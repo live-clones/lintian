@@ -727,6 +727,11 @@ foreach my $file (sort keys %{$info->index}) {
 	    }
 	}
 
+	# ---------------- fonts in non-font packages
+	if ($file =~ m,\.(ttf|otf)\z, and $pkg !~ /^(ttf|otf)-/) {
+	    tag "font-in-non-font-package", "$file";
+	}
+
 	# ---------------- general: setuid/setgid files!
 	if ($operm & 04000 or $operm & 02000) {
 	    my ($setuid, $setgid) = ("","");
