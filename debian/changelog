@@ -17,6 +17,14 @@ lintian (2.2.1) UNRELEASED; urgency=low
   * lib/Lintian/Output/LetterQualifier.pm:
     + [ADB] Add support for pedantic tags.
 
+  * reporting/config:
+    + [RA] Set a bin directory and disable signature checks by default.
+  * reporting/harness
+    + [RA] Add the bin directory to the path and create a gpg link to
+      /bin/true if signature checks are disabled.  This is a hack to work
+      with the etch version of dpkg-source.  In lenny, the --no-check flag
+      will be used instead.  Patch from Raphael Geissert.
+
   * man/lintian.1:
     + [ADB] Fix the spelling of "pedantic".  Thanks, Michal Čihař.
       (Closes: #513083)
