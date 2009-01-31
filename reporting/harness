@@ -90,15 +90,15 @@ $ENV{'LINTIAN_SECTION'} = $LINTIAN_SECTION;
 $ENV{'LINTIAN_ARCH'} = $LINTIAN_ARCH;
 $ENV{'PATH'} = $LINTIAN_BIN_DIR . ':' . $ENV{'PATH'};
 
-unless ($LINTIAN_GPG_CHECK) {
-  link '/bin/true', $LINTIAN_BIN_DIR . '/gpg'
-    unless(-f $LINTIAN_BIN_DIR . '/gpg');
-} else {
+if ($LINTIAN_GPG_CHECK) {
   if (-l $LINTIAN_BIN_DIR . '/gpg') {
     unlink($LINTIAN_BIN_DIR . '/gpg');
   } else {
     rename($LINTIAN_BIN_DIR . '/gpg', $LINTIAN_BIN_DIR . '/gpg.bkp');
   }
+} else {
+  symlink '/bin/true', $LINTIAN_BIN_DIR . '/gpg'
+    unless(-f $LINTIAN_BIN_DIR . '/gpg');
 }
 
 if ($opt_c) { # purge the old packages
