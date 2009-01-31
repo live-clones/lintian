@@ -2,6 +2,7 @@ lintian (2.2.1) UNRELEASED; urgency=low
 
   * Summary of tag changes:
     + Added
+      - duplicate-font-file
       - font-in-non-font-package
 
   * checks/fields:
@@ -11,6 +12,9 @@ lintian (2.2.1) UNRELEASED; urgency=low
   * checks/files{,.desc}:
     + [RA] Add check for fonts in non-font packages.  Thanks, Paul Wise
       and Raphael Geissert.  (Closes: #513650)
+    + [RA] Add check for fonts that duplicate already packaged fonts.
+      Patch from Raphael Geissert.  Thanks to Paul Wise for analysis and
+      data.  (Partly addresses #298545)
   * checks/shared-libs.desc:
     + [RA] Add references to the UsingSymbolsFiles wiki page in the tags
       requesting generation of a symbols file.

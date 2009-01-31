@@ -945,7 +945,9 @@ Info: This package contains a *.ttf or *.otf file, file extensions
 
 Tag: duplicate-font-file
 Severity: normal
-Certainty: certain
-Info: This package appears to be shipping a font file that is already provided
- by another package, on which it should depend and symlink the font, if
- necessary.
+Certainty: possible
+Info: This package appears to include a font file that is already provided
+ by another package in Debian.  It should instead depend on the relevant
+ font package.  If the application in this package loads the font file by
+ name, you may need to include a symlink pointing to the file name of the
+ font in its Debian package.

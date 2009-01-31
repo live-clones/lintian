@@ -734,10 +734,10 @@ foreach my $file (sort keys %{$info->index}) {
 	if ($file =~ m,/([\w-]+\.(?:[to]tf|pfb|pcf))$,i) {
 	    my $font = lc $1;
 	    if ($font_packages->known($font)) {
-		tag 'duplicate-font-file', "$file=$font_packages->value($font)"
+		tag 'duplicate-font-file', "$file also in ", $font_packages->value($font)
 		    if ($pkg ne $font_packages->value($font));
 	    } elsif ($pkg !~ m/^[ot]tf-/) {
-		tag 'font-file-not-in-font-package', $file;
+		tag 'font-in-non-font-package', $file;
 	    }
 	}
 
