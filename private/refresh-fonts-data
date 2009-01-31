@@ -46,7 +46,7 @@ readonly lintian_data="$(readlink -f "$1")"
 readonly contents="$(readlink -f "$2")"
 
 [ -d "$lintian_data" ] || {
-    printf "%s is not a directory, aborting" "$lintiandata" >&2
+    printf "%s is not a directory, aborting" "$lintian_data" >&2
     exit 1
 }
 
