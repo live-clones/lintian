@@ -99,6 +99,12 @@ while (<RULES>) {
 	}
 	if ($dh_commands_depends->known($dhcommand)) {
 	    my $dep = $dh_commands_depends->value($dhcommand);
+
+	    # Special-case default-jdk-builddep.  It appears to be a sort of
+	    # build-essential for Java applications.
+	    if ($dhcommand eq 'dh_nativejava') {
+		$dep = "$dep | default-jdk | default-jdk-builddep";
+	    }
 	    $missingbdeps{$dep} = $dhcommand;
 	}
 	if ($versions{$dhcommand}) {

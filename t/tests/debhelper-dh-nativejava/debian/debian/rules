@@ -1,0 +1,10 @@
+#!/usr/bin/make -f
+%:
+	dh $@
+
+binary: binary-arch binary-indep
+binary-arch:
+binary-indep:
+	dh binary-indep --until dh_prep
+	-dh_nativejava
+	dh binary-indep --remaining

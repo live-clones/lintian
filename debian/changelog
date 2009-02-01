@@ -21,6 +21,8 @@ lintian (2.2.1) UNRELEASED; urgency=low
       aren't numbers.  Warn of compatibility levels that aren't numbers.
       Use the same compatibility level that debhelper would use in some
       other checks.  Patch from Raphael Geissert.  (Closes: #513767)
+    + [RA] default-jdk and default-jdk-builddep provide dh_nativejava as a
+      special case.  (Closes: #513423)
   * checks/fields:
     + [RA] Allow but do not require a libmodule-build-perl dependency if
       the Build script is referenced in clean.  Thanks, Charles Plessy and
