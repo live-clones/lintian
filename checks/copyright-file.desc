@@ -324,27 +324,36 @@ Info: This package appears to be covered by the GNU GPL but depends on
 Tag: copyright-refers-to-symlink-license
 Severity: pedantic
 Certainty: possible
-Info: The copyright file refers to GPL, LGPL, or GFDL licenses by pointing
- to the versionless license file in <tt>/usr/share/common-licenses</tt>.
- Even when it is said that the package is covered by a specific version or
- later, it should refer to the license file which has the version of the
- license mentioned in the copyright file in its name. Otherwise as soon as the
- symbolic link changes it would be pointing to a version which is not the one
- under which it was licensed.
+Info: The copyright file refers to the versionless symlink in
+ <tt>/usr/share/common-licenses</tt> for the full text of the GPL, LGPL,
+ or GFDL license.  This symlink is updated to point to the latest version
+ of the license when a new one is released.  The package appears to allow
+ relicensing under later versions of its license, so this is legally
+ consistent, but it implies that Debian will relicense the package under
+ later versions of those licenses as they're released.  It is normally
+ better to point to the version of the license the package references in
+ its license statement.
  .
- That is, if the source code was released under the GNU GPL 3 it should refer
- to <tt>/usr/share/common-licenses/GPL-3</tt>, and not to <tt>/GPL</tt>.
+ For example, if the package says something like "you may redistribute it
+ and/or modify it under the terms of the GNU General Public License as
+ published by the Free Software Foundation; either version 2, or (at your
+ option) any later version", the <tt>debian/copyright</tt> file should
+ refer to <tt>/usr/share/common-licenses/GPL-2</tt>, not <tt>/GPL</tt>.
 
 Tag: copyright-refers-to-versionless-license-file
 Severity: normal
 Certainty: possible
-Info: The copyright file refers to GPL, LGPL, or GFDL licenses by pointing
- to the versionless license file in <tt>/usr/share/common-licenses</tt>.
- As the copyright file does not appear to state that the content was released
- under a specific version or any later version of those licenses, it should
- refer to the file which has the version of the license mentioned in the
- copyright file in its name. Otherwise it could point to a version which is not
- the one under which it was licensed.
+Info: The copyright file refers to the versionless symlink in
+ <tt>/usr/share/common-licenses</tt> for the full text of the GPL, LGPL,
+ or GFDL license, but the package does not appear to allow distribution
+ under later versions of the license.  This symlink will change with each
+ release of a new version of the license and may therefore point to a
+ different version than the package is released under.
+ <tt>debian/copyright</tt> should instead refers to the specific version
+ of the license that the package references.
  .
- That is, if the source code was released under the GNU GPL 3 it should refer
- to <tt>/usr/share/common-licenses/GPL-3</tt>, and not to <tt>/GPL</tt>.
+ For example, if the package says something like "you can redistribute it
+ and/or modify it under the terms of the GNU General Public License as
+ published by the Free Software Foundation; version 2 dated June, 1991,"
+ the <tt>debian/copyright</tt> file should refer to
+ <tt>/usr/share/common-licenses/GPL-2</tt>, not <tt>/GPL</tt>.
