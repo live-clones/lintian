@@ -1,4 +1,4 @@
-lintian (2.2.2) UNRELEASED; urgency=low
+lintian (2.2.2) unstable; urgency=low
 
   The "this is why spooky action at a distance is bad" release.
 
@@ -25,7 +25,7 @@ lintian (2.2.2) UNRELEASED; urgency=low
       it and leading to uninitialized value warnings in check scripts.
       (Closes: #513795)
 
- -- Adam D. Barratt <adam@adam-barratt.org.uk>  Sun, 01 Feb 2009 15:03:44 +0000
+ -- Russ Allbery <rra@debian.org>  Sun, 01 Feb 2009 11:11:36 -0800
 
 lintian (2.2.1) unstable; urgency=low
 
