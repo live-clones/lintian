@@ -204,16 +204,6 @@ if ($usescdbs and not $needversiondepends) {
 $needversiondepends ||= 1;
 if ($needversiondepends < 4) {
     tag "package-uses-deprecated-debhelper-compat-version", $needversiondepends;
-} elsif ($needversiondepends > 5 and ! Dep::implies($bdepends, Dep::parse("debhelper (>= $needversiondepends)"))) {
-    tag "package-lacks-versioned-build-depends-on-debhelper", $needversiondepends;
-} elsif (@versioncheck) {
-    my %seen;
-    @versioncheck = grep { !$seen{$_}++ } @versioncheck;
-    for my $program (@versioncheck) {
-        my $required = $versions{$program};
-        tag 'debhelper-script-needs-versioned-build-depends', $program, "(>= $required)"
-            unless Dep::implies($bdepends, Dep::parse("debhelper (>= $required)"));
-    }
 }
 
 if ($seendhcleank and $needversiondepends >= 7) {
@@ -223,7 +213,6 @@ if ($seendhcleank and $needversiondepends >= 7) {
 
 # Check the files in the debian directory for various debhelper-related
 # things.
-my $bdepends;
 opendir(DEBIAN, 'debfiles')
     or fail("Can't open debfiles directory.");
 while (defined(my $file=readdir(DEBIAN))) {
@@ -254,7 +243,7 @@ while (defined(my $file=readdir(DEBIAN))) {
         my ($control) = read_dpkg_control("debfiles/$file");
 
 	# Collect dependency information from debian/control.
-        $bdepends = '';
+        my $bdepends = '';
         for my $field ('build-depends', 'build-depends-indep') {
             next unless $control->{$field};
             $bdepends .= ', ' if $bdepends;
@@ -269,6 +258,22 @@ while (defined(my $file=readdir(DEBIAN))) {
 	    next if $dep eq 'debhelper'; #handled above
 	    tag 'missing-build-dependency-for-dh_-command', "$command=$dep"
 		unless (Dep::implies($bdepends_noarch, Dep::parse($dep)));
+	}
+	if ($needversiondepends > 5
+	    && ! Dep::implies($bdepends,
+		    Dep::parse("debhelper (>= $needversiondepends)"))) {
+	    tag "package-lacks-versioned-build-depends-on-debhelper",
+							$needversiondepends;
+	} elsif (@versioncheck) {
+	    my %seen;
+	    @versioncheck = grep { !$seen{$_}++ } @versioncheck;
+	    for my $program (@versioncheck) {
+		my $required = $versions{$program};
+		tag 'debhelper-script-needs-versioned-build-depends',
+		    $program, "(>= $required)"
+			unless Dep::implies($bdepends,
+					    Dep::parse("debhelper (>= $required)"));
+	    }
 	}
     } elsif ($file =~ m/^ex\.|\.ex$/i) {
         tag "dh-make-template-in-source", "debian/$file";
