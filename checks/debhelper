@@ -77,9 +77,9 @@ my @versioncheck;
 while (<RULES>) {
     if (m/^\s+-?(dh_\w+)/) {
         my $dhcommand = $1;
-    	if ($dhcommand =~ /dh_testversion(?:\s+(.+))?/) {
+	if ($dhcommand =~ /dh_testversion(?:\s+([^\s]+))?/) {
 	    $needversiondepends = $1 if ($1);
-            tag "dh_testversion-is-deprecated", "";
+	    tag "dh_testversion-is-deprecated", "";
 	}
 	if ($dhcommand eq 'dh_dhelp') {
 	    tag "dh_dhelp-is-deprecated", "";
@@ -122,12 +122,15 @@ while (<RULES>) {
 	# a debian/compat file if none was found; that logic is handled later.
 	$dhcompatvalue = $cdbscompat;
 	$usescdbs = 1;
-    } elsif (/^\s*export\s+DH_COMPAT\s*:?=\s*(\d+)/) {
+    } elsif (/^\s*export\s+DH_COMPAT\s*:?=\s*([^\s]+)/) {
 	$needversiondepends = $1;
     } elsif (/^\s*export\s+DH_COMPAT/) {
 	$needversiondepends = $dhcompatvalue if $dhcompatvalue;
-    } elsif (/^\s*DH_COMPAT\s*:?=\s*(\d+)/) {
+    } elsif (/^\s*DH_COMPAT\s*:?=\s*([^\s]+)/) {
 	$dhcompatvalue = $1;
+	# one can export and then set the value:
+	$needversiondepends = $1
+	    if ($needversiondepends);
     }
     if (/^\s+dh_python\s/) {
         $seendhpython = 1;
@@ -163,22 +166,36 @@ for my $binpkg (keys %$pkgs) {
 	   and $pkgs->{$binpkg} eq 'deb';
 }
 
+my $compatnan = 0;
 # Check the compat file.  Do this separately from looping over all of the
 # other files since we use the compat value when checking for brace expansion.
 if (-f 'debfiles/compat') {
-    $compat = slurp_entire_file('debfiles/compat');
+    my $compat_file = slurp_entire_file('debfiles/compat');
+    ($compat) = split(/\n/, $compat_file);
     $compat =~ s/^\s+$//;
     if ($compat) {
-	$compat =~ s/\s+$//;
+	chomp $compat;
+	if ($compat !~ m/^\d+$/) {
+	    tag 'debhelper-compat-is-not-a-number', $compat;
+	    $compat =~ s/[^\d]//g;
+	    $compatnan = 1;
+	}
 	if ($needversiondepends) {
 	    tag 'declares-possibly-conflicting-debhelper-compat-versions',
 		"rules=$needversiondepends compat=$compat";
 	} else {
+	    # this is not just to fill in the gap, but because debhelper
+	    # prefers DH_COMPAT over debian/compat
 	    $needversiondepends = $compat;
 	}
     } else {
 	tag 'debhelper-compat-file-is-empty';
     }
+}
+if ($needversiondepends !~ m/^\d+$/ and not $compatnan) {
+    tag 'debhelper-compatibility-version-is-not-a-number', $needversiondepends;
+    $needversiondepends =~ s/[^\d]//g;
+    $compatnan = 1;
 }
 
 # Check the files in the debian directory for various debhelper-related

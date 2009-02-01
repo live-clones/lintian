@@ -82,7 +82,8 @@ Severity: important
 Certainty: certain
 Ref: debhelper(7)
 Info: The source package has an empty debian/compat file. This is an error,
- the compat level of debhelper should be in there.
+ the compat level of debhelper should be in there. Note that only the first
+ line of the file is relevant.
 
 Tag: declares-possibly-conflicting-debhelper-compat-versions
 Severity: important
@@ -160,3 +161,13 @@ Info: The source package declares a weak dependecy on ${misc:Depends} in
  the given binary package's debian/control entry.  A stronger dependency, that
  is one that ensures the package's installation, is required so that the
  additional commands are available to the maintainer scripts when they are run.
+
+Tag: debhelper-compat-is-not-a-number
+Severity: serious
+Certainty: possible
+Info: The compat version specified in <tt>debian/compat</tt> is not a number.
+
+Tag: debhelper-compatibility-version-is-not-a-number
+Severity: serious
+Certainty: possible
+Info: The compatibility version specified in <tt>debian/rules</tt> is not a number.
