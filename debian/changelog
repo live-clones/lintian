@@ -4,6 +4,12 @@ lintian (2.2.2) UNRELEASED; urgency=low
     + [ADB] Treat the new copyright file format's "License-Alias: Perl" as
       indicating that the package is licensed under the same terms as Perl.
       Thanks, gregor herrmann.  (Closes: #513831)
+  * checks/debconf:
+    + [RA] Reset $/ before issuing duplicate-fields-in-templates to
+      prevent problems if -i was given.
+  * checks/debhelper:
+    + [RA] Remove stray localization of $/, which broke -i when issuing
+      tags about ${misc:Depends}.
   * checks/scripts:
     + [RA] Add nickle as a known interpreter.  Patch from Julien Cristau.
       (Closes: #513823)

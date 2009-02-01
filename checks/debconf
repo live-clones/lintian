@@ -184,6 +184,7 @@ if ($seentemplates) {
 
 	foreach (keys %fields) {
 	    if ($fields{$_} > 1) {
+		local $/ = "\n";
 		tag "duplicate-fields-in-templates", "$name $_";
 		#  Templates file is corrupted, no need to report
 		#  further errors

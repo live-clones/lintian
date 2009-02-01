@@ -152,7 +152,6 @@ my $single_pkg = keys(%$pkgs) == 1 ? $pkgs->{(keys(%$pkgs))[0]} : '';
 
 for my $binpkg (keys %$pkgs) {
     my ($weak_depends, $strong_depends, $depends) = ('','','');
-    local $/;
 
     foreach my $field (qw(pre-depends depends)) {
 	$strong_depends .= $info->binary_field($binpkg, $field);
