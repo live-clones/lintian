@@ -603,7 +603,6 @@ if ($type eq "source") {
 	open (RULES, '<', "debfiles/rules")
 	    or fail("cannot read debfiles/rules: $!");
 	my $target = "none";
-	local $/ = "\n";	# Read this linewise
 	my @rules = qw(clean binary-arch build-arch);
         my $maybe_skipping;
 	while (<RULES>) {
@@ -660,7 +659,6 @@ if ($type eq "source") {
 		}
 	}
 	close RULES;
-	$/ = undef;             # Back to reading everything.
 
 	tag "build-depends-indep-without-arch-indep", ""
 		if (defined $info->field('build-depends-indep') && $arch_indep_packages == 0);

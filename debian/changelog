@@ -1,5 +1,7 @@
 lintian (2.2.2) UNRELEASED; urgency=low
 
+  The "this is why spooky action at a distance is bad" release.
+
   * checks/copyright-file:
     + [ADB] Treat the new copyright file format's "License-Alias: Perl" as
       indicating that the package is licensed under the same terms as Perl.
@@ -10,6 +12,10 @@ lintian (2.2.2) UNRELEASED; urgency=low
   * checks/debhelper:
     + [RA] Remove stray localization of $/, which broke -i when issuing
       tags about ${misc:Depends}.
+  * checks/fields:
+    + [RA] Stop pointlessly setting $/ while parsing debian/rules and then
+      restoring it to the wrong value, which broke -i when issuing some
+      tags if they were the first tags issued.
   * checks/scripts:
     + [RA] Add nickle as a known interpreter.  Patch from Julien Cristau.
       (Closes: #513823)
