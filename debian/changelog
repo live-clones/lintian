@@ -37,7 +37,7 @@ lintian (2.2.1) UNRELEASED; urgency=low
 
   * data/output/manual-references:
     + [RA] Manual reference data used for formatting tag descriptions.
-      Moved from lib/manual_refs.
+      Moved from lib/manual_refs and added an explanatory header.
 
   * frontend/lintian-info:
     + [RA] Use Lintian::Tag::Info instead of Read_taginfo.
@@ -80,6 +80,11 @@ lintian (2.2.1) UNRELEASED; urgency=low
   * man/lintian.1:
     + [ADB] Fix the spelling of "pedantic".  Thanks, Michal Čihař.
       (Closes: #513083)
+
+  * private/refresh-manual-refs:
+    + [RA] Renamed from manual_refs_update.pl.  Add a section heading to
+      the output file and update the file in Lintian's data directory
+      directly rather than printing to standard output.
 
   * reporting/config:
     + [RA] Set a bin directory and disable signature checks by default.
