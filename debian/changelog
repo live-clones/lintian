@@ -1,4 +1,4 @@
-lintian (2.2.1) UNRELEASED; urgency=low
+lintian (2.2.1) unstable; urgency=low
 
   * Summary of tag changes:
     + Added
@@ -125,7 +125,7 @@ lintian (2.2.1) UNRELEASED; urgency=low
   * t/templates/pedantic{,.upstream}:
     + [RA] New template that passes all pedantic checks.
 
- -- Russ Allbery <rra@debian.org>  Sun, 25 Jan 2009 12:51:40 -0800
+ -- Russ Allbery <rra@debian.org>  Sat, 31 Jan 2009 20:20:46 -0800
 
 lintian (2.2.0) unstable; urgency=low
 
