@@ -23,8 +23,14 @@ package Util;
 use strict;
 
 use Exporter;
-our @ISA = qw(Exporter);
-our @EXPORT = qw(parse_dpkg_control
+
+# Force export as soon as possible, since some of the modules we load also
+# depend on us and the sequencing can cause things not to be exported
+# otherwise.
+our (@ISA, @EXPORT);
+BEGIN {
+    @ISA = qw(Exporter);
+    @EXPORT = qw(parse_dpkg_control
 	read_dpkg_control
 	get_deb_info
 	get_dsc_info
@@ -38,6 +44,7 @@ our @EXPORT = qw(parse_dpkg_control
 	gunzip_file
 	touch_file
 	perm2oct);
+}
 
 use FileHandle;
 use Lintian::Command qw(spawn);

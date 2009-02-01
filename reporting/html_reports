@@ -22,6 +22,7 @@
 # MA 02110-1301, USA.
 
 use strict;
+
 use File::Copy qw(copy);
 use URI::Escape;
 use Text::Template ();
@@ -52,17 +53,14 @@ $ENV{'LINTIAN_ROOT'} = $LINTIAN_ROOT;
 
 # Import Lintian Perl libraries.
 use lib "$ENV{LINTIAN_ROOT}/lib";
+use Lintian::Tag::Info ();
 use Read_pkglists;
-use Read_taginfo;
 use Text_utils;
 use Util;
 
 # Global variables from Read_pkglists.  Ugh.
 # FIXME: Read_pkglists should return this information instead.
 our (%binary_info, %source_info, %udeb_info, %bin_src_ref);
-
-# Get the tag information from the Lintian *.desc files.
-our %tag_info = %{ read_tag_info('html') };
 
 # Get additional tag information.
 our %tag_extra = ();
@@ -428,9 +426,10 @@ for my $id (keys %clean) {
 # Create the pages for each tag.  Each page shows the extended description for
 # the tag and all the packages for which that tag was issued.
 for my $tag (sort keys %by_tag) {
+    my $info = Lintian::Tag::Info->new($tag);
     my $description;
-    if ($tag_info{$tag}) {
-        $description = wrap_paragraphs('HTML', '    ', $tag_info{$tag});
+    if ($info) {
+        $description = $info->description('html', '    ');
     } else {
         $description = "    <p>Can't find description of tag $tag.</p>";
     }

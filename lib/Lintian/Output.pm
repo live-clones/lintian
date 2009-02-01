@@ -22,6 +22,20 @@ use strict;
 use warnings;
 
 use v5.8.0; # for PerlIO
+use base qw(Class::Accessor Exporter);
+
+# Force export as soon as possible, since some of the modules we load also
+# depend on us and the sequencing can cause things not to be exported
+# otherwise.
+our (@EXPORT, %EXPORT_TAGS, @EXPORT_OK);
+BEGIN {
+    @EXPORT = ();
+    %EXPORT_TAGS = ( messages => [qw(msg v_msg warning debug_msg delimiter)],
+		     util => [qw(_global_or_object)]);
+    @EXPORT_OK = (@{$EXPORT_TAGS{messages}},
+		  @{$EXPORT_TAGS{util}},
+		  'string');
+}
 
 =head1 NAME
 
@@ -61,8 +75,8 @@ $Lintian::Output::GLOBAL unless their first argument C<isa('Lintian::Output')>.
 
 # support for ANSI color output via colored()
 use Term::ANSIColor ();
+use Lintian::Tag::Info ();
 use Tags ();
-use Read_taginfo qw(format_tag_description);
 
 =head1 ACCESSORS
 
@@ -114,16 +128,8 @@ Hash containing the names of tags which have been issued.
 
 =cut
 
-use base qw(Class::Accessor Exporter);
 Lintian::Output->mk_accessors(qw(verbose debug quiet color colors stdout
     stderr showdescription issuedtags));
-
-our @EXPORT = ();
-our %EXPORT_TAGS = ( messages => [qw(msg v_msg warning debug_msg delimiter)],
-		     util => [qw(_global_or_object)]);
-our @EXPORT_OK = (@{$EXPORT_TAGS{messages}},
-		  @{$EXPORT_TAGS{util}},
-		  'string');
 
 # for the non-OO interface
 my %default_colors = ( 'E' => 'red' , 'W' => 'yellow' , 'I' => 'cyan',
@@ -299,9 +305,13 @@ sub print_tag {
 
     $self->_print('', "$code: $pkg_info->{pkg}$type", "$tag$information");
     if (!$self->issued_tag($tag_info->{tag}) and $self->showdescription) {
-	$self->_print('', 'N', '');
-	$self->_print('', 'N', split("\n", format_tag_description($tag_info, 3)));
-	$self->_print('', 'N', '');
+	my $info = Lintian::Tag::Info->new($tag_info->{tag});
+	if ($info) {
+	    my $description = $info->description('text', '   ');
+	    $self->_print('', 'N', '');
+	    $self->_print('', 'N', split("\n", $description));
+	    $self->_print('', 'N', '');
+	}
     }
 }
 
@@ -471,3 +481,9 @@ Originally written by Frank Lichtenheld <djpig@debian.org> for Lintian.
 lintian(1)
 
 =cut
+
+# Local Variables:
+# indent-tabs-mode: t
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 ts=8 noet shiftround

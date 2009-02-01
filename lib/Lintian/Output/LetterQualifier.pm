@@ -21,8 +21,8 @@ package Lintian::Output::LetterQualifier;
 use strict;
 use warnings;
 
-use Read_taginfo qw(format_tag_description);
 use Term::ANSIColor qw(colored);
+use Lintian::Tag::Info ();
 use Tags ();
 
 use Lintian::Output qw(:util);
@@ -129,12 +129,20 @@ sub print_tag {
 
     $self->_print('', "$code\[$lq\]: $pkg$type", "$tag$information");
     if (!$self->issued_tag($tag_info->{tag}) and $self->showdescription) {
-	$self->_print('', 'N', '');
-	$self->_print('', 'N', split("\n", format_tag_description($tag_info, 3)));
-	$self->_print('', 'N', '');
+        my $info = Lintian::Tag::Info->new($tag_info->{tag});
+        if ($info) {
+            my $description = $info->description('text', '   ');
+            $self->_print('', 'N', '');
+            $self->_print('', 'N', split("\n", $description));
+            $self->_print('', 'N', '');
+        }
     }
 }
 
 1;
 
-# vim: sw=4 sts=4 ts=4 et sr
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 ts=8 et shiftround

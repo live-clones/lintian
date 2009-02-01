@@ -35,6 +35,13 @@ lintian (2.2.1) UNRELEASED; urgency=low
     + [RA] Use binary_field() to read control fields for binary packages.
       Patch from Raphael Geissert.
 
+  * data/output/manual-references:
+    + [RA] Manual reference data used for formatting tag descriptions.
+      Moved from lib/manual_refs.
+
+  * frontend/lintian-info:
+    + [RA] Use Lintian::Tag::Info instead of Read_taginfo.
+
   * lib/Lintian/Collect/Source.pm:
     + [RA] Add binary_field() method to return a binary package field from
       debian/control for a source package.  Based on a patch by Raphael
@@ -45,8 +52,34 @@ lintian (2.2.1) UNRELEASED; urgency=low
     + [ADB] Add a colour for pedantic tags to avoid warnings when colourised
       output is used and make the combination more useful.  Thanks, gregor
       herrmann.  (Closes: #513132)
+    + [RA] Use Lintian::Tag::Info instead of Read_taginfo.
+    + [RA] Force early exporting of functions to be more robust in the
+      face of circular library dependencies.  The circular dependencies
+      had already existed but not previously caused problems.
   * lib/Lintian/Output/LetterQualifier.pm:
     + [ADB] Add support for pedantic tags.
+    + [RA] Use Lintian::Tag::Info instead of Read_taginfo.
+  * lib/Lintian/Tag/Info.pm:
+    + [RA] New module providing an interface to tag metadata.  Currently,
+      this only supports formatting the tag description, merging the
+      actions previously done by Manual_refs.pm and Read_taginfo.pm.  It
+      defers loading of manual references until they're needed, which
+      removes the requirement that LINTIAN_ROOT be already set in the
+      environment before running the reporting harness.  It also saves a
+      small amount of time in runs without -I.
+  * lib/Manual_refs.pm:
+    + [RA] Removed, merged into Lintian::Tag::Info.
+  * lib/manual_refs:
+    + [RA] Moved to data/output/manual-references.
+  * lib/Read_taginfo.pm:
+    + [RA] Removed, merged into Lintian::Tag::Info.
+  * lib/Util.pm:
+    + [RA] Force early exporting of functions to be more robust in the
+      face of circular library dependencies.
+
+  * man/lintian.1:
+    + [ADB] Fix the spelling of "pedantic".  Thanks, Michal Čihař.
+      (Closes: #513083)
 
   * reporting/config:
     + [RA] Set a bin directory and disable signature checks by default.
@@ -55,10 +88,8 @@ lintian (2.2.1) UNRELEASED; urgency=low
       /bin/true if signature checks are disabled.  This is a hack to work
       with the etch version of dpkg-source.  In lenny, the --no-check flag
       will be used instead.  Patch from Raphael Geissert.
-
-  * man/lintian.1:
-    + [ADB] Fix the spelling of "pedantic".  Thanks, Michal Čihař.
-      (Closes: #513083)
+  * reporting/html_reports:
+    + [RA] Use Lintian::Tag::Info instead of Read_taginfo.
 
   * t/runtests:
     + [RA] Add support for selecting a different test package skeleton.

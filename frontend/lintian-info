@@ -36,12 +36,10 @@ BEGIN {
 
 # import perl libraries
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
-use Read_taginfo;
+use Lintian::Tag::Info ();
 use Text_utils;
 
 my %already_displayed = ();
-
-my %tag_info = %{read_tag_info()};
 
 my ($annotate, $tags);
 Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
@@ -54,15 +52,16 @@ GetOptions('annotate|a' => \$annotate, 'tags|t' => \$tags)
 my $unknown;
 if ($tags) {
     for my $tag (@ARGV) {
-        print "N: $tag\n";
-        print "N:\n";
-        if (exists $tag_info{$tag}) {
-            print wrap_paragraphs('N:   ', $tag_info{$tag});
-        } else {
-            print "N:   Unknown tag.\n";
-            $unknown = 1;
-        }
-        print "N:\n";
+	print "N: $tag\n";
+	print "N:\n";
+	my $info = Lintian::Tag::Info->new($tag);
+	if ($info) {
+	    print $info->description('text', 'N:   ');
+	} else {
+	    print "N:	Unknown tag.\n";
+	    $unknown = 1;
+	}
+	print "N:\n";
     }
     exit ($unknown ? 1 : 0);
 }
@@ -92,9 +91,11 @@ while (<>) {
 	next if not defined $tag;
 	($tag) = split(/\s+/, $tag, 2);
 
-	next if not exists $tag_info{$tag} or $already_displayed{$tag}++;
+	next if $already_displayed{$tag}++;
+	my $info = Lintian::Tag::Info->new($tag);
+	next unless $info;
 	print "N:\n";
-	print wrap_paragraphs('N:   ',$tag_info{$tag});
+	print $info->description('text', 'N:   ');
 	print "N:\n";
     }
 }
