@@ -4,6 +4,9 @@ lintian (2.2.2) UNRELEASED; urgency=low
     + [ADB] Treat the new copyright file format's "License-Alias: Perl" as
       indicating that the package is licensed under the same terms as Perl.
       Thanks, gregor herrmann.  (Closes: #513831)
+  * checks/scripts:
+    + [RA] Add nickle as a known interpreter.  Patch from Julien Cristau.
+      (Closes: #513823)
 
   * lib/Util.pm:
     + [ADB] Localise a use of $_ in control file parsing to avoid overwriting
