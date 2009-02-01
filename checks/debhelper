@@ -61,7 +61,7 @@ my $info = shift;
 my $seencommand = '';
 my $needbuilddepends = '';
 my $needtomodifyscripts = '';
-my $needversiondepends = '';
+my $level;
 my $seenversiondepends = '0';
 my $compat = 0;
 my $usescdbs = '';
@@ -78,7 +78,7 @@ while (<RULES>) {
     if (m/^\s+-?(dh_\w+)/) {
         my $dhcommand = $1;
 	if ($dhcommand =~ /dh_testversion(?:\s+([^\s]+))?/) {
-	    $needversiondepends = $1 if ($1);
+	    $level = $1 if ($1);
 	    tag "dh_testversion-is-deprecated", "";
 	}
 	if ($dhcommand eq 'dh_dhelp') {
@@ -123,14 +123,13 @@ while (<RULES>) {
 	$dhcompatvalue = $cdbscompat;
 	$usescdbs = 1;
     } elsif (/^\s*export\s+DH_COMPAT\s*:?=\s*([^\s]+)/) {
-	$needversiondepends = $1;
+	$level = $1;
     } elsif (/^\s*export\s+DH_COMPAT/) {
-	$needversiondepends = $dhcompatvalue if $dhcompatvalue;
+	$level = $dhcompatvalue if $dhcompatvalue;
     } elsif (/^\s*DH_COMPAT\s*:?=\s*([^\s]+)/) {
 	$dhcompatvalue = $1;
 	# one can export and then set the value:
-	$needversiondepends = $1
-	    if ($needversiondepends);
+	$level = $1 if ($level);
     }
     if (/^\s+dh_python\s/) {
         $seendhpython = 1;
@@ -180,33 +179,33 @@ if (-f 'debfiles/compat') {
 	    $compat =~ s/[^\d]//g;
 	    $compatnan = 1;
 	}
-	if ($needversiondepends) {
+	if ($level) {
 	    tag 'declares-possibly-conflicting-debhelper-compat-versions',
-		"rules=$needversiondepends compat=$compat";
+		"rules=$level compat=$compat";
 	} else {
 	    # this is not just to fill in the gap, but because debhelper
 	    # prefers DH_COMPAT over debian/compat
-	    $needversiondepends = $compat;
+	    $level = $compat;
 	}
     } else {
 	tag 'debhelper-compat-file-is-empty';
     }
 }
-if ($needversiondepends !~ m/^\d+$/ and not $compatnan) {
-    tag 'debhelper-compatibility-level-not-a-number', $needversiondepends;
-    $needversiondepends =~ s/[^\d]//g;
+if (defined($level) and $level !~ m/^\d+$/ and not $compatnan) {
+    tag 'debhelper-compatibility-level-not-a-number', $level;
+    $level =~ s/[^\d]//g;
     $compatnan = 1;
 }
 
-if ($usescdbs and not $needversiondepends) {
-    $needversiondepends = $cdbscompat;
+if ($usescdbs and not defined($level)) {
+    $level = $cdbscompat;
 }
-$needversiondepends ||= 1;
-if ($needversiondepends < 4) {
-    tag "package-uses-deprecated-debhelper-compat-version", $needversiondepends;
+$level ||= 1;
+if ($level < 4) {
+    tag "package-uses-deprecated-debhelper-compat-version", $level;
 }
 
-if ($seendhcleank and $needversiondepends >= 7) {
+if ($seendhcleank and $level >= 7) {
     tag "dh-clean-k-is-deprecated";
 }
 
@@ -259,20 +258,19 @@ while (defined(my $file=readdir(DEBIAN))) {
 	    tag 'missing-build-dependency-for-dh_-command', "$command=$dep"
 		unless (Dep::implies($bdepends_noarch, Dep::parse($dep)));
 	}
-	if ($needversiondepends > 5
-	    && ! Dep::implies($bdepends,
-		    Dep::parse("debhelper (>= $needversiondepends)"))) {
-	    tag "package-lacks-versioned-build-depends-on-debhelper",
-							$needversiondepends;
+	my $needed = Dep::parse("debhelper (>= $level)");
+	if ($level > 5 && ! Dep::implies($bdepends, $needed)) {
+	    tag "package-lacks-versioned-build-depends-on-debhelper", $level;
 	} elsif (@versioncheck) {
 	    my %seen;
 	    @versioncheck = grep { !$seen{$_}++ } @versioncheck;
 	    for my $program (@versioncheck) {
 		my $required = $versions{$program};
-		tag 'debhelper-script-needs-versioned-build-depends',
-		    $program, "(>= $required)"
-			unless Dep::implies($bdepends,
-					    Dep::parse("debhelper (>= $required)"));
+		my $needed = Dep::parse("debhelper (>= $required)");
+		unless (Dep::implies($bdepends, $needed)) {
+		    tag 'debhelper-script-needs-versioned-build-depends',
+			$program, "(>= $required)";
+		}
 	    }
 	}
     } elsif ($file =~ m/^ex\.|\.ex$/i) {
@@ -285,13 +283,13 @@ while (defined(my $file=readdir(DEBIAN))) {
 	# filenames.  If so, check it for brace expansions, which aren't
 	# supported.
 	if ($filename_configs->known($base)) {
-	    next if $needversiondepends < 3;
+	    next if $level < 3;
 	    open (IN, '<', "debfiles/$file")
 		or fail("Can't open debfiles/$file: $!");
 	    local $_;
 	    while (<IN>) {
 		next if /^\s*$/;
-		next if (/^\#/ and $needversiondepends >= 5);
+		next if (/^\#/ and $level >= 5);
 		if (m/(?<!\\)\{(?:[^\s\\\}]+?,)+[^\\\}\s]+\}/) {
 		    tag 'brace-expansion-in-debhelper-config-file',
 			"debian/$file";
