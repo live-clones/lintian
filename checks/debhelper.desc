@@ -162,12 +162,18 @@ Info: The source package declares a weak dependecy on ${misc:Depends} in
  is one that ensures the package's installation, is required so that the
  additional commands are available to the maintainer scripts when they are run.
 
-Tag: debhelper-compat-is-not-a-number
-Severity: serious
-Certainty: possible
-Info: The compat version specified in <tt>debian/compat</tt> is not a number.
+Tag: debhelper-compat-not-a-number
+Severity: important
+Certainty: certain
+Ref: debhelper(7)
+Info: The debhelper compatibility level specified in
+ <tt>debian/compat</tt> is not a number.
 
-Tag: debhelper-compatibility-version-is-not-a-number
-Severity: serious
+Tag: debhelper-compatibility-level-not-a-number
+Severity: important
 Certainty: possible
-Info: The compatibility version specified in <tt>debian/rules</tt> is not a number.
+Info: The debhelper compatibility level specified in <tt>debian/rules</tt>
+ is not a number.  If you're using make functions or other more complex
+ methods to generate the compatibility level, write the output into
+ <tt>debian/compat</tt> instead of setting DH_COMPAT.  The latter should
+ be available for a user to override temporarily.

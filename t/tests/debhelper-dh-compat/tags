@@ -1,4 +1,4 @@
-E: debhelper-dh-compat source: debhelper-compatibility-version-is-not-a-number '{3'
+E: debhelper-dh-compat source: debhelper-compatibility-level-not-a-number '{3'
 E: debhelper-dh-compat source: declares-possibly-conflicting-debhelper-compat-versions rules='{3' compat=7
 W: debhelper-dh-compat source: debian-rules-sets-DH_COMPAT line 3
 W: debhelper-dh-compat source: package-uses-deprecated-debhelper-compat-version 3

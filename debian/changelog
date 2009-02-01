@@ -4,6 +4,8 @@ lintian (2.2.1) UNRELEASED; urgency=low
     + Added
       - copyright-refers-to-symlink-license (pedantic)
       - copyright-refers-to-versionless-license-file
+      - debhelper-compat-not-a-number
+      - debhelper-compatibility-level-not-a-number
       - duplicate-font-file
       - font-in-non-font-package
 
@@ -11,9 +13,14 @@ lintian (2.2.1) UNRELEASED; urgency=low
     + [RA] Add checks for references to the versionless FSF license files,
       pedantic if the package license allows relicensing under later
       versions.   Patch from Raphael Geissert.  (Closes: #497346)
-  * checks/debhelper:
+  * checks/debhelper{,.desc}:
     + [RA] Use binary_field() to read control fields for binary packages.
       Patch from Raphael Geissert.
+    + [RA] Read only the first line of debian/compat, matching debhelper's
+      behavior.  Improve the parsing of DH_COMPAT to pick up values that
+      aren't numbers.  Warn of compatibility levels that aren't numbers.
+      Use the same compatibility level that debhelper would use in some
+      other checks.  Patch from Raphael Geissert.  (Closes: #513767)
   * checks/fields:
     + [RA] Allow but do not require a libmodule-build-perl dependency if
       the Build script is referenced in clean.  Thanks, Charles Plessy and
@@ -37,6 +44,9 @@ lintian (2.2.1) UNRELEASED; urgency=low
       requesting generation of a symbols file.
     + [RA] Provide details on how to manually check some of the shared
       library problems that Lintian diagnoses.  (Closes: #513086)
+  * checks/standards-version:
+    + [RA] Be robust against unparsable timestamps in changelog files.
+      Patch from Raphael Geissert.
   * checks/version-substvars:
     + [RA] Use binary_field() to read control fields for binary packages.
       Patch from Raphael Geissert.

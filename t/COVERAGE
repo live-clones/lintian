@@ -1,4 +1,4 @@
-Last generated 2009-01-24
+Last generated 2009-02-01
 
 The following tags are not tested by the test suite:
 
@@ -338,7 +338,6 @@ debconf using-first-person-in-templates
 debconf using-imperative-form-in-templates
 debconf using-question-in-extended-description-in-templates
 
-debhelper declares-possibly-conflicting-debhelper-compat-versions
 debhelper uses-dh-python-with-no-pycompat
 
 debian-readme readme-debian-contains-debmake-default-email-address

@@ -176,7 +176,7 @@ if (-f 'debfiles/compat') {
     if ($compat) {
 	chomp $compat;
 	if ($compat !~ m/^\d+$/) {
-	    tag 'debhelper-compat-is-not-a-number', $compat;
+	    tag 'debhelper-compat-not-a-number', $compat;
 	    $compat =~ s/[^\d]//g;
 	    $compatnan = 1;
 	}
@@ -193,7 +193,7 @@ if (-f 'debfiles/compat') {
     }
 }
 if ($needversiondepends !~ m/^\d+$/ and not $compatnan) {
-    tag 'debhelper-compatibility-version-is-not-a-number', $needversiondepends;
+    tag 'debhelper-compatibility-level-not-a-number', $needversiondepends;
     $needversiondepends =~ s/[^\d]//g;
     $compatnan = 1;
 }
