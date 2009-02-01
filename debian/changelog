@@ -2,9 +2,15 @@ lintian (2.2.1) UNRELEASED; urgency=low
 
   * Summary of tag changes:
     + Added
+      - copyright-refers-to-symlink-license (pedantic)
+      - copyright-refers-to-versionless-license-file
       - duplicate-font-file
       - font-in-non-font-package
 
+  * checks/copyright-file{,.desc}:
+    + [RA] Add checks for references to the versionless FSF license files,
+      pedantic if the package license allows relicensing under later
+      versions.   Patch from Raphael Geissert.  (Closes: #497346)
   * checks/debhelper:
     + [RA] Use binary_field() to read control fields for binary packages.
       Patch from Raphael Geissert.
