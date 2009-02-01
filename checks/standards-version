@@ -133,7 +133,7 @@ if (not $STANDARDS->known($stdver)) {
             return 0;
         }
         my ($entry) = $changes->data;
-        my $timestamp = $entry ? $entry->Timestamp : 0;
+        my $timestamp = ($entry && $entry->Timestamp) ? $entry->Timestamp : 0;
         for my $standard (@STANDARDS) {
             last if $standard->[0] eq $stdver;
             if ($standard->[1] < $timestamp) {
