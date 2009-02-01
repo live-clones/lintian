@@ -1,5 +1,10 @@
 lintian (2.2.2) UNRELEASED; urgency=low
 
+  * checks/copyright-file:
+    + [ADB] Treat the new copyright file format's "License-Alias: Perl" as
+      indicating that the package is licensed under the same terms as Perl.
+      Thanks, gregor herrmann.  (Closes: #513831)
+
   * lib/Util.pm:
     + [ADB] Localise a use of $_ in control file parsing to avoid overwriting
       it and leading to uninitialized value warnings in check scripts.
