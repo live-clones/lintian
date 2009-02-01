@@ -46,7 +46,7 @@ lintian (2.2.1) UNRELEASED; urgency=low
       library problems that Lintian diagnoses.  (Closes: #513086)
   * checks/standards-version:
     + [RA] Be robust against unparsable timestamps in changelog files.
-      Patch from Raphael Geissert.
+      Patch from Raphael Geissert.  (Closes: #513766)
   * checks/version-substvars:
     + [RA] Use binary_field() to read control fields for binary packages.
       Patch from Raphael Geissert.
