@@ -69,6 +69,7 @@ sub parse_dpkg_control {
     my $open_section = 0;
     my $last_tag;
 
+    local $_;
     while (<$CONTROL>) {
 	chomp;
 
