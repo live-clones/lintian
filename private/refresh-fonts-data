@@ -43,7 +43,7 @@ INFO
 fi
 
 readonly lintian_data="$(readlink -f "$1")"
-readonly contents="$(readlink -f "$2")"
+contents="$(readlink -f "$2")"
 
 [ -d "$lintian_data" ] || {
     printf "%s is not a directory, aborting" "$lintian_data" >&2
@@ -60,11 +60,11 @@ mirror="${DEB_MIRROR:=http://i386-geomirror.debian.net/debian}"
 WGET_ARGS="${WGET_ARGS:=-nv}"
 wget() {
     echo wget "$mirror"/"$1"
-    /usr/bin/wget $WGET_ARGS "$mirror"/"$1"
+    /usr/bin/wget $WGET_ARGS -O "$workdir/$(basename "$1")" "$mirror"/"$1"
 }
 mkdir -p "$lintian_data/files"
 
-cat > "$lintian_data/files/fonts" <<EOF
+cat > "$workdir/fonts" <<EOF
 # The list of known font filenames already packaged for Debian and the
 # package that contains the font.  Only packages starting with ttf- or
 # otf- are searched for fonts.
@@ -73,8 +73,11 @@ cat > "$lintian_data/files/fonts" <<EOF
 
 EOF
 
-cd "$workdir"
-wget dists/sid/Contents-i386.gz
-zcat Contents-i386.gz \
-    | perl -n -w -E 'print lc $_ if (s,^.+/([\w-]+\.(?:[to]tf|pfb|pcf))\s+\w+/([to]tf-[^,]+(,.+)?)$,$1 $2,i);' \
-    | sort >> "$lintian_data/files/fonts"
+if [ -z "$contents" ] ; then
+    wget dists/sid/Contents-i386.gz
+    contents="$workdir/Contents-i386.gz"
+fi
+zcat "$contents" \
+    | perl -n -w -E 'print lc $_ if (s%^.+/([\w-]+\.(?:[to]tf|pfb|pcf))\s+\w+/([to]tf-[^,]+)(,.+)?$%$1 $2%i);' \
+    | sort >> "$workdir/fonts"
+mv "$workdir/fonts" "$lintian_data/files/fonts"

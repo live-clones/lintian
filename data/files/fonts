@@ -2,7 +2,7 @@
 # package that contains the font.  Only packages starting with ttf- or
 # otf- are searched for fonts.
 #
-# Last updated: 2009-01-31
+# Last updated: 2009-02-01
 
 1015sn.ttf ttf-aenigma
 1015snr.ttf ttf-aenigma
@@ -656,10 +656,10 @@ kinnari.otf otf-thai-tlwg
 kinnari.ttf ttf-thai-tlwg
 kirbyss.ttf ttf-aenigma
 knot.ttf ttf-aenigma
-kochi-gothic-subst.ttf ttf-kochi-gothic,non-free/x11/ttf-kochi-gothic-naga10
-kochi-gothic.ttf ttf-kochi-gothic,non-free/x11/ttf-kochi-gothic-naga10
-kochi-mincho-subst.ttf ttf-kochi-mincho,non-free/x11/ttf-kochi-mincho-naga10
-kochi-mincho.ttf ttf-kochi-mincho,non-free/x11/ttf-kochi-mincho-naga10
+kochi-gothic-subst.ttf ttf-kochi-gothic
+kochi-gothic.ttf ttf-kochi-gothic
+kochi-mincho-subst.ttf ttf-kochi-mincho
+kochi-mincho.ttf ttf-kochi-mincho
 konatu.ttf ttf-konatu
 konatutohaba.ttf ttf-konatu
 konecto1.ttf ttf-aenigma
