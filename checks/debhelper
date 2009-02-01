@@ -198,6 +198,29 @@ if ($needversiondepends !~ m/^\d+$/ and not $compatnan) {
     $compatnan = 1;
 }
 
+if ($usescdbs and not $needversiondepends) {
+    $needversiondepends = $cdbscompat;
+}
+$needversiondepends ||= 1;
+if ($needversiondepends < 4) {
+    tag "package-uses-deprecated-debhelper-compat-version", $needversiondepends;
+} elsif ($needversiondepends > 5 and ! Dep::implies($bdepends, Dep::parse("debhelper (>= $needversiondepends)"))) {
+    tag "package-lacks-versioned-build-depends-on-debhelper", $needversiondepends;
+} elsif (@versioncheck) {
+    my %seen;
+    @versioncheck = grep { !$seen{$_}++ } @versioncheck;
+    for my $program (@versioncheck) {
+        my $required = $versions{$program};
+        tag 'debhelper-script-needs-versioned-build-depends', $program, "(>= $required)"
+            unless Dep::implies($bdepends, Dep::parse("debhelper (>= $required)"));
+    }
+}
+
+if ($seendhcleank and $compat >= 7) {
+    tag "dh-clean-k-is-deprecated";
+}
+
+
 # Check the files in the debian directory for various debhelper-related
 # things.
 my $bdepends;
@@ -287,28 +310,6 @@ if ($seendhpython && !$usescdbspython) {
     } else {
 	tag "uses-dh-python-with-no-pycompat", "";
     }
-}
-
-if ($usescdbs and not $needversiondepends) {
-    $needversiondepends = $cdbscompat;
-}
-$needversiondepends ||= 1;
-if ($needversiondepends < 4) {
-    tag "package-uses-deprecated-debhelper-compat-version", $needversiondepends;
-} elsif ($needversiondepends > 5 and ! Dep::implies($bdepends, Dep::parse("debhelper (>= $needversiondepends)"))) {
-    tag "package-lacks-versioned-build-depends-on-debhelper", $needversiondepends;
-} elsif (@versioncheck) {
-    my %seen;
-    @versioncheck = grep { !$seen{$_}++ } @versioncheck;
-    for my $program (@versioncheck) {
-        my $required = $versions{$program};
-        tag 'debhelper-script-needs-versioned-build-depends', $program, "(>= $required)"
-            unless Dep::implies($bdepends, Dep::parse("debhelper (>= $required)"));
-    }
-}
-
-if ($seendhcleank and $compat >= 7) {
-    tag "dh-clean-k-is-deprecated";
 }
 
 }
