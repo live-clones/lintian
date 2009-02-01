@@ -216,7 +216,7 @@ if ($needversiondepends < 4) {
     }
 }
 
-if ($seendhcleank and $compat >= 7) {
+if ($seendhcleank and $needversiondepends >= 7) {
     tag "dh-clean-k-is-deprecated";
 }
 
@@ -280,13 +280,13 @@ while (defined(my $file=readdir(DEBIAN))) {
 	# filenames.  If so, check it for brace expansions, which aren't
 	# supported.
 	if ($filename_configs->known($base)) {
-	    next if $compat < 3;
+	    next if $needversiondepends < 3;
 	    open (IN, '<', "debfiles/$file")
 		or fail("Can't open debfiles/$file: $!");
 	    local $_;
 	    while (<IN>) {
 		next if /^\s*$/;
-		next if (/^\#/ and $compat >= 5);
+		next if (/^\#/ and $needversiondepends >= 5);
 		if (m/(?<!\\)\{(?:[^\s\\\}]+?,)+[^\\\}\s]+\}/) {
 		    tag 'brace-expansion-in-debhelper-config-file',
 			"debian/$file";
