@@ -6,7 +6,7 @@ Standards-Version: 3.8.0
 Build-Depends: debhelper (>= 7)
 Homepage: http://lintian.debian.org/
 
-Package: bad
+Package: {$srcpkg}-bad
 Architecture: {$architecture}
 Depends: $\{misc:Depends\}
 Description: {$description}
@@ -14,10 +14,12 @@ Description: {$description}
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
 
-Package: pedantic
+Package: {$srcpkg}-pedantic
 Architecture: {$architecture}
 Depends: $\{misc:Depends\}
 Description: {$description} -- pedantic edition :)
+ Checks the pedantic version of the versionless copyright file check.
+ .
  This is a test package designed to exercise some check of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.

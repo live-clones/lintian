@@ -2,7 +2,8 @@ Testname: copyright-file-license-symlink
 Sequence: 6000
 Version: 1.0
 Description: Test the versionless license files checks
+Options: -I -E --pedantic
+Skeleton: pedantic
 Test-For:
  copyright-refers-to-symlink-license
  copyright-refers-to-versionless-license-file
-Options: --pedantic

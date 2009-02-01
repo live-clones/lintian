@@ -1,2 +1,2 @@
-P: pedantic: copyright-refers-to-symlink-license usr/share/common-licenses/GPL
-W: bad: copyright-refers-to-versionless-license-file usr/share/common-licenses/GPL
+P: copyright-file-license-symlink-pedantic: copyright-refers-to-symlink-license usr/share/common-licenses/GPL
+W: copyright-file-license-symlink-bad: copyright-refers-to-versionless-license-file usr/share/common-licenses/GPL
