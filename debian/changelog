@@ -1,3 +1,12 @@
+lintian (2.2.3) UNRELEASED; urgency=low
+
+  * checks/copyright-file:
+    + [RA] Treat License: GPL-2+ as "GPL version 2 or later" for the
+      purposes of the check for a correctly versioned license reference.
+      Patch from Evgeni Golov.  (Closes: #513946)
+
+ -- Russ Allbery <rra@debian.org>  Mon, 02 Feb 2009 09:41:37 -0800
+
 lintian (2.2.2) unstable; urgency=low
 
   The "this is why spooky action at a distance is bad" release.
