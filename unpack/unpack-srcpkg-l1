@@ -35,6 +35,8 @@ use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Util;
 
 use File::Basename;
+use Lintian::Command qw(spawn);
+use Dpkg::Version qw(parseversion);
 
 # stat $file
 (my @stat = stat $file) or fail("$file: cannot stat: $!");
@@ -58,12 +60,28 @@ for my $field (keys %$data) {
 # Install symbolic links to source package files
 my $dir = dirname($file);
 my $name = basename($file);
+my $tarball;
+my %version = parseversion($data->{'version'});
+my $basename = $data->{'source'} . '_' . $version{'version'};
+my $basenamerev = $data->{'source'} . '_' . $data->{'version'};
+
 symlink($file,"$base_dir/dsc") or fail("cannot symlink dsc file: $!");
 for my $fs (split(/\n/,$data->{'files'})) {
   next if $fs =~ /^\s*$/o;
   my @t = split(/\s+/o,$fs);
+  $tarball = $t[2] if ($t[2] =~ /^(?:\Q$basename\E\.orig|\Q$basenamerev\E)\.tar\.(gz|bz2|lzma)$/);
   symlink("$dir/$t[2]","$base_dir/$t[2]") or fail("cannot symlink file $t[2]: $!");
 }
+
+if (!$tarball) {
+    fail("could not find the source tarball");
+}
+
+# create index file for package
+spawn({ fail => 'error', out => "$base_dir/index" },
+      ["tar", "tfv", $tarball],
+      '|', ["sed", "-e", "s/^h/-/"],
+      '|', ["sort", "-k", "6"]);
 
 # Create symbolic links to binary packages
 mkdir("$base_dir/binary", 0777) or fail("mkdir $base_dir/binary: $!");
