@@ -54,6 +54,7 @@ our %CORRECTIONS = qw(
                       alegorical allegorical
                       algorith algorithm
                       allpication application
+                      als also
                       altough although
                       alows allows
                       amoung among
@@ -61,6 +62,7 @@ our %CORRECTIONS = qw(
                       analysator analyzer
                       ang and
                       appropiate appropriate
+                      arne't aren't
                       arraival arrival
                       artifical artificial
                       artillary artillery
@@ -188,8 +190,10 @@ our %CORRECTIONS = qw(
                       langauage language
                       langugage language
                       lauch launch
+                      lenght length
                       lesstiff lesstif
                       libaries libraries
+                      libraris libraries
                       libary library
                       licenceing licencing
                       loggin login
@@ -321,6 +325,9 @@ $CORRECTIONS{'alot'} = 'a lot';
 # descriptions, and should not be applied to files that may contain
 # configuration fragments or more informal files such as debian/copyright.
 our %CORRECTIONS_CASE = qw(
+                           apache Apache
+                           api API
+                           Api API
                            D-BUS D-Bus
                            d-bus D-Bus
                            dbus D-Bus
@@ -338,12 +345,15 @@ our %CORRECTIONS_CASE = qw(
                            GnomeVfs GnomeVFS
                            gnome-vfs GnomeVFS
                            gnomevfs GnomeVFS
+                           gnu GNU
+                           Gnu GNU
                            Gobject GObject
                            gobject GObject
                            Gstreamer GStreamer
                            gstreamer GStreamer
                            GTK GTK+
                            gtk+ GTK+
+                           Http HTTP
                            kde KDE
                            meta-package metapackage
                            MYSQL MySQL
@@ -367,6 +377,7 @@ our %CORRECTIONS_CASE = qw(
                            SLang S-Lang
                            S-lang S-Lang
                            s-lang S-Lang
+                           spanish Spanish
                            subversion Subversion
                            TCL Tcl
                            tcl Tcl
