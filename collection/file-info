@@ -30,7 +30,7 @@ use Lintian::Command qw(spawn reap);
 my $pkg = shift;
 my $type = shift;
 
--f "fields/package" or fail("file-info invoked in wrong directory");
+-f "fields/source" or fail("file-info invoked in wrong directory");
 
 unlink("file-info");
 chdir("unpacked")
