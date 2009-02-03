@@ -80,7 +80,7 @@ if (!$tarball) {
 # create index file for package
 spawn({ fail => 'error', out => "$base_dir/index" },
       ["tar", "tfv", $tarball],
-      '|', ["sed", "-e", "s/^h/-/"],
+      '|', ['perl', '-p -w -E', 's,^(([^\s]+\s+){5})[^/]+,$1.,;s,^h,-,'],
       '|', ["sort", "-k", "6"]);
 
 # Create symbolic links to binary packages
