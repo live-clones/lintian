@@ -152,9 +152,9 @@ while (!eof(IN)) {
     unless (exists $data->{'source-version'}) {
 	if ($data->{'source'} =~ /^([-+\.\w]+)\s+\((.+)\)$/) {
 	    $data->{'source'} = $1;
-	    $data->{'source_version'} = $2;
+	    $data->{'source-version'} = $2;
 	} else {
-	    $data->{'source_version'} = $data->{'version'};
+	    $data->{'source-version'} = $data->{'version'};
 	}
     }
 
@@ -163,7 +163,7 @@ while (!eof(IN)) {
 		   $pkg,
 		   $data->{'version'},
 		   $data->{'source'},
-		   $data->{'source_version'},
+		   $data->{'source-version'},
 		   $deb_file,
 		   $timestamp,
 		   ),"\n";
