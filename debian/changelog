@@ -4,6 +4,12 @@ lintian (2.2.3) UNRELEASED; urgency=low
     + [RA] Treat License: GPL-2+ as "GPL version 2 or later" for the
       purposes of the check for a correctly versioned license reference.
       Patch from Evgeni Golov.  (Closes: #513946)
+  * checks/cruft.desc:
+    + [RA] Downgrade all source-contains-* tags to pedantic.  These are
+      upstream problems the packager can't do much about and they have
+      no practical effect on the Debian package.  Wishlist implies that
+      a wishlist bug against the package would be appropriate, which
+      seems too strong.
 
  -- Russ Allbery <rra@debian.org>  Mon, 02 Feb 2009 09:41:37 -0800
 

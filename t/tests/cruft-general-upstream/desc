@@ -2,6 +2,8 @@ Testname: cruft-general-upstream
 Sequence: 6000
 Version: 1.0-1
 Type: non-native
+Skeleton: pedantic
+Options: --pedantic -I -E
 Description: Check for cruft in the upstream source
 Test-For:
  configure-generated-file-in-source

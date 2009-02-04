@@ -8,9 +8,6 @@ E: diffs: possible-missing-colon-in-closes Closes Bug# 123893
 E: diffs: unstripped-binary-or-object ./usr/bin/diffs
 I: diffs source: build-depends-without-arch-dep dpatch
 I: diffs source: debian-watch-file-is-missing
-I: diffs source: source-contains-bts-control-dir .ditrack
-I: diffs source: source-contains-git-control-dir .git
-I: diffs source: source-contains-svn-commit-file svn-commit.tmp
 I: diffs: no-md5sums-control-file
 W: diffs source: ancient-standards-version 3.5.9 (current is 3.8.0)
 W: diffs source: configure-generated-file-in-source config.cache
