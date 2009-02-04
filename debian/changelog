@@ -11,6 +11,12 @@ lintian (2.2.3) UNRELEASED; urgency=low
       a wishlist bug against the package would be appropriate, which
       seems too strong.
 
+  * unpack/list-binpkg:
+    + [RA] Preserve the source_version field from the previous list when
+      adding new packages, remove some dead code, and restructure for
+      improved readability.  Thanks to Jordà Polo for the analysis.
+      (Closes: #507849)
+
  -- Russ Allbery <rra@debian.org>  Mon, 02 Feb 2009 09:41:37 -0800
 
 lintian (2.2.2) unstable; urgency=low
