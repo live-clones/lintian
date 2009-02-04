@@ -10,6 +10,9 @@ lintian (2.2.3) UNRELEASED; urgency=low
       no practical effect on the Debian package.  Wishlist implies that
       a wishlist bug against the package would be appropriate, which
       seems too strong.
+  * checks/files:
+    + [ADB] Don't report duplicate-font-file for udebs.  Patch by Raphael
+      Geissert.  (Closes: #514095)
 
   * unpack/list-{binpkg,udebpkg}:
     + [RA] Preserve the source_version field from the previous list when
