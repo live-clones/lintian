@@ -35,7 +35,6 @@ if ($#ARGV == -1) {
 
 my $verbose = 0;
 my $output_file = undef;
-my $pkgdata = undef; # WTF?
 
 while (my $arg = shift) {
     if ($arg =~ s,^-,,o) {
@@ -140,12 +139,7 @@ while (!eof(IN)) {
     }
 
     if (($status eq 'new') or ($status eq 'changed')) {
-	if (defined $pkgdata) {
-	    # avoid collecting the info twice
-	    $data = $pkgdata;
-	} else {
-	    $data = &safe_get_deb_info($deb_file);
-	}
+	$data = &safe_get_deb_info($deb_file);
 	next if not defined $data;
 	$pkg = $data->{'package'};
     }
@@ -156,10 +150,13 @@ while (!eof(IN)) {
 	next;
     }
 
-    my $source_version = $data->{'version'};
-    if ($data->{'source'} =~ /^([-+\.\w]+)\s+\((.+)\)$/) {
-	$data->{'source'} = $1;
-	$source_version = $2;
+    unless (exists $data->{'source-version'}) {
+	if ($data->{'source'} =~ /^([-+\.\w]+)\s+\((.+)\)$/) {
+	    $data->{'source'} = $1;
+	    $data->{'source-version'} = $2;
+	} else {
+	    $data->{'source-version'} = $data->{'version'};
+	}
     }
 
     # write entry to output file
@@ -167,7 +164,7 @@ while (!eof(IN)) {
 		   $pkg,
 		   $data->{'version'},
 		   $data->{'source'},
-		   $source_version,
+		   $data->{'source-version'},
 		   $deb_file,
 		   $timestamp,
 		   ),"\n";
