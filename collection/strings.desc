@@ -1,0 +1,9 @@
+Collector-Script: strings
+Author: Raphael Geissert <atomo64@gmail.com>
+Info: This script runs the "strings -a" command over all files of a binary
+ package.
+Type: binary, udeb
+Unpack-Level: 2
+Output: elf-index
+Order: 2
+Needs-Info: file-info
