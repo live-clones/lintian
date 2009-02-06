@@ -415,11 +415,6 @@ Info: This package has the Essential flag set.  New Essential packages
  be discussed on debian-devel first.
 Ref: policy 3.8
 
-Tag: non-us-spelling
-Severity: minor
-Certainty: certain
-Info: Although non-us works for a section name, non-US is preferred.
-
 Tag: doc-package-depends-on-main-package
 Severity: normal
 Certainty: possible

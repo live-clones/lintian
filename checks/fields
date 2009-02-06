@@ -332,12 +332,7 @@ if (not defined $info->field('section')) {
 	} else {
 	    my @parts = split /\//, $section, 2;
 
-	    if ($parts[0] =~ /non-US/i) {
-		tag "non-us-spelling", "" if ($parts[0] ne "non-US");
-		if ($parts[1] and not $known_non_us_parts{$parts[1]}) {
-		    tag "unknown-section", "$section";
-		}
-	    } elsif (scalar @parts > 1) {
+	    if (scalar @parts > 1) {
 		tag "unknown-section", "$section" unless $known_archive_parts{$parts[0]};
 		tag "unknown-section", "$section" unless $known_sections{$parts[1]};
 	    } elsif ($parts[0] eq 'unknown') {

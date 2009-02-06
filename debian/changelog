@@ -1,5 +1,12 @@
 lintian (2.2.3) UNRELEASED; urgency=low
 
+  * Summary of tag changes:
+    + Removed
+      - non-us-spelling
+
+  * checks/common-data.pm:
+    + [ADB] Remove the obsolete non-US from the list of recognised archive
+      sections.
   * checks/copyright-file:
     + [RA] Treat License: GPL-2+ as "GPL version 2 or later" for the
       purposes of the check for a correctly versioned license reference.
@@ -10,6 +17,9 @@ lintian (2.2.3) UNRELEASED; urgency=low
       no practical effect on the Debian package.  Wishlist implies that
       a wishlist bug against the package would be appropriate, which
       seems too strong.
+  * checks/fields{,.desc}:
+    + [ADB] Remove checks for the capitalisation of the obsolete non-US
+      archive section.
   * checks/files:
     + [ADB] Don't report duplicate-font-file for udebs.  Patch by Raphael
       Geissert.  (Closes: #514095)

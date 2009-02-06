@@ -71,7 +71,7 @@ use vars qw
 %known_non_us_parts = map { $_ => 1 } ('non-free', 'contrib', 'main' );
 
 %known_archive_parts = map { $_ => 1 }
-    ('non-free', 'contrib', 'non-US', 'non-us' );
+    ('non-free', 'contrib');
 
 %known_prios = map { $_ => 1 }
     ('required', 'important', 'standard', 'optional', 'extra');
