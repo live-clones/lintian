@@ -3,7 +3,7 @@ Author: Christian Schwarz <schwarz@debian.org>
 Abbrev: bin
 Type: binary, udeb
 Unpack-Level: 1
-Needs-Info: objdump-info, file-info
+Needs-Info: objdump-info, file-info, strings
 Info: This script checks binaries and object files for bugs.
 
 Tag: arch-independent-package-contains-binary-or-object
@@ -209,3 +209,10 @@ Info: This ELF binary appears to have been built for an architecture other
  than the one of the binary package being tested.  This may occur when a
  pre-built binary is shipped in the package or when an attempt to
  cross-compile didn't work.
+
+Tag: spelling-error-in-binary
+Severity: normal
+Certainty: possible
+Info: Lintian found a spelling error in the given binary.  Lintian has a list
+ of common misspellings that it looks for.  It does not have a dictionary
+ like a spelling checker does.

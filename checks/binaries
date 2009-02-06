@@ -22,6 +22,7 @@ package Lintian::binaries;
 use strict;
 use Tags;
 use Util;
+use Spelling;
 
 use File::Spec;
 
@@ -238,6 +239,9 @@ foreach my $file (sort keys %{$info->file_info}) {
 	    tag "binary-or-shlib-defines-rpath", "$file $rpath";
 	}
     }
+
+    my $strings = slurp_entire_file("strings/$file");
+    spelling_check('spelling-error-in-binary', $strings, $file);
 
     # binary or shared object?
     next unless ($fileinfo =~ m/executable/) or ($fileinfo =~ m/shared object/);
