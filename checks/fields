@@ -134,6 +134,8 @@ my $arch_indep;
 
 # Load obsolete packages list.
 my $obsolete_packages = Lintian::Data->new ('fields/obsolete-packages');
+# Load virtual packages list.
+my $virtual_packages = Lintian::Data->new ('fields/virtual-packages');
 
 unless (-d "fields") {
 	fail("directory in lintian laboratory for $type package $pkg missing: fields");
@@ -485,7 +487,7 @@ if (($type eq "binary") || ($type eq 'udeb')) {
 
 				# Only for (Pre-)?Depends.
 				tag "virtual-package-depends-without-real-package-depends", "$field: $alternatives[0]->[0]"
-				    if ($known_virtual_packages{$alternatives[0]->[0]}
+				    if ($virtual_packages->known($alternatives[0]->[0])
 					&& ($field eq "depends" || $field eq "pre-depends"));
 
                                 # Check defaults for transitions.  Here, we only care that the first alternative is current.
@@ -693,7 +695,7 @@ if ($type eq "source") {
 				push @alternatives, [_split_dep($_), $_] for (split /\s*\|\s*/, $dep);
 
 				tag "virtual-package-depends-without-real-package-depends", "$field: $alternatives[0]->[0]"
-				    if ($known_virtual_packages{$alternatives[0]->[0]} && &$is_dep_field($field));
+				    if ($virtual_packages->known($alternatives[0]->[0]) && &$is_dep_field($field));
 
 				for my $part_d (@alternatives) {
 					my ($d_pkg, $d_version, $d_arch, $rest, $part_d_orig) = @$part_d;

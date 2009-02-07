@@ -1,0 +1,110 @@
+#!/bin/sh
+# refresh-virtual-packages-data -- Refresh data about font packages in Debian
+
+# Copyright (C) 2008, 2009 Raphael Geissert <atomo64@gmail.com>
+#
+# This file is free software: you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 2 of the License, or
+# (at your option) any later version.
+#
+# This file is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this file.  If not, see <http://www.gnu.org/licenses/>.
+
+set -e
+
+if [ -z "$1" ]; then
+    printf "Usage: %s <path-to-data> [<packages>]\n" "$(basename "$0")"
+    cat <<INFO
+
+If <packages> is specified, it should be the path to the Packages file
+from the current unstable distribution.  It will be used to find all
+font files already packaged for Debian and update the list of known
+font files and the packages that contain them.  <path-to-data> should
+be the path to the root of the Lintian data directory to update.
+
+If the Packages file is not specified, the script will download the
+following files from a mirror.  The mirror can be specified with the
+DEB_MIRROR environment variable.  If it is not set, the default is
+http://i386-geomirror.debian.net/debian.
+
+* main/binary-i386/Packages.gz
+
+Any necessary special parameters for wget can be set via the
+environment variable WGET_ARGS.  The default arguments are -nv.
+
+To set additional virtual packages to be added to the list as Keep entries
+list them in the VIRTUAL_PACKAGES environment variable.
+
+INFO
+    exit
+fi
+
+readonly lintian_data="$(readlink -f "$1")"
+packages="$(readlink -f "$2")"
+
+[ -d "$lintian_data" ] || {
+    printf "%s is not a directory, aborting" "$lintian_data" >&2
+    exit 1
+}
+
+readonly workdir="$(mktemp -d)"
+
+cleanup () {
+    [ ! -d "$workdir" ] || rm -rf "$workdir"
+}; trap cleanup EXIT
+
+mirror="${DEB_MIRROR:=http://i386-geomirror.debian.net/debian}"
+WGET_ARGS="${WGET_ARGS:=-nv}"
+wget() {
+    echo wget "$mirror"/"$1"
+    /usr/bin/wget $WGET_ARGS -O "$workdir/$(basename "$1")" "$mirror"/"$1"
+}
+mkdir -p "$lintian_data/fields"
+
+cat > "$workdir/virtual-packages" <<EOF
+# The list of virtual packages in Debian that are provided by two or more
+# packages. Packages that wish to be listed but are not automagically found by
+# this script can be hard-coded in this file and they will be preserved across
+# multiple executions of this script as long as they are listed in a comment
+# line where the first non-space characters form the word "Keep:".
+# Multiple packages can be specified in the same line, separated by comma and/or
+# white space. Multiple "Keep: " lines can be used as well.
+#
+# Last updated: $(date -u +'%Y-%m-%d')
+
+EOF
+
+[ -f "$lintian_data/fields/virtual-packages" ] && {
+    egrep '^#\s*Keep:\s*.+$' "$lintian_data/fields/virtual-packages" \
+	>> "$workdir/virtual-packages" || true
+}
+[ -z "$VIRTUAL_PACKAGES" ] || {
+    printf "# Keep: %s\n" "$VIRTUAL_PACKAGES" >> "$workdir/virtual-packages"
+}
+
+if [ -z "$packages" ] ; then
+    wget dists/sid/main/binary-i386/Packages.gz
+    packages="$workdir/Packages.gz"
+fi
+
+{ zcat "$packages";
+  sed -rn 's/^#\s*Keep:\s*/Provides: /;T;s/([^,:])\s+([^,])/\1, \2/g;p' \
+	"$workdir/virtual-packages"
+} |
+    perl -w -E 'my %seen; while (<>) {
+		    next unless (s/^Provides:\s*//);
+		    for my $pkg (split /\s*,\s*/) {
+			$seen{$pkg}++;
+			print "$pkg\n"
+			    if ($seen{$pkg} eq 2);
+		    }
+		  };' \
+    | sort -u >> "$workdir/virtual-packages"
+
+mv "$workdir/virtual-packages" "$lintian_data/fields/"

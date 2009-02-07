@@ -8,9 +8,8 @@ our @EXPORT = qw
    %known_archs %known_sections %known_non_us_parts %known_archive_parts
    %known_prios %known_source_fields %known_binary_fields %known_udeb_fields
    %known_obsolete_fields %known_essential %known_build_essential
-   %known_obsolete_packages %known_obsolete_emacs %known_virtual_packages
-   %known_libstdcs %known_tcls %known_tclxs %known_tks %known_tkxs
-   %known_libpngs %known_x_metapackages
+   %known_obsolete_packages %known_obsolete_emacs %known_libstdcs %known_tcls
+   %known_tclxs %known_tks %known_tkxs %known_libpngs %known_x_metapackages
    %non_standard_archs %all_cpus %all_oses
    %known_doc_base_formats
    $known_shells_regex
@@ -22,9 +21,8 @@ use vars qw
   %known_archs %known_sections %known_non_us_parts %known_archive_parts
   %known_prios %known_source_fields %known_binary_fields %known_udeb_fields
   %known_obsolete_fields %known_essential %known_build_essential
-  %known_obsolete_emacs %known_virtual_packages
-  %known_libstdcs %known_tcls %known_tclxs %known_tks %known_tkxs
-  %known_libpngs %known_x_metapackages
+  %known_obsolete_emacs %known_libstdcs %known_tcls %known_tclxs %known_tks
+  %known_tkxs %known_libpngs %known_x_metapackages
   %all_cpus %all_oses
   %known_doc_base_formats
   $known_shells_regex
@@ -118,34 +116,6 @@ use vars qw
 # Still in the archive but shouldn't be the primary Emacs dependency.
 %known_obsolete_emacs = map { $_ => 1 }
     ('emacs21');
-
-# Used only (at least lintian 1.23.1) for giving a warning about a
-# virtual-only dependency
-%known_virtual_packages = map { $_ => 1 }
-    ('x-terminal-emulator', 'x-window-manager', 'xserver', 'awk', 'c-compiler',
-     'c-shell', 'dotfile-module', 'emacsen', 'fortran77-compiler',
-     'ftp-server', 'httpd', 'ident-server', 'info-browser',
-     'ispell-dictionary', 'kernel-headers', 'kernel-image', 'kernel-source',
-     'linux-kernel-log-daemon', 'lambdamoo-core', 'lambdamoo-server',
-     'libc-dev', 'man-browser', 'pdf-preview', 'pdf-viewer',
-     'postscript-preview', 'postscript-viewer',
-     'system-log-daemon', 'tclsh', 'telnet-client', 'telnet-server',
-     'time-daemon', 'ups-monitor', 'wish', 'wordlist', 'www-browser',
-     'imap-client', 'imap-server', 'mail-reader', 'mail-transport-agent',
-     'news-reader', 'news-transport-system', 'pop3-server',
-     'mp3-encoder', 'mp3-decoder',
-     'java-compiler', 'java2-compiler',
-     'java-virtual-machine',
-     'java1-runtime', 'java2-runtime',
-     'dict-client',
-     'foomatic-data',
-     'audio-mixer', 'x-audio-mixer',
-     'debconf-2.0',
-     'aspell-dictionary',
-     'radius-server',
-     'libgl-dev', 'libglu-dev',
-     'automaken'
-    );
 
 %known_libstdcs = map { $_ => 1 }
     ('libstdc++2.9-glibc2.1', 'libstdc++2.10', 'libstdc++2.10-glibc2.2',
