@@ -88,23 +88,26 @@ EOF
     printf "# Keep: %s\n" "$VIRTUAL_PACKAGES" >> "$workdir/virtual-packages"
 }
 
+echo >> "$workdir/virtual-packages"
+
 if [ -z "$packages" ] ; then
     wget dists/sid/main/binary-i386/Packages.gz
     packages="$workdir/Packages.gz"
 fi
 
-{ zcat "$packages";
+{ zcat "$packages"
   sed -rn 's/^#\s*Keep:\s*/Provides: /;T;s/([^,:])\s+([^,])/\1, \2/g;p' \
 	"$workdir/virtual-packages"
 } |
     perl -w -E 'my %seen; while (<>) {
 		    next unless (s/^Provides:\s*//);
+		    chomp;
 		    for my $pkg (split /\s*,\s*/) {
 			$seen{$pkg}++;
 			print "$pkg\n"
 			    if ($seen{$pkg} eq 2);
 		    }
-		  };' \
+		  }' \
     | sort -u >> "$workdir/virtual-packages"
 
 mv "$workdir/virtual-packages" "$lintian_data/fields/"
