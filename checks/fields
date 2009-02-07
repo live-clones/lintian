@@ -190,6 +190,12 @@ if (not defined $info->field('version')) {
 		if ($version =~ /\+b\d+$/ && $type eq "source") {
 			tag "binary-nmu-debian-revision-in-source", "$version";
 		}
+
+		# Checks for the dfsg convention for repackaged upstream source.
+		if ($type eq 'source' and $version =~ /dfsg/ and $info->native) {
+			tag 'dfsg-version-in-native-package', $version;
+		}
+
 		my $name = $info->field('package');
 		if ($name && $perl_core_provides->known($name) &&
 		    perl_core_has_version($name, '>=', $upstream)) {

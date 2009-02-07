@@ -813,6 +813,15 @@ Info: The version number of your source package ends in +b and a number or
  +b form is the current standard; the three-part version number now
  obsolete.)
 
+Tag: dfsg-version-in-native-package
+Severity: normal
+Certainty: certain
+Info: The version number of this package contains "dfsg", but it's a
+ native package.  "dfsg" is conventionally used in the upstream version of
+ packages that are repackaged for Debian Free Software Guidelines
+ compliance reasons.  The convention doesn't make sense in native
+ packages.
+
 Tag: redundant-bugs-field
 Severity: normal
 Certainty: certain

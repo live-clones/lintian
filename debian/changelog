@@ -38,6 +38,7 @@ lintian (2.2.3) UNRELEASED; urgency=low
       archive section.
     + [RA] Warn about Homepage fields pointing to search.cpan.org pages
       containing a version number.  Based on a patch by Paul Wise.
+    + [RA] Warn of dfsg versions in native packages.
   * checks/files:
     + [ADB] Don't report duplicate-font-file for udebs.  Patch by Raphael
       Geissert.  (Closes: #514095)
