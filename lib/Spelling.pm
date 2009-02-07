@@ -45,6 +45,7 @@ our %CORRECTIONS = qw(
                       accomodate accommodate
                       acess access
                       acording according
+                      addional additional
                       additionaly additionally
                       adress address
                       adresses addresses
@@ -62,6 +63,7 @@ our %CORRECTIONS = qw(
                       analysator analyzer
                       ang and
                       appropiate appropriate
+                      aquired acquired
                       arne't aren't
                       arraival arrival
                       artifical artificial
@@ -82,6 +84,7 @@ our %CORRECTIONS = qw(
                       becomming becoming
                       becuase because
                       calender calendar
+                      cancelation cancellation
                       cariage carriage
                       challanges challenges
                       changable changeable
@@ -115,9 +118,11 @@ our %CORRECTIONS = qw(
                       decompres decompress
                       definate definite
                       definately definitely
+                      delemiter delimiter
                       dependancies dependencies
                       dependancy dependency
                       dependant dependent
+                      detabase database
                       developement development
                       developped developed
                       deveolpment development
@@ -152,6 +157,7 @@ our %CORRECTIONS = qw(
                       fetaures features
                       forse force
                       fortan fortran
+                      forwardig forwarding
                       framwork framework
                       fuction function
                       fuctions functions
@@ -178,6 +184,7 @@ our %CORRECTIONS = qw(
                       independant independent
                       informatiom information
                       initalize initialize
+                      initializiation initialization
                       inofficial unofficial
                       integreated integrated
                       integrety integrity
@@ -268,6 +275,7 @@ our %CORRECTIONS = qw(
                       safly safely
                       savable saveable
                       searchs searches
+                      secund second
                       separatly separately
                       seperate separate
                       seperated separated
@@ -287,6 +295,7 @@ our %CORRECTIONS = qw(
                       succesfully successfully
                       suplied supplied
                       suport support
+                      suppored supported
                       suppport support
                       supportin supporting
                       synax syntax
