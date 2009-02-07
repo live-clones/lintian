@@ -530,13 +530,13 @@ while (<SCRIPTS>) {
 	or fail("cannot open maintainer script $filename for reading: $!");
 
     my %warned;
-    my ($saw_init, $saw_invoke, $saw_debconf, $saw_sete, $has_code);
+    my ($saw_init, $saw_invoke, $saw_debconf, $saw_bange, $saw_sete, $has_code);
     my $cat_string = "";
 
     my $previous_line = "";
     while (<C>) {
 	if ($. == 1 && $shellscript && m,/$base\s*.*\s-\w*e\w*\b,) {
-	    $saw_sete = 1;
+	    $saw_bange = 1;
 	}
 
 	next if m,^\s*$,;  # skip empty lines
@@ -882,7 +882,11 @@ while (<SCRIPTS>) {
 	tag "maintainer-script-empty", $file;
     }
     if ($shellscript && !$saw_sete) {
-	tag 'maintainer-script-ignores-errors', $file;
+	if ($saw_bange) {
+	    tag 'maintainer-script-without-set-e', $file;
+	} else {
+	    tag 'maintainer-script-ignores-errors', $file;
+	}
     }
 
     close C;

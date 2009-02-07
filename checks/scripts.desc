@@ -498,10 +498,21 @@ Info: The maintainer script doesn't seem to contain any code other than
 Tag: maintainer-script-ignores-errors
 Severity: normal
 Certainty: certain
-Ref: policy 3.9
+Ref: policy 10.4
 Info: The maintainer script doesn't seem to set the <tt>-e</tt> flag which
  ensures that the script's execution is aborted when any executed command
  fails.
+
+Tag: maintainer-script-without-set-e
+Severity: pedantic
+Certainty: certain
+Ref: policy 10.4
+Info: The maintainer script passes <tt>-e</tt> to the shell on the
+ <tt>#!</tt> line rather than using <tt>set -e</tt> in the body of the
+ script.  This is fine for normal operation, but if the script is run by
+ hand with <tt>sh /path/to/script</tt> (common in debugging), <tt>-e</tt>
+ will not be in effect.  It's therefore better to use <tt>set -e</tt> in
+ the body of the script.
 
 Tag: command-with-path-in-maintainer-script
 Severity: normal

@@ -8,6 +8,7 @@ lintian (2.2.3) UNRELEASED; urgency=low
       - dfsg-version-misspelled
       - experimental-to-unstable-without-comment (pedantic)
       - homepage-for-cpan-package-contains-version
+      - maintainer-script-without-set-e (pedantic)
       - using-first-person-in-description
     + Removed
       - non-us-spelling
@@ -48,6 +49,9 @@ lintian (2.2.3) UNRELEASED; urgency=low
   * checks/files:
     + [ADB] Don't report duplicate-font-file for udebs.  Patch by Raphael
       Geissert.  (Closes: #514095)
+  * checks/scripts{,.desc}:
+    + [RA] Add pedantic check for maintainer scripts using #!/bin/sh -e
+      instead of set -e in the script body.  (Closes: #119045)
 
   * lib/Spelling.pm:
     + [RA] Add some additional typo and case corrections.  Patch from
