@@ -24,6 +24,10 @@ lintian (2.2.3) UNRELEASED; urgency=low
     + [ADB] Don't report duplicate-font-file for udebs.  Patch by Raphael
       Geissert.  (Closes: #514095)
 
+  * lib/Spelling.pm:
+    + [RA] Add some additional typo and case corrections.  Patch from
+      Raphael Geissert.
+
   * unpack/list-{binpkg,udebpkg}:
     + [RA] Preserve the source_version field from the previous list when
       adding new packages, remove some dead code, and restructure for
