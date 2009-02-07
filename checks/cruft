@@ -121,6 +121,17 @@ check_diffstat("diffstat", \%warned) unless $info->native;
 my $wanted = sub { find_cruft($pkg, $info, \%warned, $atdinbd) };
 find($wanted, 'unpacked');
 
+# Look for cruft based on file's results
+my $file_info = $info->file_info;
+
+for my $file (keys(%$file_info)) {
+    if ($file_info->{$file} =~ m/\bELF\b/) {
+	tag "source-contains-prebuilt-binary", $file;
+    } elsif ($file_info->{$file} =~ m/\bPE(32|64)\b/) {
+	tag "source-contains-prebuilt-windows-binary", $file;
+    }
+}
+
 } # </run>
 
 # -----------------------------------

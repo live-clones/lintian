@@ -4,7 +4,7 @@ Abbrev: deb
 Type: source
 Unpack-Level: 2
 Info: This looks for cruft in Debian packaging or upstream source
-Needs-Info: debfiles, diffstat
+Needs-Info: debfiles, diffstat, file-info
 
 Tag: native-package-with-dash-version
 Severity: normal
@@ -356,3 +356,20 @@ Info: The referenced file seems to be from a libtool version
  If you have not updated the file but fixed architecture-specific
  issues with minimal patches and verified that it builds correctly
  please override this tag.  lintian will not be able to verify that.
+
+Tag: source-contains-prebuilt-binary
+Severity: pedantic
+Certainty: certain
+Info: The source tarball contains a prebuilt ELF object.  They are usually
+ left by mistake when generating the tarball by not cleaning the source
+ directory first.  You may want to report this as an upstream bug, in case
+ there is no sign that this was intended.
+
+Tag: source-contains-prebuilt-windows-binary
+Severity: pedantic
+Certainty: certain
+Info: The source tarball contains a prebuilt binary for Microsoft Windows.
+ They are usually left by convenience for end users, although it is possible
+ that upstream also provides tarballs source-only tarballs which you can use.
+ These files usually just take up space in the tarball and are of no use in
+ Debian.  You may want to ask upstream to provide source-only tarballs.
