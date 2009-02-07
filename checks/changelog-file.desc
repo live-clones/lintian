@@ -201,6 +201,16 @@ Info: The latest package has a Debian native version number, while the
  the maintainer by forgetting to append -1 when uploading a new upstream
  version.
 
+Tag: experimental-to-unstable-without-comment
+Severity: pedantic
+Certainty: possible
+Info: The previous version of this package had a distribution of
+ experimental, this version has a distribution of unstable, and there's
+ apparently no comment about the change of distributions (Lintian looks
+ for the phrase "to unstable").  This may indicate a mistake in setting
+ the distribution and accidentally uploading to unstable a package
+ intended for experimental.
+
 Tag: syntax-error-in-debian-changelog
 Severity: normal
 Certainty: possible
