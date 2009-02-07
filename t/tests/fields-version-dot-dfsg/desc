@@ -1,0 +1,6 @@
+Testname: fields-version-dot-dfsg
+Type: non-native
+Sequence: 6000
+Version: 1.0.dfsg1-1
+Description: Use of ".dfsg"
+Check-For: dfsg-version-with-period

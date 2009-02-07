@@ -3,6 +3,9 @@ lintian (2.2.3) UNRELEASED; urgency=low
   * Summary of tag changes:
     + Added
       - description-possibly-contains-homepage (pedantic)
+      - dfsg-version-in-native-package
+      - dfsg-version-with-period
+      - dfsg-version-misspelled
       - experimental-to-unstable-without-comment (pedantic)
       - homepage-for-cpan-package-contains-version
       - using-first-person-in-description
@@ -39,6 +42,9 @@ lintian (2.2.3) UNRELEASED; urgency=low
     + [RA] Warn about Homepage fields pointing to search.cpan.org pages
       containing a version number.  Based on a patch by Paul Wise.
     + [RA] Warn of dfsg versions in native packages.
+    + [RA] Warn of ".dfsg" versions and recommend "+dfsg" for version
+      sorting reasons.  Thanks, Paul Wise.  (Closes: #514203)
+    + [RA] Warn of the "dsfg" typo in versions.  Thanks, Paul Wise.
   * checks/files:
     + [ADB] Don't report duplicate-font-file for udebs.  Patch by Raphael
       Geissert.  (Closes: #514095)

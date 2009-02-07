@@ -191,9 +191,17 @@ if (not defined $info->field('version')) {
 			tag "binary-nmu-debian-revision-in-source", "$version";
 		}
 
-		# Checks for the dfsg convention for repackaged upstream source.
-		if ($type eq 'source' and $version =~ /dfsg/ and $info->native) {
-			tag 'dfsg-version-in-native-package', $version;
+		# Checks for the dfsg convention for repackaged upstream
+		# source.  Only check these against the source package to not
+		# repeat ourselves too much.
+		if ($type eq 'source') {
+			if ($version =~ /dfsg/ and $info->native) {
+				tag 'dfsg-version-in-native-package', $version;
+			} elsif ($version =~ /\.dfsg/) {
+				tag 'dfsg-version-with-period', $version;
+			} elsif ($version =~ /dsfg/) {
+				tag 'dfsg-version-misspelled', $version;
+			}
 		}
 
 		my $name = $info->field('package');
