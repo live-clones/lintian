@@ -166,12 +166,13 @@ if ($type ne 'udeb') {
 # Check for a package homepage in the description and no Homepage field.  This
 # is less accurate and more of a guess than looking for the old Homepage:
 # convention in the body.
-unless ($info->field('homepage')) {
+unless ($info->field('homepage') or $flagged_homepage) {
     if ($description =~ /homepage|webpage|website|url|upstream|web\s+site
                          |home\s+page|further\s+information|more\s+info
                          |official\s+site|project\s+home/xi
-	and $description =~ m,\b(https?://[a-z0-9][^>\s]+),i
-	and not $flagged_homepage) {
+	and $description =~ m,\b(https?://[a-z0-9][^>\s]+),i) {
+	tag 'description-possibly-contains-homepage', $1;
+    } elsif ($description =~ m,\b(https?://[a-z0-9][^>\s]+)>?\.?\s*\z,i) {
 	tag 'description-possibly-contains-homepage', $1;
     }
 }
