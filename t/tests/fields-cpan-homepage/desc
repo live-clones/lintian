@@ -1,0 +1,5 @@
+Testname: fields-cpan-homepage
+Sequence: 6000
+Version: 1.0
+Description: CPAN Homepage URLs shouldn't have versions
+Check-For: homepage-for-cpan-package-contains-version

@@ -79,6 +79,7 @@ if ($synopsis =~ m/^\s*$/) {
     }
 }
 
+my $flagged_homepage;
 foreach (split /\n/, $description) {
     next if m/^\s*$/o;
     next if m/^\.\s*$/o;
@@ -112,7 +113,8 @@ foreach (split /\n/, $description) {
     }
 
     if (m,^\s*Homepage: https?://,i) {
-        tag "description-contains-homepage";
+	tag "description-contains-homepage";
+	$flagged_homepage = 1;
     }
 
     if (m,This description was automagically extracted from the module by dh-make-perl,i) {
@@ -158,6 +160,19 @@ if ($type ne 'udeb') {
 	tag "extended-description-is-empty";
     } elsif ($lines <= 2) {
 	tag "extended-description-is-probably-too-short";
+    }
+}
+
+# Check for a package homepage in the description and no Homepage field.  This
+# is less accurate and more of a guess than looking for the old Homepage:
+# convention in the body.
+unless ($info->field('homepage')) {
+    if ($description =~ /homepage|webpage|website|url|upstream|web\s+site
+                         |home\s+page|further\s+information|more\s+info
+                         |official\s+site|project\s+home/xi
+	and $description =~ m,\b(https?://[a-z0-9][^>\s]+),i
+	and not $flagged_homepage) {
+	tag 'description-possibly-contains-homepage', $1;
     }
 }
 

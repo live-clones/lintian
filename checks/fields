@@ -398,6 +398,10 @@ if (defined $info->field('homepage')) {
 	unless ($uri->scheme) { # not an absolute URI
 		tag "bad-homepage", $homepage;
 	}
+
+	if ($homepage =~ m,/search\.cpan\.org/.*-[0-9._]+/*$,) {
+		tag 'homepage-for-cpan-package-contains-version', $homepage;
+	}
 } elsif ($type eq "binary" and not $info->native) {
 	tag "no-homepage-field";
 }

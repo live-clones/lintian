@@ -167,3 +167,11 @@ Info: You should avoid the use of first person ("I will do this..." or
  For example, rather than saying "I don't recommend this package if you
  are short on memory," say something like "this package is not suitable
  for low-memory systems."
+
+Tag: description-possibly-contains-homepage
+Severity: pedantic
+Certainty: possible
+Info: This package has no Homepage field but has a URL in the description
+ and wording that might indicate this is the package Homepage.  If it is,
+ add a Homepage control field containing it rather than mentioning it in
+ the package description.
