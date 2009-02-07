@@ -8,10 +8,10 @@
 #
 # Last updated: 2009-02-07
 
-# Keep: linux-source, linux-image, linux-headers
-# Keep: libc-dev, c-shell, dotfile-module, fortran77-compiler, kernel-headers
-# Keep: kernel-image, kernel-source, lambdamoo-core, lambdamoo-server
-# Keep: pdf-preview, mp3-encoder, java2-compiler, foomatic-data, libglu-dev
+# Keep: linux-source, linux-source-2.6, linux-image, linux-image-2.6
+# Keep: linux-headers, linux-headers-2.6, linux-kernel-headers
+# Keep: libc-dev, c-shell, dotfile-module, fortran77-compiler
+# Keep: pdf-preview, mp3-encoder, java2-compiler, libglu-dev
 
 aide-binary
 alsaplayer-interface
@@ -35,11 +35,13 @@ boom-wad
 c++abi2-dev
 c-compiler
 c++-compiler
+chasen-dic
 childsplay-alphabet-sounds
 childsplay-lfc-names
 cl-sql-backend
 console-utilities
 c-shell
+cyrus21-clients
 cyrus21-imapd
 cyrus21-pop3d
 cyrus22-imapd
@@ -51,6 +53,7 @@ dictd-dictionary
 djvu-viewer
 docbook-xsl-doc
 drbd8-modules
+drbd-module-source
 drbd-utils
 dssi-plugin
 dyndns-client
@@ -63,11 +66,14 @@ et131x-modules
 exim4-localscanapi-1.0
 exim4-localscanapi-1.1
 festival-voice
+finger-server
+fortran77-compiler
 fortran95-compiler
 fortune-cookie-db
 freeciv
 freeciv-client
 fsck-backend
+ftp
 ftp-server
 fwbuilder-backend
 gcompris-sound
@@ -83,6 +89,7 @@ gnustep-base-runtime-dbg
 grub
 gspca-modules
 gstreamer0.10-audiosink
+gstreamer0.10-colorspace
 gstreamer0.10-videosink
 gtkicq
 guile
@@ -133,6 +140,7 @@ libatlas-3gf.so
 libatlas.so.3gf
 libblas-3gf.so
 libblas.so.3gf
+libc-dev
 libcurl-dev
 libcurl-ssl-dev
 libcyrus-imap-perl
@@ -146,6 +154,7 @@ libdeps-renderer
 libdspam7-drv
 libedac
 libexif-ruby
+libfam0c102
 libfcgi-ruby
 libfilesystem-ruby
 libgd2
@@ -154,7 +163,10 @@ libgdchart-gd2-dev
 libgd-dev
 libgettext-ruby
 libggi-target
+libgl1
 libgl-dev
+libglide-dev
+libglu-dev
 libguile-dev
 libhdf5-1.6.6-0
 libhdf5-dev
@@ -177,6 +189,7 @@ linux-headers-2.6
 linux-image
 linux-image-2.6
 linux-initramfs-tool
+linux-kernel-headers
 linux-kernel-log-daemon
 linux-latest-modules-2.6.26-1-486
 linux-latest-modules-2.6.26-1-686
@@ -187,6 +200,7 @@ linux-latest-modules-2.6.26-1-vserver-686
 linux-latest-modules-2.6.26-1-vserver-686-bigmem
 linux-latest-modules-2.6.26-1-xen-686
 linux-source
+linux-source-2.6
 lisp-compiler
 locales
 loop-aes-modules
@@ -209,6 +223,7 @@ mpipython
 myspell-dictionary
 myspell-dictionary-de
 myspell-dictionary-en
+myspell-dictionary-fr
 myspell-dictionary-pt
 netcat
 nethack
@@ -302,6 +317,7 @@ vim-ruby
 vim-tcl
 virtualbox-ose-guest-modules
 virtualbox-ose-modules
+vnc-server
 vnc-viewer
 wims-extra
 wish
