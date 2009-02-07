@@ -140,6 +140,26 @@ sub binary_relation {
     return $self->{binary_relation}->{$field};
 }
 
+# Returns the information from collect/file-info.
+sub file_info {
+    my ($self) = @_;
+    return $self->{file_info} if exists $self->{file_info};
+
+    my %file_info;
+    open(my $idx, '<', "file-info") or fail("cannot open file-info: $!");
+    while (<$idx>) {
+        chomp;
+        m/^(.+?):\s+(.*)$/o or fail("cannot parse file output: $_");
+        my ($file, $info) = ($1,$2);
+        $file =~ s,^\./,,o;
+        $file =~ s,/+$,,o;
+        $file_info{$file} = $info;
+    }
+    close $idx;
+    $self->{file_info} = \%file_info;
+    return $self->{file_info};
+}
+
 # Return a Lintian::Relation object for the given build relationship
 # field.  In addition to all the normal build relationship fields, the
 # following special field names are supported:  build-depends-all
