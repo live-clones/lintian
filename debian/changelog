@@ -33,7 +33,7 @@ lintian (2.2.3) UNRELEASED; urgency=low
   * checks/description{,.desc}:
     + [RA] Check for using first person in package descriptions, similar
       to the existing check for debconf questions.  Patch from Raphael
-      Geissert.  (Closes: #513053)
+      Geissert.  (Closes: #514491)
     + [RA] Add pedantic check for apparent home page URLs in the long
       description with no Homepage field.  Based on a patch by Paul Wise.
       (Closes: #339829)
