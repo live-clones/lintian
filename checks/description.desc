@@ -169,8 +169,8 @@ Info: You should avoid the use of first person ("I will do this..." or
  for low-memory systems."
 
 Tag: description-possibly-contains-homepage
-Severity: pedantic
-Certainty: possible
+Severity: wishlist
+Certainty: wild-guess
 Info: This package has no Homepage field but has a URL in the description
  and wording that might indicate this is the package Homepage.  If it is,
  add a Homepage control field containing it rather than mentioning it in

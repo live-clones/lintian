@@ -2,7 +2,7 @@ lintian (2.2.3) UNRELEASED; urgency=low
 
   * Summary of tag changes:
     + Added
-      - description-possibly-contains-homepage (pedantic)
+      - description-possibly-contains-homepage
       - dfsg-version-in-native-package
       - dfsg-version-with-period
       - dfsg-version-misspelled
@@ -34,9 +34,9 @@ lintian (2.2.3) UNRELEASED; urgency=low
     + [RA] Check for using first person in package descriptions, similar
       to the existing check for debconf questions.  Patch from Raphael
       Geissert.  (Closes: #514491)
-    + [RA] Add pedantic check for apparent home page URLs in the long
-      description with no Homepage field.  Based on a patch by Paul Wise.
-      (Closes: #339829)
+    + [RA] Add check (wishlist/wild-guess) for apparent home page URLs in
+      the long description with no Homepage field.  Based on a patch by
+      Paul Wise.  (Closes: #339829)
   * checks/fields{,.desc}:
     + [ADB] Remove checks for the capitalisation of the obsolete non-US
       archive section.
