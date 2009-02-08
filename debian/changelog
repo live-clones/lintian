@@ -24,12 +24,14 @@ lintian (2.2.3) UNRELEASED; urgency=low
     + [RA] Treat License: GPL-2+ as "GPL version 2 or later" for the
       purposes of the check for a correctly versioned license reference.
       Patch from Evgeni Golov.  (Closes: #513946)
-  * checks/cruft.desc:
+  * checks/cruft{,.desc}:
     + [RA] Downgrade all source-contains-* tags to pedantic.  These are
       upstream problems the packager can't do much about and they have
       no practical effect on the Debian package.  Wishlist implies that
       a wishlist bug against the package would be appropriate, which
       seems too strong.
+    + [RA] Add pedantic check for binaries in the upstream source.  Patch
+      from Raphael Geissert.  (Closes: #127494)
   * checks/description{,.desc}:
     + [RA] Check for using first person in package descriptions, similar
       to the existing check for debconf questions.  Patch from Raphael
@@ -55,6 +57,10 @@ lintian (2.2.3) UNRELEASED; urgency=low
     + [RA] Add pedantic check for maintainer scripts using #!/bin/sh -e
       instead of set -e in the script body.  (Closes: #119045)
 
+  * collection/file-info{,.desc}:
+    + [RA] Also run file-info for source packages.  Patch from Raphael
+      Geissert.
+
   * lib/Lintian/Collect.pm:
     + [RA] Defer loading of the subclasses until the constructor to avoid
       circular dependencies at compilation time.
@@ -67,6 +73,8 @@ lintian (2.2.3) UNRELEASED; urgency=low
       set of fields.  New method binary_relation() to return a
       Lintian::Relation object for a given relationship field in a binary
       package built from this source package.
+    + [RA] Add file_info() method to return file information for source
+      packages.  Patch from Raphael Geissert.
   * lib/Lintian/Relation.pm:
     + [RA] New class based on the existing Dep module that handles package
       relationship analysis.  Now includes documentation, uses a more
@@ -90,6 +98,8 @@ lintian (2.2.3) UNRELEASED; urgency=low
       adding new packages, remove some dead code, and restructure for
       improved readability.  Thanks to Jordà Polo for the analysis.
       (Closes: #507849)
+    + [RA] Generate an index of files in the upstream source tarball.
+      Patch from Raphael Geissert.
 
  -- Russ Allbery <rra@debian.org>  Mon, 02 Feb 2009 09:41:37 -0800
 
