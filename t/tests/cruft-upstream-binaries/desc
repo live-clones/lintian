@@ -1,0 +1,7 @@
+Testname: cruft-upstream-binaries
+Sequence: 6000
+Type: non-native
+Version: 1.0-1
+Skeleton: pedantic
+Options: --pedantic -I -E
+Description: Check for binaries in the upstream tarball
