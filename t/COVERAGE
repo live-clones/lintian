@@ -1,4 +1,4 @@
-Last generated 2009-02-01
+Last generated 2009-02-08
 
 The following tags are not tested by the test suite:
 
@@ -40,6 +40,7 @@ copyright-file usr-share-doc-symlink-to-foreign-package
 
 cruft documentation-package-not-architecture-independent
 cruft outdated-autotools-helper-file
+cruft source-contains-prebuilt-windows-binary
 
 debconf boolean-template-has-bogus-default
 debconf debconf-is-not-a-registry
@@ -58,6 +59,7 @@ debhelper dh_dhelp-is-deprecated
 
 debian-readme spelling-error-in-readme-debian
 
+description description-possibly-contains-homepage
 description description-synopsis-has-leading-spaces
 
 fields arch-any-in-binary-pkg
@@ -397,7 +399,6 @@ fields missing-python-build-dependency
 fields needlessly-depends-on-awk
 fields new-essential-package
 fields no-human-maintainers
-fields non-us-spelling
 fields ored-build-depends-on-obsolete-package
 fields ored-depends-on-obsolete-package
 fields package-depends-on-multiple-libpng-versions

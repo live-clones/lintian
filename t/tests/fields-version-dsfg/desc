@@ -3,4 +3,4 @@ Type: non-native
 Sequence: 6000
 Version: 1.0+dsfg1-1
 Description: Check for the dsfg typo
-Check-For: dfsg-version-misspelled
+Test-For: dfsg-version-misspelled
