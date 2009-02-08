@@ -9,6 +9,8 @@ lintian (2.2.3) UNRELEASED; urgency=low
       - experimental-to-unstable-without-comment (pedantic)
       - homepage-for-cpan-package-contains-version
       - maintainer-script-without-set-e (pedantic)
+      - source-contains-prebuilt-binary (pedantic)
+      - source-contains-prebuilt-windows-binary (pedantic)
       - using-first-person-in-description
     + Removed
       - non-us-spelling
