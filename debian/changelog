@@ -46,6 +46,8 @@ lintian (2.2.3) UNRELEASED; urgency=low
     + [RA] Warn of ".dfsg" versions and recommend "+dfsg" for version
       sorting reasons.  Thanks, Paul Wise.  (Closes: #514203)
     + [RA] Warn of the "dsfg" typo in versions.  Thanks, Paul Wise.
+    + [RA] Use Lintian::Relation and the new Lintian::Collect support for
+      retrieving parsed relationship fields.
   * checks/files:
     + [ADB] Don't report duplicate-font-file for udebs.  Patch by Raphael
       Geissert.  (Closes: #514095)

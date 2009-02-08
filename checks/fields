@@ -27,12 +27,13 @@ use strict;
 
 use lib "$ENV{'LINTIAN_ROOT'}/checks/";
 use common_data;
-use Dep;
 use Tags;
 use Util;
 
-use Lintian::Data;
+use Lintian::Data ();
 use Lintian::Check qw(check_maintainer);
+use Lintian::Relation ();
+use Lintian::Relation::Version qw(versions_compare);
 
 # The allowed Python dependencies currently.  This is the list of alternatives
 # that, either directly or through transitive dependencies that can be relied
@@ -453,7 +454,6 @@ if (($type eq "binary") || ($type eq 'udeb')) {
 			unfold($field, \$data);
 			$data =~ s/^\s*(.+?)\s*$/$1/;
 			$fields{$field} = $data;
-			$parsed{$field} = Dep::parse ($data);
 
 			my (@seen_libstdcs, @seen_tcls, @seen_tclxs, @seen_tks, @seen_tkxs, @seen_libpngs);
 
@@ -581,10 +581,11 @@ if (($type eq "binary") || ($type eq 'udeb')) {
 	for my $conflict (qw/conflicts breaks/) {
 		next unless $fields{$conflict};
 		for my $field (qw(depends pre-depends recommends suggests)) {
-			next unless $parsed{$field};
+			next unless $info->field($field);
+			my $relation = $info->relation($field);
 			for my $package (split /\s*,\s*/, $fields{$conflict}) {
 				tag "conflicts-with-dependency", $field, $package
-				    if Dep::implies($parsed{$field}, Dep::parse($package));
+				    if $relation->implies($package);
 			}
 		}
 	}
@@ -743,23 +744,18 @@ if ($type eq "source") {
 	}
 
 	# Check for duplicates.
-	my $build_all = $depend{'build-depends'} || '';
-	$build_all .= ', ' if $depend{'build-depends'} && $depend{'build-depends-indep'};
-	$build_all .= $depend{'build-depends-indep'} || '';
-	my @dups = Dep::get_dups(Dep::parse($build_all));
+	my $build_all = $info->relation('build-depends-all');
+	my @dups = $build_all->duplicates;
 	for my $dup (@dups) {
 		tag "package-has-a-duplicate-build-relation", join (', ', @$dup);
 	}
 
 	# Make sure build dependencies and conflicts are consistent.
 	my %parsed;
-	$parsed{'build-depends'} = Dep::parse($depend{'build-depends'} || '');
-	$parsed{'build-depends-indep'} = Dep::parse($depend{'build-depends-indep'} || '');
 	for ($depend{'build-conflicts'}, $depend{'build-conflicts-indep'}) {
 		next unless $_;
 		for my $conflict (split /\s*,\s*/, $_) {
-			if (Dep::implies($parsed{'build-depends'}, Dep::parse($conflict))
-			    || Dep::implies($parsed{'build-depends-indep'}, Dep::parse($conflict))) {
+			if ($build_all->implies($conflict)) {
 				tag "build-conflicts-with-build-dependency", $conflict;
 			}
 		}
@@ -768,11 +764,12 @@ if ($type eq "source") {
 	# Make sure that all the required build dependencies are there.	 Don't
 	# issue missing-build-dependency errors for debhelper, since there's
 	# another test that does that and it would just be a duplicate.
+	my $build_regular = $info->relation('build-depends');
+	my $build_indep   = $info->relation('build-depends-indep');
 	for my $package (keys %needed_clean) {
-		my $dep = Dep::parse($package);
 		my $tag = $needed_clean{$package} || 'missing-build-dependency';
-		unless (Dep::implies($parsed{'build-depends'}, $dep)) {
-			if (Dep::implies($parsed{'build-depends-indep'}, $dep)) {
+		unless ($build_regular->implies($package)) {
+			if ($build_indep->implies($package)) {
 				tag "clean-should-be-satisfied-by-build-depends", $package;
 			} else {
 				if ($tag eq 'missing-build-dependency') {
@@ -783,10 +780,7 @@ if ($type eq "source") {
 			}
 		}
 	}
-	my $deps = $depend{'build-depends'} || '';
-	$deps .= ', ' if $deps && $depend{'build-depends-indep'};
-	$deps .= $depend{'build-depends-indep'} || '';
-	$deps = Dep::parse_noarch($deps);
+	my $noarch = $info->relation_noarch('build-depends-all');
 	for my $package (keys %needed) {
 		my $tag = $needed{$package} || 'missing-build-dependency';
 
@@ -796,7 +790,7 @@ if ($type eq "source") {
 			next if -f 'debfiles/pycomat';
 			next if defined $info->field('python-version');
 		}
-		unless (Dep::implies($deps, Dep::parse($package))) {
+		unless ($noarch->implies($package)) {
 			if ($tag eq 'missing-build-dependency') {
 				tag $tag, $package;
 			} else {
@@ -821,14 +815,14 @@ if ($type eq "source") {
 	if (defined $info->field('build-depends') && $arch_dep_packages == 0 && !$bypass_needed_clean) {
 		my $build_depends = $info->field('build-depends');
 		my @packages = split /\s*,\s*/, $build_depends;
-		my @allowed = map { s/[\(\[][^\)\]]+[\)\]]//g; s/\|/,/g; $_ } keys (%needed_clean), keys (%allowed_clean);
-		my $dep = Dep::parse (join (',', @allowed));
+		my @allowed = map { s/\([^\)]+\)//g; s/\|/,/g; $_ } keys (%needed_clean), keys (%allowed_clean);
+		my $dep = Lintian::Relation->new_noarch(join(',', @allowed));
 		foreach my $pkg (@packages) {
 			my $name = $pkg;
 			$name =~ s/[\[\(][^\)\]]+[\)\]]//g;
 			$name =~ s/\s+$//;
 			$name =~ s/\s+/ /g;
-			unless (Dep::implies($dep, Dep::parse($name))) {
+			unless ($dep->implies($name)) {
 				tag "build-depends-without-arch-dep", $name;
 			}
 		}
@@ -983,7 +977,7 @@ sub perl_core_has_version {
 	return 0 if !defined $core_version;
 	my @version = _valid_version($version);
 	return 0 if !@version;
-	return Dep::get_version_cmp($core_version, $op, $version);
+	return versions_compare($core_version, $op, $version);
 }
 
 sub unfold {
