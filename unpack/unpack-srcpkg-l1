@@ -34,7 +34,7 @@ my $file = shift;
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Util;
 
-use File::Basename;
+use File::Spec;
 use Lintian::Command qw(spawn);
 
 # stat $file
@@ -57,8 +57,7 @@ for my $field (keys %$data) {
 }
 
 # Install symbolic links to source package files
-my $dir = dirname($file);
-my $name = basename($file);
+my (undef, $dir, $name) = File::Spec->splitpath($file);
 my $tarball;
 my %version;
 
@@ -88,7 +87,7 @@ if (!$tarball) {
 
 # create index file for package
 spawn({ fail => 'error', out => "$base_dir/index" },
-      ["tar", "tfv", $tarball],
+      ["tar", "tfv", "$base_dir/$tarball"],
       '|', ['perl', '-p -w -E', 's,^(([^\s]+\s+){5})[^/]+,$1.,;s,^h,-,'],
       '|', ["sort", "-k", "6"]);
 
