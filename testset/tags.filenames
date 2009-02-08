@@ -48,6 +48,7 @@ I: filenames: package-contains-empty-directory usr/lib/perl5/.ditrack/
 I: filenames: package-contains-empty-directory usr/lib/perl5/.svn/
 I: filenames: package-contains-empty-directory usr/lib/perl5/CVS/
 I: filenames: package-contains-empty-directory usr/lib/perl5/{arch}/
+I: filenames: using-first-person-in-description line 1: I
 I: more-filename-games: no-md5sums-control-file
 W: filename-games: binary-without-manpage usr/bin/test-game
 W: filename-games: no-priority-field

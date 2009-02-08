@@ -13,6 +13,7 @@ E: description: description-is-debmake-template
 E: description: description-starts-with-package-name
 E: description: no-copyright-file
 I: description-bar: no-md5sums-control-file
+I: description-bar: using-first-person-in-description line 6: I
 I: description-baz: extended-description-is-probably-too-short
 I: description-baz: no-md5sums-control-file
 I: description-foo: no-md5sums-control-file

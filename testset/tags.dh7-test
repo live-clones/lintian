@@ -1,3 +1,4 @@
+I: dh7-test source: dfsg-version-with-period 1.dfsg-1
 W: dh7-test source: changelog-should-mention-nmu
 W: dh7-test source: debhelper-script-needs-versioned-build-depends dh (>= 7)
 W: dh7-test source: debian-watch-file-should-mangle-version

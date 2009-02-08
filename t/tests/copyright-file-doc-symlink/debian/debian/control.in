@@ -28,7 +28,7 @@ Architecture: {$architecture}
 Depends: {$srcpkg}, $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description} (weak)
  Helper package with a /usr/share/doc symlink but an insufficiently
- strong dependency.  We intentionally don't diagnose this.
+ strong dependency.  Lintian intentionally doesn't diagnose this.
  .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
