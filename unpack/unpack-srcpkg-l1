@@ -36,7 +36,6 @@ use Util;
 
 use File::Basename;
 use Lintian::Command qw(spawn);
-use Dpkg::Version qw(parseversion);
 
 # stat $file
 (my @stat = stat $file) or fail("$file: cannot stat: $!");
@@ -61,7 +60,17 @@ for my $field (keys %$data) {
 my $dir = dirname($file);
 my $name = basename($file);
 my $tarball;
-my %version = parseversion($data->{'version'});
+my %version;
+
+# Based on Dpkg::Versionn::parseversion:
+if ($data->{'version'} =~ /(.+)-(.*)$/) {
+    $version{'version'} = $1;
+    $version{'revision'} = $2;
+} else {
+    $version{'version'} = $data->{'version'};
+    $version{'revision'} = 0;
+}
+
 my $basename = $data->{'source'} . '_' . $version{'version'};
 my $basenamerev = $data->{'source'} . '_' . $data->{'version'};
 
