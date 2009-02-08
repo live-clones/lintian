@@ -1,7 +1,7 @@
 Not intended for single bug fixes, use the confirmed and owner tags
 in the BTS, but for somewhat bigger tasks
 
-goals for 2.2.0
+goals for 2.3.0
 ===============
 
 - go through all checks and try to move common code to modules
@@ -10,10 +10,10 @@ goals for 2.2.0
   -- mostly done
   We still need official support for alternative output formats.
   The current stuff is still experimental. [2.2.0?]
+  I think this might be considered done
 - add additional test suite types
   + normal TAP-style Perl tests
-  + raw directories for building Debian packages via dpkg -b
-  + changes files
+  + raw source packages
 
 goals not targetted
 ===================
