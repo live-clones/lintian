@@ -19,9 +19,6 @@
 package Lintian::Collect;
 use strict;
 
-use Lintian::Collect::Binary;
-use Lintian::Collect::Source;
-
 # Take the package name and type, initialize an appropriate collect object
 # based on the package type, and return it.  Returns undef for an unknown
 # package type.
@@ -29,8 +26,10 @@ sub new {
     my ($class, $pkg, $type) = @_;
     my $object;
     if ($type eq 'source') {
+        require Lintian::Collect::Source;
         $object = Lintian::Collect::Source->new ($pkg);
     } elsif ($type eq 'binary' or $type eq 'udeb') {
+        require Lintian::Collect::Binary;
         $object = Lintian::Collect::Binary->new ($pkg);
     } else {
         return;
