@@ -80,6 +80,11 @@ lintian (2.2.3) UNRELEASED; urgency=low
     + [RA] Add some additional typo and case corrections.  Patch from
       Raphael Geissert.
 
+  * t/runtests:
+    + [RA] Copy test suite data based on checksum, not size and time,
+      since some files change one character and Git doesn't preserve
+      timestamps.  Patch from Raphael Geissert.  (Closes: #514496)
+
   * unpack/list-{binpkg,udebpkg}:
     + [RA] Preserve the source_version field from the previous list when
       adding new packages, remove some dead code, and restructure for
