@@ -53,6 +53,15 @@ lintian (2.2.3) UNRELEASED; urgency=low
     + [RA] Add pedantic check for maintainer scripts using #!/bin/sh -e
       instead of set -e in the script body.  (Closes: #119045)
 
+  * lib/Lintian/Relation.pm:
+    + [RA] New class based on the existing Dep module that handles package
+      relationship analysis.  Now includes documentation, uses a more
+      object-oriented structure, and removes a special case handling of
+      Perl alternatives.  This module will eventually replace Dep.
+  * lib/Lintian/Relation/Version.pm:
+    + [RA] New module containing the version comparison code from Dep.
+      This module will only be needed until Lintian is converted to
+      Dpkg::Version or AptPkg::Version.
   * lib/Spelling.pm:
     + [RA] Add some additional typo and case corrections.  Patch from
       Raphael Geissert.
