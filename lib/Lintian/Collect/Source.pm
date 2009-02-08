@@ -18,10 +18,13 @@
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package Lintian::Collect::Source;
-use strict;
 
-use Lintian::Collect;
+use strict;
+use warnings;
+use base 'Lintian::Collect';
+
 use Parse::DebianChangelog;
+
 use Util;
 
 our @ISA = qw(Lintian::Collect);
@@ -101,6 +104,102 @@ sub binary_field {
     return $self->{binary_field}{$package}{$field};
 }
 
+# Return a Lintian::Relation object for the given relationship field in a
+# binary package.  In addition to all the normal relationship fields, the
+# following special field names are supported:  all (pre-depends, depends,
+# recommends, and suggests), strong (pre-depends and depends), and weak
+# (recommends and suggests).
+sub binary_relation {
+    my ($self, $package, $field) = @_;
+    $field = lc $field;
+    return $self->{binary_relation}->{$package}->{$field}
+        if exists $self->{binary_relation}->{$package}->{$field};
+
+    my %special = (all    => [ qw(pre-depends depends recommends suggests) ],
+                   strong => [ qw(pre-depends depends) ],
+                   weak   => [ qw(recommends suggests) ]);
+    my $result;
+    if ($special{$field}) {
+        my $merged;
+        for my $f (@{ $special{$field} }) {
+            my $value = $self->binary_field($f);
+            $merged .= ', ' if (defined($merged) and defined($value));
+            $merged .= $value if defined($value);
+        }
+        $result = $merged;
+    } else {
+        my %known = map { $_ => 1 }
+            qw(pre-depends depends recommends suggests enhances breaks
+               conflicts provides replaces);
+        croak("unknown relation field $field") unless $known{$field};
+        my $value = $self->binary_field($field);
+        $result = $value if defined($value);
+    }
+    $result = Lintian::Relation->new($result);
+    $self->{binary_relation}->{$package}->{$field} = $result;
+    return $self->{binary_relation}->{$field};
+}
+
+# Return a Lintian::Relation object for the given build relationship
+# field.  In addition to all the normal build relationship fields, the
+# following special field names are supported:  build-depends-all
+# (build-depends and build-depends-indep) and build-conflicts-all
+# (build-conflicts and build-conflicts-indep).
+sub relation {
+    my ($self, $field) = @_;
+    $field = lc $field;
+    return $self->{relation}->{$field} if exists $self->{relation}->{$field};
+
+    my $result;
+    if ($field =~ /^build-(depends|conflicts)-all$/) {
+        my $type = $1;
+        my $merged;
+        for my $f ("build-$type", "build-$type-indep") {
+            my $value = $self->field($f);
+            $merged .= ', ' if (defined($merged) and defined($value));
+            $merged .= $value if defined($value);
+        }
+        $result = $merged;
+    } elsif ($field =~ /^build-(depends|conflicts)(-indep)?$/) {
+        my $value = $self->field($field);
+        $result = $value if defined($value);
+    } else {
+        croak("unknown relation field $field");
+    }
+    $self->{relation}->{$field} = Lintian::Relation->new($result);
+    return $self->{relation}->{$field};
+}
+
+# Similar to relation(), return a Lintian::Relation object for the given build
+# relationship field, but ignore architecture restrictions.  It supports the
+# same special field names.
+sub relation_noarch {
+    my ($self, $field) = @_;
+    $field = lc $field;
+    return $self->{relation_noarch}->{$field}
+        if exists $self->{relation_noarch}->{$field};
+
+    my $result;
+    if ($field =~ /^build-(depends|conflicts)-all$/) {
+        my $type = $1;
+        my $merged;
+        for my $f ("build-$type", "build-$type-indep") {
+            my $value = $self->field($f);
+            $merged .= ', ' if (defined($merged) and defined($value));
+            $merged .= $value if defined($value);
+        }
+        $result = $merged;
+    } elsif ($field =~ /^build-(depends|conflicts)(-indep)?$/) {
+        my $value = $self->field($field);
+        $result = $value if defined($value);
+    } else {
+        croak("unknown relation field $field");
+    }
+    $self->{relation_noarch}->{$field}
+        = Lintian::Relation->new_noarch($result);
+    return $self->{relation_noarch}->{$field};
+}
+
 =head1 NAME
 
 Lintian::Collect::Source - Lintian interface to source package data collection
@@ -161,6 +260,37 @@ The source-control-file collection script must have been run to parse the
 F<debian/control> file and put the fields in the F<control> directory in
 the lab.
 
+=item binary_relation(PACKAGE, FIELD)
+
+Returns a Lintian::Relation object for the specified FIELD in the binary
+package PACKAGE in the F<debian/control> file.  FIELD should be one of the
+possible relationship fields of a Debian package or one of the following
+special values:
+
+=over 4
+
+=item all
+
+The concatenation of Pre-Depends, Depends, Recommends, and Suggests.
+
+=item strong
+
+The concatenation of Pre-Depends and Depends.
+
+=item weak
+
+The concatenation of Recommends and Suggests.
+
+=back
+
+If FIELD isn't present in the package, the returned Lintian::Relation
+object will be empty (always satisfied and implies nothing).
+
+Any substvars in F<debian/control> will be represented in the returned
+relation as packages named after the substvar.
+
+=back
+
 =item changelog()
 
 Returns the changelog of the source package as a Parse::DebianChangelog
@@ -172,6 +302,32 @@ file, which this method expects to find in F<debfiles/changelog>.
 
 Returns true if the source package is native and false otherwise.
 
+=item relation(FIELD)
+
+Returns a Lintian::Relation object for the given build relationship field
+FIELD.  In addition to the normal build relationship fields, the
+following special field names are supported:
+
+=over 4
+
+=item build-depends-all
+
+The concatenation of Build-Depends and Build-Depends-Indep.
+
+=item build-conflicts-all
+
+The concatenation of Build-Conflicts and Build-Conflicts-Indep.
+
+=back
+
+If FIELD isn't present in the package, the returned Lintian::Relation
+object will be empty (always satisfied and implies nothing).
+
+=item relation_noarch(FIELD)
+
+The same as relation(), but ignores architecture restrictions in the
+FIELD field.
+
 =back
 
 =head1 AUTHOR
@@ -180,7 +336,7 @@ Originally written by Russ Allbery <rra@debian.org> for Lintian.
 
 =head1 SEE ALSO
 
-lintian(1), Lintian::Collect(3)
+lintian(1), Lintian::Collect(3), Lintian::Relation(3)
 
 =cut
 

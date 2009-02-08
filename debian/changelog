@@ -56,6 +56,15 @@ lintian (2.2.3) UNRELEASED; urgency=low
   * lib/Lintian/Collect.pm:
     + [RA] Defer loading of the subclasses until the constructor to avoid
       circular dependencies at compilation time.
+  * lib/Lintian/Collect/Binary.pm:
+    + [RA] New method relation() to return a Lintian::Relation object for
+      a given relationship field or set of relationship fields.
+  * lib/Lintian/Collect/Source.pm:
+    + [RA] New methods relation() and relation_noarch() to return
+      Lintian::Relation objects for a given build relationship field or
+      set of fields.  New method binary_relation() to return a
+      Lintian::Relation object for a given relationship field in a binary
+      package built from this source package.
   * lib/Lintian/Relation.pm:
     + [RA] New class based on the existing Dep module that handles package
       relationship analysis.  Now includes documentation, uses a more

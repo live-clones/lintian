@@ -18,12 +18,14 @@
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package Lintian::Collect::Binary;
+
 use strict;
+use warnings;
+use base 'Lintian::Collect';
 
-use Lintian::Collect;
+use Carp qw(croak);
+
 use Util;
-
-our @ISA = qw(Lintian::Collect);
 
 # Initialize a new binary package collect object.  Takes the package name,
 # which is currently unused.
@@ -41,6 +43,7 @@ sub native {
     return $self->{native} if exists $self->{native};
     my $version = $self->field('version');
     $self->{native} = ($version !~ m/-/);
+    return $self->{native};
 }
 
 # Get the changelog file of a binary package as a Parse::DebianChangelog
@@ -249,6 +252,40 @@ sub objdump_info {
     return $self->{objdump_info};
 }
 
+# Return a Lintian::Relation object for the given relationship field.  In
+# addition to all the normal relationship fields, the following special
+# field names are supported: all (pre-depends, depends, recommends, and
+# suggests), strong (pre-depends and depends), and weak (recommends and
+# suggests).
+sub relation {
+    my ($self, $field) = @_;
+    $field = lc $field;
+    return $self->{relation}->{$field} if exists $self->{relation}->{$field};
+
+    my %special = (all    => [ qw(pre-depends depends recommends suggests) ],
+                   strong => [ qw(pre-depends depends) ],
+                   weak   => [ qw(recommends suggests) ]);
+    my $result;
+    if ($special{$field}) {
+        my $merged;
+        for my $f (@{ $special{$field} }) {
+            my $value = $self->field($f);
+            $merged .= ', ' if (defined($merged) and defined($value));
+            $merged .= $value if defined($value);
+        }
+        $result = $merged;
+    } else {
+        my %known = map { $_ => 1 }
+            qw(pre-depends depends recommends suggests enhances breaks
+               conflicts provides replaces);
+        croak("unknown relation field $field") unless $known{$field};
+        my $value = $self->field($field);
+        $result = $value if defined($value);
+    }
+    $self->{relation}->{$field} = Lintian::Relation->new($result);
+    return $self->{relation}->{$field};
+}
+
 =head1 NAME
 
 Lintian::Collect::Binary - Lintian interface to binary package data collection
@@ -358,13 +395,40 @@ directory contains.
 
 =back
 
+=item relation(FIELD)
+
+Returns a Lintian::Relation object for the specified FIELD, which should
+be one of the possible relationship fields of a Debian package or one of
+the following special values:
+
+=over 4
+
+=item all
+
+The concatenation of Pre-Depends, Depends, Recommends, and Suggests.
+
+=item strong
+
+The concatenation of Pre-Depends and Depends.
+
+=item weak
+
+The concatenation of Recommends and Suggests.
+
+=back
+
+If FIELD isn't present in the package, the returned Lintian::Relation
+object will be empty (always satisfied and implies nothing).
+
+=back
+
 =head1 AUTHOR
 
 Originally written by Frank Lichtenheld <djpig@debian.org> for Lintian.
 
 =head1 SEE ALSO
 
-lintian(1), Lintian::Collect(3)
+lintian(1), Lintian::Collect(3), Lintian::Relation(3)
 
 =cut
 
