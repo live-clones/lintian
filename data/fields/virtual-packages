@@ -6,7 +6,7 @@
 # Multiple packages can be specified in the same line, separated by comma and/or
 # white space. Multiple "Keep: " lines can be used as well.
 #
-# Last updated: 2009-02-07
+# Last updated: 2009-02-09
 
 # Keep: linux-source, linux-source-2.6, linux-image, linux-image-2.6
 # Keep: linux-headers, linux-headers-2.6, linux-kernel-headers
@@ -16,12 +16,10 @@
 aide-binary
 alsaplayer-interface
 alsaplayer-output
-apache2
 apache2-mpm
 aptitude-doc
 aspell6a-dictionary
 aspell-dictionary
-asterisk-prompt-fr
 atl2-modules
 audio-mixer
 aufs-modules
@@ -47,7 +45,6 @@ cyrus21-pop3d
 cyrus22-imapd
 cyrus22-pop3d
 debconf-2.0
-dhcp-client
 dict-client
 dictd-dictionary
 djvu-viewer
@@ -58,7 +55,6 @@ drbd-utils
 dssi-plugin
 dyndns-client
 editor
-emacs22
 emacsen
 epic4-script
 erlang-abi-11.b.3
@@ -73,7 +69,6 @@ fortune-cookie-db
 freeciv
 freeciv-client
 fsck-backend
-ftp
 ftp-server
 fwbuilder-backend
 gcompris-sound
@@ -86,7 +81,6 @@ gimp-help
 gnome-www-browser
 gnustep-back0.14-alt
 gnustep-base-runtime-dbg
-grub
 gspca-modules
 gstreamer0.10-audiosink
 gstreamer0.10-colorspace
@@ -129,7 +123,6 @@ java-runtime-headless
 java-sdk
 java-virtual-machine
 jruby
-kaffe
 kde-i18n
 kfreebsd-source
 kile-i18n
@@ -145,7 +138,6 @@ libcurl-dev
 libcurl-ssl-dev
 libcyrus-imap-perl
 libcyrus-imap-perl21
-libdb-dev
 libdb++-dev
 libdb-java
 libdb-java-dev
@@ -153,8 +145,6 @@ libdc1394-dev
 libdeps-renderer
 libdspam7-drv
 libedac
-libexif-ruby
-libfam0c102
 libfcgi-ruby
 libfilesystem-ruby
 libgd2
@@ -202,30 +192,25 @@ linux-latest-modules-2.6.26-1-xen-686
 linux-source
 linux-source-2.6
 lisp-compiler
-locales
 loop-aes-modules
-lpr
 lsb-qt4-ia32
 lsb-qt4-noarch
 lua
 lzma-modules
 mail-reader
 mail-transport-agent
-mailx
 man-browser
 mnogosearch
 monodoc-viewer
 mp3-decoder
 mp3-encoder
 mpd-client
-mpg123
 mpipython
 myspell-dictionary
 myspell-dictionary-de
 myspell-dictionary-en
 myspell-dictionary-fr
 myspell-dictionary-pt
-netcat
 nethack
 netkit-inetd
 netpbm-dev
@@ -266,7 +251,6 @@ ping
 pop3-server
 postscript-preview
 postscript-viewer
-pure-ftpd
 radius-server
 ratbox-services
 redhat-cluster-modules
@@ -274,25 +258,18 @@ root-db-client
 root-file-server
 root-fitter
 roundcube-db
-rsh-client
-rsh-server
-rxvt-unicode
 skkserv
-snort
 snort-rules
 speakup-modules
 sqlrelay-api
 sqlrelay-connection-daemon
 squashfs-modules
-ssh-askpass
 ssh-server
-stardict
 sword-comm
 sword-dict
 sword-frontend
 sword-text
 system-log-daemon
-talkd
 tcldoc
 tclsh
 tclx
@@ -307,14 +284,8 @@ tkdoc
 tp-smapi-modules
 ttf-japanese-gothic
 ttf-japanese-mincho
-ultrastar-ng
 ups-monitor
 usplash-theme
-vim
-vim-perl
-vim-python
-vim-ruby
-vim-tcl
 virtualbox-ose-guest-modules
 virtualbox-ose-modules
 vnc-server
@@ -325,10 +296,8 @@ wordlist
 www-browser
 wx-doc
 wx-i18n
-xabacus
 x-audio-mixer
 x-display-manager
-xemacs21
 xen-hypervisor
 xen-hypervisor-3
 xen-hypervisor-3.2-1

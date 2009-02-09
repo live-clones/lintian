@@ -99,15 +99,22 @@ fi
   sed -rn 's/^#\s*Keep:\s*/Provides: /;T;s/([^,:])\s+([^,])/\1, \2/g;p' \
 	"$workdir/virtual-packages"
 } |
-    perl -w -E 'my %seen; while (<>) {
-		    next unless (s/^Provides:\s*//);
+    perl -w -E 'my (%seen, %pkgs);
+		while (<>) {
 		    chomp;
+		    if (m/^Package:\s*(.+)$/) {
+			$pkgs{$1} = 1;
+			next;
+		    }
+		    next unless (s/^Provides:\s*//);
 		    for my $pkg (split /\s*,\s*/) {
 			$seen{$pkg}++;
-			print "$pkg\n"
-			    if ($seen{$pkg} eq 2);
 		    }
-		  }' \
+		}
+		for my $pkg (keys %seen) {
+		    print "$pkg\n"
+			unless ($seen{$pkg} eq 1 or exists($pkgs{$pkg}));
+		}' \
     | sort -u >> "$workdir/virtual-packages"
 
 mv "$workdir/virtual-packages" "$lintian_data/fields/"
