@@ -21,8 +21,8 @@
 package Lintian::changelog_file;
 use strict;
 
+use Lintian::Relation::Version qw(versions_gt);
 use Spelling;
-use Dep;
 use Tags;
 use Util;
 
@@ -288,7 +288,7 @@ if (@entries) {
 	my $second_version = $entries[1]->Version;
 	if ($first_version and $second_version) {
 	    tag "latest-debian-changelog-entry-without-new-version"
-		unless Dep::versions_gt ($first_version, $second_version)
+		unless versions_gt($first_version, $second_version)
                     or $entries[0]->Changes =~ /backport/i;
 	    tag "latest-debian-changelog-entry-changed-to-native"
 		if $native_pkg and $second_version =~ m/-/;

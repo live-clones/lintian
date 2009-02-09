@@ -1,3 +1,10 @@
+lintian (2.2.4) UNRELEASED; urgency=low
+
+  * checks/changelog-file:
+    + [RA] Use Lintian::Relation::Version instead of Dep.
+
+ -- Russ Allbery <rra@debian.org>  Sun, 08 Feb 2009 22:06:34 -0800
+
 lintian (2.2.3) unstable; urgency=low
 
   * Summary of tag changes:
