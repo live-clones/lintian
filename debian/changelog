@@ -9,6 +9,18 @@ lintian (2.2.4) UNRELEASED; urgency=low
   * checks/cruft:
     + [RA] Use Lintian::Collect for dependency information.
 
+  * t/runtests:
+    + [ADB] Correctly handle epoched package versions. Patch by
+      Raphael Geissert.
+
+  * testset/runtests:
+    + [ADB] Correctly handle epoched package versions.
+
+  * unpack/unpack-srcpkg-l1:
+    + [ADB] Correctly determine the source package version for packages
+      with epoched versions.  Based on a patch by Raphael Geissert.
+      (Closes: #514641)
+
  -- Russ Allbery <rra@debian.org>  Sun, 08 Feb 2009 22:06:34 -0800
 
 lintian (2.2.3) unstable; urgency=low
