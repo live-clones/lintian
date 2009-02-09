@@ -261,6 +261,7 @@ for (@tests) {
     $line =~ s/\).*$//;
     
     my ($pkg, $ver) = ($pkgdir, $line);
+    $ver =~ s/(^|-)\d+:/$1/;
     print "Running test on $pkg $ver: copying... ";
 
     print "Cleaning up and repopulating $rundir/$pkgdir...\n" if $debug;
