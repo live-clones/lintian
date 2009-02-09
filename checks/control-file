@@ -20,11 +20,17 @@
 
 package Lintian::control_file;
 use strict;
+
 use lib "$ENV{'LINTIAN_ROOT'}/checks/";
 use common_data;
-use Dep;
-use Util;
+
+use Lintian::Relation ();
 use Tags;
+use Util;
+
+# The list of libc packages, used for checking for a hard-coded dependency
+# rather than using ${shlibs:Depends}.
+our @LIBCS = qw(libc6 libc6.1 libc0.1 libc0.3);
 
 sub run {
 
@@ -107,21 +113,21 @@ for my $binary_control (@binary_controls) {
 # on libc.  We have to do the latter check here rather than in checks/fields
 # to distinguish from dependencies created by ${shlibs:Depends}.
 my @dep_fields = qw(pre-depends depends recommends suggests);
-my $libcs = Dep::parse(join(' | ', qw(libc6 libc6.1 libc0.1 libc0.3)));
+my $libcs = Lintian::Relation->new(join(' | ', @LIBCS));
 for my $control (@binary_controls) {
 	for my $strong (0 .. $#dep_fields) {
 		next unless $control->{$dep_fields[$strong]};
-		my $parsed = Dep::parse ($control->{$dep_fields[$strong]});
+		my $relation = Lintian::Relation->new($control->{$dep_fields[$strong]});
 		tag "package-depends-on-itself", $control->{package}, $dep_fields[$strong]
-		    if Dep::implies($parsed, Dep::parse($control->{package}));
+		    if $relation->implies($control->{package});
 		tag 'package-depends-on-hardcoded-libc', $control->{package}, $dep_fields[$strong]
-		    if (Dep::implies($parsed, $libcs) and $control->{package} ne "glibc");
+		    if ($relation->implies($libcs) and $control->{package} ne "glibc");
 		for my $weak (($strong + 1) .. $#dep_fields) {
 			next unless $control->{$dep_fields[$weak]};
 			for my $dependency (split /\s*,\s*/, $control->{$dep_fields[$weak]}) {
 				next unless $dependency;
 				tag "stronger-dependency-implies-weaker", $control->{package}, "$dep_fields[$strong] -> $dep_fields[$weak]", $dependency
-				    if Dep::implies($parsed, Dep::parse($dependency));
+				    if $relation->implies($dependency);
 			}
 		}
 	}
