@@ -24,7 +24,6 @@ use strict;
 use lib "$ENV{'LINTIAN_ROOT'}/checks/";
 use common_data;
 
-use Dep;
 use Spelling;
 use Tags;
 use Util;
@@ -315,12 +314,7 @@ if ($gpl || m,/usr/share/common-licenses/GPL,) {
 sub depends_on {
     my ($info, $package) = @_;
     return 1 if $known_essential{$package};
-    my $deps = $info->field('pre-depends') || '';
-    if ($info->field('depends')) {
-	$deps .= ', ' if $deps;
-	$deps .= $info->field('depends');
-    }
-    return 1 if Dep::implies(Dep::parse($deps), Dep::parse($package));
+    return 1 if $info->relation('strong')->implies($package);
     return 0;
 }
 
