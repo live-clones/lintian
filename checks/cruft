@@ -25,7 +25,7 @@
 package Lintian::cruft;
 use strict;
 
-use Dep;
+use Lintian::Relation ();
 use Tags;
 use Util;
 
@@ -34,10 +34,13 @@ use File::Find;
 use File::Basename;
 
 # All the packages that may provide config.{sub,guess} during the build, used
-# to suppress warnings about outdated autotools helper files.
-my $autotools_pkgs = join ' | ',
+# to suppress warnings about outdated autotools helper files.  I'm not
+# thrilled with having the automake exception as well, but people do depend on
+# autoconf and automake and then use autoreconf to update config.guess and
+# config.sub, and automake depends on autotools-dev.
+our $AUTOTOOLS = Lintian::Relation->new(join(' | ',
     qw(autotools-dev automake automaken automake1.4 automake1.7 automake1.8
-       automake1.9 automake1.10);
+       automake1.9 automake1.10)));
 
 # Directory checks.  These regexes match a directory that shouldn't be in the
 # source package and associate it with a tag (minus the leading
@@ -104,14 +107,7 @@ if (defined $info->field('architecture')) {
 }
 
 # Read build-depends file and see if it depends on autotools-dev or automake.
-# I'm not thrilled with having the automake exception as well, but people do
-# depend on autoconf and automake and then use autoreconf to update
-# config.guess and config.sub, and automake depends on autotools-dev.
-my $atdinbd = 0;
-if (defined $info->field('build-depends')) {
-    my $bd = $info->field('build-depends');
-    $atdinbd = 1 if Dep::implies(Dep::parse($bd), Dep::parse($autotools_pkgs));
-}
+my $atdinbd = $info->relation('build-depends')->implies($AUTOTOOLS);
 
 # Create a closure so that we can pass our lexical variables into the find
 # wanted function.  We don't want to make them global because we'll then leak
