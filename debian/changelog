@@ -1,5 +1,6 @@
-lintian (2.2.4) UNRELEASED; urgency=low
+lintian (2.2.4) unstable; urgency=low
 
+  [ Russ Allbery ]
   * checks/changelog-file:
     + [RA] Use Lintian::Relation::Version instead of Dep.
   * checks/control-file:
@@ -21,7 +22,7 @@ lintian (2.2.4) UNRELEASED; urgency=low
       with epoched versions.  Based on a patch by Raphael Geissert.
       (Closes: #514641)
 
- -- Russ Allbery <rra@debian.org>  Sun, 08 Feb 2009 22:06:34 -0800
+ -- Adam D. Barratt <adam@adam-barratt.org.uk>  Mon, 09 Feb 2009 23:59:00 +0000
 
 lintian (2.2.3) unstable; urgency=low
 
