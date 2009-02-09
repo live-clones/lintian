@@ -59,18 +59,16 @@ for my $field (keys %$data) {
 # Install symbolic links to source package files
 my (undef, $dir, $name) = File::Spec->splitpath($file);
 my $tarball;
-my %version;
+my $version;
 
 # Based on Dpkg::Versionn::parseversion:
-if ($data->{'version'} =~ /(.+)-(.*)$/) {
-    $version{'version'} = $1;
-    $version{'revision'} = $2;
-} else {
-    $version{'version'} = $data->{'version'};
-    $version{'revision'} = 0;
+$version = $data->{'version'};
+if ($version =~ /:/) {
+    $version =~ s/^(?:\d+):(.+)/$1/ or fail("bad version number '$version'");
 }
+$version =~ s/(.+)-(.*)$/$1/;
 
-my $basename = $data->{'source'} . '_' . $version{'version'};
+my $basename = $data->{'source'} . '_' . $version;
 my $basenamerev = $data->{'source'} . '_' . $data->{'version'};
 
 symlink($file,"$base_dir/dsc") or fail("cannot symlink dsc file: $!");
