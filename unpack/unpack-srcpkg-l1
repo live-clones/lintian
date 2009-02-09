@@ -61,7 +61,7 @@ my (undef, $dir, $name) = File::Spec->splitpath($file);
 my $tarball;
 my $version;
 
-# Based on Dpkg::Versionn::parseversion:
+# Based on Dpkg::Version::parseversion:
 $version = $data->{'version'};
 if ($version =~ /:/) {
     $version =~ s/^(?:\d+):(.+)/$1/ or fail("bad version number '$version'");
@@ -69,13 +69,12 @@ if ($version =~ /:/) {
 $version =~ s/(.+)-(.*)$/$1/;
 
 my $basename = $data->{'source'} . '_' . $version;
-my $basenamerev = $data->{'source'} . '_' . $data->{'version'};
 
 symlink($file,"$base_dir/dsc") or fail("cannot symlink dsc file: $!");
 for my $fs (split(/\n/,$data->{'files'})) {
   next if $fs =~ /^\s*$/o;
   my @t = split(/\s+/o,$fs);
-  $tarball = $t[2] if ($t[2] =~ /^(?:\Q$basename\E\.orig|\Q$basenamerev\E)\.tar\.(gz|bz2|lzma)$/);
+  $tarball = $t[2] if ($t[2] =~ /^\Q$basename\E(\.orig)?\.tar\.(gz|bz2|lzma)$/);
   symlink("$dir/$t[2]","$base_dir/$t[2]") or fail("cannot symlink file $t[2]: $!");
 }
 
