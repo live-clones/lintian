@@ -297,6 +297,7 @@ sub test_package {
     unless ($is_native) {
 	for ($orig_version, $pkgdir, $targetdir) {
 	    s/-[^-]+$//;
+	    s/(-|^)(\d+):/$1/;
 	}
     }
 
@@ -341,8 +342,10 @@ sub test_package {
     print "building... ";
     runsystem("cd $RUNDIR/$pkgdir && $DPKG_BUILDPACKAGE >../build.$pkg 2>&1");
 
+    my $epochless_ver = $testdata->{version};
+    $epochless_ver =~ s/^(\d+)://;
     print "testing... ";
-    runsystem_ok("$LINTIAN $testdata->{options} $RUNDIR/$pkg\_$testdata->{version}*.changes".
+    runsystem_ok("$LINTIAN $testdata->{options} $RUNDIR/$pkg\_$epochless_ver*.changes".
 		 " 2>&1 | sort > $RUNDIR/tags.$pkg");
 
     # Run a sed-script if it exists, for tests that have slightly variable
