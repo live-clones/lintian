@@ -23,6 +23,7 @@ use strict;
 use warnings;
 use base 'Lintian::Collect';
 
+use Lintian::Relation;
 use Parse::DebianChangelog;
 
 use Util;
