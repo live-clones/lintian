@@ -1,6 +1,5 @@
 lintian (2.2.4) unstable; urgency=low
 
-  [ Russ Allbery ]
   * checks/changelog-file:
     + [RA] Use Lintian::Relation::Version instead of Dep.
   * checks/control-file:
