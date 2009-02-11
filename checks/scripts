@@ -191,6 +191,90 @@ our @depends_needed = (
 # beginning of a line.
 our $LEADIN = qr'(?:(?:^|[`&;(|{])\s*|(?:if|then|do|while)\s+)';
 
+our @bashism_single_quote_regexs = (
+    $LEADIN . qr'echo\s+(?:-[^e\s]+\s+)?\'[^\']*(\\[\\abcEfnrtv0])+.*?[\']',
+	# unsafe echo with backslashes
+    $LEADIN . qr'source\s+[\"\']?(?:\.\/|\/|\$|[\w.-])[^\s]+',
+	# should be '.', not 'source'
+);
+our @bashism_string_regexs = (
+    qr'\$\[\w+\]',		 # arith not allowed
+    qr'\$\{\w+\:\d+(?::\d+)?\}',   # ${foo:3[:1]}
+    qr'\$\{\w+(/.+?){1,2}\}',	 # ${parm/?/pat[/str]}
+    qr'\$\{\#?\w+\[[0-9\*\@]+\]\}',# bash arrays, ${name[0|*|@]}
+    qr'\$\{!\w+[\@*]\}',		 # ${!prefix[*|@]}
+    qr'\$\{!\w+\}',		 # ${!name}
+    qr'(\$\(|\`)\s*\<\s*\S+\s*(\)|\`)', # $(\< foo) should be $(cat foo)
+    qr'\$\{?RANDOM\}?\b',	         # $RANDOM
+    qr'\$\{?(OS|MACH)TYPE\}?\b',   # $(OS|MACH)TYPE
+    qr'\$\{?HOST(TYPE|NAME)\}?\b', # $HOST(TYPE|NAME)
+    qr'\$\{?DIRSTACK\}?\b',        # $DIRSTACK
+    qr'\$\{?EUID\}?\b',            # $EUID should be "id -u"
+    qr'\$\{?UID\}?\b',	         # $UID should be "id -ru"
+    qr'\$\{?SECONDS\}?\b',	 # $SECONDS
+    qr'\$\{?BASH_[A-Z]+\}?\b',     # $BASH_SOMETHING
+    qr'\$\{?SHELLOPTS\}?\b',       # $SHELLOPTS
+    qr'\$\{?PIPESTATUS\}?\b',      # $PIPESTATUS
+    qr'\$\{?SHLVL\}?\b',	         # $SHLVL
+    qr'<<<',                       # <<< here string
+    $LEADIN . qr'echo\s+(?:-[^e\s]+\s+)?\"[^\"]*(\\[\\abcEfnrtv0])+.*?[\"]',
+	# unsafe echo with backslashes
+);
+our @bashism_regexs = (
+    qr'(?:^|\s+)function \w+(\s|\(|\Z)',  # function is useless
+    qr'(test|-o|-a)\s*[^\s]+\s+==\s', # should be 'b = a'
+    qr'\[\s+[^\]]+\s+==\s',        # should be 'b = a'
+    qr'\s(\|\&)',		         # pipelining is not POSIX
+    qr'[^\\\$]\{(?:[^\s\\\}]*?,)+[^\\\}\s]*\}', # brace expansion
+    qr'(?:^|\s+)\w+\[\d+\]=',      # bash arrays, H[0]
+    $LEADIN . qr'read\s+(?:-[a-qs-zA-Z\d-]+)',
+	# read with option other than -r
+    $LEADIN . qr'read\s*(?:-\w+\s*)*(?:\".*?\"|[\'].*?[\'])?\s*(?:;|$)',
+	# read without variable
+    $LEADIN . qr'kill\s+-[^sl]\w*',# kill -[0-9] or -[A-Z]
+    $LEADIN . qr'trap\s+["\']?.*["\']?\s+.*[1-9]', # trap with signal numbers
+    qr'\&>',		         # cshism
+    qr'(<\&|>\&)\s*((-|\d+)[^\s;|)`&\\\\]|[^-\d\s]+)', # should be >word 2>&1
+    qr'\[\[(?!:)',		 # alternative test command
+    $LEADIN . qr'select\s+\w+',    # 'select' is not POSIX
+    $LEADIN . qr'echo\s+(-n\s+)?-n?en?',  # echo -e
+    $LEADIN . qr'exec\s+-[acl]',   # exec -c/-l/-a name
+    qr'(?:^|\s+)let\s',	         # let ...
+    qr'(?<![\$\(])\(\(.*\)\)',     # '((' should be '$(('
+    qr'\$\[[^][]+\]',	         # '$[' should be '$(('
+    qr'(\[|test)\s+-a',	         # test with unary -a (should be -e)
+    qr'/dev/(tcp|udp)',	         # /dev/(tcp|udp)
+    $LEADIN . qr'\w+\+=',	         # should be "VAR="${VAR}foo"
+    $LEADIN . qr'suspend\s',
+    $LEADIN . qr'caller\s',
+    $LEADIN . qr'complete\s',
+    $LEADIN . qr'compgen\s',
+    $LEADIN . qr'declare\s',
+    $LEADIN . qr'typeset\s',
+    $LEADIN . qr'disown\s',
+    $LEADIN . qr'builtin\s',
+    $LEADIN . qr'set\s+-[BHT]+',   # set -[BHT]
+    $LEADIN . qr'alias\s+-p',      # alias -p
+    $LEADIN . qr'unalias\s+-a',    # unalias -a
+    $LEADIN . qr'local\s+-[a-zA-Z]+', # local -opt
+    $LEADIN . qr'local\s+\w+=',    # local foo=bar
+    qr'(?:^|\s+)\s*\(?\w*[^\(\w\s]+\S*?\s*\(\)\s*([\{|\(]|\Z)',
+	# function names should only contain [a-z0-9_]
+    $LEADIN . qr'(push|pop)d(\s|\Z)',   # (push|pod)d
+    $LEADIN . qr'export\s+-[^p]',  # export only takes -p as an option
+    $LEADIN . qr'ulimit(\s|\Z)',
+    $LEADIN . qr'shopt(\s|\Z)',
+    $LEADIN . qr'type\s',
+    $LEADIN . qr'time\s',
+    $LEADIN . qr'dirs(\s|\Z)',
+    qr'(?:^|\s+)[<>]\(.*?\)',      # <() process substituion
+    qr'(?:^|\s+)readonly\s+-[af]', # readonly -[af]
+    $LEADIN . qr'(sh|\$\{?SHELL\}?) -[rD]', # sh -[rD]
+    $LEADIN . qr'(sh|\$\{?SHELL\}?) --\w+', # sh --long-option
+    $LEADIN . qr'(sh|\$\{?SHELL\}?) [-+]O', # sh [-+]O
+);
+
+
 sub run {
 
 my %executable = ();
@@ -613,88 +697,6 @@ while (<SCRIPTS>) {
 	    if ($cat_string eq "" and $checkbashisms and !$within_another_shell) {
 		my $found = 0;
 		my $match = '';
-		my @bashism_single_quote_regexs = (
-		  $LEADIN . qr'echo\s+(?:-[^e\s]+\s+)?\'[^\']*(\\[\\abcEfnrtv0])+.*?[\']',
-			# unsafe echo with backslashes
-		  $LEADIN . qr'source\s+[\"\']?(?:\.\/|\/|\$|[\w.-])[^\s]+',
-			# should be '.', not 'source'
-		);
-		my @bashism_string_regexs = (
-		  qr'\$\[\w+\]',		 # arith not allowed
-		  qr'\$\{\w+\:\d+(?::\d+)?\}',   # ${foo:3[:1]}
-		  qr'\$\{\w+(/.+?){1,2}\}',	 # ${parm/?/pat[/str]}
-		  qr'\$\{\#?\w+\[[0-9\*\@]+\]\}',# bash arrays, ${name[0|*|@]}
-		  qr'\$\{!\w+[\@*]\}',		 # ${!prefix[*|@]}
-		  qr'\$\{!\w+\}',		 # ${!name}
-		  qr'(\$\(|\`)\s*\<\s*\S+\s*(\)|\`)', # $(\< foo) should be $(cat foo)
-		  qr'\$\{?RANDOM\}?\b',	         # $RANDOM
-		  qr'\$\{?(OS|MACH)TYPE\}?\b',   # $(OS|MACH)TYPE
-		  qr'\$\{?HOST(TYPE|NAME)\}?\b', # $HOST(TYPE|NAME)
-		  qr'\$\{?DIRSTACK\}?\b',        # $DIRSTACK
-		  qr'\$\{?EUID\}?\b',            # $EUID should be "id -u"
-		  qr'\$\{?UID\}?\b',	         # $UID should be "id -ru"
-		  qr'\$\{?SECONDS\}?\b',	 # $SECONDS
-		  qr'\$\{?BASH_[A-Z]+\}?\b',     # $BASH_SOMETHING
-		  qr'\$\{?SHELLOPTS\}?\b',       # $SHELLOPTS
-		  qr'\$\{?PIPESTATUS\}?\b',      # $PIPESTATUS
-		  qr'\$\{?SHLVL\}?\b',	         # $SHLVL
-		  qr'<<<',                       # <<< here string
-		  $LEADIN . qr'echo\s+(?:-[^e\s]+\s+)?\"[^\"]*(\\[\\abcEfnrtv0])+.*?[\"]',
-			# unsafe echo with backslashes
-		);
-		my @bashism_regexs = (
-		  qr'(?:^|\s+)function \w+(\s|\(|\Z)',  # function is useless
-		  qr'(test|-o|-a)\s*[^\s]+\s+==\s', # should be 'b = a'
-		  qr'\[\s+[^\]]+\s+==\s',        # should be 'b = a'
-		  qr'\s(\|\&)',		         # pipelining is not POSIX
-		  qr'[^\\\$]\{(?:[^\s\\\}]*?,)+[^\\\}\s]*\}', # brace expansion
-		  qr'(?:^|\s+)\w+\[\d+\]=',      # bash arrays, H[0]
-		  $LEADIN . qr'read\s+(?:-[a-qs-zA-Z\d-]+)',
-			# read with option other than -r
-		  $LEADIN . qr'read\s*(?:-\w+\s*)*(?:\".*?\"|[\'].*?[\'])?\s*(?:;|$)',
-			# read without variable
-		  $LEADIN . qr'kill\s+-[^sl]\w*',# kill -[0-9] or -[A-Z]
-		  $LEADIN . qr'trap\s+["\']?.*["\']?\s+.*[1-9]', # trap with signal numbers
-		  qr'\&>',		         # cshism
-		  qr'(<\&|>\&)\s*((-|\d+)[^\s;|)`&\\\\]|[^-\d\s]+)', # should be >word 2>&1
-		  qr'\[\[(?!:)',		 # alternative test command
-		  $LEADIN . qr'select\s+\w+',    # 'select' is not POSIX
-		  $LEADIN . qr'echo\s+(-n\s+)?-n?en?',  # echo -e
-		  $LEADIN . qr'exec\s+-[acl]',   # exec -c/-l/-a name
-		  qr'(?:^|\s+)let\s',	         # let ...
-		  qr'(?<![\$\(])\(\(.*\)\)',     # '((' should be '$(('
-		  qr'\$\[[^][]+\]',	         # '$[' should be '$(('
-		  qr'(\[|test)\s+-a',	         # test with unary -a (should be -e)
-		  qr'/dev/(tcp|udp)',	         # /dev/(tcp|udp)
-		  $LEADIN . qr'\w+\+=',	         # should be "VAR="${VAR}foo"
-		  $LEADIN . qr'suspend\s',
-		  $LEADIN . qr'caller\s',
-		  $LEADIN . qr'complete\s',
-		  $LEADIN . qr'compgen\s',
-		  $LEADIN . qr'declare\s',
-		  $LEADIN . qr'typeset\s',
-		  $LEADIN . qr'disown\s',
-		  $LEADIN . qr'builtin\s',
-		  $LEADIN . qr'set\s+-[BHT]+',   # set -[BHT]
-		  $LEADIN . qr'alias\s+-p',      # alias -p
-		  $LEADIN . qr'unalias\s+-a',    # unalias -a
-		  $LEADIN . qr'local\s+-[a-zA-Z]+', # local -opt
-		  $LEADIN . qr'local\s+\w+=',    # local foo=bar
-		  qr'(?:^|\s+)\s*\(?\w*[^\(\w\s]+\S*?\s*\(\)\s*([\{|\(]|\Z)',
-			# function names should only contain [a-z0-9_]
-		  $LEADIN . qr'(push|pop)d(\s|\Z)',   # (push|pod)d
-		  $LEADIN . qr'export\s+-[^p]',  # export only takes -p as an option
-		  $LEADIN . qr'ulimit(\s|\Z)',
-		  $LEADIN . qr'shopt(\s|\Z)',
-		  $LEADIN . qr'type\s',
-		  $LEADIN . qr'time\s',
-		  $LEADIN . qr'dirs(\s|\Z)',
-		  qr'(?:^|\s+)[<>]\(.*?\)',      # <() process substituion
-		  qr'(?:^|\s+)readonly\s+-[af]', # readonly -[af]
-		  $LEADIN . qr'(sh|\$\{?SHELL\}?) -[rD]', # sh -[rD]
-		  $LEADIN . qr'(sh|\$\{?SHELL\}?) --\w+', # sh --long-option
-		  $LEADIN . qr'(sh|\$\{?SHELL\}?) [-+]O', # sh [-+]O
-		);
 
 		# since this test is ugly, I have to do it by itself
 		# detect source (.) trying to pass args to the command it runs
