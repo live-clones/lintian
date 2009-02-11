@@ -181,7 +181,7 @@ sub spawn {
 	@err = ('2>', $opts->{err});
     }
 
-    use Data::Dumper;
+#    use Data::Dumper;
 #    print STDERR Dumper($opts, \@cmds);
     eval {
 	if (@cmds == 1) {
