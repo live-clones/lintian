@@ -72,10 +72,10 @@ sub parse_dpkg_control {
     local $_;
     while (<$CONTROL>) {
 	chomp;
+	next if /^#/; #comment line?
 
 	# tabs at the beginning are illegal, but handle them anyways
 	s/^\t/ \t/o;
-	next if /^#/; #comment line?
 
 	# empty line?
 	if ((!$debconf_flag && m/^\s*$/) or 
@@ -133,8 +133,7 @@ sub read_dpkg_control {
 	return undef;
     }
 
-    my $CONTROL = FileHandle->new;
-    open($CONTROL, '<', $file)
+    open(my $CONTROL, '<', $file)
 	or fail("cannot open control file $file for reading: $!");
     my @data = parse_dpkg_control($CONTROL, $debconf_flag);
     close($CONTROL)
