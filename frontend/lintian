@@ -25,7 +25,6 @@
 use strict;
 
 use Getopt::Long;
-use FileHandle;
 # }}}
 
 # {{{ Global Variables
