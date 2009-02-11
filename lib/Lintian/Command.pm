@@ -20,6 +20,11 @@ package Lintian::Command;
 use strict;
 use warnings;
 
+BEGIN {
+    # Disabling IPC::Run::Debug saves tons of useless calls.
+    $ENV{'IPCRUNDEBUG'} = 'none';
+}
+
 use base qw(Exporter);
 our @EXPORT = ();
 our @EXPORT_OK = qw(spawn reap);
