@@ -27,6 +27,81 @@ use Lintian::Data;
 
 our $FONT_PACKAGES = Lintian::Data->new('files/fonts', '\s+');
 
+# A list of known packaged Javascript libraries
+# and the packages providing them
+our @jslibraries = (
+    [ qr,(?i)mochikit\.js(\.gz)?$, => 'libjs-mochikit' ],
+    [ qr,(?i)jquery(\.(min|lite|pack))?\.js(\.gz)?$, => 'libjs-jquery' ],
+    [ qr,(?i)prototype(-[\d\.]+)?\.js(\.gz)?$, => 'libjs-prototype' ],
+    [ qr,(?i)scriptaculous\.js(\.gz)?$, => 'libjs-scriptaculous' ],
+    [ qr,(?i)fckeditor\.js(\.gz)?$, => 'fckeditor' ],
+    [ qr,(?i)cropper(\.uncompressed)?\.js(\.gz)?$, => 'libjs-cropper' ],
+    [ qr,(?i)swfobject\.js(\.gz)?$, => 'libjs-yui' ],
+    [ qr,(?i)yahoo(-(dom-event|min))?\.js(\.gz)?$, => 'libjs-yui' ],
+    [ qr,(?i)jsjac(\.packed)?\.js(\.gz)?$, => 'libjs-jac' ],
+    [ qr,(?i)jsMath(-fallback-\w+)?\.js(\.gz)?$, => 'jsmath' ],
+    [ qr,(?i)tiny_mce(_(popup|src))?\.js(\.gz)?$, => qr'tinymce2?' ],
+# not yet available in unstable:
+#    [ qr,(?i)(htmlarea|Xinha(Loader|Core))\.js$, => 'xinha' ],
+);
+
+# A list of known packaged PEAR modules
+# and the packages providing them
+our @pearmodules = (
+    [ qr,(?<!Auth/)HTTP\.php$, => 'php-http' ],
+    [ qr,Auth\.php$, => 'php-auth' ],
+    [ qr,Auth/HTTP\.php$, => 'php-auth-http' ],
+    [ qr,Benchmark/(Timer|Profiler|Iterate)\.php$, => 'php-benchmark' ],
+    [ qr,Cache\.php$, => 'php-cache' ],
+    [ qr,Cache/Lite\.php$, => 'php-cache-lite' ],
+    [ qr,Compat\.php$, => 'php-compat' ],
+    [ qr,Config\.php$, => 'php-config' ],
+    [ qr,CBC\.php$, => 'php-crypt-cbc' ],
+    [ qr,Date\.php$, => 'php-date' ],
+    [ qr,(?<!Container)/DB\.php$, => 'php-db' ],
+    [ qr,(?<!Container)/File\.php$, => 'php-file' ],
+    [ qr,Log\.php$, => 'php-log' ],
+    [ qr,Log/(file|error_log|null|syslog|sql\w*)\.php$, => 'php-log' ],
+    [ qr,Mail\.php$, => 'php-mail' ],
+    [ qr,(?i)mime(Part)?\.php$, => 'php-mail-mime' ],
+    [ qr,mimeDecode\.php$, => 'php-mail-mimedecode' ],
+    [ qr,FTP\.php$, => 'php-net-ftp' ],
+    [ qr,(?<!Container/)IMAP\.php$, => 'php-net-imap' ],
+    [ qr,SMTP\.php$, => 'php-net-smtp' ],
+    [ qr,(?<!FTP/)Socket\.php$, => 'php-net-socket' ],
+    [ qr,IPv4\.php$, => 'php-net-ipv4' ],
+    [ qr,(?<!Container/)LDAP\.php$, => 'php-net-ldap' ],
+);
+
+# A list of known packaged php (!PEAR) libraries
+# and the packages providing them
+our @phplibraries = (
+    [ qr,(?i)adodb\.inc\.php$, => 'libphp-adodb' ],
+    [ qr,(?i)Smarty(_Compiler)?\.class\.php$, => 'smarty' ],
+    [ qr,(?i)class\.phpmailer(\.(php|inc))+$, => 'libphp-phpmailer' ],
+    [ qr,(?i)phpsysinfo\.dtd$, => 'phpsysinfo' ],
+    [ qr,(?i)class\.(Linux|(Open|Net|Free|)BSD)\.inc\.php$, => 'phpsysinfo' ],
+    [ qr,Auth/(OpenID|Yadis/Yadis)\.php$, => 'php-openid' ],
+    [ qr,(?i)Snoopy\.class\.(php|inc)$, => 'libphp-snoopy' ],
+    [ qr,(?i)markdown\.php$, => 'libmarkdown-php' ],
+    [ qr,(?i)geshi\.php$, => 'php-geshi' ],
+    [ qr,(?i)(class[.-])?pclzip\.(inc|lib)?\.php$, => 'libphp-pclzip' ],
+    [ qr,(?i).*layersmenu.*/(lib/)?PHPLIB\.php$, => 'libphp-phplayersmenu' ],
+    [ qr,(?i)phpSniff\.(class|core)\.php$, => 'libphp-phpsniff' ],
+    [ qr,(?i)(class\.)?jabber\.php$, => 'libphp-jabber' ],
+    [ qr,(?i)simplepie(\.(php|inc))+$, => 'libphp-simplepie' ],
+    [ qr,(?i)jpgraph\.php$, => 'libphp-jpgraph' ],
+    [ qr,(?i)fpdf\.php$, => 'php-fpdf' ],
+    [ qr,(?i)getid3\.(lib\.)?(\.(php|inc))+$, => 'php-getid3' ],
+    [ qr,(?i)streams\.php$, => 'php-gettext' ],
+    [ qr,(?i)rss_parse\.(php|inc)$, => 'magpierss' ],
+    [ qr,(?i)unit_tester\.php$, => 'php-simpletest' ],
+    [ qr,(?i)Sparkline\.php$, => 'libsparkline-php' ],
+# not yet available in unstable:,
+#    [ qr,(?i)IXR_Library(\.inc|\.php)+$, => 'libphp-ixr' ],
+#    [ qr,(?i)(class\.)?kses\.php$, => 'libphp-kses' ],
+);
+
 sub run {
 
 my $pkg = shift;
@@ -627,23 +702,6 @@ foreach my $file (sort keys %{$info->index}) {
 	}
 
 	# ---------------- embedded Javascript libraries
-	# A list of known packaged Javascript libraries
-	# and the packages providing them
-	my @jslibraries = (
-	    [ qr,(?i)mochikit\.js(\.gz)?$, => 'libjs-mochikit' ],
-	    [ qr,(?i)jquery(\.(min|lite|pack))?\.js(\.gz)?$, => 'libjs-jquery' ],
-	    [ qr,(?i)prototype(-[\d\.]+)?\.js(\.gz)?$, => 'libjs-prototype' ],
-	    [ qr,(?i)scriptaculous\.js(\.gz)?$, => 'libjs-scriptaculous' ],
-	    [ qr,(?i)fckeditor\.js(\.gz)?$, => 'fckeditor' ],
-	    [ qr,(?i)cropper(\.uncompressed)?\.js(\.gz)?$, => 'libjs-cropper' ],
-	    [ qr,(?i)swfobject\.js(\.gz)?$, => 'libjs-yui' ],
-	    [ qr,(?i)yahoo(-(dom-event|min))?\.js(\.gz)?$, => 'libjs-yui' ],
-	    [ qr,(?i)jsjac(\.packed)?\.js(\.gz)?$, => 'libjs-jac' ],
-	    [ qr,(?i)jsMath(-fallback-\w+)?\.js(\.gz)?$, => 'jsmath' ],
-	    [ qr,(?i)tiny_mce(_(popup|src))?\.js(\.gz)?$, => qr'tinymce2?' ],
-# not yet available in unstable:
-#	    [ qr,(?i)(htmlarea|Xinha(Loader|Core))\.js$, => 'xinha' ],
-	);
 	foreach my $jslibrary (@jslibraries) {
 	    if ($file =~ m,/$jslibrary->[0], and $pkg !~ m,^$jslibrary->[1]$,) {
 		tag "embedded-javascript-library", "$file";
@@ -663,33 +721,6 @@ foreach my $file (sort keys %{$info->index}) {
 	}
 
 	# ---------------- embedded PEAR modules
-	# A list of known packaged PEAR modules
-	# and the packages providing them
-	my @pearmodules = (
-	    [ qr,(?<!Auth/)HTTP\.php$, => 'php-http' ],
-	    [ qr,Auth\.php$, => 'php-auth' ],
-	    [ qr,Auth/HTTP\.php$, => 'php-auth-http' ],
-	    [ qr,Benchmark/(Timer|Profiler|Iterate)\.php$, => 'php-benchmark' ],
-	    [ qr,Cache\.php$, => 'php-cache' ],
-	    [ qr,Cache/Lite\.php$, => 'php-cache-lite' ],
-	    [ qr,Compat\.php$, => 'php-compat' ],
-	    [ qr,Config\.php$, => 'php-config' ],
-	    [ qr,CBC\.php$, => 'php-crypt-cbc' ],
-	    [ qr,Date\.php$, => 'php-date' ],
-	    [ qr,(?<!Container)/DB\.php$, => 'php-db' ],
-	    [ qr,(?<!Container)/File\.php$, => 'php-file' ],
-	    [ qr,Log\.php$, => 'php-log' ],
-	    [ qr,Log/(file|error_log|null|syslog|sql\w*)\.php$, => 'php-log' ],
-	    [ qr,Mail\.php$, => 'php-mail' ],
-	    [ qr,(?i)mime(Part)?\.php$, => 'php-mail-mime' ],
-	    [ qr,mimeDecode\.php$, => 'php-mail-mimedecode' ],
-	    [ qr,FTP\.php$, => 'php-net-ftp' ],
-	    [ qr,(?<!Container/)IMAP\.php$, => 'php-net-imap' ],
-	    [ qr,SMTP\.php$, => 'php-net-smtp' ],
-	    [ qr,(?<!FTP/)Socket\.php$, => 'php-net-socket' ],
-	    [ qr,IPv4\.php$, => 'php-net-ipv4' ],
-	    [ qr,(?<!Container/)LDAP\.php$, => 'php-net-ldap' ],
-	);
 	foreach my $pearmodule (@pearmodules) {
 	    if ($file =~ m,/$pearmodule->[0], and $pkg ne $pearmodule->[1]) {
 		open (PEAR, "unpacked/$file") or fail("cannot open PHP file: $!");
@@ -704,34 +735,6 @@ foreach my $file (sort keys %{$info->index}) {
 	}
 
 	# ---------------- embedded php libraries
-	# A list of known packaged php (!PEAR) libraries
-	# and the packages providing them
-	my @phplibraries = (
-	    [ qr,(?i)adodb\.inc\.php$, => 'libphp-adodb' ],
-	    [ qr,(?i)Smarty(_Compiler)?\.class\.php$, => 'smarty' ],
-	    [ qr,(?i)class\.phpmailer(\.(php|inc))+$, => 'libphp-phpmailer' ],
-	    [ qr,(?i)phpsysinfo\.dtd$, => 'phpsysinfo' ],
-	    [ qr,(?i)class\.(Linux|(Open|Net|Free|)BSD)\.inc\.php$, => 'phpsysinfo' ],
-	    [ qr,Auth/(OpenID|Yadis/Yadis)\.php$, => 'php-openid' ],
-	    [ qr,(?i)Snoopy\.class\.(php|inc)$, => 'libphp-snoopy' ],
-	    [ qr,(?i)markdown\.php$, => 'libmarkdown-php' ],
-	    [ qr,(?i)geshi\.php$, => 'php-geshi' ],
-	    [ qr,(?i)(class[.-])?pclzip\.(inc|lib)?\.php$, => 'libphp-pclzip' ],
-	    [ qr,(?i).*layersmenu.*/(lib/)?PHPLIB\.php$, => 'libphp-phplayersmenu' ],
-	    [ qr,(?i)phpSniff\.(class|core)\.php$, => 'libphp-phpsniff' ],
-	    [ qr,(?i)(class\.)?jabber\.php$, => 'libphp-jabber' ],
-	    [ qr,(?i)simplepie(\.(php|inc))+$, => 'libphp-simplepie' ],
-	    [ qr,(?i)jpgraph\.php$, => 'libphp-jpgraph' ],
-	    [ qr,(?i)fpdf\.php$, => 'php-fpdf' ],
-	    [ qr,(?i)getid3\.(lib\.)?(\.(php|inc))+$, => 'php-getid3' ],
-	    [ qr,(?i)streams\.php$, => 'php-gettext' ],
-	    [ qr,(?i)rss_parse\.(php|inc)$, => 'magpierss' ],
-	    [ qr,(?i)unit_tester\.php$, => 'php-simpletest' ],
-	    [ qr,(?i)Sparkline\.php$, => 'libsparkline-php' ],
-# not yet available in unstable:,
-#	    [ qr,(?i)IXR_Library(\.inc|\.php)+$, => 'libphp-ixr' ],
-#	    [ qr,(?i)(class\.)?kses\.php$, => 'libphp-kses' ],
-	);
 	foreach my $phplibrary (@phplibraries) {
 	    if ($file =~ m,/$phplibrary->[0], and $pkg ne $phplibrary->[1]) {
 		tag "embedded-php-library", "$file";
