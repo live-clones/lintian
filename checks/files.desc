@@ -3,7 +3,7 @@ Author: Christian Schwarz <schwarz@debian.org>
 Abbrev: fil
 Type: binary, udeb
 Unpack-Level: 2
-Needs-Info: objdump-info, scripts
+Needs-Info: objdump-info, scripts, file-info
 Info: This script checks if a binary package conforms to policy
  WRT to files and directories.
 
@@ -951,3 +951,9 @@ Info: This package appears to include a font file that is already provided
  font package.  If the application in this package loads the font file by
  name, you may need to include a symlink pointing to the file name of the
  font in its Debian package.
+
+Tag: icon-size-and-directory-name-mismatch
+Severity: normal
+Certainty: certain
+Info: The icon has a size that differs from the size specified by the name of
+ the directory under which it was installed.

@@ -390,6 +390,14 @@ foreach my $file (sort keys %{$info->index}) {
 	    tag "desktop-file-in-wrong-dir", $file;
 	}
 
+	# ---------------- png files under /usr/share/apps/*/icons/*
+	elsif ($file =~ m,^usr/share/apps/[^/]+/icons/[^/]+/(\d+x\d+)/.*\.png$,) {
+	    my ($dsize, $fsize) = ($1);
+	    $info->file_info->{$file} =~ m/,\s*(\d+)\s*x\s*(\d+)\s*,/;
+	    $fsize = $1.'x'.$2;
+	    tag 'icon-size-and-directory-name-mismatch', $file, $fsize
+		unless ($dsize eq $fsize);
+	}
     }
     # ---------------- /var subdirs
     elsif ($type ne 'udeb' and $file =~ m,^var/[^/]+/$,) { # FSSTND dirs
