@@ -145,8 +145,8 @@ if (m,\<fill in (http/)?ftp site\>, or m/\<Must follow here\>/) {
     tag "helper-templates-in-copyright", "";
 }
 
-if (m,usr/share/common-licenses/(GPL|LGPL|BSD|Artistic)\.gz,) {
-    tag "copyright-refers-to-compressed-license", "$&";
+if (m,(usr/share/common-licenses/(?:GPL|LGPL|BSD|Artistic)\.gz),) {
+    tag "copyright-refers-to-compressed-license", $1;
 }
 
 # Allow generic GPL references for packages licensed under the same terms as
@@ -163,8 +163,8 @@ if (m,(usr/share/common-licenses/(L?GPL|GFDL))[^-],i && !m,as Perl itself,i
     }
 }
 
-if (m,usr/share/common-licences,) {
-    tag "copyright-refers-to-incorrect-directory", "$&";
+if (m,(usr/share/common-licences),) {
+    tag "copyright-refers-to-incorrect-directory", $1;
     $wrong_directory_detected = 1;
 }
 
