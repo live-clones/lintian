@@ -78,7 +78,7 @@ foreach (sort keys %{$info->index}) {
 	$linked = 1;
 
     	# check if this symlink references a directory elsewhere
-    	if ($link =~ m,^(\.\.)?/,) {
+	if ($link =~ m,^(?:\.\.)?/,) {
 	    tag "usr-share-doc-symlink-points-outside-of-usr-share-doc", "$link";
 	    last;
     	}
@@ -141,7 +141,7 @@ $_ = slurp_entire_file('copyright');
 
 my $wrong_directory_detected = 0;
 
-if (m,\<fill in (http/)?ftp site\>, or m/\<Must follow here\>/) {
+if (m,\<fill in (?:http/)?ftp site\>, or m/\<Must follow here\>/) {
     tag "helper-templates-in-copyright", "";
 }
 
@@ -156,7 +156,7 @@ if (m,(usr/share/common-licenses/(L?GPL|GFDL))[^-],i && !m,as Perl itself,i
     && !m,License-Alias:\s+Perl,) {
     my $ref = $1;
     my $license = $2;
-    if (m,\b(any|or)\s+later(\s+version)?\b,i || m,License: $license-[\d\.]+\+,i) {
+    if (m,\b(?:any|or)\s+later(?:\s+version)?\b,i || m,License: $license-[\d\.]+\+,i) {
 	tag "copyright-refers-to-symlink-license", $ref;
     } else {
 	tag "copyright-refers-to-versionless-license-file", $ref;
@@ -180,7 +180,7 @@ if (m,usr/doc/copyright,) {
 
 # Lame check for old FSF zip code.  Try to avoid false positives from other
 # Cambridge, MA addresses.
-if (m/(Free\s*Software\s*Foundation.*02139|02111-1307)/s) {
+if (m/(?:Free\s*Software\s*Foundation.*02139|02111-1307)/s) {
     tag "old-fsf-address-in-copyright-file", "";
 }
 
@@ -220,27 +220,27 @@ if (m,/usr/share/common-licenses,
     || m/Zope Public License/
     || m/LICENSE AGREEMENT FOR PYTHON 1.6.1/
     || m/LaTeX Project Public License/
-    || m/(^From:.*^To:|^To:.*^From:).*(GNU General Public License|GPL)/ms
+    || m/(?:^From:.*^To:|^To:.*^From:).*(?:GNU General Public License|GPL)/ms
     || m/AFFERO GENERAL PUBLIC LICENSE/
     || m/GNU Free Documentation License\s*Version 1\.1/
     || m/CeCILL FREE SOFTWARE LICENSE AGREEMENT/ #v2.0
     || m/FREE SOFTWARE LICENSING AGREEMENT CeCILL/ #v1.1
     || m/CNRI OPEN SOURCE GPL-COMPATIBLE LICENSE AGREEMENT/
     || m/GNU GENERAL PUBLIC LICENSE\s+Version 1/
-    || m/compatible\s+with\s+(the\s+)?(GNU\s+)?GPL/
-    || m/(GNU\s+)?GPL\W+compatible/
-    || m/was\s+previously\s+(distributed\s+)?under\s+the\s+GNU/
+    || m/compatible\s+with\s+(?:the\s+)?(?:GNU\s+)?GPL/
+    || m/(?:GNU\s+)?GPL\W+compatible/
+    || m/was\s+previously\s+(?:distributed\s+)?under\s+the\s+GNU/
     || $wrong_directory_detected) {
     # False positive or correct reference.  Ignore.
 } elsif (m/GNU Free Documentation License/i or m/\bGFDL\b/) {
     tag "copyright-should-refer-to-common-license-file-for-gfdl";
-} elsif (m/GNU (Lesser|Library) General Public License/i or m/\bLGPL\b/) {
+} elsif (m/GNU (?:Lesser|Library) General Public License/i or m/\bLGPL\b/) {
     tag "copyright-should-refer-to-common-license-file-for-lgpl";
 } elsif (m/GNU General Public License/i or m/\bGPL\b/) {
     tag "copyright-should-refer-to-common-license-file-for-gpl";
     $gpl = 1;
 }
-if (m,(under )?(the )?(same )?(terms )?as Perl itself,i &&
+if (m,(?:under )?(?:the )?(?:same )?(?:terms )?as Perl itself,i &&
     !m,usr/share/common-licenses/,) {
     tag "copyright-file-lacks-pointer-to-perl-license";
 }
@@ -280,7 +280,7 @@ if (m/(The\s+PHP\s+Licen[cs]e,?\s+version\s+3\.0[^\d])/si) {
 
 # Other flaws in the copyright phrasing or contents.
 
-if ($found && !$linked && !/(Copyright|Copr\.|\302\251)(.*|[\(C\):\s]+)\b\d{4}\b|\bpublic\s+domain\b/i) {
+if ($found && !$linked && !/(?:Copyright|Copr\.|\302\251)(?:.*|[\(C\):\s]+)\b\d{4}\b|\bpublic\s+domain\b/i) {
     tag 'copyright-without-copyright-notice';
 }
 
@@ -299,7 +299,7 @@ if ($gpl || m,/usr/share/common-licenses/GPL,) {
 	if (defined $info->field('pre-depends')) {
 	    push @depends, split (/\s*,\s*/, scalar $info->field('pre-depends'));
 	}
-	if (grep { /^libssl[0-9.]+(\s|\z)/ && !/\|/ } @depends) {
+	if (grep { /^libssl[0-9.]+(?:\s|\z)/ && !/\|/ } @depends) {
 	    tag 'possible-gpl-code-linked-with-openssl';
 	}
     }
