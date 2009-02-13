@@ -955,5 +955,6 @@ Info: This package appears to include a font file that is already provided
 Tag: icon-size-and-directory-name-mismatch
 Severity: normal
 Certainty: certain
-Info: The icon has a size that differs from the size specified by the name of
- the directory under which it was installed.
+Info: The icon has a size that differs from the size specified by the name
+ of the directory under which it was installed.  The icon was probably
+ mistakenly installed into the wrong directory.

@@ -1,3 +1,16 @@
+lintian (2.2.6) UNRELEASED; urgency=low
+
+  * Summary of tag changes:
+    + Added
+      - icon-size-and-directory-name-mismatch
+
+  * checks/files{,.desc}:
+    + [RA] Warn of PNG icons whose size doesn't match the size indicated
+      by the directory in which they're installed.  Patch from Raphael
+      Geissert.  (Closes: #509624)
+
+ -- Russ Allbery <rra@debian.org>  Fri, 13 Feb 2009 15:48:50 -0800
+
 lintian (2.2.5) unstable; urgency=low
 
   * lib/Lintian/Collect/{Binary,Source}.pm:
