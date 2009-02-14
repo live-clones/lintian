@@ -1,0 +1,7 @@
+Testname: distribution-multiple-bad-distributions
+Sequence: 2500
+Version: 1.0
+Test-For: bad-distribution-in-changes-file
+Description: Check *.changes distribution checking for multiple distributions
+  where at least one of them does not exist
+References: Debian Bug#514853

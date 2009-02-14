@@ -1,0 +1,2 @@
+E: distribution-multiple-bad-distributions_1.0_amd64.changes: bad-distribution-in-changes-file bar
+E: distribution-multiple-bad-distributions_1.0_amd64.changes: bad-distribution-in-changes-file foo

@@ -1,0 +1,6 @@
+{$srcpkg} ({$version}) stable foo bar unstable; urgency=low
+
+  * Lintian Test Suite.
+  * Test: {$testname}
+
+ -- {$author}  {$date}

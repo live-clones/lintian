@@ -808,25 +808,28 @@ while (my $arg = shift) {
 	    if (defined $data->{distribution}) {
 		my $ubuntu_dists = Lintian::Data->new ('changelog-file/ubuntu-dists');
 		my $ubuntu_regex = join('|', $ubuntu_dists->all);
-		if ($data->{distribution} eq 'UNRELEASED') {
-		    # ignore
-		} elsif ($data->{version} =~ /ubuntu|$ubuntu_regex/
-			 or $data->{distribution} =~ /$ubuntu_regex/) {
-		    if ($data->{distribution} !~ /^($ubuntu_regex)(-(proposed|updates|backports|security))?$/ ) {
-			tag("bad-ubuntu-distribution-in-changes-file",
-			    $data->{distribution});
+		my @distributions = split /\s+/o, $data->{distribution};
+		for my $distribution (@distributions) {
+		    if ($distribution eq 'UNRELEASED') {
+			# ignore
+		    } elsif ($data->{version} =~ /ubuntu|$ubuntu_regex/
+			 or $distribution =~ /$ubuntu_regex/) {
+			if ($distribution !~ /^($ubuntu_regex)(-(proposed|updates|backports|security))?$/ ) {
+			    tag("bad-ubuntu-distribution-in-changes-file",
+				$distribution);
+			}
+		    } elsif (! (($distribution eq 'stable')
+				 or ($distribution eq 'testing')
+				 or ($distribution eq 'unstable')
+				 or ($distribution eq 'experimental')
+				 or ($distribution =~ /\w+-backports/)
+				 or ($distribution =~ /\w+-proposed-updates/)
+				 or ($distribution =~ /\w+-security/))
+			    ) {
+			# bad distribution entry
+			tag("bad-distribution-in-changes-file",
+			    $distribution);
 		    }
-		} elsif (! (($data->{distribution} eq 'stable')
-			 or ($data->{distribution} eq 'testing')
-			 or ($data->{distribution} eq 'unstable')
-			 or ($data->{distribution} eq 'experimental')
-			 or ($data->{distribution} =~ /\w+-backports/)
-			 or ($data->{distribution} =~ /\w+-proposed-updates/)
-			 or ($data->{distribution} =~ /\w+-security/))
-			) {
-		    # bad distribution entry
-		    tag("bad-distribution-in-changes-file",
-			$data->{distribution});
 		}
 	    }
 
