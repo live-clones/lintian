@@ -49,16 +49,16 @@ my $python_depend = 'python | python-dev | python-all | python-all-dev | '
 # optional tags to use for reporting the problem if some information other
 # than the default is required.
 my @global_clean_depends = (
-	[ ant => '^include\s*/usr/share/cdbs/1/rules/ant\.mk' ],
-	[ cdbs => '^include\s+/usr/share/cdbs/' ],
-	[ dbs => '^include\s+/usr/share/dbs/' ],
-	[ 'dh-make-php' => '^include\s+/usr/share/cdbs/1/class/pear\.mk' ],
-	[ debhelper => '^include\s+/usr/share/cdbs/1/rules/debhelper\.mk' ],
-	[ dpatch => '^include\s+/usr/share/cdbs/1/rules/dpatch\.mk' ],
-	[ quilt => '^include\s+/usr/share/cdbs/1/rules/patchsys-quilt\.mk' ],
-	[ dpatch => '^include\s+/usr/share/dpatch/' ],
-	[ quilt => '^include\s+/usr/share/quilt/' ],
-	[ $python_depend => '/usr/share/cdbs/1/class/python-distutils\.mk', 'missing-python-build-dependency' ],
+	[ ant => qr'^include\s*/usr/share/cdbs/1/rules/ant\.mk' ],
+	[ cdbs => qr'^include\s+/usr/share/cdbs/' ],
+	[ dbs => qr'^include\s+/usr/share/dbs/' ],
+	[ 'dh-make-php' => qr'^include\s+/usr/share/cdbs/1/class/pear\.mk' ],
+	[ debhelper => qr'^include\s+/usr/share/cdbs/1/rules/debhelper\.mk' ],
+	[ dpatch => qr'^include\s+/usr/share/cdbs/1/rules/dpatch\.mk' ],
+	[ quilt => qr'^include\s+/usr/share/cdbs/1/rules/patchsys-quilt\.mk' ],
+	[ dpatch => qr'^include\s+/usr/share/dpatch/' ],
+	[ quilt => qr'^include\s+/usr/share/quilt/' ],
+	[ $python_depend => qr'/usr/share/cdbs/1/class/python-distutils\.mk', 'missing-python-build-dependency' ],
 );
 
 # These are similar, but the resulting dependency is only allowed, not
@@ -67,38 +67,38 @@ my @global_clean_depends = (
 # The xsfclean rule is specific to the packages maintained by the X Strike
 # Force, but there are enough of those to make the rule worthwhile.
 my @global_clean_allowed = (
-	[ patchutils => '^include\s+/usr/share/cdbs/1/rules/dpatch\.mk' ],
-	[ patchutils => '^include\s+/usr/share/cdbs/1/rules/patchsys-quilt\.mk' ],
-	[ patchutils => '^include\s+/usr/share/cdbs/1/rules/simple-patchsys\.mk' ],
-	[ 'python-central' => '^DEB_PYTHON_SYSTEM\s*:?=\s*pycentral' ],
-	[ 'python-support' => '^DEB_PYTHON_SYSTEM\s*:?=\s*pysupport' ],
-	[ 'python-setuptools' => '/usr/share/cdbs/1/class/python-distutils\.mk' ],
-	[ quilt => '^clean:\s+xsfclean\b' ],
+	[ patchutils => qr'^include\s+/usr/share/cdbs/1/rules/dpatch\.mk' ],
+	[ patchutils => qr'^include\s+/usr/share/cdbs/1/rules/patchsys-quilt\.mk' ],
+	[ patchutils => qr'^include\s+/usr/share/cdbs/1/rules/simple-patchsys\.mk' ],
+	[ 'python-central' => qr'^DEB_PYTHON_SYSTEM\s*:?=\s*pycentral' ],
+	[ 'python-support' => qr'^DEB_PYTHON_SYSTEM\s*:?=\s*pysupport' ],
+	[ 'python-setuptools' => qr'/usr/share/cdbs/1/class/python-distutils\.mk' ],
+	[ quilt => qr'^clean:\s+xsfclean\b' ],
 );
 
 # A list of packages; regular expressions that, if they match anywhere in the
 # debian/rules file, this package must be listed in either Build-Depends or
 # Build-Depends-Indep as appropriate; and optional tags as above.
 my @global_depends = (
-	[ $python_depend => '^\t\s*dh_python\s', 'missing-dh_python-build-dependency' ],
-	[ 'python-central' => '^\t\s*dh_pycentral\s' ],
-	[ 'python-support' => '^\t\s*dh_pysupport\s' ],
-	[ 'python-central' => '^DEB_PYTHON_SYSTEM\s*:?=\s*pycentral' ],
-	[ 'python-support' => '^DEB_PYTHON_SYSTEM\s*:?=\s*pysupport' ],
+	[ $python_depend => qr'^\t\s*dh_python\s', 'missing-dh_python-build-dependency' ],
+	[ 'python-central' => qr'^\t\s*dh_pycentral\s' ],
+	[ 'python-support' => qr'^\t\s*dh_pysupport\s' ],
+	[ 'python-central' => qr'^DEB_PYTHON_SYSTEM\s*:?=\s*pycentral' ],
+	[ 'python-support' => qr'^DEB_PYTHON_SYSTEM\s*:?=\s*pysupport' ],
 );
 
 # Similarly, this list of packages, regexes, and optional tags say that if the
 # regex matches in one of clean, build-arch, binary-arch, or a rule they
 # depend on, this package is allowed (and required) in Build-Depends.
 my @rule_clean_depends = (
-	[ ant => '^\t\s*ant\s' ],
-	[ debhelper => '^\t\s*dh_.+' ],
-	[ dpatch => '^\t\s*dpatch\s' ],
-	[ "po-debconf" => '^\t\s*debconf-updatepo\s' ],
-	[ $python_depend => '^\t\s*python\s', 'missing-python-build-dependency' ],
-	[ $python_depend => '\ssetup\.py\b', 'missing-python-build-dependency' ],
-	[ quilt => '^\t\s*(\S+=\S+\s+)*quilt\s' ],
-	[ yada => '^\t\s*yada\s' ],
+	[ ant => qr'^\t\s*ant\s' ],
+	[ debhelper => qr'^\t\s*dh_.+' ],
+	[ dpatch => qr'^\t\s*dpatch\s' ],
+	[ "po-debconf" => qr'^\t\s*debconf-updatepo\s' ],
+	[ $python_depend => qr'^\t\s*python\s', 'missing-python-build-dependency' ],
+	[ $python_depend => qr'\ssetup\.py\b', 'missing-python-build-dependency' ],
+	[ quilt => qr'^\t\s*(\S+=\S+\s+)*quilt\s' ],
+	[ yada => qr'^\t\s*yada\s' ],
 );
 
 # Similar, but the resulting dependency is only allowed, not required.  We
@@ -106,10 +106,10 @@ my @rule_clean_depends = (
 # standard suggested dependency.  No package should be depending on just
 # perl-base, since it's Priority: required.
 my @rule_clean_allowed = (
-	[ patch => '^\t\s*(?:perl debian/)?yada\s+unpatch' ],
-	[ 'perl | perl-base (>= 5.6.0-16)' => '(^\t|\|\|)\s*(perl|\$\(PERL\))\s' ],
-	[ 'perl-modules (>= 5.10) | libmodule-build-perl' => '(^\t|\|\|)\s*(perl|\$\(PERL\))\s+Build\b' ],
-	[ 'python-setuptools' => '\ssetup\.py\b' ],
+	[ patch => q'^\t\s*(?:perl debian/)?yada\s+unpatch' ],
+	[ 'perl | perl-base (>= 5.6.0-16)' => qr'(^\t|\|\|)\s*(perl|\$\(PERL\))\s' ],
+	[ 'perl-modules (>= 5.10) | libmodule-build-perl' => qr'(^\t|\|\|)\s*(perl|\$\(PERL\))\s+Build\b' ],
+	[ 'python-setuptools' => qr'\ssetup\.py\b' ],
 );
 
 # A simple list of regular expressions which, if they match anywhere in
@@ -117,8 +117,8 @@ my @rule_clean_allowed = (
 # enough that we can't know what packages are permitted in Build-Depends and
 # should bypass the build-depends-without-arch-dep check completely.
 my @global_clean_bypass = (
-	'^include\s*/usr/share/cdbs/1/class/ant\.mk',
-	'^\s+dh\s+'
+	qr'^include\s*/usr/share/cdbs/1/class/ant\.mk',
+	qr'^\s+dh\s+'
 );
 
 # Load package versions provided by the Perl core modules
