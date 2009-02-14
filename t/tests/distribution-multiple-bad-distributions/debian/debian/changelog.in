@@ -1,4 +1,4 @@
-{$srcpkg} ({$version}) stable foo bar unstable; urgency=low
+{$srcpkg} ({$version}) stable foo-backportss bar foo; urgency=low
 
   * Lintian Test Suite.
   * Test: {$testname}

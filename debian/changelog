@@ -37,6 +37,9 @@ lintian (2.2.6) UNRELEASED; urgency=low
     + [ADB] Split the Distribution field of a .changes file into individual
       distributions and then check each of them against the list of known
       distributions.  (Closes: #514853)
+    + [ADB] Anchor the regular expressions for the backports, security and
+      proposed-updates distribution checks, so that etch-backports is
+      accepted as a valid distribution but etch-backportss is not.
 
   * private/refresh-virtual-packages-data:
     + [RA] New script to generate the list of virtual packages.  Based on

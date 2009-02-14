@@ -822,9 +822,9 @@ while (my $arg = shift) {
 				 or ($distribution eq 'testing')
 				 or ($distribution eq 'unstable')
 				 or ($distribution eq 'experimental')
-				 or ($distribution =~ /\w+-backports/)
-				 or ($distribution =~ /\w+-proposed-updates/)
-				 or ($distribution =~ /\w+-security/))
+				 or ($distribution =~ /^\w+-backports$/)
+				 or ($distribution =~ /^\w+-proposed-updates$/)
+				 or ($distribution =~ /^\w+-security$/))
 			    ) {
 			# bad distribution entry
 			tag("bad-distribution-in-changes-file",
