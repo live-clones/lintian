@@ -42,6 +42,15 @@ Info: You've specified an unknown target distribution for your upload in
  Your version string suggests this package is for Ubuntu, so your
  distribution should be one of jaunty, intrepid, hardy, gutsy or dapper.
 
+Tag: multiple-distributions-in-changes-file
+Severity: important
+Certainty: certain
+Info: You've specified more than one target distribution for your upload
+ in the <tt>debian/changelog</tt> file.
+ .
+ Although this syntax is valid, it is not accepted by the Debian archive
+ management software.
+
 Tag: no-urgency-in-changes-file
 Severity: normal
 Certainty: certain

@@ -831,6 +831,12 @@ while (my $arg = shift) {
 			    $distribution);
 		    }
 		}
+
+		if ($#distributions > 0) {
+		    # Currently disabled until dak stops accepting the syntax
+		    # tag("multiple-distributions-in-changes-file",
+		    #    $data->{'distribution'});
+		}
 	    }
 
 	    # Urgency is only recommended by Policy.

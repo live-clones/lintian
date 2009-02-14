@@ -3,6 +3,7 @@ lintian (2.2.6) UNRELEASED; urgency=low
   * Summary of tag changes:
     + Added
       - icon-size-and-directory-name-mismatch
+      - multiple-distributions-in-changes-file (disabled)
 
   * checks/common_data.pm:
     + [RA] Virtual packages now come from data.
@@ -40,6 +41,10 @@ lintian (2.2.6) UNRELEASED; urgency=low
     + [ADB] Anchor the regular expressions for the backports, security and
       proposed-updates distribution checks, so that etch-backports is
       accepted as a valid distribution but etch-backportss is not.
+    + [ADB] Add a new check for .changes files which contain multiple
+      entries in their Distribution: field.  The check is currently
+      disabled as the syntax is currently accepted by dak although it is
+      likely to stop being so in the near future.
 
   * private/refresh-virtual-packages-data:
     + [RA] New script to generate the list of virtual packages.  Based on
