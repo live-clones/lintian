@@ -8,11 +8,25 @@ lintian (2.2.6) UNRELEASED; urgency=low
     + [RA] Warn of PNG icons whose size doesn't match the size indicated
       by the directory in which they're installed.  Patch from Raphael
       Geissert.  (Closes: #509624)
+    + [RA] Make static regexes global to avoid recreating them for each
+      file we scan.  Patch from Raphael Geissert.
+  * checks/scripts:
+    + [RA] Make static regexes global to avoid recreating them for each
+      file we scan.  Patch from Raphael Geissert.
+  * checks/shared-libs:
+    + [RA] Save a local reference to objdump information to reduce the
+      number of method calls.  Patch from Raphael Geissert.
 
   * collection/strings{,.desc}:
     + [RA] Collect a list of ELF binaries in the package and the output of
       strings -a on each binary except for those in /usr/lib/debug.  Based
       on a patch from Raphael Geissert.  (Closes: #514951)
+
+  * lib/Lintian/Command.pm:
+    + [RA] Don't load Data::Dumper.  Patch from Raphael Geissert.
+  * lib/Util.pm:
+    + [RA] Minor optimizations to {read,parse}_dpkg_control.  Patch from
+      Raphael Geissert.
 
  -- Russ Allbery <rra@debian.org>  Fri, 13 Feb 2009 15:48:50 -0800
 
