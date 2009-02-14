@@ -118,10 +118,10 @@ foreach my $file (sort keys %{$info->objdump_info}) {
 sub lib_soname_path {
     my (@paths) = @_;
     foreach my $path (@paths) {
-	next if $path =~ m%^(\.?/)?lib/libnss_[^.]+\.so(\.[0-9]+)$%;
-	return 1 if $path =~ m%^(\.?/)?lib/[^/]+$%;
-	return 1 if $path =~ m%^(\.?/)?usr/lib/[^/]+$%;
-	return 1 if $path =~ m%^(\.?/)?usr/X11R6/lib/[^/]+$%;
+	next if $path =~ m%^(?:\.?/)?lib/libnss_[^.]+\.so(?:\.[0-9]+)$%;
+	return 1 if $path =~ m%^(?:\.?/)?lib/[^/]+$%;
+	return 1 if $path =~ m%^(?:\.?/)?usr/lib/[^/]+$%;
+	return 1 if $path =~ m%^(?:\.?/)?usr/X11R6/lib/[^/]+$%;
     }
     return 0;
 }
@@ -139,7 +139,7 @@ $base_pkg =~ s/^lib64/lib/o;
 my $match_found = 0;
 foreach my $expected_name (@sonames) {
     $expected_name =~ s/([0-9])\.so\./$1-/;
-    $expected_name =~ s/\.so(\.|\z)//;
+    $expected_name =~ s/\.so(?:\.|\z)//;
     $expected_name =~ s/_/-/g;
 
     if ((lc($expected_name) eq $pkg)
@@ -237,7 +237,7 @@ foreach my $file (sort keys %{$info->file_info}) {
     # rpath is disallowed, except in private directories
     if (exists $objdump->{RPATH}) {
 	foreach my $rpath (map {File::Spec->canonpath($_)} keys %{$objdump->{RPATH}}) {
-	    next if $rpath =~ m,^/usr/lib/(games/)?\Q$pkg\E(?:/|\z),;
+	    next if $rpath =~ m,^/usr/lib/(?:games/)?\Q$pkg\E(?:/|\z),;
 	    next if $rpath =~ m,^\$ORIGIN$,;
 	    next if $directories{$rpath};
 	    tag "binary-or-shlib-defines-rpath", "$file $rpath";
@@ -262,7 +262,7 @@ foreach my $file (sort keys %{$info->file_info}) {
     }
 
     # Something other than detached debugging symbols in /usr/lib/debug paths.
-    if ($file =~ m,^\./usr/lib/debug/(lib\d*|s?bin|usr|opt|dev|emul)/,) {
+    if ($file =~ m,^\./usr/lib/debug/(?:lib\d*|s?bin|usr|opt|dev|emul)/,) {
 	if (exists($objdump->{NEEDED})) {
 	    tag "debug-file-should-use-detached-symbols", $file;
 	}
@@ -284,7 +284,7 @@ foreach my $file (sort keys %{$info->file_info}) {
 	    next if ($objdump->{KLIBC});
 	    # Location of debugging symbols:
 	    next if ($file =~ m%^./usr/lib/debug/%);
-	    next if ($file =~ /(\.|-)static$/);
+	    next if ($file =~ /(?:\.|-)static$/);
 	    next if ($pkg =~ /-static$/);
 	    tag "statically-linked-binary", "$file";
 	}
@@ -323,7 +323,7 @@ $depends =~ s/\n/ /g;
 
 # Check for a libc dependency.
 if ($needs_depends_line) {
-    if ($depends && $needs_libc && $pkg !~ /^libc[\d.]+(-|\z)/) {
+    if ($depends && $needs_libc && $pkg !~ /^libc[\d.]+(?:-|\z)/) {
         # Match libcXX or libcXX-*, but not libc3p0.
         my $re = qr/(?:^|,)\s*\Q$needs_libc\E\b/;
         if ($depends !~ /$re/) {

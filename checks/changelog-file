@@ -94,7 +94,7 @@ foreach (sort keys %{$info->index}) {
 	push(@doc_files, $file);
 
 	# Check a few things about the NEWS.Debian file.
-	if ($file =~ /^NEWS.Debian(\.gz)?$/i) {
+	if ($file =~ /^NEWS.Debian(?:\.gz)?$/i) {
 	    if (not $file =~ /\.gz$/) {
 		tag "debian-news-file-not-compressed", "$file1";
 	    } elsif ($file ne 'NEWS.Debian.gz') {
@@ -106,7 +106,7 @@ foreach (sort keys %{$info->index}) {
 	# an open question here what we should do with a file named ChangeLog.
 	# If there's also a changelog file, it might be a duplicate, or the
 	# packager may have installed NEWS as changelog intentionally.
-	next unless $file =~ m/^changelog(\.html)?(\.gz)?$|changelog.Debian(\.gz)?$/;
+	next unless $file =~ m/^changelog(?:\.html)?(?:\.gz)?$|changelog.Debian(?:\.gz)?$/;
 
 	if (not $file =~ m/\.gz$/) {
 	    tag "changelog-file-not-compressed", "$file";
@@ -124,10 +124,10 @@ foreach (sort keys %{$info->index}) {
 	    }
 	}
 
-	if ($file =~ m/^changelog\.html(\.gz)?$/ ) {
+	if ($file =~ m/^changelog\.html(?:\.gz)?$/ ) {
 	    $found_html = 1;
 	}
-	if ($file =~ m/^changelog(\.gz)?$/ ) {
+	if ($file =~ m/^changelog(?:\.gz)?$/ ) {
 	    $found_text = 1;
 	}
     }
@@ -186,9 +186,9 @@ $foreign_pkg = (!$native_pkg and $version !~ m/-0\./);
 if ($native_pkg) {
     my @foo;
     # native Debian package
-    if (grep m/^changelog(\.gz)?$/,@doc_files) {
+    if (grep m/^changelog(?:\.gz)?$/,@doc_files) {
 	# everything is fine
-    } elsif (@foo = grep m/^changelog\.debian(\.gz)$/i,@doc_files) {
+    } elsif (@foo = grep m/^changelog\.debian(?:\.gz)$/i,@doc_files) {
 	tag "wrong-name-for-changelog-of-native-package", "usr/share/doc/$pkg/$foo[0]";
     } else {
 	tag "changelog-file-missing-in-native-package", "";
@@ -198,7 +198,7 @@ if ($native_pkg) {
 
     # 1. check for upstream changelog
     my $found_upstream_text_changelog = 0;
-    if (grep m/^changelog(\.html)?(\.gz)?$/,@doc_files) {
+    if (grep m/^changelog(\.html)?(?:\.gz)?$/,@doc_files) {
 	$found_upstream_text_changelog = 1 unless $1;
 	# everything is fine
     } else {
@@ -217,7 +217,7 @@ if ($native_pkg) {
     }
 
     # 2. check for Debian changelog
-    if (grep m/^changelog\.Debian(\.gz)?$/,@doc_files) {
+    if (grep m/^changelog\.Debian(?:\.gz)?$/,@doc_files) {
 	# everything is fine
     } elsif (my @foo = grep m/^changelog\.debian(\.gz)?$/i,@doc_files) {
 	tag "wrong-name-for-debian-changelog-file", "usr/share/doc/$pkg/$foo[0]";
@@ -329,10 +329,10 @@ if (@entries) {
         ($version) = (split('-', $entry->Version))[-1];
     }
     unless (not $info->native and $version =~ /\./) {
-        if ($info->native and $version =~ /testing|(un)?stable/i) {
+        if ($info->native and $version =~ /testing|(?:un)?stable/i) {
             tag 'version-refers-to-distribution', $entry->Version;
         } elsif ($version =~ /woody|sarge|etch|lenny|squeeze/) {
-            if ($entry->Distribution =~ /^(unstable|experimental)$/) {
+            if ($entry->Distribution =~ /^(?:unstable|experimental)$/) {
                 tag 'version-refers-to-distribution', $entry->Version;
             }
         }
