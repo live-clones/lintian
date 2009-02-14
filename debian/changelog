@@ -9,6 +9,11 @@ lintian (2.2.6) UNRELEASED; urgency=low
       by the directory in which they're installed.  Patch from Raphael
       Geissert.  (Closes: #509624)
 
+  * collection/strings{,.desc}:
+    + [RA] Collect a list of ELF binaries in the package and the output of
+      strings -a on each binary except for those in /usr/lib/debug.  Based
+      on a patch from Raphael Geissert.  (Closes: #514951)
+
  -- Russ Allbery <rra@debian.org>  Fri, 13 Feb 2009 15:48:50 -0800
 
 lintian (2.2.5) unstable; urgency=low

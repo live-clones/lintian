@@ -29,6 +29,12 @@ exec >elf-index
 
 for bin in $(grep ELF file-info | cut -d: -f1); do
     echo "$bin"
-    mkdir -p "strings/$(dirname "$bin")"
-    strings "unpacked/$bin" > "strings/$bin"
+    case $bin in
+      /usr/lib/debug/*)
+        ;;
+      *)
+        mkdir -p "strings/$(dirname "$bin")"
+        strings "unpacked/$bin" > "strings/$bin"
+        ;;
+    esac
 done
