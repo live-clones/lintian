@@ -4,6 +4,10 @@ lintian (2.2.6) UNRELEASED; urgency=low
     + Added
       - icon-size-and-directory-name-mismatch
 
+  * checks/common_data.pm:
+    + [RA] Virtual packages now come from data.
+  * checks/fields:
+    + [RA] Load virtual packages from data/fields/virtual-packages.
   * checks/files{,.desc}:
     + [RA] Warn of PNG icons whose size doesn't match the size indicated
       by the directory in which they're installed.  Patch from Raphael
@@ -21,6 +25,17 @@ lintian (2.2.6) UNRELEASED; urgency=low
     + [RA] Collect a list of ELF binaries in the package and the output of
       strings -a on each binary except for those in /usr/lib/debug.  Based
       on a patch from Raphael Geissert.  (Closes: #514951)
+
+  * data/fields/obsolete-packages:
+    + [RA] Add foomatic-data, lambdamoo-{core,server}, and old kernel
+      packages.  Patch from Raphael Geissert.
+  * data/fields/virtual-packages:
+    + [RA] New file listing known virtual packages.  Based on a patch by
+      Raphael Geissert.  (Closes: #514497)
+
+  * private/refresh-virtual-packages-data:
+    + [RA] New script to generate the list of virtual packages.  Based on
+      a patch by Raphael Geissert.
 
   * lib/Lintian/Command.pm:
     + [RA] Don't load Data::Dumper.  Patch from Raphael Geissert.
