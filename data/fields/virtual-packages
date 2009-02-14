@@ -1,25 +1,23 @@
 # The list of virtual packages in Debian that are provided by two or more
-# packages. Packages that wish to be listed but are not automagically found by
-# this script can be hard-coded in this file and they will be preserved across
-# multiple executions of this script as long as they are listed in a comment
-# line where the first non-space characters form the word "Keep:".
-# Multiple packages can be specified in the same line, separated by comma and/or
-# white space. Multiple "Keep: " lines can be used as well.
+# packages.
 #
-# Last updated: 2009-02-09
+# Packages that should be listed but are not found by this script can be
+# listed in a special comment in this file.  They will then be preserved when
+# the list is regenerated.  Such packages must be listed in a comment line
+# staring with "Keep:".  Multiple packages can be specified in the same line,
+# separated by comma and/or white space. Multiple "Keep: " lines can be used
+# as well.
+#
+# Last updated: 2009-02-14
 
-# Keep: linux-source, linux-source-2.6, linux-image, linux-image-2.6
-# Keep: linux-headers, linux-headers-2.6, linux-kernel-headers
-# Keep: libc-dev, c-shell, dotfile-module, fortran77-compiler
-# Keep: pdf-preview, mp3-encoder, java2-compiler, libglu-dev
 
 aide-binary
 alsaplayer-interface
 alsaplayer-output
 apache2-mpm
 aptitude-doc
-aspell6a-dictionary
 aspell-dictionary
+aspell6a-dictionary
 atl2-modules
 audio-mixer
 aufs-modules
@@ -30,15 +28,15 @@ bacula-sd-tools
 bochs-gui
 bogofilter-db
 boom-wad
+c++-compiler
 c++abi2-dev
 c-compiler
-c++-compiler
+c-shell
 chasen-dic
 childsplay-alphabet-sounds
 childsplay-lfc-names
 cl-sql-backend
 console-utilities
-c-shell
 cyrus21-clients
 cyrus21-imapd
 cyrus21-pop3d
@@ -49,9 +47,9 @@ dict-client
 dictd-dictionary
 djvu-viewer
 docbook-xsl-doc
-drbd8-modules
 drbd-module-source
 drbd-utils
+drbd8-modules
 dssi-plugin
 dyndns-client
 editor
@@ -63,7 +61,6 @@ exim4-localscanapi-1.0
 exim4-localscanapi-1.1
 festival-voice
 finger-server
-fortran77-compiler
 fortran95-compiler
 fortune-cookie-db
 freeciv
@@ -106,6 +103,11 @@ iscsitarget-modules
 ispell-dictionary
 itcl-doc
 itk-doc
+java-compiler
+java-runtime
+java-runtime-headless
+java-sdk
+java-virtual-machine
 java1-runtime
 java1-runtime-headless
 java2-runtime
@@ -117,11 +119,6 @@ java5-sdk
 java6-runtime
 java6-runtime-headless
 java6-sdk
-java-compiler
-java-runtime
-java-runtime-headless
-java-sdk
-java-virtual-machine
 jruby
 kde-i18n
 kfreebsd-source
@@ -133,7 +130,6 @@ libatlas-3gf.so
 libatlas.so.3gf
 libblas-3gf.so
 libblas.so.3gf
-libc-dev
 libcurl-dev
 libcurl-ssl-dev
 libcyrus-imap-perl
@@ -147,16 +143,15 @@ libdspam7-drv
 libedac
 libfcgi-ruby
 libfilesystem-ruby
+libgd-dev
 libgd2
 libgdchart
 libgdchart-gd2-dev
-libgd-dev
 libgettext-ruby
 libggi-target
-libgl1
 libgl-dev
+libgl1
 libglide-dev
-libglu-dev
 libguile-dev
 libhdf5-1.6.6-0
 libhdf5-dev
@@ -179,7 +174,6 @@ linux-headers-2.6
 linux-image
 linux-image-2.6
 linux-initramfs-tool
-linux-kernel-headers
 linux-kernel-log-daemon
 linux-latest-modules-2.6.26-1-486
 linux-latest-modules-2.6.26-1-686
@@ -189,8 +183,6 @@ linux-latest-modules-2.6.26-1-openvz-686
 linux-latest-modules-2.6.26-1-vserver-686
 linux-latest-modules-2.6.26-1-vserver-686-bigmem
 linux-latest-modules-2.6.26-1-xen-686
-linux-source
-linux-source-2.6
 lisp-compiler
 loop-aes-modules
 lsb-qt4-ia32
@@ -203,7 +195,6 @@ man-browser
 mnogosearch
 monodoc-viewer
 mp3-decoder
-mp3-encoder
 mpd-client
 mpipython
 myspell-dictionary
@@ -218,8 +209,8 @@ news-reader
 news-transport-system
 nfs-server
 nilfs2-modules
-objc-compiler
 objc++-compiler
+objc-compiler
 octave
 octave-doc
 octave-emacsen
@@ -227,8 +218,6 @@ octave-headers
 octave-htmldoc
 octave-info
 open
-openoffice.org2-thesaurus
-openoffice.org2-thesaurus-ru
 openoffice.org-help-2.4
 openoffice.org-hyphenation
 openoffice.org-l10n-2.4
@@ -237,6 +226,8 @@ openoffice.org-spellcheck-de-ch
 openoffice.org-spellcheck-de-de
 openoffice.org-spellcheck-eu
 openoffice.org-spellcheck-fi
+openoffice.org2-thesaurus
+openoffice.org2-thesaurus-ru
 pascal-compiler
 paw-binary
 pcsc-ifd-handler
@@ -298,6 +289,9 @@ wx-doc
 wx-i18n
 x-audio-mixer
 x-display-manager
+x-session-manager
+x-terminal-emulator
+x-window-manager
 xen-hypervisor
 xen-hypervisor-3
 xen-hypervisor-3.2-1
@@ -305,7 +299,4 @@ xmp-player
 xserver
 xserver-xorg-input-2
 xserver-xorg-video-2
-x-session-manager
-x-terminal-emulator
-x-window-manager
 zcode-interpreter

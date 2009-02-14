@@ -18,6 +18,9 @@
 
 set -e
 
+# Ensure the sort order is stable.
+LC_ALL=C; export LC_ALL
+
 if [ -z "$1" ]; then
     printf "Usage: %s <path-to-data> [<packages>]\n" "$(basename "$0")"
     cat <<INFO
@@ -46,7 +49,9 @@ INFO
 fi
 
 readonly lintian_data="$(readlink -f "$1")"
-packages="$(readlink -f "$2")"
+if [ -n "$2" ] ; then
+    packages="$(readlink -f "$2")"
+fi
 
 [ -d "$lintian_data" ] || {
     printf "%s is not a directory, aborting" "$lintian_data" >&2
@@ -69,12 +74,14 @@ mkdir -p "$lintian_data/fields"
 
 cat > "$workdir/virtual-packages" <<EOF
 # The list of virtual packages in Debian that are provided by two or more
-# packages. Packages that wish to be listed but are not automagically found by
-# this script can be hard-coded in this file and they will be preserved across
-# multiple executions of this script as long as they are listed in a comment
-# line where the first non-space characters form the word "Keep:".
-# Multiple packages can be specified in the same line, separated by comma and/or
-# white space. Multiple "Keep: " lines can be used as well.
+# packages.
+#
+# Packages that should be listed but are not found by this script can be
+# listed in a special comment in this file.  They will then be preserved when
+# the list is regenerated.  Such packages must be listed in a comment line
+# staring with "Keep:".  Multiple packages can be specified in the same line,
+# separated by comma and/or white space. Multiple "Keep: " lines can be used
+# as well.
 #
 # Last updated: $(date -u +'%Y-%m-%d')
 
