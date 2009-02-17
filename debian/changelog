@@ -46,16 +46,16 @@ lintian (2.2.6) UNRELEASED; urgency=low
       disabled as the syntax is currently accepted by dak although it is
       likely to stop being so in the near future.
 
-  * private/refresh-virtual-packages-data:
-    + [RA] New script to generate the list of virtual packages.  Based on
-      a patch by Raphael Geissert.
-
   * lib/Lintian/Command.pm:
     + [RA] Disable IPC::Run debugging.  Patch from Raphael Geissert.
     + [RA] Don't load Data::Dumper.  Patch from Raphael Geissert.
   * lib/Util.pm:
     + [RA] Minor optimizations to {read,parse}_dpkg_control.  Patch from
       Raphael Geissert.
+
+  * private/refresh-virtual-packages-data:
+    + [RA] New script to generate the list of virtual packages.  Based on
+      a patch by Raphael Geissert.
 
   * unpack/unpack-srcpkg-l1:
     + [ADB] Handle a number of different ways in which upstream directory
