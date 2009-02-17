@@ -57,6 +57,10 @@ lintian (2.2.6) UNRELEASED; urgency=low
     + [RA] Minor optimizations to {read,parse}_dpkg_control.  Patch from
       Raphael Geissert.
 
+  * unpack/unpack-srcpkg-l1:
+    + [ADB] Handle a number of different ways in which upstream directory
+      trees may be represented in tarballs.  (Closes: #515795)
+
  -- Russ Allbery <rra@debian.org>  Fri, 13 Feb 2009 15:48:50 -0800
 
 lintian (2.2.5) unstable; urgency=low

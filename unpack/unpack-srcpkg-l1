@@ -86,7 +86,9 @@ if (!$tarball) {
 # create index file for package
 spawn({ fail => 'error', out => "$base_dir/index" },
       ["tar", "tfv", "$base_dir/$tarball"],
-      '|', ['perl', '-p -w -E', 's,^(([^\s]+\s+){5})[^/]+,$1.,;s,^h,-,'],
+      '|', ['perl', '-p -w -E', 's,^(\S+\s+){5}\./$,,;',
+		'-E', 's,^((\S+\s+){5})(\./)?[^/]+,$1.,;s,^h,-,'],
+      '|', ['awk', '/^.+$/ {print $0}'],
       '|', ["sort", "-k", "6"]);
 
 # Create symbolic links to binary packages
