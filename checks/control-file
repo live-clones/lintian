@@ -121,7 +121,7 @@ for my $control (@binary_controls) {
 		tag "package-depends-on-itself", $control->{package}, $dep_fields[$strong]
 		    if $relation->implies($control->{package});
 		tag 'package-depends-on-hardcoded-libc', $control->{package}, $dep_fields[$strong]
-		    if ($relation->implies($libcs) and $control->{package} ne "glibc");
+		    if ($relation->implies($libcs) and $pkg ne "glibc");
 		for my $weak (($strong + 1) .. $#dep_fields) {
 			next unless $control->{$dep_fields[$weak]};
 			for my $dependency (split /\s*,\s*/, $control->{$dep_fields[$weak]}) {
