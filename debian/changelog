@@ -10,6 +10,11 @@ lintian (2.2.6) UNRELEASED; urgency=low
   * checks/control-file:
     + [ADB] Properly exclude packages built from the glibc source package
       from the "hardcoded depends on libc" test.  (Closes: #515831)
+  * checks/description:
+    + [ADB] Warn of homepages embedded in the description which use the
+      syntax "Homepage: <http://example.com>" using the warning level
+      tag description-contains-homepage rather than the info level tag
+      description-possibly-contains-homepage.  (Closes: #515998)
   * checks/fields:
     + [RA] Load virtual packages from data/fields/virtual-packages.
   * checks/files{,.desc}:

@@ -112,7 +112,7 @@ foreach (split /\n/, $description) {
 	tag "description-contains-tabs", "" unless $tabs++;
     }
 
-    if (m,^\s*Homepage: https?://,i) {
+    if (m,^\s*Homepage: <?https?://,i) {
 	tag "description-contains-homepage";
 	$flagged_homepage = 1;
     }
