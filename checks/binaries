@@ -28,6 +28,8 @@ use File::Spec;
 # Table based on checks/emdebian' %archdetecttable, as found in
 # emdebian-tools
 our %archselftable = (
+	'32' => qr'ELF 32-bit',
+	'64' => qr'ELF 64-bit',
 	'alpha' => qr'ELF 64-bit LSB .* Alpha',
 	'amd64' => qr'ELF 64-bit LSB .* x86-64, .* (?:GNU/Linux|(?!GNU))',
 	'arm' => qr'ELF 32-bit LSB .* ARM, version \d,',
@@ -43,6 +45,8 @@ our %archselftable = (
 	'm68k' => qr'ELF 32-bit MSB .* 680[02]0',
 	'mips' => qr'ELF 32-bit MSB .* MIPS',
 	'mipsel' => qr'ELF 32-bit LSB .* MIPS',
+	'mips64' => qr'ELF 64-bit MSB .* MIPS',
+	'mipsel64' => qr'ELF 64-bit LSB .* MIPS',
 	'powerpc' => qr'ELF 32-bit MSB .* PowerPC',
 	'powerpc64' => qr'ELF 64-bit MSB .* PowerPC',
 	's390' => qr'ELF 32-bit MSB .* S.390',
@@ -154,6 +158,8 @@ foreach (sort keys %{$info->file_info}) {
     $directories{"/$_"}++;
 }
 
+exists($archselftable{$arch}) or warn("Unknown architecture $arch");
+
 # process all files in package
 foreach my $file (sort keys %{$info->file_info}) {
     my $fileinfo = $info->file_info->{$file};
@@ -188,10 +194,15 @@ foreach my $file (sort keys %{$info->file_info}) {
     }
 
     if ($arch ne 'all' and $fileinfo !~ m/$archselftable{$arch}/) {
-	$multiarch = Lintian::Data->new('binaries/multiarch')
-	    unless defined($multiarch);
-	tag "binary-from-other-architecture", $file
-	    unless (grep { $file =~ m,/\Q$_\E/, } $multiarch->all);
+	if ($file =~ m,/lib(\d{2})/, or $file =~ m,/emul/ia(\d{2}),) {
+	    tag "binary-from-other-architecture", $file
+		unless ($fileinfo =~ m/$archselftable{$1}/);
+	} else {
+	    $multiarch = Lintian::Data->new('binaries/multiarch')
+		unless defined($multiarch);
+	    tag "binary-from-other-architecture", $file
+		unless (grep { $file =~ m,/\Q$_\E/, } $multiarch->all);
+	}
     }
 
     # stripped?
