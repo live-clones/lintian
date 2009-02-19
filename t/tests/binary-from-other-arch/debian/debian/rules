@@ -1,0 +1,11 @@
+#!/usr/bin/make -f
+
+DEB_BUILD_OPTIONS := nostrip
+export DEB_BUILD_OPTIONS
+
+%:
+	dh $@
+
+binary:
+	sh debian/dumpobj > debian/elfobject
+	dh binary

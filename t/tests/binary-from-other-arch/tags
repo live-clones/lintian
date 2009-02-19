@@ -1,0 +1,4 @@
+E: binary-from-other-arch: binary-from-other-architecture ./usr/bin/elfobject
+E: binary-from-other-arch: statically-linked-binary ./usr/bin/elfobject
+W: binary-from-other-arch: apparently-corrupted-elf-binary ./usr/bin/elfobject
+W: binary-from-other-arch: binary-without-manpage usr/bin/elfobject

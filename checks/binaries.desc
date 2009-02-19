@@ -201,3 +201,11 @@ Info: This file is in a location generally used for detached debugging
  If you are using dh_strip with the --dbg-package flag, don't also install
  the library in <tt>/usr/lib/debug</tt>.  dh_strip does all the work for
  you.
+
+Tag: binary-from-other-architecture
+Severity: serious
+Certainty: possible
+Info: This ELF binary appears to have been built for an architecture other than
+ the one of the binary package being tested.  This may occur when a pre-built
+ binary is shipped in the package or when an atempt to cross-compile didn't
+ work.
