@@ -77,6 +77,10 @@ lintian (2.2.6) UNRELEASED; urgency=low
     + [RA] New script to generate the list of virtual packages.  Based on
       a patch by Raphael Geissert.
 
+  * t/runtests:
+    + [RA] Add support for raw source package checks in the source
+      subdirectory.  See t/source/README for more details.
+
   * unpack/unpack-srcpkg-l1:
     + [ADB] Handle a number of different ways in which upstream directory
       trees may be represented in tarballs.  (Closes: #515795)

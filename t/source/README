@@ -1,0 +1,91 @@
+WRITING A TEST
+==============
+
+This test framework is intended to test low-level Lintian checks and
+behavior with manually constructed source packages.  It provides a
+mechanism to manually construct pathological source packages and run
+lintian on them.  It should only be used when this degree of low-level
+control is necessary.  For other, more conventional cases, use the
+tests framework.
+
+A test in this framework is a directory containing (at least) a tags
+file and a Makefile.  The directory may contain other files as needed
+for that test.
+
+The tags file
+-------------
+
+The expected output of Lintian when run on the package, including info
+and experimental tags.  The Lintian output will be lexicographically
+sorted before comparing it with tags.  This file may be empty if the
+test case should produce no Lintian output.
+
+The Makefile
+------------
+
+Makefile must be a GNU makefile which, when invoked via make (using
+the default target), creates a .dsc file in the current directory and
+any other files needed to make up a source package.  Any .dsc file
+found in the directory will be checked.  <testname> must match the
+directory name.  This makefile may assume that the current working
+directory when it is invoked is the directory in which it's located
+(or a copy of it).  It can take any action needed to generate the deb
+file, such as running dpkg-source.
+
+The Makefile does not have to clean up after itself.  It can assume
+that the directory is deleted and recreated between test runs.
+
+
+TEST NAMING CONVENTIONS
+=======================
+
+Each test name should begin with the name of the part tested, e.g.
+
+<checkname>-...
+<unpackname>-...
+lintian-...
+lintian-info-...
+
+Use generic- as a prefix for test cases that don't cover a specific
+portion of Lintian but instead test Lintian's behavior on a useful
+special case of package (such as a minimal package).
+
+
+RUNNING THE TEST SUITE
+======================
+
+The complete test suite will be run with debian/rules runtests, but
+this can take quite a lot of time.  Normally this is only necessary
+after significant structural changes or before a release as a final
+check.
+
+To run a specific test case, run:
+
+    debian/rules runtests onlyrun=<test-name>
+
+It's often more useful to run every test that is relevant to a
+particular tag.  To do that, run:
+
+    debian/rules check-tag tag=<tag>
+
+This will run all tests that list that tag in the tags file.
+
+
+TEST WRITING TIPS
+=================
+
+Please keep each test case focused.  One of the problems that
+developed with the old test suite is that each test was serving many
+separate purposes and testing large swaths of Lintian, which made it
+difficult to know what could be changed and what would destroy some
+other useful test.  Test cases should only test a set of closely
+related tags and new tests should be added for new issues that aren't
+part of that closely-related set.
+
+Test cases should be as Lintian-clean as possible except for the tags
+that they're testing for.  The template is intended to help with this.
+It generates a Lintian-clean basic package for you to start with.  You
+should override only the minimal required to trigger your test, and
+try to fix any unrelated problems.  Sometimes this won't be possible
+and the only way to trigger a tag is to also trigger another tag, and
+that's fine, but it shouldn't be the normal case.
