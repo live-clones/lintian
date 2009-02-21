@@ -1,0 +1,22 @@
+Testname: cruft-general-native
+Sequence: 6000
+Version: 1.0
+Type: native
+Description: Check for cruft in a native package
+Test-For:
+ debian-files-list-in-source
+ diff-contains-arch-control-dir
+ diff-contains-arch-inventory-file
+ diff-contains-bts-control-dir
+ diff-contains-bzr-control-dir
+ diff-contains-cvs-conflict-copy
+ diff-contains-cvs-control-dir
+ diff-contains-editor-backup-file
+ diff-contains-git-control-dir
+ diff-contains-hg-control-dir
+ diff-contains-hg-tags-file
+ diff-contains-patch-failure-file
+ diff-contains-svk-commit-file
+ diff-contains-svn-commit-file
+ diff-contains-svn-conflict-file
+ diff-contains-svn-control-dir

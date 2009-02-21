@@ -1,0 +1,16 @@
+E: cruft-general-native source: debian-files-list-in-source
+W: cruft-general-native source: diff-contains-arch-control-dir {arch}
+W: cruft-general-native source: diff-contains-arch-inventory-file .arch-inventory
+W: cruft-general-native source: diff-contains-bts-control-dir .be
+W: cruft-general-native source: diff-contains-bzr-control-dir .bzr
+W: cruft-general-native source: diff-contains-cvs-conflict-copy .#foo.1.1
+W: cruft-general-native source: diff-contains-cvs-control-dir CVS
+W: cruft-general-native source: diff-contains-editor-backup-file foo~
+W: cruft-general-native source: diff-contains-git-control-dir .git
+W: cruft-general-native source: diff-contains-hg-control-dir .hg
+W: cruft-general-native source: diff-contains-hg-tags-file .hgtags
+W: cruft-general-native source: diff-contains-patch-failure-file foo.rej
+W: cruft-general-native source: diff-contains-svk-commit-file svk-commit444.tmp
+W: cruft-general-native source: diff-contains-svn-commit-file svn-commit.tmp
+W: cruft-general-native source: diff-contains-svn-conflict-file foo.r1352
+W: cruft-general-native source: diff-contains-svn-control-dir .svn
