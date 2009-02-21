@@ -25,7 +25,7 @@ use Tags;
 use Util;
 use Lintian::Data;
 
-our $FONT_PACKAGES = Lintian::Data->new('files/fonts', '\s+');
+our $FONT_PACKAGES;
 
 # A list of known packaged Javascript libraries
 # and the packages providing them
@@ -747,6 +747,8 @@ foreach my $file (sort keys %{$info->index}) {
 	# ---------------- fonts
 	if ($file =~ m,/([\w-]+\.(?:[to]tf|pfb|pcf))$,i) {
 	    my $font = lc $1;
+	    $FONT_PACKAGES = Lintian::Data->new('files/fonts', '\s+')
+		unless defined($FONT_PACKAGES);
 	    if ($FONT_PACKAGES->known($font)) {
 		tag 'duplicate-font-file', "$file also in", $FONT_PACKAGES->value($font)
 		    if ($pkg ne $FONT_PACKAGES->value($font) and $type ne 'udeb');
