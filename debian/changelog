@@ -66,6 +66,8 @@ lintian (2.2.6) UNRELEASED; urgency=low
       disabled as the syntax is currently accepted by dak although it is
       likely to stop being so in the near future.
 
+  * lib/Lintian/Collect/Source.pm:
+    + [RA] Recognize Format: 2.0 packages as non-native.
   * lib/Lintian/Command.pm:
     + [RA] Disable IPC::Run debugging.  Patch from Raphael Geissert.
     + [RA] Don't load Data::Dumper.  Patch from Raphael Geissert.

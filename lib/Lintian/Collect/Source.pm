@@ -61,7 +61,7 @@ sub native {
     my ($self) = @_;
     return $self->{native} if exists $self->{native};
     my $format = $self->field('format');
-    if ($format =~ /^\s*3\.0\s+\(quilt\)\s*$/) {
+    if ($format =~ /^\s*2\.0\s*$/ or $format =~ /^\s*3\.0\s+\(quilt\)\s*$/) {
         $self->{native} = 0;
     } else {
         my $version = $self->field('version');
