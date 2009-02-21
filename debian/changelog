@@ -74,6 +74,7 @@ lintian (2.2.6) UNRELEASED; urgency=low
   * unpack/unpack-srcpkg-l1:
     + [ADB] Handle a number of different ways in which upstream directory
       trees may be represented in tarballs.  (Closes: #515795)
+    + [RA] Support LZMA-compressed upstream source.  (Closes: #515068)
 
  -- Russ Allbery <rra@debian.org>  Fri, 13 Feb 2009 15:48:50 -0800
 
