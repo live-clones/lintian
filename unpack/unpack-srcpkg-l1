@@ -92,6 +92,7 @@ if ($tarball =~ /\.lzma\z/) {
 spawn({ fail => 'error', out => "$base_dir/index" },
       ["tar", @tar_options, "$base_dir/$tarball"],
       '|', ['perl', '-p -w -E', 's,^(\S+\s+){5}\./$,,;',
+		'-E', 's,^((\S+\s+){5})[^/]+$,$0/,;',
 		'-E', 's,^((\S+\s+){5})(\./)?[^/]+,$1.,;s,^h,-,'],
       '|', ['awk', '/^.+$/ {print $0}'],
       '|', ["sort", "-k", "6"]);
