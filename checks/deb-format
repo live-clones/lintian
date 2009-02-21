@@ -43,6 +43,8 @@ if ($success) {
     } elsif ($members[1] ne 'control.tar.gz') {
         tag 'malformed-deb-archive',
             "second member $members[1] not control.tar.gz";
+    } elsif ($members[2] eq 'data.tar.lzma') {
+        tag 'lzma-deb-archive';
     } elsif ($members[2] !~ /^data\.tar\.(gz|bz2)\z/) {
         tag 'malformed-deb-archive',
             "third member $members[2] not data.tar.(gz|bz2)";

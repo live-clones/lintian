@@ -3,6 +3,7 @@ lintian (2.2.6) UNRELEASED; urgency=low
   * Summary of tag changes:
     + Added
       - icon-size-and-directory-name-mismatch
+      - lzma-deb-archive
       - multiple-distributions-in-changes-file (disabled)
 
   * checks/common_data.pm:
@@ -10,6 +11,9 @@ lintian (2.2.6) UNRELEASED; urgency=low
   * checks/control-file:
     + [ADB] Properly exclude packages built from the glibc source package
       from the "hardcoded depends on libc" test.  (Closes: #515831)
+  * checks/deb-format{,.desc}:
+    + [RA] Recognize data.tar.lzma binary package components and use a
+      different tag than malformed-deb-archive.
   * checks/description:
     + [ADB] Warn of homepages embedded in the description which use the
       syntax "Homepage: <http://example.com>" using the warning level
