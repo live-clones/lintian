@@ -39,6 +39,8 @@ lintian (2.2.6) UNRELEASED; urgency=low
     + [ADB] Lower the certainty of the embedded-{javascript,php}-library
       tags to "possible" as they trigger purely on filenames and not
       content.  (Closes: #515690)
+    + [RA] Offer advice for duplicate-font-file for when the font package
+      is huge.  Thanks, Thijs Kinkhorst and Paul Wise.  (Closes: #515689)
   * checks/scripts:
     + [RA] Make static regexes global to avoid recreating them for each
       file we scan.  Patch from Raphael Geissert.
