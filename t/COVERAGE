@@ -1,4 +1,4 @@
-Last generated 2009-02-08
+Last generated 2009-02-21
 
 The following tags are not tested by the test suite:
 
@@ -154,10 +154,10 @@ init.d init.d-script-has-bad-start-runlevel
 init.d init.d-script-has-duplicate-lsb-keyword
 init.d script-in-etc-init.d-not-registered-via-update-rc.d
 
-lintian bad-distribution-in-changes-file
 lintian bad-section-in-changes-file
 lintian checksum-mismatch-in-changes-file
 lintian file-size-mismatch-in-changes-file
+lintian multiple-distributions-in-changes-file
 lintian no-description-in-changes-file
 lintian no-urgency-in-changes-file
 

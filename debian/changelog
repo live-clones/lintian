@@ -76,6 +76,8 @@ lintian (2.2.6) UNRELEASED; urgency=low
   * private/refresh-virtual-packages-data:
     + [RA] New script to generate the list of virtual packages.  Based on
       a patch by Raphael Geissert.
+  * private/update-coverage:
+    + [RA] Add support for source package tests.
 
   * t/runtests:
     + [RA] Add support for raw source package checks in the source
