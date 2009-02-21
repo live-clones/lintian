@@ -380,7 +380,7 @@ if ($#shlibs == -1 and not %unversioned_shlibs) {
 
 	    $dep_templates = 0;
 	    $meta_info_seen = 0;
-	} elsif (m/^\|\s+(\S+)(?:\s(\S+(\s\S+)))?$/) {
+	} elsif (m/^\|\s+(\S+)(?:\s(\S+\s\S+))?(\s*,\s+\S+(\s\S+\s\S+)?)*$/) {
 	    # alternative dependency template
 
 	    if ($meta_info_seen or not defined $soname) {
@@ -389,6 +389,13 @@ if ($#shlibs == -1 and not %unversioned_shlibs) {
 
 	    ($dep_package, $dep) = ($1, $2 || '');
 	    push @symbols_depends, $dep_package . ' ' . $dep;
+	    if (defined $3) {
+		my $deps = $3;
+		while ($deps =~ m/\s*,\s+(\S+)(?:\s(\S+\s\S+))?/g) {
+		    ($dep_package, $dep) = ($1, $2 || '');
+		    push @symbols_depends, $dep_package . ' '. $dep;
+		}
+	    }
 	    $dep_templates++;
 	} elsif (m/^\*\s(\S+):\s(\S+)/) {
 	    # meta-information

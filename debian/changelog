@@ -29,6 +29,8 @@ lintian (2.2.6) UNRELEASED; urgency=low
   * checks/shared-libs:
     + [RA] Save a local reference to objdump information to reduce the
       number of method calls.  Patch from Raphael Geissert.
+    + [ADB] Correctly handle alternative dependency lines in symbols files
+      which contain multiple entries.  (Closes: #516427)
 
   * collection/strings{,.desc}:
     + [RA] Collect a list of ELF binaries in the package and the output of

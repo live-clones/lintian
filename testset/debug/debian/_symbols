@@ -4,7 +4,7 @@
  and so should this
 
 libhello.so.0 libhello0 #MINVER#
-| libhello0c2 (>= 1.2)
+| libhello0c2 (>= 1.2), libhelloc0c2 (<< 1.3)
 | hello-dbg
  hello@Base 1.0
 * Build-Dep-Foo: bar

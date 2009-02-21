@@ -39,4 +39,5 @@ W: libhello0: symbols-declares-dependency-on-other-package hello-dbg
 W: libhello0: symbols-declares-dependency-on-other-package libhello0c2 (>= 1.2)
 W: libhello0: symbols-declares-dependency-on-other-package libhello2 #MINVER#
 W: libhello0: symbols-declares-dependency-on-other-package libhello2 (>= 1:2.3)
+W: libhello0: symbols-declares-dependency-on-other-package libhelloc0c2 (<< 1.3)
 W: libhello0: unused-shlib-entry-in-symbols-control-file libhello 2
