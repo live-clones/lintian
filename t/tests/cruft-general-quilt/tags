@@ -1,0 +1,18 @@
+E: cruft-general-quilt source: debian-files-list-in-source
+E: cruft-general-quilt source: unsupported-source-format 3.0 (quilt)
+W: cruft-general-quilt source: diff-contains-arch-control-dir debian/{arch}
+W: cruft-general-quilt source: diff-contains-arch-inventory-file debian/.arch-inventory
+W: cruft-general-quilt source: diff-contains-bts-control-dir debian/.be
+W: cruft-general-quilt source: diff-contains-bzr-control-dir debian/.bzr
+W: cruft-general-quilt source: diff-contains-cvs-conflict-copy debian/.#foo.1.1
+W: cruft-general-quilt source: diff-contains-cvs-control-dir debian/CVS
+W: cruft-general-quilt source: diff-contains-editor-backup-file debian/foo~
+W: cruft-general-quilt source: diff-contains-git-control-dir debian/.git
+W: cruft-general-quilt source: diff-contains-hg-control-dir debian/.hg
+W: cruft-general-quilt source: diff-contains-hg-tags-file debian/.hgtags
+W: cruft-general-quilt source: diff-contains-patch-failure-file debian/foo.rej
+W: cruft-general-quilt source: diff-contains-substvars debian/substvars
+W: cruft-general-quilt source: diff-contains-svk-commit-file debian/svk-commit444.tmp
+W: cruft-general-quilt source: diff-contains-svn-commit-file debian/svn-commit.tmp
+W: cruft-general-quilt source: diff-contains-svn-conflict-file debian/foo.r1352
+W: cruft-general-quilt source: diff-contains-svn-control-dir debian/.svn
