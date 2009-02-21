@@ -5,6 +5,7 @@ lintian (2.2.6) UNRELEASED; urgency=low
       - icon-size-and-directory-name-mismatch
       - lzma-deb-archive
       - multiple-distributions-in-changes-file (disabled)
+      - unsupported-source-format
 
   * checks/common_data.pm:
     + [RA] Virtual packages now come from data.
@@ -23,8 +24,9 @@ lintian (2.2.6) UNRELEASED; urgency=low
       syntax "Homepage: <http://example.com>" using the warning level
       tag description-contains-homepage rather than the info level tag
       description-possibly-contains-homepage.  (Closes: #515998)
-  * checks/fields:
+  * checks/fields{,.desc}:
     + [RA] Load virtual packages from data/fields/virtual-packages.
+    + [RA] Warn of unsupported source package versions.
   * checks/files{,.desc}:
     + [RA] Warn of PNG icons whose size doesn't match the size indicated
       by the directory in which they're installed.  Patch from Raphael

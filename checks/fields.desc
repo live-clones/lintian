@@ -7,6 +7,14 @@ Needs-Info: debfiles, source-control-fields
 Info: This script checks the syntax of the fields in package control files,
  as described in the Policy Manual.
 
+Tag: unsupported-source-format
+Severity: serious
+Certainty: certain
+Info: This package uses a different source package format than 1.0.  At
+ present, only <tt>Format: 1.0</tt> packages are permitted by the Debian
+ archive software.  Newer package formats are supported by dpkg, but they
+ should not yet be used for upload to Debian.
+
 Tag: no-package-name
 Severity: serious
 Certainty: certain

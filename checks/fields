@@ -141,6 +141,15 @@ unless (-d "fields") {
 	fail("directory in lintian laboratory for $type package $pkg missing: fields");
 }
 
+#---- Format
+
+if ($type eq 'source') {
+	my $format = $info->field('format');
+	if (defined($format) and $format !~ /^\s*1\.0\s*\z/) {
+		tag 'unsupported-source-format', $format;
+	}
+}
+
 #---- Package
 
 if ($type eq "binary"){
