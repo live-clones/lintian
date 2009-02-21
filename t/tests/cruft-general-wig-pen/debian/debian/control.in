@@ -1,0 +1,15 @@
+Source: {$srcpkg}
+Format: 2.0
+Priority: extra
+Section: {$section}
+Maintainer: {$author}
+Standards-Version: 3.8.0
+Build-Depends: debhelper (>= 7)
+
+Package: {$srcpkg}
+Architecture: {$architecture}
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Description: {$description}
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.
