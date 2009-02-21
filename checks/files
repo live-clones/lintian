@@ -30,22 +30,22 @@ our $FONT_PACKAGES;
 # A list of known packaged Javascript libraries
 # and the packages providing them
 our @jslibraries = (
-    [ qr,(?i)mochikit\.js(\.gz)?$, => 'libjs-mochikit' ],
-    [ qr,(?i)jquery(\.(min|lite|pack))?\.js(\.gz)?$, => 'libjs-jquery' ],
-    [ qr,(?i)prototype(-[\d\.]+)?\.js(\.gz)?$, => 'libjs-prototype' ],
-    [ qr,(?i)scriptaculous\.js(\.gz)?$, => 'libjs-scriptaculous' ],
-    [ qr,(?i)fckeditor\.js(\.gz)?$, => 'fckeditor' ],
-    [ qr,(?i)cropper(\.uncompressed)?\.js(\.gz)?$, => 'libjs-cropper' ],
-    [ qr,(?i)swfobject\.js(\.gz)?$, => 'libjs-yui' ],
-    [ qr,(?i)yahoo-(dom-event|min)\.js(\.gz)?$, => 'libjs-yui' ],
+    [ qr,(?i)mochikit\.js(\.gz)?$, => qr'libjs-mochikit' ],
+    [ qr,(?i)jquery(\.(min|lite|pack))?\.js(\.gz)?$, => qr'libjs-jquery' ],
+    [ qr,(?i)prototype(-[\d\.]+)?\.js(\.gz)?$, => qr'libjs-prototype' ],
+    [ qr,(?i)scriptaculous\.js(\.gz)?$, => qr'libjs-scriptaculous' ],
+    [ qr,(?i)fckeditor\.js(\.gz)?$, => qr'fckeditor' ],
+    [ qr,(?i)cropper(\.uncompressed)?\.js(\.gz)?$, => qr'libjs-cropper' ],
+    [ qr,(?i)swfobject\.js(\.gz)?$, => qr'libjs-yui' ],
+    [ qr,(?i)yahoo-(dom-event|min)\.js(\.gz)?$, => qr'libjs-yui' ],
 # Disabled due to false positives.  Needs a content check adding to verify
 # that the file being checked is /the/ yahoo.js
-#    [ qr,(?i)yahoo\.js(\.gz)?$, => 'libjs-yui' ],
-    [ qr,(?i)jsjac(\.packed)?\.js(\.gz)?$, => 'libjs-jac' ],
-    [ qr,(?i)jsMath(-fallback-\w+)?\.js(\.gz)?$, => 'jsmath' ],
+#    [ qr,(?i)yahoo\.js(\.gz)?$, => qr'libjs-yui' ],
+    [ qr,(?i)jsjac(\.packed)?\.js(\.gz)?$, => qr'libjs-jac' ],
+    [ qr,(?i)jsMath(-fallback-\w+)?\.js(\.gz)?$, => qr'jsmath' ],
     [ qr,(?i)tiny_mce(_(popup|src))?\.js(\.gz)?$, => qr'tinymce2?' ],
 # not yet available in unstable:
-#    [ qr,(?i)(htmlarea|Xinha(Loader|Core))\.js$, => 'xinha' ],
+#    [ qr,(?i)(htmlarea|Xinha(Loader|Core))\.js$, => qr'xinha' ],
 );
 
 # A list of known packaged PEAR modules
