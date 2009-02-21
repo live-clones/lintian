@@ -123,6 +123,10 @@ my @global_clean_bypass = (
 
 # Load package versions provided by the Perl core modules
 my $perl_core_provides = Lintian::Data->new ('fields/perl-provides', '\s+');
+# Load obsolete packages list.
+my $obsolete_packages = Lintian::Data->new ('fields/obsolete-packages');
+# Load virtual packages list.
+my $virtual_packages = Lintian::Data->new ('fields/virtual-packages');
 
 sub run {
 
@@ -131,11 +135,6 @@ my $type = shift;
 my $info = shift;
 my $version;
 my $arch_indep;
-
-# Load obsolete packages list.
-my $obsolete_packages = Lintian::Data->new ('fields/obsolete-packages');
-# Load virtual packages list.
-my $virtual_packages = Lintian::Data->new ('fields/virtual-packages');
 
 unless (-d "fields") {
 	fail("directory in lintian laboratory for $type package $pkg missing: fields");
