@@ -5,74 +5,16 @@ use base qw(Exporter);
 
 our @EXPORT = qw
 (
-   %known_archs %known_sections %known_non_us_parts %known_archive_parts
-   %known_prios %known_source_fields %known_binary_fields %known_udeb_fields
-   %known_obsolete_fields %known_essential %known_build_essential
-   %known_obsolete_packages %known_obsolete_emacs %known_libstdcs %known_tcls
-   %known_tclxs %known_tks %known_tkxs %known_libpngs %known_x_metapackages
-   %non_standard_archs %all_cpus %all_oses
-   %known_doc_base_formats
-   $known_shells_regex
+   %known_source_fields %known_essential $known_shells_regex
 );
 
 # To let "perl -cw" test know we use these variables;
 use vars qw
 (
-  %known_archs %known_sections %known_non_us_parts %known_archive_parts
-  %known_prios %known_source_fields %known_binary_fields %known_udeb_fields
-  %known_obsolete_fields %known_essential %known_build_essential
-  %known_obsolete_emacs %known_libstdcs %known_tcls %known_tclxs %known_tks
-  %known_tkxs %known_libpngs %known_x_metapackages
-  %all_cpus %all_oses
-  %known_doc_base_formats
-  $known_shells_regex
+  %known_source_fields %known_essential $known_shells_regex
 );
 
 # simple defines for commonly needed data
-
-# From /usr/share/dpkg/cputable, included here to make lintian results
-# consistent no matter what dpkg one has installed.
-%all_cpus = map { $_ => 1 }
-    ('i386', 'ia64', 'alpha', 'amd64', 'armeb', 'arm', 'hppa', 'm32r', 'm68k',
-     'mips', 'mipsel', 'powerpc', 'ppc64', 's390', 's390x', 'sh3', 'sh3eb',
-     'sh4', 'sh4eb', 'sparc');
-
-# From /usr/share/dpkg/triplettable, included here to make lintian results
-# consistent no matter what dpkg one has installed.  This lists all of the
-# foo-<cpu> rules.  Note that linux is not present in the current dpkg and
-# hence is not present here.
-%all_oses = map { $_ => 1 }
-    ('kfreebsd', 'knetbsd', 'hurd', 'freebsd', 'openbsd', 'netbsd', 'darwin',
-     'solaris');
-
-# Yes, this includes combinations that are rather unlikely to ever exist, like
-# hurd-sh3, but the chances of those showing up as errors are rather low and
-# this reduces the necessary updating.
-#
-# armel and lpia are special cases, so handle them separately here.  (They're
-# handled separately in /usr/share/dpkg/triplettable.)  any and all are also
-# special cases.
-%known_archs = map { $_ => 1 }
-    grep { !$known_archs{$_} }
-        (keys %all_cpus,
-         map { my $os = $_; map { "$os-$_" } keys %all_cpus } keys %all_oses),
-    ('armel', 'lpia', 'any', 'all');
-
-%known_sections = map { $_ => 1 }
-    ('admin', 'comm', 'devel', 'doc', 'editors', 'electronics',
-     'embedded', 'games', 'gnome', 'graphics', 'hamradio', 'interpreters',
-     'kde', 'libdevel', 'libs', 'mail', 'math', 'misc', 'net', 'news',
-     'oldlibs', 'otherosfs', 'perl', 'python', 'science', 'shells',
-     'sound', 'tex', 'text', 'utils', 'web', 'x11'
-    );
-
-%known_non_us_parts = map { $_ => 1 } ('non-free', 'contrib', 'main' );
-
-%known_archive_parts = map { $_ => 1 }
-    ('non-free', 'contrib');
-
-%known_prios = map { $_ => 1 }
-    ('required', 'important', 'standard', 'optional', 'extra');
 
 # The Ubuntu original-maintainer field is handled separately.
 %known_source_fields = map { $_ => 1 }
@@ -84,67 +26,11 @@ use vars qw
      'vcs-svn', 'vcs-browser', 'dm-upload-allowed', 'bugs', 'checksums-sha1',
      'checksums-sha256', 'checksums-md5');
 
-# The Ubuntu original-maintainer field is handled separately.
-%known_binary_fields = map { $_ => 1 }
-    ('package', 'version', 'architecture', 'depends', 'pre-depends',
-     'recommends', 'suggests', 'enhances', 'conflicts', 'provides',
-     'replaces', 'breaks', 'essential', 'maintainer', 'section', 'priority',
-     'source', 'description', 'installed-size', 'python-version', 'homepage',
-     'bugs', 'origin');
-
-# The Ubuntu original-maintainer field is handled separately.
-%known_udeb_fields = map { $_ => 1 }
-    ('package', 'version', 'architecture', 'subarchitecture', 'depends',
-     'recommends', 'enhances', 'provides', 'replaces', 'breaks', 'replaces',
-     'maintainer', 'section', 'priority', 'source', 'description',
-     'installed-size', 'kernel-version', 'installer-menu-item', 'bugs',
-     'origin');
-
-%known_obsolete_fields = map { $_ => 1 }
-    ('revision', 'package-revision', 'package_revision',
-     'recommended', 'optional', 'class');
-
 %known_essential = map { $_ => 1 }
     ('base-files', 'base-passwd', 'bash', 'bsdutils', 'coreutils',
      'debianutils', 'diff', 'dpkg', 'e2fsprogs', 'findutils', 'grep', 'gzip',
      'hostname', 'login', 'mktemp', 'mount', 'ncurses-base', 'ncurses-bin',
      'perl-base', 'sed', 'sysvinit', 'sysvinit-utils', 'tar', 'util-linux');
-
-%known_build_essential = map { $_ => 1 }
-    ('libc6-dev', 'libc-dev', 'gcc', 'g++', 'make', 'dpkg-dev');
-
-# Still in the archive but shouldn't be the primary Emacs dependency.
-%known_obsolete_emacs = map { $_ => 1 }
-    ('emacs21');
-
-%known_libstdcs = map { $_ => 1 }
-    ('libstdc++2.9-glibc2.1', 'libstdc++2.10', 'libstdc++2.10-glibc2.2',
-     'libstdc++3', 'libstdc++3.0', 'libstdc++4', 'libstdc++5',
-     'libstdc++6', 'lib64stdc++6',
-    );
-
-%known_tcls = map { $_ => 1 }
-    ( 'tcl74', 'tcl8.0', 'tcl8.2', 'tcl8.3', 'tcl8.4', 'tcl8.5', );
-
-%known_tclxs = map { $_ => 1 }
-    ( 'tclx76', 'tclx8.0.4', 'tclx8.2', 'tclx8.3', 'tclx8.4', );
-
-%known_tks = map { $_ => 1 }
-    ( 'tk40', 'tk8.0', 'tk8.2', 'tk8.3', 'tk8.4', 'tk8.5', );
-
-%known_tkxs = map { $_ => 1 }
-    ( 'tkx8.2', 'tkx8.3', );
-
-%known_libpngs = map { $_ => 1 }
-    ( 'libpng12-0', 'libpng2', 'libpng3', );
-
-%known_x_metapackages = map { $_ => 1 }
-    ( 'x-window-system', 'x-window-system-dev', 'x-window-system-core',
-      'xorg', 'xorg-dev', );
-
-# Supported documentation formats for doc-base files.
-%known_doc_base_formats = map { $_ => 1 }
-    ( 'html', 'text', 'pdf', 'postscript', 'info', 'dvi', 'debiandoc-sgml' );
 
 $known_shells_regex = qr'(?:(?:b|d)?a|t?c|(?:pd|m)?k|z)?sh';
 
