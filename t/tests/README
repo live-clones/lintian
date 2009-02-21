@@ -179,8 +179,7 @@ To run a specific test case, run:
 
     debian/rules runtests onlyrun=<desc-name>
 
-You can omit the .desc from the end of <desc-name>, but you need to
-include the leading sequence number and underscore.  Give only the
+You can omit the .desc from the end of <desc-name>.  Give only the
 file name, not the full path.
 
 It's often more useful to run every test that is relevant to a
