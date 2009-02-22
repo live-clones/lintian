@@ -97,6 +97,9 @@ lintian (2.2.6) UNRELEASED; urgency=low
     + [ADB] Handle a number of different ways in which upstream directory
       trees may be represented in tarballs.  (Closes: #515795)
     + [RA] Support LZMA-compressed upstream source.  (Closes: #515068)
+    + [RA] Analyze the upstream source tarball to extract its prefix and
+      save it in the laboratory.  Also fixes unpacking of source tarballs
+      that have no common subdirectory.
 
  -- Russ Allbery <rra@debian.org>  Fri, 13 Feb 2009 15:48:50 -0800
 

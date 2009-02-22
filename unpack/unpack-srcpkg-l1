@@ -7,6 +7,7 @@
 
 # Copyright (C) 1998 Christian Schwarz
 # Copyright (C) 2009 Raphael Geissert
+# Copyright (C) 2009 Russ Allbery
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -51,56 +52,110 @@ mkdir("$base_dir/fields", 0777) or fail("mkdir $base_dir/fields: $!");
 
 # create control field files
 for my $field (keys %$data) {
-  my $field_file = "$base_dir/fields/$field";
-  open(F, '>', $field_file) or fail("cannot open file $field_file for writing: $!");
-  print F $data->{$field},"\n";
-  close(F);
+    my $field_file = "$base_dir/fields/$field";
+    open(F, '>', $field_file)
+        or fail("cannot open file $field_file for writing: $!");
+    print F $data->{$field},"\n";
+    close(F);
 }
 
-# Install symbolic links to source package files
+# Install symbolic links to source package files.  Version handling is based
+# on Dpkg::Version::parseversion.
 my (undef, $dir, $name) = File::Spec->splitpath($file);
-my $tarball;
-my $version;
-
-# Based on Dpkg::Version::parseversion:
-$version = $data->{'version'};
+my $version = $data->{'version'};
 if ($version =~ /:/) {
     $version =~ s/^(?:\d+):(.+)/$1/ or fail("bad version number '$version'");
 }
-
-my $basenamerev = $data->{'source'} . '_' . $version;
+my $baserev = $data->{'source'} . '_' . $version;
 $version =~ s/(.+)-(.*)$/$1/;
-my $basename = $data->{'source'} . '_' . $version;
-
+my $base = $data->{'source'} . '_' . $version;
 symlink($file,"$base_dir/dsc") or fail("cannot symlink dsc file: $!");
+my $tarball;
 for my $fs (split(/\n/,$data->{'files'})) {
-  next if $fs =~ /^\s*$/o;
-  my @t = split(/\s+/o,$fs);
-  $tarball = $t[2] if ($t[2] =~ /^(\Q$basename\E\.orig|\Q$basenamerev\E)\.tar\.(gz|bz2|lzma)$/);
-  symlink("$dir/$t[2]","$base_dir/$t[2]") or fail("cannot symlink file $t[2]: $!");
+    next if $fs =~ /^\s*$/o;
+    my @t = split(/\s+/o,$fs);
+    if ($t[2] =~ /^(\Q$base\E\.orig|\Q$baserev\E)\.tar\.(gz|bz2|lzma)$/) {
+        $tarball = $t[2];
+    }
+    symlink("$dir/$t[2]", "$base_dir/$t[2]")
+        or fail("cannot symlink file $t[2]: $!");
 }
-
 if (!$tarball) {
     fail("could not find the source tarball");
 }
+
+# Collect a list of the files in the source package.  tar currently doesn't
+# automatically recognize LZMA, so we need to add the option where it's
+# needed.  Change hard link status (h) to regular files and remove a leading
+# ./ prefix on filenames while we're reading the tar output.
 my @tar_options = ('-tvf');
 if ($tarball =~ /\.lzma\z/) {
     unshift(@tar_options, '--lzma');
 }
+my @index;
+my $collect = sub {
+    for my $line (map { split "\n" } @_) {
+        $line =~ s/^h/-/;
+        if ($line and $line !~ m,^(?:\S+\s+){5}\./$,) {
+            push(@index, $line . "\n");
+        }
+    }
+};
+spawn({ fail => 'error', out => $collect },
+      ["tar", @tar_options, "$base_dir/$tarball"]);
 
-# create index file for package
+# We now need to see if all files in the tarball have a common prefix.  If so,
+# we're going to strip that prefix off each file name.  We also remove lines
+# that consist solely of the prefix.
+my $prefix;
+for my $line (@index) {
+    my ($file) = ($line =~ /^(?:\S+\s+){5}(.*)/);
+    $file =~ s,^\./+,,;
+    my ($dir) = ($file =~ m,([^/]+),);
+    if (defined($dir) and $dir eq $file and not $line =~ /^d/) {
+        $prefix = '';
+    } elsif (defined $dir) {
+        if (not defined $prefix) {
+            $prefix = $dir;
+        } elsif ($dir ne $prefix) {
+            $prefix = '';
+        }
+    } else {
+        $prefix = '';
+    }
+}
+if ($prefix) {
+    @index = map {
+        s,^((?:\S+\s+){5})(?:\./+)?\Q$prefix\E(?:/+|\z),$1,;
+        if (/^(?:\S+\s+){5}\S+/) {
+            $_;
+        } else {
+            ();
+        }
+    } @index;
+    open(PREFIX, '>', "$base_dir/source-prefix")
+        or fail("cannot create $base_dir/source-prefix: $!");
+    print PREFIX "$prefix\n";
+    close PREFIX;
+}
+
+# Now that we have the file names we want, write them out sorted to the index
+# file.
 spawn({ fail => 'error', out => "$base_dir/index" },
-      ["tar", @tar_options, "$base_dir/$tarball"],
-      '|', ['perl', '-p -w -E', 's,^(\S+\s+){5}\./$,,;',
-		'-E', 's,^((\S+\s+){5})[^/]+$,$0/,;',
-		'-E', 's,^((\S+\s+){5})(\./)?[^/]+,$1.,;s,^h,-,'],
-      '|', ['awk', '/^.+$/ {print $0}'],
-      '|', ["sort", "-k", "6"]);
+      sub { print @index },
+      '|', ['sort', '-k', '6']);
 
 # Create symbolic links to binary packages
 mkdir("$base_dir/binary", 0777) or fail("mkdir $base_dir/binary: $!");
 for my $bin (split(/,\s+/o,$data->{'binary'})) {
-  symlink("../../../binary/$bin", "$base_dir/binary/$bin") or fail("cannot symlink binary package $bin: $!");
+    symlink("../../../binary/$bin", "$base_dir/binary/$bin")
+        or fail("cannot symlink binary package $bin: $!");
 }
 
 exit 0;
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 ts=4 et shiftround
