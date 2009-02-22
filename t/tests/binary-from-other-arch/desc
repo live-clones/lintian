@@ -4,6 +4,5 @@ Architecture: any
 Version: 1.0
 Description: Test package with a pseudo binary from a different architecture
 Test-For:
-    binary-from-other-architecture
-    statically-linked-binary
-    apparently-corrupted-elf-binary
+ apparently-corrupted-elf-binary
+ binary-from-other-architecture

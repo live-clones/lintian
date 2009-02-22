@@ -25,34 +25,34 @@ use Util;
 
 use File::Spec;
 
-# Table based on checks/emdebian' %archdetecttable, as found in
-# emdebian-tools
-our %archselftable = (
-	'32' => qr'ELF 32-bit',
-	'64' => qr'ELF 64-bit',
-	'alpha' => qr'ELF 64-bit LSB .* Alpha',
-	'amd64' => qr'ELF 64-bit LSB .* x86-64, .* (?:GNU/Linux|(?!GNU))',
-	'arm' => qr'ELF 32-bit LSB .* ARM, version \d,',
-	'armeb' => qr'ELF 32-bit MSB .* ARM',
-	'armel' => qr'ELF 32-bit LSB .* \(SYSV\)',
-	'hppa' => qr'ELF 32-bit MSB .* PA-RISC',
-	'hurd-i386' => qr'ELF 32-bit LSB .* Intel 80386, .* (?:GNU/Hurd|(?!GNU))',
-	'i386' => qr'ELF 32-bit LSB .* 80386, .* (?:GNU/Linux|(?!GNU))',
-	'ia64' => qr'ELF 64-bit LSB .* IA-64',
+# Table based on checks/emdebian's %archdetecttable, as found in
+# emdebian-tools.
+our %ARCH_REGEX = (
+	'32' 		 => qr'ELF 32-bit',
+	'64' 		 => qr'ELF 64-bit',
+	'alpha'          => qr'ELF 64-bit LSB .* Alpha',
+	'amd64'          => qr'ELF 64-bit LSB .* x86-64, .* (?:GNU/Linux|(?!GNU))',
+	'arm'            => qr'ELF 32-bit LSB .* ARM, version \d,',
+	'armeb'          => qr'ELF 32-bit MSB .* ARM',
+	'armel'          => qr'ELF 32-bit LSB .* \(SYSV\)',
+	'hppa'           => qr'ELF 32-bit MSB .* PA-RISC',
+	'hurd-i386' 	 => qr'ELF 32-bit LSB .* Intel 80386, .* (?:GNU/Hurd|(?!GNU))',
+	'i386'      	 => qr'ELF 32-bit LSB .* 80386, .* (?:GNU/Linux|(?!GNU))',
+	'ia64'      	 => qr'ELF 64-bit LSB .* IA-64',
 	'kfreebsd-amd64' => qr'ELF 64-bit LSB .* x86-64, .* (?:GNU/kFreeBSD|(?!GNU))',
-	'kfreebsd-i386' => qr'ELF 32-bit LSB .* 80386, .* (?:GNU/kFreeBSD|(?!GNU))',
-	'm32r' => qr'ELF 32-bit MSB .* M32R',
-	'm68k' => qr'ELF 32-bit MSB .* 680[02]0',
-	'mips' => qr'ELF 32-bit MSB .* MIPS',
-	'mipsel' => qr'ELF 32-bit LSB .* MIPS',
-	'mips64' => qr'ELF 64-bit MSB .* MIPS',
-	'mipsel64' => qr'ELF 64-bit LSB .* MIPS',
-	'powerpc' => qr'ELF 32-bit MSB .* PowerPC',
-	'powerpc64' => qr'ELF 64-bit MSB .* PowerPC',
-	's390' => qr'ELF 32-bit MSB .* S.390',
-	's390x' => qr'ELF 64-bit MSB .* S.390',
-	'sparc' => qr'ELF 32-bit MSB .* SPARC',
-	'sparc64' => qr'ELF 64-bit MSB .* SPARC');
+	'kfreebsd-i386'  => qr'ELF 32-bit LSB .* 80386, .* (?:GNU/kFreeBSD|(?!GNU))',
+	'm32r' 		 => qr'ELF 32-bit MSB .* M32R',
+	'm68k' 		 => qr'ELF 32-bit MSB .* 680[02]0',
+	'mips' 		 => qr'ELF 32-bit MSB .* MIPS',
+	'mipsel' 	 => qr'ELF 32-bit LSB .* MIPS',
+	'mips64' 	 => qr'ELF 64-bit MSB .* MIPS',
+	'mipsel64'       => qr'ELF 64-bit LSB .* MIPS',
+	'powerpc'        => qr'ELF 32-bit MSB .* PowerPC',
+	'ppc64'          => qr'ELF 64-bit MSB .* PowerPC',
+	's390'    	 => qr'ELF 32-bit MSB .* S.390',
+	's390x'   	 => qr'ELF 64-bit MSB .* S.390',
+	'sparc'   	 => qr'ELF 32-bit MSB .* SPARC',
+	'sparc64' 	 => qr'ELF 64-bit MSB .* SPARC');
 
 our $multiarch;
 
@@ -158,7 +158,7 @@ foreach (sort keys %{$info->file_info}) {
     $directories{"/$_"}++;
 }
 
-exists($archselftable{$arch}) or warn("Unknown architecture $arch");
+exists($ARCH_REGEX{$arch}) or warn("Unknown architecture $arch");
 
 # process all files in package
 foreach my $file (sort keys %{$info->file_info}) {
@@ -193,10 +193,10 @@ foreach my $file (sort keys %{$info->file_info}) {
 	tag "arch-dependent-file-in-usr-share", "$file";
     }
 
-    if ($arch ne 'all' and $fileinfo !~ m/$archselftable{$arch}/) {
+    if ($arch ne 'all' and $fileinfo !~ m/$ARCH_REGEX{$arch}/) {
 	if ($file =~ m,/lib(\d{2})/, or $file =~ m,/emul/ia(\d{2}),) {
 	    tag "binary-from-other-architecture", $file
-		unless ($fileinfo =~ m/$archselftable{$1}/);
+		unless ($fileinfo =~ m/$ARCH_REGEX{$1}/);
 	} else {
 	    $multiarch = Lintian::Data->new('binaries/multiarch')
 		unless defined($multiarch);
