@@ -59,9 +59,6 @@ debhelper dh_dhelp-is-deprecated
 
 debian-readme spelling-error-in-readme-debian
 
-description description-possibly-contains-homepage
-description description-synopsis-has-leading-spaces
-
 fields arch-any-in-binary-pkg
 fields aspell-package-not-arch-all
 fields bad-menu-item
