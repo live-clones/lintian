@@ -1,0 +1,3 @@
+E: distribution-multiple-bad_1.0_arch.changes: bad-distribution-in-changes-file bar
+E: distribution-multiple-bad_1.0_arch.changes: bad-distribution-in-changes-file foo
+E: distribution-multiple-bad_1.0_arch.changes: bad-distribution-in-changes-file foo-backportss
