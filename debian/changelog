@@ -99,6 +99,9 @@ lintian (2.2.6) UNRELEASED; urgency=low
   * lib/Util.pm:
     + [RA] Minor optimizations to {read,parse}_dpkg_control.  Patch from
       Raphael Geissert.
+    + [RA] Only take the first space after a field name as the separator
+      and treat the rest as part of the field value so that other parts of
+      Lintian can see the leading spaces.
 
   * private/refresh-virtual-packages-data:
     + [RA] New script to generate the list of virtual packages.  Based on
