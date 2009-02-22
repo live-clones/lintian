@@ -42,6 +42,7 @@ our %ARCH_REGEX = (
 	'ia64'      	 => qr'ELF 64-bit LSB .* IA-64',
 	'kfreebsd-amd64' => qr'ELF 64-bit LSB .* x86-64, .* (?:GNU/kFreeBSD|(?!GNU))',
 	'kfreebsd-i386'  => qr'ELF 32-bit LSB .* 80386, .* (?:GNU/kFreeBSD|(?!GNU))',
+	'lpia'      	 => qr'ELF 32-bit LSB .* 80386, .* (?:GNU/Linux|(?!GNU))',
 	'm32r' 		 => qr'ELF 32-bit MSB .* M32R',
 	'm68k' 		 => qr'ELF 32-bit MSB .* 680[02]0',
 	'mips' 		 => qr'ELF 32-bit MSB .* MIPS',
@@ -159,7 +160,9 @@ foreach (sort keys %{$info->file_info}) {
     $directories{"/$_"}++;
 }
 
-exists($ARCH_REGEX{$arch}) or warn("Unknown architecture $arch");
+if ($arch ne 'all' and not exists($ARCH_REGEX{$arch})) {
+    warn("Unknown architecture $arch");
+}
 
 # process all files in package
 foreach my $file (sort keys %{$info->file_info}) {
