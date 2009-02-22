@@ -1,4 +1,5 @@
-#!/bin/sh -e
+#!/bin/sh
+set -e
 
 # Try to purge the default lab if it looks like a lab.  If the user configured
 # a lab for some other location, currently we don't do anything about that.

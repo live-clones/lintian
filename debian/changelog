@@ -89,6 +89,9 @@ lintian (2.2.6) unstable; urgency=low
     + [RA] New file listing known virtual packages.  Based on a patch by
       Raphael Geissert.  (Closes: #514497)
 
+  * debian/postrm:
+    + [RA] Use set -e, not #!/bin/sh -e.
+
   * frontend/lintian:
     + [ADB] Split the Distribution field of a .changes file into individual
       distributions and then check each of them against the list of known
