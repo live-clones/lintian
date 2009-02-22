@@ -160,8 +160,9 @@ foreach (sort keys %{$info->file_info}) {
     $directories{"/$_"}++;
 }
 
+# If we have an unknown architecture, pretend that all binaries are fine.
 if ($arch ne 'all' and not exists($ARCH_REGEX{$arch})) {
-    warn("Unknown architecture $arch");
+    $ARCH_REGEX{$arch} = qr/./;
 }
 
 # process all files in package
