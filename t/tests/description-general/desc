@@ -1,0 +1,22 @@
+Testname: description-general
+Sequence: 6000
+Version: 1.0
+Description: Tests of various description tags
+Test-For:
+ description-contains-dh-make-perl-template
+ description-contains-duplicated-word
+ description-contains-homepage
+ description-contains-invalid-control-statement
+ description-contains-tabs
+ description-is-debmake-template
+ description-starts-with-leading-spaces
+ description-starts-with-package-name
+ description-synopsis-is-duplicated
+ description-synopsis-is-empty
+ description-synopsis-might-not-be-phrased-properly
+ description-too-long
+ extended-description-is-empty
+ extended-description-line-too-long
+ possible-unindented-list-in-extended-description
+ spelling-error-in-description
+ using-first-person-in-description

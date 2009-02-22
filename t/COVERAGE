@@ -1,4 +1,4 @@
-Last generated 2009-02-21
+Last generated 2009-02-22
 
 The following tags are not tested by the test suite:
 
@@ -344,23 +344,6 @@ debhelper uses-dh-python-with-no-pycompat
 
 debian-readme readme-debian-contains-debmake-default-email-address
 debian-readme readme-debian-mentions-usr-doc
-
-description description-contains-dh-make-perl-template
-description description-contains-duplicated-word
-description description-contains-homepage
-description description-contains-invalid-control-statement
-description description-contains-tabs
-description description-is-debmake-template
-description description-starts-with-leading-spaces
-description description-starts-with-package-name
-description description-synopsis-is-duplicated
-description description-synopsis-is-empty
-description description-synopsis-might-not-be-phrased-properly
-description description-too-long
-description extended-description-is-empty
-description extended-description-line-too-long
-description possible-unindented-list-in-extended-description
-description spelling-error-in-description
 
 etcfiles file-in-etc-not-marked-as-conffile
 
