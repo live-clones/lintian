@@ -23,6 +23,9 @@ W: diffs source: diff-contains-bzr-control-dir .bzr
 W: diffs source: diff-contains-substvars debian/substvars
 W: diffs source: patch-system-but-direct-changes-in-diff .bzr/dummy
 W: diffs: binary-without-manpage usr/bin/diffs
+W: diffs: improbable-bug-number-in-closes 1
+W: diffs: improbable-bug-number-in-closes 1
+W: diffs: improbable-bug-number-in-closes 2
 W: diffs: wrong-bug-number-in-closes l6:#nnnnnn
 W: diffs: wrong-bug-number-in-closes l7:#123nnn
 W: diffs: wrong-bug-number-in-closes l8:#foo
