@@ -1,0 +1,13 @@
+#!/usr/bin/make -f
+
+pkg=lintian-overrides
+
+%:
+	dh $@
+
+binary:
+	dh binary --before install
+	install -D -m 0644 $(CURDIR)/debian/overrides \
+		$(CURDIR)/debian/$(pkg)/usr/share/lintian/overrides/$(pkg)
+	dh_fixperms
+	dh binary --remaining

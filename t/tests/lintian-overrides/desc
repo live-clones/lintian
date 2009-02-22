@@ -1,0 +1,7 @@
+Testname: lintian-overrides
+Sequence: 6000
+Version: 1.0
+Description: Test the couple of overrides-related tags
+Test-For:
+ malformed-override
+ unused-override

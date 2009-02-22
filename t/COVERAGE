@@ -457,8 +457,6 @@ init.d preinst-calls-updaterc.d
 init.d prerm-calls-updaterc.d
 
 lintian bad-ubuntu-distribution-in-changes-file
-lintian malformed-override
-lintian unused-override
 
 manpages bad-link-to-undocumented-manpage
 manpages binary-without-english-manpage
