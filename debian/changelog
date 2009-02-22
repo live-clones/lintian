@@ -76,8 +76,8 @@ lintian (2.2.6) UNRELEASED; urgency=low
 
   * collection/strings{,.desc}:
     + [RA] Collect a list of ELF binaries in the package and the output of
-      strings -a on each binary except for those in /usr/lib/debug.  Based
-      on a patch from Raphael Geissert.  (Closes: #514951)
+      strings on each binary except for those in /usr/lib/debug.  Based on
+      a patch from Raphael Geissert.  (Closes: #514951)
 
   * data/fields/obsolete-packages:
     + [RA] Add foomatic-data, lambdamoo-{core,server}, and old kernel
