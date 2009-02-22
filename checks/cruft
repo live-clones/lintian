@@ -123,9 +123,11 @@ if ($format =~ /^\s*2\.0\s*\z/ or $format =~ /^\s*3\.0\s*\(quilt\)/) {
 my $wanted = sub { find_cruft($pkg, $info, \%warned, $atdinbd) };
 find($wanted, 'unpacked');
 
-# Look for cruft based on file's results
+# Look for cruft based on file's results, but allow cruft in test directories
+# where it may be part of a test suite.
 my $file_info = $info->file_info;
 for my $file (keys(%$file_info)) {
+    next if ($file =~ m,(?:^|/)t(?:est(?:s(?:et)?)?)?/,);
     if ($file_info->{$file} =~ m/\bELF\b/) {
 	tag "source-contains-prebuilt-binary", $file;
     } elsif ($file_info->{$file} =~ m/\bPE(32|64)\b/) {
@@ -240,7 +242,12 @@ sub check_debfiles {
 sub find_cruft {
     my ($pkg, $info, $warned, $atdinbd) = @_;
     (my $name = $File::Find::name) =~ s,^(\./)?unpacked/,,;
-    return if $name =~ m,^t(?:estset)?/, and $pkg eq 'lintian';
+
+    # Ignore files in test suites.  They may be part of the test.
+    if (-d and m,^t(?:est(?:s(?:et)?)?)?\z,) {
+        $File::Find::prune = 1;
+        return;
+    }
 
     my $prefix = ($info->native ? "diff-contains" : "source-contains");
     if (-d and not $warned->{$name}) {

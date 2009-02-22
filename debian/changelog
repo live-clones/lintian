@@ -16,6 +16,9 @@ lintian (2.2.6) UNRELEASED; urgency=low
     + [RA] For Format: 2.0 and Format: 3.0 (quilt) packages, check
       the *.debian.tar.(gz|bz2|lzma) contents instead of expecting
       diffstat output.  (Closes: #515069)
+    + [RA] Ignore cruft in the upstream source in directories that look
+      like part of a test suite.  The files may be part of the test
+      cases.  (Closes: #515137)
   * checks/deb-format{,.desc}:
     + [RA] Recognize data.tar.lzma binary package components and use a
       different tag than malformed-deb-archive.
