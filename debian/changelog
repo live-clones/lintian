@@ -2,6 +2,7 @@ lintian (2.2.6) UNRELEASED; urgency=low
 
   * Summary of tag changes:
     + Added
+      - binary-from-other-architecture
       - icon-size-and-directory-name-mismatch
       - lzma-deb-archive
       - multiple-distributions-in-changes-file (disabled)
@@ -13,6 +14,9 @@ lintian (2.2.6) UNRELEASED; urgency=low
       multiple packages with different architectures, since the libc
       package name is not the same on all architectures.  Thanks to
       Raphael Geissert for the report.  (Closes: #516067)
+    + [RA] Check for binaries from other architectures than the declared
+      architecture of the package outside of known multiarch directories.
+      Patch from Raphael Geissert.  (Closes: #513996)
   * checks/common_data.pm:
     + [RA] Virtual packages now come from data.
   * checks/changelog-file:

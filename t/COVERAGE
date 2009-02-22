@@ -2,7 +2,6 @@ Last generated 2009-02-22
 
 The following tags are not tested by the test suite:
 
-binaries apparently-corrupted-elf-binary
 binaries arch-dependent-file-in-usr-share
 binaries binary-compiled-with-profiling-enabled
 binaries binary-file-compressed-with-upx
