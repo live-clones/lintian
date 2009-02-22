@@ -15,6 +15,10 @@ lintian (2.2.6) UNRELEASED; urgency=low
       Raphael Geissert for the report.  (Closes: #516067)
   * checks/common_data.pm:
     + [RA] Virtual packages now come from data.
+  * checks/changelog-file:
+    + [RA] Don't warn about uncompressed ChangeLog files in doc.  They may
+      be small files and the maintainer may be installing some other
+      upstream file as the upstrema changelog.  (Closes: #515601)
   * checks/control-file:
     + [ADB] Properly exclude packages built from the glibc source package
       from the "hardcoded depends on libc" test.  (Closes: #515831)

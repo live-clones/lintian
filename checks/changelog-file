@@ -78,11 +78,8 @@ for my $file (sort keys %{$info->file_info}) {
     }
 }
 
-# TODO: better check for incorrect case, /../i and /../ without i is used
-# together at random it seems here
-
-# Read package contents...
-foreach (sort keys %{$info->index}) { 
+# Read package contents....  Capitalization errors are dealt with later.
+foreach (sort keys %{$info->index}) {
     next unless length $_;
     # skip packages which have a /usr/share/doc/$pkg -> foo symlink
     if (m,usr/share/doc/$ppkg$, and defined $info->index->{$_}->{link}) {
@@ -105,8 +102,11 @@ foreach (sort keys %{$info->index}) {
 	    }
 	}
 
-	# check if changelog files are compressed with gzip -9
-	next unless $file =~ m/^changelog(\.html)?(\.gz)?$|changelog.debian(\.gz)?$/i;
+	# Check if changelog files are compressed with gzip -9.  It's a bit of
+	# an open question here what we should do with a file named ChangeLog.
+	# If there's also a changelog file, it might be a duplicate, or the
+	# packager may have installed NEWS as changelog intentionally.
+	next unless $file =~ m/^changelog(\.html)?(\.gz)?$|changelog.Debian(\.gz)?$/;
 
 	if (not $file =~ m/\.gz$/) {
 	    tag "changelog-file-not-compressed", "$file";
@@ -131,8 +131,6 @@ foreach (sort keys %{$info->index}) {
 	    $found_text = 1;
 	}
     }
-
-    #  next unless m,^(\S+).*usr/share/doc/$ppkg/([^/\s]+)( -> [^/\s]+)?$,o;
 }
 
 # ignore packages which don't have a /usr/share/doc/$pkg directory, since
