@@ -1,0 +1,9 @@
+unpack-srcpkg-dot-subdir (1.0-1) unstable; urgency=low
+
+  * Lintian Test Suite.
+  * Test: unpack-srcpkg-dot-subdir
+
+  * Suppress "should close ITP bug" messages.  (Closes: #123456)
+
+ -- Debian Lintian Maintainers <lintian-maint@debian.org>  Sat, 21 Feb 2009 15:30:54 -0800
+
