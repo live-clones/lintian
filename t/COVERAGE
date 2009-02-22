@@ -13,7 +13,6 @@ binaries library-not-linked-against-libc
 binaries program-not-linked-against-libc
 
 changelog-file html-changelog-without-text-version
-changelog-file improbable-bug-number-in-closes
 changelog-file no-upstream-changelog
 changelog-file spelling-error-in-changelog
 changelog-file wrong-name-for-changelog-of-native-package
@@ -73,7 +72,6 @@ fields magic-arch-in-arch-list
 fields maintainer-address-is-on-localhost
 fields maintainer-address-looks-weird
 fields maintainer-address-malformed
-fields maintainer-name-missing
 fields malformed-python-version
 fields missing-build-dependency
 fields multiline-field
@@ -273,10 +271,8 @@ binaries unstripped-binary-or-object
 changelog-file changelog-file-missing-in-native-package
 changelog-file changelog-file-not-compressed
 changelog-file changelog-news-debian-mismatch
-changelog-file changelog-not-compressed-with-max-compression
 changelog-file debian-changelog-file-contains-debmake-default-email-address
 changelog-file debian-changelog-file-contains-invalid-email-address
-changelog-file debian-changelog-file-contains-obsolete-user-emacs-settings
 changelog-file debian-changelog-file-is-a-symlink
 changelog-file debian-changelog-file-missing
 changelog-file debian-changelog-file-missing-or-wrong-name
@@ -369,10 +365,8 @@ fields depends-on-obsolete-package
 fields depends-on-old-emacs
 fields depends-on-python-minimal
 fields depends-on-x-metapackage
-fields duplicate-uploader
 fields essential-no-not-needed
 fields invalid-arch-string-in-source-relation
-fields maintainer-also-in-uploaders
 fields malformed-dm-upload-allowed
 fields missing-dh_python-build-dependency
 fields missing-python-build-dependency
@@ -396,7 +390,6 @@ fields uploader-address-is-on-localhost
 fields uploader-address-looks-weird
 fields uploader-address-malformed
 fields uploader-address-missing
-fields uploader-name-missing
 fields uploader-not-full-name
 fields versioned-dependency-satisfied-by-perl
 fields virtual-package-depends-without-real-package-depends

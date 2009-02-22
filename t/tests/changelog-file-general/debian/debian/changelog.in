@@ -1,0 +1,10 @@
+{$srcpkg} ({$version}) unstable; urgency=low
+
+  * Test: {$testname}
+  * improbable-bug-number-in-closes (Closes: #12)
+
+ -- {$author}  {$date}
+
+Local variables:
+add-log-mailing-address: "rra@debian.org"
+End:

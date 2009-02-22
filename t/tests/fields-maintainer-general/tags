@@ -1,0 +1,7 @@
+E: fields-maintainer-general source: maintainer-name-missing <lintian-maint@debian.org>
+E: fields-maintainer-general source: uploader-name-missing <lintian-maint@debian.org>
+E: fields-maintainer-general: maintainer-name-missing <lintian-maint@debian.org>
+W: fields-maintainer-general source: changelog-should-mention-nmu
+W: fields-maintainer-general source: duplicate-uploader Russ Allbery <rra@debian.org>
+W: fields-maintainer-general source: maintainer-also-in-uploaders
+W: fields-maintainer-general source: source-nmu-has-incorrect-version-number 1.0

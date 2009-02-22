@@ -1,0 +1,3 @@
+W: changelog-file-general: changelog-not-compressed-with-max-compression changelog.Debian.gz
+W: changelog-file-general: debian-changelog-file-contains-obsolete-user-emacs-settings
+W: changelog-file-general: improbable-bug-number-in-closes 12
