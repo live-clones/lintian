@@ -34,7 +34,7 @@ lintian (2.2.6) UNRELEASED; urgency=low
     + [RA] Make static regexes global to avoid recreating them for each
       file we scan.  Patch from Raphael Geissert.
     + [ADB] Modify the check for embedded Javascript libraries to ignore
-      yahoo.js as there are similarly named, but unrelated,  scripts in
+      yahoo.js as there are similarly named, but unrelated, scripts in
       the archive.      
     + [ADB] Lower the certainty of the embedded-{javascript,php}-library
       tags to "possible" as they trigger purely on filenames and not
