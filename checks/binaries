@@ -247,6 +247,11 @@ foreach my $file (sort keys %{$info->file_info}) {
     my $strings = slurp_entire_file("strings/$file");
     spelling_check('spelling-error-in-binary', $strings, $file);
 
+    if ($pkg !~ m/^zlib.+/
+	and $strings =~ /(?:in|de)flate (?:\d[ \w.\-]{1,20}[\w.\-])/m) {
+	tag "embedded-zlib", $file;
+    }
+
     # binary or shared object?
     next unless ($fileinfo =~ m/executable/) or ($fileinfo =~ m/shared object/);
     next if $type eq 'udeb';

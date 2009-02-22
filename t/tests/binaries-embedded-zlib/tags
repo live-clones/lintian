@@ -1,0 +1,4 @@
+E: binaries-embedded-zlib: embedded-zlib ./usr/bin/elfobject
+E: binaries-embedded-zlib: statically-linked-binary ./usr/bin/elfobject
+W: binaries-embedded-zlib: apparently-corrupted-elf-binary ./usr/bin/elfobject
+W: binaries-embedded-zlib: binary-without-manpage usr/bin/elfobject

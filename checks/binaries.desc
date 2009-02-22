@@ -217,3 +217,11 @@ Experimental: yes
 Info: Lintian found a spelling error in the given binary.  Lintian has a list
  of common misspellings that it looks for.  It does not have a dictionary
  like a spelling checker does.
+
+Tag: embedded-zlib
+Severity: important
+Certainty: certain
+Info: The given ELF object appears to have been statically linked to zlib.
+ Doing this is discouraged due to the extra work needed by the security team
+ to fix all the extra embedded copies or trigger the package rebuilds, as
+ appropriate.
