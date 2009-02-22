@@ -1,0 +1,3 @@
+W: binaries-spelling: binary-without-manpage usr/bin/basic
+X: binaries-spelling: spelling-error-in-binary ./usr/bin/basic exprimental experimental
+X: binaries-spelling: spelling-error-in-binary ./usr/bin/basic speling spelling

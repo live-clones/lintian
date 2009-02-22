@@ -6,6 +6,7 @@ lintian (2.2.6) UNRELEASED; urgency=low
       - icon-size-and-directory-name-mismatch
       - lzma-deb-archive
       - multiple-distributions-in-changes-file (disabled)
+      - spelling-error-in-binary (experimental)
       - unsupported-source-format
 
   * checks/binaries:
@@ -17,6 +18,8 @@ lintian (2.2.6) UNRELEASED; urgency=low
     + [RA] Check for binaries from other architectures than the declared
       architecture of the package outside of known multiarch directories.
       Patch from Raphael Geissert.  (Closes: #513996)
+    + [RA] Check the data section of ELF binaries for spelling errors.
+      Patch from Raphael Geissert.
   * checks/common_data.pm:
     + [RA] Virtual packages now come from data.
   * checks/changelog-file:
