@@ -19,6 +19,7 @@ lintian (2.2.6) UNRELEASED; urgency=low
     + [RA] Don't warn about uncompressed ChangeLog files in doc.  They may
       be small files and the maintainer may be installing some other
       upstream file as the upstrema changelog.  (Closes: #515601)
+    + [RA] Fix improbable-bug-number-in-closes so that it works.
   * checks/control-file:
     + [ADB] Properly exclude packages built from the glibc source package
       from the "hardcoded depends on libc" test.  (Closes: #515831)

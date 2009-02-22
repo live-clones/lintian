@@ -311,8 +311,8 @@ if (@entries) {
     while ($changes =~ /(closes\s*(?:bug)?\#?\s?\d{6,})[^\w]/ig) {
 	tag "possible-missing-colon-in-closes", "$1" if $1;
     }
-    my @closes = $entry->Closes;
-    for my $bug (@closes) {
+    my $closes = $entry->Closes;
+    for my $bug (@$closes) {
         tag "improbable-bug-number-in-closes", $bug if ($bug < 100);
     }
 
