@@ -1,4 +1,4 @@
-lintian (2.2.6) UNRELEASED; urgency=low
+lintian (2.2.6) unstable; urgency=low
 
   * Summary of tag changes:
     + Added
@@ -133,7 +133,7 @@ lintian (2.2.6) UNRELEASED; urgency=low
       save it in the laboratory.  Also fixes unpacking of source tarballs
       that have no common subdirectory.
 
- -- Russ Allbery <rra@debian.org>  Fri, 13 Feb 2009 15:48:50 -0800
+ -- Russ Allbery <rra@debian.org>  Sat, 21 Feb 2009 23:53:09 -0800
 
 lintian (2.2.5) unstable; urgency=low
 
