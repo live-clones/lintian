@@ -37,7 +37,10 @@ our @jslibraries = (
     [ qr,(?i)fckeditor\.js(\.gz)?$, => 'fckeditor' ],
     [ qr,(?i)cropper(\.uncompressed)?\.js(\.gz)?$, => 'libjs-cropper' ],
     [ qr,(?i)swfobject\.js(\.gz)?$, => 'libjs-yui' ],
-    [ qr,(?i)yahoo(-(dom-event|min))?\.js(\.gz)?$, => 'libjs-yui' ],
+    [ qr,(?i)yahoo-(dom-event|min)\.js(\.gz)?$, => 'libjs-yui' ],
+# Disabled due to false positives.  Needs a content check adding to verify
+# that the file being checked is /the/ yahoo.js
+#    [ qr,(?i)yahoo\.js(\.gz)?$, => 'libjs-yui' ],
     [ qr,(?i)jsjac(\.packed)?\.js(\.gz)?$, => 'libjs-jac' ],
     [ qr,(?i)jsMath(-fallback-\w+)?\.js(\.gz)?$, => 'jsmath' ],
     [ qr,(?i)tiny_mce(_(popup|src))?\.js(\.gz)?$, => qr'tinymce2?' ],
