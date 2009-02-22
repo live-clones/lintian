@@ -61,6 +61,10 @@ lintian (2.2.6) UNRELEASED; urgency=low
       content.  (Closes: #515690)
     + [RA] Offer advice for duplicate-font-file for when the font package
       is huge.  Thanks, Thijs Kinkhorst and Paul Wise.  (Closes: #515689)
+  * checks/patch-systems.desc:
+    + [RA] Improve the suggestions in the long description of
+      quilt-patch-missing-description and dpatch-missing-description based
+      on suggestions from Paul Wise.  (Closes: #516534)
   * checks/scripts:
     + [RA] Make static regexes global to avoid recreating them for each
       file we scan.  Patch from Raphael Geissert.
