@@ -522,7 +522,7 @@ close STATS or die "cannot write to $statistics_file: $!\n";
     dist         => $LINTIAN_DIST,
     mirror       => $mirror_timestamp,
     previous     => $old_statistics->{'last-updated'},
-    area         => $LINTIAN_AREA,
+    area         => join(', ', split(/\s*,\s*/, $LINTIAN_AREA)),
 );
 output_template ('index.html', $templates{index}, \%data);
 exit 0;

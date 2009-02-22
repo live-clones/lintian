@@ -86,96 +86,104 @@ open(OUT, '>', $output_file)
 print OUT "$UDEBLIST_FORMAT\n";
 
 # parse Packages file to get list of packages
-my $packages = "$LINTIAN_ARCHIVEDIR/dists/$LINTIAN_DIST/$LINTIAN_AREA/".
-               "debian-installer/binary-$LINTIAN_ARCH/Packages";
-if (-e $packages) {
-    print "N: Parsing $packages ...\n" if $verbose;
-    open(IN, '<', $packages) or fail("cannot open Packages file $packages: $!");
-} elsif (-e "$packages.gz") {
-    print "N: Parsing $packages.gz ...\n" if $verbose;
-    open(IN, '-|', 'gzip', '-dc', "$packages.gz")
-        or fail("cannot open Packages file $packages.gz: $!");
-} else {
-    fail("No packages file $packages");
+my @packages;
+for my $area (split(/\s*,\s*, $LINTIAN_AREA)) {
+    push @packages, "$LINTIAN_ARCHIVEDIR/dists/$LINTIAN_DIST/$area/".
+		    "debian-installer/binary-$LINTIAN_ARCH/Packages";
 }
 
-my $line;
 my %packages;
 my $total = 0;
 
-while (!eof(IN)) {
-    do { $line = <IN> } until ($line =~ m/^Architecture: (.*)$/m);
-    my $arch = $1;
-    do { $line = <IN> } until ($line =~ m/^Filename: (.*)$/m);
-    my $deb_file = $1;
-    do { $line = <IN> } until ($line =~ m/^\s*$/m);
-
-    my @stat;
-    # get timestamp...
-    unless (@stat = stat "$LINTIAN_ARCHIVEDIR/$deb_file") {
-	print "E: general: cannot stat $LINTIAN_ARCHIVEDIR/$deb_file\n";
-	next;
-    }
-    my $timestamp = $stat[9];
-    my ($status, $pkg, $data);
-
-    # was package already included in last list?
-    if (exists $pkgfile{$deb_file}) {
-	# yes!
-	$pkg = $pkgfile{$deb_file};
-	$data = $udeb_info{$pkg};
-
-	# file changed since last run?
-	if ($timestamp == $data->{'timestamp'}) {
-	    # no.
-	    $status = 'unchanged';
-	} else {
-	    $status = 'changed';
-	    delete $udeb_info{$pkg};
-	}
+foreach my $packages (@packages) {
+    if (-e $packages) {
+        print "N: Parsing $packages ...\n" if $verbose;
+        open(IN, '<', $packages) or fail("cannot open Packages file $packages: $!");
+    } elsif (-e "$packages.gz") {
+        print "N: Parsing $packages.gz ...\n" if $verbose;
+         open(IN, '-|', 'gzip', '-dc', "$packages.gz")
+            or fail("cannot open Packages file $packages.gz: $!");
     } else {
-	# new package, get info
-	$status = 'new';
+        warn("No packages file $packages, skipping");
+        next;
     }
 
-    if (($status eq 'new') or ($status eq 'changed')) {
-	$data = &safe_get_deb_info($deb_file);
-	next if not defined $data;
-	$pkg = $data->{'package'};
+    my $line;
+
+    while (!eof(IN)) {
+        do { $line = <IN> } until ($line =~ m/^Architecture: (.*)$/m);
+        my $arch = $1;
+        do { $line = <IN> } until ($line =~ m/^Filename: (.*)$/m);
+        my $deb_file = $1;
+        do { $line = <IN> } until ($line =~ m/^\s*$/m);
+
+        my @stat;
+        # get timestamp...
+        unless (@stat = stat "$LINTIAN_ARCHIVEDIR/$deb_file") {
+	    print "E: general: cannot stat $LINTIAN_ARCHIVEDIR/$deb_file\n";
+	    next;
+        }
+        my $timestamp = $stat[9];
+        my ($status, $pkg, $data);
+
+        # was package already included in last list?
+        if (exists $pkgfile{$deb_file}) {
+	    # yes!
+	    $pkg = $pkgfile{$deb_file};
+	    $data = $udeb_info{$pkg};
+
+	    # file changed since last run?
+	    if ($timestamp == $data->{'timestamp'}) {
+	        # no.
+	        $status = 'unchanged';
+	    } else {
+	        $status = 'changed';
+	        delete $udeb_info{$pkg};
+	    }
+        } else {
+	    # new package, get info
+	    $status = 'new';
+        }
+
+        if (($status eq 'new') or ($status eq 'changed')) {
+	    $data = &safe_get_deb_info($deb_file);
+	    next if not defined $data;
+	    $pkg = $data->{'package'};
+        }
+
+        # check for duplicates
+        if (exists $packages{$pkg}) {
+	    print "E: general: duplicate-udeb-package $pkg\n";
+	    next;
+        }
+
+         unless (exists $data->{'source-version'}) {
+	    if ($data->{'source'} =~ /^([-+\.\w]+)\s+\((.+)\)$/) {
+	        $data->{'source'} = $1;
+	        $data->{'source-version'} = $2;
+	    } else {
+	        $data->{'source-version'} = $data->{'version'};
+	    }
+        }
+
+        # write entry to output file
+        print OUT join(';',
+		       $pkg,
+		       $data->{'version'},
+		       $data->{'source'},
+		       $data->{'source-version'},
+		       $deb_file,
+		       $timestamp,
+		       ),"\n";
+        printf "N: Listed %s udeb package %s %s\n",$status,$pkg,$data->{'version'} if $verbose;
+
+        # remove record from hash
+        delete $udeb_info{$pkg} if $status eq 'unchanged';
+        $packages{$pkg} = 1;
+        $total++;
     }
-
-    # check for duplicates
-    if (exists $packages{$pkg}) {
-	print "E: general: duplicate-udeb-package $pkg\n";
-	next;
-    }
-
-    unless (exists $data->{'source-version'}) {
-	if ($data->{'source'} =~ /^([-+\.\w]+)\s+\((.+)\)$/) {
-	    $data->{'source'} = $1;
-	    $data->{'source-version'} = $2;
-	} else {
-	    $data->{'source-version'} = $data->{'version'};
-	}
-    }
-
-    # write entry to output file
-    print OUT join(';',
-		   $pkg,
-		   $data->{'version'},
-		   $data->{'source'},
-		   $data->{'source-version'},
-		   $deb_file,
-		   $timestamp,
-		   ),"\n";
-    printf "N: Listed %s udeb package %s %s\n",$status,$pkg,$data->{'version'} if $verbose;
-
-    # remove record from hash
-    delete $udeb_info{$pkg} if $status eq 'unchanged';
-    $packages{$pkg} = 1;
-    $total++;
+    close(IN) or fail("cannot close input pipe: $!");
 }
-close(IN) or fail("cannot close input pipe: $!");
 close(OUT) or fail("cannot close output pipe: $!");
 
 if ($verbose) {
