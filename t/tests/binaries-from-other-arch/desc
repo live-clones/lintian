@@ -1,4 +1,4 @@
-Testname: binary-from-other-arch
+Testname: binaries-from-other-arch
 Sequence: 6000
 Architecture: any
 Version: 1.0
