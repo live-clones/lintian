@@ -266,7 +266,7 @@ $depends =~ s/\n/ /g;
 if ($needs_depends_line) {
     if ($depends && $needs_libc && $pkg !~ /^libc[\d.]+(-|\z)/) {
         # Match libcXX or libcXX-*, but not libc3p0.
-        my $re = qr/(?:^|,)\s*\Q$needs_libc\E\b/o;
+        my $re = qr/(?:^|,)\s*\Q$needs_libc\E\b/;
         if ($depends !~ /$re/) {
             my $others = '';
 	    $needs_libc_count--;

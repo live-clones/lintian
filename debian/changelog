@@ -7,6 +7,12 @@ lintian (2.2.6) UNRELEASED; urgency=low
       - multiple-distributions-in-changes-file (disabled)
       - unsupported-source-format
 
+  * checks/binaries:
+    + [RA] When checking for dependencies on libc, don't use /o on the
+      regex.  Otherwise, lintian produces false positives when run on
+      multiple packages with different architectures, since the libc
+      package name is not the same on all architectures.  Thanks to
+      Raphael Geissert for the report.  (Closes: #516067)
   * checks/common_data.pm:
     + [RA] Virtual packages now come from data.
   * checks/control-file:
