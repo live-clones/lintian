@@ -37,6 +37,8 @@ lintian (2.2.6) UNRELEASED; urgency=low
       syntax "Homepage: <http://example.com>" using the warning level
       tag description-contains-homepage rather than the info level tag
       description-possibly-contains-homepage.  (Closes: #515998)
+    + [RA] Don't warn about too-short long descriptions for transitional
+      or dummy packages.  Thanks, Andreas Beckmann.  (Closes: #515538)
   * checks/fields{,.desc}:
     + [RA] Load virtual packages from data/fields/virtual-packages.
     + [RA] Warn of unsupported source package versions.

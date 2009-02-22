@@ -80,6 +80,7 @@ if ($synopsis =~ m/^\s*$/) {
 }
 
 my $flagged_homepage;
+my $is_dummy;
 foreach (split /\n/, $description) {
     next if m/^\s*$/o;
     next if m/^\.\s*$/o;
@@ -158,7 +159,7 @@ foreach (split /\n/, $description) {
 if ($type ne 'udeb') {
     if ($lines == 0) {
 	tag "extended-description-is-empty";
-    } elsif ($lines <= 2) {
+    } elsif ($lines <= 2 and not $synopsis =~ /(dummy|transition)/i) {
 	tag "extended-description-is-probably-too-short";
     }
 }
