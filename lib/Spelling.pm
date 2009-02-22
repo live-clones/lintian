@@ -217,6 +217,7 @@ our %CORRECTIONS = qw(
                       ment meant
                       modulues modules
                       monochromo monochrome
+                      mroe more
                       multidimensionnal multidimensional
                       navagating navigating
                       nead need
