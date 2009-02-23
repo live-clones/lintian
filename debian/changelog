@@ -5,6 +5,7 @@ lintian (2.2.7) UNRELEASED; urgency=low
       - apparently-truncated-elf-binary
       - copyright-refers-to-nonexistent-license-file
       - embedded-zlib
+      - incorrect-libdir-in-la-file
 
   * checks/binaries{,.desc}:
     + [RA] Check for embedded copies of zlib in ELF binaries by looking
@@ -84,7 +85,7 @@ lintian (2.2.7) UNRELEASED; urgency=low
     + [ADB] Use Lintian::Relation rather than Dep.
     + [ADB] Update lists of known interpreter versions (add jruby1.1,
       octave3.1 and remove jruby0.9)
-  * checks/shared-libs:
+  * checks/shared-libs{,.desc}:
     + [ADB] When parsing symbols files, correctly ensure that meta-information
       occurs between the end of the dependency template(s) and the start of
       the symbol list.  The code that was intended to check this resulted
@@ -96,6 +97,9 @@ lintian (2.2.7) UNRELEASED; urgency=low
     + [ADB] Use Lintian::Relation rather than Dep.
     + [ADB] Avoid capturing parentheses in regexes due to their minor
       performance penalty.
+    + [RA] Check the libdir path in libtool *.la files and ensure that it
+      matches the installed location of the *.la file.  Based on a patch
+      by Raphael Geissert.  (Closes: #302196)
   * checks/version-substvars:
     + [RA] Be robust against whitespace in the Architecture field.
       Thanks, Gonéri Le Bouder.  (Closes: #517555)

@@ -1,0 +1,1 @@
+E: shared-libs-la-files: incorrect-libdir-in-la-file usr/lib/kde3/kio_locate.la /build/buildd/kio-locate-0.4.5+ds/debian/kio-locate/usr/lib/kde3 != /usr/lib/kde3

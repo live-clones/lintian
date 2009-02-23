@@ -401,3 +401,12 @@ Info: The listed shared library calls the C library exit() or _exit()
  .
  In most cases, removing the call should be discussed with upstream,
  particularly as it may produce an ABI change.
+
+Tag: incorrect-libdir-in-la-file
+Severity: important
+Certainty: possible
+Info: The given .la file points to a libdir other than the path where it is
+ installed.  This can be caused by resetting <tt>prefix</tt> at make install
+ time instead of using <tt>DESTDIR</tt>.  The incorrect path will cause
+ packages linking to this library using libtool to build incorrectly (adding
+ incorrect paths to RPATH, for example).

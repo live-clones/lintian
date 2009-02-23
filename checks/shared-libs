@@ -159,6 +159,19 @@ for my $cur_file (sort keys %{$info->index}) {
 	     && $ldconfig_dirs->known(dirname($cur_file))
 	     && exists $sharedobject{$cur_file}) {
 	tag "sharedobject-in-library-directory-missing-soname", "$cur_file";
+    } elsif ($cur_file =~ m/\.la$/ and not defined($cur_file_data->{link})) {
+	local $_;
+	open(LAFILE, "< unpacked/$cur_file")
+	    or fail("Could not open unpacked/$cur_file for reading!");
+	while(<LAFILE>) {
+	    next unless (m/^libdir='(.+?)'$/);
+	    my $actual = $1;
+	    my ($expected) = ("/$cur_file" =~ m,^(.+)/[^/]+$,);
+	    tag "incorrect-libdir-in-la-file", $cur_file, "$actual != $expected"
+		unless($expected eq $actual);
+	    last;
+	}
+	close(LAFILE);
     }
 }
 
