@@ -252,19 +252,19 @@ foreach my $file (sort keys %{$info->index}) {
 	my $cmd;
 	my $warnings = $MAN_WARNINGS ? ' --warnings' : '';
 	if ($file =~ m,^(.*)/(man\d/.*)$,) {
-	    $cmd = "cd unpacked/\Q$1\E && man$warnings -l \Q$2\E";
+	    $cmd = "cd unpacked/\Q$1\E && man$warnings -E UTF-8 -l \Q$2\E";
 	} else {
-	    $cmd = "man$warnings -l unpacked/\Q$file\E";
+	    $cmd = "man$warnings -E UTF-8 -l unpacked/\Q$file\E";
 	}
 	my $pid = open MANERRS, '-|';
 	if (not defined $pid) {
-	    fail("cannot run man -l: $!");
+	    fail("cannot run man -E UTF-8 -l: $!");
 	} elsif ($pid == 0) {
 	    my %newenv = (LANG => 'C', PATH => $ENV{PATH});
 	    undef %ENV;
 	    %ENV = %newenv;
 	    exec "($cmd >/dev/null) 2>&1"
-		or fail("cannot run man -l: $!");
+		or fail("cannot run man -E UTF-8 -l: $!");
 	}
 	while (<MANERRS>) {
 	    # ignore progress information from man

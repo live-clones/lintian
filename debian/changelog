@@ -8,6 +8,12 @@ lintian (2.2.7) UNRELEASED; urgency=low
     + [RA] Check for embedded copies of zlib in ELF binaries by looking
       for the inflate and deflate copyright strings.  Patch from Raphael
       Geissert.  (Closes: #318104)
+  * checks/manpages:
+    + [CW] Run man with '-E UTF-8' to avoid producing bogus warnings on
+      localised manual pages due to attempting to recode through ASCII.
+
+  * debian/control:
+    + [CW] Depend on man-db (>= 2.4.0) for '-E UTF-8'.
 
  -- Russ Allbery <rra@debian.org>  Sun, 22 Feb 2009 13:24:23 -0800
 
