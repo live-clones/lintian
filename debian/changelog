@@ -14,7 +14,7 @@ lintian (2.2.7) UNRELEASED; urgency=low
   * checks/shared-libs:
     + [ADB] When parsing symbols files, correctly ensure that meta-information
       occurs between the end of the dependency template(s) and the start of
-      the symbol list.  The cocde that was intended to check this resulted
+      the symbol list.  The code that was intended to check this resulted
       in a false positive syntax error being generated if a file with
       alternative dependency templates used meta-information.
 
