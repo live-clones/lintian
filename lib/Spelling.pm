@@ -429,23 +429,17 @@ sub spelling_check {
     my ($tag, $text, $filename) = @_;
     return unless $text;
 
-    for my $word (split(/\s+/, $text)) {
-        $word = lc $word;
+    $text = lc $text;
+    $text =~ s/[.,;:?!()[\]-]//g;
 
-        # Try deleting the non-alphabetic parts from the word.  Treat
-        # apostrophes specially: only delete them if they occur at the
-        # beginning or end of the word.
-        #
-        # FIXME: Should do something that's aware of Unicode character
-        # classes rather than only handling ISO 8859-15 characters.
-        $word =~ s/(^\')|[^\w\xc0-\xd6\xd8-\xf6\xf8-\xff\'-]+|(\'\z)//g;
+    for my $word (split(/\s+/, $text)) {
         if (exists $CORRECTIONS{$word}) {
             _tag($tag, $filename, $word, $CORRECTIONS{$word});
         }
     }
 
     # Special case for correcting a multi-word string.
-    if ($text =~ m,Debian/GNU\s+Linux,) {
+    if ($text =~ m,debian/gnu\s+linux,) {
         _tag($tag, $filename, "Debian/GNU Linux", "Debian GNU/Linux");
     }
 }
