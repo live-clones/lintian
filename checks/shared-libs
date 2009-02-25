@@ -359,6 +359,7 @@ if ($#shlibs == -1 and not %unversioned_shlibs) {
     my @symbols_depends;
     my $dep_templates = 0;
     my $meta_info_seen = 0;
+    my $symbol_count = 0;
 
     while (<IN>) {
 	chomp;
@@ -380,6 +381,7 @@ if ($#shlibs == -1 and not %unversioned_shlibs) {
 
 	    $dep_templates = 0;
 	    $meta_info_seen = 0;
+	    $symbol_count = 0;
 	} elsif (m/^\|\s+(\S+)(?:\s(\S+\s\S+))?(\s*,\s+\S+(\s\S+\s\S+)?)*$/) {
 	    # alternative dependency template
 
@@ -405,7 +407,7 @@ if ($#shlibs == -1 and not %unversioned_shlibs) {
 	    tag "unknown-meta-field-in-symbols-file", "$1, line $."
 		unless $1 eq 'Build-Depends-Package';
 	    tag "syntax-error-in-symbols-file", $.
-		if $dep_templates > 0;
+		unless defined $soname and $symbol_count == 0;
 
 	    $meta_info_seen = 1;
 	} elsif (m/^\s+(\S+)\s(\S+)(?:\s(\S+(\s\S+)?))?$/) {
@@ -414,6 +416,7 @@ if ($#shlibs == -1 and not %unversioned_shlibs) {
 	    tag "syntax-error-in-symbols-file", $.
 		unless defined $soname;
 
+	    $symbol_count++;
 	    my ($sym, $v, $dep_order) = ($1, $2, $3);
 	    $dep_order ||= '';
 
