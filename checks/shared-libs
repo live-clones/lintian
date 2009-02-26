@@ -398,6 +398,8 @@ if ($#shlibs == -1 and not %unversioned_shlibs) {
 	    $meta_info_seen = 0;
 	    $symbol_count = 0;
 	} elsif (m/^\|\s+\S+\s*(\(\S+\s+\S+\)|#MINVER#)?/) {
+	    # alternative dependency template
+
 	    $warned = 0;
 
 	    if ($meta_info_seen or not defined $soname) {
