@@ -17,6 +17,8 @@ lintian (2.2.7) UNRELEASED; urgency=low
       the symbol list.  The code that was intended to check this resulted
       in a false positive syntax error being generated if a file with
       alternative dependency templates used meta-information.
+    + [ADB] Extend the parsing of dependency templates in symbols files to
+      handle ORed dependencies.
 
   * debian/control:
     + [CW] Depend on man-db (>= 2.4.0) for '-E UTF-8'.
