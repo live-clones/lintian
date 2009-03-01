@@ -30,6 +30,8 @@ lintian (2.2.7) UNRELEASED; urgency=low
       performance penalty.  Patch from Raphael Geissert.
     + [RA] Precompile constant regexes with qr and only load the list of
       font packages if needed.  Patch from Raphael Geissert.
+    + [RA] Warn about yui-*.js as well as yahoo-*.js.  Patch from Raphael
+      Geissert.
   * checks/manpages:
     + [CW] Run man with '-E UTF-8' to avoid producing bogus warnings on
       localised manual pages due to attempting to recode through ASCII.
