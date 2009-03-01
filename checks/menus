@@ -33,18 +33,23 @@ use Util;
 
 # Known fields for doc-base files.  The value is 1 for required fields and 0
 # for optional fields.
-my %known_docbase_main_fields = (
+our %KNOWN_DOCBASE_MAIN_FIELDS = (
 	'document' => 1,
 	'title'    => 1,
 	'section'  => 1,
 	'abstract' => 0,
 	'author'   => 0
 );
-my %known_docbase_format_fields = (
+our %KNOWN_DOCBASE_FORMAT_FIELDS = (
 	'format'  => 1,
 	'files'   => 1,
 	'index'   => 0
 );
+
+# Will contain the list of valid sections as a Lintian::Data object if it's
+# needed.  We don't load it unless we need it since many packages don't have
+# doc-base files.
+our $SECTIONS;
 
 sub run {
 
@@ -228,7 +233,7 @@ sub check_doc_base_file {
         or fail("cannot open doc-base file $dbfile for reading.");
 
     my (@files, $field, @vals);
-    my $knownfields = \%known_docbase_main_fields;
+    my $knownfields = \%KNOWN_DOCBASE_MAIN_FIELDS;
     $line           = 0;  # global
     my %sawfields   = (); # local for each section of control file
     my %sawformats  = (); # global for control file
@@ -276,7 +281,7 @@ sub check_doc_base_file {
             %sawfields = ();
 
             # Each section except the first one is format section.
-            $knownfields = \%known_docbase_format_fields;
+            $knownfields = \%KNOWN_DOCBASE_FORMAT_FIELDS;
 
         # Everything else is a syntax error.
         } else {
@@ -390,14 +395,12 @@ sub check_doc_base_field {
 
     # Section field.
     } elsif ($field eq 'section') {
-	my $sections = Lintian::Data->new('doc-base/sections');
+	$SECTIONS = Lintian::Data->new('doc-base/sections') unless $SECTIONS;
 	$_ = join (' ', @$vals);
-	unless ($sections->known($_)) {
-	    if (m;^App(?:lication)?s/(.+)$;
-		and $sections->known($1)) {
+	unless ($SECTIONS->known($_)) {
+	    if (m,^App(?:lication)?s/(.+)$, and $SECTIONS->known($1)) {
 		tag "doc-base-uses-applications-section", "$dbfile:$line", $_;
-	    } elsif (m;^(.+)/([^/]+)$;
-		    and $sections->known($1)) {
+	    } elsif (m,^(.+)/([^/]+)$, and $SECTIONS->known($1)) {
 		# allows creating a new subsection to a known section
 	    } else {
 		tag "doc-base-unknown-section", "$dbfile:$line", $_;
