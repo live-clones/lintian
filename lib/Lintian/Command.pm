@@ -195,7 +195,13 @@ sub spawn {
 	    }
 	    $opts->{harness} = harness($cmd, @in, @out, @err);
 	} else {
-	    my $first = shift @cmds;
+	    my ($first, $last) = (shift @cmds, pop @cmds);
+	    # Support shell-style "command &"
+	    if ($last eq '&') {
+		$background = 1;
+	    } else {
+		push @cmds, $last;
+	    }
 	    $opts->{harness} = harness($first, @in, @cmds, @out, @err);
 	}
 	if ($background) {
