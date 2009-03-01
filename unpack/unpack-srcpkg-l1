@@ -37,10 +37,12 @@ use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Util;
 
 use File::Spec;
-use Lintian::Command qw(spawn);
+use Lintian::Command qw(spawn reap);
 
 # stat $file
 (my @stat = stat $file) or fail("$file: cannot stat: $!");
+
+my (@jobs, $job);
 
 # get package control information
 my $data = get_dsc_info($file);
@@ -87,7 +89,8 @@ if (!$tarball) {
 # Collect a list of the files in the source package.  tar currently doesn't
 # automatically recognize LZMA, so we need to add the option where it's
 # needed.  Change hard link status (h) to regular files and remove a leading
-# ./ prefix on filenames while we're reading the tar output.
+# ./ prefix on filenames while we're reading the tar output.  We intentionally
+# don't parallelize this job because we need to use the output below.
 my @tar_options = ('-tvf');
 if ($tarball =~ /\.lzma\z/) {
     unshift(@tar_options, '--lzma');
@@ -154,9 +157,8 @@ if ($prefix) {
 
 # Now that we have the file names we want, write them out sorted to the index
 # file.
-spawn({ fail => 'error', out => "$base_dir/index" },
-      sub { print @index },
-      '|', ['sort', '-k', '6']);
+my $job = { fail => 'error', out => "$base_dir/index" };
+spawn($job, sub { print @index }, '|', ['sort', '-k', '6'], '&');
 
 # Create symbolic links to binary packages
 mkdir("$base_dir/binary", 0777) or fail("mkdir $base_dir/binary: $!");
@@ -164,6 +166,9 @@ for my $bin (split(/,\s+/o,$data->{'binary'})) {
     symlink("../../../binary/$bin", "$base_dir/binary/$bin")
         or fail("cannot symlink binary package $bin: $!");
 }
+
+# Wait for all jobs to finish.
+reap($job);
 
 exit 0;
 
