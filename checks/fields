@@ -38,7 +38,7 @@ use Lintian::Relation::Version qw(versions_compare);
 # The allowed Python dependencies currently.  This is the list of alternatives
 # that, either directly or through transitive dependencies that can be relied
 # upon, ensure /usr/bin/python will exist for the use of dh_python.
-my $python_depend = 'python | python-dev | python-all | python-all-dev | '
+our $PYTHON_DEPEND = 'python | python-dev | python-all | python-all-dev | '
     . join (' | ', map { "python$_ | python$_-dev" } qw(2.4 2.5));
 
 # Certain build tools must be listed in Build-Depends even if there are no
@@ -48,7 +48,7 @@ my $python_depend = 'python | python-dev | python-all | python-all-dev | '
 # say that this package is allowed (and required) in Build-Depends; and
 # optional tags to use for reporting the problem if some information other
 # than the default is required.
-my @global_clean_depends = (
+our @GLOBAL_CLEAN_DEPENDS = (
 	[ ant => qr'^include\s*/usr/share/cdbs/1/rules/ant\.mk' ],
 	[ cdbs => qr'^include\s+/usr/share/cdbs/' ],
 	[ dbs => qr'^include\s+/usr/share/dbs/' ],
@@ -58,7 +58,7 @@ my @global_clean_depends = (
 	[ quilt => qr'^include\s+/usr/share/cdbs/1/rules/patchsys-quilt\.mk' ],
 	[ dpatch => qr'^include\s+/usr/share/dpatch/' ],
 	[ quilt => qr'^include\s+/usr/share/quilt/' ],
-	[ $python_depend => qr'/usr/share/cdbs/1/class/python-distutils\.mk', 'missing-python-build-dependency' ],
+	[ $PYTHON_DEPEND => qr'/usr/share/cdbs/1/class/python-distutils\.mk', 'missing-python-build-dependency' ],
 );
 
 # These are similar, but the resulting dependency is only allowed, not
@@ -66,7 +66,7 @@ my @global_clean_depends = (
 #
 # The xsfclean rule is specific to the packages maintained by the X Strike
 # Force, but there are enough of those to make the rule worthwhile.
-my @global_clean_allowed = (
+my @GLOBAL_CLEAN_ALLOWED = (
 	[ patchutils => qr'^include\s+/usr/share/cdbs/1/rules/dpatch\.mk' ],
 	[ patchutils => qr'^include\s+/usr/share/cdbs/1/rules/patchsys-quilt\.mk' ],
 	[ patchutils => qr'^include\s+/usr/share/cdbs/1/rules/simple-patchsys\.mk' ],
@@ -79,8 +79,8 @@ my @global_clean_allowed = (
 # A list of packages; regular expressions that, if they match anywhere in the
 # debian/rules file, this package must be listed in either Build-Depends or
 # Build-Depends-Indep as appropriate; and optional tags as above.
-my @global_depends = (
-	[ $python_depend => qr'^\t\s*dh_python\s', 'missing-dh_python-build-dependency' ],
+my @GLOBAL_DEPENDS = (
+	[ $PYTHON_DEPEND => qr'^\t\s*dh_python\s', 'missing-dh_python-build-dependency' ],
 	[ 'python-central' => qr'^\t\s*dh_pycentral\s' ],
 	[ 'python-support' => qr'^\t\s*dh_pysupport\s' ],
 	[ 'python-central' => qr'^DEB_PYTHON_SYSTEM\s*:?=\s*pycentral' ],
@@ -90,13 +90,13 @@ my @global_depends = (
 # Similarly, this list of packages, regexes, and optional tags say that if the
 # regex matches in one of clean, build-arch, binary-arch, or a rule they
 # depend on, this package is allowed (and required) in Build-Depends.
-my @rule_clean_depends = (
+my @RULE_CLEAN_DEPENDS = (
 	[ ant => qr'^\t\s*ant\s' ],
 	[ debhelper => qr'^\t\s*dh_.+' ],
 	[ dpatch => qr'^\t\s*dpatch\s' ],
 	[ "po-debconf" => qr'^\t\s*debconf-updatepo\s' ],
-	[ $python_depend => qr'^\t\s*python\s', 'missing-python-build-dependency' ],
-	[ $python_depend => qr'\ssetup\.py\b', 'missing-python-build-dependency' ],
+	[ $PYTHON_DEPEND => qr'^\t\s*python\s', 'missing-python-build-dependency' ],
+	[ $PYTHON_DEPEND => qr'\ssetup\.py\b', 'missing-python-build-dependency' ],
 	[ quilt => qr'^\t\s*(\S+=\S+\s+)*quilt\s' ],
 	[ yada => qr'^\t\s*yada\s' ],
 );
@@ -105,7 +105,7 @@ my @rule_clean_depends = (
 # permit a versioned dependency on perl-base because that used to be the
 # standard suggested dependency.  No package should be depending on just
 # perl-base, since it's Priority: required.
-my @rule_clean_allowed = (
+my @RULE_CLEAN_ALLOWED = (
 	[ patch => q'^\t\s*(?:perl debian/)?yada\s+unpatch' ],
 	[ 'perl | perl-base (>= 5.6.0-16)' => qr'(^\t|\|\|)\s*(perl|\$\(PERL\))\s' ],
 	[ 'perl-modules (>= 5.10) | libmodule-build-perl' => qr'(^\t|\|\|)\s*(perl|\$\(PERL\))\s+Build\b' ],
@@ -116,17 +116,14 @@ my @rule_clean_allowed = (
 # debian/rules, indicate the requirements for debian/rules clean are complex
 # enough that we can't know what packages are permitted in Build-Depends and
 # should bypass the build-depends-without-arch-dep check completely.
-my @global_clean_bypass = (
+my @GLOBAL_CLEAN_BYPASS = (
 	qr'^include\s*/usr/share/cdbs/1/class/ant\.mk',
 	qr'^\s+dh\s+'
 );
 
-# Load package versions provided by the Perl core modules
-my $perl_core_provides = Lintian::Data->new ('fields/perl-provides', '\s+');
-# Load obsolete packages list.
-my $obsolete_packages = Lintian::Data->new ('fields/obsolete-packages');
-# Load virtual packages list.
-my $virtual_packages = Lintian::Data->new ('fields/virtual-packages');
+our $PERL_CORE_PROVIDES = Lintian::Data->new('fields/perl-provides', '\s+');
+our $OBSOLETE_PACKAGES  = Lintian::Data->new('fields/obsolete-packages');
+our $VIRTUAL_PACKAGES   = Lintian::Data->new('fields/virtual-packages');
 
 sub run {
 
@@ -216,9 +213,9 @@ if (not defined $info->field('version')) {
 		}
 
 		my $name = $info->field('package');
-		if ($name && $perl_core_provides->known($name) &&
+		if ($name && $PERL_CORE_PROVIDES->known($name) &&
 		    perl_core_has_version($name, '>=', $upstream)) {
-			my $core_version = $perl_core_provides->value($name);
+			my $core_version = $PERL_CORE_PROVIDES->value($name);
 			tag "package-superseded-by-perl", "with $core_version"
 		}
 	} else {
@@ -495,7 +492,7 @@ if (($type eq "binary") || ($type eq 'udeb')) {
 
 				# Only for (Pre-)?Depends.
 				tag "virtual-package-depends-without-real-package-depends", "$field: $alternatives[0]->[0]"
-				    if ($virtual_packages->known($alternatives[0]->[0])
+				    if ($VIRTUAL_PACKAGES->known($alternatives[0]->[0])
 					&& ($field eq "depends" || $field eq "pre-depends"));
 
                                 # Check defaults for transitions.  Here, we only care that the first alternative is current.
@@ -524,7 +521,7 @@ if (($type eq "binary") || ($type eq 'udeb')) {
 					    if $rest;
 
 					push @seen_obsolete_packages, $part_d_orig
-					    if ($obsolete_packages->known($d_pkg) && &$is_dep_field($field));
+					    if ($OBSOLETE_PACKAGES->known($d_pkg) && &$is_dep_field($field));
 
 					tag "depends-on-x-metapackage", "$field: $part_d_orig"
 					    if ($known_x_metapackages{$d_pkg} && ! $metapackage && &$is_dep_field($field));
@@ -635,7 +632,7 @@ if ($type eq "source") {
 		} elsif (/^endif\s/) {
 			$maybe_skipping--;
 		}
-		for my $rule (@global_clean_depends) {
+		for my $rule (@GLOBAL_CLEAN_DEPENDS) {
 			if ($_ =~ /$rule->[1]/) {
 				if ($maybe_skipping) {
 					$allowed_clean{$rule->[0]} = 1;
@@ -644,17 +641,17 @@ if ($type eq "source") {
 				}
 			}
 		}
-		for my $rule (@global_clean_allowed) {
+		for my $rule (@GLOBAL_CLEAN_ALLOWED) {
 			if ($_ =~ /$rule->[1]/) {
 				$allowed_clean{$rule->[0]} = 1;
 			}
 		}
-		for my $rule (@global_clean_bypass) {
+		for my $rule (@GLOBAL_CLEAN_BYPASS) {
 			if ($_ =~ /$rule/) {
 				$bypass_needed_clean = 1;
 			}
 		}
-		for my $rule (@global_depends) {
+		for my $rule (@GLOBAL_DEPENDS) {
 			if ($_ =~ /$rule->[1]/ && !$maybe_skipping) {
 				$needed{$rule->[0]} = $rule->[2] || $needed{$rule->[0]} || '';
 			}
@@ -666,7 +663,7 @@ if ($type eq "source") {
 			}
 		}
 		if (grep ($_ eq $target, @rules)) {
-			for my $rule (@rule_clean_depends) {
+			for my $rule (@RULE_CLEAN_DEPENDS) {
 				if ($_ =~ /$rule->[1]/) {
 					if ($maybe_skipping) {
 						$allowed_clean{$rule->[0]} = 1;
@@ -675,7 +672,7 @@ if ($type eq "source") {
 					}
 				}
 			}
-			for my $rule (@rule_clean_allowed) {
+			for my $rule (@RULE_CLEAN_ALLOWED) {
 				if ($_ =~ /$rule->[1]/) {
 					$allowed_clean{$rule->[0]} = 1;
 				}
@@ -703,7 +700,7 @@ if ($type eq "source") {
 				push @alternatives, [_split_dep($_), $_] for (split /\s*\|\s*/, $dep);
 
 				tag "virtual-package-depends-without-real-package-depends", "$field: $alternatives[0]->[0]"
-				    if ($virtual_packages->known($alternatives[0]->[0]) && &$is_dep_field($field));
+				    if ($VIRTUAL_PACKAGES->known($alternatives[0]->[0]) && &$is_dep_field($field));
 
 				for my $part_d (@alternatives) {
 					my ($d_pkg, $d_version, $d_arch, $rest, $part_d_orig) = @$part_d;
@@ -723,7 +720,7 @@ if ($type eq "source") {
 					tag "build-depends-on-essential-package-without-using-version", "$field: $part_d_orig"
 					    if ($d_pkg ne "coreutils" && $known_essential{$d_pkg} && ! $d_version->[0]);
 					push @seen_obsolete_packages, $part_d_orig
-					    if ($obsolete_packages->known($d_pkg) && &$is_dep_field($field));
+					    if ($OBSOLETE_PACKAGES->known($d_pkg) && &$is_dep_field($field));
 
 					tag "build-depends-on-x-metapackage", "$field: $part_d_orig"
 					    if ($known_x_metapackages{$d_pkg} && &$is_dep_field($field));
@@ -983,7 +980,7 @@ sub _valid_version {
 
 sub perl_core_has_version {
 	my ($package, $op, $version) = @_;
-	my $core_version = $perl_core_provides->value($package);
+	my $core_version = $PERL_CORE_PROVIDES->value($package);
 	return 0 if !defined $core_version;
 	my @version = _valid_version($version);
 	return 0 if !@version;
