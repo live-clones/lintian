@@ -152,11 +152,13 @@ if (m,(usr/share/common-licenses/(?:GPL|LGPL|BSD|Artistic)\.gz),) {
 # Allow generic GPL references for packages licensed under the same terms as
 # Perl for now.  Perl references GPL version 1, which isn't in
 # common-licenses.
-if (m,(usr/share/common-licenses/(L?GPL|GFDL))[^-],i && !m,as Perl itself,i
+if (m,(usr/share/common-licenses/(L?GPL|GFDL))([^-]),i && !m,as Perl itself,i
     && !m,License-Alias:\s+Perl,) {
-    my $ref = $1;
-    my $license = $2;
-    if (m,\b(?:any|or)\s+later(?:\s+version)?\b,i || m,License: $license-[\d\.]+\+,i) {
+    my ($ref, $license, $separator) = ($1, $2, $3);
+    if ($separator =~ /[\d\w]/) {
+	tag 'copyright-refers-to-nonexistent-license-file', "$ref$separator";
+    } elsif (m,\b(?:any|or)\s+later(?:\s+version)?\b,i
+	     || m,License: $license-[\d\.]+\+,i) {
 	tag "copyright-refers-to-symlink-license", $ref;
     } else {
 	tag "copyright-refers-to-versionless-license-file", $ref;

@@ -15,6 +15,7 @@ Test-For:
  copyright-refers-to-bad-php-license
  copyright-refers-to-compressed-license
  copyright-refers-to-incorrect-directory
+ copyright-refers-to-nonexistent-license-file
  copyright-refers-to-old-directory
  copyright-refers-to-problematic-php-license
  copyright-should-refer-to-common-license-file-for-gfdl

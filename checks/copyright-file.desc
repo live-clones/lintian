@@ -357,3 +357,11 @@ Info: The copyright file refers to the versionless symlink in
  published by the Free Software Foundation; version 2 dated June, 1991,"
  the <tt>debian/copyright</tt> file should refer to
  <tt>/usr/share/common-licenses/GPL-2</tt>, not <tt>/GPL</tt>.
+
+Tag: copyright-refers-to-nonexistent-license-file
+Severity: normal
+Certainty: certain
+Info: The copyright file refers to a license in
+ <tt>/usr/share/common-licenses</tt> that doesn't exist.  Usually this is
+ a typo, such as accidentally omitting the <tt>-</tt> between the license
+ name and the version number.
