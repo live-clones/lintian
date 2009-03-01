@@ -35,33 +35,7 @@ use Lintian::Check qw(check_maintainer);
 use Lintian::Relation ();
 use Lintian::Relation::Version qw(versions_compare);
 
-# From /usr/share/dpkg/cputable, included here to make lintian results
-# consistent no matter what dpkg one has installed.
-our %all_cpus = map { $_ => 1 }
-    ('i386', 'ia64', 'alpha', 'amd64', 'armeb', 'arm', 'hppa', 'm32r', 'm68k',
-     'mips', 'mipsel', 'powerpc', 'ppc64', 's390', 's390x', 'sh3', 'sh3eb',
-     'sh4', 'sh4eb', 'sparc');
-
-# From /usr/share/dpkg/triplettable, included here to make lintian results
-# consistent no matter what dpkg one has installed.  This lists all of the
-# foo-<cpu> rules.  Note that linux is not present in the current dpkg and
-# hence is not present here.
-our %all_oses = map { $_ => 1 }
-    ('kfreebsd', 'knetbsd', 'hurd', 'freebsd', 'openbsd', 'netbsd', 'darwin',
-     'solaris');
-
-# Yes, this includes combinations that are rather unlikely to ever exist, like
-# hurd-sh3, but the chances of those showing up as errors are rather low and
-# this reduces the necessary updating.
-#
-# armel and lpia are special cases, so handle them separately here.  (They're
-# handled separately in /usr/share/dpkg/triplettable.)  any and all are also
-# special cases.
-our %known_archs = map { $_ => 1 }
-    grep { !$known_archs{$_} }
-        (keys %all_cpus,
-         map { my $os = $_; map { "$os-$_" } keys %all_cpus } keys %all_oses),
-    ('armel', 'lpia', 'any', 'all');
+our $KNOWN_ARCHS = Lintian::Data->new ('fields/architectures');
 
 our %known_archive_parts = map { $_ => 1 }
     ('non-free', 'contrib');
@@ -333,7 +307,7 @@ if (not defined $info->field('architecture')) {
 	}
 
 	for my $arch (@archs) {
-		tag "unknown-architecture", "$arch" unless $known_archs{$arch};
+		tag "unknown-architecture", "$arch" unless $KNOWN_ARCHS->known($arch);
 	}
 
 	if ($type eq "binary") {
@@ -796,7 +770,7 @@ if ($type eq "source") {
 					my ($d_pkg, $d_version, $d_arch, $rest, $part_d_orig) = @$part_d;
 
 					for my $arch (@{$d_arch->[0]}) {
-						if (!$known_archs{$arch}) {
+						if (!$KNOWN_ARCHS->known($arch)) {
 							tag "invalid-arch-string-in-source-relation", "$arch [$field: $part_d_orig]"
 						}
 					}
