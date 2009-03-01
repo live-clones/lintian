@@ -634,7 +634,7 @@ require Lintian::Schedule;
 require Lintian::Output;
 import Lintian::Output qw(:messages);
 require Lintian::Command;
-import Lintian::Command qw(spawn);
+import Lintian::Command qw(spawn reap);
 require Lintian::Check;
 import Lintian::Check qw(check_maintainer);
 
@@ -1330,6 +1330,7 @@ require Checker;
 require Lintian::Collect;
 
 my %overrides;
+my @pending_jobs;
 PACKAGE:
 foreach my $pkg_info ($schedule->get_all) {
     my ($type, $pkg, $ver, $arch, $file) =
@@ -1338,6 +1339,10 @@ foreach my $pkg_info ($schedule->get_all) {
 		     ($type eq 's' ? 'source' : 'udeb' ));
 
     Tags::set_pkg( $file, $pkg, $ver, $arch, $long_type );
+
+    # Kill pending jobs, if any
+    Lintian::Command::kill(@pending_jobs);
+    undef @pending_jobs;
 
     # determine base directory
     my $base = "$LINTIAN_LAB/$long_type/$pkg";
@@ -1432,8 +1437,10 @@ foreach my $pkg_info ($schedule->get_all) {
     }
 
     if (($action eq 'unpack') or ($action eq 'check')) { # collect info
+	my $current_order = -1;
 	for my $coll (sort by_collection_order keys %unpack_infos) {
 	    my $ci = $collection_info{$coll};
+	    my %run_opts = ('description' => $coll);
 
 	    # current type?
 	    next unless ($ci->{'type'} =~ m/$type/);
@@ -1458,16 +1465,35 @@ foreach my $pkg_info ($schedule->get_all) {
 		next PACKAGE;
 	    }
 
+	    $current_order = $ci->{'order'}
+		if ($current_order == -1);
+	    if ($current_order != $ci->{'order'}) {
+		debug_msg(1, "Waiting for jobs from order $current_order ...");
+		# wait until the jobs of the previous order finish:
+		reap(@pending_jobs);
+		undef @pending_jobs;
+		$current_order = $ci->{'order'};
+	    }
+
 	    # collect info
 	    remove_status_file($base);
 	    debug_msg(1, "Collecting info: $coll ...");
-	    unless (spawn({}, ["$LINTIAN_ROOT/collection/$ci->{'script'}", $pkg, $long_type])) {
+	    unless (spawn(\%run_opts,
+			    ["$LINTIAN_ROOT/collection/$ci->{'script'}",
+			     $pkg,
+			     $long_type,
+			     '&'])) {
 		warning("collect info $coll about package $pkg: $?",
 			"skipping $action of $long_type package $pkg");
 		$exit_code = 2;
 		next PACKAGE;
 	    }
+	    push @pending_jobs, \%run_opts;
 	}
+	# wait until all the jobs finish
+	debug_msg(1, "Waiting for jobs from order $current_order ...");
+	reap(@pending_jobs);
+	undef @pending_jobs;
     }
 
     if ($action eq 'check') { 	# read override file

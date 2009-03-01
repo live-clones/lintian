@@ -27,9 +27,9 @@ BEGIN {
 
 use base qw(Exporter);
 our @EXPORT = ();
-our @EXPORT_OK = qw(spawn reap);
+our @EXPORT_OK = qw(spawn reap kill);
 
-use IPC::Run qw(run harness);
+use IPC::Run qw(run harness kill_kill);
 
 =head1 NAME
 
@@ -157,25 +157,25 @@ sub spawn {
     }
     $opts->{fail} ||= 'exception';
 
-    my ($out, $pipe);
+    my ($out, $background);
     my (@out, @in, @err);
     if ($opts->{pipe_in}) {
 	@in = ('<pipe', $opts->{pipe_in});
-	$pipe = 1;
+	$background = 1;
     } else {
 	$opts->{in} ||= \undef;
 	@in = ('<', $opts->{in});
     }
     if ($opts->{pipe_out}) {
 	@out = ('>pipe', $opts->{pipe_out});
-	$pipe = 1;
+	$background = 1;
     } else {
 	$opts->{out} ||= \$out;
 	@out = ('>', $opts->{out});
     }
     if ($opts->{pipe_err}) {
 	@err = ('2>pipe', $opts->{pipe_err});
-	$pipe = 1;
+	$background = 1;
     } else {
 	$opts->{err} ||= \*STDERR;
 	@err = ('2>', $opts->{err});
@@ -185,13 +185,20 @@ sub spawn {
 #    print STDERR Dumper($opts, \@cmds);
     eval {
 	if (@cmds == 1) {
-	    $opts->{harness} = harness($cmds[0], @in, @out, @err);
+	    my $cmd = pop @cmds;
+	    my $last = pop @$cmd;
+	    # Support shell-style "command &"
+	    if ($last eq '&') {
+		$background = 1;
+	    } else {
+		push @$cmd, $last;
+	    }
+	    $opts->{harness} = harness($cmd, @in, @out, @err);
 	} else {
 	    my $first = shift @cmds;
 	    $opts->{harness} = harness($first, @in, @cmds, @out, @err);
 	}
-
-	if ($pipe) {
+	if ($background) {
 	    $opts->{success} = $opts->{harness}->start;
 	} else {
 	    $opts->{success} = $opts->{harness}->run;
@@ -220,12 +227,13 @@ sub spawn {
     return $opts->{success};
 }
 
-=head 2 C<reap($opts)>
+=head 2 C<reap($opts[, $opts[,...]])>
 
-If you used one of the C<pipe_*> options to spawn(), you will need to wait
-for your child processes to finish.  For this you can use the reap() function,
+If you used one of the C<pipe_*> options to spawn() or used the shell-style "&"
+operator to send the process to the background, you will need to wait for your
+child processes to finish.  For this you can use the reap() function,
 which you can call with the $opts hash reference you gave to spawn() and which
-will do the right thing.
+will do the right thing. Multiple $opts can be passed.
 
 Note however that this function will not close any of the pipes for you, so
 you probably want to do that first before calling this function.
@@ -250,30 +258,50 @@ All other keys are probably just ignored.
 =cut
 
 sub reap {
-    my ($opts) = @_;
+    my $status;
+    while (my $opts = shift @_) {
+	next unless defined($opts->{harness});
 
-    return unless defined($opts->{harness});
-
-    eval {
-	$opts->{success} = $opts->{harness}->finish;
-    };
-    if ($@) {
-	require Util;
-	Util::fail($@) if $opts->{fail} ne 'never';
-	$opts->{success} = 0;
-	$opts->{exception} = $@;
-    } elsif ($opts->{fail} eq 'error'
-	     and !$opts->{success}) {
-	require Util;
-	if ($opts->{description}) {
-	    Util::fail("$opts->{description} failed with error code ".
-		       $opts->{harness}->result);
-	} else {
-	    Util::fail("command failed with error code ".
-		       $opts->{harness}->result);
+	eval {
+	    $opts->{success} = $opts->{harness}->finish;
+	};
+	if ($@) {
+	    require Util;
+	    Util::fail($@) if $opts->{fail} ne 'never';
+	    $opts->{success} = 0;
+	    $opts->{exception} = $@;
+	} elsif ($opts->{fail} eq 'error'
+		 and !$opts->{success}) {
+	    require Util;
+	    if ($opts->{description}) {
+		Util::fail("$opts->{description} failed with error code ".
+			   $opts->{harness}->result);
+	    } else {
+		Util::fail("command failed with error code ".
+			   $opts->{harness}->result);
+	    }
 	}
+	$status |= $opts->{success};
     }
-    return $opts->{success};
+    return $status;
+}
+
+=head 2 C<kill($opts[, $opts[, ...]])>
+
+This is a simple wrapper around the kill_kill function. It doesn't allow
+any customisation, but takes an $opts hash ref and SIGKILLs the process
+two seconds after SIGTERM is sent. If multiple hash refs are passed it
+executes kill_kill on each of them. The return status is the ORed value of
+all the executions of kill_kill.
+
+=cut
+
+sub kill {
+    my $status;
+    while (my $opts = shift @_) {
+	$status |= kill_kill($opts->{'harness'}, grace => 2);
+    }
+    return $status;
 }
 
 1;
