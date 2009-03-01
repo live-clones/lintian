@@ -25,6 +25,14 @@ use Lintian::Data;
 use Tags;
 use Util;
 
+# Used to match Ubuntu distribution names in target distributions.
+our $UBUNTU_REGEX;
+{
+	my $dists = Lintian::Data->new('changelog-file/ubuntu-dists');
+	my $string = join ('|', 'ubuntu', $dists->all);
+	$UBUNTU_REGEX = qr/$string/o;
+}
+
 sub run {
 
 my $pkg = shift;
@@ -91,9 +99,7 @@ if (defined $uploaders) {
 }
 
 # No such thing as NMUs in Ubuntu-land.
-my $ubuntu_dists = Lintian::Data->new('changelog-file/ubuntu-dists');
-my $ubuntu_regex = join('|', 'ubuntu', $ubuntu_dists->all);
-if ($version =~ /$ubuntu_regex/ or $distribution =~ /$ubuntu_regex/) {
+if ($version =~ /$UBUNTU_REGEX/ or $distribution =~ /$UBUNTU_REGEX/) {
 	$upload_is_nmu = 0;
 	$version_nmuness = 0;
 }

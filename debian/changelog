@@ -32,6 +32,8 @@ lintian (2.2.7) UNRELEASED; urgency=low
   * checks/menus:
     + [RA] Cache the reference to the section list.  Thanks, Raphael
       Geissert.  Also use all caps for global variables.
+  * checks/nmu:
+    + [RA] Calculate the regex for Ubuntu distributions only once.
   * checks/shared-libs:
     + [ADB] When parsing symbols files, correctly ensure that meta-information
       occurs between the end of the dependency template(s) and the start of
