@@ -34,15 +34,10 @@ my $pkg = shift;
 my $type = shift;
 my $info = shift;
 
-my $arch;
+# Skip architecture-dependent packages.
+my $arch = $info->field('architecture') || '';
+return 0 if $arch =~ /^\s*all\s*$/;
 
-# read architecture
-if (defined $info->field('architecture')) {
-    $arch = $info->field('architecture');
-}
-
-# If this is a arch-independent package, this test doesn't apply
-return 0 if $arch eq 'all';
 # usr/share missing. other checks will moan about it
 # so just ignore this package
 return 0 if !-d 'unpacked/usr/share';

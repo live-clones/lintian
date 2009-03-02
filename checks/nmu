@@ -73,6 +73,7 @@ if ($firstline) {
 }
 
 my $version = $info->field("version");
+$version =~ s/\s*$//;
 my $maintainer = canonicalize($info->field("maintainer"));
 my $uploaders = $info->field("uploaders");
 

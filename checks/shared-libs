@@ -146,6 +146,8 @@ for my $cur_file (sort keys %{$info->index}) {
 	    if (not defined $objdump->{$cur_file}->{STACK}) {
 		if (defined $info->field('architecture')) {
 		    my $arch = $info->field('architecture');
+		    $arch =~ s/^\s+//;
+		    $arch =~ s/\s+$//;
 		    tag "shlib-without-PT_GNU_STACK-section", $cur_file
 			if $stack_arches{$arch};
 		}

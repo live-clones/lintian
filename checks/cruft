@@ -101,7 +101,7 @@ if ($info->native) {
 my $arch;
 if (defined $info->field('architecture')) {
     my $arch = $info->field('architecture');
-    if ($pkg =~ /-docs?$/ && $arch ne 'all') {
+    if ($pkg =~ /-docs?$/ && $arch !~ /^\s*all\s*$/) {
         tag 'documentation-package-not-architecture-independent';
     }
 }
