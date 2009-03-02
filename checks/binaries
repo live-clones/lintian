@@ -104,6 +104,8 @@ foreach my $file (sort keys %{$info->objdump_info}) {
     foreach (@{$objdump->{NOTES}}) {
 	if (m/^File format not recognized$/) {
             tag "apparently-corrupted-elf-binary", "$file";
+	} elsif (m/^File truncated$/) {
+            tag "apparently-truncated-elf-binary", "$file";
 	} elsif (m/^Packed with UPX$/) {
 	    tag "binary-file-compressed-with-upx", "$file";
 	} elsif (m/^Invalid operation$/) {

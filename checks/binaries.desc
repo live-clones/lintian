@@ -157,6 +157,13 @@ Info: This appears to be an ELF file but objdump -T doesn't recognize it
  non-native binaries are handled correctly, or it may be a
  misidentification of a file as ELF that actually isn't.
 
+Tag: apparently-truncated-elf-binary
+Severity: normal
+Certainty: possible
+Info: This appears to be an ELF file but objdump believes it is truncated.
+ This may be a mistake or a corrupted file, or it may be a
+ misidentification of a file as ELF that actually isn't.
+
 Tag: missing-dependency-on-libc
 Severity: serious
 Certainty: certain

@@ -219,6 +219,8 @@ sub objdump_info {
                 $dynsyms = 1;
             } elsif (m/^objdump: (.*?): File format not recognized$/) {
                 push @{$file->{NOTES}}, "File format not recognized";
+            } elsif (m/^objdump: (.*?): File truncated$/) {
+                push @{$file->{NOTES}}, "File truncated";
             } elsif (m/^objdump: \.(.*?): Packed with UPX$/) {
                 push @{$file->{NOTES}}, "Packed with UPX";
             } elsif (m/objdump: \.(.*?): Invalid operation$/) {
