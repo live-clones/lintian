@@ -260,7 +260,7 @@ foreach my $file (sort keys %{$info->index}) {
 	if (not defined $pid) {
 	    fail("cannot run man -E UTF-8 -l: $!");
 	} elsif ($pid == 0) {
-	    my %newenv = (LANG => 'C', PATH => $ENV{PATH});
+	    my %newenv = (LANG => 'C', PATH => $ENV{PATH}, MANWIDTH => 80);
 	    undef %ENV;
 	    %ENV = %newenv;
 	    exec "($cmd >/dev/null) 2>&1"

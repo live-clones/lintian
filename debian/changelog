@@ -47,6 +47,9 @@ lintian (2.2.7) UNRELEASED; urgency=low
   * checks/manpages:
     + [CW] Run man with '-E UTF-8' to avoid producing bogus warnings on
       localised manual pages due to attempting to recode through ASCII.
+    + [RA] Set MANWIDTH to 80 in the environment when running man to force
+      it to assume 80-column lines even when Lintian is run in a smaller
+      window.  Thanks, Joey Hess.  (Closes: #517629)
   * checks/menus:
     + [RA] Cache the reference to the section list.  Thanks, Raphael
       Geissert.  Also use all caps for global variables.
