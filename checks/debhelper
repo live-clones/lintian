@@ -277,7 +277,7 @@ while (defined(my $file=readdir(DEBIAN))) {
 		tag "maintainer-script-lacks-debhelper-token", "debian/$file";
 	    }
 	}
-    } elsif ($file =~ m/^control$/) {
+    } elsif ($file eq 'control') {
 	my $bdepends_noarch = $info->relation_noarch('build-depends-all');
         my $bdepends = $info->relation('build-depends-all');
         if ($needbuilddepends && ! $bdepends->implies('debhelper')) {

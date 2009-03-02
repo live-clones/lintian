@@ -51,14 +51,14 @@ foreach my $file (sort keys %{$info->index}) {
     # location of the binary, but there are too many mismatches between
     # bin/sbin and 1/8 that it's not clear it's the right thing to do.
     if (($perm =~ m,^[\-lh],o) and
-    	(($path =~ m,^bin/$,o) or
-	 ($path =~ m,^sbin/$,o) or
-	 ($path =~ m,^usr/bin/$,o) or
-	 ($path =~ m,^usr/bin/X11/$,o) or
-	 ($path =~ m,^usr/bin/mh/$,o) or
-	 ($path =~ m,^usr/sbin/$,o) or
-	 ($path =~ m,^usr/games/$,o) or
-	 ($path =~ m,^usr/X11R6/bin/$,o) )) {
+	(($path eq 'bin/') or
+	 ($path eq 'sbin/') or
+	 ($path eq 'usr/bin/') or
+	 ($path eq 'usr/bin/X11/') or
+	 ($path eq 'usr/bin/mh/') or
+	 ($path eq 'usr/sbin/') or
+	 ($path eq 'usr/games/') or
+	 ($path eq 'usr/X11R6/bin/') )) {
 
 	my $bin = $fname;
 	$binary{$bin} = $file;
@@ -312,7 +312,7 @@ foreach my $file (sort keys %{$info->index}) {
 		# regexes taken from checks/files
 		tag "FSSTND-dir-in-manual-page", "$file:$lc $1";
 	    }
-	    if ($line =~ m/^.SH "POD ERRORS"$/) {
+	    if ($line eq '.SH "POD ERRORS"') {
 		tag "manpage-has-errors-from-pod2man", "$file:$lc";
 	    }
 	}

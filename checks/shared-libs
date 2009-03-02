@@ -106,7 +106,7 @@ for my $cur_file (sort keys %{$info->index}) {
         }
 
 	my @symbol_names = map { @{$_}[2] } @{$objdump->{$cur_file}->{SYMBOLS}};
-	if (grep /^_?exit$/, @symbol_names and !grep /^fork$/, @symbol_names) {
+	if (grep /^_?exit$/, @symbol_names and !grep $_ eq 'fork', @symbol_names) {
 	    tag "shlib-calls-exit", "$cur_file";
 	}
 

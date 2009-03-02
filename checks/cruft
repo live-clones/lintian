@@ -220,7 +220,7 @@ sub check_diffstat {
         }
 
         # Additional special checks only for the diff, not the full source.
-        if ($file =~ m,^debian/substvars$,) {
+        if ($file eq 'debian/substvars') {
             tag 'diff-contains-substvars', $file;
         }
     }

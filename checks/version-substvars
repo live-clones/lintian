@@ -76,7 +76,7 @@ foreach (keys %$binpkgs) {
 				unless ($pkg2 =~ /\$\{\S+\}/);
 			next;
 		}
-		$pkg2_is_any = ($info->binary_field($pkg2, 'architecture') !~ m/^all$/);
+		$pkg2_is_any = ($info->binary_field($pkg2, 'architecture') ne 'all');
 
 		if ($pkg1_is_any) {
 			if ($pkg2_is_any and $substvar_strips_binNMU) {

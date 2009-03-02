@@ -110,13 +110,13 @@ foreach my $file (sort keys %{$info->objdump_info}) {
 	}
     }
     foreach (@{$objdump->{NOTES}}) {
-	if (m/^File format not recognized$/) {
+	if ($_ eq 'File format not recognized') {
             tag "apparently-corrupted-elf-binary", "$file";
-	} elsif (m/^File truncated$/) {
+	} elsif ($_ eq 'File truncated') {
             tag "apparently-truncated-elf-binary", "$file";
-	} elsif (m/^Packed with UPX$/) {
+	} elsif ($_ eq 'Packed with UPX') {
 	    tag "binary-file-compressed-with-upx", "$file";
-	} elsif (m/^Invalid operation$/) {
+	} elsif ($_ eq 'Invalid operation') {
 	    tag "binary-with-bad-dynamic-table", "$file" unless $file =~ m%^\./usr/lib/debug/%;
 	}
     }
@@ -168,7 +168,7 @@ my %directories;
 foreach (sort keys %{$info->file_info}) {
     next unless length $_;
     my $data = $info->file_info->{$_};
-    next unless $data =~ /^directory$/ or $data =~ / link to /;
+    next unless $data eq 'directory' or $data =~ / link to /;
     $directories{"/$_"}++;
 }
 
