@@ -20,7 +20,7 @@
 
 package Lintian::manpages;
 use strict;
-use Dep;
+use Lintian::Relation::Version qw(versions_gte);
 use Tags;
 use Util;
 
@@ -238,7 +238,7 @@ foreach my $file (sort keys %{$info->index}) {
 	unless (defined $MAN_WARNINGS) {
 	    my $version = `man -V 2>&1`;
 	    if ($? == 0 && $version =~ / (\d+\.[\d.]+)(,|\Z)/) {
-		$MAN_WARNINGS = Dep::versions_gte($1, '2.5.1');
+		$MAN_WARNINGS = versions_gte($1, '2.5.1');
 	    } else {
 		$MAN_WARNINGS = 0;
 	    }
