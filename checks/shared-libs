@@ -24,7 +24,7 @@ use strict;
 use File::Basename;
 
 use Lintian::Data;
-use Dep;
+use Lintian::Relation;
 use Tags;
 use Util;
 
@@ -239,7 +239,7 @@ my $provides = $pkg . "( = $version)";
 if (defined $info->field('provides')) {
     $provides .= ", " . $info->field('provides');
 }
-$provides = Dep::parse($provides);
+$provides = Lintian::Relation->new($provides);
 
 my %shlibs_control;
 my %symbols_control;
@@ -328,7 +328,7 @@ if ($#shlibs == -1) {
 	my %seen;
 	@shlibs_depends = grep { !$seen{$_}++ } @shlibs_depends;
 	for my $depend (@shlibs_depends) {
-	    unless (Dep::implies($provides, Dep::parse($depend))) {
+	    unless ($provides->implies($depend)) {
 		tag "shlibs-declares-dependency-on-other-package", $depend;
 	    }
 	}
@@ -511,7 +511,7 @@ if ($#shlibs == -1 and not %unversioned_shlibs) {
     my %seen;
     @symbols_depends = grep { !$seen{$_}++ } @symbols_depends;
     for my $depend (@symbols_depends) {
-	unless (Dep::implies($provides, Dep::parse($depend))) {
+	unless ($provides->implies($depend)) {
 	    tag "symbols-declares-dependency-on-other-package", $depend;
 	}
     } 

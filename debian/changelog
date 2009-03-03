@@ -69,6 +69,7 @@ lintian (2.2.7) UNRELEASED; urgency=low
     + [ADB] Extend the parsing of dependency templates in symbols files to
       handle ORed dependencies.
     + [RA] Be robust against whitespace in the Architecture field.
+    + [ADB] Use Lintian::Relation rather than Dep.
   * checks/version-substvars:
     + [RA] Be robust against whitespace in the Architecture field.
       Thanks, Gonéri Le Bouder.  (Closes: #517555)
