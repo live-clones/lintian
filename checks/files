@@ -23,7 +23,6 @@ use strict;
 use Tags;
 use Util;
 use Lintian::Data;
-use Lintian::Relation;
 
 our $FONT_PACKAGES;
 
@@ -332,13 +331,8 @@ foreach my $file (sort keys %{$info->index}) {
 	# so that the symlinks will be sorted out first on a sarge upgrade.
 	elsif ($file =~ m,^usr/(?:include|lib)/X11(/|\Z),
 	       && !$warned_x11_predepends && $pkg ne 'x11-common') {
-	    my $pre_depends = '';
-	    if (defined $info->field('pre-depends')) {
-		$pre_depends = $info->field('pre-depends');
-	    }
-	    $pre_depends = Lintian::Relation->new($pre_depends);
 	    tag "file-in-usr-something-x11-without-pre-depends", "$file"
-		unless $pre_depends->implies('x11-common (>= 1:7.0.0)');
+		unless $info->relation('pre-depends')->implies('x11-common (>= 1:7.0.0)');
 
 	    # Always set this so that we don't redo the check, even if we
 	    # didn't warn.  If the first instance didn't warn, none will.
