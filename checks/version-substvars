@@ -52,7 +52,7 @@ foreach (keys %$binpkgs) {
 	my ($pkg1, $pkg1_is_any, $pkg2, $pkg2_is_any, $substvar_strips_binNMU);
 
 	$pkg1 = $_;
-	$pkg1_is_any = ($info->binary_field($pkg1, 'architecture') =~ /^\s*all\s*$/);
+	$pkg1_is_any = ($info->binary_field($pkg1, 'architecture') !~ /^\s*all\s*$/);
 
 	foreach my $field (@dep_fields) {
 		next unless $info->binary_field($pkg1, $field);
