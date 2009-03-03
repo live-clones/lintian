@@ -59,6 +59,7 @@ lintian (2.2.7) UNRELEASED; urgency=low
     + [RA] Be robust against whitespace in the Architecture field.
   * checks/rules:
     + [RA] Be robust against whitespace in the Architecture field.
+    + [ADB] Remove some obsolete code and therefore stop use-ing Dep.
   * checks/shared-libs:
     + [ADB] When parsing symbols files, correctly ensure that meta-information
       occurs between the end of the dependency template(s) and the start of

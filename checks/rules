@@ -17,7 +17,6 @@ package Lintian::rules;
 use strict;
 use Tags;
 use Util;
-use Dep;
 
 # The following targets are required per Policy.
 my %required = map { $_ => 1 }
@@ -54,17 +53,6 @@ unless (-d "fields") {
 }
 
 my $architecture = $info->field('architecture') || "";
-
-#get build-depends:
-my $build_deps = "";
-if (defined $info->field('build-depends')) {
-    $build_deps = $info->field('build-depends');
-}
-if (defined $info->field('build-depends-indep')) {
-    $build_deps .= $info->field('build-depends-indep');
-}
-$build_deps = Dep::parse($build_deps);
-
 
 open(RULES, '<', 'debfiles/rules') or fail("Failed opening rules: $!");
 
