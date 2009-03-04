@@ -70,6 +70,8 @@ lintian (2.2.7) UNRELEASED; urgency=low
     + [ADB] Remove some obsolete code and therefore stop use-ing Dep.
   * checks/scripts:
     + [ADB] Use Lintian::Relation rather than Dep.
+    + [ADB] Update lists of known interpreter versions (add jruby1.1,
+      octave3.1 and remove jruby0.9)
   * checks/shared-libs:
     + [ADB] When parsing symbols files, correctly ensure that meta-information
       occurs between the end of the dependency template(s) and the start of
