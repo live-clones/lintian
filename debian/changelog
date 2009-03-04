@@ -27,6 +27,8 @@ lintian (2.2.7) UNRELEASED; urgency=low
       that explains the problem.  Based on a patch from Raphael Geissert.
   * checks/cruft:
     + [RA] Be robust against whitespace in the Architecture field.
+  * checks/debconf:
+    + [ADB] Use Lintian::Relation rather than Dep.
   * checks/fields:
     + [RA] Precompile constant regexes with qr.  Patch from Raphael
       Geissert.

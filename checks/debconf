@@ -22,7 +22,7 @@ package Lintian::debconf;
 use strict;
 use Tags;
 
-use Dep;
+use Lintian::Relation;
 use Util;
 
 # From debconf-devel(7), section 'THE TEMPLATES FILE', up to date with debconf
@@ -138,21 +138,20 @@ for my $field (qw(depends pre-depends)) {
     if (defined $info->field($field)) {
 	$_ = $info->field($field);
 	$_ .= ", $version" if defined $version;
-        push @alldeps, $_;
-	$dependencies{$field} = Dep::parse($_);
+	push @alldeps, $_;
+	$dependencies{$field} = Lintian::Relation->new($_);
     } else {
-	my $dep = $version;
-	push @alldeps, $dep;
-	$dependencies{$field} = Dep::parse($dep);
+	push @alldeps, $version;
+	$dependencies{$field} = Lintian::Relation->new($version);
     }
 }
 
-my $alldependencies = Dep::parse(join ', ', @alldeps);
+my $alldependencies = Lintian::Relation->new(join ', ', @alldeps);
 
 # See if the package depends on dbconfig-common.  Packages that do are allowed
 # to have a config file with no templates, since they use the dbconfig-common
 # templates.
-my $usesdbconfig = Dep::implies($alldependencies, Dep::parse('dbconfig-common'));
+my $usesdbconfig = $alldependencies->implies('dbconfig-common');
 
 # Check that both debconf control area files are present.
 if ($seenconfig and not $seentemplates and not $usesdbconfig) {
@@ -491,14 +490,14 @@ foreach my $template (@templates_seen) {
 # Check that the right dependencies are in the control file.  Accept any
 # package that might provide debconf functionality.
 
-my $anydebconf = Dep::parse(join (' | ', @debconfs));
+my $anydebconf = join (' | ', @debconfs);
 if ($usespreinst) {
-    unless (Dep::implies($dependencies{'pre-depends'}, $anydebconf)) {
+    unless ($dependencies{'pre-depends'}->implies($anydebconf)) {
 	tag "missing-debconf-dependency-for-preinst", ""
 	    unless $type eq 'udeb';
     }
 } else {
-    unless (Dep::implies($alldependencies, $anydebconf) or $usesdbconfig) {
+    unless ($alldependencies->implies($anydebconf) or $usesdbconfig) {
 	tag "missing-debconf-dependency", "";
     }
 }
