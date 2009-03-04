@@ -27,9 +27,10 @@ use strict;
 
 use lib "$ENV{'LINTIAN_ROOT'}/checks/";
 use common_data;
-use Dep;
 use Tags;
 use Util;
+
+use Lintian::Relation;
 
 # This is a map of all known interpreters.  The key is the interpreter name
 # (the binary invoked on the #! line).  The value is an anonymous array of one
@@ -281,7 +282,6 @@ my %executable = ();
 my %suid = ();
 my %ELF = ();
 my %scripts = ();
-my %deps = ();
 
 # no dependency for install-menu, because the menu package specifically
 # says not to depend on it.
@@ -307,18 +307,14 @@ for my $file (sort keys %{$info->file_info}) {
 
 my $all_deps = '';
 for my $field (qw/suggests recommends depends pre-depends provides/) {
-    $deps{$field} = '';
     if (defined $info->field($field)) {
-	$_ = $info->field($field);
-        $deps{$field} = $_;
         $all_deps .= ', ' if $all_deps;
-        $all_deps .= $_;
+        $all_deps .= $info->field($field);
     }
-    $deps{$field} = Dep::parse($deps{$field});
 }
 $all_deps .= ', ' if $all_deps;
 $all_deps .= $pkg;
-$deps{all} = Dep::parse($all_deps);
+my $all_parsed = Lintian::Relation->new($all_deps);
 
 for my $filename (sort keys %{$info->scripts}) {
     my $interpreter = $info->scripts->{$filename}->{interpreter};
@@ -461,7 +457,7 @@ for my $filename (sort keys %{$info->scripts}) {
 	if (not defined $depends) {
 	    $depends = $base;
 	}
-	if ($depends && !Dep::implies($deps{all}, Dep::parse($depends))) {
+	if ($depends && !$all_parsed->implies($depends)) {
 	    if ($base =~ /^(python|ruby|(m|g)awk)$/) {
 		tag("$base-script-but-no-$base-dep", $filename);
 	    } elsif ($base eq 'csh' && $filename =~ m,^\./etc/csh/login\.d/,) {
@@ -477,7 +473,7 @@ for my $filename (sort keys %{$info->scripts}) {
 	}
 	if ($base eq 'perl' && $suid{$filename}) {
 	    tag("suid-perl-script-but-no-perl-suid-dep", $filename)
-		unless Dep::implies($deps{all}, Dep::parse('perl-suid'));
+		unless $all_parsed->implies('perl-suid');
 	}
     } elsif ($versioned_interpreters{$base}) {
 	my @versions = @$data[4 .. @$data - 1];
@@ -487,7 +483,7 @@ for my $filename (sort keys %{$info->scripts}) {
 	    $d;
 	} @versions;
 	my $depends = join (' | ', $data->[1], @depends);
-	unless (Dep::implies($deps{all}, Dep::parse($depends))) {
+	unless ($all_parsed->implies($depends)) {
 	    if ($base eq 'php') {
 		tag('php-script-but-no-phpX-cli-dep', $filename);
 	    } elsif ($base =~ /^(wish|tclsh)/) {
@@ -501,7 +497,7 @@ for my $filename (sort keys %{$info->scripts}) {
 	my ($version) = ($base =~ /$data->[2]/);
 	my $depends = $data->[3];
 	$depends =~ s/\$1/$version/g;
-	unless (Dep::implies($deps{all}, Dep::parse($depends))) {
+	unless ($all_parsed->implies($depends)) {
 	    if ($base =~ /^php/) {
 		tag('php-script-but-no-phpX-cli-dep', $filename);
 	    } elsif ($base =~ /^(python|ruby)/) {
@@ -572,15 +568,14 @@ while (<SCRIPTS>) {
 	# Interpreters used by preinst scripts must be in Pre-Depends.
 	# Interpreters used by postinst or prerm scripts must be in Depends.
 	unless (defined ($data->[1]) and not $data->[1]) {
-	    my $depends = Dep::parse($data->[1] || $base);
+	    my $depends = Lintian::Relation->new($data->[1] || $base);
 	    if ($file eq 'preinst') {
-		unless (Dep::implies($deps{'pre-depends'}, $depends)) {
+		unless ($info->relation('pre-depends')->implies($depends)) {
 		    tag('preinst-interpreter-without-predepends',
 			"#!$interpreter")
 		}
 	    } else {
-		unless (Dep::implies($deps{'pre-depends'}, $depends)
-			or Dep::implies($deps{'depends'}, $depends)) {
+		unless ($info->relation('strong')->implies($depends)) {
 		    tag('control-interpreter-without-depends', $filename,
 			"#!$interpreter")
 		}
@@ -816,11 +811,11 @@ while (<SCRIPTS>) {
 		}
 		if (m,>\s*/etc/inetd\.conf(\s|\Z),) {
 		    tag "maintainer-script-modifies-inetd-conf", "$file:$."
-			unless Dep::implies($deps{provides}, Dep::parse('inet-superserver'));
+			unless $info->relation('provides')->implies('inet-superserver');
 		}
 		if (m,^\s*(?:cp|mv)\s+(?:.*\s)?/etc/inetd\.conf\s*$,) {
 		    tag "maintainer-script-modifies-inetd-conf", "$file:$."
-			unless Dep::implies($deps{provides}, Dep::parse('inet-superserver'));
+			unless $info->relation('provides')->implies('inet-superserver');
 		}
 		if (m,^$LEADIN(/(usr/)?s?bin/[\w.+-]+)(\s|;|$),) {
 		    tag "command-with-path-in-maintainer-script", "$file:$. $1";
@@ -855,8 +850,7 @@ while (<SCRIPTS>) {
 		    if (m,-x\s+\S*$regex, or m,(which|type)\s+$regex, or m,command\s+.*?$regex,) {
 			$warned{$package} = 1;
 		    } else {
-			my $needed = Dep::parse($package);
-			unless (Dep::implies($deps{depends}, $needed) || Dep::implies($deps{'pre-depends'}, $needed)) {
+			unless ($info->relation('strong')->implies($package)) {
 			    my $shortpackage = $package;
 			    $shortpackage =~ s/[ \(].*//;
 			    tag "maintainer-script-needs-depends-on-$shortpackage", "$file";
