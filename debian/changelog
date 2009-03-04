@@ -63,6 +63,8 @@ lintian (2.2.7) UNRELEASED; urgency=low
   * checks/nmu:
     + [RA] Calculate the regex for Ubuntu distributions only once.
     + [RA] Be robust against whitespace in the Architecture field.
+  * checks/patch-systems:
+    + [ADB] Use Lintian::Relation instead of Dep.
   * checks/rules:
     + [RA] Be robust against whitespace in the Architecture field.
     + [ADB] Remove some obsolete code and therefore stop use-ing Dep.

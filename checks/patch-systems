@@ -22,7 +22,6 @@
 package Lintian::patch_systems;
 use strict;
 
-use Dep;
 use Tags;
 use Util;
 
@@ -38,15 +37,7 @@ sub run {
 
 	#Get build deps so we can decide which build system the maintainer
 	#meant to use:
-	my $build_deps = "";
-	if (defined $info->field('build-depends')) {
-		$build_deps = $info->field('build-depends');
-	}
-	if (defined $info->field('build-depends-indep')) {
-		$build_deps .= ", " if $build_deps;
-		$build_deps .= $info->field('build-depends-indep');
-	}
-	$build_deps = Dep::parse($build_deps);
+	my $build_deps = $info->relation('build-depends-all');
 	# Get source package format
 	my $format = "";
 	if (defined $info->field('format')) {
@@ -55,7 +46,7 @@ sub run {
 	my $quilt_format = ($format =~ /3\.\d+ \(quilt\)/) ? 1 : 0;
 
 	#----- dpatch
-	if (Dep::implies($build_deps, Dep::parse("dpatch"))) {
+	if ($build_deps->implies("dpatch")) {
 		$uses_patch_system++;
 		#check for a debian/patches file:
 		if (! -r "debfiles/patches/00list") {
@@ -117,7 +108,7 @@ sub run {
 	}
 
 	#----- quilt
-	if (Dep::implies($build_deps, Dep::parse("quilt")) or $quilt_format) {
+	if ($build_deps->implies("quilt") or $quilt_format) {
 		$uses_patch_system++;
 		#check for a debian/patches file:
 		if (! -r "debfiles/patches/series") {
