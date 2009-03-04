@@ -78,6 +78,8 @@ lintian (2.2.7) UNRELEASED; urgency=low
       handle ORed dependencies.
     + [RA] Be robust against whitespace in the Architecture field.
     + [ADB] Use Lintian::Relation rather than Dep.
+    + [ADB] Avoid capturing parentheses in regexes due to their minor
+      performance penalty.
   * checks/version-substvars:
     + [RA] Be robust against whitespace in the Architecture field.
       Thanks, Gonéri Le Bouder.  (Closes: #517555)

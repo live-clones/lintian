@@ -368,7 +368,7 @@ if ($#shlibs == -1 and not %unversioned_shlibs) {
 	chomp;
 	next if m/^\s*$/ or /^#/;
 
-	if (m/^([^\s|*]\S+)\s\S+\s*(\(\S+\s+\S+\)|#MINVER#)?/) {
+	if (m/^([^\s|*]\S+)\s\S+\s*(?:\(\S+\s+\S+\)|#MINVER#)?/) {
 	    # soname, main dependency template
 
 	    $soname = $1;
@@ -399,7 +399,7 @@ if ($#shlibs == -1 and not %unversioned_shlibs) {
 	    $dep_templates = 0;
 	    $meta_info_seen = 0;
 	    $symbol_count = 0;
-	} elsif (m/^\|\s+\S+\s*(\(\S+\s+\S+\)|#MINVER#)?/) {
+	} elsif (m/^\|\s+\S+\s*(?:\(\S+\s+\S+\)|#MINVER#)?/) {
 	    # alternative dependency template
 
 	    $warned = 0;
@@ -425,7 +425,7 @@ if ($#shlibs == -1 and not %unversioned_shlibs) {
 	    }
 
 	    $dep_templates++ unless $warned;
-	} elsif (m/^\*\s(\S+):\s(\S+)/) {
+	} elsif (m/^\*\s(\S+):\s\S+/) {
 	    # meta-information
 
 	    # This should probably be in a hash, but there's
@@ -436,7 +436,7 @@ if ($#shlibs == -1 and not %unversioned_shlibs) {
 		unless defined $soname and $symbol_count == 0;
 
 	    $meta_info_seen = 1;
-	} elsif (m/^\s+(\S+)\s(\S+)(?:\s(\S+(\s\S+)?))?$/) {
+	} elsif (m/^\s+(\S+)\s(\S+)(?:\s(\S+(?:\s\S+)?))?$/) {
 	    # Symbol definition
 
 	    tag "syntax-error-in-symbols-file", $.
