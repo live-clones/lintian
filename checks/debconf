@@ -129,7 +129,6 @@ my $version;
 if (defined $info->field('version')) {
     $_ = $info->field('version');
     $version = "$pkg (= $_)";
-    close IN;
 }
 
 my (%dependencies, @alldeps);
