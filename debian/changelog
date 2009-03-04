@@ -87,6 +87,11 @@ lintian (2.2.7) UNRELEASED; urgency=low
 
   * lib/Lintian/Collect/Binary.pm:
     + [RA] Recognize truncated binaries.  Patch from Raphael Geissert.
+
+  * unpack/unpack-srcpkg-l1:
+    + [RA] When processing tar output, we may not get complete lines at a
+      time.  Save partial lines and glue them back together again when we
+      get the next burst of data.  (Closes: #517899)
   
  -- Russ Allbery <rra@debian.org>  Sun, 22 Feb 2009 13:24:23 -0800
 

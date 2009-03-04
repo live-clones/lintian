@@ -93,8 +93,18 @@ if ($tarball =~ /\.lzma\z/) {
     unshift(@tar_options, '--lzma');
 }
 my @index;
+my $last = '';
 my $collect = sub {
-    for my $line (map { split "\n" } @_) {
+    my @lines = map { split "\n" } @_;
+    if ($last ne '') {
+        $lines[0] = $last . $lines[0];
+    }
+    if ($_[-1] !~ /\n\z/) {
+        $last = pop @lines;
+    } else {
+        $last = '';
+    }
+    for my $line (@lines) {
         $line =~ s/^h/-/;
         if ($line and $line !~ m,^(?:\S+\s+){5}\./$,) {
             push(@index, $line . "\n");
@@ -103,6 +113,9 @@ my $collect = sub {
 };
 spawn({ fail => 'error', out => $collect },
       ["tar", @tar_options, "$base_dir/$tarball"]);
+if ($last) {
+    fail("tar output doesn't end in a newline");
+}
 
 # We now need to see if all files in the tarball have a common prefix.  If so,
 # we're going to strip that prefix off each file name.  We also remove lines
