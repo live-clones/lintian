@@ -22,7 +22,6 @@ package Lintian::debhelper;
 use strict;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
-use Dep;
 use Tags;
 use Util;
 use Lintian::Data;
@@ -244,35 +243,26 @@ while (defined(my $file=readdir(DEBIAN))) {
 	    }
 	}
     } elsif ($file =~ m/^control$/) {
-        my ($control) = read_dpkg_control("debfiles/$file");
-
-	# Collect dependency information from debian/control.
-        my $bdepends = '';
-        for my $field ('build-depends', 'build-depends-indep') {
-            next unless $control->{$field};
-            $bdepends .= ', ' if $bdepends;
-            $bdepends .= $control->{$field};
-        }
-	my $bdepends_noarch = Dep::parse_noarch($bdepends);
-        $bdepends = Dep::parse($bdepends);
-        if ($needbuilddepends && ! Dep::implies($bdepends, Dep::parse('debhelper'))) {
+	my $bdepends_noarch = $info->relation_noarch('build-depends-all');
+        my $bdepends = $info->relation('build-depends-all');
+        if ($needbuilddepends && ! $bdepends->implies('debhelper')) {
 	    tag "package-uses-debhelper-but-lacks-build-depends", "";
 	}
 	while (my ($dep, $command) = each %missingbdeps) {
 	    next if $dep eq 'debhelper'; #handled above
 	    tag 'missing-build-dependency-for-dh_-command', "$command=$dep"
-		unless (Dep::implies($bdepends_noarch, Dep::parse($dep)));
+		unless ($bdepends_noarch->implies($dep));
 	}
-	my $needed = Dep::parse("debhelper (>= $level)");
-	if ($level > 5 && ! Dep::implies($bdepends, $needed)) {
+	my $needed = "debhelper (>= $level)";
+	if ($level > 5 && ! $bdepends->implies($needed)) {
 	    tag "package-lacks-versioned-build-depends-on-debhelper", $level;
 	} elsif (@versioncheck) {
 	    my %seen;
 	    @versioncheck = grep { !$seen{$_}++ } @versioncheck;
 	    for my $program (@versioncheck) {
 		my $required = $versions{$program};
-		my $needed = Dep::parse("debhelper (>= $required)");
-		unless (Dep::implies($bdepends, $needed)) {
+		my $needed = "debhelper (>= $required)";
+		unless ($bdepends->implies($needed)) {
 		    tag 'debhelper-script-needs-versioned-build-depends',
 			$program, "(>= $required)";
 		}
