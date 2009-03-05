@@ -4,5 +4,5 @@ Info: This script copies the "etc/init.d" directory into the lintian
  directory.
 Type: binary
 Unpack-Level: 2
-Output: init.d
+Version: 1
 Order: 1

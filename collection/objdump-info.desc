@@ -4,6 +4,6 @@ Info: This script runs "objdump" over all binaries and object files of a
  binary package.
 Type: binary, udeb
 Unpack-Level: 2
-Output: objdump-info
+Version: 1
 Order: 2
 Needs-Info: file-info

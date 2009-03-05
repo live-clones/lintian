@@ -93,6 +93,7 @@ if (not defined $chl) {
 
 # Extract NEWS.Debian files as well, with similar precautious.  Ignore any
 # symlinks to other packages here; in that case, we just won't check the file.
+unlink('NEWS.Debian');
 my $news = "unpacked/usr/share/doc/$pkg/NEWS.Debian.gz";
 if (-f $news) {
     if (-l $news) {

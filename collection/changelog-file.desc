@@ -5,5 +5,5 @@ Info: This script copies the <tt>changelog</tt> file and
  directory.
 Type: binary
 Unpack-Level: 2
-Output: changelog
+Version: 1
 Order: 1

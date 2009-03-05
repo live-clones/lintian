@@ -4,6 +4,6 @@ Info: This script runs the "strings" command over all files of a binary
  package.
 Type: binary, udeb
 Unpack-Level: 2
-Output: elf-index
+Version: 1
 Order: 2
 Needs-Info: file-info

@@ -1088,8 +1088,8 @@ for my $f (readdir COLLDIR) {
     $p->{'type'} = "$s$b$u";
 
     set_value($f,$p,'unpack-level',$secs[0],1);
-    set_value($f,$p,'output',$secs[0],1);
     set_value($f,$p,'order',$secs[0],1);
+    set_value($f,$p,'version',$secs[0],1);
 
     if (exists $secs[0]->{'needs-info'} && defined $secs[0]->{'needs-info'}) {
 	for (split(/\s*,\s*/o,$secs[0]->{'needs-info'})) {
@@ -1446,7 +1446,8 @@ foreach my $pkg_info ($schedule->get_all) {
 	    next unless ($ci->{'type'} =~ m/$type/);
 
 	    # info already available?
-	    next if (-e "$base/$ci->{'output'}");
+	    next if (-l "$base/.${coll}$ci->{'version'}");
+	    system('sh', '-c', 'rm -f '."'$base'/.${coll}*");
 
 	    # unpack to desired unpack level (if necessary)
 	    $act_unpack_level = unpack_pkg($type,$base,$file,$act_unpack_level,$ci->{'unpack-level'});
@@ -1569,6 +1570,7 @@ foreach my $pkg_info ($schedule->get_all) {
 	    } elsif ($fail_on_warnings && $stats->{types}{W}) {
 		$exit_code = 1;
 	    }
+	    symlink $$, ".${coll}$ci->{'version'}";
 	}
 
 	# report unused overrides
