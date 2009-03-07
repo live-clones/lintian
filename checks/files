@@ -96,7 +96,7 @@ our @phplibraries = (
     [ qr,(?i)fpdf\.php$, => 'php-fpdf' ],
     [ qr,(?i)getid3\.(lib\.)?(\.(php|inc))+$, => 'php-getid3' ],
     [ qr,(?i)streams\.php$, => 'php-gettext' ],
-    [ qr,(?i)rss_parse\.(php|inc)$, => 'magpierss' ],
+    [ qr,(?i)rss_parse\.(php|inc)$, => 'libphp-magpierss' ],
     [ qr,(?i)unit_tester\.php$, => 'php-simpletest' ],
     [ qr,(?i)Sparkline\.php$, => 'libsparkline-php' ],
 # not yet available in unstable:,
