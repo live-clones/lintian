@@ -264,7 +264,7 @@ All other keys are probably just ignored.
 =cut
 
 sub reap {
-    my $status;
+    my $status = 1;
     while (my $opts = shift @_) {
 	next unless defined($opts->{harness});
 
@@ -287,7 +287,7 @@ sub reap {
 			   $opts->{harness}->result);
 	    }
 	}
-	$status |= $opts->{success};
+	$status &&= $opts->{success};
     }
     return $status;
 }
