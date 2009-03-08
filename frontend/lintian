@@ -1465,8 +1465,7 @@ foreach my $pkg_info ($schedule->get_all) {
 		next PACKAGE;
 	    }
 
-	    $current_order = $ci->{'order'}
-		if ($current_order == -1);
+	    $current_order = $ci->{'order'} if ($current_order == -1);
 	    if ($current_order != $ci->{'order'}) {
 		debug_msg(1, "Waiting for jobs from order $current_order ...");
 		# wait until the jobs of the previous order finish:
@@ -1478,21 +1477,30 @@ foreach my $pkg_info ($schedule->get_all) {
 	    # collect info
 	    remove_status_file($base);
 	    debug_msg(1, "Collecting info: $coll ...");
-	    unless (spawn(\%run_opts,
-			    ["$LINTIAN_ROOT/collection/$ci->{'script'}",
-			     $pkg,
-			     $long_type,
-			     '&'])) {
-		warning("collect info $coll about package $pkg: $?",
+	    my $script = "$LINTIAN_ROOT/collection/$ci->{'script'}";
+	    unless (spawn(\%run_opts, [ $script, $pkg, $long_type, '&' ])) {
+		warning("collect info $coll about package $pkg failed",
 			"skipping $action of $long_type package $pkg");
 		$exit_code = 2;
 		next PACKAGE;
 	    }
 	    push @pending_jobs, \%run_opts;
 	}
-	# wait until all the jobs finish
+
+	# wait until all the jobs finish and skip this package if any of them
+	# failed.
 	debug_msg(1, "Waiting for jobs from order $current_order ...");
-	reap(@pending_jobs);
+	unless (reap(@pending_jobs)) {
+	    for my $job (@pending_jobs) {
+		unless ($job->{success}) {
+		    warning("collect info $job->{'description'} about package"
+			    . " $pkg failed");
+		}
+	    }
+	    warning("skipping $action of $long_type package $pkg");
+	    $exit_code = 2;
+	    next PACKAGE;
+	}
 	undef @pending_jobs;
     }
 
