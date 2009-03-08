@@ -42,8 +42,6 @@ use Lintian::Command qw(spawn reap);
 # stat $file
 (my @stat = stat $file) or fail("$file: cannot stat: $!");
 
-my (@jobs, $job);
-
 # get package control information
 my $data = get_dsc_info($file);
 
