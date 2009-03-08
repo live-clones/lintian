@@ -54,6 +54,8 @@ lintian (2.2.7) UNRELEASED; urgency=low
     + [RA] Warn about yui-*.js as well as yahoo-*.js.  Patch from Raphael
       Geissert.
     + [ADB] Use Lintian::Relation instead of Dep.
+    + [RA] magpierss was renamed to libphp-magpierss.  Patch from Marcelo
+      Jorge Vieira (metal).  (Closes: #518684)
   * checks/huge-usr-share:
     + [RA] Simplify architecture checking code and be robust against
       whitespace in the field.
