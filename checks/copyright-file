@@ -224,7 +224,7 @@ if (m,/usr/share/common-licenses,
     || m/LaTeX Project Public License/
     || m/(?:^From:.*^To:|^To:.*^From:).*(?:GNU General Public License|GPL)/ms
     || m/AFFERO GENERAL PUBLIC LICENSE/
-    || m/GNU Free Documentation License\s*Version 1\.1/
+    || m/GNU Free Documentation License[,\s]*Version 1\.1/
     || m/CeCILL FREE SOFTWARE LICENSE AGREEMENT/ #v2.0
     || m/FREE SOFTWARE LICENSING AGREEMENT CeCILL/ #v1.1
     || m/CNRI OPEN SOURCE GPL-COMPATIBLE LICENSE AGREEMENT/
