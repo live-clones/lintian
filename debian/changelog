@@ -19,6 +19,9 @@ lintian (2.2.7) UNRELEASED; urgency=low
   * checks/changelog-file:
     + [RA] Avoid capturing parentheses in regexes due to their minor
       performance penalty.  Patch from Raphael Geissert.
+  * checks/common_data.pm:
+    + [RA] Move all information used only in one check script from here to
+      the relevant check script.  Patch from Raphael Geissert.
   * checks/copyright-file{,.desc}:
     + [RA] Avoid capturing parentheses in regexes due to their minor
       performance penalty.  Patch from Raphael Geissert.
@@ -38,6 +41,8 @@ lintian (2.2.7) UNRELEASED; urgency=low
       Geissert.  Also use all caps for global variables.
     + [RA] Strip leading and trailing whitespace from fields and simplify
       other logic to assume that.  Thanks, Gonéri Le Bouder.
+    * [RA] Move data from common_data.pm to here and use Lintian::Data to
+      get the list of known architectures.  Patch from Raphael Geissert.
   * checks/files:
     + [RA] Avoid capturing parentheses in regexes due to their minor
       performance penalty.  Patch from Raphael Geissert.
@@ -60,6 +65,8 @@ lintian (2.2.7) UNRELEASED; urgency=low
   * checks/menus:
     + [RA] Cache the reference to the section list.  Thanks, Raphael
       Geissert.  Also use all caps for global variables.
+    + [RA] Move known doc-base formats from common_data.pm to here.  Patch
+      from Raphael Geissert.
   * checks/nmu:
     + [RA] Calculate the regex for Ubuntu distributions only once.
     + [RA] Be robust against whitespace in the Architecture field.
@@ -94,11 +101,19 @@ lintian (2.2.7) UNRELEASED; urgency=low
   * debian/control:
     + [CW] Depend on man-db (>= 2.4.0) for '-E UTF-8'.
 
+  * data/fields/architectures:
+    + [RA] Replace the runtime-generated list of known architectures with
+      this data file, built from the current dpkg files.  Patch from
+      Raphael Geissert.
+
   * frontend/lintian:
     + [RA] Stop loading FileHandle.  We no longer use it.
 
   * lib/Lintian/Collect/Binary.pm:
     + [RA] Recognize truncated binaries.  Patch from Raphael Geissert.
+
+  * private/refresh-archs:
+    + [RA] Script from Raphael Geissert to refresh known architectures.
 
   * unpack/unpack-srcpkg-l1:
     + [RA] When processing tar output, we may not get complete lines at a
