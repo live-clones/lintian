@@ -108,17 +108,29 @@ lintian (2.2.7) UNRELEASED; urgency=low
 
   * frontend/lintian:
     + [RA] Stop loading FileHandle.  We no longer use it.
+    + [RA] Run all the collect scripts within a given order in parallel.
+      Patch from Raphael Geissert.
 
   * lib/Lintian/Collect/Binary.pm:
     + [RA] Recognize truncated binaries.  Patch from Raphael Geissert.
+  * lib/Lintian/Command.pm:
+    + [RA] Add support for running commands in the background using a
+      final argument of '&'.  Allow reap() to take multiple opt hashes and
+      reap all of them in a loop.  Add a kill() function to kill
+      outstanding jobs.  Patch from Raphael Geissert.
 
   * private/refresh-archs:
     + [RA] Script from Raphael Geissert to refresh known architectures.
 
+  * unpack/unpack-binpkg-l1:
+    + [RA] Run the separate commands involved in unpacking a binary
+      package in parallel where possible.  Patch from Raphael Geissert.
   * unpack/unpack-srcpkg-l1:
     + [RA] When processing tar output, we may not get complete lines at a
       time.  Save partial lines and glue them back together again when we
       get the next burst of data.  (Closes: #517899)
+    + [RA] Do a little bit of parallelization when writing out the sorted
+      index of the source package.
   
  -- Russ Allbery <rra@debian.org>  Sun, 22 Feb 2009 13:24:23 -0800
 
