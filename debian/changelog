@@ -100,8 +100,17 @@ lintian (2.2.7) UNRELEASED; urgency=low
     + [RA] Be robust against whitespace in the Architecture field.
       Thanks, Gonéri Le Bouder.  (Closes: #517555)
 
+  * collection/*.desc:
+    + [RA] Remove the output key and instead add a version key.  Patch
+      from Raphael Geissert.
+  * collection/changelog-file:
+    + [RA] Remove the remains of a previous run before starting.
+  * collection/diffstat:
+    + [RA] Remove the remains of a previous run before starting.
   * collection/objdump-info:
     + [RA] Recognize truncated binaries.  Patch from Raphael Geissert.
+  * collection/source-control-file:
+    + [RA] Remove the remains of a previous run before starting.
 
   * debian/control:
     + [CW] Depend on man-db (>= 2.4.0) for '-E UTF-8'.
@@ -115,6 +124,12 @@ lintian (2.2.7) UNRELEASED; urgency=low
     + [RA] Stop loading FileHandle.  We no longer use it.
     + [RA] Run all the collect scripts within a given order in parallel.
       Patch from Raphael Geissert.
+    + [RA] Create marker files in the laboratory for each collect script
+      that has successfully including its current version number.  Use
+      these marker files rather than the existence of output files to
+      determine when to run collect scripts.  Re-run collect scripts if
+      the current version doesn't match what's in the lab.  Patch from
+      Raphael Geissert.  (Closes: #517650)
 
   * lib/Lintian/Collect/Binary.pm:
     + [RA] Recognize truncated binaries.  Patch from Raphael Geissert.
