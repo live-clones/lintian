@@ -1445,9 +1445,18 @@ foreach my $pkg_info ($schedule->get_all) {
 	    # current type?
 	    next unless ($ci->{'type'} =~ m/$type/);
 
-	    # info already available?
-	    next if (-l "$base/.${coll}$ci->{'version'}");
-	    system('sh', '-c', 'rm -f '."'$base'/.${coll}*");
+	    # If a file named .SCRIPT-VERSION already exists, we've already
+	    # collected this information and we can skip it.  Otherwise,
+	    # remove any .SCRIPT-* files (which are old version information).
+	    next if (-f "$base/.${coll}-$ci->{'version'}");
+	    opendir(BASE, $base)
+		or fail("cannot read directory $base: $!");
+	    for my $file (readdir BASE) {
+		if ($file =~ /^\.\Q$coll-/) {
+		    unlink("$base/$file");
+		}
+	    }
+	    closedir(BASE);
 
 	    # unpack to desired unpack level (if necessary)
 	    $act_unpack_level = unpack_pkg($type,$base,$file,$act_unpack_level,$ci->{'unpack-level'});
@@ -1469,8 +1478,11 @@ foreach my $pkg_info ($schedule->get_all) {
 	    $current_order = $ci->{'order'} if ($current_order == -1);
 	    if ($current_order != $ci->{'order'}) {
 		debug_msg(1, "Waiting for jobs from order $current_order ...");
-		# wait until the jobs of the previous order finish:
-		reap(@pending_jobs);
+		unless (reap_collect_jobs($pkg, $base, @pending_jobs)) {
+		    warning("skipping $action of $long_type package $pkg");
+		    $exit_code = 2;
+		    next PACKAGE;
+		}
 		undef @pending_jobs;
 		$current_order = $ci->{'order'};
 	    }
@@ -1491,13 +1503,7 @@ foreach my $pkg_info ($schedule->get_all) {
 	# wait until all the jobs finish and skip this package if any of them
 	# failed.
 	debug_msg(1, "Waiting for jobs from order $current_order ...");
-	unless (reap(@pending_jobs)) {
-	    for my $job (@pending_jobs) {
-		unless ($job->{success}) {
-		    warning("collect info $job->{'description'} about package"
-			    . " $pkg failed");
-		}
-	    }
+	unless (reap_collect_jobs($pkg, $base, @pending_jobs)) {
 	    warning("skipping $action of $long_type package $pkg");
 	    $exit_code = 2;
 	    next PACKAGE;
@@ -1570,7 +1576,6 @@ foreach my $pkg_info ($schedule->get_all) {
 	    } elsif ($fail_on_warnings && $stats->{types}{W}) {
 		$exit_code = 1;
 	    }
-	    symlink $$, ".${coll}$ci->{'version'}";
 	}
 
 	# report unused overrides
@@ -1731,6 +1736,32 @@ sub unpack_pkg {
     }
 
     return $cur_level;
+}
+
+# Given a list of jobs corresponding to collect scripts, reap each of the
+# jobs.  For each successful job, record that it was successful by creating
+# the corresponding version marker file in the lab.  For each unsuccessful
+# job, warn that it was unsuccessful.
+#
+# Takes the current package, base directory, and the list of pending jobs.
+# Return true if all jobs were successful, false otherwise.
+sub reap_collect_jobs {
+    my ($pkg, $base, @pending_jobs) = @_;
+    my $status = reap(@pending_jobs);
+    for my $job (@pending_jobs) {
+	my $coll = $job->{'description'};
+	if ($job->{success}) {
+	    my $ci = $collection_info{$coll};
+	    open(VERSION, '>', "$base/.${coll}-$ci->{'version'}")
+		or fail("cannot create $base/.${coll}-$ci->{'version'}: $!");
+	    print VERSION "Lintian-Version: $LINTIAN_VERSION\n"
+		. "Timestamp: " . time . "\n";
+	    close(VERSION);
+	} else {
+	    warning("collect info $coll about package $pkg failed");
+	}
+    }
+    return $status;
 }
 
 # TODO: is this the best way to clean dirs in perl?
