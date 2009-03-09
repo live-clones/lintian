@@ -294,7 +294,9 @@ foreach my $file (sort keys %{$info->index}) {
 		}
 		# gzipped zero byte files:
 		# 276 is 255 bytes (maximal length for a filename) + gzip overhead
-		if ($file =~ m,.gz$, and $index_info->{size} <= 276 and $index_info->{type} =~ m,^[-h],) {
+		if ($file =~ m,.gz$, and $index_info->{size} <= 276
+		    and $index_info->{type} =~ m,^[-h],
+		    and $info->file_info->{$file} =~ m/gzip compressed/) {
 		    unless (`gzip -dc unpacked/$file`) {
 			tag "zero-byte-file-in-doc-directory", "$file";
 		    }
@@ -545,6 +547,11 @@ foreach my $file (sort keys %{$info->index}) {
     # ---------------- .ali files (Ada Library Information)
     if ($file =~ m,^usr/lib/.*\.ali$, && $operm != 0444) {
 	tag "bad-permissions-for-ali-file", "$file";
+    }
+
+    # ---------------- .gz files
+    if ($file =~ m/\.gz/ && $info->file_info->{$file} !~ m/gzip compressed/) {
+	tag "gz-file-not-gzip", "$file";
     }
 
     # ---------------- any files

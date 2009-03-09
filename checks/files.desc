@@ -966,3 +966,10 @@ Certainty: certain
 Info: The icon has a size that differs from the size specified by the name
  of the directory under which it was installed.  The icon was probably
  mistakenly installed into the wrong directory.
+
+Tag: gz-file-not-gzip
+Severity: normal
+Certainty: possible
+Info: The given file ends with .gz which suggests it is compressed with gzip
+ but it doesn't appear to actually be one.  gzip will fail with an error on
+ such cases and should therefor be avoided or fixed, as necessary.

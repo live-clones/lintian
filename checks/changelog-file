@@ -118,7 +118,7 @@ foreach (sort keys %{$info->index}) {
 		}
 	    }
 	    if (not $max_compressed) {
-		unless ($is_a_symlink{$file1}) {
+		unless ($is_a_symlink{$file1} or $file_info{$file1} !~ m/gzip compressed/) {
 		    tag "changelog-not-compressed-with-max-compression", "$file";
 		}
 	    }

@@ -1,0 +1,8 @@
+#!/usr/bin/make -f
+pkg=files-gzip
+%:
+	dh $@
+binary:
+	dh --until install binary
+	echo "Hello world :)" > debian/$(pkg)/usr/share/doc/$(pkg)/changelog.gz
+	dh --after install binary
