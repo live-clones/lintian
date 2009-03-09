@@ -31,6 +31,7 @@ Description record of a Lintian tag:
 Description record of a test case:
 
   Testname: <directory name of test>
+  Sequence: <sequence number for test>
   Version: <package version>
   Description: <description of test case>
   [ Type: <native | non-native> ]
@@ -42,3 +43,4 @@ Description record of a test case:
   [ Architecture: <architecture for control> ]
   [ Section: <section for package> ]
   [ Options: <options to pass to lintian> ]
+  [ Skeleton: <skeleton to base the package on> ]

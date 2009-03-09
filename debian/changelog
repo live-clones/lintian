@@ -151,6 +151,14 @@ lintian (2.2.7) UNRELEASED; urgency=low
       this data file, built from the current dpkg files.  Patch from
       Raphael Geissert.
 
+  * doc/desc-files:
+    + [RA] Document new Version field for collect scripts and remove
+      Output field.  Document pedantic severity for tags.  Document
+      Sequence, Options, and Skeleton for test suite descriptions.
+      Thanks, Raphael Geissert.
+  * doc/lintian.sgml:
+    + [RA] Document pendantic tags.  Patch from Raphael Geissert.
+
   * frontend/lintian:
     + [RA] Stop loading FileHandle.  We no longer use it.
     + [RA] Run all the collect scripts within a given order in parallel.
@@ -180,6 +188,9 @@ lintian (2.2.7) UNRELEASED; urgency=low
       whitespace of subsequent lines left in, and leading tabs are no
       longer handled specially.  Trailing whitespace is now uniformly
       stripped, as is leading whitespace on the first field line.
+
+  * man/lintian.1:
+    + [RA] Document strings collect script.
 
   * private/refresh-archs:
     + [RA] Script from Raphael Geissert to refresh known architectures.
