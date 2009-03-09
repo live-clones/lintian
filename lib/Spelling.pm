@@ -430,7 +430,7 @@ sub spelling_check {
     return unless $text;
 
     $text = lc $text;
-    $text =~ s/[.,;:?!()[\]-]//g;
+    $text =~ s/[.,;:?!()[\]]//g;
 
     for my $word (split(/\s+/, $text)) {
         if (exists $CORRECTIONS{$word}) {
