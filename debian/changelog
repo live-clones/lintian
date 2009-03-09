@@ -91,6 +91,9 @@ lintian (2.2.7) UNRELEASED; urgency=low
       Geissert.  Also use all caps for global variables.
     + [RA] Move known doc-base formats from common_data.pm to here.  Patch
       from Raphael Geissert.
+    + [RA] Explicit update-menus calls in postinst and postrm are no
+      longer required unless menu-methods are installed.  Thanks, Eric
+      Lavarde.  (Closes: #518712)
   * checks/nmu:
     + [RA] Calculate the regex for Ubuntu distributions only once.
     + [RA] Be robust against whitespace in the Architecture field.

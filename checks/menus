@@ -148,26 +148,26 @@ close IN;
 
 # prerm scripts should not call update-menus
 if ($prerm{'calls-updatemenus'}) {
-    tag "prerm-calls-updatemenus", "";
+    tag "prerm-calls-updatemenus";
 }
 
 # postrm scripts should not call install-docs
 if ($postrm{'calls-installdocs'} or $postrm{'calls-installdocs-r'}) {
-    tag "postrm-calls-installdocs", "";
+    tag "postrm-calls-installdocs";
 }
 
 # preinst scripts should not call either update-menus nor installdocs
 if ($preinst{'calls-updatemenus'}) {
-    tag "preinst-calls-updatemenus", "";
+    tag "preinst-calls-updatemenus";
 }
 
 if ($preinst{'calls-installdocs'}) {
-    tag "preinst-calls-installdocs", "";
+    tag "preinst-calls-installdocs";
 }
 
 # don't set the /usr/doc link, the FHS transition is over (2002-10-08)
 if (defined $postinst{'sets-link'} && $postinst{'sets-link'} == 1) {
-    tag "postinst-should-not-set-usr-doc-link", "";
+    tag "postinst-should-not-set-usr-doc-link";
 }
 
 $anymenu_file = $menu_file || $menumethod_file;
@@ -202,22 +202,23 @@ if ($docbase_file) {		# postinst has to call install-docs
     }
 }
 
-if ($anymenu_file) {
+if ($menumethod_file) {
     # postinst has to call update-menus
     if (not $postinst{'calls-updatemenus'}) {
-	tag "postinst-does-not-call-updatemenus", "$anymenu_file";
+	tag "postinst-does-not-call-updatemenus", "$menumethod_file";
     }
     # postrm has to call update-menus
     if (not $postrm{'calls-updatemenus'}) {
-	tag "postrm-does-not-call-updatemenus", "$anymenu_file" unless $pkg eq 'menu';
+	tag "postrm-does-not-call-updatemenus", "$menumethod_file"
+	    unless $pkg eq 'menu';
     }
 } else {
     # postinst and postrm should not need to call update-menus
     if ($postinst{'calls-updatemenus'}) {
-	tag "postinst-has-useless-call-to-update-menus", "";
+	tag "postinst-has-useless-call-to-update-menus";
     }
     if ($postrm{'calls-updatemenus'}) {
-	tag "postrm-has-useless-call-to-update-menus", "";
+	tag "postrm-has-useless-call-to-update-menus";
     }
 }
 
