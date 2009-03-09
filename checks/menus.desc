@@ -118,7 +118,7 @@ Info: Since the package installs a file in <tt>/etc/menu-methods</tt>, the
 Ref: menu 4.2
 
 Tag: postinst-has-useless-call-to-update-menus
-Severity: normal
+Severity: minor
 Certainty: certain
 Info: The <tt>postinst</tt> script calls the <tt>update-menus</tt> program
  though no file is installed in <tt>/etc/menu-methods</tt>.  Files
@@ -130,7 +130,7 @@ Info: The <tt>postinst</tt> script calls the <tt>update-menus</tt> program
  package with debhelper 7.2.3 or later will fix this problem.
 
 Tag: postrm-has-useless-call-to-update-menus
-Severity: normal
+Severity: minor
 Certainty: certain
 Info: The <tt>postrm</tt> script calls the <tt>update-menus</tt> program
  though no file is installed in <tt>/etc/menu-methods</tt>.  Files
