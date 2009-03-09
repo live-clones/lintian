@@ -142,6 +142,8 @@ lintian (2.2.7) UNRELEASED; urgency=low
       final argument of '&'.  Allow reap() to take multiple opt hashes and
       reap all of them in a loop.  Add a kill() function to kill
       outstanding jobs.  Patch from Raphael Geissert.
+  * lib/Lintian/Tag/Info.pm:
+    + [RA] Strip leading whitespace from continued lines.
 
   * private/refresh-archs:
     + [RA] Script from Raphael Geissert to refresh known architectures.

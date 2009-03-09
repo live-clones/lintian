@@ -234,7 +234,9 @@ sub description {
     }
 
     # Build the tag description.
-    my @text = split_paragraphs($self->{info});
+    my $info = $self->{info};
+    $info =~ s/\n[ \t]/\n/g;
+    my @text = split_paragraphs($info);
     if ($self->{ref}) {
         push(@text, '', _format_reference($self->{ref}));
     }
