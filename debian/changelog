@@ -1,4 +1,6 @@
-lintian (2.2.7) UNRELEASED; urgency=low
+lintian (2.2.7) unstable; urgency=low
+
+  The "debhelper 7.2.3 and lots of fiddly infrastructure fixes" release.
 
   * Summary of tag changes:
     + Added
