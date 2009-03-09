@@ -1130,58 +1130,56 @@ for my $f (readdir CHECKDIR) {
 
     # ignore check `lintian' (this check is a special case and contains the
     # tag info for the lintian frontend--this script here)
-    if ($script ne 'lintian') {
+    next if $script eq 'lintian';
 
-	delete $secs[0]->{'check-script'};
-	$check_info{$script}->{'script'} = $script;
-	my $p = $check_info{$script};
+    delete $secs[0]->{'check-script'};
+    $check_info{$script}->{'script'} = $script;
+    my $p = $check_info{$script};
 
-	set_value($f,$p,'type',$secs[0],1);
-	# convert Type:
-	my ($b,$s,$u) = ( "", "", "" );
-	for (split(/\s*,\s*/o,$p->{'type'})) {
-	    if ($_ eq 'binary') {
-		$b = 'b';
-	    } elsif ($_ eq 'source') {
-		$s = 's';
-	    } elsif ($_ eq 'udeb') {
-		$u = 'u';
-	    } else {
-		fail("unknown type $_ specified in description file $f");
-	    }
+    set_value($f,$p,'type',$secs[0],1);
+    # convert Type:
+    my ($b,$s,$u) = ( "", "", "" );
+    for (split(/\s*,\s*/o,$p->{'type'})) {
+	if ($_ eq 'binary') {
+	    $b = 'b';
+	} elsif ($_ eq 'source') {
+	    $s = 's';
+	} elsif ($_ eq 'udeb') {
+	    $u = 'u';
+	} else {
+	    fail("unknown type $_ specified in description file $f");
 	}
-	$p->{'type'} = "$s$b$u";
+    }
+    $p->{'type'} = "$s$b$u";
 
-	set_value($f,$p,'unpack-level',$secs[0],1);
-	set_value($f,$p,'abbrev',$secs[0],1);
+    set_value($f,$p,'unpack-level',$secs[0],1);
+    set_value($f,$p,'abbrev',$secs[0],1);
 
-	if (exists $secs[0]->{'needs-info'} && defined $secs[0]->{'needs-info'}) {
-	    for (split(/\s*,\s*/o,$secs[0]->{'needs-info'})) {
-		$p->{$_} = 1;
-	    }
-	    delete $secs[0]->{'needs-info'};
+    if (exists $secs[0]->{'needs-info'} && defined $secs[0]->{'needs-info'}) {
+	for (split(/\s*,\s*/o,$secs[0]->{'needs-info'})) {
+	    $p->{$_} = 1;
 	}
+	delete $secs[0]->{'needs-info'};
+    }
 
-	# ignore Info: and other fields for now...
-	delete $secs[0]->{'info'};
-	delete $secs[0]->{'standards-version'};
-	delete $secs[0]->{'author'};
+    # ignore Info: and other fields for now...
+    delete $secs[0]->{'info'};
+    delete $secs[0]->{'standards-version'};
+    delete $secs[0]->{'author'};
 
-	for (keys %{$secs[0]}) {
-	    warning("unused tag $_ in description file $f");
-	}
+    for (keys %{$secs[0]}) {
+	warning("unused tag $_ in description file $f");
+    }
 
-	debug_msg(2, map( { "$_: $p->{$_}" } sort keys %$p ));
+    debug_msg(2, map( { "$_: $p->{$_}" } sort keys %$p ));
 
-	shift(@secs);
-	$p->{'requested-tags'} = 0;
-	foreach my $tag (@secs) {
-	    $tag->{'script'} = $script;
-	    Tags::add_tag($tag);
-	    $p->{'requested-tags'}++ if Tags::display_tag($tag);
-	}
-    } # end: if ne lintian
-
+    shift(@secs);
+    $p->{'requested-tags'} = 0;
+    foreach my $tag (@secs) {
+	$tag->{'script'} = $script;
+	Tags::add_tag($tag);
+	$p->{'requested-tags'}++ if Tags::display_tag($tag);
+    }
 }
 
 closedir(CHECKDIR);
