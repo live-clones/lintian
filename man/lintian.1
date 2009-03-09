@@ -602,7 +602,7 @@ into the lintian directory (below \fBdoc\-base\fR).
 .B file\-info
 Collect the output of the
 .BR file (1)
-utility for each file in a binary package.
+utility for each file in a binary, udeb, and source package.
 
 .TP
 .B init.d
@@ -640,6 +640,12 @@ Collect information about scripts in binary package.
 .B source-control-file
 Collects information about binary packages from debian/control
 in source packages
+
+.TP
+.B strings
+Collect the output of the
+.BR strings (1)
+utility for each non-debug ELF object in a binary package.
 
 .SH FILES
 Lintian looks for its configuration file in the following locations:

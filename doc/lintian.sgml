@@ -354,7 +354,14 @@ They are not displayed unless the <tt>-E</tt> option is set.
 <em>Warning</em> or <em>Error</em> message which has been
 <em>overridden</em> (see below). They are not displayed unless
 the <tt>--show-overrides</tt> option is set.
+<p>
 
+<tag><em>Pedantic (P)</em>
+<item>The displayed message indicates a message of Lintian at its most pickiest
+and include checks for particular Debian packaging styles, checks that are
+very frequently wrong, and checks that many people disagree with.
+
+They are not displayed unless the <tt>--pedantic</tt> option is set.
 <p>
 
 </taglist>
