@@ -144,6 +144,12 @@ lintian (2.2.7) UNRELEASED; urgency=low
       outstanding jobs.  Patch from Raphael Geissert.
   * lib/Lintian/Tag/Info.pm:
     + [RA] Strip leading whitespace from continued lines.
+  * lib/Util.pm:
+    + [RA] Fully comply with Policy in whitespace handling when parsing
+      Debian control files.  Multiline fields will now have the leading
+      whitespace of subsequent lines left in, and leading tabs are no
+      longer handled specially.  Trailing whitespace is now uniformly
+      stripped, as is leading whitespace on the first field line.
 
   * private/refresh-archs:
     + [RA] Script from Raphael Geissert to refresh known architectures.

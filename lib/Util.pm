@@ -55,7 +55,7 @@ use Digest::MD5;
 # this function can parse output of `dpkg-deb -f', .dsc,
 # and .changes files (and probably all similar formats)
 # arguments:
-#    $filehandle 
+#    $filehandle
 #    $debconf_flag (true if the file is a debconf template file)
 # output:
 #    list of hashes
@@ -72,14 +72,13 @@ sub parse_dpkg_control {
     local $_;
     while (<$CONTROL>) {
 	chomp;
-	next if /^#/; #comment line?
 
-	# tabs at the beginning are illegal, but handle them anyways
-	s/^\t/ \t/o;
+	# FIXME: comment lines are only allowed in debian/control and should
+	# be an error for other control files.
+	next if /^\#/;
 
 	# empty line?
-	if ((!$debconf_flag && m/^\s*$/) or 
-	    ($debconf_flag && m/^$/)) {
+	if ((!$debconf_flag && m/^\s*$/) or ($debconf_flag && m/^$/)) {
 	    if ($open_section) { # end of current section
 		$cur_section++;
 		$open_section = 0;
@@ -107,19 +106,28 @@ sub parse_dpkg_control {
 	    $last_tag = $tag;
 	}
 	# new field?
-	elsif (m/^(\S+):\s?(.*)$/o) {
+	elsif (m/^(\S+):\s*(.*)$/o) {
 	    $open_section = 1;
 
+	    # Policy: Horizontal whitespace (spaces and tabs) may occur
+	    # immediately before or after the value and is ignored there.
 	    my ($tag,$value) = (lc $1,$2);
+	    $value =~ s/\s+$//;
 	    $data[$cur_section]->{$tag} = $value;
 
 	    $last_tag = $tag;
 	}
 	# continued field?
-	elsif (m/^ (.*)$/o) {
+	elsif (m/^([ \t].*)$/o) {
 	    $open_section or fail("syntax error in section $cur_section after the tag $last_tag: $_");
 
-	    $data[$cur_section]->{$last_tag} .= "\n".$1;
+	    # Policy: Many fields' values may span several lines; in this case
+	    # each continuation line must start with a space or a tab.  Any
+	    # trailing spaces or tabs at the end of individual lines of a
+	    # field value are ignored.
+	    my $value = $1;
+	    $value =~ s/\s+$//;
+	    $data[$cur_section]->{$last_tag} .= "\n" . $value;
 	}
     }
 
