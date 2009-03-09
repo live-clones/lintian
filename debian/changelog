@@ -155,6 +155,7 @@ lintian (2.2.7) UNRELEASED; urgency=low
       get the next burst of data.  (Closes: #517899)
     + [RA] Do a little bit of parallelization when writing out the sorted
       index of the source package.
+    + [RA] Ignore leading whitespace in the Files section.
   
  -- Russ Allbery <rra@debian.org>  Sun, 22 Feb 2009 13:24:23 -0800
 

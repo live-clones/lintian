@@ -72,7 +72,8 @@ my $base = $data->{'source'} . '_' . $version;
 symlink($file,"$base_dir/dsc") or fail("cannot symlink dsc file: $!");
 my $tarball;
 for my $fs (split(/\n/,$data->{'files'})) {
-    next if $fs =~ /^\s*$/o;
+    $fs =~ s/^\s*//;
+    next if $fs =~ /^$/o;
     my @t = split(/\s+/o,$fs);
     if ($t[2] =~ /^(\Q$base\E\.orig|\Q$baserev\E)\.tar\.(gz|bz2|lzma)$/) {
         $tarball = $t[2];
