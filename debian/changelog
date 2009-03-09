@@ -55,7 +55,7 @@ lintian (2.2.7) UNRELEASED; urgency=low
   * checks/debhelper{,.desc}:
     + [ADB] Use Lintian::Relation rather than Dep.
     + [RA] Add dh_bugfiles to version requirements, added in 7.2.3.
-    + [RA] debhelper compatibility level V5 is now deprecated.
+    + [RA] debhelper compatibility level V4 is now deprecated.
   * checks/description{,.desc}:
     + [RA] Remove description-synopsis-has-leading-spaces.  Policy
       explicitly says this is not a bug.  Adjust for the changes to Util
