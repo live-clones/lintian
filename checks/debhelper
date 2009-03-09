@@ -206,7 +206,7 @@ if ($usescdbs and not defined($level)) {
     $level = $cdbscompat;
 }
 $level ||= 1;
-if ($level < 4) {
+if ($level < 5) {
     tag "package-uses-deprecated-debhelper-compat-version", $level;
 }
 
