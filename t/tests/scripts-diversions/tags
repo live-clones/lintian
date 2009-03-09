@@ -1,0 +1,5 @@
+E: scripts-diversions: diversion-for-unknown-file usr/share/scripts/no-such-file preinst:26
+E: scripts-diversions: orphaned-diversion usr/share/scripts/orphan preinst
+E: scripts-diversions: package-uses-local-diversion preinst:12
+E: scripts-diversions: package-uses-local-diversion preinst:16
+E: scripts-diversions: remove-of-unknown-diversion usr/share/scripts/old-file postrm:12

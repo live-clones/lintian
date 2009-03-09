@@ -5,8 +5,12 @@ lintian (2.2.7) UNRELEASED; urgency=low
       - apparently-truncated-elf-binary
       - copyright-refers-to-nonexistent-license-file
       - debian-control-has-unusual-field-spacing (pedantic)
+      - diversion-for-unknown-file
       - embedded-zlib
       - incorrect-libdir-in-la-file
+      - orphaned-diversion
+      - package-uses-local-diversion
+      - remove-of-unknown-diversion
     + Removed
       - description-synopsis-has-leading-spaces
 
@@ -97,6 +101,8 @@ lintian (2.2.7) UNRELEASED; urgency=low
     + [ADB] Use Lintian::Relation rather than Dep.
     + [ADB] Update lists of known interpreter versions (add jruby1.1,
       octave3.1 and remove jruby0.9)
+    + [RA] Diagnose various problems with creating and removing
+      diversions.  Based on a patch by Jörg Sommer.  (Closes: #516221)
   * checks/shared-libs{,.desc}:
     + [ADB] When parsing symbols files, correctly ensure that meta-information
       occurs between the end of the dependency template(s) and the start of

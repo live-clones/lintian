@@ -1,0 +1,36 @@
+#!/bin/sh
+set -e
+
+if [ install = "$1"  ]; then
+    # This is a correct diversion.
+    dpkg-divert --package scripts-diversions --add --rename \
+        --divert /usr/share/scripts/some-file.real \
+        /usr/share/scripts/some-file
+
+    # This is broken -- can't use local.
+    dpkg-divert --local --add --divert /usr/share/scripts/other-file.real \
+        /usr/share/scripts/other-file
+
+    # This is also broken; the default is --local if --package isn't there.
+    dpkg-divert --add --divert /usr/share/scripts/another-file.real \
+        /usr/share/scripts/another-file
+
+    # This is also correct, but we're not going to clean it up.
+    dpkg-divert --package scripts-diversions --add --rename \
+        --divert /usr/share/scripts/orphan.real \
+        /usr/share/scripts/orphan
+
+    # This is broken because the file doesn't exist.
+    dpkg-divert --add --package scripts-diversions --rename \
+        --divert /usr/share/scripts/no-such-file.real \
+        /usr/share/scripts/no-such-file
+fi
+
+# This isn't a diversion we create anywhere, but we're allowed to do this in
+# preinst in case we're cleaning up after a previous version.
+if [ upgrade = "$1" ] && dpkg-divert --list '*old-file' >/dev/null ; then
+    dpkg-divert --package scripts-diversions --remove --rename \
+        /usr/share/scripts/old-file
+fi
+
+#DEBHELPER#

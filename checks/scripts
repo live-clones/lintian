@@ -526,6 +526,7 @@ open(SCRIPTS, '<', "control-scripts")
 # normal scripts above, because there were just enough differences to
 # make a shared function awkward.
 
+my %added_diversions;
 while (<SCRIPTS>) {
     chop;
 
@@ -721,7 +722,7 @@ while (<SCRIPTS>) {
 			}
 		    }
 		}
-		
+
 		# Ignore anything inside single quotes; it could be an
 		# argument to grep or the like.
 
@@ -869,6 +870,39 @@ while (<SCRIPTS>) {
         if (m,/var/lib/dpkg/status\b, && $pkg ne 'base-files' && $pkg ne 'dpkg') {
             tag "maintainer-script-uses-dpkg-status-directly", "$file";
         }
+	if (m,^$LEADIN(?:/usr/sbin/)?dpkg-divert\s, && ! /--(?:help|list|truename|version)/) {
+	    if (/--local/ or !/--package/) {
+		tag 'package-uses-local-diversion', "$file:$.";
+	    } else {
+		my $mode = /--remove/ ? 'remove' : 'add';
+		my ($divert) = /dpkg-divert\s*(.*)$/;
+		$divert =~ s/\s*--(?:add|quiet|remove|rename|test|(:?admindir|divert|package)\s+\S+)//g;
+		$divert =~ s/\s+//g;
+		# remove the leading / because it's not in the index hash
+		$divert =~ s,^/,,;
+
+		if ($mode eq 'add') {
+		    $added_diversions{$divert} = $file;
+		    tag 'diversion-for-unknown-file', $divert, "$file:$."
+			unless (exists $info->index->{$divert});
+		} elsif ($mode eq 'remove') {
+		    if (exists $added_diversions{$divert}) {
+			# do not really delete the entry, because a --remove
+			# might happen in two branches in the script, i.e. we
+			# see it twice, which is not a bug
+			undef $added_diversions{$divert};
+		    } elsif ($file eq 'postrm') {
+			# Allow preinst and postinst to remove diversions the
+			# package doesn't add to clean up after previous
+			# versions of the package.
+			tag 'remove-of-unknown-diversion', $divert, "$file:$.";
+		    }
+		} else {
+		    fail "Internal error: \$mode has unknown value: ".
+			"$mode";
+		}
+	    }
+	}
     }
 
     if ($saw_init && ! $saw_invoke) {
@@ -890,6 +924,9 @@ while (<SCRIPTS>) {
 }
 close(SCRIPTS);
 
+for my $file (grep { defined $added_diversions{$_} } keys %added_diversions) {
+    tag 'orphaned-diversion', $file, $added_diversions{$file};
+}
 }
 
 # -----------------------------------

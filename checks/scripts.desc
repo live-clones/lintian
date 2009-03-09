@@ -551,3 +551,30 @@ Certainty: certain
 Info: The package calls dpkg --assert-multi-conrep in a maintainer
  script.  This check is obsolete and has always returned true since dpkg
  1.4.1.19, released 1999-10-30.
+
+Tag: package-uses-local-diversion
+Severity: serious
+Certainty: certain
+Info: The maintainer script calls dpkg-divert with <tt>--local</tt> or
+ without <tt>--package</tt>.  This option is reserved for local
+ administrators and must never be used by a Debian package.
+
+Tag: diversion-for-unknown-file
+Severity: important
+Certainty: certain
+Info: The maintainer script adds a diversion for a file that is not
+ provided by this package.
+
+Tag: orphaned-diversion
+Severity: important
+Certainty: certain
+Info: A diversion was added for the file, but not removed. This means
+ your package doesn't restore the previous state after removal.
+
+Tag: remove-of-unknown-diversion
+Severity: important
+Certainty: certain
+Info: The maintainer script removes a diversion that it didn't add.  If
+ you're cleaning up unnecessary diversions from older versions of the
+ package, remove them in <tt>preinst</tt> or <tt>postinst</tt> instead of
+ waiting for <tt>postrm</tt> to do it.
