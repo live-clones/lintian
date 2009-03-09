@@ -30,7 +30,6 @@ W: generic-dh-make-2008: bad-homepage <insert the upstream URL, if relevant>
 W: generic-dh-make-2008: copyright-contains-dh_make-todo-boilerplate
 W: generic-dh-make-2008: copyright-has-url-from-dh_make-boilerplate
 W: generic-dh-make-2008: copyright-lists-upstream-authors-with-dh_make-boilerplate
-W: generic-dh-make-2008: copyright-refers-to-versionless-license-file usr/share/common-licenses/GPL
 W: generic-dh-make-2008: copyright-without-copyright-notice
 W: generic-dh-make-2008: new-package-should-close-itp-bug
 W: generic-dh-make-2008: readme-debian-contains-debmake-template
