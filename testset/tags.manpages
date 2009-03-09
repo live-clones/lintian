@@ -51,6 +51,10 @@ W: manpages: executable-not-elf-or-script ./usr/bin/binary-without-english-manpa
 W: manpages: executable-not-elf-or-script ./usr/bin/usr-bin-binary-alt
 W: manpages: executable-not-elf-or-script ./usr/sbin/usr-sbin-binary
 W: manpages: executable-not-elf-or-script ./usr/share/man/de/man1/binary-without-english-manpage.1
+W: manpages: gz-file-not-gzip usr/X11R6/man/man1/rstartd.1x.gz
+W: manpages: gz-file-not-gzip usr/share/info/baz.broken.gz
+W: manpages: gz-file-not-gzip usr/share/man/man1/usr-bin-binary-alt.1.gz
+W: manpages: gz-file-not-gzip usr/share/man/man1/usr-sbin-binary.1.gz
 W: manpages: info-document-has-wrong-extension usr/share/info/baz.broken.gz
 W: manpages: info-document-missing-dir-section usr/share/info/bar.gz
 W: manpages: info-documents-not-removed
