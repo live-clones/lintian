@@ -71,6 +71,9 @@ while (<CONTROL>) {
 			tag "xs-vcs-header-in-debian-control", "$field"
 			    if $known_source_fields{$base};
 		}
+		unless (/^\S+: \S/) {
+			tag 'debian-control-has-unusual-field-spacing', "line $.";
+		}
 	}
 }
 close CONTROL;

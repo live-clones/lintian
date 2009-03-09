@@ -1,0 +1,3 @@
+P: control-file-pedantic-space source: debian-control-has-unusual-field-spacing line 1
+P: control-file-pedantic-space source: debian-control-has-unusual-field-spacing line 2
+P: control-file-pedantic-space source: debian-control-has-unusual-field-spacing line 3

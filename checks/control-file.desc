@@ -34,6 +34,15 @@ Info: One of the paragraphs of your debian/control contains the same
  field more than once. This can lead to an unexpected behaviour of dpkg
  and apt.
 
+Tag: debian-control-has-unusual-field-spacing
+Severity: pedantic
+Certainty: certain
+Ref: policy 5.1
+Info: The field on this line of <tt>debian/control</tt> has whitespace
+ other than a single space after the colon.  This is explicitly permitted
+ in the syntax of Debian control files, but as Policy says, it is
+ conventional to put a single space after the colon.
+
 Tag: binary-control-field-duplicates-source
 Severity: wishlist
 Certainty: certain
