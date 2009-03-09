@@ -24,6 +24,8 @@ lintian (2.2.7) UNRELEASED; urgency=low
     + [RA] Report apparently truncated ELF binaries separately from
       apparently corrupted ones.  The current binutils now distinguishes.
       Patch from Raphael Geissert.  (Closes: #517778)
+    + [RA] Allow i386 binaries in amd64 packages for right now.  Thanks,
+      Paul Wise.  (Closes: #516856)
   * checks/changelog-file:
     + [RA] Avoid capturing parentheses in regexes due to their minor
       performance penalty.  Patch from Raphael Geissert.

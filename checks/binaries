@@ -206,6 +206,8 @@ foreach my $file (sort keys %{$info->file_info}) {
 	if ($file =~ m,/lib(\d{2})/, or $file =~ m,/emul/ia(\d{2}),) {
 	    tag "binary-from-other-architecture", $file
 		unless ($fileinfo =~ m/$ARCH_REGEX{$1}/);
+	} elsif ($arch eq 'amd64' and $fileinfo =~ m/$ARCH_REGEX{i386}/) {
+	    # Ignore i386 binaries in amd64 packages for right now.
 	} else {
 	    $multiarch = Lintian::Data->new('binaries/multiarch')
 		unless defined($multiarch);
