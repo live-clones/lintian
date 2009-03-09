@@ -34,6 +34,7 @@ lintian (2.2.7) UNRELEASED; urgency=low
     + [RA] Avoid false positive for versionless license files when the
       file is referred to without a hyphen; instead, issue a separate tag
       that explains the problem.  Based on a patch from Raphael Geissert.
+      (Closes: #517191)
     + [RA] Allow commas between the GFDL license name and version when
       suppressing false positives for the 1.1 version.  Thanks, Aurelien
       Jarno.  (Closes: #516687)
