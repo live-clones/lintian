@@ -209,7 +209,7 @@ lintian (2.2.7) unstable; urgency=low
       index of the source package.
     + [RA] Ignore leading whitespace in the Files section.
   
- -- Russ Allbery <rra@debian.org>  Sun, 22 Feb 2009 13:24:23 -0800
+ -- Russ Allbery <rra@debian.org>  Sun, 08 Mar 2009 21:58:32 -0700
 
 lintian (2.2.6) unstable; urgency=low
 
