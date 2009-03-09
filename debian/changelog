@@ -38,6 +38,8 @@ lintian (2.2.7) UNRELEASED; urgency=low
     + [RA] Allow commas between the GFDL license name and version when
       suppressing false positives for the 1.1 version.  Thanks, Aurelien
       Jarno.  (Closes: #516687)
+    + [RA] Don't warn about versionless GPL references if the word version
+      appears nowhere in the copyright file.
   * checks/cruft:
     + [RA] Be robust against whitespace in the Architecture field.
   * checks/debconf:
