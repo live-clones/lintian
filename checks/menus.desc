@@ -95,32 +95,6 @@ Severity: important
 Certainty: certain
 Info: Files in <tt>/usr/share/doc-base</tt> may not be marked as executables.
 
-Tag: postinst-does-not-call-installdocs
-Severity: important
-Certainty: certain
-Info: Since the package installs a file in <tt>/usr/share/doc-base</tt>, the
- package should probably call the <tt>install-docs</tt> command in its
- <tt>postinst</tt> script.
- .
- For example, use the following code in your maintainer script:
-  if [ -x /usr/sbin/install-docs ]; then
-    /usr/sbin/install-docs -i /usr/share/doc-base/&lt;your-package&gt;
-  fi
-Ref: doc-base 2.4
-
-Tag: prerm-does-not-call-installdocs
-Severity: important
-Certainty: certain
-Info: Since the package installs a file in <tt>/usr/share/doc-base</tt>, the
- package should probably call the <tt>install-docs</tt> command in its
- <tt>prerm</tt> script.
- .
- For example, use the following code in your maintainer script:
-  if [ -x /usr/sbin/install-docs ]; then
-    /usr/sbin/install-docs -r &lt;your-package&gt; || true
-  fi
-Ref: doc-base 2.4
-
 Tag: postinst-does-not-call-updatemenus
 Severity: important
 Certainty: certain
@@ -168,16 +142,20 @@ Info: The <tt>postrm</tt> script calls the <tt>update-menus</tt> program
  package with debhelper 7.2.3 or later will fix this problem.
 
 Tag: postinst-has-useless-call-to-install-docs
-Severity: important
+Severity: minor
 Certainty: certain
-Info: The <tt>postinst</tt> script calls the <tt>install-docs</tt> program
- though no file is installed in <tt>/usr/share/doc-base</tt>.
+Info: Explicitly calling <tt>install-docs</tt> in <tt>postinst</tt> is no
+ longer required since doc-base file processing is handled by triggers.
+ If the <tt>install-docs</tt> call was added by debhelper, rebuilding the
+ package with debhelper 7.2.3 or later will fix this problem.
 
 Tag: prerm-has-useless-call-to-install-docs
-Severity: important
+Severity: minor
 Certainty: certain
-Info: The <tt>prerm</tt> script calls the <tt>install-docs</tt> program
- though no file is installed in <tt>/usr/share/doc-base</tt>.
+Info: Explicitly calling <tt>install-docs</tt> in <tt>prerm</tt> is no
+ longer required since doc-base file processing is handled by triggers.
+ If the <tt>install-docs</tt> call was added by debhelper, rebuilding the
+ package with debhelper 7.2.3 or later will fix this problem.
 
 Tag: bad-menu-file-name
 Severity: important

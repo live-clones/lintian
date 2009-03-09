@@ -172,18 +172,17 @@ if (defined $postinst{'sets-link'} && $postinst{'sets-link'} == 1) {
 
 $anymenu_file = $menu_file || $menumethod_file;
 
+# No one needs to call install-docs any more; triggers now handles that.
+if ($postinst{'calls-installdocs'} or $postinst{'calls-installdocs-r'}) {
+    tag "postinst-has-useless-call-to-install-docs";
+}
+if ($prerm{'calls-installdocs'} or $prerm{'calls-installdocs-r'}) {
+    tag "prerm-has-useless-call-to-install-docs";
+}
+
 # check consistency
 # docbase file?
-if ($docbase_file) {		# postinst has to call install-docs
-    if (not $postinst{'calls-installdocs'}) {
-	tag "postinst-does-not-call-installdocs", "$docbase_file";
-    }
-    # prerm has to call install-docs -r
-    if (not $prerm{'calls-installdocs-r'}) {
-	tag "prerm-does-not-call-installdocs", "$docbase_file";
-    }
-
-    # check the contents of the doc-base file(s)
+if ($docbase_file) {
     opendir DOCBASEDIR, "doc-base" or fail("cannot read doc-base directory.");
     my $dbfile;
     while (defined ($dbfile = readdir DOCBASEDIR)) {
@@ -192,14 +191,6 @@ if ($docbase_file) {		# postinst has to call install-docs
 	check_doc_base_file($dbfile, $pkg, $type, \%all_files, \%all_links);
     }
     closedir DOCBASEDIR;
-} else {
-    # postinst and postrm should not need to call install-docs
-    if ($postinst{'calls-installdocs'} or $postinst{'calls-installdocs-r'}) {
-	tag "postinst-has-useless-call-to-install-docs", "";
-    }
-    if ($prerm{'calls-installdocs'} or $prerm{'calls-installdocs-r'}) {
-	tag "prerm-has-useless-call-to-install-docs", "";
-    }
 }
 
 if ($menumethod_file) {

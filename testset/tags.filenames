@@ -17,8 +17,6 @@ E: filenames: package-installs-file-to-usr-x11r6 usr/X11R6/
 E: filenames: package-installs-file-to-usr-x11r6-bin usr/X11R6/bin/
 E: filenames: package-installs-file-to-usr-x11r6-bin usr/X11R6/bin/testxbin2
 E: filenames: package-installs-packlist usr/lib/perl5/foo/.packlist
-E: filenames: postinst-does-not-call-installdocs usr/share/doc-base/filenames
-E: filenames: prerm-does-not-call-installdocs usr/share/doc-base/filenames
 E: filenames: subdir-in-usr-bin usr/bin/bin/
 E: filenames: symlink-contains-spurious-segments usr/lib/filenames/symlink5wrong ../menu/../somethingelse
 E: filenames: symlink-contains-spurious-segments usr/lib/filenames/symlink6wrong ./file4

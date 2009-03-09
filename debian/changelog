@@ -13,6 +13,8 @@ lintian (2.2.7) UNRELEASED; urgency=low
       - remove-of-unknown-diversion
     + Removed
       - description-synopsis-has-leading-spaces
+      - postinst-does-not-call-installdocs
+      - prerm-does-not-call-installdocs
 
   * checks/binaries{,.desc}:
     + [RA] Check for embedded copies of zlib in ELF binaries by looking
@@ -94,6 +96,8 @@ lintian (2.2.7) UNRELEASED; urgency=low
     + [RA] Explicit update-menus calls in postinst and postrm are no
       longer required unless menu-methods are installed.  Thanks, Eric
       Lavarde.  (Closes: #518712)
+    + [RA] Explicit install-docs calls are no longer needed since doc-base
+      registration is done with triggers.  (Closes: #518801)
   * checks/nmu:
     + [RA] Calculate the regex for Ubuntu distributions only once.
     + [RA] Be robust against whitespace in the Architecture field.
