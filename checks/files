@@ -549,11 +549,6 @@ foreach my $file (sort keys %{$info->index}) {
 	tag "bad-permissions-for-ali-file", "$file";
     }
 
-    # ---------------- .gz files
-    if ($file =~ m/\.gz/ && $info->file_info->{$file} !~ m/gzip compressed/) {
-	tag "gz-file-not-gzip", "$file";
-    }
-
     # ---------------- any files
     if ($index_info->{type} !~ m/^d/) {
 	unless ($type eq 'udeb'
@@ -755,6 +750,14 @@ foreach my $file (sort keys %{$info->index}) {
 		    if ($pkg ne $FONT_PACKAGES->value($font) and $type ne 'udeb');
 	    } elsif ($pkg !~ m/^[ot]tf-/) {
 		tag 'font-in-non-font-package', $file;
+	    }
+	}
+
+	# ---------------- .gz files
+	if ($file =~ m/\.gz/) {
+	    my $info = $info->file_info->{$file} || '';
+	    if ($info !~ m/gzip compressed/) {
+		tag "gz-file-not-gzip", "$file";
 	    }
 	}
 
