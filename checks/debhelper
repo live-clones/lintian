@@ -46,6 +46,7 @@ my %versions
        dh_auto_build      => '7',
        dh_auto_clean      => '7',
        dh_auto_install    => '7',
+       dh_bugfiles        => '7.2.3~',
        dh_icons           => '5.0.51~',
        dh_installifupdown => '5.0.44~',
        dh_lintian         => '6.0.7~',

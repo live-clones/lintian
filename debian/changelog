@@ -54,6 +54,7 @@ lintian (2.2.7) UNRELEASED; urgency=low
     + [ADB] Use Lintian::Relation rather than Dep.
   * checks/debhelper:
     + [ADB] Use Lintian::Relation rather than Dep.
+    + [RA] Add dh_bugfiles to version requirements, added in 7.2.3.
   * checks/description{,.desc}:
     + [RA] Remove description-synopsis-has-leading-spaces.  Policy
       explicitly says this is not a bug.  Adjust for the changes to Util
