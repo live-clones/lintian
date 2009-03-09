@@ -52,7 +52,7 @@ unless (-d "fields") {
     fail("directory in lintian laboratory for $type package $pkg missing: fields");
 }
 
-my $architecture = $info->field('architecture') || "";
+my $architecture = $info->field('architecture') || '';
 
 open(RULES, '<', 'debfiles/rules') or fail("Failed opening rules: $!");
 
@@ -162,7 +162,7 @@ unless ($includes) {
 
 # Make sure we have no content for binary-arch if we are arch-indep:
 $rules_per_target{'binary-arch'} ||= [];
-if ($architecture =~ /^\s*all\s*$/ && scalar @{$rules_per_target{'binary-arch'}}) {
+if ($architecture eq "all" && scalar @{$rules_per_target{'binary-arch'}}) {
     my $nonempty = 0;
     foreach (@{$rules_per_target{'binary-arch'}}) {
         # dh binary-arch is actually a no-op if there is no

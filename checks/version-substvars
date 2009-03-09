@@ -52,7 +52,7 @@ foreach (keys %$binpkgs) {
 	my ($pkg1, $pkg1_is_any, $pkg2, $pkg2_is_any, $substvar_strips_binNMU);
 
 	$pkg1 = $_;
-	$pkg1_is_any = ($info->binary_field($pkg1, 'architecture') !~ /^\s*all\s*$/);
+	$pkg1_is_any = ($info->binary_field($pkg1, 'architecture') ne 'all');
 
 	foreach my $field (@dep_fields) {
 		next unless $info->binary_field($pkg1, $field);
@@ -76,7 +76,7 @@ foreach (keys %$binpkgs) {
 				unless ($pkg2 =~ /\$\{\S+\}/);
 			next;
 		}
-		$pkg2_is_any = ($info->binary_field($pkg2, 'architecture') !~ m/^\s*all\s*$/);
+		$pkg2_is_any = ($info->binary_field($pkg2, 'architecture') !~ m/^all$/);
 
 		if ($pkg1_is_any) {
 			if ($pkg2_is_any and $substvar_strips_binNMU) {

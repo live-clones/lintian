@@ -23,7 +23,6 @@ lintian (2.2.7) UNRELEASED; urgency=low
       Geissert.  (Closes: #318104)
     + [RA] Avoid capturing parentheses in regexes due to their minor
       performance penalty.  Patch from Raphael Geissert.
-    + [RA] Be robust against whitespace in the Architecture field.
     + [RA] Report apparently truncated ELF binaries separately from
       apparently corrupted ones.  The current binutils now distinguishes.
       Patch from Raphael Geissert.  (Closes: #517778)
@@ -51,8 +50,6 @@ lintian (2.2.7) UNRELEASED; urgency=low
       Jarno.  (Closes: #516687)
     + [RA] Don't warn about versionless GPL references if the word version
       appears nowhere in the copyright file.
-  * checks/cruft:
-    + [RA] Be robust against whitespace in the Architecture field.
   * checks/debconf:
     + [ADB] Use Lintian::Relation rather than Dep.
   * checks/debhelper:
@@ -66,8 +63,6 @@ lintian (2.2.7) UNRELEASED; urgency=low
       Geissert.
     + [RA] Load Lintian::Data objects only once.  Patch from Raphael
       Geissert.  Also use all caps for global variables.
-    + [RA] Strip leading and trailing whitespace from fields and simplify
-      other logic to assume that.  Thanks, Gonéri Le Bouder.
     * [RA] Move data from common_data.pm to here and use Lintian::Data to
       get the list of known architectures.  Patch from Raphael Geissert.
   * checks/files{,.desc}:
@@ -82,9 +77,8 @@ lintian (2.2.7) UNRELEASED; urgency=low
       Jorge Vieira (metal).  (Closes: #518684)
     + [RA] Diagnose files ending in *.gz that aren't compressed with
       gzip.  Patch from Raphael Geissert.  (Closes: #518873)
-  * checks/huge-usr-share:
-    + [RA] Simplify architecture checking code and be robust against
-      whitespace in the field.
+    + [RA] Simplify some checks now that we're guaranteed leading and
+      trailing whitespace will be stripped from field values.
   * checks/manpages:
     + [CW] Run man with '-E UTF-8' to avoid producing bogus warnings on
       localised manual pages due to attempting to recode through ASCII.
@@ -105,11 +99,9 @@ lintian (2.2.7) UNRELEASED; urgency=low
       registration is done with triggers.  (Closes: #518801)
   * checks/nmu:
     + [RA] Calculate the regex for Ubuntu distributions only once.
-    + [RA] Be robust against whitespace in the Architecture field.
   * checks/patch-systems:
     + [ADB] Use Lintian::Relation instead of Dep.
   * checks/rules:
-    + [RA] Be robust against whitespace in the Architecture field.
     + [ADB] Remove some obsolete code and therefore stop use-ing Dep.
   * checks/scripts:
     + [ADB] Use Lintian::Relation rather than Dep.
@@ -125,7 +117,6 @@ lintian (2.2.7) UNRELEASED; urgency=low
       alternative dependency templates used meta-information.
     + [ADB] Extend the parsing of dependency templates in symbols files to
       handle ORed dependencies.
-    + [RA] Be robust against whitespace in the Architecture field.
     + [ADB] Use Lintian::Relation rather than Dep.
     + [ADB] Avoid capturing parentheses in regexes due to their minor
       performance penalty.

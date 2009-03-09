@@ -674,7 +674,7 @@ if ($type eq "source") {
 	my $arch_dep_packages = 0;
 	foreach my $binpkg (keys %$binpkgs) {
 		my $arch = $info->binary_field($binpkg, 'architecture');
-		if ($arch =~ /^\s*all\s*$/) {
+		if ($arch eq 'all') {
 			$arch_indep_packages++;
 		} else {
 			$arch_dep_packages++;
@@ -903,7 +903,7 @@ if ($type eq "source") {
 	foreach my $binpkg (keys %$binpkgs) {
 		if ($binpkg =~ m/-dbg$/) {
 			push @dbg_pkgs, $binpkg;
-		} elsif ($info->binary_field($binpkg, 'architecture') !~ /^\s*all\s*$/) {
+		} elsif ($info->binary_field($binpkg, 'architecture') ne 'all') {
 			push @arch_dep_pkgs, $binpkg;
 		}
 	}
@@ -923,7 +923,7 @@ if (defined $info->field('origin')) {
 
 	unfold('origin', \$origin);
 
-	tag "redundant-origin-field" if lc($origin) eq 'debian';
+	tag "redundant-origin-field", "" if lc($origin) eq 'debian';
 }
 
 #----- Bugs
@@ -1060,8 +1060,6 @@ sub unfold {
 	if ($$line =~ s/\n//g) {
 		tag "multiline-field", "$field";
 	}
-	$$line =~ s/^\s+//;
-	$$line =~ s/\s+$//;
 }
 
 1;
