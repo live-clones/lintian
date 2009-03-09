@@ -970,6 +970,8 @@ Info: The icon has a size that differs from the size specified by the name
 Tag: gz-file-not-gzip
 Severity: normal
 Certainty: possible
-Info: The given file ends with .gz which suggests it is compressed with gzip
- but it doesn't appear to actually be one.  gzip will fail with an error on
- such cases and should therefor be avoided or fixed, as necessary.
+Info: The given file ends with <tt>.gz</tt>, which normally indicates it
+ is compressed with gzip.  However, it doesn't seem to be a
+ gzip-compressed file.  gzip will fail with an error on such files.
+ Normally this indicates a mistake in the installation process of the
+ package.

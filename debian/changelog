@@ -7,6 +7,7 @@ lintian (2.2.7) UNRELEASED; urgency=low
       - debian-control-has-unusual-field-spacing (pedantic)
       - diversion-for-unknown-file
       - embedded-zlib
+      - gz-file-not-gzip
       - incorrect-libdir-in-la-file
       - orphaned-diversion
       - package-uses-local-diversion
@@ -31,6 +32,8 @@ lintian (2.2.7) UNRELEASED; urgency=low
   * checks/changelog-file:
     + [RA] Avoid capturing parentheses in regexes due to their minor
       performance penalty.  Patch from Raphael Geissert.
+    + [RA] Correctly handle changelog.gz files that aren't compressed with
+      gzip.  Patch from Raphael Geissert.
   * checks/common_data.pm:
     + [RA] Move all information used only in one check script from here to
       the relevant check script.  Patch from Raphael Geissert.
@@ -67,7 +70,7 @@ lintian (2.2.7) UNRELEASED; urgency=low
       other logic to assume that.  Thanks, Gonéri Le Bouder.
     * [RA] Move data from common_data.pm to here and use Lintian::Data to
       get the list of known architectures.  Patch from Raphael Geissert.
-  * checks/files:
+  * checks/files{,.desc}:
     + [RA] Avoid capturing parentheses in regexes due to their minor
       performance penalty.  Patch from Raphael Geissert.
     + [RA] Precompile constant regexes with qr and only load the list of
@@ -77,6 +80,8 @@ lintian (2.2.7) UNRELEASED; urgency=low
     + [ADB] Use Lintian::Relation instead of Dep.
     + [RA] magpierss was renamed to libphp-magpierss.  Patch from Marcelo
       Jorge Vieira (metal).  (Closes: #518684)
+    + [RA] Diagnose files ending in *.gz that aren't compressed with
+      gzip.  Patch from Raphael Geissert.  (Closes: #518873)
   * checks/huge-usr-share:
     + [RA] Simplify architecture checking code and be robust against
       whitespace in the field.
