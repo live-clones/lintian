@@ -817,7 +817,8 @@ while (my $arg = shift) {
 			    tag("bad-ubuntu-distribution-in-changes-file",
 				$distribution);
 			}
-		    } elsif (! (($distribution eq 'stable')
+		    } elsif (! (($distribution eq 'oldstable')
+				 or ($distribution eq 'stable')
 				 or ($distribution eq 'testing')
 				 or ($distribution eq 'unstable')
 				 or ($distribution eq 'experimental')

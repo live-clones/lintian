@@ -169,6 +169,7 @@ lintian (2.2.7) UNRELEASED; urgency=low
       determine when to run collect scripts.  Re-run collect scripts if
       the current version doesn't match what's in the lab.  Patch from
       Raphael Geissert.  (Closes: #517650)
+    + [RA] Add oldstable to the known distributions for *.changes files.
 
   * lib/Lintian/Collect/Binary.pm:
     + [RA] Recognize truncated binaries.  Patch from Raphael Geissert.
