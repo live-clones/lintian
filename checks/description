@@ -30,7 +30,6 @@ my $pkg = shift;
 my $type = shift;
 my $info = shift;
 
-my $ppkg = quotemeta($pkg);
 my $tabs = 0;
 my $lines = 0;
 my $template = 0;
@@ -55,12 +54,7 @@ unless (defined $synopsis) {
 if ($synopsis =~ m/^\s*$/) {
     tag "description-synopsis-is-empty", "";
 } else {
-    # Current dpkg-gencontrol appears to fix this automatically so this
-    # tag will never trigger with a current dpkg-dev.
-    if ($synopsis =~ m/^\s/) {
-	tag "description-synopsis-has-leading-spaces", "";
-    }
-    if ($synopsis =~ m/^\s*$ppkg\b/i) {
+    if ($synopsis =~ m/^\Q$pkg\E\b/i) {
 	tag "description-starts-with-package-name", "";
     }
     if ($synopsis =~ m/(?<!etc)\.\s*$/i) {
@@ -72,7 +66,7 @@ if ($synopsis =~ m/^\s*$/) {
     if (length($synopsis) >= 80) {
 	tag "description-too-long", "";
     }
-    if ($synopsis =~ m/^\s*missing\s*$/i) {
+    if ($synopsis =~ m/^missing\s*$/i) {
 	tag "description-is-debmake-template", "" unless $template++;
     } elsif ($synopsis =~ m/<insert up to 60 chars description>/) {
 	tag "description-is-dh_make-template", "" unless $template++;
@@ -82,8 +76,7 @@ if ($synopsis =~ m/^\s*$/) {
 my $flagged_homepage;
 my $is_dummy;
 foreach (split /\n/, $description) {
-    next if m/^\s*$/o;
-    next if m/^\.\s*$/o;
+    next if m/^ \.\s*$/o;
 
     if ($lines == 0) {
 	my $firstline = lc $_;
@@ -101,9 +94,9 @@ foreach (split /\n/, $description) {
 
     $lines++;
 
-    if (m/^\.\s*\S/o) {
+    if (m/^ \.\s*\S/o) {
 	tag "description-contains-invalid-control-statement", "";
-    } elsif (m/^[\-\*]/o) {
+    } elsif (m/^ [\-\*]/o) {
 	# Print it only the second time.  Just one is not enough to be sure that
 	# it's a list, and after the second there's no need to repeat it.
 	tag "possible-unindented-list-in-extended-description", "" if $unindented_list++ == 2;
@@ -141,7 +134,7 @@ foreach (split /\n/, $description) {
 
     if ($lines == 1) {
 	# checks for the first line of the extended description:
-	if (m/^\s/o) {
+	if (m/^ \s/o) {
 	    tag "description-starts-with-leading-spaces", "";
 	}
 	if (m/^\s*missing\s*$/oi) {
@@ -151,7 +144,7 @@ foreach (split /\n/, $description) {
 	}
     }
 
-    if (length($_) >= 80) {
+    if (length($_) > 80) {
 	tag "extended-description-line-too-long", "";
     }
 }

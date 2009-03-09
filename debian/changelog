@@ -6,6 +6,8 @@ lintian (2.2.7) UNRELEASED; urgency=low
       - copyright-refers-to-nonexistent-license-file
       - embedded-zlib
       - incorrect-libdir-in-la-file
+    + Removed
+      - description-synopsis-has-leading-spaces
 
   * checks/binaries{,.desc}:
     + [RA] Check for embedded copies of zlib in ELF binaries by looking
@@ -38,6 +40,10 @@ lintian (2.2.7) UNRELEASED; urgency=low
     + [ADB] Use Lintian::Relation rather than Dep.
   * checks/debhelper:
     + [ADB] Use Lintian::Relation rather than Dep.
+  * checks/description{,.desc}:
+    + [RA] Remove description-synopsis-has-leading-spaces.  Policy
+      explicitly says this is not a bug.  Adjust for the changes to Util
+      that preserve leading whitespace in continued fields.
   * checks/fields:
     + [RA] Precompile constant regexes with qr.  Patch from Raphael
       Geissert.

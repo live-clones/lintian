@@ -46,12 +46,6 @@ Certainty: certain
 Info: The first line of the "Description:" must not exceed 80 characters.
 Ref: policy 3.4.1
 
-Tag: description-synopsis-has-leading-spaces
-Severity: important
-Certainty: certain
-Status: untested
-Info: The first line of the "Description:" should not have leading spaces.
-
 Tag: description-starts-with-package-name
 Severity: important
 Certainty: certain
