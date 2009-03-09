@@ -221,9 +221,15 @@ Tag: spelling-error-in-binary
 Severity: normal
 Certainty: wild-guess
 Experimental: yes
-Info: Lintian found a spelling error in the given binary.  Lintian has a list
- of common misspellings that it looks for.  It does not have a dictionary
- like a spelling checker does.
+Info: Lintian found a spelling error in the given binary.  Lintian has a
+ list of common misspellings that it looks for.  It does not have a
+ dictionary like a spelling checker does.
+ .
+ If the string containing the spelling error is translated with the help
+ of gettext or a similar tool, please fix the error in the translations as
+ well as the English text to avoid making the translations fuzzy.  With
+ gettext, for example, this means you should also fix the spelling mistake
+ in the corresponding msgids in the *.po files.
 
 Tag: embedded-zlib
 Severity: important
