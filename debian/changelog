@@ -15,6 +15,16 @@ lintian (2.2.8) UNRELEASED; urgency=low
 
   * lib/Dep.pm:
     + [RA] Remove, replaced with Lintian::Relation.
+  * lib/Lintian/Collect/Binary.pm:
+    + [RA] Fix POD errors.
+  * lib/Lintian/Collect/Source.pm:
+    + [RA] Fix POD errors.
+  * lib/Lintian/Command.pm:
+    + [RA] Fix POD errors.
+
+  * t/runtests:
+    + [RA] Add support for running test scripts under t/scripts via prove
+      (the standard Perl test harness).
 
  -- Russ Allbery <rra@debian.org>  Mon, 09 Mar 2009 20:31:24 -0700
 

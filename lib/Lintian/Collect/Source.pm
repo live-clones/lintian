@@ -247,6 +247,8 @@ data in memory.
 
 =head1 CLASS METHODS
 
+=over 4
+
 =item new(PACKAGE)
 
 Creates a new Lintian::Collect::Source object.  Currently, PACKAGE is
@@ -309,8 +311,6 @@ object will be empty (always satisfied and implies nothing).
 
 Any substvars in F<debian/control> will be represented in the returned
 relation as packages named after the substvar.
-
-=back
 
 =item changelog()
 

@@ -233,7 +233,7 @@ sub spawn {
     return $opts->{success};
 }
 
-=head 2 C<reap($opts[, $opts[,...]])>
+=head2 C<reap($opts[, $opts[,...]])>
 
 If you used one of the C<pipe_*> options to spawn() or used the shell-style "&"
 operator to send the process to the background, you will need to wait for your
@@ -292,7 +292,7 @@ sub reap {
     return $status;
 }
 
-=head 2 C<kill($opts[, $opts[, ...]])>
+=head2 C<kill($opts[, $opts[, ...]])>
 
 This is a simple wrapper around the kill_kill function. It doesn't allow
 any customisation, but takes an $opts hash ref and SIGKILLs the process

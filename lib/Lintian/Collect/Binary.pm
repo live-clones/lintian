@@ -315,6 +315,8 @@ data in memory.
 
 =head1 CLASS METHODS
 
+=over 4
+
 =item new(PACKAGE)
 
 Creates a new Lintian::Collect::Binary object.  Currently, PACKAGE is
