@@ -4,8 +4,6 @@ Version: 1.0
 Description: Correct program checks in maintainer scripts
 Test-For:
  postinst-has-useless-call-to-install-docs
- postinst-has-useless-call-to-update-menus
- postrm-has-useless-call-to-update-menus
  prerm-has-useless-call-to-install-docs
 Test-Against:
  maintainer-script-does-not-check-for-existence-of-installdocs

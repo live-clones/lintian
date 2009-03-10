@@ -38,7 +38,7 @@ E: binary: non-wm-in-windowmanager-menu-section x11 /usr/share/menu/binary:4
 E: binary: non-wm-module-in-wm-modules-menu-section wm /usr/lib/menu/binary:22
 E: binary: non-wm-module-in-wm-modules-menu-section wm /usr/share/menu/binary:22
 E: binary: possible-gpl-code-linked-with-openssl
-E: binary: postinst-does-not-call-updatemenus etc/menu-methods/lintian
+E: binary: postinst-does-not-call-updatemenus usr/share/menu/binary
 E: binary: postrm-does-not-call-updatemenus etc/menu-methods/lintian
 E: binary: statically-linked-binary ./usr/bin/static-hello
 E: binary: su-wrapper-without--c /usr/lib/menu/binary:2 su-to-root

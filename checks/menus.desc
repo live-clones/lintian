@@ -98,9 +98,10 @@ Info: Files in <tt>/usr/share/doc-base</tt> may not be marked as executables.
 Tag: postinst-does-not-call-updatemenus
 Severity: important
 Certainty: certain
-Info: Since the package installs a file in <tt>/etc/menu-methods</tt>, the
- package should probably call the <tt>update-menus</tt> command in it's
- <tt>postinst</tt> script.
+Info: Since the package installs a file in <tt>/etc/menu-methods</tt>,
+ <tt>/usr/share/menu</tt>, or <tt>/usr/lib/menu</tt>, the package should
+ probably call the <tt>update-menus</tt> command in it's <tt>postinst</tt>
+ script.
  .
  For example, use the following code in your maintainer script:
   if [ -x /usr/bin/update-menus ] ; then update-menus ; fi
@@ -109,9 +110,10 @@ Ref: menu 4.2
 Tag: postrm-does-not-call-updatemenus
 Severity: important
 Certainty: certain
-Info: Since the package installs a file in <tt>/etc/menu-methods</tt>, the
- package should probably call the <tt>update-menus</tt> command in it's
- <tt>postrm</tt> script.
+Info: Since the package installs a file in <tt>/etc/menu-methods</tt>,
+ <tt>/usr/share/menu</tt>, or <tt>/usr/lib/menu</tt>, the package should
+ probably call the <tt>update-menus</tt> command in it's <tt>postrm</tt>
+ script.
  .
  For example, use the following code in your maintainer script:
   if [ -x /usr/bin/update-menus ] ; then update-menus ; fi
@@ -121,25 +123,15 @@ Tag: postinst-has-useless-call-to-update-menus
 Severity: minor
 Certainty: certain
 Info: The <tt>postinst</tt> script calls the <tt>update-menus</tt> program
- though no file is installed in <tt>/etc/menu-methods</tt>.  Files
- installed in <tt>/usr/share/menu</tt> or <tt>/usr/lib/menu</tt> are now
- handled with triggers and don't need an explicit <tt>update-menus</tt>
- invocation.
- .
- If the <tt>update-menus</tt> call was added by debhelper, rebuilding the
- package with debhelper 7.2.3 or later will fix this problem.
+ though no file is installed in <tt>/etc/menu-methods</tt>,
+ <tt>/usr/share/menu</tt>, or <tt>/usr/lib/menu</tt>.
 
 Tag: postrm-has-useless-call-to-update-menus
 Severity: minor
 Certainty: certain
 Info: The <tt>postrm</tt> script calls the <tt>update-menus</tt> program
- though no file is installed in <tt>/etc/menu-methods</tt>.  Files
- installed in <tt>/usr/share/menu</tt> or <tt>/usr/lib/menu</tt> are now
- handled with triggers and don't need an explicit <tt>update-menus</tt>
- invocation.
- .
- If the <tt>update-menus</tt> call was added by debhelper, rebuilding the
- package with debhelper 7.2.3 or later will fix this problem.
+ though no file is installed in <tt>/etc/menu-methods</tt>,
+ <tt>/usr/share/menu</tt>, or <tt>/usr/lib/menu</tt>.
 
 Tag: postinst-has-useless-call-to-install-docs
 Severity: minor

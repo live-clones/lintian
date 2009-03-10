@@ -193,18 +193,24 @@ if ($docbase_file) {
     closedir DOCBASEDIR;
 }
 
-if ($menumethod_file) {
-    # postinst has to call update-menus
+if ($anymenu_file) {
+    # postinst and postrm should not need to call update-menus unless there is
+    # a menu-method file.  However, update-menus currently won't enable
+    # packages that have outstanding triggers, leading to an update-menus call
+    # being required for at least some packages right now.  Until this bug is
+    # fixed, we still require it.  See #518919 for more information.
+    #
+    # That bug does not require calling update-menus from postrm, but
+    # debhelper apparently currently still adds that to the maintainer script,
+    # so don't warn if it's done.
     if (not $postinst{'calls-updatemenus'}) {
-	tag "postinst-does-not-call-updatemenus", "$menumethod_file";
+	tag "postinst-does-not-call-updatemenus", "$anymenu_file";
     }
-    # postrm has to call update-menus
-    if (not $postrm{'calls-updatemenus'}) {
+    if ($menumethod_file and not $postrm{'calls-updatemenus'}) {
 	tag "postrm-does-not-call-updatemenus", "$menumethod_file"
 	    unless $pkg eq 'menu';
     }
 } else {
-    # postinst and postrm should not need to call update-menus
     if ($postinst{'calls-updatemenus'}) {
 	tag "postinst-has-useless-call-to-update-menus";
     }

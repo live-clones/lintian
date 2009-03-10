@@ -1,3 +1,13 @@
+lintian (2.2.8) UNRELEASED; urgency=low
+
+  * checks/menus{,.desc}:
+    + [RA] Revert the change to not require update-menus in postinst.
+      This is still needed due to #518919.  Don't require update-menus in
+      postrm for regular menu files, only for menu-methods, but also don't
+      warn if it's present.
+
+ -- Russ Allbery <rra@debian.org>  Mon, 09 Mar 2009 20:31:24 -0700
+
 lintian (2.2.7) unstable; urgency=low
 
   The "debhelper 7.2.3 and lots of fiddly infrastructure fixes" release.
