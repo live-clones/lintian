@@ -13,6 +13,9 @@ lintian (2.2.8) UNRELEASED; urgency=low
     + [RA] Policy allows scripts to assume that /bin/sh supports local
       with simple variable assignments.
 
+  * lib/Dep.pm:
+    + [RA] Remove, replaced with Lintian::Relation.
+
  -- Russ Allbery <rra@debian.org>  Mon, 09 Mar 2009 20:31:24 -0700
 
 lintian (2.2.7) unstable; urgency=low
