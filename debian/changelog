@@ -1,5 +1,10 @@
 lintian (2.2.8) UNRELEASED; urgency=low
 
+  * Summary of tag changes:
+    + Added
+      - dir-or-file-in-var-lock
+      - dir-or-file-in-var-run
+
   * checks/changelog-file.desc:
     + [RA] Using UTF-8 is now a Policy must and hence serious.
   * checks/control-file.desc:
