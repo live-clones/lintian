@@ -4,6 +4,10 @@ lintian (2.2.8) UNRELEASED; urgency=low
     + [RA] Using UTF-8 is now a Policy must and hence serious.
   * checks/control-file.desc:
     + [RA] Using UTF-8 is now a Policy must and hence serious.
+  * checks/files{,.desc}:
+    + [CW] Emit dir-or-file-in-var-lock or dir-or-file-in-var-run, as
+      appropriate, for packages shipping directories or files in /var/lock
+      or /var/run. See policy bug #514326.
   * checks/menus{,.desc}:
     + [RA] Revert the change to not require update-menus in postinst.
       This is still needed due to #518919.  Don't require update-menus in

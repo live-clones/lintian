@@ -486,6 +486,13 @@ foreach my $file (sort keys %{$info->index}) {
     elsif ($type ne 'udeb' and $file =~ m,^var/lib/games/.,) {
 	tag "non-standard-dir-in-var", "$file";
     }
+    # ---------------- /var/lock, /var/run
+    elsif ($file =~ m,^var/lock/.,) {
+	tag "dir-or-file-in-var-lock", "$file";
+    }
+    elsif ($file =~ m,^var/run/.,) {
+	tag "dir-or-file-in-var-run", "$file";
+    }
     # ---------------- /var/www
     # Packages are allowed to create /var/www since it's historically been the
     # default document root, but they shouldn't be installing stuff under that
