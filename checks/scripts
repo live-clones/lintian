@@ -526,6 +526,7 @@ open(SCRIPTS, '<', "control-scripts")
 # make a shared function awkward.
 
 my %added_diversions;
+my %removed_diversions;
 while (<SCRIPTS>) {
     chop;
 
@@ -885,17 +886,7 @@ while (<SCRIPTS>) {
 		    tag 'diversion-for-unknown-file', $divert, "$file:$."
 			unless (exists $info->index->{$divert});
 		} elsif ($mode eq 'remove') {
-		    if (exists $added_diversions{$divert}) {
-			# do not really delete the entry, because a --remove
-			# might happen in two branches in the script, i.e. we
-			# see it twice, which is not a bug
-			undef $added_diversions{$divert};
-		    } elsif ($file eq 'postrm') {
-			# Allow preinst and postinst to remove diversions the
-			# package doesn't add to clean up after previous
-			# versions of the package.
-			tag 'remove-of-unknown-diversion', $divert, "$file:$.";
-		    }
+		    $removed_diversions{$divert} = [ $file, $. ];
 		} else {
 		    fail "Internal error: \$mode has unknown value: ".
 			"$mode";
@@ -922,6 +913,23 @@ while (<SCRIPTS>) {
 
 }
 close(SCRIPTS);
+
+for my $divert (keys %removed_diversions) {
+    my $file = $removed_diversions{$divert}[0];
+    my $line = $removed_diversions{$divert}[1];
+
+    if (exists $added_diversions{$divert}) {
+	# do not really delete the entry, because a --remove
+	# might happen in two branches in the script, i.e. we
+	# see it twice, which is not a bug
+	undef $added_diversions{$divert};
+    } elsif ($file eq 'postrm') {
+	# Allow preinst and postinst to remove diversions the
+	# package doesn't add to clean up after previous
+	# versions of the package.
+	tag 'remove-of-unknown-diversion', $divert, "$file:$line";
+    }
+}
 
 for my $file (grep { defined $added_diversions{$_} } keys %added_diversions) {
     tag 'orphaned-diversion', $file, $added_diversions{$file};

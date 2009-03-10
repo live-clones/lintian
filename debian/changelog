@@ -12,6 +12,10 @@ lintian (2.2.8) UNRELEASED; urgency=low
   * checks/scripts:
     + [RA] Policy allows scripts to assume that /bin/sh supports local
       with simple variable assignments.
+    + [ADB] Check all added and removed diversions at once rather than
+      as each maintainer script is processed.  This avoids differing
+      results and false positives if the postrm is processed before other
+      maintainer scripts.  (Closes: #518966)
 
   * lib/Dep.pm:
     + [RA] Remove, replaced with Lintian::Relation.
