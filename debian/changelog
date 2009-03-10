@@ -1,10 +1,17 @@
 lintian (2.2.8) UNRELEASED; urgency=low
 
+  * checks/changelog-file.desc:
+    + [RA] Using UTF-8 is now a Policy must and hence serious.
+  * checks/control-file.desc:
+    + [RA] Using UTF-8 is now a Policy must and hence serious.
   * checks/menus{,.desc}:
     + [RA] Revert the change to not require update-menus in postinst.
       This is still needed due to #518919.  Don't require update-menus in
       postrm for regular menu files, only for menu-methods, but also don't
       warn if it's present.
+  * checks/scripts:
+    + [RA] Policy allows scripts to assume that /bin/sh supports local
+      with simple variable assignments.
 
  -- Russ Allbery <rra@debian.org>  Mon, 09 Mar 2009 20:31:24 -0700
 

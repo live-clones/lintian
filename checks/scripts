@@ -258,7 +258,6 @@ our @bashism_regexs = (
     $LEADIN . qr'alias\s+-p',      # alias -p
     $LEADIN . qr'unalias\s+-a',    # unalias -a
     $LEADIN . qr'local\s+-[a-zA-Z]+', # local -opt
-    $LEADIN . qr'local\s+\w+=',    # local foo=bar
     qr'(?:^|\s+)\s*\(?\w*[^\(\w\s]+\S*?\s*\(\)\s*([\{|\(]|\Z)',
 	# function names should only contain [a-z0-9_]
     $LEADIN . qr'(push|pop)d(\s|\Z)',   # (push|pod)d

@@ -7,8 +7,9 @@ Needs-Info: debfiles
 Info: This script checks debian/control files in source packages
 
 Tag: debian-control-file-uses-obsolete-national-encoding
-Severity: important
+Severity: serious
 Certainty: certain
+Ref: policy 5.1
 Info: The Debian control file should be valid UTF-8, an encoding of
  the Unicode character set.
  .

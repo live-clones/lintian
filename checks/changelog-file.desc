@@ -158,8 +158,9 @@ Info: The changelog file contains an invalid email address: the domain
  needs at least one dot. This looks like a mistake.
 
 Tag: debian-changelog-file-uses-obsolete-national-encoding
-Severity: important
+Severity: serious
 Certainty: certain
+Ref: policy 4.4
 Info: The Debian changelog file must be valid UTF-8, an encoding of
  the Unicode character set.
  .
