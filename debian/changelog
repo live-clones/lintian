@@ -17,7 +17,7 @@ lintian (2.2.8) UNRELEASED; urgency=low
     + [RA] Revert the change to not require update-menus in postinst.
       This is still needed due to #518919.  Don't require update-menus in
       postrm for regular menu files, only for menu-methods, but also don't
-      warn if it's present.
+      warn if it's present.  (Closes: #519300)
   * checks/scripts:
     + [RA] Policy allows scripts to assume that /bin/sh supports local
       with simple variable assignments.
