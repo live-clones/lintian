@@ -1,4 +1,6 @@
-lintian (2.2.8) UNRELEASED; urgency=low
+lintian (2.2.8) unstable; urgency=low
+
+  The "Policy 3.8.1" release.
 
   * Summary of tag changes:
     + Added
@@ -45,7 +47,7 @@ lintian (2.2.8) UNRELEASED; urgency=low
     + [RA] Add support for running test scripts under t/scripts via prove
       (the standard Perl test harness).
 
- -- Russ Allbery <rra@debian.org>  Mon, 09 Mar 2009 20:31:24 -0700
+ -- Russ Allbery <rra@debian.org>  Wed, 11 Mar 2009 21:50:58 -0700
 
 lintian (2.2.7) unstable; urgency=low
 
