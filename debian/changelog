@@ -26,6 +26,9 @@ lintian (2.2.8) UNRELEASED; urgency=low
       results and false positives if the postrm is processed before other
       maintainer scripts.  (Closes: #518966)
 
+  * data/standards-version/release-dates:
+    + [RA] Add release date for 3.8.1.
+
   * lib/Dep.pm:
     + [RA] Remove, replaced with Lintian::Relation.
   * lib/Lintian/Collect/Binary.pm:

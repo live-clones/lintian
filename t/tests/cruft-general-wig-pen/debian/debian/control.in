@@ -3,7 +3,7 @@ Format: 2.0
 Priority: extra
 Section: {$section}
 Maintainer: {$author}
-Standards-Version: 3.8.0
+Standards-Version: 3.8.1
 Build-Depends: debhelper (>= 7)
 
 Package: {$srcpkg}

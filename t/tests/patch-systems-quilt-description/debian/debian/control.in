@@ -2,7 +2,7 @@ Source: {$srcpkg}
 Priority: extra
 Section: devel
 Maintainer: {$author}
-Standards-Version: 3.8.0
+Standards-Version: 3.8.1
 Build-Depends: quilt, debhelper (>= 7)
 
 Package: {$srcpkg}

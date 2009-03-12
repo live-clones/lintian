@@ -1,7 +1,7 @@
 Source: {$srcpkg}
 Priority: extra
 Maintainer: {$author}
-Standards-Version: 3.8.0
+Standards-Version: 3.8.1
 Build-Depends: debhelper (>= 7)
 X-VCS-Svn: svn://svn.example.com/{$srcpkg}/trunk
 
