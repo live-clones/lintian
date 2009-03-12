@@ -132,7 +132,8 @@ else
     grep -lr autoscript */ \
 	| sed 's,.*/usr/bin/,,g' | sort -u > maint_commands
     grep -lr misc:Depends */ \
-	| sed 's,.*/usr/bin/,,g' | sort -u > miscDepends_commands
+	| sed 's,.*/usr/bin/,,g' | sort -u | grep -v dh_gencontrol \
+	> miscDepends_commands
 
     for f in maint miscDepends; do
 	rf="$lintian_data/debhelper/${f}_commands"

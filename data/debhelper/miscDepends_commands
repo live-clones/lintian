@@ -1,5 +1,4 @@
 dh_gconf
-dh_gencontrol
 dh_gtkmodules
 dh_installcatalogs
 dh_installdebconf

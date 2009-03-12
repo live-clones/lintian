@@ -55,6 +55,9 @@ lintian (2.2.8) unstable; urgency=low
   * private/refresh-debhelper-data:
     + [RA] Remove symlinks as a (possibly temporary) workaround to
       packages that contain broken links to dh_* commands.
+    + [RA] Exclude dh_gencontrol from debhelper commands that set
+      ${misc:Depends} since it only sets it to empty when not already
+      set.
   * private/refresh-fonts-data:
     + [RA] Correctly handle not specifying a Contents file on the command
       line.
