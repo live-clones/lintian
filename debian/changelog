@@ -29,6 +29,9 @@ lintian (2.2.8) UNRELEASED; urgency=low
   * data/standards-version/release-dates:
     + [RA] Add release date for 3.8.1.
 
+  * debian/control:
+    + [RA] Update to standards version 3.8.1.
+
   * lib/Dep.pm:
     + [RA] Remove, replaced with Lintian::Relation.
   * lib/Lintian/Collect/Binary.pm:
