@@ -43,7 +43,9 @@ INFO
 fi
 
 readonly lintian_data="$(readlink -f "$1")"
-contents="$(readlink -f "$2")"
+if [ -n "$2" ] ; then
+    contents="$(readlink -f "$2")"
+fi
 
 [ -d "$lintian_data" ] || {
     printf "%s is not a directory, aborting" "$lintian_data" >&2

@@ -7,7 +7,7 @@
 # If <section> is empty, that line specifies the title and URL for the whole
 # manual.  If <url> is empty, that manual is not available on the web.
 #
-# Last updated: 2009-01-31
+# Last updated: 2009-03-11
 
 debconf-spec::::Configuration management::http://www.debian.org/doc/packaging-manuals/debconf_specification.html
 debconf-spec::aen27::Introduction::http://www.debian.org/doc/packaging-manuals/debconf_specification.html#AEN27
@@ -56,7 +56,7 @@ devref::4.7::Debian mirrors::http://www.debian.org/doc/developers-reference/reso
 devref::4.8::The Incoming system::http://www.debian.org/doc/developers-reference/resources.html#incoming-system
 devref::4.9::Package information::http://www.debian.org/doc/developers-reference/resources.html#pkg-info
 devref::4.9.1::On the web::http://www.debian.org/doc/developers-reference/resources.html#pkg-info-web
-devref::4.9.2::The <span class="command"><strong>dak ls</strong></span> utility::http://www.debian.org/doc/developers-reference/resources.html#dak ls
+devref::4.9.2::The <span class="command"><strong>dak ls</strong></span> utility::http://www.debian.org/doc/developers-reference/resources.html#dak-ls
 devref::4.10::The Package Tracking System::http://www.debian.org/doc/developers-reference/resources.html#pkg-tracking-system
 devref::4.10.1::The PTS email interface::http://www.debian.org/doc/developers-reference/resources.html#pts-commands
 devref::4.10.2::Filtering PTS mails::http://www.debian.org/doc/developers-reference/resources.html#pts-mail-filtering
@@ -99,15 +99,12 @@ devref::5.10.2::Guidelines for porter uploads::http://www.debian.org/doc/develop
 devref::5.10.3::Porting infrastructure and automation::http://www.debian.org/doc/developers-reference/pkgs.html#porter-automation
 devref::5.10.4::When your package is <span class="emphasis"><em>not</em></span> portable::http://www.debian.org/doc/developers-reference/pkgs.html#packages-arch-specific
 devref::5.11::Non-Maintainer Uploads (NMUs)::http://www.debian.org/doc/developers-reference/pkgs.html#nmu
-devref::5.11.1::How to do a NMU::http://www.debian.org/doc/developers-reference/pkgs.html#nmu-guidelines
-devref::5.11.2::NMU version numbering::http://www.debian.org/doc/developers-reference/pkgs.html#nmu-version
-devref::5.11.3::Source NMUs must have a new changelog entry::http://www.debian.org/doc/developers-reference/pkgs.html#nmu-changelog
-devref::5.11.4::Source NMUs and the Bug Tracking System::http://www.debian.org/doc/developers-reference/pkgs.html#nmu-patch
-devref::5.11.5::Building source NMUs::http://www.debian.org/doc/developers-reference/pkgs.html#nmu-build
-devref::5.11.6::Acknowledging an NMU::http://www.debian.org/doc/developers-reference/pkgs.html#ack-nmu
-devref::5.11.7::NMU vs QA uploads::http://www.debian.org/doc/developers-reference/pkgs.html#nmu-vs-qa
-devref::5.11.8::Who can do an NMU::http://www.debian.org/doc/developers-reference/pkgs.html#nmu-who
-devref::5.11.9::Terminology::http://www.debian.org/doc/developers-reference/pkgs.html#nmu-terms
+devref::5.11.1::When and how to do an NMU::http://www.debian.org/doc/developers-reference/pkgs.html#nmu-guidelines
+devref::5.11.2::NMUs and debian/changelog::http://www.debian.org/doc/developers-reference/pkgs.html#nmu-changelog
+devref::5.11.3::Using the <code class="literal">DELAYED/</code> queue::http://www.debian.org/doc/developers-reference/pkgs.html#nmu-delayed
+devref::5.11.4::NMUs from the maintainer's point of view::http://www.debian.org/doc/developers-reference/pkgs.html#nmu-maintainer
+devref::5.11.5::Source NMUs vs Binary-only NMUs (binNMUs)::http://www.debian.org/doc/developers-reference/pkgs.html#nmu-binnmu
+devref::5.11.6::NMUs vs QA uploads::http://www.debian.org/doc/developers-reference/pkgs.html#nmu-qa-upload
 devref::5.12::Collaborative maintenance::http://www.debian.org/doc/developers-reference/pkgs.html#collaborative-maint
 devref::5.13::The testing distribution::http://www.debian.org/doc/developers-reference/pkgs.html#testing
 devref::5.13.1::Basics::http://www.debian.org/doc/developers-reference/pkgs.html#testing-basics
@@ -208,17 +205,19 @@ devref::A.7::Porting tools::http://www.debian.org/doc/developers-reference/tools
 devref::A.7.1::<code class="systemitem">quinn-diff</code>::http://www.debian.org/doc/developers-reference/tools.html#quinn-diff
 devref::A.7.2::<code class="systemitem">dpkg-cross</code>::http://www.debian.org/doc/developers-reference/tools.html#dpkg-cross
 devref::A.8::Documentation and information::http://www.debian.org/doc/developers-reference/tools.html#tools-doc
-devref::A.8.1::<code class="systemitem">debiandoc-sgml</code>::http://www.debian.org/doc/developers-reference/tools.html#debiandoc-sgml
-devref::A.8.2::<code class="systemitem">debian-keyring</code>::http://www.debian.org/doc/developers-reference/tools.html#debian-keyring
-devref::A.8.3::<code class="systemitem">debian-maintainers</code>::http://www.debian.org/doc/developers-reference/tools.html#debian-maintainers
-devref::A.8.4::<code class="systemitem">debview</code>::http://www.debian.org/doc/developers-reference/tools.html#debview
+devref::A.8.1::<code class="systemitem">docbook-xml</code>::http://www.debian.org/doc/developers-reference/tools.html#docbook-xml
+devref::A.8.2::<code class="systemitem">debiandoc-sgml</code>::http://www.debian.org/doc/developers-reference/tools.html#debiandoc-sgml
+devref::A.8.3::<code class="systemitem">debian-keyring</code>::http://www.debian.org/doc/developers-reference/tools.html#debian-keyring
+devref::A.8.4::<code class="systemitem">debian-maintainers</code>::http://www.debian.org/doc/developers-reference/tools.html#debian-maintainers
+devref::A.8.5::<code class="systemitem">debview</code>::http://www.debian.org/doc/developers-reference/tools.html#debview
 devref::4.6.4.1::Stable, testing, and unstable::http://www.debian.org/doc/developers-reference/resources.html#sec-dists
 devref::4.6.4.2::More information about the testing distribution::http://www.debian.org/doc/developers-reference/resources.html#s4.6.4.2
 devref::4.6.4.3::Experimental::http://www.debian.org/doc/developers-reference/resources.html#experimental
-devref::5.8.5.1::Confidentiality::http://www.debian.org/doc/developers-reference/pkgs.html#bug-security-confidentiality
-devref::5.8.5.2::Security Advisories::http://www.debian.org/doc/developers-reference/pkgs.html#bug-security-advisories
-devref::5.8.5.3::Preparing packages to address security issues::http://www.debian.org/doc/developers-reference/pkgs.html#bug-security-building
-devref::5.8.5.4::Uploading the fixed package::http://www.debian.org/doc/developers-reference/pkgs.html#bug-security-upload
+devref::5.8.5.1::The Security Tracker::http://www.debian.org/doc/developers-reference/pkgs.html#bug-security-tracker
+devref::5.8.5.2::Confidentiality::http://www.debian.org/doc/developers-reference/pkgs.html#bug-security-confidentiality
+devref::5.8.5.3::Security Advisories::http://www.debian.org/doc/developers-reference/pkgs.html#bug-security-advisories
+devref::5.8.5.4::Preparing packages to address security issues::http://www.debian.org/doc/developers-reference/pkgs.html#bug-security-building
+devref::5.8.5.5::Uploading the fixed package::http://www.debian.org/doc/developers-reference/pkgs.html#bug-security-upload
 devref::5.9.2.1::Removing packages from <code class="filename">Incoming</code>::http://www.debian.org/doc/developers-reference/pkgs.html#s5.9.2.1
 devref::5.10.2.1::Recompilation or binary-only NMU::http://www.debian.org/doc/developers-reference/pkgs.html#binary-only-nmu
 devref::5.10.2.2::When to do a source NMU if you are a porter::http://www.debian.org/doc/developers-reference/pkgs.html#source-nmu-when-porter
@@ -264,6 +263,7 @@ devref::6.5.4.5::Default field::http://www.debian.org/doc/developers-reference/b
 devref::6.7.8.1::Pristine source::http://www.debian.org/doc/developers-reference/best-pkging-practices.html#pristinesource
 devref::6.7.8.2::Repackaged upstream source::http://www.debian.org/doc/developers-reference/best-pkging-practices.html#repackagedorigtargz
 devref::6.7.8.3::Changing binary files in <code class="literal">diff.gz</code>::http://www.debian.org/doc/developers-reference/best-pkging-practices.html#changed-binfiles
+devref::7.1.1.1::Usertags::http://www.debian.org/doc/developers-reference/beyond-pkging.html#usertags
 doc-base::::Debian doc-base Manual::
 doc-base::1::About <code>doc-base</code>::
 doc-base::2::The packages interface::
@@ -284,7 +284,7 @@ doc-base::2.5.4::Registering local documents::
 doc-base::2.6::Checking Syntax of <em>Control Files</em>::
 doc-base::3::Getting information about installed documents::
 doc-base::4::TODO List::
-doc-base::4.1::Roadmap for 0.8.* releases::
+doc-base::4.1::Roadmap for 0.9.* releases::
 doc-base::4.2::Old TODO entries::
 fhs::::Filesystem Hierarchy Standard::http://www.pathname.com/fhs/pub/fhs-2.3.html
 fhs::introduction::Introduction::http://www.pathname.com/fhs/pub/fhs-2.3.html#INTRODUCTION
@@ -551,8 +551,9 @@ policy::1.1::Scope::http://www.debian.org/doc/debian-policy/ch-scope.html#s1.1
 policy::1.2::New versions of this document::http://www.debian.org/doc/debian-policy/ch-scope.html#s1.2
 policy::1.3::Authors and Maintainers::http://www.debian.org/doc/debian-policy/ch-scope.html#s-authors
 policy::1.4::Related documents::http://www.debian.org/doc/debian-policy/ch-scope.html#s-related
+policy::1.5::Definitions::http://www.debian.org/doc/debian-policy/ch-scope.html#s-definitions
 policy::2.1::The Debian Free Software Guidelines::http://www.debian.org/doc/debian-policy/ch-archive.html#s-dfsg
-policy::2.2::Categories::http://www.debian.org/doc/debian-policy/ch-archive.html#s-sections
+policy::2.2::Archive areas::http://www.debian.org/doc/debian-policy/ch-archive.html#s-sections
 policy::2.3::Copyright considerations::http://www.debian.org/doc/debian-policy/ch-archive.html#s-pkgcopyright
 policy::2.4::Sections::http://www.debian.org/doc/debian-policy/ch-archive.html#s-subsections
 policy::2.5::Priorities::http://www.debian.org/doc/debian-policy/ch-archive.html#s-priorities
@@ -656,14 +657,13 @@ policy::D.1::Syntax of control files::http://www.debian.org/doc/debian-policy/ap
 policy::D.2::List of fields::http://www.debian.org/doc/debian-policy/ap-pkg-controlfields.html#sD.2
 policy::E.1::Automatic handling of configuration files by <code>dpkg</code>::http://www.debian.org/doc/debian-policy/ap-pkg-conffiles.html#sE.1
 policy::E.2::Fully-featured maintainer script configuration handling::http://www.debian.org/doc/debian-policy/ap-pkg-conffiles.html#sE.2
-policy::2.2.1::The main category::http://www.debian.org/doc/debian-policy/ch-archive.html#s-main
-policy::2.2.2::The contrib category::http://www.debian.org/doc/debian-policy/ch-archive.html#s-contrib
-policy::2.2.3::The non-free category::http://www.debian.org/doc/debian-policy/ch-archive.html#s-non-free
+policy::2.2.1::The main archive area::http://www.debian.org/doc/debian-policy/ch-archive.html#s-main
+policy::2.2.2::The contrib archive area::http://www.debian.org/doc/debian-policy/ch-archive.html#s-contrib
+policy::2.2.3::The non-free archive area::http://www.debian.org/doc/debian-policy/ch-archive.html#s-non-free
 policy::3.2.1::Version numbers based on dates::http://www.debian.org/doc/debian-policy/ch-binary.html#s3.2.1
 policy::3.4.1::The single line synopsis::http://www.debian.org/doc/debian-policy/ch-binary.html#s-synopsis
 policy::3.4.2::The extended description::http://www.debian.org/doc/debian-policy/ch-binary.html#s-extendeddesc
 policy::3.9.1::Prompting in maintainer scripts::http://www.debian.org/doc/debian-policy/ch-binary.html#s-maintscriptprompt
-policy::4.4.1::Alternative changelog formats::http://www.debian.org/doc/debian-policy/ch-source.html#s4.4.1
 policy::4.9.1::<code>debian/rules</code> and <samp>DEB_BUILD_OPTIONS</samp>::http://www.debian.org/doc/debian-policy/ch-source.html#s-debianrules-options
 policy::5.6.1::<samp>Source</samp>::http://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-Source
 policy::5.6.2::<samp>Maintainer</samp>::http://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-Maintainer

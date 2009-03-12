@@ -28,6 +28,15 @@ lintian (2.2.8) unstable; urgency=low
       results and false positives if the postrm is processed before other
       maintainer scripts.  (Closes: #518966)
 
+  * data/debhelper/*:
+    + [RA] Refresh against unstable.
+  * data/fields/virtual-packages:
+    + [RA] Refresh against unstable.
+  * data/files/fonts:
+    + [RA] Refresh against unstable.
+  * data/output/manual-references:
+    + [RA] Refresh reference data against Policy 3.8.1, doc-base 0.9.1,
+      and developers-reference 3.4.1.
   * data/standards-version/release-dates:
     + [RA] Add release date for 3.8.1.
 
@@ -42,6 +51,13 @@ lintian (2.2.8) unstable; urgency=low
     + [RA] Fix POD errors.
   * lib/Lintian/Command.pm:
     + [RA] Fix POD errors.
+
+  * private/refresh-debhelper-data:
+    + [RA] Remove symlinks as a (possibly temporary) workaround to
+      packages that contain broken links to dh_* commands.
+  * private/refresh-fonts-data:
+    + [RA] Correctly handle not specifying a Contents file on the command
+      line.
 
   * t/runtests:
     + [RA] Add support for running test scripts under t/scripts via prove

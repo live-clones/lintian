@@ -8,7 +8,7 @@
 # separated by comma and/or white space. Multiple "Keep: " lines can be used
 # as well.
 #
-# Last updated: 2009-02-14
+# Last updated: 2009-03-12
 
 
 aide-binary
@@ -34,7 +34,6 @@ c-compiler
 c-shell
 chasen-dic
 childsplay-alphabet-sounds
-childsplay-lfc-names
 cl-sql-backend
 console-utilities
 cyrus21-clients
@@ -61,6 +60,7 @@ exim4-localscanapi-1.0
 exim4-localscanapi-1.1
 festival-voice
 finger-server
+firebird-server
 fortran95-compiler
 fortune-cookie-db
 freeciv
@@ -80,15 +80,17 @@ gnustep-back0.14-alt
 gnustep-base-runtime-dbg
 gspca-modules
 gstreamer0.10-audiosink
-gstreamer0.10-colorspace
+gstreamer0.10-audiosource
 gstreamer0.10-videosink
-gtkicq
+gstreamer0.10-videosource
+gstreamer0.10-visualization
 guile
 gvim
 httpd
 httpd-cgi
 hunspell-dictionary
 hunspell-dictionary-de
+hunspell-dictionary-fr
 ident-server
 ike-server
 imap-client
@@ -137,7 +139,6 @@ libcyrus-imap-perl21
 libdb++-dev
 libdb-java
 libdb-java-dev
-libdc1394-dev
 libdeps-renderer
 libdspam7-drv
 libedac
@@ -151,7 +152,6 @@ libgettext-ruby
 libggi-target
 libgl-dev
 libgl1
-libglide-dev
 libguile-dev
 libhdf5-1.6.6-0
 libhdf5-dev
@@ -218,13 +218,12 @@ octave-headers
 octave-htmldoc
 octave-info
 open
-openoffice.org-help-2.4
+openoffice.org-help-3.0
 openoffice.org-hyphenation
-openoffice.org-l10n-2.4
+openoffice.org-l10n-3.0
 openoffice.org-spellcheck-de-at
 openoffice.org-spellcheck-de-ch
 openoffice.org-spellcheck-de-de
-openoffice.org-spellcheck-eu
 openoffice.org-spellcheck-fi
 openoffice.org2-thesaurus
 openoffice.org2-thesaurus-ru
@@ -248,7 +247,6 @@ redhat-cluster-modules
 root-db-client
 root-file-server
 root-fitter
-roundcube-db
 skkserv
 snort-rules
 speakup-modules

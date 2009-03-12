@@ -2,7 +2,7 @@
 # package that contains the font.  Only packages starting with ttf- or
 # otf- are searched for fonts.
 #
-# Last updated: 2009-02-01
+# Last updated: 2009-03-12
 
 1015sn.ttf ttf-aenigma
 1015snr.ttf ttf-aenigma
@@ -591,11 +591,16 @@ junicode-bold.ttf ttf-junicode
 junicode-boldcondensed.ttf ttf-junicode
 junicode-bolditalic.ttf ttf-junicode
 junicode-bolditaliccondensed.ttf ttf-junicode
+junicode-italic.ttf ttf-junicode
 junicode-italiccondensed.ttf ttf-junicode
 junicode-regular.ttf ttf-junicode
 junicode-regularcondensed.ttf ttf-junicode
 junkyard.ttf ttf-dustin
 jupiterc.ttf ttf-aenigma
+jurabook.ttf ttf-jura
+jurademibold.ttf ttf-jura
+juralight.ttf ttf-jura
+juramedium.ttf ttf-jura
 kacstart.ttf ttf-kacst
 kacstbook.ttf ttf-kacst
 kacstdecorative.ttf ttf-kacst
