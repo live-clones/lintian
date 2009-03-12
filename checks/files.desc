@@ -428,15 +428,15 @@ Certainty: certain
 Info: Documentation files should be owned by <tt>root/root</tt>.
 
 Tag: dir-or-file-in-var-lock
-Severity: important
-Certainty: certain
+Severity: serious
+Certainty: possible
 Info: <tt>/var/lock</tt> may be a temporary filesystem, so any directories
  or files needed there must be created dynamically at boot time.
 Ref: policy 9.3.2
 
 Tag: dir-or-file-in-var-run
-Severity: important
-Certainty: certain
+Severity: serious
+Certainty: possible
 Info: <tt>/var/run</tt> may be a temporary filesystem, so any directories
  or files needed there must be created dynamically at boot time.
 Ref: policy 9.3.2
