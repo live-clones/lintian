@@ -174,13 +174,8 @@ sub get_deb_info {
 
 sub get_dsc_info {
     my ($file) = @_;
-
-    if (not _ensure_file_is_sane($file)) {
-	return undef;
-    }
-
     my @data = read_dpkg_control($file);
-    return $data[0];
+    return (defined($data[0])? $data[0] : undef);
 }
 
 sub _ensure_file_is_sane {
