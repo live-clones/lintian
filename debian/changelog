@@ -2,6 +2,11 @@ lintian (2.2.9) UNRELEASED; urgency=low
 
   * checks/fields{,.desc}:
     + [FL] Update list of valid sections.
+  * checks/lintian.desc:
+    + [CW] Add karmic as an allowable distribution for Ubuntu.
+
+  * data/changelog-file/ubuntu-dists:
+    + [CW] Add karmic as an allowable distribution for Ubuntu.
 
  -- Frank Lichtenheld <djpig@debian.org>  Mon, 16 Mar 2009 00:13:30 +0100
 
