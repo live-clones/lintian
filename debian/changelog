@@ -2,6 +2,8 @@ lintian (2.2.9) UNRELEASED; urgency=low
 
   * checks/fields{,.desc}:
     + [FL] Update list of valid sections.
+    + [RA] Fix dbg-package-missing-depends check when the dependency is
+      followed by a comma.  (Closes: #520640)
   * checks/lintian.desc:
     + [CW] Add karmic as an allowable distribution for Ubuntu (thanks, Soren
       Hansen).
