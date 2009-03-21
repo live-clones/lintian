@@ -12,6 +12,9 @@ lintian (2.2.9) UNRELEASED; urgency=low
     + [CW] Add karmic as an allowable distribution for Ubuntu (thanks, Soren
       Hansen).
 
+  * frontend/lintian:
+    + [RA] Belatedly bump the lab format version for many recent changes.
+
  -- Frank Lichtenheld <djpig@debian.org>  Mon, 16 Mar 2009 00:13:30 +0100
 
 lintian (2.2.8) unstable; urgency=low
