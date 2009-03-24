@@ -1,5 +1,9 @@
 lintian (2.2.9) UNRELEASED; urgency=low
 
+  * checks/deb-format.desc:
+    + [RA] In the tag description, the first required element should be
+      debian-binary, not debian-control.  Thanks, Judit Foglszinger.
+      (Closes: #521012)
   * checks/fields{,.desc}:
     + [FL] Update list of valid sections.
     + [RA] Fix dbg-package-missing-depends check when the dependency is
