@@ -303,9 +303,9 @@ all the executions of kill_kill.
 =cut
 
 sub kill {
-    my $status = 0;
+    my $status = 1;
     while (my $opts = shift @_) {
-	$status ||= kill_kill($opts->{'harness'}, grace => 2);
+	$status &&= kill_kill($opts->{'harness'}, grace => 2);
     }
     return $status;
 }
