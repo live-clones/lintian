@@ -19,6 +19,10 @@ lintian (2.2.9) UNRELEASED; urgency=low
   * frontend/lintian:
     + [RA] Belatedly bump the lab format version for many recent changes.
 
+  * lib/Lintian/Command.pm:
+    + [RA] In kill, initialize the result status and use ||= instead of |=.
+      Partly addresses #521257.
+
  -- Frank Lichtenheld <djpig@debian.org>  Mon, 16 Mar 2009 00:13:30 +0100
 
 lintian (2.2.8) unstable; urgency=low
