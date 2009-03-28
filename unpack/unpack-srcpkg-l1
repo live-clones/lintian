@@ -126,7 +126,7 @@ my $prefix;
 for my $line (@index) {
     my ($file) = ($line =~ /^(?:\S+\s+){5}(.*)/);
     $file =~ s,^\./+,,;
-    my ($dir) = ($file =~ m,([^/]+),);
+    my ($dir) = ($file =~ m,^([^/]+),);
     if (defined($dir) and $dir eq $file and not $line =~ /^d/) {
         $prefix = '';
     } elsif (defined $dir) {
@@ -141,7 +141,7 @@ for my $line (@index) {
 }
 if ($prefix) {
     @index = map {
-        s,^((?:\S+\s+){5})(?:\./+)?\Q$prefix\E(?:/+|\z),$1,;
+        s,^((?:\S+\s+){5})(?:\./+)?\Q$prefix\E(?:/+|\Z),$1,;
         if (/^(?:\S+\s+){5}\S+/) {
             $_;
         } else {

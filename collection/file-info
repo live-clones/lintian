@@ -45,7 +45,7 @@ $opts{pipe_in}->blocking(1);
 open(INDEX, '<', "../index")
     or fail("cannot open index file: $!");
 while (<INDEX>) {
-    chop;
+    chomp;
     $_ = (split(" ", $_, 6))[5];
     s/ link to .*//;
     s/ -> .*//;
