@@ -23,6 +23,10 @@ lintian (2.2.9) UNRELEASED; urgency=low
   * checks/lintian.desc:
     + [CW] Add karmic as an allowable distribution for Ubuntu (thanks, Soren
       Hansen).
+  * checks/scripts:
+    + [RA] Fix a hash collision that could suppress a correct
+      remove-of-unknown-diversion tag if the diversion was removed in
+      multiple maintainer scripts including postrm.
 
   * collection/file-info:
     + [RA] Use chomp instead of chop to remove newlines.

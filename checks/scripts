@@ -525,8 +525,7 @@ open(SCRIPTS, '<', "control-scripts")
 # normal scripts above, because there were just enough differences to
 # make a shared function awkward.
 
-my %added_diversions;
-my %removed_diversions;
+my (%added_diversions, @removed_diversions);
 while (<SCRIPTS>) {
     chop;
 
@@ -886,7 +885,7 @@ while (<SCRIPTS>) {
 		    tag 'diversion-for-unknown-file', $divert, "$file:$."
 			unless (exists $info->index->{$divert});
 		} elsif ($mode eq 'remove') {
-		    $removed_diversions{$divert} = [ $file, $. ];
+		    push(@removed_diversions, [ $divert, $file, $. ]);
 		} else {
 		    fail "Internal error: \$mode has unknown value: ".
 			"$mode";
@@ -914,9 +913,8 @@ while (<SCRIPTS>) {
 }
 close(SCRIPTS);
 
-for my $divert (keys %removed_diversions) {
-    my $file = $removed_diversions{$divert}[0];
-    my $line = $removed_diversions{$divert}[1];
+for (@removed_diversions) {
+    my ($divert, $file, $line) = @$_;
 
     if (exists $added_diversions{$divert}) {
 	# do not really delete the entry, because a --remove
