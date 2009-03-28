@@ -1,4 +1,12 @@
-W: fields-wrong-section-doc: doc-package-should-be-section-doc fields-wrong-section-doc
-W: libfields-wrong-section-dev: dev-package-should-be-section-libdevel libfields-wrong-section-dev
-W: libfields-wrong-section-perl: perl-package-should-be-section-perl libfields-wrong-section-perl
-W: python-fields-wrong-section: python-package-should-be-section-python python-fields-wrong-section
+W: fields-wrong-section-dbg: wrong-section-according-to-package-name fields-wrong-section-dbg => debug
+W: fields-wrong-section-doc: wrong-section-according-to-package-name fields-wrong-section-doc => doc
+W: libfields-wrong-section-cil: wrong-section-according-to-package-name libfields-wrong-section-cil => cli-mono
+W: libfields-wrong-section-dev: wrong-section-according-to-package-name libfields-wrong-section-dev => libdevel
+W: libfields-wrong-section-java: wrong-section-according-to-package-name libfields-wrong-section-java => java
+W: libfields-wrong-section-ocaml-dev: wrong-section-according-to-package-name libfields-wrong-section-ocaml-dev => ocaml
+W: libfields-wrong-section-perl: wrong-section-according-to-package-name libfields-wrong-section-perl => perl
+W: libfields-wrong-section-ruby1.8: wrong-section-according-to-package-name libfields-wrong-section-ruby1.8 => ruby
+W: libghc6-fields-wrong-section: wrong-section-according-to-package-name libghc6-fields-wrong-section => haskell
+W: libphp-fields-wrong-section: wrong-section-according-to-package-name libphp-fields-wrong-section => php
+W: python-fields-wrong-section: wrong-section-according-to-package-name python-fields-wrong-section => python
+W: r-cran-fields-wrong-section: wrong-section-according-to-package-name r-cran-fields-wrong-section => gnu-r

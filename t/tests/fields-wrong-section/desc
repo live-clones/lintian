@@ -3,7 +3,4 @@ Sequence: 6000
 Version: 1.0
 Description: Packages placed in the wrong sections
 Test-For:
- doc-package-should-be-section-doc
- dev-package-should-be-section-libdevel
- perl-package-should-be-section-perl
- python-package-should-be-section-python
+ wrong-section-according-to-package-name

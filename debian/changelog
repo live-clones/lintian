@@ -1,5 +1,14 @@
 lintian (2.2.9) UNRELEASED; urgency=low
 
+  * Summary of tag changes:
+    + Added:
+       - wrong-section-according-to-package-name
+    + Removed:
+       - dev-package-should-be-section-libdevel
+       - doc-package-should-be-section-doc
+       - perl-package-should-be-section-perl
+       - python-package-should-be-section-python
+  
   * checks/deb-format.desc:
     + [RA] In the tag description, the first required element should be
       debian-binary, not debian-control.  Thanks, Judit Foglszinger.
@@ -8,6 +17,9 @@ lintian (2.2.9) UNRELEASED; urgency=low
     + [FL] Update list of valid sections.
     + [RA] Fix dbg-package-missing-depends check when the dependency is
       followed by a comma.  (Closes: #520640)
+    + [FL] Add package name checks for the new sections. Use this opportunity
+      to move all these checks to one tag "wrong-section-according-to-package-name"
+      instead of one tag per section.
   * checks/lintian.desc:
     + [CW] Add karmic as an allowable distribution for Ubuntu (thanks, Soren
       Hansen).

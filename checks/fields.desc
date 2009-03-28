@@ -908,30 +908,11 @@ Info: The Dm-Upload-Allowed field in this package is set to something
  Debian GR is "yes" and other values (including capitalization variants)
  may not work as expected.
 
-Tag: doc-package-should-be-section-doc
+Tag: wrong-section-according-to-package-name
 Severity: normal
 Certainty: certain
-Info: This package has a name suggesting that it contains only
- documentation.  If so, it should be in section "doc".
-
-Tag: python-package-should-be-section-python
-Severity: normal
-Certainty: certain
-Info: This package has a name suggesting that it is a Python extension or
- part of the Python environment.  If so, it should be in section
- "python".
-
-Tag: perl-package-should-be-section-perl
-Severity: normal
-Certainty: certain
-Info: This package has a name suggesting that it is a Perl module package.
- If so, it should be in section "perl".
-
-Tag: dev-package-should-be-section-libdevel
-Severity: normal
-Certainty: certain
-Info: This package has a name suggesting that it is a library development
- package.  If so, it should be in section "libdevel".
+Info: This package has a name suggesting that it belongs to a section
+ other than the one it is currently categorized in.
 
 Tag: debug-package-should-be-priority-extra
 Severity: normal

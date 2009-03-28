@@ -5,11 +5,31 @@ Maintainer: {$author}
 Standards-Version: 3.8.1
 Build-Depends: debhelper (>= 7)
 
+Package: {$srcpkg}
+Architecture: any
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Description: {$description}
+ Only here as valid dependency for {$srcpkg}-dbg.
+ .
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.
+
 Package: {$srcpkg}-doc
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description} (doc)
  Test for doc section.
+ .
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.
+
+Package: {$srcpkg}-dbg
+Architecture: any
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, {$srcpkg} (= $\{binary:Version\})
+Description: {$description} (debug)
+ Test for debug section.
  .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -40,6 +60,76 @@ Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description} (Python)
  Test for Python section.
+ .
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.
+
+Package: lib{$srcpkg}-ocaml-dev
+Architecture: {$architecture}
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Description: {$description} (OCaml)
+ Test for OCaml section.
+ .
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.
+
+Package: libghc6-{$srcpkg}
+Architecture: {$architecture}
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Description: {$description} (Haskell)
+ Test for Haskell section.
+ .
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.
+
+Package: lib{$srcpkg}-cil
+Architecture: {$architecture}
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Description: {$description} (CLI/Mono)
+ Test for CLI/Mono section.
+ .
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.
+
+Package: libphp-{$srcpkg}
+Architecture: {$architecture}
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Description: {$description} (PHP)
+ Test for PHP section.
+ .
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.
+
+Package: lib{$srcpkg}-ruby1.8
+Architecture: {$architecture}
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Description: {$description} (Ruby)
+ Test for Ruby section.
+ .
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.
+
+Package: lib{$srcpkg}-java
+Architecture: {$architecture}
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Description: {$description} (Java)
+ Test for Java section.
+ .
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.
+
+Package: r-cran-{$srcpkg}
+Architecture: {$architecture}
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Description: {$description} (GNU R)
+ Test for GNU R section.
  .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd

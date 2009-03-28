@@ -191,6 +191,23 @@ my @GLOBAL_CLEAN_BYPASS = (
 	qr'^\s+dh\s+'
 );
 
+# Mapping of package names to section names
+my @NAME_SECTION_MAPPINGS = (
+    [ qr/-docs?$/      => 'doc'      ],
+    [ qr/-dbg$/        => 'debug'    ],
+    [ qr/^python-/     => 'python'   ],
+    [ qr/^r-cran-/     => 'gnu-r'    ],
+    [ qr/^lib.*-perl$/ => 'perl'     ],
+    [ qr/^lib.*-cil$/  => 'cli-mono' ],
+    [ qr/^lib.*-java$/ => 'java'     ],
+    [ qr/^(?:lib)php-/ => 'php'      ],
+    [ qr/^lib(?:hugs|ghc6)-/ => 'haskell'   ],
+    [ qr/^lib.*-ruby(?:1\.\d)?$/ => 'ruby'  ],
+    [ qr/^lib.*-ocaml-dev$/ => 'ocaml'      ],
+    [ qr/^lib.*-dev$/  => 'libdevel' ],
+);
+
+
 our $PERL_CORE_PROVIDES = Lintian::Data->new('fields/perl-provides', '\s+');
 our $OBSOLETE_PACKAGES  = Lintian::Data->new('fields/obsolete-packages');
 our $VIRTUAL_PACKAGES   = Lintian::Data->new('fields/virtual-packages');
@@ -432,19 +449,13 @@ if (not defined $info->field('section')) {
 	    }
 
 	    # Check package name <-> section.
-	    if ($pkg =~ /-docs?$/) {
-		tag "doc-package-should-be-section-doc", $pkg
-		    unless $parts[-1] eq 'doc';
-	    } elsif ($pkg =~ /^lib.*-perl$/) {
-		tag "perl-package-should-be-section-perl", $pkg
-		    unless $parts[-1] eq 'perl';
-	    } elsif ($pkg =~ /^python-/) {
-		tag "python-package-should-be-section-python", $pkg
-		    unless $parts[-1] eq 'python';
-	    } elsif ($pkg =~ /^lib.*-dev$/) {
-                tag "dev-package-should-be-section-libdevel", $pkg
-                    unless $parts[-1] eq 'libdevel';
-            }
+	    foreach my $map (@NAME_SECTION_MAPPINGS) {
+		if ($pkg =~ $map->[0]) {
+		    tag "wrong-section-according-to-package-name", "$pkg => $map->[1]"
+			unless $parts[-1] eq $map->[1];
+		    last;
+		}
+	    }
         }
 }
 

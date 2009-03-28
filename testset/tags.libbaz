@@ -42,7 +42,7 @@ W: libbaz source: native-package-with-dash-version
 W: libbaz source: package-lacks-versioned-build-depends-on-debhelper 6
 W: libbaz source: source-nmu-has-incorrect-version-number 1-1
 W: libbaz source: substvar-source-version-is-deprecated libbaz2-dev
-W: libbaz1-dev: dev-package-should-be-section-libdevel libbaz1-dev
+W: libbaz1-dev: wrong-section-according-to-package-name libbaz1-dev => libdevel
 W: libbaz1: missing-depends-line
 W: libbaz1: new-package-should-close-itp-bug
 W: libbaz1: package-name-doesnt-match-sonames libbaz libbaz2-1.0 libbaz3-1
@@ -62,8 +62,9 @@ W: libbaz1: unused-shlib-entry-in-control-file udeb: libdoesntexist2 1.0
 W: libbaz1: unused-shlib-entry-in-symbols-control-file libbaz 2
 W: libbaz1: zero-byte-file-in-doc-directory usr/share/doc/README.Debian
 W: libbaz2-dbg: debug-package-should-be-priority-extra libbaz2-dbg
-W: libbaz2-dev: dev-package-should-be-section-libdevel libbaz2-dev
+W: libbaz2-dbg: wrong-section-according-to-package-name libbaz2-dbg => debug
 W: libbaz2-dev: new-package-should-close-itp-bug
+W: libbaz2-dev: wrong-section-according-to-package-name libbaz2-dev => libdevel
 W: libbaz2: debian-changelog-file-is-a-symlink
 W: libbaz2: package-name-doesnt-match-sonames libbaz2-1.0
 W: libbaz2: symlink-should-be-relative usr/share/doc/libbaz2/changelog.gz /usr/share/doc/lintian/changelog.gz
