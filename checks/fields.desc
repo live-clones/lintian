@@ -975,3 +975,18 @@ Info: This package is also provided by one of the Perl core packages
  .
  Example: perl-modules (&gt;= 5.10.0) | libmodule-build-perl (&gt;= 0.26)
 Ref: policy 7.5
+
+Tag: vcs-field-uses-not-recommended-uri-format
+Severity: minor
+Certainty: possible
+Info: The VCS-* field uses an URI which doesn't match the recommended
+ format, but still looks valid. Examples for not recommended URI formats
+ are protocols that require authentication (like SSH). Instead where
+ possible you should provide an URI that is accessible for everyone
+ without authentication.
+
+Tag: vcs-field-uses-unknown-uri-format
+Severity: normal
+Certainty: possible
+Info: The VCS-* field uses an URI which doesn't match any known format.
+ You might have forgotten the protocol before the hostname.

@@ -3,6 +3,8 @@ lintian (2.2.9) UNRELEASED; urgency=low
   * Summary of tag changes:
     + Added:
        - wrong-section-according-to-package-name
+       - vcs-field-uses-not-recommended-uri-format
+       - vcs-field-uses-unknown-uri-format
     + Removed:
        - dev-package-should-be-section-libdevel
        - doc-package-should-be-section-doc
@@ -20,6 +22,7 @@ lintian (2.2.9) UNRELEASED; urgency=low
     + [FL] Add package name checks for the new sections.  Move all package
       section checks to one tag "wrong-section-according-to-package-name"
       instead of one tag per section.
+    + [FL] Add checks for well formatted Vcs-* fields.  (Closes: #517635)
   * checks/lintian.desc:
     + [CW] Add karmic as an allowable distribution for Ubuntu (thanks, Soren
       Hansen).

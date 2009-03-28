@@ -1,0 +1,7 @@
+Testname: fields-malformed-vcs-fields
+Sequence: 6000
+Description: Test malformed VCS-* fields
+Version: 1.0
+Test-For:
+ vcs-field-uses-not-recommended-uri-format
+ vcs-field-uses-unknown-uri-format

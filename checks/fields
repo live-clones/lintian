@@ -207,6 +207,26 @@ my @NAME_SECTION_MAPPINGS = (
     [ qr/^lib.*-dev$/  => 'libdevel' ],
 );
 
+# Valid URI formats for the Vcs-* fields
+# currently only checks the protocol, not the actual format of the URI
+my %VCS_RECOMMENDED_URIS = (
+    browser => qr;^https?://;,
+    arch    => qr;^https?://;,
+    bzr     => qr;^(lp:~|(?:nosmart\+)?https?://);,
+    cvs     => qr;^:pserver:;,
+    darcs   => qr;^https?://;,
+    hg      => qr;^https?://;,
+    git     => qr;^(?:git|https?|rsync)://;,
+    svn     => qr;^(?:svn|(?:svn\+)?https?)://;,
+    mtn     => qr;^[\w.-]+\s+\S+;, # that's a hostname followed by a module name
+);
+my %VCS_VALID_URIS = (
+    arch    => qr;^https?://;,
+    bzr     => qr;^(?:sftp|(?:bzr\+)?ssh)://;,
+    cvs     => qr;^(?:-d\s*)?:(?:ext|pserver):;,
+    git     => qr;^(?:git\+)?ssh://;,
+    svn     => qr;^(?:svn\+)?ssh://;,
+);
 
 our $PERL_CORE_PROVIDES = Lintian::Data->new('fields/perl-provides', '\s+');
 our $OBSOLETE_PACKAGES  = Lintian::Data->new('fields/obsolete-packages');
@@ -995,6 +1015,22 @@ if (defined $info->field('dm-upload-allowed')) {
 		tag "malformed-dm-upload-allowed", "$dmupload";
 	}
 }
+
+#----- Vcs-*
+
+while (my ($vcs, $regex) = each %VCS_RECOMMENDED_URIS) {
+    if (defined $info->field("vcs-$vcs")) {
+	my $uri = $info->field("vcs-$vcs");
+	if ($uri !~ $regex) {
+	    if ($VCS_VALID_URIS{$vcs} and $uri =~ $VCS_VALID_URIS{$vcs}) {
+		tag "vcs-field-uses-not-recommended-uri-format", "vcs-$vcs", $uri;
+	    } else {
+		tag "vcs-field-uses-unknown-uri-format", "vcs-$vcs", $uri;
+	    }
+	}
+    }
+}
+
 
 #----- Field checks (without checking the value)
 

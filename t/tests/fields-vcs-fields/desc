@@ -1,0 +1,7 @@
+Testname: fields-vcs-fields
+Sequence: 6000
+Description: Test well formed VCS-* fields
+Version: 1.0
+Test-Against:
+ vcs-field-uses-not-recommended-uri-format
+ vcs-field-uses-unknown-uri-format
