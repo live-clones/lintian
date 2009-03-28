@@ -31,6 +31,10 @@ lintian (2.2.9) UNRELEASED; urgency=low
     + [CW] Add karmic as an allowable distribution for Ubuntu (thanks, Soren
       Hansen).
 
+  * debian/rules:
+    + [RA] Remove and recreate debian/tests before runtests or check-tag to
+      avoid spurious test failures from lingering old files.
+
   * frontend/lintian:
     + [RA] Belatedly bump the lab format version for many recent changes.
 

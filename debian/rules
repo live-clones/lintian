@@ -16,7 +16,8 @@ tag =
 
 runtests: $(neededfiles) $(allchecks) $(allcollect) $(tagfiles) $(testfiles)
 	@echo .... running tests ....
-	[ -d debian/tests ] || mkdir debian/tests
+	rm -rf debian/tests
+	mkdir debian/tests
 	LINTIAN_ROOT="" $(PERL) testset/runtests -k testset debian/tests $(onlyrun)
 	LINTIAN_ROOT="" $(PERL) t/runtests -k t debian/tests $(onlyrun)
 	if [ "$(onlyrun)" = "" ]; then touch $@; fi
@@ -27,7 +28,8 @@ check-tag:
 	@if [ "$(tag)" = "" ]; then \
 		echo 'Specify tag to test with tag=<tag>'; exit 1; \
 	fi
-	[ -d debian/tests ] || mkdir debian/tests
+	rm -rf debian/tests
+	mkdir debian/tests
 	LINTIAN_ROOT="" $(PERL) t/runtests -k -t $(tag) t debian/tests
 
 # this target is only run manually
