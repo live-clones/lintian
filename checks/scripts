@@ -525,7 +525,9 @@ open(SCRIPTS, '<', "control-scripts")
 # normal scripts above, because there were just enough differences to
 # make a shared function awkward.
 
-my (%added_diversions, @removed_diversions);
+my %added_diversions;
+my %removed_diversions;
+my $expand_diversions = 0;
 while (<SCRIPTS>) {
     chop;
 
@@ -880,12 +882,16 @@ while (<SCRIPTS>) {
 		# remove the leading / because it's not in the index hash
 		$divert =~ s,^/,,;
 
+		$divert = quotemeta($divert);
+
+		# For now just replace variables, they will later be normalised
+		$expand_diversions = 1 if $divert =~ s/\\\$\w+/.+/g;
+		$expand_diversions = 1 if $divert =~ s/\\\$\\{\w+\\}/.+/g;
+
 		if ($mode eq 'add') {
-		    $added_diversions{$divert} = $file;
-		    tag 'diversion-for-unknown-file', $divert, "$file:$."
-			unless (exists $info->index->{$divert});
+		    $added_diversions{$divert} = {'script' => $file, 'line' => $.};
 		} elsif ($mode eq 'remove') {
-		    push(@removed_diversions, [ $divert, $file, $. ]);
+		    push @{$removed_diversions{$divert}}, {'script' => $file, 'line' => $.};
 		} else {
 		    fail "Internal error: \$mode has unknown value: ".
 			"$mode";
@@ -913,24 +919,97 @@ while (<SCRIPTS>) {
 }
 close(SCRIPTS);
 
-for (@removed_diversions) {
-    my ($divert, $file, $line) = @$_;
+# If any of the maintainer scripts used a variable in the file or
+# diversion name normalise them all
+if ($expand_diversions) {
+    for my $divert (keys %removed_diversions, keys %added_diversions) {
 
-    if (exists $added_diversions{$divert}) {
-	# do not really delete the entry, because a --remove
-	# might happen in two branches in the script, i.e. we
-	# see it twice, which is not a bug
-	undef $added_diversions{$divert};
-    } elsif ($file eq 'postrm') {
-	# Allow preinst and postinst to remove diversions the
-	# package doesn't add to clean up after previous
-	# versions of the package.
-	tag 'remove-of-unknown-diversion', $divert, "$file:$line";
+	# if a wider regex was found, the entries might no longer be there
+	unless (exists($removed_diversions{$divert})
+	    or exists($added_diversions{$divert})) {
+	    next;
+	}
+
+	my $widerrx = $divert;
+	my $wider = $widerrx;
+	$wider =~ s/\\//g;
+
+	# find the widest regex:
+	my @matches = grep {
+		    my $lrx = $_;
+		    my $l = $lrx;
+		    $l =~ s/\\//g;
+
+		    if ($wider =~ m/^$lrx$/) {
+			$widerrx = $lrx;
+			$wider = $l;
+			1;
+		    } elsif ($l =~ m/^$widerrx$/) {
+			1;
+		    } else {
+			0;
+		    }
+		} (keys %removed_diversions, keys %added_diversions);
+
+	# replace all the occurences with the widest regex:
+	for my $k (@matches) {
+	    next if ($k eq $widerrx);
+
+	    if (exists($removed_diversions{$k})) {
+		$removed_diversions{$widerrx} = $removed_diversions{$k};
+		delete $removed_diversions{$k};
+	    }
+	    if (exists($added_diversions{$k})) {
+		$added_diversions{$widerrx} = $added_diversions{$k};
+		delete $added_diversions{$k};
+	    }
+	}
     }
 }
 
-for my $file (grep { defined $added_diversions{$_} } keys %added_diversions) {
-    tag 'orphaned-diversion', $file, $added_diversions{$file};
+for my $divert (keys %removed_diversions) {
+
+    if (exists $added_diversions{$divert}) {
+	# just mark the entry, because a --remove might
+	# happen in two branches in the script, i.e. we
+	# see it twice, which is not a bug
+	$added_diversions{$divert}{'removed'} = 1;
+    } else {
+	for my $item (@{$removed_diversions{$divert}}) {
+	    my $script = $item->{'script'};
+	    my $line = $item->{'line'};
+
+	    next unless ($script eq 'postrm');
+
+	    # Allow preinst and postinst to remove diversions the
+	    # package doesn't add to clean up after previous
+	    # versions of the package.
+
+	    $divert = unquote($divert, $expand_diversions);
+
+	    tag 'remove-of-unknown-diversion', $divert, "$script:$line";
+	}
+    }
+}
+
+for my $divert (keys %added_diversions) {
+    my $script = $added_diversions{$divert}{'script'};
+    my $line = $added_diversions{$divert}{'line'};
+
+    my $divertrx = $divert;
+    $divert = unquote($divert, $expand_diversions);
+
+    if ($expand_diversions) {
+	tag 'diversion-for-unknown-file', $divert, "$script:$line"
+	    unless (grep { $_ =~ m/$divertrx/ } keys %{$info->index});
+    } else {
+	tag 'diversion-for-unknown-file', $divert, "$script:$line"
+	    unless (exists $info->index->{$divert});
+    }
+
+    if (not exists $added_diversions{$divertrx}{'removed'}) {
+	tag 'orphaned-diversion', $divert, $script;
+    }
 }
 }
 
@@ -1041,6 +1120,17 @@ sub remove_comments {
     }
 
     return $_;
+}
+
+sub unquote($$) {
+    my ($string, $replace_regex) = @_;
+
+    $string =~ s,\\,,g;
+    if ($replace_regex) {
+	$string =~ s,\.\+,*,g;
+    }
+
+    return $string;
 }
 
 1;

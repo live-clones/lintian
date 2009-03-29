@@ -1,0 +1,9 @@
+Testname: scripts-diversions-variables
+Sequence: 0000
+Version: 1.0
+Description: Tests of dpkg-divert checks with variables
+Test-For:
+ diversion-for-unknown-file
+ package-uses-local-diversion
+ orphaned-diversion
+ remove-of-unknown-diversion

@@ -1,0 +1,24 @@
+#!/bin/sh
+set -e
+
+if [ remove = "$1" ]; then
+    # Clean up the correct diversion from preinst.
+    dpkg-divert --package scripts-diversions --remove --rename \
+        --divert /usr/share/scripts/t2/foo/some-file.real \
+        /usr/share/scripts/t2/foo/some-file
+
+    d=scripts
+    # Clean up some other diversion that we didn't create.
+    dpkg-divert --package scripts-diversions --remove --rename \
+       /usr/lib/$d/old-file
+
+    # Clean up a diversion we did not create for a non-existent file.
+    dpkg-divert --remove --package scripts-diversions --rename \
+        --divert /usr/share/scripts/$v/no-such-file.real \
+        /usr/share/scripts/$v/no-such-file
+
+    # Clean up a diversion we did create for a non-existent file.
+    dpkg-divert --package foo --remove /etc/scripts/orphan
+fi
+
+#DEBHELPER#
