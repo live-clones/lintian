@@ -30,6 +30,9 @@ lintian (2.2.9) UNRELEASED; urgency=low
     + [RA] Fix a hash collision that could suppress a correct
       remove-of-unknown-diversion tag if the diversion was removed in
       multiple maintainer scripts including postrm.
+  * checks/shared-libs:
+    + [RA] Correctly handle SONAMEs in symbols files that contain regex
+      metacharacters like +.  Thanks, Daniel Kobras.  (Closes: #521621)
 
   * collection/file-info:
     + [RA] Use chomp instead of chop to remove newlines.

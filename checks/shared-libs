@@ -379,11 +379,11 @@ if ($#shlibs == -1 and not %unversioned_shlibs) {
 	chomp;
 	next if m/^\s*$/ or /^#/;
 
-	if (m/^([^\s|*]\S+)\s\S+\s*(?:\(\S+\s+\S+\)|#MINVER#)?/) {
+	if (m/^([^\s|*]\S+)\s\S+\s*(?:\(\S+\s+\S+\)|\#MINVER\#)?/) {
 	    # soname, main dependency template
 
 	    $soname = $1;
-	    s/^$soname\s*//;
+	    s/^\Q$soname\E\s*//;
 	    $soname = format_soname($soname);
 
 	    if ($symbols_control{$soname}) {
