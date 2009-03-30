@@ -16,7 +16,7 @@ lintian (2.2.9) UNRELEASED; urgency=low
       debian-binary, not debian-control.  Thanks, Judit Foglszinger.
       (Closes: #521012)
   * checks/fields{,.desc}:
-    + [FL] Update list of valid sections.
+    + [FL] Update list of valid sections.  (Closes: #521782)
     + [RA] Fix dbg-package-missing-depends check when the dependency is
       followed by a comma.  (Closes: #520640)
     + [FL] Add package name checks for the new sections.  Move all package
