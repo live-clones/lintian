@@ -202,6 +202,35 @@ sub get_tag_code {
     return $codes{$tag_info->{severity}}{$tag_info->{certainty}};
 }
 
+sub add_overrides {
+    my ($file, $pkg, $long_type) = @_;
+
+    if (!open(O, '<', $file)) {
+	warn "Could not open override file '$file' for reading";
+	return 0;
+    }
+
+    local $_;
+    while (<O>) {
+	chomp;
+	next if m,^\s*(\#|\z),o;
+	s/^\s+//o;
+	s/\s+$//o;
+	s/\s+/ /go;
+	my $override = $_;
+	$override =~ s/^\Q$pkg\E( \Q$long_type\E)?: //;
+	if ($override eq '' or $override !~ /^[\w.+-]+(\s.*)?$/) {
+	    tag ('malformed-override', $_);
+	} else {
+	    my ($tag, $extra) = split(/ /, $override, 2);
+	    add_override($tag, $extra);
+	}
+    }
+    close(O);
+
+    return 1;
+}
+
 # check if a certain tag has a override for the 'current' package
 sub check_overrides {
     my ( $tag_info, $information ) = @_;
