@@ -936,20 +936,20 @@ if ($expand_diversions) {
 
 	# find the widest regex:
 	my @matches = grep {
-		    my $lrx = $_;
-		    my $l = $lrx;
-		    $l =~ s/\\//g;
+	    my $lrx = $_;
+	    my $l = $lrx;
+	    $l =~ s/\\//g;
 
-		    if ($wider =~ m/^$lrx$/) {
-			$widerrx = $lrx;
-			$wider = $l;
-			1;
-		    } elsif ($l =~ m/^$widerrx$/) {
-			1;
-		    } else {
-			0;
-		    }
-		} (keys %removed_diversions, keys %added_diversions);
+	    if ($wider =~ m/^$lrx$/) {
+		$widerrx = $lrx;
+		$wider = $l;
+		1;
+	    } elsif ($l =~ m/^$widerrx$/) {
+		1;
+	    } else {
+		0;
+	    }
+	} (keys %removed_diversions, keys %added_diversions);
 
 	# replace all the occurences with the widest regex:
 	for my $k (@matches) {
@@ -968,7 +968,6 @@ if ($expand_diversions) {
 }
 
 for my $divert (keys %removed_diversions) {
-
     if (exists $added_diversions{$divert}) {
 	# just mark the entry, because a --remove might
 	# happen in two branches in the script, i.e. we
@@ -1011,6 +1010,7 @@ for my $divert (keys %added_diversions) {
 	tag 'orphaned-diversion', $divert, $script;
     }
 }
+
 }
 
 # -----------------------------------
