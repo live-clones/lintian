@@ -38,6 +38,10 @@ lintian (2.2.9) UNRELEASED; urgency=low
 
   * collection/file-info:
     + [RA] Use chomp instead of chop to remove newlines.
+    + [RA] Ignore error returns from file.  file returns non-zero if it
+      can't parse some files, but the resulting output is still fine for
+      Lintian's purposes.  Thanks to Raphael Geissert for the problem
+      identification.  (Closes: #521257)
 
   * data/changelog-file/ubuntu-dists:
     + [CW] Add karmic as an allowable distribution for Ubuntu (thanks, Soren

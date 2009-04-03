@@ -1,0 +1,4 @@
+Testname: file-info-errors
+Sequence: 4500
+Version: 1.0
+Description: Test handling of errors from file
