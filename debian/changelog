@@ -1,4 +1,4 @@
-lintian (2.2.9) UNRELEASED; urgency=low
+lintian (2.2.9) unstable; urgency=low
 
   * Summary of tag changes:
     + Added:
@@ -62,7 +62,7 @@ lintian (2.2.9) UNRELEASED; urgency=low
     + [RA] Better anchor the regexes that parse the file list in a source
       package.
 
- -- Frank Lichtenheld <djpig@debian.org>  Mon, 16 Mar 2009 00:13:30 +0100
+ -- Russ Allbery <rra@debian.org>  Fri, 03 Apr 2009 11:49:06 -0700
 
 lintian (2.2.8) unstable; urgency=low
 
