@@ -295,7 +295,9 @@ sub print_tag {
     my $tag;
     if ($self->_do_color) {
 	if ($self->color eq 'html') {
-	    $tag .= qq(<span style="color: $tag_color">$tag_info->{tag}</span>)
+	    my $escaped = $tag_info->{tag};
+	    $escaped =~ s/([<&>])/sprintf("&#%d;", ord($1))/ge;
+	    $tag .= qq(<span style="color: $tag_color">$escaped</span>)
 	} else {
 	    $tag .= Term::ANSIColor::colored($tag_info->{tag}, $tag_color);
 	}
@@ -307,7 +309,12 @@ sub print_tag {
     if (!$self->issued_tag($tag_info->{tag}) and $self->showdescription) {
 	my $info = Lintian::Tag::Info->new($tag_info->{tag});
 	if ($info) {
-	    my $description = $info->description('text', '   ');
+	    my $description;
+	    if ($self->_do_color && $self->color eq 'html') {
+		$description = $info->description('html', '   ');
+	    } else {
+		$description = $info->description('text', '   ');
+	    }
 	    $self->_print('', 'N', '');
 	    $self->_print('', 'N', split("\n", $description));
 	    $self->_print('', 'N', '');
