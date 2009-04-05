@@ -79,7 +79,7 @@ sub parse_element {
          |                              #   or
          \$\{[a-zA-Z0-9:-]+\}           #   substvar
         )                               # end of package name or substvar
-        (?:                             # start of optional verison
+        (?:                             # start of optional version
          \s* \(                         # open parenthesis for version part
          \s* (<<|<=|=|>=|>>|<|>)        # relation part (2)
          \s* (.*?)                      # version (3)

@@ -44,7 +44,7 @@ Info: The source package refers to a Standards-Version that has been
  you upload the package.
  .
  See <tt>/usr/share/doc/debian-policy/upgrading-checklist.txt.gz</tt> in
- the debian-policy package for a summary of changes in newer verisons of
+ the debian-policy package for a summary of changes in newer versions of
  Policy.
 
 Tag: out-of-date-standards-version
@@ -62,7 +62,7 @@ Info: The source package refers to a Standards-Version older than the one
  you upload the package.
  .
  See <tt>/usr/share/doc/debian-policy/upgrading-checklist.txt.gz</tt> in
- the debian-policy package for a summary of changes in newer verisons of
+ the debian-policy package for a summary of changes in newer versions of
  Policy.
 
 Tag: timewarp-standards-version
