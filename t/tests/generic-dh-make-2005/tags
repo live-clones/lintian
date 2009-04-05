@@ -3,7 +3,7 @@ E: generic-dh-make-2005: helper-templates-in-copyright
 E: generic-dh-make-2005: section-is-dh_make-template
 I: generic-dh-make-2005 source: debian-watch-file-is-missing
 I: generic-dh-make-2005: extended-description-is-probably-too-short
-W: generic-dh-make-2005 source: ancient-standards-version 3.6.2 (current is 3.8.1)
+W: generic-dh-make-2005 source: ancient-standards-version 3.6.2 (current is CURRENT)
 W: generic-dh-make-2005 source: debian-rules-ignores-make-clean-error line 47
 W: generic-dh-make-2005 source: debian-rules-sets-DH_COMPAT line 12
 W: generic-dh-make-2005 source: dh_suidregister-is-obsolete

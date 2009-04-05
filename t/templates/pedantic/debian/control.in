@@ -2,7 +2,7 @@ Source: {$srcpkg}
 Priority: extra
 Section: {$section}
 Maintainer: {$author}
-Standards-Version: 3.8.1
+Standards-Version: {$standards_version}
 Build-Depends: debhelper (>= 7)
 Homepage: http://lintian.debian.org/
 
