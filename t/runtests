@@ -144,7 +144,7 @@ if ($singletest) {
 
 if (@tests) {
     print "Test scripts:\n";
-    if (system('prove', '-I', "$LINTIAN_ROOT/lib", @tests) != 0) {
+    if (system('prove', '-r', '-I', "$LINTIAN_ROOT/lib", @tests) != 0) {
 	exit 1 unless $run_all_tests;
 	$status = 1;
     }
