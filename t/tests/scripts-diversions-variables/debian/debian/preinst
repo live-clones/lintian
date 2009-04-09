@@ -18,12 +18,16 @@ if [ install = "$1"  ]; then
     # This is also correct, but we're not going to clean it up.
     dpkg-divert --package scripts-diversions --add --rename \
         --divert /usr/share/scripts/t1/$f.real \
-        /usr/share/scripts/t1/$f
+        /usr/share/scripts/t1/"$f"
 
     # Try to divert a file we don't ship
     dpkg-divert --package scripts-diversions --add --rename \
         --divert /etc/scripts/$f.real \
-        /etc/scripts/$f
+        /etc/scripts/$f|| true
+    # Another one
+    dpkg-divert --package scripts-diversions --add --rename \
+        --divert /usr/share/foo/$f.real \
+        /usr/share/foo/${f#f}
 fi
 
 #DEBHELPER#

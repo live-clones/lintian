@@ -1,4 +1,5 @@
 E: scripts-diversions-variables: diversion-for-unknown-file etc/scripts/* preinst:26
+E: scripts-diversions-variables: diversion-for-unknown-file usr/share/foo/* preinst:30
 E: scripts-diversions-variables: orphaned-diversion usr/share/scripts/t1/* preinst
 E: scripts-diversions-variables: package-uses-local-diversion preinst:15
 E: scripts-diversions-variables: remove-of-unknown-diversion usr/lib/*/old-file postrm:13
