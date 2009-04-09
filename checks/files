@@ -761,7 +761,7 @@ foreach my $file (sort keys %{$info->index}) {
 	}
 
 	# ---------------- .gz files
-	if ($file =~ m/\.gz/) {
+	if ($file =~ m/\.gz$/) {
 	    my $info = $info->file_info->{$file} || '';
 	    if ($info !~ m/gzip compressed/) {
 		tag "gz-file-not-gzip", "$file";

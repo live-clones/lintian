@@ -1,0 +1,1 @@
+Only .gz$ files should match, not .gzip, nor .gz.xxxx
