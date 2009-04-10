@@ -1,5 +1,9 @@
 lintian (2.2.10) UNRELEASED; urgency=low
 
+  * checks/files:
+    + [ADB] Anchor the regular expression for the "gz-file-not-gzip" tag so
+      that files with names that contain ".gz" but do not end in that string
+      are not flagged.  Patch by Raphael Geissert.  (Closes: #523352)
   * checks/standards-version.desc:
     + [ADB] Fix a couple of spelling mistakes ("verison" -> "version").
       Thanks, Guillaume Delacour.  (Closes: #522643)
