@@ -101,7 +101,7 @@ harness.  The following additional fields are currently supported:
     Author: <maintainer for control and changelog>
     Architecture: <architecture for control>
     Section: <section for package>
-    Standard-Version: <standard version for control>
+    Standards-Version: <standard version for control>
 
 See t/runtests and t/templates/skel/{control,changelog}.in for how
 they're used.

@@ -42,6 +42,6 @@ Description record of a test case:
   [ Author: <maintainer for control and changelog> ]
   [ Architecture: <architecture for control> ]
   [ Section: <section for package> ]
-  [ Standard-Version: <standard version for control> ]
+  [ Standards-Version: <standard version for control> ]
   [ Options: <options to pass to lintian> ]
   [ Skeleton: <skeleton to base the package on> ]
