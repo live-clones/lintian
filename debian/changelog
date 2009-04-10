@@ -13,9 +13,24 @@ lintian (2.2.10) UNRELEASED; urgency=low
       that start with "-" aren't interpreted as options to "file".  Thanks,
       Trent W. Buck.  (Closes: #523408)
 
+  * doc/desc-files:
+    + [ADB] Mention the new Standards-Version field available for tests.
+      Patch by Raphael Geissert.
+
   * lib/Lintian/Relation.pm:
     + [ADB] Fix a spelling mistake ("verison" -> "version").  Thanks,
       Guillaume Delacour. 
+
+  * t/runtests:
+    + [ADB] Allow a default Policy version to be specified in template files.
+      This avoids the need to update every test each time a new Policy version
+      is released, unless one specifically wishes to keep a particular test
+      using an older version.  Patch by Raphael Geissert.
+    + [ADB] Use extended regular expressions in "post_test" sed scripts.
+      Patch by Raphael Geissert.
+  * t/tests/README:
+    + [ADB] Mention the new Standards-Version field available for tests.
+      Patch by Raphael Geissert.
 
  -- Adam D. Barratt <adam@adam-barratt.org.uk>  Sun, 05 Apr 2009 20:42:34 +0100
 
