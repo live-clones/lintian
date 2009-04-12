@@ -1,0 +1,9 @@
+#!/usr/bin/make -f
+pkg=binaries-misplaced
+%:
+	dh $@
+binary:
+	dh --before dh_install binary
+	mkdir debian/$(pkg)/etc/
+	cp -a /bin/true debian/$(pkg)/etc/foo
+	dh --remaining binary
