@@ -1,0 +1,8 @@
+{$srcpkg} ({$version}) unstable; urgency=low
+
+  * Lintian Test Suite.
+  * Test: {$testname}
+
+  * Suppress "should close ITP bug" messages.  (Closes: #123456)
+
+ -- {$author}  Fri, 15 Mar 2009 07:00:00 +0000

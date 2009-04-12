@@ -1,0 +1,5 @@
+Testname: standards-version-old
+Sequence: 6000
+Version: 1.0
+Description: Test old standards version on recent package
+Test-For: out-of-date-standards-version
