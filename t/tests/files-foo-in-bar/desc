@@ -1,0 +1,16 @@
+Testname: files-foo-in-bar
+Sequence: 6000
+Version: 1.0
+Description: Test tags about files or dirs in given paths
+Test-For:
+ dir-in-usr-local
+ dir-or-file-in-mnt
+ dir-or-file-in-tmp
+ dir-or-file-in-var-lock
+ dir-or-file-in-var-run
+ file-in-usr-lib-site-python
+ file-in-usr-local
+ nested-examples-directory
+ non-standard-dir-in-usr
+ non-standard-dir-in-var
+ subdir-in-bin

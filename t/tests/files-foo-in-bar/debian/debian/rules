@@ -1,0 +1,6 @@
+#!/usr/bin/make -f
+%:
+	dh $@
+binary:
+	dh --before dh_usrlocal binary
+	dh --after dh_usrlocal binary
