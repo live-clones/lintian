@@ -42,22 +42,25 @@ while (<IN>) {
     chop;
     next if m/^\s*$/;
 
+    unless (m,^/,) {
+	tag "relative-conffile", $_;
+	$_ = '/' . $_;
+    }
+
     $conffiles{$_}++;
+
     if ($conffiles{$_} > 1) {
 	tag "duplicate-conffile", $_;
     }
 
-    if (m,^/?usr/,) {
+    if (m,^/usr/,) {
 	tag "file-in-usr-marked-as-conffile", $_;
     } else {
-	unless (m,^/?etc/,) {
+	unless (m,^/etc/,) {
 	    tag "non-etc-file-marked-as-conffile", $_;
 	}
     }
 
-    unless (m,^/,) {
-	tag "relative-conffile", $_;
-    }
 }
 close(IN);
 

@@ -1,0 +1,9 @@
+#!/usr/bin/make -f
+pkg=conffiles-general
+
+%:
+	dh $@
+binary:
+	dh --before dh_builddeb binary
+	dpkg-deb --nocheck --build debian/$(pkg) ../$(pkg)_1.0_all.deb
+	dh --after dh_builddeb binary
