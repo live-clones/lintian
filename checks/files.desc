@@ -790,16 +790,6 @@ Info: The package contains a .desktop file in an obsolete directory.
  that are intended to create a menu should be placed in
  <tt>/usr/share/applications</tt>, not <tt>/usr/share/gnome/apps</tt>.
 
-Tag: file-in-usr-lib-cgi-bin
-Severity: normal
-Certainty: certain
-Info: Packages shipping web server CGI files should install them in
- <tt>/usr/lib/cgi-lib</tt>, not in <tt>/usr/lib/cgi-bin</tt>.  This is
- done to avoid conflicts with the cgi-bin script alias, which is reserved
- for the local use of webmasters.  Web servers should include /cgi-lib/ as
- a standard ScriptAlias pointing to that directory.
-Ref: policy 11.5
-
 Tag: script-with-language-extension
 Severity: normal
 Certainty: certain
