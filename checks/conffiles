@@ -40,23 +40,23 @@ my %conffiles = ();
 open(IN, '<', $cf) or fail("cannot open $cf for reading: $!");
 while (<IN>) {
     chop;
-    next if m/^\s*$/o;
+    next if m/^\s*$/;
 
-    $conffiles{"$_"}++;
-    if ($conffiles{"$_"} > 1) {
-	tag "duplicate-conffile", "$_";
+    $conffiles{$_}++;
+    if ($conffiles{$_} > 1) {
+	tag "duplicate-conffile", $_;
     }
 
-    if (m,^/?usr/,o) {
-	tag "file-in-usr-marked-as-conffile", "$_";
+    if (m,^/?usr/,) {
+	tag "file-in-usr-marked-as-conffile", $_;
     } else {
-	unless (m,^/?etc/,o) {
-	    tag "non-etc-file-marked-as-conffile", "$_";
+	unless (m,^/?etc/,) {
+	    tag "non-etc-file-marked-as-conffile", $_;
 	}
     }
 
-    unless (m,^/,o) {
-	tag "relative-conffile", "$_";
+    unless (m,^/,) {
+	tag "relative-conffile", $_;
     }
 }
 close(IN);
