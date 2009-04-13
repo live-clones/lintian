@@ -1,0 +1,5 @@
+E: binaries-general: arch-dependent-file-in-usr-share ./usr/share/foo/basic
+E: binaries-general: library-in-debug-or-profile-should-not-be-stripped ./usr/lib/debug/usr/share/foo/basic
+W: binaries-general: binary-compiled-with-profiling-enabled ./usr/share/foo/basic
+W: binaries-general: binary-or-shlib-defines-rpath ./usr/share/foo/basic /usr/local/lib
+W: binaries-general: debug-package-should-be-named-dbg usr/lib/debug/usr/
