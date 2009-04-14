@@ -1,0 +1,4 @@
+Testname: strings-elf-detection
+Sequence: 4500
+Version: 1.0
+Description: Test the ability to detect ELF objects
