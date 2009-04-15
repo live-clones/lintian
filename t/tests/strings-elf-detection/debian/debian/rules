@@ -1,0 +1,12 @@
+#!/usr/bin/make -f
+%:
+	dh $@
+binary:
+	dh --before dh_install binary
+	cp /bin/true .
+	touch foo bar::ELF
+	dh --remaining binary
+
+clean:
+	dh clean
+	$(RM) true foo bar::ELF
