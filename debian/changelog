@@ -1,10 +1,22 @@
 lintian (2.2.10) UNRELEASED; urgency=low
 
   * Summary of tag changes:
+    + Added:
+      - ancient-autotools-helper-file
     + Removed:
       - desktop-mimetype-without-update-call
       - package-uses-breaks
 
+  * checks/cruft{,.desc}:
+    + [RA] Split outdated-autotools-helper-file into ancient- and
+      outdated-, preserving the 2004 date for ancient and checking for at
+      least June of 2006 for outdated.  The latter is needed for AVR32.
+      Thanks, Bradley Smith.  (Closes: #525280)
+    + [RA] Set certainty for ancient- and outdated-autotools-helper-file
+      to possible instead of certain.  Some packages contain extra copies
+      that aren't used during the Debian package build.
+    + [RA] Document that cdbs still requires the autotools-dev build
+      dependency to update config.{sub,guess} at build time.
   * checks/fields{,.desc}:
     + [RA] Remove package-uses-breaks.  dpkg in stable now supports it.
       Thanks, Julian Andres Klode.  (Closes: #522660)
