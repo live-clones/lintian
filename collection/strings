@@ -27,7 +27,7 @@
 [ ! -f elf-index ] || rm -f elf-index
 exec >elf-index
 
-for bin in $(grep ELF file-info | cut -d: -f1); do
+for bin in $(grep '^[^:]*:.*ELF' file-info | sed 's/: .*//'); do
     echo "$bin"
     case $bin in
       /usr/lib/debug/*)
