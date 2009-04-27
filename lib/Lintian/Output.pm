@@ -296,7 +296,9 @@ sub print_tag {
     if ($self->_do_color) {
 	if ($self->color eq 'html') {
 	    my $escaped = $tag_info->{tag};
-	    $escaped =~ s/([<&>])/sprintf("&#%d;", ord($1))/ge;
+	    $escaped =~ s/&/&amp;/g;
+	    $escaped =~ s/</&lt;/g;
+	    $escaped =~ s/>/&gt;/g;
 	    $tag .= qq(<span style="color: $tag_color">$escaped</span>)
 	} else {
 	    $tag .= Term::ANSIColor::colored($tag_info->{tag}, $tag_color);
