@@ -75,6 +75,10 @@ lintian (2.2.10) UNRELEASED; urgency=low
     + [ADB] Mention the new Standards-Version field available for tests.
       Patch by Raphael Geissert.
 
+  * frontend/lintian:
+    + [RA] Stop reporting $! when unpack scripts fail.  It will almost
+      never contain anything useful.
+
   * lib/Lintian/Collect/Binary.pm:
     + [CW] Add missing 'use Parse::DebianChangelog'.
   * lib/Lintian/Output.pm:

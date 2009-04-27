@@ -1429,7 +1429,7 @@ foreach my $pkg_info ($schedule->get_all) {
     $act_unpack_level = unpack_pkg($type,$base,$file,$act_unpack_level,
 				   $unpack_level);
     if ($act_unpack_level == -1) {
-	warning("could not unpack package to desired level: $!",
+	warning("could not unpack package to desired level",
 		"skipping $action of $long_type package $pkg");
 	$exit_code = 2;
 	next PACKAGE;
@@ -1460,7 +1460,7 @@ foreach my $pkg_info ($schedule->get_all) {
 	    # unpack to desired unpack level (if necessary)
 	    $act_unpack_level = unpack_pkg($type,$base,$file,$act_unpack_level,$ci->{'unpack-level'});
 	    if ($act_unpack_level == -1) {
-		warning("could not unpack package to desired level: $!",
+		warning("could not unpack package to desired level",
 			"skipping $action of $long_type package $pkg");
 		$exit_code = 2;
 		next PACKAGE;
@@ -1544,7 +1544,7 @@ foreach my $pkg_info ($schedule->get_all) {
 	    # unpack to desired unpack level (if necessary)
 	    $act_unpack_level = unpack_pkg($type,$base,$file,$act_unpack_level,$ci->{'unpack-level'});
 	    if ($act_unpack_level == -1) {
-		warning("could not unpack package to desired level: $!",
+		warning("could not unpack package to desired level",
 			"skipping $action of $long_type package $pkg");
 		$exit_code = 2;
 		next PACKAGE;
