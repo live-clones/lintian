@@ -4,6 +4,10 @@ lintian (2.2.10) UNRELEASED; urgency=low
     + [ADB] Anchor the regular expression for the "gz-file-not-gzip" tag so
       that files with names that contain ".gz" but do not end in that string
       are not flagged.  Patch by Raphael Geissert.  (Closes: #523352)
+  * checks/scripts:
+    + [RA] Handle command delimiters, $() expressions, and braces and
+      parentheses in the checks for correct diversion handling.  Patch
+      from Raphael Geissert.  (Closes: #523708)
   * checks/shared-libs:
     + [RA] Strip trailing slashes from the libdir path in *.la files
       before checking it for correctness.  Thanks, Patrick Matthäi.
