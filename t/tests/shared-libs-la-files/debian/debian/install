@@ -1,1 +1,2 @@
 kio_locate.la usr/lib/kde3
+trailing-slash.la usr/lib/lintian

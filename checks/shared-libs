@@ -164,6 +164,7 @@ for my $cur_file (sort keys %{$info->index}) {
 	while(<LAFILE>) {
 	    next unless (m/^libdir='(.+?)'$/);
 	    my $actual = $1;
+	    $actual =~ s,/+$,,;
 	    my ($expected) = ("/$cur_file" =~ m,^(.+)/[^/]+$,);
 	    tag "incorrect-libdir-in-la-file", $cur_file, "$actual != $expected"
 		unless($expected eq $actual);
