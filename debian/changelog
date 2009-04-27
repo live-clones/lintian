@@ -46,6 +46,8 @@ lintian (2.2.10) UNRELEASED; urgency=low
       from Raphael Geissert.  (Closes: #523708)
     + [RA] Clarify the php-script-but-no-phpX-cli-dep description to
       explain why it warns about a php4-cli dependency.  (Closes: #525484)
+    + [RA] Add jruby1.2 and allow an unversioned jruby reference.  Thanks,
+      Sebastien Delafond.  (Closes: #523001)
   * checks/shared-libs:
     + [RA] Strip trailing slashes from the libdir path in *.la files
       before checking it for correctness.  Thanks, Patrick Matthäi.

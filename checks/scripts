@@ -116,10 +116,10 @@ our %interpreters =
 # An interpreter with a version must have a dependency on the specific package
 # formed by taking the fourth element of the list and replacing $1 with the
 # version number.  An interpreter without a version is rejected if the second
-# element is undef; otherwise, the package must depend on the disjunction of
-# the second argument (if non-empty) and all the packages formed by taking the
-# list of known versions (the fifth element and on) and replacing $1 in the
-# fourth argument with them.
+# element is undef; otherwise, the package must satisfy a dependency on the
+# disjunction of the second argument (if non-empty) and all the packages
+# formed by taking the list of known versions (the fifth element and on) and
+# replacing $1 in the fourth argument with them.
 #
 # For example:
 #
@@ -137,8 +137,8 @@ our %versioned_interpreters =
     (guile   => [ '/usr/bin', 'guile',
 		  qr/^guile-([\d.]+)$/, 'guile-$1', qw(1.6 1.8)
 		],
-     jruby   => [ '/usr/bin', undef,
-		  qr/^jruby([\d.]+)$/, 'jruby$1', qw(1.0 1.1)
+     jruby   => [ '/usr/bin', 'jruby',
+		  qr/^jruby([\d.]+)$/, 'jruby$1', qw(1.0 1.1 1.2)
 		],
      lua     => [ '/usr/bin', 'lua',
 		  qr/^lua([\d.]+)$/, 'lua$1', qw(40 50 5.1)
