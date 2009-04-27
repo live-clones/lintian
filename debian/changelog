@@ -15,10 +15,12 @@ lintian (2.2.10) UNRELEASED; urgency=low
   * checks/menu-format{,.desc}:
     + [RA] Remove desktop-mimetype-without-update-call.  This is now
       handled by triggers.  Thanks, Chow Loong Jin.  (Closes: #525133)
-  * checks/scripts:
+  * checks/scripts{,.desc}:
     + [RA] Handle command delimiters, $() expressions, and braces and
       parentheses in the checks for correct diversion handling.  Patch
       from Raphael Geissert.  (Closes: #523708)
+    + [RA] Clarify the php-script-but-no-phpX-cli-dep description to
+      explain why it warns about a php4-cli dependency.  (Closes: #525484)
   * checks/shared-libs:
     + [RA] Strip trailing slashes from the libdir path in *.la files
       before checking it for correctness.  Thanks, Patrick Matthäi.
