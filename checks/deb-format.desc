@@ -2,7 +2,7 @@ Check-Script: deb-format
 Author: Russ Allbery <rra@debian.org>
 Abbrev: dfmt
 Type: binary, udeb
-Unpack-Level: 1
+Unpack-Level: 2
 Info: This script checks the format of the deb ar archive itself.
 
 Tag: malformed-deb-archive
@@ -22,3 +22,18 @@ Certainty: certain
 Info: The data portion of this binary package is compressed with lzma.
  This is supported by dpkg but not yet permitted in the Debian archive.
  Such a package will be rejected by DAK.
+
+Tag: tar-errors-from-control
+Severity: important
+Certainty: possible
+Info: tar produced an error while listing the contents of the
+ <tt>control.tar.gz</tt> member of this package.  This probably means
+ there's something broken or at least strange about the way the package
+ was constructed.
+
+Tag: tar-errors-from-data
+Severity: important
+Certainty: possible
+Info: tar produced an error while listing the contents of the data
+ member of this package.  This probably means there's something broken or
+ at least strange about the way the package was constructed.

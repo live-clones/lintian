@@ -42,6 +42,11 @@ our $AUTOTOOLS = Lintian::Relation->new(join(' | ',
     qw(autotools-dev automake automaken automake1.4 automake1.7 automake1.8
        automake1.9 automake1.10)));
 
+# The files that contain error messages from tar, which we'll check and issue
+# tags for if they contain something unexpected, and their corresponding tags.
+our %ERRORS = ('index-errors'    => 'tar-errors-from-source',
+               'unpacked-errors' => 'tar-errors-from-source');
+
 # Directory checks.  These regexes match a directory that shouldn't be in the
 # source package and associate it with a tag (minus the leading
 # source-contains or diff-contains).  Note that only one of these regexes
@@ -132,6 +137,33 @@ for my $file (keys(%$file_info)) {
 	tag "source-contains-prebuilt-binary", $file;
     } elsif ($file_info->{$file} =~ m/\bPE(32|64)\b/) {
 	tag "source-contains-prebuilt-windows-binary", $file;
+    }
+}
+
+# Report any error messages from tar while unpacking the source package if it
+# isn't just tar cruft.
+for my $file (keys %ERRORS) {
+    my $tag = $ERRORS{$file};
+    if (-s $file) {
+        open(ERRORS, '<', $file) or fail("cannot open $file: $!");
+        local $_;
+        while (<ERRORS>) {
+            chomp;
+            s,^(?:[/\w]+/)?tar: ,,;
+
+            # Record size errors are harmless.  Skipping to next header
+            # apparently comes from star files.  Ignore all GnuPG noise from
+            # not having a valid GnuPG configuration directory.  Also ignore
+            # the tar "exiting with failure status" message, since it comes
+            # after some other error.
+            next if /^Record size =/;
+            next if /^Skipping to next header/
+            next if /^gpg: /;
+            next if /^secmem usage: /;
+            next if /^Exiting with failure status due to previous errors/;
+            tag $tag, $_;
+        }
+        close ERRORS;
     }
 }
 

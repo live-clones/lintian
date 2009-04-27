@@ -36,7 +36,7 @@ chdir($base_dir);
 
 # Ignore STDOUT of the child process because older versions of dpkg-source
 # print things out even with -q.
-spawn({ fail => 'error', out => '/dev/null' },
+spawn({ fail => 'error', out => '/dev/null', err => 'unpacked-errors' },
       ['dpkg-source', '-q', '-x', 'dsc', 'unpacked']);
 
 # fix permissions

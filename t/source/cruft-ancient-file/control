@@ -1,0 +1,14 @@
+Source: cruft-ancient-file
+Section: devel
+Priority: optional
+Maintainer: Debian Lintian Maintainers <lintian-maint@debian.org>
+Build-Depends: debhelper (>= 7)
+Standards-Version: 3.8.0
+
+Package: cruft-ancient-file
+Architecture: all
+Depends: ${misc:Depends}
+Description: Test package for ancient files producing tar errors
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.

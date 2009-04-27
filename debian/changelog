@@ -3,6 +3,9 @@ lintian (2.2.10) UNRELEASED; urgency=low
   * Summary of tag changes:
     + Added:
       - ancient-autotools-helper-file
+      - tar-errors-from-control
+      - tar-errors-from-data
+      - tar-errors-from-source
     + Removed:
       - desktop-mimetype-without-update-call
       - package-uses-breaks
@@ -17,6 +20,12 @@ lintian (2.2.10) UNRELEASED; urgency=low
       that aren't used during the Debian package build.
     + [RA] Document that cdbs still requires the autotools-dev build
       dependency to update config.{sub,guess} at build time.
+    + [RA] Report errors from tar or dpkg-source when listing or unpacking
+      the source package, skipping and suppressing some harmless errors.
+  * checks/deb-format{,.desc}:
+    + [RA] Report tar errors from listing or unpacking the control or data
+      members of the package, suppressing uninteresting errors or errors
+      that are caught some other way.  (Closes: #367327)
   * checks/fields{,.desc}:
     + [RA] Remove package-uses-breaks.  dpkg in stable now supports it.
       Thanks, Julian Andres Klode.  (Closes: #522660)
@@ -82,6 +91,22 @@ lintian (2.2.10) UNRELEASED; urgency=low
   * t/tests/README:
     + [ADB] Mention the new Standards-Version field available for tests.
       Patch by Raphael Geissert.
+
+  * unpack/unpack-binpkg-l1:
+    + [RA] Save control unpack errors in control-errors, control listing
+      errors in control-index-errors, and package listing errors in
+      index-errors for later processing by deb-format.  (Closes: #522530)
+  * unpack/unpack-binpkg-l2:
+    + [RA] Save data unpack errors in unpacked-errors for later processing
+      by deb-format.
+  * unpack/unpack-srcpkg-l1:
+    + [RA] Save source listing errors in index-errors for later processing
+      by cruft.  Don't fail the unpack if tar exits with non-zero status.
+      star-created archives  will cause tar to blow up, but the listing
+      and unpacking still works.
+  * unpack/unpack-srcpkg-l2:
+    + [RA] Save source unpack errors in unpacked-errors for later
+      processing by cruft.
 
  -- Adam D. Barratt <adam@adam-barratt.org.uk>  Sun, 05 Apr 2009 20:42:34 +0100
 

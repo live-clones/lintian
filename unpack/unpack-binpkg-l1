@@ -55,13 +55,15 @@ spawn({ fail => 'error', out => "$base_dir/control.tar" },
       ['ar', 'p', $file, 'control.tar.gz'],
       '|', ['gzip', '-dc']);
 
-$job = { fail =>'error' };
+$job = { fail => 'error', err => "$base_dir/control-errors" };
 push @jobs, $job;
 # extract the tarball's contents
 spawn($job,
       ["tar", "xf", "$base_dir/control.tar", "-C", "$base_dir/control", '&']);
 
-$job = { fail =>'error', out => "$base_dir/control-index" };
+$job = { fail => 'error',
+         out  => "$base_dir/control-index",
+         err  => "$base_dir/control-index-errors" };
 push @jobs, $job;
 # create index of control.tar.gz
 spawn($job,
@@ -77,7 +79,9 @@ unlink("$base_dir/control.tar") or fail();
 spawn({ fail => 'error' },
       ["chmod", "-R", "u+rX,o-w", "$base_dir/control"]);
 
-$job = { fail => 'error', out => "$base_dir/index" };
+$job = { fail => 'error',
+         out  => "$base_dir/index",
+         err  => "$base_dir/index-errors" };
 push @jobs, $job;
 # (replaces dpkg-deb -c)
 # create index file for package
@@ -87,7 +91,9 @@ spawn($job,
       '|', ["sed", "-e", "s/^h/-/"],
       '|', ["sort", "-k", "6"], '&');
 
-$job = { fail => 'error', out => "$base_dir/index-owner-id" };
+$job = { fail => 'error',
+         out  => "$base_dir/index-owner-id",
+         err  => '/dev/null' };
 push @jobs, $job;
 # (replaces dpkg-deb -c)
 # create index file for package with owner IDs instead of names

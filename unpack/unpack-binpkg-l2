@@ -38,7 +38,7 @@ mkdir("$base_dir/unpacked", 0777) or fail();
 # improvement on large debs, and factor 1.5 on small debs.  I heard
 # it's because dpkg-deb syncs while writing.  -- Richard
 
-spawn({ fail => 'error' },
+spawn({ fail => 'error', err => "$base_dir/unpacked-errors" },
       ['dpkg-deb', '--fsys-tarfile', "$base_dir/deb"],
       '|', ['tar', 'xf', '-', '-C', "$base_dir/unpacked"]);
 

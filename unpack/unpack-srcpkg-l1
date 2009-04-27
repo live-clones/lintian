@@ -113,7 +113,7 @@ my $collect = sub {
         }
     }
 };
-spawn({ fail => 'error', out => $collect },
+spawn({ fail => 'never', out => $collect, err => "$base_dir/index-errors" },
       ["tar", @tar_options, "$base_dir/$tarball"]);
 if ($last) {
     fail("tar output doesn't end in a newline");

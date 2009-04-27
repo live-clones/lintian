@@ -21,6 +21,13 @@ use Tags;
 
 use Lintian::Command qw(spawn);
 
+# The files that contain error messages from tar, which we'll check and issue
+# tags for if they contain something unexpected, and their corresponding tags.
+our %ERRORS = ('control-errors'       => 'tar-errors-from-control',
+               'control-index-errors' => 'tar-errors-from-control',
+               'index-errors'         => 'tar-errors-from-data',
+               'unpacked-errors'      => 'tar-errors-from-data');
+
 sub run {
 
 my $pkg = shift;
@@ -73,6 +80,31 @@ if ($okay) {
     } elsif (${ $opts->{out} } !~ /^2\.\d+\n/) {
         my ($version) = split("\n", ${ $opts->{out} });
         tag 'malformed-deb-archive', "version $version not 2.0";
+    }
+}
+
+# If either control-errors or index-errors exist, tar produced error output
+# when processing the package.  We want to report those as tags unless they're
+# just tar noise that doesn't represent an actual problem.
+for my $file (keys %ERRORS) {
+    my $tag = $ERRORS{$file};
+    if (-s $file) {
+        open(ERRORS, '<', $file) or fail("cannot open $file: $!");
+        local $_;
+        while (<ERRORS>) {
+            chomp;
+            s,^(?:[/\w]+/)?tar: ,,;
+
+            # Record size errors are harmless.  Ignore implausibly old
+            # timestamps in the data section since we already check for that
+            # elsewhere, but still warn for control.
+            next if /^Record size =/;
+            if ($tag eq 'tar-errors-from-data') {
+                next if /implausibly old time stamp/;
+            }
+            tag $tag, $_;
+        }
+        close ERRORS;
     }
 }
 

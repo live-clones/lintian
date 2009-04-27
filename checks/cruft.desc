@@ -391,3 +391,11 @@ Info: The source tarball contains a prebuilt binary for Microsoft Windows.
  that upstream also provides tarballs source-only tarballs which you can use.
  These files usually just take up space in the tarball and are of no use in
  Debian.  You may want to ask upstream to provide source-only tarballs.
+
+Tag: tar-errors-from-source
+Severity: normal
+Certainty: wild-guess
+Info: tar produced an error while unpacking this source package.  This
+ probably means there's something broken or at least strange about the way
+ the upstream tar file was constructed.  You may want to report this as an
+ upstream bug.
