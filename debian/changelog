@@ -26,6 +26,8 @@ lintian (2.2.10) UNRELEASED; urgency=low
     + [RA] Report tar errors from listing or unpacking the control or data
       members of the package, suppressing uninteresting errors or errors
       that are caught some other way.  (Closes: #367327)
+    + [CW] Ubuntu's archive allows packages whose data members are
+      compressed with lzma.
   * checks/fields{,.desc}:
     + [RA] Remove package-uses-breaks.  dpkg in stable now supports it.
       Thanks, Julian Andres Klode.  (Closes: #522660)
