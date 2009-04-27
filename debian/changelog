@@ -73,6 +73,8 @@ lintian (2.2.10) UNRELEASED; urgency=low
     + [ADB] Mention the new Standards-Version field available for tests.
       Patch by Raphael Geissert.
 
+  * lib/Lintian/Collect/Binary.pm:
+    + [CW] Add missing 'use Parse::DebianChangelog'.
   * lib/Lintian/Output.pm:
     + [RA] With --color=html, display the HTML rendering of the long tag
       description rather than the text version and escape HTML

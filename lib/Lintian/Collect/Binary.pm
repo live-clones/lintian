@@ -25,6 +25,7 @@ use base 'Lintian::Collect';
 
 use Lintian::Relation;
 use Carp qw(croak);
+use Parse::DebianChangelog;
 
 use Util;
 
