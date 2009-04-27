@@ -48,13 +48,14 @@ lintian (2.2.10) UNRELEASED; urgency=low
       explain why it warns about a php4-cli dependency.  (Closes: #525484)
     + [RA] Add jruby1.2 and allow an unversioned jruby reference.  Thanks,
       Sebastien Delafond.  (Closes: #523001)
-  * checks/shared-libs:
+  * checks/shared-libs{,.desc}:
     + [RA] Strip trailing slashes from the libdir path in *.la files
       before checking it for correctness.  Thanks, Patrick Matthäi.
       (Closes: #524228)
     + [RA] Special-case *.la files for Python modules installed in
       /usr/share/pyshared, since they're moved during install.  Thanks,
       Jonas Smedegaard.  (Closes: #522623)
+    + [RA] Requires unpack level 2 to read the *.la files.
   * checks/standards-version.desc:
     + [ADB] Fix a couple of spelling mistakes ("verison" -> "version").
       Thanks, Guillaume Delacour.  (Closes: #522643)
