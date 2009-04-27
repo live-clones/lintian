@@ -66,10 +66,6 @@ lintian (2.2.10) UNRELEASED; urgency=low
     + [ADB] Call "file" with "--" to ensure that any filenames in the package
       that start with "-" aren't interpreted as options to "file".  Thanks,
       Trent W. Buck.  (Closes: #523408)
-  * collection/strings:
-    + [RA] Be robust against file names containing "ELF" or a colon by
-      requiring ELF occur after the colon and space and breaking on colon
-      and space instead of a simple colon.
 
   * doc/desc-files:
     + [ADB] Mention the new Standards-Version field available for tests.
