@@ -1,14 +1,9 @@
-Last generated 2009-03-02
+Last generated 2009-04-27
 
 The following tags are not tested by the test suite:
 
 binaries apparently-corrupted-elf-binary
-binaries arch-dependent-file-in-usr-share
-binaries binary-compiled-with-profiling-enabled
 binaries binary-file-compressed-with-upx
-binaries binary-in-etc
-binaries binary-or-shlib-defines-rpath
-binaries library-in-debug-or-profile-should-not-be-stripped
 binaries library-not-linked-against-libc
 binaries program-not-linked-against-libc
 
@@ -18,10 +13,6 @@ changelog-file spelling-error-in-changelog
 changelog-file wrong-name-for-changelog-of-native-package
 changelog-file wrong-name-for-debian-changelog-file
 changelog-file wrong-name-for-upstream-changelog
-
-conffiles duplicate-conffile
-conffiles file-in-usr-marked-as-conffile
-conffiles relative-conffile
 
 control-file debian-control-file-is-a-symlink
 control-file debian-control-with-duplicate-fields
@@ -38,8 +29,9 @@ copyright-file usr-share-doc-symlink-points-outside-of-usr-share-doc
 copyright-file usr-share-doc-symlink-to-foreign-package
 
 cruft documentation-package-not-architecture-independent
-cruft outdated-autotools-helper-file
 cruft source-contains-prebuilt-windows-binary
+
+deb-format tar-errors-from-data
 
 debconf boolean-template-has-bogus-default
 debconf debconf-is-not-a-registry
@@ -67,7 +59,6 @@ fields bad-version-number
 fields build-depends-on-x-metapackage
 fields depends-on-libdb1-compat
 fields doc-package-depends-on-main-package
-fields essential-in-source-package
 fields magic-arch-in-arch-list
 fields maintainer-address-is-on-localhost
 fields maintainer-address-looks-weird
@@ -91,7 +82,6 @@ fields source-field-does-not-match-pkg-name
 fields source-field-malformed
 fields too-many-architectures
 fields unknown-architecture
-fields unknown-essential-value
 fields unknown-field-in-control
 fields unknown-field-in-dsc
 fields unknown-priority
@@ -107,19 +97,10 @@ files bad-permissions-for-etc-emacs-script
 files compressed-symlink-with-wrong-ext
 files config-file-reserved
 files debug-package-should-be-named-dbg
-files dir-in-usr-local
-files dir-or-file-in-mnt
-files dir-or-file-in-tmp
 files embedded-php-library
 files executable-in-usr-share-doc
-files file-in-usr-lib-cgi-bin
-files file-in-usr-lib-site-python
-files file-in-usr-local
 files image-file-in-usr-lib
-files nested-examples-directory
 files nfs-temporary-file-in-package
-files non-standard-dir-in-usr
-files non-standard-dir-in-var
 files non-standard-file-perm
 files non-standard-file-permissions-for-etc-init.d-script
 files non-standard-game-executable-perm
@@ -136,7 +117,6 @@ files possible-name-space-pollution
 files setgid-binary
 files setuid-gid-binary
 files special-file
-files subdir-in-bin
 files third-party-package-in-python-dir
 files udeb-contains-documentation-file
 
@@ -195,14 +175,12 @@ menus executable-in-usr-share-docbase
 menus executable-menu-file
 menus maintainer-script-does-not-check-for-existence-of-installdocs
 menus maintainer-script-does-not-check-for-existence-of-updatemenus
-menus postinst-has-useless-call-to-install-docs
 menus postinst-has-useless-call-to-update-menus
 menus postrm-calls-installdocs
 menus postrm-has-useless-call-to-update-menus
 menus preinst-calls-installdocs
 menus preinst-calls-updatemenus
 menus prerm-calls-updatemenus
-menus prerm-has-useless-call-to-install-docs
 
 nmu changelog-is-symlink
 
@@ -233,6 +211,7 @@ scripts mknod-in-maintainer-script
 scripts ruby-script-but-no-ruby-dep
 scripts script-without-interpreter
 scripts tclsh-script-but-no-tclsh-dep
+scripts unusual-interpreter
 scripts wish-script-but-no-wish-dep
 
 shared-libs dev-pkg-without-shlib-symlink
@@ -288,8 +267,6 @@ changelog-file spelling-error-in-news-debian
 changelog-file syntax-error-in-debian-changelog
 changelog-file syntax-error-in-debian-news-file
 changelog-file wrong-name-for-debian-news-file
-
-conffiles non-etc-file-marked-as-conffile
 
 control-file debian-control-file-uses-obsolete-national-encoding
 control-file section-category-mismatch
@@ -365,13 +342,11 @@ fields depends-on-obsolete-package
 fields depends-on-old-emacs
 fields depends-on-python-minimal
 fields depends-on-x-metapackage
-fields essential-no-not-needed
 fields invalid-arch-string-in-source-relation
 fields malformed-dm-upload-allowed
 fields missing-dh_python-build-dependency
 fields missing-python-build-dependency
 fields needlessly-depends-on-awk
-fields new-essential-package
 fields no-human-maintainers
 fields ored-build-depends-on-obsolete-package
 fields ored-depends-on-obsolete-package
@@ -382,7 +357,6 @@ fields package-depends-on-multiple-tk-versions
 fields package-depends-on-multiple-tkx-versions
 fields package-has-a-duplicate-build-relation
 fields package-relation-with-self
-fields package-uses-breaks
 fields redundant-bugs-field
 fields redundant-origin-field
 fields unknown-section
@@ -419,7 +393,6 @@ files non-standard-dir-perm
 files non-standard-executable-perm
 files non-standard-setuid-executable-perm
 files non-standard-toplevel-dir
-files package-contains-ancient-file
 files package-contains-bts-control-dir
 files package-contains-devhelp-file-without-symlink
 files package-contains-hardlink
@@ -553,11 +526,9 @@ menus maintainer-script-calls-deprecated-wm-menu-config
 menus maintainer-script-does-not-check-for-existence-of-wm-menu-config
 menus menu-file-in-usr-lib
 menus menu-method-should-include-menu-h
-menus postinst-does-not-call-installdocs
 menus postinst-does-not-call-updatemenus
 menus postinst-should-not-set-usr-doc-link
 menus postrm-does-not-call-updatemenus
-menus prerm-does-not-call-installdocs
 menus spelling-error-in-doc-base-abstract-field
 menus spelling-error-in-doc-base-title-field
 
@@ -616,7 +587,6 @@ scripts shell-script-fails-syntax-check
 scripts start-stop-daemon-in-maintainer-script
 scripts suid-perl-script-but-no-perl-suid-dep
 scripts suidregister-used-in-maintainer-script
-scripts unusual-interpreter
 scripts update-alternatives-remove-called-in-postrm
 
 shared-libs duplicate-entry-in-shlibs-control-file
@@ -643,7 +613,6 @@ shared-libs unknown-meta-field-in-symbols-file
 shared-libs unused-shlib-entry-in-control-file
 shared-libs unused-shlib-entry-in-symbols-control-file
 
-standards-version out-of-date-standards-version
 standards-version timewarp-standards-version
 
 version-substvars not-binnmuable-all-depends-any
