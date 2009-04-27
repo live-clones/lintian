@@ -157,7 +157,7 @@ for my $file (keys %ERRORS) {
             # the tar "exiting with failure status" message, since it comes
             # after some other error.
             next if /^Record size =/;
-            next if /^Skipping to next header/
+            next if /^Skipping to next header/;
             next if /^gpg: /;
             next if /^secmem usage: /;
             next if /^Exiting with failure status due to previous errors/;
