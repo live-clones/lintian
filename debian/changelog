@@ -10,6 +10,10 @@ lintian (2.2.10) UNRELEASED; urgency=low
       - desktop-mimetype-without-update-call
       - package-uses-breaks
 
+  * checks/conffiles:
+    + [RA] Fix a false negative in duplicate-conffile by improving
+      normalization of conffiles before comparing and restructure the
+      check a bit.  Patch from Raphael Geissert.
   * checks/cruft{,.desc}:
     + [RA] Split outdated-autotools-helper-file into ancient- and
       outdated-, preserving the 2004 date for ancient and checking for at
@@ -28,9 +32,12 @@ lintian (2.2.10) UNRELEASED; urgency=low
       that are caught some other way.  (Closes: #367327)
     + [CW] Ubuntu's archive allows packages whose data members are
       compressed with lzma.
+  * checks/etcfiles.desc:
+    + [RA] Remove unused Needs-Info: etcfiles.  Thanks, Raphael Geissert.
   * checks/fields{,.desc}:
     + [RA] Remove package-uses-breaks.  dpkg in stable now supports it.
       Thanks, Julian Andres Klode.  (Closes: #522660)
+    + [RA] Fix Needs-Info.  Thanks, Raphael Geissert.
   * checks/files:
     + [ADB] Anchor the regular expression for the "gz-file-not-gzip" tag so
       that files with names that contain ".gz" but do not end in that string
@@ -66,6 +73,9 @@ lintian (2.2.10) UNRELEASED; urgency=low
     + [ADB] Call "file" with "--" to ensure that any filenames in the package
       that start with "-" aren't interpreted as options to "file".  Thanks,
       Trent W. Buck.  (Closes: #523408)
+  * collection/strings:
+    + [RA] Make strings gathering on ELF binaries robust against file
+      names containing "ELF" or a colon.  Patch from Raphael Geissert.
 
   * doc/desc-files:
     + [ADB] Mention the new Standards-Version field available for tests.
