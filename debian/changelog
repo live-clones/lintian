@@ -1,5 +1,12 @@
 lintian (2.2.10) UNRELEASED; urgency=low
 
+  * Summary of tag changes:
+    + Removed:
+      - package-uses-breaks
+
+  * checks/fields{,.desc}:
+    + [RA] Remove package-uses-breaks.  dpkg in stable now supports it.
+      Thanks, Julian Andres Klode.  (Closes: #522660)
   * checks/files:
     + [ADB] Anchor the regular expression for the "gz-file-not-gzip" tag so
       that files with names that contain ".gz" but do not end in that string

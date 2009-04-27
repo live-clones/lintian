@@ -776,13 +776,6 @@ Ref: policy 7.4
 Info: The package seems to conflict with one of its dependencies,
  recommendations, or suggestions by listing it in Conflicts or Breaks.
 
-Tag: package-uses-breaks
-Severity: normal
-Certainty: certain
-Ref: policy 7.3
-Info: This package uses the Breaks control field.  This control field
- should not be used until the stable release of Debian supports Breaks.
-
 Tag: breaks-without-version
 Severity: normal
 Certainty: possible

@@ -564,8 +564,6 @@ if (($type eq "binary") || ($type eq 'udeb')) {
 
 			my $is_dep_field = sub { grep { $_ eq $_[0] } qw(depends pre-depends recommends suggests) };
 
-			tag "package-uses-breaks" if $field eq "breaks";
-
 			tag "alternates-not-allowed", "$field"
 			    if ($data =~ /\|/ && ! &$is_dep_field($field));
 
