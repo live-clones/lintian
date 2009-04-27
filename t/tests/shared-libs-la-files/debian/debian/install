@@ -1,2 +1,3 @@
 kio_locate.la usr/lib/kde3
 trailing-slash.la usr/lib/lintian
+_python_module.la usr/share/pyshared

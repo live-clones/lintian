@@ -8,6 +8,9 @@ lintian (2.2.10) UNRELEASED; urgency=low
     + [RA] Strip trailing slashes from the libdir path in *.la files
       before checking it for correctness.  Thanks, Patrick Matthäi.
       (Closes: #524228)
+    + [RA] Special-case *.la files for Python modules installed in
+      /usr/share/pyshared, since they're moved during install.  Thanks,
+      Jonas Smedegaard.  (Closes: #522623)
   * checks/standards-version.desc:
     + [ADB] Fix a couple of spelling mistakes ("verison" -> "version").
       Thanks, Guillaume Delacour.  (Closes: #522643)

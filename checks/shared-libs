@@ -166,6 +166,11 @@ for my $cur_file (sort keys %{$info->index}) {
 	    my $actual = $1;
 	    $actual =~ s,/+$,,;
 	    my ($expected) = ("/$cur_file" =~ m,^(.+)/[^/]+$,);
+
+	    # python-central is a special case since the libraries are moved
+	    # at install time.
+	    next if ($actual =~ m,^/usr/lib/python[\d.]+/site-packages,
+		     and $expected =~ m,^/usr/share/pyshared,);
 	    tag "incorrect-libdir-in-la-file", $cur_file, "$actual != $expected"
 		unless($expected eq $actual);
 	    last;
