@@ -11,10 +11,12 @@ Severity: normal
 Certainty: certain
 Info: Using dpatch requires you to explicitly list all patches you want
  to apply in debian/patches/00list. This package build-depends on dpatch,
- but does not provide a patch list.
+ but does not provide a patch list.  You should either remove the dpatch
+ build dependency or add a patch list.
  .
- You should either remove the dpatch build dependency or add a patch
- list.
+ Note that an empty file cannot be represented in the Debian diff, so an
+ empty patch list will disappear in the source package.  If you intended
+ for the series file to be empty, add a comment line.
 
 Tag: dpatch-index-references-non-existent-patch
 Severity: important
@@ -39,11 +41,13 @@ Tag: quilt-build-dep-but-no-series-file
 Severity: normal
 Certainty: certain
 Info: Using quilt requires you to explicitly list all patches you want
- to apply in debian/patches/series. This package build-depends on quilt,
- but does not provide a patch list.
+ to apply in debian/patches/series.  This package build-depends on quilt,
+ but does not provide a patch list.  You should either remove the quilt
+ build dependency or add a series file.
  .
- You should either remove the quilt build dependency or add a series
- file.
+ Note that an empty file cannot be represented in the Debian diff, so an
+ empty series file will disappear in the source package.  If you intended
+ for the series file to be empty, add a comment line.
 
 Tag: quilt-series-but-no-build-dep
 Severity: normal

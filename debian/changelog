@@ -15,6 +15,10 @@ lintian (2.2.10) UNRELEASED; urgency=low
   * checks/menu-format{,.desc}:
     + [RA] Remove desktop-mimetype-without-update-call.  This is now
       handled by triggers.  Thanks, Chow Loong Jin.  (Closes: #525133)
+  * checks/patch-systems.desc:
+    + [RA] Mention that empty dpatch patch lists or quilt series files
+      will disappear in a non-native source package and hence produce the
+      warning about a missing file.  (Closes: #525005)
   * checks/scripts{,.desc}:
     + [RA] Handle command delimiters, $() expressions, and braces and
       parentheses in the checks for correct diversion handling.  Patch
