@@ -24,6 +24,11 @@ lintian (2.2.10) UNRELEASED; urgency=low
     + [ADB] Mention the new Standards-Version field available for tests.
       Patch by Raphael Geissert.
 
+  * lib/Lintian/Output.pm:
+    + [RA] With --color=html, display the HTML rendering of the long tag
+      description rather than the text version and escape HTML
+      metacharacters in the tag information.  Patch from Raphael Geissert.
+      (Closes: #522527)
   * lib/Lintian/Relation.pm:
     + [ADB] Fix a spelling mistake ("verison" -> "version").  Thanks,
       Guillaume Delacour.
