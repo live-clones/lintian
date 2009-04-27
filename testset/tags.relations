@@ -56,7 +56,6 @@ W: relations source: virtual-package-depends-without-real-package-depends build-
 W: relations-multiple-libs: bad-homepage lintian.debian.org
 W: relations-multiple-libs: breaks-without-version libpng2
 W: relations-multiple-libs: description-synopsis-might-not-be-phrased-properly
-W: relations-multiple-libs: package-uses-breaks
 W: relations-multiple-libs: redundant-bugs-field
 W: relations-multiple-libs: redundant-origin-field
 W: relations: bad-homepage lintian.debian.org

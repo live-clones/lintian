@@ -8,6 +8,7 @@ E: scripts: init.d-script-does-not-implement-required-option /etc/init.d/lsb-bro
 E: scripts: init.d-script-does-not-implement-required-option /etc/init.d/lsb-broken restart
 E: scripts: init.d-script-has-duplicate-lsb-section /etc/init.d/lsb-broken
 E: scripts: init.d-script-has-unterminated-lsb-section /etc/init.d/lsb-broken:15
+E: scripts: missing-dep-for-interpreter jruby => jruby | jruby1.0 | jruby1.1 | jruby1.2 (./usr/bin/jruby-broken)
 E: scripts: missing-dep-for-interpreter lefty => graphviz (./usr/bin/lefty-foo)
 E: scripts: php-script-but-no-phpX-cli-dep ./usr/share/scripts/php5foo
 E: scripts: php-script-but-no-phpX-cli-dep ./usr/share/scripts/phpfoo
@@ -77,4 +78,3 @@ W: scripts: script-uses-bin-env ./usr/bin/envfoo
 W: scripts: script-with-language-extension usr/bin/test.sh
 W: scripts: setuid-binary usr/bin/suidperlfoo 4555 root/root
 W: scripts: setuid-binary usr/bin/suidperlfoo2 4751 root/root
-W: scripts: unusual-interpreter ./usr/bin/jruby-broken #!/usr/bin/jruby
