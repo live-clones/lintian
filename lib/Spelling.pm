@@ -319,6 +319,8 @@ our %CORRECTIONS = qw(
                       utitlty utility
                       variantions variations
                       varient variant
+                      verison version
+                      verisons versions
                       verson version
                       vicefersa vice-versa
                       yur your

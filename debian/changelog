@@ -19,7 +19,9 @@ lintian (2.2.10) UNRELEASED; urgency=low
 
   * lib/Lintian/Relation.pm:
     + [ADB] Fix a spelling mistake ("verison" -> "version").  Thanks,
-      Guillaume Delacour. 
+      Guillaume Delacour.
+  * lib/Spelling.pm:
+    + [RA] Add spelling correction for "verison".
 
   * t/runtests:
     + [ADB] Allow a default Policy version to be specified in template files.
