@@ -2,6 +2,7 @@ lintian (2.2.10) UNRELEASED; urgency=low
 
   * Summary of tag changes:
     + Removed:
+      - desktop-mimetype-without-update-call
       - package-uses-breaks
 
   * checks/fields{,.desc}:
@@ -11,6 +12,9 @@ lintian (2.2.10) UNRELEASED; urgency=low
     + [ADB] Anchor the regular expression for the "gz-file-not-gzip" tag so
       that files with names that contain ".gz" but do not end in that string
       are not flagged.  Patch by Raphael Geissert.  (Closes: #523352)
+  * checks/menu-format{,.desc}:
+    + [RA] Remove desktop-mimetype-without-update-call.  This is now
+      handled by triggers.  Thanks, Chow Loong Jin.  (Closes: #525133)
   * checks/scripts:
     + [RA] Handle command delimiters, $() expressions, and braces and
       parentheses in the checks for correct diversion handling.  Patch

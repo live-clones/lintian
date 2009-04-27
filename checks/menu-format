@@ -384,9 +384,6 @@ my $pkg = shift;
 my $type = shift;
 my $info = shift;
 
-# Whether the postinst script calls update-desktop-database.
-my $postinst_calls_update;
-
 my @menufiles;
 opendir (MENUDIR, "menu/lib") or fail("cannot read menu/lib file directory.");
 push @menufiles, map { "menu/lib/$_" } readdir(MENUDIR);
@@ -415,24 +412,9 @@ foreach my $file (sort keys %{$info->index}) {
     }
 }
 
-# If we saw any desktop files, we may want to know whether postinst calls
-# update-desktop-database.
-if (@desktop_files) {
-    $postinst_calls_update = 0;
-    if (open(IN, '<', "control/postinst")) {
-	local $_;
-	while (<IN>) {
-	    next if /^\s*\#/;
-	    $postinst_calls_update = 1 if /\bupdate-desktop-database\b/;
-	}
-    }
-    close IN;
-}
-
 # Verify all the desktop files.
 for my $desktop_file (@desktop_files) {
-    VerifyDesktopFile($desktop_file, $desktop_file, $pkg, $info,
-		      $postinst_calls_update);
+    VerifyDesktopFile($desktop_file, $desktop_file, $pkg, $info);
 }
 
 # Now all the menu files.
@@ -754,7 +736,7 @@ parse_error:
 
 # Syntax-checks a .desktop file.
 sub VerifyDesktopFile {
-    my ($desktopfile, $file, $pkg, $info, $postinst_calls_update) = @_;
+    my ($desktopfile, $file, $pkg, $info) = @_;
     my %vals;
     open (DESKTOP, '<', "unpacked/$file")
 	or fail("cannot open desktop file $file: $!");
@@ -854,12 +836,6 @@ sub VerifyDesktopFile {
         unless ($saw_main) {
             tag "desktop-entry-lacks-main-category", "/$file";
         }
-    }
-
-    # If there is a MimeType key, the package should call
-    # update-desktop-database in the postinst.
-    if ($vals{'MimeType'} and not $postinst_calls_update) {
-	tag "desktop-mimetype-without-update-call", "/$file";
     }
 }
 
