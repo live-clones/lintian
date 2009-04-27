@@ -1,7 +1,0 @@
-22341 perl-base: pre-dependency libgdbmg1
-21039 libc5-dbg: dependency libc5-dev (= 5.4.38-1)
-12717 wm2: dependency xlib6 (>= 3.3-0)
-23436 vrwave: dependencies jdk1.1-runtime | jdk-shared | jdk-static, unzip (>= 5.20-3)
-25427 libzephyr2: dependency comerr2g
-25709 geomview: dependency libforms0.88
-25710 debian-cd: dependency unzip
