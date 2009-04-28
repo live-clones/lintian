@@ -1,4 +1,6 @@
-lintian (2.2.10) UNRELEASED; urgency=low
+lintian (2.2.10) unstable; urgency=low
+
+  The "do something useful with tar errors, plus bug fixes" release.
 
   * Summary of tag changes:
     + Added:
@@ -128,13 +130,13 @@ lintian (2.2.10) UNRELEASED; urgency=low
   * unpack/unpack-srcpkg-l1:
     + [RA] Save source listing errors in index-errors for later processing
       by cruft.  Don't fail the unpack if tar exits with non-zero status.
-      star-created archives  will cause tar to blow up, but the listing
+      star-created archives will cause tar to blow up, but the listing
       and unpacking still works.
   * unpack/unpack-srcpkg-l2:
     + [RA] Save source unpack errors in unpacked-errors for later
       processing by cruft.
 
- -- Adam D. Barratt <adam@adam-barratt.org.uk>  Sun, 05 Apr 2009 20:42:34 +0100
+ -- Russ Allbery <rra@debian.org>  Mon, 27 Apr 2009 19:28:02 -0700
 
 lintian (2.2.9) unstable; urgency=low
 
