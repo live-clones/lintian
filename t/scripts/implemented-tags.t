@@ -38,6 +38,7 @@ our $EXCLUDE =
                  .*-address-is-on-localhost$
                  ^wrong-debian-qa-address-set-as-maintainer$
                  ^wrong-debian-qa-group-name$
+                 ^malformed-override$
                 ));
 
 # Find all of the check description files.  We'll do one check per
