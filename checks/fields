@@ -643,7 +643,8 @@ if (($type eq "binary") || ($type eq 'udeb')) {
 
 					tag "old-versioned-python-dependency", "$field: $part_d_orig"
 					    if ($d_pkg eq 'python' && $d_version->[0] eq '<<' && &$is_dep_field($field)
-						&& $arch_indep && $pkg =~ /^python-/ && ! defined $info->field('python-version'));
+						&& $arch_indep && $pkg =~ /^python-/ && ! defined $info->field('python-version')
+						&& ! $info->relation('depends')->implies('python-support'));
 
 					# only trigger this for the the preferred alternative
 					tag "versioned-dependency-satisfied-by-perl", "$field: $part_d_orig"

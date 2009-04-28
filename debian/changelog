@@ -1,3 +1,14 @@
+lintian (2.2.11) UNRELEASED; urgency=low
+
+  * checks/fields{,.desc}:
+    + [RA] Allow python << dependencies without Python-Version if the
+      package depends on python-support, which doesn't use the
+      Python-Version field.  Adjust the long description of
+      old-versioned-python-dependency to make it clearer it only applies
+      to python-central.  Thanks, Bernd Zeimetz.  (Closes: #525997)
+
+ -- Russ Allbery <rra@debian.org>  Tue, 28 Apr 2009 10:24:46 -0700
+
 lintian (2.2.10) unstable; urgency=low
 
   The "do something useful with tar errors, plus bug fixes" release.
