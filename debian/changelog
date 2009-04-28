@@ -88,6 +88,8 @@ lintian (2.2.10) UNRELEASED; urgency=low
   * frontend/lintian:
     + [RA] Stop reporting $! when unpack scripts fail.  It will almost
       never contain anything useful.
+    + [RA] Move override parsing to the Tags module.  Patch from Raphael
+      Geissert.
 
   * lib/Lintian/Collect/Binary.pm:
     + [CW] Add missing 'use Parse::DebianChangelog'.
@@ -101,6 +103,9 @@ lintian (2.2.10) UNRELEASED; urgency=low
       Guillaume Delacour.
   * lib/Spelling.pm:
     + [RA] Add spelling correction for "verison".
+  * lib/Tags.pm:
+    + [RA] Add a function to parse overrides, moved from frontend/lintian.
+      Patch from Raphael Geissert.
 
   * t/runtests:
     + [ADB] Allow a default Policy version to be specified in template files.
