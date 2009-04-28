@@ -185,15 +185,6 @@ Info: The package installs a directory in <tt>/usr/local/...</tt> which is
  <tt>/usr/local</tt> is mounted read-only).
 Ref: policy 9.1.2
 
-Tag: possible-name-space-pollution
-Severity: normal
-Certainty: certain
-Info: The package installs a binary which uses a very short file name (one
- or two characters). This is not forbidden by policy, but short names
- should be reserved for the user.  Unless this short name has been used
- for a while already (like the famous "ls", "rm", "cp" commands), you
- should consider giving these binaries a longer name.
-
 Tag: non-standard-dir-perm
 Severity: normal
 Certainty: possible

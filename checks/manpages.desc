@@ -200,17 +200,6 @@ Info: Manual pages for binaries that are not located in <tt>/usr/X11R6/bin</tt>
  proper solution for this problem; move the manual page instead.
 Ref: fhs usrsharemanmanualpages
 
-Tag: no-manpage-in-correct-directory
-Severity: normal
-Certainty: certain
-Info: Manpages for executables in /sbin and /usr/sbin should be placed in
- section 8; manpages for executables in /bin and /usr/bin in section 1;
- manpages for executables in /usr/games in section 6. For the noted
- executable some probable manpages were found but none in the right section.
- .
- This could either mean there is no manpage for the executable or that its
- manpage is placed in the wrong section.
-
 Tag: bad-so-link-within-manual-page
 Severity: important
 Certainty: certain

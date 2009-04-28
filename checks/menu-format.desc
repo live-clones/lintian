@@ -86,14 +86,6 @@ Info: The menu item has a line that has a needs= field with a strange value.
  This may be intentional, but it's probably a typo that will make menu
  ignore the line.
 
-Tag: menu-item-adds-to-root-menu
-Severity: important
-Certainty: certain
-Info: The menu item has a line that specifies a section that will put a menu
- item right in the root menu. Packages should never add items directly to the
- root menu. Note that if you specify an empty section, this error will
- pop up, as it will if you specify a section of "/".
-
 Tag: menu-item-uses-apps-games-section
 Severity: normal
 Certainty: certain

@@ -38,13 +38,17 @@ lintian (2.2.10) UNRELEASED; urgency=low
     + [RA] Remove package-uses-breaks.  dpkg in stable now supports it.
       Thanks, Julian Andres Klode.  (Closes: #522660)
     + [RA] Fix Needs-Info.  Thanks, Raphael Geissert.
-  * checks/files:
+  * checks/files{,.desc}
     + [ADB] Anchor the regular expression for the "gz-file-not-gzip" tag so
       that files with names that contain ".gz" but do not end in that string
       are not flagged.  Patch by Raphael Geissert.  (Closes: #523352)
+    + [RA] Remove desc for removed possible-name-space-pollution tag.
+  * checks/manpages.desc:
+    + [RA] Remove desc for removed no-manpage-in-correct-directory tag.
   * checks/menu-format{,.desc}:
     + [RA] Remove desktop-mimetype-without-update-call.  This is now
       handled by triggers.  Thanks, Chow Loong Jin.  (Closes: #525133)
+    + [RA] Remove desc for removed menu-item-adds-to-root-menu tag.
   * checks/patch-systems.desc:
     + [RA] Mention that empty dpatch patch lists or quilt series files
       will disappear in a non-native source package and hence produce the
