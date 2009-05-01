@@ -1,5 +1,10 @@
 lintian (2.2.11) UNRELEASED; urgency=low
 
+  * checks/binaries.desc:
+    + [ADB] Extend the description of spelling-error-in-binary to mention
+      that misspelt words are always output in lower case, and give some
+      suggestions for finding the error oneself.  Thanks, Raphael Geissert
+      and Paul Gevers.  (Closes: #526435)
   * checks/fields{,.desc}:
     + [RA] Allow python << dependencies without Python-Version if the
       package depends on python-support, which doesn't use the
