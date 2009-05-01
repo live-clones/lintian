@@ -223,7 +223,7 @@ Certainty: wild-guess
 Experimental: yes
 Info: Lintian found a spelling error in the given binary.  Lintian has a
  list of common misspellings that it looks for.  It does not have a
- dictionary like a spelling checker does.  For lintian's convenience all
+ dictionary like a spelling checker does.  For Lintian's convenience all
  words are normalised to lower case.
  .
  If the string containing the spelling error is translated with the help
