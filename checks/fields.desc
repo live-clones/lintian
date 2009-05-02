@@ -294,8 +294,8 @@ Info: The "Section:" field in this package's control file is not one of
  utils, vcs, video, web, x11, xfce, zope.
  .
  The section name should be preceded by "non-free/" if the package
- is in the non-free distribution, and by "contrib/" if the package
- is in the contrib distribution.
+ is in the non-free archive area, and by "contrib/" if the package
+ is in the contrib archive area.
 Ref: policy 2.4
 
 Tag: section-is-dh_make-template
