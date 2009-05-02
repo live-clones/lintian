@@ -40,6 +40,7 @@ sub new {
 
 # Returns whether the package is a native package according to
 # its version number
+# sub native Needs-Info <>
 sub native {
     my ($self) = @_;
     return $self->{native} if exists $self->{native};
@@ -53,6 +54,7 @@ sub native {
 sub changelog {
     my ($self) = @_;
     return $self->{changelog} if exists $self->{changelog};
+    # sub changelog Needs-Info changelog-file
     if (-l 'changelog' || ! -f 'changelog') {
         $self->{changelog} = undef;
     } else {
@@ -64,6 +66,7 @@ sub changelog {
 
 # Returns the information from the indices
 # FIXME: should maybe return an object
+# sub index Needs-Info <>
 sub index {
     my ($self) = @_;
     return $self->{index} if exists $self->{index};
@@ -125,6 +128,7 @@ sub file_info {
     return $self->{file_info} if exists $self->{file_info};
 
     my %file_info;
+    # sub file_info Needs-Info file-info
     open(my $idx, '<', "file-info")
         or fail("cannot open file-info: $!");
     while (<$idx>) {
@@ -150,6 +154,7 @@ sub scripts {
     return $self->{scripts} if exists $self->{scripts};
 
     my %scripts;
+    # sub scripts Needs-Info scripts
     open(SCRIPTS, '<', "scripts")
 	or fail("cannot open scripts file: $!");
     while (<SCRIPTS>) {
@@ -179,6 +184,7 @@ sub objdump_info {
 
     my %objdump_info;
     my ($dynsyms, $file);
+    # sub objdump_info Needs-Info objdump-info
     open(my $idx, '<', "objdump-info")
         or fail("cannot open objdump-info: $!");
     while (<$idx>) {
@@ -261,6 +267,7 @@ sub objdump_info {
 # field names are supported: all (pre-depends, depends, recommends, and
 # suggests), strong (pre-depends and depends), and weak (recommends and
 # suggests).
+# sub relation Needs-Info <>
 sub relation {
     my ($self, $field) = @_;
     $field = lc $field;

@@ -41,6 +41,7 @@ sub new {
 
 # Get the changelog file of a source package as a Parse::DebianChangelog
 # object.  Returns undef if the changelog file couldn't be found.
+# sub changelog Needs-Info <>
 sub changelog {
     my ($self) = @_;
     return $self->{changelog} if exists $self->{changelog};
@@ -57,6 +58,7 @@ sub changelog {
 # format 3.0 (quilt) packages, we base this on whether we have a Debian
 # *.diff.gz file.  3.0 (quilt) packages are always non-native.  Returns true
 # if the package is native and false otherwise.
+# sub native Needs-Info <>
 sub native {
     my ($self) = @_;
     return $self->{native} if exists $self->{native};
@@ -78,6 +80,7 @@ sub binaries {
     my ($self) = @_;
     return $self->{binaries} if exists $self->{binaries};
     my %binaries;
+    # sub binaries Needs-Info source-control-file
     opendir(BINPKGS, 'control') or fail("can't open control directory: $!");
     for my $package (readdir BINPKGS) {
         next if $package =~ /^\.\.?$/;
@@ -97,6 +100,7 @@ sub binary_field {
     return $self->{binary_field}{$package}{$field}
         if exists $self->{binary_field}{$package}{$field};
     my $value = '';
+    # sub binary_field Needs-Info source-control-file
     if (-f "control/$package/$field") {
         $value = slurp_entire_file("control/$package/$field");
         chomp $value;
@@ -123,6 +127,7 @@ sub binary_relation {
     if ($special{$field}) {
         my $merged;
         for my $f (@{ $special{$field} }) {
+	    # sub binary_relation Needs-Info :binary_field
             my $value = $self->binary_field($f);
             $merged .= ', ' if (defined($merged) and defined($value));
             $merged .= $value if defined($value);
@@ -147,6 +152,7 @@ sub file_info {
     return $self->{file_info} if exists $self->{file_info};
 
     my %file_info;
+    # sub file_info Needs-Info file-info
     open(my $idx, '<', "file-info") or fail("cannot open file-info: $!");
     while (<$idx>) {
         chomp;
@@ -166,6 +172,7 @@ sub file_info {
 # following special field names are supported:  build-depends-all
 # (build-depends and build-depends-indep) and build-conflicts-all
 # (build-conflicts and build-conflicts-indep).
+# sub relation Needs-Info <>
 sub relation {
     my ($self, $field) = @_;
     $field = lc $field;
@@ -194,6 +201,7 @@ sub relation {
 # Similar to relation(), return a Lintian::Relation object for the given build
 # relationship field, but ignore architecture restrictions.  It supports the
 # same special field names.
+# sub relation_noarch Needs-Info <>
 sub relation_noarch {
     my ($self, $field) = @_;
     $field = lc $field;

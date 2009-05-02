@@ -40,12 +40,14 @@ sub new {
 }
 
 # Return the package name.
+# sub name Needs-Info <>
 sub name {
     my ($self) = @_;
     return $self->{name};
 }
 
 # Return the package type.
+# sub type Needs-Info <>
 sub type {
     my ($self) = @_;
     return $self->{type};
@@ -55,6 +57,7 @@ sub type {
 # that field wasn't present in the control file for the package.  For source
 # packages, this is the *.dsc file; for binary packages, this is the control
 # file in the control section of the package.
+# sub field Needs-Info <>
 sub field {
     my ($self, $field) = @_;
     return $self->{field}{$field} if exists $self->{field}{$field};
