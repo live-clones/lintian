@@ -2,7 +2,7 @@ Check-Script: po-debconf
 Author: Denis Barbier <barbier@linuxfr.org>
 Abbrev: pd
 Type: source
-Unpack-Level: 2
+Unpack-Level: 1
 Info: This looks for common mistakes in packages using po-debconf.
 Needs-Info: debfiles
 

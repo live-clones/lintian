@@ -2,7 +2,7 @@ Check-Script: menus
 Author: Christian Schwarz <schwarz@debian.org>
 Abbrev: men
 Type: binary
-Unpack-Level: 1
+Unpack-Level: 2
 Needs-Info: doc-base-files
 
 Tag: postinst-should-not-set-usr-doc-link

@@ -3,7 +3,7 @@ Author: Joey Hess <joeyh@master.debian.org>
 Abbrev: mnf
 Needs-Info: menu-files
 Type: binary
-Unpack-Level: 1
+Unpack-Level: 2
 Info: This script validates the format of menu files.
 
 Tag: old-format-menu-file
