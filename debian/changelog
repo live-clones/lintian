@@ -1,10 +1,20 @@
 lintian (2.2.11) UNRELEASED; urgency=low
 
+  * Summary of tag changes:
+    + Added:
+      - section-area-mismatch
+    + Removed:
+      - section-category-mismatch
+
   * checks/binaries.desc:
     + [ADB] Extend the description of spelling-error-in-binary to mention
       that misspelt words are always output in lower case, and give some
       suggestions for finding the error oneself.  Thanks, Raphael Geissert
       and Paul Gevers.  (Closes: #526435)
+  * checks/control-file{,.desc}:
+    + [ADB] Refer to main, contrib and non-free as archive areas rather
+      than categories.
+    + [ADB] Rename section-category-mismatch to section-area-mismatch.
   * checks/fields{,.desc}:
     + [RA] Allow python << dependencies without Python-Version if the
       package depends on python-support, which doesn't use the

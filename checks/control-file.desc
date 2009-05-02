@@ -70,14 +70,14 @@ Info: The package does not have a "Section:" field in the source package
  section of its control file.  The Section field is required for source
  packages at the request of the Debian ftp-masters.
 
-Tag: section-category-mismatch
+Tag: section-area-mismatch
 Severity: important
 Certainty: certain
 Info: The <tt>debian/control</tt> file places the indicated binary package
- in a different archive category (main, contrib, non-free) than its source
+ in a different archive area (main, contrib, non-free) than its source
  package or other binary packages built from the same source package.  The
  source package and any binary packages it builds must be in the same
- category of the archive.  A source package in main may only build binary
+ area of the archive.  A source package in main may only build binary
  packages in main, a source package in non-free may only build binary
  packages in non-free, and so forth.
 

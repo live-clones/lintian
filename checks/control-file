@@ -136,21 +136,21 @@ for my $control (@binary_controls) {
 	}
 }
 
-# Check that every package is in the same archive category, except that
+# Check that every package is in the same archive area, except that
 # sources in main can deliver both main and contrib packages.  The source
 # package may or may not have a section specified; if it doesn't, derive the
-# expected archive category from the first binary package by leaving $category
+# expected archive area from the first binary package by leaving $area
 # undefined until parsing the first binary section.  Missing sections will be
 # caught by other checks.
 #
 # Also accumulate short and long descriptions for each package so that we can
 # check for duplication.
-my $category;
+my $area;
 if ($header->{'section'}) {
 	if ($header->{'section'} =~ m%^([^/]+)/%) {
-		$category = $1;
+		$area = $1;
 	} else {
-		$category = '';
+		$area = '';
 	}
 } else {
 	tag "no-section-field-for-source", "";
@@ -160,18 +160,18 @@ for my $binary_control (@binary_controls) {
 	push(@descriptions, [ $binary_control->{'package'}, split("\n", $binary_control->{'description'}, 2) ])
 	    if $binary_control->{'description'};
 	next unless $binary_control->{'section'};
-	if (!defined ($category)) {
+	if (!defined ($area)) {
 		if ($binary_control->{'section'} =~ m%^([^/]+)/%) {
-			$category = ($1 eq 'contrib') ? '' : $1;
+			$area = ($1 eq 'contrib') ? '' : $1;
 		} else {
-			$category = '';
+			$area = '';
 		}
 		next;
 	}
-	tag "section-category-mismatch", "Package " . $binary_control->{'package'}
-		if ($category && $binary_control->{'section'} !~ m%^$category/%);
-	tag "section-category-mismatch", "Package " . $binary_control->{'package'}
-		if (!$category && $binary_control->{'section'} =~ m%^([^/]+)/% && $1 ne 'contrib');
+	tag "section-area-mismatch", "Package " . $binary_control->{'package'}
+		if ($area && $binary_control->{'section'} !~ m%^$area/%);
+	tag "section-area-mismatch", "Package " . $binary_control->{'package'}
+		if (!$area && $binary_control->{'section'} =~ m%^([^/]+)/% && $1 ne 'contrib');
 }
 
 # Check for duplicate descriptions.
