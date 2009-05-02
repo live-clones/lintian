@@ -971,3 +971,9 @@ Info: The given file ends with <tt>.gz</tt>, which normally indicates it
  gzip-compressed file.  gzip will fail with an error on such files.
  Normally this indicates a mistake in the installation process of the
  package.
+
+Tag: non-free-flash
+Severity: serious
+Certainty: possible
+Info: The given flash file appears to be a known non-free file.
+

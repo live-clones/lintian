@@ -104,6 +104,15 @@ our @phplibraries = (
 #    [ qr,(?i)(class\.)?kses\.php$, => 'libphp-kses' ],
 );
 
+# A list of known non-free flash executables
+our @flash_nonfree = (
+    qr<(?i)dewplayer(?:-\w+)?\.swf$>,
+    qr<(?i)(?:mp3|flv)player\.swf$>,
+# Situation needs to be clarified:
+#    qr,(?i)multipleUpload\.swf$,
+#    qr,(?i)xspf_jukebox\.swf$,
+);
+
 sub run {
 
 my $pkg = shift;
@@ -757,6 +766,14 @@ foreach my $file (sort keys %{$info->index}) {
 		    if ($pkg ne $FONT_PACKAGES->value($font) and $type ne 'udeb');
 	    } elsif ($pkg !~ m/^[ot]tf-/) {
 		tag 'font-in-non-font-package', $file;
+	    }
+	}
+
+	# ---------------- non-free .swf files
+	foreach my $flash (@flash_nonfree) {
+	    last if ($pkg_section =~ m,^non-free/,);
+	    if ($file =~ m,/$flash,) {
+		tag "non-free-flash", $file;
 	    }
 	}
 
