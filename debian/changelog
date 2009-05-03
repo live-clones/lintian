@@ -33,6 +33,9 @@ lintian (2.2.11) UNRELEASED; urgency=low
       variables.  In each case, the original name is permitted as a
       synonym.
 
+  * reporting/config:
+    + [ADB] Use $LINTIAN_AREA rather than $LINTIAN_SECTION in the default
+      configuration file.
   * reporting/harness:
     + [ADB] Use the new $LINTIAN_AREA variable to determine which packages
       to process.
