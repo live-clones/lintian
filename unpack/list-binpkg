@@ -67,7 +67,7 @@ use Util;
 my $LINTIAN_ARCHIVEDIR = $ENV{'LINTIAN_ARCHIVEDIR'};
 my $LINTIAN_DIST = $ENV{'LINTIAN_DIST'};
 my $LINTIAN_ARCH = $ENV{'LINTIAN_ARCH'};
-my $LINTIAN_SECTION = $ENV{'LINTIAN_SECTION'};
+my $LINTIAN_AREA = $ENV{'LINTIAN_AREA'};
 my $LINTIAN_LAB = $ENV{'LINTIAN_LAB'};
 
 # read old list file (this command does nothing if the file does not exist)
@@ -85,7 +85,7 @@ open(OUT, '>', $output_file)
 print OUT "$BINLIST_FORMAT\n";
 
 # parse Packages file to get list of packages
-my $packages = "$LINTIAN_ARCHIVEDIR/dists/$LINTIAN_DIST/$LINTIAN_SECTION/".
+my $packages = "$LINTIAN_ARCHIVEDIR/dists/$LINTIAN_DIST/$LINTIAN_AREA/".
                "binary-$LINTIAN_ARCH/Packages";
 if (-e $packages) {
 	print "N: Parsing $packages ...\n" if $verbose;

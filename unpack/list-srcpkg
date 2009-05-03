@@ -66,7 +66,7 @@ use Util;
 my $LINTIAN_ARCHIVEDIR = $ENV{'LINTIAN_ARCHIVEDIR'};
 my $LINTIAN_DIST = $ENV{'LINTIAN_DIST'};
 my $LINTIAN_LAB = $ENV{'LINTIAN_LAB'};
-my $LINTIAN_SECTION = $ENV{'LINTIAN_SECTION'};
+my $LINTIAN_AREA = $ENV{'LINTIAN_AREA'};
 
 # read old list file (this command does nothing if the file does not exist)
 read_src_list($output_file,1);
@@ -82,7 +82,7 @@ open(OUT, '>', $output_file) or fail("cannot open list file $output_file for wri
 print OUT "$SRCLIST_FORMAT\n";
 
 # parse Sources.gz to get list of packages
-my $sources = "$LINTIAN_ARCHIVEDIR/dists/$LINTIAN_DIST/$LINTIAN_SECTION/source/Sources.gz";
+my $sources = "$LINTIAN_ARCHIVEDIR/dists/$LINTIAN_DIST/$LINTIAN_AREA/source/Sources.gz";
 print "N: Parsing $sources ...\n" if $verbose;
 open(IN, '-|', 'zcat', $sources) or fail("Cannot open input pipe from zcat $sources: $!");
 
