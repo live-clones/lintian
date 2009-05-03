@@ -60,10 +60,11 @@ our $OPT_LINTIAN_LAB = "";	#string for the --lab option
 our $OPT_LINTIAN_ARCHIVEDIR = "";#string for the --archivedir option
 our $OPT_LINTIAN_DIST = "";	#string for the --dist option
 our $OPT_LINTIAN_ARCH = "";	#string for the --arch option
-our $OPT_LINTIAN_SECTION = "";	#string for the --release option
+our $OPT_LINTIAN_AREA = "";	#string for the --area option
 # These options can also be used via default or environment variables
 our $LINTIAN_CFG = "";		#config file to use
 our $LINTIAN_ROOT;		#location of the lintian modules
+our $OPT_LINTIAN_SECTION = "";  #old name for OPT_LINTIAN_ARCH
 
 my $experimental_output_opts = undef;
 
@@ -98,6 +99,7 @@ our $LINTIAN_DIST = undef;
 our $LINTIAN_UNPACK_LEVEL = undef;
 our $LINTIAN_ARCH = undef;
 our $LINTIAN_SECTION = undef;
+our $LINTIAN_AREA = undef;
 # }}}
 
 # {{{ Setup Code
@@ -162,7 +164,7 @@ Configuration options:
     --lab LABDIR              use LABDIR as permanent laboratory
     --archivedir ARCHIVEDIR   location of Debian archive to scan for packages
     --dist DIST               scan packages in this distribution (e.g. sid)
-    --section RELEASE         scan packages in this section (e.g. main)
+    --area AREA               scan packages in this archive area (e.g. main)
     --arch ARCH               scan packages with architecture ARCH
     --root ROOTDIR            use ROOTDIR instead of /usr/share/lintian
 Package selection options:
@@ -437,7 +439,8 @@ my %opthash = (			# ------------------ actions
 	       "lab=s" => \$OPT_LINTIAN_LAB,
 	       "archivedir=s" => \$OPT_LINTIAN_ARCHIVEDIR,
 	       "dist=s" => \$OPT_LINTIAN_DIST,
-	       "section=s" => \$OPT_LINTIAN_SECTION,
+	       "area=s" => \$OPT_LINTIAN_AREA,
+	       "section=s" => \$OPT_LINTIAN_AREA,
 	       "arch=s" => \$OPT_LINTIAN_ARCH,
 	       "root=s" => \$LINTIAN_ROOT,
 
@@ -528,7 +531,7 @@ if ($LINTIAN_CFG) {
     undef $LINTIAN_CFG;
 }
 
-use constant VARS => qw(LAB ARCHIVEDIR DIST UNPACK_LEVEL SECTION ARCH);
+use constant VARS => qw(LAB ARCHIVEDIR DIST UNPACK_LEVEL SECTION AREA ARCH);
 # read configuration file
 if ($LINTIAN_CFG) {
     open(CFG, '<', $LINTIAN_CFG)
@@ -575,6 +578,18 @@ unless (defined $LINTIAN_ARCH) {
 	chop($LINTIAN_ARCH=`dpkg --print-architecture`);
     } else {
 	$LINTIAN_ARCH = 'any';
+    }
+}
+
+# LINTIAN_SECTION is deprecated in favour of LINTIAN_AREA
+if (defined $LINTIAN_SECTION) {
+    print STDERR "warning: LINTIAN_SECTION has been deprecated in favour of LINTIAN_AREA.\n";
+    if (defined $LINTIAN_AREA) {
+	print STDERR "Using LINTIAN_AREA as both were defined.\n";
+    } else {
+	print STDERR "Both are currently accepted, but LINTIAN_SECTION may be removed\n";
+	print STDERR "in a future Lintian release.\n";
+	$LINTIAN_AREA = $LINTIAN_SECTION;
     }
 }
 

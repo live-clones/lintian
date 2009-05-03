@@ -26,6 +26,13 @@ lintian (2.2.11) UNRELEASED; urgency=low
     + [ADB] Refer to contrib and non-free as "archive areas" rather than
       distributions.
 
+  * frontend/lintian:
+    + [ADB] Rename the --section command line option to --area in line
+      with Policy's use of the term "archive area" to describe main, etc.
+      Also rename the corresponding environment and configuration file
+      variables.  In each case, the original name is permitted as a
+      synonym.
+
  -- Russ Allbery <rra@debian.org>  Tue, 28 Apr 2009 10:24:46 -0700
 
 lintian (2.2.10) unstable; urgency=low
