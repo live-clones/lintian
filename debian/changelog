@@ -32,6 +32,9 @@ lintian (2.2.11) UNRELEASED; urgency=low
       Also rename the corresponding environment and configuration file
       variables.  In each case, the original name is permitted as a
       synonym.
+    + [ADB] Reset the timezone in the environment before running any
+      tests so that tar's "implausibly old timestamp" errors use a
+      consistent epoch.  Thanks, Raphael Geissert.
 
   * man/lintian.1:
    + [ADB] Document the new --area command line option and update the
