@@ -58,7 +58,8 @@ use vars qw($LINTIAN_ROOT $LINTIAN_LAB $LINTIAN_ARCHIVEDIR $LINTIAN_DIST
             $log_file $lintian_log $old_lintian_log
             $changes_file $list_file $html_reports_log
             $LOG_DIR $statistics_file
-            $HTML_DIR $HTML_TMP_DIR $LINTIAN_BIN_DIR $LINTIAN_GPG_CHECK);
+            $HTML_DIR $HTML_TMP_DIR $LINTIAN_BIN_DIR $LINTIAN_GPG_CHECK
+            $LINTIAN_AREA);
 
 # import perl libraries
 unshift @INC, "$LINTIAN_ROOT/lib";
@@ -86,7 +87,18 @@ $ENV{'LINTIAN_LAB'} = $LINTIAN_LAB;
 $ENV{'LINTIAN_ARCHIVEDIR'} = $LINTIAN_ARCHIVEDIR;
 $ENV{'LINTIAN_DIST'} = $LINTIAN_DIST;
 $ENV{'LINTIAN_UNPACK_LEVEL'} = $LINTIAN_UNPACK_LEVEL;
-$ENV{'LINTIAN_SECTION'} = $LINTIAN_SECTION;
+# LINTIAN_SECTION is deprecated in favour of LINTIAN_AREA
+if (defined $LINTIAN_SECTION) {
+    print STDERR "warning: LINTIAN_SECTION has been deprecated in favour of LINTIAN_AREA.\n";
+    if (defined $LINTIAN_AREA) {
+        print STDERR "Using LINTIAN_AREA as both were defined.\n";
+    } else {
+        print STDERR "Both are currently accepted, but LINTIAN_SECTION may be removed\n";
+        print STDERR "in a future Lintian release.\n";
+        $LINTIAN_AREA = $LINTIAN_SECTION;
+    }
+}
+$ENV{'LINTIAN_AREA'} = $LINTIAN_AREA;
 $ENV{'LINTIAN_ARCH'} = $LINTIAN_ARCH;
 $ENV{'PATH'} = $LINTIAN_BIN_DIR . ':' . $ENV{'PATH'};
 

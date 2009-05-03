@@ -33,6 +33,17 @@ lintian (2.2.11) UNRELEASED; urgency=low
       variables.  In each case, the original name is permitted as a
       synonym.
 
+  * reporting/harness:
+    + [ADB] Use the new $LINTIAN_AREA variable to determine which packages
+      to process.
+  * reporting/html_reports:
+    + [ADB] Use the new $LINTIAN_AREA variable to determine which archive
+      area we are generating reports for, and pass it through to templates
+      where relevant.
+  * reporting/templates/index.tmpl:
+    + [ADB] Modify the statistics table to refer to archive area rather
+      than section.
+
   * unpack/list-{bin,src,udeb}pkg:
     + [ADB] Use the new $LINTIAN_AREA variable to determine which package
       list to read.

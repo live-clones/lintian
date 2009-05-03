@@ -37,10 +37,15 @@ our $MAX_TAGS = 8;
 # These have no default and must be set in the configuration file.
 # FIXME: $statistics_file should be in all caps as well.
 our ($LINTIAN_ROOT, $LINTIAN_LAB, $LINTIAN_ARCHIVEDIR, $LINTIAN_DIST,
-     $LINTIAN_SECTION, $LINTIAN_ARCH, $HTML_TMP_DIR, $statistics_file);
+     $LINTIAN_SECTION, $LINTIAN_ARCH, $HTML_TMP_DIR, $statistics_file,
+     $LINTIAN_AREA);
 
 # Read the configuration.
 require './config';
+
+if (defined $LINTIAN_SECTION and not defined $LINTIAN_AREA) {
+    $LINTIAN_AREA = $LINTIAN_SECTION;
+}
 
 # The path to the mirror timestamp.
 our $LINTIAN_TIMESTAMP
@@ -476,9 +481,9 @@ for my $package (sort keys %packages) {
     packages  => \%packages,
 );
 my $i = 1;
-for my $section (sort keys %list) {
-    $data{section} = $section;
-    $data{list} = $list{$section};
+for my $area (sort keys %list) {
+    $data{area} = $area;
+    $data{list} = $list{$area};
     output_template ("packages_$i.html", $templates{packages}, \%data);
     $i++;
 }
@@ -517,7 +522,7 @@ close STATS or die "cannot write to $statistics_file: $!\n";
     dist         => $LINTIAN_DIST,
     mirror       => $mirror_timestamp,
     previous     => $old_statistics->{'last-updated'},
-    section      => $LINTIAN_SECTION,
+    area         => $LINTIAN_AREA,
 );
 output_template ('index.html', $templates{index}, \%data);
 exit 0;
