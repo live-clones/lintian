@@ -287,13 +287,19 @@ environment variable and the configuration file entry of the same
 name.
 
 .TP
-.BR \-\-section " release"
+.BR \-\-area " area"
 When scanning for packages in the distdir, select only packages from
-section
-.IR section
+archive area
+.IR area
 (e.g. main). This option overrides the
-.B LINTIAN_SECTION
+.B LINTIAN_AREA
 environment variable and the configuration file entry of the same name.
+
+.TP
+.BR \-\-section " area"
+This is an old name for the
+.B \-\-area
+option and accepted as a synonym for that option.
 
 .TP
 .BR \-\-arch " arch"

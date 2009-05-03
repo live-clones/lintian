@@ -33,6 +33,11 @@ lintian (2.2.11) UNRELEASED; urgency=low
       variables.  In each case, the original name is permitted as a
       synonym.
 
+  * man/lintian.1:
+   + [ADB] Document the new --area command line option and update the
+     documentation of --section to indiciate that it is deprecated in
+     favour of the new option.
+
   * reporting/config:
     + [ADB] Use $LINTIAN_AREA rather than $LINTIAN_SECTION in the default
       configuration file.
