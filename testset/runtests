@@ -207,30 +207,6 @@ if ($testok) {
     exit 1 unless $run_all_tests;
 }
 
-# can I make a lab?
-print "Running static lab test ... create ... ";
-$testok = runsystem_ok("$lintian_path --lab $rundir/test_lab --setup-lab");
-# can I renew a lab?
-print " renew ... ";
-$testok = runsystem_ok("$lintian_path --lab $rundir/test_lab --setup-lab")
-    if $testok;
-# can I remove a lab?
-print " remove ...";
-$testok = runsystem_ok("$lintian_path --lab $rundir/test_lab --remove-lab")
-    if $testok;
-# should be empty now
-print " rmdir ...";
-$testok = runsystem_ok("rmdir $rundir/test_lab")
-    if $testok;
-# cleanup
-runsystem("rm -r $rundir/test_lab") if -d "$rundir/test_lab";
-if ($testok) {
-    print "done.\n";
-} else {
-    print "FAILED!\n";
-    exit 1 unless $run_all_tests;
-}
-
 # ok, I can make a static lab, now let's test the package checks
 # in temporary labs
 my @tests;
