@@ -125,9 +125,36 @@ my $status = 0;
 # anything.
 my $tests_run = 0;
 
+my @tests;
+my $prev;
+
+# --- Run all test scripts
+
+$prev = $prev || scalar(@tests);
+@tests = ();
+if ($singletest) {
+    my $script = "$TESTSET/scripts/$singletest.t";
+    if (-f $script) {
+	@tests = ($script);
+    }
+} else {
+    unless (-d "$TESTSET/scripts") {
+	fail("cannot find $TESTSET/scripts: $!");
+    }
+    @tests = ("$TESTSET/scripts");
+}
+print "\n" if ($prev and @tests);
+if (@tests) {
+    print "Test scripts:\n";
+    if (system('prove', '-I', "$LINTIAN_ROOT/lib", @tests) != 0) {
+	exit 1 unless $run_all_tests;
+	$status = 1;
+    }
+    $tests_run++;
+}
+
 # --- Run all changes tests
 
-my @tests;
 if ($singletest) {
     my $test = $singletest;
     $test =~ s/\.changes$//;
@@ -159,7 +186,7 @@ for (@tests) {
 
 # --- Run all debs tests
 
-my $prev = scalar(@tests);
+$prev = scalar(@tests);
 @tests = ();
 if ($singletest) {
     my $test = $singletest;
@@ -266,31 +293,6 @@ print "Package tests:\n" if @tests;
 for my $test (@tests) {
     my $okay = test_package($test);
     unless ($okay) {
-	exit 1 unless $run_all_tests;
-	$status = 1;
-    }
-    $tests_run++;
-}
-
-# --- Run all test scripts
-
-$prev = $prev || scalar(@tests);
-@tests = ();
-if ($singletest) {
-    my $script = "$TESTSET/scripts/$singletest.t";
-    if (-f $script) {
-	@tests = ($script);
-    }
-} else {
-    unless (-d "$TESTSET/scripts") {
-	fail("cannot find $TESTSET/scripts: $!");
-    }
-    @tests = ("$TESTSET/scripts");
-}
-print "\n" if ($prev and @tests);
-if (@tests) {
-    print "Test scripts:\n";
-    if (system('prove', '-I', "$LINTIAN_ROOT/lib", @tests) != 0) {
 	exit 1 unless $run_all_tests;
 	$status = 1;
     }

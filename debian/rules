@@ -18,8 +18,8 @@ runtests: $(neededfiles) $(allchecks) $(allcollect) $(tagfiles) $(testfiles)
 	@echo .... running tests ....
 	rm -rf debian/tests
 	mkdir debian/tests
-	LINTIAN_ROOT="" $(PERL) testset/runtests -k testset debian/tests $(onlyrun)
 	LINTIAN_ROOT="" $(PERL) t/runtests -k t debian/tests $(onlyrun)
+	LINTIAN_ROOT="" $(PERL) testset/runtests -k testset debian/tests $(onlyrun)
 	if [ "$(onlyrun)" = "" ]; then touch $@; fi
 
 # Like runtests but only runs tests affecting a particular tag.  That tag
