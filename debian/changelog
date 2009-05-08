@@ -55,6 +55,14 @@ lintian (2.2.11) UNRELEASED; urgency=low
     + [ADB] Modify the statistics table to refer to archive area rather
       than section.
 
+  * t/runtests:
+    + [ADB] Run the test scripts before all other tests as they now test
+      some fundamentals which are required to pass in order for the harness
+      itself to work.  Thanks, Raphael Geissert.
+  * t/scripts/{static-lab,tags}.t:
+    + [ADB] New test scripts splitting some of the "harness checking" out
+      of the runtets script.  Patch by Raphael Geissert.
+
   * unpack/list-{bin,src,udeb}pkg:
     + [ADB] Use the new $LINTIAN_AREA variable to determine which package
       list to read.
