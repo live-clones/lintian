@@ -130,8 +130,6 @@ my $prev;
 
 # --- Run all test scripts
 
-$prev = $prev || scalar(@tests);
-@tests = ();
 if ($singletest) {
     my $script = "$TESTSET/scripts/$singletest.t";
     if (-f $script) {
@@ -143,7 +141,7 @@ if ($singletest) {
     }
     @tests = ("$TESTSET/scripts");
 }
-print "\n" if ($prev and @tests);
+
 if (@tests) {
     print "Test scripts:\n";
     if (system('prove', '-I', "$LINTIAN_ROOT/lib", @tests) != 0) {
@@ -151,10 +149,14 @@ if (@tests) {
 	$status = 1;
     }
     $tests_run++;
+
+    print "\n";
 }
 
 # --- Run all changes tests
 
+$prev = scalar(@tests);
+@tests = ();
 if ($singletest) {
     my $test = $singletest;
     $test =~ s/\.changes$//;
@@ -186,7 +188,7 @@ for (@tests) {
 
 # --- Run all debs tests
 
-$prev = scalar(@tests);
+$prev = $prev || scalar(@tests);
 @tests = ();
 if ($singletest) {
     my $test = $singletest;
