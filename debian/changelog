@@ -25,6 +25,13 @@ lintian (2.2.11) UNRELEASED; urgency=low
       to python-central.  Thanks, Bernd Zeimetz.  (Closes: #525997)
     + [ADB] Refer to contrib and non-free as "archive areas" rather than
       distributions.
+  * checks/files.desc:
+    + [RA] Downgrade symlink-has-double-slash and symlink-ends-with-slash
+      to minor.  These are violations of a Policy should, but are unlikely
+      to cause practical problems.  (Closes: #527843)
+    + [RA] Explain in the symlink-contains-spurious-segments description
+      that these segments can cause problems in the presence of symlinked
+      directories.
 
   * debian/rules:
     + [ADB] Re-order the commands in the runtests target so that the
