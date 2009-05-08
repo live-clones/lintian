@@ -26,6 +26,11 @@ lintian (2.2.11) UNRELEASED; urgency=low
     + [ADB] Refer to contrib and non-free as "archive areas" rather than
       distributions.
 
+  * debian/rules:
+    + [ADB] Re-order the commands in the runtests target so that the
+      "new style" testset is run first, as it now also tests the harness.
+      Thanks, Raphael Geissert.
+
   * frontend/lintian:
     + [ADB] Rename the --section command line option to --area in line
       with Policy's use of the term "archive area" to describe main, etc.
