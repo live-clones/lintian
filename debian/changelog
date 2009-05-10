@@ -53,9 +53,9 @@ lintian (2.2.11) UNRELEASED; urgency=low
       finished and wasn't usable in its current form.
 
   * man/lintian.1:
-   + [ADB] Document the new --area command line option and update the
-     documentation of --section to indiciate that it is deprecated in
-     favour of the new option.
+    + [ADB] Document the new --area command line option and update the
+      documentation of --section to indiciate that it is deprecated in
+      favour of the new option.
 
   * reporting/config:
     + [ADB] Use $LINTIAN_AREA rather than $LINTIAN_SECTION in the default
