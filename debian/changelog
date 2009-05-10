@@ -63,6 +63,8 @@ lintian (2.2.11) UNRELEASED; urgency=low
   * reporting/harness:
     + [ADB] Use the new $LINTIAN_AREA variable to determine which packages
       to process.
+    + [RA] Include pedantic tags in lintian.log, but don't report them on
+      the web site.  Patch from Raphael Geissert.
   * reporting/html_reports:
     + [ADB] Use the new $LINTIAN_AREA variable to determine which archive
       area we are generating reports for, and pass it through to templates
@@ -75,6 +77,7 @@ lintian (2.2.11) UNRELEASED; urgency=low
     + [ADB] Run the test scripts before all other tests as they now test
       some fundamentals which are required to pass in order for the harness
       itself to work.  Thanks, Raphael Geissert.
+    + [RA] Run prove recursively in the scripts directory.
   * t/scripts/{static-lab,tags}.t:
     + [ADB] New test scripts splitting some of the "harness checking" out
       of the runtests script.  Patch by Raphael Geissert.
