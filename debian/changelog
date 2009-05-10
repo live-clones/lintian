@@ -48,6 +48,10 @@ lintian (2.2.11) UNRELEASED; urgency=low
       tests so that tar's "implausibly old timestamp" errors use a
       consistent epoch.  Thanks, Raphael Geissert.
 
+  * lib/scan_script.pl:
+    + [RA] Removed.  A start at parsing shell scripts that was never
+      finished and wasn't usable in its current form.
+
   * man/lintian.1:
    + [ADB] Document the new --area command line option and update the
      documentation of --section to indiciate that it is deprecated in
