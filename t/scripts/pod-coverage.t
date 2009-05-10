@@ -8,13 +8,20 @@ eval 'use Test::Pod::Coverage';
 plan skip_all => 'Test::Pod::Coverage is required for testing POD coverage'
     if $@;
 
-my @modules = qw(
-		Lintian::Check
-		Lintian::Collect
-		Lintian::Command
-		Lintian::Data
-		Lintian::Tag::Info
-	);
+# Association of modules to check with additional regexes of private symbols.
+# If one is inclined, one can consider the presence of regexes as a TODO to
+# add underscores; personally, I (rra) think they make the code hard to read.
+our %MODULES =
+    (
+     'Lintian::Check'             => [],
+     'Lintian::Collect'           => [],
+     'Lintian::Command'           => [],
+     'Lintian::Data'              => [],
+     'Lintian::Relation'          => [ qr/^parse_element$/,
+                                       qr/^implies_(element|array)/ ],
+     'Lintian::Relation::Version' => [ qr/^compare$/ ],
+     'Lintian::Tag::Info'         => [],
+    );
 # TODO:
 #		Lintian::Collect::Binary
 #		Lintian::Collect::Source
@@ -22,12 +29,12 @@ my @modules = qw(
 #		Lintian::Output::ColonSeparated
 #		Lintian::Output::LetterQualifier
 #		Lintian::Output::XML
-#		Lintian::Relation
 #		Lintian::Schedule
 
-plan tests => scalar(@modules);
+plan tests => scalar keys(%MODULES);
 
 # Ensure the following modules are documented:
-for my $module (@modules) {
-    pod_coverage_ok($module, "$module is covered");
+for my $module (sort keys %MODULES) {
+    pod_coverage_ok($module, { also_private => $MODULES{$module} },
+                    "$module is covered");
 }
