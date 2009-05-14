@@ -22,8 +22,6 @@ E: filenames: subdir-in-usr-bin usr/bin/bin/
 E: filenames: symlink-contains-spurious-segments usr/lib/filenames/symlink5wrong ../menu/../somethingelse
 E: filenames: symlink-contains-spurious-segments usr/lib/filenames/symlink6wrong ./file4
 E: filenames: symlink-contains-spurious-segments usr/lib/filenames/symlink7wrong ../menu/./something
-E: filenames: symlink-ends-with-slash usr/lib/filenames/symlink9wrong ../menu/something/
-E: filenames: symlink-has-double-slash usr/lib/filenames/symlink8wrong ../menu//something
 E: filenames: symlink-has-too-many-up-segments usr/lib/filenames/symlink2wrong ../../../../etc/symlink
 E: filenames: symlink-should-be-absolute usr/lib/filenames/symlink10wrong ../../..
 E: filenames: symlink-should-be-absolute usr/lib/filenames/symlink1wrong ../../../etc/symlink
@@ -129,6 +127,8 @@ W: filenames: package-installs-nonbinary-perl-in-usr-lib-perl5 usr/lib/perl5/foo
 W: filenames: script-not-executable ./files/feedparser.py
 W: filenames: svk-commit-file-in-package files/svk-commitsEr9P.tmp
 W: filenames: svn-commit-file-in-package files/svn-commit.tmp
+W: filenames: symlink-ends-with-slash usr/lib/filenames/symlink9wrong ../menu/something/
+W: filenames: symlink-has-double-slash usr/lib/filenames/symlink8wrong ../menu//something
 W: filenames: symlink-is-self-recursive usr/lib/filenames/symlink10wrong ../../..
 W: filenames: symlink-is-self-recursive usr/lib/filenames/symlink5ok+warn ..
 W: filenames: symlink-is-self-recursive usr/lib/filenames/symlink6ok+warn .
