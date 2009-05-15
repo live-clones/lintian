@@ -40,6 +40,11 @@ $_config->{quiet} = 2;
 my $cache = AptPkg::Cache->new;
 # end from /usr/share/doc/libapt-pkg-perl/examples/apt-cache
 
+# special cases when libfoo-bar-per => Foo::Bar doesn't work
+my %module_name = (
+    "libio-compress-zlib-perl" => "IO::Compress::Gzip",
+);
+
 use Module::CoreList;
 my $versioning = $_system->versioning;
 
@@ -92,10 +97,14 @@ sub find_core_version {
     my $ret;
     return if $module =~ /^perl(5|api)/;
 
-    # mangle the package name into the module name
-    $module =~ s/^lib//;
-    $module =~ s/-perl$//;
-    $module =~ s/-/::/g;
+    if (exists $module_name{$module}) {
+        $module = $module_name{$module};
+    } else {
+        # mangle the package name into the module name
+        $module =~ s/^lib//;
+        $module =~ s/-perl$//;
+        $module =~ s/-/::/g;
+    }
 
     for (Module::CoreList->find_modules(qr/^\Q$module\E$/i, 0+$])) {
         $ret = $Module::CoreList::version{0+$]}{$_};
