@@ -9,11 +9,16 @@
 #
 # last updated for PERL_VERSION=5.010000
 libtime-piece-perl 1.12
+libsys-syslog-perl 0.22
+libio-compress-zlib-perl 2.008
+libio-compress-base-perl 2.008
 libdigest-sha-perl 5.45
+libcompress-zlib-perl 2.008
+libcompress-raw-zlib-perl 2.008
 libtest-simple-perl 0.72
 libtest-harness-perl 2.64
 libpod-simple-perl 3.05
-libparams-check-perl 0.26
+libpod-escapes-perl 1.04
 libmodule-pluggable-perl 3.6
 libmodule-load-conditional-perl 0.22
 libmodule-corelist-perl 2.12

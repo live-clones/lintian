@@ -33,6 +33,9 @@ lintian (2.2.11) UNRELEASED; urgency=low
       that these segments can cause problems in the presence of symlinked
       directories.
 
+  * data/fields/perl-provides:
+    + [ADB] Refresh against unstable.
+
   * debian/rules:
     + [ADB] Re-order the commands in the runtests target so that the
       "new style" testset is run first, as it now also tests the harness.
