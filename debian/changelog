@@ -37,6 +37,8 @@ lintian (2.2.11) UNRELEASED; urgency=low
     + [ADB] Refresh against unstable.
   * data/fields/perl-provides:
     + [ADB] Refresh against unstable.
+  * data/files/fonts:
+    + [ADB] Refresh against unstable.
 
   * debian/rules:
     + [ADB] Re-order the commands in the runtests target so that the
