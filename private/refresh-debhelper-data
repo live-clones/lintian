@@ -46,7 +46,7 @@ fi
 readonly lintian_data="$(readlink -f "$1")"
 readonly contents="$(readlink -f "$2")"
 readonly dh_regex='^usr/bin/dh_.'
-readonly dh_perl_regex='^usr/bin/(dh_[^\s]+)\s+\w+/([^,]+).*'
+readonly dh_perl_regex='^usr/bin/(dh_[^\s]+)\s+[\w-]+/([^,]+).*'
 offline=0
 
 [ -d "$lintian_data" ] || {

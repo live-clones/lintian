@@ -60,6 +60,9 @@ lintian (2.2.11) UNRELEASED; urgency=low
       documentation of --section to indiciate that it is deprecated in
       favour of the new option.
 
+  * private/refresh-debhelper-data:
+    + [ADB] Update the contents file parsing to handle the fact that
+      there are now section names containing hyphens.
   * private/refresh-perl-provides:
     + [ADB] Special-case libio-compress-zlib-perl to account for the fact
       that it does not contain IO::Compress::Zlib.  Patch by Niko Tyni.
