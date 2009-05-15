@@ -1,6 +1,5 @@
 dh_cligacpolicy
 dh_consoledata
-dh_desktop
 dh_gconf
 dh_haskell_prep
 dh_icons

@@ -17,11 +17,13 @@ java-gcj-compat-dev
 libgstreamer0.10-dev
 libgtk2.0-dev
 libpango1.0-dev
+libxine-dev
 mono-xsp-base
 pidgin-dev
 pkg-kde-tools
 python-central
 python-support
+quilt
 ruby-pkg-tools
 tex-common
 upx-ucl
