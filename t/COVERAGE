@@ -1,4 +1,4 @@
-Last generated 2009-04-27
+Last generated 2009-05-15
 
 The following tags are not tested by the test suite:
 
@@ -113,7 +113,6 @@ files package-installs-into-etc-rc.d
 files package-installs-perllocal-pod
 files package-uses-obsolete-file
 files perl-module-in-core-directory
-files possible-name-space-pollution
 files setgid-binary
 files setuid-gid-binary
 files special-file
@@ -142,7 +141,6 @@ manpages manpage-for-non-x11-binary-in-wrong-directory
 manpages manpage-for-x11-binary-in-wrong-directory
 manpages manpage-in-wrong-directory
 manpages manpage-section-mismatch
-manpages no-manpage-in-correct-directory
 
 menu-format bad-test-in-menu-item
 menu-format desktop-entry-contains-deprecated-key
@@ -153,7 +151,6 @@ menu-format menu-icon-cannot-be-parsed
 menu-format menu-icon-missing
 menu-format menu-icon-not-in-xpm-format
 menu-format menu-icon-too-big
-menu-format menu-item-adds-to-root-menu
 menu-format menu-item-contains-unknown-tag
 menu-format menu-item-creates-new-root-section
 menu-format menu-item-needs-dwww
@@ -269,7 +266,7 @@ changelog-file syntax-error-in-debian-news-file
 changelog-file wrong-name-for-debian-news-file
 
 control-file debian-control-file-uses-obsolete-national-encoding
-control-file section-category-mismatch
+control-file section-area-mismatch
 control-file xs-vcs-header-in-debian-control
 
 control-files control-file-has-bad-permissions
