@@ -104,10 +104,10 @@ else
     zgrep -E "$dh_regex" Contents-i386.gz > dh_entries
     cat dh_entries \
 	| perl -p -w -E 's#'"$dh_perl_regex"'#$1=$2#g;' \
-	| sort > dh_commands
+	| LC_ALL=C sort > dh_commands
     cat dh_entries \
 	| perl -p -w -E 's#'"$dh_perl_regex"'#$2#g;' \
-	| sort -u > dh_packages
+	| LC_ALL=C sort -u > dh_packages
 
     for f in commands packages; do
 	rf="$lintian_data/debhelper/dh_$f"
