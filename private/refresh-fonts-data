@@ -81,5 +81,5 @@ if [ -z "$contents" ] ; then
 fi
 zcat "$contents" \
     | perl -n -w -E 'print lc $_ if (s%^.+/([\w-]+\.(?:[to]tf|pfb|pcf))\s+\w+/([to]tf-[^,]+)(,.+)?$%$1 $2%i);' \
-    | sort >> "$workdir/fonts"
+    | LC_ALL=C sort >> "$workdir/fonts"
 mv "$workdir/fonts" "$lintian_data/files/fonts"
