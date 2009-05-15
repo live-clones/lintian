@@ -69,7 +69,7 @@ lintian (2.2.11) UNRELEASED; urgency=low
       there are now section names containing hyphens.
     + [ADB] Use LC_ALL=C to preserve sort order regardless of the user's
       locale.
-  * private/refresh-fonts-data:
+  * private/refresh-{fonts-data,virtual-packages}:
     + [ADB] Use LC_ALL=C to preserve sort order.
   * private/refresh-perl-provides:
     + [ADB] Special-case libio-compress-zlib-perl to account for the fact

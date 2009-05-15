@@ -122,6 +122,6 @@ fi
 		    print "$pkg\n"
 			unless ($seen{$pkg} eq 1 or exists($pkgs{$pkg}));
 		}' \
-    | sort -u >> "$workdir/virtual-packages"
+    | LC_ALL=C sort -u >> "$workdir/virtual-packages"
 
 mv "$workdir/virtual-packages" "$lintian_data/fields/"
