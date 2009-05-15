@@ -35,7 +35,7 @@ lintian (2.2.11) UNRELEASED; urgency=low
 
   * data/debhelper/{dh_commands,dh_packages,maint_commands}:
     + [ADB] Refresh against unstable.
-  * data/fields/perl-provides:
+  * data/fields/{perl-provides,virtual-packages}:
     + [ADB] Refresh against unstable.
   * data/files/fonts:
     + [ADB] Refresh against unstable.

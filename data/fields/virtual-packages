@@ -8,7 +8,7 @@
 # separated by comma and/or white space. Multiple "Keep: " lines can be used
 # as well.
 #
-# Last updated: 2009-03-12
+# Last updated: 2009-05-15
 
 
 aide-binary
@@ -25,6 +25,8 @@ automaken
 awk
 bacula-director
 bacula-sd-tools
+batman-adv-modules
+batmand-gateway-modules
 bochs-gui
 bogofilter-db
 boom-wad
@@ -54,8 +56,7 @@ dyndns-client
 editor
 emacsen
 epic4-script
-erlang-abi-11.b.3
-et131x-modules
+erlang-abi-13.a
 exim4-localscanapi-1.0
 exim4-localscanapi-1.1
 festival-voice
@@ -76,21 +77,18 @@ gift-client
 gift-plugin
 gimp-help
 gnome-www-browser
-gnustep-back0.14-alt
-gnustep-base-runtime-dbg
-gspca-modules
+gnustep-back0.16-alt
 gstreamer0.10-audiosink
 gstreamer0.10-audiosource
 gstreamer0.10-videosink
 gstreamer0.10-videosource
-gstreamer0.10-visualization
 guile
 gvim
 httpd
 httpd-cgi
 hunspell-dictionary
 hunspell-dictionary-de
-hunspell-dictionary-fr
+hunspell-dictionary-en
 ident-server
 ike-server
 imap-client
@@ -101,7 +99,6 @@ inews
 info-browser
 irc
 ircd
-iscsitarget-modules
 ispell-dictionary
 itcl-doc
 itk-doc
@@ -118,18 +115,13 @@ java2-sdk
 java5-runtime
 java5-runtime-headless
 java5-sdk
-java6-runtime
-java6-runtime-headless
-java6-sdk
-jruby
-kde-i18n
-kfreebsd-source
-kile-i18n
+kde-l10n
 koffice-i18n
 ladspa-host
 ladspa-plugin
 libatlas-3gf.so
 libatlas.so.3gf
+libbatteries-camlp4-dev
 libblas-3gf.so
 libblas.so.3gf
 libcurl-dev
@@ -162,12 +154,10 @@ liblapack-3gf.so
 liblapack.so.3gf
 libmpich-dev
 libneon-dev
-libnet-dev
 libsoqt-dev
 libstdc++-dev
 libstlport-dev
 libswfdec-dev
-libzlui
 licq-plugin
 linux-headers
 linux-headers-2.6
@@ -175,14 +165,10 @@ linux-image
 linux-image-2.6
 linux-initramfs-tool
 linux-kernel-log-daemon
-linux-latest-modules-2.6.26-1-486
-linux-latest-modules-2.6.26-1-686
-linux-latest-modules-2.6.26-1-686-bigmem
-linux-latest-modules-2.6.26-1-amd64
-linux-latest-modules-2.6.26-1-openvz-686
-linux-latest-modules-2.6.26-1-vserver-686
-linux-latest-modules-2.6.26-1-vserver-686-bigmem
-linux-latest-modules-2.6.26-1-xen-686
+linux-latest-modules-2.6.29-2-486
+linux-latest-modules-2.6.29-2-686
+linux-latest-modules-2.6.29-2-686-bigmem
+linux-latest-modules-2.6.29-2-amd64
 lisp-compiler
 loop-aes-modules
 lsb-qt4-ia32
@@ -211,16 +197,10 @@ nfs-server
 nilfs2-modules
 objc++-compiler
 objc-compiler
-octave
-octave-doc
-octave-emacsen
-octave-headers
-octave-htmldoc
-octave-info
 open
-openoffice.org-help-3.0
+openoffice.org-help-3.1
 openoffice.org-hyphenation
-openoffice.org-l10n-3.0
+openoffice.org-l10n-3.1
 openoffice.org-spellcheck-de-at
 openoffice.org-spellcheck-de-ch
 openoffice.org-spellcheck-de-de
@@ -243,7 +223,7 @@ postscript-preview
 postscript-viewer
 radius-server
 ratbox-services
-redhat-cluster-modules
+readline-editor
 root-db-client
 root-file-server
 root-fitter
@@ -252,7 +232,6 @@ snort-rules
 speakup-modules
 sqlrelay-api
 sqlrelay-connection-daemon
-squashfs-modules
 ssh-server
 sword-comm
 sword-dict
@@ -261,8 +240,6 @@ sword-text
 system-log-daemon
 tcldoc
 tclsh
-tclx
-tclx-doc
 telepathy-connection-manager
 telnet-client
 telnet-server
@@ -275,6 +252,10 @@ ttf-japanese-gothic
 ttf-japanese-mincho
 ups-monitor
 usplash-theme
+vim-perl
+vim-python
+vim-ruby
+vim-tcl
 virtualbox-ose-guest-modules
 virtualbox-ose-modules
 vnc-server
@@ -295,6 +276,8 @@ xen-hypervisor-3
 xen-hypervisor-3.2-1
 xmp-player
 xserver
-xserver-xorg-input-2
+xserver-xorg-input-4
 xserver-xorg-video-2
+xserver-xorg-video-5
 zcode-interpreter
+zope
