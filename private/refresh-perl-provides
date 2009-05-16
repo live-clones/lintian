@@ -40,7 +40,7 @@ $_config->{quiet} = 2;
 my $cache = AptPkg::Cache->new;
 # end from /usr/share/doc/libapt-pkg-perl/examples/apt-cache
 
-# special cases when libfoo-bar-per => Foo::Bar doesn't work
+# special cases when libfoo-bar-perl => Foo::Bar doesn't work
 my %module_name = (
     "libio-compress-zlib-perl" => "IO::Compress::Gzip",
 );
