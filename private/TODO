@@ -1,50 +1,166 @@
-Not intended for single bug fixes, use the confirmed and owner tags
-in the BTS, but for somewhat bigger tasks
+This is a collection of work to do in Lintian that isn't a bug fix or a
+simple requested new check.  Use the BTS for those since they're more
+public and so that other people know things have already been requested.
+This is intended for more internal use to track code restructurings,
+infrastructure work, needed cleanups, or larger tasks.
 
-goals for 2.3.0
-===============
+Tasks here are sorted roughly by the directory structure of Lintian where
+that makes sense so that we don't just have one long list.  Patches for
+any of this is welcome, but please discuss on the mailing list first
+before you do lots of work since the maintainers may have specific ways
+they want it to be done.
 
-- go through all checks and try to move common code to modules
-  -- partly done
-- overhaul the Errors/Warnings concept (#243976)
-  -- mostly done
-  We still need official support for alternative output formats.
-  The current stuff is still experimental. [2.2.0?]
-  I think this might be considered done
-- add additional test suite types
-  + normal TAP-style Perl tests
-  + raw source packages
+If someone is actively working on something, note their name in square
+brackets at the beginning.  If someone is noted, coordinate with them
+before working on this.
 
-goals not targetted
-===================
+checks:
 
-- update doc/CREDITS file
-- Go through testset/libbaz/debian/rules, and make sure all TODO's are
-  lintian-detected
-- go through all tags and make sure that any that should have Policy
+- Move all static keyword lists into files in data.
+
+- Separate doc-base checks out of checks/menus (or, probably easier,
+  rename checks/menus to checks/doc-base and separate out the few bits
+  that are actually about menus).
+
+- Remove support for old man programs in checks/manpages; lintian.d.o is
+  running lenny and we don't have to support anything older.
+
+- Go through all tags and make sure that any that should have Policy
   references have them, and more generally that appropriate references are
-  present
-- rewrite the Lintian manual in something other than DebianDoc-SGML
-- update the Lintian manual
+  present.  (Need some way to track this sort of regular tag maintenance.)
+
+- Check current tag certainties and severities against the results from
+  lintian.d.o and adjust.  If something has legitimate overrides, it's not
+  severity: certain, for instance.
+
+collection:
+
+- [Raphael Geissert] Run collect scripts in order based on their
+  dependencies rather than using the Order key in the *.desc.
+
+- Collect desktop files so that checks/menu-format doesn't have to walk
+  the file index and so that we can do interesting checks on desktop files
+  from inside the Lintian lab.
+
+- Switch from objdump to readelf in objdump-info.  readelf provides the
+  data we want in a sometimes-nicer format and is more reliable with
+  broken binaries and non-native architectures.  We already use readelf
+  and hack its output where we have to; replace all of that with always
+  using readelf and modify lib/Lintian/Collect/Binary.pm to understand the
+  readelf output syntax instead.
+
+doc:
+
+- Either update doc/CREDITS based on the changelog file or archive it
+  somewhere and say that it's not going to be updated.
+
+- Rewrite the Lintian manual in something other than DebianDoc-SGML.
+
+- Update the Lintian manual:
   + document severity/certainty
   + document other output formats
   + document the reporting framework
   + developer documentation of the test suite, submitting patches, etc.
 
-goals outside of the lintian source
-===================================
+frontend:
 
-- set up system for automatically filing bugs based on specific lintian
+- Nearly everything in frontend/lintian that isn't command-line parsing is
+  really begging to be a module.  Move code out of here and into modules
+  as part of rewriting the non-namespace modules in lib, such as Lab.pm
+  which should acquire more the laboratory handling from frontend/lintian,
+  and Checker.pm, which should acquire most of the smarts of the main
+  frontend/lintian checking loop.
+
+lib:
+
+- Finish documentation of Lintian::Collect::Binary and ::Source.
+
+- Finish documentation of Lintian::Output*.
+
+- Finish documentation of Lintian::Schedule.
+
+- Replace Lintan::Relation::Version with code to use libapt-pkg-perl,
+  which can do version comparisons in native C.  Forking dpkg is hella
+  slow and I suspect the hash of saved version comparisons is much of the
+  reason for lintian.d.o's memory bloat on whole-archive runs.
+
+- Add collect function to return the sort of symlink information that's
+  currently gathered by checks/menus; we'll find other uses for it.
+
+- Provide a utility function to check a command as currently done in
+  checks/menu-format, after which we could split desktop checking and menu
+  checking into two separate check scripts.
+
+- Move the spelling corrections in Spelling.pm into data as a file with a
+  custom delimiter, so that corrections containing whitespace can be
+  represented.  Move the small amount of code remaining into Lintian/Check
+  as a new method.
+
+- Move the remaining libraries in lib into real modules in the Lintian
+  namespace.  In some cases, this correctly involves significantly
+  rewriting how that part of Lintian is handled to make it more
+  object-oriented.  Add specific to-do tasks for particular files if
+  you've thought through how to do this.
+
+man:
+
+- Rewrite man pages in POD.  We're maintaining a Perl package after all.
+
+private:
+
+- Provide a general framework for updating metadata about the archive and
+  modify all of the private/refresh-* scripts to use it.  Also set up
+  something in debian/rules that will run all of them and update data
+  accordingly which can be done routinely before every release.
+
+reporting:
+
+- Turn the bulk of the reporting framework into a module and move report
+  generation into frontend as a lintian-report program (or something like
+  that) which we can install as a first-class executable.  The
+  html_reports script is relatively okay but could stand some cleanup and
+  conversion to a module.  The harness script needs serious de-yucking.
+
+t:
+
+- Move all remaining test cases from testset into t/tests as a separate
+  legacy class of test cases.  Requires fix to private/update-coverage to
+  keep those tags separated out since we still want to do the next thing.
+
+- Write new-style test cases for everything tested by the old test suite
+  and retire the old test suite.
+
+- Go through testset/libbaz/debian/rules and make sure all TODO's are
+  lintian-detected.
+
+- t/runtests has a lot of duplicate code and could stand some
+  restructuring and factoring of common code.
+
+- Add support to t/runtests for running a single test, moving the logic
+  out of debian/rules.  It should probably be the default action if
+  t/runtests is just given some command-line parameters.
+
+General:
+
+- Make changes files a different type of object that can be checked with
+  check scripts for that type of object.  Add Lintian::Collect::Changes
+  that holds the data of interest.  Move the code for doing changes file
+  checks out of frontend/lintian into a new check script.
+
+- [Raphael Geissert] Turn unpack scripts into another type of collect
+  script that many collect scripts depend on and run all collect and
+  unpack scripts based on their dependency order, in parallel as much as
+  possible.
+
+- Write a real parser for shell scripts that can at least tokenize them
+  half-way decently, do some basic analysis of whether code is conditional
+  or not, and provide reasonable answers to questions like "is this
+  command called in the script" without heinous regex matches.  Replace
+  all the ugly, ad hoc script parsing code elsewhere in Lintian with that
+  parser.
+
+External:
+
+- Set up system for automatically filing bugs based on specific lintian
   tags (the most reliable ones), with usertags to ensure the bugs aren't
-  repeatedly filed
-- set up lintian for use on ftp-master so that it can be used to
-  automatically REJECT packages with particular errors.  will require a
-  mode that only runs important checks that are highly reliable
-  -- our side mostly done, needs to be implemented by ftp-master now
-
-old todo list
-=============
-
-rewrite into a more sane layout.  What I would really like is a set of modules
-that the controller script can open and use.  Probably some OO design.
-I am leaning towards python, but will give OO perl a look first.
+  repeatedly filed.
