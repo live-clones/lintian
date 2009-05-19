@@ -37,6 +37,8 @@ lintian (2.2.11) UNRELEASED; urgency=low
       dependencies for an interpreter when the interpreter may be
       unversioned but the dependency may not.  For example, pikeX.Y provide
       /usr/bin/pike and /usr/bin/pikeX.Y but there is no "pike" package.
+    + [ADB] Add ksh and zsh to the list of packages providing the /bin/ksh
+      alternative.  Thanks, Guillaume Delacour.  (Closes: #529457)
 
   * data/debhelper/{dh_commands,dh_packages,maint_commands}:
     + [ADB] Refresh against unstable.
