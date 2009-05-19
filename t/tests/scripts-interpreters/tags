@@ -1,0 +1,2 @@
+E: scripts-interpreters: missing-dep-for-interpreter pike => pike7.6 | pike7.6-core (./usr/bin/unversioned-pike)
+E: scripts-interpreters: missing-dep-for-interpreter pike7.6 => pike7.6 | pike7.6-core (./usr/bin/versioned-pike)

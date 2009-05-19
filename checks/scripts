@@ -481,7 +481,8 @@ for my $filename (sort keys %{$info->scripts}) {
 	    $d =~ s/\$1/$_/g;
 	    $d;
 	} @versions;
-	my $depends = join (' | ', $data->[1], @depends);
+	unshift (@depends, $data->[1]) if length $data->[1];
+	my $depends = join (' | ',  @depends);
 	unless ($all_parsed->implies($depends)) {
 	    if ($base eq 'php') {
 		tag('php-script-but-no-phpX-cli-dep', $filename);

@@ -1,0 +1,5 @@
+Testname: scripts-interpreters
+Sequence: 6000
+Version: 1.0
+Description: Ensure package dependencies provide interpreters used by scripts
+Test-For: missing-dep-for-interpreter

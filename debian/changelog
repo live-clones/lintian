@@ -32,6 +32,11 @@ lintian (2.2.11) UNRELEASED; urgency=low
     + [RA] Explain in the symlink-contains-spurious-segments description
       that these segments can cause problems in the presence of symlinked
       directories.
+  * checks/scripts:
+    + [ADB] Do not include an empty alternative in the list of suggested
+      dependencies for an interpreter when the interpreter may be
+      unversioned but the dependency may not.  For example, pikeX.Y provide
+      /usr/bin/pike and /usr/bin/pikeX.Y but there is no "pike" package.
 
   * data/debhelper/{dh_commands,dh_packages,maint_commands}:
     + [ADB] Refresh against unstable.
