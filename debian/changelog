@@ -106,6 +106,8 @@ lintian (2.2.11) UNRELEASED; urgency=low
       some fundamentals which are required to pass in order for the harness
       itself to work.  Thanks, Raphael Geissert.
     + [RA] Run prove recursively in the scripts directory.
+    + [RA] Skip scripts tests if a tag was specified.  Patch from Raphael
+      Geissert.
   * t/scripts/{static-lab,tags}.t:
     + [ADB] New test scripts splitting some of the "harness checking" out
       of the runtests script.  Patch by Raphael Geissert.
