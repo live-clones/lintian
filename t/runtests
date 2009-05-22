@@ -135,7 +135,7 @@ if ($singletest) {
     if (-f $script) {
 	@tests = ($script);
     }
-} else {
+} elsif (not $tag) {
     unless (-d "$TESTSET/scripts") {
 	fail("cannot find $TESTSET/scripts: $!");
     }
