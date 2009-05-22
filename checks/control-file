@@ -144,7 +144,11 @@ for my $control (@binary_controls) {
 # caught by other checks.
 #
 # Also accumulate short and long descriptions for each package so that we can
-# check for duplication.
+# check for duplication, but skip udeb packages.  Ideally, we should check the
+# udeb package descriptions separately for duplication, but udeb packages
+# should be able to duplicate the descriptions of non-udeb packages and the
+# package description for udebs is much less important or significant to the
+# user.
 my $area;
 if ($header->{'section'}) {
 	if ($header->{'section'} =~ m%^([^/]+)/%) {
@@ -157,8 +161,13 @@ if ($header->{'section'}) {
 }
 my @descriptions;
 for my $binary_control (@binary_controls) {
-	push(@descriptions, [ $binary_control->{'package'}, split("\n", $binary_control->{'description'}, 2) ])
-	    if $binary_control->{'description'};
+	if ($binary_control->{'description'}
+	    and (not $binary_control->{'xc-package-type'}
+		 or $binary_control->{'xc-package-type'} ne 'udeb')) {
+		push(@descriptions,
+		     [ $binary_control->{'package'},
+		       split("\n", $binary_control->{'description'}, 2) ]);
+	}
 	next unless $binary_control->{'section'};
 	if (!defined ($area)) {
 		if ($binary_control->{'section'} =~ m%^([^/]+)/%) {

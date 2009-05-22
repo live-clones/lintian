@@ -17,6 +17,8 @@ lintian (2.2.11) UNRELEASED; urgency=low
     + [ADB] Rename section-category-mismatch to section-area-mismatch.
     + [ADB] Update the description of section-area-mismatch to clarify
       that source packages in main may build binary packages in contrib.
+    + [RA] Skip duplicate description checks for udeb packages.  Thanks,
+      Thijs Kinkhorst.  (Closes: #529924)
   * checks/fields{,.desc}:
     + [RA] Allow python << dependencies without Python-Version if the
       package depends on python-support, which doesn't use the
