@@ -314,7 +314,7 @@ Info: The Debian diff of this non-native package appears to be completely
 
 Tag: configure-generated-file-in-source
 Severity: normal
-Certainty: certain
+Certainty: possible
 Info: Leaving config.cache/status causes autobuilders problems.
  config.cache and config.status are produced by GNU autoconf's configure
  scripts. If they are left in the source package, autobuilders may pick

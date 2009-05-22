@@ -655,7 +655,7 @@ Ref: lintian 2.4
 
 Tag: package-contains-upstream-install-documentation
 Severity: normal
-Certainty: certain
+Certainty: possible
 Ref: policy 12.3
 Info: Binary packages do not need to contain the instructions for building
  and installing the package as this info is not needed by package users.
@@ -803,7 +803,7 @@ Info: This package installs a file in <tt>/usr/lib/sgml</tt>.  This was
 
 Tag: file-name-ends-in-whitespace
 Severity: normal
-Certainty: certain
+Certainty: possible
 Info: This package installs a file or directory whose name ends in
  whitespace.  This might be intentional but it's normally a mistake.  If
  it is intentional, add a lintian override.
@@ -813,7 +813,7 @@ Info: This package installs a file or directory whose name ends in
 
 Tag: package-contains-empty-directory
 Severity: wishlist
-Certainty: certain
+Certainty: possible
 Info: This package installs an empty directory.  This might be intentional
  but it's normally a mistake.  If it is intentional, add a lintian override.
  .

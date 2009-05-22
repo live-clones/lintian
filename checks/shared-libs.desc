@@ -20,7 +20,7 @@ Ref: policy 8.1
 
 Tag: shlib-with-non-pic-code
 Severity: serious
-Certainty: certain
+Certainty: possible
 Ref: policy 10.2
 Info: The listed shared libraries contain object code that was compiled 
  without -fPIC. All object code in shared libraries should be recompiled
@@ -126,7 +126,7 @@ Ref: policy 8.1.1
 
 Tag: no-shlibs-control-file
 Severity: serious
-Certainty: certain
+Certainty: possible
 Info: Although the package includes a shared library, the package does not
  have a shlibs control file. If this is intentional, please override this
  error.
@@ -151,7 +151,7 @@ Info: The shlibs control file contains a duplicate entry.
 
 Tag: shlib-missing-in-control-file
 Severity: important
-Certainty: certain
+Certainty: possible
 Info: The package contains a shared library that is not listed in the
  shlibs control file. If this is intentional, please override this error.
 Ref: policy 8.6

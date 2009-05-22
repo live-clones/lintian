@@ -8,7 +8,7 @@ Info: This script checks binaries and object files for bugs.
 
 Tag: arch-independent-package-contains-binary-or-object
 Severity: serious
-Certainty: certain
+Certainty: possible
 Info: The package contains a binary or object file but is tagged
  Architecture: all.
  .
@@ -33,7 +33,7 @@ Info: Libraries in <tt>.../lib/debug</tt> or in
 
 Tag: statically-linked-binary
 Severity: important
-Certainty: certain
+Certainty: possible
 Info: The package installs a statically linked binary or object file.
  .
  Usually this is a bug. Otherwise, please install an override if your package
