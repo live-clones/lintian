@@ -296,6 +296,7 @@ Lintian::Collect::Binary - Lintian interface to binary package data collection
 
 =head1 SYNOPSIS
 
+    my ($name, $type) = ('foobar', 'binary');
     my $collect = Lintian::Collect->new($name, $type);
     if ($collect->native) {
         print "Package is native\n";

@@ -76,6 +76,7 @@ Lintian::Collect - Lintian interface to package data collection
 
 =head1 SYNOPSIS
 
+    my ($name, $type) = ('foobar', 'udeb');
     my $collect = Lintian::Collect->new($name, $type);
     $name = $collect->name;
     $type = $collect->type;

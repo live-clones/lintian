@@ -37,6 +37,7 @@ Lintian::Check -- Lintian checks shared between multiple scripts
 
     use Lintian::Check qw(check_maintainer);
 
+    my ($maintainer, $field) = ('John Doe', 'uploader');
     check_maintainer ($maintainer, $field);
 
 =head1 DESCRIPTION

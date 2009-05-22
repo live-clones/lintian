@@ -82,6 +82,7 @@ Lintian::Data - Lintian interface to query lists of keywords
 
 =head1 SYNOPSIS
 
+    my $keyword;
     my $list = Lintian::Data->new('type');
     if ($list->known($keyword)) {
         # do something ...

@@ -44,7 +44,7 @@ Lintian::Output - Lintian messaging handling
 =head1 SYNOPSIS
 
     # non-OO
-    use Lintian::Output qw(:messages)
+    use Lintian::Output qw(:messages);
 
     $Lintian::Output::GLOBAL->verbose(1);
 

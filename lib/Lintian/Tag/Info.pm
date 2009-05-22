@@ -49,7 +49,7 @@ Lintian::Tag::Info - Lintian interface to tag metadata
 
 =head1 SYNOPSIS
 
-    my $tag = Lintian::Tag::Info->new('some-tag');
+    my $tag_info = Lintian::Tag::Info->new('some-tag');
     print "Tag info is:\n";
     print $tag_info->description('text', '   ');
     print "\nTag info in HTML is:\n";
