@@ -140,6 +140,10 @@ t:
   out of debian/rules.  It should probably be the default action if
   t/runtests is just given some command-line parameters.
 
+- udebs are generally undertested right now and could use some general
+  tests, particularly for things that we don't care about with udebs but
+  do care about with regular packages.
+
 General:
 
 - Make changes files a different type of object that can be checked with
