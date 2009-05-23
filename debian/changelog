@@ -11,6 +11,8 @@ lintian (2.2.11) UNRELEASED; urgency=low
       that misspelt words are always output in lower case, and give some
       suggestions for finding the error oneself.  Thanks, Raphael Geissert
       and Paul Gevers.  (Closes: #526435)
+    + [RA] Downgrade certainty of tags for which we recommend overrides.
+      Patch from Raphael Geissert.  (Closes: #530008)
   * checks/control-file{,.desc}:
     + [ADB] Refer to main, contrib and non-free as archive areas rather
       than categories.
@@ -19,6 +21,9 @@ lintian (2.2.11) UNRELEASED; urgency=low
       that source packages in main may build binary packages in contrib.
     + [RA] Skip duplicate description checks for udeb packages.  Thanks,
       Thijs Kinkhorst.  (Closes: #529924)
+  * checks/cruft.desc:
+    + [RA] Downgrade certainty of tags for which we recommend overrides.
+      Patch from Raphael Geissert.
   * checks/fields{,.desc}:
     + [RA] Allow python << dependencies without Python-Version if the
       package depends on python-support, which doesn't use the
@@ -34,6 +39,8 @@ lintian (2.2.11) UNRELEASED; urgency=low
     + [RA] Explain in the symlink-contains-spurious-segments description
       that these segments can cause problems in the presence of symlinked
       directories.
+    + [RA] Downgrade certainty of tags for which we recommend overrides.
+      Patch from Raphael Geissert.
   * checks/scripts:
     + [ADB] Do not include an empty alternative in the list of suggested
       dependencies for an interpreter when the interpreter may be
@@ -41,6 +48,9 @@ lintian (2.2.11) UNRELEASED; urgency=low
       /usr/bin/pike and /usr/bin/pikeX.Y but there is no "pike" package.
     + [ADB] Add ksh and zsh to the list of packages providing the /bin/ksh
       alternative.  Thanks, Guillaume Delacour.  (Closes: #529457)
+  * checks/shared-libs.desc:
+    + [RA] Downgrade certainty of tags for which we recommend overrides.
+      Patch from Raphael Geissert.
 
   * data/debhelper/{dh_commands,dh_packages,maint_commands}:
     + [ADB] Refresh against unstable.
