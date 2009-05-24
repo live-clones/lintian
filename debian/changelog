@@ -21,9 +21,11 @@ lintian (2.2.11) UNRELEASED; urgency=low
       that source packages in main may build binary packages in contrib.
     + [RA] Skip duplicate description checks for udeb packages.  Thanks,
       Thijs Kinkhorst.  (Closes: #529924)
-  * checks/cruft.desc:
+  * checks/cruft{,.desc}:
     + [RA] Downgrade certainty of tags for which we recommend overrides.
       Patch from Raphael Geissert.
+    + [RA] When looking for tar errors from dpkg-source, ignore gpgv
+      output as well as gpg output.
   * checks/fields{,.desc}:
     + [RA] Allow python << dependencies without Python-Version if the
       package depends on python-support, which doesn't use the

@@ -158,7 +158,7 @@ for my $file (keys %ERRORS) {
             # after some other error.
             next if /^Record size =/;
             next if /^Skipping to next header/;
-            next if /^gpg: /;
+            next if /^gpgv?: /;
             next if /^secmem usage: /;
             next if /^Exiting with failure status due to previous errors/;
             tag $tag, $_;
