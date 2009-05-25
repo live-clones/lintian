@@ -1,4 +1,4 @@
-Last generated 2009-05-15
+Last generated 2009-05-25
 
 The following tags are not tested by the test suite:
 
@@ -570,7 +570,6 @@ scripts maintainer-script-needs-depends-on-xml-core
 scripts maintainer-script-removes-device-files
 scripts maintainer-script-uses-dpkg-status-directly
 scripts maintainer-shell-script-fails-syntax-check
-scripts missing-dep-for-interpreter
 scripts php-script-but-no-phpX-cli-dep
 scripts possible-bashism-in-maintainer-script
 scripts possibly-insecure-handling-of-tmp-files-in-maintainer-script
