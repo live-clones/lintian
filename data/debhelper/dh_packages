@@ -13,7 +13,7 @@ dh-ocaml
 gjdoc
 gnustep-make
 haskell-devscripts
-java-gcj-compat-dev
+libgcj-common
 libgstreamer0.10-dev
 libgtk2.0-dev
 libpango1.0-dev

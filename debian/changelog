@@ -55,7 +55,7 @@ lintian (2.2.11) UNRELEASED; urgency=low
       Patch from Raphael Geissert.
 
   * data/debhelper/{dh_commands,dh_packages,maint_commands}:
-    + [ADB] Refresh against unstable.
+    + [ADB] Refresh against unstable.  (Closes: #530622)
   * data/fields/{perl-provides,virtual-packages}:
     + [ADB] Refresh against unstable.
   * data/files/fonts:
