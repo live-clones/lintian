@@ -80,8 +80,9 @@ Ref: policy 5.3
 Tag: magic-arch-in-arch-list
 Severity: serious
 Certainty: certain
-Info: The special architecture values "all" and "any" only make sense if
- they occur alone.
+Info: The special architecture value "any" only make sense if it occurs
+ alone.  The value "all" may appear together with other architectures
+ in a *.dsc file but must occur alone if used in a binary package.
 Ref: policy 5.6.8
 
 Tag: unknown-architecture

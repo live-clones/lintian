@@ -34,6 +34,8 @@ lintian (2.2.11) UNRELEASED; urgency=low
       to python-central.  Thanks, Bernd Zeimetz.  (Closes: #525997)
     + [ADB] Refer to contrib and non-free as "archive areas" rather than
       distributions.
+    + [ADB] Accept Architecture fields in .dsc files which contain both
+      "all" and one or more binary architectures.  (Closes: #530565)
   * checks/files.desc:
     + [RA] Downgrade symlink-has-double-slash and symlink-ends-with-slash
       to minor.  These are violations of a Policy should, but are unlikely

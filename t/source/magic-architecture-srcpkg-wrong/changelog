@@ -1,0 +1,9 @@
+magic-architecture-srcpkg-wrong (1.0-1) unstable; urgency=low
+
+  * Lintian Test Suite.
+  * Test: magic-architecture-srcpkg-wrong
+
+  * Suppress "should close ITP bug" messages.  (Closes: #123456)
+
+ -- Debian Lintian Maintainers <lintian-maint@debian.org>  Wed, 27 May 2009 19:46:03 +0100
+

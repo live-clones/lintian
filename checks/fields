@@ -341,7 +341,7 @@ if (not defined $info->field('architecture')) {
 
 	my @archs = split / /, $archs;
 
-	if (@archs > 1 && grep { $_ eq "any" || $_ eq "all" } @archs) {
+	if (@archs > 1 && grep { $_ eq "any" || ($type ne "source" && $_ eq "all") } @archs) {
 		tag "magic-arch-in-arch-list", "";
 	}
 
