@@ -1055,7 +1055,7 @@ sub script_is_evil_and_wrong {
 	last if (++$i > 55);
 	if (m~
             # the exec should either be "eval"ed or a new statement
-            (^\s*|\beval\s*[\'\"]|(;|&&)\s*)
+            (^\s*|\beval\s*[\'\"]|(;|&&|\b(then|else))\s*)
 
             # eat anything between the exec and $0
             exec\s*.+\s*
@@ -1092,7 +1092,7 @@ sub script_is_evil_and_wrong {
 	    $backgrounded = 1;
 	} elsif ($backgrounded and m~
 	    # the exec should either be "eval"ed or a new statement
-	    (^\s*|\beval\s*[\'\"]|(;|&&)\s*)
+	    (^\s*|\beval\s*[\'\"]|(;|&&|\b(then|else))\s*)
 	    exec\s+true(\s|\Z)~x) {
 
 	    $ret = $1;
