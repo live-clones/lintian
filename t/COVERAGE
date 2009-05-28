@@ -1,4 +1,4 @@
-Last generated 2009-05-25
+Last generated 2009-05-28
 
 The following tags are not tested by the test suite:
 
@@ -59,7 +59,6 @@ fields bad-version-number
 fields build-depends-on-x-metapackage
 fields depends-on-libdb1-compat
 fields doc-package-depends-on-main-package
-fields magic-arch-in-arch-list
 fields maintainer-address-is-on-localhost
 fields maintainer-address-looks-weird
 fields maintainer-address-malformed
