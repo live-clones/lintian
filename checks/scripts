@@ -700,8 +700,8 @@ while (<SCRIPTS>) {
 		# detect source (.) trying to pass args to the command it runs
 		# The first expression weeds out '. "foo bar"'
 		if (not $found and
-		    not m/^\s*\.\s+(\"[^\"]+\"|\'[^\']+\')\s*(\&|\||\d?>|<|;|\Z)/
-		    and m/^\s*(\.\s+[^\s;\`:]+\s+([^\s;]+))/) {
+		    not m/$LEADIN\.\s+(\"[^\"]+\"|\'[^\']+\')\s*(\&|\||\d?>|<|;|\Z)/
+		    and m/$LEADIN(\.\s+[^\s;\`:]+\s+([^\s;]+))/) {
 
 		    my $extra;
 		    ($match, $extra) = ($1, $2);

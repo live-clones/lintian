@@ -54,6 +54,8 @@ lintian (2.2.11) UNRELEASED; urgency=low
       alternative.  Thanks, Guillaume Delacour.  (Closes: #529457)
     + [ADB] Detect shellscript wrappers which embed a call to "exec" in a
       conditional statement.  Thanks, Raphael Geissert.
+    + [ADB] Detect the use of ". foo bar" (passing arguments to a sourced
+      script) inside a conditional statement.  Thanks, Raphael Geissert.
   * checks/shared-libs.desc:
     + [RA] Downgrade certainty of tags for which we recommend overrides.
       Patch from Raphael Geissert.
