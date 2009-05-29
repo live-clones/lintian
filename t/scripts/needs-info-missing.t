@@ -89,7 +89,7 @@ for my $desc (@DESCS) {
     my %needs = map { $_ => 1 } split(/\s*,\s*/, $header->{'needs-info'} || '');
 
     if ($desc =~ m/lintian\.desc$/) {
-	pass("lintian.desc doesn't have missing needs-info for Lintian::Collect");
+	pass("lintian.desc has all required needs-info for Lintian::Collect");
 	next;
     }
 
@@ -120,6 +120,6 @@ for my $desc (@DESCS) {
 
     my $short = $desc;
     $short =~ s,^\Q$ENV{LINTIAN_ROOT}/checks/,,;
-    is($missing, 0, "$short doesn't have missing needs-info for Lintian::Collect") or
+    is($missing, 0, "$short has all required needs-info for Lintian::Collect") or
 	diag(@warnings);
 }
