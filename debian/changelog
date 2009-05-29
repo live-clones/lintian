@@ -2,6 +2,7 @@ lintian (2.2.11) UNRELEASED; urgency=low
 
   * Summary of tag changes:
     + Added:
+      - non-free-flash
       - section-area-mismatch
     + Removed:
       - section-category-mismatch
@@ -38,7 +39,7 @@ lintian (2.2.11) UNRELEASED; urgency=low
       distributions.
     + [ADB] Accept Architecture fields in .dsc files which contain both
       "all" and one or more binary architectures.  (Closes: #530565)
-  * checks/files.desc:
+  * checks/files{,.desc}:
     + [RA] Downgrade symlink-has-double-slash and symlink-ends-with-slash
       to minor.  These are violations of a Policy should, but are unlikely
       to cause practical problems.  (Closes: #527843)
@@ -47,6 +48,9 @@ lintian (2.2.11) UNRELEASED; urgency=low
       directories.
     + [RA] Downgrade certainty of tags for which we recommend overrides.
       Patch from Raphael Geissert.
+    + [ADB] Add a new tag indicating that the filename of a Flash file
+      it may be a known non-free file.  Patch by Raphael Geissert.
+      (Closes: #516250)
   * checks/manpages:
     + [ADB] Remove support for detecting whether man supports the --warnings
       flag.  The version of man shipped in lenny supports it so the
