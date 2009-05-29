@@ -975,5 +975,5 @@ Info: The given file ends with <tt>.gz</tt>, which normally indicates it
 Tag: non-free-flash
 Severity: serious
 Certainty: possible
-Info: The given flash file appears to be a known non-free file.
-
+Info: The given Flash file has a filename which suggests that it may be
+ one of a number of known Flash files with non-free content.
