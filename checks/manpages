@@ -20,7 +20,6 @@
 
 package Lintian::manpages;
 use strict;
-use Lintian::Relation::Version qw(versions_gte);
 use Tags;
 use Util;
 
