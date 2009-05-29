@@ -39,12 +39,25 @@ our @EXPORT = qw(spelling_check spelling_check_picky);
 # "builtin" to "built-in".
 
 our %CORRECTIONS = qw(
-                      accesnt accent
+                      abandonning abandoning
+                      abigious ambiguous
+                      abitrate arbitrate
+                      abov above
+                      absolut absolute
                       accelleration acceleration
+                      accesing accessing
+                      accesnt accent
                       accessable accessible
+                      accessable accessible
+                      accidentaly accidentally
+                      accidentually accidentally
                       accomodate accommodate
+                      accomodate accommodate
+                      accomodates accommodates
+                      accout account
                       acess access
                       acording according
+                      acumulating accumulating
                       addional additional
                       additionaly additionally
                       adress address
@@ -54,37 +67,64 @@ our %CORRECTIONS = qw(
                       albumns albums
                       alegorical allegorical
                       algorith algorithm
+                      algorithmical algorithmically
                       allpication application
+                      alows allows
                       als also
                       altough although
-                      alows allows
+                      ambigious ambiguous
                       amoung among
                       amout amount
                       analysator analyzer
                       ang and
+                      annoucement announcement
+                      appearence appearance
                       appropiate appropriate
+                      appropriatly appropriately
                       aquired acquired
+                      aquired acquired
+                      architechture architecture
+                      arguement argument
+                      arguements arguments
+                      aritmetic arithmetic
                       arne't aren't
                       arraival arrival
                       artifical artificial
                       artillary artillery
+                      assigment assignment
+                      assigments assignments
+                      assistent assistant
+                      asuming assuming
+                      atomatically automatically
                       attemps attempts
+                      attruibutes attributes
                       authentification authentication
                       automaticly automatically
                       automatize automate
                       automatized automated
                       automatizes automates
                       auxilliary auxiliary
+                      avaiable available
+                      availabled available
+                      availablity availability
+                      availale available
                       availavility availability
                       availble available
-                      avaliable available
+                      availble available
                       availiable available
+                      avaliable available
+                      avaliable available
                       backgroud background
                       baloons balloons
+                      batery battery
                       becomming becoming
                       becuase because
+                      begining beginning
                       calender calendar
                       cancelation cancellation
+                      cancelation cancellation
+                      capabilites capabilities
+                      capatibilities capabilities
                       cariage carriage
                       challanges challenges
                       changable changeable
@@ -93,8 +133,11 @@ our %CORRECTIONS = qw(
                       choosen chosen
                       colorfull colorful
                       comand command
+                      comit commit
                       commerical commercial
                       comminucation communication
+                      commiting committing
+                      committ commit
                       commoditiy commodity
                       compability compatibility
                       compatability compatibility
@@ -104,13 +147,18 @@ our %CORRECTIONS = qw(
                       compleatly completely
                       complient compliant
                       compres compress
+                      compresion compression
+                      connectinos connections
+                      consistancy consistency
                       containes contains
                       containts contains
                       contence contents
                       continous continuous
+                      continueing continuing
                       contraints constraints
                       convertor converter
                       convinient convenient
+                      corected corrected
                       cryptocraphic cryptographic
                       deamon daemon
                       debain Debian
@@ -124,16 +172,18 @@ our %CORRECTIONS = qw(
                       dependant dependent
                       detabase database
                       developement development
+                      developement development
                       developped developed
                       deveolpment development
                       devided divided
                       dictionnary dictionary
                       diplay display
                       disapeared disappeared
+                      dispertion dispersion
                       dissapears disappears
-                      documentaion documentation
                       docuentation documentation
                       documantation documentation
+                      documentaion documentation
                       dont don't
                       easilly easily
                       ecspecially especially
@@ -141,14 +191,20 @@ our %CORRECTIONS = qw(
                       editting editing
                       eletronic electronic
                       enchanced enhanced
-                      enhaced enhanced
                       encorporating incorporating
+                      endianness endianess
+                      enhaced enhanced
                       enlightnment enlightenment
                       enterily entirely
                       enviroiment environment
+                      enviroment environment
                       environement environment
+                      excecutable executable
+                      exceded exceeded
                       excellant excellent
                       exlcude exclude
+                      explicitely explicitly
+                      expresion expression
                       exprimental experimental
                       extention extension
                       failuer failure
@@ -161,9 +217,9 @@ our %CORRECTIONS = qw(
                       framwork framework
                       fuction function
                       fuctions functions
+                      functionaly functionally
                       functionnality functionality
                       functonality functionality
-                      functionaly functionally
                       futhermore furthermore
                       generiously generously
                       grahical graphical
@@ -179,11 +235,15 @@ our %CORRECTIONS = qw(
                       implemantation implementation
                       incomming incoming
                       incompatabilities incompatibilities
-                      indended intended
+                      incompatable incompatible
+                      inconsistant inconsistent
                       indendation indentation
+                      indended intended
                       independant independent
                       informatiom information
+                      infromation information
                       initalize initialize
+                      initators initiators
                       initializiation initialization
                       inofficial unofficial
                       integreated integrated
@@ -192,6 +252,7 @@ our %CORRECTIONS = qw(
                       intendet intended
                       interchangable interchangeable
                       intermittant intermittent
+                      interupted interrupted
                       jave java
                       langage language
                       langauage language
@@ -200,59 +261,89 @@ our %CORRECTIONS = qw(
                       lenght length
                       lesstiff lesstif
                       libaries libraries
-                      libraris libraries
                       libary library
+                      libraris libraries
                       licenceing licencing
+                      loggging logging
                       loggin login
                       logile logfile
-                      loggging logging
+                      machinary machinery
                       maintainance maintenance
                       maintainence maintenance
                       makeing making
                       managable manageable
                       manoeuvering maneuvering
+                      mathimatical mathematical
                       mathimatic mathematic
                       mathimatics mathematics
-                      mathimatical mathematical
                       ment meant
+                      messsages messages
+                      microprocesspr microprocessor
+                      milliseonds milliseconds
+                      miscelleneous miscellaneous
+                      misformed malformed
+                      mispelled misspelled
+                      mmnemonic mnemonic
                       modulues modules
+                      monochorome monochrome
                       monochromo monochrome
+                      monocrome monochrome
                       mroe more
                       multidimensionnal multidimensional
                       navagating navigating
                       nead need
                       neccesary necessary
                       neccessary necessary
+                      neccessary necessary
                       necesary necessary
+                      negotation negotiation
                       nescessary necessary
+                      nessessary necessary
                       noticable noticeable
+                      notications notifications
                       o'caml OCaml
+                      omitt omit
+                      ommitted omitted
                       optionnal optional
+                      optmizations optimizations
                       orientatied orientated
                       orientied oriented
+                      overaall overall
                       pacakge package
                       pachage package
                       packacge package
                       packege package
                       packge package
                       pakage package
+                      paramameters parameters
+                      parameterize parametrize
+                      paramter parameter
+                      paramters parameters
                       particularily particularly
+                      pased passed
+                      peprocessor preprocessor
+                      perfoming performing
+                      permissons permissions
                       persistant persistent
                       plattform platform
                       ploting plotting
-                      protable portable
                       posible possible
                       postgressql PostgreSQL
                       powerfull powerful
+                      preceeded preceded
+                      preceeding preceding
+                      precission precision
                       prefered preferred
                       prefferably preferably
                       prepaired prepared
+                      primative primitive
                       princliple principle
                       priorty priority
                       proccesors processors
                       proces process
-                      processsing processing
                       processessing processing
+                      processpr processor
+                      processsing processing
                       progams programs
                       programers programmers
                       programm program
@@ -261,46 +352,88 @@ our %CORRECTIONS = qw(
                       pronnounced pronounced
                       prononciation pronunciation
                       pronouce pronounce
+                      pronunce pronounce
+                      propery property
+                      prosess process
+                      protable portable
                       protcol protocol
+                      protecion protection
                       protocoll protocol
-                      recieve receive
+                      psychadelic psychedelic
+                      quering querying
                       recieved received
+                      recieved received
+                      recieve receive
+                      recieve receive
+                      reciever receiver
+                      recognizeable recognizable
+                      recommanded recommended
                       redircet redirect
+                      redirectrion redirection
+                      reenabled re-enabled
+                      reenable re-enable
+                      reencode re-encode
                       refence reference
+                      registerd registered
+                      registraration registration
                       regulamentations regulations
                       remoote remote
+                      removeable removable
                       repectively respectively
                       replacments replacements
                       requiere require
+                      requred required
+                      resizeable resizable
+                      ressize resize
+                      ressource resource
+                      retransmited retransmitted
                       runnning running
                       safly safely
                       savable saveable
                       searchs searches
                       secund second
                       separatly separately
-                      seperate separate
+                      sepcify specify
+                      seperated separated
                       seperated separated
                       seperately separately
+                      seperate separate
+                      seperate separate
                       seperatly separately
+                      seperator separator
+                      sequencial sequential
                       serveral several
                       setts sets
                       similiar similar
                       simliar similar
                       speach speech
+                      speciefied specified
+                      specifed specified
+                      specificaton specification
+                      specifing specifying
+                      speficied specified
                       speling spelling
                       splitted split
-                      standart standard
                       staically statically
+                      standart standard
                       staticly statically
-                      succesful successful
+                      subdirectoires subdirectories
                       succesfully successfully
+                      succesful successful
+                      superceded superseded
+                      superflous superfluous
+                      superseeded superseded
                       suplied supplied
                       suport support
                       suppored supported
-                      suppport support
                       supportin supporting
+                      suppoted supported
+                      suppported supported
+                      suppport support
+                      suspicously suspiciously
                       synax syntax
                       synchonized synchronized
+                      syncronize synchronize
                       syncronize synchronize
                       syncronizing synchronizing
                       syncronus synchronous
@@ -308,6 +441,14 @@ our %CORRECTIONS = qw(
                       sythesis synthesis
                       taht that
                       throught through
+                      transfering transferring
+                      trasmission transmission
+                      treshold threshold
+                      trigerring triggering
+                      unexecpted unexpected
+                      unfortunatelly unfortunately
+                      unknonw unknown
+                      unuseful useless
                       useable usable
                       usefull useful
                       usera users
@@ -319,14 +460,15 @@ our %CORRECTIONS = qw(
                       utitlty utility
                       variantions variations
                       varient variant
-                      verison version
+                      verbse verbose
                       verisons versions
+                      verison version
                       verson version
                       vicefersa vice-versa
-                      yur your
                       wheter whether
                       wierd weird
                       xwindows X
+                      yur your
                      );
 
 # The format above doesn't allow spaces.
