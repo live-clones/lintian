@@ -26,6 +26,8 @@ lintian (2.2.11) UNRELEASED; urgency=low
       Patch from Raphael Geissert.
     + [RA] When looking for tar errors from dpkg-source, ignore gpgv
       output as well as gpg output.
+  * checks/debhelper.desc:
+    + [ADB] Correct Unpack-Level to 1.  Thanks, Raphael Geissert.
   * checks/fields{,.desc}:
     + [RA] Allow python << dependencies without Python-Version if the
       package depends on python-support, which doesn't use the
@@ -49,6 +51,10 @@ lintian (2.2.11) UNRELEASED; urgency=low
     + [ADB] Remove support for detecting whether man supports the --warnings
       flag.  The version of man shipped in lenny supports it so the
       compatibility code is no longer required.
+  * checks/menu{s,-format}.desc:
+    + [ADB] Correct Unpack-Level to 2.  Thanks, Raphael Geissert.
+  * checks/po-debconf.desc:
+    + [ADB] Correct Unpack-Level to 1.  Thanks, Raphael Geissert.
   * checks/scripts:
     + [ADB] Do not include an empty alternative in the list of suggested
       dependencies for an interpreter when the interpreter may be
@@ -88,6 +94,9 @@ lintian (2.2.11) UNRELEASED; urgency=low
       tests so that tar's "implausibly old timestamp" errors use a
       consistent epoch.  Thanks, Raphael Geissert.
 
+  * lib/Lintian/*.pm:
+    + [ADB] Fix a few errors and add missing example variable declarations
+      in POD synopsis example sections.  Patch by Raphael Geissert.
   * lib/Lintian/Relation/Version.pm:
     + [ADB] Rework to use libapt-pkg-perl rather than calling "dpkg
       --compare-versions" repeatedly and keeping a potentially large
@@ -136,9 +145,27 @@ lintian (2.2.11) UNRELEASED; urgency=low
     + [RA] Run prove recursively in the scripts directory.
     + [RA] Skip scripts tests if a tag was specified.  Patch from Raphael
       Geissert.
+  * t/scripts/minimum-version.t:
+    + [ADB] New script by Raphael Geissert to ensure that all our scripts
+      can run with Perl 5.8.0.
+  * t/scripts/needs-info.t:
+    + [ADB] Renamed to needs-info-exists.t.
+  * t/scripts/needs-info-missing.t:
+    + [ADB] New script by Raphael Geissert to check whether scripts using
+      Lintian::Collect{,::*} declare the required collection scripts in
+      Use-Info.
+  * t/scripts/pod-synopsis.t:
+    + [ADB] New script by Raphael Geissert to ensure that example code in
+      module's POD synopsis section is valid.
   * t/scripts/{static-lab,tags}.t:
     + [ADB] New test scripts splitting some of the "harness checking" out
       of the runtests script.  Patch by Raphael Geissert.
+  * t/scripts/strict.t:
+    + [ADB] New script by Raphael Geissert to check that all our scripts
+      "use strict".
+  * t/scripts/unpack-level.t:
+    + [ADB] New script by Raphael Geissert to check that all checks scripts
+      declare the correct unpack level.
   * t/scripts/version.t:
     + [ADB] New script to test Lintian::Relation::Version.
   * t/tests/lintian-overrides:
