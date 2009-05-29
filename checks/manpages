@@ -24,10 +24,6 @@ use Lintian::Relation::Version qw(versions_gte);
 use Tags;
 use Util;
 
-# Set to true if the man program supports --warnings based on its version
-# number.  This is probed if this variable is undefined and set to 0 or 1.
-our $MAN_WARNINGS;
-
 sub run {
 
 my $pkg = shift;
@@ -233,28 +229,16 @@ foreach my $file (sort keys %{$info->index}) {
 	    tag "manpage-has-bad-whatis-entry", "$file" if $? != 0;
 	}
 
-	# If we've not probed yet, determine if man supports --warnings.
-	# This can be removed once man 2.5.1 makes it to testing.
-	unless (defined $MAN_WARNINGS) {
-	    my $version = `man -V 2>&1`;
-	    if ($? == 0 && $version =~ / (\d+\.[\d.]+)(,|\Z)/) {
-		$MAN_WARNINGS = versions_gte($1, '2.5.1');
-	    } else {
-		$MAN_WARNINGS = 0;
-	    }
-	}
-
 	# If it's not a .so link, run it through "man" to check for errors.
 	# If it is in a directory with the standard man layout, cd to the
 	# parent directory before running man so that .so directives are
 	# processed properly.  (Yes, there are man pages that include other
 	# pages with .so but aren't simple links; rbash, for instance.)
 	my $cmd;
-	my $warnings = $MAN_WARNINGS ? ' --warnings' : '';
 	if ($file =~ m,^(.*)/(man\d/.*)$,) {
-	    $cmd = "cd unpacked/\Q$1\E && man$warnings -E UTF-8 -l \Q$2\E";
+	    $cmd = "cd unpacked/\Q$1\E && man --warnings -E UTF-8 -l \Q$2\E";
 	} else {
-	    $cmd = "man$warnings -E UTF-8 -l unpacked/\Q$file\E";
+	    $cmd = "man --warnings -E UTF-8 -l unpacked/\Q$file\E";
 	}
 	my $pid = open MANERRS, '-|';
 	if (not defined $pid) {
@@ -280,15 +264,6 @@ foreach my $file (sort keys %{$info->index}) {
 	    # ignore wrapping failures if they contain URLs
 	    next if /:(\d+): warning \[.*\]: (can\'t break|cannot adjust) line/
 		and $manfile[$1 - 1] =~ m,(?:http|ftp)://.+,i;
-	    # ignore charset issues with old versions of man for all man pages
-	    # since we can't know, with old versions, whether that was just a
-	    # Unicode issue
-	    if (!$MAN_WARNINGS and
-		(m/warning: can\'t find numbered character/
-		 or m/a magic token is not allowed in a name/
-		 or m/name expected \(got a magic token\)/)) {
-		next;
-	    }
 	    # ignore common undefined macros from pod2man << Perl 5.10
 	    next if /warning: \`(Tr|IX)\' not defined/;
 	    chomp;

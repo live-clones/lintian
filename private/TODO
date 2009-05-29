@@ -22,9 +22,6 @@ checks:
   rename checks/menus to checks/doc-base and separate out the few bits
   that are actually about menus).
 
-- Remove support for old man programs in checks/manpages; lintian.d.o is
-  running lenny and we don't have to support anything older.
-
 - Go through all tags and make sure that any that should have Policy
   references have them, and more generally that appropriate references are
   present.  (Need some way to track this sort of regular tag maintenance.)

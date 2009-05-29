@@ -45,6 +45,10 @@ lintian (2.2.11) UNRELEASED; urgency=low
       directories.
     + [RA] Downgrade certainty of tags for which we recommend overrides.
       Patch from Raphael Geissert.
+  * checks/manpages:
+    + [ADB] Remove support for detecting whether man supports the --warnings
+      flag.  The version of man shipped in lenny supports it so the
+      compatibility code is no longer required.
   * checks/scripts:
     + [ADB] Do not include an empty alternative in the list of suggested
       dependencies for an interpreter when the interpreter may be
