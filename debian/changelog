@@ -135,6 +135,8 @@ lintian (2.2.11) UNRELEASED; urgency=low
   * t/scripts/{static-lab,tags}.t:
     + [ADB] New test scripts splitting some of the "harness checking" out
       of the runtests script.  Patch by Raphael Geissert.
+  * t/scripts/version.t:
+    + [ADB] New script to test Lintian::Relation::Version.
   * t/tests/lintian-overrides:
     + [ADB] New testset for the {malformed,unused}-override tags.  Patch by
       Raphael Geissert.
