@@ -67,6 +67,8 @@ lintian (2.2.11) UNRELEASED; urgency=low
   * data/files/fonts:
     + [ADB] Refresh against unstable.
 
+  * debian/control:
+    + [ADB] Depend on libapt-pkg-perl.
   * debian/rules:
     + [ADB] Re-order the commands in the runtests target so that the
       "new style" testset is run first, as it now also tests the harness.
@@ -82,6 +84,10 @@ lintian (2.2.11) UNRELEASED; urgency=low
       tests so that tar's "implausibly old timestamp" errors use a
       consistent epoch.  Thanks, Raphael Geissert.
 
+  * lib/Lintian/Relation/Version.pm:
+    + [ADB] Rework to use libapt-pkg-perl rather than calling "dpkg
+      --compare-versions" repeatedly and keeping a potentially large
+      cache of previous results.
   * lib/scan_script.pl:
     + [RA] Removed.  A start at parsing shell scripts that was never
       finished and wasn't usable in its current form.

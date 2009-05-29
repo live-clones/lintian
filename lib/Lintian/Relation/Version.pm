@@ -3,6 +3,7 @@
 
 # Copyright (C) 1998 Christian Schwarz and Richard Braakman
 # Copyright (C) 2004-2009 Russ Allbery <rra@debian.org>
+# Copyright (C) 2009 Adam D. Barratt <adam@adam-barratt.org.uk>
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -24,17 +25,14 @@ use warnings;
 
 use Carp qw(croak);
 
-use Lintian::Command qw(spawn);
-
 use base 'Exporter';
 BEGIN {
     our @EXPORT = qw(versions_equal versions_lte versions_gte versions_lt
                      versions_gt versions_compare);
 }
 
-# We save a cache of every version comparison we've done so that we don't have
-# to fork dpkg again if the same comparison comes up.
-our %CACHE;
+use AptPkg::Config '$_config';
+my $versioning = $_config->system->versioning;
 
 =head1 NAME
 
@@ -52,9 +50,8 @@ Lintian::Relation::Version - Comparison operators on Debian versions
 =head1 DESCRIPTION
 
 This module provides five functions for comparing version numbers.  The
-underlying implementation uses C<dpkg --compare-versions> to ensure that
-the results match what dpkg will expect.  All comparisons are cached so
-that we do not fork B<dpkg> again if we see the same comparison.
+underlying implementation uses C<libapt-pkg-perl> to ensure that
+the results match what dpkg will expect.
 
 =head1 FUNCTIONS
 
@@ -71,21 +68,10 @@ sub versions_equal {
     my $result;
 
     return 1 if $p eq $q;
-    return 1 if $CACHE{"$p == $q"};
-    return 1 if $CACHE{"$p <= $q"} and $CACHE{"$p >= $q"};
-    return 0 if $CACHE{"$p != $q"};
-    return 0 if $CACHE{"$p << $q"};
-    return 0 if $CACHE{"$p >> $q"};
 
-    $result = compare($p, 'eq', $q);
-
-    if ($result) {
-        $CACHE{"$p == $q"} = 1;
-    } else {
-        $CACHE{"$p != $q"} = 1;
-    }
-
-    return $result;
+    $result = $versioning->compare($p, $q);
+    
+    return ($result == 0);
 }
 
 =item versions_lte(A, B)
@@ -100,21 +86,10 @@ sub versions_lte {
     my $result;
 
     return 1 if $p eq $q;
-    return 1 if $CACHE{"$p <= $q"};
-    return 1 if $CACHE{"$p == $q"};
-    return 1 if $CACHE{"$p << $q"};
-    return 0 if $CACHE{"$p >> $q"};
-    return 0 if $CACHE{"$p >= $q"} and $CACHE{"$p != $q"};
 
-    $result = compare($p, 'le', $q);
+    $result = $versioning->compare($p, $q);
 
-    if ($result) {
-        $CACHE{"$p <= $q"} = 1;
-    } else {
-        $CACHE{"$p >> $q"} = 1;
-    }
-
-    return $result;
+    return ($result <= 0);
 }
 
 =item versions_gte(A, B)
@@ -129,21 +104,10 @@ sub versions_gte {
     my $result;
 
     return 1 if $p eq $q;
-    return 1 if $CACHE{"$p >= $q"};
-    return 1 if $CACHE{"$p == $q"};
-    return 1 if $CACHE{"$p >> $q"};
-    return 0 if $CACHE{"$p << $q"};
-    return 0 if $CACHE{"$p <= $q"} and $CACHE{"$p != $q"};
 
-    $result = compare($p, 'ge', $q);
+    $result = $versioning->compare($p, $q);
 
-    if ($result) {
-        $CACHE{"$p >= $q"} = 1;
-    } else {
-        $CACHE{"$p << $q"} = 1;
-    }
-
-    return $result;
+    return ($result >= 0);
 }
 
 =item versions_lt(A, B)
@@ -157,21 +121,10 @@ sub versions_lt {
     my $result;
 
     return 0 if $p eq $q;
-    return 1 if $CACHE{"$p << $q"};
-    return 0 if $CACHE{"$p == $q"};
-    return 0 if $CACHE{"$p >= $q"};
-    return 0 if $CACHE{"$p >> $q"};
-    return 1 if $CACHE{"$p <= $q"} and $CACHE{"$p != $q"};
 
-    $result = compare($p, 'lt', $q);
+    $result = $versioning->compare($p, $q);
 
-    if ($result) {
-        $CACHE{"$p << $q"} = 1;
-    } else {
-        $CACHE{"$p >= $q"} = 1;
-    }
-
-    return $result;
+    return ($result < 0);
 }
 
 =item versions_gt(A, B)
@@ -185,21 +138,10 @@ sub versions_gt {
     my $result;
 
     return 0 if $p eq $q;
-    return 1 if $CACHE{"$p >> $q"};
-    return 0 if $CACHE{"$p == $q"};
-    return 0 if $CACHE{"$p <= $q"};
-    return 0 if $CACHE{"$p << $q"};
-    return 1 if $CACHE{"$p >= $q"} and $CACHE{"$p != $q"};
 
-    $result = compare($p, 'gt', $q);
+    $result = $versioning->compare($p, $q);
 
-    if ($result) {
-        $CACHE{"$p >> $q"} = 1;
-    } else {
-        $CACHE{"$p <= $q"} = 1;
-    }
-
-    return $result;
+    return ($result > 0);
 }
 
 =item versions_compare(A, OP, B)
@@ -219,22 +161,12 @@ sub versions_compare {
     else { croak("unknown operator $op") }
 }
 
-# The internal function used to do the comparisons.
-sub compare {
-    return spawn(undef, ['dpkg', '--compare-versions', @_]);
-}
-
 =back
-
-=head1 NOTES
-
-This module can probably be dropped once Dpkg::Version is available on the
-host where lintian.debian.org is generated.  Using Dpkg::Version directly
-will be much more efficient.
 
 =head1 AUTHOR
 
-Originally written by Russ Allbery <rra@debian.org> for Lintian.
+Originally written by Russ Allbery <rra@debian.org> for Lintian and adapted
+to use libapt-pkg-perl by Adam D. Barratt <adam@adam-barratt-org.uk>.
 
 =head1 SEE ALSO
 
