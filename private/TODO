@@ -79,11 +79,6 @@ lib:
 
 - Finish documentation of Lintian::Schedule.
 
-- Replace Lintan::Relation::Version with code to use libapt-pkg-perl,
-  which can do version comparisons in native C.  Forking dpkg is hella
-  slow and I suspect the hash of saved version comparisons is much of the
-  reason for lintian.d.o's memory bloat on whole-archive runs.
-
 - Add collect function to return the sort of symlink information that's
   currently gathered by checks/menus; we'll find other uses for it.
 
