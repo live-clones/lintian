@@ -108,6 +108,9 @@ lintian (2.2.11) UNRELEASED; urgency=low
   * lib/scan_script.pl:
     + [RA] Removed.  A start at parsing shell scripts that was never
       finished and wasn't usable in its current form.
+  * lib/Spelling.pm:
+    + [ADB] Add a number of new corrections from Raphael Geissert.
+      (Closes: #526019)
 
   * man/lintian.1:
     + [ADB] Document the new --area command line option and update the
