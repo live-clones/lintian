@@ -2,6 +2,7 @@ lintian (2.2.11) UNRELEASED; urgency=low
 
   * Summary of tag changes:
     + Added:
+      - missing-comma-between-items
       - non-free-flash
       - section-area-mismatch
     + Removed:
@@ -22,6 +23,9 @@ lintian (2.2.11) UNRELEASED; urgency=low
       that source packages in main may build binary packages in contrib.
     + [RA] Skip duplicate description checks for udeb packages.  Thanks,
       Thijs Kinkhorst.  (Closes: #529924)
+    + [ADB] Warn about missing spaces between items in a control file which
+      have been omitted when spanning the dependency line over multiple
+      lines.  Based on a patch by Damyan Ivanov.  (Closes: #516706)
   * checks/cruft{,.desc}:
     + [RA] Downgrade certainty of tags for which we recommend overrides.
       Patch from Raphael Geissert.

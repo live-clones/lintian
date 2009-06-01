@@ -105,6 +105,33 @@ for my $binary_control (@binary_controls) {
 	}
 }
 
+# Check if comma-separated values that span multiple lines omit commas as in
+# the following example:
+#   Depends: foo, bar
+#    baz
+for my $control ($header, @binary_controls) {
+	for my $field (qw(pre-depends depends recommends suggests breaks
+			  conflicts provides replaces enhances
+			  build-depends build-depends-indep
+			  build-conflics build-conflicts-indep)) {
+		next unless $control->{$field};
+		if ($control->{$field} =~ /
+			([^,]+)		# previous entry
+			\s*\n\s+	# new line + space
+			([a-z][^,]+)	# next entry, must start with a letter
+			/x) {
+
+			my ($prev, $next) = ($1, $2);
+			for ($prev, $next) {
+				s/^\s+//; s/\s+$//;
+			}
+			tag "missing-comma-between-items",
+			    "in $field field between '$prev' and '$next', " .
+			    ($control->{source} ? 'source' : $control->{package});
+		}
+	}
+}
+
 # Make sure that a stronger dependency field doesn't imply any of the elements
 # of a weaker dependency field.  dpkg-gencontrol will fix this up for us, but
 # we want to check the source package since dpkg-gencontrol may silently "fix"
