@@ -68,6 +68,9 @@ lintian (2.2.11) UNRELEASED; urgency=low
       alternative.  Thanks, Guillaume Delacour.  (Closes: #529457)
     + [ADB] Detect shellscript wrappers which embed a call to "exec" in a
       conditional statement.  Thanks, Raphael Geissert.
+    + [ADB] Fix a syntax error in the shellscript wrapper detection that lead
+      to it returning a part of the wrapper script rather than a simple
+      success value.
   * checks/shared-libs.desc:
     + [RA] Downgrade certainty of tags for which we recommend overrides.
       Patch from Raphael Geissert.

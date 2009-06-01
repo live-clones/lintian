@@ -1095,7 +1095,7 @@ sub script_is_evil_and_wrong {
 	    (^\s*|\beval\s*[\'\"]|(;|&&|\b(then|else))\s*)
 	    exec\s+true(\s|\Z)~x) {
 
-	    $ret = $1;
+	    $ret = 1;
 	    last;
 	}
     }
