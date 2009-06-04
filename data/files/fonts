@@ -2,7 +2,7 @@
 # package that contains the font.  Only packages starting with ttf- or
 # otf- are searched for fonts.
 #
-# Last updated: 2009-05-15
+# Last updated: 2009-06-04
 
 1015sn.ttf ttf-aenigma
 1015snr.ttf ttf-aenigma
@@ -969,6 +969,10 @@ slenderw.ttf ttf-aenigma
 slenmini.ttf ttf-aenigma
 slenstub.ttf ttf-aenigma
 snailets.ttf ttf-aenigma
+snb.ttf ttf-sil-sophia-nubian
+snbi.ttf ttf-sil-sophia-nubian
+sni.ttf ttf-sil-sophia-nubian
+snr.ttf ttf-sil-sophia-nubian
 spaciouo.ttf ttf-aenigma
 spacious.ttf ttf-aenigma
 spastic2.ttf ttf-aenigma
@@ -1217,14 +1221,6 @@ vanished.ttf ttf-aenigma
 vantage.ttf ttf-aenigma
 variance.ttf ttf-aenigma
 vemana.ttf ttf-telugu-fonts
-vera.ttf ttf-bitstream-vera
-verabd.ttf ttf-bitstream-vera
-verabi.ttf ttf-bitstream-vera
-verait.ttf ttf-bitstream-vera
-veramobd.ttf ttf-bitstream-vera
-veramobi.ttf ttf-bitstream-vera
-veramoit.ttf ttf-bitstream-vera
-veramono.ttf ttf-bitstream-vera
 verana-bold.otf ttf-adf-verana
 verana-bolditalic.otf ttf-adf-verana
 verana-italic.otf ttf-adf-verana
@@ -1237,8 +1233,6 @@ veranasansdemi-oblique.otf ttf-adf-verana
 veranasansdemi-regular.otf ttf-adf-verana
 veranasansmedium-oblique.otf ttf-adf-verana
 veranasansmedium-regular.otf ttf-adf-verana
-verase.ttf ttf-bitstream-vera
-verasebd.ttf ttf-bitstream-vera
 vertigo.ttf ttf-aenigma
 vertigo2.ttf ttf-aenigma
 vertigup.ttf ttf-aenigma
