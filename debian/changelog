@@ -3,6 +3,7 @@ lintian (2.2.11) UNRELEASED; urgency=low
   * Summary of tag changes:
     + Added:
       - missing-comma-between-items
+      - non-conf-file-in-modprobe.d
       - non-free-flash
       - section-area-mismatch
     + Removed:
@@ -55,6 +56,9 @@ lintian (2.2.11) UNRELEASED; urgency=low
     + [ADB] Add a new tag indicating that the filename of a Flash file
       it may be a known non-free file.  Patch by Raphael Geissert.
       (Closes: #516250)
+    + [ADB] Check for files in /etc/modprobe.d with filenames which do not
+      end in ".conf".  Based on a patch by Raphael Geissert.
+      (Closes: #521595)
   * checks/manpages:
     + [ADB] Remove support for detecting whether man supports the --warnings
       flag.  The version of man shipped in lenny supports it so the

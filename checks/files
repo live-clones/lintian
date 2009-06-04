@@ -245,6 +245,10 @@ foreach my $file (sort keys %{$info->index}) {
 	    tag "non-standard-file-permissions-for-etc-init.d-script",
 		sprintf("$file %04o != 0755",$operm);
 	}
+	#----------------- /etc/modprobe.d
+	elsif ($file =~ m,^etc/modprobe\.d/(.+)$, and $1 !~ m,\.conf$, and $index_info->{type} !~ m/^d/) {
+	    tag "non-conf-file-in-modprobe.d", $file;
+	}
 	#----------------- /etc/pam.conf
 	elsif ($file =~ m,^etc/pam.conf, and $pkg ne "libpam-runtime" ) {
 	    tag "config-file-reserved", "$file by libpam-runtime";

@@ -977,3 +977,16 @@ Severity: serious
 Certainty: possible
 Info: The given Flash file has a filename which suggests that it may be
  one of a number of known Flash files with non-free content.
+
+Tag: non-conf-file-in-modprobe.d
+Severity: important
+Certainty: certain
+Ref: http://lists.debian.org/debian-devel/2009/03/msg00119.html
+Info: Files in <tt>/etc/modprobe.d</tt> should use filenames ending in
+ <tt>.conf</tt>.  modprobe currently warns about files which do not match
+ this convention and at some point in the future the files will no longer
+ be processed.
+ .
+ If the file is an example containing only comments, consider installing
+ it in another location as files in <tt>/etc/modprobe.d</tt> are
+ read each time modprobe is run (which is often at boot time).
