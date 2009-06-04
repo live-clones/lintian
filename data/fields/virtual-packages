@@ -8,7 +8,7 @@
 # separated by comma and/or white space. Multiple "Keep: " lines can be used
 # as well.
 #
-# Last updated: 2009-05-15
+# Last updated: 2009-06-04
 
 
 aide-binary
@@ -18,7 +18,6 @@ apache2-mpm
 aptitude-doc
 aspell-dictionary
 aspell6a-dictionary
-atl2-modules
 audio-mixer
 aufs-modules
 automaken
@@ -67,6 +66,7 @@ fortune-cookie-db
 freeciv
 freeciv-client
 fsck-backend
+fso-sounds
 ftp-server
 fwbuilder-backend
 gcompris-sound
@@ -100,8 +100,6 @@ info-browser
 irc
 ircd
 ispell-dictionary
-itcl-doc
-itk-doc
 java-compiler
 java-runtime
 java-runtime-headless
@@ -115,8 +113,10 @@ java2-sdk
 java5-runtime
 java5-runtime-headless
 java5-sdk
+jruby
 kde-l10n
-koffice-i18n
+kfreebsd-source
+kfreebsd-source-7
 ladspa-host
 ladspa-plugin
 libatlas-3gf.so
@@ -152,6 +152,7 @@ libhtml-wikiconverter-dialect
 libimage-size-ruby
 liblapack-3gf.so
 liblapack.so.3gf
+libmp3splt-plugin
 libmpich-dev
 libneon-dev
 libsoqt-dev
@@ -277,7 +278,6 @@ xen-hypervisor-3.2-1
 xmp-player
 xserver
 xserver-xorg-input-4
-xserver-xorg-video-2
 xserver-xorg-video-5
 zcode-interpreter
 zope
