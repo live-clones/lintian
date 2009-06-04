@@ -193,7 +193,7 @@ our @depends_needed = (
 our $LEADIN = qr'(?:(?:^|[`&;(|{])\s*|(?:if|then|do|while)\s+)';
 
 our @bashism_single_quote_regexs = (
-    $LEADIN . qr'echo\s+(?:-[^e\s]+\s+)?\'[^\']*(\\[\\abcEfnrtv0])+.*?[\']',
+    $LEADIN . qr'echo\s+(?:-[^e\s]+\s+)?\'[^\']*(\\[abcEfnrtv0])+.*?[\']',
 	# unsafe echo with backslashes
     $LEADIN . qr'source\s+[\"\']?(?:\.\/|\/|\$|[\w.-])[^\s]+',
 	# should be '.', not 'source'
@@ -218,7 +218,7 @@ our @bashism_string_regexs = (
     qr'\$\{?PIPESTATUS\}?\b',      # $PIPESTATUS
     qr'\$\{?SHLVL\}?\b',	         # $SHLVL
     qr'<<<',                       # <<< here string
-    $LEADIN . qr'echo\s+(?:-[^e\s]+\s+)?\"[^\"]*(\\[\\abcEfnrtv0])+.*?[\"]',
+    $LEADIN . qr'echo\s+(?:-[^e\s]+\s+)?\"[^\"]*(\\[abcEfnrtv0])+.*?[\"]',
 	# unsafe echo with backslashes
 );
 our @bashism_regexs = (

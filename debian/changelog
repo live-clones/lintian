@@ -75,6 +75,9 @@ lintian (2.2.11) UNRELEASED; urgency=low
     + [ADB] Fix a syntax error in the shellscript wrapper detection that lead
       to it returning a part of the wrapper script rather than a simple
       success value.
+    + [ADB] Remove "\\" from the list of unsafe backslash escapes in the
+      shell script checks.  POSIX does not prohibit its use and it works in
+      all shells in Debian.
   * checks/shared-libs.desc:
     + [RA] Downgrade certainty of tags for which we recommend overrides.
       Patch from Raphael Geissert.
