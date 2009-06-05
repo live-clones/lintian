@@ -1,4 +1,4 @@
 I: files-fonts: font-in-non-font-package usr/share/fonts/truetype/font.otf
 I: files-fonts: font-in-non-font-package usr/share/fonts/truetype/font.ttf
-W: files-fonts: duplicate-font-file usr/share/fonts/truetype/VeraBd.ttf also in ttf-bitstream-vera
-W: ttf-files-fonts: duplicate-font-file usr/share/fonts/truetype/VeraBd.ttf also in ttf-bitstream-vera
+W: files-fonts: duplicate-font-file usr/share/fonts/truetype/4shadow.ttf also in ttf-aenigma
+W: ttf-files-fonts: duplicate-font-file usr/share/fonts/truetype/4shadow.ttf also in ttf-aenigma
