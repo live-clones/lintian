@@ -16,8 +16,9 @@ lintian (2.2.11) UNRELEASED; urgency=low
       and Paul Gevers.  (Closes: #526435)
     + [RA] Downgrade certainty of tags for which we recommend overrides.
       Patch from Raphael Geissert.  (Closes: #530008)
-    + [ADB] Don't consider an amd64 kernel module shipped in an i386
-      binary package to be "from other architecture".  (Closes: #532013)
+    + [ADB] Don't consider an 64-bit kernel module shipped in a binary
+      package for the corresponding 32-bit architecture to be "from other
+      architecture".  (Closes: #532013)
   * checks/control-file{,.desc}:
     + [ADB] Refer to main, contrib and non-free as archive areas rather
       than categories.
