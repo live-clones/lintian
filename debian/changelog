@@ -9,13 +9,15 @@ lintian (2.2.11) UNRELEASED; urgency=low
     + Removed:
       - section-category-mismatch
 
-  * checks/binaries.desc:
+  * checks/binaries{,.desc}:
     + [ADB] Extend the description of spelling-error-in-binary to mention
       that misspelt words are always output in lower case, and give some
       suggestions for finding the error oneself.  Thanks, Raphael Geissert
       and Paul Gevers.  (Closes: #526435)
     + [RA] Downgrade certainty of tags for which we recommend overrides.
       Patch from Raphael Geissert.  (Closes: #530008)
+    + [ADB] Don't consider an amd64 kernel module shipped in an i386
+      binary package to be "from other architecture".  (Closes: #532013)
   * checks/control-file{,.desc}:
     + [ADB] Refer to main, contrib and non-free as archive areas rather
       than categories.

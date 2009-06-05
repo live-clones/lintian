@@ -206,6 +206,9 @@ foreach my $file (sort keys %{$info->file_info}) {
 		unless ($fileinfo =~ m/$ARCH_REGEX{$1}/);
 	} elsif ($arch eq 'amd64' and $fileinfo =~ m/$ARCH_REGEX{i386}/) {
 	    # Ignore i386 binaries in amd64 packages for right now.
+	} elsif ($arch eq 'i386' and
+	    $file =~ m,^./lib/modules/[^/]+-amd64/,) {
+	    # Allow amd64 kernel modules to be installed on i386.
 	} else {
 	    $multiarch = Lintian::Data->new('binaries/multiarch')
 		unless defined($multiarch);
