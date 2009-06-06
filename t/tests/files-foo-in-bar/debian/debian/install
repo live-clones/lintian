@@ -4,6 +4,7 @@ bar tmp/foo
 bar usr/bin/foo
 bar usr/foo
 bar usr/local/foo
+bar usr/lib/debug/
 bar usr/lib/site-python/foo
 bar usr/share/doc/files-foo-in-bar/examples/examples
 bar var/foo
