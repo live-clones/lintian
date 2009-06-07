@@ -85,6 +85,8 @@ lintian (2.2.11) UNRELEASED; urgency=low
     + [ADB] Remove "\\" from the list of unsafe backslash escapes in the
       shell script checks.  POSIX does not prohibit its use and it works in
       all shells in Debian.
+    + [RA] Add escript to the list of known interpreters.  Thanks, Nicholas
+      Jefferson.  (Closes: #532158)
   * checks/shared-libs.desc:
     + [RA] Downgrade certainty of tags for which we recommend overrides.
       Patch from Raphael Geissert.
