@@ -247,3 +247,14 @@ Info: The given ELF object appears to have been statically linked to zlib.
  Doing this is discouraged due to the extra work needed by the security team
  to fix all the extra embedded copies or trigger the package rebuilds, as
  appropriate.
+
+Tag: debug-symbols-directly-in-usr-lib-debug
+Severity: important
+Certainty: certain
+Info: The given debugging symbols-only object is installed directly in
+ <tt>/usr/lib/debug</tt>, although it should be installed in a subdirectory.
+ I.e. debug symbols of a binary in <tt>/usr/bin</tt> should be placed in
+ <tt>/usr/lib/debug/usr/bin</tt>.
+ .
+ gdb, when looking for debugging symbols, prepends <tt>/usr/lib/debug</tt> to
+ the path of the original binary.

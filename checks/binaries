@@ -286,6 +286,14 @@ foreach my $file (sort keys %{$info->file_info}) {
 	}
     }
 
+    # Detached debugging symbols directly in /usr/lib/debug.
+    if ($file =~ m,^\./usr/lib/debug/[^/]+$,) {
+	unless (exists($objdump->{NEEDED})
+	    || $fileinfo =~ m/statically linked/) {
+	    tag "debug-symbols-directly-in-usr-lib-debug", $file;
+	}
+    }
+
     # statically linked?
     if (!exists($objdump->{NEEDED}) || !defined($objdump->{NEEDED})) {
 	if ($fileinfo =~ m/shared object/o) {
