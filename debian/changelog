@@ -19,6 +19,9 @@ lintian (2.2.11) UNRELEASED; urgency=low
     + [ADB] Don't consider an 64-bit kernel module shipped in a binary
       package for the corresponding 32-bit architecture to be "from other
       architecture".  (Closes: #532013)
+    + [ADB] When checking for binaries which define rpaths, don't exclude
+      rpaths of /lib and /usr/lib, even if the directory is shipped by the
+      package.  (Closes: #532508)
   * checks/control-file{,.desc}:
     + [ADB] Refer to main, contrib and non-free as archive areas rather
       than categories.
