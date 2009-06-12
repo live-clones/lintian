@@ -49,7 +49,8 @@ sub add_file {
 	    @pkg_info{qw(package version architecture)};
     }
     $pkg  ||= '';
-    $ver  ||= '';
+    # "0" is a valid version, so we can't use || here
+    $ver  = '' unless length $ver;
     $arch ||= '';
 
     my $s = "$type $pkg $ver $arch $file";

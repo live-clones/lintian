@@ -131,6 +131,9 @@ lintian (2.2.11) UNRELEASED; urgency=low
     + [ADB] Rework to use libapt-pkg-perl rather than calling "dpkg
       --compare-versions" repeatedly and keeping a potentially large
       cache of previous results.
+  * lib/Lintian/Schedule.pm:
+    + [ADB] Correctly display package versions of 0 in status messages.
+      (Closes: #532550)
   * lib/scan_script.pl:
     + [RA] Removed.  A start at parsing shell scripts that was never
       finished and wasn't usable in its current form.

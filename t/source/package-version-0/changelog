@@ -1,0 +1,9 @@
+package-version-0 (0) unstable; urgency=low
+
+  * Lintian Test Suite.
+  * Test: package-version-0
+
+  * Suppress "should close ITP bug" messages.  (Closes: #123456)
+
+ -- Debian Lintian Maintainers <lintian-maint@debian.org>  Fri, 12 Jun 2009 21:08:23 +0100
+
