@@ -30,6 +30,5 @@ dh_ocaml
 dh_pycentral
 dh_pysupport
 dh_python
-dh_scrollkeeper
 dh_suidregister
 dh_usrlocal
