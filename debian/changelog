@@ -52,10 +52,10 @@ lintian (2.2.11) UNRELEASED; urgency=low
       "all" and one or more binary architectures.  (Closes: #530565)
     + [ADB] If a ruby-pkg-tools make include is used in a rules file,
       require a build-dependency on that package.  Patch by Ryan Niebur.
-      (Closes: #523837)
+      (Closes: #532837)
     + [ADB] Replace a misplaced "build-depends" with the correct "depends"
       in the description of the "missing-build-dependency" tag.  Patch by
-      Ryan Niebur.  (Closes: #523838)
+      Ryan Niebur.  (Closes: #532838)
   * checks/files{,.desc}:
     + [RA] Downgrade symlink-has-double-slash and symlink-ends-with-slash
       to minor.  These are violations of a Policy should, but are unlikely
