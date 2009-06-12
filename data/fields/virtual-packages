@@ -8,7 +8,7 @@
 # separated by comma and/or white space. Multiple "Keep: " lines can be used
 # as well.
 #
-# Last updated: 2009-06-04
+# Last updated: 2009-06-12
 
 
 aide-binary
@@ -115,8 +115,6 @@ java5-runtime-headless
 java5-sdk
 jruby
 kde-l10n
-kfreebsd-source
-kfreebsd-source-7
 ladspa-host
 ladspa-plugin
 libatlas-3gf.so
@@ -198,6 +196,12 @@ nfs-server
 nilfs2-modules
 objc++-compiler
 objc-compiler
+octave
+octave-doc
+octave-emacsen
+octave-headers
+octave-htmldoc
+octave-info
 open
 openoffice.org-help-3.1
 openoffice.org-hyphenation
@@ -236,7 +240,6 @@ sqlrelay-connection-daemon
 ssh-server
 sword-comm
 sword-dict
-sword-frontend
 sword-text
 system-log-daemon
 tcldoc
