@@ -128,6 +128,7 @@ our @GLOBAL_CLEAN_DEPENDS = (
 	[ quilt => qr'^include\s+/usr/share/cdbs/1/rules/patchsys-quilt\.mk' ],
 	[ dpatch => qr'^include\s+/usr/share/dpatch/' ],
 	[ quilt => qr'^include\s+/usr/share/quilt/' ],
+	[ 'ruby-pkg-tools' => qr'^include\s+/usr/share/ruby-pkg-tools/1/class/' ],
 	[ $PYTHON_DEPEND => qr'/usr/share/cdbs/1/class/python-distutils\.mk', 'missing-python-build-dependency' ],
 );
 
