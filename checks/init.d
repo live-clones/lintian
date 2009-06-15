@@ -156,6 +156,9 @@ for (keys %initd_postinst) {
 	    or fail("cannot open init.d file $initd_file: $!");
 	my (%tag, %lsb);
 	while (defined(my $l = <IN>)) {
+	    if ($. eq 1 && $l =~ m,^#!\s*(/usr/[^\s]+),) {
+		tag "init.d-script-uses-usr-interpreter", "/etc/init.d/$_ $1";
+	    }
 	    if ($l =~ m/^\#\#\# BEGIN INIT INFO/) {
 		if ($lsb{BEGIN}) {
 		    tag "init.d-script-has-duplicate-lsb-section", "/etc/init.d/$_";

@@ -22,3 +22,13 @@ Description: {$description} -- bugs
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
+
+Package: {$srcpkg}-interpreter-in-usr-dir
+Architecture: {$architecture}
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Description: {$description} -- bad script interpreter
+ Test a check for a /usr dir interpreter used in an init script
+ .
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.

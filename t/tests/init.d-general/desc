@@ -4,3 +4,4 @@ Version: 1.0
 Description: Test tags related to the init.d checks
 Test-For:
   init.d-script-does-not-implement-required-option
+  init.d-script-uses-usr-interpreter

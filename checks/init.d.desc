@@ -199,3 +199,17 @@ Info: This <tt>/etc/init.d</tt> script specifies the S runlevel in
  runlevel and is only used during boot.  There is no way to switch to it
  and hence no use for stop scripts for it, so S should be removed from
  Default-Stop.
+
+Tag: init.d-script-uses-usr-interpreter
+Severity: serious
+Certainty: certain
+Info: The given <tt>/etc/init.d</tt> script specifies an interpreter in
+ its shebang located under <tt>/usr</tt>.
+ .
+ Since init scripts can be left on the system when the package is
+ removed but not purged, its dependencies might no longer be installed
+ causing the init script to fail if the interpreter is one of its dependencies.
+ .
+ Another case where the script might fail to execute is early during the boot
+ process, when the <tt>/usr</tt> partition might not yet be mounted by the time
+ the script needs its interpreter.
