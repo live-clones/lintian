@@ -1,4 +1,4 @@
-lintian (2.2.11) UNRELEASED; urgency=low
+lintian (2.2.11) unstable; urgency=low
 
   * Summary of tag changes:
     + Added:
@@ -212,7 +212,7 @@ lintian (2.2.11) UNRELEASED; urgency=low
     + [ADB] Use the new $LINTIAN_AREA variable to determine which package
       list to read.
 
- -- Russ Allbery <rra@debian.org>  Tue, 28 Apr 2009 10:24:46 -0700
+ -- Russ Allbery <rra@debian.org>  Sun, 14 Jun 2009 18:40:18 -0700
 
 lintian (2.2.10) unstable; urgency=low
 
