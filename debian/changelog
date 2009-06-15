@@ -1,3 +1,20 @@
+lintian (2.2.12) UNRELEASED; urgency=low
+
+  * Summary of tag changes:
+    + Added:
+      - missing-separator-between-items
+    + Removed:
+      - missing-comma-between-items
+      
+  * checks/control-file{,.desc}:
+    + [ADB] Allow both comma and pipe as valid separators between items when
+      detecting whether a separator has been omitted.  As a consequence,
+      rename the missing-comma-between-items tag to the more descriptive
+      missing-separator-between-items.  Based on a patch by Rafael
+      Laboissiere.  (Closes: #533202)
+
+ -- Adam D. Barratt <adam@adam-barratt.org.uk>  Mon, 15 Jun 2009 19:21:07 +0100
+
 lintian (2.2.11) unstable; urgency=low
 
   * Summary of tag changes:

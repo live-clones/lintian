@@ -142,13 +142,13 @@ Info: The given field in the <tt>debian/control</tt> file has a substvar
  the control file will have a syntax error.  You probably meant to put a
  comma after the substvar expansion.
 
-Tag: missing-comma-between-items
+Tag: missing-separator-between-items
 Severity: important
 Certainty: certain
 Info: The given field in the <tt>debian/control</tt> file contains a list
- of items separated by commas.  It appears that when wrapping the list on
- multiple lines, a comma was missed at the end of a line.  This can lead
- to bogus or incomplete dependencies, conflicts etc.
+ of items separated by commas and pipes.  It appears that when wrapping
+ the list on multiple lines, a separator was missed at the end of a line.
+ This can lead to bogus or incomplete dependencies, conflicts etc.
 
 Tag: package-depends-on-hardcoded-libc
 Severity: normal

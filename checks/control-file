@@ -116,16 +116,16 @@ for my $control ($header, @binary_controls) {
 			  build-conflics build-conflicts-indep)) {
 		next unless $control->{$field};
 		if ($control->{$field} =~ /
-			([^,]+)		# previous entry
+			([^,|]+)	# previous entry
 			\s*\n\s+	# new line + space
-			([a-z][^,]+)	# next entry, must start with a letter
+			([a-z][^,|]+)	# next entry, must start with a letter
 			/x) {
 
 			my ($prev, $next) = ($1, $2);
 			for ($prev, $next) {
 				s/^\s+//; s/\s+$//;
 			}
-			tag "missing-comma-between-items",
+			tag "missing-separator-between-items",
 			    "in $field field between '$prev' and '$next', " .
 			    ($control->{source} ? 'source' : $control->{package});
 		}

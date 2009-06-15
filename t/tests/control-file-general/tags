@@ -1,7 +1,7 @@
 E: control-file-general source: build-info-in-binary-control-file-section Package control-file-general
-E: control-file-general source: missing-comma-between-items in depends field between 'foo' and 'bar (>= 1)', control-file-general-3
+E: control-file-general source: missing-separator-between-items in depends field between 'foo' and 'bar (>= 1)', control-file-general-3
 I: control-file-general source: binary-control-field-duplicates-source field "maintainer" in package control-file-general
-I: control-file-general source: duplicate-long-description control-file-general control-file-general-1 control-file-general-2 control-file-general-3
+I: control-file-general source: duplicate-long-description control-file-general control-file-general-1 control-file-general-2 control-file-general-3 control-file-general-4
 I: control-file-general source: duplicate-short-description control-file-general control-file-general-1
 W: control-file-general source: missing-comma-after-substvar in depends field near ${shlibs:Depends}
 W: control-file-general source: no-section-field-for-source

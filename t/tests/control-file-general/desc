@@ -8,8 +8,9 @@ Test-For:
  duplicate-long-description
  duplicate-short-description
  missing-comma-after-substvar
- missing-comma-between-items
+ missing-separator-between-items
  no-section-field-for-source
  package-depends-on-itself
  stronger-dependency-implies-weaker
-References: Debian Bug#30020, Debian Bug#409099, Debian Bug#516706
+References: Debian Bug#30020, Debian Bug#409099, Debian Bug#516706,
+ Debian Bug#533202
