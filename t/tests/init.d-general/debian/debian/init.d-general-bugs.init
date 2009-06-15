@@ -1,0 +1,14 @@
+#!/bin/sh
+
+set -e
+
+### BEGIN INIT INFO
+# Provides:          nothing
+# Required-Start:
+# Required-Stop:
+# Default-Start:
+# Default-Stop:
+# Short-Description: Do nothing at all
+### END INIT INFO
+
+# start stop force-reload restart status

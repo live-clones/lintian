@@ -1,0 +1,4 @@
+E: init.d-general-bugs: init.d-script-does-not-implement-required-option /etc/init.d/init.d-general-bugs force-reload
+E: init.d-general-bugs: init.d-script-does-not-implement-required-option /etc/init.d/init.d-general-bugs restart
+E: init.d-general-bugs: init.d-script-does-not-implement-required-option /etc/init.d/init.d-general-bugs start
+E: init.d-general-bugs: init.d-script-does-not-implement-required-option /etc/init.d/init.d-general-bugs stop

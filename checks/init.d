@@ -192,7 +192,7 @@ for (keys %initd_postinst) {
 		}
 	    }
 
-	    while ($l =~ s/(start|stop|restart|force-reload)//o) {
+	    while ($l =~ s/^[^#]*?(start|stop|restart|force-reload)//o) {
 		$tag{$1} = 1;
 	    }
         }
