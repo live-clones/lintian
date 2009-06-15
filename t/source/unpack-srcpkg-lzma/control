@@ -1,5 +1,4 @@
 Source: unpack-srcpkg-lzma
-Format: 3.0 (quilt)
 Section: devel
 Priority: optional
 Maintainer: Debian Lintian Maintainers <lintian-maint@debian.org>
