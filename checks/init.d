@@ -151,102 +151,7 @@ for (keys %initd_postinst) {
     # check if file exists in package
     my $initd_file = "init.d/$_";
     if (-f $initd_file) {
-	# yes! check it...
-	open(IN, '<', $initd_file)
-	    or fail("cannot open init.d file $initd_file: $!");
-	my (%tag, %lsb);
-	while (defined(my $l = <IN>)) {
-	    if ($. eq 1 && $l =~ m,^#!\s*(/usr/[^\s]+),) {
-		tag "init.d-script-uses-usr-interpreter", "/etc/init.d/$_ $1";
-	    }
-	    if ($l =~ m/^\#\#\# BEGIN INIT INFO/) {
-		if ($lsb{BEGIN}) {
-		    tag "init.d-script-has-duplicate-lsb-section", "/etc/init.d/$_";
-		    next;
-		}
-		$lsb{BEGIN} = 1;
-		my $last;
-
-		# We have an LSB keyword section.  Parse it and save the data
-		# in %lsb for analysis.
-		while (defined(my $l = <IN>)) {
-		    if ($l =~ /^\#\#\# END INIT INFO/) {
-			$lsb{END} = 1;
-			last;
-		    } elsif ($l !~ /^\#/) {
-			tag "init.d-script-has-unterminated-lsb-section", "/etc/init.d/$_:$.";
-			last;
-		    } elsif ($l =~ /^\# ([a-zA-Z-]+):\s*(.*?)\s*$/) {
-			my $keyword = lc $1;
-			my $value = $2;
-			tag "init.d-script-has-duplicate-lsb-keyword", "/etc/init.d/$_:$. $keyword"
-			    if (defined $lsb{$keyword});
-			tag "init.d-script-has-unknown-lsb-keyword", "/etc/init.d/$_:$. $keyword"
-			    unless (defined ($lsb_keywords{$keyword}) || $keyword =~ /^x-/);
-			$lsb{$keyword} = $value || '';
-			$last = $keyword;
-		    } elsif ($l =~ /^\#(\t|  )/ && $last eq 'description') {
-			my $value = $l;
-			$value =~ s/^\#\s*//;
-			$lsb{description} .= ' ' . $value;
-		    } else {
-			tag "init.d-script-has-bad-lsb-line", "/etc/init.d/$_:$.";
-		    }
-		}
-	    }
-
-	    while ($l =~ s/^[^#]*?(start|stop|restart|force-reload)//o) {
-		$tag{$1} = 1;
-	    }
-        }
-	close(IN);
-
-	# Make sure all of the required keywords are present.
-	if (not $lsb{BEGIN}) {
-	    tag "init.d-script-missing-lsb-section", "/etc/init.d/$_";
-	} else {
-	    for my $keyword (keys %lsb_keywords) {
-		if ($lsb_keywords{$keyword} && !defined $lsb{$keyword}) {
-		    if ($keyword eq 'short-description') {
-			tag "init.d-script-missing-lsb-short-description", "/etc/init.d/$_";
-		    } else {
-			tag "init.d-script-missing-lsb-keyword", "/etc/init.d/$_ $keyword";
-		    }
-		}
-	    }
-	}
-
-	# Check the runlevels.
-	my %start;
-	if ($lsb{'default-start'}) {
-	    for my $runlevel (split (/\s+/, $lsb{'default-start'})) {
-		if ($runlevel =~ /^[sS0-6]$/) {
-		    $start{lc $runlevel} = 1;
-		} else {
-		    tag "init.d-script-has-bad-start-runlevel", "/etc/init.d/$_ $runlevel";
-		}
-	    }
-	}
-	if ($lsb{'default-stop'}) {
-	    for my $runlevel (split (/\s+/, $lsb{'default-stop'})) {
-		if ($runlevel =~ /^[sS0-6]$/) {
-		    if ($start{$runlevel}) {
-			tag "init.d-script-has-conflicting-start-stop", "/etc/init.d/$_ $runlevel";
-		    }
-		    if ($runlevel =~ /[sS]/) {
-			tag "init-d-script-stops-in-s-runlevel", "/etc/init.d/$_";
-		    }
-		} else {
-		    tag "init.d-script-has-bad-stop-runlevel", "/etc/init.d/$_ $runlevel";
-		}
-	    }
-	}
-
-	# all tags included in file?
-	$tag{'start'} or tag "init.d-script-does-not-implement-required-option", "/etc/init.d/$_ start";
-	$tag{'stop'} or tag "init.d-script-does-not-implement-required-option", "/etc/init.d/$_ stop";
-	$tag{'restart'} or tag "init.d-script-does-not-implement-required-option", "/etc/init.d/$_ restart";
-	$tag{'force-reload'} or tag "init.d-script-does-not-implement-required-option", "/etc/init.d/$_ force-reload";
+	checkinit($initd_file);
     } else {
 	tag "init.d-script-not-included-in-package", "/etc/init.d/$_";
     }
@@ -256,11 +161,113 @@ for (keys %initd_postinst) {
 opendir(INITD, "init.d") or fail("cannot read init.d directory: $!");
 for (readdir(INITD)) {
     next if $_ eq '.' || $_ eq '..';
-    tag "script-in-etc-init.d-not-registered-via-update-rc.d", "/etc/init.d/$_"
-	unless $initd_postinst{$_};
+    unless ($initd_postinst{$_}) {
+	tag "script-in-etc-init.d-not-registered-via-update-rc.d", "/etc/init.d/$_";
+	checkinit("init.d/$_");
+    }
 }
 closedir(INITD);
 
+}
+
+sub checkinit {
+    my ($initd_file) = @_;
+    # yes! check it...
+    open(IN, '<', $initd_file)
+	or fail("cannot open init.d file $initd_file: $!");
+    my (%tag, %lsb);
+    while (defined(my $l = <IN>)) {
+	if ($. eq 1 && $l =~ m,^#!\s*(/usr/[^\s]+),) {
+	    tag "init.d-script-uses-usr-interpreter", "/etc/init.d/$_ $1";
+	}
+	if ($l =~ m/^\#\#\# BEGIN INIT INFO/) {
+	    if ($lsb{BEGIN}) {
+		tag "init.d-script-has-duplicate-lsb-section", "/etc/init.d/$_";
+		next;
+	    }
+	    $lsb{BEGIN} = 1;
+	    my $last;
+
+	    # We have an LSB keyword section.  Parse it and save the data
+	    # in %lsb for analysis.
+	    while (defined(my $l = <IN>)) {
+		if ($l =~ /^\#\#\# END INIT INFO/) {
+		    $lsb{END} = 1;
+		    last;
+		} elsif ($l !~ /^\#/) {
+		    tag "init.d-script-has-unterminated-lsb-section", "/etc/init.d/$_:$.";
+		    last;
+		} elsif ($l =~ /^\# ([a-zA-Z-]+):\s*(.*?)\s*$/) {
+		    my $keyword = lc $1;
+		    my $value = $2;
+		    tag "init.d-script-has-duplicate-lsb-keyword", "/etc/init.d/$_:$. $keyword"
+			if (defined $lsb{$keyword});
+		    tag "init.d-script-has-unknown-lsb-keyword", "/etc/init.d/$_:$. $keyword"
+			unless (defined ($lsb_keywords{$keyword}) || $keyword =~ /^x-/);
+		    $lsb{$keyword} = $value || '';
+		    $last = $keyword;
+		} elsif ($l =~ /^\#(\t|  )/ && $last eq 'description') {
+		    my $value = $l;
+		    $value =~ s/^\#\s*//;
+		    $lsb{description} .= ' ' . $value;
+		} else {
+		    tag "init.d-script-has-bad-lsb-line", "/etc/init.d/$_:$.";
+		}
+	    }
+	}
+
+	while ($l =~ s/^[^#]*?(start|stop|restart|force-reload)//o) {
+	    $tag{$1} = 1;
+	}
+    }
+    close(IN);
+
+    # Make sure all of the required keywords are present.
+    if (not $lsb{BEGIN}) {
+	tag "init.d-script-missing-lsb-section", "/etc/init.d/$_";
+    } else {
+	for my $keyword (keys %lsb_keywords) {
+	    if ($lsb_keywords{$keyword} && !defined $lsb{$keyword}) {
+		if ($keyword eq 'short-description') {
+		    tag "init.d-script-missing-lsb-short-description", "/etc/init.d/$_";
+		} else {
+		    tag "init.d-script-missing-lsb-keyword", "/etc/init.d/$_ $keyword";
+		}
+	    }
+	}
+    }
+
+    # Check the runlevels.
+    my %start;
+    if ($lsb{'default-start'}) {
+	for my $runlevel (split (/\s+/, $lsb{'default-start'})) {
+	    if ($runlevel =~ /^[sS0-6]$/) {
+		$start{lc $runlevel} = 1;
+	    } else {
+		tag "init.d-script-has-bad-start-runlevel", "/etc/init.d/$_ $runlevel";
+	    }
+	}
+    }
+    if ($lsb{'default-stop'}) {
+	for my $runlevel (split (/\s+/, $lsb{'default-stop'})) {
+	    if ($runlevel =~ /^[sS0-6]$/) {
+		if ($start{$runlevel}) {
+		    tag "init.d-script-has-conflicting-start-stop", "/etc/init.d/$_ $runlevel";
+		}
+		if ($runlevel =~ /[sS]/) {
+		    tag "init-d-script-stops-in-s-runlevel", "/etc/init.d/$_";
+		}
+	    } else {
+		tag "init.d-script-has-bad-stop-runlevel", "/etc/init.d/$_ $runlevel";
+	    }
+	}
+    }
+
+    # all tags included in file?
+    $tag{'start'} or tag "init.d-script-does-not-implement-required-option", "/etc/init.d/$_ start";
+    $tag{'stop'} or tag "init.d-script-does-not-implement-required-option", "/etc/init.d/$_ stop";
+    $tag{'restart'} or tag "init.d-script-does-not-implement-required-option", "/etc/init.d/$_ restart";
+    $tag{'force-reload'} or tag "init.d-script-does-not-implement-required-option", "/etc/init.d/$_ force-reload";
 }
 
 1;

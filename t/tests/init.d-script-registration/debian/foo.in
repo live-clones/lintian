@@ -1,0 +1,14 @@
+#!/bin/sh -e
+
+case "$1" in
+    start)
+    ;;
+    stop)
+    ;;
+    reload)
+    ;;
+    restart|force-reload)
+    ;;
+    *)
+    ;;
+esac
