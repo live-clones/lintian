@@ -1,0 +1,9 @@
+#!/usr/bin/make -f
+
+%:
+	dh $*
+
+binary:
+	dh $@ --until dh_fixperms
+	chmod -x debian/init.d-script-registration/etc/init.d/README
+	dh $@ --remaining
