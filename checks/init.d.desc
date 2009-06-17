@@ -213,3 +213,13 @@ Info: The given <tt>/etc/init.d</tt> script specifies an interpreter in
  Another case where the script might fail to execute is early during the boot
  process, when the <tt>/usr</tt> partition might not yet be mounted by the time
  the script needs its interpreter.
+
+Tag: init.d-script-sourcing-without-test
+Severity: important
+Certainty: possible
+Info: The given <tt>/etc/init.d</tt> script seems to be sourcing an
+ <tt>/etc/default/</tt> file without assuring its existence first.
+ .
+ Files in <tt>/etc/default/</tt> can be deleted by the administrator at any
+ time and the init script should handle the situation gracefully.
+Ref: policy 9.3.2
