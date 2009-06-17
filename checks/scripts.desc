@@ -309,13 +309,13 @@ Info: Maintainer scripts must not remove device files.  This is left to
  the system administrator.
 
 Tag: read-in-maintainer-script
-Severity: normal
+Severity: serious
 Certainty: certain
 Ref: policy 3.9.1 
 Info: This maintainer script appears to use read to get information from
- the user.  Prompting in maintainer scripts should be done by
- communicating through a program such as debconf which conforms to the
- Debian Configuration management specification, version 2 or higher.
+ the user.  Prompting in maintainer scripts must be done by communicating
+ through a program such as debconf which conforms to the Debian
+ Configuration management specification, version 2 or higher.
 
 Tag: possible-bashism-in-maintainer-script
 Severity: normal

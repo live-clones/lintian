@@ -25,6 +25,16 @@ E: maintainer-scripts: postrm-contains-additional-updaterc.d-calls /etc/init.d/b
 E: maintainer-scripts: postrm-does-not-call-updaterc.d-for-init.d-script /etc/init.d/foo
 E: maintainer-scripts: preinst-calls-updaterc.d bar
 E: maintainer-scripts: prerm-calls-updaterc.d foo
+E: maintainer-scripts: read-in-maintainer-script postinst:20
+E: maintainer-scripts: read-in-maintainer-script prerm:177
+E: maintainer-scripts: read-in-maintainer-script prerm:179
+E: maintainer-scripts: read-in-maintainer-script prerm:180
+E: maintainer-scripts: read-in-maintainer-script prerm:181
+E: maintainer-scripts: read-in-maintainer-script prerm:62
+E: maintainer-scripts: read-in-maintainer-script prerm:63
+E: maintainer-scripts: read-in-maintainer-script prerm:64
+E: maintainer-scripts: read-in-maintainer-script prerm:65
+E: maintainer-scripts: read-in-maintainer-script prerm:66
 E: maintainer-scripts: wrong-debian-qa-group-name QA group <packages@qa.debian.org>
 I: maintainer-scripts: no-md5sums-control-file
 I: maintainer-scripts: output-of-updaterc.d-not-redirected-to-dev-null bar postrm
@@ -153,15 +163,5 @@ W: maintainer-scripts: postinst-does-not-load-confmodule
 W: maintainer-scripts: postinst-should-not-set-usr-doc-link
 W: maintainer-scripts: postrm-does-not-purge-debconf
 W: maintainer-scripts: postrm-has-useless-call-to-ldconfig
-W: maintainer-scripts: read-in-maintainer-script postinst:20
-W: maintainer-scripts: read-in-maintainer-script prerm:177
-W: maintainer-scripts: read-in-maintainer-script prerm:179
-W: maintainer-scripts: read-in-maintainer-script prerm:180
-W: maintainer-scripts: read-in-maintainer-script prerm:181
-W: maintainer-scripts: read-in-maintainer-script prerm:62
-W: maintainer-scripts: read-in-maintainer-script prerm:63
-W: maintainer-scripts: read-in-maintainer-script prerm:64
-W: maintainer-scripts: read-in-maintainer-script prerm:65
-W: maintainer-scripts: read-in-maintainer-script prerm:66
 W: maintainer-scripts: start-stop-daemon-in-maintainer-script postinst:161
 W: maintainer-scripts: update-alternatives-remove-called-in-postrm
