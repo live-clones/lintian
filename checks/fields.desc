@@ -244,12 +244,16 @@ Info: The source package's filename is not the same as the name given
 Ref: policy 5.6.1
 
 Tag: source-field-malformed
-Severity: important
+Severity: serious
 Certainty: certain
-Info: In a binary package, the Source field should identify the source
- package from which the package was compiled.  It should be the
- source package name, optionally followed by a version number
- between parentheses.
+Info: In <tt>debian/control</tt> or a <tt>.dsc</tt> file, the Source field
+ must contain only the name of the source package.  In a binary package,
+ the Source field may also optionally contain the version number of the
+ corresponding source package in parentheses.
+ .
+ Source package names must consist only of lowercase letters, digits,
+ plus and minus signs, and periods.  They must be at least two characters
+ long and must start with an alphanumeric character.
 Ref: policy 5.6.1
 
 Tag: essential-in-source-package

@@ -14,6 +14,11 @@ lintian (2.2.12) UNRELEASED; urgency=low
       rename the missing-comma-between-items tag to the more descriptive
       missing-separator-between-items.  Based on a patch by Rafael
       Laboissiere.  (Closes: #533202)
+  * checks/fields{,.desc}:
+    + [RA] Update source-field-malformed to serious and don't allow
+      capital letters in source package names.  Check source package names
+      for validity even when checking only source packages to be sure the
+      package name is syntactically valid.
   * checks/files{,.desc}:
     + [RA] Diagnose files installed into discouraged or unknown
       subdirectories of /usr/share/fonts/X11 per Policy 11.8.5.

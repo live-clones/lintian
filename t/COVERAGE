@@ -1,4 +1,4 @@
-Last generated 2009-05-28
+Last generated 2009-06-17
 
 The following tags are not tested by the test suite:
 
@@ -50,6 +50,7 @@ debhelper dh_dhelp-is-deprecated
 
 debian-readme spelling-error-in-readme-debian
 
+fields alternates-not-allowed
 fields arch-any-in-binary-pkg
 fields aspell-package-not-arch-all
 fields bad-menu-item
@@ -78,7 +79,6 @@ fields package-depends-on-multiple-tclx-versions
 fields package-not-lowercase
 fields package-superseded-by-perl
 fields source-field-does-not-match-pkg-name
-fields source-field-malformed
 fields too-many-architectures
 fields unknown-architecture
 fields unknown-field-in-control
@@ -313,7 +313,6 @@ debian-readme readme-debian-mentions-usr-doc
 
 etcfiles file-in-etc-not-marked-as-conffile
 
-fields alternates-not-allowed
 fields bad-version-in-relation
 fields binary-nmu-debian-revision-in-source
 fields binary-nmu-uses-old-version-style

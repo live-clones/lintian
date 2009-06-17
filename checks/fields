@@ -422,10 +422,13 @@ if (not defined $info->field('source')) {
 		if ($source ne $pkg) {
 			tag "source-field-does-not-match-pkg-name", "$source != $pkg";
 		}
+		if ($source !~ /^[a-z0-9][-+\.a-z0-9]+\z/) {
+			tag 'source-field-malformed', $source;
+		}
 	} else {
-		if ($source !~ /[A-Z0-9][-+\.A-Z0-9]+                      #Package name
+		if ($source !~ /^[a-z0-9][-+\.a-z0-9]+ # Package name
 		                \s*
-		                (?:\((?:\d+:)?(?:[-\.+:A-Z0-9~]+?)(?:-[\.+A-Z0-9~]+)?\))?\s*$/ix) { #Version
+		                (?:\((?:\d+:)?(?:[-\.+:a-zA-Z0-9~]+?)(?:-[\.+a-zA-Z0-9~]+)?\))?\s*$/x) { #Version
 			tag "source-field-malformed", "$source";
 		}
 	}
