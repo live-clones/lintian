@@ -2,6 +2,8 @@ lintian (2.2.12) UNRELEASED; urgency=low
 
   * Summary of tag changes:
     + Added:
+      - file-in-discouraged-x11-font-directory
+      - file-in-unknown-x11-font-directory
       - missing-separator-between-items
     + Removed:
       - missing-comma-between-items
@@ -12,6 +14,9 @@ lintian (2.2.12) UNRELEASED; urgency=low
       rename the missing-comma-between-items tag to the more descriptive
       missing-separator-between-items.  Based on a patch by Rafael
       Laboissiere.  (Closes: #533202)
+  * checks/files{,.desc}:
+    + [RA] Diagnose files installed into discouraged or unknown
+      subdirectories of /usr/share/fonts/X11 per Policy 11.8.5.
   * checks/scripts.desc:
     + [RA] Per Policy 3.8.2, read-in-maintainer-script is now of serious
       severity.

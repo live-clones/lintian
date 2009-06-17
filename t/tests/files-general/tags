@@ -1,4 +1,9 @@
 E: files-general: dir-or-file-in-var-lock var/lock/lintian/
 E: files-general: dir-or-file-in-var-run var/run/lintian/
+E: files-general: file-in-unknown-x11-font-directory usr/share/fonts/X11/other/foo.pcf.gz
 E: files-general: non-conf-file-in-modprobe.d etc/modprobe.d/--lzma
+W: files-general: file-in-discouraged-x11-font-directory usr/share/fonts/X11/CID/foo.pcf.gz
+W: files-general: file-in-discouraged-x11-font-directory usr/share/fonts/X11/PEX/foo.pcf.gz
+W: files-general: file-in-discouraged-x11-font-directory usr/share/fonts/X11/Speedo/foo.pcf.gz
+W: files-general: file-in-discouraged-x11-font-directory usr/share/fonts/X11/cyrillic/foo.pcf.gz
 W: files-general: icon-size-and-directory-name-mismatch usr/share/apps/lintian/icons/hicolor/22x22/lintian-16x16.png 16x16

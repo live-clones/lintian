@@ -420,6 +420,15 @@ foreach my $file (sort keys %{$info->index}) {
 		tag "executable-manpage", "$file";
 	    }
 	}
+	# ---------------- /usr/share/fonts/X11
+	elsif ($file =~ m,^usr/share/fonts/X11/([^/]+)/\S+,) {
+	    my ($dir, $filename) = ($1, $2);
+	    if ($dir =~ /^(?:PEX|CID|Speedo|cyrillic)$/) {
+		tag 'file-in-discouraged-x11-font-directory', $file;
+	    } elsif ($dir !~ /^(?:100dpi|75dpi|misc|Type1|encodings|util)$/) {
+		tag 'file-in-unknown-x11-font-directory', $file;
+	    }
+	}
 	# ---------------- /usr/share/info
 	elsif ($file =~ m,^usr/share/info\S+,) {
 	    if ($type eq 'udeb') {

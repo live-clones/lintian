@@ -990,3 +990,24 @@ Info: Files in <tt>/etc/modprobe.d</tt> should use filenames ending in
  If the file is an example containing only comments, consider installing
  it in another location as files in <tt>/etc/modprobe.d</tt> are
  read each time modprobe is run (which is often at boot time).
+
+Tag: file-in-discouraged-x11-font-directory
+Severity: minor
+Certainty: certain
+Ref: policy 11.8.5
+Info: For historical reasons, use of <tt>PEX</tt>, <tt>CID</tt>,
+ <tt>Speedo</tt>, and <tt>cyrillic</tt> subdirectories of
+ <tt>/usr/share/fonts/X11</tt> are permitted, but installation of files
+ into these directories is discouraged.  Support for the first three font
+ types is deprecated or no longer available, and Cyrillic fonts should use
+ the normal font directories where possible.
+
+Tag: file-in-unknown-x11-font-directory
+Severity: serious
+Certainty: certain
+Ref: policy 11.8.5
+Info: Subdirectories of <tt>/usr/share/fonts/X11</tt> other than
+ <tt>100dpi</tt>, <tt>75dpi</tt>, <tt>misc</tt>, <tt>Type1</tt>, ad some
+ historic exceptions must be neither created nor used.  (The directories
+ <tt>encodings</tt> and <tt>util</tt>, used by some X Window System
+ packages, are also permitted by Lintian.)
