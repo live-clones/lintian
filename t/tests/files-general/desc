@@ -5,7 +5,5 @@ Description: Test tags about file paths and names
 Test-For:
  dir-or-file-in-var-lock
  dir-or-file-in-var-run
- file-in-discouraged-x11-font-directory
- file-in-unknown-x11-font-directory
  icon-size-and-directory-name-mismatch
  non-conf-file-in-modprobe.d

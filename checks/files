@@ -161,6 +161,10 @@ my $warned_debug_name = 0;
 my @devhelp;
 my @devhelp_links;
 
+# X11 bitmapped font directories under /usr/share/fonts/X11 in which we've
+# seen files.
+my %x11_font_dirs;
+
 # Read package contents...
 foreach my $file (sort keys %{$info->index}) {
     next if $file eq "";
@@ -427,6 +431,9 @@ foreach my $file (sort keys %{$info->index}) {
 		tag 'file-in-discouraged-x11-font-directory', $file;
 	    } elsif ($dir !~ /^(?:100dpi|75dpi|misc|Type1|encodings|util)$/) {
 		tag 'file-in-unknown-x11-font-directory', $file;
+	    }
+	    if ($dir =~ /^(?:100dpi|75dpi|misc)$/) {
+		$x11_font_dirs{$dir}++;
 	    }
 	}
 	# ---------------- /usr/share/info
@@ -1078,6 +1085,15 @@ for my $file (@devhelp) {
 	}
     }
     tag 'package-contains-devhelp-file-without-symlink', $file unless $found;
+}
+
+# Check for including multiple different DPIs of fonts in the same X11 bitmap
+# font package.
+if ($x11_font_dirs{'100dpi'} and $x11_font_dirs{'75dpi'}) {
+    tag 'package-contains-multiple-dpi-fonts';
+}
+if ($x11_font_dirs{misc} and keys (%x11_font_dirs) > 1) {
+    tag 'package-mixes-misc-and-dpi-fonts';
 }
 
 }

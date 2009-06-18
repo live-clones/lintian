@@ -4,4 +4,6 @@ Version: 1.0
 Description: Font file checks
 Test-For:
  duplicate-font-file
+ file-in-discouraged-x11-font-directory
+ file-in-unknown-x11-font-directory
  font-in-non-font-package

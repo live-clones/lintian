@@ -1,4 +1,11 @@
+E: files-fonts: file-in-unknown-x11-font-directory usr/share/fonts/X11/other/foo.pcf.gz
 I: files-fonts: font-in-non-font-package usr/share/fonts/truetype/font.otf
 I: files-fonts: font-in-non-font-package usr/share/fonts/truetype/font.ttf
 W: files-fonts: duplicate-font-file usr/share/fonts/truetype/4shadow.ttf also in ttf-aenigma
+W: files-fonts: file-in-discouraged-x11-font-directory usr/share/fonts/X11/CID/foo.pcf.gz
+W: files-fonts: file-in-discouraged-x11-font-directory usr/share/fonts/X11/PEX/foo.pcf.gz
+W: files-fonts: file-in-discouraged-x11-font-directory usr/share/fonts/X11/Speedo/foo.pcf.gz
+W: files-fonts: file-in-discouraged-x11-font-directory usr/share/fonts/X11/cyrillic/foo.pcf.gz
+W: files-fonts: package-contains-multiple-dpi-fonts
+W: files-fonts: package-mixes-misc-and-dpi-fonts
 W: ttf-files-fonts: duplicate-font-file usr/share/fonts/truetype/4shadow.ttf also in ttf-aenigma

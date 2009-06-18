@@ -8,6 +8,8 @@ lintian (2.2.12) UNRELEASED; urgency=low
       - file-in-discouraged-x11-font-directory
       - file-in-unknown-x11-font-directory
       - missing-separator-between-items
+      - package-contains-multiple-dpi-fonts
+      - package-mixes-misc-and-dpi-fonts
     + Removed:
       - missing-comma-between-items
       
@@ -48,6 +50,8 @@ lintian (2.2.12) UNRELEASED; urgency=low
   * checks/files{,.desc}:
     + [RA] Diagnose files installed into discouraged or unknown
       subdirectories of /usr/share/fonts/X11 per Policy 11.8.5.
+    + [RA] Diagnose packages including both 100dpi and 75dpi fonts or
+      mixing misc and Xdpi fonts.
   * checks/menus{,.desc}:
     + [RA] Read menu-methods files from the collected location instead of
       the unpacked binary package and change the unpack level of menus to

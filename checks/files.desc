@@ -1007,7 +1007,26 @@ Severity: serious
 Certainty: certain
 Ref: policy 11.8.5
 Info: Subdirectories of <tt>/usr/share/fonts/X11</tt> other than
- <tt>100dpi</tt>, <tt>75dpi</tt>, <tt>misc</tt>, <tt>Type1</tt>, ad some
+ <tt>100dpi</tt>, <tt>75dpi</tt>, <tt>misc</tt>, <tt>Type1</tt>, and some
  historic exceptions must be neither created nor used.  (The directories
  <tt>encodings</tt> and <tt>util</tt>, used by some X Window System
  packages, are also permitted by Lintian.)
+
+Tag: package-contains-multiple-dpi-fonts
+Severity: normal
+Certainty: certain
+Ref: policy 11.8.5
+Info: This package contains both 100dpi and 75dpi bitmapped fonts.  Both
+ versions should not be included in a single package.  If both resolutions
+ are available, they should be provided in separate binary packages with
+ <tt>-75dpi</tt> or <tt>-100dpi</tt> appended to the package name for the
+ corresponding fonts.
+
+Tag: package-mixes-misc-and-dpi-fonts
+Severity: normal
+Certainty: certain
+Ref: policy 11.8.5
+Info: This package contains both bitmapped fonts for a specific DPI
+ (100dpi or 75dpi) and misc bitmapped fonts.  These should not be combined
+ in the same package.  Instead, the misc bitmapped fonts should be
+ provided in a separate package with <tt>-misc</tt> appended to its name.
