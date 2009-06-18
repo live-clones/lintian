@@ -1,0 +1,7 @@
+Testname: fields-quilt-debhelper
+Sequence: 6000
+Type: non-native
+Version: 1.0-1
+Description: Recognize quilt's debhelper add-ons
+Test-Against: build-depends-without-arch-dep
+References: Debian Bug #528003
