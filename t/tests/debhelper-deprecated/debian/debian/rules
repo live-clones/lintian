@@ -21,6 +21,7 @@ binary-indep:
 	dh_installdocs
 	dh_desktop
 	-dh_dhelp
+	dh_scrollkeeper
 	dh_link
 	dh_compress
 	dh_fixperms

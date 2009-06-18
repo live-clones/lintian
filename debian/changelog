@@ -4,6 +4,7 @@ lintian (2.2.12) UNRELEASED; urgency=low
     + Added:
       - debug-symbols-directly-in-usr-lib-debug
       - dh_desktop-is-deprecated
+      - dh_scrollkeeper-is-deprecated
       - file-in-discouraged-x11-font-directory
       - file-in-unknown-x11-font-directory
       - missing-separator-between-items
@@ -31,6 +32,8 @@ lintian (2.2.12) UNRELEASED; urgency=low
       deprecated.   Thanks, Nelson A. de Oliveira.  (Closes: #531164)
     + [RA] Include the line number in deprecated and obsolete dh_* command
       tags.
+    + [ADB] Warn about dh_scrollkeeper calls since the command is now
+      deprecated.
   * checks/fields{,.desc}:
     + [RA] Update source-field-malformed to serious and don't allow
       capital letters in source package names.  Check source package names

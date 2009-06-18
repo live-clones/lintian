@@ -76,6 +76,15 @@ Info: This package calls dh_desktop in its <tt>debian/rules</tt> file.
  dh_desktop is deprecated and no longer does anything.  The setup it used
  to handle is now done with triggers.
 
+Tag: dh_scrollkeeper-is-deprecated
+Severity: normal
+Certainty: certain
+Ref: dh_scrollkeeper(1)
+Info: This package calls dh_scrollkeeper in its <tt>debian/rules</tt> file.
+ dh_scrollkeeper is deprecated and no longer does anything.  scrollkeeper
+ has been replaced by rarian, which does not require the functionality
+ dh_scrollkeeper used to provide.
+
 Tag: dh-clean-k-is-deprecated
 Severity: normal
 Certainty: certain

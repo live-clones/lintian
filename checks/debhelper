@@ -90,6 +90,9 @@ while (<RULES>) {
 	if ($dhcommand eq 'dh_desktop') {
 	    tag 'dh_desktop-is-deprecated', "line $.";
 	}
+	if ($dhcommand eq 'dh_scrollkeeper') {
+	    tag 'dh_scrollkeeper-is-deprecated', "line $.";
+	}
 	if ($dhcommand eq 'dh_clean' and m/\s+\-k(\s+.*)?$/) {
 	    $seendhcleank = 1;
 	}
