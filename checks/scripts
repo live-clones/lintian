@@ -821,26 +821,26 @@ while (<SCRIPTS>) {
 		    tag "maintainer-script-modifies-inetd-conf", "$file:$."
 			unless $info->relation('provides')->implies('inet-superserver');
 		}
-		if (m,^$LEADIN(/(usr/)?s?bin/[\w.+-]+)(\s|;|$),) {
+		if (m,$LEADIN(/(usr/)?s?bin/[\w.+-]+)(\s|;|$),) {
 		    tag "command-with-path-in-maintainer-script", "$file:$. $1";
 		}
 
 		# Ancient dpkg feature tests.
-		if (m/^${LEADIN}dpkg\s+--assert-support-predepends\b/) {
+		if (m/${LEADIN}dpkg\s+--assert-support-predepends\b/) {
 		    tag "ancient-dpkg-predepends-check", "$file:$.";
 		}
-		if (m/^${LEADIN}dpkg\s+--assert-working-epoch\b/) {
+		if (m/${LEADIN}dpkg\s+--assert-working-epoch\b/) {
 		    tag "ancient-dpkg-epoch-check", "$file:$.";
 		}
-		if (m/^${LEADIN}dpkg\s+--assert-long-filenames\b/) {
+		if (m/${LEADIN}dpkg\s+--assert-long-filenames\b/) {
 		    tag "ancient-dpkg-long-filenames-check", "$file:$.";
 		}
-		if (m/^${LEADIN}dpkg\s+--assert-multi-conrep\b/) {
+		if (m/${LEADIN}dpkg\s+--assert-multi-conrep\b/) {
 		    tag "ancient-dpkg-multi-conrep-check", "$file:$.";
 		}
 
 		# Commands that should not be used in maintainer scripts.
-		if (m,^${LEADIN}(?:/usr/bin/)?fc-cache(\s|\Z),) {
+		if (m,${LEADIN}(?:/usr/bin/)?fc-cache(\s|\Z),) {
 		    tag 'fc-cache-used-in-maintainer-script', "$file:$.";
 		}
 	    }
