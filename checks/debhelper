@@ -255,7 +255,7 @@ while (defined(my $file=readdir(DEBIAN))) {
 		unless ($bdepends_noarch->implies($dep));
 	}
 	my $needed = "debhelper (>= $level)";
-	if ($level > 5 && ! $bdepends->implies($needed)) {
+	if (not $bdepends->implies($needed)) {
 	    tag "package-lacks-versioned-build-depends-on-debhelper", $level;
 	} elsif (@versioncheck) {
 	    my %seen;

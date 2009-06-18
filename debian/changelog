@@ -22,6 +22,10 @@ lintian (2.2.12) UNRELEASED; urgency=low
     + [RA] Allow a newline immediately after the field name, since this
       does work with fields that can be wrapped (such as Build-Depends).
       Thanks, Stephane Glondu.  (Closes: #528377)
+  * checks/debhelper:
+    + [RA] Issue package-lacks-versioned-build-depends-on-debhelper always
+      if the debhelper dependency isn't properly versioned, not just for
+      compat levels newer than 5.  (Closes: #522384)
   * checks/fields{,.desc}:
     + [RA] Update source-field-malformed to serious and don't allow
       capital letters in source package names.  Check source package names
