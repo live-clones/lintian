@@ -128,9 +128,11 @@ for my $file (sort keys %{$info->index}) {
 	    # the menu manual
 
 	    my $menumethod_includes_menu_h = 0;
+	    my $local_file = $file;
+	    $local_file =~ s,^etc/menu-methods/,,;
 	    $menumethod_file = $file;
 
-	    open(MM, '<', "unpacked/$file") or fail("cannot open menu-method file $file: $!");
+	    open(MM, '<', "menu/methods/$local_file") or fail("cannot open menu-method file $local_file: $!");
 	    while (<MM>) {
 		chomp;
 		if (m,^!include menu.h,o) {

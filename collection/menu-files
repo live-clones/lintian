@@ -37,18 +37,17 @@ if (-e "menu") {
 
 mkdir("menu", 0777) or fail("cannot mkdir menu: $!");
 
-if (-d "unpacked/usr/lib/menu") {    
-     copy_dir('unpacked/usr/lib/menu', 'menu/lib')
-	or fail("cannot copy unpacked/usr/lib/menu/ directory");
-} else {
-    # no menu directory
-    mkdir("menu/lib", 0777) or fail("cannot mkdir menu/lib: $!");
-}
+my %dirs;
+$dirs{'share'}   = 'usr/share/menu';
+$dirs{'lib'}     = 'usr/lib/menu';
+$dirs{'methods'} = 'etc/menu-methods';
 
-if (-d "unpacked/usr/share/menu") {    
-    copy_dir('unpacked/usr/share/menu', 'menu/share')
-	or fail("cannot copy unpacked/usr/share/menu directory");
-} else {
-    # no menu directory
-    mkdir("menu/share", 0777) or fail("cannot mkdir menu/share: $!");
+while (my ($shortn, $path) = each %dirs) {
+    if (-d "unpacked/$path") {
+	 copy_dir("unpacked/$path", "menu/$shortn")
+	    or fail("cannot copy unpacked/$path/ directory");
+    } else {
+	# no menu directory
+	mkdir("menu/$shortn", 0777) or fail("cannot mkdir menu/$shortn: $!");
+    }
 }
