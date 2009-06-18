@@ -124,7 +124,6 @@ init.d duplicate-updaterc.d-calls-in-postinst
 init.d file-in-etc-rc.d-marked-as-conffile
 init.d init.d-script-has-bad-start-runlevel
 init.d init.d-script-has-duplicate-lsb-keyword
-init.d script-in-etc-init.d-not-registered-via-update-rc.d
 
 lintian bad-section-in-changes-file
 lintian checksum-mismatch-in-changes-file
@@ -432,7 +431,6 @@ infofiles install-info-not-called-with-quiet-option
 
 init.d duplicate-updaterc.d-calls-in-postrm
 init.d init-d-script-stops-in-s-runlevel
-init.d init.d-script-does-not-implement-required-option
 init.d init.d-script-has-bad-lsb-line
 init.d init.d-script-has-bad-stop-runlevel
 init.d init.d-script-has-conflicting-start-stop
@@ -440,7 +438,6 @@ init.d init.d-script-has-duplicate-lsb-section
 init.d init.d-script-has-unknown-lsb-keyword
 init.d init.d-script-has-unterminated-lsb-section
 init.d init.d-script-missing-lsb-keyword
-init.d init.d-script-missing-lsb-section
 init.d init.d-script-missing-lsb-short-description
 init.d init.d-script-not-included-in-package
 init.d init.d-script-not-marked-as-conffile
