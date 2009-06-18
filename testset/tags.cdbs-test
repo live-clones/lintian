@@ -4,7 +4,7 @@ I: cdbs-test source: build-depends-without-arch-dep yada
 W: cdbs-test source: debian-watch-file-declares-multiple-versions line 3
 W: cdbs-test source: debian-watch-file-unknown-version 4
 W: cdbs-test source: no-human-maintainers
-W: cdbs-test source: out-of-date-standards-version 3.7.3 (current is 3.8.1)
+W: cdbs-test source: out-of-date-standards-version 3.7.3 (current is 3.8.2)
 W: cdbs-test source: package-has-a-duplicate-build-relation cdbs, cdbs
 W: cdbs-test: debian-changelog-line-too-long line 1
 W: cdbs-test: description-contains-duplicated-word bla bla bla

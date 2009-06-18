@@ -36,7 +36,7 @@ I: libbaz2: no-md5sums-control-file
 I: libbaz2: no-symbols-control-file usr/lib/libbaz2.so.1.0.3b
 N: 4 tags overridden (4 warnings)
 W: ia32-libbaz2: new-package-should-close-itp-bug
-W: libbaz source: ancient-standards-version 3.2.1 (current is 3.8.1)
+W: libbaz source: ancient-standards-version 3.2.1 (current is 3.8.2)
 W: libbaz source: changelog-should-mention-nmu
 W: libbaz source: native-package-with-dash-version
 W: libbaz source: package-lacks-versioned-build-depends-on-debhelper 6

@@ -26,6 +26,15 @@ lintian (2.2.12) UNRELEASED; urgency=low
     + [RA] Per Policy 3.8.2, read-in-maintainer-script is now of serious
       severity.
 
+  * data/standards-version/release-dates:
+    + [RA] Add the release date for Policy 3.8.2.
+
+  * debian/control:
+    + [RA] Update standards version to 3.8.2 (no changes required).
+
+  * t/runtests:
+    + [RA] Update standards version to 3.8.2.
+
  -- Adam D. Barratt <adam@adam-barratt.org.uk>  Mon, 15 Jun 2009 19:21:07 +0100
 
 lintian (2.2.11) unstable; urgency=low

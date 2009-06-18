@@ -26,7 +26,7 @@ I: scripts: init.d-script-missing-lsb-short-description /etc/init.d/lsb-other
 I: scripts: no-md5sums-control-file
 I: scripts: script-in-usr-share-doc usr/share/doc/scripts/py2foo
 I: scripts: script-in-usr-share-doc usr/share/doc/scripts/rubyfoo
-W: scripts source: ancient-standards-version 3.2.1 (current is 3.8.1)
+W: scripts source: ancient-standards-version 3.2.1 (current is 3.8.2)
 W: scripts source: binary-arch-rules-but-pkg-is-arch-indep
 W: scripts source: debian-watch-file-declares-multiple-versions line 7
 W: scripts source: debian-watch-file-should-use-sf-redirector line 8
