@@ -14,6 +14,9 @@ lintian (2.2.12) UNRELEASED; urgency=low
       rename the missing-comma-between-items tag to the more descriptive
       missing-separator-between-items.  Based on a patch by Rafael
       Laboissiere.  (Closes: #533202)
+    + [RA] Allow a newline immediately after the field name, since this
+      does work with fields that can be wrapped (such as Build-Depends).
+      Thanks, Stephane Glondu.  (Closes: #528377)
   * checks/fields{,.desc}:
     + [RA] Update source-field-malformed to serious and don't allow
       capital letters in source package names.  Check source package names
