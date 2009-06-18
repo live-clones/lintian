@@ -151,7 +151,7 @@ for (keys %initd_postinst) {
     # check if file exists in package
     my $initd_file = "init.d/$_";
     if (-f $initd_file) {
-	checkinit($initd_file);
+	check_init($initd_file);
     } else {
 	tag "init.d-script-not-included-in-package", "/etc/init.d/$_";
     }
@@ -160,25 +160,24 @@ for (keys %initd_postinst) {
 # files actually installed in /etc/init.d should match our list :-)
 opendir(INITD, "init.d") or fail("cannot read init.d directory: $!");
 for (readdir(INITD)) {
-    next if $_ eq '.' || $_ eq '..' || $_ eq 'README';
+    next if $_ eq '.' || $_ eq '..' || $_ eq 'README' || $_ eq 'skeleton';
     unless ($initd_postinst{$_}) {
 	tag "script-in-etc-init.d-not-registered-via-update-rc.d", "/etc/init.d/$_";
-	checkinit("init.d/$_");
+	check_init("init.d/$_");
     }
 }
 closedir(INITD);
 
 }
 
-sub checkinit {
+sub check_init {
     my ($initd_file) = @_;
-    # yes! check it...
     open(IN, '<', $initd_file)
 	or fail("cannot open init.d file $initd_file: $!");
     my (%tag, %lsb);
     my $in_file_test = 0;
     while (defined(my $l = <IN>)) {
-	if ($. eq 1 && $l =~ m,^#!\s*(/usr/[^\s]+),) {
+	if ($. eq 1 && $l =~ m,^\#!\s*(/usr/[^\s]+),) {
 	    tag "init.d-script-uses-usr-interpreter", "/etc/init.d/$_ $1";
 	}
 	if ($l =~ m/^\#\#\# BEGIN INIT INFO/) {
@@ -225,7 +224,7 @@ sub checkinit {
 	    tag "init.d-script-sourcing-without-test", "/etc/init.d/$_:$. $1";
 	}
 
-	while ($l =~ s/^[^#]*?(start|stop|restart|force-reload)//o) {
+	while ($l =~ s/^[^\#]*?(start|stop|restart|force-reload)//o) {
 	    $tag{$1} = 1;
 	}
     }

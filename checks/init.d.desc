@@ -201,25 +201,29 @@ Info: This <tt>/etc/init.d</tt> script specifies the S runlevel in
  Default-Stop.
 
 Tag: init.d-script-uses-usr-interpreter
-Severity: serious
-Certainty: certain
+Severity: normal
+Certainty: possible
 Info: The given <tt>/etc/init.d</tt> script specifies an interpreter in
- its shebang located under <tt>/usr</tt>.
+ its shebang located under <tt>/usr</tt>.  This means the init script will
+ fail if run at a point in the boot sequence before the <tt>/usr</tt>
+ partition has been mounted.
  .
- Since init scripts can be left on the system when the package is
- removed but not purged, its dependencies might no longer be installed
- causing the init script to fail if the interpreter is one of its dependencies.
+ It also indicates that the init script may be using a non-essential
+ interpreter.  Since init scripts are configuration files, they may be
+ left on the system after their package has been removed but not purged.
+ At that point, the package dependencies are not guaranteed to exist and
+ the interpreter may therefore not be available.
  .
- Another case where the script might fail to execute is early during the boot
- process, when the <tt>/usr</tt> partition might not yet be mounted by the time
- the script needs its interpreter.
+ It's generally best to write init scripts using <tt>/bin/sh</tt> or
+ <tt>/bin/bash</tt> where possible, since they are guaranteed to always be
+ available.
 
 Tag: init.d-script-sourcing-without-test
 Severity: important
 Certainty: possible
 Info: The given <tt>/etc/init.d</tt> script seems to be sourcing an
- <tt>/etc/default/</tt> file without assuring its existence first.
- .
- Files in <tt>/etc/default/</tt> can be deleted by the administrator at any
- time and the init script should handle the situation gracefully.
+ <tt>/etc/default/</tt> file without checking for its existence first.
+ Files in <tt>/etc/default/</tt> can be deleted by the administrator at
+ any time, and init scripts are required to handle the situation
+ gracefully.
 Ref: policy 9.3.2

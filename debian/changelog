@@ -7,6 +7,8 @@ lintian (2.2.12) UNRELEASED; urgency=low
       - dh_scrollkeeper-is-deprecated
       - file-in-discouraged-x11-font-directory
       - file-in-unknown-x11-font-directory
+      - init.d-script-sourcing-without-test
+      - init.d-script-uses-usr-interpreter
       - missing-separator-between-items
       - package-contains-multiple-dpi-fonts
       - package-mixes-misc-and-dpi-fonts
@@ -52,6 +54,16 @@ lintian (2.2.12) UNRELEASED; urgency=low
       subdirectories of /usr/share/fonts/X11 per Policy 11.8.5.
     + [RA] Diagnose packages including both 100dpi and 75dpi fonts or
       mixing misc and Xdpi fonts.
+  * checks/init.d{,.desc}:
+    + [RA] Also check unregistered init scripts for other syntax problems.
+      Patch from Raphael Geissert.
+    + [RA] Don't think required init.d options are implemented just
+      because they occur in a comment.  Patch from Raphael Geissert.
+    + [RA] Diagnose init scripts sourcing /etc/default files without
+      checking first whether they're present.  Patch from Raphael
+      Geissert.  (Closes: #533571)
+    + [RA] Diagnose init scripts that use interpreters in /usr.  Patch
+      from Raphael Geissert.
   * checks/menus{,.desc}:
     + [RA] Read menu-methods files from the collected location instead of
       the unpacked binary package and change the unpack level of menus to
