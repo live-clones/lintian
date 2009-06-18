@@ -1,0 +1,24 @@
+Testname: scripts-maintainer-general
+Sequence: 6000
+Type: native
+Version: 1.0
+Architecture: any
+Description: Check general problems in maintainer scripts
+Test-For:
+ command-with-path-in-maintainer-script
+ deprecated-chown-usage
+ fc-cache-used-in-maintainer-script
+ gconftool-used-in-maintainer-script
+ install-sgmlcatalog-deprecated
+ maintainer-script-hides-init-failure
+ maintainer-script-modifies-inetd-conf
+ maintainer-script-modifies-netbase-managed-file
+ maintainer-script-needs-depends-on-gconf2
+ maintainer-script-needs-depends-on-ucf
+ maintainer-script-needs-depends-on-xml-core
+ maintainer-script-uses-dpkg-status-directly
+ possibly-insecure-handling-of-tmp-files-in-maintainer-script
+ read-in-maintainer-script
+ start-stop-daemon-in-maintainer-script
+ suidregister-used-in-maintainer-script
+References: Debian Bug#532984

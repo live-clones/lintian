@@ -444,6 +444,13 @@ Certainty: possible
 Info: This script apparently runs gconftool or gconftool-2.  It should
  probably be calling gconf-schemas or update-gconf-defaults instead.
 
+Tag: fc-cache-used-in-maintainer-script
+Severity: normal
+Certainty: possible
+Info: This script apparently runs fc-cache.  Updating of the fontconfig
+ cache files is now handled automatically by triggers, so running fc-cache
+ from maintainer scripts is no longer necessary.
+
 Tag: maintainer-script-uses-dpkg-status-directly
 Severity: important
 Certainty: certain
