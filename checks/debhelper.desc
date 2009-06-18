@@ -68,6 +68,14 @@ Ref: dh_suidregister(1)
 Info: suidregister is obsoleted by dpkg-statoverride, so registration of
  files in with dh_suidregister is unnecessary, and even harmful.
 
+Tag: dh_desktop-is-deprecated
+Severity: normal
+Certainty: certain
+Ref: dh_desktop(1)
+Info: This package calls dh_desktop in its <tt>debian/rules</tt> file.
+ dh_desktop is deprecated and o longer does anything.  The setup it used
+ to handle is now done with triggers.
+
 Tag: dh-clean-k-is-deprecated
 Severity: normal
 Certainty: certain

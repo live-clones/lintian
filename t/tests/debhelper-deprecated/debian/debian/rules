@@ -1,0 +1,33 @@
+#!/usr/bin/make -f
+
+pkg = $(shell dh_listpackages)
+
+build:
+
+clean:
+	dh_testdir
+	dh_testroot
+	dh_clean
+
+binary: binary-indep binary-arch
+binary-arch:
+binary-indep:
+	dh_testdir
+	dh_testroot
+	dh_testversion 7
+	dh_prep
+	dh_install
+	dh_installchangelogs
+	dh_installdocs
+	dh_desktop
+	-dh_dhelp
+	dh_link
+	dh_compress
+	dh_fixperms
+	dh_suidregister
+	dh_installdeb
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+.PHONY: binary binary-arch binary-indep build clean

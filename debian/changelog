@@ -3,6 +3,7 @@ lintian (2.2.12) UNRELEASED; urgency=low
   * Summary of tag changes:
     + Added:
       - debug-symbols-directly-in-usr-lib-debug
+      - dh_desktop-is-deprecated
       - file-in-discouraged-x11-font-directory
       - file-in-unknown-x11-font-directory
       - missing-separator-between-items
@@ -22,10 +23,14 @@ lintian (2.2.12) UNRELEASED; urgency=low
     + [RA] Allow a newline immediately after the field name, since this
       does work with fields that can be wrapped (such as Build-Depends).
       Thanks, Stephane Glondu.  (Closes: #528377)
-  * checks/debhelper:
+  * checks/debhelper{,.desc}:
     + [RA] Issue package-lacks-versioned-build-depends-on-debhelper always
       if the debhelper dependency isn't properly versioned, not just for
       compat levels newer than 5.  (Closes: #522384)
+    + [RA] Warn about dh_desktop calls since the command is now
+      deprecated.   Thanks, Nelson A. de Oliveira.  (Closes: #531164)
+    + [RA] Include the line number in deprecated and obsolete dh_* command
+      tags.
   * checks/fields{,.desc}:
     + [RA] Update source-field-malformed to serious and don't allow
       capital letters in source package names.  Check source package names

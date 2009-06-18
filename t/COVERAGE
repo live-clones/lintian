@@ -1,4 +1,4 @@
-Last generated 2009-06-17
+Last generated 2009-06-18
 
 The following tags are not tested by the test suite:
 
@@ -46,7 +46,6 @@ debconf unknown-field-in-templates
 debconf unknown-template-type
 
 debhelper debhelper-compat-file-is-empty
-debhelper dh_dhelp-is-deprecated
 
 debian-readme spelling-error-in-readme-debian
 

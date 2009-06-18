@@ -79,13 +79,16 @@ while (<RULES>) {
         my $dhcommand = $1;
 	if ($dhcommand =~ /dh_testversion(?:\s+([^\s]+))?/) {
 	    $level = $1 if ($1);
-	    tag "dh_testversion-is-deprecated", "";
+	    tag "dh_testversion-is-deprecated", "line $.";
 	}
 	if ($dhcommand eq 'dh_dhelp') {
-	    tag "dh_dhelp-is-deprecated", "";
+	    tag "dh_dhelp-is-deprecated", "line $.";
 	}
 	if ($dhcommand eq 'dh_suidregister') {
-	    tag "dh_suidregister-is-obsolete", "";
+	    tag "dh_suidregister-is-obsolete", "line $.";
+	}
+	if ($dhcommand eq 'dh_desktop') {
+	    tag 'dh_desktop-is-deprecated', "line $.";
 	}
 	if ($dhcommand eq 'dh_clean' and m/\s+\-k(\s+.*)?$/) {
 	    $seendhcleank = 1;
