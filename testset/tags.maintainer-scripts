@@ -44,6 +44,7 @@ W: maintainer-scripts source: debian-watch-file-in-native-package
 W: maintainer-scripts source: debian-watch-file-should-mangle-version
 W: maintainer-scripts source: debian-watch-file-unknown-version 4
 W: maintainer-scripts source: dfsg-version-in-native-package 7+dfsg-0.1
+W: maintainer-scripts source: package-lacks-versioned-build-depends-on-debhelper 1
 W: maintainer-scripts source: package-uses-deprecated-debhelper-compat-version 1
 W: maintainer-scripts source: qa-upload-has-incorrect-version-number 7+dfsg-0.1
 W: maintainer-scripts: ancient-dpkg-epoch-check preinst:8
