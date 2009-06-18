@@ -7,3 +7,5 @@ Test-For:
  file-in-discouraged-x11-font-directory
  file-in-unknown-x11-font-directory
  font-in-non-font-package
+ package-contains-multiple-dpi-fonts
+ package-mixes-misc-and-dpi-fonts
