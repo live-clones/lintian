@@ -31,9 +31,17 @@ lintian (2.2.12) UNRELEASED; urgency=low
   * checks/files{,.desc}:
     + [RA] Diagnose files installed into discouraged or unknown
       subdirectories of /usr/share/fonts/X11 per Policy 11.8.5.
+  * checks/menus{,.desc}:
+    + [RA] Read menu-methods files from the collected location instead of
+      the unpacked binary package and change the unpack level of menus to
+      1.  Patch from Raphael Geissert.
   * checks/scripts.desc:
     + [RA] Per Policy 3.8.2, read-in-maintainer-script is now of serious
       severity.
+
+  * collection/menu-files{,.desc}:
+    + [RA] Collect menu-methods as well as menu files.  Refactor to remove
+      code duplication.  Patch from Raphael Geissert.
 
   * data/standards-version/release-dates:
     + [RA] Add the release date for Policy 3.8.2.
