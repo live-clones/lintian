@@ -22,6 +22,9 @@ lintian (2.2.12) UNRELEASED; urgency=low
     + [RA] Permit quilt in Build-Depends for arch-independent packages if
       dh_quilt_* programs are called in the clean target.  Thanks, Daniel
       Moerner.  (Closes: #528003)
+    + [RA] If one of the gnome-pkg-tools makefile fragments is included,
+      gnome-pkg-tools is allowed and required in Build-Depends.  Thanks,
+      Emilio Pozuelo Monfort.  (Closes: #532892)
   * checks/files{,.desc}:
     + [RA] Diagnose files installed into discouraged or unknown
       subdirectories of /usr/share/fonts/X11 per Policy 11.8.5.
