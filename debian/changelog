@@ -2,12 +2,17 @@ lintian (2.2.12) UNRELEASED; urgency=low
 
   * Summary of tag changes:
     + Added:
+      - debug-symbols-directly-in-usr-lib-debug
       - file-in-discouraged-x11-font-directory
       - file-in-unknown-x11-font-directory
       - missing-separator-between-items
     + Removed:
       - missing-comma-between-items
       
+  * checks/binaries{,.desc}:
+    + [RA] Diagnose installing detached debugging symbols directly in
+      /usr/lib/debug instead of in an appropriate subdirectory.  Patch
+      from Raphael Geissert.  (Closes: #532394)
   * checks/control-file{,.desc}:
     + [ADB] Allow both comma and pipe as valid separators between items when
       detecting whether a separator has been omitted.  As a consequence,
