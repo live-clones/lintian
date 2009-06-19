@@ -1,5 +1,7 @@
-lintian (2.2.12) UNRELEASED; urgency=low
+lintian (2.2.12) unstable; urgency=low
 
+  The "Policy 3.8.2" release.
+  
   * Summary of tag changes:
     + Added:
       - debug-symbols-directly-in-usr-lib-debug
@@ -90,7 +92,7 @@ lintian (2.2.12) UNRELEASED; urgency=low
   * t/runtests:
     + [RA] Update standards version to 3.8.2.
 
- -- Adam D. Barratt <adam@adam-barratt.org.uk>  Mon, 15 Jun 2009 19:21:07 +0100
+ -- Russ Allbery <rra@debian.org>  Thu, 18 Jun 2009 17:19:03 -0700
 
 lintian (2.2.11) unstable; urgency=low
 
