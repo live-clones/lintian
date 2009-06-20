@@ -87,24 +87,30 @@ print OUT "$UDEBLIST_FORMAT\n";
 
 # parse Packages file to get list of packages
 my @packages;
-for my $area (split(/\s*,\s*, $LINTIAN_AREA)) {
-    push @packages, "$LINTIAN_ARCHIVEDIR/dists/$LINTIAN_DIST/$area/".
-		    "debian-installer/binary-$LINTIAN_ARCH/Packages";
+foreach my $area (split /\s*,\s*/,$LINTIAN_AREA) {
+    my %hash;
+    $hash{'dist'} = $LINTIAN_DIST;
+    $hash{'arch'} = $LINTIAN_ARCH;
+    $hash{'area'} = $area;
+    $hash{'file'} = "$LINTIAN_ARCHIVEDIR/dists/$hash{'dist'}/$hash{'area'}/" .
+                    "debian-installer/binary-$hash{'arch'}/Packages";
+    push @packages, \%hash;
 }
 
 my %packages;
 my $total = 0;
 
 foreach my $packages (@packages) {
-    if (-e $packages) {
-        print "N: Parsing $packages ...\n" if $verbose;
-        open(IN, '<', $packages) or fail("cannot open Packages file $packages: $!");
-    } elsif (-e "$packages.gz") {
-        print "N: Parsing $packages.gz ...\n" if $verbose;
-         open(IN, '-|', 'gzip', '-dc', "$packages.gz")
-            or fail("cannot open Packages file $packages.gz: $!");
+    my $pkgs_file = $packages->{'file'};
+    if (-e $pkgs_file) {
+        print "N: Parsing $pkgs_file ...\n" if $verbose;
+        open(IN, '<', $pkgs_file) or fail("cannot open Packages file $pkgs_file: $!");
+    } elsif (-e "$pkgs_file.gz") {
+        print "N: Parsing $pkgs_file.gz ...\n" if $verbose;
+         open(IN, '-|', 'gzip', '-dc', "$pkgs_file.gz")
+            or fail("cannot open Packages file $pkgs_file.gz: $!");
     } else {
-        warn("No packages file $packages, skipping");
+        warn("No packages file $pkgs_file, skipping");
         next;
     }
 
@@ -174,6 +180,7 @@ foreach my $packages (@packages) {
 		       $data->{'source-version'},
 		       $deb_file,
 		       $timestamp,
+		       $packages->{'area'},
 		       ),"\n";
         printf "N: Listed %s udeb package %s %s\n",$status,$pkg,$data->{'version'} if $verbose;
 

@@ -28,9 +28,9 @@ use vars qw($BINLIST_FORMAT $SRCLIST_FORMAT $UDEBLIST_FORMAT %source_info %binar
 
 # these banner lines have to be changed with every incompatible change of the
 # binary and source list file formats
-$BINLIST_FORMAT = "Lintian's list of binary packages in the archive--V3";
-$SRCLIST_FORMAT = "Lintian's list of source packages in the archive--V3";
-$UDEBLIST_FORMAT = "Lintian's list of udeb packages in the archive--V2";
+$BINLIST_FORMAT = "Lintian's list of binary packages in the archive--V4";
+$SRCLIST_FORMAT = "Lintian's list of source packages in the archive--V4";
+$UDEBLIST_FORMAT = "Lintian's list of udeb packages in the archive--V3";
 
 %source_info = ();
 %binary_info = ();
@@ -64,7 +64,7 @@ sub read_src_list {
   while (<IN>) {
     chop;
     next if /^\s*$/o;
-    my ($src,$ver,$maint,$uploaders,$arch,$std,$bin,$files,$file,$timestamp) = split(/\;/,$_);
+    my ($src,$ver,$maint,$uploaders,$arch,$area,$std,$bin,$files,$file,$timestamp) = split(/\;/,$_);
 
     my $src_struct;
     %$src_struct =
@@ -74,6 +74,7 @@ sub read_src_list {
        'maintainer' => $maint,
        'uploaders' => $uploaders,
        'architecture' => $arch,
+       'area' => $area,
        'standards-version' => $std,
        'binary' => $bin,
        'files' => $files,
@@ -115,7 +116,7 @@ sub read_bin_list {
     chop;
 
     next if /^\s*$/o;
-    my ($bin,$ver,$source,$source_ver,$file,$timestamp) = split(/\;/o,$_);
+    my ($bin,$ver,$source,$source_ver,$file,$timestamp,$area) = split(/\;/o,$_);
 
     my $bin_struct;
     %$bin_struct =
@@ -126,6 +127,7 @@ sub read_bin_list {
        'source-version' => $source_ver,
        'file' => $file,
        'timestamp' => $timestamp,
+       'area' => $area,
        );
 
     $binary_info{$bin} = $bin_struct;
@@ -162,7 +164,7 @@ sub read_udeb_list {
     chop;
 
     next if /^\s*$/o;
-    my ($udeb,$ver,$source,$source_ver,$file,$timestamp) = split(/\;/o,$_);
+    my ($udeb,$ver,$source,$source_ver,$file,$timestamp,$area) = split(/\;/o,$_);
 
     my $udeb_struct;
     %$udeb_struct =
@@ -173,6 +175,7 @@ sub read_udeb_list {
        'source-version' => $source_ver,
        'file' => $file,
        'timestamp' => $timestamp,
+       'area' => $area,
        );
 
     $udeb_info{$udeb} = $udeb_struct;
