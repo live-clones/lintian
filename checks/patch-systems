@@ -50,7 +50,7 @@ sub run {
 		$uses_patch_system++;
 		#check for a debian/patches file:
 		if (! -r "debfiles/patches/00list") {
-			tag "dpatch-build-dep-but-no-patch-list", $pkg;
+			tag "dpatch-build-dep-but-no-patch-list";
 		} else {
 			my $list_uses_cpp = 0;
 			if (open(OPTS, '<', "debfiles/patches/00options")) {
@@ -112,7 +112,7 @@ sub run {
 		$uses_patch_system++;
 		#check for a debian/patches file:
 		if (! -r "debfiles/patches/series") {
-			tag "quilt-build-dep-but-no-series-file", $pkg unless $quilt_format;
+			tag "quilt-build-dep-but-no-series-file" unless $quilt_format;
 		} else {
 			if (open(IN, '<', "debfiles/patches/series")) {
 				my @patches;
