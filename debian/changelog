@@ -1,5 +1,9 @@
 lintian (2.2.13) UNRELEASED; urgency=low
 
+  * checks/patch-systems:
+    + [RA] Don't include the package name as extra data in tags that are
+      only issued for source packages.  Patch from Raphael Geissert.
+
   * collection/strings:
     + [ADB] Handle the fact that, when Lintian is run as root, the output of
       "file" on set[gu]id files may include the fact that they are set[gu]id.
