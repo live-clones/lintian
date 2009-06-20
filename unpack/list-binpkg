@@ -85,7 +85,7 @@ open(OUT, '>', $output_file)
 print OUT "$BINLIST_FORMAT\n";
 
 # parse Packages file to get list of packages
-my @packages;
+my @packages_files;
 foreach my $area (split /\s*,\s*/,$LINTIAN_AREA) {
     my %hash;
     $hash{'dist'} = $LINTIAN_DIST;
@@ -93,14 +93,14 @@ foreach my $area (split /\s*,\s*/,$LINTIAN_AREA) {
     $hash{'area'} = $area;
     $hash{'file'} = "$LINTIAN_ARCHIVEDIR/dists/$hash{'dist'}/$hash{'area'}/" .
 		    "binary-$hash{'arch'}/Packages";
-    push @packages, \%hash;
+    push @packages_files, \%hash;
 }
 
 my %packages;
 my $total = 0;
 
-foreach my $packages (@packages) {
-    my $pkgs_file = $packages->{'file'};
+foreach my $packages_file (@packages_files) {
+    my $pkgs_file = $packages_file->{'file'};
     if (-e $pkgs_file) {
 	    print "N: Parsing $pkgs_file ...\n" if $verbose;
 	    open(IN, '<', $pkgs_file) or fail("cannot open Packages file $pkgs_file: $!");
@@ -178,7 +178,7 @@ foreach my $packages (@packages) {
 		       $data->{'source-version'},
 		       $deb_file,
 		       $timestamp,
-		       $packages->{'area'}
+		       $packages_file->{'area'}
 		       ),"\n";
 	printf "N: Listed %s binary package %s %s\n",$status,$pkg,$data->{'version'} if $verbose;
 
