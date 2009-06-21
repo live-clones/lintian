@@ -11,6 +11,7 @@ lintian (2.2.13) UNRELEASED; urgency=low
 
   * lib/Spelling.pm:
     + [RA] Add changes misspelling.
+    + [RA] Fix correction for endianness.  Thanks, Raphael Geissert.
 
  -- Adam D. Barratt <adam@adam-barratt.org.uk>  Fri, 19 Jun 2009 19:11:28 +0100
 

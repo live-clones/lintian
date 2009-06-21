@@ -193,7 +193,7 @@ our %CORRECTIONS = qw(
                       eletronic electronic
                       enchanced enhanced
                       encorporating incorporating
-                      endianness endianess
+                      endianess endianness
                       enhaced enhanced
                       enlightnment enlightenment
                       enterily entirely
