@@ -9,6 +9,9 @@ lintian (2.2.13) UNRELEASED; urgency=low
       "file" on set[gu]id files may include the fact that they are set[gu]id.
       Thanks, Peter Pentchev.  (Closes: #533618)
 
+  * lib/Spelling.pm:
+    + [RA] Add changes misspelling.
+
  -- Adam D. Barratt <adam@adam-barratt.org.uk>  Fri, 19 Jun 2009 19:11:28 +0100
 
 lintian (2.2.12) unstable; urgency=low

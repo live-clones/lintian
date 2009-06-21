@@ -130,6 +130,7 @@ our %CORRECTIONS = qw(
                       changable changeable
                       charachters characters
                       charcter character
+                      chnages changes
                       choosen chosen
                       colorfull colorful
                       comand command
