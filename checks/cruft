@@ -111,8 +111,9 @@ if (defined $info->field('architecture')) {
     }
 }
 
-# Read build-depends file and see if it depends on autotools-dev or automake.
+# Check if the package build-depends on autotools-dev, automake, or libtool.
 my $atdinbd = $info->relation('build-depends')->implies($AUTOTOOLS);
+my $ltinbd  = $info->relation('build-depends')->implies('libtool');
 
 # Create a closure so that we can pass our lexical variables into the find
 # wanted function.  We don't want to make them global because we'll then leak
@@ -125,7 +126,7 @@ if ($format =~ /^\s*2\.0\s*\z/ or $format =~ /^\s*3\.0\s*\(quilt\)/) {
 } elsif (not $info->native) {
     check_diffstat("diffstat", \%warned);
 }
-my $wanted = sub { find_cruft($pkg, $info, \%warned, $atdinbd) };
+my $wanted = sub { find_cruft($pkg, $info, \%warned, $atdinbd, $ltinbd) };
 find($wanted, 'unpacked');
 
 # Look for cruft based on file's results, but allow cruft in test directories
@@ -270,7 +271,7 @@ sub check_debfiles {
 # "source-contains" tag.  The tag isn't entirely accurate, but it's better
 # than creating yet a third set of tags, and this gets the severity right.
 sub find_cruft {
-    my ($pkg, $info, $warned, $atdinbd) = @_;
+    my ($pkg, $info, $warned, $atdinbd, $ltinbd) = @_;
     (my $name = $File::Find::name) =~ s,^(\./)?unpacked/,,;
 
     # Ignore files in test suites.  They may be part of the test.
@@ -320,9 +321,9 @@ sub find_cruft {
             }
         }
         close F;
-    } elsif ($name =~ m,^(.+/)?ltconfig$,) {
+    } elsif ($name =~ m,^(.+/)?ltconfig$, and not $ltinbd) {
         tag "ancient-libtool", $name;
-    } elsif ($name =~ m,^(.+/)?ltmain\.sh$,) {
+    } elsif ($name =~ m,^(.+/)?ltmain\.sh$, and not $ltinbd) {
         my $b = basename $name;
         open (F, '<', $b) or die "can't open $name: $!";
         while (<F>) {
