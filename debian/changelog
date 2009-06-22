@@ -16,6 +16,10 @@ lintian (2.2.13) UNRELEASED; urgency=low
     + [RA] Add changes misspelling.
     + [RA] Fix correction for endianness.  Thanks, Raphael Geissert.
 
+  * reporting/html_reports:
+    + [RA] Change area back to section in the loop for generating the
+      package index pages to be consistent with the page template.
+
  -- Adam D. Barratt <adam@adam-barratt.org.uk>  Fri, 19 Jun 2009 19:11:28 +0100
 
 lintian (2.2.12) unstable; urgency=low

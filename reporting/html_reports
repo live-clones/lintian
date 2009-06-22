@@ -481,9 +481,9 @@ for my $package (sort keys %packages) {
     packages  => \%packages,
 );
 my $i = 1;
-for my $area (sort keys %list) {
-    $data{area} = $area;
-    $data{list} = $list{$area};
+for my $section (sort keys %list) {
+    $data{section} = $section;
+    $data{list} = $list{$section};
     output_template ("packages_$i.html", $templates{packages}, \%data);
     $i++;
 }
