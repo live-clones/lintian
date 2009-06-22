@@ -575,9 +575,10 @@ sub spelling_check {
     return unless $text;
 
     $text = lc $text;
-    $text =~ s/[.,;:?!()[\]]//g;
+    $text =~ s/[()[\]]//g;
 
     for my $word (split(/\s+/, $text)) {
+        $word =~ s/[.,;:?!]+$//;
         if (exists $CORRECTIONS{$word}) {
             _tag($tag, $filename, $word, $CORRECTIONS{$word});
         }
