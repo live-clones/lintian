@@ -12,6 +12,9 @@ lintian (2.2.13) UNRELEASED; urgency=low
   * checks/cruft:
     + [RA] Don't warn about outdated libtool if the package build-depends
       on libtool.  Thanks, Kurt Roeckx.  (Closes: #534134)
+  * checks/init.d:
+    + [RA] Take into account dangling symlinks in /etc/init.d.  Patch from
+      Raphael Geissert.  (Closes: #534139)
   * checks/patch-systems:
     + [RA] Don't include the package name as extra data in tags that are
       only issued for source packages.  Patch from Raphael Geissert.
