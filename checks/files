@@ -616,7 +616,7 @@ foreach my $file (sort keys %{$info->index}) {
 
     # ---------------- pythonX.Y extensions
     if ($file =~ m,^usr/lib/python\d\.\d/\S,
-	and not $file =~ m,^usr/lib/python\d\.\d/site-packages/,) {
+	and not $file =~ m,^usr/lib/python\d\.\d/(?:site|dist)-packages/,) {
         # check if it's one of the Python proper packages
 	unless (defined $is_python) {
 	    $is_python = 0;

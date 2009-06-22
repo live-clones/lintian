@@ -14,6 +14,10 @@ lintian (2.2.13) UNRELEASED; urgency=low
       on libtool.  Thanks, Kurt Roeckx.  (Closes: #534134)
     + [RA] Fix typo in *-contains-ht-tags-file description.  Patch from
       Peter Pentchev.  (Closes: #534218)
+  * checks/files:
+    + [RA] Allow non-core Python packages to install files into
+      /usr/lib/python*/dist-packages, the extension location for Python
+      2.6 and later.  Thanks, Julian Andres Klode.  (Closes: #534212)
   * checks/init.d:
     + [RA] Take into account dangling symlinks in /etc/init.d.  Patch from
       Raphael Geissert.  (Closes: #534139)
