@@ -88,46 +88,44 @@ for my $binary_control (@binary_controls) {
 		tag 'binary-control-field-duplicates-source', "field \"$field\" in package ".$binary_control->{'package'},
 		    if ($header->{$field} && $binary_control->{$field} eq $header->{$field});
 	}
-
-	# If two substvars aren't separated by a comma, but at least one of
-	# them expands to an empty string, there will be a lurking bug.  The
-	# result will be syntactically correct, but as soon as both expand
-	# into something non-empty, there will be a syntax error.  Catch that
-	# mistake to avoid problems later.
-	#
-	# Only check the fields that use comma-separated values.
-	for my $field (qw(pre-depends depends recommends suggests breaks
-			  conflicts provides replaces enhances)) {
-		next unless $binary_control->{$field};
-		if ($binary_control->{$field} =~ /(\$\{\S+\})\s+[a-zA-Z0-9\$]/) {
-			tag 'missing-comma-after-substvar', "in $field field near $1";
-		}
-	}
 }
 
-# Check if comma-separated values that span multiple lines omit commas as in
-# the following example:
-#   Depends: foo, bar
-#    baz
+# Check that fields which should be comma-separated or pipe-separated have
+# separators.  Places where this tends to cause problems are with wrapped
+# lines such as:
+#
+#     Depends: foo, bar
+#      baz
+#
+# or with substvars.  If two substvars aren't separated by a comma, but at
+# least one of them expands to an empty string, there will be a lurking bug.
+# The result will be syntactically correct, but as soon as both expand into
+# something non-empty, there will be a syntax error.
 for my $control ($header, @binary_controls) {
 	for my $field (qw(pre-depends depends recommends suggests breaks
 			  conflicts provides replaces enhances
 			  build-depends build-depends-indep
 			  build-conflics build-conflicts-indep)) {
 		next unless $control->{$field};
-		if ($control->{$field} =~ /
-			([^,|]+)	# previous entry
-			\s*\n\s+	# new line + space
-			([a-z][^,|]+)	# next entry, must start with a letter
-			/x) {
-
+		my $value = $control->{$field};
+		$value =~ s/\n(\s)/$1/g;
+		if ($value =~ /(?:^|\s)
+			       (
+				(?:\w[^\s,|]+|\$\{\S+\})\s*
+				(?:\([^\)]*\)\s*|\[[^\]]+\]\s*)*
+			       )
+			       \s+
+			       (
+				(?:\w[^\s,|]+|\$\{\S+\})\s*
+				(?:\([^\)]*\)\s*|\[[^\]]+\]\s*)*
+			       )/x) {
 			my ($prev, $next) = ($1, $2);
 			for ($prev, $next) {
-				s/^\s+//; s/\s+$//;
+				s/\s+$//;
 			}
-			tag "missing-separator-between-items",
-			    "in $field field between '$prev' and '$next', " .
-			    ($control->{source} ? 'source' : $control->{package});
+			tag 'missing-separator-between-items', 'in',
+			    ($control->{source} ? 'source' : $control->{package}),
+			    "$field field between '$prev' and '$next'";
 		}
 	}
 }

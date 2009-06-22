@@ -7,7 +7,6 @@ Test-For:
  build-info-in-binary-control-file-section
  duplicate-long-description
  duplicate-short-description
- missing-comma-after-substvar
  missing-separator-between-items
  no-section-field-for-source
  package-depends-on-itself

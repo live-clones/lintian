@@ -1,5 +1,14 @@
 lintian (2.2.13) UNRELEASED; urgency=low
 
+  * Summary of tag changes:
+    + Removed:
+      - missing-comma-after-substvar
+
+  * checks/control-file{,.desc}:
+    + [RA] Rework missing-separator-between-lines to only include two
+      specific package stanzas in the extra tag data and not include
+      newlines.  Generalize it to also detect missing commas between
+      substvars, replacing missing-comma-after-substvar.
   * checks/cruft:
     + [RA] Don't warn about outdated libtool if the package build-depends
       on libtool.  Thanks, Kurt Roeckx.  (Closes: #534134)
