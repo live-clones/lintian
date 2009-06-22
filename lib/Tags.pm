@@ -366,7 +366,7 @@ sub tag {
     # treat the distinction between extra arguments to tag() as significant,
     # so we may as well take care of this up front.
     @information = grep { defined($_) and $_ ne '' }
-	map { s,\n,\\n,; $_ } @information;
+	map { s,\n,\\n,g; $_ } @information;
     my $information = join(' ', @information);
     $information = '' unless defined $information;
 

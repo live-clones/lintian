@@ -15,6 +15,9 @@ lintian (2.2.13) UNRELEASED; urgency=low
   * lib/Spelling.pm:
     + [RA] Add changes misspelling.
     + [RA] Fix correction for endianness.  Thanks, Raphael Geissert.
+  * lib/Tags.pm:
+    + [RA] Replace all newlines in tag data with \n, not just the first.
+      (Closes: #534141)
 
   * reporting/html_reports:
     + [RA] Change area back to section in the loop for generating the
