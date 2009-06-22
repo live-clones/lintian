@@ -216,7 +216,7 @@ Info: The upstream source contains an <tt>.arch-inventory</tt> file.  This
 Tag: diff-contains-hg-tags-file
 Severity: normal
 Certainty: certain
-Info: The Debian diff or native package contains an <tt>.htgags</tt>
+Info: The Debian diff or native package contains an <tt>.hgtags</tt>
  file.  This file is Mercurial metadata that should normally not be
  distributed.  It stores hashes of tagged commits in a Mercurial
  repository and isn't therefore useful without the repository.
@@ -224,7 +224,7 @@ Info: The Debian diff or native package contains an <tt>.htgags</tt>
 Tag: source-contains-hg-tags-file
 Severity: pedantic
 Certainty: certain
-Info: The upstream source contains an <tt>.htgags</tt> file.  This file is
+Info: The upstream source contains an <tt>.hgtags</tt> file.  This file is
  Mercurial metadata that should normally not be distributed.  It stores
  hashes of tagged commits in a Mercurial repository and isn't therefore
  useful without the repository.  You may want to report this as an

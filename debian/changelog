@@ -9,9 +9,11 @@ lintian (2.2.13) UNRELEASED; urgency=low
       specific package stanzas in the extra tag data and not include
       newlines.  Generalize it to also detect missing commas between
       substvars, replacing missing-comma-after-substvar.
-  * checks/cruft:
+  * checks/cruft{,.desc}:
     + [RA] Don't warn about outdated libtool if the package build-depends
       on libtool.  Thanks, Kurt Roeckx.  (Closes: #534134)
+    + [RA] Fix typo in *-contains-ht-tags-file description.  Patch from
+      Peter Pentchev.  (Closes: #534218)
   * checks/init.d:
     + [RA] Take into account dangling symlinks in /etc/init.d.  Patch from
       Raphael Geissert.  (Closes: #534139)
