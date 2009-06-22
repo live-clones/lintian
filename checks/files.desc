@@ -489,11 +489,12 @@ Info: Debian packages should not install into <tt>/srv</tt>.  The
 Tag: third-party-package-in-python-dir
 Severity: normal
 Certainty: certain
-Info: According to <a href="http://www.python.org/doc/essays/packages.html">
- <tt>http://www.python.org/doc/essays/packages.html</tt></a>, third-party
- python packages should install their files in
- <tt>/usr/lib/python1.5/site-packages</tt>.  All other directories in
- <tt>/usr/lib/python1.5</tt> are for use by the core python packages.
+Info: Third-party Python packages should install their files in
+ <tt>/usr/lib/python<i>VERSION</i>/site-packages</tt> for Python versions
+ before 2.6 and <tt>/usr/lib/python<i>VERSION</i>/dist-packages</tt>
+ for Python 2.6 and later.  All other directories in
+ <tt>/usr/lib/python<i>VERSION</i></tt> are for use by the core python
+ packages.
  
 Tag: perl-module-in-core-directory
 Severity: important
