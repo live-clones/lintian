@@ -1,2 +1,3 @@
 W: init.d-script-registration: init.d-script-missing-lsb-section /etc/init.d/foo.in
+W: init.d-script-registration: script-in-etc-init.d-not-registered-via-update-rc.d /etc/init.d/bar
 W: init.d-script-registration: script-in-etc-init.d-not-registered-via-update-rc.d /etc/init.d/foo.in

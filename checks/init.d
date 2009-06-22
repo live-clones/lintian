@@ -163,7 +163,7 @@ for (readdir(INITD)) {
     next if $_ eq '.' || $_ eq '..' || $_ eq 'README' || $_ eq 'skeleton';
     unless ($initd_postinst{$_}) {
 	tag "script-in-etc-init.d-not-registered-via-update-rc.d", "/etc/init.d/$_";
-	check_init("init.d/$_");
+	check_init("init.d/$_") if -f "init.d/$_";
     }
 }
 closedir(INITD);
