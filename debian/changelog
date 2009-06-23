@@ -24,6 +24,9 @@ lintian (2.2.13) UNRELEASED; urgency=low
   * checks/patch-systems:
     + [RA] Don't include the package name as extra data in tags that are
       only issued for source packages.  Patch from Raphael Geissert.
+  * checks/scripts.desc:
+    + [RA] Lower certainty of read-in-maintainer-script to possible and
+      mention false positives.  Thanks, Raphaël Hertzog.  (Closes: #534276)
 
   * collection/strings:
     + [ADB] Handle the fact that, when Lintian is run as root, the output of
