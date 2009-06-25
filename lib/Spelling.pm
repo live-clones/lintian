@@ -205,6 +205,7 @@ our %CORRECTIONS = qw(
                       exceded exceeded
                       excellant excellent
                       exlcude exclude
+                      expecially especially
                       explicitely explicitly
                       expresion expression
                       exprimental experimental
@@ -451,6 +452,7 @@ our %CORRECTIONS = qw(
                       unexecpted unexpected
                       unfortunatelly unfortunately
                       unknonw unknown
+                      unkown unknown
                       unuseful useless
                       useable usable
                       usefull useful
