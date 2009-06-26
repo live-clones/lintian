@@ -14,6 +14,10 @@ lintian (2.2.13) UNRELEASED; urgency=low
       on libtool.  Thanks, Kurt Roeckx.  (Closes: #534134)
     + [RA] Fix typo in *-contains-ht-tags-file description.  Patch from
       Peter Pentchev.  (Closes: #534218)
+  * checks/fields:
+    + [ADB] If the Debian r-cran makefile include is used in the rules file,
+      cdbs, debhelper and r-base-dev are required in Build-Depends.  Thanks,
+      Charles Plessy.  (Closes: #534684)
   * checks/files{,.desc}:
     + [RA] Allow non-core Python packages to install files into
       /usr/lib/python*/dist-packages, the extension location for Python

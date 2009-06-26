@@ -121,15 +121,18 @@ our $PYTHON_DEPEND = 'python | python-dev | python-all | python-all-dev | '
 our @GLOBAL_CLEAN_DEPENDS = (
 	[ ant => qr'^include\s*/usr/share/cdbs/1/rules/ant\.mk' ],
 	[ cdbs => qr'^include\s+/usr/share/cdbs/' ],
+	[ cdbs => qr'^include\s+/usr/share/R/debian/r-cran\.mk' ],
 	[ dbs => qr'^include\s+/usr/share/dbs/' ],
 	[ 'dh-make-php' => qr'^include\s+/usr/share/cdbs/1/class/pear\.mk' ],
 	[ debhelper => qr'^include\s+/usr/share/cdbs/1/rules/debhelper\.mk' ],
+	[ debhelper => qr'^include\s+/usr/share/R/debian/r-cran\.mk' ],
 	[ dpatch => qr'^include\s+/usr/share/cdbs/1/rules/dpatch\.mk' ],
 	[ 'gnome-pkg-tools' => qr'^include\s+/usr/share/gnome-pkg-tools/' ],
 	[ quilt => qr'^include\s+/usr/share/cdbs/1/rules/patchsys-quilt\.mk' ],
 	[ dpatch => qr'^include\s+/usr/share/dpatch/' ],
 	[ quilt => qr'^include\s+/usr/share/quilt/' ],
 	[ 'ruby-pkg-tools' => qr'^include\s+/usr/share/ruby-pkg-tools/1/class/' ],
+	[ 'r-base-dev' => qr'^include\s+/usr/share/R/debian/r-cran\.mk' ],
 	[ $PYTHON_DEPEND => qr'/usr/share/cdbs/1/class/python-distutils\.mk', 'missing-python-build-dependency' ],
 );
 
