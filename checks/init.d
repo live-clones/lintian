@@ -143,16 +143,19 @@ if (open(IN, '<', $conffiles)) {
 
 for (keys %initd_postinst) {
     next if /^\$/;
-    # init.d scripts have to be marked as conffiles
-    unless ($conffiles{"/etc/init.d/$_"} or $conffiles{"etc/init.d/$_"}) {
+    my $initd_file = "init.d/$_";
+
+    # init.d scripts have to be marked as conffiles unless they're symlinks.
+    unless ($conffiles{"/etc/init.d/$_"} or $conffiles{"etc/init.d/$_"}
+	    or -l $initd_file) {
 	tag "init.d-script-not-marked-as-conffile", "/etc/init.d/$_";
     }
 
-    # check if file exists in package
-    my $initd_file = "init.d/$_";
+    # Check if file exists in package and check the script for other issues if
+    # it was included in the package.
     if (-f $initd_file) {
 	check_init($initd_file);
-    } else {
+    } elsif (not -l $initd_file) {
 	tag "init.d-script-not-included-in-package", "/etc/init.d/$_";
     }
 }

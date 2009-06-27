@@ -25,6 +25,9 @@ lintian (2.2.13) UNRELEASED; urgency=low
   * checks/init.d:
     + [RA] Take into account dangling symlinks in /etc/init.d.  Patch from
       Raphael Geissert.  (Closes: #534139)
+    + [RA] Don't require symlink init scripts to be conffiles and realize
+      they are included in the package even if the symlink is dangling.
+      Thanks, Steve Langasek.  (Closes: #534326)
   * checks/patch-systems:
     + [RA] Don't include the package name as extra data in tags that are
       only issued for source packages.  Patch from Raphael Geissert.
