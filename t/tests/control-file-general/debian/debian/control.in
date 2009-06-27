@@ -2,7 +2,16 @@ Source: {$srcpkg}
 Priority: extra
 Maintainer: {$author}
 Standards-Version: {$standards_version}
-Build-Depends: debhelper (>= 7)
+Build-Depends: debhelper (>= 7),
+ fiddle [amd64 powerpc
+ mips mipsel
+ hppa
+ s390],
+ faddle
+ (>>
+ 2) [
+ sparc i386 amd64
+ ]
 X-VCS-Svn: svn://svn.example.com/{$srcpkg}/trunk
 
 Package: {$srcpkg}

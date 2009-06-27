@@ -101,6 +101,10 @@ for my $binary_control (@binary_controls) {
 # least one of them expands to an empty string, there will be a lurking bug.
 # The result will be syntactically correct, but as soon as both expand into
 # something non-empty, there will be a syntax error.
+#
+# The architecture list can contain things that look like packages separated
+# by spaces, so we have to remove any architecture restrictions first.  This
+# unfortunately distorts our report a little, but hopefully not too much.
 for my $control ($header, @binary_controls) {
 	for my $field (qw(pre-depends depends recommends suggests breaks
 			  conflicts provides replaces enhances
@@ -109,6 +113,7 @@ for my $control ($header, @binary_controls) {
 		next unless $control->{$field};
 		my $value = $control->{$field};
 		$value =~ s/\n(\s)/$1/g;
+		$value =~ s/\[[^\]]*\]//g;
 		if ($value =~ /(?:^|\s)
 			       (
 				(?:\w[^\s,|]+|\$\{\S+\})\s*
