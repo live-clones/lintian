@@ -897,10 +897,10 @@ while (<SCRIPTS>) {
 
 		# position after the last pair of quotation marks, if any
 		while($divert =~ m/\G.*?("|').+?\1/gc) {} #"
-		# Strip anything matching and after '&&', '||', or ';'
+		# Strip anything matching and after '&&', '||', ';', or '>'
 		# this is safe only after we are positioned after the last pair
 		# of quotation marks
-		$divert =~ s/\G.+?\K(?: && | \|\| | ;).*$//x;
+		$divert =~ s/\G.+?\K(?: && | \|\| | ; | \d*> ).*$//x;
 		pos($divert) = undef;
 		# Remove quotation marks, they affect:
 		# * our var to regex trick

@@ -15,10 +15,16 @@ if [ install = "$1"  ]; then
     dpkg-divert --add --divert /usr/share/scripts/another-file.real \
         /usr/share/scripts/another-file
 
-    # This is also correct, but we're not going to clean it up.
+    # This is also correct, but we're not going to clean it up.  While we're
+    # at it, make sure we strip trailing redirections.
     dpkg-divert --package scripts-diversions --add --rename \
         --divert /usr/share/scripts/orphan.real \
-        /usr/share/scripts/orphan
+        /usr/share/scripts/orphan > /dev/null
+
+    # The same one again, but with a different redirection.
+    dpkg-divert --package scripts-diversions --add --rename \
+        --divert /usr/share/scripts/orphan.real \
+        /usr/share/scripts/orphan 2> /dev/null
 
     # This is broken because the file doesn't exist.
     dpkg-divert --add --package scripts-diversions --rename \
