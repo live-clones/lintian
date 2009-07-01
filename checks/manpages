@@ -274,6 +274,7 @@ foreach my $file (sort keys %{$info->index}) {
 	# Now we search through the whole man page for some common errors
 	my $lc = 0;
 	my $hc = 0;
+	my $draft_mode = 0;
 	foreach my $line (@manfile) {
 	    $lc++;
 	    chomp $line;
@@ -289,14 +290,19 @@ foreach my $file (sort keys %{$info->index}) {
 	    # Catch hyphens used as minus signs by looking for ones at the
 	    # beginning of a word, but don't generate false positives on \s-1
 	    # (small font), \*(-- (pod2man long dash), or things like \h'-1'.
-	    if ($line =~ /^(
-			    ([^\.].*)?
-			    [\s\'\"\`\(\[]
-			    (?<! \\s | \*\( | \(- | \w\' )
-			   )?
-			   (--?\w+)/ox) {
+	    # Ignoring hyphens contained in draft mode (.eo).
+	    $draft_mode = 1 if $line =~ /^\.\s*eo/;
+	    $draft_mode = 0 if $line =~ /^\.\s*ec/;
+	    if (not $draft_mode
+		and $line =~ /^(
+				([^\.].*)?
+				[\s\'\"\`\(\[]
+				(?<! \\s | \*\( | \(- | \w\' )
+			       )?
+			      (--?\w+)/ox) {
 		$hc++;
-		tag "hyphen-used-as-minus-sign", "$file:$lc" if $hc <= 10 or $ENV{'LINTIAN_DEBUG'};
+		tag "hyphen-used-as-minus-sign", "$file:$lc"
+		    if $hc <= 10 or $ENV{'LINTIAN_DEBUG'};
 	    }
 	    if (($line =~ m,(/usr/(dict|doc|etc|info|man|adm|preserve)/),o)
 		|| ($line =~ m,(/var/(adm|catman|named|nis|preserve)/),o)) {
@@ -308,7 +314,9 @@ foreach my $file (sort keys %{$info->index}) {
 		tag "manpage-has-errors-from-pod2man", "$file:$lc";
 	    }
 	}
-	tag "hyphen-used-as-minus-sign", $file, ($hc-10), "more occurrences not shown" if $hc > 10 and ! $ENV{'LINTIAN_DEBUG'};
+	tag "hyphen-used-as-minus-sign", $file, ($hc - 10),
+	    "more occurrences not shown"
+	    if ($hc > 10 and ! $ENV{'LINTIAN_DEBUG'});
     }
 }
 

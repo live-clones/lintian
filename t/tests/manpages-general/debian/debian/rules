@@ -1,0 +1,63 @@
+#!/usr/bin/make -f
+
+tmp = $(CURDIR)/debian/$(shell dh_listpackages)
+
+%:
+	dh $@
+
+override_dh_auto_install:
+	install -d $(tmp)/usr/share/man/man1 $(tmp)/usr/share/man/man3 \
+	    $(tmp)/usr/share/man/man6 $(tmp)/usr/X11R6/man/man6 \
+	    $(tmp)/usr/bin $(tmp)/usr/sbin $(tmp)/usr/X11R6/bin \
+	    $(tmp)/usr/share/man/de/man1 $(tmp)/usr/X11R6/man/man1
+	printf '#!/bin/sh\ntrue\n' > $(tmp)/usr/bin/usr-bin-binary-alt
+	chmod 755 $(tmp)/usr/bin/usr-bin-binary-alt
+	printf '#!/bin/sh\ntrue\n' > $(tmp)/usr/sbin/usr-sbin-binary
+	chmod 755 $(tmp)/usr/sbin/usr-sbin-binary
+	printf '#!/bin/sh\ntrue\n' > $(tmp)/usr/X11R6/bin/rstartd
+	chmod 755 $(tmp)/usr/X11R6/bin/rstartd
+	printf '#!/bin/sh\ntrue\n' \
+	    > $(tmp)/usr/bin/binary-without-english-manpage
+	chmod 755 $(tmp)/usr/bin/binary-without-english-manpage
+
+	gzip -c9 < test.1p > $(tmp)/usr/share/man/man1/test.1p.gz
+	gzip -c9 < true.1 > $(tmp)/usr/share/man/man1/true.1.gz
+	gzip -c9 < program.1 > $(tmp)/usr/share/man/man1/program.1.gz
+
+	ln -s ../X11R6/bin/rstartd $(tmp)/usr/bin/rstartd
+	gzip -c9 < program.1 > $(tmp)/usr/X11R6/man/man1/rstartd.1x.gz
+
+	ln -s ../man7/undocumented.7.gz \
+	     $(tmp)/usr/share/man/man1/bin-binary.1.gz
+	ln -s undocumented.7.gz $(tmp)/usr/share/man/man1/sbin-binary.1.gz
+	ln -s undocumented.3.gz $(tmp)/usr/share/man/man3/function.3.gz
+
+	touch $(tmp)/usr/share/man/man1/usr-bin-binary.1
+	chmod 644 $(tmp)/usr/share/man/man1/usr-bin-binary.1
+	touch $(tmp)/usr/share/man/man1/usr-sbin-binary.1.gz
+	chmod 644 $(tmp)/usr/share/man/man1/usr-sbin-binary.1.gz
+	cd $(tmp)/usr/share/man/man1 \
+	    && ln usr-sbin-binary.1.gz usr-bin-binary-alt.1.gz
+	touch $(tmp)/usr/share/man/man6/usr-games-binary.6
+	chmod 644 $(tmp)/usr/share/man/man6/usr-games-binary.6
+	gzip -1 $(tmp)/usr/share/man/man6/usr-games-binary.6
+	touch $(tmp)/usr/X11R6/man/man6/X11R6-binary.man
+	chmod 644 $(tmp)/usr/X11R6/man/man6/X11R6-binary.man
+	touch $(tmp)/usr/share/man/de/man1/binary-without-english-manpage.1
+
+	gzip -c9 < test.1p.de \
+	    > $(tmp)/usr/share/man/man1/test-latin1-chars.1p.gz
+	gzip -c9 < test.1p.de \
+	    > $(tmp)/usr/share/man/de/man1/test-latin1-chars.1p.gz
+	install -d $(tmp)/usr/share/man/de_DE/man1
+	gzip -c9 < test.1p.utf-8 \
+	    > $(tmp)/usr/share/man/de_DE/man1/test-utf8-chars.1p.gz
+
+	gzip -c9 <include.3 >$(tmp)/usr/share/man/man3/include.3.gz
+	gzip -c9 <included.3 >$(tmp)/usr/share/man/man3/included.3.gz
+
+override_dh_fixperms:
+override_dh_installman:
+
+override_dh_compress:
+	gzip -9 $(tmp)/usr/share/doc/manpages-general/changelog

@@ -1,4 +1,4 @@
-Last generated 2009-06-18
+Last generated 2009-07-01
 
 The following tags are not tested by the test suite:
 
@@ -137,7 +137,6 @@ manpages bad-so-link-within-manual-page
 manpages manpage-for-non-x11-binary-in-wrong-directory
 manpages manpage-for-x11-binary-in-wrong-directory
 manpages manpage-in-wrong-directory
-manpages manpage-section-mismatch
 
 menu-format bad-test-in-menu-item
 menu-format desktop-entry-contains-deprecated-key
@@ -449,23 +448,7 @@ init.d prerm-calls-updaterc.d
 
 lintian bad-ubuntu-distribution-in-changes-file
 
-manpages bad-link-to-undocumented-manpage
-manpages binary-without-english-manpage
 manpages binary-without-manpage
-manpages empty-manual-page
-manpages hyphen-used-as-minus-sign
-manpages link-to-undocumented-manpage
-manpages manpage-has-bad-whatis-entry
-manpages manpage-has-errors-from-man
-manpages manpage-has-errors-from-pod2man
-manpages manpage-has-useless-whatis-entry
-manpages manpage-has-wrong-extension
-manpages manpage-is-dh_make-template
-manpages manpage-locale-dir-country-specific
-manpages manpage-not-compressed
-manpages manpage-not-compressed-with-gzip
-manpages manpage-not-compressed-with-max-compression
-manpages x11-games-should-be-in-usr-games
 
 md5sums file-missing-in-md5sums
 md5sums malformed-md5sums-control-file
