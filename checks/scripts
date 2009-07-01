@@ -196,7 +196,7 @@ our $LEADIN = qr'(?:(?:^|[`&;(|{])\s*|(?:if|then|do|while)\s+)';
 our @bashism_single_quote_regexs = (
     $LEADIN . qr'echo\s+(?:-[^e\s]+\s+)?\'[^\']*(\\[abcEfnrtv0])+.*?[\']',
 	# unsafe echo with backslashes
-    $LEADIN . qr'source\s+[\"\']?(?:\.\/|\/|\$|[\w.-])[^\s]+',
+    $LEADIN . qr'source\s+[\"\']?(?:\.\/|\/|\$|[\w~.-])\S*',
 	# should be '.', not 'source'
 );
 our @bashism_string_regexs = (

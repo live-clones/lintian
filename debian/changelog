@@ -40,6 +40,9 @@ lintian (2.2.13) UNRELEASED; urgency=low
       mention false positives.  Thanks, Raphaël Hertzog.  (Closes: #534276)
     + [RA] Allow for output redirection when parsing diversions in
       maintainer scripts.  Thanks, Andreas Beckmann.  (Closes: #534942)
+    + [ADB] Detect the use of the "source" bashism when the sourced filename
+      contains a tilde or consists of a single character.  Thanks, Raphael
+      Geissert and Ryan Niebur.
 
   * collection/strings:
     + [ADB] Handle the fact that, when Lintian is run as root, the output of

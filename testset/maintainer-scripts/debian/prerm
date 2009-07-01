@@ -184,3 +184,5 @@ set -e
 
 source "$BAR"
 source '$BAR'
+source ~/bar
+source a
