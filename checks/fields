@@ -166,9 +166,9 @@ my @GLOBAL_DEPENDS = (
 # regex matches in one of clean, build-arch, binary-arch, or a rule they
 # depend on, this package is allowed (and required) in Build-Depends.
 my @RULE_CLEAN_DEPENDS = (
-	[ ant => qr'^\t\s*ant\s' ],
+	[ ant => qr'^\t\s*(\S+=\S+\s+)*ant\s' ],
 	[ debhelper => qr'^\t\s*dh_.+' ],
-	[ dpatch => qr'^\t\s*dpatch\s' ],
+	[ dpatch => qr'^\t\s*(\S+=\S+\s+)*dpatch\s' ],
 	[ "po-debconf" => qr'^\t\s*debconf-updatepo\s' ],
 	[ $PYTHON_DEPEND => qr'^\t\s*python\s', 'missing-python-build-dependency' ],
 	[ $PYTHON_DEPEND => qr'\ssetup\.py\b', 'missing-python-build-dependency' ],
@@ -194,23 +194,23 @@ my @RULE_CLEAN_ALLOWED = (
 # should bypass the build-depends-without-arch-dep check completely.
 my @GLOBAL_CLEAN_BYPASS = (
 	qr'^include\s*/usr/share/cdbs/1/class/ant\.mk',
-	qr'^\s+dh\s+'
+	qr'^\s+(\S+=\S+\s+)*dh\s+'
 );
 
 # Mapping of package names to section names
 my @NAME_SECTION_MAPPINGS = (
-    [ qr/-docs?$/      => 'doc'      ],
-    [ qr/-dbg$/        => 'debug'    ],
-    [ qr/^python-/     => 'python'   ],
-    [ qr/^r-cran-/     => 'gnu-r'    ],
-    [ qr/^lib.*-perl$/ => 'perl'     ],
-    [ qr/^lib.*-cil$/  => 'cli-mono' ],
-    [ qr/^lib.*-java$/ => 'java'     ],
-    [ qr/^(?:lib)php-/ => 'php'      ],
-    [ qr/^lib(?:hugs|ghc6)-/ => 'haskell'   ],
-    [ qr/^lib.*-ruby(?:1\.\d)?$/ => 'ruby'  ],
-    [ qr/^lib.*-ocaml-dev$/ => 'ocaml'      ],
-    [ qr/^lib.*-dev$/  => 'libdevel' ],
+    [ qr/-docs?$/                => 'doc'      ],
+    [ qr/-dbg$/                  => 'debug'    ],
+    [ qr/^python-/               => 'python'   ],
+    [ qr/^r-cran-/               => 'gnu-r'    ],
+    [ qr/^lib.*-perl$/           => 'perl'     ],
+    [ qr/^lib.*-cil$/            => 'cli-mono' ],
+    [ qr/^lib.*-java$/           => 'java'     ],
+    [ qr/^(?:lib)php-/           => 'php'      ],
+    [ qr/^lib(?:hugs|ghc6)-/     => 'haskell'  ],
+    [ qr/^lib.*-ruby(?:1\.\d)?$/ => 'ruby'     ],
+    [ qr/^lib.*-ocaml-dev$/      => 'ocaml'    ],
+    [ qr/^lib.*-dev$/            => 'libdevel' ],
 );
 
 # Valid URI formats for the Vcs-* fields
