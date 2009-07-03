@@ -55,6 +55,7 @@ lintian (2.2.13) UNRELEASED; urgency=low
   * lib/Spelling.pm:
     + [RA] Add changes misspelling.
     + [RA] Fix correction for endianness.  Thanks, Raphael Geissert.
+      (Closes: #535582)
     + [RA] Only strip most punctuation from the end of each word, not from
       anywhere in the string.  We don't want to strip the period from
       res.size.  Thanks, Zack Weinberg.  (Closes: #534234)
