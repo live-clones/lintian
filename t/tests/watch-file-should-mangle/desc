@@ -1,0 +1,6 @@
+Testname: watch-file-should-mangle
+Sequence: 6000
+Type: non-native
+Version: 1+dfsg-1
+Description: Watch file should mangle version
+Test-For: debian-watch-file-should-mangle-version

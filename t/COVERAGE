@@ -564,9 +564,7 @@ version-substvars substvar-source-version-is-deprecated
 version-substvars version-substvar-for-external-package
 
 watch-file debian-watch-file-in-native-package
-watch-file debian-watch-file-should-mangle-version
 watch-file debian-watch-file-specifies-old-upstream-version
-watch-file debian-watch-file-specifies-wrong-upstream-version
 
 Breakdown of remaining tags in legacy test suite by test case:
 
@@ -715,8 +713,6 @@ debug
   version-substvar-for-external-package
 
 dh7-test
-  debian-watch-file-should-mangle-version
-  debian-watch-file-specifies-wrong-upstream-version
 
 diffs
   arch-independent-package-contains-binary-or-object

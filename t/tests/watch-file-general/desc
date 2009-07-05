@@ -7,6 +7,7 @@ Test-For:
  debian-watch-file-declares-multiple-versions
  debian-watch-file-should-dversionmangle-not-uversionmangle
  debian-watch-file-should-use-sf-redirector
+ debian-watch-file-specifies-wrong-upstream-version
  debian-watch-file-unknown-version
  debian-watch-file-uses-deprecated-sf-redirector-method
 References: Debian Bug#510398

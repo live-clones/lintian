@@ -2,4 +2,4 @@
 # package version number.
 
 version=2
-http://www.example.com/dist/ dh7-test\.([\d.]+)\.tar\.gz 1.dfsg-1 uupdate
+http://www.example.com/dist/ dh7-test\.([\d.]+)\.tar\.gz debian uupdate
