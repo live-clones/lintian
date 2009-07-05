@@ -73,9 +73,12 @@ for my $tagfile (<t/changes/*.tags>, <t/debs/*/tags>, <t/source/*/tags>) {
 
 # Now parse all tags files from the old test suite looking for what tags that
 # test reveals.
-my %legacy;
+my (%legacy, %legacy_test);
 for my $tagfile (<testset/tags.*>) {
     next if $tagfile =~ /\.sed$/;
+    my $case = $tagfile;
+    $case =~ s/.*tags\.//;
+    $legacy_test{$case} ||= [];
     open (IN, '<', $tagfile) or die "Cannot open $tagfile: $!\n";
     local $_;
     while (<IN>) {
@@ -83,6 +86,7 @@ for my $tagfile (<testset/tags.*>) {
             if (exists $tags{$3}) {
                 $legacy{$3} = $tags{$3};
                 delete $tags{$3};
+                push (@{ $legacy_test{$case} }, $3);
             }
         }
     }
@@ -101,6 +105,16 @@ print_tags(\%tags, \*OUT);
 # The contents of the %legacy hash are only tested by the legacy test suite.
 print OUT "\nThe following tags are only tested by the legacy test suite:\n";
 print_tags(\%legacy, \*OUT);
+
+# Print out a breakdown of the tags that are only tested by the legacy test
+# suite, sorted by legacy test case.
+print OUT "\nBreakdown of remaining tags in legacy test suite by test case:\n";
+for my $package (sort keys %legacy_test) {
+    print OUT "\n$package\n";
+    for my $tag (sort @{ $legacy_test{$package} }) {
+        print OUT "  $tag\n";
+    }
+}
 close OUT;
 
 # -----------------------------------

@@ -96,6 +96,10 @@ lintian (2.2.13) UNRELEASED; urgency=low
     + [RA] The archive area may be a comma-separated list of areas.  Patch
       from Raphael Geissert.
 
+  * private/update-coverage:
+    + [RA] Provide a breakdown of tags only covered in the legacy test
+      suite by test name.
+
   * reporting/html_reports:
     + [RA] Change area back to section in the loop for generating the
       package index pages to be consistent with the page template.
