@@ -836,8 +836,6 @@ maintainer-scripts
   update-alternatives-remove-called-in-postrm
   wrong-debian-qa-group-name
 
-manpages
-
 relations
   bad-version-in-relation
   breaks-without-version
