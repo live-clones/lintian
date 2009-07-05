@@ -710,8 +710,6 @@ debug
   unused-shlib-entry-in-symbols-control-file
   version-substvar-for-external-package
 
-dh7-test
-
 diffs
   arch-independent-package-contains-binary-or-object
   patch-system-but-direct-changes-in-diff
