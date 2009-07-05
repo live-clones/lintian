@@ -221,14 +221,16 @@ while (<>) {
     }
 
     # Determine the source package for this package and warn if there appears
-    # to be no source package in the archive.  Determine the maintainer and
-    # version.  Work around a missing source package by pulling information
-    # from a binary package or udeb of the same name if there is any.
-    my ($source, $version, $source_version, $maintainer, $uploaders);
+    # to be no source package in the archive.  Determine the maintainer,
+    # version, and archive area.  Work around a missing source package by
+    # pulling information from a binary package or udeb of the same name if
+    # there is any.
+    my ($source, $version, $area, $source_version, $maintainer, $uploaders);
     if ($type eq 'source') {
         $source = $package;
         if (exists $source_info{$source}) {
             $version = $source_info{$source}->{version};
+            $area = $source_info{$source}->{area};
             $maintainer = $source_info{$source}->{maintainer};
             $uploaders = $source_info{$source}->{uploaders};
         } else {
@@ -250,9 +252,11 @@ while (<>) {
         }
         if ($type eq 'binary') {
             $version = $binary_info{$package}->{version};
+            $area = $binary_info{$source}->{area};
             $source_version = $binary_info{$package}->{'source-version'};
         } elsif ($type eq 'udeb') {
             $version = $udeb_info{$package}->{version};
+            $area = $udeb_info{$source}->{area};
             $source_version = $udeb_info{$package}->{'source-version'};
         }
     }
@@ -279,6 +283,7 @@ while (<>) {
         code      => html_quote ($code),
         package   => html_quote ($package),
         version   => html_quote ($version),
+        area      => html_quote ($area),
         type      => html_quote ($type),
         tag       => html_quote ($tag),
         severity  => html_quote ($tag_extra{$tag}{severity}),

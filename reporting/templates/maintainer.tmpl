@@ -80,10 +80,11 @@
                 my $is_binary = ($info->{type} eq "binary" or $info->{type} eq "udeb");
                 my $new_binary = $info->{package} ne $binary if $is_binary;
 
+                my $area = ($data->{area} eq 'main') ? '' : "; $info->{area}";
                 if ($first) {
                     $OUT .= qq(  <div class="source-header">\n);
                     $OUT .= qq(   <h2 id="$source">);
-                    $OUT .= "$source ($version)";
+                    $OUT .= "$source ($version$area)";
                     $OUT .= " [Uploader]" if $upload;
                     $OUT .= "</h2>\n";
                     $OUT .= qq(   <p class="info-links">\n);
@@ -95,7 +96,10 @@
                 }
 
                 my $bin_version = "";
-                $bin_version = " ($info->{version})" if $info->{version} ne $version;
+                unless ($info->{version} eq $version
+                        and $info->{area} eq $data->{area}) {
+                    $bin_version = " ($info->{version}; $info->{area})";
+                }
 
                 if ($new_binary) {
                     $OUT .= "</ul>\n    </li>\n  </ul>\n" unless $first;
