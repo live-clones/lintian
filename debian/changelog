@@ -46,6 +46,9 @@ lintian (2.2.13) UNRELEASED; urgency=low
     + [ADB] Detect the use of the "source" bashism when the sourced filename
       contains a tilde or consists of a single character.  Thanks, Raphael
       Geissert and Ryan Niebur.
+    + [RA] Avoid a false positive in the bashism check for trap with
+      signal numbers when the the trap command contains a number.  Thanks,
+      Julien Cristau.  (Closes: #534580)
 
   * collection/strings:
     + [ADB] Handle the fact that, when Lintian is run as root, the output of
