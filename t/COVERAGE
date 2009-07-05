@@ -45,8 +45,6 @@ debconf select-without-choices
 debconf unknown-field-in-templates
 debconf unknown-template-type
 
-debhelper debhelper-compat-file-is-empty
-
 debian-readme spelling-error-in-readme-debian
 
 fields alternates-not-allowed

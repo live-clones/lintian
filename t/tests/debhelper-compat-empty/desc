@@ -1,0 +1,7 @@
+Testname: debhelper-compat-empty
+Sequence: 6000
+Version: 1.0
+Description: Test empty debian/compat file
+Test-For:
+ debhelper-compat-file-is-empty
+ package-uses-deprecated-debhelper-compat-version
