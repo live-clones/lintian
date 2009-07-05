@@ -1,5 +1,5 @@
 Testname: lintian-overrides
-Sequence: 6000
+Sequence: 2500
 Version: 1.0
 Description: Test the couple of overrides-related tags
 Test-For:
