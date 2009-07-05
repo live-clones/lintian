@@ -72,6 +72,8 @@ lintian (2.2.13) UNRELEASED; urgency=low
       Julien Cristau.  (Closes: #534580)
     + [RA] Check for any maintainer script running install-info, since
       this is now handled with triggers.
+  * checks/watch-file:
+    + [RA] Use a consistent way of displaying the line number of a problem.
 
   * collection/strings:
     + [ADB] Handle the fact that, when Lintian is run as root, the output of

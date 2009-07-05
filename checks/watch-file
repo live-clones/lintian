@@ -153,13 +153,13 @@ if (defined $changes and %dversions) {
         local $" = ', ';
         if (!$info->native && exists($changelog_versions{'orig'}{$dversion})) {
             tag 'debian-watch-file-specifies-wrong-upstream-version',
-                "$dversion: @{$lines}";
+                $dversion, "line @{$lines}";
             next;
         }
         if (exists($changelog_versions{'mangled'}{$dversion})
             && $changelog_versions{'mangled'}{$dversion} != 1) {
             tag 'debian-watch-file-specifies-old-upstream-version',
-                "$dversion: @{$lines}";
+                $dversion, "line @{$lines}";
             next;
         }
     }
