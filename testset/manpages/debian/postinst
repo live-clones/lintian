@@ -1,4 +1,0 @@
-#!/bin/sh
-set -e
-install-info /usr/share/info/foo.info.gz
-install-info /usr/share/info/bar.gz

@@ -304,8 +304,6 @@ debian-readme readme-debian-mentions-usr-doc
 etcfiles file-in-etc-not-marked-as-conffile
 
 fields bad-version-in-relation
-fields binary-nmu-debian-revision-in-source
-fields binary-nmu-uses-old-version-style
 fields breaks-without-version
 fields build-conflicts-with-build-dependency
 fields build-depends-indep-without-arch-indep
@@ -839,8 +837,6 @@ maintainer-scripts
   wrong-debian-qa-group-name
 
 manpages
-  binary-nmu-debian-revision-in-source
-  binary-nmu-uses-old-version-style
 
 relations
   bad-version-in-relation
