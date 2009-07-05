@@ -219,8 +219,6 @@ shared-libs shlib-with-bad-permissions
 shared-libs shlib-with-executable-stack
 shared-libs shlib-without-PT_GNU_STACK-section
 
-watch-file debian-watch-file-missing-version
-
 The following tags are only tested by the legacy test suite:
 
 binaries arch-independent-package-contains-binary-or-object
