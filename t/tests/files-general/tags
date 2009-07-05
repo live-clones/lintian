@@ -7,3 +7,4 @@ E: files-general: stray-directory-in-manpage-directory usr/share/man/man1/random
 I: files-general: package-contains-empty-directory usr/share/man/man1/random/
 W: files-general: executable-not-elf-or-script ./usr/share/man/man5/foo.5.gz
 W: files-general: icon-size-and-directory-name-mismatch usr/share/apps/lintian/icons/hicolor/22x22/lintian-16x16.png 16x16
+W: files-general: windows-devel-file-in-package usr/lib/foo/foo.vcproj

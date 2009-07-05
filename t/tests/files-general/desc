@@ -11,3 +11,4 @@ Test-For:
  package-contains-empty-directory
  package-contains-info-dir-file
  stray-directory-in-manpage-directory
+ windows-devel-file-in-package
