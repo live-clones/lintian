@@ -441,6 +441,9 @@ foreach my $file (sort keys %{$info->index}) {
 	    if ($type eq 'udeb') {
 		tag "documentation-file", "$file";
 	    }
+	    if ($file =~ m,^usr/share/info/dir(?:\.old)?(?:\.gz)?$,) {
+		tag 'package-contains-info-dir-file', $file;
+	    }
 	}
 	# ---------------- /usr/share/linda/overrides
 	elsif ($file =~ m,^usr/share/linda/overrides/\S+,) {

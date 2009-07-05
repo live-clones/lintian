@@ -1,6 +1,8 @@
 lintian (2.2.13) UNRELEASED; urgency=low
 
   * Summary of tag changes:
+    + Added:
+      - package-contains-info-dir-file
     + Removed:
       - missing-comma-after-substvar
 
@@ -25,6 +27,11 @@ lintian (2.2.13) UNRELEASED; urgency=low
     + [RA] Allow non-core Python packages to install files into
       /usr/lib/python*/dist-packages, the extension location for Python
       2.6 and later.  Thanks, Julian Andres Klode.  (Closes: #534212)
+    + [RA] Check for /usr/share/info/dir files included in the package.
+      Thanks, Bas Zoetekouw.  (Closes: #535566)
+  * checks/infofiles:
+    + [RA] Ignore dir files; they're a different error that's now caught
+      by checks/files.
   * checks/init.d:
     + [RA] Take into account dangling symlinks in /etc/init.d.  Patch from
       Raphael Geissert.  (Closes: #534139)

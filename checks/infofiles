@@ -27,7 +27,7 @@ use common_data;
 
 use Tags;
 use Util;
-use File::Basename;
+use File::Basename qw(fileparse);
 
 sub run {
 
@@ -53,10 +53,14 @@ foreach my $file (sort keys %{$info->index}) {
     my $index_info = $info->index->{$file};
     my $file_info = $info->file_info->{$file};
     my $link = $index_info->{link} || '';
-    my ($fname, $path, $suffix) = fileparse($file);
+    my ($fname, $path) = fileparse($file);
 
     next unless ($index_info->{type} =~ m,^[\-lh],o)
 	    and ($path =~ m,^usr/share/info/, or $path =~ m,^usr/info/,);
+
+    # Ignore dir files.  That's a different error which we already catch in
+    # the files check.
+    next if $fname =~ /^dir(?:\.old)?(?:\.gz)?/;
 
     # Analyze the file names making sure the documents are named properly.
     # Note that Emacs 22 added support for images in info files, so we have to
