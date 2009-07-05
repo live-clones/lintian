@@ -456,6 +456,17 @@ Info: This script apparently runs fc-cache.  Updating of the fontconfig
  cache files is now handled automatically by triggers, so running fc-cache
  from maintainer scripts is no longer necessary.
 
+Tag: install-info-used-in-maintainer-script
+Severity: normal
+Certainty: possible
+Info: This script apparently runs <tt>install-info</tt>.  Updating the
+ <tt>/usr/share/info/dir</tt> file is now handled automatically by
+ triggers, so running <tt>install-info</tt> from maintainer scripts is no
+ longer necessary.
+ .
+ If debhelper generated the maintainer script fragment, rebuilding the
+ package with debhelper 7.2.17 or later will fix this problem.
+
 Tag: maintainer-script-uses-dpkg-status-directly
 Severity: important
 Certainty: certain

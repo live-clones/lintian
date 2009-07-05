@@ -35,18 +35,7 @@ my $pkg = shift;
 my $type = shift;
 my $info = shift;
 
-my %preinst;
-my %postinst;
-my %prerm;
-my %postrm;
-
 my %missing_section;
-
-# check maintainer scripts (for install-info invocation)
-check_script("preinst", \%preinst) if (-f "control/preinst");
-check_script("postinst", \%postinst) if (-f "control/postinst");
-check_script("prerm", \%prerm) if (-f "control/prerm");
-check_script("postrm", \%postrm) if (-f "control/postrm");
 
 # Read package contents...
 foreach my $file (sort keys %{$info->index}) {
@@ -84,7 +73,7 @@ foreach my $file (sort keys %{$info->index}) {
 	tag "info-document-not-compressed", "$file";
     }
     my $infoext = pop @fname_pieces;
-    unless ($infoext && $infoext =~ /info(-\d)?/) { # it's not foo.info
+    unless ($infoext && $infoext =~ /^info(-\d)?$/) { # it's not foo.info
 	unless (!@fname_pieces) { # it's not foo{,-{1,2,3,...}}
 	    tag "info-document-has-wrong-extension", "$file";
 	}
@@ -106,105 +95,22 @@ foreach my $file (sort keys %{$info->index}) {
 	local $_;
 	my ($section, $start, $end);
 	while (<INFO>) {
-	    $section = 1 if /INFO-DIR-SECTION\s+\S/;
+	    $section = 1 if /^INFO-DIR-SECTION\s+\S/;
+	    $start   = 1 if /^START-INFO-DIR-ENTRY\b/;
+	    $end     = 1 if /^END-INFO-DIR-ENTRY\b/;
 	}
 	close INFO;
-	$missing_section{$file} = 1 unless $section;
+	tag 'info-document-missing-dir-section', $file unless $section;
+	tag 'info-document-missing-dir-entry', $file unless $start && $end;
     }
 }
 
-# policy 13.2 says prerm and postinst
-if ($postrm{'calls-install-info'}) {
-    tag "postrm-calls-install-info", "";
-}
-if ($preinst{'calls-install-info'}) {
-    tag "preinst-calls-install-info", "";
-}
-
-if ($postinst{'calls-install-info'}) {
-    tag "install-info-not-called-with-quiet-option", ""
-	unless $postinst{'calls-install-info-quiet'};
-}
-if ($prerm{'calls-install-info'}) {
-    # it must use the --quiet option
-    tag "install-info-not-called-with-quiet-option", ""
-	unless $prerm{'calls-install-info-quiet'};
-}
-
-# Currently we assume all the info pages are fine if any of them are installed
-# with an explicit --section option.  It would be nice to be stricter.
-for my $file (keys %missing_section) {
-    tag "info-document-missing-dir-section", "$file"
-	unless ($postinst{'calls-install-info-section'});
-}
-
-# Ideally we'd check whether all documents installed are removed,
-# but for now we assume that if any are removed then they all are
-if ($postinst{'calls-install-info'}) {
-    tag "info-documents-not-removed", ""
-	unless ($prerm{'calls-install-info-remove'});
-}
-
-}
-
-# -----------------------------------
-
-sub check_script {
-    my ($script,$pres) = @_;
-    my ($no_check_menu,$no_check_installdocs);
-    my $interp;
-
-    open(IN, '<', "control/$script") or
-	fail("cannot open maintainer script control/$script for reading: $!");
-    $interp = <IN>;
-    $interp = '' unless defined $interp;
-    if ($interp =~ m,^\#\!\s*/bin/$known_shells_regex,) {
-	$interp = 'sh';
-    } elsif ($interp =~ m,^\#\!\s*/usr/bin/perl,) {
-	$interp = 'perl';
-    } else {
-	if ($interp =~ m,^\#\!\s*(.+),) {
-	    $interp = $1;
-	}
-	else { # hmm, doesn't seem to start with #!
-	    # is it a binary? look for ELF header
-	    if ($interp =~ m/^\177ELF/) {
-		return; # nothing to do here
-	    }
-	    $interp = 'unknown';
-	}
-    }
-
-    my $hold;
-    while (<IN>) {
-	s/\s+#.*$//;
-	# this wraps a previous line continuation into the current line
-	if (defined $hold) {
-	    $_ = "$hold $_";
-	    $hold = undef;
-	}
-	# check if install-info is called and if so, is it called properly
-	if (m/install-info/o) {
-	    if (m,\\$,) {
-		$hold = substr($_, 0, -1);
-		next;
-	    }
-	    $pres->{'calls-install-info'} = 1;
-	    my @pieces = split(/\s+/);
-	    for my $piece (@pieces) {
-		if ($piece eq '--quiet') {
-		    $pres->{'calls-install-info-quiet'} = 1;
-		} elsif ($piece eq '--section') {
-		    $pres->{'calls-install-info-section'} = 1;
-		} elsif ($piece eq '--remove' or $piece eq '--remove-exactly') {
-		    $pres->{'calls-install-info-remove'} = 1;
-		}
-	    }
-	}
-    }
-    close IN;
 }
 
 1;
 
-# vim: syntax=perl
+# Local Variables:
+# indent-tabs-mode: t
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 ts=8

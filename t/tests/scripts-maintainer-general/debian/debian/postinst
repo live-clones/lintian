@@ -2,7 +2,7 @@
 
 # This file contains a pile of random junk in maintainer scripts that we
 # should be checking for in checks/scripts.  Don't put bashisms in this file,
-# though; those should go into their own check.
+# though; those should go into scripts-bashisms.
 
 set -e
 
@@ -99,5 +99,9 @@ EOF
 
 # Obsolete suidregister program.
 suidregister /usr/bin/foo
+
+# install-info is now handled through triggers.
+install-info --quiet --section Development Development \
+    /usr/share/info/foobar.info
 
 #DEBHELPER#

@@ -1,0 +1,24 @@
+#!/usr/bin/make -f
+
+tmp = $(CURDIR)/debian/$(shell dh_listpackages)
+
+%:
+	dh $@
+
+override_dh_auto_install:
+	install -d $(tmp)/usr/share/info
+	install -m 644 foo.info $(tmp)/usr/share/info/foo.info
+	gzip -9 $(tmp)/usr/share/info/foo.info
+	install -m 644 foo.info $(tmp)/usr/share/info/foo
+	install -m 644 foo.info $(tmp)/usr/share/info/foo-nogz.gz
+	install -m 644 foo.info $(tmp)/usr/share/info/foo-nomax
+	gzip -1 $(tmp)/usr/share/info/foo-nomax
+	install -m 644 bar.info $(tmp)/usr/share/info/bar.info
+	gzip -9 $(tmp)/usr/share/info/bar.info
+	install -m 644 bar.info $(tmp)/usr/share/info/bar.newinfo
+	gzip -9 $(tmp)/usr/share/info/bar.newinfo
+
+override_dh_installinfo:
+
+override_dh_compress:
+	gzip -9 $(tmp)/usr/share/doc/infofiles-general/changelog

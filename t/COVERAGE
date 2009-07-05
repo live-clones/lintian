@@ -1,4 +1,4 @@
-Last generated 2009-07-01
+Last generated 2009-07-05
 
 The following tags are not tested by the test suite:
 
@@ -116,9 +116,6 @@ files setuid-gid-binary
 files special-file
 files third-party-package-in-python-dir
 files udeb-contains-documentation-file
-
-infofiles postrm-calls-install-info
-infofiles preinst-calls-install-info
 
 init.d duplicate-updaterc.d-calls-in-postinst
 init.d file-in-etc-rc.d-marked-as-conffile
@@ -420,14 +417,6 @@ files wrong-file-owner-uid-or-gid
 
 huge-usr-share arch-dep-package-has-big-usr-share
 
-infofiles info-document-has-wrong-extension
-infofiles info-document-missing-dir-section
-infofiles info-document-not-compressed
-infofiles info-document-not-compressed-with-gzip
-infofiles info-document-not-compressed-with-max-compression
-infofiles info-documents-not-removed
-infofiles install-info-not-called-with-quiet-option
-
 init.d duplicate-updaterc.d-calls-in-postrm
 init.d init-d-script-stops-in-s-runlevel
 init.d init.d-script-has-bad-lsb-line
@@ -537,7 +526,6 @@ scripts maintainer-script-ignores-errors
 scripts maintainer-script-removes-device-files
 scripts maintainer-shell-script-fails-syntax-check
 scripts php-script-but-no-phpX-cli-dep
-scripts possible-bashism-in-maintainer-script
 scripts python-script-but-no-python-dep
 scripts script-not-executable
 scripts script-uses-bin-env

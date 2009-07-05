@@ -57,8 +57,8 @@ W: maintainer-scripts: config-does-not-load-confmodule
 W: maintainer-scripts: deprecated-chown-usage postinst:167 'chown -R root.root'
 W: maintainer-scripts: deprecated-chown-usage postinst:35 'chown root.root'
 W: maintainer-scripts: gconftool-used-in-maintainer-script postinst:70
-W: maintainer-scripts: info-documents-not-removed
 W: maintainer-scripts: init.d-script-not-marked-as-conffile /etc/init.d/foo
+W: maintainer-scripts: install-info-used-in-maintainer-script postinst:28
 W: maintainer-scripts: maintainer-script-calls-deprecated-wm-menu-config postinst:33
 W: maintainer-scripts: maintainer-script-empty config
 W: maintainer-scripts: maintainer-script-hides-init-failure postinst:57

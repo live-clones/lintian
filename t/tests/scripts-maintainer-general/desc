@@ -9,6 +9,7 @@ Test-For:
  deprecated-chown-usage
  fc-cache-used-in-maintainer-script
  gconftool-used-in-maintainer-script
+ install-info-used-in-maintainer-script
  install-sgmlcatalog-deprecated
  maintainer-script-hides-init-failure
  maintainer-script-modifies-inetd-conf

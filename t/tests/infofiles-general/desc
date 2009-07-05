@@ -1,0 +1,12 @@
+Testname: infofiles-general
+Sequence: 6000
+Version: 1.0
+Description: Checks of info files
+Test-For:
+ info-document-has-wrong-extension
+ info-document-missing-dir-entry
+ info-document-missing-dir-section
+ info-document-not-compressed
+ info-document-not-compressed-with-gzip
+ info-document-not-compressed-with-max-compression
+References: Bug#534640

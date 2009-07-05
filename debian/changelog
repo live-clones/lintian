@@ -2,9 +2,14 @@ lintian (2.2.13) UNRELEASED; urgency=low
 
   * Summary of tag changes:
     + Added:
+      - install-info-used-in-maintainer-script
       - package-contains-info-dir-file
     + Removed:
+      - info-documents-not-removed
+      - install-info-not-called-with-quiet-option
       - missing-comma-after-substvar
+      - postrm-calls-install-info
+      - preinst-calls-install-info
 
   * checks/control-file{,.desc}:
     + [RA] Rework missing-separator-between-lines to only include two
@@ -29,9 +34,18 @@ lintian (2.2.13) UNRELEASED; urgency=low
       2.6 and later.  Thanks, Julian Andres Klode.  (Closes: #534212)
     + [RA] Check for /usr/share/info/dir files included in the package.
       Thanks, Bas Zoetekouw.  (Closes: #535566)
-  * checks/infofiles:
+  * checks/infofiles{,.desc}:
     + [RA] Ignore dir files; they're a different error that's now caught
       by checks/files.
+    + [RA] Remove all checking of maintainer scripts, since info dir
+      entries are now handled with triggers.  Now always warn of info
+      files without INFO-DIR-SECTION, even if install-info were called
+      with a --section argument.  Warn of info files without a DIR-ENTRY
+      section.  Thanks, Raphaël Hertzog.  (Closes: #534640)
+    + [RA] Fix a bug in the detection of bad info file extensions that
+      missed extensions containing the string "info".
+    + [RA] Improve the long descriptions of tags about compression of info
+      documents.
   * checks/init.d:
     + [RA] Take into account dangling symlinks in /etc/init.d.  Patch from
       Raphael Geissert.  (Closes: #534139)
@@ -56,6 +70,8 @@ lintian (2.2.13) UNRELEASED; urgency=low
     + [RA] Avoid a false positive in the bashism check for trap with
       signal numbers when the the trap command contains a number.  Thanks,
       Julien Cristau.  (Closes: #534580)
+    + [RA] Check for any maintainer script running install-info, since
+      this is now handled with triggers.
 
   * collection/strings:
     + [ADB] Handle the fact that, when Lintian is run as root, the output of

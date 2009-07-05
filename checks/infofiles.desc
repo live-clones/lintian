@@ -9,74 +9,55 @@ Info: This script checks if a binary package conforms to info document policy.
 Tag: info-document-not-compressed
 Severity: important
 Certainty: certain
-Info: Info documents have to be installed compressed (using <tt>gzip -9</tt>).
+Info: Info documents should be compressed with <tt>gzip -9</tt>.
 Ref: policy 12.2
 
 Tag: info-document-not-compressed-with-gzip
 Severity: important
 Certainty: certain
-Info: Info documents should be compressed with <tt>gzip -9</tt>.
+Info: Info documents should be compressed with <tt>gzip -9</tt>.  This
+ file ends in <tt>.gz</tt> but doesn't appear to be a gzip-compressed
+ file.
 Ref: policy 12.2
 
 Tag: info-document-not-compressed-with-max-compression
 Severity: important
 Certainty: certain
-Info: Info documents should be compressed with <tt>gzip -9</tt>.
+Info: Info documents should be compressed with <tt>gzip -9</tt>.  This
+ file is compressed with gzip, but without using maximum compression.
 Ref: policy 12.2
 
 Tag: info-document-has-wrong-extension
 Severity: normal
 Certainty: certain
 Info: The info document has an extension other than info*.gz.
-Ref: policy 12.2
 
 Tag: info-document-missing-dir-section
-Severity: normal
+Severity: important
 Certainty: certain
-Info: This info document has no INFO-DIR-SECTION line and no
- <tt>--section</tt> option is passed to <tt>install-info</tt> in the
- package <tt>postinst</tt> maintainer script.  <tt>install-info</tt> will
- be unable to determine the section into which this info page should be
- put.  The best solution is to add a line like:
+Info: This info document has no INFO-DIR-SECTION line.
+ <tt>install-info</tt> will be unable to determine the section into which
+ this info page should be put.  The best solution is to add a line like:
  .
    @dircategory Development
  .
  to the texinfo source so that the generated info file will contain a
- section.  See /usr/share/info/dir for sections to choose from.
- .
- Another alternative that doesn't require modifying the source is to
- explicitly pass a <tt>--section</tt> option to <tt>install-info</tt> in
- the <tt>postinst</tt> maintainer script, although in this case you will
- need to write the <tt>postinst</tt> yourself and not use tools like
- debhelper to do it for you.
-Ref: policy 12.2
+ section.  See <tt>/usr/share/info/dir</tt> for sections to choose from.
+ You will have to ensure that the build process builds new info files
+ rather than using ones built by upstream.
 
-Tag: postrm-calls-install-info
-Severity: normal
-Certainty: certain
-Ref: policy 12.2
-Info: The postrm script calls the <tt>install-info</tt> command. Usually,
- this command should be called from the <tt>prerm</tt> maintainer script.
-
-Tag: preinst-calls-install-info
+Tag: info-document-missing-dir-entry
 Severity: important
 Certainty: certain
-Ref: policy 12.2
-Info: The preinst script calls the <tt>install-info</tt> command. Usually,
- this command should be called from the <tt>postinst</tt> maintainer script.
-
-Tag: install-info-not-called-with-quiet-option
-Severity: normal
-Certainty: certain
-Ref: policy 3.9
-Info: The package installation scripts should avoid producing output which it
- is unnecessary for the user to see.  Policy specifically mentions install-info
- output as unnecessary.
-
-Tag: info-documents-not-removed
-Severity: normal
-Certainty: certain
-Ref: policy 12.2
-Info: The postinst script calls the <tt>install-info</tt> command, but the
- documents installed are not then removed by the <tt>prerm</tt>  maintainer
- script.
+Info: This info document has no directory entry.  This is text between
+ START-INFO-DIR-ENTRY and END-INFO-DIR-ENTRY lines which is copied into
+ the <tt>dir</tt> file in <tt>/usr/share/info</tt> by
+ <tt>install-info</tt>.  The best solution is to add lines like:
+ .
+   @direntry
+   foo: (foo).                  Foo creator and editor
+   @end direntry
+ .
+ to the texinfo source so that the generated info file will contain an
+ appropriate entry.  You will have to ensure that the build process builds
+ new info files rather than using ones built by upstream.
