@@ -78,6 +78,9 @@ lintian (2.2.13) UNRELEASED; urgency=low
       "file" on set[gu]id files may include the fact that they are set[gu]id.
       Thanks, Peter Pentchev.  (Closes: #533618)
 
+  * lib/Read_pkglists.pm:
+    + [RA] Increment the package list format and expect the archive area
+      as an additional argument.  Patch from Raphael Geissert.
   * lib/Spelling.pm:
     + [RA] Add changes misspelling.
     + [RA] Fix correction for endianness.  Thanks, Raphael Geissert.
@@ -89,9 +92,19 @@ lintian (2.2.13) UNRELEASED; urgency=low
     + [RA] Replace all newlines in tag data with \n, not just the first.
       (Closes: #534141)
 
+  * man/lintian.1:
+    + [RA] The archive area may be a comma-separated list of areas.  Patch
+      from Raphael Geissert.
+
   * reporting/html_reports:
     + [RA] Change area back to section in the loop for generating the
       package index pages to be consistent with the page template.
+    + [RA] Allow for multiple archive areas in the front page summary.
+
+  * unpack/list-{bin,src,udeb}pkg:
+    + [RA] Collect information from multiple archive areas and include the
+      archive area in the package list.  Patch from Raphael Geissert.
+      (Closes: #516530)
 
  -- Adam D. Barratt <adam@adam-barratt.org.uk>  Fri, 19 Jun 2009 19:11:28 +0100
 
