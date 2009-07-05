@@ -363,7 +363,6 @@ files dir-or-file-in-var-www
 files embedded-feedparser-library
 files embedded-javascript-library
 files executable-is-not-world-readable
-files executable-manpage
 files extra-license-file
 files file-directly-in-usr-share
 files file-directly-in-usr-share-doc
@@ -396,7 +395,6 @@ files run-parts-cron-filename-contains-full-stop
 files script-in-usr-share-doc
 files script-with-language-extension
 files setuid-binary
-files stray-directory-in-manpage-directory
 files subdir-in-usr-bin
 files svk-commit-file-in-package
 files svn-commit-file-in-package
@@ -843,8 +841,6 @@ maintainer-scripts
 manpages
   binary-nmu-debian-revision-in-source
   binary-nmu-uses-old-version-style
-  executable-manpage
-  stray-directory-in-manpage-directory
 
 relations
   bad-version-in-relation

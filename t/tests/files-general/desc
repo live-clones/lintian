@@ -1,10 +1,13 @@
 Testname: files-general
 Sequence: 6000
 Version: 1.0
-Description: Test tags about file paths and names
+Description: Test tags for file paths, names, and modes
 Test-For:
  dir-or-file-in-var-lock
  dir-or-file-in-var-run
+ executable-manpage
  icon-size-and-directory-name-mismatch
  non-conf-file-in-modprobe.d
+ package-contains-empty-directory
  package-contains-info-dir-file
+ stray-directory-in-manpage-directory
