@@ -1,4 +1,4 @@
-Testname: package-version-became-native
+Testname: changelog-file-become-native
 Sequence: 6000
 Version: 1.0
 Description: Test for packages where the version suddenly becomes native
