@@ -52,7 +52,7 @@ if ($version =~ /(dfsg|debian|ds)/) {
 # diagnose on the first time through.
 open(WATCH, '<', 'debfiles/watch') or fail("cannot open watch file: $!");
 local $_;
-my ($watchver, $mangle, $dmangle, $nonempty, %dversions);
+my ($watchver, %dversions);
 while (<WATCH>) {
     next if /^\s*\#/;
     next if /^\s*$/;
@@ -76,8 +76,6 @@ while (<WATCH>) {
             tag 'debian-watch-file-unknown-version', $watchver;
         }
     } else {
-        $nonempty = 1;
-
         unless (defined($watchver)) {
             tag 'debian-watch-file-missing-version';
             $watchver = 1;
@@ -85,6 +83,7 @@ while (<WATCH>) {
         # Version 1 watch files are too broken to try checking them.
         next if ($watchver == 1);
 
+        my ($mangle, $dmangle) = (0, 0);
         my ($opts, @opts);
         if (s/^opt(?:ion)?s=\"([^\"]+)\"\s+// || s/^opt(?:ion)?s=(\S+)\s+//) {
             $opts = $1;
@@ -117,19 +116,20 @@ while (<WATCH>) {
             (undef, $lastversion, $action) = split ' ', $_, 3;
         }
         push @{$dversions{$lastversion}}, $. if (defined($lastversion));
+        $lastversion = 'debian' unless (defined($lastversion));
+
+        my $needs_mangling = ($repack and $lastversion eq 'debian');
+        # If the version of the package contains dfsg, assume that it needs
+        # to be mangled to get reasonable matches with upstream.
+        if ($needs_mangling and not $mangle) {
+            tag 'debian-watch-file-should-mangle-version', "line $.";
+        }
+        if ($needs_mangling and $mangle and not $dmangle) {
+            tag 'debian-watch-file-should-dversionmangle-not-uversionmangle', "line $.";
+        }
     }
 }
 close WATCH;
-
-# If the version of the package contains dfsg, assume that it needs to be
-# mangled to get reasonable matches with upstream.
-if ($nonempty and $repack and not $mangle) {
-    tag 'debian-watch-file-should-mangle-version';
-}
-
-if ($repack and $mangle and not $dmangle) {
-    tag 'debian-watch-file-should-dversionmangle-not-uversionmangle';
-}
 
 my $changes = $info->changelog;
 if (defined $changes and %dversions) {
