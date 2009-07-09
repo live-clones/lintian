@@ -1,4 +1,6 @@
-lintian (2.2.13) UNRELEASED; urgency=low
+lintian (2.2.13) unstable; urgency=low
+
+  The "triggerized install-info" release.
 
   * Summary of tag changes:
     + Added:
@@ -117,7 +119,7 @@ lintian (2.2.13) UNRELEASED; urgency=low
       archive area in the package list.  Patch from Raphael Geissert.
       (Closes: #516530)
 
- -- Adam D. Barratt <adam@adam-barratt.org.uk>  Fri, 19 Jun 2009 19:11:28 +0100
+ -- Russ Allbery <rra@debian.org>  Thu, 09 Jul 2009 09:11:14 -0700
 
 lintian (2.2.12) unstable; urgency=low
 
