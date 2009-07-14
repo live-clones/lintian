@@ -1,6 +1,6 @@
 lintian (2.2.14) unstable; urgency=low
 
-  * debian/files:
+  * checks/fields:
     + [FL] packages named lib*-camlp4-dev should be in section ocaml
 
   * lib/Spelling.pm:
