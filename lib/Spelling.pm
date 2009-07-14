@@ -333,6 +333,7 @@ our %CORRECTIONS = qw(
                       powerfull powerful
                       preceeded preceded
                       preceeding preceding
+                      precendence precedence
                       precission precision
                       prefered preferred
                       prefferably preferably

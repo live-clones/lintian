@@ -3,6 +3,9 @@ lintian (2.2.14) unstable; urgency=low
   * debian/files:
     + [FL] packages named lib*-camlp4-dev should be in section ocaml
 
+  * lib/Spelling.pm:
+    + [RA] Add spelling correction for precedence.
+
  -- Frank Lichtenheld <djpig@debian.org>  Sun, 12 Jul 2009 12:57:44 +0200
 
 lintian (2.2.13) unstable; urgency=low
