@@ -257,3 +257,11 @@ Info: The given debugging symbols-only object is installed directly in
  <tt>/usr/bin</tt> should be placed in <tt>/usr/lib/debug/usr/bin</tt>.
  gdb, when looking for debugging symbols, prepends <tt>/usr/lib/debug</tt>
  to the path of the original binary.
+
+Tag: ocaml-custom-executable
+Severity: normal
+Certainty: possible
+Info: This package provides an OCaml bytecode executable linked with a
+ custom runtime. Such executables cannot be stripped and require
+ special care. Their usage is deprecated in favour of shared libraries
+ for C stubs (dll*.so).

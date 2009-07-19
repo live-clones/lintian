@@ -228,14 +228,22 @@ foreach my $file (sort keys %{$info->file_info}) {
 	}
     }
 
+    my $strings = slurp_entire_file("strings/$file");
+    spelling_check('spelling-error-in-binary', $strings, $file);
+
     # stripped?
     if ($fileinfo =~ m,not stripped\s*$,o) {
 	# Is it an object file (which generally can not be stripped),
 	# a kernel module, debugging symbols, or perhaps a debugging package?
-	# Ocaml executables are exempted, see #252695
 	unless ($file =~ m,\.k?o$, or $pkg =~ m/-dbg$/ or $pkg =~ m/debug/
-		or $file =~ m,/lib/debug/, or exists $objdump->{OCAML}) {
-	    tag "unstripped-binary-or-object", "$file";
+		or $file =~ m,/lib/debug/,) {
+	    if ($fileinfo =~ m/executable/
+		and $strings =~ m/^Caml1999X0[0-9][0-9]$/m) {
+		# Check for OCaml custom executables (#498138)
+		tag "ocaml-custom-executable", $file;
+	    } else {
+		tag "unstripped-binary-or-object", "$file";
+	    }
 	}
     } else {
 	# stripped but a debug or profiling library?
@@ -261,9 +269,6 @@ foreach my $file (sort keys %{$info->file_info}) {
 	    tag "binary-or-shlib-defines-rpath", "$file $rpath";
 	}
     }
-
-    my $strings = slurp_entire_file("strings/$file");
-    spelling_check('spelling-error-in-binary', $strings, $file);
 
     if ($pkg !~ m/^zlib.+/
 	and $strings =~ /(?:in|de)flate (?:\d[ \w.\-]{1,20}[\w.\-])/m) {

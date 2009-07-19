@@ -204,10 +204,6 @@ sub objdump_info {
             if (m/^[0-9a-fA-F]+.{6}\w\w?\s+(\S+)\s+[0-9a-zA-Z]+\s+(\S+)\s+(\S+)$/){
                 my ($foo, $sec, $sym) = ($1, $2, $3);
                 push @{$file->{SYMBOLS}}, [ $foo, $sec, $sym ];
-
-		if ($foo eq '.text' and $sec eq 'Base' and $sym eq 'caml_main') {
-		    $file->{OCAML} = 1;
-		}
             }
         } else {
             if (m/^\s*NEEDED\s*(\S+)/o) {
