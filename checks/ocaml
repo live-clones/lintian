@@ -1,0 +1,185 @@
+# ocaml -- lintian check script -*- perl -*-
+#
+# Copyright © 2009 Stéphane Glondu
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+package Lintian::ocaml;
+use strict;
+use Tags;
+use File::Basename;
+
+sub run {
+
+my $pkg = shift;
+my $type = shift;
+my $info = shift;
+
+# Collect information about .a files from ar-info dump
+my %provided_o;
+open ARINFO, "ar-info";
+while (<ARINFO>) {
+    chomp;
+    if (/^\.\/([^:]+): (.*)$/) {
+        my $filename = $1;
+        my $dirname = dirname($filename);
+        foreach (split(" ", $2)) {
+            # Note: a .o may be legitimately in several different .a
+            $provided_o{"$dirname/$_"} = $filename;
+        }
+    }
+}
+close ARINFO;
+
+# is it a library package?
+my $is_lib_package = 0;
+if ($pkg =~ /^lib/) {
+    $is_lib_package = 1;
+}
+
+# is it a development package?
+my $is_dev_package = 0;
+if ($pkg =~ /(-dev|^camlp[45](-extra)?|^ocaml(-nox|-interp|-compiler-libs)?)$/) {
+    $is_dev_package = 1;
+}
+
+# for libraries outside /usr/lib/ocaml
+my $outside_number = 0;
+my $outside_prefix;
+
+# dangling .cmi files (we show only $max_cmi of them)
+my $cmi_number = 0;
+my $max_cmi = 3;
+
+# dev files in nondev package
+my $dev_number = 0;
+my $dev_prefix;
+
+# does the package provide a META file?
+my $has_meta = 0;
+
+foreach my $file (sort keys %{$info->file_info}) {
+    my $fileinfo = $info->file_info->{$file};
+
+    # For each .cmxa file, there must be a matching .a file (#528367)
+    $_ = $file;
+    if (s/\.cmxa$/.a/ && !(exists $info->file_info->{$_})) {
+        tag "ocaml-dangling-cmxa", $file;
+    }
+
+    # For each .cmxs file, there must be a matching .cma or .cmo file
+    # (at least, in library packages)
+    if ($is_lib_package) {
+        $_ = $file;
+        if (s/\.cmxs$/.cm/
+            && !(exists $info->file_info->{"${_}a"})
+            && !(exists $info->file_info->{"${_}o"})) {
+            tag "ocaml-dangling-cmxs", $file;
+        }
+    }
+
+    # The .cmx counterpart: for each .cmx file, there must be a
+    # matching .o file, which can be there by itself, or embedded in a
+    # .a file in the same directory
+    $_ = $file;
+    if (s/\.cmx$/.o/
+        && !(exists $info->file_info->{$_})
+        && !(exists $provided_o{$_})) {
+        tag "ocaml-dangling-cmx", $file;
+    }
+
+    # $somename.cmi should be shipped with $somename.mli or $somename.ml
+    $_ = $file;
+    if ($is_dev_package && s/\.cmi$/.ml/
+        && !(exists $info->file_info->{"${_}i"})
+        && !(exists $info->file_info->{$_})) {
+        $cmi_number++;
+        if ($cmi_number <= $max_cmi) {
+            tag "ocaml-dangling-cmi", $file;
+        }
+    }
+
+    # non-dev packages should not ship .cmi, .cmx or .cmxa files
+    if ($file =~ m/\.cm(i|xa?)$/) {
+        $dev_number++;
+        if (defined $dev_prefix) {
+            chop $dev_prefix while ($file !~ m@^$dev_prefix@);
+        } else {
+            $dev_prefix = $file;
+        }
+    }
+
+    # $somename.cmo should usually not be shipped with $somename.cma
+    $_ = $file;
+    if (s/\.cma$/.cmo/ && exists $info->file_info->{$_}) {
+        tag "ocaml-stray-cmo", $file;
+    }
+
+    # development files outside /usr/lib/ocaml (.cmi, .cmx, .cmxa)
+    # .cma, .cmo and .cmxs are excluded because they can be plugins
+    if ($file =~ m/\.cm(i|xa?)$/ && $file !~ m@^usr/lib/ocaml/@) {
+        $outside_number++;
+        if (defined $outside_prefix) {
+            chop $outside_prefix while ($file !~ m@^$outside_prefix@);
+        } else {
+            $outside_prefix = $file;
+        }
+    }
+
+    # if there is a META file, ocaml-findlib should be at least
+    # suggested
+    $has_meta = 1 if $file =~ m@/META(\..*)?$@;
+
+}
+
+if ($is_dev_package) {
+    # summary about .cmi files
+    if ($cmi_number > $max_cmi) {
+        tag "ocaml-dangling-cmi", ($cmi_number-$max_cmi), "more file(s) not shown";
+    }
+    # summary about /usr/lib/ocaml
+    if ($outside_number) {
+        $outside_prefix = dirname($outside_prefix);
+        tag "ocaml-dev-file-not-in-usr-lib-ocaml", "$outside_number file(s) in /$outside_prefix";
+    }
+    if ($has_meta) {
+        my $findlib = 0;
+        for my $field (qw(depends recommends suggests)) {
+            if (defined $info->field($field)) {
+                $_ = $info->field($field);
+                $findlib = 1 if /ocaml-findlib/;
+            }
+        }
+        tag "ocaml-meta-without-suggestion-to-findlib" unless $findlib;
+    }
+} else {
+    # summary about dev files
+    if ($dev_number > 0) {
+        $dev_prefix = dirname($dev_prefix);
+        tag "ocaml-dev-file-in-nondev-package", "$dev_number file(s) in /$dev_prefix";
+    }
+}
+
+}
+
+1;
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: ts=8 sw=4 noet syntax=perl
