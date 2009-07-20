@@ -1,0 +1,7 @@
+Collector-Script: ar-info
+Author: Stéphane Glondu <steph@glondu.net>
+Info: This script runs the "ar t" command over all .a files of package.
+Type: binary
+Unpack-Level: 2
+Version: 1
+Order: 1

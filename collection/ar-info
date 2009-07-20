@@ -1,0 +1,54 @@
+#!/usr/bin/perl -w
+# ar-info -- lintian collection script
+#
+# Copyright © 2009 Stéphane Glondu
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+use strict;
+
+($#ARGV == 1) or fail("syntax: ar-info <pkg> <type>");
+my $pkg = shift;
+my $type = shift;
+
+-f "fields/source" or fail("ar-info invoked in wrong directory");
+
+unlink("ar-info");
+chdir("unpacked")
+    or fail("cannot chdir to unpacked directory: $!");
+
+open(INDEX, '<', "../index")
+    or fail("cannot open index file: $!");
+open(OUT, '>', "../ar-info");
+
+while (<INDEX>) {
+    chomp;
+    next unless /\.a$/;
+    my $file = (split(" ", $_, 6))[5];
+    open(OBJS, '-|', "ar t $file")
+        or fail("cannot read file: $!");
+    print OUT "$file:";
+    while (<OBJS>) {
+        chomp;
+        print OUT " $_";
+    }
+    close(OBJS);
+    print OUT "\n";
+}
+
+close(INDEX);
+close(OUT);
