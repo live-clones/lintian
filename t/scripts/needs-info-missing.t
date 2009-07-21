@@ -40,7 +40,7 @@ for my $module (@MODULES) {
 	if (m/^\s*sub\s+(\w+)/) {
 	    $seen_subs{$1} = 1;
 	}
-	if (m/^\s*#\s*sub\s+(\w+)\s+Needs-Info\s+(.*)$/) {
+	if (m/^\s*\#\s*sub\s+(\w+)\s+Needs-Info\s+(.*)$/) {
 	    my ($sub, $all_info) = ($1, $2);
 	    $seen_needsinfo{$sub} = 1;
 	    $all_info =~ s/\s//g;
@@ -52,8 +52,6 @@ for my $module (@MODULES) {
 	    $all_info =~ s/^<>$//;
 	    if (exists($needs_info{$sub})) {
 		if ($all_info ne $needs_info{$sub}) {
-		    push @warnings, "$sub already defined but values don't match:\n"
-				. "\t'$all_info' ($pretty_module) ne '$needs_info{$sub}'\n";
 		    $needs_info{$sub} .= " or $all_info";
 		}
 	    } else {
