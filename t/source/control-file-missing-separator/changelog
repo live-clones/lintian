@@ -1,0 +1,10 @@
+control-file-missing-separator (1) unstable; urgency=low
+
+  * Lintian Test Suite.
+  * Test: control-file-missing-separator
+
+  * Suppress "should close ITP bug" messages.  (Closes: #123456)
+
+ -- Debian Lintian Maintainers <lintian-maint@debian.org>  Tue, 21 Jul 2009 12:47:16 -0700
+
+

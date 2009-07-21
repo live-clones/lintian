@@ -1,0 +1,2 @@
+E: control-file-missing-separator source: missing-separator-between-items in control-file-missing-separator depends field between 'foo (>= 1)' and 'baz (<< 2)'
+E: control-file-missing-separator source: missing-separator-between-items in control-file-missing-separator suggests field between 'p1' and 'p2'

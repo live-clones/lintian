@@ -1,7 +1,5 @@
 E: control-file-general source: build-info-in-binary-control-file-section Package control-file-general
 E: control-file-general source: missing-separator-between-items in control-file-general depends field between '${shlibs:Depends}' and '${misc:Depends}'
-E: control-file-general source: missing-separator-between-items in control-file-general-3 depends field between 'foo' and 'bar (>= 1)'
-E: control-file-general source: missing-separator-between-items in control-file-general-3 suggests field between 'p1' and 'p2'
 I: control-file-general source: binary-control-field-duplicates-source field "maintainer" in package control-file-general
 I: control-file-general source: duplicate-long-description control-file-general control-file-general-1 control-file-general-2 control-file-general-3 control-file-general-4
 I: control-file-general source: duplicate-short-description control-file-general control-file-general-1
