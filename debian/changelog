@@ -1,7 +1,15 @@
 lintian (2.2.14) unstable; urgency=low
 
-  * checks/fields:
+  * checks/fields{,.desc}
     + [FL] packages named lib*-camlp4-dev should be in section ocaml
+    + [RA] Move debian/rules parsing to check build dependencies to
+      checks/rules.
+  * checks/rules{,.desc}:
+    + [RA] Moved checking of build dependencies based on programs invoked
+      in debian/rules from checks/fields to here.
+    + [RA] Expand Lintian's understanding of which targets are run for the
+      clean target to include targets invoked via pattern variable
+      expansion.  (Closes: #536405)
 
   * lib/Spelling.pm:
     + [RA] Add spelling correction for precedence.
