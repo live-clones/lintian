@@ -351,3 +351,11 @@ Certainty: certain
 Info: A menu-method file must include the menu.h configuration file
  (using "!include menu.h").
 Ref: menu 5
+
+Tag: possible-documentation-but-no-doc-base-registration
+Severity: wishlist
+Certainty: possible
+Info: The package ships a <tt>.html</tt> or <tt>.pdf</tt> file under
+ <tt>/usr/share/doc/</tt>, which are usually documentation, but it does
+ not register anything in doc-base.
+Ref: policy 9.10

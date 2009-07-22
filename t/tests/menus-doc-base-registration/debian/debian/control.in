@@ -1,0 +1,22 @@
+Source: {$srcpkg}
+Priority: extra
+Section: {$section}
+Maintainer: {$author}
+Standards-Version: {$standards_version}
+Build-Depends: debhelper (>= 7)
+
+Package: {$srcpkg}-pdf
+Architecture: {$architecture}
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Description: {$description} -- pdf doc
+ This is a test package with fake pdf documentation designed to exercise
+ some feature or tag of Lintian.  It is part of the Lintian test suite and
+ may do very odd things.  It should not be installed like a regular package.
+
+Package: {$srcpkg}-html
+Architecture: {$architecture}
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Description: {$description} -- html doc
+ This is a test package with fake html documentation designed to exercise
+ some feature or tag of Lintian.  It is part of the Lintian test suite and
+ may do very odd things.  It should not be installed like a regular package.
