@@ -137,3 +137,17 @@ Info: The Debian diff.gz contains changes to files or creation of additional
  control over them.  The package will also more easily support  possible
  future source package formats if all changes outside the <tt>debian</tt>
  directory are stored as patches.
+
+Tag: patch-system-but-no-source-readme
+Severity: normal
+Certainty: certain
+Info: This package build-depends on a patch system such as dpatch or
+ quilt, but there is no <tt>debian/README.source</tt> file.  This file is
+ recommended for any package where <tt>dpkg-source -x</tt> does not result
+ in the preferred form for making modifications to the package.
+ .
+ If you are using quilt and the package needs no other special handling
+ instructions, you may want to add a <tt>debian/README.source</tt>
+ referring to <tt>/usr/share/doc/quilt/README.source</tt>.  Similarly, you
+ can refer to <tt>/usr/share/doc/dpatch/README.source.gz</tt> for dpatch.
+Ref: policy 4.14

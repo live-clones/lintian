@@ -1,5 +1,9 @@
 lintian (2.2.14) unstable; urgency=low
 
+  * Summary of tag changes:
+    + Added:
+      - patch-system-but-no-source-readme
+
   * checks/fields{,.desc}
     + [FL] packages named lib*-camlp4-dev should be in section ocaml
     + [RA] Move debian/rules parsing to check build dependencies to
@@ -10,6 +14,9 @@ lintian (2.2.14) unstable; urgency=low
     + [RA] Expand Lintian's understanding of which targets are run for the
       clean target to include targets invoked via pattern variable
       expansion.  (Closes: #536405)
+  * checks/patch-systems{,.desc}:
+    + [RA] Check for a patch system in use but no debian/README.source.
+      Based on a patch from Jonathan Yu.  (Closes: #537969)
 
   * lib/Spelling.pm:
     + [RA] Add spelling correction for precedence.
