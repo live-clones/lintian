@@ -166,6 +166,10 @@ sub run {
 		}
 	}
 
+	#----- look for README.source
+	if ($uses_patch_system && ! -f 'debian/README.source') {
+		tag "patch-system-but-no-source-readme";
+	}
 
 	#----- general cruft checking:
 	if ($uses_patch_system > 1) {
