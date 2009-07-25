@@ -888,19 +888,18 @@ while (<SCRIPTS>) {
 	    } else {
 		my $mode = /--remove/ ? 'remove' : 'add';
 		my ($divert) = /dpkg-divert\s*(.*)$/;
-		$divert =~ s/\s*--(?:add|quiet|remove|rename|test|(:?admindir|divert|package)\s+\S+)//g;
-		$divert =~ s/\s+//g;
+		$divert =~ s/\s*--(?:add|quiet|remove|rename|test|(:?admindir|divert|package)\s+\S+)\s*//g;
 		# Remove unpaired opening or closing parenthesis
-		while($divert =~ m/\G.*?\(.+?\)/gc) {}
+		1 while($divert =~ m/\G.*?\(.+?\)/gc);
 		$divert =~ s/\G(.*?)[()]/$1/;
 		pos($divert) = undef;
 		# Remove unpaired opening or closing braces
-		while($divert =~ m/\G.*?{.+?}/gc) {}
+		1 while($divert =~ m/\G.*?{.+?}/gc);
 		$divert =~ s/\G(.*?)[{}]/$1/;
 		pos($divert) = undef;
 
 		# position after the last pair of quotation marks, if any
-		while($divert =~ m/\G.*?("|').+?\1/gc) {} #"
+		1 while($divert =~ m/\G.*?(\"|\').+?\1/gc);
 		# Strip anything matching and after '&&', '||', ';', or '>'
 		# this is safe only after we are positioned after the last pair
 		# of quotation marks
@@ -909,9 +908,13 @@ while (<SCRIPTS>) {
 		# Remove quotation marks, they affect:
 		# * our var to regex trick
 		# * stripping the initial slash if the path was quoted
-		$divert =~ s/["']//g; #"
+		$divert =~ s/[\"\']//g;
 		# remove the leading / because it's not in the index hash
 		$divert =~ s,^/,,;
+
+		# remove any remaining leading or trailing whitespace.
+		$divert =~ s/^\s+//;
+		$divert =~ s/\s+$//;
 
 		$divert = quotemeta($divert);
 

@@ -15,6 +15,11 @@ if [ remove = "$1" ]; then
     dpkg-divert --remove --package scripts-diversions --rename \
         --divert /usr/share/scripts/no-such-file.real \
         /usr/share/scripts/no-such-file
+
+    # Regression test for diversions ending in numbers (Bug#534942)
+    dpkg-divert --remove --package scripts-diversions \
+        --divert /usr/share/scripts/file.1.real \
+        /usr/share/scripts/file.1 > /dev/null
 fi
 
 #DEBHELPER#

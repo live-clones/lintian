@@ -17,6 +17,10 @@ lintian (2.2.14) unstable; urgency=low
   * checks/patch-systems{,.desc}:
     + [RA] Check for a patch system in use but no debian/README.source.
       Based on a patch from Jonathan Yu.  (Closes: #537969)
+  * checks/scripts:
+    + [RA] Fix parsing of dpkg-divert commands diverting a file ending in
+      a number, followed by a redirection.  Thanks, Andreas Beckmann.
+      (Closes: #534942)
 
   * lib/Spelling.pm:
     + [RA] Add spelling correction for precedence.
