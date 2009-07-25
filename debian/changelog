@@ -27,6 +27,11 @@ lintian (2.2.14) unstable; urgency=low
     + [RA] Fix parsing of dpkg-divert commands diverting a file ending in
       a number, followed by a redirection.  Thanks, Andreas Beckmann.
       (Closes: #534942)
+  * checks/watch-file:
+    + [RA] Fix false positives in debian-watch-file-should-mangle-version
+      when an upstream version is specified in the watch file and give the
+      line number of mangling issues.  Patch from Raphael Geissert.
+      (Closes: #536404)
 
   * lib/Spelling.pm:
     + [RA] Add spelling correction for precedence.
