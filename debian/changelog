@@ -11,6 +11,8 @@ lintian (2.2.14) unstable; urgency=low
     + [FL] packages named lib*-camlp4-dev should be in section ocaml
     + [RA] Move debian/rules parsing to check build dependencies to
       checks/rules.
+    + [RA] Allow any package to be in section oldlibs without triggering
+      warnings.  Thanks, Rene Engelhard.  (Closes: #537606)
   * checks/rules{,.desc}:
     + [RA] Moved checking of build dependencies based on programs invoked
       in debian/rules from checks/fields to here.

@@ -385,15 +385,18 @@ if (not defined $info->field('section')) {
 		tag "unknown-section", "$section" unless $known_sections{$parts[0]};
 	    }
 
-	    # Check package name <-> section.
-	    foreach my $map (@NAME_SECTION_MAPPINGS) {
-		if ($pkg =~ $map->[0]) {
-		    tag "wrong-section-according-to-package-name", "$pkg => $map->[1]"
-			unless $parts[-1] eq $map->[1];
-		    last;
-		}
+	    # Check package name <-> section.  oldlibs is a special case; let
+	    # anything go there.
+	    if ($parts[-1] ne 'oldlibs') {
+		    foreach my $map (@NAME_SECTION_MAPPINGS) {
+			    if ($pkg =~ $map->[0]) {
+				    tag "wrong-section-according-to-package-name", "$pkg => $map->[1]"
+					unless $parts[-1] eq $map->[1];
+				    last;
+			    }
+		    }
 	    }
-        }
+	}
 }
 
 #---- Priority
