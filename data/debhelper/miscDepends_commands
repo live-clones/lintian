@@ -2,6 +2,7 @@ dh_gconf
 dh_gtkmodules
 dh_installcatalogs
 dh_installdebconf
+dh_installinfo
 dh_installlisting
 dh_installtex
 dh_installxfonts

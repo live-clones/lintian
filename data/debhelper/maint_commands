@@ -8,7 +8,6 @@ dh_installcligac
 dh_installdebconf
 dh_installdefoma
 dh_installemacsen
-dh_installinfo
 dh_installinit
 dh_installlisting
 dh_installmenu

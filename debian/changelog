@@ -38,6 +38,8 @@ lintian (2.2.14) unstable; urgency=low
       line number of mangling issues.  Patch from Raphael Geissert.
       (Closes: #536404)
 
+  * data/debhelper/*:
+    + [ADB] Refresh against unstable.
   * data/fields/architectures:
     + [RA] Refresh architecture list against dpkg 1.15.3.1, adding avr32
       and kopensolaris.  (Closes: #538055)
