@@ -3,6 +3,7 @@ lintian (2.2.14) unstable; urgency=low
   * Summary of tag changes:
     + Added:
       - patch-system-but-no-source-readme
+      - possible-documentation-but-no-doc-base-registration
 
   * checks/description:
     + [RA] Decode descriptions from UTF-8 before checking length.  Thanks,
@@ -14,6 +15,10 @@ lintian (2.2.14) unstable; urgency=low
     + [RA] Allow any package to be in section oldlibs without triggering
       warnings.  Thanks, Rene Engelhard.  (Closes: #537606)
     + [RA] Lower wrong-section-according-to-package-name to possible.
+  * checks/menus{,.desc}:
+    + [RA] Add info-level tag for packages with apparent HTML or PDF
+      documentation in /usr/share/doc but no doc-base registration.  Based
+      on a patch from Raphael Geissert.  (Closes: #469018)
   * checks/rules{,.desc}:
     + [RA] Moved checking of build dependencies based on programs invoked
       in debian/rules from checks/fields to here.
