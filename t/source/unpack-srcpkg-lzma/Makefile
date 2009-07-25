@@ -11,6 +11,7 @@ all:
 	touch $(dir)/debian/watch
 	mkdir $(dir)/debian/source
 	echo '3.0 (quilt)' > $(dir)/debian/source/format
+	echo 'Information about patching' > $(dir)/debian/README.source
 	dpkg-source -sp -b $(dir)
 
 clean:
