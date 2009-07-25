@@ -1,4 +1,4 @@
-Last generated 2009-07-05
+Last generated 2009-07-25
 
 The following tags are not tested by the test suite:
 
@@ -61,7 +61,6 @@ fields maintainer-address-is-on-localhost
 fields maintainer-address-looks-weird
 fields maintainer-address-malformed
 fields malformed-python-version
-fields missing-build-dependency
 fields multiline-field
 fields no-architecture-field
 fields no-maintainer-field
@@ -186,6 +185,7 @@ po-debconf not-using-po-debconf
 rules debian-rules-is-symlink
 rules debian-rules-not-a-makefile
 rules debian-rules-uses-DEB_BUILD_OPTS
+rules missing-build-dependency
 
 scripts csh-considered-harmful
 scripts gawk-script-but-no-gawk-dep
@@ -311,8 +311,6 @@ fields build-depends-on-1-revision
 fields build-depends-on-build-essential
 fields build-depends-on-essential-package-without-using-version
 fields build-depends-on-obsolete-package
-fields build-depends-without-arch-dep
-fields clean-should-be-satisfied-by-build-depends
 fields conflicts-with-dependency
 fields dbg-package-missing-depends
 fields debian-revision-not-well-formed
@@ -327,8 +325,6 @@ fields depends-on-python-minimal
 fields depends-on-x-metapackage
 fields invalid-arch-string-in-source-relation
 fields malformed-dm-upload-allowed
-fields missing-dh_python-build-dependency
-fields missing-python-build-dependency
 fields needlessly-depends-on-awk
 fields no-human-maintainers
 fields ored-build-depends-on-obsolete-package
@@ -505,8 +501,12 @@ po-debconf stray-translated-debconf-templates
 po-debconf translated-default-field
 po-debconf unknown-encoding-in-po-file
 
+rules build-depends-without-arch-dep
+rules clean-should-be-satisfied-by-build-depends
 rules debian-rules-calls-debhelper-in-odd-order
 rules debian-rules-uses-pwd
+rules missing-dh_python-build-dependency
+rules missing-python-build-dependency
 
 scripts ancient-dpkg-epoch-check
 scripts ancient-dpkg-long-filenames-check
