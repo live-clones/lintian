@@ -8,7 +8,7 @@
 # separated by comma and/or white space. Multiple "Keep: " lines can be used
 # as well.
 #
-# Last updated: 2009-06-12
+# Last updated: 2009-07-25
 
 
 aide-binary
@@ -44,6 +44,7 @@ cyrus22-imapd
 cyrus22-pop3d
 debconf-2.0
 dict-client
+dict-server
 dictd-dictionary
 djvu-viewer
 docbook-xsl-doc
@@ -66,9 +67,9 @@ fortune-cookie-db
 freeciv
 freeciv-client
 fsck-backend
+fso-config
 fso-sounds
 ftp-server
-fwbuilder-backend
 gcompris-sound
 gforge-mta
 gforge-plugin-scm
@@ -117,6 +118,8 @@ jruby
 kde-l10n
 ladspa-host
 ladspa-plugin
+libaqbanking-backend
+libaqbanking-dev
 libatlas-3gf.so
 libatlas.so.3gf
 libbatteries-camlp4-dev
@@ -164,10 +167,10 @@ linux-image
 linux-image-2.6
 linux-initramfs-tool
 linux-kernel-log-daemon
-linux-latest-modules-2.6.29-2-486
-linux-latest-modules-2.6.29-2-686
-linux-latest-modules-2.6.29-2-686-bigmem
-linux-latest-modules-2.6.29-2-amd64
+linux-latest-modules-2.6.30-1-486
+linux-latest-modules-2.6.30-1-686
+linux-latest-modules-2.6.30-1-686-bigmem
+linux-latest-modules-2.6.30-1-amd64
 lisp-compiler
 loop-aes-modules
 lsb-qt4-ia32
@@ -226,6 +229,7 @@ ping
 pop3-server
 postscript-preview
 postscript-viewer
+python-zope
 radius-server
 ratbox-services
 readline-editor
@@ -275,9 +279,6 @@ x-display-manager
 x-session-manager
 x-terminal-emulator
 x-window-manager
-xen-hypervisor
-xen-hypervisor-3
-xen-hypervisor-3.2-1
 xmp-player
 xserver
 xserver-xorg-input-4
