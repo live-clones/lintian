@@ -43,6 +43,8 @@ lintian (2.2.14) unstable; urgency=low
   * data/fields/architectures:
     + [RA] Refresh architecture list against dpkg 1.15.3.1, adding avr32
       and kopensolaris.  (Closes: #538055)
+  * data/files/fonts:
+    + [ADB] Refresh against unstable.
 
   * lib/Spelling.pm:
     + [RA] Add spelling correction for precedence.

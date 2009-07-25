@@ -2,7 +2,7 @@
 # package that contains the font.  Only packages starting with ttf- or
 # otf- are searched for fonts.
 #
-# Last updated: 2009-06-04
+# Last updated: 2009-07-25
 
 1015sn.ttf ttf-aenigma
 1015snr.ttf ttf-aenigma
@@ -248,6 +248,10 @@ clasict2.ttf ttf-aenigma
 claw1.ttf ttf-aenigma
 claw2.ttf ttf-aenigma
 cleavttr.ttf ttf-aenigma
+cmex10.ttf ttf-lyx
+cmmi10.ttf ttf-lyx
+cmr10.ttf ttf-lyx
+cmsy10.ttf ttf-lyx
 codelife.ttf ttf-aenigma
 collecro.ttf ttf-aenigma
 collecrs.ttf ttf-aenigma
@@ -367,10 +371,12 @@ enthuses.ttf ttf-aenigma
 entlayra.ttf ttf-aenigma
 entlayrb.ttf ttf-aenigma
 entplain.ttf ttf-aenigma
+esint10.ttf ttf-lyx
 essays1743-bold.ttf ttf-essays1743
 essays1743-bolditalic.ttf ttf-essays1743
 essays1743-italic.ttf ttf-essays1743
 essays1743.ttf ttf-essays1743
+eufm10.ttf ttf-lyx
 eunjin.ttf ttf-alee
 eunjinnakseo.ttf ttf-alee
 euphor3d.ttf ttf-aenigma
@@ -773,6 +779,8 @@ monkphon.ttf ttf-aenigma
 monou___.ttf ttf-uralic
 moronmis.ttf ttf-aenigma
 mry_kacstqurn.ttf ttf-kacst
+msam10.ttf ttf-lyx
+msbm10.ttf ttf-lyx
 muktinarrow.ttf ttf-bengali-fonts
 muktinarrowbold.ttf ttf-bengali-fonts
 musical.otf ttf-ancient-fonts
@@ -1257,6 +1265,7 @@ waree-oblique.ttf ttf-thai-tlwg
 waree.otf otf-thai-tlwg
 waree.ttf ttf-thai-tlwg
 wargames.ttf ttf-dustin
+wasy10.ttf ttf-lyx
 waver.ttf ttf-aenigma
 wayward.ttf ttf-aenigma
 waywards.ttf ttf-aenigma
