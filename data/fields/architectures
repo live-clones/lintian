@@ -1,5 +1,5 @@
 # List of known architectures as provided by dpkg-architecture
-# Last updated: 2009-03-12
+# Last updated: 2009-07-25
 
 all
 alpha
@@ -8,10 +8,12 @@ any
 arm
 armeb
 armel
+avr32
 darwin-alpha
 darwin-amd64
 darwin-arm
 darwin-armeb
+darwin-avr32
 darwin-hppa
 darwin-i386
 darwin-ia64
@@ -32,6 +34,7 @@ freebsd-alpha
 freebsd-amd64
 freebsd-arm
 freebsd-armeb
+freebsd-avr32
 freebsd-hppa
 freebsd-i386
 freebsd-ia64
@@ -53,6 +56,7 @@ hurd-alpha
 hurd-amd64
 hurd-arm
 hurd-armeb
+hurd-avr32
 hurd-hppa
 hurd-i386
 hurd-ia64
@@ -75,6 +79,7 @@ kfreebsd-alpha
 kfreebsd-amd64
 kfreebsd-arm
 kfreebsd-armeb
+kfreebsd-avr32
 kfreebsd-hppa
 kfreebsd-i386
 kfreebsd-ia64
@@ -95,6 +100,7 @@ knetbsd-alpha
 knetbsd-amd64
 knetbsd-arm
 knetbsd-armeb
+knetbsd-avr32
 knetbsd-hppa
 knetbsd-i386
 knetbsd-ia64
@@ -111,6 +117,27 @@ knetbsd-sh3eb
 knetbsd-sh4
 knetbsd-sh4eb
 knetbsd-sparc
+kopensolaris-alpha
+kopensolaris-amd64
+kopensolaris-arm
+kopensolaris-armeb
+kopensolaris-avr32
+kopensolaris-hppa
+kopensolaris-i386
+kopensolaris-ia64
+kopensolaris-m32r
+kopensolaris-m68k
+kopensolaris-mips
+kopensolaris-mipsel
+kopensolaris-powerpc
+kopensolaris-ppc64
+kopensolaris-s390
+kopensolaris-s390x
+kopensolaris-sh3
+kopensolaris-sh3eb
+kopensolaris-sh4
+kopensolaris-sh4eb
+kopensolaris-sparc
 lpia
 m32r
 m68k
@@ -120,6 +147,7 @@ netbsd-alpha
 netbsd-amd64
 netbsd-arm
 netbsd-armeb
+netbsd-avr32
 netbsd-hppa
 netbsd-i386
 netbsd-ia64
@@ -140,6 +168,7 @@ openbsd-alpha
 openbsd-amd64
 openbsd-arm
 openbsd-armeb
+openbsd-avr32
 openbsd-hppa
 openbsd-i386
 openbsd-ia64
@@ -168,6 +197,7 @@ solaris-alpha
 solaris-amd64
 solaris-arm
 solaris-armeb
+solaris-avr32
 solaris-hppa
 solaris-i386
 solaris-ia64
