@@ -20,6 +20,9 @@
 
 package Lintian::description;
 use strict;
+
+use Encode qw(decode);
+
 use Spelling;
 use Tags;
 use Util;
@@ -63,13 +66,17 @@ if ($synopsis =~ m/^\s*$/) {
     if ($synopsis =~ m/\t/) {
 	tag "description-contains-tabs", "" unless $tabs++;
     }
-    if (length($synopsis) >= 80) {
-	tag "description-too-long", "";
-    }
     if ($synopsis =~ m/^missing\s*$/i) {
 	tag "description-is-debmake-template", "" unless $template++;
     } elsif ($synopsis =~ m/<insert up to 60 chars description>/) {
 	tag "description-is-dh_make-template", "" unless $template++;
+    }
+
+    # We have to decode into UTF-8 to get the right length for the length
+    # check.  If the changelog uses a non-UTF-8 encoding, this will mangle it,
+    # but it doesn't matter for the length check.
+    if (length(decode('utf-8', $synopsis)) >= 80) {
+	tag 'description-too-long';
     }
 }
 
@@ -144,7 +151,7 @@ foreach (split /\n/, $description) {
 	}
     }
 
-    if (length($_) > 80) {
+    if (length(decode('utf-8', $_)) > 80) {
 	tag "extended-description-line-too-long", "";
     }
 }

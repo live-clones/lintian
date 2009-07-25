@@ -75,3 +75,13 @@ Package: {$srcpkg}-empty
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: test package with empty extended description
+
+Package: {$srcpkg}-utf8-long
+Architecture: {$architecture}
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Description: test package with UTF-8 description (“héhé”“héhé”“héhé”“héhé”)
+ Not really too long: “héhé”“héhé”“héhé”“héhé”“héhé”“héhé”
+ .
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.
