@@ -1,5 +1,6 @@
 lintian (2.2.14) unstable; urgency=low
 
+  [ Frank Lichtenheld ]
   * Summary of tag changes:
     + Added:
       - patch-system-but-no-source-readme
@@ -47,6 +48,10 @@ lintian (2.2.14) unstable; urgency=low
     + [ADB] Refresh against unstable.
   * data/files/fonts:
     + [ADB] Refresh against unstable.
+
+  * frontend/lintian-info:
+    + [ADB] Correctly parse Lintian output for pedantic tags.  Thanks, James
+      Vega.
 
   * lib/Spelling.pm:
     + [RA] Add spelling correction for precedence.

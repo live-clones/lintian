@@ -86,7 +86,7 @@ while (<>) {
 	$type = shift @pieces;
 	$pkg = shift @pieces;
     }
-    if ($annotate or (defined $type and $type =~ m/^[OEWIX]$/)) {
+    if ($annotate or (defined $type and $type =~ m/^[OEWIXP]$/)) {
 	my $tag = shift @pieces;
 	next if not defined $tag;
 	($tag) = split(/\s+/, $tag, 2);
