@@ -1,6 +1,5 @@
 lintian (2.2.14) unstable; urgency=low
 
-  [ Frank Lichtenheld ]
   * Summary of tag changes:
     + Added:
       - patch-system-but-no-source-readme
