@@ -3,6 +3,8 @@ lintian (2.2.15) UNRELEASED; urgency=low
   * checks/debconf:
     + [CW] Permit Help: in .templates files, which is supported as of
       cdebconf 0.143 and used in the installer.
+  * checks/infofiles.desc:
+    + [RA] Add missing leading * to example info directory entry.
 
  -- Colin Watson <cjwatson@debian.org>  Fri, 31 Jul 2009 12:00:10 +0100
 
