@@ -147,12 +147,17 @@ for my $image (qw/ico.png l.png logo-small.png/) {
         or die "cannot copy images/$image to $HTML_TMP_DIR: $!\n";
 }
 
-# This variable will accumulate statistics.  For tags: errors, warnings,
+# %statistics accumulates global statistics.  For tags: errors, warnings,
 # experimental, overridden, and info are the keys holding the count of tags of
 # that sort.  For packages: binary, udeb, and source are the number of
 # packages of each type with Lintian errors or warnings.  For maintainers:
 # maintainers is the number of maintainers with Lintian errors or warnings.
-my %statistics;
+#
+# %tag_statistics holds a hash of tag-specific statistics.  Each tag name is a
+# key, and its value is a hash with the following keys: count and overrides
+# (number of times the tag has been detected and overriden, respectively), and
+# packages (number of packages with at least one such tag).
+my (%statistics, %tag_statistics);
 
 # %by_maint holds a hash of maintainer names to packages and tags.  Each
 # maintainer is a key.  The value is a hash of package names to hashes.  Each
@@ -443,13 +448,19 @@ for my $tag (sort keys %by_tag) {
     } else {
         $description = "    <p>Can't find description of tag $tag.</p>";
     }
+    my ($count, $overrides) = (0, 0);
+    my %seen;
     my $code = 'O';
     foreach (@{$by_tag{$tag}}) {
         if ($_->{code} ne 'O') {
             $code = $_->{code};
-            last;
+            $count++;
+            $seen{$_->{xref}}++;
+        } else {
+            $overrides++;
         }
     }
+
     my %data = (
         description => $description,
         tag         => html_quote ($tag),
@@ -457,11 +468,16 @@ for my $tag (sort keys %by_tag) {
         tags        => $by_tag{$tag},
     );
     output_template ("tags/$tag.html", $templates{tag}, \%data);
+
+    $tag_statistics{$tag}{'count'} = $count;
+    $tag_statistics{$tag}{'overrides'} = $overrides;
+    $tag_statistics{$tag}{'packages'} = scalar keys %seen;
 }
 
 # Create the general tag indices.
 %data = (
     tags      => \%by_tag,
+    stats     => \%tag_statistics,
 );
 output_template ('tags.html', $templates{tags}, \%data);
 output_template ('tags-severity.html', $templates{'tags-severity'}, \%data);

@@ -9,18 +9,10 @@
 
   <ul>
 {
-    for my $tag (sort keys %tags) {
-        my ($count, $overrides) = (0, 0);
-        my %seen;
-        for my $info (@{ $tags{$tag} }) {
-            if ($info->{code} eq 'O') {
-                $overrides++;
-            } else {
-                $count++;
-                $seen{$info->{xref}}++;
-            }
-        }
-        my $packages = scalar keys %seen;
+    for my $tag (sort keys %stats) {
+        my $packages = $stats{$tag}{'packages'};
+        my $count = $stats{$tag}{'count'};
+        my $overrides = $stats{$tag}{'overrides'};
         $OUT .= qq(    <li><a href="tags/$tag.html">$tag</a>)
             . " ($packages packages, $count tags, plus $overrides overrides)"
             . "</li>\n";

@@ -60,6 +60,12 @@ lintian (2.2.14) UNRELEASED; urgency=low
   * lib/Spelling.pm:
     + [RA] Add spelling correction for precedence.
 
+  * reporting/html_reports:
+    + [JP] Accumulate tag-specific statistics in a new variable, and pass it
+      to the appropriate templates.
+  * reporting/templates/tags{,-severity}.tmpl:
+    + [JP] Remove duplicate code to calculate tag statistics.
+
  -- Frank Lichtenheld <djpig@debian.org>  Sun, 12 Jul 2009 12:57:44 +0200
 
 lintian (2.2.13) unstable; urgency=low
