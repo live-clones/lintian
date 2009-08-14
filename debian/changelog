@@ -18,6 +18,9 @@ lintian (2.2.14) UNRELEASED; urgency=low
     + [RA] Allow any package to be in section oldlibs without triggering
       warnings.  Thanks, Rene Engelhard.  (Closes: #537606)
     + [RA] Lower wrong-section-according-to-package-name to possible.
+  * checks/files:
+    + [CW] /var/lock and /var/run are not temporary filesystems in d-i, so
+      don't emit errors about their use in udebs.
   * checks/infofiles.desc:
     + [RA] Add missing leading * to example info directory entry.
   * checks/menus{,.desc}:

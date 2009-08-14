@@ -519,10 +519,10 @@ foreach my $file (sort keys %{$info->index}) {
 	tag "non-standard-dir-in-var", "$file";
     }
     # ---------------- /var/lock, /var/run
-    elsif ($file =~ m,^var/lock/.,) {
+    elsif ($type ne 'udeb' and $file =~ m,^var/lock/.,) {
 	tag "dir-or-file-in-var-lock", "$file";
     }
-    elsif ($file =~ m,^var/run/.,) {
+    elsif ($type ne 'udeb' and $file =~ m,^var/run/.,) {
 	tag "dir-or-file-in-var-run", "$file";
     }
     # ---------------- /var/www
