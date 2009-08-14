@@ -2,12 +2,16 @@ lintian (2.2.14) UNRELEASED; urgency=low
 
   * Summary of tag changes:
     + Added:
+      - debhelper-overrides-need-versioned-build-depends
       - patch-system-but-no-source-readme
       - possible-documentation-but-no-doc-base-registration
 
   * checks/debconf:
     + [CW] Permit Help: in .templates files, which is supported as of
       cdebconf 0.143 and used in the installer.
+  * checks/debhelper{,.desc}:
+    + [CW] Check for the use of debhelper override targets, which require
+      debhelper 7.0.50.
   * checks/description:
     + [RA] Decode descriptions from UTF-8 before checking length.  Thanks,
       Charles Plessy.  (Closes: #537207)

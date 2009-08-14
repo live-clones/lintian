@@ -69,6 +69,7 @@ my $seendhpython = '';
 my $usescdbspython = '';
 my $seendhcleank = '';
 my $needmiscdepends = 0;
+my $overridetargets = 0;
 my %missingbdeps;
 
 open(RULES, '<', "debfiles/rules") or fail("cannot read debian/rules: $!");
@@ -142,6 +143,9 @@ while (<RULES>) {
 	$dhcompatvalue = $1;
 	# one can export and then set the value:
 	$level = $1 if ($level);
+    } elsif (/^override_dh_/) {
+	$needbuilddepends = 1;
+	$overridetargets = 1;
     }
     if (/^\s+dh_python\s/) {
         $seendhpython = 1;
@@ -263,7 +267,7 @@ while (defined(my $file=readdir(DEBIAN))) {
 	my $needed = "debhelper (>= $level)";
 	if (not $bdepends->implies($needed)) {
 	    tag "package-lacks-versioned-build-depends-on-debhelper", $level;
-	} elsif (@versioncheck) {
+	} elsif (@versioncheck or $overridetargets) {
 	    my %seen;
 	    @versioncheck = grep { !$seen{$_}++ } @versioncheck;
 	    for my $program (@versioncheck) {
@@ -272,6 +276,14 @@ while (defined(my $file=readdir(DEBIAN))) {
 		unless ($bdepends->implies($needed)) {
 		    tag 'debhelper-script-needs-versioned-build-depends',
 			$program, "(>= $required)";
+		}
+	    }
+	    if ($overridetargets) {
+		my $required = '7.0.50~';
+		my $needed = "debhelper (>= $required)";
+		unless ($bdepends->implies($needed)) {
+		    tag 'debhelper-overrides-need-versioned-build-depends',
+			"(>= $required)";
 		}
 	    }
 	}
