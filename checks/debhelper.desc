@@ -164,6 +164,7 @@ Info: The given debhelper script was introduced in a later version of
 Tag: debhelper-overrides-need-versioned-build-depends
 Severity: normal
 Certainty: certain
+Ref: dh(1)
 Info: The override targets facility in debhelper, involving debian/rules
  targets that begin with "override_dh_", was introduced in a later version
  of debhelper than the package Build-Depends on.  The package Build-Depends
