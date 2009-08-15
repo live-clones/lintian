@@ -40,6 +40,9 @@ lintian (2.2.14) UNRELEASED; urgency=low
   * checks/patch-systems{,.desc}:
     + [RA] Check for a patch system in use but no debian/README.source.
       Based on a patch from Jonathan Yu.  (Closes: #537969)
+  * checks/po-debconf:
+    + [CW] Don't emit not-using-po-debconf if all templates are marked "for
+      internal use".  (Closes: #492626)
   * checks/scripts:
     + [RA] Fix parsing of dpkg-divert commands diverting a file ending in
       a number, followed by a redirection.  Thanks, Andreas Beckmann.

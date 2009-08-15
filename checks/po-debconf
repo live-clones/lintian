@@ -45,6 +45,7 @@ for my $file (readdir(DEB)) {
 		} else {
 			open(PO, '<', "debfiles/$file")
 				or fail("Can't open debfiles/$file file.");
+			my $in_template = 0;
 			while (<PO>) {
 				tag "translated-default-field", "$file: $."
 					if (m/^_Default(Choice)?: [^\[]*$/);
@@ -52,7 +53,13 @@ for my $file (readdir(DEB)) {
 					my $template = $1;
 					next if $template =~ m,^shared/packages-(wordlist|ispell)$,;
 					next if $template =~ m,/languages$,;
+					$in_template = 1;
+				} elsif ($in_template and /^_?Description: (.+)/i) {
+					my $description = $1;
+					next if $description =~ /for internal use/;
 					$has_template = 1;
+				} elsif ($in_template and /^$/) {
+					$in_template = 0;
 				}
 			}
 			close PO;
