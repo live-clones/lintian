@@ -41,6 +41,8 @@ lintian (2.2.14) UNRELEASED; urgency=low
     + [RA] Expand Lintian's understanding of which targets are run for the
       clean target to include targets invoked via pattern variable
       expansion.  (Closes: #536405)
+    + [RA] Make the handling of make variables as rule names more robust
+      and avoid generating invalid regexes.
   * checks/patch-systems{,.desc}:
     + [RA] Check for a patch system in use but no debian/README.source.
       Based on a patch from Jonathan Yu.  (Closes: #537969)

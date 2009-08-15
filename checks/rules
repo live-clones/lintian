@@ -247,10 +247,11 @@ while (<RULES>) {
         }
     }
 
-    if (/^([^\s:][^:]*):+(.*)/) {
+    if (!/^ifn?(eq|def)\s/ && /^([^\s:][^:]*):+(.*)/) {
 	@current_targets = split (' ', $1);
         my @depends = map {
-            s/\$\([^\):]+:([^=]+)=([^\)]+)\1\)/$2.*/g;
+            $_ = quotemeta $_;
+            s/\\\$\\\([^\):]+\\:([^=]+)\\=([^\)]+)\1\\\)/$2.*/g;
             qr/^$_$/;
         } split (' ', $2);
 	for my $target (@current_targets) {
