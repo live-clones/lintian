@@ -6,6 +6,10 @@ lintian (2.2.14) UNRELEASED; urgency=low
       - patch-system-but-no-source-readme
       - possible-documentation-but-no-doc-base-registration
 
+  * checks/changelog-file.desc:
+    + [RA] Document the "Old Changelog" way of marking historic changelog
+      entries that shouldn't be syntax-checked in the long description for
+      syntax-error-in-debian-changelog.  (Closes: #541119)
   * checks/debconf:
     + [CW] Permit Help: in .templates files, which is supported as of
       cdebconf 0.143 and used in the installer.
