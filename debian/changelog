@@ -53,6 +53,8 @@ lintian (2.2.14) UNRELEASED; urgency=low
       to be metapackages for the dependency check.
     + [RA] Don't require a tilde after lp: in bzr URLs.  Thanks, Benjamin
       Drung.  (Closes: #541143)
+    + [RA] Fix spelling of xfonts-encodings in the xfont dependency
+      exception.  (Closes: #540425)
   * checks/files{,.desc}:
     + [CW] /var/lock and /var/run are not temporary filesystems in d-i, so
       don't emit errors about their use in udebs.
