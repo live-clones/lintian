@@ -1,6 +1,8 @@
 Testname: distribution-multiple-bad
 Sequence: 2500
 Version: 1.0
-Test-For: bad-distribution-in-changes-file
 Description: Multiple distributions with at least one bad one
+Test-For:
+ bad-distribution-in-changes-file
+ multiple-distributions-in-changes-file
 References: Debian Bug#514853
