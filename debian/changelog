@@ -107,6 +107,7 @@ lintian (2.2.14) UNRELEASED; urgency=low
   * data/fields/metapackages:
     + [RA] New file listing known metapackages that should not be used in
       Depends or Build-Depends.
+    + [RA] Add mono-complete.  (Closes: #538929)
   * data/fields/virtual-packages:
     + [ADB] Refresh against unstable.
   * data/files/fonts:

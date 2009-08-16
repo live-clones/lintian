@@ -3,6 +3,7 @@
 # and should not be used as a dependency of anything other than another
 # metapackage.  It should not be used as a build dependency ever.
 
+mono-complete
 x-window-system
 x-window-system-dev
 x-window-system-core
