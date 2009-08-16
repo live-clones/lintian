@@ -123,6 +123,11 @@ lintian (2.2.14) UNRELEASED; urgency=low
     + [ADB] Refresh against unstable.
   * data/files/fonts:
     + [ADB] Refresh against unstable.
+  * data/standards-version/release-dates:
+    + [RA] Add the release date for Policy 3.8.3.
+
+  * debian/control:
+    + [RA] Update standards version to 3.8.3 (no changes required).
 
   * frontend/lintian:
     + [RA] Enable multiple-distributions-in-changes-file now that Policy
@@ -139,6 +144,9 @@ lintian (2.2.14) UNRELEASED; urgency=low
       to the appropriate templates.
   * reporting/templates/tags{,-severity}.tmpl:
     + [JP] Remove duplicate code to calculate tag statistics.
+
+  * t/runtests:
+    + [RA] Update standards version to 3.8.3.
 
  -- Frank Lichtenheld <djpig@debian.org>  Sun, 12 Jul 2009 12:57:44 +0200
 

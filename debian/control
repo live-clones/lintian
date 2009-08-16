@@ -10,7 +10,7 @@ Uploaders: Josip Rodin <joy-packages@debian.org>,
  Adam D. Barratt <adam@adam-barratt.org.uk>
 Build-Depends: debhelper (>= 5)
 Build-Depends-Indep: debiandoc-sgml, sed (>= 4.1-4)
-Standards-Version: 3.8.2
+Standards-Version: 3.8.3
 Vcs-Git: git://git.debian.org/git/lintian/lintian.git
 Vcs-Browser: http://git.debian.org/?p=lintian/lintian.git
 
@@ -37,4 +37,4 @@ Description: Debian package checker
  should check packages with this tool before uploading them to the
  archive.
  .
- This version of Lintian is calibrated for policy version 3.8.2.
+ This version of Lintian is calibrated for policy version 3.8.3.
