@@ -49,6 +49,8 @@ lintian (2.2.14) UNRELEASED; urgency=low
       metapackages to make them generic and load the list of metapackages
       from data/fields/metapackages.  Always consider known metapackages
       to be metapackages for the dependency check.
+    + [RA] Don't require a tilde after lp: in bzr URLs.  Thanks, Benjamin
+      Drung.  (Closes: #541143)
   * checks/files{,.desc}:
     + [CW] /var/lock and /var/run are not temporary filesystems in d-i, so
       don't emit errors about their use in udebs.
