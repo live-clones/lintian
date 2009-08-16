@@ -55,21 +55,6 @@ Info: Debian has switched to the modular X tree which now uses the regular
  1:1.0.2-2) for the correct paths.
 Ref: policy 11.8.7
 
-Tag: file-in-usr-something-x11-without-pre-depends
-Severity: wishlist
-Certainty: certain
-Info: Packages that install files into /usr/include/X11 or /usr/lib/X11
- should pre-depend on at least x11-common (&gt;= 1:7.0.0).  These directories
- used to be symlinks and installing files in them while they are still
- symlinks will put files in the wrong locations and cause stranded files
- and other problems.  x11-common is responsible for converting the
- symlinks to regular directories.
- .
- A fresh etch (or later) install will not have problems even without this
- dependency, but this dependency is needed for upgrades from sarge and is
- therefore still useful for backports.
-Ref: policy 11.8.7
-
 Tag: package-installs-file-to-usr-x11r6
 Severity: important
 Certainty: certain

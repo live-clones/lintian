@@ -155,7 +155,6 @@ if (defined $info->field('section')) {
 my %script = map {$_ => 1} (sort keys %{$info->scripts});
 
 # We only want to warn about these once.
-my $warned_x11_predepends = 0;
 my $warned_debug_name = 0;
 
 my @devhelp;
@@ -347,19 +346,6 @@ foreach my $file (sort keys %{$info->index}) {
 	# ---------------- /usr/X11R6/lib/X11/app-defaults
 	elsif ($file =~ m,usr/X11R6/lib/X11/app-defaults,) {
 	    tag "old-app-defaults-directory", "$file";
-	}
-
-	#----------------- /usr/{include,lib}/X11/
-	# Packages installing files here will need to pre-depend on x11-common
-	# so that the symlinks will be sorted out first on a sarge upgrade.
-	elsif ($file =~ m,^usr/(?:include|lib)/X11(/|\Z),
-	       && !$warned_x11_predepends && $pkg ne 'x11-common') {
-	    tag "file-in-usr-something-x11-without-pre-depends", "$file"
-		unless $info->relation('pre-depends')->implies('x11-common (>= 1:7.0.0)');
-
-	    # Always set this so that we don't redo the check, even if we
-	    # didn't warn.  If the first instance didn't warn, none will.
-	    $warned_x11_predepends = 1;
 	}
 
 	#----------------- /usr/X11R6/

@@ -8,6 +8,8 @@ lintian (2.2.14) UNRELEASED; urgency=low
       - patch-system-but-no-source-readme
       - package-modifies-ld.so-search-path
       - possible-documentation-but-no-doc-base-registration
+    + Removed:
+      - file-in-usr-something-x11-without-pre-depends
 
   * checks/changelog-file.desc:
     + [RA] Document the "Old Changelog" way of marking historic changelog
@@ -29,12 +31,15 @@ lintian (2.2.14) UNRELEASED; urgency=low
     + [RA] Allow any package to be in section oldlibs without triggering
       warnings.  Thanks, Rene Engelhard.  (Closes: #537606)
     + [RA] Lower wrong-section-according-to-package-name to possible.
-  * checks/files:
+  * checks/files{,.desc}:
     + [CW] /var/lock and /var/run are not temporary filesystems in d-i, so
       don't emit errors about their use in udebs.
     + [RA] Warn about packages containing files in /etc/ld.so.conf.d that
       don't appear to be part of libc.  Policy 3.8.3 no longer permits
       modification of ld.so.conf.
+    + [RA] Remove the check for x11-common pre-depends before installing
+      files in /usr/{include,lib}/X11.  Policy 3.8.3 removes this
+      requirement.
   * checks/infofiles.desc:
     + [RA] Add missing leading * to example info directory entry.
   * checks/lintian.desc:
