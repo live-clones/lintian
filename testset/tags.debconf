@@ -35,6 +35,7 @@ W: debconf source: misnamed-po-file debian/po/lang.po
 W: debconf source: misnamed-po-file debian/po/sample-file.po
 W: debconf source: newer-debconf-templates
 W: debconf source: package-uses-deprecated-debhelper-compat-version 4
+W: debconf source: patch-system-but-no-source-readme
 W: debconf source: stray-translated-debconf-templates debconf-test.templates.de
 W: debconf source: translated-default-field debconf-test.templates: 67
 W: debconf source: translated-default-field debconf-test.templates: 72

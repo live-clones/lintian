@@ -22,6 +22,7 @@ W: diffs source: configure-generated-file-in-source subdir-good/config.status
 W: diffs source: diff-contains-bzr-control-dir .bzr
 W: diffs source: diff-contains-substvars debian/substvars
 W: diffs source: patch-system-but-direct-changes-in-diff .bzr/dummy
+W: diffs source: patch-system-but-no-source-readme
 W: diffs: binary-without-manpage usr/bin/diffs
 W: diffs: improbable-bug-number-in-closes 1
 W: diffs: improbable-bug-number-in-closes 1
