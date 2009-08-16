@@ -118,18 +118,24 @@ while (<RULES>) {
 	if ($miscDeps_commands->known($dhcommand)) {
 	    $needmiscdepends = 1;
 	}
-	if ($dh_commands_depends->known($dhcommand)) {
-	    my $dep = $dh_commands_depends->value($dhcommand);
 
-	    # Special-case default-jdk-builddep.  It appears to be a sort of
-	    # build-essential for Java applications.
-	    if ($dhcommand eq 'dh_nativejava') {
-		$dep = "$dep | default-jdk | default-jdk-builddep";
+	# If debhelper commands are wrapped in make conditionals, assume the
+	# maintainer knows what they're doing and don't check build
+	# dependencies.
+	unless ($maybe_skipping) {
+	    if ($dh_commands_depends->known($dhcommand)) {
+		my $dep = $dh_commands_depends->value($dhcommand);
+
+		# Special-case default-jdk-builddep.  It appears to be a sort
+		# of build-essential for Java applications.
+		if ($dhcommand eq 'dh_nativejava') {
+		    $dep = "$dep | default-jdk | default-jdk-builddep";
+		}
+		$missingbdeps{$dep} = $dhcommand;
 	    }
-	    $missingbdeps{$dep} = $dhcommand;
-	}
-	if ($versions{$dhcommand}) {
-	    push (@versioncheck, $dhcommand);
+	    if ($versions{$dhcommand}) {
+		push (@versioncheck, $dhcommand);
+	    }
 	}
 	$seencommand = 1;
 	$needbuilddepends = 1;
