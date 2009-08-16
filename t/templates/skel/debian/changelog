@@ -1,3 +1,10 @@
+skel (1.2) unstable; urgency=low
+
+  * Raise the default dependency on debhelper to 7.0.50~ so that tests can
+    freely use overrides without a modified control.in.
+
+ -- Russ Allbery <rra@debian.org>  Sat, 15 Aug 2009 19:09:15 -0700
+
 skel (1.1) unstable; urgency=low
 
   * Parameterize the package section to make it easier to avoid spurious
