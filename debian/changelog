@@ -32,6 +32,8 @@ lintian (2.2.14) UNRELEASED; urgency=low
   * checks/description:
     + [RA] Decode descriptions from UTF-8 before checking length.  Thanks,
       Charles Plessy.  (Closes: #537207)
+    + [RA] Avoid duplicated word false positives from words that contain
+      punctuation.  Thanks, Nelson A. de Oliveira.  (Closes: #540348)
   * checks/fields{,.desc}:
     + [FL] packages named lib*-camlp4-dev should be in section ocaml
     + [RA] Move debian/rules parsing to check build dependencies to

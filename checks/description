@@ -122,11 +122,14 @@ foreach (split /\n/, $description) {
 	tag "description-contains-dh-make-perl-template";
     }
 
-    my $wo_quotes = $_;
-    $wo_quotes =~ s,(\"|\')(.*?)(\1),,;
-    while ($wo_quotes =~ m,(?:\W|^)((\w+)(\s+(\2))+)(?:\W|\z),i) {
+    # Check for duplicated words.  We want to catch "this this." but not
+    # "ITU-T T.81", so compare non-whitespace sequences rather than word
+    # characters but allow punctuation at the end.
+    my $stripped = $_;
+    $stripped =~ s,(\"|\')(.*?)(\1),,g;
+    while ($stripped =~ m%(?:\s|^)((\S+)(\s+(\2))+)(?:[\).,?!:;\s]|\z)%i) {
 	my $words = $1;
-	$wo_quotes =~ s/\Q$words//;
+	$stripped =~ s/\Q$words//;
         tag "description-contains-duplicated-word", "$words";
     }
 
