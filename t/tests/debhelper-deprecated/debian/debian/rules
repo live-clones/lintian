@@ -22,6 +22,13 @@ binary-indep:
 	dh_desktop
 	-dh_dhelp
 	dh_scrollkeeper
+# Check not warning about deprecated commands in optional portions, but
+# commands that have been toast for a long time are still warned about.
+ifneq "$(LENNY_BACKPORT)" "y"
+	-dh_help
+	dh_scrollkeeper
+	dh_testversion 7
+endif
 	dh_link
 	dh_compress
 	dh_fixperms

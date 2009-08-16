@@ -73,11 +73,19 @@ my $overridetargets = 0;
 my %missingbdeps;
 
 open(RULES, '<', "debfiles/rules") or fail("cannot read debian/rules: $!");
+my $maybe_skipping;
 my $dhcompatvalue;
 my @versioncheck;
 while (<RULES>) {
+    if (/^ifn?(eq|def)\s/) {
+        $maybe_skipping++;
+    } elsif (/^endif\s/) {
+        $maybe_skipping--;
+    }
+
     if (m/^\s+-?(dh_\w+)/) {
         my $dhcommand = $1;
+
 	if ($dhcommand =~ /dh_testversion(?:\s+([^\s]+))?/) {
 	    $level = $1 if ($1);
 	    tag "dh_testversion-is-deprecated", "line $.";
@@ -88,15 +96,21 @@ while (<RULES>) {
 	if ($dhcommand eq 'dh_suidregister') {
 	    tag "dh_suidregister-is-obsolete", "line $.";
 	}
-	if ($dhcommand eq 'dh_desktop') {
-	    tag 'dh_desktop-is-deprecated', "line $.";
+
+	# Don't warn about recently deprecated commands in code that may be
+	# optional.  It may be there only for backports.
+	unless ($maybe_skipping) {
+	    if ($dhcommand eq 'dh_desktop') {
+		tag 'dh_desktop-is-deprecated', "line $.";
+	    }
+	    if ($dhcommand eq 'dh_scrollkeeper') {
+		tag 'dh_scrollkeeper-is-deprecated', "line $.";
+	    }
+	    if ($dhcommand eq 'dh_clean' and m/\s+\-k(\s+.*)?$/) {
+		$seendhcleank = 1;
+	    }
 	}
-	if ($dhcommand eq 'dh_scrollkeeper') {
-	    tag 'dh_scrollkeeper-is-deprecated', "line $.";
-	}
-	if ($dhcommand eq 'dh_clean' and m/\s+\-k(\s+.*)?$/) {
-	    $seendhcleank = 1;
-	}
+
 	# if command is passed -n, it does not modify the scripts
 	if ($maint_commands->known($dhcommand) and not m/\s+\-n\s+/) {
 	    $needtomodifyscripts = 1;

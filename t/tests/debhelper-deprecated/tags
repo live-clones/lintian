@@ -1,5 +1,6 @@
 W: debhelper-deprecated source: dh_desktop-is-deprecated line 22
 W: debhelper-deprecated source: dh_dhelp-is-deprecated line 23
 W: debhelper-deprecated source: dh_scrollkeeper-is-deprecated line 24
-W: debhelper-deprecated source: dh_suidregister-is-obsolete line 28
+W: debhelper-deprecated source: dh_suidregister-is-obsolete line 35
 W: debhelper-deprecated source: dh_testversion-is-deprecated line 17
+W: debhelper-deprecated source: dh_testversion-is-deprecated line 30

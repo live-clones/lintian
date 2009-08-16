@@ -22,6 +22,8 @@ lintian (2.2.14) UNRELEASED; urgency=low
   * checks/debhelper{,.desc}:
     + [CW] Check for the use of debhelper override targets, which require
       debhelper 7.0.50.
+    + [RA] Don't warn about recently deprecated debhelper commands in
+      possibly optional portions of debian/rules.  (Closes: #537607)
   * checks/description:
     + [RA] Decode descriptions from UTF-8 before checking length.  Thanks,
       Charles Plessy.  (Closes: #537207)
