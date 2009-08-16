@@ -9,4 +9,5 @@ Test-For:
  info-document-not-compressed
  info-document-not-compressed-with-gzip
  info-document-not-compressed-with-max-compression
+ missing-dependency-on-install-info
 References: Bug#534640

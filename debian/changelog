@@ -4,6 +4,7 @@ lintian (2.2.14) UNRELEASED; urgency=low
     + Added:
       - debhelper-overrides-need-versioned-build-depends
       - maintainer-script-modifies-ld-so-conf
+      - missing-dependency-on-install-info
       - multiple-distributions-in-changes-file
       - patch-system-but-no-source-readme
       - package-modifies-ld.so-search-path
@@ -40,8 +41,10 @@ lintian (2.2.14) UNRELEASED; urgency=low
     + [RA] Remove the check for x11-common pre-depends before installing
       files in /usr/{include,lib}/X11.  Policy 3.8.3 removes this
       requirement.
-  * checks/infofiles.desc:
+  * checks/infofiles{,.desc}:
     + [RA] Add missing leading * to example info directory entry.
+    + [RA] Check that packages with info files depend on dpkg or
+      install-info as recommended by Policy 5.8.3.
   * checks/lintian.desc:
     + [RA] Expand multiple-distributions-in-changes-file description and
       add a reference to the Policy section.  Change certainty to

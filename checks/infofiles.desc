@@ -61,3 +61,13 @@ Info: This info document has no directory entry.  This is text between
  to the texinfo source so that the generated info file will contain an
  appropriate entry.  You will have to ensure that the build process builds
  new info files rather than using ones built by upstream.
+
+Tag: missing-dependency-on-install-info
+Severity: normal
+Certainty: possible
+Info: This package appears to contain at least one info document but does
+ not depend on <tt>dpkg (>= 1.15.4) | install-info</tt> as recommended by
+ Policy.  This dependency is needed for the transition to triggerized
+ install-info to correctly build the info directory during partial
+ upgrades from lenny.
+Ref: policy 12.2
