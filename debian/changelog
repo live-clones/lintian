@@ -36,6 +36,12 @@ lintian (2.2.14) UNRELEASED; urgency=low
     + [RA] Allow any package to be in section oldlibs without triggering
       warnings.  Thanks, Rene Engelhard.  (Closes: #537606)
     + [RA] Lower wrong-section-according-to-package-name to possible.
+    + [RA] Recognize packages as metapackages even if they contain Lintian
+      overrides, thus fixing two packages that added a Lintian override
+      for having dependencies only permitted for metapackages, which in
+      turn ensures that they keep getting that tag.
+    + [RA] Recognize packages as metapackages even if they contain files
+      in /usr/share/cdd.
   * checks/files{,.desc}:
     + [CW] /var/lock and /var/run are not temporary filesystems in d-i, so
       don't emit errors about their use in udebs.

@@ -462,13 +462,17 @@ if (defined $info->field('installer-menu-item')) {
 
 # Check whether the package looks like a meta-package, used for later
 # dependency checks.  We consider a package to possibly be a meta-package if
-# it is a binary package, arch: all, with no files outside of /usr/share/doc.
+# it is a binary package, arch: all, with no files outside of /usr/share/doc
+# and a few other directories found in metapackges.
 my $metapackage = 0;
 if ($type eq 'binary' && $arch_indep) {
 	$metapackage = 1;
 	foreach my $file (keys %{$info->index}) {
-		$metapackage = 0 unless ($info->index->{$file}->{type} =~ /^d/
-		    || $file =~ m%^usr/share/doc/%);
+		next if $info->index->{$file}->{type} =~ /^d/;
+		next if $file =~ m%^usr/share/doc/%;
+		next if $file =~ m%^usr/share/lintian/overrides/%;
+		next if $file =~ m%^usr/share/cdd/%;
+		$metapackage = 0;
 	}
 }
 if (($type eq "binary") || ($type eq 'udeb')) {
