@@ -822,6 +822,14 @@ while (<SCRIPTS>) {
 		    tag "maintainer-script-modifies-inetd-conf", "$file:$."
 			unless $info->relation('provides')->implies('inet-superserver');
 		}
+		if (m,>\s*/etc/ld\.so\.conf(\s|\Z),) {
+		    tag "maintainer-script-modifies-ld-so-conf", "$file:$."
+			unless $pkg =~ /^libc/;
+		}
+		if (m,^\s*(?:cp|mv)\s+(?:.*\s)?/etc/ld\.so\.conf\s*$,) {
+		    tag "maintainer-script-modifies-ld-so-conf", "$file:$."
+			unless $pkg =~ /^libc/;
+		}
 		if (m,$LEADIN(/(usr/)?s?bin/[\w.+-]+)(\s|;|$),) {
 		    tag "command-with-path-in-maintainer-script", "$file:$. $1";
 		}

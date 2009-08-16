@@ -104,4 +104,9 @@ suidregister /usr/bin/foo
 install-info --quiet --section Development Development \
     /usr/share/info/foobar.info
 
+# Packages don't get to modify /etc/ld.so.conf
+echo '/usr/local/lib' >> /etc/ld.so.conf
+( cat /etc/ld.so.conf ; echo '/usr/local/lib' ) > /etc/ld.so.conf.new
+mv /etc/ld.so.conf.new /etc/ld.so.conf
+
 #DEBHELPER#

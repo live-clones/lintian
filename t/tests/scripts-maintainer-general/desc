@@ -13,6 +13,7 @@ Test-For:
  install-sgmlcatalog-deprecated
  maintainer-script-hides-init-failure
  maintainer-script-modifies-inetd-conf
+ maintainer-script-modifies-ld-so-conf
  maintainer-script-modifies-netbase-managed-file
  maintainer-script-needs-depends-on-gconf2
  maintainer-script-needs-depends-on-ucf

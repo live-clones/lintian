@@ -498,6 +498,23 @@ Info: The maintainer script modifies <tt>/etc/inetd.conf</tt> directly.
  <tt>update-inetd</tt> script or the <tt>DebianNet.pm</tt> Perl module.
 Ref: policy 11.2
 
+Tag: maintainer-script-modifies-ld-so-conf
+Severity: important
+Certainty: possible
+Info: This package appears to modify <tt>/etc/ld.so.conf</tt> and does not
+ appear to be part of libc.  Packages installing shared libraries in
+ non-standard locations were previously permitted to modify
+ /etc/ld.so.conf to add the non-standard path, but this permission was
+ removed in Policy 3.8.3.
+ .
+ Packages containing shared libraries should either install them into
+ <tt>/usr/lib</tt> or should require binaries built against them to set
+ RPATH to find the library at run-time.  Installing libraries in a
+ different directory and modifying the run-time linker path is equivalent
+ to installing them into <tt>/usr/lib</tt> except now conflicting library
+ packages may cause random segfaults and difficult-to-debug problems
+ instead of conflicts in the package manager.
+
 Tag: install-sgmlcatalog-deprecated
 Severity: important
 Certainty: certain

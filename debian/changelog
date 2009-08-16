@@ -3,6 +3,7 @@ lintian (2.2.14) UNRELEASED; urgency=low
   * Summary of tag changes:
     + Added:
       - debhelper-overrides-need-versioned-build-depends
+      - maintainer-script-modifies-ld-so-conf
       - multiple-distributions-in-changes-file
       - patch-system-but-no-source-readme
       - package-modifies-ld.so-search-path
@@ -62,6 +63,8 @@ lintian (2.2.14) UNRELEASED; urgency=low
     + [RA] Fix parsing of dpkg-divert commands diverting a file ending in
       a number, followed by a redirection.  Thanks, Andreas Beckmann.
       (Closes: #534942)
+    + [RA] Warn about maintainter scripts that modify /etc/ld.so.conf.
+      Policy 3.8.3 no longer permits this.
   * checks/watch-file:
     + [RA] Fix false positives in debian-watch-file-should-mangle-version
       when an upstream version is specified in the watch file and give the
