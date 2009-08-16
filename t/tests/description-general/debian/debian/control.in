@@ -91,6 +91,8 @@ Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: test package with duplicated words that aren't
  Lossless JPEG is defined in ITU-T T.81, ISO/IEC IS 10918-1.
+ Contain the strings " link to ", " -> ", or ": ".
+ This is train A, a particularly fast train.
  .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
