@@ -3,6 +3,7 @@ lintian (2.2.14) UNRELEASED; urgency=low
   * Summary of tag changes:
     + Added:
       - debhelper-overrides-need-versioned-build-depends
+      - multiple-distributions-in-changes-file
       - patch-system-but-no-source-readme
       - possible-documentation-but-no-doc-base-registration
 
@@ -31,6 +32,10 @@ lintian (2.2.14) UNRELEASED; urgency=low
       don't emit errors about their use in udebs.
   * checks/infofiles.desc:
     + [RA] Add missing leading * to example info directory entry.
+  * checks/lintian.desc:
+    + [RA] Expand multiple-distributions-in-changes-file description and
+      add a reference to the Policy section.  Change certainty to
+      possible, since this may be fine for non-Debian uploads.
   * checks/menus{,.desc}:
     + [RA] Add info-level tag for packages with apparent HTML or PDF
       documentation in /usr/share/doc but no doc-base registration.  Based
@@ -69,6 +74,9 @@ lintian (2.2.14) UNRELEASED; urgency=low
   * data/files/fonts:
     + [ADB] Refresh against unstable.
 
+  * frontend/lintian:
+    + [RA] Enable multiple-distributions-in-changes-file now that Policy
+      documents that this does not work with the Debian archive.
   * frontend/lintian-info:
     + [ADB] Correctly parse Lintian output for pedantic tags.  Thanks, James
       Vega.

@@ -850,9 +850,8 @@ while (my $arg = shift) {
 		}
 
 		if ($#distributions > 0) {
-		    # Currently disabled until dak stops accepting the syntax
-		    # tag("multiple-distributions-in-changes-file",
-		    #    $data->{'distribution'});
+		    tag("multiple-distributions-in-changes-file",
+			$data->{'distribution'});
 		}
 	    }
 

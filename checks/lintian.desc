@@ -45,12 +45,15 @@ Info: You've specified an unknown target distribution for your upload in
 
 Tag: multiple-distributions-in-changes-file
 Severity: important
-Certainty: certain
+Certainty: possible
 Info: You've specified more than one target distribution for your upload
- in the <tt>debian/changelog</tt> file.
+ in the <tt>*.changes</tt> file, probably via the most recent entry in the
+ <tt>debian/changelog</tt> file.
  .
  Although this syntax is valid, it is not accepted by the Debian archive
- management software.
+ management software.  This may not be a problem if this upload is
+ targeted at an archive other than Debian's.
+Ref: policy 5.6.14
 
 Tag: no-urgency-in-changes-file
 Severity: normal
