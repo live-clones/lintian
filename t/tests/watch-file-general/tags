@@ -1,4 +1,4 @@
-I: watch-file-general source: debian-watch-file-should-dversionmangle-not-uversionmangle
+I: watch-file-general source: debian-watch-file-should-dversionmangle-not-uversionmangle line 5
 W: watch-file-general source: debian-watch-file-declares-multiple-versions line 18
 W: watch-file-general source: debian-watch-file-declares-multiple-versions line 7
 W: watch-file-general source: debian-watch-file-should-use-sf-redirector line 12
