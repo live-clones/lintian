@@ -1042,3 +1042,19 @@ Info: This package contains a file named <tt>dir</tt> or <tt>dir.old</tt>,
  build systems create it automatically, but it must not be included in a
  package since it needs to be generated dynamically based on the installed
  info files on the system.
+
+Tag: package-modifies-ld.so-search-path
+Severity: important
+Certainty: possible
+Ref: policy 10.2
+Info: This package installs a file in <tt>/etc/ld.so.conf.d</tt>,
+ presumably to modify the search path of the run-time linker, and does not
+ appear to be part of libc.
+ .
+ Packages containing shared libraries should either install them into
+ <tt>/usr/lib</tt> or should require binaries built against them to set
+ RPATH to find the library at run-time.  Installing libraries in a
+ different directory and modifying the run-time linker path is equivalent
+ to installing them into <tt>/usr/lib</tt> except now conflicting library
+ packages may cause random segfaults and difficult-to-debug problems
+ instead of conflicts in the package manager.

@@ -249,6 +249,10 @@ foreach my $file (sort keys %{$info->index}) {
 	    tag "non-standard-file-permissions-for-etc-init.d-script",
 		sprintf("$file %04o != 0755",$operm);
 	}
+	#----------------- /etc/ld.so.conf.d
+	elsif ($file =~ m,^etc/ld\.so\.conf\.d/(.+)$, and $pkg !~ /^libc/) {
+	    tag 'package-modifies-ld.so-search-path', "$file";
+	}
 	#----------------- /etc/modprobe.d
 	elsif ($file =~ m,^etc/modprobe\.d/(.+)$, and $1 !~ m,\.conf$, and $index_info->{type} !~ m/^d/) {
 	    tag "non-conf-file-in-modprobe.d", $file;

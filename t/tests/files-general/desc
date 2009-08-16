@@ -10,5 +10,6 @@ Test-For:
  non-conf-file-in-modprobe.d
  package-contains-empty-directory
  package-contains-info-dir-file
+ package-modifies-ld.so-search-path
  stray-directory-in-manpage-directory
  windows-devel-file-in-package

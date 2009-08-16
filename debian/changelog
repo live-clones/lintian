@@ -5,6 +5,7 @@ lintian (2.2.14) UNRELEASED; urgency=low
       - debhelper-overrides-need-versioned-build-depends
       - multiple-distributions-in-changes-file
       - patch-system-but-no-source-readme
+      - package-modifies-ld.so-search-path
       - possible-documentation-but-no-doc-base-registration
 
   * checks/changelog-file.desc:
@@ -30,6 +31,9 @@ lintian (2.2.14) UNRELEASED; urgency=low
   * checks/files:
     + [CW] /var/lock and /var/run are not temporary filesystems in d-i, so
       don't emit errors about their use in udebs.
+    + [RA] Warn about packages containing files in /etc/ld.so.conf.d that
+      don't appear to be part of libc.  Policy 3.8.3 no longer permits
+      modification of ld.so.conf.
   * checks/infofiles.desc:
     + [RA] Add missing leading * to example info directory entry.
   * checks/lintian.desc:
