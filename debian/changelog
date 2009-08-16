@@ -72,6 +72,12 @@ lintian (2.2.14) UNRELEASED; urgency=low
     + [RA] Add info-level tag for packages with apparent HTML or PDF
       documentation in /usr/share/doc but no doc-base registration.  Based
       on a patch from Raphael Geissert.  (Closes: #469018)
+  * checks/patch-systems{,.desc}:
+    + [RA] Check for a patch system in use but no debian/README.source.
+      Based on a patch from Jonathan Yu.  (Closes: #537969)
+  * checks/po-debconf:
+    + [CW] Don't emit not-using-po-debconf if all templates are marked "for
+      internal use".  (Closes: #492626)
   * checks/rules{,.desc}:
     + [RA] Moved checking of build dependencies based on programs invoked
       in debian/rules from checks/fields to here.
@@ -80,12 +86,9 @@ lintian (2.2.14) UNRELEASED; urgency=low
       expansion.  (Closes: #536405)
     + [RA] Make the handling of make variables as rule names more robust
       and avoid generating invalid regexes.
-  * checks/patch-systems{,.desc}:
-    + [RA] Check for a patch system in use but no debian/README.source.
-      Based on a patch from Jonathan Yu.  (Closes: #537969)
-  * checks/po-debconf:
-    + [CW] Don't emit not-using-po-debconf if all templates are marked "for
-      internal use".  (Closes: #492626)
+    + [RA] Packages including /usr/share/mozilla-devscripts makefile
+      fragments in debian/rules must Build-Depend on mozilla-devscripts.
+      Thanks, Benjamin Drung.  (Closes: #541144)
   * checks/scripts:
     + [RA] Fix parsing of dpkg-divert commands diverting a file ending in
       a number, followed by a redirection.  Thanks, Andreas Beckmann.

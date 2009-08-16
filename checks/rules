@@ -44,6 +44,7 @@ our @GLOBAL_CLEAN_DEPENDS =
      [ 'gnome-pkg-tools' => qr'^include\s+/usr/share/gnome-pkg-tools/' ],
      [ quilt => qr'^include\s+/usr/share/cdbs/1/rules/patchsys-quilt\.mk' ],
      [ dpatch => qr'^include\s+/usr/share/dpatch/' ],
+     [ 'mozilla-devscripts' => qr'^include\s+/usr/share/mozilla-devscripts/' ],
      [ quilt => qr'^include\s+/usr/share/quilt/' ],
      [ 'ruby-pkg-tools' => qr'^include\s+/usr/share/ruby-pkg-tools/1/class/' ],
      [ 'r-base-dev' => qr'^include\s+/usr/share/R/debian/r-cran\.mk' ],
