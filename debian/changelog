@@ -55,6 +55,8 @@ lintian (2.2.14) UNRELEASED; urgency=low
       Drung.  (Closes: #541143)
     + [RA] Fix spelling of xfonts-encodings in the xfont dependency
       exception.  (Closes: #540425)
+    + [RA] Allow :ext: CVS repository references if the username looks
+      like it won't require autentication.  Thanks, Thorsten Glaser.
   * checks/files{,.desc}:
     + [CW] /var/lock and /var/run are not temporary filesystems in d-i, so
       don't emit errors about their use in udebs.
