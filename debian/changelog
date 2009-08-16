@@ -1,4 +1,6 @@
-lintian (2.2.14) UNRELEASED; urgency=low
+lintian (2.2.14) unstable; urgency=low
+
+  The "Policy 3.8.3" release.
 
   * Summary of tag changes:
     + Added:
@@ -12,8 +14,8 @@ lintian (2.2.14) UNRELEASED; urgency=low
     + Removed:
       - file-in-usr-something-x11-without-pre-depends
     + Renamed:
-      - depends-on-x-metapackage => depends-on-metapackage
       - build-depends-on-x-metapackage => build-depends-on-metapackage
+      - depends-on-x-metapackage => depends-on-metapackage
 
   * checks/changelog-file.desc:
     + [RA] Document the "Old Changelog" way of marking historic changelog
@@ -148,7 +150,7 @@ lintian (2.2.14) UNRELEASED; urgency=low
   * t/runtests:
     + [RA] Update standards version to 3.8.3.
 
- -- Frank Lichtenheld <djpig@debian.org>  Sun, 12 Jul 2009 12:57:44 +0200
+ -- Russ Allbery <rra@debian.org>  Sat, 15 Aug 2009 22:47:44 -0700
 
 lintian (2.2.13) unstable; urgency=low
 
