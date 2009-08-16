@@ -830,9 +830,6 @@ while (<SCRIPTS>) {
 		    tag "maintainer-script-modifies-ld-so-conf", "$file:$."
 			unless $pkg =~ /^libc/;
 		}
-		if (m,$LEADIN(/(usr/)?s?bin/[\w.+-]+)(\s|;|$),) {
-		    tag "command-with-path-in-maintainer-script", "$file:$. $1";
-		}
 
 		# Ancient dpkg feature tests.
 		if (m/${LEADIN}dpkg\s+--assert-support-predepends\b/) {
@@ -851,6 +848,28 @@ while (<SCRIPTS>) {
 		# Commands that should not be used in maintainer scripts.
 		if (m,${LEADIN}(?:/usr/bin/)?fc-cache(\s|\Z),) {
 		    tag 'fc-cache-used-in-maintainer-script', "$file:$.";
+		}
+
+		# Check for running commands with a leading path.
+		#
+		# Unfortunately, our $LEADIN string doesn't work well for this
+		# in the presence of commands that contain backquoted
+		# expressions because it can't tell the difference between the
+		# initial backtick and the closing backtick.  We therefore
+		# first extract all backquoted expressions and check them
+		# separately, and then remove them from a copy of a string and
+		# then check it for bashisms.
+                while (m,\`([^\`]+)\`,g) {
+		    my $cmd = $1;
+		    if ($cmd =~ m,$LEADIN(/(usr/)?s?bin/[\w.+-]+)(\s|;|\z),) {
+			tag "command-with-path-in-maintainer-script",
+			    "$file:$. $1";
+		    }
+		}
+		my $cmd = $_;
+		$cmd =~ s/\`[^\`]+\`//g;
+		if ($cmd =~ m,$LEADIN(/(usr/)?s?bin/[\w.+-]+)(\s|;|$),) {
+		    tag "command-with-path-in-maintainer-script", "$file:$. $1";
 		}
 	    }
 	}

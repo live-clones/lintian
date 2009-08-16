@@ -9,6 +9,8 @@ E: scripts-maintainer-general: maintainer-script-modifies-netbase-managed-file p
 E: scripts-maintainer-general: maintainer-script-uses-dpkg-status-directly postinst
 E: scripts-maintainer-general: read-in-maintainer-script postinst:10
 E: scripts-maintainer-general: suidregister-used-in-maintainer-script postinst
+W: scripts-maintainer-general: command-with-path-in-maintainer-script postinst:117 /usr/bin/foo
+W: scripts-maintainer-general: command-with-path-in-maintainer-script postinst:118 /usr/bin/foo
 W: scripts-maintainer-general: command-with-path-in-maintainer-script postinst:91 /usr/bin/baz
 W: scripts-maintainer-general: deprecated-chown-usage postinst:14 'chown root.root'
 W: scripts-maintainer-general: deprecated-chown-usage postinst:84 'chown -R root.root'

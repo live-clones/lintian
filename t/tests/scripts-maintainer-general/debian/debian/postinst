@@ -109,4 +109,12 @@ echo '/usr/local/lib' >> /etc/ld.so.conf
 ( cat /etc/ld.so.conf ; echo '/usr/local/lib' ) > /etc/ld.so.conf.new
 mv /etc/ld.so.conf.new /etc/ld.so.conf
 
+# Further tests for commands with paths in maintainer scripts.  The following
+# should not trigger a tag (Bug#536397).
+chmod `dpkg-statoverride --list /usr/sbin/apache2 | cut -f 3` /usr/sbin/apache2
+
+# These, however, should.
+true `basename "$0"` `/usr/bin/foo bar`
+true `/usr/bin/foo "$0"`
+
 #DEBHELPER#

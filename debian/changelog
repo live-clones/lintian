@@ -73,6 +73,9 @@ lintian (2.2.14) UNRELEASED; urgency=low
       (Closes: #534942)
     + [RA] Warn about maintainter scripts that modify /etc/ld.so.conf.
       Policy 3.8.3 no longer permits this.
+    + [RA] Avoid command-with-path-in-maintainer-script false positives
+      with backtick expressions as arguments to commands.  Thanks, Stefan
+      Fritsch.  (Closes: #536397)
   * checks/watch-file:
     + [RA] Fix false positives in debian-watch-file-should-mangle-version
       when an upstream version is specified in the watch file and give the
