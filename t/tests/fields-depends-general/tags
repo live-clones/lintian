@@ -1,0 +1,2 @@
+E: fields-depends-general source: build-depends-on-metapackage build-depends: xorg-dev
+E: fields-depends-general: depends-on-metapackage depends: xorg

@@ -11,6 +11,9 @@ lintian (2.2.14) UNRELEASED; urgency=low
       - possible-documentation-but-no-doc-base-registration
     + Removed:
       - file-in-usr-something-x11-without-pre-depends
+    + Renamed:
+      - depends-on-x-metapackage => depends-on-metapackage
+      - build-depends-on-x-metapackage => build-depends-on-metapackage
 
   * checks/changelog-file.desc:
     + [RA] Document the "Old Changelog" way of marking historic changelog
@@ -29,7 +32,7 @@ lintian (2.2.14) UNRELEASED; urgency=low
   * checks/description:
     + [RA] Decode descriptions from UTF-8 before checking length.  Thanks,
       Charles Plessy.  (Closes: #537207)
-  * checks/fields{,.desc}
+  * checks/fields{,.desc}:
     + [FL] packages named lib*-camlp4-dev should be in section ocaml
     + [RA] Move debian/rules parsing to check build dependencies to
       checks/rules.
@@ -42,6 +45,10 @@ lintian (2.2.14) UNRELEASED; urgency=low
       turn ensures that they keep getting that tag.
     + [RA] Recognize packages as metapackages even if they contain files
       in /usr/share/cdd.
+    + [RA] Renamed the tags for depending or build-depending on X
+      metapackages to make them generic and load the list of metapackages
+      from data/fields/metapackages.  Always consider known metapackages
+      to be metapackages for the dependency check.
   * checks/files{,.desc}:
     + [CW] /var/lock and /var/run are not temporary filesystems in d-i, so
       don't emit errors about their use in udebs.
@@ -97,6 +104,9 @@ lintian (2.2.14) UNRELEASED; urgency=low
   * data/fields/architectures:
     + [RA] Refresh architecture list against dpkg 1.15.3.1, adding avr32
       and kopensolaris.  (Closes: #538055)
+  * data/fields/metapackages:
+    + [RA] New file listing known metapackages that should not be used in
+      Depends or Build-Depends.
   * data/fields/virtual-packages:
     + [ADB] Refresh against unstable.
   * data/files/fonts:

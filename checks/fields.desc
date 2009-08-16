@@ -502,18 +502,17 @@ Info: The package lists an old version of Emacs as its first dependency.
  for example, it was included with later versions of Emacs), add a lintian
  override.
 
-Tag: depends-on-x-metapackage
+Tag: depends-on-metapackage
 Severity: important
-Certainty: certain
-Info: Packages that are not themselves metapackages must not depend on X
- Window System metapackages.
- .
- The metapackages xorg, xorg-dev, x-window-system, x-window-system-dev, and
- x-window-system-core exist only for the benefit of users and dependencies
- for other metapackages and should not be used in regular package
- dependencies.
+Certainty: possible
+Info: This package is one of the packages that Lintian believes is a
+ metapackage: a package that exists for the convenience of users or
+ installers to install a set of related packages.  Packages that are not
+ themselves metapackages must not depend on metapackages, since this may
+ prevent the user from removing portions of the package set they don't
+ need.
 
-Tag: build-depends-on-x-metapackage
+Tag: build-depends-on-metapackage
 Severity: important
 Certainty: certain
 Info: Packages must not build-depend on X Window System metapackages.

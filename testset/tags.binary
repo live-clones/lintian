@@ -4,7 +4,7 @@ E: binary source: not-binnmuable-any-depends-all binary -> binary-data
 E: binary: changelog-file-not-compressed changelog
 E: binary: debian-changelog-file-missing-or-wrong-name
 E: binary: debian-news-file-uses-obsolete-national-encoding at line 3
-E: binary: depends-on-x-metapackage pre-depends: xorg
+E: binary: depends-on-metapackage pre-depends: xorg
 E: binary: deprecated-kdelnk-file /usr/share/applications/hello.kdelnk
 E: binary: desktop-entry-missing-required-key /usr/share/applications/goodbye.desktop Name
 E: binary: doc-base-document-field-ends-in-whitespace binary:1

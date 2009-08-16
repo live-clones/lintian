@@ -35,7 +35,8 @@ use Lintian::Check qw(check_maintainer);
 use Lintian::Relation ();
 use Lintian::Relation::Version qw(versions_compare);
 
-our $KNOWN_ARCHS = Lintian::Data->new ('fields/architectures');
+our $KNOWN_ARCHS = Lintian::Data->new('fields/architectures');
+our $KNOWN_METAPACKAGES = Lintian::Data->new('fields/metapackages');
 
 our %known_archive_parts = map { $_ => 1 }
     ('non-free', 'contrib');
@@ -100,10 +101,6 @@ our %known_tkxs = map { $_ => 1 }
 
 our %known_libpngs = map { $_ => 1 }
     ( 'libpng12-0', 'libpng2', 'libpng3', );
-
-our %known_x_metapackages = map { $_ => 1 }
-    ( 'x-window-system', 'x-window-system-dev', 'x-window-system-core',
-      'xorg', 'xorg-dev', );
 
 # Mapping of package names to section names
 my @NAME_SECTION_MAPPINGS = (
@@ -467,13 +464,18 @@ if (defined $info->field('installer-menu-item')) {
 my $metapackage = 0;
 if ($type eq 'binary' && $arch_indep) {
 	$metapackage = 1;
-	foreach my $file (keys %{$info->index}) {
+	for my $file (keys %{$info->index}) {
 		next if $info->index->{$file}->{type} =~ /^d/;
 		next if $file =~ m%^usr/share/doc/%;
 		next if $file =~ m%^usr/share/lintian/overrides/%;
 		next if $file =~ m%^usr/share/cdd/%;
 		$metapackage = 0;
+		last;
 	}
+
+	# Packages we say are metapackages are always metapackages even if
+	# they don't look like it.
+	$metapackage = 1 if $KNOWN_METAPACKAGES->known($pkg);
 }
 if (($type eq "binary") || ($type eq 'udeb')) {
 	my (%deps, %fields, %parsed);
@@ -543,8 +545,8 @@ if (($type eq "binary") || ($type eq 'udeb')) {
 					push @seen_obsolete_packages, $part_d_orig
 					    if ($OBSOLETE_PACKAGES->known($d_pkg) && &$is_dep_field($field));
 
-					tag "depends-on-x-metapackage", "$field: $part_d_orig"
-					    if ($known_x_metapackages{$d_pkg} && ! $metapackage && &$is_dep_field($field));
+					tag "depends-on-metapackage", "$field: $part_d_orig"
+					    if ($KNOWN_METAPACKAGES->known($d_pkg) and not $metapackage and &$is_dep_field($field));
 
 					tag "depends-on-essential-package-without-using-version", "$field: $part_d_orig"
 					    if ($known_essential{$d_pkg} && ! $d_version->[0] && &$is_dep_field($field));
@@ -677,8 +679,8 @@ if ($type eq "source") {
 					push @seen_obsolete_packages, $part_d_orig
 					    if ($OBSOLETE_PACKAGES->known($d_pkg) && &$is_dep_field($field));
 
-					tag "build-depends-on-x-metapackage", "$field: $part_d_orig"
-					    if ($known_x_metapackages{$d_pkg} && &$is_dep_field($field));
+					tag "build-depends-on-metapackage", "$field: $part_d_orig"
+					    if ($KNOWN_METAPACKAGES->known($d_pkg) and &$is_dep_field($field));
 
 					tag "build-depends-on-1-revision", "$field: $part_d_orig"
 					    if ($d_version->[0] eq '>=' && $d_version->[1] =~ /-1$/ && &$is_dep_field($field));
