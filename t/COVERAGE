@@ -54,7 +54,6 @@ fields bad-menu-item
 fields bad-package-name
 fields bad-relation
 fields bad-version-number
-fields build-depends-on-x-metapackage
 fields depends-on-libdb1-compat
 fields doc-package-depends-on-main-package
 fields maintainer-address-is-on-localhost
@@ -321,7 +320,6 @@ fields depends-on-essential-package-without-using-version
 fields depends-on-obsolete-package
 fields depends-on-old-emacs
 fields depends-on-python-minimal
-fields depends-on-x-metapackage
 fields invalid-arch-string-in-source-relation
 fields malformed-dm-upload-allowed
 fields needlessly-depends-on-awk
@@ -571,7 +569,6 @@ binary
   debian-news-entry-has-strange-distribution
   debian-news-file-uses-obsolete-national-encoding
   debian-rules-uses-pwd
-  depends-on-x-metapackage
   deprecated-kdelnk-file
   desktop-command-not-in-package
   desktop-contains-deprecated-header
