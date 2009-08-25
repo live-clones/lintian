@@ -1,0 +1,3 @@
+W: init.d-lsb-headers: init-d-script-stops-in-s-runlevel /etc/init.d/init.d-lsb-headers
+W: init.d-lsb-headers: init.d-script-has-bad-start-runlevel /etc/init.d/init.d-lsb-headers X
+W: init.d-lsb-headers: init.d-script-has-bad-stop-runlevel /etc/init.d/init.d-lsb-headers Y

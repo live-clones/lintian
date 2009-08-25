@@ -1,0 +1,8 @@
+Testname: init.d-lsb-headers
+Sequence: 6000
+Version: 1.0
+Description: Test tags related to the init.d lsb header checks
+Test-For:
+ init.d-script-has-bad-start-runlevel
+ init.d-script-has-bad-stop-runlevel
+ init-d-script-stops-in-s-runlevel

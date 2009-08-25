@@ -1,0 +1,18 @@
+#!/bin/sh
+
+set -e
+
+### BEGIN INIT INFO
+# Provides:          nothing
+# Required-Start:
+# Required-Stop:
+# Default-Start: X
+# Default-Stop: S Y
+# Short-Description: Do nothing at all
+### END INIT INFO
+
+case "$1" in
+    start|stop|force-reload|restart|status|*)
+	echo hello world!
+    ;;
+esac
