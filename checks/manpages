@@ -262,7 +262,7 @@ foreach my $file (sort keys %{$info->index}) {
 	    }
 	    # ignore wrapping failures if they contain URLs
 	    next if /:(\d+): warning \[.*\]: (can\'t break|cannot adjust) line/
-		and $manfile[$1 - 1] =~ m,(?:http|ftp)://.+,i;
+		and $manfile[$1 - 1] =~ m,(?:https?|ftp)://.+,i;
 	    # ignore common undefined macros from pod2man << Perl 5.10
 	    next if /warning: \`(Tr|IX)\' not defined/;
 	    chomp;

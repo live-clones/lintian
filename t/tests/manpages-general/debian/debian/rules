@@ -21,6 +21,7 @@ override_dh_auto_install:
 	chmod 755 $(tmp)/usr/bin/binary-without-english-manpage
 
 	gzip -c9 < test.1p > $(tmp)/usr/share/man/man1/test.1p.gz
+	gzip -c9 < test.3p > $(tmp)/usr/share/man/man3/test.3p.gz
 	gzip -c9 < true.1 > $(tmp)/usr/share/man/man1/true.1.gz
 	gzip -c9 < program.1 > $(tmp)/usr/share/man/man1/program.1.gz
 
