@@ -227,3 +227,13 @@ Info: The given <tt>/etc/init.d</tt> script seems to be sourcing an
  any time, and init scripts are required to handle the situation
  gracefully.
 Ref: policy 9.3.2
+
+Tag: init.d-script-starts-in-stop-runlevel
+Severity: normal
+Certainty: certain
+Info: This <tt>/etc/init.d</tt> script specifies the 6 or 0 runlevel in
+ Default-Start in its LSB keyword section.  The 0 and 6 runlevels are
+ meant to only stop services, not to start them.  If the intention is
+ to do something that might not exactly be stopping a service at one of
+ those runlevels the script should anyway specify them in Default-Stop
+ and perform the actions when passed the <tt>stop</tt> argument.

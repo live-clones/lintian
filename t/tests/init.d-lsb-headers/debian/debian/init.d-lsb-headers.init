@@ -6,7 +6,7 @@ set -e
 # Provides:          nothing
 # Required-Start:
 # Required-Stop:
-# Default-Start: X
+# Default-Start: 0 6 X
 # Default-Stop: S Y
 # Short-Description: Do nothing at all
 ### END INIT INFO

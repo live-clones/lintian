@@ -6,3 +6,4 @@ Test-For:
  init.d-script-has-bad-start-runlevel
  init.d-script-has-bad-stop-runlevel
  init-d-script-stops-in-s-runlevel
+ init.d-script-starts-in-stop-runlevel

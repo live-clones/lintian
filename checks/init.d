@@ -254,6 +254,8 @@ sub check_init {
 	for my $runlevel (split (/\s+/, $lsb{'default-start'})) {
 	    if ($runlevel =~ /^[sS0-6]$/) {
 		$start{lc $runlevel} = 1;
+		tag "init.d-script-starts-in-stop-runlevel", "/etc/init.d/$_ $runlevel"
+		    if ($runlevel =~ /^(?:0|6)$/);
 	    } else {
 		tag "init.d-script-has-bad-start-runlevel", "/etc/init.d/$_ $runlevel";
 	    }
