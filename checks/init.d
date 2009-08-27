@@ -275,6 +275,14 @@ sub check_init {
 	    }
 	}
     }
+    if ($lsb{'provides'}) {
+	for my $facility (split(/\s+/, $lsb{'provides'})) {
+	    if ($facility =~ /^\$/) {
+		tag "init.d-script-provides-virtual-facility-in-header",
+		    "/etc/init.d/$_ $facility";
+	    }
+	}
+    }
 
     # all tags included in file?
     $tag{'start'} or tag "init.d-script-does-not-implement-required-option", "/etc/init.d/$_ start";

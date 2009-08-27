@@ -237,3 +237,14 @@ Info: This <tt>/etc/init.d</tt> script specifies the 6 or 0 runlevel in
  to do something that might not exactly be stopping a service at one of
  those runlevels the script should anyway specify them in Default-Stop
  and perform the actions when passed the <tt>stop</tt> argument.
+
+Tag: init.d-script-provides-virtual-facility-in-header
+Severity: normal
+Certainty: certain
+Info: This <tt>/etc/init.d</tt> script indicates it provides a virtual
+ facility, denoted by the dollar sign in front of the name.
+ Virtual facilities are declared as provided by shipping a file,
+ usually named after the package to avoid file conflicts, that is
+ installed in <tt>/etc/insserv.conf.d</tt> with its content on the
+ following format: <tt>$virtual_facility_name +init-script-name</tt>.
+Ref: http://wiki.debian.org/LSBInitScripts/DebianVirtualFacilities

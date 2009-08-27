@@ -7,3 +7,4 @@ Test-For:
  init.d-script-has-bad-stop-runlevel
  init-d-script-stops-in-s-runlevel
  init.d-script-starts-in-stop-runlevel
+ init.d-script-provides-virtual-facility-in-header

@@ -3,7 +3,7 @@
 set -e
 
 ### BEGIN INIT INFO
-# Provides:          nothing
+# Provides:          nothing $bad_facility
 # Required-Start:
 # Required-Stop:
 # Default-Start: 0 6 X
