@@ -3,7 +3,7 @@
 set -e
 
 ### BEGIN INIT INFO
-# Provides:          nothing
+# Provides:          init.d-general
 # Required-Start:
 # Required-Stop:
 # Default-Start:
