@@ -276,12 +276,17 @@ sub check_init {
 	}
     }
     if ($lsb{'provides'}) {
+	my $named_after_script = 0;
 	for my $facility (split(/\s+/, $lsb{'provides'})) {
 	    if ($facility =~ /^\$/) {
 		tag "init.d-script-provides-virtual-facility-in-header",
 		    "/etc/init.d/$_ $facility";
 	    }
+	    $named_after_script = 1
+		if ($_ =~ m/^\Q$facility\E(?:.sh)?$/);
 	}
+	tag "init.d-script-provides-not-after-its-name", "/etc/init.d/$_"
+	    unless ($named_after_script);
     }
 
     # all tags included in file?

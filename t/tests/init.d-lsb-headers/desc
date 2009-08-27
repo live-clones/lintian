@@ -8,3 +8,4 @@ Test-For:
  init-d-script-stops-in-s-runlevel
  init.d-script-starts-in-stop-runlevel
  init.d-script-provides-virtual-facility-in-header
+ init.d-script-provides-not-after-its-name

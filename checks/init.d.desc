@@ -248,3 +248,13 @@ Info: This <tt>/etc/init.d</tt> script indicates it provides a virtual
  installed in <tt>/etc/insserv.conf.d</tt> with its content on the
  following format: <tt>$virtual_facility_name +init-script-name</tt>.
 Ref: http://wiki.debian.org/LSBInitScripts/DebianVirtualFacilities
+
+Tag: init.d-script-provides-not-after-its-name
+Severity: normal
+Certainty: possible
+Info: This <tt>/etc/init.d</tt> script indicates it provides one or
+ more facilities but none is named after the name of the init script.
+ Although in certain cases it might be necessary not to follow that
+ naming convention, in most cases that's the right way to name the
+ facility provided by the init script.
+Ref: http://wiki.debian.org/LSBInitScripts
