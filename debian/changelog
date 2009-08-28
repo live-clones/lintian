@@ -4,6 +4,11 @@ lintian (2.2.15) UNRELEASED; urgency=low
     + [RA] Exclude base-files from the needlesly-depends-on-awk tag
       and from the warning about depending on a virtual package without
       a real package for the awk virtual package.
+  * checks/files:
+    + [RA] Suppress non-standard-dir-perm for /tmp, /var/tmp, /var/local,
+      /var/lock, and /usr/src if they have their normal owner and
+      permissions.  This suppresses some Lintian tags for base-files.
+    + [RA] Allow base-files to ship /var/backups and /var/local.
   * checks/manpages:
     + [ADB] Add HTTPS to the list of recognised protocols for URLs in manpages
       which should not cause manpage-has-errors-from-man to be emitted.

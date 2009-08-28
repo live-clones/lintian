@@ -500,6 +500,10 @@ foreach my $file (sort keys %{$info->index}) {
 	if ( $file =~ m,^var/(?:adm|catman|named|nis|preserve)/, ) {
 	    tag "FSSTND-dir-in-var", "$file";
 	}
+	# base-files is special
+	elsif ($pkg eq 'base-files' && $file =~ m,^var/(?:backups|local)/,) {
+	    # ignore
+	}
 	# FHS dirs with exception in Debian policy
 	elsif ( $file !~ m,^var/(?:account|lib|cache|crash|games|lock|log|opt|run|spool|state|tmp|www|yp)/,) {
 	    tag "non-standard-dir-in-var", "$file";
@@ -887,9 +891,22 @@ foreach my $file (sort keys %{$info->index}) {
 	# special cases first:
         # game directory with setgid bit
 	if ($file =~ m,var/(?:lib/)?games/\S+, and $operm == 02775
-            and $owner =~ m,root/games,) {
+            and $owner eq 'root/games') {
             # do nothing, this is allowed, but not mandatory
         }
+	elsif (($file eq 'tmp/' or $file eq 'var/tmp/'
+		or $file eq 'var/lock/')
+	       and $operm == 01777 and $owner eq 'root/root') {
+	    # actually shipping files here is warned about elsewhere
+	}
+	elsif ($file eq 'usr/src/' and $operm == 02775
+	       and $owner eq 'root/src') {
+	    # /usr/src as created by base-files is a special exception
+	}
+	elsif ($file eq 'var/local/' and $operm == 02775
+	       and $owner eq 'root/staff') {
+	    # actually shipping files here is warned about elsewhere
+	}
 	# otherwise, complain if it's not 0755.
 	elsif ($operm != 0755) {
 	    tag "non-standard-dir-perm", $file,
