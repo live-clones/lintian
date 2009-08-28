@@ -1,5 +1,7 @@
 lintian (2.2.15) UNRELEASED; urgency=low
 
+  * checks/fields:
+    + [RA] Exclude base-files from the needlesly-depends-on-awk tag.
   * checks/manpages:
     + [ADB] Add HTTPS to the list of recognised protocols for URLs in manpages
       which should not cause manpage-has-errors-from-man to be emitted.

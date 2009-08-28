@@ -555,7 +555,7 @@ if (($type eq "binary") || ($type eq 'udeb')) {
 					    if ($field =~ /^(pre-)?depends$/ && $d_pkg =~ /^xfont.*/ && $d_pkg ne 'xfonts-utils' && $d_pkg ne 'xfonts-encodings');
 
 					tag "needlessly-depends-on-awk", "$field"
-					    if ($d_pkg eq "awk" && ! $d_version->[0] && &$is_dep_field($field));
+					    if ($d_pkg eq "awk" && ! $d_version->[0] && &$is_dep_field($field) && $pkg ne 'base-files');
 
 					tag "depends-on-libdb1-compat", "$field"
 					    if ($d_pkg eq "libdb1-compat" && $pkg !~ /^libc(6|6.1|0.3)/ && $field =~ /^(pre-)depends$/);
