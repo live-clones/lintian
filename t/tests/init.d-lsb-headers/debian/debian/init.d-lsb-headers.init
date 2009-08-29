@@ -4,8 +4,9 @@ set -e
 
 ### BEGIN INIT INFO
 # Provides:          nothing $bad_facility
-# Required-Start:
-# Required-Stop:
+# Required-Start: mountall networking sysklogd
+# Should-Start: portmap
+# Required-Stop: mountnfs
 # Default-Start: 0 6 X
 # Default-Stop: S Y
 # Short-Description: Do nothing at all

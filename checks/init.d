@@ -34,6 +34,17 @@ my %lsb_keywords = (provides		=> 1,
 		    'short-description' => 1,
 		    'description'	=> 0);
 
+my %common_implied_dependencies = ('mountall' => '$local_fs',
+				    'mountnfs' => '$remote_fs',
+				    'hwclock' => '$time',
+				    'portmap' => '$portmap',
+				    'named' => '$named',
+				    'bind9' => '$named',
+				    'networking' => '$network',
+				    'syslog' => '$syslog',
+				    'rsyslog' => '$syslog',
+				    'sysklogd' => '$syslog');
+
 sub run {
 
 my $pkg = shift;
@@ -287,6 +298,16 @@ sub check_init {
 	}
 	tag "init.d-script-provides-not-after-its-name", "/etc/init.d/$_"
 	    unless ($named_after_script);
+    }
+
+    for my $keyword qw(required-start should-start required-stop should-stop) {
+	next unless defined($lsb{$keyword});
+	for my $dependency (split(/\s+/, $lsb{$keyword})) {
+	    if (defined($common_implied_dependencies{$dependency})) {
+		tag "init.d-script-dependency-better-on-virtual-facility",
+			"/etc/init.d/$_ $dependency -> $common_implied_dependencies{$dependency}";
+	    }
+	}
     }
 
     # all tags included in file?
