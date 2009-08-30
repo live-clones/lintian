@@ -494,6 +494,10 @@ foreach my $file (sort keys %{$info->index}) {
 	    tag 'icon-size-and-directory-name-mismatch', $file, $fsize
 		unless ($dsize eq $fsize);
 	}
+	# ---------------- non-games-specific data in games subdirectory
+	elsif ($file =~ m,^usr/share/games/(?:applications|mime|icons|pixmaps)/,) {
+	    tag "global-data-in-games-directory", $file;
+	}
     }
     # ---------------- /var subdirs
     elsif ($type ne 'udeb' and $file =~ m,^var/[^/]+/$,) { # FSSTND dirs

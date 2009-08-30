@@ -1045,3 +1045,9 @@ Info: This package installs a file in <tt>/etc/ld.so.conf.d</tt>,
  to installing them into <tt>/usr/lib</tt> except now conflicting library
  packages may cause random segfaults and difficult-to-debug problems
  instead of conflicts in the package manager.
+
+Tag: global-data-in-games-directory
+Severity: important
+Certainty: certain
+Info: This package contains files in directories that belong to direct
+ subdirectories of <tt>/usr/share</tt> instead of <tt>/usr/share/games</tt>.

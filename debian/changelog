@@ -3,6 +3,7 @@ lintian (2.2.15) UNRELEASED; urgency=low
   * Summary of tag changes:
     + Added:
       - build-depends-on-non-build-package
+      - global-data-in-games-directory
   
   * checks/changelog-file:
     + [RA] Don't warn about a symlinked changelog file if the version
@@ -41,6 +42,8 @@ lintian (2.2.15) UNRELEASED; urgency=low
       the same check.
     + [RA] Add mootools.js to embedded-javascript-library.  Patch from
       Marcelo Jorge Vieira (metal).  (Closes: #545716)
+    + [RA] Check for putting data that should be in /usr/share under
+      /usr/share/games.  Patch from Raphael Geissert.  (Closes: #534486)
   * checks/manpages:
     + [ADB] Add HTTPS to the list of recognised protocols for URLs in manpages
       which should not cause manpage-has-errors-from-man to be emitted.
