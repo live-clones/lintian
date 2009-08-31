@@ -3,6 +3,7 @@ E: init.d-lsb-headers: init.d-script-should-depend-on-virtual-facility /etc/init
 E: init.d-lsb-headers: init.d-script-should-depend-on-virtual-facility /etc/init.d/init.d-lsb-headers networking -> $network
 E: init.d-lsb-headers: init.d-script-should-depend-on-virtual-facility /etc/init.d/init.d-lsb-headers portmap -> $portmap
 E: init.d-lsb-headers: init.d-script-should-depend-on-virtual-facility /etc/init.d/init.d-lsb-headers sysklogd -> $syslog
+E: init.d-lsb-headers: init.d-script-possible-missing-stop /etc/init.d/init.d-lsb-headers 1
 W: init.d-lsb-headers: init-d-script-stops-in-s-runlevel /etc/init.d/init.d-lsb-headers
 W: init.d-lsb-headers: init.d-script-does-not-provide-itself /etc/init.d/init.d-lsb-headers
 W: init.d-lsb-headers: init.d-script-has-bad-start-runlevel /etc/init.d/init.d-lsb-headers X

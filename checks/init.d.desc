@@ -278,3 +278,13 @@ Info: The given <tt>/etc/init.d</tt> script depends on a non-virtual
  Properly using virtual facilities allows multiple implementations of the
  same facility and accomodates systems where that specific facility may
  not be enough to provide everything the script expects.
+
+Tag: init.d-script-possible-missing-stop
+Severity: important
+Certainty: possible
+Info: The given <tt>/etc/init.d</tt> script indicates it should be
+ stopped at either runlevel 0, 1, or 6 but not at the three of them.
+ This is usually a mistake when writing the <tt>Default-Stop</tt>
+ information. For example, if it is safe for the daemon started by the
+ given init script to be stopped by <tt>sendsigs</tt> at runlevels 0
+ and 6 then there should be no reason to special case runlevel 1.

@@ -281,8 +281,10 @@ sub check_init {
 	}
     }
     if ($lsb{'default-stop'}) {
+	my %stop;
 	for my $runlevel (split (/\s+/, $lsb{'default-stop'})) {
 	    if ($runlevel =~ /^[sS0-6]$/) {
+		$stop{$runlevel} = 1;
 		if ($start{$runlevel}) {
 		    tag "init.d-script-has-conflicting-start-stop", "/etc/init.d/$_ $runlevel";
 		}
@@ -292,6 +294,15 @@ sub check_init {
 	    } else {
 		tag "init.d-script-has-bad-stop-runlevel", "/etc/init.d/$_ $runlevel";
 	    }
+	}
+
+	if ((defined($stop{"0"}) || defined($stop{"1"}) || defined($stop{"6"}))
+	    && !(defined($stop{"0"}) && defined($stop{"1"}) && defined($stop{"6"}))) {
+
+	    my $missing = join(' ', grep { !defined($stop{$_}) } qw(0 1 6));
+
+	    tag "init.d-script-possible-missing-stop", "/etc/init.d/$_ $missing"
+		unless (grep {$initd_file eq "init.d/$_"} qw(killprocs sendsigs halt reboot));
 	}
     }
     if ($lsb{'provides'}) {
