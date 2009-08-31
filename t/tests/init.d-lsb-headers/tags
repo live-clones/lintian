@@ -7,6 +7,8 @@ W: init.d-lsb-headers: init-d-script-stops-in-s-runlevel /etc/init.d/init.d-lsb-
 W: init.d-lsb-headers: init.d-script-does-not-provide-itself /etc/init.d/init.d-lsb-headers
 W: init.d-lsb-headers: init.d-script-has-bad-start-runlevel /etc/init.d/init.d-lsb-headers X
 W: init.d-lsb-headers: init.d-script-has-bad-stop-runlevel /etc/init.d/init.d-lsb-headers Y
+W: init.d-lsb-headers: init.d-script-has-conflicting-start-stop /etc/init.d/init.d-lsb-headers 0
+W: init.d-lsb-headers: init.d-script-has-conflicting-start-stop /etc/init.d/init.d-lsb-headers 6
 W: init.d-lsb-headers: init.d-script-provides-virtual-facility /etc/init.d/init.d-lsb-headers $bad_facility
 W: init.d-lsb-headers: init.d-script-starts-in-stop-runlevel /etc/init.d/init.d-lsb-headers 0
 W: init.d-lsb-headers: init.d-script-starts-in-stop-runlevel /etc/init.d/init.d-lsb-headers 6
