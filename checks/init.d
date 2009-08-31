@@ -223,7 +223,7 @@ sub check_init {
 			if (defined $lsb{$keyword});
 		    tag "init.d-script-has-unknown-lsb-keyword", "/etc/init.d/$_:$. $keyword"
 			unless (defined ($lsb_keywords{$keyword}) || $keyword =~ /^x-/);
-		    $lsb{$keyword} = $value || '';
+		    $lsb{$keyword} = length($value)? $value : '';
 		    $last = $keyword;
 		} elsif ($l =~ /^\#(\t|  )/ && $last eq 'description') {
 		    my $value = $l;
@@ -266,7 +266,7 @@ sub check_init {
 
     # Check the runlevels.
     my %start;
-    if ($lsb{'default-start'}) {
+    if (defined($lsb{'default-start'})) {
 	for my $runlevel (split (/\s+/, $lsb{'default-start'})) {
 	    if ($runlevel =~ /^[sS0-6]$/) {
 		$start{lc $runlevel} = 1;
@@ -280,7 +280,7 @@ sub check_init {
 	    }
 	}
     }
-    if ($lsb{'default-stop'}) {
+    if (defined($lsb{'default-stop'})) {
 	my %stop;
 	for my $runlevel (split (/\s+/, $lsb{'default-stop'})) {
 	    if ($runlevel =~ /^[sS0-6]$/) {
