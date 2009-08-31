@@ -46,6 +46,11 @@ lintian (2.2.15) UNRELEASED; urgency=low
   * data/files/fonts:
     + [RA] Refresh and include Type 1 fonts and packages as well.
 
+  * lib/Lintian/Schedule.pm:
+    + [RA] If declining to add a duplicate file to the Lintian check
+      schedule, return success to avoid a spurious error message.  Patch
+      from Raphael Geissert.  (Closes: #542072)
+
   * private/refresh-fonts-data:
     + [RA] To match what checks/files looks for, also look for *.pfb files
       and packages starting with t1-.

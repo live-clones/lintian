@@ -62,7 +62,7 @@ sub add_file {
 	    printf "N: Ignoring duplicate %s package $pkg (version $ver)\n",
 		$type eq 'b' ? 'binary' : ($type eq 's' ? 'source': 'udeb');
 	}
-	return;
+	return 1;
     }
 
     push(@{$self->{schedule}}, \%h);
