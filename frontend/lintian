@@ -1023,7 +1023,7 @@ if (not $check_everything and not $packages_file and not $schedule->count) {
 #  Check to make sure there are packages to check.
 sub set_value {
     my ($f,$target,$field,$source,$required) = @_;
-    if ($required and not $source->{$field}) {
+    if ($required and not defined($source->{$field})) {
 	fail("description file $f does not define required tag $field");
     }
     $target->{$field} = $source->{$field};
