@@ -118,7 +118,7 @@ For details, see the CHECKS section below.
 .TP
 .BR \-u ", " \-\-unpack
 Unpack the specified packages up to the current unpack level.
-The default unpack level is 1 for this option.  See the UNPACK
+The default and only unpack level is 1 for this option.  See the UNPACK
 LEVELS section below.
 
 .TP
@@ -420,7 +420,8 @@ source package files.
 
 .TP
 .B "2 (contents)"
-The actual package contents are unpacked as well.
+This unpack level is deprecated and no longer functional. The
+\fIunpacked\fR collection script replaced it.
 
 .PP
 Lintian will unpack packages as far as is necessary to do its checks,

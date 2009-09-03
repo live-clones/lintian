@@ -2,8 +2,8 @@ Check-Script: shared-libs
 Author: Christian Schwarz <schwarz@debian.org>
 Abbrev: shl
 Type: binary, udeb
-Unpack-Level: 2
-Needs-Info: file-info, objdump-info
+Unpack-Level: 1
+Needs-Info: unpacked, file-info, objdump-info
 Info: This script checks if a binary package conforms to shared library policy.
 
 Tag: shlib-with-executable-bit

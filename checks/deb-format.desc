@@ -2,7 +2,8 @@ Check-Script: deb-format
 Author: Russ Allbery <rra@debian.org>
 Abbrev: dfmt
 Type: binary, udeb
-Unpack-Level: 2
+Unpack-Level: 1
+Needs-Info: unpacked
 Info: This script checks the format of the deb ar archive itself.
 
 Tag: malformed-deb-archive

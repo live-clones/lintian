@@ -2,7 +2,8 @@ Check-Script: huge-usr-share
 Author: Jeroen van Wolffelaar <jeroen@wolffelaar.nl>
 Abbrev: hus
 Type: binary
-Unpack-Level: 2
+Unpack-Level: 1
+Needs-Info: unpacked
 Info: This script checks whether an architecture-dependent package has
  large amounts of data in /usr/share.
 

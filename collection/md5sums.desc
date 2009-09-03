@@ -2,6 +2,7 @@ Collector-Script: md5sums
 Author: Richard Braakman <dark@xs4all.nl>
 Info: This script runs the "md5sums" over all files in a binary package.
 Type: binary, udeb
-Unpack-Level: 2
+Unpack-Level: 1
 Version: 1
 Order: 1
+Needs-Info: unpacked

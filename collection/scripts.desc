@@ -6,6 +6,7 @@ Info: This script scans a binary package for scripts that start with #! and
  Note that the filename might contain spaces, but the scriptpath will not,
  because linux only looks at the first word when executing a script.
 Type: binary, udeb
-Unpack-Level: 2
+Unpack-Level: 1
 Version: 1
 Order: 1
+Needs-Info: unpacked

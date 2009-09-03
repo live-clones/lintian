@@ -1,9 +1,9 @@
 Check-Script: menu-format
 Author: Joey Hess <joeyh@master.debian.org>
 Abbrev: mnf
-Needs-Info: menu-files
+Needs-Info: unpacked, menu-files
 Type: binary
-Unpack-Level: 2
+Unpack-Level: 1
 Info: This script validates the format of menu files.
 
 Tag: old-format-menu-file

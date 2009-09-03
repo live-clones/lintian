@@ -2,6 +2,7 @@ Collector-Script: menu-files
 Author: Richard Braakman <dark@xs4all.nl>
 Info: This script copies the contents of /usr/lib/menu into the lintian menu/ directory.
 Type: binary
-Unpack-Level: 2
+Unpack-Level: 1
 Version: 2
 Order: 1
+Needs-Info: unpacked

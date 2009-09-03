@@ -433,12 +433,6 @@ if (defined $LINTIAN_ROOT) {
     $LINTIAN_ROOT = '/usr/share/lintian';
 }
 
-# keep-lab implies unpack-level=2 unless explicetly
-# given otherwise
-if ($keep_lab and not defined $unpack_level) {
-    $unpack_level = 2;
-}
-
 # option --all and packages specified at the same time?
 if (($check_everything or $packages_file) and $#ARGV+1 > 0) {
     print STDERR "warning: options -a or -p can't be mixed with package parameters!\n";
@@ -1071,6 +1065,7 @@ for my $f (readdir COLLDIR) {
     set_value($f,$p,'unpack-level',$secs[0],1);
     set_value($f,$p,'order',$secs[0],1);
     set_value($f,$p,'version',$secs[0],1);
+    set_value($f,$p,'auto-remove',$secs[0],0);
 
     if (exists $secs[0]->{'needs-info'} && defined $secs[0]->{'needs-info'}) {
 	for (split(/\s*,\s*/o,$secs[0]->{'needs-info'})) {
@@ -1087,7 +1082,7 @@ for my $f (readdir COLLDIR) {
 	warning("unused tag $_ in description file $f");
     }
 
-    debug_msg(2, map( { "$_: $p->{$_}" } sort keys %$p ));
+    debug_msg(2, map( { "$_: $p->{$_}" if defined($p->{$_}) } sort keys %$p ));
 }
 
 closedir(COLLDIR);
@@ -1589,6 +1584,28 @@ foreach my $pkg_info ($schedule->get_all) {
 	    next PACKAGE;
 	}
     }
+    # if the package's basedir was not removed then run the
+    # auto-remove: yes collection scripts
+    if (-d "$base") {
+	chdir($base);
+	for my $coll (keys %collection_info) {
+	    my $ci = $collection_info{$coll};
+	    if (defined($ci->{'auto-remove'}) && $ci->{'auto-remove'} eq "yes") {
+		next if $keep_lab;
+		next unless (-f "$base/.${coll}-$ci->{'version'}");
+		my $script = "$LINTIAN_ROOT/collection/$ci->{'script'}";
+		unless (spawn({}, [ $script, $pkg, "remove-$long_type"])) {
+		    warning("removing collect info $coll about package $pkg failed",
+			    "skipping cleanup of $long_type package $pkg");
+		    $exit_code = 2;
+		    next PACKAGE;
+		}
+		unlink("$base/.${coll}-$ci->{'version'}")
+		    or fail("failed to remove status file of collect info $coll about package $pkg");
+	    }
+	}
+	chdir($LINTIAN_ROOT);
+    }
 
     # create Lintian status file
     if (($act_unpack_level > 0) and (not -f "$base/.lintian-status")) {
@@ -1677,19 +1694,9 @@ sub unpack_pkg {
 	$cur_level = 1;
     }
 
-    if ( ($new_level >= 2) and
-	 (not defined ($cur_level) or ($cur_level < 2)) ) {
-	# unpack package contents
-	debug_msg(1, "Unpacking package to level 2 ...");
-	if (($type eq 'b') || ($type eq 'u')) {
-	    spawn({}, ["$LINTIAN_ROOT/unpack/unpack-binpkg-l2", $base])
-		or return -1;
-	} else {
-	    debug_msg(1, "$LINTIAN_ROOT/unpack/unpack-srcpkg-l2 $base");
-	    spawn({}, ["$LINTIAN_ROOT/unpack/unpack-srcpkg-l2", $base])
-		or return -1;
-	}
-	$cur_level = 2;
+    if ($new_level >= 2) {
+	warning("Requested no longer existent unpack-level 2, expect errors");
+	return $cur_level;
     }
 
     return $cur_level;

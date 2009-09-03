@@ -2,8 +2,8 @@ Check-Script: infofiles
 Author: Josip Rodin <jrodin@jagor.srce.hr>
 Abbrev: info
 Type: binary
-Unpack-Level: 2
-Needs-Info: file-info
+Unpack-Level: 1
+Needs-Info: unpacked, file-info
 Info: This script checks if a binary package conforms to info document policy.
 
 Tag: info-document-not-compressed

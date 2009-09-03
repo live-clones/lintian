@@ -2,9 +2,9 @@ Check-Script: debconf
 Author: Colin Watson <cjwatson@debian.org>
 Abbrev: dc
 Type: binary, udeb, source
-Unpack-Level: 2
+Unpack-Level: 1
 Info: This looks for common mistakes in packages using debconf.
-Needs-Info: scripts
+Needs-Info: unpacked, scripts
 
 Tag: missing-debconf-dependency
 Severity: normal

@@ -2,9 +2,9 @@ Check-Script: scripts
 Author: Richard Braakman <dark@xs4all.nl>
 Abbrev: scr
 Type: binary
-Unpack-Level: 2
+Unpack-Level: 1
 Info: This script checks the #! lines of scripts in a package.
-Needs-Info: file-info, scripts
+Needs-Info: unpacked, file-info, scripts
 
 Tag: script-without-interpreter
 Severity: important

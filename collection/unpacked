@@ -1,0 +1,87 @@
+#!/usr/bin/perl
+# unpacked -- lintian collector/unpack script
+#
+
+# Copyright (C) 1998 Christian Schwarz and Richard Braakman
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+use strict;
+use warnings;
+use vars qw($verbose);
+
+use lib "$ENV{'LINTIAN_ROOT'}/lib";
+use Lintian::Command qw(spawn);
+use Util;
+
+($#ARGV == 1) or fail("syntax: unpacked <package> <type>");
+
+my $pkg = shift;
+my $type = shift;
+
+print STDERR "unpacked $pkg $type\n";
+if ($type =~ m/^remove-/) {
+    print STDERR "removing $pkg 's unpacked/...";
+    print STDERR delete_dir("unpacked/"), "\n";
+    if (-d "unpacked/") {
+	fail("failed to remove unpacked directory of $pkg");
+    } else {
+	print STDERR "good, unpacked/ is gone\n";
+    }
+    exit 0;
+}
+
+if ($type eq "source") {
+    # Ignore STDOUT of the child process because older versions of
+    # dpkg-source print things out even with -q.
+    my $opts = { out => '/dev/null', err => 'unpacked-errors' };
+    unless (spawn($opts, ['dpkg-source', '-q', '-x', 'dsc', 'unpacked'])) {
+	open(ERRORS, '<', 'unpacked-errors')
+	    or fail("cannot open unpacked-errors: $!");
+	print STDERR while <ERRORS>;
+	close ERRORS;
+	fail("dpkg-source -x failed with status ", $opts->{harness}->result);
+    }
+    
+    # fix permissions
+    spawn({ fail => 'error' },
+	  ['chmod', '-R', 'u+rwX,o+rX,o-w', 'unpacked']);
+
+} else {
+    mkdir("unpacked", 0777) or fail("mkdir $base_dir/unpacked: $!");
+
+    # avoid using dpkg-deb -x; this pipeline is far faster.  I got a factor 2
+    # improvement on large debs, and factor 1.5 on small debs.
+    # I heard it's because dpkg-deb syncs while writing.  -- Richard
+
+    my $opts = { err => "$base_dir/unpacked-errors" };
+    spawn($opts,
+	    ['dpkg-deb', '--fsys-tarfile', "deb"],
+	    '|', ['tar', 'xf', '-', '-C', "unpacked"]);
+    unless ($opts->{success}) {
+	open(ERRORS, '<', "$base_dir/unpacked-errors")
+	    or fail("cannot open $base_dir/unpacked-errors: $!");
+	print STDERR while <ERRORS>;
+	close ERRORS;
+	fail("dpkg-deb | tar failed with status ", $opts->{harness}->result);
+    }
+
+    # fix permissions
+    spawn({ fail => 'error' },
+	    ['chmod', '-R', 'u+rwX,go-w', "unpacked"]);
+}
+
