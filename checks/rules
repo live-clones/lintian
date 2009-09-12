@@ -89,7 +89,7 @@ my @RULE_CLEAN_DEPENDS =
      [ "po-debconf" => qr'^\t\s*debconf-updatepo\s' ],
      [ $PYTHON_DEPEND => qr'^\t\s*python\s', 'missing-python-build-dependency' ],
      [ $PYTHON_DEPEND => qr'\ssetup\.py\b', 'missing-python-build-dependency' ],
-     [ 'quilt (>= 0.46-7~)' => qr'\t\s*dh_quilt_.+' ],
+     [ 'quilt (>= 0.46-7~)' => qr'^\t\s*dh_quilt_.+' ],
      [ quilt => qr'^\t\s*(\S+=\S+\s+)*quilt\s' ],
      [ yada => qr'^\t\s*yada\s' ],
     );

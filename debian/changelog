@@ -13,6 +13,9 @@ lintian (2.2.15) UNRELEASED; urgency=low
     + [ADB] Add HTTPS to the list of recognised protocols for URLs in manpages
       which should not cause manpage-has-errors-from-man to be emitted.
       (Closes: #543641)
+  * checks/rules:
+    + [RA] Anchor the dh_quilt regex to not trigger on commented-out
+      calls.  Patch from Cesare Tirabassi.  (Closes: #543259)
 
   * reporting/{html_reports,templates/clean.tmpl}:
     + [JP] Don't link to full report if the maintainer only has clean
