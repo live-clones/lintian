@@ -68,8 +68,8 @@ mkdir -p "$lintian_data/files"
 
 cat > "$workdir/fonts" <<EOF
 # The list of known font filenames already packaged for Debian and the
-# package that contains the font.  Only packages starting with ttf- or
-# otf- are searched for fonts.
+# package that contains the font.  Only packages starting with ttf-,
+# otf-, t1-, and xfonts- are searched for fonts.
 #
 # Last updated: $(date -u +'%Y-%m-%d')
 
@@ -80,6 +80,6 @@ if [ -z "$contents" ] ; then
     contents="$workdir/Contents-i386.gz"
 fi
 zcat "$contents" \
-    | perl -n -w -E 'print lc $_ if (s%^.+/([\w-]+\.(?:[to]tf|pfb|pcf))\s+\w+/([to]tf-[^,]+)(,.+)?$%$1 $2%i);' \
+    | perl -n -w -E 'print lc $_ if (s%^.+/([\w-]+\.(?:[to]tf|pfb))\s+\w+/((?:[to]tf|t1|xfonts)-[^,]+)(,.+)?$%$1 $2%i);' \
     | LC_ALL=C sort >> "$workdir/fonts"
 mv "$workdir/fonts" "$lintian_data/files/fonts"

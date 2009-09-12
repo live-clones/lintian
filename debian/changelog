@@ -38,6 +38,12 @@ lintian (2.2.15) UNRELEASED; urgency=low
     + [RA] New list of essential packages.
     + [RA] Add dash.  (Closes: #541744)
     + [RA] Add diffutils and remove diff.  (Closes: #544277)
+  * data/files/fonts:
+    + [RA] Refresh and include Type 1 fonts and packages as well.
+
+  * private/refresh-fonts-data:
+    + [RA] To match what checks/files looks for, also look for *.pfb files
+      and packages starting with t1-.
 
   * reporting/{html_reports,templates/clean.tmpl}:
     + [JP] Don't link to full report if the maintainer only has clean
