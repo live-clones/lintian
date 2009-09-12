@@ -429,9 +429,11 @@ for my $id (keys %clean) {
     my ($name, $email) = ($maintainer =~ /^(.*) <([^>]+)>/);
     $email = 'unknown' unless $email;
     my %data = (
+        id         => $id,
         email      => html_quote (uri_escape ($email)),
         maintainer => html_quote ($maintainer),
         name       => html_quote ($name),
+        clean      => 1,
     );
     print "Generating clean page for $id\n";
     output_template ("maintainer/$id", $templates{clean}, \%data);

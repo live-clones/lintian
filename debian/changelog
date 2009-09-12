@@ -14,6 +14,10 @@ lintian (2.2.15) UNRELEASED; urgency=low
       which should not cause manpage-has-errors-from-man to be emitted.
       (Closes: #543641)
 
+  * reporting/{html_reports,templates/clean.tmpl}:
+    + [JP] Don't link to full report if the maintainer only has clean
+      packages. (Closes: #545781)
+
  -- Adam D. Barratt <adam@adam-barratt.org.uk>  Wed, 26 Aug 2009 21:13:12 +0100
 
 lintian (2.2.14) unstable; urgency=low
