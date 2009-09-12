@@ -16,6 +16,9 @@ lintian (2.2.15) UNRELEASED; urgency=low
       /var/lock, and /usr/src if they have their normal owner and
       permissions.  This suppresses some Lintian tags for base-files.
     + [RA] Allow base-files to ship /var/backups and /var/local.
+    + [RA] Remove swfobject.js from the known packaged Javascript
+      libraries.  The version in libjs-yui is old and the new version is
+      not packaged.  Thanks, Giuseppe Iuculano.  (Closes: #542046)
   * checks/manpages:
     + [ADB] Add HTTPS to the list of recognised protocols for URLs in manpages
       which should not cause manpage-has-errors-from-man to be emitted.
