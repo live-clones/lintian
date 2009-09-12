@@ -9,6 +9,8 @@ lintian (2.2.15) UNRELEASED; urgency=low
       and from the warning about depending on a virtual package without
       a real package for the awk virtual package.
     + [RA] Use Lintian::Data to read the essential package list.
+    + [RA] Stop allowing unversioned build dependencies on coreutils.  The
+      migration from fileutils is long since finished.
   * checks/files:
     + [RA] Suppress non-standard-dir-perm for /tmp, /var/tmp, /var/local,
       /var/lock, and /usr/src if they have their normal owner and

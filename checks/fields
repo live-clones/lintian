@@ -679,7 +679,7 @@ if ($type eq "source") {
 					    if ($known_build_essential{$d_pkg} && ! $d_version->[1]);
 
 					tag "build-depends-on-essential-package-without-using-version", "$field: $part_d_orig"
-					    if ($d_pkg ne 'coreutils' && $KNOWN_ESSENTIAL->known($d_pkg) && ! $d_version->[0]);
+					    if ($KNOWN_ESSENTIAL->known($d_pkg) && ! $d_version->[0]);
 					push @seen_obsolete_packages, $part_d_orig
 					    if ($OBSOLETE_PACKAGES->known($d_pkg) && &$is_dep_field($field));
 
