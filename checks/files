@@ -774,14 +774,14 @@ foreach my $file (sort keys %{$info->index}) {
 	}
 
 	# ---------------- fonts
-	if ($file =~ m,/([\w-]+\.(?:[to]tf|pfb|pcf))$,i) {
+	if ($file =~ m,/([\w-]+\.(?:[to]tf|pfb))$,i) {
 	    my $font = lc $1;
 	    $FONT_PACKAGES = Lintian::Data->new('files/fonts', '\s+')
 		unless defined($FONT_PACKAGES);
 	    if ($FONT_PACKAGES->known($font)) {
 		tag 'duplicate-font-file', "$file also in", $FONT_PACKAGES->value($font)
 		    if ($pkg ne $FONT_PACKAGES->value($font) and $type ne 'udeb');
-	    } elsif ($pkg !~ m/^[ot]tf-/) {
+	    } elsif ($pkg !~ m/^(?:[ot]tf|t1|xfonts)-/) {
 		tag 'font-in-non-font-package', $file;
 	    }
 	}

@@ -11,7 +11,7 @@ lintian (2.2.15) UNRELEASED; urgency=low
     + [RA] Use Lintian::Data to read the essential package list.
     + [RA] Stop allowing unversioned build dependencies on coreutils.  The
       migration from fileutils is long since finished.
-  * checks/files:
+  * checks/files{,.desc}:
     + [RA] Suppress non-standard-dir-perm for /tmp, /var/tmp, /var/local,
       /var/lock, and /usr/src if they have their normal owner and
       permissions.  This suppresses some Lintian tags for base-files.
@@ -19,6 +19,13 @@ lintian (2.2.15) UNRELEASED; urgency=low
     + [RA] Remove swfobject.js from the known packaged Javascript
       libraries.  The version in libjs-yui is old and the new version is
       not packaged.  Thanks, Giuseppe Iuculano.  (Closes: #542046)
+    + [RA] Allow t1- and xfonts- as prefixes for font packages since the
+      font regex is also looking for Type 1 fonts.  Thanks, Rogério
+      Brito.  (Closes: #542389)
+    + [RA] Stop looking for *.pcf files outside font packages.  The check
+      wasn't triggering since PCF files are always compressed, and the
+      situation for PCF font packages is more complex and not suitable for
+      the same check.
   * checks/manpages:
     + [ADB] Add HTTPS to the list of recognised protocols for URLs in manpages
       which should not cause manpage-has-errors-from-man to be emitted.
