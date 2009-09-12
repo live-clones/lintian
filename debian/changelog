@@ -24,6 +24,8 @@ lintian (2.2.15) UNRELEASED; urgency=low
 
   * data/fields/essential:
     + [RA] New list of essential packages.
+    + [RA] Add dash.  (Closes: #541744)
+    + [RA] Add diffutils and remove diff.  (Closes: #544277)
 
   * reporting/{html_reports,templates/clean.tmpl}:
     + [JP] Don't link to full report if the maintainer only has clean
