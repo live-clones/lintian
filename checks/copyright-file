@@ -24,11 +24,14 @@ use strict;
 use lib "$ENV{'LINTIAN_ROOT'}/checks/";
 use common_data;
 
+use Lintian::Data ();
 use Spelling;
 use Tags;
 use Util;
 
 use Encode qw(decode);
+
+our $KNOWN_ESSENTIAL = Lintian::Data->new('fields/essential');
 
 sub run {
 
@@ -321,7 +324,7 @@ if ($gpl || m,/usr/share/common-licenses/GPL,) {
 # or if $package is essential.
 sub depends_on {
     my ($info, $package) = @_;
-    return 1 if $known_essential{$package};
+    return 1 if $KNOWN_ESSENTIAL->known($package);
     return 1 if $info->relation('strong')->implies($package);
     return 0;
 }

@@ -5,13 +5,13 @@ use base qw(Exporter);
 
 our @EXPORT = qw
 (
-   %known_source_fields %known_essential $known_shells_regex
+   %known_source_fields $known_shells_regex
 );
 
 # To let "perl -cw" test know we use these variables;
 use vars qw
 (
-  %known_source_fields %known_essential $known_shells_regex
+  %known_source_fields $known_shells_regex
 );
 
 # simple defines for commonly needed data
@@ -25,12 +25,6 @@ use vars qw
      'vcs-bzr', 'vcs-cvs', 'vcs-darcs', 'vcs-git', 'vcs-hg', 'vcs-mtn',
      'vcs-svn', 'vcs-browser', 'dm-upload-allowed', 'bugs', 'checksums-sha1',
      'checksums-sha256', 'checksums-md5');
-
-%known_essential = map { $_ => 1 }
-    ('base-files', 'base-passwd', 'bash', 'bsdutils', 'coreutils',
-     'debianutils', 'diff', 'dpkg', 'e2fsprogs', 'findutils', 'grep', 'gzip',
-     'hostname', 'login', 'mktemp', 'mount', 'ncurses-base', 'ncurses-bin',
-     'perl-base', 'sed', 'sysvinit', 'sysvinit-utils', 'tar', 'util-linux');
 
 $known_shells_regex = qr'(?:(?:b|d)?a|t?c|(?:pd|m)?k|z)?sh';
 

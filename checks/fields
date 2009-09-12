@@ -36,6 +36,7 @@ use Lintian::Relation ();
 use Lintian::Relation::Version qw(versions_compare);
 
 our $KNOWN_ARCHS = Lintian::Data->new('fields/architectures');
+our $KNOWN_ESSENTIAL = Lintian::Data->new('fields/essential');
 our $KNOWN_METAPACKAGES = Lintian::Data->new('fields/metapackages');
 
 our %known_archive_parts = map { $_ => 1 }
@@ -354,7 +355,9 @@ if (defined $info->field('essential')) {
 	tag "essential-in-source-package", "" if ($type eq "source");
 	tag "essential-no-not-needed", "" if ($essential eq "no");
 	tag "unknown-essential-value", "" if ($essential ne "no" and $essential ne "yes");
-	tag "new-essential-package", "" if ($essential eq "yes" and ! $known_essential{$pkg});
+	if ($essential eq "yes" and not $KNOWN_ESSENTIAL->known($pkg)) {
+		tag 'new-essential-package';
+	}
 }
 
 #---- Section
@@ -550,7 +553,7 @@ if (($type eq "binary") || ($type eq 'udeb')) {
 					    if ($KNOWN_METAPACKAGES->known($d_pkg) and not $metapackage and &$is_dep_field($field));
 
 					tag "depends-on-essential-package-without-using-version", "$field: $part_d_orig"
-					    if ($known_essential{$d_pkg} && ! $d_version->[0] && &$is_dep_field($field));
+					    if ($KNOWN_ESSENTIAL->known($d_pkg) && ! $d_version->[0] && &$is_dep_field($field));
 
 					tag "package-depends-on-an-x-font-package", "$field: $part_d_orig"
 					    if ($field =~ /^(pre-)?depends$/ && $d_pkg =~ /^xfont.*/ && $d_pkg ne 'xfonts-utils' && $d_pkg ne 'xfonts-encodings');
@@ -676,7 +679,7 @@ if ($type eq "source") {
 					    if ($known_build_essential{$d_pkg} && ! $d_version->[1]);
 
 					tag "build-depends-on-essential-package-without-using-version", "$field: $part_d_orig"
-					    if ($d_pkg ne "coreutils" && $known_essential{$d_pkg} && ! $d_version->[0]);
+					    if ($d_pkg ne 'coreutils' && $KNOWN_ESSENTIAL->known($d_pkg) && ! $d_version->[0]);
 					push @seen_obsolete_packages, $part_d_orig
 					    if ($OBSOLETE_PACKAGES->known($d_pkg) && &$is_dep_field($field));
 
