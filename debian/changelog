@@ -30,6 +30,8 @@ lintian (2.2.15) UNRELEASED; urgency=low
     + [ADB] Add HTTPS to the list of recognised protocols for URLs in manpages
       which should not cause manpage-has-errors-from-man to be emitted.
       (Closes: #543641)
+    + [RA] Document the MANWIDTH variable when running man by hand to
+      check for man page errors.  (Closes: #542584)
   * checks/rules:
     + [RA] Anchor the dh_quilt regex to not trigger on commented-out
       calls.  Patch from Cesare Tirabassi.  (Closes: #543259)
