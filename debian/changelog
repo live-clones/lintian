@@ -30,6 +30,8 @@ lintian (2.2.15) UNRELEASED; urgency=low
       wasn't triggering since PCF files are always compressed, and the
       situation for PCF font packages is more complex and not suitable for
       the same check.
+    + [RA] Add mootools.js to embedded-javascript-library.  Patch from
+      Marcelo Jorge Vieira (metal).  (Closes: #545716)
   * checks/manpages:
     + [ADB] Add HTTPS to the list of recognised protocols for URLs in manpages
       which should not cause manpage-has-errors-from-man to be emitted.
