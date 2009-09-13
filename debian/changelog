@@ -10,13 +10,17 @@ lintian (2.2.15) UNRELEASED; urgency=low
       - example-shell-script-fails-syntax-check (pedantic)
       - example-wrong-path-for-interpreter
       - example-unusual-interpreter (pedantic)
+      - global-data-in-games-directory
       - init.d-script-does-not-provide-itself
       - init.d-script-possible-missing-stop
       - init.d-script-provides-virtual-facility
       - init.d-script-should-depend-on-virtual-facility
       - init.d-script-starts-in-stop-runlevel
-      - global-data-in-games-directory
+      - ocaml-custom-executable
   
+  * checks/binaries{,.desc}:
+    + [RA] Add a new check for OCaml bytecode executables.  Patch from
+      Stéphane Glondu.  (Closes: #498138)
   * checks/changelog-file:
     + [RA] Don't warn about a symlinked changelog file if the version
       contains ubuntu.  Thanks, Benjamin Drung.  (Closes: #536434)
@@ -97,6 +101,9 @@ lintian (2.2.15) UNRELEASED; urgency=low
   * data/files/fonts:
     + [RA] Refresh and include Type 1 fonts and packages as well.
 
+  * lib/Lintian/Collect/Binary.pm:
+    + [RA] Stop looking for the special OCaml symbol.  OCaml custom
+      binaries are now detected another way.  Patch from Stéphane Glondu.
   * lib/Lintian/Schedule.pm:
     + [RA] If declining to add a duplicate file to the Lintian check
       schedule, return success to avoid a spurious error message.  Patch
