@@ -35,6 +35,12 @@ if [ install = "$1"  ]; then
     dpkg-divert --add --rename --package scripts-diversions \
         --divert /usr/share/scripts/file.1.real \
         /usr/share/scripts/file.1 > /dev/null
+
+    # We're allowed to divert a man page to install another man page in a
+    # different section but the same numeric section.  (Bug#543781)
+    dpkg-divert --add --rename --package scripts-diversions \
+        --divert /usr/share/man/man1/foo.real.1.gz \
+        /usr/share/man/man1/foo.1.gz
 fi
 
 # This isn't a diversion we create anywhere, but we're allowed to do this in

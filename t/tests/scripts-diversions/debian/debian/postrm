@@ -20,6 +20,11 @@ if [ remove = "$1" ]; then
     dpkg-divert --remove --package scripts-diversions \
         --divert /usr/share/scripts/file.1.real \
         /usr/share/scripts/file.1 > /dev/null
+
+    # Clean up the diversion for a binary man page.
+    dpkg-divert --remove --package scripts-diversions \
+        --divert /usr/share/man/man1/foo.real.1.gz \
+        /usr/share/man/man1/foo.1.gz
 fi
 
 #DEBHELPER#

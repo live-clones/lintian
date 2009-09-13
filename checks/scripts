@@ -1061,16 +1061,30 @@ for my $divert (keys %added_diversions) {
     my $divertrx = $divert;
     $divert = unquote($divert, $expand_diversions);
 
+    if (not exists $added_diversions{$divertrx}{'removed'}) {
+	tag 'orphaned-diversion', $divert, $script;
+    }
+
+    # Handle man page diversions somewhat specially.  We may divert away a man
+    # page in one section without replacing that same file, since we're
+    # installing a man page in a different section.  An example is diverting a
+    # man page in section 1 and replacing it with one in section 1p (such as
+    # libmodule-corelist-perl at the time of this writing).
+    #
+    # Deal with this by turning all man page diversions into wildcard
+    # expressions instead that match everything in the same numeric section so
+    # that they'll match the files shipped in the package.
+    if ($divertrx =~ m,^(usr\\/share\\/man\\/\S+\\/.*\\\.\d)\w*(\\\.gz\z),) {
+	$divertrx = "$1.*$2";
+	$expand_diversions = 1;
+    }
+
     if ($expand_diversions) {
 	tag 'diversion-for-unknown-file', $divert, "$script:$line"
 	    unless (grep { $_ =~ m/$divertrx/ } keys %{$info->index});
     } else {
 	tag 'diversion-for-unknown-file', $divert, "$script:$line"
 	    unless (exists $info->index->{$divert});
-    }
-
-    if (not exists $added_diversions{$divertrx}{'removed'}) {
-	tag 'orphaned-diversion', $divert, $script;
     }
 }
 

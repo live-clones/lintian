@@ -48,6 +48,10 @@ lintian (2.2.15) UNRELEASED; urgency=low
     + [RA] Don't warn about missing dependencies on programs if the
       program invocation is followed by || true.  Thanks, Aurelien Jarno.
       (Closes: #541372)
+    + [RA] Permit diversion of a man page as long as the package is
+      installing a man page by the same name in the same numeric section,
+      even if the specific section is different.  Thanks, Niko Tyni.
+      (Closes: #543781)
 
   * data/fields/essential:
     + [RA] New list of essential packages.
