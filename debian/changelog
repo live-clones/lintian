@@ -35,6 +35,9 @@ lintian (2.2.15) UNRELEASED; urgency=low
   * checks/rules:
     + [RA] Anchor the dh_quilt regex to not trigger on commented-out
       calls.  Patch from Cesare Tirabassi.  (Closes: #543259)
+    + [RA] When checking for out-of-order debhelper calls, take into
+      account the -p flag and only check within each package.  Thanks,
+      Michael Koch.  (Closes: #545219)
 
   * data/fields/essential:
     + [RA] New list of essential packages.

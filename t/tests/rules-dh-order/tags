@@ -1,0 +1,5 @@
+W: rules-dh-order source: debian-rules-calls-debhelper-in-odd-order dh_gencontrol (line 11)
+W: rules-dh-order source: debian-rules-calls-debhelper-in-odd-order dh_installdeb (line 12)
+W: rules-dh-order source: debian-rules-calls-debhelper-in-odd-order dh_makeshlibs (line 14)
+W: rules-dh-order source: debian-rules-calls-debhelper-in-odd-order dh_makeshlibs (line 18)
+W: rules-dh-order source: debian-rules-calls-debhelper-in-odd-order dh_shlibdeps (line 13)

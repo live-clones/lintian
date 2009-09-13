@@ -178,7 +178,7 @@ local $_;
 my @arch_rules = (qr/^clean$/, qr/^binary-arch$/, qr/^build-arch$/);
 my @current_targets;
 my %rules_per_target;
-my $debhelper_group;
+my %debhelper_group;
 my $maybe_skipping;
 while (<RULES>) {
     next if /^\s*\#/;
@@ -269,7 +269,7 @@ while (<RULES>) {
                 push (@arch_rules, @depends);
             }
 	}
-        $debhelper_group = 0;
+        undef %debhelper_group;
     } elsif (/^define /) {
         # We don't want to think the body of the define is part of the
         # previous rule or we'll get false positives on tags like
@@ -306,12 +306,15 @@ while (<RULES>) {
 	    }
             if (m/^\s+(dh_\S+)\b/ and $debhelper_order{$1}) {
                 my $command = $1;
+                my ($package) = /\s(?:-p|--package=)(\S+)/;
+                $package ||= '';
                 my $group = $debhelper_order{$command};
-                if ($group < $debhelper_group) {
+                $debhelper_group{$package} ||= 0;
+                if ($group < $debhelper_group{$package}) {
                     tag "debian-rules-calls-debhelper-in-odd-order",
                         $command, "(line $.)";
                 } else {
-                    $debhelper_group = $group;
+                    $debhelper_group{$package} = $group;
                 }
             }
 	}

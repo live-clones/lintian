@@ -1,4 +1,4 @@
-Last generated 2009-08-16
+Last generated 2009-09-13
 
 The following tags are not tested by the test suite:
 
@@ -499,7 +499,6 @@ po-debconf unknown-encoding-in-po-file
 
 rules build-depends-without-arch-dep
 rules clean-should-be-satisfied-by-build-depends
-rules debian-rules-calls-debhelper-in-odd-order
 rules debian-rules-uses-pwd
 rules missing-dh_python-build-dependency
 rules missing-python-build-dependency
@@ -644,7 +643,6 @@ cdbs-test
   package-has-a-duplicate-build-relation
 
 debconf
-  debian-rules-calls-debhelper-in-odd-order
   dpatch-build-dep-but-no-patch-list
   invalid-po-file
   loads-obsolete-confmodule
