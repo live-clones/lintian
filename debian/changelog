@@ -3,6 +3,13 @@ lintian (2.2.15) UNRELEASED; urgency=low
   * Summary of tag changes:
     + Added:
       - build-depends-on-non-build-package
+      - example-interpreter-in-usr-local (pedantic)
+      - example-interpreter-not-absolute (pedantic)
+      - example-script-without-interpreter (pedantic)
+      - example-script-uses-bin-env (pedantic)
+      - example-shell-script-fails-syntax-check (pedantic)
+      - example-wrong-path-for-interpreter (pedantic)
+      - example-unusual-interpreter (pedantic)
       - global-data-in-games-directory
   
   * checks/changelog-file:
@@ -64,6 +71,10 @@ lintian (2.2.15) UNRELEASED; urgency=low
       installing a man page by the same name in the same numeric section,
       even if the specific section is different.  Thanks, Niko Tyni.
       (Closes: #543781)
+    + [RA] Check example scripts for most of the same issues as scripts
+      elsewhere in the package, but report problems with a different set
+      of tags with pedantic severity.  Patch from Damyan Ivanov.
+      (Closes: #543873)
 
   * data/fields/essential:
     + [RA] New list of essential packages.

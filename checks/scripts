@@ -276,6 +276,15 @@ our @bashism_regexs = (
     $LEADIN . qr'(sh|\$\{?SHELL\}?) [-+]O', # sh [-+]O
 );
 
+# a local function to help use separate tags for example scripts
+sub script_tag {
+    my( $tag, $filename, @rest ) = @_;
+
+    $tag = "example-$tag"
+        if $filename and $filename =~ m,usr/share/doc/[^/]+/examples/,;
+
+    tag( $tag, $filename, @rest );
+}
 
 sub run {
 
@@ -323,8 +332,12 @@ for my $filename (sort keys %{$info->scripts}) {
     $filename = './' . $filename;
     $scripts{$filename} = 1;
 
+    my $in_docs = $filename =~ m,usr/share/doc/,;
+    my $in_examples = $filename =~ m,usr/share/doc/[^/]+/examples/,;
+
     # no checks necessary at all for scripts in /usr/share/doc/
-    next if $filename =~ m,usr/share/doc/,;
+    # unless they are examples
+    next if $in_docs and !$in_examples;
 
     my ($base) = $interpreter =~ m,([^/]*)$,;
 
@@ -337,15 +350,15 @@ for my $filename (sort keys %{$info->scripts}) {
     # an absolute path and are not in a bin/ directory (/usr/bin, /bin etc)
     # They are probably not scripts after all.
     next if ($filename !~ m,(bin/|etc/init\.d/), and !$executable{$filename}
-             and !$is_absolute);
+             and !$is_absolute and !$in_examples);
 
     if ($interpreter eq "") {
-	tag("script-without-interpreter", $filename);
+	script_tag("script-without-interpreter", $filename);
 	next;
     }
 
     # Either they use an absolute path or they use '/usr/bin/env interp'.
-    tag("interpreter-not-absolute", $filename, "#!$interpreter")
+    script_tag("interpreter-not-absolute", $filename, "#!$interpreter")
 	unless $is_absolute;
     tag("script-not-executable", $filename)
 	unless ($executable{$filename}
@@ -356,13 +369,15 @@ for my $filename (sort keys %{$info->scripts}) {
 		or $filename =~ m,\.ex$,
 		or $filename eq './etc/init.d/skeleton'
 		or $filename =~ m,^\./etc/menu-methods,
-		or $filename =~ m,^\./etc/X11/Xsession\.d,);
+		or $filename =~ m,^\./etc/X11/Xsession\.d,)
+		or $in_docs;
 
     # Warn about csh scripts.
     tag("csh-considered-harmful", $filename)
         if (($base eq 'csh' or $base eq 'tcsh')
 	    and $executable{$filename}
-	    and $filename !~ m,^\./etc/csh/login\.d/,);
+	    and $filename !~ m,^\./etc/csh/login\.d/,)
+	    and !$in_docs;
 
     # Syntax-check most shell scripts, but don't syntax-check scripts that end
     # in .dpatch.  bash -n doesn't stop checking at exit 0 and goes on to blow
@@ -375,7 +390,7 @@ for my $filename (sort keys %{$info->scripts}) {
 	    and $base !~ m/^(z|t?c)sh$/) {
 
 	    if (check_script_syntax($interpreter, "unpacked/$filename")) {
-		tag("shell-script-fails-syntax-check", $filename);
+		script_tag("shell-script-fails-syntax-check", $filename);
 	    }
 	}
     }
@@ -398,20 +413,20 @@ for my $filename (sort keys %{$info->scripts}) {
     if ($data) {
 	my $expected = $data->[0] . '/' . $base;
 	unless ($interpreter eq $expected or defined $calls_env) {
-	    tag("wrong-path-for-interpreter",
-		"#!$interpreter != $expected", "($filename)");
+	    script_tag("wrong-path-for-interpreter", $filename,
+		"(#!$interpreter != $expected)");
 	}
     } elsif ($interpreter =~ m,/usr/local/,) {
-	tag("interpreter-in-usr-local", $filename, "#!$interpreter");
+	script_tag("interpreter-in-usr-local", $filename, "#!$interpreter");
     } elsif ($executable{'.' . $interpreter}) {
 	# Package installs the interpreter itself, so it's probably ok.  Don't
 	# emit any tag for this.
     } elsif ($base eq 'suidperl') {
 	tag("calls-suidperl-directly", $filename);
     } elsif ($interpreter eq '/bin/env') {
-	tag("script-uses-bin-env", $filename);
+	script_tag("script-uses-bin-env", $filename);
     } else {
-	tag("unusual-interpreter", $filename, "#!$interpreter");
+	script_tag("unusual-interpreter", $filename, "#!$interpreter");
     }
 
     # Do some additional checks on shell scripts in /etc.  This should
@@ -452,7 +467,7 @@ for my $filename (sort keys %{$info->scripts}) {
     # If we found the interpreter and the script is executable, check
     # dependencies.  This should be the last thing we do in the loop so that
     # we can use next for an early exit and reduce the nesting.
-    next unless ($data && $executable{$filename});
+    next unless ($data && $executable{$filename} and !$in_docs);
     if (!$versioned) {
 	my $depends = $data->[1];
 	if (not defined $depends) {
