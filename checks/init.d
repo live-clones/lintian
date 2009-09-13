@@ -223,7 +223,7 @@ sub check_init {
 			if (defined $lsb{$keyword});
 		    tag "init.d-script-has-unknown-lsb-keyword", "/etc/init.d/$_:$. $keyword"
 			unless (defined ($lsb_keywords{$keyword}) || $keyword =~ /^x-/);
-		    $lsb{$keyword} = length($value)? $value : '';
+		    $lsb{$keyword} = defined($value) ? $value : '';
 		    $last = $keyword;
 		} elsif ($l =~ /^\#(\t|  )/ && $last eq 'description') {
 		    my $value = $l;
@@ -266,7 +266,7 @@ sub check_init {
 
     # Check the runlevels.
     my %start;
-    if (defined($lsb{'default-start'})) {
+    if (defined $lsb{'default-start'}) {
 	for my $runlevel (split (/\s+/, $lsb{'default-start'})) {
 	    if ($runlevel =~ /^[sS0-6]$/) {
 		$start{lc $runlevel} = 1;
@@ -280,11 +280,11 @@ sub check_init {
 	    }
 	}
     }
-    if (defined($lsb{'default-stop'})) {
+    if (defined $lsb{'default-stop'}) {
 	my %stop;
 	for my $runlevel (split (/\s+/, $lsb{'default-stop'})) {
 	    if ($runlevel =~ /^[sS0-6]$/) {
-		$stop{$runlevel} = 1;
+		$stop{$runlevel} = 1 unless $runlevel =~ /[sS]/;
 		if ($start{$runlevel}) {
 		    tag "init.d-script-has-conflicting-start-stop", "/etc/init.d/$_ $runlevel";
 		}
@@ -296,13 +296,17 @@ sub check_init {
 	    }
 	}
 
-	if ((defined($stop{"0"}) || defined($stop{"1"}) || defined($stop{"6"}))
-	    && !(defined($stop{"0"}) && defined($stop{"1"}) && defined($stop{"6"}))) {
-
-	    my $missing = join(' ', grep { !defined($stop{$_}) } qw(0 1 6));
-
-	    tag "init.d-script-possible-missing-stop", "/etc/init.d/$_ $missing"
-		unless (grep {$initd_file eq "init.d/$_"} qw(killprocs sendsigs halt reboot));
+	# Scripts that stop in any of 0, 1, or 6 probably should stop in all
+	# of them, with some special exceptions.
+	my $stop = join(' ', sort keys %stop);
+	if (defined($stop) and $stop ne '0 1 6') {
+	    my $base = $initd_file;
+	    $base =~ s,.*/,,;
+	    unless (grep { $base eq $_ } qw(killprocs sendsigs halt reboot)) {
+		my @missing = grep { !defined $stop{$_} } qw(0 1 6);
+		tag 'init.d-script-possible-missing-stop', "/etc/init.d/$_",
+		    @missing;
+	    }
 	}
     }
     if ($lsb{'provides'}) {
