@@ -13,10 +13,10 @@ Info: This file starts with the #! sequence that identifies scripts, but
  it does not name an interpreter.
 
 Tag: example-script-without-interpreter
-Severity: pedantic
+Severity: wishlist
 Certainty: certain
-Info: This file starts with the #! sequence that identifies scripts, but
- it does not name an interpreter.
+Info: This example file starts with the #! sequence that identifies
+ scripts, but it does not name an interpreter.
 
 Tag: executable-not-elf-or-script
 Severity: normal
@@ -40,11 +40,12 @@ Info: This script uses a relative path to locate its interpreter.
  the script's, so it is not likely to be what was intended.
 
 Tag: example-interpreter-not-absolute
-Severity: pedantic
+Severity: wishlist
 Certainty: certain
-Info: This script uses a relative path to locate its interpreter.
+Info: This example script uses a relative path to locate its interpreter.
  This path will be taken relative to the caller's current directory, not
- the script's, so it is not likely to be what was intended.
+ the script's, so a user will probably not be able to run the example
+ without modification.
 
 Tag: unusual-interpreter
 Severity: normal
@@ -59,8 +60,7 @@ Severity: pedantic
 Certainty: possible
 Info: This package contains an example script for an interpreter that the
  Lintian maintainers have not heard of.  It could be a typo for a common
- interpreter.  If not, please file a wishlist bug on lintian so that the
- Lintian maintainers can add this interpreter to their list.
+ interpreter.
 
 Tag: script-uses-bin-env
 Severity: normal
@@ -71,11 +71,12 @@ Info: This script uses /bin/env as its interpreter (used to find the
  env in the script should be changed.
 
 Tag: example-script-uses-bin-env
-Severity: pedantic
+Severity: wishlist
 Certainty: certain
 Info: This example script uses /bin/env as its interpreter (used to find
  the actual interpreter on the user's path).  There is no /bin/env on
- Debian systems; env is instead installed as /usr/bin/env.
+ Debian systems; env is instead installed as /usr/bin/env.  Usually, the
+ pth to env in the script should be changed.
 
 Tag: forbidden-config-interpreter
 Severity: important
@@ -119,11 +120,12 @@ Info: This package contains a script that looks for an interpreter in a
  /usr/local, this is the wrong place to look.
 
 Tag: example-interpreter-in-usr-local
-Severity: pedantic
+Severity: wishlist
 Certainty: certain
 Info: This package contains an example script that looks for an
  interpreter in a directory in /usr/local.  Since Debian does not install
- anything in /usr/local, this is the wrong place to look.
+ anything in /usr/local, the example script would probably need
+ modifications before a user could run it.
 
 Tag: control-interpreter-in-usr-local
 Severity: serious
@@ -189,10 +191,11 @@ Info: The interpreter you used is installed at another location on Debian
  systems.
 
 Tag: example-wrong-path-for-interpreter
-Severity: pedantic
+Severity: wishlist
 Certainty: certain
-Info: The interpreter used is installed at another location on Debian
- systems.
+Info: The interpreter used by this example script is installed at another
+ location on Debian systems.  Normally the path should be updated to match
+ the Debian location.
 
 Tag: gawk-script-but-no-gawk-dep
 Severity: important
@@ -295,7 +298,9 @@ Tag: shell-script-fails-syntax-check
 Severity: important
 Certainty: certain
 Info: Running this shell script with the shell's -n option set fails,
- which means that the script has syntax errors.
+ which means that the script has syntax errors.  The most common cause of
+ this problem is a script expecting <tt>/bin/sh</tt> to be bash checked on
+ a system using dash as <tt>/bin/sh</tt>.
  .
  Run e.g. <tt>sh -n yourscript</tt> to see the errors yourself.
 
@@ -303,7 +308,9 @@ Tag: example-shell-script-fails-syntax-check
 Severity: pedantic
 Certainty: certain
 Info: Running this shell script with the shell's -n option set fails,
- which means that the script has syntax errors.
+ which means that the script has syntax errors.  The most common cause of
+ this problem is a script expecting <tt>/bin/sh</tt> to be bash checked on
+ a system using dash as <tt>/bin/sh</tt>.
  .
  Run e.g. <tt>sh -n yourscript</tt> to see the errors yourself.
 

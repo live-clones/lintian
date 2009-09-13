@@ -3,12 +3,12 @@ lintian (2.2.15) UNRELEASED; urgency=low
   * Summary of tag changes:
     + Added:
       - build-depends-on-non-build-package
-      - example-interpreter-in-usr-local (pedantic)
-      - example-interpreter-not-absolute (pedantic)
-      - example-script-without-interpreter (pedantic)
-      - example-script-uses-bin-env (pedantic)
+      - example-interpreter-in-usr-local
+      - example-interpreter-not-absolute
+      - example-script-without-interpreter
+      - example-script-uses-bin-env
       - example-shell-script-fails-syntax-check (pedantic)
-      - example-wrong-path-for-interpreter (pedantic)
+      - example-wrong-path-for-interpreter
       - example-unusual-interpreter (pedantic)
       - global-data-in-games-directory
   
@@ -73,7 +73,7 @@ lintian (2.2.15) UNRELEASED; urgency=low
       (Closes: #543781)
     + [RA] Check example scripts for most of the same issues as scripts
       elsewhere in the package, but report problems with a different set
-      of tags with pedantic severity.  Patch from Damyan Ivanov.
+      of tags with info or pedantic severity.  Patch from Damyan Ivanov.
       (Closes: #543873)
 
   * data/fields/essential:
