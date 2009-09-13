@@ -495,7 +495,8 @@ foreach my $file (sort keys %{$info->index}) {
 		unless ($dsize eq $fsize);
 	}
 	# ---------------- non-games-specific data in games subdirectory
-	elsif ($file =~ m,^usr/share/games/(?:applications|mime|icons|pixmaps)/,) {
+	elsif ($file =~ m,^usr/share/games/(?:applications|mime|icons|pixmaps)/,
+	       and $index_info->{type} !~ m/^d/) {
 	    tag "global-data-in-games-directory", $file;
 	}
     }
