@@ -4,4 +4,6 @@ Version: 1.0
 Description: General tests for package dependencies
 Test-For:
  build-depends-on-metapackage
+ build-depends-on-non-build-package
  depends-on-metapackage
+References: Debian Bug#540594

@@ -38,6 +38,7 @@ use Lintian::Relation::Version qw(versions_compare);
 our $KNOWN_ARCHS = Lintian::Data->new('fields/architectures');
 our $KNOWN_ESSENTIAL = Lintian::Data->new('fields/essential');
 our $KNOWN_METAPACKAGES = Lintian::Data->new('fields/metapackages');
+our $NO_BUILD_DEPENDS = Lintian::Data->new('fields/no-build-depends');
 
 our %known_archive_parts = map { $_ => 1 }
     ('non-free', 'contrib');
@@ -685,6 +686,9 @@ if ($type eq "source") {
 
 					tag "build-depends-on-metapackage", "$field: $part_d_orig"
 					    if ($KNOWN_METAPACKAGES->known($d_pkg) and &$is_dep_field($field));
+
+					tag 'build-depends-on-non-build-package', "$field: $part_d_orig"
+					    if ($NO_BUILD_DEPENDS->known($d_pkg) and &$is_dep_field($field));
 
 					tag "build-depends-on-1-revision", "$field: $part_d_orig"
 					    if ($d_version->[0] eq '>=' && $d_version->[1] =~ /-1$/ && &$is_dep_field($field));

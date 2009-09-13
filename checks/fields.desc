@@ -543,6 +543,15 @@ Info: The package declares a build-depends on an essential package, e.g. dpkg,
  is if you need a particular version of that package, in which case the
  version should be given in the dependency.
 
+Tag: build-depends-on-non-build-package
+Severity: important
+Certainty: certain
+Info: The package declares a build dependency on a package that is not
+ appropriate for build dependencies, usually because it's only for
+ interactive use or cannot be correctly installed in a build environment.
+ See the description or documentation of the package for more
+ information.
+
 Tag: virtual-package-depends-without-real-package-depends
 Severity: normal
 Certainty: possible

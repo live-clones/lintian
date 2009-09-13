@@ -1,5 +1,9 @@
 lintian (2.2.15) UNRELEASED; urgency=low
 
+  * Summary of tag changes:
+    + Added:
+      - build-depends-on-non-build-package
+  
   * checks/changelog-file:
     + [RA] Don't warn about a symlinked changelog file if the version
       contains ubuntu.  Thanks, Benjamin Drung.  (Closes: #536434)
@@ -11,13 +15,15 @@ lintian (2.2.15) UNRELEASED; urgency=low
     + [RA] Ignore whitespace when checking debian/compat, since Perl will
       when converting it to a number.  Thanks, Niels Thykier.
       (Closes: #545430)
-  * checks/fields:
+  * checks/fields{,.desc}:
     + [RA] Exclude base-files from the needlesly-depends-on-awk tag
       and from the warning about depending on a virtual package without
       a real package for the awk virtual package.
     + [RA] Use Lintian::Data to read the essential package list.
     + [RA] Stop allowing unversioned build dependencies on coreutils.  The
       migration from fileutils is long since finished.
+    + [RA] Check for build dependencies on packages that should not be
+      used for builds.  (Closes: #540594)
   * checks/files{,.desc}:
     + [RA] Suppress non-standard-dir-perm for /tmp, /var/tmp, /var/local,
       /var/lock, and /usr/src if they have their normal owner and
@@ -60,6 +66,10 @@ lintian (2.2.15) UNRELEASED; urgency=low
     + [RA] New list of essential packages.
     + [RA] Add dash.  (Closes: #541744)
     + [RA] Add diffutils and remove diff.  (Closes: #544277)
+  * data/fields/no-build-depends:
+    + [RA] New list of packages that should not be used as build
+      dependencies, currently containing only java-propose-classpath.
+      Thanks, Josh Triplett.
   * data/files/fonts:
     + [RA] Refresh and include Type 1 fonts and packages as well.
 
