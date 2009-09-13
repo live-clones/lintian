@@ -10,6 +10,10 @@ lintian (2.2.15) UNRELEASED; urgency=low
       - example-shell-script-fails-syntax-check (pedantic)
       - example-wrong-path-for-interpreter
       - example-unusual-interpreter (pedantic)
+      - init.d-script-does-not-provide-itself
+      - init.d-script-provides-virtual-facility
+      - init.d-script-should-depend-on-virtual-facility
+      - init.d-script-starts-in-stop-runlevel
       - global-data-in-games-directory
   
   * checks/changelog-file:
@@ -51,6 +55,10 @@ lintian (2.2.15) UNRELEASED; urgency=low
       Marcelo Jorge Vieira (metal).  (Closes: #545716)
     + [RA] Check for putting data that should be in /usr/share under
       /usr/share/games.  Patch from Raphael Geissert.  (Closes: #534486)
+  * checks/init.d{,.desc}:
+    + [RA] Add new checks for starting in runlevels 0 and 6, providing a
+      virtual facility, not providing a facility matching the script, and
+      not depending on a virtual facility.  Patch from Raphael Geissert.
   * checks/manpages:
     + [ADB] Add HTTPS to the list of recognised protocols for URLs in manpages
       which should not cause manpage-has-errors-from-man to be emitted.
