@@ -120,7 +120,7 @@ Info: This package contains a script that looks for an interpreter in a
  /usr/local, this is the wrong place to look.
 
 Tag: example-interpreter-in-usr-local
-Severity: wishlist
+Severity: pedantic
 Certainty: certain
 Info: This package contains an example script that looks for an
  interpreter in a directory in /usr/local.  Since Debian does not install

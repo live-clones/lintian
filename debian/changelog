@@ -3,7 +3,7 @@ lintian (2.2.15) UNRELEASED; urgency=low
   * Summary of tag changes:
     + Added:
       - build-depends-on-non-build-package
-      - example-interpreter-in-usr-local
+      - example-interpreter-in-usr-local (pedantic)
       - example-interpreter-not-absolute
       - example-script-without-interpreter
       - example-script-uses-bin-env
