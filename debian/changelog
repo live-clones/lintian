@@ -4,6 +4,10 @@ lintian (2.2.15) UNRELEASED; urgency=low
     + [RA] Moved the essential package list to data/fields.
   * checks/copyright-file:
     + [RA] Use Lintian::Data to read the essential package list.
+  * checks/debhelper:
+    + [RA] Ignore whitespace when checking debian/compat, since Perl will
+      when converting it to a number.  Thanks, Niels Thykier.
+      (Closes: #545430)
   * checks/fields:
     + [RA] Exclude base-files from the needlesly-depends-on-awk tag
       and from the warning about depending on a virtual package without

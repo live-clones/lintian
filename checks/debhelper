@@ -208,7 +208,8 @@ if (-f 'debfiles/compat') {
     ($compat) = split(/\n/, $compat_file);
     $compat =~ s/^\s+$//;
     if ($compat) {
-	chomp $compat;
+	$compat =~ s/^\s+//;
+	$compat =~ s/\s+$//;
 	if ($compat !~ m/^\d+$/) {
 	    tag 'debhelper-compat-not-a-number', $compat;
 	    $compat =~ s/[^\d]//g;
