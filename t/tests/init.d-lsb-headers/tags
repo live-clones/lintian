@@ -1,12 +1,12 @@
-E: init.d-lsb-headers: init.d-script-dependency-better-on-virtual-facility /etc/init.d/init.d-lsb-headers mountall -> $local_fs
-E: init.d-lsb-headers: init.d-script-dependency-better-on-virtual-facility /etc/init.d/init.d-lsb-headers mountnfs -> $remote_fs
-E: init.d-lsb-headers: init.d-script-dependency-better-on-virtual-facility /etc/init.d/init.d-lsb-headers networking -> $network
-E: init.d-lsb-headers: init.d-script-dependency-better-on-virtual-facility /etc/init.d/init.d-lsb-headers portmap -> $portmap
-E: init.d-lsb-headers: init.d-script-dependency-better-on-virtual-facility /etc/init.d/init.d-lsb-headers sysklogd -> $syslog
+E: init.d-lsb-headers: init.d-script-should-depend-on-virtual-facility /etc/init.d/init.d-lsb-headers mountall -> $local_fs
+E: init.d-lsb-headers: init.d-script-should-depend-on-virtual-facility /etc/init.d/init.d-lsb-headers mountnfs -> $remote_fs
+E: init.d-lsb-headers: init.d-script-should-depend-on-virtual-facility /etc/init.d/init.d-lsb-headers networking -> $network
+E: init.d-lsb-headers: init.d-script-should-depend-on-virtual-facility /etc/init.d/init.d-lsb-headers portmap -> $portmap
+E: init.d-lsb-headers: init.d-script-should-depend-on-virtual-facility /etc/init.d/init.d-lsb-headers sysklogd -> $syslog
 W: init.d-lsb-headers: init-d-script-stops-in-s-runlevel /etc/init.d/init.d-lsb-headers
+W: init.d-lsb-headers: init.d-script-does-not-provide-itself /etc/init.d/init.d-lsb-headers
 W: init.d-lsb-headers: init.d-script-has-bad-start-runlevel /etc/init.d/init.d-lsb-headers X
 W: init.d-lsb-headers: init.d-script-has-bad-stop-runlevel /etc/init.d/init.d-lsb-headers Y
-W: init.d-lsb-headers: init.d-script-provides-not-after-its-name /etc/init.d/init.d-lsb-headers
-W: init.d-lsb-headers: init.d-script-provides-virtual-facility-in-header /etc/init.d/init.d-lsb-headers $bad_facility
+W: init.d-lsb-headers: init.d-script-provides-virtual-facility /etc/init.d/init.d-lsb-headers $bad_facility
 W: init.d-lsb-headers: init.d-script-starts-in-stop-runlevel /etc/init.d/init.d-lsb-headers 0
 W: init.d-lsb-headers: init.d-script-starts-in-stop-runlevel /etc/init.d/init.d-lsb-headers 6

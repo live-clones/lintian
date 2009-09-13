@@ -231,41 +231,50 @@ Ref: policy 9.3.2
 Tag: init.d-script-starts-in-stop-runlevel
 Severity: normal
 Certainty: certain
-Info: This <tt>/etc/init.d</tt> script specifies the 6 or 0 runlevel in
+Info: This <tt>/etc/init.d</tt> script specifies the 0 or 6 runlevels in
  Default-Start in its LSB keyword section.  The 0 and 6 runlevels are
- meant to only stop services, not to start them.  If the intention is
- to do something that might not exactly be stopping a service at one of
- those runlevels the script should anyway specify them in Default-Stop
- and perform the actions when passed the <tt>stop</tt> argument.
+ meant to only stop services, not to start them.  Even if the init script
+ is doing something that isn't exactly stopping a service, the run-level
+ should be listed in Default-Stop, not Default-Start, and the script
+ should perform those actions when passed the <tt>stop</tt> argument.
 
-Tag: init.d-script-provides-virtual-facility-in-header
+Tag: init.d-script-provides-virtual-facility
 Severity: normal
 Certainty: certain
-Info: This <tt>/etc/init.d</tt> script indicates it provides a virtual
- facility, denoted by the dollar sign in front of the name.
- Virtual facilities are declared as provided by shipping a file,
- usually named after the package to avoid file conflicts, that is
- installed in <tt>/etc/insserv.conf.d</tt> with its content on the
- following format: <tt>$virtual_facility_name +init-script-name</tt>.
+Info: This <tt>/etc/init.d</tt> script indicates in its LSB headers that
+ it provides a virtual facility, denoted by the dollar sign in front of
+ the name.
+ .
+ This is not the correct way to provide a virtual facility.  Instead, the
+ package should include a file in <tt>/etc/insserv.conf.d</tt>, usually
+ named after the package, containing:
+ .
+  $virtual_facility_name +init-script-name
+ .
+ to declare that the named init script provides the named virtual
+ facility.
 Ref: http://wiki.debian.org/LSBInitScripts/DebianVirtualFacilities
 
-Tag: init.d-script-provides-not-after-its-name
+Tag: init.d-script-does-not-provide-itself
 Severity: normal
 Certainty: possible
 Info: This <tt>/etc/init.d</tt> script indicates it provides one or
- more facilities but none is named after the name of the init script.
- Although in certain cases it might be necessary not to follow that
- naming convention, in most cases that's the right way to name the
- facility provided by the init script.
+ more facilities, but none of the provided facilities match the name of
+ the init script.  In certain cases, it may be necessary to not follow
+ that convention, but normally init scripts should always provide a
+ facility matching the name of the init script.
 Ref: http://wiki.debian.org/LSBInitScripts
 
-Tag: init.d-script-dependency-better-on-virtual-facility
+Tag: init.d-script-should-depend-on-virtual-facility
 Severity: important
 Certainty: possible
 Info: The given <tt>/etc/init.d</tt> script depends on a non-virtual
- facility although it should probably depend on the virtual facility
- that implies that facility. One such example is when a dependency on
- <tt>networking</tt> is declared, although the script should probably
- depend on <tt>$network</tt> instead, which will pull in whataver
- init script provides that virtual facility, therefore accomodating to
- other setups and requirements.
+ facility that should probably be replaced by a vitual facility.  For
+ example, init scripts should depend on the virtual facility
+ <tt>$network</tt> rather than the facility <tt>networking</tt>, and the
+ virtual facility <tt>$named</tt> rather than the specific facility
+ <tt>bind9</tt>.
+ .
+ Properly using virtual facilities allows multiple implementations of the
+ same facility and accomodates systems where that specific facility may
+ not be enough to provide everything the script expects.

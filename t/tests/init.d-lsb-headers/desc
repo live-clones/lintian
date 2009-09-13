@@ -1,12 +1,12 @@
 Testname: init.d-lsb-headers
 Sequence: 6000
 Version: 1.0
-Description: Test tags related to the init.d lsb header checks
+Description: Test tags related to init script LSB headers
 Test-For:
+ init-d-script-stops-in-s-runlevel
+ init.d-script-does-not-provide-itself
  init.d-script-has-bad-start-runlevel
  init.d-script-has-bad-stop-runlevel
- init-d-script-stops-in-s-runlevel
+ init.d-script-provides-virtual-facility
+ init.d-script-should-depend-on-virtual-facility
  init.d-script-starts-in-stop-runlevel
- init.d-script-provides-virtual-facility-in-header
- init.d-script-provides-not-after-its-name
- init.d-script-dependency-better-on-virtual-facility

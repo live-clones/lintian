@@ -34,16 +34,21 @@ my %lsb_keywords = (provides		=> 1,
 		    'short-description' => 1,
 		    'description'	=> 0);
 
-my %common_implied_dependencies = ('mountall' => '$local_fs',
-				    'mountnfs' => '$remote_fs',
-				    'hwclock' => '$time',
-				    'portmap' => '$portmap',
-				    'named' => '$named',
-				    'bind9' => '$named',
-				    'networking' => '$network',
-				    'syslog' => '$syslog',
-				    'rsyslog' => '$syslog',
-				    'sysklogd' => '$syslog');
+# These init script names should probably not be used in dependencies.
+# Instead, the corresponding virtual facility should be used.
+my %implied_dependencies =
+    (
+     'mountall'   => '$local_fs',
+     'mountnfs'   => '$remote_fs',
+     'hwclock'    => '$time',
+     'portmap'    => '$portmap',
+     'named'      => '$named',
+     'bind9'      => '$named',
+     'networking' => '$network',
+     'syslog'     => '$syslog',
+     'rsyslog'    => '$syslog',
+     'sysklogd'   => '$syslog'
+    );
 
 sub run {
 
@@ -265,10 +270,13 @@ sub check_init {
 	for my $runlevel (split (/\s+/, $lsb{'default-start'})) {
 	    if ($runlevel =~ /^[sS0-6]$/) {
 		$start{lc $runlevel} = 1;
-		tag "init.d-script-starts-in-stop-runlevel", "/etc/init.d/$_ $runlevel"
-		    if ($runlevel =~ /^(?:0|6)$/);
+		if ($runlevel eq '0' or $runlevel eq '6') {
+		    tag 'init.d-script-starts-in-stop-runlevel',
+			"/etc/init.d/$_", $runlevel;
+		}
 	    } else {
-		tag "init.d-script-has-bad-start-runlevel", "/etc/init.d/$_ $runlevel";
+		tag 'init.d-script-has-bad-start-runlevel', "/etc/init.d/$_",
+		    $runlevel;
 	    }
 	}
     }
@@ -287,25 +295,27 @@ sub check_init {
 	}
     }
     if ($lsb{'provides'}) {
-	my $named_after_script = 0;
+	my $provides_self;
 	for my $facility (split(/\s+/, $lsb{'provides'})) {
 	    if ($facility =~ /^\$/) {
-		tag "init.d-script-provides-virtual-facility-in-header",
-		    "/etc/init.d/$_ $facility";
+		tag 'init.d-script-provides-virtual-facility',
+		    "/etc/init.d/$_", $facility;
 	    }
-	    $named_after_script = 1
-		if ($_ =~ m/^\Q$facility\E(?:.sh)?$/);
+	    if (/^\Q$facility\E(?:.sh)?$/) {
+		$provides_self = 1;
+	    }
 	}
-	tag "init.d-script-provides-not-after-its-name", "/etc/init.d/$_"
-	    unless ($named_after_script);
+	tag 'init.d-script-does-not-provide-itself', "/etc/init.d/$_"
+	    unless $provides_self;
     }
 
     for my $keyword qw(required-start should-start required-stop should-stop) {
-	next unless defined($lsb{$keyword});
+	next unless defined $lsb{$keyword};
 	for my $dependency (split(/\s+/, $lsb{$keyword})) {
-	    if (defined($common_implied_dependencies{$dependency})) {
-		tag "init.d-script-dependency-better-on-virtual-facility",
-			"/etc/init.d/$_ $dependency -> $common_implied_dependencies{$dependency}";
+	    if (defined $implied_dependencies{$dependency}) {
+		tag 'init.d-script-should-depend-on-virtual-facility',
+		    "/etc/init.d/$_",
+		    "$dependency -> $implied_dependencies{$dependency}";
 	    }
 	}
     }
