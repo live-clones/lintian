@@ -44,6 +44,10 @@ lintian (2.2.15) UNRELEASED; urgency=low
     + [RA] When checking for out-of-order debhelper calls, take into
       account the -p flag and only check within each package.  Thanks,
       Michael Koch.  (Closes: #545219)
+  * checks/scripts:
+    + [RA] Don't warn about missing dependencies on programs if the
+      program invocation is followed by || true.  Thanks, Aurelien Jarno.
+      (Closes: #541372)
 
   * data/fields/essential:
     + [RA] New list of essential packages.

@@ -886,7 +886,7 @@ while (<SCRIPTS>) {
 		if ($pkg ne $package and /$regex/ and ! $warned{$package}) {
 		    if (m,-x\s+\S*$regex, or m,(which|type)\s+$regex, or m,command\s+.*?$regex,) {
 			$warned{$package} = 1;
-		    } else {
+		    } elsif (!/\|\|\s*true\b/) {
 			unless ($info->relation('strong')->implies($package)) {
 			    my $shortpackage = $package;
 			    $shortpackage =~ s/[ \(].*//;

@@ -117,4 +117,8 @@ chmod `dpkg-statoverride --list /usr/sbin/apache2 | cut -f 3` /usr/sbin/apache2
 true `basename "$0"` `/usr/bin/foo bar`
 true `/usr/bin/foo "$0"`
 
+# This line should not trigger a warning about no dependency on ucf because of
+# the || true.  (Bug#541372)
+ucf -p /etc/sensors3.conf || true
+
 #DEBHELPER#
