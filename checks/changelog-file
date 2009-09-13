@@ -236,9 +236,11 @@ if ($native_pkg) {
 }
 
 # Everything below involves opening and reading the changelog file, so bail
-# with a warning at this point if all we have is a symlink.
+# with a warning at this point if all we have is a symlink.  Ubuntu permits
+# such symlinks, so give the package a pass if the version number contains
+# ubuntu.
 if (-l 'changelog') {
-    tag "debian-changelog-file-is-a-symlink", "";
+    tag 'debian-changelog-file-is-a-symlink' unless $version =~ /ubuntu/;
     return 0;
 }
 

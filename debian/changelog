@@ -1,5 +1,8 @@
 lintian (2.2.15) UNRELEASED; urgency=low
 
+  * checks/changelog-file:
+    + [RA] Don't warn about a symlinked changelog file if the version
+      contains ubuntu.  Thanks, Benjamin Drung.  (Closes: #536434)
   * checks/common_data.pm:
     + [RA] Moved the essential package list to data/fields.
   * checks/copyright-file:
