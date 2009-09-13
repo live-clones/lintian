@@ -1060,6 +1060,3 @@ Info: This package contains files under <tt>/usr/share/games</tt>, such as
  equivalent and using the upstream installation rules.  These files need
  to be moved into the corresponding directories directly under
  <tt>/usr/share</tt>.
-
- in directories that belong to direct
- subdirectories of <tt>/usr/share</tt> instead of <tt>/usr/share/games</tt>.
