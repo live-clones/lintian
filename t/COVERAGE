@@ -186,13 +186,6 @@ rules debian-rules-uses-DEB_BUILD_OPTS
 rules missing-build-dependency
 
 scripts csh-considered-harmful
-scripts example-interpreter-in-usr-local
-scripts example-interpreter-not-absolute
-scripts example-script-uses-bin-env
-scripts example-script-without-interpreter
-scripts example-shell-script-fails-syntax-check
-scripts example-unusual-interpreter
-scripts example-wrong-path-for-interpreter
 scripts gawk-script-but-no-gawk-dep
 scripts killall-is-dangerous
 scripts maintainer-script-needs-depends-on-adduser

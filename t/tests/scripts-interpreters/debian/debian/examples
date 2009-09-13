@@ -1,0 +1,8 @@
+bin-env
+no-interpreter
+not-absolute
+syntax
+unusual
+unversioned-pike
+usr-local
+wrong-perl-path

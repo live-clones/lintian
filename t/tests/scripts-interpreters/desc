@@ -2,7 +2,16 @@ Testname: scripts-interpreters
 Sequence: 6000
 Version: 1.0
 Description: Check various script interpreter issues
+Skeleton: pedantic
+Options: --pedantic -I -E
 Test-For:
+ example-interpreter-in-usr-local
+ example-interpreter-not-absolute
+ example-script-uses-bin-env
+ example-script-without-interpreter
+ example-shell-script-fails-syntax-check
+ example-unusual-interpreter
+ example-wrong-path-for-interpreter
  interpreter-in-usr-local
  interpreter-not-absolute
  missing-dep-for-interpreter
@@ -10,3 +19,4 @@ Test-For:
  script-without-interpreter
  unusual-interpreter
  wrong-path-for-interpreter
+References: Debian Bug#543873
