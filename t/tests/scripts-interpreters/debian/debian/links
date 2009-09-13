@@ -1,2 +1,9 @@
-usr/share/man/man1/interpreters.1	usr/share/man/man1/unversioned-pike.1
-usr/share/man/man1/interpreters.1	usr/share/man/man1/versioned-pike.1
+usr/share/man/man1/interpreters.1       usr/share/man/man1/bin-env.1
+usr/share/man/man1/interpreters.1       usr/share/man/man1/no-interpreter.1
+usr/share/man/man1/interpreters.1       usr/share/man/man1/not-absolute.1
+usr/share/man/man1/interpreters.1       usr/share/man/man1/syntax.1
+usr/share/man/man1/interpreters.1       usr/share/man/man1/unusual.1
+usr/share/man/man1/interpreters.1       usr/share/man/man1/unversioned-pike.1
+usr/share/man/man1/interpreters.1       usr/share/man/man1/usr-local.1
+usr/share/man/man1/interpreters.1       usr/share/man/man1/versioned-pike.1
+usr/share/man/man1/interpreters.1       usr/share/man/man1/wrong-perl-path.1

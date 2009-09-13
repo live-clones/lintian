@@ -1,2 +1,9 @@
-unversioned-pike	usr/bin/
-versioned-pike		usr/bin/
+bin-env                 usr/bin/
+no-interpreter          usr/bin/
+not-absolute            usr/bin/
+syntax                  usr/bin/
+unusual                 usr/bin/
+unversioned-pike        usr/bin/
+usr-local               usr/bin/
+versioned-pike          usr/bin/
+wrong-perl-path         usr/bin/

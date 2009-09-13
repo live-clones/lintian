@@ -1,2 +1,10 @@
+E: scripts-interpreters: interpreter-in-usr-local ./usr/bin/usr-local #!/usr/local/bin/special-perl
 E: scripts-interpreters: missing-dep-for-interpreter pike => pike7.6 | pike7.6-core (./usr/bin/unversioned-pike)
 E: scripts-interpreters: missing-dep-for-interpreter pike7.6 => pike7.6 | pike7.6-core (./usr/bin/versioned-pike)
+E: scripts-interpreters: script-without-interpreter ./usr/bin/no-interpreter
+E: scripts-interpreters: shell-script-fails-syntax-check ./usr/bin/syntax
+E: scripts-interpreters: wrong-path-for-interpreter ./usr/bin/not-absolute (#!perl != /usr/bin/perl)
+E: scripts-interpreters: wrong-path-for-interpreter ./usr/bin/wrong-perl-path (#!/bin/perl != /usr/bin/perl)
+W: scripts-interpreters: interpreter-not-absolute ./usr/bin/not-absolute #!perl
+W: scripts-interpreters: script-uses-bin-env ./usr/bin/bin-env
+W: scripts-interpreters: unusual-interpreter ./usr/bin/unusual #!/usr/bin/lintian

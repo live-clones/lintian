@@ -186,18 +186,21 @@ rules debian-rules-uses-DEB_BUILD_OPTS
 rules missing-build-dependency
 
 scripts csh-considered-harmful
+scripts example-interpreter-in-usr-local
+scripts example-interpreter-not-absolute
+scripts example-script-uses-bin-env
+scripts example-script-without-interpreter
+scripts example-shell-script-fails-syntax-check
+scripts example-unusual-interpreter
+scripts example-wrong-path-for-interpreter
 scripts gawk-script-but-no-gawk-dep
-scripts interpreter-in-usr-local
-scripts interpreter-not-absolute
 scripts killall-is-dangerous
 scripts maintainer-script-needs-depends-on-adduser
 scripts maintainer-script-needs-depends-on-update-inetd
 scripts mawk-script-but-no-mawk-dep
 scripts mknod-in-maintainer-script
 scripts ruby-script-but-no-ruby-dep
-scripts script-without-interpreter
 scripts tclsh-script-but-no-tclsh-dep
-scripts unusual-interpreter
 scripts wish-script-but-no-wish-dep
 
 shared-libs dev-pkg-without-shlib-symlink
@@ -515,7 +518,6 @@ scripts maintainer-shell-script-fails-syntax-check
 scripts php-script-but-no-phpX-cli-dep
 scripts python-script-but-no-python-dep
 scripts script-not-executable
-scripts script-uses-bin-env
 scripts shell-script-fails-syntax-check
 scripts suid-perl-script-but-no-perl-suid-dep
 scripts update-alternatives-remove-called-in-postrm
@@ -884,7 +886,6 @@ scripts
   php-script-but-no-phpX-cli-dep
   python-script-but-no-python-dep
   script-in-usr-share-doc
-  script-uses-bin-env
   script-with-language-extension
   setuid-binary
   shell-script-fails-syntax-check
