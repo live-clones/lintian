@@ -108,6 +108,8 @@ lintian (2.2.15) UNRELEASED; urgency=low
     + [RA] If declining to add a duplicate file to the Lintian check
       schedule, return success to avoid a spurious error message.  Patch
       from Raphael Geissert.  (Closes: #542072)
+  * lib/Spelling.pm:
+    + [RA] Add spelling correction for "aplication."  (Closes: #546404)
 
   * private/refresh-fonts-data:
     + [RA] To match what checks/files looks for, also look for *.pfb files

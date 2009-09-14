@@ -78,6 +78,7 @@ our %CORRECTIONS = qw(
                       analysator analyzer
                       ang and
                       annoucement announcement
+                      aplication application
                       appearence appearance
                       appropiate appropriate
                       appropriatly appropriately
