@@ -6,4 +6,5 @@ Test-For:
  build-depends-on-metapackage
  build-depends-on-non-build-package
  depends-on-metapackage
+ lib-recommends-documentation
 References: Debian Bug#540594

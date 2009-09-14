@@ -1,3 +1,4 @@
 E: fields-depends-general source: build-depends-on-metapackage build-depends: xorg-dev
 E: fields-depends-general source: build-depends-on-non-build-package build-depends: java-propose-classpath
 E: fields-depends-general: depends-on-metapackage depends: xorg
+W: libfields-depends-general: lib-recommends-documentation recommends: debconf-doc

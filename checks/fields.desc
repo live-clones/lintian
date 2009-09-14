@@ -935,3 +935,12 @@ Severity: normal
 Certainty: possible
 Info: The VCS-* field uses an URI which doesn't match any known format.
  You might have forgotten the protocol before the hostname.
+
+Tag: lib-recommends-documentation
+Severity: normal
+Certainty: possible
+Info: The given package appears to be a library but it recommends a
+ documentation package.  Doing so is not recommended as libraries
+ usually make part of the dependencies of other packages, and this may
+ lead to users installing unwanted documentation packages (given that
+ recommends are installed by default).
