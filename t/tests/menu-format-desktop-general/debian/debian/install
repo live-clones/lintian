@@ -1,0 +1,6 @@
+crlf.desktop         usr/share/applications
+environments.desktop usr/share/applications
+general.desktop      usr/share/applications
+missing.desktop      usr/share/applications
+reserved-bad.desktop usr/share/applications
+reserved.desktop     usr/share/applications

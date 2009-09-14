@@ -3,6 +3,7 @@ lintian (2.2.15) UNRELEASED; urgency=low
   * Summary of tag changes:
     + Added:
       - build-depends-on-non-build-package
+      - desktop-entry-limited-to-environments
       - example-interpreter-in-usr-local (pedantic)
       - example-interpreter-not-absolute
       - example-script-without-interpreter
@@ -74,11 +75,14 @@ lintian (2.2.15) UNRELEASED; urgency=low
       (Closes: #543641)
     + [RA] Document the MANWIDTH variable when running man by hand to
       check for man page errors.  (Closes: #542584)
-  * checks/menu-format.desc:
+  * checks/menu-format{,.desc}:
     + [RA] Add a pointer to desktop-file-validate in many of the tag
       descriptions for desktop tags.  (Closes: #539403)
     + [RA] Mention in the description of desktop-entry-invalid-category
       that whitespace isn't allowed and categories are case-sensitive.
+    + [RA] Add a new check for desktop entries that are limited to
+      multiple environments.  NotShowIn was probably intended instead.
+      Thanks, Andrew Lee.  (Closes: #537737)
   * checks/rules:
     + [RA] Anchor the dh_quilt regex to not trigger on commented-out
       calls.  Patch from Cesare Tirabassi.  (Closes: #543259)

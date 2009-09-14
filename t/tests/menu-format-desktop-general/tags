@@ -1,0 +1,15 @@
+E: menu-format-desktop-general: executable-desktop-file /usr/share/applications/general.desktop 0755
+I: menu-format-desktop-general: desktop-entry-contains-encoding-key /usr/share/applications/general.desktop:7 Encoding
+I: menu-format-desktop-general: desktop-entry-limited-to-environments /usr/share/applications/environments.desktop
+W: menu-format-desktop-general: desktop-command-not-in-package /usr/share/applications/environments.desktop foo
+W: menu-format-desktop-general: desktop-command-not-in-package /usr/share/applications/general.desktop foo
+W: menu-format-desktop-general: desktop-command-not-in-package /usr/share/applications/reserved-bad.desktop foo
+W: menu-format-desktop-general: desktop-command-not-in-package /usr/share/applications/reserved.desktop foo
+W: menu-format-desktop-general: desktop-entry-contains-deprecated-key usr/share/applications/general.desktop:10 TerminalOptions
+W: menu-format-desktop-general: desktop-entry-contains-unknown-key /usr/share/applications/general.desktop:6 Foo
+W: menu-format-desktop-general: desktop-entry-file-has-crs /usr/share/applications/crlf.desktop:1
+W: menu-format-desktop-general: desktop-entry-invalid-category Lintian /usr/share/applications/general.desktop
+W: menu-format-desktop-general: desktop-entry-lacks-main-category /usr/share/applications/general.desktop
+W: menu-format-desktop-general: desktop-entry-uses-reserved-category Screensaver /usr/share/applications/reserved-bad.desktop
+W: menu-format-desktop-general: duplicated-key-in-desktop-entry /usr/share/applications/general.desktop:3 Name
+W: menu-format-desktop-general: executable-not-elf-or-script ./usr/share/applications/general.desktop

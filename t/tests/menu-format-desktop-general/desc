@@ -1,0 +1,17 @@
+Testname: menu-format-desktop-general
+Sequence: 6000
+Version: 1.0
+Description: Test desktop file tags
+Test-For:
+ desktop-command-not-in-package
+ desktop-entry-contains-deprecated-key
+ desktop-entry-contains-encoding-key
+ desktop-entry-contains-unknown-key
+ desktop-entry-file-has-crs
+ desktop-entry-invalid-catgory
+ desktop-entry-lacks-main-category
+ desktop-entry-limited-to-environments
+ desktop-entry-uses-reserved-category
+ duplicated-key-in-desktop-entry
+ executable-desktop-file
+References: Debian Bug#537737

@@ -818,6 +818,7 @@ sub VerifyDesktopFile {
     }
 
     # Check the Category tag.
+    my $in_reserved;
     if (defined $vals{'Categories'}) {
         my @cats = split (';', $vals{'Categories'});
         my $saw_main;
@@ -827,6 +828,7 @@ sub VerifyDesktopFile {
                 tag "desktop-entry-uses-reserved-category", "$cat /$file"
                     unless $vals{'OnlyShowIn'};
                 $saw_main = 1;
+		$in_reserved = 1;
             } elsif (not $categories{$cat} and not $main_categories{$cat}) {
                 tag "desktop-entry-invalid-category", "$cat /$file";
             } elsif ($main_categories{$cat}) {
@@ -836,6 +838,17 @@ sub VerifyDesktopFile {
         unless ($saw_main) {
             tag "desktop-entry-lacks-main-category", "/$file";
         }
+    }
+
+    # Check the OnlyShowIn tag.  If this is not an application in a reserved
+    # category, warn about any desktop entry that specifies OnlyShowIn for
+    # more than one environment.  In that case, the application probably
+    # should be using NotShowIn instead.
+    if (defined $vals{OnlyShowIn} and not $in_reserved) {
+	my @envs = split (';', $vals{OnlyShowIn});
+	if (@envs > 1) {
+	    tag 'desktop-entry-limited-to-environments', "/$file";
+	}
     }
 }
 

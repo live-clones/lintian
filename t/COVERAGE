@@ -1,10 +1,11 @@
-Last generated 2009-09-13
+Last generated 2009-09-14
 
 The following tags are not tested by the test suite:
 
 binaries apparently-corrupted-elf-binary
 binaries binary-file-compressed-with-upx
 binaries library-not-linked-against-libc
+binaries ocaml-custom-executable
 binaries program-not-linked-against-libc
 
 changelog-file html-changelog-without-text-version
@@ -130,9 +131,6 @@ manpages manpage-for-x11-binary-in-wrong-directory
 manpages manpage-in-wrong-directory
 
 menu-format bad-test-in-menu-item
-menu-format desktop-entry-contains-deprecated-key
-menu-format desktop-entry-lacks-main-category
-menu-format duplicated-key-in-desktop-entry
 menu-format duplicated-tag-in-menu-item
 menu-format menu-icon-cannot-be-parsed
 menu-format menu-icon-missing
@@ -422,15 +420,9 @@ md5sums md5sums-lists-nonexisting-file
 md5sums no-md5sums-control-file
 
 menu-format deprecated-kdelnk-file
-menu-format desktop-command-not-in-package
 menu-format desktop-contains-deprecated-header
-menu-format desktop-entry-contains-encoding-key
-menu-format desktop-entry-contains-unknown-key
-menu-format desktop-entry-file-has-crs
 menu-format desktop-entry-invalid-category
 menu-format desktop-entry-missing-required-key
-menu-format desktop-entry-uses-reserved-category
-menu-format executable-desktop-file
 menu-format menu-command-not-in-package
 menu-format menu-item-creates-new-section
 menu-format menu-item-missing-required-tag
@@ -560,14 +552,9 @@ binary
   debian-news-file-uses-obsolete-national-encoding
   debian-rules-uses-pwd
   deprecated-kdelnk-file
-  desktop-command-not-in-package
   desktop-contains-deprecated-header
-  desktop-entry-contains-encoding-key
-  desktop-entry-contains-unknown-key
-  desktop-entry-file-has-crs
   desktop-entry-invalid-category
   desktop-entry-missing-required-key
-  desktop-entry-uses-reserved-category
   doc-base-abstract-field-separator-extra-whitespaces
   doc-base-document-field-ends-in-whitespace
   doc-base-file-duplicated-format
@@ -582,7 +569,6 @@ binary
   doc-base-index-references-multiple-files
   doc-base-invalid-document-field
   doc-base-unknown-section
-  executable-desktop-file
   executable-not-elf-or-script
   file-directly-in-usr-share
   file-in-unusual-dir
