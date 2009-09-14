@@ -1,5 +1,5 @@
 E: scripts-interpreters: interpreter-in-usr-local ./usr/bin/usr-local #!/usr/local/bin/special-perl
-E: scripts-interpreters: missing-dep-for-interpreter pike => pike7.6 | pike7.6-core (./usr/bin/unversioned-pike)
+E: scripts-interpreters: missing-dep-for-interpreter pike => pike7.6 | pike7.6-core | pike7.8 | pike7.8-core (./usr/bin/unversioned-pike)
 E: scripts-interpreters: missing-dep-for-interpreter pike7.6 => pike7.6 | pike7.6-core (./usr/bin/versioned-pike)
 E: scripts-interpreters: script-without-interpreter ./usr/bin/no-interpreter
 E: scripts-interpreters: shell-script-fails-syntax-check ./usr/bin/syntax
