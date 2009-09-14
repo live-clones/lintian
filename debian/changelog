@@ -92,6 +92,7 @@ lintian (2.2.15) UNRELEASED; urgency=low
       elsewhere in the package, but report problems with a different set
       of tags with info or pedantic severity.  Patch from Damyan Ivanov.
       (Closes: #543873)
+    + [RA] Add seed.  Thanks, Josselin Mouette.  (Closes: #543779)
 
   * data/fields/essential:
     + [RA] New list of essential packages.

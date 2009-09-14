@@ -92,6 +92,7 @@ our %interpreters =
      ruby	    => [ '/usr/bin' ],
      runhugs	    => [ '/usr/bin', 'hugs | hugs98' ],
      sed	    => [ '/bin', '' ],
+     seed	    => [ '/usr/bin' ],
      sh		    => [ '/bin', '' ],
      slsh	    => [ '/usr/bin' ],
      speedy	    => [ '/usr/bin', 'speedy-cgi-perl' ],
