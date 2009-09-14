@@ -16,8 +16,8 @@ E: scripts: python-script-but-no-python-dep ./usr/bin/py2foo
 E: scripts: python-script-but-no-python-dep ./usr/bin/pyfoo
 E: scripts: shell-script-fails-syntax-check ./usr/bin/sh-broken
 E: scripts: suid-perl-script-but-no-perl-suid-dep ./usr/bin/suidperlfoo2
-E: scripts: wrong-path-for-interpreter #!/bin/ruby1.8 != /usr/bin/ruby1.8 (./usr/bin/rubyfoo)
-E: scripts: wrong-path-for-interpreter #!/usr/local/bin/lefty != /usr/bin/lefty (./usr/bin/lefty-foo)
+E: scripts: wrong-path-for-interpreter ./usr/bin/lefty-foo (#!/usr/local/bin/lefty != /usr/bin/lefty)
+E: scripts: wrong-path-for-interpreter ./usr/bin/rubyfoo (#!/bin/ruby1.8 != /usr/bin/ruby1.8)
 E: scripts_6ds-1ubuntu0.5.10.1_arch.changes: bad-ubuntu-distribution-in-changes-file unstable
 I: scripts source: debian-watch-file-should-dversionmangle-not-uversionmangle line 5
 I: scripts source: dpatch-missing-description 02_i_dont_have_a_description.patch
@@ -63,6 +63,7 @@ W: scripts: executable-is-not-world-readable usr/bin/suidperlfoo2 4751
 W: scripts: executable-not-elf-or-script ./usr/bin/perl-bizarre-3
 W: scripts: init-d-script-stops-in-s-runlevel /etc/init.d/lsb-broken
 W: scripts: init-d-script-stops-in-s-runlevel /etc/init.d/skeleton
+W: scripts: init.d-script-does-not-provide-itself /etc/init.d/lsb-broken
 W: scripts: init.d-script-has-bad-lsb-line /etc/init.d/lsb-broken:4
 W: scripts: init.d-script-has-bad-lsb-line /etc/init.d/lsb-broken:9
 W: scripts: init.d-script-has-bad-stop-runlevel /etc/init.d/lsb-broken X
