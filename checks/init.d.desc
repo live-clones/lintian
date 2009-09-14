@@ -269,14 +269,14 @@ Tag: init.d-script-should-depend-on-virtual-facility
 Severity: important
 Certainty: possible
 Info: The given <tt>/etc/init.d</tt> script depends on a non-virtual
- facility that should probably be replaced by a vitual facility.  For
+ facility that should probably be replaced by a virtual facility.  For
  example, init scripts should depend on the virtual facility
  <tt>$network</tt> rather than the facility <tt>networking</tt>, and the
  virtual facility <tt>$named</tt> rather than the specific facility
  <tt>bind9</tt>.
  .
  Properly using virtual facilities allows multiple implementations of the
- same facility and accomodates systems where that specific facility may
+ same facility and accommodates systems where that specific facility may
  not be enough to provide everything the script expects.
 
 Tag: init.d-script-possible-missing-stop
