@@ -470,6 +470,7 @@ our %CORRECTIONS = qw(
                       verison version
                       verson version
                       vicefersa vice-versa
+                      whataver whatever
                       wheter whether
                       wierd weird
                       xwindows X
