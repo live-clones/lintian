@@ -41,6 +41,9 @@ lintian (2.2.15) UNRELEASED; urgency=low
       migration from fileutils is long since finished.
     + [RA] Check for build dependencies on packages that should not be
       used for builds.  (Closes: #540594)
+    + [RA] Allow architecture-dependent metapackages, since it can be
+      useful for metapackages to change dependencies based on the
+      architecture.  Thanks, Vagrant Cascadian.  (Closes: #544004)
   * checks/files{,.desc}:
     + [RA] Suppress non-standard-dir-perm for /tmp, /var/tmp, /var/local,
       /var/lock, and /usr/src if they have their normal owner and
