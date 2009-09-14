@@ -22,6 +22,7 @@ lintian (2.2.15) UNRELEASED; urgency=low
   * checks/binaries{,.desc}:
     + [RA] Add a new check for OCaml bytecode executables.  Patch from
       Stéphane Glondu.  (Closes: #498138)
+    + [RA] Allow ldconfig to be statically linked.
   * checks/changelog-file:
     + [RA] Don't warn about a symlinked changelog file if the version
       contains ubuntu.  Thanks, Benjamin Drung.  (Closes: #536434)
@@ -103,6 +104,8 @@ lintian (2.2.15) UNRELEASED; urgency=low
       (Closes: #543873)
     + [RA] Add seed.  Thanks, Josselin Mouette.  (Closes: #543779)
     + [RA] Add pike 7.8.  Thanks, Magnus Holmgren.  (Closes: #543262)
+  * checks/shared-libs:
+    + [RA] Allow ld.so to be executable.  (Closes: #538716)
 
   * data/fields/essential:
     + [RA] New list of essential packages.

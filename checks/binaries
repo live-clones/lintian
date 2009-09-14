@@ -311,12 +311,14 @@ foreach my $file (sort keys %{$info->file_info}) {
 	    # Some exceptions: files in /boot, /usr/lib/debug/*, named *-static or
 	    # *.static, or *-static as package-name.
 	    next if ($file =~ m%^./boot/%);
-	    # klibc binaries appear to be static.
-	    next if ($objdump->{KLIBC});
-	    # Location of debugging symbols:
-	    next if ($file =~ m%^./usr/lib/debug/%);
 	    next if ($file =~ /(?:\.|-)static$/);
 	    next if ($pkg =~ /-static$/);
+	    # klibc binaries appear to be static.
+	    next if ($objdump->{KLIBC});
+	    # Location of debugging symbols.
+	    next if ($file =~ m%^./usr/lib/debug/%);
+	    # ldconfig must be static.
+	    next if ($file eq './sbin/ldconfig');
 	    tag "statically-linked-binary", "$file";
 	}
     } else {

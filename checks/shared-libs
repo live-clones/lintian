@@ -110,18 +110,21 @@ for my $cur_file (sort keys %{$info->index}) {
 	    tag "shlib-calls-exit", "$cur_file";
 	}
 
-        # don't apply the permission checks to links
-        # since this only results in doubled messages
-        if ($cur_file eq $real_file) { 
+        # Don't apply the permission checks to links since this only results
+        # in doubled messages.
+        if ($cur_file eq $real_file) {
             # executable?
+	    my $perms = sprintf("%04o", $real_perm);
             if ($real_perm & 0100 or $real_perm & 010 or $real_perm & 01) {
-                # yes.  But if the library has an INTERP section, it's designed
-                # to do something useful when executed, so don't report an error.
-                tag "shlib-with-executable-bit", $cur_file, sprintf("%04o", $real_perm)
-                    unless $objdump->{$real_file}->{INTERP};
+                # Yes.  But if the library has an INTERP section, it's
+                # designed to do something useful when executed, so don't
+                # report an error.  Also give ld.so a pass, since it's
+                # special.
+                tag "shlib-with-executable-bit", $cur_file, $perms
+                    unless ($objdump->{$real_file}->{INTERP}
+			    or $real_file =~ m,^lib(|32|64)/ld-[\d.]+\.so$,);
             } elsif ($real_perm != 0644) {
-                # bad permissions
-                tag "shlib-with-bad-permissions", $cur_file, sprintf("%04o", $real_perm);
+                tag "shlib-with-bad-permissions", $cur_file, $perms;
             }
         }
 
