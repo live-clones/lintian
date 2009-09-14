@@ -68,7 +68,7 @@ lintian (2.2.15) UNRELEASED; urgency=low
       virtual facility, not providing a facility matching the script, not
       depending on a virtual facility, and inconsistent stop runlevels.
       Patch from Raphael Geissert.  (Closes: #544221)
-  * checks/manpages:
+  * checks/manpages{,.desc}:
     + [ADB] Add HTTPS to the list of recognised protocols for URLs in manpages
       which should not cause manpage-has-errors-from-man to be emitted.
       (Closes: #543641)
@@ -80,7 +80,7 @@ lintian (2.2.15) UNRELEASED; urgency=low
     + [RA] When checking for out-of-order debhelper calls, take into
       account the -p flag and only check within each package.  Thanks,
       Michael Koch.  (Closes: #545219)
-  * checks/scripts:
+  * checks/scripts{,.desc}:
     + [RA] Don't warn about missing dependencies on programs if the
       program invocation is followed by || true.  Thanks, Aurelien Jarno.
       (Closes: #541372)
