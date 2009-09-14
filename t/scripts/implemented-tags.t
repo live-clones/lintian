@@ -39,6 +39,9 @@ our $EXCLUDE =
                  ^wrong-debian-qa-address-set-as-maintainer$
                  ^wrong-debian-qa-group-name$
                  ^malformed-override$
+                 ^example.*interpreter.*
+                 ^example-script-.*$
+                 ^example-shell-script-.*$
                 ));
 
 # Find all of the check description files.  We'll do one check per
