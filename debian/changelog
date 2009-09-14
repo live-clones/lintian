@@ -74,6 +74,11 @@ lintian (2.2.15) UNRELEASED; urgency=low
       (Closes: #543641)
     + [RA] Document the MANWIDTH variable when running man by hand to
       check for man page errors.  (Closes: #542584)
+  * checks/menu-format.desc:
+    + [RA] Add a pointer to desktop-file-validate in many of the tag
+      descriptions for desktop tags.  (Closes: #539403)
+    + [RA] Mention in the description of desktop-entry-invalid-category
+      that whitespace isn't allowed and categories are case-sensitive.
   * checks/rules:
     + [RA] Anchor the dh_quilt regex to not trigger on commented-out
       calls.  Patch from Cesare Tirabassi.  (Closes: #543259)
