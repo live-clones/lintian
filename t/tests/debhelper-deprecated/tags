@@ -4,3 +4,4 @@ W: debhelper-deprecated source: dh_scrollkeeper-is-deprecated line 24
 W: debhelper-deprecated source: dh_suidregister-is-obsolete line 35
 W: debhelper-deprecated source: dh_testversion-is-deprecated line 17
 W: debhelper-deprecated source: dh_testversion-is-deprecated line 30
+W: debhelper-deprecated source: dh_undocumented-is-obsolete line 36

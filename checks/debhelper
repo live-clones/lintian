@@ -96,6 +96,9 @@ while (<RULES>) {
 	if ($dhcommand eq 'dh_suidregister') {
 	    tag "dh_suidregister-is-obsolete", "line $.";
 	}
+	if ($dhcommand eq 'dh_undocumented') {
+	    tag "dh_undocumented-is-obsolete", "line $.";
+	}
 
 	# Don't warn about recently deprecated commands in code that may be
 	# optional.  It may be there only for backports.

@@ -68,6 +68,15 @@ Ref: dh_suidregister(1)
 Info: suidregister is obsoleted by dpkg-statoverride, so registration of
  files in with dh_suidregister is unnecessary, and even harmful.
 
+Tag: dh_undocumented-is-obsolete
+Severity: normal
+Certainty: certain
+Ref: dh_undocumented(1)
+Info: This package calls dh_undocumented in its <tt>debian/rules</tt> file.
+ Adding symbolic links to the undocumented(7) man page for the binaries
+ without man page is deprecated therefore obsoleting the dh_undocumented
+ man page.
+
 Tag: dh_desktop-is-deprecated
 Severity: normal
 Certainty: certain
