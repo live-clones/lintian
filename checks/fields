@@ -485,131 +485,130 @@ if ($type eq 'binary') {
 if (($type eq "binary") || ($type eq 'udeb')) {
 	my (%deps, %fields, %parsed);
 	for my $field (qw(depends pre-depends recommends suggests conflicts provides enhances replaces breaks)) {
-		if (defined $info->field($field)) {
-			#Get data and clean it
-			my $data = $info->field($field);;
-			unfold($field, \$data);
-			$fields{$field} = $data;
+		next unless defined $info->field($field);
+		#Get data and clean it
+		my $data = $info->field($field);;
+		unfold($field, \$data);
+		$fields{$field} = $data;
 
-			my (@seen_libstdcs, @seen_tcls, @seen_tclxs, @seen_tks, @seen_tkxs, @seen_libpngs);
+		my (@seen_libstdcs, @seen_tcls, @seen_tclxs, @seen_tks, @seen_tkxs, @seen_libpngs);
 
-			my $is_dep_field = sub { grep { $_ eq $_[0] } qw(depends pre-depends recommends suggests) };
+		my $is_dep_field = sub { grep { $_ eq $_[0] } qw(depends pre-depends recommends suggests) };
 
-			tag "alternates-not-allowed", "$field"
-			    if ($data =~ /\|/ && ! &$is_dep_field($field));
+		tag "alternates-not-allowed", "$field"
+		    if ($data =~ /\|/ && ! &$is_dep_field($field));
 
-			for my $dep (split /\s*,\s*/, $data) {
-				my (@alternatives, @seen_obsolete_packages);
-				push @alternatives, [_split_dep($_), $_] for (split /\s*\|\s*/, $dep);
+		for my $dep (split /\s*,\s*/, $data) {
+			my (@alternatives, @seen_obsolete_packages);
+			push @alternatives, [_split_dep($_), $_] for (split /\s*\|\s*/, $dep);
 
-				if (&$is_dep_field($field)) {
-					push @seen_libstdcs, $alternatives[0]->[0]
-					    if defined $known_libstdcs{$alternatives[0]->[0]};
-					push @seen_tcls, $alternatives[0]->[0]
-					    if defined $known_tcls{$alternatives[0]->[0]};
-					push @seen_tclxs, $alternatives[0]->[0]
-					    if defined $known_tclxs{$alternatives[0]->[0]};
-					push @seen_tks, $alternatives[0]->[0]
-					    if defined $known_tks{$alternatives[0]->[0]};
-					push @seen_tkxs, $alternatives[0]->[0]
-					    if defined $known_tkxs{$alternatives[0]->[0]};
-					push @seen_libpngs, $alternatives[0]->[0]
-					    if defined $known_libpngs{$alternatives[0]->[0]};
-				}
+			if (&$is_dep_field($field)) {
+				push @seen_libstdcs, $alternatives[0]->[0]
+				    if defined $known_libstdcs{$alternatives[0]->[0]};
+				push @seen_tcls, $alternatives[0]->[0]
+				    if defined $known_tcls{$alternatives[0]->[0]};
+				push @seen_tclxs, $alternatives[0]->[0]
+				    if defined $known_tclxs{$alternatives[0]->[0]};
+				push @seen_tks, $alternatives[0]->[0]
+				    if defined $known_tks{$alternatives[0]->[0]};
+				push @seen_tkxs, $alternatives[0]->[0]
+				    if defined $known_tkxs{$alternatives[0]->[0]};
+				push @seen_libpngs, $alternatives[0]->[0]
+				    if defined $known_libpngs{$alternatives[0]->[0]};
+			}
 
-				# Only for (Pre-)?Depends.
-				tag "virtual-package-depends-without-real-package-depends", "$field: $alternatives[0]->[0]"
-				    if ($VIRTUAL_PACKAGES->known($alternatives[0]->[0])
-					&& ($field eq "depends" || $field eq "pre-depends")
-					&& ($pkg ne 'base-files' || $alternatives[0]->[0] ne 'awk'));
+			# Only for (Pre-)?Depends.
+			tag "virtual-package-depends-without-real-package-depends", "$field: $alternatives[0]->[0]"
+			    if ($VIRTUAL_PACKAGES->known($alternatives[0]->[0])
+				&& ($field eq "depends" || $field eq "pre-depends")
+				&& ($pkg ne 'base-files' || $alternatives[0]->[0] ne 'awk'));
 
-                                # Check defaults for transitions.  Here, we only care that the first alternative is current.
-                                tag "depends-on-old-emacs", "$field: $alternatives[0]->[0]"
-                                    if (&$is_dep_field($field) && $known_obsolete_emacs{$alternatives[0]->[0]});
+			# Check defaults for transitions.  Here, we only care that the first alternative is current.
+			tag "depends-on-old-emacs", "$field: $alternatives[0]->[0]"
+			    if (&$is_dep_field($field) && $known_obsolete_emacs{$alternatives[0]->[0]});
 
-				for my $part_d (@alternatives) {
-					my ($d_pkg, $d_version, $d_arch, $rest, $part_d_orig) = @$part_d;
+			for my $part_d (@alternatives) {
+				my ($d_pkg, $d_version, $d_arch, $rest, $part_d_orig) = @$part_d;
 
-					tag "versioned-provides", "$part_d_orig"
-					    if ($field eq "provides" && $d_version->[0]);
+				tag "versioned-provides", "$part_d_orig"
+				    if ($field eq "provides" && $d_version->[0]);
 
-					tag "breaks-without-version", "$part_d_orig"
-					    if ($field eq "breaks" && !$d_version->[0]);
+				tag "breaks-without-version", "$part_d_orig"
+				    if ($field eq "breaks" && !$d_version->[0]);
 
-					tag "obsolete-relation-form", "$field: $part_d_orig"
-					    if ($d_version && grep { $d_version->[0] eq $_ } ("<", ">"));
+				tag "obsolete-relation-form", "$field: $part_d_orig"
+				    if ($d_version && grep { $d_version->[0] eq $_ } ("<", ">"));
 
-					tag "bad-version-in-relation", "$field: $part_d_orig"
-					    if ($d_version->[0] && ! defined((_valid_version($d_version->[1]))[1]));
+				tag "bad-version-in-relation", "$field: $part_d_orig"
+				    if ($d_version->[0] && ! defined((_valid_version($d_version->[1]))[1]));
 
-					tag "package-relation-with-self", "$field: $part_d_orig"
-					    if ($pkg eq $d_pkg) && ($field ne 'conflicts');
+				tag "package-relation-with-self", "$field: $part_d_orig"
+				    if ($pkg eq $d_pkg) && ($field ne 'conflicts');
 
-					tag "bad-relation", "$field: $part_d_orig"
-					    if $rest;
+				tag "bad-relation", "$field: $part_d_orig"
+				    if $rest;
 
-					push @seen_obsolete_packages, $part_d_orig
-					    if ($OBSOLETE_PACKAGES->known($d_pkg) && &$is_dep_field($field));
+				push @seen_obsolete_packages, $part_d_orig
+				    if ($OBSOLETE_PACKAGES->known($d_pkg) && &$is_dep_field($field));
 
-					tag "depends-on-metapackage", "$field: $part_d_orig"
-					    if ($KNOWN_METAPACKAGES->known($d_pkg) and not $metapackage and &$is_dep_field($field));
+				tag "depends-on-metapackage", "$field: $part_d_orig"
+				    if ($KNOWN_METAPACKAGES->known($d_pkg) and not $metapackage and &$is_dep_field($field));
 
-					tag "depends-on-essential-package-without-using-version", "$field: $part_d_orig"
-					    if ($KNOWN_ESSENTIAL->known($d_pkg) && ! $d_version->[0] && &$is_dep_field($field));
+				tag "depends-on-essential-package-without-using-version", "$field: $part_d_orig"
+				    if ($KNOWN_ESSENTIAL->known($d_pkg) && ! $d_version->[0] && &$is_dep_field($field));
 
-					tag "package-depends-on-an-x-font-package", "$field: $part_d_orig"
-					    if ($field =~ /^(pre-)?depends$/ && $d_pkg =~ /^xfont.*/ && $d_pkg ne 'xfonts-utils' && $d_pkg ne 'xfonts-encodings');
+				tag "package-depends-on-an-x-font-package", "$field: $part_d_orig"
+				    if ($field =~ /^(pre-)?depends$/ && $d_pkg =~ /^xfont.*/ && $d_pkg ne 'xfonts-utils' && $d_pkg ne 'xfonts-encodings');
 
-					tag "needlessly-depends-on-awk", "$field"
-					    if ($d_pkg eq "awk" && ! $d_version->[0] && &$is_dep_field($field) && $pkg ne 'base-files');
+				tag "needlessly-depends-on-awk", "$field"
+				    if ($d_pkg eq "awk" && ! $d_version->[0] && &$is_dep_field($field) && $pkg ne 'base-files');
 
-					tag "depends-on-libdb1-compat", "$field"
-					    if ($d_pkg eq "libdb1-compat" && $pkg !~ /^libc(6|6.1|0.3)/ && $field =~ /^(pre-)depends$/);
+				tag "depends-on-libdb1-compat", "$field"
+				    if ($d_pkg eq "libdb1-compat" && $pkg !~ /^libc(6|6.1|0.3)/ && $field =~ /^(pre-)depends$/);
 
-					tag "depends-on-python-minimal", "$field",
-					    if ($d_pkg =~ /^python[\d.]*-minimal$/ && &$is_dep_field($field)
-						&& $pkg !~ /^python[\d.]*-minimal$/);
+				tag "depends-on-python-minimal", "$field",
+				    if ($d_pkg =~ /^python[\d.]*-minimal$/ && &$is_dep_field($field)
+					&& $pkg !~ /^python[\d.]*-minimal$/);
 
-					tag "doc-package-depends-on-main-package", "$field"
-					    if ("$d_pkg-doc" eq $pkg && $field =~ /^(pre-)depends$/);
+				tag "doc-package-depends-on-main-package", "$field"
+				    if ("$d_pkg-doc" eq $pkg && $field =~ /^(pre-)depends$/);
 
-					tag "old-versioned-python-dependency", "$field: $part_d_orig"
-					    if ($d_pkg eq 'python' && $d_version->[0] eq '<<' && &$is_dep_field($field)
-						&& $arch_indep && $pkg =~ /^python-/ && ! defined $info->field('python-version')
-						&& ! $info->relation('depends')->implies('python-support'));
+				tag "old-versioned-python-dependency", "$field: $part_d_orig"
+				    if ($d_pkg eq 'python' && $d_version->[0] eq '<<' && &$is_dep_field($field)
+					&& $arch_indep && $pkg =~ /^python-/ && ! defined $info->field('python-version')
+					&& ! $info->relation('depends')->implies('python-support'));
 
-					# only trigger this for the the preferred alternative
-					tag "versioned-dependency-satisfied-by-perl", "$field: $part_d_orig"
-						if $alternatives[0][-1] eq $part_d_orig
-						&& &$is_dep_field($field)
-						&& perl_core_has_version($d_pkg, $d_version->[0], $d_version->[1]);
+				# only trigger this for the the preferred alternative
+				tag "versioned-dependency-satisfied-by-perl", "$field: $part_d_orig"
+					if $alternatives[0][-1] eq $part_d_orig
+					&& &$is_dep_field($field)
+					&& perl_core_has_version($d_pkg, $d_version->[0], $d_version->[1]);
 
-					tag "depends-exclusively-on-makedev", "$field",
-					    if ($field eq 'depends' && $d_pkg eq 'makedev' && @alternatives == 1);
-				}
+				tag "depends-exclusively-on-makedev", "$field",
+				    if ($field eq 'depends' && $d_pkg eq 'makedev' && @alternatives == 1);
+			}
 
-				for my $pkg (@seen_obsolete_packages) {
-					if ($pkg eq $alternatives[0]->[0] or
-					    scalar @seen_obsolete_packages == scalar @alternatives) {
-						tag "depends-on-obsolete-package", "$field: $pkg";
-					} else {
-						tag "ored-depends-on-obsolete-package", "$field: $pkg";
-					}
+			for my $pkg (@seen_obsolete_packages) {
+				if ($pkg eq $alternatives[0]->[0] or
+				    scalar @seen_obsolete_packages == scalar @alternatives) {
+					tag "depends-on-obsolete-package", "$field: $pkg";
+				} else {
+					tag "ored-depends-on-obsolete-package", "$field: $pkg";
 				}
 			}
-			tag "package-depends-on-multiple-libstdc-versions", @seen_libstdcs
-			    if (scalar @seen_libstdcs > 1);
-			tag "package-depends-on-multiple-tcl-versions", @seen_tcls
-			    if (scalar @seen_tcls > 1);
-			tag "package-depends-on-multiple-tclx-versions", @seen_tclxs
-			    if (scalar @seen_tclxs > 1);
-			tag "package-depends-on-multiple-tk-versions", @seen_tks
-			    if (scalar @seen_tks > 1);
-			tag "package-depends-on-multiple-tkx-versions", @seen_tkxs
-			    if (scalar @seen_tkxs > 1);
-			tag "package-depends-on-multiple-libpng-versions", @seen_libpngs
-			    if (scalar @seen_libpngs > 1);
 		}
+		tag "package-depends-on-multiple-libstdc-versions", @seen_libstdcs
+		    if (scalar @seen_libstdcs > 1);
+		tag "package-depends-on-multiple-tcl-versions", @seen_tcls
+		    if (scalar @seen_tcls > 1);
+		tag "package-depends-on-multiple-tclx-versions", @seen_tclxs
+		    if (scalar @seen_tclxs > 1);
+		tag "package-depends-on-multiple-tk-versions", @seen_tks
+		    if (scalar @seen_tks > 1);
+		tag "package-depends-on-multiple-tkx-versions", @seen_tkxs
+		    if (scalar @seen_tkxs > 1);
+		tag "package-depends-on-multiple-libpng-versions", @seen_libpngs
+		    if (scalar @seen_libpngs > 1);
 	}
 
 	# If Conflicts or Breaks is set, make sure it's not inconsistent with
