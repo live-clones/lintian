@@ -93,6 +93,7 @@ lintian (2.2.15) UNRELEASED; urgency=low
       of tags with info or pedantic severity.  Patch from Damyan Ivanov.
       (Closes: #543873)
     + [RA] Add seed.  Thanks, Josselin Mouette.  (Closes: #543779)
+    + [RA] Add pike 7.8.  Thanks, Magnus Holmgren.  (Closes: #543262)
 
   * data/fields/essential:
     + [RA] New list of essential packages.

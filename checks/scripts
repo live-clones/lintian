@@ -152,7 +152,7 @@ our %versioned_interpreters =
 		  qr/^php(\d+)$/, 'php$1-cli', qw(5)
 		],
      pike    => [ '/usr/bin', '',
-		  qr/^pike([\d.]+)$/, 'pike$1 | pike$1-core', qw(7.6)
+		  qr/^pike([\d.]+)$/, 'pike$1 | pike$1-core', qw(7.6 7.8)
 		],
      python  => [ '/usr/bin', undef,
 		  qr/^python([\d.]+)$/, 'python$1 | python$1-minimal',
