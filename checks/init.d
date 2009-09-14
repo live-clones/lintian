@@ -299,7 +299,7 @@ sub check_init {
 	# Scripts that stop in any of 0, 1, or 6 probably should stop in all
 	# of them, with some special exceptions.
 	my $stop = join(' ', sort keys %stop);
-	if (defined($stop) and $stop ne '0 1 6') {
+	if (length($stop) > 0 and $stop ne '0 1 6') {
 	    my $base = $initd_file;
 	    $base =~ s,.*/,,;
 	    unless (grep { $base eq $_ } qw(killprocs sendsigs halt reboot)) {
