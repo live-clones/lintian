@@ -264,7 +264,7 @@ foreach my $file (sort keys %{$info->index}) {
 	    next if /:(\d+): warning \[.*\]: (can\'t break|cannot adjust) line/
 		and $manfile[$1 - 1] =~ m,(?:https?|ftp)://.+,i;
 	    # ignore common undefined macros from pod2man << Perl 5.10
-	    next if /warning: \`(Tr|IX)\' not defined/;
+	    next if /warning: (?:macro )?\`(Tr|IX)\' not defined/;
 	    chomp;
 	    s/^[^:]+://o;
 	    tag "manpage-has-errors-from-man", "$file", "$_";

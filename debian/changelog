@@ -76,6 +76,8 @@ lintian (2.2.15) UNRELEASED; urgency=low
       (Closes: #543641)
     + [RA] Document the MANWIDTH variable when running man by hand to
       check for man page errors.  (Closes: #542584)
+    + [RA] Adjust the exclusion of pod2man's .IX macro for the new
+      output format from groff.
   * checks/menu-format{,.desc}:
     + [RA] Add a pointer to desktop-file-validate in many of the tag
       descriptions for desktop tags.  (Closes: #539403)
