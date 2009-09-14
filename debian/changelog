@@ -1,4 +1,6 @@
-lintian (2.2.15) UNRELEASED; urgency=low
+lintian (2.2.15) unstable; urgency=low
+
+  The "BTS cleanup" release.
 
   * Summary of tag changes:
     + Added:
@@ -138,7 +140,7 @@ lintian (2.2.15) UNRELEASED; urgency=low
     + [JP] Don't link to full report if the maintainer only has clean
       packages. (Closes: #545781)
 
- -- Adam D. Barratt <adam@adam-barratt.org.uk>  Wed, 26 Aug 2009 21:13:12 +0100
+ -- Russ Allbery <rra@debian.org>  Mon, 14 Sep 2009 00:06:01 -0700
 
 lintian (2.2.14) unstable; urgency=low
 
