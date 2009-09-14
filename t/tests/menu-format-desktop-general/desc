@@ -8,7 +8,7 @@ Test-For:
  desktop-entry-contains-encoding-key
  desktop-entry-contains-unknown-key
  desktop-entry-file-has-crs
- desktop-entry-invalid-catgory
+ desktop-entry-invalid-category
  desktop-entry-lacks-main-category
  desktop-entry-limited-to-environments
  desktop-entry-uses-reserved-category
