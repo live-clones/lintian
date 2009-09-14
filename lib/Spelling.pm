@@ -579,20 +579,28 @@ sub spelling_check {
     my ($tag, $text, $filename) = @_;
     return unless $text;
 
+    my $counter = 0;
+
     $text = lc $text;
     $text =~ s/[()[\]]//g;
 
     for my $word (split(/\s+/, $text)) {
         $word =~ s/[.,;:?!]+$//;
         if (exists $CORRECTIONS{$word}) {
-            _tag($tag, $filename, $word, $CORRECTIONS{$word});
+            $counter++;
+            _tag($tag, $filename, $word, $CORRECTIONS{$word})
+                if defined $tag;
         }
     }
 
     # Special case for correcting a multi-word string.
     if ($text =~ m,debian/gnu\s+linux,) {
-        _tag($tag, $filename, "Debian/GNU Linux", "Debian GNU/Linux");
+       $counter++;
+        _tag($tag, $filename, "Debian/GNU Linux", "Debian GNU/Linux")
+            if defined $tag;
     }
+
+    return $counter;
 }
 
 # Check spelling of $text against pickier corrections, such as common
@@ -604,10 +612,14 @@ sub spelling_check {
 sub spelling_check_picky {
     my ($tag, $text, $filename) = @_;
 
+    my $counter = 0;
+
     # Check this first in case it's contained in square brackets and
     # removed below.
     if ($text =~ m,meta\s+package,) {
-        _tag($tag, $filename, "meta package", "metapackage");
+        $counter++;
+        _tag($tag, $filename, "meta package", "metapackage")
+            if defined $tag;
     }
 
     # Exclude text enclosed in square brackets as it could be a package list
@@ -617,10 +629,14 @@ sub spelling_check_picky {
     for my $word (split(/\s+/, $text)) {
         $word =~ s/^\(|[).,?!:;]+$//g;
         if (exists $CORRECTIONS_CASE{$word}) {
-            _tag($tag, $filename, $word, $CORRECTIONS_CASE{$word});
+            $counter++;
+            _tag($tag, $filename, $word, $CORRECTIONS_CASE{$word})
+                if defined $tag;
             next;
         }
     }
+
+    return $counter;
 }
 
 1;

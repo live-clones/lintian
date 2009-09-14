@@ -23,6 +23,7 @@ use warnings;
 use Test::More qw(no_plan);
 use Util qw(read_dpkg_control);
 use Tags ();
+use Spelling;
 
 my @DESCS = <$ENV{'LINTIAN_ROOT'}/checks/*.desc>;
 
@@ -38,9 +39,13 @@ for my $desc_file (@DESCS) {
 	    ok(exists $i->{'info'}, "Tag has info")
 		or diag("$desc_file: $i->{'tag'}\n");
 
+	    my $info = $i->{'info'} || '';
+
+	    is(spelling_check(undef, $info), 0,
+		"$desc_file: $i->{'tag'} has no spelling errors");
+
 	    # Check the tag info for unescaped <> or for unknown tags (which
 	    # probably indicate the same thing).
-	    my $info = $i->{'info'} || '';
 	    my @tags;
 	    while ($info =~ s,<([^\s>]+)(?:\s+href=\"[^\"]+\")?>.*?</\1>,,s) {
 		push (@tags, $1);
