@@ -305,7 +305,7 @@ foreach my $file (sort keys %{$info->file_info}) {
             # Some exceptions: detached debugging information and the dynamic
             # loader (which itself has no dependencies).
             next if ($file =~ m%^\./usr/lib/debug/%);
-            next if ($file =~ m%^\./lib/(?:[\w/]+/)?ld-[\d.]+\.so$%);
+            next if ($file =~ m%^\./lib(?:|32|64)/(?:[\w/]+/)?ld-[\d.]+\.so$%);
 	    tag "shared-lib-without-dependency-information", "$file";
 	} else {
 	    # Some exceptions: files in /boot, /usr/lib/debug/*, named *-static or
