@@ -3,10 +3,14 @@ lintian (2.2.16) UNRELEASED; urgency=low
   * Summary of tag changes:
     + Added:
       - dh_undocumented-is-obsolete
+      - lib-recommends-documentation
 
-  * checks/debhelper:
+  * checks/debhelper{,.desc}:
     + [RA] Check for use of the obsolete dh_undocumented debhelper
       program.  Patch from Raphael Geissert.  (Closes: #541977)
+  * checks/fields{,.desc}:
+    + [RA] Check for library packages that recommend documentation
+      packages.  Patch from Raphael Geissert.  (Closes: #527363)
 
   * lib/Spelling.pm:
     + [RA] Additional spelling corrections from Raphael Geissert.
