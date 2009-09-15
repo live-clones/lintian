@@ -1,5 +1,12 @@
 lintian (2.2.16) UNRELEASED; urgency=low
 
+  * lib/Spelling.pm:
+    + [RA] Additional spelling corrections from Raphael Geissert.
+    + [RA] Return the count of spelling errors and support suppressing the
+      tag by passing undef for the tag name so that the spell checking
+      functions can be used to test tag descriptions for spelling errors.
+      (Closes: #546641)
+  
   * reporting/html_reports:
     + [RA] Include all tag types in the qa-list.txt file instead of just
       errors and warnings.  The new order of columns is errors, warnings,
