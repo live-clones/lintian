@@ -341,20 +341,20 @@ for my $maintainer (@maintainers) {
     delete $clean{$id};
 
     # For each of this maintainer's packages, add statistical information
-    # about warnings and errors to the QA list and build the packages hash
-    # used for the package index.  We only do this for the maintainer
-    # packages, not the uploader packages, to avoid double-counting.
+    # about the number of each type of tag to the QA data and build the
+    # packages hash used for the package index.  We only do this for the
+    # maintainer packages, not the uploader packages, to avoid
+    # double-counting.
     for my $source (keys %{ $by_maint{$maintainer} }) {
-        my ($errors, $warnings) = (0, 0);
+        my %count;
         for my $version (keys %{ $by_maint{$maintainer}{$source} }) {
             my $tags = $by_maint{$maintainer}{$source}{$version};
             for my $tag (@$tags) {
-                $errors++ if $tag->{code} eq 'E';
-                $warnings++ if $tag->{code} eq 'W';
+                $count{$tag->{code}}++;
                 $packages{$tag->{package}} = $tag->{xref};
             }
         }
-        $qa{$source} = [ $errors, $warnings ];
+        $qa{$source} = \%count;
     }
 
     # Determine if the maintainer's page is clean.  Check all packages for
@@ -415,11 +415,18 @@ my %data = (
 );
 output_template ('maintainers.html', $templates{maintainers}, \%data);
 
-# Write out the QA package list.
+# Write out the QA package list.  This is a space-delimited file that contains
+# the package name and then the error count, warning count, info count,
+# pedantic count, experimental count, and overridden tag count.
 open (QA, '>', "$HTML_TMP_DIR/qa-list.txt")
     or die "cannot create qa-list.txt: $!\n";
 for my $source (sort keys %qa) {
-    print QA "$source $qa{$source}[0] $qa{$source}[1]\n";
+    print QA $source;
+    for my $code (qw/E W I P X O/) {
+        my $count = $qa{$source}{$code} || 0;
+        print QA " $count";
+    }
+    print QA "\n";
 }
 close QA or die "cannot write to qa-list: $!\n";
 
