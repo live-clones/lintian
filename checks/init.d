@@ -195,6 +195,7 @@ sub check_init {
 	or fail("cannot open init.d file $initd_file: $!");
     my (%tag, %lsb);
     my $in_file_test = 0;
+    my %needs_fs = ('remote' => 0, 'local' => 0);
     while (defined(my $l = <IN>)) {
 	if ($. eq 1 && $l =~ m,^\#!\s*(/usr/[^\s]+),) {
 	    tag "init.d-script-uses-usr-interpreter", "/etc/init.d/$_ $1";
@@ -242,6 +243,9 @@ sub check_init {
 	if (!$in_file_test && $l =~ m,^\s*\.\s+["'"]?(/etc/default/[\$\w/-]+),) {
 	    tag "init.d-script-sourcing-without-test", "/etc/init.d/$_:$. $1";
 	}
+
+	$needs_fs{'remote'} = 1 if ($l =~ m,^[^#]*/usr,);
+	$needs_fs{'local'}  = 1 if ($l =~ m,^[^#]*/var,);
 
 	while ($l =~ s/^[^\#]*?(start|stop|restart|force-reload)//o) {
 	    $tag{$1} = 1;
@@ -324,9 +328,23 @@ sub check_init {
 	    unless $provides_self;
     }
 
+    # if $remote_fs is needed $local_fs is not, as it is implied
+    $needs_fs{'local'} = 0 if $needs_fs{'remote'};
+
     for my $keyword qw(required-start should-start required-stop should-stop) {
+	if ($keyword =~ m/^required-(start|stop)$/
+	    && defined $lsb{"default-$1"} && length($lsb{"default-$1"})) {
+
+	    tag "missing-dependency-on-remote_fs", "/etc/init.d/$_: $keyword"
+		if ($needs_fs{'remote'} && (!defined $lsb{$keyword}
+		    || $lsb{$keyword} !~ m,(?:^|\s)\$remote_fs(?:\s|$),));
+	    tag "missing-dependency-on-local_fs", "/etc/init.d/$_: $keyword"
+		if ($needs_fs{'local'} && (!defined $lsb{$keyword}
+		    || $lsb{$keyword} !~ m,(?:^|\s)\$(local|remote)_fs(?:\s|$),));
+	}
 	next unless defined $lsb{$keyword};
 	for my $dependency (split(/\s+/, $lsb{$keyword})) {
+
 	    if (defined $implied_dependencies{$dependency}) {
 		tag 'init.d-script-should-depend-on-virtual-facility',
 		    "/etc/init.d/$_",

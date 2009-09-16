@@ -293,3 +293,35 @@ Info: The given <tt>/etc/init.d</tt> script indicates it should be
  needs special shutdown handling when rebooting the system (runlevel 6),
  it probably needs the same handling when halting the system (runlevel 0)
  or switching to single-user mode (runlevel 1).
+
+Tag: missing-dependency-on-remote_fs
+Severity: important
+Certainty: possible
+Info: The given init script seems to refer to <tt>/usr</tt>, possibly
+ using a file or binary from there.  Without a dependency on
+ <tt>$remote_fs</tt> on, possibly both, required-start and
+ required-stop the init script might be started too early or stopped
+ too late.  That is, the init script might be called before
+ <tt>/usr</tt> is mounted, or after it is unmounted, respectively.
+ .
+ Using should-start or should-stop to declare the dependency is
+ conceptually incorrect.  By doing so, the init script will always be
+ positioned as if <tt>$remote_fs</tt> had been set on a required-
+ field, and is therefore ignored by this check.
+Ref: http://wiki.debian.org/LSBInitScripts
+
+Tag: missing-dependency-on-local_fs
+Severity: important
+Certainty: possible
+Info: The given init script seems to refer to <tt>/var</tt>, possibly
+ using a file.  Without a dependency on <tt>$local_fs</tt> on, possibly
+ both, required-start and required-stop the init script might be started
+ too early or stopped too late.  That is, the init script might be
+ called before <tt>/var</tt> is mounted read/write, or after it is
+ unmounted, respectively.
+ .
+ Using should-start or should-stop to declare the dependency is
+ conceptually incorrect.  By doing so, the init script will always be
+ positioned as if <tt>$local_fs</tt> had been set on a required-
+ field, and is therefore ignored by this check.
+Ref: http://wiki.debian.org/LSBInitScripts

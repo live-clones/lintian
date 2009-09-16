@@ -12,3 +12,5 @@ Test-For:
  init.d-script-provides-virtual-facility
  init.d-script-should-depend-on-virtual-facility
  init.d-script-starts-in-stop-runlevel
+ missing-dependency-on-remote_fs
+ missing-dependency-on-local_fs
