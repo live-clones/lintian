@@ -144,3 +144,14 @@ Severity: normal
 Certainty: certain
 Info: The given package declares a dependency on libc directly instead
  of using ${shlibs:Depends} in its <tt>debian/control</tt> stanza.
+
+Tag: weak-library-dev-dependency
+Severity: important
+Certainty: possible
+Ref: policy 8.5
+Info: The given package appears to be a shared library -dev package, but
+ the dependency on what seems to be a corresponding shared library package
+ does not force the same package version.  To ensure that compiling and
+ linking works properly, and that the symlinks in the -dev package point
+ to the correct files in the shared library package, a -dev package should
+ normally depend on the exact same version of the shared library package.

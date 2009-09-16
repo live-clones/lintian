@@ -1,0 +1,61 @@
+Source: {$srcpkg}
+Priority: extra
+Section: {$section}
+Maintainer: {$author}
+Standards-Version: {$standards_version}
+Build-Depends: debhelper (>= 7.0.50~)
+
+Package: libcontrol-file-foo1
+Architecture: {$architecture}
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Description: {$description} (shared lib 1)
+ First shared library.
+ .
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.
+
+Package: libcontrol-file-bar7ldbl
+Architecture: {$architecture}
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Description: {$description} (shared lib 2)
+ Second shared library.
+ .
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.
+
+Package: libcontrol-file-dev
+Section: libdevel
+Architecture: {$architecture}
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\},
+ libcontrol-file-foo1 (= $\{binary:Version\}),
+ libcontrol-file-bar7ldbl, libcontrol-file-baz9-4 (>= $\{binary:Version\}),
+ libfoo4, libcontrol-file-doc
+Description: {$description} (dev package)
+ Dev package.
+ .
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.
+
+Package: libcontrol-file-baz9-4
+Architecture: {$architecture}
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Description: {$description} (shared lib 3)
+ Third shared library.
+ .
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.
+
+Package: libcontrol-file-doc
+Section: doc
+Architecture: {$architecture}
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Description: {$description} (doc package)
+ Doc package.
+ .
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.

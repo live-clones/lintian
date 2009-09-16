@@ -4,7 +4,11 @@ lintian (2.2.16) UNRELEASED; urgency=low
     + Added:
       - dh_undocumented-is-obsolete
       - lib-recommends-documentation
+      - weak-library-dev-dependency
 
+  * checks/control-file{,.desc}:
+    + [RA] Check that -dev packages depend on exactly the same version of
+      the shared library package.  (Closes: #537768)
   * checks/debhelper{,.desc}:
     + [RA] Check for use of the obsolete dh_undocumented debhelper
       program.  Patch from Raphael Geissert.  (Closes: #541977)

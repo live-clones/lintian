@@ -145,9 +145,14 @@ for my $control ($header, @binary_controls) {
 # another problem, and check that the package doesn't hard-code a dependency
 # on libc.  We have to do the latter check here rather than in checks/fields
 # to distinguish from dependencies created by ${shlibs:Depends}.
+#
+# Use this traversal to build a list of package names built from this source
+# package, which we'll use later to check for dependencies in -dev packages.
 my @dep_fields = qw(pre-depends depends recommends suggests);
 my $libcs = Lintian::Relation->new(join(' | ', @LIBCS));
+my @package_names;
 for my $control (@binary_controls) {
+	push (@package_names, $control->{package});
 	for my $strong (0 .. $#dep_fields) {
 		next unless $control->{$dep_fields[$strong]};
 		my $relation = Lintian::Relation->new($control->{$dep_fields[$strong]});
@@ -173,6 +178,10 @@ for my $control (@binary_controls) {
 # undefined until parsing the first binary section.  Missing sections will be
 # caught by other checks.
 #
+# Check any package that looks like a library -dev package for a dependency on
+# a shared library package built from the same source.  If found, such a
+# dependency should have a tight version dependency on that package.
+#
 # Also accumulate short and long descriptions for each package so that we can
 # check for duplication, but skip udeb packages.  Ideally, we should check the
 # udeb package descriptions separately for duplication, but udeb packages
@@ -191,13 +200,28 @@ if ($header->{'section'}) {
 }
 my @descriptions;
 for my $binary_control (@binary_controls) {
-	if ($binary_control->{'description'}
-	    and (not $binary_control->{'xc-package-type'}
-		 or $binary_control->{'xc-package-type'} ne 'udeb')) {
-		push(@descriptions,
-		     [ $binary_control->{'package'},
-		       split("\n", $binary_control->{'description'}, 2) ]);
+	my $package = $binary_control->{'package'};
+
+	# Accumulate the description.
+	my $desc = $binary_control->{'description'};
+	if ($desc and (not $binary_control->{'xc-package-type'}
+		       or $binary_control->{'xc-package-type'} ne 'udeb')) {
+		push(@descriptions, [ $package, split("\n", $desc, 2) ]);
 	}
+
+	# If this looks like a -dev package, check its dependencies.
+	if ($package =~ /-dev$/) {
+		for my $depend (split /\s*,\s*/, $binary_control->{'depends'}) {
+			my ($target, $version) = ($depend =~ /^([\w.+-]+)(?:\s*\(([^\)]+)\))?/);
+			next unless $target;
+			if ($target =~ /^lib[\w.+-]+\d/ and grep { $target eq $_ } @package_names) {
+				tag 'weak-library-dev-dependency', "$package on $depend"
+				    unless ($version and $version =~ /^\s*=\s*\$\{(?:binary:Version|Source-Version)\}/);
+			}
+		}
+	}
+
+	# Check mismatches in archive area.
 	next unless $binary_control->{'section'};
 	if (!defined ($area)) {
 		if ($binary_control->{'section'} =~ m%^([^/]+)/%) {
@@ -207,9 +231,9 @@ for my $binary_control (@binary_controls) {
 		}
 		next;
 	}
-	tag "section-area-mismatch", "Package " . $binary_control->{'package'}
+	tag "section-area-mismatch", "Package " . $package
 		if ($area && $binary_control->{'section'} !~ m%^$area/%);
-	tag "section-area-mismatch", "Package " . $binary_control->{'package'}
+	tag "section-area-mismatch", "Package " . $package
 		if (!$area && $binary_control->{'section'} =~ m%^([^/]+)/% && $1 ne 'contrib');
 }
 
