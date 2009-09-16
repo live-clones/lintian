@@ -5,6 +5,7 @@ Description: Test tags for file paths, names, and modes
 Test-For:
  dir-or-file-in-var-lock
  dir-or-file-in-var-run
+ duplicated-compressed-file
  executable-manpage
  global-data-in-games-directory
  icon-size-and-directory-name-mismatch

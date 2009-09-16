@@ -8,3 +8,10 @@ tmp = $(CURDIR)/debian/$(shell dh_listpackages)
 override_dh_fixperms:
 	dh_fixperms
 	chmod 755 $(tmp)/usr/share/man/man5/foo.5.gz
+
+override_dh_compress:
+	dh_compress
+	# create a .png and .png.gz
+	gzip -1 $(tmp)/usr/share/doc/lintian/lintian-16x16.png
+	zcat $(tmp)/usr/share/doc/lintian/lintian-16x16.png.gz > \
+		$(tmp)/usr/share/doc/lintian/lintian-16x16.png

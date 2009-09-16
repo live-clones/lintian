@@ -808,6 +808,12 @@ foreach my $file (sort keys %{$info->index}) {
 	    }
 	}
 
+	# --------------- compressed + uncompressed files
+	if ($file =~ m,^(.+)\.(?:gz|bz2)$,) {
+	    tag 'duplicated-compressed-file', $file
+		if exists $info->file_info->{$1};
+	}
+
 	# ---------------- general: setuid/setgid files!
 	if ($operm & 04000 or $operm & 02000) {
 	    my ($setuid, $setgid) = ("","");

@@ -1076,3 +1076,11 @@ Info: This package contains files under <tt>/usr/share/games</tt>, such as
  equivalent and using the upstream installation rules.  These files need
  to be moved into the corresponding directories directly under
  <tt>/usr/share</tt>.
+
+Tag: duplicated-compressed-file
+Severity: normal
+Certainty: possible
+Info: The given, apparently compressed, file is shipped in the package
+ in addition to another file with the same name without the
+ compression-method extension.  Normally this indicates a mistake in
+ the installation process of the package.
