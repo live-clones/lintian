@@ -310,6 +310,29 @@ sub kill {
     return $status;
 }
 
+=head2 C<done($opts)>
+
+Check if a process and its childs are done. This is useful when one wants to
+know whether reap() can be called without blocking waiting for the process.
+It takes a single hash reference as returned by spawn.
+
+=cut
+
+sub done {
+    my $opts = shift;
+
+    eval { $opts->{'harness'}->pump_nb; };
+
+    return 0 unless($@);
+
+    if ($@ =~ m/process ended prematurely/) {
+	return 1;
+    } else {
+	require Util;
+	Util::fail("Unknown failure when trying to pump_nb: $@");
+    }
+}
+
 1;
 __END__
 

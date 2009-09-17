@@ -3,5 +3,4 @@ Author: Raphael Geissert <atomo64@gmail.com>
 Info: This script unpacks the package under the unpacked/ directory
 Type: binary, udeb, source
 Version: 1
-Order: 0
 Auto-Remove: yes

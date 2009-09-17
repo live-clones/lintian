@@ -4,5 +4,4 @@ Info: This script collects files shipped in the source of the
  package.
 Type: source
 Version: 1
-Order: 1
 Needs-Info: unpacked

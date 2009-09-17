@@ -5,5 +5,4 @@ Info: This script copies the <tt>changelog</tt> file and
  directory.
 Type: binary
 Version: 1
-Order: 1
 Needs-Info: unpacked

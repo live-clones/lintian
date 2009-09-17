@@ -900,29 +900,29 @@ for my $f (readdir COLLDIR) {
 
     set_value($f, $p,'type',$secs[0],1);
     # convert Type:
-    my ($b,$s,$u,$c) = ( "", "", "", "" );;
+    my %type;
     for (split(/\s*,\s*/o,$p->{'type'})) {
 	if ($_ eq 'binary') {
-	    $b = 'b';
+	    $type{'b'} = 1;
 	} elsif ($_ eq 'source') {
-	    $s = 's';
+	    $type{'s'} = 1;
 	} elsif ($_ eq 'udeb') {
-	    $u = 'u';
+	    $type{'u'} = 1;
 	} elsif ($_ eq 'changes') {
-	    $c = 'c';
+	    $type{'c'} = 1;
 	} else {
 	    fail("unknown type $_ specified in description file $f");
 	}
     }
-    $p->{'type'} = "$s$b$u$c";
+    $p->{'type'} = \%type;
 
-    set_value($f,$p,'order',$secs[0],1);
+    set_value($f,$p,'unpack-level',$secs[0],1);
     set_value($f,$p,'version',$secs[0],1);
     set_value($f,$p,'auto-remove',$secs[0],0);
 
     if (exists $secs[0]->{'needs-info'} && defined $secs[0]->{'needs-info'}) {
 	for (split(/\s*,\s*/o,$secs[0]->{'needs-info'})) {
-	    $p->{$_} = 1;
+	    push @{$p->{'needs-info'}}, $_;
 	}
 	delete $secs[0]->{'needs-info'};
     }
@@ -966,22 +966,22 @@ for my $f (readdir CHECKDIR) {
     my $p = $check_info{$script};
 
     set_value($f,$p,'type',$secs[0],1);
+    my %type;
     # convert Type:
-    my ($b,$s,$u,$c) = ( "", "", "", "" );
     for (split(/\s*,\s*/o,$p->{'type'})) {
 	if ($_ eq 'binary') {
-	    $b = 'b';
+	    $type{'b'} = 1;
 	} elsif ($_ eq 'source') {
-	    $s = 's';
+	    $type{'s'} = 1;
 	} elsif ($_ eq 'udeb') {
-	    $u = 'u';
+	    $type{'u'} = 1;
 	} elsif ($_ eq 'changes') {
-	    $c = 'c';
+	    $type{'c'} = 1;
 	} else {
 	    fail("unknown type $_ specified in description file $f");
 	}
     }
-    $p->{'type'} = "$s$b$u$c";
+    $p->{'type'} = \%type;
 
     set_value($f,$p,'abbrev',$secs[0],1);
 
@@ -1084,13 +1084,15 @@ if ($action eq 'check') {
 
 # }}}
 
+require Lintian::DepMap;
+
+my $coll_map = Lintian::DepMap->new();
+
 # {{{ determine which info is needed by the collection scripts
 for my $c (keys %unpack_infos) {
-    for my $i (keys %collection_info) {
-	# required by $c ?
-	if ($collection_info{$c}->{$i}) {
-	    $unpack_infos{$i} = 1;
-	}
+    $coll_map->add($c);
+    if (exists $collection_info{$c}{'needs-info'}) {
+	$coll_map->add($c, @{$collection_info{$c}{'needs-info'}});
     }
 }
 # }}}
@@ -1144,19 +1146,20 @@ if ($check_everything) {
 # }}}
 
 # {{{ Some silent exit
-unless ($schedule->count) {
+my $count = $schedule->count;
+unless ($count) {
     v_msg("No packages selected.");
     exit 0;
 }
 # }}}
 
 # {{{ Okay, now really processing the packages in one huge loop
-$unpack_infos{ "override-file" } = 1 unless $no_override;
-v_msg(sprintf("Processing %d packages...", $schedule->count));
+$coll_map->add('override-file') unless $no_override;
+v_msg(sprintf("Processing %d packages...", $count));
 debug_msg(1,
 	  "Selected action: $action",
 	  "Requested unpack level: $unpack_level",
-	  sprintf("Requested data to collect: %s", join(',',sort keys %unpack_infos)),
+	  sprintf("Requested data to collect: %s", join(',',sort $coll_map->known)),
 	  sprintf("Selected checks: %s", join(',',sort keys %checks)),
     );
 
@@ -1174,6 +1177,7 @@ foreach my $pkg_info ($schedule->get_all) {
 		     ($type eq 's' ? 'source' : 'udeb' )));
 
     $TAGS->file_start($file, $pkg, $ver, $arch, $long_type);
+    $coll_map->initialise();
 
     # Kill pending jobs, if any
     Lintian::Command::kill(@pending_jobs);
@@ -1263,26 +1267,32 @@ foreach my $pkg_info ($schedule->get_all) {
     }
 
     if (($action eq 'unpack') or ($action eq 'check')) { # collect info
-	my $current_order = -1;
-	for my $coll (sort by_collection_order keys %unpack_infos) {
-	    my $ci = $collection_info{$coll};
-	    my %run_opts = ('description' => $coll);
+	while ($coll_map->pending) {
+	    for my $coll ($coll_map->selectable) {
+		my $ci = $collection_info{$coll};
+		my %run_opts = ('description' => $coll);
 
-	    # current type?
-	    next unless ($ci->{'type'} =~ m/$type/);
-
-	    # If a file named .SCRIPT-VERSION already exists, we've already
-	    # collected this information and we can skip it.  Otherwise,
-	    # remove any .SCRIPT-* files (which are old version information).
-	    next if (-f "$base/.${coll}-$ci->{'version'}");
-	    opendir(BASE, $base)
-		or fail("cannot read directory $base: $!");
-	    for my $file (readdir BASE) {
-		if ($file =~ /^\.\Q$coll-/) {
-		    unlink("$base/$file");
+		# current type?
+		unless (exists $ci->{'type'}{$type}) {
+		    $coll_map->satisfy($coll);
+		    next;
 		}
-	    }
-	    closedir(BASE);
+
+		# If a file named .SCRIPT-VERSION already exists, we've already
+		# collected this information and we can skip it.  Otherwise,
+		# remove any .SCRIPT-* files (which are old version information).
+		if (-f "$base/.${coll}-$ci->{'version'}") {
+		    $coll_map->satisfy($coll);
+		    next;
+		}
+		opendir(BASE, $base)
+		    or fail("cannot read directory $base: $!");
+		for my $file (readdir BASE) {
+		    if ($file =~ /^\.\Q$coll-/) {
+			unlink("$base/$file");
+		    }
+		}
+		closedir(BASE);
 
 	    # chdir to base directory
 	    unless (chdir($base)) {
@@ -1292,38 +1302,27 @@ foreach my $pkg_info ($schedule->get_all) {
 		next PACKAGE;
 	    }
 
-	    $current_order = $ci->{'order'} if ($current_order == -1);
-	    if ($current_order != $ci->{'order'}) {
-		debug_msg(1, "Waiting for jobs from order $current_order ...");
-		unless (reap_collect_jobs($pkg, $base, @pending_jobs)) {
-		    warning("skipping $action of $long_type package $pkg");
+		# collect info
+		$coll_map->select($coll);
+		remove_status_file($base);
+		debug_msg(1, "Collecting info: $coll ...");
+		my $script = "$LINTIAN_ROOT/collection/$ci->{'script'}";
+		unless (spawn(\%run_opts, [ $script, $pkg, $long_type, '&' ])) {
+		    warning("collect info $coll about package $pkg failed",
+			    "skipping $action of $long_type package $pkg");
 		    $exit_code = 2;
 		    next PACKAGE;
 		}
-		undef @pending_jobs;
-		$current_order = $ci->{'order'};
+		push @pending_jobs, \%run_opts;
 	    }
-
-	    # collect info
-	    remove_status_file($base);
-	    debug_msg(1, "Collecting info: $coll ...");
-	    my $script = "$LINTIAN_ROOT/collection/$ci->{'script'}";
-	    unless (spawn(\%run_opts, [ $script, $pkg, $long_type, '&' ])) {
-		warning("collect info $coll about package $pkg failed",
-			"skipping $action of $long_type package $pkg");
+	    # wait until a job finishes to run its branches, if any, or skip
+	    # this package if any of the jobs failed.
+	    debug_msg(1, "Reaping done jobs ...");
+	    unless (reap_collect_jobs($pkg, $base, \@pending_jobs, $coll_map)) {
+		warning("skipping $action of $long_type package $pkg");
 		$exit_code = 2;
 		next PACKAGE;
 	    }
-	    push @pending_jobs, \%run_opts;
-	}
-
-	# wait until all the jobs finish and skip this package if any of them
-	# failed.
-	debug_msg(1, "Waiting for jobs from order $current_order ...");
-	unless (reap_collect_jobs($pkg, $base, @pending_jobs)) {
-	    warning("skipping $action of $long_type package $pkg");
-	    $exit_code = 2;
-	    next PACKAGE;
 	}
 	undef @pending_jobs;
     }
@@ -1340,7 +1339,7 @@ foreach my $pkg_info ($schedule->get_all) {
 	    my $ci = $check_info{$check};
 
 	    # current type?
-	    next unless ($ci->{'type'} =~ m/$type/);
+	    next unless (exists $ci->{'type'}{$type});
 
 	    # chdir to base directory
 	    unless (chdir($base)) {
@@ -1542,16 +1541,27 @@ sub unpack_pkg {
 }
 
 # Given a list of jobs corresponding to collect scripts, reap each of the
-# jobs.  For each successful job, record that it was successful by creating
-# the corresponding version marker file in the lab.  For each unsuccessful
+# jobs without blocking.  For each successful job, record that it was
+# successful by creating the corresponding version marker file in the lab and
+# marking it as done in the dependencies map.  For each unsuccessful
 # job, warn that it was unsuccessful.
 #
 # Takes the current package, base directory, and the list of pending jobs.
-# Return true if all jobs were successful, false otherwise.
+# Return true if all done jobs were successful, false otherwise.
 sub reap_collect_jobs {
-    my ($pkg, $base, @pending_jobs) = @_;
-    my $status = reap(@pending_jobs);
-    for my $job (@pending_jobs) {
+    my ($pkg, $base, $pending_jobs, $coll_map) = @_;
+    my $status = 1;
+    my $_pending_jobs = [];
+
+    while (my $job = pop @{pending_jobs}) {
+
+	if (!Lintian::Command::done($job)) {
+	    push @{$_pending_jobs}, $job;
+	    next;
+	}
+
+	$status &&= reap($job);
+
 	my $coll = $job->{'description'};
 	if ($job->{success}) {
 	    my $ci = $collection_info{$coll};
@@ -1560,10 +1570,18 @@ sub reap_collect_jobs {
 	    print VERSION "Lintian-Version: $LINTIAN_VERSION\n"
 		. "Timestamp: " . time . "\n";
 	    close(VERSION);
+	    debug_msg(1, "Collection script $coll done");
 	} else {
 	    warning("collect info $coll about package $pkg failed");
 	}
+
+	$coll_map->satisfy($coll);
+	# break here to give some time for other jobs to finish
+	# while we try to start another job
+	last;
     }
+
+    @{$pending_jobs} = (@{$pending_jobs}, @{$_pending_jobs});
     return $status;
 }
 
@@ -1681,10 +1699,6 @@ sub read_file {
     return $t;
 }
 
-# sort collection list by `order'
-sub by_collection_order {
-    $collection_info{$a}->{'order'} <=> $collection_info{$b}->{'order'};
-}
 # }}}
 
 # {{{ Exit handler.

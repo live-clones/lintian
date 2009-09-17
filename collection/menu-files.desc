@@ -3,5 +3,4 @@ Author: Richard Braakman <dark@xs4all.nl>
 Info: This script copies the contents of /usr/lib/menu into the lintian menu/ directory.
 Type: binary
 Version: 2
-Order: 1
 Needs-Info: unpacked
