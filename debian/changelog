@@ -17,6 +17,9 @@ lintian (2.2.16) UNRELEASED; urgency=low
       packages.  Patch from Raphael Geissert.  (Closes: #527363)
     + [RA] Fix regex for recognizing CVS repositories available via
       anonymous ssh.  Thanks, Thorsten Glaser.  (Closes: #546927)
+  * checks/menus{,.desc}:
+    + [RA] Exclude examples from documentation that may require doc-base
+      registration.  Thanks, Mikhail Gusarov.  (Closes: #547345)
 
   * lib/Spelling.pm:
     + [RA] Additional spelling corrections from Raphael Geissert.

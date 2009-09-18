@@ -357,5 +357,6 @@ Severity: wishlist
 Certainty: possible
 Info: The package ships a <tt>.html</tt> or <tt>.pdf</tt> file under
  <tt>/usr/share/doc/</tt>, which are usually documentation, but it does
- not register anything in doc-base.
+ not register anything in doc-base.  (Files under an <tt>examples</tt>
+ directory are excluded.)
 Ref: policy 9.10
