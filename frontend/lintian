@@ -916,7 +916,6 @@ for my $f (readdir COLLDIR) {
     }
     $p->{'type'} = \%type;
 
-    set_value($f,$p,'unpack-level',$secs[0],1);
     set_value($f,$p,'version',$secs[0],1);
     set_value($f,$p,'auto-remove',$secs[0],0);
 
@@ -987,6 +986,7 @@ for my $f (readdir CHECKDIR) {
 
     if (exists $secs[0]->{'needs-info'} && defined $secs[0]->{'needs-info'}) {
 	for (split(/\s*,\s*/o,$secs[0]->{'needs-info'})) {
+	    push @{$p->{'needs-info'}}, $_;
 	    $p->{$_} = 1;
 	}
 	delete $secs[0]->{'needs-info'};
@@ -1084,15 +1084,24 @@ if ($action eq 'check') {
 
 # }}}
 
-require Lintian::DepMap;
+require Lintian::PDepMap;
 
-my $coll_map = Lintian::DepMap->new();
+my $map = Lintian::PDepMap->new();
 
 # {{{ determine which info is needed by the collection scripts
 for my $c (keys %unpack_infos) {
-    $coll_map->add($c);
+    $map->add('coll-' . $c, {'type' => 'collection', 'name' => $c});
     if (exists $collection_info{$c}{'needs-info'}) {
-	$coll_map->add($c, @{$collection_info{$c}{'needs-info'}});
+	$map->addp('coll-' . $c, 'coll-', @{$collection_info{$c}{'needs-info'}});
+    }
+}
+# }}}
+
+# {{{ add the checks to the dependencies tree
+for my $c (keys %checks) {
+    $map->add('check-' . $c, {'type' => 'check', 'name' => $c});
+    if (exists $check_info{$c}{'needs-info'}) {
+	$map->addp('check-' . $c, 'coll-', @{$check_info{$c}{'needs-info'}});
     }
 }
 # }}}
@@ -1154,12 +1163,13 @@ unless ($count) {
 # }}}
 
 # {{{ Okay, now really processing the packages in one huge loop
-$coll_map->add('override-file') unless $no_override;
+$map->add('coll-override-file', {'type' => 'collection', 'name' => 'override-file'})
+    unless $no_override;
 v_msg(sprintf("Processing %d packages...", $count));
 debug_msg(1,
 	  "Selected action: $action",
 	  "Requested unpack level: $unpack_level",
-	  sprintf("Requested data to collect: %s", join(',',sort $coll_map->known)),
+	  sprintf("Requested data to collect: %s", join(',',sort keys %unpack_infos)),
 	  sprintf("Selected checks: %s", join(',',sort keys %checks)),
     );
 
@@ -1177,7 +1187,7 @@ foreach my $pkg_info ($schedule->get_all) {
 		     ($type eq 's' ? 'source' : 'udeb' )));
 
     $TAGS->file_start($file, $pkg, $ver, $arch, $long_type);
-    $coll_map->initialise();
+    $map->initialise();
 
     # Kill pending jobs, if any
     Lintian::Command::kill(@pending_jobs);
@@ -1266,139 +1276,153 @@ foreach my $pkg_info ($schedule->get_all) {
 	next PACKAGE;
     }
 
-    if (($action eq 'unpack') or ($action eq 'check')) { # collect info
-	while ($coll_map->pending) {
-	    for my $coll ($coll_map->selectable) {
-		my $ci = $collection_info{$coll};
-		my %run_opts = ('description' => $coll);
+    if (($action eq 'unpack') or ($action eq 'check')) {
+	my $info = Lintian::Collect->new($pkg, $long_type);
+	my $loaded_overrides = 0;
 
-		# current type?
-		unless (exists $ci->{'type'}{$type}) {
-		    $coll_map->satisfy($coll);
-		    next;
-		}
+	while ($map->pending) {
+	    foreach my $req (sort sort_coll $map->selectable) {
+		my $ri = $map->getProp($req);
+		if ($ri->{'type'} eq 'collection') {
+		    my $coll = $ri->{'name'};
+		    my $ci = $collection_info{$coll};
+		    my %run_opts = ('description' => $coll);
 
-		# If a file named .SCRIPT-VERSION already exists, we've already
-		# collected this information and we can skip it.  Otherwise,
-		# remove any .SCRIPT-* files (which are old version information).
-		if (-f "$base/.${coll}-$ci->{'version'}") {
-		    $coll_map->satisfy($coll);
-		    next;
-		}
-		opendir(BASE, $base)
-		    or fail("cannot read directory $base: $!");
-		for my $file (readdir BASE) {
-		    if ($file =~ /^\.\Q$coll-/) {
-			unlink("$base/$file");
+		    # current type?
+		    unless (exists $ci->{'type'}{$type}) {
+			$map->satisfy($req);
+			next;
 		    }
-		}
-		closedir(BASE);
 
-	    # chdir to base directory
-	    unless (chdir($base)) {
-		warning("could not chdir into directory $base: $!",
-			"skipping $action of $long_type package $pkg");
-		$exit_code = 2;
-		next PACKAGE;
-	    }
+		    # If a file named .SCRIPT-VERSION already exists, we've already
+		    # collected this information and we can skip it.  Otherwise,
+		    # remove any .SCRIPT-* files (which are old version information).
+		    if (-f "$base/.${coll}-$ci->{'version'}") {
+			$map->satisfy($req);
+			next;
+		    }
+		    opendir(BASE, $base)
+			or fail("cannot read directory $base: $!");
+		    for my $file (readdir BASE) {
+			if ($file =~ /^\.\Q$coll-/) {
+			    unlink("$base/$file");
+			}
+		    }
+		    closedir(BASE);
 
-		# collect info
-		$coll_map->select($coll);
-		remove_status_file($base);
-		debug_msg(1, "Collecting info: $coll ...");
-		my $script = "$LINTIAN_ROOT/collection/$ci->{'script'}";
-		unless (spawn(\%run_opts, [ $script, $pkg, $long_type, '&' ])) {
-		    warning("collect info $coll about package $pkg failed",
-			    "skipping $action of $long_type package $pkg");
-		    $exit_code = 2;
-		    next PACKAGE;
+		    # chdir to base directory
+		    unless (chdir($base)) {
+			warning("could not chdir into directory $base: $!",
+				"skipping $action of $long_type package $pkg");
+			$exit_code = 2;
+			next PACKAGE;
+		    }
+
+		    # collect info
+		    $map->select($req);
+		    remove_status_file($base);
+		    debug_msg(1, "Collecting info: $coll ...");
+		    my $script = "$LINTIAN_ROOT/collection/$ci->{'script'}";
+		    unless (spawn(\%run_opts, [ $script, $pkg, $long_type, '&'])) {
+			warning("collect info $coll about package $pkg failed",
+				"skipping $action of $long_type package $pkg");
+			$exit_code = 2;
+			next PACKAGE;
+		    }
+		    push @pending_jobs, \%run_opts;
+		} elsif ($ri->{'type'} eq 'check') {
+		    # skip check if overrides were not yet loaded
+		    last unless $loaded_overrides or $no_override;
+		    my $check = $ri->{'name'};
+		    my $ci = $check_info{$check};
+
+		    # current type?
+		    unless (exists $ci->{'type'}{$type}) {
+			$map->satisfy($req);
+			next;
+		    }
+
+		    # chdir to base directory
+		    unless (chdir($base)) {
+			warning("could not chdir into directory $base: $!",
+				"skipping $action of $long_type package $pkg");
+			$exit_code = 2;
+			next PACKAGE;
+		    }
+
+		    debug_msg(1, "Running check: $check ...");
+		    my $returnvalue = Checker::runcheck($pkg, $long_type, $info, $check);
+		    # Set exit_code correctly if there was not yet an exit code
+		    $exit_code = $returnvalue unless $exit_code;
+
+		    if ($returnvalue == 2) {
+			warning("skipping $action of $long_type package $pkg");
+			next PACKAGE;
+		    }
+		    $map->satisfy($req);
 		}
-		push @pending_jobs, \%run_opts;
 	    }
 	    # wait until a job finishes to run its branches, if any, or skip
 	    # this package if any of the jobs failed.
 	    debug_msg(1, "Reaping done jobs ...");
-	    unless (reap_collect_jobs($pkg, $base, \@pending_jobs, $coll_map)) {
+	    unless (reap_collect_jobs($pkg, $base, \@pending_jobs, $map)) {
 		warning("skipping $action of $long_type package $pkg");
 		$exit_code = 2;
 		next PACKAGE;
+	    }
+	    unless ($no_override or $loaded_overrides) {
+		if ($map->done('coll-override-file')) {
+		    debug_msg(1, "Override file collected, loading it ...");
+		    $loaded_overrides = 1;
+		    $TAGS->file_overrides("$base/override")
+			if (-f "$base/override");
+		}
 	    }
 	}
 	undef @pending_jobs;
-    }
 
-    if ($action eq 'check') { 	# read override file
-
-	unless ($no_override) {
-	    $TAGS->file_overrides("$base/override") if -f "$base/override";
-        }
-
-	# perform checks
-	my $info = Lintian::Collect->new($pkg, $long_type);
-	for my $check (sort keys %checks) {
-	    my $ci = $check_info{$check};
-
-	    # current type?
-	    next unless (exists $ci->{'type'}{$type});
-
-	    # chdir to base directory
-	    unless (chdir($base)) {
-		warning("could not chdir into directory $base: $!",
-			"skipping $action of $long_type package $pkg");
-		$exit_code = 2;
-		next PACKAGE;
-	    }
-
-	    my $returnvalue = Checker::runcheck($pkg, $long_type, $info, $check);
-	    # Set exit_code correctly if there was not yet an exit code
-	    $exit_code = $returnvalue unless $exit_code;
-
-	    if ($returnvalue == 2) {
-		warning("skipping $action of $long_type package $pkg");
-		next PACKAGE;
-	    }
-
-	}
-	unless ($exit_code) {
-	    my $stats = $TAGS->statistics($file);
-	    if ($stats->{types}{E}) {
-		$exit_code = 1;
-	    } elsif ($fail_on_warnings && $stats->{types}{W}) {
-		$exit_code = 1;
-	    }
-	}
-
-	# report unused overrides
-	if (not $no_override) {
-	    my $overrides = $TAGS->overrides($file);
-
-	    for my $tag (sort keys %$overrides) {
-		next if $TAGS->suppressed($tag);
-
-		# Did we run the check script containing the tag?
-		my $taginfo = Lintian::Tag::Info->new($tag);
-		if (defined $taginfo) {
-		    next unless $checks{$taginfo->script};
-		}
-
-		for my $extra (sort keys %{$overrides->{$tag}}) {
-		    next if $overrides->{$tag}{$extra};
-
-		    tag( "unused-override", $tag, $extra );
+	if ($action eq 'check') {
+	    unless ($exit_code) {
+		my $stats = $TAGS->statistics($file);
+		if ($stats->{types}{E}) {
+		    $exit_code = 1;
+		} elsif ($fail_on_warnings && $stats->{types}{W}) {
+		    $exit_code = 1;
 		}
 	    }
-	}
 
-	# Report override statistics.
-	if (not $no_override and not $show_overrides) {
-	    my $stats = $TAGS->statistics($file);
-	    my $errors = $stats->{overrides}{types}{E} || 0;
-	    my $warnings = $stats->{overrides}{types}{W} || 0;
-	    my $info = $stats->{overrides}{types}{I} || 0;
-	    $overrides{errors} += $errors;
-	    $overrides{warnings} += $warnings;
-	    $overrides{info} += $info;
-        }
+	    # report unused overrides
+	    if (not $no_override) {
+		my $overrides = $TAGS->overrides($file);
+
+		for my $tag (sort keys %$overrides) {
+		    next if $TAGS->suppressed($tag);
+
+		    # Did we run the check script containing the tag?
+		    my $taginfo = Lintian::Tag::Info->new($tag);
+		    if (defined $taginfo) {
+			next unless $checks{$taginfo->script};
+		    }
+
+		    for my $extra (sort keys %{$overrides->{$tag}}) {
+			next if $overrides->{$tag}{$extra};
+
+			tag( "unused-override", $tag, $extra );
+		    }
+		}
+	    }
+
+	    # Report override statistics.
+	    if (not $no_override and not $show_overrides) {
+		my $stats = $TAGS->statistics($file);
+		my $errors = $stats->{overrides}{types}{E} || 0;
+		my $warnings = $stats->{overrides}{types}{W} || 0;
+		my $info = $stats->{overrides}{types}{I} || 0;
+		$overrides{errors} += $errors;
+		$overrides{warnings} += $warnings;
+		$overrides{info} += $info;
+	    }
+	}
     }
 
     # chdir to lintian root directory (to unlock $base so it can be removed below)
@@ -1549,7 +1573,7 @@ sub unpack_pkg {
 # Takes the current package, base directory, and the list of pending jobs.
 # Return true if all done jobs were successful, false otherwise.
 sub reap_collect_jobs {
-    my ($pkg, $base, $pending_jobs, $coll_map) = @_;
+    my ($pkg, $base, $pending_jobs, $map) = @_;
     my $status = 1;
     my $_pending_jobs = [];
 
@@ -1575,7 +1599,7 @@ sub reap_collect_jobs {
 	    warning("collect info $coll about package $pkg failed");
 	}
 
-	$coll_map->satisfy($coll);
+	$map->satisfy('coll-' . $coll);
 	# break here to give some time for other jobs to finish
 	# while we try to start another job
 	last;
@@ -1583,6 +1607,19 @@ sub reap_collect_jobs {
 
     @{$pending_jobs} = (@{$pending_jobs}, @{$_pending_jobs});
     return $status;
+}
+
+sub sort_coll {
+    my ($ap, $bp);
+    $ap = $map->getProp($a);
+    $bp = $map->getProp($b);
+    # override-file should be the first script to be run
+    return -1 if ($ap->{'name'} eq 'override-file');
+    return 1 if ($bp->{'name'} eq 'override-file');
+    # sort collection scripts first
+    return -1 if ($ap->{'type'} eq 'collection' && $bp->{'type'} ne 'collection');
+    return 1 if ($bp->{'type'} eq 'collection' && $ap->{'type'} ne 'collection');
+    return ($ap->{'name'} cmp $bp->{'name'});
 }
 
 # TODO: is this the best way to clean dirs in perl?

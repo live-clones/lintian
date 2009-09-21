@@ -159,6 +159,17 @@ sub add {
     } else { 1; }
 }
 
+sub addp {
+    my ($self,$node,$prefix) = (shift,shift,shift);
+    my @deps;
+
+    while (my $dep = shift) {
+	push @deps, $prefix . $dep;
+    }
+
+    return $self->add($node, @deps);
+}
+
 =item satisfy(node)
 
 Indicates that the given C<node> has been satisfied/done.
@@ -212,6 +223,12 @@ sub satisfy {
 
     delete $self->{'map'}{$node};
     delete $self->{'nodes'}{$node};
+}
+
+sub done {
+    my $self = shift;
+    my $node = shift;
+    return exists $self->{'satisfied_nodes'}->{$node};
 }
 
 =item unlink(node[, 'soft'])
