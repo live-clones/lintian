@@ -1,6 +1,5 @@
 lintian (2.2.16) UNRELEASED; urgency=low
 
-  [ Russ Allbery ]
   * Summary of tag changes:
     + Added:
       - dh_undocumented-is-obsolete
