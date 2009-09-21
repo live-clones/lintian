@@ -20,9 +20,11 @@ lintian (2.2.16) UNRELEASED; urgency=low
   * checks/menus{,.desc}:
     + [RA] Exclude examples from documentation that may require doc-base
       registration.  Thanks, Mikhail Gusarov.  (Closes: #547345)
-  * checks/scripts:
+  * checks/scripts{,.desc}:
     + [RA] Add /usr/bin/ir as an interpreter provided by the ironruby
       package.  Thanks, Matthias Klose.  (Closes: #547555)
+    + [ADB] Fix a typo in the description of example-script-uses-bin-env
+      (pth -> path).  Thanks, Jakub Wilk.  (Closes: #547670)
 
   * lib/Lintian/Output.pm:
     + [ADB] Import Exporter before Class::Accessor to avoid accidentally
