@@ -1,4 +1,4 @@
-lintian (2.2.16) UNRELEASED; urgency=low
+lintian (2.2.16) unstable; urgency=low
 
   * Summary of tag changes:
     + Added:
@@ -42,7 +42,7 @@ lintian (2.2.16) UNRELEASED; urgency=low
       errors and warnings.  The new order of columns is errors, warnings,
       info tags, pedantic tags, experimental tags, and overridden tags.
 
- -- Russ Allbery <rra@debian.org>  Mon, 14 Sep 2009 18:37:26 -0700
+ -- Adam D. Barratt <adam@adam-barratt.org.uk>  Mon, 21 Sep 2009 20:30:33 +0100
 
 lintian (2.2.15) unstable; urgency=low
 
