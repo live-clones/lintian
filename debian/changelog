@@ -255,7 +255,7 @@ lintian (2.2.14) unstable; urgency=low
   * checks/infofiles{,.desc}:
     + [RA] Add missing leading * to example info directory entry.
     + [RA] Check that packages with info files depend on dpkg or
-      install-info as recommended by Policy 5.8.3.
+      install-info as recommended by Policy 3.8.3.
   * checks/lintian.desc:
     + [RA] Expand multiple-distributions-in-changes-file description and
       add a reference to the Policy section.  Change certainty to
