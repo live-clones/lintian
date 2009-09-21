@@ -1,4 +1,5 @@
 E: libbaz source: not-binnmuable-any-depends-any libbaz1-dev -> libbaz1
+E: libbaz source: weak-library-dev-dependency libbaz1-dev on libbaz1 (= ${source:Version})
 E: libbaz1-dev: missing-dependency-on-libc needed by ./usr/lib/perl5/auto/Foo/Foo.so
 E: libbaz1: control-file-has-bad-permissions shlibs 0755 != 0644
 E: libbaz1: control-file-has-bad-permissions symbols 0755 != 0644
