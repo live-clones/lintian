@@ -22,7 +22,7 @@ use strict;
 use warnings;
 
 use v5.8.0; # for PerlIO
-use base qw(Class::Accessor Exporter);
+use base qw(Exporter Class::Accessor);
 
 # Force export as soon as possible, since some of the modules we load also
 # depend on us and the sequencing can cause things not to be exported
