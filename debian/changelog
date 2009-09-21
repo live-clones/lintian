@@ -1,5 +1,6 @@
 lintian (2.2.16) UNRELEASED; urgency=low
 
+  [ Russ Allbery ]
   * Summary of tag changes:
     + Added:
       - dh_undocumented-is-obsolete
@@ -24,6 +25,10 @@ lintian (2.2.16) UNRELEASED; urgency=low
     + [RA] Add /usr/bin/ir as an interpreter provided by the ironruby
       package.  Thanks, Matthias Klose.  (Closes: #547555)
 
+  * lib/Lintian/Output.pm:
+    + [ADB] Import Exporter before Class::Accessor to avoid accidentally
+      calling Class::Accessor::import().  Thanks, Niko Tyni.
+      (Closes: #547631)
   * lib/Spelling.pm:
     + [RA] Additional spelling corrections from Raphael Geissert.
     + [RA] Return the count of spelling errors and support suppressing the
