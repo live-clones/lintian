@@ -67,6 +67,7 @@ our %interpreters =
      gosh	    => [ '/usr/bin', 'gauche' ],
      icmake	    => [ '/usr/bin', 'icmake' ],
      'install-menu' => [ '/usr/bin', '' ],
+     ir             => [ '/usr/bin', 'ironruby' ],
      jed	    => [ '/usr/bin' ],
      'jed-script'   => [ '/usr/bin', 'jed | xjed' ],
      kaptain        => [ '/usr/bin' ],

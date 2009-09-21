@@ -20,6 +20,9 @@ lintian (2.2.16) UNRELEASED; urgency=low
   * checks/menus{,.desc}:
     + [RA] Exclude examples from documentation that may require doc-base
       registration.  Thanks, Mikhail Gusarov.  (Closes: #547345)
+  * checks/scripts:
+    + [RA] Add /usr/bin/ir as an interpreter provided by the ironruby
+      package.  Thanks, Matthias Klose.  (Closes: #547555)
 
   * lib/Spelling.pm:
     + [RA] Additional spelling corrections from Raphael Geissert.
