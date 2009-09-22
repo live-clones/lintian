@@ -31,7 +31,7 @@ Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\},
  libcontrol-file-foo1 (= $\{binary:Version\}),
  libcontrol-file-bar7ldbl, libcontrol-file-baz9-4 (>= $\{binary:Version\}),
- libfoo4, libcontrol-file-doc
+ libfoo4, libcontrol-file-doc, libcontrol-file4-dev
 Description: {$description} (dev package)
  Dev package.
  .
@@ -55,6 +55,17 @@ Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description} (doc package)
  Doc package.
+ .
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.
+
+Package: libcontrol-file4-dev
+Section: libdevel
+Architecture: {$architecture}
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Description: {$description} (dev package with version)
+ Dev package containing a number.
  .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd

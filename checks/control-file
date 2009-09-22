@@ -214,7 +214,7 @@ for my $binary_control (@binary_controls) {
 		for my $depend (split /\s*,\s*/, $binary_control->{'depends'}) {
 			my ($target, $version) = ($depend =~ /^([\w.+-]+)(?:\s*\(([^\)]+)\))?/);
 			next unless $target;
-			if ($target =~ /^lib[\w.+-]+\d/ and grep { $target eq $_ } @package_names) {
+			if ($target =~ /^lib[\w.+-]+\d/ and $target !~ /-dev$/ and grep { $target eq $_ } @package_names) {
 				tag 'weak-library-dev-dependency', "$package on $depend"
 				    unless ($version and $version =~ /^\s*=\s*\$\{(?:binary:Version|Source-Version)\}/);
 			}
