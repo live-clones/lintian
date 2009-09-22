@@ -18,8 +18,9 @@ Package: lintian
 Architecture: all
 Depends: perl, libdigest-md5-perl | perl (>> 5.8), dpkg-dev (>= 1.13.17),
  file, binutils, diffstat (>= 1.27-1), man-db (>= 2.4.0), gettext (>= 0.16),
- intltool-debian, libdigest-sha-perl, libparse-debianchangelog-perl (>= 0.6),
- libtimedate-perl, liburi-perl, libipc-run-perl, libapt-pkg-perl
+ intltool-debian, libclass-accessor-perl, libdigest-sha-perl,
+ libparse-debianchangelog-perl (>= 0.6), libtimedate-perl, liburi-perl,
+ libipc-run-perl, libapt-pkg-perl
 Suggests: binutils-multiarch, libtext-template-perl, man-db (>= 2.5.1-1)
 Description: Debian package checker
  Lintian dissects Debian packages and reports bugs and policy

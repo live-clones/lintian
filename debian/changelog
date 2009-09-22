@@ -7,6 +7,11 @@ lintian (2.2.17) unstable; urgency=medium
       packages that contain a version number.  Thanks, Yves-Alexis Perez.
       (Closes: #547773)
 
+  * debian/control:
+    + [RA] Explicitly depend on libclass-accessor-perl, since we use it
+      directly.  (libparse-debianchangelog-perl was implicitly ensuring it
+      was installed.)
+
  -- Russ Allbery <rra@debian.org>  Tue, 22 Sep 2009 10:07:24 -0700
 
 lintian (2.2.16) unstable; urgency=low
