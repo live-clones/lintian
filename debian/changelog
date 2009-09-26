@@ -4,6 +4,9 @@ lintian (2.2.18) UNRELEASED; urgency=low
     + [RA] Say to use (= ${binary:Version}) to fix weak dependencies
       between a library dev package and the shared library.  Thanks,
       Norbert Preining.  (Closes: #548218)
+  * checks/fields:
+    + [RA] Fix lib-recommends-documentation tag to correctly exclude dev
+      and doc packages.  Patch from Stéphane Glondu.  (Closes: #548210)
 
  -- Russ Allbery <rra@debian.org>  Fri, 25 Sep 2009 17:29:38 -0700
 
