@@ -40,7 +40,7 @@ use File::Basename;
 # config.sub, and automake depends on autotools-dev.
 our $AUTOTOOLS = Lintian::Relation->new(join(' | ',
     qw(autotools-dev automake automaken automake1.4 automake1.7 automake1.8
-       automake1.9 automake1.10)));
+       automake1.9 automake1.10 automake1.11)));
 
 # The files that contain error messages from tar, which we'll check and issue
 # tags for if they contain something unexpected, and their corresponding tags.
