@@ -11,7 +11,11 @@ lintian (2.2.18) UNRELEASED; urgency=low
     + [RA] Add some more details to executable-not-elf-or-script about
       possible causes and how to correct them.
 
- -- Russ Allbery <rra@debian.org>  Fri, 25 Sep 2009 17:29:38 -0700
+  * data/doc-base/sections:
+    + [FL] Update from doc-base 0.9.5. Adds Typesetting section.
+      Thanks Julian Gilbey.  (Closes: #552526)
+
+ -- Frank Lichtenheld <djpig@debian.org>  Tue, 27 Oct 2009 17:29:39 +0100
 
 lintian (2.2.17) unstable; urgency=medium
 

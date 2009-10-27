@@ -1,6 +1,6 @@
 # Taken from /usr/share/doc-base/data/sections.list.
 #
-# Last synchronized with doc-base 0.8.16 (2008-05-14).
+# Last synchronized with doc-base 0.9.5 (2009-10-27).
 
 Accessibility
 Amateur Radio
@@ -68,6 +68,7 @@ System/Security
 Terminal Emulators
 Text
 TV and Radio
+Typesetting
 Viewers
 Video
 Web Development
