@@ -172,7 +172,7 @@ for my $cur_file (sort keys %{$info->index}) {
 
 	    # python-central is a special case since the libraries are moved
 	    # at install time.
-	    next if ($actual =~ m,^/usr/lib/python[\d.]+/site-packages,
+	    next if ($actual =~ m,^/usr/lib/python[\d.]+/(?:site|dist)-packages,
 		     and $expected =~ m,^/usr/share/pyshared,);
 	    tag "incorrect-libdir-in-la-file", $cur_file, "$actual != $expected"
 		unless($expected eq $actual);

@@ -13,12 +13,16 @@ lintian (2.2.18) UNRELEASED; urgency=low
   * checks/scripts.desc:
     + [RA] Add some more details to executable-not-elf-or-script about
       possible causes and how to correct them.
+  * checks/shared-libs:
+    + [FL] Add /usr/lib/python*/dist-packages to exception list for
+      incorrect-libdir-in-la-file.  Thanks, Mathieu Trudel.
+      (Closes: #551134)
 
   * data/doc-base/sections:
     + [FL] Update from doc-base 0.9.5. Adds Typesetting section.
       Thanks Julian Gilbey.  (Closes: #552526)
 
- -- Frank Lichtenheld <djpig@debian.org>  Tue, 27 Oct 2009 17:42:49 +0100
+ -- Frank Lichtenheld <djpig@debian.org>  Tue, 27 Oct 2009 17:58:23 +0100
 
 lintian (2.2.17) unstable; urgency=medium
 
