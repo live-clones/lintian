@@ -210,7 +210,7 @@ for my $binary_control (@binary_controls) {
 	}
 
 	# If this looks like a -dev package, check its dependencies.
-	if ($package =~ /-dev$/) {
+	if ($package =~ /-dev$/ and $binary_control->{'depends'}) {
 		for my $depend (split /\s*,\s*/, $binary_control->{'depends'}) {
 			my ($target, $version) = ($depend =~ /^([\w.+-]+)(?:\s*\(([^\)]+)\))?/);
 			next unless $target;

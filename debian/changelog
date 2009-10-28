@@ -1,9 +1,12 @@
 lintian (2.2.18) UNRELEASED; urgency=low
 
-  * checks/control-file.desc:
+  * checks/control-file{,.desc}:
     + [RA] Say to use (= ${binary:Version}) to fix weak dependencies
       between a library dev package and the shared library.  Thanks,
       Norbert Preining.  (Closes: #548218)
+    + [ADB] Fix an uninitialised value warning when processing a
+      -dev package which has no Depends: fields.  Thanks, Lucas
+      Nussbaum.
   * checks/cruft:
     + [FL] Add automake1.11 to list of autotools packages.  Thanks,
       Laurent Bigonville.  (Closes: #551051)
