@@ -13,6 +13,9 @@ lintian (2.2.18) UNRELEASED; urgency=low
   * checks/fields:
     + [RA] Fix lib-recommends-documentation tag to correctly exclude dev
       and doc packages.  Patch from Stéphane Glondu.  (Closes: #548210)
+  * checks/lintian.desc:
+    + [CW] Add lucid as an allowable distribution for Ubuntu, and remove
+      gutsy.
   * checks/scripts.desc:
     + [RA] Add some more details to executable-not-elf-or-script about
       possible causes and how to correct them.
@@ -21,6 +24,9 @@ lintian (2.2.18) UNRELEASED; urgency=low
       incorrect-libdir-in-la-file.  Thanks, Mathieu Trudel.
       (Closes: #551134)
 
+  * data/changelog-file/ubuntu-dists:
+    + [CW] Add lucid as an allowable distribution for Ubuntu, and remove
+      gutsy.
   * data/doc-base/sections:
     + [FL] Update from doc-base 0.9.5. Adds Typesetting section.
       Thanks Julian Gilbey.  (Closes: #552526)
