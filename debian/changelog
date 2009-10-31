@@ -13,6 +13,9 @@ lintian (2.2.18) UNRELEASED; urgency=low
   * checks/copyright-file:
     + [FL] Add special exception to no-copyright-file for perl.
       See #522827 for discussion.  (Closes: #553262)
+    + [FL] Extend match for exceptions to copyright-refers-to-symlink-license
+      to catch more ways to specify Perl's license.  Patch from
+      Salvatore Bonaccorso.  (Closes: #549596)
   * checks/cruft:
     + [FL] Add automake1.11 to list of autotools packages.  Thanks,
       Laurent Bigonville.  (Closes: #551051)

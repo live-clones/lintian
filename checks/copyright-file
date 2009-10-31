@@ -163,7 +163,9 @@ if (m,(usr/share/common-licenses/(?:GPL|LGPL|BSD|Artistic)\.gz),) {
 # our false positives for GPL references that don't include a specific version
 # number, but it will get the obvious ones.
 if (m,(usr/share/common-licenses/(L?GPL|GFDL))([^-]),i && !m,as Perl itself,i
-    && !m,License-Alias:\s+Perl,) {
+    && !m,License-Alias:\s+Perl,
+    && !m,License:\s+Artistic\s+or\s+GPL-1\+,
+    && !m,License:\s+Perl,) {
     my ($ref, $license, $separator) = ($1, $2, $3);
     if ($separator =~ /[\d\w]/) {
 	tag 'copyright-refers-to-nonexistent-license-file', "$ref$separator";
