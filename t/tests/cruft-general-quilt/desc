@@ -21,4 +21,3 @@ Test-For:
  diff-contains-svn-commit-file
  diff-contains-svn-conflict-file
  diff-contains-svn-control-dir
- unsupported-source-format

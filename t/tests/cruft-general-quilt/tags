@@ -1,5 +1,4 @@
 E: cruft-general-quilt source: debian-files-list-in-source
-E: cruft-general-quilt source: unsupported-source-format 3.0 (quilt)
 W: cruft-general-quilt source: diff-contains-arch-control-dir debian/{arch}
 W: cruft-general-quilt source: diff-contains-arch-inventory-file debian/.arch-inventory
 W: cruft-general-quilt source: diff-contains-bts-control-dir debian/.be
