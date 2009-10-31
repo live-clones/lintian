@@ -1,5 +1,8 @@
 lintian (2.2.18) UNRELEASED; urgency=low
 
+  * checks/changelog-file:
+    + [FL] Avoid various Perl warnings which can be caused by
+      completly broken changelog files.
   * checks/control-file{,.desc}:
     + [RA] Say to use (= ${binary:Version}) to fix weak dependencies
       between a library dev package and the shared library.  Thanks,

@@ -305,11 +305,11 @@ if (@entries) {
 
     # Some checks should only be done against the most recent changelog entry.
     my $entry = $entries[0];
-    if (@entries == 1 and $entry->Version =~ /-1$/) {
+    if (@entries == 1 and $entry->Version and $entry->Version =~ /-1$/) {
         tag 'new-package-should-close-itp-bug'
             unless @{ $entry->Closes };
     }
-    my $changes = $entry->Changes;
+    my $changes = $entry->Changes || '';
     while ($changes =~ /(closes\s*(?:bug)?\#?\s?\d{6,})[^\w]/ig) {
 	tag "possible-missing-colon-in-closes", "$1" if $1;
     }
@@ -326,9 +326,13 @@ if (@entries) {
     # that was already there.
     my $version;
     if ($info->native) {
-        $version = $entry->Version;
+        $version = $entry->Version || '';
     } else {
+      if( $entry->Version ){
         ($version) = (split('-', $entry->Version))[-1];
+      }else{
+	$version = '';
+      }
     }
     unless (not $info->native and $version =~ /\./) {
         if ($info->native and $version =~ /testing|(?:un)?stable/i) {
