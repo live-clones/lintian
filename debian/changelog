@@ -19,6 +19,10 @@ lintian (2.2.18) UNRELEASED; urgency=low
   * checks/cruft:
     + [FL] Add automake1.11 to list of autotools packages.  Thanks,
       Laurent Bigonville.  (Closes: #551051)
+  * checks/debconf.desc:
+    + [FL] Remove experimental flag from template-uses-unsplit-choices.
+      This was only done to not disrupt the lenny freeze.  Thanks,
+      Raphael Geissert.  (Closes: #553487)
   * checks/fields:
     + [RA] Fix lib-recommends-documentation tag to correctly exclude dev
       and doc packages.  Patch from Stéphane Glondu.  (Closes: #548210)
@@ -42,7 +46,7 @@ lintian (2.2.18) UNRELEASED; urgency=low
     + [FL] Update from doc-base 0.9.5. Adds Typesetting section.
       Thanks Julian Gilbey.  (Closes: #552526)
 
- -- Frank Lichtenheld <djpig@debian.org>  Tue, 27 Oct 2009 17:58:23 +0100
+ -- Frank Lichtenheld <djpig@debian.org>  Sat, 31 Oct 2009 23:17:02 +0100
 
 lintian (2.2.17) unstable; urgency=medium
 
