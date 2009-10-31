@@ -19,6 +19,8 @@ lintian (2.2.18) UNRELEASED; urgency=low
   * checks/fields:
     + [RA] Fix lib-recommends-documentation tag to correctly exclude dev
       and doc packages.  Patch from Stéphane Glondu.  (Closes: #548210)
+    + [FL] Allow source formats 3.0 (quilt) and 3.0 (native).
+      (Closes: #552707)
   * checks/lintian.desc:
     + [CW] Add lucid as an allowable distribution for Ubuntu, and remove
       gutsy.
