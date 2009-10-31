@@ -7,6 +7,9 @@ lintian (2.2.18) UNRELEASED; urgency=low
     + [ADB] Fix an uninitialised value warning when processing a
       -dev package which has no Depends: fields.  Thanks, Lucas
       Nussbaum.
+  * checks/copyright-file:
+    + [FL] Add special exception to no-copyright-file for perl.
+      See #522827 for discussion.  (Closes: #553262)
   * checks/cruft:
     + [FL] Add automake1.11 to list of autotools packages.  Thanks,
       Laurent Bigonville.  (Closes: #551051)
