@@ -42,6 +42,7 @@ my $cache = AptPkg::Cache->new;
 
 # special cases when libfoo-bar-perl => Foo::Bar doesn't work
 my %module_name = (
+    "libio-compress-perl" => "IO::Compress::Gzip",
     "libio-compress-zlib-perl" => "IO::Compress::Gzip",
 );
 
