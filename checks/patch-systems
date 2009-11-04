@@ -167,7 +167,7 @@ sub run {
 	}
 
 	#----- look for README.source
-	if ($uses_patch_system && ! -f 'debfiles/README.source') {
+	if ($uses_patch_system && ! $quilt_format && ! -f 'debfiles/README.source') {
 		tag "patch-system-but-no-source-readme";
 	}
 
