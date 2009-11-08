@@ -1,5 +1,5 @@
 # List of known architectures as provided by dpkg-architecture
-# Last updated: 2009-07-25
+# Last updated: 2009-11-08
 
 all
 alpha
@@ -215,3 +215,47 @@ solaris-sh4
 solaris-sh4eb
 solaris-sparc
 sparc
+uclibc-linux-alpha
+uclibc-linux-amd64
+uclibc-linux-arm
+uclibc-linux-armeb
+uclibc-linux-armel
+uclibc-linux-avr32
+uclibc-linux-hppa
+uclibc-linux-i386
+uclibc-linux-ia64
+uclibc-linux-m32r
+uclibc-linux-m68k
+uclibc-linux-mips
+uclibc-linux-mipsel
+uclibc-linux-powerpc
+uclibc-linux-ppc64
+uclibc-linux-s390
+uclibc-linux-s390x
+uclibc-linux-sh3
+uclibc-linux-sh3eb
+uclibc-linux-sh4
+uclibc-linux-sh4eb
+uclibc-linux-sparc
+uclinux-alpha
+uclinux-amd64
+uclinux-arm
+uclinux-armeb
+uclinux-armel
+uclinux-avr32
+uclinux-hppa
+uclinux-i386
+uclinux-ia64
+uclinux-m32r
+uclinux-m68k
+uclinux-mips
+uclinux-mipsel
+uclinux-powerpc
+uclinux-ppc64
+uclinux-s390
+uclinux-s390x
+uclinux-sh3
+uclinux-sh3eb
+uclinux-sh4
+uclinux-sh4eb
+uclinux-sparc

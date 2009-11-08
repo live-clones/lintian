@@ -45,6 +45,8 @@ lintian (2.2.18) UNRELEASED; urgency=low
   * data/doc-base/sections:
     + [FL] Update from doc-base 0.9.5. Adds Typesetting section.
       Thanks Julian Gilbey.  (Closes: #552526)
+  * data/fields/architectures:
+    + [ADB] Refresh against unstable.
   * data/fields/perl-provides:
     + [ADB] Refresh against unstable.
 
