@@ -49,6 +49,8 @@ lintian (2.2.18) UNRELEASED; urgency=low
     + [ADB] Refresh against unstable.
   * data/fields/perl-provides:
     + [ADB] Refresh against unstable.
+  * data/files/fonts:
+    + [ADB] Refresh against unstable.
 
   * private/refresh-perl-provides:
     + [ADB] Special-case libio-compress-perl; the package contains the
