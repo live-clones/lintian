@@ -9,8 +9,11 @@
 #
 # last updated for PERL_VERSION=5.010000
 libtime-piece-perl 1.12
+libthreads-shared-perl 1.14
+libthreads-perl 1.67
 libsys-syslog-perl 0.22
 libio-compress-zlib-perl 2.008
+libio-compress-perl 2.008
 libio-compress-base-perl 2.008
 libdigest-sha-perl 5.45
 libcompress-zlib-perl 2.008
