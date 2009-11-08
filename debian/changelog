@@ -46,6 +46,11 @@ lintian (2.2.18) UNRELEASED; urgency=low
     + [FL] Update from doc-base 0.9.5. Adds Typesetting section.
       Thanks Julian Gilbey.  (Closes: #552526)
 
+  * private/refresh-perl-provides:
+    + [ADB] Special-case libio-compress-perl; the package contains the
+      modules which used to be in libio-compress-* but does not contain
+      IO::Compress.  Patch from Niko Tyni.  (Closes: #554393)
+
  -- Frank Lichtenheld <djpig@debian.org>  Sat, 31 Oct 2009 23:17:02 +0100
 
 lintian (2.2.17) unstable; urgency=medium
