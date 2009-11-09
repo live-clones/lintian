@@ -34,7 +34,7 @@ lintian (2.2.18) UNRELEASED; urgency=low
   * checks/manpages.desc:
     + [ADB] Mention in the description for manpage-has-errors-from-man
       that Lintian passes "-E UTF-8" to man when running checks.  Thanks,
-      Raphaël Hertzog.
+      Raphaël Hertzog. (Closes: #555320)
   * checks/scripts.desc:
     + [RA] Add some more details to executable-not-elf-or-script about
       possible causes and how to correct them.
