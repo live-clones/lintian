@@ -31,6 +31,10 @@ lintian (2.2.18) UNRELEASED; urgency=low
   * checks/lintian.desc:
     + [CW] Add lucid as an allowable distribution for Ubuntu, and remove
       gutsy.
+  * checks/manpages.desc:
+    + [ADB] Mention in the description for manpage-has-errors-from-man
+      that Lintian passes "-E UTF-8" to man when running checks.  Thanks,
+      Raphaël Hertzog.
   * checks/scripts.desc:
     + [RA] Add some more details to executable-not-elf-or-script about
       possible causes and how to correct them.

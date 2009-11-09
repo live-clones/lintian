@@ -169,7 +169,7 @@ Info: This man page provokes warnings or errors from man.
  "Debugging" in the groff manual.
  .
  To test this for yourself you can use the following command:
-  LANG=C MANWIDTH=80 man --warnings -l manpage-file &gt;/dev/null
+  LANG=C MANWIDTH=80 man --warnings -E UTF-8 -l manpage-file &gt;/dev/null
 
 Tag: manpage-has-errors-from-pod2man
 Severity: normal
