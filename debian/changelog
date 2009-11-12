@@ -72,6 +72,8 @@ lintian (2.2.18) UNRELEASED; urgency=low
   * checks/scripts.desc:
     + [RA] Add some more details to executable-not-elf-or-script about
       possible causes and how to correct them.
+    + [RA] Suggest mkfifo in mknod-in-maintainer-script if the script was
+      creating a named pipe.
   * checks/shared-libs:
     + [FL] Add /usr/lib/python*/dist-packages to exception list for
       incorrect-libdir-in-la-file.  Thanks, Mathieu Trudel.

@@ -351,7 +351,10 @@ Severity: serious
 Certainty: certain
 Ref: policy 10.6
 Info: Maintainer scripts must not create device files directly.  They
- should call MAKEDEV instead.
+ should call <tt>MAKEDEV</tt> instead.
+ .
+ If <tt>mknod</tt> is being used to create a FIFO (named pipe), use
+ <tt>mkfifo</tt> instead to avoid triggering this tag.
 
 Tag: start-stop-daemon-in-maintainer-script
 Severity: normal
