@@ -53,6 +53,12 @@ lintian (2.2.18) UNRELEASED; urgency=low
       and doc packages.  Patch from Stéphane Glondu.  (Closes: #548210)
     + [FL] Allow source formats 3.0 (quilt) and 3.0 (native).
       (Closes: #552707)
+  * checks/files.desc:
+    + [RA] Add a note to wrong-file-owner-uid-or-gid that it's possible to
+      construct a Policy-compliant package that triggers this tag by
+      creating users in preinst, and asking package maintainers to file a
+      bug against Lintian if they encounter a case where this appears to
+      be necessary.
   * checks/lintian.desc:
     + [CW] Add lucid as an allowable distribution for Ubuntu, and remove
       gutsy.
