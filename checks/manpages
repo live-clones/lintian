@@ -260,9 +260,11 @@ foreach my $file (sort keys %{$info->index}) {
 		next if /warning \[.*\]: cannot adjust line/;
 		next if /warning \[.*\]: can\'t break line/;
 	    }
-	    # ignore wrapping failures if they contain URLs
+	    # ignore wrapping failures if they contain URLs (.UE is an
+	    # extension for marking the end of a URL).
 	    next if /:(\d+): warning \[.*\]: (can\'t break|cannot adjust) line/
-		and $manfile[$1 - 1] =~ m,(?:https?|ftp)://.+,i;
+		and (   $manfile[$1 - 1] =~ m,(?:https?|ftp)://.+,i
+		     or $manfile[$1 - 1] =~ m,^\s*\.\s*UE\b,);
 	    # ignore common undefined macros from pod2man << Perl 5.10
 	    next if /warning: (?:macro )?\`(Tr|IX)\' not defined/;
 	    chomp;

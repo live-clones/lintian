@@ -35,6 +35,9 @@ lintian (2.2.18) UNRELEASED; urgency=low
     + [ADB] Mention in the description for manpage-has-errors-from-man
       that Lintian passes "-E UTF-8" to man when running checks.  Thanks,
       Raphaël Hertzog. (Closes: #555320)
+    + [RA] Also suppress failures to break lines if the reported line is
+      a .UE macro, which marks the end of a block defining a URL.  Thanks,
+      Martin Stigge.
   * checks/scripts.desc:
     + [RA] Add some more details to executable-not-elf-or-script about
       possible causes and how to correct them.
