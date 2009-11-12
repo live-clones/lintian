@@ -77,6 +77,12 @@ lintian (2.2.18) UNRELEASED; urgency=low
   * data/files/fonts:
     + [ADB] Refresh against unstable.
 
+  * man/lintian.1:
+    + [RA] Add additional explanation of experimental tags.  Remove the
+      comment that pedantic tags are frequently wrong; that's not what
+      they're for.  Improve the explanation for -i to not imply that
+      everything Lintian finds is a Policy violation.
+
   * private/refresh-perl-provides:
     + [ADB] Special-case libio-compress-perl; the package contains the
       modules which used to be in libio-compress-* but does not contain

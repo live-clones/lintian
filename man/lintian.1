@@ -154,9 +154,9 @@ Behaviour options for
 
 .TP
 .BR \-i ", " \-\-info
-Print explanatory information about discovered policy violations in
-addition to the lintian error tags. To print a long tag description
-without running lintian, see
+Print explanatory information about each problem discovered in addition to
+the lintian error tags. To print a long tag description without running
+lintian, see
 .BR lintian\-info (1).
 
 .TP
@@ -169,15 +169,21 @@ Display informational ("I:") tags as well.  They are normally suppressed.
 .BR \-E ", " \-\-display\-experimental
 Display experimental ("X:") tags as well.  They are normally suppressed.
 
+If a tag is marked experimental, this means that the code that generates
+this message is not as well tested as the rest of Lintian, and might still
+give surprising results.  Feel free to ignore Experimental messages that
+do not seem to make sense, though of course bug reports are always
+welcomed (particularly if they include fixes).
+
 .TP
 .BR \-\-pedantic
 Display pedantic ("P:") tags as well.  They are normally suppressed.
 
 Pedantic tags are Lintian at its most pickiest and include checks for
-particular Debian packaging styles, checks that are very frequently wrong,
-and checks that many people disagree with.  Expect false positives and
-Lintian tags that you don't consider useful if you use this option.
-Adding overrides for pedantic tags is probably not worth the effort.
+particular Debian packaging styles and checks that many people disagree
+with.  Expect false positives and Lintian tags that you don't consider
+useful if you use this option.  Adding overrides for pedantic tags is
+probably not worth the effort.
 
 .TP
 .BR \-L " [+|-|=][>=|>|<|<=][S|C|S/C], " \-\-display\-level " [+|-|=][>=|>|<|<=][S|C|S/C]"
