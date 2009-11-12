@@ -218,9 +218,8 @@ Info: This ELF binary appears to have been built for an architecture other
  cross-compile didn't work.
 
 Tag: spelling-error-in-binary
-Severity: normal
+Severity: minor
 Certainty: wild-guess
-Experimental: yes
 Info: Lintian found a spelling error in the given binary.  Lintian has a
  list of common misspellings that it looks for.  It does not have a
  dictionary like a spelling checker does.  For Lintian's convenience all
@@ -234,11 +233,11 @@ Info: Lintian found a spelling error in the given binary.  Lintian has a
  .
  To find the original word you can run:
  .
- <tt>strings &lt;binary&gt; | grep -i &lt;word&gt;</tt>
+  strings &lt;binary&gt; | grep -i &lt;word&gt;
  .
  You can often find the word in the source code by running:
  .
- <tt>grep -r '\b&lt;original-word&gt;\b' &lt;source-tree&gt;</tt>
+  grep -r '\b&lt;original-word&gt;\b' &lt;source-tree&gt;
 
 Tag: embedded-zlib
 Severity: important

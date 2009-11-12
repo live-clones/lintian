@@ -3,7 +3,13 @@ lintian (2.2.18) UNRELEASED; urgency=low
   * Summary of tag changes:
     + Removed:
       - copyright-lists-upstream-authors-with-dh_make-boilerplate
+    + Promoted from experimental:
+      - spelling-error-in-binary
+      - template-uses-unsplit-choices
 
+  * checks/binaries.desc:
+    + [RA] Remove experimental marker on spelling-error-in-binary.  Change
+      severity to minor; spelling errors are minor bugs.
   * checks/changelog-file:
     + [FL] Avoid various Perl warnings which can be caused by
       completly broken changelog files.
