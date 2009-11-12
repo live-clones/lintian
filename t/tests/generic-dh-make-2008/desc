@@ -8,7 +8,6 @@ Test-For:
  bad-homepage
  copyright-contains-dh_make-todo-boilerplate
  copyright-has-url-from-dh_make-boilerplate
- copyright-lists-upstream-authors-with-dh_make-boilerplate
  copyright-with-old-dh-make-debian-copyright
  copyright-without-copyright-notice
  debian-watch-file-is-missing

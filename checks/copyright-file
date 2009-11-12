@@ -149,6 +149,9 @@ my $wrong_directory_detected = 0;
 if (m,\<fill in (?:http/)?ftp site\>, or m/\<Must follow here\>/) {
     tag "helper-templates-in-copyright", "";
 }
+if (m,\<Put the license of the package here,) {
+    tag 'helper-templates-in-copyright';
+}
 
 if (m,(usr/share/common-licenses/(?:GPL|LGPL|BSD|Artistic)\.gz),) {
     tag "copyright-refers-to-compressed-license", $1;
@@ -262,12 +265,15 @@ if (m,(?:under )?(?:the )?(?:same )?(?:terms )?as Perl itself,i &&
 
 # Checks for various packaging helper boilerplate.
 
-if (m/^This copyright info was automatically extracted from the perl module\./) {
-    tag "helper-templates-in-copyright", "";
+if (m,\<put author[\'\(]s\)? name and email here\>,) {
+    tag 'helper-templates-in-copyright';
+}
+if (m,\<Copyright \(C\) YYYY Name OfAuthor\>,) {
+    tag 'helper-templates-in-copyright';
 }
 
-if (m,Upstream Author\(s\),) {
-    tag "copyright-lists-upstream-authors-with-dh_make-boilerplate";
+if (m/^This copyright info was automatically extracted from the perl module\./m) {
+    tag 'copyright-contains-dh-make-perl-boilerplate';
 }
 
 if (m,url://example\.com,) {
@@ -276,9 +282,6 @@ if (m,url://example\.com,) {
 
 if (m{\# Please also look if there are files or directories which have a\n\# different copyright/license attached and list them here\.}) {
     tag "copyright-contains-dh_make-todo-boilerplate", "";
-}
-if (m{This copyright info was automatically extracted from the perl module\.\nIt may not be accurate, so you better check the module sources\nif you don\'t want to get into legal troubles\.}) {
-    tag "copyright-contains-dh-make-perl-boilerplate", "";
 }
 
 if (m,The\s+Debian\s+packaging\s+is\s+\(C\)\s+\d+,i) {

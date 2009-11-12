@@ -1,5 +1,7 @@
 E: generic-dh-make-2005: description-is-dh_make-template
 E: generic-dh-make-2005: helper-templates-in-copyright
+E: generic-dh-make-2005: helper-templates-in-copyright
+E: generic-dh-make-2005: helper-templates-in-copyright
 E: generic-dh-make-2005: section-is-dh_make-template
 I: generic-dh-make-2005 source: debian-watch-file-is-missing
 I: generic-dh-make-2005: extended-description-is-probably-too-short

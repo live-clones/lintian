@@ -11,7 +11,6 @@ Test-For:
  copyright-file-contains-full-gpl-license
  copyright-file-is-symlink
  copyright-has-url-from-dh_make-boilerplate
- copyright-lists-upstream-authors-with-dh_make-boilerplate
  copyright-refers-to-bad-php-license
  copyright-refers-to-compressed-license
  copyright-refers-to-incorrect-directory

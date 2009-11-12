@@ -17,6 +17,5 @@ W: copyright-full-apache-2: copyright-without-copyright-notice
 W: copyright-iso-8859-1: debian-copyright-file-uses-obsolete-national-encoding at line 3
 W: copyright-misc-errors: copyright-contains-dh-make-perl-boilerplate
 W: copyright-misc-errors: copyright-has-url-from-dh_make-boilerplate
-W: copyright-misc-errors: copyright-lists-upstream-authors-with-dh_make-boilerplate
 W: copyright-misc-errors: copyright-refers-to-nonexistent-license-file usr/share/common-licenses/GPL2
 W: copyright-old-style: copyright-without-copyright-notice

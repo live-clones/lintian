@@ -1,5 +1,9 @@
 lintian (2.2.18) UNRELEASED; urgency=low
 
+  * Summary of tag changes:
+    + Removed:
+      - copyright-lists-upstream-authors-with-dh_make-boilerplate
+
   * checks/changelog-file:
     + [FL] Avoid various Perl warnings which can be caused by
       completly broken changelog files.
@@ -10,12 +14,24 @@ lintian (2.2.18) UNRELEASED; urgency=low
     + [ADB] Fix an uninitialised value warning when processing a
       -dev package which has no Depends: fields.  Thanks, Lucas
       Nussbaum.
-  * checks/copyright-file:
+  * checks/copyright-file{,.desc}:
     + [FL] Add special exception to no-copyright-file for perl.
       See #522827 for discussion.  (Closes: #553262)
     + [FL] Extend match for exceptions to copyright-refers-to-symlink-license
       to catch more ways to specify Perl's license.  Patch from
       Salvatore Bonaccorso.  (Closes: #549596)
+    + [RA] copyright-lists-upstream-authors-with-dh_make-boilerplate
+      removed, as some package maintainers prefer to use Author(s) and
+      have filled out the copyright file.
+    + [RA] Add additional dh_make template strings to the
+      helper-templates-in-copyright check, including the templates for
+      upstream author or copyright holder, which effectively replaces
+      copyright-lists-upstream-authors-with-dh_make-boilerplate with far
+      fewer false positives.
+    + [RA] Remove a duplication of the check for "This copyright info was
+      automatically extracted from the perl module" by dh-make-perl, and
+      ensure that this is copyright-contains-dh-make-perl-boilerplate and
+      not helper-templates-in-copyright, since it is lower severity.
   * checks/cruft:
     + [FL] Add automake1.11 to list of autotools packages.  Thanks,
       Laurent Bigonville.  (Closes: #551051)
