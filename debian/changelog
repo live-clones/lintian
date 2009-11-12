@@ -45,6 +45,9 @@ lintian (2.2.18) UNRELEASED; urgency=low
     + [FL] Remove experimental flag from template-uses-unsplit-choices.
       This was only done to not disrupt the lenny freeze.  Thanks,
       Raphael Geissert.  (Closes: #553487)
+  * checks/description.desc:
+    + [RA] Downgrade description-synopsis-might-not-be-phrased-properly to
+      minor and fix the cross-reference to point to devref, not Policy.
   * checks/fields:
     + [RA] Fix lib-recommends-documentation tag to correctly exclude dev
       and doc packages.  Patch from Stéphane Glondu.  (Closes: #548210)

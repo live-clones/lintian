@@ -97,7 +97,7 @@ Info: The extended description contains the statement that it was
  to signal that you have done so. 
 
 Tag: description-synopsis-might-not-be-phrased-properly
-Severity: normal
+Severity: minor
 Certainty: possible
 Info: The synopsis (first line in the package "Description:" field, the
  short description) ends with a full stop "." character. This is not
@@ -106,7 +106,7 @@ Info: The synopsis (first line in the package "Description:" field, the
  .
  Note also that the synopsis is not part of the rest of the "Description:"
  field.
-Ref: policy 3.4.1
+Ref: devref 6.2.2
 
 Tag: description-synopsis-is-duplicated
 Severity: important
