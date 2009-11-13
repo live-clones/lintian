@@ -88,6 +88,7 @@ our %interpreters =
      pforth	    => [ '/usr/bin' ],
      rc		    => [ '/usr/bin' ],
      regina	    => [ '/usr/bin', 'regina-rexx' ],
+     rep            => [ '/usr/bin' ],
      rexx	    => [ '/usr/bin', 'regina-rexx' ],
      rrdcgi	    => [ '/usr/bin', 'rrdtool' ],
      ruby	    => [ '/usr/bin' ],
