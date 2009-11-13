@@ -72,6 +72,8 @@ lintian (2.2.18) UNRELEASED; urgency=low
   * checks/cruft:
     + [FL] Add automake1.11 to list of autotools packages.  Thanks,
       Laurent Bigonville.  (Closes: #551051)
+    + [RA] Allow CMakeCache.txt files in the debian directory.  Thanks,
+      Aaron M. Ucko.  (Closes: #553264)
   * checks/debconf.desc:
     + [FL] Remove experimental flag from template-uses-unsplit-choices.
       This was only done to not disrupt the lenny freeze.  Thanks,

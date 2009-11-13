@@ -188,7 +188,7 @@ sub check_diffstat {
         # Check for CMake cache files.  These embed the source path and hence
         # will cause FTBFS on buildds, so they should never be touched in the
         # diff.
-        if ($file =~ m,(^|/)CMakeCache.txt\z,) {
+        if ($file =~ m,(^|/)CMakeCache.txt\z, and $file !~ m,/debian/,) {
             tag 'diff-contains-cmake-cache-file', $file;
         }
 
