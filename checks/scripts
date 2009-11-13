@@ -161,6 +161,9 @@ our %versioned_interpreters =
 		  qr/^python([\d.]+)$/, 'python$1 | python$1-minimal',
 		  qw(2.4 2.5)
 		],
+     rackup  => [ '/usr/bin', undef,
+		  qr/^rackup([\d.]+)$/, 'librack-ruby$1', qw(1.8 1.9)
+		],
      ruby    => [ '/usr/bin', undef,
 		  qr/^ruby([\d.]+)$/, 'ruby$1', qw(1.8 1.9)
 		],

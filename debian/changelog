@@ -138,6 +138,7 @@ lintian (2.2.18) UNRELEASED; urgency=low
       creating a named pipe.
     + [RA] Add rep.  Thanks, Rodrigo Gallardo.  (Closes: #510954)
     + [RA] Add r.  Thanks, Dirk Eddelbuettel.  (Closes: #555278)
+    + [RA] Add rackup.  Thanks, Sebastien Delafond.  (Closes: #552013)
   * checks/shared-libs:
     + [FL] Add /usr/lib/python*/dist-packages to exception list for
       incorrect-libdir-in-la-file.  Thanks, Mathieu Trudel.
