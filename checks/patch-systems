@@ -147,7 +147,7 @@ sub run {
 							last if /^---/;
 							next if /^\s*$/;
 							# Skip common "lead-in" lines
-							$has_description = 1 unless (/^(Index: |=+$|diff .+)/);
+							$has_description = 1 unless (/^(Index: |=+$|diff .+|index )/);
 						}
 						close(PATCH_FILE);
 						unless ($has_description) {

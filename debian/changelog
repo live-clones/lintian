@@ -114,6 +114,8 @@ lintian (2.2.18) UNRELEASED; urgency=low
   * checks/patch-systems:
     + [RA] Do not issue patch-system-but-no-source-readme for packages in
       3.0 (quilt) format.  Patch from Stéphane Glondu.  (Closes: #553207)
+    + [RA] Don't consider the "index <sha1>..<sha1>" line added by git
+      diff to be a patch description.  (Closes: #553697)
   * checks/rules.desc:
     + [RA] missing-build-dependency is now serious/possible (ftpmaster
       reject unless overridden).

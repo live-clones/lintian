@@ -1,1 +1,2 @@
 I: patch-systems-quilt-description source: quilt-patch-missing-description 02_this_one_has_no_description
+I: patch-systems-quilt-description source: quilt-patch-missing-description 03_a_git_patch
