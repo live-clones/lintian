@@ -137,6 +137,10 @@ Info: The Debian diff.gz contains changes to files or creation of additional
  control over them.  The package will also more easily support  possible
  future source package formats if all changes outside the <tt>debian</tt>
  directory are stored as patches.
+ .
+ If the diff only creates new files that can be copied into place by the
+ package build rules, consider putting them in the <tt>debian</tt>
+ directory rather than using a patch system.
 
 Tag: patch-system-but-no-source-readme
 Severity: normal
