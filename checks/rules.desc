@@ -103,8 +103,8 @@ Info: One of the targets in the <tt>debian/rules</tt> file for this
  incorrect or missing package files and metadata.
 
 Tag: missing-build-dependency
-Severity: important
-Certainty: certain
+Severity: serious
+Certainty: possible
 Ref: policy 4.2
 Info: The package doesn't specify a build dependency on a package that is
  used in <tt>debian/rules</tt>.

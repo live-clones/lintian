@@ -1,7 +1,11 @@
 E: debconf source: declares-possibly-conflicting-debhelper-compat-versions rules=4 compat=4
 E: debconf source: missing-dh_python-build-dependency
+E: debconf-test-noscripts: copyright-contains-dh_make-todo-boilerplate
 E: debconf-test-noscripts: no-debconf-config
+E: debconf-test-postinst: copyright-contains-dh_make-todo-boilerplate
 E: debconf-test-postinst: no-debconf-config
+E: debconf-test-preinst: copyright-contains-dh_make-todo-boilerplate
+E: debconf-test: copyright-contains-dh_make-todo-boilerplate
 E: debconf-test: extended-description-is-empty
 E: debconf-test: mismatch-translated-choices debconf/testmulti-escape choices-de.utf-8
 E: debconf-test: no-template-description debconf/no-description
@@ -41,19 +45,15 @@ W: debconf source: template-uses-unsplit-choices debconf-test - debconf/testmult
 W: debconf source: translated-default-field debconf-test.templates: 67
 W: debconf source: translated-default-field debconf-test.templates: 72
 W: debconf source: unknown-encoding-in-po-file debian/po/fr.po
-W: debconf-test-noscripts: copyright-contains-dh_make-todo-boilerplate
 W: debconf-test-noscripts: old-fsf-address-in-copyright-file
 W: debconf-test-noscripts: postrm-does-not-purge-debconf
-W: debconf-test-postinst: copyright-contains-dh_make-todo-boilerplate
 W: debconf-test-postinst: old-fsf-address-in-copyright-file
 W: debconf-test-postinst: possible-debconf-note-abuse postinst:6 debconf/test
 W: debconf-test-postinst: postinst-uses-db-input
-W: debconf-test-preinst: copyright-contains-dh_make-todo-boilerplate
 W: debconf-test-preinst: loads-obsolete-confmodule preinst:5 /usr/share/debconf/confmodule.sh
 W: debconf-test-preinst: missing-debconf-dependency-for-preinst
 W: debconf-test-preinst: old-fsf-address-in-copyright-file
 W: debconf-test-preinst: possible-debconf-note-abuse preinst:9 debconf/test
-W: debconf-test: copyright-contains-dh_make-todo-boilerplate
 W: debconf-test: making-assumptions-about-interfaces-in-templates debconf/testboolean
 W: debconf-test: malformed-prompt-in-templates debconf/teststring
 W: debconf-test: malformed-question-in-templates debconf/should-be-no-longer-a-problem

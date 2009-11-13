@@ -22,7 +22,7 @@ Ref: policy 12.5
 Tested: empty
 
 Tag: copyright-refers-to-old-directory
-Severity: important
+Severity: serious
 Certainty: certain
 Info: The common licenses (GPL, BSD, Artistic, etc) have been moved from
  /usr/doc/copyright to /usr/share/common-licenses.
@@ -68,26 +68,39 @@ Info: The copyright file /usr/share/doc/<i>pkg</i>/copyright contains the
 Ref: policy 12.5
 
 Tag: usr-share-doc-symlink-without-dependency
-Severity: important
-Certainty: certain
-Info: If the package installs a symbolic link /usr/share/doc/<i>pkg1</i> -&gt;
- <i>pkg2</i>, then <i>pkg1</i> has to depend on <i>pkg2</i> with the same
- version as <i>pkg1</i>.
+Severity: serious
+Certainty: possible
+Info: If the package installs a symbolic link
+ <tt>/usr/share/doc/<i>pkg1</i> -&gt; <i>pkg2</i></tt>, then <i>pkg1</i>
+ must depend on <i>pkg2</i> directory, with the same version as
+ <i>pkg1</i>.
  .
- Note, that adding the "Depends:" entry just to fix this bug is not a good
- solution. It's suggested that you include a real /usr/share/doc/<i>pkg1</i>
- directory within <i>pkg1</i> and copy the copyright file into that directory.
+ Adding the dependency just to fix this bug is often not a good solution.
+ Usually, it's better to include a real <tt>/usr/share/doc/<i>pkg1</i></tt>
+ directory within <i>pkg1</i> and copy the copyright file into that
+ directory.
+ .
+ Transitive dependencies are not allowed here.  In other words, if the
+ documentation directory is shipped in <i>pkg3</i> and <i>pkg1</i> depends
+ on <i>pkg2</i>, which in turn depends on <i>pkg3</i>, that's still an
+ error.  Copyright file extractors are not required to go more than one
+ level deep when resolving dependencies.  Each package should have a
+ direct dependency on the package which includes its documentation
+ directory.
 Ref: policy 12.5
 
 Tag: usr-share-doc-symlink-to-foreign-package
-Severity: important
+Severity: serious
 Certainty: certain
-Info: If the package installs a symbolic link /usr/share/doc/<i>pkg1</i> -&gt;
- <i>pkg2</i>, then <i>pkg1</i> and <i>pkg2</i> must both come from the same
- source package.
+Info: If the package installs a symbolic link
+ <tt>/usr/share/doc/<i>pkg1</i> -&gt; <i>pkg2</i></tt>, then <i>pkg1</i>
+ and <i>pkg2</i> must both come from the same source package.
  .
- It's suggested that you include a real /usr/share/doc/<i>pkg1</i> directory
- within <i>pkg1</i> and copy the copyright file to that directory.
+ The best solution is probably to stop symlinking the
+ <tt>/usr/share/doc</tt> directory for this package and instead include a
+ real /usr/share/doc/<i>pkg1</i> directory within <i>pkg1</i> with the
+ appropriate contents (such as the <tt>copyright</tt> and
+ <tt>changelog.Debian.gz</tt> files).
 Ref: policy 12.5
 
 Tag: cannot-check-whether-usr-share-doc-symlink-points-to-foreign-package
@@ -101,7 +114,7 @@ Info: There is a symlink /usr/share/doc/<i>pkg1</i> -&gt; <i>pkg2</i>
  package.
 
 Tag: old-style-copyright-file
-Severity: important
+Severity: serious
 Certainty: certain
 Info: The package installs a /usr/doc/copyright/<i>pkg</i> file. Instead,
  you should place the copyright file in /usr/share/doc/<i>pkg</i>/copyright.
@@ -149,7 +162,7 @@ Info: If your package uses any one of the licenses in
 Ref: policy 12.5
 
 Tag: copyright-refers-to-incorrect-directory
-Severity: important
+Severity: serious
 Certainty: certain
 Ref: policy 12.5
 Info: In the directory name /usr/share/common-licenses, licenses is spelled
@@ -229,8 +242,8 @@ Info: The Debian copyright file should be valid UTF-8, an encoding of
   $ mv copyright.new copyright
 
 Tag: copyright-contains-dh_make-todo-boilerplate
-Severity: normal
-Certainty: certain
+Severity: serious
+Certainty: possible
 Ref: policy 12.5
 Info: The string "Please also look if..." appears in the copyright
  file, which indicates that you either didn't check the whole source

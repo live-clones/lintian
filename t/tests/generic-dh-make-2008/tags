@@ -1,3 +1,4 @@
+E: generic-dh-make-2008: copyright-contains-dh_make-todo-boilerplate
 E: generic-dh-make-2008: description-is-dh_make-template
 E: generic-dh-make-2008: helper-templates-in-copyright
 E: generic-dh-make-2008: helper-templates-in-copyright
@@ -30,7 +31,6 @@ W: generic-dh-make-2008 source: dh-make-template-in-source debian/watch.ex
 W: generic-dh-make-2008 source: out-of-date-standards-version 3.7.3 (current is CURRENT)
 W: generic-dh-make-2008 source: superfluous-clutter-in-homepage <insert the upstream URL, if relevant>
 W: generic-dh-make-2008: bad-homepage <insert the upstream URL, if relevant>
-W: generic-dh-make-2008: copyright-contains-dh_make-todo-boilerplate
 W: generic-dh-make-2008: copyright-has-url-from-dh_make-boilerplate
 W: generic-dh-make-2008: copyright-without-copyright-notice
 W: generic-dh-make-2008: new-package-should-close-itp-bug

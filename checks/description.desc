@@ -18,7 +18,6 @@ Info: The first line in the "Description:" is empty.
 Tag: extended-description-is-empty
 Severity: serious
 Certainty: certain
-Status: untested
 Info: The extended description (the lines after the first line of the
  "Description:" field) is empty.
 
@@ -83,7 +82,7 @@ Info: The synopsis or the extended description just says "Missing",
  which is a template provided by debmake.
 
 Tag: description-is-dh_make-template
-Severity: important
+Severity: serious
 Certainty: certain
 Info: The synopsis or the extended description has not been changed
  from the template provided by dh_make.

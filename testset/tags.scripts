@@ -10,6 +10,7 @@ E: scripts: init.d-script-has-duplicate-lsb-section /etc/init.d/lsb-broken
 E: scripts: init.d-script-has-unterminated-lsb-section /etc/init.d/lsb-broken:15
 E: scripts: missing-dep-for-interpreter jruby => jruby | jruby1.0 | jruby1.1 | jruby1.2 (./usr/bin/jruby-broken)
 E: scripts: missing-dep-for-interpreter lefty => graphviz (./usr/bin/lefty-foo)
+E: scripts: package-installs-python-pyc usr/lib/python2.3/site-packages/test.pyc
 E: scripts: php-script-but-no-phpX-cli-dep ./usr/share/scripts/php5foo
 E: scripts: php-script-but-no-phpX-cli-dep ./usr/share/scripts/phpfoo
 E: scripts: python-script-but-no-python-dep ./usr/bin/py2foo
@@ -76,7 +77,6 @@ W: scripts: maintainer-script-empty preinst
 W: scripts: maintainer-script-ignores-errors postinst
 W: scripts: non-standard-executable-perm usr/bin/perl-bizarre-3 0754 != 0755
 W: scripts: non-standard-setuid-executable-perm usr/bin/suidperlfoo 4555
-W: scripts: package-installs-python-pyc usr/lib/python2.3/site-packages/test.pyc
 W: scripts: script-uses-bin-env ./usr/bin/envfoo
 W: scripts: script-with-language-extension usr/bin/test.sh
 W: scripts: setuid-binary usr/bin/suidperlfoo 4555 root/root

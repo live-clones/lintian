@@ -8,7 +8,7 @@ Info: This script checks if a binary package conforms to policy
  WRT to files and directories.
 
 Tag: package-contains-ancient-file
-Severity: important
+Severity: serious
 Certainty: certain
 Info: Your package contains a file that claims to have been generated
  more than 20 years ago. This is most probably an error. Your package
@@ -332,8 +332,9 @@ Info: Scripts are usually not documentation files, unless they are
  <tt>/usr/share/doc/<i>pkg</i>/examples</tt> directory.
 
 Tag: symlink-has-too-many-up-segments
-Severity: important
+Severity: serious
 Certainty: certain
+Ref: policy 10.5
 Info: The symlink references a directory beyond the root directory "/".
 
 Tag: lengthy-symlink
@@ -419,8 +420,8 @@ Info: <tt>/var/run</tt> may be a temporary filesystem, so any directories
 Ref: policy 9.3.2
 
 Tag: dir-or-file-in-var-www
-Severity: important
-Certainty: certain
+Severity: serious
+Certainty: possible
 Ref: fhs thevarhierarchy
 Info: Debian packages should not install files under <tt>/var/www</tt>.
  This is not one of the <tt>/var</tt> directories in the File Hierarchy
@@ -437,28 +438,36 @@ Info: Debian packages should not install files under <tt>/var/www</tt>.
  As an exception, packages are permitted to create the <tt>/var/www</tt>
  directory due to its past history as the default document root, but
  should at most copy over a default file in postinst for a new install.
+ In this case, please add a Lintian override.
 
 Tag: dir-or-file-in-tmp
-Severity: important
+Severity: serious
 Certainty: certain
-Info: Packages should not install into <tt>/tmp</tt> or <tt>/var/tmp</tt>.
+Info: Packages must not install files into <tt>/tmp</tt> or
+ <tt>/var/tmp</tt>.  The File Hierarchy Standard specifies that such files
+ may be removed by the administrator and that programs may not depend on
+ any files in <tt>/tmp</tt> being preserved across invocations, which
+ combined mean that it makes no sense to ship files in these directories.
+Ref: fhs tmptemporaryfiles, fhs vartmptemporaryfilespreservedbetwee
 
 Tag: dir-or-file-in-mnt
-Severity: important
+Severity: serious
 Certainty: certain
 Info: Packages should not install into <tt>/mnt</tt>.  The FHS states that
- the contents of this directory is a local issue.
+ this directory is reserved for the local system administrator for
+ temporary mounts and that it must not be used by installation programs.
+Ref: fhs mntmountpointforatemporarilymount
 
 Tag: dir-or-file-in-opt
-Severity: important
+Severity: serious
 Certainty: certain
 Info: Debian packages should not install into <tt>/opt</tt>, because it
  is reserved for add-on software.
+Ref: fhs optaddonapplicationsoftwarepackages
 
 Tag: dir-or-file-in-srv
-Severity: important
+Severity: serious
 Certainty: certain
-Ref: fhs therootfilesystem
 Info: Debian packages should not install into <tt>/srv</tt>.  The
  specification of <tt>/srv</tt> states that its structure is at the
  discretion of the local administrator and no package should rely on any
@@ -470,6 +479,7 @@ Info: Debian packages should not install into <tt>/srv</tt>.  The
  a way that allows the local administrator to specify and preserve their
  chosen directory structure (such as through post-install configuration,
  setup scripts, debconf prompting, etc.).
+Ref: fhs srvdataforservicesprovidedbysystem
 
 Tag: third-party-package-in-python-dir
 Severity: normal
@@ -733,9 +743,9 @@ Info: The directory /usr/lib/site-python has been deprecated as a
  default search path.
 
 Tag: package-installs-python-pyc
-Severity: normal
+Severity: serious
 Certainty: certain
-Info: Compiled python source files should not be included in the package.
+Info: Compiled python source files must not be included in the package.
  These files should be removed from the package and created at package
  installation time in the postinst. 
 
@@ -1026,7 +1036,7 @@ Info: This package contains both bitmapped fonts for a specific DPI
  provided in a separate package with <tt>-misc</tt> appended to its name.
 
 Tag: package-contains-info-dir-file
-Severity: important
+Severity: serious
 Certainty: certain
 Info: This package contains a file named <tt>dir</tt> or <tt>dir.old</tt>,
  possibly compressed, in <tt>/usr/share/info</tt>.  This is the directory

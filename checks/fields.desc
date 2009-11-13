@@ -133,13 +133,13 @@ Ref: policy 5.6.2
 Tag: maintainer-address-missing
 Severity: serious
 Certainty: certain
-Info: The maintainer field should contain the package maintainer's name and
+Info: The maintainer field must contain the package maintainer's name and
  email address, with the name followed by the address inside angle
  brackets (&lt; and &gt;).  The address seems to be missing.
 Ref: policy 5.6.2
 
 Tag: maintainer-address-malformed
-Severity: important
+Severity: serious
 Certainty: certain
 Info: The maintainer field could not be parsed according to the rules in
  the Policy Manual.
@@ -158,14 +158,14 @@ Info: The maintainer address does not have whitespace between the name
  and the email address.
 
 Tag: maintainer-address-is-on-localhost
-Severity: important
+Severity: serious
 Certainty: certain
 Info: The maintainer address includes localhost(.localdomain), which is
  an invalid e-mail address.
 Ref: policy 5.6.2
 
 Tag: uploader-name-missing
-Severity: important
+Severity: serious
 Certainty: certain
 Info: The uploader field seems to contain just an email address. It must
  contain the package uploader's name and email address.
@@ -180,7 +180,7 @@ Info: The uploader field should contain the package uploader's name and
 Ref: policy 5.6.2
 
 Tag: uploader-address-malformed
-Severity: important
+Severity: serious
 Certainty: certain
 Info: The uploader field could not be parsed according to the rules in
  the Policy Manual.
@@ -199,7 +199,7 @@ Info: The uploader address does not have whitespace between the name
  and the email address.
 
 Tag: uploader-address-is-on-localhost
-Severity: important
+Severity: serious
 Certainty: certain
 Info: The uploader address includes localhost(.localdomain), which is
  an invalid e-mail address.
@@ -304,7 +304,7 @@ Info: The "Section:" field in this package's control file is not one of
 Ref: policy 2.4
 
 Tag: section-is-dh_make-template
-Severity: important
+Severity: serious
 Certainty: certain
 Info: The "Section:" field in this package's control file is set to
  unknown.  This is not a valid section, and usually means a dh_make
@@ -440,7 +440,7 @@ Info: The package declares a relationship with itself.  This is not very
  package name doubles as a virtual package.
 
 Tag: bad-relation
-Severity: important
+Severity: serious
 Certainty: certain
 Info: The package declares a relationship that could not be parsed according
  to the rules given in the Policy Manual.

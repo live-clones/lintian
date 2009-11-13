@@ -35,6 +35,7 @@ I: relations source: build-depends-without-arch-dep foo
 I: relations source: build-depends-without-arch-dep libc6-dev
 I: relations source: build-depends-without-arch-dep mail-transport-agent
 I: relations source: ored-build-depends-on-obsolete-package build-depends-indep: gs
+I: relations-multiple-libs: description-synopsis-might-not-be-phrased-properly
 I: relations-multiple-libs: ored-depends-on-obsolete-package suggests: gs
 I: relations: ored-depends-on-obsolete-package recommends: gs-aladdin
 W: relations source: bad-homepage lintian.debian.org
@@ -55,7 +56,6 @@ W: relations source: timewarp-standards-version (2007-12-02 < 2007-12-03)
 W: relations source: virtual-package-depends-without-real-package-depends build-depends: mail-transport-agent
 W: relations-multiple-libs: bad-homepage lintian.debian.org
 W: relations-multiple-libs: breaks-without-version libpng2
-W: relations-multiple-libs: description-synopsis-might-not-be-phrased-properly
 W: relations-multiple-libs: redundant-bugs-field
 W: relations-multiple-libs: redundant-origin-field
 W: relations: bad-homepage lintian.debian.org

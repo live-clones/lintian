@@ -10,9 +10,21 @@ lintian (2.2.18) UNRELEASED; urgency=low
   * checks/binaries.desc:
     + [RA] Remove experimental marker on spelling-error-in-binary.  Change
       severity to minor; spelling errors are minor bugs.
+    + [RA] library-in-debug-or-profile-should-not-be-stripped,
+      binary-or-shlib-defines-rpath, arch-dependent-file-in-usr-share, and
+      binary-in-etc, binary-file-compressed-with-upx,
+      binary-with-bad-dynamic-table, and embedded-zlib are now
+      serious since they can result in ftpmaster rejects.  embedded-zlib,
+      missing-dependency-on-libc, and binary-or-shlib-defines-rpath are
+      possible rather than certain since overrides are allowed.
   * checks/changelog-file:
     + [FL] Avoid various Perl warnings which can be caused by
       completly broken changelog files.
+  * checks/conffiles.desc:
+    + [RA] file-in-usr-marked-as-conffile is serious (ftpmaster reject).
+      Add a Policy reference and improve the description.
+    + [RA] non-etc-file-marked-as-conffile is serious/possible rather than
+      important/certain (ftpmaster reject unless overridden).
   * checks/control-file{,.desc}:
     + [RA] Say to use (= ${binary:Version}) to fix weak dependencies
       between a library dev package and the shared library.  Thanks,
@@ -20,6 +32,13 @@ lintian (2.2.18) UNRELEASED; urgency=low
     + [ADB] Fix an uninitialised value warning when processing a
       -dev package which has no Depends: fields.  Thanks, Lucas
       Nussbaum.
+    + [RA] build-info-in-binary-control-file-section and
+      debian-control-with-duplicate-fields are now serious (ftpmaster
+      reject).
+  * checks/control-files.desc:
+    + [RA] not-allowed-control-file, control-file-has-bad-permissions, and
+      control-file-has-bad-owner are now serious (ftpmaster reject).
+      Mention that the config control file should also be executable.
   * checks/copyright-file{,.desc}:
     + [FL] Add special exception to no-copyright-file for perl.
       See #522827 for discussion.  (Closes: #553262)
@@ -38,6 +57,15 @@ lintian (2.2.18) UNRELEASED; urgency=low
       automatically extracted from the perl module" by dh-make-perl, and
       ensure that this is copyright-contains-dh-make-perl-boilerplate and
       not helper-templates-in-copyright, since it is lower severity.
+    + [RA] copyright-refers-to-old-directory, old-style-copyright-file,
+      usr-share-doc-symlink-without-dependency,
+      usr-share-doc-symlink-to-foreign-package,
+      copyright-refers-to-incorrect-directory, and
+      copyright-contains-dh_make-todo-boilerplate are now serious
+      (ftpmaster reject).  copyright-contains-dh_make-todo-boilerplate is
+      possible (overrides allowed).  Significantly improve the description
+      of usr-share-doc-symlink-without-dependency to mention that Lintian
+      doesn't look at transitive dependencies, and change to possible.
   * checks/cruft:
     + [FL] Add automake1.11 to list of autotools packages.  Thanks,
       Laurent Bigonville.  (Closes: #551051)
@@ -48,17 +76,31 @@ lintian (2.2.18) UNRELEASED; urgency=low
   * checks/description.desc:
     + [RA] Downgrade description-synopsis-might-not-be-phrased-properly to
       minor and fix the cross-reference to point to devref, not Policy.
-  * checks/fields:
+    + [RA] description-is-dh_make-template is serious (ftpmaster reject).
+  * checks/etcfiles.desc:
+    + [RA] file-in-etc-not-marked-as-conffile is serious (ftpmaster
+      reject).
+  * checks/fields{,.desc}:
     + [RA] Fix lib-recommends-documentation tag to correctly exclude dev
       and doc packages.  Patch from Stéphane Glondu.  (Closes: #548210)
     + [FL] Allow source formats 3.0 (quilt) and 3.0 (native).
       (Closes: #552707)
+    + [RA] Multiple maintainer-* and uploader-* tags for syntax errors or
+      localhost addresses are now serious (ftpmaster reject), as are
+      section-is-dh_make-template and bad-relation.
   * checks/files.desc:
     + [RA] Add a note to wrong-file-owner-uid-or-gid that it's possible to
       construct a Policy-compliant package that triggers this tag by
       creating users in preinst, and asking package maintainers to file a
       bug against Lintian if they encounter a case where this appears to
       be necessary.
+    + [RA] package-contains-ancient-file, package-installs-python-pyc
+      symlink-has-too-many-up-segments, and package-contains-info-dir-file
+      are now serious (ftpmaster reject).
+    + [RA] dir-or-file-in-var-www is now serious/possible (ftpmaster
+      reject unless overridden).
+    + [RA] dir-or-file-in-{tmp,mnt,opt,srv} are now serious and have the
+      proper File Hierarchy Standard cross-references and descriptions.
   * checks/lintian.desc:
     + [CW] Add lucid as an allowable distribution for Ubuntu, and remove
       gutsy.
@@ -69,6 +111,9 @@ lintian (2.2.18) UNRELEASED; urgency=low
     + [RA] Also suppress failures to break lines if the reported line is
       a .UE macro, which marks the end of a block defining a URL.  Thanks,
       Martin Stigge.
+  * checks/rules.desc:
+    + [RA] missing-build-dependency is now serious/possible (ftpmaster
+      reject unless overridden).
   * checks/scripts.desc:
     + [RA] Add some more details to executable-not-elf-or-script about
       possible causes and how to correct them.
