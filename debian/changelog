@@ -111,6 +111,9 @@ lintian (2.2.18) UNRELEASED; urgency=low
     + [RA] Also suppress failures to break lines if the reported line is
       a .UE macro, which marks the end of a block defining a URL.  Thanks,
       Martin Stigge.
+  * checks/patch-systems:
+    + [RA] Do not issue patch-system-but-no-source-readme for packages in
+      3.0 (quilt) format.  Patch from Stéphane Glondu.  (Closes: #553207)
   * checks/rules.desc:
     + [RA] missing-build-dependency is now serious/possible (ftpmaster
       reject unless overridden).
