@@ -104,6 +104,9 @@ lintian (2.2.18) UNRELEASED; urgency=low
       reject unless overridden).
     + [RA] dir-or-file-in-{tmp,mnt,opt,srv} are now serious and have the
       proper File Hierarchy Standard cross-references and descriptions.
+    + [RA] Don't suggest creating a symlink to the python-feedparser
+      library.  Just use the normal Python import mechanism.  Thanks,
+      Jakub Wilk.  (Closes: #555617)
   * checks/lintian.desc:
     + [CW] Add lucid as an allowable distribution for Ubuntu, and remove
       gutsy.

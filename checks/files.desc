@@ -901,8 +901,8 @@ Tag: embedded-feedparser-library
 Severity: normal
 Certainty: certain
 Info: This package contains an embedded copy of Mark Pilgrim's Universal
- Feed Parser. Please depend on the "python-feedparser" package and symlink
- the library into the appropriate location.
+ Feed Parser.  Please depend on the "python-feedparser" package and use
+ the normal Python import mechanism to load it.
 Ref: policy 4.13
 
 Tag: embedded-pear-module
