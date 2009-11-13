@@ -50,7 +50,7 @@ lintian (2.2.18) UNRELEASED; urgency=low
       Salvatore Bonaccorso.  (Closes: #549596)
     + [RA] copyright-lists-upstream-authors-with-dh_make-boilerplate
       removed, as some package maintainers prefer to use Author(s) and
-      have filled out the copyright file.
+      have filled out the copyright file.  (Closes: #553469)
     + [RA] Add additional dh_make template strings to the
       helper-templates-in-copyright check, including the templates for
       upstream author or copyright holder, which effectively replaces
