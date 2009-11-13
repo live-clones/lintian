@@ -35,6 +35,9 @@ lintian (2.2.18) UNRELEASED; urgency=low
     + [RA] build-info-in-binary-control-file-section and
       debian-control-with-duplicate-fields are now serious (ftpmaster
       reject).
+    + [RA] Allow -dev dependencies based on source:Upstream-Version or
+      source:Version if the -dev package is architecture: all.  Thanks,
+      Mike Hommey.  (Closes: #552729)
   * checks/control-files.desc:
     + [RA] not-allowed-control-file, control-file-has-bad-permissions, and
       control-file-has-bad-owner are now serious (ftpmaster reject).
