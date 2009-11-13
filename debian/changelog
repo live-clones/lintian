@@ -137,6 +137,7 @@ lintian (2.2.18) UNRELEASED; urgency=low
     + [RA] Suggest mkfifo in mknod-in-maintainer-script if the script was
       creating a named pipe.
     + [RA] Add rep.  Thanks, Rodrigo Gallardo.  (Closes: #510954)
+    + [RA] Add r.  Thanks, Dirk Eddelbuettel.  (Closes: #555278)
   * checks/shared-libs:
     + [FL] Add /usr/lib/python*/dist-packages to exception list for
       incorrect-libdir-in-la-file.  Thanks, Mathieu Trudel.
