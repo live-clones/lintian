@@ -1,4 +1,6 @@
-lintian (2.2.18) UNRELEASED; urgency=low
+lintian (2.2.18) unstable; urgency=low
+
+  The "synchronize severities with ftpmaster's Lintian checks" release.
 
   * Summary of tag changes:
     + Removed:
@@ -170,7 +172,7 @@ lintian (2.2.18) UNRELEASED; urgency=low
       modules which used to be in libio-compress-* but does not contain
       IO::Compress.  Patch from Niko Tyni.  (Closes: #554393)
 
- -- Frank Lichtenheld <djpig@debian.org>  Sat, 31 Oct 2009 23:17:02 +0100
+ -- Russ Allbery <rra@debian.org>  Thu, 12 Nov 2009 23:36:33 -0800
 
 lintian (2.2.17) unstable; urgency=medium
 
