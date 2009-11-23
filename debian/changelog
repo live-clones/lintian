@@ -1,3 +1,11 @@
+lintian (2.2.19) UNRELEASED; urgency=low
+
+  * checks/binaries:
+    + [RA] Allow any RPATH containing $ORIGIN or ${ORIGIN}, not just the
+      literal value $ORIGIN.  (Closes: #557511)
+
+ -- Russ Allbery <rra@debian.org>  Mon, 23 Nov 2009 02:20:29 -0800
+
 lintian (2.2.18) unstable; urgency=low
 
   The "synchronize severities with ftpmaster's Lintian checks" release.
