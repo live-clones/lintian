@@ -807,11 +807,11 @@ Info: You use the Bugs field though the field value is the default
 
 Tag: build-depends-on-build-essential
 Info: You depend on the build-essential package, which is only a
+ meta-package depending on build tools that have to be installed in all
+ build environments.
 Severity: important
 Certainty: certain
 Ref: policy 7.7
- meta-package depending on build tools that have to be installed in all
- build environments.
 
 Tag: malformed-python-version
 Severity: important

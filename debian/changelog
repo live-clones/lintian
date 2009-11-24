@@ -3,6 +3,10 @@ lintian (2.2.19) UNRELEASED; urgency=low
   * checks/binaries:
     + [RA] Allow any RPATH containing $ORIGIN or ${ORIGIN}, not just the
       literal value $ORIGIN.  (Closes: #557511)
+  * checks/fields.desc:
+    + [ADB] Re-order the fields of build-depends-on-build-essential so that
+      all of the descriptive text is included.  Thanks, Jonathan Wiltshire.
+      (Closes: #557786)
 
  -- Russ Allbery <rra@debian.org>  Mon, 23 Nov 2009 02:20:29 -0800
 
