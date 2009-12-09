@@ -270,7 +270,7 @@ foreach my $file (sort keys %{$info->file_info}) {
 	}
     }
 
-    if ($pkg !~ m/^zlib.+/
+    if ($info->field('source') ne 'zlib'
 	and $strings =~ /(?:in|de)flate (?:\d[ \w.\-]{1,20}[\w.\-])/m) {
 	tag "embedded-zlib", $file;
     }

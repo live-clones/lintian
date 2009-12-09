@@ -3,6 +3,9 @@ lintian (2.2.19) UNRELEASED; urgency=low
   * checks/binaries:
     + [RA] Allow any RPATH containing $ORIGIN or ${ORIGIN}, not just the
       literal value $ORIGIN.  (Closes: #557511)
+    + [ADB] Exempt all binary packages built from the zlib source from
+      the embedded-zlib test, not just those with binary package names
+      matching zlib.+.  Thanks, Mark Brown.
   * checks/fields.desc:
     + [ADB] Re-order the fields of build-depends-on-build-essential so that
       all of the descriptive text is included.  Thanks, Jonathan Wiltshire.
