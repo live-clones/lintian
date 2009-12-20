@@ -19,6 +19,9 @@ lintian (2.2.19) UNRELEASED; urgency=low
 
   * lib/Tags.pm:
     + [RA] Support suppressing a list of tags.
+  * lib/Util.pm:
+    + [RA] Consume all output from extracting the control file of a binary
+      package before closing the pipe.
 
   * man/lintian.1:
     + [RA] Document --suppress-tags and --suppress-tags-from-file.

@@ -156,13 +156,18 @@ sub get_deb_info {
 	return undef;
     }
 
-    # `dpkg-deb -f $file' is very slow. Instead, we use ar and tar.
+    # dpkg-deb -f $file is very slow. Instead, we use ar and tar.
     my $opts = { pipe_out => FileHandle->new };
     spawn($opts,
 	  ['ar', 'p', $file, 'control.tar.gz'],
 	  '|', ['tar', '--wildcards', '-xzO', '-f', '-', '*control'])
 	or fail("cannot fork to unpack $file: $opts->{exception}\n");
     my @data = parse_dpkg_control($opts->{pipe_out});
+
+    # Consume all data before exiting so that we don't kill child processes
+    # with SIGPIPE.  This will normally only be an issue with malformed
+    # control files.
+    1 while readline $opts->{pipe_out};
     $opts->{harness}->finish();
     return $data[0];
 }
