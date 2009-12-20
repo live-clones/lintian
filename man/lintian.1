@@ -97,7 +97,9 @@ not be issued.
 .BR \-\-tags\-from\-file " filename"
 Same functionality as
 .BR \-\-tags ,
-but read the list of tags from a file, one per line.
+but read the list of tags from a file.  Blank lines and lines beginning
+with # are ignored.  All other lines are taken to be tag names or
+comma-separated lists of tag names to suppress.
 
 .TP
 .BR \-X " chk1,chk2,..., " \-\-dont\-check\-part " chk1,chk2,..."
@@ -202,8 +204,8 @@ will not affect the exit status of Lintian.
 .BR \-\-suppress\-tags\-from\-file " file"
 Suppress all tags listed in the given file.  Blank lines and lines
 beginning with # are ignored.  All other lines are taken to be tag names
-or comma-separated lists of tags to suppress.  The suppressed tags will
-not be reported if they occur and will not affect the exit status of
+or comma-separated lists of tag nams to suppress.  The suppressed tags
+will not be reported if they occur and will not affect the exit status of
 Lintian.
 
 .TP

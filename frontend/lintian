@@ -241,12 +241,19 @@ sub record_check_tags {
 # Record Parts requested for checking
 # Options: --tags-from-file
 sub record_check_tags_from_file {
-    open my $file, '<', $_[1]
-	or fail("failed to open $_[1]: $!");
-    my $tags =  join(',', map { chomp($_); $_ } <$file>);
+    my ($option, $name) = @_;
+    open(my $file, '<', $name)
+	or fail("failed to open $name: $!");
+    my @tags;
+    for my $line (<$file>) {
+	$line =~ s/^\s+//;
+	$line =~ s/\s+$//;
+	next unless $line;
+	next if $line =~ /^\#/;
+	push(@tags, split(/\s*,\s*/, $line));
+    }
     close $file;
-
-    record_check_tags($_[0], $tags);
+    record_check_tags($option, join(',', @tags));
 }
 
 # Record tags that should be suppressed.
@@ -262,7 +269,7 @@ sub record_suppress_tags {
 # Options: --suppress-tags-from-file
 sub record_suppress_tags_from_file {
     my ($option, $name) = @_;
-    open (my $file, '<', $name)
+    open(my $file, '<', $name)
 	or fail("failed to open $name: $!");
     for my $line (<$file>) {
 	$line =~ s/^\s+//;
