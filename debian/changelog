@@ -11,6 +11,12 @@ lintian (2.2.19) UNRELEASED; urgency=low
       all of the descriptive text is included.  Thanks, Jonathan Wiltshire.
       (Closes: #557786)
 
+  * t/runtests:
+    + [RA] Unwrap the Options field so that it can be continued.
+    + [RA] Replace TESTSET in Options with the root of the test suite so
+      that Lintian options referring to files can be tested with files in
+      the test suite directory.
+
  -- Russ Allbery <rra@debian.org>  Mon, 23 Nov 2009 02:20:29 -0800
 
 lintian (2.2.18) unstable; urgency=low

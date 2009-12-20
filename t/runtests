@@ -699,6 +699,12 @@ sub check_test_is_sane {
     $data->{skeleton} ||= 'skel';
     $data->{options} ||= '-I -E';
 
+    # Unwrap the options in case we used continuation lines.
+    $data->{options} =~ s/\n//g;
+
+    # Allow options relative to the root of the test directory.
+    $data->{options} =~ s/TESTSET/$dir/g;
+
     if ($DEBUG) {
 	print "check_test_is_sane => ".Dumper($data);
     }

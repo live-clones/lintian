@@ -69,6 +69,11 @@ For example, to test --show-overrides with the -T option, use:
 
     Options: --show-overrides -T no-copyright-file
 
+The string TESTSET in the Options field will be replaced with the root of
+the test suite (the whole test suite, not the test currently running) so
+that the Lintian options can refer to files in the test suite directory to
+test options like --suppress-tags-from-file.
+
 By default, all tests are built as native Debian packages.  To build
 the test case as a non-native package, add:
 
