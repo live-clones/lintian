@@ -36,6 +36,7 @@ our $show_overrides = 0;
 our %display_level;
 our %display_source;
 our %only_issue_tags;
+our %suppress_tags;
 
 # The master hash with all tag info. Key is the tag name, value another hash
 # with the following keys:
@@ -361,6 +362,7 @@ sub tag {
 
     return 0 unless
 	! keys %only_issue_tags or exists $only_issue_tags{$tag};
+    return 0 if $suppress_tags{$tag};
 
     # Clean up @information and collapse it to a string.  Lintian code doesn't
     # treat the distinction between extra arguments to tag() as significant,

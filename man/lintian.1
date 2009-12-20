@@ -88,7 +88,7 @@ name of the check script or the abbreviation.
 For details, see the CHECKS section below.
 
 .TP
-.BR \-T " tag1,tag2,...m " \-\-tags " tag1,tag2,..."
+.BR \-T " tag1,tag2,..., " \-\-tags " tag1,tag2,..."
 Run only the checks that issue the requested tags.  The tests for
 other tags within the check scripts will be run but the tags will
 not be issued.
@@ -192,6 +192,19 @@ or set the levels to display, specifying a severity (S: serious, important,
 normal, minor, wishlist), a certainty (C: certain, possible, wild-guess), or
 both (S/C).  The default settings are equivalent to
 .BR \-L " \(dq>=important\(dq " \-L " \(dq+>=normal/possible\(dq " \-L " +minor/certain)."
+
+.TP
+.BR \-\-suppress\-tags " tag1,tag2,..."
+Suppress the listed tags.  They will not be reported if they occur and
+will not affect the exit status of Lintian.
+
+.TP
+.BR \-\-suppress\-tags\-from\-file " file"
+Suppress all tags listed in the given file.  Blank lines and lines
+beginning with # are ignored.  All other lines are taken to be tag names
+or comma-separated lists of tags to suppress.  The suppressed tags will
+not be reported if they occur and will not affect the exit status of
+Lintian.
 
 .TP
 .BR \-l " n, " \-\-unpack\-level " n"

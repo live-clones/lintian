@@ -72,6 +72,7 @@ my @severities = qw(wishlist minor normal important serious);
 my @certainties = qw(wild-guess possible certain);
 my %display_level = ();
 my %display_source = ();
+my %suppress_tags = ();
 
 my $schedule;
 
@@ -152,6 +153,8 @@ Behaviour options:
     --pedantic                display "P:" tags (normally suppressed)
     -L, --display-level       display tags with the specified level
     --display-source X        restrict displayed tags by source
+    --suppress-tags T,...     don\'t show the specified tags
+    --suppress-tags-from-file X don\'t show the tags listed in file X
     -l X, --unpack-level X    set default unpack level to X
     -o, --no-override         ignore overrides
     --show-overrides          output tags that have been overriden
@@ -246,6 +249,30 @@ sub record_check_tags_from_file {
     record_check_tags($_[0], $tags);
 }
 
+# Record tags that should be suppressed.
+# Options: --suppress-tags
+sub record_suppress_tags {
+    my ($option, $tags) = @_;
+    for my $tag (split(/\s*,\s*/, $tags)) {
+	$suppress_tags{$tag} = 1;
+    }
+}
+
+# Record tags that should be suppressed from a file.
+# Options: --suppress-tags-from-file
+sub record_suppress_tags_from_file {
+    my ($option, $name) = @_;
+    open (my $file, '<', $name)
+	or fail("failed to open $name: $!");
+    for my $line (<$file>) {
+	$line =~ s/^\s+//;
+	$line =~ s/\s+$//;
+	next unless $line;
+	next if $line =~ /^\#/;
+	record_suppress_tags($option, $line);
+    }
+    close $file;
+}
 
 # Record Parts requested not to check
 # Options: -X|--dont-check-part X
@@ -423,6 +450,8 @@ my %opthash = (			# ------------------ actions
 	       "pedantic" => \$display_pedantictags,
 	       "display-level|L=s" => \&record_display_level,
 	       "display-source=s" => \&record_display_source,
+	       "suppress-tags=s" => \&record_suppress_tags,
+	       "suppress-tags-from-file=s" => \&record_suppress_tags_from_file,
 	       "unpack-level|l=i" => \$unpack_level,
 	       "no-override|o" => \$no_override,
 	       "show-overrides" => \$show_overrides,
@@ -707,6 +736,7 @@ $Tags::show_overrides = $show_overrides;
 %Tags::display_source = %display_source;
 %Tags::only_issue_tags = map { $_ => 1 } (split(/,/, $check_tags))
     if defined $check_tags;
+%Tags::suppress_tags = %suppress_tags;
 use warnings;
 
 # }}}

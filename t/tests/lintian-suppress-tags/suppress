@@ -1,0 +1,7 @@
+# This is a comment.
+
+# Suppress a tag not present in the test.
+malformed-override
+
+# Suppress two tags on the same line.
+section-is-dh_make-template,debhelper-but-no-misc-depends

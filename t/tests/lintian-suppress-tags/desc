@@ -1,0 +1,6 @@
+Testname: lintian-suppress-tags
+Sequence: 2500
+Version: 1.0
+Description: Test tag suppression
+Options: --suppress-tags extended-description-is-empty
+ --suppress-tags-from-file TESTSET/tests/lintian-suppress-tags/suppress
