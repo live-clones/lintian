@@ -15,6 +15,7 @@ lintian (2.2.19) UNRELEASED; urgency=low
     + [RA] Add options --suppress-tags and --suppress-tags-from-file to
       completely suppress the given tags.
     + [RA] Support comments and blank lines in --tags-from-file files.
+    + [RA] Run the check modules in sorted order.
 
   * lib/Tags.pm:
     + [RA] Support suppressing a list of tags.
