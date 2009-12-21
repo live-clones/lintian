@@ -68,9 +68,8 @@ Lintian::Tag::Info - Lintian interface to tag metadata
 =head1 DESCRIPTION
 
 This module provides an interface to tag metadata as gleaned from the
-*.desc files describing the checks.  Currently, it is only used to format
-and return the tag description, but it provides a framework that can be
-used to retrieve other metadata about tags.
+*.desc files describing the checks.  It can be used to retrieve specific
+metadata elements or to format the tag description.
 
 =head1 CLASS METHODS
 
@@ -105,6 +104,7 @@ sub _load_tag_data {
                 fail("missing Tag field in $desc");
             }
             $tag->{info} = '' unless exists($tag->{info});
+            $tag->{script} = $header->{'check-script'};
             $INFO{$tag->{tag}} = $tag;
         }
     }
@@ -131,6 +131,17 @@ sub new {
 =head1 INSTANCE METHODS
 
 =over 4
+
+=item certainty()
+
+Returns the certainty of the tag.
+
+=cut
+
+sub certainty {
+    my ($self) = @_;
+    return $self->{certainty};
+}
 
 =item code()
 
@@ -285,6 +296,55 @@ sub description {
     } elsif ($format eq 'html') {
         return wrap_paragraphs('HTML', $indent, dtml_to_html(@text));
     }
+}
+
+=item experimental()
+
+Returns true if this tag is experimental, false otheriwse.
+
+=cut
+
+sub experimental {
+    my ($self) = @_;
+    return $self->{experimental} eq 'yes';
+}
+
+=item severity()
+
+Returns the severity of the tag.
+
+=cut
+
+sub severity {
+    my ($self) = @_;
+    return $self->{severity};
+}
+
+=item script()
+
+Returns the check script corresponding to this tag.
+
+=cut
+
+sub script {
+    my ($self) = @_;
+    return $self->{script};
+}
+
+=item sources()
+
+Returns, as a list, the keywords for the sources of this tag from the
+references header.  This is only the top-level source, not any
+more-specific section or chapter.
+
+=cut
+
+sub sources {
+    my ($self) = @_;
+    return unless $self->{ref};
+    my @refs = split(',', $self->{ref});
+    @refs = map { s/^([\w-]+)\s.*/$1/; s/\(\S+\)$//; $_ } @refs;
+    return @refs;
 }
 
 =back

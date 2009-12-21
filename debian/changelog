@@ -21,6 +21,12 @@ lintian (2.2.19) UNRELEASED; urgency=low
     + [RA] Add a code method that returns the tag code corresponding to
       the severity and certainty for a tag, based on get_tag_code from
       Tags.pm.
+    + [RA] Add certainty and severity accessor methods.
+    + [RA] Add a method saying whether a tag is experimental.
+    + [RA] Record the check script corresponding to each tag and add an
+      accessor method for it.
+    + [RA] Add a sources method returning a list of sources referenced by
+      a tag, based on the get_tag_source method from Tags.pm.
   * lib/Tags.pm:
     + [RA] Support suppressing a list of tags.
   * lib/Util.pm:
