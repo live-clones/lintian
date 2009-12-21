@@ -347,6 +347,17 @@ sub sources {
     return @refs;
 }
 
+=item tag()
+
+Returns the tag name.
+
+=cut
+
+sub tag {
+    my ($self) = @_;
+    return $self->{tag};
+}
+
 =back
 
 =head1 DIAGNOSTICS
