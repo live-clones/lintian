@@ -17,6 +17,10 @@ lintian (2.2.19) UNRELEASED; urgency=low
     + [RA] Support comments and blank lines in --tags-from-file files.
     + [RA] Run the check modules in sorted order.
 
+  * lib/Lintian/Tag/Info.pm:
+    + [RA] Add a code method that returns the tag code corresponding to
+      the severity and certainty for a tag, based on get_tag_code from
+      Tags.pm.
   * lib/Tags.pm:
     + [RA] Support suppressing a list of tags.
   * lib/Util.pm:

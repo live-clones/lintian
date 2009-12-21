@@ -43,6 +43,16 @@ our %INFO;
 # is called.
 our %MANUALS;
 
+# Map severity/certainty levels to tag codes.
+our %CODES = (
+    pedantic  => { 'wild-guess' => 'P', possible => 'P', certain => 'P' },
+    wishlist  => { 'wild-guess' => 'I', possible => 'I', certain => 'I' },
+    minor     => { 'wild-guess' => 'I', possible => 'I', certain => 'W' },
+    normal    => { 'wild-guess' => 'I', possible => 'W', certain => 'W' },
+    important => { 'wild-guess' => 'W', possible => 'E', certain => 'E' },
+    serious   => { 'wild-guess' => 'E', possible => 'E', certain => 'E' },
+);
+
 =head1 NAME
 
 Lintian::Tag::Info - Lintian interface to tag metadata
@@ -121,6 +131,21 @@ sub new {
 =head1 INSTANCE METHODS
 
 =over 4
+
+=item code()
+
+Returns the one-letter code for the tag.  This will be a letter chosen
+from C<E>, C<W>, C<I>, or C<P>, based on the tag severity, certainty, and
+other attributes (such as whether experimental is set).  This code will
+never be C<O> or C<X>; overrides and experimental tags are handled
+separately.
+
+=cut
+
+sub code {
+    my ($self) = @_;
+    return $CODES{$self->{severity}}{$self->{certainty}};
+}
 
 =item description([FORMAT [, INDENT]])
 
