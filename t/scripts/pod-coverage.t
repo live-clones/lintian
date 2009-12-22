@@ -20,6 +20,7 @@ our %MODULES =
      'Lintian::Relation'          => [ qr/^parse_element$/,
                                        qr/^implies_(element|array)/ ],
      'Lintian::Relation::Version' => [ qr/^compare$/ ],
+     'Lintian::Tags'              => [],
      'Lintian::Tag::Info'         => [],
     );
 # TODO:
