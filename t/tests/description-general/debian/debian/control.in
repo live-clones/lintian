@@ -11,7 +11,7 @@ Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$srcpkg} is a package which tests lintian's description checks.
  missing
  The the synopsis should not start with the package's name. Moreover,
- the long description
+ the long	description
 	should
 	not
  contain tabs.
