@@ -1,4 +1,4 @@
-lintian (2.2.19) UNRELEASED; urgency=low
+lintian (2.3.0) UNRELEASED; urgency=low
 
   * checks/*:
     + [RA] Use Lintian::Tags instead of Tags.
@@ -51,6 +51,8 @@ lintian (2.2.19) UNRELEASED; urgency=low
     + [RA] Support suppressing a list of tags.
   * lib/Spelling.pm:
     + [RA] Use Lintian::Tags instead of Tags.
+  * lib/Tags.pm:
+    + [RA] Removed in favor of Lintian::Tags.
   * lib/Util.pm:
     + [RA] Consume all output from extracting the control file of a binary
       package before closing the pipe.
