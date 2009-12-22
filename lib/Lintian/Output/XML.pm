@@ -26,14 +26,14 @@ use Lintian::Output qw(:util);
 use base qw(Lintian::Output);
 
 sub print_tag {
-    my ($self, $pkg_info, $tag_info, $information) = @_;
+    my ($self, $pkg_info, $tag_info, $information, $overridden) = @_;
 
-    $self->issued_tag($tag_info->{tag});
+    $self->issued_tag($tag_info->tag);
     $self->_print_xml('',
-		      qq{<tag severity="$tag_info->{severity}" certainty="$tag_info->{certainty}"},
-		      'flags="'.(exists($tag_info->{experimental}) ? 'experimental' : ''),
-		      ($tag_info->{overridden}{override} ? 'overridden' : '').'"',
-		      qq{name="$tag_info->{tag}">}.encode_entities("$information","<>&\"'").qq{</tag>},
+		      qq{<tag severity="}, $tag_info->severity, qq{" certainty="}, $tag_info->certainty, qq{"},
+		      'flags="'.($tag_info->experimental ? 'experimental' : ''),
+		      ($overridden ? 'overridden' : '').'"',
+		      qq{name="}, $tag_info->tag, qq{">}.encode_entities("$information","<>&\"'").qq{</tag>},
 	);
 }
 
@@ -41,7 +41,7 @@ sub print_start_pkg {
     my ($self, $pkg_info) = @_;
 
     $self->_print_xml('',
-		      qq{<package type="$pkg_info->{type}" name="$pkg_info->{pkg}"},
+		      qq{<package type="$pkg_info->{type}" name="$pkg_info->{package}"},
 		      qq{architecture="$pkg_info->{arch}" version="$pkg_info->{version}">}
 	);
 }

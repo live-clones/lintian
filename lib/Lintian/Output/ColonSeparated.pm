@@ -27,20 +27,20 @@ use Lintian::Output qw(:util);
 use base qw(Lintian::Output);
 
 sub print_tag {
-    my ($self, $pkg_info, $tag_info, $information) = @_;
+    my ($self, $pkg_info, $tag_info, $information, $overridden) = @_;
 
-    $self->issued_tag($tag_info->{tag});
+    $self->issued_tag($tag_info->tag);
     $self->_print(
 	'tag',
-	Tags::get_tag_code($tag_info),
-	$tag_info->{severity},
-	$tag_info->{certainty},
-	(exists($tag_info->{experimental}) ? 'X' : '').
-	($tag_info->{overridden}{override} ? 'O' : ''),
-	@{$pkg_info}{'pkg','version','arch','type'},
-	$tag_info->{tag},
+	$tag_info->code,
+	$tag_info->severity,
+	$tag_info->certainty,
+	($tag_info->experimental ? 'X' : '').
+	(defined($overridden) ? 'O' : ''),
+	@{$pkg_info}{'package','version','arch','type'},
+	$tag_info->tag,
 	$information,
-	$tag_info->{overridden}{override} || '',
+        $overridden || '',
 	);
 }
 

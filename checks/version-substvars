@@ -36,7 +36,7 @@ package Lintian::version_substvars;
 use strict;
 
 use Util;
-use Tags;
+use Lintian::Tags qw(tag);
 
 sub run {
 

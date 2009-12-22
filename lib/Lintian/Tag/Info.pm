@@ -306,7 +306,7 @@ Returns true if this tag is experimental, false otheriwse.
 
 sub experimental {
     my ($self) = @_;
-    return $self->{experimental} eq 'yes';
+    return ($self->{experimental} and $self->{experimental} eq 'yes');
 }
 
 =item severity()

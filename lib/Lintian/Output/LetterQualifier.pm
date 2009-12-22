@@ -23,7 +23,6 @@ use warnings;
 
 use Term::ANSIColor qw(colored);
 use Lintian::Tag::Info ();
-use Tags ();
 
 use Lintian::Output qw(:util);
 use base qw(Lintian::Output);
@@ -104,20 +103,20 @@ sub new {
 
 
 sub print_tag {
-    my ($self, $pkg_info, $tag_info, $information) = @_;
+    my ($self, $pkg_info, $tag_info, $information, $overridden) = @_;
 
-    my $code = Tags::get_tag_code($tag_info);
-    $code = 'X' if exists $tag_info->{experimental};
-    $code = 'O' if $tag_info->{overridden}{override};
+    my $code = $tag_info->code;
+    $code = 'X' if $tag_info->experimental;
+    $code = 'O' if defined($overridden);
 
-    my $sev = $tag_info->{severity};
-    my $cer = $tag_info->{certainty};
+    my $sev = $tag_info->severity;
+    my $cer = $tag_info->certainty;
     my $lq = $codes{$sev}{$cer};
 
-    my $pkg = $pkg_info->{pkg};
+    my $pkg = $pkg_info->{package};
     my $type = ($pkg_info->{type} ne 'binary') ? " $pkg_info->{type}" : '';
 
-    my $tag = $tag_info->{tag};
+    my $tag = $tag_info->tag;
 
     $information = ' ' . $information if $information ne '';
 
@@ -128,14 +127,11 @@ sub print_tag {
     }
 
     $self->_print('', "$code\[$lq\]: $pkg$type", "$tag$information");
-    if (!$self->issued_tag($tag_info->{tag}) and $self->showdescription) {
-        my $info = Lintian::Tag::Info->new($tag_info->{tag});
-        if ($info) {
-            my $description = $info->description('text', '   ');
-            $self->_print('', 'N', '');
-            $self->_print('', 'N', split("\n", $description));
-            $self->_print('', 'N', '');
-        }
+    if (!$self->issued_tag($tag_info->tag) and $self->showdescription) {
+        my $description = $tag_info->description('text', '   ');
+        $self->_print('', 'N', '');
+        $self->_print('', 'N', split("\n", $description));
+        $self->_print('', 'N', '');
     }
 }
 

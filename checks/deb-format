@@ -17,9 +17,9 @@
 
 package Lintian::deb_format;
 use strict;
-use Tags;
 
 use Lintian::Command qw(spawn);
+use Lintian::Tags qw(tag);
 
 # The files that contain error messages from tar, which we'll check and issue
 # tags for if they contain something unexpected, and their corresponding tags.

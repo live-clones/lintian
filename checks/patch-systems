@@ -22,7 +22,7 @@
 package Lintian::patch_systems;
 use strict;
 
-use Tags;
+use Lintian::Tags qw(tag);
 use Util;
 
 sub run {

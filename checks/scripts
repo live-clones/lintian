@@ -27,10 +27,11 @@ use strict;
 
 use lib "$ENV{'LINTIAN_ROOT'}/checks/";
 use common_data;
-use Tags;
+
 use Util;
 
 use Lintian::Relation;
+use Lintian::Tags qw(tag);
 
 # This is a map of all known interpreters.  The key is the interpreter name
 # (the binary invoked on the #! line).  The value is an anonymous array of one

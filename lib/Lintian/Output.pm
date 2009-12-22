@@ -73,10 +73,11 @@ $Lintian::Output::GLOBAL unless their first argument C<isa('Lintian::Output')>.
 
 =cut
 
+use Lintian::Tag::Info ();
+use Lintian::Tags ();
+
 # support for ANSI color output via colored()
 use Term::ANSIColor ();
-use Lintian::Tag::Info ();
-use Tags ();
 
 =head1 ACCESSORS
 
@@ -274,21 +275,23 @@ can only be called as instance methods.
 
 =over 4
 
-=item C<print_tag($pkg_info, $tag_info, $extra)>
+=item C<print_tag($pkg_info, $tag_info, $extra, $overridden)>
 
-Print a tag.  The first two arguments are hash reference with the information
-about the package and the tag, $extra is the extra information for the tag
-(if any) as an array reference.  Called from Tags::tag().
+Print a tag.  The first two arguments are hash reference with the
+information about the package and the tag, $extra is the extra information
+for the tag (if any) as an array reference, and $overridden is either
+undef if the tag is not overridden or the override for this tag.  Called
+from Lintian::Tags::tag().
 
 =cut
 
 sub print_tag {
-    my ($self, $pkg_info, $tag_info, $information) = @_;
+    my ($self, $pkg_info, $tag_info, $information, $overridden) = @_;
     $information = ' ' . $information if $information ne '';
-    my $code = Tags::get_tag_code($tag_info);
+    my $code = $tag_info->code;
     my $tag_color = $self->{colors}{$code};
-    $code = 'X' if exists $tag_info->{experimental};
-    $code = 'O' if $tag_info->{overridden}{override};
+    $code = 'X' if $tag_info->experimental;
+    $code = 'O' if defined($overridden);
     my $type = '';
     $type = " $pkg_info->{type}" if $pkg_info->{type} ne 'binary';
 
@@ -301,26 +304,23 @@ sub print_tag {
 	    $escaped =~ s/>/&gt;/g;
 	    $tag .= qq(<span style="color: $tag_color">$escaped</span>)
 	} else {
-	    $tag .= Term::ANSIColor::colored($tag_info->{tag}, $tag_color);
+	    $tag .= Term::ANSIColor::colored($tag_info->tag, $tag_color);
 	}
     } else {
-	$tag .= $tag_info->{tag};
+	$tag .= $tag_info->tag;
     }
 
-    $self->_print('', "$code: $pkg_info->{pkg}$type", "$tag$information");
-    if (!$self->issued_tag($tag_info->{tag}) and $self->showdescription) {
-	my $info = Lintian::Tag::Info->new($tag_info->{tag});
-	if ($info) {
-	    my $description;
-	    if ($self->_do_color && $self->color eq 'html') {
-		$description = $info->description('html', '   ');
-	    } else {
-		$description = $info->description('text', '   ');
-	    }
-	    $self->_print('', 'N', '');
-	    $self->_print('', 'N', split("\n", $description));
-	    $self->_print('', 'N', '');
+    $self->_print('', "$code: $pkg_info->{package}$type", "$tag$information");
+    if (!$self->issued_tag($tag_info->tag) and $self->showdescription) {
+	my $description;
+	if ($self->_do_color && $self->color eq 'html') {
+	    $description = $tag_info->description('html', '   ');
+	} else {
+	    $description = $tag_info->description('text', '   ');
 	}
+	$self->_print('', 'N', '');
+	$self->_print('', 'N', split("\n", $description));
+	$self->_print('', 'N', '');
     }
 }
 
@@ -335,14 +335,14 @@ sub print_start_pkg {
     my ($self, $pkg_info) = @_;
 
     $self->v_msg($self->delimiter,
-		 "Processing $pkg_info->{type} package $pkg_info->{pkg} (version $pkg_info->{version}) ...");
+		 "Processing $pkg_info->{type} package $pkg_info->{package} (version $pkg_info->{version}) ...");
 }
 
 =item C<print_start_pkg($pkg_info)>
 
 Called after lintian is finished with a package.  The version in
-Lintian::Output does nothing.  Called from Tags::select_pkg() and
-Tags::reset_pkg().
+Lintian::Output does nothing.  Called from Lintian::Tags::file_start() and
+Lintian::Tags::file_end().
 
 =cut
 

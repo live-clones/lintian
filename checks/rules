@@ -15,8 +15,8 @@
 
 package Lintian::rules;
 use strict;
-use Tags;
 use Util;
+use Lintian::Tags qw(tag);
 
 # The allowed Python dependencies currently.  This is the list of alternatives
 # that, either directly or through transitive dependencies that can be relied

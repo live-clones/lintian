@@ -20,9 +20,9 @@
 
 package Lintian::debconf;
 use strict;
-use Tags;
 
 use Lintian::Relation;
+use Lintian::Tags qw(tag);
 use Util;
 
 # From debconf-devel(7), section 'THE TEMPLATES FILE', up to date with debconf

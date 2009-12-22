@@ -27,8 +27,8 @@ use lib "$ENV{'LINTIAN_ROOT'}/checks/";
 use common_data;
 
 use Lintian::Data;
+use Lintian::Tags qw(tag);
 use Spelling;
-use Tags;
 use Util;
 
 # Supported documentation formats for doc-base files.

@@ -22,8 +22,8 @@ package Lintian::changelog_file;
 use strict;
 
 use Lintian::Relation::Version qw(versions_gt);
+use Lintian::Tags qw(tag);
 use Spelling;
-use Tags;
 use Util;
 
 use Encode qw(decode);

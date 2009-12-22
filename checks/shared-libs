@@ -25,7 +25,7 @@ use File::Basename;
 
 use Lintian::Data;
 use Lintian::Relation;
-use Tags;
+use Lintian::Tags qw(tag);
 use Util;
 
 # Libraries that should only be used in the presence of certain capabilities

@@ -20,9 +20,9 @@
 
 package Lintian::files;
 use strict;
-use Tags;
 use Util;
 use Lintian::Data;
+use Lintian::Tags qw(tag);
 
 our $FONT_PACKAGES;
 

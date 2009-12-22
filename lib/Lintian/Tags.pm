@@ -189,17 +189,18 @@ called first or if an attempt is made to issue an unknown tag.
 
 # Check if a given tag with associated extra information is overridden by the
 # overrides for the current file.  This may require checking for matches
-# against override data with wildcards.
+# against override data with wildcards.  Returns undef if the tag is not
+# overridden or the override if the tag is.
 sub _check_overrides {
     my ($self, $tag, $extra) = @_;
     my $overrides = $self->{info}{$self->{current}}{overrides}{$tag};
     return unless $overrides;
     if (exists $overrides->{''}) {
         $overrides->{''}++;
-        return 1;
+        return $tag;
     } elsif ($extra ne '' and exists $overrides->{$extra}) {
         $overrides->{$extra}++;
-        return 1;
+        return "$tag $extra";
     } elsif ($extra ne '') {
         for (sort keys %$overrides) {
             my $pattern = $_;
@@ -209,20 +210,20 @@ sub _check_overrides {
             $end   = '.*' if $pattern =~ s/\*$//;
             if ($extra =~ /^$start\Q$pattern\E$end\z/) {
                 $overrides->{$_}++;
-                return 1;
+                return "$tag $_";
             }
         }
     }
-    return 0;
+    return;
 }
 
 # Record tag statistics.  Takes the tag, the Lintian::Tag::Info object and a
 # flag saying whether the tag was overridden.
 sub _record_stats {
     my ($self, $tag, $info, $overridden) = @_;
-    my $stats = $self->{info}{$self->{current}};
+    my $stats = $self->{statistics}{$self->{current}};
     if ($overridden) {
-        $stats = $self->{info}{$self->{current}}{overrides};
+        $stats = $self->{statistics}{$self->{current}}{overrides};
     }
     $stats->{tags}{$tag}++;
     $stats->{severity}{$info->severity}++;
@@ -238,12 +239,7 @@ sub tag {
     unless ($self->{current}) {
         die "tried to issue tag $tag without starting a file";
     }
-
-    # Ignore this tag if so configured.
-    if (keys %{ $self->{only_issue} }) {
-        return unless $self->{only_issue}{$tag};
-    }
-    return if $self->{suppress}{$tag};
+    return if $self->suppressed($tag);
 
     # Clean up @extra and collapse it to a string.  Lintian code
     # doesn't treat the distinction between extra arguments to tag() as
@@ -260,8 +256,8 @@ sub tag {
     }
     my $overridden = $self->_check_overrides($tag, $extra);
     $self->_record_stats($tag, $info, $overridden);
-    return if ($overridden and not $self->{show_overrides});
-    return unless $self->displayed($info);
+    return if (defined($overridden) and not $self->{show_overrides});
+    return unless $self->displayed($tag);
     my $file = $self->{info}{$self->{current}};
     $Lintian::Output::GLOBAL->print_tag($file, $info, $extra, $overridden);
 }
@@ -309,7 +305,7 @@ certainty or an impossible constraint (like C<< > serious >>).
 # function makes a hard assumption that $rel will be one of <, <=, =, >=,
 # or >.  It is not syntax-checked.
 sub _relation_subset {
-    my ($element, $rel, @list) = @_;
+    my ($self, $element, $rel, @list) = @_;
     if ($rel eq '=') {
         return grep { $_ eq $element } @list;
     }
@@ -323,7 +319,7 @@ sub _relation_subset {
             last;
         }
     }
-    return unless $found;
+    return unless defined($found);
     if (length($rel) > 1) {
         return @list[$found .. $#list];
     } else {
@@ -358,9 +354,9 @@ sub display {
         if (not defined $severity and not defined $certainty) {
             die "invalid display constraint $op $rel";
         } elsif (not defined $severity) {
-            die "invalid display constraint $op $rel $certainty";
+            die "invalid display constraint $op $rel $certainty (certainty)";
         } elsif (not defined $certainty) {
-            die "invalid display constraint $op $rel $severity";
+            die "invalid display constraint $op $rel $severity (severity)";
         } else {
             die "invalid display constraint $op $rel $severity/$certainty";
         }
@@ -661,6 +657,27 @@ sub displayed {
         }
     }
     return $display;
+}
+
+=item suppressed(TAG)
+
+Returns true if the given tag would be suppressed given the current
+configuration, false otherwise.  This is different than displayed() in
+that a tag is only suppressed if Lintian treats the tag as if it's never
+been seen, doesn't update statistics, and doesn't change its exit status.
+Tags are suppressed via only() or suppress().
+
+=cut
+
+#'# for cperl-mode
+
+sub suppressed {
+    my ($self, $tag) = @_;
+    if (keys %{ $self->{only_issue} }) {
+        return 1 unless $self->{only_issue}{$tag};
+    }
+    return 1 if $self->{suppress}{$tag};
+    return;
 }
 
 1;

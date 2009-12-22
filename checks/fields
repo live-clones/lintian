@@ -27,13 +27,14 @@ use strict;
 
 use lib "$ENV{'LINTIAN_ROOT'}/checks/";
 use common_data;
-use Tags;
+
 use Util;
 
 use Lintian::Data ();
 use Lintian::Check qw(check_maintainer);
 use Lintian::Relation ();
 use Lintian::Relation::Version qw(versions_compare);
+use Lintian::Tags qw(tag);
 
 our $KNOWN_ARCHS = Lintian::Data->new('fields/architectures');
 our $KNOWN_ESSENTIAL = Lintian::Data->new('fields/essential');

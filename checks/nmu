@@ -22,7 +22,7 @@ package Lintian::nmu;
 use strict;
 
 use Lintian::Data;
-use Tags;
+use Lintian::Tags qw(tag);
 use Util;
 
 # Used to match Ubuntu distribution names in target distributions.

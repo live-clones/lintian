@@ -25,7 +25,7 @@ use lib "$ENV{'LINTIAN_ROOT'}/checks/";
 use common_data;
 
 use Lintian::Relation ();
-use Tags;
+use Lintian::Tags qw(tag);
 use Util;
 
 # The list of libc packages, used for checking for a hard-coded dependency

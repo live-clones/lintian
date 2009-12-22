@@ -113,8 +113,8 @@ BEGIN {
 my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
+use Lintian::Tag::Info;
 use Util;
-use Tags;
 
 # --- Set the ways to call lintian and dpkg-buildpackage
 my $lintian_options = '-I -E';
@@ -140,7 +140,8 @@ for my $desc_file (<$LINTIAN_ROOT/checks/*.desc>) {
 	$desc_file =~ s#.*/##;
 	if (exists $i->{'tag'}) {
 	    my $experimental = $i->{'experimental'};
-	    my $code = Tags::get_tag_code($i);
+	    my $info = Lintian::Tag::Info->new($i->{tag});
+	    my $code = $info->code;
 	    $code = 'X' if $experimental and $experimental eq 'yes';
 
 	    $tags{$i->{'tag'}}{'desc_file'} = $desc_file;

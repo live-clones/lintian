@@ -16,10 +16,10 @@ my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Read_pkglists;
-use Tags;
+use Lintian::Tag::Info;
 
-my @severities = @Tags::severity_list;
-my @certainties = @Tags::certainty_list;
+my @severities = qw(pedantic wishlist minor normal important serious);
+my @certainties = qw(wild-guess possible certain);
 my @types = qw(info warning error);
 my @codes = qw(I W E);
 
@@ -72,7 +72,8 @@ for my $check (readdir CHECKDIR) {
         next if not $done;
 
         my $old_code = $old_codes{$type};
-        my $new_code = Tags::get_tag_code($tag);
+        my $info = Lintian::Tag::Info->new($tag);
+        my $new_code = $info->code;
         push(@{$stats{code}{$old_code}{$new_code}}, $name);
 
         $num_ok++ if $old_code eq $new_code;

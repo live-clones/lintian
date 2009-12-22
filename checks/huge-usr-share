@@ -20,7 +20,7 @@
 
 package Lintian::huge_usr_share;
 use strict;
-use Tags;
+use Lintian::Tags qw(tag);
 
 # Threshold in kB of /usr/share to trigger this warning.  Consider that the
 # changelog alone can be quite big, and cannot be moved away.

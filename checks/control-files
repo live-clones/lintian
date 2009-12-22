@@ -20,8 +20,8 @@
 
 package Lintian::control_files;
 use strict;
-use Tags;
 use Util;
+use Lintian::Tags qw(tag);
 
 my %ctrl_deb =
     (clilibs   => 0644,

@@ -20,9 +20,9 @@
 
 package Lintian::binaries;
 use strict;
-use Tags;
 use Util;
 use Spelling;
+use Lintian::Tags qw(tag);
 
 use File::Spec;
 

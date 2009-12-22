@@ -20,8 +20,8 @@
 
 package Lintian::init_d;
 use strict;
-use Tags;
 use Util;
+use Lintian::Tags qw(tag);
 
 # A list of valid LSB keywords.	 The value is 0 if optional and 1 if required.
 my %lsb_keywords = (provides		=> 1,

@@ -24,7 +24,7 @@ package Lintian::watch_file;
 use strict;
 
 use Lintian::Collect;
-use Tags;
+use Lintian::Tags qw(tag);
 
 sub run {
 

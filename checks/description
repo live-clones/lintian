@@ -23,8 +23,8 @@ use strict;
 
 use Encode qw(decode);
 
+use Lintian::Tags qw(tag);
 use Spelling;
-use Tags;
 use Util;
 
 sub run {

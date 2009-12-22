@@ -21,7 +21,7 @@
 package Lintian::debian_readme;
 use strict;
 use Spelling;
-use Tags;
+use Lintian::Tags qw(tag);
 
 sub run {
 

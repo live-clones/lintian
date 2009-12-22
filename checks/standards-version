@@ -25,7 +25,7 @@ use strict;
 use POSIX qw(strftime);
 
 use Lintian::Data;
-use Tags;
+use Lintian::Tags qw(tag);
 use Util;
 
 our $STANDARDS = Lintian::Data->new('standards-version/release-dates', '\s+');

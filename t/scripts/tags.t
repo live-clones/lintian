@@ -20,15 +20,17 @@
 
 use strict;
 use warnings;
+
 use Test::More qw(no_plan);
-use Util qw(read_dpkg_control);
-use Tags ();
+
+use Lintian::Tags ();
 use Spelling;
+use Util qw(read_dpkg_control);
 
 my @DESCS = <$ENV{'LINTIAN_ROOT'}/checks/*.desc>;
 
-my %severities = map { $_ => 1 } @Tags::severity_list;
-my %certainties = map { $_ => 1 } @Tags::certainty_list;
+my %severities = map { $_ => 1 } 'pedantic', @Lintian::Tags::SEVERITIES;
+my %certainties = map { $_ => 1 } @Lintian::Tags::CERTAINTIES;
 
 for my $desc_file (@DESCS) {
     for my $i (read_dpkg_control($desc_file)) {

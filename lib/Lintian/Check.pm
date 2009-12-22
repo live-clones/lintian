@@ -24,7 +24,7 @@ use strict;
 use warnings;
 
 use Exporter ();
-use Tags qw(tag);
+use Lintian::Tags qw(tag);
 
 our @ISA    = qw(Exporter);
 our @EXPORT = qw(check_maintainer);

@@ -34,8 +34,10 @@
 
 package Lintian::menu_format;
 use strict;
-use Tags;
+
+use Lintian::Tags qw(tag);
 use Util;
+
 use File::Basename;
 
 # This is a list of all tags that should be in every menu item.

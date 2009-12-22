@@ -22,9 +22,9 @@ package Lintian::debhelper;
 use strict;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
-use Tags;
 use Util;
 use Lintian::Data;
+use Lintian::Tags qw(tag);
 
 # If there is no debian/compat file present but cdbs is being used, cdbs will
 # create one automatically.  Currently it always uses compatibility level 5.

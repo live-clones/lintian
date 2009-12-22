@@ -20,8 +20,8 @@
 
 package Lintian::conffiles;
 use strict;
-use Tags;
 use Util;
+use Lintian::Tags qw(tag);
 
 sub run {
 

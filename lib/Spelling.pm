@@ -21,7 +21,8 @@
 
 package Spelling;
 use strict;
-use Tags;
+
+use Lintian::Tags qw(tag);
 
 use Exporter;
 our @ISA = qw(Exporter);
