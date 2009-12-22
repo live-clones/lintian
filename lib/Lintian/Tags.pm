@@ -47,13 +47,10 @@ Lintian::Tags - Manipulate and output Lintian tags
 =head1 SYNOPSIS
 
     my $tags = Lintian::Tags->new;
-    %data = $tags->info('lintian-tag');
     $tags->file_start('/path/to/file', 'pkg', '1.0', 'i386', 'binary');
     $tags->file_overrides('/path/to/file', 'pkg', 'binary');
     $tags->tag('lintian-tag', 'data');
     tag('other-lintian-tag', 'data');
-    my %info = $tags->info('lintian-tag');
-    my %source = $tags->source('lintian-tag');
     my %overrides = $tags->overrides('/path/to/file');
     my %stats = $tags->statistics;
     if ($tags->displayed('lintian-tag')) {
@@ -185,7 +182,7 @@ called first or if an attempt is made to issue an unknown tag.
 
 =cut
 
-#':# for cperl-mode
+#'# for cperl-mode
 
 # Check if a given tag with associated extra information is overridden by the
 # overrides for the current file.  This may require checking for matches
@@ -680,10 +677,22 @@ sub suppressed {
     return;
 }
 
+=back
+
+=head1 AUTHOR
+
+Originally written by Russ Allbery <rra@debian.org> for Lintian.
+
+=head1 SEE ALSO
+
+lintian(1), Lintian::Output(3), Lintian::Tag::Info(3)
+
+=cut
+
 1;
 
 # Local Variables:
 # indent-tabs-mode: nil
 # cperl-indent-level: 4
 # End:
-# vim: ts=4 sw=4 et
+# vim: syntax=perl ts=4 sw=4 et
