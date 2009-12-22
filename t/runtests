@@ -52,7 +52,6 @@ BEGIN {
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Util;
-use Tags;
 
 # --- Global configuration
 
