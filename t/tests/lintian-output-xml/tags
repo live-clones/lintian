@@ -1,0 +1,22 @@
+<package type="source" name="lintian-output-xml" architecture="source" version="1.0+dsfg-1.1">
+<tag severity="pedantic" certainty="certain" flags="" name="debian-control-has-unusual-field-spacing">line 11</tag>
+<tag severity="wishlist" certainty="certain" flags="" name="binary-control-field-duplicates-source">field &quot;section&quot; in package lintian-output-xml</tag>
+<tag severity="minor" certainty="certain" flags="overridden" name="dfsg-version-misspelled">1.0+dsfg-1.1</tag>
+<tag severity="normal" certainty="certain" flags="" name="maintainer-upload-has-incorrect-version-number">1.0+dsfg-1.1</tag>
+<tag severity="pedantic" certainty="certain" flags="" name="direct-changes-in-diff-but-no-patch-system">Changes</tag>
+</package>
+<package type="binary" name="lintian-output-xml" architecture="all" version="1.0+dsfg-1.1">
+<tag severity="pedantic" certainty="wild-guess" flags="overridden" name="no-upstream-changelog"></tag>
+<tag severity="serious" certainty="wild-guess" flags="" name="possible-gpl-code-linked-with-openssl"></tag>
+<tag severity="minor" certainty="possible" flags="" name="description-synopsis-might-not-be-phrased-properly"></tag>
+<tag severity="wishlist" certainty="wild-guess" flags="" name="description-possibly-contains-homepage">http://www.example.com/.</tag>
+<tag severity="important" certainty="possible" flags="" name="new-essential-package"></tag>
+<tag severity="pedantic" certainty="possible" flags="" name="no-homepage-field"></tag>
+<tag severity="serious" certainty="certain" flags="" name="dir-in-usr-local">usr/local/share/</tag>
+<tag severity="serious" certainty="certain" flags="" name="dir-in-usr-local">usr/local/share/lintian/</tag>
+<tag severity="serious" certainty="possible" flags="" name="dir-or-file-in-var-lock">var/lock/lintian/</tag>
+<tag severity="wishlist" certainty="possible" flags="" name="package-contains-empty-directory">usr/local/share/lintian/</tag>
+<tag severity="normal" certainty="possible" flags="" name="binary-without-manpage">usr/bin/script</tag>
+<tag severity="normal" certainty="wild-guess" flags="" name="desktop-entry-limited-to-environments">/usr/share/applications/script.desktop</tag>
+<tag severity="pedantic" certainty="possible" flags="" name="example-unusual-interpreter">./usr/share/doc/lintian-output-xml/examples/example #!/usr/bin/foo</tag>
+</package>
