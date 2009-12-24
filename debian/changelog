@@ -14,6 +14,10 @@ lintian (2.3.0) UNRELEASED; urgency=low
     + [ADB] Exempt all binary packages built from the zlib source from
       the embedded-zlib test, not just those with binary package names
       matching zlib.+.  Thanks, Mark Brown.
+  * checks/changelog-file:
+    + [RA] Suppress latest-debian-changelog-entry-without-new-date if the
+      distribution is UNRELEASED.  Thanks, Raphaël Hertzog.
+      (Closes: #560149)
   * checks/control-file{,.desc}:
     + [RA] Check for < and > version dependencies in debian/control since
       dpkg-source helpfully rewrites and fixes them in binary packages.
