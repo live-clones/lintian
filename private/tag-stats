@@ -1,0 +1,152 @@
+#!/usr/bin/perl -w
+
+# tag-stats - tag classification statistics
+#
+# This script displays statistics and data for tag classification based on
+# Severity/Certainty headers and their mapping to a E/W/I code.
+#
+# The verbose options (-v, -vv, -vvv) can be used to display a detailed list
+# of which tags are assigned to each category.
+
+use strict;
+use warnings;
+
+BEGIN {
+    my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
+    if (not $LINTIAN_ROOT) {
+        use Cwd ();
+        $ENV{'LINTIAN_ROOT'} = $LINTIAN_ROOT = Cwd::cwd();
+    } else {
+        chdir $LINTIAN_ROOT or die "Cannot chdir to $LINTIAN_ROOT: $!\n";
+    }
+}
+
+my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
+
+use lib "$ENV{'LINTIAN_ROOT'}/lib";
+use Read_pkglists;
+use Lintian::Tag::Info;
+
+my @severities = reverse qw(pedantic wishlist minor normal important serious);
+my @certainties = reverse qw(wild-guess possible certain);
+my @types = qw(E W I P);
+
+my %stats;
+my $num_tags = 0;
+my %num_code;
+my $num_ok = 0;
+my $percent = 0;
+
+my $verbose = $ARGV[0] ? ($ARGV[0] =~ s/v/v/g) : 0;
+
+opendir(CHECKDIR, "$LINTIAN_ROOT/checks")
+    or fail("cannot read directory $LINTIAN_ROOT/checks");
+
+for my $check (readdir CHECKDIR) {
+    next unless $check =~ /\.desc$/;
+
+    my @tags = read_dpkg_control("$LINTIAN_ROOT/checks/$check");
+    my $desc = $tags[0];
+    my @needs = ();
+    if ($desc and exists $desc->{'needs-info'}) {
+        @needs = split(/\s*,\s*/, $desc->{'needs-info'});
+    }
+
+    shift(@tags);
+
+    foreach my $tag (@tags) {
+        my $name = $tag->{tag};
+        my $severity = $tag->{severity};
+        my $certainty = $tag->{certainty};
+
+        $severity = 'unclassified' if not $severity;
+        $certainty = 'unclassified' if not $certainty;
+
+        my $info = Lintian::Tag::Info->new($tag->{tag});
+        my $code = $info->code;
+
+        push(@{$stats{severity}{$severity}}, $name);
+        push(@{$stats{certainty}{$certainty}}, $name);
+        push(@{$stats{both}{$severity}{$certainty}}, $name);
+        push(@{$stats{type}{severity}{$code}{$severity}}, $name);
+        push(@{$stats{type}{both}{$code}{$severity}{$certainty}}, $name);
+
+        map { $stats{needs}{$severity}{$certainty}{$_} = 1 } @needs;
+
+        $num_tags++;
+    }
+}
+
+closedir(CHECKDIR);
+
+print "Severity\n";
+foreach my $s (@severities) {
+    my $tags = $stats{severity}{$s};
+    print "  $s: " . @{$tags} . "\n";
+    print "    " . join("\n    ", sort @{$tags}) . "\n" if $verbose >= 3;
+}
+
+print "\nCertainty\n";
+foreach my $c (@certainties) {
+    my $tags = $stats{certainty}{$c};
+    print "  $c: " . @{$tags} . "\n";
+    print "    " . join("\n    ", sort @{$tags}) . "\n" if $verbose >= 3;
+}
+
+print "\nSeverity/Certainty\n";
+foreach my $s (@severities) {
+    foreach my $c (@certainties) {
+        if (my $tags = $stats{both}{$s}{$c}) {
+            print "  $s/$c: " . @{$tags} . "\n";
+            print "    " . join("\n    ", sort @{$tags}) . "\n"
+                if $verbose >= 2;
+        }
+    }
+}
+
+foreach my $t (@types) {
+    print "\nType $t Severity\n";
+    foreach my $s (@severities) {
+        if (my $tags = $stats{type}{severity}{$t}{$s}) {
+            print "  $s: " . @{$tags} . "\n";
+            print "    " . join("\n    ", sort @{$tags}) . "\n"
+                if $verbose >= 2;
+        }
+    }
+}
+
+foreach my $t (@types) {
+    print "\nType $t Severity/Certainty\n";
+    foreach my $s (@severities) {
+        foreach my $c (@certainties) {
+            if (my $tags = $stats{type}{both}{$t}{$s}{$c}) {
+                print "  $s/$c: " . @{$tags} . "\n";
+                print "    " . join("\n    ", sort @{$tags}) . "\n"
+                    if $verbose >= 1;
+            }
+        }
+    }
+}
+
+print "\nCollections\n";
+foreach my $s (@severities) {
+    foreach my $c (@certainties) {
+        if (my $needs = $stats{needs}{$s}{$c}) {
+            my $size = scalar keys %{$needs};
+            my @list = sort keys %{$needs};
+            print "  $s/$c: $size\n";
+            print "    " . join("\n    ", @list) . "\n" if $verbose >= 2;
+        }
+    }
+}
+
+if ($verbose >= 1 and exists $stats{severity}{unclassified}) {
+    print "\nUnclassified tags\n";
+    print "  " . join("\n  ", @{$stats{severity}{unclassified}}) . "\n"
+}
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: sw=4 sts=4 ts=4 et sr
