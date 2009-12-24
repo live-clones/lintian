@@ -417,20 +417,20 @@ sub test_package {
     my @options = split(' ', $testdata->{options});
     my ($file) = glob("$RUNDIR/$pkg\_$version*.changes");
     print "testing... ";
+    my $opts = { err => "$RUNDIR/tags.$pkg", fail => 'never' };
+    my $status;
     if ($testdata->{sort}) {
-	my $status = spawn({ out => "$RUNDIR/tags.$pkg" },
-			   [ $LINTIAN, @options, $file ],
-			   '|', [ 'sort' ]);
-	unless ($status == 0 or $status == (1 << 8)) {
-	    fail("failed: @_\n");
-	}
+	$status = spawn($opts, [ $LINTIAN, @options, $file ], '|', [ 'sort' ]);
     } else {
-	my $status = spawn({ out => "$RUNDIR/tags.$pkg" },
-			   [ $LINTIAN, @options, $file ]);
-	unless ($status == 0 or $status == (1 << 8)) {
-	    fail("failed: @_\n");
-	}
+	$status = spawn($opts, [ $LINTIAN, @options, $file ]);
     }
+    unless ($status == 0 or $status == (1 << 8)) {
+	fail("failed: @_\n");
+    }
+    open(OUT, '>>', "$RUNDIR/tags.$pkg")
+	or fail("cannot append to $RUNDIR/tags.$pkg: $!");
+    print OUT ${ $opts->{out} };
+    close OUT;
 
     # Run a sed-script if it exists, for tests that have slightly variable
     # output
@@ -448,34 +448,40 @@ sub test_package {
     }
 
     # Check the output for invalid lines.  Also verify that all Test-For tags
-    # are seen and all Test-Against tags are not.
+    # are seen and all Test-Against tags are not.  Skip this part of the test
+    # if neither Test-For nor Test-Against are set and Sort is also not set,
+    # since in that case we probably have non-standard output.
     my %test_for = map { $_ => 1 } split(' ', $testdata->{'test-for'});
     my %test_against = map { $_ => 1 } split(' ', $testdata->{'test-against'});
-    my $okay = 1;
-    open TAGS, "$RUNDIR/tags.$pkg" or fail("Cannot open $RUNDIR/tags.$pkg");
-    while (<TAGS>) {
-	next if m/^N: /;
-	if (not /^(.): (\S+)(?: (?:source|udeb))?: (\S+)/) {
-	    print "E: Invalid line:\n$_";
-	    $okay = 0;
-	    next;
+    if (not %test_for and not %test_against and not $testdata->{sort}) {
+	return 1;
+    } else {
+	my $okay = 1;
+	open TAGS, "$RUNDIR/tags.$pkg" or fail("Cannot open $RUNDIR/tags.$pkg");
+	while (<TAGS>) {
+		next if m/^N: /;
+		if (not /^(.): (\S+)(?: (?:source|udeb))?: (\S+)/) {
+		    print "E: Invalid line:\n$_";
+		    $okay = 0;
+		    next;
+		}
+		my $tag = $3;
+		if ($test_against{$tag}) {
+		    print "E: Tag $tag seen but listed in Test-Against\n";
+		    $okay = 0;
+		}
+		delete $test_for{$tag};
 	}
-	my $tag = $3;
-	if ($test_against{$tag}) {
-	    print "E: Tag $tag seen but listed in Test-Against\n";
-	    $okay = 0;
+	close TAGS;
+	if (%test_for) {
+		for my $tag (sort keys %test_for) {
+		    print "E: Tag $tag listed in Test-For but not found\n";
+		    $okay = 0;
+		}
 	}
-	delete $test_for{$tag};
+	return 1 if $okay;
+	return;
     }
-    close TAGS;
-    if (%test_for) {
-	for my $tag (sort keys %test_for) {
-	    print "E: Tag $tag listed in Test-For but not found\n";
-	    $okay = 0;
-	}
-    }
-    return 1 if $okay;
-    return;
 }
 
 # --- Changes file testing
