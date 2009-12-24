@@ -2,7 +2,7 @@
 # package that contains the font.  Only packages starting with ttf-,
 # otf-, t1-, and xfonts- are searched for fonts.
 #
-# Last updated: 2009-11-08
+# Last updated: 2009-12-24
 
 1015sn.ttf ttf-aenigma
 1015snr.ttf ttf-aenigma
@@ -99,11 +99,17 @@ aftermat.ttf ttf-aenigma
 akkadian.otf ttf-ancient-fonts
 alexander.otf ttf-ancient-fonts
 alfa-beta.ttf ttf-linex
+alfios_b.otf ttf-ancient-fonts
+alfios_i.otf ttf-ancient-fonts
+alfios_j.otf ttf-ancient-fonts
+alfios_r.otf ttf-ancient-fonts
 alphbeta.ttf ttf-aenigma
 amalgama.ttf ttf-aenigma
 amalgamo.ttf ttf-aenigma
 amplitud.ttf ttf-aenigma
+anaktoria.otf ttf-ancient-fonts
 analecta.otf ttf-ancient-fonts
+anatolian.otf ttf-ancient-fonts
 andbasr.ttf ttf-sil-andika
 ani.ttf ttf-bengali-fonts
 anjalioldlipi.ttf ttf-malayalam-fonts
@@ -112,6 +118,8 @@ apibolit.ttf ttf-linex
 apiitali.ttf ttf-linex
 apiregul.ttf ttf-linex
 arhangai.ttf ttf-arhangai
+aroania_b.otf ttf-ancient-fonts
+aroania_r.otf ttf-ancient-fonts
 arthriti.ttf ttf-aenigma
 arundinasans-bold.pfb t1-thai-arundina
 arundinasans-bold.ttf ttf-thai-arundina
@@ -140,9 +148,14 @@ atarismallbold.ttf ttf-atarismall
 atarismallcondensed.ttf ttf-atarismall
 atarismallitalic.ttf ttf-atarismall
 atarismalllight.ttf ttf-atarismall
+atavyros.otf ttf-ancient-fonts
 ataxia.ttf ttf-aenigma
 ataxiao.ttf ttf-aenigma
 automati.ttf ttf-aenigma
+avdira_b.otf ttf-ancient-fonts
+avdira_i.otf ttf-ancient-fonts
+avdira_j.otf ttf-ancient-fonts
+avdira_r.otf ttf-ancient-fonts
 b018012d.pfb t1-cyrillic
 b018015d.pfb t1-cyrillic
 b018032d.pfb t1-cyrillic
@@ -260,6 +273,7 @@ caslonitalic.ttf ttf-georgewilliams
 caslonroman.ttf ttf-georgewilliams
 ccaps.ttf ttf-aenigma
 ccapshad.ttf ttf-aenigma
+century-catalogue.ttf ttf-century-catalogue
 chandas1-2.ttf ttf-devanagari-fonts
 chanui__.ttf ttf-uralic
 charissilb.ttf ttf-sil-charis
@@ -297,6 +311,7 @@ compc2o.ttf ttf-aenigma
 compc2s.ttf ttf-aenigma
 compc3o.ttf ttf-aenigma
 compc3s.ttf ttf-aenigma
+conakry.ttf ttf-evertype-conakry
 condui2i.ttf ttf-aenigma
 conduit.ttf ttf-aenigma
 conduit2.ttf ttf-aenigma
@@ -345,7 +360,7 @@ dejavuserifcondensed-bold.ttf ttf-dejavu-extra
 dejavuserifcondensed-bolditalic.ttf ttf-dejavu-extra
 dejavuserifcondensed-italic.ttf ttf-dejavu-extra
 dejavuserifcondensed.ttf ttf-dejavu-extra
-dejima-mincho.ttf ttf-dejima-mincho
+dejima-mincho-r220.ttf ttf-dejima-mincho
 delphine.ttf ttf-sjfonts
 dented.ttf ttf-aenigma
 dephun2.ttf ttf-aenigma
@@ -721,12 +736,17 @@ kochi-gothic-subst.ttf ttf-kochi-gothic
 kochi-gothic.ttf ttf-kochi-gothic
 kochi-mincho-subst.ttf ttf-kochi-mincho
 kochi-mincho.ttf ttf-kochi-mincho
+komatuna-p.ttf ttf-komatuna
+komatuna.ttf ttf-komatuna
 konatu.ttf ttf-konatu
 konatutohaba.ttf ttf-konatu
 konecto1.ttf ttf-aenigma
 konecto2.ttf ttf-aenigma
 konector.ttf ttf-aenigma
 koneerie.ttf ttf-aenigma
+kouzan-mouhitsu-gyosho.ttf ttf-kouzan-mouhitsu
+kouzan-mouhitsu-sosho.ttf ttf-kouzan-mouhitsu
+kouzan-mouhitsu.ttf ttf-kouzan-mouhitsu
 kurvatur.ttf ttf-aenigma
 lakeshor.ttf ttf-aenigma
 lamebrai.ttf ttf-aenigma
@@ -891,7 +911,11 @@ msam10.ttf ttf-lyx
 msbm10.ttf ttf-lyx
 muktinarrow.ttf ttf-bengali-fonts
 muktinarrowbold.ttf ttf-bengali-fonts
-musical.otf ttf-ancient-fonts
+museumbible.otf ttf-levien-museum
+museumfoundry.otf ttf-levien-museum
+museumfourteen.otf ttf-levien-museum
+museumsixty.otf ttf-levien-museum
+musica.otf ttf-ancient-fonts
 mysteron.ttf ttf-aenigma
 n019003d.pfb t1-cyrillic
 n019004d.pfb t1-cyrillic
@@ -943,6 +967,7 @@ nsecthck.ttf ttf-aenigma
 nsecthin.ttf ttf-aenigma
 nucleus.ttf ttf-aenigma
 numskull.ttf ttf-aenigma
+nuosusil.ttf ttf-sil-nuosusil
 nymonak.ttf ttf-aenigma
 obloquyo.ttf ttf-aenigma
 obloquys.ttf ttf-aenigma
@@ -969,6 +994,9 @@ oldaniaadfstd-bolditalic.otf ttf-adf-oldania
 oldaniaadfstd-italic.otf ttf-adf-oldania
 oldaniaadfstd-regular.otf ttf-adf-oldania
 oldslavicregu.pfb t1-oldslavic
+oldstandard-bold.ttf ttf-oldstandard
+oldstandard-italic.ttf ttf-oldstandard
+oldstandard-regular.ttf ttf-oldstandard
 opendinschriftenengshrift.ttf ttf-opendin
 opens___.ttf ttf-opensymbol
 opiated.ttf ttf-aenigma
@@ -1203,6 +1231,7 @@ switzeraadflightcd-italic.otf ttf-adf-switzera
 switzeraadflightcd-regular.otf ttf-adf-switzera
 symbol.pfb xfonts-mathml
 symbol.pfb xfonts-mathml
+symbola.otf ttf-ancient-fonts
 symmetry.ttf ttf-aenigma
 syndrome.ttf ttf-aenigma
 syntheti.ttf ttf-aenigma
@@ -1372,6 +1401,7 @@ tuffy_bold_italic.ttf ttf-tuffy
 tuffy_italic.ttf ttf-tuffy
 tuffy_regular.ttf ttf-tuffy
 turmoil.ttf ttf-aenigma
+typoscript.otf ttf-levien-typoscript
 ubiquity.ttf ttf-aenigma
 ubuntutitling-bold.otf ttf-ubuntu-title
 ume-pgc4.ttf ttf-umefont
@@ -1426,8 +1456,8 @@ undrscr2.ttf ttf-aenigma
 ungraphic.ttf ttf-unfonts-core
 ungraphicbold.ttf ttf-unfonts-core
 ungungseo.ttf ttf-unfonts-core
-unicode.otf ttf-ancient-fonts
 unifont.ttf ttf-unifont
+unikuweb.ttf ttf-unikurdweb
 united.ttf ttf-aenigma
 universalisadfcdstd-bdoblique.otf ttf-adf-universalis
 universalisadfcdstd-bold.otf ttf-adf-universalis
@@ -1547,6 +1577,7 @@ yonder.ttf ttf-aenigma
 yoshisst.ttf ttf-aenigma
 yourcomp.ttf ttf-aenigma
 z003034d.pfb t1-cyrillic
+zaghawaberia.otf ttf-sil-zaghawa-beria
 zeldadxt.ttf ttf-aenigma
 zenith.ttf ttf-aenigma
 zephyrea.ttf ttf-aenigma

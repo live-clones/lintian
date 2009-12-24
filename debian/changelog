@@ -13,6 +13,8 @@ lintian (2.3.0) UNRELEASED; urgency=low
       all of the descriptive text is included.  Thanks, Jonathan Wiltshire.
       (Closes: #557786)
 
+  * data/fonts:
+    + [ADB] Refresh against unstable.
   * data/output/ftp-master-{non,}fatal:
     + [RA] New data files listing tags that may result in an automated
       upload reject.
