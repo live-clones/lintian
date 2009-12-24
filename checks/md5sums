@@ -20,7 +20,8 @@
 
 package Lintian::md5sums;
 use strict;
-use Tags;
+
+use Lintian::Tags qw(tag);
 use Util;
 
 sub run {
