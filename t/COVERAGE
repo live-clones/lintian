@@ -1,4 +1,4 @@
-Last generated 2009-09-14
+Last generated 2009-12-24
 
 The following tags are not tested by the test suite:
 
@@ -9,7 +9,6 @@ binaries ocaml-custom-executable
 binaries program-not-linked-against-libc
 
 changelog-file html-changelog-without-text-version
-changelog-file no-upstream-changelog
 changelog-file spelling-error-in-changelog
 changelog-file wrong-name-for-changelog-of-native-package
 changelog-file wrong-name-for-debian-changelog-file
@@ -254,7 +253,6 @@ control-files control-file-is-empty
 
 copyright-file copyright-file-lacks-pointer-to-perl-license
 copyright-file old-fsf-address-in-copyright-file
-copyright-file possible-gpl-code-linked-with-openssl
 copyright-file usr-share-doc-symlink-without-dependency
 
 cruft native-package-with-dash-version
@@ -324,7 +322,6 @@ fields package-depends-on-multiple-libstdc-versions
 fields package-depends-on-multiple-tcl-versions
 fields package-depends-on-multiple-tk-versions
 fields package-depends-on-multiple-tkx-versions
-fields package-has-a-duplicate-build-relation
 fields package-relation-with-self
 fields redundant-bugs-field
 fields redundant-origin-field
@@ -341,7 +338,6 @@ fields wrong-debian-qa-group-name
 
 files bad-permissions-for-ali-file
 files desktop-file-in-wrong-dir
-files dir-or-file-in-opt
 files dir-or-file-in-srv
 files dir-or-file-in-var-www
 files embedded-feedparser-library
@@ -411,8 +407,6 @@ init.d prerm-calls-updaterc.d
 
 lintian bad-ubuntu-distribution-in-changes-file
 
-manpages binary-without-manpage
-
 md5sums file-missing-in-md5sums
 md5sums malformed-md5sums-control-file
 md5sums md5sum-mismatch
@@ -421,7 +415,6 @@ md5sums no-md5sums-control-file
 
 menu-format deprecated-kdelnk-file
 menu-format desktop-contains-deprecated-header
-menu-format desktop-entry-invalid-category
 menu-format desktop-entry-missing-required-key
 menu-format menu-command-not-in-package
 menu-format menu-item-creates-new-section
@@ -463,7 +456,6 @@ menus spelling-error-in-doc-base-title-field
 
 nmu changelog-should-mention-qa
 nmu changelog-should-not-mention-nmu
-nmu maintainer-upload-has-incorrect-version-number
 nmu orphaned-package-should-not-have-uploaders
 nmu qa-upload-has-incorrect-version-number
 
@@ -543,7 +535,6 @@ Breakdown of remaining tags in legacy test suite by test case:
 binary
   arch-dep-package-has-big-usr-share
   binary-has-unneeded-section
-  binary-without-manpage
   changelog-file-not-compressed
   changelog-news-debian-mismatch
   control-file-is-empty
@@ -553,7 +544,6 @@ binary
   debian-rules-uses-pwd
   deprecated-kdelnk-file
   desktop-contains-deprecated-header
-  desktop-entry-invalid-category
   desktop-entry-missing-required-key
   doc-base-abstract-field-separator-extra-whitespaces
   doc-base-document-field-ends-in-whitespace
@@ -574,7 +564,6 @@ binary
   file-in-unusual-dir
   file-name-ends-in-whitespace
   lengthy-symlink
-  maintainer-upload-has-incorrect-version-number
   menu-command-not-in-package
   menu-file-in-usr-lib
   menu-item-creates-new-section
@@ -592,7 +581,6 @@ binary
   old-fsf-address-in-copyright-file
   package-contains-hardlink
   package-contains-upstream-install-documentation
-  possible-gpl-code-linked-with-openssl
   postinst-does-not-call-updatemenus
   postrm-does-not-call-updatemenus
   spelling-error-in-doc-base-abstract-field
@@ -617,7 +605,6 @@ cdbs-test
   debian-changelog-line-too-long
   missing-python-build-dependency
   no-human-maintainers
-  package-has-a-duplicate-build-relation
 
 debconf
   dpatch-build-dep-but-no-patch-list
@@ -701,7 +688,6 @@ filenames
   bad-permissions-for-ali-file
   debian-news-file-not-compressed
   desktop-file-in-wrong-dir
-  dir-or-file-in-opt
   dir-or-file-in-srv
   dir-or-file-in-var-www
   embedded-feedparser-library
