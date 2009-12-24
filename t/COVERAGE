@@ -16,6 +16,7 @@ changelog-file wrong-name-for-upstream-changelog
 
 control-file debian-control-file-is-a-symlink
 control-file debian-control-with-duplicate-fields
+control-file obsolete-relation-form-in-source
 
 control-files control-file-has-bad-owner
 control-files not-allowed-control-file
@@ -67,7 +68,6 @@ fields no-package-name
 fields no-source-field
 fields no-version-field
 fields obsolete-field
-fields obsolete-relation-form
 fields old-versioned-python-dependency
 fields package-depends-on-an-x-font-package
 fields package-depends-on-multiple-tclx-versions
@@ -179,7 +179,6 @@ po-debconf not-using-po-debconf
 rules debian-rules-is-symlink
 rules debian-rules-not-a-makefile
 rules debian-rules-uses-DEB_BUILD_OPTS
-rules missing-build-dependency
 
 scripts csh-considered-harmful
 scripts gawk-script-but-no-gawk-dep
@@ -473,11 +472,9 @@ po-debconf stray-translated-debconf-templates
 po-debconf translated-default-field
 po-debconf unknown-encoding-in-po-file
 
-rules build-depends-without-arch-dep
 rules clean-should-be-satisfied-by-build-depends
 rules debian-rules-uses-pwd
 rules missing-dh_python-build-dependency
-rules missing-python-build-dependency
 
 scripts ancient-dpkg-epoch-check
 scripts ancient-dpkg-long-filenames-check
@@ -600,10 +597,8 @@ binary
   xs-vcs-header-in-debian-control
 
 cdbs-test
-  build-depends-without-arch-dep
   clean-should-be-satisfied-by-build-depends
   debian-changelog-line-too-long
-  missing-python-build-dependency
   no-human-maintainers
 
 debconf
