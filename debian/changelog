@@ -39,7 +39,7 @@ lintian (2.3.0) UNRELEASED; urgency=low
       builds architecture-independent packages, the distinction between
       Build-Depends and Build-Depends-Indep is meaningless and there's no
       reason, even pedantically, to worry about the separation.  Thanks,
-      Charles Plessy.  (Closes: #552200)
+      Charles Plessy.  (Closes: #552200, #555667)
 
   * data/debhelper/*:
     + [ADB] Refresh against unstable.  
