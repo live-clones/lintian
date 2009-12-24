@@ -3,7 +3,7 @@ Priority: extra
 Section: devel
 Maintainer: {$author}
 Standards-Version: {$standards_version}
-Build-Depends: quilt (>= 0.46-7), debhelper (>= 7)
+Build-Depends: quilt, debhelper (>= 7)
 
 Package: {$srcpkg}
 Architecture: {$architecture}

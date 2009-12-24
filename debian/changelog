@@ -1,5 +1,9 @@
 lintian (2.3.0) UNRELEASED; urgency=low
 
+  * Summary of tag changes:
+    + Removed:
+      - build-depends-without-arch-dep
+
   * checks/*:
     + [RA] Use Lintian::Tags instead of Tags.
   * checks/binaries:
@@ -16,6 +20,12 @@ lintian (2.3.0) UNRELEASED; urgency=low
     + [ADB] Re-order the fields of build-depends-on-build-essential so that
       all of the descriptive text is included.  Thanks, Jonathan Wiltshire.
       (Closes: #557786)
+  * checks/rules{,.desc}:
+    + [RA] Remove build-depends-without-arch-dep.  If the package only
+      builds architecture-independent packages, the distinction between
+      Build-Depends and Build-Depends-Indep is meaningless and there's no
+      reason, even pedantically, to worry about the separation.  Thanks,
+      Charles Plessy.  (Closes: #552200)
 
   * data/debhelper/*:
     + [ADB] Refresh against unstable.  

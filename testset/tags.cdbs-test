@@ -1,6 +1,5 @@
 E: cdbs-test source: clean-should-be-satisfied-by-build-depends debhelper
 E: cdbs-test source: missing-python-build-dependency
-I: cdbs-test source: build-depends-without-arch-dep yada
 W: cdbs-test source: debian-watch-file-declares-multiple-versions line 3
 W: cdbs-test source: debian-watch-file-unknown-version 4
 W: cdbs-test source: no-human-maintainers

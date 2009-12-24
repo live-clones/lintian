@@ -3,5 +3,5 @@ Sequence: 6000
 Type: non-native
 Version: 1.0-1
 Description: Recognize quilt's debhelper add-ons
-Test-Against: build-depends-without-arch-dep
+Test-For: missing-build-dependency
 References: Debian Bug #528003

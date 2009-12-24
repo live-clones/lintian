@@ -27,13 +27,6 @@ E: relations: depends-on-essential-package-without-using-version depends: dpkg
 E: relations: depends-on-obsolete-package recommends: gs
 E: relations: needlessly-depends-on-awk pre-depends
 E: relations: no-copyright-file
-I: relations source: build-depends-without-arch-dep arch-test1
-I: relations source: build-depends-without-arch-dep arch-test2
-I: relations source: build-depends-without-arch-dep bar
-I: relations source: build-depends-without-arch-dep findutils
-I: relations source: build-depends-without-arch-dep foo
-I: relations source: build-depends-without-arch-dep libc6-dev
-I: relations source: build-depends-without-arch-dep mail-transport-agent
 I: relations source: ored-build-depends-on-obsolete-package build-depends-indep: gs
 I: relations-multiple-libs: description-synopsis-might-not-be-phrased-properly
 I: relations-multiple-libs: ored-depends-on-obsolete-package suggests: gs

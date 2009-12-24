@@ -143,17 +143,6 @@ Info: The package runs dh_python in <tt>debian/rules</tt> but doesn't
  build-depend on python (or python-dev or python-all-dev, which in turn
  depend on python), even if they don't otherwise need Python to build.
 
-Tag: build-depends-without-arch-dep
-Severity: minor
-Certainty: possible
-Ref: policy 7.7
-Info: The control file lists the given package in Build-Depends, but no
- architecture-dependent packages are built. If all the packages built are
- architecture-independent, the only packages that should be listed in
- Build-Depends are those required to run the clean target (such as
- debhelper if you use dh_clean). Other build dependencies should be listed
- in Build-Depends-Indep instead.
-
 Tag: clean-should-be-satisfied-by-build-depends
 Severity: important
 Certainty: certain
