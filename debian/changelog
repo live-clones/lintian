@@ -47,6 +47,10 @@ lintian (2.3.0) UNRELEASED; urgency=low
   * lib/Lintian/Output/XML.pm:
     + [RA] Rewrite to be more readable and fix the tags attribute for
       overridden experimental tags.
+  * lib/Lintian/Relation.pm:
+    + [RA] Fix bugs in unparse() and duplicates() that caused duplicates()
+      to crash when processing duplicates between an alternative and a
+      regular package.  Thanks, Jonathan Yu.  (Closes: #559625)
   * lib/Lintian/Tag/Info.pm:
     + [RA] Add a code method that returns the tag code corresponding to
       the severity and certainty for a tag, based on get_tag_code from

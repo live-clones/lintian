@@ -196,8 +196,8 @@ sub duplicates {
             my $forward = $self->implies_array($self->[$i], $self->[$j]);
             my $reverse = $self->implies_array($self->[$j], $self->[$i]);
             if ($forward or $reverse) {
-                my $first = unparse($self->[$i]);
-                my $second = unparse($self->[$j]);
+                my $first = $self->unparse($self->[$i]);
+                my $second = $self->unparse($self->[$j]);
                 if ($seen{$first}) {
                     $dups{$seen{$first}}->{$second} = $j;
                     $seen{$second} = $seen{$first};
@@ -596,7 +596,7 @@ sub unparse {
     } elsif ($relation->[0] eq 'AND' || $relation->[0] eq 'OR') {
         my $seperator = ($relation->[0] eq 'AND') ? ', ' : ' | ';
         my $text = '';
-        for my $element (@$relation) {
+        for my $element (@$relation[1 .. $#$relation]) {
             $text .= $seperator if $text;
             my $result = $self->unparse($element);
             return unless defined($result);
