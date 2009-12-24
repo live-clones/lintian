@@ -112,8 +112,8 @@ if (defined $info->field('architecture')) {
 }
 
 # Check if the package build-depends on autotools-dev, automake, or libtool.
-my $atdinbd = $info->relation('build-depends')->implies($AUTOTOOLS);
-my $ltinbd  = $info->relation('build-depends')->implies('libtool');
+my $atdinbd = $info->relation('build-depends-all')->implies($AUTOTOOLS);
+my $ltinbd  = $info->relation('build-depends-all')->implies('libtool');
 
 # Create a closure so that we can pass our lexical variables into the find
 # wanted function.  We don't want to make them global because we'll then leak

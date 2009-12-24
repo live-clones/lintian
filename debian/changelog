@@ -8,6 +8,10 @@ lintian (2.3.0) UNRELEASED; urgency=low
     + [ADB] Exempt all binary packages built from the zlib source from
       the embedded-zlib test, not just those with binary package names
       matching zlib.+.  Thanks, Mark Brown.
+  * checks/cruft:
+    + [RA] Allow an automake or libtool dependency in Build-Depends-Indep
+      to also satisfy the check for outdated helper files.  Thanks,
+      Guillaume Delacour.  (Closes: #557530)
   * checks/fields.desc:
     + [ADB] Re-order the fields of build-depends-on-build-essential so that
       all of the descriptive text is included.  Thanks, Jonathan Wiltshire.
