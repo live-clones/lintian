@@ -17,6 +17,7 @@
 # MA 02110-1301, USA.
 
 package Lintian::Output::XML;
+
 use strict;
 use warnings;
 
@@ -27,28 +28,31 @@ use base qw(Lintian::Output);
 
 sub print_tag {
     my ($self, $pkg_info, $tag_info, $information, $overridden) = @_;
-
     $self->issued_tag($tag_info->tag);
-    $self->_print_xml('',
-		      qq{<tag severity="}, $tag_info->severity, qq{" certainty="}, $tag_info->certainty, qq{"},
-		      'flags="'.($tag_info->experimental ? 'experimental' : ''),
-		      ($overridden ? 'overridden' : '').'"',
-		      qq{name="}, $tag_info->tag, qq{">}.encode_entities("$information","<>&\"'").qq{</tag>},
-	);
+    my $flags = ($tag_info->experimental ? 'experimental' : '');
+    if ($overridden) {
+        $flags .= ',' if $flags;
+        $flags .= 'overridden';
+    }
+    my @attrs = ([ severity  => $tag_info->severity ],
+                 [ certainty => $tag_info->certainty ],
+                 [ flags     => $flags ],
+                 [ name      => $tag_info->tag ]);
+    $self->_print_xml_tag('tag', \@attrs, $information);
 }
 
 sub print_start_pkg {
     my ($self, $pkg_info) = @_;
-
-    $self->_print_xml('',
-		      qq{<package type="$pkg_info->{type}" name="$pkg_info->{package}"},
-		      qq{architecture="$pkg_info->{arch}" version="$pkg_info->{version}">}
-	);
+    my @attrs = ([ type         => $pkg_info->{type} ],
+                 [ name         => $pkg_info->{package} ],
+                 [ architecture => $pkg_info->{arch} ],
+                 [ version      => $pkg_info->{version} ]);
+    $self->_print_xml_tag('package', \@attrs);
 }
 
 sub print_end_pkg {
     my ($self) = @_;
-    $self->_print_xml('', '</package>');
+    print { $self->stdout } "</package>\n"
 }
 
 sub _delimiter {
@@ -58,17 +62,24 @@ sub _delimiter {
 sub _print {
     my ($self, $stream, $lead, @args) = @_;
     $stream ||= $self->stderr;
-
     my $output = $self->string($lead, @args);
-    print {$stream} $output;
+    print { $stream } $output;
 }
 
-sub _print_xml {
-    my ($self, $stream, @args) = @_;
-    $stream ||= $self->stdout;
-
-    print {$stream} join(' ',@args), "\n";
+# Print a given XML tag to standard output.  Takes the tag, an anonymous array
+# of pairs of attributes and values, and then the contents of the tag.
+sub _print_xml_tag {
+    my ($self, $tag, $attrs, $content) = @_;
+    my $output = "<$tag";
+    for my $attr (@$attrs) {
+        my ($name, $value) = @$attr;
+        $output .= " $name=" . '"' . $value . '"';
+    }
+    $output .= '>';
+    if (defined $content) {
+        $output .= encode_entities($content,"<>&\"'") . "</$tag>";
+    }
+    print { $self->stdout } $output, "\n";
 }
 
 1;
-

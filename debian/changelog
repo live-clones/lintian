@@ -32,6 +32,9 @@ lintian (2.3.0) UNRELEASED; urgency=low
     + [RA] Adjust for the renaming of pkg in the file information hash.
   * lib/Lintian/Output/*.pm:
     + [RA] Adjust for print_tag() and file information hash changes.
+  * lib/Lintian/Output/XML.pm:
+    + [RA] Rewrite to be more readable and fix the tags attribute for
+      overridden experimental tags.
   * lib/Lintian/Tag/Info.pm:
     + [RA] Add a code method that returns the tag code corresponding to
       the severity and certainty for a tag, based on get_tag_code from
