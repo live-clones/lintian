@@ -13,6 +13,8 @@ lintian (2.3.0) UNRELEASED; urgency=low
       all of the descriptive text is included.  Thanks, Jonathan Wiltshire.
       (Closes: #557786)
 
+  * data/debhelper/*:
+    + [ADB] Refresh against unstable.  
   * data/fonts:
     + [ADB] Refresh against unstable.
   * data/output/ftp-master-{non,}fatal:

@@ -1,8 +1,11 @@
+dh_config_model_upgrade
 dh_gconf
 dh_gtkmodules
 dh_installcatalogs
 dh_installdebconf
+dh_installdocs
 dh_installinfo
+dh_installinit
 dh_installlisting
 dh_installtex
 dh_installxfonts

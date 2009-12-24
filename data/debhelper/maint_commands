@@ -1,4 +1,5 @@
 dh_cligacpolicy
+dh_config_model_upgrade
 dh_consoledata
 dh_gconf
 dh_haskell_prep
@@ -25,7 +26,6 @@ dh_lisp
 dh_makeshlibs
 dh_metainit
 dh_nativejava
-dh_ocaml
 dh_pycentral
 dh_pysupport
 dh_python
