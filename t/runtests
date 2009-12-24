@@ -424,8 +424,9 @@ sub test_package {
     } else {
 	$status = spawn($opts, [ $LINTIAN, @options, $file ]);
     }
-    unless ($status == 0 or $status == (1 << 8)) {
-	fail("failed: @_\n");
+    unless ($status == 0 or $status == 1) {
+	print "FAILED:\n";
+	fail("$LINTIAN @options $file exited with status $status\n");
     }
     open(OUT, '>>', "$RUNDIR/tags.$pkg")
 	or fail("cannot append to $RUNDIR/tags.$pkg: $!");
