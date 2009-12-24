@@ -47,6 +47,7 @@ my $check_everything = 0;	#flag for -a|--all switch
 my $lintian_info = 0;		#flag for -i|--info switch
 our $display_experimentaltags = 0; #flag for -E|--display-experimental switch
 our $display_pedantictags = 0;	#flag for --pedantic switch
+our $ftpmaster_tags = 0;	#flag for -F|--ftp-master-rejects switch
 my $unpack_level = undef;	#flag for -l|--unpack-level switch
 our $no_override = 0;		#flag for -o|--no-override switch
 our $show_overrides = 0;	#flag for --show-overrides switch
@@ -137,6 +138,7 @@ Actions:
     -X X, --dont-check-part X don\'t check certain aspects
     -T X, --tags X            only run checks needed for requested tags
     --tags-from-file X        like --tags, but read list from file
+    -F, --ftp-master-rejects  only check for automatic reject tags
     -u, --unpack              only unpack packages in the lab
     -r, --remove              remove package from the lab
 General options:
@@ -354,6 +356,7 @@ my %opthash = (			# ------------------ actions
 	       "check-part|C=s" => \&record_check_part,
 	       "tags|T=s" => \&record_check_tags,
 	       "tags-from-file=s" => \&record_check_tags_from_file,
+	       "ftp-master-rejects|F" => \$ftpmaster_tags,
 	       "dont-check-part|X=s" => \&record_dont_check_part,
 	       "unpack|u" => \&record_action,
 	       "remove|r" => \&record_action,
@@ -627,6 +630,14 @@ $Lintian::Output::GLOBAL->debug($debug);
 $Lintian::Output::GLOBAL->quiet($quiet);
 $Lintian::Output::GLOBAL->color($color);
 $Lintian::Output::GLOBAL->showdescription($lintian_info);
+
+# Now that we can load the data, process the -F or --ftp-master-rejects
+# option.
+if ($ftpmaster_tags) {
+    my $fatal = Lintian::Data->new('output/ftp-master-fatal');
+    my $nonfatal = Lintian::Data->new('output/ftp-master-nonfatal');
+    $check_tags = join(',', $fatal->all, $nonfatal->all);
+}
 
 # Print Debug banner, now that we're finished determining
 # the values and have Lintian::Output available

@@ -102,6 +102,14 @@ with # are ignored.  All other lines are taken to be tag names or
 comma-separated lists of tag names to suppress.
 
 .TP
+.BR \-F , \-\-ftp\-master\-rejects
+Run only the checks that issue tags that result in automatic rejects from
+the Debian upload queue.  The list of such tags is refreshed with each
+Lintian release, so may be slightly out of date if it has changed
+recently.  This option does not, as yet, ignore overrides for fatal tags
+for which overrides aren't allowed.
+
+.TP
 .BR \-X " chk1,chk2,..., " \-\-dont\-check\-part " chk1,chk2,..."
 Run all but the the specified checks.  You can either specify
 the name of the check script or the abbreviation.

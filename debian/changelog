@@ -13,6 +13,10 @@ lintian (2.3.0) UNRELEASED; urgency=low
       all of the descriptive text is included.  Thanks, Jonathan Wiltshire.
       (Closes: #557786)
 
+  * data/output/ftp-master-{non,}fatal:
+    + [RA] New data files listing tags that may result in an automated
+      upload reject.
+
   * frontend/lintian:
     + [RA] Add options --suppress-tags and --suppress-tags-from-file to
       completely suppress the given tags.
@@ -22,6 +26,8 @@ lintian (2.3.0) UNRELEASED; urgency=low
       setting variables in the Tags namespace.  Move display level code
       from here to Lintian::Tags.  Adjust calls for the new Lintian::Tags
       module.
+    + [RA] Add option -F or --ftp-master-rejects which only checks tags
+      that could result in an automatic upload reject.
 
   * lib/Lintian/Check.pm:
     + [RA] Use Lintian::Tags instead of Tags.
@@ -66,6 +72,10 @@ lintian (2.3.0) UNRELEASED; urgency=low
   * man/lintian.1:
     + [RA] Document --suppress-tags and --suppress-tags-from-file.
     + [RA] Document format of --tags-from-file.
+    + [RA] Document -F (--ftp-master-rejects).
+
+  * private/refresh-ftp-master-tags:
+    + [RA] Script to refresh data about automatic package rejects.
 
   * t/runtests:
     + [RA] Unwrap the Options field so that it can be continued.
