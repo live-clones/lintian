@@ -34,6 +34,11 @@ lintian (2.3.0) UNRELEASED; urgency=low
       (Closes: #557786)
     + [RA] For lib-recommends-documentation, exclude packages ending in
       -tools or -bin.  Thanks, Jay Berkenbilt.  (Closes: #557883)
+  * checks/manpages.desc:
+    + [RA] Clarify the long description of hyphen-used-as-minus-sign.
+      Note that Debian groff is currently patched to avoid this problem,
+      but hopefully that divergence can be removed.  Reference
+      groff-base's README.Debian for more information.  (Closes: #548844)
   * checks/rules{,.desc}:
     + [RA] Remove build-depends-without-arch-dep.  If the package only
       builds architecture-independent packages, the distinction between
