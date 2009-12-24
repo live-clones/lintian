@@ -32,15 +32,22 @@ use Lintian::Command qw(spawn);
 use Util;
 
 print "N: Unpacking binary packages in directory $base_dir ...\n" if $verbose;
-mkdir("$base_dir/unpacked", 0777) or fail();
+mkdir("$base_dir/unpacked", 0777) or fail("mkdir $base_dir/unpacked: $!");
 
 # avoid using dpkg-deb -x; this pipeline is far faster.  I got a factor 2
-# improvement on large debs, and factor 1.5 on small debs.  I heard
-# it's because dpkg-deb syncs while writing.  -- Richard
-
-spawn({ fail => 'error', err => "$base_dir/unpacked-errors" },
+# improvement on large debs, and factor 1.5 on small debs.  I heard it's
+# because dpkg-deb syncs while writing.  -- Richard
+my $opts = { err => "$base_dir/unpacked-errors" };
+spawn($opts,
       ['dpkg-deb', '--fsys-tarfile', "$base_dir/deb"],
       '|', ['tar', 'xf', '-', '-C', "$base_dir/unpacked"]);
+unless ($opts->{success}) {
+    open(ERRORS, '<', "$base_dir/unpacked-errors")
+        or fail("cannot open $base_dir/unpacked-errors: $!");
+    print STDERR while <ERRORS>;
+    close ERRORS;
+    fail("dpkg-deb | tar failed with status ", $opts->{harness}->result);
+}
 
 # fix permissions
 spawn({ fail => 'error' },

@@ -36,8 +36,14 @@ chdir($base_dir);
 
 # Ignore STDOUT of the child process because older versions of dpkg-source
 # print things out even with -q.
-spawn({ fail => 'error', out => '/dev/null', err => 'unpacked-errors' },
-      ['dpkg-source', '-q', '-x', 'dsc', 'unpacked']);
+my $opts = { out => '/dev/null', err => 'unpacked-errors' };
+unless (spawn($opts, ['dpkg-source', '-q', '-x', 'dsc', 'unpacked'])) {
+    open(ERRORS, '<', 'unpacked-errors')
+        or fail("cannot open unpacked-errors: $!");
+    print STDERR while <ERRORS>;
+    close ERRORS;
+    fail("dpkg-source -x failed with status ", $opts->{harness}->result);
+}
 
 # fix permissions
 spawn({ fail => 'error' },
