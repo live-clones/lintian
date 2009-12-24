@@ -16,7 +16,6 @@ changelog-file wrong-name-for-upstream-changelog
 
 control-file debian-control-file-is-a-symlink
 control-file debian-control-with-duplicate-fields
-control-file obsolete-relation-form-in-source
 
 control-files control-file-has-bad-owner
 control-files not-allowed-control-file

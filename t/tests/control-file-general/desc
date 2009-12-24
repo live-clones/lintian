@@ -9,7 +9,8 @@ Test-For:
  duplicate-short-description
  missing-separator-between-items
  no-section-field-for-source
+ obsolete-relation-form-in-source
  package-depends-on-itself
  stronger-dependency-implies-weaker
 References: Debian Bug#30020, Debian Bug#409099, Debian Bug#516706,
- Debian Bug#533202
+ Debian Bug#533202, Debian Bug#557971
