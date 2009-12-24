@@ -325,9 +325,27 @@ sub _relation_subset {
     }
 }
 
+# Given the operation, relation, severity, and certainty, produce a
+# human-readable representation of the display level string for errors.
+sub _format_level {
+    my ($self, $op, $rel, $severity, $certainty) = @_;
+    if (not defined $severity and not defined $certainty) {
+        return "$op $rel";
+    } elsif (not defined $severity) {
+        return "$op $rel $certainty (certainty)";
+    } elsif (not defined $certainty) {
+        return "$op $rel $severity (severity)";
+    } else {
+        return "$op $rel $severity/$certainty";
+    }
+}
+
 sub display {
     my ($self, $op, $rel, $severity, $certainty) = @_;
-    return unless ($op =~ /^[+=-]\z/ and $rel =~ /^(?:[<>]=?|=)\z/);
+    unless ($op =~ /^[+=-]\z/ and $rel =~ /^(?:[<>]=?|=)\z/) {
+        my $error = $self->_format_level($op, $rel, $severity, $certainty);
+        die "invalid display constraint " . $error;
+    }
     if ($op eq '=') {
         for my $s (@SEVERITIES) {
             for my $c (@CERTAINTIES) {
@@ -348,15 +366,8 @@ sub display {
         @certainties = @CERTAINTIES;
     }
     unless (@severities and @certainties) {
-        if (not defined $severity and not defined $certainty) {
-            die "invalid display constraint $op $rel";
-        } elsif (not defined $severity) {
-            die "invalid display constraint $op $rel $certainty (certainty)";
-        } elsif (not defined $certainty) {
-            die "invalid display constraint $op $rel $severity (severity)";
-        } else {
-            die "invalid display constraint $op $rel $severity/$certainty";
-        }
+        my $error = $self->_format_level($op, $rel, $severity, $certainty);
+        die "invalid display constraint " . $error;
     }
     for my $s (@severities) {
         for my $c (@certainties) {

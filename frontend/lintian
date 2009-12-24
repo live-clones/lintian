@@ -317,8 +317,13 @@ sub record_pkgmode {
 # Process -L|--display-level flag
 sub record_display_level {
     my ($option, $level) = @_;
-    my ($op) = ($level =~ s/^([+=-])//);
-    my ($rel) = ($level =~ s/^([<>]=?|=)//);
+    my ($op, $rel);
+    if ($level =~ s/^([+=-])//) {
+	$op = $1;
+    }
+    if ($level =~ s/^([<>]=?|=)//) {
+	$rel = $1;
+    }
     my ($severity, $certainty) = split('/', $level);
     $op = '=' unless defined $op;
     $rel = '=' unless defined $rel;
@@ -647,7 +652,12 @@ $TAGS->suppress(keys %suppress_tags) if %suppress_tags;
 
 # Initialize display level settings.
 for my $level (@display_level) {
-    $TAGS->display(@$level);
+    eval { $TAGS->display(@$level) };
+    if ($@) {
+	my $error = $@;
+	$error =~ s/ at .*//;
+	die $error, "\n";
+    }
 }
 
 use warnings;
