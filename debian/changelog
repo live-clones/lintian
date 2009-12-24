@@ -17,7 +17,7 @@ lintian (2.3.0) UNRELEASED; urgency=low
     + [ADB] Refresh against unstable.  
   * data/fields/virtual-packages:
     + [ADB] Refresh against unstable.
-  * data/fonts:
+  * data/files/fonts:
     + [ADB] Refresh against unstable.
   * data/output/ftp-master-{non,}fatal:
     + [RA] New data files listing tags that may result in an automated
