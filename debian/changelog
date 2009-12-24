@@ -49,6 +49,9 @@ lintian (2.3.0) UNRELEASED; urgency=low
       functions (which have moved to Lintian::Tag::Info).  All handling of
       display levels is now here instead of in frontend/lintian.
     + [RA] Support suppressing a list of tags.
+    + [RA] Suppress calling Lintian::Output::print_end_pkg for changes
+      files, where we don't call print_start_pkg.  This fixes an unmatched
+      closing tag in the experimental XML output.
   * lib/Spelling.pm:
     + [RA] Use Lintian::Tags instead of Tags.
   * lib/Tags.pm:

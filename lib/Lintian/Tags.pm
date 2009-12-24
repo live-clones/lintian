@@ -500,7 +500,7 @@ sub file_start {
         tags      => {},
         overrides => {},
     };
-    if ($self->{current}) {
+    if ($self->{current} && $self->{current} !~ /\.changes$/) {
         my $info = $self->{info}{$self->{current}};
         $Lintian::Output::GLOBAL->print_end_pkg($info);
     }
