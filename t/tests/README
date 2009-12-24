@@ -74,6 +74,12 @@ the test suite (the whole test suite, not the test currently running) so
 that the Lintian options can refer to files in the test suite directory to
 test options like --suppress-tags-from-file.
 
+By default, the Lintian output is sorted before comparing it to the tags
+file.  To suppress the sort (when, for instance, checking non-standard
+output formats), use:
+
+    Sort: no
+
 By default, all tests are built as native Debian packages.  To build
 the test case as a non-native package, add:
 
