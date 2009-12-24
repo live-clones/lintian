@@ -18,10 +18,12 @@ lintian (2.3.0) UNRELEASED; urgency=low
       Guillaume Delacour.  (Closes: #557530)
     + [RA] Ignore files in .pc, created by unpacking 3.0 (quilt) packages.
       Thanks, Ahmed El-Mahmoudy.  (Closes: #556022)
-  * checks/fields.desc:
+  * checks/fields{,.desc}:
     + [ADB] Re-order the fields of build-depends-on-build-essential so that
       all of the descriptive text is included.  Thanks, Jonathan Wiltshire.
       (Closes: #557786)
+    + [RA] For lib-recommends-documentation, exclude packages ending in
+      -tools or -bin.  Thanks, Jay Berkenbilt.  (Closes: #557883)
   * checks/rules{,.desc}:
     + [RA] Remove build-depends-without-arch-dep.  If the package only
       builds architecture-independent packages, the distinction between
