@@ -16,6 +16,8 @@ lintian (2.3.0) UNRELEASED; urgency=low
     + [RA] Allow an automake or libtool dependency in Build-Depends-Indep
       to also satisfy the check for outdated helper files.  Thanks,
       Guillaume Delacour.  (Closes: #557530)
+    + [RA] Ignore files in .pc, created by unpacking 3.0 (quilt) packages.
+      Thanks, Ahmed El-Mahmoudy.  (Closes: #556022)
   * checks/fields.desc:
     + [ADB] Re-order the fields of build-depends-on-build-essential so that
       all of the descriptive text is included.  Thanks, Jonathan Wiltshire.

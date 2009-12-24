@@ -274,6 +274,13 @@ sub find_cruft {
     my ($pkg, $info, $warned, $atdinbd, $ltinbd) = @_;
     (my $name = $File::Find::name) =~ s,^(\./)?unpacked/,,;
 
+    # Ignore the .pc directory and its contents, created as part of the
+    # unpacking of a 3.0 (quilt) source package.
+    if (-d and $_ eq '.pc') {
+        $File::Find::prune = 1;
+        return;
+    }
+
     # Ignore files in test suites.  They may be part of the test.
     if (-d and m,^t(?:est(?:s(?:et)?)?)?\z,) {
         $File::Find::prune = 1;
