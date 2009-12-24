@@ -1,6 +1,8 @@
 lintian (2.3.0) UNRELEASED; urgency=low
 
   * Summary of tag changes:
+    + Added:
+      - obsolete-relation-form-in-source
     + Removed:
       - build-depends-without-arch-dep
 
@@ -12,6 +14,10 @@ lintian (2.3.0) UNRELEASED; urgency=low
     + [ADB] Exempt all binary packages built from the zlib source from
       the embedded-zlib test, not just those with binary package names
       matching zlib.+.  Thanks, Mark Brown.
+  * checks/control-file{,.desc}:
+    + [RA] Check for < and > version dependencies in debian/control since
+      dpkg-source helpfully rewrites and fixes them in binary packages.
+      Thanks, Jakub Wilk.  (Closes: #557971)
   * checks/cruft:
     + [RA] Allow an automake or libtool dependency in Build-Depends-Indep
       to also satisfy the check for outdated helper files.  Thanks,

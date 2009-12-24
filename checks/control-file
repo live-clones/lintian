@@ -105,6 +105,10 @@ for my $binary_control (@binary_controls) {
 # The architecture list can contain things that look like packages separated
 # by spaces, so we have to remove any architecture restrictions first.  This
 # unfortunately distorts our report a little, but hopefully not too much.
+#
+# Also check for < and > relations.  dpkg-source warns about them and then
+# transforms them in the output to <= and >=, but it's easy to miss the error
+# message.
 for my $control ($header, @binary_controls) {
 	for my $field (qw(pre-depends depends recommends suggests breaks
 			  conflicts provides replaces enhances
@@ -131,6 +135,11 @@ for my $control ($header, @binary_controls) {
 			tag 'missing-separator-between-items', 'in',
 			    ($control->{source} ? 'source' : $control->{package}),
 			    "$field field between '$prev' and '$next'";
+		}
+		while ($value =~ /([^\s\(]+\s*\([<>]\s*[^<>=]+\))/g) {
+			tag 'obsolete-relation-form-in-source', 'in',
+			    ($control->{source} ? 'source' : $control->{package}),
+			    "$field: $1";
 		}
 	}
 }
