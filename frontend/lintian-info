@@ -50,10 +50,11 @@ GetOptions('annotate|a' => \$annotate, 'tags|t' => \$tags, 'help|h' => \$help)
 if ($help) {
     print <<"EOT";
 Usage: lintian-info [log-file...] ...
+       lintian-info --annotate [overrides ...]
        lintian-info --tags tag ...
 
 Options:
-    -a, --annotate    display verbose information about provided Lintian overrides
+    -a, --annotate    display descriptions of tags in Lintian overrides
     -t, --tags        display tag descriptions
 EOT
 

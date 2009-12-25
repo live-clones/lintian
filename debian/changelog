@@ -98,6 +98,9 @@ lintian (2.3.0) UNRELEASED; urgency=low
       module.
     + [RA] Add option -F or --ftp-master-rejects which only checks tags
       that could result in an automatic upload reject.
+  * frontend/lintian-info:
+    + [RA] Add -h/--help option.  Patch from gregor herrmann.
+      (Closes: #558214)
 
   * lib/Lintian/Check.pm:
     + [RA] Use Lintian::Tags instead of Tags.
@@ -154,6 +157,8 @@ lintian (2.3.0) UNRELEASED; urgency=low
     + [RA] Document -F (--ftp-master-rejects).
     + [RA] Add ocaml checker script.
     + [RA] Add ar-info collection script.
+  * man/lintian-info.1:
+    + [RA] Add -h (--help).
 
   * private/refresh-ftp-master-tags:
     + [RA] Script to refresh data about automatic package rejects.
