@@ -276,6 +276,21 @@ for my $i (0 .. $#descriptions) {
 	}
 }
 
+# Check for python*-dev build-dependency with Architecture: any packages
+my $isNotAll = 0;
+my $pydev_bd;
+my $pydev_bdi;
+$pydev_bd = $header->{"build-depends"} =~ /python(-all|[\d.])*-dev/ if $header->{"build-depends"};
+$pydev_bdi = $header->{"build-depends-indep"} =~ /python(-all|[\d.])*-dev/ if $header->{"build-depends-indep"};
+if ($pydev_bd or $pydev_bdi) {
+	for my $control (@binary_controls) {
+		foreach ($control->{architecture}) {
+			$isNotAll = 1 if ($_ ne 'all');
+		}
+	}
+	tag 'python-dev-with-no-arch-any-packages' if ($isNotAll eq 0);
+}
+
 }
 
 1;
