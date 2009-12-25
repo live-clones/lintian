@@ -66,6 +66,9 @@ lintian (2.3.0) UNRELEASED; urgency=low
   * checks/ocaml{,.desc}:
     + [RA] New checks for OCaml packaging.  Contributed by Stéphane
       Glondu.  (Closes: #528367)
+  * checks/patch-systems.desc:
+    + [RA] Recommend DEP-3 format in quilt-patch-missing-description and
+      reference the document.  Thanks, Raphaël Hertzog.  (Closes: #554025)
   * checks/rules{,.desc}:
     + [RA] Remove build-depends-without-arch-dep.  If the package only
       builds architecture-independent packages, the distinction between
