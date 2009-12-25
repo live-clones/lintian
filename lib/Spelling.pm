@@ -599,10 +599,25 @@ sub spelling_check {
         }
     }
 
-    # Special case for correcting a multi-word string.
+    # Special case for correcting multi-word strings.
     if ($text =~ m,debian/gnu\s+linux,) {
        $counter++;
         _tag($tag, $filename, "Debian/GNU Linux", "Debian GNU/Linux")
+            if defined $tag;
+    }
+    if ($text =~ m,\ban other\b,) {
+       $counter++;
+        _tag($tag, $filename, "an other", "another")
+            if defined $tag;
+    }
+    if ($text =~ m,\bthis packages\b,) {
+       $counter++;
+        _tag($tag, $filename, "this packages", "these packages")
+            if defined $tag;
+    }
+    if ($text =~ m,\bthese package\b,) {
+       $counter++;
+        _tag($tag, $filename, "these package", "this package")
             if defined $tag;
     }
 

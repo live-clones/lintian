@@ -14,4 +14,9 @@ Description: {$description}
  things.  It should not be installed like a regular package.
  .
  Spelling errors:
- * Debian/GNU Linux
+   * Debian/GNU Linux
+   * An other error
+   * This packages
+ .
+ Not errors:
+   * These packages
