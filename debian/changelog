@@ -66,6 +66,10 @@ lintian (2.3.0) UNRELEASED; urgency=low
       reason, even pedantically, to worry about the separation.  Thanks,
       Charles Plessy.  (Closes: #552200, #555667)
 
+  * collection/ar-info{,.desc}:
+    + [RA] Collects the results of ar t on all *.a files, used by the new
+      OCaml checks.  Contributed by Stéphane Glondu.
+
   * data/debhelper/*:
     + [ADB] Refresh against unstable.  
   * data/fields/{perl-provides,virtual-packages}:
@@ -142,6 +146,7 @@ lintian (2.3.0) UNRELEASED; urgency=low
     + [RA] Document format of --tags-from-file.
     + [RA] Document -F (--ftp-master-rejects).
     + [RA] Add ocaml checker script.
+    + [RA] Add ar-info collection script.
 
   * private/refresh-ftp-master-tags:
     + [RA] Script to refresh data about automatic package rejects.
