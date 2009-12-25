@@ -41,10 +41,25 @@ use Text_utils;
 
 my %already_displayed = ();
 
-my ($annotate, $tags);
+my ($annotate, $tags, $help);
 Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
-GetOptions('annotate|a' => \$annotate, 'tags|t' => \$tags)
+GetOptions('annotate|a' => \$annotate, 'tags|t' => \$tags, 'help|h' => \$help)
     or die("error parsing options\n");
+
+# help
+if ($help) {
+    print <<"EOT";
+Usage: lintian-info [log-file...] ...
+       lintian-info --tags tag ...
+
+Options:
+    -a, --annotate    display verbose information about provided Lintian overrides
+    -t, --tags        display tag descriptions
+EOT
+
+    exit 0;
+}
+
 
 # If tag mode was specified, read the arguments as tags and display the
 # descriptions for each one.  (We don't currently display the severity,
