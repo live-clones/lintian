@@ -159,6 +159,8 @@ lintian (2.3.0) UNRELEASED; urgency=low
     + [RA] Add ar-info collection script.
   * man/lintian-info.1:
     + [RA] Add -h (--help).
+    + [RA] lintian -i no longer pipes output through lintian-info.  Adjust
+      the man page accordingly.
 
   * private/refresh-ftp-master-tags:
     + [RA] Script to refresh data about automatic package rejects.
