@@ -171,6 +171,14 @@ lintian (2.3.0) UNRELEASED; urgency=low
     + [RA] Document -F (--ftp-master-rejects).
     + [RA] Add ocaml checker script.
     + [RA] Add ar-info collection script.
+    + [RA] Document the override locations in the FILES section.  Thanks,
+      Jakub Wilk.  (Closes: #558649)
+    + [RA] Remove obsolete spelling checker script.
+    + [RA] Mention /usr/share/lintian/data under FILES.
+    + [RA] Clarify that errors are not necessarily policy violations.
+    + [RA] Remove bug that Lintian doesn't handle packages with different
+      binary and source versions correctly.  I don't believe this is still
+      an issue.
   * man/lintian-info.1:
     + [RA] Add -h (--help).
     + [RA] lintian -i no longer pipes output through lintian-info.  Adjust

@@ -102,7 +102,7 @@ with # are ignored.  All other lines are taken to be tag names or
 comma-separated lists of tag names to suppress.
 
 .TP
-.BR \-F , \-\-ftp\-master\-rejects
+.BR \-F ", " \-\-ftp\-master\-rejects
 Run only the checks that issue tags that result in automatic rejects from
 the Debian upload queue.  The list of such tags is refreshed with each
 Lintian release, so may be slightly out of date if it has changed
@@ -587,11 +587,6 @@ shared libraries and the
 control file.
 
 .TP
-.B spelling (spl)
-Check a binary package's "Description:" field and copyright file
-for common spelling errors.
-
-.TP
 .B standards\-version (std)
 Check if a source package contains a valid
 .B Standards\-Version
@@ -723,6 +718,9 @@ Scripts that check aspects of a package.
 Scripts that collect information about a package and store it for
 use by the check scripts.
 .TP
+.I /usr/share/lintian/data
+Supporting data used by Lintian checks and for output formatting.
+.TP
 .I /usr/share/lintian/lib
 Utility scripts used by the other lintian scripts.
 .TP
@@ -752,13 +750,25 @@ as follows:
 Lintian always expects the "/dists/" path component in paths to Debian
 archives.
 
+.PP
+For binary packages, Lintian looks for overrides in a file named
+.I usr/share/lintian/overrides/<package>
+inside the binary package, where \fI<package>\fP is the name of the binary
+package.  For source packages, Lintian looks for overrides in
+.I debian/source/lintian-overrides
+and then in
+.I debian/source.lintian-overrides
+if the first file is not found.  The first path is preferred.  See the
+Lintian User's Manual for the syntax of overrides.
+
 .SH EXIT STATUS
 .TP
 .B 0
-No policy violations (errors) detected. (There might have been warnings, though.)
+No policy violations or major errors detected.  (There may have been
+warnings, though.)
 .TP
 .B 1
-Policy violations detected.
+Policy violations or major errors detected.
 .TP
 .B 2
 Lintian run-time error. An error message is sent to stderr.
@@ -807,9 +817,6 @@ package disk usage in the laboratory to level 1.
 Remove package foo from the Lintian laboratory.
 
 .SH BUGS
-Lintian does not handle packages with different binary and source
-version numbers correctly.
-.sp
 Lintian does not have any locking mechanisms yet. (Running several
 checks simultaneously is likely to fail.)
 .sp
