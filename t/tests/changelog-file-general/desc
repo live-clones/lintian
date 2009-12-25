@@ -5,5 +5,11 @@ Version: 1.0-1
 Description: General tests for changelog-file tags
 Test-For:
  changelog-not-compressed-with-max-compression
+ debian-changelog-file-contains-debmake-default-email-address
  debian-changelog-file-contains-obsolete-user-emacs-settings
+ debian-changelog-line-too-long
  improbable-bug-number-in-closes
+ latest-debian-changelog-entry-without-new-date
+ latest-debian-changelog-entry-without-new-version
+ possible-missing-colon-in-closes
+ syntax-error-in-debian-changelog

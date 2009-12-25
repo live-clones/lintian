@@ -222,21 +222,15 @@ binaries unstripped-binary-or-object
 changelog-file changelog-file-missing-in-native-package
 changelog-file changelog-file-not-compressed
 changelog-file changelog-news-debian-mismatch
-changelog-file debian-changelog-file-contains-debmake-default-email-address
 changelog-file debian-changelog-file-contains-invalid-email-address
 changelog-file debian-changelog-file-is-a-symlink
 changelog-file debian-changelog-file-missing
 changelog-file debian-changelog-file-missing-or-wrong-name
 changelog-file debian-changelog-file-uses-obsolete-national-encoding
-changelog-file debian-changelog-line-too-long
 changelog-file debian-news-entry-has-strange-distribution
 changelog-file debian-news-file-not-compressed
 changelog-file debian-news-file-uses-obsolete-national-encoding
-changelog-file latest-debian-changelog-entry-without-new-date
-changelog-file latest-debian-changelog-entry-without-new-version
-changelog-file possible-missing-colon-in-closes
 changelog-file spelling-error-in-news-debian
-changelog-file syntax-error-in-debian-changelog
 changelog-file syntax-error-in-debian-news-file
 changelog-file wrong-name-for-debian-news-file
 
@@ -584,7 +578,6 @@ binary
   substvar-source-version-is-deprecated
   symlink-contains-spurious-segments
   symlink-should-be-relative
-  syntax-error-in-debian-changelog
   syntax-error-in-debian-news-file
   unquoted-string-in-menu-item
   unstripped-binary-or-object
@@ -592,7 +585,6 @@ binary
 
 cdbs-test
   clean-should-be-satisfied-by-build-depends
-  debian-changelog-line-too-long
   no-human-maintainers
 
 debconf
@@ -639,7 +631,6 @@ debug
   debug-file-should-use-detached-symbols
   duplicate-entry-in-symbols-control-file
   invalid-template-id-in-symbols-file
-  latest-debian-changelog-entry-without-new-version
   missing-dependency-on-libc
   pkg-has-symbols-control-file-but-no-shared-libs
   shared-lib-without-dependency-information
@@ -655,7 +646,6 @@ debug
 diffs
   arch-independent-package-contains-binary-or-object
   patch-system-but-direct-changes-in-diff
-  possible-missing-colon-in-closes
 
 etcfiles
   file-in-etc-not-marked-as-conffile
@@ -712,11 +702,9 @@ filenames
   wrong-name-for-debian-news-file
 
 foo++
-  debian-changelog-file-contains-debmake-default-email-address
   debian-changelog-file-uses-obsolete-national-encoding
   debian-control-file-uses-obsolete-national-encoding
   debian-watch-file-in-native-package
-  latest-debian-changelog-entry-without-new-date
   malformed-dm-upload-allowed
   uploader-address-is-on-localhost
   uploader-address-looks-weird

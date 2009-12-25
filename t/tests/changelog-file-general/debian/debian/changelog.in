@@ -2,6 +2,24 @@
 
   * Test: {$testname}
   * improbable-bug-number-in-closes (Closes: #12)
+  * Another bug closer without a colon (Closes #555555)
+  * This line is too long since it contains words and words and words but doesn't
+    have any wrapping except at column 81.
+  * http://www.example.com/but-a-really-long-url-does-not-count-as-a-long-line-at-all
+    See http://www.example.com/but-a-really-long-url-does-not-count-as-a-long-line-at-all
+    even if preceded by See.
+
+ -- {$author}  {$date}
+
+{$srcpkg} ({$version}) unstable; urgency=low
+
+  * Duplicate changelog entry to trigger tags.
+
+ -- Unknown <unknown@unknown>  {$date}
+
+{$srcpkg} () unstable; urgency=low
+
+  * Syntax error here.
 
  -- {$author}  {$date}
 

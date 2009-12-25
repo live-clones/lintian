@@ -1,3 +1,10 @@
+E: changelog-file-general: debian-changelog-file-contains-debmake-default-email-address unknown@unknown
+E: changelog-file-general: possible-missing-colon-in-closes Closes #555555
 W: changelog-file-general: changelog-not-compressed-with-max-compression changelog.Debian.gz
 W: changelog-file-general: debian-changelog-file-contains-obsolete-user-emacs-settings
+W: changelog-file-general: debian-changelog-line-too-long line 4
 W: changelog-file-general: improbable-bug-number-in-closes 12
+W: changelog-file-general: latest-debian-changelog-entry-without-new-date
+W: changelog-file-general: latest-debian-changelog-entry-without-new-version
+W: changelog-file-general: syntax-error-in-debian-changelog line 20 "badly formatted heading line"
+W: changelog-file-general: syntax-error-in-debian-changelog line 22 "found change data where expected next heading or eof"
