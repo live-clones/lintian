@@ -8,9 +8,9 @@ Test-For:
  init.d-script-has-bad-start-runlevel
  init.d-script-has-bad-stop-runlevel
  init.d-script-has-conflicting-start-stop
+ init.d-script-missing-dependency-on-remote_fs
+ init.d-script-missing-dependency-on-local_fs
  init.d-script-possible-missing-stop
  init.d-script-provides-virtual-facility
  init.d-script-should-depend-on-virtual-facility
  init.d-script-starts-in-stop-runlevel
- missing-dependency-on-remote_fs
- missing-dependency-on-local_fs

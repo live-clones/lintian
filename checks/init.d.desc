@@ -294,34 +294,31 @@ Info: The given <tt>/etc/init.d</tt> script indicates it should be
  it probably needs the same handling when halting the system (runlevel 0)
  or switching to single-user mode (runlevel 1).
 
-Tag: missing-dependency-on-remote_fs
+Tag: init.d-script-missing-dependency-on-remote_fs
 Severity: important
 Certainty: possible
+Experimental: yes
 Info: The given init script seems to refer to <tt>/usr</tt>, possibly
  using a file or binary from there.  Without a dependency on
- <tt>$remote_fs</tt> on, possibly both, required-start and
- required-stop the init script might be started too early or stopped
- too late.  That is, the init script might be called before
- <tt>/usr</tt> is mounted, or after it is unmounted, respectively.
+ <tt>$remote_fs</tt> in Required-Start or Required-Stop, as appropriate,
+ the init script might be run before <tt>/usr</tt> is mounted or after
+ it's unmounted.
  .
- Using should-start or should-stop to declare the dependency is
- conceptually incorrect.  By doing so, the init script will always be
- positioned as if <tt>$remote_fs</tt> had been set on a required-
- field, and is therefore ignored by this check.
+ Using Should-Start or Should-Stop to declare the dependency is
+ conceptually incorrect since the $remote_fs facility are always
+ available.  Required-Start or Required-Stop should be used instead.
 Ref: http://wiki.debian.org/LSBInitScripts
 
-Tag: missing-dependency-on-local_fs
+Tag: init.d-script-missing-dependency-on-local_fs
 Severity: important
 Certainty: possible
+Experimental: yes
 Info: The given init script seems to refer to <tt>/var</tt>, possibly
- using a file.  Without a dependency on <tt>$local_fs</tt> on, possibly
- both, required-start and required-stop the init script might be started
- too early or stopped too late.  That is, the init script might be
- called before <tt>/var</tt> is mounted read/write, or after it is
- unmounted, respectively.
+ using a file from there.  Without a dependency on <tt>$local_fs</tt> in
+ Required-Start or Required-Stop, as appropriate, the init script might be
+ run before <tt>/var</tt> is mounted or after it's unmounted.
  .
- Using should-start or should-stop to declare the dependency is
- conceptually incorrect.  By doing so, the init script will always be
- positioned as if <tt>$local_fs</tt> had been set on a required-
- field, and is therefore ignored by this check.
+ Using Should-Start or Should-Stop to declare the dependency is
+ conceptually incorrect since the $local_fs facility are always
+ available.  Required-Start or Required-Stop should be used instead.
 Ref: http://wiki.debian.org/LSBInitScripts

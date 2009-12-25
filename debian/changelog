@@ -2,6 +2,8 @@ lintian (2.3.0) UNRELEASED; urgency=low
 
   * Summary of tag changes:
     + Added:
+      - init.d-script-missing-dependency-on-local_fs (experimental)
+      - init.d-script-missing-dependency-on-remote_fs (experimental)
       - obsolete-relation-form-in-source
     + Removed:
       - build-depends-without-arch-dep
@@ -37,6 +39,10 @@ lintian (2.3.0) UNRELEASED; urgency=low
       (Closes: #557786)
     + [RA] For lib-recommends-documentation, exclude packages ending in
       -tools or -bin.  Thanks, Jay Berkenbilt.  (Closes: #557883)
+  * checks/init.d{,.desc}:
+    + [RA] Add checks for missing dependencies on $local_fs or $remote_fs
+      based on what files appear to be used in the init scripts.  Patch
+      from Raphael Geissert.  (Partly addresses #405454)
   * checks/manpages.desc:
     + [RA] Clarify the long description of hyphen-used-as-minus-sign.
       Note that Debian groff is currently patched to avoid this problem,
