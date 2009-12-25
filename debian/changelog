@@ -79,6 +79,10 @@ lintian (2.3.0) UNRELEASED; urgency=low
   * collection/ar-info{,.desc}:
     + [RA] Collects the results of ar t on all *.a files, used by the new
       OCaml checks.  Contributed by Stéphane Glondu.
+  * collection/override-file:
+    + [RA] Check debian/source/lintian-overrides before
+      debian/source.lintian-overrides for source package overrides.
+      Thanks, martin f krafft.  (Closes: #554617)
 
   * data/debhelper/*:
     + [ADB] Refresh against unstable.  
@@ -89,6 +93,10 @@ lintian (2.3.0) UNRELEASED; urgency=low
   * data/output/ftp-master-{non,}fatal:
     + [RA] New data files listing tags that may result in an automated
       upload reject.
+
+  * doc/lintian.sgml:
+    + [RA] Document debian/source/lintian-overrides as the new preferred
+      location for source overrides.
 
   * frontend/lintian:
     + [RA] Add options --suppress-tags and --suppress-tags-from-file to

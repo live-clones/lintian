@@ -3,17 +3,17 @@
 
 # Copyright (C) 1999 by Darren Benham
 # Derived from debian-readme by Richard Braakman
-# 
+#
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
 # Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
@@ -33,20 +33,24 @@ my $type = shift;
 
 unlink("override");
 
-# Pick the first of these files that exists.
-my $file;
+# Pick the first of these files that exists.  Prefer source/lintian-overrides
+# to source.lintian-overrides for source packages.
+my (@overrides, $file);
 if ($type eq 'source') {
-    $file = "unpacked/debian/source.lintian-overrides";
+    @overrides = qw(unpacked/debian/source/lintian-overrides
+                    unpacked/debian/source.lintian-overrides);
 } else {
-    $file = "unpacked/usr/share/lintian/overrides/$pkg";
+    @overrides = ("unpacked/usr/share/lintian/overrides/$pkg");
+}
+for my $override (@overrides) {
+    if (-f $override) {
+        $file = $override;
+    } elsif (-f "$override.gz") {
+        $file = "$override.gz";
+    }
 }
 
-if ( ! -f $file ) 
-{ 	if ( -f $file . ".gz" ) { $file = $file . ".gz"; }
-	else { $file = ''; }
-}
-
-if ( $file eq '' ) {
+if (not defined $file) {
     # no override found
 } elsif ($file =~ /\.gz$/) {
     gunzip_file($file, "override");
@@ -54,3 +58,9 @@ if ( $file eq '' ) {
     link($file, "override")
 	or fail("cannot link $file to override: $!");
 }
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 ts=8 et

@@ -445,12 +445,13 @@ Once it has been decided that an override is needed, you can easily add one by
 supplying an overrides file. If the override is for a binary or udeb
 package, you have to place it at
 <file>/usr/share/lintian/overrides/&lt;package&gt;</file> inside the
-package. If the override is for a source package, you have to place
-it at <file>debian/source.lintian-overrides</file>. With that, Lintian
-will know about this exception and not report the problem again when
-checking your package. (Actually, Lintian will report the problem 
-again, but with type <em>overridden</em>, see above.) Note that
-support for source overrides was added in Lintian version 1.23.0.
+package. If the override is for a source package, you have to place it
+at <file>debian/source/lintian-overrides</file>
+or <file>debian/source.lintian-overrides</file> (the former path is
+preferred). With that, Lintian will know about this exception and not
+report the problem again when checking your package. (Actually, Lintian
+will report the problem again, but with type <em>overridden</em>, see
+above.)
 
 <p>
 
