@@ -583,15 +583,19 @@ sub spelling_check {
 
     my $counter = 0;
 
-    $text = lc $text;
     $text =~ s/[()[\]]//g;
 
     for my $word (split(/\s+/, $text)) {
         $word =~ s/[.,;:?!]+$//;
-        if (exists $CORRECTIONS{$word}) {
+        next if (length($word) <= 5 and $word =~ /^[A-Z]+\z/);
+        my $lcword = lc $word;
+        if (exists $CORRECTIONS{$lcword}) {
             $counter++;
-            _tag($tag, $filename, $word, $CORRECTIONS{$word})
-                if defined $tag;
+            my $correction = $CORRECTIONS{$lcword};
+            if ($word =~ /^[A-Z]/) {
+                $correction = ucfirst $correction;
+            }
+            _tag($tag, $filename, $word, $correction) if defined $tag;
         }
     }
 

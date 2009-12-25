@@ -223,8 +223,7 @@ Severity: minor
 Certainty: wild-guess
 Info: Lintian found a spelling error in the given binary.  Lintian has a
  list of common misspellings that it looks for.  It does not have a
- dictionary like a spelling checker does.  For Lintian's convenience all
- words are normalised to lower case.
+ dictionary like a spelling checker does.
  .
  If the string containing the spelling error is translated with the help
  of gettext or a similar tool, please fix the error in the translations as
@@ -232,13 +231,9 @@ Info: Lintian found a spelling error in the given binary.  Lintian has a
  gettext, for example, this means you should also fix the spelling mistake
  in the corresponding msgids in the *.po files.
  .
- To find the original word you can run:
- .
-  strings &lt;binary&gt; | grep -i &lt;word&gt;
- .
  You can often find the word in the source code by running:
  .
-  grep -r '\b&lt;original-word&gt;\b' &lt;source-tree&gt;
+  grep -rw &lt;word&gt; &lt;source-tree&gt;
 
 Tag: embedded-zlib
 Severity: serious

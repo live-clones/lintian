@@ -1,4 +1,4 @@
-Last generated 2009-12-24
+Last generated 2009-12-25
 
 The following tags are not tested by the test suite:
 
@@ -44,8 +44,6 @@ debconf no-template-name
 debconf select-without-choices
 debconf unknown-field-in-templates
 debconf unknown-template-type
-
-debian-readme spelling-error-in-readme-debian
 
 fields alternates-not-allowed
 fields arch-any-in-binary-pkg
@@ -284,9 +282,6 @@ debconf using-imperative-form-in-templates
 debconf using-question-in-extended-description-in-templates
 
 debhelper uses-dh-python-with-no-pycompat
-
-debian-readme readme-debian-contains-debmake-default-email-address
-debian-readme readme-debian-mentions-usr-doc
 
 etcfiles file-in-etc-not-marked-as-conffile
 
@@ -668,7 +663,6 @@ etcfiles
   malformed-md5sums-control-file
   md5sum-mismatch
   md5sums-lists-nonexisting-file
-  readme-debian-mentions-usr-doc
   run-parts-cron-filename-contains-full-stop
 
 fields
@@ -724,7 +718,6 @@ foo++
   debian-watch-file-in-native-package
   latest-debian-changelog-entry-without-new-date
   malformed-dm-upload-allowed
-  readme-debian-contains-debmake-default-email-address
   uploader-address-is-on-localhost
   uploader-address-looks-weird
   uploader-address-malformed

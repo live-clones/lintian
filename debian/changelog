@@ -8,12 +8,13 @@ lintian (2.3.0) UNRELEASED; urgency=low
 
   * checks/*:
     + [RA] Use Lintian::Tags instead of Tags.
-  * checks/binaries:
+  * checks/binaries{,.desc}:
     + [RA] Allow any RPATH containing $ORIGIN or ${ORIGIN}, not just the
       literal value $ORIGIN.  (Closes: #557511)
     + [ADB] Exempt all binary packages built from the zlib source from
       the embedded-zlib test, not just those with binary package names
       matching zlib.+.  Thanks, Mark Brown.
+    + [RA] Spelling errors are no longer normalized to lowercase.
   * checks/changelog-file:
     + [RA] Suppress latest-debian-changelog-entry-without-new-date if the
       distribution is UNRELEASED.  Thanks, Raphaël Hertzog.
@@ -106,6 +107,11 @@ lintian (2.3.0) UNRELEASED; urgency=low
       closing tag in the experimental XML output.
   * lib/Spelling.pm:
     + [RA] Use Lintian::Tags instead of Tags.
+    + [RA] Ignore all-caps words of five characters or less for spelling
+      corrections, since they are probably acronyms.  Thanks, Michal
+      Čihař.  (Closes: #556456)
+    + [RA] Report the original word in spelling errors rather than the
+      normalized form.
   * lib/Tags.pm:
     + [RA] Removed in favor of Lintian::Tags.
   * lib/Util.pm:
