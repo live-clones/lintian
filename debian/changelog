@@ -175,6 +175,7 @@ lintian (2.3.0) UNRELEASED; urgency=low
       Čihař.  (Closes: #556456)
     + [RA] Report the original word in spelling errors rather than the
       normalized form.
+    + [RG] Detect some multi-word spelling errors.
   * lib/Tags.pm:
     + [RA] Removed in favor of Lintian::Tags.
   * lib/Util.pm:
