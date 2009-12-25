@@ -1078,9 +1078,9 @@ Info: This package contains files under <tt>/usr/share/games</tt>, such as
  <tt>/usr/share</tt>.
 
 Tag: duplicated-compressed-file
-Severity: normal
+Severity: minor
 Certainty: possible
 Info: The given, apparently compressed, file is shipped in the package
  in addition to another file with the same name without the
- compression-method extension.  Normally this indicates a mistake in
- the installation process of the package.
+ compression-method extension.  Normally this indicates a mistake in the
+ installation process of the package.

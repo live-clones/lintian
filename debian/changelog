@@ -2,6 +2,7 @@ lintian (2.3.0) UNRELEASED; urgency=low
 
   * Summary of tag changes:
     + Added:
+      - duplicated-compressed-file
       - init.d-script-missing-dependency-on-local_fs (experimental)
       - init.d-script-missing-dependency-on-remote_fs (experimental)
       - obsolete-relation-form-in-source
@@ -47,6 +48,9 @@ lintian (2.3.0) UNRELEASED; urgency=low
       (Closes: #557786)
     + [RA] For lib-recommends-documentation, exclude packages ending in
       -tools or -bin.  Thanks, Jay Berkenbilt.  (Closes: #557883)
+  * checks/files{,.desc}:
+    + [RA] New check for files present in both compressed and uncompressed
+      form.  Patch from Raphael Geissert.  (Closes: #546174)
   * checks/init.d{,.desc}:
     + [RA] Add checks for missing dependencies on $local_fs or $remote_fs
       based on what files appear to be used in the init scripts.  Patch
