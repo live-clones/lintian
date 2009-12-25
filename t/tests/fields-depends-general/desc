@@ -5,6 +5,7 @@ Description: General tests for package dependencies
 Test-For:
  build-depends-on-metapackage
  build-depends-on-non-build-package
+ build-depends-on-python-dev-with-no-arch-any
  depends-on-metapackage
  lib-recommends-documentation
-References: Debian Bug#540594
+References: Debian Bug#540594, Debian Bug#551793

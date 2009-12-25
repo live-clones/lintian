@@ -145,6 +145,12 @@ my %VCS_VALID_URIS = (
     svn     => qr;^(?:svn\+)?ssh://;,
 );
 
+# Python development packages that are used almost always just for building
+# architecture-dependent modules.  Used to check for unnecessary build
+# dependencies for architecture-independent source packages.
+our $PYTHON_DEV = join(' | ', qw(python-dev python-all-dev python3-all-dev),
+		       map { "python$_-dev" } qw(2.4 2.5 2.6 3 3.1));
+
 our $PERL_CORE_PROVIDES = Lintian::Data->new('fields/perl-provides', '\s+');
 our $OBSOLETE_PACKAGES  = Lintian::Data->new('fields/obsolete-packages');
 our $VIRTUAL_PACKAGES   = Lintian::Data->new('fields/virtual-packages');
@@ -762,7 +768,13 @@ if ($type eq "source") {
 		$deps  = $info->binary_field($_, 'pre-depends') . ', ';
 		$deps .= $info->binary_field($_, 'depends');
 		tag 'dbg-package-missing-depends', $_
-		   unless (grep {my $quoted_name = qr<\Q$_>; $deps =~ m/(\s|,|^)$quoted_name(\s|,|$)/} @arch_dep_pkgs);
+		   unless (grep {my $quoted_name = qr<\Q$_>; $deps =~ m/(\s|,|^)$quoted_name(\s|,|\z)/} @arch_dep_pkgs);
+	}
+
+	# Check for a python*-dev build dependency in source packages that
+	# build only arch: all packages.
+	if ($arch_dep_packages == 0 and $build_all->implies($PYTHON_DEV)) {
+		tag 'build-depends-on-python-dev-with-no-arch-any';
 	}
 }
 

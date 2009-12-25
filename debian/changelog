@@ -48,6 +48,9 @@ lintian (2.3.0) UNRELEASED; urgency=low
       (Closes: #557786)
     + [RA] For lib-recommends-documentation, exclude packages ending in
       -tools or -bin.  Thanks, Jay Berkenbilt.  (Closes: #557883)
+    + [RA] Warn of build dependencies on python*-dev if no architecture-
+      dependent packages are being built.  Patch from Luca Falavigna.
+      (Closes: #551793)
   * checks/files{,.desc}:
     + [RA] New check for files present in both compressed and uncompressed
       form.  Patch from Raphael Geissert.  (Closes: #546174)

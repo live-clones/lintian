@@ -169,17 +169,3 @@ Info: The given package appears to be a shared library -dev package, but
  dependency since it would break binary NMUs.  Instead, a dependency of
  <tt>(>= ${source:Upstream-Version}), (<< ${source:Version}.1~)</tt> or
  similar is usually the correct approach.
-
-Tag: python-dev-with-no-arch-any-packages
-Severity: normal
-Certainty: possible
-Info: The given package appears to have a Python development package
- (python-dev, python-all-dev or pythonX.Y-dev) listed in its Build-Depends
- or Build-Depends-Indep fields, but only "Architecture: all" packages are
- created. Python applications and modules do not usually require such
- packages, so you should consider removing them in favour of python,
- python-all or pythonX.Y packages.
- .
- If you are building a Python extension instead, you should have
- development packages listed in Build-Depends, but you need at least one
- "Architecture: any" package.
