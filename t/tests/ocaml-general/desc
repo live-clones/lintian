@@ -1,0 +1,17 @@
+Testname: ocaml-general
+Sequence: 6000
+Version: 1.0
+Skeleton: pedantic
+Options: -I -E --pedantic
+Architecture: any
+Section: ocaml
+Description: Test the OCaml-related tags
+Test-For:
+ ocaml-dev-file-in-nondev-package
+ ocaml-dev-file-not-in-usr-lib-ocaml
+ ocaml-dangling-cmi
+ ocaml-dangling-cmx
+ ocaml-dangling-cmxa
+ ocaml-dangling-cmxs
+ ocaml-meta-without-suggesting-findlib
+ ocaml-stray-cmo

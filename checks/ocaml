@@ -19,9 +19,16 @@
 # MA 02110-1301, USA.
 
 package Lintian::ocaml;
+
 use strict;
-use Tags;
+
 use File::Basename;
+use Lintian::Collect::Binary ();
+use Lintian::Tags qw(tag);
+use Lintian::Relation ();
+
+# The maximum number of *.cmi files to show individually.
+our $MAX_CMI = 3;
 
 sub run {
 
@@ -61,9 +68,8 @@ if ($pkg =~ /(-dev|^camlp[45](-extra)?|^ocaml(-nox|-interp|-compiler-libs)?)$/) 
 my $outside_number = 0;
 my $outside_prefix;
 
-# dangling .cmi files (we show only $max_cmi of them)
+# dangling .cmi files (we show only $MAX_CMI of them)
 my $cmi_number = 0;
-my $max_cmi = 3;
 
 # dev files in nondev package
 my $dev_number = 0;
@@ -108,7 +114,7 @@ foreach my $file (sort keys %{$info->file_info}) {
         && !(exists $info->file_info->{"${_}i"})
         && !(exists $info->file_info->{$_})) {
         $cmi_number++;
-        if ($cmi_number <= $max_cmi) {
+        if ($cmi_number <= $MAX_CMI) {
             tag "ocaml-dangling-cmi", $file;
         }
     }
@@ -140,37 +146,36 @@ foreach my $file (sort keys %{$info->file_info}) {
         }
     }
 
-    # if there is a META file, ocaml-findlib should be at least
-    # suggested
-    $has_meta = 1 if $file =~ m@/META(\..*)?$@;
-
+    # If there is a META file, ocaml-findlib should be at least suggested.
+    $has_meta = 1 if $file =~ m@^usr/lib/ocaml/(.+/)?META(\..*)?$@;
 }
 
 if ($is_dev_package) {
     # summary about .cmi files
-    if ($cmi_number > $max_cmi) {
-        tag "ocaml-dangling-cmi", ($cmi_number-$max_cmi), "more file(s) not shown";
+    if ($cmi_number > $MAX_CMI) {
+        my $plural = ($cmi_number - $MAX_CMI == 1) ? '' : 's';
+        tag "ocaml-dangling-cmi", ($cmi_number - $MAX_CMI),
+            "more file$plural not shown";
     }
     # summary about /usr/lib/ocaml
     if ($outside_number) {
         $outside_prefix = dirname($outside_prefix);
-        tag "ocaml-dev-file-not-in-usr-lib-ocaml", "$outside_number file(s) in /$outside_prefix";
+        my $plural = ($outside_number == 1) ? '' : 's';
+        tag "ocaml-dev-file-not-in-usr-lib-ocaml",
+            "$outside_number file$plural in /$outside_prefix";
     }
     if ($has_meta) {
-        my $findlib = 0;
-        for my $field (qw(depends recommends suggests)) {
-            if (defined $info->field($field)) {
-                $_ = $info->field($field);
-                $findlib = 1 if /ocaml-findlib/;
-            }
-        }
-        tag "ocaml-meta-without-suggestion-to-findlib" unless $findlib;
+        my $depends = $info->relation('all');
+        tag 'ocaml-meta-without-suggesting-findlib'
+            unless $depends->implies('ocaml-findlib');
     }
 } else {
     # summary about dev files
     if ($dev_number > 0) {
         $dev_prefix = dirname($dev_prefix);
-        tag "ocaml-dev-file-in-nondev-package", "$dev_number file(s) in /$dev_prefix";
+        my $plural = ($dev_number == 1) ? '' : 's';
+        tag "ocaml-dev-file-in-nondev-package",
+            "$dev_number file$plural in /$dev_prefix";
     }
 }
 

@@ -5,6 +5,14 @@ lintian (2.3.0) UNRELEASED; urgency=low
       - init.d-script-missing-dependency-on-local_fs (experimental)
       - init.d-script-missing-dependency-on-remote_fs (experimental)
       - obsolete-relation-form-in-source
+      - ocaml-dangling-cmi
+      - ocaml-dangling-cmx
+      - ocaml-dangling-cmxa
+      - ocaml-dangling-cmxs
+      - ocaml-dev-file-in-nondev-package (pedantic)
+      - ocaml-dev-file-not-in-usr-lib-ocaml (pedantic)
+      - ocaml-meta-without-suggesting-findlib (pedantic)
+      - ocaml-stray-cmo
     + Removed:
       - build-depends-without-arch-dep
 
@@ -48,6 +56,9 @@ lintian (2.3.0) UNRELEASED; urgency=low
       Note that Debian groff is currently patched to avoid this problem,
       but hopefully that divergence can be removed.  Reference
       groff-base's README.Debian for more information.  (Closes: #548844)
+  * checks/ocaml{,.desc}:
+    + [RA] New checks for OCaml packaging.  Contributed by Stéphane
+      Glondu.  (Closes: #528367)
   * checks/rules{,.desc}:
     + [RA] Remove build-depends-without-arch-dep.  If the package only
       builds architecture-independent packages, the distinction between
@@ -130,6 +141,7 @@ lintian (2.3.0) UNRELEASED; urgency=low
     + [RA] Document --suppress-tags and --suppress-tags-from-file.
     + [RA] Document format of --tags-from-file.
     + [RA] Document -F (--ftp-master-rejects).
+    + [RA] Add ocaml checker script.
 
   * private/refresh-ftp-master-tags:
     + [RA] Script to refresh data about automatic package rejects.

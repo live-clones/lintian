@@ -1,0 +1,21 @@
+#!/usr/bin/make -f
+export DH_VERBOSE=1
+
+%:
+	dh $@
+
+override_dh_installdirs:
+	dh_installdirs
+	touch debian/libocaml-general-ocaml/usr/lib/ocaml/foo.cmxa
+	touch debian/libocaml-general-ocaml/usr/lib/ocaml/bar.cmxs
+	touch debian/libocaml-general-ocaml/usr/lib/ocaml/symbol.cmx
+	touch debian/libocaml-general-ocaml-dev/usr/lib/ocaml/foo.cmi
+	touch debian/libocaml-general-ocaml-dev/usr/lib/ocaml/bar.cmi
+	touch debian/libocaml-general-ocaml-dev/usr/lib/ocaml/baz.cmi
+	touch debian/libocaml-general-ocaml-dev/usr/lib/ocaml/boo.cmi
+	touch debian/libocaml-general-ocaml-dev/usr/lib/ocaml/symbol.cmx
+	touch debian/libocaml-general-ocaml-dev/usr/lib/ocaml/symbol2.cmx
+	touch debian/libocaml-general-ocaml-dev/usr/lib/ocaml/bleh.cmo
+	touch debian/libocaml-general-ocaml-dev/usr/lib/ocaml/bleh.cma
+	touch debian/libocaml-general-ocaml-dev/usr/lib/ocaml/META
+	touch debian/libocaml-general-ocaml-dev/usr/lib/foo.cmi
