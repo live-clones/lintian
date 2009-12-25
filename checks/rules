@@ -165,6 +165,9 @@ while (<RULES>) {
     if (/\$[\(\{]DEB_BUILD_OPTS[\)\}]/) {
         tag "debian-rules-uses-DEB_BUILD_OPTS", "line $.";
     }
+    if (/^\s*DEB_AUTO_UPDATE_DEBIAN_CONTROL\s*=\s*yes/) {
+        tag 'debian-rules-automatically-updates-control', "line $.";
+    }
 
     # Keep track of whether this portion of debian/rules may be optional
     if (/^ifn?(eq|def)\s/) {

@@ -175,7 +175,6 @@ po-debconf not-using-po-debconf
 
 rules debian-rules-is-symlink
 rules debian-rules-not-a-makefile
-rules debian-rules-uses-DEB_BUILD_OPTS
 
 scripts csh-considered-harmful
 scripts gawk-script-but-no-gawk-dep
@@ -460,10 +459,6 @@ po-debconf stray-translated-debconf-templates
 po-debconf translated-default-field
 po-debconf unknown-encoding-in-po-file
 
-rules clean-should-be-satisfied-by-build-depends
-rules debian-rules-uses-pwd
-rules missing-dh_python-build-dependency
-
 scripts ancient-dpkg-epoch-check
 scripts ancient-dpkg-long-filenames-check
 scripts ancient-dpkg-multi-conrep-check
@@ -526,7 +521,6 @@ binary
   debian-changelog-file-missing-or-wrong-name
   debian-news-entry-has-strange-distribution
   debian-news-file-uses-obsolete-national-encoding
-  debian-rules-uses-pwd
   deprecated-kdelnk-file
   desktop-contains-deprecated-header
   desktop-entry-missing-required-key
@@ -584,7 +578,6 @@ binary
   xs-vcs-header-in-debian-control
 
 cdbs-test
-  clean-should-be-satisfied-by-build-depends
   no-human-maintainers
 
 debconf
@@ -599,7 +592,6 @@ debconf
   misnamed-po-file
   missing-debconf-dependency
   missing-debconf-dependency-for-preinst
-  missing-dh_python-build-dependency
   newer-debconf-templates
   no-complete-debconf-translation
   no-debconf-config

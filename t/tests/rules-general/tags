@@ -1,0 +1,5 @@
+E: rules-general source: clean-should-be-satisfied-by-build-depends debhelper
+E: rules-general source: debian-rules-automatically-updates-control line 3
+E: rules-general source: missing-dh_python-build-dependency
+W: rules-general source: debian-rules-uses-DEB_BUILD_OPTS line 13
+W: rules-general source: debian-rules-uses-pwd line 13

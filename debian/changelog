@@ -2,6 +2,7 @@ lintian (2.3.0) UNRELEASED; urgency=low
 
   * Summary of tag changes:
     + Added:
+      - debian-rules-automatically-updates-control
       - duplicated-compressed-file
       - init.d-script-missing-dependency-on-local_fs (experimental)
       - init.d-script-missing-dependency-on-remote_fs (experimental)
@@ -75,6 +76,8 @@ lintian (2.3.0) UNRELEASED; urgency=low
       Build-Depends and Build-Depends-Indep is meaningless and there's no
       reason, even pedantically, to worry about the separation.  Thanks,
       Charles Plessy.  (Closes: #552200, #555667)
+    + [RA] Add a new check for DEB_AUTO_UPDATE_DEBIAN_CONTROL = yes.
+      Thanks, Nelson A. de Oliveira.  (Closes: #557120)
 
   * collection/ar-info{,.desc}:
     + [RA] Collects the results of ar t on all *.a files, used by the new

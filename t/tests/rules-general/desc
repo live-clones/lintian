@@ -1,0 +1,10 @@
+Testname: rules-general
+Sequence: 6000
+Version: 1.0
+Description: Test various debian/rules checks
+Test-For:
+ clean-should-be-satisfied-by-build-depends
+ debian-rules-automatically-updates-control
+ debian-rules-uses-DEB_BUILD_OPTS
+ debian-rules-uses-pwd
+ missing-dh_python-build-dependency
