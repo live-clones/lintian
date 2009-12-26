@@ -459,10 +459,8 @@ for my $tag (sort keys %by_tag) {
     }
     my ($count, $overrides) = (0, 0);
     my %seen;
-    my $code = 'O';
     foreach (@{$by_tag{$tag}}) {
         if ($_->{code} ne 'O') {
-            $code = $_->{code};
             $count++;
             $seen{$_->{xref}}++;
         } else {
@@ -473,7 +471,7 @@ for my $tag (sort keys %by_tag) {
     my %data = (
         description => $description,
         tag         => html_quote ($tag),
-        code        => $code,
+        code        => $info->code,
         tags        => $by_tag{$tag},
     );
     output_template ("tags/$tag.html", $templates{tag}, \%data);

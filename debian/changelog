@@ -213,6 +213,10 @@ lintian (2.3.0) UNRELEASED; urgency=low
   * private/refresh-ftp-master-tags:
     + [RA] Script to refresh data about automatic package rejects.
 
+  * reporting/html_reports:
+    + [RA] Never use O as the code for the tag on the per-tag page even if
+      all instances in the archive are overridden.  (Closes: #562630)
+
   * t/runtests:
     + [RA] Unwrap the Options field so that it can be continued.
     + [RA] Replace TESTSET in Options with the root of the test suite so
