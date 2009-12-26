@@ -67,6 +67,8 @@ lintian (2.3.0) UNRELEASED; urgency=low
   * checks/files{,.desc}:
     + [RA] New check for files present in both compressed and uncompressed
       form.  Patch from Raphael Geissert.  (Closes: #546174)
+    + [RA] Allow /etc/sudoers.d files to be mode 0440 as recommended by
+      sudo.  Thanks, Thijs Kinkhorst.  (Closes: #557353)
   * checks/huge-usr-share{,.desc}:
     + [RA] Increase the thresholds to 2MB (over 50%) and 4MB (any
       percentage), and mention the thresholds in the tag description.

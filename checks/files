@@ -891,6 +891,8 @@ foreach my $file (sort keys %{$info->index}) {
 		# everything is ok
 	    } elsif ($operm == 0600 and $file =~ m,etc/backup.d/,) {
 		# backupninja expects configurations files to be 0600
+	    } elsif ($operm == 0440 and $file =~ m,etc/sudoers.d/,) {
+		# sudo recommends sudoers files be mode 0440
 	    } elsif ($operm != 0644) {
 		tag "non-standard-file-perm", $file,
 		    sprintf("%04o != 0644",$operm);
