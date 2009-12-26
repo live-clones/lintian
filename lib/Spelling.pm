@@ -600,24 +600,24 @@ sub spelling_check {
     }
 
     # Special case for correcting multi-word strings.
-    if ($text =~ m,debian/gnu\s+linux,) {
+    if ($text =~ m,(debian/gnu\s+linux),i) {
        $counter++;
-        _tag($tag, $filename, "Debian/GNU Linux", "Debian GNU/Linux")
+        _tag($tag, $filename, $1, "Debian GNU/Linux")
             if defined $tag;
     }
-    if ($text =~ m,\ban other\b,) {
+    if ($text =~ m,\b(an other)\b,i) {
        $counter++;
-        _tag($tag, $filename, "an other", "another")
+        _tag($tag, $filename, $1, "another")
             if defined $tag;
     }
-    if ($text =~ m,\bthis packages\b,) {
+    if ($text =~ m,\b(this packages)\b,i) {
        $counter++;
-        _tag($tag, $filename, "this packages", "these packages")
+        _tag($tag, $filename, $1, "these packages")
             if defined $tag;
     }
-    if ($text =~ m,\bthese package\b,) {
+    if ($text =~ m,\b(these package)\b,i) {
        $counter++;
-        _tag($tag, $filename, "these package", "this package")
+        _tag($tag, $filename, $1, "this package")
             if defined $tag;
     }
 
