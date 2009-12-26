@@ -227,19 +227,8 @@ for my $binary_control (@binary_controls) {
 
 	# If this looks like a -dev package, check its dependencies.
 	if ($package =~ /-dev$/ and $binary_control->{'depends'}) {
-		for my $depend (split /\s*,\s*/, $binary_control->{'depends'}) {
-			my ($target, $version) = ($depend =~ /^([\w.+-]+)(?:\s*\(([^\)]+)\))?/);
-			next unless $target;
-			if ($target =~ /^lib[\w.+-]+\d/ and $target !~ /-(?:dev|docs?)$/ and grep { $target eq $_ } @package_names) {
-				if ($binary_control->{'architecture'} eq 'all') {
-					tag 'weak-library-dev-dependency', "$package on $depend"
-					    unless ($version and $version =~ /^\s*[<>]?=\s*\$\{source:(?:Upstream-)?Version\}/);
-				} else {
-					tag 'weak-library-dev-dependency', "$package on $depend"
-					    unless ($version and $version =~ /^\s*=\s*\$\{(?:binary:Version|Source-Version)\}/);
-				}
-			}
-		}
+		check_dev_depends($package, $binary_control->{depends},
+				  @package_names);
 	}
 
 	# Check mismatches in archive area.
@@ -283,6 +272,50 @@ for my $i (0 .. $#descriptions) {
 	}
 }
 
+}
+
+
+# Check the dependencies of a -dev package.  Any dependency on one of the
+# packages in @package_names that looks like the underlying library needs to
+# have a version restriction that's at least as strict as the same upstream
+# version.
+sub check_dev_depends {
+	my ($package, $depends, @packages) = @_;
+	for my $target (@packages) {
+		next unless ($target =~ /^lib[\w.+-]+\d/
+			     and $target !~ /-(?:dev|docs?)$/);
+		my @depends = grep { /(?:^|[\s|])\Q$target\E(?:[\s|\(]|\z)/ }
+		    split (/\s*,\s*/, $depends);
+
+		# If there are any alternatives here, something special is
+		# going on.  Assume that the maintainer knows what they're
+		# doing.  Otherwise, separate out just the versions.
+		next if grep { /\|/ } @depends;
+		my @versions = sort map {
+			if (/^[\w.+-]+(?:\s*\(([^\)]+)\))/) {
+				$1;
+			} else {
+				'';
+			}
+		} @depends;
+
+		# If there's only one mention of this package, the dependency
+		# should be tight.  Otherwise, there should be both >>/>= and
+		# <</<= dependencies that mention the source, binary, or
+		# upstream version.  If there are more than three mentions of
+		# the package, again something is weird going on, so we assume
+		# they know what they're doing.
+		if (@depends == 1) {
+			unless ($versions[0] =~ /^\s*=\s*\$\{(?:binary:Version|Source-Version)\}/) {
+				tag 'weak-library-dev-dependency', "$package on $depends[0]";
+			}
+		} elsif (@depends == 2) {
+			unless ($versions[0] =~ /^\s*<[=<]\s*\$\{(?:(?:binary|source):(?:Upstream-)?Version|Source-Version)\}/
+				and $versions[1] =~ /^\s*>[=>]\s*\$\{(?:(?:binary|source):(?:Upstream-)?Version|Source-Version)\}/) {
+				tag 'weak-library-dev-dependency', "$package on $depends[0], $depends[1]";
+			}
+		}
+	}
 }
 
 1;

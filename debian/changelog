@@ -42,6 +42,11 @@ lintian (2.3.0) UNRELEASED; urgency=low
       debian/control prior to the fixes applied by dpkg-dev.  Thanks,
       Nelson A. de Oliveira.  (Closes: #548819)
     + [RA] Fix a typo that skipped checks on the Build-Conflicts field.
+    + [RA] Rework weak-library-dev-dependency to allow more approaches to
+      bounding the shared library version.  Skip complex cases with or'd
+      dependencies and assume the maintainer knows what they're doing.
+      Add more explanation to the long tag description.  Thanks, Reinhard
+      Tartler and Mike Hommey.  (Closes: #557449)
   * checks/cruft:
     + [RA] Allow an automake or libtool dependency in Build-Depends-Indep
       to also satisfy the check for outdated helper files.  Thanks,
