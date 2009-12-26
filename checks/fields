@@ -85,7 +85,7 @@ our %known_build_essential = map { $_ => 1 }
 
 # Still in the archive but shouldn't be the primary Emacs dependency.
 our %known_obsolete_emacs = map { $_ => 1 }
-    ('emacs21');
+    ('emacs21', 'emacs22');
 
 our %known_libstdcs = map { $_ => 1 }
     ('libstdc++2.9-glibc2.1', 'libstdc++2.10', 'libstdc++2.10-glibc2.2',
