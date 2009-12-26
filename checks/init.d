@@ -238,7 +238,7 @@ sub check_init {
 
 	# Pretty dummy way to handle conditionals, but should be enough
 	# for simple init scripts
-	$in_file_test = 1 if ($l =~ m/\bif\s+.+?\[\s+-[fe]\s+/);
+	$in_file_test = 1 if ($l =~ m/\bif\s+.*?\[\s+-[fe]\s+/);
 	$in_file_test = 0 if ($l =~ m/\bfi\b/);
 	if (!$in_file_test && $l =~ m,^\s*\.\s+["'"]?(/etc/default/[\$\w/-]+),) {
 	    tag "init.d-script-sourcing-without-test", "/etc/init.d/$_:$. $1";
