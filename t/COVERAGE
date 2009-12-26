@@ -1,4 +1,4 @@
-Last generated 2009-12-25
+Last generated 2009-12-26
 
 The following tags are not tested by the test suite:
 
@@ -374,8 +374,6 @@ files use-of-compat-symlink
 files windows-thumbnail-database-in-package
 files wrong-file-owner-uid-or-gid
 
-huge-usr-share arch-dep-package-has-big-usr-share
-
 init.d duplicate-updaterc.d-calls-in-postrm
 init.d init.d-script-has-bad-lsb-line
 init.d init.d-script-has-duplicate-lsb-section
@@ -446,8 +444,6 @@ nmu orphaned-package-should-not-have-uploaders
 nmu qa-upload-has-incorrect-version-number
 
 patch-systems dpatch-build-dep-but-no-patch-list
-patch-systems dpatch-index-references-non-existent-patch
-patch-systems dpatch-missing-description
 patch-systems patch-system-but-direct-changes-in-diff
 patch-systems quilt-build-dep-but-no-series-file
 
@@ -513,7 +509,6 @@ watch-file debian-watch-file-specifies-old-upstream-version
 Breakdown of remaining tags in legacy test suite by test case:
 
 binary
-  arch-dep-package-has-big-usr-share
   binary-has-unneeded-section
   changelog-file-not-compressed
   changelog-news-debian-mismatch
@@ -795,8 +790,6 @@ scripts
   calls-suidperl-directly
   copyright-file-lacks-pointer-to-perl-license
   debian-watch-file-specifies-old-upstream-version
-  dpatch-index-references-non-existent-patch
-  dpatch-missing-description
   duplicate-updaterc.d-calls-in-postrm
   executable-is-not-world-readable
   init.d-script-has-bad-lsb-line

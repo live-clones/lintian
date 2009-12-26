@@ -57,6 +57,10 @@ lintian (2.3.0) UNRELEASED; urgency=low
   * checks/files{,.desc}:
     + [RA] New check for files present in both compressed and uncompressed
       form.  Patch from Raphael Geissert.  (Closes: #546174)
+  * checks/huge-usr-share{,.desc}:
+    + [RA] Increase the thresholds to 2MB (over 50%) and 4MB (any
+      percentage), and mention the thresholds in the tag description.
+      Thanks, Christoph Egger.  (Closes: #561720)
   * checks/init.d{,.desc}:
     + [RA] Add checks for missing dependencies on $local_fs or $remote_fs
       based on what files appear to be used in the init scripts.  Patch
