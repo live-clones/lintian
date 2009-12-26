@@ -3,6 +3,7 @@ lintian (2.3.0) UNRELEASED; urgency=low
   * Summary of tag changes:
     + Added:
       - debian-rules-automatically-updates-control
+      - duplicate-in-relation-field (pedantic)
       - duplicated-compressed-file
       - init.d-script-missing-dependency-on-local_fs (experimental)
       - init.d-script-missing-dependency-on-remote_fs (experimental)
@@ -37,6 +38,10 @@ lintian (2.3.0) UNRELEASED; urgency=low
     + [RA] Check for < and > version dependencies in debian/control since
       dpkg-source helpfully rewrites and fixes them in binary packages.
       Thanks, Jakub Wilk.  (Closes: #557971)
+    + [RA] Add a pedantic check for duplicates in relation fields in
+      debian/control prior to the fixes applied by dpkg-dev.  Thanks,
+      Nelson A. de Oliveira.  (Closes: #548819)
+    + [RA] Fix a typo that skipped checks on the Build-Conflicts field.
   * checks/cruft:
     + [RA] Allow an automake or libtool dependency in Build-Depends-Indep
       to also satisfy the check for outdated helper files.  Thanks,

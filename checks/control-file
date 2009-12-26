@@ -106,15 +106,22 @@ for my $binary_control (@binary_controls) {
 # by spaces, so we have to remove any architecture restrictions first.  This
 # unfortunately distorts our report a little, but hopefully not too much.
 #
-# Also check for < and > relations.  dpkg-source warns about them and then
+# Also check for < and > relations.  dpkg-gencontrol warns about them and then
 # transforms them in the output to <= and >=, but it's easy to miss the error
-# message.
+# message.  Similarly, check for duplicates, which dpkg-source eliminates.
 for my $control ($header, @binary_controls) {
 	for my $field (qw(pre-depends depends recommends suggests breaks
 			  conflicts provides replaces enhances
 			  build-depends build-depends-indep
-			  build-conflics build-conflicts-indep)) {
+			  build-conflicts build-conflicts-indep)) {
 		next unless $control->{$field};
+		my $relation = Lintian::Relation->new($control->{$field});
+		my @dups = $relation->duplicates;
+		for my $dup (@dups) {
+			tag 'duplicate-in-relation-field', 'in',
+			    ($control->{source} ? 'source' : $control->{package}),
+			    "$field:", join(', ', @$dup);
+		}
 		my $value = $control->{$field};
 		$value =~ s/\n(\s)/$1/g;
 		$value =~ s/\[[^\]]*\]//g;
