@@ -201,6 +201,9 @@ lintian (2.3.0) UNRELEASED; urgency=low
     + [RA] Suppress checking the syntax of the lintian output if neither
       Test-For nor Test-Against are set and Sort: no is set.
 
+  * unpack/list-{bin,src,udeb}pkg:
+    + [RA] Support multiple versions of a package in the archive and
+      include only the latest version in the Lintian package list.
   * unpack/unpack-binpkg-l2:
     + [RA] Report errors from dpkg-deb or tar on stderr if either exit
       with non-zero status.

@@ -2,17 +2,17 @@
 # list-srcpkg -- lintian helper script
 
 # Copyright (C) 1998 Christian Schwarz
-# 
+#
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, you can find it on the World Wide
 # Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
@@ -20,6 +20,9 @@
 # MA 02110-1301, USA.
 
 use strict;
+
+use lib "$ENV{'LINTIAN_ROOT'}/lib";
+use Lintian::Relation::Version qw(versions_lte);
 
 # turn file buffering off:
 $| = 1;
@@ -159,42 +162,53 @@ foreach my $sources (@sources) {
       $pkg = $data->{'source'};
     }
 
-    # check for duplicates
+    # Check for duplicates.  In the case of a duplicate, we take the one with
+    # the latest version.
     if (exists $packages{$pkg}) {
-      print "E: general: duplicate-source-package $pkg\n";
-      next;
+      if (versions_lte($data->{version}, $packages{$pkg}{version})) {
+        next;
+      }
     }
 
-    # write entry to output file
-    for (qw/version maintainer uploaders architecture standards-version binary files/) {
+    # Save entry for writing to output file.
+    $data->{file} = $dsc_file;
+    $data->{area} = $sources->{area};
+    $data->{timestamp} = $timestamp;
+    $data->{status} = $status;
+    for (qw(version maintainer uploaders architecture standards-version
+            binary files)) {
       $data->{$_} =~ tr/;\n/_ / if $data->{$_};
     }
-    print OUT join(';',
-                  $pkg,
-                  $data->{'version'},
-                  $data->{'maintainer'},
-                  $data->{'uploaders'} || '',
-                  $data->{'architecture'},
-                  $sources->{'area'},
-                  $data->{'standards-version'},
-                  $data->{'binary'},
-                  $data->{'files'},
-                  $dsc_file,
-                  $timestamp,
-                  ),"\n";
-    printf "N: Listed %s source package %s %s\n",$status,$pkg,$data->{'version'} if $verbose;
+    $packages{$pkg} = $data;
 
     # remove record from hash
     delete $source_info{$pkg} if $status eq 'unchanged';
-    $packages{$pkg} = 1;
     $total++;
   }
   close(IN) or fail("cannot close input pipe: $!");
 }
+for my $pkg (sort keys %packages) {
+  print OUT join(';',
+                 $pkg,
+                 $packages{$pkg}{version},
+                 $packages{$pkg}{maintainer},
+                 $packages{$pkg}{uploaders} || '',
+                 $packages{$pkg}{architecture},
+                 $packages{$pkg}{area},
+                 $packages{$pkg}{'standards-version'},
+                 $packages{$pkg}{binary},
+                 $packages{$pkg}{files},
+                 $packages{$pkg}{file},
+                 $packages{$pkg}{timestamp},
+                ),"\n";
+  printf "N: Listed %s source package %s %s\n", $packages{$pkg}{status},
+      $pkg, $packages{$pkg}{version} if $verbose;
+}
 close(OUT) or fail("cannot close output pipe: $!");
 
 if ($verbose) {
-  # all packages that are still included in %source_info have disappeared from the archive...
+  # All packages that are still included in %source_info have disappeared from
+  # the archive.
   for my $pkg (sort keys %source_info) {
     print "N: Removed source package $pkg from list\n";
   }
