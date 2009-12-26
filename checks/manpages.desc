@@ -280,3 +280,17 @@ Info: This package installs a manual page in a locale directory that
  language.  The known cases where country names are appropriate are pt_BR
  and zh_*.  Please file a bug against Lintian if this is another case
  where a country name is appropriate.
+
+Tag: manpage-has-spelling-error
+Severity: normal
+Certainty: possible
+Info: Lintian found a spelling error in the manpage. Lintian has a list
+ of common misspellings that it looks for.  It does not have a
+ dictionary like a spelling checker does.
+ .
+ If the string containing the spelling error is translated with the help
+ of gettext (with the help of po4a, for example) or a similar tool,
+ please fix the error in the translations as well as the English text to
+ avoid making the translations fuzzy.  With gettext, for example, this
+ means you should also fix the spelling mistake in the corresponding
+ msgids in the *.po files.

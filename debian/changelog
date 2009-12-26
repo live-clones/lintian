@@ -70,6 +70,8 @@ lintian (2.3.0) UNRELEASED; urgency=low
     + [RA] Add checks for missing dependencies on $local_fs or $remote_fs
       based on what files appear to be used in the init scripts.  Patch
       from Raphael Geissert.  (Partly addresses #405454)
+  * checks/manpages{,.desc}:
+    + [RG] Check for spelling errors in English manpages.
   * checks/manpages.desc:
     + [RA] Clarify the long description of hyphen-used-as-minus-sign.
       Note that Debian groff is currently patched to avoid this problem,
