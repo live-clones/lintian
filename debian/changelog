@@ -1,4 +1,6 @@
-lintian (2.3.0) UNRELEASED; urgency=low
+lintian (2.3.0) unstable; urgency=low
+
+  The "welcome Raphael Geissert!" release.
 
   * Summary of tag changes:
     + Added:
@@ -261,7 +263,7 @@ lintian (2.3.0) UNRELEASED; urgency=low
     + [RA] Report errors from dpkg-source -x on stderr if it exits with
       non-zero status.  (Closes: #557717)
 
- -- Russ Allbery <rra@debian.org>  Mon, 23 Nov 2009 02:20:29 -0800
+ -- Russ Allbery <rra@debian.org>  Sat, 26 Dec 2009 18:38:10 -0800
 
 lintian (2.2.18) unstable; urgency=low
 
