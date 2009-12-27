@@ -286,16 +286,16 @@ Info: Unnecessary spaces were found in the paragraph separator line of the
 Ref: doc-base 2.3.2
 
 Tag: spelling-error-in-doc-base-title-field
-Severity: normal
-Certainty: possible
+Severity: minor
+Certainty: certain
 Info: Lintian found a spelling or capitalization error in the Title field
  of this doc-base control file.  Lintian has a list of common misspellings
  that it looks for.  It does not have a dictionary like a spelling checker
  does.
 
 Tag: spelling-error-in-doc-base-abstract-field
-Severity: normal
-Certainty: possible
+Severity: minor
+Certainty: certain
 Info: Lintian found a spelling or capitalization error in the Abstract
  field of this doc-base control file.  Lintian has a list of common
  misspellings that looks for.  It does not have a dictionary like a

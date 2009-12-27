@@ -262,7 +262,7 @@ Info: The latest entry in NEWS.Debian has an unusual distribution name.
  Debian changelog file.
 
 Tag: spelling-error-in-changelog
-Severity: normal
+Severity: minor
 Certainty: certain
 Info: Lintian found a spelling error in the latest entry of the Debian
  changelog.  Lintian has a list of common misspellings that it looks for.
@@ -273,7 +273,7 @@ Info: Lintian found a spelling error in the latest entry of the Debian
  misspelled word to avoid triggering this warning.
 
 Tag: spelling-error-in-news-debian
-Severity: normal
+Severity: minor
 Certainty: certain
 Info: Lintian found a spelling error in the latest entry of the
  NEWS.Debian file.  Lintian has a list of common misspellings that it

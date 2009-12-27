@@ -303,11 +303,13 @@ Info: The copyright file for this package does not appear to contain a
  product of a United States government agency.
 
 Tag: spelling-error-in-copyright
-Severity: normal
+Severity: minor
 Certainty: possible
 Info: Lintian found a spelling error in the copyright file.  Lintian has a
  list of common misspellings that it looks for.  It does not have a
- dictionary like a spelling checker does.
+ dictionary like a spelling checker does.  If this is a spelling error in
+ the upstream license, in supporting email messages, or a case of Lintian
+ being confused by non-English text, add an override.
 
 Tag: possible-gpl-code-linked-with-openssl
 Severity: serious

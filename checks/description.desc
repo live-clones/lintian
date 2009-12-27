@@ -134,7 +134,7 @@ Info: The extended description contains a "Homepage:" pseudo-header
  description to the fields for the relevant source or binary packages.
 
 Tag: spelling-error-in-description
-Severity: normal
+Severity: minor
 Certainty: certain
 Info: Lintian found a spelling or capitalization error in the package
  description.  Lintian has a list of common misspellings that it looks

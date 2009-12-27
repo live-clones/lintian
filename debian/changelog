@@ -35,6 +35,7 @@ lintian (2.3.0) UNRELEASED; urgency=low
       (Closes: #560149)
     + [RA] Also ignore too-long lines that consist of "See" followed by an
       unbreakable word.  Thanks, Jari Aalto.  (Closes: #560005)
+    + [RA] Downgrade spelling tags to severity: minor.
   * checks/control-file{,.desc}:
     + [RA] Check for < and > version dependencies in debian/control since
       dpkg-source helpfully rewrites and fixes them in binary packages.
@@ -48,12 +49,19 @@ lintian (2.3.0) UNRELEASED; urgency=low
       dependencies and assume the maintainer knows what they're doing.
       Add more explanation to the long tag description.  Thanks, Reinhard
       Tartler and Mike Hommey.  (Closes: #557449)
+  * checks/copyright-file.desc:
+    + [RA] Downgrade spelling-error-in-copyright to minor and mention
+      false positive possibilities and an override in the tag description.
   * checks/cruft:
     + [RA] Allow an automake or libtool dependency in Build-Depends-Indep
       to also satisfy the check for outdated helper files.  Thanks,
       Guillaume Delacour.  (Closes: #557530)
     + [RA] Ignore files in .pc, created by unpacking 3.0 (quilt) packages.
       Thanks, Ahmed El-Mahmoudy.  (Closes: #556022)
+  * checks/debian-readme.desc:
+    + [RA] Downgrade spelling tag to severity: minor.
+  * checks/description.desc:
+    + [RA] Downgrade spelling tag to severity: minor.
   * checks/fields{,.desc}:
     + [ADB] Re-order the fields of build-depends-on-build-essential so that
       all of the descriptive text is included.  Thanks, Jonathan Wiltshire.
@@ -85,6 +93,10 @@ lintian (2.3.0) UNRELEASED; urgency=low
       Note that Debian groff is currently patched to avoid this problem,
       but hopefully that divergence can be removed.  Reference
       groff-base's README.Debian for more information.  (Closes: #548844)
+  * checks/menus.desc:
+    + [RA] Change spelling tags to severity: minor and certainty: certain
+      since there are few false positives but minor is the correct
+      severity.
   * checks/ocaml{,.desc}:
     + [RA] New checks for OCaml packaging.  Contributed by Stéphane
       Glondu.  (Closes: #528367)
