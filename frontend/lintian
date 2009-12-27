@@ -1240,6 +1240,14 @@ for my $c (keys %unpack_infos) {
 }
 # }}}
 
+# {{{ make --unpack collect all info
+if ($action eq 'unpack') {
+    for my $c (keys %collection_info) {
+	$unpack_infos{$c} = 1;
+    }
+}
+# }}}
+
 # {{{ process all packages in the archive?
 if ($check_everything) {
     # make sure package info is available
@@ -1566,6 +1574,7 @@ foreach my $pkg_info ($schedule->get_all) {
 		next if $keep_lab;
 		next unless (-f "$base/.${coll}-$ci->{'version'}");
 		my $script = "$LINTIAN_ROOT/collection/$ci->{'script'}";
+		debug_msg(1, "Auto removing: $ci->{'script'} ...");
 		unless (spawn({}, [ $script, $pkg, "remove-$long_type"])) {
 		    warning("removing collect info $coll about package $pkg failed",
 			    "skipping cleanup of $long_type package $pkg");
