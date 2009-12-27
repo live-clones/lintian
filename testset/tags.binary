@@ -50,8 +50,10 @@ E: binary: symlink-contains-spurious-segments usr/share/doc/binary/html/ch2.html
 E: binary: unstripped-binary-or-object ./usr/bin/hello
 I: binary source: binary-control-field-duplicates-source field "vcs-svn" in package binary
 I: binary source: xs-vcs-header-in-debian-control xs-vcs-browser
+I: binary-data: capitalization-error-in-description subversion Subversion
 I: binary: arch-dep-package-has-big-usr-share
 I: binary: binary-has-unneeded-section ./usr/bin/hello-static .comment
+I: binary: capitalization-error-in-description debian Debian
 I: binary: desktop-entry-contains-encoding-key /usr/share/applications/goodbye.desktop:11 Encoding
 I: binary: desktop-entry-contains-encoding-key /usr/share/applications/hello.desktop:13 Encoding
 I: binary: no-md5sums-control-file
@@ -63,7 +65,6 @@ W: binary source: native-package-with-dash-version
 W: binary source: substvar-source-version-is-deprecated binary
 W: binary source: substvar-source-version-is-deprecated binary-data
 W: binary-data: control-file-is-empty md5sums
-W: binary-data: spelling-error-in-description subversion Subversion
 W: binary: binary-without-manpage usr/bin/hello
 W: binary: binary-without-manpage usr/bin/hello-static
 W: binary: binary-without-manpage usr/bin/hello.static
@@ -114,7 +115,6 @@ W: binary: menu-item-uses-windowmanagers-section /usr/share/menu/binary:13
 W: binary: old-fsf-address-in-copyright-file
 W: binary: package-contains-hardlink usr/bar2 -> usr/share/baz
 W: binary: package-contains-upstream-install-documentation usr/share/doc/binary/INSTALL
-W: binary: spelling-error-in-description debian Debian
 W: binary: spelling-error-in-description dont don't
 W: binary: spelling-error-in-doc-base-abstract-field binary:10 speling spelling
 W: binary: spelling-error-in-doc-base-title-field binary:2 debian Debian
