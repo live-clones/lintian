@@ -142,8 +142,11 @@ lintian (2.3.0) unstable; urgency=low
     + [RA] Document debian/source/lintian-overrides as the new preferred
       location for source overrides.
 
-  * debian/{control,copyright}:
-    + [RG] Add Raphael Geissert to Uploaders and copyright.
+  * debian/control:
+    + [RG] Add Raphael Geissert to Uploaders.
+    + [RA] Add ${misc:Depends} to dependencies.
+  * debian/copyright:
+    + [RG] Add Raphael Geissert to maintainers.
 
   * frontend/lintian:
     + [RA] Add options --suppress-tags and --suppress-tags-from-file to
