@@ -186,7 +186,7 @@ unless ($info->field('homepage') or $flagged_homepage) {
 
 if ($description) {
     spelling_check('spelling-error-in-description', $description);
-    spelling_check_picky('spelling-error-in-description', $description);
+    spelling_check_picky('capitalization-error-in-description', $description);
 }
 
 }

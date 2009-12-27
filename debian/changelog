@@ -2,6 +2,8 @@ lintian (2.3.0) UNRELEASED; urgency=low
 
   * Summary of tag changes:
     + Added:
+      - capitalization-error-in-description
+        (split from spelling-error-in-description)
       - debian-rules-automatically-updates-control
       - duplicate-in-relation-field (pedantic)
       - duplicated-compressed-file
@@ -60,8 +62,10 @@ lintian (2.3.0) UNRELEASED; urgency=low
       Thanks, Ahmed El-Mahmoudy.  (Closes: #556022)
   * checks/debian-readme.desc:
     + [RA] Downgrade spelling tag to severity: minor.
-  * checks/description.desc:
+  * checks/description{,.desc}:
     + [RA] Downgrade spelling tag to severity: minor.
+    + [RA] Split capitalization-error-in-description to a separate tag and
+      downgrade its certainty to wild-guess.
   * checks/fields{,.desc}:
     + [ADB] Re-order the fields of build-depends-on-build-essential so that
       all of the descriptive text is included.  Thanks, Jonathan Wiltshire.

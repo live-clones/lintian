@@ -50,7 +50,7 @@ Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: some Lintian test package
  some Lintian test package
  .
- Some mroe stuff about this test package.
+ Some mroe stuff about this debian test package.
  .
  Homepage: <http://lintian.debian.org/>
 

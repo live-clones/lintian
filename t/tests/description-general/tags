@@ -8,6 +8,7 @@ E: description-general: description-contains-tabs
 E: description-general: description-is-debmake-template
 E: description-general: description-starts-with-package-name
 I: description-general-3: using-first-person-in-description line 5: I
+I: description-general-4: capitalization-error-in-description debian Debian
 I: description-general: description-synopsis-might-not-be-phrased-properly
 W: description-general-2: description-starts-with-leading-spaces
 W: description-general-2: possible-unindented-list-in-extended-description
