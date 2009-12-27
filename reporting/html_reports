@@ -177,6 +177,8 @@ my (%statistics, %tag_statistics);
 #       '0.15~20061120-1' => [
 #           { code      => 'W',
 #             package   => 'gnubg',
+#             version   => '0.15~20061120-1',
+#             area      => 'main',
 #             type      => 'source',
 #             tag       => 'substvar-source-version-is-deprecated',
 #             severity  => 'normal',
