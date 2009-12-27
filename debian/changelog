@@ -1,5 +1,8 @@
 lintian (2.3.1) UNRELEASED; urgency=low
 
+  * checks/init.desc:
+    + [RG] Bump severity of init.d-script-sourcing-without-test to serious.
+
   * reporting/templates/maintainer.tmpl:
     + [RA] Fix the logic to optionally display the archive area of
       additional package entries under the same source package.

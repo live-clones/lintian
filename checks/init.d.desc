@@ -219,7 +219,7 @@ Info: The given <tt>/etc/init.d</tt> script specifies an interpreter in
  available.
 
 Tag: init.d-script-sourcing-without-test
-Severity: important
+Severity: serious
 Certainty: possible
 Info: The given <tt>/etc/init.d</tt> script seems to be sourcing an
  <tt>/etc/default/</tt> file without checking for its existence first.
