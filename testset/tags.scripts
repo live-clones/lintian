@@ -23,6 +23,7 @@ E: scripts_6ds-1ubuntu0.5.10.1_arch.changes: bad-ubuntu-distribution-in-changes-
 I: scripts source: debian-watch-file-should-dversionmangle-not-uversionmangle line 5
 I: scripts source: dpatch-missing-description 02_i_dont_have_a_description.patch
 I: scripts source: dpatch-missing-description 04_i_dont_have_a_description_either.patch
+I: scripts: init.d-script-does-not-provide-itself /etc/init.d/lsb-broken
 I: scripts: init.d-script-missing-lsb-short-description /etc/init.d/lsb-other
 I: scripts: no-md5sums-control-file
 I: scripts: script-in-usr-share-doc usr/share/doc/scripts/py2foo
@@ -64,7 +65,6 @@ W: scripts: executable-is-not-world-readable usr/bin/suidperlfoo2 4751
 W: scripts: executable-not-elf-or-script ./usr/bin/perl-bizarre-3
 W: scripts: init-d-script-stops-in-s-runlevel /etc/init.d/lsb-broken
 W: scripts: init-d-script-stops-in-s-runlevel /etc/init.d/skeleton
-W: scripts: init.d-script-does-not-provide-itself /etc/init.d/lsb-broken
 W: scripts: init.d-script-has-bad-lsb-line /etc/init.d/lsb-broken:4
 W: scripts: init.d-script-has-bad-lsb-line /etc/init.d/lsb-broken:9
 W: scripts: init.d-script-has-bad-stop-runlevel /etc/init.d/lsb-broken X

@@ -256,7 +256,7 @@ Info: This <tt>/etc/init.d</tt> script indicates in its LSB headers that
 Ref: http://wiki.debian.org/LSBInitScripts/DebianVirtualFacilities
 
 Tag: init.d-script-does-not-provide-itself
-Severity: normal
+Severity: minor
 Certainty: possible
 Info: This <tt>/etc/init.d</tt> script indicates it provides one or
  more facilities, but none of the provided facilities match the name of
