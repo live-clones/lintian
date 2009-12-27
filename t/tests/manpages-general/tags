@@ -41,8 +41,8 @@ W: manpages-general: manpage-has-bad-whatis-entry usr/share/man/man6/usr-games-b
 W: manpages-general: manpage-has-errors-from-man usr/share/man/man1/test.1p.gz 12: warning: macro `dep' not defined (possibly missing space after `de')
 W: manpages-general: manpage-has-errors-from-man usr/share/man/man3/included.3.gz 6: warning: macro `zY' not defined
 W: manpages-general: manpage-has-errors-from-pod2man usr/share/man/man1/test.1p.gz:17
-W: manpages-general: manpage-has-spelling-error usr/X11R6/man/man1/rstartd.1x.gz speling spelling
-W: manpages-general: manpage-has-spelling-error usr/share/man/man1/program.1.gz speling spelling
 W: manpages-general: manpage-has-useless-whatis-entry usr/share/man/man1/true.1.gz
 W: manpages-general: manpage-locale-dir-country-specific usr/share/man/de_DE/man1/test-utf8-chars.1p.gz
 W: manpages-general: manpage-section-mismatch usr/X11R6/man/man1/rstartd.1x.gz:5 1x != 1
+W: manpages-general: spelling-error-in-manpage usr/X11R6/man/man1/rstartd.1x.gz speling spelling
+W: manpages-general: spelling-error-in-manpage usr/share/man/man1/program.1.gz speling spelling

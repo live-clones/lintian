@@ -16,6 +16,7 @@ lintian (2.3.0) UNRELEASED; urgency=low
       - ocaml-dev-file-not-in-usr-lib-ocaml (pedantic)
       - ocaml-meta-without-suggesting-findlib (pedantic)
       - ocaml-stray-cmo
+      - spelling-error-in-manpage
     + Removed:
       - build-depends-without-arch-dep
 

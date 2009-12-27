@@ -281,7 +281,7 @@ Info: This package installs a manual page in a locale directory that
  and zh_*.  Please file a bug against Lintian if this is another case
  where a country name is appropriate.
 
-Tag: manpage-has-spelling-error
+Tag: spelling-error-in-manpage
 Severity: normal
 Certainty: possible
 Info: Lintian found a spelling error in the manpage. Lintian has a list

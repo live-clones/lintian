@@ -11,7 +11,6 @@ Test-For:
  manpage-has-bad-whatis-entry
  manpage-has-errors-from-man
  manpage-has-errors-from-pod2man
- manpage-has-spelling-error
  manpage-has-useless-whatis-entry
  manpage-has-wrong-extension
  manpage-is-dh_make-template
@@ -20,4 +19,5 @@ Test-For:
  manpage-not-compressed-with-gzip
  manpage-not-compressed-with-max-compression
  manpage-section-mismatch
+ spelling-error-in-manpage
  x11-games-should-be-in-usr-games
