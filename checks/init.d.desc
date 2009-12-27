@@ -294,6 +294,15 @@ Info: The given <tt>/etc/init.d</tt> script indicates it should be
  it probably needs the same handling when halting the system (runlevel 0)
  or switching to single-user mode (runlevel 1).
 
+Tag: init.d-script-missing-start
+Severity: normal
+Certainty: certain
+Info: The given <tt>/etc/init.d</tt> script indicates it should be
+ started at one of the runlevels 2-5 but not at all of them. This is a
+ mistake.  The system administrators should be given the opportunity to
+ customize the runlevels at their will.
+Ref: policy 9.3.3.1
+
 Tag: init.d-script-missing-dependency-on-remote_fs
 Severity: important
 Certainty: possible

@@ -285,6 +285,17 @@ sub check_init {
 		    $runlevel;
 	    }
 	}
+
+	# No script should start at one of the 2-5 runlevels but not at
+	# all of them
+	my $start = join(' ', sort grep {$_ =~ /^[2-5]$/} keys %start);
+	if (length($start) > 0 and $start ne '2 3 4 5') {
+	    my $base = $initd_file;
+	    $base =~ s,.*/,,;
+	    my @missing = grep { !defined $start{$_} } qw(2 3 4 5);
+	    tag 'init.d-script-missing-start', "/etc/init.d/$_",
+		@missing;
+	}
     }
     if (defined $lsb{'default-stop'}) {
 	my %stop;
