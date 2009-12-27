@@ -1,7 +1,17 @@
 lintian (2.3.1) UNRELEASED; urgency=low
 
-  * checks/init.desc:
+  * Summary of tag changes:
+    + Added:
+      - init.d-script-missing-start
+
+  * checks/init.d.desc:
     + [RG] Bump severity of init.d-script-sourcing-without-test to serious.
+  * checks/init.d{,.desc}:
+    + [RG] Lower the severity of init.d-script-does-not-provide-itself
+      to minor.
+    + [RG] Fix a init.d-script-possible-missing-stop false positive when
+      stopping on runlevels 2-5.
+    + [RG] Warn about init scripts with incomplete start runlevels.
 
   * reporting/templates/maintainer.tmpl:
     + [RA] Fix the logic to optionally display the archive area of
