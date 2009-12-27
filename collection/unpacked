@@ -33,14 +33,10 @@ use Util;
 my $pkg = shift;
 my $type = shift;
 
-print STDERR "unpacked $pkg $type\n";
 if ($type =~ m/^remove-/) {
-    print STDERR "removing $pkg 's unpacked/...";
-    print STDERR delete_dir("unpacked/"), "\n";
+    delete_dir("unpacked/");
     if (-d "unpacked/") {
 	fail("failed to remove unpacked directory of $pkg");
-    } else {
-	print STDERR "good, unpacked/ is gone\n";
     }
     exit 0;
 }
@@ -62,19 +58,19 @@ if ($type eq "source") {
 	  ['chmod', '-R', 'u+rwX,o+rX,o-w', 'unpacked']);
 
 } else {
-    mkdir("unpacked", 0777) or fail("mkdir $base_dir/unpacked: $!");
+    mkdir("unpacked", 0777) or fail("mkdir unpacked: $!");
 
     # avoid using dpkg-deb -x; this pipeline is far faster.  I got a factor 2
     # improvement on large debs, and factor 1.5 on small debs.
     # I heard it's because dpkg-deb syncs while writing.  -- Richard
 
-    my $opts = { err => "$base_dir/unpacked-errors" };
+    my $opts = { err => "unpacked-errors" };
     spawn($opts,
 	    ['dpkg-deb', '--fsys-tarfile', "deb"],
 	    '|', ['tar', 'xf', '-', '-C', "unpacked"]);
     unless ($opts->{success}) {
-	open(ERRORS, '<', "$base_dir/unpacked-errors")
-	    or fail("cannot open $base_dir/unpacked-errors: $!");
+	open(ERRORS, '<', "unpacked-errors")
+	    or fail("cannot open unpacked-errors: $!");
 	print STDERR while <ERRORS>;
 	close ERRORS;
 	fail("dpkg-deb | tar failed with status ", $opts->{harness}->result);
