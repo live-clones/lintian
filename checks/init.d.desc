@@ -3,7 +3,6 @@ Author: Christian Schwarz <schwarz@debian.org>
 Abbrev: ini
 Type: binary
 Needs-Info: init.d
-Unpack-Level: 1
 
 Tag: duplicate-updaterc.d-calls-in-postinst
 Severity: important

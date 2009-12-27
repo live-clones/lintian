@@ -1,7 +1,6 @@
 Check-Script: rules
 Author: Russ Allbery <rra@debian.org>
 Type: source
-Unpack-Level: 1
 Needs-Info: debfiles, source-control-file
 Info: Check targets and actions in debian/rules.
 Abbrev: rul

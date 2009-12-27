@@ -2,7 +2,6 @@ Check-Script: copyright-file
 Author: Christian Schwarz <schwarz@debian.org>
 Abbrev: cpy
 Type: binary
-Unpack-Level: 1
 Needs-Info: copyright-file
 Info: This script checks if a binary package conforms to policy
  with regard to copyright files.

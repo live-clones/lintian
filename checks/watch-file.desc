@@ -2,7 +2,6 @@ Check-Script: watch-file
 Author: Patrick Schoenfeld <schoenfeld@in-medisa-res.com>
 Abbrev: watch
 Type: source
-Unpack-Level: 1
 Needs-Info: debfiles
 Info: Check debian/watch files in source packages.
 

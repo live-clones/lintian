@@ -3,7 +3,6 @@ Author: Raphael Geissert <atomo64@gmail.com>
 Info: This script runs the "strings" command over all files of a binary
  package.
 Type: binary, udeb
-Unpack-Level: 1
 Version: 1
 Order: 2
 Needs-Info: unpacked, file-info

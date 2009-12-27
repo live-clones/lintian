@@ -2,7 +2,6 @@ Check-Script: description
 Author: Christian Schwarz <schwarz@debian.org>
 Abbrev: des
 Type: binary, udeb
-Unpack-Level: 1
 
 Tag: package-has-no-description
 Severity: serious

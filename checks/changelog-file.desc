@@ -2,7 +2,6 @@ Check-Script: changelog-file
 Author: Christian Schwarz <schwarz@debian.org>
 Abbrev: chg
 Type: binary
-Unpack-Level: 1
 Needs-Info: file-info, changelog-file
 Info: This script checks if a binary package conforms to policy
  with regards to changelog files.

@@ -38,15 +38,14 @@ my @l2refs = (
 # it is level two then there should be a reference
 for my $desc (@DESCS) {
     my ($header) = read_dpkg_control($desc);
+    my $level = $header->{'unpack-level'};
 
     if ($desc =~ m/lintian\.desc$/) {
-	ok(1, "lintian.desc has valid unpack-level");
+	ok(!defined($level), "lintian.desc doesn't define unpack-level");
 	ok(1, "lintian.desc has valid needs-info for unpack level");
 	next;
     }
 
-    my $level = $header->{'unpack-level'};
-    chomp $level;
     my $info = $header->{'needs-info'} || '';
     chomp $info;
     my %ninfo = map {$_ => 1} split(/\s*,\s*/, $info);
@@ -66,8 +65,8 @@ for my $desc (@DESCS) {
     # it is ok that collection/unpacked doesn't depend on itself :)
     $requires_unpacked = 0 if ($short eq 'collection/unpacked.desc');
 
-    # no script should be using unpack-level: 2 anymore
-    ok($level eq 1, "$short has valid unpack-level");
+    # no script should be using unpack-level: n anymore
+    ok(!defined($level), "$short doesn't define unpack-level");
 
     ok($requires_unpacked? defined($ninfo{'unpacked'}) : !defined($ninfo{'unpacked'}),
 	"$short has valid needs-info for unpack level");

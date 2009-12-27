@@ -2,7 +2,6 @@ Check-Script: binaries
 Author: Christian Schwarz <schwarz@debian.org>
 Abbrev: bin
 Type: binary, udeb
-Unpack-Level: 1
 Needs-Info: objdump-info, file-info, strings
 Info: This script checks binaries and object files for bugs.
 

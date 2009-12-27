@@ -2,7 +2,6 @@ Check-Script: version-substvars
 Author: Adeodato Simó <dato@net.com.org.es>
 Abbrev: v-s
 Type: source
-Unpack-Level: 1
 Needs-Info: debfiles, source-control-file
 Info: This script checks for correct use of the various *Version
  substvars, e.g. deprecated substvars, or usage that can cause

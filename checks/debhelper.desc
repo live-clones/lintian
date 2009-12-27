@@ -2,7 +2,6 @@ Check-Script: debhelper
 Author: Joey Hess <joeyh@debian.org>
 Abbrev: dh
 Type: source
-Unpack-Level: 1
 Info: This looks for common mistakes in debhelper source packages.
 Needs-Info: debfiles, source-control-file
 

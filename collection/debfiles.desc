@@ -3,7 +3,6 @@ Author: Joey Hess <joeyh@debian.org>
 Info: This script collects files shipped in the source of the
  package.
 Type: source
-Unpack-Level: 1
 Version: 1
 Order: 1
 Needs-Info: unpacked

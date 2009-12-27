@@ -2,7 +2,6 @@ Check-Script: control-file
 Author: Marc 'HE' Brockschmidt <marc@marcbrockschmidt.de>
 Abbrev: dctl
 Type: source
-Unpack-Level: 1
 Needs-Info: debfiles
 Info: This script checks debian/control files in source packages
 
