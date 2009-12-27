@@ -71,7 +71,6 @@ our %CORRECTIONS = qw(
                       algorithmical algorithmically
                       allpication application
                       alows allows
-                      als also
                       altough although
                       ambigious ambiguous
                       amoung among

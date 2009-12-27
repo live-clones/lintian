@@ -202,6 +202,9 @@ lintian (2.3.0) UNRELEASED; urgency=low
     + [RA] Report the original word in spelling errors rather than the
       normalized form.
     + [RG] Detect some multi-word spelling errors.
+    + [RA] Remove the als to also correction.  This is a word in several
+      European languages, and the many hits on the archive are nearly all
+      false positives.
   * lib/Tags.pm:
     + [RA] Removed in favor of Lintian::Tags.
   * lib/Util.pm:
