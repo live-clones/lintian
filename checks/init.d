@@ -290,7 +290,7 @@ sub check_init {
 	my %stop;
 	for my $runlevel (split (/\s+/, $lsb{'default-stop'})) {
 	    if ($runlevel =~ /^[sS0-6]$/) {
-		$stop{$runlevel} = 1 unless $runlevel =~ /[sS]/;
+		$stop{$runlevel} = 1 unless $runlevel =~ /[sS2-5]/;
 		if ($start{$runlevel}) {
 		    tag "init.d-script-has-conflicting-start-stop", "/etc/init.d/$_ $runlevel";
 		}
