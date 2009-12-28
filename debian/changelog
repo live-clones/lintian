@@ -4,6 +4,9 @@ lintian (2.3.1) UNRELEASED; urgency=low
     + Added:
       - init.d-script-missing-start
 
+  * {checks,collection}/*.desc:
+    + [RG] Remove Unpack-Level fields and depend on the 'unpacked'
+      collection script as needed.
   * checks/init.d.desc:
     + [RG] Bump severity of init.d-script-sourcing-without-test to serious.
   * checks/init.d{,.desc}:
@@ -17,10 +20,22 @@ lintian (2.3.1) UNRELEASED; urgency=low
     + [RA] Skip *.a files that are dangling symlinks and discard error
       output from ar.  Correctly handle file names that contain shell
       metacharacters.
+  * collection/unpacked{,.desc}:
+    + [RG] New scripts to replace the unpack level 2.
+
+  * frontend/lintian:
+    + [RG] Deprecate and replace unpack levels with the use of
+      collection scripts.
+
+  * man/lintian.1:
+    + [RG] Document deprecation of unpack levels.
   
   * reporting/templates/maintainer.tmpl:
     + [RA] Fix the logic to optionally display the archive area of
       additional package entries under the same source package.
+
+  * unpack/unpack-{src,bin}pkg-l2:
+    + [RG] Dropped in favour of collection/unpacked.
 
  -- Russ Allbery <rra@debian.org>  Sat, 26 Dec 2009 23:05:35 -0800
 
