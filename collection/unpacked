@@ -33,11 +33,16 @@ use Util;
 my $pkg = shift;
 my $type = shift;
 
-if ($type =~ m/^remove-/) {
-    delete_dir("unpacked/");
-    if (-d "unpacked/") {
+if (-d "unpacked/") {
+    delete_dir("unpacked/") or
 	fail("failed to remove unpacked directory of $pkg");
-    }
+}
+if (-f "unpacked-errors") {
+    unlink("unpacked-errors") or
+	fail("failed to remove unpacked-errors file of $pkg");
+}
+# If we are asked to only remove the files stop right here
+if ($type =~ m/^remove-/) {
     exit 0;
 }
 
