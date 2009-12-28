@@ -14,6 +14,8 @@ lintian (2.3.1) UNRELEASED; urgency=low
       to minor.
     + [RG] Fix a init.d-script-possible-missing-stop false positive when
       stopping on runlevels 2-5.
+    + [RG] Mention 'killprocs' in init.d-script-possible-missing-stop's
+      description. (Closes: #562608)
     + [RG] Warn about init scripts with incomplete start runlevels.
 
   * collection/ar-info:

@@ -287,11 +287,12 @@ Info: The given <tt>/etc/init.d</tt> script indicates it should be
  at any of those runlevels need to be stopped at all of them.
  .
  For example, if it is safe for the facility provided by this init script
- given init script to be stopped by <tt>sendsigs</tt> at runlevels 0 and
- 6, there should be no reason to special case runlevel 1.  If the facility
- needs special shutdown handling when rebooting the system (runlevel 6),
- it probably needs the same handling when halting the system (runlevel 0)
- or switching to single-user mode (runlevel 1).
+ to be stopped by <tt>sendsigs</tt> at runlevels 0 and 6, there should be
+ no reason to special case runlevel 1, where <tt>killprocs</tt> would
+ stop it.  If the facility needs special shutdown handling when rebooting
+ the system (runlevel 6), it probably needs the same handling when
+ halting the system (runlevel 0) or switching to single-user mode
+ (runlevel 1).
 
 Tag: init.d-script-missing-start
 Severity: normal
