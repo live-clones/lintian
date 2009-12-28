@@ -13,6 +13,11 @@ lintian (2.3.1) UNRELEASED; urgency=low
       stopping on runlevels 2-5.
     + [RG] Warn about init scripts with incomplete start runlevels.
 
+  * collection/ar-info:
+    + [RA] Skip *.a files that are dangling symlinks and discard error
+      output from ar.  Correctly handle file names that contain shell
+      metacharacters.
+  
   * reporting/templates/maintainer.tmpl:
     + [RA] Fix the logic to optionally display the archive area of
       additional package entries under the same source package.

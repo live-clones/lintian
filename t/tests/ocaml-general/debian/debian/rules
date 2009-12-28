@@ -18,4 +18,5 @@ override_dh_installdirs:
 	touch debian/libocaml-general-ocaml-dev/usr/lib/ocaml/bleh.cmo
 	touch debian/libocaml-general-ocaml-dev/usr/lib/ocaml/bleh.cma
 	touch debian/libocaml-general-ocaml-dev/usr/lib/ocaml/META
+	echo foo > debian/libocaml-general-ocaml-dev/usr/lib/ocaml/libbaz.a
 	touch debian/libocaml-general-ocaml-dev/usr/lib/foo.cmi
