@@ -37,6 +37,7 @@ our %ARCH_REGEX = (
 	'armeb'          => qr'ELF 32-bit MSB .* ARM',
 	'armel'          => qr'ELF 32-bit LSB .* \(SYSV\)',
 	'hppa'           => qr'ELF 32-bit MSB .* PA-RISC',
+	'hppa64'         => qr'ELF 64-bit MSB .* PA-RISC',
 	'hurd-i386' 	 => qr'ELF 32-bit LSB .* Intel 80386, .* (?:GNU/Hurd|(?!GNU))',
 	'i386'      	 => qr'ELF 32-bit LSB .* 80386, .* (?:GNU/Linux|(?!GNU))',
 	'ia64'      	 => qr'ELF 64-bit LSB .* IA-64',
@@ -57,6 +58,7 @@ our %ARCH_REGEX = (
 	'sparc64' 	 => qr'ELF 64-bit MSB .* SPARC');
 
 our %arch_64bit_equivs = (
+	'hppa'		=> 'hppa64',
 	'i386'		=> 'amd64',
 	'kfreebsd-i386'	=> 'kfreebsd-amd64',
 	'mips'		=> 'mips64',
