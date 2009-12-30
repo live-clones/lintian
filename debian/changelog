@@ -36,6 +36,8 @@ lintian (2.3.1) UNRELEASED; urgency=low
 
   * man/lintian.1:
     + [RG] Document deprecation of unpack levels.
+    + [ADB] Add the new "unpacked" collection script to the list of such
+      scripts.
   
   * reporting/templates/maintainer.tmpl:
     + [RA] Fix the logic to optionally display the archive area of
