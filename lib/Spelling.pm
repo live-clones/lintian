@@ -293,6 +293,8 @@ our %CORRECTIONS = qw(
                       monocrome monochrome
                       mroe more
                       multidimensionnal multidimensional
+                      nam name
+                      nams names
                       navagating navigating
                       nead need
                       neccesary necessary

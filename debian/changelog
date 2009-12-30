@@ -34,6 +34,9 @@ lintian (2.3.1) UNRELEASED; urgency=low
     + [RG] Deprecate and replace unpack levels with the use of
       collection scripts.
 
+  * lib/Spelling.pm:
+    + [ADB] Add corrections for "nam" (name) and "nams" (names).
+
   * man/lintian.1:
     + [RG] Document deprecation of unpack levels.
     + [ADB] Add the new "unpacked" collection script to the list of such
