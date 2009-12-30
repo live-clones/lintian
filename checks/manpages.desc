@@ -281,7 +281,7 @@ Info: This package installs a manual page in a locale directory that
  where a country name is appropriate.
 
 Tag: spelling-error-in-manpage
-Severity: normal
+Severity: minor
 Certainty: possible
 Info: Lintian found a spelling error in the manpage. Lintian has a list
  of common misspellings that it looks for.  It does not have a
