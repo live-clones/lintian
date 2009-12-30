@@ -48,6 +48,8 @@ lintian (2.3.1) UNRELEASED; urgency=low
   * lib/Spelling.pm:
     + [ADB] Add corrections for "nam" (name) and "nams" (names).
     + [RG] Add some more spelling errors.
+    + [RG] Uppercase every character of the correction if every
+      character of the original word is too.
 
   * man/lintian.1:
     + [RG] Document deprecation of unpack levels.

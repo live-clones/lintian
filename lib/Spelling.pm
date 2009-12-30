@@ -631,7 +631,9 @@ sub spelling_check {
         if (exists $CORRECTIONS{$lcword}) {
             $counter++;
             my $correction = $CORRECTIONS{$lcword};
-            if ($word =~ /^[A-Z]/) {
+            if ($word =~ /^[A-Z]+$/) {
+		$correction = uc $correction;
+	    } elsif ($word =~ /^[A-Z]/) {
                 $correction = ucfirst $correction;
             }
             _tag($tag, $filename, $word, $correction) if defined $tag;
@@ -643,7 +645,9 @@ sub spelling_check {
 	if ($text =~ m,\b($regex)\b,) {
 	    my $word = $1;
 	    my $correction = $MULTIWORD_CORRECTIONS{$regex};
-	    if ($word =~ /^[A-Z]/) {
+	    if ($word =~ /^[A-Z]+$/) {
+		$correction = uc $correction;
+	    } elsif ($word =~ /^[A-Z]/) {
 		$correction = ucfirst $correction;
 	    }
 	    $counter++;
