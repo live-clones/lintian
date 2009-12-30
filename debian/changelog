@@ -38,6 +38,8 @@ lintian (2.3.1) UNRELEASED; urgency=low
     + [RG] Document deprecation of unpack levels.
     + [ADB] Add the new "unpacked" collection script to the list of such
       scripts.
+    + [ADB] Correct the documentation of --tags-from-file to indicate that
+      the file contains tags to issue, not suppress.
   
   * reporting/templates/maintainer.tmpl:
     + [RA] Fix the logic to optionally display the archive area of
