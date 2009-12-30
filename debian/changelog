@@ -40,6 +40,7 @@ lintian (2.3.1) UNRELEASED; urgency=low
   * frontend/lintian:
     + [RG] Deprecate and replace unpack levels with the use of
       collection scripts.
+    + [ADB] Remove an unused variable declaration.
 
   * lib/Spelling.pm:
     + [ADB] Add corrections for "nam" (name) and "nams" (names).

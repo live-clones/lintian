@@ -88,7 +88,6 @@ my $exit_code = 0;
 my $LAB;
 
 my %collection_info;
-my %already_scheduled;
 my %checks;
 my %check_abbrev;
 my %unpack_infos;
