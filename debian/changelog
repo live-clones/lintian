@@ -13,6 +13,8 @@ lintian (2.3.1) UNRELEASED; urgency=low
   * checks/cruft:
     + [RA] Fix the regex to properly ignore CMakeCache.txt in the debian
       directory.  Thanks, Aaron M. Ucko.  (Closes: #553264)
+  * checks/files.desc:
+    + [RG] Add a missing 'it' to the description of duplicate-font-file.
   * checks/init.d.desc:
     + [RG] Bump severity of init.d-script-sourcing-without-test to serious.
   * checks/init.d{,.desc}:
