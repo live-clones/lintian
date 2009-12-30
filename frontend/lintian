@@ -540,11 +540,11 @@ if (defined $LINTIAN_SECTION) {
 
 # determine requested unpack level
 if (defined($unpack_level)) {
-    print STDERR "warning: --unpack-level is deprecated, ingoring.\n";
+    print STDERR "warning: --unpack-level is deprecated, ignoring.\n";
     # specified through command line
 } elsif (defined($LINTIAN_UNPACK_LEVEL)) {
     # specified via configuration file or env variable
-    print STDERR "warning: LINTIAN_UNPACK_LEVEL is deprecated, ingoring.\n";
+    print STDERR "warning: LINTIAN_UNPACK_LEVEL is deprecated, ignoring.\n";
 }
 
 # determine by action
