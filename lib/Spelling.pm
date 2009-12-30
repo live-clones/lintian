@@ -514,6 +514,13 @@ our %CORRECTIONS = qw(
 # The format above doesn't allow spaces.
 $CORRECTIONS{'alot'} = 'a lot';
 
+our %MULTIWORD_CORRECTIONS = (
+			    qr'(?i)an other' => 'another',
+			    qr'(?i)debian/gnu linux' => 'Debian GNU/Linux',
+			    qr'(?i)these package' => 'this package',
+			    qr'(?i)this packages' => 'these packages',
+			    );
+
 # Picky corrections, applied before lowercasing the word.  These are only
 # applied to things known to be entirely English text, such as package
 # descriptions, and should not be applied to files that may contain
@@ -632,25 +639,17 @@ sub spelling_check {
     }
 
     # Special case for correcting multi-word strings.
-    if ($text =~ m,(debian/gnu\s+linux),i) {
-       $counter++;
-        _tag($tag, $filename, $1, "Debian GNU/Linux")
-            if defined $tag;
-    }
-    if ($text =~ m,\b(an other)\b,i) {
-       $counter++;
-        _tag($tag, $filename, $1, "another")
-            if defined $tag;
-    }
-    if ($text =~ m,\b(this packages)\b,i) {
-       $counter++;
-        _tag($tag, $filename, $1, "these packages")
-            if defined $tag;
-    }
-    if ($text =~ m,\b(these package)\b,i) {
-       $counter++;
-        _tag($tag, $filename, $1, "this package")
-            if defined $tag;
+    for my $regex (keys %MULTIWORD_CORRECTIONS) {
+	if ($text =~ m,\b($regex)\b,) {
+	    my $word = $1;
+	    my $correction = $MULTIWORD_CORRECTIONS{$regex};
+	    if ($word =~ /^[A-Z]/) {
+		$correction = ucfirst $correction;
+	    }
+	    $counter++;
+	    _tag($tag, $filename, $word, $correction)
+		if defined $tag;
+	}
     }
 
     return $counter;
