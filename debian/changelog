@@ -9,7 +9,8 @@ lintian (2.3.1) UNRELEASED; urgency=low
       collection script as needed.
   * checks/binaries:
     + [RG] Recognise hppa64 binaries and ignore them on the
-      binary-from-other-architecture check for hppa. (Closes: #562788)
+      binary-from-other-architecture check for hppa.
+      Thanks, Matthias Klose.  (Closes: #562788)
   * checks/cruft:
     + [RA] Fix the regex to properly ignore CMakeCache.txt in the debian
       directory.  Thanks, Aaron M. Ucko.  (Closes: #553264)
@@ -23,7 +24,7 @@ lintian (2.3.1) UNRELEASED; urgency=low
     + [RG] Fix a init.d-script-possible-missing-stop false positive when
       stopping on runlevels 2-5.
     + [RG] Mention 'killprocs' in init.d-script-possible-missing-stop's
-      description. (Closes: #562608)
+      description.  Thanks, Kurt Roeckx.  (Closes: #562608)
     + [RG] Warn about init scripts with incomplete start runlevels.
   * checks/manpages.desc:
     + [RA] Downgrade spelling-error-in-manpage to minor severity.
