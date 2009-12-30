@@ -44,6 +44,7 @@ our %CORRECTIONS = qw(
                       abigious ambiguous
                       abitrate arbitrate
                       abov above
+                      absense absence
                       absolut absolute
                       accelleration acceleration
                       accesing accessing
@@ -57,6 +58,7 @@ our %CORRECTIONS = qw(
                       accomodates accommodates
                       accout account
                       acess access
+                      acessable accessible
                       acording according
                       acumulating accumulating
                       addional additional
@@ -69,6 +71,7 @@ our %CORRECTIONS = qw(
                       alegorical allegorical
                       algorith algorithm
                       algorithmical algorithmically
+                      algoritms algorithms
                       allpication application
                       alows allows
                       altough although
@@ -84,6 +87,7 @@ our %CORRECTIONS = qw(
                       appropriatly appropriately
                       aquired acquired
                       aquired acquired
+                      arbitary arbitrary
                       architechture architecture
                       arguement argument
                       arguements arguments
@@ -100,10 +104,12 @@ our %CORRECTIONS = qw(
                       attemps attempts
                       attruibutes attributes
                       authentification authentication
+                      automaticaly automatically
                       automaticly automatically
                       automatize automate
                       automatized automated
                       automatizes automates
+                      autonymous autonomous
                       auxilliary auxiliary
                       avaiable available
                       availabled available
@@ -116,6 +122,7 @@ our %CORRECTIONS = qw(
                       avaliable available
                       avaliable available
                       backgroud background
+                      bahavior behavior
                       baloons balloons
                       batery battery
                       becomming becoming
@@ -131,13 +138,16 @@ our %CORRECTIONS = qw(
                       changable changeable
                       charachters characters
                       charcter character
+                      childs children
                       chnages changes
                       choosen chosen
+                      colocated collocated
                       colorfull colorful
                       comand command
                       comit commit
                       commerical commercial
                       comminucation communication
+                      commited committed
                       commiting committing
                       committ commit
                       commoditiy commodity
@@ -150,6 +160,7 @@ our %CORRECTIONS = qw(
                       complient compliant
                       compres compress
                       compresion compression
+                      configuratoin configuration
                       connectinos connections
                       consistancy consistency
                       containes contains
@@ -161,7 +172,11 @@ our %CORRECTIONS = qw(
                       convertor converter
                       convinient convenient
                       corected corrected
+                      correponding corresponding
+                      correponds corresponds
                       cryptocraphic cryptographic
+                      curently currently
+                      deafult default
                       deamon daemon
                       debain Debian
                       debians Debian's
@@ -181,6 +196,7 @@ our %CORRECTIONS = qw(
                       dictionnary dictionary
                       diplay display
                       disapeared disappeared
+                      discontiguous discontinuous
                       dispertion dispersion
                       dissapears disappears
                       docuentation documentation
@@ -197,10 +213,14 @@ our %CORRECTIONS = qw(
                       endianess endianness
                       enhaced enhanced
                       enlightnment enlightenment
+                      enocded encoded
                       enterily entirely
                       enviroiment environment
                       enviroment environment
                       environement environment
+                      environent environment
+                      equivelant equivalent
+                      equivilant equivalent
                       excecutable executable
                       exceded exceeded
                       excellant excellent
@@ -235,7 +255,9 @@ our %CORRECTIONS = qw(
                       hierachy hierarchy
                       hierarchie hierarchy
                       howver however
+                      immeadiately immediately
                       implemantation implementation
+                      implemention implementation
                       incomming incoming
                       incompatabilities incompatibilities
                       incompatable incompatible
@@ -244,6 +266,7 @@ our %CORRECTIONS = qw(
                       indended intended
                       independant independent
                       informatiom information
+                      informations information
                       infromation information
                       initalize initialize
                       initators initiators
@@ -293,6 +316,7 @@ our %CORRECTIONS = qw(
                       monocrome monochrome
                       mroe more
                       multidimensionnal multidimensional
+                      mulitplied multiplied
                       nam name
                       nams names
                       navagating navigating
@@ -320,8 +344,11 @@ our %CORRECTIONS = qw(
                       packege package
                       packge package
                       pakage package
+                      pallette palette
                       paramameters parameters
+                      paramater parameter
                       parameterize parametrize
+                      parametes parameters
                       paramter parameter
                       paramters parameters
                       particularily particularly
@@ -345,6 +372,7 @@ our %CORRECTIONS = qw(
                       primative primitive
                       princliple principle
                       priorty priority
+                      procceed proceed
                       proccesors processors
                       proces process
                       processessing processing
@@ -372,6 +400,7 @@ our %CORRECTIONS = qw(
                       recieve receive
                       recieve receive
                       reciever receiver
+                      recogniced recognised
                       recognizeable recognizable
                       recommanded recommended
                       redircet redirect
@@ -426,6 +455,7 @@ our %CORRECTIONS = qw(
                       subdirectoires subdirectories
                       succesfully successfully
                       succesful successful
+                      sucessfully successfully
                       superceded superseded
                       superflous superfluous
                       superseeded superseded
@@ -460,6 +490,7 @@ our %CORRECTIONS = qw(
                       usefull useful
                       usera users
                       usetnet Usenet
+                      usualy usually
                       utilites utilities
                       utillities utilities
                       utilties utilities
