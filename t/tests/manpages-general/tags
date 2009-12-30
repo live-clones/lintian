@@ -28,6 +28,8 @@ I: manpages-general: hyphen-used-as-minus-sign usr/share/man/man3/include.3.gz:1
 I: manpages-general: hyphen-used-as-minus-sign usr/share/man/man3/include.3.gz:13
 I: manpages-general: hyphen-used-as-minus-sign usr/share/man/man3/include.3.gz:14
 I: manpages-general: hyphen-used-as-minus-sign usr/share/man/man3/include.3.gz:9
+I: manpages-general: spelling-error-in-manpage usr/X11R6/man/man1/rstartd.1x.gz speling spelling
+I: manpages-general: spelling-error-in-manpage usr/share/man/man1/program.1.gz speling spelling
 W: manpages-general: binary-without-english-manpage usr/bin/binary-without-english-manpage
 W: manpages-general: gz-file-not-gzip usr/share/man/man1/usr-bin-binary-alt.1.gz
 W: manpages-general: gz-file-not-gzip usr/share/man/man1/usr-sbin-binary.1.gz
@@ -44,5 +46,3 @@ W: manpages-general: manpage-has-errors-from-pod2man usr/share/man/man1/test.1p.
 W: manpages-general: manpage-has-useless-whatis-entry usr/share/man/man1/true.1.gz
 W: manpages-general: manpage-locale-dir-country-specific usr/share/man/de_DE/man1/test-utf8-chars.1p.gz
 W: manpages-general: manpage-section-mismatch usr/X11R6/man/man1/rstartd.1x.gz:5 1x != 1
-W: manpages-general: spelling-error-in-manpage usr/X11R6/man/man1/rstartd.1x.gz speling spelling
-W: manpages-general: spelling-error-in-manpage usr/share/man/man1/program.1.gz speling spelling
