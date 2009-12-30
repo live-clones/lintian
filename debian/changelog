@@ -22,6 +22,7 @@ lintian (2.3.1) UNRELEASED; urgency=low
     + [RG] Warn about init scripts with incomplete start runlevels.
   * checks/manpages.desc:
     + [RA] Downgrade spelling-error-in-manpage to minor severity.
+      (Closes: #563039)
 
   * collection/ar-info:
     + [RA] Skip *.a files that are dangling symlinks and discard error
