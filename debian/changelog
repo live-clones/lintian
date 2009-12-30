@@ -10,6 +10,9 @@ lintian (2.3.1) UNRELEASED; urgency=low
   * checks/binaries:
     + [RG] Recognise hppa64 binaries and ignore them on the
       binary-from-other-architecture check for hppa. (Closes: #562788)
+  * checks/cruft:
+    + [RA] Fix the regex to properly ignore CMakeCache.txt in the debian
+      directory.  Thanks, Aaron M. Ucko.  (Closes: #553264)
   * checks/init.d.desc:
     + [RG] Bump severity of init.d-script-sourcing-without-test to serious.
   * checks/init.d{,.desc}:
