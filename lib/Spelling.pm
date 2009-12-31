@@ -455,7 +455,6 @@ our %CORRECTIONS = qw(
                       succesfully successfully
                       succesful successful
                       sucessfully successfully
-                      superceded superseded
                       superflous superfluous
                       superseeded superseded
                       suplied supplied
