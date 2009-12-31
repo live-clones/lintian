@@ -314,7 +314,7 @@ Info: The given init script seems to refer to <tt>/usr</tt>, possibly
  it's unmounted.
  .
  Using Should-Start or Should-Stop to declare the dependency is
- conceptually incorrect since the $remote_fs facility are always
+ conceptually incorrect since the $remote_fs facility is always
  available.  Required-Start or Required-Stop should be used instead.
 Ref: http://wiki.debian.org/LSBInitScripts
 
@@ -328,6 +328,6 @@ Info: The given init script seems to refer to <tt>/var</tt>, possibly
  run before <tt>/var</tt> is mounted or after it's unmounted.
  .
  Using Should-Start or Should-Stop to declare the dependency is
- conceptually incorrect since the $local_fs facility are always
+ conceptually incorrect since the $local_fs facility is always
  available.  Required-Start or Required-Stop should be used instead.
 Ref: http://wiki.debian.org/LSBInitScripts
