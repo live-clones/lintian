@@ -626,7 +626,7 @@ sub spelling_check {
 
     for my $word (split(/\s+/, $text)) {
         $word =~ s/[.,;:?!]+$//;
-        next if (length($word) <= 5 and $word =~ /^[A-Z]+\z/);
+        next if ($word =~ /^[A-Z]{1,5}\z/);
         my $lcword = lc $word;
         if (exists $CORRECTIONS{$lcword}) {
             $counter++;
