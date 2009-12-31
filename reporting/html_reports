@@ -269,8 +269,11 @@ while (<>) {
         }
     }
     $maintainer ||= '(unknown)';
-    $version ||= 'unknown';
-    $source_version ||= $version;
+    $area ||= 'main';
+    $version = 'unknown'
+        unless (defined ($version) and length ($version) > 0);
+    $source_version = $version
+        unless (defined ($source_version) and length ($source_version) > 0);
 
     # Check if we've seen the URL for this maintainer before and, if so, map
     # them to the same person as the previous one.
