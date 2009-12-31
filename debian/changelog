@@ -3,6 +3,7 @@ lintian (2.3.1) UNRELEASED; urgency=low
   * Summary of tag changes:
     + Added:
       - init.d-script-missing-start
+      - non-native-package-with-native-version
 
   * {checks,collection}/*.desc:
     + [RG] Remove Unpack-Level fields and depend on the 'unpacked'
@@ -14,6 +15,8 @@ lintian (2.3.1) UNRELEASED; urgency=low
   * checks/cruft:
     + [RA] Fix the regex to properly ignore CMakeCache.txt in the debian
       directory.  Thanks, Aaron M. Ucko.  (Closes: #553264)
+    + [RA] Check for a non-native package with a native version.  Thanks,
+      Andreas Beckmann.
   * checks/files.desc:
     + [RG] Add a missing 'it' to the description of duplicate-font-file.
   * checks/init.d.desc:

@@ -94,10 +94,14 @@ if (-e "debfiles/files" and not -z "debfiles/files") {
 
 # This doens't really belong here, but there isn't a better place at the
 # moment to put this check.
+my $version = $info->field('version');
 if ($info->native) {
-    my $version = $info->field('version');
     if ($version =~ /-/ and $version !~ /-0\.[^-]+$/) {
         tag 'native-package-with-dash-version';
+    }
+} else {
+    if ($version !~ /-/) {
+        tag 'non-native-package-with-native-version';
     }
 }
 

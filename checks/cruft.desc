@@ -16,6 +16,15 @@ Info: Native packaging should only be used if a piece of software was
  the reason is the location of the original source tarball. dpkg-source
  searches for this in ../package_upstream-version.orig.tar.gz.
 
+Tag: non-native-package-with-native-version
+Severity: normal
+Certainty: certain
+Info: This package has a native version number (a version number without a
+ dash and a Debian portion) but is built as a non-native package.  Usually
+ this is an error caused by a stray <tt>*.orig.tar.gz</tt> file in the
+ parent directory fooling <tt>dpkg-source</tt> into thinking it was
+ supposed to be a non-native package.
+
 Tag: documentation-package-not-architecture-independent
 Severity: normal
 Certainty: certain
