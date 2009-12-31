@@ -18,8 +18,16 @@ echo start stop reload restart force-reload status
 
 [ -f /etc/default/bar ] && . /etc/default/bar
 
+if [ -e /etc/default/locale ]; then
+    . /etc/default/locale
+fi
+
 if [ -f /etc/default/moo ]; then
     . /etc/default/moo
+fi
+
+if [ -r /etc/default/tmpfs ]; then
+    . /etc/default/tmpfs
 fi
 
 PACKAGE=moo
