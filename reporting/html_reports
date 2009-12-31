@@ -211,6 +211,7 @@ while (<>) {
     next unless m/^([EWIXO]): (\S+)(?: (\S+))?: (\S+)(?:\s+(.*))?/;
     my ($code, $package, $type, $tag, $extra) = ($1, $2, $3, $4, $5);
     $type = 'binary' unless (defined $type);
+    $extra = '' unless (defined $extra);
     next unless ($type eq 'source' || $type eq 'binary' || $type eq 'udeb');
 
     # Update statistics.
@@ -362,12 +363,16 @@ for my $maintainer (@maintainers) {
     # Determine if the maintainer's page is clean.  Check all packages for
     # which they're either maintainer or uploader and set $error_clean if
     # they have no errors or warnings.
+    #
+    # Also take this opportunity to sort the tags so that all similar tags
+    # will be grouped, which produces better HTML output.
     my $error_clean = 1;
     for my $source (keys %{ $by_maint{$maintainer} },
                     keys %{ $by_uploader{$maintainer} }) {
         my $versions = $by_maint{$maintainer}{$source}
             || $by_uploader{$maintainer}{$source};
         for my $version (keys %$versions) {
+            $versions->{$version} = [ sort by_tag @{ $versions->{$version} } ];
             my $tags = $versions->{$version};
             for my $tag (@$tags) {
                 $error_clean = 0 if ($tag->{code} eq 'E');
@@ -625,6 +630,17 @@ sub output_template {
     $template->fill_in (OUTPUT => \*OUTPUT, HASH => $data)
         or die "filling out $file failed: $Text::Template::ERROR\n";
     close OUTPUT;
+}
+
+# Sort function for sorting lists of tags.  Sort by package, version, area,
+# type, tag, and then any extra data.  This will produce the best HTML output.
+sub by_tag {
+    return $a->{package} cmp $b->{package}
+        || $a->{version} cmp $b->{version}
+        || $a->{area}    cmp $b->{area}
+        || $a->{type}    cmp $b->{type}
+        || $a->{tag}     cmp $b->{tag}
+        || $a->{extra}   cmp $b->{extra};
 }
 
 # Local Variables:

@@ -62,6 +62,10 @@ lintian (2.3.1) UNRELEASED; urgency=low
     + [ADB] Correct the documentation of --tags-from-file to indicate that
       the file contains tags to issue, not suppress.
   
+  * reporting/html_reports:
+    + [RA] Sort the tags so that the maintainer view will group repeated
+      instances of the same tag and display extra information in sorted
+      order.  (Closes: #563126)
   * reporting/templates/maintainer.tmpl:
     + [RA] Fix the logic to optionally display the archive area of
       additional package entries under the same source package.
