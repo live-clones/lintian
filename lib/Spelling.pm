@@ -141,7 +141,6 @@ our %CORRECTIONS = qw(
                       childs children
                       chnages changes
                       choosen chosen
-                      colocated collocated
                       colorfull colorful
                       comand command
                       comit commit
@@ -196,7 +195,7 @@ our %CORRECTIONS = qw(
                       dictionnary dictionary
                       diplay display
                       disapeared disappeared
-                      discontiguous discontinuous
+                      discontiguous noncontiguous
                       dispertion dispersion
                       dissapears disappears
                       docuentation documentation
