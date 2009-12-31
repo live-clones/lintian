@@ -17,6 +17,9 @@ lintian (2.3.1) UNRELEASED; urgency=low
       directory.  Thanks, Aaron M. Ucko.  (Closes: #553264)
     + [RA] Check for a non-native package with a native version.  Thanks,
       Andreas Beckmann.
+  * checks/fields.desc:
+    + [RA] Fix spelling error in dfsg-version-with-period tag description.
+      Thanks, Jakub Wilk.  (Closes: #563185)
   * checks/files.desc:
     + [RG] Add a missing 'it' to the description of duplicate-font-file.
   * checks/init.d{,.desc}:

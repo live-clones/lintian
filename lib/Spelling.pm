@@ -452,6 +452,7 @@ our %CORRECTIONS = qw(
                       standart standard
                       staticly statically
                       subdirectoires subdirectories
+                      suble subtle
                       succesfully successfully
                       succesful successful
                       sucessfully successfully

@@ -781,7 +781,7 @@ Tag: dfsg-version-with-period
 Severity: minor
 Certainty: possible
 Info: The version number of this package contains ".dfsg", probably in a
- form like "1.2.dfsg1".  There is a suble sorting problem with this
+ form like "1.2.dfsg1".  There is a subtle sorting problem with this
  version method: 1.2.dfsg1 is considered a later version than 1.2.1.  If
  upstream adds another level to its versioning, finding a good version
  number for the next upstream release will be awkward.
