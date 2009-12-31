@@ -29,6 +29,8 @@ lintian (2.3.1) UNRELEASED; urgency=low
     + [RG] Mention 'killprocs' in init.d-script-possible-missing-stop's
       description.  Thanks, Kurt Roeckx.  (Closes: #562608)
     + [RG] Warn about init scripts with incomplete start runlevels.
+    + [RG] Tighten check for missing dependency on local_fs or remote_fs
+      when using files with a name of 'var*' or 'usr*'.
   * checks/manpages.desc:
     + [RA] Downgrade spelling-error-in-manpage to minor severity.
       (Closes: #563039)

@@ -246,8 +246,8 @@ sub check_init {
 
 	# This should be more sophisticated: ignore heredocs, ignore quoted
 	# text and the arguments to echo, etc.
-	$needs_fs{'remote'} = 1 if ($l =~ m,^[^\#]*/usr,);
-	$needs_fs{'local'}  = 1 if ($l =~ m,^[^\#]*/var,);
+	$needs_fs{'remote'} = 1 if ($l =~ m,^[^\#]*/usr/,);
+	$needs_fs{'local'}  = 1 if ($l =~ m,^[^\#]*/var/,);
 
 	while ($l =~ s/^[^\#]*?(start|stop|restart|force-reload)//o) {
 	    $tag{$1} = 1;

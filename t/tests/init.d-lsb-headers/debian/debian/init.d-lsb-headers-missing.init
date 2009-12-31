@@ -11,6 +11,8 @@ set -e
 # Short-Description: Just a test script
 ### END INIT INFO
 
+. /lib/init/vars.sh
+
 case "$1" in
     start|stop|force-reload|restart|status|*)
 	echo hello world
