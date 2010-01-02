@@ -43,6 +43,10 @@ lintian (2.3.1) UNRELEASED; urgency=low
   * checks/manpages.desc:
     + [RA] Downgrade spelling-error-in-manpage to minor severity.
       (Closes: #563039)
+  * checks/patch-systems:
+    + [RA] Avoid false positives for patches modifying files in debian/*
+      when the parent directory in which the patch was created is named
+      debian.  Thanks, Mark Brown.  (Closes: #562875)
 
   * collection/ar-info:
     + [RA] Skip *.a files that are dangling symlinks and discard error

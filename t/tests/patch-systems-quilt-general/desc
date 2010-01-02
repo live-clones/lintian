@@ -1,0 +1,12 @@
+Testname: patch-systems-quilt-general
+Sequence: 6000
+Type: non-native
+Version: 1.0-1
+Description: General tests of a quilt patch system
+Test-For:
+ dpatch-build-dep-but-no-patch-list
+ more-than-one-patch-system
+ patch-modifying-debian-files
+ patch-system-but-direct-changes-in-diff
+ quilt-patch-with-non-standard-options
+ quilt-series-references-non-existent-patch

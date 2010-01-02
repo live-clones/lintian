@@ -1,4 +1,4 @@
-Last generated 2009-12-27
+Last generated 2010-01-02
 
 The following tags are not tested by the test suite:
 
@@ -162,11 +162,7 @@ menus prerm-calls-updatemenus
 
 nmu changelog-is-symlink
 
-patch-systems more-than-one-patch-system
-patch-systems patch-modifying-debian-files
-patch-systems quilt-patch-with-non-standard-options
 patch-systems quilt-series-but-no-build-dep
-patch-systems quilt-series-references-non-existent-patch
 
 po-debconf missing-file-from-potfiles-in
 po-debconf missing-potfiles-in
@@ -443,8 +439,6 @@ nmu changelog-should-not-mention-nmu
 nmu orphaned-package-should-not-have-uploaders
 nmu qa-upload-has-incorrect-version-number
 
-patch-systems dpatch-build-dep-but-no-patch-list
-patch-systems patch-system-but-direct-changes-in-diff
 patch-systems quilt-build-dep-but-no-series-file
 
 po-debconf invalid-po-file
@@ -576,7 +570,6 @@ cdbs-test
   no-human-maintainers
 
 debconf
-  dpatch-build-dep-but-no-patch-list
   invalid-po-file
   loads-obsolete-confmodule
   making-assumptions-about-interfaces-in-templates
@@ -632,7 +625,6 @@ debug
 
 diffs
   arch-independent-package-contains-binary-or-object
-  patch-system-but-direct-changes-in-diff
 
 etcfiles
   file-in-etc-not-marked-as-conffile

@@ -1,0 +1,6 @@
+E: patch-systems-quilt-general source: patch-modifying-debian-files some-file debian/some-file
+E: patch-systems-quilt-general source: quilt-series-references-non-existent-patch some-nonexistent-patch
+W: patch-systems-quilt-general source: dpatch-build-dep-but-no-patch-list
+W: patch-systems-quilt-general source: more-than-one-patch-system
+W: patch-systems-quilt-general source: patch-system-but-direct-changes-in-diff README
+W: patch-systems-quilt-general source: quilt-patch-with-non-standard-options some-other-file
