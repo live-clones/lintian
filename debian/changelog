@@ -20,8 +20,9 @@ lintian (2.3.1) UNRELEASED; urgency=low
   * checks/fields.desc:
     + [RA] Fix spelling error in dfsg-version-with-period tag description.
       Thanks, Jakub Wilk.  (Closes: #563185)
-  * checks/files.desc:
+  * checks/files{,.desc}:
     + [RG] Add a missing 'it' to the description of duplicate-font-file.
+    + [RG] Add detection of nusoap to the embedded PHP libraries check.
   * checks/init.d{,.desc}:
     + [RG] Bump severity of init.d-script-sourcing-without-test to serious.
     + [RG] Lower the severity of init.d-script-does-not-provide-itself

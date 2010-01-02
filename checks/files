@@ -99,6 +99,7 @@ our @phplibraries = (
     [ qr,(?i)rss_parse\.(php|inc)$, => 'libphp-magpierss' ],
     [ qr,(?i)unit_tester\.php$, => 'php-simpletest' ],
     [ qr,(?i)Sparkline\.php$, => 'libsparkline-php' ],
+    [ qr,(?i)(?:class\.)?nusoap\.(?:php|inc)$, => 'libnusoap-php' ],
 # not yet available in unstable:,
 #    [ qr,(?i)IXR_Library(\.inc|\.php)+$, => 'libphp-ixr' ],
 #    [ qr,(?i)(class\.)?kses\.php$, => 'libphp-kses' ],
