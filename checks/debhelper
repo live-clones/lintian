@@ -33,7 +33,6 @@ use Lintian::Tags qw(tag);
 my $cdbscompat = 5;
 
 my $maint_commands = Lintian::Data->new ('debhelper/maint_commands');
-my $miscDeps_commands = Lintian::Data->new ('debhelper/miscDepends_commands');
 my $dh_commands_depends = Lintian::Data->new ('debhelper/dh_commands', '=');
 my $filename_configs = Lintian::Data->new ('debhelper/filename-config-files');
 
@@ -68,7 +67,6 @@ my $usescdbs = '';
 my $seendhpython = '';
 my $usescdbspython = '';
 my $seendhcleank = '';
-my $needmiscdepends = 0;
 my $overridetargets = 0;
 my %missingbdeps;
 
@@ -118,9 +116,6 @@ while (<RULES>) {
 	if ($maint_commands->known($dhcommand) and not m/\s+\-n\s+/) {
 	    $needtomodifyscripts = 1;
 	}
-	if ($miscDeps_commands->known($dhcommand)) {
-	    $needmiscdepends = 1;
-	}
 
 	# If debhelper commands are wrapped in make conditionals, assume the
 	# maintainer knows what they're doing and don't check build
@@ -146,13 +141,11 @@ while (<RULES>) {
 	$seencommand = 1;
 	$needbuilddepends = 1;
 	$needtomodifyscripts = 1;
-	$needmiscdepends = 1;
 	push (@versioncheck, 'dh');
     } elsif (m,^include\s+/usr/share/cdbs/1/rules/debhelper.mk,) {
 	$seencommand = 1;
 	$needbuilddepends = 1;
 	$needtomodifyscripts = 1;
-	$needmiscdepends = 1;
 
 	# CDBS sets DH_COMPAT but doesn't export it.  It does, however, create
 	# a debian/compat file if none was found; that logic is handled later.
@@ -195,8 +188,7 @@ for my $binpkg (keys %$pkgs) {
     $depends = $weak_depends . $strong_depends;
 
     tag 'debhelper-but-no-misc-depends', $binpkg
-	if $needmiscdepends and $depends !~ m/\$\{misc:Depends\}/
-	   and $pkgs->{$binpkg} eq 'deb';
+	if $depends !~ m/\$\{misc:Depends\}/ and $pkgs->{$binpkg} eq 'deb';
 
     tag 'weak-dependency-on-misc-depends', $binpkg
 	if $weak_depends =~ m/\$\{misc:Depends\}/

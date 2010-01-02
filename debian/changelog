@@ -17,6 +17,12 @@ lintian (2.3.1) UNRELEASED; urgency=low
       directory.  Thanks, Aaron M. Ucko.  (Closes: #553264)
     + [RA] Check for a non-native package with a native version.  Thanks,
       Andreas Beckmann.
+  * checks/debhelper:
+    + [RA] Always warn if debhelper is in use but no ${misc:Depends}
+      dependency is present rather than checking which specific debhelper
+      commands use it.  Any debhelper command may start adding
+      dependencies to ${misc:Depends} at any time.  Lower the certainty to
+      possible, since a missing ${misc:Depends} may not cause problems.
   * checks/fields.desc:
     + [RA] Fix spelling error in dfsg-version-with-period tag description.
       Thanks, Jakub Wilk.  (Closes: #563185)
