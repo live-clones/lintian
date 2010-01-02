@@ -269,6 +269,20 @@ Info: The latest entry in NEWS.Debian appears to use asterisks to present
  NEWS.Debian rather than a bulleted list.
 Ref: devref 6.3.4
 
+Tag: debian-news-entry-without-blank-line
+Severity: minor
+Certainty: possible
+Info: There appears to be no blank line after the most recent
+ <tt>NEWS.Debian</tt> entry.
+ .
+ The current <tt>apt-listchanges</tt> takes the blank that separates
+ entries for different packages from the blank line following the trailer
+ line of each <tt>NEWS.Debian</tt> file.  This means that unless there is
+ a blank line after an entry, it may be displayed to the user without a
+ blank line between it and entries from other packages.  Please add a
+ blank line (which, if this is the only entry in the file, may mean adding
+ a trailing blank line).
+
 Tag: spelling-error-in-changelog
 Severity: minor
 Certainty: certain

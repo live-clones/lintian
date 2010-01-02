@@ -6,6 +6,7 @@ Test-For:
  changelog-news-debian-mismatch
  debian-news-entry-has-strange-distribution
  debian-news-entry-uses-asterisk
+ debian-news-entry-without-blank-line
  debian-news-file-uses-obsolete-national-encoding
  spelling-error-in-news-debian
  syntax-error-in-debian-news-file

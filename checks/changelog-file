@@ -139,8 +139,8 @@ if ($#doc_files < 0) {
     return 0;
 }
 
-# Check a NEWS.Debian file if we have one.  Save the version, distribution,
-# and urgency for later checks against the changelog file.
+# Check a NEWS.Debian file if we have one.  Save the parsed version of the
+# flie for later checks against the changelog file.
 my $news;
 if (-f 'NEWS.Debian') {
     my $line = file_is_encoded_in_non_utf8('NEWS.Debian', $type, $pkg);
@@ -165,6 +165,20 @@ if (-f 'NEWS.Debian') {
 	    tag 'debian-news-entry-uses-asterisk';
 	}
     }
+
+    # Check that the most recent trailer line in NEWS.Debian is followed by a
+    # blank line due to a current bug in apt-listchanges that otherwise
+    # doesn't show a blank line between entries from other packages.
+    open(IN, '<', 'NEWS.Debian')
+	or fail("cannot open NEWS.Debian for $type package $pkg");
+    local $_;
+    while (<IN>) {
+	last if /^ --/;
+    }
+    my $next = <IN>;
+    tag 'debian-news-entry-without-blank-line', "line " . ($. - 1)
+	unless $next =~ /^\s*$/;
+    close IN;
 }
 
 if ( $found_html && !$found_text ) {

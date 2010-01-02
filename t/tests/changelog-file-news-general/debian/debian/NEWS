@@ -4,7 +4,6 @@ changelog-file-news-general (1.0) UNRELEASED; urgency=high
     has an ISO 8859-1 character: µ and a speling error.
 
  -- Russ Allbery <rra@debian.org>  Fri, 01 Jan 2010 20:57:15 -0800
-
 changelog-file-news-general (0.9) unstable; urgency=low
 
   Another entry, this one with a syntax error in the date.

@@ -4,6 +4,7 @@ lintian (2.3.1) UNRELEASED; urgency=low
     + Added:
       - init.d-script-missing-start
       - debian-news-entry-uses-asterisk
+      - debian-news-entry-without-blank-line
       - non-native-package-with-native-version
 
   * {checks,collection}/*.desc:
@@ -16,6 +17,9 @@ lintian (2.3.1) UNRELEASED; urgency=low
   * checks/changelog-file{,.desc}:
     + [RA] Per devref, recommend against NEWS.Debian entries formatted
       with asterisks like changelog entries.
+    + [RA] Check that the most recent NEWS.Debian entry is followed by a
+      blank line for apt-listchanges.  Thanks, Adeodato Simó.  (Addresses
+      the Lintian part of #523436)
   * checks/cruft:
     + [RA] Fix the regex to properly ignore CMakeCache.txt in the debian
       directory.  Thanks, Aaron M. Ucko.  (Closes: #553264)
