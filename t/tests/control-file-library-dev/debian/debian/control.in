@@ -88,3 +88,17 @@ Description: {$description} (arch: all dev package)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
+
+Package: libcontrol-baz-dev
+Section: libdevel
+Architecture: {$architecture}
+Depends:
+ libcontrol-file-baz9-4 (= $\{binary:Version\}),
+ $\{misc:Depends\},
+ $\{shlibs:Depends\}
+Description: {$description} (dev whitespace)
+ Test proper parsing of leading whitespace in Depends
+ .
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.

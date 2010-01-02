@@ -281,6 +281,8 @@ for my $i (0 .. $#descriptions) {
 # version.
 sub check_dev_depends {
 	my ($package, $depends, @packages) = @_;
+	$depends =~ s/^\s+//;
+	$depends =~ s/\s+$//;
 	for my $target (@packages) {
 		next unless ($target =~ /^lib[\w.+-]+\d/
 			     and $target !~ /-(?:dev|docs?)$/);
