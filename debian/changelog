@@ -33,9 +33,9 @@ lintian (2.3.1) UNRELEASED; urgency=low
     + [RG] Warn about init scripts with incomplete start runlevels.
     + [RG] Tighten check for missing dependency on local_fs or remote_fs
       when using files with a name of 'var*' or 'usr*'.
-    + [RG] Also recognise the use of the -r test as a file test when
-      determining whether a /etc/default file is being sourced
-      unconditionally.
+    + [RG] Also recognise the use of the -r test as a file test, and
+      the test command when determining whether a /etc/default file is
+      being sourced unconditionally.
     + [RG] Correct the description of the
       missing-dependency-on-{remote,local_fs} tags where 'is' was meant
       to be used instead of 'are'.

@@ -36,3 +36,7 @@ PACKAGE=moo
 if [ -f /etc/default/$PACKAGE ]; then
     . /etc/default/$PACKAGE
 fi
+
+if test -f /etc/default/$PACKAGE; then
+    . /etc/default/$PACKAGE
+fi
