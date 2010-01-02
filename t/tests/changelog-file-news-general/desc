@@ -1,0 +1,11 @@
+Testname: changelog-file-news-general
+Sequence: 6000
+Version: 1.0
+Description: General checks for NEWS.Debian
+Test-For:
+ changelog-news-debian-mismatch
+ debian-news-entry-has-strange-distribution
+ debian-news-entry-uses-asterisk
+ debian-news-file-uses-obsolete-national-encoding
+ spelling-error-in-news-debian
+ syntax-error-in-debian-news-file

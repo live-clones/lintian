@@ -139,10 +139,8 @@ if ($#doc_files < 0) {
     return 0;
 }
 
-# Check a NEWS.Debian file if we have one.  We should additionally check here
-# that the entries don't begin with an asterisk, but that hasn't been done
-# yet.  Save the version, distribution, and urgency for later checks against
-# the changelog file.
+# Check a NEWS.Debian file if we have one.  Save the version, distribution,
+# and urgency for later checks against the changelog file.
 my $news;
 if (-f 'NEWS.Debian') {
     my $line = file_is_encoded_in_non_utf8('NEWS.Debian', $type, $pkg);
@@ -163,6 +161,9 @@ if (-f 'NEWS.Debian') {
             tag "debian-news-entry-has-strange-distribution", $news->Distribution;
         }
         spelling_check('spelling-error-in-news-debian', $news->Changes);
+	if ($news->Changes =~ /^\s*\*\s/) {
+	    tag 'debian-news-entry-uses-asterisk';
+	}
     }
 }
 

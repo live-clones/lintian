@@ -3,6 +3,7 @@ lintian (2.3.1) UNRELEASED; urgency=low
   * Summary of tag changes:
     + Added:
       - init.d-script-missing-start
+      - debian-news-entry-uses-asterisk
       - non-native-package-with-native-version
 
   * {checks,collection}/*.desc:
@@ -12,6 +13,9 @@ lintian (2.3.1) UNRELEASED; urgency=low
     + [RG] Recognise hppa64 binaries and ignore them on the
       binary-from-other-architecture check for hppa.
       Thanks, Matthias Klose.  (Closes: #562788)
+  * checks/changelog-file{,.desc}:
+    + [RA] Per devref, recommend against NEWS.Debian entries formatted
+      with asterisks like changelog entries.
   * checks/cruft:
     + [RA] Fix the regex to properly ignore CMakeCache.txt in the debian
       directory.  Thanks, Aaron M. Ucko.  (Closes: #553264)

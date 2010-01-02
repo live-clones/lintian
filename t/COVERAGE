@@ -216,17 +216,12 @@ binaries unstripped-binary-or-object
 
 changelog-file changelog-file-missing-in-native-package
 changelog-file changelog-file-not-compressed
-changelog-file changelog-news-debian-mismatch
 changelog-file debian-changelog-file-contains-invalid-email-address
 changelog-file debian-changelog-file-is-a-symlink
 changelog-file debian-changelog-file-missing
 changelog-file debian-changelog-file-missing-or-wrong-name
 changelog-file debian-changelog-file-uses-obsolete-national-encoding
-changelog-file debian-news-entry-has-strange-distribution
 changelog-file debian-news-file-not-compressed
-changelog-file debian-news-file-uses-obsolete-national-encoding
-changelog-file spelling-error-in-news-debian
-changelog-file syntax-error-in-debian-news-file
 changelog-file wrong-name-for-debian-news-file
 
 control-file debian-control-file-uses-obsolete-national-encoding
@@ -505,11 +500,8 @@ Breakdown of remaining tags in legacy test suite by test case:
 binary
   binary-has-unneeded-section
   changelog-file-not-compressed
-  changelog-news-debian-mismatch
   control-file-is-empty
   debian-changelog-file-missing-or-wrong-name
-  debian-news-entry-has-strange-distribution
-  debian-news-file-uses-obsolete-national-encoding
   deprecated-kdelnk-file
   desktop-contains-deprecated-header
   desktop-entry-missing-required-key
@@ -553,7 +545,6 @@ binary
   postrm-does-not-call-updatemenus
   spelling-error-in-doc-base-abstract-field
   spelling-error-in-doc-base-title-field
-  spelling-error-in-news-debian
   statically-linked-binary
   su-to-root-with-usr-sbin
   su-wrapper-not-su-to-root
@@ -561,7 +552,6 @@ binary
   substvar-source-version-is-deprecated
   symlink-contains-spurious-segments
   symlink-should-be-relative
-  syntax-error-in-debian-news-file
   unquoted-string-in-menu-item
   unstripped-binary-or-object
   xs-vcs-header-in-debian-control

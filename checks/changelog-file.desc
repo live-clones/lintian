@@ -260,6 +260,15 @@ Info: The latest entry in NEWS.Debian has an unusual distribution name.
  distribution doesn't match the distribution for the same entry in the
  Debian changelog file.
 
+Tag: debian-news-entry-uses-asterisk
+Severity: wishlist
+Certainty: possible
+Info: The latest entry in NEWS.Debian appears to use asterisks to present
+ changes in a bulleted list, similar to the normal changelog syntax.  The
+ Debian Developer's Reference recommends using regular paragraphs in
+ NEWS.Debian rather than a bulleted list.
+Ref: devref 6.3.4
+
 Tag: spelling-error-in-changelog
 Severity: minor
 Certainty: certain
