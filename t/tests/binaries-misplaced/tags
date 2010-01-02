@@ -1,1 +1,2 @@
+E: binaries-misplaced: arch-independent-package-contains-binary-or-object ./etc/foo
 E: binaries-misplaced: binary-in-etc ./etc/foo

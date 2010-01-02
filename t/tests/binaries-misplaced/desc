@@ -2,5 +2,6 @@ Testname: binaries-misplaced
 Sequence: 6000
 Version: 1.0
 Description: Test binaries in /etc
-Architecture: any
-Test-For: binary-in-etc
+Test-For:
+ arch-independent-package-contains-binary-or-object
+ binary-in-etc

@@ -202,7 +202,6 @@ shared-libs shlib-without-PT_GNU_STACK-section
 
 The following tags are only tested by the legacy test suite:
 
-binaries arch-independent-package-contains-binary-or-object
 binaries binary-has-unneeded-section
 binaries binary-with-bad-dynamic-table
 binaries debug-file-should-use-detached-symbols
@@ -608,9 +607,6 @@ debug
   unknown-meta-field-in-symbols-file
   unused-shlib-entry-in-symbols-control-file
   version-substvar-for-external-package
-
-diffs
-  arch-independent-package-contains-binary-or-object
 
 etcfiles
   file-in-etc-not-marked-as-conffile
