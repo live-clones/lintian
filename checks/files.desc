@@ -1083,3 +1083,11 @@ Info: The given, apparently compressed, file is shipped in the package
  in addition to another file with the same name without the
  compression-method extension.  Normally this indicates a mistake in the
  installation process of the package.
+
+Tag: udev-rule-in-etc
+Severity: important
+Certainty: certain
+Ref: http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=559208
+Info: This package ships a udev rule and installs it under
+ <tt>/etc/udev/rules.d</tt>, which is reserved for user-installed files.
+ The correct directory for system rules is <tt>/lib/udev/rules.d</tt>.

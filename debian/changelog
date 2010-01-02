@@ -7,6 +7,7 @@ lintian (2.3.1) UNRELEASED; urgency=low
       - debian-news-entry-uses-asterisk
       - debian-news-entry-without-blank-line
       - non-native-package-with-native-version
+      - udev-rule-in-etc
 
   * {checks,collection}/*.desc:
     + [RG] Remove Unpack-Level fields and depend on the 'unpacked'
@@ -40,6 +41,8 @@ lintian (2.3.1) UNRELEASED; urgency=low
   * checks/files{,.desc}:
     + [RG] Add a missing 'it' to the description of duplicate-font-file.
     + [RG] Add detection of nusoap to the embedded PHP libraries check.
+    + [RG] Check that udev rules are not installed in /etc/udev/rules.d.
+      Thanks, Marco d'Itri.  (Closes: #559208)
   * checks/init.d{,.desc}:
     + [RG] Bump severity of init.d-script-sourcing-without-test to serious.
     + [RG] Lower the severity of init.d-script-does-not-provide-itself

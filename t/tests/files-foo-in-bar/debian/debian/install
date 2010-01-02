@@ -1,4 +1,5 @@
 bar bin/foo
+bar etc/udev/rules.d
 bar mnt/foo
 bar tmp/foo
 bar usr/bin/foo

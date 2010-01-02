@@ -14,3 +14,4 @@ Test-For:
  non-standard-dir-in-usr
  non-standard-dir-in-var
  subdir-in-bin
+ udev-rule-in-etc

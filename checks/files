@@ -273,6 +273,10 @@ foreach my $file (sort keys %{$info->index}) {
 	elsif ($file =~ m,^etc/rc\.boot/\S,) {
 	    tag "package-installs-into-etc-rc.boot", "$file";
 	}
+	# ---------------- /etc/udev/rules.d
+	elsif ($file =~ m,^etc/udev/rules\.d/\S,) {
+	    tag "udev-rule-in-etc", "$file";
+	}
     }
     # ---------------- /usr
     elsif ($file =~ m,^usr/,) {
