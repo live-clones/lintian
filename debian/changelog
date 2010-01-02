@@ -3,6 +3,7 @@ lintian (2.3.1) UNRELEASED; urgency=low
   * Summary of tag changes:
     + Added:
       - init.d-script-missing-start
+      - debian-news-entry-has-unknown-version
       - debian-news-entry-uses-asterisk
       - debian-news-entry-without-blank-line
       - non-native-package-with-native-version
