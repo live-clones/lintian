@@ -280,14 +280,16 @@ if (my @errors = $changes->get_parse_errors) {
 
 my @entries = $changes->data;
 if (@entries) {
-    foreach (@entries) {
-	if ($_->Maintainer) {
-	    if ($_->Maintainer =~ /<([^>\@]+\@unknown)>/) {
+    my %versions;
+    for my $entry (@entries) {
+	if ($entry->Maintainer) {
+	    if ($entry->Maintainer =~ /<([^>\@]+\@unknown)>/) {
 		tag "debian-changelog-file-contains-debmake-default-email-address", $1;
-	    } elsif ($_->Maintainer =~ /<([^>\@]+\@[^>.]*)>/) {
+	    } elsif ($entry->Maintainer =~ /<([^>\@]+\@[^>.]*)>/) {
 		tag "debian-changelog-file-contains-invalid-email-address", $1;
 	    }
 	}
+	$versions{$entry->Version} = 1;
     }
 
     if (@entries > 1) {
@@ -361,13 +363,18 @@ if (@entries) {
     }
 
     # Compare against NEWS.Debian if available.
-    if ($news and $news->Version and $entry->Version eq $news->Version) {
-        for my $field (qw/Distribution Urgency/) {
-            if ($entry->$field ne $news->$field) {
-                tag 'changelog-news-debian-mismatch', lc ($field),
-                    $entry->$field . ' != ' . $news->$field;
-            }
-        }
+    if ($news and $news->Version) {
+	if ($entry->Version eq $news->Version) {
+	    for my $field (qw/Distribution Urgency/) {
+		if ($entry->$field ne $news->$field) {
+		    tag 'changelog-news-debian-mismatch', lc ($field),
+			$entry->$field . ' != ' . $news->$field;
+		}
+	    }
+	}
+	unless ($versions{$news->Version}) {
+	    tag 'debian-news-entry-has-unknown-version', $news->Version;
+	}
     }
 
     # We have to decode into UTF-8 to get the right length for the length

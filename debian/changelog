@@ -20,6 +20,8 @@ lintian (2.3.1) UNRELEASED; urgency=low
     + [RA] Check that the most recent NEWS.Debian entry is followed by a
       blank line for apt-listchanges.  Thanks, Adeodato Simó.  (Addresses
       the Lintian part of #523436)
+    + [RA] Warn if the version of the latest NEWS.Debian entry doesn't
+      appear in the changelog.  Thanks, Christoph Berg.  (Closes: #550594)
   * checks/cruft:
     + [RA] Fix the regex to properly ignore CMakeCache.txt in the debian
       directory.  Thanks, Aaron M. Ucko.  (Closes: #553264)
