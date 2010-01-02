@@ -291,7 +291,6 @@ fields depends-on-python-minimal
 fields invalid-arch-string-in-source-relation
 fields malformed-dm-upload-allowed
 fields needlessly-depends-on-awk
-fields no-human-maintainers
 fields ored-build-depends-on-obsolete-package
 fields ored-depends-on-obsolete-package
 fields package-depends-on-multiple-libpng-versions
@@ -555,9 +554,6 @@ binary
   unquoted-string-in-menu-item
   unstripped-binary-or-object
   xs-vcs-header-in-debian-control
-
-cdbs-test
-  no-human-maintainers
 
 debconf
   invalid-po-file
