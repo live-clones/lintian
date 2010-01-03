@@ -1,4 +1,6 @@
-lintian (2.3.1) UNRELEASED; urgency=low
+lintian (2.3.1) unstable; urgency=low
+
+  The "goodbye to unpack level 2" release.
 
   * Summary of tag changes:
     + Added:
@@ -111,7 +113,7 @@ lintian (2.3.1) UNRELEASED; urgency=low
   * unpack/unpack-{src,bin}pkg-l2:
     + [RG] Dropped in favour of collection/unpacked.
 
- -- Russ Allbery <rra@debian.org>  Sat, 26 Dec 2009 23:05:35 -0800
+ -- Russ Allbery <rra@debian.org>  Sat, 02 Jan 2010 21:01:14 -0800
 
 lintian (2.3.0) unstable; urgency=low
 
