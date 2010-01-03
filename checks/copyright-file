@@ -272,7 +272,7 @@ if (m,\<Copyright \(C\) YYYY Name OfAuthor\>,) {
     tag 'helper-templates-in-copyright';
 }
 
-if (m/^This copyright info was automatically extracted/m) {
+if (m/This copyright info was automatically extracted/) {
     tag 'copyright-contains-dh-make-perl-boilerplate';
 }
 
