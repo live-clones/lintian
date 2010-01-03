@@ -40,6 +40,7 @@ I: maintainer-scripts: no-md5sums-control-file
 I: maintainer-scripts: output-of-updaterc.d-not-redirected-to-dev-null bar postrm
 W: maintainer-scripts source: ancient-standards-version 3.1.1 (current is 3.8.3)
 W: maintainer-scripts source: changelog-should-mention-qa
+W: maintainer-scripts source: debhelper-but-no-misc-depends maintainer-scripts
 W: maintainer-scripts source: debian-watch-file-in-native-package
 W: maintainer-scripts source: debian-watch-file-should-mangle-version line 11
 W: maintainer-scripts source: debian-watch-file-should-mangle-version line 7

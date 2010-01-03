@@ -6,6 +6,8 @@ E: fields: debian-changelog-file-missing-or-wrong-name
 E: fields: depends-on-python-minimal depends
 E: fields: no-copyright-file
 W: fields source: changelog-should-mention-nmu
+W: fields source: debhelper-but-no-misc-depends another-version
+W: fields source: debhelper-but-no-misc-depends fields
 W: fields source: debian-revision-not-well-formed 1.5-.3
 W: fields source: native-package-with-dash-version
 W: fields source: package-lacks-versioned-build-depends-on-debhelper 1
