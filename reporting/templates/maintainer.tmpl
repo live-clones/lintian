@@ -98,7 +98,8 @@
                 }
 
                 my $bin_version = '';
-                unless ($info->{version} eq $version and $area eq $firstarea) {
+                unless ($info->{version} eq $version
+                        and $info->{area} eq $firstarea) {
                     $bin_version = " ($info->{version}; $info->{area})";
                 }
 
