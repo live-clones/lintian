@@ -176,8 +176,8 @@ if (-f 'NEWS.Debian') {
 	last if /^ --/;
     }
     my $next = <IN>;
-    tag 'debian-news-entry-without-blank-line', "line " . ($. - 1)
-	unless $next =~ /^\s*$/;
+    tag 'debian-news-entry-without-blank-line', "line $."
+	unless ($next and $next =~ /^\s*$/);
     close IN;
 }
 
