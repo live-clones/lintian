@@ -104,10 +104,8 @@ data in memory.
 
 =item new(PACKAGE, TYPE)
 
-Creates a new object appropriate to the package type.  Currently, the only
-TYPE supported is C<source>, which creates a new Lintian::Collect::Source
-object and returns it.  TYPE can be retrieved later with the type()
-method.  Returns undef an unknown TYPE.
+Creates a new object appropriate to the package type.  TYPE can be 
+retrieved later with the type() method.  Returns undef an unknown TYPE.
 
 PACKAGE is the name of the package and is stored in the collect object.
 It can be retrieved with the name() method.
@@ -117,8 +115,8 @@ It can be retrieved with the name() method.
 =head1 INSTANCE METHODS
 
 In addition to the instance methods documented here, see the documentation
-of Lintian::Collect::Source for instance methods specific to source
-packages.
+of Lintian::Collect::Source and Lintian::Collect::Binary for instance 
+methods specific to source and binary / udeb packages.
 
 =over 4
 
@@ -148,7 +146,7 @@ Originally written by Russ Allbery <rra@debian.org> for Lintian.
 
 =head1 SEE ALSO
 
-lintian(1), Lintian::Collect::Source(3)
+lintian(1), Lintian::Collect::Binary(3), Lintian::Collect::Source(3)
 
 =cut
 
