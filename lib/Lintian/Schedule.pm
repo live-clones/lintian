@@ -40,6 +40,7 @@ sub new {
 sub add_file {
     my ($self, $type, $file, %pkg_info) = @_;
 
+    my %long_types = ('b','binary', 'c','changes', 's','source', 'u','udeb');
     my ($pkg, $ver, $arch);
     if ($type eq 's') {
 	($pkg, $ver, $arch) =
@@ -66,7 +67,7 @@ sub add_file {
     if ( $self->{unique}{$s}++ ) {
 	if ($self->{opts}{verbose}) {
 	    printf "N: Ignoring duplicate %s package %s (version %s)\n",
-		$type eq 'b' ? 'binary' : ($type eq 's' ? 'source': 'udeb'),
+		$long_types{$type},
 		$pkg, $ver;
 	}
 	return 1;
@@ -109,10 +110,38 @@ sub add_pkg_list {
     close(IN);
 }
 
+sub add_changes {
+    my ($self, $changes_file) = @_;
+
+    my $info = get_dsc_info($changes_file);
+    return unless defined $info;
+    
+    my $status = $self->add_file('c', $changes_file, %$info);
+    # get directory and filename part of $changes_file
+    my ($arg_dir, $arg_name) = $changes_file =~ m,(.*)/([^/]+)$,;
+    my $file_list = $info->{files} || '';
+    for (split /\n/, $file_list) {
+	chomp;
+	s/^\s+//o;
+	next if $_ eq '';
+
+	my ($md5sum,$size,$section,$priority,$file) = split(/\s+/o, $_);
+	if ($file =~ /\.deb$/) {
+	    $status ||= $self->add_deb('b', "$arg_dir/$file");
+	} elsif ($file =~ /\.udeb$/) {
+	    $status ||= $self->add_deb('u', "$arg_dir/$file");
+	} elsif ($file =~ /\.dsc$/) {
+	    $status ||= $self->add_dsc("$arg_dir/$file");
+	}
+    }                                    
+
+    return $status;
+}
+
 # for each package (the sort is to make sure that source packages are
 # before the corresponding binary packages--this has the advantage that binary
 # can use information from the source packages if these are unpacked)
-my %type_sort = ('b' => 1, 'u' => 1, 's' => 2 );
+my %type_sort = ('b' => 1, 'u' => 1, 's' => 2, 'c' => 3 );
 sub get_all {
     return sort({$type_sort{$b->{type}} <=> $type_sort{$a->{type}}}
 		@{$_[0]->{schedule}});
