@@ -314,7 +314,7 @@ packages.
 This module is in its infancy.  Most of Lintian still reads all data from
 files in the laboratory whenever that data is needed and generates that
 data via collect scripts.  The goal is to eventually access all data about
-source packages via this module so that the module can cache data where
+binary packages via this module so that the module can cache data where
 appropriate and possibly retire collect scripts in favor of caching that
 data in memory.
 

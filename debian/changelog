@@ -16,6 +16,10 @@ lintian (2.3.2) UNRELEASED; urgency=low
     + [RA] Warn if some architectures in a build relation are negated and
       others are not.
 
+  * lib/Lintian/Collect/Binary.pm:
+    + [ADB] Correct a reference in the documentation indicating that the 
+      module collects data for source packages.
+
   * reporting/templates/maintainer.tmpl:
     + [RA] Really fix the logic to optionally display the archive area of
       additional package entries under the same source package.
