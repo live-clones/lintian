@@ -31,6 +31,9 @@ sub new {
     } elsif ($type eq 'binary' or $type eq 'udeb') {
         require Lintian::Collect::Binary;
         $object = Lintian::Collect::Binary->new ($pkg);
+    } elsif ($type eq 'changes') {
+	require Lintian::Collect::Changes;
+	$object = Lintian::Collect::Changes->new ($pkg);
     } else {
         return;
     }
@@ -56,7 +59,8 @@ sub type {
 # Return the value of the specified control field of the package, or undef if
 # that field wasn't present in the control file for the package.  For source
 # packages, this is the *.dsc file; for binary packages, this is the control
-# file in the control section of the package.
+# file in the control section of the package.  For .changes files, the 
+# information will be retrieved from the file itself.
 # sub field Needs-Info <>
 sub field {
     my ($self, $field) = @_;
@@ -87,9 +91,9 @@ Lintian::Collect - Lintian interface to package data collection
 =head1 DESCRIPTION
 
 Lintian::Collect provides the shared interface to package data used by
-source, binary, and udeb packages.  It creates an object of the
-appropriate type and provides common functions used by the collection
-interface to all three types of packages.
+source, binary and udeb packages and .changes files.  It creates an 
+object of the appropriate type and provides common functions used by the 
+collection interface to all types of package.
 
 This module is in its infancy.  Most of Lintian still reads all data from
 files in the laboratory whenever that data is needed and generates that
@@ -115,8 +119,9 @@ It can be retrieved with the name() method.
 =head1 INSTANCE METHODS
 
 In addition to the instance methods documented here, see the documentation
-of Lintian::Collect::Source and Lintian::Collect::Binary for instance 
-methods specific to source and binary / udeb packages.
+of Lintian::Collect::Source, Lintian::Collect::Binary and 
+Lintian::Collect::Changes for instance methods specific to source and 
+binary / udeb packages and .changes files.
 
 =over 4
 
@@ -146,7 +151,8 @@ Originally written by Russ Allbery <rra@debian.org> for Lintian.
 
 =head1 SEE ALSO
 
-lintian(1), Lintian::Collect::Binary(3), Lintian::Collect::Source(3)
+lintian(1), Lintian::Collect::Binary(3), Lintian::Collect::Changes(3),
+Lintian::Collect::Source(3)
 
 =cut
 
