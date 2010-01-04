@@ -689,11 +689,15 @@ if ($type eq "source") {
 				for my $part_d (@alternatives) {
 					my ($d_pkg, $d_version, $d_arch, $rest, $part_d_orig) = @$part_d;
 
+					my $negated = 0;
 					for my $arch (@{$d_arch->[0]}) {
-						if (!$KNOWN_ARCHS->known($arch)) {
+						if ($arch eq 'all' or $arch eq 'any' or !$KNOWN_ARCHS->known($arch)) {
 							tag "invalid-arch-string-in-source-relation", "$arch [$field: $part_d_orig]"
 						}
 					}
+
+					tag 'conflicting-negation-in-source-relation', "$field: $part_d_orig"
+					    unless (not $d_arch or $d_arch->[1] == 0 or $d_arch->[1] eq @{ $d_arch->[0] });
 
 					tag "build-depends-on-build-essential", $field
 					    if ($d_pkg eq "build-essential");
@@ -886,11 +890,11 @@ for my $field (glob("fields/*")) {
 # splits "foo (>= 1.2.3) [!i386 ia64]" into
 # ( "foo", [ ">=", "1.2.3" ], [ [ "i386", "ia64" ], 1 ], "" )
 #                                                  ^^^   ^^
-#                                 true, if ! was given   ||
+#              count of negated arches, if ! was given   ||
 #           rest (should always be "" for valid dependencies)
 sub _split_dep {
 	my $dep = shift;
-	my ($pkg, $version, $darch) = ("", ["",""], [[],""]);
+	my ($pkg, $version, $darch) = ("", ["",""], [[], 0]);
 
 	$pkg = $1 if $dep =~ s/^\s*([^\s\[\(]+)\s*//;
 
@@ -900,8 +904,12 @@ sub _split_dep {
 		}
 		if ($dep && $dep =~ s/\s*\[([^\]]+)\]\s*//) {
 			my $t = $1;
-			$darch->[1] = 1 if ($t =~ s/!//g);
 			$darch->[0] = [ split /\s+/, $t ];
+			my $negated = 0;
+			for my $arch (@{ $darch->[0] }) {
+				$negated++ if $arch =~ s/^!//;
+			}
+			$darch->[1] = $negated;
 		}
 	}
 

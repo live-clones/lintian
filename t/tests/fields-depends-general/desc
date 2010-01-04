@@ -6,6 +6,8 @@ Test-For:
  build-depends-on-metapackage
  build-depends-on-non-build-package
  build-depends-on-python-dev-with-no-arch-any
+ conflicting-negation-in-source-relation
  depends-on-metapackage
+ invalid-arch-string-in-source-relation
  lib-recommends-documentation
 References: Debian Bug#540594, Debian Bug#551793

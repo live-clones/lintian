@@ -1,4 +1,4 @@
-Last generated 2010-01-02
+Last generated 2010-01-04
 
 The following tags are not tested by the test suite:
 
@@ -287,7 +287,6 @@ fields depends-on-essential-package-without-using-version
 fields depends-on-obsolete-package
 fields depends-on-old-emacs
 fields depends-on-python-minimal
-fields invalid-arch-string-in-source-relation
 fields malformed-dm-upload-allowed
 fields needlessly-depends-on-awk
 fields ored-build-depends-on-obsolete-package
@@ -741,7 +740,6 @@ relations
   depends-on-essential-package-without-using-version
   depends-on-obsolete-package
   depends-on-old-emacs
-  invalid-arch-string-in-source-relation
   needlessly-depends-on-awk
   ored-build-depends-on-obsolete-package
   ored-depends-on-obsolete-package

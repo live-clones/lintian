@@ -570,9 +570,20 @@ Tag: invalid-arch-string-in-source-relation
 Severity: important
 Certainty: possible
 Ref: policy 5.6.8
-Info: The architecture string in the source relation does not follow policy.
- A common cause of this is a comma in the arch, i.e. [i386, m68k], it should
- be [i386 m68k].
+Info: The architecture string in the source relation includes an unknown
+ architecture.  This may be a typo, or it may be an architecture that dpkg
+ doesn't know about yet.  A common problem is incorrectly separating
+ architectures with a comma, such as <tt>[i386, m68k]</tt>.  Architectures
+ are separated by spaces; this should instead be <tt>[i386 m68k]</tt>.
+
+Tag: conflicting-negation-in-source-relation
+Severity: serious
+Certainty: certain
+Ref: policy 7.1
+Info: The architecture string in this source relation has some
+ negated architectures (prepended by <tt>!</tt>) and others that are not
+ negated.  This is not permitted by Policy.  Either all architectures must
+ be negated or none of them may be.
 
 Tag: depends-on-build-essential-package-without-using-version
 Severity: important
