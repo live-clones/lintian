@@ -7,7 +7,7 @@
 # If <section> is empty, that line specifies the title and URL for the whole
 # manual.  If <url> is empty, that manual is not available on the web.
 #
-# Last updated: 2009-03-11
+# Last updated: 2010-01-04
 
 debconf-spec::::Configuration management::http://www.debian.org/doc/packaging-manuals/debconf_specification.html
 debconf-spec::aen27::Introduction::http://www.debian.org/doc/packaging-manuals/debconf_specification.html#AEN27
@@ -66,6 +66,7 @@ devref::4.11::Developer's packages overview::http://www.debian.org/doc/developer
 devref::4.12::Debian's GForge installation: Alioth::http://www.debian.org/doc/developers-reference/resources.html#alioth
 devref::4.13::Goodies for Developers::http://www.debian.org/doc/developers-reference/resources.html#developer-misc
 devref::4.13.1::LWN Subscriptions::http://www.debian.org/doc/developers-reference/resources.html#lwn
+devref::4.13.2::Gandi.net Hosting Discount::http://www.debian.org/doc/developers-reference/resources.html#gandi
 devref::5::Managing Packages::http://www.debian.org/doc/developers-reference/pkgs.html
 devref::5.1::New packages::http://www.debian.org/doc/developers-reference/pkgs.html#newpackage
 devref::5.2::Recording changes in the package::http://www.debian.org/doc/developers-reference/pkgs.html#changelog-entries
@@ -159,7 +160,7 @@ devref::7.5.1::Sponsoring packages::http://www.debian.org/doc/developers-referen
 devref::7.5.2::Managing sponsored packages::http://www.debian.org/doc/developers-reference/beyond-pkging.html#s7.5.2
 devref::7.5.3::Advocating new developers::http://www.debian.org/doc/developers-reference/beyond-pkging.html#s7.5.3
 devref::7.5.4::Handling new maintainer applications::http://www.debian.org/doc/developers-reference/beyond-pkging.html#s7.5.4
-devref::8::Internationalizing, translating, being internationalized and being translated::http://www.debian.org/doc/developers-reference/l10n.html
+devref::8::Internationalization and Translations::http://www.debian.org/doc/developers-reference/l10n.html
 devref::8.1::How translations are handled within Debian::http://www.debian.org/doc/developers-reference/l10n.html#l10n-handling
 devref::8.2::I18N &amp; L10N FAQ for maintainers::http://www.debian.org/doc/developers-reference/l10n.html#l10n-faqm
 devref::8.2.1::How to get a given text translated::http://www.debian.org/doc/developers-reference/l10n.html#l10n-faqm-tr
@@ -275,12 +276,11 @@ doc-base::2.3.2::Syntax of the control file::
 doc-base::2.3.2.1::The main section::
 doc-base::2.3.2.2::<em>Format</em> sections::
 doc-base::2.3.3::The <samp>section</samp> field::
-doc-base::2.4::Registering Documents Using <code>install-docs</code>::
+doc-base::2.4::Registering Documents With <code>doc-base</code>::
 doc-base::2.5::doc-base 0.8.x features and incompatibilities::
-doc-base::2.5.1::Remove call semantics::
-doc-base::2.5.2::Registering multiple documents::
-doc-base::2.5.3::Splitting control files over multiple binary packages::
-doc-base::2.5.4::Registering local documents::
+doc-base::2.5.1::Splitting control files over multiple binary packages::
+doc-base::2.5.2::Registering local documents::
+doc-base::2.5.3::dpkg triggers::
 doc-base::2.6::Checking Syntax of <em>Control Files</em>::
 doc-base::3::Getting information about installed documents::
 doc-base::4::TODO List::
@@ -696,7 +696,7 @@ policy::8.6.2::How to use <code>dpkg-shlibdeps</code> and the <code>shlibs</code
 policy::8.6.3::The <code>shlibs</code> File Format::http://www.debian.org/doc/debian-policy/ch-sharedlibs.html#s-shlibs
 policy::8.6.4::Providing a <code>shlibs</code> file::http://www.debian.org/doc/debian-policy/ch-sharedlibs.html#s8.6.4
 policy::8.6.5::Writing the <code>debian/shlibs.local</code> file::http://www.debian.org/doc/debian-policy/ch-sharedlibs.html#s-shlibslocal
-policy::9.1.1::File system Structure::http://www.debian.org/doc/debian-policy/ch-opersys.html#s-fhs
+policy::9.1.1::File System Structure::http://www.debian.org/doc/debian-policy/ch-opersys.html#s-fhs
 policy::9.1.2::Site-specific programs::http://www.debian.org/doc/debian-policy/ch-opersys.html#s9.1.2
 policy::9.1.3::The system-wide mail directory::http://www.debian.org/doc/debian-policy/ch-opersys.html#s9.1.3
 policy::9.2.1::Introduction::http://www.debian.org/doc/debian-policy/ch-opersys.html#s9.2.1
@@ -719,7 +719,7 @@ policy::11.8.2::Packages providing an X server::http://www.debian.org/doc/debian
 policy::11.8.3::Packages providing a terminal emulator::http://www.debian.org/doc/debian-policy/ch-customized-programs.html#s11.8.3
 policy::11.8.4::Packages providing a window manager::http://www.debian.org/doc/debian-policy/ch-customized-programs.html#s11.8.4
 policy::11.8.5::Packages providing fonts::http://www.debian.org/doc/debian-policy/ch-customized-programs.html#s11.8.5
-policy::11.8.6::Application defaults files::http://www.debian.org/doc/debian-policy/ch-customized-programs.html#s11.8.6
+policy::11.8.6::Application defaults files::http://www.debian.org/doc/debian-policy/ch-customized-programs.html#s-appdefaults
 policy::11.8.7::Installation directory issues::http://www.debian.org/doc/debian-policy/ch-customized-programs.html#s11.8.7
 policy::11.8.8::The OSF/Motif and OpenMotif libraries::http://www.debian.org/doc/debian-policy/ch-customized-programs.html#s11.8.8
 policy::C.1.1::<code>dpkg-source</code> - packs and unpacks Debian source packages::http://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#s-pkg-dpkg-source
@@ -753,23 +753,26 @@ python-policy::A::Build Dependencies::http://www.debian.org/doc/packaging-manual
 python-policy::B::Packaging Tools::http://www.debian.org/doc/packaging-manuals/python-policy/ap-packaging_tools.html
 python-policy::C::Upgrade Procedure::http://www.debian.org/doc/packaging-manuals/python-policy/ap-upgrade.html
 python-policy::1.1::Versions::http://www.debian.org/doc/packaging-manuals/python-policy/ch-python.html#s-versions
-python-policy::1.2::Main package::http://www.debian.org/doc/packaging-manuals/python-policy/ch-python.html#s-base
-python-policy::1.3::Python Interpreter::http://www.debian.org/doc/packaging-manuals/python-policy/ch-python.html#s-interpreter
-python-policy::1.4::Module Path::http://www.debian.org/doc/packaging-manuals/python-policy/ch-python.html#s-paths
-python-policy::1.5::Documentation::http://www.debian.org/doc/packaging-manuals/python-policy/ch-python.html#s-docs
+python-policy::1.2::Main packages::http://www.debian.org/doc/packaging-manuals/python-policy/ch-python.html#s-base
+python-policy::1.3::Minimal packages::http://www.debian.org/doc/packaging-manuals/python-policy/ch-python.html#s-minimal
+python-policy::1.4::Python Interpreter::http://www.debian.org/doc/packaging-manuals/python-policy/ch-python.html#s-interpreter
+python-policy::1.5::Module Path::http://www.debian.org/doc/packaging-manuals/python-policy/ch-python.html#s-paths
+python-policy::1.6::Hooks for updates to installed runtimes::http://www.debian.org/doc/packaging-manuals/python-policy/ch-python.html#s-runtimes_hooks
+python-policy::1.7::Documentation::http://www.debian.org/doc/packaging-manuals/python-policy/ch-python.html#s-docs
 python-policy::2.1::Types of Python Modules::http://www.debian.org/doc/packaging-manuals/python-policy/ch-module_packages.html#s2.1
 python-policy::2.2::Module Package Names::http://www.debian.org/doc/packaging-manuals/python-policy/ch-module_packages.html#s-package_names
 python-policy::2.3::Specifying Supported Versions::http://www.debian.org/doc/packaging-manuals/python-policy/ch-module_packages.html#s-specifying_versions
 python-policy::2.4::Dependencies::http://www.debian.org/doc/packaging-manuals/python-policy/ch-module_packages.html#s-dependencies
 python-policy::2.5::Provides::http://www.debian.org/doc/packaging-manuals/python-policy/ch-module_packages.html#s-provides
-python-policy::2.6::Modules Bytecompilation::http://www.debian.org/doc/packaging-manuals/python-policy/ch-module_packages.html#s-bytecompilation
+python-policy::2.6::Modules Byte-Compilation::http://www.debian.org/doc/packaging-manuals/python-policy/ch-module_packages.html#s-byte_compilation
 python-policy::3.1::Programs using the default python::http://www.debian.org/doc/packaging-manuals/python-policy/ch-programs.html#s-version_indep_progs
 python-policy::3.2::Programs Using a Particular Python Version::http://www.debian.org/doc/packaging-manuals/python-policy/ch-programs.html#s-version_dep_progs
 python-policy::4.1::Building Embedded Programs::http://www.debian.org/doc/packaging-manuals/python-policy/ch-embed.html#s-build_embedded
 python-policy::4.2::Embedded Python Dependencies::http://www.debian.org/doc/packaging-manuals/python-policy/ch-embed.html#s-embedded_deps
-python-policy::B.1::python-support::http://www.debian.org/doc/packaging-manuals/python-policy/ap-packaging_tools.html#s-pysupport
-python-policy::B.2::python-central::http://www.debian.org/doc/packaging-manuals/python-policy/ap-packaging_tools.html#s-pycentral
-python-policy::B.3::CDBS::http://www.debian.org/doc/packaging-manuals/python-policy/ap-packaging_tools.html#s-cdbs
-python-policy::1.3.1::Interpreter Name::http://www.debian.org/doc/packaging-manuals/python-policy/ch-python.html#s-interpreter_name
-python-policy::1.3.2::Interpreter Location::http://www.debian.org/doc/packaging-manuals/python-policy/ch-python.html#s-interpreter_loc
+python-policy::B.1::distutils::http://www.debian.org/doc/packaging-manuals/python-policy/ap-packaging_tools.html#s-distutils
+python-policy::B.2::python-support::http://www.debian.org/doc/packaging-manuals/python-policy/ap-packaging_tools.html#s-pysupport
+python-policy::B.3::python-central::http://www.debian.org/doc/packaging-manuals/python-policy/ap-packaging_tools.html#s-pycentral
+python-policy::B.4::CDBS::http://www.debian.org/doc/packaging-manuals/python-policy/ap-packaging_tools.html#s-cdbs
+python-policy::1.4.1::Interpreter Name::http://www.debian.org/doc/packaging-manuals/python-policy/ch-python.html#s-interpreter_name
+python-policy::1.4.2::Interpreter Location::http://www.debian.org/doc/packaging-manuals/python-policy/ch-python.html#s-interpreter_loc
 python-policy::3.1.1::Programs Shipping Private Modules::http://www.debian.org/doc/packaging-manuals/python-policy/ch-programs.html#s-current_version_progs

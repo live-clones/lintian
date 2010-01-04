@@ -15,6 +15,12 @@ lintian (2.3.2) UNRELEASED; urgency=low
       dependencies.  Thanks, Jonathan Yu.
     + [RA] Warn if some architectures in a build relation are negated and
       others are not.
+  * checks/files.desc:
+    + [JP] Fix outdated reference in file-in-usr-lib-site-python.
+
+  * data/output/manual-references:
+    + [JP] Refresh reference data against Policy 3.8.3, doc-base 0.9.5,
+      developers-reference 3.4.3, and Python Policy 0.9.0.
 
   * lib/Lintian/Collect.pm:
     + [ADB] Update the documentation to reflect the existence of
