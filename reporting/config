@@ -17,6 +17,9 @@ $LINTIAN_UNPACK_LEVEL = "";
 $LINTIAN_BIN_DIR = "$HOME/bin";
 $LINTIAN_GPG_CHECK = 0;
 
+$HISTORY = 0;
+$HISTORY_DIR = "$HOME/history";
+
 $log_file = "$LOG_DIR/harness.log";
 $changes_file = "$LOG_DIR/setup-lab.log";
 $list_file = "$LOG_DIR/changed-packages.list";

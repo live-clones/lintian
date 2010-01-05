@@ -38,7 +38,7 @@ our $MAX_TAGS = 8;
 # FIXME: $statistics_file should be in all caps as well.
 our ($LINTIAN_ROOT, $LINTIAN_LAB, $LINTIAN_ARCHIVEDIR, $LINTIAN_DIST,
      $LINTIAN_SECTION, $LINTIAN_ARCH, $HTML_TMP_DIR, $statistics_file,
-     $LINTIAN_AREA);
+     $LINTIAN_AREA, $HISTORY, $HISTORY_DIR);
 
 # Read the configuration.
 require './config';
@@ -563,6 +563,38 @@ close STATS or die "cannot write to $statistics_file: $!\n";
     area         => join(', ', split(/\s*,\s*/, $LINTIAN_AREA)),
 );
 output_template ('index.html', $templates{index}, \%data);
+
+exit 0 if (not $HISTORY);
+
+# Update history.
+my $unix_time = time();
+mkdir("$HISTORY_DIR")
+    or die "cannot create history directory $HISTORY_DIR: $!\n"
+    if (not -d "$HISTORY_DIR");
+mkdir("$HISTORY_DIR/tags")
+    or die "cannot create tag history directory $HISTORY_DIR/tags: $!\n"
+    if (not -d "$HISTORY_DIR/tags");
+
+my $history_file = "$HISTORY_DIR/statistics.dat";
+my $stats = "";
+for my $attr (@attrs) {
+    $stats .= " $statistics{$attr}";
+}
+open(HIST, '>>', $history_file)
+    or die "cannot open history file: $!\n";
+print HIST "$unix_time $LINTIAN_VERSION$stats\n";
+close HIST or die "cannot write to $history_file: $!\n";
+
+for my $tag (sort keys %tag_statistics) {
+    $history_file = "$HISTORY_DIR/tags/$tag.dat";
+    $stats = $tag_statistics{$tag};
+    open(HIST, '>>', $history_file)
+        or die "cannot open tag history file $history_file: $!\n";
+    print HIST "$unix_time $stats->{'count'} $stats->{'overrides'} " .
+               "$stats->{'packages'}\n";
+    close HIST or die "cannot write to $history_file: $!\n";
+}
+
 exit 0;
 
 # ------------------------------

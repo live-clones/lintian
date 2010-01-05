@@ -35,6 +35,9 @@ lintian (2.3.2) UNRELEASED; urgency=low
   * man/lintian.1:
     + [RA] Spelling fix.  Thanks, A. Costa.  (Closes: #564017)
 
+  * reporting/{config,html_reports}:
+    + [JP] Make it possible to keep a record of statistics of previous
+      archive-wide Lintian executions.
   * reporting/templates/maintainer.tmpl:
     + [RA] Really fix the logic to optionally display the archive area of
       additional package entries under the same source package.
