@@ -334,8 +334,13 @@ Lintian::Output uses v_msg() for output.  Called from Tags::select_pkg().
 sub print_start_pkg {
     my ($self, $pkg_info) = @_;
 
+    my $object = "package";
+    if ($pkg_info->{type} eq 'changes') {
+	$object = "file";
+    }
+
     $self->v_msg($self->delimiter,
-		 "Processing $pkg_info->{type} package $pkg_info->{package} (version $pkg_info->{version}) ...");
+		 "Processing $pkg_info->{type} $object $pkg_info->{package} (version $pkg_info->{version}) ...");
 }
 
 =item C<print_start_pkg($pkg_info)>
