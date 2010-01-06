@@ -67,7 +67,7 @@ sub files {
 	    
 	    my ($checksum, $size, $file) = split(/\s+/o, $_);
 	    $files{$file}{checksums}{$alg} = {
-		sum' => $checksum, 'filesize' => $size
+		'sum' => $checksum, 'filesize' => $size
 	    };
 	}
     }
