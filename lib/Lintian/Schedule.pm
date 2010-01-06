@@ -130,6 +130,12 @@ sub add_changes {
 	next if $_ eq '';
 
 	my ($md5sum,$size,$section,$priority,$file) = split(/\s+/o, $_);
+
+	if (not -f "$arg_dir/$file") {
+	    warning("$file does not exist, exiting");
+	    exit 2;
+	}
+
 	if ($file =~ /\.deb$/) {
 	    $status += $self->add_deb('b', "$arg_dir/$file");
 	} elsif ($file =~ /\.udeb$/) {
