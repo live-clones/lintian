@@ -1064,7 +1064,7 @@ for my $f (readdir COLLDIR) {
 
     set_value($f, $p,'type',$secs[0],1);
     # convert Type:
-    my ($b,$s,$u) = ( "", "", "" );;
+    my ($b,$s,$u,$c) = ( "", "", "", "" );;
     for (split(/\s*,\s*/o,$p->{'type'})) {
 	if ($_ eq 'binary') {
 	    $b = 'b';
@@ -1072,11 +1072,13 @@ for my $f (readdir COLLDIR) {
 	    $s = 's';
 	} elsif ($_ eq 'udeb') {
 	    $u = 'u';
+	} elsif ($_ eq 'changes') {
+	    $c = 'c';
 	} else {
 	    fail("unknown type $_ specified in description file $f");
 	}
     }
-    $p->{'type'} = "$s$b$u";
+    $p->{'type'} = "$s$b$u$c";
 
     set_value($f,$p,'order',$secs[0],1);
     set_value($f,$p,'version',$secs[0],1);
@@ -1129,7 +1131,7 @@ for my $f (readdir CHECKDIR) {
 
     set_value($f,$p,'type',$secs[0],1);
     # convert Type:
-    my ($b,$s,$u) = ( "", "", "" );
+    my ($b,$s,$u,$c) = ( "", "", "", "" );
     for (split(/\s*,\s*/o,$p->{'type'})) {
 	if ($_ eq 'binary') {
 	    $b = 'b';
@@ -1137,11 +1139,13 @@ for my $f (readdir CHECKDIR) {
 	    $s = 's';
 	} elsif ($_ eq 'udeb') {
 	    $u = 'u';
+	} elsif ($_ eq 'changes') {
+	    $c = 'c';
 	} else {
 	    fail("unknown type $_ specified in description file $f");
 	}
     }
-    $p->{'type'} = "$s$b$u";
+    $p->{'type'} = "$s$b$u$c";
 
     set_value($f,$p,'abbrev',$secs[0],1);
 
