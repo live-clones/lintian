@@ -30,7 +30,7 @@ use Getopt::Long;
 # {{{ Global Variables
 my $LINTIAN_VERSION = "<VERSION>";	#External Version number
 my $BANNER = "Lintian v$LINTIAN_VERSION"; #Version Banner - text form
-my $LAB_FORMAT = 9;		#Lab format Version Number
+my $LAB_FORMAT = 10;		#Lab format Version Number
 				#increased whenever incompatible
 				#changes are done to the lab
 				#so that all packages are re-unpacked

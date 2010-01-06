@@ -50,6 +50,7 @@ sub is_lab {
     return -d "$self->{dir}/binary"
 	&& -d "$self->{dir}/udeb"
 	&& -d "$self->{dir}/source"
+	&& -d "$self->{dir}/changes"
 	&& -d "$self->{dir}/info";
 }
 
@@ -106,7 +107,7 @@ sub setup_force {
     }
 
     # create base directories
-    for my $subdir (qw( binary source udeb info )) {
+    for my $subdir (qw( binary source udeb changes info )) {
 	my $fulldir = "$dir/$subdir";
 	if (not -d $fulldir) {
 	    mkdir($fulldir, 0777)
@@ -216,6 +217,7 @@ sub delete_force {
     unless (delete_dir("$self->{dir}/binary",
 		       "$self->{dir}/source",
 		       "$self->{dir}/udeb",
+		       "$self->{dir}/changes",
 		       "$self->{dir}/info")) {
 		warning("cannot remove lab directory $self->{dir} (please remove it yourself)");
     }
