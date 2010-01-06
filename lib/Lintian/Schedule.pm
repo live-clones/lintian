@@ -55,7 +55,7 @@ sub add_file {
     }
     $pkg  ||= '';
     # "0" is a valid version, so we can't use || here
-    $ver  = '' unless length $ver;
+    $ver  = '' unless defined $ver and length $ver;
     $arch ||= '';
 
     if ( $pkg =~ m,/, ) {
