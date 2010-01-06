@@ -131,15 +131,15 @@ sub add_changes {
 
 	my ($md5sum,$size,$section,$priority,$file) = split(/\s+/o, $_);
 	if ($file =~ /\.deb$/) {
-	    $status ||= $self->add_deb('b', "$arg_dir/$file");
+	    $status += $self->add_deb('b', "$arg_dir/$file");
 	} elsif ($file =~ /\.udeb$/) {
-	    $status ||= $self->add_deb('u', "$arg_dir/$file");
+	    $status += $self->add_deb('u', "$arg_dir/$file");
 	} elsif ($file =~ /\.dsc$/) {
-	    $status ||= $self->add_dsc("$arg_dir/$file");
+	    $status += $self->add_dsc("$arg_dir/$file");
 	}
     }                                    
 
-    return $status;
+    return ($status ? 0 : 1);
 }
 
 # for each package (the sort is to make sure that source packages are
