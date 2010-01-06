@@ -45,6 +45,10 @@ sub add_file {
     if ($type eq 's') {
 	($pkg, $ver, $arch) =
 	    (@pkg_info{qw(source version)}, 'source');
+    } elsif ($type eq 'c') {
+	my ($filename) = $file =~ m,.*/([^/]+)\.changes$,;
+	($pkg, $ver, $arch) =
+	    ($filename, @pkg_info{qw(version architecture)});
     } else {
 	($pkg, $ver, $arch) =
 	    @pkg_info{qw(package version architecture)};
