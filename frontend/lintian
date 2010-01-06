@@ -1686,6 +1686,9 @@ sub unpack_pkg {
 	if (($type eq 'b') || ($type eq 'u')) {
 	    spawn({}, ["$LINTIAN_ROOT/unpack/unpack-binpkg-l1", $base, $file])
 		or return -1;
+	} elsif ($type eq 'c') {
+	    spawn({}, ["$LINTIAN_ROOT/unpack/unpack-changes-l1", $base, $file])
+		or return -1;
 	} else {
 	    spawn({}, ["$LINTIAN_ROOT/unpack/unpack-srcpkg-l1", $base, $file])
 		or return -1;
