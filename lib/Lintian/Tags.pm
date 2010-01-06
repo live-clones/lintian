@@ -500,14 +500,12 @@ sub file_start {
         tags      => {},
         overrides => {},
     };
-    if ($self->{current} && $self->{current} !~ /\.changes$/) {
+    if ($self->{current}) {
         my $info = $self->{info}{$self->{current}};
         $Lintian::Output::GLOBAL->print_end_pkg($info);
     }
     $self->{current} = $file;
-    if ($file !~ /\.changes$/) {
-        $Lintian::Output::GLOBAL->print_start_pkg($self->{info}{$file});
-    }
+    $Lintian::Output::GLOBAL->print_start_pkg($self->{info}{$file});
 }
 
 =item file_overrides(OVERRIDE-FILE)
