@@ -81,6 +81,8 @@ our %CORRECTIONS = qw(
                       analysator analyzer
                       ang and
                       annoucement announcement
+                      anomolies anomalies
+                      anomoly anomaly
                       aplication application
                       appearence appearance
                       appropiate appropriate
@@ -337,6 +339,7 @@ our %CORRECTIONS = qw(
                       orientatied orientated
                       orientied oriented
                       overaall overall
+                      overriden overridden
                       pacakge package
                       pachage package
                       packacge package
