@@ -606,8 +606,6 @@ require Lintian::Output;
 import Lintian::Output qw(:messages);
 require Lintian::Command;
 import Lintian::Command qw(spawn reap);
-require Lintian::Check;
-import Lintian::Check qw(check_maintainer);
 require Lintian::Tags;
 import Lintian::Tags qw(tag);
 
