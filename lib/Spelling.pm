@@ -349,7 +349,6 @@ our %CORRECTIONS = qw(
                       pallette palette
                       paramameters parameters
                       paramater parameter
-                      parameterize parametrize
                       parametes parameters
                       paramter parameter
                       paramters parameters

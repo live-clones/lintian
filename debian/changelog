@@ -31,6 +31,8 @@ lintian (2.3.2) UNRELEASED; urgency=low
 
   * lib/Spelling.pm:
     + [RA] Add additional spelling corrections.
+    + [RA] Remove spelling correction for parameterize.  This is the
+      correct US spelling.  Thanks, Jonathan Yu.  (Closes: #564523)
 
   * man/lintian.1:
     + [RA] Spelling fix.  Thanks, A. Costa.  (Closes: #564017)
