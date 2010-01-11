@@ -1,0 +1,9 @@
+#!/bin/sh
+#
+# Remove our generated locale unless we're only upgrading.
+
+if [ 'upgrade' != "$1" ] ; then
+    rm -rf /var/lib/lintian/locale
+fi
+
+#DEBHELPER#

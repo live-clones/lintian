@@ -1,4 +1,5 @@
 etc
 usr/bin
 usr/share/lintian
+var/lib/locale
 var/spool/lintian

@@ -17,10 +17,26 @@ lintian (2.3.2) UNRELEASED; urgency=low
       others are not.
   * checks/files.desc:
     + [JP] Fix outdated reference in file-in-usr-lib-site-python.
+  * checks/infofiles:
+    + [RA] Pass LOCPATH to subprocesses.
+  * checks/manpages:
+    + [RA] Pass LOCPATH to subprocesses.
 
   * data/output/manual-references:
     + [JP] Refresh reference data against Policy 3.8.3, doc-base 0.9.5,
       developers-reference 3.4.3, and Python Policy 0.9.0.
+
+  * debian/control:
+    + [RA] Depend on locales.
+  * debian/prerm:
+    + [RA] Remove /var/lib/lintian/locale on any removal except upgrades.
+  * debian/postinst:
+    + [RA] Generate an en_US.UTF-8 locale in /var/lib/lintian/locale for
+      use for tests, particularly man page tests.  (Closes: #555408)
+
+  * frontend/lintian:
+    + [RA] Set LOCPATH to LINTIAN_ROOT/locale or /var/lib/lintian/locale,
+      whichever exist.
 
   * lib/Lintian/Collect.pm:
     + [ADB] Update the documentation to reflect the existence of
@@ -28,11 +44,12 @@ lintian (2.3.2) UNRELEASED; urgency=low
   * lib/Lintian/Collect/Binary.pm:
     + [ADB] Correct a reference in the documentation indicating that the 
       module collects data for source packages.
-
   * lib/Spelling.pm:
     + [RA] Add additional spelling corrections.
     + [RA] Remove spelling correction for parameterize.  This is the
       correct US spelling.  Thanks, Jonathan Yu.  (Closes: #564523)
+  * lib/Util.pm:
+    + [RA] Pass LOCPATH to subprocesses.
 
   * man/lintian.1:
     + [RA] Spelling fix.  Thanks, A. Costa.  (Closes: #564017)

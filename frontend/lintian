@@ -575,6 +575,15 @@ my $debug = $#debug + 1;
 $verbose = 1 if $debug;
 $ENV{'LINTIAN_DEBUG'} = $debug;
 
+# Use our custom-generated locale for programs we call, if it's available.  We
+# first look in the Lintian root and then in /var/lib/lintian, which is the
+# standard location for the install-time-generated locale.
+if (-d "$LINTIAN_ROOT/locale/en_US.UTF-8") {
+    $ENV{LOCPATH} = "$LINTIAN_ROOT/locale";
+} elsif (-d '/var/lib/lintian/locale/en_US.UTF-8') {
+    $ENV{LOCPATH} = '/var/lib/lintian/locale/en_US.UTF-8';
+}
+
 # }}}
 
 # {{{ Loading lintian's own libraries (now LINTIAN_ROOT is known)

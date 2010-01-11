@@ -1,0 +1,18 @@
+#!/bin/sh
+#
+# Lintian requires a UTF-8 locale in order to properly do man page tests.
+# Generate one at installation time so that we're guaranteed to have one.
+
+set -e
+
+if [ ! -d '/var/lib/lintian/locale/en_US.UTF-8/LC_CTYPE' ] ; then
+    echo 'Generating en_US.UTF-8 locale for internal Lintian use....'
+    mkdir -p /var/lib/lintian/locale
+    if ! localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias \
+                --quiet /var/lib/lintian/locale ; then
+        rm -rf /var/lib/lintian/locale
+        exit 1
+    fi
+fi
+
+#DEBHELPER#

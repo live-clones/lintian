@@ -236,7 +236,7 @@ sub file_is_encoded_in_non_utf8 {
 # Just like system, except cleanses the environment first to avoid any strange
 # side effects due to the user's environment.
 sub system_env {
-    my @whitelist = qw(PATH INTLTOOL_EXTRACT);
+    my @whitelist = qw(PATH INTLTOOL_EXTRACT LOCPATH);
     my %newenv = map { exists $ENV{$_} ? ($_ => $ENV{$_}) : () } @whitelist;
     my $pid = fork;
     if (not defined $pid) {
