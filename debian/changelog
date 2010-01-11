@@ -48,6 +48,8 @@ lintian (2.3.2) UNRELEASED; urgency=low
     + [RA] Add additional spelling corrections.
     + [RA] Remove spelling correction for parameterize.  This is the
       correct US spelling.  Thanks, Jonathan Yu.  (Closes: #564523)
+    + [RA] Remove spelling correction for useable, a variant permitted
+      by the OED.  Thanks, Vagrant Cascadian.  (Closes: #564740)
   * lib/Util.pm:
     + [RA] Pass LOCPATH to subprocesses.
 

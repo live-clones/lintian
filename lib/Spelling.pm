@@ -487,7 +487,6 @@ our %CORRECTIONS = qw(
                       unknonw unknown
                       unkown unknown
                       unuseful useless
-                      useable usable
                       usefull useful
                       usera users
                       usetnet Usenet
