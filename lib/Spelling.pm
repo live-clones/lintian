@@ -204,6 +204,8 @@ our %CORRECTIONS = qw(
                       documantation documentation
                       documentaion documentation
                       dont don't
+                      downlad download
+                      downlads downloads
                       easilly easily
                       ecspecially especially
                       edditable editable
@@ -318,6 +320,7 @@ our %CORRECTIONS = qw(
                       mroe more
                       multidimensionnal multidimensional
                       mulitplied multiplied
+                      mutiple multiple
                       nam name
                       nams names
                       navagating navigating

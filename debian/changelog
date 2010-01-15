@@ -50,6 +50,7 @@ lintian (2.3.2) UNRELEASED; urgency=low
       correct US spelling.  Thanks, Jonathan Yu.  (Closes: #564523)
     + [RA] Remove spelling correction for useable, a variant permitted
       by the OED.  Thanks, Vagrant Cascadian.  (Closes: #564740)
+    + [RG] Add more spelling corrections.
   * lib/Util.pm:
     + [RA] Pass LOCPATH to subprocesses.
 
