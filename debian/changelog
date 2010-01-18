@@ -19,6 +19,8 @@ lintian (2.3.2) UNRELEASED; urgency=low
     + [JP] Fix outdated reference in file-in-usr-lib-site-python.
   * checks/infofiles:
     + [RA] Pass LOCPATH to subprocesses.
+    + [ADB] Don't flag info files with filenames of info-N.gz as having an
+      incorrect extension if N contains multiple digits.  (Closes: #564900)
   * checks/manpages:
     + [RA] Pass LOCPATH to subprocesses.
 

@@ -78,7 +78,7 @@ foreach my $file (sort keys %{$info->index}) {
 	tag "info-document-not-compressed", "$file";
     }
     my $infoext = pop @fname_pieces;
-    unless ($infoext && $infoext =~ /^info(-\d)?$/) { # it's not foo.info
+    unless ($infoext && $infoext =~ /^info(-\d+)?$/) { # it's not foo.info
 	unless (!@fname_pieces) { # it's not foo{,-{1,2,3,...}}
 	    tag "info-document-has-wrong-extension", "$file";
 	}
