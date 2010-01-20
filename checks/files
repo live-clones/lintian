@@ -753,7 +753,7 @@ foreach my $file (sort keys %{$info->index}) {
 
 	# ---------------- embedded Feedparser library
 	if ($file =~ m,/feedparser\.py$, and $pkg ne "python-feedparser") {
-	    open(FEEDPARSER, "unpacked/$file") or fail("cannot open feedparser.py file: $!");
+	    open(FEEDPARSER, '<', "unpacked/$file") or fail("cannot open feedparser.py file: $!");
 	    while (<FEEDPARSER>) {
 		if (m,Universal feed parser,) {
 		    tag "embedded-feedparser-library", "$file";
@@ -766,7 +766,7 @@ foreach my $file (sort keys %{$info->index}) {
 	# ---------------- embedded PEAR modules
 	foreach my $pearmodule (@pearmodules) {
 	    if ($file =~ m,/$pearmodule->[0], and $pkg ne $pearmodule->[1]) {
-		open (PEAR, "unpacked/$file") or fail("cannot open PHP file: $!");
+		open (PEAR, '<', "unpacked/$file") or fail("cannot open PHP file: $!");
 		while (<PEAR>) {
 		    if (m,/pear[/.],i) {
 			tag "embedded-pear-module", "$file";

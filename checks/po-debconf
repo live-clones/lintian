@@ -162,10 +162,10 @@ while (defined(my $file=readdir(DEBIAN))) {
         }
         tag "unknown-encoding-in-po-file", "debian/po/$file"
                 unless length($charset);
-	system_env("msgfmt -o /dev/null debfiles/po/$file 2>/dev/null") == 0
+	system_env("msgfmt -o /dev/null \Qdebfiles/po/$file\E 2>/dev/null") == 0
 		or tag "invalid-po-file", "debian/po/$file";
 
-	my $stats = `LANG=C msgfmt -o /dev/null --statistics debfiles/po/$file 2>&1`;
+	my $stats = `LANG=C msgfmt -o /dev/null --statistics \Qdebfiles/po/$file\E 2>&1`;
 	if (!$full_translation && $stats =~ m/^\w+ \w+ \w+\.$/) {
 		$full_translation = 1;
 	}

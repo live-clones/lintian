@@ -134,7 +134,7 @@ sub extract_refs {
     my ($fh, $manual, $title, $page, $url, $ref_re, $fields) = @_;
     my @linked_pages = ();
 
-    open(PAGE, "$page") or die "Couldn't open $page: $!";
+    open(PAGE, '<', $page) or die "Couldn't open $page: $!";
 
     # Read until there are 2 newlines. This hack is needed since some lines in
     # the Developer's Reference are cut in the middle of <a>...</a>.

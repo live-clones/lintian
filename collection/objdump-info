@@ -54,20 +54,20 @@ while (<FILES>) {
 
 	print OUT "-- $bin\n";
 
-	system("head $bin | grep -q 'packed.*with.*UPX'");
+	system("head \Q$bin\E | grep -q 'packed.*with.*UPX'");
 	print OUT "objdump: $bin: Packed with UPX" if $? == 0;
 
-	if (open(PIPE, '-|', "readelf -l $bin 2>&1")) {
+	if (open(PIPE, '-|', "readelf -l \Q$bin\E 2>&1")) {
 	    local $/;
 	    local $_ = <PIPE>;
 	    print OUT $_;
 	    close PIPE;
 	}
 
-	system("objdump -T $bin >/dev/null 2>&1");
+	system("objdump -T \Q$bin\E >/dev/null 2>&1");
 	if ($? == 0) {
 	    # Seems happy so slurp the full output
-	    if (open(PIPE, '-|', "objdump --headers --private-headers -T $bin 2>&1")) {
+	    if (open(PIPE, '-|', "objdump --headers --private-headers -T \Q$bin\E 2>&1")) {
 		local $/;
 		local $_ = <PIPE>;
 		print OUT $_;
@@ -77,7 +77,7 @@ while (<FILES>) {
 	    $failed = 1;
 	    my $invalidop = 0;
 	    my $objdumpout = '';
-	    if (open(PIPE, '-|', "objdump --headers --private-headers -T $bin 2>&1")) {
+	    if (open(PIPE, '-|', "objdump --headers --private-headers -T \Q$bin\E 2>&1")) {
 		while(<PIPE>) {
 		    $objdumpout .= $_;
 		    if (m/Invalid operation$/) {
@@ -106,7 +106,7 @@ while (<FILES>) {
 		# objdump output and let the scripts handle it
 
 		print OUT $objdumpout;
-	    } elsif (system("readelf -l $bin 2>&1 | grep -q 'Error: Not an ELF file'") == 0) {
+	    } elsif (system("readelf -l \Q$bin\E 2>&1 | grep -q 'Error: Not an ELF file'") == 0) {
 		print OUT "objdump: $bin: File format not recognized\n";
 	    } else {
 		# We're using etch's binutils so attempt to build an output
@@ -116,7 +116,7 @@ while (<FILES>) {
 		my @sections;
 		my @symbol_versions;
 
-		if (open(PIPE, '-|', "readelf -W -l -t -d -V $bin")) {
+		if (open(PIPE, '-|', 'readelf', '-W', '-l', '-t', '-d', '-V', $bin)) {
 		    my $section = '';
 		    my %program_headers;
 
@@ -179,7 +179,7 @@ while (<FILES>) {
 		    close PIPE;
 		}
 
-		if (open(PIPE, '-|', "readelf -W -s -D $bin")) {
+		if (open(PIPE, '-|', 'readelf', '-W', '-s', '-D', $bin)) {
 		    print OUT "DYNAMIC SYMBOL TABLE:\n";
 
 		    while(<PIPE>) {
