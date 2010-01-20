@@ -65,8 +65,9 @@ sub add_file {
 
     if ( $self->{unique}{$s}++ ) {
 	if ($self->{opts}{verbose}) {
-	    printf "N: Ignoring duplicate %s package $pkg (version $ver)\n",
-		$type eq 'b' ? 'binary' : ($type eq 's' ? 'source': 'udeb');
+	    printf "N: Ignoring duplicate %s package %s (version %s)\n",
+		$type eq 'b' ? 'binary' : ($type eq 's' ? 'source': 'udeb'),
+		$pkg, $ver;
 	}
 	return 1;
     }

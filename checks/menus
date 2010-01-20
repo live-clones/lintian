@@ -100,7 +100,7 @@ for my $file (sort keys %{$info->index}) {
 	# menu file?
 	if ($file =~ m,^usr/(lib|share)/menu/\S,o) { # correct permissions?
 	    if ($operm & 01 or $operm & 010 or $operm & 0100) {
-		tag "executable-menu-file", sprintf("$file %04o",$operm);
+		tag "executable-menu-file", sprintf("%s %04o",$file,$operm);
 	    }
 
 	    next if $file =~ m,^usr/(lib|share)/menu/README$,;
