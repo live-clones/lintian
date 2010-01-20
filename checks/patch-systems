@@ -201,7 +201,7 @@ sub run {
 # Checks on patches common to all build systems
 sub check_patch($) {
 	my $patch_file = shift;
-	open(DIFFSTAT, "-|", "diffstat -p0 -l debfiles/patches/$patch_file")
+	open(DIFFSTAT, "-|", 'diffstat', '-p0', '-l', "debfiles/patches/$patch_file")
 	  or fail("can't fork diffstat");
 	while (<DIFFSTAT>) {
 		chomp;
