@@ -102,7 +102,7 @@ while (<IN>) {
     # correct permissions?
     unless ($operm == $ctrl{$file}) {
 	tag "control-file-has-bad-permissions",
-	    sprintf("$file %04o != %04o",$operm,$ctrl{$file});
+	    sprintf("%s %04o != %04o",$file,$operm,$ctrl{$file});
     }
 
     # correct owner?

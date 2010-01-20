@@ -409,7 +409,7 @@ while (<IN>) {
 
     if ($perm =~ m,^-, && $file =~ m,/usr/share/applications/.*\.desktop$,) {
         if ($perm =~ m,x,o) {
-            tag "executable-desktop-file", sprintf("$file %04o",$operm);
+            tag "executable-desktop-file", sprintf("%s %04o",$file,$operm);
         }
         unless (m,template,) {
             push (@desktop_files, $file);
