@@ -1,3 +1,6 @@
 some-file
 some-other-file -p0
 some-nonexistent-patch
+# this is to test for directory traversals
+# 'debian-patch' is a file in the laboratory
+../../debian-patch

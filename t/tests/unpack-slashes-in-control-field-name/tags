@@ -1,0 +1,2 @@
+I: unpack-slashes-in-control-field-name: unknown-field-in-control ../bar
+W: unpack-slashes-in-control-field-name source: unknown-field-in-dsc ../foo

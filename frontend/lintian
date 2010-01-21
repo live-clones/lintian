@@ -849,6 +849,9 @@ while (my $arg = shift) {
 		next if $_ eq '';
 
 		my ($md5sum,$size,$section,$priority,$file) = split(/\s+/o, $_);
+
+		next if ($file =~ m,/,);
+
 		$files{$file}{md5} = $md5sum;
 		$files{$file}{size} = $size;
 

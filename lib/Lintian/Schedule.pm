@@ -53,6 +53,12 @@ sub add_file {
     $ver  = '' unless length $ver;
     $arch ||= '';
 
+    if ( $pkg =~ m,/, ) {
+	warn(sprintf("warning: bad name for %2\$s package '%1\$s', skipping\n",
+	    $pkg, $type eq 'b' ? 'binary' : ($type eq 's' ? 'source': 'udeb')));
+	return 1;
+    }
+
     my $s = "$type $pkg $ver $arch $file";
     my %h = ( type => $type, package => $pkg, version => $ver,
 	      architecture => $arch, file => $file );

@@ -867,8 +867,15 @@ while (my ($vcs, $regex) = each %VCS_RECOMMENDED_URIS) {
 
 #----- Field checks (without checking the value)
 
-for my $field (glob("fields/*")) {
-	$field =~ s!^fields/!!;
+opendir(FIELDS, 'fields/')
+    or fail("cannot read fields/ directory: $!");
+
+for my $field (readdir FIELDS) {
+	next if ($field eq '.' || $field eq '..');
+
+	# The unpack scripts turn slashes into colons
+	# This is safe since a control field name can't contain colons
+	$field =~ s,:,/,g;
 
 	next if ($field eq 'original-maintainer') and $version =~ /ubuntu/;
 
@@ -884,6 +891,7 @@ for my $field (glob("fields/*")) {
 	tag "unknown-field-in-control", "$field"
 	    if ($type eq "udeb" && ! $known_udeb_fields{$field} && ! $known_obsolete_fields{$field});
 }
+closedir(FIELDS);
 
 }
 

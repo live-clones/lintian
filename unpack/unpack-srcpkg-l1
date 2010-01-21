@@ -52,10 +52,13 @@ mkdir("$base_dir/fields", 0777) or fail("mkdir $base_dir/fields: $!");
 
 # create control field files
 for my $field (keys %$data) {
+    my $value = $data->{$field};
+    # checks/fields will convert colons into slashes
+    $field =~ s,/,:,g;
     my $field_file = "$base_dir/fields/$field";
     open(F, '>', $field_file)
         or fail("cannot open file $field_file for writing: $!");
-    print F $data->{$field},"\n";
+    print F $value,"\n";
     close(F);
 }
 
@@ -75,6 +78,7 @@ for my $fs (split(/\n/,$data->{'files'})) {
     $fs =~ s/^\s*//;
     next if $fs =~ /^$/o;
     my @t = split(/\s+/o,$fs);
+    next if ($t[2] =~ m,/,);
     if ($t[2] =~ /^(\Q$base\E\.orig|\Q$baserev\E)\.tar\.(gz|bz2|lzma)$/) {
         $tarball = $t[2];
     }
@@ -162,6 +166,7 @@ spawn($job, sub { print @index }, '|', ['sort', '-k', '6'], '&');
 # Create symbolic links to binary packages
 mkdir("$base_dir/binary", 0777) or fail("mkdir $base_dir/binary: $!");
 for my $bin (split(/,\s+/o,$data->{'binary'})) {
+    next if ($bin =~ m,/,);
     symlink("../../../binary/$bin", "$base_dir/binary/$bin")
         or fail("cannot symlink binary package $bin: $!");
 }

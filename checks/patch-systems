@@ -24,6 +24,7 @@ use strict;
 
 use Lintian::Tags qw(tag);
 use Util;
+use Cwd qw(realpath);
 
 sub run {
 	my ($pkg, $type, $info) = @_;
@@ -44,6 +45,8 @@ sub run {
 		$format = $info->field('format');
 	}
 	my $quilt_format = ($format =~ /3\.\d+ \(quilt\)/) ? 1 : 0;
+
+	my $cwd = realpath('.');
 
 	#----- dpatch
 	if ($build_deps->implies("dpatch")) {
@@ -84,6 +87,10 @@ sub run {
 				foreach my $patch_file (@patches) {
 					$patch_file .= ".dpatch" if -e "debfiles/patches/$patch_file.dpatch"
 						and not -e "debfiles/patches/$patch_file";
+					next if ( -l "debfiles/patches/$patch_file" );
+					unless (realpath("debfiles/patches/$patch_file") =~ m,^\Q$cwd\E/debfiles/,) {
+					    next;
+					}
 					if (! -r "debfiles/patches/$patch_file") {
 						tag "dpatch-index-references-non-existent-patch", $patch_file;
 						next;
@@ -137,6 +144,10 @@ sub run {
 
 				# Check each patch.
 				foreach my $patch_file (@patches) {
+					next if ( -l "debfiles/patches/$patch_file" );
+					unless (realpath("debfiles/patches/$patch_file") =~ m,^\Q$cwd\E/debfiles/,) {
+					    next;
+					}
 					if (! -r "debfiles/patches/$patch_file") {
 						tag "quilt-series-references-non-existent-patch", $patch_file;
 						next;

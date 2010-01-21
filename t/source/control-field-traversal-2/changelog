@@ -1,0 +1,8 @@
+control-field-traversal-2 (1) unstable; urgency=low
+
+  * Lintian Test Suite.
+  * Test: control-field-traversal-2
+
+  * Suppress "should close ITP bug" messages.  (Closes: #123456)
+
+ -- Debian Lintian Maintainers <lintian-maint@debian.org>  Tue, 5 Jan 2010 01:01:01 -0001
