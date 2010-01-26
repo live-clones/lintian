@@ -121,7 +121,7 @@ sub read_dpkg_control {
     }
 
     my $CONTROL = FileHandle->new;
-    open($CONTROL,$file)
+    open($CONTROL,'<',$file)
 	or fail("cannot open control file $file for reading: $!");
     my @data = parse_dpkg_control($CONTROL, $debconf_flag);
     close($CONTROL)
@@ -193,7 +193,7 @@ sub file_is_encoded_in_non_utf8 {
 	my ($file, $type, $pkg) = @_;
 	my $non_utf8 = 0;
 	
-	open ICONV, "env LANG=C iconv -f utf8 -t utf8 $file 2>&1 |"
+	open ICONV, "env LANG=C iconv -f utf8 -t utf8 \Q$file\E 2>&1 |"
 	    or fail("failure while checking encoding of $file for $type package $pkg");
 	my $line = 1;
 	while (<ICONV>) {

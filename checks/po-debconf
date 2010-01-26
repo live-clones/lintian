@@ -144,7 +144,7 @@ while (defined(my $file=readdir(DEBIAN))) {
         }
         tag "unknown-encoding-in-po-file", "debian/po/$file"
                 unless length($charset);
-	system_env("msgfmt -o /dev/null debfiles/po/$file 2>/dev/null") == 0
+	system_env("msgfmt -o /dev/null debfiles/po/\Q$file\E 2>/dev/null") == 0
 		or tag "invalid-po-file", "debian/po/$file";
 }
 

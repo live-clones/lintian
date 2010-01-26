@@ -150,7 +150,7 @@ while (defined(my $file=readdir(DEBIAN))) {
     if ($file =~ m/^(?:(.*)\.)?(?:post|pre)(?:inst|rm)$/) {
 	
         my $binpkg = $1 || '';
-	open(IN,"debfiles/$file")
+	open(IN,'<',"debfiles/$file")
 	    or fail("Can't open debfiles/$file: $!");
 	my $seentag = '';
 	while (<IN>) {

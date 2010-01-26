@@ -162,7 +162,7 @@ sub check_script {
     my ($no_check_menu,$no_check_installdocs);
     my $interp;
 
-    open(IN,"control/$script") or
+    open(IN,'<',"control/$script") or
 	fail("cannot open maintainer script control/$script for reading: $!");
     $interp = <IN>;
     if ($interp =~ m,^\#\!\s*/bin/(a|ba|k|pdk)?sh,) {

@@ -152,7 +152,7 @@ for (keys %initd_postinst) {
     my $initd_file = "init.d/$_";
     if (-f $initd_file) {
 	# yes! check it...
-	open(IN,$initd_file) or fail("cannot open init.d file $initd_file: $!");
+	open(IN,'<',$initd_file) or fail("cannot open init.d file $initd_file: $!");
 	my (%tag, %lsb);
 	while (defined(my $l = <IN>)) {
 	    if ($l =~ m/^\#\#\# BEGIN INIT INFO/) {

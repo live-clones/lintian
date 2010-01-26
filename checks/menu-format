@@ -141,7 +141,7 @@ foreach my $menufile (@menufiles) {
     next if $basename eq "README"; # README is a special case
 
     my $menufile_line ="";
-    open (IN, $menufile) or
+    open (IN, '<', $menufile) or
 	fail("cannot open menu file $menufile for reading.");
     # line below is commented out in favour of the while loop
     # do { $_=<IN>; } while defined && (m/^\s* \#/ || m/^\s*$/);
@@ -465,7 +465,7 @@ sub VerifyIcon {
 	$iconfile = "unpacked/usr/share/pixmaps/$icon";
     }
 
-    if (! open IN, $iconfile) {
+    if (! open IN, '<', $iconfile) {
 	tag "menu-icon-missing", "$icon";
 	return;
     }

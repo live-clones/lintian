@@ -439,7 +439,7 @@ while (<SCRIPTS>) {
 # print "E: something" unless exists $maintainer_scripts{$file}
 
     # now scan the file contents themselves
-    open C, "$filename"
+    open C, '<', "$filename"
 	or fail("cannot open maintainer script $filename for reading: $!");
 
     my %warned;
@@ -649,7 +649,7 @@ sub tag_warn {
 sub script_is_evil_and_wrong {
     my ($filename) = @_;
     my $ret = 0;
-    open IN, $filename or fail("cannot open $filename: $!");
+    open IN, '<', $filename or fail("cannot open $filename: $!");
     my $i = 0;
     local $_;
     while (<IN>) {

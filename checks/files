@@ -199,7 +199,7 @@ while (<IN>) {
 		# gzipped zero byte files:
 		# 276 is 255 bytes (maximal length for a filename) + gzip overhead
 		if ($file =~ m,.gz$, and $size <= 276 and $perm =~ m,^-,) {
-		    unless (`gzip -dc unpacked/$file`) {
+		    unless (`gzip -dc unpacked/\Q$file\E`) {
 			tag "zero-byte-file-in-doc-directory", "$file";
 		    }
 		}
