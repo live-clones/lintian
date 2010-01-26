@@ -26,6 +26,7 @@ use common_data;
 use Dep;
 use Tags;
 use Util;
+use Cwd qw(realpath);
 
 sub run {
 	my ($pkg, $type) = @_;
@@ -60,6 +61,8 @@ sub run {
 		close(IN);
 	}
 	my $quilt_format = ($format =~ /3\.\d+ \(quilt\)/) ? 1 : 0;
+
+	my $cwd = realpath('.');
 
 	#----- dpatch
 	if (Dep::implies($build_deps, Dep::parse("dpatch"))) {
@@ -100,6 +103,10 @@ sub run {
 				foreach my $patch_file (@patches) {
 					$patch_file .= ".dpatch" if -e "debfiles/patches/$patch_file.dpatch"
 						and not -e "debfiles/patches/$patch_file";
+					next if ( -l "debfiles/patches/$patch_file" );
+					unless (realpath("debfiles/patches/$patch_file") =~ m,^\Q$cwd\E/debfiles/,) {
+						next;
+					}
 					if (! -r "debfiles/patches/$patch_file") {
 						tag "dpatch-index-references-non-existent-patch", $patch_file;
 						next;
@@ -152,6 +159,10 @@ sub run {
 
 				# Check each patch.
 				foreach my $patch_file (@patches) {
+					next if ( -l "debfiles/patches/$patch_file" );
+					unless (realpath("debfiles/patches/$patch_file") =~ m,^\Q$cwd\E/debfiles/,) {
+						next;
+					}
 					if (! -r "debfiles/patches/$patch_file") {
 						tag "quilt-series-references-non-existent-patch", $patch_file;
 						next;

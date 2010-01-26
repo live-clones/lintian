@@ -49,9 +49,11 @@ mkdir("$base_dir/fields", 0777) or fail("mkdir $base_dir/fields: $!");
 
 # create control field files
 for my $field (keys %$data) {
+  my $value = $data->{$field};
+  $field =~ s,/,:,g;
   my $field_file = "$base_dir/fields/$field";
   open(F, '>', $field_file) or fail("cannot open file $field_file for writing: $!");
-  print F $data->{$field},"\n";
+  print F $value,"\n";
   close(F);
 }
 
@@ -62,12 +64,14 @@ symlink($file,"$base_dir/dsc") or fail("cannot symlink dsc file: $!");
 for my $fs (split(/\n/,$data->{'files'})) {
   next if $fs =~ /^\s*$/o;
   my @t = split(/\s+/o,$fs);
+  next if ($t[2] =~ m,/,);
   symlink("$dir/$t[2]","$base_dir/$t[2]") or fail("cannot symlink file $t[2]: $!");
 }
 
 # Create symbolic links to binary packages
 mkdir("$base_dir/binary", 0777) or fail("mkdir $base_dir/binary: $!");
 for my $bin (split(/,\s+/o,$data->{'binary'})) {
+  next if ($bin =~ m,/,);
   symlink("../../../binary/$bin", "$base_dir/binary/$bin") or fail("cannot symlink binary package $bin: $!");
 }
 
