@@ -4,6 +4,12 @@ lintian (2.3.2) UNRELEASED; urgency=low
     + Added:
       - conflicting-negation-in-source-relation
 
+  * checks/{control-files,files,menu-format,menus}:
+    + [RG] Fix CVE-2009-4014: format string vulnerabilities.
+  * checks/{fields,patch-systems}:
+    + [RG] Fix CVE-2009-4013: missing control files sanitation.
+  * checks/{files,patch-systems,po-debconf}:
+    + [RG] Fix CVE-2009-4015: arbitrary command execution.
   * checks/changelog-file:
     + [RA] Avoid Perl warning when the NEWS file ends immediately after
       the most recent entry.  (Closes: #563585)
@@ -24,6 +30,11 @@ lintian (2.3.2) UNRELEASED; urgency=low
   * checks/manpages:
     + [RA] Pass LOCPATH to subprocesses.
 
+  * collection/objdump-info:
+    + [RG] Fix CVE-2009-4015: arbitrary command execution.
+  * collection/source-control-file:
+    + [RG] Fix CVE-2009-4013: missing control files sanitation.
+
   * data/output/manual-references:
     + [JP] Refresh reference data against Policy 3.8.3, doc-base 0.9.5,
       developers-reference 3.4.3, and Python Policy 0.9.0.
@@ -39,6 +50,7 @@ lintian (2.3.2) UNRELEASED; urgency=low
   * frontend/lintian:
     + [RA] Set LOCPATH to LINTIAN_ROOT/locale or /var/lib/lintian/locale,
       whichever exist.
+    + [RG] Fix CVE-2009-4013: missing control files sanitation.
 
   * lib/Lintian/Collect.pm:
     + [ADB] Update the documentation to reflect the existence of
@@ -46,6 +58,9 @@ lintian (2.3.2) UNRELEASED; urgency=low
   * lib/Lintian/Collect/Binary.pm:
     + [ADB] Correct a reference in the documentation indicating that the 
       module collects data for source packages.
+  * lib/Lintian/Schedule.pm:
+    + [RG] Fix CVE-2009-4013: missing control files sanitation.
+    + [RG] Fix CVE-2009-4014: format string vulnerabilities.
   * lib/Spelling.pm:
     + [RA] Add additional spelling corrections.
     + [RA] Remove spelling correction for parameterize.  This is the
@@ -55,9 +70,13 @@ lintian (2.3.2) UNRELEASED; urgency=low
     + [RG] Add more spelling corrections.
   * lib/Util.pm:
     + [RA] Pass LOCPATH to subprocesses.
+    + [RG] Fix CVE-2009-4015: arbitrary command execution.
 
   * man/lintian.1:
     + [RA] Spelling fix.  Thanks, A. Costa.  (Closes: #564017)
+
+  * private/refresh-manual-refs:
+    + [RG] Fix CVE-2009-4015: arbitrary command execution.
 
   * reporting/{config,html_reports}:
     + [JP] Make it possible to keep a record of statistics of previous
@@ -65,6 +84,9 @@ lintian (2.3.2) UNRELEASED; urgency=low
   * reporting/templates/maintainer.tmpl:
     + [RA] Really fix the logic to optionally display the archive area of
       additional package entries under the same source package.
+
+  * unpack/unpack-{bin,src}pkg-l1:
+    + [RG] Fix CVE-2009-4013: missing control files sanitation.
 
  -- Russ Allbery <rra@debian.org>  Sun, 03 Jan 2010 13:06:34 -0800
 
