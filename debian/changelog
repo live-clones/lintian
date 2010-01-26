@@ -1,3 +1,31 @@
+lintian (1.24.2.1+lenny1) stable-security; urgency=high
+
+  * Non-maintainer upload by the Security Team.
+
+  * checks/{control-files,files,menu-format,menus}:
+    + [RG] Fix CVE-2009-4014: format string vulnerabilities
+  * checks/{fields,patch-systems}:
+    + [RG] Fix CVE-2009-4013: missing control files sanitation
+  * checks/{files,patch-systems}:
+    + [RG] Fix CVE-2009-4015: arbitrary command execution
+
+  * collection/objdump-info:
+    + [RG] Fix CVE-2009-4015: arbitrary command execution
+  * collection/source-control-file:
+    + [RG] Fix CVE-2009-4013: missing control files sanitation
+
+  * frontend/lintian:
+    + [RG] Fix CVE-2009-4013: missing control files sanitation
+    + [RG] Fix CVE-2009-4014: format string vulnerabilities
+
+  * lib/Util:
+    + [RG] Fix CVE-2009-4015: arbitrary command execution
+
+  * unpack/unpack-{bin,src}pkg-l1:
+    + [RG] Fix CVE-2009-4013: missing control files sanitation
+
+ -- Raphael Geissert <geissert@debian.org>  Tue, 26 Jan 2010 01:28:23 -0600
+
 lintian (1.24.2.1) testing; urgency=high
 
   The "for the sake of lenny users" release.
