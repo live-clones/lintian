@@ -114,12 +114,12 @@ while (<IN>) {
 	}
 	# ---------------- /etc/cron.d
 	elsif ($file =~ m,^etc/cron\.d/\S, and $operm != 0644) {
-	    tag "bad-permissions-for-etc-cron.d-script", sprintf("$file %04o != 0644",$operm);
+	    tag "bad-permissions-for-etc-cron.d-script", sprintf("%s %04o != 0644",$file,$operm);
 	}
 	# ---------------- /etc/emacs.*
 	elsif ($file =~ m,^etc/emacs.*/\S, and $perm =~ m/^-/
 	       and $operm != 0644) {
-	    tag "bad-permissions-for-etc-emacs-script", sprintf("$file %04o != 0644",$operm);
+	    tag "bad-permissions-for-etc-emacs-script", sprintf("%s %04o != 0644",$file,$operm);
 	}
 	# ---------------- /etc/gconf/schemas
 	elsif ($file =~ m,^etc/gconf/schemas/\S,) {
@@ -129,7 +129,7 @@ while (<IN>) {
 	elsif ($file =~ m,^etc/init\.d/\S, and $operm != 0755
 	       and $perm =~ m/^-/) {
 	    tag "non-standard-file-permissions-for-etc-init.d-script",
-		sprintf("$file %04o != 0755",$operm);
+		sprintf("%s %04o != 0755",$file,$operm);
 	}
 	#----------------- /etc/pam.conf
 	elsif ($file =~ m,^etc/pam.conf, and $pkg ne "libpam-runtime" ) {
@@ -575,11 +575,11 @@ while (<IN>) {
 
 	    # Check for setuid and setgid that isn't expected.
 	    if ($setuid and $setgid) {
-		tag "setuid-gid-binary", $file, sprintf("%04o $owner",$operm);
+		tag "setuid-gid-binary", $file, sprintf("%04o %s",$operm,$owner);
 	    } elsif ($setuid) {
-		tag "setuid-binary", $file, sprintf("%04o $owner",$operm);
+		tag "setuid-binary", $file, sprintf("%04o %s",$operm,$owner);
 	    } elsif ($setgid) {
-		tag "setgid-binary", $file, sprintf("%04o $owner",$operm);
+		tag "setgid-binary", $file, sprintf("%04o %s",$operm,$owner);
 	    }
 
 	    # Check for permission problems other than the setuid status.
