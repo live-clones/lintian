@@ -663,6 +663,9 @@ while (my $arg = shift) {
 		next if $_ eq '';
 
 		my ($md5sum,$size,$section,$priority,$file) = split(/\s+/o, $_);
+
+		next if ($file =~ m,/,);
+
 		my $filename = $arg_dir . '/' . $file;
 	
 		# check size
@@ -1556,6 +1559,13 @@ sub get_src_info_from_lab {
 # schedule a package for processing
 sub schedule_package {
     my ($type,$pkg,$ver,$file) = @_;
+
+    if ( $pkg =~ m,/, ) {
+       warn(sprintf("warning: bad name for %2\$s package '%1\$s', skipping\n",
+           $pkg, $type eq 'b' ? 'binary' : ($type eq 's' ? 'source': 'udeb')));
+       return;
+    }
+
 
     my $s = "$type $pkg $ver $file";
 

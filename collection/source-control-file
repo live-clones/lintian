@@ -43,10 +43,12 @@ foreach (@control_data) {
     mkdir "control/$pkg_name", 0777
         or fail( "can't create dir control/$pkg_name: $!" );
     for my $field (keys %$_) {
+        my $value = $_->{$field};
+        $field =~ s,/,:,g;
         my $field_file = "control/$pkg_name/$field";
         open F, ">", "$field_file"
             or fail("cannot open file $field_file for writing: $!");
-        print F $_->{$field},"\n";
+        print F $value,"\n";
         close F;
     }
 }

@@ -83,13 +83,17 @@ $data->{'source'} or ($data->{'source'} = $data->{'package'});
 
 # create control field files
 for my $field (keys %$data) {
+    my $value = $data->{$field};
+    $field =~ s,/,:,g;
     my $field_file = "$base_dir/fields/$field";
     open(F,">$field_file") or fail("cannot open file $field_file for writing: $!");
-    print F $data->{$field},"\n";
+    print F $value,"\n";
     close(F);
 }
 
-# create symlink to source package
-symlink("../../source/$data->{'source'}","$base_dir/source") or fail("symlink: $!");
+if ($data->{'source'} !~ m,/,) {
+    # create symlink to source package
+    symlink("../../source/$data->{'source'}","$base_dir/source") or fail("symlink: $!");
+}
 
 exit 0;

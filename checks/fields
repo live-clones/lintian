@@ -778,8 +778,12 @@ if (open(FH, "fields/python-version")) {
 
 #----- Field checks (without checking the value)
 
-for my $field (glob("fields/*")) {
-	$field =~ s!^fields/!!;
+opendir(FIELDS, 'fields/')
+	or fail("cannot read fields/ directory: $!");
+for my $field (readdir FIELDS) {
+	next if ($field eq '.' || $field eq '..');
+
+	$field =~ s,:,/,g;
 
 	tag "obsolete-field", "$field"
 	    if $known_obsolete_fields{$field};
@@ -793,6 +797,7 @@ for my $field (glob("fields/*")) {
 	tag "unknown-field-in-control", "$field"
 	    if ($type eq "udeb" && ! $known_udeb_fields{$field} && ! $known_obsolete_fields{$field});
 }
+closedir(FIELDS);
 
 }
 
