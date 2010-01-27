@@ -1,4 +1,4 @@
-lintian (2.3.2) UNRELEASED; urgency=low
+lintian (2.3.2) unstable; urgency=high
 
   * Summary of tag changes:
     + Added:
@@ -88,7 +88,7 @@ lintian (2.3.2) UNRELEASED; urgency=low
   * unpack/unpack-{bin,src}pkg-l1:
     + [RG] Fix CVE-2009-4013: missing control files sanitation.
 
- -- Russ Allbery <rra@debian.org>  Sun, 03 Jan 2010 13:06:34 -0800
+ -- Raphael Geissert <geissert@debian.org>  Wed, 27 Jan 2010 10:55:03 -0600
 
 lintian (2.3.1) unstable; urgency=low
 
