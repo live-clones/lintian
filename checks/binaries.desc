@@ -191,6 +191,22 @@ Info: This package includes a *.so file in <tt>/usr/lib/perl5</tt>,
  ${perl:Depends} substitution variable in the Depends line in
  <tt>debian/control</tt>.
 
+Tag: missing-dependency-on-phpapi
+Severity: serious
+Certainty: certain
+Info: This package includes a *.so file in <tt>/usr/lib/phpN</tt>
+ (where N is a number representing the major PHP version), normally
+ indicating that it includes a PHP extension.  PHP extensions must
+ depend on phpapi-$(php-configN --phpapi), without adding an
+ alternative package with the OR operator.
+ .
+ This can usually be achieved by, for example, adding the following
+ code to the binary-arch target of the rules file and adding
+ <tt>${php:Depends}</tt> to the <tt>Depends</tt> field of the binary
+ package shipping the extension:
+ .
+ echo "php:Depends=phpapi-$(php-config5 --phpapi)" > debian/substvars
+
 Tag: debug-file-should-use-detached-symbols
 Severity: normal
 Certainty: certain

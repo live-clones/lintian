@@ -83,6 +83,7 @@ my $needs_libc_file;
 my $needs_libc_count = 0;
 my $needs_depends_line = 0;
 my $has_perl_lib = 0;
+my $has_php_ext = 0;
 
 my %SONAME;
 
@@ -286,6 +287,11 @@ foreach my $file (sort keys %{$info->file_info}) {
 	$has_perl_lib = 1;
     }
 
+    # PHP extension?
+    if ($file =~ m,^\./usr/lib/php\d/.*\.so$,) {
+	$has_php_ext = 1;
+    }
+
     # Something other than detached debugging symbols in /usr/lib/debug paths.
     if ($file =~ m,^\./usr/lib/debug/(?:lib\d*|s?bin|usr|opt|dev|emul)/,) {
 	if (exists($objdump->{NEEDED})) {
@@ -380,6 +386,13 @@ if ($has_perl_lib) {
     my $re = qr/(?:^|,)\s*perlapi-[\d.]+(?:\s*\[[^\]]+\])?\s*(?:,|\z)/;
     unless ($depends =~ /$re/) {
 	tag 'missing-dependency-on-perlapi';
+    }
+}
+
+# Check for a phpapi- dependency.
+if ($has_php_ext) {
+    unless ($depends =~ /(?:^|,)\s*phpapi-[\d\w+]+\s*(?:,|\z)/) {
+	tag 'missing-dependency-on-phpapi';
     }
 }
 
