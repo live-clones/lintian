@@ -43,6 +43,8 @@ our @jslibraries = (
     [ qr,(?i)jsjac(\.packed)?\.js(\.gz)?$, => qr'libjs-jac' ],
     [ qr,(?i)jsMath(-fallback-\w+)?\.js(\.gz)?$, => qr'jsmath' ],
     [ qr,(?i)tiny_mce(_(popup|src))?\.js(\.gz)?$, => qr'tinymce2?' ],
+    [ qr,(?i)dojo\.js(\.uncompressed\.js)?(\.gz)?$, => qr'libjs-dojo-\w+' ],
+    [ qr,(?i)dijit\.js(\.uncompressed\.js)?(\.gz)?$, => qr'libjs-dojo-\w+' ],
 # not yet available in unstable:
 #    [ qr,(?i)(htmlarea|Xinha(Loader|Core))\.js$, => qr'xinha' ],
 );
