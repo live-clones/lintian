@@ -1,3 +1,21 @@
+lintian (2.3.3) UNRELEASED; urgency=low
+
+  * Summary of tag changes:
+    + Added:
+      - missing-dependency-on-phpapi
+      - obsolete-comments-style-in-php-ini
+
+  * checks/binaries{,.desc}:
+    + [RG] Warn about packages shipping PHP extensions but not
+      depending on phpapi-*.
+  * checks/files{,.desc}:
+    + [RG] Warn about packages shipping PHP .ini files using old-style
+      (#) comments separators.
+    + [RG] Warn about packages embedding the dojo and dijit javascript
+      libraries.
+
+ -- Raphael Geissert <geissert@debian.org>  Thu, 28 Jan 2010 15:31:11 -0600
+
 lintian (2.3.2) unstable; urgency=high
 
   * Summary of tag changes:
