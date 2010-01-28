@@ -578,7 +578,7 @@ foreach my $file (sort keys %{$info->index}) {
     }
     # ---------------- FHS directory?
     elsif ($file =~ m,^[^/]+/$, and $file ne './' and
-	   $file !~ m,^(?:bin|boot|dev|etc|home|lib(?:64|32)?|mnt|opt|root|sbin|srv|tmp|usr|var)/,) {
+	   $file !~ m,^(?:bin|boot|dev|etc|home|lib(?:64|32)?|mnt|opt|root|sbin|selinux|srv|sys|tmp|usr|var)/,) {
 	# Make an exception for the base-files package here and other similar
 	# packages because they install a slew of top-level directories for
 	# setting up the base system.  (Specifically, /cdrom, /floppy,

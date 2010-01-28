@@ -16,6 +16,8 @@ lintian (2.3.3) UNRELEASED; urgency=low
       (#) comments separators.
     + [RG] Warn about packages embedding the dojo and dijit javascript
       libraries.
+    + [RG] Don't warn about packages containing /sys or /selinux
+      directories.  Policy 3.8.4 grants an exception to the FHS.
 
   * debian/control:
     + [RG] Update standards version to 3.8.4 (no changes required).
