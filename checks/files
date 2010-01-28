@@ -261,6 +261,17 @@ foreach my $file (sort keys %{$info->index}) {
 	elsif ($file =~ m,^etc/pam.conf, and $pkg ne "libpam-runtime" ) {
 	    tag "config-file-reserved", "$file by libpam-runtime";
 	}
+	#----------------- /etc/php5/conf.d
+	elsif ($file =~ m,^etc/php5/conf.d/.+\.ini$,) {
+	    open (PHPINI, '<', "unpacked/$file") or fail("cannot open .ini file: $!");
+	    while (<PHPINI>) {
+		next unless (m/^\s*#/);
+		tag "obsolete-comments-style-in-php-ini", $file;
+		# only warn once per file:
+		last;
+	    }
+	    close(PHPINI);
+	}
 	# ---------------- /etc/rc.d
 	elsif ($type ne 'udeb' and $file =~ m,^etc/rc\.d/\S, and $pkg !~ /^(?:sysvinit|file-rc)$/) {
 	    tag "package-installs-into-etc-rc.d", "$file";

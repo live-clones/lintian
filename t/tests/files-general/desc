@@ -10,6 +10,7 @@ Test-For:
  global-data-in-games-directory
  icon-size-and-directory-name-mismatch
  non-conf-file-in-modprobe.d
+ obsolete-comments-style-in-php-ini
  package-contains-empty-directory
  package-contains-info-dir-file
  package-modifies-ld.so-search-path
