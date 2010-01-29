@@ -38,6 +38,8 @@ lintian (2.3.3) UNRELEASED; urgency=low
 
   * debian/control:
     + [RG] Update standards version to 3.8.4 (no changes required).
+  * debian/prerm:
+    + [RG] Don't ignore errors on shell commands failures.
 
   * private/refresh-archs:
     + [RG] Generate a list of triplet<->architecture relationships too.
