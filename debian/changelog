@@ -6,12 +6,6 @@ lintian (2.3.3) UNRELEASED; urgency=low
       - obsolete-comments-style-in-php-ini
       - triplet-dir-and-architecture-mismatch
 
-  * data/files/triplets:
-    + [RG] New file with a list of triplet<->architecture
-      relationships.
-  * data/standards-version/release-dates:
-    + [RG] Add the release date for Policy 3.8.4.
-
   * checks/binaries{,.desc}:
     + [RG] Warn about packages shipping PHP extensions but not
       depending on phpapi-*.
@@ -27,6 +21,12 @@ lintian (2.3.3) UNRELEASED; urgency=low
     + [RG] Warn about packages containing (/usr)/lib/<triplet>
       directories for a <triplet> that isn't the one of the
       architecture of the package, per Policy 3.8.4 requirement.
+
+  * data/files/triplets:
+    + [RG] New file with a list of triplet<->architecture
+      relationships.
+  * data/standards-version/release-dates:
+    + [RG] Add the release date for Policy 3.8.4.
 
   * debian/control:
     + [RG] Update standards version to 3.8.4 (no changes required).
