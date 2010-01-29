@@ -39,6 +39,7 @@ my %lsb_keywords = (provides		=> 1,
 my %implied_dependencies =
     (
      'mountall'   => '$local_fs',
+     'checkroot'  => '$local_fs',
      'mountnfs'   => '$remote_fs',
      'hwclock'    => '$time',
      'portmap'    => '$portmap',

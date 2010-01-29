@@ -21,6 +21,9 @@ lintian (2.3.3) UNRELEASED; urgency=low
     + [RG] Warn about packages containing (/usr)/lib/<triplet>
       directories for a <triplet> that isn't the one of the
       architecture of the package, per Policy 3.8.4 requirement.
+  * checks/init.d:
+    + [RG] Warn about init scripts depending on checkroot instead of
+      $local_fs.
 
   * data/debhelper/*:
     + [RG] Refresh against unstable.
