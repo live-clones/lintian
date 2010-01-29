@@ -33,6 +33,7 @@ libmodule-corelist-perl 2.18
 libmodule-build-perl 0.340201
 libio-zlib-perl 1.09
 libfile-temp-perl 0.22
+libfile-spec-perl 3.30
 libextutils-parsexs-perl 2.2002
 libextutils-cbuilder-perl 0.2602
 libautodie-perl 2.06.01

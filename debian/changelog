@@ -22,9 +22,17 @@ lintian (2.3.3) UNRELEASED; urgency=low
       directories for a <triplet> that isn't the one of the
       architecture of the package, per Policy 3.8.4 requirement.
 
+  * data/debhelper/*:
+    + [RG] Refresh against unstable.
+  * data/fields/{perl-provides,virtual-packages}:
+    + [RG] Refresh against unstable.
+  * data/files/fonts:
+    + [RG] Refresh against unstable.
   * data/files/triplets:
     + [RG] New file with a list of triplet<->architecture
       relationships.
+  * data/output/ftp-master-{,non}fatal:
+    + [RG] Refresh, without changes.
   * data/standards-version/release-dates:
     + [RG] Add the release date for Policy 3.8.4.
 

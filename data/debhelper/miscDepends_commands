@@ -1,4 +1,5 @@
 dh_config_model_upgrade
+dh_dkms
 dh_gconf
 dh_gtkmodules
 dh_installcatalogs
