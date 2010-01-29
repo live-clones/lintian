@@ -25,6 +25,7 @@ use Lintian::Data;
 use Lintian::Tags qw(tag);
 
 our $FONT_PACKAGES;
+our $TRIPLETS;
 
 # A list of known packaged Javascript libraries
 # and the packages providing them
@@ -621,6 +622,16 @@ foreach my $file (sort keys %{$info->index}) {
 		# not allowed, but tested indivudually
 		or $file =~ m,^(?:mnt|opt|srv|(?:(?:usr|var)/)?tmp)|var/www/,) {
 	    tag "file-in-unusual-dir", "$file";
+	}
+    }
+
+    if ($file =~ m,^(?:usr/)lib/([^/]+)/$,) {
+	my $subdir = $1;
+	$TRIPLETS = Lintian::Data->new('files/triplets', '\s+')
+	    unless defined($FONT_PACKAGES);
+	if ($TRIPLETS->known($subdir)) {
+	    tag 'triplet-dir-and-architecture-mismatch', "$file is for", $TRIPLETS->value($subdir)
+		if ($info->field('architecture') ne $TRIPLETS->value($subdir));
 	}
     }
 

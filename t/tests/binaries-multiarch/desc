@@ -1,0 +1,6 @@
+Testname: binaries-multiarch
+Sequence: 6000
+Version: 1.0
+Description: Multiarch-related tests but not multiarch itself
+Architecture: any
+Test-For: triplet-dir-and-architecture-mismatch

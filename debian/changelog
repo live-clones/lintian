@@ -4,6 +4,7 @@ lintian (2.3.3) UNRELEASED; urgency=low
     + Added:
       - missing-dependency-on-phpapi
       - obsolete-comments-style-in-php-ini
+      - triplet-dir-and-architecture-mismatch
 
   * data/files/triplets:
     + [RG] New file with a list of triplet<->architecture
@@ -21,6 +22,9 @@ lintian (2.3.3) UNRELEASED; urgency=low
       libraries.
     + [RG] Don't warn about packages containing /sys or /selinux
       directories.  Policy 3.8.4 grants an exception to the FHS.
+    + [RG] Warn about packages containing (/usr)/lib/<triplet>
+      directories for a <triplet> that isn't the one of the
+      architecture of the package, per Policy 3.8.4 requirement.
 
   * debian/control:
     + [RG] Update standards version to 3.8.4 (no changes required).

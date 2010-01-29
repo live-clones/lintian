@@ -1101,3 +1101,13 @@ Info: This package ships a <tt>.ini</tt> file used to configure php but
  .
  Since version 5.3, the PHP interpreter warns about the use of the
  old style of comment separator.
+
+Tag: triplet-dir-and-architecture-mismatch
+Severity: important
+Certainty: possible
+Ref: policy 9.1.1
+Info: This package contains a directory under <tt>/lib</tt> or
+ <tt>/usr/lib</tt> which doesn't match the proper triplet for the
+ binary package's architecture.  This is very likely to be a mistake
+ when indicating the underlying build system where the files should be
+ installed.
