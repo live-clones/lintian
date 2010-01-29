@@ -15,6 +15,8 @@ lintian (2.3.3) UNRELEASED; urgency=low
   * checks/binaries{,.desc}:
     + [RG] Warn about packages shipping PHP extensions but not
       depending on phpapi-*.
+  * checks/fields{,.desc}:
+    + [RG] Don't warn about depending on the phpapi-* virtual package.
   * checks/files{,.desc}:
     + [RG] Warn about packages shipping PHP .ini files using old-style
       (#) comments separators.

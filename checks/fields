@@ -538,7 +538,10 @@ if (($type eq "binary") || ($type eq 'udeb')) {
 			tag "virtual-package-depends-without-real-package-depends", "$field: $alternatives[0]->[0]"
 			    if ($VIRTUAL_PACKAGES->known($alternatives[0]->[0])
 				&& ($field eq "depends" || $field eq "pre-depends")
-				&& ($pkg ne 'base-files' || $alternatives[0]->[0] ne 'awk'));
+				&& ($pkg ne 'base-files' || $alternatives[0]->[0] ne 'awk')
+				# ignore phpapi- dependencies as adding an
+				# alternative, real, package breaks its pourpose
+				&& $alternatives[0]->[0] !~ m/^phpapi-/);
 
 			# Check defaults for transitions.  Here, we only care that the first alternative is current.
 			tag "depends-on-old-emacs", "$field: $alternatives[0]->[0]"
