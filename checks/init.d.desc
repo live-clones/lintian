@@ -306,7 +306,6 @@ Ref: policy 9.3.3.1
 Tag: init.d-script-missing-dependency-on-remote_fs
 Severity: important
 Certainty: possible
-Experimental: yes
 Info: The given init script seems to refer to <tt>/usr</tt>, possibly
  using a file or binary from there.  Without a dependency on
  <tt>$remote_fs</tt> in Required-Start or Required-Stop, as appropriate,
@@ -321,7 +320,6 @@ Ref: http://wiki.debian.org/LSBInitScripts
 Tag: init.d-script-missing-dependency-on-local_fs
 Severity: important
 Certainty: possible
-Experimental: yes
 Info: The given init script seems to refer to <tt>/var</tt>, possibly
  using a file from there.  Without a dependency on <tt>$local_fs</tt> in
  Required-Start or Required-Stop, as appropriate, the init script might be
