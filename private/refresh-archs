@@ -26,16 +26,43 @@ if [ -z "$1" ]; then
     exit 0
 fi
 
+export LANG=C
+
+dpkg_version="$(dpkg-architecture --version | head -n1)"
+
+### Architectures list ###
+
 f="$(mktemp)"
 
 cat > "$f" <<EOF
 # List of known architectures as provided by dpkg-architecture
 # Last updated: $(date -u +'%Y-%m-%d')
+# With: $dpkg_version
 
 EOF
-
-export LANG=C
 { echo "any"; echo "all";
   dpkg-architecture -L; } | sort >> "$f"
 
 mv "$f" "$1"/fields/architectures
+
+
+### Triplets list ###
+
+f="$(mktemp)"
+
+cat > "$f" <<EOF
+# List of "triplet architecture" relationships as provided by
+# dpkg-architecture
+# Last updated: $(date -u +'%Y-%m-%d')
+# With: $dpkg_version
+
+EOF
+
+{ # run this in a subshell to avoid multiple fd redirections
+for arch in $(dpkg-architecture -L); do
+    triplet="$(dpkg-architecture -a"$arch" -qDEB_HOST_GNU_TYPE 2>/dev/null)"
+    printf "%s %s\n" "$triplet" "$arch"
+done
+} | sort >> "$f"
+
+mv "$f" "$1"/files/triplets

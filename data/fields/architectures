@@ -1,5 +1,6 @@
 # List of known architectures as provided by dpkg-architecture
-# Last updated: 2009-11-08
+# Last updated: 2010-01-29
+# With: Debian dpkg-architecture version 1.15.5.6.
 
 all
 alpha

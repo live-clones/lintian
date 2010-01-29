@@ -5,6 +5,9 @@ lintian (2.3.3) UNRELEASED; urgency=low
       - missing-dependency-on-phpapi
       - obsolete-comments-style-in-php-ini
 
+  * data/files/triplets:
+    + [RG] New file with a list of triplet<->architecture
+      relationships.
   * data/standards-version/release-dates:
     + [RG] Add the release date for Policy 3.8.4.
 
@@ -21,6 +24,9 @@ lintian (2.3.3) UNRELEASED; urgency=low
 
   * debian/control:
     + [RG] Update standards version to 3.8.4 (no changes required).
+
+  * private/refresh-archs:
+    + [RG] Generate a list of triplet<->architecture relationships too.
 
   * t/runtests:
     + [RG] Update standards version to 3.8.4.
