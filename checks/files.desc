@@ -1103,7 +1103,7 @@ Info: This package ships a <tt>.ini</tt> file used to configure php but
  old style of comment separator.
 
 Tag: triplet-dir-and-architecture-mismatch
-Severity: important
+Severity: serious
 Certainty: possible
 Ref: policy 9.1.1
 Info: This package contains a directory under <tt>/lib</tt> or
