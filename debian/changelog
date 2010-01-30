@@ -25,6 +25,7 @@ lintian (2.3.3) UNRELEASED; urgency=low
     + [RG] Warn about init scripts depending on checkroot instead of
       $local_fs.
     + [RG] Remove experimental flag from remote_fs and local_fs checks.
+    + [RG] Skip rc and rcS from the init script checks.
 
   * data/debhelper/*:
     + [RG] Refresh against unstable.

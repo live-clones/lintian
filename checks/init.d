@@ -180,7 +180,9 @@ for (keys %initd_postinst) {
 # files actually installed in /etc/init.d should match our list :-)
 opendir(INITD, "init.d") or fail("cannot read init.d directory: $!");
 for (readdir(INITD)) {
-    next if $_ eq '.' || $_ eq '..' || $_ eq 'README' || $_ eq 'skeleton';
+    my $script = $_;
+    next if grep {$script eq $_} qw(. .. README skeleton rc rcS);
+    $_ = $script;
     unless ($initd_postinst{$_}) {
 	tag "script-in-etc-init.d-not-registered-via-update-rc.d", "/etc/init.d/$_";
 	check_init("init.d/$_") if -f "init.d/$_";
