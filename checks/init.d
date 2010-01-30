@@ -368,10 +368,10 @@ sub check_init {
     }
 
     # all tags included in file?
-    $tag{'start'} or tag "init.d-script-does-not-implement-required-option", "/etc/init.d/$_ start";
-    $tag{'stop'} or tag "init.d-script-does-not-implement-required-option", "/etc/init.d/$_ stop";
-    $tag{'restart'} or tag "init.d-script-does-not-implement-required-option", "/etc/init.d/$_ restart";
-    $tag{'force-reload'} or tag "init.d-script-does-not-implement-required-option", "/etc/init.d/$_ force-reload";
+    for my $option qw(start stop restart force-reload) {
+	$tag{$option}
+	    or tag "init.d-script-does-not-implement-required-option", "/etc/init.d/$_ $option";
+    }
 }
 
 1;
