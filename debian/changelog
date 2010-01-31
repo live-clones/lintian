@@ -43,8 +43,14 @@ lintian (2.3.3) UNRELEASED; urgency=low
 
   * debian/control:
     + [RG] Update standards version to 3.8.4 (no changes required).
+  * debian/postinst:
+    + [RG] Generate the locale under the correct directory.
   * debian/prerm:
     + [RG] Don't ignore errors on shell commands failures.
+
+  * frontend/lintian:
+    + [RG] Fix path to the locale directory passed to LOCPATH.
+      (Closes: #555408)
 
   * private/refresh-archs:
     + [RG] Generate a list of triplet<->architecture relationships too.

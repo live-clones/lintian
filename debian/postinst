@@ -5,12 +5,14 @@
 
 set -e
 
-if [ ! -f '/var/lib/lintian/locale/LC_CTYPE' ] &&
+if [ ! -f '/var/lib/lintian/locale/en_US.UTF-8/LC_CTYPE' ] &&
    [ -f /usr/share/locale/locale.alias ]; then
     echo 'Generating en_US.UTF-8 locale for internal Lintian use....'
+    # handle upgrades from the previous, incorrect, directory
+    rm -rf /var/lib/lintian/locale
     mkdir -p /var/lib/lintian/locale
     if ! localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias \
-                --quiet /var/lib/lintian/locale ; then
+                --quiet /var/lib/lintian/locale/en_US.UTF-8 ; then
         rm -rf /var/lib/lintian/locale
         exit 1
     fi

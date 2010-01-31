@@ -581,7 +581,7 @@ $ENV{'LINTIAN_DEBUG'} = $debug;
 if (-d "$LINTIAN_ROOT/locale/en_US.UTF-8") {
     $ENV{LOCPATH} = "$LINTIAN_ROOT/locale";
 } elsif (-d '/var/lib/lintian/locale/en_US.UTF-8') {
-    $ENV{LOCPATH} = '/var/lib/lintian/locale/en_US.UTF-8';
+    $ENV{LOCPATH} = '/var/lib/lintian/locale';
 }
 
 # }}}
