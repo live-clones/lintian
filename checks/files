@@ -420,6 +420,10 @@ foreach my $file (sort keys %{$info->index}) {
 		tag "file-in-usr-local", "$file";
 	    }
 	}
+	# ---------------- /usr/share/applications
+	elsif ($file =~ m,^usr/share/applications/mimeinfo.cache(?:\.gz)?$,) {
+	    tag 'package-contains-mimeinfo.cache-file', $file;
+	}
 	# ---------------- /usr/share/man and /usr/X11R6/man
 	elsif ($file =~ m,^usr/X11R6/man/\S+, or $file =~ m,^usr/share/man/\S+,) {
 	    if ($type eq 'udeb') {

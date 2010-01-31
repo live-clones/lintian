@@ -14,6 +14,7 @@ Test-For:
  package-contains-empty-directory
  package-contains-info-dir-file
  package-contains-mime-cache-file
+ package-contains-mimeinfo.cache-file
  package-modifies-ld.so-search-path
  stray-directory-in-manpage-directory
  windows-devel-file-in-package
