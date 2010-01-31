@@ -205,7 +205,7 @@ Info: This package includes a *.so file in <tt>/usr/lib/phpN</tt>
  <tt>${php:Depends}</tt> to the <tt>Depends</tt> field of the binary
  package shipping the extension:
  .
- echo "php:Depends=phpapi-$(php-config5 --phpapi)" > debian/substvars
+ echo "php:Depends=phpapi-$(php-config5 --phpapi)" &gt; debian/substvars
 
 Tag: debug-file-should-use-detached-symbols
 Severity: normal
