@@ -1,4 +1,6 @@
-lintian (2.3.3) UNRELEASED; urgency=low
+lintian (2.3.3) unstable; urgency=low
+
+  The "Policy 3.8.4" release.
 
   * Summary of tag changes:
     + Added:
@@ -67,7 +69,7 @@ lintian (2.3.3) UNRELEASED; urgency=low
   * t/runtests:
     + [RG] Update standards version to 3.8.4.
 
- -- Raphael Geissert <geissert@debian.org>  Thu, 28 Jan 2010 15:31:11 -0600
+ -- Raphael Geissert <geissert@debian.org>  Sun, 31 Jan 2010 02:59:56 -0600
 
 lintian (2.3.2) unstable; urgency=high
 
