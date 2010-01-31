@@ -9,6 +9,9 @@ lintian (2.3.3) UNRELEASED; urgency=low
   * checks/binaries{,.desc}:
     + [RG] Warn about packages shipping PHP extensions but not
       depending on phpapi-*.
+  * checks/debconf.desc:
+    + [RG] There are legitimate uses of db_input on the postinst
+      script, downgrading the certainty of the check.  (Closes: #543418)
   * checks/fields{,.desc}:
     + [RG] Don't warn about depending on the phpapi-* virtual package.
   * checks/files{,.desc}:

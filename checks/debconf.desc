@@ -111,7 +111,7 @@ Info: The config script must load one of the debconf libraries.
 
 Tag: postinst-uses-db-input
 Severity: normal
-Certainty: certain
+Certainty: possible
 Info: It is generally not a good idea for postinst scripts to use debconf
  commands like <tt>db_input</tt>. Typically, they should restrict themselves
  to <tt>db_get</tt> to request previously acquired information, and have the
