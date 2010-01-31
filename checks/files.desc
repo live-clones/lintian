@@ -1045,6 +1045,16 @@ Info: This package contains a file named <tt>dir</tt> or <tt>dir.old</tt>,
  package since it needs to be generated dynamically based on the installed
  info files on the system.
 
+Tag: package-contains-mime-cache-file
+Severity: serious
+Certainty: certain
+Info: This package contains a cache file generated automatically by
+ update-mime-database when a package containing MIME-Info Database
+ files is installed.  Some upstream build systems create them
+ automatically, but they must not be included in a package since they need
+ to be generated dynamically based on the installed MIME-Info Database
+ files on the system.
+
 Tag: package-modifies-ld.so-search-path
 Severity: important
 Certainty: possible

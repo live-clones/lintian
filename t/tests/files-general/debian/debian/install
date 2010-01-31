@@ -8,3 +8,4 @@ dir usr/share/info
 foo.vcproj usr/lib/foo
 lintian-lib.conf etc/ld.so.conf.d
 php-foo.ini etc/php5/conf.d
+types usr/share/mime

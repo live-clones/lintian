@@ -454,6 +454,10 @@ foreach my $file (sort keys %{$info->index}) {
 		tag 'package-contains-info-dir-file', $file;
 	    }
 	}
+	# ---------------- /usr/share/mime
+	elsif ($file =~ m,^usr/share/mime/[^/]+$,) {
+	    tag 'package-contains-mime-cache-file', $file;
+	}
 	# ---------------- /usr/share/linda/overrides
 	elsif ($file =~ m,^usr/share/linda/overrides/\S+,) {
 	    tag "package-contains-linda-override", $file;

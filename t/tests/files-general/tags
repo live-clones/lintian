@@ -4,6 +4,7 @@ E: files-general: executable-manpage usr/share/man/man5/foo.5.gz
 E: files-general: global-data-in-games-directory usr/share/games/icons/hicolor/22x22/lintian-22x22.png
 E: files-general: non-conf-file-in-modprobe.d etc/modprobe.d/--lzma
 E: files-general: package-contains-info-dir-file usr/share/info/dir.gz
+E: files-general: package-contains-mime-cache-file usr/share/mime/types
 E: files-general: package-modifies-ld.so-search-path etc/ld.so.conf.d/lintian-lib.conf
 E: files-general: stray-directory-in-manpage-directory usr/share/man/man1/random/
 I: files-general: duplicated-compressed-file usr/share/doc/lintian/lintian-16x16.png.gz

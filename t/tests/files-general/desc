@@ -13,6 +13,7 @@ Test-For:
  obsolete-comments-style-in-php-ini
  package-contains-empty-directory
  package-contains-info-dir-file
+ package-contains-mime-cache-file
  package-modifies-ld.so-search-path
  stray-directory-in-manpage-directory
  windows-devel-file-in-package
