@@ -144,9 +144,11 @@ my @current_targets;
 my %rules_per_target;
 my %debhelper_group;
 my $maybe_skipping;
+my $uses_makefile_pl = 0;
 while (<RULES>) {
     next if /^\s*\#/;
     $includes = 1 if m/^ *[s-]?include\s+/;
+    $uses_makefile_pl = 1 if m/Makefile\.PL/;
 
     # Check for DH_COMPAT settings outside of any rule, which are now
     # deprecated.  It's a bit easier structurally to do this here than in
@@ -168,6 +170,9 @@ while (<RULES>) {
     }
     if (/^\s*DEB_AUTO_UPDATE_DEBIAN_CONTROL\s*=\s*yes/) {
         tag 'debian-rules-automatically-updates-control', "line $.";
+    }
+    if ($uses_makefile_pl && /install.*PREFIX/ && !/DESTDIR/) {
+        tag 'debian-rules-perl-makemaker-prefix-is-deprecated', "line $.";
     }
 
     # Keep track of whether this portion of debian/rules may be optional
