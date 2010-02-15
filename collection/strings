@@ -27,7 +27,7 @@
 [ ! -f elf-index ] || rm -f elf-index
 exec >elf-index
 
-for bin in $(sed -rn 's/:\s+[^,]*\bELF\b.+$//g;T;p' file-info); do
+for bin in $(sed -rn 's/\x00\s+[^,]*\bELF\b.+$//g;T;p' file-info); do
     echo "$bin"
     case $bin in
       /usr/lib/debug/*)

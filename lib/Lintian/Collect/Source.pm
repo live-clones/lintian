@@ -156,7 +156,7 @@ sub file_info {
     open(my $idx, '<', "file-info") or fail("cannot open file-info: $!");
     while (<$idx>) {
         chomp;
-        m/^(.+?):\s+(.*)$/o or fail("cannot parse file output: $_");
+        m/^(.+?)\x00\s+(.*)$/o or fail("cannot parse file output: $_");
         my ($file, $info) = ($1,$2);
         $file =~ s,^\./,,o;
         $file =~ s,/+$,,o;

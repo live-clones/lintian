@@ -49,7 +49,7 @@ chdir ("unpacked")
     or fail ("unable to chdir to unpacked: $!\n");
 
 while (<FILES>) {
-    if (m/^(.+?):\s.*ELF/) {
+    if (m/^(.+?)\x00\s.*ELF/) {
 	my $bin = $1;
 
 	print OUT "-- $bin\n";

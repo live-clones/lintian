@@ -134,7 +134,7 @@ sub file_info {
     while (<$idx>) {
         chomp;
 
-        m/^(.+?):\s+(.*)$/o
+        m/^(.+?)\x00\s+(.*)$/o
             or fail("an error in the file pkg is preventing lintian from checking this package: $_");
         my ($file, $info) = ($1,$2);
 
