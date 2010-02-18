@@ -4,6 +4,9 @@ lintian (2.3.4) UNRELEASED; urgency=low
     + [RG] Update package description to mention Policy version 3.8.4
       instead of 3.8.3.  Should have been done on the previous release.
 
+  * man/lintian-info.1:
+    + [CW] Fix typo.
+
  -- Raphael Geissert <geissert@debian.org>  Mon, 01 Feb 2010 14:28:54 -0600
 
 lintian (2.3.3) unstable; urgency=low
