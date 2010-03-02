@@ -14,7 +14,8 @@ Info: Native packaging should only be used if a piece of software was
  .
  Native source packages are sometimes created by accident. In most cases
  the reason is the location of the original source tarball. dpkg-source
- searches for this in ../package_upstream-version.orig.tar.gz.
+ searches debian/changelog's VERSION in ../package_VERSION.orig.tar.gz.
+ Check also mistakenly set '(native)' value in file debian/source/format.
 
 Tag: non-native-package-with-native-version
 Severity: normal
