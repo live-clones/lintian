@@ -1280,6 +1280,14 @@ foreach my $pkg_info ($schedule->get_all) {
 	my $info = Lintian::Collect->new($pkg, $long_type);
 	my $loaded_overrides = 0;
 
+	# chdir to base directory
+	unless (chdir($base)) {
+	    warning("could not chdir into directory $base: $!",
+		    "skipping $action of $long_type package $pkg");
+	    $exit_code = 2;
+	    next PACKAGE;
+	}
+
 	while ($map->pending) {
 	    foreach my $req (sort sort_coll $map->selectable) {
 		my $ri = $map->getProp($req);
@@ -1310,14 +1318,6 @@ foreach my $pkg_info ($schedule->get_all) {
 		    }
 		    closedir(BASE);
 
-		    # chdir to base directory
-		    unless (chdir($base)) {
-			warning("could not chdir into directory $base: $!",
-				"skipping $action of $long_type package $pkg");
-			$exit_code = 2;
-			next PACKAGE;
-		    }
-
 		    # collect info
 		    $map->select($req);
 		    remove_status_file($base);
@@ -1340,14 +1340,6 @@ foreach my $pkg_info ($schedule->get_all) {
 		    unless (exists $ci->{'type'}{$type}) {
 			$map->satisfy($req);
 			next;
-		    }
-
-		    # chdir to base directory
-		    unless (chdir($base)) {
-			warning("could not chdir into directory $base: $!",
-				"skipping $action of $long_type package $pkg");
-			$exit_code = 2;
-			next PACKAGE;
 		    }
 
 		    debug_msg(1, "Running check: $check ...");
