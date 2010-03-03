@@ -1,0 +1,43 @@
+Check-Script: debian-source-dir
+Author: Raphaël Hertzog <hertzog@debian.org>
+Abbrev: dsd
+Type: source
+Info: This script looks for mistakes in debian/source/* files.
+Needs-Info: debfiles
+
+Tag: missing-debian-source-format
+Severity: normal
+Certainty: certain
+Info: With the introduction of new source formats, it's now recommended to
+ explicitly select the desired source format in debian/source/format.
+ .
+ If you don't have a good reason to stick with the old format,
+ you should switch to "3.0 (quilt)" (for packages with a separate
+ upstream tarball) or to "3.0 (native)" (for Debian native packages).
+ .
+ If you plan to keep using the old format, you should still create
+ that file and put "1.0" in it. In that case, you are invited to get in
+ touch with debian-dpkg@lists.debian.org to discuss the (technical) reasons
+ why the new formats do not suit you.
+Ref: dpkg-source(1), http://wiki.debian.org/Projects/DebSrc3.0
+
+Tag: unknown-source-format
+Severity: serious
+Certainty: certain
+Info: debian/source/format contains an unknown source format. The
+ formats officially supported by Debian are "3.0 (quilt)", "3.0 (native)"
+ and "1.0". dpkg-source additionnaly supports "2.0", "3.0 (git)" and
+ "3.0 (bzr)".
+Ref: dpkg-source(1)
+
+Tag: using-old-source-format
+Severity: pedantic
+Certainty: certain
+Info: The source package is still using the old source format "1.0" while
+ "3.0 (quilt)" and "3.0 (native)" are the recommended formats for use
+ within Debian.
+ .
+ See http://wiki.debian.org/Projects/DebSrc3.0 for basic information about
+ updating packages to use the new source formats.
+Ref: dpkg-source(1)
+
