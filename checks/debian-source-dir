@@ -33,6 +33,14 @@ our %KNOWN_FORMATS = (
     "3.0 (bzr)" => 1,
 );
 
+our %KNOWN_FILES = (
+    "format" => 1,
+    "include-binaries" => 1,
+    "lintian-overrides" => 1,
+    "options" => 1,
+    "patch-header" => 1,
+);
+
 sub run {
 
 my $pkg = shift;
@@ -48,6 +56,17 @@ if (-e "debfiles/source/format") {
     tag "using-old-source-format" if $format eq "1.0";
 } else {
     tag "missing-debian-source-format";
+}
+
+if (-d "debfiles/source") {
+    opendir(DEBSRC, "debfiles/source") or fail("cannot opendir debian/source/: $!");
+    my $file;
+    while ($file = readdir(DEBSRC)) {
+	next if $file eq "." or $file eq "..";
+	tag "unknown-file-in-debian-source", $file
+	    unless $KNOWN_FILES{$file};
+    }
+    closedir(DEBSRC);
 }
 
 }

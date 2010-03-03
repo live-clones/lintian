@@ -41,3 +41,19 @@ Info: The source package is still using the old source format "1.0" while
  updating packages to use the new source formats.
 Ref: dpkg-source(1)
 
+Tag: unknown-file-in-debian-source
+Severity: important
+Certainty: possible
+Info: The source package contains a file in debian/source/ that lintian
+ doesn't know about. Currently the following files are recognized:
+ .
+  * format
+  * include-binaries
+  * lintian-overrides
+  * options
+  * patch-header
+ .
+ This tag is emitted in case you mistyped the name of one of the above
+ files. If that's not the case and if the file can be legitimately be
+ expected in source packages, please file a bug against lintian asking
+ for the file to be recognized.
