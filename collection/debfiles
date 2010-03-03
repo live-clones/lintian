@@ -35,14 +35,5 @@ if (-e "debfiles") {
 	or fail("cannot rm old debfiles directory");
 }
 
-mkdir('debfiles', 0777) or fail("cannot mkdir debfiles: $!");
-
-# Don't copy the whole directory, just all files in it.
-opendir(DEBIAN, 'unpacked/debian')
-	or fail("cannot open unpacked/debian/ directory: $!");
-while (my $file=readdir(DEBIAN)) {
-	next if -d $file;
-	copy_dir("unpacked/debian/$file", 'debfiles/')
-		or fail("cannot copy unpacked/debian/$file: $!");
-}
-closedir(DEBIAN);
+# Copy the whole debian directory
+copy_dir("unpacked/debian", "debfiles");
