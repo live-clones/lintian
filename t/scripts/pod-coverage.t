@@ -16,6 +16,7 @@ our %MODULES =
      'Lintian::Check'             => [],
      'Lintian::Collect'           => [],
      'Lintian::Command'           => [],
+     'Lintian::Command::Simple'   => [],
      'Lintian::Data'              => [],
      'Lintian::DepMap'            => [],
      'Lintian::Relation'          => [ qr/^parse_element$/,
