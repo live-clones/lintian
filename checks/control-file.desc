@@ -87,6 +87,14 @@ Info: There is an XS-Vcs-* field in the <tt>debian/control</tt> file.  As
  recognizes these headers and handles them correctly.  Consider removing
  the XS- prefix for this field.
 
+Tag: package-type-in-debian-control
+Severity: important
+Certainty: certain
+Info: There is a Package-Type field in the <tt>debian/control</tt>
+ file.  This field is only relevant to the build process and should
+ not be embedded in the resulting binary package.  As a consequence,
+ XC-Package-Type should be used instead.
+
 Tag: stronger-dependency-implies-weaker
 Severity: normal
 Certainty: certain
