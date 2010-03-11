@@ -103,9 +103,11 @@ Tag: manpage-has-bad-whatis-entry
 Severity: normal
 Certainty: certain
 Info: Each manual page should start with a "NAME" section, which lists the
- name and a brief description of the page separated by "\-". These sections
- are parsed by "mandb" and stored in a database for the use of "apropos" and
- "whatis", so they must be in a certain format. This manual page apparently
+ name and a brief description of the page separated by "\-". A common mistake
+ is that in sections TH or NAME the entry is expressed with a space in form
+ "PROGRAM NAME", not "PROGRAM_NAME" or "PROGRAM-NAME". The TH and NAME sections
+ are parsed by mandb(8) and stored in a database for the use of apropos(1) and
+ whatis(1), so they must be in a certain format. This manual page apparently
  uses the wrong format and cannot be parsed by "mandb".
 Ref: lexgrog(1), groff_man(7), groff_mdoc(7)
 
