@@ -1,5 +1,10 @@
 lintian (2.3.4) UNRELEASED; urgency=low
 
+  * checks/scripts:
+    + [ADB] Update the list of octave interpreters, adding octave3.2
+      (Closes: #574048) and removing octave2.1 (only available in lenny
+      and earlier) and octave3.1.
+
   * debian/control:
     + [RG] Update package description to mention Policy version 3.8.4
       instead of 3.8.3.  Should have been done on the previous release.

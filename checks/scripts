@@ -150,7 +150,7 @@ our %versioned_interpreters =
 		  qr/^lua([\d.]+)$/, 'lua$1', qw(40 50 5.1)
 		],
      octave  => [ '/usr/bin', 'octave',
-		  qr/^octave([\d.]+)$/, 'octave$1', qw(2.1 3.0 3.1)
+		  qr/^octave([\d.]+)$/, 'octave$1', qw(3.0 3.2)
 		],
      php     => [ '/usr/bin', '',
 		  qr/^php(\d+)$/, 'php$1-cli', qw(5)
