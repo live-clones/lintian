@@ -50,10 +50,8 @@ our %CORRECTIONS = qw(
                       accesing accessing
                       accesnt accent
                       accessable accessible
-                      accessable accessible
                       accidentaly accidentally
                       accidentually accidentally
-                      accomodate accommodate
                       accomodate accommodate
                       accomodates accommodates
                       accout account
@@ -87,7 +85,6 @@ our %CORRECTIONS = qw(
                       appearence appearance
                       appropiate appropriate
                       appropriatly appropriately
-                      aquired acquired
                       aquired acquired
                       arbitary arbitrary
                       architechture architecture
@@ -131,7 +128,6 @@ our %CORRECTIONS = qw(
                       becuase because
                       begining beginning
                       calender calendar
-                      cancelation cancellation
                       cancelation cancellation
                       capabilites capabilities
                       capatibilities capabilities
@@ -189,7 +185,6 @@ our %CORRECTIONS = qw(
                       dependancy dependency
                       dependant dependent
                       detabase database
-                      developement development
                       developement development
                       developped developed
                       deveolpment development
@@ -327,7 +322,6 @@ our %CORRECTIONS = qw(
                       nead need
                       neccesary necessary
                       neccessary necessary
-                      neccessary necessary
                       necesary necessary
                       negotation negotiation
                       nescessary necessary
@@ -400,8 +394,6 @@ our %CORRECTIONS = qw(
                       psychadelic psychedelic
                       quering querying
                       recieved received
-                      recieved received
-                      recieve receive
                       recieve receive
                       reciever receiver
                       recogniced recognised
@@ -434,9 +426,7 @@ our %CORRECTIONS = qw(
                       separatly separately
                       sepcify specify
                       seperated separated
-                      seperated separated
                       seperately separately
-                      seperate separate
                       seperate separate
                       seperatly separately
                       seperator separator
@@ -473,7 +463,6 @@ our %CORRECTIONS = qw(
                       suspicously suspiciously
                       synax syntax
                       synchonized synchronized
-                      syncronize synchronize
                       syncronize synchronize
                       syncronizing synchronizing
                       syncronus synchronous

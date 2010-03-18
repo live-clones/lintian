@@ -11,6 +11,9 @@ lintian (2.3.4) UNRELEASED; urgency=low
 
   * lib/Lintian/Tag/Info.pm:
     + [JP] Don't link to references with no URL.  (Closes: #572297)
+  * lib/Spelling.pm:
+    + [ADB] Remove duplicate entires from the correction list.  Thanks,
+      Jakub Wilk.  (Closes: #572260)
 
   * man/lintian-info.1:
     + [CW] Fix typo.
