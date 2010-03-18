@@ -20,6 +20,10 @@ lintian (2.3.4) UNRELEASED; urgency=low
   * man/lintian-info.1:
     + [CW] Fix typo.
 
+  * reporting/templates/foot.tmpl:
+    + [ADB] Replace the "please mail comments to the maintainer" request
+      with a pointer to reportbug.
+
  -- Raphael Geissert <geissert@debian.org>  Mon, 01 Feb 2010 14:28:54 -0600
 
 lintian (2.3.3) unstable; urgency=low
