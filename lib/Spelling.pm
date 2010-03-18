@@ -474,6 +474,7 @@ our %CORRECTIONS = qw(
                       trasmission transmission
                       treshold threshold
                       trigerring triggering
+                      unecessary unnecessary
                       unexecpted unexpected
                       unfortunatelly unfortunately
                       unknonw unknown

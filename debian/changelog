@@ -14,6 +14,8 @@ lintian (2.3.4) UNRELEASED; urgency=low
   * lib/Spelling.pm:
     + [ADB] Remove duplicate entires from the correction list.  Thanks,
       Jakub Wilk.  (Closes: #572260)
+    + [ADB] Add a spelling correction for "unecessary".  Thanks, Jakub
+      Wilk.  (Closes: #572456)
 
   * man/lintian-info.1:
     + [CW] Fix typo.
