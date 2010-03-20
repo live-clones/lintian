@@ -312,6 +312,15 @@ if (@entries) {
 		if $native_pkg and $second_version =~ m/-/;
 	}
 
+	my $first_upstream = $first_version;
+	$first_upstream =~ s/-[^-]+$//;
+	my $second_upstream = $second_version;
+	$second_upstream =~ s/-[^-]+$//;
+	if ($first_upstream eq $second_upstream
+	    and $entries[0]->Changes =~ /^\s*\*\s+new\s+upstream\s+(\S+\s+)?release\b/im) {
+	    tag 'possible-new-upstream-release-without-new-version';
+	}
+
 	my $first_dist = lc $entries[0]->Distribution;
 	my $second_dist = lc $entries[1]->Distribution;
 	if ($first_dist eq 'unstable' and $second_dist eq 'experimental') {

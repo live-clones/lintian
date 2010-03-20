@@ -1,0 +1,14 @@
+{$srcpkg} ({$version}) unstable; urgency=low
+
+  * New upstream bugfix release.
+  * Lintian Test Suite.
+  * Test: {$testname}
+
+ -- {$author}  {$date}
+
+{$srcpkg} (1.0-1) unstable; urgency=low
+
+  * Old changelog entry to trigger the tag.
+
+ -- {$author}  Sat, 20 Mar 2010 16:09:18 -0700
+

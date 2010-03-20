@@ -4,6 +4,10 @@ lintian (2.3.4) UNRELEASED; urgency=low
     + [RA] Exclude packages from the klibc source package from the
       embedded zlib check since klibc legitimately includes its own copy.
       Thanks, maximilian attems.  (Closes: #573914)
+  * checks/changelog-file{,.desc}:
+    + [RA] New check for a changelog entry indicating a new upstream
+      release but no change in the upstream portion of the package
+      version.  Idea from Emilio Pozuelo Monfort.  (Closes: #569129)
   * checks/control-file:
     + [RG] Update package-depends-on-hardcoded-libc exception to also
       exclude eglibc.  Based on a patch from Cyril Brulebois.
