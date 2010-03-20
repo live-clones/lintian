@@ -182,6 +182,9 @@ opendir(INITD, "init.d") or fail("cannot read init.d directory: $!");
 for (readdir(INITD)) {
     my $script = $_;
     next if grep {$script eq $_} qw(. .. README skeleton rc rcS);
+    # don't check upstart jobs. See Ubuntu bug report:
+    # https://bugs.launchpad.net/ubuntu/+source/lintian/+bug/496798
+    next if -l "init.d/$script" and readlink("init.d/$script") =~ m|lib/init/upstart-job$|;
     $_ = $script;
     unless ($initd_postinst{$_}) {
 	tag "script-in-etc-init.d-not-registered-via-update-rc.d", "/etc/init.d/$_";
