@@ -108,6 +108,10 @@ our $LINTIAN_AREA = undef;
 #turn off file buffering
 $| = 1;
 
+# Globally ignore SIGPIPE.  We'd rather deal with error returns from write
+# than randomly delivered signals.
+$SIG{PIPE} = 'IGNORE';
+
 # reset locale definition (necessary for tar)
 $ENV{'LC_ALL'} = 'C';
 # reset timezone definition (also for tar)

@@ -24,6 +24,11 @@ lintian (2.3.4) UNRELEASED; urgency=low
     + [RG] Update package description to mention Policy version 3.8.4
       instead of 3.8.3.  Should have been done on the previous release.
 
+  * frontend/lintian:
+    + [RA] Globally ignore SIGPIPE, forcing error return codes from write.
+      Hopefully will resolve some unreproducible occasional crashes.
+      (Closes: #558360)
+
   * lib/Lintian/Tag/Info.pm:
     + [JP] Don't link to references with no URL.  (Closes: #572297)
   * lib/Spelling.pm:
