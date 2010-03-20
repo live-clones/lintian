@@ -14,6 +14,10 @@ lintian (2.3.4) UNRELEASED; urgency=low
       (Closes: #573398)
     + [RA] Also exclude *-common packages from weak-library-dev-dependency
       checks.  Thanks, Emilio Pozuelo Monfort.  (Closes: #570408)
+    + [RA] Suppress missing-separator-between-items if either of the items
+      contain substvars other than *:Depends substvars, since substvars
+      may be used to assemble the components of a dependency.  Thanks,
+      Matthias Klose.  (Closes: #573815)
   * checks/init.d:
     + [RA] Exclude symlinks to upstart-job from init script syntax checks.
       Based on a patch by Jos Boumans.  (Closes: #569492)

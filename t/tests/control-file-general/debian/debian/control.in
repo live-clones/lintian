@@ -2,7 +2,7 @@ Source: {$srcpkg}
 Priority: extra
 Maintainer: {$author}
 Standards-Version: {$standards_version}
-Build-Depends: debhelper (>= 7),
+Build-Depends: debhelper (>= 7.0.50~),
  fiddle [amd64 powerpc mips mipsel hppa s390],
  faddle
  (>>
@@ -49,7 +49,7 @@ Section: {$section}
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, foo (>= 1),
   baz (<< 2),
-  fizz (= 2.0)
+  fizz (= 2.0), gcc-$\{pv:gcc\} $\{reqv:gcc\}
 Description: {$description} (three)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
