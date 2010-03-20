@@ -285,7 +285,7 @@ sub check_dev_depends {
 	$depends =~ s/\s+$//;
 	for my $target (@packages) {
 		next unless ($target =~ /^lib[\w.+-]+\d/
-			     and $target !~ /-(?:dev|docs?)$/);
+			     and $target !~ /-(?:dev|docs?|common)$/);
 		my @depends = grep { /(?:^|[\s|])\Q$target\E(?:[\s|\(]|\z)/ }
 		    split (/\s*,\s*/, $depends);
 
