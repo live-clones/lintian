@@ -4,6 +4,9 @@ lintian (2.3.4) UNRELEASED; urgency=low
     + [RG] Update package-depends-on-hardcoded-libc exception to also
       exclude eglibc.  Based on a patch from Cyril Brulebois.
       (Closes: #573398)
+  * checks/rules:
+    + [RA] Allow ant1.7 to satisfy a build requirement for ant.  Thanks,
+      Rene Engelhard.  (Closes: #572430)
   * checks/scripts:
     + [ADB] Update the list of octave interpreters, adding octave3.2
       (Closes: #574048) and removing octave2.1 (only available in lenny
