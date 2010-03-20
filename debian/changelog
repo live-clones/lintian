@@ -1,5 +1,9 @@
 lintian (2.3.4) UNRELEASED; urgency=low
 
+  * checks/binaries:
+    + [RA] Exclude packages from the klibc source package from the
+      embedded zlib check since klibc legitimately includes its own copy.
+      Thanks, maximilian attems.  (Closes: #573914)
   * checks/control-file:
     + [RG] Update package-depends-on-hardcoded-libc exception to also
       exclude eglibc.  Based on a patch from Cyril Brulebois.

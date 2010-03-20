@@ -273,7 +273,7 @@ foreach my $file (sort keys %{$info->file_info}) {
 	}
     }
 
-    if ($info->field('source') ne 'zlib'
+    if ($info->field('source') ne 'zlib' and $info->field('source') ne 'klibc'
 	and $strings =~ /(?:in|de)flate (?:\d[ \w.\-]{1,20}[\w.\-])/m) {
 	tag "embedded-zlib", $file;
     }
