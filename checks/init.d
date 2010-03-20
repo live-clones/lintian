@@ -182,13 +182,14 @@ opendir(INITD, "init.d") or fail("cannot read init.d directory: $!");
 for (readdir(INITD)) {
     my $script = $_;
     next if grep {$script eq $_} qw(. .. README skeleton rc rcS);
-    # don't check upstart jobs. See Ubuntu bug report:
-    # https://bugs.launchpad.net/ubuntu/+source/lintian/+bug/496798
-    next if -l "init.d/$script" and readlink("init.d/$script") =~ m|lib/init/upstart-job$|;
-    $_ = $script;
-    unless ($initd_postinst{$_}) {
-	tag "script-in-etc-init.d-not-registered-via-update-rc.d", "/etc/init.d/$_";
-	check_init("init.d/$_") if -f "init.d/$_";
+
+    # If $initd_postinst is true for this script, we already checked the
+    # syntax in the above loop.  Check the syntax of unregistered scripts so
+    # that we get more complete Lintian coverage in the first pass.
+    unless ($initd_postinst{$script}) {
+	tag 'script-in-etc-init.d-not-registered-via-update-rc.d',
+	    "/etc/init.d/$script";
+	check_init("init.d/$script") if -f "init.d/$script";
     }
 }
 closedir(INITD);
@@ -197,6 +198,16 @@ closedir(INITD);
 
 sub check_init {
     my ($initd_file) = @_;
+
+    # In an upstart system, such as Ubuntu, init scripts are symlinks to
+    # upstart-job.  It doesn't make sense to check the syntax of upstart-job,
+    # so skip the checks of the init script itself in that case.
+    if (-l $initd_file) {
+	my $target = readlink($initd_file);
+	if ($target =~ m,(?:\A|/)lib/init/upstart-job\z,) {
+	    return;
+	}
+    }
     open(IN, '<', $initd_file)
 	or fail("cannot open init.d file $initd_file: $!");
     my (%tag, %lsb);

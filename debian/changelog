@@ -8,6 +8,9 @@ lintian (2.3.4) UNRELEASED; urgency=low
     + [RG] Update package-depends-on-hardcoded-libc exception to also
       exclude eglibc.  Based on a patch from Cyril Brulebois.
       (Closes: #573398)
+  * checks/init.d:
+    + [RA] Exclude symlinks to upstart-job from init script syntax checks.
+      Based on a patch by Jos Boumans.  (Closes: #569492)
   * checks/rules:
     + [RA] Allow ant1.7 to satisfy a build requirement for ant.  Thanks,
       Rene Engelhard.  (Closes: #572430)
