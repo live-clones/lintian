@@ -77,17 +77,20 @@ my ($major, $minor, $patch) = $stdver =~ m/^(\d+)\.(\d+)\.(\d+)/;
 # file.  If we can't find the changelog file, assume that the package was
 # released today, since that activates the most tags.
 my $changes = $info->changelog;
-my $pkgdate;
+my ($pkgdate, $dist);
 if (defined $changes) {
     my ($entry) = $changes->data;
     $pkgdate = ($entry && $entry->Timestamp) ? $entry->Timestamp : time;
+    $dist = ($entry && $entry->Distribution)? $entry->Distribution : '';
 } else {
     $pkgdate = time;
 }
 
 # Check for packages dated prior to the date of release of the standards
 # version with which they claim to comply.
-if ($STANDARDS->known($stdver) && $STANDARDS->value($stdver) > $pkgdate) {
+if ($dist ne 'UNRELEASED' && $STANDARDS->known($stdver)
+    && $STANDARDS->value($stdver) > $pkgdate) {
+
     my $package = strftime('%Y-%m-%d', gmtime $pkgdate);
     my $release = strftime('%Y-%m-%d', gmtime $STANDARDS->value($stdver));
     tag 'timewarp-standards-version', "($package < $release)";

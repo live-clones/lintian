@@ -4,6 +4,10 @@ lintian (2.3.4) UNRELEASED; urgency=low
     + [ADB] Update the list of octave interpreters, adding octave3.2
       (Closes: #574048) and removing octave2.1 (only available in lenny
       and earlier) and octave3.1.
+  * checks/standards-version:
+    + [RG] Don't warn about timewarp-standards-version when the
+      changelog's distribution is "UNRELEASED."  Thanks, Raphaël Hertzog.
+      (Closes: #571616)
 
   * debian/control:
     + [RG] Update package description to mention Policy version 3.8.4
