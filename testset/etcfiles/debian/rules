@@ -27,14 +27,14 @@ binary-indep:
 	install -d $(tmp)/DEBIAN
 	install -m 644 debian/conffiles $(tmp)/DEBIAN
 
-	echo '68b329da9893e34099c7d8ad5cb9c940  ./etc/cron.daily/cronfile-normal' \
+	echo 'd41d8cd98f00b204e9800998ecf8427e  ./etc/cron.daily/cronfile-normal' \
 	    > debian/tmp/DEBIAN/md5sums
-	echo '68b329da9893e34099c7d8ad5cb9c940  ./etc/cron.daily/.cronfile-begins-with-fullstop' \
-	    > debian/tmp/DEBIAN/md5sums
-	echo '68b329da9893e34099c7d8ad5cb9c940  ./etc/cron.daily/cronfile-contains.fullstop' \
-	    > debian/tmp/DEBIAN/md5sums
-	echo 'ab371382468880299e5ebd05921764ce  ./etc/proper' \
-	    > debian/tmp/DEBIAN/md5sums
+	echo 'd41d8cd98f00b204e9800998ecf8427e  ./etc/cron.daily/.cronfile-begins-with-fullstop' \
+	    >> debian/tmp/DEBIAN/md5sums
+	echo 'd41d8cd98f00b204e9800998ecf8427e  ./etc/cron.daily/cronfile-contains.fullstop' \
+	    >> debian/tmp/DEBIAN/md5sums
+	echo '05c72cacce994208128b7d081116b04a  ./etc/proper' \
+	    >> debian/tmp/DEBIAN/md5sums
 	echo 'ab371382468880299e5ebd05921764ce  etc/improper' \
 	    >> debian/tmp/DEBIAN/md5sums
 	echo 'ab371382468880299e5ebd05921764ce  usr/bin/foo' \

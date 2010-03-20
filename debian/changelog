@@ -53,6 +53,9 @@ lintian (2.3.4) UNRELEASED; urgency=low
     + [ADB] Replace the "please mail comments to the maintainer" request
       with a pointer to reportbug.
 
+  * testset/etcfiles/:
+    + [RA] Fix problems with the md5sums test suite construction in the
+      legacy etcfiles test.  Thanks, Frank Lin PIAT.  (Closes: #573081)
   * t/tests/binaries-multiarch/:
     + [RG] Fix test failure in non-i386 architectures by normalising the
       expected output.  Thanks, Niko Tyni.  (Closes: #568680)
