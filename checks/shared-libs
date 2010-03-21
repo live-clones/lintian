@@ -403,10 +403,10 @@ if ($#shlibs == -1 and not %unversioned_shlibs) {
 
 		foreach my $part (split /\s*,\s*/) {
 		    foreach my $subpart (split /\s*\|\s*/, $part) {
-			$subpart =~ m,^(\S+)\s*(\(\S+\s+\S+\)|#MINVER#)?$,;
+			$subpart =~ m,^(\S+)(\s*(?:\(\S+\s+\S+\)|#MINVER#))?$,;
 			($dep_package, $dep) = ($1, $2 || '');
 			if (defined $dep_package) {
-			    push @symbols_depends, $dep_package . ' ' . $dep;
+			    push @symbols_depends, $dep_package . $dep;
 			} else {
 			    tag "syntax-error-in-symbols-file", $.
 				unless $warned;
@@ -433,10 +433,10 @@ if ($#shlibs == -1 and not %unversioned_shlibs) {
 
 	    foreach my $part (split /\s*,\s*/) {
 		foreach my $subpart (split /\s*\|\s*/, $part) {
-		    $subpart =~ m,^(\S+)\s*(\(\S+\s+\S+\)|#MINVER#)?$,;
+		    $subpart =~ m,^(\S+)(\s*(?:\(\S+\s+\S+\)|#MINVER#))?$,;
 		    ($dep_package, $dep) = ($1, $2 || '');
 		    if (defined $dep_package) {
-			push @symbols_depends, $dep_package . ' ' . $dep;
+			push @symbols_depends, $dep_package . $dep;
 		    } else {
 			tag "syntax-error-in-symbols-file", $. unless $warned;
 			$warned = 1;
