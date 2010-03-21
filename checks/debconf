@@ -290,10 +290,10 @@ foreach my $template (@templates) {
     } else {
         ($short, $extended) = ('', '');
     }
-    my $type = $template->{type} || '';
+    my $ttype = $template->{type} || '';
     unless ($short =~ /for internal use/i) {
-	my $isprompt = grep { $_ eq $type } qw(string password);
-        my $isselect = grep { $_ eq $type } qw(select multiselect);
+	my $isprompt = grep { $_ eq $ttype } qw(string password);
+        my $isselect = grep { $_ eq $ttype } qw(select multiselect);
 	if ($isprompt) {
 	    if ($short && ($short !~ m/:$/ || $short =~ m/^(what|who|when|where|which|how)/i)) {
 		tag "malformed-prompt-in-templates", $template->{template};
@@ -304,7 +304,7 @@ foreach my $template (@templates) {
 		tag "using-imperative-form-in-templates", $template->{template};
 	    }
 	}
-	if ($type eq 'boolean') {
+	if ($ttype eq 'boolean') {
 	    if ($short !~ /\?/) {
 		tag "malformed-question-in-templates", $template->{template};
 	    }
@@ -312,19 +312,20 @@ foreach my $template (@templates) {
 	if (defined ($extended) && $extended =~ /[^\?]\?(\s+|$)/) {
 	    tag "using-question-in-extended-description-in-templates", $template->{template};
 	}
-	if ($type eq 'note') {
+	if ($ttype eq 'note') {
 	    if ($short =~ /[.?;:]$/) {
 		tag "malformed-title-in-templates", $template->{template};
 	    }
 	}
 	if (length ($short) > 75) {
-	    tag "too-long-short-description-in-templates", $template->{template};
+	    tag "too-long-short-description-in-templates", $template->{template}
+		unless $type eq 'udeb' && $ttype eq 'text';
 	}
         if (defined $template->{description}) {
             if ($template->{description} =~ /(\A|\s)(I|[Mm]y|[Ww]e|[Oo]ur|[Oo]urs|mine|myself|ourself|me|us)(\Z|\s)/) {
                 tag "using-first-person-in-templates", $template->{template};
             }
-            if ($template->{description} =~ /[ \'\"]yes[ \'\",;.]/i and $type eq 'boolean') {
+            if ($template->{description} =~ /[ \'\"]yes[ \'\",;.]/i and $ttype eq 'boolean') {
                 tag "making-assumptions-about-interfaces-in-templates", $template->{template};
             }
         }
