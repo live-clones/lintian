@@ -1,0 +1,5 @@
+Testname: runtests-arch-amd64
+Sequence: 0700
+Version: 1.0
+Architecture: amd64
+Description: Test a package that is supposedly amd64-specific

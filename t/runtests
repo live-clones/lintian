@@ -63,6 +63,8 @@ our $LINTIAN = $LINTIAN_ROOT . '/frontend/lintian';
 our $DPKG_BUILDPACKAGE = 'dpkg-buildpackage -rfakeroot -us -uc -d'
     . ' -iNEVER_MATCH_ANYTHING -INEVER_MATCH_ANYTHING';
 our $STANDARDS_VERSION = '3.8.4';
+our $ARCHITECTURE = `dpkg-architecture -qDEB_HOST_ARCH`;
+chomp $ARCHITECTURE;
 
 # --- Usage information
 
@@ -378,7 +380,11 @@ sub find_tests_for_tag {
 sub test_package {
     my ($testdata) = @_;
 
-    check_test_is_sane($TESTSET, $testdata);
+    if (!check_test_is_sane($TESTSET, $testdata)) {
+	print "Skipping test $testdata->{testname} $testdata->{version}... architecture mismatch\n";
+	return 1;
+    }
+
     print "Running test $testdata->{testname} $testdata->{version}... ";
 
     my $pkg = $testdata->{srcpkg};
@@ -761,6 +767,16 @@ sub check_test_is_sane {
     if ($DEBUG) {
 	print "check_test_is_sane => ".Dumper($data);
     }
+
+    my @architectures = qw(all any);
+    push @architectures, $ARCHITECTURE;
+
+    # Check for arch-specific tests
+    if (!grep { $data->{architecture} =~ m/\b$_\b/ } @architectures) {
+	return 0;
+    }
+
+    return 1;
 }
 
 # Local Variables:

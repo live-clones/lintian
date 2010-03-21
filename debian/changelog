@@ -123,6 +123,9 @@ lintian (2.3.4) UNRELEASED; urgency=low
   * testset/etcfiles/:
     + [RA] Fix problems with the md5sums test suite construction in the
       legacy etcfiles test.  Thanks, Frank Lin PIAT.  (Closes: #573081)
+
+  * t/runtests:
+    + [RG] Add support for architecture-specific tests.
   * t/tests/binaries-multiarch/:
     + [RG] Fix test failure in non-i386 architectures by normalising the
       expected output.  Thanks, Niko Tyni.  (Closes: #568680)

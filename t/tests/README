@@ -281,3 +281,7 @@ Tests will generally fall into one of four basic types:
    on an empty source package) or generic-empty (a package missing
    everything that dpkg-buildpackage will let one get away with
    missing).
+
+If you by any reason need to write an architecture-specific test case,
+make sure the target architectures are properly listed _in the desc
+file_.  runtests will in then handle this special test correctly.
