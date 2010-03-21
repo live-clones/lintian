@@ -260,6 +260,68 @@ sub wait {
     }
 }
 
+=item kill([pid|hashref])
+
+When called as a function:
+C<pid> must be specified. It sigTERMs the given process.
+Under this mode, it acts as a wrapper around CORE::kill().
+
+When called as a method:
+It takes no argument. It sigTERMsr the previously background()ed
+process and cleans up internal variables.
+
+The return value is that of CORE:kill().
+
+
+Killing multiple processes:
+
+In a similar way to wait(), it is possible to pass a hash reference to
+kill() so that it calls the kill() method of each of the objects and
+reaps them afterwards with wait().
+
+Only the processes that were successfully signaled are reaped.
+Depending on the effects of the signal, it is possible that the call to
+wait() blocks. To reduce the chances of blocking, the processes are
+reaped in the same order they were signaled.
+
+The return value is the number of processes that were successfully
+signaled (and per the above description, reaped.)
+
+=cut
+
+sub kill {
+    my ($self, $pid);
+
+    if (ref $_[0] eq "Lintian::Command::Simple") {
+	$self = shift;
+	$pid = $self->pid();
+    } elsif (ref $_[0]) {
+	my $jobs = shift;
+	my $count = 0;
+	my @killed_jobs;
+
+	# reset internal iterator
+	keys %$jobs;
+	# send signals
+	while (my ($k, $cmd) = each %$jobs) {
+	    if ($cmd->kill()) {
+		$count++;
+		push @killed_jobs, $k;
+	    }
+	}
+	# and reap afterwards
+	while (my $k = shift @killed_jobs) {
+	    $jobs->{$k}->wait();
+	}
+
+	return $count;
+    } else {
+	$pid = shift;
+    }
+
+    return CORE::kill('TERM', $pid);
+}
+
 =item pid()
 
 Only available under the OO interface, it returns the pid of a
