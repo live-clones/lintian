@@ -38,6 +38,7 @@ W: debconf source: invalid-po-file debian/po/sample-file.po
 W: debconf source: maintainer-script-lacks-debhelper-token debian/debconf-test.postinst
 W: debconf source: misnamed-po-file debian/po/lang.po
 W: debconf source: misnamed-po-file debian/po/sample-file.po
+W: debconf source: missing-debian-source-format
 W: debconf source: newer-debconf-templates
 W: debconf source: package-uses-deprecated-debhelper-compat-version 4
 W: debconf source: patch-system-but-no-source-readme

@@ -27,6 +27,7 @@ W: debug source: debhelper-but-no-misc-depends hello-hello-dbg
 W: debug source: debhelper-but-no-misc-depends hi-dbg
 W: debug source: debhelper-script-needs-versioned-build-depends dh_icons (>= 5.0.51~)
 W: debug source: debian-rules-sets-DH_COMPAT line 5
+W: debug source: missing-debian-source-format
 W: debug source: timewarp-standards-version (2006-04-04 < 2006-04-26)
 W: hello-hello-dbg: latest-debian-changelog-entry-without-new-version
 W: hello: binary-without-manpage usr/bin/hello
@@ -38,12 +39,12 @@ W: libhello0-dbg: latest-debian-changelog-entry-without-new-version
 W: libhello0-dbg: shared-lib-without-dependency-information ./usr/lib/libhello.so.dbg
 W: libhello0: latest-debian-changelog-entry-without-new-version
 W: libhello0: symbols-declares-dependency-on-other-package foobar (= 1.2)
-W: libhello0: symbols-declares-dependency-on-other-package hello-dbg 
-W: libhello0: symbols-declares-dependency-on-other-package hello-dbg2 
-W: libhello0: symbols-declares-dependency-on-other-package hello-dbg3 
+W: libhello0: symbols-declares-dependency-on-other-package hello-dbg
+W: libhello0: symbols-declares-dependency-on-other-package hello-dbg2
+W: libhello0: symbols-declares-dependency-on-other-package hello-dbg3
 W: libhello0: symbols-declares-dependency-on-other-package libhello0c2 (>= 1.2)
 W: libhello0: symbols-declares-dependency-on-other-package libhello2 #MINVER#
 W: libhello0: symbols-declares-dependency-on-other-package libhello2 (>= 1:2.3)
 W: libhello0: symbols-declares-dependency-on-other-package libhelloc0c2 (<< 1.3)
-W: libhello0: symbols-declares-dependency-on-other-package libhelloc0c3 
+W: libhello0: symbols-declares-dependency-on-other-package libhelloc0c3
 W: libhello0: unused-shlib-entry-in-symbols-control-file libhello 2
