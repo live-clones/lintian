@@ -1,0 +1,2 @@
+#!/bin/sh
+rm "$1"/debian/source/format
