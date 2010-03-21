@@ -68,13 +68,16 @@ our $STANDARDS_VERSION = '3.8.4';
 
 sub usage {
     print unquote(<<"END");
-:       Usage: $0 [-dkv] <testset-directory> <testing-directory> [<test>]
-:              $0 [-dkv] [-t <tag>] <testset-directory> <testing-directory>
+:       Usage: $0 [-dkv] [-j [<jobs>]] <testset-directory> <testing-directory> [<test>]
+:              $0 [-dkv] [-j [<jobs>]] [-t <tag>] <testset-directory> <testing-directory>
 :
-:         -d        Display additional debugging information
-:         -k        Do not stop after one failed test
-:         -t <tag>  Run only tests for or against <tag>
-:         -v        Be more verbose
+:         -d          Display additional debugging information
+:         -j [<jobs>] Run up to <jobs> jobs in parallel. Defaults to two.
+:                     If -j is passed without specifying <jobs>, the number
+:                     of jobs started is <cpu cores>+1 if /proc/cpuinfo is readable.
+:         -k          Do not stop after one failed test
+:         -t <tag>    Run only tests for or against <tag>
+:         -v          Be more verbose
 :
 :       The optional 3rd parameter causes runtests to only run that particular
 :       test.
@@ -88,10 +91,12 @@ our $DEBUG = 0;
 our $VERBOSE = 0;
 our $RUNDIR;
 our $TESTSET;
+our $JOBS = -1;
 
 my ($run_all_tests, $tag);
 Getopt::Long::Configure('bundling');
 GetOptions('d|debug'      => \$DEBUG,
+	   'j|jobs:i'     => \$JOBS,
 	   'k|keep-going' => \$run_all_tests,
 	   't|tag=s'      => \$tag,
 	   'v|verbose'    => \$VERBOSE) or usage;
@@ -108,6 +113,31 @@ unless (-d $RUNDIR) {
 }
 unless (-d $TESTSET) {
     fail("test set directory $TESTSET does not exist");
+}
+
+# Getopt::Long assigns 0 as default value if none was specified
+if ($JOBS eq 0 && -r '/proc/cpuinfo') {
+    open(CPU, '<', '/proc/cpuinfo')
+	or fail("failed to open /proc/cpuinfo: $!");
+    while (<CPU>) {
+	next unless m/^cpu cores\s*:\s*(\d+)/;
+	$JOBS += $1;
+    }
+    close(CPU);
+
+    print "Apparent number of cores: $JOBS\n" if $DEBUG;
+
+    # Running up to twice the number of cores usually gets the most out
+    # of the CPUs and disks but it might be too aggresive to be the
+    # default for -j. Only use <cores>+1 then.
+    $JOBS++;
+}
+
+# No decent number of jobs? set a default
+# Above $JOBS should be set to -1 so that this condition is always met,
+# therefore avoiding duplication.
+if ($JOBS le 0) {
+    $JOBS = 2;
 }
 
 # --- Display output immediately
@@ -145,7 +175,7 @@ if ($singletest) {
 
 if (@tests) {
     print "Test scripts:\n";
-    if (system('prove', '-r', '-I', "$LINTIAN_ROOT/lib", @tests) != 0) {
+    if (system('prove', '-j', $JOBS, '-r', '-I', "$LINTIAN_ROOT/lib", @tests) != 0) {
 	exit 1 unless $run_all_tests;
 	$status = 1;
     }
