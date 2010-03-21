@@ -24,6 +24,11 @@ lintian (2.3.4) UNRELEASED; urgency=low
       mistake.  Thanks, Jari Aalto.  (Closes: #573839)
     + [RA] Reword source-contains-prebuilt-windows-binary long
       description.  (Closes: #574515)
+  * checks/debconf:
+    + [RA] Don't warn about the length of the short description for
+      templates of type text in udebs, since they're frequently used by
+      including them into other templates at runtime.  Patch from Frans
+      Pop.  (Closes: #560414)
   * checks/init.d:
     + [RA] Exclude symlinks to upstart-job from init script syntax checks.
       Based on a patch by Jos Boumans.  (Closes: #569492)
