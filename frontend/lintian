@@ -1085,9 +1085,9 @@ if ($action eq 'check') {
 
 # }}}
 
-require Lintian::PDepMap;
+require Lintian::DepMap::Properties;
 
-my $map = Lintian::PDepMap->new();
+my $map = Lintian::DepMap::Properties->new();
 
 # {{{ determine which info is needed by the collection scripts
 for my $c (keys %unpack_infos) {

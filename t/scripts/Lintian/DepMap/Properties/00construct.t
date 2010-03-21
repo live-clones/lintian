@@ -2,11 +2,11 @@
 
 use Test::More qw(no_plan);
 
-BEGIN { use_ok('Lintian::PDepMap'); }
+BEGIN { use_ok('Lintian::DepMap::Properties'); }
 
 my $map;
 
-ok(eval { $map = Lintian::PDepMap->new(); }, 'Create');
+ok(eval { $map = Lintian::DepMap::Properties->new(); }, 'Create');
 
 my %prop = (name => 'John Doe', age => 20);
 

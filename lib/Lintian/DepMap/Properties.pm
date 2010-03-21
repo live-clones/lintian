@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Lintian::PDepMap;
+package Lintian::DepMap::Properties;
 
 use strict;
 use warnings;
@@ -23,18 +23,18 @@ my ($properties);
 
 =head1 NAME
 
-Lintian::PDepMap - Dependencies with properties map/tree creator
+Lintian::DepMap::Properties - Dependencies with properties map/tree creator
 
 =head1 SYNOPSIS
 
-    use Lintian::PDepMap;
+    use Lintian::DepMap::Properties;
 
-    my $map = Lintian::DepMap->new();
+    my $map = Lintian::DepMap::Properties->new();
 
 
 =head1 DESCRIPTION
 
-Lintian::PDepMap is a simple layer between Lintian::DepMap and the
+Lintian::DepMap::Properties is a simple layer between Lintian::DepMap and the
 application allowing nodes to have application-defined properties.
 
 
@@ -42,7 +42,7 @@ application allowing nodes to have application-defined properties.
 
 =item new()
 
-Creates a new Lintian::PDepMap object and returns a reference to it.
+Creates a new Lintian::DepMap::Properties object and returns a reference to it.
 
 =cut
 
