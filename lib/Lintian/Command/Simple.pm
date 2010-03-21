@@ -57,6 +57,8 @@ provided.
 It is possible to reuse an object to run multiple commands, but only
 after reaping the previous command.
 
+=over 4
+
 =item new()
 
 Creates a new Lintian::Command::Simple object and returns a reference
@@ -373,6 +375,7 @@ sub status {
 __END__
 
 =back
+
 =head1 TODO
 
 Provide the necessary methods to modify the environment variables of
