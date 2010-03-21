@@ -20,6 +20,7 @@ libdigest-sha-perl 5.47
 libcompress-zlib-perl 2.020
 libcompress-raw-zlib-perl 2.020
 libcompress-raw-bzip2-perl 2.020
+libtime-local-perl 1.1901
 libthread-queue-perl 2.11
 libtest-simple-perl 0.92
 libtest-harness-perl 3.17
