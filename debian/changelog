@@ -3,6 +3,7 @@ lintian (2.3.4) UNRELEASED; urgency=low
   * Summary of tag changes:
     + Added:
       - control-file-with-CRLF-EOLs
+      - empty-binary-package
       - missing-debian-source-format
       - possible-new-upstream-release-without-new-version
       - unknown-file-in-debian-source
@@ -48,6 +49,11 @@ lintian (2.3.4) UNRELEASED; urgency=low
       unsupported-source-format.  Patch from Raphaël Hertzog.
     + [RA] Stop recommending a dependency on perl-modules.  Patch from
       Niko Tyni.  (Closes: #568749)
+  * checks/files{,.desc}:
+    + [RA] New check for binary packages that are empty except for
+      standard files and don't declare themselves to be metapackages or
+      other types of dummy packages.  Based on a patch from Luca
+      Falavigna.  (Closes: #569220)
   * checks/init.d:
     + [RA] Exclude symlinks to upstart-job from init script syntax checks.
       Based on a patch by Jos Boumans.  (Closes: #569492)

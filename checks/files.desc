@@ -1134,10 +1134,14 @@ Info: This package contains a directory under <tt>/lib</tt> or
  installed.
 
 Tag: empty-binary-package
-Severity: serious
+Severity: important
 Certainty: wild-guess
-Info: This binary package appears to be empty, and its description
- does not mention it is neither meta package or transitional package.
+Info: This binary package appears to be empty, and its description does
+ not say that it's a meta-package or a transitional package.  This is
+ often due to problems with updating debhelper *.install files during
+ package renames or similar problems where installation rules don't put
+ files in the correct place.
  .
- You should check if package is deliberately empty, and then state
- so in package description, or fix it to provide missing files.
+ If the package is deliberately empty, pleaes mention in the package long
+ description one of the phrases "meta-package," "dummy," "dependency
+ package," "empty package," or "virtual package."
