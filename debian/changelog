@@ -18,6 +18,10 @@ lintian (2.3.4) UNRELEASED; urgency=low
       contain substvars other than *:Depends substvars, since substvars
       may be used to assemble the components of a dependency.  Thanks,
       Matthias Klose.  (Closes: #573815)
+  * checks/cruft.desc:
+    + [RA] Provide more information in native-package-with-dash-version
+      long description about how native packages can be created by
+      mistake.  Thanks, Jari Aalto.  (Closes: #573839)
   * checks/init.d:
     + [RA] Exclude symlinks to upstart-job from init script syntax checks.
       Based on a patch by Jos Boumans.  (Closes: #569492)
