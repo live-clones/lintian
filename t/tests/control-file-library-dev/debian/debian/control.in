@@ -13,7 +13,8 @@ Description: {$description} (shared lib 1)
  .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
- things.  It should not be installed like a regular package.
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
 
 Package: libcontrol-file-bar7ldbl
 Architecture: {$architecture}
@@ -23,7 +24,8 @@ Description: {$description} (shared lib 2)
  .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
- things.  It should not be installed like a regular package.
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
 
 Package: libcontrol-file-dev
 Section: libdevel
@@ -37,7 +39,8 @@ Description: {$description} (dev package)
  .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
- things.  It should not be installed like a regular package.
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
 
 Package: libcontrol-file-baz9-4
 Architecture: {$architecture}
@@ -47,7 +50,8 @@ Description: {$description} (shared lib 3)
  .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
- things.  It should not be installed like a regular package.
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
 
 Package: libcontrol-file-doc
 Section: doc
@@ -58,7 +62,8 @@ Description: {$description} (doc package)
  .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
- things.  It should not be installed like a regular package.
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
 
 Package: libcontrol-file4-dev
 Section: libdevel
@@ -73,7 +78,8 @@ Description: {$description} (dev package with version)
  .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
- things.  It should not be installed like a regular package.
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
 
 Package: libcontrol-file-all-dev
 Section: libdevel
@@ -87,7 +93,8 @@ Description: {$description} (arch: all dev package)
  .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
- things.  It should not be installed like a regular package.
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
 
 Package: libcontrol-baz-dev
 Section: libdevel
@@ -101,4 +108,5 @@ Description: {$description} (dev whitespace)
  .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
- things.  It should not be installed like a regular package.
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.

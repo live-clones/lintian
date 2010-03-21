@@ -7,4 +7,5 @@ Priority: extra
 Description: Test package containing an ancient file
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
- things.  It should not be installed like a regular package.
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.

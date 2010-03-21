@@ -13,7 +13,8 @@ Description: checks for non-utf-8-encodings
  .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
- things.  It should not be installed like a regular package.
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
 
 Package: copyright-full-gpl
 Architecture: all
@@ -23,7 +24,8 @@ Description: checks inclusion of GPL in full text
  .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
- things.  It should not be installed like a regular package.
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
 
 Package: copyright-full-gfdl
 Architecture: all
@@ -33,7 +35,8 @@ Description: checks inclusion of GFDL in full text
  .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
- things.  It should not be installed like a regular package.
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
 
 Package: copyright-full-apache-2
 Architecture: all
@@ -43,7 +46,8 @@ Description: checks inclusion of Apache 2.0 in full text
  .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
- things.  It should not be installed like a regular package.
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
 
 Package: copyright-misc-errors
 Architecture: all
@@ -53,7 +57,8 @@ Description: checks various errors in copyright files
  .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
- things.  It should not be installed like a regular package.
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
 
 Package: copyright-symlink
 Architecture: all
@@ -63,7 +68,8 @@ Description: just use a symlink for the copyright file
  .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
- things.  It should not be installed like a regular package.
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
 
 Package: copyright-compressed
 Architecture: all
@@ -73,7 +79,8 @@ Description: include a valid copyright file and compress it
  .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
- things.  It should not be installed like a regular package.
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
 
 Package: copyright-old-style
 Architecture: all
@@ -83,7 +90,8 @@ Description: use an old-style directory structure
  .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
- things.  It should not be installed like a regular package.
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
 
 Package: copyright-full-gpl-1
 Architecture: all
@@ -94,7 +102,8 @@ Description: checks inclusion of GPL1
  .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
- things.  It should not be installed like a regular package.
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
 
 Package: copyright-php
 Architecture: all
@@ -104,7 +113,8 @@ Description: checks problematic PHP licenses
  .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
- things.  It should not be installed like a regular package.
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
 
 Package: copyright-w3c
 Architecture: all
@@ -115,7 +125,8 @@ Description: checks inclusion of the W3C license
  .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
- things.  It should not be installed like a regular package.
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
 
 Package: copyright-no-errors
 Architecture: all
@@ -125,7 +136,8 @@ Description: this should not emit any error
  .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
- things.  It should not be installed like a regular package.
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
 
 Package: copyright-versionless
 Architecture: all
@@ -135,4 +147,5 @@ Description: checks a valid versionless GPL reference
  .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
- things.  It should not be installed like a regular package.
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.

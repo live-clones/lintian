@@ -8,7 +8,7 @@ Standards-Version: 3.7.2
 Package: debconf-test
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: Test package for the debconf checks of lintian
+Description: Test package for the debconf checks of lintian (dummy)
 
 Package: debconf-test-noscripts
 Architecture: any
@@ -18,7 +18,8 @@ Description: Test package for the debconf checks of lintian (noscripts)
  .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
- things.  It should not be installed like a regular package.
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
 
 Package: debconf-test-preinst
 Architecture: any
@@ -28,7 +29,8 @@ Description: Test package for the debconf checks of lintian (preinst)
  .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
- things.  It should not be installed like a regular package.
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
 
 Package: debconf-test-postinst
 Architecture: any
@@ -38,7 +40,8 @@ Description: Test package for the debconf checks of lintian (postinst)
  .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
- things.  It should not be installed like a regular package.
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
 
 Package: debconf-udeb
 Section: debian-installer
@@ -46,4 +49,4 @@ XC-Package-Type: udeb
 XB-Installer-Menu-Item: 100
 Architecture: any
 Depends: ${shlibs:Depends}
-Description: Test udeb package for the debconf checks of lintian
+Description: Test udeb package for the debconf checks of lintian (dummy)

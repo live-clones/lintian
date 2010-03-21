@@ -13,7 +13,8 @@ Description: {$description}
  .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
- things.  It should not be installed like a regular package.
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
 
 Package: {$srcpkg}-doc
 Architecture: {$architecture}
@@ -23,7 +24,8 @@ Description: {$description} (doc)
  .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
- things.  It should not be installed like a regular package.
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
 
 Package: {$srcpkg}-dbg
 Architecture: any
@@ -33,7 +35,8 @@ Description: {$description} (debug)
  .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
- things.  It should not be installed like a regular package.
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
 
 Package: lib{$srcpkg}-dev
 Architecture: {$architecture}
@@ -43,7 +46,8 @@ Description: {$description} (dev)
  .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
- things.  It should not be installed like a regular package.
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
 
 Package: lib{$srcpkg}-perl
 Architecture: {$architecture}
@@ -53,7 +57,8 @@ Description: {$description} (perl)
  .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
- things.  It should not be installed like a regular package.
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
 
 Package: python-{$srcpkg}
 Architecture: {$architecture}
@@ -63,7 +68,8 @@ Description: {$description} (Python)
  .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
- things.  It should not be installed like a regular package.
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
 
 Package: lib{$srcpkg}-ocaml-dev
 Architecture: {$architecture}
@@ -73,7 +79,8 @@ Description: {$description} (OCaml)
  .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
- things.  It should not be installed like a regular package.
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
 
 Package: libghc6-{$srcpkg}
 Architecture: {$architecture}
@@ -83,7 +90,8 @@ Description: {$description} (Haskell)
  .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
- things.  It should not be installed like a regular package.
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
 
 Package: lib{$srcpkg}-cil
 Architecture: {$architecture}
@@ -93,7 +101,8 @@ Description: {$description} (CLI/Mono)
  .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
- things.  It should not be installed like a regular package.
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
 
 Package: libphp-{$srcpkg}
 Architecture: {$architecture}
@@ -103,7 +112,8 @@ Description: {$description} (PHP)
  .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
- things.  It should not be installed like a regular package.
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
 
 Package: lib{$srcpkg}-ruby1.8
 Architecture: {$architecture}
@@ -113,7 +123,8 @@ Description: {$description} (Ruby)
  .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
- things.  It should not be installed like a regular package.
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
 
 Package: lib{$srcpkg}-java
 Architecture: {$architecture}
@@ -123,7 +134,8 @@ Description: {$description} (Java)
  .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
- things.  It should not be installed like a regular package.
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
 
 Package: r-cran-{$srcpkg}
 Architecture: {$architecture}
@@ -133,7 +145,8 @@ Description: {$description} (GNU R)
  .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
- things.  It should not be installed like a regular package.
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
 
 Package: lib{$srcpkg}-oldlibs-dev
 Architecture: {$architecture}
@@ -144,4 +157,5 @@ Description: {$description} (oldlibs)
  .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
- things.  It should not be installed like a regular package.
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.

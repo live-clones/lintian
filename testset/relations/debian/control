@@ -24,7 +24,7 @@ Conflicts: foobar (<< 5&5), foo, relations,
            gnuwdf,
 Suggests: alpha, gnu (>= 44-3-4-8-11.4) | ung (<< 89beta) | nug | ngu, beta, some-other-package
 Recommends: emacs21 | emacsen, dpkg, null, some-other-package, ${f-oo:b-ar}, gs | ghostscript | gs-aladdin
-Description: Strange dependency relationships
+Description: Strange dependency relationships (dummy)
  This package declares relationships designed to tickle lintian's "fields"
  check.  It should generate a number of tags for these.
  .

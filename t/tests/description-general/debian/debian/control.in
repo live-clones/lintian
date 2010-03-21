@@ -21,7 +21,7 @@ Description: {$srcpkg} is a package which tests lintian's description checks.
  .
  This description was automagically extracted from the module by dh-make-perl
  .
- No, not really...
+ No, not really... (dummy)
 
 Package: {$srcpkg}-2
 Architecture: {$architecture}
@@ -31,7 +31,7 @@ Description: Don't use tabs	in the synopsis and restrict yourself to less than 8
  Now here comes a list:
  - which is
  - unfortunately
- - not correctly indented.
+ - not correctly indented. (dummy)
 
 Package: {$srcpkg}-3
 Architecture: {$architecture}
@@ -42,7 +42,7 @@ Description:
  a Lintian warning.
  .
  And the old man said "he he is the one!"
- "No, I am am not", he replied
+ "No, I am am not", he replied (dummy)
 
 Package: {$srcpkg}-4
 Architecture: {$architecture}
@@ -50,7 +50,7 @@ Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: some Lintian test package
  some Lintian test package
  .
- Some mroe stuff about this debian test package.
+ Some mroe stuff about this debian test package. (dummy)
  .
  Homepage: <http://lintian.debian.org/>
 
@@ -63,7 +63,8 @@ Description: This description ends, etc.
  .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
- things.  It should not be installed like a regular package.
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
 
 Package: {$srcpkg}-dummy
 Architecture: {$architecture}
@@ -74,7 +75,7 @@ Description: test package (transitional package)
 Package: {$srcpkg}-empty
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
-Description: test package with empty extended description
+Description: test package with empty extended description (dummy)
 
 Package: {$srcpkg}-utf8-long
 Architecture: {$architecture}
@@ -84,7 +85,8 @@ Description: test package with UTF-8 description (“héhé”“héhé”“hé
  .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
- things.  It should not be installed like a regular package.
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
 
 Package: {$srcpkg}-not-dup
 Architecture: {$architecture}
@@ -96,4 +98,5 @@ Description: test package with duplicated words that aren't
  .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
- things.  It should not be installed like a regular package.
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.

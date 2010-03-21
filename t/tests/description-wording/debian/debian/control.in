@@ -13,3 +13,4 @@ Description: {$description}
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  You should not install it like a regular package, we can guarantee
  you that. This is a test package. This package does nothing useful at all.
+ It may be an empty package.

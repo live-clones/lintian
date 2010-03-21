@@ -8,4 +8,4 @@ Build-Depends: debhelper (>= 7.0.50~)
 Package: {$srcpkg}
 Section: unknown
 Architecture: {$architecture}
-Description: {$description}
+Description: {$description} (dummy)
