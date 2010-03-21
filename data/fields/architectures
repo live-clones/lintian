@@ -1,6 +1,6 @@
 # List of known architectures as provided by dpkg-architecture
-# Last updated: 2010-01-29
-# With: Debian dpkg-architecture version 1.15.5.6.
+# Last updated: 2010-03-21
+# With: Debian dpkg-architecture version 1.15.6.
 
 all
 alpha
@@ -31,6 +31,7 @@ darwin-sh3eb
 darwin-sh4
 darwin-sh4eb
 darwin-sparc
+darwin-sparc64
 freebsd-alpha
 freebsd-amd64
 freebsd-arm
@@ -52,6 +53,7 @@ freebsd-sh3eb
 freebsd-sh4
 freebsd-sh4eb
 freebsd-sparc
+freebsd-sparc64
 hppa
 hurd-alpha
 hurd-amd64
@@ -74,6 +76,7 @@ hurd-sh3eb
 hurd-sh4
 hurd-sh4eb
 hurd-sparc
+hurd-sparc64
 i386
 ia64
 kfreebsd-alpha
@@ -97,6 +100,7 @@ kfreebsd-sh3eb
 kfreebsd-sh4
 kfreebsd-sh4eb
 kfreebsd-sparc
+kfreebsd-sparc64
 knetbsd-alpha
 knetbsd-amd64
 knetbsd-arm
@@ -118,6 +122,7 @@ knetbsd-sh3eb
 knetbsd-sh4
 knetbsd-sh4eb
 knetbsd-sparc
+knetbsd-sparc64
 kopensolaris-alpha
 kopensolaris-amd64
 kopensolaris-arm
@@ -139,6 +144,7 @@ kopensolaris-sh3eb
 kopensolaris-sh4
 kopensolaris-sh4eb
 kopensolaris-sparc
+kopensolaris-sparc64
 lpia
 m32r
 m68k
@@ -165,6 +171,7 @@ netbsd-sh3eb
 netbsd-sh4
 netbsd-sh4eb
 netbsd-sparc
+netbsd-sparc64
 openbsd-alpha
 openbsd-amd64
 openbsd-arm
@@ -186,6 +193,7 @@ openbsd-sh3eb
 openbsd-sh4
 openbsd-sh4eb
 openbsd-sparc
+openbsd-sparc64
 powerpc
 ppc64
 s390
@@ -215,7 +223,9 @@ solaris-sh3eb
 solaris-sh4
 solaris-sh4eb
 solaris-sparc
+solaris-sparc64
 sparc
+sparc64
 uclibc-linux-alpha
 uclibc-linux-amd64
 uclibc-linux-arm
@@ -238,6 +248,7 @@ uclibc-linux-sh3eb
 uclibc-linux-sh4
 uclibc-linux-sh4eb
 uclibc-linux-sparc
+uclibc-linux-sparc64
 uclinux-alpha
 uclinux-amd64
 uclinux-arm
@@ -260,3 +271,4 @@ uclinux-sh3eb
 uclinux-sh4
 uclinux-sh4eb
 uclinux-sparc
+uclinux-sparc64

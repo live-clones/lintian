@@ -1,7 +1,7 @@
 # List of "triplet architecture" relationships as provided by
 # dpkg-architecture
-# Last updated: 2010-01-29
-# With: Debian dpkg-architecture version 1.15.5.6.
+# Last updated: 2010-03-21
+# With: Debian dpkg-architecture version 1.15.6.
 
 alpha-darwin darwin-alpha
 alpha-freebsd freebsd-alpha
@@ -247,6 +247,18 @@ sparc-netbsd netbsd-sparc
 sparc-openbsd openbsd-sparc
 sparc-solaris solaris-sparc
 sparc-uclinux-uclibc uclinux-sparc
+sparc64-darwin darwin-sparc64
+sparc64-freebsd freebsd-sparc64
+sparc64-gnu hurd-sparc64
+sparc64-kfreebsd-gnu kfreebsd-sparc64
+sparc64-knetbsd-gnu knetbsd-sparc64
+sparc64-kopensolaris-gnu kopensolaris-sparc64
+sparc64-linux-gnu sparc64
+sparc64-linux-uclibc uclibc-linux-sparc64
+sparc64-netbsd netbsd-sparc64
+sparc64-openbsd openbsd-sparc64
+sparc64-solaris solaris-sparc64
+sparc64-uclinux-uclibc uclinux-sparc64
 x86_64-darwin darwin-amd64
 x86_64-freebsd freebsd-amd64
 x86_64-gnu hurd-amd64

@@ -90,6 +90,11 @@ lintian (2.3.4) UNRELEASED; urgency=low
     + [RA] Simplify the logic since the entire debian directory is always
       copied.  Patch from Raphaël Hertzog.
 
+  * data/files/architectures:
+    + [RG] Refreshed against dpkg 1.15.6.
+  * data/files/triplets:
+    + [RG] Refreshed against dpkg 1.15.6.
+
   * debian/control:
     + [RG] Update package description to mention Policy version 3.8.4
       instead of 3.8.3.  Should have been done on the previous release.
