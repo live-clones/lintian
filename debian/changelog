@@ -94,6 +94,8 @@ lintian (2.3.4) UNRELEASED; urgency=low
     + [RG] Refresh against unstable.
   * data/files/architectures:
     + [RG] Refreshed against dpkg 1.15.6.
+  * data/files/fonts:
+    + [RG] Refresh against unstable.
   * data/files/triplets:
     + [RG] Refreshed against dpkg 1.15.6.
 

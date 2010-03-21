@@ -2,7 +2,7 @@
 # package that contains the font.  Only packages starting with ttf-,
 # otf-, t1-, and xfonts- are searched for fonts.
 #
-# Last updated: 2010-01-29
+# Last updated: 2010-03-21
 
 1015sn.ttf ttf-aenigma
 1015snr.ttf ttf-aenigma
@@ -113,6 +113,7 @@ anatolian.otf ttf-ancient-fonts
 andbasr.ttf ttf-sil-andika
 ani.ttf ttf-bengali-fonts
 anjalioldlipi.ttf ttf-malayalam-fonts
+aoyagi-soseki.ttf ttf-aoyagi-soseki
 aoyagikouzanfontt.ttf ttf-aoyagi-kouzan-t
 apibold.ttf ttf-linex
 apibolit.ttf ttf-linex
@@ -361,7 +362,7 @@ dejavuserifcondensed-bold.ttf ttf-dejavu-extra
 dejavuserifcondensed-bolditalic.ttf ttf-dejavu-extra
 dejavuserifcondensed-italic.ttf ttf-dejavu-extra
 dejavuserifcondensed.ttf ttf-dejavu-extra
-dejima-mincho-r220.ttf ttf-dejima-mincho
+dejima-mincho-r227.ttf ttf-dejima-mincho
 delphine.ttf ttf-sjfonts
 dented.ttf ttf-aenigma
 dephun2.ttf ttf-aenigma
@@ -610,11 +611,13 @@ intersec.ttf ttf-aenigma
 interso.ttf ttf-aenigma
 ipabold.ttf ttf-linex
 ipabolit.ttf ttf-linex
-ipag.otf otf-ipafont
-ipagp.otf otf-ipafont
+ipaexg.ttf otf-ipaexfont-gothic
+ipaexm.ttf otf-ipaexfont-mincho
+ipag.ttf otf-ipafont-gothic
+ipagp.ttf otf-ipafont-gothic
 ipaitali.ttf ttf-linex
-ipam.otf otf-ipafont
-ipamp.otf otf-ipafont
+ipam.ttf otf-ipafont-mincho
+ipamp.ttf otf-ipafont-mincho
 iparegul.ttf ttf-linex
 irianisadfstd-bold.otf ttf-adf-irianis
 irianisadfstd-bolditalic.otf ttf-adf-irianis
@@ -647,12 +650,30 @@ jeopardt.ttf ttf-aenigma
 jmacscrl.ttf ttf-aenigma
 joltcaff.ttf ttf-aenigma
 jomolhari-alpha3c-0605331.ttf ttf-dzongkha
+jsmath-bbold10.ttf ttf-jsmath
+jsmath-cmbsy10.ttf ttf-jsmath
 jsmath-cmbx10.ttf ttf-jsmath
 jsmath-cmex10.ttf ttf-jsmath
 jsmath-cmmi10.ttf ttf-jsmath
+jsmath-cmmib10.ttf ttf-jsmath
 jsmath-cmr10.ttf ttf-jsmath
+jsmath-cmss10.ttf ttf-jsmath
 jsmath-cmsy10.ttf ttf-jsmath
 jsmath-cmti10.ttf ttf-jsmath
+jsmath-eufb10.ttf ttf-jsmath
+jsmath-eufm10.ttf ttf-jsmath
+jsmath-eurb10.ttf ttf-jsmath
+jsmath-eurm10.ttf ttf-jsmath
+jsmath-eusb10.ttf ttf-jsmath
+jsmath-eusm10.ttf ttf-jsmath
+jsmath-lasy10.ttf ttf-jsmath
+jsmath-lasyb10.ttf ttf-jsmath
+jsmath-msam10.ttf ttf-jsmath
+jsmath-msbm10.ttf ttf-jsmath
+jsmath-rsfs10.ttf ttf-jsmath
+jsmath-stmary10.ttf ttf-jsmath
+jsmath-wasy10.ttf ttf-jsmath
+jsmath-wasyb10.ttf ttf-jsmath
 junicode-bold.ttf ttf-junicode
 junicode-boldcondensed.ttf ttf-junicode
 junicode-bolditalic.ttf ttf-junicode
