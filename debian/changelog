@@ -1,5 +1,12 @@
 lintian (2.3.4) UNRELEASED; urgency=low
 
+  * Summary of tag changes:
+    + Added:
+      - missing-debian-source-format
+      - possible-new-upstream-release-without-new-version
+      - unknown-file-in-debian-source
+      - unknown-source-format
+
   * checks/binaries:
     + [RA] Exclude packages from the klibc source package from the
       embedded zlib check since klibc legitimately includes its own copy.
