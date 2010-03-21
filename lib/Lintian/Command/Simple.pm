@@ -92,6 +92,9 @@ sub exec {
 
     system(@_);
 
+    $self->{'status'} = $?
+	if defined $self;
+
     return $? >> 8;
 }
 
@@ -113,6 +116,8 @@ sub fork {
 	$self = shift;
 	return -1
 	    if (defined($self->{'pid'}));
+
+	$self->{'status'} = undef;
     }
 
     my $pid = fork();
@@ -136,7 +141,7 @@ sub fork {
     }
 }
 
-=item wait([pid])
+=item wait([pid|hashref])
 
 When called as a function:
 If C<pid> is specified, it waits until the given process (which must be
@@ -152,24 +157,104 @@ return status of the process as it would be seen from a shell script.
 See 'perldoc -f wait' for more details about the possible meanings of
 -1.
 
+
+To reap one from many:
+
+When starting multiple processes asynchronously, it is common to wait
+until the first is done. While the CORE::wait() function is usually
+used for that very pourpose, it does not provide the desired results
+when the processes were started via the OO interface.
+
+To help with this task, wait() can take a hash ref where the value of
+each entry is an instance of Lintian::Command::Simple. The key of each
+entry is irrelevant and is not used for any pourpose.
+
+Under this mode, wait() waits until any child process is done and if the
+deceased process is one of the set passed via the hash ref it marks it
+as reaped and stores the return status.
+The results and return value are undefined when under this mode wait()
+"accidentally" reaps a process not started by one of the objects passed
+in the hash ref.
+
+The return value in scalar context is the instance of the object that
+started the now deceased process. In list context, the key and value
+(i.e. the object instance) are returned.
+Whenever CORE::wait() would return -1, wait() returns undef or a null
+value so that it is safe to:
+
+    while($cmd = Lintian::Command::Simple::wait(\%hash)) { something; }
+
+The same is true whenever the hash reference points to an empty hash.
+
+Passing any other kind of reference or value as arguments has undefined
+results.
+
 =cut
 
 sub wait {
     my ($self, $pid);
 
-    if (ref $_[0]) {
+    if (ref $_[0] eq "Lintian::Command::Simple") {
 	$self = shift;
 	$pid = $self->{'pid'};
     } else {
 	$pid = shift;
     }
 
-    if (defined($pid)) {
+    if (defined($pid) && !ref $pid) {
 	$self->{'pid'} = undef
 	    if defined($self);
-	return (waitpid($pid, 0) == -1)? -1 : ($? >> 8);
+
+	my $ret = waitpid($pid, 0);
+	my $status = $?;
+
+	$self->{'status'} = $?
+	    if defined($self);
+
+	return ($ret == -1)? -1 : $status >> 8;
+    } elsif (defined($pid)) {
+	# in this case $pid is a ref (must be a hash ref)
+	# rename it accordingly:
+	my $jobs = $pid;
+	$pid = 0;
+
+	my ($reaped_pid, $reaped_status);
+
+	# count the number of members and reset the internal hash iterator
+	if (scalar keys %$jobs == 0) {
+	    if (wantarray) {
+		return ();
+	    } else {
+		return undef;
+	    }
+	}
+
+	$reaped_pid = CORE::wait();
+	$reaped_status = $?;
+
+	if ($reaped_pid == -1) {
+	    if (wantarray) {
+		return ();
+	    } else {
+		return undef;
+	    }
+	}
+
+	while (my ($k, $cmd) = each %$jobs) {
+	    next unless (defined($cmd->pid()) && $reaped_pid == $cmd->pid());
+
+	    $cmd->status($reaped_status)
+		or die("internal error: object of pid $reaped_pid " .
+			"failed to recognise its termination\n");
+
+	    if (wantarray) {
+		return ($k, $cmd);
+	    } else {
+		return $cmd;
+	    }
+	}
     } elsif (not defined($self)) {
-	return (wait() == -1)? -1 : ($? >> 8);
+	return (CORE::wait() == -1)? -1 : ($? >> 8);
     } else {
 	return -1;
     }
@@ -188,6 +273,37 @@ sub pid {
     my $self = shift;
 
     return $self->{'pid'};
+}
+
+=item status()
+
+Only available under the OO interface, it returns the return status of
+the fork()ed or exec()uted process.
+
+When used on async processes, it is only defined after calling wait().
+
+B<Note>: it is also the method internally used by wait() to set the return
+status in some cases.
+
+=cut
+
+sub status {
+    my $self = shift;
+    my $status = shift;
+
+    # Externally set the return status.
+    # It performs a sanity check by making sure the executed command is
+    # indeed done.
+    if (defined($status)) {
+	my $rstatus = $self->wait();
+
+	return 0 if ($rstatus != -1);
+
+	$self->{'status'} = $status;
+	return 1;
+    }
+
+    return (defined $self->{'status'})? $self->{'status'} >> 8 : undef;
 }
 
 1;
@@ -218,7 +334,8 @@ object that started the reaped process won't be able to determine the
 return status, which can affect the rest of the application.
 
 As a general advise, the procedural and OO interfaces should not be
-combined when using fork().
+combined when using fork(). Unless, of course, you are calling wait()
+with a hash ref.
 
 =head1 AUTHOR
 
