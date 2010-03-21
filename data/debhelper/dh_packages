@@ -1,3 +1,4 @@
+autotools-dev
 bash-completion
 cli-common-dev
 debhelper
@@ -28,6 +29,7 @@ mozilla-devscripts
 pidgin-dev
 pkg-kde-tools
 python-central
+python-sip-dev
 python-support
 python-van.pydeb
 quilt

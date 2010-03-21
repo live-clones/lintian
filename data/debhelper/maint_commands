@@ -3,7 +3,6 @@ dh_config_model_upgrade
 dh_consoledata
 dh_dkms
 dh_gconf
-dh_haskell_prep
 dh_icons
 dh_installcatalogs
 dh_installcligac
