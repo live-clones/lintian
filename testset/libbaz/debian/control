@@ -57,7 +57,7 @@ Description: debugging package
  things.  It should not be installed like a regular package.
 
 Package: ia32-libbaz2
-Architecture: all
+Architecture: any
 Depends: ${shlibs:Depends}
 Description: multiarch package
  Regression test for lintian's handling of libraries (multiarch).
