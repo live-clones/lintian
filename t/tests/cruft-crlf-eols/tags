@@ -1,0 +1,2 @@
+E: cruft-crlf-eols source: control-file-with-CRLF-EOLs debian/changelog
+E: cruft-crlf-eols source: control-file-with-CRLF-EOLs debian/control

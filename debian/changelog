@@ -2,6 +2,7 @@ lintian (2.3.4) UNRELEASED; urgency=low
 
   * Summary of tag changes:
     + Added:
+      - control-file-with-CRLF-EOLs
       - missing-debian-source-format
       - possible-new-upstream-release-without-new-version
       - unknown-file-in-debian-source
@@ -25,12 +26,14 @@ lintian (2.3.4) UNRELEASED; urgency=low
       contain substvars other than *:Depends substvars, since substvars
       may be used to assemble the components of a dependency.  Thanks,
       Matthias Klose.  (Closes: #573815)
-  * checks/cruft.desc:
+  * checks/cruft{,.desc}:
     + [RA] Provide more information in native-package-with-dash-version
       long description about how native packages can be created by
       mistake.  Thanks, Jari Aalto.  (Closes: #573839)
     + [RA] Reword source-contains-prebuilt-windows-binary long
       description.  (Closes: #574515)
+    + [RG] Warn about control and changelog files with CRLF end of line
+      terminators.  Thanks, Michal Čihař.  (Closes: #564713)
   * checks/debconf:
     + [RA] Don't warn about the length of the short description for
       templates of type text in udebs, since they're frequently used by

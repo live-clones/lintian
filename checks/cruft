@@ -81,6 +81,9 @@ my @file_checks =
      [ qr,((^|/)\.[^/]+\.swp|~)$,         => 'editor-backup-file',  1 ],
     );
 
+# List of files to check for a LF-only end of line terminator, relative
+# to the debian/ source directory
+our @EOL_terminators_files = qw(control changelog);
 
 sub run {
 
@@ -143,6 +146,15 @@ for my $file (keys(%$file_info)) {
     } elsif ($file_info->{$file} =~ m/\bPE(32|64)\b/) {
 	tag "source-contains-prebuilt-windows-binary", $file;
     }
+}
+
+for my $file (@EOL_terminators_files) {
+    next unless -f "debfiles/$file";
+
+    $file = "debian/$file";
+
+    tag "control-file-with-CRLF-EOLs", $file
+	if ($file_info->{$file} =~ m/\bCRLF\b/);
 }
 
 # Report any error messages from tar while unpacking the source package if it
