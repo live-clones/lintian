@@ -31,17 +31,6 @@ Info: <tt>debian/source/format</tt> contains an unknown source format. The
  "3.0 (bzr)".
 Ref: dpkg-source(1)
 
-Tag: using-old-source-format
-Severity: pedantic
-Certainty: certain
-Info: The source package is still using the old source format "1.0" while
- "3.0 (quilt)" and "3.0 (native)" are the recommended formats for use
- within Debian.
- .
- See http://wiki.debian.org/Projects/DebSrc3.0 for basic information about
- updating packages to use the new source formats.
-Ref: dpkg-source(1)
-
 Tag: unknown-file-in-debian-source
 Severity: important
 Certainty: possible

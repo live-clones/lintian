@@ -42,7 +42,6 @@ if (-e "debfiles/source/format") {
     my $format = <FORMAT>;
     chomp $format;
     tag "unknown-source-format", $format unless $KNOWN_FORMATS{$format};
-    tag "using-old-source-format" if $format eq "1.0";
 } else {
     tag "missing-debian-source-format";
 }
