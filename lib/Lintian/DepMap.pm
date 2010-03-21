@@ -159,6 +159,19 @@ sub add {
     } else { 1; }
 }
 
+=item addp(node[, prefix, dependency[, dependency[, ...]]])
+
+Adds the given C<node> to the map marking any third or more parameters,
+after prefixing them with C<prefix>, as its dependencies. E.g.
+
+    # pA and pB have no dependency:
+    $map->add('pA');
+    $map->add('pA');
+    # C depends on pA and pB:
+    $map->addp('C', 'p', 'A', 'B');
+
+=cut
+
 sub addp {
     my ($self,$node,$prefix) = (shift,shift,shift);
     my @deps;
@@ -224,6 +237,23 @@ sub satisfy {
     delete $self->{'map'}{$node};
     delete $self->{'nodes'}{$node};
 }
+
+=item done(node)
+
+Returns whether the given C<node> has been satisfied/done.
+
+E.g.
+
+    # A has no dependencies:
+    $map->add('A');
+    # we work on A, and we are done:
+    $map->satisfy('A');
+
+    print "A is done!"
+	if ($map->done('A'));
+
+=cut
+
 
 sub done {
     my $self = shift;

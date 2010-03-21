@@ -80,6 +80,21 @@ sub add {
     return $self->SUPER::add(@_);
 }
 
+=item addp(node[, prefix, dependency[, dependency...]], [ref to property])
+
+Adds the given C<node> to the map marking any third or more parameters,
+after prefixing them with C<prefix>, as its dependencies and sets the
+C<node>'s property to the ref, if defined. See add()'s description for
+more information about about properties. E.g.
+
+    # pA and pB have no dependency:
+    $map->addp('pA', {name => 'John Doe'});
+    $map->addp('pB', {name => 'Jane Doe'});
+    # Df depends on pA and pB:
+    $map->addp('Df', 'p', 'A', 'B', {name => 'Doe Family'});
+
+=cut
+
 sub addp {
     my $self = shift;
     my $ref = pop;

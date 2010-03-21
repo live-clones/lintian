@@ -13,17 +13,18 @@ plan skip_all => 'Test::Pod::Coverage is required for testing POD coverage'
 # add underscores; personally, I (rra) think they make the code hard to read.
 our %MODULES =
     (
-     'Lintian::Check'             => [],
-     'Lintian::Collect'           => [],
-     'Lintian::Command'           => [],
-     'Lintian::Command::Simple'   => [],
-     'Lintian::Data'              => [],
-     'Lintian::DepMap'            => [],
-     'Lintian::Relation'          => [ qr/^parse_element$/,
-                                       qr/^implies_(element|array)/ ],
-     'Lintian::Relation::Version' => [ qr/^compare$/ ],
-     'Lintian::Tags'              => [],
-     'Lintian::Tag::Info'         => [],
+     'Lintian::Check'              => [],
+     'Lintian::Collect'            => [],
+     'Lintian::Command'            => [],
+     'Lintian::Command::Simple'    => [],
+     'Lintian::Data'               => [],
+     'Lintian::DepMap'             => [],
+     'Lintian::DepMap::Properties' => [],
+     'Lintian::Relation'           => [ qr/^parse_element$/,
+                                        qr/^implies_(element|array)/ ],
+     'Lintian::Relation::Version'  => [ qr/^compare$/ ],
+     'Lintian::Tags'               => [],
+     'Lintian::Tag::Info'          => [],
     );
 # TODO:
 #		Lintian::Collect::Binary
