@@ -1145,3 +1145,10 @@ Info: This binary package appears to be empty, and its description does
  If the package is deliberately empty, pleaes mention in the package long
  description one of the phrases "meta-package," "dummy," "dependency
  package," "empty package," or "virtual package."
+
+Tag: star-file
+Severity: important
+Certainty: possible
+Info: The given file is literally installed as <tt>*</tt> (star
+ symbol).  Normally this indicates a mistake in the installation
+ process of the package either when creating symlinks or renaming files.

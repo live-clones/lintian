@@ -7,6 +7,7 @@ lintian (2.3.4) UNRELEASED; urgency=low
       - empty-binary-package
       - missing-debian-source-format
       - possible-new-upstream-release-without-new-version
+      - star-file
       - unknown-file-in-debian-source
       - unknown-source-format
 
@@ -55,6 +56,8 @@ lintian (2.3.4) UNRELEASED; urgency=low
       standard files and don't declare themselves to be metapackages or
       other types of dummy packages.  Based on a patch from Luca
       Falavigna.  (Closes: #569220)
+    + [RG] New check for packages shipping files literally called '*'
+      (star symbol).  Thanks, Niels Thykier.  (Closes: #574771)
   * checks/init.d:
     + [RA] Exclude symlinks to upstart-job from init script syntax checks.
       Based on a patch by Jos Boumans.  (Closes: #569492)

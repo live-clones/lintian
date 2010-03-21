@@ -5,6 +5,11 @@ tmp = $(CURDIR)/debian/$(shell dh_listpackages)
 %:
 	dh $@
 
+override_dh_install:
+	dh_install
+	mkdir -p $(tmp)/usr/share/foo
+	touch $(tmp)/usr/share/foo/'*'
+
 override_dh_fixperms:
 	dh_fixperms
 	chmod 755 $(tmp)/usr/share/man/man5/foo.5.gz
