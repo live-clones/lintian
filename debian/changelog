@@ -67,7 +67,7 @@ lintian (2.3.4) UNRELEASED; urgency=low
 
   * reporting/templates/foot.tmpl:
     + [ADB] Replace the "please mail comments to the maintainer" request
-      with a pointer to reportbug.
+      with a pointer to reportbug.  (Closes: #572298)
 
   * testset/etcfiles/:
     + [RA] Fix problems with the md5sums test suite construction in the
