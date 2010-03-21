@@ -29,6 +29,13 @@ lintian (2.3.4) UNRELEASED; urgency=low
       templates of type text in udebs, since they're frequently used by
       including them into other templates at runtime.  Patch from Frans
       Pop.  (Closes: #560414)
+  * checks/debian-source-dir{,.desc}:
+    + [RA] New check script from Raphaël Hertzog checking various things
+      about debian/source/* control files including checking for a source
+      format control file.  (Closes: #566820)
+  * checks/fields.desc:
+    + [RA] Correct the supported source formats in the long description of
+      unsupported-source-format.  Patch from Raphaël Hertzog.
   * checks/init.d:
     + [RA] Exclude symlinks to upstart-job from init script syntax checks.
       Based on a patch by Jos Boumans.  (Closes: #569492)
@@ -52,9 +59,15 @@ lintian (2.3.4) UNRELEASED; urgency=low
       changelog's distribution is "UNRELEASED."  Thanks, Raphaël Hertzog.
       (Closes: #571616)
 
+  * collection/debfiles:
+    + [RA] Simplify the logic since the entire debian directory is always
+      copied.  Patch from Raphaël Hertzog.
+
   * debian/control:
     + [RG] Update package description to mention Policy version 3.8.4
       instead of 3.8.3.  Should have been done on the previous release.
+  * debian/source/format:
+    + [RA] Switch package format to 3.0 (native).
 
   * frontend/lintian:
     + [RA] Globally ignore SIGPIPE, forcing error return codes from write.
@@ -71,6 +84,7 @@ lintian (2.3.4) UNRELEASED; urgency=low
 
   * man/lintian-info.1:
     + [CW] Fix typo.
+    + [RA] Document new debian-source-dir check script.
 
   * reporting/templates/foot.tmpl:
     + [ADB] Replace the "please mail comments to the maintainer" request

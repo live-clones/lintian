@@ -24,22 +24,11 @@ use strict;
 use Lintian::Data;
 use Lintian::Tags qw(tag);
 
-our %KNOWN_FORMATS = (
-    "1.0" => 1,
-    "2.0" => 1,
-    "3.0 (quilt)" => 1,
-    "3.0 (native)" => 1,
-    "3.0 (git)" => 1,
-    "3.0 (bzr)" => 1,
-);
+our %KNOWN_FORMATS = map { $_ => 1 }
+    ('1.0', '2.0', '3.0 (quilt)', '3.0 (native)', '3.0 (git)', '3.0 (bzr)');
 
-our %KNOWN_FILES = (
-    "format" => 1,
-    "include-binaries" => 1,
-    "lintian-overrides" => 1,
-    "options" => 1,
-    "patch-header" => 1,
-);
+our %KNOWN_FILES = map { $_ => 1 }
+    qw(format include-binaries lintian-overrides options patch-header);
 
 sub run {
 
@@ -49,7 +38,7 @@ my $info = shift;
 
 if (-e "debfiles/source/format") {
     open(FORMAT, "<", "debfiles/source/format") or
-	fail("cannot read debian/source/format: $!");
+        fail("cannot read debian/source/format: $!");
     my $format = <FORMAT>;
     chomp $format;
     tag "unknown-source-format", $format unless $KNOWN_FORMATS{$format};
@@ -62,9 +51,9 @@ if (-d "debfiles/source") {
     opendir(DEBSRC, "debfiles/source") or fail("cannot opendir debian/source/: $!");
     my $file;
     while ($file = readdir(DEBSRC)) {
-	next if $file eq "." or $file eq "..";
-	tag "unknown-file-in-debian-source", $file
-	    unless $KNOWN_FILES{$file};
+        next if $file eq "." or $file eq "..";
+        tag "unknown-file-in-debian-source", $file
+            unless $KNOWN_FILES{$file};
     }
     closedir(DEBSRC);
 }
@@ -75,6 +64,6 @@ if (-d "debfiles/source") {
 
 # Local Variables:
 # indent-tabs-mode: t
-# cperl-indent-level: 4
+# cperl-indent-level: nil
 # End:
-# vim: syntax=perl sw=4 ts=8 noet shiftround
+# vim: syntax=perl sw=4 ts=8 et shiftround
