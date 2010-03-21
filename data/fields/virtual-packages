@@ -8,10 +8,9 @@
 # separated by comma and/or white space. Multiple "Keep: " lines can be used
 # as well.
 #
-# Last updated: 2010-01-29
+# Last updated: 2010-03-21
 
 
-ada-compiler
 aide-binary
 alsaplayer-interface
 alsaplayer-output
@@ -47,14 +46,13 @@ cyrus22-clients
 cyrus22-common
 cyrus22-imapd
 cyrus22-pop3d
+d-compiler
 debconf-2.0
 dict-client
 dict-server
 dictd-dictionary
 djvu-viewer
 docbook-xsl-doc
-drbd-module-source
-drbd-utils
 dssi-plugin
 dyndns-client
 editor
@@ -125,6 +123,7 @@ java6-runtime
 java6-runtime-headless
 java6-sdk
 kde-l10n
+kernel-manual-2.6
 kfreebsd-source
 ladspa-host
 ladspa-plugin
@@ -156,7 +155,6 @@ libgl-dev
 libgl1
 libguile-dev
 libhdf5-1.8
-libhdf5-1.8.3
 libhdf5-1.8.4
 libhdf5-dev
 libhk-classes-driver
@@ -168,24 +166,32 @@ liblapack.so.3gf
 libmp3splt-plugin
 libmpich-dev
 libneon-dev
+libnet-sftp-ruby
+libnet-sftp-ruby2
 libode0-dev
+libphobos-dev
 libreadline-dbg
 libsoqt-dev
 libstdc++-dev
 libstlport-dev
-libufsparse-dev
-libumfpack4-dev
+libzip-ruby
 licq-plugin
+linux-doc-2.6
 linux-headers
 linux-headers-2.6
 linux-image
 linux-image-2.6
 linux-initramfs-tool
 linux-kernel-log-daemon
-linux-latest-modules-2.6.32-trunk-486
-linux-latest-modules-2.6.32-trunk-686
-linux-latest-modules-2.6.32-trunk-686-bigmem
-linux-latest-modules-2.6.32-trunk-amd64
+linux-latest-modules-2.6.32-3-486
+linux-latest-modules-2.6.32-3-686
+linux-latest-modules-2.6.32-3-686-bigmem
+linux-latest-modules-2.6.32-3-amd64
+linux-latest-modules-2.6.32-3-vserver-686
+linux-latest-modules-2.6.32-3-vserver-686-bigmem
+linux-manual
+linux-source
+linux-source-2.6
 lisp-compiler
 lsb-qt4-ia32
 lsb-qt4-noarch
@@ -194,13 +200,6 @@ mail-reader
 mail-transport-agent
 mailx
 man-browser
-mbrola-voice
-mbrola-voice-de
-mbrola-voice-en
-mbrola-voice-en-us
-mbrola-voice-it
-mbrola-voice-pt
-mbrola-voice-sv
 mnogosearch
 monodoc-viewer
 mp3-decoder
@@ -211,6 +210,7 @@ myspell-dictionary-de
 myspell-dictionary-en
 myspell-dictionary-fr
 myspell-dictionary-pt
+mysql-common-4.1
 nethack
 netkit-inetd
 netpbm-dev
@@ -218,11 +218,6 @@ netscript
 news-reader
 news-transport-system
 nfs-server
-nordugrid-arc1-client
-nvidia-kernel-173.14.09
-nvidia-kernel-legacy-1.0.7184
-nvidia-kernel-legacy-71xx-1.0.7185
-nvidia-kernel-legacy-96xx-96.43.07
 objc++-compiler
 objc-compiler
 octave
@@ -232,9 +227,9 @@ octave-headers
 octave-htmldoc
 octave-info
 open
-openoffice.org-help-3.1
+openoffice.org-help-3.2
 openoffice.org-hyphenation
-openoffice.org-l10n-3.1
+openoffice.org-l10n-3.2
 openoffice.org-spellcheck-de-at
 openoffice.org-spellcheck-de-ch
 openoffice.org-spellcheck-de-de
@@ -249,8 +244,7 @@ pdf-viewer
 pdns-backend
 pgdocs
 phonon-backend
-phpapi-20060613+lfs
-picons
+phpapi-20090626+lfs
 pinentry
 pinentry-x11
 ping
@@ -262,6 +256,7 @@ python-gnuradio-audio
 python-jarabe
 python-olpc-datastore
 python-pg
+python-pysvn
 python-sugar
 python-sugar-toolkit
 python2.5-setuptools
@@ -292,9 +287,8 @@ sword-comm
 sword-dict
 sword-frontend
 sword-text
+syslogd
 system-log-daemon
-tads2-interpreter
-tads3-interpreter
 tcldoc
 tclsh
 telepathy-connection-manager
@@ -328,14 +322,10 @@ x-session-manager
 x-terminal-emulator
 x-window-manager
 xen-hypervisor
-xen-hypervisor-3
 xen-hypervisor-3.4
-xmame
-xmess
 xmp-player
 xserver
 xserver-xorg-input-4
 xserver-xorg-input-7
-xserver-xorg-video-5
 xserver-xorg-video-6
 zcode-interpreter

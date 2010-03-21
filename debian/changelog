@@ -92,7 +92,7 @@ lintian (2.3.4) UNRELEASED; urgency=low
 
   * data/debhelper/*:
     + [RG] Refresh against unstable.
-  * data/fields/perl-provides:
+  * data/fields/{perl-provides,virtual-packages}:
     + [RG] Refresh against unstable.
   * data/files/architectures:
     + [RG] Refreshed against dpkg 1.15.6.
