@@ -88,6 +88,9 @@ lintian (2.3.4) UNRELEASED; urgency=low
       instead of 3.8.3.  Should have been done on the previous release.
   * debian/source/format:
     + [RA] Switch package format to 3.0 (native).
+  * debian/postinst:
+    + [RG] Use triggers to ensure an up-to-date locale in all cases.
+      (Closes: #567451)
 
   * frontend/lintian:
     + [RA] Globally ignore SIGPIPE, forcing error return codes from write.

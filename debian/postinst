@@ -3,18 +3,39 @@
 # Lintian requires a UTF-8 locale in order to properly do man page tests.
 # Generate one at installation time so that we're guaranteed to have one.
 
-set -e
+set -eu
 
-if [ ! -f '/var/lib/lintian/locale/en_US.UTF-8/LC_CTYPE' ] &&
-   [ -f /usr/share/locale/locale.alias ]; then
+locale_dir=/var/lib/lintian/locale
+
+gen_locale() {
     echo 'Generating en_US.UTF-8 locale for internal Lintian use....'
-    # handle upgrades from the previous, incorrect, directory
-    rm -rf /var/lib/lintian/locale
-    mkdir -p /var/lib/lintian/locale
+    mkdir -p "$locale_dir"
     if ! localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias \
-                --quiet /var/lib/lintian/locale/en_US.UTF-8 ; then
-        rm -rf /var/lib/lintian/locale
+                --quiet "$locale_dir"/en_US.UTF-8 ; then
+        rm -rf "$locale_dir"
         exit 1
+    fi
+}
+
+if [ "$1" = "configure" ]; then
+    if [ ! -f "$locale_dir/en_US.UTF-8/LC_CTYPE" ] &&
+	[ -f /usr/share/locale/locale.alias ]; then
+
+	# handle upgrades from the previous, incorrect, directory:
+	rm -rf "$locale_dir"
+	gen_locale
+    fi
+fi
+
+if [ "$1" = "triggered" ]; then
+    # Remove our locale directory in all cases:
+    # If locales is removed, locales-all should provide us the locale
+    # we want.
+    # If locales is upgraded, we should still regenerate our locale.
+    rm -rf "$locale_dir"
+
+    if [ -f /usr/share/locale/locale.alias ]; then
+	gen_locale
     fi
 fi
 
