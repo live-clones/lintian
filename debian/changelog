@@ -32,6 +32,10 @@ lintian (2.3.4) UNRELEASED; urgency=low
     + [ADB] Update the list of octave interpreters, adding octave3.2
       (Closes: #574048) and removing octave2.1 (only available in lenny
       and earlier) and octave3.1.
+  * checks/shared-libs:
+    + [RA] symbols-declares-dependency-on-other-package should not have
+      trailing whitespace for unversioned dependencies.  Patch from
+      Modestas Vainius.  (Closes: #570380)
   * checks/standards-version:
     + [RG] Don't warn about timewarp-standards-version when the
       changelog's distribution is "UNRELEASED."  Thanks, Raphaël Hertzog.
