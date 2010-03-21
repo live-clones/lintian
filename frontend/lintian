@@ -604,6 +604,7 @@ require Lintian::Data;
 require Lintian::Schedule;
 require Lintian::Output;
 import Lintian::Output qw(:messages);
+require Lintian::Command::Simple;
 require Lintian::Command;
 import Lintian::Command qw(spawn reap);
 require Lintian::Tags;
@@ -1181,7 +1182,7 @@ require Checker;
 require Lintian::Collect;
 
 my %overrides;
-my @pending_jobs;
+my %running_jobs;
 PACKAGE:
 foreach my $pkg_info ($schedule->get_all) {
     my ($type, $pkg, $ver, $arch, $file) =
@@ -1194,8 +1195,8 @@ foreach my $pkg_info ($schedule->get_all) {
     $map->initialise();
 
     # Kill pending jobs, if any
-    Lintian::Command::kill(@pending_jobs);
-    undef @pending_jobs;
+    Lintian::Command::Simple::kill(\%running_jobs);
+    %running_jobs = ();
 
     # determine base directory
     my $base = "$LINTIAN_LAB/$long_type/$pkg";
@@ -1298,7 +1299,6 @@ foreach my $pkg_info ($schedule->get_all) {
 		if ($ri->{'type'} eq 'collection') {
 		    my $coll = $ri->{'name'};
 		    my $ci = $collection_info{$coll};
-		    my %run_opts = ('description' => $coll);
 
 		    # current type?
 		    unless (exists $ci->{'type'}{$type}) {
@@ -1327,13 +1327,14 @@ foreach my $pkg_info ($schedule->get_all) {
 		    remove_status_file($base);
 		    debug_msg(1, "Collecting info: $coll ...");
 		    my $script = "$LINTIAN_ROOT/collection/$ci->{'script'}";
-		    unless (spawn(\%run_opts, [ $script, $pkg, $long_type, '&'])) {
+		    my $cmd = Lintian::Command::Simple->new();
+		    unless ($cmd->background($script, $pkg, $long_type) > 0) {
 			warning("collect info $coll about package $pkg failed",
 				"skipping $action of $long_type package $pkg");
 			$exit_code = 2;
 			next PACKAGE;
 		    }
-		    push @pending_jobs, \%run_opts;
+		    $running_jobs{$coll} = $cmd;
 		} elsif ($ri->{'type'} eq 'check') {
 		    # skip check if overrides were not yet loaded
 		    last unless $loaded_overrides or $no_override;
@@ -1361,11 +1362,30 @@ foreach my $pkg_info ($schedule->get_all) {
 	    # wait until a job finishes to run its branches, if any, or skip
 	    # this package if any of the jobs failed.
 	    debug_msg(1, "Reaping done jobs ...");
-	    unless (reap_collect_jobs($pkg, $base, \@pending_jobs, $map)) {
-		warning("skipping $action of $long_type package $pkg");
-		$exit_code = 2;
-		next PACKAGE;
+
+	    while (my ($coll, $cmd) = Lintian::Command::Simple::wait(\%running_jobs)) {
+		if ($cmd->status() == 0) {
+		    my $ci = $collection_info{$coll};
+		    open(VERSION, '>', "$base/.${coll}-$ci->{'version'}")
+			or fail("cannot create $base/.${coll}-$ci->{'version'}: $!");
+		    print VERSION "Lintian-Version: $LINTIAN_VERSION\n"
+				. "Timestamp: " . time . "\n";
+		    close(VERSION);
+		    debug_msg(1, "Collection script $coll done");
+		} else {
+		    warning("collect info $coll about package $pkg failed");
+		    warning("skipping $action of $long_type package $pkg");
+		    $exit_code = 2;
+		    next PACKAGE;
+		}
+
+		$map->satisfy('coll-' . $coll);
+
+		# give a chance to other jobs to finish while we
+		# process other stuff:
+		last;
 	    }
+
 	    unless ($no_override or $loaded_overrides) {
 		if ($map->done('coll-override-file')) {
 		    debug_msg(1, "Override file collected, loading it ...");
@@ -1375,7 +1395,7 @@ foreach my $pkg_info ($schedule->get_all) {
 		}
 	    }
 	}
-	undef @pending_jobs;
+	%running_jobs = ();
 
 	if ($action eq 'check') {
 	    unless ($exit_code) {
@@ -1450,7 +1470,7 @@ foreach my $pkg_info ($schedule->get_all) {
 		next unless (-f "$base/.${coll}-$ci->{'version'}");
 		my $script = "$LINTIAN_ROOT/collection/$ci->{'script'}";
 		debug_msg(1, "Auto removing: $ci->{'script'} ...");
-		unless (spawn({}, [ $script, $pkg, "remove-$long_type"])) {
+		unless (Lintian::Command::Simple::run($script, $pkg, "remove-$long_type") == 0) {
 		    warning("removing collect info $coll about package $pkg failed",
 			    "skipping cleanup of $long_type package $pkg");
 		    $exit_code = 2;
@@ -1540,13 +1560,13 @@ sub unpack_pkg {
 	# create new directory
 	debug_msg(1, "Unpacking package to level 1 ...");
 	if (($type eq 'b') || ($type eq 'u')) {
-	    spawn({}, ["$LINTIAN_ROOT/unpack/unpack-binpkg-l1", $base, $file])
+	    Lintian::Command::Simple::run("$LINTIAN_ROOT/unpack/unpack-binpkg-l1", $base, $file) == 0
 		or return -1;
 	} elsif ($type eq 'c') {
 	    spawn({}, ["$LINTIAN_ROOT/unpack/unpack-changes-l1", $base, $file])
 		or return -1;
 	} else {
-	    spawn({}, ["$LINTIAN_ROOT/unpack/unpack-srcpkg-l1", $base, $file])
+	    Lintian::Command::Simple::run("$LINTIAN_ROOT/unpack/unpack-srcpkg-l1", $base, $file) == 0
 		or return -1;
 	}
 	$cur_level = 1;
@@ -1558,51 +1578,6 @@ sub unpack_pkg {
     }
 
     return $cur_level;
-}
-
-# Given a list of jobs corresponding to collect scripts, reap each of the
-# jobs without blocking.  For each successful job, record that it was
-# successful by creating the corresponding version marker file in the lab and
-# marking it as done in the dependencies map.  For each unsuccessful
-# job, warn that it was unsuccessful.
-#
-# Takes the current package, base directory, and the list of pending jobs.
-# Return true if all done jobs were successful, false otherwise.
-sub reap_collect_jobs {
-    my ($pkg, $base, $pending_jobs, $map) = @_;
-    my $status = 1;
-    my $_pending_jobs = [];
-
-    while (my $job = pop @{pending_jobs}) {
-
-	if (!Lintian::Command::done($job)) {
-	    push @{$_pending_jobs}, $job;
-	    next;
-	}
-
-	$status &&= reap($job);
-
-	my $coll = $job->{'description'};
-	if ($job->{success}) {
-	    my $ci = $collection_info{$coll};
-	    open(VERSION, '>', "$base/.${coll}-$ci->{'version'}")
-		or fail("cannot create $base/.${coll}-$ci->{'version'}: $!");
-	    print VERSION "Lintian-Version: $LINTIAN_VERSION\n"
-		. "Timestamp: " . time . "\n";
-	    close(VERSION);
-	    debug_msg(1, "Collection script $coll done");
-	} else {
-	    warning("collect info $coll about package $pkg failed");
-	}
-
-	$map->satisfy('coll-' . $coll);
-	# break here to give some time for other jobs to finish
-	# while we try to start another job
-	last;
-    }
-
-    @{$pending_jobs} = (@{$pending_jobs}, @{$_pending_jobs});
-    return $status;
 }
 
 sub sort_coll {
