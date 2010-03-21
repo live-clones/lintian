@@ -53,6 +53,8 @@ lintian (2.3.4) UNRELEASED; urgency=low
   * checks/rules:
     + [RA] Allow ant1.7 to satisfy a build requirement for ant.  Thanks,
       Rene Engelhard.  (Closes: #572430)
+    + [RG] Require a versioned build-dependency on cdbs if scons.mk or
+      perl-build.mk are used.  (Closes: #574744)
   * checks/scripts:
     + [ADB] Update the list of octave interpreters, adding octave3.2
       (Closes: #574048) and removing octave2.1 (only available in lenny
