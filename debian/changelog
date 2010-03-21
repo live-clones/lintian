@@ -46,6 +46,8 @@ lintian (2.3.4) UNRELEASED; urgency=low
   * checks/fields.desc:
     + [RA] Correct the supported source formats in the long description of
       unsupported-source-format.  Patch from Raphaël Hertzog.
+    + [RA] Stop recommending a dependency on perl-modules.  Patch from
+      Niko Tyni.  (Closes: #568749)
   * checks/init.d:
     + [RA] Exclude symlinks to upstart-job from init script syntax checks.
       Based on a patch by Jos Boumans.  (Closes: #569492)
