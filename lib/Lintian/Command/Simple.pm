@@ -26,19 +26,19 @@ Lintian::Command::Simple - Run commands without pipes
 
     use Lintian::Command::Simple;
 
-    Lintian::Command::Simple::exec("echo", "hello world");
+    Lintian::Command::Simple::run("echo", "hello world");
 
     # Start a command in the background:
-    Lintian::Command::Simple::fork("sleep", 10);
+    Lintian::Command::Simple::background("sleep", 10);
     print (Lintian::Command::Simple::wait())? "success" : "failure";
 
     # Using the OO interface
 
     my $cmd = Lintian::Command::Simple->new();
 
-    $cmd->exec("echo", "hello world");
+    $cmd->run("echo", "hello world");
 
-    $cmd->fork("sleep", 10);
+    $cmd->background("sleep", 10);
     print ($cmd->wait())? "success" : "failure";
 
 
@@ -71,7 +71,7 @@ sub new {
     return $self;
 }
 
-=item exec(command, argument  [, ...])
+=item run(command, argument  [, ...])
 
 Executes the given C<command> with the given arguments and returns the
 status code as one would see it from a shell script.
@@ -81,7 +81,7 @@ CORE::system() function is the way the return status is reported.
 
 =cut
 
-sub exec {
+sub run {
     my $self;
 
     if (ref $_[0]) {
@@ -98,7 +98,7 @@ sub exec {
     return $? >> 8;
 }
 
-=item fork(command, argument  [, ...])
+=item background(command, argument  [, ...])
 
 Executes the given C<command> with the given arguments asynchronously
 and returns the process id of the child process.
@@ -109,7 +109,7 @@ calling wait() to reap the previous command.
 
 =cut
 
-sub fork {
+sub background {
     my $self;
 
     if (ref $_[0]) {
@@ -149,7 +149,7 @@ a child of the current process) returns. If C<pid> is not specified, it
 waits for any child process to finish and returns.
 
 When called as a method:
-It takes no argument. It waits for the previously fork()ed process to
+It takes no argument. It waits for the previously background()ed process to
 return.
 
 The return value is either -1, probably indicating an error, or the
@@ -263,7 +263,7 @@ sub wait {
 =item pid()
 
 Only available under the OO interface, it returns the pid of a
-fork()ed process.
+background()ed process.
 
 After calling wait(), this method always returns undef.
 
@@ -278,7 +278,7 @@ sub pid {
 =item status()
 
 Only available under the OO interface, it returns the return status of
-the fork()ed or exec()uted process.
+the background()ed or run()-ran process.
 
 When used on async processes, it is only defined after calling wait().
 
@@ -315,7 +315,7 @@ __END__
 
 Provide the necessary methods to modify the environment variables of
 the to-be-executed commands.  This would let us drop C<system_env> (from
-lib/Util.pm) and make C<exec> more useful.
+lib/Util.pm) and make C<run> more useful.
 
 =head1 NOTES
 
@@ -334,7 +334,7 @@ object that started the reaped process won't be able to determine the
 return status, which can affect the rest of the application.
 
 As a general advise, the procedural and OO interfaces should not be
-combined when using fork(). Unless, of course, you are calling wait()
+combined when using background(). Unless, of course, you are calling wait()
 with a hash ref.
 
 =head1 AUTHOR

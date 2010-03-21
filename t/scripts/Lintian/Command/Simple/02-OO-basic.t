@@ -10,5 +10,5 @@ my $cmd;
 
 ok(eval { $cmd = Lintian::Command::Simple->new(); }, 'Create');
 
-is($cmd->exec("true"), 0, 'Basic exec (true)');
-is($cmd->exec("false"), 1, 'Basic exec (false)');
+is($cmd->run("true"), 0, 'Basic run (true)');
+is($cmd->run("false"), 1, 'Basic run (false)');

@@ -12,7 +12,7 @@ my %jobs;
 
 while ($c) {
     $cmd = Lintian::Command::Simple->new();
-    $cmd->fork("sleep", 1);
+    $cmd->background("sleep", 1);
     $jobs{$c} = $cmd;
     $c--;
 }
@@ -28,7 +28,7 @@ is($c, 4, "4 jobs were started, 4 reaped");
 
 while ($c) {
     $cmd = Lintian::Command::Simple->new();
-    $cmd->fork("sleep", 1);
+    $cmd->background("sleep", 1);
     $jobs{"Job $c"} = $cmd;
     $c--;
 }
@@ -45,7 +45,7 @@ is($c, 4, "4 more jobs were started, 4 reaped");
 # (i.e. undef is returned and no process is reaped)
 
 %jobs = ();
-my $pid = Lintian::Command::Simple::fork("true");
+my $pid = Lintian::Command::Simple::background("true");
 is(Lintian::Command::Simple::wait(\%jobs), undef,
     "With an empty hash ref, wait() returns undef");
 
@@ -55,7 +55,7 @@ is(Lintian::Command::Simple::wait($pid), 0,
 # Again but now in list context
 
 %jobs = ();
-$pid = Lintian::Command::Simple::fork("true");
+$pid = Lintian::Command::Simple::background("true");
 is(my @list = Lintian::Command::Simple::wait(\%jobs), 0,
     "With an empty hash ref, in list context wait() returns null");
 

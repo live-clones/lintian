@@ -10,17 +10,17 @@ my ($cmd, $pid);
 
 $cmd = Lintian::Command::Simple->new();
 
-$pid = $cmd->fork("true");
+$pid = $cmd->background("true");
 
-cmp_ok($pid, '>', 0, 'Basic fork (true)');
+cmp_ok($pid, '>', 0, 'Basic background (true)');
 is(waitpid($pid, 0), $pid, "Waiting for pid");
 is($?, 0, "Return status is 0");
 
 # Again but using helper function
 
 $cmd = Lintian::Command::Simple->new();
-$pid = $cmd->fork("true");
+$pid = $cmd->background("true");
 
-cmp_ok($pid, '>', 0, 'Basic fork (true), take two');
+cmp_ok($pid, '>', 0, 'Basic background (true), take two');
 is($cmd->wait(), 0, "Waiting and checking return status");
 is(waitpid($pid, 0), -1, "Process was really reaped");

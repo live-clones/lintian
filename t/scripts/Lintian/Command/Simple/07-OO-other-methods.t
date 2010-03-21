@@ -12,10 +12,10 @@ $cmd = Lintian::Command::Simple->new();
 
 # pid():
 
-is($cmd->pid(), undef, 'pid() returns undef without fork()');
+is($cmd->pid(), undef, 'pid() returns undef without background()');
 
-$pid = $cmd->fork("true");
-is($cmd->pid(), $pid, 'pid() returns PID after fork()');
+$pid = $cmd->background("true");
+is($cmd->pid(), $pid, 'pid() returns PID after background()');
 
 $cmd->wait();
 
@@ -25,27 +25,27 @@ is($cmd->pid(), undef, 'pid() returns undef after wait()');
 
 $cmd = Lintian::Command::Simple->new();
 
-is($cmd->status(), undef, 'status() returns undef without fork()');
+is($cmd->status(), undef, 'status() returns undef without background()');
 
-$cmd->fork("true");
+$cmd->background("true");
 is($cmd->status(), undef, 'status() returns undef without wait()');
 
 $cmd->wait();
 
 is($cmd->status(), 0, 'status() is 0 after wait()');
 
-$cmd->fork("false");
-is($cmd->status(), undef, 'status() returns undef after another fork()');
+$cmd->background("false");
+is($cmd->status(), undef, 'status() returns undef after another background()');
 
 $cmd->wait();
 
 is($cmd->status(), 1, 'status() is 1 after wait()');
 
-# status() with exec()
+# status() with run()
 
 $cmd = Lintian::Command::Simple->new();
 
-$cmd->exec("true");
-is($cmd->status(), 0, "status() returns 0 for exec(true)");
-$cmd->exec("false");
-is($cmd->status(), 1, "status() returns 1 for exec(false)");
+$cmd->run("true");
+is($cmd->status(), 0, "status() returns 0 for run(true)");
+$cmd->run("false");
+is($cmd->status(), 1, "status() returns 1 for run(false)");
