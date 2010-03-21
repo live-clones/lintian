@@ -1132,3 +1132,12 @@ Info: This package contains a directory under <tt>/lib</tt> or
  binary package's architecture.  This is very likely to be a mistake
  when indicating the underlying build system where the files should be
  installed.
+
+Tag: empty-binary-package
+Severity: serious
+Certainty: wild-guess
+Info: This binary package appears to be empty, and its description
+ does not mention it is neither meta package or transitional package.
+ .
+ You should check if package is deliberately empty, and then state
+ so in package description, or fix it to provide missing files.

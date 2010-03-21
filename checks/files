@@ -21,6 +21,7 @@
 package Lintian::files;
 use strict;
 use Util;
+use File::Basename;
 use Lintian::Data;
 use Lintian::Tags qw(tag);
 
@@ -117,6 +118,30 @@ our @flash_nonfree = (
 #    qr,(?i)xspf_jukebox\.swf$,
 );
 
+# List of entries to identify metapackages
+our @metapkg_match = (
+    "metapackage",
+    "meta package",
+    "meta-package",
+    "dummy",
+    "dependency package",
+    "empty package",
+    "virtual package"
+);
+
+# List of common files stored in /usr/share/doc/$pkg
+our @doc_files = (
+    "AUTHORS.gz",
+    "NEWS.gz",
+    "README.gz",
+    "COPYING.gz",
+    "HACKING.gz",
+    "TODO.gz",
+    "copyright.gz",
+    "changelog.gz",
+    "changelog.Debian.gz"
+);
+
 sub run {
 
 my $pkg = shift;
@@ -167,6 +192,43 @@ my @devhelp_links;
 # X11 bitmapped font directories under /usr/share/fonts/X11 in which we've
 # seen files.
 my %x11_font_dirs;
+
+# Check if package is empty
+my $valid_empty = 0;
+foreach (@metapkg_match) {
+    if ($info->field('description') =~ m,($_),) {
+        $valid_empty = 1;
+        last;
+    }
+}
+if ($valid_empty == 0) {
+    foreach my $file (sort keys %{$info->index}) {
+        # Ignore directories
+        unless ($file =~ m,/$,) {
+            # Skip if $file is an empty string
+            next if not $file;
+            # Skip if $file is outside /usr/share/doc/$pkg directory
+            if ($file !~ m,usr/share/doc/($pkg),) {
+                $valid_empty = 0;
+                last;
+            }
+            # Skip if /usr/share/doc/$pkg has files in a subdirectory
+            if ($file =~ m,usr/share/doc/($pkg)/.*/,) {
+                $valid_empty = 0;
+                last;
+            }
+            # Check if files is one of those usually stored in /usr/share/doc/$pkg
+            my $bfile = basename($file);
+            unless (grep (/($bfile)/i, @doc_files)) {
+                $valid_empty = 0;
+                last;
+            }
+            # If everything fails, mark package as candidate to be empty
+            $valid_empty = 1;
+        }
+    }
+    tag 'empty-binary-package' if ($valid_empty);
+}
 
 # Read package contents...
 foreach my $file (sort keys %{$info->index}) {
