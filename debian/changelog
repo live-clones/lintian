@@ -21,6 +21,10 @@ lintian (2.3.4) UNRELEASED; urgency=low
   * checks/init.d:
     + [RA] Exclude symlinks to upstart-job from init script syntax checks.
       Based on a patch by Jos Boumans.  (Closes: #569492)
+    + [RA] Allow umountnfs to satisfy a $remote_fs requirement and
+      umountnfs or umountfs to satisfy a $local_fs requirement in LSB
+      headers, avoiding false positives in unusual situations such as
+      rsyslog.  Thanks, Michael Biebl.  (Closes: #571280)
   * checks/rules:
     + [RA] Allow ant1.7 to satisfy a build requirement for ant.  Thanks,
       Rene Engelhard.  (Closes: #572430)

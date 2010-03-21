@@ -367,10 +367,10 @@ sub check_init {
 
 	    tag "init.d-script-missing-dependency-on-remote_fs", "/etc/init.d/$_: $keyword"
 		if ($needs_fs{'remote'} && (!defined $lsb{$keyword}
-		    || $lsb{$keyword} !~ m,(?:^|\s)\$remote_fs(?:\s|$),));
+		    || $lsb{$keyword} !~ m,(?:^|\s)(?:\$remote_fs|umountnfs)(?:\s|$),));
 	    tag "init.d-script-missing-dependency-on-local_fs", "/etc/init.d/$_: $keyword"
 		if ($needs_fs{'local'} && (!defined $lsb{$keyword}
-		    || $lsb{$keyword} !~ m,(?:^|\s)\$(local|remote)_fs(?:\s|$),));
+		    || $lsb{$keyword} !~ m,(?:^|\s)(?:\$(local|remote)_fs|umountn?fs)(?:\s|$),));
 	}
 	next unless defined $lsb{$keyword};
 	for my $dependency (split(/\s+/, $lsb{$keyword})) {
