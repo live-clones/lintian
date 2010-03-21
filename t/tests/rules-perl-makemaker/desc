@@ -2,5 +2,5 @@ Testname: rules-perl-makemaker
 Sequence: 6000
 Version: 1.0
 Description: Check detection of PREFIX usage in Makefile.PL based packages
-Test-For: debian-rules-perl-makemaker-prefix-is-deprecated
+Test-For: debian-rules-makemaker-prefix-is-deprecated
 References: Debian Bug#545904

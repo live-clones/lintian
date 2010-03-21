@@ -172,7 +172,7 @@ while (<RULES>) {
         tag 'debian-rules-automatically-updates-control', "line $.";
     }
     if ($uses_makefile_pl && /install.*PREFIX/ && !/DESTDIR/) {
-        tag 'debian-rules-perl-makemaker-prefix-is-deprecated', "line $.";
+        tag 'debian-rules-makemaker-prefix-is-deprecated', "line $.";
     }
 
     # Keep track of whether this portion of debian/rules may be optional
