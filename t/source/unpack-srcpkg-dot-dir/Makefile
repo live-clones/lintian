@@ -11,6 +11,8 @@ all:
 	cp changelog copyright control rules $(dir)/debian/
 	echo 7 > $(dir)/debian/compat
 	echo > $(dir)/debian/watch
+	mkdir $(dir)/debian/source
+	echo 1.0 > $(dir)/debian/source/format
 	dpkg-source -sp -b $(dir)
 
 clean:

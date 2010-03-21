@@ -6,6 +6,8 @@ all:
 	mkdir $(dir)/debian
 	cp changelog copyright control rules $(dir)/debian/
 	echo 7 > $(dir)/debian/compat
+	mkdir $(dir)/debian/source
+	echo 1.0 > $(dir)/debian/source/format
 	tar cfz $(name)_1.tar.gz $(dir)
 	cp dsc.in $(name)_1.dsc
 	perl -I$(LINTIAN_ROOT)/lib -MUtil -i -pe \
