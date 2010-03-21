@@ -1,0 +1,6 @@
+Testname: runtests-todo-test-for
+Sequence: 0700
+Version: 1.0
+Todo: yes
+Description: Test todo tests support
+Test-For: lintian-easter-egg

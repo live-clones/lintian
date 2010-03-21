@@ -46,3 +46,4 @@ Description record of a test case:
   [ Standards-Version: <standard version for control> ]
   [ Options: <options to pass to lintian> ]
   [ Skeleton: <skeleton to base the package on> ]
+  [ Todo: <yes | no> ]

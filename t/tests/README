@@ -88,6 +88,17 @@ the test case as a non-native package, add:
 to the .desc file.  You will also want to change the version number to
 be non-native unless you're testing a mismatch.
 
+There are times when one wants to add a test for something that needs
+to be done.  To mark it as such, preventing the test suite from
+failing, use:
+
+    Todo: yes
+
+Test cases marked as Todo will suceed if they fail _the testing step_
+and fail if they suceed.  Although this option can be very useful to
+document what needs to be done, the ideal situation is to have none of
+them :)
+
 Unless you're writing a test case just to improve Lintian's test coverage,
 you will normally want to add a References field giving the source of the
 test or the bug that you're testing for.  This should be one of "Debian

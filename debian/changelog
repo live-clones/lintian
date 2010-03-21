@@ -126,6 +126,7 @@ lintian (2.3.4) UNRELEASED; urgency=low
 
   * t/runtests:
     + [RG] Add support for architecture-specific tests.
+    + [RG] Add support for To-Do tests.
   * t/tests/binaries-multiarch/:
     + [RG] Fix test failure in non-i386 architectures by normalising the
       expected output.  Thanks, Niko Tyni.  (Closes: #568680)

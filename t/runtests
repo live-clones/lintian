@@ -479,9 +479,14 @@ sub test_package {
     if ($testok) {
 	print "ok.\n";
     } else {
-	print "FAILED:\n";
-	runsystem_ok("diff", "-u", "$origdir/tags", "$RUNDIR/tags.$pkg");
-	return;
+	if ($testdata->{'todo'} eq 'yes') {
+	    print "TODO\n";
+	    return 1;
+	} else {
+	    print "FAILED:\n";
+	    runsystem_ok("diff", "-u", "$origdir/tags", "$RUNDIR/tags.$pkg");
+	    return;
+	}
     }
 
     # Check the output for invalid lines.  Also verify that all Test-For tags
@@ -491,20 +496,27 @@ sub test_package {
     my %test_for = map { $_ => 1 } split(' ', $testdata->{'test-for'});
     my %test_against = map { $_ => 1 } split(' ', $testdata->{'test-against'});
     if (not %test_for and not %test_against and not $testdata->{sort}) {
-	return 1;
+	if ($testdata->{'todo'} eq 'yes') {
+	    print "E: marked as TODO but succeeded.\n";
+	    return;
+	} else {
+	    return 1;
+	}
     } else {
 	my $okay = 1;
 	open TAGS, "$RUNDIR/tags.$pkg" or fail("Cannot open $RUNDIR/tags.$pkg");
 	while (<TAGS>) {
 		next if m/^N: /;
 		if (not /^(.): (\S+)(?: (?:source|udeb))?: (\S+)/) {
-		    print "E: Invalid line:\n$_";
+		    print (($testdata->{'todo'} eq 'yes')? "TODO" : "E");
+		    print ": Invalid line:\n$_";
 		    $okay = 0;
 		    next;
 		}
 		my $tag = $3;
 		if ($test_against{$tag}) {
-		    print "E: Tag $tag seen but listed in Test-Against\n";
+		    print (($testdata->{'todo'} eq 'yes')? "TODO" : "E");
+		    print ": Tag $tag seen but listed in Test-Against\n";
 		    $okay = 0;
 		}
 		delete $test_for{$tag};
@@ -512,12 +524,17 @@ sub test_package {
 	close TAGS;
 	if (%test_for) {
 		for my $tag (sort keys %test_for) {
-		    print "E: Tag $tag listed in Test-For but not found\n";
+		    print (($testdata->{'todo'} eq 'yes')? "TODO" : "E");
+		    print ": Tag $tag listed in Test-For but not found\n";
 		    $okay = 0;
 		}
 	}
-	return 1 if $okay;
-	return;
+	if ($okay && $testdata->{'todo'} eq 'yes') {
+	    print "E: marked as TODO but succeeded.\n";
+	    return;
+	} else {
+	    return ($okay || $testdata->{'todo'} eq 'yes');
+	}
     }
 }
 
@@ -757,6 +774,7 @@ sub check_test_is_sane {
 
     $data->{skeleton} ||= 'skel';
     $data->{options} ||= '-I -E';
+    $data->{todo} ||= 'no';
 
     # Unwrap the options in case we used continuation lines.
     $data->{options} =~ s/\n//g;
