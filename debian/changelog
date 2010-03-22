@@ -98,6 +98,7 @@ lintian (2.3.4) UNRELEASED; urgency=low
       hint.  Thanks, Thijs Kinkhorst.  (Closes: #574826)
     + [RA] Mention #!@BASH@ and similar cases in the long tag description
       of example-interpreter-not-absolute.
+    + [RA] Add Python 2.6 to recognized Python versions.
   * checks/shared-libs:
     + [RA] symbols-declares-dependency-on-other-package should not have
       trailing whitespace for unversioned dependencies.  Patch from
