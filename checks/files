@@ -691,7 +691,7 @@ foreach my $file (sort keys %{$info->index}) {
     if ($file =~ m,^(?:usr/)lib/([^/]+)/$,) {
 	my $subdir = $1;
 	$TRIPLETS = Lintian::Data->new('files/triplets', '\s+')
-	    unless defined($FONT_PACKAGES);
+	    unless defined($TRIPLETS);
 	if ($TRIPLETS->known($subdir)) {
 	    tag 'triplet-dir-and-architecture-mismatch', "$file is for", $TRIPLETS->value($subdir)
 		if ($info->field('architecture') ne $TRIPLETS->value($subdir));
