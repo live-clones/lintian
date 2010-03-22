@@ -77,10 +77,15 @@ lintian (2.3.4) UNRELEASED; urgency=low
     + [RG] Warn about installing files specifying the destination
       directory with PREFIX when Perl's MakeMaker build system is used.
       Based on a patch by Niko Tyni.  (Closes: #568748)
-  * checks/scripts:
+  * checks/scripts{,.desc}:
     + [ADB] Update the list of octave interpreters, adding octave3.2
       (Closes: #574048) and removing octave2.1 (only available in lenny
       and earlier) and octave3.1.
+    + [RA] Allow non-executable *.pm files in the examples directory to
+      start with a line like #!perl.  This is probably just an editor
+      hint.  Thanks, Thijs Kinkhorst.  (Closes: #574826)
+    + [RA] Mention #!@BASH@ and similar cases in the long tag description
+      of example-interpreter-not-absolute.
   * checks/shared-libs:
     + [RA] symbols-declares-dependency-on-other-package should not have
       trailing whitespace for unversioned dependencies.  Patch from

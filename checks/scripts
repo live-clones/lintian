@@ -360,6 +360,14 @@ for my $filename (sort keys %{$info->scripts}) {
     next if ($filename !~ m,(bin/|etc/init\.d/), and !$executable{$filename}
              and !$is_absolute and !$in_examples);
 
+    # Example directories sometimes contain Perl libraries, and some people
+    # use initial lines like #!perl or #!python to provide editor hints, so
+    # skip those too if they're not executable.  Be conservative here, since
+    # it's not uncommon for people to both not set examples executable and not
+    # fix the path and we want to warn about that.
+    next if ($filename !~ /\.pm\z/ and !$executable{$filename}
+	     and !$is_absolute and $in_examples);
+
     if ($interpreter eq "") {
 	script_tag("script-without-interpreter", $filename);
 	next;
