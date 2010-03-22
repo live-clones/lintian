@@ -88,12 +88,12 @@ Info: There is an XS-Vcs-* field in the <tt>debian/control</tt> file.  As
  the XS- prefix for this field.
 
 Tag: package-type-in-debian-control
-Severity: important
+Severity: minor
 Certainty: certain
-Info: There is a Package-Type field in the <tt>debian/control</tt>
- file.  This field is only relevant to the build process and should
- not be embedded in the resulting binary package.  As a consequence,
- XC-Package-Type should be used instead.
+Info: The <tt>debian/control</tt> file contains a Package-Type field.
+ This field is only relevant to the build process and should
+ not be embedded in the resulting binary package, so XC-Package-Type
+ should be used instead.
 
 Tag: stronger-dependency-implies-weaker
 Severity: normal

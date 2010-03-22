@@ -7,6 +7,7 @@ lintian (2.3.4) UNRELEASED; urgency=low
       - empty-binary-package
       - incorrect-locale-code
       - missing-debian-source-format
+      - package-type-in-debian-control
       - possible-new-upstream-release-without-new-version
       - star-file
       - unknown-file-in-debian-source
@@ -31,6 +32,8 @@ lintian (2.3.4) UNRELEASED; urgency=low
       contain substvars other than *:Depends substvars, since substvars
       may be used to assemble the components of a dependency.  Thanks,
       Matthias Klose.  (Closes: #573815)
+    + [RA] Warn about Package-Type instead of XC-Package-Type in
+      debian/control.  Patch from Cyril Brulebois.  (Closes: #573399)
   * checks/cruft{,.desc}:
     + [RA] Provide more information in native-package-with-dash-version
       long description about how native packages can be created by
