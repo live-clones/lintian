@@ -65,13 +65,16 @@ lintian (2.3.4) UNRELEASED; urgency=low
       (star symbol).  Thanks, Niels Thykier.  (Closes: #574771)
     + [RG] New checks for incorrect and unknown locale codes in
       /usr/share/locale subdirectories.
-  * checks/init.d:
+  * checks/init.d{,.desc}:
     + [RA] Exclude symlinks to upstart-job from init script syntax checks.
       Based on a patch by Jos Boumans.  (Closes: #569492)
     + [RA] Allow umountnfs to satisfy a $remote_fs requirement and
       umountnfs or umountfs to satisfy a $local_fs requirement in LSB
       headers, avoiding false positives in unusual situations such as
       rsyslog.  Thanks, Michael Biebl.  (Closes: #571280)
+    + [RA] Allow $all to satisfy a $remote_fs or $local_fs requirement in
+      Required-Start, but (per the wiki) not Required-Stop.  Thanks,
+      Michael Meskes.  (Closes: #574970)
   * checks/manpages.desc:
     + [RA] Clarify the long description for manpage-has-bad-whatis-entry.
       Thanks, Jari Aalto.  (Closes: #573837)

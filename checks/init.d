@@ -361,20 +361,45 @@ sub check_init {
     # If $remote_fs is needed $local_fs is not, since it's implied.
     $needs_fs{'local'} = 0 if $needs_fs{'remote'};
 
-    for my $keyword qw(required-start should-start required-stop should-stop) {
-	if ($keyword =~ m/^required-(start|stop)$/
-	    && defined $lsb{"default-$1"} && length($lsb{"default-$1"})) {
-
-	    tag "init.d-script-missing-dependency-on-remote_fs", "/etc/init.d/$_: $keyword"
-		if ($needs_fs{'remote'} && (!defined $lsb{$keyword}
-		    || $lsb{$keyword} !~ m,(?:^|\s)(?:\$remote_fs|umountnfs)(?:\s|$),));
-	    tag "init.d-script-missing-dependency-on-local_fs", "/etc/init.d/$_: $keyword"
-		if ($needs_fs{'local'} && (!defined $lsb{$keyword}
-		    || $lsb{$keyword} !~ m,(?:^|\s)(?:\$(local|remote)_fs|umountn?fs)(?:\s|$),));
+    # Separately check Required-Start and Required-Stop, since while they're
+    # similar, they're not quite identical.  This could use some further
+    # restructuring by pulling the regexes out as data tied to start/stop and
+    # remote/local and then combining the loops.
+    if (defined $lsb{'default-start'} && length($lsb{'default-start'})) {
+	my @required = split(' ', $lsb{'required-start'} || '');
+	if ($needs_fs{remote}) {
+	    unless (grep { /^\$(?:remote_fs|all)\z/ } @required) {
+		tag 'init.d-script-missing-dependency-on-remote_fs',
+		    "/etc/init.d/$_: required-start";
+	    }
 	}
+	if ($needs_fs{local}) {
+	    unless (grep { /^\$(?:local_fs|remote_fs|all)\z/ } @required) {
+		tag 'init.d-script-missing-dependency-on-local_fs',
+		    "/etc/init.d/$_: required-start";
+	    }
+	}
+    }
+    if (defined $lsb{'default-stop'} && length($lsb{'default-stop'})) {
+	my @required = split(' ', $lsb{'required-stop'} || '');
+	if ($needs_fs{remote}) {
+	    unless (grep { /^(?:\$remote_fs|umountnfs)\z/ } @required) {
+		tag 'init.d-script-missing-dependency-on-remote_fs',
+		    "/etc/init.d/$_: required-stop";
+	    }
+	}
+	if ($needs_fs{local}) {
+	    unless (grep { /^(?:\$(?:local|remote)_fs|umountn?fs)\z/ } @required) {
+		tag 'init.d-script-missing-dependency-on-local_fs',
+		    "/etc/init.d/$_: required-stop";
+	    }
+	}
+    }
+
+    # Check syntax rules that apply to all of the keywords.
+    for my $keyword qw(required-start should-start required-stop should-stop) {
 	next unless defined $lsb{$keyword};
 	for my $dependency (split(/\s+/, $lsb{$keyword})) {
-
 	    if (defined $implied_dependencies{$dependency}) {
 		tag 'init.d-script-should-depend-on-virtual-facility',
 		    "/etc/init.d/$_",
