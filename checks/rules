@@ -76,6 +76,7 @@ my @RULE_CLEAN_DEPENDS =
      [ $PYTHON_DEPEND => qr'^\t\s*python\s', 'missing-python-build-dependency' ],
      [ $PYTHON_DEPEND => qr'\ssetup\.py\b', 'missing-python-build-dependency' ],
      [ 'quilt (>= 0.46-7~)' => qr'^\t\s*dh_quilt_.+' ],
+     [ 'quilt (>= 0.46-7~)' => qr'^\t\s*dh\s.*--with\s+(?:\S+,)*quilt' ],
      [ quilt => qr'^\t\s*(\S+=\S+\s+)*quilt\s' ],
      [ yada => qr'^\t\s*yada\s' ],
     );
@@ -140,6 +141,7 @@ my $includes = 0;
 my %seen;
 local $_;
 my @arch_rules = (qr/^clean$/, qr/^binary-arch$/, qr/^build-arch$/);
+my @indep_rules = (qr/^build$/, qr/^build-indep$/, qr/^binary-indep$/);
 my @current_targets;
 my %rules_per_target;
 my %debhelper_group;
@@ -239,11 +241,13 @@ while (<RULES>) {
     	# targets and check whether debhelper programs are called in a
     	# reasonable order.
 	if (m/^\s+[^\#]/) {
-            my $arch = 0;
+            my ($arch, $indep) = (0, 0);
             for my $target (@current_targets) {
                 $rules_per_target{$target} ||= [];
                 push @{$rules_per_target{$target}}, $_;
                 $arch = 1 if (grep { $target =~ /$_/ } @arch_rules);
+                $indep = 1 if (grep { $target =~ /$_/ } @indep_rules);
+                $indep = 1 if $target eq '%';
             }
             if ($arch) {
                 for my $rule (@RULE_CLEAN_DEPENDS) {
@@ -252,7 +256,14 @@ while (<RULES>) {
                             = $rule->[2] || $needed_clean{$rule->[0]} || '';
                     }
                 }
-	    }
+	    } elsif ($indep) {
+                for my $rule (@RULE_CLEAN_DEPENDS) {
+                    if (/$rule->[1]/ and not $maybe_skipping) {
+                        $needed{$rule->[0]}
+                            = $rule->[2] || $needed{$rule->[0]} || '';
+                    }
+                }
+            }
             if (m/^\s+(dh_\S+)\b/ and $debhelper_order{$1}) {
                 my $command = $1;
                 my ($package) = /\s(?:-p|--package=)(\S+)/;
@@ -299,6 +310,7 @@ if ($architecture eq "all" && scalar @{$rules_per_target{'binary-arch'}}) {
 my $build_regular = $info->relation('build-depends');
 my $build_indep   = $info->relation('build-depends-indep');
 for my $package (keys %needed_clean) {
+    delete $needed{$package};
     my $tag = $needed_clean{$package} || 'missing-build-dependency';
     unless ($build_regular->implies($package)) {
         if ($build_indep->implies($package)) {
