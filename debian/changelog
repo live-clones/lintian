@@ -5,11 +5,13 @@ lintian (2.3.4) UNRELEASED; urgency=low
       - control-file-with-CRLF-EOLs
       - debian-rules-makemaker-prefix-is-deprecated
       - empty-binary-package
+      - incorrect-locale-code
       - missing-debian-source-format
       - possible-new-upstream-release-without-new-version
       - star-file
       - unknown-file-in-debian-source
       - unknown-source-format
+      - unknown-locale-code
 
   * checks/binaries:
     + [RA] Exclude packages from the klibc source package from the
@@ -58,6 +60,8 @@ lintian (2.3.4) UNRELEASED; urgency=low
       Falavigna.  (Closes: #569220)
     + [RG] New check for packages shipping files literally called '*'
       (star symbol).  Thanks, Niels Thykier.  (Closes: #574771)
+    + [RG] New checks for incorrect and unknown locale codes in
+      /usr/share/locale subdirectories.
   * checks/init.d:
     + [RA] Exclude symlinks to upstart-job from init script syntax checks.
       Based on a patch by Jos Boumans.  (Closes: #569492)
@@ -98,6 +102,10 @@ lintian (2.3.4) UNRELEASED; urgency=low
     + [RG] Refreshed against dpkg 1.15.6.
   * data/files/fonts:
     + [RG] Refresh against unstable.
+  * data/files/incorrect-locale-codes:
+    + [RG] New list of common incorrect locale names
+  * data/files/locale-codes:
+    + [RG] Generated from unstable's iso-codes.
   * data/files/triplets:
     + [RG] Refreshed against dpkg 1.15.6.
 
@@ -126,6 +134,9 @@ lintian (2.3.4) UNRELEASED; urgency=low
   * man/lintian-info.1:
     + [CW] Fix typo.
     + [RA] Document new debian-source-dir check script.
+
+  * private/refresh-locale-codes:
+    + [RG] New script to generate a list of locale codes.
 
   * reporting/templates/foot.tmpl:
     + [ADB] Replace the "please mail comments to the maintainer" request

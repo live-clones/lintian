@@ -1,0 +1,4 @@
+W: files-locales: incorrect-locale-code cz -> cs
+W: files-locales: incorrect-locale-code en_UK -> en_GB
+W: files-locales: incorrect-locale-code ind -> id
+W: files-locales: unknown-locale-code zz

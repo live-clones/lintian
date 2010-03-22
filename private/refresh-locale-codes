@@ -1,0 +1,72 @@
+#!/bin/sh
+# refresh-locale-codes -- Refresh the locale (aka ISO 639-1/639-2 codes)
+
+# Copyright (C) 2010 Raphael Geissert <atomo64@gmail.com>
+#
+# This file is free software: you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 2 of the License, or
+# (at your option) any later version.
+#
+# This file is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this file.  If not, see <http://www.gnu.org/licenses/>.
+
+set -e
+
+if [ -z "$1" ]; then
+    printf "Usage: %s <path-to-data>\n" "$(basename "$0")"
+    cat <<INFO
+<path-to-data> must be the path to the root of the Lintian data
+directory to update.
+
+This script requires the isoquery package to be installed.
+INFO
+    exit
+fi
+
+readonly lintian_data="$(readlink -f "$1")"
+
+[ -d "$lintian_data" ] || {
+    printf "%s is not a directory, aborting" "$lintian_data" >&2
+    exit 1
+}
+
+readonly tmpfile="$(mktemp)"
+
+cleanup () {
+    [ ! -f "$tmpfile" ] || unlink "$tmpfile"
+}; trap cleanup EXIT
+
+mkdir -p "$lintian_data/files"
+
+cat > "$tmpfile" <<EOF
+# List of locale codes.  This is derived from the ISO 639-1 and ISO
+# 639-2 standards.
+# If a language has 639-1 and 639-2 codes, the -2 code is also included
+# as a key to be mapped to the -1 code.
+#
+# Last updated: $(date -u +'%Y-%m-%d')
+
+EOF
+
+export LANG=C
+
+isoquery -i 639 |
+    perl -w -n -e 'next unless m/^\w{3}\s+(\w{3})\s+(?:(\w{2})\s+)?/;
+		    ($iso1, $iso2) = ($2, $1);
+		    if (!defined($iso1)) {
+			$iso1 = $iso2;
+			$iso2 = undef;
+		    }
+		    print "\L$iso1\n";
+		    if (defined $iso2) {
+			print "\L$iso2 $iso1\n";
+		    }' |
+    sort -u >> "$tmpfile"
+
+mv "$tmpfile" "$lintian_data/files/locale-codes"

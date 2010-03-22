@@ -1152,3 +1152,30 @@ Certainty: possible
 Info: The given file is literally installed as <tt>*</tt> (star
  symbol).  Normally this indicates a mistake in the installation
  process of the package either when creating symlinks or renaming files.
+
+Tag: incorrect-locale-code
+Severity: normal
+Certainty: possible
+Info: The package appears to ship locales for a language but uses an
+ incorrect locale code as a subdirectory of <tt>/usr/share/locale</tt>.
+ This usually results in users of the intended target language not
+ finding the locale.  The language codes used in the locale directories
+ are those from the ISO 639-1 and ISO 639-2 standards, not those
+ usually used as TLDs (which are from the ISO 3166 standard).
+ .
+ Lintian only knows about some commonly-mistaken set of incorrect
+ locale codes.
+
+Tag: unknown-locale-code
+Severity: normal
+Certainty: certain
+Ref: http://www.loc.gov/standards/iso639-2/php/code_list.php
+Info: The package appears to ship locales for a language but uses an
+ unknown locale code as a subdirectory of <tt>/usr/share/locale</tt>.
+ This usually results in users of the intended target language not
+ finding the locale.  The language codes used in the locale directories
+ are those from the ISO 639-1 and ISO 639-2 standards, not those
+ usually used as TLDs (which are from the ISO 3166 standard).
+ .
+ It is possible that the language code was mistyped or incorrectly
+ guessed from the language's or country's name.

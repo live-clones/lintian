@@ -29,6 +29,8 @@ use Util;
 
 our $FONT_PACKAGES;
 our $TRIPLETS;
+our $LOCALE_CODES;
+our $INCORRECT_LOCALE_CODES;
 
 # A list of known packaged Javascript libraries
 # and the packages providing them
@@ -1036,6 +1038,34 @@ foreach my $file (sort keys %{$info->index}) {
 	}
 	if ($file =~ m,usr/share/doc/[^/]+/examples/examples/?$,) {
 	    tag "nested-examples-directory", "$file";
+	}
+	if ($file =~ m,^usr/share/locale/([^/]+)/$,) {
+	    # Without encoding:
+	    my ($lwccode) = split(/[.@]/, $1);
+	    # Without country code:
+	    my ($lcode) = split(/_/, $lwccode);
+
+	    # special exception:
+	    if ($lwccode ne 'l10n') {
+		$INCORRECT_LOCALE_CODES = Lintian::Data->new('files/incorrect-locale-codes', '\s+')
+		    unless defined($INCORRECT_LOCALE_CODES);
+		$LOCALE_CODES = Lintian::Data->new('files/locale-codes', '\s+')
+		    unless defined($LOCALE_CODES);
+
+		if ($INCORRECT_LOCALE_CODES->known($lwccode)) {
+		    tag 'incorrect-locale-code',
+			"$lwccode ->", $INCORRECT_LOCALE_CODES->value($lwccode);
+		} elsif ($INCORRECT_LOCALE_CODES->known($lcode)) {
+		    tag 'incorrect-locale-code',
+			"$lcode ->", $INCORRECT_LOCALE_CODES->value($lcode);
+		} elsif (!$LOCALE_CODES->known($lcode)) {
+		    tag 'unknown-locale-code', $lcode;
+		} elsif ($LOCALE_CODES->known($lcode) && defined($LOCALE_CODES->value($lcode))) {
+		    # If there's a key-value pair in the codes list it
+		    # means the ISO 639-2 code is being used instead of ISO 639-1's
+		    tag 'incorrect-locale-code', "$lcode ->", $LOCALE_CODES->value($lcode);
+		}
+	    }
 	}
     }
     # ---------------- symbolic links

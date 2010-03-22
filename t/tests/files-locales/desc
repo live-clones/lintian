@@ -1,0 +1,7 @@
+Testname: files-locales
+Sequence: 6000
+Version: 1.0
+Description: Test checks about incorrect locale codes
+Test-For:
+ incorrect-locale-code
+ unknown-locale-code

@@ -1,0 +1,677 @@
+# List of locale codes.  This is derived from the ISO 639-1 and ISO
+# 639-2 standards.
+# If a language has 639-1 and 639-2 codes, the -2 code is also included
+# as a key to be mapped to the -1 code.
+#
+# Last updated: 2010-03-22
+
+aa
+aar aa
+ab
+abk ab
+ace
+ach
+ada
+ady
+ae
+af
+afa
+afh
+afr af
+ain
+ak
+aka ak
+akk
+ale
+alg
+alt
+am
+amh am
+an
+ang
+anp
+apa
+ar
+ara ar
+arc
+arg an
+arn
+arp
+art
+arw
+as
+asm as
+ast
+ath
+aus
+av
+ava av
+ave ae
+awa
+ay
+aym ay
+az
+aze az
+ba
+bad
+bai
+bak ba
+bal
+bam bm
+ban
+bas
+bat
+be
+bej
+bel be
+bem
+ben bn
+ber
+bg
+bh
+bho
+bi
+bih bh
+bik
+bin
+bis bi
+bla
+bm
+bn
+bnt
+bo
+bod bo
+bos bs
+br
+bra
+bre br
+bs
+btk
+bua
+bug
+bul bg
+byn
+ca
+cad
+cai
+car
+cat ca
+cau
+ce
+ceb
+cel
+ces cs
+ch
+cha ch
+chb
+che ce
+chg
+chk
+chm
+chn
+cho
+chp
+chr
+chu cu
+chv cv
+chy
+cmc
+co
+cop
+cor kw
+cos co
+cpe
+cpf
+cpp
+cr
+cre cr
+crh
+crp
+cs
+csb
+cu
+cus
+cv
+cy
+cym cy
+da
+dak
+dan da
+dar
+day
+de
+del
+den
+deu de
+dgr
+din
+div dv
+doi
+dra
+dsb
+dua
+dum
+dv
+dyu
+dz
+dzo dz
+ee
+efi
+egy
+eka
+el
+ell el
+elx
+en
+eng en
+enm
+eo
+epo eo
+es
+est et
+et
+eu
+eus eu
+ewe ee
+ewo
+fa
+fan
+fao fo
+fas fa
+fat
+ff
+fi
+fij fj
+fil
+fin fi
+fiu
+fj
+fo
+fon
+fr
+fra fr
+frm
+fro
+frr
+frs
+fry fy
+ful ff
+fur
+fy
+ga
+gaa ga
+gay
+gba
+gd
+gem
+gez
+gil
+gl
+gla gd
+gle ga
+glg gl
+glv gv
+gmh
+gn
+goh
+gon
+gor
+got
+grb
+grc
+grn gn
+gsw
+gu
+guj gu
+gv
+gwi
+ha
+hai
+hat ht
+hau ha
+haw
+he
+heb he
+her hz
+hi
+hil
+him
+hin hi
+hit
+hmn
+hmo ho
+ho
+hr
+hrv hr
+hsb
+ht
+hu
+hun hu
+hup
+hy
+hye hy
+hz
+ia
+iba
+ibo ig
+id
+ido io
+ie
+ig
+ii
+iii ii
+ijo
+ik
+iku iu
+ile ie
+ilo
+ina ia
+inc
+ind id
+ine
+inh
+io
+ipk ik
+ira
+iro
+is
+isl is
+it
+ita it
+iu
+ja
+jav jv
+jbo
+jpn ja
+jpr
+jrb
+jv
+ka
+kaa
+kab
+kac
+kal kl
+kam
+kan kn
+kar
+kas ks
+kat ka
+kau kr
+kaw
+kaz kk
+kbd
+kg
+kha
+khi
+khm km
+kho
+ki
+kik ki
+kin rw
+kir ky
+kj
+kk
+kl
+km
+kmb
+kn
+ko
+kok
+kom kv
+kon kg
+kor ko
+kos
+kpe
+kr
+krc
+krl
+kro
+kru
+ks
+ku
+kua kj
+kum
+kur ku
+kut
+kv
+kw
+ky
+la
+lad
+lah
+lam
+lao lo
+lat la
+lav lv
+lb
+lez
+lg
+li
+lim li
+lin ln
+lit lt
+ln
+lo
+lol
+loz
+lt
+ltz lb
+lu
+lua
+lub lu
+lug lg
+lui
+lun
+luo
+lus
+lv
+mad
+mag
+mah mh
+mai
+mak
+mal ml
+man
+map
+mar mr
+mas
+mdf
+mdr
+men
+mg
+mga
+mh
+mi
+mic
+min
+mis
+mk
+mkd mk
+mkh
+ml
+mlg mg
+mlt mt
+mn
+mnc
+mni
+mno
+mo
+moh
+mol mo
+mon mn
+mos
+mr
+mri mi
+ms
+msa ms
+mt
+mul
+mun
+mus
+mwl
+mwr
+my
+mya my
+myn
+myv
+na
+nah
+nai
+nap
+nau na
+nav nv
+nb
+nbl nr
+nd
+nde nd
+ndo ng
+nds
+ne
+nep ne
+new
+ng
+nia
+nic
+niu
+nl
+nld nl
+nn
+nno nn
+no
+nob nb
+nog
+non
+nor no
+nqo
+nr
+nso
+nub
+nv
+nwc
+ny
+nya ny
+nym
+nyn
+nyo
+nzi
+oc
+oci oc
+oj
+oji oj
+om
+or
+ori or
+orm om
+os
+osa
+oss os
+ota
+oto
+pa
+paa
+pag
+pal
+pam
+pan pa
+pap
+pau
+peo
+phi
+phn
+pi
+pl
+pli pi
+pol pl
+pon
+por pt
+pra
+pro
+ps
+pt
+pus ps
+qu
+que qu
+raj
+rap
+rar
+rm
+rn
+ro
+roa
+roh rm
+rom
+ron ro
+ru
+run rn
+rup
+rus ru
+rw
+sa
+sad
+sag sg
+sah
+sai
+sal
+sam
+san sa
+sas
+sat
+sc
+scn
+sco
+sd
+se
+sel
+sem
+sg
+sga
+sgn
+shn
+si
+sid
+sin si
+sio
+sit
+sk
+sl
+sla
+slk sk
+slv sl
+sm
+sma
+sme se
+smi
+smj
+smn
+smo sm
+sms
+sn
+sna sn
+snd sd
+snk
+so
+sog
+som so
+son
+sot st
+spa es
+sq
+sqi sq
+sr
+srd sc
+srn
+srp sr
+srr
+ss
+ssa
+ssw ss
+st
+su
+suk
+sun su
+sus
+sux
+sv
+sw
+swa sw
+swe sv
+syc
+syr
+ta
+tah ty
+tai
+tam ta
+tat tt
+te
+tel te
+tem
+ter
+tet
+tg
+tgk tg
+tgl tl
+th
+tha th
+ti
+tig
+tir ti
+tiv
+tk
+tkl
+tl
+tlh
+tli
+tmh
+tn
+to
+tog
+ton to
+tpi
+tr
+ts
+tsi
+tsn tn
+tso ts
+tt
+tuk tk
+tum
+tup
+tur tr
+tut
+tvl
+tw
+twi tw
+ty
+tyv
+udm
+ug
+uga
+uig ug
+uk
+ukr uk
+umb
+und
+ur
+urd ur
+uz
+uzb uz
+vai
+ve
+ven ve
+vi
+vie vi
+vo
+vol vo
+vot
+wa
+wak
+wal
+war
+was
+wen
+wln wa
+wo
+wol wo
+xal
+xh
+xho xh
+yao
+yap
+yi
+yid yi
+yo
+yor yo
+ypk
+za
+zap
+zbl
+zen
+zh
+zha za
+zho zh
+znd
+zu
+zul zu
+zun
+zxx no
+zza
