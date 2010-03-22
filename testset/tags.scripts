@@ -1,5 +1,6 @@
 E: scripts source: dpatch-index-references-non-existent-patch 01_not_here_right_now.dpatch
 E: scripts source: dpatch-index-references-non-existent-patch 01_some_other_patch_thats_not_in_the_package.dpatch
+E: scripts source: missing-build-dependency debhelper
 E: scripts source: package-uses-debhelper-but-lacks-build-depends
 E: scripts: calls-suidperl-directly ./usr/bin/suidperlfoo
 E: scripts: copyright-file-lacks-pointer-to-perl-license

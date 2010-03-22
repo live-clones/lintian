@@ -1,6 +1,7 @@
 E: another-version: debian-revision-should-not-be-zero 123.4-0
 E: another-version: new-essential-package
 E: another-version: no-copyright-file
+E: fields source: missing-build-dependency debhelper
 E: fields source: package-uses-debhelper-but-lacks-build-depends
 E: fields: debian-changelog-file-missing-or-wrong-name
 E: fields: depends-on-python-minimal depends
