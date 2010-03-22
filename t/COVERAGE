@@ -1,10 +1,11 @@
-Last generated 2010-01-04
+Last generated 2010-03-22
 
 The following tags are not tested by the test suite:
 
 binaries apparently-corrupted-elf-binary
 binaries binary-file-compressed-with-upx
 binaries library-not-linked-against-libc
+binaries missing-dependency-on-phpapi
 binaries ocaml-custom-executable
 binaries program-not-linked-against-libc
 
@@ -21,7 +22,6 @@ control-files control-file-has-bad-owner
 control-files not-allowed-control-file
 control-files unknown-control-file
 
-copyright-file cannot-check-whether-usr-share-doc-symlink-points-to-foreign-package
 copyright-file copyright-does-not-refer-to-common-license-file
 copyright-file copyright-should-refer-to-common-license-file-for-lgpl
 copyright-file spelling-error-in-copyright
@@ -44,6 +44,8 @@ debconf no-template-name
 debconf select-without-choices
 debconf unknown-field-in-templates
 debconf unknown-template-type
+
+debian-source-dir unknown-source-format
 
 fields alternates-not-allowed
 fields arch-any-in-binary-pkg
@@ -89,6 +91,7 @@ files compressed-symlink-with-wrong-ext
 files config-file-reserved
 files debug-package-should-be-named-dbg
 files embedded-php-library
+files empty-binary-package
 files executable-in-usr-share-doc
 files image-file-in-usr-lib
 files nfs-temporary-file-in-package
@@ -481,8 +484,6 @@ shared-libs unknown-meta-field-in-symbols-file
 shared-libs unused-shlib-entry-in-control-file
 shared-libs unused-shlib-entry-in-symbols-control-file
 
-standards-version timewarp-standards-version
-
 version-substvars not-binnmuable-all-depends-any
 version-substvars not-binnmuable-any-depends-all
 version-substvars not-binnmuable-any-depends-any
@@ -602,7 +603,6 @@ debug
   symbols-declared-but-not-shlib
   symbols-declares-dependency-on-other-package
   syntax-error-in-symbols-file
-  timewarp-standards-version
   unknown-meta-field-in-symbols-file
   unused-shlib-entry-in-symbols-control-file
   version-substvar-for-external-package
