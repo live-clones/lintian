@@ -149,9 +149,10 @@ for my $file (keys(%$file_info)) {
 }
 
 for my $file (@EOL_terminators_files) {
-    next unless defined $file_info->{"debfiles/$file"};
-
     $file = "debian/$file";
+
+    next unless defined $file_info->{$file};
+
 
     tag "control-file-with-CRLF-EOLs", $file
 	if ($file_info->{$file} =~ m/\bCRLF\b/);
