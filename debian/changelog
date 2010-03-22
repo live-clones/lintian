@@ -72,6 +72,9 @@ lintian (2.3.4) UNRELEASED; urgency=low
       umountnfs or umountfs to satisfy a $local_fs requirement in LSB
       headers, avoiding false positives in unusual situations such as
       rsyslog.  Thanks, Michael Biebl.  (Closes: #571280)
+  * checks/manpages.desc:
+    + [RA] Clarify the long description for manpage-has-bad-whatis-entry.
+      Thanks, Jari Aalto.  (Closes: #573837)
   * checks/rules:
     + [RA] Allow ant1.7 to satisfy a build requirement for ant.  Thanks,
       Rene Engelhard.  (Closes: #572430)

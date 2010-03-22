@@ -103,12 +103,16 @@ Tag: manpage-has-bad-whatis-entry
 Severity: normal
 Certainty: certain
 Info: Each manual page should start with a "NAME" section, which lists the
- name and a brief description of the page separated by "\-". A common mistake
- is that in sections TH or NAME the entry is expressed with a space in form
- "PROGRAM NAME", not "PROGRAM_NAME" or "PROGRAM-NAME". The TH and NAME sections
- are parsed by mandb(8) and stored in a database for the use of apropos(1) and
- whatis(1), so they must be in a certain format. This manual page apparently
- uses the wrong format and cannot be parsed by "mandb".
+ name and a brief description of the page separated by "\-".  The "NAME"
+ section is parsed by lexgrog and used to generate a database that's
+ queried by commands like apropos and whatis.  This tag indicates that
+ lexgrog was unable to parse the NAME section of this manual page.
+ .
+ For manual pages that document multiple programs, functions, files, or
+ other things, the part before "\-" should list each separated by a comma
+ and a space.  Each thing listed must not contain spaces; a man page for a
+ two-part command like "fs listacl" must use something like "fs_listacl"
+ in the "NAME" section so that it can be parsed by lexgrog.
 Ref: lexgrog(1), groff_man(7), groff_mdoc(7)
 
 Tag: manpage-has-useless-whatis-entry
