@@ -91,7 +91,6 @@ files compressed-symlink-with-wrong-ext
 files config-file-reserved
 files debug-package-should-be-named-dbg
 files embedded-php-library
-files empty-binary-package
 files executable-in-usr-share-doc
 files image-file-in-usr-lib
 files nfs-temporary-file-in-package
