@@ -367,7 +367,7 @@ for my $filename (sort keys %{$info->scripts}) {
     # skip those too if they're not executable.  Be conservative here, since
     # it's not uncommon for people to both not set examples executable and not
     # fix the path and we want to warn about that.
-    next if ($filename !~ /\.pm\z/ and !$executable{$filename}
+    next if ($filename =~ /\.pm\z/ and !$executable{$filename}
 	     and !$is_absolute and $in_examples);
 
     if ($interpreter eq "") {
