@@ -22,7 +22,7 @@ use Lintian::Tags qw(tag);
 # that, either directly or through transitive dependencies that can be relied
 # upon, ensure /usr/bin/python will exist for the use of dh_python.
 our $PYTHON_DEPEND = 'python | python-dev | python-all | python-all-dev | '
-    . join (' | ', map { "python$_ | python$_-dev" } qw(2.4 2.5));
+    . join (' | ', map { "python$_ | python$_-dev" } qw(2.4 2.5 2.6));
 
 # Certain build tools must be listed in Build-Depends even if there are no
 # arch-specific packages because they're required in order to run the clean

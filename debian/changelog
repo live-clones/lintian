@@ -88,6 +88,7 @@ lintian (2.3.4) UNRELEASED; urgency=low
       Build-Depends or Build-Depends-Indep.
     + [RA] Check for a quilt dependency when the debhelper 7 quilt module
       is used.  Thanks, Martin Meredith.  (Closes: #548094)
+    + [RA] Allow python2.6 packages to satisfy Python build dependencies.
   * checks/scripts{,.desc}:
     + [ADB] Update the list of octave interpreters, adding octave3.2
       (Closes: #574048) and removing octave2.1 (only available in lenny
