@@ -248,6 +248,7 @@ while (<RULES>) {
                 $arch = 1 if (grep { $target =~ /$_/ } @arch_rules);
                 $indep = 1 if (grep { $target =~ /$_/ } @indep_rules);
                 $indep = 1 if $target eq '%';
+                $indep = 1 if $target =~ /^override_/;
             }
             if ($arch) {
                 for my $rule (@RULE_CLEAN_DEPENDS) {

@@ -86,8 +86,8 @@ lintian (2.3.4) UNRELEASED; urgency=low
     + [RG] Warn about installing files specifying the destination
       directory with PREFIX when Perl's MakeMaker build system is used.
       Based on a patch by Niko Tyni.  (Closes: #568748)
-    + [RA] Also check binary-independent and wildcard rules for programs
-      requiring build dependencies, but accept them in either
+    + [RA] Also check binary-independent, wildcard, and override rules for
+      programs requiring build dependencies, but accept them in either
       Build-Depends or Build-Depends-Indep.
     + [RA] Check for a quilt dependency when the debhelper 7 quilt module
       is used.  Thanks, Martin Meredith.  (Closes: #548094)
