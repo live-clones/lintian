@@ -1,4 +1,6 @@
-lintian (2.3.4) UNRELEASED; urgency=low
+lintian (2.3.4) unstable; urgency=low
+
+  The "miscellaneous bug fix" release.
 
   * Summary of tag changes:
     + Added:
@@ -175,7 +177,7 @@ lintian (2.3.4) UNRELEASED; urgency=low
     + [RG] Fix test failure in non-i386 architectures by normalising the
       expected output.  Thanks, Niko Tyni.  (Closes: #568680)
 
- -- Raphael Geissert <geissert@debian.org>  Mon, 01 Feb 2010 14:28:54 -0600
+ -- Russ Allbery <rra@debian.org>  Mon, 22 Mar 2010 16:23:51 -0700
 
 lintian (2.3.3) unstable; urgency=low
 
