@@ -99,7 +99,7 @@ lintian (2.3.4) UNRELEASED; urgency=low
   * data/fields/{perl-provides,virtual-packages}:
     + [RG] Refresh against unstable.
   * data/files/architectures:
-    + [RG] Refreshed against dpkg 1.15.6.
+    + [RG] Refreshed against dpkg 1.15.6.  (Closes: #563495)
   * data/files/fonts:
     + [RG] Refresh against unstable.
   * data/files/incorrect-locale-codes:
