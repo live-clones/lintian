@@ -507,7 +507,7 @@ sub test_package {
 	open TAGS, "$RUNDIR/tags.$pkg" or fail("Cannot open $RUNDIR/tags.$pkg");
 	while (<TAGS>) {
 		next if m/^N: /;
-		if (not /^(.): (\S+)(?: (?:source|udeb))?: (\S+)/) {
+		if (not /^(.): (\S+)(?: (?:changes|source|udeb))?: (\S+)/) {
 		    print (($testdata->{'todo'} eq 'yes')? "TODO" : "E");
 		    print ": Invalid line:\n$_";
 		    $okay = 0;
