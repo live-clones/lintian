@@ -50,7 +50,6 @@ sub is_lab {
     return -d "$self->{dir}/binary"
 	&& -d "$self->{dir}/udeb"
 	&& -d "$self->{dir}/source"
-	&& -d "$self->{dir}/changes"
 	&& -d "$self->{dir}/info";
 }
 
@@ -61,6 +60,11 @@ sub setup {
 	$self->{mode} = 'static';
 	$self->{dir} = $dir;
 	$self->{dist} = $dist;
+	
+	if (-d "$dir" && ! -d "$dir/changes") {
+	    mkdir("$dir/changes", 0777)
+		or fail("cannot create lab directory $dir/changes");
+	}
     } else {
 	$self->{mode} = 'temporary';
 
