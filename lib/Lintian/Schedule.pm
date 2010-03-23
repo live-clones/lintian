@@ -60,7 +60,7 @@ sub add_file {
 
     if ( $pkg =~ m,/, ) {
 	warn(sprintf("warning: bad name for %2\$s package '%1\$s', skipping\n",
-	    $pkg, $type eq 'b' ? 'binary' : ($type eq 's' ? 'source': 'udeb')));
+	    $pkg, $long_types{$type}));
 	return 1;
     }
 
