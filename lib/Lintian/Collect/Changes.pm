@@ -49,6 +49,8 @@ sub files {
 	next if $_ eq '';
 	
 	my ($md5sum,$size,$section,$priority,$file) = split(/\s+/o, $_);
+	next if $file =~ m,/,;
+
 	$files{$file}{checksums}{md5} = {
 	    'sum' => $md5sum, 'filesize' => $size,
 	};
@@ -66,6 +68,8 @@ sub files {
 	    next if $_ eq '';
 	    
 	    my ($checksum, $size, $file) = split(/\s+/o, $_);
+	    next if $file =~ m,/,;
+
 	    $files{$file}{checksums}{$alg} = {
 		'sum' => $checksum, 'filesize' => $size
 	    };

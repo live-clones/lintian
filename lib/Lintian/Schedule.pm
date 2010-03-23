@@ -131,6 +131,8 @@ sub add_changes {
 
 	my ($md5sum,$size,$section,$priority,$file) = split(/\s+/o, $_);
 
+	next if $file =~ m,/,;
+
 	if (not -f "$arg_dir/$file") {
 	    warning("$file does not exist, exiting");
 	    exit 2;
