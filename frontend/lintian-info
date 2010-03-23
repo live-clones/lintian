@@ -97,7 +97,8 @@ while (<>) {
     my @pieces = split(/:\s+/);
     if ($annotate) {
         $type = shift @pieces if ($pieces[0] =~ /^\w$/);
-        $pkg = shift @pieces if ($pieces[0] =~ /^\S+( (binary|udeb))?$/);
+        $pkg = shift @pieces if
+            ($pieces[0] =~ /^\S+( (binary|changes|udeb))?$/);
     } else {
 	$type = shift @pieces;
 	$pkg = shift @pieces;
