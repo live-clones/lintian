@@ -1,3 +1,5 @@
+<package type="changes" name="lintian-output-xml_1.0+dsfg-1.1_amd64" architecture="source all" version="1.0+dsfg-1.1">
+</package>
 <package type="source" name="lintian-output-xml" architecture="source" version="1.0+dsfg-1.1">
 <tag severity="pedantic" certainty="certain" flags="" name="debian-control-has-unusual-field-spacing">line 11</tag>
 <tag severity="wishlist" certainty="certain" flags="" name="binary-control-field-duplicates-source">field &quot;section&quot; in package lintian-output-xml</tag>

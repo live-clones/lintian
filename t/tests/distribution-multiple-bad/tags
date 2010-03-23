@@ -1,4 +1,4 @@
-E: distribution-multiple-bad_1.0_arch.changes: bad-distribution-in-changes-file bar
-E: distribution-multiple-bad_1.0_arch.changes: bad-distribution-in-changes-file foo
-E: distribution-multiple-bad_1.0_arch.changes: bad-distribution-in-changes-file foo-backportss
-E: distribution-multiple-bad_1.0_arch.changes: multiple-distributions-in-changes-file stable foo-backportss bar foo
+E: distribution-multiple-bad_1.0_amd64 changes: bad-distribution-in-changes-file bar
+E: distribution-multiple-bad_1.0_amd64 changes: bad-distribution-in-changes-file foo
+E: distribution-multiple-bad_1.0_amd64 changes: bad-distribution-in-changes-file foo-backportss
+E: distribution-multiple-bad_1.0_amd64 changes: multiple-distributions-in-changes-file stable foo-backportss bar foo
