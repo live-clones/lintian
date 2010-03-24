@@ -383,13 +383,13 @@ sub check_init {
     if (defined $lsb{'default-stop'} && length($lsb{'default-stop'})) {
 	my @required = split(' ', $lsb{'required-stop'} || '');
 	if ($needs_fs{remote}) {
-	    unless (grep { /^(?:\$remote_fs|umountnfs)\z/ } @required) {
+	    unless (grep { /^(?:\$remote_fs|\$all|umountnfs)\z/ } @required) {
 		tag 'init.d-script-missing-dependency-on-remote_fs',
 		    "/etc/init.d/$_: required-stop";
 	    }
 	}
 	if ($needs_fs{local}) {
-	    unless (grep { /^(?:\$(?:local|remote)_fs|umountn?fs)\z/ } @required) {
+	    unless (grep { /^(?:\$(?:local|remote)_fs|\$all|umountn?fs)\z/ } @required) {
 		tag 'init.d-script-missing-dependency-on-local_fs',
 		    "/etc/init.d/$_: required-stop";
 	    }

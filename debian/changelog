@@ -5,6 +5,10 @@ lintian (2.3.5) UNRELEASED; urgency=low
       package without a version, since diff was renamed to diffutils and
       depending on diffutils effectively is a versioned dependency.
       Thanks, Santiago Vila.  (Closes: #575073)
+  * checks/init.d:
+    + [RA] Allow $all to satisfy a $remote_fs or $local_fs requirement for
+      Required-Stop, since this has now been implemented.  Thanks, Michael
+      Meskes.
 
  -- Russ Allbery <rra@debian.org>  Tue, 23 Mar 2010 17:35:12 -0700
 
