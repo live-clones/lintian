@@ -58,7 +58,9 @@ my $distribution = $entry->Distribution;
 my $uploader = canonicalize($entry->Maintainer);
 my $changes = $entry->Changes;
 $changes =~ s/^(\s*\n)+//;
-my $firstline = (split('\n', $changes))[0];
+my @lines = split("\n", $changes);
+shift @lines while $lines[0] =~ /^\s*(?:\[.+\])?\s*$/;
+my $firstline = $lines[0];
 
 # Check the first line for QA and NMU mentions.
 if ($firstline) {
