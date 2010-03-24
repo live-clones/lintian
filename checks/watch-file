@@ -47,6 +47,10 @@ my $repack;
 if ($version =~ /(dfsg|debian|ds)/) {
     $repack = $1;
 }
+my $prerelease;
+if ($version =~ /(alpha|beta|rc)/i) {
+    $prerelease = $1;
+}
 
 # Gather information from the watch file and look for problems we can
 # diagnose on the first time through.
@@ -83,15 +87,17 @@ while (<WATCH>) {
         # Version 1 watch files are too broken to try checking them.
         next if ($watchver == 1);
 
-        my ($mangle, $dmangle) = (0, 0);
+        my ($repack_mangle, $repack_dmangle, $prerelease_mangle, $prerelease_umangle) = (0, 0, 0, 0);
         my ($opts, @opts);
         if (s/^opt(?:ion)?s=\"([^\"]+)\"\s+// || s/^opt(?:ion)?s=(\S+)\s+//) {
             $opts = $1;
             @opts = split(',', $opts);
-            if (defined $repack) {
+            if (defined $repack or defined $prerelease) {
                 for (@opts) {
-                    $mangle = 1 if /^[ud]?versionmangle\s*=.*($repack)/;
-                    $dmangle = 1 if /^dversionmangle\s*=.*($repack)/;
+                    $repack_mangle = 1 if defined $repack and /^[ud]?versionmangle\s*=.*($repack)/;
+                    $repack_dmangle = 1 if defined $repack and /^dversionmangle\s*=.*($repack)/;
+                    $prerelease_mangle = 1 if defined $prerelease and /^[ud]?versionmangle\s*=.*($prerelease)/;
+                    $prerelease_umangle = 1 if defined $prerelease and /^uversionmangle\s*=.*($prerelease)/;
                 }
             }
         }
@@ -118,14 +124,19 @@ while (<WATCH>) {
         push @{$dversions{$lastversion}}, $. if (defined($lastversion));
         $lastversion = 'debian' unless (defined($lastversion));
 
-        my $needs_mangling = ($repack and $lastversion eq 'debian');
+        my $needs_repack_mangling = ($repack and $lastversion eq 'debian');
         # If the version of the package contains dfsg, assume that it needs
         # to be mangled to get reasonable matches with upstream.
-        if ($needs_mangling and not $mangle) {
+        if ($needs_repack_mangling and not $repack_mangle) {
             tag 'debian-watch-file-should-mangle-version', "line $.";
         }
-        if ($needs_mangling and $mangle and not $dmangle) {
+        if ($needs_repack_mangling and $repack_mangle and not $repack_dmangle) {
             tag 'debian-watch-file-should-dversionmangle-not-uversionmangle', "line $.";
+        }
+
+        my $needs_prerelease_mangling = ($prerelease and $lastversion eq 'debian');
+        if ($needs_prerelease_mangling and $prerelease_mangle and not $prerelease_umangle) {
+            tag 'debian-watch-file-should-uversionmangle-not-dversionmangle', "line $.";
         }
     }
 }
