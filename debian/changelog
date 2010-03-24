@@ -9,6 +9,10 @@ lintian (2.3.5) UNRELEASED; urgency=low
     + [RA] Allow $all to satisfy a $remote_fs or $local_fs requirement for
       Required-Stop, since this has now been implemented.  Thanks, Michael
       Meskes.
+  * checks/watch-file{,.desc}:
+    + [RA] Warn about use of dversionmangle instead of uversionmangle to
+      handle tildes for upstream pre-releases.  Patch from Peter
+      Eisentraut.  (Closes: #575064)
 
  -- Russ Allbery <rra@debian.org>  Tue, 23 Mar 2010 17:35:12 -0700
 
