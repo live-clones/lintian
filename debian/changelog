@@ -1,5 +1,7 @@
 lintian (2.3.5) UNRELEASED; urgency=low
 
+  * checks/changes-file{,.desc}:
+    + [ADB] New check script for .changes file tests
   * checks/fields:
     + [RA] Add an exception for diffutils for depending on an essential
       package without a version, since diff was renamed to diffutils and
@@ -9,6 +11,9 @@ lintian (2.3.5) UNRELEASED; urgency=low
     + [RA] Allow $all to satisfy a $remote_fs or $local_fs requirement for
       Required-Stop, since this has now been implemented.  Thanks, Michael
       Meskes.
+  * checks/lintian.desc:
+    + [ADB] Remove information about .changes-related tags, now included in
+      checks/changes-file.desc
   * checks/nmu:
     + [RA] Skip leading multi-author changelog lines when looking for
       things like non-maintainer upload notes at the start of the
@@ -17,6 +22,43 @@ lintian (2.3.5) UNRELEASED; urgency=low
     + [RA] Warn about use of dversionmangle instead of uversionmangle to
       handle tildes for upstream pre-releases.  Patch from Peter
       Eisentraut.  (Closes: #575064)
+
+  * frontend/lintian:
+    + [ADB] Add "changes" as a valid type for collection and check scripts
+    + [ADB] Replace the special-cased parsing of .changes files with calls to
+      unpack-changes-l1 and Lintian::Schedule::add_changes()
+    + [ADB] Bump lab format to 10 for the addition of the "changes" lab
+      directory
+    + [ADB] Remove import of Lintian::Check which is no longer required after
+      the .changes parsing code was removed
+  * frontend/lintian-info:
+    + [ADB] Add support for .changes tags to --annotate
+
+  * lib/Lab.pm:
+    + [ADB] Add a "changes" directory to the lab structure. For static labs,
+      the directory is automatically added the first time a .changes-aware
+      Lintian accesses the lab.
+
+  * lib/Lintian/Collect.pm:
+    + [ADB] Add support for Lintian::Collect::Changes
+  * lib/Lintian/Collect/Changes.pm:
+    + [ADB] New module providing information about .changes files and the
+      files referenced therein
+  * lib/Lintian/Schedule.pm:
+    + [ADB] Add support for scheduling .changes files
+    + [ADB] Fix an uninitialised value warning caused by .changes files by
+      treating a missing Version: field as being empty
+  * lib/Lintian/Tags.pm:
+    + [ADB] Remove the special-casing of .changes files in the output from
+      file_start()
+    + [ADB] Don't refer to .changes files as "packages"
+
+  * {t,testset}/runtests:
+    + [ADB] Don't flag lintian output lines for .changes tags as invalid
+
+  * unpack/unpack-changes-l1:
+    + [ADB] New script to "unpack" a .changes file, creating a fields/
+      hierarchy
 
  -- Russ Allbery <rra@debian.org>  Tue, 23 Mar 2010 17:35:12 -0700
 
