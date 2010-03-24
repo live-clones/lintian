@@ -230,7 +230,7 @@ for (@tests) {
     open TAGS, "$rundir/tags.$pkg" or fail("Cannot open $rundir/tags.$pkg");
     while (<TAGS>) {
 	next if m/^N: /;
-	if (not /^(.): (\S+)(?: (?:source|udeb))?: (\S+)/) {
+	if (not /^(.): (\S+)(?: (?:source|udeb|changes))?: (\S+)/) {
 	    print "E: Invalid line:\n$_";
 	    next;
 	}
