@@ -5,9 +5,9 @@ E: generic-empty source: no-standards-version-field
 E: generic-empty: maintainer-address-missing a
 E: generic-empty: no-copyright-file
 E: generic-empty: package-has-no-description
-E: generic-empty_1.0_amd64 changes: bad-urgency-in-changes-file unknown
-E: generic-empty_1.0_amd64 changes: changed-by-address-malformed a <>
-E: generic-empty_1.0_amd64 changes: changed-by-address-missing a <>
+E: generic-empty_1.0_arch changes: bad-urgency-in-changes-file unknown
+E: generic-empty_1.0_arch changes: changed-by-address-malformed a <>
+E: generic-empty_1.0_arch changes: changed-by-address-missing a <>
 W: generic-empty source: changelog-should-mention-nmu
 W: generic-empty source: maintainer-not-full-name a
 W: generic-empty source: no-section-field-for-source

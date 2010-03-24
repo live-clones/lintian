@@ -1,1 +1,1 @@
-s/_[^.]*\.changes/_arch.changes/
+s/_[^ _]* changes/_arch changes/
