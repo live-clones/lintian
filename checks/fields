@@ -574,8 +574,12 @@ if (($type eq "binary") || ($type eq 'udeb')) {
 				tag "depends-on-metapackage", "$field: $part_d_orig"
 				    if ($KNOWN_METAPACKAGES->known($d_pkg) and not $metapackage and &$is_dep_field($field));
 
+				# diffutils is a special case since diff was
+				# renamed to diffutils, so a dependency on
+				# diffutils effectively is a versioned one.
 				tag "depends-on-essential-package-without-using-version", "$field: $part_d_orig"
-				    if ($KNOWN_ESSENTIAL->known($d_pkg) && ! $d_version->[0] && &$is_dep_field($field));
+				    if ($KNOWN_ESSENTIAL->known($d_pkg) && ! $d_version->[0]
+					&& &$is_dep_field($field) && $d_pkg ne 'diffutils');
 
 				tag "package-depends-on-an-x-font-package", "$field: $part_d_orig"
 				    if ($field =~ /^(pre-)?depends$/ && $d_pkg =~ /^xfont.*/ && $d_pkg ne 'xfonts-utils' && $d_pkg ne 'xfonts-encodings');

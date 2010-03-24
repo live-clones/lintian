@@ -1,3 +1,13 @@
+lintian (2.3.5) UNRELEASED; urgency=low
+
+  * checks/fields:
+    + [RA] Add an exception for diffutils for depending on an essential
+      package without a version, since diff was renamed to diffutils and
+      depending on diffutils effectively is a versioned dependency.
+      Thanks, Santiago Vila.  (Closes: #575073)
+
+ -- Russ Allbery <rra@debian.org>  Tue, 23 Mar 2010 17:35:12 -0700
+
 lintian (2.3.4) unstable; urgency=low
 
   The "miscellaneous bug fix" release.
