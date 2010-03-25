@@ -40,3 +40,11 @@ fi
 if test -f /etc/default/$PACKAGE; then
     . /etc/default/$PACKAGE
 fi
+
+# This is not sourcing without a test and shouldn't produce an error.
+if [ ! -f /etc/default/$PACKAGE ] ; then
+    # do something else
+    :
+else
+    . /etc/default/$PACKAGE
+fi

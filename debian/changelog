@@ -11,6 +11,8 @@ lintian (2.4.0) UNRELEASED; urgency=low
     + [RA] Allow $all to satisfy a $remote_fs or $local_fs requirement for
       Required-Stop, since this has now been implemented.  Thanks, Michael
       Meskes.
+    + [RA] Recognize negated file checks when checking for file sourcing
+      without a test.  Thanks, Jérémie Corbier.  (Closes: #575363)
   * checks/lintian.desc:
     + [ADB] Remove information about .changes-related tags, now included in
       checks/changes-file.desc
