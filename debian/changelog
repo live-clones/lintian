@@ -1,4 +1,4 @@
-lintian (2.3.5) UNRELEASED; urgency=low
+lintian (2.4.0) UNRELEASED; urgency=low
 
   * checks/changes-file{,.desc}:
     + [ADB] New check script for .changes file tests
