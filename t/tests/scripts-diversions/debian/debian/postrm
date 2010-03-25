@@ -25,6 +25,10 @@ if [ remove = "$1" ]; then
     dpkg-divert --remove --package scripts-diversions \
         --divert /usr/share/man/man1/foo.real.1.gz \
         /usr/share/man/man1/foo.1.gz
+
+    # Clean up a local diversion.
+    dpkg-divert --local --remove --divert /usr/share/scripts/other-file.real \
+        /usr/share/scripts/other-file
 fi
 
 #DEBHELPER#

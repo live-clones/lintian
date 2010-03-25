@@ -18,6 +18,10 @@ lintian (2.3.5) UNRELEASED; urgency=low
     + [RA] Skip leading multi-author changelog lines when looking for
       things like non-maintainer upload notes at the start of the
       changelog entry.  Thanks, Vincent Danjean.  (Closes: #575192)
+  * checks/scripts:
+    + [RA] Track local diversions like other diversions for the purposes
+      of checking for orphans and diversions of unknown files.  Partly
+      addresses #575361.
   * checks/watch-file{,.desc}:
     + [RA] Warn about use of dversionmangle instead of uversionmangle to
       handle tildes for upstream pre-releases.  Patch from Peter
