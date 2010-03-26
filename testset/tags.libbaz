@@ -26,6 +26,7 @@ E: libbaz2-dev: changelog-file-not-compressed changelog
 E: libbaz2-dev: debian-changelog-file-missing-or-wrong-name
 E: libbaz2: debian-changelog-file-missing-or-wrong-name
 I: ia32-libbaz2: no-symbols-control-file usr/lib/i486-linux-gnu/libbaz2.so.1.0.3b
+I: libbaz source: missing-debian-source-format
 I: libbaz1-dev: binary-has-unneeded-section ./usr/lib/perl5/auto/Foo/Foo.so .comment
 I: libbaz1-dev: no-md5sums-control-file
 I: libbaz1-dev: package-contains-empty-directory usr/include/
@@ -45,7 +46,6 @@ W: libbaz source: debhelper-but-no-misc-depends libbaz1-dev
 W: libbaz source: debhelper-but-no-misc-depends libbaz2
 W: libbaz source: debhelper-but-no-misc-depends libbaz2-dbg
 W: libbaz source: debhelper-but-no-misc-depends libbaz2-dev
-W: libbaz source: missing-debian-source-format
 W: libbaz source: native-package-with-dash-version
 W: libbaz source: package-lacks-versioned-build-depends-on-debhelper 6
 W: libbaz source: source-nmu-has-incorrect-version-number 1-1

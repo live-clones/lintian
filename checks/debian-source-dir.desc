@@ -6,20 +6,21 @@ Info: This script looks for mistakes in debian/source/* files.
 Needs-Info: debfiles
 
 Tag: missing-debian-source-format
-Severity: normal
+Severity: wishlist
 Certainty: certain
 Info: To allow for possible future changes in the default source format,
  explicitly selecting a source format by creating
  <tt>debian/source/format</tt> is recommended.
  .
- If you don't have a good reason to stick with the old format, you should
- switch to "3.0 (quilt)" (for packages with a separate upstream tarball)
- or to "3.0 (native)" (for Debian native packages).
+ If you don't have a good reason to stick with the old format, please
+ consider switching to "3.0 (quilt)" (for packages with a separate
+ upstream tarball) or to "3.0 (native)" (for Debian native packages).
  .
- If you plan to keep using the old format, you should still create that
- file and put "1.0" in it. In that case, you are invited to get in touch
- with debian-dpkg@lists.debian.org to discuss the (technical) reasons why
- the new formats do not suit you.
+ If you wish to keep using the old format, please create that file and put
+ "1.0" in it to be explicit about the source package version.  If you have
+ problems with the 3.0 format, the dpkg maintainers are interested in
+ hearing, at debian-dpkg@lists.debian.org, the (technical) reasons why the
+ new formats do not suit you
 Ref: dpkg-source(1), http://wiki.debian.org/Projects/DebSrc3.0
 
 Tag: unknown-source-format

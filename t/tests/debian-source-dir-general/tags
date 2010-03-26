@@ -1,2 +1,2 @@
 E: debian-source-dir-general source: unknown-file-in-debian-source formt
-W: debian-source-dir-general source: missing-debian-source-format
+I: debian-source-dir-general source: missing-debian-source-format

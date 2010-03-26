@@ -4,6 +4,9 @@ lintian (2.4.0) UNRELEASED; urgency=low
     + [ADB] New check script for .changes file tests
   * checks/deb-format.desc:
     + [RG] deb-format needs changelog-file.
+  * checks/debian-source-dir.desc:
+    + [RA] Downgrade missing-debian-source-format to wishlist and tone
+      down the long description a bit.
   * checks/fields:
     + [RA] Add an exception for diffutils for depending on an essential
       package without a version, since diff was renamed to diffutils and

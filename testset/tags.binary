@@ -49,6 +49,7 @@ E: binary: suidregister-used-in-maintainer-script postinst
 E: binary: symlink-contains-spurious-segments usr/share/doc/binary/html/ch2.html ../html/./ch1.html
 E: binary: unstripped-binary-or-object ./usr/bin/hello
 I: binary source: binary-control-field-duplicates-source field "vcs-svn" in package binary
+I: binary source: missing-debian-source-format
 I: binary source: xs-vcs-header-in-debian-control xs-vcs-browser
 I: binary-data: capitalization-error-in-description subversion Subversion
 I: binary: arch-dep-package-has-big-usr-share
@@ -61,7 +62,6 @@ W: binary source: ancient-standards-version 3.2.1 (current is 3.8.4)
 W: binary source: debian-rules-ignores-make-clean-error line 12
 W: binary source: debian-rules-uses-pwd line 9
 W: binary source: maintainer-upload-has-incorrect-version-number 4-1.1
-W: binary source: missing-debian-source-format
 W: binary source: native-package-with-dash-version
 W: binary source: substvar-source-version-is-deprecated binary
 W: binary source: substvar-source-version-is-deprecated binary-data
