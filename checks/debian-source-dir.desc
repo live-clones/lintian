@@ -12,8 +12,8 @@ Info: To allow for possible future changes in the default source format,
  explicitly selecting a source format by creating
  <tt>debian/source/format</tt> is recommended.
  .
- If you don't have a good reason to stick with the old format, please
- consider switching to "3.0 (quilt)" (for packages with a separate
+ If you don't have a reason to stay with the old format for this package,
+ please consider switching to "3.0 (quilt)" (for packages with a separate
  upstream tarball) or to "3.0 (native)" (for Debian native packages).
  .
  If you wish to keep using the old format, please create that file and put
