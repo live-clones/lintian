@@ -32,9 +32,6 @@ checks:
 
 collection:
 
-- [Raphael Geissert] Run collect scripts in order based on their
-  dependencies rather than using the Order key in the *.desc.
-
 - Collect desktop files so that checks/menu-format doesn't have to walk
   the file index and so that we can do interesting checks on desktop files
   from inside the Lintian lab.
