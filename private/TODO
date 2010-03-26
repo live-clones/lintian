@@ -135,11 +135,6 @@ t:
 
 General:
 
-- Make changes files a different type of object that can be checked with
-  check scripts for that type of object.  Add Lintian::Collect::Changes
-  that holds the data of interest.  Move the code for doing changes file
-  checks out of frontend/lintian into a new check script.
-
 - [Raphael Geissert] Turn unpack scripts into another type of collect
   script that many collect scripts depend on and run all collect and
   unpack scripts based on their dependency order, in parallel as much as
