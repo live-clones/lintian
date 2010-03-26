@@ -2,6 +2,8 @@ lintian (2.4.0) UNRELEASED; urgency=low
 
   * checks/changes-file{,.desc}:
     + [ADB] New check script for .changes file tests
+  * checks/deb-format.desc:
+    + [RG] deb-format needs changelog-file.
   * checks/fields:
     + [RA] Add an exception for diffutils for depending on an essential
       package without a version, since diff was renamed to diffutils and
@@ -29,6 +31,9 @@ lintian (2.4.0) UNRELEASED; urgency=low
       handle tildes for upstream pre-releases.  Patch from Peter
       Eisentraut.  (Closes: #575064)
 
+  * collection/*.desc:
+    + [RG] Remove now-unneeded Order keys.
+
   * frontend/lintian:
     + [ADB] Add "changes" as a valid type for collection and check scripts
     + [ADB] Replace the special-cased parsing of .changes files with calls to
@@ -37,6 +42,8 @@ lintian (2.4.0) UNRELEASED; urgency=low
       directory
     + [ADB] Remove import of Lintian::Check which is no longer required after
       the .changes parsing code was removed
+    + [RG] Support running collection and check scripts in parallel as soon
+      as their prerequisites are satisfied.
   * frontend/lintian-info:
     + [ADB] Add support for .changes tags to --annotate
 
@@ -44,12 +51,23 @@ lintian (2.4.0) UNRELEASED; urgency=low
     + [ADB] Add a "changes" directory to the lab structure. For static labs,
       the directory is automatically added the first time a .changes-aware
       Lintian accesses the lab.
-
   * lib/Lintian/Collect.pm:
     + [ADB] Add support for Lintian::Collect::Changes
   * lib/Lintian/Collect/Changes.pm:
     + [ADB] New module providing information about .changes files and the
       files referenced therein
+  * lib/Lintian/Command.pm:
+    + [RG] Add done() method to check whether a process can be reaped
+      without blocking.
+  * lib/Lintian/Command/Simple.pm:
+    + [RG] New simple command interface which supports backgrounded
+      commands and easier waiting on commands without the full features of
+      Lintian::Command.
+  * lib/Lintian/DepMap.pm:
+    + [RG] New module to manipulate dependency maps.
+  * lib/Lintian/DepMap/Properties.pm:
+    + [RG] New subclass of Lintian::DepMap that allows properties to be
+      associated with Lintian::DepMap nodes.
   * lib/Lintian/Schedule.pm:
     + [ADB] Add support for scheduling .changes files
     + [ADB] Fix an uninitialised value warning caused by .changes files by
