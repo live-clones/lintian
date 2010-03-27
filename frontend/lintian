@@ -1091,6 +1091,14 @@ my $map = Lintian::DepMap::Properties->new();
 
 # {{{ determine which info is needed by the collection scripts
 for my $c (keys %unpack_infos) {
+    if (exists $collection_info{$c}{'needs-info'}) {
+	map { $unpack_infos{$_} = 1; } @{$collection_info{$c}{'needs-info'}};
+    }
+}
+# }}}
+
+# {{{ add the collection scripts to the dependencies tree
+for my $c (keys %unpack_infos) {
     $map->add('coll-' . $c, {'type' => 'collection', 'name' => $c});
     if (exists $collection_info{$c}{'needs-info'}) {
 	$map->addp('coll-' . $c, 'coll-', @{$collection_info{$c}{'needs-info'}});
