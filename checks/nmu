@@ -53,14 +53,17 @@ if (-l "debfiles/changelog") {
 }
 
 # Get some data from the changelog file.
+my $firstline = '';
 my ($entry) = $info->changelog->data;
 my $distribution = $entry->Distribution;
 my $uploader = canonicalize($entry->Maintainer);
 my $changes = $entry->Changes;
 $changes =~ s/^(\s*\n)+//;
 my @lines = split("\n", $changes);
-shift @lines while $lines[0] =~ /^\s*(?:\[.+\])?\s*$/;
-my $firstline = $lines[0];
+if (scalar @lines) {
+    shift @lines while $lines[0] =~ /^\s*(?:\[.+\])?\s*$/;
+    $firstline = $lines[0];
+}
 
 # Check the first line for QA and NMU mentions.
 if ($firstline) {
