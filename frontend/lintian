@@ -1186,6 +1186,11 @@ debug_msg(1,
 	  sprintf("Selected checks: %s", join(',',sort keys %checks)),
     );
 
+
+# Make sure the resolver is in a sane state:
+scalar($map->missing()) == 0
+    or fail("There are missing nodes on the resolver: ".join(', ', $map->missing()));
+
 require Checker;
 require Lintian::Collect;
 
