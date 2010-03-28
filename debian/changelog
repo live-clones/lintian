@@ -86,6 +86,8 @@ lintian (2.4.0) UNRELEASED; urgency=low
   * unpack/unpack-changes-l1:
     + [ADB] New script to "unpack" a .changes file, creating a fields/
       hierarchy
+  * unpack/unpack-srcpkg-l1:
+    + [ADB] Support tarballs in the .tar.xz format.  (Closes: #575633)
 
  -- Russ Allbery <rra@debian.org>  Tue, 23 Mar 2010 17:35:12 -0700
 

@@ -79,7 +79,7 @@ for my $fs (split(/\n/,$data->{'files'})) {
     next if $fs =~ /^$/o;
     my @t = split(/\s+/o,$fs);
     next if ($t[2] =~ m,/,);
-    if ($t[2] =~ /^(\Q$base\E\.orig|\Q$baserev\E)\.tar\.(gz|bz2|lzma)$/) {
+    if ($t[2] =~ /^(\Q$base\E\.orig|\Q$baserev\E)\.tar\.(gz|bz2|lzma|xz)$/) {
         $tarball = $t[2];
     }
     symlink("$dir/$t[2]", "$base_dir/$t[2]")
@@ -90,13 +90,13 @@ if (!$tarball) {
 }
 
 # Collect a list of the files in the source package.  tar currently doesn't
-# automatically recognize LZMA, so we need to add the option where it's
+# automatically recognize LZMA / XZ, so we need to add the option where it's
 # needed.  Change hard link status (h) to regular files and remove a leading
 # ./ prefix on filenames while we're reading the tar output.  We intentionally
 # don't parallelize this job because we need to use the output below.
 my @tar_options = ('-tvf');
-if ($tarball =~ /\.lzma\z/) {
-    unshift(@tar_options, '--lzma');
+if ($tarball =~ /\.(lzma|xz)\z/) {
+    unshift(@tar_options, "--$1");
 }
 my @index;
 my $last = '';
