@@ -8,9 +8,11 @@ Needs-Info: debfiles
 Tag: missing-debian-source-format
 Severity: wishlist
 Certainty: certain
-Info: To allow for possible future changes in the default source format,
- explicitly selecting a source format by creating
- <tt>debian/source/format</tt> is recommended.
+Info: Explicitly selecting a source format by putting the format in
+ <tt>debian/source/format</tt> is recommened.  This allows for possible
+ future removal of the 1.0 default for the package source format and,
+ depending on the source format, may allow unambiguous declaration of
+ whether this package is native or non-native.
  .
  If you don't have a reason to stay with the old format for this package,
  please consider switching to "3.0 (quilt)" (for packages with a separate
