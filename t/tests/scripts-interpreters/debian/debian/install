@@ -1,6 +1,7 @@
 bin-env                 usr/bin/
 no-interpreter          usr/bin/
 not-absolute            usr/bin/
+python2.6               usr/bin/
 syntax                  usr/bin/
 unusual                 usr/bin/
 unversioned-pike        usr/bin/
