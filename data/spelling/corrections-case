@@ -1,0 +1,84 @@
+# Picky corrections, applied before lowercasing the word.  These are only
+# applied to things known to be entirely English text, such as package
+# descriptions, and should not be applied to files that may contain
+# configuration fragments or more informal files such as debian/copyright.
+#
+# The format of each line is:
+# mistake||correction
+
+apache||Apache
+api||API
+Api||API
+D-BUS||D-Bus
+d-bus||D-Bus
+dbus||D-Bus
+debian||Debian
+Debian-Edu||Debian Edu
+debian-edu||Debian Edu
+english||English
+french||French
+EMacs||Emacs
+Gconf||GConf
+gconf||GConf
+german||German
+Gnome||GNOME
+gnome||GNOME
+Gnome-VFS||GnomeVFS
+Gnome-Vfs||GnomeVFS
+GnomeVfs||GnomeVFS
+gnome-vfs||GnomeVFS
+gnomevfs||GnomeVFS
+gnu||GNU
+Gnu||GNU
+Gobject||GObject
+gobject||GObject
+Gstreamer||GStreamer
+gstreamer||GStreamer
+GTK||GTK+
+gtk+||GTK+
+Http||HTTP
+kde||KDE
+meta-package||metapackage
+MYSQL||MySQL
+Mysql||MySQL
+mysql||MySQL
+linux||Linux
+Latex||LaTeX
+latex||LaTeX
+OCAML||OCaml
+Ocaml||OCaml
+ocaml||OCaml
+OpenLdap||OpenLDAP
+Openldap||OpenLDAP
+openldap||OpenLDAP
+Postgresql||PostgreSQL
+postgresql||PostgreSQL
+python||Python
+russian||Russian
+SkoleLinux||Skolelinux
+skolelinux||Skolelinux
+SLang||S-Lang
+S-lang||S-Lang
+s-lang||S-Lang
+spanish||Spanish
+subversion||Subversion
+TCL||Tcl
+tcl||Tcl
+TEX||TeX
+Tex||TeX
+TeTeX||teTeX
+Tetex||teTeX
+tetex||teTeX
+TeXLive||TeX Live
+TeX-Live||TeX Live
+TeXlive||TeX Live
+TeX-live||TeX Live
+texlive||TeX Live
+tex-live||TeX Live
+TK||Tk
+tk||Tk
+Xemacs||XEmacs
+XEMacs||XEmacs
+XFCE||Xfce
+XFce||Xfce
+xfce||Xfce

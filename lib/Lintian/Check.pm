@@ -24,10 +24,11 @@ use strict;
 use warnings;
 
 use Exporter ();
+use Lintian::Data;
 use Lintian::Tags qw(tag);
 
 our @ISA    = qw(Exporter);
-our @EXPORT = qw(check_maintainer);
+our @EXPORT = qw(check_maintainer check_spelling check_spelling_picky);
 
 =head1 NAME
 
@@ -175,6 +176,113 @@ sub check_maintainer {
             }
 	}
     }
+}
+
+sub _tag {
+    my @args = grep { defined($_) } @_;
+    tag(@args);
+}
+
+=item check_spelling(TAG, TEXT, FILENAME)
+
+Performs a spelling check of TEXT, reporting TAG if any errors are found.
+
+If FILENAME is given, it will be used as the first argument to TAG.
+
+Returns the number of spelling mistakes found in TEXT.
+
+=cut
+
+sub check_spelling {
+    my ($tag, $text, $filename) = @_;
+    return unless $text;
+
+    my $counter = 0;
+    my $corrections = Lintian::Data->new('spelling/corrections', '\|\|');
+    my $corrections_multiword =
+        Lintian::Data->new('spelling/corrections-multiword', '\|\|');
+
+    $text =~ s/[()[\]]//g;
+
+    for my $word (split(/\s+/, $text)) {
+        $word =~ s/[.,;:?!]+$//;
+        next if ($word =~ /^[A-Z]{1,5}\z/);
+        my $lcword = lc $word;
+        if ($corrections->known($lcword)) {
+            $counter++;
+            my $correction = $corrections->value($lcword);
+            if ($word =~ /^[A-Z]+$/) {
+		$correction = uc $correction;
+	    } elsif ($word =~ /^[A-Z]/) {
+                $correction = ucfirst $correction;
+            }
+            _tag($tag, $filename, $word, $correction) if defined $tag;
+        }
+    }
+
+    # Special case for correcting multi-word strings.
+    for my $oregex ($corrections_multiword->all) {
+        my $regex = qr($oregex);
+	if ($text =~ m,\b($regex)\b,) {
+	    my $word = $1;
+	    my $correction = $corrections_multiword->value($oregex);
+	    if ($word =~ /^[A-Z]+$/) {
+		$correction = uc $correction;
+	    } elsif ($word =~ /^[A-Z]/) {
+		$correction = ucfirst $correction;
+	    }
+	    $counter++;
+	    _tag($tag, $filename, $word, $correction)
+		if defined $tag;
+	}
+    }
+
+    return $counter;
+}
+
+=item check_spelling_picky(TAG, TEXT, FILENAME)
+
+Perform a spelling check of TEXT, reporting TAG if any mistakes are found.
+This method performs some pickier corrections - such as checking for common
+capitalization mistakes - which would are not included in check_spelling as
+they are not appropriate for some files, such as changelogs.
+
+If FILENAME is given, it will be used as the first argument to TAG.
+
+Returns the number of spelling mistakes found in TEXT.
+
+=cut
+
+sub check_spelling_picky {
+    my ($tag, $text, $filename) = @_;
+
+    my $counter = 0;
+    my $corrections_case =
+        Lintian::Data->new('spelling/corrections-case', '\|\|');
+
+    # Check this first in case it's contained in square brackets and
+    # removed below.
+    if ($text =~ m,meta\s+package,) {
+        $counter++;
+        _tag($tag, $filename, "meta package", "metapackage")
+            if defined $tag;
+    }
+
+    # Exclude text enclosed in square brackets as it could be a package list
+    # or similar which may legitimately contain lower-cased versions of
+    # the words.
+    $text =~ s/\[.+?\]//sg;
+    for my $word (split(/\s+/, $text)) {
+        $word =~ s/^\(|[).,?!:;]+$//g;
+        if ($corrections_case->known($word)) {
+            $counter++;
+            _tag($tag, $filename, $word, $corrections_case->value($word))
+                if defined $tag;
+            next;
+        }
+    }
+
+    return $counter;
 }
 
 =back
