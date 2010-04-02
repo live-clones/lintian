@@ -1,0 +1,9 @@
+unpack-srcpkg-xz (1.0-1) unstable; urgency=low
+
+  * Lintian Test Suite.
+  * Test: unpack-srcpkg-xz
+
+  * Suppress "should close ITP bug" messages.  (Closes: #123456)
+
+ -- Debian Lintian Maintainers <lintian-maint@debian.org>  Fri,  2 Apr 2010 17:35:22 +0100
+

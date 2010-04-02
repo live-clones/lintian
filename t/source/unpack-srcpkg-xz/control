@@ -1,0 +1,14 @@
+Source: unpack-srcpkg-xz
+Section: devel
+Priority: optional
+Maintainer: Debian Lintian Maintainers <lintian-maint@debian.org>
+Build-Depends: debhelper (>= 7)
+Standards-Version: 3.8.4
+
+Package: unpack-srcpkg-xz
+Architecture: all
+Depends: ${misc:Depends}
+Description: Test package for xz-compressed source packages
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.
