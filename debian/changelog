@@ -22,6 +22,7 @@ lintian (2.4.0) UNRELEASED; urgency=low
       Meskes.
     + [RA] Recognize negated file checks when checking for file sourcing
       without a test.  Thanks, Jérémie Corbier.  (Closes: #575363)
+    + [ADB] Use == for numeric comparison.
   * checks/lintian.desc:
     + [ADB] Remove information about .changes-related tags, now included in
       checks/changes-file.desc

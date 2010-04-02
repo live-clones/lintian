@@ -214,7 +214,7 @@ sub check_init {
     my $in_file_test = 0;
     my %needs_fs = ('remote' => 0, 'local' => 0);
     while (defined(my $l = <IN>)) {
-	if ($. eq 1 && $l =~ m,^\#!\s*(/usr/[^\s]+),) {
+	if ($. == 1 && $l =~ m,^\#!\s*(/usr/[^\s]+),) {
 	    tag "init.d-script-uses-usr-interpreter", "/etc/init.d/$_ $1";
 	}
 	if ($l =~ m/^\#\#\# BEGIN INIT INFO/) {
