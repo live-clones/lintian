@@ -120,7 +120,7 @@ fi
 		}
 		for my $pkg (keys %seen) {
 		    print "$pkg\n"
-			unless ($seen{$pkg} eq 1 or exists($pkgs{$pkg}));
+			unless ($seen{$pkg} == 1 or exists($pkgs{$pkg}));
 		}' \
     | sort -u >> "$workdir/virtual-packages"
 

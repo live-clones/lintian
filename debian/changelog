@@ -88,6 +88,9 @@ lintian (2.4.0) UNRELEASED; urgency=low
       file_start()
     + [ADB] Don't refer to .changes files as "packages"
 
+  * private/refresh-virtual-packages-data:
+    + [ADB] Use "==" for numeric comparison, not "eq".
+
   * t/runtests:
     + [ADB] Don't flag lintian output lines for .changes tags as invalid
     + [ADB] When checking the number of jobs to run in parallel, use "=="
