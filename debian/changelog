@@ -2,6 +2,7 @@ lintian (2.4.0) UNRELEASED; urgency=low
 
   * checks/changes-file{,.desc}:
     + [ADB] New check script for .changes file tests
+    + [RA] Add maverick as a valid Ubuntu distribution.
   * checks/deb-format.desc:
     + [RG] deb-format needs changelog-file.
   * checks/debian-source-dir.desc:
@@ -39,6 +40,9 @@ lintian (2.4.0) UNRELEASED; urgency=low
 
   * collection/*.desc:
     + [RG] Remove now-unneeded Order keys.
+
+  * data/changelog-file/ubuntu-dists:
+    + [RA] Add maverick as a valid Ubuntu distribution.  (Closes: #576282)
 
   * frontend/lintian:
     + [ADB] Add "changes" as a valid type for collection and check scripts
