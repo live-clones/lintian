@@ -1,13 +1,23 @@
 lintian (2.4.0) UNRELEASED; urgency=low
 
+  * checks/binaries:
+    + [ADB] Use Lintian::Check::check_spelling()
+  * checks/changelog-file:
+    + [ADB] Use Lintian::Check::check_spelling()
   * checks/changes-file{,.desc}:
     + [ADB] New check script for .changes file tests
     + [RA] Add maverick as a valid Ubuntu distribution.
+  * checks/copyright-file:
+    + [ADB] Use Lintian::Check::check_spelling()
   * checks/deb-format.desc:
     + [RG] deb-format needs changelog-file.
+  * checks/debian-readme:
+    + [ADB] Use Lintian::Check::check_spelling()
   * checks/debian-source-dir.desc:
     + [RA] Downgrade missing-debian-source-format to wishlist and tone
       down the long description a bit.
+  * checks/description:
+    + [ADB] Use Lintian::Check::check_spelling{,_picky}()
   * checks/fields:
     + [RA] Add an exception for diffutils for depending on an essential
       package without a version, since diff was renamed to diffutils and
@@ -26,6 +36,11 @@ lintian (2.4.0) UNRELEASED; urgency=low
   * checks/lintian.desc:
     + [ADB] Remove information about .changes-related tags, now included in
       checks/changes-file.desc
+  * checks/manpages:
+    + [ADB] Replace Spelling::spelling_check() call with the new
+      Lintian::Check::check_spelling()
+  * checks/menus:
+    + [ADB] Use Lintian::Check::check_spelling{,_picky}()
   * checks/nmu:
     + [RA] Skip leading multi-author changelog lines when looking for
       things like non-maintainer upload notes at the start of the
@@ -44,6 +59,9 @@ lintian (2.4.0) UNRELEASED; urgency=low
 
   * data/changelog-file/ubuntu-dists:
     + [RA] Add maverick as a valid Ubuntu distribution.  (Closes: #576282)
+  * data/spelling/corrections{,-case,-multiword}:
+    + [ADB] New files to contain the various types of spelling corrections
+      made by Lintian's spelling checks.
 
   * frontend/lintian:
     + [ADB] Add "changes" as a valid type for collection and check scripts
@@ -62,6 +80,10 @@ lintian (2.4.0) UNRELEASED; urgency=low
     + [ADB] Add a "changes" directory to the lab structure. For static labs,
       the directory is automatically added the first time a .changes-aware
       Lintian accesses the lab.
+  * lib/Lintian/Check.pm:
+    + [ADB] Add new check_spelling and check_spelling_picky methods, based on
+      the spelling_check and spelling_check_picky methods from lib/Spelling.pm
+      (renamed for consistency with check_maintainer).
   * lib/Lintian/Collect.pm:
     + [ADB] Add support for Lintian::Collect::Changes
   * lib/Lintian/Collect/Binary.pm:
@@ -90,6 +112,9 @@ lintian (2.4.0) UNRELEASED; urgency=low
     + [ADB] Remove the special-casing of .changes files in the output from
       file_start()
     + [ADB] Don't refer to .changes files as "packages"
+  * lib/Spelling.pm:
+    + [ADB] Removed as its functionality has been replaced by new methods in
+      Lintian::Check.
 
   * private/refresh-virtual-packages-data:
     + [ADB] Use "==" for numeric comparison, not "eq".
@@ -98,6 +123,8 @@ lintian (2.4.0) UNRELEASED; urgency=low
     + [ADB] Don't flag lintian output lines for .changes tags as invalid
     + [ADB] When checking the number of jobs to run in parallel, use "=="
       for numeric comparison rather than "eq".
+  * t/scripts/tags.t:
+    + [ADB] Use Lintian::Check::check_spelling() rather than Spelling.pm.
 
   * testset/runtests:
     + [ADB] Don't flag lintian output lines for .changes tags as invalid
