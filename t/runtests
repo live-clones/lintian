@@ -118,7 +118,7 @@ unless (-d $TESTSET) {
 }
 
 # Getopt::Long assigns 0 as default value if none was specified
-if ($JOBS eq 0 && -r '/proc/cpuinfo') {
+if ($JOBS == 0 && -r '/proc/cpuinfo') {
     open(CPU, '<', '/proc/cpuinfo')
 	or fail("failed to open /proc/cpuinfo: $!");
     while (<CPU>) {
@@ -138,7 +138,7 @@ if ($JOBS eq 0 && -r '/proc/cpuinfo') {
 # No decent number of jobs? set a default
 # Above $JOBS should be set to -1 so that this condition is always met,
 # therefore avoiding duplication.
-if ($JOBS le 0) {
+if ($JOBS <= 0) {
     $JOBS = 2;
 }
 

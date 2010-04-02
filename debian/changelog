@@ -88,7 +88,12 @@ lintian (2.4.0) UNRELEASED; urgency=low
       file_start()
     + [ADB] Don't refer to .changes files as "packages"
 
-  * {t,testset}/runtests:
+  * t/runtests:
+    + [ADB] Don't flag lintian output lines for .changes tags as invalid
+    + [ADB] When checking the number of jobs to run in parallel, use "=="
+      for numeric comparison rather than "eq".
+
+  * testset/runtests:
     + [ADB] Don't flag lintian output lines for .changes tags as invalid
 
   * unpack/unpack-changes-l1:
