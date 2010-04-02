@@ -80,11 +80,6 @@ lib:
   checks/menu-format, after which we could split desktop checking and menu
   checking into two separate check scripts.
 
-- Move the spelling corrections in Spelling.pm into data as a file with a
-  custom delimiter, so that corrections containing whitespace can be
-  represented.  Move the small amount of code remaining into Lintian/Check
-  as a new method.
-
 - Move the remaining libraries in lib into real modules in the Lintian
   namespace.  In some cases, this correctly involves significantly
   rewriting how that part of Lintian is handled to make it more
