@@ -64,6 +64,9 @@ lintian (2.4.0) UNRELEASED; urgency=low
       Lintian accesses the lab.
   * lib/Lintian/Collect.pm:
     + [ADB] Add support for Lintian::Collect::Changes
+  * lib/Lintian/Collect/Binary.pm:
+    + [ADB] The STACK element of objdump_info's result is a string not a
+      number; treat it as such consistently
   * lib/Lintian/Collect/Changes.pm:
     + [ADB] New module providing information about .changes files and the
       files referenced therein

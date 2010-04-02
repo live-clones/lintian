@@ -239,9 +239,9 @@ sub objdump_info {
 	    } elsif (m/^\s*INTERP\s/) {
 		$file->{INTERP} = 1;
 	    } elsif (m/^\s*STACK\s/) {
-		$file->{STACK} = 0;
+		$file->{STACK} = "0";
 	    } else {
-		if (defined $file->{STACK} and $file->{STACK} eq 0) {
+		if (defined $file->{STACK} and $file->{STACK} eq "0") {
 		    m/\sflags\s+(\S+)/o;
 		    $file->{STACK} = $1;
 		} else {
