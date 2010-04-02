@@ -21,8 +21,8 @@
 package Lintian::manpages;
 use strict;
 use Util;
+use Lintian::Check qw(check_spelling);
 use Lintian::Tags qw(tag);
-use Spelling;
 
 sub run {
 
@@ -319,7 +319,7 @@ foreach my $file (sort keys %{$info->index}) {
 		tag "manpage-has-errors-from-pod2man", "$file:$lc";
 	    }
 	    # Check for spelling errors if the manpage is English
-	    spelling_check("spelling-error-in-manpage", $line, $file)
+	    check_spelling("spelling-error-in-manpage", $line, $file)
 		if ($path =~ m,/man/man\d/,);
 	}
 	tag "hyphen-used-as-minus-sign", $file, ($hc - 10),

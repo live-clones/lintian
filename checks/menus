@@ -26,9 +26,9 @@ use strict;
 use lib "$ENV{'LINTIAN_ROOT'}/checks/";
 use common_data;
 
+use Lintian::Check qw(check_spelling check_spelling_picky);
 use Lintian::Data;
 use Lintian::Tags qw(tag);
-use Spelling;
 use Util;
 
 # Supported documentation formats for doc-base files.
@@ -402,9 +402,9 @@ sub check_doc_base_field {
     # Title field.
     } elsif ($field eq 'title') {
         if (@$vals) {
-            spelling_check("spelling-error-in-doc-base-title-field",
+            check_spelling("spelling-error-in-doc-base-title-field",
                            join (' ', @$vals), "$dbfile:$line");
-            spelling_check_picky("spelling-error-in-doc-base-title-field",
+            check_spelling_picky("spelling-error-in-doc-base-title-field",
                                  join (' ', @$vals), "$dbfile:$line");
         }
 
@@ -470,9 +470,9 @@ sub check_doc_base_field {
 
         # Check spelling.
         if (@$vals) {
-            spelling_check("spelling-error-in-doc-base-abstract-field",
+            check_spelling("spelling-error-in-doc-base-abstract-field",
                            join (' ', @$vals), "$dbfile:$line");
-            spelling_check_picky("spelling-error-in-doc-base-abstract-field",
+            check_spelling_picky("spelling-error-in-doc-base-abstract-field",
                                  join (' ', @$vals), "$dbfile:$line");
         }
     }

@@ -23,7 +23,7 @@ use strict;
 
 use Lintian::Relation::Version qw(versions_gt);
 use Lintian::Tags qw(tag);
-use Spelling;
+use Lintian::Check qw(check_spelling);
 use Util;
 
 use Encode qw(decode);
@@ -160,7 +160,7 @@ if (-f 'NEWS.Debian') {
         if ($news->Distribution && $news->Distribution =~ /unreleased/i) {
             tag "debian-news-entry-has-strange-distribution", $news->Distribution;
         }
-        spelling_check('spelling-error-in-news-debian', $news->Changes);
+        check_spelling('spelling-error-in-news-debian', $news->Changes);
 	if ($news->Changes =~ /^\s*\*\s/) {
 	    tag 'debian-news-entry-uses-asterisk';
 	}
@@ -404,7 +404,7 @@ if (@entries) {
     # Strip out all lines that contain the word spelling to avoid false
     # positives on changelog entries for spelling fixes.
     $changes =~ s/^.*spelling.*\n//gm;
-    spelling_check('spelling-error-in-changelog', $changes);
+    check_spelling('spelling-error-in-changelog', $changes);
 }
 
 # read the changelog itself

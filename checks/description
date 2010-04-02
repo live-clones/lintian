@@ -19,12 +19,13 @@
 # MA 02110-1301, USA.
 
 package Lintian::description;
+use warnings;
 use strict;
 
 use Encode qw(decode);
 
+use Lintian::Check qw(check_spelling check_spelling_picky);
 use Lintian::Tags qw(tag);
-use Spelling;
 use Util;
 
 sub run {
@@ -185,8 +186,8 @@ unless ($info->field('homepage') or $flagged_homepage) {
 }
 
 if ($description) {
-    spelling_check('spelling-error-in-description', $description);
-    spelling_check_picky('capitalization-error-in-description', $description);
+    check_spelling('spelling-error-in-description', $description);
+    check_spelling_picky('capitalization-error-in-description', $description);
 }
 
 }

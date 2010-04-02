@@ -23,8 +23,8 @@ use warnings;
 
 use Test::More qw(no_plan);
 
+use Lintian::Check qw(check_spelling);
 use Lintian::Tags ();
-use Spelling;
 use Util qw(read_dpkg_control);
 
 my @DESCS = <$ENV{'LINTIAN_ROOT'}/checks/*.desc>;
@@ -43,7 +43,7 @@ for my $desc_file (@DESCS) {
 
 	    my $info = $i->{'info'} || '';
 
-	    is(spelling_check(undef, $info), 0,
+	    is(check_spelling(undef, $info), 0,
 		"$desc_file: $i->{'tag'} has no spelling errors");
 
 	    # Check the tag info for unescaped <> or for unknown tags (which

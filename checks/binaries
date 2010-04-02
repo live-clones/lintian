@@ -21,7 +21,7 @@
 package Lintian::binaries;
 use strict;
 use Util;
-use Spelling;
+use Lintian::Check qw(check_spelling);
 use Lintian::Tags qw(tag);
 
 use File::Spec;
@@ -232,7 +232,7 @@ foreach my $file (sort keys %{$info->file_info}) {
     }
 
     my $strings = slurp_entire_file("strings/$file");
-    spelling_check('spelling-error-in-binary', $strings, $file);
+    check_spelling('spelling-error-in-binary', $strings, $file);
 
     # stripped?
     if ($fileinfo =~ m,not stripped\s*$,o) {

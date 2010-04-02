@@ -24,9 +24,9 @@ use strict;
 use lib "$ENV{'LINTIAN_ROOT'}/checks/";
 use common_data;
 
+use Lintian::Check qw(check_spelling);
 use Lintian::Data ();
 use Lintian::Tags qw(tag);
-use Spelling;
 use Util;
 
 use Encode qw(decode);
@@ -302,7 +302,7 @@ if ($found && !$linked && !/(?:Copyright|Copr\.|\302\251)(?:.*|[\(C\):\s]+)\b\d{
     tag 'copyright-without-copyright-notice';
 }
 
-spelling_check('spelling-error-in-copyright', $_);
+check_spelling('spelling-error-in-copyright', $_);
 
 # Now, check for linking against libssl if the package is covered by the GPL.
 # (This check was requested by ftp-master.)  First, see if the package is
