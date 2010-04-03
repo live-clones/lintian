@@ -64,7 +64,7 @@ for my $tagfile (<t/changes/*.tags>, <t/debs/*/tags>, <t/source/*/tags>) {
     open(IN, '<', $tagfile) or die "Cannot open $tagfile: $!\n";
     local $_;
     while (<IN>) {
-        if (/^(.): (\S+)(?: (?:source|udeb))?: (\S+)/) {
+        if (/^(.): (\S+)(?: (?:changes|source|udeb))?: (\S+)/) {
             delete $tags{$3};
         }
     }
@@ -82,7 +82,7 @@ for my $tagfile (<testset/tags.*>) {
     open (IN, '<', $tagfile) or die "Cannot open $tagfile: $!\n";
     local $_;
     while (<IN>) {
-        if (/^(.): (\S+)(?: (?:source|udeb))?: (\S+)/) {
+        if (/^(.): (\S+)(?: (?:changes|source|udeb))?: (\S+)/) {
             if (exists $tags{$3}) {
                 $legacy{$3} = $tags{$3};
                 delete $tags{$3};

@@ -125,6 +125,8 @@ lintian (2.4.0) UNRELEASED; urgency=low
 
   * private/refresh-virtual-packages-data:
     + [ADB] Use "==" for numeric comparison, not "eq".
+  * private/update-coverage:
+    + [ADB] Support .changes file tags
 
   * t/runtests:
     + [ADB] Don't flag lintian output lines for .changes tags as invalid
