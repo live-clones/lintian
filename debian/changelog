@@ -116,6 +116,9 @@ lintian (2.4.0) UNRELEASED; urgency=low
     + [ADB] Removed as its functionality has been replaced by new methods in
       Lintian::Check.
 
+  * man/lintian.1:
+    + [ADB] Add changes-file to the list of check scripts.
+
   * private/refresh-virtual-packages-data:
     + [ADB] Use "==" for numeric comparison, not "eq".
 
