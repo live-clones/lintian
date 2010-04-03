@@ -134,6 +134,9 @@ lintian (2.4.0) UNRELEASED; urgency=low
       for numeric comparison rather than "eq".
   * t/scripts/tags.t:
     + [ADB] Use Lintian::Check::check_spelling() rather than Spelling.pm.
+  * t/tests/README:
+    + [ADB] Update the example .changes sed script to match the new output
+      format.
 
   * testset/runtests:
     + [ADB] Don't flag lintian output lines for .changes tags as invalid

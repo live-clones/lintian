@@ -178,7 +178,7 @@ post_test
     use for this script is to remove the architecture from tags
     produced on the .changes file with a line like:
 
-        s/_[^.]*\.changes/_arch.changes/
+        s/_[^ _]* changes/_arch changes/
 
     but it may be useful for other cases where the output of Lintian
     may change on different systems.
