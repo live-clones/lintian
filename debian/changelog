@@ -63,6 +63,10 @@ lintian (2.4.0) UNRELEASED; urgency=low
     + [ADB] New files to contain the various types of spelling corrections
       made by Lintian's spelling checks.
 
+  * doc/desc-files:
+    + [ADB] Add "changes" as an acceptable type for collection and check
+      scripts.
+
   * frontend/lintian:
     + [ADB] Add "changes" as a valid type for collection and check scripts
     + [ADB] Replace the special-cased parsing of .changes files with calls to
