@@ -10,6 +10,7 @@ Test-For:
  copyright-file-contains-full-gfdl-license
  copyright-file-contains-full-gpl-license
  copyright-file-is-symlink
+ copyright-file-lacks-pointer-to-perl-license
  copyright-has-url-from-dh_make-boilerplate
  copyright-refers-to-bad-php-license
  copyright-refers-to-compressed-license

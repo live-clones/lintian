@@ -7,6 +7,7 @@ E: copyright-full-gpl: copyright-should-refer-to-common-license-file-for-gpl
 E: copyright-misc-errors: copyright-refers-to-compressed-license usr/share/common-licenses/BSD.gz
 E: copyright-misc-errors: copyright-refers-to-incorrect-directory usr/share/common-licences
 E: copyright-misc-errors: copyright-refers-to-old-directory
+E: copyright-missing-perl-license-pointer: copyright-file-lacks-pointer-to-perl-license
 E: copyright-old-style: FSSTND-dir-in-usr usr/doc/
 E: copyright-old-style: old-style-copyright-file
 E: copyright-php: copyright-refers-to-bad-php-license
