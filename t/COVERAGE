@@ -1,4 +1,4 @@
-Last generated 2010-03-22
+Last generated 2010-04-03
 
 The following tags are not tested by the test suite:
 
@@ -14,6 +14,12 @@ changelog-file spelling-error-in-changelog
 changelog-file wrong-name-for-changelog-of-native-package
 changelog-file wrong-name-for-debian-changelog-file
 changelog-file wrong-name-for-upstream-changelog
+
+changes-file bad-section-in-changes-file
+changes-file checksum-mismatch-in-changes-file
+changes-file file-size-mismatch-in-changes-file
+changes-file no-description-in-changes-file
+changes-file no-urgency-in-changes-file
 
 control-file debian-control-file-is-a-symlink
 control-file debian-control-with-duplicate-fields
@@ -115,12 +121,6 @@ files udeb-contains-documentation-file
 init.d duplicate-updaterc.d-calls-in-postinst
 init.d file-in-etc-rc.d-marked-as-conffile
 init.d init.d-script-has-duplicate-lsb-keyword
-
-lintian bad-section-in-changes-file
-lintian checksum-mismatch-in-changes-file
-lintian file-size-mismatch-in-changes-file
-lintian no-description-in-changes-file
-lintian no-urgency-in-changes-file
 
 manpages FSSTND-dir-in-manual-page
 manpages bad-so-link-within-manual-page
@@ -224,6 +224,8 @@ changelog-file debian-changelog-file-missing-or-wrong-name
 changelog-file debian-changelog-file-uses-obsolete-national-encoding
 changelog-file debian-news-file-not-compressed
 changelog-file wrong-name-for-debian-news-file
+
+changes-file bad-ubuntu-distribution-in-changes-file
 
 control-file debian-control-file-uses-obsolete-national-encoding
 control-file section-area-mismatch
@@ -378,8 +380,6 @@ init.d postrm-contains-additional-updaterc.d-calls
 init.d postrm-does-not-call-updaterc.d-for-init.d-script
 init.d preinst-calls-updaterc.d
 init.d prerm-calls-updaterc.d
-
-lintian bad-ubuntu-distribution-in-changes-file
 
 md5sums file-missing-in-md5sums
 md5sums malformed-md5sums-control-file
