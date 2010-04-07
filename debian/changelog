@@ -1,5 +1,11 @@
 lintian (2.4.0) UNRELEASED; urgency=low
 
+  * Summary of tag changes:
+    + Added:
+      - embedded-libjpeg
+      - embedded-libopenjpeg
+      - embedded-libpng
+
   * checks/binaries{,.desc}:
     + [ADB] Use Lintian::Check::check_spelling()
     + [RG] Detect embedded copies of libpng, lib{,open}jpeg.
