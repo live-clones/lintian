@@ -1,2 +1,0 @@
-E: binaries-embedded-libpng: embedded-libpng ./usr/bin/dummy
-W: binaries-embedded-libpng: binary-without-manpage usr/bin/dummy

@@ -1,6 +1,0 @@
-Testname: binaries-embedded-libpng
-Sequence: 6000
-Architecture: any
-Version: 1.0
-Description: Package with binary with the png_zalloc error string
-Test-For: embedded-libpng

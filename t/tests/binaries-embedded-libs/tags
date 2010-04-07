@@ -1,0 +1,4 @@
+E: binaries-embedded-libs: embedded-libpng ./usr/bin/libpng
+E: binaries-embedded-libs: embedded-zlib ./usr/bin/zlib
+W: binaries-embedded-libs: binary-without-manpage usr/bin/libpng
+W: binaries-embedded-libs: binary-without-manpage usr/bin/zlib

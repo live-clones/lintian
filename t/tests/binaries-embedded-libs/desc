@@ -1,0 +1,8 @@
+Testname: binaries-embedded-libs
+Sequence: 6000
+Architecture: any
+Version: 1.0
+Description: Package with binary with library-unique strings
+Test-For:
+ embedded-zlib
+ embedded-libpng

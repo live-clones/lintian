@@ -1,6 +1,0 @@
-Testname: binaries-embedded-zlib
-Sequence: 6000
-Architecture: any
-Version: 1.0
-Description: Package with binary with the deflate copyright string
-Test-For: embedded-zlib

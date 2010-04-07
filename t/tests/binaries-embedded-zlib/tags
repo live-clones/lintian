@@ -1,2 +1,0 @@
-E: binaries-embedded-zlib: embedded-zlib ./usr/bin/dummy
-W: binaries-embedded-zlib: binary-without-manpage usr/bin/dummy
