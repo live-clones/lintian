@@ -1142,7 +1142,7 @@ Info: This binary package appears to be empty, and its description does
  package renames or similar problems where installation rules don't put
  files in the correct place.
  .
- If the package is deliberately empty, pleaes mention in the package long
+ If the package is deliberately empty, please mention in the package long
  description one of the phrases "meta-package," "dummy," "dependency
  package," "empty package," or "virtual package."
 

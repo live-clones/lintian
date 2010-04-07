@@ -30,9 +30,11 @@ lintian (2.4.0) UNRELEASED; urgency=low
       package without a version, since diff was renamed to diffutils and
       depending on diffutils effectively is a versioned dependency.
       Thanks, Santiago Vila.  (Closes: #575073)
-  * checks/files:
+  * checks/files{,.desc}:
     + [RA] The simplepie class can begin with class[.-].  Patch from
       Marcelo Jorge Vieira (metal).  (Closes: #575879)
+    + [RG] Fix typo in empty-binary-package's description.  Thanks,
+      Jakub Wilk.  (Closes: #576804)
   * checks/init.d:
     + [RA] Allow $all to satisfy a $remote_fs or $local_fs requirement for
       Required-Stop, since this has now been implemented.  Thanks, Michael
