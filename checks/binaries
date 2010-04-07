@@ -283,6 +283,16 @@ foreach my $file (sort keys %{$info->file_info}) {
 	tag "embedded-libpng", $file;
     }
 
+    if ($info->field('source') !~ '^libjpeg.*'
+	and $strings =~ /quantization tables are too coarse for baseline JPEG/) {
+	tag "embedded-libjpeg", $file;
+    }
+
+    if ($info->field('source') ne 'openjpeg'
+	and $strings =~ /tcd_decode: incomplete bistream/) {
+	tag "embedded-libopenjpeg", $file;
+    }
+
     # binary or shared object?
     next unless ($fileinfo =~ m/executable/) or ($fileinfo =~ m/shared object/);
     next if $type eq 'udeb';

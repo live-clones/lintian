@@ -2,7 +2,7 @@ lintian (2.4.0) UNRELEASED; urgency=low
 
   * checks/binaries{,.desc}:
     + [ADB] Use Lintian::Check::check_spelling()
-    + [RG] Detect embedded copies of libpng.
+    + [RG] Detect embedded copies of libpng, lib{,open}jpeg.
   * checks/changelog-file:
     + [ADB] Use Lintian::Check::check_spelling()
   * checks/changes-file{,.desc}:

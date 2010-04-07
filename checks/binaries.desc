@@ -275,6 +275,32 @@ Info: The given ELF object appears to have been statically linked to libpng.
  to coordinate with the libpng maintainer to include the changes on the
  system version of the library.
 
+Tag: embedded-libjpeg
+Severity: serious
+Certainty: possible
+Ref: policy 4.13
+Info: The given ELF object appears to have been statically linked to
+ libjpeg.  Doing this is strongly discouraged due to the extra work needed
+ by the security team to fix all the extra embedded copies or trigger the
+ package rebuilds, as appropriate.
+ .
+ If the package uses a modified version of libjpeg it is highly
+ recommended to coordinate with the libjpeg maintainer to include the
+ changes on the system version of the library.
+
+Tag: embedded-libopenjpeg
+Severity: serious
+Certainty: possible
+Ref: policy 4.13
+Info: The given ELF object appears to have been statically linked to
+ libopenjpeg.  Doing this is strongly discouraged due to the extra work
+ needed by the security team to fix all the extra embedded copies or
+ trigger the package rebuilds, as appropriate.
+ .
+ If the package uses a modified version of libopenjpeg it is highly
+ recommended to coordinate with the libopenjpeg maintainer to include the
+ changes on the system version of the library.
+
 Tag: debug-symbols-directly-in-usr-lib-debug
 Severity: important
 Certainty: certain

@@ -1,4 +1,4 @@
-BINARIES :=  zlib libpng
+BINARIES :=  zlib libpng libjpeg libopenjpeg
 
 all: $(BINARIES)
 
