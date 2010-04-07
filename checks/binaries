@@ -278,6 +278,11 @@ foreach my $file (sort keys %{$info->file_info}) {
 	tag "embedded-zlib", $file;
     }
 
+    if ($info->field('source') ne 'libpng'
+	and $strings =~ /^Potential overflow in png_zalloc/m) {
+	tag "embedded-libpng", $file;
+    }
+
     # binary or shared object?
     next unless ($fileinfo =~ m/executable/) or ($fileinfo =~ m/shared object/);
     next if $type eq 'udeb';

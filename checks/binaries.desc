@@ -262,6 +262,19 @@ Info: The given ELF object appears to have been statically linked to zlib.
  Some packages have to use a modified version of zlib due to requirements
  in that package.  If this is the case, please add an override.
 
+Tag: embedded-libpng
+Severity: serious
+Certainty: possible
+Ref: policy 4.13
+Info: The given ELF object appears to have been statically linked to libpng.
+ Doing this is strongly discouraged due to the extra work needed by the
+ security team to fix all the extra embedded copies or trigger the package
+ rebuilds, as appropriate.
+ .
+ If the package uses a modified version of libpng it is highly recommended
+ to coordinate with the libpng maintainer to include the changes on the
+ system version of the library.
+
 Tag: debug-symbols-directly-in-usr-lib-debug
 Severity: important
 Certainty: certain
