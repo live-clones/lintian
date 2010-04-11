@@ -72,6 +72,7 @@ lintian (2.4.0) UNRELEASED; urgency=low
     + [ADB] New files to contain the various types of spelling corrections
       made by Lintian's spelling checks.
     + [RG] Detect "pleaes" -> "please" typo.
+    + [RG] Add more spelling corrections.
 
   * doc/desc-files:
     + [ADB] Add "changes" as an acceptable type for collection and check

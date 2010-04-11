@@ -21,6 +21,8 @@ abitrate||arbitrate
 abov||above
 absense||absence
 absolut||absolute
+absoulte||absolute
+acceleratoin||acceleration
 accelleration||acceleration
 accesing||accessing
 accesnt||accent
@@ -32,10 +34,16 @@ accomodates||accommodates
 accout||account
 acess||access
 acessable||accessible
+ackowledge||acknowledge
+ackowledged||acknowledged
 acording||according
+activete||activate
 acumulating||accumulating
 addional||additional
 additionaly||additionally
+aditional||additional
+aditionally||additionally
+aditionaly||additionally
 adress||address
 adresses||addresses
 adviced||advised
@@ -44,9 +52,13 @@ albumns||albums
 alegorical||allegorical
 algorith||algorithm
 algorithmical||algorithmically
+algoritm||algorithm
 algoritms||algorithms
+algorrithm||algorithm
+algorritm||algorithm
 allpication||application
 alot||a lot
+alow||allow
 alows||allows
 altough||although
 ambigious||ambiguous
@@ -98,6 +110,7 @@ avaliable||available
 avaliable||available
 backgroud||background
 bahavior||behavior
+baloon||balloon
 baloons||balloons
 batery||battery
 becomming||becoming
@@ -108,11 +121,14 @@ cancelation||cancellation
 capabilites||capabilities
 capatibilities||capabilities
 cariage||carriage
+challange||challenge
 challanges||challenges
 changable||changeable
+charachter||character
 charachters||characters
 charcter||character
 childs||children
+chnage||change
 chnages||changes
 choosen||chosen
 colorfull||colorful
@@ -135,6 +151,8 @@ compres||compress
 compresion||compression
 configuratoin||configuration
 connectinos||connections
+connnection||connection
+connnections||connections
 consistancy||consistency
 containes||contains
 containts||contains
@@ -160,6 +178,7 @@ delemiter||delimiter
 dependancies||dependencies
 dependancy||dependency
 dependant||dependent
+desactivate||deactivate
 detabase||database
 developement||development
 developped||developed
@@ -199,6 +218,7 @@ excecutable||executable
 exceded||exceeded
 excellant||excellent
 exlcude||exclude
+exlcusive||exclusive
 expecially||especially
 explicitely||explicitly
 expresion||expression
@@ -207,6 +227,7 @@ extention||extension
 failuer||failure
 familar||familiar
 fatser||faster
+fetaure||feature
 fetaures||features
 forse||force
 fortan||fortran
@@ -277,6 +298,7 @@ mathimatical||mathematical
 mathimatic||mathematic
 mathimatics||mathematics
 ment||meant
+messsage||message
 messsages||messages
 microprocesspr||microprocessor
 milliseonds||milliseconds
