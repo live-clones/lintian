@@ -220,7 +220,7 @@ if ($is_empty) {
 	    }
         }
     }
-    tag 'empty-binary-package' if $is_empty;
+    tag 'empty-binary-package' if ($is_empty && $type ne 'udeb');
 }
 
 # Read package contents...

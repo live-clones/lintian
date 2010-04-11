@@ -35,6 +35,8 @@ lintian (2.4.0) UNRELEASED; urgency=low
       Marcelo Jorge Vieira (metal).  (Closes: #575879)
     + [RG] Fix typo in empty-binary-package's description.  Thanks,
       Jakub Wilk.  (Closes: #576804)
+    + [RG] Exclude udebs from empty-binary-package check.  Thanks,
+      Vagrant Cascadian.  (Closes: #576581)
   * checks/init.d:
     + [RA] Allow $all to satisfy a $remote_fs or $local_fs requirement for
       Required-Stop, since this has now been implemented.  Thanks, Michael
