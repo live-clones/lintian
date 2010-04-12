@@ -4,5 +4,5 @@ Type: non-native
 Version: 1.0+dsfg-1.1
 Skeleton: pedantic
 Options: --pedantic -I -E --exp-output format=letterqualifier --show-overrides
-Sort: no
+Output-Format: letter
 Description: Test Lintian letter qualifier output format

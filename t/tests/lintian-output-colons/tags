@@ -1,18 +1,18 @@
-tag:P:pedantic:certain::lintian-output-colons:1.0+dsfg-1.1:source:source:debian-control-has-unusual-field-spacing:line 11:
-tag:I:wishlist:certain::lintian-output-colons:1.0+dsfg-1.1:source:source:binary-control-field-duplicates-source:field "section" in package lintian-output-colons:
-tag:W:minor:certain:O:lintian-output-colons:1.0+dsfg-1.1:source:source:dfsg-version-misspelled:1.0+dsfg-1.1:dfsg-version-misspelled 1.0*
-tag:W:normal:certain::lintian-output-colons:1.0+dsfg-1.1:source:source:maintainer-upload-has-incorrect-version-number:1.0+dsfg-1.1:
-tag:P:pedantic:certain::lintian-output-colons:1.0+dsfg-1.1:source:source:direct-changes-in-diff-but-no-patch-system:Changes:
-tag:P:pedantic:wild-guess:O:lintian-output-colons:1.0+dsfg-1.1:all:binary:no-upstream-changelog::no-upstream-changelog
-tag:E:serious:wild-guess::lintian-output-colons:1.0+dsfg-1.1:all:binary:possible-gpl-code-linked-with-openssl::
-tag:I:minor:possible::lintian-output-colons:1.0+dsfg-1.1:all:binary:description-synopsis-might-not-be-phrased-properly::
-tag:I:wishlist:wild-guess::lintian-output-colons:1.0+dsfg-1.1:all:binary:description-possibly-contains-homepage:http\://www.example.com/.:
 tag:E:important:possible::lintian-output-colons:1.0+dsfg-1.1:all:binary:new-essential-package::
-tag:P:pedantic:possible::lintian-output-colons:1.0+dsfg-1.1:all:binary:no-homepage-field::
 tag:E:serious:certain::lintian-output-colons:1.0+dsfg-1.1:all:binary:dir-in-usr-local:usr/local/share/:
 tag:E:serious:certain::lintian-output-colons:1.0+dsfg-1.1:all:binary:dir-in-usr-local:usr/local/share/lintian/:
 tag:E:serious:possible::lintian-output-colons:1.0+dsfg-1.1:all:binary:dir-or-file-in-var-lock:var/lock/lintian/:
-tag:I:wishlist:possible::lintian-output-colons:1.0+dsfg-1.1:all:binary:package-contains-empty-directory:usr/local/share/lintian/:
-tag:W:normal:possible::lintian-output-colons:1.0+dsfg-1.1:all:binary:binary-without-manpage:usr/bin/script:
+tag:E:serious:wild-guess::lintian-output-colons:1.0+dsfg-1.1:all:binary:possible-gpl-code-linked-with-openssl::
+tag:I:minor:possible::lintian-output-colons:1.0+dsfg-1.1:all:binary:description-synopsis-might-not-be-phrased-properly::
 tag:I:normal:wild-guess::lintian-output-colons:1.0+dsfg-1.1:all:binary:desktop-entry-limited-to-environments:/usr/share/applications/script.desktop:
+tag:I:wishlist:certain::lintian-output-colons:1.0+dsfg-1.1:source:source:binary-control-field-duplicates-source:field "section" in package lintian-output-colons:
+tag:I:wishlist:possible::lintian-output-colons:1.0+dsfg-1.1:all:binary:package-contains-empty-directory:usr/local/share/lintian/:
+tag:I:wishlist:wild-guess::lintian-output-colons:1.0+dsfg-1.1:all:binary:description-possibly-contains-homepage:http\://www.example.com/.:
+tag:P:pedantic:certain::lintian-output-colons:1.0+dsfg-1.1:source:source:debian-control-has-unusual-field-spacing:line 11:
+tag:P:pedantic:certain::lintian-output-colons:1.0+dsfg-1.1:source:source:direct-changes-in-diff-but-no-patch-system:Changes:
 tag:P:pedantic:possible::lintian-output-colons:1.0+dsfg-1.1:all:binary:example-unusual-interpreter:./usr/share/doc/lintian-output-colons/examples/example #!/usr/bin/foo:
+tag:P:pedantic:possible::lintian-output-colons:1.0+dsfg-1.1:all:binary:no-homepage-field::
+tag:P:pedantic:wild-guess:O:lintian-output-colons:1.0+dsfg-1.1:all:binary:no-upstream-changelog::no-upstream-changelog
+tag:W:minor:certain:O:lintian-output-colons:1.0+dsfg-1.1:source:source:dfsg-version-misspelled:1.0+dsfg-1.1:dfsg-version-misspelled 1.0*
+tag:W:normal:certain::lintian-output-colons:1.0+dsfg-1.1:source:source:maintainer-upload-has-incorrect-version-number:1.0+dsfg-1.1:
+tag:W:normal:possible::lintian-output-colons:1.0+dsfg-1.1:all:binary:binary-without-manpage:usr/bin/script:

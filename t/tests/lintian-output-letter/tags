@@ -1,18 +1,18 @@
-P[P!]: lintian-output-letter source: debian-control-has-unusual-field-spacing line 11
-I[W!]: lintian-output-letter source: binary-control-field-duplicates-source field "section" in package lintian-output-letter
-O[M!]: lintian-output-letter source: dfsg-version-misspelled 1.0+dsfg-1.1
-W[N!]: lintian-output-letter source: maintainer-upload-has-incorrect-version-number 1.0+dsfg-1.1
-P[P!]: lintian-output-letter source: direct-changes-in-diff-but-no-patch-system Changes
-O[P?]: lintian-output-letter: no-upstream-changelog
-E[S?]: lintian-output-letter: possible-gpl-code-linked-with-openssl
-I[M ]: lintian-output-letter: description-synopsis-might-not-be-phrased-properly
-I[W?]: lintian-output-letter: description-possibly-contains-homepage http://www.example.com/.
 E[I ]: lintian-output-letter: new-essential-package
-P[P ]: lintian-output-letter: no-homepage-field
+E[S ]: lintian-output-letter: dir-or-file-in-var-lock var/lock/lintian/
 E[S!]: lintian-output-letter: dir-in-usr-local usr/local/share/
 E[S!]: lintian-output-letter: dir-in-usr-local usr/local/share/lintian/
-E[S ]: lintian-output-letter: dir-or-file-in-var-lock var/lock/lintian/
-I[W ]: lintian-output-letter: package-contains-empty-directory usr/local/share/lintian/
-W[N ]: lintian-output-letter: binary-without-manpage usr/bin/script
+E[S?]: lintian-output-letter: possible-gpl-code-linked-with-openssl
+I[M ]: lintian-output-letter: description-synopsis-might-not-be-phrased-properly
 I[N?]: lintian-output-letter: desktop-entry-limited-to-environments /usr/share/applications/script.desktop
+I[W ]: lintian-output-letter: package-contains-empty-directory usr/local/share/lintian/
+I[W!]: lintian-output-letter source: binary-control-field-duplicates-source field "section" in package lintian-output-letter
+I[W?]: lintian-output-letter: description-possibly-contains-homepage http://www.example.com/.
+O[M!]: lintian-output-letter source: dfsg-version-misspelled 1.0+dsfg-1.1
+O[P?]: lintian-output-letter: no-upstream-changelog
 P[P ]: lintian-output-letter: example-unusual-interpreter ./usr/share/doc/lintian-output-letter/examples/example #!/usr/bin/foo
+P[P ]: lintian-output-letter: no-homepage-field
+P[P!]: lintian-output-letter source: debian-control-has-unusual-field-spacing line 11
+P[P!]: lintian-output-letter source: direct-changes-in-diff-but-no-patch-system Changes
+W[N ]: lintian-output-letter: binary-without-manpage usr/bin/script
+W[N!]: lintian-output-letter source: maintainer-upload-has-incorrect-version-number 1.0+dsfg-1.1
