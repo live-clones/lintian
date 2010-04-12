@@ -1,0 +1,1 @@
+s/(lintian-output-xml)_([^_]+)_([^"]+)/\1_\2_ARCH/
