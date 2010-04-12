@@ -4,5 +4,5 @@ Type: non-native
 Version: 1.0+dsfg-1.1
 Skeleton: pedantic
 Options: --pedantic -I -E --exp-output format=xml --show-overrides
-Sort: no
+Output-Format: xml
 Description: Test Lintian XML output format
