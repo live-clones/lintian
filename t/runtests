@@ -495,7 +495,7 @@ sub test_package {
     # since in that case we probably have non-standard output.
     my %test_for = map { $_ => 1 } split(' ', $testdata->{'test-for'});
     my %test_against = map { $_ => 1 } split(' ', $testdata->{'test-against'});
-    if (not %test_for and not %test_against and not $testdata->{sort}) {
+    if (not %test_for and not %test_against and $testdata->{'output-format'} ne 'EWI') {
 	if ($testdata->{'todo'} eq 'yes') {
 	    print "E: marked as TODO but succeeded.\n";
 	    return;
@@ -768,6 +768,7 @@ sub check_test_is_sane {
     $data->{section} ||= 'devel';
     $data->{'standards_version'} ||= $STANDARDS_VERSION;
     $data->{sort} = ($data->{sort} and $data->{sort} eq 'no') ? 0 : 1;
+    $data->{'output-format'} ||= 'EWI';
 
     $data->{'test-for'} ||= '';
     $data->{'test-against'} ||= '';
