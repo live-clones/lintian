@@ -53,9 +53,10 @@ lintian (2.4.0) UNRELEASED; urgency=low
   * checks/menus:
     + [ADB] Use Lintian::Check::check_spelling{,_picky}()
   * checks/nmu:
-    + [RA] Skip leading multi-author changelog lines when looking for
-      things like non-maintainer upload notes at the start of the
-      changelog entry.  Thanks, Vincent Danjean.  (Closes: #575192)
+    + [RA] Skip leading changelog lines that do not begin with * when
+      looking for things like non-maintainer upload notes at the start of
+      the changelog entry.  Patch from Gunnar Wolf.  Thanks, Vincent
+      Danjean.  (Closes: #575192)
   * checks/scripts:
     + [RA] Track local diversions like other diversions for the purposes
       of checking for orphans and diversions of unknown files.  Partly
