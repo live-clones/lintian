@@ -45,8 +45,8 @@ cleanup () {
 mkdir -p "$lintian_data/files"
 
 cat > "$tmpfile" <<EOF
-# List of locale codes.  This is derived from the ISO 639-1 and ISO
-# 639-2 standards.
+# List of locale codes.  This is derived from the ISO 639-1, ISO
+# 639-2, and ISO 639-3 standards.
 # If a language has 639-1 and 639-2 codes, the -2 code is also included
 # as a key to be mapped to the -1 code.
 #
@@ -56,8 +56,11 @@ EOF
 
 export LANG=C
 
-isoquery -i 639 |
-    perl -w -n -e 'next unless m/^\w{3}\s+(\w{3})\s+(?:(\w{2})\s+)?/;
+{
+    isoquery -i 639
+    sed -nr '/\bid=/{s/^.*id="([^"]+)".*$/xxx \1 x/;p}' \
+	/usr/share/xml/iso-codes/iso_639_3.xml
+} | perl -w -n -e 'next unless m/^\w{3}\s+(\w{3})\s+(?:(\w{2})\s+)?/;
 		    ($iso1, $iso2) = ($2, $1);
 		    if (!defined($iso1)) {
 			$iso1 = $iso2;

@@ -141,6 +141,8 @@ lintian (2.4.0) UNRELEASED; urgency=low
   * man/lintian.1:
     + [ADB] Add changes-file to the list of check scripts.
 
+  * private/refresh-locale-codes:
+    + [RG] Include ISO 639-3 codes.
   * private/refresh-virtual-packages-data:
     + [ADB] Use "==" for numeric comparison, not "eq".
   * private/update-coverage:
