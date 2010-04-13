@@ -8,7 +8,7 @@
 # separated by comma and/or white space. Multiple "Keep: " lines can be used
 # as well.
 #
-# Last updated: 2010-03-21
+# Last updated: 2010-04-13
 
 
 aide-binary
@@ -46,7 +46,6 @@ cyrus22-clients
 cyrus22-common
 cyrus22-imapd
 cyrus22-pop3d
-d-compiler
 debconf-2.0
 dict-client
 dict-server
@@ -75,8 +74,14 @@ fso-config
 fso-sounds
 ftp-server
 gcompris-sound
+gforge-db
+gforge-dns
+gforge-ftp
+gforge-lists
 gforge-mta
 gforge-plugin-scm
+gforge-shell
+gforge-web
 gfxboot-theme
 ggz-core-client
 gift-client
@@ -125,8 +130,10 @@ java6-sdk
 kde-l10n
 kernel-manual-2.6
 kfreebsd-source
+kfreebsd-source-7
 ladspa-host
 ladspa-plugin
+lcl-gtk
 lfcdaemon
 lib64readline-dev
 libatlas-3gf.so
@@ -166,14 +173,12 @@ liblapack.so.3gf
 libmp3splt-plugin
 libmpich-dev
 libneon-dev
-libnet-sftp-ruby
-libnet-sftp-ruby2
 libode0-dev
-libphobos-dev
 libreadline-dbg
 libsoqt-dev
 libstdc++-dev
 libstlport-dev
+libyaz-dev
 libzip-ruby
 licq-plugin
 linux-doc-2.6
@@ -211,6 +216,7 @@ myspell-dictionary-en
 myspell-dictionary-fr
 myspell-dictionary-pt
 mysql-common-4.1
+nes-emulator
 nethack
 netkit-inetd
 netpbm-dev
@@ -248,6 +254,7 @@ phpapi-20090626+lfs
 pinentry
 pinentry-x11
 ping
+plymouth-plugin
 pop3-server
 postscript-preview
 postscript-viewer

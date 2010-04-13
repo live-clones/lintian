@@ -74,6 +74,8 @@ lintian (2.4.0) UNRELEASED; urgency=low
 
   * data/changelog-file/ubuntu-dists:
     + [RA] Add maverick as a valid Ubuntu distribution.  (Closes: #576282)
+  * data/fields/virtual-packages:
+    + [RG] Refresh against unstable.
   * data/files/fonts:
     + [RG] Refresh against unstable.
   * data/files/locale-codes:
