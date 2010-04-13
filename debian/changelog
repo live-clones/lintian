@@ -18,6 +18,8 @@ lintian (2.4.0) UNRELEASED; urgency=low
     + [ADB] Use Lintian::Check::check_spelling()
   * checks/deb-format.desc:
     + [RG] deb-format needs changelog-file.
+  * checks/debconf.desc:
+    + [RG] Add missing dependency on debfiles collection script.
   * checks/debian-readme:
     + [ADB] Use Lintian::Check::check_spelling()
   * checks/debian-source-dir.desc:
