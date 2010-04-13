@@ -273,8 +273,12 @@ foreach my $file (sort keys %{$info->file_info}) {
 	}
     }
 
+    # We exclude version strings starting with "4 " since that's a mark of the
+    # Pascal implementation, which is not what this tag is designed to detect.
+    # (The "4" is actually the string length (52 characters) in the Pascal
+    # counted string format.)
     if ($info->field('source') ne 'zlib' and $info->field('source') ne 'klibc'
-	and $strings =~ /(?:in|de)flate (?:\d[ \w.\-]{1,20}[\w.\-])/m) {
+	and $strings =~ /(?<!4 )(?:in|de)flate (?:\d[ \w.\-]{1,20}[\w.\-])/m) {
 	tag "embedded-zlib", $file;
     }
 

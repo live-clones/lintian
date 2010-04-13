@@ -9,6 +9,9 @@ lintian (2.4.0) UNRELEASED; urgency=low
   * checks/binaries{,.desc}:
     + [ADB] Use Lintian::Check::check_spelling()
     + [RG] Detect embedded copies of libpng, lib{,open}jpeg.
+    + [RA] Suppress embedded-zlib if the zlib implementation is the Pascal
+      version.  FPC doesn't support dynamic linking at this time, and this
+      isn't the problem the tag was designed to catch.
   * checks/changelog-file:
     + [ADB] Use Lintian::Check::check_spelling()
   * checks/changes-file{,.desc}:
