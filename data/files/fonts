@@ -2,7 +2,7 @@
 # package that contains the font.  Only packages starting with ttf-,
 # otf-, t1-, and xfonts- are searched for fonts.
 #
-# Last updated: 2010-03-21
+# Last updated: 2010-04-13
 
 1015sn.ttf ttf-aenigma
 1015snr.ttf ttf-aenigma
@@ -452,17 +452,29 @@ freefarsi-bolditalic.ttf ttf-freefarsi
 freefarsi-italic.ttf ttf-freefarsi
 freefarsi-mono.ttf ttf-freefarsi
 freefarsi.ttf ttf-freefarsi
+freemono.otf otf-freefont
 freemono.ttf ttf-freefont
+freemonobold.otf otf-freefont
 freemonobold.ttf ttf-freefont
+freemonoboldoblique.otf otf-freefont
 freemonoboldoblique.ttf ttf-freefont
+freemonooblique.otf otf-freefont
 freemonooblique.ttf ttf-freefont
+freesans.otf otf-freefont
 freesans.ttf ttf-freefont
+freesansbold.otf otf-freefont
 freesansbold.ttf ttf-freefont
+freesansboldoblique.otf otf-freefont
 freesansboldoblique.ttf ttf-freefont
+freesansoblique.otf otf-freefont
 freesansoblique.ttf ttf-freefont
+freeserif.otf otf-freefont
 freeserif.ttf ttf-freefont
+freeserifbold.otf otf-freefont
 freeserifbold.ttf ttf-freefont
+freeserifbolditalic.otf otf-freefont
 freeserifbolditalic.ttf ttf-freefont
+freeserifitalic.otf otf-freefont
 freeserifitalic.ttf ttf-freefont
 frizzed.ttf ttf-aenigma
 fullcomp.ttf ttf-aenigma
@@ -697,6 +709,7 @@ kacstletter.ttf ttf-kacst
 kacstnaskh.ttf ttf-kacst
 kacstoffice.ttf ttf-kacst
 kacstone.ttf ttf-kacst
+kacstone.ttf ttf-kacst-one
 kacstpen.ttf ttf-kacst
 kacstposter.ttf ttf-kacst
 kacstqurn.ttf ttf-kacst
