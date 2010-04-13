@@ -80,6 +80,7 @@ lintian (2.4.0) UNRELEASED; urgency=low
   * doc/desc-files:
     + [ADB] Add "changes" as an acceptable type for collection and check
       scripts.
+    + [RG] Document Sort and Output-Format fields of the tests' desc files.
 
   * frontend/lintian:
     + [ADB] Add "changes" as a valid type for collection and check scripts

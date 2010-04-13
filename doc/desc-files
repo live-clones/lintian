@@ -45,5 +45,7 @@ Description record of a test case:
   [ Section: <section for package> ]
   [ Standards-Version: <standard version for control> ]
   [ Options: <options to pass to lintian> ]
+  [ Output-Format: <EWI | ...> ]
   [ Skeleton: <skeleton to base the package on> ]
+  [ Sort: <yes | no> ]
   [ Todo: <yes | no> ]
