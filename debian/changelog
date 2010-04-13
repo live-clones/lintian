@@ -57,6 +57,9 @@ lintian (2.4.0) UNRELEASED; urgency=low
       looking for things like non-maintainer upload notes at the start of
       the changelog entry.  Patch from Gunnar Wolf.  Thanks, Vincent
       Danjean.  (Closes: #575192)
+  * checks/rules:
+    + [RG] Warn about missing versioned build dependencies for
+      ocaml-related packages.  (Closes: #567949)
   * checks/scripts:
     + [RA] Track local diversions like other diversions for the purposes
       of checking for orphans and diversions of unknown files.  Partly
