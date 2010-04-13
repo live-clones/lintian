@@ -288,7 +288,7 @@ foreach my $file (sort keys %{$info->file_info}) {
     }
 
     if ($info->field('source') !~ '^libjpeg.*'
-	and $strings =~ /quantization tables are too coarse for baseline JPEG/) {
+	and $strings =~ /^Caution: quantization tables are too coarse for baseline JPEG/m) {
 	tag "embedded-libjpeg", $file;
     }
 
