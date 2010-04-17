@@ -17,6 +17,7 @@ lintian (2.4.0) UNRELEASED; urgency=low
   * checks/changes-file{,.desc}:
     + [ADB] New check script for .changes file tests
     + [RA] Add maverick as a valid Ubuntu distribution.
+    + [ADB] Recognise *-volatile as valid distributions.
   * checks/copyright-file:
     + [ADB] Use Lintian::Check::check_spelling()
   * checks/deb-format.desc:

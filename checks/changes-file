@@ -67,7 +67,8 @@ if (defined $info->field('distribution')) {
 		     or ($distribution eq 'experimental')
 		     or ($distribution =~ /^\w+-backports$/)
 		     or ($distribution =~ /^\w+-proposed-updates$/)
-		     or ($distribution =~ /^\w+-security$/))
+		     or ($distribution =~ /^\w+-security$/)
+		     or ($distribution =~ /^\w+-volatile$/))
 		) {
 	    # bad distribution entry
 	    tag("bad-distribution-in-changes-file", $distribution);
