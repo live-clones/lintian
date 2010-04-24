@@ -43,6 +43,8 @@ lintian (2.4.0) UNRELEASED; urgency=low
       Jakub Wilk.  (Closes: #576804)
     + [RG] Exclude udebs from empty-binary-package check.  Thanks,
       Vagrant Cascadian.  (Closes: #576581)
+    + [RG] Also warn about bmp files in /usr/lib.  Thanks, Rene
+      Engelhard.  (Closes: #578776)
   * checks/init.d:
     + [RA] Allow $all to satisfy a $remote_fs or $local_fs requirement for
       Required-Stop, since this has now been implemented.  Thanks, Michael

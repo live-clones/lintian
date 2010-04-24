@@ -463,7 +463,7 @@ foreach my $file (sort keys %{$info->index}) {
 	}
 	# ---------------- /usr/lib -- needs to go after the other usr/lib/*
 	elsif ($file =~ m,^usr/lib/,) {
-	    if ($type ne 'udeb' and $file =~ m,\.(?:gif|jpeg|jpg|png|tiff|xpm|xbm)$, and not defined $link) {
+	    if ($type ne 'udeb' and $file =~ m,\.(?:bmp|gif|jpeg|jpg|png|tiff|xpm|xbm)$, and not defined $link) {
 		tag "image-file-in-usr-lib", "$file"
 	    }
 	}
