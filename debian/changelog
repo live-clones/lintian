@@ -88,6 +88,8 @@ lintian (2.4.0) UNRELEASED; urgency=low
     + [RG] Refresh against unstable.
   * data/files/locale-codes:
     + [RG] Refresh to include ISO 639-3 codes.
+  * data/output/ftp-master-{,non}fatal:
+    + [RG] Refresh, without changes.
   * data/spelling/corrections{,-case,-multiword}:
     + [ADB] New files to contain the various types of spelling corrections
       made by Lintian's spelling checks.
