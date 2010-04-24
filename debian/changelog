@@ -1,4 +1,6 @@
-lintian (2.4.0) UNRELEASED; urgency=low
+lintian (2.4.0) unstable; urgency=low
+
+  The "and this is just the beginning" release.
 
   * Summary of tag changes:
     + Added:
@@ -183,7 +185,7 @@ lintian (2.4.0) UNRELEASED; urgency=low
   * unpack/unpack-srcpkg-l1:
     + [ADB] Support tarballs in the .tar.xz format.  (Closes: #575633)
 
- -- Russ Allbery <rra@debian.org>  Tue, 23 Mar 2010 17:35:12 -0700
+ -- Raphael Geissert <geissert@debian.org>  Sat, 24 Apr 2010 13:51:45 -0500
 
 lintian (2.3.4) unstable; urgency=low
 
