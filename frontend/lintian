@@ -1377,6 +1377,7 @@ foreach my $pkg_info ($schedule->get_all) {
 	    debug_msg(1, "Reaping done jobs ...");
 
 	    while (my ($coll, $cmd) = Lintian::Command::Simple::wait(\%running_jobs)) {
+		delete $running_jobs{$coll};
 		if ($cmd->status() == 0) {
 		    my $ci = $collection_info{$coll};
 		    open(VERSION, '>', "$base/.${coll}-$ci->{'version'}")
