@@ -36,5 +36,5 @@ if (-e "debfiles") {
 }
 
 # Copy the whole debian directory
-copy_dir("unpacked/debian", "debfiles")
+copy_dir("unpacked/debian/", "debfiles")
     or fail("cannot copy unpacked/debian to debfiles: $!");

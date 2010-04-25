@@ -1,5 +1,8 @@
 lintian (2.4.1) UNRELEASED; urgency=low
 
+  * collection/debfiles:
+    + [RG] Properly handle cases where debian is a symlink.
+
   * frontend/lintian:
     + [RG] Remove finished processes from the processes hash to avoid
       trying to kill dead processes.
