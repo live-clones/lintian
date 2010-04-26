@@ -1172,11 +1172,12 @@ unless ($count) {
 # }}}
 
 # {{{ Okay, now really processing the packages in one huge loop
-$map->add('coll-override-file', {'type' => 'collection', 'name' => 'override-file'})
-    unless $no_override;
-if (exists $collection_info{'override-file'}{'needs-info'}) {
-    $map->addp('coll-override-file', 'coll-',
+unless ($no_override) {
+    $map->add('coll-override-file', {'type' => 'collection', 'name' =>  'override-file'});
+    if (exists $collection_info{'override-file'}{'needs-info'}) {
+	$map->addp('coll-override-file', 'coll-',
 		@{$collection_info{'override-file'}{'needs-info'}});
+    }
 }
 v_msg(sprintf("Processing %d packages...", $count));
 debug_msg(1,

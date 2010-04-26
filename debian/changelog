@@ -9,6 +9,9 @@ lintian (2.4.1) UNRELEASED; urgency=low
   * frontend/lintian:
     + [RG] Remove finished processes from the processes hash to avoid
       trying to kill dead processes.
+    + [ADB] Don't add the dependencies of the override-file check script
+      to the list of checks to run if --no-override was specified.
+      (Closes: #579211)
 
  -- Raphael Geissert <geissert@debian.org>  Sun, 25 Apr 2010 16:16:15 -0500
 
