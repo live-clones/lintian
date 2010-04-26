@@ -1,0 +1,5 @@
+Testname: lintian-no-override
+Sequence: 1500
+Version: 1.0
+Description: Test no-override option
+Options: --no-override
