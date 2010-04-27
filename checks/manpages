@@ -23,6 +23,7 @@ use strict;
 use Util;
 use Lintian::Check qw(check_spelling);
 use Lintian::Tags qw(tag);
+use Text::ParseWords ();
 
 sub run {
 
@@ -285,7 +286,6 @@ foreach my $file (sort keys %{$info->index}) {
 	    chomp $line;
 	    next if $line =~ /^\.\\\"/o; # comments .\"
 	    if ($line =~ /^\.TH\s/) { # header
-		require Text::ParseWords;
 		my ($th_command, $th_title, $th_section, $th_date ) =
 		    Text::ParseWords::parse_line( '\s+', 0, $line);
 		if ($th_section && (lc($fn_section) ne lc($th_section))) {

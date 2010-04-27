@@ -1,5 +1,9 @@
 lintian (2.4.1) UNRELEASED; urgency=low
 
+  * checks/manpages:
+    + [RG] Use "use" instead of "require" for Text::ParseWords and move
+      it outside a loop.
+
   * collection/debfiles:
     + [RG] Properly handle cases where debian is a symlink.
 
