@@ -1,4 +1,6 @@
-lintian (2.4.1) UNRELEASED; urgency=low
+lintian (2.4.1) unstable; urgency=low
+
+  The "there's always a hidden bug" release.
 
   * checks/manpages:
     + [RG] Use "use" instead of "require" for Text::ParseWords and move
@@ -17,7 +19,7 @@ lintian (2.4.1) UNRELEASED; urgency=low
       to the list of checks to run if --no-override was specified.
       (Closes: #579211)
 
- -- Raphael Geissert <geissert@debian.org>  Sun, 25 Apr 2010 16:16:15 -0500
+ -- Raphael Geissert <geissert@debian.org>  Mon, 26 Apr 2010 22:44:35 -0500
 
 lintian (2.4.0) unstable; urgency=low
 
