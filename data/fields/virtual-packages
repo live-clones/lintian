@@ -8,8 +8,12 @@
 # separated by comma and/or white space. Multiple "Keep: " lines can be used
 # as well.
 #
-# Last updated: 2010-04-13
+# Last updated: 2010-05-07
 
+# Keep: xserver-xorg-input, xserver-xorg-input-2, xserver-xorg-input-2.1
+# Keep: xserver-xorg-input-4
+# Keep: xserver-xorg-video, xserver-xorg-video-1.0, xserver-xorg-video-1.9
+# Keep: xserver-xorg-video-2, xserver-xorg-video-4, xserver-xorg-video-5
 
 aide-binary
 alsaplayer-interface
@@ -115,7 +119,6 @@ java-compiler
 java-runtime
 java-runtime-headless
 java-sdk
-java-virtual-machine
 java1-runtime
 java1-runtime-headless
 java2-runtime
@@ -128,6 +131,9 @@ java6-runtime
 java6-runtime-headless
 java6-sdk
 kde-l10n
+kde-minimal
+kdevelop-l10n
+kdevplatform-l10n
 kernel-manual-2.6
 kfreebsd-source
 kfreebsd-source-7
@@ -181,22 +187,22 @@ libstlport-dev
 libyaz-dev
 libzip-ruby
 licq-plugin
-linux-doc-2.6
 linux-headers
 linux-headers-2.6
 linux-image
 linux-image-2.6
 linux-initramfs-tool
 linux-kernel-log-daemon
-linux-latest-modules-2.6.32-3-486
-linux-latest-modules-2.6.32-3-686
-linux-latest-modules-2.6.32-3-686-bigmem
-linux-latest-modules-2.6.32-3-amd64
-linux-latest-modules-2.6.32-3-vserver-686
-linux-latest-modules-2.6.32-3-vserver-686-bigmem
+linux-latest-modules-2.6.32-5-486
+linux-latest-modules-2.6.32-5-686
+linux-latest-modules-2.6.32-5-686-bigmem
+linux-latest-modules-2.6.32-5-amd64
+linux-latest-modules-2.6.32-5-openvz-686
+linux-latest-modules-2.6.32-5-vserver-686
+linux-latest-modules-2.6.32-5-vserver-686-bigmem
+linux-latest-modules-2.6.32-5-xen-686
 linux-manual
 linux-source
-linux-source-2.6
 lisp-compiler
 lsb-qt4-ia32
 lsb-qt4-noarch
@@ -331,8 +337,18 @@ x-window-manager
 xen-hypervisor
 xen-hypervisor-3.4
 xmp-player
+xorg-driver-video
 xserver
+xserver-xorg-input
+xserver-xorg-input-2
+xserver-xorg-input-2.1
 xserver-xorg-input-4
 xserver-xorg-input-7
+xserver-xorg-video
+xserver-xorg-video-1.0
+xserver-xorg-video-1.9
+xserver-xorg-video-2
+xserver-xorg-video-4
+xserver-xorg-video-5
 xserver-xorg-video-6
 zcode-interpreter

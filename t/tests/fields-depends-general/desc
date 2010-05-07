@@ -3,6 +3,7 @@ Sequence: 6000
 Version: 1.0
 Description: General tests for package dependencies
 Test-For:
+ breaks-without-version
  build-depends-on-metapackage
  build-depends-on-non-build-package
  build-depends-on-python-dev-with-no-arch-any

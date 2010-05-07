@@ -1,9 +1,20 @@
 lintian (2.4.2) UNRELEASED; urgency=low
 
+  * checks/fields:
+    + [RA] Allow Breaks without a version if the broken package is a
+      virtual package.
   * checks/huge-usr-share{,.desc}:
     + [RA] Count file size from the tar listing rather than using du.  The
       results of du vary based on file system and other factors and make
       the tag difficult to test.
+
+  * data/fields/virtual-packages:
+    + [RA] Update to current unstable and add the old xserver-xorg video
+      and input virtual packages.
+
+  * private/refresh-virtual-packages-data:
+    + [RA] Fix handling of # Keep: lines to work correctly now that
+      virtual packages mentioned only once are excluded.
 
  -- Russ Allbery <rra@debian.org>  Thu, 06 May 2010 20:59:04 -0700
 

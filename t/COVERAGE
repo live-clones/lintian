@@ -1,4 +1,4 @@
-Last generated 2010-04-03
+Last generated 2010-05-07
 
 The following tags are not tested by the test suite:
 
@@ -18,8 +18,6 @@ changelog-file wrong-name-for-upstream-changelog
 changes-file bad-section-in-changes-file
 changes-file checksum-mismatch-in-changes-file
 changes-file file-size-mismatch-in-changes-file
-changes-file no-description-in-changes-file
-changes-file no-urgency-in-changes-file
 
 control-file debian-control-file-is-a-symlink
 control-file debian-control-with-duplicate-fields
@@ -225,8 +223,6 @@ changelog-file debian-changelog-file-uses-obsolete-national-encoding
 changelog-file debian-news-file-not-compressed
 changelog-file wrong-name-for-debian-news-file
 
-changes-file bad-ubuntu-distribution-in-changes-file
-
 control-file debian-control-file-uses-obsolete-national-encoding
 control-file section-area-mismatch
 control-file xs-vcs-header-in-debian-control
@@ -234,7 +230,6 @@ control-file xs-vcs-header-in-debian-control
 control-files control-file-has-bad-permissions
 control-files control-file-is-empty
 
-copyright-file copyright-file-lacks-pointer-to-perl-license
 copyright-file old-fsf-address-in-copyright-file
 copyright-file usr-share-doc-symlink-without-dependency
 
@@ -273,7 +268,6 @@ debhelper uses-dh-python-with-no-pycompat
 etcfiles file-in-etc-not-marked-as-conffile
 
 fields bad-version-in-relation
-fields breaks-without-version
 fields build-conflicts-with-build-dependency
 fields build-depends-indep-without-arch-indep
 fields build-depends-on-1-revision
@@ -727,7 +721,6 @@ maintainer-scripts
 
 relations
   bad-version-in-relation
-  breaks-without-version
   build-conflicts-with-build-dependency
   build-depends-on-1-revision
   build-depends-on-build-essential
@@ -757,9 +750,7 @@ relations
   virtual-package-depends-without-real-package-depends
 
 scripts
-  bad-ubuntu-distribution-in-changes-file
   calls-suidperl-directly
-  copyright-file-lacks-pointer-to-perl-license
   debian-watch-file-specifies-old-upstream-version
   duplicate-updaterc.d-calls-in-postrm
   executable-is-not-world-readable

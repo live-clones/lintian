@@ -10,6 +10,7 @@ Build-Depends: debhelper (>= 7.0.50~), xorg-dev, java-propose-classpath,
 Package: {$srcpkg}
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, xorg
+Breaks: package-without-version
 Description: {$description}
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
@@ -21,6 +22,7 @@ Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Recommends: debconf-doc
 Section: libs
+Breaks: xserver-xorg-video-6
 Description: {$description} -- fake library
  This is a fake library designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd

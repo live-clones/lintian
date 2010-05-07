@@ -102,7 +102,11 @@ if [ -z "$packages" ] ; then
     packages="$workdir/Packages.gz"
 fi
 
+# We have to repeat all the Keep packages twice, since we filter out any
+# virtual packages that are only used once in the archive.
 { zcat "$packages"
+  sed -rn 's/^#\s*Keep:\s*/Provides: /;T;s/([^,:])\s+([^,])/\1, \2/g;p' \
+	"$workdir/virtual-packages"
   sed -rn 's/^#\s*Keep:\s*/Provides: /;T;s/([^,:])\s+([^,])/\1, \2/g;p' \
 	"$workdir/virtual-packages"
 } |
