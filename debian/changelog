@@ -1,3 +1,12 @@
+lintian (2.4.2) UNRELEASED; urgency=low
+
+  * checks/huge-usr-share{,.desc}:
+    + [RA] Count file size from the tar listing rather than using du.  The
+      results of du vary based on file system and other factors and make
+      the tag difficult to test.
+
+ -- Russ Allbery <rra@debian.org>  Thu, 06 May 2010 20:59:04 -0700
+
 lintian (2.4.1) unstable; urgency=low
 
   The "there's always a hidden bug" release.
