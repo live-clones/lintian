@@ -7,6 +7,9 @@ lintian (2.4.2) UNRELEASED; urgency=low
     + [RA] Count file size from the tar listing rather than using du.  The
       results of du vary based on file system and other factors and make
       the tag difficult to test.
+  * checks/menu-format.desc:
+    + [RA] Fix typo in long description of duplicated-key-in-desktop-entry.
+      Thanks, Niels Thykier.  (Closes: #580700)
 
   * data/fields/virtual-packages:
     + [RA] Update to current unstable and add the old xserver-xorg video
