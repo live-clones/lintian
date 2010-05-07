@@ -75,9 +75,11 @@ sub parse_element {
     $element =~ /
         ^\s*                            # skip leading whitespace
         (                               # package name or substvar (1)
-         [a-zA-Z0-9][a-zA-Z0-9+.-]+     #   package name
-         |                              #   or
-         \$\{[a-zA-Z0-9:-]+\}           #   substvar
+         (?:                            #  substvars may be mixed in
+          [a-zA-Z0-9][a-zA-Z0-9+.-]+    #   package name
+          |                             #   or
+          \$\{[a-zA-Z0-9:-]+\}          #   substvar
+         )+                             #  one or more name or substvar
         )                               # end of package name or substvar
         (?:                             # start of optional version
          \s* \(                         # open parenthesis for version part

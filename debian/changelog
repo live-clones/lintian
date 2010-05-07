@@ -12,6 +12,10 @@ lintian (2.4.2) UNRELEASED; urgency=low
     + [RA] Update to current unstable and add the old xserver-xorg video
       and input virtual packages.
 
+  * lib/Lintian/Relation.pm:
+    + [RA] Rather than allowing only a package name or a substvar, allow
+      substvars mixed into the package name.  (Closes: #580494)
+
   * private/refresh-virtual-packages-data:
     + [RA] Fix handling of # Keep: lines to work correctly now that
       virtual packages mentioned only once are excluded.
