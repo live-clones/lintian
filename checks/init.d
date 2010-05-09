@@ -51,6 +51,8 @@ my %implied_dependencies =
      'sysklogd'   => '$syslog'
     );
 
+our $VIRTUAL_FACILITIES = Lintian::Data->new('init.d/virtual_facilities');
+
 sub run {
 
 my $pkg = shift;
@@ -404,6 +406,10 @@ sub check_init {
 		tag 'init.d-script-should-depend-on-virtual-facility',
 		    "/etc/init.d/$_",
 		    "$dependency -> $implied_dependencies{$dependency}";
+	    } elsif ($keyword =~ m/^required-/ && $dependency =~ m/^\$/) {
+		tag "init.d-script-depends-on-unknown-virtual-facility",
+		    "/etc/init.d/$_", "$dependency"
+		    unless ($VIRTUAL_FACILITIES->known($dependency));
 	    }
 	}
     }

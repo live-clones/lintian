@@ -331,3 +331,12 @@ Info: The given init script seems to refer to <tt>/var</tt>, possibly
  conceptually incorrect since the $local_fs facility is always
  available.  Required-Start or Required-Stop should be used instead.
 Ref: http://wiki.debian.org/LSBInitScripts
+
+Tag: init.d-script-depends-on-unknown-virtual-facility
+Severity: serious
+Certainty: possible
+Info: The given init script declares a dependency on a virtual facility
+ that is not known to be provided by any init.d script in the archive.
+ If the dependency can not be satisfied upon the package's
+ installation, insserv will refuse the activation of the init.d script.
+Ref: http://wiki.debian.org/LSBInitScripts

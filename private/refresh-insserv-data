@@ -1,0 +1,94 @@
+#!/bin/sh
+
+####################
+#    Copyright (C) 2008, 2010 by Raphael Geissert <atomo64@gmail.com>
+#
+#
+#    This file is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 2 of the License, or
+#    (at your option) any later version.
+#
+#    This file is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this file.  If not, see <http://www.gnu.org/licenses/>.
+####################
+
+set -eu
+
+if [ -z "${1:-}" ]; then
+    printf "Usage: %s path/to/lintian/data\n" \
+	"$(basename "$0")"
+    cat <<INFO
+
+The script downloads the following files from a mirror (which should be
+specified via the DEB_MIRROR env var, which defaults to 
+http://i386-geomirror.debian.net/debian and is used directly without any
+kind of parsing so one can play with it):
+* Contents-i386.gz, main/binary-i386/Packages.gz
+* Binary packages found at Contents shipping insser.conf.d files
+Any special parameter can be passed to wget via WGET_ARGS, if needed.
+
+Other options:
+Other variables such as GREP_OPTIONS can be used to enable things like --mmap.
+INFO
+    exit
+fi
+
+readonly lintian_data="$(readlink -f "$1")"
+readonly regex='^etc/insserv.conf.'
+readonly perl_regex='^etc/insserv\.conf.*?\s+[\w-]+/([^,]+).*'
+
+[ -d "$lintian_data" ] || {
+    printf "%s is not a directory, aborting" "$lintian_data" >&2
+    exit 1
+}
+
+readonly workdir="$(mktemp -d)"
+
+cleanup () {
+        [ ! -d "$workdir" ] || rm -rf "$workdir"
+}; trap cleanup EXIT
+
+cat > "$workdir/virtual_facilities" <<EOF
+# The list of known virtual facilities that init scripts may depend on.
+#
+# Last updated: $(date -u +'%Y-%m-%d')
+
+EOF
+
+mirror="${DEB_MIRROR:=http://i386-geomirror.debian.net/debian}"
+WGET_ARGS="${WGET_ARGS:=-nv}"
+wget() {
+    echo wget "$mirror"/"$1"
+    /usr/bin/wget $WGET_ARGS "$mirror"/"$1"
+}
+mkdir -p "$lintian_data/init.d"
+
+cd "$workdir"
+wget dists/sid/Contents-i386.gz
+zgrep -E "$regex" Contents-i386.gz > entries
+cat entries \
+    | perl -p -w -E 's#'"$perl_regex"'#$1#g;' \
+    | LC_ALL=C sort -u > packages
+
+wget dists/sid/main/binary-i386/Packages.gz
+gunzip Packages.gz
+for package in $(cat packages); do
+    fn="$(grep-dctrl -n -P -X "$package" -sFilename Packages)"
+    wget "$fn"
+    file="$(basename "$fn")"
+    dpkg-deb -x "$file" "$(mktemp -d -p .)"
+    rm -rf "$file"
+    find */ | grep -Ev '^[^/]+/etc/insserv.+$' \
+	| xargs rm >/dev/null 2>&1 || true
+    find */ -type l -print | xargs rm >/dev/null 2>&1 || true
+done
+
+sed -nr '/^\$/{s/\s.*$//;p}' */etc/insserv.conf */etc/insserv.conf.d/* |
+    sort -u >> virtual_facilities
+mv virtual_facilities "$lintian_data/init.d/"

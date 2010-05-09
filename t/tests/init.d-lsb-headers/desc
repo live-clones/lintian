@@ -4,6 +4,7 @@ Version: 1.0
 Description: Test tags related to init script LSB headers
 Test-For:
  init-d-script-stops-in-s-runlevel
+ init.d-script-depends-on-unknown-virtual-facility
  init.d-script-does-not-provide-itself
  init.d-script-has-bad-start-runlevel
  init.d-script-has-bad-stop-runlevel

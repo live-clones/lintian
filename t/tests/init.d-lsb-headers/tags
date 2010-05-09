@@ -1,5 +1,6 @@
 E: init.d-lsb-headers-local: init.d-script-missing-dependency-on-local_fs /etc/init.d/init.d-lsb-headers-local: required-start
 E: init.d-lsb-headers-remote: init.d-script-missing-dependency-on-remote_fs /etc/init.d/init.d-lsb-headers-remote: required-start
+E: init.d-lsb-headers-virtual: init.d-script-depends-on-unknown-virtual-facility /etc/init.d/init.d-lsb-headers-virtual $something_that_doesnt_exist
 E: init.d-lsb-headers: init.d-script-should-depend-on-virtual-facility /etc/init.d/init.d-lsb-headers mountall -> $local_fs
 E: init.d-lsb-headers: init.d-script-should-depend-on-virtual-facility /etc/init.d/init.d-lsb-headers mountnfs -> $remote_fs
 E: init.d-lsb-headers: init.d-script-should-depend-on-virtual-facility /etc/init.d/init.d-lsb-headers networking -> $network
