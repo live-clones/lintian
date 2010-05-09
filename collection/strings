@@ -1,7 +1,7 @@
-#!/bin/sh -e
+#!/usr/bin/perl -w
 # strings -- lintian collection script
 
-# Copyright (C) 2009 Raphael Geissert <atomo64@gmail.com>
+# Copyright (C) 2009, 2010 Raphael Geissert <atomo64@gmail.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,22 +19,44 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-[ $# -eq 2 ] || {
-    echo "Syntax: strings <pkg> <type>"
-    exit 1
+use strict;
+use warnings;
+
+use lib "$ENV{'LINTIAN_ROOT'}/lib";
+use Util;
+use Lintian::Command qw(spawn);
+use Lintian::Command::Simple;
+
+($#ARGV == 1) or fail("syntax: strings <pkg> <type>");
+
+-f "file-info"
+    or fail("file-info invoked in wrong directory");
+
+unlink("elf-index");
+delete_dir("strings");
+
+open(ELF_INDEX, '>', 'elf-index')
+    or fail("Could not open 'elf-index' for writing: $!\n");
+
+open(FILE_INFO, '<', 'file-info')
+    or fail("Could not open 'file-info' for reading: $!\n");
+
+while (<FILE_INFO>) {
+    next unless(m/^(.+?)\x00\s+[^,]*\bELF\b/);
+    my $bin = $1;
+
+    print ELF_INDEX "$bin\n";
+
+    next if ($bin =~ m,^/usr/lib/debug/,);
+
+    my $dir = $bin;
+    $dir =~ s,/[^/]+?$,,;
+
+    Lintian::Command::Simple::run('mkdir', '-p', "strings/$dir") == 0
+	or fail("Failed to create directory 'strings/$dir'\n");
+
+    spawn({out => "strings/$bin", fail => 'error'}, ['strings', "unpacked/$bin"]);
 }
 
-[ ! -f elf-index ] || rm -f elf-index
-exec >elf-index
-
-for bin in $(sed -rn 's/\x00\s+[^,]*\bELF\b.+$//g;T;p' file-info); do
-    echo "$bin"
-    case $bin in
-      /usr/lib/debug/*)
-        ;;
-      *)
-        mkdir -p "strings/$(dirname "$bin")"
-        strings "unpacked/$bin" > "strings/$bin"
-        ;;
-    esac
-done
+close(ELF_INDEX);
+close(FILE_INFO);

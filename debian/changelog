@@ -18,6 +18,10 @@ lintian (2.4.2) UNRELEASED; urgency=low
     + [RA] Fix typo in long description of duplicated-key-in-desktop-entry.
       Thanks, Niels Thykier.  (Closes: #580700)
 
+  * collection/strings:
+    + [RG] Correctly handle ELF binaries with whitespaces in their name.
+      (LP: #540342)
+
   * data/fields/virtual-packages:
     + [RA] Update to current unstable and add the old xserver-xorg video
       and input virtual packages.
@@ -28,6 +32,8 @@ lintian (2.4.2) UNRELEASED; urgency=low
     + [RA] Set a PATH of /bin:/usr/bin if PATH is completely unset.
       Thanks, Carsten Hey.
 
+  * lib/Lintian/Collect/Binary.pm:
+    + [RG] Correctly handle ELF binaries with whitespaces in their name.
   * lib/Lintian/Relation.pm:
     + [RA] Rather than allowing only a package name or a substvar, allow
       substvars mixed into the package name.  (Closes: #580494)

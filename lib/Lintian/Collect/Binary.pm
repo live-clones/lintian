@@ -192,7 +192,7 @@ sub objdump_info {
 
         next if m/^\s*$/o;
 
-        if (m,^-- \./(\S+)\s*$,o) {
+        if (m,^-- \./(.+)$,) {
             if ($file) {
                 $objdump_info{$file->{name}} = $file;
             }
