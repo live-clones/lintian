@@ -18,6 +18,8 @@ lintian (2.4.2) UNRELEASED; urgency=low
     + [RA] Fix typo in long description of duplicated-key-in-desktop-entry.
       Thanks, Niels Thykier.  (Closes: #580700)
 
+  * collection/objdump-info:
+    + [RG] Disable etch compatibility code.
   * collection/strings:
     + [RG] Correctly handle ELF binaries with whitespaces in their name.
       (LP: #540342)

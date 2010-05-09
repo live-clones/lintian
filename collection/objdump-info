@@ -39,11 +39,10 @@ open (FILES, '<', "file-info")
 open (OUT, '>', "objdump-info")
     or fail("cannot open objdump-info: $!");
 
-open(PIPE, '-|', "dpkg-query -W -f='\${Version}\n' binutils")
-    or fail("unable to run dpkg-query: $!");
-my $binutils_version = <PIPE>;
-chomp $binutils_version;
-close PIPE;
+# Disable etch compatibility code.
+# Running dpkg-query every time is too expensive
+# readelf code is not dropped as per private/TODO entry
+my $etch_compat = 0;
 
 chdir ("unpacked")
     or fail ("unable to chdir to unpacked: $!\n");
@@ -94,7 +93,7 @@ while (<FILES>) {
 
 	    last if $failed;
 
-	    if ($invalidop or $binutils_version !~ m/^2\.17/) {
+	    if ($invalidop or !$etch_compat) {
 		# If we're using a binutils newer than etch's then either
 		# "invalid operation" or "file format not recognized"
 		# are simply passed through to the checks scripts
