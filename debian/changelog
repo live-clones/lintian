@@ -3,7 +3,15 @@ lintian (2.4.2) UNRELEASED; urgency=low
   * Summary of tag changes:
     + Added:
       - init.d-script-depends-on-unknown-virtual-facility
+      - xc-package-type-in-debian-control (pedantic)
+    + Removed:
+      - package-type-in-debian-control
 
+  * checks/control-file{,.desc}:
+    + [RA] Remove package-type-in-debian-control now that dpkg-dev handles
+      it as desired by the d-i team.  xc-package-type-in-debian-control
+      replaces it as a pedantic check to encourage switching to the
+      official name.  Thanks, Raphael Hertzog.
   * checks/fields:
     + [RA] Allow Breaks without a version if the broken package is a
       virtual package.

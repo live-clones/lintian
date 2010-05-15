@@ -87,13 +87,15 @@ Info: There is an XS-Vcs-* field in the <tt>debian/control</tt> file.  As
  recognizes these headers and handles them correctly.  Consider removing
  the XS- prefix for this field.
 
-Tag: package-type-in-debian-control
-Severity: minor
+Tag: xc-package-type-in-debian-control
+Severity: pedantic
 Certainty: certain
-Info: The <tt>debian/control</tt> file contains a Package-Type field.
- This field is only relevant to the build process and should
- not be embedded in the resulting binary package, so XC-Package-Type
- should be used instead.
+Info: The <tt>debian/control</tt> file contains an XC-Package-Type field.
+ As of dpkg-dev 1.15.7, the dpkg development utilities recognize
+ Package-Type as an official field name and do not add it to binary
+ packages (the previous concern with the dpkg-dev-supported Package-Type
+ field).  XC-Package-Type should generally now be replaced with
+ Package-Type.
 
 Tag: stronger-dependency-implies-weaker
 Severity: normal
