@@ -22,6 +22,7 @@ use strict;
 use warnings;
 
 use Util;
+use Lintian::Output;
 
 sub new {
     my ($class, %options) = @_;

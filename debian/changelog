@@ -51,6 +51,9 @@ lintian (2.4.2) UNRELEASED; urgency=low
   * lib/Lintian/Relation.pm:
     + [RA] Rather than allowing only a package name or a substvar, allow
       substvars mixed into the package name.  (Closes: #580494)
+  * lib/Lintian/Schedule.pm:
+    + [ADB] Add missing "use Lintian::Output", required for the use of
+      warning().  (Closes: #583555)
 
   * private/refresh-insserv-data:
     + [RG] New script to collect insserv data from the archive.
