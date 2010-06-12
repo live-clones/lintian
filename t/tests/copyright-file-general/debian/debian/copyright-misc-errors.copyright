@@ -18,3 +18,5 @@ The path /usr/share/common-licenses/GPL2 is missing a hyphen.
 This copyright info was automatically extracted from the perl module.
 It may not be accurate, so you better check the module sources
 if you don't want to get into legal troubles.
+
+References to /usr/share/common-licenses/BSD are deprecated.

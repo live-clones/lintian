@@ -14,6 +14,7 @@ Test-For:
  copyright-has-url-from-dh_make-boilerplate
  copyright-refers-to-bad-php-license
  copyright-refers-to-compressed-license
+ copyright-refers-to-deprecated-bsd-license-file
  copyright-refers-to-incorrect-directory
  copyright-refers-to-nonexistent-license-file
  copyright-refers-to-old-directory

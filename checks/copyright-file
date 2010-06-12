@@ -143,6 +143,7 @@ if ($line) {
 
 # check contents of copyright file
 $_ = slurp_entire_file('copyright');
+study $_;
 
 my $wrong_directory_detected = 0;
 
@@ -179,6 +180,12 @@ if (m,(usr/share/common-licenses/(L?GPL|GFDL))([^-]),i && !m,as Perl itself,i
 	tag "copyright-refers-to-versionless-license-file", $ref
 	    if /\bversion\b/;
     }
+}
+
+# References to /usr/share/common-licenses/BSD are deprecated as of Policy
+# 3.8.5.
+if (m,/usr/share/common-licenses/BSD,) {
+    tag 'copyright-refers-to-deprecated-bsd-license-file';
 }
 
 if (m,(usr/share/common-licences),) {
