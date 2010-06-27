@@ -1,7 +1,7 @@
 # List of "triplet architecture" relationships as provided by
 # dpkg-architecture
-# Last updated: 2010-03-21
-# With: Debian dpkg-architecture version 1.15.6.
+# Last updated: 2010-06-27
+# With: Debian dpkg-architecture version 1.15.7.2.
 
 alpha-darwin darwin-alpha
 alpha-freebsd freebsd-alpha
@@ -146,6 +146,7 @@ powerpc-kfreebsd-gnu kfreebsd-powerpc
 powerpc-knetbsd-gnu knetbsd-powerpc
 powerpc-kopensolaris-gnu kopensolaris-powerpc
 powerpc-linux-gnu powerpc
+powerpc-linux-gnuspe powerpcspe
 powerpc-linux-uclibc uclibc-linux-powerpc
 powerpc-netbsd netbsd-powerpc
 powerpc-openbsd openbsd-powerpc

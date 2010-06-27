@@ -1,6 +1,6 @@
 # List of known architectures as provided by dpkg-architecture
-# Last updated: 2010-03-21
-# With: Debian dpkg-architecture version 1.15.6.
+# Last updated: 2010-06-27
+# With: Debian dpkg-architecture version 1.15.7.2.
 
 all
 alpha
@@ -195,6 +195,7 @@ openbsd-sh4eb
 openbsd-sparc
 openbsd-sparc64
 powerpc
+powerpcspe
 ppc64
 s390
 s390x
