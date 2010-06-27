@@ -107,11 +107,12 @@ Info: A binary package should list exactly one architecture (the one it is
  compiled for), or the special value "all" if it is architecture-independent.
 Ref: policy 5.6.8
 
-Tag: arch-any-in-binary-pkg
+Tag: arch-wildcard-in-binary-package
 Severity: serious
 Certainty: certain
-Info: The special architecture value "any" does not make sense in a binary
- package.
+Info: Architecture wildcards, including the special architecture value
+ "any", do not make sense in a binary package.  A binary package must
+ either be architecture-independent or built for a specific architecture.
 Ref: policy 5.6.8
 
 Tag: aspell-package-not-arch-all

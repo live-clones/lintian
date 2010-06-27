@@ -2,11 +2,13 @@ lintian (2.4.2) UNRELEASED; urgency=low
 
   * Summary of tag changes:
     + Added:
+      - arch-wildcard-in-binary-package
       - bad-provided-package-name
       - copyright-refers-to-deprecated-bsd-license-file
       - init.d-script-depends-on-unknown-virtual-facility
       - xc-package-type-in-debian-control (pedantic)
     + Removed:
+      - arch-any-in-binary-pkg (now in arch-wildcard-in-binary-package)
       - package-type-in-debian-control
 
   * checks/changes-file.desc:
@@ -28,6 +30,10 @@ lintian (2.4.2) UNRELEASED; urgency=low
       packages.
     + [RG] Exclude dash from the depends-on-essential-package checks, as
       per discusion in debian-devel.  (Closes: #587209)
+    + [RA] Allow architecture wildcards in build relations and in the
+      Architecture field of binary and source packages.
+    + [RA] Rename arch-any-in-binary-pkg to arch-wildcard-in-binary-package
+      and diagnose any architecture wildcard, not just "any".
   * checks/huge-usr-share{,.desc}:
     + [RA] Count file size from the tar listing rather than using du.  The
       results of du vary based on file system and other factors and make

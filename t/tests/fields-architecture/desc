@@ -1,0 +1,6 @@
+Testname: fields-architecture
+Sequence: 6000
+Version: 1.0
+Description: Tests for the Architecture field
+Architecture: linux-any any-i386
+Test-Against: unknown-architecture

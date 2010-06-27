@@ -41,6 +41,21 @@ our $KNOWN_ESSENTIAL = Lintian::Data->new('fields/essential');
 our $KNOWN_METAPACKAGES = Lintian::Data->new('fields/metapackages');
 our $NO_BUILD_DEPENDS = Lintian::Data->new('fields/no-build-depends');
 
+# Generate the list of valid architecture wildcards.  We can ignore all
+# architectures not containing a - for our purposes and transform any
+# architecture like foo-bar into any-bar and foo-any.  Putting this in a hash
+# will then clean up all the duplicates.
+our %ARCH_WILDCARDS = map {
+	if (/-/) {
+		my ($first, $second) = split ('-', $_, 2);
+		("$first-any" => 1, "any-$second" => 1);
+	} else {
+		();
+	}
+} $KNOWN_ARCHS->all;
+$ARCH_WILDCARDS{'linux-any'} = 1;
+$ARCH_WILDCARDS{any} = 1;
+
 our %known_archive_parts = map { $_ => 1 }
     ('non-free', 'contrib');
 
@@ -276,12 +291,14 @@ if (not defined $info->field('architecture')) {
 	}
 
 	for my $arch (@archs) {
-		tag "unknown-architecture", "$arch" unless $KNOWN_ARCHS->known($arch);
+		tag "unknown-architecture", "$arch"
+		    unless $KNOWN_ARCHS->known($arch) || $ARCH_WILDCARDS{$arch};
+		tag "arch-wildcard-in-binary-package", "$arch"
+		    if ($type eq 'binary' && $ARCH_WILDCARDS{$arch});
 	}
 
 	if ($type eq "binary") {
 		tag "too-many-architectures", "" if (@archs > 1);
-		tag "arch-any-in-binary-pkg", "" if (grep { $_ eq "any" } @archs);
                 tag "aspell-package-not-arch-all", ""
                     if ($pkg =~ /^aspell-[a-z]{2}(-.*)?$/ && (@archs > 1 || $archs[0] ne 'all'));
 	}
@@ -701,7 +718,7 @@ if ($type eq "source") {
 
 					my $negated = 0;
 					for my $arch (@{$d_arch->[0]}) {
-						if ($arch eq 'all' or $arch eq 'any' or !$KNOWN_ARCHS->known($arch)) {
+						if ($arch eq 'all' or (!$KNOWN_ARCHS->known($arch) and !$ARCH_WILDCARDS{$arch})) {
 							tag "invalid-arch-string-in-source-relation", "$arch [$field: $part_d_orig]"
 						}
 					}
