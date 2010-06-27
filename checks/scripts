@@ -948,7 +948,7 @@ while (<SCRIPTS>) {
 	    }
 	    my $mode = /--remove/ ? 'remove' : 'add';
 	    my ($divert) = /dpkg-divert\s*(.*)$/;
-	    $divert =~ s/\s*--(?:add|quiet|remove|rename|test|local|(:?admindir|divert|package)\s+\S+)\s*//g;
+	    $divert =~ s/\s*(?:\${?[\w:=-]+}?)*\s*--(?:add|quiet|remove|rename|test|local|(:?admindir|divert|package)\s+\S+)\s*//g;
 	    # Remove unpaired opening or closing parenthesis
 	    1 while($divert =~ m/\G.*?\(.+?\)/gc);
 	    $divert =~ s/\G(.*?)[()]/$1/;

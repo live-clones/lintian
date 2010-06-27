@@ -28,6 +28,11 @@ if [ install = "$1"  ]; then
     dpkg-divert --package scripts-diversions --add --rename \
         --divert /usr/share/foo/$f.real \
         /usr/share/foo/${f#f}
+
+    # This is correct too.
+    dpkg-divert $SOMETHING --package scripts-diversions --add --rename \
+        --divert /usr/share/scripts/t2/foo/some-file.real \
+        /usr/share/scripts/t2/foo/some-file
 fi
 
 #DEBHELPER#
