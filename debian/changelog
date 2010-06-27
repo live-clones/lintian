@@ -14,6 +14,7 @@ lintian (2.4.2) UNRELEASED; urgency=low
       it as desired by the d-i team.  xc-package-type-in-debian-control
       replaces it as a pedantic check to encourage switching to the
       official name.  Thanks, Raphael Hertzog.
+    + [RA] Add reference for debian-control-with-duplicate-fields.
   * checks/copyright-file{,.desc}:
     + [RA] Deprecate references to /usr/share/common-licenses/BSD in
       debian/copyright following the change in Policy 3.8.5.
