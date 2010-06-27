@@ -4,6 +4,7 @@ lintian (2.4.2) UNRELEASED; urgency=low
     + Added:
       - arch-wildcard-in-binary-package
       - bad-provided-package-name
+      - conflicts-with-version
       - copyright-refers-to-deprecated-bsd-license-file
       - init.d-script-depends-on-unknown-virtual-facility
       - xc-package-type-in-debian-control (pedantic)
@@ -34,6 +35,8 @@ lintian (2.4.2) UNRELEASED; urgency=low
       Architecture field of binary and source packages.
     + [RA] Rename arch-any-in-binary-pkg to arch-wildcard-in-binary-package
       and diagnose any architecture wildcard, not just "any".
+    + [RA] Warn of using Conflicts with a version, which should normally
+      be Breaks instead, but only at wild-guess certainty for now.
   * checks/huge-usr-share{,.desc}:
     + [RA] Count file size from the tar listing rather than using du.  The
       results of du vary based on file system and other factors and make

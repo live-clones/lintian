@@ -5,6 +5,7 @@ E: fields-depends-general source: invalid-arch-string-in-source-relation all [bu
 E: fields-depends-general source: invalid-arch-string-in-source-relation i3!86 [build-depends: baz [source i3!86]]
 E: fields-depends-general source: invalid-arch-string-in-source-relation source [build-depends: baz [source i3!86]]
 E: fields-depends-general: depends-on-metapackage depends: xorg
+I: fields-depends-general: conflicts-with-version package-with-version (<< 3.0)
 W: fields-depends-general source: build-depends-on-python-dev-with-no-arch-any
 W: fields-depends-general: breaks-without-version package-without-version
 W: libfields-depends-general: lib-recommends-documentation recommends: debconf-doc

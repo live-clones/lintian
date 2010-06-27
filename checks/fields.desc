@@ -756,6 +756,18 @@ Info: This package declares a Breaks relationship with another package
  all versions predating a fix.  If the two packages can never be installed
  at the same time, Conflicts should normally be used instead.
 
+Tag: conflicts-with-version
+Severity: normal
+Certainty: wild-guess
+Ref: policy 7.4
+Info: An earlier-than version clause is normally an indication that Breaks
+ should be used instead of Conflicts.  Breaks is a weaker requirement that
+ provides the package manager more leeway to find a valid upgrade path.
+ Conflicts should only be used if two packages can never be unpacked at
+ the same time, or for some situations involving virtual packages (where a
+ version clause is not appropriate).  In particular, when moving files
+ between packages, use Breaks plus Replaces, not Conflicts plus Replaces.
+
 Tag: bad-menu-item
 Severity: important
 Certainty: certain

@@ -11,6 +11,7 @@ Package: {$srcpkg}
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, xorg
 Breaks: package-without-version
+Conflicts: package-with-version (<< 3.0)
 Description: {$description}
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
