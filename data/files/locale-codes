@@ -3,7 +3,7 @@
 # If a language has 639-1 and 639-2 codes, the -2 code is also included
 # as a key to be mapped to the -1 code.
 #
-# Last updated: 2010-04-13
+# Last updated: 2010-06-27
 
 aa
 aaa
@@ -22,7 +22,6 @@ aan
 aao
 aap
 aaq
-aar
 aar aa
 aas
 aat
@@ -41,7 +40,6 @@ abg
 abh
 abi
 abj
-abk
 abk ab
 abl
 abm
@@ -131,7 +129,6 @@ afk
 afn
 afo
 afp
-afr
 afr af
 afs
 aft
@@ -208,7 +205,6 @@ aju
 ajw
 ajz
 ak
-aka
 aka ak
 akb
 akc
@@ -265,7 +261,6 @@ amc
 ame
 amf
 amg
-amh
 amh am
 ami
 amj
@@ -365,13 +360,11 @@ aqp
 aqr
 aqz
 ar
-ara
 ara ar
 arb
 arc
 ard
 are
-arg
 arg an
 arh
 ari
@@ -404,7 +397,6 @@ asi
 asj
 ask
 asl
-asm
 asm as
 asn
 aso
@@ -469,11 +461,9 @@ aux
 auy
 auz
 av
-ava
 ava av
 avb
 avd
-ave
 ave ae
 avi
 avk
@@ -518,7 +508,6 @@ ayh
 ayi
 ayk
 ayl
-aym
 aym ay
 ayn
 ayo
@@ -534,7 +523,6 @@ ayz
 az
 aza
 azb
-aze
 aze az
 azg
 azj
@@ -553,10 +541,8 @@ bag
 bah
 bai
 baj
-bak
 bak ba
 bal
-bam
 bam bm
 ban
 bao
@@ -659,10 +645,8 @@ beh
 bei
 bej
 bek
-bel
 bel be
 bem
-ben
 ben bn
 beo
 bep
@@ -771,7 +755,6 @@ bio
 bip
 biq
 bir
-bis
 bis bi
 bit
 biu
@@ -910,7 +893,6 @@ bnz
 bo
 boa
 bob
-bod
 bod bo
 boe
 bof
@@ -926,7 +908,6 @@ boo
 bop
 boq
 bor
-bos
 bos bs
 bot
 bou
@@ -988,7 +969,6 @@ bra
 brb
 brc
 brd
-bre
 bre br
 brf
 brg
@@ -1072,7 +1052,6 @@ buh
 bui
 buj
 buk
-bul
 bul bg
 bum
 bun
@@ -1230,7 +1209,6 @@ cap
 caq
 car
 cas
-cat
 cat ca
 cau
 cav
@@ -1290,7 +1268,6 @@ ceb
 ceg
 cel
 cen
-ces
 ces cs
 cet
 cfa
@@ -1302,12 +1279,10 @@ cgc
 cgg
 cgk
 ch
-cha
 cha ch
 chb
 chc
 chd
-che
 che ce
 chf
 chg
@@ -1322,9 +1297,7 @@ chp
 chq
 chr
 cht
-chu
 chu cu
-chv
 chv cv
 chw
 chx
@@ -1425,9 +1398,7 @@ con
 coo
 cop
 coq
-cor
 cor kw
-cos
 cos co
 cot
 cou
@@ -1456,7 +1427,6 @@ cra
 crb
 crc
 crd
-cre
 cre cr
 crf
 crg
@@ -1547,7 +1517,6 @@ cwt
 cy
 cya
 cyb
-cym
 cym cy
 cyo
 czh
@@ -1568,7 +1537,6 @@ daj
 dak
 dal
 dam
-dan
 dan da
 dao
 dap
@@ -1626,7 +1594,6 @@ dep
 deq
 der
 des
-deu
 deu de
 dev
 dez
@@ -1679,7 +1646,6 @@ dir
 dis
 dit
 diu
-div
 div dv
 diw
 dix
@@ -1838,7 +1804,6 @@ dzd
 dzg
 dzl
 dzn
-dzo
 dzo dz
 ebg
 ebk
@@ -1878,7 +1843,6 @@ ele
 elh
 eli
 elk
-ell
 ell el
 elm
 elo
@@ -1906,7 +1870,6 @@ enb
 enc
 end
 enf
-eng
 eng en
 enh
 enm
@@ -1920,7 +1883,6 @@ enw
 eo
 eot
 epi
-epo
 epo eo
 era
 erg
@@ -1943,7 +1905,6 @@ esn
 eso
 esq
 ess
-est
 est et
 esu
 et
@@ -1959,12 +1920,10 @@ etu
 etx
 etz
 eu
-eus
 eus eu
 eve
 evh
 evn
-ewe
 ewe ee
 ewo
 ext
@@ -1984,11 +1943,9 @@ fak
 fal
 fam
 fan
-fao
 fao fo
 fap
 far
-fas
 fas fa
 fat
 fau
@@ -2005,10 +1962,8 @@ fgr
 fi
 fia
 fie
-fij
 fij fj
 fil
-fin
 fin fi
 fip
 fir
@@ -2038,7 +1993,6 @@ fos
 fpe
 fqs
 fr
-fra
 fra fr
 frc
 frd
@@ -2050,7 +2004,6 @@ frq
 frr
 frs
 frt
-fry
 fry fy
 fse
 fsl
@@ -2063,7 +2016,6 @@ fuf
 fuh
 fui
 fuj
-ful
 ful ff
 fum
 fun
@@ -2078,7 +2030,6 @@ fwa
 fwe
 fy
 ga
-gaa
 gaa ga
 gab
 gac
@@ -2226,13 +2177,10 @@ gke
 gkn
 gkp
 gl
-gla
 gla gd
 glc
 gld
-gle
 gle ga
-glg
 glg gl
 glh
 gli
@@ -2241,7 +2189,6 @@ glk
 glo
 glr
 glu
-glv
 glv gv
 glw
 gly
@@ -2316,7 +2263,6 @@ grh
 gri
 grj
 grm
-grn
 grn gn
 gro
 grq
@@ -2350,7 +2296,6 @@ guf
 gug
 guh
 gui
-guj
 guj gu
 guk
 gul
@@ -2432,9 +2377,7 @@ hap
 haq
 har
 has
-hat
 hat ht
-hau
 hau ha
 hav
 haw
@@ -2454,14 +2397,12 @@ hds
 hdy
 he
 hea
-heb
 heb he
 hed
 heg
 heh
 hei
 hem
-her
 her hz
 hgm
 hgw
@@ -2480,7 +2421,6 @@ hij
 hik
 hil
 him
-hin
 hin hi
 hio
 hir
@@ -2512,7 +2452,6 @@ hmk
 hml
 hmm
 hmn
-hmo
 hmo ho
 hmp
 hmq
@@ -2565,7 +2504,6 @@ hro
 hrr
 hrt
 hru
-hrv
 hrv hr
 hrx
 hrz
@@ -2593,7 +2531,6 @@ huj
 huk
 hul
 hum
-hun
 hun hu
 huo
 hup
@@ -2617,7 +2554,6 @@ hwc
 hwo
 hy
 hya
-hye
 hye hy
 hz
 ia
@@ -2634,7 +2570,6 @@ ibi
 ibl
 ibm
 ibn
-ibo
 ibo ig
 ibr
 ibu
@@ -2650,7 +2585,6 @@ idc
 idd
 ide
 idi
-ido
 ido io
 idr
 ids
@@ -2679,7 +2613,6 @@ ihb
 ihi
 ihp
 ii
-iii
 iii ii
 ijc
 ije
@@ -2695,7 +2628,6 @@ ikl
 iko
 ikp
 ikt
-iku
 iku iu
 ikv
 ikw
@@ -2703,7 +2635,6 @@ ikx
 ikz
 ila
 ilb
-ile
 ile ie
 ilg
 ili
@@ -2723,11 +2654,9 @@ imo
 imr
 ims
 imy
-ina
 ina ia
 inb
 inc
-ind
 ind id
 ine
 ing
@@ -2746,7 +2675,6 @@ ior
 iou
 iow
 ipi
-ipk
 ipk ik
 ipo
 iqu
@@ -2770,7 +2698,6 @@ isg
 ish
 isi
 isk
-isl
 isl is
 ism
 isn
@@ -2779,7 +2706,6 @@ isr
 ist
 isu
 it
-ita
 ita it
 itb
 ite
@@ -2830,7 +2756,6 @@ jar
 jas
 jat
 jau
-jav
 jav jv
 jax
 jay
@@ -2906,7 +2831,6 @@ jor
 jos
 jow
 jpa
-jpn
 jpn ja
 jpr
 jqr
@@ -2952,26 +2876,20 @@ kah
 kai
 kaj
 kak
-kal
 kal kl
 kam
-kan
 kan kn
 kao
 kap
 kaq
 kar
-kas
 kas ks
-kat
 kat ka
-kau
 kau kr
 kav
 kaw
 kax
 kay
-kaz
 kaz kk
 kba
 kbb
@@ -3138,7 +3056,6 @@ khi
 khj
 khk
 khl
-khm
 khm km
 khn
 kho
@@ -3164,16 +3081,13 @@ kig
 kih
 kii
 kij
-kik
 kik ki
 kil
 kim
-kin
 kin rw
 kio
 kip
 kiq
-kir
 kir ky
 kis
 kit
@@ -3327,14 +3241,11 @@ koi
 koj
 kok
 kol
-kom
 kom kv
-kon
 kon kg
 koo
 kop
 koq
-kor
 kor ko
 kos
 kot
@@ -3475,7 +3386,6 @@ ktx
 kty
 ktz
 ku
-kua
 kua kj
 kub
 kuc
@@ -3493,7 +3403,6 @@ kun
 kuo
 kup
 kuq
-kur
 kur ku
 kus
 kut
@@ -3650,16 +3559,13 @@ lak
 lal
 lam
 lan
-lao
 lao lo
 lap
 laq
 lar
 las
-lat
 lat la
 lau
-lav
 lav lv
 law
 lax
@@ -3778,16 +3684,13 @@ lii
 lij
 lik
 lil
-lim
 lim li
-lin
 lin ln
 lio
 lip
 liq
 lir
 lis
-lit
 lit lt
 liu
 liv
@@ -3939,17 +3842,14 @@ ltn
 lto
 lts
 ltu
-ltz
 ltz lb
 lu
 lua
-lub
 lub lu
 luc
 lud
 lue
 luf
-lug
 lug lg
 lui
 luj
@@ -3995,18 +3895,15 @@ mad
 mae
 maf
 mag
-mah
 mah mh
 mai
 maj
 mak
-mal
 mal ml
 mam
 man
 map
 maq
-mar
 mar mr
 mas
 mat
@@ -4249,7 +4146,6 @@ mk
 mka
 mkb
 mkc
-mkd
 mkd mk
 mke
 mkf
@@ -4280,7 +4176,6 @@ mlc
 mld
 mle
 mlf
-mlg
 mlg mg
 mlh
 mli
@@ -4294,7 +4189,6 @@ mlp
 mlq
 mlr
 mls
-mlt
 mlt mt
 mlu
 mlv
@@ -4365,7 +4259,6 @@ moj
 mok
 mol mo
 mom
-mon
 mon mn
 moo
 mop
@@ -4438,7 +4331,6 @@ mre
 mrf
 mrg
 mrh
-mri
 mri mi
 mrj
 mrk
@@ -4458,7 +4350,6 @@ mrx
 mry
 mrz
 ms
-msa
 msa ms
 msb
 msc
@@ -4611,7 +4502,6 @@ mxx
 mxy
 mxz
 my
-mya
 mya my
 myb
 myc
@@ -4683,9 +4573,7 @@ naq
 nar
 nas
 nat
-nau
 nau na
-nav
 nav nv
 naw
 nax
@@ -4703,7 +4591,6 @@ nbh
 nbi
 nbj
 nbk
-nbl
 nbl nr
 nbm
 nbn
@@ -4745,7 +4632,6 @@ nda
 ndb
 ndc
 ndd
-nde
 nde nd
 ndf
 ndg
@@ -4756,7 +4642,6 @@ ndk
 ndl
 ndm
 ndn
-ndo
 ndo ng
 ndp
 ndq
@@ -4784,7 +4669,6 @@ nek
 nem
 nen
 neo
-nep
 nep ne
 neq
 ner
@@ -4916,7 +4800,6 @@ nkz
 nl
 nla
 nlc
-nld
 nld nl
 nle
 nlg
@@ -4973,7 +4856,6 @@ nnk
 nnl
 nnm
 nnn
-nno
 nno nn
 nnp
 nnq
@@ -4988,7 +4870,6 @@ nny
 nnz
 no
 noa
-nob
 nob nb
 noc
 nod
@@ -5004,7 +4885,6 @@ non
 noo
 nop
 noq
-nor
 nor no
 nos
 not
@@ -5127,7 +5007,6 @@ nxr
 nxu
 nxx
 ny
-nya
 nya ny
 nyb
 nyc
@@ -5177,7 +5056,6 @@ obu
 oc
 oca
 och
-oci
 oci oc
 oco
 ocu
@@ -5202,7 +5080,6 @@ oj
 ojb
 ojc
 ojg
-oji
 oji oj
 ojp
 ojs
@@ -5281,9 +5158,7 @@ orc
 ore
 org
 orh
-ori
 ori or
-orm
 orm om
 orn
 oro
@@ -5301,7 +5176,6 @@ osc
 osi
 oso
 osp
-oss
 oss os
 ost
 osu
@@ -5351,7 +5225,6 @@ pai
 pak
 pal
 pam
-pan
 pan pa
 pao
 pap
@@ -5500,7 +5373,6 @@ pld
 ple
 plg
 plh
-pli
 pli pi
 plj
 plk
@@ -5568,14 +5440,12 @@ pog
 poh
 poi
 pok
-pol
 pol pl
 pom
 pon
 poo
 pop
 poq
-por
 por pt
 pos
 pot
@@ -5671,7 +5541,6 @@ puo
 pup
 puq
 pur
-pus
 pus ps
 put
 puu
@@ -5701,7 +5570,6 @@ qua
 qub
 quc
 qud
-que
 que qu
 quf
 qug
@@ -5867,11 +5735,9 @@ rod
 roe
 rof
 rog
-roh
 roh rm
 rol
 rom
-ron
 ron ro
 roo
 rop
@@ -5897,12 +5763,10 @@ rug
 ruh
 rui
 ruk
-run
 run rn
 ruo
 rup
 ruq
-rus
 rus ru
 rut
 ruu
@@ -5924,7 +5788,6 @@ sac
 sad
 sae
 saf
-sag
 sag sg
 sah
 sai
@@ -5932,7 +5795,6 @@ saj
 sak
 sal
 sam
-san
 san sa
 sao
 sap
@@ -6101,7 +5963,6 @@ sij
 sik
 sil
 sim
-sin
 sin si
 sio
 sip
@@ -6167,7 +6028,6 @@ slg
 slh
 sli
 slj
-slk
 slk sk
 sll
 slm
@@ -6178,7 +6038,6 @@ slr
 sls
 slt
 slu
-slv
 slv sl
 slw
 slx
@@ -6189,7 +6048,6 @@ sma
 smb
 smc
 smd
-sme
 sme se
 smf
 smg
@@ -6200,7 +6058,6 @@ smk
 sml
 smm
 smn
-smo
 smo sm
 smp
 smq
@@ -6214,11 +6071,9 @@ smx
 smy
 smz
 sn
-sna
 sna sn
 snb
 snc
-snd
 snd sd
 sne
 snf
@@ -6253,7 +6108,6 @@ soi
 soj
 sok
 sol
-som
 som so
 son
 soo
@@ -6261,7 +6115,6 @@ sop
 soq
 sor
 sos
-sot
 sot st
 sou
 sov
@@ -6269,7 +6122,6 @@ sow
 sox
 soy
 soz
-spa
 spa es
 spb
 spc
@@ -6292,7 +6144,6 @@ spy
 sq
 sqa
 sqh
-sqi
 sqi sq
 sqm
 sqn
@@ -6306,7 +6157,6 @@ sr
 sra
 srb
 src
-srd
 srd sc
 sre
 srf
@@ -6318,7 +6168,6 @@ srl
 srm
 srn
 sro
-srp
 srp sr
 srq
 srr
@@ -6353,7 +6202,6 @@ sss
 sst
 ssu
 ssv
-ssw
 ssw ss
 ssx
 ssy
@@ -6390,7 +6238,6 @@ sug
 sui
 suj
 suk
-sun
 sun su
 suq
 sur
@@ -6411,11 +6258,9 @@ svr
 svs
 svx
 sw
-swa
 swa sw
 swb
 swc
-swe
 swe sv
 swf
 swg
@@ -6482,13 +6327,11 @@ tad
 tae
 taf
 tag
-tah
 tah ty
 tai
 taj
 tak
 tal
-tam
 tam ta
 tan
 tao
@@ -6496,7 +6339,6 @@ tap
 taq
 tar
 tas
-tat
 tat tt
 tau
 tav
@@ -6585,7 +6427,6 @@ teg
 teh
 tei
 tek
-tel
 tel te
 tem
 ten
@@ -6615,9 +6456,7 @@ tgf
 tgg
 tgh
 tgi
-tgk
 tgk tg
-tgl
 tgl tl
 tgn
 tgo
@@ -6632,7 +6471,6 @@ tgw
 tgx
 tgy
 th
-tha
 tha th
 thc
 thd
@@ -6672,7 +6510,6 @@ tin
 tio
 tip
 tiq
-tir
 tir ti
 tis
 tit
@@ -6796,7 +6633,6 @@ toi
 toj
 tol
 tom
-ton
 ton to
 too
 top
@@ -6882,9 +6718,7 @@ tsj
 tsk
 tsl
 tsm
-tsn
 tsn tn
-tso
 tso ts
 tsp
 tsq
@@ -6932,7 +6766,6 @@ tug
 tuh
 tui
 tuj
-tuk
 tuk tk
 tul
 tum
@@ -6940,7 +6773,6 @@ tun
 tuo
 tup
 tuq
-tur
 tur tr
 tus
 tut
@@ -6970,7 +6802,6 @@ twe
 twf
 twg
 twh
-twi
 twi tw
 twl
 twm
@@ -7052,7 +6883,6 @@ ugo
 ugy
 uha
 uhn
-uig
 uig ug
 uis
 uiv
@@ -7064,7 +6894,6 @@ ukh
 ukl
 ukp
 ukq
-ukr
 ukr uk
 uks
 uku
@@ -7110,7 +6939,6 @@ ur
 ura
 urb
 urc
-urd
 urd ur
 ure
 urf
@@ -7152,7 +6980,6 @@ uvl
 uwa
 uya
 uz
-uzb
 uzb uz
 uzn
 uzs
@@ -7180,7 +7007,6 @@ vec
 ved
 vel
 vem
-ven
 ven ve
 veo
 vep
@@ -7190,7 +7016,6 @@ vgt
 vi
 vic
 vid
-vie
 vie vi
 vif
 vig
@@ -7238,7 +7063,6 @@ vnk
 vnm
 vnp
 vo
-vol
 vol vo
 vor
 vot
@@ -7362,7 +7186,6 @@ wli
 wlk
 wll
 wlm
-wln
 wln wa
 wlo
 wlr
@@ -7407,7 +7230,6 @@ wof
 wog
 woi
 wok
-wol
 wol wo
 wom
 won
@@ -7538,7 +7360,6 @@ xha
 xhc
 xhd
 xhe
-xho
 xho xh
 xhr
 xht
@@ -7804,7 +7625,6 @@ yhd
 yhl
 yi
 yia
-yid
 yid yi
 yif
 yig
@@ -7886,7 +7706,6 @@ yok
 yol
 yom
 yon
-yor
 yor yo
 yos
 yox
@@ -8003,13 +7822,11 @@ zgm
 zgn
 zgr
 zh
-zha
 zha za
 zhb
 zhd
 zhi
 zhn
-zho
 zho zh
 zhw
 zia
@@ -8129,13 +7946,11 @@ zty
 zu
 zua
 zuh
-zul
 zul zu
 zum
 zun
 zuy
 zwa
-zxx
 zxx no
 zyb
 zyg

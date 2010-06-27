@@ -60,16 +60,23 @@ export LANG=C
     isoquery -i 639
     sed -nr '/\bid=/{s/^.*id="([^"]+)".*$/xxx \1 x/;p}' \
 	/usr/share/xml/iso-codes/iso_639_3.xml
-} | perl -w -n -e 'next unless m/^\w{3}\s+(\w{3})\s+(?:(\w{2})\s+)?/;
+} | perl -w -e ' my %codes;
+		 while (<>) {
+		    next unless m/^\w{3}\s+(\w{3})\s+(?:(\w{2})\s+)?/;
 		    ($iso1, $iso2) = ($2, $1);
 		    if (!defined($iso1)) {
 			$iso1 = $iso2;
 			$iso2 = undef;
 		    }
-		    print "\L$iso1\n";
+		    $iso1 = lc $iso1;
+		    $codes{$iso1} = undef unless (exists $codes{$iso1});
 		    if (defined $iso2) {
-			print "\L$iso2 $iso1\n";
-		    }' |
+			$codes{lc $iso2} = $iso1;
+		    }
+		}
+		while (my ($a, $b) = each %codes) {
+		    print $a.(defined($b)? " $b" : "")."\n";
+		} ' |
     sort -u >> "$tmpfile"
 
 mv "$tmpfile" "$lintian_data/files/locale-codes"

@@ -49,6 +49,8 @@ lintian (2.4.2) UNRELEASED; urgency=low
   * data/fields/virtual-packages:
     + [RA] Update to current unstable and add the old xserver-xorg video
       and input virtual packages.
+  * data/files/locale-codes:
+    + [RG] Refresh to reflect change to private/refresh-locale-codes.
   * data/files/triplets:
     + [RG] Refresh against dpkg 1.15.7.2.
   * data/init.d/virtual_facilities
@@ -73,6 +75,8 @@ lintian (2.4.2) UNRELEASED; urgency=low
 
   * private/refresh-insserv-data:
     + [RG] New script to collect insserv data from the archive.
+  * private/refresh-locale-codes:
+    + [RG] Print elements with values only once.
   * private/refresh-virtual-packages-data:
     + [RA] Fix handling of # Keep: lines to work correctly now that
       virtual packages mentioned only once are excluded.
