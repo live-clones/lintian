@@ -52,6 +52,8 @@ lintian (2.4.2) UNRELEASED; urgency=low
     + [RG] New list of virtual facilities that exist in the archive.
   * data/spelling/corrections:
     + [RG] Add more spelling corrections.
+  * data/spelling/corrections-case:
+    + [RG] Add capitalization correction for OAuth.  (Closes: #582353)
 
   * frontend/lintian:
     + [RA] Set a PATH of /bin:/usr/bin if PATH is completely unset.
