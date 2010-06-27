@@ -51,7 +51,7 @@ lintian (2.4.2) UNRELEASED; urgency=low
       and input virtual packages.
   * data/files/triplets:
     + [RG] Refresh against dpkg 1.15.7.2.
-  * data/init.d/data/init.d/virtual_facilities
+  * data/init.d/virtual_facilities
     + [RG] New list of virtual facilities that exist in the archive.
   * data/spelling/corrections:
     + [RG] Add more spelling corrections.
