@@ -9,6 +9,9 @@ lintian (2.4.2) UNRELEASED; urgency=low
     + Removed:
       - package-type-in-debian-control
 
+  * checks/changes-file.desc:
+    + [RA] Add references for file-size-mismatch-in-changes-file and
+      checksum-mismatch-in-changes-file.
   * checks/control-file{,.desc}:
     + [RA] Remove package-type-in-debian-control now that dpkg-dev handles
       it as desired by the d-i team.  xc-package-type-in-debian-control
