@@ -2,6 +2,7 @@ lintian (2.4.2) UNRELEASED; urgency=low
 
   * Summary of tag changes:
     + Added:
+      - bad-provided-package-name
       - copyright-refers-to-deprecated-bsd-license-file
       - init.d-script-depends-on-unknown-virtual-facility
       - xc-package-type-in-debian-control (pedantic)
@@ -16,9 +17,11 @@ lintian (2.4.2) UNRELEASED; urgency=low
   * checks/copyright-file{,.desc}:
     + [RA] Deprecate references to /usr/share/common-licenses/BSD in
       debian/copyright following the change in Policy 3.8.5.
-  * checks/fields:
+  * checks/fields{,.desc}:
     + [RA] Allow Breaks without a version if the broken package is a
       virtual package.
+    + [RG] Check for invalid package names in provided (virtual)
+      packages.
   * checks/huge-usr-share{,.desc}:
     + [RA] Count file size from the tar listing rather than using du.  The
       results of du vary based on file system and other factors and make

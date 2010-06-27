@@ -553,6 +553,9 @@ if (($type eq "binary") || ($type eq 'udeb')) {
 				tag "versioned-provides", "$part_d_orig"
 				    if ($field eq "provides" && $d_version->[0]);
 
+				tag "bad-provided-package-name", $d_pkg
+				    if $d_pkg !~ /^[a-z0-9][-+\.a-z0-9]+$/;
+
 				tag "breaks-without-version", "$part_d_orig"
 				    if ($field eq "breaks" && !$d_version->[0] && !$VIRTUAL_PACKAGES->known($d_pkg));
 

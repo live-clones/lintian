@@ -33,6 +33,14 @@ Certainty: certain
 Info: New packages should not use uppercase characters in their names.
 Ref: policy 5.6.7
 
+Tag: bad-provided-package-name
+Severity: serious
+Certainty: certain
+Info: A package name should be at least two characters long, must consist
+ of the alphanumerics (lowercase characters only) and "+" "-" and ".", and
+ must start with an alphanumeric character.
+Ref: policy 5.6.7
+
 Tag: no-version-field
 Severity: serious
 Certainty: certain
