@@ -22,6 +22,8 @@ lintian (2.4.2) UNRELEASED; urgency=low
       virtual package.
     + [RG] Check for invalid package names in provided (virtual)
       packages.
+    + [RG] Exclude dash from the depends-on-essential-package checks, as
+      per discusion in debian-devel.  (Closes: #587209)
   * checks/huge-usr-share{,.desc}:
     + [RA] Count file size from the tar listing rather than using du.  The
       results of du vary based on file system and other factors and make

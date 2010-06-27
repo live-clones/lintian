@@ -582,7 +582,7 @@ if (($type eq "binary") || ($type eq 'udeb')) {
 				# diffutils effectively is a versioned one.
 				tag "depends-on-essential-package-without-using-version", "$field: $part_d_orig"
 				    if ($KNOWN_ESSENTIAL->known($d_pkg) && ! $d_version->[0]
-					&& &$is_dep_field($field) && $d_pkg ne 'diffutils');
+					&& &$is_dep_field($field) && $d_pkg ne 'diffutils' && $d_pkg ne 'dash');
 
 				tag "package-depends-on-an-x-font-package", "$field: $part_d_orig"
 				    if ($field =~ /^(pre-)?depends$/ && $d_pkg =~ /^xfont.*/ && $d_pkg ne 'xfonts-utils' && $d_pkg ne 'xfonts-encodings');
@@ -716,7 +716,7 @@ if ($type eq "source") {
 					    if ($known_build_essential{$d_pkg} && ! $d_version->[1]);
 
 					tag "build-depends-on-essential-package-without-using-version", "$field: $part_d_orig"
-					    if ($KNOWN_ESSENTIAL->known($d_pkg) && ! $d_version->[0]);
+					    if ($KNOWN_ESSENTIAL->known($d_pkg) && ! $d_version->[0] && $d_pkg ne 'dash');
 					push @seen_obsolete_packages, $part_d_orig
 					    if ($OBSOLETE_PACKAGES->known($d_pkg) && &$is_dep_field($field));
 
