@@ -49,6 +49,8 @@ lintian (2.4.2) UNRELEASED; urgency=low
       Thanks, Niels Thykier.  (Closes: #580700)
   * checks/menus:
     + [RG] Recognise call to update-menus when using 'exec.'
+  * checks/rules.desc:
+    + [RA] Add reference for debian-rules-makemaker-prefix-is-deprecated.
   * checks/scripts:
     + [RG] Correctly handle variables at the beginning of a call to
       dpkg-divert.  Thanks, Andreas Beckmann.  (Closes: #586984)

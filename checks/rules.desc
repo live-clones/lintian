@@ -162,7 +162,7 @@ Info: The specified package is required to run the clean target of
 Tag: debian-rules-makemaker-prefix-is-deprecated
 Severity: normal
 Certainty: possible
-Ref: http://bugs.debian.org/545904
+Ref: perl-policy 4.3
 Info: The package appears to use an <tt>ExtUtils::MakeMaker</tt>
  (Makefile.PL) build system and sets the temporary installation path by
  overriding <tt>PREFIX</tt> when calling <tt>make install</tt>.  This only
