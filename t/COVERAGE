@@ -1,4 +1,4 @@
-Last generated 2010-05-15
+Last generated 2010-06-28
 
 The following tags are not tested by the test suite:
 
@@ -52,7 +52,6 @@ debconf unknown-template-type
 debian-source-dir unknown-source-format
 
 fields alternates-not-allowed
-fields arch-any-in-binary-pkg
 fields aspell-package-not-arch-all
 fields bad-menu-item
 fields bad-package-name
@@ -83,7 +82,6 @@ fields unknown-field-in-control
 fields unknown-field-in-dsc
 fields unknown-priority
 fields upstream-version-not-numeric
-fields versioned-provides
 fields wrong-section-for-udeb
 
 files FSSTND-dir-in-var
@@ -304,7 +302,6 @@ fields uploader-address-malformed
 fields uploader-address-missing
 fields uploader-not-full-name
 fields versioned-dependency-satisfied-by-perl
-fields virtual-package-depends-without-real-package-depends
 fields wrong-debian-qa-address-set-as-maintainer
 fields wrong-debian-qa-group-name
 
@@ -747,7 +744,6 @@ relations
   section-area-mismatch
   usr-share-doc-symlink-without-dependency
   versioned-dependency-satisfied-by-perl
-  virtual-package-depends-without-real-package-depends
 
 scripts
   calls-suidperl-directly
