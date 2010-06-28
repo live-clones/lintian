@@ -30,7 +30,7 @@ Package: {$srcpkg}-1
 Section: {$section}
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
-Conflicts: libsqlite3-0 (< 3.6.12)
+Breaks: libsqlite3-0 (< 3.6.12)
 Description: {$description}
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd

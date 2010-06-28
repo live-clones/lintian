@@ -1,1 +1,2 @@
+I: fields-obsolete-relation: conflicts-with-version libsqlite3-0 (< 3.6.12)
 W: fields-obsolete-relation: obsolete-relation-form conflicts: libsqlite3-0 (< 3.6.12)
