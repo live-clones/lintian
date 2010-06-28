@@ -53,6 +53,9 @@ lintian (2.4.2) UNRELEASED; urgency=low
       Thanks, Niels Thykier.  (Closes: #580700)
   * checks/menus:
     + [RG] Recognise call to update-menus when using 'exec.'
+    + [RA] Skip Haskell library documentation when warning about
+      documentation not registered with doc-base.  Patch from Erik de
+      Castro Lopo.  (Closes: #586877)
   * checks/rules.desc:
     + [RA] Add reference for debian-rules-makemaker-prefix-is-deprecated.
   * checks/scripts:

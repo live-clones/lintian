@@ -203,7 +203,13 @@ if ($docbase_file) {
     }
     closedir DOCBASEDIR;
 } elsif ($documentation) {
-    tag "possible-documentation-but-no-doc-base-registration";
+    if ($pkg =~ /^libghc6-.*-doc$/) {
+        # This is the library documentation for a haskell library. Haskell
+        # libraries register their documentation via the ghc compiler's
+        # documetation registration mechanism.  See bug #586877.
+    } else {
+        tag "possible-documentation-but-no-doc-base-registration";
+    }
 }
 
 if ($anymenu_file) {
