@@ -7,15 +7,15 @@
 # If <section> is empty, that line specifies the title and URL for the whole
 # manual.  If <url> is empty, that manual is not available on the web.
 #
-# Last updated: 2010-01-04
+# Last updated: 2010-06-27
 
 debconf-spec::::Configuration management::http://www.debian.org/doc/packaging-manuals/debconf_specification.html
 debconf-spec::aen27::Introduction::http://www.debian.org/doc/packaging-manuals/debconf_specification.html#AEN27
 debconf-spec::aen30::Configuration Data::http://www.debian.org/doc/packaging-manuals/debconf_specification.html#AEN30
 debconf-spec::aen45::Templates::http://www.debian.org/doc/packaging-manuals/debconf_specification.html#AEN45
-debconf-spec::aen98::Configuration frontends::http://www.debian.org/doc/packaging-manuals/debconf_specification.html#AEN98
-debconf-spec::aen103::Communication with the frontend::http://www.debian.org/doc/packaging-manuals/debconf_specification.html#AEN103
-debconf-spec::aen267::Debian install-time configuration::http://www.debian.org/doc/packaging-manuals/debconf_specification.html#AEN267
+debconf-spec::aen101::Configuration frontends::http://www.debian.org/doc/packaging-manuals/debconf_specification.html#AEN101
+debconf-spec::aen106::Communication with the frontend::http://www.debian.org/doc/packaging-manuals/debconf_specification.html#AEN106
+debconf-spec::aen275::Debian install-time configuration::http://www.debian.org/doc/packaging-manuals/debconf_specification.html#AEN275
 devref::::Debian Developer's Reference::http://www.debian.org/doc/developers-reference/
 devref::1::Scope of This Document::http://www.debian.org/doc/developers-reference/scope.html
 devref::2::Applying to Become a Maintainer::http://www.debian.org/doc/developers-reference/new-maintainer.html
@@ -618,7 +618,7 @@ policy::9.7::Multimedia handlers::http://www.debian.org/doc/debian-policy/ch-ope
 policy::9.8::Keyboard configuration::http://www.debian.org/doc/debian-policy/ch-opersys.html#s9.8
 policy::9.9::Environment variables::http://www.debian.org/doc/debian-policy/ch-opersys.html#s9.9
 policy::9.10::Registering Documents using doc-base::http://www.debian.org/doc/debian-policy/ch-opersys.html#s-doc-base
-policy::10.1::Binaries::http://www.debian.org/doc/debian-policy/ch-files.html#s10.1
+policy::10.1::Binaries::http://www.debian.org/doc/debian-policy/ch-files.html#s-binaries
 policy::10.2::Libraries::http://www.debian.org/doc/debian-policy/ch-files.html#s-libraries
 policy::10.3::Shared libraries::http://www.debian.org/doc/debian-policy/ch-files.html#s10.3
 policy::10.4::Scripts::http://www.debian.org/doc/debian-policy/ch-files.html#s-scripts
@@ -650,7 +650,7 @@ policy::B.2::Package control information files::http://www.debian.org/doc/debian
 policy::B.3::The main control information file: <samp>control</samp>::http://www.debian.org/doc/debian-policy/ap-pkg-binarypkg.html#s-pkg-controlfile
 policy::B.4::Time Stamps::http://www.debian.org/doc/debian-policy/ap-pkg-binarypkg.html#sB.4
 policy::C.1::Tools for processing source packages::http://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#s-pkg-sourcetools
-policy::C.2::The Debianised source tree::http://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#s-pkg-sourcetree
+policy::C.2::The Debian package source tree::http://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#s-pkg-sourcetree
 policy::C.3::Source packages as archives::http://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#s-pkg-sourcearchives
 policy::C.4::Unpacking a Debian source package without <code>dpkg-source</code>::http://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#sC.4
 policy::D.1::Syntax of control files::http://www.debian.org/doc/debian-policy/ap-pkg-controlfields.html#sD.1
@@ -688,6 +688,7 @@ policy::5.6.20::<samp>Installed-Size</samp>::http://www.debian.org/doc/debian-po
 policy::5.6.21::<samp>Files</samp>::http://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-Files
 policy::5.6.22::<samp>Closes</samp>::http://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-Closes
 policy::5.6.23::<samp>Homepage</samp>::http://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-Homepage
+policy::5.6.24::<samp>Checksums-Sha1</samp> and <samp>Checksums-Sha256</samp>::http://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-Checksums
 policy::7.6.1::Overwriting files in other packages::http://www.debian.org/doc/debian-policy/ch-relationships.html#s7.6.1
 policy::7.6.2::Replacing whole packages, forcing their removal::http://www.debian.org/doc/debian-policy/ch-relationships.html#s7.6.2
 policy::8.1.1::<samp>ldconfig</samp>::http://www.debian.org/doc/debian-policy/ch-sharedlibs.html#s-ldconfig
@@ -702,7 +703,7 @@ policy::9.1.3::The system-wide mail directory::http://www.debian.org/doc/debian-
 policy::9.2.1::Introduction::http://www.debian.org/doc/debian-policy/ch-opersys.html#s9.2.1
 policy::9.2.2::UID and GID classes::http://www.debian.org/doc/debian-policy/ch-opersys.html#s9.2.2
 policy::9.3.1::Introduction::http://www.debian.org/doc/debian-policy/ch-opersys.html#s-/etc/init.d
-policy::9.3.2::Writing the scripts::http://www.debian.org/doc/debian-policy/ch-opersys.html#s9.3.2
+policy::9.3.2::Writing the scripts::http://www.debian.org/doc/debian-policy/ch-opersys.html#s-writing-init
 policy::9.3.3::Interfacing with the initscript system::http://www.debian.org/doc/debian-policy/ch-opersys.html#s9.3.3
 policy::9.3.3.1::Managing the links::http://www.debian.org/doc/debian-policy/ch-opersys.html#s9.3.3.1
 policy::9.3.3.2::Running initscripts::http://www.debian.org/doc/debian-policy/ch-opersys.html#s9.3.3.2
@@ -714,6 +715,7 @@ policy::10.7.3::Behavior::http://www.debian.org/doc/debian-policy/ch-files.html#
 policy::10.7.4::Sharing configuration files::http://www.debian.org/doc/debian-policy/ch-files.html#s10.7.4
 policy::10.7.5::User configuration files (&quot;dotfiles&quot;)::http://www.debian.org/doc/debian-policy/ch-files.html#s10.7.5
 policy::10.9.1::The use of <code>dpkg-statoverride</code>::http://www.debian.org/doc/debian-policy/ch-files.html#s10.9.1
+policy::11.1.1::Architecture wildcards::http://www.debian.org/doc/debian-policy/ch-customized-programs.html#s-arch-wildcard-spec
 policy::11.8.1::Providing X support and package priorities::http://www.debian.org/doc/debian-policy/ch-customized-programs.html#s11.8.1
 policy::11.8.2::Packages providing an X server::http://www.debian.org/doc/debian-policy/ch-customized-programs.html#s11.8.2
 policy::11.8.3::Packages providing a terminal emulator::http://www.debian.org/doc/debian-policy/ch-customized-programs.html#s11.8.3
@@ -731,11 +733,9 @@ policy::C.1.6::<code>dpkg-genchanges</code> - generates a <code>.changes</code> 
 policy::C.1.7::<code>dpkg-parsechangelog</code> - produces parsed representation of a changelog::http://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#s-pkg-dpkg-parsechangelog
 policy::C.1.8::<code>dpkg-architecture</code> - information about the build and host system::http://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#s-pkg-dpkg-architecture
 policy::C.2.1::<code>debian/rules</code> - the main building script::http://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#s-pkg-debianrules
-policy::C.2.2::<code>debian/changelog</code>::http://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#s-pkg-dpkgchangelog
-policy::C.2.2.1::Defining alternative changelog formats::http://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#sC.2.2.1
-policy::C.2.3::<code>debian/substvars</code> and variable substitutions::http://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#s-pkg-srcsubstvars
-policy::C.2.4::<code>debian/files</code>::http://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#sC.2.4
-policy::C.2.5::<code>debian/tmp</code>::http://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#sC.2.5
+policy::C.2.2::<code>debian/substvars</code> and variable substitutions::http://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#s-pkg-srcsubstvars
+policy::C.2.3::<code>debian/files</code>::http://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#sC.2.3
+policy::C.2.4::<code>debian/tmp</code>::http://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#sC.2.4
 policy::C.4.1::Restrictions on objects in source packages::http://www.debian.org/doc/debian-policy/ap-pkg-sourcepkg.html#sC.4.1
 policy::D.2.1::<samp>Filename</samp> and <samp>MSDOS-Filename</samp>::http://www.debian.org/doc/debian-policy/ap-pkg-controlfields.html#s-pkg-f-Filename
 policy::D.2.2::<samp>Size</samp> and <samp>MD5sum</samp>::http://www.debian.org/doc/debian-policy/ap-pkg-controlfields.html#s-pkg-f-Size
