@@ -66,7 +66,7 @@ lintian (2.4.2) UNRELEASED; urgency=low
       (LP: #540342)
 
   * data/fields/architectures:
-    + [RG] Refresh against dpkg 1.15.7.2.  (Closes: #581314)
+    + [RG] Refresh against dpkg 1.15.7.2.  (Closes: #581314, #584743)
   * data/fields/virtual-packages:
     + [RA] Update to current unstable and add the old xserver-xorg video
       and input virtual packages.
