@@ -44,6 +44,9 @@ lintian (2.4.2) UNRELEASED; urgency=low
   * checks/init.d{,.desc}:
     + [RG] Check for init.d scripts depending on unknown virtual
       facilities.
+    + [RA] Remove checkroot from the list of scripts that should use a
+      virtual dependency since $local_fs is not quite the same and some
+      packages (cryptsetup) care about the difference.  (Closes: #580082)
   * checks/manpages{,.desc}:
     + [RA] Run man page checks using the en_US.UTF-8 locale now that we
       guarantee it exists.  Should hopefully fix occasional problems with

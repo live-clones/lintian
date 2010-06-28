@@ -36,10 +36,13 @@ my %lsb_keywords = (provides		=> 1,
 
 # These init script names should probably not be used in dependencies.
 # Instead, the corresponding virtual facility should be used.
+#
+# checkroot is not included here since cryptsetup needs the root file system
+# mounted but not any other local file systems and therefore correctly depends
+# on checkroot.  There may be other similar situations.
 my %implied_dependencies =
     (
      'mountall'   => '$local_fs',
-     'checkroot'  => '$local_fs',
      'mountnfs'   => '$remote_fs',
      'hwclock'    => '$time',
      'portmap'    => '$portmap',
