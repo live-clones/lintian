@@ -86,6 +86,8 @@ lintian (2.4.2) UNRELEASED; urgency=low
     + [RG] Refresh against dpkg 1.15.7.2.
   * data/init.d/virtual_facilities
     + [RG] New list of virtual facilities that exist in the archive.
+  * data/output/ftp-master-fatal:
+    + [RA] Remove arch-any-in-binary-pkg.
   * data/spelling/corrections:
     + [RG] Add more spelling corrections.
   * data/spelling/corrections-case:
