@@ -42,6 +42,7 @@ my $info = shift;
 my $changelog_mentions_nmu = 0;
 my $changelog_mentions_local = 0;
 my $changelog_mentions_qa = 0;
+my $changelog_mentions_team_upload = 0;
 
 # This isn't really an NMU check, but right now no other check looks at
 # debian/changelog in source packages.  Catch a debian/changelog file that's a
@@ -60,7 +61,7 @@ my $changes = $entry->Changes;
 $changes =~ s/^(\s*\n)+//;
 my $firstline = (grep /^\s*\*/, split('\n', $changes))[0];
 
-# Check the first line for QA and NMU mentions.
+# Check the first line for QA, NMU or team upload mentions.
 if ($firstline) {
 	local $_ = $firstline;
 	if (/\bnmu\b/i or /non-maintainer upload/i) {
@@ -70,6 +71,8 @@ if ($firstline) {
 	}
 	$changelog_mentions_local = 1 if /\blocal\s+package\b/i;
 	$changelog_mentions_qa = 1 if /orphan/i or /qa (?:group )?upload/i;
+	$changelog_mentions_team_upload = 1 if / \* Team upload./;
+
 }
 
 my $version = $info->field("version");
@@ -111,6 +114,9 @@ if ($maintainer =~ /packages\@qa.debian.org/) {
 		if $version_nmuness == 1;
 	tag "changelog-should-mention-qa", ""
 		if !$changelog_mentions_qa;
+} elsif ($changelog_mentions_team_upload) {
+	tag "team-upload-has-incorrect-version-number", "$version"
+		if $version_nmuness == 1;
 } else {
 	# Local packages may be either NMUs or not.
 	unless ($changelog_mentions_local || $version_local) {

@@ -18,6 +18,13 @@ Certainty: certain
 Info: A QA upload (uploading an orphaned package without adopting it) is
  always a maintainer upload: it should not get a NMU revision number.
 
+Tag: team-upload-has-incorrect-version-number
+Severity: normal
+Certainty: certain
+Info: A team upload (uploading a package from the same team without adding
+ onself as maintainer or uploader) is a maintainer upload: it should not get a
+ NMU revision number.
+
 Tag: source-nmu-has-incorrect-version-number
 Severity: normal
 Certainty: certain
