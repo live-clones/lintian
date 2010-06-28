@@ -94,6 +94,8 @@ lintian (2.4.2) UNRELEASED; urgency=low
     + [RG] Add more spelling corrections.
   * data/spelling/corrections-case:
     + [RG] Add capitalization correction for OAuth.  (Closes: #582353)
+  * data/standards-version/release-dates:
+    + [RA] Add Debian Policy 3.9.0.
 
   * frontend/lintian:
     + [RA] Set a PATH of /bin:/usr/bin if PATH is completely unset.
