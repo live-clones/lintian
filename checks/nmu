@@ -71,8 +71,7 @@ if ($firstline) {
 	}
 	$changelog_mentions_local = 1 if /\blocal\s+package\b/i;
 	$changelog_mentions_qa = 1 if /orphan/i or /qa (?:group )?upload/i;
-	$changelog_mentions_team_upload = 1 if / \* Team upload./;
-
+	$changelog_mentions_team_upload = 1 if /team upload/i;
 }
 
 my $version = $info->field("version");

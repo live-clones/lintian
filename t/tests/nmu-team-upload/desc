@@ -1,0 +1,5 @@
+Testname: nmu-team-upload
+Sequence: 6000
+Version: 1.0+nmu1
+Description: Test for versioning of a team upload
+Test-For: team-upload-has-incorrect-version-number
