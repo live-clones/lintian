@@ -32,7 +32,7 @@ lintian (2.4.2) UNRELEASED; urgency=low
     + [RG] Exclude dash from the depends-on-essential-package checks, as
       per discusion in debian-devel.  (Closes: #587209)
     + [RA] Allow architecture wildcards in build relations and in the
-      Architecture field of binary and source packages.
+      Architecture field of binary and source packages.  (Closes: #582804)
     + [RA] Rename arch-any-in-binary-pkg to arch-wildcard-in-binary-package
       and diagnose any architecture wildcard, not just "any".
     + [RA] Warn of using Conflicts with a version, which should normally
