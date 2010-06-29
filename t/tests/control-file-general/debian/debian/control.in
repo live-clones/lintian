@@ -18,7 +18,7 @@ Maintainer: {$author}
 Build-Conflicts: foo
 Architecture: {$architecture}
 Depends: {$srcpkg}, foo, baz, $\{shlibs:Depends\} $\{misc:Depends\}
-Recommends: foo, bar, no-match$\{lintian:Foo\}, match$\{lintian:Match\}
+Recommends: foo, bar, no-match$\{lintian:Foo\}, match$\{lintian:Match\}, no-match$\{lintian:Bar\}-foo
 Suggests: bar | baz, no-match$\{lintian:Bar\}, match$\{lintian:Match\}
 Description: {$description}
  This is a test package designed to exercise some feature or tag of
