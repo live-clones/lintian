@@ -62,7 +62,7 @@ our $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
 our $LINTIAN = $LINTIAN_ROOT . '/frontend/lintian';
 our $DPKG_BUILDPACKAGE = 'dpkg-buildpackage -rfakeroot -us -uc -d'
     . ' -iNEVER_MATCH_ANYTHING -INEVER_MATCH_ANYTHING';
-our $STANDARDS_VERSION = '3.8.4';
+our $STANDARDS_VERSION = '3.9.0';
 our $ARCHITECTURE = `dpkg-architecture -qDEB_HOST_ARCH`;
 chomp $ARCHITECTURE;
 
