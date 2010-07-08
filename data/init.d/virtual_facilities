@@ -2,6 +2,7 @@
 #
 # Last updated: 2010-05-02
 
+$all
 $local_fs
 $named
 $network

@@ -6,7 +6,7 @@ set -e
 # Provides: init.d-lsb-headers-virtual
 # Required-Start: $local_fs $something_that_doesnt_exist
 # Should-Start: $something_we_might_not_ship
-# Required-Stop:
+# Required-Stop: $all
 # Default-Start: 2 3 4 5
 # Default-Stop:
 # Short-Description: Just a test script

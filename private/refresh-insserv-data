@@ -59,6 +59,7 @@ cat > "$workdir/virtual_facilities" <<EOF
 #
 # Last updated: $(date -u +'%Y-%m-%d')
 
+\$all
 EOF
 
 mirror="${DEB_MIRROR:=http://i386-geomirror.debian.net/debian}"
