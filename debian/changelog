@@ -1,5 +1,8 @@
 lintian (2.4.3) UNRELEASED; urgency=low
 
+  * checks/files
+    + [RG] Detect embedded copies of HTMLPurifier.
+
   * private/refresh-insserv-data:
     + Hardcode the '$all' virtual facility.
 

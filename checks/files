@@ -108,6 +108,7 @@ our @phplibraries = (
     [ qr,(?i)unit_tester\.php$, => 'php-simpletest' ],
     [ qr,(?i)Sparkline\.php$, => 'libsparkline-php' ],
     [ qr,(?i)(?:class\.)?nusoap\.(?:php|inc)$, => 'libnusoap-php' ],
+    [ qr,(?i)HTMLPurifier\.php$, => 'php-htmlpurifier' ],
 # not yet available in unstable:,
 #    [ qr,(?i)IXR_Library(\.inc|\.php)+$, => 'libphp-ixr' ],
 #    [ qr,(?i)(class\.)?kses\.php$, => 'libphp-kses' ],
