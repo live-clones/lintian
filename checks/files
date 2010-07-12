@@ -51,6 +51,7 @@ our @jslibraries = (
     [ qr,(?i)tiny_mce(_(popup|src))?\.js(\.gz)?$, => qr'tinymce2?' ],
     [ qr,(?i)dojo\.js(\.uncompressed\.js)?(\.gz)?$, => qr'libjs-dojo-\w+' ],
     [ qr,(?i)dijit\.js(\.uncompressed\.js)?(\.gz)?$, => qr'libjs-dojo-\w+' ],
+    [ qr,(?i)strophe(\.min)?\.js(\.gz)?$, => qr'libjs-strophe' ],
 # not yet available in unstable:
 #    [ qr,(?i)(htmlarea|Xinha(Loader|Core))\.js$, => qr'xinha' ],
 );
