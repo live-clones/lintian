@@ -2,7 +2,3 @@ E: binaries-embedded-libs: embedded-libjpeg ./usr/bin/libjpeg
 E: binaries-embedded-libs: embedded-libopenjpeg ./usr/bin/libopenjpeg
 E: binaries-embedded-libs: embedded-libpng ./usr/bin/libpng
 E: binaries-embedded-libs: embedded-zlib ./usr/bin/zlib
-W: binaries-embedded-libs: binary-without-manpage usr/bin/libjpeg
-W: binaries-embedded-libs: binary-without-manpage usr/bin/libopenjpeg
-W: binaries-embedded-libs: binary-without-manpage usr/bin/libpng
-W: binaries-embedded-libs: binary-without-manpage usr/bin/zlib
