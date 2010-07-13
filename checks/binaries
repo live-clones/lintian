@@ -68,6 +68,12 @@ our %arch_64bit_equivs = (
 	'sparc'		=> 'sparc64',
 );
 
+our %EMBEDDED_LIBRARIES = (
+	'bzip2'		=> qr'(?m)^This is a bug in bzip2',
+	'pcre3'		=> qr'this version of PCRE is not compiled with PCRE_UTF8 support',
+	'tiff'		=> qr'No space for PixarLog state block',
+);
+
 our $multiarch;
 
 sub run {
@@ -295,6 +301,13 @@ foreach my $file (sort keys %{$info->file_info}) {
     if ($info->field('source') ne 'openjpeg'
 	and $strings =~ /tcd_decode: incomplete bistream/) {
 	tag "embedded-libopenjpeg", $file;
+    }
+
+    while (my ($src, $regex) = each %EMBEDDED_LIBRARIES) {
+	if ($info->field('source') ne $src
+	    and $strings =~ /$regex/) {
+	    tag "embedded-library", "$file: $src";
+	}
     }
 
     # binary or shared object?
