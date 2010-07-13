@@ -11,7 +11,7 @@ lintian (2.4.3) UNRELEASED; urgency=low
     + [RG] Detect embedded copies of the Strophe javascript library.
 
   * private/refresh-insserv-data:
-    + Hardcode the '$all' virtual facility.
+    + [RG] Hardcode the '$all' virtual facility.
 
  -- Raphael Geissert <geissert@debian.org>  Fri, 02 Jul 2010 15:22:17 -0500
 
