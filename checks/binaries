@@ -23,6 +23,7 @@ use strict;
 use Util;
 use Lintian::Check qw(check_spelling);
 use Lintian::Tags qw(tag);
+use Lintian::Output qw(debug_msg);
 
 use File::Spec;
 
@@ -35,7 +36,8 @@ our %ARCH_REGEX = (
 	'amd64'          => qr'ELF 64-bit LSB .* x86-64, .* (?:GNU/Linux|(?!GNU))',
 	'arm'            => qr'ELF 32-bit LSB .* ARM, version \d,',
 	'armeb'          => qr'ELF 32-bit MSB .* ARM',
-	'armel'          => qr'ELF 32-bit LSB .* \(SYSV\)',
+	'armel'          => qr'ELF 32-bit LSB .* ARM, .* \(SYSV\)',
+#	'avr32'          => qr'ELF 32-bit MSB .* \(SYSV\)',
 	'hppa'           => qr'ELF 32-bit MSB .* PA-RISC',
 	'hppa64'         => qr'ELF 64-bit MSB .* PA-RISC',
 	'hurd-i386' 	 => qr'ELF 32-bit LSB .* Intel 80386, .* (?:GNU/Hurd|(?!GNU))',
@@ -51,9 +53,11 @@ our %ARCH_REGEX = (
 	'mips64' 	 => qr'ELF 64-bit MSB .* MIPS',
 	'mipsel64'       => qr'ELF 64-bit LSB .* MIPS',
 	'powerpc'        => qr'ELF 32-bit MSB .* PowerPC',
+	'powerpcspe'     => qr'ELF 32-bit MSB .* PowerPC .* cisco 4500',
 	'ppc64'          => qr'ELF 64-bit MSB .* PowerPC',
 	's390'    	 => qr'ELF 32-bit MSB .* S.390',
 	's390x'   	 => qr'ELF 64-bit MSB .* S.390',
+	'sh4'   	 => qr'ELF 32-bit LSB .* Renesas SH',
 	'sparc'   	 => qr'ELF 32-bit MSB .* SPARC',
 	'sparc64' 	 => qr'ELF 64-bit MSB .* SPARC');
 
@@ -183,6 +187,7 @@ foreach (sort keys %{$info->file_info}) {
 
 # If we have an unknown architecture, pretend that all binaries are fine.
 if ($arch ne 'all' and not exists($ARCH_REGEX{$arch})) {
+    debug_msg(1, "Unknown architecture: $arch");
     $ARCH_REGEX{$arch} = qr/./;
 }
 
