@@ -74,6 +74,8 @@ our %arch_64bit_equivs = (
 
 our %EMBEDDED_LIBRARIES = (
 	'bzip2'		=> qr'(?m)^This is a bug in bzip2',
+	'expat'		=> qr'(?m)^requested feature requires XML_DTD support in Expat',
+	'file'		=> qr'(?m)^could not find any magic files',
 	'libxml2'	=> qr'root and DTD name do not match',
 	'pcre3'		=> qr'this version of PCRE is not compiled with PCRE_UTF8 support',
 	'tiff'		=> qr'No space for PixarLog state block',

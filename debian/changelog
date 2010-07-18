@@ -5,7 +5,8 @@ lintian (2.4.3) UNRELEASED; urgency=low
       - embedded-library
 
   * checks/binaries{,.desc}:
-    + [RG] Detect embedded copies of libbz2, pcre3, tiff, and libxml2.
+    + [RG] Detect embedded copies of expat, libbz2, libmagic, libxml2,
+      pcre3, and tiff.
     + [RG] Recognise powerpcspe and sh4 ELF objects.
   * checks/files
     + [RG] Detect embedded copies of HTMLPurifier.

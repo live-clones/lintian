@@ -2,6 +2,8 @@ E: binaries-embedded-libs: embedded-libjpeg ./usr/bin/libjpeg
 E: binaries-embedded-libs: embedded-libopenjpeg ./usr/bin/libopenjpeg
 E: binaries-embedded-libs: embedded-libpng ./usr/bin/libpng
 E: binaries-embedded-libs: embedded-library ./usr/bin/libbz2: bzip2
+E: binaries-embedded-libs: embedded-library ./usr/bin/libexpat: expat
+E: binaries-embedded-libs: embedded-library ./usr/bin/libmagic: file
 E: binaries-embedded-libs: embedded-library ./usr/bin/libpcre3: pcre3
 E: binaries-embedded-libs: embedded-library ./usr/bin/libtiff: tiff
 E: binaries-embedded-libs: embedded-library ./usr/bin/libxml2: libxml2
