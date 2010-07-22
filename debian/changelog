@@ -12,6 +12,11 @@ lintian (2.4.3) UNRELEASED; urgency=low
     + [RG] Detect embedded copies of HTMLPurifier.
     + [RG] Detect embedded copies of the Strophe javascript library.
 
+  * lib/Lintian/Schedule.pm:
+    + [ADB] Import "warning" from Lintian::Output, really fixing the
+      error caused by a non-existent file referenced in a .changes
+      file.  (Closes: #583555, again)
+
   * private/refresh-insserv-data:
     + [RG] Hardcode the '$all' virtual facility.
 
