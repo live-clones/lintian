@@ -1,5 +1,4 @@
 E: description-general-2: description-contains-tabs
-E: description-general-2: description-too-long
 E: description-general-3: description-synopsis-is-empty
 E: description-general-4: description-synopsis-is-duplicated
 E: description-general-empty: extended-description-is-empty
@@ -11,6 +10,7 @@ I: description-general-3: using-first-person-in-description line 5: I
 I: description-general-4: capitalization-error-in-description debian Debian
 I: description-general: description-synopsis-might-not-be-phrased-properly
 W: description-general-2: description-starts-with-leading-spaces
+W: description-general-2: description-too-long
 W: description-general-2: possible-unindented-list-in-extended-description
 W: description-general-3: extended-description-line-too-long
 W: description-general-4: description-contains-homepage
