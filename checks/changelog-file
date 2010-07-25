@@ -165,20 +165,6 @@ if (-f 'NEWS.Debian') {
 	    tag 'debian-news-entry-uses-asterisk';
 	}
     }
-
-    # Check that the most recent trailer line in NEWS.Debian is followed by a
-    # blank line due to a current bug in apt-listchanges that otherwise
-    # doesn't show a blank line between entries from other packages.
-    open(IN, '<', 'NEWS.Debian')
-	or fail("cannot open NEWS.Debian for $type package $pkg");
-    local $_;
-    while (<IN>) {
-	last if /^ --/;
-    }
-    my $next = <IN>;
-    tag 'debian-news-entry-without-blank-line', "line $."
-	unless ($next and $next =~ /^\s*$/);
-    close IN;
 }
 
 if ( $found_html && !$found_text ) {

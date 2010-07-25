@@ -1,6 +1,5 @@
 E: changelog-file-news-general: debian-news-file-uses-obsolete-national-encoding at line 4
 I: changelog-file-news-general: debian-news-entry-uses-asterisk
-I: changelog-file-news-general: debian-news-entry-without-blank-line line 7
 W: changelog-file-news-general: changelog-news-debian-mismatch distribution unstable != UNRELEASED
 W: changelog-file-news-general: changelog-news-debian-mismatch urgency low != high
 W: changelog-file-news-general: debian-news-entry-has-strange-distribution UNRELEASED
