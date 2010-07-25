@@ -25,6 +25,9 @@ lintian (2.4.3) UNRELEASED; urgency=low
   * debian/changelog:
     + [RA] Fix Policy 3.9.0 reference in 2.4.2.  (Closes: #587549)
 
+  * lib/Lintian/Check.pm:
+    + [RA] More correctly handle hyphenated words to avoid triggering
+      spelling error false positives.  (Closes: #588896)
   * lib/Lintian/Schedule.pm:
     + [ADB] Import "warning" from Lintian::Output, really fixing the
       error caused by a non-existent file referenced in a .changes

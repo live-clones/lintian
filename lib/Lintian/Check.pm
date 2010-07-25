@@ -202,7 +202,8 @@ sub check_spelling {
     my $corrections_multiword =
         Lintian::Data->new('spelling/corrections-multiword', '\|\|');
 
-    $text =~ s/[()[\]]//g;
+    $text =~ s/[()\[\]]//g;
+    $text =~ s/(\w-)\s*\n\s*/$1/;
 
     for my $word (split(/\s+/, $text)) {
         $word =~ s/[.,;:?!]+$//;

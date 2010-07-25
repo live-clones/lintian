@@ -1,0 +1,9 @@
+Testname: spelling-general
+Sequence: 6000
+Version: 1.0
+Description: General checks for spelling errors
+Test-For:
+ spelling-error-in-changelog
+ spelling-error-in-copyright
+ spelling-error-in-doc-base-abstract-field
+ spelling-error-in-doc-base-title-field

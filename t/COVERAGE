@@ -1,16 +1,16 @@
-Last generated 2010-06-28
+Last generated 2010-07-25
 
 The following tags are not tested by the test suite:
 
 binaries apparently-corrupted-elf-binary
 binaries binary-file-compressed-with-upx
+binaries embedded-library
 binaries library-not-linked-against-libc
 binaries missing-dependency-on-phpapi
 binaries ocaml-custom-executable
 binaries program-not-linked-against-libc
 
 changelog-file html-changelog-without-text-version
-changelog-file spelling-error-in-changelog
 changelog-file wrong-name-for-changelog-of-native-package
 changelog-file wrong-name-for-debian-changelog-file
 changelog-file wrong-name-for-upstream-changelog
@@ -28,7 +28,6 @@ control-files unknown-control-file
 
 copyright-file copyright-does-not-refer-to-common-license-file
 copyright-file copyright-should-refer-to-common-license-file-for-lgpl
-copyright-file spelling-error-in-copyright
 copyright-file usr-share-doc-symlink-points-outside-of-usr-share-doc
 copyright-file usr-share-doc-symlink-to-foreign-package
 
@@ -81,7 +80,6 @@ fields unknown-architecture
 fields unknown-field-in-control
 fields unknown-field-in-dsc
 fields unknown-priority
-fields upstream-version-not-numeric
 fields wrong-section-for-udeb
 
 files FSSTND-dir-in-var
@@ -416,8 +414,6 @@ menus menu-method-should-include-menu-h
 menus postinst-does-not-call-updatemenus
 menus postinst-should-not-set-usr-doc-link
 menus postrm-does-not-call-updatemenus
-menus spelling-error-in-doc-base-abstract-field
-menus spelling-error-in-doc-base-title-field
 
 nmu changelog-should-mention-qa
 nmu changelog-should-not-mention-nmu
@@ -531,8 +527,6 @@ binary
   package-contains-upstream-install-documentation
   postinst-does-not-call-updatemenus
   postrm-does-not-call-updatemenus
-  spelling-error-in-doc-base-abstract-field
-  spelling-error-in-doc-base-title-field
   statically-linked-binary
   su-to-root-with-usr-sbin
   su-wrapper-not-su-to-root
