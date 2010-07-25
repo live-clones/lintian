@@ -15,6 +15,10 @@ lintian (2.4.3) UNRELEASED; urgency=low
   * checks/changelog-file{,.desc}:
     + [RA] apt-listchanges has been fixed, so drop the check for NEWS
       files ending in a trailing blank line.  (Closes: #586816)
+  * checks/debhelper.desc:
+    + [RA] package-lacks-versioned-build-depends-on-debhelper can also
+      trigger if the dependency is present but not tight enough.  Thanks,
+      gregor herrmann.  (Closes: #588156)
   * checks/description.desc:
     + [RA] Downgrade description-too-long to minor severity to match bug
       reporting standards for formatting bugs.  (Closes: #587837)
