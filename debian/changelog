@@ -40,6 +40,10 @@ lintian (2.4.3) UNRELEASED; urgency=low
       tag.  Thanks, Robert Luberda.  (Closes: #585657)
   * checks/po-debconf:
     + [RA] Ignore comments in po/POTFILES.in.  (Closes: #586036)
+  * checks/rules.desc:
+    + [RA] Rephrase the debian-rules-calls-debhelper-in-odd-order long
+      description to try to be clearer about the ordering requirements.
+      (Closes: #579964)
   * checks/scripts.desc:
     + [RA] Improve python-script-but-no-python-dep tag description to be
       clearer about the requirement for a versioned dependency for
