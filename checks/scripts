@@ -247,9 +247,6 @@ our @bashism_regexs = (
 	# read with option other than -r
     $LEADIN . qr'read\s*(?:-\w+\s*)*(?:\".*?\"|[\'].*?[\'])?\s*(?:;|$)',
 	# read without variable
-    $LEADIN . qr'kill\s+-[^sl]\w*',# kill -[0-9] or -[A-Z]
-    $LEADIN . qr'trap\s+(?:\'(?:[^\'\\]|\\.)*\'\s+|\"(?:[^\"\\]|\\.)*\"\s+)?[^\"\']*[1-9]',
-	# trap with signal numbers
     qr'\&>',		         # cshism
     qr'(<\&|>\&)\s*((-|\d+)[^\s;|)`&\\\\]|[^-\d\s]+)', # should be >word 2>&1
     qr'\[\[(?!:)',		 # alternative test command
