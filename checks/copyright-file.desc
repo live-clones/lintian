@@ -295,9 +295,9 @@ Info: The copyright file for this package does not appear to contain a
  copyright file include the authors and years of copyright, and including
  a valid copyright notice is the best way to do that.  Examples:
  .
-   Copyright YYYY Firstname Lastname <address@example.com>
-   Copr. YYYY-YYYY Firstname Lastname <address@example.com>
-   © YYYY,YYYY Firstname Lastname <address@example.com>
+   Copyright YYYY Firstname Lastname &lt;address@example.com&gt;
+   Copr. YYYY-YYYY Firstname Lastname &lt;address@example.com&gt;
+   © YYYY,YYYY Firstname Lastname &lt;address@example.com&gt;
  .
  If the package is in the public domain rather than copyrighted, be sure
  to mention "public domain" in the copyright file.  Please be aware that
