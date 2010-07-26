@@ -669,6 +669,7 @@ Info: The package calls dpkg --assert-multi-conrep in a maintainer
 Tag: package-uses-local-diversion
 Severity: serious
 Certainty: certain
+Ref: policy 3.9
 Info: The maintainer script calls dpkg-divert with <tt>--local</tt> or
  without <tt>--package</tt>.  This option is reserved for local
  administrators and must never be used by a Debian package.

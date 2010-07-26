@@ -751,6 +751,7 @@ Info: Compiled python source files must not be included in the package.
 Tag: bad-permissions-for-ali-file
 Severity: normal
 Certainty: certain
+Ref: policy 8.4
 Info: Ada Library Information (*.ali) files are required to be read-only
  (mode 0444) by GNAT. 
  .

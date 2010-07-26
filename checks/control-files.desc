@@ -28,6 +28,7 @@ Info: The package contains an empty control file, which is most probably
 Tag: control-file-has-bad-permissions
 Severity: serious
 Certainty: certain
+Ref: policy 10.9
 Info: The <tt>config</tt>, <tt>postinst</tt>, <tt>postrm</tt>,
  <tt>preinst</tt>, and <tt>prerm</tt> control files should use mode 0755;
  all other control files should use 0644.
@@ -35,4 +36,5 @@ Info: The <tt>config</tt>, <tt>postinst</tt>, <tt>postrm</tt>,
 Tag: control-file-has-bad-owner
 Severity: serious
 Certainty: certain
+Ref: policy 10.9
 Info: All control files should be owned by root/root.
