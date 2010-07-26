@@ -40,6 +40,11 @@ lintian (2.4.3) UNRELEASED; urgency=low
       tag.  Thanks, Robert Luberda.  (Closes: #585657)
   * checks/po-debconf:
     + [RA] Ignore comments in po/POTFILES.in.  (Closes: #586036)
+  * checks/scripts.desc:
+    + [RA] Improve python-script-but-no-python-dep tag description to be
+      clearer about the requirement for a versioned dependency for
+      versioned scripts and to mention ${python:Depends}, created by the
+      various Python debhelper scripts.  (Closes: #575590, #582763)
 
   * debian/changelog:
     + [RA] Fix Policy 3.9.0 reference in 2.4.2.  (Closes: #587549)

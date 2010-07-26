@@ -245,14 +245,20 @@ Info: Packages with PHP scripts must depend on a phpX-cli package such as
 Tag: python-script-but-no-python-dep
 Severity: important
 Certainty: certain
-Info: Packages with Python scripts must depend on the package python.
- Those that have scripts executed with a versioned python package need a
- dependency on the equivalent version of python. 
+Info: Packages with Python scripts should depend on the package
+ <tt>python</tt>.  Those with scripts that specify a specific version of
+ Python must depend on that version of Python (exactly).
  .
  For example, if a script in the package uses <tt>#!/usr/bin/python</tt>,
- the package needs a dependency on "python".  If a script uses
- <tt>#!/usr/bin/python2.5</tt>, the package need a dependency on
- "python2.5".
+ the package needs a dependency on <tt>python</tt>.  If a script uses
+ <tt>#!/usr/bin/python2.6</tt>, the package needs a dependency on
+ <tt>python2.6</tt>.  A dependency on <tt>python (>= 2.6)</tt> is not
+ correct, since later versions of Python may not provide the
+ <tt>/usr/bin/python2.6</tt> binary.
+ .
+ If you are using debhelper, adding <tt>${python:Depends}</tt> to the
+ Depends field and ensuring dh_pysupport or dh_pycentral are run during
+ the build should take care of adding the correct dependency.
  .
  In some cases a weaker relationship, such as Suggests or Recommends, will
  be more appropriate.
