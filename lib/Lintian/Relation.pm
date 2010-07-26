@@ -76,7 +76,7 @@ sub parse_element {
         ^\s*                            # skip leading whitespace
         (                               # package name or substvar (1)
          (?:                            #  start of the name
-          [a-zA-Z0-9]                   #   start of a package name
+          [a-zA-Z0-9][a-zA-Z0-9+.-]+    #   start of a package name
           |                             #   or
           \$\{[a-zA-Z0-9:-]+\}          #   substvar
          )                              #  end of start of the name
@@ -84,7 +84,7 @@ sub parse_element {
           [a-zA-Z0-9+.-]+               #   package name portion
           |                             #   or
           \$\{[a-zA-Z0-9:-]+\}          #   substvar
-         )+                             #  one or more portion or substvar
+         )*                             #  zero or more portions or substvars
         )                               # end of package name or substvar
         (?:                             # start of optional version
          \s* \(                         # open parenthesis for version part
