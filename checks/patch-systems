@@ -173,6 +173,14 @@ sub run {
 				}
 			}
 		}
+		if ($quilt_format) { # 3.0 (quilt) specific checks
+		    # Format 3.0 packages may generate a debian-changes-$version patch
+		    my $version = $info->field('version');
+		    if (-f "debfiles/patches/debian-changes-$version" &&
+			! -f 'debfiles/debian/source/patch-header') {
+			tag 'format-3.0-but-debian-changes-patch';
+		    }
+		}
 	} else {
 		if (-r "debfiles/patches/series" and
 		    -f "debfiles/patches/series") {

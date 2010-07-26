@@ -123,6 +123,19 @@ Info: The package uses a patch system, but the Debian diff.gz contains
  possible future source package formats if all changes outside the
  <tt>debian</tt> directory are stored as patches.
 
+Tag: format-3.0-but-debian-changes-patch
+Severity: minor
+Certainty: certain
+Info: This package declares source format 3.0 (quilt), but the Debian
+ .debian.tar.gz file contains a debian-changes-VERSION patch, which represents
+ direct changes to files outside of the <tt>debian</tt> directory. This often
+ indicates accidental changes that weren't meant to be in the package or changes
+ that were supposed to be separated out into a patch.
+ .
+ If this is intentional, you may wish to consider adding
+ <tt>single-debian-patch</tt> to <tt>debian/source/options</tt>, and/or a patch
+ header to <tt>debian/source/patch-header</tt> explaining why this is done.
+
 Tag: more-than-one-patch-system
 Severity: minor
 Certainty: certain

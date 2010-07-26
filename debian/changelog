@@ -1,9 +1,17 @@
 lintian (2.5.0~rc4) UNRELEASED; urgency=low
 
+  * Summary of tag changes:
+    + Added:
+      - format-3.0-but-debian-changes-patch
+
   * checks/copyright-file.desc:
     + [ADB] Correct a spelling mistake ("coypright" -> "copyright") in the
       description of copyright-refers-to-deprecated-bsd-license-file; thanks,
       Kees Cook.  (Closes: #623780)
+  * checks/patch-systems{,.desc}:
+    + [NT] Detect when 3.0 (quilt) packages have a debian-changes-VERSION
+      patch without a patch header.  Thanks to Iain Lane for suggestion
+      and patch.  (Closes: #588873)
 
  -- Adam D. Barratt <adam@adam-barratt.org.uk>  Sat, 23 Apr 2011 13:37:52 +0100
 
