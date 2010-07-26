@@ -25,6 +25,11 @@ lintian (2.4.3) UNRELEASED; urgency=low
   * checks/files:
     + [RG] Detect embedded copies of HTMLPurifier.
     + [RG] Detect embedded copies of the Strophe javascript library.
+  * checks/patch-systems.desc:
+    + [RA] Improve the more-than-one-patch-system long description to
+      explicitly mention the case of packages that depend on dpatch but
+      are in 3.0 (quilt) format and to provide more rationale for the
+      tag.  Thanks, Robert Luberda.  (Closes: #585657)
   * checks/po-debconf:
     + [RA] Ignore comments in po/POTFILES.in.  (Closes: #586036)
 

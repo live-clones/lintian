@@ -126,10 +126,12 @@ Info: The package uses a patch system, but the Debian diff.gz contains
 Tag: more-than-one-patch-system
 Severity: minor
 Certainty: certain
-Info: The build-dependencies list more than one patch system and it's
- unlikely that you need both at the same time.
- .
- Currently lintian knows only dpatch and quilt.
+Info: Either the build-dependencies list more than one patch system or the
+ package uses the <tt>3.0 (quilt)</tt> source format but also has a
+ dependency on <tt>dpatch</tt>.  It's unlikely that you need both patch
+ systems at the same time, and having multiple patch systems in play
+ simultaneously can make understanding and modifying the source package
+ unnecessarily complex.
 
 Tag: direct-changes-in-diff-but-no-patch-system
 Severity: pedantic
