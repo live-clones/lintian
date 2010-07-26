@@ -17,7 +17,7 @@ E: foo++_5_arch changes: changed-by-address-malformed Marc 'HE' Brockschmidt <he
 I: foo++ source: duplicate-short-description foo++ foo++-helper
 I: foo++ source: missing-debian-source-format
 I: foo++: no-md5sums-control-file
-W: foo++ source: ancient-standards-version 3.1.1 (current is 3.9.0)
+W: foo++ source: ancient-standards-version 3.1.1 (current is 3.9.1)
 W: foo++ source: debian-watch-file-in-native-package
 W: foo++ source: debian-watch-file-unknown-version 0
 W: foo++ source: uploader-address-looks-weird Jeroen van Wolffelaar<jeroen@localhost.localdomain>

@@ -3,7 +3,7 @@ Section: devel
 Priority: optional
 Maintainer: Debian Lintian Maintainers <lintian-maint@debian.org>
 Build-Depends: debhelper (>= 7)
-Standards-Version: 3.9.0
+Standards-Version: 3.9.1
 
 Package: control-field-traversal-2
 Architecture: all
