@@ -7,7 +7,7 @@
 # If <section> is empty, that line specifies the title and URL for the whole
 # manual.  If <url> is empty, that manual is not available on the web.
 #
-# Last updated: 2010-06-27
+# Last updated: 2010-07-25
 
 debconf-spec::::Configuration management::http://www.debian.org/doc/packaging-manuals/debconf_specification.html
 debconf-spec::aen27::Introduction::http://www.debian.org/doc/packaging-manuals/debconf_specification.html#AEN27
@@ -626,7 +626,7 @@ policy::10.5::Symbolic links::http://www.debian.org/doc/debian-policy/ch-files.h
 policy::10.6::Device files::http://www.debian.org/doc/debian-policy/ch-files.html#s10.6
 policy::10.7::Configuration files::http://www.debian.org/doc/debian-policy/ch-files.html#s-config-files
 policy::10.8::Log files::http://www.debian.org/doc/debian-policy/ch-files.html#s10.8
-policy::10.9::Permissions and owners::http://www.debian.org/doc/debian-policy/ch-files.html#s10.9
+policy::10.9::Permissions and owners::http://www.debian.org/doc/debian-policy/ch-files.html#s-permissions-owners
 policy::11.1::Architecture specification strings::http://www.debian.org/doc/debian-policy/ch-customized-programs.html#s-arch-spec
 policy::11.2::Daemons::http://www.debian.org/doc/debian-policy/ch-customized-programs.html#s11.2
 policy::11.3::Using pseudo-ttys and modifying wtmp, utmp and lastlog::http://www.debian.org/doc/debian-policy/ch-customized-programs.html#s11.3
@@ -696,7 +696,6 @@ policy::8.6.1::The <samp>shlibs</samp> files present on the system::http://www.d
 policy::8.6.2::How to use <code>dpkg-shlibdeps</code> and the <code>shlibs</code> files::http://www.debian.org/doc/debian-policy/ch-sharedlibs.html#s8.6.2
 policy::8.6.3::The <code>shlibs</code> File Format::http://www.debian.org/doc/debian-policy/ch-sharedlibs.html#s-shlibs
 policy::8.6.4::Providing a <code>shlibs</code> file::http://www.debian.org/doc/debian-policy/ch-sharedlibs.html#s8.6.4
-policy::8.6.5::Writing the <code>debian/shlibs.local</code> file::http://www.debian.org/doc/debian-policy/ch-sharedlibs.html#s-shlibslocal
 policy::9.1.1::File System Structure::http://www.debian.org/doc/debian-policy/ch-opersys.html#s-fhs
 policy::9.1.2::Site-specific programs::http://www.debian.org/doc/debian-policy/ch-opersys.html#s9.1.2
 policy::9.1.3::The system-wide mail directory::http://www.debian.org/doc/debian-policy/ch-opersys.html#s9.1.3

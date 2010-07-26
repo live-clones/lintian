@@ -68,6 +68,8 @@ lintian (2.4.3) UNRELEASED; urgency=low
   * debian/control:
     + [RA] Update standards version to 3.9.1.
 
+  * data/output/manual-references:
+    + [RA] Update for Policy 3.9.1.
   * data/standards-version/release-dates:
     + [RA] Add release date for Policy 3.9.1.
 
