@@ -46,8 +46,9 @@ Tag: copyright-file-contains-full-gpl-license
 Severity: important
 Certainty: certain
 Info: The copyright file /usr/share/doc/<i>pkg</i>/copyright contains the
- complete text of the GPL v2 or v3.  It should refer to the file
- <tt>/usr/share/common-licenses/GPL-2</tt> or <tt>GPL-3</tt> instead.
+ complete text of the GPL v1, v2, or v3.  It should refer to the file
+ <tt>/usr/share/common-licenses/GPL-1</tt>, <tt>GPL-2</tt>, or
+ <tt>GPL-3</tt> instead.
 Ref: policy 12.5
 
 Tag: copyright-file-contains-full-gfdl-license
@@ -347,6 +348,9 @@ Info: The copyright file refers to the versionless symlink in
  published by the Free Software Foundation; either version 2, or (at your
  option) any later version", the <tt>debian/copyright</tt> file should
  refer to <tt>/usr/share/common-licenses/GPL-2</tt>, not <tt>/GPL</tt>.
+ .
+ For packages released under the same terms as Perl, Perl references the
+ GPL version 1, so point to <tt>/usr/share/common-licenses/GPL-1</tt>.
 
 Tag: copyright-refers-to-versionless-license-file
 Severity: normal

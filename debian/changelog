@@ -18,9 +18,11 @@ lintian (2.4.3) UNRELEASED; urgency=low
       files ending in a trailing blank line.  (Closes: #586816)
   * checks/control-files.desc:
     + [RA] Add references to Policy requirements added in 3.9.1.
-  * checks/copyright-file.desc:
+  * checks/copyright-file{,.desc}:
     + [RA] Add examples for copyright-without-copyright-notice.  Based on
       a patch by Jari Aalto.  (Closes: #580767)
+    + [RA] Remove exceptions for GPL v1, which is now in common-licenses
+      and mentioned in Policy 3.9.1.
   * checks/cruft.desc:
     + [RA] Add some hints to the ancient-libtool long description on how
       to update the libtool files oneself.  (Closes: #580767)

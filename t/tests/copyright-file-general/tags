@@ -2,6 +2,7 @@ E: copyright-compressed: copyright-file-compressed
 E: copyright-full-apache-2: copyright-file-contains-full-apache-2-license
 E: copyright-full-gfdl: copyright-file-contains-full-gfdl-license
 E: copyright-full-gfdl: copyright-should-refer-to-common-license-file-for-gfdl
+E: copyright-full-gpl-1: copyright-should-refer-to-common-license-file-for-gpl
 E: copyright-full-gpl: copyright-file-contains-full-gpl-license
 E: copyright-full-gpl: copyright-should-refer-to-common-license-file-for-gpl
 E: copyright-misc-errors: copyright-refers-to-compressed-license usr/share/common-licenses/BSD.gz
