@@ -626,6 +626,10 @@ sub test_deb {
 
     my $testdir = "$TESTSET/debs/$test";
     my $targetdir = "$RUNDIR/$test";
+    if (-f "$testdir/skip") {
+	print "skipped.\n";
+	return 1;
+    }
 
     print "Cleaning up and repopulating $targetdir...\n" if $DEBUG;
     runsystem_ok("rm", "-rf", $targetdir);
@@ -686,6 +690,10 @@ sub test_source {
 
     my $testdir = "$TESTSET/source/$test";
     my $targetdir = "$RUNDIR/$test";
+    if (-f "$testdir/skip") {
+	print "skipped.\n";
+	return 1;
+    }
 
     print "Cleaning up and repopulating $targetdir...\n" if $DEBUG;
     runsystem_ok("rm", "-rf", $targetdir);

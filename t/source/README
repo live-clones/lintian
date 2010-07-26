@@ -35,6 +35,14 @@ file, such as running dpkg-source.
 The Makefile does not have to clean up after itself.  It can assume
 that the directory is deleted and recreated between test runs.
 
+Skipping tests
+--------------
+
+To mark a test to be skipped, create a file named "skip" in the test
+directory containing the reason for why this test should be skipped.
+This should be used for tests for work that hasn't been finished or
+tests that must be temporarily skipped due to bugs in other packages.
+
 
 TEST NAMING CONVENTIONS
 =======================
