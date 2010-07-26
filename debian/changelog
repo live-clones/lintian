@@ -1,4 +1,6 @@
-lintian (2.4.3) UNRELEASED; urgency=low
+lintian (2.4.3) unstable; urgency=low
+
+  The "Policy 3.9.1" release.
 
   * Summary of tag changes:
     + Added:
@@ -98,7 +100,7 @@ lintian (2.4.3) UNRELEASED; urgency=low
     + [RA] Add support for skipping raw Debian package and source package
       tests.
 
- -- Raphael Geissert <geissert@debian.org>  Fri, 02 Jul 2010 15:22:17 -0500
+ -- Russ Allbery <rra@debian.org>  Sun, 25 Jul 2010 21:50:45 -0700
 
 lintian (2.4.2) unstable; urgency=low
 
