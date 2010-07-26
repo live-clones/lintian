@@ -57,6 +57,11 @@ lintian (2.4.3) UNRELEASED; urgency=low
   * lib/Lintian/Check.pm:
     + [RA] More correctly handle hyphenated words to avoid triggering
       spelling error false positives.  (Closes: #588896)
+  * lib/Lintian/Relation.pm:
+    + [RA] Don't require a package name component after a substvar to
+      follow the rules of the beginning of a package name.  Fixes
+      stronger-dependency-implies-weaker false positives containing
+      substvars.  (Closes: #580494)
   * lib/Lintian/Schedule.pm:
     + [ADB] Import "warning" from Lintian::Output, really fixing the
       error caused by a non-existent file referenced in a .changes
