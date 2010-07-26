@@ -84,10 +84,6 @@ while (<RULES>) {
     if (m/^\s+-?(dh_\w+)/) {
         my $dhcommand = $1;
 
-	if ($dhcommand =~ /dh_testversion(?:\s+([^\s]+))?/) {
-	    $level = $1 if ($1);
-	    tag "dh_testversion-is-deprecated", "line $.";
-	}
 	if ($dhcommand eq 'dh_dhelp') {
 	    tag "dh_dhelp-is-deprecated", "line $.";
 	}

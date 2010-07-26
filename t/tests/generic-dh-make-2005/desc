@@ -12,7 +12,6 @@ Test-For:
  debian-watch-file-is-missing
  description-is-dh_make-template
  dh_suidregister-is-obsolete
- dh_testversion-is-deprecated
  extended-description-is-probably-too-short
  helper-templates-in-copyright
  new-package-should-close-itp-bug

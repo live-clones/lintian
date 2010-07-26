@@ -5,6 +5,7 @@ lintian (2.4.3) UNRELEASED; urgency=low
       - embedded-library
     + Removed:
       - debian-news-entry-without-blank-line
+      - dh_testversion-is-deprecated
 
   * checks/binaries{,.desc}:
     + [RG] Detect embedded copies of expat, libbz2, libmagic, libxml2,
@@ -27,6 +28,9 @@ lintian (2.4.3) UNRELEASED; urgency=low
       gregor herrmann.  (Closes: #588156)
     + [RA] Allow a tilde after the compatibility level in the debhelper
       dependency.  Thanks, Axel Beckert.  (Closes: #583777)
+    + [RA] Remove dh_testversion-is-deprecated.  The command is no longer
+      part of debhelper, so using it now just results in a build failure,
+      and there are no instances in the archive.
   * checks/description.desc:
     + [RA] Downgrade description-too-long to minor severity to match bug
       reporting standards for formatting bugs.  (Closes: #587837)

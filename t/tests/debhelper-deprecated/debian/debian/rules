@@ -14,7 +14,6 @@ binary-arch:
 binary-indep:
 	dh_testdir
 	dh_testroot
-	dh_testversion 7
 	dh_prep
 	dh_install
 	dh_installchangelogs
@@ -27,7 +26,6 @@ binary-indep:
 ifneq "$(LENNY_BACKPORT)" "y"
 	-dh_help
 	dh_scrollkeeper
-	dh_testversion 7
 endif
 	dh_link
 	dh_compress

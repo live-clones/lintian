@@ -7,5 +7,4 @@ Test-For:
  dh_dhelp-is-deprecated
  dh_scrollkeeper-is-deprecated
  dh_suidregister-is-obsolete
- dh_testversion-is-deprecated
  dh_undocumented-is-obsolete

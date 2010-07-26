@@ -42,15 +42,6 @@ Info: This package contains debian/*.ex and/or debian/ex.* files
  package's details and renamed for use by various debhelper commands.
  If they are not being used, they should be removed.
 
-Tag: dh_testversion-is-deprecated
-Severity: normal
-Certainty: certain
-Ref: dh_testversion(1)
-Info: This package calls dh_testversion in its <tt>debian/rules</tt> file.
- dh_testversion is deprecated. Packages using debhelper should use
- versioned build dependencies to ensure that the correct version of
- debhelper is installed.
-
 Tag: dh_dhelp-is-deprecated
 Severity: normal
 Certainty: certain
