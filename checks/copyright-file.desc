@@ -293,12 +293,11 @@ Info: The copyright file for this package does not appear to contain a
  followed by the years and the copyright holder.  A copyright notice is
  not required for a work to be copyrighted, but Debian requires the
  copyright file include the authors and years of copyright, and including
- a valid copyright notice is the best way to do that. Exmaples:
+ a valid copyright notice is the best way to do that.  Examples:
  .
-   Copyright (C) YYYY Firstname Lastname <address@example.com>
-   Copyright (C) YYYY-YYYY Firstname Lastname <address@example.com>
-   Copyright © YYYY,YYYY Firstname Lastname <address@example.com>
- .
+   Copyright YYYY Firstname Lastname <address@example.com>
+   Copr. YYYY-YYYY Firstname Lastname <address@example.com>
+   © YYYY,YYYY Firstname Lastname <address@example.com>
  .
  If the package is in the public domain rather than copyrighted, be sure
  to mention "public domain" in the copyright file.  Please be aware that

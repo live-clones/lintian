@@ -15,6 +15,9 @@ lintian (2.4.3) UNRELEASED; urgency=low
   * checks/changelog-file{,.desc}:
     + [RA] apt-listchanges has been fixed, so drop the check for NEWS
       files ending in a trailing blank line.  (Closes: #586816)
+  * checks/copyright-file.desc:
+    + [RA] Add examples for copyright-without-copyright-notice.  Based on
+      a patch by Jari Aalto.  (Closes: #580767)
   * checks/debhelper{,.desc}:
     + [RA] package-lacks-versioned-build-depends-on-debhelper can also
       trigger if the dependency is present but not tight enough.  Thanks,
