@@ -280,7 +280,7 @@ while (defined(my $file=readdir(DEBIAN))) {
 	    tag 'missing-build-dependency-for-dh_-command', "$command=$dep"
 		unless ($bdepends_noarch->implies($dep));
 	}
-	my $needed = "debhelper (>= $level)";
+	my $needed = "debhelper (>= $level~)";
 	if (not $bdepends->implies($needed)) {
 	    tag "package-lacks-versioned-build-depends-on-debhelper", $level;
 	} elsif (@versioncheck or $overridetargets) {
