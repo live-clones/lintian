@@ -461,12 +461,8 @@ for my $id (keys %clean) {
 # the tag and all the packages for which that tag was issued.
 for my $tag (sort keys %by_tag) {
     my $info = Lintian::Tag::Info->new($tag);
-    my $description;
-    if ($info) {
-        $description = $info->description('html', '    ');
-    } else {
-        $description = "    <p>Can't find description of tag $tag.</p>";
-    }
+    next unless $info;
+    my $description = $info->description('html', '    ');
     my ($count, $overrides) = (0, 0);
     my %seen;
     foreach (@{$by_tag{$tag}}) {
