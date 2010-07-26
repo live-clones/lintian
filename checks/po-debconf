@@ -104,6 +104,7 @@ if (!$yada && -f "debfiles/po/POTFILES.in") {
 		or fail("Can't open debfiles/po/POTFILES.in.");
 	while (<POTFILES>) {
 		chomp;
+		next if /^\s*\#/;
 		s/.*\]\s*//;
 		#  Cannot check files which are not under debian/
 		next if m,^\.\./, or $_ eq '';

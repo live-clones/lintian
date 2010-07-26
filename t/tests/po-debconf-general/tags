@@ -1,0 +1,10 @@
+E: po-debconf-general: no-debconf-config
+I: po-debconf-general source: no-complete-debconf-translation
+I: po-debconf-general: unused-debconf-template po-debconf-general/test
+I: po-debconf-general: unused-debconf-template po-debconf-general/test-2
+W: po-debconf-general source: invalid-po-file debian/po/English.po
+W: po-debconf-general source: invalid-po-file debian/po/de.po
+W: po-debconf-general source: misnamed-po-file debian/po/English.po
+W: po-debconf-general source: missing-file-from-potfiles-in some-other-file
+W: po-debconf-general source: stray-translated-debconf-templates templates.en_US
+W: po-debconf-general source: translated-default-field templates: 3

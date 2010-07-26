@@ -25,6 +25,8 @@ lintian (2.4.3) UNRELEASED; urgency=low
   * checks/files:
     + [RG] Detect embedded copies of HTMLPurifier.
     + [RG] Detect embedded copies of the Strophe javascript library.
+  * checks/po-debconf:
+    + [RA] Ignore comments in po/POTFILES.in.  (Closes: #586036)
 
   * debian/changelog:
     + [RA] Fix Policy 3.9.0 reference in 2.4.2.  (Closes: #587549)

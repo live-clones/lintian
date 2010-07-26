@@ -1,0 +1,13 @@
+Testname: po-debconf-general
+Sequence: 6000
+Version: 1.0
+Description: General tests for debconf translations
+Test-For:
+ invalid-po-file
+ misnamed-po-file
+ missing-file-from-potfiles-in
+ no-complete-debconf-translation
+ no-debconf-config
+ stray-translated-debconf-templates
+ translated-default-field
+ unused-debconf-template

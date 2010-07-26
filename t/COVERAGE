@@ -1,4 +1,4 @@
-Last generated 2010-07-25
+Last generated 2010-07-26
 
 The following tags are not tested by the test suite:
 
@@ -159,7 +159,6 @@ nmu changelog-is-symlink
 
 patch-systems quilt-series-but-no-build-dep
 
-po-debconf missing-file-from-potfiles-in
 po-debconf missing-potfiles-in
 po-debconf missing-templates-pot
 po-debconf not-using-po-debconf
@@ -240,7 +239,6 @@ debconf malformed-title-in-templates
 debconf mismatch-translated-choices
 debconf missing-debconf-dependency
 debconf missing-debconf-dependency-for-preinst
-debconf no-debconf-config
 debconf no-debconf-templates
 debconf no-template-description
 debconf no-template-type
@@ -253,7 +251,6 @@ debconf template-uses-unsplit-choices
 debconf too-long-extended-description-in-templates
 debconf too-long-short-description-in-templates
 debconf unknown-debconf-priority
-debconf unused-debconf-template
 debconf using-first-person-in-templates
 debconf using-imperative-form-in-templates
 debconf using-question-in-extended-description-in-templates
@@ -421,12 +418,7 @@ nmu qa-upload-has-incorrect-version-number
 
 patch-systems quilt-build-dep-but-no-series-file
 
-po-debconf invalid-po-file
-po-debconf misnamed-po-file
 po-debconf newer-debconf-templates
-po-debconf no-complete-debconf-translation
-po-debconf stray-translated-debconf-templates
-po-debconf translated-default-field
 po-debconf unknown-encoding-in-po-file
 
 scripts ancient-dpkg-epoch-check
@@ -538,34 +530,27 @@ binary
   xs-vcs-header-in-debian-control
 
 debconf
-  invalid-po-file
   loads-obsolete-confmodule
   making-assumptions-about-interfaces-in-templates
   malformed-prompt-in-templates
   malformed-question-in-templates
   malformed-title-in-templates
   mismatch-translated-choices
-  misnamed-po-file
   missing-debconf-dependency
   missing-debconf-dependency-for-preinst
   newer-debconf-templates
-  no-complete-debconf-translation
-  no-debconf-config
   no-template-description
   no-template-type
   possible-debconf-note-abuse
   postinst-uses-db-input
   postrm-does-not-purge-debconf
   select-with-boolean-choices
-  stray-translated-debconf-templates
   template-uses-unsplit-choices
   too-long-extended-description-in-templates
   too-long-short-description-in-templates
-  translated-default-field
   udeb-postinst-must-not-call-ldconfig
   unknown-debconf-priority
   unknown-encoding-in-po-file
-  unused-debconf-template
   using-first-person-in-templates
   using-imperative-form-in-templates
   using-question-in-extended-description-in-templates
