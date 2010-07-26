@@ -44,11 +44,12 @@ lintian (2.4.3) UNRELEASED; urgency=low
     + [RA] Rephrase the debian-rules-calls-debhelper-in-odd-order long
       description to try to be clearer about the ordering requirements.
       (Closes: #579964)
-  * checks/scripts.desc:
+  * checks/scripts{,.desc}:
     + [RA] Improve python-script-but-no-python-dep tag description to be
       clearer about the requirement for a versioned dependency for
       versioned scripts and to mention ${python:Depends}, created by the
       various Python debhelper scripts.  (Closes: #575590, #582763)
+    + [RA] Add runhaskell and runghc.  (Closes: #589266)
 
   * debian/changelog:
     + [RA] Fix Policy 3.9.0 reference in 2.4.2.  (Closes: #587549)
