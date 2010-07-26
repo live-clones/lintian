@@ -374,18 +374,27 @@ Info: The referenced file has a time stamp older than June of 2006 and the
 Tag: ancient-libtool
 Severity: normal
 Certainty: possible
-Info: The referenced file seems to be from a libtool version
- older than 1.5.2-2.  This might lead to build errors on some
- newer architectures not known to this libtool.
+Info: The referenced file seems to be from a libtool version older than
+ 1.5.2-2.  This might lead to build errors on some newer architectures not
+ known to this libtool.
  .
- Please ask your upstream maintainer to re-libtoolize the
- package or do it yourself in case there is no active upstream
- anymore.  Beware that might mean you need to update autoconf, too,
- if you use a very old version there as well.
+ Please ask your upstream maintainer to re-libtoolize the package or do it
+ yourself if there is no active upstream.  You will also need to run
+ Autoconf to regenerate the configure script.  Usually it is best to do
+ this during the build by depending on autoconf, libtool, and automake if
+ it is used, and then running:
  .
- If you have not updated the file but fixed architecture-specific
- issues with minimal patches and verified that it builds correctly
- please override this tag.  lintian will not be able to verify that.
+  autoreconf -i --force
+ .
+ before running configure.  Depending on how old the package is, this may
+ require additional modifications to <tt>configure.ac</tt> or
+ <tt>configure.in</tt> or other work.  If you do this during the build,
+ determine which files it will add or update and be sure to remove those
+ files in the clean target.
+ .
+ If you have fixed architecture-specific issues with minimal patches,
+ rather than updating libtool, and verified that it builds correctly,
+ please override this tag.  Lintian will not be able to verify that.
 
 Tag: source-contains-prebuilt-binary
 Severity: pedantic

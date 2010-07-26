@@ -18,6 +18,9 @@ lintian (2.4.3) UNRELEASED; urgency=low
   * checks/copyright-file.desc:
     + [RA] Add examples for copyright-without-copyright-notice.  Based on
       a patch by Jari Aalto.  (Closes: #580767)
+  * checks/cruft.desc:
+    + [RA] Add some hints to the ancient-libtool long description on how
+      to update the libtool files oneself.  (Closes: #580767)
   * checks/debhelper{,.desc}:
     + [RA] package-lacks-versioned-build-depends-on-debhelper can also
       trigger if the dependency is present but not tight enough.  Thanks,
