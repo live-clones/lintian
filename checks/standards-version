@@ -88,7 +88,7 @@ if (defined $changes) {
 
 # Check for packages dated prior to the date of release of the standards
 # version with which they claim to comply.
-if ($dist ne 'UNRELEASED' && $STANDARDS->known($stdver)
+if (defined $dist && $dist ne 'UNRELEASED' && $STANDARDS->known($stdver)
     && $STANDARDS->value($stdver) > $pkgdate) {
 
     my $package = strftime('%Y-%m-%d', gmtime $pkgdate);

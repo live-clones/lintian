@@ -1,0 +1,14 @@
+Format: 1.0
+Source: changelog-file-symlink
+Binary: changelog-file-symlink
+Architecture: all
+Version: 1
+Maintainer: Debian Lintian Maintainers <lintian-maint@debian.org>
+Standards-Version: 3.9.1
+Build-Depends: debhelper (>= 7)
+Checksums-Sha1:
+ @SHA1@ @SIZE@ changelog-file-symlink_1.tar.gz
+Checksums-Sha256:
+ @SHA256@ @SIZE@ changelog-file-symlink_1.tar.gz
+Files:
+ @MD5@ @SIZE@ changelog-file-symlink_1.tar.gz

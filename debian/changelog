@@ -1,3 +1,13 @@
+lintian (2.4.4) UNRELEASED; urgency=low
+
+  * checks/nmu:
+    + [RG] Completely abort if debian/changelog is a symlink.
+      (Closes: #582408)
+  * checks/standards-version:
+    + [RG] Correctly handle cases where debian/changelog is a symlink.
+
+ -- Raphael Geissert <geissert@debian.org>  Thu, 29 Jul 2010 21:09:55 -0400
+
 lintian (2.4.3) unstable; urgency=low
 
   The "Policy 3.9.1" release.
