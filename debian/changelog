@@ -1,5 +1,8 @@
 lintian (2.4.4) UNRELEASED; urgency=low
 
+  * checks/menus.desc:
+    + [RA] Rephrase doc-base-uses-applications-section to be clearer that
+      its advice is to remove the "Applications/" part of the section.
   * checks/nmu:
     + [RG] Completely abort if debian/changelog is a symlink.
       (Closes: #582408)

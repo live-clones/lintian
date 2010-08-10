@@ -332,8 +332,8 @@ Severity: normal
 Certainty: certain
 Info: The section indicated in this doc-base control file has a top-level
  section of Apps or Applications. This section is only used in menu, not
- in doc-base. Simply removing the top-level section will lead to a valid
- doc-base section.
+ in doc-base. Simply removing the <tt>Applications/</tt> part of the
+ section will lead to a valid doc-base section.
 Ref: doc-base 2.3.3
 
 Tag: doc-base-unknown-section
