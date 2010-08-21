@@ -992,3 +992,11 @@ Info: The given package appears to have a Python development package
  If you are building a Python extension instead, you should have
  development packages listed in Build-Depends, but normally there should
  be at least one Architecture: any package.
+
+Tag: build-depends-on-specific-java-doc-package
+Severity: normal
+Certainty: certain
+Info: The given package declares a build dependency on either openjdk-
+ X-doc or classpath-doc instead of using default-jdk-doc. default-jdk-doc
+ provides a symlink to the API via /usr/share/default-jdk-doc/api.
+
