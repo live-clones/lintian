@@ -40,6 +40,8 @@ for my $desc_file (@DESCS) {
 		or diag("$desc_file: $i->{'tag'}\n");
 	    ok(exists $i->{'info'}, "Tag has info")
 		or diag("$desc_file: $i->{'tag'}\n");
+	    cmp_ok(length($i->{'tag'}), '<=', 68, "Tag is not too long")
+		or diag("$desc_file: $i->{'tag'}\n");
 
 	    my $info = $i->{'info'} || '';
 
