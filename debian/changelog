@@ -1,5 +1,8 @@
 lintian (2.4.4) UNRELEASED; urgency=low
 
+  * checks/binaries:
+    + [RA] Exclude kfreebsd-kernel-di-{amd64,i386} from the
+      embedded-zlib check since it's in the kernel.  (Closes: #593397)
   * checks/menus.desc:
     + [RA] Rephrase doc-base-uses-applications-section to be clearer that
       its advice is to remove the "Applications/" part of the section.

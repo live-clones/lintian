@@ -292,6 +292,8 @@ foreach my $file (sort keys %{$info->file_info}) {
     # (The "4" is actually the string length (52 characters) in the Pascal
     # counted string format.)
     if ($info->field('source') ne 'zlib' and $info->field('source') ne 'klibc'
+	and $info->field('source') ne 'kfreebsd-kernel-di-amd64'
+	and $info->field('source') ne 'kfreebsd-kernel-di-i386'
 	and $strings =~ /(?<!4 )(?:in|de)flate (?:\d[ \w.\-]{1,20}[\w.\-])/m) {
 	tag "embedded-zlib", $file;
     }
