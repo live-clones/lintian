@@ -9,20 +9,23 @@ Uploaders: Josip Rodin <joy-packages@debian.org>,
  Colin Watson <cjwatson@debian.org>, Russ Allbery <rra@debian.org>,
  Adam D. Barratt <adam@adam-barratt.org.uk>,
  Raphael Geissert <geissert@debian.org>
-Build-Depends: debhelper (>= 5)
-Build-Depends-Indep: debiandoc-sgml, sed (>= 4.1-4)
+Build-Depends: debhelper (>= 5), binutils, debiandoc-sgml, diffstat,
+ fakeroot, file, gettext, intltool-debian, libapt-pkg-perl,
+ libclass-accessor-perl, libapt-pkg-perl, libdigest-sha-perl,
+ libipc-run-perl, libparse-debianchangelog-perl,
+ libtest-minimumversion-perl, libtest-pod-perl, libtest-strict-perl,
+ libtest-synopsis-perl, libtext-template-perl, libtimedate-perl,
+ liburi-perl, locales, man-db, perl, python, quilt, rsync
 Standards-Version: 3.9.1
 Vcs-Git: git://git.debian.org/git/lintian/lintian.git
 Vcs-Browser: http://git.debian.org/?p=lintian/lintian.git
 
 Package: lintian
 Architecture: all
-Depends: ${misc:Depends}, perl, libdigest-md5-perl | perl (>> 5.8),
- dpkg-dev (>= 1.13.17), file, binutils, diffstat (>= 1.27-1),
- man-db (>= 2.4.0), gettext (>= 0.16), intltool-debian,
- libclass-accessor-perl, libdigest-sha-perl,
- libparse-debianchangelog-perl (>= 0.6), libtimedate-perl, liburi-perl,
- libipc-run-perl, libapt-pkg-perl, locales
+Depends: ${misc:Depends}, binutils, dpkg-dev, diffstat, file, gettext,
+ intltool-debian, libapt-pkg-perl, libclass-accessor-perl,
+ libdigest-sha-perl, libipc-run-perl, libparse-debianchangelog-perl,
+ libtimedate-perl, liburi-perl, locales, man-db, perl
 Suggests: binutils-multiarch, libtext-template-perl, man-db (>= 2.5.1-1)
 Description: Debian package checker
  Lintian dissects Debian packages and reports bugs and policy

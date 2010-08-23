@@ -12,6 +12,15 @@ lintian (2.4.4) UNRELEASED; urgency=low
   * checks/standards-version:
     + [RG] Correctly handle cases where debian/changelog is a symlink.
 
+  * debian/control:
+    + [RA] Add the build dependencies required to run the test suite
+      during the build.  Many thanks to Niels Thykier for the investigative
+      work to determine which packages are required.  (Closes: #593832)
+    + [RA] Remove versions from dependencies when those versions are
+      satisifed by stable (lenny).
+  * debian/rules:
+    + [RA] Run the test suite during the package build.
+
  -- Raphael Geissert <geissert@debian.org>  Thu, 29 Jul 2010 21:09:55 -0400
 
 lintian (2.4.3) unstable; urgency=low
