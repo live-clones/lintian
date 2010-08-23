@@ -1,4 +1,4 @@
-Last generated 2010-07-26
+Last generated 2010-08-23
 
 The following tags are not tested by the test suite:
 
@@ -54,6 +54,7 @@ fields aspell-package-not-arch-all
 fields bad-menu-item
 fields bad-package-name
 fields bad-relation
+fields bad-version-in-relation
 fields bad-version-number
 fields depends-on-libdb1-compat
 fields doc-package-depends-on-main-package
@@ -154,8 +155,6 @@ menus postrm-has-useless-call-to-update-menus
 menus preinst-calls-installdocs
 menus preinst-calls-updatemenus
 menus prerm-calls-updatemenus
-
-nmu changelog-is-symlink
 
 patch-systems quilt-series-but-no-build-dep
 
@@ -259,7 +258,6 @@ debhelper uses-dh-python-with-no-pycompat
 
 etcfiles file-in-etc-not-marked-as-conffile
 
-fields bad-version-in-relation
 fields build-conflicts-with-build-dependency
 fields build-depends-indep-without-arch-indep
 fields build-depends-on-1-revision
@@ -695,7 +693,6 @@ maintainer-scripts
   wrong-debian-qa-group-name
 
 relations
-  bad-version-in-relation
   build-conflicts-with-build-dependency
   build-depends-on-1-revision
   build-depends-on-build-essential

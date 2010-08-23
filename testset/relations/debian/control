@@ -20,7 +20,7 @@ Pre-Depends: awk|gawk
 Depends: relations(<< 3), dpkg, bash (>> 2.0 ), mail-transport-agent, gawk | awk, foo (>> 2.0), foo (<< 2.2), coreutils, ,null (>= 0), ${misc:Depends}, makedev, libfile-temp-perl (>= 0.18)
 Provides: mail-reader
 Replaces: relations
-Conflicts: foobar (<< 5&5), foo, relations,
+Conflicts: foobar (<< 5+5), foo, relations,
            gnuwdf,
 Suggests: alpha, gnu (>= 44-3-4-8-11.4) | ung (<< 89beta) | nug | ngu, beta, some-other-package
 Recommends: emacs21 | emacsen, dpkg, null, some-other-package, ${f-oo:b-ar}, gs | ghostscript | gs-aladdin

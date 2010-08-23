@@ -19,7 +19,6 @@ E: relations-multiple-libs: package-depends-on-multiple-tcl-versions tcl8.0 tcl8
 E: relations-multiple-libs: package-depends-on-multiple-tk-versions tk8.2 tk8.3
 E: relations-multiple-libs: package-depends-on-multiple-tkx-versions tkx8.2 tkx8.3
 E: relations-multiple-libs: usr-share-doc-symlink-without-dependency relations
-E: relations: bad-version-in-relation conflicts: foobar (<< 5&5)
 E: relations: conflicts-with-dependency depends foo
 E: relations: conflicts-with-dependency depends relations
 E: relations: depends-on-essential-package-without-using-version depends: coreutils
@@ -31,7 +30,7 @@ I: relations source: missing-debian-source-format
 I: relations source: ored-build-depends-on-obsolete-package build-depends-indep: gs
 I: relations-multiple-libs: description-synopsis-might-not-be-phrased-properly
 I: relations-multiple-libs: ored-depends-on-obsolete-package suggests: gs
-I: relations: conflicts-with-version foobar (<< 5&5)
+I: relations: conflicts-with-version foobar (<< 5+5)
 I: relations: ored-depends-on-obsolete-package recommends: gs-aladdin
 W: relations source: ancient-standards-version 3.7.3 (current is 3.9.1)
 W: relations source: bad-homepage lintian.debian.org
