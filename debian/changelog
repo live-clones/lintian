@@ -12,6 +12,9 @@ lintian (2.4.4) UNRELEASED; urgency=low
   * checks/standards-version:
     + [RG] Correctly handle cases where debian/changelog is a symlink.
 
+  * data/fields/essential:
+    + [RG] Add hurd.  (Closes: #591323)
+
   * debian/control:
     + [RA] Add the build dependencies required to run the test suite
       during the build.  Many thanks to Niels Thykier for the investigative

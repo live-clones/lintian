@@ -15,6 +15,7 @@ findutils
 grep
 gzip
 hostname
+hurd
 login
 mktemp
 mount
