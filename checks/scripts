@@ -102,6 +102,7 @@ our %interpreters =
      sh		    => [ '/bin', '' ],
      slsh	    => [ '/usr/bin' ],
      speedy	    => [ '/usr/bin', 'speedy-cgi-perl' ],
+     swipl	    => [ '/usr/bin', 'swi-prolog | swi-prolog-nox' ],
      tcsh	    => [ '/usr/bin' ],
      texlua         => [ '/usr/bin', 'luatex' ],
      tixwish	    => [ '/usr/bin', 'tix' ],
