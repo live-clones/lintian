@@ -176,6 +176,8 @@ lintian (2.5.0) UNRELEASED; urgency=low
       exiting.  In some cases these jobs would attempt to modify the
       lab while Lintian was trying to remove it.  Thanks to
       Andreas Beckmann for reporting this issue.  (Closes: #610218)
+    + [NT] Sorted related options alphabetically.  Thanks to Jari Aalto
+      for the initial patch.  (Closes: #600905)
 
   * lib/Lintian/Check.pm:
     + [NT] Use Email::Valid to validate email addreses.
