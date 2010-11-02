@@ -249,7 +249,7 @@ Severity: important
 Certainty: certain
 Info: Desktop entries must contain, at a minimum, the keys Type and Name.
  .
- The desktop-file-validate took in the desktop-file-utils package is
+ The desktop-file-validate tool in the desktop-file-utils package is
  useful for checking the syntax of desktop entries.
 Ref: http://standards.freedesktop.org/desktop-entry-spec/1.0/ar01s05.html
 
@@ -261,7 +261,7 @@ Info: The key on this line of the desktop entry is not one of the standard
  keywords, and one that does not begin with <tt>X-</tt>.  It's most likely
  that the key was misspelled.
  .
- The desktop-file-validate took in the desktop-file-utils package is
+ The desktop-file-validate tool in the desktop-file-utils package is
  useful for checking the syntax of desktop entries.
 Ref: http://standards.freedesktop.org/desktop-entry-spec/1.0/ar01s05.html
 
@@ -271,7 +271,7 @@ Certainty: certain
 Info: The key on this line of the desktop entry has been deprecated in the
  FreeDesktop specification.
  .
- The desktop-file-validate took in the desktop-file-utils package is
+ The desktop-file-validate tool in the desktop-file-utils package is
  useful for checking the syntax of desktop entries.
 Ref: http://standards.freedesktop.org/desktop-entry-spec/1.0/apc.html
 
@@ -283,7 +283,7 @@ Info: The Encoding key is now deprecated by the FreeDesktop standard and
  explicitly specifies an Encoding of UTF-8, which is harmless but no
  longer necessary.
  .
- The desktop-file-validate took in the desktop-file-utils package is
+ The desktop-file-validate tool in the desktop-file-utils package is
  useful for checking the syntax of desktop entries.
 Ref: http://standards.freedesktop.org/desktop-entry-spec/1.0/apc.html
 
@@ -294,7 +294,7 @@ Info: The categories for this desktop entry do not contain any Main
  Categories, only Additional Categories.  Additional Categories should
  only be used on conjunction with one or more Main Categories.
  .
- The desktop-file-validate took in the desktop-file-utils package is
+ The desktop-file-validate tool in the desktop-file-utils package is
  useful for checking the syntax of desktop entries.
 Ref: http://standards.freedesktop.org/menu-spec/1.0/apa.html
 
@@ -307,7 +307,7 @@ Info: This desktop entry includes a Reserved Category, one which has a
  must include an OnlyShowIn key limiting the entry to those environments
  that support the category.
  .
- The desktop-file-validate took in the desktop-file-utils package is
+ The desktop-file-validate tool in the desktop-file-utils package is
  useful for checking the syntax of desktop entries.
 Ref: http://standards.freedesktop.org/menu-spec/1.0/apa.html
 
@@ -320,7 +320,7 @@ Info: This desktop entry lists a category that is not one of the
  allowed immediately before and after the equal sign in the Category key,
  not elsewhere in the field.
  .
- The desktop-file-validate took in the desktop-file-utils package is
+ The desktop-file-validate tool in the desktop-file-utils package is
  useful for checking the syntax of desktop entries.
 Ref: http://standards.freedesktop.org/menu-spec/1.0/apa.html
 
@@ -340,7 +340,7 @@ Info: The header on this line of the desktop entry has been deprecated in the
  FreeDesktop specification.  If the header is "KDE Desktop Entry", the right
  fix is normally changing it to "Desktop Entry".
  .
- The desktop-file-validate took in the desktop-file-utils package is
+ The desktop-file-validate tool in the desktop-file-utils package is
  useful for checking the syntax of desktop entries.
 Ref: http://standards.freedesktop.org/desktop-entry-spec/1.0/apc.html
 
