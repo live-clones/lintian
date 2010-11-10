@@ -15,6 +15,7 @@ Test-For:
  description-synopsis-is-duplicated
  description-synopsis-is-empty
  description-synopsis-might-not-be-phrased-properly
+ description-synopsis-starts-with-article
  description-too-long
  extended-description-is-empty
  extended-description-line-too-long

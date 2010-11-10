@@ -61,6 +61,9 @@ if ($synopsis =~ m/^\s*$/) {
     if ($synopsis =~ m/^\Q$pkg\E\b/i) {
 	tag "description-starts-with-package-name", "";
     }
+    if ($synopsis =~ m/^(an?|the)\s/i) {
+	tag "description-synopsis-starts-with-article", "";
+    }
     if ($synopsis =~ m/(?<!etc)\.\s*$/i) {
 	tag "description-synopsis-might-not-be-phrased-properly", "";
     }

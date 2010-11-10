@@ -52,6 +52,17 @@ Info: The first line of the "Description:" should not start with the
  have a description like this: "foo is a program that...".
 Ref: policy 3.4.1
 
+Tag: description-synopsis-starts-with-article
+Severity: minor
+Certainty: certain
+Info: The first line of the "Description:" should omit any initial indefinite
+ or definite article: "a", "an", or "the". A good heuristic is that it should
+ be possible to substitute the package <tt>name</tt> and <tt>synopsis</tt>
+ into this formula:
+ .
+ The package <tt>name</tt> provides {a,an,the,some} <tt>synopsis</tt>.
+Ref: devref 6.2.2
+
 Tag: description-contains-tabs
 Severity: important
 Certainty: certain

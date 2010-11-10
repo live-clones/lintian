@@ -100,3 +100,15 @@ Description: test package with duplicated words that aren't
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may
  be an empty package.
+
+Package: {$srcpkg}-syn-article
+Architecture: {$architecture}
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Description: the synopsis starts with an article
+ A good synopsis should start not start with "a", "an" and "the"
+ according to devref 6.2.2.
+ .
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.

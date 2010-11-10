@@ -5,6 +5,7 @@ lintian (2.4.4) UNRELEASED; urgency=low
       - build-depends-on-specific-java-doc-package
       - depends-on-specific-java-doc-package
       - unneeded-build-dep-on-quilt
+      - description-synopsis-starts-with-article
 
   * checks/*:
     + [NT] Use the new pre-sorted file index when iterating over files.
@@ -18,6 +19,9 @@ lintian (2.4.4) UNRELEASED; urgency=low
   * checks/debian-source-dir:
     + [NT] Added missing import of "Util" perl module.  Thanks to David
       Bremner for the patch.
+  * checks/description{,.desc}:
+    + [NT] Add a check for synopsis starting with articles.  Thanks to
+      Nelson A. de Oliveira for the patch.  (Closes: #603053)
   * checks/fields{,.desc}:
     + [NT] Added check for packages (build) depending on openjdk-X-doc or
       classpath-doc instead of the default-jdk-doc metapackage.
