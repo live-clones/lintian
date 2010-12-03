@@ -3,6 +3,7 @@ lintian (2.4.4) UNRELEASED; urgency=low
   * Summary of tag changes:
     + Added:
       - build-depends-on-specific-java-doc-package
+      - depends-on-specific-java-doc-package
 
   * checks/binaries:
     + [RA] Exclude kfreebsd-kernel-di-{amd64,i386} from the
@@ -12,7 +13,7 @@ lintian (2.4.4) UNRELEASED; urgency=low
     + [NT] Added missing import of "Util" perl module.  Thanks to David
       Bremner for the patch.
   * checks/fields{,.desc}:
-    + [NT] Added check for packages build depending on openjdk-X-doc or
+    + [NT] Added check for packages (build) depending on openjdk-X-doc or
       classpath-doc instead of the default-jdk-doc metapackage.
       (Closes: #593837)
   * checks/files:

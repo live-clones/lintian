@@ -1,1 +1,2 @@
 W: fields-java source: build-depends-on-specific-java-doc-package openjdk-6-doc
+W: libfields-java-java-doc: depends-on-specific-java-doc-package recommends

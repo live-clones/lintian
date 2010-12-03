@@ -1000,3 +1000,10 @@ Info: The given package declares a build dependency on either openjdk-
  X-doc or classpath-doc instead of using default-jdk-doc. default-jdk-doc
  provides a symlink to the API via /usr/share/default-jdk-doc/api.
 
+Tag: depends-on-specific-java-doc-package
+Severity: normal
+Certainty: certain
+Info: The package should use default-jdk-doc instead of classpath-doc
+ or openjdk-X-doc to ease transitions when the providing doc package
+ is replaced (e.g. openjdk-6-doc being replaced by openjdk-7-doc).
+

@@ -638,6 +638,13 @@ if (($type eq "binary") || ($type eq 'udeb')) {
 					if ($field eq 'recommends'
 					    && $pkg =~ m/^lib/ && $pkg !~ m/-(dev|docs?|tools|bin)$/
 					    && $part_d_orig =~ m/-docs?$/);
+
+				# default-jdk-doc must depend on openjdk-X-doc (or classpath-doc) to be
+				# useful; other packages should depend on default-jdk-doc if they
+				# want the Java Core API.
+				tag "depends-on-specific-java-doc-package", "$field"
+				    if(&$is_dep_field($field) && $pkg ne 'default-jdk-doc'
+				       && ($d_pkg eq 'classpath-doc' || $d_pkg =~ m/openjdk-\d+-doc/o));
 			}
 
 			for my $pkg (@seen_obsolete_packages) {
