@@ -4,6 +4,7 @@ lintian (2.4.4) UNRELEASED; urgency=low
     + Added:
       - build-depends-on-specific-java-doc-package
       - depends-on-specific-java-doc-package
+      - unneeded-build-dep-on-quilt
 
   * checks/*:
     + [NT] Use the new pre-sorted file index when iterating over files.
@@ -32,6 +33,9 @@ lintian (2.4.4) UNRELEASED; urgency=low
   * checks/nmu:
     + [RG] Completely abort if debian/changelog is a symlink.
       (Closes: #582408)
+  * checks/patch-systems{,.desc}
+    + [NT] Added check for new unneeded-build-dep-on-quilt.
+      (Closes: #582767)
   * checks/standards-version:
     + [RG] Correctly handle cases where debian/changelog is a symlink.
 

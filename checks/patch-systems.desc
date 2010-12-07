@@ -160,3 +160,11 @@ Info: This package build-depends on a patch system such as dpatch or
  referring to <tt>/usr/share/doc/quilt/README.source</tt>.  Similarly, you
  can refer to <tt>/usr/share/doc/dpatch/README.source.gz</tt> for dpatch.
 Ref: policy 4.14
+
+Tag: unneeded-build-dep-on-quilt
+Severity: normal
+Certainty: certain
+Info: This package build-depends on quilt, which is not required since
+ dpkg-source will apply patches at unpack time for 3.0 (quilt) source
+ packages.
+
