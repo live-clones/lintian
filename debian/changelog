@@ -11,6 +11,9 @@ lintian (2.4.4) UNRELEASED; urgency=low
     + [RA] Exclude kfreebsd-kernel-di-{amd64,i386} from the
       embedded-zlib check since it's in the kernel.  (Closes: #593397)
     + [RG] Add swipl to the list of known interpreters.  (Closes: #591316)
+  * checks/debhelper:
+    + [NT] Fix dependency check for dh_nativejava, default-jdk has never
+      provided dh_nativejava.  (Closes: #606506)
   * checks/debian-source-dir:
     + [NT] Added missing import of "Util" perl module.  Thanks to David
       Bremner for the patch.
@@ -37,6 +40,8 @@ lintian (2.4.4) UNRELEASED; urgency=low
       intrepid and jaunty.
   * data/fields/essential:
     + [RG] Add hurd.  (Closes: #591323)
+  * data/fields/obsolete-packages:
+    + [NT] Added default-jdk-builddep (replaced by gcj-native-helper).
 
   * debian/control:
     + [RA] Add the build dependencies required to run the test suite
