@@ -7,6 +7,9 @@ lintian (2.4.4) UNRELEASED; urgency=low
   * checks/debian-source-dir:
     + [NT] Added missing import of "Util" perl module. Thanks to David
       Bremner for the patch.
+  * checks/files:
+    + [NT] Fixed false-positive extra-license-file for license.ui files.
+      Thanks to Jeremy Sanders for the report. (Closes: #595941)
   * checks/menu-format.desc:
     + [CW] Fix several typos.
   * checks/menus.desc:
@@ -41,6 +44,8 @@ lintian (2.4.4) UNRELEASED; urgency=low
   * debian/compat:
     + [NT] Bump debhelper comat to 7.
 
+  * t/tests/files-extra-license:
+    + [NT] Added new test.
   * t/tests/rules-not-makefile:
     + [NT] Added new test.
   * t/tests/scripts-missing-dep:

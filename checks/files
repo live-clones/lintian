@@ -757,7 +757,7 @@ foreach my $file (sort keys %{$info->index}) {
 	#
 	# Ignore extra license files in examples, since various package
 	# building software includes example packages with licenses.
-	and not $file =~ m/\.(?:el|c|h|py|cc|pl|pm|hi|p_hi|html|php|rb|xpm|png|jpe?g|gif|svg|dtd)$/
+	and not $file =~ m/\.(?:el|c|h|py|cc|pl|pm|hi|p_hi|html|php|rb|xpm|png|jpe?g|gif|svg|dtd|ui)$/
 	and not $file =~ m,^usr/share/zope/Products/.*\.(?:dtml|pt|cpt)$,
 	and not $file =~ m,/under\S+License\.docbook$,
 	and not $file =~ m,^(?:usr/)?s?bin/,
