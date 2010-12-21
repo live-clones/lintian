@@ -66,7 +66,7 @@ binary-indep: $(neededfiles) build
 	@echo .... binary-indep ....
 	dh_testdir
 	dh_testroot
-	dh_clean -k -Xtestset/diffs/binary.c~
+	dh_prep -Xtestset/diffs/binary.c~
 	dh_installdirs
 
 	dh_install

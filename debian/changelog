@@ -27,8 +27,13 @@ lintian (2.4.4) UNRELEASED; urgency=low
       work to determine which packages are required.  (Closes: #593832)
     + [RA] Remove versions from dependencies when those versions are
       satisifed by stable (lenny).
+    + [NT] Bump debhelper build dependency to 7.0.50~, since some tests
+      depend on using dh7 with override targets. (Closes: #607730)
   * debian/rules:
     + [RA] Run the test suite during the package build.
+    + [NT] Replace dh_clean -k with dh_prep.
+  * debian/compat:
+    + [NT] Bump debhelper comat to 7.
 
  -- Raphael Geissert <geissert@debian.org>  Thu, 29 Jul 2010 21:09:55 -0400
 
