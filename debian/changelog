@@ -35,6 +35,11 @@ lintian (2.4.4) UNRELEASED; urgency=low
   * debian/compat:
     + [NT] Bump debhelper comat to 7.
 
+  * t/tests/rules-not-makefile:
+    + [NT] Added new test.
+  * t/tests/scripts-missing-dep:
+    + [NT] Added new test. (Closes: #607731)
+
  -- Raphael Geissert <geissert@debian.org>  Thu, 29 Jul 2010 21:09:55 -0400
 
 lintian (2.4.3) unstable; urgency=low

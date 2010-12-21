@@ -1,0 +1,5 @@
+E: scripts-missing-dep: gawk-script-but-no-gawk-dep ./usr/bin/gawk-script
+E: scripts-missing-dep: mawk-script-but-no-mawk-dep ./usr/bin/mawk-script
+E: scripts-missing-dep: ruby-script-but-no-ruby-dep ./usr/bin/ruby-script
+E: scripts-missing-dep: tclsh-script-but-no-tclsh-dep ./usr/bin/tclsh-script
+E: scripts-missing-dep: wish-script-but-no-wish-dep ./usr/bin/wish-script
