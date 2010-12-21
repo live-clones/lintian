@@ -8,7 +8,8 @@ Uploaders: Josip Rodin <joy-packages@debian.org>,
  Marc 'HE' Brockschmidt <he@debian.org>,
  Colin Watson <cjwatson@debian.org>, Russ Allbery <rra@debian.org>,
  Adam D. Barratt <adam@adam-barratt.org.uk>,
- Raphael Geissert <geissert@debian.org>
+ Raphael Geissert <geissert@debian.org>,
+ Niels Thykier <niels@thykier.net>
 Build-Depends: debhelper (>= 7.0.50~), binutils, debiandoc-sgml, diffstat,
  fakeroot, file, gettext, intltool-debian, libapt-pkg-perl,
  libclass-accessor-perl, libapt-pkg-perl, libdigest-sha-perl,

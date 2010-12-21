@@ -32,6 +32,9 @@ lintian (2.4.4) UNRELEASED; urgency=low
       satisifed by stable (lenny).
     + [NT] Bump debhelper build dependency to 7.0.50~, since some tests
       depend on using dh7 with override targets. (Closes: #607730)
+    + [NT] Added Niels Thykier to uploaders.
+  * debian/copyright:
+    + [NT] Added Niels Thykier to maintainers.
   * debian/rules:
     + [RA] Run the test suite during the package build.
     + [NT] Replace dh_clean -k with dh_prep.
