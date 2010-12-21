@@ -14,6 +14,12 @@ perlprovides := data/fields/perl-provides
 onlyrun =
 tag =
 
+ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
+	testtarget = runtests
+else
+	testtarget =
+endif
+
 runtests: $(neededfiles) $(allchecks) $(allcollect) $(tagfiles) $(testfiles)
 	@echo .... running tests ....
 	rm -rf debian/tests
@@ -37,7 +43,7 @@ refresh-perl-provides:
 	perl private/refresh-perl-provides > $(perlprovides)
 
 build: build-stamp
-build-stamp: $(neededfiles) $(docsource) runtests
+build-stamp: $(neededfiles) $(docsource) $(testtarget)
 	@echo .... running build ....
 	dh_testdir
 	cd doc && LANG=C debiandoc2html lintian.sgml

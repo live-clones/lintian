@@ -52,6 +52,8 @@ lintian (2.4.4) UNRELEASED; urgency=low
   * debian/rules:
     + [RA] Run the test suite during the package build.
     + [NT] Replace dh_clean -k with dh_prep.
+    + [NT] Add support for skipping the test suite per policy 4.9.1.
+      Many thanks to David Bremner for the patch.
   * debian/compat:
     + [NT] Bump debhelper comat to 7.
 
