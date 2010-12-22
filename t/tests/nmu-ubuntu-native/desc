@@ -3,4 +3,5 @@ Sequence: 6000
 Version: 1.0
 Description: Test NMU tag suppression for Ubuntu native packages
 Test-Against: changelog-should-mention-nmu
+ bad-distribution-in-changes-file
 References: Debian Bug #507740
