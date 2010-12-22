@@ -1,4 +1,4 @@
-Last generated 2010-08-23
+Last generated 2010-12-22
 
 The following tags are not tested by the test suite:
 
@@ -163,18 +163,12 @@ po-debconf missing-templates-pot
 po-debconf not-using-po-debconf
 
 rules debian-rules-is-symlink
-rules debian-rules-not-a-makefile
 
 scripts csh-considered-harmful
-scripts gawk-script-but-no-gawk-dep
 scripts killall-is-dangerous
 scripts maintainer-script-needs-depends-on-adduser
 scripts maintainer-script-needs-depends-on-update-inetd
-scripts mawk-script-but-no-mawk-dep
 scripts mknod-in-maintainer-script
-scripts ruby-script-but-no-ruby-dep
-scripts tclsh-script-but-no-tclsh-dep
-scripts wish-script-but-no-wish-dep
 
 shared-libs dev-pkg-without-shlib-symlink
 shared-libs ldconfig-symlink-before-shlib-in-deb
@@ -258,19 +252,13 @@ debhelper uses-dh-python-with-no-pycompat
 
 etcfiles file-in-etc-not-marked-as-conffile
 
-fields build-conflicts-with-build-dependency
 fields build-depends-indep-without-arch-indep
-fields build-depends-on-1-revision
-fields build-depends-on-build-essential
-fields build-depends-on-essential-package-without-using-version
-fields build-depends-on-obsolete-package
 fields conflicts-with-dependency
 fields dbg-package-missing-depends
 fields debian-revision-not-well-formed
 fields debian-revision-should-not-be-zero
 fields debug-package-should-be-priority-extra
 fields depends-exclusively-on-makedev
-fields depends-on-build-essential-package-without-using-version
 fields depends-on-essential-package-without-using-version
 fields depends-on-obsolete-package
 fields depends-on-old-emacs
@@ -304,7 +292,6 @@ files dir-or-file-in-var-www
 files embedded-feedparser-library
 files embedded-javascript-library
 files executable-is-not-world-readable
-files extra-license-file
 files file-directly-in-usr-share
 files file-directly-in-usr-share-doc
 files file-in-unusual-dir
@@ -596,7 +583,6 @@ filenames
   dir-or-file-in-var-www
   embedded-feedparser-library
   embedded-javascript-library
-  extra-license-file
   file-in-usr-lib-sgml
   macos-ds-store-file-in-package
   macos-resource-fork-file-in-package
@@ -693,14 +679,8 @@ maintainer-scripts
   wrong-debian-qa-group-name
 
 relations
-  build-conflicts-with-build-dependency
-  build-depends-on-1-revision
-  build-depends-on-build-essential
-  build-depends-on-essential-package-without-using-version
-  build-depends-on-obsolete-package
   conflicts-with-dependency
   depends-exclusively-on-makedev
-  depends-on-build-essential-package-without-using-version
   depends-on-essential-package-without-using-version
   depends-on-obsolete-package
   depends-on-old-emacs

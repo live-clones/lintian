@@ -1,0 +1,6 @@
+E: fields-build-depends source: build-conflicts-with-build-dependency bd-conflict
+E: fields-build-depends source: build-depends-on-build-essential build-depends
+E: fields-build-depends source: build-depends-on-essential-package-without-using-version build-depends: bash
+E: fields-build-depends source: build-depends-on-obsolete-package build-depends: x-dev
+E: fields-build-depends source: depends-on-build-essential-package-without-using-version make [build-depends: make]
+W: fields-build-depends source: build-depends-on-1-revision build-depends: revision-1 (>= 1.0-1)

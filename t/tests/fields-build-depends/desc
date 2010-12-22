@@ -1,0 +1,12 @@
+Testname: fields-build-depends
+Sequence: 6000
+Version: 1.0
+Description: Check for sane build depends
+Test-For:
+ build-conflicts-with-build-dependency
+ build-depends-on-1-revision
+ build-depends-on-build-essential
+ build-depends-on-essential-package-without-using-version
+ depends-on-build-essential-package-without-using-version
+ build-depends-on-obsolete-package
+
