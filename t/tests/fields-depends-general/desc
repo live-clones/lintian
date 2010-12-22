@@ -4,12 +4,7 @@ Version: 1.0
 Description: General tests for package dependencies
 Test-For:
  breaks-without-version
- build-depends-on-metapackage
- build-depends-on-non-build-package
- build-depends-on-python-dev-with-no-arch-any
- conflicting-negation-in-source-relation
  conflicts-with-version
  depends-on-metapackage
- invalid-arch-string-in-source-relation
  lib-recommends-documentation
-References: Debian Bug#540594, Debian Bug#551793
+

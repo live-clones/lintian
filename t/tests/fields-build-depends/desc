@@ -7,7 +7,12 @@ Test-For:
  build-depends-on-1-revision
  build-depends-on-build-essential
  build-depends-on-essential-package-without-using-version
- depends-on-build-essential-package-without-using-version
+ build-depends-on-metapackage
+ build-depends-on-non-build-package
  build-depends-on-obsolete-package
+ build-depends-on-python-dev-with-no-arch-any
+ conflicting-negation-in-source-relation
+ depends-on-build-essential-package-without-using-version
+ invalid-arch-string-in-source-relation
  ored-build-depends-on-obsolete-package
-
+References: Debian Bug#540594, Debian Bug#551793
