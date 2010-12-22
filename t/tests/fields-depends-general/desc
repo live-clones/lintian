@@ -1,7 +1,7 @@
 Testname: fields-depends-general
 Sequence: 6000
 Version: 1.0
-Description: General tests for package dependencies
+Description: General tests for binary package dependencies
 Test-For:
  breaks-without-version
  conflicts-with-version
