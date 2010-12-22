@@ -265,7 +265,6 @@ fields depends-on-old-emacs
 fields depends-on-python-minimal
 fields malformed-dm-upload-allowed
 fields needlessly-depends-on-awk
-fields ored-build-depends-on-obsolete-package
 fields ored-depends-on-obsolete-package
 fields package-depends-on-multiple-libpng-versions
 fields package-depends-on-multiple-libstdc-versions
@@ -685,7 +684,6 @@ relations
   depends-on-obsolete-package
   depends-on-old-emacs
   needlessly-depends-on-awk
-  ored-build-depends-on-obsolete-package
   ored-depends-on-obsolete-package
   package-depends-on-multiple-libpng-versions
   package-depends-on-multiple-libstdc-versions
