@@ -9,7 +9,7 @@ lintian (2.4.4) UNRELEASED; urgency=low
       embedded-zlib check since it's in the kernel.  (Closes: #593397)
     + [RG] Add swipl to the list of known interpreters.  (Closes: #591316)
   * checks/debian-source-dir:
-    + [NT] Added missing import of "Util" perl module. Thanks to David
+    + [NT] Added missing import of "Util" perl module.  Thanks to David
       Bremner for the patch.
   * checks/fields{,.desc}:
     + [NT] Added check for packages build depending on openjdk-X-doc or
@@ -17,7 +17,7 @@ lintian (2.4.4) UNRELEASED; urgency=low
       (Closes: #593837)
   * checks/files:
     + [NT] Fixed false-positive extra-license-file for license.ui files.
-      Thanks to Jeremy Sanders for the report. (Closes: #595941)
+      Thanks to Jeremy Sanders for the report.  (Closes: #595941)
   * checks/menu-format.desc:
     + [CW] Fix several typos.
   * checks/menus.desc:
@@ -42,7 +42,7 @@ lintian (2.4.4) UNRELEASED; urgency=low
     + [RA] Remove versions from dependencies when those versions are
       satisifed by stable (lenny).
     + [NT] Bump debhelper build dependency to 7.0.50~, since some tests
-      depend on using dh7 with override targets. (Closes: #607730)
+      depend on using dh7 with override targets.  (Closes: #607730)
     + [NT] Added Niels Thykier to uploaders.
   * debian/copyright:
     + [NT] Added Niels Thykier to maintainers.
@@ -52,14 +52,8 @@ lintian (2.4.4) UNRELEASED; urgency=low
   * debian/compat:
     + [NT] Bump debhelper comat to 7.
 
-  * t/tests/files-extra-license:
-    + [NT] Added new test.
-  * t/tests/fields-java:
-    + [NT] Added test for new tag.
-  * t/tests/rules-not-makefile:
-    + [NT] Added new test.
-  * t/tests/scripts-missing-dep:
-    + [NT] Added new test. (Closes: #607731)
+  * t/tests/{rules-not-makefile,scripts-missing-dep}:
+    + [NT] Added new tests. (Closes: #607731)
 
  -- Raphael Geissert <geissert@debian.org>  Thu, 29 Jul 2010 21:09:55 -0400
 
