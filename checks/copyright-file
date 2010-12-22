@@ -45,7 +45,7 @@ my $found = 0;
 my $linked = 0;
 
 # Read package contents...
-foreach (sort keys %{$info->index}) {
+foreach (@{$info->sorted_index}) {
     my $index_info = $info->index->{$_};
     if (m,usr/(share/)?doc/$ppkg/copyright(\.\S+)?$,) {
 	my $ext = $2;

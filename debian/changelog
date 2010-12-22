@@ -5,6 +5,8 @@ lintian (2.4.4) UNRELEASED; urgency=low
       - build-depends-on-specific-java-doc-package
       - depends-on-specific-java-doc-package
 
+  * checks/*:
+    + [NT] Use the new pre-sorted file index when iterating over files.
   * checks/binaries:
     + [RA] Exclude kfreebsd-kernel-di-{amd64,i386} from the
       embedded-zlib check since it's in the kernel.  (Closes: #593397)
@@ -52,6 +54,10 @@ lintian (2.4.4) UNRELEASED; urgency=low
     + [NT] Replace dh_clean -k with dh_prep.
   * debian/compat:
     + [NT] Bump debhelper comat to 7.
+
+  * lib/Lintian/Collect/Binary.pm:
+    + [NT] Create a sorted file index to avoid sorting it in the checks.
+      (Closes: #605844)
 
   * t/tests/{rules-not-makefile,scripts-missing-dep}:
     + [NT] Added new tests. (Closes: #607731)

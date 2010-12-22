@@ -396,7 +396,7 @@ closedir MENUDIR;
 
 # Find the desktop files in the package for verification.
 my @desktop_files;
-foreach my $file (sort keys %{$info->index}) {
+foreach my $file (@{$info->sorted_index}) {
     my $index_info = $info->index->{$file};
     my $operm = $index_info->{operm};
 

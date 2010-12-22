@@ -83,7 +83,7 @@ foreach my $file (sort keys %{$info->file_info}) {
 
 # 2nd step: read package contents
 
-for my $cur_file (sort keys %{$info->index}) {
+for my $cur_file (@{$info->sorted_index}) {
     # shared library?
     my $cur_file_data = $info->index->{$cur_file};
 

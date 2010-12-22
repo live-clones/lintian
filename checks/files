@@ -199,7 +199,7 @@ if ($description) {
     }
 }
 if ($is_empty) {
-    for my $file (sort keys %{$info->index}) {
+    for my $file (@{$info->sorted_index}) {
         # Ignore directories
         unless ($file =~ m,/$,) {
             # Skip if $file is an empty string
@@ -226,7 +226,7 @@ if ($is_empty) {
 }
 
 # Read package contents...
-foreach my $file (sort keys %{$info->index}) {
+foreach my $file (@{$info->sorted_index}) {
     next if $file eq "";
     my $index_info = $info->index->{$file};
     my $owner = $index_info->{owner} . '/' . $index_info->{group};
@@ -1204,7 +1204,7 @@ if ($pkg_section !~ m,games$, and $games > 0 and $other == 0) {
 # so just ignore them.
 #
 # python-support needs a directory for each package even it might be empty
-foreach my $dir (sort keys %{$info->index}) {
+foreach my $dir (@{$info->sorted_index}) {
     next if $dir eq "" or $info->index->{$dir}->{type} ne 'd';
     next if ($dir =~ m{^var/} or $dir =~ m{^etc/});
     next if $pkg eq 'base-files';

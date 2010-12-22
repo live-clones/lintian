@@ -122,6 +122,18 @@ sub index {
     return $self->{index};
 }
 
+# Returns sorted file index (eqv to sort keys %{$info->index}), except it is cached.
+sub sorted_index {
+    my ($self) = @_;
+    my $index;
+    my @result;
+    return $self->{sorted_index} if exists $self->{sorted_index};
+    $index = $self->index();
+    @result = sort keys %{$index};
+    $self->{sorted_index} = \@result;
+    return \@result;
+}
+
 # Returns the information from collect/file-info
 sub file_info {
     my ($self) = @_;

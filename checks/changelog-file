@@ -79,7 +79,7 @@ for my $file (sort keys %{$info->file_info}) {
 }
 
 # Read package contents....  Capitalization errors are dealt with later.
-foreach (sort keys %{$info->index}) {
+foreach (@{$info->sorted_index}) {
     next unless length $_;
     # skip packages which have a /usr/share/doc/$pkg -> foo symlink
     if (m,usr/share/doc/$ppkg$, and defined $info->index->{$_}->{link}) {
