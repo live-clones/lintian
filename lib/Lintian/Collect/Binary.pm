@@ -123,6 +123,7 @@ sub index {
 }
 
 # Returns sorted file index (eqv to sort keys %{$info->index}), except it is cached.
+#  sub sorted_index Needs-Info <>
 sub sorted_index {
     my ($self) = @_;
     my $index;

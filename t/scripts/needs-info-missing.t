@@ -73,8 +73,6 @@ for my $module (@MODULES) {
     }
 
     delete $seen_subs{'new'};
-    # Extension of index
-    delete $seen_subs{'sorted_index'};
 
     is(scalar(keys(%seen_subs)) + scalar(keys(%seen_needsinfo)), 0,
 	"$pretty_module has per-method needs-info") or
