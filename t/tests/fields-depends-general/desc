@@ -4,7 +4,14 @@ Version: 1.0
 Description: General tests for binary package dependencies
 Test-For:
  breaks-without-version
+ conflicts-with-dependency
  conflicts-with-version
+ depends-on-essential-package-without-using-version
  depends-on-metapackage
+ depends-on-obsolete-package
  lib-recommends-documentation
+ needlessly-depends-on-awk
+ ored-depends-on-obsolete-package
+ package-depends-on-itself
+ package-relation-with-self
 

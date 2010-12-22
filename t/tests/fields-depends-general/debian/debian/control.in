@@ -7,9 +7,11 @@ Build-Depends: debhelper (>= 7.0.50~)
 
 Package: {$srcpkg}
 Architecture: {$architecture}
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, xorg
-Breaks: package-without-version
-Conflicts: package-with-version (<< 3.0)
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, xorg, bash,
+ conflict-dep, gawk | awk, new-package | xbase-clients, {$srcpkg},
+ gaim
+Breaks: package-without-version, {$srcpkg} (<< 0.1)
+Conflicts: package-with-version (<< 3.0), conflict-dep
 Description: {$description}
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
