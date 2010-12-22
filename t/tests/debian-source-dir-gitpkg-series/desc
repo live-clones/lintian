@@ -1,0 +1,7 @@
+Testname: debian-source-dir-gitpkg-series
+Sequence: 6000
+Version: 1.0-1
+Type: non-native
+Description: Test for trivial series file in git-patches-not-exported
+Test-For:
+ git-patches-not-exported
