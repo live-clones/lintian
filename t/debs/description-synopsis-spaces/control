@@ -4,7 +4,7 @@ Architecture: all
 Maintainer: Debian Lintian Maintainers <lintian-maint@debian.org>
 Section: devel
 Priority: extra
-Description:     the synopsis starts with spaces
+Description:     synopsis starts with spaces
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may

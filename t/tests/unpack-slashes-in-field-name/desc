@@ -1,4 +1,4 @@
 Testname: unpack-slashes-in-field-name
 Sequence: 3500
 Version: 1.0
-Description: A test package with slashes in a control field name
+Description: Test package with slashes in a control field name
