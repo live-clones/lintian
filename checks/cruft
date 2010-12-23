@@ -237,7 +237,7 @@ sub check_diffstat {
         }
 
         # Additional special checks only for the diff, not the full source.
-        if ($file eq 'debian/substvars') {
+        if ($file =~ m@^debian/(?:.+\.)?substvars$@) {
             tag 'diff-contains-substvars', $file;
         }
     }
@@ -275,7 +275,7 @@ sub check_debfiles {
     }
 
     # Additional special checks only for the diff, not the full source.
-    if ($name eq 'substvars') {
+    if ($name =~ m@(?:.+\.)?substvars$@) {
         tag 'diff-contains-substvars', "debian/$name";
     }
 }

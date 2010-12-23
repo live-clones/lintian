@@ -22,3 +22,4 @@ Test-For:
  diff-contains-svn-commit-file
  diff-contains-svn-conflict-file
  diff-contains-svn-control-dir
+References: Debian Bug#598251

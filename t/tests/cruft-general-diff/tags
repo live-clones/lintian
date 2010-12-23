@@ -11,6 +11,7 @@ W: cruft-general-diff source: diff-contains-git-control-dir .git
 W: cruft-general-diff source: diff-contains-hg-control-dir .hg
 W: cruft-general-diff source: diff-contains-hg-tags-file .hgtags
 W: cruft-general-diff source: diff-contains-patch-failure-file foo.rej
+W: cruft-general-diff source: diff-contains-substvars debian/somepackage.substvars
 W: cruft-general-diff source: diff-contains-substvars debian/substvars
 W: cruft-general-diff source: diff-contains-svk-commit-file svk-commit444.tmp
 W: cruft-general-diff source: diff-contains-svn-commit-file svn-commit.tmp
