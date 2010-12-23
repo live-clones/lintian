@@ -1204,15 +1204,16 @@ if ($pkg_section !~ m,games$, and $games > 0 and $other == 0) {
 # so just ignore them.
 #
 # python-support needs a directory for each package even it might be empty
-foreach my $dir (@{$info->sorted_index}) {
-    next if $dir eq "" or $info->index->{$dir}->{type} ne 'd';
-    next if ($dir =~ m{^var/} or $dir =~ m{^etc/});
-    next if $pkg eq 'base-files';
-    if (dir_counts($info, $dir) == 0) {
-	if ($dir ne 'usr/lib/perl5/'
-	    and $dir ne 'usr/share/perl5/'
-	    and $dir !~ m;^usr/share/python-support/;) {
-	    tag "package-contains-empty-directory", $dir;
+if($pkg ne 'base-files'){
+    foreach my $dir (@{$info->sorted_index}) {
+	next if $dir eq "" or $info->index->{$dir}->{type} ne 'd';
+	next if ($dir =~ m{^var/} or $dir =~ m{^etc/});
+	if (dir_counts($info, $dir) == 0) {
+	    if ($dir ne 'usr/lib/perl5/'
+		and $dir ne 'usr/share/perl5/'
+		and $dir !~ m;^usr/share/python-support/;) {
+		tag "package-contains-empty-directory", $dir;
+	    }
 	}
     }
 }
