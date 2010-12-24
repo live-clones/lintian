@@ -77,8 +77,8 @@ lintian (2.4.4) UNRELEASED; urgency=low
     + [NT] Bump debhelper comat to 7.
 
   * lib/Lintian/Collect/Binary.pm:
-    + [NT] Create a sorted file index and file info to avoid sorting it
-      in the checks.  (Closes: #605844)
+    + [NT] Pre-sort file index and file info to avoid sorting it
+      repeatedly in the checks.  (Closes: #605844)
 
   * t/tests/{rules-not-makefile,scripts-missing-dep}:
     + [NT] Added new tests. (Closes: #607731)
