@@ -55,6 +55,9 @@ lintian (2.4.4) UNRELEASED; urgency=low
   * data/changelog-file/ubuntu-dists:
     + [CW] Add natty as a valid Ubuntu distribution, and remove the EOLed
       intrepid and jaunty.
+  * data/shared-libs/ldconfig-dirs:
+    + [NT] Removed the emul/ia32-linux directories as they are no longer
+      used.  (Closes: #596848)
   * data/fields/essential:
     + [RG] Add hurd.  (Closes: #591323)
   * data/fields/obsolete-packages:

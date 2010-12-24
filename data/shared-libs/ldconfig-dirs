@@ -16,10 +16,6 @@ lib64
 usr/lib32
 usr/lib64
 
-# Used by the Debian amd64 port for 32-bit libraries.
-emul/ia32-linux/lib
-emul/ia32-linux/usr/lib
-
 # This is now obsolete, but is still in the standard ld.so.conf.
 usr/X11R6/lib
 
