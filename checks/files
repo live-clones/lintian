@@ -655,6 +655,7 @@ foreach my $file (@{$info->sorted_index}) {
 	tag "non-standard-toplevel-dir", "$file"
 	    unless $pkg eq 'base-files'
 		or $pkg eq 'hurd'
+		or $pkg eq 'hurd-udeb'
 		or $pkg =~ /^rootskel(?:-bootfloppy)?/
 		or $file =~ m,^emul/,;
     }

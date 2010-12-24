@@ -32,6 +32,9 @@ lintian (2.4.4) UNRELEASED; urgency=low
   * checks/files:
     + [NT] Fixed false-positive extra-license-file for license.ui files.
       Thanks to Jeremy Sanders for the report.  (Closes: #595941)
+    + [NT] Added hurd-udeb to the list of packages allowed to ship
+      unusual top-level directories.  Thanks to Samual Thibault for
+      the patch.  (Closes: #591331)
   * checks/menu-format.desc:
     + [CW] Fix several typos.
   * checks/menus.desc:
