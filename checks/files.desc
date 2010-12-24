@@ -1138,13 +1138,13 @@ Tag: empty-binary-package
 Severity: important
 Certainty: wild-guess
 Info: This binary package appears to be empty, and its description does
- not say that it's a meta-package or a transitional package.  This is
+ not say that it's a metapackage or a transitional package.  This is
  often due to problems with updating debhelper *.install files during
  package renames or similar problems where installation rules don't put
  files in the correct place.
  .
  If the package is deliberately empty, please mention in the package long
- description one of the phrases "meta-package," "dummy," "dependency
+ description one of the phrases "metapackage," "dummy," "dependency
  package," "empty package," or "virtual package."
 
 Tag: star-file

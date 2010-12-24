@@ -120,7 +120,7 @@ while (<RULES>) {
 	    if ($dh_commands_depends->known($dhcommand)) {
 		my $dep = $dh_commands_depends->value($dhcommand);
 
-		# Special-case gcj-native-helper, which is a meta-package to
+		# Special-case gcj-native-helper, which is a metapackage to
 		# pull this helper. default-jdk-builddep is obsolete, but
 		# we keep it for backwards compatibility, because it used to
 		# serve this purpose.
