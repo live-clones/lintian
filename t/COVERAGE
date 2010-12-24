@@ -1,4 +1,4 @@
-Last generated 2010-12-22
+Last generated 2010-12-24
 
 The following tags are not tested by the test suite:
 
@@ -287,7 +287,6 @@ files embedded-javascript-library
 files executable-is-not-world-readable
 files file-directly-in-usr-share
 files file-directly-in-usr-share-doc
-files file-in-unusual-dir
 files file-in-usr-lib-sgml
 files file-name-ends-in-whitespace
 files lengthy-symlink
@@ -296,7 +295,6 @@ files macos-resource-fork-file-in-package
 files non-standard-dir-perm
 files non-standard-executable-perm
 files non-standard-setuid-executable-perm
-files non-standard-toplevel-dir
 files package-contains-bts-control-dir
 files package-contains-devhelp-file-without-symlink
 files package-contains-hardlink
@@ -474,7 +472,6 @@ binary
   doc-base-unknown-section
   executable-not-elf-or-script
   file-directly-in-usr-share
-  file-in-unusual-dir
   file-name-ends-in-whitespace
   lengthy-symlink
   menu-command-not-in-package
@@ -580,7 +577,6 @@ filenames
   macos-ds-store-file-in-package
   macos-resource-fork-file-in-package
   non-standard-dir-perm
-  non-standard-toplevel-dir
   package-contains-bts-control-dir
   package-contains-devhelp-file-without-symlink
   package-contains-linda-override
