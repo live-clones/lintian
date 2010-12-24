@@ -241,6 +241,7 @@ if ($seendhcleank and $level >= 7) {
 
 # Check the files in the debian directory for various debhelper-related
 # things.
+my @indebfiles = ();
 opendir(DEBIAN, 'debfiles')
     or fail("Can't open debfiles directory.");
 while (defined(my $file=readdir(DEBIAN))) {
@@ -303,6 +304,8 @@ while (defined(my $file=readdir(DEBIAN))) {
 	}
     } elsif ($file =~ m/^ex\.|\.ex$/i) {
         tag "dh-make-template-in-source", "debian/$file";
+    } elsif ($file =~ m/^(?:.+\.)?debhelper(?:\.log)?$/){
+	push(@indebfiles, $file);
     } else {
 	my $base = $file;
 	$base =~ s/^[.]+\.//;
@@ -328,6 +331,18 @@ while (defined(my $file=readdir(DEBIAN))) {
     }
 }
 closedir(DEBIAN);
+
+if(scalar(@indebfiles)){
+    my $f = pop(@indebfiles);
+    my $others = scalar(@indebfiles);
+    my $otext = "";
+    if($others > 1){
+	$otext = " and $others others";
+    } elsif($others == 1){
+	$otext = " and 1 other";
+    }
+    tag "temporary-debhelper-file", "$f$otext";
+}
 
 # Check for Python policy usage and the required debhelper dependency for
 # dh_python policy support.  Assume people who intentionally set pycompat to

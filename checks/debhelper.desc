@@ -212,3 +212,13 @@ Info: The debhelper compatibility level specified in <tt>debian/rules</tt>
  methods to generate the compatibility level, write the output into
  <tt>debian/compat</tt> instead of setting DH_COMPAT.  The latter should
  be available for a user to override temporarily.
+
+Tag: temporary-debhelper-file
+Severity: important
+Certainty: certain
+Ref: dh_clean(1)
+Info: The package contains temporary debhelper files, which are normally
+ removed by <tt>dh_clean</tt>. The most common cause for this is that a
+ binary package has been renamed or removed without cleaning the build
+ directory first.
+

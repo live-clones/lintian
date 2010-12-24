@@ -7,6 +7,7 @@ lintian (2.4.4) UNRELEASED; urgency=low
       - unneeded-build-dep-on-quilt
       - description-synopsis-starts-with-article
       - needless-dependency-on-jre
+      - temporary-debhelper-file
 
   * checks/*:
     + [NT] Use the new pre-sorted file {index,info} when iterating over files.
@@ -17,9 +18,11 @@ lintian (2.4.4) UNRELEASED; urgency=low
   * checks/cruft{,.desc}:
     + [NT] Extended the diff-contains-substvars check to also catch files
       prefixed with a package name.
-  * checks/debhelper:
+  * checks/debhelper{,.desc}:
     + [NT] Fix dependency check for dh_nativejava, default-jdk has never
       provided dh_nativejava.  (Closes: #606506)
+    + [NT] Added check for temporary debhelper files that ought to have
+      been removed by dh_clean.  (Closes: #598251)
   * checks/debian-source-dir:
     + [NT] Added missing import of "Util" perl module.  Thanks to David
       Bremner for the patch.
