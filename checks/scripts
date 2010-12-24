@@ -323,7 +323,7 @@ foreach (@{$info->sorted_index}) {
     $suid{'./' . $_} = $is_suid;
 }
 
-for my $file (sort keys %{$info->file_info}) {
+for my $file (@{$info->sorted_file_info}) {
     $ELF{'./' . $file} = 1 if $info->file_info->{$file} =~ /^[^,]*\bELF\b/o;
 }
 

@@ -162,6 +162,21 @@ sub file_info {
     return $self->{file_info};
 }
 
+
+# Returns sorted file info (eqv to sort keys %{$info->file_info}),
+# except it is cached.
+#  sub sorted_file_info Needs-Info <>
+sub sorted_file_info{
+    my ($self) = @_;
+    my $info;
+    my @result;
+    return $self->{sorted_file_info} if exists $self->{sorted_file_info};
+    $info = $self->file_info();
+    @result = sort keys %{$info};
+    $self->{sorted_file_info} = \@result;
+    return \@result;
+}
+
 sub scripts {
     my ($self) = @_;
     return $self->{scripts} if exists $self->{scripts};

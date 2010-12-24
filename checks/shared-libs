@@ -73,7 +73,7 @@ foreach my $file (sort keys %{$objdump}) {
 	if defined $objdump->{$file}->{SONAME};
 }
 
-foreach my $file (sort keys %{$info->file_info}) {
+foreach my $file (@{$info->sorted_file_info}) {
     next unless length $file;
     my $fileinfo = $info->file_info->{$file};
     if ($fileinfo =~ m/^[^,]*\bELF\b/ && $fileinfo =~ m/shared object/) {

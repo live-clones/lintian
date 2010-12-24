@@ -181,7 +181,7 @@ tag "package-name-doesnt-match-sonames", "@sonames"
     if @sonames && !$match_found;
 
 my %directories;
-foreach (sort keys %{$info->file_info}) {
+foreach (@{$info->sorted_file_info}) {
     next unless length $_;
     my $data = $info->file_info->{$_};
     next unless $data eq 'directory' or $data =~ / link to /;
@@ -195,7 +195,7 @@ if ($arch ne 'all' and not exists($ARCH_REGEX{$arch})) {
 }
 
 # process all files in package
-foreach my $file (sort keys %{$info->file_info}) {
+foreach my $file (@{$info->sorted_file_info}) {
     my $fileinfo = $info->file_info->{$file};
     my $objdump = $info->objdump_info->{$file};
 
