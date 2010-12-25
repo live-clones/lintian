@@ -6,4 +6,6 @@ Test-For:
  duplicate-uploader
  maintainer-also-in-uploaders
  maintainer-name-missing
+ uploader-address-malformed
  uploader-name-missing
+

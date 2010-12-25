@@ -24,6 +24,7 @@ use strict;
 use warnings;
 
 use Exporter ();
+use Email::Valid;
 use Lintian::Data;
 use Lintian::Tags qw(tag);
 
@@ -154,12 +155,13 @@ sub check_maintainer {
             if $field ne 'changed-by';
     }
 
-    # This should really be done with Email::Valid.  Don't issue the malformed
-    # tag twice if we already saw problems.
+    # Don't issue the malformed tag twice if we already saw problems.
     if (not $mail) {
         tag "$field-address-missing", $maintainer;
     } else {
-	if (not $malformed and $mail !~ /^[^()<>@,;:\\\"\[\]]+@(\S+\.)+\S+/) {
+	if (not $malformed and not Email::Valid->address($mail)){
+            # Either not a valid email or possibly missing a comma between
+            # two entries.
             tag "$field-address-malformed", $maintainer;
 	}
 	if ($mail =~ /(?:localhost|\.localdomain|\.localnet)$/) {
