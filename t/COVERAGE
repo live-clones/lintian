@@ -1,4 +1,4 @@
-Last generated 2010-12-24
+Last generated 2010-12-25
 
 The following tags are not tested by the test suite:
 
@@ -80,6 +80,7 @@ fields unknown-architecture
 fields unknown-field-in-control
 fields unknown-field-in-dsc
 fields unknown-priority
+fields upstream-version-not-numeric
 fields wrong-section-for-udeb
 
 files FSSTND-dir-in-var
@@ -280,8 +281,6 @@ fields wrong-debian-qa-group-name
 
 files bad-permissions-for-ali-file
 files desktop-file-in-wrong-dir
-files dir-or-file-in-srv
-files dir-or-file-in-var-www
 files embedded-feedparser-library
 files embedded-javascript-library
 files executable-is-not-world-readable
@@ -569,8 +568,6 @@ filenames
   bad-permissions-for-ali-file
   debian-news-file-not-compressed
   desktop-file-in-wrong-dir
-  dir-or-file-in-srv
-  dir-or-file-in-var-www
   embedded-feedparser-library
   embedded-javascript-library
   file-in-usr-lib-sgml

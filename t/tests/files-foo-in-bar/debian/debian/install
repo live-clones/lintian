@@ -9,5 +9,7 @@ bar usr/lib/debug/
 bar usr/lib/site-python/foo
 bar usr/share/doc/files-foo-in-bar/examples/examples
 bar var/foo
+bar srv/foo
 bar var/lock/foo
 bar var/run/foo
+bar var/www/foo
