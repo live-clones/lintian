@@ -42,10 +42,23 @@ Vcs-Browser: http://git.debian.org/?p=lintian/lintian.git
 
 Package: lintian
 Architecture: all
-Depends: ${misc:Depends}, binutils, dpkg-dev, diffstat, file, gettext,
- intltool-debian, libapt-pkg-perl, libclass-accessor-perl,
- libdigest-sha-perl, libipc-run-perl, libparse-debianchangelog-perl,
- libtimedate-perl, liburi-perl, locales, man-db, perl
+Depends: ${misc:Depends},
+         binutils,
+         diffstat,
+         dpkg-dev,
+         file,
+         gettext,
+         intltool-debian,
+         libapt-pkg-perl,
+         libclass-accessor-perl,
+         libdigest-sha-perl,
+         libipc-run-perl,
+         libparse-debianchangelog-perl,
+         libtimedate-perl,
+         liburi-perl,
+         locales,
+         man-db,
+         perl
 Suggests: binutils-multiarch, libtext-template-perl, man-db (>= 2.5.1-1)
 Description: Debian package checker
  Lintian dissects Debian packages and reports bugs and policy
