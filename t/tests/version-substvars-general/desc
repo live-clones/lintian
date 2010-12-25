@@ -1,0 +1,10 @@
+Testname: version-substvars-general
+Sequence: 6000
+Version: 1.0
+Description: Test of substvars
+Test-For:
+ not-binnmuable-all-depends-any
+ not-binnmuable-any-depends-all
+ not-binnmuable-any-depends-any
+ substvar-source-version-is-deprecated
+ version-substvar-for-external-package

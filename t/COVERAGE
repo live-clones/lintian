@@ -432,12 +432,6 @@ shared-libs unknown-meta-field-in-symbols-file
 shared-libs unused-shlib-entry-in-control-file
 shared-libs unused-shlib-entry-in-symbols-control-file
 
-version-substvars not-binnmuable-all-depends-any
-version-substvars not-binnmuable-any-depends-all
-version-substvars not-binnmuable-any-depends-any
-version-substvars substvar-source-version-is-deprecated
-version-substvars version-substvar-for-external-package
-
 watch-file debian-watch-file-specifies-old-upstream-version
 
 Breakdown of remaining tags in legacy test suite by test case:
@@ -480,8 +474,6 @@ binary
   no-md5sums-control-file
   non-wm-in-windowmanager-menu-section
   non-wm-module-in-wm-modules-menu-section
-  not-binnmuable-all-depends-any
-  not-binnmuable-any-depends-all
   old-fsf-address-in-copyright-file
   package-contains-hardlink
   package-contains-upstream-install-documentation
@@ -491,7 +483,6 @@ binary
   su-to-root-with-usr-sbin
   su-wrapper-not-su-to-root
   su-wrapper-without--c
-  substvar-source-version-is-deprecated
   symlink-contains-spurious-segments
   unquoted-string-in-menu-item
   unstripped-binary-or-object
@@ -541,7 +532,6 @@ debug
   syntax-error-in-symbols-file
   unknown-meta-field-in-symbols-file
   unused-shlib-entry-in-symbols-control-file
-  version-substvar-for-external-package
 
 etcfiles
   file-in-etc-not-marked-as-conffile
@@ -613,7 +603,6 @@ libbaz
   missing-dependency-on-perlapi
   missing-depends-line
   no-symbols-control-file
-  not-binnmuable-any-depends-any
   package-name-doesnt-match-sonames
   postinst-must-call-ldconfig
   postinst-should-not-set-usr-doc-link
