@@ -1,0 +1,4 @@
+data-file usr/share/lintian/data/
+pkg.conf etc/
+symlinks/data-file.old usr/share/lintian/data/
+symlinks/pkg*.conf usr/share/lintian/data/

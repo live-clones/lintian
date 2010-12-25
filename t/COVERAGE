@@ -317,11 +317,7 @@ files svk-commit-file-in-package
 files svn-commit-file-in-package
 files symlink-contains-spurious-segments
 files symlink-ends-with-slash
-files symlink-has-double-slash
-files symlink-has-too-many-up-segments
 files symlink-is-self-recursive
-files symlink-should-be-absolute
-files symlink-should-be-relative
 files use-of-compat-symlink
 files windows-thumbnail-database-in-package
 files wrong-file-owner-uid-or-gid
@@ -498,7 +494,6 @@ binary
   su-wrapper-without--c
   substvar-source-version-is-deprecated
   symlink-contains-spurious-segments
-  symlink-should-be-relative
   unquoted-string-in-menu-item
   unstripped-binary-or-object
   xs-vcs-header-in-debian-control
@@ -590,10 +585,7 @@ filenames
   svk-commit-file-in-package
   svn-commit-file-in-package
   symlink-ends-with-slash
-  symlink-has-double-slash
-  symlink-has-too-many-up-segments
   symlink-is-self-recursive
-  symlink-should-be-absolute
   use-of-compat-symlink
   windows-thumbnail-database-in-package
   wrong-file-owner-uid-or-gid

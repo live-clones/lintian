@@ -1,0 +1,11 @@
+Testname: files-symlinks
+Sequence: 6000
+Version: 1.0
+Description: Test tags about symlinks
+Test-For:
+ symlink-has-double-slash
+ symlink-has-too-many-up-segments
+ symlink-should-be-absolute
+ symlink-should-be-relative
+
+

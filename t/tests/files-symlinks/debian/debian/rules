@@ -1,0 +1,16 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@
+
+override_dh_auto_build:
+	mkdir symlinks/
+	ln -s ../../../../etc/pkg.conf symlinks/pkg-old.conf
+	ln -s ../..//..//..//../etc/pkg.conf symlinks/pkg.conf
+	ln -s /usr/share/lintian/data-file symlinks/data-file.old
+
+override_dh_auto_clean:
+	rm -fr symlinks/
+
+override_dh_link:
+	# it will fix our symlinks and ruin the test, so skip it.
