@@ -61,7 +61,8 @@ lintian (2.4.4) UNRELEASED; urgency=low
   * data/fields/essential:
     + [RG] Add hurd.  (Closes: #591323)
   * data/fields/obsolete-packages:
-    + [NT] Added default-jdk-builddep (replaced by gcj-native-helper).
+    + [NT] Added default-jdk-builddep.  See README.gcj-native-transition
+      in java-common for the replacement.
 
   * debian/control:
     + [RA] Add the build dependencies required to run the test suite
