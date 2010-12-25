@@ -438,7 +438,6 @@ version-substvars not-binnmuable-any-depends-any
 version-substvars substvar-source-version-is-deprecated
 version-substvars version-substvar-for-external-package
 
-watch-file debian-watch-file-in-native-package
 watch-file debian-watch-file-specifies-old-upstream-version
 
 Breakdown of remaining tags in legacy test suite by test case:
@@ -594,7 +593,6 @@ filenames
 foo++
   debian-changelog-file-uses-obsolete-national-encoding
   debian-control-file-uses-obsolete-national-encoding
-  debian-watch-file-in-native-package
   malformed-dm-upload-allowed
   uploader-address-is-on-localhost
   uploader-address-looks-weird
