@@ -10,7 +10,7 @@ Uploaders: Josip Rodin <joy-packages@debian.org>,
  Adam D. Barratt <adam@adam-barratt.org.uk>,
  Raphael Geissert <geissert@debian.org>,
  Niels Thykier <niels@thykier.net>
-Build-Depends: binutils
+Build-Depends: binutils,
                debhelper (>= 7.0.50~),
                debiandoc-sgml,
                diffstat,
