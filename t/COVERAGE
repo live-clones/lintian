@@ -1,4 +1,4 @@
-Last generated 2010-12-25
+Last generated 2010-12-26
 
 The following tags are not tested by the test suite:
 
@@ -315,9 +315,6 @@ files setuid-binary
 files subdir-in-usr-bin
 files svk-commit-file-in-package
 files svn-commit-file-in-package
-files symlink-contains-spurious-segments
-files symlink-ends-with-slash
-files symlink-is-self-recursive
 files use-of-compat-symlink
 files windows-thumbnail-database-in-package
 files wrong-file-owner-uid-or-gid
@@ -483,7 +480,6 @@ binary
   su-to-root-with-usr-sbin
   su-wrapper-not-su-to-root
   su-wrapper-without--c
-  symlink-contains-spurious-segments
   unquoted-string-in-menu-item
   unstripped-binary-or-object
   xs-vcs-header-in-debian-control
@@ -573,8 +569,6 @@ filenames
   subdir-in-usr-bin
   svk-commit-file-in-package
   svn-commit-file-in-package
-  symlink-ends-with-slash
-  symlink-is-self-recursive
   use-of-compat-symlink
   windows-thumbnail-database-in-package
   wrong-file-owner-uid-or-gid

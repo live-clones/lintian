@@ -3,9 +3,11 @@ Sequence: 6000
 Version: 1.0
 Description: Test tags about symlinks
 Test-For:
+ symlink-contains-spurious-segments
+ symlink-ends-with-slash
  symlink-has-double-slash
  symlink-has-too-many-up-segments
+ symlink-is-self-recursive
  symlink-should-be-absolute
  symlink-should-be-relative
-
 
