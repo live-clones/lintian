@@ -264,11 +264,6 @@ fields package-depends-on-multiple-tkx-versions
 fields redundant-bugs-field
 fields redundant-origin-field
 fields unknown-section
-fields uploader-address-is-on-localhost
-fields uploader-address-looks-weird
-fields uploader-address-malformed
-fields uploader-address-missing
-fields uploader-not-full-name
 fields versioned-dependency-satisfied-by-perl
 fields wrong-debian-qa-address-set-as-maintainer
 fields wrong-debian-qa-group-name
@@ -569,11 +564,6 @@ foo++
   debian-changelog-file-uses-obsolete-national-encoding
   debian-control-file-uses-obsolete-national-encoding
   malformed-dm-upload-allowed
-  uploader-address-is-on-localhost
-  uploader-address-looks-weird
-  uploader-address-malformed
-  uploader-address-missing
-  uploader-not-full-name
   wrong-debian-qa-address-set-as-maintainer
 
 libbaz

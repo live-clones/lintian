@@ -1,0 +1,10 @@
+Testname: fields-uploaders
+Sequence: 6000
+Version: 1.0
+Description: General tests of the uploaders field
+Test-For:
+ uploader-address-is-on-localhost
+ uploader-address-looks-weird
+ uploader-address-malformed
+ uploader-address-missing
+ uploader-not-full-name
