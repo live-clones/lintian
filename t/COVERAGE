@@ -154,8 +154,6 @@ menus preinst-calls-installdocs
 menus preinst-calls-updatemenus
 menus prerm-calls-updatemenus
 
-patch-systems quilt-series-but-no-build-dep
-
 po-debconf missing-potfiles-in
 po-debconf missing-templates-pot
 po-debconf not-using-po-debconf
