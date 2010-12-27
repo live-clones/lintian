@@ -77,7 +77,6 @@ fields unknown-architecture
 fields unknown-field-in-control
 fields unknown-field-in-dsc
 fields unknown-priority
-fields upstream-version-not-numeric
 fields wrong-section-for-udeb
 
 files FSSTND-dir-in-var
