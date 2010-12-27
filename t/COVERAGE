@@ -1,4 +1,4 @@
-Last generated 2010-12-26
+Last generated 2010-12-27
 
 The following tags are not tested by the test suite:
 
@@ -163,8 +163,6 @@ po-debconf missing-potfiles-in
 po-debconf missing-templates-pot
 po-debconf not-using-po-debconf
 
-rules debian-rules-is-symlink
-
 scripts csh-considered-harmful
 scripts killall-is-dangerous
 scripts maintainer-script-needs-depends-on-adduser
@@ -220,8 +218,6 @@ control-files control-file-is-empty
 
 copyright-file old-fsf-address-in-copyright-file
 copyright-file usr-share-doc-symlink-without-dependency
-
-cruft native-package-with-dash-version
 
 debconf config-does-not-load-confmodule
 debconf debconf-config-not-executable
@@ -467,7 +463,6 @@ binary
   menu-item-uses-apps-section
   menu-item-uses-windowmanagers-section
   menu-method-should-include-menu-h
-  native-package-with-dash-version
   no-md5sums-control-file
   non-wm-in-windowmanager-menu-section
   non-wm-module-in-wm-modules-menu-section

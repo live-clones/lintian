@@ -1,0 +1,6 @@
+#!/bin/sh
+# Create d/rules as a symlink.
+
+ROOT_DIR="$1"
+
+ln -fs rules.real "${ROOT_DIR}/debian/rules"
