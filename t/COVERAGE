@@ -251,8 +251,6 @@ etcfiles file-in-etc-not-marked-as-conffile
 
 fields build-depends-indep-without-arch-indep
 fields dbg-package-missing-depends
-fields debian-revision-not-well-formed
-fields debian-revision-should-not-be-zero
 fields debug-package-should-be-priority-extra
 fields depends-exclusively-on-makedev
 fields depends-on-old-emacs
@@ -533,8 +531,6 @@ etcfiles
   run-parts-cron-filename-contains-full-stop
 
 fields
-  debian-revision-not-well-formed
-  debian-revision-should-not-be-zero
   depends-on-python-minimal
   unknown-section
 

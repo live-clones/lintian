@@ -1,0 +1,8 @@
+Testname: fields-debian-revision
+Sequence: 6000
+Version: 1.5-.3
+Description: Test for weird Debian revisions
+Type: non-native
+Test-For:
+ debian-revision-not-well-formed
+ debian-revision-should-not-be-zero

@@ -1,0 +1,2 @@
+E: fields-debian-revision: debian-revision-should-not-be-zero 1.0-0
+W: fields-debian-revision source: debian-revision-not-well-formed 1.5-.3
