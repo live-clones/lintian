@@ -58,9 +58,6 @@ fields bad-version-in-relation
 fields bad-version-number
 fields depends-on-libdb1-compat
 fields doc-package-depends-on-main-package
-fields maintainer-address-is-on-localhost
-fields maintainer-address-looks-weird
-fields maintainer-address-malformed
 fields malformed-python-version
 fields multiline-field
 fields no-architecture-field

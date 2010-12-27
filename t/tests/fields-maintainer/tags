@@ -1,0 +1,6 @@
+E: fields-maintainer source: maintainer-address-is-on-localhost Mrs. Localhost<user@localhost>
+E: fields-maintainer source: maintainer-address-malformed Mrs. Localhost<user@localhost>
+E: fields-maintainer: maintainer-address-is-on-localhost Mrs. Localhost<user@localhost>
+E: fields-maintainer: maintainer-address-malformed Mrs. Localhost<user@localhost>
+W: fields-maintainer source: maintainer-address-looks-weird Mrs. Localhost<user@localhost>
+W: fields-maintainer: maintainer-address-looks-weird Mrs. Localhost<user@localhost>

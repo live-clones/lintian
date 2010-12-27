@@ -1,2 +1,0 @@
-This file is installed into /usr/share/lintian just to ensure that this
-package doesn't look like a metapackage for the dependency checks.
