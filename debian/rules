@@ -66,13 +66,13 @@ clean: $(neededfiles)
 	rm -rf doc/lintian.html/ doc/lintian.txt
 	rm -rf debian/tests
 	find -name "*.py?" -print0 | xargs -0r rm
-	dh_clean -Xtestset/diffs/binary.c~
+	dh_clean
 
 binary-indep: $(neededfiles) build
 	@echo .... binary-indep ....
 	dh_testdir
 	dh_testroot
-	dh_prep -Xtestset/diffs/binary.c~
+	dh_prep
 	dh_installdirs
 
 	dh_install
