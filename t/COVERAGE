@@ -203,7 +203,6 @@ changelog-file wrong-name-for-debian-news-file
 
 control-file debian-control-file-uses-obsolete-national-encoding
 control-file section-area-mismatch
-control-file xs-vcs-header-in-debian-control
 
 control-files control-file-has-bad-permissions
 control-files control-file-is-empty
@@ -452,7 +451,6 @@ binary
   su-wrapper-without--c
   unquoted-string-in-menu-item
   unstripped-binary-or-object
-  xs-vcs-header-in-debian-control
 
 debconf
   loads-obsolete-confmodule

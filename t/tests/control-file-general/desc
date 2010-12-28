@@ -12,5 +12,6 @@ Test-For:
  obsolete-relation-form-in-source
  package-depends-on-itself
  stronger-dependency-implies-weaker
+ xs-vcs-header-in-debian-control
 References: Debian Bug#30020, Debian Bug#409099, Debian Bug#516706,
  Debian Bug#533202, Debian Bug#557971, Debian Bug#573399, Debian Bug#580494

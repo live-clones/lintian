@@ -10,7 +10,8 @@ Build-Depends: debhelper (>= 7.0.50~),
  sparc i386 amd64
  ]
 Build-Depends-Indep: perl (> 5.8)
-X-VCS-Svn: svn://svn.example.com/{$srcpkg}/trunk
+XS-Vcs-Svn: svn://svn.example.com/{$srcpkg}/trunk
+
 
 Package: {$srcpkg}
 Section: {$section}
