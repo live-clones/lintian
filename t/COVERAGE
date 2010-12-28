@@ -394,8 +394,6 @@ shared-libs shlib-with-executable-bit
 shared-libs shlibs-declares-dependency-on-other-package
 shared-libs symbols-declared-but-not-shlib
 shared-libs symbols-declares-dependency-on-other-package
-shared-libs symbols-file-contains-current-version-with-debian-revision
-shared-libs symbols-file-contains-debian-revision
 shared-libs syntax-error-in-symbols-file
 shared-libs udeb-postinst-must-not-call-ldconfig
 shared-libs unknown-meta-field-in-symbols-file
@@ -568,8 +566,6 @@ libbaz
   shlib-missing-in-symbols-control-file
   shlib-with-executable-bit
   shlibs-declares-dependency-on-other-package
-  symbols-file-contains-current-version-with-debian-revision
-  symbols-file-contains-debian-revision
   unused-shlib-entry-in-control-file
 
 maintainer-scripts

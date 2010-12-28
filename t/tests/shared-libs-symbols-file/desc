@@ -1,0 +1,8 @@
+Testname: shared-libs-symbols-file
+Sequence: 6000
+Version: 1.0-1
+Type: non-native
+Description: Test checks related to symbols files
+Test-For: 
+ symbols-file-contains-current-version-with-debian-revision
+ symbols-file-contains-debian-revision
