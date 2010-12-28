@@ -240,8 +240,6 @@ debconf using-question-in-extended-description-in-templates
 
 debhelper uses-dh-python-with-no-pycompat
 
-etcfiles file-in-etc-not-marked-as-conffile
-
 fields build-depends-indep-without-arch-indep
 fields dbg-package-missing-depends
 fields debug-package-should-be-priority-extra
@@ -510,7 +508,6 @@ debug
   unused-shlib-entry-in-symbols-control-file
 
 etcfiles
-  file-in-etc-not-marked-as-conffile
   file-missing-in-md5sums
   malformed-md5sums-control-file
   md5sum-mismatch
