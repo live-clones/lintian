@@ -1,0 +1,6 @@
+Testname: md5sums-missing
+Sequence: 6000
+Version: 1.0
+Description: Test of missing md5sums file
+Test-For:
+ no-md5sums-control-file

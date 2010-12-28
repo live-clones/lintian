@@ -307,8 +307,6 @@ init.d postrm-does-not-call-updaterc.d-for-init.d-script
 init.d preinst-calls-updaterc.d
 init.d prerm-calls-updaterc.d
 
-md5sums no-md5sums-control-file
-
 menu-format deprecated-kdelnk-file
 menu-format desktop-contains-deprecated-header
 menu-format desktop-entry-missing-required-key
@@ -433,7 +431,6 @@ binary
   menu-item-uses-apps-section
   menu-item-uses-windowmanagers-section
   menu-method-should-include-menu-h
-  no-md5sums-control-file
   non-wm-in-windowmanager-menu-section
   non-wm-module-in-wm-modules-menu-section
   old-fsf-address-in-copyright-file
