@@ -247,11 +247,6 @@ fields depends-exclusively-on-makedev
 fields depends-on-old-emacs
 fields depends-on-python-minimal
 fields malformed-dm-upload-allowed
-fields package-depends-on-multiple-libpng-versions
-fields package-depends-on-multiple-libstdc-versions
-fields package-depends-on-multiple-tcl-versions
-fields package-depends-on-multiple-tk-versions
-fields package-depends-on-multiple-tkx-versions
 fields redundant-bugs-field
 fields redundant-origin-field
 fields unknown-section
@@ -609,11 +604,6 @@ maintainer-scripts
 relations
   depends-exclusively-on-makedev
   depends-on-old-emacs
-  package-depends-on-multiple-libpng-versions
-  package-depends-on-multiple-libstdc-versions
-  package-depends-on-multiple-tcl-versions
-  package-depends-on-multiple-tk-versions
-  package-depends-on-multiple-tkx-versions
   quilt-build-dep-but-no-series-file
   redundant-bugs-field
   redundant-origin-field
