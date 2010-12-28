@@ -307,10 +307,6 @@ init.d postrm-does-not-call-updaterc.d-for-init.d-script
 init.d preinst-calls-updaterc.d
 init.d prerm-calls-updaterc.d
 
-md5sums file-missing-in-md5sums
-md5sums malformed-md5sums-control-file
-md5sums md5sum-mismatch
-md5sums md5sums-lists-nonexisting-file
 md5sums no-md5sums-control-file
 
 menu-format deprecated-kdelnk-file
@@ -498,10 +494,6 @@ debug
   unused-shlib-entry-in-symbols-control-file
 
 etcfiles
-  file-missing-in-md5sums
-  malformed-md5sums-control-file
-  md5sum-mismatch
-  md5sums-lists-nonexisting-file
   run-parts-cron-filename-contains-full-stop
 
 fields
