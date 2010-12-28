@@ -1,4 +1,4 @@
-Last generated 2010-12-27
+Last generated 2010-12-28
 
 The following tags are not tested by the test suite:
 
@@ -400,7 +400,6 @@ shared-libs sharedobject-in-library-directory-missing-soname
 shared-libs shlib-missing-in-control-file
 shared-libs shlib-missing-in-symbols-control-file
 shared-libs shlib-with-executable-bit
-shared-libs shlib-with-non-pic-code
 shared-libs shlibs-declares-dependency-on-other-package
 shared-libs symbols-declared-but-not-shlib
 shared-libs symbols-declares-dependency-on-other-package
@@ -578,7 +577,6 @@ libbaz
   shlib-missing-in-control-file
   shlib-missing-in-symbols-control-file
   shlib-with-executable-bit
-  shlib-with-non-pic-code
   shlibs-declares-dependency-on-other-package
   symbols-file-contains-current-version-with-debian-revision
   symbols-file-contains-debian-revision
