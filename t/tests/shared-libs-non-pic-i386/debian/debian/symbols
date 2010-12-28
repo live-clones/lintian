@@ -1,2 +1,2 @@
-libbaz3.so libfoo #MINVER#
+libbaz3.so libbaz3-1 #MINVER#
  pw@Base 1.0
