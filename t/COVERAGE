@@ -67,7 +67,6 @@ fields no-version-field
 fields obsolete-field
 fields old-versioned-python-dependency
 fields package-depends-on-an-x-font-package
-fields package-depends-on-multiple-tclx-versions
 fields package-not-lowercase
 fields package-superseded-by-perl
 fields source-field-does-not-match-pkg-name

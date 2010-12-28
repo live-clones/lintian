@@ -6,5 +6,6 @@ Test-For:
   package-depends-on-multiple-libpng-versions
   package-depends-on-multiple-libstdc-versions
   package-depends-on-multiple-tcl-versions
+  package-depends-on-multiple-tclx-versions
   package-depends-on-multiple-tk-versions
   package-depends-on-multiple-tkx-versions
