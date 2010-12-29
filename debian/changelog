@@ -6,6 +6,7 @@ lintian (2.4.4) UNRELEASED; urgency=low
       - depends-on-specific-java-doc-package
       - unneeded-build-dep-on-quilt
       - description-synopsis-starts-with-article
+      - needless-dependency-on-jre
 
   * checks/*:
     + [NT] Use the new pre-sorted file {index,info} when iterating over files.
@@ -30,6 +31,7 @@ lintian (2.4.4) UNRELEASED; urgency=low
       classpath-doc instead of the default-jdk-doc metapackage.
       (Closes: #593837)
     + [NT] Fixed spelling of metapackage in tag descriptions.
+    + [NT] Added needless-dependency-on-jre tag.
   * checks/files{,.desc}:
     + [NT] Fixed false-positive extra-license-file for license.ui files.
       Thanks to Jeremy Sanders for the report.  (Closes: #595941)

@@ -1007,3 +1007,15 @@ Info: The package should use default-jdk-doc instead of classpath-doc
  or openjdk-X-doc to ease transitions when the providing doc package
  is replaced (e.g. openjdk-6-doc being replaced by openjdk-7-doc).
 
+Tag: needless-dependency-on-jre
+Severity: normal
+Certainty: possible
+Info: The package appear to be a Java library and depending on one
+ or more JRE/JDK packages. As of 05 Apr 2010, the Java Policy no
+ longer mandates that Java libraries depend on Java Runtimes.
+ .
+ If there is a valid reason for this dependency, please override
+ the tag.
+Ref: http://packages.qa.debian.org/j/java-common/news/20100405T221415Z.html,
+ http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=227587
+

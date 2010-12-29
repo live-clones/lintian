@@ -123,6 +123,15 @@ our %known_tkxs = map { $_ => 1 }
 our %known_libpngs = map { $_ => 1 }
     ( 'libpng12-0', 'libpng2', 'libpng3', );
 
+our @known_java_pkg = map { qr/$_/ }
+    ('default-jre(?:-headless)?', 'default-jdk', # default java
+     'java\d*-runtime(?:-headless)?', # java-runtime and javaX-runtime alternatives (virtual)
+     '(openjdk-|sun-java)\d+-jre(?:-headless)?', '(openjdk-|sun-java)\d+-jdk', # openjdk-X and sun-javaX
+     'gcj-(?:\d+\.\d+-)?jre(?:-headless)?', 'gcj-(?:\d+\.\d+-)?jdk', # gcj
+     'gij', 'java-compat(?:-dev|-headless)?', # deprecated/transitional packages
+     'kaffe', 'cacao', 'jamvm', 'classpath', # deprecated packages (removed in Squeeze)
+    );
+
 # Mapping of package names to section names
 my @NAME_SECTION_MAPPINGS = (
     [ qr/-docs?$/                      => 'doc'      ],
@@ -518,10 +527,13 @@ if ($type eq 'binary') {
 }
 if (($type eq "binary") || ($type eq 'udeb')) {
 	my (%deps, %fields, %parsed);
+	my $javalib = 0;
+	$javalib = 1 if($pkg =~ m/^lib.*-(?:java|gcj)$/o);
 	for my $field (qw(depends pre-depends recommends suggests conflicts provides enhances replaces breaks)) {
 		next unless defined $info->field($field);
 		#Get data and clean it
 		my $data = $info->field($field);;
+		my $javadep = 0;
 		unfold($field, \$data);
 		$fields{$field} = $data;
 
@@ -645,6 +657,17 @@ if (($type eq "binary") || ($type eq 'udeb')) {
 				tag "depends-on-specific-java-doc-package", "$field"
 				    if(&$is_dep_field($field) && $pkg ne 'default-jdk-doc'
 				       && ($d_pkg eq 'classpath-doc' || $d_pkg =~ m/openjdk-\d+-doc/o));
+
+
+				if($javalib && $field eq 'depends'){
+				    foreach my $reg (@known_java_pkg){
+					if($d_pkg =~ m/$reg/){
+					    $javadep++;
+					    last;
+					}
+
+				    }
+				}
 			}
 
 			for my $pkg (@seen_obsolete_packages) {
@@ -655,6 +678,11 @@ if (($type eq "binary") || ($type eq 'udeb')) {
 					tag "ored-depends-on-obsolete-package", "$field: $pkg";
 				}
 			}
+
+			# Only emit the tag if all the alternatives are JVM/JRE/JDKs
+			# - assume that <some-lib> | openjdk-6-jre-headless makes sense for now.
+			tag "needless-dependency-on-jre"
+			    if (scalar(@alternatives) == $javadep);
 		}
 		tag "package-depends-on-multiple-libstdc-versions", @seen_libstdcs
 		    if (scalar @seen_libstdcs > 1);
