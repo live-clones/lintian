@@ -128,7 +128,7 @@ our @known_java_pkg = map { qr/$_/ }
      'java\d*-runtime(?:-headless)?', # java-runtime and javaX-runtime alternatives (virtual)
      '(openjdk-|sun-java)\d+-jre(?:-headless)?', '(openjdk-|sun-java)\d+-jdk', # openjdk-X and sun-javaX
      'gcj-(?:\d+\.\d+-)?jre(?:-headless)?', 'gcj-(?:\d+\.\d+-)?jdk', # gcj
-     'gij', 'java-compat(?:-dev|-headless)?', # deprecated/transitional packages
+     'gij', 'java-gcj-compat(?:-dev|-headless)?', # deprecated/transitional packages
      'kaffe', 'cacao', 'jamvm', 'classpath', # deprecated packages (removed in Squeeze)
     );
 
