@@ -65,6 +65,8 @@ lintian (2.4.4) UNRELEASED; urgency=low
   * data/fields/obsolete-packages:
     + [NT] Added default-jdk-builddep.  See README.gcj-native-transition
       in java-common for the replacement.
+  * data/spelling/corrections:
+    + [NT] Added more corrections.
 
   * debian/control:
     + [RA] Add the build dependencies required to run the test suite
