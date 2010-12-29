@@ -1,0 +1,2 @@
+E: symlink-outside-usd: usr-share-doc-symlink-points-outside-of-usr-share-doc ../../lib/symlink-outside-usd/copyright
+E: symlink-to-foreign: usr-share-doc-symlink-to-foreign-package foreign-package

@@ -1,0 +1,7 @@
+Testname: copyright-file-symlink
+Sequence: 6000
+Version: 1.0
+Description: Test for symlinked copyright files
+Test-For:
+ usr-share-doc-symlink-points-outside-of-usr-share-doc 
+ usr-share-doc-symlink-to-foreign-package

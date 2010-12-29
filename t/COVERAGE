@@ -1,4 +1,4 @@
-Last generated 2010-12-28
+Last generated 2010-12-29
 
 The following tags are not tested by the test suite:
 
@@ -26,8 +26,6 @@ control-files unknown-control-file
 
 copyright-file copyright-does-not-refer-to-common-license-file
 copyright-file copyright-should-refer-to-common-license-file-for-lgpl
-copyright-file usr-share-doc-symlink-points-outside-of-usr-share-doc
-copyright-file usr-share-doc-symlink-to-foreign-package
 
 cruft documentation-package-not-architecture-independent
 cruft source-contains-prebuilt-windows-binary
