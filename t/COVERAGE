@@ -386,8 +386,6 @@ shared-libs unknown-meta-field-in-symbols-file
 shared-libs unused-shlib-entry-in-control-file
 shared-libs unused-shlib-entry-in-symbols-control-file
 
-watch-file debian-watch-file-specifies-old-upstream-version
-
 Breakdown of remaining tags in legacy test suite by test case:
 
 binary
@@ -583,7 +581,6 @@ relations
 
 scripts
   calls-suidperl-directly
-  debian-watch-file-specifies-old-upstream-version
   duplicate-updaterc.d-calls-in-postrm
   executable-is-not-world-readable
   init.d-script-has-bad-lsb-line

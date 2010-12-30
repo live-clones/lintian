@@ -1,0 +1,14 @@
+{$srcpkg} ({$version}) unstable; urgency=low
+
+  * New upstream release.
+  * Lintian Test Suite.
+  * Test: {$testname}
+  * We forgot to update the watch file, lalala.
+
+ -- {$author}  {$date}
+
+{$srcpkg} (1.0-1) unstable; urgency=low
+
+  * An earlier non-native version.
+
+ -- {$author}  Tue,  1 Jan 2008 22:45:57 +0000
