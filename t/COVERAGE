@@ -241,7 +241,6 @@ fields dbg-package-missing-depends
 fields debug-package-should-be-priority-extra
 fields depends-exclusively-on-makedev
 fields depends-on-old-emacs
-fields depends-on-python-minimal
 fields malformed-dm-upload-allowed
 fields redundant-bugs-field
 fields redundant-origin-field
@@ -490,7 +489,6 @@ debug
 etcfiles
 
 fields
-  depends-on-python-minimal
   unknown-section
 
 filenames
