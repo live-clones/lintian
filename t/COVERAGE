@@ -205,7 +205,6 @@ control-files control-file-has-bad-permissions
 control-files control-file-is-empty
 
 copyright-file old-fsf-address-in-copyright-file
-copyright-file usr-share-doc-symlink-without-dependency
 
 debconf config-does-not-load-confmodule
 debconf debconf-config-not-executable
@@ -580,7 +579,6 @@ relations
   quilt-build-dep-but-no-series-file
   redundant-bugs-field
   redundant-origin-field
-  usr-share-doc-symlink-without-dependency
   versioned-dependency-satisfied-by-perl
 
 scripts

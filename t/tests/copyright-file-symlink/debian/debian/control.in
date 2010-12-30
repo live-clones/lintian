@@ -6,23 +6,34 @@ Standards-Version: {$standards_version}
 Build-Depends: debhelper (>= 7.0.50~)
 
 Package: symlink-to-foreign
-Architecture: {$architecture}
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, foreign-package
+Architecture: all
+Depends: $\{misc:Depends\}, foreign-package
 Description: {$description} (foreign)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may
  be an empty package.
  .
- Foreign
+ Foreign.
 
 Package: symlink-outside-usd
-Architecture: {$architecture}
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Architecture: all
+Depends: $\{misc:Depends\}
 Description: {$description} (usd)
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may
  be an empty package.
  .
- USD
+ USD.
+
+Package: symlink-without-depends
+Architecture: all
+Depends: $\{misc:Depends\}
+Description: {$description} (no-deepnds)
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+ .
+ Symlinks without dependency.
