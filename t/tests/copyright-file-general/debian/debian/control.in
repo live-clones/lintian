@@ -27,6 +27,17 @@ Description: checks inclusion of GPL in full text
  things.  It should not be installed like a regular package.  It may
  be an empty package.
 
+Package: copyright-full-lgpl
+Architecture: all
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Description: checks inclusion of LGPL in full text
+ Tests the tag for including all of the LGPL.
+ .
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+
 Package: copyright-full-gfdl
 Architecture: all
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
@@ -166,6 +177,18 @@ Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: checks for perl packages not pointing to common-licenses
  Packages under the "same terms as Perl itself" should reference a
  license in common-licenses.
+ .
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+
+Package: copyright-poor-common-licenses
+Architecture: all
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Description: checks not referring to common licenses
+ Packages should refer to common licenses with full path if they
+ use a common license.
  .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd

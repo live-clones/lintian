@@ -7,6 +7,7 @@ E: copyright-full-gpl-2: copyright-file-contains-full-gpl-license
 E: copyright-full-gpl-2: copyright-should-refer-to-common-license-file-for-lgpl
 E: copyright-full-gpl: copyright-file-contains-full-gpl-license
 E: copyright-full-gpl: copyright-should-refer-to-common-license-file-for-gpl
+E: copyright-full-lgpl: copyright-should-refer-to-common-license-file-for-lgpl
 E: copyright-misc-errors: copyright-refers-to-compressed-license usr/share/common-licenses/BSD.gz
 E: copyright-misc-errors: copyright-refers-to-incorrect-directory usr/share/common-licences
 E: copyright-misc-errors: copyright-refers-to-old-directory
@@ -15,6 +16,7 @@ E: copyright-old-style: FSSTND-dir-in-usr usr/doc/
 E: copyright-old-style: old-style-copyright-file
 E: copyright-php: copyright-refers-to-bad-php-license
 E: copyright-php: copyright-refers-to-problematic-php-license
+E: copyright-poor-common-licenses: copyright-should-refer-to-common-license-file-for-gpl
 E: copyright-symlink: copyright-file-is-symlink
 W: copyright-compressed: copyright-without-copyright-notice
 W: copyright-full-apache-2: copyright-without-copyright-notice
@@ -24,3 +26,4 @@ W: copyright-misc-errors: copyright-has-url-from-dh_make-boilerplate
 W: copyright-misc-errors: copyright-refers-to-deprecated-bsd-license-file
 W: copyright-misc-errors: copyright-refers-to-nonexistent-license-file usr/share/common-licenses/GPL2
 W: copyright-old-style: copyright-without-copyright-notice
+W: copyright-poor-common-licenses: copyright-does-not-refer-to-common-license-file /GPL-3

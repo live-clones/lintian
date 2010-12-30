@@ -24,9 +24,6 @@ control-files control-file-has-bad-owner
 control-files not-allowed-control-file
 control-files unknown-control-file
 
-copyright-file copyright-does-not-refer-to-common-license-file
-copyright-file copyright-should-refer-to-common-license-file-for-lgpl
-
 cruft documentation-package-not-architecture-independent
 cruft source-contains-prebuilt-windows-binary
 

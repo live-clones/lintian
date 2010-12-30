@@ -5,6 +5,7 @@ Description: Test checking of copyright files
 Test-For:
  FSSTND-dir-in-usr
  copyright-contains-dh-make-perl-boilerplate
+ copyright-does-not-refer-to-common-license-file
  copyright-file-compressed
  copyright-file-contains-full-apache-2-license
  copyright-file-contains-full-gfdl-license
@@ -21,6 +22,7 @@ Test-For:
  copyright-refers-to-problematic-php-license
  copyright-should-refer-to-common-license-file-for-gfdl
  copyright-should-refer-to-common-license-file-for-gpl
+ copyright-should-refer-to-common-license-file-for-lgpl
  copyright-without-copyright-notice
  debian-copyright-file-uses-obsolete-national-encoding
  old-style-copyright-file
