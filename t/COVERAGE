@@ -1,4 +1,4 @@
-Last generated 2010-12-29
+Last generated 2010-12-30
 
 The following tags are not tested by the test suite:
 
@@ -279,7 +279,6 @@ files package-installs-into-etc-gconf-schemas
 files package-installs-nonbinary-perl-in-usr-lib-perl5
 files package-installs-packlist
 files package-installs-python-pyc
-files run-parts-cron-filename-contains-full-stop
 files script-in-usr-share-doc
 files script-with-language-extension
 files setuid-binary
@@ -489,7 +488,6 @@ debug
   unused-shlib-entry-in-symbols-control-file
 
 etcfiles
-  run-parts-cron-filename-contains-full-stop
 
 fields
   depends-on-python-minimal
