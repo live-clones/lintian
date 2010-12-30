@@ -200,7 +200,6 @@ changelog-file debian-news-file-not-compressed
 changelog-file wrong-name-for-debian-news-file
 
 control-file debian-control-file-uses-obsolete-national-encoding
-control-file section-area-mismatch
 
 control-files control-file-has-bad-permissions
 control-files control-file-is-empty
@@ -244,7 +243,6 @@ fields depends-on-old-emacs
 fields malformed-dm-upload-allowed
 fields redundant-bugs-field
 fields redundant-origin-field
-fields unknown-section
 fields versioned-dependency-satisfied-by-perl
 fields wrong-debian-qa-address-set-as-maintainer
 fields wrong-debian-qa-group-name
@@ -489,7 +487,6 @@ debug
 etcfiles
 
 fields
-  unknown-section
 
 filenames
   bad-menu-file-name
@@ -583,7 +580,6 @@ relations
   quilt-build-dep-but-no-series-file
   redundant-bugs-field
   redundant-origin-field
-  section-area-mismatch
   usr-share-doc-symlink-without-dependency
   versioned-dependency-satisfied-by-perl
 
