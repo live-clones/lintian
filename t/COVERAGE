@@ -1,4 +1,4 @@
-Last generated 2010-12-30
+Last generated 2010-12-31
 
 The following tags are not tested by the test suite:
 
@@ -190,7 +190,6 @@ changelog-file changelog-file-missing-in-native-package
 changelog-file changelog-file-not-compressed
 changelog-file debian-changelog-file-contains-invalid-email-address
 changelog-file debian-changelog-file-is-a-symlink
-changelog-file debian-changelog-file-missing
 changelog-file debian-changelog-file-missing-or-wrong-name
 changelog-file debian-changelog-file-uses-obsolete-national-encoding
 changelog-file debian-news-file-not-compressed
@@ -522,7 +521,6 @@ foo++
 libbaz
   control-file-has-bad-permissions
   debian-changelog-file-is-a-symlink
-  debian-changelog-file-missing
   debug-package-should-be-priority-extra
   duplicate-entry-in-shlibs-control-file
   file-directly-in-usr-share-doc
