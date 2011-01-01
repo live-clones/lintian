@@ -357,7 +357,6 @@ scripts shell-script-fails-syntax-check
 scripts suid-perl-script-but-no-perl-suid-dep
 scripts update-alternatives-remove-called-in-postrm
 
-shared-libs duplicate-entry-in-shlibs-control-file
 shared-libs duplicate-entry-in-symbols-control-file
 shared-libs invalid-template-id-in-symbols-file
 shared-libs ldconfig-symlink-missing-for-shlib
@@ -510,7 +509,6 @@ libbaz
   control-file-has-bad-permissions
   debian-changelog-file-is-a-symlink
   debug-package-should-be-priority-extra
-  duplicate-entry-in-shlibs-control-file
   file-directly-in-usr-share-doc
   ldconfig-symlink-missing-for-shlib
   maintainer-shell-script-fails-syntax-check
