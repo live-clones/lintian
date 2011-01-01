@@ -234,7 +234,6 @@ fields build-depends-indep-without-arch-indep
 fields dbg-package-missing-depends
 fields debug-package-should-be-priority-extra
 fields depends-exclusively-on-makedev
-fields depends-on-old-emacs
 fields malformed-dm-upload-allowed
 fields redundant-bugs-field
 fields redundant-origin-field
@@ -566,7 +565,6 @@ maintainer-scripts
 
 relations
   depends-exclusively-on-makedev
-  depends-on-old-emacs
   quilt-build-dep-but-no-series-file
   redundant-bugs-field
   redundant-origin-field

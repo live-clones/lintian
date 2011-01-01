@@ -9,6 +9,7 @@ Test-For:
  depends-on-essential-package-without-using-version
  depends-on-metapackage
  depends-on-obsolete-package
+ depends-on-old-emacs
  depends-on-python-minimal
  lib-recommends-documentation
  needlessly-depends-on-awk

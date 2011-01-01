@@ -9,7 +9,7 @@ Package: {$srcpkg}
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, xorg, bash,
  conflict-dep, gawk | awk, new-package | xbase-clients, {$srcpkg},
- gaim
+ gaim, emacs21, emacs22
 Breaks: package-without-version, {$srcpkg} (<< 0.1)
 Conflicts: package-with-version (<< 3.0), conflict-dep
 Description: {$description}
