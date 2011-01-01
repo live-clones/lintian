@@ -233,7 +233,6 @@ debhelper uses-dh-python-with-no-pycompat
 fields build-depends-indep-without-arch-indep
 fields dbg-package-missing-depends
 fields debug-package-should-be-priority-extra
-fields depends-exclusively-on-makedev
 fields malformed-dm-upload-allowed
 fields redundant-bugs-field
 fields redundant-origin-field
@@ -564,7 +563,6 @@ maintainer-scripts
   wrong-debian-qa-group-name
 
 relations
-  depends-exclusively-on-makedev
   quilt-build-dep-but-no-series-file
   redundant-bugs-field
   redundant-origin-field
