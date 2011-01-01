@@ -365,7 +365,6 @@ shared-libs postinst-must-call-ldconfig
 shared-libs postrm-has-useless-call-to-ldconfig
 shared-libs sharedobject-in-library-directory-missing-soname
 shared-libs shlib-with-executable-bit
-shared-libs shlibs-declares-dependency-on-other-package
 shared-libs symbols-declared-but-not-shlib
 shared-libs symbols-declares-dependency-on-other-package
 shared-libs syntax-error-in-symbols-file
@@ -521,7 +520,6 @@ libbaz
   postinst-must-call-ldconfig
   postinst-should-not-set-usr-doc-link
   shlib-with-executable-bit
-  shlibs-declares-dependency-on-other-package
 
 maintainer-scripts
   ancient-dpkg-epoch-check

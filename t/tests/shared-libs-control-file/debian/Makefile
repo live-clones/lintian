@@ -1,7 +1,7 @@
 CC=gcc
 CFLAGS=-Wall -Winline -O2 -fPIC
 
-SONAMES:= libnoshf.so.1 libeshf.so.1 libunshf.so.1
+SONAMES:= libnoshf.so.1 libeshf.so.1 libunshf.so.1 libfdshf.so.1
 LIBFILES:= $(patsubst %,%.0.1, $(SONAMES))
 
 all: $(LIBFILES)

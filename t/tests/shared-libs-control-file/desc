@@ -5,4 +5,5 @@ Description: Test checks related to shlibs files
 Test-For: 
  no-shlibs-control-file
  shlib-missing-in-control-file
+ shlibs-declares-dependency-on-other-package
  unused-shlib-entry-in-control-file
