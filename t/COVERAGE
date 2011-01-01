@@ -371,7 +371,6 @@ shared-libs symbols-declares-dependency-on-other-package
 shared-libs syntax-error-in-symbols-file
 shared-libs udeb-postinst-must-not-call-ldconfig
 shared-libs unknown-meta-field-in-symbols-file
-shared-libs unused-shlib-entry-in-control-file
 shared-libs unused-shlib-entry-in-symbols-control-file
 
 Breakdown of remaining tags in legacy test suite by test case:
@@ -523,7 +522,6 @@ libbaz
   postinst-should-not-set-usr-doc-link
   shlib-with-executable-bit
   shlibs-declares-dependency-on-other-package
-  unused-shlib-entry-in-control-file
 
 maintainer-scripts
   ancient-dpkg-epoch-check

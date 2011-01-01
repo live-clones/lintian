@@ -8,4 +8,5 @@ override_dh_builddeb:
 	# before installing them.
 	rm -f debian/libnoshf1/DEBIAN/shlibs
 	echo "# aloha" > debian/libeshf1/DEBIAN/shlibs
+	echo "libfoo 1 libunshf1" >> debian/libunshf1/DEBIAN/shlibs
 	dh_builddeb
