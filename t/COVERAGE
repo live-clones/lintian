@@ -1,4 +1,4 @@
-Last generated 2010-12-31
+Last generated 2011-01-01
 
 The following tags are not tested by the test suite:
 
@@ -365,7 +365,6 @@ shared-libs duplicate-entry-in-shlibs-control-file
 shared-libs duplicate-entry-in-symbols-control-file
 shared-libs invalid-template-id-in-symbols-file
 shared-libs ldconfig-symlink-missing-for-shlib
-shared-libs no-symbols-control-file
 shared-libs pkg-has-symbols-control-file-but-no-shared-libs
 shared-libs postinst-must-call-ldconfig
 shared-libs postrm-has-useless-call-to-ldconfig
@@ -528,7 +527,6 @@ libbaz
   maintainer-shell-script-fails-syntax-check
   missing-dependency-on-perlapi
   missing-depends-line
-  no-symbols-control-file
   package-name-doesnt-match-sonames
   postinst-must-call-ldconfig
   postinst-should-not-set-usr-doc-link

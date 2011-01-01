@@ -4,5 +4,6 @@ Version: 1.0-1
 Type: non-native
 Description: Test checks related to symbols files
 Test-For: 
+ no-symbols-control-file
  symbols-file-contains-current-version-with-debian-revision
  symbols-file-contains-debian-revision
