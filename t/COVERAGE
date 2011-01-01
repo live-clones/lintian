@@ -233,7 +233,6 @@ debhelper uses-dh-python-with-no-pycompat
 fields build-depends-indep-without-arch-indep
 fields dbg-package-missing-depends
 fields debug-package-should-be-priority-extra
-fields malformed-dm-upload-allowed
 fields redundant-bugs-field
 fields redundant-origin-field
 fields versioned-dependency-satisfied-by-perl
@@ -512,7 +511,6 @@ filenames
 foo++
   debian-changelog-file-uses-obsolete-national-encoding
   debian-control-file-uses-obsolete-national-encoding
-  malformed-dm-upload-allowed
   wrong-debian-qa-address-set-as-maintainer
 
 libbaz

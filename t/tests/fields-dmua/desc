@@ -1,0 +1,6 @@
+Testname: fields-dmua
+Sequence: 6000
+Version: 1.0
+Description: Test for invalid DMUA field
+Test-For: 
+ malformed-dm-upload-allowed
