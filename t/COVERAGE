@@ -367,7 +367,6 @@ shared-libs postinst-must-call-ldconfig
 shared-libs postrm-has-useless-call-to-ldconfig
 shared-libs sharedobject-in-library-directory-missing-soname
 shared-libs shlib-missing-in-control-file
-shared-libs shlib-missing-in-symbols-control-file
 shared-libs shlib-with-executable-bit
 shared-libs shlibs-declares-dependency-on-other-package
 shared-libs symbols-declared-but-not-shlib
@@ -527,7 +526,6 @@ libbaz
   postinst-must-call-ldconfig
   postinst-should-not-set-usr-doc-link
   shlib-missing-in-control-file
-  shlib-missing-in-symbols-control-file
   shlib-with-executable-bit
   shlibs-declares-dependency-on-other-package
   unused-shlib-entry-in-control-file

@@ -1,0 +1,11 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@
+
+override_dh_builddeb:
+	# Apparently some of the tools are too smart to install
+	# a redundant/empty symbols file in the package, so here
+	# is a non-empty useless symbols file!
+	echo "# Aloha!" > debian/libesym1/DEBIAN/symbols
+	dh_builddeb

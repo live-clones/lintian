@@ -3,7 +3,7 @@ Priority: extra
 Section: libs
 Maintainer: {$author}
 Standards-Version: {$standards_version}
-Build-Depends: debhelper (>= 7)
+Build-Depends: debhelper (>= 7.0.50~)
 
 Package: libfoo1
 Architecture: any
@@ -24,3 +24,14 @@ Description: {$description} (missing)
  things.  It should not be installed like a regular package.
  .
  Checks for missing symbol file.
+
+
+Package: libesym1
+Architecture: any
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Description: {$description} (empty symbols)
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.
+ .
+ Checks for empty symbol file/missing shlib in symbols file.

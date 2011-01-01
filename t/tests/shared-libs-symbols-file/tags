@@ -1,3 +1,4 @@
 E: libfoo1: symbols-file-contains-current-version-with-debian-revision on symbol e@Base
 I: libsym1: no-symbols-control-file usr/lib/libsym.so.1.0.1
+W: libesym1: shlib-missing-in-symbols-control-file libesym 1 for usr/lib/libesym.so.1.0.1
 W: libfoo1: symbols-file-contains-debian-revision on symbol energy@Base

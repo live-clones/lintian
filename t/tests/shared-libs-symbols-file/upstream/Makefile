@@ -1,16 +1,13 @@
 CC=gcc
 CFLAGS=-Wall -Winline -O2 -fPIC
 
-FOO_SONAME:= libfoo.so.1
-SYM_SONAME:= libsym.so.1
+SONAMES:= libfoo.so.1 libsym.so.1 libesym.so.1
+LIBFILES:= $(patsubst %,%.0.1, $(SONAMES))
 
-all: libfoo.so.1.0.1 libsym.so.1.0.1
+all: $(LIBFILES)
 
-libfoo.so.1.0.1: code.o
-	$(CC) -o $@ -shared -Wl,-soname,$(FOO_SONAME) $^ -lc
-
-libsym.so.1.0.1: code.o
-	$(CC) -o $@ -shared -Wl,-soname,$(SYM_SONAME) $^ -lc
+$(LIBFILES): code.o
+	$(CC) -o $@ -shared -Wl,-soname,$(patsubst %.0.1,%,$@) $^ -lc
 
 clean:
 	rm -f *.a *.o *.so*
@@ -18,7 +15,8 @@ clean:
 install: all
 	install -m 0755 -d $(DESTDIR)/usr/lib
 	install -m 0644 *.so* $(DESTDIR)/usr/lib
-	ln -s libfoo.so.1.0.1 $(DESTDIR)/usr/lib/$(FOO_SONAME)
-	ln -s libsym.so.1.0.1 $(DESTDIR)/usr/lib/$(SYM_SONAME)
+	for FILE in $(SONAMES) ; do \
+	    ln -s $${FILE}.0.1 $(DESTDIR)/usr/lib/$$FILE ; \
+	done
 
 .PHONY: install clean
