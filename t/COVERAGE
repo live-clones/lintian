@@ -361,7 +361,6 @@ shared-libs duplicate-entry-in-shlibs-control-file
 shared-libs duplicate-entry-in-symbols-control-file
 shared-libs invalid-template-id-in-symbols-file
 shared-libs ldconfig-symlink-missing-for-shlib
-shared-libs pkg-has-symbols-control-file-but-no-shared-libs
 shared-libs postinst-must-call-ldconfig
 shared-libs postrm-has-useless-call-to-ldconfig
 shared-libs sharedobject-in-library-directory-missing-soname
@@ -461,7 +460,6 @@ debug
   duplicate-entry-in-symbols-control-file
   invalid-template-id-in-symbols-file
   missing-dependency-on-libc
-  pkg-has-symbols-control-file-but-no-shared-libs
   shared-lib-without-dependency-information
   sharedobject-in-library-directory-missing-soname
   symbols-declared-but-not-shlib

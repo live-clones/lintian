@@ -8,4 +8,5 @@ override_dh_builddeb:
 	# a redundant/empty symbols file in the package, so here
 	# is a non-empty useless symbols file!
 	echo "# Aloha!" > debian/libesym1/DEBIAN/symbols
+	echo "# Aloha!" > debian/nolibrary/DEBIAN/symbols
 	dh_builddeb

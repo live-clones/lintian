@@ -35,3 +35,13 @@ Description: {$description} (empty symbols)
  things.  It should not be installed like a regular package.
  .
  Checks for empty symbol file/missing shlib in symbols file.
+
+Package: nolibrary
+Architecture: all
+Depends: $\{misc:Depends\}
+Description: {$description} (not a library)
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.
+ .
+ Check for shipping a symbols file without a library.
