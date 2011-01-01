@@ -1,1 +1,2 @@
+E: libeshf1: shlib-missing-in-control-file libeshf 1 for usr/lib/libeshf.so.1.0.1
 E: libnoshf1: no-shlibs-control-file usr/lib/libnoshf.so.1.0.1

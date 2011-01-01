@@ -4,5 +4,8 @@
 	dh $@
 
 override_dh_builddeb:
+	# Work around "smart tools" that check the shlibs
+	# before installing them.
 	rm -f debian/libnoshf1/DEBIAN/shlibs
+	echo "# aloha" > debian/libeshf1/DEBIAN/shlibs
 	dh_builddeb
