@@ -160,7 +160,6 @@ shared-libs dev-pkg-without-shlib-symlink
 shared-libs ldconfig-symlink-before-shlib-in-deb
 shared-libs ldconfig-symlink-is-not-a-symlink
 shared-libs ldconfig-symlink-referencing-wrong-file
-shared-libs no-shlibs-control-file
 shared-libs non-dev-pkg-with-shlib-symlink
 shared-libs pkg-has-shlibs-control-file-but-no-actual-shared-libs
 shared-libs postinst-has-useless-call-to-ldconfig
