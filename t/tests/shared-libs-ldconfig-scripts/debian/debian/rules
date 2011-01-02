@@ -1,0 +1,8 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@
+
+override_dh_builddeb:
+	cp -af debian/postrm debian/postinst debian/libfoo1/DEBIAN/
+	dh_builddeb

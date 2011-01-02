@@ -163,7 +163,6 @@ shared-libs ldconfig-symlink-referencing-wrong-file
 shared-libs non-dev-pkg-with-shlib-symlink
 shared-libs pkg-has-shlibs-control-file-but-no-actual-shared-libs
 shared-libs postinst-has-useless-call-to-ldconfig
-shared-libs postrm-should-call-ldconfig
 shared-libs postrm-unsafe-ldconfig
 shared-libs preinst-calls-ldconfig
 shared-libs prerm-calls-ldconfig
@@ -359,7 +358,6 @@ scripts update-alternatives-remove-called-in-postrm
 shared-libs duplicate-entry-in-symbols-control-file
 shared-libs invalid-template-id-in-symbols-file
 shared-libs ldconfig-symlink-missing-for-shlib
-shared-libs postinst-must-call-ldconfig
 shared-libs postrm-has-useless-call-to-ldconfig
 shared-libs sharedobject-in-library-directory-missing-soname
 shared-libs shlib-with-executable-bit
@@ -513,7 +511,6 @@ libbaz
   missing-dependency-on-perlapi
   missing-depends-line
   package-name-doesnt-match-sonames
-  postinst-must-call-ldconfig
   postinst-should-not-set-usr-doc-link
   shlib-with-executable-bit
 

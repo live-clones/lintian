@@ -1,0 +1,2 @@
+E: libfoo1: postinst-must-call-ldconfig usr/lib/libfoo.so.1.0.1
+E: libfoo1: postrm-should-call-ldconfig usr/lib/libfoo.so.1.0.1

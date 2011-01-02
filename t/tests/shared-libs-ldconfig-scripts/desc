@@ -1,0 +1,7 @@
+Testname: shared-libs-ldconfig-scripts
+Sequence: 6000
+Version: 1.0
+Description: Test checks related to ldconfig in scripts
+Test-For: 
+ postinst-must-call-ldconfig
+ postrm-should-call-ldconfig
