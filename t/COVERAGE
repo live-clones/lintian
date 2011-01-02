@@ -163,7 +163,6 @@ shared-libs ldconfig-symlink-referencing-wrong-file
 shared-libs non-dev-pkg-with-shlib-symlink
 shared-libs pkg-has-shlibs-control-file-but-no-actual-shared-libs
 shared-libs postinst-has-useless-call-to-ldconfig
-shared-libs postrm-unsafe-ldconfig
 shared-libs shlib-calls-exit
 shared-libs shlib-with-bad-permissions
 shared-libs shlib-with-executable-stack
