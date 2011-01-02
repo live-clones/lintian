@@ -5,3 +5,5 @@ Description: Test checks related to ldconfig in scripts
 Test-For: 
  postinst-must-call-ldconfig
  postrm-should-call-ldconfig
+ preinst-calls-ldconfig
+ prerm-calls-ldconfig

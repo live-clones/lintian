@@ -1,7 +1,7 @@
 CC=gcc
 CFLAGS=-Wall -Winline -O2 -fPIC
 
-SONAMES:= libfoo.so.1
+SONAMES:= libfoo.so.1 libfish.so.1
 LIBFILES:= $(patsubst %,%.0.1, $(SONAMES))
 
 all: $(LIBFILES)

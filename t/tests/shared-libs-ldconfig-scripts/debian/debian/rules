@@ -4,5 +4,12 @@
 	dh $@
 
 override_dh_builddeb:
-	cp -af debian/postrm debian/postinst debian/libfoo1/DEBIAN/
+	for P in $$(dh_listpackages) ; do \
+	  for S in postinst postrm preinst prerm ; do \
+	    if [ -f debian/$${P}.$${S} ] ; then \
+	      cp -af debian/$${P}.$${S} debian/$${P}/DEBIAN/$${S} ; \
+	      chmod 0755 debian/$${P}/DEBIAN/$${S} ; \
+	    fi ; \
+	  done ; \
+	done
 	dh_builddeb
