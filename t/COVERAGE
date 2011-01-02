@@ -330,8 +330,6 @@ nmu changelog-should-not-mention-nmu
 nmu orphaned-package-should-not-have-uploaders
 nmu qa-upload-has-incorrect-version-number
 
-patch-systems quilt-build-dep-but-no-series-file
-
 po-debconf newer-debconf-templates
 po-debconf unknown-encoding-in-po-file
 
@@ -538,7 +536,6 @@ maintainer-scripts
   wrong-debian-qa-group-name
 
 relations
-  quilt-build-dep-but-no-series-file
   redundant-bugs-field
   redundant-origin-field
   versioned-dependency-satisfied-by-perl
