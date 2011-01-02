@@ -3,6 +3,7 @@ Sequence: 6000
 Version: 1.0
 Description: Test tags about files or dirs in given paths
 Test-For:
+ file-directly-in-usr-share-doc
  dir-in-usr-local
  dir-or-file-in-mnt
  dir-or-file-in-srv

@@ -7,6 +7,7 @@ bar usr/foo
 bar usr/local/foo
 bar usr/lib/debug/
 bar usr/lib/site-python/foo
+bar usr/share/doc
 bar usr/share/doc/files-foo-in-bar/examples/examples
 bar var/foo
 bar srv/foo
