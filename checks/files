@@ -761,6 +761,7 @@ foreach my $file (@{$info->sorted_index}) {
 	and not $file =~ m,^usr/share/zope/Products/.*\.(?:dtml|pt|cpt)$,
 	and not $file =~ m,/under\S+License\.docbook$,
 	and not $file =~ m,^(?:usr/)?s?bin/,
+	and not $file =~ m,^usr/games/,
 	and not $file =~ m,^usr/share/doc/[^/]+/examples/,
 	and not defined $link) {
 	tag "extra-license-file", "$file";
