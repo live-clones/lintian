@@ -1211,8 +1211,10 @@ foreach my $pkg_info ($schedule->get_all) {
     my $base;
     my $act_unpack_level;
     eval{ $lpkg = $LAB->get_lab_package($pkg, $ver, $type, $file); };
-    if($@){
-	warning("skipping $action of $long_type package $pkg: $@");
+    if(!defined($lpkg)){
+	my $err = ".";
+	$err = ": $@" if(defined($@));
+	warning("skipping $action of $long_type package $pkg$err");
 	$exit_code = 2;
 	next PACKAGE;
     }
@@ -1232,8 +1234,7 @@ foreach my $pkg_info ($schedule->get_all) {
     debug_msg(1, "Base directory in lab: $base");
 
     # unpack to requested unpack level
-    $act_unpack_level = unpack_pkg($type,$base,$file,$act_unpack_level,
-				   $unpack_level);
+    $act_unpack_level = $lpkg->unpack($unpack_level);
     if ($act_unpack_level == -1) {
 	warning("could not unpack package to desired level",
 		"skipping $action of $long_type package $pkg");
@@ -1284,7 +1285,7 @@ foreach my $pkg_info ($schedule->get_all) {
 
 		    # collect info
 		    $map->select($req);
-		    remove_status_file($base);
+		    $lpkg->remove_status_file();
 		    debug_msg(1, "Collecting info: $coll ...");
 		    my $script = "$LINTIAN_ROOT/collection/$ci->{'script'}";
 		    my $cmd = Lintian::Command::Simple->new();
@@ -1412,7 +1413,7 @@ foreach my $pkg_info ($schedule->get_all) {
 
     # clean up
     if ($act_unpack_level > $unpack_level) {
-	$act_unpack_level = clean_pkg($type,$base,$file,$act_unpack_level,$unpack_level);
+	$act_unpack_level = $lpkg->pack($unpack_level);
 	if ($act_unpack_level == -1) {
 	    warning("could not clean up laboratory for package $pkg: $!",
 		    "skipping clean up");
@@ -1422,12 +1423,11 @@ foreach my $pkg_info ($schedule->get_all) {
     }
     # if the package's basedir was not removed then run the
     # auto-remove: yes collection scripts
-    if (-d "$base") {
+    if (-d "$base" and !$keep_lab) {
 	chdir($base);
 	for my $coll (keys %collection_info) {
 	    my $ci = $collection_info{$coll};
 	    if (defined($ci->{'auto-remove'}) && $ci->{'auto-remove'} eq "yes") {
-		next if $keep_lab;
 		next unless (-f "$base/.${coll}-$ci->{'version'}");
 		my $script = "$LINTIAN_ROOT/collection/$ci->{'script'}";
 		debug_msg(1, "Auto removing: $ci->{'script'} ...");
@@ -1444,31 +1444,9 @@ foreach my $pkg_info ($schedule->get_all) {
 	chdir($LINTIAN_ROOT);
     }
 
-    # create Lintian status file
-    if (($act_unpack_level > 0) and (not -f "$base/.lintian-status")) {
-	my @stat;
-	unless (@stat = stat $file) {
-	    warning("cannot stat file $file: $!",
-		    "skipping creation of status file");
-	    $exit_code = 2;
-	    next PACKAGE;
-	}
-	my $timestamp = $stat[9];
-
-	unless (open(STATUS, '>', "$base/.lintian-status")) {
-	    warning("could not create status file $base/.lintian-status for package $pkg: $!");
-	    $exit_code = 2;
-	    next PACKAGE;
-	}
-
-	print STATUS "Lintian-Version: $LINTIAN_VERSION\n";
-	print STATUS "Lab-Format: $LAB_FORMAT\n";
-	print STATUS "Package: $pkg\n";
-	print STATUS "Version: $ver\n";
-	print STATUS "Type: $type\n";
-	print STATUS "Timestamp: $timestamp\n";
-	close(STATUS);
-    }
+    # All successful, make sure to record it so we do not recheck the same package
+    # in a later run (mostly for archive-wide checks).
+    $lpkg->update_status_file($LINTIAN_VERSION);
 }
 $TAGS->file_end();
 
