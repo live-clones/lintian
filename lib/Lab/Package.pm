@@ -30,10 +30,10 @@ Lab::Package - A package inside the Lab
  use Lab;
  
  my $lab = new Lab("dir", "dist");
- my $lpkg = $lab->get_lab_package("name", "type", "path");
- 
- # reduce unpack level of the package.
- $lpkg->reduce_unpack(1);
+ my $lpkg = $lab->get_lab_package("name", "version", "type", "path");
+
+ # Make sure the package is unpacked to at least level 1.
+ $lpkg->unpack(1) >= 1 or die("Could not unpack: $!");
  # Remove package from lab.
  $lpkg->delete_lab_entry();
 
@@ -49,8 +49,7 @@ use strict;
 
 use Util;
 use Lintian::Output qw(:messages); # debug_msg and warning
-
-# We use require since Lab also depends on us.
+use Lintian::Command qw();
 use Lab qw(:constants); # LAB_FORMAT
 
 =head1 METHODS
@@ -69,6 +68,8 @@ inside the Lab.
 Note: this method should only be used by the Lab.
 
 =cut
+
+## FIXME: relies on $ENV{LINTIAN_ROOT}
 
 sub new{
     my ($class, $lab, $pkg_name, $pkg_version, $pkg_type, $pkg_path, $base_dir) = @_;
@@ -145,7 +146,59 @@ sub delete_lab_entry {
 
 =pod
 
-=item $lpkg->reduce_unpack($new_level)
+=item $lpkg->unpack($new_level)
+
+Increases the unpack level to B<$new_level> if it is not already at
+least B<$new_level>. Returns the unpack level (which will always be at
+least B<$new_level>) on success. In case of an error, it will return
+-1 (or fail if an unknown unpack level was specified).
+
+=cut
+
+sub unpack {
+    my ($self, $new_level) = @_;
+    my $level = $self->{unpack_level};
+    my $base_dir = $self->{base_dir};
+    my $pkg_type = $self->{pkg_type};
+    my $pkg_path = $self->{pkg_path};
+
+    debug_msg(1, sprintf("Current unpack level is %d",$level));
+
+    return $level if $level >= $new_level;
+
+    $self->remove_status_file();
+
+    if ( ($level == 0) and (-d $base_dir) ) {
+        # We were lied to, there's something already there - clean it up first
+        $self->delete_lab_entry() or return -1;
+    }
+
+    if($level < 1 && $new_level >= 1){
+        # create new directory
+	debug_msg(1, "Unpacking package to level 1 ...");
+	if (($pkg_type eq 'binary') || ($pkg_type eq 'udeb')) {
+            Lintian::Command::Simple::run("$ENV{LINTIAN_ROOT}/unpack/unpack-binpkg-l1", $base_dir, $pkg_path) == 0
+		or return -1;
+	} elsif ($pkg_type eq 'changes') {
+	    Lintian::Command::spawn({}, ["$ENV{LINTIAN_ROOT}/unpack/unpack-changes-l1", $base_dir, $pkg_path])
+		or return -1;
+	} else {
+	    Lintian::Command::Simple::run("$ENV{LINTIAN_ROOT}/unpack/unpack-srcpkg-l1", $base_dir, $pkg_path) == 0
+		or return -1;
+	}
+    }
+
+    if ($new_level >= 2) {
+	fail("Requested no longer existent unpack-level $new_level");
+    }
+
+    $self->{unpack_level} = $new_level;
+    return $new_level;
+}
+
+=pod
+
+=item $lpkg->pack($new_level)
 
 Reduce the unpack level to B<$new_level>. Returns the unpack level
 after the operation has finished. If B<$new_level> is less than 1,
@@ -157,19 +210,24 @@ nothing happens and the currnet level is returned instead.
 
 =cut
 
-sub reduce_unpack {
+# TODO: is this the best way to clean dirs in perl?
+# no, look at File::Path module
+sub pack {
     my ($self, $new_level) = @_;
     my $level = $self->{unpack_level};
+
+    # Are we already more packed than requested?
     return $level if($level <= $new_level);
+
     if($new_level < 1){
-        return -1 unless($self->delete_lab_entry());
-        return 0;
+	return -1 unless($self->delete_lab_entry());
+	return 0;
     }
 
     if($new_level < 2){
-        my $base = $self->{base_dir};
-        $self->{unpack_level} = $new_level;
-        $self->remove_status_file();
+	my $base = $self->{base_dir};
+	$self->{unpack_level} = $new_level;
+	$self->remove_status_file();
 	# remove unpacked/ directory
 	debug_msg(1, "Decreasing unpack level to 1 (removing files) ...");
 	if ( -l "$base/unpacked" ) {
@@ -179,11 +237,40 @@ sub reduce_unpack {
 	} else {
 	    delete_dir("$base/unpacked") or return -1;
 	}
-        return $new_level;
+	return $new_level;
     }
 
     # This should not happen unless we implement a new unpack level.
-    fail("Unhandled reduce_unpack case to $new_level from $level");
+    fail("Unhandled pack case to $new_level from $level");
+}
+
+sub update_status_file{
+    my ($self, $lint_version) = @_;
+    my @stat;
+    my $pkg_path;
+    my $fd;
+    my $stf = "$self->{base_dir}/.lintian-status";
+    # We are not unpacked => no place to put the status file.
+    return 0 if($self->{unpack_level} < 1);
+    $pkg_path = $self->{pkg_path};
+    unless( @stat = stat($pkg_path)){
+	warning("cannot stat file $pkg_path: $!",
+		"skipping creation of status file");
+	return -1;
+    }
+    unless(open($fd, '>', $stf)){
+	warning("could not create status file $stf for package $self->{pkg_name}: $!");
+	return -1;
+    }
+
+    print $fd "Lintian-Version: $lint_version\n";
+    print $fd "Lab-Format: " . LAB_FORMAT ."\n";
+    print $fd "Package: $self->{pkg_name}\n";
+    print $fd "Version: $self->{pkg_version}\n";
+    print $fd "Type: $self->{pkg_type}\n";
+    print $fd "Timestamp: $stat[9]\n";
+    close($fd) or return -1;
+    return 1;
 }
 
 ## FIXME - does this really need to be public?
@@ -192,8 +279,8 @@ sub remove_status_file{
     my $stfile = "$self->{base_dir}/.lintian-status";
     return 1 unless( -e $stfile );
     if(!unlink($stfile)){
-        warning("cannot remove status file $stfile: $!");
-        return 0;
+	warning("cannot remove status file $stfile: $!");
+	return 0;
     }
     return 1;
 }
@@ -214,13 +301,13 @@ sub _check {
     my $act_unpack_level = 0;
     my $basedir = $self->{base_dir};
     if( -d $basedir ) {
-        my $remove_basedir = 0;
-        my $pkg_path = $self->{pkg_path};
-        my $data;
-        my $pkg_version = $self->{pkg_version};
+	my $remove_basedir = 0;
+	my $pkg_path = $self->{pkg_path};
+	my $data;
+	my $pkg_version = $self->{pkg_version};
 
-        # there's a base dir, so we assume that at least
-        # one level of unpacking has been done
+	# there's a base dir, so we assume that at least
+	# one level of unpacking has been done
 	$act_unpack_level = 1;
 
 	# lintian status file exists?
@@ -266,10 +353,10 @@ sub _check {
 	    goto REMOVE_BASEDIR;
 	}
 
-    REMOVE_BASEDIR:
+      REMOVE_BASEDIR:
 	if ($remove_basedir) {
-            my $pkg_name = $self->{pkg_name};
-            my $lab = $self->{lab};
+	    my $pkg_name = $self->{pkg_name};
+	    my $lab = $self->{lab};
 	    v_msg("Removing $pkg_name");
 	    $self->delete_lab_entry() or die("Could not remove $pkg_name from lab.");
 	    $act_unpack_level = 0;
@@ -288,3 +375,8 @@ Niels Thykier <niels@thykier.net>
 
 =cut
 
+# Local Variables:
+# indent-tabs-mode: t
+# cperl-indent-level: 4
+# End:
+# vim: sw=4 ts=8 noet fdm=marker
