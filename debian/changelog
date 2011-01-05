@@ -43,8 +43,9 @@ lintian (2.4.4) UNRELEASED; urgency=low
       the patch.  (Closes: #591331)
     + [NT] Fixed spelling of metapackage in empty-binary-package tag
       description.  (Closes: #591300)
-    + [NT] Fixed false-positive extra-license-file for games.
-      (Closes: #608866)
+    + [NT] Fixed false-positive extra-license-file for games. Instead
+      of skipping PATH directories Lintian now ignores all executable
+      files.  (Closes: #608866)
   * checks/menu-format.desc:
     + [CW] Fix several typos.
   * checks/menus.desc:
