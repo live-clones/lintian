@@ -19,13 +19,34 @@
 # MA 02110-1301, USA.
 
 package Lab;
+
 use strict;
+use base qw(Exporter);
+
+use constant LAB_FORMAT => 10;
+
+# Export now due to cicular depends between Lab and Lab::Package.
+our (@EXPORT, @EXPORT_OK, %EXPORT_TAGS);
+
+BEGIN {
+    @EXPORT = ();
+    %EXPORT_TAGS = ( 
+        constants => [qw(LAB_FORMAT)],
+        );
+    @EXPORT_OK = (
+        @{$EXPORT_TAGS{constants}}
+        );
+};
 
 use Util;
 use Lintian::Output qw(:messages);
 use Lintian::Command qw(spawn);
+use Lab::Package;
 
+use Cwd;
 use File::Temp;
+
+
 
 # Quiet "Name "main::LINTIAN_ROOT" used only once"
 () = ($main::LINTIAN_ROOT);
@@ -57,12 +78,15 @@ sub setup {
     my ( $self, $dir, $dist ) = @_;
 
     if ( $dir ) {
+         # Make sure we can always find it, even if we chdir around a lot.
+        my $absdir = Cwd::realpath($dir);
+        fail("Cannot determine the absolute path of $dir: $!") unless($absdir);
 	$self->{mode} = 'static';
-	$self->{dir} = $dir;
+	$self->{dir} = $absdir;
 	$self->{dist} = $dist;
 	
-	if (-d "$dir" && ! -d "$dir/changes") {
-	    mkdir("$dir/changes", 0777)
+	if (-d "$absdir" && ! -d "$absdir/changes") {
+	    mkdir("$absdir/changes", 0777)
 		or fail("cannot create lab directory $dir/changes");
 	}
     } else {
@@ -70,7 +94,7 @@ sub setup {
 
 	my $created = 0;
 	for (1..10) {
-	    $dir = tmpnam();
+	    $dir = tmpnam(); # [NT] Double check this - would tempdir be better? Is it always absolute?
 
 	    if ($self->setup_force( $dir, $dist )) {
 		$created = 1;
@@ -186,12 +210,6 @@ sub delete_force {
 
     v_msg("Removing $self->{dir} ...");
 
-    # since we will chdir in a moment, make the path of the lab absolute
-    unless ( $self->{dir} =~ m,^/, ) {
-	require Cwd;
-	$self->{dir} = Cwd::getcwd() . "/$self->{dir}";
-    }
-
     # chdir to root (otherwise, the shell will complain if we happen
     # to sit in the directory we want to delete :)
     chdir('/');
@@ -236,6 +254,35 @@ sub delete_force {
     $self->{dir} = "";
 
     return 1;
+}
+
+
+{
+    
+    # private helper variable.
+    my %pkg_types = (
+        'b' => 'binary',
+        'binary' => 'binary',
+        'c' => 'changes',
+        'changes' => 'changes',
+        's' => 'source',
+        'sources' => 'source',
+        'u' => 'udeb',
+        'udeb' => 'udeb',
+    );
+
+    sub get_lab_package {
+        my ($self, $pkg_name, $pkg_version, $pkg_type, $pkg_path) = @_;
+        my $vpkg_type = $pkg_types{$pkg_type};
+        my $realpath = Cwd::realpath($pkg_path);
+        my $dir;
+        fail("Unknown package type $pkg_type") unless($vpkg_type);
+        fail("Could not resolve the path of $pkg_path") unless($realpath);
+        $dir = $self->{dir} . '/' . $vpkg_type . '/' . $pkg_name;
+        return new Lab::Package($self, $pkg_name, $pkg_version, $vpkg_type,
+                                $realpath, $dir);
+              
+    }
 }
 
 1;
