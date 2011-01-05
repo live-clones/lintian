@@ -55,6 +55,8 @@ unless (defined $synopsis) {
     $description = '';
 }
 
+$description = '' unless defined($description);
+
 if ($synopsis =~ m/^\s*$/) {
     tag "description-synopsis-is-empty", "";
 } else {
