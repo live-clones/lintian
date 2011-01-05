@@ -282,10 +282,10 @@ foreach my $template (@templates) {
     # the string "for internal use".
     my ($short, $extended);
     if (defined $template->{description}) {
-        $template->{description} =~ m/^([^\n]*)\n(.*)$/s;
-        ($short, $extended) = ($1, $2);
+        ($short, $extended) = split(/\n/, $template->{description}, 2);
         unless (defined $short) {
             $short = $template->{description};
+	    $extended = '';
         }
     } else {
         ($short, $extended) = ('', '');
