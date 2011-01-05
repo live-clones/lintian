@@ -1479,46 +1479,6 @@ exit $exit_code;
 
 # {{{ Some subroutines
 
-sub unpack_pkg {
-    my ($type,$base,$file,$cur_level,$new_level) = @_;
-
-    debug_msg(1, sprintf("Current unpack level is %d",$cur_level));
-
-    return $cur_level if $cur_level == $new_level;
-
-    # remove .lintian-status file
-    remove_status_file($base);
-
-    if ( ($cur_level == 0) and (-d $base) ) {
-       # We were lied to, there's something already there - clean it up first
-       remove_pkg($base) or return -1;
-    }
-
-    if ( ($new_level >= 1) and
-	 (not defined ($cur_level) or ($cur_level < 1)) ) {
-	# create new directory
-	debug_msg(1, "Unpacking package to level 1 ...");
-	if (($type eq 'b') || ($type eq 'u')) {
-	    Lintian::Command::Simple::run("$LINTIAN_ROOT/unpack/unpack-binpkg-l1", $base, $file) == 0
-		or return -1;
-	} elsif ($type eq 'c') {
-	    spawn({}, ["$LINTIAN_ROOT/unpack/unpack-changes-l1", $base, $file])
-		or return -1;
-	} else {
-	    Lintian::Command::Simple::run("$LINTIAN_ROOT/unpack/unpack-srcpkg-l1", $base, $file) == 0
-		or return -1;
-	}
-	$cur_level = 1;
-    }
-
-    if ($new_level >= 2) {
-	warning("Requested no longer existent unpack-level 2, expect errors");
-	return $cur_level;
-    }
-
-    return $cur_level;
-}
-
 sub sort_coll {
     my ($ap, $bp);
     $ap = $map->getProp($a);
@@ -1530,68 +1490,6 @@ sub sort_coll {
     return -1 if ($ap->{'type'} eq 'collection' && $bp->{'type'} ne 'collection');
     return 1 if ($bp->{'type'} eq 'collection' && $ap->{'type'} ne 'collection');
     return ($ap->{'name'} cmp $bp->{'name'});
-}
-
-# TODO: is this the best way to clean dirs in perl?
-# no, look at File::Path module
-sub clean_pkg {
-    my ($type,$base,$file,$cur_level,$new_level) = @_;
-
-    return $cur_level if $cur_level == $new_level;
-
-    if ($new_level < 1) {
-	# remove base directory
-	remove_pkg($base) or return -1;
-	return 0;
-    }
-
-    if ( ($new_level < 2) and defined ($cur_level) and ($cur_level >= 2) ) {
-	# remove .lintian-status file
-	remove_status_file($base);
-
-	# remove unpacked/ directory
-	debug_msg(1, "Decreasing unpack level to 1 (removing files) ...");
-	if ( -l "$base/unpacked" ) {
-	    delete_dir("$base/".readlink("$base/unpacked"))
-		or return -1;
-	    delete_dir("$base/unpacked") or return -1;
-	} else {
-	    delete_dir("$base/unpacked") or return -1;
-	}
-
-	$cur_level = 1;
-    }
-
-    return $cur_level;
-}
-
-# this function removes a package's base directory in the lab completely
-sub remove_pkg {
-    my ($base) = @_;
-
-    debug_msg(1, "Removing package in lab ...");
-    unless (delete_dir($base)) {
-	warning("cannot remove directory $base: $!");
-	return 0;
-    }
-
-    return 1;
-}
-
-sub remove_status_file {
-    my ($base) = @_;
-
-    # status file exists?
-    if (not -e "$base/.lintian-status") {
-	return 1;
-    }
-
-    if (not unlink("$base/.lintian-status")) {
-	warning("cannot remove status file $base/.lintian-status: $!");
-	return 0;
-    }
-
-    return 1;
 }
 
 # -------------------------------
