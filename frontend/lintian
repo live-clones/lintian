@@ -1206,9 +1206,19 @@ PACKAGE:
 foreach my $pkg_info ($schedule->get_all) {
     my ($type, $pkg, $ver, $arch, $file) =
 	@$pkg_info{qw(type package version architecture file)};
-    my $long_type = ($type eq 'b' ? 'binary' :
-		     ($type eq 'c' ? 'changes' :
-		     ($type eq 's' ? 'source' : 'udeb' )));
+    my $lpkg;
+    my $long_type;
+    my $base;
+    my $act_unpack_level;
+    eval{ $lpkg = $LAB->get_lab_package($pkg, $ver, $type, $file); };
+    if($@){
+	warning("skipping $action of $long_type package $pkg: $@");
+	$exit_code = 2;
+	next PACKAGE;
+    }
+    # The Lab will normalize it.
+    $long_type = $lpkg->pkg_type();
+    $act_unpack_level = $lpkg->unpack_level();
 
     $TAGS->file_start($file, $pkg, $ver, $arch, $long_type);
     $map->initialise();
@@ -1218,77 +1228,8 @@ foreach my $pkg_info ($schedule->get_all) {
     %running_jobs = ();
 
     # determine base directory
-    my $base = "$LINTIAN_LAB/$long_type/$pkg";
-    unless ($base =~ m,^/,) {
-	$base = "$cwd/$base";
-    }
+    $base = $lpkg->base_dir();
     debug_msg(1, "Base directory in lab: $base");
-
-    my $act_unpack_level = 0;
-
-    # unpacked package up-to-date?
-    if (-d $base) {
-	my $remove_basedir = 0;
-
-        # there's a base dir, so we assume that at least
-        # one level of unpacking has been done
-	$act_unpack_level = 1;
-
-	# lintian status file exists?
-	unless (-f "$base/.lintian-status") {
-	    v_msg("No lintian status file found (removing old directory in lab)");
-	    $remove_basedir = 1;
-	    goto REMOVE_BASEDIR;
-	}
-
-	# read unpack status -- catch any possible errors
-	my $data;
-	eval { ($data) = read_dpkg_control("$base/.lintian-status"); };
-	if ($@) {		# error!
-	    v_msg($@);
-	    $remove_basedir = 1;
-	    goto REMOVE_BASEDIR;
-	}
-
-	# compatible lintian version?
-	if (not exists $data->{'lab-format'} or ($data->{'lab-format'} < $LAB_FORMAT)) {
-	    v_msg("Lab directory was created by incompatible lintian version");
-	    $remove_basedir = 1;
-	    goto REMOVE_BASEDIR;
-	}
-
-	# version up to date?
-	if (not exists $data->{'version'} or ($data->{'version'} ne $ver)) {
-	    debug_msg(1, "Removing package in lab (newer version exists) ...");
-	    $remove_basedir = 1;
-	    goto REMOVE_BASEDIR;
-	}
-
-	# file modified?
-	my $timestamp;
-	my @stat;
-	unless (@stat = stat $file) {
-	    warning("cannot stat file $file: $!");
-	} else {
-	    $timestamp = $stat[9];
-	}
-	if ((not defined $timestamp) or (not exists $data->{'timestamp'}) or ($data->{'timestamp'} != $timestamp)) {
-	    debug_msg(1, "Removing package in lab (package has been changed) ...");
-	    $remove_basedir = 1;
-	    goto REMOVE_BASEDIR;
-	}
-
-    REMOVE_BASEDIR:
-	if ($remove_basedir) {
-	    v_msg("Removing $pkg");
-	    unless (remove_pkg($base)) {
-		warning("skipping $action of $long_type package $pkg");
-		$exit_code = 2;
-		next PACKAGE;
-	    }
-	    $act_unpack_level = 0;
-	}
-    }
 
     # unpack to requested unpack level
     $act_unpack_level = unpack_pkg($type,$base,$file,$act_unpack_level,
