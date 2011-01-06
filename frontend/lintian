@@ -1095,9 +1095,16 @@ require Lintian::DepMap::Properties;
 my $map = Lintian::DepMap::Properties->new();
 
 # {{{ determine which info is needed by the collection scripts
-for my $c (keys %unpack_infos) {
-    if (exists $collection_info{$c}{'needs-info'}) {
-	map { $unpack_infos{$_} = 1; } @{$collection_info{$c}{'needs-info'}};
+if ($action eq 'unpack') {
+    # With --unpack we want all of it
+    for my $c (keys %collection_info) {
+	$unpack_infos{$c} = 1;
+    }
+} else {
+    for my $c (keys %unpack_infos) {
+	if (exists $collection_info{$c}{'needs-info'}) {
+	    map { $unpack_infos{$_} = 1; } @{$collection_info{$c}{'needs-info'}};
+	}
     }
 }
 # }}}
@@ -1116,14 +1123,6 @@ for my $c (keys %checks) {
     $map->add('check-' . $c, {'type' => 'check', 'name' => $c});
     if (exists $check_info{$c}{'needs-info'}) {
 	$map->addp('check-' . $c, 'coll-', @{$check_info{$c}{'needs-info'}});
-    }
-}
-# }}}
-
-# {{{ make --unpack collect all info
-if ($action eq 'unpack') {
-    for my $c (keys %collection_info) {
-	$unpack_infos{$c} = 1;
     }
 }
 # }}}
