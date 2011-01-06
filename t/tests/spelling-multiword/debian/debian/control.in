@@ -15,8 +15,12 @@ Description: {$description}
  be an empty package.
  .
  Spelling errors:
-   * Debian/GNU Linux
+   * Allows to
    * An other error
+   * Debian/GNU Linux
+   * Helps to
+   * Permits to
+   * Requires to
    * This packages
  .
  Not errors:

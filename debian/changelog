@@ -111,6 +111,9 @@ lintian (2.4.4) UNRELEASED; urgency=low
       used.  (Closes: #596848)
   * data/spelling/corrections:
     + [NT] Added more corrections.
+  * data/spelling/collections-multiword:
+    + [NT] Added "allows to" and other similar cases.  Thanks to
+      Matthew Paul Thomas for the report.  (LP: #608231)
 
   * debian/control:
     + [RA] Add the build dependencies required to run the test suite
