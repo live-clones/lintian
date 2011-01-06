@@ -870,19 +870,6 @@ if (not $check_everything and not $packages_file and not $schedule->count) {
 }
 # }}}
 
-# {{{ A lone subroutine
-#----------------------------------------------------------------------------
-#  Check to make sure there are packages to check.
-sub set_value {
-    my ($f,$target,$field,$source,$required) = @_;
-    if ($required and not defined($source->{$field})) {
-	fail("description file $f does not define required tag $field");
-    }
-    $target->{$field} = $source->{$field};
-    delete $source->{$field};
-}
-# }}}
-
 # {{{ Load information about collector scripts
 opendir(COLLDIR, "$LINTIAN_ROOT/collection")
     or fail("cannot read directory $LINTIAN_ROOT/collection");
@@ -1482,6 +1469,16 @@ if ($action eq 'check' and not $no_override and not $show_overrides) {
 exit $exit_code;
 
 # {{{ Some subroutines
+
+#  Check to make sure there are packages to check.
+sub set_value {
+    my ($f,$target,$field,$source,$required) = @_;
+    if ($required and not defined($source->{$field})) {
+	fail("description file $f does not define required tag $field");
+    }
+    $target->{$field} = $source->{$field};
+    delete $source->{$field};
+}
 
 sub sort_coll {
     my ($ap, $bp);
