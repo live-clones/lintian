@@ -136,6 +136,7 @@ value if successful.
 sub delete_lab_entry {
     my ($self) = @_;
     my $basedir = $self->{base_dir};
+    return 1 if( ! -e $basedir);
     debug_msg(1, "Removing package in lab ...");
     unless(delete_dir($basedir)) {
         warning("cannot remove directory $basedir: $!");
