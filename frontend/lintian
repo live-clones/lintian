@@ -1199,6 +1199,11 @@ scalar($map->missing()) == 0
 require Checker;
 require Lintian::Collect;
 
+## REFACTORING NOTES:
+## If we are here $action is one of "check", "unpack" or "remove"
+##  $unpack_level is 1 if $action is "check" or "unpack" else it is 0.
+##  
+
 my %overrides;
 my %running_jobs;
 PACKAGE:
@@ -1217,6 +1222,15 @@ foreach my $pkg_info ($schedule->get_all) {
 	$exit_code = 2;
 	next PACKAGE;
     }
+    # short circut remove
+    if($action eq 'remove'){
+	unless($lpkg->delete_lab_entry()){
+	    $exit_code = 2;
+	}
+	next PACKAGE;
+    }
+
+
     # The Lab will normalize it.
     $long_type = $lpkg->pkg_type();
     $act_unpack_level = $lpkg->unpack_level();
@@ -1231,6 +1245,7 @@ foreach my $pkg_info ($schedule->get_all) {
     # determine base directory
     $base = $lpkg->base_dir();
     debug_msg(1, "Base directory in lab: $base");
+
 
     # unpack to requested unpack level
     $act_unpack_level = $lpkg->unpack($unpack_level);
@@ -1410,16 +1425,6 @@ foreach my $pkg_info ($schedule->get_all) {
 	next PACKAGE;
     }
 
-    # clean up
-    if ($act_unpack_level > $unpack_level) {
-	$act_unpack_level = $lpkg->pack($unpack_level);
-	if ($act_unpack_level == -1) {
-	    warning("could not clean up laboratory for package $pkg: $!",
-		    "skipping clean up");
-	    $exit_code = 2;
-	    next PACKAGE;
-	}
-    }
     # if the package's basedir was not removed then run the
     # auto-remove: yes collection scripts
     if (-d "$base" and !$keep_lab) {
