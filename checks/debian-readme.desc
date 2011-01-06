@@ -3,7 +3,7 @@ Author: Richard Braakman <dark@xs4all.nl>
 Abbrev: drm
 Type: binary
 Needs-Info: debian-readme
-Info: This script checks the README.Debian file for various problems.
+Info: This script checks the <tt>README.Debian</tt> file for various problems.
 
 Tag: readme-debian-mentions-usr-doc
 Severity: normal

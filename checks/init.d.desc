@@ -2,6 +2,8 @@ Check-Script: init.d
 Author: Christian Schwarz <schwarz@debian.org>
 Abbrev: ini
 Type: binary
+Info: Check if a binary package conforms to policy with respect to
+ scripts in /etc/init.d.
 Needs-Info: init.d
 
 Tag: duplicate-updaterc.d-calls-in-postinst
