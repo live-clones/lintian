@@ -871,66 +871,7 @@ if (not $check_everything and not $packages_file and not $schedule->count) {
 # }}}
 
 # {{{ Load information about collector scripts
-opendir(COLLDIR, "$LINTIAN_ROOT/collection")
-    or fail("cannot read directory $LINTIAN_ROOT/collection");
-
-for my $f (readdir COLLDIR) {
-    next if $f =~ /^\./;
-    next unless $f =~ /\.desc$/;
-
-    debug_msg(2, "Reading collector description file $f ...");
-    my @secs = read_dpkg_control("$LINTIAN_ROOT/collection/$f");
-    my $script;
-    ($#secs+1 == 1)
-	or fail("syntax error in description file $f: too many sections");
-
-    ($script = $secs[0]->{'collector-script'})
-	or fail("error in description file $f: `Collector-Script:' not defined");
-
-    delete $secs[0]->{'collector-script'};
-    $collection_info{$script}->{'script'} = $script;
-    my $p = $collection_info{$script};
-
-    set_value($f, $p,'type',$secs[0],1);
-    # convert Type:
-    my %type;
-    for (split(/\s*,\s*/o,$p->{'type'})) {
-	if ($_ eq 'binary') {
-	    $type{'b'} = 1;
-	} elsif ($_ eq 'source') {
-	    $type{'s'} = 1;
-	} elsif ($_ eq 'udeb') {
-	    $type{'u'} = 1;
-	} elsif ($_ eq 'changes') {
-	    $type{'c'} = 1;
-	} else {
-	    fail("unknown type $_ specified in description file $f");
-	}
-    }
-    $p->{'type'} = \%type;
-
-    set_value($f,$p,'version',$secs[0],1);
-    set_value($f,$p,'auto-remove',$secs[0],0);
-
-    if (exists $secs[0]->{'needs-info'} && defined $secs[0]->{'needs-info'}) {
-	for (split(/\s*,\s*/o,$secs[0]->{'needs-info'})) {
-	    push @{$p->{'needs-info'}}, $_;
-	}
-	delete $secs[0]->{'needs-info'};
-    }
-
-    # ignore Info: and other fields for now
-    delete $secs[0]->{'info'};
-    delete $secs[0]->{'author'};
-
-    for (keys %{$secs[0]}) {
-	warning("unused tag $_ in description file $f");
-    }
-
-    debug_msg(2, map( { "$_: $p->{$_}" if defined($p->{$_}) } sort keys %$p ));
-}
-
-closedir(COLLDIR);
+load_collections(\%collection_info, "$LINTIAN_ROOT/collection");
 # }}}
 
 # {{{ Now we're ready to load info about checks & tags
@@ -1478,6 +1419,73 @@ sub set_value {
     }
     $target->{$field} = $source->{$field};
     delete $source->{$field};
+}
+
+# Given a ref to %collection_info and the path to the collection
+# directory, this will load all the collection information into
+# %collection_info.
+sub load_collections{
+    my ($cinfo, $dirname) = @_;
+    opendir(my $dir, $dirname)
+	or fail("cannot read directory $dirname");
+
+    for my $f (readdir($dir)) {
+	next if $f =~ /^\./;
+	next unless $f =~ /\.desc$/;
+
+	debug_msg(2, "Reading collector description file $f ...");
+	my @secs = read_dpkg_control("$dirname/$f");
+	my $script;
+	($#secs+1 == 1)
+	    or fail("syntax error in description file $f: too many sections");
+
+	($script = $secs[0]->{'collector-script'})
+	    or fail("error in description file $f: `Collector-Script:' not defined");
+
+	delete $secs[0]->{'collector-script'};
+	$cinfo->{$script}->{'script'} = $script;
+	my $p = $cinfo->{$script};
+
+	set_value($f, $p,'type',$secs[0],1);
+	# convert Type:
+	my %type;
+	for (split(/\s*,\s*/o,$p->{'type'})) {
+	    if ($_ eq 'binary') {
+		$type{'b'} = 1;
+	    } elsif ($_ eq 'source') {
+		$type{'s'} = 1;
+	    } elsif ($_ eq 'udeb') {
+		$type{'u'} = 1;
+	    } elsif ($_ eq 'changes') {
+		$type{'c'} = 1;
+	    } else {
+		fail("unknown type $_ specified in description file $f");
+	    }
+	}
+	$p->{'type'} = \%type;
+
+	set_value($f,$p,'version',$secs[0],1);
+	set_value($f,$p,'auto-remove',$secs[0],0);
+
+	if (exists $secs[0]->{'needs-info'} && defined $secs[0]->{'needs-info'}) {
+	    for (split(/\s*,\s*/o,$secs[0]->{'needs-info'})) {
+		push @{$p->{'needs-info'}}, $_;
+	    }
+	    delete $secs[0]->{'needs-info'};
+	}
+
+	# ignore Info: and other fields for now
+	delete $secs[0]->{'info'};
+	delete $secs[0]->{'author'};
+
+	for (keys %{$secs[0]}) {
+	    warning("unused tag $_ in description file $f");
+	}
+
+	debug_msg(2, map( { "$_: $p->{$_}" if defined($p->{$_}) } sort keys %$p ));
+    }
+
+    closedir($dir);
 }
 
 sub sort_coll {
