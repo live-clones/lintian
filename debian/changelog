@@ -18,6 +18,9 @@ lintian (2.4.4) UNRELEASED; urgency=low
   * checks/cruft{,.desc}:
     + [NT] Extended the diff-contains-substvars check to also catch files
       prefixed with a package name.
+    + [NT] Corrected the description of diff-contains-$vcs-control-dir.
+      It incorrectly assumed that -i worked for native packages.
+      (Closes: #609153)
   * checks/debhelper{,.desc}:
     + [NT] Fix dependency check for dh_nativejava, default-jdk has never
       provided dh_nativejava.  (Closes: #606506)
