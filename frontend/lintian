@@ -877,74 +877,7 @@ load_collections(\%collection_info, "$LINTIAN_ROOT/collection");
 # {{{ Now we're ready to load info about checks & tags
 
 # load information about checker scripts
-opendir(CHECKDIR, "$LINTIAN_ROOT/checks")
-    or fail("cannot read directory $LINTIAN_ROOT/checks");
-
-for my $f (readdir CHECKDIR) {
-    next if $f =~ /^\./;
-    next unless $f =~ /\.desc$/;
-    debug_msg(2, "Reading checker description file $f ...");
-
-    my @secs = read_dpkg_control("$LINTIAN_ROOT/checks/$f");
-    my $script;
-    ($script = $secs[0]->{'check-script'})
-	or fail("error in description file $f: `Check-Script:' not defined");
-
-    # ignore check `lintian' (this check is a special case and contains the
-    # tag info for the lintian frontend--this script here)
-    next if $script eq 'lintian';
-
-    delete $secs[0]->{'check-script'};
-    $check_info{$script}->{'script'} = $script;
-    my $p = $check_info{$script};
-
-    set_value($f,$p,'type',$secs[0],1);
-    my %type;
-    # convert Type:
-    for (split(/\s*,\s*/o,$p->{'type'})) {
-	if ($_ eq 'binary') {
-	    $type{'b'} = 1;
-	} elsif ($_ eq 'source') {
-	    $type{'s'} = 1;
-	} elsif ($_ eq 'udeb') {
-	    $type{'u'} = 1;
-	} elsif ($_ eq 'changes') {
-	    $type{'c'} = 1;
-	} else {
-	    fail("unknown type $_ specified in description file $f");
-	}
-    }
-    $p->{'type'} = \%type;
-
-    set_value($f,$p,'abbrev',$secs[0],1);
-
-    if (exists $secs[0]->{'needs-info'} && defined $secs[0]->{'needs-info'}) {
-	for (split(/\s*,\s*/o,$secs[0]->{'needs-info'})) {
-	    push @{$p->{'needs-info'}}, $_;
-	    $p->{$_} = 1;
-	}
-	delete $secs[0]->{'needs-info'};
-    }
-
-    # ignore Info: and other fields for now...
-    delete $secs[0]->{'info'};
-    delete $secs[0]->{'standards-version'};
-    delete $secs[0]->{'author'};
-
-    for (keys %{$secs[0]}) {
-	warning("unused tag $_ in description file $f");
-    }
-
-    debug_msg(2, map( { "$_: $p->{$_}" } sort keys %$p ));
-
-    shift(@secs);
-    $p->{'requested-tags'} = 0;
-    foreach my $tag (@secs) {
-	$p->{'requested-tags'}++ if $TAGS->displayed($tag->{'tag'});
-    }
-}
-
-closedir(CHECKDIR);
+load_checks(\%check_info, $TAGS, "$LINTIAN_ROOT/checks");
 
 # }}}
 
@@ -1487,6 +1420,81 @@ sub load_collections{
 
     closedir($dir);
 }
+
+# Given a ref to %check_info, $TAGS  and the path to the checks
+# directory, this will load all the information about checks into
+# %check_info.
+sub load_checks{
+    my ($cinfo, $tags, $dirname) = @_;
+    opendir(my $dir, $dirname)
+	or fail("cannot read directory $dirname");
+
+    for my $f (readdir($dir)) {
+	next if $f =~ /^\./;
+	next unless $f =~ /\.desc$/;
+	debug_msg(2, "Reading checker description file $f ...");
+
+	my @secs = read_dpkg_control("$dirname/$f");
+	my $script;
+	($script = $secs[0]->{'check-script'})
+	    or fail("error in description file $f: `Check-Script:' not defined");
+
+	# ignore check `lintian' (this check is a special case and contains the
+	# tag info for the lintian frontend--this script here)
+	next if $script eq 'lintian';
+
+	delete $secs[0]->{'check-script'};
+	$cinfo->{$script}->{'script'} = $script;
+	my $p = $cinfo->{$script};
+
+	set_value($f,$p,'type',$secs[0],1);
+	my %type;
+	# convert Type:
+	for (split(/\s*,\s*/o,$p->{'type'})) {
+	    if ($_ eq 'binary') {
+		$type{'b'} = 1;
+	    } elsif ($_ eq 'source') {
+		$type{'s'} = 1;
+	    } elsif ($_ eq 'udeb') {
+		$type{'u'} = 1;
+	    } elsif ($_ eq 'changes') {
+		$type{'c'} = 1;
+	    } else {
+		fail("unknown type $_ specified in description file $f");
+	    }
+    }
+	$p->{'type'} = \%type;
+
+	set_value($f,$p,'abbrev',$secs[0],1);
+
+	if (exists $secs[0]->{'needs-info'} && defined $secs[0]->{'needs-info'}) {
+	    for (split(/\s*,\s*/o,$secs[0]->{'needs-info'})) {
+		push @{$p->{'needs-info'}}, $_;
+		$p->{$_} = 1;
+	    }
+	    delete $secs[0]->{'needs-info'};
+	}
+
+	# ignore Info: and other fields for now...
+	delete $secs[0]->{'info'};
+	delete $secs[0]->{'standards-version'};
+	delete $secs[0]->{'author'};
+
+	for (keys %{$secs[0]}) {
+	    warning("unused tag $_ in description file $f");
+	}
+
+	debug_msg(2, map( { "$_: $p->{$_}" } sort keys %$p ));
+
+	shift(@secs);
+	$p->{'requested-tags'} = 0;
+	foreach my $tag (@secs) {
+	    $p->{'requested-tags'}++ if $tags->displayed($tag->{'tag'});
+	}
+    }
+    closedir($dir);
+}
+
 
 sub sort_coll {
     my ($ap, $bp);
