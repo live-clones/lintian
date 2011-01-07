@@ -38,6 +38,9 @@ lintian (2.4.4) UNRELEASED; urgency=low
       (Closes: #593837)
     + [NT] Fixed spelling of metapackage in tag descriptions.
     + [NT] Added needless-dependency-on-jre tag.
+    + [NT] Corrected Policy references for the uploader tags.  Thanks to
+      David Prévot for spotting this issue and providing a patch.
+      (Closes: #602632)
   * checks/files{,.desc}:
     + [NT] Fixed false-positive extra-license-file for license.ui files.
       Thanks to Jeremy Sanders for the report.  (Closes: #595941)
