@@ -49,7 +49,8 @@ build-stamp: $(neededfiles) $(docsource) $(testtarget)
 	cd doc && LANG=C debiandoc2html lintian.sgml
 	cd doc && LANG=C debiandoc2text lintian.sgml
 	mkdir man/man1/
-	private/generate-lintian-pod | pod2man --section=1 > man/man1/lintian.1
+	private/generate-lintian-pod | \
+		pod2man --name lintian --center "Debian Package Checker" --section=1 > man/man1/lintian.1
 	pod2man --section=1 man/lintian-info.pod > man/man1/lintian-info.1
 	LINTIAN_ROOT="" ./frontend/lintian --help \
 		| tail -n +3 | $(PERL) -n -e 'print "  $$_"' >doc/help.tmp
