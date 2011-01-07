@@ -1088,7 +1088,7 @@ if($action eq 'remove'){
     exit $exit_code;
 }
 
-# Now action is always either "check" or "check" and $unpack_level is 1
+# Now action is always either "check" or "unpack" and $unpack_level is 1
 
 my %overrides;
 my %running_jobs;
