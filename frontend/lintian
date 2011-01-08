@@ -49,7 +49,6 @@ my $lintian_info = 0;		#flag for -i|--info switch
 our $display_experimentaltags = 0; #flag for -E|--display-experimental switch
 our $display_pedantictags = 0;	#flag for --pedantic switch
 our $ftpmaster_tags = 0;	#flag for -F|--ftp-master-rejects switch
-my $unpack_level = undef;	#flag for -l|--unpack-level switch
 our $no_override = 0;		#flag for -o|--no-override switch
 our $show_overrides = 0;	#flag for --show-overrides switch
 my $color = 'never';		#flag for --color switch
@@ -98,7 +97,6 @@ my %check_info;
 our $LINTIAN_LAB = undef;
 our $LINTIAN_ARCHIVEDIR = undef;
 our $LINTIAN_DIST = undef;
-our $LINTIAN_UNPACK_LEVEL = undef;
 our $LINTIAN_ARCH = undef;
 our $LINTIAN_SECTION = undef;
 our $LINTIAN_AREA = undef;
@@ -387,7 +385,6 @@ my %opthash = (			# ------------------ actions
 	       "display-source=s" => \&record_display_source,
 	       "suppress-tags=s" => \&record_suppress_tags,
 	       "suppress-tags-from-file=s" => \&record_suppress_tags_from_file,
-	       "unpack-level|l=i" => \$unpack_level,
 	       "no-override|o" => \$no_override,
 	       "show-overrides" => \$show_overrides,
 	       "color=s" => \$color,
@@ -485,7 +482,7 @@ if ($LINTIAN_CFG) {
     undef $LINTIAN_CFG;
 }
 
-use constant VARS => qw(LAB ARCHIVEDIR DIST UNPACK_LEVEL SECTION AREA ARCH);
+use constant VARS => qw(LAB ARCHIVEDIR DIST SECTION AREA ARCH);
 # read configuration file
 if ($LINTIAN_CFG) {
     open(CFG, '<', $LINTIAN_CFG)
@@ -546,28 +543,6 @@ if (defined $LINTIAN_SECTION) {
 	$LINTIAN_AREA = $LINTIAN_SECTION;
     }
 }
-
-# determine requested unpack level
-if (defined($unpack_level)) {
-    print STDERR "warning: --unpack-level is deprecated, ignoring.\n";
-    # specified through command line
-} elsif (defined($LINTIAN_UNPACK_LEVEL)) {
-    # specified via configuration file or env variable
-    print STDERR "warning: LINTIAN_UNPACK_LEVEL is deprecated, ignoring.\n";
-}
-
-# determine by action
-if (($action eq 'unpack') or ($action eq 'check')) {
-    $unpack_level = 1;
-} else {
-    $unpack_level = 0;
-}
-
-unless (($unpack_level == 0) or ($unpack_level == 1)) {
-    die("bad unpack level $unpack_level specified");
-}
-
-$LINTIAN_UNPACK_LEVEL = $unpack_level;
 
 # export current settings for our helper scripts
 foreach (('ROOT', 'CFG', VARS)) {
@@ -660,7 +635,6 @@ debug_msg(1,
 	  "Laboratory: $LINTIAN_LAB",
 	  "Archive directory: $LINTIAN_ARCHIVEDIR",
 	  "Distribution: $LINTIAN_DIST",
-	  "Default unpack level: $LINTIAN_UNPACK_LEVEL",
 	  "Architecture: $LINTIAN_ARCH",
 	  delimiter(),
     );
@@ -1048,7 +1022,6 @@ unless ($count) {
 v_msg(sprintf("Processing %d packages...", $count));
 debug_msg(1,
 	  "Selected action: $action",
-	  "Requested unpack level: $unpack_level",
 	  sprintf("Requested data to collect: %s", join(',',sort keys %unpack_infos)),
 	  sprintf("Selected checks: %s", join(',',sort keys %checks)),
     );
@@ -1063,7 +1036,6 @@ require Lintian::Collect;
 
 ## REFACTORING NOTES:
 ## If we are here $action is one of "check", "unpack" or "remove"
-##  $unpack_level is 1 if $action is "check" or "unpack" else it is 0.
 ##  
 
 if($action eq 'remove'){
@@ -1089,7 +1061,7 @@ if($action eq 'remove'){
     exit $exit_code;
 }
 
-# Now action is always either "check" or "unpack" and $unpack_level is 1
+# Now action is always either "check" or "unpack"
 
 my %overrides;
 my %running_jobs;
@@ -1100,7 +1072,6 @@ foreach my $pkg_info ($schedule->get_all) {
     my $lpkg;
     my $long_type;
     my $base;
-    my $act_unpack_level;
     my $info;
     my $loaded_overrides = 0;
     eval{ $lpkg = $LAB->get_lab_package($pkg, $ver, $type, $file); };
@@ -1114,7 +1085,6 @@ foreach my $pkg_info ($schedule->get_all) {
 
     # The Lab will normalize it.
     $long_type = $lpkg->pkg_type();
-    $act_unpack_level = $lpkg->unpack_level();
 
     $TAGS->file_start($file, $pkg, $ver, $arch, $long_type);
     $map->initialise();
@@ -1128,9 +1098,8 @@ foreach my $pkg_info ($schedule->get_all) {
     debug_msg(1, "Base directory in lab: $base");
 
 
-    # unpack to requested unpack level
-    $act_unpack_level = $lpkg->unpack($unpack_level);
-    if ($act_unpack_level == -1) {
+    # Ensure it has been unpacked
+    unless ($lpkg->unpack()){
 	warning("could not unpack package to desired level",
 		"skipping $action of $long_type package $pkg");
 	$exit_code = 2;

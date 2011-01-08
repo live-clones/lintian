@@ -32,8 +32,8 @@ Lab::Package - A package inside the Lab
  my $lab = new Lab("dir", "dist");
  my $lpkg = $lab->get_lab_package("name", "version", "type", "path");
 
- # Make sure the package is unpacked to at least level 1.
- $lpkg->unpack(1) >= 1 or die("Could not unpack: $!");
+ # Unpack the package
+ $lpkg->unpack() or die("Could not unpack: $!");
  # Remove package from lab.
  $lpkg->delete_lab_entry();
 
@@ -116,13 +116,9 @@ Returns the type of package (e.g. binary, source, udeb ...)
 
 Returns the base directory of this package inside the lab.
 
-=item $lpkg->unpack_level()
-
-Returns the current unpack level.
-
 =cut
 
-Lab::Package->mk_accessors(qw(lab pkg_name pkg_version pkg_path pkg_type base_dir unpack_level));
+Lab::Package->mk_accessors(qw(lab pkg_name pkg_version pkg_path pkg_type base_dir));
 
 =pod
 
@@ -147,102 +143,48 @@ sub delete_lab_entry {
 
 =pod
 
-=item $lpkg->unpack($new_level)
+=item $lpkg->unpack()
 
-Increases the unpack level to B<$new_level> if it is not already at
-least B<$new_level>. Returns the unpack level (which will always be at
-least B<$new_level>) on success. In case of an error, it will return
--1 (or fail if an unknown unpack level was specified).
+Runs the unpack script for the type of package.  This is
+deprecated but remains until all the unpack scripts have
+been replaced by coll scripts.
 
 =cut
 
 sub unpack {
-    my ($self, $new_level) = @_;
-    my $level = $self->{unpack_level};
+    my ($self) = @_;
+    my $level = $self->{_unpack_level};
     my $base_dir = $self->{base_dir};
     my $pkg_type = $self->{pkg_type};
     my $pkg_path = $self->{pkg_path};
 
     debug_msg(1, sprintf("Current unpack level is %d",$level));
 
-    return $level if $level >= $new_level;
+    # Have we already run the unpack script?
+    return 1 if $level;
 
     $self->remove_status_file();
 
-    if ( ($level == 0) and (-d $base_dir) ) {
+    if ( -d $base_dir ) {
         # We were lied to, there's something already there - clean it up first
-        $self->delete_lab_entry() or return -1;
+        $self->delete_lab_entry() or return 0;
     }
 
-    if($level < 1 && $new_level >= 1){
-        # create new directory
-	debug_msg(1, "Unpacking package to level 1 ...");
-	if (($pkg_type eq 'binary') || ($pkg_type eq 'udeb')) {
-            Lintian::Command::Simple::run("$ENV{LINTIAN_ROOT}/unpack/unpack-binpkg-l1", $base_dir, $pkg_path) == 0
-		or return -1;
-	} elsif ($pkg_type eq 'changes') {
-	    Lintian::Command::spawn({}, ["$ENV{LINTIAN_ROOT}/unpack/unpack-changes-l1", $base_dir, $pkg_path])
-		or return -1;
-	} else {
-	    Lintian::Command::Simple::run("$ENV{LINTIAN_ROOT}/unpack/unpack-srcpkg-l1", $base_dir, $pkg_path) == 0
-		or return -1;
-	}
+    # create new directory
+    debug_msg(1, "Unpacking package ...");
+    if (($pkg_type eq 'binary') || ($pkg_type eq 'udeb')) {
+	Lintian::Command::Simple::run("$ENV{LINTIAN_ROOT}/unpack/unpack-binpkg-l1", $base_dir, $pkg_path) == 0
+	    or return 0;
+    } elsif ($pkg_type eq 'changes') {
+	Lintian::Command::spawn({}, ["$ENV{LINTIAN_ROOT}/unpack/unpack-changes-l1", $base_dir, $pkg_path])
+	    or return 0;
+    } else {
+	Lintian::Command::Simple::run("$ENV{LINTIAN_ROOT}/unpack/unpack-srcpkg-l1", $base_dir, $pkg_path) == 0
+	    or return 0;
     }
 
-    if ($new_level >= 2) {
-	fail("Requested no longer existent unpack-level $new_level");
-    }
-
-    $self->{unpack_level} = $new_level;
-    return $new_level;
-}
-
-=pod
-
-=item $lpkg->pack($new_level)
-
-Reduce the unpack level to B<$new_level>. Returns the unpack level
-after the operation has finished. If B<$new_level> is less than 1,
-then this will call delete_lab_entry. Returns -1 in case of an
-error.
-
-Note if the current level is lower than the new requested level, then
-nothing happens and the currnet level is returned instead.
-
-=cut
-
-# TODO: is this the best way to clean dirs in perl?
-# no, look at File::Path module
-sub pack {
-    my ($self, $new_level) = @_;
-    my $level = $self->{unpack_level};
-
-    # Are we already more packed than requested?
-    return $level if($level <= $new_level);
-
-    if($new_level < 1){
-	return -1 unless($self->delete_lab_entry());
-	return 0;
-    }
-
-    if($new_level < 2){
-	my $base = $self->{base_dir};
-	$self->{unpack_level} = $new_level;
-	$self->remove_status_file();
-	# remove unpacked/ directory
-	debug_msg(1, "Decreasing unpack level to 1 (removing files) ...");
-	if ( -l "$base/unpacked" ) {
-	    delete_dir("$base/".readlink("$base/unpacked"))
-		or return -1;
-	    delete_dir("$base/unpacked") or return -1;
-	} else {
-	    delete_dir("$base/unpacked") or return -1;
-	}
-	return $new_level;
-    }
-
-    # This should not happen unless we implement a new unpack level.
-    fail("Unhandled pack case to $new_level from $level");
+    $self->{_unpack_level} = 1;
+    return 1;
 }
 
 sub update_status_file{
@@ -252,7 +194,7 @@ sub update_status_file{
     my $fd;
     my $stf = "$self->{base_dir}/.lintian-status";
     # We are not unpacked => no place to put the status file.
-    return 0 if($self->{unpack_level} < 1);
+    return 0 if($self->{_unpack_level} < 1);
     $pkg_path = $self->{pkg_path};
     unless( @stat = stat($pkg_path)){
 	warning("cannot stat file $pkg_path: $!",
@@ -363,7 +305,7 @@ sub _check {
 	    $act_unpack_level = 0;
 	}
     }
-    $self->{unpack_level} = $act_unpack_level;
+    $self->{_unpack_level} = $act_unpack_level;
     return 1;
 }
 

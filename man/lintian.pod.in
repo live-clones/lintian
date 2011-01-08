@@ -104,14 +104,12 @@ L</CHECKS> section below.
 
 =item B<-u>, B<--unpack>
 
-Unpack the specified packages up to the current unpack level.  The
-default and only unpack level is 1 for this option.  See the L</UNPACK
-LEVELS> section below.
+Unpacks the package will all collections.  See the L</COLLECTION>
+section below.
 
 =item B<-r>, B<--remove>
 
-Clean up the lintian directory of the specified packages up to the
-current unpack level.  The default unpack level is 0 for this option.
+Clean up the lintian directory of the specified packages.
 
 =back
 
@@ -205,10 +203,6 @@ names or comma-separated lists of tag names to suppress.  The
 suppressed tags will not be reported if they occur and will not affect
 the exit status of Lintian.
 
-=item B<-l> n, B<--unpack-level> n
-
-Set unpack level to I<n>.  See the L</UNPACK LEVELS> section, below.
-
 =item B<-o>, B<--no-override>
 
 Don't use the overrides file.
@@ -252,8 +246,6 @@ By default, temporary labs will be removed after lintian is finished.
 Specifying this options will leave the lab behind, which might be
 useful for debugging purposes.  You can find out where the temporary
 lab is located by running lintian with the B<--verbose> option.
-Implies B<--unpack-level=2> unless another unpack level is specified
-directly.
 
 =back
 
@@ -353,40 +345,6 @@ version, and B<file> is the package file name (absolute path
 specification).
 
 =back
-
-=head1 UNPACK LEVELS
-
-=over 4
-
-=item B<0 (none)>
-
-The package does not exist in the I<laboratory> at all.
-
-=item B<1 (basic)>
-
-A directory for this package exists in the I<laboratory> and basic
-information is extracted.  This does not take much space.
-
-For binary and udeb packages, the I<control> and I<fields> directories
-and the index file are unpacked, and symbolic links are made to the
-B<.deb> file and to the lintian directory for the source package.
-
-For source packages, the binary and fields directories are unpacked,
-and symbolic links are made to the source package files.
-
-=item B<2 (contents)>
-
-This unpack level is deprecated and no longer functional. The
-I<unpacked> collection script replaced it.
-
-=back
-
-Lintian will unpack packages as far as is necessary to do its checks,
-but it will leave the package in whatever unpack level was specified
-when it is done.
-
-The default unpack level can be overwritten by setting the
-B<LINTIAN_UNPACK_LEVEL> variable in the configuration file.
 
 =head1 CHECKS
 
