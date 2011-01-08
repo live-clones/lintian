@@ -48,6 +48,10 @@ build-stamp: $(neededfiles) $(docsource) $(testtarget)
 	dh_testdir
 	cd doc && LANG=C debiandoc2html lintian.sgml
 	cd doc && LANG=C debiandoc2text lintian.sgml
+	mkdir man/man1/
+	private/generate-lintian-pod | \
+		pod2man --name lintian --center "Debian Package Checker" --section=1 > man/man1/lintian.1
+	pod2man --section=1 man/lintian-info.pod > man/man1/lintian-info.1
 	LINTIAN_ROOT="" ./frontend/lintian --help \
 		| tail -n +3 | $(PERL) -n -e 'print "  $$_"' >doc/help.tmp
 	$(PERL) -p -e 'BEGIN { open HELP, "<", "doc/help.tmp" or die; local $$/ = undef; $$h = <HELP> }; s/%LINTIAN_HELP%/$$h/' doc/README.in >doc/README
@@ -65,6 +69,7 @@ clean: $(neededfiles)
 	rm -f doc/help.tmp doc/README
 	rm -rf doc/lintian.html/ doc/lintian.txt
 	rm -rf debian/tests
+	rm -rf man/man1/
 	find -name "*.py?" -print0 | xargs -0r rm
 	dh_clean
 

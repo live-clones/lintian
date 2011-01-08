@@ -3,9 +3,9 @@ Author: Adeodato Simó <dato@net.com.org.es>
 Abbrev: v-s
 Type: source
 Needs-Info: debfiles, source-control-file
-Info: This script checks for correct use of the various *Version
- substvars, e.g. deprecated substvars, or usage that can cause
- un-binNMUability
+Info: This script checks for correct use of the various
+ <tt>*Version</tt> substvars, e.g. deprecated substvars,
+ or usage that can cause un-binNMUability
 
 Tag: not-binnmuable-any-depends-any
 Severity: important

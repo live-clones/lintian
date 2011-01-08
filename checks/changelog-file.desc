@@ -7,9 +7,9 @@ Info: This script checks if a binary package conforms to policy
  with regards to changelog files.
  .
  Each binary package with a /usr/share/doc/&lt;foo&gt; directory must have
- a Debian changelog file in "changelog.Debian.gz" unless the Debian
+ a Debian changelog file in <tt>changelog.Debian.gz</tt> unless the Debian
  changelog and the upstream one is the same file; in this case, it
- must be in "changelog.gz".
+ must be in <tt>changelog.gz</tt>.
  .
  If there is an upstream changelog file, it must be named
  "changelog.gz".

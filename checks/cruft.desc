@@ -61,9 +61,10 @@ Severity: normal
 Certainty: certain
 Info: The Debian diff or native package contains files in a CVS directory.
  These are usually artifacts of the revision control system used by the
- Debian maintainer and not useful in a diff or native package.  Passing
- <tt>-i</tt> to <tt>dpkg-buildpackage</tt> or the equivalent will
- automatically exclude them.
+ Debian maintainer and not useful in a diff or native package.
+ <tt>dpkg-source</tt> will automatically exclude these if it is passed
+ <tt>-I</tt> or <tt>-i</tt> for native and non-native packages respectively.
+Ref: dpkg-source(1)
 
 Tag: source-contains-cvs-control-dir
 Severity: pedantic
@@ -80,8 +81,9 @@ Certainty: certain
 Info: The Debian diff or native package contains files in an .svn
  directory.  These are usually artifacts of the revision control system
  used by the Debian maintainer and not useful in a diff or native package.
- Passing <tt>-i</tt> to <tt>dpkg-buildpackage</tt> or the equivalent will
- automatically exclude them.
+ <tt>dpkg-source</tt> will automatically exclude these if it is passed
+ <tt>-I</tt> or <tt>-i</tt> for native and non-native packages respectively.
+Ref: dpkg-source(1)
 
 Tag: source-contains-svn-control-dir
 Severity: pedantic
@@ -99,8 +101,9 @@ Certainty: certain
 Info: The Debian diff or native package contains files in a .bzr
  directory.  These are usually artifacts of the revision control system
  used by the Debian maintainer and not useful in a diff or native package.
- Passing <tt>-i</tt> to <tt>dpkg-buildpackage</tt> or the equivalent will
- automatically exclude them.
+ <tt>dpkg-source</tt> will automatically exclude these if it is passed
+ <tt>-I</tt> or <tt>-i</tt> for native and non-native packages respectively.
+Ref: dpkg-source(1)
 
 Tag: source-contains-bzr-control-dir
 Severity: pedantic
@@ -119,8 +122,10 @@ Info: The Debian diff or native package contains files in an {arch} or
  .arch-ids directory or a directory starting with <tt>,,</tt> (used by baz
  for debugging traces).  These are usually artifacts of the revision
  control system used by the Debian maintainer and not useful in a diff or
- native package.  Passing <tt>-i</tt> to <tt>dpkg-buildpackage</tt> or the
- equivalent will automatically exclude them.
+ native package.  <tt>dpkg-source</tt> will automatically exclude these if
+ it is passed <tt>-I</tt> or <tt>-i</tt> for native and non-native
+ packages respectively.
+Ref: dpkg-source(1)
 
 Tag: source-contains-arch-control-dir
 Severity: pedantic
@@ -138,8 +143,9 @@ Certainty: certain
 Info: The Debian diff or native package contains files in a .git
  directory.  These are usually artifacts of the revision control system
  used by the Debian maintainer and not useful in a diff or native package.
- Passing <tt>-i</tt> to <tt>dpkg-buildpackage</tt> or the equivalent will
- automatically exclude them.
+ <tt>dpkg-source</tt> will automatically exclude these if it is passed
+ <tt>-I</tt> or <tt>-i</tt> for native and non-native packages respectively.
+Ref: dpkg-source(1)
 
 Tag: source-contains-git-control-dir
 Severity: pedantic
@@ -156,8 +162,9 @@ Certainty: certain
 Info: The Debian diff or native package contains files in a .hg
  directory.  These are usually artifacts of the revision control system
  used by the Debian maintainer and not useful in a diff or native package.
- Passing <tt>-i</tt> to <tt>dpkg-buildpackage</tt> or the equivalent will
- automatically exclude them.
+ <tt>dpkg-source</tt> will automatically exclude these if it is passed
+ <tt>-I</tt> or <tt>-i</tt> for native and non-native packages respectively.
+Ref: dpkg-source(1)
 
 Tag: source-contains-hg-control-dir
 Severity: pedantic
@@ -173,8 +180,10 @@ Severity: normal
 Certainty: certain
 Info: The Debian diff or native package contains files in a directory
  used by a bug tracking system, which are not useful in a diff or native
- package. Passing <tt>-i</tt> to <tt>dpkg-buildpackage</tt> or the
- equivalent will automatically exclude them.
+ package.  <tt>dpkg-source</tt> will automatically exclude these if it
+ is passed <tt>-I</tt> or <tt>-i</tt> for native and non-native packages
+ respectively.
+Ref: dpkg-source(1)
 
 Tag: source-contains-bts-control-dir
 Severity: pedantic
