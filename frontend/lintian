@@ -25,6 +25,7 @@
 use strict;
 
 use Getopt::Long;
+use Cwd;
 # }}}
 
 # {{{ Global Variables
@@ -428,7 +429,7 @@ GetOptions(%opthash)
     or die("error parsing options\n");
 
 # determine current working directory--we'll need this later
-chop($cwd = `pwd`);
+$cwd = Cwd::getcwd();
 
 # determine LINTIAN_ROOT if it was not set with --root.
 $LINTIAN_ROOT = $LINTIAN_ROOT || $ENV{'LINTIAN_ROOT'};
