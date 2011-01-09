@@ -22,6 +22,7 @@ lintian (2.4.4) UNRELEASED; urgency=low
     + [NT] Corrected the description of diff-contains-$vcs-control-dir.
       It incorrectly assumed that -i worked for native packages.
       (Closes: #609153)
+    + [NT] Moved the list of autotools packages into data/cruft/autotools.
   * checks/debhelper{,.desc}:
     + [NT] Fix dependency check for dh_nativejava, default-jdk has never
       provided dh_nativejava.  (Closes: #606506)
@@ -74,6 +75,11 @@ lintian (2.4.4) UNRELEASED; urgency=low
   * data/changelog-file/ubuntu-dists:
     + [CW] Add natty as a valid Ubuntu distribution, and remove the EOLed
       intrepid and jaunty.
+  * data/cruft/autotools:
+    + [NT] Added the file which is a list of all packages that will
+      suppress the {ancient,outdated}-autotools-helper-file tags.
+      Currently this is manually updated.  This new list includes
+      dh-autoreconf, thanks to Felix Geyer.  (Closes: #592358)
   * data/shared-libs/ldconfig-dirs:
     + [NT] Removed the emul/ia32-linux directories as they are no longer
       used.  (Closes: #596848)
