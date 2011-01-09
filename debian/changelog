@@ -8,6 +8,7 @@ lintian (2.4.4) UNRELEASED; urgency=low
       - description-synopsis-starts-with-article
       - needless-dependency-on-jre
       - temporary-debhelper-file
+      - compressed-objects.inv
 
   * checks/*:
     + [NT] Use the new pre-sorted file {index,info} when iterating over files.
@@ -52,6 +53,10 @@ lintian (2.4.4) UNRELEASED; urgency=low
     + [NT] Fixed false-positive extra-license-file for games. Instead
       of skipping PATH directories Lintian now ignores all executable
       files.  (Closes: #608866)
+    + [NT] Added compressed-objects.inv tag to catch compressed
+      objects.inv files in python documentation.  Thanks to
+      Fladischer Michael for the report and a partial patch.
+      (Closes: #608810)
   * checks/menu-format.desc:
     + [CW] Fix several typos.
   * checks/menus.desc:

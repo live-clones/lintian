@@ -1,0 +1,11 @@
+#!/usr/bin/make -f
+
+DOCS:=debian/python-kinterbasdb/usr/share/doc/python-kinterbasdb/docs
+%:
+	dh $@
+
+override_dh_compress:
+	dh_compress
+	# Manually compress it, since debhelper will fix #608907
+	# in the "near" future.
+	[ -f "$(DOCS)/objects.inv.gz" ] || gzip --best "$(DOCS)/objects.inv"
