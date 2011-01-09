@@ -1180,3 +1180,12 @@ Info: The package appears to ship locales for a language but uses an
  .
  It is possible that the language code was mistyped or incorrectly
  guessed from the language's or country's name.
+
+Tag: compressed-objects.inv
+Severity: normal
+Certainty: possible
+Info: The package appears to ship a gzip compressed objects.inv file
+ in it's documentation.  Unfortunately some tools do not cope with
+ this file being compressed.
+ .
+ This file should be excluded from compression during build time.
