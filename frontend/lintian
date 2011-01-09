@@ -25,6 +25,7 @@
 use strict;
 
 use Getopt::Long;
+use Cwd;
 # }}}
 
 # {{{ Global Variables
@@ -48,7 +49,6 @@ my $lintian_info = 0;		#flag for -i|--info switch
 our $display_experimentaltags = 0; #flag for -E|--display-experimental switch
 our $display_pedantictags = 0;	#flag for --pedantic switch
 our $ftpmaster_tags = 0;	#flag for -F|--ftp-master-rejects switch
-my $unpack_level = undef;	#flag for -l|--unpack-level switch
 our $no_override = 0;		#flag for -o|--no-override switch
 our $show_overrides = 0;	#flag for --show-overrides switch
 my $color = 'never';		#flag for --color switch
@@ -97,7 +97,6 @@ my %check_info;
 our $LINTIAN_LAB = undef;
 our $LINTIAN_ARCHIVEDIR = undef;
 our $LINTIAN_DIST = undef;
-our $LINTIAN_UNPACK_LEVEL = undef;
 our $LINTIAN_ARCH = undef;
 our $LINTIAN_SECTION = undef;
 our $LINTIAN_AREA = undef;
@@ -386,7 +385,6 @@ my %opthash = (			# ------------------ actions
 	       "display-source=s" => \&record_display_source,
 	       "suppress-tags=s" => \&record_suppress_tags,
 	       "suppress-tags-from-file=s" => \&record_suppress_tags_from_file,
-	       "unpack-level|l=i" => \$unpack_level,
 	       "no-override|o" => \$no_override,
 	       "show-overrides" => \$show_overrides,
 	       "color=s" => \$color,
@@ -428,7 +426,7 @@ GetOptions(%opthash)
     or die("error parsing options\n");
 
 # determine current working directory--we'll need this later
-chop($cwd = `pwd`);
+$cwd = Cwd::getcwd();
 
 # determine LINTIAN_ROOT if it was not set with --root.
 $LINTIAN_ROOT = $LINTIAN_ROOT || $ENV{'LINTIAN_ROOT'};
@@ -484,7 +482,7 @@ if ($LINTIAN_CFG) {
     undef $LINTIAN_CFG;
 }
 
-use constant VARS => qw(LAB ARCHIVEDIR DIST UNPACK_LEVEL SECTION AREA ARCH);
+use constant VARS => qw(LAB ARCHIVEDIR DIST SECTION AREA ARCH);
 # read configuration file
 if ($LINTIAN_CFG) {
     open(CFG, '<', $LINTIAN_CFG)
@@ -545,28 +543,6 @@ if (defined $LINTIAN_SECTION) {
 	$LINTIAN_AREA = $LINTIAN_SECTION;
     }
 }
-
-# determine requested unpack level
-if (defined($unpack_level)) {
-    print STDERR "warning: --unpack-level is deprecated, ignoring.\n";
-    # specified through command line
-} elsif (defined($LINTIAN_UNPACK_LEVEL)) {
-    # specified via configuration file or env variable
-    print STDERR "warning: LINTIAN_UNPACK_LEVEL is deprecated, ignoring.\n";
-}
-
-# determine by action
-if (($action eq 'unpack') or ($action eq 'check')) {
-    $unpack_level = 1;
-} else {
-    $unpack_level = 0;
-}
-
-unless (($unpack_level == 0) or ($unpack_level == 1)) {
-    die("bad unpack level $unpack_level specified");
-}
-
-$LINTIAN_UNPACK_LEVEL = $unpack_level;
 
 # export current settings for our helper scripts
 foreach (('ROOT', 'CFG', VARS)) {
@@ -659,7 +635,6 @@ debug_msg(1,
 	  "Laboratory: $LINTIAN_LAB",
 	  "Archive directory: $LINTIAN_ARCHIVEDIR",
 	  "Distribution: $LINTIAN_DIST",
-	  "Default unpack level: $LINTIAN_UNPACK_LEVEL",
 	  "Architecture: $LINTIAN_ARCH",
 	  delimiter(),
     );
@@ -870,153 +845,14 @@ if (not $check_everything and not $packages_file and not $schedule->count) {
 }
 # }}}
 
-# {{{ A lone subroutine
-#----------------------------------------------------------------------------
-#  Check to make sure there are packages to check.
-sub set_value {
-    my ($f,$target,$field,$source,$required) = @_;
-    if ($required and not defined($source->{$field})) {
-	fail("description file $f does not define required tag $field");
-    }
-    $target->{$field} = $source->{$field};
-    delete $source->{$field};
-}
-# }}}
-
 # {{{ Load information about collector scripts
-opendir(COLLDIR, "$LINTIAN_ROOT/collection")
-    or fail("cannot read directory $LINTIAN_ROOT/collection");
-
-for my $f (readdir COLLDIR) {
-    next if $f =~ /^\./;
-    next unless $f =~ /\.desc$/;
-
-    debug_msg(2, "Reading collector description file $f ...");
-    my @secs = read_dpkg_control("$LINTIAN_ROOT/collection/$f");
-    my $script;
-    ($#secs+1 == 1)
-	or fail("syntax error in description file $f: too many sections");
-
-    ($script = $secs[0]->{'collector-script'})
-	or fail("error in description file $f: `Collector-Script:' not defined");
-
-    delete $secs[0]->{'collector-script'};
-    $collection_info{$script}->{'script'} = $script;
-    my $p = $collection_info{$script};
-
-    set_value($f, $p,'type',$secs[0],1);
-    # convert Type:
-    my %type;
-    for (split(/\s*,\s*/o,$p->{'type'})) {
-	if ($_ eq 'binary') {
-	    $type{'b'} = 1;
-	} elsif ($_ eq 'source') {
-	    $type{'s'} = 1;
-	} elsif ($_ eq 'udeb') {
-	    $type{'u'} = 1;
-	} elsif ($_ eq 'changes') {
-	    $type{'c'} = 1;
-	} else {
-	    fail("unknown type $_ specified in description file $f");
-	}
-    }
-    $p->{'type'} = \%type;
-
-    set_value($f,$p,'version',$secs[0],1);
-    set_value($f,$p,'auto-remove',$secs[0],0);
-
-    if (exists $secs[0]->{'needs-info'} && defined $secs[0]->{'needs-info'}) {
-	for (split(/\s*,\s*/o,$secs[0]->{'needs-info'})) {
-	    push @{$p->{'needs-info'}}, $_;
-	}
-	delete $secs[0]->{'needs-info'};
-    }
-
-    # ignore Info: and other fields for now
-    delete $secs[0]->{'info'};
-    delete $secs[0]->{'author'};
-
-    for (keys %{$secs[0]}) {
-	warning("unused tag $_ in description file $f");
-    }
-
-    debug_msg(2, map( { "$_: $p->{$_}" if defined($p->{$_}) } sort keys %$p ));
-}
-
-closedir(COLLDIR);
+load_collections(\%collection_info, "$LINTIAN_ROOT/collection");
 # }}}
 
 # {{{ Now we're ready to load info about checks & tags
 
 # load information about checker scripts
-opendir(CHECKDIR, "$LINTIAN_ROOT/checks")
-    or fail("cannot read directory $LINTIAN_ROOT/checks");
-
-for my $f (readdir CHECKDIR) {
-    next if $f =~ /^\./;
-    next unless $f =~ /\.desc$/;
-    debug_msg(2, "Reading checker description file $f ...");
-
-    my @secs = read_dpkg_control("$LINTIAN_ROOT/checks/$f");
-    my $script;
-    ($script = $secs[0]->{'check-script'})
-	or fail("error in description file $f: `Check-Script:' not defined");
-
-    # ignore check `lintian' (this check is a special case and contains the
-    # tag info for the lintian frontend--this script here)
-    next if $script eq 'lintian';
-
-    delete $secs[0]->{'check-script'};
-    $check_info{$script}->{'script'} = $script;
-    my $p = $check_info{$script};
-
-    set_value($f,$p,'type',$secs[0],1);
-    my %type;
-    # convert Type:
-    for (split(/\s*,\s*/o,$p->{'type'})) {
-	if ($_ eq 'binary') {
-	    $type{'b'} = 1;
-	} elsif ($_ eq 'source') {
-	    $type{'s'} = 1;
-	} elsif ($_ eq 'udeb') {
-	    $type{'u'} = 1;
-	} elsif ($_ eq 'changes') {
-	    $type{'c'} = 1;
-	} else {
-	    fail("unknown type $_ specified in description file $f");
-	}
-    }
-    $p->{'type'} = \%type;
-
-    set_value($f,$p,'abbrev',$secs[0],1);
-
-    if (exists $secs[0]->{'needs-info'} && defined $secs[0]->{'needs-info'}) {
-	for (split(/\s*,\s*/o,$secs[0]->{'needs-info'})) {
-	    push @{$p->{'needs-info'}}, $_;
-	    $p->{$_} = 1;
-	}
-	delete $secs[0]->{'needs-info'};
-    }
-
-    # ignore Info: and other fields for now...
-    delete $secs[0]->{'info'};
-    delete $secs[0]->{'standards-version'};
-    delete $secs[0]->{'author'};
-
-    for (keys %{$secs[0]}) {
-	warning("unused tag $_ in description file $f");
-    }
-
-    debug_msg(2, map( { "$_: $p->{$_}" } sort keys %$p ));
-
-    shift(@secs);
-    $p->{'requested-tags'} = 0;
-    foreach my $tag (@secs) {
-	$p->{'requested-tags'}++ if $TAGS->displayed($tag->{'tag'});
-    }
-}
-
-closedir(CHECKDIR);
+load_checks(\%check_info, $TAGS, "$LINTIAN_ROOT/checks");
 
 # }}}
 
@@ -1095,9 +931,23 @@ require Lintian::DepMap::Properties;
 my $map = Lintian::DepMap::Properties->new();
 
 # {{{ determine which info is needed by the collection scripts
-for my $c (keys %unpack_infos) {
-    if (exists $collection_info{$c}{'needs-info'}) {
-	map { $unpack_infos{$_} = 1; } @{$collection_info{$c}{'needs-info'}};
+if ($action eq 'unpack') {
+    # With --unpack we want all of it
+    for my $c (keys %collection_info) {
+	$unpack_infos{$c} = 1;
+    }
+} else {
+    for my $c (keys %unpack_infos) {
+	if (exists $collection_info{$c}{'needs-info'}) {
+	    map { $unpack_infos{$_} = 1; } @{$collection_info{$c}{'needs-info'}};
+	}
+    }
+}
+unless ($no_override) {
+    $map->add('coll-override-file', {'type' => 'collection', 'name' =>  'override-file'});
+    if (exists $collection_info{'override-file'}{'needs-info'}) {
+	$map->addp('coll-override-file', 'coll-',
+		   @{$collection_info{'override-file'}{'needs-info'}});
     }
 }
 # }}}
@@ -1116,14 +966,6 @@ for my $c (keys %checks) {
     $map->add('check-' . $c, {'type' => 'check', 'name' => $c});
     if (exists $check_info{$c}{'needs-info'}) {
 	$map->addp('check-' . $c, 'coll-', @{$check_info{$c}{'needs-info'}});
-    }
-}
-# }}}
-
-# {{{ make --unpack collect all info
-if ($action eq 'unpack') {
-    for my $c (keys %collection_info) {
-	$unpack_infos{$c} = 1;
     }
 }
 # }}}
@@ -1177,17 +1019,9 @@ unless ($count) {
 # }}}
 
 # {{{ Okay, now really processing the packages in one huge loop
-unless ($no_override) {
-    $map->add('coll-override-file', {'type' => 'collection', 'name' =>  'override-file'});
-    if (exists $collection_info{'override-file'}{'needs-info'}) {
-	$map->addp('coll-override-file', 'coll-',
-		@{$collection_info{'override-file'}{'needs-info'}});
-    }
-}
 v_msg(sprintf("Processing %d packages...", $count));
 debug_msg(1,
 	  "Selected action: $action",
-	  "Requested unpack level: $unpack_level",
 	  sprintf("Requested data to collect: %s", join(',',sort keys %unpack_infos)),
 	  sprintf("Selected checks: %s", join(',',sort keys %checks)),
     );
@@ -1200,15 +1034,57 @@ scalar($map->missing()) == 0
 require Checker;
 require Lintian::Collect;
 
+## REFACTORING NOTES:
+## If we are here $action is one of "check", "unpack" or "remove"
+##  
+
+if($action eq 'remove'){
+    # Handle remove here - makes the unpack/check loop simpler.
+    foreach my $pkg_info ($schedule->get_all) {
+	my ($type, $pkg, $ver, $arch, $file) =
+	    @$pkg_info{qw(type package version architecture file)};
+	my $lpkg;
+	eval{ $lpkg = $LAB->get_lab_package($pkg, $ver, $type, $file); };
+	if(!defined($lpkg)){
+	    my $err = ".";
+	    $err = ": $@" if(defined($@));
+	    warning("skipping $action of $type package $pkg$err");
+	    $exit_code = 2;
+	    next;
+	}
+	$TAGS->file_start($file, $pkg, $ver, $arch, $lpkg->pkg_type());
+	unless($lpkg->delete_lab_entry()){
+	    $exit_code = 2;
+	}
+    }
+    $TAGS->file_end();
+    exit $exit_code;
+}
+
+# Now action is always either "check" or "unpack"
+
 my %overrides;
 my %running_jobs;
 PACKAGE:
 foreach my $pkg_info ($schedule->get_all) {
     my ($type, $pkg, $ver, $arch, $file) =
 	@$pkg_info{qw(type package version architecture file)};
-    my $long_type = ($type eq 'b' ? 'binary' :
-		     ($type eq 'c' ? 'changes' :
-		     ($type eq 's' ? 'source' : 'udeb' )));
+    my $lpkg;
+    my $long_type;
+    my $base;
+    my $info;
+    my $loaded_overrides = 0;
+    eval{ $lpkg = $LAB->get_lab_package($pkg, $ver, $type, $file); };
+    if(!defined($lpkg)){
+	my $err = ".";
+	$err = ": $@" if(defined($@));
+	warning("skipping $action of $type package $pkg$err");
+	$exit_code = 2;
+	next PACKAGE;
+    }
+
+    # The Lab will normalize it.
+    $long_type = $lpkg->pkg_type();
 
     $TAGS->file_start($file, $pkg, $ver, $arch, $long_type);
     $map->initialise();
@@ -1218,246 +1094,173 @@ foreach my $pkg_info ($schedule->get_all) {
     %running_jobs = ();
 
     # determine base directory
-    my $base = "$LINTIAN_LAB/$long_type/$pkg";
-    unless ($base =~ m,^/,) {
-	$base = "$cwd/$base";
-    }
+    $base = $lpkg->base_dir();
     debug_msg(1, "Base directory in lab: $base");
 
-    my $act_unpack_level = 0;
 
-    # unpacked package up-to-date?
-    if (-d $base) {
-	my $remove_basedir = 0;
-
-        # there's a base dir, so we assume that at least
-        # one level of unpacking has been done
-	$act_unpack_level = 1;
-
-	# lintian status file exists?
-	unless (-f "$base/.lintian-status") {
-	    v_msg("No lintian status file found (removing old directory in lab)");
-	    $remove_basedir = 1;
-	    goto REMOVE_BASEDIR;
-	}
-
-	# read unpack status -- catch any possible errors
-	my $data;
-	eval { ($data) = read_dpkg_control("$base/.lintian-status"); };
-	if ($@) {		# error!
-	    v_msg($@);
-	    $remove_basedir = 1;
-	    goto REMOVE_BASEDIR;
-	}
-
-	# compatible lintian version?
-	if (not exists $data->{'lab-format'} or ($data->{'lab-format'} < $LAB_FORMAT)) {
-	    v_msg("Lab directory was created by incompatible lintian version");
-	    $remove_basedir = 1;
-	    goto REMOVE_BASEDIR;
-	}
-
-	# version up to date?
-	if (not exists $data->{'version'} or ($data->{'version'} ne $ver)) {
-	    debug_msg(1, "Removing package in lab (newer version exists) ...");
-	    $remove_basedir = 1;
-	    goto REMOVE_BASEDIR;
-	}
-
-	# file modified?
-	my $timestamp;
-	my @stat;
-	unless (@stat = stat $file) {
-	    warning("cannot stat file $file: $!");
-	} else {
-	    $timestamp = $stat[9];
-	}
-	if ((not defined $timestamp) or (not exists $data->{'timestamp'}) or ($data->{'timestamp'} != $timestamp)) {
-	    debug_msg(1, "Removing package in lab (package has been changed) ...");
-	    $remove_basedir = 1;
-	    goto REMOVE_BASEDIR;
-	}
-
-    REMOVE_BASEDIR:
-	if ($remove_basedir) {
-	    v_msg("Removing $pkg");
-	    unless (remove_pkg($base)) {
-		warning("skipping $action of $long_type package $pkg");
-		$exit_code = 2;
-		next PACKAGE;
-	    }
-	    $act_unpack_level = 0;
-	}
-    }
-
-    # unpack to requested unpack level
-    $act_unpack_level = unpack_pkg($type,$base,$file,$act_unpack_level,
-				   $unpack_level);
-    if ($act_unpack_level == -1) {
+    # Ensure it has been unpacked
+    unless ($lpkg->unpack()){
 	warning("could not unpack package to desired level",
 		"skipping $action of $long_type package $pkg");
 	$exit_code = 2;
 	next PACKAGE;
     }
+    $info = Lintian::Collect->new($pkg, $long_type);
 
-    if (($action eq 'unpack') or ($action eq 'check')) {
-	my $info = Lintian::Collect->new($pkg, $long_type);
-	my $loaded_overrides = 0;
+    # chdir to base directory
+    unless (chdir($base)) {
+	warning("could not chdir into directory $base: $!",
+		"skipping $action of $long_type package $pkg");
+	$exit_code = 2;
+	next PACKAGE;
+    }
 
-	# chdir to base directory
-	unless (chdir($base)) {
-	    warning("could not chdir into directory $base: $!",
-		    "skipping $action of $long_type package $pkg");
-	    $exit_code = 2;
-	    next PACKAGE;
-	}
+    while ($map->pending) {
+	foreach my $req (sort sort_coll $map->selectable) {
+	    my $ri = $map->getProp($req);
+	    if ($ri->{'type'} eq 'collection') {
+		my $coll = $ri->{'name'};
+		my $ci = $collection_info{$coll};
 
-	while ($map->pending) {
-	    foreach my $req (sort sort_coll $map->selectable) {
-		my $ri = $map->getProp($req);
-		if ($ri->{'type'} eq 'collection') {
-		    my $coll = $ri->{'name'};
-		    my $ci = $collection_info{$coll};
-
-		    # current type?
-		    unless (exists $ci->{'type'}{$type}) {
-			$map->satisfy($req);
-			next;
-		    }
-
-		    # If a file named .SCRIPT-VERSION already exists, we've already
-		    # collected this information and we can skip it.  Otherwise,
-		    # remove any .SCRIPT-* files (which are old version information).
-		    if (-f "$base/.${coll}-$ci->{'version'}") {
-			$map->satisfy($req);
-			next;
-		    }
-		    opendir(BASE, $base)
-			or fail("cannot read directory $base: $!");
-		    for my $file (readdir BASE) {
-			if ($file =~ /^\.\Q$coll-/) {
-			    unlink("$base/$file");
-			}
-		    }
-		    closedir(BASE);
-
-		    # collect info
-		    $map->select($req);
-		    remove_status_file($base);
-		    debug_msg(1, "Collecting info: $coll ...");
-		    my $script = "$LINTIAN_ROOT/collection/$ci->{'script'}";
-		    my $cmd = Lintian::Command::Simple->new();
-		    unless ($cmd->background($script, $pkg, $long_type) > 0) {
-			warning("collect info $coll about package $pkg failed",
-				"skipping $action of $long_type package $pkg");
-			$exit_code = 2;
-			next PACKAGE;
-		    }
-		    $running_jobs{$coll} = $cmd;
-		} elsif ($ri->{'type'} eq 'check') {
-		    # skip check if overrides were not yet loaded
-		    last unless $loaded_overrides or $no_override;
-		    my $check = $ri->{'name'};
-		    my $ci = $check_info{$check};
-
-		    # current type?
-		    unless (exists $ci->{'type'}{$type}) {
-			$map->satisfy($req);
-			next;
-		    }
-
-		    debug_msg(1, "Running check: $check ...");
-		    my $returnvalue = Checker::runcheck($pkg, $long_type, $info, $check);
-		    # Set exit_code correctly if there was not yet an exit code
-		    $exit_code = $returnvalue unless $exit_code;
-
-		    if ($returnvalue == 2) {
-			warning("skipping $action of $long_type package $pkg");
-			next PACKAGE;
-		    }
+		# current type?
+		unless (exists $ci->{'type'}{$type}) {
 		    $map->satisfy($req);
+		    next;
 		}
-	    }
-	    # wait until a job finishes to run its branches, if any, or skip
-	    # this package if any of the jobs failed.
-	    debug_msg(1, "Reaping done jobs ...");
 
-	    while (my ($coll, $cmd) = Lintian::Command::Simple::wait(\%running_jobs)) {
-		delete $running_jobs{$coll};
-		if ($cmd->status() == 0) {
-		    my $ci = $collection_info{$coll};
-		    open(VERSION, '>', "$base/.${coll}-$ci->{'version'}")
-			or fail("cannot create $base/.${coll}-$ci->{'version'}: $!");
-		    print VERSION "Lintian-Version: $LINTIAN_VERSION\n"
-				. "Timestamp: " . time . "\n";
-		    close(VERSION);
-		    debug_msg(1, "Collection script $coll done");
-		} else {
-		    warning("collect info $coll about package $pkg failed");
+		# If a file named .SCRIPT-VERSION already exists, we've already
+		# collected this information and we can skip it.  Otherwise,
+		# remove any .SCRIPT-* files (which are old version information).
+		if (-f "$base/.${coll}-$ci->{'version'}") {
+		    $map->satisfy($req);
+		    next;
+		}
+		opendir(BASE, $base)
+		    or fail("cannot read directory $base: $!");
+		for my $file (readdir BASE) {
+		    if ($file =~ /^\.\Q$coll-/) {
+			unlink("$base/$file");
+		    }
+		}
+		closedir(BASE);
+
+		# collect info
+		$map->select($req);
+		$lpkg->remove_status_file();
+		debug_msg(1, "Collecting info: $coll ...");
+		my $script = "$LINTIAN_ROOT/collection/$ci->{'script'}";
+		my $cmd = Lintian::Command::Simple->new();
+		unless ($cmd->background($script, $pkg, $long_type) > 0) {
+		    warning("collect info $coll about package $pkg failed",
+			    "skipping $action of $long_type package $pkg");
+		    $exit_code = 2;
+		    next PACKAGE;
+		}
+		$running_jobs{$coll} = $cmd;
+	    } elsif ($ri->{'type'} eq 'check') {
+		# skip check if overrides were not yet loaded
+		last unless $loaded_overrides or $no_override;
+		my $check = $ri->{'name'};
+		my $ci = $check_info{$check};
+
+		# current type?
+		unless (exists $ci->{'type'}{$type}) {
+		    $map->satisfy($req);
+		    next;
+		}
+
+		debug_msg(1, "Running check: $check ...");
+		my $returnvalue = Checker::runcheck($pkg, $long_type, $info, $check);
+		# Set exit_code correctly if there was not yet an exit code
+		$exit_code = $returnvalue unless $exit_code;
+
+		if ($returnvalue == 2) {
 		    warning("skipping $action of $long_type package $pkg");
 		    $exit_code = 2;
 		    next PACKAGE;
 		}
+		$map->satisfy($req);
+	    }
+	}
+	# wait until a job finishes to run its branches, if any, or skip
+	# this package if any of the jobs failed.
+	debug_msg(1, "Reaping done jobs ...");
 
-		$map->satisfy('coll-' . $coll);
-
-		# give a chance to other jobs to finish while we
-		# process other stuff:
-		last;
+	while (my ($coll, $cmd) = Lintian::Command::Simple::wait(\%running_jobs)) {
+	    delete $running_jobs{$coll};
+	    if ($cmd->status() == 0) {
+		my $ci = $collection_info{$coll};
+		open(VERSION, '>', "$base/.${coll}-$ci->{'version'}")
+		    or fail("cannot create $base/.${coll}-$ci->{'version'}: $!");
+		print VERSION "Lintian-Version: $LINTIAN_VERSION\n"
+				. "Timestamp: " . time . "\n";
+		close(VERSION);
+		debug_msg(1, "Collection script $coll done");
+	    } else {
+		warning("collect info $coll about package $pkg failed");
+		warning("skipping $action of $long_type package $pkg");
+		$exit_code = 2;
+		next PACKAGE;
 	    }
 
-	    unless ($no_override or $loaded_overrides) {
-		if ($map->done('coll-override-file')) {
-		    debug_msg(1, "Override file collected, loading it ...");
-		    $loaded_overrides = 1;
-		    $TAGS->file_overrides("$base/override")
-			if (-f "$base/override");
+	    $map->satisfy('coll-' . $coll);
+
+	    # give a chance to other jobs to finish while we
+	    # process other stuff:
+	    last;
+	}
+
+	unless ($no_override or $loaded_overrides) {
+	    if ($map->done('coll-override-file')) {
+		debug_msg(1, "Override file collected, loading it ...");
+		$loaded_overrides = 1;
+		$TAGS->file_overrides("$base/override")
+		    if (-f "$base/override");
+	    }
+	}
+    }
+    %running_jobs = ();
+
+    if ($action eq 'check') {
+	unless ($exit_code) {
+	    my $stats = $TAGS->statistics($file);
+	    if ($stats->{types}{E}) {
+		$exit_code = 1;
+	    } elsif ($fail_on_warnings && $stats->{types}{W}) {
+		$exit_code = 1;
+	    }
+	}
+
+	# report unused overrides
+	if (not $no_override) {
+	    my $overrides = $TAGS->overrides($file);
+
+	    for my $tag (sort keys %$overrides) {
+		next if $TAGS->suppressed($tag);
+
+		# Did we run the check script containing the tag?
+		my $taginfo = Lintian::Tag::Info->new($tag);
+		if (defined $taginfo) {
+		    next unless $checks{$taginfo->script};
+		}
+
+		for my $extra (sort keys %{$overrides->{$tag}}) {
+		    next if $overrides->{$tag}{$extra};
+
+		    tag( "unused-override", $tag, $extra );
 		}
 	    }
 	}
-	%running_jobs = ();
 
-	if ($action eq 'check') {
-	    unless ($exit_code) {
-		my $stats = $TAGS->statistics($file);
-		if ($stats->{types}{E}) {
-		    $exit_code = 1;
-		} elsif ($fail_on_warnings && $stats->{types}{W}) {
-		    $exit_code = 1;
-		}
-	    }
-
-	    # report unused overrides
-	    if (not $no_override) {
-		my $overrides = $TAGS->overrides($file);
-
-		for my $tag (sort keys %$overrides) {
-		    next if $TAGS->suppressed($tag);
-
-		    # Did we run the check script containing the tag?
-		    my $taginfo = Lintian::Tag::Info->new($tag);
-		    if (defined $taginfo) {
-			next unless $checks{$taginfo->script};
-		    }
-
-		    for my $extra (sort keys %{$overrides->{$tag}}) {
-			next if $overrides->{$tag}{$extra};
-
-			tag( "unused-override", $tag, $extra );
-		    }
-		}
-	    }
-
-	    # Report override statistics.
-	    if (not $no_override and not $show_overrides) {
-		my $stats = $TAGS->statistics($file);
-		my $errors = $stats->{overrides}{types}{E} || 0;
-		my $warnings = $stats->{overrides}{types}{W} || 0;
-		my $info = $stats->{overrides}{types}{I} || 0;
-		$overrides{errors} += $errors;
-		$overrides{warnings} += $warnings;
-		$overrides{info} += $info;
-	    }
+	# Report override statistics.
+	if (not $no_override and not $show_overrides) {
+	    my $stats = $TAGS->statistics($file);
+	    my $errors = $stats->{overrides}{types}{E} || 0;
+	    my $warnings = $stats->{overrides}{types}{W} || 0;
+	    my $info = $stats->{overrides}{types}{I} || 0;
+	    $overrides{errors} += $errors;
+	    $overrides{warnings} += $warnings;
+	    $overrides{info} += $info;
 	}
     }
 
@@ -1469,24 +1272,13 @@ foreach my $pkg_info ($schedule->get_all) {
 	next PACKAGE;
     }
 
-    # clean up
-    if ($act_unpack_level > $unpack_level) {
-	$act_unpack_level = clean_pkg($type,$base,$file,$act_unpack_level,$unpack_level);
-	if ($act_unpack_level == -1) {
-	    warning("could not clean up laboratory for package $pkg: $!",
-		    "skipping clean up");
-	    $exit_code = 2;
-	    next PACKAGE;
-	}
-    }
     # if the package's basedir was not removed then run the
     # auto-remove: yes collection scripts
-    if (-d "$base") {
+    if (!$keep_lab) {
 	chdir($base);
 	for my $coll (keys %collection_info) {
 	    my $ci = $collection_info{$coll};
 	    if (defined($ci->{'auto-remove'}) && $ci->{'auto-remove'} eq "yes") {
-		next if $keep_lab;
 		next unless (-f "$base/.${coll}-$ci->{'version'}");
 		my $script = "$LINTIAN_ROOT/collection/$ci->{'script'}";
 		debug_msg(1, "Auto removing: $ci->{'script'} ...");
@@ -1503,31 +1295,9 @@ foreach my $pkg_info ($schedule->get_all) {
 	chdir($LINTIAN_ROOT);
     }
 
-    # create Lintian status file
-    if (($act_unpack_level > 0) and (not -f "$base/.lintian-status")) {
-	my @stat;
-	unless (@stat = stat $file) {
-	    warning("cannot stat file $file: $!",
-		    "skipping creation of status file");
-	    $exit_code = 2;
-	    next PACKAGE;
-	}
-	my $timestamp = $stat[9];
-
-	unless (open(STATUS, '>', "$base/.lintian-status")) {
-	    warning("could not create status file $base/.lintian-status for package $pkg: $!");
-	    $exit_code = 2;
-	    next PACKAGE;
-	}
-
-	print STATUS "Lintian-Version: $LINTIAN_VERSION\n";
-	print STATUS "Lab-Format: $LAB_FORMAT\n";
-	print STATUS "Package: $pkg\n";
-	print STATUS "Version: $ver\n";
-	print STATUS "Type: $type\n";
-	print STATUS "Timestamp: $timestamp\n";
-	close(STATUS);
-    }
+    # All successful, make sure to record it so we do not recheck the same package
+    # in a later run (mostly for archive-wide checks).
+    $lpkg->update_status_file($LINTIAN_VERSION);
 }
 $TAGS->file_end();
 
@@ -1560,45 +1330,157 @@ exit $exit_code;
 
 # {{{ Some subroutines
 
-sub unpack_pkg {
-    my ($type,$base,$file,$cur_level,$new_level) = @_;
-
-    debug_msg(1, sprintf("Current unpack level is %d",$cur_level));
-
-    return $cur_level if $cur_level == $new_level;
-
-    # remove .lintian-status file
-    remove_status_file($base);
-
-    if ( ($cur_level == 0) and (-d $base) ) {
-       # We were lied to, there's something already there - clean it up first
-       remove_pkg($base) or return -1;
+#  Check to make sure there are packages to check.
+sub set_value {
+    my ($f,$target,$field,$source,$required) = @_;
+    if ($required and not defined($source->{$field})) {
+	fail("description file $f does not define required tag $field");
     }
-
-    if ( ($new_level >= 1) and
-	 (not defined ($cur_level) or ($cur_level < 1)) ) {
-	# create new directory
-	debug_msg(1, "Unpacking package to level 1 ...");
-	if (($type eq 'b') || ($type eq 'u')) {
-	    Lintian::Command::Simple::run("$LINTIAN_ROOT/unpack/unpack-binpkg-l1", $base, $file) == 0
-		or return -1;
-	} elsif ($type eq 'c') {
-	    spawn({}, ["$LINTIAN_ROOT/unpack/unpack-changes-l1", $base, $file])
-		or return -1;
-	} else {
-	    Lintian::Command::Simple::run("$LINTIAN_ROOT/unpack/unpack-srcpkg-l1", $base, $file) == 0
-		or return -1;
-	}
-	$cur_level = 1;
-    }
-
-    if ($new_level >= 2) {
-	warning("Requested no longer existent unpack-level 2, expect errors");
-	return $cur_level;
-    }
-
-    return $cur_level;
+    $target->{$field} = $source->{$field};
+    delete $source->{$field};
 }
+
+# Given a ref to %collection_info and the path to the collection
+# directory, this will load all the collection information into
+# %collection_info.
+sub load_collections{
+    my ($cinfo, $dirname) = @_;
+    opendir(my $dir, $dirname)
+	or fail("cannot read directory $dirname");
+
+    for my $f (readdir($dir)) {
+	next if $f =~ /^\./;
+	next unless $f =~ /\.desc$/;
+
+	debug_msg(2, "Reading collector description file $f ...");
+	my @secs = read_dpkg_control("$dirname/$f");
+	my $script;
+	($#secs+1 == 1)
+	    or fail("syntax error in description file $f: too many sections");
+
+	($script = $secs[0]->{'collector-script'})
+	    or fail("error in description file $f: `Collector-Script:' not defined");
+
+	delete $secs[0]->{'collector-script'};
+	$cinfo->{$script}->{'script'} = $script;
+	my $p = $cinfo->{$script};
+
+	set_value($f, $p,'type',$secs[0],1);
+	# convert Type:
+	my %type;
+	for (split(/\s*,\s*/o,$p->{'type'})) {
+	    if ($_ eq 'binary') {
+		$type{'b'} = 1;
+	    } elsif ($_ eq 'source') {
+		$type{'s'} = 1;
+	    } elsif ($_ eq 'udeb') {
+		$type{'u'} = 1;
+	    } elsif ($_ eq 'changes') {
+		$type{'c'} = 1;
+	    } else {
+		fail("unknown type $_ specified in description file $f");
+	    }
+	}
+	$p->{'type'} = \%type;
+
+	set_value($f,$p,'version',$secs[0],1);
+	set_value($f,$p,'auto-remove',$secs[0],0);
+
+	if (exists $secs[0]->{'needs-info'} && defined $secs[0]->{'needs-info'}) {
+	    for (split(/\s*,\s*/o,$secs[0]->{'needs-info'})) {
+		push @{$p->{'needs-info'}}, $_;
+	    }
+	    delete $secs[0]->{'needs-info'};
+	}
+
+	# ignore Info: and other fields for now
+	delete $secs[0]->{'info'};
+	delete $secs[0]->{'author'};
+
+	for (keys %{$secs[0]}) {
+	    warning("unused tag $_ in description file $f");
+	}
+
+	debug_msg(2, map( { "$_: $p->{$_}" if defined($p->{$_}) } sort keys %$p ));
+    }
+
+    closedir($dir);
+}
+
+# Given a ref to %check_info, $TAGS  and the path to the checks
+# directory, this will load all the information about checks into
+# %check_info.
+sub load_checks{
+    my ($cinfo, $tags, $dirname) = @_;
+    opendir(my $dir, $dirname)
+	or fail("cannot read directory $dirname");
+
+    for my $f (readdir($dir)) {
+	next if $f =~ /^\./;
+	next unless $f =~ /\.desc$/;
+	debug_msg(2, "Reading checker description file $f ...");
+
+	my @secs = read_dpkg_control("$dirname/$f");
+	my $script;
+	($script = $secs[0]->{'check-script'})
+	    or fail("error in description file $f: `Check-Script:' not defined");
+
+	# ignore check `lintian' (this check is a special case and contains the
+	# tag info for the lintian frontend--this script here)
+	next if $script eq 'lintian';
+
+	delete $secs[0]->{'check-script'};
+	$cinfo->{$script}->{'script'} = $script;
+	my $p = $cinfo->{$script};
+
+	set_value($f,$p,'type',$secs[0],1);
+	my %type;
+	# convert Type:
+	for (split(/\s*,\s*/o,$p->{'type'})) {
+	    if ($_ eq 'binary') {
+		$type{'b'} = 1;
+	    } elsif ($_ eq 'source') {
+		$type{'s'} = 1;
+	    } elsif ($_ eq 'udeb') {
+		$type{'u'} = 1;
+	    } elsif ($_ eq 'changes') {
+		$type{'c'} = 1;
+	    } else {
+		fail("unknown type $_ specified in description file $f");
+	    }
+    }
+	$p->{'type'} = \%type;
+
+	set_value($f,$p,'abbrev',$secs[0],1);
+
+	if (exists $secs[0]->{'needs-info'} && defined $secs[0]->{'needs-info'}) {
+	    for (split(/\s*,\s*/o,$secs[0]->{'needs-info'})) {
+		push @{$p->{'needs-info'}}, $_;
+		$p->{$_} = 1;
+	    }
+	    delete $secs[0]->{'needs-info'};
+	}
+
+	# ignore Info: and other fields for now...
+	delete $secs[0]->{'info'};
+	delete $secs[0]->{'standards-version'};
+	delete $secs[0]->{'author'};
+
+	for (keys %{$secs[0]}) {
+	    warning("unused tag $_ in description file $f");
+	}
+
+	debug_msg(2, map( { "$_: $p->{$_}" } sort keys %$p ));
+
+	shift(@secs);
+	$p->{'requested-tags'} = 0;
+	foreach my $tag (@secs) {
+	    $p->{'requested-tags'}++ if $tags->displayed($tag->{'tag'});
+	}
+    }
+    closedir($dir);
+}
+
 
 sub sort_coll {
     my ($ap, $bp);
@@ -1611,68 +1493,6 @@ sub sort_coll {
     return -1 if ($ap->{'type'} eq 'collection' && $bp->{'type'} ne 'collection');
     return 1 if ($bp->{'type'} eq 'collection' && $ap->{'type'} ne 'collection');
     return ($ap->{'name'} cmp $bp->{'name'});
-}
-
-# TODO: is this the best way to clean dirs in perl?
-# no, look at File::Path module
-sub clean_pkg {
-    my ($type,$base,$file,$cur_level,$new_level) = @_;
-
-    return $cur_level if $cur_level == $new_level;
-
-    if ($new_level < 1) {
-	# remove base directory
-	remove_pkg($base) or return -1;
-	return 0;
-    }
-
-    if ( ($new_level < 2) and defined ($cur_level) and ($cur_level >= 2) ) {
-	# remove .lintian-status file
-	remove_status_file($base);
-
-	# remove unpacked/ directory
-	debug_msg(1, "Decreasing unpack level to 1 (removing files) ...");
-	if ( -l "$base/unpacked" ) {
-	    delete_dir("$base/".readlink("$base/unpacked"))
-		or return -1;
-	    delete_dir("$base/unpacked") or return -1;
-	} else {
-	    delete_dir("$base/unpacked") or return -1;
-	}
-
-	$cur_level = 1;
-    }
-
-    return $cur_level;
-}
-
-# this function removes a package's base directory in the lab completely
-sub remove_pkg {
-    my ($base) = @_;
-
-    debug_msg(1, "Removing package in lab ...");
-    unless (delete_dir($base)) {
-	warning("cannot remove directory $base: $!");
-	return 0;
-    }
-
-    return 1;
-}
-
-sub remove_status_file {
-    my ($base) = @_;
-
-    # status file exists?
-    if (not -e "$base/.lintian-status") {
-	return 1;
-    }
-
-    if (not unlink("$base/.lintian-status")) {
-	warning("cannot remove status file $base/.lintian-status: $!");
-	return 0;
-    }
-
-    return 1;
 }
 
 # -------------------------------

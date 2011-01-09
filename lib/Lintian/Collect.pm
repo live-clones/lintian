@@ -18,10 +18,11 @@
 
 package Lintian::Collect;
 use strict;
+use Util qw(fail);
 
 # Take the package name and type, initialize an appropriate collect object
-# based on the package type, and return it.  Returns undef for an unknown
-# package type.
+# based on the package type, and return it.  fail with unknown types,
+# since we do not check in other packes if this returns a value.
 sub new {
     my ($class, $pkg, $type) = @_;
     my $object;
@@ -35,7 +36,7 @@ sub new {
 	require Lintian::Collect::Changes;
 	$object = Lintian::Collect::Changes->new ($pkg);
     } else {
-        return;
+        fail("Undefined type: $type");
     }
     $object->{name} = $pkg;
     $object->{type} = $type;
