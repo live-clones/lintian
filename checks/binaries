@@ -246,7 +246,7 @@ foreach my $file (@{$info->sorted_file_info}) {
     }
 
     my $strings = slurp_entire_file("strings/$file");
-    check_spelling('spelling-error-in-binary', $strings, $file);
+    check_spelling('spelling-error-in-binary', $strings, $file, { $pkg => 1 });
 
     # stripped?
     if ($fileinfo =~ m,not stripped\s*$,o) {

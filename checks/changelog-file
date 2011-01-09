@@ -160,7 +160,8 @@ if (-f 'NEWS.Debian') {
         if ($news->Distribution && $news->Distribution =~ /unreleased/i) {
             tag "debian-news-entry-has-strange-distribution", $news->Distribution;
         }
-        check_spelling('spelling-error-in-news-debian', $news->Changes);
+        check_spelling('spelling-error-in-news-debian', $news->Changes,
+		       undef, { $pkg => 1});
 	if ($news->Changes =~ /^\s*\*\s/) {
 	    tag 'debian-news-entry-uses-asterisk';
 	}
@@ -390,7 +391,7 @@ if (@entries) {
     # Strip out all lines that contain the word spelling to avoid false
     # positives on changelog entries for spelling fixes.
     $changes =~ s/^.*spelling.*\n//gm;
-    check_spelling('spelling-error-in-changelog', $changes);
+    check_spelling('spelling-error-in-changelog', $changes, undef, { $pkg => 1});
 }
 
 # read the changelog itself

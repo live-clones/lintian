@@ -191,7 +191,8 @@ unless ($info->field('homepage') or $flagged_homepage) {
 }
 
 if ($description) {
-    check_spelling('spelling-error-in-description', $description);
+    check_spelling('spelling-error-in-description', $description,
+		   undef, {$pkg => 1});
     check_spelling_picky('capitalization-error-in-description', $description);
 }
 

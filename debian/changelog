@@ -117,6 +117,10 @@ lintian (2.4.4) UNRELEASED; urgency=low
   * lib/Lintian/Check.pm:
     + [NT] Use Email::Valid to validate email addreses.
       (Closes: #602655)
+    + [NT] Allow package names to be excluded from regular spelling
+      checks.  They are still subject to multi word and case sensitive
+      spelling checks.  Thanks to syq for the suggestion.
+      (Closes: #576283)
   * lib/Lintian/Collect/Binary.pm:
     + [NT] Pre-sort file index and file info to avoid sorting it
       repeatedly in the checks.  (Closes: #605844)
