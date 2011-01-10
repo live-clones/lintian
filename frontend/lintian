@@ -581,6 +581,9 @@ require Read_pkglists;
 
 import Util;
 
+require Checker;
+require Lintian::Collect;
+require Lintian::DepMap::Properties;
 require Lintian::Data;
 require Lintian::Schedule;
 require Lintian::Output;
@@ -897,26 +900,13 @@ load_checks(\%check_info, $TAGS, "$LINTIAN_ROOT/checks");
 
 # }}}
 
-# {{{ Again some lone code the author just dumped where his cursor just happened to be
-if ($unpack_info) {
-    # determine which info has been requested
-    for my $i (split(/,/,$unpack_info)) {
-	unless ($collection_info{$i}) {
-	    fail("unknown info specified: $i");
-	}
-	$unpack_infos{$i} = 1;
-    }
-}
-
-# create check_abbrev hash
-for my $c (keys %check_info) {
-    $check_abbrev{$check_info{$c}->{'abbrev'}} = $c;
-}
-
-# }}}
-
 # {{{ determine which checks have been requested
 if ($action eq 'check') {
+    # create check_abbrev hash
+    for my $c (keys %check_info) {
+	$check_abbrev{$check_info{$c}->{'abbrev'}} = $c;
+    }
+
     if ($check_tags) {
 	foreach my $t (split(/,/, $check_tags)) {
 	    my $info = Lintian::Tag::Info->new($t);
@@ -967,10 +957,6 @@ if ($action eq 'check') {
 
 # }}}
 
-require Lintian::DepMap::Properties;
-
-my $map = Lintian::DepMap::Properties->new();
-
 # {{{ determine which info is needed by the collection scripts
 if ($action eq 'unpack') {
     # With --unpack we want all of it
@@ -983,27 +969,45 @@ if ($action eq 'unpack') {
 	    map { $unpack_infos{$_} = 1; } @{$collection_info{$c}{'needs-info'}};
 	}
     }
+    if ($unpack_info) {
+	# Add collections specifically requested by the user (--unpack-info)
+	for my $i (split(/,/,$unpack_info)) {
+	    unless ($collection_info{$i}) {
+		fail("unknown info specified: $i");
+	    }
+	    $unpack_infos{$i} = 1;
+	}
+    }
 }
+# }}}
+
+# {{{ Create the dependency tree and populate it with checks and collections
+
+# All required checks and collections have been calculated at this point.
+# We are just adding this information to a map now that will generate the
+# execution order.
+
+my $map = Lintian::DepMap::Properties->new();
+
 unless ($no_override) {
+    # add the override-file collection
     $map->add('coll-override-file', {'type' => 'collection', 'name' =>  'override-file'});
     if (exists $collection_info{'override-file'}{'needs-info'}) {
 	$map->addp('coll-override-file', 'coll-',
 		   @{$collection_info{'override-file'}{'needs-info'}});
     }
 }
-# }}}
 
-# {{{ add the collection scripts to the dependencies tree
 for my $c (keys %unpack_infos) {
+    # Add the collections with their dependency information
     $map->add('coll-' . $c, {'type' => 'collection', 'name' => $c});
     if (exists $collection_info{$c}{'needs-info'}) {
 	$map->addp('coll-' . $c, 'coll-', @{$collection_info{$c}{'needs-info'}});
     }
 }
-# }}}
 
-# {{{ add the checks to the dependencies tree
 for my $c (keys %enabled_checks) {
+    # Add the checks with their dependency information
     $map->add('check-' . $c, {'type' => 'check', 'name' => $c});
     if (exists $check_info{$c}{'needs-info'}) {
 	$map->addp('check-' . $c, 'coll-', @{$check_info{$c}{'needs-info'}});
@@ -1023,9 +1027,6 @@ debug_msg(1,
 # Make sure the resolver is in a sane state:
 scalar($map->missing()) == 0
     or fail("There are missing nodes on the resolver: ".join(', ', $map->missing()));
-
-require Checker;
-require Lintian::Collect;
 
 ## REFACTORING NOTES:
 ## If we are here $action is one of "check", "unpack" or "remove"
