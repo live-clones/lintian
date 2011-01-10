@@ -839,7 +839,48 @@ while (my $arg = shift) {
     }
 }
 
-if (not $check_everything and not $packages_file and not $schedule->count) {
+if ($check_everything) {
+    # make sure package info is available
+    read_src_list("$LINTIAN_LAB/info/source-packages", 0);
+    read_bin_list("$LINTIAN_LAB/info/binary-packages", 0);
+    read_udeb_list("$LINTIAN_LAB/info/udeb-packages", 0);
+
+    debug_msg(2, "pkg_mode = $pkg_mode");
+
+    if (($pkg_mode eq 'a') or ($pkg_mode eq 's')) {
+	for my $arg (sort keys %source_info) {
+	    debug_msg(1, "doing stuff with $LINTIAN_ARCHIVEDIR/$source_info{$arg}->{'file'}");
+	    $schedule->add_file('s', "$LINTIAN_ARCHIVEDIR/$source_info{$arg}->{'file'}",
+				%{$source_info{$arg}});
+	}
+    }
+    if (($pkg_mode eq 'a') or ($pkg_mode eq 'b')) {
+	for my $arg (sort keys %binary_info) {
+	    debug_msg(1, "doing stuff with $LINTIAN_ARCHIVEDIR/$binary_info{$arg}->{'file'}");
+	    $schedule->add_file('b', "$LINTIAN_ARCHIVEDIR/$binary_info{$arg}->{'file'}",
+				%{$binary_info{$arg}});
+	}
+    }
+    if (($pkg_mode eq 'a') or ($pkg_mode eq 'u')) {
+	for my $arg (sort keys %udeb_info) {
+	    debug_msg(1, "doing stuff with $LINTIAN_ARCHIVEDIR/$udeb_info{$arg}->{'file'}");
+	    $schedule->add_file('u', "$LINTIAN_ARCHIVEDIR/$udeb_info{$arg}->{'file'}",
+				%{$udeb_info{$arg}});
+	}
+    }
+
+    # package list still empty?
+    unless ($schedule->count) {
+	warning("no packages found in distribution directory");
+    }
+} elsif ($packages_file) {	# process all packages listed in packages file?
+    $schedule->add_pkg_list($packages_file);
+}
+# }}}
+
+# {{{ Some silent exit
+my $count = $schedule->count;
+unless ($count) {
     v_msg("No packages selected.");
     exit $exit_code;
 }
@@ -967,54 +1008,6 @@ for my $c (keys %enabled_checks) {
     if (exists $check_info{$c}{'needs-info'}) {
 	$map->addp('check-' . $c, 'coll-', @{$check_info{$c}{'needs-info'}});
     }
-}
-# }}}
-
-# {{{ process all packages in the archive?
-if ($check_everything) {
-    # make sure package info is available
-    read_src_list("$LINTIAN_LAB/info/source-packages", 0);
-    read_bin_list("$LINTIAN_LAB/info/binary-packages", 0);
-    read_udeb_list("$LINTIAN_LAB/info/udeb-packages", 0);
-
-    debug_msg(2, "pkg_mode = $pkg_mode");
-
-    if (($pkg_mode eq 'a') or ($pkg_mode eq 's')) {
-	for my $arg (sort keys %source_info) {
-	    debug_msg(1, "doing stuff with $LINTIAN_ARCHIVEDIR/$source_info{$arg}->{'file'}");
-	    $schedule->add_file('s', "$LINTIAN_ARCHIVEDIR/$source_info{$arg}->{'file'}",
-				%{$source_info{$arg}});
-	}
-    }
-    if (($pkg_mode eq 'a') or ($pkg_mode eq 'b')) {
-	for my $arg (sort keys %binary_info) {
-	    debug_msg(1, "doing stuff with $LINTIAN_ARCHIVEDIR/$binary_info{$arg}->{'file'}");
-	    $schedule->add_file('b', "$LINTIAN_ARCHIVEDIR/$binary_info{$arg}->{'file'}",
-				%{$binary_info{$arg}});
-	}
-    }
-    if (($pkg_mode eq 'a') or ($pkg_mode eq 'u')) {
-	for my $arg (sort keys %udeb_info) {
-	    debug_msg(1, "doing stuff with $LINTIAN_ARCHIVEDIR/$udeb_info{$arg}->{'file'}");
-	    $schedule->add_file('u', "$LINTIAN_ARCHIVEDIR/$udeb_info{$arg}->{'file'}",
-				%{$udeb_info{$arg}});
-	}
-    }
-
-    # package list still empty?
-    unless ($schedule->count) {
-	warning("no packages found in distribution directory");
-    }
-} elsif ($packages_file) {	# process all packages listed in packages file?
-    $schedule->add_pkg_list($packages_file);
-}
-# }}}
-
-# {{{ Some silent exit
-my $count = $schedule->count;
-unless ($count) {
-    v_msg("No packages selected.");
-    exit 0;
 }
 # }}}
 
