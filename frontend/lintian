@@ -88,7 +88,7 @@ my $exit_code = 0;
 my $LAB;
 
 my %collection_info;
-my %checks;
+my %enabled_checks;
 my %check_abbrev;
 my %unpack_infos;
 my %check_info;
@@ -884,7 +884,7 @@ if ($action eq 'check') {
 	    my $script = $info->script;
 	    next if $script eq 'lintian';
 	    if ($check_info{$script}) {
-		$checks{$script} = 1;
+		$enabled_checks{$script} = 1;
 	    } else {
 		# should never happen
 		fail("no info for script $script");
@@ -902,11 +902,11 @@ if ($action eq 'check') {
 		} elsif ($check_info{$c}->{'requested-tags'} == 0) {
 		    #no need to run this check, no tags will be issued
 		} else {
-		    $checks{$c} = 1;
+		    $enabled_checks{$c} = 1;
 		}
 	    } elsif (exists $check_abbrev{$c}) {
 		#abbrevs only used when -C is given, so we don't need %dont_check
-		$checks{$check_abbrev{$c}} = 1;
+		$enabled_checks{$check_abbrev{$c}} = 1;
 	    } else {
 		fail("unknown check specified: $c");
 	    }
@@ -914,7 +914,7 @@ if ($action eq 'check') {
     }
 
     # determine which info is needed by the checks
-    for my $c (keys %checks) {
+    for my $c (keys %enabled_checks) {
 	for my $i (keys %collection_info) {
 	    # required by $c ?
 	    if ($check_info{$c}->{$i}) {
@@ -962,7 +962,7 @@ for my $c (keys %unpack_infos) {
 # }}}
 
 # {{{ add the checks to the dependencies tree
-for my $c (keys %checks) {
+for my $c (keys %enabled_checks) {
     $map->add('check-' . $c, {'type' => 'check', 'name' => $c});
     if (exists $check_info{$c}{'needs-info'}) {
 	$map->addp('check-' . $c, 'coll-', @{$check_info{$c}{'needs-info'}});
@@ -1023,7 +1023,7 @@ v_msg(sprintf("Processing %d packages...", $count));
 debug_msg(1,
 	  "Selected action: $action",
 	  sprintf("Requested data to collect: %s", join(',',sort keys %unpack_infos)),
-	  sprintf("Selected checks: %s", join(',',sort keys %checks)),
+	  sprintf("Selected checks: %s", join(',',sort keys %enabled_checks)),
     );
 
 
@@ -1241,7 +1241,7 @@ foreach my $pkg_info ($schedule->get_all) {
 		# Did we run the check script containing the tag?
 		my $taginfo = Lintian::Tag::Info->new($tag);
 		if (defined $taginfo) {
-		    next unless $checks{$taginfo->script};
+		    next unless $enabled_checks{$taginfo->script};
 		}
 
 		for my $extra (sort keys %{$overrides->{$tag}}) {
