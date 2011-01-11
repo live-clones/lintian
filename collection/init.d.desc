@@ -4,4 +4,4 @@ Info: This script copies the etc/init.d directory into the lintian
  directory.
 Type: binary
 Version: 1
-Needs-Info: unpacked
+Needs-Info: unpacked, fields

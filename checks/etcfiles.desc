@@ -4,6 +4,7 @@ Abbrev: etc
 Type: binary
 Info: Checks if all files in /etc that are shipped with the package are
  marked as conffiles as required by policy.
+Needs-info: bin-pkg-control
 
 Tag: file-in-etc-not-marked-as-conffile
 Severity: serious

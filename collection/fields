@@ -1,0 +1,89 @@
+#!/usr/bin/perl -w
+# bin-pkg-control -- lintian collector script
+
+# Copyright (C) 1998 Christian Schwarz
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+use strict;
+use lib "$ENV{'LINTIAN_ROOT'}/lib";
+use Util;
+
+($#ARGV == 1) or fail("syntax: fields <pkg> <type>");
+my $pkg = shift;
+my $type = shift;
+my $file;
+my $data;
+
+exit 0 if ($type eq 'source'); #FIXME
+
+if ($type eq 'changes'){
+    $file = 'changes';
+} elsif ($type eq 'binary' or $type eq 'udeb'){
+    $file = 'control/control';
+} else {
+
+
+}
+
+if (!defined($file)) {
+    fail("Cannot extract files for $type") unless ($type =~ m/^remove-/);
+} elsif (not -e $file) {
+    fail("fields invoked in the wrong directory");
+}
+
+if (-d 'fields'){
+    delete_dir('fields') or fail("Could not remove old fields directory");
+}
+
+# Exit now if we are just removing.
+exit 0 unless (defined($file));
+
+mkdir("fields", 0777) or fail("mkdir fields: $!");
+
+if($type eq 'changes'){
+    $data = get_dsc_info($file);
+} elsif ($type eq 'binary' or $type eq 'udeb'){
+    $data = (read_dpkg_control($file))[0];
+    $data->{'source'} or ($data->{'source'} = $data->{'package'});
+}
+    
+# create control field files
+for my $field (keys %$data) {
+    my $value = $data->{$field};
+    # checks/fields will convert colons into slashes
+    $field =~ s,/,:,g;
+    my $field_file = "fields/$field";
+    open(F, '>', $field_file) or fail("cannot open file $field_file for writing: $!");
+    print F $value,"\n";
+    close(F) or fail("Could not write $field_file: $!");
+}
+
+if($type eq 'binary' or $type eq 'udeb'){
+    # FIXME - the LAB really ought to handle this as it involves
+    # cross-pkg LAB layout.
+
+    # create symlink to source package
+    $data->{'source'} =~ s/\s*\(.*\)\s*$//;
+    # but only create it if it doesn't traverse directories
+    if ($data->{'source'} !~ m,/,) {
+        symlink("../../source/$data->{'source'}","source")
+            or fail("symlink: $!");
+    }
+}
+    
+exit 0;
