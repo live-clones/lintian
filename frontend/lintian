@@ -1199,9 +1199,9 @@ foreach my $pkg_info ($schedule->get_all) {
 
 	    $map->satisfy('coll-' . $coll);
 
-	    # give a chance to other jobs to finish while we
-	    # process other stuff:
-	    last;
+	    # If that node allowed us to start on another, then we
+	    # leave this loop.
+	    last unless ($map->selectable());
 	}
 
 	unless ($no_override or $loaded_overrides) {
