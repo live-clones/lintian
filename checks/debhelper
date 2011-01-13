@@ -74,6 +74,7 @@ open(RULES, '<', "debfiles/rules") or fail("cannot read debian/rules: $!");
 my $maybe_skipping;
 my $dhcompatvalue;
 my @versioncheck;
+my $inclcdbs = 0;
 while (<RULES>) {
     if (/^ifn?(eq|def)\s/) {
         $maybe_skipping++;
@@ -144,6 +145,7 @@ while (<RULES>) {
 	$seencommand = 1;
 	$needbuilddepends = 1;
 	$needtomodifyscripts = 1;
+	$inclcdbs = 1;
 
 	# CDBS sets DH_COMPAT but doesn't export it.  It does, however, create
 	# a debian/compat file if none was found; that logic is handled later.
@@ -160,6 +162,8 @@ while (<RULES>) {
     } elsif (/^override_dh_/) {
 	$needbuilddepends = 1;
 	$overridetargets = 1;
+    } elsif (m,^include\s+/usr/share/cdbs/,){
+	$inclcdbs = 1;
     }
     if (/^\s+dh_python\s/) {
         $seendhpython = 1;
@@ -168,6 +172,12 @@ while (<RULES>) {
     }
 }
 close RULES;
+
+unless ($inclcdbs){
+    my $bdepends = $info->relation('build-depends-all');
+    # Okay - d/rules does not include any file in /usr/share/cdbs/
+    tag "unused-build-dependency-on-cdbs" if ($bdepends->implies("cdbs"));
+}
 
 return unless $seencommand;
 

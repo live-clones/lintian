@@ -9,6 +9,7 @@ lintian (2.4.4) UNRELEASED; urgency=low
       - needless-dependency-on-jre
       - temporary-debhelper-file
       - compressed-objects.inv
+      - unused-build-dependency-on-cdbs
 
   * checks/*:
     + [NT] Use the new pre-sorted file {index,info} when iterating over files.
@@ -28,6 +29,8 @@ lintian (2.4.4) UNRELEASED; urgency=low
       provided dh_nativejava.  (Closes: #606506)
     + [NT] Added check for temporary debhelper files that ought to have
       been removed by dh_clean.  (Closes: #598251)
+    + [NT] Added check for unused build dependency on cdbs.  Thanks to
+      Jari Aalto for suggesting this.  (Closes: #582769)
   * checks/debian-source-dir:
     + [NT] Added missing import of "Util" perl module.  Thanks to David
       Bremner for the patch.
