@@ -1093,8 +1093,8 @@ foreach my $pkg_info ($schedule->get_all) {
 
 
     # Ensure it has been unpacked
-    unless ($lpkg->unpack()){
-	warning("could not unpack package to desired level",
+    unless ($lpkg->create_entry()){
+	warning("could not create the package entry in the lab",
 		"skipping $action of $long_type package $pkg");
 	$exit_code = 2;
 	next PACKAGE;

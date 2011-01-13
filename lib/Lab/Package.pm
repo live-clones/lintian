@@ -143,7 +143,73 @@ sub delete_lab_entry {
 
 =pod
 
-=item $lpkg->unpack()
+=item $lpkg->entry_exists()
+
+Returns a truth value if the lab-entry exists.
+
+=cut
+
+sub entry_exists(){
+    my ($self) = @_;
+    my $pkg_type = $self->{pkg_type};
+    my $base_dir = $self->{base_dir};
+
+    # If we have a positive unpack level, something exists 
+    return 1 if ($self->{_unpack_level} > 0);
+
+    # Check if the relevant symlink exists.
+    if ($pkg_type eq 'changes'){
+	return 1 if ( -l "$base_dir/changes");
+    }
+
+    # No unpack level and no symlink => the entry does not
+    # exist or it is too broken in its current state.
+    return 0;
+}
+
+=pod
+
+=item $lpkg->create_entry()
+
+Creates a minimum lab-entry, in which collections and checks
+can be run.  Note if it already exists, then this will do
+nothing.
+
+=cut
+
+sub create_entry(){
+    my ($self) = @_;
+    my $pkg_type = $self->{pkg_type};
+    my $base_dir = $self->{base_dir};
+    my $pkg_path = $self->{pkg_path};
+    my $link;
+    my $madedir = 0;
+    # It already exists.
+    return 1 if ($self->entry_exists());
+    # We still use the "legacy" unpack for some things.
+    return $self->_unpack() unless ($pkg_type eq 'changes');
+
+    unless (-d $base_dir) {
+	mkdir($base_dir, 0777) or return 0;
+	$madedir = 1;
+    }
+    $link = "$base_dir/changes";
+    unless (symlink($pkg_path, $link)){
+	# "undo" the mkdir if the symlink fails.
+	rmdir($base_dir) if($madedir);
+	return 0;
+    }
+    # Set the legacy "_unpack_level"
+    $self->{_unpack_level} = 1;
+    return 1;
+}
+
+
+=pod
+
+=item $lpkg->_unpack()
+
+DEPRECATED
 
 Runs the unpack script for the type of package.  This is
 deprecated but remains until all the unpack scripts have
@@ -151,7 +217,7 @@ been replaced by coll scripts.
 
 =cut
 
-sub unpack {
+sub _unpack {
     my ($self) = @_;
     my $level = $self->{_unpack_level};
     my $base_dir = $self->{base_dir};
@@ -175,12 +241,11 @@ sub unpack {
     if (($pkg_type eq 'binary') || ($pkg_type eq 'udeb')) {
 	Lintian::Command::Simple::run("$ENV{LINTIAN_ROOT}/unpack/unpack-binpkg-l1", $base_dir, $pkg_path) == 0
 	    or return 0;
-    } elsif ($pkg_type eq 'changes') {
-	Lintian::Command::spawn({}, ["$ENV{LINTIAN_ROOT}/unpack/unpack-changes-l1", $base_dir, $pkg_path])
-	    or return 0;
-    } else {
+    } elsif ($pkg_type eq 'source') {
 	Lintian::Command::Simple::run("$ENV{LINTIAN_ROOT}/unpack/unpack-srcpkg-l1", $base_dir, $pkg_path) == 0
 	    or return 0;
+    } else {
+	fail("_unpack does not know how to handle $pkg_type");
     }
 
     $self->{_unpack_level} = 1;
