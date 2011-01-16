@@ -15,10 +15,11 @@ Info: Native packaging should only be used if a piece of software was
  Native source packages are sometimes created by accident. In most cases
  the reason is the location of the original source tarball. For version
  1.0 source packages, dpkg-source determines whether they're non-native by
- looking for a file named <tt>&lt;package&gt;_&lt;version&gt;.orig.tar.gz</tt>
- in the parent directory, where &lt;version&gt; is the version from the most
- recent <tt>debian/changelog</tt> entry. For version 3.0 packages, check
- <tt>debian/source/format</tt> for an erroneous "(native)" package format.
+ looking for a file named <tt>&lt;package&gt;_&lt;upversion&gt;.orig.tar.gz</tt>
+ in the parent directory, where &lt;upversion&gt; is the upstream version
+ from the most recent <tt>debian/changelog</tt> entry. For version 3.0
+ packages, check <tt>debian/source/format</tt> for an erroneous
+ "(native)" package format.
 
 Tag: non-native-package-with-native-version
 Severity: normal

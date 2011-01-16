@@ -25,6 +25,10 @@ lintian (2.4.4) UNRELEASED; urgency=low
       It incorrectly assumed that -i worked for native packages.
       (Closes: #609153)
     + [NT] Moved the list of autotools packages into data/cruft/autotools.
+    + [NT] Clarified that dpkg-source looks for <package>_<upstreamversion>
+      and not <package>_<version> in the description of
+      native-package-with-dash-version.  Thanks to Daniel Thomas for the
+      report.  (Closes: #594254)
   * checks/debhelper{,.desc}:
     + [NT] Fix dependency check for dh_nativejava, default-jdk has never
       provided dh_nativejava.  (Closes: #606506)
