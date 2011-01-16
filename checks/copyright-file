@@ -270,7 +270,10 @@ if (m,(?:under )?(?:the )?(?:same )?(?:terms )?as Perl itself,i &&
 if (m,\<put author[\'\(]s\)? name and email here\>,) {
     tag 'helper-templates-in-copyright';
 }
-if (m,\<Copyright \(C\) YYYY Name OfAuthor\>,) {
+if (m,\<Copyright \(C\) YYYY Name OfAuthor\>,o or
+    m,\<Copyright \(C\) \d{4} Upstream Full Name\>,o or
+    m,My Full Name \<name\@place.com\>,o or
+    m,\<likewise for another author\>,o) {
     tag 'helper-templates-in-copyright';
 }
 
@@ -278,7 +281,7 @@ if (m/This copyright info was automatically extracted/) {
     tag 'copyright-contains-dh-make-perl-boilerplate';
 }
 
-if (m,url://example\.com,) {
+if (m,url://example\.com, or m,url://somewhere\.com,) {
     tag 'copyright-has-url-from-dh_make-boilerplate';
 }
 
