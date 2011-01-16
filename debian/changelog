@@ -97,6 +97,10 @@ lintian (2.4.4) UNRELEASED; urgency=low
       suppress the {ancient,outdated}-autotools-helper-file tags.
       Currently this is manually updated.  This new list includes
       dh-autoreconf, thanks to Felix Geyer.  (Closes: #592358)
+  * data/debian-source-dir/known-files:
+    + [NT] Added the file and included git-patches in it.  Thanks to
+      Ron for the report and David Bremner for the initial patch.
+      (Closes: #607502)
   * data/fields/essential:
     + [RG] Add hurd.  (Closes: #591323)
   * data/fields/obsolete-packages:
