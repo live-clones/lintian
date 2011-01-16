@@ -11,6 +11,7 @@ lintian (2.4.4) UNRELEASED; urgency=low
       - compressed-objects.inv
       - unused-build-dependency-on-cdbs
       - python-debug-in-wrong-location
+      - debian-watch-contains-dh_make-template
 
   * checks/*:
     + [NT] Use the new pre-sorted file {index,info} when iterating over files.
@@ -81,6 +82,9 @@ lintian (2.4.4) UNRELEASED; urgency=low
       (Closes: #582767)
   * checks/standards-version:
     + [RG] Correctly handle cases where debian/changelog is a symlink.
+  * checks/watch-file{,.desc}:
+    + [NT] Added check for dh_make(1) templates in the watch file.
+    Thanks to Nelson A. de Oliveira for the report.  (Closes: #600866)
 
   * data/changelog-file/ubuntu-dists:
     + [CW] Add natty as a valid Ubuntu distribution, and remove the EOLed
