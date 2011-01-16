@@ -12,6 +12,7 @@ lintian (2.4.4) UNRELEASED; urgency=low
       - unused-build-dependency-on-cdbs
       - python-debug-in-wrong-location
       - debian-watch-contains-dh_make-template
+      - missing-dependency-on-python-central
 
   * checks/*:
     + [NT] Use the new pre-sorted file {index,info} when iterating over files.
@@ -69,6 +70,8 @@ lintian (2.4.4) UNRELEASED; urgency=low
       (Closes: #608810)
     + [NT] Added check for misplaced python debug files.  Thanks to
       Jakub Wilk for the report.  (Closes: #576014)
+    + [NT] Added check for missing dependency on python-central.
+      Thanks to Jakub Wilk for the report.  (Closes: #592533)
   * checks/menu-format.desc:
     + [CW] Fix several typos.
   * checks/menus.desc:

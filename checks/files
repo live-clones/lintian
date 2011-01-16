@@ -805,6 +805,12 @@ foreach my $file (@{$info->sorted_index}) {
 	tag "override-file-in-wrong-location", "$file";
     }
 
+    # ---------------- pyshared-data
+    if ($file =~ m,^usr/share/pyshared-data/$tmp$,){
+	my $dep = Lintian::Relation->new($info->field('depends')//'');
+	tag "missing-dependency-on-python-central" unless ($dep->implies('python-central (>= 0.6)'));
+    }
+
     # ---------------- plain files
     if ($index_info->{type} =~ m/^[-h]/) {
 	my $wanted_operm;
