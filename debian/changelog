@@ -114,6 +114,12 @@ lintian (2.4.4) UNRELEASED; urgency=low
   * debian/compat:
     + [NT] Bump debhelper comat to 7.
 
+  * frontend/lintian:
+    + [NT] Ensure that Lintian always reaps processes it started before
+      exiting.  In some cases these jobs would attempt to modify the
+      lab while Lintian was trying to remove it.  Thanks to
+      Andreas Beckmann for reporting this issue.  (Closes: #610218)
+
   * lib/Lintian/Check.pm:
     + [NT] Use Email::Valid to validate email addreses.
       (Closes: #602655)

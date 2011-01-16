@@ -1556,6 +1556,16 @@ if ($action eq 'check' and not $no_override and not $show_overrides) {
 
 # }}}
 
+
+# Wait for any remaining jobs - %running_jobs will usually be empty here
+# unless we had an issue examining the last package.  We patiently wait
+# for them here; if the user cannot be bothered to wait, he/she can send
+# us a signal and the END handler will kill any remaining jobs.
+while (my ($coll, undef) = Lintian::Command::Simple::wait(\%running_jobs)) {
+    delete $running_jobs{$coll};
+}
+%running_jobs = ();
+
 exit $exit_code;
 
 # {{{ Some subroutines
@@ -1737,6 +1747,12 @@ sub END {
 
     $SIG{'INT'} = 'DEFAULT';
     $SIG{'QUIT'} = 'DEFAULT';
+
+    # Kill any remaining jobs.
+    if(%running_jobs) {
+	Lintian::Command::Simple::kill(\%running_jobs);
+	%running_jobs = ();
+    }
 
     $LAB->delete() if $LAB and not $keep_lab;
 }
