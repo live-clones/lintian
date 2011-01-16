@@ -429,7 +429,7 @@ GetOptions(%opthash)
 $cwd = Cwd::getcwd();
 
 # determine LINTIAN_ROOT if it was not set with --root.
-$LINTIAN_ROOT = $LINTIAN_ROOT || $ENV{'LINTIAN_ROOT'};
+$LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'} unless (defined($LINTIAN_ROOT));
 if (defined $LINTIAN_ROOT) {
     unless ($LINTIAN_ROOT =~ m,^/,) {
 	$LINTIAN_ROOT = "$cwd/$LINTIAN_ROOT";
