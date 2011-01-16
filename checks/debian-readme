@@ -52,7 +52,7 @@ if ($readme =~ m/$regex/io) {
     tag("readme-debian-contains-debmake-default-email-address");
 }
 
-check_spelling('spelling-error-in-readme-debian', $readme);
+check_spelling('spelling-error-in-readme-debian', $readme, undef, { $pkg => 1 });
 
 }
 

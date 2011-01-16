@@ -185,18 +185,23 @@ sub _tag {
     tag(@args);
 }
 
-=item check_spelling(TAG, TEXT, FILENAME)
+=item check_spelling(TAG, TEXT, FILENAME, EXCEPTION)
 
 Performs a spelling check of TEXT, reporting TAG if any errors are found.
 
 If FILENAME is given, it will be used as the first argument to TAG.
+
+If EXCEPTION is given, it will be used as a hash ref of exceptions.
+Any lowercase word appearing as a key of this hash ref will never be
+considered a spelling mistake (exception being if it is a part of a
+multiword misspelling).
 
 Returns the number of spelling mistakes found in TEXT.
 
 =cut
 
 sub check_spelling {
-    my ($tag, $text, $filename) = @_;
+    my ($tag, $text, $filename, $exceptions) = @_;
     return unless $text;
 
     my $counter = 0;
@@ -207,11 +212,14 @@ sub check_spelling {
     $text =~ s/[()\[\]]//g;
     $text =~ s/(\w-)\s*\n\s*/$1/;
 
+    $exceptions = {} unless (defined($exceptions));
+
     for my $word (split(/\s+/, $text)) {
         $word =~ s/[.,;:?!]+$//;
         next if ($word =~ /^[A-Z]{1,5}\z/);
         my $lcword = lc $word;
-        if ($corrections->known($lcword)) {
+        if ($corrections->known($lcword) &&
+                not exists ($exceptions->{$lcword})) {
             $counter++;
             my $correction = $corrections->value($lcword);
             if ($word =~ /^[A-Z]+$/) {

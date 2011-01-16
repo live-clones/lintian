@@ -222,3 +222,9 @@ Info: The package contains temporary debhelper files, which are normally
  binary package has been renamed or removed without cleaning the build
  directory first.
 
+Tag: unused-build-dependency-on-cdbs
+Severity: normal
+Certainty: possible
+Info: The package build-depends on cdbs, but does not include any cdbs
+ files in <tt>debian/rules</tt>.
+

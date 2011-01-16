@@ -409,7 +409,7 @@ sub check_doc_base_field {
     } elsif ($field eq 'title') {
         if (@$vals) {
             check_spelling("spelling-error-in-doc-base-title-field",
-                           join (' ', @$vals), "$dbfile:$line");
+                           join (' ', @$vals), "$dbfile:$line", { $pkg => 1});
             check_spelling_picky("spelling-error-in-doc-base-title-field",
                                  join (' ', @$vals), "$dbfile:$line");
         }
@@ -477,7 +477,7 @@ sub check_doc_base_field {
         # Check spelling.
         if (@$vals) {
             check_spelling("spelling-error-in-doc-base-abstract-field",
-                           join (' ', @$vals), "$dbfile:$line");
+                           join (' ', @$vals), "$dbfile:$line", { $pkg => 1 });
             check_spelling_picky("spelling-error-in-doc-base-abstract-field",
                                  join (' ', @$vals), "$dbfile:$line");
         }
