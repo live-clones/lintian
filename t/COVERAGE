@@ -1,4 +1,4 @@
-Last generated 2011-01-02
+Last generated 2011-01-16
 
 The following tags are not tested by the test suite:
 
@@ -237,8 +237,6 @@ files desktop-file-in-wrong-dir
 files embedded-feedparser-library
 files embedded-javascript-library
 files executable-is-not-world-readable
-files file-directly-in-usr-share
-files file-in-usr-lib-sgml
 files file-name-ends-in-whitespace
 files lengthy-symlink
 files macos-ds-store-file-in-package
@@ -385,7 +383,6 @@ binary
   doc-base-invalid-document-field
   doc-base-unknown-section
   executable-not-elf-or-script
-  file-directly-in-usr-share
   file-name-ends-in-whitespace
   lengthy-symlink
   menu-command-not-in-package
@@ -465,7 +462,6 @@ filenames
   desktop-file-in-wrong-dir
   embedded-feedparser-library
   embedded-javascript-library
-  file-in-usr-lib-sgml
   macos-ds-store-file-in-package
   macos-resource-fork-file-in-package
   non-standard-dir-perm

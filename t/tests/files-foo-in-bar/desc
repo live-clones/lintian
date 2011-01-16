@@ -3,7 +3,6 @@ Sequence: 6000
 Version: 1.0
 Description: Test tags about files or dirs in given paths
 Test-For:
- file-directly-in-usr-share-doc
  dir-in-usr-local
  dir-or-file-in-mnt
  dir-or-file-in-srv
@@ -11,6 +10,9 @@ Test-For:
  dir-or-file-in-var-lock
  dir-or-file-in-var-run
  dir-or-file-in-var-www
+ file-directly-in-usr-share
+ file-directly-in-usr-share-doc
+ file-in-usr-lib-sgml
  file-in-usr-lib-site-python
  file-in-usr-local
  nested-examples-directory
