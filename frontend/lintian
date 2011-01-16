@@ -65,7 +65,6 @@ our $OPT_LINTIAN_AREA = "";	#string for the --area option
 # These options can also be used via default or environment variables
 our $LINTIAN_CFG = "";		#config file to use
 our $LINTIAN_ROOT;		#location of the lintian modules
-our $OPT_LINTIAN_SECTION = "";  #old name for OPT_LINTIAN_ARCH
 
 my $experimental_output_opts = undef;
 
@@ -482,7 +481,7 @@ if ($LINTIAN_CFG) {
     undef $LINTIAN_CFG;
 }
 
-use constant VARS => qw(LAB ARCHIVEDIR DIST SECTION AREA ARCH);
+use constant VARS => qw(LAB ARCHIVEDIR DIST AREA ARCH);
 # read configuration file
 if ($LINTIAN_CFG) {
     open(CFG, '<', $LINTIAN_CFG)
@@ -529,18 +528,6 @@ unless (defined $LINTIAN_ARCH) {
 	chop($LINTIAN_ARCH=`dpkg --print-architecture`);
     } else {
 	$LINTIAN_ARCH = 'any';
-    }
-}
-
-# LINTIAN_SECTION is deprecated in favour of LINTIAN_AREA
-if (defined $LINTIAN_SECTION) {
-    print STDERR "warning: LINTIAN_SECTION has been deprecated in favour of LINTIAN_AREA.\n";
-    if (defined $LINTIAN_AREA) {
-	print STDERR "Using LINTIAN_AREA as both were defined.\n";
-    } else {
-	print STDERR "Both are currently accepted, but LINTIAN_SECTION may be removed\n";
-	print STDERR "in a future Lintian release.\n";
-	$LINTIAN_AREA = $LINTIAN_SECTION;
     }
 }
 

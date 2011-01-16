@@ -469,7 +469,7 @@ Search for package foo in the Debian archive and check it. (Depending
 on what is found, this command will check either the source or binary
 package foo, or both.)
 
-=item B<$ lintian --archivedir /var/packages --dist custom --section main>
+=item B<$ lintian --archivedir /var/packages --dist custom --area main>
 
 Check all packages found in the Debian archive at
 I</var/packages/dists/custom/main>.
