@@ -10,6 +10,7 @@ lintian (2.4.4) UNRELEASED; urgency=low
       - temporary-debhelper-file
       - compressed-objects.inv
       - unused-build-dependency-on-cdbs
+      - python-debug-in-wrong-location
 
   * checks/*:
     + [NT] Use the new pre-sorted file {index,info} when iterating over files.
@@ -61,6 +62,8 @@ lintian (2.4.4) UNRELEASED; urgency=low
       objects.inv files in python documentation.  Thanks to
       Fladischer Michael for the report and a partial patch.
       (Closes: #608810)
+    + [NT] Added check for misplaced python debug files.  Thanks to
+      Jakub Wilk for the report.  (Closes: #576014)
   * checks/menu-format.desc:
     + [CW] Fix several typos.
   * checks/menus.desc:

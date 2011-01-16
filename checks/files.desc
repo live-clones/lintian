@@ -741,6 +741,16 @@ Info: The directory /usr/lib/site-python has been deprecated as a
  private module and should be packaged in a directory outside of Python's
  default search path.
 
+Tag: python-debug-in-wrong-location
+Severity: normal
+Certainty: possible
+Ref: http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=576014
+Info: The package appears to be installing debug modules in
+ /usr/lib/debug/usr/lib/pyshared/pythonX.Y/.  However, gdb(1)
+ will not look for it there, making it less useful.  The file
+ should be installed in /usr/lib/debug/usr/lib/pymodules/pythonX.Y/
+ instead.
+
 Tag: package-installs-python-pyc
 Severity: serious
 Certainty: certain

@@ -450,6 +450,12 @@ foreach my $file (@{$info->sorted_index}) {
 		    unless ($pkg =~ /-dbg$/);
 		$warned_debug_name = 1;
 	    }
+
+	    if ($index_info->{type} =~ m/^[-h]/o &&
+		$file =~ m,^usr/lib/debug/usr/lib/pyshared/(python\d?(?:\.\d+))/(.++)$,o){
+		my $correct = "/usr/lib/debug/usr/lib/pymodules/$1/$2";
+		tag "python-debug-in-wrong-location", "$file", "$correct";
+	    }
 	}
 
 	# ---------------- /usr/lib/sgml
