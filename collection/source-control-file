@@ -52,6 +52,6 @@ foreach (@control_data) {
         open (F, '>', "$field_file")
             or fail("cannot open file $field_file for writing: $!");
         print F $value,"\n";
-        close F;
+        close F or fail("cannot write control/$pkg_name/$field: $!");
     }
 }

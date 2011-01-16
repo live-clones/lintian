@@ -56,7 +56,7 @@ while (<INDEX>) {
     s/\\\\/\\/;
     printf {$opts{pipe_in}} "%s\0", $_;
 }
-close(INDEX);
+close(INDEX) or fail("cannot close index file: $!");
 
 close $opts{pipe_in};
 reap(\%opts);

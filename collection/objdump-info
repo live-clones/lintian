@@ -223,7 +223,7 @@ while (<FILES>) {
 }
 
 close FILES;
-close OUT;
+close OUT or fail("cannot write objdump-info: $!");
 
 exit $failed;
 

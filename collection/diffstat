@@ -39,7 +39,8 @@ open (V, '<', "fields/version") or fail("cannot open fields/version: $!");
 my $ver = <V>; chomp $ver;
 close V;
 
-unlink('debian-patch');
+unlink('debian-patch') or fail("cannot unlink debian-patch: $!")
+    if( -e 'debian-patch' or -l 'debian-patch');
 
 $ver =~ s/^\d://; #Remove epoch for this
 

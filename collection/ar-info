@@ -38,7 +38,8 @@ chdir("unpacked")
 
 open(INDEX, '<', "../index")
     or fail("cannot open index file: $!");
-open(OUT, '>', "../ar-info");
+open(OUT, '>', "../ar-info")
+    or fail("cannot open ar-info file: $!");
 
 while (<INDEX>) {
     chomp;
@@ -58,4 +59,4 @@ while (<INDEX>) {
 }
 
 close(INDEX);
-close(OUT);
+close(OUT) or fail("cannot write ar-info: $!");
