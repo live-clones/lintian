@@ -1,2 +1,2 @@
 E: scripts-calls-init-script: maintainer-script-calls-init-script-directly postinst:5
-W: scripts-calls-init-script: script-calls-init-script-directly ./etc/cron.daily/bad:2
+W: scripts-calls-init-script: script-calls-init-script-directly etc/cron.daily/bad:2

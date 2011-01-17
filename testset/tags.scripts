@@ -2,24 +2,24 @@ E: scripts source: dpatch-index-references-non-existent-patch 01_not_here_right_
 E: scripts source: dpatch-index-references-non-existent-patch 01_some_other_patch_thats_not_in_the_package.dpatch
 E: scripts source: missing-build-dependency debhelper
 E: scripts source: package-uses-debhelper-but-lacks-build-depends
-E: scripts: calls-suidperl-directly ./usr/bin/suidperlfoo
+E: scripts: calls-suidperl-directly usr/bin/suidperlfoo
 E: scripts: copyright-file-lacks-pointer-to-perl-license
 E: scripts: duplicate-updaterc.d-calls-in-postrm lsb-other
 E: scripts: init.d-script-does-not-implement-required-option /etc/init.d/lsb-broken force-reload
 E: scripts: init.d-script-does-not-implement-required-option /etc/init.d/lsb-broken restart
 E: scripts: init.d-script-has-duplicate-lsb-section /etc/init.d/lsb-broken
 E: scripts: init.d-script-has-unterminated-lsb-section /etc/init.d/lsb-broken:15
-E: scripts: missing-dep-for-interpreter jruby => jruby | jruby1.0 | jruby1.1 | jruby1.2 (./usr/bin/jruby-broken)
-E: scripts: missing-dep-for-interpreter lefty => graphviz (./usr/bin/lefty-foo)
+E: scripts: missing-dep-for-interpreter jruby => jruby | jruby1.0 | jruby1.1 | jruby1.2 (usr/bin/jruby-broken)
+E: scripts: missing-dep-for-interpreter lefty => graphviz (usr/bin/lefty-foo)
 E: scripts: package-installs-python-pyc usr/lib/python2.3/site-packages/test.pyc
-E: scripts: php-script-but-no-phpX-cli-dep ./usr/share/scripts/php5foo
-E: scripts: php-script-but-no-phpX-cli-dep ./usr/share/scripts/phpfoo
-E: scripts: python-script-but-no-python-dep ./usr/bin/py2foo
-E: scripts: python-script-but-no-python-dep ./usr/bin/pyfoo
-E: scripts: shell-script-fails-syntax-check ./usr/bin/sh-broken
-E: scripts: suid-perl-script-but-no-perl-suid-dep ./usr/bin/suidperlfoo2
-E: scripts: wrong-path-for-interpreter ./usr/bin/lefty-foo (#!/usr/local/bin/lefty != /usr/bin/lefty)
-E: scripts: wrong-path-for-interpreter ./usr/bin/rubyfoo (#!/bin/ruby1.8 != /usr/bin/ruby1.8)
+E: scripts: php-script-but-no-phpX-cli-dep usr/share/scripts/php5foo
+E: scripts: php-script-but-no-phpX-cli-dep usr/share/scripts/phpfoo
+E: scripts: python-script-but-no-python-dep usr/bin/py2foo
+E: scripts: python-script-but-no-python-dep usr/bin/pyfoo
+E: scripts: shell-script-fails-syntax-check usr/bin/sh-broken
+E: scripts: suid-perl-script-but-no-perl-suid-dep usr/bin/suidperlfoo2
+E: scripts: wrong-path-for-interpreter usr/bin/lefty-foo (#!/usr/local/bin/lefty != /usr/bin/lefty)
+E: scripts: wrong-path-for-interpreter usr/bin/rubyfoo (#!/bin/ruby1.8 != /usr/bin/ruby1.8)
 E: scripts_6ds-1ubuntu0.5.10.1_arch changes: bad-ubuntu-distribution-in-changes-file unstable
 I: scripts source: debian-watch-file-should-dversionmangle-not-uversionmangle line 5
 I: scripts source: dpatch-missing-description 02_i_dont_have_a_description.patch
@@ -65,7 +65,7 @@ W: scripts: control-file-is-empty prerm
 W: scripts: executable-is-not-world-readable usr/bin/guile-bizarre 0705 != 0755
 W: scripts: executable-is-not-world-readable usr/bin/perl-bizarre-2 0750 != 0755
 W: scripts: executable-is-not-world-readable usr/bin/suidperlfoo2 4751
-W: scripts: executable-not-elf-or-script ./usr/bin/perl-bizarre-3
+W: scripts: executable-not-elf-or-script usr/bin/perl-bizarre-3
 W: scripts: init-d-script-stops-in-s-runlevel /etc/init.d/lsb-broken
 W: scripts: init-d-script-stops-in-s-runlevel /etc/init.d/skeleton
 W: scripts: init.d-script-has-bad-lsb-line /etc/init.d/lsb-broken:4
@@ -80,7 +80,7 @@ W: scripts: maintainer-script-empty preinst
 W: scripts: maintainer-script-ignores-errors postinst
 W: scripts: non-standard-executable-perm usr/bin/perl-bizarre-3 0754 != 0755
 W: scripts: non-standard-setuid-executable-perm usr/bin/suidperlfoo 4555
-W: scripts: script-uses-bin-env ./usr/bin/envfoo
+W: scripts: script-uses-bin-env usr/bin/envfoo
 W: scripts: script-with-language-extension usr/bin/test.sh
 W: scripts: setuid-binary usr/bin/suidperlfoo 4555 root/root
 W: scripts: setuid-binary usr/bin/suidperlfoo2 4751 root/root

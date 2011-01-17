@@ -10,7 +10,7 @@ tag:I:wishlist:possible::lintian-output-colons:1.0+dsfg-1.1:all:binary:package-c
 tag:I:wishlist:wild-guess::lintian-output-colons:1.0+dsfg-1.1:all:binary:description-possibly-contains-homepage:http\://www.example.com/.:
 tag:P:pedantic:certain::lintian-output-colons:1.0+dsfg-1.1:source:source:debian-control-has-unusual-field-spacing:line 11:
 tag:P:pedantic:certain::lintian-output-colons:1.0+dsfg-1.1:source:source:direct-changes-in-diff-but-no-patch-system:Changes:
-tag:P:pedantic:possible::lintian-output-colons:1.0+dsfg-1.1:all:binary:example-unusual-interpreter:./usr/share/doc/lintian-output-colons/examples/example #!/usr/bin/foo:
+tag:P:pedantic:possible::lintian-output-colons:1.0+dsfg-1.1:all:binary:example-unusual-interpreter:usr/share/doc/lintian-output-colons/examples/example #!/usr/bin/foo:
 tag:P:pedantic:possible::lintian-output-colons:1.0+dsfg-1.1:all:binary:no-homepage-field::
 tag:P:pedantic:wild-guess:O:lintian-output-colons:1.0+dsfg-1.1:all:binary:no-upstream-changelog::no-upstream-changelog
 tag:W:minor:certain:O:lintian-output-colons:1.0+dsfg-1.1:source:source:dfsg-version-misspelled:1.0+dsfg-1.1:dfsg-version-misspelled 1.0*

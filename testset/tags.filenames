@@ -80,8 +80,8 @@ W: filenames: embedded-javascript-library usr/share/filenames/prototype.js.gz
 W: filenames: embedded-javascript-library usr/share/filenames/scriptaculous.js
 W: filenames: embedded-javascript-library usr/share/filenames/yahoo-dom-event.js
 W: filenames: embedded-javascript-library usr/share/filenames/yahoo-min.js
-W: filenames: executable-not-elf-or-script ./usr/bin/bin/bad
-W: filenames: executable-not-elf-or-script ./usr/bin/mh/read
+W: filenames: executable-not-elf-or-script usr/bin/bin/bad
+W: filenames: executable-not-elf-or-script usr/bin/mh/read
 W: filenames: extra-license-file usr/share/pixmaps/COPYING
 W: filenames: extra-license-file usr/share/pixmaps/license.foo
 W: filenames: extra-license-file usr/share/pixmaps/license.txt
@@ -125,7 +125,7 @@ W: filenames: package-contains-vcs-control-file usr/lib/perl5/foo/.hgtags
 W: filenames: package-installs-into-etc-gconf-schemas etc/gconf/schemas/test.schema
 W: filenames: package-installs-nonbinary-perl-in-usr-lib-perl5 usr/lib/perl5/foo/ancient.pm
 W: filenames: package-installs-nonbinary-perl-in-usr-lib-perl5 usr/lib/perl5/foo/bar.pm
-W: filenames: script-not-executable ./files/feedparser.py
+W: filenames: script-not-executable files/feedparser.py
 W: filenames: svk-commit-file-in-package files/svk-commitsEr9P.tmp
 W: filenames: svn-commit-file-in-package files/svn-commit.tmp
 W: filenames: symlink-ends-with-slash usr/lib/filenames/symlink9wrong ../menu/something/

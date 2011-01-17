@@ -86,8 +86,8 @@ W: binary: desktop-entry-uses-reserved-category Screensaver /usr/share/applicati
 W: binary: doc-base-abstract-field-separator-extra-whitespaces binary:7
 W: binary: doc-base-file-unknown-format binary:20 esp
 W: binary: doc-base-unknown-section binary:11 Non/Existant
-W: binary: executable-not-elf-or-script ./usr/bin/iminusrbin
-W: binary: executable-not-elf-or-script ./usr/share/applications/goodbye.desktop
+W: binary: executable-not-elf-or-script usr/bin/iminusrbin
+W: binary: executable-not-elf-or-script usr/share/applications/goodbye.desktop
 W: binary: file-in-unusual-dir usr/bar
 W: binary: file-in-unusual-dir usr/bar2
 W: binary: file-in-unusual-dir usr/foo

@@ -12,4 +12,4 @@ W: menu-format-desktop-general: desktop-entry-invalid-category Lintian /usr/shar
 W: menu-format-desktop-general: desktop-entry-lacks-main-category /usr/share/applications/general.desktop
 W: menu-format-desktop-general: desktop-entry-uses-reserved-category Screensaver /usr/share/applications/reserved-bad.desktop
 W: menu-format-desktop-general: duplicated-key-in-desktop-entry /usr/share/applications/general.desktop:3 Name
-W: menu-format-desktop-general: executable-not-elf-or-script ./usr/share/applications/general.desktop
+W: menu-format-desktop-general: executable-not-elf-or-script usr/share/applications/general.desktop
