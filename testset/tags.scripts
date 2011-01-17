@@ -5,10 +5,10 @@ E: scripts source: package-uses-debhelper-but-lacks-build-depends
 E: scripts: calls-suidperl-directly usr/bin/suidperlfoo
 E: scripts: copyright-file-lacks-pointer-to-perl-license
 E: scripts: duplicate-updaterc.d-calls-in-postrm lsb-other
-E: scripts: init.d-script-does-not-implement-required-option /etc/init.d/lsb-broken force-reload
-E: scripts: init.d-script-does-not-implement-required-option /etc/init.d/lsb-broken restart
-E: scripts: init.d-script-has-duplicate-lsb-section /etc/init.d/lsb-broken
-E: scripts: init.d-script-has-unterminated-lsb-section /etc/init.d/lsb-broken:15
+E: scripts: init.d-script-does-not-implement-required-option etc/init.d/lsb-broken force-reload
+E: scripts: init.d-script-does-not-implement-required-option etc/init.d/lsb-broken restart
+E: scripts: init.d-script-has-duplicate-lsb-section etc/init.d/lsb-broken
+E: scripts: init.d-script-has-unterminated-lsb-section etc/init.d/lsb-broken:15
 E: scripts: missing-dep-for-interpreter jruby => jruby | jruby1.0 | jruby1.1 | jruby1.2 (usr/bin/jruby-broken)
 E: scripts: missing-dep-for-interpreter lefty => graphviz (usr/bin/lefty-foo)
 E: scripts: package-installs-python-pyc usr/lib/python2.3/site-packages/test.pyc
@@ -25,8 +25,8 @@ I: scripts source: debian-watch-file-should-dversionmangle-not-uversionmangle li
 I: scripts source: dpatch-missing-description 02_i_dont_have_a_description.patch
 I: scripts source: dpatch-missing-description 04_i_dont_have_a_description_either.patch
 I: scripts source: missing-debian-source-format
-I: scripts: init.d-script-does-not-provide-itself /etc/init.d/lsb-broken
-I: scripts: init.d-script-missing-lsb-short-description /etc/init.d/lsb-other
+I: scripts: init.d-script-does-not-provide-itself etc/init.d/lsb-broken
+I: scripts: init.d-script-missing-lsb-short-description etc/init.d/lsb-other
 I: scripts: no-md5sums-control-file
 I: scripts: script-in-usr-share-doc usr/share/doc/scripts/py2foo
 I: scripts: script-in-usr-share-doc usr/share/doc/scripts/rubyfoo
@@ -66,16 +66,16 @@ W: scripts: executable-is-not-world-readable usr/bin/guile-bizarre 0705 != 0755
 W: scripts: executable-is-not-world-readable usr/bin/perl-bizarre-2 0750 != 0755
 W: scripts: executable-is-not-world-readable usr/bin/suidperlfoo2 4751
 W: scripts: executable-not-elf-or-script usr/bin/perl-bizarre-3
-W: scripts: init-d-script-stops-in-s-runlevel /etc/init.d/lsb-broken
-W: scripts: init-d-script-stops-in-s-runlevel /etc/init.d/skeleton
-W: scripts: init.d-script-has-bad-lsb-line /etc/init.d/lsb-broken:4
-W: scripts: init.d-script-has-bad-lsb-line /etc/init.d/lsb-broken:9
-W: scripts: init.d-script-has-bad-stop-runlevel /etc/init.d/lsb-broken X
-W: scripts: init.d-script-has-conflicting-start-stop /etc/init.d/lsb-broken 1
-W: scripts: init.d-script-has-unknown-lsb-keyword /etc/init.d/lsb-broken:14 foo
-W: scripts: init.d-script-missing-lsb-keyword /etc/init.d/lsb-broken required-start
-W: scripts: init.d-script-missing-lsb-section /etc/init.d/no-lsb
-W: scripts: init.d-script-not-marked-as-conffile /etc/init.d/skeleton
+W: scripts: init-d-script-stops-in-s-runlevel etc/init.d/lsb-broken
+W: scripts: init-d-script-stops-in-s-runlevel etc/init.d/skeleton
+W: scripts: init.d-script-has-bad-lsb-line etc/init.d/lsb-broken:4
+W: scripts: init.d-script-has-bad-lsb-line etc/init.d/lsb-broken:9
+W: scripts: init.d-script-has-bad-stop-runlevel etc/init.d/lsb-broken X
+W: scripts: init.d-script-has-conflicting-start-stop etc/init.d/lsb-broken 1
+W: scripts: init.d-script-has-unknown-lsb-keyword etc/init.d/lsb-broken:14 foo
+W: scripts: init.d-script-missing-lsb-keyword etc/init.d/lsb-broken required-start
+W: scripts: init.d-script-missing-lsb-section etc/init.d/no-lsb
+W: scripts: init.d-script-not-marked-as-conffile etc/init.d/skeleton
 W: scripts: maintainer-script-empty preinst
 W: scripts: maintainer-script-ignores-errors postinst
 W: scripts: non-standard-executable-perm usr/bin/perl-bizarre-3 0754 != 0755
