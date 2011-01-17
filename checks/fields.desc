@@ -749,12 +749,17 @@ Info: The package seems to conflict with one of its dependencies,
 Tag: breaks-without-version
 Severity: normal
 Certainty: possible
-Ref: policy 7.3
+Ref: policy 7.3, policy 7.4
+ http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=605744
 Info: This package declares a Breaks relationship with another package
  that has no version number.  Normally, Breaks should be used to indicate
  an incompatibility with a specific version of another package, or with
  all versions predating a fix.  If the two packages can never be installed
  at the same time, Conflicts should normally be used instead.
+ .
+ Note this tag can also be issued, if a package has been split into two
+ completely new ones.  In this case, this package is missing a Replaces
+ on the old package.
 
 Tag: conflicts-with-version
 Severity: normal

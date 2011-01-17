@@ -56,6 +56,10 @@ lintian (2.5.0) UNRELEASED; urgency=low
     + [NT] Corrected Policy references for the uploader tags.  Thanks to
       David Prévot for spotting this issue and providing a patch.
       (Closes: #602632)
+    + [NT] Fixed false positives for breaks-without-version.  The tag
+      will no longer be emitted if the package listed in Breaks is also
+      listed in Replaces.  Thanks to Modestas Vainius for the report.
+      (Closes: #605744)
   * checks/files{,.desc}:
     + [NT] Fixed false-positive extra-license-file for license.ui files.
       Thanks to Jeremy Sanders for the report.  (Closes: #595941)

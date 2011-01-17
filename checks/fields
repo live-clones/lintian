@@ -531,11 +531,12 @@ if ($type eq 'binary') {
 if (($type eq "binary") || ($type eq 'udeb')) {
 	my (%deps, %fields, %parsed);
 	my $javalib = 0;
+	my $replaces = Lintian::Relation->new($info->field('replaces')//'');
 	$javalib = 1 if($pkg =~ m/^lib.*-(?:java|gcj)$/o);
 	for my $field (qw(depends pre-depends recommends suggests conflicts provides enhances replaces breaks)) {
 		next unless defined $info->field($field);
 		#Get data and clean it
-		my $data = $info->field($field);;
+		my $data = $info->field($field);
 		my $javadep = 0;
 		unfold($field, \$data);
 		$fields{$field} = $data;
@@ -589,7 +590,9 @@ if (($type eq "binary") || ($type eq 'udeb')) {
 				    if $d_pkg !~ /^[a-z0-9][-+\.a-z0-9]+$/;
 
 				tag "breaks-without-version", "$part_d_orig"
-				    if ($field eq "breaks" && !$d_version->[0] && !$VIRTUAL_PACKAGES->known($d_pkg));
+				    if ($field eq "breaks" && !$d_version->[0] && !$VIRTUAL_PACKAGES->known($d_pkg)
+					&& !$replaces->implies("$part_d_orig")
+				    );
 
 				tag "conflicts-with-version", "$part_d_orig"
 				    if ($field eq 'conflicts' && $d_version->[0]);
