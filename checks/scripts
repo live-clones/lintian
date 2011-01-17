@@ -319,12 +319,12 @@ foreach (@{$info->sorted_index}) {
     next unless ($index_info->{type} =~ m,^[-h], and ($operm & 01 or
 	$operm & 010 or $operm & 0100));
     my $is_suid = $operm & 04000;
-    $executable{'./' . $_} = 1;
-    $suid{'./' . $_} = $is_suid;
+    $executable{$_} = 1;
+    $suid{$_} = $is_suid;
 }
 
 for my $file (@{$info->sorted_file_info}) {
-    $ELF{'./' . $file} = 1 if $info->file_info->{$file} =~ /^[^,]*\bELF\b/o;
+    $ELF{$file} = 1 if $info->file_info->{$file} =~ /^[^,]*\bELF\b/o;
 }
 
 my $all_deps = '';
@@ -341,7 +341,6 @@ my $all_parsed = Lintian::Relation->new($all_deps);
 for my $filename (sort keys %{$info->scripts}) {
     my $interpreter = $info->scripts->{$filename}->{interpreter};
     my $calls_env = $info->scripts->{$filename}->{calls_env};
-    $filename = './' . $filename;
     $scripts{$filename} = 1;
 
     my $in_docs = $filename =~ m,usr/share/doc/,;
@@ -382,21 +381,21 @@ for my $filename (sort keys %{$info->scripts}) {
 	unless $is_absolute;
     tag("script-not-executable", $filename)
 	unless ($executable{$filename}
-		or $filename =~ m,^\./usr/(lib|share)/.*\.pm,
-		or $filename =~ m,^\./usr/(lib|share)/.*\.py,
-		or $filename =~ m,^\./usr/(lib|share)/ruby/.*\.rb,
+		or $filename =~ m,^usr/(lib|share)/.*\.pm,
+		or $filename =~ m,^usr/(lib|share)/.*\.py,
+		or $filename =~ m,^usr/(lib|share)/ruby/.*\.rb,
 		or $filename =~ m,\.in$,
 		or $filename =~ m,\.ex$,
-		or $filename eq './etc/init.d/skeleton'
-		or $filename =~ m,^\./etc/menu-methods,
-		or $filename =~ m,^\./etc/X11/Xsession\.d,)
+		or $filename eq 'etc/init.d/skeleton'
+		or $filename =~ m,^etc/menu-methods,
+		or $filename =~ m,^etc/X11/Xsession\.d,)
 		or $in_docs;
 
     # Warn about csh scripts.
     tag("csh-considered-harmful", $filename)
         if (($base eq 'csh' or $base eq 'tcsh')
 	    and $executable{$filename}
-	    and $filename !~ m,^\./etc/csh/login\.d/,)
+	    and $filename !~ m,^etc/csh/login\.d/,)
 	    and !$in_docs;
 
     # Syntax-check most shell scripts, but don't syntax-check scripts that end
@@ -453,7 +452,7 @@ for my $filename (sort keys %{$info->scripts}) {
     # probably be extended eventually to any script in a public directory.
     # This also needs smarter processing of multiline quoted strings,
     # heredocs, and so forth.  Hopefully it will do for right now.
-    if ($filename =~ m,^./etc/, and $base =~ /^$known_shells_regex$/) {
+    if ($filename =~ m,^etc/, and $base =~ /^$known_shells_regex$/) {
 	my ($saw_init, $saw_invoke);
 	local $.;
 	open(FH, '<', 'unpacked/' . $filename);
@@ -470,7 +469,7 @@ for my $filename (sort keys %{$info->scripts}) {
 	    # those defined for invoke-rc.d.
 	    if (m,$LEADIN/etc/init.d/(\S+)\s+[\"\']?(\S+)[\"\']?,) {
 		my ($script, $action) = ($1, $2);
-		next if "./etc/init.d/$script" eq $filename;
+		next if "etc/init.d/$script" eq $filename;
 		next unless $action =~ /^(force-)?(start|stop|restart|reload|status)$/;
 		$saw_init = $.;
 	    }
@@ -496,9 +495,9 @@ for my $filename (sort keys %{$info->scripts}) {
 	if ($depends && !$all_parsed->implies($depends)) {
 	    if ($base =~ /^(python|ruby|(m|g)awk)$/) {
 		tag("$base-script-but-no-$base-dep", $filename);
-	    } elsif ($base eq 'csh' && $filename =~ m,^\./etc/csh/login\.d/,) {
+	    } elsif ($base eq 'csh' && $filename =~ m,^etc/csh/login\.d/,) {
 		# Initialization files for csh.
-	    } elsif ($base eq 'fish' && $filename =~ m,^\./etc/fish\.d/,) {
+	    } elsif ($base eq 'fish' && $filename =~ m,^etc/fish\.d/,) {
 		# Initialization files for fish.
 	    } elsif ($base eq 'ocamlrun' && $all_deps =~ /\bocaml(-base)?(-nox)?-\d\.[\d.]+/) {
 		# ABI-versioned virtual packages for ocaml

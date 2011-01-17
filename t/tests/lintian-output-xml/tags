@@ -12,7 +12,7 @@
 <tag severity="normal" certainty="wild-guess" flags="" name="desktop-entry-limited-to-environments">/usr/share/applications/script.desktop</tag>
 <tag severity="pedantic" certainty="certain" flags="" name="debian-control-has-unusual-field-spacing">line 11</tag>
 <tag severity="pedantic" certainty="certain" flags="" name="direct-changes-in-diff-but-no-patch-system">Changes</tag>
-<tag severity="pedantic" certainty="possible" flags="" name="example-unusual-interpreter">./usr/share/doc/lintian-output-xml/examples/example #!/usr/bin/foo</tag>
+<tag severity="pedantic" certainty="possible" flags="" name="example-unusual-interpreter">usr/share/doc/lintian-output-xml/examples/example #!/usr/bin/foo</tag>
 <tag severity="pedantic" certainty="possible" flags="" name="no-homepage-field"></tag>
 <tag severity="pedantic" certainty="wild-guess" flags="overridden" name="no-upstream-changelog"></tag>
 <tag severity="serious" certainty="certain" flags="" name="dir-in-usr-local">usr/local/share/</tag>
