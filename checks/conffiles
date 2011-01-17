@@ -46,18 +46,19 @@ while (<IN>) {
 	tag "relative-conffile", $_;
 	$_ = '/' . $_;
     }
+    my $file = $_;
+    $file =~ s@^/++@@o;
+    $conffiles{$file}++;
 
-    $conffiles{$_}++;
-
-    if ($conffiles{$_} > 1) {
-	tag "duplicate-conffile", $_;
+    if ($conffiles{$file} > 1) {
+	tag "duplicate-conffile", $file;
     }
 
     if (m,^/usr/,) {
-	tag "file-in-usr-marked-as-conffile", $_;
+	tag "file-in-usr-marked-as-conffile", $file;
     } else {
 	unless (m,^/etc/,) {
-	    tag "non-etc-file-marked-as-conffile", $_;
+	    tag "non-etc-file-marked-as-conffile", $file;
 	}
     }
 
