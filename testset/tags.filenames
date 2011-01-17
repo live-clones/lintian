@@ -7,7 +7,7 @@ E: filenames: dir-or-file-in-opt opt/foo/bar
 E: filenames: dir-or-file-in-srv srv/foo/
 E: filenames: dir-or-file-in-srv srv/foo/bar
 E: filenames: dir-or-file-in-var-www var/www/foo
-E: filenames: file-in-etc-not-marked-as-conffile /etc/gconf/schemas/test.schema
+E: filenames: file-in-etc-not-marked-as-conffile etc/gconf/schemas/test.schema
 E: filenames: lengthy-symlink usr/lib/filenames/symlink4wrong ../filenames/symlink2
 E: filenames: lengthy-symlink usr/share/doc/filenames/version.txt.gz ../filenames/doc/version6.txt.gz
 E: filenames: no-copyright-file

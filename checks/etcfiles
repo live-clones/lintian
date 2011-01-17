@@ -55,7 +55,7 @@ foreach my $file (@{$info->sorted_index}) {
 	and $file ne 'etc/init.d/skeleton'
 	and $file ne 'etc/init.d/rc'
 	and $file ne 'etc/init.d/rcS') {
-	tag "file-in-etc-not-marked-as-conffile", "/$file";
+	tag "file-in-etc-not-marked-as-conffile", "$file";
     }
 }
 
