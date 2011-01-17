@@ -1,1 +1,1 @@
-E: etcfiles-etc-not-marked: file-in-etc-not-marked-as-conffile /etc/something.conf
+E: etcfiles-etc-not-marked: file-in-etc-not-marked-as-conffile etc/something.conf
