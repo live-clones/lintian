@@ -226,6 +226,9 @@ lintian (2.4.3) unstable; urgency=low
   * debian/control:
     + [RA] Update standards version to 3.9.1.
 
+  * data/files/fonts:
+    + [NT] Made tipa replace xfonts-tipa as font provider.
+      (Closes: #595530)
   * data/output/manual-references:
     + [RA] Update for Policy 3.9.1.
   * data/standards-version/release-dates:
