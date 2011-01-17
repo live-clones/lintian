@@ -142,11 +142,11 @@ for (keys %initd_postinst) {
     if ($initd_postrm{$_}) {
 	delete $initd_postrm{$_};
     } else {
-	tag "postrm-does-not-call-updaterc.d-for-init.d-script", "/etc/init.d/$_";
+	tag "postrm-does-not-call-updaterc.d-for-init.d-script", "etc/init.d/$_";
     }
 }
 for (keys %initd_postrm) {
-    tag "postrm-contains-additional-updaterc.d-calls", "/etc/init.d/$_";
+    tag "postrm-contains-additional-updaterc.d-calls", "etc/init.d/$_";
 }
 
 # load conffiles
@@ -170,7 +170,7 @@ for (keys %initd_postinst) {
     # init.d scripts have to be marked as conffiles unless they're symlinks.
     unless ($conffiles{"/etc/init.d/$_"} or $conffiles{"etc/init.d/$_"}
 	    or -l $initd_file) {
-	tag "init.d-script-not-marked-as-conffile", "/etc/init.d/$_";
+	tag "init.d-script-not-marked-as-conffile", "etc/init.d/$_";
     }
 
     # Check if file exists in package and check the script for other issues if
@@ -178,7 +178,7 @@ for (keys %initd_postinst) {
     if (-f $initd_file) {
 	check_init($initd_file);
     } elsif (not -l $initd_file) {
-	tag "init.d-script-not-included-in-package", "/etc/init.d/$_";
+	tag "init.d-script-not-included-in-package", "etc/init.d/$_";
     }
 }
 
@@ -193,7 +193,7 @@ for (readdir(INITD)) {
     # that we get more complete Lintian coverage in the first pass.
     unless ($initd_postinst{$script}) {
 	tag 'script-in-etc-init.d-not-registered-via-update-rc.d',
-	    "/etc/init.d/$script";
+	    "etc/init.d/$script";
 	check_init("init.d/$script") if -f "init.d/$script";
     }
 }
@@ -220,11 +220,11 @@ sub check_init {
     my %needs_fs = ('remote' => 0, 'local' => 0);
     while (defined(my $l = <IN>)) {
 	if ($. == 1 && $l =~ m,^\#!\s*(/usr/[^\s]+),) {
-	    tag "init.d-script-uses-usr-interpreter", "/etc/init.d/$_ $1";
+	    tag "init.d-script-uses-usr-interpreter", "etc/init.d/$_ $1";
 	}
 	if ($l =~ m/^\#\#\# BEGIN INIT INFO/) {
 	    if ($lsb{BEGIN}) {
-		tag "init.d-script-has-duplicate-lsb-section", "/etc/init.d/$_";
+		tag "init.d-script-has-duplicate-lsb-section", "etc/init.d/$_";
 		next;
 	    }
 	    $lsb{BEGIN} = 1;
@@ -237,14 +237,14 @@ sub check_init {
 		    $lsb{END} = 1;
 		    last;
 		} elsif ($l !~ /^\#/) {
-		    tag "init.d-script-has-unterminated-lsb-section", "/etc/init.d/$_:$.";
+		    tag "init.d-script-has-unterminated-lsb-section", "etc/init.d/$_:$.";
 		    last;
 		} elsif ($l =~ /^\# ([a-zA-Z-]+):\s*(.*?)\s*$/) {
 		    my $keyword = lc $1;
 		    my $value = $2;
-		    tag "init.d-script-has-duplicate-lsb-keyword", "/etc/init.d/$_:$. $keyword"
+		    tag "init.d-script-has-duplicate-lsb-keyword", "etc/init.d/$_:$. $keyword"
 			if (defined $lsb{$keyword});
-		    tag "init.d-script-has-unknown-lsb-keyword", "/etc/init.d/$_:$. $keyword"
+		    tag "init.d-script-has-unknown-lsb-keyword", "etc/init.d/$_:$. $keyword"
 			unless (defined ($lsb_keywords{$keyword}) || $keyword =~ /^x-/);
 		    $lsb{$keyword} = defined($value) ? $value : '';
 		    $last = $keyword;
@@ -253,7 +253,7 @@ sub check_init {
 		    $value =~ s/^\#\s*//;
 		    $lsb{description} .= ' ' . $value;
 		} else {
-		    tag "init.d-script-has-bad-lsb-line", "/etc/init.d/$_:$.";
+		    tag "init.d-script-has-bad-lsb-line", "etc/init.d/$_:$.";
 		}
 	    }
 	}
@@ -263,7 +263,7 @@ sub check_init {
 	$in_file_test = 1 if ($l =~ m/\bif\s+.*?(?:test|\[)(?:\s+\!)?\s+-[efr]\s+/);
 	$in_file_test = 0 if ($l =~ m/\bfi\b/);
 	if (!$in_file_test && $l =~ m,^\s*\.\s+["'"]?(/etc/default/[\$\w/-]+),) {
-	    tag "init.d-script-sourcing-without-test", "/etc/init.d/$_:$. $1";
+	    tag "init.d-script-sourcing-without-test", "etc/init.d/$_:$. $1";
 	}
 
 	# This should be more sophisticated: ignore heredocs, ignore quoted
@@ -279,14 +279,14 @@ sub check_init {
 
     # Make sure all of the required keywords are present.
     if (not $lsb{BEGIN}) {
-	tag "init.d-script-missing-lsb-section", "/etc/init.d/$_";
+	tag "init.d-script-missing-lsb-section", "etc/init.d/$_";
     } else {
 	for my $keyword (keys %lsb_keywords) {
 	    if ($lsb_keywords{$keyword} && !defined $lsb{$keyword}) {
 		if ($keyword eq 'short-description') {
-		    tag "init.d-script-missing-lsb-short-description", "/etc/init.d/$_";
+		    tag "init.d-script-missing-lsb-short-description", "etc/init.d/$_";
 		} else {
-		    tag "init.d-script-missing-lsb-keyword", "/etc/init.d/$_ $keyword";
+		    tag "init.d-script-missing-lsb-keyword", "etc/init.d/$_ $keyword";
 		}
 	    }
 	}
@@ -300,10 +300,10 @@ sub check_init {
 		$start{lc $runlevel} = 1;
 		if ($runlevel eq '0' or $runlevel eq '6') {
 		    tag 'init.d-script-starts-in-stop-runlevel',
-			"/etc/init.d/$_", $runlevel;
+			"etc/init.d/$_", $runlevel;
 		}
 	    } else {
-		tag 'init.d-script-has-bad-start-runlevel', "/etc/init.d/$_",
+		tag 'init.d-script-has-bad-start-runlevel', "etc/init.d/$_",
 		    $runlevel;
 	    }
 	}
@@ -315,7 +315,7 @@ sub check_init {
 	    my $base = $initd_file;
 	    $base =~ s,.*/,,;
 	    my @missing = grep { !defined $start{$_} } qw(2 3 4 5);
-	    tag 'init.d-script-missing-start', "/etc/init.d/$_",
+	    tag 'init.d-script-missing-start', "etc/init.d/$_",
 		@missing;
 	}
     }
@@ -325,13 +325,13 @@ sub check_init {
 	    if ($runlevel =~ /^[sS0-6]$/) {
 		$stop{$runlevel} = 1 unless $runlevel =~ /[sS2-5]/;
 		if ($start{$runlevel}) {
-		    tag "init.d-script-has-conflicting-start-stop", "/etc/init.d/$_ $runlevel";
+		    tag "init.d-script-has-conflicting-start-stop", "etc/init.d/$_ $runlevel";
 		}
 		if ($runlevel =~ /[sS]/) {
-		    tag "init-d-script-stops-in-s-runlevel", "/etc/init.d/$_";
+		    tag "init-d-script-stops-in-s-runlevel", "etc/init.d/$_";
 		}
 	    } else {
-		tag "init.d-script-has-bad-stop-runlevel", "/etc/init.d/$_ $runlevel";
+		tag "init.d-script-has-bad-stop-runlevel", "etc/init.d/$_ $runlevel";
 	    }
 	}
 
@@ -343,7 +343,7 @@ sub check_init {
 	    $base =~ s,.*/,,;
 	    unless (grep { $base eq $_ } qw(killprocs sendsigs halt reboot)) {
 		my @missing = grep { !defined $stop{$_} } qw(0 1 6);
-		tag 'init.d-script-possible-missing-stop', "/etc/init.d/$_",
+		tag 'init.d-script-possible-missing-stop', "etc/init.d/$_",
 		    @missing;
 	    }
 	}
@@ -353,13 +353,13 @@ sub check_init {
 	for my $facility (split(/\s+/, $lsb{'provides'})) {
 	    if ($facility =~ /^\$/) {
 		tag 'init.d-script-provides-virtual-facility',
-		    "/etc/init.d/$_", $facility;
+		    "etc/init.d/$_", $facility;
 	    }
 	    if (/^\Q$facility\E(?:.sh)?$/) {
 		$provides_self = 1;
 	    }
 	}
-	tag 'init.d-script-does-not-provide-itself', "/etc/init.d/$_"
+	tag 'init.d-script-does-not-provide-itself', "etc/init.d/$_"
 	    unless $provides_self;
     }
 
@@ -375,13 +375,13 @@ sub check_init {
 	if ($needs_fs{remote}) {
 	    unless (grep { /^\$(?:remote_fs|all)\z/ } @required) {
 		tag 'init.d-script-missing-dependency-on-remote_fs',
-		    "/etc/init.d/$_: required-start";
+		    "etc/init.d/$_: required-start";
 	    }
 	}
 	if ($needs_fs{local}) {
 	    unless (grep { /^\$(?:local_fs|remote_fs|all)\z/ } @required) {
 		tag 'init.d-script-missing-dependency-on-local_fs',
-		    "/etc/init.d/$_: required-start";
+		    "etc/init.d/$_: required-start";
 	    }
 	}
     }
@@ -390,13 +390,13 @@ sub check_init {
 	if ($needs_fs{remote}) {
 	    unless (grep { /^(?:\$remote_fs|\$all|umountnfs)\z/ } @required) {
 		tag 'init.d-script-missing-dependency-on-remote_fs',
-		    "/etc/init.d/$_: required-stop";
+		    "etc/init.d/$_: required-stop";
 	    }
 	}
 	if ($needs_fs{local}) {
 	    unless (grep { /^(?:\$(?:local|remote)_fs|\$all|umountn?fs)\z/ } @required) {
 		tag 'init.d-script-missing-dependency-on-local_fs',
-		    "/etc/init.d/$_: required-stop";
+		    "etc/init.d/$_: required-stop";
 	    }
 	}
     }
@@ -407,11 +407,11 @@ sub check_init {
 	for my $dependency (split(/\s+/, $lsb{$keyword})) {
 	    if (defined $implied_dependencies{$dependency}) {
 		tag 'init.d-script-should-depend-on-virtual-facility',
-		    "/etc/init.d/$_",
+		    "etc/init.d/$_",
 		    "$dependency -> $implied_dependencies{$dependency}";
 	    } elsif ($keyword =~ m/^required-/ && $dependency =~ m/^\$/) {
 		tag "init.d-script-depends-on-unknown-virtual-facility",
-		    "/etc/init.d/$_", "$dependency"
+		    "etc/init.d/$_", "$dependency"
 		    unless ($VIRTUAL_FACILITIES->known($dependency));
 	    }
 	}
@@ -420,7 +420,7 @@ sub check_init {
     # all tags included in file?
     for my $option qw(start stop restart force-reload) {
 	$tag{$option}
-	    or tag "init.d-script-does-not-implement-required-option", "/etc/init.d/$_ $option";
+	    or tag "init.d-script-does-not-implement-required-option", "etc/init.d/$_ $option";
     }
 }
 
