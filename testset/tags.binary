@@ -5,8 +5,8 @@ E: binary: changelog-file-not-compressed changelog
 E: binary: debian-changelog-file-missing-or-wrong-name
 E: binary: debian-news-file-uses-obsolete-national-encoding at line 3
 E: binary: depends-on-metapackage pre-depends: xorg
-E: binary: deprecated-kdelnk-file /usr/share/applications/hello.kdelnk
-E: binary: desktop-entry-missing-required-key /usr/share/applications/goodbye.desktop Name
+E: binary: deprecated-kdelnk-file usr/share/applications/hello.kdelnk
+E: binary: desktop-entry-missing-required-key usr/share/applications/goodbye.desktop Name
 E: binary: doc-base-document-field-ends-in-whitespace binary:1
 E: binary: doc-base-file-duplicated-format binary:36 html
 E: binary: doc-base-file-lacks-required-field binary:22 files
@@ -25,26 +25,26 @@ E: binary: doc-base-file-unknown-field binary:18 unknown
 E: binary: doc-base-file-uses-obsolete-national-encoding binary:8
 E: binary: doc-base-index-references-multiple-files binary:25
 E: binary: doc-base-invalid-document-field binary:1 binary!docs  
-E: binary: executable-desktop-file /usr/share/applications/goodbye.desktop 0755
+E: binary: executable-desktop-file usr/share/applications/goodbye.desktop 0755
 E: binary: file-directly-in-usr-share usr/share/baz
 E: binary: lengthy-symlink usr/share/doc/binary/html/ch2.html ../html/./ch1.html
-E: binary: menu-item-missing-required-tag needs /usr/lib/menu/binary:6
-E: binary: menu-item-missing-required-tag needs /usr/share/menu/binary:6
-E: binary: menu-item-missing-required-tag section /usr/lib/menu/binary:1
-E: binary: menu-item-missing-required-tag section /usr/share/menu/binary:1
+E: binary: menu-item-missing-required-tag needs usr/lib/menu/binary:6
+E: binary: menu-item-missing-required-tag needs usr/share/menu/binary:6
+E: binary: menu-item-missing-required-tag section usr/lib/menu/binary:1
+E: binary: menu-item-missing-required-tag section usr/share/menu/binary:1
 E: binary: menu-method-should-include-menu-h etc/menu-methods/lintian
-E: binary: non-wm-in-windowmanager-menu-section x11 /usr/lib/menu/binary:4
-E: binary: non-wm-in-windowmanager-menu-section x11 /usr/share/menu/binary:4
-E: binary: non-wm-module-in-wm-modules-menu-section wm /usr/lib/menu/binary:22
-E: binary: non-wm-module-in-wm-modules-menu-section wm /usr/share/menu/binary:22
+E: binary: non-wm-in-windowmanager-menu-section x11 usr/lib/menu/binary:4
+E: binary: non-wm-in-windowmanager-menu-section x11 usr/share/menu/binary:4
+E: binary: non-wm-module-in-wm-modules-menu-section wm usr/lib/menu/binary:22
+E: binary: non-wm-module-in-wm-modules-menu-section wm usr/share/menu/binary:22
 E: binary: possible-gpl-code-linked-with-openssl
 E: binary: postinst-does-not-call-updatemenus usr/share/menu/binary
 E: binary: postrm-does-not-call-updatemenus etc/menu-methods/lintian
 E: binary: statically-linked-binary usr/bin/static-hello
-E: binary: su-wrapper-without--c /usr/lib/menu/binary:2 su-to-root
-E: binary: su-wrapper-without--c /usr/lib/menu/binary:3 sux
-E: binary: su-wrapper-without--c /usr/share/menu/binary:2 su-to-root
-E: binary: su-wrapper-without--c /usr/share/menu/binary:3 sux
+E: binary: su-wrapper-without--c usr/lib/menu/binary:2 su-to-root
+E: binary: su-wrapper-without--c usr/lib/menu/binary:3 sux
+E: binary: su-wrapper-without--c usr/share/menu/binary:2 su-to-root
+E: binary: su-wrapper-without--c usr/share/menu/binary:3 sux
 E: binary: suidregister-used-in-maintainer-script postinst
 E: binary: symlink-contains-spurious-segments usr/share/doc/binary/html/ch2.html ../html/./ch1.html
 E: binary: unstripped-binary-or-object usr/bin/hello
@@ -55,8 +55,8 @@ I: binary-data: capitalization-error-in-description subversion Subversion
 I: binary: arch-dep-package-has-big-usr-share
 I: binary: binary-has-unneeded-section usr/bin/hello-static .comment
 I: binary: capitalization-error-in-description debian Debian
-I: binary: desktop-entry-contains-encoding-key /usr/share/applications/goodbye.desktop:11 Encoding
-I: binary: desktop-entry-contains-encoding-key /usr/share/applications/hello.desktop:13 Encoding
+I: binary: desktop-entry-contains-encoding-key usr/share/applications/goodbye.desktop:11 Encoding
+I: binary: desktop-entry-contains-encoding-key usr/share/applications/hello.desktop:13 Encoding
 I: binary: no-md5sums-control-file
 W: binary source: ancient-standards-version 3.2.1 (current is 3.9.1)
 W: binary source: debian-rules-ignores-make-clean-error line 12
@@ -76,13 +76,13 @@ W: binary: changelog-news-debian-mismatch urgency low != high
 W: binary: debian-copyright-file-uses-obsolete-national-encoding at line 13
 W: binary: debian-news-entry-has-strange-distribution UNRELEASED
 W: binary: description-contains-homepage
-W: binary: desktop-command-not-in-package /usr/share/applications/goodbye.desktop goodbye
-W: binary: desktop-contains-deprecated-header /usr/share/applications/hello.desktop:4
-W: binary: desktop-entry-contains-unknown-key /usr/share/applications/goodbye.desktop:5 SpecialTag
-W: binary: desktop-entry-contains-unknown-key /usr/share/applications/goodbye.desktop:7 icon
-W: binary: desktop-entry-file-has-crs /usr/share/applications/hello.desktop:7
-W: binary: desktop-entry-invalid-category WeirdStuff /usr/share/applications/goodbye.desktop
-W: binary: desktop-entry-uses-reserved-category Screensaver /usr/share/applications/goodbye.desktop
+W: binary: desktop-command-not-in-package usr/share/applications/goodbye.desktop goodbye
+W: binary: desktop-contains-deprecated-header usr/share/applications/hello.desktop:4
+W: binary: desktop-entry-contains-unknown-key usr/share/applications/goodbye.desktop:5 SpecialTag
+W: binary: desktop-entry-contains-unknown-key usr/share/applications/goodbye.desktop:7 icon
+W: binary: desktop-entry-file-has-crs usr/share/applications/hello.desktop:7
+W: binary: desktop-entry-invalid-category WeirdStuff usr/share/applications/goodbye.desktop
+W: binary: desktop-entry-uses-reserved-category Screensaver usr/share/applications/goodbye.desktop
 W: binary: doc-base-abstract-field-separator-extra-whitespaces binary:7
 W: binary: doc-base-file-unknown-format binary:20 esp
 W: binary: doc-base-unknown-section binary:11 Non/Existant
@@ -92,27 +92,27 @@ W: binary: file-in-unusual-dir usr/bar
 W: binary: file-in-unusual-dir usr/bar2
 W: binary: file-in-unusual-dir usr/foo
 W: binary: file-name-ends-in-whitespace usr/share/doc-base/space 
-W: binary: menu-command-not-in-package /usr/lib/menu/binary:18 imnothere
-W: binary: menu-command-not-in-package /usr/lib/menu/binary:20 cfdisk
-W: binary: menu-command-not-in-package /usr/lib/menu/binary:4 xfdisk
-W: binary: menu-command-not-in-package /usr/lib/menu/binary:7 /imnothere
-W: binary: menu-command-not-in-package /usr/share/menu/binary:18 imnothere
-W: binary: menu-command-not-in-package /usr/share/menu/binary:20 cfdisk
-W: binary: menu-command-not-in-package /usr/share/menu/binary:4 xfdisk
-W: binary: menu-command-not-in-package /usr/share/menu/binary:7 /imnothere
+W: binary: menu-command-not-in-package usr/lib/menu/binary:18 imnothere
+W: binary: menu-command-not-in-package usr/lib/menu/binary:20 cfdisk
+W: binary: menu-command-not-in-package usr/lib/menu/binary:4 xfdisk
+W: binary: menu-command-not-in-package usr/lib/menu/binary:7 /imnothere
+W: binary: menu-command-not-in-package usr/share/menu/binary:18 imnothere
+W: binary: menu-command-not-in-package usr/share/menu/binary:20 cfdisk
+W: binary: menu-command-not-in-package usr/share/menu/binary:4 xfdisk
+W: binary: menu-command-not-in-package usr/share/menu/binary:7 /imnothere
 W: binary: menu-file-in-usr-lib usr/lib/menu/binary
-W: binary: menu-item-creates-new-section Applications/System /usr/lib/menu/binary:2
-W: binary: menu-item-creates-new-section Applications/System /usr/share/menu/binary:2
-W: binary: menu-item-creates-new-section Apps/System /usr/lib/menu/binary:7
-W: binary: menu-item-creates-new-section Apps/System /usr/share/menu/binary:7
-W: binary: menu-item-creates-new-section WindowManagers/Modules /usr/lib/menu/binary:13
-W: binary: menu-item-creates-new-section WindowManagers/Modules /usr/share/menu/binary:13
-W: binary: menu-item-needs-tag-has-unknown-value wm /usr/lib/menu/binary:5
-W: binary: menu-item-needs-tag-has-unknown-value wm /usr/share/menu/binary:5
-W: binary: menu-item-uses-apps-section /usr/lib/menu/binary:7
-W: binary: menu-item-uses-apps-section /usr/share/menu/binary:7
-W: binary: menu-item-uses-windowmanagers-section /usr/lib/menu/binary:13
-W: binary: menu-item-uses-windowmanagers-section /usr/share/menu/binary:13
+W: binary: menu-item-creates-new-section Applications/System usr/lib/menu/binary:2
+W: binary: menu-item-creates-new-section Applications/System usr/share/menu/binary:2
+W: binary: menu-item-creates-new-section Apps/System usr/lib/menu/binary:7
+W: binary: menu-item-creates-new-section Apps/System usr/share/menu/binary:7
+W: binary: menu-item-creates-new-section WindowManagers/Modules usr/lib/menu/binary:13
+W: binary: menu-item-creates-new-section WindowManagers/Modules usr/share/menu/binary:13
+W: binary: menu-item-needs-tag-has-unknown-value wm usr/lib/menu/binary:5
+W: binary: menu-item-needs-tag-has-unknown-value wm usr/share/menu/binary:5
+W: binary: menu-item-uses-apps-section usr/lib/menu/binary:7
+W: binary: menu-item-uses-apps-section usr/share/menu/binary:7
+W: binary: menu-item-uses-windowmanagers-section usr/lib/menu/binary:13
+W: binary: menu-item-uses-windowmanagers-section usr/share/menu/binary:13
 W: binary: old-fsf-address-in-copyright-file
 W: binary: package-contains-hardlink usr/bar2 -> usr/share/baz
 W: binary: package-contains-upstream-install-documentation usr/share/doc/binary/INSTALL
@@ -121,17 +121,17 @@ W: binary: spelling-error-in-doc-base-abstract-field binary:10 speling spelling
 W: binary: spelling-error-in-doc-base-title-field binary:2 debian Debian
 W: binary: spelling-error-in-news-debian speling spelling
 W: binary: spelling-error-in-news-debian usefull useful
-W: binary: su-to-root-with-usr-sbin /usr/lib/menu/binary:4
-W: binary: su-to-root-with-usr-sbin /usr/share/menu/binary:4
-W: binary: su-wrapper-not-su-to-root /usr/lib/menu/binary:3 sux
-W: binary: su-wrapper-not-su-to-root /usr/share/applications/hello.desktop kdesu
-W: binary: su-wrapper-not-su-to-root /usr/share/menu/binary:3 sux
+W: binary: su-to-root-with-usr-sbin usr/lib/menu/binary:4
+W: binary: su-to-root-with-usr-sbin usr/share/menu/binary:4
+W: binary: su-wrapper-not-su-to-root usr/lib/menu/binary:3 sux
+W: binary: su-wrapper-not-su-to-root usr/share/applications/hello.desktop kdesu
+W: binary: su-wrapper-not-su-to-root usr/share/menu/binary:3 sux
 W: binary: superfluous-clutter-in-homepage <http://lintian.debian.org/>
 W: binary: symlink-should-be-relative usr/share/doc/binary/html/ch3.html /usr/share/doc/binary/htm/ch1.html
 W: binary: syntax-error-in-debian-changelog line 16 "couldn't parse date The, 15 Apr 2004 23:33:51 +0200"
 W: binary: syntax-error-in-debian-news-file line 12 "badly formatted trailer line"
 W: binary: syntax-error-in-debian-news-file line 12 "found eof where expected more change data or trailer"
-W: binary: unquoted-string-in-menu-item /usr/lib/menu/binary needs:1
-W: binary: unquoted-string-in-menu-item /usr/lib/menu/binary needs:2
-W: binary: unquoted-string-in-menu-item /usr/share/menu/binary needs:1
-W: binary: unquoted-string-in-menu-item /usr/share/menu/binary needs:2
+W: binary: unquoted-string-in-menu-item usr/lib/menu/binary needs:1
+W: binary: unquoted-string-in-menu-item usr/lib/menu/binary needs:2
+W: binary: unquoted-string-in-menu-item usr/share/menu/binary needs:1
+W: binary: unquoted-string-in-menu-item usr/share/menu/binary needs:2
