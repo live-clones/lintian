@@ -10,6 +10,9 @@ lintian (2.4.4) UNRELEASED; urgency=low
       - temporary-debhelper-file
       - compressed-objects.inv
       - unused-build-dependency-on-cdbs
+      - python-debug-in-wrong-location
+      - debian-watch-contains-dh_make-template
+      - missing-dependency-on-python-central
 
   * checks/*:
     + [NT] Use the new pre-sorted file {index,info} when iterating over files.
@@ -24,6 +27,10 @@ lintian (2.4.4) UNRELEASED; urgency=low
       It incorrectly assumed that -i worked for native packages.
       (Closes: #609153)
     + [NT] Moved the list of autotools packages into data/cruft/autotools.
+    + [NT] Clarified that dpkg-source looks for <package>_<upstreamversion>
+      and not <package>_<version> in the description of
+      native-package-with-dash-version.  Thanks to Daniel Thomas for the
+      report.  (Closes: #594254)
   * checks/debhelper{,.desc}:
     + [NT] Fix dependency check for dh_nativejava, default-jdk has never
       provided dh_nativejava.  (Closes: #606506)
@@ -61,6 +68,10 @@ lintian (2.4.4) UNRELEASED; urgency=low
       objects.inv files in python documentation.  Thanks to
       Fladischer Michael for the report and a partial patch.
       (Closes: #608810)
+    + [NT] Added check for misplaced python debug files.  Thanks to
+      Jakub Wilk for the report.  (Closes: #576014)
+    + [NT] Added check for missing dependency on python-central.
+      Thanks to Jakub Wilk for the report.  (Closes: #592533)
   * checks/menu-format.desc:
     + [CW] Fix several typos.
   * checks/menus.desc:
@@ -74,6 +85,9 @@ lintian (2.4.4) UNRELEASED; urgency=low
       (Closes: #582767)
   * checks/standards-version:
     + [RG] Correctly handle cases where debian/changelog is a symlink.
+  * checks/watch-file{,.desc}:
+    + [NT] Added check for dh_make(1) templates in the watch file.
+    Thanks to Nelson A. de Oliveira for the report.  (Closes: #600866)
 
   * data/changelog-file/ubuntu-dists:
     + [CW] Add natty as a valid Ubuntu distribution, and remove the EOLed
@@ -83,6 +97,10 @@ lintian (2.4.4) UNRELEASED; urgency=low
       suppress the {ancient,outdated}-autotools-helper-file tags.
       Currently this is manually updated.  This new list includes
       dh-autoreconf, thanks to Felix Geyer.  (Closes: #592358)
+  * data/debian-source-dir/known-files:
+    + [NT] Added the file and included git-patches in it.  Thanks to
+      Ron for the report and David Bremner for the initial patch.
+      (Closes: #607502)
   * data/fields/essential:
     + [RG] Add hurd.  (Closes: #591323)
   * data/fields/obsolete-packages:
@@ -93,6 +111,9 @@ lintian (2.4.4) UNRELEASED; urgency=low
       used.  (Closes: #596848)
   * data/spelling/corrections:
     + [NT] Added more corrections.
+  * data/spelling/collections-multiword:
+    + [NT] Added "allows to" and other similar cases.  Thanks to
+      Matthew Paul Thomas for the report.  (LP: #608231)
 
   * debian/control:
     + [RA] Add the build dependencies required to run the test suite
@@ -208,6 +229,9 @@ lintian (2.4.3) unstable; urgency=low
   * debian/control:
     + [RA] Update standards version to 3.9.1.
 
+  * data/files/fonts:
+    + [NT] Made tipa replace xfonts-tipa as font provider.
+      (Closes: #595530)
   * data/output/manual-references:
     + [RA] Update for Policy 3.9.1.
   * data/standards-version/release-dates:

@@ -64,7 +64,7 @@ while (<INDEX>) {
     close(FILE);
 }
 close(INDEX);
-close(SCRIPTS);
+close(SCRIPTS) or fail("cannot write scripts file: $!");
 
 open(SCRIPTS, '>', "control-scripts")
     or fail("cannot open control-scripts output file: $!");
@@ -83,7 +83,7 @@ for $file (readdir CONTROL) {
     close(FILE);
 }
 closedir(CONTROL);
-close(SCRIPTS);
+close(SCRIPTS) or fail("cannot write control-scripts file: $!");
 
 exit 0;
 

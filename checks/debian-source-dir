@@ -28,8 +28,7 @@ use Util;
 our %KNOWN_FORMATS = map { $_ => 1 }
     ('1.0', '2.0', '3.0 (quilt)', '3.0 (native)', '3.0 (git)', '3.0 (bzr)');
 
-our %KNOWN_FILES = map { $_ => 1 }
-    qw(format include-binaries lintian-overrides options patch-header);
+our $KNOWN_FILES = Lintian::Data->new('debian-source-dir/known-files');
 
 sub run {
 
@@ -53,7 +52,7 @@ if (-d "debfiles/source") {
     while ($file = readdir(DEBSRC)) {
         next if $file eq "." or $file eq "..";
         tag "unknown-file-in-debian-source", $file
-            unless $KNOWN_FILES{$file};
+            unless $KNOWN_FILES->known($file);
     }
     closedir(DEBSRC);
 }

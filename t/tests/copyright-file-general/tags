@@ -18,6 +18,7 @@ E: copyright-php: copyright-refers-to-bad-php-license
 E: copyright-php: copyright-refers-to-problematic-php-license
 E: copyright-poor-common-licenses: copyright-should-refer-to-common-license-file-for-gpl
 E: copyright-symlink: copyright-file-is-symlink
+I: copyright-full-gfdl: spelling-error-in-copyright requires to requires one to
 W: copyright-compressed: copyright-without-copyright-notice
 W: copyright-full-apache-2: copyright-without-copyright-notice
 W: copyright-iso-8859-1: debian-copyright-file-uses-obsolete-national-encoding at line 3

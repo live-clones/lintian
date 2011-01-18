@@ -86,10 +86,6 @@ lib:
   object-oriented.  Add specific to-do tasks for particular files if
   you've thought through how to do this.
 
-man:
-
-- Rewrite man pages in POD.  We're maintaining a Perl package after all.
-
 private:
 
 - Provide a general framework for updating metadata about the archive and

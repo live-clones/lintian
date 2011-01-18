@@ -30,7 +30,8 @@ my $type = shift;
 
 -f "fields/package" or fail("changelog-file invoked in wrong directory");
 
-unlink("changelog");
+unlink("changelog") or fail("cannot remove changelog file: $!")
+    if ( -e 'changelog' or -l 'changelog');
 
 # Pick the first of these files that exists.
 my @changelogs = ("unpacked/usr/share/doc/$pkg/changelog.Debian.gz",
@@ -85,7 +86,7 @@ if (not defined $chl) {
     open (COPY, '>', 'changelog') or fail("cannot create changelog: $!");
     print COPY while <CHL>;
     close CHL;
-    close COPY;
+    close (COPY) or fail("cannot write changelog: $!");
 } else {
     link($chl, "changelog")
 	or fail("cannot link $chl to changelog: $!");
@@ -93,7 +94,8 @@ if (not defined $chl) {
 
 # Extract NEWS.Debian files as well, with similar precautious.  Ignore any
 # symlinks to other packages here; in that case, we just won't check the file.
-unlink('NEWS.Debian');
+unlink('NEWS.Debian') or fail("cannot unlink NEWS.Debian: $!")
+    if (-e 'NEWS.Debian' or -l 'NEWS.Debian');
 my $news = "unpacked/usr/share/doc/$pkg/NEWS.Debian.gz";
 if (-f $news) {
     if (-l $news) {

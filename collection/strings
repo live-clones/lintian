@@ -58,5 +58,5 @@ while (<FILE_INFO>) {
     spawn({out => "strings/$bin", fail => 'error'}, ['strings', "unpacked/$bin"]);
 }
 
-close(ELF_INDEX);
+close(ELF_INDEX) or fail("cannot write elf-index file: $!");
 close(FILE_INFO);

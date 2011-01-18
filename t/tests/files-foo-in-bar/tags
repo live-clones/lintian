@@ -11,6 +11,7 @@ E: files-foo-in-bar: dir-or-file-in-var-run var/run/foo/
 E: files-foo-in-bar: dir-or-file-in-var-run var/run/foo/bar
 E: files-foo-in-bar: dir-or-file-in-var-www var/www/foo/
 E: files-foo-in-bar: dir-or-file-in-var-www var/www/foo/bar
+E: files-foo-in-bar: file-directly-in-usr-share usr/share/bar
 E: files-foo-in-bar: file-directly-in-usr-share-doc usr/share/doc/bar
 E: files-foo-in-bar: file-in-usr-lib-site-python usr/lib/site-python/foo/
 E: files-foo-in-bar: file-in-usr-lib-site-python usr/lib/site-python/foo/bar
@@ -28,4 +29,5 @@ W: files-foo-in-bar: file-in-unusual-dir usr/local/foo/bar
 W: files-foo-in-bar: file-in-unusual-dir var/foo/bar
 W: files-foo-in-bar: file-in-unusual-dir var/lock/foo/bar
 W: files-foo-in-bar: file-in-unusual-dir var/run/foo/bar
+W: files-foo-in-bar: file-in-usr-lib-sgml usr/lib/sgml/bar
 W: files-foo-in-bar: non-standard-dir-in-usr usr/foo/

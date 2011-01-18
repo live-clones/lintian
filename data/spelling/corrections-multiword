@@ -5,7 +5,12 @@
 # The format of each line is:
 # SPELLING_MISTAKE_REGEX||correction
 
+(?i)allows to||allows one to
 (?i)an other||another
 (?i)debian/gnu linux||Debian GNU/Linux
+(?i)helps to||helps one to
+(?i)permits to||permits one to
+(?i)requires to||requires one to
 (?i)these package||this package
 (?i)this packages||these packages
+

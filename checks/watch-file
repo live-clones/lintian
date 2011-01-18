@@ -32,6 +32,8 @@ my $pkg = shift;
 my $type = shift;
 my $info = shift;
 
+my $template = 0;
+
 if (! -f "debfiles/watch") {
     tag 'debian-watch-file-is-missing' unless ($info->native);
     return;
@@ -58,6 +60,7 @@ open(WATCH, '<', 'debfiles/watch') or fail("cannot open watch file: $!");
 local $_;
 my ($watchver, %dversions);
 while (<WATCH>) {
+    $template = 1 if m/^\s*\#\s*Example watch control file for uscan/io;
     next if /^\s*\#/;
     next if /^\s*$/;
     s/^\s*//;
@@ -141,6 +144,8 @@ while (<WATCH>) {
     }
 }
 close WATCH;
+
+tag "debian-watch-contains-dh_make-template" if ($template);
 
 my $changes = $info->changelog;
 if (defined $changes and %dversions) {

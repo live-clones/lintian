@@ -136,3 +136,10 @@ Info: The watch file specifies an upstream version number which matches
  incorrect and probably should be replaced with the current expected
  upstream version.  Otherwise, DEHS and similar projects will think the
  package is out of date even when it may not be.
+
+Tag: debian-watch-contains-dh_make-template
+Severity: wishlist
+Certainty: certain
+Info: The watch file contains a standard template included by dh_make.
+ Please remove them once you have implemented the watch file.
+

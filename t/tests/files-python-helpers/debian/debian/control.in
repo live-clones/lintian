@@ -1,27 +1,15 @@
 Source: {$srcpkg}
 Priority: extra
-Section: {$section}
+Section: python
 Maintainer: {$author}
 Standards-Version: {$standards_version}
-Build-Depends: debhelper (>= 7.0.50~)
+Build-Depends: debhelper (>= 7)
 
-Package: {$srcpkg}
-Architecture: {$architecture}
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Package: python-foo
+Architecture: all
+Depends: $\{misc:Depends\},
 Description: {$description}
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may
  be an empty package.
- .
- Spelling errors:
-   * Allows to
-   * An other error
-   * Debian/GNU Linux
-   * Helps to
-   * Permits to
-   * Requires to
-   * This packages
- .
- Not errors:
-   * These packages

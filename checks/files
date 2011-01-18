@@ -450,6 +450,12 @@ foreach my $file (@{$info->sorted_index}) {
 		    unless ($pkg =~ /-dbg$/);
 		$warned_debug_name = 1;
 	    }
+
+	    if ($index_info->{type} =~ m/^[-h]/o &&
+		$file =~ m,^usr/lib/debug/usr/lib/pyshared/(python\d?(?:\.\d+))/(.++)$,o){
+		my $correct = "/usr/lib/debug/usr/lib/pymodules/$1/$2";
+		tag "python-debug-in-wrong-location", "$file", "$correct";
+	    }
 	}
 
 	# ---------------- /usr/lib/sgml
@@ -799,6 +805,12 @@ foreach my $file (@{$info->sorted_index}) {
 	tag "override-file-in-wrong-location", "$file";
     }
 
+    # ---------------- pyshared-data
+    if ($file =~ m,^usr/share/pyshared-data/$tmp$,){
+	my $dep = Lintian::Relation->new($info->field('depends')//'');
+	tag "missing-dependency-on-python-central" unless ($dep->implies('python-central (>= 0.6)'));
+    }
+
     # ---------------- plain files
     if ($index_info->{type} =~ m/^[-h]/) {
 	my $wanted_operm;
@@ -977,7 +989,7 @@ foreach my $file (@{$info->sorted_index}) {
 	    } else {
 		if (($operm & 0444) != 0444) {
 		    tag "executable-is-not-world-readable", $file,
-			sprintf("%04o != 0755",$operm);
+			sprintf("%04o",$operm);
 		} elsif ($operm != 0755) {
 		    tag "non-standard-executable-perm", $file,
 			sprintf("%04o != 0755",$operm);
