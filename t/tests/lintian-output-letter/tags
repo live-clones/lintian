@@ -4,7 +4,7 @@ E[S!]: lintian-output-letter: dir-in-usr-local usr/local/share/
 E[S!]: lintian-output-letter: dir-in-usr-local usr/local/share/lintian/
 E[S?]: lintian-output-letter: possible-gpl-code-linked-with-openssl
 I[M ]: lintian-output-letter: description-synopsis-might-not-be-phrased-properly
-I[N?]: lintian-output-letter: desktop-entry-limited-to-environments /usr/share/applications/script.desktop
+I[N?]: lintian-output-letter: desktop-entry-limited-to-environments usr/share/applications/script.desktop
 I[W ]: lintian-output-letter: package-contains-empty-directory usr/local/share/lintian/
 I[W!]: lintian-output-letter source: binary-control-field-duplicates-source field "section" in package lintian-output-letter
 I[W?]: lintian-output-letter: description-possibly-contains-homepage http://www.example.com/.
