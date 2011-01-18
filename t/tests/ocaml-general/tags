@@ -6,7 +6,7 @@ I: libocaml-general-ocaml-dev: ocaml-dangling-cmi usr/lib/foo.cmi
 I: libocaml-general-ocaml-dev: ocaml-dangling-cmi usr/lib/ocaml/bar.cmi
 I: libocaml-general-ocaml-dev: ocaml-dangling-cmi usr/lib/ocaml/baz.cmi
 I: libocaml-general-ocaml-dev: ocaml-stray-cmo usr/lib/ocaml/bleh.cma
-P: libocaml-general-ocaml-dev: ocaml-dev-file-not-in-usr-lib-ocaml 1 file in /usr/lib
+P: libocaml-general-ocaml-dev: ocaml-dev-file-not-in-usr-lib-ocaml 1 file in usr/lib
 P: libocaml-general-ocaml-dev: ocaml-meta-without-suggesting-findlib
-P: libocaml-general-ocaml: ocaml-dev-file-in-nondev-package 2 files in /usr/lib
+P: libocaml-general-ocaml: ocaml-dev-file-in-nondev-package 2 files in usr/lib
 W: libocaml-general-ocaml: ocaml-dangling-cmxs usr/lib/ocaml/bar.cmxs

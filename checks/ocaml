@@ -162,7 +162,7 @@ if ($is_dev_package) {
         $outside_prefix = dirname($outside_prefix);
         my $plural = ($outside_number == 1) ? '' : 's';
         tag "ocaml-dev-file-not-in-usr-lib-ocaml",
-            "$outside_number file$plural in /$outside_prefix";
+            "$outside_number file$plural in $outside_prefix";
     }
     if ($has_meta) {
         my $depends = $info->relation('all');
@@ -175,7 +175,7 @@ if ($is_dev_package) {
         $dev_prefix = dirname($dev_prefix);
         my $plural = ($dev_number == 1) ? '' : 's';
         tag "ocaml-dev-file-in-nondev-package",
-            "$dev_number file$plural in /$dev_prefix";
+            "$dev_number file$plural in $dev_prefix";
     }
 }
 
