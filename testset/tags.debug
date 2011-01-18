@@ -2,10 +2,10 @@ E: debug source: build-depends-indep-without-arch-indep
 E: debug source: version-substvar-for-external-package libhello0-dbg -> libhello
 E: hello-dbg: changelog-file-missing-in-native-package
 E: hello: pkg-has-symbols-control-file-but-no-shared-libs
-E: hello: statically-linked-binary ./usr/bin/hello.dbg
-E: hello: unstripped-binary-or-object ./usr/bin/hello.dbg
-E: libhello0-dbg: binary-with-bad-dynamic-table ./usr/lib/libhello.so.dbg
-E: libhello0-dbg: missing-dependency-on-libc needed by ./usr/lib/debug/lib/libhello.so.0.0 and 1 others
+E: hello: statically-linked-binary usr/bin/hello.dbg
+E: hello: unstripped-binary-or-object usr/bin/hello.dbg
+E: libhello0-dbg: binary-with-bad-dynamic-table usr/lib/libhello.so.dbg
+E: libhello0-dbg: missing-dependency-on-libc needed by usr/lib/debug/lib/libhello.so.0.0 and 1 others
 E: libhello0-dbg: sharedobject-in-library-directory-missing-soname usr/lib/libhello.so.dbg
 E: libhello0: duplicate-entry-in-symbols-control-file libhello 0
 E: libhello0: invalid-template-id-in-symbols-file 12
@@ -34,9 +34,9 @@ W: hello: binary-without-manpage usr/bin/hello
 W: hello: binary-without-manpage usr/bin/hello.dbg
 W: hello: latest-debian-changelog-entry-without-new-version
 W: hi-dbg: latest-debian-changelog-entry-without-new-version
-W: libhello0-dbg: debug-file-should-use-detached-symbols ./usr/lib/debug/lib/libhello.so.0.0
+W: libhello0-dbg: debug-file-should-use-detached-symbols usr/lib/debug/lib/libhello.so.0.0
 W: libhello0-dbg: latest-debian-changelog-entry-without-new-version
-W: libhello0-dbg: shared-lib-without-dependency-information ./usr/lib/libhello.so.dbg
+W: libhello0-dbg: shared-lib-without-dependency-information usr/lib/libhello.so.dbg
 W: libhello0: latest-debian-changelog-entry-without-new-version
 W: libhello0: symbols-declares-dependency-on-other-package foobar (= 1.2)
 W: libhello0: symbols-declares-dependency-on-other-package hello-dbg

@@ -104,7 +104,6 @@ $arch = $info->field('architecture');
 
 foreach my $file (sort keys %{$info->objdump_info}) {
     my $objdump = $info->objdump_info->{$file};
-    $file = './' . $file;
 
     if (defined $objdump->{SONAME}) {
 	foreach my $soname (@{$objdump->{SONAME}}) {
@@ -133,7 +132,7 @@ foreach my $file (sort keys %{$info->objdump_info}) {
 	} elsif ($_ eq 'Packed with UPX') {
 	    tag "binary-file-compressed-with-upx", "$file";
 	} elsif ($_ eq 'Invalid operation') {
-	    tag "binary-with-bad-dynamic-table", "$file" unless $file =~ m%^\./usr/lib/debug/%;
+	    tag "binary-with-bad-dynamic-table", "$file" unless $file =~ m%^usr/lib/debug/%;
 	}
     }
 }
@@ -199,8 +198,6 @@ foreach my $file (@{$info->sorted_file_info}) {
     my $fileinfo = $info->file_info->{$file};
     my $objdump = $info->objdump_info->{$file};
 
-    $file = './' . $file;
-
     # binary or object file?
     next unless ($fileinfo =~ m/^[^,]*\bELF\b/) or ($fileinfo =~ m/\bcurrent ar archive\b/);
 
@@ -208,7 +205,7 @@ foreach my $file (@{$info->sorted_file_info}) {
     # only if those libraries aren't installed in a multiarch directory.  The
     # package may be a support package for cross-compiles.
     if ($arch eq 'all') {
-	my ($arch) = ($file =~ m,^\./(?:usr/)?lib/([^/]+)/,);
+	my ($arch) = ($file =~ m,^(?:usr/)?lib/([^/]+)/,);
 	$multiarch = Lintian::Data->new('binaries/multiarch')
 	    unless defined($multiarch);
 	unless ($arch and $multiarch->known($arch)) {
@@ -219,11 +216,11 @@ foreach my $file (@{$info->sorted_file_info}) {
     # ELF?
     next unless $fileinfo =~ m/^[^,]*\bELF\b/o;
 
-    if ($file =~ m,^\./etc/,) {
+    if ($file =~ m,^etc/,) {
 	tag "binary-in-etc", "$file";
     }
 
-    if ($file =~ m,^\./usr/share/,) {
+    if ($file =~ m,^usr/share/,) {
 	tag "arch-dependent-file-in-usr-share", "$file";
     }
 
@@ -325,24 +322,24 @@ foreach my $file (@{$info->sorted_file_info}) {
     next if $type eq 'udeb';
 
     # Perl library?
-    if ($file =~ m,^\./usr/lib/perl5/.*\.so$,) {
+    if ($file =~ m,^usr/lib/perl5/.*\.so$,) {
 	$has_perl_lib = 1;
     }
 
     # PHP extension?
-    if ($file =~ m,^\./usr/lib/php\d/.*\.so$,) {
+    if ($file =~ m,^usr/lib/php\d/.*\.so$,) {
 	$has_php_ext = 1;
     }
 
     # Something other than detached debugging symbols in /usr/lib/debug paths.
-    if ($file =~ m,^\./usr/lib/debug/(?:lib\d*|s?bin|usr|opt|dev|emul)/,) {
+    if ($file =~ m,^usr/lib/debug/(?:lib\d*|s?bin|usr|opt|dev|emul)/,) {
 	if (exists($objdump->{NEEDED})) {
 	    tag "debug-file-should-use-detached-symbols", $file;
 	}
     }
 
     # Detached debugging symbols directly in /usr/lib/debug.
-    if ($file =~ m,^\./usr/lib/debug/[^/]+$,) {
+    if ($file =~ m,^usr/lib/debug/[^/]+$,) {
 	unless (exists($objdump->{NEEDED})
 	    || $fileinfo =~ m/statically linked/) {
 	    tag "debug-symbols-directly-in-usr-lib-debug", $file;
@@ -354,21 +351,21 @@ foreach my $file (@{$info->sorted_file_info}) {
 	if ($fileinfo =~ m/shared object/o) {
             # Some exceptions: detached debugging information and the dynamic
             # loader (which itself has no dependencies).
-            next if ($file =~ m%^\./usr/lib/debug/%);
-            next if ($file =~ m%^\./lib(?:|32|64)/(?:[\w/]+/)?ld-[\d.]+\.so$%);
+            next if ($file =~ m%^usr/lib/debug/%);
+            next if ($file =~ m%^lib(?:|32|64)/(?:[\w/]+/)?ld-[\d.]+\.so$%);
 	    tag "shared-lib-without-dependency-information", "$file";
 	} else {
 	    # Some exceptions: files in /boot, /usr/lib/debug/*, named *-static or
 	    # *.static, or *-static as package-name.
-	    next if ($file =~ m%^./boot/%);
+	    next if ($file =~ m%^boot/%);
 	    next if ($file =~ /(?:\.|-)static$/);
 	    next if ($pkg =~ /-static$/);
 	    # klibc binaries appear to be static.
 	    next if ($objdump->{KLIBC});
 	    # Location of debugging symbols.
-	    next if ($file =~ m%^./usr/lib/debug/%);
+	    next if ($file =~ m%^usr/lib/debug/%);
 	    # ldconfig must be static.
-	    next if ($file eq './sbin/ldconfig');
+	    next if ($file eq 'sbin/ldconfig');
 	    tag "statically-linked-binary", "$file";
 	}
     } else {
