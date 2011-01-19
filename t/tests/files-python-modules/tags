@@ -1,0 +1,5 @@
+W: python-foo: python-module-in-wrong-location usr/lib/python2.5/dist-packages/python-foo usr/lib/python2.5/site-packages/python-foo
+W: python-foo: python-module-in-wrong-location usr/lib/python2.6/site-packages/python-foo usr/lib/python2.6/dist-packages/python-foo
+W: python-foo: python-module-in-wrong-location usr/lib/python2.7/site-packages/python-foo usr/lib/python2.7/dist-packages/python-foo
+W: python-foo: python-module-in-wrong-location usr/lib/python3.1/dist-packages/python-foo usr/lib/python3/dist-packages/python-foo
+W: python-foo: python-module-in-wrong-location usr/lib/python3.1/site-packages/python-foo usr/lib/python3/dist-packages/python-foo
