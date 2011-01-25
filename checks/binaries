@@ -85,6 +85,7 @@ our %EMBEDDED_LIBRARIES = (
 	'libgd2'	=> qr'gd-(?:png|jpeg:) error:',
 	'ncurses'	=> qr'Not enough memory to create terminal structure',
 	'openssl'	=> qr'You need to read the OpenSSL FAQ',
+	'sqlite'	=> {source => qr'sqlite3?', match => qr'CREATE TABLE sqlite_master\('},
 );
 
 our $multiarch;
@@ -317,8 +318,14 @@ foreach my $file (@{$info->sorted_file_info}) {
     }
 
     while (my ($src, $regex) = each %EMBEDDED_LIBRARIES) {
-	if ($info->field('source') ne $src
-	    and $strings =~ /$regex/) {
+	if (ref $regex eq 'HASH') {
+	    next if ($info->field('source') =~ m/$regex->{'source'}/);
+
+	    $regex = $regex->{'match'};
+	} elsif ($info->field('source') eq $src) {
+	    next;
+	}
+	if ($strings =~ /$regex/) {
 	    tag "embedded-library", "$file: $src";
 	}
     }
