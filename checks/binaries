@@ -86,6 +86,13 @@ our %EMBEDDED_LIBRARIES = (
 	'ncurses'	=> qr'Not enough memory to create terminal structure',
 	'openssl'	=> qr'You need to read the OpenSSL FAQ',
 	'sqlite'	=> {source => qr'sqlite3?', match => qr'CREATE TABLE sqlite_master\('},
+	'libm'		=> {source => qr'eglibc', match => qr'neg\*\*non-integral: DOMAIN error'},
+	'ltdl'		=> {source => qr'libtool', match => qr'(?m)^library already shutdown'},
+	'curl'		=> qr'A libcurl function was given a bad argument',
+	'libmng'	=> qr'TERM misplaced during creation of MNG stream',
+	'libmsn'	=> qr'The MSN server has terminated the connection with an unknown reason code\.',
+	'libmikmod'	=> qr'APUN \(APlayer\) and UNI \(MikMod\)',
+	'libmysqlclient'=> {source => qr'mysql-\d.*', match => qr'MySQL client ran out of memory'},
 );
 
 our $multiarch;
