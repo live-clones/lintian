@@ -79,6 +79,12 @@ our %EMBEDDED_LIBRARIES = (
 	'libxml2'	=> qr'root and DTD name do not match',
 	'pcre3'		=> qr'this version of PCRE is not compiled with PCRE_UTF8 support',
 	'tiff'		=> qr'No space for PixarLog state block',
+	'ftgl'		=> qr'FTGlyphContainer',
+	't1lib'		=> qr't1lib is copyright \(c\) Rainer Menzner',
+	'gl2ps'		=> qr'\(C\) 1999-2009 C\. Geuzaine',
+	'libgd2'	=> qr'gd-(?:png|jpeg:) error:',
+	'ncurses'	=> qr'Not enough memory to create terminal structure',
+	'openssl'	=> qr'You need to read the OpenSSL FAQ',
 );
 
 our $multiarch;
