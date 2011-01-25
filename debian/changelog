@@ -1,4 +1,4 @@
-lintian (2.4.4) UNRELEASED; urgency=low
+lintian (2.5.0) UNRELEASED; urgency=low
 
   * Summary of tag changes:
     + Added:
@@ -17,6 +17,8 @@ lintian (2.4.4) UNRELEASED; urgency=low
 
   * checks/*:
     + [NT] Use the new pre-sorted file {index,info} when iterating over files.
+    + [NT] All checks now report files without any "./" or "/" prefix.  This
+      may break existing overrides.  (Closes: #534940)
   * checks/binaries:
     + [RA] Exclude kfreebsd-kernel-di-{amd64,i386} from the
       embedded-zlib check since it's in the kernel.  (Closes: #593397)
