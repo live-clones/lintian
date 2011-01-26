@@ -2,11 +2,10 @@
 # be overridden.  It is based on the data file retrieved from
 # http://ftp-master.debian.org/static/lintian.tags
 #
-# Last updated: 2010-04-24
+# Last updated: 2011-01-26
 
 FSSTND-dir-in-usr
 FSSTND-dir-in-var
-bad-package-name
 bad-package-name
 bad-relation
 bad-version-number
@@ -43,7 +42,6 @@ maintainer-name-missing
 maintainer-script-removes-device-files
 malformed-deb-archive
 missing-dependency-on-perlapi
-no-architecture-field
 no-architecture-field
 no-copyright-file
 no-maintainer-field

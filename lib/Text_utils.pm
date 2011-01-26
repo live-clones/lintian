@@ -21,11 +21,12 @@
 
 package Text_utils;
 
+use strict;
+use warnings;
+
 use Exporter;
 our @ISA    = qw(Exporter);
 our @EXPORT = qw(split_paragraphs wrap_paragraphs dtml_to_html dtml_to_text);
-
-use strict;
 
 # requires wrap() function
 use Text::Wrap;
@@ -41,7 +42,7 @@ sub html_wrap {
     # subtract 1 to compensate for the lack of a space before the first word.
     my $ll = length($lead) - 1;
     my $cnt = 0;
-    my $r = "";
+    my $r = '';
 
     while ($cnt <= $#words) {
 	if ($ll + 1 + length($words[$cnt]) > 76) {
@@ -74,7 +75,7 @@ sub html_wrap {
 # Paragraphs are separated by empty lines. Each empty line is a
 # paragraph. Furthermore, indented lines are considered a paragraph.
 sub split_paragraphs {
-    return "" unless (@_);
+    return '' unless (@_);
 
     my $t = join("\n",@_);
 
@@ -100,7 +101,7 @@ sub split_paragraphs {
 	}
 	# what else can happen?
 	else {
-	    fail("internal error in wrap");
+	    fail('internal error in wrap');
 	}
     }
     #FLUSH;
@@ -133,7 +134,7 @@ sub dtml_to_html {
 	# preformatted line?
 	elsif (/^\s/o) {
 	    if (not $pre) {
-		push(@o,"<pre>");
+		push(@o,'<pre>');
 		$pre=1;
 	    }
 	    push(@o,"$_");
@@ -141,14 +142,14 @@ sub dtml_to_html {
 	# normal line
 	else {
 	    if ($pre) {
-		push(@o,"</pre>");
+		push(@o,'</pre>');
 		$pre=0;
 	    }
 	    push(@o,"<p>$_\n");
 	}
     }
     if ($pre) {
-	push(@o,"</pre>");
+	push(@o,'</pre>');
 	$pre=0;
     }
 
@@ -198,7 +199,7 @@ sub wrap_paragraphs {
     my $o;
     for my $t (split_paragraphs(@_)) {
 	# empty or indented line?
-	if ($t =~ /^$/ or $t =~ /^\s/) {
+	if ($t eq '' or $t =~ /^\s/) {
 	    $o .= "$lead$t\n";
 	} else {
 	    if ($html) {

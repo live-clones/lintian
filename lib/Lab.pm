@@ -21,6 +21,7 @@
 package Lab;
 
 use strict;
+use warnings;
 use base qw(Exporter);
 
 use constant LAB_FORMAT => 10;
@@ -84,7 +85,7 @@ sub setup {
 	$self->{mode} = 'static';
 	$self->{dir} = $absdir;
 	$self->{dist} = $dist;
-	
+
 	if (-d "$absdir" && ! -d "$absdir/changes") {
 	    mkdir("$absdir/changes", 0777)
 		or fail("cannot create lab directory $dir/changes");
@@ -113,7 +114,7 @@ sub setup_static {
     my ( $self ) = @_;
 
     unless ( $self->{mode} eq 'static' and $self->{dir} ) {
-	warning("no laboratory specified (need to define LINTIAN_LAB)");
+	warning('no laboratory specified (need to define LINTIAN_LAB)');
 	return 0;
     }
 
@@ -172,13 +173,13 @@ sub populate_with_dist {
     my %opts = ( out => $Lintian::Output::GLOBAL->stdout );
     spawn(\%opts, ["$LINTIAN_ROOT/unpack/list-binpkg",
 		  "$self->{dir}/info/binary-packages", $v])
-	or fail("cannot create binary package list");
+	or fail('cannot create binary package list');
     spawn(\%opts, ["$LINTIAN_ROOT/unpack/list-srcpkg",
 		  "$self->{dir}/info/source-packages", $v])
-	or fail("cannot create source package list");
+	or fail('cannot create source package list');
     spawn(\%opts, ["$LINTIAN_ROOT/unpack/list-udebpkg",
 		  "$self->{dir}/info/udeb-packages", $v])
-	or fail("cannot create udeb package list");
+	or fail('cannot create udeb package list');
 
     return 1;
 }
@@ -187,7 +188,7 @@ sub delete_static {
     my ( $self ) = @_;
 
     unless ( $self->{mode} eq 'static' and $self->{dir} ) {
-	warning("no laboratory specified (need to define LINTIAN_LAB)");
+	warning('no laboratory specified (need to define LINTIAN_LAB)');
 	return 0;
     }
 
@@ -251,7 +252,7 @@ sub delete_force {
 		}
     }
 
-    $self->{dir} = "";
+    $self->{dir} = '';
 
     return 1;
 }

@@ -10,7 +10,9 @@ Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, xorg, bash,
  conflict-dep, gawk | awk, new-package | xbase-clients, {$srcpkg},
  gaim, emacs21, emacs22, makedev
-Breaks: package-without-version, {$srcpkg} (<< 0.1)
+Breaks: package-without-version, {$srcpkg} (<< 0.1),
+ replaced-wo-version
+Replaces: replaced-wo-version
 Conflicts: package-with-version (<< 3.0), conflict-dep
 Description: {$description}
  This is a test package designed to exercise some feature or tag of

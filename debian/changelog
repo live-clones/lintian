@@ -1,4 +1,4 @@
-lintian (2.4.4) UNRELEASED; urgency=low
+lintian (2.5.0) UNRELEASED; urgency=low
 
   * Summary of tag changes:
     + Added:
@@ -13,13 +13,26 @@ lintian (2.4.4) UNRELEASED; urgency=low
       - python-debug-in-wrong-location
       - debian-watch-contains-dh_make-template
       - missing-dependency-on-python-central
+      - python-module-in-wrong-location
+    + Removed:
+      - embedded-zlib (now in embedded-library)
+      - embedded-libpng (now in embedded-library)
+      - embedded-libjpeg (now in embedded-library)
+      - embedded-libopenjpeg (now in embedded-library)
 
   * checks/*:
     + [NT] Use the new pre-sorted file {index,info} when iterating over files.
+    + [NT] All checks now report files without any "./" or "/" prefix.  This
+      may break existing overrides.  (Closes: #534940)
   * checks/binaries:
     + [RA] Exclude kfreebsd-kernel-di-{amd64,i386} from the
       embedded-zlib check since it's in the kernel.  (Closes: #593397)
     + [RG] Add swipl to the list of known interpreters.  (Closes: #591316)
+    + [RG] Detect embedded copies of ftgl, t1lib, gl2ps, libgd2,
+      ncurses, openssl (libcrypto), sqlite/3, libm, ltdl, curl, libmng,
+      libmsn, libmikmod, and libmysqlclient.
+    + [RG] Merge embedded-{zlib,lib{png,jpeg,openjpeg}} into
+      embedded-library.
   * checks/cruft{,.desc}:
     + [NT] Extended the diff-contains-substvars check to also catch files
       prefixed with a package name.
@@ -53,6 +66,10 @@ lintian (2.4.4) UNRELEASED; urgency=low
     + [NT] Corrected Policy references for the uploader tags.  Thanks to
       David Prévot for spotting this issue and providing a patch.
       (Closes: #602632)
+    + [NT] Fixed false positives for breaks-without-version.  The tag
+      will no longer be emitted if the package listed in Breaks is also
+      listed in Replaces.  Thanks to Modestas Vainius for the report.
+      (Closes: #605744)
   * checks/files{,.desc}:
     + [NT] Fixed false-positive extra-license-file for license.ui files.
       Thanks to Jeremy Sanders for the report.  (Closes: #595941)
@@ -72,6 +89,8 @@ lintian (2.4.4) UNRELEASED; urgency=low
       Jakub Wilk for the report.  (Closes: #576014)
     + [NT] Added check for missing dependency on python-central.
       Thanks to Jakub Wilk for the report.  (Closes: #592533)
+    + [NT] Added check for malplaced Python modules. Thanks to
+      Jakub Wilk for the report.  (Closes: #576012)
   * checks/menu-format.desc:
     + [CW] Fix several typos.
   * checks/menus.desc:
@@ -106,6 +125,9 @@ lintian (2.4.4) UNRELEASED; urgency=low
   * data/fields/obsolete-packages:
     + [NT] Added default-jdk-builddep.  See README.gcj-native-transition
       in java-common for the replacement.
+  * data/files/fonts:
+    + [NT] Made tipa replace xfonts-tipa as font provider.
+      (Closes: #595530)
   * data/shared-libs/ldconfig-dirs:
     + [NT] Removed the emul/ia32-linux directories as they are no longer
       used.  (Closes: #596848)
@@ -229,9 +251,6 @@ lintian (2.4.3) unstable; urgency=low
   * debian/control:
     + [RA] Update standards version to 3.9.1.
 
-  * data/files/fonts:
-    + [NT] Made tipa replace xfonts-tipa as font provider.
-      (Closes: #595530)
   * data/output/manual-references:
     + [RA] Update for Policy 3.9.1.
   * data/standards-version/release-dates:

@@ -811,6 +811,50 @@ foreach my $file (@{$info->sorted_index}) {
 	tag "missing-dependency-on-python-central" unless ($dep->implies('python-central (>= 0.6)'));
     }
 
+    # ---------------- python file locations
+    #  - The python people kindly provided the following table.
+    # good:
+    # /usr/lib/python2.5/site-packages/
+    # /usr/lib/python2.6/dist-packages/
+    # /usr/lib/python2.7/dist-packages/
+    # /usr/lib/python3/dist-packages/
+    #
+    # bad:
+    # /usr/lib/python2.5/dist-packages/
+    # /usr/lib/python2.6/site-packages/
+    # /usr/lib/python2.7/site-packages/
+    # /usr/lib/python3.*/*-packages/
+    if ($file =~ m,^(usr/lib/debug/)?usr/lib/python(\d+(?:\.\d+)?)/(site|dist)-packages/(.++)$,o){
+	my ($debug, $pyver, $loc, $rest) = ($1, $2, $3, $4);
+	my ($pmaj, $pmin) = split(m/\./o, $pyver, 2);
+	my @correction = ();
+	$pmin = 0 unless (defined $pmin);
+	$debug = '' unless (defined $debug);
+	next if ($pmaj < 2 or $pmaj > 3); # Not python 2 or 3
+	if ($pmaj == 2 and $pmin < 6){
+	    # 2.4 and 2.5
+	    if ($loc ne 'site') {
+		@correction = ("${debug}usr/lib/python${pyver}/$loc-packages/$rest",
+			       "${debug}usr/lib/python${pyver}/site-packages/$rest");
+	    }
+	} elsif ($pmaj == 3){
+	    # python 3. Everything must be in python3/dist-... and not python3.X/<something>
+	    my @files;
+	    if ($pyver ne '3' or $loc ne 'dist'){
+		# bad mojo
+		@correction = ("${debug}usr/lib/python${pyver}/$loc-packages/$rest",
+			       "${debug}usr/lib/python3/dist-packages/$rest");
+	    }
+	} else {
+	    # python 2.6+
+	    if ($loc ne 'dist') {
+		@correction = ("${debug}usr/lib/python${pyver}/$loc-packages/$rest",
+			       "${debug}usr/lib/python${pyver}/dist-packages/$rest");
+	    }
+	}
+	tag "python-module-in-wrong-location", @correction if (@correction);
+    }
+
     # ---------------- plain files
     if ($index_info->{type} =~ m/^[-h]/) {
 	my $wanted_operm;

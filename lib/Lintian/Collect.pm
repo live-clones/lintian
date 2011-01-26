@@ -18,6 +18,8 @@
 
 package Lintian::Collect;
 use strict;
+use warnings;
+
 use Util qw(fail);
 
 # Take the package name and type, initialize an appropriate collect object

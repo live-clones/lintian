@@ -73,12 +73,39 @@ our %arch_64bit_equivs = (
 );
 
 our %EMBEDDED_LIBRARIES = (
+	# We exclude version strings starting with "4 " since that's a mark of the
+	# Pascal implementation, which is not what this tag is designed to detect.
+	# (The "4" is actually the string length (52 characters) in the Pascal
+	# counted string format.)
+	'zlib'		=> {
+			    source => qr'(?:zlib|klibc|kfreebsd-kernel-di-\w+)',
+			    match => qr'(?m)(?<!4 )(?:in|de)flate (?:\d[ \w.\-]{1,20}[\w.\-])'
+			   },
+
 	'bzip2'		=> qr'(?m)^This is a bug in bzip2',
 	'expat'		=> qr'(?m)^requested feature requires XML_DTD support in Expat',
 	'file'		=> qr'(?m)^could not find any magic files',
 	'libxml2'	=> qr'root and DTD name do not match',
 	'pcre3'		=> qr'this version of PCRE is not compiled with PCRE_UTF8 support',
 	'tiff'		=> qr'No space for PixarLog state block',
+	'ftgl'		=> qr'FTGlyphContainer',
+	't1lib'		=> qr't1lib is copyright \(c\) Rainer Menzner',
+	'gl2ps'		=> qr'\(C\) 1999-2009 C\. Geuzaine',
+	'libgd2'	=> qr'gd-(?:png|jpeg:) error:',
+	'ncurses'	=> qr'Not enough memory to create terminal structure',
+	'openssl'	=> qr'You need to read the OpenSSL FAQ',
+	'sqlite'	=> {source => qr'sqlite3?', match => qr'CREATE TABLE sqlite_master\('},
+	'libm'		=> {source => qr'eglibc', match => qr'neg\*\*non-integral: DOMAIN error'},
+	'ltdl'		=> {source => qr'libtool', match => qr'(?m)^library already shutdown'},
+	'curl'		=> qr'A libcurl function was given a bad argument',
+	'libmng'	=> qr'TERM misplaced during creation of MNG stream',
+	'libmsn'	=> qr'The MSN server has terminated the connection with an unknown reason code\.',
+	'libmikmod'	=> qr'APUN \(APlayer\) and UNI \(MikMod\)',
+	'libmysqlclient'=> {source => qr'mysql-\d.*', match => qr'MySQL client ran out of memory'},
+	'libpng'	=> qr'(?m)^Potential overflow in png_zalloc',
+	'libjpeg'	=> { source => qr'^libjpeg.*',
+			     match => qr'(?m)^Caution: quantization tables are too coarse for baseline JPEG'},
+	'openjpeg'	=> qr'tcd_decode: incomplete bistream',
 );
 
 our $multiarch;
@@ -284,35 +311,15 @@ foreach my $file (@{$info->sorted_file_info}) {
 	}
     }
 
-    # We exclude version strings starting with "4 " since that's a mark of the
-    # Pascal implementation, which is not what this tag is designed to detect.
-    # (The "4" is actually the string length (52 characters) in the Pascal
-    # counted string format.)
-    if ($info->field('source') ne 'zlib' and $info->field('source') ne 'klibc'
-	and $info->field('source') ne 'kfreebsd-kernel-di-amd64'
-	and $info->field('source') ne 'kfreebsd-kernel-di-i386'
-	and $strings =~ /(?<!4 )(?:in|de)flate (?:\d[ \w.\-]{1,20}[\w.\-])/m) {
-	tag "embedded-zlib", $file;
-    }
-
-    if ($info->field('source') ne 'libpng'
-	and $strings =~ /^Potential overflow in png_zalloc/m) {
-	tag "embedded-libpng", $file;
-    }
-
-    if ($info->field('source') !~ '^libjpeg.*'
-	and $strings =~ /^Caution: quantization tables are too coarse for baseline JPEG/m) {
-	tag "embedded-libjpeg", $file;
-    }
-
-    if ($info->field('source') ne 'openjpeg'
-	and $strings =~ /tcd_decode: incomplete bistream/) {
-	tag "embedded-libopenjpeg", $file;
-    }
-
     while (my ($src, $regex) = each %EMBEDDED_LIBRARIES) {
-	if ($info->field('source') ne $src
-	    and $strings =~ /$regex/) {
+	if (ref $regex eq 'HASH') {
+	    next if ($info->field('source') =~ m/^$regex->{'source'}$/);
+
+	    $regex = $regex->{'match'};
+	} elsif ($info->field('source') eq $src) {
+	    next;
+	}
+	if ($strings =~ /$regex/) {
 	    tag "embedded-library", "$file: $src";
 	}
     }

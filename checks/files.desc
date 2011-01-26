@@ -741,6 +741,15 @@ Info: The directory /usr/lib/site-python has been deprecated as a
  private module and should be packaged in a directory outside of Python's
  default search path.
 
+Tag: python-module-in-wrong-location
+Severity: normal
+Certainty: possible
+Ref: python-policy1.5,  http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=576012
+Info: The package installs a Python module or debug information for a Python
+ module in the wrong location for the given version of Python.
+ .
+ dh_python3 can be used to fix this for Python 3 modules.
+
 Tag: python-debug-in-wrong-location
 Severity: normal
 Certainty: possible
