@@ -1,6 +1,7 @@
 # FIXME: the list of checks should probably be moved to
 # t/scripts/critic.pl. Line continuations are not supported here
 
+verbose = 1
 # Severity is actually ignored for our main purposes, see below
 severity = 1
 # Work based on a whitelist
