@@ -4,8 +4,4 @@ Architecture: any
 Version: 1.0
 Description: Package with binary with library-unique strings
 Test-For:
- embedded-zlib
- embedded-libpng
- embedded-libjpeg
- embedded-libopenjpeg
  embedded-library

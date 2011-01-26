@@ -73,6 +73,15 @@ our %arch_64bit_equivs = (
 );
 
 our %EMBEDDED_LIBRARIES = (
+	# We exclude version strings starting with "4 " since that's a mark of the
+	# Pascal implementation, which is not what this tag is designed to detect.
+	# (The "4" is actually the string length (52 characters) in the Pascal
+	# counted string format.)
+	'zlib'		=> {
+			    source => qr'(?:zlib|klibc|kfreebsd-kernel-di-\w+)',
+			    match => qr'(?m)(?<!4 )(?:in|de)flate (?:\d[ \w.\-]{1,20}[\w.\-])'
+			   },
+
 	'bzip2'		=> qr'(?m)^This is a bug in bzip2',
 	'expat'		=> qr'(?m)^requested feature requires XML_DTD support in Expat',
 	'file'		=> qr'(?m)^could not find any magic files',
@@ -93,6 +102,10 @@ our %EMBEDDED_LIBRARIES = (
 	'libmsn'	=> qr'The MSN server has terminated the connection with an unknown reason code\.',
 	'libmikmod'	=> qr'APUN \(APlayer\) and UNI \(MikMod\)',
 	'libmysqlclient'=> {source => qr'mysql-\d.*', match => qr'MySQL client ran out of memory'},
+	'libpng'	=> qr'(?m)^Potential overflow in png_zalloc',
+	'libjpeg'	=> { source => qr'^libjpeg.*',
+			     match => qr'(?m)^Caution: quantization tables are too coarse for baseline JPEG'},
+	'openjpeg'	=> qr'tcd_decode: incomplete bistream',
 );
 
 our $multiarch;
@@ -296,32 +309,6 @@ foreach my $file (@{$info->sorted_file_info}) {
 	    next if $directories{$rpath} and $rpath !~ m,^(?:/usr)?/lib/?\z,;
 	    tag "binary-or-shlib-defines-rpath", "$file $rpath";
 	}
-    }
-
-    # We exclude version strings starting with "4 " since that's a mark of the
-    # Pascal implementation, which is not what this tag is designed to detect.
-    # (The "4" is actually the string length (52 characters) in the Pascal
-    # counted string format.)
-    if ($info->field('source') ne 'zlib' and $info->field('source') ne 'klibc'
-	and $info->field('source') ne 'kfreebsd-kernel-di-amd64'
-	and $info->field('source') ne 'kfreebsd-kernel-di-i386'
-	and $strings =~ /(?<!4 )(?:in|de)flate (?:\d[ \w.\-]{1,20}[\w.\-])/m) {
-	tag "embedded-zlib", $file;
-    }
-
-    if ($info->field('source') ne 'libpng'
-	and $strings =~ /^Potential overflow in png_zalloc/m) {
-	tag "embedded-libpng", $file;
-    }
-
-    if ($info->field('source') !~ '^libjpeg.*'
-	and $strings =~ /^Caution: quantization tables are too coarse for baseline JPEG/m) {
-	tag "embedded-libjpeg", $file;
-    }
-
-    if ($info->field('source') ne 'openjpeg'
-	and $strings =~ /tcd_decode: incomplete bistream/) {
-	tag "embedded-libopenjpeg", $file;
     }
 
     while (my ($src, $regex) = each %EMBEDDED_LIBRARIES) {
