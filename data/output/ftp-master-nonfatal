@@ -11,7 +11,7 @@ binary-with-bad-dynamic-table
 control-interpreter-without-depends
 copyright-contains-dh_make-todo-boilerplate
 dir-or-file-in-var-www
-embedded-zlib
+embedded-library
 missing-build-dependency
 missing-dependency-on-libc
 mknod-in-maintainer-script
