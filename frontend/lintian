@@ -425,7 +425,7 @@ Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
 
 # process commandline options
 GetOptions(%opthash)
-    or die('error parsing options\n');
+    or die("error parsing options\n");
 
 # determine current working directory--we'll need this later
 chop($cwd = `pwd`);
@@ -442,8 +442,8 @@ if (defined $LINTIAN_ROOT) {
 
 # option --all and packages specified at the same time?
 if (($check_everything or $packages_file) and $#ARGV+1 > 0) {
-    print STDERR 'warning: options -a or -p cannot be mixed with package parameters!\n';
-    print STDERR '(will ignore -a or -p option)\n';
+    print STDERR "warning: options -a or -p cannot be mixed with package parameters!\n";
+    print STDERR "(will ignore -a or -p option)\n";
     undef $check_everything;
     undef $packages_file;
 }
@@ -468,7 +468,7 @@ if ($action =~ /^(?:check|unpack|remove)$/ and $#ARGV == -1 and not $check_every
 # root permissions?
 # check if effective UID is 0
 if ($> == 0 and not $allow_root) {
-    print STDERR 'warning: the authors of lintian do not recommend running it with root privileges!\n';
+    print STDERR "warning: the authors of lintian do not recommend running it with root privileges!\n";
 }
 
 # search for configuration file if it was not set with --cfg
@@ -536,23 +536,23 @@ unless (defined $LINTIAN_ARCH) {
 
 # LINTIAN_SECTION is deprecated in favour of LINTIAN_AREA
 if (defined $LINTIAN_SECTION) {
-    print STDERR 'warning: LINTIAN_SECTION has been deprecated in favour of LINTIAN_AREA.\n';
+    print STDERR "warning: LINTIAN_SECTION has been deprecated in favour of LINTIAN_AREA.\n";
     if (defined $LINTIAN_AREA) {
-	print STDERR 'Using LINTIAN_AREA as both were defined.\n';
+	print STDERR "Using LINTIAN_AREA as both were defined.\n";
     } else {
-	print STDERR 'Both are currently accepted, but LINTIAN_SECTION may be removed\n';
-	print STDERR 'in a future Lintian release.\n';
+	print STDERR "Both are currently accepted, but LINTIAN_SECTION may be removed\n";
+	print STDERR "in a future Lintian release.\n";
 	$LINTIAN_AREA = $LINTIAN_SECTION;
     }
 }
 
 # determine requested unpack level
 if (defined($unpack_level)) {
-    print STDERR 'warning: --unpack-level is deprecated, ignoring.\n';
+    print STDERR "warning: --unpack-level is deprecated, ignoring.\n";
     # specified through command line
 } elsif (defined($LINTIAN_UNPACK_LEVEL)) {
     # specified via configuration file or env variable
-    print STDERR 'warning: LINTIAN_UNPACK_LEVEL is deprecated, ignoring.\n';
+    print STDERR "warning: LINTIAN_UNPACK_LEVEL is deprecated, ignoring.\n";
 }
 
 # determine by action
@@ -678,7 +678,7 @@ for my $level (@display_level) {
     if ($@) {
 	my $error = $@;
 	$error =~ s/ at .*//;
-	die $error, '\n';
+	die $error, "\n";
     }
 }
 
@@ -1389,7 +1389,7 @@ foreach my $pkg_info ($schedule->get_all) {
 		    open(VERSION, '>', "$base/.${coll}-$ci->{'version'}")
 			or fail("cannot create $base/.${coll}-$ci->{'version'}: $!");
 		    print VERSION "Lintian-Version: $LINTIAN_VERSION\n"
-				. 'Timestamp: ' . time . '\n';
+				. 'Timestamp: ' . time . "\n";
 		    close(VERSION);
 		    debug_msg(1, "Collection script $coll done");
 		} else {
@@ -1759,7 +1759,7 @@ sub END {
 
 sub interrupted {
     $SIG{$_[0]} = 'DEFAULT';
-    die 'N: Interrupted.\n';
+    die "N: Interrupted.\n";
 }
 # }}}
 

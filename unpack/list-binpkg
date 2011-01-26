@@ -30,9 +30,9 @@ $| = 1;
 
 # parse command line options
 if ($#ARGV == -1) {
-    print 'list-binpkg [-v] <output-list-file>\n';
-    print 'options:\n';
-    print '   -v  verbose\n';
+    print "list-binpkg [-v] <output-list-file>\n";
+    print "options:\n";
+    print "   -v  verbose\n";
     exit 0;
 }
 
