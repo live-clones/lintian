@@ -127,7 +127,7 @@ sub print_tag {
     }
 
     $self->_print('', "$code\[$lq\]: $pkg$type", "$tag$information");
-    if (!$self->issued_tag($tag_info->tag) and $self->showdescription) {
+    if (not $self->issued_tag($tag_info->tag) and $self->showdescription) {
         my $description = $tag_info->description('text', '   ');
         $self->_print('', 'N', '');
         $self->_print('', 'N', split("\n", $description));

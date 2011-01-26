@@ -19,8 +19,6 @@ use strict;
 use warnings;
 use base 'Lintian::DepMap';
 
-my ($properties);
-
 =head1 NAME
 
 Lintian::DepMap::Properties - Dependencies with properties map/tree creator

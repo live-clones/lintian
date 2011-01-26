@@ -20,6 +20,7 @@
 # MA 02110-1301, USA.
 
 use strict;
+use warnings;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Relation::Version qw(versions_lte);
@@ -228,7 +229,7 @@ sub safe_get_deb_info {
 	# error!
 	print STDERR "$@\n";
 	print "E: general: bad-binary-package $_[0]\n";
-	return undef;
+	return;
     }
     $data->{'source'} or ($data->{'source'} = $data->{'package'});
     return $data;

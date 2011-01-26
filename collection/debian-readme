@@ -20,17 +20,20 @@
 # MA 02110-1301, USA.
 
 use strict;
+use warnings;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Util;
 
-($#ARGV == 1) or fail("syntax: debian-readme <pkg> <type>");
+($#ARGV == 1) or fail('syntax: debian-readme <pkg> <type>');
 my $pkg = shift;
 my $type = shift;
 
--f "fields/package" or fail("debian-readme invoked in wrong directory");
+-f 'fields/package' or fail('debian-readme invoked in wrong directory');
 
-unlink("README.Debian");
+if (-f 'README.Debian') {
+    unlink('README.Debian') or fail("Could not remove old README.Debian: $!");
+}
 
 # Pick the first of these files that exists.
 my @readmes = ("unpacked/usr/share/doc/$pkg/README.Debian.gz",
@@ -52,10 +55,10 @@ for (@readmes) {
 
 if (not defined $file) {
     # no README found
-    touch_file("README.Debian");
+    touch_file('README.Debian');
 } elsif ($file =~ m/\.gz$/) {
-    gunzip_file($file, "README.Debian");
+    gunzip_file($file, 'README.Debian');
 } else {
-    link($file, "README.Debian")
+    link($file, 'README.Debian')
 	or fail("cannot link $file to README.Debian: $!");
 }

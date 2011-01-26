@@ -41,7 +41,8 @@ sub new {
 sub add_file {
     my ($self, $type, $file, %pkg_info) = @_;
 
-    my %long_types = ('b','binary', 'c','changes', 's','source', 'u','udeb');
+    my %long_types = ('b' => 'binary', 'c' => 'changes',
+                      's' => 'source', 'u' =>'udeb');
     my ($pkg, $ver, $arch);
     if ($type eq 's') {
 	($pkg, $ver, $arch) =
@@ -120,7 +121,7 @@ sub add_changes {
 
     my $info = get_dsc_info($changes_file);
     return unless defined $info;
-    
+
     my $status = $self->add_file('c', $changes_file, %$info);
     # get directory and filename part of $changes_file
     my ($arg_dir, $arg_name) = $changes_file =~ m,(.*)/([^/]+)$,;
@@ -146,7 +147,7 @@ sub add_changes {
 	} elsif ($file =~ /\.dsc$/) {
 	    $status += $self->add_dsc("$arg_dir/$file");
 	}
-    }                                    
+    }
 
     return ($status ? 0 : 1);
 }

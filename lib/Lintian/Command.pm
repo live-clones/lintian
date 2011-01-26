@@ -216,7 +216,7 @@ sub spawn {
 	$opts->{success} = 0;
 	$opts->{exception} = $@;
     } elsif ($opts->{fail} eq 'error'
-	     and !$opts->{success}) {
+	     and not $opts->{success}) {
 	require Util;
 	if ($opts->{description}) {
 	    Util::fail("$opts->{description} failed with error code ".
@@ -225,7 +225,7 @@ sub spawn {
 	    Util::fail("$cmds[0][0] failed with error code ".
 		       $opts->{harness}->result);
 	} else {
-	    Util::fail("command failed with error code ".
+	    Util::fail('command failed with error code '.
 		       $opts->{harness}->result);
 	}
     }
@@ -277,13 +277,13 @@ sub reap {
 	    $opts->{success} = 0;
 	    $opts->{exception} = $@;
 	} elsif ($opts->{fail} eq 'error'
-		 and !$opts->{success}) {
+		 and not $opts->{success}) {
 	    require Util;
 	    if ($opts->{description}) {
 		Util::fail("$opts->{description} failed with error code ".
 			   $opts->{harness}->result);
 	    } else {
-		Util::fail("command failed with error code ".
+		Util::fail('command failed with error code '.
 			   $opts->{harness}->result);
 	    }
 	}

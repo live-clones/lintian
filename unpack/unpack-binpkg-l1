@@ -24,9 +24,10 @@
 # MA 02110-1301, USA.
 
 use strict;
+use warnings;
 use vars qw($verbose);
 
-($#ARGV == 1) or die "syntax: unpack-binpkg-l1 <base-dir> <deb-file>";
+($#ARGV == 1) or die 'syntax: unpack-binpkg-l1 <base-dir> <deb-file>';
 my $base_dir = shift;
 my $file = shift;
 
@@ -53,10 +54,10 @@ push @jobs, $job;
 # (replaces dpkg-deb -c)
 # create index file for package
 spawn($job,
-      ["dpkg-deb", "--fsys-tarfile", $file ],
-      '|', ["tar", "tfv", "-"],
-      '|', ["sed", "-e", "s/^h/-/"],
-      '|', ["sort", "-k", "6"], '&');
+      ['dpkg-deb', '--fsys-tarfile', $file ],
+      '|', ['tar', 'tfv', '-'],
+      '|', ['sed', '-e', 's/^h/-/'],
+      '|', ['sort', '-k', '6'], '&');
 
 $job = { fail => 'error',
          out  => "$base_dir/index-owner-id",
@@ -65,10 +66,10 @@ push @jobs, $job;
 # (replaces dpkg-deb -c)
 # create index file for package with owner IDs instead of names
 spawn($job,
-      ["dpkg-deb", "--fsys-tarfile", $file],
-      '|', ["tar", "--numeric-owner", "-tvf", "-"],
-      '|', ["sed", "-e", "s/^h/-/"],
-      '|', ["sort", "-k", "6"], '&');
+      ['dpkg-deb', '--fsys-tarfile', $file],
+      '|', ['tar', '--numeric-owner', '-tvf', '-'],
+      '|', ['sed', '-e', 's/^h/-/'],
+      '|', ['sort', '-k', '6'], '&');
 
 
 

@@ -26,7 +26,6 @@ package Lintian::fields;
 use strict;
 
 use lib "$ENV{'LINTIAN_ROOT'}/checks/";
-use common_data;
 
 use Util;
 
@@ -178,6 +177,7 @@ our $PYTHON_DEV = join(' | ', qw(python-dev python-all-dev python3-all-dev),
 our $PERL_CORE_PROVIDES = Lintian::Data->new('fields/perl-provides', '\s+');
 our $OBSOLETE_PACKAGES  = Lintian::Data->new('fields/obsolete-packages');
 our $VIRTUAL_PACKAGES   = Lintian::Data->new('fields/virtual-packages');
+our $SOURCE_FIELDS      = Lintian::Data->new('common/source-fields');
 
 sub run {
 
@@ -958,7 +958,7 @@ for my $field (readdir FIELDS) {
 	    if $known_obsolete_fields{$field};
 
 	tag "unknown-field-in-dsc", "$field"
-	    if ($type eq "source" && ! $known_source_fields{$field} && ! $known_obsolete_fields{$field});
+	    if ($type eq "source" && ! $SOURCE_FIELDS->known($field) && ! $known_obsolete_fields{$field});
 
 	tag "unknown-field-in-control", "$field"
 	    if ($type eq "binary" && ! $known_binary_fields{$field} && ! $known_obsolete_fields{$field});

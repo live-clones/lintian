@@ -1,0 +1,34 @@
+# Manually maintained list of known source fields
+#  - please keep it sorted
+
+architecture
+autobuild
+binary
+bugs
+build-conflicts
+build-conflicts-indep
+build-depends
+build-depends-indep
+checksums-md5
+checksums-sha1
+checksums-sha256
+dm-upload-allowed
+files
+format
+homepage
+maintainer
+origin
+python-version
+source
+standards-version
+uploaders
+vcs-arch
+vcs-browser
+vcs-bzr
+vcs-cvs
+vcs-darcs
+vcs-git
+vcs-hg
+vcs-mtn
+vcs-svn
+version

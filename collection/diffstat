@@ -26,16 +26,17 @@
 # need be started.
 
 use strict;
+use warnings;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Util;
 
-($#ARGV == 1) or fail("syntax: diffstat <pkg>");
+($#ARGV == 1) or fail('syntax: diffstat <pkg> <type>');
 my $pkg = shift;
 
--f "fields/version" or fail("diffstat invoked in wrong directory");
+-f 'fields/version' or fail('diffstat invoked in wrong directory');
 
-open (V, '<', "fields/version") or fail("cannot open fields/version: $!");
+open (V, '<', 'fields/version') or fail("cannot open fields/version: $!");
 my $ver = <V>; chomp $ver;
 close V;
 
@@ -51,12 +52,12 @@ unless (-f $diff_file) {
   exit 0;
 }
 
-gunzip_file($diff_file, "debian-patch");
+gunzip_file($diff_file, 'debian-patch');
 
-open (STAT, '>', "diffstat") or fail("cannot open scripts output file: $!");
+open (STAT, '>', 'diffstat') or fail("cannot open scripts output file: $!");
 # diffstat is noisy on stderr if its stdout is not a tty.
 # Shut it up by redirecting stderr to /dev/null.
-open STDERR, ">/dev/null";
+open STDERR, '>', '/dev/null';
 open (DIFF, '-|', qw/diffstat -p1 debian-patch/)
   or fail("cannot open pipe to diffstat on debian-patch: $!");
 # Copy all except last line to the STAT file

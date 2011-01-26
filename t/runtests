@@ -305,6 +305,8 @@ if ($singletest) {
     my $desc = "$TESTSET/tests/$singletest/desc";
     if (-f $desc) {
 	@tests = read_dpkg_control($desc);
+    } elsif (-f "$LINTIAN_ROOT/checks/$singletest.desc"){
+	@tests = map { read_dpkg_control($_) } <$TESTSET/tests/$singletest-*/desc>;
     }
 } elsif ($tag) {
     @tests = find_tests_for_tag($tag);

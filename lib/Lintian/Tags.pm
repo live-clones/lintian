@@ -344,7 +344,7 @@ sub display {
     my ($self, $op, $rel, $severity, $certainty) = @_;
     unless ($op =~ /^[+=-]\z/ and $rel =~ /^(?:[<>]=?|=)\z/) {
         my $error = $self->_format_level($op, $rel, $severity, $certainty);
-        die "invalid display constraint " . $error;
+        die 'invalid display constraint ' . $error;
     }
     if ($op eq '=') {
         for my $s (@SEVERITIES) {
@@ -367,7 +367,7 @@ sub display {
     }
     unless (@severities and @certainties) {
         my $error = $self->_format_level($op, $rel, $severity, $certainty);
-        die "invalid display constraint " . $error;
+        die 'invalid display constraint ' . $error;
     }
     for my $s (@severities) {
         for my $c (@certainties) {
@@ -523,7 +523,7 @@ file cannot be opened.
 sub file_overrides {
     my ($self, $overrides) = @_;
     unless (defined $self->{current}) {
-        die "no current file when adding overrides";
+        die 'no current file when adding overrides';
     }
     my $info = $self->{info}{$self->{current}};
     open(my $file, '<', $overrides)
@@ -536,7 +536,7 @@ sub file_overrides {
         s/\s+/ /go;
         my $override = $_;
         $override =~ s/^\Q$info->{package}\E( \Q$info->{type}\E)?: //;
-        if ($override eq '' or $override !~ /^[\w.+-]+(\s.*)?$/) {
+        if ($override eq '' or $override !~ /^[\w.+-]+(?:\s.*)?$/) {
             tag('malformed-override', $_);
         } else {
             my ($tag, $extra) = split(/ /, $override, 2);

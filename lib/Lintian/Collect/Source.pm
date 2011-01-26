@@ -153,7 +153,7 @@ sub file_info {
 
     my %file_info;
     # sub file_info Needs-Info file-info
-    open(my $idx, '<', "file-info") or fail("cannot open file-info: $!");
+    open(my $idx, '<', 'file-info') or fail("cannot open file-info: $!");
     while (<$idx>) {
         chomp;
         m/^(.+?)\x00\s+(.*)$/o or fail("cannot parse file output: $_");

@@ -196,7 +196,7 @@ results.
 sub wait {
     my ($self, $pid);
 
-    if (ref $_[0] eq "Lintian::Command::Simple") {
+    if (ref $_[0] eq 'Lintian::Command::Simple') {
 	$self = shift;
 	$pid = $self->{'pid'};
     } else {
@@ -227,7 +227,7 @@ sub wait {
 	    if (wantarray) {
 		return ();
 	    } else {
-		return undef;
+		return;
 	    }
 	}
 
@@ -238,7 +238,7 @@ sub wait {
 	    if (wantarray) {
 		return ();
 	    } else {
-		return undef;
+		return;
 	    }
 	}
 
@@ -294,7 +294,7 @@ signaled (and per the above description, reaped.)
 sub kill {
     my ($self, $pid);
 
-    if (ref $_[0] eq "Lintian::Command::Simple") {
+    if (ref $_[0] eq 'Lintian::Command::Simple') {
 	$self = shift;
 	$pid = $self->pid();
     } elsif (ref $_[0]) {

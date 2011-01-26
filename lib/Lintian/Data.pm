@@ -18,6 +18,7 @@
 
 package Lintian::Data;
 use strict;
+use warnings;
 
 use Carp qw(croak);
 
@@ -40,7 +41,7 @@ use Carp qw(croak);
                 chomp;
                 s/^\s+//;
                 next if /^\#/;
-                next if /^$/;
+                next if $_ eq '';
                 my ($key, $val);
                 if (defined $separator) {
                     ($key, $val) = split(/$separator/, $_, 2);

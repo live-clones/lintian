@@ -22,8 +22,8 @@ package Lintian::control_file;
 use strict;
 
 use lib "$ENV{'LINTIAN_ROOT'}/checks/";
-use common_data;
 
+use Lintian::Data ();
 use Lintian::Relation ();
 use Lintian::Tags qw(tag);
 use Util;
@@ -31,6 +31,7 @@ use Util;
 # The list of libc packages, used for checking for a hard-coded dependency
 # rather than using ${shlibs:Depends}.
 our @LIBCS = qw(libc6 libc6.1 libc0.1 libc0.3);
+my $src_fields = Lintian::Data->new('common/source-fields');
 
 sub run {
 
@@ -69,7 +70,7 @@ while (<CONTROL>) {
 			my $base = $field;
 			$base =~ s/^xs-//;
 			tag "xs-vcs-header-in-debian-control", "$field"
-			    if $known_source_fields{$base};
+			    if $src_fields->known($base);
 		}
 		if ($field eq 'xc-package-type') {
 			tag 'xc-package-type-in-debian-control', "line $.";

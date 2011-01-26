@@ -311,7 +311,7 @@ sub print_tag {
     }
 
     $self->_print('', "$code: $pkg_info->{package}$type", "$tag$information");
-    if (!$self->issued_tag($tag_info->tag) and $self->showdescription) {
+    if (not $self->issued_tag($tag_info->tag) and $self->showdescription) {
 	my $description;
 	if ($self->_do_color && $self->color eq 'html') {
 	    $description = $tag_info->description('html', '   ');
@@ -334,9 +334,9 @@ Lintian::Output uses v_msg() for output.  Called from Tags::select_pkg().
 sub print_start_pkg {
     my ($self, $pkg_info) = @_;
 
-    my $object = "package";
+    my $object = 'package';
     if ($pkg_info->{type} eq 'changes') {
-	$object = "file";
+	$object = 'file';
     }
 
     $self->v_msg($self->delimiter,

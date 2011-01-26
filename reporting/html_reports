@@ -132,7 +132,7 @@ mkdir("$HTML_TMP_DIR/maintainer", 0777)
     or die "cannot create output directory $HTML_TMP_DIR/maintainer: $!\n";
 mkdir("$HTML_TMP_DIR/tags", 0777)
     or die "cannot create output directory $HTML_TMP_DIR/tags: $!\n";
-symlink(".", "$HTML_TMP_DIR/reports")
+symlink('.', "$HTML_TMP_DIR/reports")
     or die "cannot create symlink $HTML_TMP_DIR/reports: $!\n";
 symlink("$LINTIAN_ROOT/doc/lintian.html", "$HTML_TMP_DIR/manual")
     or die "cannot create symlink $HTML_TMP_DIR/manual: $!\n";
@@ -338,9 +338,9 @@ for my $source (keys %source_info) {
 my (%qa, %maintainers, %packages);
 my @maintainers;
 {
-    my %seen;
+    my %unique;
     @maintainers =
-        sort grep { !$seen{$_}++ } keys (%by_maint), keys (%by_uploader);
+        sort grep { !$unique{$_}++ } keys (%by_maint), keys (%by_uploader);
 }
 for my $maintainer (@maintainers) {
     my $id = maintainer_url ($maintainer);
@@ -445,7 +445,7 @@ for my $id (keys %clean) {
     my $maintainer = $clean{$id};
     my ($name, $email) = ($maintainer =~ /^(.*) <([^>]+)>/);
     $email = 'unknown' unless $email;
-    my %data = (
+    my %maint_data = (
         id         => $id,
         email      => html_quote (uri_escape ($email)),
         maintainer => html_quote ($maintainer),
@@ -453,8 +453,8 @@ for my $id (keys %clean) {
         clean      => 1,
     );
     print "Generating clean page for $id\n";
-    output_template ("maintainer/$id", $templates{clean}, \%data);
-    output_template ("full/$id", $templates{clean}, \%data);
+    output_template ("maintainer/$id", $templates{clean}, \%maint_data);
+    output_template ("full/$id", $templates{clean}, \%maint_data);
 }
 
 # Create the pages for each tag.  Each page shows the extended description for
@@ -464,27 +464,27 @@ for my $tag (sort keys %by_tag) {
     next unless $info;
     my $description = $info->description('html', '    ');
     my ($count, $overrides) = (0, 0);
-    my %seen;
+    my %seen_tags;
     foreach (@{$by_tag{$tag}}) {
         if ($_->{code} ne 'O') {
             $count++;
-            $seen{$_->{xref}}++;
+            $seen_tags{$_->{xref}}++;
         } else {
             $overrides++;
         }
     }
 
-    my %data = (
+    my %maint_data = (
         description => $description,
         tag         => html_quote ($tag),
         code        => $info->code,
         tags        => $by_tag{$tag},
     );
-    output_template ("tags/$tag.html", $templates{tag}, \%data);
+    output_template ("tags/$tag.html", $templates{tag}, \%maint_data);
 
     $tag_statistics{$tag}{'count'} = $count;
     $tag_statistics{$tag}{'overrides'} = $overrides;
-    $tag_statistics{$tag}{'packages'} = scalar keys %seen;
+    $tag_statistics{$tag}{'packages'} = scalar keys %seen_tags;
 }
 
 # Create the general tag indices.
@@ -534,7 +534,7 @@ my @attrs = qw(maintainers source-packages binary-packages udeb-packages
 for my $attr (@attrs) {
     my $old = $old_statistics->{$attr} || 0;
     $statistics{$attr} ||= 0;
-    $delta{$attr} = sprintf("%d (%+d)", $statistics{$attr},
+    $delta{$attr} = sprintf('%d (%+d)', $statistics{$attr},
                             $statistics{$attr} - $old);
 }
 
@@ -572,7 +572,7 @@ mkdir("$HISTORY_DIR/tags")
     if (not -d "$HISTORY_DIR/tags");
 
 my $history_file = "$HISTORY_DIR/statistics.dat";
-my $stats = "";
+my $stats = '';
 for my $attr (@attrs) {
     $stats .= " $statistics{$attr}";
 }

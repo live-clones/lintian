@@ -46,9 +46,9 @@ END
   exit;
 }
 
-die "Can't use both incremental and full/clean." if ($opt_i && ($opt_f || $opt_c));
+die 'Cannot use both incremental and full/clean.' if ($opt_i && ($opt_f || $opt_c));
 $opt_f = 1 if $opt_c;
-die "Can't use other modes with reports only." if ($opt_r && ($opt_i || $opt_f || $opt_c));
+die 'Cannot use other modes with reports only.' if ($opt_r && ($opt_i || $opt_f || $opt_c));
 
 # read configuration
 require './config';
@@ -72,7 +72,7 @@ $| = 1;
 
 # rotate log files
 system("savelog $log_file $changes_file $list_file $html_reports_log >/dev/null") == 0
-    or Die("cannot rotate log files");
+    or Die('cannot rotate log files');
 
 # create new log file
 open(LOG, '>', $log_file)
@@ -89,12 +89,12 @@ $ENV{'LINTIAN_DIST'} = $LINTIAN_DIST;
 $ENV{'LINTIAN_UNPACK_LEVEL'} = $LINTIAN_UNPACK_LEVEL;
 # LINTIAN_SECTION is deprecated in favour of LINTIAN_AREA
 if (defined $LINTIAN_SECTION) {
-    print STDERR "warning: LINTIAN_SECTION has been deprecated in favour of LINTIAN_AREA.\n";
+    print STDERR 'warning: LINTIAN_SECTION has been deprecated in favour of LINTIAN_AREA.\n';
     if (defined $LINTIAN_AREA) {
-        print STDERR "Using LINTIAN_AREA as both were defined.\n";
+        print STDERR 'Using LINTIAN_AREA as both were defined.\n';
     } else {
-        print STDERR "Both are currently accepted, but LINTIAN_SECTION may be removed\n";
-        print STDERR "in a future Lintian release.\n";
+        print STDERR 'Both are currently accepted, but LINTIAN_SECTION may be removed\n';
+        print STDERR 'in a future Lintian release.\n';
         $LINTIAN_AREA = $LINTIAN_SECTION;
     }
 }
@@ -126,8 +126,8 @@ if ($opt_c) { # purge the old packages
 unless ($opt_r) {
   # make lintian update its packages files and save output
   run("$lintian_cmd -v --setup-lab >$changes_file")
-      or Die("cannot run lintian --setup-lab");
-  Log("");
+      or Die('cannot run lintian --setup-lab');
+  Log('');
 }
 
 unless ($opt_f || $opt_c) {
@@ -141,13 +141,13 @@ unless ($opt_f || $opt_c) {
 }
 
 if ($opt_f) { # check all packages
-  Log("Running Lintian over all packages...");
+  Log('Running Lintian over all packages...');
   my $cmd = "$lintian_cmd -I -E --pedantic -v -a --show-overrides -U changelog-file >$lintian_log 2>&1";
   Log("Executing $cmd");
   my $res = (system($cmd) >> 8);
   (($res == 0) or ($res == 1))
     or Log("warning: executing lintian returned $res");
-  Log("");
+  Log('');
 }
 
 if ($opt_i) { # process changes only
@@ -175,7 +175,7 @@ if ($opt_i) { # process changes only
     read_src_list($pkgfile);
 
     # process changes file and create list of packages to process
-    Log("Reading changes file...");
+    Log('Reading changes file...');
     open(IN, '<', $changes_file)
 	or Die("cannot open changes file $changes_file for reading: $!");
     open(OUT, '>', $list_file)
@@ -225,10 +225,10 @@ if ($opt_i) { # process changes only
     }
     close(OUT);
     close(IN);
-    Log("");
+    Log('');
 
     # update lintian.log
-    Log("Updating lintian.log...");
+    Log('Updating lintian.log...');
     rename $lintian_log, $old_lintian_log;
     open(IN, '<', $old_lintian_log)
 	or Die("cannot open old lintian.log $old_lintian_log for reading: $!");
@@ -252,31 +252,31 @@ if ($opt_i) { # process changes only
 	    print OUT $_;
 	}
     }
-    print OUT "N: ---end-of-old-lintian-log-file---\n";
+    print OUT 'N: ---end-of-old-lintian-log-file---\n';
     close(OUT);
     close(IN);
-    Log("");
+    Log('');
 
     # run Lintian over the newly introduced or changed packages
-    Log("Running Lintian over newly introduced and changed packages...");
+    Log('Running Lintian over newly introduced and changed packages...');
     my $cmd = "$lintian_cmd -I -E --pedantic -v --show-overrides -p $list_file -U changelog-file >>$lintian_log 2>&1";
     Log("Executing $cmd");
     my $res = (system($cmd) >> 8);
     (($res == 0) or ($res == 1))
         or Log("warning: executing lintian returned $res");
-    Log("");
+    Log('');
 }
 
 # create html reports
-Log("Creating HTML reports...");
+Log('Creating HTML reports...');
 run("$html_reports_cmd $lintian_log >$html_reports_log 2>&1")
     or Log("warning: executing $html_reports_cmd returned $?");
-Log("");
+Log('');
 
 # rotate the statistics file updated by $html_reports_cmd
 if (-f $statistics_file) {
   system("cp $statistics_file $LOG_DIR/stats/statistics-`date +%Y%m%d`") == 0
-    or Log("warning: couldn't rotate the statistics file");
+    or Log('warning: could not rotate the statistics file');
 }
 
 #Log("Creating depcheck pages...");
@@ -285,16 +285,16 @@ if (-f $statistics_file) {
 #Log("");
 
 # install new html directory
-Log("Installing HTML reports...");
+Log('Installing HTML reports...');
 system("rm -rf $HTML_DIR") == 0
     or Die("error removing $HTML_DIR");
 # a tiny bit of race right here
 rename($HTML_TMP_DIR,$HTML_DIR)
     or Die("error renaming $HTML_TMP_DIR into $HTML_DIR");
-Log("");
+Log('');
 
 # ready!!! :-)
-Log("All done.");
+Log('All done.');
 exit 0;
 
 # -------------------------------

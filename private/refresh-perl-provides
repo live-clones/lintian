@@ -1,5 +1,6 @@
 #!/usr/bin/perl -w
 use strict;
+use warnings;
 
 # Generate a list of packages that are provided by the Perl core packages
 # and also packaged separately at a (hopefully) newer version.
@@ -42,8 +43,8 @@ my $cache = AptPkg::Cache->new;
 
 # special cases when libfoo-bar-perl => Foo::Bar doesn't work
 my %module_name = (
-    "libio-compress-perl" => "IO::Compress::Gzip",
-    "libio-compress-zlib-perl" => "IO::Compress::Gzip",
+    'libio-compress-perl' => 'IO::Compress::Gzip',
+    'libio-compress-zlib-perl' => 'IO::Compress::Gzip',
 );
 
 use Module::CoreList;
@@ -53,11 +54,11 @@ my $versioning = $_system->versioning;
 my @core_packages = (qw(perl-base perl perl-modules));
 
 # check we have a cache of Debian sid packages available
-warn("Warning: this list should only be updated on a system with an up to date APT cache of the Debian unstable distribution")
+warn('Warning: this list should only be updated on a system with an up to date APT cache of the Debian unstable distribution')
     if !grep { defined $_->{Origin} &&
                defined $_->{Archive} &&
-               $_->{Origin} eq "Debian" &&
-               $_->{Archive} eq "unstable" }
+               $_->{Origin} eq 'Debian' &&
+               $_->{Archive} eq 'unstable' }
        @{$cache->files};
 
 print <<EOF;

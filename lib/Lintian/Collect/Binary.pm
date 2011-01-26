@@ -72,9 +72,9 @@ sub index {
     return $self->{index} if exists $self->{index};
 
     my (%idx, %dir_counts);
-    open my $idx, '<', "index"
+    open my $idx, '<', 'index'
         or fail("cannot open index file index: $!");
-    open my $num_idx, '<', "index-owner-id"
+    open my $num_idx, '<', 'index-owner-id'
         or fail("cannot open index file index-owner-id: $!");
     while (<$idx>) {
         chomp;
@@ -87,7 +87,7 @@ sub index {
 
         my $numeric = <$num_idx>;
         chomp $numeric;
-        fail("cannot read index file index-owner-id") unless defined $numeric;
+        fail('cannot read index file index-owner-id') unless defined $numeric;
         my ($owner_id, $name_chk) = (split(' ', $numeric, 6))[1, 5];
         fail("mismatching contents of index files: $name $name_chk")
             if $name ne $name_chk;
@@ -142,7 +142,7 @@ sub file_info {
 
     my %file_info;
     # sub file_info Needs-Info file-info
-    open(my $idx, '<', "file-info")
+    open(my $idx, '<', 'file-info')
         or fail("cannot open file-info: $!");
     while (<$idx>) {
         chomp;
@@ -183,7 +183,7 @@ sub scripts {
 
     my %scripts;
     # sub scripts Needs-Info scripts
-    open(SCRIPTS, '<', "scripts")
+    open(SCRIPTS, '<', 'scripts')
 	or fail("cannot open scripts file: $!");
     while (<SCRIPTS>) {
 	chomp;
@@ -213,7 +213,7 @@ sub objdump_info {
     my %objdump_info;
     my ($dynsyms, $file);
     # sub objdump_info Needs-Info objdump-info
-    open(my $idx, '<', "objdump-info")
+    open(my $idx, '<', 'objdump-info')
         or fail("cannot open objdump-info: $!");
     while (<$idx>) {
         chomp;
@@ -237,8 +237,9 @@ sub objdump_info {
             if (m/^\s*NEEDED\s*(\S+)/o) {
                 push @{$file->{NEEDED}}, $1;
             } elsif (m/^\s*RPATH\s*(\S+)/o) {
-                foreach (split m/:/, $1) {
-                    $file->{RPATH}{$_}++;
+                my $rpath = $1;
+                foreach my $r (split m/:/o, $rpath) {
+                    $file->{RPATH}{$r}++;
                 }
             } elsif (m/^\s*SONAME\s*(\S+)/o) {
                 push @{$file->{SONAME}}, $1;
@@ -248,16 +249,16 @@ sub objdump_info {
                 $file->{NOTE_SECTION} = 1;
             } elsif (m/^DYNAMIC SYMBOL TABLE:/) {
                 $dynsyms = 1;
-            } elsif (m/^objdump: (.*?): File format not recognized$/) {
-                push @{$file->{NOTES}}, "File format not recognized";
-            } elsif (m/^objdump: (.*?): File truncated$/) {
-                push @{$file->{NOTES}}, "File truncated";
-            } elsif (m/^objdump: \.(.*?): Packed with UPX$/) {
-                push @{$file->{NOTES}}, "Packed with UPX";
-            } elsif (m/objdump: \.(.*?): Invalid operation$/) {
+            } elsif (m/^objdump: .*?: File format not recognized$/) {
+                push @{$file->{NOTES}}, 'File format not recognized';
+            } elsif (m/^objdump: .*?: File truncated$/) {
+                push @{$file->{NOTES}}, 'File truncated';
+            } elsif (m/^objdump: \..*?: Packed with UPX$/) {
+                push @{$file->{NOTES}}, 'Packed with UPX';
+            } elsif (m/objdump: \..*?: Invalid operation$/) {
                 # Don't anchor this regex since it can be interspersed with other
                 # output and hence not on the beginning of a line.
-                push @{$file->{NOTES}}, "Invalid operation";
+                push @{$file->{NOTES}}, 'Invalid operation';
             } elsif (m/CXXABI/) {
                 $file->{CXXABI} = 1;
             } elsif (m%Requesting program interpreter:\s+/lib/klibc-\S+\.so%) {
@@ -267,9 +268,9 @@ sub objdump_info {
 	    } elsif (m/^\s*INTERP\s/) {
 		$file->{INTERP} = 1;
 	    } elsif (m/^\s*STACK\s/) {
-		$file->{STACK} = "0";
+		$file->{STACK} = '0';
 	    } else {
-		if (defined $file->{STACK} and $file->{STACK} eq "0") {
+		if (defined $file->{STACK} and $file->{STACK} eq '0') {
 		    m/\sflags\s+(\S+)/o;
 		    $file->{STACK} = $1;
 		} else {

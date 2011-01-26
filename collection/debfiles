@@ -20,21 +20,23 @@
 # MA 02110-1301, USA.
 
 use strict;
+use warnings;
 
-($#ARGV == 1) or fail("syntax: debfiles <pkg> <type>");
-my $pkg = shift;
-my $type = shift;
-
--e "unpacked" or fail("debfiles invoked in wrong directory");
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Util;
 
-if (-e "debfiles") {
+($#ARGV == 1) or fail('syntax: debfiles <pkg> <type>');
+my $pkg = shift;
+my $type = shift;
+
+-e 'unpacked' or fail('debfiles invoked in wrong directory');
+
+if (-e 'debfiles') {
     delete_dir('debfiles')
-	or fail("cannot rm old debfiles directory");
+	or fail('cannot rm old debfiles directory');
 }
 
 # Copy the whole debian directory
-copy_dir("unpacked/debian/", "debfiles")
+copy_dir('unpacked/debian/', 'debfiles')
     or fail("cannot copy unpacked/debian to debfiles: $!");

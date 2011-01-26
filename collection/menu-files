@@ -20,22 +20,23 @@
 # MA 02110-1301, USA.
 
 use strict;
-
-($#ARGV == 1) or fail("syntax: menu-files <pkg> <type>");
-my $pkg = shift;
-my $type = shift;
-
--f "fields/package" or fail("menu-files invoked in wrong directory");
+use warnings;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Util;
 
-if (-e "menu") {
+($#ARGV == 1) or fail('syntax: menu-files <pkg> <type>');
+my $pkg = shift;
+my $type = shift;
+
+-f 'fields/package' or fail('menu-files invoked in wrong directory');
+
+if (-e 'menu') {
     delete_dir('menu')
-	or fail("cannot rm old menu directory");
+	or fail('cannot rm old menu directory');
 }
 
-mkdir("menu", 0777) or fail("cannot mkdir menu: $!");
+mkdir('menu', 0777) or fail("cannot mkdir menu: $!");
 
 my %dirs;
 $dirs{'share'}   = 'usr/share/menu';

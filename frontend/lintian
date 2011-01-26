@@ -29,7 +29,7 @@ use Cwd;
 # }}}
 
 # {{{ Global Variables
-my $LINTIAN_VERSION = "<VERSION>";	#External Version number
+my $LINTIAN_VERSION = '<VERSION>';	#External Version number
 my $BANNER = "Lintian v$LINTIAN_VERSION"; #Version Banner - text form
 my $LAB_FORMAT = 10;		#Lab format Version Number
 				#increased whenever incompatible
@@ -57,13 +57,13 @@ my $allow_root = 0;		#flag for --allow-root switch
 my $fail_on_warnings = 0;       #flag for --fail-on-warnings switch
 my $keep_lab = 0;		#flag for --keep-lab switch
 my $packages_file = 0;		#string for the -p option
-our $OPT_LINTIAN_LAB = "";	#string for the --lab option
-our $OPT_LINTIAN_ARCHIVEDIR = "";#string for the --archivedir option
-our $OPT_LINTIAN_DIST = "";	#string for the --dist option
-our $OPT_LINTIAN_ARCH = "";	#string for the --arch option
-our $OPT_LINTIAN_AREA = "";	#string for the --area option
+our $OPT_LINTIAN_LAB = '';	#string for the --lab option
+our $OPT_LINTIAN_ARCHIVEDIR = '';#string for the --archivedir option
+our $OPT_LINTIAN_DIST = '';	#string for the --dist option
+our $OPT_LINTIAN_ARCH = '';	#string for the --arch option
+our $OPT_LINTIAN_AREA = '';	#string for the --area option
 # These options can also be used via default or environment variables
-our $LINTIAN_CFG = "";		#config file to use
+our $LINTIAN_CFG = '';		#config file to use
 our $LINTIAN_ROOT;		#location of the lintian modules
 
 my $experimental_output_opts = undef;
@@ -214,10 +214,10 @@ sub record_action {
 # Options: -C|--check-part
 sub record_check_part {
     if (defined $action and $action eq 'check' and $checks) {
-	die("multiple -C or --check-part options not allowed");
+	die('multiple -C or --check-part options not allowed');
     }
     if ($dont_check) {
-	die("both -C or --check-part and -X or --dont-check-part options not allowed");
+	die('both -C or --check-part and -X or --dont-check-part options not allowed');
     }
     if ($action) {
 	die("too many actions specified: $_[0]");
@@ -230,13 +230,13 @@ sub record_check_part {
 # Options: -T|--tags
 sub record_check_tags {
     if (defined $action and $action eq 'check' and $check_tags) {
-	die("multiple -T or --tags options not allowed");
+	die('multiple -T or --tags options not allowed');
     }
     if ($checks) {
-	die("both -T or --tags and -C or --check-part options not allowed");
+	die('both -T or --tags and -C or --check-part options not allowed');
     }
     if ($dont_check) {
-	die("both -T or --tags and -X or --dont-check-part options not allowed");
+	die('both -T or --tags and -X or --dont-check-part options not allowed');
     }
     if ($action) {
 	die("too many actions specified: $_[0]");
@@ -282,7 +282,7 @@ sub record_suppress_tags_from_file {
 	$line =~ s/^\s+//;
 	$line =~ s/\s+$//;
 	next unless $line;
-	next if $line =~ /^\#/;
+	next if $line eq '';
 	record_suppress_tags($option, $line);
     }
     close $file;
@@ -292,10 +292,10 @@ sub record_suppress_tags_from_file {
 # Options: -X|--dont-check-part X
 sub record_dont_check_part {
     if (defined $action and $action eq 'check' and $dont_check) {
-	die("multiple -X or --dont-check-part options not allowed");
+	die('multiple -X or --dont-check-part options not allowed');
     }
     if ($checks) {
-	die("both -C or --check-part and -X or --dont-check-part options not allowed");
+	die('both -C or --check-part and -X or --dont-check-part options not allowed');
     }
     if ($action) {
 	die("too many actions specified: $_[0]");
@@ -308,7 +308,7 @@ sub record_dont_check_part {
 # Process for -U|--unpack-info flag
 sub record_unpack_info {
     if ($unpack_info) {
-	die("multiple -U or --unpack-info options not allowed");
+	die('multiple -U or --unpack-info options not allowed');
     }
     $unpack_info = "$_[1]";
 }
@@ -355,66 +355,67 @@ sub record_display_source {
 
 # Hash used to process commandline options
 my %opthash = (			# ------------------ actions
-	       "setup-lab|S" => \&record_action,
-	       "remove-lab|R" => \&record_action,
-	       "check|c" => \&record_action,
-	       "check-part|C=s" => \&record_check_part,
-	       "tags|T=s" => \&record_check_tags,
-	       "tags-from-file=s" => \&record_check_tags_from_file,
-	       "ftp-master-rejects|F" => \$ftpmaster_tags,
-	       "dont-check-part|X=s" => \&record_dont_check_part,
-	       "unpack|u" => \&record_action,
-	       "remove|r" => \&record_action,
+	       'setup-lab|S' => \&record_action,
+	       'remove-lab|R' => \&record_action,
+	       'check|c' => \&record_action,
+	       'check-part|C=s' => \&record_check_part,
+	       'tags|T=s' => \&record_check_tags,
+	       'tags-from-file=s' => \&record_check_tags_from_file,
+	       'ftp-master-rejects|F' => \$ftpmaster_tags,
+	       'dont-check-part|X=s' => \&record_dont_check_part,
+	       'unpack|u' => \&record_action,
+	       'remove|r' => \&record_action,
 
 	       # ------------------ general options
-	       "help|h" => \&syntax,
-	       "version|V" => \&banner,
-	       "print-version" => \&banner,
+	       'help|h' => \&syntax,
+	       'version|V' => \&banner,
+	       'print-version' => \&banner,
 
-	       "verbose|v" => \$verbose,
-	       "debug|d" => \@debug, # Count the -d flags
-	       "quiet|q" => \$quiet,
+	       'verbose|v' => \$verbose,
+	       'debug|d' => \@debug, # Count the -d flags
+	       'quiet|q' => \$quiet,
 
 	       # ------------------ behaviour options
-	       "info|i" => \$lintian_info,
-	       "display-info|I" => \&display_infotags,
-	       "display-experimental|E" => \$display_experimentaltags,
-	       "pedantic" => \$display_pedantictags,
-	       "display-level|L=s" => \&record_display_level,
-	       "display-source=s" => \&record_display_source,
-	       "suppress-tags=s" => \&record_suppress_tags,
-	       "suppress-tags-from-file=s" => \&record_suppress_tags_from_file,
-	       "no-override|o" => \$no_override,
-	       "show-overrides" => \$show_overrides,
-	       "color=s" => \$color,
-	       "unpack-info|U=s" => \&record_unpack_info,
-	       "checksums|md5sums|m" => \$check_checksums,
-	       "allow-root" => \$allow_root,
-	       "fail-on-warnings" => \$fail_on_warnings,
-	       "keep-lab" => \$keep_lab,
+	       'info|i' => \$lintian_info,
+	       'display-info|I' => \&display_infotags,
+	       'display-experimental|E' => \$display_experimentaltags,
+	       'pedantic' => \$display_pedantictags,
+	       'display-level|L=s' => \&record_display_level,
+	       'display-source=s' => \&record_display_source,
+	       'suppress-tags=s' => \&record_suppress_tags,
+	       'suppress-tags-from-file=s' => \&record_suppress_tags_from_file,
+	       'no-override|o' => \$no_override,
+	       'show-overrides' => \$show_overrides,
+	       'color=s' => \$color,
+	       'unpack-info|U=s' => \&record_unpack_info,
+	       'checksums|md5sums|m' => \$check_checksums,
+	       'allow-root' => \$allow_root,
+	       'fail-on-warnings' => \$fail_on_warnings,
+	       'keep-lab' => \$keep_lab,
+
 	       # Note: Ubuntu has (and other derivatives might gain) a
 	       # -D/--debian option to make lintian behave like in Debian, that
 	       # is, to revert distribution-specific changes
 
 	       # ------------------ configuration options
-	       "cfg=s" => \$LINTIAN_CFG,
-	       "lab=s" => \$OPT_LINTIAN_LAB,
-	       "archivedir=s" => \$OPT_LINTIAN_ARCHIVEDIR,
-	       "dist=s" => \$OPT_LINTIAN_DIST,
-	       "area=s" => \$OPT_LINTIAN_AREA,
-	       "section=s" => \$OPT_LINTIAN_AREA,
-	       "arch=s" => \$OPT_LINTIAN_ARCH,
-	       "root=s" => \$LINTIAN_ROOT,
+	       'cfg=s' => \$LINTIAN_CFG,
+	       'lab=s' => \$OPT_LINTIAN_LAB,
+	       'archivedir=s' => \$OPT_LINTIAN_ARCHIVEDIR,
+	       'dist=s' => \$OPT_LINTIAN_DIST,
+	       'area=s' => \$OPT_LINTIAN_AREA,
+	       'section=s' => \$OPT_LINTIAN_AREA,
+	       'arch=s' => \$OPT_LINTIAN_ARCH,
+	       'root=s' => \$LINTIAN_ROOT,
 
 	       # ------------------ package selection options
-	       "all|a" => \$check_everything,
-	       "binary|b" => \&record_pkgmode,
-	       "source|s" => \&record_pkgmode,
-	       "udeb" => \&record_pkgmode,
-	       "packages-file|p=s" => \$packages_file,
+	       'all|a' => \$check_everything,
+	       'binary|b' => \&record_pkgmode,
+	       'source|s' => \&record_pkgmode,
+	       'udeb' => \&record_pkgmode,
+	       'packages-file|p=s' => \$packages_file,
 
 	       # ------------------ experimental
-	       "exp-output:s" => \$experimental_output_opts,
+	       'exp-output:s' => \$experimental_output_opts,
 	      );
 
 # init commandline parser
@@ -439,14 +440,14 @@ if (defined $LINTIAN_ROOT) {
 
 # option --all and packages specified at the same time?
 if (($check_everything or $packages_file) and $#ARGV+1 > 0) {
-    print STDERR "warning: options -a or -p can't be mixed with package parameters!\n";
+    print STDERR "warning: options -a or -p cannot be mixed with package parameters!\n";
     print STDERR "(will ignore -a or -p option)\n";
     undef $check_everything;
     undef $packages_file;
 }
 
 # check permitted values for --color
-if ($color and $color !~ /^(never|always|auto|html)$/) {
+if ($color and $color !~ /^(?:never|always|auto|html)$/) {
     die "invalid argument to --color: $color\n";
 }
 
@@ -454,7 +455,7 @@ if ($color and $color !~ /^(never|always|auto|html)$/) {
 $action = 'check' unless $action;
 
 # check for arguments
-if ($action =~ /^(check|unpack|remove)$/ and $#ARGV == -1 and not $check_everything and not $packages_file) {
+if ($action =~ /^(?:check|unpack|remove)$/ and $#ARGV == -1 and not $check_everything and not $packages_file) {
     syntax();
 }
 
@@ -465,7 +466,7 @@ if ($action =~ /^(check|unpack|remove)$/ and $#ARGV == -1 and not $check_everyth
 # root permissions?
 # check if effective UID is 0
 if ($> == 0 and not $allow_root) {
-    print STDERR "warning: lintian's authors do not recommend running it with root privileges!\n";
+    print STDERR "warning: the authors of lintian do not recommend running it with root privileges!\n";
 }
 
 # search for configuration file if it was not set with --cfg
@@ -538,8 +539,8 @@ foreach (('ROOT', 'CFG', VARS)) {
     if ($$var) {
 	$ENV{$var} = $$var;
     } else {
-	$ENV{$var} = "";
-	$$var = "";
+	$ENV{$var} ='';
+	$$var = '';
     }
 }
 
@@ -670,11 +671,11 @@ $LAB = new Lab( $LINTIAN_LAB, $LINTIAN_DIST );
 # Process -S option
 if ($action eq 'setup-lab') {
     if ($#ARGV+1 > 0) {
-	warning("ignoring additional command line arguments");
+	warning('ignoring additional command line arguments');
     }
 
     $LAB->setup_static()
-	or fail("There was an error while setting up the static lab.");
+	or fail('There was an error while setting up the static lab.');
 
     exit 0;
 
@@ -682,11 +683,11 @@ if ($action eq 'setup-lab') {
 # Process -R option
 } elsif ($action eq 'remove-lab') {
     if ($#ARGV+1 > 0) {
-	warning("ignoring additional command line arguments");
+	warning('ignoring additional command line arguments');
     }
 
     $LAB->delete_static()
-	or fail("There was an error while removing the static lab.");
+	or fail('There was an error while removing the static lab.');
 
     exit 0;
 
@@ -698,7 +699,7 @@ if ($action eq 'setup-lab') {
 }
 
 # sanity check:
-fail("lintian lab has not been set up correctly (perhaps you forgot to run lintian --setup-lab?)")
+fail('lintian lab has not been set up correctly (perhaps you forgot to run lintian --setup-lab?)')
     unless $LAB->is_lab();
 
 #XXX: There has to be a cleaner way to do this
@@ -861,7 +862,7 @@ if ($check_everything) {
 
     # package list still empty?
     unless ($schedule->count) {
-	warning("no packages found in distribution directory");
+	warning('no packages found in distribution directory');
     }
 } elsif ($packages_file) {	# process all packages listed in packages file?
     $schedule->add_pkg_list($packages_file);
@@ -871,7 +872,7 @@ if ($check_everything) {
 # {{{ Some silent exit
 my $count = $schedule->count;
 unless ($count) {
-    v_msg("No packages selected.");
+    v_msg('No packages selected.');
     exit $exit_code;
 }
 # }}}
@@ -909,7 +910,7 @@ if ($action eq 'check') {
 	    }
 	}
     } else {
-	my %dont_check = map { $_ => 1 } (split m/,/, ($dont_check || ""));
+	my %dont_check = map { $_ => 1 } (split m/,/, ($dont_check || ''));
 	$checks or ($checks = join(',',keys %check_info));
 	for my $c (split(/,/,$checks)) {
 	    if ($check_info{$c}) {
@@ -1003,17 +1004,17 @@ for my $c (keys %enabled_checks) {
 # }}}
 
 # {{{ Okay, now really processing the packages in one huge loop
-v_msg(sprintf("Processing %d packages...", $count));
+v_msg(sprintf('Processing %d packages...', $count));
 debug_msg(1,
 	  "Selected action: $action",
-	  sprintf("Requested data to collect: %s", join(',',sort keys %unpack_infos)),
-	  sprintf("Selected checks: %s", join(',',sort keys %enabled_checks)),
+	  sprintf('Requested data to collect: %s', join(',',sort keys %unpack_infos)),
+	  sprintf('Selected checks: %s', join(',',sort keys %enabled_checks)),
     );
 
 
 # Make sure the resolver is in a sane state:
 scalar($map->missing()) == 0
-    or fail("There are missing nodes on the resolver: ".join(', ', $map->missing()));
+    or fail('There are missing nodes on the resolver: '.join(', ', $map->missing()));
 
 ## REFACTORING NOTES:
 ## If we are here $action is one of "check", "unpack" or "remove"
@@ -1027,7 +1028,7 @@ if($action eq 'remove'){
 	my $lpkg;
 	eval{ $lpkg = $LAB->get_lab_package($pkg, $ver, $type, $file); };
 	if(!defined($lpkg)){
-	    my $err = ".";
+	    my $err = '.';
 	    $err = ": $@" if(defined($@));
 	    warning("skipping $action of $type package $pkg$err");
 	    $exit_code = 2;
@@ -1057,7 +1058,7 @@ foreach my $pkg_info ($schedule->get_all) {
     my $loaded_overrides = 0;
     eval{ $lpkg = $LAB->get_lab_package($pkg, $ver, $type, $file); };
     if(!defined($lpkg)){
-	my $err = ".";
+	my $err = '.';
 	$err = ": $@" if(defined($@));
 	warning("skipping $action of $type package $pkg$err");
 	$exit_code = 2;
@@ -1078,10 +1079,9 @@ foreach my $pkg_info ($schedule->get_all) {
     $base = $lpkg->base_dir();
     debug_msg(1, "Base directory in lab: $base");
 
-
     # Ensure it has been unpacked
     unless ($lpkg->create_entry()){
-	warning("could not create the package entry in the lab",
+	warning('could not create the package entry in the lab',
 		"skipping $action of $long_type package $pkg");
 	$exit_code = 2;
 	next PACKAGE;
@@ -1165,7 +1165,7 @@ foreach my $pkg_info ($schedule->get_all) {
 	}
 	# wait until a job finishes to run its branches, if any, or skip
 	# this package if any of the jobs failed.
-	debug_msg(1, "Reaping done jobs ...");
+	debug_msg(1, 'Reaping done jobs ...');
 
 	while (my ($coll, $cmd) = Lintian::Command::Simple::wait(\%running_jobs)) {
 	    delete $running_jobs{$coll};
@@ -1174,7 +1174,7 @@ foreach my $pkg_info ($schedule->get_all) {
 		open(VERSION, '>', "$base/.${coll}-$ci->{'version'}")
 		    or fail("cannot create $base/.${coll}-$ci->{'version'}: $!");
 		print VERSION "Lintian-Version: $LINTIAN_VERSION\n"
-				. "Timestamp: " . time . "\n";
+				. 'Timestamp: ' . time . "\n";
 		close(VERSION);
 		debug_msg(1, "Collection script $coll done");
 	    } else {
@@ -1193,7 +1193,7 @@ foreach my $pkg_info ($schedule->get_all) {
 
 	unless ($no_override or $loaded_overrides) {
 	    if ($map->done('coll-override-file')) {
-		debug_msg(1, "Override file collected, loading it ...");
+		debug_msg(1, 'Override file collected, loading it ...');
 		$loaded_overrides = 1;
 		$TAGS->file_overrides("$base/override")
 		    if (-f "$base/override");
@@ -1228,7 +1228,7 @@ foreach my $pkg_info ($schedule->get_all) {
 		for my $extra (sort keys %{$overrides->{$tag}}) {
 		    next if $overrides->{$tag}{$extra};
 
-		    tag( "unused-override", $tag, $extra );
+		    tag( 'unused-override', $tag, $extra );
 		}
 	    }
 	}
@@ -1259,7 +1259,7 @@ foreach my $pkg_info ($schedule->get_all) {
 	chdir($base);
 	for my $coll (keys %collection_info) {
 	    my $ci = $collection_info{$coll};
-	    if (defined($ci->{'auto-remove'}) && $ci->{'auto-remove'} eq "yes") {
+	    if (defined($ci->{'auto-remove'}) && $ci->{'auto-remove'} eq 'yes') {
 		next unless (-f "$base/.${coll}-$ci->{'version'}");
 		my $script = "$LINTIAN_ROOT/collection/$ci->{'script'}";
 		debug_msg(1, "Auto removing: $ci->{'script'} ...");
@@ -1301,7 +1301,7 @@ if ($action eq 'check' and not $no_override and not $show_overrides) {
 	if ($info) {
 	    push (@output, "$info info");
 	}
-	msg("$total (". join (', ', @output). ")");
+	msg("$total (". join (', ', @output). ')');
     }
 }
 

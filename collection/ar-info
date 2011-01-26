@@ -20,31 +20,32 @@
 # MA 02110-1301, USA.
 
 use strict;
-use lib "$ENV{LINTIAN_ROOT}/lib";
+use warnings;
 
+use lib "$ENV{LINTIAN_ROOT}/lib";
 use FileHandle;
 use Lintian::Command qw(spawn);
 use Util qw(fail);
 
-($#ARGV == 1) or fail("syntax: ar-info <pkg> <type>");
+($#ARGV == 1) or fail('syntax: ar-info <pkg> <type>');
 my $pkg = shift;
 my $type = shift;
 
--f "fields/source" or fail("ar-info invoked in wrong directory");
+-f 'fields/source' or fail('ar-info invoked in wrong directory');
 
-unlink("ar-info");
-chdir("unpacked")
+unlink('ar-info');
+chdir('unpacked')
     or fail("cannot chdir to unpacked directory: $!");
 
-open(INDEX, '<', "../index")
+open(INDEX, '<', '../index')
     or fail("cannot open index file: $!");
-open(OUT, '>', "../ar-info")
+open(OUT, '>', '../ar-info')
     or fail("cannot open ar-info file: $!");
 
 while (<INDEX>) {
     chomp;
     next unless /\.a$/;
-    my $file = (split(" ", $_, 6))[5];
+    my $file = (split(' ', $_, 6))[5];
     next unless -f $file;
     my $opts = { pipe_out => FileHandle->new, err => '/dev/null' };
     spawn($opts, [ 'ar', 't', $file ]);
