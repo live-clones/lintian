@@ -21,6 +21,7 @@
 
 package Util;
 use strict;
+use warnings;
 
 use Exporter;
 
@@ -78,7 +79,7 @@ sub parse_dpkg_control {
 	next if /^\#/;
 
 	# empty line?
-	if ((!$debconf_flag && m/^\s*$/) or ($debconf_flag && m/^$/)) {
+	if ((!$debconf_flag && m/^\s*$/) or ($debconf_flag && $_ eq '')) {
 	    if ($open_section) { # end of current section
 		$cur_section++;
 		$open_section = 0;
@@ -138,7 +139,7 @@ sub read_dpkg_control {
     my ($file, $debconf_flag) = @_;
 
     if (not _ensure_file_is_sane($file)) {
-	return undef;
+	return;
     }
 
     open(my $CONTROL, '<', $file)
@@ -153,7 +154,7 @@ sub get_deb_info {
     my ($file) = @_;
 
     if (not _ensure_file_is_sane($file)) {
-	return undef;
+	return;
     }
 
     # dpkg-deb -f $file is very slow. Instead, we use ar and tar.

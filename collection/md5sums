@@ -26,14 +26,14 @@ use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Command qw(spawn reap);
 use Util;
 
-($#ARGV == 1) or fail("syntax: md5sums <pkg> <type>");
+($#ARGV == 1) or fail('syntax: md5sums <pkg> <type>');
 my $pkg = shift;
 my $type = shift;
 
--f "fields/package" or fail("md5sums invoked in wrong directory");
+-f 'fields/package' or fail('md5sums invoked in wrong directory');
 
-unlink("md5sums");
-chdir("unpacked")
+unlink('md5sums');
+chdir('unpacked')
     or fail("cannot chdir to unpacked directory: $!");
 
 my %opts = ( pipe_in => FileHandle->new,
@@ -41,12 +41,12 @@ my %opts = ( pipe_in => FileHandle->new,
 	     fail => 'error' );
 spawn(\%opts, ['xargs', '-0r', 'md5sum'] );
 $opts{pipe_in}->blocking(1);
-open(INDEX, '<', "../index")
+open(INDEX, '<', '../index')
     or fail("cannot open index file: $!");
 while (<INDEX>) {
     next unless m/^-/;
     chop;
-    $_ = (split(" ", $_, 6))[5];
+    $_ = (split(' ', $_, 6))[5];
     s/ link to .*//;
     s/\\(\d+)/chr(oct($1))/eg;
     s/\\\\/\\/g;

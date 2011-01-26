@@ -19,9 +19,6 @@ use strict;
 use warnings;
 use Util ();
 
-my ($nodes, $selected, $known, $unknown, $map);
-my ($satisfied_nodes);
-
 =head1 NAME
 
 Lintian::DepMap - Dependencies map/tree creator
@@ -213,11 +210,11 @@ sub satisfy {
 
     if (grep {$_ eq $node} $self->missing()) {
 	Util::fail("Attempted to mark node '$node' as satisfied but it is not ".
-		    "reachable, perhaps you forgot to add() it first?");
+		    'reachable, perhaps you forgot to add() it first?');
     }
     if (not exists($self->{'nodes'}{$node})) {
 	Util::fail("Attempted to mark node '$node' as satisfied but it is not ".
-		    "reachable, perhaps you forgot to satisfy() its dependencies first?");
+		    'reachable, perhaps you forgot to satisfy() its dependencies first?');
     }
     return 0 unless (exists($self->{'map'}{$node}));
 
@@ -298,7 +295,7 @@ sub unlink {
 
     if (not exists($self->{'nodes'}{$node})) {
 	Util::fail("Attempted to unlink node '$node' but it can not be found".
-		    ", perhaps it has already been satisfied?");
+		    ', perhaps it has already been satisfied?');
     }
 
     delete $self->{'map'}{$node}
@@ -313,7 +310,7 @@ sub unlink {
 		if exists $self->{'nodes'}{$parent}{'branches'}{$node};
 	    delete $self->{'nodes'}{$node}{'parents'}{$parent};
 	}
-    
+
 	for my $branch (keys %{$self->{'nodes'}{$node}->{'branches'}}) {
 	    delete $self->{'nodes'}{$branch}{'parents'}{$node};
 	    delete $self->{'nodes'}{$node}{'branches'}{$branch};
@@ -350,7 +347,7 @@ sub select {
 
     if (not exists($self->{'map'}{$node})) {
 	Util::fail("Attempted to mark node '$node' as selected but it is not ".
-		    "known, perhaps its parents are not yet satisfied?");
+		    'known, perhaps its parents are not yet satisfied?');
     }
     return 0 if (exists($self->{'selected'}{$node}));
 
@@ -442,7 +439,7 @@ sub parents {
 
     if (not exists($self->{'nodes'}{$node})) {
 	Util::fail("Attempted to get the parents of node '$node' but it is not".
-		    "known, perhaps you forgot to add() it first?");
+		    'known, perhaps you forgot to add() it first?');
     }
 
     return keys %{$self->{'nodes'}{$node}{'parents'}};

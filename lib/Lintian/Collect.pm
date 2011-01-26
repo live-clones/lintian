@@ -18,6 +18,7 @@
 
 package Lintian::Collect;
 use strict;
+use warnings;
 
 # Take the package name and type, initialize an appropriate collect object
 # based on the package type, and return it.  Returns undef for an unknown

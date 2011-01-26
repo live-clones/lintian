@@ -219,7 +219,7 @@ sub check_spelling {
         next if ($word =~ /^[A-Z]{1,5}\z/);
         my $lcword = lc $word;
         if ($corrections->known($lcword) &&
-                not exists ($exceptions->{$lcword})) {
+                !exists ($exceptions->{$lcword})) {
             $counter++;
             my $correction = $corrections->value($lcword);
             if ($word =~ /^[A-Z]+$/) {
@@ -275,7 +275,7 @@ sub check_spelling_picky {
     # removed below.
     if ($text =~ m,meta\s+package,) {
         $counter++;
-        _tag($tag, $filename, "meta package", "metapackage")
+        _tag($tag, $filename, 'meta package', 'metapackage')
             if defined $tag;
     }
 

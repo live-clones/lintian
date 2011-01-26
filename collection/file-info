@@ -20,20 +20,21 @@
 # MA 02110-1301, USA.
 
 use strict;
+use warnings;
 
 use FileHandle;
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Util;
 use Lintian::Command qw(spawn reap);
 
-($#ARGV == 1) or fail("syntax: file-info <pkg> <type>");
+($#ARGV == 1) or fail('syntax: file-info <pkg> <type>');
 my $pkg = shift;
 my $type = shift;
 
--f "fields/source" or fail("file-info invoked in wrong directory");
+-f 'fields/source' or fail('file-info invoked in wrong directory');
 
-unlink("file-info");
-chdir("unpacked")
+unlink('file-info');
+chdir('unpacked')
     or fail("cannot chdir to unpacked directory: $!");
 
 # We ignore failures from file because sometimes file returns a non-zero exit
@@ -49,7 +50,7 @@ open(INDEX, '<', "../index")
     or fail("cannot open index file: $!");
 while (<INDEX>) {
     chomp;
-    $_ = (split(" ", $_, 6))[5];
+    $_ = (split(' ', $_, 6))[5];
     s/ link to .*//;
     s/ -> .*//;
     s/(\G|[^\\](?:\\\\)*)\\(\d{3})/"$1" . chr(oct $2)/ge;

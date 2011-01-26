@@ -24,13 +24,13 @@ use strict;
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Util;
 
-($#ARGV == 1) or fail("syntax: changelog-file <pkg> <type>");
+($#ARGV == 1) or fail('syntax: changelog-file <pkg> <type>');
 my $pkg = shift;
 my $type = shift;
 
--f "fields/package" or fail("changelog-file invoked in wrong directory");
+-f 'fields/package' or fail('changelog-file invoked in wrong directory');
 
-unlink("changelog") or fail("cannot remove changelog file: $!")
+unlink('changelog') or fail("cannot remove changelog file: $!")
     if ( -e 'changelog' or -l 'changelog');
 
 # Pick the first of these files that exists.
@@ -63,7 +63,7 @@ for (@changelogs) {
 # intentinally broken symlink so that checks can do the right thing.
 if (defined ($chl) && -l $chl) {
     my $link = readlink $chl or fail("cannot readlink $chl: $!");
-    if ($link =~ /\.\./ || ($link =~ m%/% && $link !~ m%^[^/]+(/+[^/]+)*\z%)) {
+    if ($link =~ /\.\./ || ($link =~ m%/% && $link !~ m%^[^/]+(?:/+[^/]+)*\z%)) {
 	symlink('file-is-in-another-package', 'changelog')
 	    or fail("cannot create changelog symlink: $!");
 	undef $chl;
@@ -88,7 +88,7 @@ if (not defined $chl) {
     close CHL;
     close (COPY) or fail("cannot write changelog: $!");
 } else {
-    link($chl, "changelog")
+    link($chl, 'changelog')
 	or fail("cannot link $chl to changelog: $!");
 }
 
@@ -100,13 +100,13 @@ my $news = "unpacked/usr/share/doc/$pkg/NEWS.Debian.gz";
 if (-f $news) {
     if (-l $news) {
         my $link = readlink $news or fail("cannot readlink $chl: $!");
-        if ($link =~ /\.\./ || ($link =~ m%/% && $link !~ m%^[^/]+(/+[^/]+)*\z%)) {
+        if ($link =~ /\.\./ || ($link =~ m%/% && $link !~ m%^[^/]+(?:/+[^/]+)*\z%)) {
             undef $news;
         } elsif (! -f $news) {
             undef $news;
         }
     }
     if ($news) {
-	gunzip_file($news, "NEWS.Debian");
+	gunzip_file($news, 'NEWS.Debian');
     }
 }

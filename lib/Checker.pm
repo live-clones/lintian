@@ -21,6 +21,7 @@
 package Checker;
 use strict;
 no strict 'refs';
+use warnings;
 
 # Quiet "Name "main::LINTIAN_ROOT" used only once"
 # The variable comes from 'lintian'

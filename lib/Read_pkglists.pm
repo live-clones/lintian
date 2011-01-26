@@ -20,6 +20,7 @@
 # MA 02110-1301, USA.
 
 use strict;
+use warnings;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Util;
