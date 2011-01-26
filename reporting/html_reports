@@ -132,7 +132,7 @@ mkdir("$HTML_TMP_DIR/maintainer", 0777)
     or die "cannot create output directory $HTML_TMP_DIR/maintainer: $!\n";
 mkdir("$HTML_TMP_DIR/tags", 0777)
     or die "cannot create output directory $HTML_TMP_DIR/tags: $!\n";
-symlink(".", "$HTML_TMP_DIR/reports")
+symlink('.', "$HTML_TMP_DIR/reports")
     or die "cannot create symlink $HTML_TMP_DIR/reports: $!\n";
 symlink("$LINTIAN_ROOT/doc/lintian.html", "$HTML_TMP_DIR/manual")
     or die "cannot create symlink $HTML_TMP_DIR/manual: $!\n";
@@ -534,7 +534,7 @@ my @attrs = qw(maintainers source-packages binary-packages udeb-packages
 for my $attr (@attrs) {
     my $old = $old_statistics->{$attr} || 0;
     $statistics{$attr} ||= 0;
-    $delta{$attr} = sprintf("%d (%+d)", $statistics{$attr},
+    $delta{$attr} = sprintf('%d (%+d)', $statistics{$attr},
                             $statistics{$attr} - $old);
 }
 
@@ -572,7 +572,7 @@ mkdir("$HISTORY_DIR/tags")
     if (not -d "$HISTORY_DIR/tags");
 
 my $history_file = "$HISTORY_DIR/statistics.dat";
-my $stats = "";
+my $stats = '';
 for my $attr (@attrs) {
     $stats .= " $statistics{$attr}";
 }
