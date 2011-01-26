@@ -6,7 +6,7 @@ severity = 1
 # Work based on a whitelist
 only = 1
 # Our whitelist (ignores severity):
-include = MixedBooleanOperators ExplicitReturnUndef InteractiveTest GlobFunction UpperCaseHeredoc NegativeIndices PrivateVars UselessInitialization UnusedVariables ReusedNames PackageVars MatchVars ConditionalDeclarations NumberSeparators NullStatements LongChainsOfMethodCalls UseStrict UseWarnings SingleCharAlternation UnusedCapture FixedStringMatches EndWithOne ConditionalUseStatements TwoArgOpen PackageMatchesPodName JoinedReadline UnreachableCode QuotedWordLists TrailingWhitespace
+include = MixedBooleanOperators ExplicitReturnUndef InteractiveTest GlobFunction UpperCaseHeredoc NegativeIndices PrivateVars UselessInitialization UnusedVariables ReusedNames PackageVars MatchVars ConditionalDeclarations NumberSeparators NullStatements LongChainsOfMethodCalls UseStrict UseWarnings SingleCharAlternation UnusedCapture FixedStringMatches EndWithOne ConditionalUseStatements TwoArgOpen PackageMatchesPodName JoinedReadline UnreachableCode QuotedWordLists TrailingWhitespace Capitalization InterpolationOfLiterals
 
 # If you want to try some other stuff, uncomment the following
 # (exclude is an incomplete list of things we probably won't change)
@@ -16,8 +16,6 @@ include = MixedBooleanOperators ExplicitReturnUndef InteractiveTest GlobFunction
 
 # Would be nice to fix at some point:
 # include = ProhibitBarewordFileHandles
-# include = InterpolationOfLiterals
-# include = Capitalization
 
 criticism-fatal = 1
 color = 1
