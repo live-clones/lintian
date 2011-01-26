@@ -1,0 +1,27 @@
+# FIXME: the list of checks should probably be moved to
+# t/scripts/critic.pl. Line continuations are not supported here
+
+# Severity is actually ignored for our main purposes, see below
+severity = 1
+# Work based on a whitelist
+only = 1
+# Our whitelist (ignores severity):
+include = MixedBooleanOperators ExplicitReturnUndef InteractiveTest GlobFunction UpperCaseHeredoc NegativeIndices PrivateVars UselessInitialization UnusedVariables ReusedNames PackageVars MatchVars ConditionalDeclarations NumberSeparators NullStatements LongChainsOfMethodCalls UseStrict UseWarnings SingleCharAlternation UnusedCapture FixedStringMatches EndWithOne ConditionalUseStatements TwoArgOpen PackageMatchesPodName JoinedReadline UnreachableCode QuotedWordLists TrailingWhitespace
+
+# If you want to try some other stuff, uncomment the following
+# (exclude is an incomplete list of things we probably won't change)
+# theme = security || bugs || complexity || maintenance
+# exclude = ExtendedFormat LineBoundaryMatch DotMatchAnything AutomaticExportation BuiltinHomonyms FinalReturn PunctuationVars InitializationForLocalVars UnusualDelimiters RcsKeywords
+# even more stuff if theme is empty
+
+# Would be nice to fix at some point:
+# include = ProhibitBarewordFileHandles
+# include = InterpolationOfLiterals
+# include = Capitalization
+
+criticism-fatal = 1
+color = 1
+allow-unsafe = 1
+
+[ValuesAndExpressions::ProhibitInterpolationOfLiterals]
+allow_if_string_contains_single_quote = 1
