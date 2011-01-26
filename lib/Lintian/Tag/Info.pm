@@ -218,9 +218,9 @@ sub _manual_reference {
         $text .= " section $section";
     }
     if ($section and exists $MANUALS{$manual}{$section}) {
-        my $title = $MANUALS{$manual}{$section}{title};
-        my $url   = $MANUALS{$manual}{$section}{url};
-        $text .= $url ? qq[ (<a href="$url">$title</a>)] : qq[ ($title)];
+        my $sec_title = $MANUALS{$manual}{$section}{title};
+        my $sec_url   = $MANUALS{$manual}{$section}{url};
+        $text .= $sec_url ? qq[ (<a href="$sec_url">$sec_title</a>)] : qq[ ($sec_title)];
     }
 
     return $text;
