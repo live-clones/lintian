@@ -326,7 +326,7 @@ foreach my $file (@{$info->sorted_file_info}) {
 
     while (my ($src, $regex) = each %EMBEDDED_LIBRARIES) {
 	if (ref $regex eq 'HASH') {
-	    next if ($info->field('source') =~ m/$regex->{'source'}/);
+	    next if ($info->field('source') =~ m/^$regex->{'source'}$/);
 
 	    $regex = $regex->{'match'};
 	} elsif ($info->field('source') eq $src) {
