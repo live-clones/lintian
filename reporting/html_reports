@@ -474,13 +474,13 @@ for my $tag (sort keys %by_tag) {
         }
     }
 
-    my %data = (
+    my %maint_data = (
         description => $description,
         tag         => html_quote ($tag),
         code        => $info->code,
         tags        => $by_tag{$tag},
     );
-    output_template ("tags/$tag.html", $templates{tag}, \%data);
+    output_template ("tags/$tag.html", $templates{tag}, \%maint_data);
 
     $tag_statistics{$tag}{'count'} = $count;
     $tag_statistics{$tag}{'overrides'} = $overrides;
