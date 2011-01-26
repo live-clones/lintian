@@ -20,6 +20,7 @@
 # MA 02110-1301, USA.
 
 use strict;
+use warnings;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Relation::Version qw(versions_lte);
@@ -91,7 +92,7 @@ foreach my $area (split /\s*,\s*/,$LINTIAN_AREA) {
     $hash{'dist'} = $LINTIAN_DIST;
     $hash{'area'} = $area;
     $hash{'file'} = "$LINTIAN_ARCHIVEDIR/dists/$hash{'dist'}/$hash{'area'}/" .
-                    "source/Sources.gz";
+                    'source/Sources.gz';
     push @sources, \%hash;
 }
 
@@ -158,7 +159,7 @@ foreach my $sources (@sources) {
         push(@f,$t[2]);
       }
       $data->{'files'} = join(',',@f);
-      $data->{'standards-version'} ||= "";
+      $data->{'standards-version'} ||= '';
       $pkg = $data->{'source'};
     }
 

@@ -26,9 +26,10 @@
 # MA 02110-1301, USA.
 
 use strict;
+use warnings;
 use vars qw($verbose);
 
-($#ARGV == 1) or die "syntax: unpack-srcpkg-l1 <base-dir> <dsc-file>";
+($#ARGV == 1) or die 'syntax: unpack-srcpkg-l1 <base-dir> <dsc-file>';
 my $base_dir = shift;
 my $file = shift;
 
@@ -58,7 +59,7 @@ for my $field (keys %$data) {
     my $field_file = "$base_dir/fields/$field";
     open(F, '>', $field_file)
         or fail("cannot open file $field_file for writing: $!");
-    print F $value,"\n";
+    print F $value,'\n';
     close(F);
 }
 
@@ -76,7 +77,7 @@ symlink($file,"$base_dir/dsc") or fail("cannot symlink dsc file: $!");
 my $tarball;
 for my $fs (split(/\n/,$data->{'files'})) {
     $fs =~ s/^\s*//;
-    next if $fs =~ /^$/o;
+    next if $fs eq '';
     my @t = split(/\s+/o,$fs);
     next if ($t[2] =~ m,/,);
     if ($t[2] =~ /^(\Q$base\E\.orig|\Q$baserev\E)\.tar\.(gz|bz2|lzma|xz)$/) {
@@ -86,7 +87,7 @@ for my $fs (split(/\n/,$data->{'files'})) {
         or fail("cannot symlink file $t[2]: $!");
 }
 if (!$tarball) {
-    fail("could not find the source tarball");
+    fail('could not find the source tarball');
 }
 
 # Collect a list of the files in the source package.  tar currently doesn't
@@ -96,12 +97,12 @@ if (!$tarball) {
 # don't parallelize this job because we need to use the output below.
 my @tar_options = ('-tvf');
 if ($tarball =~ /\.(lzma|xz)\z/) {
-    unshift(@tar_options, "--$1");
+    unshift(@tar_options, '--$1');
 }
 my @index;
 my $last = '';
 my $collect = sub {
-    my @lines = map { split "\n" } @_;
+    my @lines = map { split '\n' } @_;
     if ($last ne '') {
         $lines[0] = $last . $lines[0];
     }
@@ -113,14 +114,14 @@ my $collect = sub {
     for my $line (@lines) {
         $line =~ s/^h/-/;
         if ($line and $line !~ m,^(?:\S+\s+){5}\./$,) {
-            push(@index, $line . "\n");
+            push(@index, $line . '\n');
         }
     }
 };
 spawn({ fail => 'never', out => $collect, err => "$base_dir/index-errors" },
-      ["tar", @tar_options, "$base_dir/$tarball"]);
+      ['tar', @tar_options, "$base_dir/$tarball"]);
 if ($last) {
-    fail("tar output doesn't end in a newline");
+    fail('tar output does not end in a newline');
 }
 
 # We now need to see if all files in the tarball have a common prefix.  If so,
@@ -128,15 +129,15 @@ if ($last) {
 # that consist solely of the prefix.
 my $prefix;
 for my $line (@index) {
-    my ($file) = ($line =~ /^(?:\S+\s+){5}(.*)/);
-    $file =~ s,^\./+,,;
-    my ($dir) = ($file =~ m,^([^/]+),);
-    if (defined($dir) and $dir eq $file and not $line =~ /^d/) {
+    my ($filename) = ($line =~ /^(?:\S+\s+){5}(.*)/);
+    $filename =~ s,^\./+,,;
+    my ($dirname) = ($filename =~ m,^([^/]+),);
+    if (defined($dirname) and $dirname eq $filename and not $line =~ /^d/) {
         $prefix = '';
-    } elsif (defined $dir) {
+    } elsif (defined $dirname) {
         if (not defined $prefix) {
-            $prefix = $dir;
-        } elsif ($dir ne $prefix) {
+            $prefix = $dirname;
+        } elsif ($dirname ne $prefix) {
             $prefix = '';
         }
     } else {

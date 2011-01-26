@@ -24,9 +24,10 @@
 # MA 02110-1301, USA.
 
 use strict;
+use warnings;
 use vars qw($verbose);
 
-($#ARGV == 1) or die "syntax: unpack-binpkg-l1 <base-dir> <deb-file>";
+($#ARGV == 1) or die 'syntax: unpack-binpkg-l1 <base-dir> <deb-file>';
 my $base_dir = shift;
 my $file = shift;
 
@@ -59,7 +60,7 @@ $job = { fail => 'error', err => "$base_dir/control-errors" };
 push @jobs, $job;
 # extract the tarball's contents
 spawn($job,
-      ["tar", "xf", "$base_dir/control.tar", "-C", "$base_dir/control", '&']);
+      ['tar', 'xf', "$base_dir/control.tar", '-C', "$base_dir/control", '&']);
 
 $job = { fail => 'error',
          out  => "$base_dir/control-index",
@@ -67,8 +68,8 @@ $job = { fail => 'error',
 push @jobs, $job;
 # create index of control.tar.gz
 spawn($job,
-      ["tar", "tvf", "$base_dir/control.tar"],
-      '|', ["sort", "-k", "6"], '&');
+      ['tar', 'tvf', "$base_dir/control.tar"],
+      '|', ['sort', '-k', '6'], '&');
 
 reap(@jobs);
 undef @jobs;
@@ -77,7 +78,7 @@ unlink("$base_dir/control.tar") or fail();
 
 # fix permissions
 spawn({ fail => 'error' },
-      ["chmod", "-R", "u+rX,o-w", "$base_dir/control"]);
+      ['chmod', '-R', 'u+rX,o-w', "$base_dir/control"]);
 
 $job = { fail => 'error',
          out  => "$base_dir/index",
@@ -86,10 +87,10 @@ push @jobs, $job;
 # (replaces dpkg-deb -c)
 # create index file for package
 spawn($job,
-      ["dpkg-deb", "--fsys-tarfile", $file ],
-      '|', ["tar", "tfv", "-"],
-      '|', ["sed", "-e", "s/^h/-/"],
-      '|', ["sort", "-k", "6"], '&');
+      ['dpkg-deb', '--fsys-tarfile', $file ],
+      '|', ['tar', 'tfv', '-'],
+      '|', ['sed', '-e', 's/^h/-/'],
+      '|', ['sort', '-k', '6'], '&');
 
 $job = { fail => 'error',
          out  => "$base_dir/index-owner-id",
@@ -98,10 +99,10 @@ push @jobs, $job;
 # (replaces dpkg-deb -c)
 # create index file for package with owner IDs instead of names
 spawn($job,
-      ["dpkg-deb", "--fsys-tarfile", $file],
-      '|', ["tar", "--numeric-owner", "-tvf", "-"],
-      '|', ["sed", "-e", "s/^h/-/"],
-      '|', ["sort", "-k", "6"], '&');
+      ['dpkg-deb', '--fsys-tarfile', $file],
+      '|', ['tar', '--numeric-owner', '-tvf', '-'],
+      '|', ['sed', '-e', 's/^h/-/'],
+      '|', ['sort', '-k', '6'], '&');
 
 # get package control information
 my $data = (read_dpkg_control("$base_dir/control/control"))[0];
@@ -114,7 +115,7 @@ for my $field (keys %$data) {
     $field =~ s,/,:,g;
     my $field_file = "$base_dir/fields/$field";
     open(F, '>', $field_file) or fail("cannot open file $field_file for writing: $!");
-    print F $value,"\n";
+    print F $value,'\n';
     close(F);
 }
 
