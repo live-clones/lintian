@@ -20,6 +20,7 @@
 
 package Lintian::files;
 use strict;
+use warnings;
 
 use File::Basename;
 
@@ -100,7 +101,7 @@ our @phplibraries = (
     [ qr,(?i).*layersmenu.*/(lib/)?PHPLIB\.php$, => 'libphp-phplayersmenu' ],
     [ qr,(?i)phpSniff\.(class|core)\.php$, => 'libphp-phpsniff' ],
     [ qr,(?i)(class\.)?jabber\.php$, => 'libphp-jabber' ],
-    [ qr,(?i)(class(\.|-))?simplepie(\.(php|inc))+$, => 'libphp-simplepie' ],
+    [ qr,(?i)(class[\.-])?simplepie(\.(php|inc))+$, => 'libphp-simplepie' ],
     [ qr,(?i)jpgraph\.php$, => 'libphp-jpgraph' ],
     [ qr,(?i)fpdf\.php$, => 'php-fpdf' ],
     [ qr,(?i)getid3\.(lib\.)?(\.(php|inc))+$, => 'php-getid3' ],
@@ -143,8 +144,8 @@ my $type = shift;
 my $info = shift;
 
 my $file;
-my $source_pkg = "";
-my $pkg_section = "";
+my $source_pkg = '';
+my $pkg_section = '';
 my $is_python;
 my $is_perl;
 my $has_binary_perl_file;
@@ -166,7 +167,7 @@ foreach my $file (sort keys %{$info->objdump_info}) {
 
 # Get source package name, if possible.
 if (defined $info->field('source')) {
-    $source_pkg = $info->field('source') || "";
+    $source_pkg = $info->field('source') || '';
 }
 
 # Get section.
@@ -227,7 +228,7 @@ if ($is_empty) {
 
 # Read package contents...
 foreach my $file (@{$info->sorted_index}) {
-    next if $file eq "";
+    next if $file eq '';
     my $index_info = $info->index->{$file};
     my $owner = $index_info->{owner} . '/' . $index_info->{group};
     my $operm = $index_info->{operm};
@@ -243,7 +244,7 @@ foreach my $file (@{$info->sorted_index}) {
 	# stable lintian output despite that.
 	#
 	# TODO: actually, policy says 'conffile', not '/etc' -> extend!
-	tag "package-contains-hardlink", join (' -> ', sort ($file, $link))
+	tag 'package-contains-hardlink', join (' -> ', sort ($file, $link))
 	    if $file =~ m,^etc/,
 		or $link =~ m,^etc/,
 		or $file !~ m,^\Q$link_target_dir\E[^/]*$,;
@@ -251,14 +252,14 @@ foreach my $file (@{$info->sorted_index}) {
 
     my ($year) = ($index_info->{date} =~ /^(\d{4})/);
     if ( $year <= 1984 ) { # value from dak CVS: Dinstall::PastCutOffYear
-	tag "package-contains-ancient-file", "$file " . $index_info->{date};
+	tag 'package-contains-ancient-file', "$file " . $index_info->{date};
     }
 
     if (!($index_info->{uid} < 100 || $index_info->{uid} == 65534
 	  || ($index_info->{uid} >= 60000 && $index_info->{uid} < 65000))
 	|| !($index_info->{gid} < 100 || $index_info->{gid} == 65534
 	     || ($index_info->{gid} >= 60000 && $index_info->{gid} < 65000))) {
-	tag "wrong-file-owner-uid-or-gid", $file, $index_info->{uid} . '/' . $index_info->{gid};
+	tag 'wrong-file-owner-uid-or-gid', $file, $index_info->{uid} . '/' . $index_info->{gid};
     }
 
     # *.devhelp and *.devhelp2 files must be accessible from a directory in
@@ -282,51 +283,51 @@ foreach my $file (@{$info->sorted_index}) {
     # ---------------- /etc
     if ($file =~ m,^etc/,) {
 	if ($file =~ m,^etc/nntpserver, ) {
-	    tag "package-uses-obsolete-file", "$file";
+	    tag 'package-uses-obsolete-file', "$file";
 	}
 	# ---------------- /etc/cron.daily, etc.
 	elsif ($file =~ m,^etc/cron\.(?:daily|hourly|monthly|weekly)/[^\.].*\., ) {
-	    tag "run-parts-cron-filename-contains-full-stop", "$file";
+	    tag 'run-parts-cron-filename-contains-full-stop', "$file";
 	}
 	# ---------------- /etc/cron.d
 	elsif ($file =~ m,^etc/cron\.d/\S, and $operm != 0644) {
-	    tag "bad-permissions-for-etc-cron.d-script", sprintf("%s %04o != 0644",$file,$operm);
+	    tag 'bad-permissions-for-etc-cron.d-script', sprintf('%s %04o != 0644',$file,$operm);
 	}
 	# ---------------- /etc/emacs.*
 	elsif ($file =~ m,^etc/emacs.*/\S, and $index_info->{type} =~ m,^[-h],
 	       and $operm != 0644) {
-	    tag "bad-permissions-for-etc-emacs-script", sprintf("%s %04o != 0644",$file,$operm);
+	    tag 'bad-permissions-for-etc-emacs-script', sprintf('%s %04o != 0644',$file,$operm);
 	}
 	# ---------------- /etc/gconf/schemas
 	elsif ($file =~ m,^etc/gconf/schemas/\S,) {
-	    tag "package-installs-into-etc-gconf-schemas", "$file";
+	    tag 'package-installs-into-etc-gconf-schemas', "$file";
 	}
 	# ---------------- /etc/init.d
 	elsif ($file =~ m,^etc/init\.d/\S,
 	       and $file !~ m,^etc/init\.d/(?:README|skeleton)$,
 	       and $operm != 0755
 	       and $index_info->{type} =~ m,^[-h],) {
-	    tag "non-standard-file-permissions-for-etc-init.d-script",
-		sprintf("%s %04o != 0755",$file,$operm);
+	    tag 'non-standard-file-permissions-for-etc-init.d-script',
+		sprintf('%s %04o != 0755',$file,$operm);
 	}
 	#----------------- /etc/ld.so.conf.d
-	elsif ($file =~ m,^etc/ld\.so\.conf\.d/(.+)$, and $pkg !~ /^libc/) {
+	elsif ($file =~ m,^etc/ld\.so\.conf\.d/.+$, and $pkg !~ /^libc/) {
 	    tag 'package-modifies-ld.so-search-path', "$file";
 	}
 	#----------------- /etc/modprobe.d
 	elsif ($file =~ m,^etc/modprobe\.d/(.+)$, and $1 !~ m,\.conf$, and $index_info->{type} !~ m/^d/) {
-	    tag "non-conf-file-in-modprobe.d", $file;
+	    tag 'non-conf-file-in-modprobe.d', $file;
 	}
 	#----------------- /etc/pam.conf
-	elsif ($file =~ m,^etc/pam.conf, and $pkg ne "libpam-runtime" ) {
-	    tag "config-file-reserved", "$file by libpam-runtime";
+	elsif ($file =~ m,^etc/pam.conf, and $pkg ne 'libpam-runtime' ) {
+	    tag 'config-file-reserved', "$file by libpam-runtime";
 	}
 	#----------------- /etc/php5/conf.d
 	elsif ($file =~ m,^etc/php5/conf.d/.+\.ini$,) {
 	    open (PHPINI, '<', "unpacked/$file") or fail("cannot open .ini file: $!");
 	    while (<PHPINI>) {
 		next unless (m/^\s*#/);
-		tag "obsolete-comments-style-in-php-ini", $file;
+		tag 'obsolete-comments-style-in-php-ini', $file;
 		# only warn once per file:
 		last;
 	    }
@@ -334,19 +335,19 @@ foreach my $file (@{$info->sorted_index}) {
 	}
 	# ---------------- /etc/rc.d
 	elsif ($type ne 'udeb' and $file =~ m,^etc/rc\.d/\S, and $pkg !~ /^(?:sysvinit|file-rc)$/) {
-	    tag "package-installs-into-etc-rc.d", "$file";
+	    tag 'package-installs-into-etc-rc.d', "$file";
 	}
 	# ---------------- /etc/rc?.d
 	elsif ($type ne 'udeb' and $file =~ m,^etc/rc(?:\d|S)\.d/\S, and $pkg !~ /^(?:sysvinit|file-rc)$/) {
-	    tag "package-installs-into-etc-rc.d", "$file";
+	    tag 'package-installs-into-etc-rc.d', "$file";
 	}
 	# ---------------- /etc/rc.boot
 	elsif ($file =~ m,^etc/rc\.boot/\S,) {
-	    tag "package-installs-into-etc-rc.boot", "$file";
+	    tag 'package-installs-into-etc-rc.boot', "$file";
 	}
 	# ---------------- /etc/udev/rules.d
 	elsif ($file =~ m,^etc/udev/rules\.d/\S,) {
-	    tag "udev-rule-in-etc", "$file";
+	    tag 'udev-rule-in-etc', "$file";
 	}
     }
     # ---------------- /usr
@@ -354,16 +355,16 @@ foreach my $file (@{$info->sorted_index}) {
 	# ---------------- /usr/share/doc
 	if ($file =~ m,^usr/share/doc/\S,) {
 	    if ($type eq 'udeb') {
-		tag "udeb-contains-documentation-file", "$file";
+		tag 'udeb-contains-documentation-file', "$file";
 	    } else {
 		# file not owned by root?
 		if ($owner ne 'root/root') {
-		    tag "bad-owner-for-doc-file", "$file $owner != root/root";
+		    tag 'bad-owner-for-doc-file', "$file $owner != root/root";
 		}
 
 		# file directly in /usr/share/doc ?
 		if ($index_info->{type} =~ m/^[-h]/ and $file =~ m,^usr/share/doc/[^/]+$,) {
-		    tag "file-directly-in-usr-share-doc", "$file";
+		    tag 'file-directly-in-usr-share-doc', "$file";
 		}
 
 		# executable in /usr/share/doc ?
@@ -371,9 +372,9 @@ foreach my $file (@{$info->sorted_index}) {
 		    $file !~ m,^usr/share/doc/(?:[^/]+/)?examples/, and
 		    ($operm & 01 or $operm & 010 or $operm & 0100)) {
 		    if ($script{$file}) {
-			tag "script-in-usr-share-doc", "$file";
+			tag 'script-in-usr-share-doc', "$file";
 		    } else {
-			tag "executable-in-usr-share-doc", $file, (sprintf "%04o", $operm);
+			tag 'executable-in-usr-share-doc', $file, (sprintf '%04o', $operm);
 		    }
 		}
 
@@ -385,7 +386,7 @@ foreach my $file (@{$info->sorted_index}) {
 		    unless ($file =~ m,^usr/share/doc/(?:[^/]+/)?examples/,
 			    or $file =~ m,^usr/share/doc/(?:.+/)?html/.*\.map$,
 			    or $file =~ m,^usr/share/doc/(?:.+/)?__init__\.py$,) {
-			tag "zero-byte-file-in-doc-directory", "$file";
+			tag 'zero-byte-file-in-doc-directory', "$file";
 		    }
 		}
 		# gzipped zero byte files:
@@ -394,14 +395,14 @@ foreach my $file (@{$info->sorted_index}) {
 		    and $index_info->{type} =~ m,^[-h],
 		    and $info->file_info->{$file} =~ m/gzip compressed/) {
 		    unless (`gzip -dc unpacked/$file`) {
-			tag "zero-byte-file-in-doc-directory", "$file";
+			tag 'zero-byte-file-in-doc-directory', "$file";
 		    }
 		}
 
 		# contains an INSTALL file?
 		my $tmp = quotemeta($pkg);
 		if ($file =~ m,^usr/share/doc/$tmp/INSTALL(?:\..+)*$,) {
-		    tag "package-contains-upstream-install-documentation", "$file";
+		    tag 'package-contains-upstream-install-documentation', "$file";
 		}
 
 		# contains a README for another distribution/platform?
@@ -409,13 +410,13 @@ foreach my $file (@{$info->sorted_index}) {
 		                cygwin|darwin|irix|gentoo|freebsd|mac|macos|macosx|netbsd|
 				openbsd|osf|redhat|sco|sgi|solaris|suse|sun|vms|win32|win9x|
 				windows)(?:\.txt)?(?:\.gz)?$,xi){
-		    tag "package-contains-readme-for-other-platform-or-distro", "$file";
+		    tag 'package-contains-readme-for-other-platform-or-distro', "$file";
 		}
 
 		# contains a compressed version of objects.inv in sphinx-generated documentation?
-		if ($file =~ m,^usr/share/doc/$tmp/([^/]+/)+objects\.inv\.gz$,
+		if ($file =~ m,^usr/share/doc/$tmp/(?:[^/]+/)+objects\.inv\.gz$,
 		    and $info->file_info->{$file} =~ m/gzip compressed/) {
-		    tag "compressed-objects.inv", "$file";
+		    tag 'compressed-objects.inv', "$file";
 		}
 
 	    }
@@ -423,30 +424,30 @@ foreach my $file (@{$info->sorted_index}) {
 	# ---------------- /usr/doc
 	elsif ($file =~ m,^usr/doc/\S,) {
 	    if ($file =~ m,^usr/doc/examples/\S+, and $index_info->{type} eq 'd') {
-		tag "old-style-example-dir", "$file";
+		tag 'old-style-example-dir', "$file";
 	    }
 	}
 	# ---------------- /usr/X11R6/lib/X11/app-defaults
 	elsif ($file =~ m,usr/X11R6/lib/X11/app-defaults,) {
-	    tag "old-app-defaults-directory", "$file";
+	    tag 'old-app-defaults-directory', "$file";
 	}
 
 	#----------------- /usr/X11R6/
 	elsif ($file =~ m,^usr/X11R6/bin, && $pkg ne 'x11-common') {
-	    tag "package-installs-file-to-usr-x11r6-bin", "$file";
+	    tag 'package-installs-file-to-usr-x11r6-bin', "$file";
 	}
 	elsif ($file =~ m,^usr/X11R6/lib/X11/fonts,) {
-	    tag "package-installs-font-to-usr-x11r6", "$file";
+	    tag 'package-installs-font-to-usr-x11r6', "$file";
 	}
 	elsif ($file =~ m,^usr/X11R6/, and
 	       $index_info->{type} !~ m,^l,) { #links to FHS locations are allowed
-	    tag "package-installs-file-to-usr-x11r6", "$file";
+	    tag 'package-installs-file-to-usr-x11r6', "$file";
 	}
 
 	# ---------------- /usr/lib/debug
 	elsif ($file =~ m,^usr/lib/debug/\S,) {
 	    unless ($warned_debug_name) {
-		tag "debug-package-should-be-named-dbg", "$file"
+		tag 'debug-package-should-be-named-dbg', "$file"
 		    unless ($pkg =~ /-dbg$/);
 		$warned_debug_name = 1;
 	    }
@@ -454,21 +455,21 @@ foreach my $file (@{$info->sorted_index}) {
 	    if ($index_info->{type} =~ m/^[-h]/o &&
 		$file =~ m,^usr/lib/debug/usr/lib/pyshared/(python\d?(?:\.\d+))/(.++)$,o){
 		my $correct = "/usr/lib/debug/usr/lib/pymodules/$1/$2";
-		tag "python-debug-in-wrong-location", "$file", "$correct";
+		tag 'python-debug-in-wrong-location', "$file", "$correct";
 	    }
 	}
 
 	# ---------------- /usr/lib/sgml
 	elsif ($file =~ m,^usr/lib/sgml/\S,) {
-	    tag "file-in-usr-lib-sgml", $file;
+	    tag 'file-in-usr-lib-sgml', $file;
 	}
 	# ---------------- perllocal.pod
 	elsif ($file =~ m,^usr/lib/perl.*/perllocal.pod$,) {
-	    tag "package-installs-perllocal-pod", "$file";
+	    tag 'package-installs-perllocal-pod', "$file";
 	}
 	# ---------------- .packlist files
 	elsif ($file =~ m,^usr/lib/perl.*/.packlist$,) {
-	    tag "package-installs-packlist", "$file";
+	    tag 'package-installs-packlist', "$file";
 	}
 	elsif ($file =~ m,^usr/lib/perl5/.*\.(?:pl|pm)$,) {
 	    push @nonbinary_perl_files_in_lib, $file;
@@ -479,15 +480,15 @@ foreach my $file (@{$info->sorted_index}) {
 	# ---------------- /usr/lib -- needs to go after the other usr/lib/*
 	elsif ($file =~ m,^usr/lib/,) {
 	    if ($type ne 'udeb' and $file =~ m,\.(?:bmp|gif|jpeg|jpg|png|tiff|xpm|xbm)$, and not defined $link) {
-		tag "image-file-in-usr-lib", "$file"
+		tag 'image-file-in-usr-lib', "$file"
 	    }
 	}
 	# ---------------- /usr/local
 	elsif ($file =~ m,^usr/local/\S+,) {
 	    if ($index_info->{type} =~ m/^d/) {
-		tag "dir-in-usr-local", "$file";
+		tag 'dir-in-usr-local', "$file";
 	    } else {
-		tag "file-in-usr-local", "$file";
+		tag 'file-in-usr-local', "$file";
 	    }
 	}
 	# ---------------- /usr/share/applications
@@ -497,14 +498,14 @@ foreach my $file (@{$info->sorted_index}) {
 	# ---------------- /usr/share/man and /usr/X11R6/man
 	elsif ($file =~ m,^usr/X11R6/man/\S+, or $file =~ m,^usr/share/man/\S+,) {
 	    if ($type eq 'udeb') {
-		tag "documentation-file", "$file";
+		tag 'documentation-file', "$file";
 	    }
 	    if ($index_info->{type} =~ m/^d/) {
-		tag "stray-directory-in-manpage-directory", "$file"
+		tag 'stray-directory-in-manpage-directory', "$file"
 		    if ($file !~ m,^usr/(?:X11R6|share)/man/(?:[^/]+/)?(?:man\d/)?$,);
 	    } elsif ($index_info->{type} =~ m,^[-h], and
 		($operm & 01 or $operm & 010 or $operm & 0100)) {
-		tag "executable-manpage", "$file";
+		tag 'executable-manpage', "$file";
 	    }
 	}
 	# ---------------- /usr/share/fonts/X11
@@ -522,7 +523,7 @@ foreach my $file (@{$info->sorted_index}) {
 	# ---------------- /usr/share/info
 	elsif ($file =~ m,^usr/share/info\S+,) {
 	    if ($type eq 'udeb') {
-		tag "documentation-file", "$file";
+		tag 'documentation-file', "$file";
 	    }
 	    if ($file =~ m,^usr/share/info/dir(?:\.old)?(?:\.gz)?$,) {
 		tag 'package-contains-info-dir-file', $file;
@@ -530,7 +531,7 @@ foreach my $file (@{$info->sorted_index}) {
 	}
 	# ---------------- /usr/share/linda/overrides
 	elsif ($file =~ m,^usr/share/linda/overrides/\S+,) {
-	    tag "package-contains-linda-override", $file;
+	    tag 'package-contains-linda-override', $file;
 	}
 	# ---------------- /usr/share/mime
 	elsif ($file =~ m,^usr/share/mime/[^/]+$,) {
@@ -539,19 +540,19 @@ foreach my $file (@{$info->sorted_index}) {
 	# ---------------- /usr/share
 	elsif ($file =~ m,^usr/share/[^/]+$,) {
 	    if ($index_info->{type} =~ m/^[-h]/) {
-		tag "file-directly-in-usr-share", "$file";
+		tag 'file-directly-in-usr-share', "$file";
 	    }
 	}
         # ---------------- /usr/bin
 	elsif ($file =~ m,^usr/bin/,) {
 	    if ($index_info->{type} =~ m/^d/ and $file =~ m,^usr/bin/., and $file !~ m,^usr/bin/(?:X11|mh)/,) {
-		tag "subdir-in-usr-bin", "$file";
+		tag 'subdir-in-usr-bin', "$file";
 	    }
 	}
 	# ---------------- /usr subdirs
 	elsif ($type ne 'udeb' and $file =~ m,^usr/[^/]+/$,) { # FSSTND dirs
 	    if ( $file =~ m,^usr/(?:dict|doc|etc|info|man|adm|preserve)/,) {
-		tag "FSSTND-dir-in-usr", "$file";
+		tag 'FSSTND-dir-in-usr', "$file";
 	    }
 	    # FHS dirs
 	    elsif ($file !~ m,^usr/(?:X11R6|X386|
@@ -559,9 +560,9 @@ foreach my $file (@{$info->sorted_index}) {
 				    lib|lib32|lib64|
 				    local|sbin|share|
 				    src|spool|tmp)/,x) {
-		tag "non-standard-dir-in-usr", "$file";
+		tag 'non-standard-dir-in-usr', "$file";
 	    } elsif ($file =~ m,^usr/share/doc,) {
-		tag "uses-FHS-doc-dir", "$file";
+		tag 'uses-FHS-doc-dir', "$file";
 	    }
 
 	    # unless $file =~ m,^usr/[^/]+-linuxlibc1/,; was tied into print
@@ -580,7 +581,7 @@ foreach my $file (@{$info->sorted_index}) {
 	# KDE hasn't moved its files from /usr/share/applnk, so don't warn
 	# about this yet until KDE adopts the new location.
 	elsif ($file =~ m,^usr/share/gnome/apps/.*\.desktop$,) {
-	    tag "desktop-file-in-wrong-dir", $file;
+	    tag 'desktop-file-in-wrong-dir', $file;
 	}
 
 	# ---------------- png files under /usr/share/apps/*/icons/*
@@ -594,13 +595,13 @@ foreach my $file (@{$info->sorted_index}) {
 	# ---------------- non-games-specific data in games subdirectory
 	elsif ($file =~ m,^usr/share/games/(?:applications|mime|icons|pixmaps)/,
 	       and $index_info->{type} !~ m/^d/) {
-	    tag "global-data-in-games-directory", $file;
+	    tag 'global-data-in-games-directory', $file;
 	}
     }
     # ---------------- /var subdirs
     elsif ($type ne 'udeb' and $file =~ m,^var/[^/]+/$,) { # FSSTND dirs
 	if ( $file =~ m,^var/(?:adm|catman|named|nis|preserve)/, ) {
-	    tag "FSSTND-dir-in-var", "$file";
+	    tag 'FSSTND-dir-in-var', "$file";
 	}
 	# base-files is special
 	elsif ($pkg eq 'base-files' && $file =~ m,^var/(?:backups|local)/,) {
@@ -608,29 +609,29 @@ foreach my $file (@{$info->sorted_index}) {
 	}
 	# FHS dirs with exception in Debian policy
 	elsif ( $file !~ m,^var/(?:account|lib|cache|crash|games|lock|log|opt|run|spool|state|tmp|www|yp)/,) {
-	    tag "non-standard-dir-in-var", "$file";
+	    tag 'non-standard-dir-in-var', "$file";
 	}
     }
     elsif ($type ne 'udeb' and $file =~ m,^var/lib/games/.,) {
-	tag "non-standard-dir-in-var", "$file";
+	tag 'non-standard-dir-in-var', "$file";
     }
     # ---------------- /var/lock, /var/run
     elsif ($type ne 'udeb' and $file =~ m,^var/lock/.,) {
-	tag "dir-or-file-in-var-lock", "$file";
+	tag 'dir-or-file-in-var-lock', "$file";
     }
     elsif ($type ne 'udeb' and $file =~ m,^var/run/.,) {
-	tag "dir-or-file-in-var-run", "$file";
+	tag 'dir-or-file-in-var-run', "$file";
     }
     # ---------------- /var/www
     # Packages are allowed to create /var/www since it's historically been the
     # default document root, but they shouldn't be installing stuff under that
     # directory.
     elsif ($file =~ m,^var/www/\S+,) {
-	tag "dir-or-file-in-var-www", $file;
+	tag 'dir-or-file-in-var-www', $file;
     }
     # ---------------- /opt
     elsif ($file =~ m,^opt/.,) {
-	tag "dir-or-file-in-opt", "$file";
+	tag 'dir-or-file-in-opt', "$file";
     }
     elsif ($file =~ m,^hurd/.,) {
 	next;
@@ -639,21 +640,21 @@ foreach my $file (@{$info->sorted_index}) {
     }
     # ---------------- /tmp, /var/tmp, /usr/tmp
     elsif ($file =~ m,^tmp/., or $file =~ m,^(?:var|usr)/tmp/.,) {
-	tag "dir-or-file-in-tmp", "$file";
+	tag 'dir-or-file-in-tmp', "$file";
     }
     # ---------------- /mnt
     elsif ($file =~ m,^mnt/.,) {
-	tag "dir-or-file-in-mnt", "$file";
+	tag 'dir-or-file-in-mnt', "$file";
     }
     # ---------------- /bin
     elsif ($file =~ m,^bin/,) {
 	if ($index_info->{type} =~ m/^d/ and $file =~ m,^bin/.,) {
-	    tag "subdir-in-bin", "$file";
+	    tag 'subdir-in-bin', "$file";
 	}
     }
     # ---------------- /srv
     elsif ($file =~ m,^srv/.,) {
-	tag "dir-or-file-in-srv", "$file";
+	tag 'dir-or-file-in-srv', "$file";
     }
     # ---------------- FHS directory?
     elsif ($file =~ m,^[^/]+/$, and $file ne './' and
@@ -665,7 +666,7 @@ foreach my $file (@{$info->sorted_index}) {
 	#
 	# Also make an exception for /emul, which is used for multiarch
 	# support in Debian at the moment.
-	tag "non-standard-toplevel-dir", "$file"
+	tag 'non-standard-toplevel-dir', "$file"
 	    unless $pkg eq 'base-files'
 		or $pkg eq 'hurd'
 		or $pkg eq 'hurd-udeb'
@@ -677,12 +678,12 @@ foreach my $file (@{$info->sorted_index}) {
     if ($file =~ m,^usr/(?:spool|tmp)/, or
 	$file =~ m,^usr/(?:doc|bin)/X11/, or
 	$file =~ m,^var/adm/,) {
-	tag "use-of-compat-symlink", "$file";
+	tag 'use-of-compat-symlink', "$file";
     }
 
     # ---------------- .ali files (Ada Library Information)
     if ($file =~ m,^usr/lib/.*\.ali$, && $operm != 0444) {
-	tag "bad-permissions-for-ali-file", "$file";
+	tag 'bad-permissions-for-ali-file', "$file";
     }
 
     # ---------------- any files
@@ -699,7 +700,7 @@ foreach my $file (@{$info->sorted_index}) {
 		or $file =~ m,^usr/iraf/,
 		# not allowed, but tested indivudually
 		or $file =~ m,^(?:mnt|opt|srv|(?:(?:usr|var)/)?tmp)|var/www/,) {
-	    tag "file-in-unusual-dir", "$file";
+	    tag 'file-in-unusual-dir', "$file";
 	}
     }
 
@@ -715,12 +716,12 @@ foreach my $file (@{$info->sorted_index}) {
 
     # ---------------- .pyc (compiled python files
     if ($file =~ m,^usr/lib/python\d\.\d/.*.pyc$,) {
-	tag "package-installs-python-pyc", "$file"
+	tag 'package-installs-python-pyc', "$file"
     }
 
     # ---------------- /usr/lib/site-python
     if ($file =~ m,^usr/lib/site-python/\S,) {
-	tag "file-in-usr-lib-site-python", "$file";
+	tag 'file-in-usr-lib-site-python', "$file";
     }
 
     # ---------------- pythonX.Y extensions
@@ -734,7 +735,7 @@ foreach my $file (@{$info->sorted_index}) {
 		$is_python = 1 if /^python(?:\d\.\d)?(?:$|\s)/;
 	    }
 	}
-	tag "third-party-package-in-python-dir", "$file"
+	tag 'third-party-package-in-python-dir', "$file"
 	    unless $is_python;
     }
     # ---------------- perl modules
@@ -747,7 +748,7 @@ foreach my $file (@{$info->sorted_index}) {
                $is_perl = 1 if /^perl(?:$|\s)/;
            }
        }
-       tag "perl-module-in-core-directory", "$file"
+       tag 'perl-module-in-core-directory', "$file"
            unless $is_perl;
     }
 
@@ -773,12 +774,12 @@ foreach my $file (@{$info->sorted_index}) {
 	# Ignore extra license files in examples, since various package
 	# building software includes example packages with licenses.
 	and ($operm & 0111) == 0
-	and not $file =~ m/\.(?:el|c|h|py|cc|pl|pm|hi|p_hi|html|php|rb|xpm|png|jpe?g|gif|svg|dtd|ui)$/
+	and not $file =~ m/\.(?:el|[ch]|py|cc|pl|pm|hi|p_hi|html|php|rb|xpm|png|jpe?g|gif|svg|dtd|ui)$/
 	and not $file =~ m,^usr/share/zope/Products/.*\.(?:dtml|pt|cpt)$,
 	and not $file =~ m,/under\S+License\.docbook$,
 	and not $file =~ m,^usr/share/doc/[^/]+/examples/,
 	and not defined $link) {
-	tag "extra-license-file", "$file";
+	tag 'extra-license-file', "$file";
     }
 
     # ---------------- .devhelp2? files
@@ -792,23 +793,23 @@ foreach my $file (@{$info->sorted_index}) {
 
     # ---------------- weird file names
     if ($file =~ m,\s+\z,) {
-	tag "file-name-ends-in-whitespace", "$file";
+	tag 'file-name-ends-in-whitespace', "$file";
     }
     if ($file =~ m,/\*\z,) {
-	tag "star-file", $file;
+	tag 'star-file', $file;
     }
 
     # ---------------- misplaced lintian overrides
     my $tmp = quotemeta($pkg);
     if ($file =~ m,^usr/share/doc/$tmp/override\.[lL]intian(?:\.gz)?$, or
 	$file =~ m,^usr/share/lintian/overrides/$tmp/.+,) {
-	tag "override-file-in-wrong-location", "$file";
+	tag 'override-file-in-wrong-location', "$file";
     }
 
     # ---------------- pyshared-data
     if ($file =~ m,^usr/share/pyshared-data/$tmp$,){
 	my $dep = Lintian::Relation->new($info->field('depends')//'');
-	tag "missing-dependency-on-python-central" unless ($dep->implies('python-central (>= 0.6)'));
+	tag 'missing-dependency-on-python-central' unless ($dep->implies('python-central (>= 0.6)'));
     }
 
     # ---------------- python file locations
@@ -839,7 +840,6 @@ foreach my $file (@{$info->sorted_index}) {
 	    }
 	} elsif ($pmaj == 3){
 	    # python 3. Everything must be in python3/dist-... and not python3.X/<something>
-	    my @files;
 	    if ($pyver ne '3' or $loc ne 'dist'){
 		# bad mojo
 		@correction = ("${debug}usr/lib/python${pyver}/$loc-packages/$rest",
@@ -852,68 +852,67 @@ foreach my $file (@{$info->sorted_index}) {
 			       "${debug}usr/lib/python${pyver}/dist-packages/$rest");
 	    }
 	}
-	tag "python-module-in-wrong-location", @correction if (@correction);
+	tag 'python-module-in-wrong-location', @correction if (@correction);
     }
 
     # ---------------- plain files
     if ($index_info->{type} =~ m/^[-h]/) {
-	my $wanted_operm;
 	# ---------------- backup files and autosave files
 	if ($file =~ /~$/ or $file =~ m,\#[^/]+\#$, or $file =~ m,/\.[^/]+\.swp$,) {
-	    tag "backup-file-in-package", "$file";
+	    tag 'backup-file-in-package', "$file";
 	}
 	if ($file =~ m,/\.nfs[^/]+$,) {
-	    tag "nfs-temporary-file-in-package", "$file";
+	    tag 'nfs-temporary-file-in-package', "$file";
 	}
 
 	# ---------------- vcs control files
 	if ($file =~ m/\.(?:(?:cvs|git|hg)ignore|arch-inventory|hgtags|hg_archival\.txt)$/) {
-	    tag "package-contains-vcs-control-file", "$file";
+	    tag 'package-contains-vcs-control-file', "$file";
 	}
 
 	# ---------------- subversion and svk commit message backups
 	if ($file =~ m/svn-commit.*\.tmp$/) {
-	    tag "svn-commit-file-in-package", "$file";
+	    tag 'svn-commit-file-in-package', "$file";
 	}
 	if ($file =~ m/svk-commit.+\.tmp$/) {
-	    tag "svk-commit-file-in-package", "$file";
+	    tag 'svk-commit-file-in-package', "$file";
 	}
 
 	# ---------------- executables with language extensions
 	if ($file =~ m,^(?:usr/)?(?:s?bin|games)/[^/]+\.(?:pl|sh|py|php|rb|tcl|bsh|csh|tcl)$,) {
-	    tag "script-with-language-extension", "$file";
+	    tag 'script-with-language-extension', "$file";
 	}
 
 	# ---------------- Devel files for Windows
 	if ($file =~ m,/.+\.(?:vcproj|sln|dsp|dsw)(?:\.gz)?$,
 	    and $file !~ m,^usr/share/doc/,) {
-	    tag "windows-devel-file-in-package", "$file";
+	    tag 'windows-devel-file-in-package', "$file";
 	}
 
 	# ---------------- Autogenerated databases from other OSes
 	if ($file =~ m,/Thumbs\.db(?:\.gz)?$,i) {
-	    tag "windows-thumbnail-database-in-package", "$file";
+	    tag 'windows-thumbnail-database-in-package', "$file";
 	}
 	if ($file =~ m,/\.DS_Store(?:\.gz)?$,) {
-	    tag "macos-ds-store-file-in-package", "$file";
+	    tag 'macos-ds-store-file-in-package', "$file";
 	}
 	if ($file =~ m,/\._[^_/][^/]*$, and $file !~ m/\.swp$/) {
-	    tag "macos-resource-fork-file-in-package", "$file";
+	    tag 'macos-resource-fork-file-in-package', "$file";
 	}
 
 	# ---------------- embedded Javascript libraries
 	foreach my $jslibrary (@jslibraries) {
 	    if ($file =~ m,/$jslibrary->[0], and $pkg !~ m,^$jslibrary->[1]$,) {
-		tag "embedded-javascript-library", "$file";
+		tag 'embedded-javascript-library', "$file";
 	    }
 	}
 
 	# ---------------- embedded Feedparser library
-	if ($file =~ m,/feedparser\.py$, and $pkg ne "python-feedparser") {
+	if ($file =~ m,/feedparser\.py$, and $pkg ne 'python-feedparser') {
 	    open(FEEDPARSER, '<', "unpacked/$file") or fail("cannot open feedparser.py file: $!");
 	    while (<FEEDPARSER>) {
 		if (m,Universal feed parser,) {
-		    tag "embedded-feedparser-library", "$file";
+		    tag 'embedded-feedparser-library', "$file";
 		    last;
 		}
 	    }
@@ -926,7 +925,7 @@ foreach my $file (@{$info->sorted_index}) {
 		open (PEAR, '<', "unpacked/$file") or fail("cannot open PHP file: $!");
 		while (<PEAR>) {
 		    if (m,/pear[/.],i) {
-			tag "embedded-pear-module", "$file";
+			tag 'embedded-pear-module', "$file";
 			last;
 		    }
 		}
@@ -937,7 +936,7 @@ foreach my $file (@{$info->sorted_index}) {
 	# ---------------- embedded php libraries
 	foreach my $phplibrary (@phplibraries) {
 	    if ($file =~ m,/$phplibrary->[0], and $pkg ne $phplibrary->[1]) {
-		tag "embedded-php-library", "$file";
+		tag 'embedded-php-library', "$file";
 	    }
 	}
 
@@ -958,7 +957,7 @@ foreach my $file (@{$info->sorted_index}) {
 	foreach my $flash (@flash_nonfree) {
 	    last if ($pkg_section =~ m,^non-free/,);
 	    if ($file =~ m,/$flash,) {
-		tag "non-free-flash", $file;
+		tag 'non-free-flash', $file;
 	    }
 	}
 
@@ -966,7 +965,7 @@ foreach my $file (@{$info->sorted_index}) {
 	if ($file =~ m/\.gz$/) {
 	    my $info = $info->file_info->{$file} || '';
 	    if ($info !~ m/gzip compressed/) {
-		tag "gz-file-not-gzip", "$file";
+		tag 'gz-file-not-gzip', "$file";
 	    }
 	}
 
@@ -978,7 +977,7 @@ foreach my $file (@{$info->sorted_index}) {
 
 	# ---------------- general: setuid/setgid files!
 	if ($operm & 04000 or $operm & 02000) {
-	    my ($setuid, $setgid) = ("","");
+	    my ($setuid, $setgid) = ('','');
 	    # get more info:
 	    $setuid = $index_info->{owner} if ($operm & 04000);
 	    $setgid = $index_info->{group} if ($operm & 02000);
@@ -992,7 +991,7 @@ foreach my $file (@{$info->sorted_index}) {
 	    }
 
 	    # 2nd special case: program is a setgid game
-	    if ($file =~ m,usr/lib/games/\S+, or $file =~ m,usr/games/\S+,) {
+	    if ($file =~ m,^usr/lib/games/\S+, or $file =~ m,^usr/games/\S+,) {
 		# setgid games is ok, so remove it
 		if ($setgid eq 'games') {
 		    undef $setgid;
@@ -1006,37 +1005,37 @@ foreach my $file (@{$info->sorted_index}) {
 
 	    # Check for setuid and setgid that isn't expected.
 	    if ($setuid and $setgid) {
-		tag "setuid-gid-binary", $file, sprintf("%04o %s",$operm,$owner);
+		tag 'setuid-gid-binary', $file, sprintf('%04o %s',$operm,$owner);
 	    } elsif ($setuid) {
-		tag "setuid-binary", $file, sprintf("%04o %s",$operm,$owner);
+		tag 'setuid-binary', $file, sprintf('%04o %s',$operm,$owner);
 	    } elsif ($setgid) {
-		tag "setgid-binary", $file, sprintf("%04o %s",$operm,$owner);
+		tag 'setgid-binary', $file, sprintf('%04o %s',$operm,$owner);
 	    }
 
 	    # Check for permission problems other than the setuid status.
 	    if (($operm & 0444) != 0444) {
-		tag "executable-is-not-world-readable", $file,
-		    sprintf("%04o",$operm);
+		tag 'executable-is-not-world-readable', $file,
+		    sprintf('%04o',$operm);
 	    } elsif ($operm != 04755 && $operm != 02755 && $operm != 06755 && $operm != 04754) {
-		tag "non-standard-setuid-executable-perm", $file,
-		    sprintf("%04o",$operm);
+		tag 'non-standard-setuid-executable-perm', $file,
+		    sprintf('%04o',$operm);
 	    }
 	}
 	# ---------------- general: executable files
 	elsif ($operm & 01 or $operm & 010 or $operm & 0100) {
 	    # executable
-	    if ($owner =~ m,root/games,) {
+	    if ($owner eq 'root/games') {
 		if ($operm != 2755) {
-		    tag "non-standard-game-executable-perm", $file,
-			sprintf("%04o != 2755",$operm);
+		    tag 'non-standard-game-executable-perm', $file,
+			sprintf('%04o != 2755',$operm);
 	    	}
 	    } else {
 		if (($operm & 0444) != 0444) {
-		    tag "executable-is-not-world-readable", $file,
-			sprintf("%04o",$operm);
+		    tag 'executable-is-not-world-readable', $file,
+			sprintf('%04o',$operm);
 		} elsif ($operm != 0755) {
-		    tag "non-standard-executable-perm", $file,
-			sprintf("%04o != 0755",$operm);
+		    tag 'non-standard-executable-perm', $file,
+			sprintf('%04o != 0755',$operm);
 		}
 	    }
 	}
@@ -1044,20 +1043,20 @@ foreach my $file (@{$info->sorted_index}) {
 	else {
 	    # not executable
 	    # special case first: game data
-	    if ($operm == 0664 and $owner =~ m,root/games, and
-		$file =~ m,var/(lib/)?games/\S+,) {
+	    if ($operm == 0664 and $owner eq 'root/games' and
+		$file =~ m,^var/(lib/)?games/\S+,) {
 		# everything is ok
-	    } elsif ($operm == 0444 and $file =~ m,usr/lib/.*\.ali$,) {
+	    } elsif ($operm == 0444 and $file =~ m,^usr/lib/.*\.ali$,) {
 		# Ada library information files should be read-only
 		# since GNAT behaviour depends on that
 		# everything is ok
-	    } elsif ($operm == 0600 and $file =~ m,etc/backup.d/,) {
+	    } elsif ($operm == 0600 and $file =~ m,^etc/backup.d/,) {
 		# backupninja expects configurations files to be 0600
-	    } elsif ($operm == 0440 and $file =~ m,etc/sudoers.d/,) {
+	    } elsif ($operm == 0440 and $file =~ m,^etc/sudoers.d/,) {
 		# sudo recommends sudoers files be mode 0440
 	    } elsif ($operm != 0644) {
-		tag "non-standard-file-perm", $file,
-		    sprintf("%04o != 0644",$operm);
+		tag 'non-standard-file-perm', $file,
+		    sprintf('%04o != 0644',$operm);
 	    }
 	}
     }
@@ -1065,7 +1064,7 @@ foreach my $file (@{$info->sorted_index}) {
     elsif ($index_info->{type} =~ m/^d/) {
 	# special cases first:
         # game directory with setgid bit
-	if ($file =~ m,var/(?:lib/)?games/\S+, and $operm == 02775
+	if ($file =~ m,^var/(?:lib/)?games/\S+, and $operm == 02775
             and $owner eq 'root/games') {
             # do nothing, this is allowed, but not mandatory
         }
@@ -1084,27 +1083,27 @@ foreach my $file (@{$info->sorted_index}) {
 	}
 	# otherwise, complain if it's not 0755.
 	elsif ($operm != 0755) {
-	    tag "non-standard-dir-perm", $file,
-		sprintf("%04o != 0755", $operm);
+	    tag 'non-standard-dir-perm', $file,
+		sprintf('%04o != 0755', $operm);
 	}
 	if ($file =~ m,/CVS/?$,) {
-	    tag "package-contains-vcs-control-dir", "$file";
+	    tag 'package-contains-vcs-control-dir', "$file";
 	}
 	if ($file =~ m,/\.(?:svn|bzr|git|hg)/?$,) {
-	    tag "package-contains-vcs-control-dir", "$file";
+	    tag 'package-contains-vcs-control-dir', "$file";
 	}
 	if (($file =~ m,/\.arch-ids/?$,)
 	    || ($file =~ m,/\{arch\}/?$,)) {
-	    tag "package-contains-vcs-control-dir", "$file";
+	    tag 'package-contains-vcs-control-dir', "$file";
 	}
 	if ($file =~ m,/\.(?:be|ditrack)/?$,) {
-	    tag "package-contains-bts-control-dir", "$file";
+	    tag 'package-contains-bts-control-dir', "$file";
 	}
 	if ($file =~ m,/.xvpics/?$,) {
-	    tag "package-contains-xvpics-dir", "$file";
+	    tag 'package-contains-xvpics-dir', "$file";
 	}
 	if ($file =~ m,usr/share/doc/[^/]+/examples/examples/?$,) {
-	    tag "nested-examples-directory", "$file";
+	    tag 'nested-examples-directory', "$file";
 	}
 	if ($file =~ m,^usr/share/locale/([^/]+)/$,) {
 	    # Without encoding:
@@ -1141,10 +1140,10 @@ foreach my $file (@{$info->sorted_index}) {
 
 	my $mylink = $link;
 	if ($mylink =~ s,//+,/,g) {
-	    tag "symlink-has-double-slash", "$file $link";
+	    tag 'symlink-has-double-slash', "$file $link";
 	}
 	if ($mylink =~ s,(.)/$,$1,) {
-	    tag "symlink-ends-with-slash", "$file $link";
+	    tag 'symlink-ends-with-slash', "$file $link";
 	}
 
 	# determine top-level directory of file
@@ -1153,18 +1152,16 @@ foreach my $file (@{$info->sorted_index}) {
 
 	if ($mylink =~ m,^/([^/]*),) {
 	    # absolute link, including link to /
-
 	    # determine top-level directory of link
-	    $mylink =~ m,^/([^/]*),;
 	    my $linktop = $1;
 
 	    if ($type ne 'udeb' and $filetop eq $linktop) {
 		# absolute links within one toplevel directory are _not_ ok!
-		tag "symlink-should-be-relative", "$file $link";
+		tag 'symlink-should-be-relative', "$file $link";
 	    }
 
 	    # Any other case is already definitely non-recursive
-	    tag "symlink-is-self-recursive", "$file $link"
+	    tag 'symlink-is-self-recursive', "$file $link"
 	    	if $mylink eq '/';
 
 	} else {
@@ -1182,7 +1179,7 @@ foreach my $file (@{$info->sorted_index}) {
 	    my $linkcomponent = undef;
 	    while ($linkcomponent = shift @linkcomponents) {
 		if ($linkcomponent eq '.') {
-		    tag "symlink-contains-spurious-segments", "$file $link"
+		    tag 'symlink-contains-spurious-segments', "$file $link"
 		    	unless $mylink eq '.';
 		    next;
 		}
@@ -1190,14 +1187,14 @@ foreach my $file (@{$info->sorted_index}) {
 		if (@filecomponents) {
 		    $lastpop = pop @filecomponents;
 		} else {
-		    tag "symlink-has-too-many-up-segments", "$file $link";
+		    tag 'symlink-has-too-many-up-segments', "$file $link";
 		    goto NEXT_LINK;
 		}
 	    }
 
 	    if (!defined $linkcomponent) {
 		# After stripping all starting .. components, nothing left
-		tag "symlink-is-self-recursive", "$file $link";
+		tag 'symlink-is-self-recursive', "$file $link";
 	    }
 
 	    # does the link go up and then down into the same directory?
@@ -1205,55 +1202,55 @@ foreach my $file (@{$info->sorted_index}) {
 	    # means the symlink doesn't get up anymore)
 	    if (defined $lastpop && defined $linkcomponent &&
 		$linkcomponent eq $lastpop) {
-		tag "lengthy-symlink", "$file $link";
+		tag 'lengthy-symlink', "$file $link";
 	    }
 
 	    if ($#filecomponents == -1) {
 		# we've reached the root directory
-		if (($type ne 'udeb') 
+		if (($type ne 'udeb')
 		    && (!defined $linkcomponent)
 		    || ($filetop ne $linkcomponent)) {
 		    # relative link into other toplevel directory.
 		    # this hits a relative symbolic link in the root too.
-		    tag "symlink-should-be-absolute", "$file $link";
+		    tag 'symlink-should-be-absolute', "$file $link";
 		}
 	    }
 
 	    # check additional segments for mistakes like `foo/../bar/'
 	    foreach (@linkcomponents) {
 		if ($_ eq '..' || $_ eq '.') {
-		    tag "symlink-contains-spurious-segments", "$file $link";
+		    tag 'symlink-contains-spurious-segments', "$file $link";
 		    last;
 		}
 	    }
 	}
     NEXT_LINK:
 
-	if ($link =~ m,\.(gz|z|Z|bz|bz2|tgz|zip)\s*$,) {
+	if ($link =~ m,\.(gz|[zZ]|bz|bz2|tgz|zip)\s*$,) {
 	    # symlink is pointing to a compressed file
 
 	    # symlink has correct extension?
 	    unless ($file =~ m,\.$1\s*$,) {
-		tag "compressed-symlink-with-wrong-ext", "$file $link";
+		tag 'compressed-symlink-with-wrong-ext', "$file $link";
 	    }
 	}
     }
     # ---------------- special files
     else {
 	# special file
-	tag "special-file", $file, sprintf("%04o",$operm);
+	tag 'special-file', $file, sprintf('%04o',$operm);
     }
 }
 
 # Check for section games but nothing in /usr/games.  Check for any binary to
 # save ourselves from game-data false positives:
-my $games = dir_counts($info, "usr/games/");
-my $other = dir_counts($info, "bin/") + dir_counts($info, "usr/bin/");
+my $games = dir_counts($info, 'usr/games/');
+my $other = dir_counts($info, 'bin/') + dir_counts($info, 'usr/bin/');
 if ($pkg_section =~ m,games$, and $games == 0 and $other > 0) {
-    tag "package-section-games-but-contains-no-game";
+    tag 'package-section-games-but-contains-no-game';
 }
 if ($pkg_section =~ m,games$, and $games > 0 and $other > 0) {
-    tag "package-section-games-but-has-usr-bin";
+    tag 'package-section-games-but-has-usr-bin';
 }
 if ($pkg_section !~ m,games$, and $games > 0 and $other == 0) {
     tag 'games-package-should-be-section-games';
@@ -1271,13 +1268,13 @@ if ($pkg_section !~ m,games$, and $games > 0 and $other == 0) {
 # python-support needs a directory for each package even it might be empty
 if($pkg ne 'base-files'){
     foreach my $dir (@{$info->sorted_index}) {
-	next if $dir eq "" or $info->index->{$dir}->{type} ne 'd';
+	next if $dir eq '' or $info->index->{$dir}->{type} ne 'd';
 	next if ($dir =~ m{^var/} or $dir =~ m{^etc/});
 	if (dir_counts($info, $dir) == 0) {
 	    if ($dir ne 'usr/lib/perl5/'
 		and $dir ne 'usr/share/perl5/'
 		and $dir !~ m;^usr/share/python-support/;) {
-		tag "package-contains-empty-directory", $dir;
+		tag 'package-contains-empty-directory', $dir;
 	    }
 	}
     }
@@ -1285,7 +1282,7 @@ if($pkg ne 'base-files'){
 
 if (!$has_binary_perl_file && @nonbinary_perl_files_in_lib) {
     foreach my $file (@nonbinary_perl_files_in_lib) {
-	tag "package-installs-nonbinary-perl-in-usr-lib-perl5", "$file";
+	tag 'package-installs-nonbinary-perl-in-usr-lib-perl5', "$file";
     }
 }
 
