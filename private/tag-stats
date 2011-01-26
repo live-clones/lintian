@@ -33,7 +33,6 @@ my @types = qw(E W I P);
 
 my %stats;
 my $num_tags = 0;
-my %num_code;
 my $num_ok = 0;
 my $percent = 0;
 
@@ -83,14 +82,14 @@ print "Severity\n";
 foreach my $s (@severities) {
     my $tags = $stats{severity}{$s};
     print "  $s: " . @{$tags} . "\n";
-    print "    " . join("\n    ", sort @{$tags}) . "\n" if $verbose >= 3;
+    print '    ' . join("\n    ", sort @{$tags}) . "\n" if $verbose >= 3;
 }
 
 print "\nCertainty\n";
 foreach my $c (@certainties) {
     my $tags = $stats{certainty}{$c};
     print "  $c: " . @{$tags} . "\n";
-    print "    " . join("\n    ", sort @{$tags}) . "\n" if $verbose >= 3;
+    print '    ' . join("\n    ", sort @{$tags}) . "\n" if $verbose >= 3;
 }
 
 print "\nSeverity/Certainty\n";
@@ -98,7 +97,7 @@ foreach my $s (@severities) {
     foreach my $c (@certainties) {
         if (my $tags = $stats{both}{$s}{$c}) {
             print "  $s/$c: " . @{$tags} . "\n";
-            print "    " . join("\n    ", sort @{$tags}) . "\n"
+            print '    ' . join("\n    ", sort @{$tags}) . "\n"
                 if $verbose >= 2;
         }
     }
@@ -109,7 +108,7 @@ foreach my $t (@types) {
     foreach my $s (@severities) {
         if (my $tags = $stats{type}{severity}{$t}{$s}) {
             print "  $s: " . @{$tags} . "\n";
-            print "    " . join("\n    ", sort @{$tags}) . "\n"
+            print '    ' . join("\n    ", sort @{$tags}) . "\n"
                 if $verbose >= 2;
         }
     }
@@ -121,7 +120,7 @@ foreach my $t (@types) {
         foreach my $c (@certainties) {
             if (my $tags = $stats{type}{both}{$t}{$s}{$c}) {
                 print "  $s/$c: " . @{$tags} . "\n";
-                print "    " . join("\n    ", sort @{$tags}) . "\n"
+                print '    ' . join("\n    ", sort @{$tags}) . "\n"
                     if $verbose >= 1;
             }
         }
@@ -135,14 +134,14 @@ foreach my $s (@severities) {
             my $size = scalar keys %{$needs};
             my @list = sort keys %{$needs};
             print "  $s/$c: $size\n";
-            print "    " . join("\n    ", @list) . "\n" if $verbose >= 2;
+            print '    ' . join("\n    ", @list) . "\n" if $verbose >= 2;
         }
     }
 }
 
 if ($verbose >= 1 and exists $stats{severity}{unclassified}) {
     print "\nUnclassified tags\n";
-    print "  " . join("\n  ", @{$stats{severity}{unclassified}}) . "\n"
+    print '  ' . join("\n  ", @{$stats{severity}{unclassified}}) . "\n"
 }
 
 # Local Variables:
