@@ -20,6 +20,7 @@
 
 package Lintian::debian_source_dir;
 use strict;
+use warnings;
 
 use Lintian::Data;
 use Lintian::Tags qw(tag);
@@ -51,7 +52,7 @@ if (-d 'debfiles/source') {
     my $file;
     while ($file = readdir(DEBSRC)) {
         next if $file eq '.' or $file eq '..';
-        tag "unknown-file-in-debian-source", $file
+        tag 'unknown-file-in-debian-source', $file
             unless $KNOWN_FILES->known($file);
     }
     closedir(DEBSRC);

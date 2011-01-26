@@ -28,7 +28,7 @@ sub run {
 my $pkg = shift;
 my $type = shift;
 
-my $cf = "control/conffiles";
+my $cf = 'control/conffiles';
 
 # conffiles?
 unless (-f $cf) {
@@ -43,7 +43,7 @@ while (<IN>) {
     next if m/^\s*$/;
 
     unless (m,^/,) {
-	tag "relative-conffile", $_;
+	tag 'relative-conffile', $_;
 	$_ = '/' . $_;
     }
     my $file = $_;
@@ -51,14 +51,14 @@ while (<IN>) {
     $conffiles{$file}++;
 
     if ($conffiles{$file} > 1) {
-	tag "duplicate-conffile", $file;
+	tag 'duplicate-conffile', $file;
     }
 
     if (m,^/usr/,) {
-	tag "file-in-usr-marked-as-conffile", $file;
+	tag 'file-in-usr-marked-as-conffile', $file;
     } else {
 	unless (m,^/etc/,) {
-	    tag "non-etc-file-marked-as-conffile", $file;
+	    tag 'non-etc-file-marked-as-conffile', $file;
 	}
     }
 

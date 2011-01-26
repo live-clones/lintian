@@ -20,6 +20,8 @@
 
 package Lintian::debian_readme;
 use strict;
+use warnings;
+
 use Lintian::Check qw(check_spelling);
 use Lintian::Tags qw(tag);
 
@@ -27,10 +29,9 @@ sub run {
 
 my $pkg = shift;
 my $type = shift;
-my $readme = "";
-my $template;
+my $readme = '';
 
-if (open(IN, '<', "README.Debian")) {
+if (open(IN, '<', 'README.Debian')) {
     local $_;
     while (<IN>) {
         if (m,/usr/doc\b,) {
@@ -47,9 +48,9 @@ my @template =
      '<possible notes regarding this package - if none, delete this file>');
 my $regex = join ('|', @template);
 if ($readme =~ m/$regex/io) {
-    tag("readme-debian-contains-debmake-template");
+    tag 'readme-debian-contains-debmake-template';
 } elsif ($readme =~ m/^\s*-- [^<]*<[^> ]+.\@unknown>/m) {
-    tag("readme-debian-contains-debmake-default-email-address");
+    tag 'readme-debian-contains-debmake-default-email-address';
 }
 
 check_spelling('spelling-error-in-readme-debian', $readme, undef, { $pkg => 1 });

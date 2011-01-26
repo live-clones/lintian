@@ -24,6 +24,7 @@
 
 package Lintian::fields;
 use strict;
+use warnings;
 
 use lib "$ENV{'LINTIAN_ROOT'}/checks/";
 
@@ -187,7 +188,7 @@ my $info = shift;
 my $version;
 my $arch_indep;
 
-unless (-d "fields") {
+unless (-d 'fields') {
 	fail("directory in lintian laboratory for $type package $pkg missing: fields");
 }
 
@@ -209,58 +210,58 @@ if ($type eq 'source') {
 
 #---- Package
 
-if ($type eq "binary"){
+if ($type eq 'binary'){
 	if (not defined $info->field('package')) {
-		tag "no-package-name", "";
+		tag 'no-package-name';
 	} else {
 		my $name = $info->field('package');
 
-		unfold("package", \$name);
-		tag "bad-package-name", "" unless $name =~ /^[A-Z0-9][-+\.A-Z0-9]+$/i;
-		tag "package-not-lowercase", "" if ($name =~ /[A-Z]/)
+		unfold('package', \$name);
+		tag 'bad-package-name' unless $name =~ /^[A-Z0-9][-+\.A-Z0-9]+$/i;
+		tag 'package-not-lowercase' if ($name =~ /[A-Z]/)
 	}
 }
 
 #---- Version
 
 if (not defined $info->field('version')) {
-	tag "no-version-field", "";
+	tag 'no-version-field';
 } else {
 	$version = $info->field('version');
 
-	unfold("version", \$version);
+	unfold('version', \$version);
 
 	if (@_ = _valid_version($version)) {
 		my ($epoch, $upstream, $debian) = @_;
 		if ($upstream !~ /^\d/i) {
-			tag "upstream-version-not-numeric", "$version";
+			tag 'upstream-version-not-numeric', "$version";
 		}
 		if (defined $debian) {
-			tag "debian-revision-should-not-be-zero", "$version"
+			tag 'debian-revision-should-not-be-zero', "$version"
 				if $debian eq '-0';
 			my $ubuntu;
-			if($debian =~ /^-([^.]+)(?:\.[^.]+)?(?:\.[^.]+)?(\..*)?$/){
-			    my $extra = $2;
+			if($debian =~ /^-(?:[^.]+)(?:\.[^.]+)?(?:\.[^.]+)?(\..*)?$/){
+			    my $extra = $1;
 			    if (defined $extra) {
-				$debian =~ /^-([^.]+ubuntu[^.]+)(?:\.\d+){1,3}(\..*)?$/;
+				$debian =~ /^-(?:[^.]+ubuntu[^.]+)(?:\.\d+){1,3}(\..*)?$/;
 				$ubuntu = 1;
-				$extra = $2;
+				$extra = $1;
 			    }
-			    if (not defined $1 or defined $extra) {
-				tag "debian-revision-not-well-formed", "$version";
+			    if (defined $extra) {
+				tag 'debian-revision-not-well-formed', "$version";
 			    }
 			} else {
-			    tag "debian-revision-not-well-formed", "$version";
+			    tag 'debian-revision-not-well-formed', "$version";
 			}
 			if ($debian =~ /^-[^.-]+\.[^.-]+\./ and not $ubuntu) {
-				tag "binary-nmu-uses-old-version-style", "$version"
+				tag 'binary-nmu-uses-old-version-style', "$version"
 					if $type eq 'binary';
-				tag "binary-nmu-debian-revision-in-source", "$version"
+				tag 'binary-nmu-debian-revision-in-source', "$version"
 					if $type eq 'source';
 			}
 		}
-		if ($version =~ /\+b\d+$/ && $type eq "source") {
-			tag "binary-nmu-debian-revision-in-source", "$version";
+		if ($version =~ /\+b\d+$/ && $type eq 'source') {
+			tag 'binary-nmu-debian-revision-in-source', "$version";
 		}
 
 		# Checks for the dfsg convention for repackaged upstream
@@ -280,39 +281,39 @@ if (not defined $info->field('version')) {
 		if ($name && $PERL_CORE_PROVIDES->known($name) &&
 		    perl_core_has_version($name, '>=', $upstream)) {
 			my $core_version = $PERL_CORE_PROVIDES->value($name);
-			tag "package-superseded-by-perl", "with $core_version"
+			tag 'package-superseded-by-perl', "with $core_version"
 		}
 	} else {
-		tag "bad-version-number", "$version";
+		tag 'bad-version-number', "$version";
 	}
 }
 
 #---- Architecture
 
 if (not defined $info->field('architecture')) {
-	tag "no-architecture-field", "";
+	tag 'no-architecture-field';
 } else {
 	my $archs = $info->field('architecture');
 
-	unfold("architecture", \$archs);
+	unfold('architecture', \$archs);
 
 	my @archs = split / /, $archs;
 
-	if (@archs > 1 && grep { $_ eq "any" || ($type ne "source" && $_ eq "all") } @archs) {
-		tag "magic-arch-in-arch-list", "";
+	if (@archs > 1 && grep { $_ eq 'any' || ($type ne 'source' && $_ eq 'all') } @archs) {
+		tag 'magic-arch-in-arch-list';
 	}
 
 	for my $arch (@archs) {
-		tag "unknown-architecture", "$arch"
+		tag 'unknown-architecture', "$arch"
 		    unless $KNOWN_ARCHS->known($arch) || $ARCH_WILDCARDS{$arch};
-		tag "arch-wildcard-in-binary-package", "$arch"
+		tag 'arch-wildcard-in-binary-package', "$arch"
 		    if ($type eq 'binary' && $ARCH_WILDCARDS{$arch});
 	}
 
-	if ($type eq "binary") {
-		tag "too-many-architectures", "" if (@archs > 1);
-                tag "aspell-package-not-arch-all", ""
-                    if ($pkg =~ /^aspell-[a-z]{2}(-.*)?$/ && (@archs > 1 || $archs[0] ne 'all'));
+	if ($type eq 'binary') {
+		tag 'too-many-architectures' if (@archs > 1);
+                tag 'aspell-package-not-arch-all'
+                    if ($pkg =~ /^aspell-[a-z]{2}(?:-.*)?$/ && (@archs > 1 || $archs[0] ne 'all'));
 	}
 
 	# Used for later tests.
@@ -324,7 +325,7 @@ if (not defined $info->field('architecture')) {
 if (defined $info->field('subarchitecture')) {
 	my $subarch = $info->field('subarchitecture');
 
-	unfold("subarchitecture", \$subarch);
+	unfold('subarchitecture', \$subarch);
 }
 
 #---- Maintainer
@@ -332,7 +333,7 @@ if (defined $info->field('subarchitecture')) {
 
 for my $f (qw(maintainer uploaders)) {
 	if (not defined $info->field($f)) {
-		tag "no-maintainer-field", "" if $f eq "maintainer";
+		tag 'no-maintainer-field' if $f eq 'maintainer';
 	} else {
 		my $maintainer = $info->field($f);
 
@@ -340,11 +341,11 @@ for my $f (qw(maintainer uploaders)) {
 		# newlines for the .dsc, and the newlines don't hurt in debian/control
 		unfold($f, \$maintainer);
 
-		if ($f eq "uploaders") {
+		if ($f eq 'uploaders') {
 			my @uploaders = split /\s*,\s*/, $maintainer;
 			my %duplicate_uploaders;
 			for my $uploader (@uploaders) {
-			 	check_maintainer($uploader, "uploader");
+			    check_maintainer($uploader, 'uploader');
 				if ( ((grep { $_ eq $uploader } @uploaders) > 1) and
 				     ($duplicate_uploaders{$uploader}++ == 0)) {
 					tag 'duplicate-uploader', $uploader;
@@ -353,7 +354,7 @@ for my $f (qw(maintainer uploaders)) {
 		} else {
 			check_maintainer($maintainer, $f);
 			if ($type eq 'source'
-			    && $maintainer =~ /\@lists(\.alioth)?\.debian\.org\b/
+			    && $maintainer =~ /\@lists(?:\.alioth)?\.debian\.org\b/
 			    && ! defined $info->field('uploaders')) {
 				tag 'no-human-maintainers';
 			}
@@ -370,15 +371,15 @@ if (defined $info->field('uploaders') && defined $info->field('maintainer')) {
 #---- Source
 
 if (not defined $info->field('source')) {
-	tag "no-source-field" if $type eq "source";
+	tag 'no-source-field' if $type eq 'source';
 } else {
 	my $source = $info->field('source');
 
-	unfold("source", \$source);
+	unfold('source', \$source);
 
 	if ($type eq 'source') {
 		if ($source ne $pkg) {
-			tag "source-field-does-not-match-pkg-name", "$source != $pkg";
+			tag 'source-field-does-not-match-pkg-name', "$source != $pkg";
 		}
 		if ($source !~ /^[a-z0-9][-+\.a-z0-9]+\z/) {
 			tag 'source-field-malformed', $source;
@@ -387,7 +388,7 @@ if (not defined $info->field('source')) {
 		if ($source !~ /^[a-z0-9][-+\.a-z0-9]+ # Package name
 		                \s*
 		                (?:\((?:\d+:)?(?:[-\.+:a-zA-Z0-9~]+?)(?:-[\.+a-zA-Z0-9~]+)?\))?\s*$/x) { #Version
-			tag "source-field-malformed", "$source";
+			tag 'source-field-malformed', "$source";
 		}
 	}
 }
@@ -397,12 +398,12 @@ if (not defined $info->field('source')) {
 if (defined $info->field('essential')) {
 	my $essential = $info->field('essential');
 
-	unfold("essential", \$essential);
+	unfold('essential', \$essential);
 
-	tag "essential-in-source-package", "" if ($type eq "source");
-	tag "essential-no-not-needed", "" if ($essential eq "no");
-	tag "unknown-essential-value", "" if ($essential ne "no" and $essential ne "yes");
-	if ($essential eq "yes" and not $KNOWN_ESSENTIAL->known($pkg)) {
+	tag 'essential-in-source-package' if ($type eq 'source');
+	tag 'essential-no-not-needed' if ($essential eq 'no');
+	tag 'unknown-essential-value' if ($essential ne 'no' and $essential ne 'yes');
+	if ($essential eq 'yes' and not $KNOWN_ESSENTIAL->known($pkg)) {
 		tag 'new-essential-package';
 	}
 }
@@ -414,22 +415,22 @@ if (not defined $info->field('section')) {
 } else {
 	my $section = $info->field('section');
 
-	unfold("section", \$section);
+	unfold('section', \$section);
 
 	if ($type eq 'udeb') {
 	    unless ($section eq 'debian-installer') {
-		tag "wrong-section-for-udeb", "$section";
+		tag 'wrong-section-for-udeb', "$section";
 	    }
 	} else {
 	    my @parts = split /\//, $section, 2;
 
 	    if (scalar @parts > 1) {
-		tag "unknown-section", "$section" unless $known_archive_parts{$parts[0]};
-		tag "unknown-section", "$section" unless $known_sections{$parts[1]};
+		tag 'unknown-section', "$section" unless $known_archive_parts{$parts[0]};
+		tag 'unknown-section', "$section" unless $known_sections{$parts[1]};
 	    } elsif ($parts[0] eq 'unknown') {
-		tag "section-is-dh_make-template";
+		tag 'section-is-dh_make-template';
 	    } else {
-		tag "unknown-section", "$section" unless $known_sections{$parts[0]};
+		tag 'unknown-section', "$section" unless $known_sections{$parts[0]};
 	    }
 
 	    # Check package name <-> section.  oldlibs is a special case; let
@@ -437,7 +438,7 @@ if (not defined $info->field('section')) {
 	    if ($parts[-1] ne 'oldlibs') {
 		    foreach my $map (@NAME_SECTION_MAPPINGS) {
 			    if ($pkg =~ $map->[0]) {
-				    tag "wrong-section-according-to-package-name", "$pkg => $map->[1]"
+				    tag 'wrong-section-according-to-package-name', "$pkg => $map->[1]"
 					unless $parts[-1] eq $map->[1];
 				    last;
 			    }
@@ -449,16 +450,16 @@ if (not defined $info->field('section')) {
 #---- Priority
 
 if (not defined $info->field('priority')) {
-	tag "no-priority-field", "" if $type eq "binary";
+	tag 'no-priority-field' if $type eq 'binary';
 } else {
 	my $priority = $info->field('priority');
 
-	unfold("priority", \$priority);
+	unfold('priority', \$priority);
 
-	tag "unknown-priority", "$priority" if (! $known_prios{$priority});
+	tag 'unknown-priority', "$priority" if (! $known_prios{$priority});
 
 	if ($pkg =~ /-dbg$/) {
-		tag "debug-package-should-be-priority-extra", $pkg
+		tag 'debug-package-should-be-priority-extra', $pkg
 		    unless $priority eq 'extra';
         }
 }
@@ -474,24 +475,24 @@ if (not defined $info->field('priority')) {
 if (defined $info->field('homepage')) {
 	my $homepage = $info->field('homepage');
 
-	unfold("homepage", \$homepage);
+	unfold('homepage', \$homepage);
 
 	if ($homepage =~ /^<(?:UR[LI]:)?.*>$/i) {
-		tag "superfluous-clutter-in-homepage", $homepage;
+		tag 'superfluous-clutter-in-homepage', $homepage;
 	}
 
 	require URI;
 	my $uri = URI->new($homepage);
 
 	unless ($uri->scheme) { # not an absolute URI
-		tag "bad-homepage", $homepage;
+		tag 'bad-homepage', $homepage;
 	}
 
 	if ($homepage =~ m,/search\.cpan\.org/.*-[0-9._]+/*$,) {
 		tag 'homepage-for-cpan-package-contains-version', $homepage;
 	}
-} elsif ($type eq "binary" and not $info->native) {
-	tag "no-homepage-field";
+} elsif ($type eq 'binary' and not $info->native) {
+	tag 'no-homepage-field';
 }
 
 #---- Installer-Menu-Item (udeb)
@@ -501,7 +502,7 @@ if (defined $info->field('installer-menu-item')) {
 
 	unfold('installer-menu-item', \$menu_item);
 
-	$menu_item =~ /^\d+$/ or tag "bad-menu-item", "$menu_item";
+	$menu_item =~ /^\d+$/ or tag 'bad-menu-item', "$menu_item";
 }
 
 
@@ -528,8 +529,8 @@ if ($type eq 'binary') {
 	# they don't look like it.
 	$metapackage = 1 if $KNOWN_METAPACKAGES->known($pkg);
 }
-if (($type eq "binary") || ($type eq 'udeb')) {
-	my (%deps, %fields, %parsed);
+if (($type eq 'binary') || ($type eq 'udeb')) {
+	my (%fields, %parsed);
 	my $javalib = 0;
 	my $replaces = Lintian::Relation->new($info->field('replaces')//'');
 	$javalib = 1 if($pkg =~ m/^lib.*-(?:java|gcj)$/o);
@@ -545,7 +546,7 @@ if (($type eq "binary") || ($type eq 'udeb')) {
 
 		my $is_dep_field = sub { grep { $_ eq $_[0] } qw(depends pre-depends recommends suggests) };
 
-		tag "alternates-not-allowed", "$field"
+		tag 'alternates-not-allowed', "$field"
 		    if ($data =~ /\|/ && ! &$is_dep_field($field));
 
 		for my $dep (split /\s*,\s*/, $data) {
@@ -568,99 +569,99 @@ if (($type eq "binary") || ($type eq 'udeb')) {
 			}
 
 			# Only for (Pre-)?Depends.
-			tag "virtual-package-depends-without-real-package-depends", "$field: $alternatives[0]->[0]"
+			tag 'virtual-package-depends-without-real-package-depends', "$field: $alternatives[0]->[0]"
 			    if ($VIRTUAL_PACKAGES->known($alternatives[0]->[0])
-				&& ($field eq "depends" || $field eq "pre-depends")
+				&& ($field eq 'depends' || $field eq 'pre-depends')
 				&& ($pkg ne 'base-files' || $alternatives[0]->[0] ne 'awk')
 				# ignore phpapi- dependencies as adding an
 				# alternative, real, package breaks its pourpose
 				&& $alternatives[0]->[0] !~ m/^phpapi-/);
 
 			# Check defaults for transitions.  Here, we only care that the first alternative is current.
-			tag "depends-on-old-emacs", "$field: $alternatives[0]->[0]"
+			tag 'depends-on-old-emacs', "$field: $alternatives[0]->[0]"
 			    if (&$is_dep_field($field) && $known_obsolete_emacs{$alternatives[0]->[0]});
 
 			for my $part_d (@alternatives) {
 				my ($d_pkg, $d_version, $d_arch, $rest, $part_d_orig) = @$part_d;
 
-				tag "versioned-provides", "$part_d_orig"
-				    if ($field eq "provides" && $d_version->[0]);
+				tag 'versioned-provides', "$part_d_orig"
+				    if ($field eq 'provides' && $d_version->[0]);
 
-				tag "bad-provided-package-name", $d_pkg
+				tag 'bad-provided-package-name', $d_pkg
 				    if $d_pkg !~ /^[a-z0-9][-+\.a-z0-9]+$/;
 
-				tag "breaks-without-version", "$part_d_orig"
-				    if ($field eq "breaks" && !$d_version->[0] && !$VIRTUAL_PACKAGES->known($d_pkg)
+				tag 'breaks-without-version', "$part_d_orig"
+				    if ($field eq 'breaks' && !$d_version->[0] && !$VIRTUAL_PACKAGES->known($d_pkg)
 					&& !$replaces->implies("$part_d_orig")
 				    );
 
-				tag "conflicts-with-version", "$part_d_orig"
+				tag 'conflicts-with-version', "$part_d_orig"
 				    if ($field eq 'conflicts' && $d_version->[0]);
 
-				tag "obsolete-relation-form", "$field: $part_d_orig"
-				    if ($d_version && grep { $d_version->[0] eq $_ } ("<", ">"));
+				tag 'obsolete-relation-form', "$field: $part_d_orig"
+				    if ($d_version && grep { $d_version->[0] eq $_ } ('<', '>'));
 
-				tag "bad-version-in-relation", "$field: $part_d_orig"
+				tag 'bad-version-in-relation', "$field: $part_d_orig"
 				    if ($d_version->[0] && ! defined((_valid_version($d_version->[1]))[1]));
 
-				tag "package-relation-with-self", "$field: $part_d_orig"
+				tag 'package-relation-with-self', "$field: $part_d_orig"
 				    if ($pkg eq $d_pkg) && ($field ne 'conflicts');
 
-				tag "bad-relation", "$field: $part_d_orig"
+				tag 'bad-relation', "$field: $part_d_orig"
 				    if $rest;
 
 				push @seen_obsolete_packages, $part_d_orig
 				    if ($OBSOLETE_PACKAGES->known($d_pkg) && &$is_dep_field($field));
 
-				tag "depends-on-metapackage", "$field: $part_d_orig"
+				tag 'depends-on-metapackage', "$field: $part_d_orig"
 				    if ($KNOWN_METAPACKAGES->known($d_pkg) and not $metapackage and &$is_dep_field($field));
 
 				# diffutils is a special case since diff was
 				# renamed to diffutils, so a dependency on
 				# diffutils effectively is a versioned one.
-				tag "depends-on-essential-package-without-using-version", "$field: $part_d_orig"
+				tag 'depends-on-essential-package-without-using-version', "$field: $part_d_orig"
 				    if ($KNOWN_ESSENTIAL->known($d_pkg) && ! $d_version->[0]
 					&& &$is_dep_field($field) && $d_pkg ne 'diffutils' && $d_pkg ne 'dash');
 
-				tag "package-depends-on-an-x-font-package", "$field: $part_d_orig"
+				tag 'package-depends-on-an-x-font-package', "$field: $part_d_orig"
 				    if ($field =~ /^(pre-)?depends$/ && $d_pkg =~ /^xfont.*/ && $d_pkg ne 'xfonts-utils' && $d_pkg ne 'xfonts-encodings');
 
-				tag "needlessly-depends-on-awk", "$field"
-				    if ($d_pkg eq "awk" && ! $d_version->[0] && &$is_dep_field($field) && $pkg ne 'base-files');
+				tag 'needlessly-depends-on-awk', "$field"
+				    if ($d_pkg eq 'awk' && ! $d_version->[0] && &$is_dep_field($field) && $pkg ne 'base-files');
 
-				tag "depends-on-libdb1-compat", "$field"
-				    if ($d_pkg eq "libdb1-compat" && $pkg !~ /^libc(6|6.1|0.3)/ && $field =~ /^(pre-)depends$/);
+				tag 'depends-on-libdb1-compat', "$field"
+				    if ($d_pkg eq 'libdb1-compat' && $pkg !~ /^libc(?:6|6.1|0.3)/ && $field =~ /^(pre-)depends$/);
 
-				tag "depends-on-python-minimal", "$field",
+				tag 'depends-on-python-minimal', "$field",
 				    if ($d_pkg =~ /^python[\d.]*-minimal$/ && &$is_dep_field($field)
 					&& $pkg !~ /^python[\d.]*-minimal$/);
 
-				tag "doc-package-depends-on-main-package", "$field"
+				tag 'doc-package-depends-on-main-package', "$field"
 				    if ("$d_pkg-doc" eq $pkg && $field =~ /^(pre-)depends$/);
 
-				tag "old-versioned-python-dependency", "$field: $part_d_orig"
+				tag 'old-versioned-python-dependency', "$field: $part_d_orig"
 				    if ($d_pkg eq 'python' && $d_version->[0] eq '<<' && &$is_dep_field($field)
 					&& $arch_indep && $pkg =~ /^python-/ && ! defined $info->field('python-version')
 					&& ! $info->relation('depends')->implies('python-support'));
 
 				# only trigger this for the the preferred alternative
-				tag "versioned-dependency-satisfied-by-perl", "$field: $part_d_orig"
+				tag 'versioned-dependency-satisfied-by-perl', "$field: $part_d_orig"
 					if $alternatives[0][-1] eq $part_d_orig
 					&& &$is_dep_field($field)
 					&& perl_core_has_version($d_pkg, $d_version->[0], $d_version->[1]);
 
-				tag "depends-exclusively-on-makedev", "$field",
+				tag 'depends-exclusively-on-makedev', "$field",
 				    if ($field eq 'depends' && $d_pkg eq 'makedev' && @alternatives == 1);
 
-				tag "lib-recommends-documentation", "$field: $part_d_orig"
+				tag 'lib-recommends-documentation', "$field: $part_d_orig"
 					if ($field eq 'recommends'
-					    && $pkg =~ m/^lib/ && $pkg !~ m/-(dev|docs?|tools|bin)$/
+					    && $pkg =~ m/^lib/ && $pkg !~ m/-(?:dev|docs?|tools|bin)$/
 					    && $part_d_orig =~ m/-docs?$/);
 
 				# default-jdk-doc must depend on openjdk-X-doc (or classpath-doc) to be
 				# useful; other packages should depend on default-jdk-doc if they
 				# want the Java Core API.
-				tag "depends-on-specific-java-doc-package", "$field"
+				tag 'depends-on-specific-java-doc-package', "$field"
 				    if(&$is_dep_field($field) && $pkg ne 'default-jdk-doc'
 				       && ($d_pkg eq 'classpath-doc' || $d_pkg =~ m/openjdk-\d+-doc/o));
 
@@ -679,28 +680,28 @@ if (($type eq "binary") || ($type eq 'udeb')) {
 			for my $pkg (@seen_obsolete_packages) {
 				if ($pkg eq $alternatives[0]->[0] or
 				    scalar @seen_obsolete_packages == scalar @alternatives) {
-					tag "depends-on-obsolete-package", "$field: $pkg";
+					tag 'depends-on-obsolete-package', "$field: $pkg";
 				} else {
-					tag "ored-depends-on-obsolete-package", "$field: $pkg";
+					tag 'ored-depends-on-obsolete-package', "$field: $pkg";
 				}
 			}
 
 			# Only emit the tag if all the alternatives are JVM/JRE/JDKs
 			# - assume that <some-lib> | openjdk-6-jre-headless makes sense for now.
-			tag "needless-dependency-on-jre"
+			tag 'needless-dependency-on-jre'
 			    if (scalar(@alternatives) == $javadep);
 		}
-		tag "package-depends-on-multiple-libstdc-versions", @seen_libstdcs
+		tag 'package-depends-on-multiple-libstdc-versions', @seen_libstdcs
 		    if (scalar @seen_libstdcs > 1);
-		tag "package-depends-on-multiple-tcl-versions", @seen_tcls
+		tag 'package-depends-on-multiple-tcl-versions', @seen_tcls
 		    if (scalar @seen_tcls > 1);
-		tag "package-depends-on-multiple-tclx-versions", @seen_tclxs
+		tag 'package-depends-on-multiple-tclx-versions', @seen_tclxs
 		    if (scalar @seen_tclxs > 1);
-		tag "package-depends-on-multiple-tk-versions", @seen_tks
+		tag 'package-depends-on-multiple-tk-versions', @seen_tks
 		    if (scalar @seen_tks > 1);
-		tag "package-depends-on-multiple-tkx-versions", @seen_tkxs
+		tag 'package-depends-on-multiple-tkx-versions', @seen_tkxs
 		    if (scalar @seen_tkxs > 1);
-		tag "package-depends-on-multiple-libpng-versions", @seen_libpngs
+		tag 'package-depends-on-multiple-libpng-versions', @seen_libpngs
 		    if (scalar @seen_libpngs > 1);
 	}
 
@@ -712,7 +713,7 @@ if (($type eq "binary") || ($type eq 'udeb')) {
 			next unless $info->field($field);
 			my $relation = $info->relation($field);
 			for my $package (split /\s*,\s*/, $fields{$conflict}) {
-				tag "conflicts-with-dependency", $field, $package
+				tag 'conflicts-with-dependency', $field, $package
 				    if $relation->implies($package);
 			}
 		}
@@ -721,7 +722,7 @@ if (($type eq "binary") || ($type eq 'udeb')) {
 
 #---- Package relations (source package)
 
-if ($type eq "source") {
+if ($type eq 'source') {
 
 	my $binpkgs = $info->binaries;
 
@@ -737,7 +738,7 @@ if ($type eq "source") {
 		}
 	}
 
-	tag "build-depends-indep-without-arch-indep", ""
+	tag 'build-depends-indep-without-arch-indep'
 		if (defined $info->field('build-depends-indep') && $arch_indep_packages == 0);
 
 	my $is_dep_field = sub { grep { $_ eq $_[0] } qw(build-depends build-depends-indep) };
@@ -754,7 +755,7 @@ if ($type eq "source") {
 				my (@alternatives, @seen_obsolete_packages);
 				push @alternatives, [_split_dep($_), $_] for (split /\s*\|\s*/, $dep);
 
-				tag "virtual-package-depends-without-real-package-depends", "$field: $alternatives[0]->[0]"
+				tag 'virtual-package-depends-without-real-package-depends', "$field: $alternatives[0]->[0]"
 				    if ($VIRTUAL_PACKAGES->known($alternatives[0]->[0]) && &$is_dep_field($field));
 
 				for my $part_d (@alternatives) {
@@ -762,8 +763,8 @@ if ($type eq "source") {
 
 					my $negated = 0;
 					for my $arch (@{$d_arch->[0]}) {
-						if ($arch eq 'all' or (!$KNOWN_ARCHS->known($arch) and !$ARCH_WILDCARDS{$arch})) {
-							tag "invalid-arch-string-in-source-relation", "$arch [$field: $part_d_orig]"
+						if ($arch eq 'all' || (!$KNOWN_ARCHS->known($arch) && !$ARCH_WILDCARDS{$arch})) {
+							tag 'invalid-arch-string-in-source-relation', "$arch [$field: $part_d_orig]"
 						}
 					}
 
@@ -774,31 +775,31 @@ if ($type eq "source") {
 					tag 'conflicting-negation-in-source-relation', "$field: $part_d_orig"
 					    unless (not $d_arch or $d_arch->[1] == 0 or $d_arch->[1] eq @{ $d_arch->[0] });
 
-					tag "build-depends-on-build-essential", $field
-					    if ($d_pkg eq "build-essential");
+					tag 'build-depends-on-build-essential', $field
+					    if ($d_pkg eq 'build-essential');
 
-					tag "depends-on-build-essential-package-without-using-version", "$d_pkg [$field: $part_d_orig]"
+					tag 'depends-on-build-essential-package-without-using-version', "$d_pkg [$field: $part_d_orig]"
 					    if ($known_build_essential{$d_pkg} && ! $d_version->[1]);
 
-					tag "build-depends-on-essential-package-without-using-version", "$field: $part_d_orig"
+					tag 'build-depends-on-essential-package-without-using-version', "$field: $part_d_orig"
 					    if ($KNOWN_ESSENTIAL->known($d_pkg) && ! $d_version->[0] && $d_pkg ne 'dash');
 					push @seen_obsolete_packages, $part_d_orig
 					    if ($OBSOLETE_PACKAGES->known($d_pkg) && &$is_dep_field($field));
 
-					tag "build-depends-on-metapackage", "$field: $part_d_orig"
+					tag 'build-depends-on-metapackage', "$field: $part_d_orig"
 					    if ($KNOWN_METAPACKAGES->known($d_pkg) and &$is_dep_field($field));
 
 					tag 'build-depends-on-non-build-package', "$field: $part_d_orig"
 					    if ($NO_BUILD_DEPENDS->known($d_pkg) and &$is_dep_field($field));
 
-					tag "build-depends-on-1-revision", "$field: $part_d_orig"
+					tag 'build-depends-on-1-revision', "$field: $part_d_orig"
 					    if ($d_version->[0] eq '>=' && $d_version->[1] =~ /-1$/ && &$is_dep_field($field));
 
-					tag "bad-relation", "$field: $part_d_orig"
+					tag 'bad-relation', "$field: $part_d_orig"
 					    if $rest;
 
 					# only trigger this for the the preferred alternative
-					tag "versioned-dependency-satisfied-by-perl", "$field: $part_d_orig"
+					tag 'versioned-dependency-satisfied-by-perl', "$field: $part_d_orig"
 						if $alternatives[0][-1] eq $part_d_orig
 						&& &$is_dep_field($field)
 						&& perl_core_has_version($d_pkg, $d_version->[0], $d_version->[1]);
@@ -807,9 +808,9 @@ if ($type eq "source") {
 				for my $pkg (@seen_obsolete_packages) {
 					if ($pkg eq $alternatives[0]->[0] or
 					    scalar @seen_obsolete_packages == scalar @alternatives) {
-						tag "build-depends-on-obsolete-package", "$field: $pkg";
+						tag 'build-depends-on-obsolete-package', "$field: $pkg";
 					} else {
-						tag "ored-build-depends-on-obsolete-package", "$field: $pkg";
+						tag 'ored-build-depends-on-obsolete-package', "$field: $pkg";
 					}
 				}
 			}
@@ -820,7 +821,7 @@ if ($type eq "source") {
 	my $build_all = $info->relation('build-depends-all');
 	my @dups = $build_all->duplicates;
 	for my $dup (@dups) {
-		tag "package-has-a-duplicate-build-relation", join (', ', @$dup);
+		tag 'package-has-a-duplicate-build-relation', join (', ', @$dup);
 	}
 
 	# Make sure build dependencies and conflicts are consistent.
@@ -829,7 +830,7 @@ if ($type eq "source") {
 		next unless $_;
 		for my $conflict (split /\s*,\s*/, $_) {
 			if ($build_all->implies($conflict)) {
-				tag "build-conflicts-with-build-dependency", $conflict;
+				tag 'build-conflicts-with-build-dependency', $conflict;
 			}
 		}
 	}
@@ -847,7 +848,7 @@ if ($type eq "source") {
 		$deps  = $info->binary_field($_, 'pre-depends') . ', ';
 		$deps .= $info->binary_field($_, 'depends');
 		tag 'dbg-package-missing-depends', $_
-		   unless (grep {my $quoted_name = qr<\Q$_>; $deps =~ m/(\s|,|^)$quoted_name(\s|,|\z)/} @arch_dep_pkgs);
+		   unless (grep {my $quoted_name = qr<\Q$_>; $deps =~ m/(?:\s|,|^)$quoted_name(?:\s|,|\z)/} @arch_dep_pkgs);
 	}
 
 	# Check for a python*-dev build dependency in source packages that
@@ -864,7 +865,7 @@ if (defined $info->field('origin')) {
 
 	unfold('origin', \$origin);
 
-	tag "redundant-origin-field", "" if lc($origin) eq 'debian';
+	tag 'redundant-origin-field' if lc($origin) eq 'debian';
 }
 
 #----- Bugs
@@ -874,7 +875,7 @@ if (defined $info->field('bugs')) {
 
 	unfold('bugs', \$bugs);
 
-	tag "redundant-bugs-field"
+	tag 'redundant-bugs-field'
 	    if $bugs =~ m,^debbugs://bugs.debian.org/?$,i;
 }
 
@@ -896,7 +897,7 @@ if (defined $info->field('python-version')) {
 	my @pyversion = split(/\s*,\s*/, $pyversion);
 	if (@pyversion > 2) {
 		if (grep { !/^\d+\.\d+$/ } @pyversion) {
-			tag "malformed-python-version", "$pyversion";
+			tag 'malformed-python-version', "$pyversion";
 		}
 	} else {
 		my $okay = 0;
@@ -908,7 +909,7 @@ if (defined $info->field('python-version')) {
 				last;
 			}
 		}
-		tag "malformed-python-version", "$pyversion" unless $okay;
+		tag 'malformed-python-version', "$pyversion" unless $okay;
 	}
 }
 
@@ -920,7 +921,7 @@ if (defined $info->field('dm-upload-allowed')) {
 	unfold('dm-upload-allowed', \$dmupload);
 
 	unless ($dmupload eq 'yes') {
-		tag "malformed-dm-upload-allowed", "$dmupload";
+		tag 'malformed-dm-upload-allowed', "$dmupload";
 	}
 }
 
@@ -931,9 +932,9 @@ while (my ($vcs, $regex) = each %VCS_RECOMMENDED_URIS) {
 	my $uri = $info->field("vcs-$vcs");
 	if ($uri !~ $regex) {
 	    if ($VCS_VALID_URIS{$vcs} and $uri =~ $VCS_VALID_URIS{$vcs}) {
-		tag "vcs-field-uses-not-recommended-uri-format", "vcs-$vcs", $uri;
+		tag 'vcs-field-uses-not-recommended-uri-format', "vcs-$vcs", $uri;
 	    } else {
-		tag "vcs-field-uses-unknown-uri-format", "vcs-$vcs", $uri;
+		tag 'vcs-field-uses-unknown-uri-format', "vcs-$vcs", $uri;
 	    }
 	}
     }
@@ -954,17 +955,17 @@ for my $field (readdir FIELDS) {
 
 	next if ($field eq 'original-maintainer') and $version =~ /ubuntu/;
 
-	tag "obsolete-field", "$field"
+	tag 'obsolete-field', "$field"
 	    if $known_obsolete_fields{$field};
 
-	tag "unknown-field-in-dsc", "$field"
-	    if ($type eq "source" && ! $SOURCE_FIELDS->known($field) && ! $known_obsolete_fields{$field});
+	tag 'unknown-field-in-dsc', "$field"
+	    if ($type eq 'source' && ! $SOURCE_FIELDS->known($field) && ! $known_obsolete_fields{$field});
 
-	tag "unknown-field-in-control", "$field"
-	    if ($type eq "binary" && ! $known_binary_fields{$field} && ! $known_obsolete_fields{$field});
+	tag 'unknown-field-in-control', "$field"
+	    if ($type eq 'binary' && ! $known_binary_fields{$field} && ! $known_obsolete_fields{$field});
 
-	tag "unknown-field-in-control", "$field"
-	    if ($type eq "udeb" && ! $known_udeb_fields{$field} && ! $known_obsolete_fields{$field});
+	tag 'unknown-field-in-control', "$field"
+	    if ($type eq 'udeb' && ! $known_udeb_fields{$field} && ! $known_obsolete_fields{$field});
 }
 closedir(FIELDS);
 
@@ -977,7 +978,7 @@ closedir(FIELDS);
 #           rest (should always be "" for valid dependencies)
 sub _split_dep {
 	my $dep = shift;
-	my ($pkg, $version, $darch) = ("", ["",""], [[], 0]);
+	my ($pkg, $version, $darch) = ('', ['',''], [[], 0]);
 
 	$pkg = $1 if $dep =~ s/^\s*([^\s\[\(]+)\s*//;
 
@@ -1027,7 +1028,7 @@ sub unfold {
 	$$line =~ s/\n$//;
 
 	if ($$line =~ s/\n//g) {
-		tag "multiline-field", "$field";
+		tag 'multiline-field', "$field";
 	}
 }
 
