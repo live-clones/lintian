@@ -14,6 +14,11 @@ lintian (2.5.0) UNRELEASED; urgency=low
       - debian-watch-contains-dh_make-template
       - missing-dependency-on-python-central
       - python-module-in-wrong-location
+    + Removed:
+      - embedded-zlib (now in embedded-library)
+      - embedded-libpng (now in embedded-library)
+      - embedded-libjpeg (now in embedded-library)
+      - embedded-libopenjpeg (now in embedded-library)
 
   * checks/*:
     + [NT] Use the new pre-sorted file {index,info} when iterating over files.
@@ -23,6 +28,11 @@ lintian (2.5.0) UNRELEASED; urgency=low
     + [RA] Exclude kfreebsd-kernel-di-{amd64,i386} from the
       embedded-zlib check since it's in the kernel.  (Closes: #593397)
     + [RG] Add swipl to the list of known interpreters.  (Closes: #591316)
+    + [RG] Detect embedded copies of ftgl, t1lib, gl2ps, libgd2,
+      ncurses, openssl (libcrypto), sqlite/3, libm, ltdl, curl, libmng,
+      libmsn, libmikmod, and libmysqlclient.
+    + [RG] Merge embedded-{zlib,lib{png,jpeg,openjpeg}} into
+      embedded-library.
   * checks/cruft{,.desc}:
     + [NT] Extended the diff-contains-substvars check to also catch files
       prefixed with a package name.
