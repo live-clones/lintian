@@ -102,7 +102,7 @@ if ($tarball =~ /\.(lzma|xz)\z/) {
 my @index;
 my $last = '';
 my $collect = sub {
-    my @lines = map { split '\n' } @_;
+    my @lines = map { split "\n" } @_;
     if ($last ne '') {
         $lines[0] = $last . $lines[0];
     }
@@ -114,7 +114,7 @@ my $collect = sub {
     for my $line (@lines) {
         $line =~ s/^h/-/;
         if ($line and $line !~ m,^(?:\S+\s+){5}\./$,) {
-            push(@index, $line . '\n');
+            push(@index, $line . "\n");
         }
     }
 };
