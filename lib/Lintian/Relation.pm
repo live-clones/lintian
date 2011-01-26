@@ -118,10 +118,10 @@ sub new {
     my ($class, $relation) = @_;
     $relation = '' unless defined($relation);
     my @result;
-    for my $element (split(/\s*,\s*/, $relation)) {
-        next if $element =~ /^$/;
+    for my $element (split(/\s*,\s*/o, $relation)) {
+        next if $element eq '';
         my @alternatives;
-        for my $alternative (split(/\s*\|\s*/, $element)) {
+        for my $alternative (split(/\s*\|\s*/o, $element)) {
             push(@alternatives, $class->parse_element($alternative));
         }
         if (@alternatives == 1) {
@@ -256,7 +256,7 @@ sub implies_element {
     # If the names don't match, there is no relationship between them.
     $$p[1] = '' unless defined $$p[1];
     $$q[1] = '' unless defined $$q[1];
-    return undef if $$p[1] ne $$q[1];
+    return if $$p[1] ne $$q[1];
 
     # If the names match, then the only difference is in the architecture or
     # version clauses.  First, check architecture.  The architectures for p
@@ -276,7 +276,7 @@ sub implies_element {
         # If q has no arches, it is a superset of p and there are no useful
         # implications.
         elsif (not @q_arches) {
-            return undef;
+            return;
         }
 
         # Both have arches.  If neither are negated, we know nothing useful
@@ -287,7 +287,7 @@ sub implies_element {
             for my $arch (@q_arches) {
                 $subset = 0 unless $p_arches{$arch};
             }
-            return undef unless $subset;
+            return unless $subset;
         }
 
         # If both are negated, we know nothing useful unless p is a subset of
@@ -299,13 +299,13 @@ sub implies_element {
             for my $arch (@p_arches) {
                 $subset = 0 unless $q_arches{$arch};
             }
-            return undef unless $subset;
+            return unless $subset;
         }
 
         # If q is negated and p isn't, we'd need to know the full list of
         # arches to know if there's any relationship, so bail.
         elsif (not $p_arch_neg and $q_arch_neg) {
-            return undef;
+            return;
         }
 
         # If p is negated and q isn't, q is a subset of p iff none of the
@@ -316,7 +316,7 @@ sub implies_element {
             for my $arch (@p_arches) {
                 $subset = 0 if $q_arches{substr($arch, 1)};
             }
-            return undef unless $subset;
+            return unless $subset;
         }
     }
 
@@ -328,7 +328,7 @@ sub implies_element {
 
     # If q does have a version clause, then p must also have one to have any
     # useful relationship.
-    return undef if not defined $$p[2];
+    return if not defined $$p[2];
 
     # q wants an exact version, so p must provide that exact version.  p
     # disproves q if q's version is outside the range enforced by p.
@@ -398,7 +398,7 @@ sub implies_element {
         }
     }
 
-    return undef;
+    return;
 }
 
 # This internal function does the heavy of AND, OR, and NOT logic.  It expects
@@ -515,7 +515,7 @@ sub implies_element_inverse {
     my $result = $self->implies_element($q, $p);
 
     return not $result if defined $result;
-    return undef;
+    return;
 }
 
 # This internal function does the heavily lifting for AND, OR, and NOT

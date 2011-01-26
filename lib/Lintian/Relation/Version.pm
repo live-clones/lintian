@@ -70,7 +70,7 @@ sub versions_equal {
     return 1 if $p eq $q;
 
     $result = $versioning->compare($p, $q);
-    
+
     return ($result == 0);
 }
 
