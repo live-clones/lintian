@@ -24,19 +24,20 @@
 # MA 02110-1301, USA.
 
 use strict;
+use warnings;
 
 # Sanity check
-unless (-f "fields/package") {
-    print STDERR "error: collection script called in wrong directory!\n";
+unless (-f 'fields/package') {
+    print STDERR 'error: collection script called in wrong directory!\n';
     exit 2;
 }
 
 my $failed = 0;
 
-open (FILES, '<', "file-info")
+open (FILES, '<', 'file-info')
     or fail("cannot open file-info: $!");
 
-open (OUT, '>', "objdump-info")
+open (OUT, '>', 'objdump-info')
     or fail("cannot open objdump-info: $!");
 
 # Disable etch compatibility code.
@@ -44,7 +45,7 @@ open (OUT, '>', "objdump-info")
 # readelf code is not dropped as per private/TODO entry
 my $etch_compat = 0;
 
-chdir ("unpacked")
+chdir ('unpacked')
     or fail ("unable to chdir to unpacked: $!\n");
 
 while (<FILES>) {
@@ -93,7 +94,7 @@ while (<FILES>) {
 
 	    last if $failed;
 
-	    if ($invalidop or !$etch_compat) {
+	    if ($invalidop || !$etch_compat) {
 		# If we're using a binutils newer than etch's then either
 		# "invalid operation" or "file format not recognized"
 		# are simply passed through to the checks scripts
@@ -157,9 +158,9 @@ while (<FILES>) {
 
 			    $value =~ s/^(?:Shared library|Library soname): \[(.*)\]/$1/;
 			    print OUT "  $type   $value\n";
-			} elsif (m/^\s*[0-9A-F]+:\s+(\S+)\s*(?:\((\S+)\))?(\s|\Z)/i
+			} elsif (m/^\s*[0-9A-F]+: \s+ \S+ \s* (?:\(\S+\))? (?:\s|\Z)/i
 			      and $section eq 'VS') {
-			    while (m/([0-9A-F]+h?)\s*(?:\((\S+)\))?(\s|\Z)/gci) {
+			    while (m/([0-9A-F]+h?)\s*(?:\((\S+)\))?(?:\s|\Z)/gci) {
 				my ($vernum, $verstring) = ($1, $2);
 				$verstring ||= '';
 				if ($vernum =~ m/h$/) {

@@ -21,17 +21,20 @@
 # MA 02110-1301, USA.
 
 use strict;
+use warnings;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Util;
 
-($#ARGV == 1) or fail("syntax: override-file <pkg> <type>");
+($#ARGV == 1) or fail('syntax: override-file <pkg> <type>');
 my $pkg = shift;
 my $type = shift;
 
--d "unpacked" or fail("override-file invoked in wrong directory");
+-d 'unpacked' or fail('override-file invoked in wrong directory');
 
-unlink("override");
+if (-e 'override'){
+    unlink('override') or fail("could not remove old override file: $!");
+}
 
 # Pick the first of these files that exists.  Prefer source/lintian-overrides
 # to source.lintian-overrides for source packages.
@@ -53,9 +56,9 @@ for my $override (@overrides) {
 if (not defined $file) {
     # no override found
 } elsif ($file =~ /\.gz$/) {
-    gunzip_file($file, "override");
+    gunzip_file($file, 'override');
 } else {
-    link($file, "override")
+    link($file, 'override')
 	or fail("cannot link $file to override: $!");
 }
 

@@ -20,9 +20,10 @@
 # MA 02110-1301, USA.
 
 use strict;
+use warnings;
 
-open(SCRIPTS, '>', "scripts") or fail("cannot open scripts output file: $!");
-open(INDEX, '<', "index") or fail("cannot open index file: $!");
+open(SCRIPTS, '>', 'scripts') or fail("cannot open scripts output file: $!");
+open(INDEX, '<', 'index') or fail("cannot open index file: $!");
 
 my $file;
 my $magic;
@@ -66,10 +67,10 @@ while (<INDEX>) {
 close(INDEX);
 close(SCRIPTS) or fail("cannot write scripts file: $!");
 
-open(SCRIPTS, '>', "control-scripts")
+open(SCRIPTS, '>', 'control-scripts')
     or fail("cannot open control-scripts output file: $!");
 
-opendir(CONTROL, "control")
+opendir(CONTROL, 'control')
     or fail("cannot read control directory: $!");
 
 for $file (readdir CONTROL) {

@@ -27,13 +27,13 @@ use Util;
 use Lintian::Command qw(spawn);
 use Lintian::Command::Simple;
 
-($#ARGV == 1) or fail("syntax: strings <pkg> <type>");
+($#ARGV == 1) or fail('syntax: strings <pkg> <type>');
 
--f "file-info"
-    or fail("file-info invoked in wrong directory");
+-f 'file-info'
+    or fail('file-info invoked in wrong directory');
 
-unlink("elf-index");
-delete_dir("strings");
+unlink('elf-index');
+delete_dir('strings');
 
 open(ELF_INDEX, '>', 'elf-index')
     or fail("Could not open 'elf-index' for writing: $!\n");

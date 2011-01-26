@@ -20,25 +20,26 @@
 # MA 02110-1301, USA.
 
 use strict;
-
-($#ARGV == 1) or fail("syntax: init.d <pkg> <type>");
-my $pkg = shift;
-my $type = shift;
-
--f "fields/package" or fail("init.d invoked in wrong directory");
+use warnings;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Util;
 
-if (-e "init.d") {
-    delete_dir("init.d")
-	or fail("cannot rm old init.d directory");
+($#ARGV == 1) or fail('syntax: init.d <pkg> <type>');
+my $pkg = shift;
+my $type = shift;
+
+-f 'fields/package' or fail('init.d invoked in wrong directory');
+
+if (-e 'init.d') {
+    delete_dir('init.d')
+	or fail('cannot rm old init.d directory');
 }
 
-if (-d "unpacked/etc/init.d") {
+if (-d 'unpacked/etc/init.d') {
     copy_dir('unpacked/etc/init.d', 'init.d')
-	or fail("cannot copy init.d directory");
+	or fail('cannot copy init.d directory');
 } else {
     # no etc/init.d
-    mkdir("init.d", 0777) or fail("cannot mkdir init.d: $!");
+    mkdir('init.d', 0777) or fail("cannot mkdir init.d: $!");
 }

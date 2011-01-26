@@ -22,23 +22,22 @@
 
 use strict;
 use warnings;
-use vars qw($verbose);
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Command qw(spawn);
 use Util;
 
-($#ARGV == 1) or fail("syntax: unpacked <package> <type>");
+($#ARGV == 1) or fail('syntax: unpacked <package> <type>');
 
 my $pkg = shift;
 my $type = shift;
 
-if (-d "unpacked/") {
-    delete_dir("unpacked/") or
+if (-d 'unpacked/') {
+    delete_dir('unpacked/') or
 	fail("failed to remove unpacked directory of $pkg");
 }
-if (-f "unpacked-errors") {
-    unlink("unpacked-errors") or
+if (-f 'unpacked-errors') {
+    unlink('unpacked-errors') or
 	fail("failed to remove unpacked-errors file of $pkg");
 }
 # If we are asked to only remove the files stop right here
@@ -46,7 +45,7 @@ if ($type =~ m/^remove-/) {
     exit 0;
 }
 
-if ($type eq "source") {
+if ($type eq 'source') {
     # Ignore STDOUT of the child process because older versions of
     # dpkg-source print things out even with -q.
     my $opts = { out => '/dev/null', err => 'unpacked-errors' };
@@ -55,34 +54,34 @@ if ($type eq "source") {
 	    or fail("cannot open unpacked-errors: $!");
 	print STDERR while <ERRORS>;
 	close ERRORS;
-	fail("dpkg-source -x failed with status ", $opts->{harness}->result);
+	fail('dpkg-source -x failed with status ', $opts->{harness}->result);
     }
-    
+
     # fix permissions
     spawn({ fail => 'error' },
 	  ['chmod', '-R', 'u+rwX,o+rX,o-w', 'unpacked']);
 
 } else {
-    mkdir("unpacked", 0777) or fail("mkdir unpacked: $!");
+    mkdir('unpacked', 0777) or fail("mkdir unpacked: $!");
 
     # avoid using dpkg-deb -x; this pipeline is far faster.  I got a factor 2
     # improvement on large debs, and factor 1.5 on small debs.
     # I heard it's because dpkg-deb syncs while writing.  -- Richard
 
-    my $opts = { err => "unpacked-errors" };
+    my $opts = { err => 'unpacked-errors' };
     spawn($opts,
-	    ['dpkg-deb', '--fsys-tarfile', "deb"],
-	    '|', ['tar', 'xf', '-', '-C', "unpacked"]);
+	    ['dpkg-deb', '--fsys-tarfile', 'deb'],
+	    '|', ['tar', 'xf', '-', '-C', 'unpacked']);
     unless ($opts->{success}) {
-	open(ERRORS, '<', "unpacked-errors")
+	open(ERRORS, '<', 'unpacked-errors')
 	    or fail("cannot open unpacked-errors: $!");
 	print STDERR while <ERRORS>;
 	close ERRORS;
-	fail("dpkg-deb | tar failed with status ", $opts->{harness}->result);
+	fail('dpkg-deb | tar failed with status ', $opts->{harness}->result);
     }
 
     # fix permissions
     spawn({ fail => 'error' },
-	    ['chmod', '-R', 'u+rwX,go-w', "unpacked"]);
+	    ['chmod', '-R', 'u+rwX,go-w', 'unpacked']);
 }
 

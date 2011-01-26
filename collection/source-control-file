@@ -22,20 +22,20 @@
 use strict;
 use warnings;
 
-($#ARGV == 1) or fail("syntax: source-control-file <pkg> <type>");
-my $pkg = shift;
-my $type = shift;
-
--f "debfiles/control" or fail("control invoked in wrong directory");
-
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Util;
 
-my @control_data = read_dpkg_control("debfiles/control");
+($#ARGV == 1) or fail('syntax: source-control-file <pkg> <type>');
+my $pkg = shift;
+my $type = shift;
+
+-f 'debfiles/control' or fail('control invoked in wrong directory');
+
+my @control_data = read_dpkg_control('debfiles/control');
 shift @control_data; # we don't need the source information
 
 delete_dir('control');
-mkdir "control", 0777  or fail( "can't create dir control: $!" );
+mkdir 'control', 0777  or fail( "can't create dir control: $!" );
 
 foreach (@control_data) {
     my $pkg_name = $_->{'package'};

@@ -21,25 +21,27 @@
 # MA 02110-1301, USA.
 
 use strict;
-
-($#ARGV == 1) or fail("syntax: doc-base-files <pkg> <type>");
-my $pkg = shift;
-my $type = shift;
-
--f "fields/package" or fail("doc-base-files invoked in wrong directory");
+use warnings;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Util;
 
-if (-e "doc-base") {
-    delete_dir("doc-base")
-	or fail("cannot rm old doc-base directory");
+($#ARGV == 1) or fail('syntax: doc-base-files <pkg> <type>');
+my $pkg = shift;
+my $type = shift;
+
+-f 'fields/package' or fail('doc-base-files invoked in wrong directory');
+
+
+if (-e 'doc-base') {
+    delete_dir('doc-base')
+	or fail('cannot rm old doc-base directory');
 }
 
-if (-d "unpacked/usr/share/doc-base") {
+if (-d 'unpacked/usr/share/doc-base') {
     copy_dir('unpacked/usr/share/doc-base', 'doc-base')
-	or fail("cannot copy directory unpacked/usr/share/doc-base");
+	or fail('cannot copy directory unpacked/usr/share/doc-base');
 } else {
     # no doc-base directory
-    mkdir("doc-base", 0777) or fail("cannot mkdir doc-base: $!");
+    mkdir('doc-base', 0777) or fail("cannot mkdir doc-base: $!");
 }
