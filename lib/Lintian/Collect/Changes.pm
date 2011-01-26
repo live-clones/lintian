@@ -37,17 +37,17 @@ sub new {
 # sub files Needs-Info <>
 sub files {
     my ($self) = @_;
-    
+
     return $self->{files} if exists $self->{files};
-    
+
     my %files;
-    
-    my $file_list = $self->field('files') || '';    
+
+    my $file_list = $self->field('files') || '';
     for (split /\n/, $file_list) {
 	chomp;
 	s/^\s+//o;
 	next if $_ eq '';
-	
+
 	my ($md5sum,$size,$section,$priority,$file) = split(/\s+/o, $_);
 	next if $file =~ m,/,;
 
@@ -59,14 +59,14 @@ sub files {
 	$files{$file}{section} = $section;
 	$files{$file}{priority} = $priority;
     }
-    
+
     foreach my $alg (qw(sha1 sha256)) {
 	my $list = $self->field("checksums-$alg") || '';
 	for (split /\n/, $list) {
 	    chomp;
 	    s/^\s+//o;
 	    next if $_ eq '';
-	    
+
 	    my ($checksum, $size, $file) = split(/\s+/o, $_);
 	    next if $file =~ m,/,;
 
@@ -75,7 +75,7 @@ sub files {
 	    };
 	}
     }
-    
+
     $self->{files} = \%files;
     return $self->{files};
 }
