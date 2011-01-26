@@ -59,7 +59,7 @@ for my $field (keys %$data) {
     my $field_file = "$base_dir/fields/$field";
     open(F, '>', $field_file)
         or fail("cannot open file $field_file for writing: $!");
-    print F $value,'\n';
+    print F $value,"\n";
     close(F);
 }
 
@@ -97,7 +97,7 @@ if (!$tarball) {
 # don't parallelize this job because we need to use the output below.
 my @tar_options = ('-tvf');
 if ($tarball =~ /\.(lzma|xz)\z/) {
-    unshift(@tar_options, '--$1');
+    unshift(@tar_options, "--$1");
 }
 my @index;
 my $last = '';

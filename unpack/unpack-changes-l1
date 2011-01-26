@@ -55,7 +55,7 @@ for my $field (keys %$data) {
     my $field_file = "$base_dir/fields/$field";
     open(F, '>', $field_file)
         or fail("cannot open file $field_file for writing: $!");
-    print F $value,'\n';
+    print F $value,"\n";
     close(F);
 }
 
