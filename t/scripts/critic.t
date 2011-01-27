@@ -16,12 +16,20 @@ diag('libppix-regexp-perl is needed to enable some checks') if $@;
 
 Test::Perl::Critic->import( -profile => "$ENV{LINTIAN_ROOT}/.perlcriticrc" );
 
-all_critic_ok("$ENV{LINTIAN_ROOT}/checks",
-	      "$ENV{LINTIAN_ROOT}/collection",
-	      "$ENV{LINTIAN_ROOT}/frontend",
-	      "$ENV{LINTIAN_ROOT}/lib",
-	      "$ENV{LINTIAN_ROOT}/unpack");
+our @CHECKS = glob ("$ENV{LINTIAN_ROOT}/checks/*[!.]*[!c]");
 
+plan tests => scalar(@CHECKS)+1;
+
+for my $check (@CHECKS) {
+    critic_ok($check);
+}
+
+subtest 'All scripts with correct shebang or extension' => sub {
+    all_critic_ok("$ENV{LINTIAN_ROOT}/collection",
+		  "$ENV{LINTIAN_ROOT}/frontend",
+		  "$ENV{LINTIAN_ROOT}/lib",
+		  "$ENV{LINTIAN_ROOT}/unpack");
+};
 
 sub should_skip($) {
     my $path = shift;
