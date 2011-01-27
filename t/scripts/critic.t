@@ -3,10 +3,15 @@
 use strict;
 use Test::More;
 
-sub should_skip($);
+sub should_skip();
+
+
+chdir ($ENV{'LINTIAN_ROOT'})
+    or die ("fatal error: could not chdir to $ENV{LINTIAN_ROOT}: $!");
 
 plan skip_all => 'Only UNRELEASED versions are criticised'
-    if should_skip($ENV{'LINTIAN_ROOT'});
+    if should_skip();
+
 
 eval 'use Test::Perl::Critic 1.00';
 plan skip_all => "Test::Perl::Critic 1.00 required to run this test" if $@;
@@ -14,10 +19,11 @@ plan skip_all => "Test::Perl::Critic 1.00 required to run this test" if $@;
 eval 'use PPIx::Regexp';
 diag('libppix-regexp-perl is needed to enable some checks') if $@;
 
-Test::Perl::Critic->import( -profile => "$ENV{LINTIAN_ROOT}/.perlcriticrc" );
 
-our @CHECKS = glob ("$ENV{LINTIAN_ROOT}/checks/*[!.]*[!c]");
+Test::Perl::Critic->import( -profile => '.perlcriticrc' );
 
+
+our @CHECKS = glob ('checks/*[!.]*[!c]');
 plan tests => scalar(@CHECKS)+1;
 
 for my $check (@CHECKS) {
@@ -25,19 +31,14 @@ for my $check (@CHECKS) {
 }
 
 subtest 'All scripts with correct shebang or extension' => sub {
-    all_critic_ok("$ENV{LINTIAN_ROOT}/collection",
-		  "$ENV{LINTIAN_ROOT}/frontend",
-		  "$ENV{LINTIAN_ROOT}/lib",
-		  "$ENV{LINTIAN_ROOT}/unpack");
+    all_critic_ok(qw(collection frontend lib unpack));
 };
 
-sub should_skip($) {
-    my $path = shift;
+sub should_skip() {
     my $skip = 1;
     my $pid;
 
-    $pid = open (DPKG, '-|', 'dpkg-parsechangelog', '-c0',
-	    "-l$path/debian/changelog");
+    $pid = open (DPKG, '-|', 'dpkg-parsechangelog', '-c0');
 
     die("failed to execute dpkg-parsechangelog: $!")
 	unless defined ($pid);
