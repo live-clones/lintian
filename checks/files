@@ -255,10 +255,10 @@ foreach my $file (@{$info->sorted_index}) {
 	tag 'package-contains-ancient-file', "$file " . $index_info->{date};
     }
 
-    if (!($index_info->{uid} < 100 || $index_info->{uid} == 65534
-	  || ($index_info->{uid} >= 60000 && $index_info->{uid} < 65000))
-	|| !($index_info->{gid} < 100 || $index_info->{gid} == 65534
-	     || ($index_info->{gid} >= 60000 && $index_info->{gid} < 65000))) {
+    if (!($index_info->{uid} < 100 || $index_info->{uid} == 65_534
+	  || ($index_info->{uid} >= 60000 && $index_info->{uid} < 65_000))
+	|| !($index_info->{gid} < 100 || $index_info->{gid} == 65_534
+	     || ($index_info->{gid} >= 60_000 && $index_info->{gid} < 65_000))) {
 	tag 'wrong-file-owner-uid-or-gid', $file, $index_info->{uid} . '/' . $index_info->{gid};
     }
 

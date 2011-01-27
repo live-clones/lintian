@@ -63,7 +63,7 @@ our %ARCH_REGEX = (
 	'sparc'   	 => qr'ELF 32-bit MSB .* SPARC',
 	'sparc64' 	 => qr'ELF 64-bit MSB .* SPARC');
 
-our %arch_64bit_equivs = (
+our %ARCH_64BIT_EQUIVS = (
 	'hppa'		=> 'hppa64',
 	'i386'		=> 'amd64',
 	'kfreebsd-i386'	=> 'kfreebsd-amd64',
@@ -110,7 +110,7 @@ our %EMBEDDED_LIBRARIES = (
 	'openjpeg'	=> qr'tcd_decode: incomplete bistream',
 );
 
-our $multiarch;
+our $MULTIARCH;
 
 sub run {
 
@@ -235,9 +235,9 @@ foreach my $file (@{$info->sorted_file_info}) {
     # package may be a support package for cross-compiles.
     if ($arch eq 'all') {
 	my ($arch_path) = ($file =~ m,^(?:usr/)?lib/([^/]+)/,);
-	$multiarch = Lintian::Data->new('binaries/multiarch')
-	    unless defined($multiarch);
-	unless ($arch_path and $multiarch->known($arch_path)) {
+	$MULTIARCH = Lintian::Data->new('binaries/multiarch')
+	    unless defined($MULTIARCH);
+	unless ($arch_path and $MULTIARCH->known($arch_path)) {
 	    tag 'arch-independent-package-contains-binary-or-object', $file;
 	}
     }
@@ -259,15 +259,15 @@ foreach my $file (@{$info->sorted_file_info}) {
 		unless ($fileinfo =~ m/$ARCH_REGEX{$1}/);
 	} elsif ($arch eq 'amd64' and $fileinfo =~ m/$ARCH_REGEX{i386}/) {
 	    # Ignore i386 binaries in amd64 packages for right now.
-	} elsif (exists $arch_64bit_equivs{$arch}
-	    and $fileinfo =~ m/$ARCH_REGEX{$arch_64bit_equivs{$arch}}/
+	} elsif (exists $ARCH_64BIT_EQUIVS{$arch}
+	    and $fileinfo =~ m/$ARCH_REGEX{$ARCH_64BIT_EQUIVS{$arch}}/
 	    and $file =~ m,^lib/modules/,) {
 	    # Allow amd64 kernel modules to be installed on i386.
 	} else {
-	    $multiarch = Lintian::Data->new('binaries/multiarch')
-		unless defined($multiarch);
+	    $MULTIARCH = Lintian::Data->new('binaries/multiarch')
+		unless defined($MULTIARCH);
 	    tag 'binary-from-other-architecture', $file
-		unless (grep { $file =~ m,/\Q$_\E/, } $multiarch->all);
+		unless (grep { $file =~ m,/\Q$_\E/, } $MULTIARCH->all);
 	}
     }
 

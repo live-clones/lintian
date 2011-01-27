@@ -253,7 +253,7 @@ foreach my $template (@templates) {
     }
 
     if (not exists $template->{description}) {
-	tag "no-template-description", "$template->{template}";
+	tag 'no-template-description', "$template->{template}";
     } elsif ($template->{description}=~m/^\s*(.*?)\s*?\n\s*\1\s*$/) {
 	# Check for duplication. Should all this be folded into the
 	# description checks?
@@ -294,7 +294,6 @@ foreach my $template (@templates) {
     my $ttype = $template->{type} || '';
     unless ($short =~ /for internal use/i) {
 	my $isprompt = grep { $_ eq $ttype } qw(string password);
-        my $isselect = grep { $_ eq $ttype } qw(select multiselect);
 	if ($isprompt) {
 	    if ($short && ($short !~ m/:$/ || $short =~ m/^(what|who|when|where|which|how)/i)) {
 		tag 'malformed-prompt-in-templates', $template->{template};

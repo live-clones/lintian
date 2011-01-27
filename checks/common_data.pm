@@ -18,7 +18,7 @@ use vars qw
 
 # simple defines for commonly needed data
 
-$known_shells_regex = qr'(?:(?:b|d)?a|t?c|(?:pd|m)?k|z)?sh';
+$known_shells_regex = qr'(?:[bd]?a|t?c|(?:pd|m)?k|z)?sh';
 
 1;
 

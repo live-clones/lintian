@@ -21,6 +21,7 @@
 package Lintian::ocaml;
 
 use strict;
+use warnings;
 
 use File::Basename;
 use Lintian::Collect::Binary ();
@@ -38,7 +39,7 @@ my $info = shift;
 
 # Collect information about .a files from ar-info dump
 my %provided_o;
-open ARINFO, "ar-info";
+open ARINFO, '<', 'ar-info';
 while (<ARINFO>) {
     chomp;
     if (/^\.\/([^:]+): (.*)$/) {
@@ -84,7 +85,7 @@ foreach my $file (@{$info->sorted_file_info}) {
     # For each .cmxa file, there must be a matching .a file (#528367)
     $_ = $file;
     if (s/\.cmxa$/.a/ && !(exists $info->file_info->{$_})) {
-        tag "ocaml-dangling-cmxa", $file;
+        tag 'ocaml-dangling-cmxa', $file;
     }
 
     # For each .cmxs file, there must be a matching .cma or .cmo file
@@ -94,7 +95,7 @@ foreach my $file (@{$info->sorted_file_info}) {
         if (s/\.cmxs$/.cm/
             && !(exists $info->file_info->{"${_}a"})
             && !(exists $info->file_info->{"${_}o"})) {
-            tag "ocaml-dangling-cmxs", $file;
+            tag 'ocaml-dangling-cmxs', $file;
         }
     }
 
@@ -105,7 +106,7 @@ foreach my $file (@{$info->sorted_file_info}) {
     if (s/\.cmx$/.o/
         && !(exists $info->file_info->{$_})
         && !(exists $provided_o{$_})) {
-        tag "ocaml-dangling-cmx", $file;
+        tag 'ocaml-dangling-cmx', $file;
     }
 
     # $somename.cmi should be shipped with $somename.mli or $somename.ml
@@ -115,7 +116,7 @@ foreach my $file (@{$info->sorted_file_info}) {
         && !(exists $info->file_info->{$_})) {
         $cmi_number++;
         if ($cmi_number <= $MAX_CMI) {
-            tag "ocaml-dangling-cmi", $file;
+            tag 'ocaml-dangling-cmi', $file;
         }
     }
 
@@ -132,7 +133,7 @@ foreach my $file (@{$info->sorted_file_info}) {
     # $somename.cmo should usually not be shipped with $somename.cma
     $_ = $file;
     if (s/\.cma$/.cmo/ && exists $info->file_info->{$_}) {
-        tag "ocaml-stray-cmo", $file;
+        tag 'ocaml-stray-cmo', $file;
     }
 
     # development files outside /usr/lib/ocaml (.cmi, .cmx, .cmxa)
@@ -154,14 +155,14 @@ if ($is_dev_package) {
     # summary about .cmi files
     if ($cmi_number > $MAX_CMI) {
         my $plural = ($cmi_number - $MAX_CMI == 1) ? '' : 's';
-        tag "ocaml-dangling-cmi", ($cmi_number - $MAX_CMI),
+        tag 'ocaml-dangling-cmi', ($cmi_number - $MAX_CMI),
             "more file$plural not shown";
     }
     # summary about /usr/lib/ocaml
     if ($outside_number) {
         $outside_prefix = dirname($outside_prefix);
         my $plural = ($outside_number == 1) ? '' : 's';
-        tag "ocaml-dev-file-not-in-usr-lib-ocaml",
+        tag 'ocaml-dev-file-not-in-usr-lib-ocaml',
             "$outside_number file$plural in $outside_prefix";
     }
     if ($has_meta) {
@@ -174,7 +175,7 @@ if ($is_dev_package) {
     if ($dev_number > 0) {
         $dev_prefix = dirname($dev_prefix);
         my $plural = ($dev_number == 1) ? '' : 's';
-        tag "ocaml-dev-file-in-nondev-package",
+        tag 'ocaml-dev-file-in-nondev-package',
             "$dev_number file$plural in $dev_prefix";
     }
 }

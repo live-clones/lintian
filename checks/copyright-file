@@ -209,19 +209,19 @@ if (m/(?:Free\s*Software\s*Foundation.*02139|02111-1307)/s) {
 # Whether the package is covered by the GPL, used later for the libssl check.
 my $gpl;
 
-if (length($_) > 12000
+if (length($_) > 12_000
     and (m/\bGNU GENERAL PUBLIC LICENSE\s*TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION\b/m
          or (m/\bGNU GENERAL PUBLIC LICENSE\s*Version 3/ and m/\bTERMS AND CONDITIONS\s/))) {
     tag 'copyright-file-contains-full-gpl-license';
     $gpl = 1;
 }
 
-if (length($_) > 12000
+if (length($_) > 12_000
     and m/\bGNU Free Documentation License\s*Version 1\.2/ and m/\b1\. APPLICABILITY AND DEFINITIONS/) {
     tag 'copyright-file-contains-full-gfdl-license';
 }
 
-if (length($_) > 10000
+if (length($_) > 10_000
     and m/\bApache License\s+Version 2\.0,/
     and m/TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION/) {
     tag 'copyright-file-contains-full-apache-2-license';

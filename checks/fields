@@ -56,10 +56,10 @@ our %ARCH_WILDCARDS = map {
 $ARCH_WILDCARDS{'linux-any'} = 1;
 $ARCH_WILDCARDS{any} = 1;
 
-our %known_archive_parts = map { $_ => 1 }
+our %KNOWN_ARCHIVE_PARTS = map { $_ => 1 }
     ('non-free', 'contrib');
 
-our %known_sections = map { $_ => 1 }
+our %KNOWN_SECTIONS = map { $_ => 1 }
     ('admin', 'comm', 'cli-mono', 'database', 'debug', 'devel', 'doc',
      'editors', 'electronics', 'embedded', 'fonts', 'games', 'gnome', 'gnu-r',
      'gnustep', 'graphics', 'hamradio', 'haskell', 'httpd', 'interpreters',
@@ -69,11 +69,11 @@ our %known_sections = map { $_ => 1 }
      'utils', 'vcs', 'video', 'web', 'x11', 'xfce', 'zope'
     );
 
-our %known_prios = map { $_ => 1 }
+our %KNOWN_PRIOS = map { $_ => 1 }
     ('required', 'important', 'standard', 'optional', 'extra');
 
 # The Ubuntu original-maintainer field is handled separately.
-our %known_binary_fields = map { $_ => 1 }
+our %KNOWN_BINARY_FIELDS = map { $_ => 1 }
     ('package', 'version', 'architecture', 'depends', 'pre-depends',
      'recommends', 'suggests', 'enhances', 'conflicts', 'provides',
      'replaces', 'breaks', 'essential', 'maintainer', 'section', 'priority',
@@ -81,7 +81,7 @@ our %known_binary_fields = map { $_ => 1 }
      'bugs', 'origin');
 
 # The Ubuntu original-maintainer field is handled separately.
-our %known_udeb_fields = map { $_ => 1 }
+our %KNOWN_UDEB_FIELDS = map { $_ => 1 }
     ('package', 'version', 'architecture', 'subarchitecture', 'depends',
      'recommends', 'enhances', 'provides', 'replaces', 'breaks', 'replaces',
      'maintainer', 'section', 'priority', 'source', 'description',
@@ -425,12 +425,12 @@ if (not defined $info->field('section')) {
 	    my @parts = split /\//, $section, 2;
 
 	    if (scalar @parts > 1) {
-		tag 'unknown-section', $section unless $known_archive_parts{$parts[0]};
-		tag 'unknown-section', $section unless $known_sections{$parts[1]};
+		tag 'unknown-section', $section unless $KNOWN_ARCHIVE_PARTS{$parts[0]};
+		tag 'unknown-section', $section unless $KNOWN_SECTIONS{$parts[1]};
 	    } elsif ($parts[0] eq 'unknown') {
 		tag 'section-is-dh_make-template';
 	    } else {
-		tag 'unknown-section', $section unless $known_sections{$parts[0]};
+		tag 'unknown-section', $section unless $KNOWN_SECTIONS{$parts[0]};
 	    }
 
 	    # Check package name <-> section.  oldlibs is a special case; let
@@ -456,7 +456,7 @@ if (not defined $info->field('priority')) {
 
 	unfold('priority', \$priority);
 
-	tag 'unknown-priority', $priority if (! $known_prios{$priority});
+	tag 'unknown-priority', $priority if (! $KNOWN_PRIOS{$priority});
 
 	if ($pkg =~ /-dbg$/) {
 		tag 'debug-package-should-be-priority-extra', $pkg
@@ -962,10 +962,10 @@ for my $field (readdir FIELDS) {
 	    if ($type eq 'source' && ! $SOURCE_FIELDS->known($field) && ! $known_obsolete_fields{$field});
 
 	tag 'unknown-field-in-control', $field
-	    if ($type eq 'binary' && ! $known_binary_fields{$field} && ! $known_obsolete_fields{$field});
+	    if ($type eq 'binary' && ! $KNOWN_BINARY_FIELDS{$field} && ! $known_obsolete_fields{$field});
 
 	tag 'unknown-field-in-control', $field
-	    if ($type eq 'udeb' && ! $known_udeb_fields{$field} && ! $known_obsolete_fields{$field});
+	    if ($type eq 'udeb' && ! $KNOWN_UDEB_FIELDS{$field} && ! $known_obsolete_fields{$field});
 }
 closedir(FIELDS);
 

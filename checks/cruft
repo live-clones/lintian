@@ -84,7 +84,7 @@ my @file_checks =
 
 # List of files to check for a LF-only end of line terminator, relative
 # to the debian/ source directory
-our @EOL_terminators_files = qw(control changelog);
+our @EOL_TERMINATORS_FILES = qw(control changelog);
 
 sub run {
 
@@ -111,7 +111,6 @@ if ($info->native) {
 
 # Check if this is a documentation package that's not arch: all.  This doesn't
 # really belong here either.
-my $arch;
 if (defined $info->field('architecture')) {
     my $arch = $info->field('architecture');
     if ($pkg =~ /-docs?$/ && $arch ne 'all') {
@@ -149,7 +148,7 @@ for my $file (keys(%$file_info)) {
     }
 }
 
-for my $file (@EOL_terminators_files) {
+for my $file (@EOL_TERMINATORS_FILES) {
     $file = "debian/$file";
 
     next unless defined $file_info->{$file};
@@ -356,7 +355,7 @@ sub find_cruft {
                 my ($version, $major, $minor, $debian) = ($1, $2, $3, $4);
                 if ($major < 5 or ($major == 5 and $minor < 2)) {
                     tag 'ancient-libtool', $name, $version;
-                } elsif ($minor == 2 and (!$debian or $debian < 2)) {
+                } elsif ($minor == 2 and (!$debian || $debian < 2)) {
                     tag 'ancient-libtool', $name, $version;
                 } elsif ($minor < 24) {
                     # not entirely sure whether that would be good idea

@@ -20,6 +20,8 @@
 
 package Lintian::manpages;
 use strict;
+use warnings;
+
 use Util;
 use Lintian::Check qw(check_spelling);
 use Lintian::Tags qw(tag);
@@ -69,8 +71,8 @@ foreach my $file (@{$info->sorted_index}) {
     	next;
     }
 
-    if (($path =~ m,usr/(share|X11R6)/man/$,) and ($fname ne "")) {
-	tag "manpage-in-wrong-directory", $file;
+    if (($path =~ m,usr/(share|X11R6)/man/$,) and ($fname ne '')) {
+	tag 'manpage-in-wrong-directory', $file;
     	next;
     }
 
@@ -82,50 +84,50 @@ foreach my $file (@{$info->sorted_index}) {
 
     my $t = $1;
     if (not $t =~ m,^.*man(\d)/$,o) {
-	tag "manpage-in-wrong-directory", $file;
+	tag 'manpage-in-wrong-directory', $file;
     	next;
     }
     my ($section,$name) = ($1,$fname);
-    my $lang = "";
+    my $lang = '';
        $lang = $1 if $t =~ m,^/([^/]+)/man\d/$,o;
 
     # The country should not be part of the man page locale directory unless
     # it's one of the known cases where the language is significantly
     # different between countries.
-    if ($lang =~ /_/ && $lang !~ /^(pt_BR|zh_[A-Z][A-Z])$/) {
-	tag "manpage-locale-dir-country-specific", $file;
+    if ($lang =~ /_/ && $lang !~ /^(?:pt_BR|zh_[A-Z][A-Z])$/) {
+	tag 'manpage-locale-dir-country-specific', $file;
     }
 
     my @pieces = split(/\./, $name);
     my $ext = pop @pieces;
     if ($ext ne 'gz') {
         push @pieces, $ext;
-	tag "manpage-not-compressed", $file;
+	tag 'manpage-not-compressed', $file;
     } elsif ($perm =~ m,^[-h],o) { # so it's .gz... files first; links later
 	if ($file_info !~ m/gzip compressed data/o) {
-	    tag "manpage-not-compressed-with-gzip", $file;
+	    tag 'manpage-not-compressed-with-gzip', $file;
 	} elsif ($file_info !~ m/max compression/o) {
-	    tag "manpage-not-compressed-with-max-compression", $file;
+	    tag 'manpage-not-compressed-with-max-compression', $file;
 	}
     }
     my $fn_section = pop @pieces;
     my $section_num = $fn_section;
     if (scalar @pieces && $section_num =~ s/^(\d).*$/$1/) {
-	my $bin = join(".", @pieces);
+	my $bin = join('.', @pieces);
 	       $manpage{$bin} = [] unless $manpage{$bin};
 	push @{$manpage{$bin}}, { file => $file, lang => $lang };
 
 	# number of directory and manpage extension equal?
 	if ($section_num != $section) {
-	    tag "manpage-in-wrong-directory", $file;
+	    tag 'manpage-in-wrong-directory', $file;
 	}
     } else {
-	tag "manpage-has-wrong-extension", $file;
+	tag 'manpage-has-wrong-extension', $file;
     }
 
     # special check for manual pages for X11 games
     if ($path =~ m,^usr/X11R6/man/man6/,o) {
-	tag "x11-games-should-be-in-usr-games", $file;
+	tag 'x11-games-should-be-in-usr-games', $file;
     }
 
     # check symbolic links to other manual pages
@@ -144,9 +146,9 @@ foreach my $file (@{$info->sorted_index}) {
                     ($link =~ m,^\.\./\.\./man/man[237]/undocumented\.[237]\.gz$,o) or
                     ($link =~ m,^\.\./\.\./\.\./share/man/man[237]/undocumented\.[237]\.gz$,o) or
                     ($link =~ m,^\.\./\.\./\.\./\.\./usr/share/man/man[237]/undocumented\.[237]\.gz$,o)) {
-		    tag "link-to-undocumented-manpage", $file;
+		    tag 'link-to-undocumented-manpage', $file;
                 } else {
-		    tag "bad-link-to-undocumented-manpage", $file;
+		    tag 'bad-link-to-undocumented-manpage', $file;
 		}
 	    } else {
 		# undocumented link in /usr/X11R6/man -- possibilities:
@@ -154,9 +156,9 @@ foreach my $file (@{$info->sorted_index}) {
 		#    ../../../../usr/share/man/man?/undocumented...
 		if (($link =~ m,^\.\./\.\./\.\./share/man/man[237]/undocumented\.[237]\.gz$,o) or
 		    ($link =~ m,^\.\./\.\./\.\./\.\./usr/share/man/man[237]/undocumented\.[237]\.gz$,o)) {
-		    tag "link-to-undocumented-manpage", $file;
+		    tag 'link-to-undocumented-manpage', $file;
 		} else {
-		    tag "bad-link-to-undocumented-manpage", $file;
+		    tag 'bad-link-to-undocumented-manpage', $file;
 		}
 	    }
 	}
@@ -168,13 +170,13 @@ foreach my $file (@{$info->sorted_index}) {
 	close MANFILE;
 	# Is it a .so link?
 	if ($index_info->{size} < 256) {
-	    my ($i, $first) = (0, "");
+	    my ($i, $first) = (0, '');
 	    do {
-		$first = $manfile[$i++] || ""; 
+		$first = $manfile[$i++] || '';
 	    } while ($first =~ /^\.\\"/ && $manfile[$i]); #");
 
 	    unless ($first) {
-		tag "empty-manual-page", $file;
+		tag 'empty-manual-page', $file;
 	    } elsif ($first =~ /^\.so\s+(.+)?$/) {
 		my $dest = $1;
 		if ($dest =~ m,^([^/]+)/(.+)$,) {
@@ -185,14 +187,14 @@ foreach my $file (@{$info->sorted_index}) {
 			if ($rest =~ m,^([^/]+)/(.+)$,) {
 			    my ($lang, $rest) = ($1, $2);
 			    if ($rest !~ m,^[^/]+\.\d(?:\S+)?(?:\.gz)?$,) {
-				tag "bad-so-link-within-manual-page", $file;
+				tag 'bad-so-link-within-manual-page', $file;
 			    }
 			} else {
-			    tag "bad-so-link-within-manual-page", $file;
+			    tag 'bad-so-link-within-manual-page', $file;
 			}
 		    }
 		} else {
-		    tag "bad-so-link-within-manual-page", $file;
+		    tag 'bad-so-link-within-manual-page', $file;
 		}
 		next;
 	    }
@@ -222,16 +224,16 @@ foreach my $file (@{$info->sorted_index}) {
 	    my $desc = <LEXGROG>;
 	    $desc =~ s/^[^:]+: \"(.*)\"$/$1/;
 	    if ($desc =~ /(\S+)\s+-\s+manual page for \1/i) {
-		tag "manpage-has-useless-whatis-entry", $file;
+		tag 'manpage-has-useless-whatis-entry', $file;
 	    } elsif ($desc =~ /(\S+)\s+-\s+programs? to do something/i) {
 		tag "manpage-is-dh_make-template", $file;
 	    }
 	    1 while <LEXGROG>;
 	    close LEXGROG;
-	    tag "manpage-has-bad-whatis-entry", $file if $? != 0;
+	    tag 'manpage-has-bad-whatis-entry', $file if $? != 0;
 	}
 
-	# If it's not a .so link, run it through "man" to check for errors.
+	# If it's not a .so link, run it through 'man' to check for errors.
 	# If it is in a directory with the standard man layout, cd to the
 	# parent directory before running man so that .so directives are
 	# processed properly.  (Yes, there are man pages that include other
@@ -273,7 +275,7 @@ foreach my $file (@{$info->sorted_index}) {
 	    next if /warning: (?:macro )?\`(Tr|IX)\' not defined/;
 	    chomp;
 	    s/^[^:]+://o;
-	    tag "manpage-has-errors-from-man", $file, $_;
+	    tag 'manpage-has-errors-from-man', $file, $_;
 	    last;
 	}
 	close(MANERRS);
@@ -289,7 +291,7 @@ foreach my $file (@{$info->sorted_index}) {
 		my ($th_command, $th_title, $th_section, $th_date ) =
 		    Text::ParseWords::parse_line( '\s+', 0, $line);
 		if ($th_section && (lc($fn_section) ne lc($th_section))) {
-		    tag "manpage-section-mismatch", "$file:$lc $fn_section != $th_section";
+		    tag 'manpage-section-mismatch', "$file:$lc $fn_section != $th_section";
 		}
 	    }
 	    # Catch hyphens used as minus signs by looking for ones at the
@@ -306,25 +308,25 @@ foreach my $file (@{$info->sorted_index}) {
 			       )?
 			      (--?\w+)/ox) {
 		$hc++;
-		tag "hyphen-used-as-minus-sign", "$file:$lc"
+		tag 'hyphen-used-as-minus-sign', "$file:$lc"
 		    if $hc <= 10 or $ENV{'LINTIAN_DEBUG'};
 	    }
 	    if (($line =~ m,(/usr/(dict|doc|etc|info|man|adm|preserve)/),o)
 		|| ($line =~ m,(/var/(adm|catman|named|nis|preserve)/),o)) {
 		# FSSTND dirs in man pages
 		# regexes taken from checks/files
-		tag "FSSTND-dir-in-manual-page", "$file:$lc $1";
+		tag 'FSSTND-dir-in-manual-page', "$file:$lc $1";
 	    }
 	    if ($line eq '.SH "POD ERRORS"') {
-		tag "manpage-has-errors-from-pod2man", "$file:$lc";
+		tag 'manpage-has-errors-from-pod2man', "$file:$lc";
 	    }
 	    # Check for spelling errors if the manpage is English
-	    check_spelling("spelling-error-in-manpage", $line, $file, { $pkg => 1 })
+	    check_spelling('spelling-error-in-manpage', $line, $file, { $pkg => 1 })
 		if ($path =~ m,/man/man\d/,);
 	}
-	tag "hyphen-used-as-minus-sign", $file, ($hc - 10),
+	tag 'hyphen-used-as-minus-sign', $file, ($hc - 10),
 	    "more occurrences not shown"
-	    if ($hc > 10 and ! $ENV{'LINTIAN_DEBUG'});
+	    if ($hc > 10 && ! $ENV{'LINTIAN_DEBUG'});
     }
 }
 
@@ -339,25 +341,25 @@ for my $f (sort keys %binary) {
 		if ($manp_info->{file} =~ m/X11R6/) {
 		    # ok.
 		} else {
-		    tag "manpage-for-x11-binary-in-wrong-directory", "$binary{$f} $manp_info->{file}";
+		    tag 'manpage-for-x11-binary-in-wrong-directory', "$binary{$f} $manp_info->{file}";
 		}
 	    }
 	} else {
 	    for my $manp_info (@{$manpage{$f}}) {
 		# no. manpage in X11?
 		if ($manp_info->{file} =~ m/X11R6/) {
-		    tag "manpage-for-non-x11-binary-in-wrong-directory", "$binary{$f} $manp_info->{file}";
+		    tag 'manpage-for-non-x11-binary-in-wrong-directory', "$binary{$f} $manp_info->{file}";
 		} else {
 		    # ok.
 		}
 	    }
 	}
 
-	if (not grep { $_->{lang} eq "" } @{$manpage{$f}}) {
-	    tag "binary-without-english-manpage", "$binary{$f}";
+	if (not grep { $_->{lang} eq '' } @{$manpage{$f}}) {
+	    tag 'binary-without-english-manpage', "$binary{$f}";
 	}
     } else {
-	tag "binary-without-manpage", "$binary{$f}";
+	tag 'binary-without-manpage', "$binary{$f}";
     }
 }
 

@@ -26,7 +26,7 @@ use Util;
 use Lintian::Tags qw(tag);
 use Lintian::Check qw(check_maintainer);
 
-my $check_checksums = $main::check_checksums;
+our $CHECK_CHECKSUMS = $main::check_checksums;
 
 sub run {
 
@@ -88,6 +88,7 @@ if (defined $info->field('distribution')) {
     } else {
 	my $urgency = lc $info->field('urgency');
 	$urgency =~ s/ .*//o;
+	my %urgencies = map { $_ => 1 } qw(low medium high critical emergency);
 	unless ($urgency =~ /^(?:low|medium|high|critical|emergency)$/io) {
 	    tag 'bad-urgency-in-changes-file', $info->field('urgency');
 	}
@@ -132,7 +133,7 @@ if (defined $info->field('distribution')) {
 	}
 
 	# check checksums
-	if ($check_checksums or $file =~ m/\.dsc$/o) {
+	if ($CHECK_CHECKSUMS or $file =~ m/\.dsc$/o) {
 	    foreach my $alg (qw(md5 sha1 sha256)) {
 		next unless exists $file_info->{checksums}{$alg};
 
