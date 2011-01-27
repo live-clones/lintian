@@ -108,6 +108,7 @@ our %EMBEDDED_LIBRARIES = (
 	'libjpeg'	=> { source => qr'^libjpeg.*',
 			     match => qr'(?m)^Caution: quantization tables are too coarse for baseline JPEG'},
 	'openjpeg'	=> qr'tcd_decode: incomplete bistream',
+	'tinyxml'	=> qr'Error when TiXmlDocument added to document',
 );
 
 our $MULTIARCH;

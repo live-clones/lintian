@@ -30,7 +30,7 @@ lintian (2.5.0) UNRELEASED; urgency=low
     + [RG] Add swipl to the list of known interpreters.  (Closes: #591316)
     + [RG] Detect embedded copies of ftgl, t1lib, gl2ps, libgd2,
       ncurses, openssl (libcrypto), sqlite/3, libm, ltdl, curl, libmng,
-      libmsn, libmikmod, and libmysqlclient.
+      libmsn, libmikmod, libmysqlclient, and tinyxml.
     + [RG] Merge embedded-{zlib,lib{png,jpeg,openjpeg}} into
       embedded-library.
   * checks/cruft{,.desc}:
