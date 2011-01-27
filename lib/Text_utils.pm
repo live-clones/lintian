@@ -137,7 +137,7 @@ sub dtml_to_html {
 		push(@o,'<pre>');
 		$pre=1;
 	    }
-	    push(@o,"$_");
+	    push(@o,$_);
 	}
 	# normal line
 	else {

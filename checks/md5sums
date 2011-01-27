@@ -104,15 +104,15 @@ close(C);
 for my $file (keys %control_entry) {
 
     if (not exists $info_entry{$file}) {
-	tag "md5sums-lists-nonexisting-file", "$file";
+	tag "md5sums-lists-nonexisting-file", $file;
     } elsif ($info_entry{$file} ne $control_entry{$file}) {
-	tag "md5sum-mismatch", "$file";
+	tag "md5sum-mismatch", $file;
     }
 
     delete $info_entry{$file};
 }
 for my $file (keys %info_entry) {
-    tag "file-missing-in-md5sums", "$file"
+    tag "file-missing-in-md5sums", $file
 	unless ($conffile{$file} || $file =~ m%^var/lib/[ai]spell/.%);
 }
 

@@ -1481,7 +1481,7 @@ foreach my $pkg_info ($schedule->get_all) {
     }
     # if the package's basedir was not removed then run the
     # auto-remove: yes collection scripts
-    if (-d "$base") {
+    if (-d $base) {
 	chdir($base);
 	for my $coll (keys %collection_info) {
 	    my $ci = $collection_info{$coll};

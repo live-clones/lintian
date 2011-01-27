@@ -306,7 +306,7 @@ sub fail {
     if (@_) {
 	$str = string('internal error', @_);
     } elsif ($!) {
-	$str = string('internal error', "$!");
+	$str = string('internal error', $!);
     } else {
 	$str = string('internal error');
     }

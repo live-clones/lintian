@@ -83,7 +83,7 @@ foreach (@{$info->sorted_index}) {
 
     	# check if this symlink references a directory elsewhere
 	if ($link =~ m,^(?:\.\.)?/,) {
-	    tag 'usr-share-doc-symlink-points-outside-of-usr-share-doc', "$link";
+	    tag 'usr-share-doc-symlink-points-outside-of-usr-share-doc', $link;
 	    last;
     	}
 
@@ -115,7 +115,7 @@ foreach (@{$info->sorted_index}) {
 		# yes, everything is ok.
 	    } else {
 		# no, it is not.
-		tag 'usr-share-doc-symlink-to-foreign-package', "$link";
+		tag 'usr-share-doc-symlink-to-foreign-package', $link;
 	    }
     	} else {		# no, source is not available
 	    tag 'cannot-check-whether-usr-share-doc-symlink-points-to-foreign-package';
@@ -229,7 +229,7 @@ if (length($_) > 10000
 
 # wtf?
 if ((m,common-licenses(/\S+),) && (! m,/usr/share/common-licenses/,)) {
-    tag 'copyright-does-not-refer-to-common-license-file', "$1";
+    tag 'copyright-does-not-refer-to-common-license-file', $1;
 }
 
 # This check is a bit prone to false positives, since some other licenses

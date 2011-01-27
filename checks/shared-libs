@@ -102,12 +102,12 @@ for my $cur_file (@{$info->sorted_index}) {
 	# Now that we're sure this is really a shared library, report on
 	# non-PIC problems.
         if ($cur_file eq $real_file and $objdump->{$cur_file}->{TEXTREL}) {
-            tag "shlib-with-non-pic-code", "$cur_file";
+            tag "shlib-with-non-pic-code", $cur_file;
         }
 
 	my @symbol_names = map { @{$_}[2] } @{$objdump->{$cur_file}->{SYMBOLS}};
 	if (grep /^_?exit$/, @symbol_names and !grep $_ eq 'fork', @symbol_names) {
-	    tag "shlib-calls-exit", "$cur_file";
+	    tag "shlib-calls-exit", $cur_file;
 	}
 
         # Don't apply the permission checks to links since this only results
@@ -159,7 +159,7 @@ for my $cur_file (@{$info->sorted_index}) {
     } elsif (exists $objdump->{$cur_file}->{OTHER_DATA}
 	     && $ldconfig_dirs->known(dirname($cur_file))
 	     && exists $sharedobject{$cur_file}) {
-	tag "sharedobject-in-library-directory-missing-soname", "$cur_file";
+	tag "sharedobject-in-library-directory-missing-soname", $cur_file;
     } elsif ($cur_file =~ m/\.la$/ and not defined($cur_file_data->{link})) {
 	local $_;
 	open(LAFILE, "< unpacked/$cur_file")
@@ -292,7 +292,7 @@ if ($#shlibs == -1) {
 	    for my $shlib (@shlibs) {
 		# skip it if it's not a public shared library
 		next unless $ldconfig_dirs->known(dirname($shlib));
-		tag "no-shlibs-control-file", "$shlib";
+		tag "no-shlibs-control-file", $shlib;
 	    }
 	}
     } else {
@@ -368,7 +368,7 @@ if ($#shlibs == -1 and not %unversioned_shlibs) {
 	for my $shlib (@shlibs, keys %unversioned_shlibs) {
 	    # skip it if it's not a public shared library
 	    next unless $ldconfig_dirs->known(dirname($shlib));
-	    tag "no-symbols-control-file", "$shlib";
+	    tag "no-symbols-control-file", $shlib;
 	}
     }
 } elsif (open(IN, '<', 'control/symbols')) {
@@ -572,7 +572,7 @@ if ($type eq 'udeb') {
 } else {
     tag "postinst-has-useless-call-to-ldconfig", ""
 	if $we_call_postinst and not $must_call_ldconfig;
-    tag "postinst-must-call-ldconfig", "$must_call_ldconfig"
+    tag "postinst-must-call-ldconfig", $must_call_ldconfig
 	if not $we_call_postinst and $must_call_ldconfig;
 }
 
@@ -591,7 +591,7 @@ if (-f 'control/postrm') {
 	tag "postrm-has-useless-call-to-ldconfig", ""
 	    unless $must_call_ldconfig;
     } else {
-	tag "postrm-should-call-ldconfig", "$must_call_ldconfig"
+	tag "postrm-should-call-ldconfig", $must_call_ldconfig
 	    if $must_call_ldconfig;
     }
 

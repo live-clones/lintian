@@ -70,7 +70,7 @@ while (<CONTROL>) {
 		if ($field =~ /^xs-vcs-/) {
 			my $base = $field;
 			$base =~ s/^xs-//;
-			tag 'xs-vcs-header-in-debian-control', "$field"
+			tag 'xs-vcs-header-in-debian-control', $field
 			    if $src_fields->known($base);
 		}
 		if ($field eq 'xc-package-type') {

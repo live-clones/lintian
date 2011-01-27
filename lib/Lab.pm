@@ -62,7 +62,7 @@ sub setup {
 	$self->{dir} = $dir;
 	$self->{dist} = $dist;
 
-	if (-d "$dir" && ! -d "$dir/changes") {
+	if (-d $dir && ! -d "$dir/changes") {
 	    mkdir("$dir/changes", 0777)
 		or fail("cannot create lab directory $dir/changes");
 	}

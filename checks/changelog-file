@@ -97,9 +97,9 @@ foreach (@{$info->sorted_index}) {
 	# Check a few things about the NEWS.Debian file.
 	if ($file =~ /^NEWS.Debian(?:\.gz)?$/i) {
 	    if (not $file =~ /\.gz$/) {
-		tag 'debian-news-file-not-compressed', "$file1";
+		tag 'debian-news-file-not-compressed', $file1;
 	    } elsif ($file ne 'NEWS.Debian.gz') {
-		tag 'wrong-name-for-debian-news-file', "$file1";
+		tag 'wrong-name-for-debian-news-file', $file1;
 	    }
 	}
 
@@ -110,7 +110,7 @@ foreach (@{$info->sorted_index}) {
 	next unless $file =~ m/^changelog(?:\.html)?(?:\.gz)?$|changelog.Debian(?:\.gz)?$/;
 
 	if (not $file =~ m/\.gz$/) {
-	    tag 'changelog-file-not-compressed', "$file";
+	    tag 'changelog-file-not-compressed', $file;
 	} else {
 	    my $max_compressed = 0;
 	    if (exists $file_info{$file1} && defined $file_info{$file1}) {
@@ -120,7 +120,7 @@ foreach (@{$info->sorted_index}) {
 	    }
 	    if (not $max_compressed and $file_info{$file1} =~ m/gzip compressed/) {
 		unless ($is_a_symlink{$file1}) {
-		    tag 'changelog-not-compressed-with-max-compression', "$file";
+		    tag 'changelog-not-compressed-with-max-compression', $file;
 		}
 	    }
 	}
@@ -326,7 +326,7 @@ if (@entries) {
     }
     my $changes = $entry->Changes || '';
     while ($changes =~ /(closes\s*(?:bug)?\#?\s?\d{6,})[^\w]/ig) {
-	tag 'possible-missing-colon-in-closes', "$1" if $1;
+	tag 'possible-missing-colon-in-closes', $1 if $1;
     }
     my $closes = $entry->Closes;
     for my $bug (@$closes) {

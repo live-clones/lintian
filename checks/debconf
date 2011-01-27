@@ -436,7 +436,7 @@ for my $file (qw(config prerm postrm preinst postinst)) {
 	    }
 	    if (not $isdefault and m/db_fset.*isdefault/) {
 	        # TODO: Perl?
-	        tag 'isdefault-flag-is-deprecated', "$file";
+	        tag 'isdefault-flag-is-deprecated', $file;
 	        $isdefault=1;
 	    }
 	    if (not $db_purge and m/db_purge/) {    # TODO: Perl?
@@ -519,7 +519,7 @@ foreach my $filename (sort keys %{$info->scripts}) {
 	s/#.*//;    # Not perfect for Perl, but should be OK
 	if (m,/usr/share/debconf/confmodule, or
 	        m/(?:Debconf|Debian::DebConf)::Client::ConfModule/) {
-	    tag 'debconf-is-not-a-registry', "$filename";
+	    tag 'debconf-is-not-a-registry', $filename;
 	    last;
 	}
     }

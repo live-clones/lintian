@@ -67,7 +67,7 @@ sub run {
 			}
 			foreach my $listfile (glob("debfiles/patches/00list*")) {
 				my @patches;
-				if (open(IN, '<', "$listfile")) {
+				if (open(IN, '<', $listfile)) {
 					while(<IN>) {
 						chomp;
 						next if (/^\#/); #ignore comments or CPP directive

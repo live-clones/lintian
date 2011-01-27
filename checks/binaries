@@ -145,23 +145,23 @@ foreach my $file (sort keys %{$info->objdump_info}) {
 	if ($arch ne 'hppa') {
 	    if ($foo eq '.text' and $sec eq 'Base' and
 		$sym eq '__gmon_start__') {
-		tag 'binary-compiled-with-profiling-enabled', "$file";
+		tag 'binary-compiled-with-profiling-enabled', $file;
 	    }
 	} else {
 	    if ( ($sec =~ /^GLIBC_.*/) and ($sym eq '_mcount') ) {
-		tag 'binary-compiled-with-profiling-enabled', "$file";
+		tag 'binary-compiled-with-profiling-enabled', $file;
 	    }
 	}
     }
     foreach (@{$objdump->{NOTES}}) {
 	if ($_ eq 'File format not recognized') {
-            tag 'apparently-corrupted-elf-binary', "$file";
+            tag 'apparently-corrupted-elf-binary', $file;
 	} elsif ($_ eq 'File truncated') {
-            tag 'apparently-truncated-elf-binary', "$file";
+            tag 'apparently-truncated-elf-binary', $file;
 	} elsif ($_ eq 'Packed with UPX') {
-	    tag 'binary-file-compressed-with-upx', "$file";
+	    tag 'binary-file-compressed-with-upx', $file;
 	} elsif ($_ eq 'Invalid operation') {
-	    tag 'binary-with-bad-dynamic-table', "$file" unless $file =~ m%^usr/lib/debug/%;
+	    tag 'binary-with-bad-dynamic-table', $file unless $file =~ m%^usr/lib/debug/%;
 	}
     }
 }
@@ -238,7 +238,7 @@ foreach my $file (@{$info->sorted_file_info}) {
 	$multiarch = Lintian::Data->new('binaries/multiarch')
 	    unless defined($multiarch);
 	unless ($arch_path and $multiarch->known($arch_path)) {
-	    tag 'arch-independent-package-contains-binary-or-object', "$file";
+	    tag 'arch-independent-package-contains-binary-or-object', $file;
 	}
     }
 
@@ -246,11 +246,11 @@ foreach my $file (@{$info->sorted_file_info}) {
     next unless $fileinfo =~ m/^[^,]*\bELF\b/o;
 
     if ($file =~ m,^etc/,) {
-	tag 'binary-in-etc', "$file";
+	tag 'binary-in-etc', $file;
     }
 
     if ($file =~ m,^usr/share/,) {
-	tag 'arch-dependent-file-in-usr-share', "$file";
+	tag 'arch-dependent-file-in-usr-share', $file;
     }
 
     if ($arch ne 'all' and $fileinfo !~ m/$ARCH_REGEX{$arch}/) {
@@ -285,13 +285,13 @@ foreach my $file (@{$info->sorted_file_info}) {
 		# Check for OCaml custom executables (#498138)
 		tag 'ocaml-custom-executable', $file;
 	    } else {
-		tag 'unstripped-binary-or-object', "$file";
+		tag 'unstripped-binary-or-object', $file;
 	    }
 	}
     } else {
 	# stripped but a debug or profiling library?
 	if (($file =~ m,/lib/debug/,o) or ($file =~ m,/lib/profile/,o)) {
-	    tag 'library-in-debug-or-profile-should-not-be-stripped', "$file";
+	    tag 'library-in-debug-or-profile-should-not-be-stripped', $file;
 	} else {
 	    # appropriately stripped, but is it stripped enough?
 	    if (exists $objdump->{NOTE_SECTION}) {
@@ -362,7 +362,7 @@ foreach my $file (@{$info->sorted_file_info}) {
             # loader (which itself has no dependencies).
             next if ($file =~ m%^usr/lib/debug/%);
             next if ($file =~ m%^lib(?:|32|64)/(?:[\w/]+/)?ld-[\d.]+\.so$%);
-	    tag 'shared-lib-without-dependency-information', "$file";
+	    tag 'shared-lib-without-dependency-information', $file;
 	} else {
 	    # Some exceptions: files in /boot, /usr/lib/debug/*, named *-static or
 	    # *.static, or *-static as package-name.
@@ -375,7 +375,7 @@ foreach my $file (@{$info->sorted_file_info}) {
 	    next if ($file =~ m%^usr/lib/debug/%);
 	    # ldconfig must be static.
 	    next if ($file eq 'sbin/ldconfig');
-	    tag 'statically-linked-binary', "$file";
+	    tag 'statically-linked-binary', $file;
 	}
     } else {
 	my $lib;
@@ -391,9 +391,9 @@ foreach my $file (@{$info->sorted_file_info}) {
 	}
 	if ($no_libc and not $file =~ m,/libc\b,) {
 	    if ($fileinfo =~ m/shared object/) {
-		tag 'library-not-linked-against-libc', "$file";
+		tag 'library-not-linked-against-libc', $file;
 	    } else {
-		tag 'program-not-linked-against-libc', "$file";
+		tag 'program-not-linked-against-libc', $file;
 	    }
 	}
     }

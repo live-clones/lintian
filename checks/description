@@ -140,7 +140,7 @@ foreach (split /\n/, $description) {
 	   m%(?:\s|^)((\w(?:\S*\w)?)(\s+(\2))+)(?:[\).,?!:;\s]|\z)%i) {
 	my $words = $1;
 	$stripped =~ s/\Q$words//;
-        tag "description-contains-duplicated-word", "$words";
+        tag "description-contains-duplicated-word", $words;
     }
 
     my $first_person = $_;

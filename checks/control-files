@@ -77,17 +77,17 @@ while (<IN>) {
     # valid control file?
     unless ( exists $ctrl{$file} ) {
 	if ( exists $ctrl_alt{$file} ) {
-	    tag 'not-allowed-control-file', "$file";
+	    tag 'not-allowed-control-file', $file;
 	    next;
 	} else {
-	    tag 'unknown-control-file', "$file";
+	    tag 'unknown-control-file', $file;
 	    next;
 	}
     }
 
     # I'm not sure about the udeb case
     if ($type ne 'udeb' and $size == 0) {
-	tag 'control-file-is-empty', "$file";
+	tag 'control-file-is-empty', $file;
     }
 
 

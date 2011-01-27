@@ -86,7 +86,7 @@ if (open(IN, '<', $postinst)) {
 	my ($name,$opt) = ($1,$2);
 	next if $opt eq 'remove';
 	if ($initd_postinst{$name}++ == 1) {
-	    tag "duplicate-updaterc.d-calls-in-postinst", "$name";
+	    tag "duplicate-updaterc.d-calls-in-postinst", $name;
 	    next;
 	}
 	unless (m,>\s*/dev/null,o) {
@@ -104,7 +104,7 @@ if (open(IN, '<', $preinst)) {
 	next unless m/update-rc\.d\s+(?:$opts_r)*($name_r)\s+($action_r)/o;
 	my ($name,$opt) = ($1,$2);
 	next if $opt eq 'remove';
-	tag "preinst-calls-updaterc.d", "$name";
+	tag "preinst-calls-updaterc.d", $name;
     }
     close(IN);
 }
@@ -116,7 +116,7 @@ if (open(IN, '<', $postrm)) {
 	s/\#.*$//o;
 	next unless m/update-rc\.d\s+($opts_r)*($name_r)/o;
 	if ($initd_postrm{$2}++ == 1) {
-	    tag "duplicate-updaterc.d-calls-in-postrm", "$2";
+	    tag "duplicate-updaterc.d-calls-in-postrm", $2;
 	    next;
 	}
 	unless (m,>\s*/dev/null,o) {
@@ -132,7 +132,7 @@ if (open(IN, '<', $prerm)) {
 	next if /$exclude_r/o;
 	s/\#.*$//o;
 	next unless m/update-rc\.d\s+($opts_r)*($name_r)/o;
-	tag "prerm-calls-updaterc.d", "$2";
+	tag "prerm-calls-updaterc.d", $2;
     }
     close(IN);
 }
@@ -157,7 +157,7 @@ if (open(IN, '<', $conffiles)) {
 	$conffiles{$_} = 1;
 
 	if (m,^/?etc/rc.\.d,o) {
-	    tag "file-in-etc-rc.d-marked-as-conffile", "$_";
+	    tag "file-in-etc-rc.d-marked-as-conffile", $_;
 	}
     }
     close(IN);
@@ -411,7 +411,7 @@ sub check_init {
 		    "$dependency -> $implied_dependencies{$dependency}";
 	    } elsif ($keyword =~ m/^required-/ && $dependency =~ m/^\$/) {
 		tag "init.d-script-depends-on-unknown-virtual-facility",
-		    "etc/init.d/$_", "$dependency"
+		    "etc/init.d/$_", $dependency
 		    unless ($VIRTUAL_FACILITIES->known($dependency));
 	    }
 	}

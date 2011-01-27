@@ -142,7 +142,7 @@ for my $file (@{$info->sorted_index}) {
 		}
 	    }
 	    close MM;
-	    tag "menu-method-should-include-menu-h", "$file"
+	    tag "menu-method-should-include-menu-h", $file
 		unless $menumethod_includes_menu_h or $pkg eq 'menu';
 	}
 	# package doc dir?
@@ -223,10 +223,10 @@ if ($anymenu_file) {
     # debhelper apparently currently still adds that to the maintainer script,
     # so don't warn if it's done.
     if (not $postinst{'calls-updatemenus'}) {
-	tag "postinst-does-not-call-updatemenus", "$anymenu_file";
+	tag "postinst-does-not-call-updatemenus", $anymenu_file;
     }
     if ($menumethod_file and not $postrm{'calls-updatemenus'}) {
-	tag "postrm-does-not-call-updatemenus", "$menumethod_file"
+	tag "postrm-does-not-call-updatemenus", $menumethod_file
 	    unless $pkg eq 'menu';
     }
 } else {
@@ -331,9 +331,9 @@ sub check_doc_base_field {
     my ($pkg, $dbfile, $line, $field, $vals, $sawfields, $sawformats,
         $knownfields, $all_files, $all_links) = @_;
 
-    tag "doc-base-file-unknown-field", "$dbfile:$line", "$field"
+    tag "doc-base-file-unknown-field", "$dbfile:$line", $field
         unless defined $knownfields->{$field};
-    tag "doc-base-file-duplicated-field", "$dbfile:$line", "$field"
+    tag "doc-base-file-duplicated-field", "$dbfile:$line", $field
         if $sawfields->{$field};
     $sawfields->{$field} = 1;
 
@@ -398,7 +398,7 @@ sub check_doc_base_field {
     } elsif ($field eq 'document') {
         $_ = join (' ', @$vals);
 
-        tag "doc-base-invalid-document-field", "$dbfile:$line", "$_"
+        tag 'doc-base-invalid-document-field', "$dbfile:$line", $_
             unless /^[a-z0-9+.-]+$/;
         tag "doc-base-document-field-ends-in-whitespace", "$dbfile:$line"
             if /[ \t]$/;
@@ -501,7 +501,7 @@ sub check_doc_base_file_section {
                 && !$sawfields->{'index'});
     }
     for my $field (sort keys %$knownfields) {
-        tag "doc-base-file-lacks-required-field", "$dbfile:$line", "$field"
+        tag 'doc-base-file-lacks-required-field', "$dbfile:$line", $field
             if ($knownfields->{$field} == 1 && !$sawfields->{$field});
     }
 }
@@ -694,7 +694,7 @@ sub check_script {
 	    }
 	    # checked first?
 	    if (not $pres->{'checks-for-installdocs'}) {
-		tag "maintainer-script-does-not-check-for-existence-of-installdocs", "$script" unless $no_check_installdocs++;
+		tag "maintainer-script-does-not-check-for-existence-of-installdocs", $script unless $no_check_installdocs++;
 	    }
 	}
     }

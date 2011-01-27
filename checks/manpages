@@ -70,7 +70,7 @@ foreach my $file (@{$info->sorted_index}) {
     }
 
     if (($path =~ m,usr/(share|X11R6)/man/$,) and ($fname ne "")) {
-	tag "manpage-in-wrong-directory", "$file";
+	tag "manpage-in-wrong-directory", $file;
     	next;
     }
 
@@ -82,7 +82,7 @@ foreach my $file (@{$info->sorted_index}) {
 
     my $t = $1;
     if (not $t =~ m,^.*man(\d)/$,o) {
-	tag "manpage-in-wrong-directory", "$file";
+	tag "manpage-in-wrong-directory", $file;
     	next;
     }
     my ($section,$name) = ($1,$fname);
@@ -93,19 +93,19 @@ foreach my $file (@{$info->sorted_index}) {
     # it's one of the known cases where the language is significantly
     # different between countries.
     if ($lang =~ /_/ && $lang !~ /^(pt_BR|zh_[A-Z][A-Z])$/) {
-	tag "manpage-locale-dir-country-specific", "$file";
+	tag "manpage-locale-dir-country-specific", $file;
     }
 
     my @pieces = split(/\./, $name);
     my $ext = pop @pieces;
     if ($ext ne 'gz') {
         push @pieces, $ext;
-	tag "manpage-not-compressed", "$file";
+	tag "manpage-not-compressed", $file;
     } elsif ($perm =~ m,^[-h],o) { # so it's .gz... files first; links later
 	if ($file_info !~ m/gzip compressed data/o) {
-	    tag "manpage-not-compressed-with-gzip", "$file";
+	    tag "manpage-not-compressed-with-gzip", $file;
 	} elsif ($file_info !~ m/max compression/o) {
-	    tag "manpage-not-compressed-with-max-compression", "$file";
+	    tag "manpage-not-compressed-with-max-compression", $file;
 	}
     }
     my $fn_section = pop @pieces;
@@ -117,15 +117,15 @@ foreach my $file (@{$info->sorted_index}) {
 
 	# number of directory and manpage extension equal?
 	if ($section_num != $section) {
-	    tag "manpage-in-wrong-directory", "$file";
+	    tag "manpage-in-wrong-directory", $file;
 	}
     } else {
-	tag "manpage-has-wrong-extension", "$file";
+	tag "manpage-has-wrong-extension", $file;
     }
 
     # special check for manual pages for X11 games
     if ($path =~ m,^usr/X11R6/man/man6/,o) {
-	tag "x11-games-should-be-in-usr-games", "$file";
+	tag "x11-games-should-be-in-usr-games", $file;
     }
 
     # check symbolic links to other manual pages
@@ -144,9 +144,9 @@ foreach my $file (@{$info->sorted_index}) {
                     ($link =~ m,^\.\./\.\./man/man[237]/undocumented\.[237]\.gz$,o) or
                     ($link =~ m,^\.\./\.\./\.\./share/man/man[237]/undocumented\.[237]\.gz$,o) or
                     ($link =~ m,^\.\./\.\./\.\./\.\./usr/share/man/man[237]/undocumented\.[237]\.gz$,o)) {
-		    tag "link-to-undocumented-manpage", "$file";
+		    tag "link-to-undocumented-manpage", $file;
                 } else {
-		    tag "bad-link-to-undocumented-manpage", "$file";
+		    tag "bad-link-to-undocumented-manpage", $file;
 		}
 	    } else {
 		# undocumented link in /usr/X11R6/man -- possibilities:
@@ -154,9 +154,9 @@ foreach my $file (@{$info->sorted_index}) {
 		#    ../../../../usr/share/man/man?/undocumented...
 		if (($link =~ m,^\.\./\.\./\.\./share/man/man[237]/undocumented\.[237]\.gz$,o) or
 		    ($link =~ m,^\.\./\.\./\.\./\.\./usr/share/man/man[237]/undocumented\.[237]\.gz$,o)) {
-		    tag "link-to-undocumented-manpage", "$file";
+		    tag "link-to-undocumented-manpage", $file;
 		} else {
-		    tag "bad-link-to-undocumented-manpage", "$file";
+		    tag "bad-link-to-undocumented-manpage", $file;
 		}
 	    }
 	}
@@ -174,7 +174,7 @@ foreach my $file (@{$info->sorted_index}) {
 	    } while ($first =~ /^\.\\"/ && $manfile[$i]); #");
 
 	    unless ($first) {
-		tag "empty-manual-page", "$file";
+		tag "empty-manual-page", $file;
 	    } elsif ($first =~ /^\.so\s+(.+)?$/) {
 		my $dest = $1;
 		if ($dest =~ m,^([^/]+)/(.+)$,) {
@@ -185,14 +185,14 @@ foreach my $file (@{$info->sorted_index}) {
 			if ($rest =~ m,^([^/]+)/(.+)$,) {
 			    my ($lang, $rest) = ($1, $2);
 			    if ($rest !~ m,^[^/]+\.\d(?:\S+)?(?:\.gz)?$,) {
-				tag "bad-so-link-within-manual-page", "$file";
+				tag "bad-so-link-within-manual-page", $file;
 			    }
 			} else {
-			    tag "bad-so-link-within-manual-page", "$file";
+			    tag "bad-so-link-within-manual-page", $file;
 			}
 		    }
 		} else {
-		    tag "bad-so-link-within-manual-page", "$file";
+		    tag "bad-so-link-within-manual-page", $file;
 		}
 		next;
 	    }
@@ -222,13 +222,13 @@ foreach my $file (@{$info->sorted_index}) {
 	    my $desc = <LEXGROG>;
 	    $desc =~ s/^[^:]+: \"(.*)\"$/$1/;
 	    if ($desc =~ /(\S+)\s+-\s+manual page for \1/i) {
-		tag "manpage-has-useless-whatis-entry", "$file";
+		tag "manpage-has-useless-whatis-entry", $file;
 	    } elsif ($desc =~ /(\S+)\s+-\s+programs? to do something/i) {
-		tag "manpage-is-dh_make-template", "$file";
+		tag "manpage-is-dh_make-template", $file;
 	    }
 	    1 while <LEXGROG>;
 	    close LEXGROG;
-	    tag "manpage-has-bad-whatis-entry", "$file" if $? != 0;
+	    tag "manpage-has-bad-whatis-entry", $file if $? != 0;
 	}
 
 	# If it's not a .so link, run it through "man" to check for errors.
@@ -273,7 +273,7 @@ foreach my $file (@{$info->sorted_index}) {
 	    next if /warning: (?:macro )?\`(Tr|IX)\' not defined/;
 	    chomp;
 	    s/^[^:]+://o;
-	    tag "manpage-has-errors-from-man", "$file", "$_";
+	    tag "manpage-has-errors-from-man", $file, $_;
 	    last;
 	}
 	close(MANERRS);

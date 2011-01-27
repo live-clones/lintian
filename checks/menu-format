@@ -400,7 +400,7 @@ foreach my $file (@{$info->sorted_index}) {
     my $index_info = $info->index->{$file};
     my $operm = $index_info->{operm};
 
-    tag 'deprecated-kdelnk-file', "$file" if ($file =~ m,\.kdelnk$,);
+    tag 'deprecated-kdelnk-file', $file if ($file =~ m,\.kdelnk$,);
 
     if ($index_info->{type} =~ m/[-h]/ &&
 	$file =~ m,^usr/share/applications/.*\.desktop$,) {
@@ -694,7 +694,7 @@ sub VerifyIcon {
     }
 
     if (not ($icon =~ m/\.xpm$/i)) {
-	tag "menu-icon-not-in-xpm-format", "$icon";
+	tag "menu-icon-not-in-xpm-format", $icon;
 	return;
     }
 
@@ -705,7 +705,7 @@ sub VerifyIcon {
     }
 
     if (! open (IN, '<', $iconfile)) {
-	tag "menu-icon-missing", "$icon";
+	tag "menu-icon-missing", $icon;
 	return;
     }
 
@@ -838,7 +838,7 @@ sub VerifyDesktopFile {
             }
         }
         unless ($saw_main) {
-            tag "desktop-entry-lacks-main-category", "$file";
+            tag "desktop-entry-lacks-main-category", $file;
         }
     }
 
@@ -849,7 +849,7 @@ sub VerifyDesktopFile {
     if (defined $vals{OnlyShowIn} and not $in_reserved) {
 	my @envs = split (';', $vals{OnlyShowIn});
 	if (@envs > 1) {
-	    tag 'desktop-entry-limited-to-environments', "$file";
+	    tag 'desktop-entry-limited-to-environments', $file;
 	}
     }
 }
