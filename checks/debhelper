@@ -255,7 +255,7 @@ if ($seendhcleank and $level >= 7) {
 my @indebfiles = ();
 opendir(DEBIAN, 'debfiles')
     or fail("Can't open debfiles directory.");
-while (defined(my $file=readdir(DEBIAN))) {
+foreach my $file (sort readdir(DEBIAN)) {
     if ($file =~ m/^(?:(.*)\.)?(?:post|pre)(?:inst|rm)$/) {
 	next unless $needtomodifyscripts;
 
