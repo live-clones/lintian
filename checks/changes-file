@@ -88,7 +88,6 @@ if (defined $info->field('distribution')) {
     } else {
 	my $urgency = lc $info->field('urgency');
 	$urgency =~ s/ .*//o;
-	my %urgencies = map { $_ => 1 } qw(low medium high critical emergency);
 	unless ($urgency =~ /^(?:low|medium|high|critical|emergency)$/io) {
 	    tag 'bad-urgency-in-changes-file', $info->field('urgency');
 	}
