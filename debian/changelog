@@ -91,6 +91,9 @@ lintian (2.5.0) UNRELEASED; urgency=low
       Thanks to Jakub Wilk for the report.  (Closes: #592533)
     + [NT] Added check for malplaced Python modules. Thanks to
       Jakub Wilk for the report.  (Closes: #576012)
+    + [NT] Removed the "!= 0755" part from the out of the tag
+      executable-is-not-world-readable, since there are other valid
+      world readable file permissions.
   * checks/menu-format.desc:
     + [CW] Fix several typos.
   * checks/menus.desc:
