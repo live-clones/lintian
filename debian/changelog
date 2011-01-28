@@ -147,6 +147,8 @@ lintian (2.5.0) UNRELEASED; urgency=low
       depend on using dh7 with override targets.  (Closes: #607730)
     + [NT] Added Niels Thykier to uploaders.
     + [NT] Introduce (build) dependency on libemail-valid-perl.
+    + [RG] Add a versioned build dependency on libtest-simple-perl or a
+      recent Perl that has Test::More with subtests support.
   * debian/copyright:
     + [NT] Added Niels Thykier to maintainers.
   * debian/rules:
