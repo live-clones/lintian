@@ -134,7 +134,7 @@ foreach (split /\n/, $description) {
     # We don't want to think ", ," or "a, a" is a duplicated word, so require
     # that a word start and end with a word character.
     my $stripped = $_;
-    $stripped =~ s,[\"\'](.*?)(\1),,g;
+    $stripped =~ s,(["'])(.*?)(\1),,g;
     while ($stripped =~
 	   m%(?:\s|^)((\w(?:\S*\w)?)(\s+(\2))+)(?:[\).,?!:;\s]|\z)%i) {
 	my $words = $1;
