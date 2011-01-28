@@ -133,7 +133,10 @@ lintian (2.5.0) UNRELEASED; urgency=low
       used.  (Closes: #596848)
   * data/spelling/corrections:
     + [NT] Added more corrections.
-  * data/spelling/collections-multiword:
+  * data/spelling/corrections-case:
+    + [NT] Added DocBook corrections.  Thanks to Jakub Wilk.
+      (Closes: #611349)
+  * data/spelling/corrections-multiword:
     + [NT] Added "allows to" and other similar cases.  Thanks to
       Matthew Paul Thomas for the report.  (LP: #608231)
 
