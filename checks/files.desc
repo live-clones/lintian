@@ -770,6 +770,15 @@ Info: The package installs a file with the package name in
  This can happen if ${python:Depends} was omitted from the Depends field
  in debian/control.
 
+Tag: missing-dependency-on-python-support
+Severity: important
+Certainty: possible
+Info: The package installs a file in usr/share/python-support/ but does
+ not declare the necessary dependency on python-support.
+ .
+ This can happen if ${python:Depends} was omitted from the Depends field
+ in debian/control.
+
 Tag: package-installs-python-pyc
 Severity: serious
 Certainty: certain
