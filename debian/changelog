@@ -113,7 +113,7 @@ lintian (2.5.0) UNRELEASED; urgency=low
 
   * data/changelog-file/ubuntu-dists:
     + [CW] Add natty as a valid Ubuntu distribution, and remove the EOLed
-      intrepid and jaunty.
+      intrepid and jaunty.  (Closes: #611439)
   * data/cruft/autotools:
     + [NT] Added the file which is a list of all packages that will
       suppress the {ancient,outdated}-autotools-helper-file tags.
