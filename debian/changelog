@@ -58,6 +58,9 @@ lintian (2.5.0) UNRELEASED; urgency=low
   * checks/description{,.desc}:
     + [NT] Add a check for synopsis starting with articles.  Thanks to
       Nelson A. de Oliveira for the patch.  (Closes: #603053)
+    + [NT] Fixed false positive description-contains-duplicated-word
+      caused by Lintian ignoring quoted words.  Thanks to Gregor
+      Herrmann for report.  (Closes: #590723)
   * checks/fields{,.desc}:
     + [NT] Added check for packages (build) depending on openjdk-X-doc or
       classpath-doc instead of the default-jdk-doc metapackage.

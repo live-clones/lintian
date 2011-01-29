@@ -133,8 +133,12 @@ foreach (split /\n/, $description) {
     #
     # We don't want to think ", ," or "a, a" is a duplicated word, so require
     # that a word start and end with a word character.
+    #
+    # We replace text that is quoted with ' "" '.  The assumption is that
+    # quoted words are "okay" and blindly removing them causes false
+    # positives with text like "'a' or 'b' or 'c'".
     my $stripped = $_;
-    $stripped =~ s,(["'])(.*?)(\1),,g;
+    $stripped =~ s,(["'])(.*?)(\1), "" ,g;
     while ($stripped =~
 	   m%(?:\s|^)((\w(?:\S*\w)?)(\s+(\2))+)(?:[\).,?!:;\s]|\z)%i) {
 	my $words = $1;

@@ -96,6 +96,10 @@ Description: test package with duplicated words that aren't
  Contain the strings " link to ", " -> ", or ": ".
  This is train A, a particularly fast train.
  .
+ "hallo" or "evening" or "farewell" should not trigger a duplicate
+ "or or" warning.  Also "or" "or" does not trigger the warning
+ either.
+ .
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may
