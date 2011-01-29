@@ -963,8 +963,8 @@ foreach my $file (@{$info->sorted_index}) {
 
 	# ---------------- .gz files
 	if ($file =~ m/\.gz$/) {
-	    my $info = $info->file_info->{$file} || '';
-	    if ($info !~ m/gzip compressed/) {
+	    my $finfo = $info->file_info->{$file} || '';
+	    if ($finfo !~ m/gzip compressed/) {
 		tag 'gz-file-not-gzip', $file;
 	    }
 	}
