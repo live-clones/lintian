@@ -190,6 +190,9 @@ lintian (2.5.0) UNRELEASED; urgency=low
     + [NT] Pre-sort file index and file info to avoid sorting it
       repeatedly in the checks.  (Closes: #605844)
 
+  * man/*:
+    + [NT] Rewrote the man pages in pod.  (Closes: #600906)
+
   * t/tests/{rules-not-makefile,scripts-missing-dep}:
     + [NT] Added new tests. (Closes: #607731)
 
