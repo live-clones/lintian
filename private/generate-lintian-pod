@@ -19,9 +19,9 @@ open(my $file, '<', 'man/lintian.pod.in') or fail("man/lintian.pod.in: $!");
 while(my $line = <$file>){
     chomp($line);
     if($line eq '@CHECKS@'){
-        extract_data('checks', 'abbrev');
+        extract_data('checks', 'check-script', 'abbrev');
     } elsif($line eq '@COLLECTION@'){
-        extract_data('collection');
+        extract_data('collection', 'collector-script');
     } else {
         print "$line\n";
     }
@@ -70,11 +70,11 @@ sub pretty_print {
 }
 
 sub extract_data {
-    my ($folder, $abname) = @_;
+    my ($folder, $fname, $abname) = @_;
     print "=over 4\n\n";
     foreach my $file (<$folder/*.desc>) {
         my ($header, @ignore) = read_dpkg_control($file);
-        my $name = $header->{$name};
+        my $name = $header->{$fname};
         my $abbr;
         my $desc;
         next if($name eq 'lintian');
