@@ -1,0 +1,5 @@
+E: python-kinterbasdb: package-installs-python-bytecode usr/share/python-kinterbasdb/code.pyc
+E: python-kinterbasdb: package-installs-python-bytecode usr/share/python-kinterbasdb/code.pyo
+E: python-kinterbasdb: package-installs-python-egg usr/share/python-kinterbasdb/python.egg
+E: python-kinterbasdb: package-installs-python-pycache-dir usr/share/python-kinterbasdb/__pycache__/
+W: python-kinterbasdb: compressed-objects.inv usr/share/doc/python-kinterbasdb/docs/objects.inv.gz

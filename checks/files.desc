@@ -779,12 +779,33 @@ Info: The package installs a file in usr/share/python-support/ but does
  This can happen if ${python:Depends} was omitted from the Depends field
  in debian/control.
 
-Tag: package-installs-python-pyc
+Tag: package-installs-python-bytecode
 Severity: serious
 Certainty: certain
+Ref: python-policy 2.6
 Info: Compiled python source files must not be included in the package.
  These files should be removed from the package and created at package
- installation time in the postinst. 
+ installation time in the postinst.
+
+Tag: package-installs-python-egg
+Severity: serious
+Certainty: possible
+Ref: python-policy 2.6
+Info: Python eggs should not be installed, since the Debian package is
+ supposed to do the required steps for installing the Python code.
+ .
+ The egg may contain pre-compiled python bytecode or shared libraries.
+
+Tag: package-installs-python-pycache-dir
+Severity: serious
+Certainty: certain
+Ref: python-policy 2.6
+Info: The package installs a __pycache__ directory, which is normally
+ only used to store compiled python source files. Compiled python
+ source files must not be included in the package, instead they
+ should be generated at installation time in the postinst.
+ .
+ Note this tag is issues even if the directory is empty.
 
 Tag: bad-permissions-for-ali-file
 Severity: normal

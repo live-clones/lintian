@@ -15,11 +15,14 @@ lintian (2.5.0) UNRELEASED; urgency=low
       - missing-dependency-on-python-central
       - python-module-in-wrong-location
       - missing-dependency-on-python-support
+      - package-installs-python-bytecode
     + Removed:
       - embedded-zlib (now in embedded-library)
       - embedded-libpng (now in embedded-library)
       - embedded-libjpeg (now in embedded-library)
       - embedded-libopenjpeg (now in embedded-library)
+      - package-installs-python-pyc (replaced by
+        package-installs-python-bytecode)
 
   * checks/*:
     + [NT] Use the new pre-sorted file {index,info} when iterating over files.
@@ -100,6 +103,11 @@ lintian (2.5.0) UNRELEASED; urgency=low
       world readable file permissions.
     + [NT] Added check for missing dependency on python-support.
       Thanks to Jakub Wilk for the report.  (Closes: #592491)
+    + [NT] Added check for packages installing Python eggs and
+      __pycache__ directories.  Also extended existing Python bytecode
+      check to include ".pyo" files.  Thanks to Piotr Ożarowski,
+      Jakub Wilk and the people in #debian-python for the report and
+      help with implementing this.  (Closes: #576005)
   * checks/menu-format.desc:
     + [CW] Fix several typos.
   * checks/menus.desc:
