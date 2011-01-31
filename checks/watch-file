@@ -22,6 +22,7 @@
 
 package Lintian::watch_file;
 use strict;
+use warnings;
 
 use Lintian::Collect;
 use Lintian::Tags qw(tag);
@@ -34,7 +35,7 @@ my $info = shift;
 
 my $template = 0;
 
-if (! -f "debfiles/watch") {
+if (! -f 'debfiles/watch') {
     tag 'debian-watch-file-is-missing' unless ($info->native);
     return;
 }
@@ -74,7 +75,7 @@ while (<WATCH>) {
         goto CHOMP;
     }
 
-    if (/^version\s*=\s*(\d+)(\s|\Z)/) {
+    if (/^version\s*=\s*(\d+)(?:\s|\Z)/) {
         if (defined $watchver) {
             tag 'debian-watch-file-declares-multiple-versions', "line $.";
         }
@@ -97,10 +98,10 @@ while (<WATCH>) {
             @opts = split(',', $opts);
             if (defined $repack or defined $prerelease) {
                 for (@opts) {
-                    $repack_mangle = 1 if defined $repack and /^[ud]?versionmangle\s*=.*($repack)/;
-                    $repack_dmangle = 1 if defined $repack and /^dversionmangle\s*=.*($repack)/;
-                    $prerelease_mangle = 1 if defined $prerelease and /^[ud]?versionmangle\s*=.*($prerelease)/;
-                    $prerelease_umangle = 1 if defined $prerelease and /^uversionmangle\s*=.*($prerelease)/;
+                    $repack_mangle = 1 if defined $repack and /^[ud]?versionmangle\s*=.*$repack/;
+                    $repack_dmangle = 1 if defined $repack and /^dversionmangle\s*=.*$repack/;
+                    $prerelease_mangle = 1 if defined $prerelease and /^[ud]?versionmangle\s*=.*$prerelease/;
+                    $prerelease_umangle = 1 if defined $prerelease and /^uversionmangle\s*=.*$prerelease/;
                 }
             }
         }
@@ -109,9 +110,9 @@ while (<WATCH>) {
                 "line $.";
         }
 
-        if (m%(https?|ftp)://((.+\.)?dl|(pr)?downloads?|ftp\d?|upload)\.(sourceforge|sf)\.net%
-            or m%https?://(www\.)?(sourceforge|sf)\.net/project/showfiles\.php%
-            or m%https?://(www\.)?(sourceforge|sf)\.net/projects/.+/files%) {
+        if (m%(?:https?|ftp)://(?:(?:.+\.)?dl|(?:pr)?downloads?|ftp\d?|upload)\.(?:sourceforge|sf)\.net%
+            or m%https?://(?:www\.)?(?:sourceforge|sf)\.net/project/showfiles\.php%
+            or m%https?://(?:www\.)?(?:sourceforge|sf)\.net/projects/.+/files%) {
             tag 'debian-watch-file-should-use-sf-redirector', "line $.";
         }
 
@@ -145,7 +146,7 @@ while (<WATCH>) {
 }
 close WATCH;
 
-tag "debian-watch-contains-dh_make-template" if ($template);
+tag 'debian-watch-contains-dh_make-template' if ($template);
 
 my $changes = $info->changelog;
 if (defined $changes and %dversions) {
