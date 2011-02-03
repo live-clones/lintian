@@ -109,6 +109,7 @@ our %EMBEDDED_LIBRARIES = (
 			     match => qr'(?m)^Caution: quantization tables are too coarse for baseline JPEG'},
 	'openjpeg'	=> qr'tcd_decode: incomplete bistream',
 	'tinyxml'	=> qr'Error when TiXmlDocument added to document',
+	'libpcap'	=> qr'(?:pcap_activate: The "any" device isn\'t supported|corrupted frame on kernel ring mac offset)',
 );
 
 our $MULTIARCH;
