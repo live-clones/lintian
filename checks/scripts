@@ -79,6 +79,7 @@ our %interpreters =
      make	    => [ '/usr/bin', 'make | build-essential | dpkg-dev' ],
      mawk	    => [ '/usr/bin' ],
      mksh	    => [ '/bin' ],
+     mscgen	    => [ '/usr/bin' ],
      nickle	    => [ '/usr/bin' ],
      ocamlrun	    => [ '/usr/bin',
 			 'ocaml-base-nox | ocaml-base | ocaml-nox | ocaml' ],

@@ -119,6 +119,8 @@ lintian (2.5.0) UNRELEASED; urgency=low
   * checks/patch-systems{,.desc}
     + [NT] Added check for new unneeded-build-dep-on-quilt.
       (Closes: #582767)
+  * checks/scripts:
+    + [NT] Added mscgen as interpreter.
   * checks/standards-version:
     + [RG] Correctly handle cases where debian/changelog is a symlink.
   * checks/watch-file{,.desc}:
