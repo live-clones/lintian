@@ -20,6 +20,7 @@
 
 package Lintian::debian_source_dir;
 use strict;
+use warnings;
 
 use Lintian::Data;
 use Lintian::Tags qw(tag);
@@ -36,22 +37,22 @@ my $pkg = shift;
 my $type = shift;
 my $info = shift;
 
-if (-e "debfiles/source/format") {
-    open(FORMAT, "<", "debfiles/source/format") or
+if (-e 'debfiles/source/format') {
+    open(FORMAT, '<', 'debfiles/source/format') or
         fail("cannot read debian/source/format: $!");
     my $format = <FORMAT>;
     chomp $format;
-    tag "unknown-source-format", $format unless $KNOWN_FORMATS{$format};
+    tag 'unknown-source-format', $format unless $KNOWN_FORMATS{$format};
 } else {
-    tag "missing-debian-source-format";
+    tag 'missing-debian-source-format';
 }
 
-if (-d "debfiles/source") {
-    opendir(DEBSRC, "debfiles/source") or fail("cannot opendir debian/source/: $!");
+if (-d 'debfiles/source') {
+    opendir(DEBSRC, 'debfiles/source') or fail("cannot opendir debian/source/: $!");
     my $file;
     while ($file = readdir(DEBSRC)) {
-        next if $file eq "." or $file eq "..";
-        tag "unknown-file-in-debian-source", $file
+        next if $file eq '.' or $file eq '..';
+        tag 'unknown-file-in-debian-source', $file
             unless $KNOWN_FILES->known($file);
     }
     closedir(DEBSRC);

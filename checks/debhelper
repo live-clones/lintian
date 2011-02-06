@@ -20,6 +20,7 @@
 
 package Lintian::debhelper;
 use strict;
+use warnings;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Util;
@@ -70,13 +71,13 @@ my $seendhcleank = '';
 my $overridetargets = 0;
 my %missingbdeps;
 
-open(RULES, '<', "debfiles/rules") or fail("cannot read debian/rules: $!");
+open(RULES, '<', 'debfiles/rules') or fail("cannot read debian/rules: $!");
 my $maybe_skipping;
 my $dhcompatvalue;
 my @versioncheck;
 my $inclcdbs = 0;
 while (<RULES>) {
-    if (/^ifn?(eq|def)\s/) {
+    if (/^ifn?(?:eq|def)\s/) {
         $maybe_skipping++;
     } elsif (/^endif\s/) {
         $maybe_skipping--;
@@ -86,13 +87,13 @@ while (<RULES>) {
         my $dhcommand = $1;
 
 	if ($dhcommand eq 'dh_dhelp') {
-	    tag "dh_dhelp-is-deprecated", "line $.";
+	    tag 'dh_dhelp-is-deprecated', "line $.";
 	}
 	if ($dhcommand eq 'dh_suidregister') {
-	    tag "dh_suidregister-is-obsolete", "line $.";
+	    tag 'dh_suidregister-is-obsolete', "line $.";
 	}
 	if ($dhcommand eq 'dh_undocumented') {
-	    tag "dh_undocumented-is-obsolete", "line $.";
+	    tag 'dh_undocumented-is-obsolete', "line $.";
 	}
 
 	# Don't warn about recently deprecated commands in code that may be
@@ -104,7 +105,7 @@ while (<RULES>) {
 	    if ($dhcommand eq 'dh_scrollkeeper') {
 		tag 'dh_scrollkeeper-is-deprecated', "line $.";
 	    }
-	    if ($dhcommand eq 'dh_clean' and m/\s+\-k(\s+.*)?$/) {
+	    if ($dhcommand eq 'dh_clean' and m/\s+\-k(?:\s+.*)?$/) {
 		$seendhcleank = 1;
 	    }
 	}
@@ -176,7 +177,7 @@ close RULES;
 unless ($inclcdbs){
     my $bdepends = $info->relation('build-depends-all');
     # Okay - d/rules does not include any file in /usr/share/cdbs/
-    tag "unused-build-dependency-on-cdbs" if ($bdepends->implies("cdbs"));
+    tag 'unused-build-dependency-on-cdbs' if ($bdepends->implies('cdbs'));
 }
 
 return unless $seencommand;
@@ -241,11 +242,11 @@ if ($usescdbs and not defined($level)) {
 }
 $level ||= 1;
 if ($level < 5) {
-    tag "package-uses-deprecated-debhelper-compat-version", $level;
+    tag 'package-uses-deprecated-debhelper-compat-version', $level;
 }
 
 if ($seendhcleank and $level >= 7) {
-    tag "dh-clean-k-is-deprecated";
+    tag 'dh-clean-k-is-deprecated';
 }
 
 
@@ -254,7 +255,7 @@ if ($seendhcleank and $level >= 7) {
 my @indebfiles = ();
 opendir(DEBIAN, 'debfiles')
     or fail("Can't open debfiles directory.");
-while (defined(my $file=readdir(DEBIAN))) {
+foreach my $file (sort readdir(DEBIAN)) {
     if ($file =~ m/^(?:(.*)\.)?(?:post|pre)(?:inst|rm)$/) {
 	next unless $needtomodifyscripts;
 
@@ -275,23 +276,22 @@ while (defined(my $file=readdir(DEBIAN))) {
 	    unless (($binpkg && exists($pkgs->{$binpkg})
 		     && ($pkgs->{$binpkg} eq 'udeb'))
 		    or (!$binpkg && ($single_pkg eq 'udeb'))) {
-		tag "maintainer-script-lacks-debhelper-token", "debian/$file";
+		tag 'maintainer-script-lacks-debhelper-token', "debian/$file";
 	    }
 	}
     } elsif ($file eq 'control') {
 	my $bdepends_noarch = $info->relation_noarch('build-depends-all');
         my $bdepends = $info->relation('build-depends-all');
         if ($needbuilddepends && ! $bdepends->implies('debhelper')) {
-	    tag "package-uses-debhelper-but-lacks-build-depends", "";
+	    tag 'package-uses-debhelper-but-lacks-build-depends';
 	}
 	while (my ($dep, $command) = each %missingbdeps) {
 	    next if $dep eq 'debhelper'; #handled above
 	    tag 'missing-build-dependency-for-dh_-command', "$command=$dep"
 		unless ($bdepends_noarch->implies($dep));
 	}
-	my $needed = "debhelper (>= $level~)";
-	if (not $bdepends->implies($needed)) {
-	    tag "package-lacks-versioned-build-depends-on-debhelper", $level;
+	if (not $bdepends->implies("debhelper (>= $level~)")) {
+	    tag 'package-lacks-versioned-build-depends-on-debhelper', $level;
 	} elsif (@versioncheck or $overridetargets) {
 	    my %seen;
 	    @versioncheck = grep { !$seen{$_}++ } @versioncheck;
@@ -313,7 +313,7 @@ while (defined(my $file=readdir(DEBIAN))) {
 	    }
 	}
     } elsif ($file =~ m/^ex\.|\.ex$/i) {
-        tag "dh-make-template-in-source", "debian/$file";
+        tag 'dh-make-template-in-source', "debian/$file";
     } elsif ($file =~ m/^(?:.+\.)?debhelper(?:\.log)?$/){
 	push(@indebfiles, $file);
     } else {
@@ -345,13 +345,13 @@ closedir(DEBIAN);
 if(scalar(@indebfiles)){
     my $f = pop(@indebfiles);
     my $others = scalar(@indebfiles);
-    my $otext = "";
+    my $otext = '';
     if($others > 1){
 	$otext = " and $others others";
     } elsif($others == 1){
-	$otext = " and 1 other";
+	$otext = ' and 1 other';
     }
-    tag "temporary-debhelper-file", "$f$otext";
+    tag 'temporary-debhelper-file', "$f$otext";
 }
 
 # Check for Python policy usage and the required debhelper dependency for
@@ -359,12 +359,12 @@ if(scalar(@indebfiles)){
 # something earlier than 2 know what they're doing.  Skip CDBS packages since
 # CDBS creates pycompat internally at build time.
 if ($seendhpython && !$usescdbspython) {
-    if (open(PYCOMPAT, '<', "debfiles/pycompat")) {
+    if (open(PYCOMPAT, '<', 'debfiles/pycompat')) {
 	local $/;
 	my $pycompat = <PYCOMPAT>;
 	close PYCOMPAT;
     } else {
-	tag "uses-dh-python-with-no-pycompat", "";
+	tag 'uses-dh-python-with-no-pycompat';
     }
 }
 

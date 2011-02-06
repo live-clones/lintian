@@ -1,7 +1,0 @@
-Testname: files-objects-inv
-Sequence: 6000
-Version: 1.0
-Description: Test tags for compressed objects.inv files
-References: Debian Bug#608810
-Test-For:
- compressed-objects.inv

@@ -34,6 +34,7 @@ Build-Depends: binutils,
                locales,
                man-db,
                perl,
+               perl (>= 5.12) | libtest-simple-perl (>= 0.93),
                python,
                quilt,
                rsync

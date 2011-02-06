@@ -20,6 +20,7 @@
 
 package Lintian::control_file;
 use strict;
+use warnings;
 
 use lib "$ENV{'LINTIAN_ROOT'}/checks/";
 
@@ -38,38 +39,38 @@ sub run {
 my $pkg = shift;
 my $type = shift;
 
-if (-l "debfiles/control") {
-    tag "debian-control-file-is-a-symlink", "";
+if (-l 'debfiles/control') {
+    tag 'debian-control-file-is-a-symlink';
 }
 
 # check that control is UTF-8 encoded
-my $line = file_is_encoded_in_non_utf8("debfiles/control", $type, $pkg);
+my $line = file_is_encoded_in_non_utf8('debfiles/control', $type, $pkg);
 if ($line) {
-    tag "debian-control-file-uses-obsolete-national-encoding", "at line $line"
+    tag 'debian-control-file-uses-obsolete-national-encoding', "at line $line"
 }
 
 # Check that each field is only used once:
 my $seen_fields = {};
-open (CONTROL, '<', "debfiles/control")
+open (CONTROL, '<', 'debfiles/control')
     or fail "Couldn't read debfiles/control: $!";
 while (<CONTROL>) {
 	s/\s*\n$//;
 	next if /^\#/;
 
 	#Reset seen_fields if we enter a new section:
-	$seen_fields = {} if /^$/;
+	$seen_fields = {} if $_ eq '';
 
 	#line with field:
 	if (/^(\S+):/) {
 		my $field = lc ($1);
 		if ($seen_fields->{$field}) {
-			tag "debian-control-with-duplicate-fields", "$field: $$seen_fields{$field}, $.";
+			tag 'debian-control-with-duplicate-fields', "$field: $$seen_fields{$field}, $.";
 		}
 		$seen_fields->{$field} = $.;
 		if ($field =~ /^xs-vcs-/) {
 			my $base = $field;
 			$base =~ s/^xs-//;
-			tag "xs-vcs-header-in-debian-control", "$field"
+			tag 'xs-vcs-header-in-debian-control', $field
 			    if $src_fields->known($base);
 		}
 		if ($field eq 'xc-package-type') {
@@ -82,12 +83,12 @@ while (<CONTROL>) {
 }
 close CONTROL;
 
-my ($header, @binary_controls) = read_dpkg_control("debfiles/control");
+my ($header, @binary_controls) = read_dpkg_control('debfiles/control');
 
 for my $binary_control (@binary_controls) {
-	tag "build-info-in-binary-control-file-section", "Package ".$binary_control->{"package"}
-	    if ($binary_control->{"build-depends"} || $binary_control->{"build-depends-indep"} ||
-	        $binary_control->{"build-conflicts"} || $binary_control->{"build-conflicts-indep"});
+	tag 'build-info-in-binary-control-file-section', 'Package '.$binary_control->{'package'}
+	    if ($binary_control->{'build-depends'} || $binary_control->{'build-depends-indep'} ||
+	        $binary_control->{'build-conflicts'} || $binary_control->{'build-conflicts-indep'});
 	for my $field (keys %$binary_control) {
 		tag 'binary-control-field-duplicates-source', "field \"$field\" in package ".$binary_control->{'package'},
 		    if ($header->{$field} && $binary_control->{$field} eq $header->{$field});
@@ -176,7 +177,7 @@ for my $control (@binary_controls) {
 	for my $strong (0 .. $#dep_fields) {
 		next unless $control->{$dep_fields[$strong]};
 		my $relation = Lintian::Relation->new($control->{$dep_fields[$strong]});
-		tag "package-depends-on-itself", $control->{package}, $dep_fields[$strong]
+		tag 'package-depends-on-itself', $control->{package}, $dep_fields[$strong]
 		    if $relation->implies($control->{package});
 		tag 'package-depends-on-hardcoded-libc', $control->{package}, $dep_fields[$strong]
 		    if ($relation->implies($libcs) and $pkg !~ /^e?glibc$/);
@@ -184,7 +185,7 @@ for my $control (@binary_controls) {
 			next unless $control->{$dep_fields[$weak]};
 			for my $dependency (split /\s*,\s*/, $control->{$dep_fields[$weak]}) {
 				next unless $dependency;
-				tag "stronger-dependency-implies-weaker", $control->{package}, "$dep_fields[$strong] -> $dep_fields[$weak]", $dependency
+				tag 'stronger-dependency-implies-weaker', $control->{package}, "$dep_fields[$strong] -> $dep_fields[$weak]", $dependency
 				    if $relation->implies($dependency);
 			}
 		}
@@ -216,7 +217,7 @@ if ($header->{'section'}) {
 		$area = '';
 	}
 } else {
-	tag "no-section-field-for-source", "";
+	tag 'no-section-field-for-source';
 }
 my @descriptions;
 for my $binary_control (@binary_controls) {
@@ -245,9 +246,9 @@ for my $binary_control (@binary_controls) {
 		}
 		next;
 	}
-	tag "section-area-mismatch", "Package " . $package
+	tag 'section-area-mismatch', 'Package ' . $package
 		if ($area && $binary_control->{'section'} !~ m%^$area/%);
-	tag "section-area-mismatch", "Package " . $package
+	tag 'section-area-mismatch', 'Package ' . $package
 		if (!$area && $binary_control->{'section'} =~ m%^([^/]+)/% && $1 ne 'contrib');
 }
 

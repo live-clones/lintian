@@ -43,8 +43,8 @@ my (@jobs, $job);
 
 # create directory in lab
 print "N: Creating directory $base_dir ...\n" if $verbose;
-mkdir("$base_dir", 0777) or fail("mkdir $base_dir: $!");
-mkdir("$base_dir/fields", 0777) or fail("mkdir $base_dir/fields: $!");
+mkdir($base_dir, 0777) or fail("mkdir $base_dir: $!");
+
 symlink($file,"$base_dir/deb") or fail("symlink: $!");
 
 $job = { fail => 'error',

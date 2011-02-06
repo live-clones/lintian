@@ -20,6 +20,8 @@
 
 package Lintian::binaries;
 use strict;
+use warnings;
+
 use Util;
 use Lintian::Check qw(check_spelling);
 use Lintian::Tags qw(tag);
@@ -61,7 +63,7 @@ our %ARCH_REGEX = (
 	'sparc'   	 => qr'ELF 32-bit MSB .* SPARC',
 	'sparc64' 	 => qr'ELF 64-bit MSB .* SPARC');
 
-our %arch_64bit_equivs = (
+our %ARCH_64BIT_EQUIVS = (
 	'hppa'		=> 'hppa64',
 	'i386'		=> 'amd64',
 	'kfreebsd-i386'	=> 'kfreebsd-amd64',
@@ -106,9 +108,11 @@ our %EMBEDDED_LIBRARIES = (
 	'libjpeg'	=> { source => qr'^libjpeg.*',
 			     match => qr'(?m)^Caution: quantization tables are too coarse for baseline JPEG'},
 	'openjpeg'	=> qr'tcd_decode: incomplete bistream',
+	'tinyxml'	=> qr'Error when TiXmlDocument added to document',
+	'libpcap'	=> qr'(?:pcap_activate: The "any" device isn\'t supported|corrupted frame on kernel ring mac offset)',
 );
 
-our $multiarch;
+our $MULTIARCH;
 
 sub run {
 
@@ -143,23 +147,23 @@ foreach my $file (sort keys %{$info->objdump_info}) {
 	if ($arch ne 'hppa') {
 	    if ($foo eq '.text' and $sec eq 'Base' and
 		$sym eq '__gmon_start__') {
-		tag "binary-compiled-with-profiling-enabled", "$file";
+		tag 'binary-compiled-with-profiling-enabled', $file;
 	    }
 	} else {
 	    if ( ($sec =~ /^GLIBC_.*/) and ($sym eq '_mcount') ) {
-		tag "binary-compiled-with-profiling-enabled", "$file";
+		tag 'binary-compiled-with-profiling-enabled', $file;
 	    }
 	}
     }
     foreach (@{$objdump->{NOTES}}) {
 	if ($_ eq 'File format not recognized') {
-            tag "apparently-corrupted-elf-binary", "$file";
+            tag 'apparently-corrupted-elf-binary', $file;
 	} elsif ($_ eq 'File truncated') {
-            tag "apparently-truncated-elf-binary", "$file";
+            tag 'apparently-truncated-elf-binary', $file;
 	} elsif ($_ eq 'Packed with UPX') {
-	    tag "binary-file-compressed-with-upx", "$file";
+	    tag 'binary-file-compressed-with-upx', $file;
 	} elsif ($_ eq 'Invalid operation') {
-	    tag "binary-with-bad-dynamic-table", "$file" unless $file =~ m%^usr/lib/debug/%;
+	    tag 'binary-with-bad-dynamic-table', $file unless $file =~ m%^usr/lib/debug/%;
 	}
     }
 }
@@ -203,7 +207,7 @@ foreach my $expected_name (@sonames) {
     }
 }
 
-tag "package-name-doesnt-match-sonames", "@sonames"
+tag 'package-name-doesnt-match-sonames', "@sonames"
     if @sonames && !$match_found;
 
 my %directories;
@@ -232,11 +236,11 @@ foreach my $file (@{$info->sorted_file_info}) {
     # only if those libraries aren't installed in a multiarch directory.  The
     # package may be a support package for cross-compiles.
     if ($arch eq 'all') {
-	my ($arch) = ($file =~ m,^(?:usr/)?lib/([^/]+)/,);
-	$multiarch = Lintian::Data->new('binaries/multiarch')
-	    unless defined($multiarch);
-	unless ($arch and $multiarch->known($arch)) {
-	    tag "arch-independent-package-contains-binary-or-object", "$file";
+	my ($arch_path) = ($file =~ m,^(?:usr/)?lib/([^/]+)/,);
+	$MULTIARCH = Lintian::Data->new('binaries/multiarch')
+	    unless defined($MULTIARCH);
+	unless ($arch_path and $MULTIARCH->known($arch_path)) {
+	    tag 'arch-independent-package-contains-binary-or-object', $file;
 	}
     }
 
@@ -244,28 +248,28 @@ foreach my $file (@{$info->sorted_file_info}) {
     next unless $fileinfo =~ m/^[^,]*\bELF\b/o;
 
     if ($file =~ m,^etc/,) {
-	tag "binary-in-etc", "$file";
+	tag 'binary-in-etc', $file;
     }
 
     if ($file =~ m,^usr/share/,) {
-	tag "arch-dependent-file-in-usr-share", "$file";
+	tag 'arch-dependent-file-in-usr-share', $file;
     }
 
     if ($arch ne 'all' and $fileinfo !~ m/$ARCH_REGEX{$arch}/) {
 	if ($file =~ m,/lib(\d{2})/, or $file =~ m,/emul/ia(\d{2}),) {
-	    tag "binary-from-other-architecture", $file
+	    tag 'binary-from-other-architecture', $file
 		unless ($fileinfo =~ m/$ARCH_REGEX{$1}/);
 	} elsif ($arch eq 'amd64' and $fileinfo =~ m/$ARCH_REGEX{i386}/) {
 	    # Ignore i386 binaries in amd64 packages for right now.
-	} elsif (exists $arch_64bit_equivs{$arch}
-	    and $fileinfo =~ m/$ARCH_REGEX{$arch_64bit_equivs{$arch}}/
-	    and $file =~ m,^\./lib/modules/,) {
+	} elsif (exists $ARCH_64BIT_EQUIVS{$arch}
+	    and $fileinfo =~ m/$ARCH_REGEX{$ARCH_64BIT_EQUIVS{$arch}}/
+	    and $file =~ m,^lib/modules/,) {
 	    # Allow amd64 kernel modules to be installed on i386.
 	} else {
-	    $multiarch = Lintian::Data->new('binaries/multiarch')
-		unless defined($multiarch);
-	    tag "binary-from-other-architecture", $file
-		unless (grep { $file =~ m,/\Q$_\E/, } $multiarch->all);
+	    $MULTIARCH = Lintian::Data->new('binaries/multiarch')
+		unless defined($MULTIARCH);
+	    tag 'binary-from-other-architecture', $file
+		unless (grep { $file =~ m,/\Q$_\E/, } $MULTIARCH->all);
 	}
     }
 
@@ -281,22 +285,22 @@ foreach my $file (@{$info->sorted_file_info}) {
 	    if ($fileinfo =~ m/executable/
 		and $strings =~ m/^Caml1999X0[0-9][0-9]$/m) {
 		# Check for OCaml custom executables (#498138)
-		tag "ocaml-custom-executable", $file;
+		tag 'ocaml-custom-executable', $file;
 	    } else {
-		tag "unstripped-binary-or-object", "$file";
+		tag 'unstripped-binary-or-object', $file;
 	    }
 	}
     } else {
 	# stripped but a debug or profiling library?
 	if (($file =~ m,/lib/debug/,o) or ($file =~ m,/lib/profile/,o)) {
-	    tag "library-in-debug-or-profile-should-not-be-stripped", "$file";
+	    tag 'library-in-debug-or-profile-should-not-be-stripped', $file;
 	} else {
 	    # appropriately stripped, but is it stripped enough?
 	    if (exists $objdump->{NOTE_SECTION}) {
-		tag "binary-has-unneeded-section", "$file .note";
+		tag 'binary-has-unneeded-section', "$file .note";
 	    }
 	    if (exists $objdump->{COMMENT_SECTION}) {
-		tag "binary-has-unneeded-section", "$file .comment";
+		tag 'binary-has-unneeded-section', "$file .comment";
 	    }
 	}
     }
@@ -307,7 +311,7 @@ foreach my $file (@{$info->sorted_file_info}) {
 	    next if $rpath =~ m,^/usr/lib/(?:games/)?\Q$pkg\E(?:/|\z),;
 	    next if $rpath =~ m,^\$\{?ORIGIN\}?,;
 	    next if $directories{$rpath} and $rpath !~ m,^(?:/usr)?/lib/?\z,;
-	    tag "binary-or-shlib-defines-rpath", "$file $rpath";
+	    tag 'binary-or-shlib-defines-rpath', "$file $rpath";
 	}
     }
 
@@ -320,7 +324,7 @@ foreach my $file (@{$info->sorted_file_info}) {
 	    next;
 	}
 	if ($strings =~ /$regex/) {
-	    tag "embedded-library", "$file: $src";
+	    tag 'embedded-library', "$file: $src";
 	}
     }
 
@@ -341,7 +345,7 @@ foreach my $file (@{$info->sorted_file_info}) {
     # Something other than detached debugging symbols in /usr/lib/debug paths.
     if ($file =~ m,^usr/lib/debug/(?:lib\d*|s?bin|usr|opt|dev|emul)/,) {
 	if (exists($objdump->{NEEDED})) {
-	    tag "debug-file-should-use-detached-symbols", $file;
+	    tag 'debug-file-should-use-detached-symbols', $file;
 	}
     }
 
@@ -349,7 +353,7 @@ foreach my $file (@{$info->sorted_file_info}) {
     if ($file =~ m,^usr/lib/debug/[^/]+$,) {
 	unless (exists($objdump->{NEEDED})
 	    || $fileinfo =~ m/statically linked/) {
-	    tag "debug-symbols-directly-in-usr-lib-debug", $file;
+	    tag 'debug-symbols-directly-in-usr-lib-debug', $file;
 	}
     }
 
@@ -360,12 +364,12 @@ foreach my $file (@{$info->sorted_file_info}) {
             # loader (which itself has no dependencies).
             next if ($file =~ m%^usr/lib/debug/%);
             next if ($file =~ m%^lib(?:|32|64)/(?:[\w/]+/)?ld-[\d.]+\.so$%);
-	    tag "shared-lib-without-dependency-information", "$file";
+	    tag 'shared-lib-without-dependency-information', $file;
 	} else {
 	    # Some exceptions: files in /boot, /usr/lib/debug/*, named *-static or
 	    # *.static, or *-static as package-name.
 	    next if ($file =~ m%^boot/%);
-	    next if ($file =~ /(?:\.|-)static$/);
+	    next if ($file =~ /[\.-]static$/);
 	    next if ($pkg =~ /-static$/);
 	    # klibc binaries appear to be static.
 	    next if ($objdump->{KLIBC});
@@ -373,7 +377,7 @@ foreach my $file (@{$info->sorted_file_info}) {
 	    next if ($file =~ m%^usr/lib/debug/%);
 	    # ldconfig must be static.
 	    next if ($file eq 'sbin/ldconfig');
-	    tag "statically-linked-binary", "$file";
+	    tag 'statically-linked-binary', $file;
 	}
     } else {
 	my $lib;
@@ -389,9 +393,9 @@ foreach my $file (@{$info->sorted_file_info}) {
 	}
 	if ($no_libc and not $file =~ m,/libc\b,) {
 	    if ($fileinfo =~ m/shared object/) {
-		tag "library-not-linked-against-libc", "$file";
+		tag 'library-not-linked-against-libc', $file;
 	    } else {
-		tag "program-not-linked-against-libc", "$file";
+		tag 'program-not-linked-against-libc', $file;
 	    }
 	}
     }
@@ -419,11 +423,11 @@ if ($needs_depends_line) {
             if ($needs_libc_count > 0) {
                 $others = " and $needs_libc_count others";
             }
-            tag "missing-dependency-on-libc",
+            tag 'missing-dependency-on-libc',
 		"needed by $needs_libc_file$others";
         }
     } elsif (!$depends) {
-	tag "missing-depends-line";
+	tag 'missing-depends-line';
     }
 }
 

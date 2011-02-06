@@ -24,6 +24,7 @@
 
 package Lintian::cruft;
 use strict;
+use warnings;
 
 use Lintian::Data;
 use Lintian::Relation ();
@@ -83,7 +84,7 @@ my @file_checks =
 
 # List of files to check for a LF-only end of line terminator, relative
 # to the debian/ source directory
-our @EOL_terminators_files = qw(control changelog);
+our @EOL_TERMINATORS_FILES = qw(control changelog);
 
 sub run {
 
@@ -91,7 +92,7 @@ my $pkg = shift;
 my $type = shift;
 my $info = shift;
 
-if (-e "debfiles/files" and not -z "debfiles/files") {
+if (-e 'debfiles/files' and not -z 'debfiles/files') {
     tag 'debian-files-list-in-source';
 }
 
@@ -110,7 +111,6 @@ if ($info->native) {
 
 # Check if this is a documentation package that's not arch: all.  This doesn't
 # really belong here either.
-my $arch;
 if (defined $info->field('architecture')) {
     my $arch = $info->field('architecture');
     if ($pkg =~ /-docs?$/ && $arch ne 'all') {
@@ -131,7 +131,7 @@ if ($format =~ /^\s*2\.0\s*\z/ or $format =~ /^\s*3\.0\s*\(quilt\)/) {
     my $wanted = sub { check_debfiles($pkg, $info, \%warned) };
     find($wanted, 'debfiles');
 } elsif (not $info->native) {
-    check_diffstat("diffstat", \%warned);
+    check_diffstat('diffstat', \%warned);
 }
 my $wanted = sub { find_cruft($pkg, $info, \%warned, $atdinbd, $ltinbd) };
 find($wanted, 'unpacked');
@@ -142,19 +142,19 @@ my $file_info = $info->file_info;
 for my $file (keys(%$file_info)) {
     next if ($file =~ m,(?:^|/)t(?:est(?:s(?:et)?)?)?/,);
     if ($file_info->{$file} =~ m/\bELF\b/) {
-	tag "source-contains-prebuilt-binary", $file;
+	tag 'source-contains-prebuilt-binary', $file;
     } elsif ($file_info->{$file} =~ m/\bPE(32|64)\b/) {
-	tag "source-contains-prebuilt-windows-binary", $file;
+	tag 'source-contains-prebuilt-windows-binary', $file;
     }
 }
 
-for my $file (@EOL_terminators_files) {
+for my $file (@EOL_TERMINATORS_FILES) {
     $file = "debian/$file";
 
     next unless defined $file_info->{$file};
 
 
-    tag "control-file-with-CRLF-EOLs", $file
+    tag 'control-file-with-CRLF-EOLs', $file
 	if ($file_info->{$file} =~ m/\bCRLF\b/);
 }
 
@@ -205,7 +205,7 @@ sub check_diffstat {
         # Check for CMake cache files.  These embed the source path and hence
         # will cause FTBFS on buildds, so they should never be touched in the
         # diff.
-        if ($file =~ m,(^|/)CMakeCache.txt\z, and $file !~ m,(^|/)debian/,) {
+        if ($file =~ m,(?:^|/)CMakeCache.txt\z, and $file !~ m,(?:^|/)debian/,) {
             tag 'diff-contains-cmake-cache-file', $file;
         }
 
@@ -304,7 +304,7 @@ sub find_cruft {
         return;
     }
 
-    my $prefix = ($info->native ? "diff-contains" : "source-contains");
+    my $prefix = ($info->native ? 'diff-contains' : 'source-contains');
     if (-d and not $warned->{$name}) {
         for my $rule (@directory_checks) {
             if ($name =~ /$rule->[0]/) {
@@ -328,7 +328,7 @@ sub find_cruft {
     # as part of the build.
     if ($name =~ m,^(.+/)?config.(?:cache|log|status)$,) {
         if ($name !~ m,^debian/config\.cache$,) {
-            tag "configure-generated-file-in-source", $name;
+            tag 'configure-generated-file-in-source', $name;
         }
     } elsif ($name =~ m,^(.+/)?config.(?:guess|sub)$, and not $atdinbd) {
         my $b = basename $name;
@@ -346,7 +346,7 @@ sub find_cruft {
         }
         close F;
     } elsif ($name =~ m,^(.+/)?ltconfig$, and not $ltinbd) {
-        tag "ancient-libtool", $name;
+        tag 'ancient-libtool', $name;
     } elsif ($name =~ m,^(.+/)?ltmain\.sh$, and not $ltinbd) {
         my $b = basename $name;
         open (F, '<', $b) or die "can't open $name: $!";
@@ -354,9 +354,9 @@ sub find_cruft {
             if (/^VERSION=[\"\']?(1\.(\d)\.(\d+)(?:-(\d))?)/) {
                 my ($version, $major, $minor, $debian) = ($1, $2, $3, $4);
                 if ($major < 5 or ($major == 5 and $minor < 2)) {
-                    tag "ancient-libtool", $name, $version;
-                } elsif ($minor == 2 and (!$debian or $debian < 2)) {
-                    tag "ancient-libtool", $name, $version;
+                    tag 'ancient-libtool', $name, $version;
+                } elsif ($minor == 2 and (!$debian || $debian < 2)) {
+                    tag 'ancient-libtool', $name, $version;
                 } elsif ($minor < 24) {
                     # not entirely sure whether that would be good idea
 #                    tag "outdated-libtool", $name, $version;

@@ -20,6 +20,8 @@
 
 package Lintian::control_files;
 use strict;
+use warnings;
+
 use Util;
 use Lintian::Tags qw(tag);
 
@@ -57,7 +59,7 @@ my %ctrl = $type eq 'udeb' ? %ctrl_udeb : %ctrl_deb;
 my %ctrl_alt = $type eq 'udeb' ? %ctrl_deb : %ctrl_udeb;
 
 # process control-index file
-open(IN, '<', "control-index") or fail("cannot open control-index file: $!");
+open(IN, '<', 'control-index') or fail("cannot open control-index file: $!");
 while (<IN>) {
     chop;
 
@@ -75,17 +77,17 @@ while (<IN>) {
     # valid control file?
     unless ( exists $ctrl{$file} ) {
 	if ( exists $ctrl_alt{$file} ) {
-	    tag "not-allowed-control-file", "$file";
+	    tag 'not-allowed-control-file', $file;
 	    next;
 	} else {
-	    tag "unknown-control-file", "$file";
+	    tag 'unknown-control-file', $file;
 	    next;
 	}
     }
 
     # I'm not sure about the udeb case
     if ($type ne 'udeb' and $size == 0) {
-	tag "control-file-is-empty", "$file";
+	tag 'control-file-is-empty', $file;
     }
 
 
@@ -97,13 +99,13 @@ while (<IN>) {
 
     # correct permissions?
     unless ($operm == $ctrl{$file}) {
-	tag "control-file-has-bad-permissions",
-	    sprintf("%s %04o != %04o",$file,$operm,$ctrl{$file});
+	tag 'control-file-has-bad-permissions',
+	    sprintf('%s %04o != %04o',$file,$operm,$ctrl{$file});
     }
 
     # correct owner?
     unless ($owner eq 'root/root') {
-	tag "control-file-has-bad-owner", "$file $owner != root/root";
+	tag 'control-file-has-bad-owner', "$file $owner != root/root";
     }
 
 # for other maintainer scripts checks, see the scripts check

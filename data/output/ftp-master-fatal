@@ -52,7 +52,7 @@ not-allowed-control-file
 old-style-copyright-file
 package-contains-ancient-file
 package-has-no-description
-package-installs-python-pyc
+package-installs-python-bytecode
 package-not-lowercase
 package-uses-local-diversion
 section-is-dh_make-template

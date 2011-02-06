@@ -48,7 +48,7 @@ my $data = get_dsc_info($file);
 
 # create directory in lab
 print "N: Creating directory $base_dir ...\n" if $verbose;
-mkdir("$base_dir", 0777) or fail("mkdir $base_dir: $!");
+mkdir($base_dir, 0777) or fail("mkdir $base_dir: $!");
 mkdir("$base_dir/fields", 0777) or fail("mkdir $base_dir/fields: $!");
 
 # create control field files
@@ -102,7 +102,7 @@ if ($tarball =~ /\.(lzma|xz)\z/) {
 my @index;
 my $last = '';
 my $collect = sub {
-    my @lines = map { split '\n' } @_;
+    my @lines = map { split "\n" } @_;
     if ($last ne '') {
         $lines[0] = $last . $lines[0];
     }
@@ -114,7 +114,7 @@ my $collect = sub {
     for my $line (@lines) {
         $line =~ s/^h/-/;
         if ($line and $line !~ m,^(?:\S+\s+){5}\./$,) {
-            push(@index, $line . '\n');
+            push(@index, $line . "\n");
         }
     }
 };

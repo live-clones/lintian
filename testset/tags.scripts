@@ -11,7 +11,7 @@ E: scripts: init.d-script-has-duplicate-lsb-section etc/init.d/lsb-broken
 E: scripts: init.d-script-has-unterminated-lsb-section etc/init.d/lsb-broken:15
 E: scripts: missing-dep-for-interpreter jruby => jruby | jruby1.0 | jruby1.1 | jruby1.2 (usr/bin/jruby-broken)
 E: scripts: missing-dep-for-interpreter lefty => graphviz (usr/bin/lefty-foo)
-E: scripts: package-installs-python-pyc usr/lib/python2.3/site-packages/test.pyc
+E: scripts: package-installs-python-bytecode usr/lib/python2.3/site-packages/test.pyc
 E: scripts: php-script-but-no-phpX-cli-dep usr/share/scripts/php5foo
 E: scripts: php-script-but-no-phpX-cli-dep usr/share/scripts/phpfoo
 E: scripts: python-script-but-no-python-dep usr/bin/py2foo
@@ -62,8 +62,8 @@ W: scripts: binary-without-manpage usr/bin/test.sh
 W: scripts: binary-without-manpage usr/bin/tkfoo
 W: scripts: binary-without-manpage usr/bin/wishfoo
 W: scripts: control-file-is-empty prerm
-W: scripts: executable-is-not-world-readable usr/bin/guile-bizarre 0705 != 0755
-W: scripts: executable-is-not-world-readable usr/bin/perl-bizarre-2 0750 != 0755
+W: scripts: executable-is-not-world-readable usr/bin/guile-bizarre 0705
+W: scripts: executable-is-not-world-readable usr/bin/perl-bizarre-2 0750
 W: scripts: executable-is-not-world-readable usr/bin/suidperlfoo2 4751
 W: scripts: executable-not-elf-or-script usr/bin/perl-bizarre-3
 W: scripts: init-d-script-stops-in-s-runlevel etc/init.d/lsb-broken

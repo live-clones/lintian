@@ -644,7 +644,7 @@ while (<SCRIPTS>) {
     }
 
     # now scan the file contents themselves
-    open (C, '<', "$filename")
+    open (C, '<', $filename)
 	or fail("cannot open maintainer script $filename for reading: $!");
 
     my %warned;
@@ -908,7 +908,7 @@ while (<SCRIPTS>) {
 	    }
 	}
 	if (m,\bsuidregister\b,) {
-	    tag "suidregister-used-in-maintainer-script", "$file";
+	    tag "suidregister-used-in-maintainer-script", $file;
 	}
 	if ($file eq 'postrm') {
 	    if (m,update\-alternatives \-\-remove,) {
@@ -924,7 +924,7 @@ while (<SCRIPTS>) {
 			unless ($info->relation('strong')->implies($package)) {
 			    my $shortpackage = $package;
 			    $shortpackage =~ s/[ \(].*//;
-			    tag "maintainer-script-needs-depends-on-$shortpackage", "$file";
+			    tag "maintainer-script-needs-depends-on-$shortpackage", $file;
 			    $warned{$package} = 1;
 			}
 		    }
@@ -941,7 +941,7 @@ while (<SCRIPTS>) {
 	    tag 'install-info-used-in-maintainer-script', "$file:$.";
 	}
         if (m,/var/lib/dpkg/status\b, && $pkg ne 'base-files' && $pkg ne 'dpkg') {
-            tag "maintainer-script-uses-dpkg-status-directly", "$file";
+            tag "maintainer-script-uses-dpkg-status-directly", $file;
         }
 	if (m,$LEADIN(?:/usr/sbin/)?dpkg-divert\s, && ! /--(?:help|list|truename|version)/) {
 	    if (/--local/ or !/--package/) {

@@ -21,6 +21,7 @@
 
 package Lintian::infofiles;
 use strict;
+use warnings;
 
 use lib "$ENV{'LINTIAN_ROOT'}/checks/";
 use common_data;
@@ -36,7 +37,6 @@ my $pkg = shift;
 my $type = shift;
 my $info = shift;
 
-my %missing_section;
 my $has_info_file;
 
 # Read package contents...
@@ -61,13 +61,13 @@ foreach my $file (@{$info->sorted_index}) {
     # accept those and ignore them.  Just ignore .png files for now.
     my @fname_pieces = split /\./, $fname;
     my $ext = pop @fname_pieces;
-    if ($ext eq "gz") { # ok!
+    if ($ext eq 'gz') { # ok!
 	if ($index_info->{type} =~ m,^[-h],o) { # compressed with maximum compression rate?
 	    if ($file_info !~ m/gzip compressed data/o) {
-		tag "info-document-not-compressed-with-gzip", "$file";
+		tag 'info-document-not-compressed-with-gzip', $file;
 	    } else {
 		if ($file_info !~ m/max compression/o) {
-		    tag "info-document-not-compressed-with-max-compression", "$file";
+		    tag 'info-document-not-compressed-with-max-compression', $file;
 		}
 	    }
 	}
@@ -75,12 +75,12 @@ foreach my $file (@{$info->sorted_index}) {
         next;
     } else {
 	push (@fname_pieces, $ext);
-	tag "info-document-not-compressed", "$file";
+	tag 'info-document-not-compressed', $file;
     }
     my $infoext = pop @fname_pieces;
     unless ($infoext && $infoext =~ /^info(-\d+)?$/) { # it's not foo.info
 	unless (!@fname_pieces) { # it's not foo{,-{1,2,3,...}}
-	    tag "info-document-has-wrong-extension", "$file";
+	    tag 'info-document-has-wrong-extension', $file;
 	}
     }
 

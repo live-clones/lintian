@@ -1,12 +1,13 @@
 # FIXME: the list of checks should probably be moved to
 # t/scripts/critic.pl. Line continuations are not supported here
 
+verbose = 1
 # Severity is actually ignored for our main purposes, see below
 severity = 1
 # Work based on a whitelist
 only = 1
 # Our whitelist (ignores severity):
-include = MixedBooleanOperators ExplicitReturnUndef InteractiveTest GlobFunction UpperCaseHeredoc NegativeIndices PrivateVars UselessInitialization UnusedVariables ReusedNames PackageVars MatchVars ConditionalDeclarations NumberSeparators NullStatements LongChainsOfMethodCalls UseStrict UseWarnings SingleCharAlternation UnusedCapture FixedStringMatches EndWithOne ConditionalUseStatements TwoArgOpen PackageMatchesPodName JoinedReadline UnreachableCode QuotedWordLists TrailingWhitespace Capitalization InterpolationOfLiterals
+include = MixedBooleanOperators ExplicitReturnUndef InteractiveTest GlobFunction UpperCaseHeredoc NegativeIndices PrivateVars UselessInitialization UnusedVariables ReusedNames PackageVars MatchVars ConditionalDeclarations NumberSeparators NullStatements LongChainsOfMethodCalls UseStrict UseWarnings SingleCharAlternation UnusedCapture FixedStringMatches EndWithOne ConditionalUseStatements TwoArgOpen PackageMatchesPodName JoinedReadline UnreachableCode QuotedWordLists TrailingWhitespace InterpolationOfLiterals ImplicitNewlines CommaSeparatedStatements
 
 # If you want to try some other stuff, uncomment the following
 # (exclude is an incomplete list of things we probably won't change)
@@ -23,3 +24,6 @@ allow-unsafe = 1
 
 [ValuesAndExpressions::ProhibitInterpolationOfLiterals]
 allow_if_string_contains_single_quote = 1
+
+[ValuesAndExpressions::ProhibitCommaSeparatedStatements]
+allow_last_statement_to_be_comma_separated_in_map_and_grep = 1

@@ -1,0 +1,132 @@
+'\" t
+.\"     Title: SKETCH
+.\"    Author: [see the "AUTHOR" section]
+.\" Generator: DocBook XSL Stylesheets v1.75.2 <http://docbook.sf.net/>
+.\"      Date: July  7, 2009
+.\"    Manual:  User Commands 
+.\"    Source:  sketch   0.2.159 
+.\"  Language: English
+.\"
+.TH "SKETCH" "1" "July 7, 2009" "sketch 0\&.2\&.159" "User Commands"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+sketch \- Produce 3D line drawings from scene description language
+.SH "DESCRIPTION"
+.PP
+sketch [options] file1 [\-D tag] [\-U tag] file2\&.\&.\&.
+.PP
+\fB\-h\fR
+.RS 4
+Print a summary of options to stderr
+.RE
+.PP
+\fB\-v\fR
+.RS 4
+Print version info to standard output
+.RE
+.PP
+\fB\-d\fR
+.RS 4
+Debug parser (for developers)
+.RE
+.PP
+\fB\-b\fR
+.RS 4
+Use BSP rather than Painters algorithm for hidden surface removal
+.RE
+.PP
+\fB\-T\fR[u|e][p[P|T]]
+.RS 4
+Produce a complete LaTeX document
+.PP
+u
+.RS 4
+U\&.S\&. paper size (8\&.5 x 11 inches) (default)
+.RE
+.PP
+e
+.RS 4
+European A4 paper size (297 x 210 mm)
+.RE
+.PP
+p
+.RS 4
+Print document template to stdout
+.RE
+.PP
+P
+.RS 4
+Print PSTricks version of doc template (default)
+.RE
+.PP
+T
+.RS 4
+Print TikZ version of doc template
+.RE
+.RE
+.PP
+\fB\-t\fR templatefile
+.RS 4
+Load user document template (any text file with escape %SKETCH_OUTPUT%)
+.RE
+.PP
+\fB\-o\fR outfile
+.RS 4
+Put output in outfile (default is stdout)
+.RE
+.PP
+\fB\-D\fR tag
+.RS 4
+Define given tag
+.RE
+.PP
+\fB\-U\fR tag
+.RS 4
+Undefine given tag
+.RE
+.SH "SEE ALSO"
+.PP
+The full documentation for
+\fBsketch\fR
+is maintained as a Texinfo manual\&. If the
+\fBinfo\fR
+and
+\fBsketch\fR
+programs are properly installed at your site, the command
+.PP
+\fBinfo sketch\fR
+.PP
+should give you access to the complete manual\&.
+.SH "AUTHOR"
+.PP
+This manual page was written by David Bremner
+bremner@unb\&.ca
+for the
+Debian(TM)
+system (but may be used by others)\&. Permission is granted to copy, distribute and/or modify this document under the terms of the
+GNU
+General Public License, Version 2 any later version published by the Free Software Foundation\&.
+.PP
+On Debian systems, the complete text of the GNU General Public License can be found in /usr/share/common\-licenses/GPL\&.
+.SH "COPYRIGHT"
+.br
+Copyright \(co 2009 David Bremner
+.br

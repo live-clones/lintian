@@ -224,22 +224,14 @@ sub wait {
 
 	# count the number of members and reset the internal hash iterator
 	if (scalar keys %$jobs == 0) {
-	    if (wantarray) {
-		return ();
-	    } else {
-		return;
-	    }
+            return;
 	}
 
 	$reaped_pid = CORE::wait();
 	$reaped_status = $?;
 
 	if ($reaped_pid == -1) {
-	    if (wantarray) {
-		return ();
-	    } else {
-		return;
-	    }
+            return;
 	}
 
 	while (my ($k, $cmd) = each %$jobs) {

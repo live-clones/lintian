@@ -20,6 +20,7 @@
 
 package Lintian::copyright_file;
 use strict;
+use warnings;
 
 use lib "$ENV{'LINTIAN_ROOT'}/checks/";
 use common_data;
@@ -47,8 +48,8 @@ my $linked = 0;
 # Read package contents...
 foreach (@{$info->sorted_index}) {
     my $index_info = $info->index->{$_};
-    if (m,usr/(share/)?doc/$ppkg/copyright(\.\S+)?$,) {
-	my $ext = $2;
+    if (m,usr/(?:share/)?doc/$ppkg/copyright(\.\S+)?$,) {
+	my $ext = $1;
 
 	$ext = '' if (! defined $ext);
 	#an extension other than .gz doesn't count as copyright file
@@ -57,13 +58,13 @@ foreach (@{$info->sorted_index}) {
 
 	#search for an extension
 	if ($ext eq '.gz') {
-	    tag "copyright-file-compressed", "";
+	    tag 'copyright-file-compressed';
 	    last;
     	}
 
 	#make sure copyright is not a symlink
     	if ($index_info->{link}) {
-	    tag "copyright-file-is-symlink", "";
+	    tag 'copyright-file-is-symlink';
 	    last;
     	}
 
@@ -82,7 +83,7 @@ foreach (@{$info->sorted_index}) {
 
     	# check if this symlink references a directory elsewhere
 	if ($link =~ m,^(?:\.\.)?/,) {
-	    tag "usr-share-doc-symlink-points-outside-of-usr-share-doc", "$link";
+	    tag 'usr-share-doc-symlink-points-outside-of-usr-share-doc', $link;
 	    last;
     	}
 
@@ -107,23 +108,23 @@ foreach (@{$info->sorted_index}) {
 
     	# We can only check if both packages come from the same source
     	# if our source package is currently unpacked in the lab, too!
-    	if (-d "source") { 	# yes, it's unpacked
+	if (-d 'source') { 	# yes, it's unpacked
 
 	    # $link from the same source pkg?
 	    if (-l "source/binary/$link") {
 		# yes, everything is ok.
 	    } else {
 		# no, it is not.
-		tag "usr-share-doc-symlink-to-foreign-package", "$link";
+		tag 'usr-share-doc-symlink-to-foreign-package', $link;
 	    }
     	} else {		# no, source is not available
-	    tag "cannot-check-whether-usr-share-doc-symlink-points-to-foreign-package", "";
+	    tag 'cannot-check-whether-usr-share-doc-symlink-points-to-foreign-package';
     	}
 
     	# everything is ok.
     	last;
     } elsif (m,usr/doc/copyright/$ppkg$,) {
-	tag "old-style-copyright-file", "";
+	tag 'old-style-copyright-file';
 	$found = 1;
     	last;
     }
@@ -131,14 +132,14 @@ foreach (@{$info->sorted_index}) {
 
 if (not $found) {
     # #522827: special exception for perl for now
-    tag "no-copyright-file", ""
+    tag 'no-copyright-file'
       unless $pkg eq 'perl';
 }
 
 # check that copyright is UTF-8 encoded
-my $line = file_is_encoded_in_non_utf8("copyright", $type, $pkg);
+my $line = file_is_encoded_in_non_utf8('copyright', $type, $pkg);
 if ($line) {
-    tag "debian-copyright-file-uses-obsolete-national-encoding", "at line $line"
+    tag 'debian-copyright-file-uses-obsolete-national-encoding', "at line $line"
 }
 
 # check contents of copyright file
@@ -148,14 +149,14 @@ study $_;
 my $wrong_directory_detected = 0;
 
 if (m,\<fill in (?:http/)?ftp site\>, or m/\<Must follow here\>/) {
-    tag "helper-templates-in-copyright", "";
+    tag 'helper-templates-in-copyright';
 }
 if (m,\<Put the license of the package here,) {
     tag 'helper-templates-in-copyright';
 }
 
 if (m,(usr/share/common-licenses/(?:GPL|LGPL|BSD|Artistic)\.gz),) {
-    tag "copyright-refers-to-compressed-license", $1;
+    tag 'copyright-refers-to-compressed-license', $1;
 }
 
 # Avoid complaining about referring to a versionless license file if the word
@@ -171,9 +172,9 @@ if (m,(usr/share/common-licenses/(L?GPL|GFDL))([^-]),i) {
 	     || m,as Perl itself,i
 	     || m,License-Alias:\s+Perl,
 	     || m,License:\s+Perl,) {
-	tag "copyright-refers-to-symlink-license", $ref;
+	tag 'copyright-refers-to-symlink-license', $ref;
     } else {
-	tag "copyright-refers-to-versionless-license-file", $ref
+	tag 'copyright-refers-to-versionless-license-file', $ref
 	    if /\bversion\b/;
     }
 }
@@ -185,50 +186,50 @@ if (m,/usr/share/common-licenses/BSD,) {
 }
 
 if (m,(usr/share/common-licences),) {
-    tag "copyright-refers-to-incorrect-directory", $1;
+    tag 'copyright-refers-to-incorrect-directory', $1;
     $wrong_directory_detected = 1;
 }
 
 if (m,usr/share/doc/copyright,) {
-    tag "copyright-refers-to-old-directory", "";
+    tag 'copyright-refers-to-old-directory';
     $wrong_directory_detected = 1;
 }
 
 if (m,usr/doc/copyright,) {
-    tag "copyright-refers-to-old-directory", "";
+    tag 'copyright-refers-to-old-directory';
     $wrong_directory_detected = 1;
 }
 
 # Lame check for old FSF zip code.  Try to avoid false positives from other
 # Cambridge, MA addresses.
 if (m/(?:Free\s*Software\s*Foundation.*02139|02111-1307)/s) {
-    tag "old-fsf-address-in-copyright-file", "";
+    tag 'old-fsf-address-in-copyright-file';
 }
 
 # Whether the package is covered by the GPL, used later for the libssl check.
 my $gpl;
 
-if (length($_) > 12000
+if (length($_) > 12_000
     and (m/\bGNU GENERAL PUBLIC LICENSE\s*TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION\b/m
          or (m/\bGNU GENERAL PUBLIC LICENSE\s*Version 3/ and m/\bTERMS AND CONDITIONS\s/))) {
-    tag "copyright-file-contains-full-gpl-license";
+    tag 'copyright-file-contains-full-gpl-license';
     $gpl = 1;
 }
 
-if (length($_) > 12000
+if (length($_) > 12_000
     and m/\bGNU Free Documentation License\s*Version 1\.2/ and m/\b1\. APPLICABILITY AND DEFINITIONS/) {
-    tag "copyright-file-contains-full-gfdl-license";
+    tag 'copyright-file-contains-full-gfdl-license';
 }
 
-if (length($_) > 10000
+if (length($_) > 10_000
     and m/\bApache License\s+Version 2\.0,/
     and m/TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION/) {
-    tag "copyright-file-contains-full-apache-2-license";
+    tag 'copyright-file-contains-full-apache-2-license';
 }
 
 # wtf?
 if ((m,common-licenses(/\S+),) && (! m,/usr/share/common-licenses/,)) {
-    tag "copyright-does-not-refer-to-common-license-file", "$1";
+    tag 'copyright-does-not-refer-to-common-license-file', $1;
 }
 
 # This check is a bit prone to false positives, since some other licenses
@@ -252,16 +253,16 @@ if (m,/usr/share/common-licenses,
     || $wrong_directory_detected) {
     # False positive or correct reference.  Ignore.
 } elsif (m/GNU Free Documentation License/i or m/\bGFDL\b/) {
-    tag "copyright-should-refer-to-common-license-file-for-gfdl";
+    tag 'copyright-should-refer-to-common-license-file-for-gfdl';
 } elsif (m/GNU (?:Lesser|Library) General Public License/i or m/\bLGPL\b/) {
-    tag "copyright-should-refer-to-common-license-file-for-lgpl";
+    tag 'copyright-should-refer-to-common-license-file-for-lgpl';
 } elsif (m/GNU General Public License/i or m/\bGPL\b/) {
-    tag "copyright-should-refer-to-common-license-file-for-gpl";
+    tag 'copyright-should-refer-to-common-license-file-for-gpl';
     $gpl = 1;
 }
 if (m,(?:under )?(?:the )?(?:same )?(?:terms )?as Perl itself,i &&
     !m,usr/share/common-licenses/,) {
-    tag "copyright-file-lacks-pointer-to-perl-license";
+    tag 'copyright-file-lacks-pointer-to-perl-license';
 }
 
 # Checks for various packaging helper boilerplate.
@@ -278,11 +279,11 @@ if (m/This copyright info was automatically extracted/) {
 }
 
 if (m,url://example\.com,) {
-    tag "copyright-has-url-from-dh_make-boilerplate";
+    tag 'copyright-has-url-from-dh_make-boilerplate';
 }
 
 if (m{\# Please also look if there are files or directories which have a\n\# different copyright/license attached and list them here\.}) {
-    tag "copyright-contains-dh_make-todo-boilerplate", "";
+    tag 'copyright-contains-dh_make-todo-boilerplate';
 }
 
 if (m,The\s+Debian\s+packaging\s+is\s+\(C\)\s+\d+,i) {
@@ -290,10 +291,10 @@ if (m,The\s+Debian\s+packaging\s+is\s+\(C\)\s+\d+,i) {
 }
 
 # Bad licenses.
-if (m/(The\s+PHP\s+Licen[cs]e,?\s+version\s+2)/si) {
+if (m/The\s+PHP\s+Licen[cs]e,?\s+version\s+2/si) {
     tag 'copyright-refers-to-bad-php-license';
 }
-if (m/(The\s+PHP\s+Licen[cs]e,?\s+version\s+3\.0[^\d])/si) {
+if (m/The\s+PHP\s+Licen[cs]e,?\s+version\s+3\.0[^\d]/si) {
     tag 'copyright-refers-to-problematic-php-license';
 }
 

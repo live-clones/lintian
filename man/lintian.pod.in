@@ -57,14 +57,6 @@ Actions of the lintian command: (Only one action can be specified per invocation
 
 =over 4
 
-=item B<-S>, B<--setup-lab>
-
-Set up or update the laboratory.
-
-=item B<-R>, B<--remove-lab>
-
-Remove the laboratory directory.
-
 =item B<-c>, B<--check>
 
 Run all checks over the specified packages.  This is the default action.
@@ -74,6 +66,27 @@ Run all checks over the specified packages.  This is the default action.
 Run only the specified checks.  You can either specify the name of the
 check script or the abbreviation.  For details, see the L</CHECKS> section
 below.
+
+=item B<-F>, B<--ftp-master-rejects>
+
+Run only the checks that issue tags that result in automatic rejects
+from the Debian upload queue.  The list of such tags is refreshed with
+each Lintian release, so may be slightly out of date if it has changed
+recently.  This option does not, as yet, ignore overrides for fatal
+tags for which overrides aren't allowed.
+
+=item B<-r>, B<--remove>
+
+Clean up the lintian directory of the specified packages up to the
+current unpack level.  The default unpack level is 0 for this option.
+
+=item B<-R>, B<--remove-lab>
+
+Remove the laboratory directory.
+
+=item B<-S>, B<--setup-lab>
+
+Set up or update the laboratory.
 
 =item B<-T> tag1,tag2,..., B<--tags> tag1,tag2,...
 
@@ -88,13 +101,13 @@ file.  Blank lines and lines beginning with # are ignored.  All other
 lines are taken to be tag names or comma-separated lists of tag names
 to (potentially) issue.
 
-=item B<-F>, B<--ftp-master-rejects>
+=item B<-u>, B<--unpack>
 
-Run only the checks that issue tags that result in automatic rejects
-from the Debian upload queue.  The list of such tags is refreshed with
-each Lintian release, so may be slightly out of date if it has changed
-recently.  This option does not, as yet, ignore overrides for fatal
-tags for which overrides aren't allowed.
+Unpacks the package will all collections.  See the L</COLLECTION>
+section below.
+
+Note in this option will also run all collections.  See the
+L</COLLECTION> section below.
 
 =item B<-X> chk1,chk2,..., B<--dont-check-part> chk1,chk2,...
 
@@ -102,24 +115,29 @@ Run all but the the specified checks.  You can either specify the name
 of the check script or the abbreviation.  For details, see the
 L</CHECKS> section below.
 
-=item B<-u>, B<--unpack>
-
-Unpacks the package will all collections.  See the L</COLLECTION>
-section below.
-
-=item B<-r>, B<--remove>
-
-Clean up the lintian directory of the specified packages.
-
 =back
 
 General options:
 
 =over 4
 
+=item B<-d>, B<--debug>
+
+Display debugging messages. (Implies B<-v>).
+
 =item B<-h>, B<--help>
 
 Display usage information and exit.
+
+=item B<-q>, B<--quiet>
+
+Suppress all informational messages.  Currently, the only message this
+suppresses is the message at the end of the run giving the total count
+of overrides.
+
+=item B<-v>, B<--verbose>
+
+Display verbose messages.
 
 =item B<-V>, B<--version>
 
@@ -129,36 +147,33 @@ Display lintian version number and exit.
 
 Print unadorned version number and exit.
 
-=item B<-v>, B<--verbose>
-
-Display verbose messages.
-
-=item B<-d>, B<--debug>
-
-Display debugging messages. (Implies B<-v>).
-
-=item B<-q>, B<--quiet>
-
-Suppress all informational messages.  Currently, the only message this
-suppresses is the message at the end of the run giving the total count
-of overrides.
-
 =back
 
 Behaviour options for B<lintian>.
 
 =over 4
 
-=item B<-i>, B<--info>
+=item B<--allow-root>
 
-Print explanatory information about each problem discovered in
-addition to the lintian error tags. To print a long tag description
-without running lintian, see L<lintian-info(1)>..
+Override lintian's warning when it is run with superuser privileges.
 
-=item B<-I>, B<--display-info>
+=item B<--color> (never|always|auto|html)
 
-Display informational ("I:") tags as well.  They are normally
-suppressed.  (This is equivalent to B<-L> ">=wishlist").
+Whether to colorize tags in lintian output based on their severity.
+The default is "never", which never uses color.  "always" will always
+use color, "auto" will use color only if the output is going to a
+terminal, and "html" will use HTML E<lt>spanE<gt> tags with a color style
+attribute (instead of ANSI color escape sequences).
+
+=item B<--display-source> X
+
+Only display tags from the source X (e.g. the Policy Manual or the
+Developer Reference).  This option can be used multiple times to
+add additional sources.  Example sources are "policy" or "devref"
+being the Policy Manual and the Developer Reference (respectively).
+
+The entire list of sources can be found in
+I<$LINTIAN_ROOT/data/output/manual-references>
 
 =item B<-E>, B<--display-experimental>
 
@@ -171,6 +186,59 @@ and might still give surprising results.  Feel free to ignore
 Experimental messages that do not seem to make sense, though of course
 bug reports are always welcomed (particularly if they include fixes).
 
+=item B<--fail-on-warnings>
+
+By default, B<lintian> exits with 0 status if only warnings were
+found.  If this flag is given, exit with a status of 1 if either
+warnings or errors are found.
+
+=item B<-i>, B<--info>
+
+Print explanatory information about each problem discovered in
+addition to the lintian error tags. To print a long tag description
+without running lintian, see L<lintian-info(1)>.
+
+=item B<-I>, B<--display-info>
+
+Display informational ("I:") tags as well.  They are normally
+suppressed.  (This is equivalent to B<-L> ">=wishlist").
+
+=item B<--keep-lab>
+
+By default, temporary labs will be removed after lintian is finished.
+Specifying this options will leave the lab behind, which might be
+useful for debugging purposes.  You can find out where the temporary
+lab is located by running lintian with the B<--verbose> option.
+
+For static (non-temporary) labs this option causes Lintian to skip
+the automatical clean up of some collections.
+
+=item B<-l> n, B<--unpack-level> n
+
+Set unpack level to I<n>.  See the L</UNPACK LEVELS> section, below.
+
+Note that the UNPACK LEVEL system is deprecated in favour of the
+L</COLLECTION> system.
+
+=item B<-L> [+|-|=][>=|>|<|<=][S|C|S/C], B<--display-level> [+|-|=][>=|>|<|<=][S|C|S/C]
+
+Fine-grained selection of tags to be displayed. It is possible to add,
+remove or set the levels to display, specifying a severity (S:
+serious, important, normal, minor, wishlist), a certainty (C: certain,
+possible, wild-guess), or both (S/C).  The default settings are
+equivalent to B<-L> ">=important" B<-L> "+>=normal/possible" B<-L>
++minor/certain).
+
+=item B<-m>, B<--md5sums>, B<--checksums>
+
+Check checksums when processing a .changes file.  Normally, Lintian
+only checks the checksums for .dsc files when processing a .changes
+file.
+
+=item B<-o>, B<--no-override>
+
+Don't use the overrides file.
+
 =item B<--pedantic>
 
 Display pedantic ("P:") tags as well.  They are normally suppressed.
@@ -181,14 +249,9 @@ disagree with.  Expect false positives and Lintian tags that you don't
 consider useful if you use this option.  Adding overrides for pedantic
 tags is probably not worth the effort.
 
-=item B<-L> [+|-|=][>=|>|<|<=][S|C|S/C], B<--display-level> [+|-|=][>=|>|<|<=][S|C|S/C]
+=item B<--show-overrides>
 
-Fine-grained selection of tags to be displayed. It is possible to add,
-remove or set the levels to display, specifying a severity (S:
-serious, important, normal, minor, wishlist), a certainty (C: certain,
-possible, wild-guess), or both (S/C).  The default settings are
-equivalent to B<-L> ">=important" B<-L> "+>=normal/possible" B<-L>
-+minor/certain).
+Output tags that have been overridden.
 
 =item B<--suppress-tags> tag1,tag2,...
 
@@ -203,49 +266,10 @@ names or comma-separated lists of tag names to suppress.  The
 suppressed tags will not be reported if they occur and will not affect
 the exit status of Lintian.
 
-=item B<-o>, B<--no-override>
-
-Don't use the overrides file.
-
-=item B<--show-overrides>
-
-Output tags that have been overridden.
-
-=item B<--color> (never|always|auto|html)
-
-Whether to colorize tags in lintian output based on their severity.
-The default is "never", which never uses color.  "always" will always
-use color, "auto" will use color only if the output is going to a
-terminal, and "html" will use HTML E<lt>spanE<gt> tags with a color style
-attribute (instead of ANSI color escape sequences).
-
 =item B<-U> info1,info2,..., B<--unpack-info> info1,info2,...
 
 Collect information info1, info2, etc. even if these are not required
 by the checks.
-
-=item B<-m>, B<--md5sums>, B<--checksums>
-
-Check checksums when processing a .changes file.  Normally, Lintian
-only checks the checksums for .dsc files when processing a .changes
-file.
-
-=item B<--allow-root>
-
-Override lintian's warning when it is run with superuser privileges.
-
-=item B<--fail-on-warnings>
-
-By default, B<lintian> exits with 0 status if only warnings were
-found.  If this flag is given, exit with a status of 1 if either
-warnings or errors are found.
-
-=item B<--keep-lab>
-
-By default, temporary labs will be removed after lintian is finished.
-Specifying this options will leave the lab behind, which might be
-useful for debugging purposes.  You can find out where the temporary
-lab is located by running lintian with the B<--verbose> option.
 
 =back
 
@@ -253,34 +277,10 @@ Configuration options:
 
 =over 4
 
-=item B<--cfg> configfile
+=item B<--arch> arch
 
-Read the configuration from configfile rather than the default
-locations.  This option overrides the B<LINTIAN_CFG> environment
-variable.
-
-=item B<--lab> labdir
-
-Use labdir as the permanent laboratory.  This is where Lintian keeps
-information about the packages it checks.  This option overrides the
-B<LINTIAN_LAB> environment variable and the configuration file entry
-of the same name.
-
-=item B<--archivedir> archivedir
-
-Location of Debian archive to scan for packages.  (See the L</FILES>
-section for complete information on how the path is constructed.)  Use
-this if you want Lintian to check the whole Debian archive instead of
-just single packages. This option overrides the B<LINTIAN_ARCHIVEDIR>
-environment variable and the configuration file entry of the same
-name.
-
-=item B<--dist> distdir
-
-Scan for packages in the I<distdir> directory.  (See the L</FILES>
-section for complete information on how the path is constructed.)  Use
-this if you want Lintian to check the whole Debian archive instead of
-just single packages.  This option overrides the B<LINTIAN_DIST>
+When scanning for packages in the distdir, select only packages for
+architecture I<arch>.  This option overrides the B<LINTIAN_ARCH>
 environment variable and the configuration file entry of the same
 name.
 
@@ -291,17 +291,41 @@ the comma-separated list of archive I<areas> (e.g. main, contrib).
 This option overrides the B<LINTIAN_AREA> environment variable and the
 configuration file entry of the same name.
 
+=item B<--archivedir> archivedir
+
+Location of Debian archive to scan for packages.  (See the L</FILES>
+section for complete information on how the path is constructed.)  Use
+this if you want Lintian to check the whole Debian archive instead of
+just single packages. This option overrides the B<LINTIAN_ARCHIVEDIR>
+environment variable and the configuration file entry of the same
+name.
+
+=item B<--cfg> configfile
+
+Read the configuration from configfile rather than the default
+locations.  This option overrides the B<LINTIAN_CFG> environment
+variable.
+
+=item B<--dist> distdir
+
+Scan for packages in the I<distdir> directory.  (See the L</FILES>
+section for complete information on how the path is constructed.)  Use
+this if you want Lintian to check the whole Debian archive instead of
+just single packages.  This option overrides the B<LINTIAN_DIST>
+environment variable and the configuration file entry of the same
+name.
+
 =item B<--section> area
 
 This is an old name for the B<--area> option and accepted as a synonym
 for that option.
 
-=item B<--arch> arch
+=item B<--lab> labdir
 
-When scanning for packages in the distdir, select only packages for
-architecture I<arch>.  This option overrides the B<LINTIAN_ARCH>
-environment variable and the configuration file entry of the same
-name.
+Use labdir as the permanent laboratory.  This is where Lintian keeps
+information about the packages it checks.  This option overrides the
+B<LINTIAN_LAB> environment variable and the configuration file entry
+of the same name.
 
 =item B<--root> rootdir
 
@@ -324,14 +348,6 @@ LINTIAN_DIST variable is defined in the configuration file.)
 
 The following packages listed on the command line are binary packages.
 
-=item B<-s>, B<--source>
-
-The following packages listed on the command line are source packages.
-
-=item B<--udeb>
-
-The following packages listed on the command line are udeb packages.
-
 =item B<-p> X, B<--packages-file> X
 
 Process all packages which are listed in file X.  Each package has to
@@ -344,7 +360,52 @@ package), B<package> is the package name, B<version> is the package's
 version, and B<file> is the package file name (absolute path
 specification).
 
+=item B<-s>, B<--source>
+
+The following packages listed on the command line are source packages.
+
+=item B<--udeb>
+
+The following packages listed on the command line are udeb packages.
+
 =back
+
+=head1 UNPACK LEVELS
+
+Note that the UNPACK LEVEL system is deprecated in favour of the
+L</COLLECTION> system.
+
+=over 4
+
+=item B<0 (none)>
+
+The package does not exist in the I<laboratory> at all.
+
+=item B<1 (basic)>
+
+A directory for this package exists in the I<laboratory> and basic
+information is extracted.  This does not take much space.
+
+For binary and udeb packages, the I<control> and I<fields> directories
+and the index file are unpacked, and symbolic links are made to the
+B<.deb> file and to the lintian directory for the source package.
+
+For source packages, the binary and fields directories are unpacked,
+and symbolic links are made to the source package files.
+
+=item B<2 (contents)>
+
+This unpack level is deprecated and no longer functional. The
+I<unpacked> collection script replaced it.
+
+=back
+
+Lintian will unpack packages as far as is necessary to do its checks,
+but it will leave the package in whatever unpack level was specified
+when it is done.
+
+The default unpack level can be overwritten by setting the
+B<LINTIAN_UNPACK_LEVEL> variable in the configuration file.
 
 =head1 CHECKS
 

@@ -109,7 +109,7 @@ if (!$yada && -f "debfiles/po/POTFILES.in") {
 		#  Cannot check files which are not under debian/
 		next if m,^\.\./, or $_ eq '';
 		unless (-f "debfiles/$_") {
-			tag "missing-file-from-potfiles-in", "$_";
+			tag "missing-file-from-potfiles-in", $_;
 			$missing_files = 1;
 		} 
 	}

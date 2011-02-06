@@ -14,11 +14,15 @@ lintian (2.5.0) UNRELEASED; urgency=low
       - debian-watch-contains-dh_make-template
       - missing-dependency-on-python-central
       - python-module-in-wrong-location
+      - missing-dependency-on-python-support
+      - package-installs-python-bytecode
     + Removed:
       - embedded-zlib (now in embedded-library)
       - embedded-libpng (now in embedded-library)
       - embedded-libjpeg (now in embedded-library)
       - embedded-libopenjpeg (now in embedded-library)
+      - package-installs-python-pyc (replaced by
+        package-installs-python-bytecode)
 
   * checks/*:
     + [NT] Use the new pre-sorted file {index,info} when iterating over files.
@@ -30,7 +34,7 @@ lintian (2.5.0) UNRELEASED; urgency=low
     + [RG] Add swipl to the list of known interpreters.  (Closes: #591316)
     + [RG] Detect embedded copies of ftgl, t1lib, gl2ps, libgd2,
       ncurses, openssl (libcrypto), sqlite/3, libm, ltdl, curl, libmng,
-      libmsn, libmikmod, and libmysqlclient.
+      libmsn, libmikmod, libmysqlclient, and tinyxml.
     + [RG] Merge embedded-{zlib,lib{png,jpeg,openjpeg}} into
       embedded-library.
   * checks/cruft{,.desc}:
@@ -57,6 +61,9 @@ lintian (2.5.0) UNRELEASED; urgency=low
   * checks/description{,.desc}:
     + [NT] Add a check for synopsis starting with articles.  Thanks to
       Nelson A. de Oliveira for the patch.  (Closes: #603053)
+    + [NT] Fixed false positive description-contains-duplicated-word
+      caused by Lintian ignoring quoted words.  Thanks to Gregor
+      Herrmann for report.  (Closes: #590723)
   * checks/fields{,.desc}:
     + [NT] Added check for packages (build) depending on openjdk-X-doc or
       classpath-doc instead of the default-jdk-doc metapackage.
@@ -91,6 +98,16 @@ lintian (2.5.0) UNRELEASED; urgency=low
       Thanks to Jakub Wilk for the report.  (Closes: #592533)
     + [NT] Added check for malplaced Python modules. Thanks to
       Jakub Wilk for the report.  (Closes: #576012)
+    + [NT] Removed the "!= 0755" part from the out of the tag
+      executable-is-not-world-readable, since there are other valid
+      world readable file permissions.
+    + [NT] Added check for missing dependency on python-support.
+      Thanks to Jakub Wilk for the report.  (Closes: #592491)
+    + [NT] Added check for packages installing Python eggs and
+      __pycache__ directories.  Also extended existing Python bytecode
+      check to include ".pyo" files.  Thanks to Piotr Ożarowski,
+      Jakub Wilk and the people in #debian-python for the report and
+      help with implementing this.  (Closes: #576005)
   * checks/menu-format.desc:
     + [CW] Fix several typos.
   * checks/menus.desc:
@@ -110,7 +127,7 @@ lintian (2.5.0) UNRELEASED; urgency=low
 
   * data/changelog-file/ubuntu-dists:
     + [CW] Add natty as a valid Ubuntu distribution, and remove the EOLed
-      intrepid and jaunty.
+      intrepid and jaunty.  (Closes: #611439)
   * data/cruft/autotools:
     + [NT] Added the file which is a list of all packages that will
       suppress the {ancient,outdated}-autotools-helper-file tags.
@@ -133,7 +150,10 @@ lintian (2.5.0) UNRELEASED; urgency=low
       used.  (Closes: #596848)
   * data/spelling/corrections:
     + [NT] Added more corrections.
-  * data/spelling/collections-multiword:
+  * data/spelling/corrections-case:
+    + [NT] Added DocBook corrections.  Thanks to Jakub Wilk.
+      (Closes: #611349)
+  * data/spelling/corrections-multiword:
     + [NT] Added "allows to" and other similar cases.  Thanks to
       Matthew Paul Thomas for the report.  (LP: #608231)
 
@@ -147,6 +167,8 @@ lintian (2.5.0) UNRELEASED; urgency=low
       depend on using dh7 with override targets.  (Closes: #607730)
     + [NT] Added Niels Thykier to uploaders.
     + [NT] Introduce (build) dependency on libemail-valid-perl.
+    + [RG] Add a versioned build dependency on libtest-simple-perl or a
+      recent Perl that has Test::More with subtests support.
   * debian/copyright:
     + [NT] Added Niels Thykier to maintainers.
   * debian/rules:
@@ -162,6 +184,8 @@ lintian (2.5.0) UNRELEASED; urgency=low
       exiting.  In some cases these jobs would attempt to modify the
       lab while Lintian was trying to remove it.  Thanks to
       Andreas Beckmann for reporting this issue.  (Closes: #610218)
+    + [NT] Sorted related options alphabetically.  Thanks to Jari Aalto
+      for the initial patch.  (Closes: #600905)
 
   * lib/Lintian/Check.pm:
     + [NT] Use Email::Valid to validate email addreses.
@@ -173,6 +197,9 @@ lintian (2.5.0) UNRELEASED; urgency=low
   * lib/Lintian/Collect/Binary.pm:
     + [NT] Pre-sort file index and file info to avoid sorting it
       repeatedly in the checks.  (Closes: #605844)
+
+  * man/*:
+    + [NT] Rewrote the man pages in pod.  (Closes: #600906)
 
   * t/tests/{rules-not-makefile,scripts-missing-dep}:
     + [NT] Added new tests. (Closes: #607731)

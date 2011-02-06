@@ -25,8 +25,7 @@ runtests: $(neededfiles) $(allchecks) $(allcollect) $(tagfiles) $(testfiles)
 	@echo .... running tests ....
 	rm -rf debian/tests
 	mkdir debian/tests
-	LINTIAN_ROOT="" $(PERL) t/runtests -k t debian/tests $(onlyrun)
-	LINTIAN_ROOT="" $(PERL) testset/runtests -k testset debian/tests $(onlyrun)
+	private/runtests $(onlyrun)
 	if [ "$(onlyrun)" = "" ]; then touch $@; fi
 
 # Like runtests but only runs tests affecting a particular tag.  That tag
@@ -37,7 +36,7 @@ check-tag:
 	fi
 	rm -rf debian/tests
 	mkdir debian/tests
-	LINTIAN_ROOT="" $(PERL) t/runtests -k -t $(tag) t debian/tests
+	private/runtests -t $(tag)
 
 # this target is only run manually
 refresh-perl-provides:
@@ -71,6 +70,7 @@ clean: $(neededfiles)
 	rm -rf doc/lintian.html/ doc/lintian.txt
 	rm -rf debian/tests
 	rm -rf man/man1/
+	rm -fr debian/test.locale
 	find -name "*.py?" -print0 | xargs -0r rm
 	dh_clean
 

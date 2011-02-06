@@ -94,6 +94,7 @@ files package-installs-font-to-usr-x11r6
 files package-installs-into-etc-rc.boot
 files package-installs-into-etc-rc.d
 files package-installs-perllocal-pod
+files package-installs-python-pyc
 files package-uses-obsolete-file
 files perl-module-in-core-directory
 files setgid-binary
@@ -257,7 +258,6 @@ files package-installs-file-to-usr-x11r6-bin
 files package-installs-into-etc-gconf-schemas
 files package-installs-nonbinary-perl-in-usr-lib-perl5
 files package-installs-packlist
-files package-installs-python-pyc
 files script-in-usr-share-doc
 files script-with-language-extension
 files setuid-binary
@@ -545,7 +545,6 @@ scripts
   init.d-script-missing-lsb-short-description
   non-standard-executable-perm
   non-standard-setuid-executable-perm
-  package-installs-python-pyc
   php-script-but-no-phpX-cli-dep
   python-script-but-no-python-dep
   script-in-usr-share-doc

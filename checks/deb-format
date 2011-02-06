@@ -17,6 +17,7 @@
 
 package Lintian::deb_format;
 use strict;
+use warnings;
 
 use Lintian::Command qw(spawn);
 use Lintian::Tags qw(tag);
@@ -67,7 +68,7 @@ if ($success) {
         } else {
             tag 'lzma-deb-archive';
         }
-    } elsif ($members[2] !~ /^data\.tar\.(gz|bz2)\z/) {
+    } elsif ($members[2] !~ /^data\.tar\.(?:gz|bz2)\z/) {
         tag 'malformed-deb-archive',
             "third member $members[2] not data.tar.(gz|bz2)";
     } else {
@@ -88,8 +89,8 @@ if ($success) {
 # may eventually have a case where dpkg supports a newer format but it's not
 # permitted in the archive yet.
 if ($okay) {
-    my $opts = {};
-    my $success = spawn($opts, ['ar', 'p', 'deb', 'debian-binary']);
+    $opts = {};
+    $success = spawn($opts, ['ar', 'p', 'deb', 'debian-binary']);
     if (not $success) {
         tag 'malformed-deb-archive', "can't read debian-binary member";
     } elsif (${ $opts->{out} } !~ /^2\.\d+\n/) {

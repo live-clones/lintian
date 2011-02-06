@@ -34,6 +34,7 @@
 
 package Lintian::version_substvars;
 use strict;
+use warnings;
 
 use Util;
 use Lintian::Tags qw(tag);
@@ -57,11 +58,11 @@ foreach (keys %$binpkgs) {
 	foreach my $field (@dep_fields) {
 		next unless $info->binary_field($pkg1, $field);
 		if ($info->binary_field($pkg1, $field) =~ m/\${Source-Version}/) {
-			tag "substvar-source-version-is-deprecated", $pkg1;
+			tag 'substvar-source-version-is-deprecated', $pkg1;
 		}
 	}
 
-	foreach (split(m/,/, $info->binary_field($pkg1, 'pre-depends').", ".
+	foreach (split(m/,/, $info->binary_field($pkg1, 'pre-depends').', '.
 		       $info->binary_field($pkg1, 'depends'))) {
 		next unless m/(\S+)\s*\(\s*=\s*\${((?:Source-|source:|binary:)Version)}/x;
 
@@ -72,7 +73,7 @@ foreach (keys %$binpkgs) {
 		# formed via substvars expanded during the build.  Assume
 		# those maintainers know what they're doing.
 		if (not $info->binary_field($pkg2, 'architecture')) {
-			tag "version-substvar-for-external-package", "$pkg1 -> $pkg2"
+			tag 'version-substvar-for-external-package', "$pkg1 -> $pkg2"
 				unless ($pkg2 =~ /\$\{\S+\}/);
 			next;
 		}
@@ -81,14 +82,14 @@ foreach (keys %$binpkgs) {
 		if ($pkg1_is_any) {
 			if ($pkg2_is_any and $substvar_strips_binNMU) {
 				# (b1) any -> any (= ${source:Version})
-				tag "not-binnmuable-any-depends-any", "$pkg1 -> $pkg2";
+				tag 'not-binnmuable-any-depends-any', "$pkg1 -> $pkg2";
 			} elsif (not $pkg2_is_any and not $substvar_strips_binNMU) {
 				# (b2) any -> all (= ${Source-Version}) [or b:V]
-				tag "not-binnmuable-any-depends-all", "$pkg1 -> $pkg2";
+				tag 'not-binnmuable-any-depends-all', "$pkg1 -> $pkg2";
 			}
 		} elsif ($pkg2_is_any) {
 			# (b3) all -> any (= ${either-of-them})
-			tag "not-binnmuable-all-depends-any", "$pkg1 -> $pkg2";
+			tag 'not-binnmuable-all-depends-any', "$pkg1 -> $pkg2";
 		}
 	}
 }
