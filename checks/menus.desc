@@ -4,7 +4,7 @@ Abbrev: men
 Type: binary
 Info: Check if a binary package conforms to policy with respect to
  <b>menu</b> and <b>doc-base</b> files.
-Needs-Info: doc-base-files
+Needs-Info: doc-base-files, menu-files
 
 Tag: postinst-should-not-set-usr-doc-link
 Severity: normal
