@@ -183,8 +183,8 @@ Tag: debhelper-maintscript-need-versioned-build-depends
 Severity: normal
 Certainty: certain
 Ref: dh(1)
-Info: The mainscript files used by this package was introduced in a later
- version of debhelper than the package Build-Depends on.  The package
+Info: The maintscript files used by this package was introduced in a later
+ version of debhelper than the package Build-Depends on.  The package's
  Build-Depends should be updated to require at least debhelper 8.1.0.
  Giving the version followed by <tt>~</tt> is recommended so that
  backports will satisfy the dependency.
