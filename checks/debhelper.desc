@@ -179,7 +179,7 @@ Info: The override targets facility in debhelper, involving debian/rules
  assumes a newer version should explicitly declare so for the sake of lenny
  backports.
 
-Tag: debhelper-maintscript-need-versioned-build-depends
+Tag: debhelper-maintscript-needs-versioned-build-depends
 Severity: normal
 Certainty: certain
 Ref: dh(1)
