@@ -737,7 +737,7 @@ Info: The given binary package has a name of the form of "X-dbg", indicating it
  If this package provides debugging symbols for multiple other
  packages, it should normally depend on all of those packages as
  alternatives.  In other words, <tt>pkga (= ${binary:Version}) | pkgb (=
- ${binary:Version)</tt> and so forth.
+ ${binary:Version})</tt> and so forth.
 
 Tag: conflicts-with-dependency
 Severity: important
