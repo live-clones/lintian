@@ -16,6 +16,7 @@ lintian (2.5.0) UNRELEASED; urgency=low
       - python-module-in-wrong-location
       - missing-dependency-on-python-support
       - package-installs-python-bytecode
+      - debhelper-maintscript-need-versioned-build-depends
     + Removed:
       - embedded-zlib (now in embedded-library)
       - embedded-libpng (now in embedded-library)
@@ -55,6 +56,8 @@ lintian (2.5.0) UNRELEASED; urgency=low
       been removed by dh_clean.  (Closes: #598251)
     + [NT] Added check for unused build dependency on cdbs.  Thanks to
       Jari Aalto for suggesting this.  (Closes: #582769)
+    + [NT] Added check for incorrection debhelper version when using the
+      maintscript feature from debhelper 8.1.0.
   * checks/debian-source-dir:
     + [NT] Added missing import of "Util" perl module.  Thanks to David
       Bremner for the patch.
