@@ -248,7 +248,7 @@ foreach my $file (@{$info->sorted_index}) {
 	if (not defined $pid) {
 	    fail("cannot run man -E UTF-8 -l: $!");
 	} elsif ($pid == 0) {
-	    my %newenv = (LANG => 'en_US.UTF8', PATH => $ENV{PATH},
+	    my %newenv = (LANG => 'en_US.UTF-8', PATH => $ENV{PATH},
 			  MANWIDTH => 80, LOCPATH => $ENV{LOCPATH});
 	    undef %ENV;
 	    %ENV = %newenv;

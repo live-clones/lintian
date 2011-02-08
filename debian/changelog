@@ -111,6 +111,8 @@ lintian (2.5.0) UNRELEASED; urgency=low
       check to include ".pyo" files.  Thanks to Piotr Ożarowski,
       Jakub Wilk and the people in #debian-python for the report and
       help with implementing this.  (Closes: #576005)
+  * checks/manpages:
+    + [NT] Fixed typo in locale name.
   * checks/menu-format.desc:
     + [CW] Fix several typos.
   * checks/menus.desc:
