@@ -16,7 +16,7 @@ lintian (2.5.0) UNRELEASED; urgency=low
       - python-module-in-wrong-location
       - missing-dependency-on-python-support
       - package-installs-python-bytecode
-      - debhelper-maintscript-need-versioned-build-depends
+      - debhelper-maintscript-needs-versioned-build-depends
     + Removed:
       - embedded-zlib (now in embedded-library)
       - embedded-libpng (now in embedded-library)
