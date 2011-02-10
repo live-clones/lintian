@@ -878,6 +878,10 @@ Info: This package appears to be an architecture-independent Python module
  If this package really does require only a particular range of Python
  versions and uses python-central, add a Python-Version control field (as
  described in 2.3 of the Python policy) to resolve this warning.
+ .
+ Note that this can also be triggered if dh_python2 is used and it cannot
+ add anything to the Breaks field, beceause the package has no
+ ${python:Breaks} substition variable.
 
 Tag: malformed-dm-upload-allowed
 Severity: important

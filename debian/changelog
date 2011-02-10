@@ -80,6 +80,10 @@ lintian (2.5.0) UNRELEASED; urgency=low
       will no longer be emitted if the package listed in Breaks is also
       listed in Replaces.  Thanks to Modestas Vainius for the report.
       (Closes: #605744)
+    + [NT] Clarified that old-versioned-python-dependency can also be
+      triggered if dh_python2 is used and the package is missing
+      ${python:Breaks}. Thanks to Piotr Ożarowski for the report.
+      (Closes: #604167)
   * checks/files{,.desc}:
     + [NT] Fixed false-positive extra-license-file for license.ui files.
       Thanks to Jeremy Sanders for the report.  (Closes: #595941)
