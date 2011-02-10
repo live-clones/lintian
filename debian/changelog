@@ -112,7 +112,8 @@ lintian (2.5.0) UNRELEASED; urgency=low
       Jakub Wilk and the people in #debian-python for the report and
       help with implementing this.  (Closes: #576005)
   * checks/manpages:
-    + [NT] Fixed typo in locale name.
+    + [NT] Fixed typo in locale name. Thanks to Christoph Biedl for spotting
+      this.  (Closes: #606933)
   * checks/menu-format.desc:
     + [CW] Fix several typos.
   * checks/menus.desc:
