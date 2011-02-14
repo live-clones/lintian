@@ -150,7 +150,7 @@ my $maybe_skipping;
 my $uses_makefile_pl = 0;
 while (<RULES>) {
     next if /^\s*\#/;
-    $includes = 1 if m/^ *[s-]?include\s+/;
+    $includes = 1 if m/^\s*[s-]?include\s+/;
     $uses_makefile_pl = 1 if m/Makefile\.PL/;
 
     # Check for DH_COMPAT settings outside of any rule, which are now

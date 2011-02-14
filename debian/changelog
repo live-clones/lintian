@@ -136,6 +136,8 @@ lintian (2.5.0) UNRELEASED; urgency=low
     + [RG] Drop some checks for versioned dependencies that can now be
       satisfied in stable (squeeze).  Thanks, Cyril Brulebois.
       (Closes: #612137)
+    + [RG] Correctly handle include directives preceded by a tab.
+      (Closes: #607281)
   * checks/scripts:
     + [NT] Added mscgen as interpreter.
   * checks/standards-version:
