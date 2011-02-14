@@ -115,6 +115,9 @@ lintian (2.5.0) UNRELEASED; urgency=low
       check to include ".pyo" files.  Thanks to Piotr Ożarowski,
       Jakub Wilk and the people in #debian-python for the report and
       help with implementing this.  (Closes: #576005)
+  * checks/init.d.desc:
+    + [RG] Raise severity of init.d-script-starts-in-stop-runlevel.
+      (Closes: #603800)
   * checks/manpages:
     + [NT] Fixed typo in locale name. Thanks to Christoph Biedl for spotting
       this.  (Closes: #606933)
