@@ -2,7 +2,7 @@
 # package that contains the font.  Only packages starting with ttf-,
 # otf-, t1-, and xfonts- are searched for fonts.
 #
-# Last updated: 2011-01-17
+# Last updated: 2011-02-19
 
 1015sn.ttf ttf-aenigma
 1015snr.ttf ttf-aenigma
@@ -56,9 +56,6 @@ ae_alarabiya.ttf ttf-arabeyes
 ae_albattar.ttf ttf-arabeyes
 ae_alhor.ttf ttf-arabeyes
 ae_almanzomah.ttf ttf-arabeyes
-ae_almateen-bold.ttf ttf-arabeyes
-ae_almohanad.ttf ttf-arabeyes
-ae_almothnna-bold.ttf ttf-arabeyes
 ae_alyarmook.ttf ttf-arabeyes
 ae_arab.ttf ttf-arabeyes
 ae_cortoba.ttf ttf-arabeyes
@@ -250,6 +247,7 @@ bpg_rioni.ttf ttf-bpg-georgian-fonts
 bpg_rioni_bold.ttf ttf-bpg-georgian-fonts
 bpg_unicode_standard.ttf ttf-bpg-georgian-fonts
 brassknu.ttf ttf-aenigma
+breip.ttf ttf-breip
 breipfont.ttf ttf-breip
 brigadom.ttf ttf-aenigma
 brigadow.ttf ttf-aenigma
@@ -377,6 +375,18 @@ dotum.ttf ttf-baekmuk
 doulossilr.ttf ttf-sil-doulos
 draggle.ttf ttf-aenigma
 draggleo.ttf ttf-aenigma
+droidsans-bold.ttf ttf-droid
+droidsans.ttf ttf-droid
+droidsansarabic.ttf ttf-droid
+droidsansfallback.ttf ttf-droid
+droidsanshebrew.ttf ttf-droid
+droidsansjapanese.ttf ttf-droid
+droidsansmono.ttf ttf-droid
+droidsansthai.ttf ttf-droid
+droidserif-bold.ttf ttf-droid
+droidserif-bolditalic.ttf ttf-droid
+droidserif-italic.ttf ttf-droid
+droidserif-regular.ttf ttf-droid
 dustismo.ttf ttf-dustin
 dustismo_bold.ttf ttf-dustin
 dustismo_bold_italic.ttf ttf-dustin
@@ -796,6 +806,10 @@ liberationsans-bold.ttf ttf-liberation
 liberationsans-bolditalic.ttf ttf-liberation
 liberationsans-italic.ttf ttf-liberation
 liberationsans-regular.ttf ttf-liberation
+liberationsansnarrow-bold.ttf ttf-liberation
+liberationsansnarrow-bolditalic.ttf ttf-liberation
+liberationsansnarrow-italic.ttf ttf-liberation
+liberationsansnarrow-regular.ttf ttf-liberation
 liberationserif-bold.ttf ttf-liberation
 liberationserif-bolditalic.ttf ttf-liberation
 liberationserif-italic.ttf ttf-liberation
@@ -807,12 +821,17 @@ librisadfstd-regular.otf ttf-adf-libris
 licostrg.ttf ttf-aenigma
 lightout.ttf ttf-aenigma
 likhannormal.ttf ttf-bengali-fonts
+linbiolinum_bd.ttf ttf-linux-libertine
+linbiolinum_it.ttf ttf-linux-libertine
+linbiolinum_kb.ttf ttf-linux-libertine
+linbiolinum_re.ttf ttf-linux-libertine
+linbiolinum_sl.ttf ttf-linux-libertine
 lineding.ttf ttf-aenigma
 linlibertine_bd.ttf ttf-linux-libertine
 linlibertine_bi.ttf ttf-linux-libertine
+linlibertine_c.ttf ttf-linux-libertine
 linlibertine_it.ttf ttf-linux-libertine
 linlibertine_re.ttf ttf-linux-libertine
-linlibertinec_re.ttf ttf-linux-libertine
 lklug.ttf ttf-sinhala-lklug
 lohit_as.ttf ttf-bengali-fonts
 lohit_bn.ttf ttf-bengali-fonts
@@ -945,7 +964,7 @@ mplus-2p-thin.ttf ttf-mplus
 mry_kacstqurn.ttf ttf-kacst
 msam10.ttf ttf-lyx
 msbm10.ttf ttf-lyx
-mtlc3m.ttf ttf-motoya-l-ceder
+mtlc3m.ttf ttf-motoya-l-cedar
 mtlmr3m.ttf ttf-motoya-l-maruberi
 muktinarrow.ttf ttf-bengali-fonts
 muktinarrowbold.ttf ttf-bengali-fonts
@@ -974,16 +993,16 @@ n022024d.pfb t1-cyrillic
 nafeesweb.ttf ttf-nafees
 nakula.ttf ttf-devanagari-fonts
 nanosecw.ttf ttf-aenigma
-nanumbrush.ttf ttf-nanum
+nanumbrush.ttf ttf-nanum-extra
 nanumgothic.ttf ttf-nanum
 nanumgothic_coding.ttf ttf-nanum-coding
 nanumgothic_coding_bold.ttf ttf-nanum-coding
 nanumgothicbold.ttf ttf-nanum
-nanumgothicextrabold.ttf ttf-nanum
+nanumgothicextrabold.ttf ttf-nanum-extra
 nanummyeongjo.ttf ttf-nanum
 nanummyeongjobold.ttf ttf-nanum
-nanummyeongjoextrabold.ttf ttf-nanum
-nanumpen.ttf ttf-nanum
+nanummyeongjoextrabold.ttf ttf-nanum-extra
+nanumpen.ttf ttf-nanum-extra
 naqsh.ttf ttf-paktype
 naughts.ttf ttf-aenigma
 nazli.ttf ttf-farsiweb
@@ -1152,6 +1171,7 @@ romaui__.ttf ttf-uralic
 rotund.ttf ttf-aenigma
 rotundo.ttf ttf-aenigma
 roughday.ttf ttf-aenigma
+rsfs10.ttf ttf-lyx
 rufscript010.ttf ttf-rufscript
 ryuker.ttf ttf-aenigma
 saab.ttf ttf-punjabi-fonts
@@ -1196,7 +1216,6 @@ setbackt.ttf ttf-aenigma
 sideways.ttf ttf-aenigma
 sileot.ttf ttf-sil-ezra
 sileotsr.ttf ttf-sil-ezra
-silyi.ttf ttf-sil-yi
 simplto2.ttf ttf-aenigma
 skullcap.ttf ttf-aenigma
 slender.ttf ttf-aenigma
@@ -1539,6 +1558,8 @@ unpilgibold.ttf ttf-unfonts-core
 unrespon.ttf ttf-aenigma
 unshinmun.ttf ttf-unfonts-extra
 untaza.ttf ttf-unfonts-extra
+untitled1.otf otf-freefont
+untitled1.ttf ttf-freefont
 unvada.ttf ttf-unfonts-extra
 unxgala.ttf ttf-aenigma
 unxgalaw.ttf ttf-aenigma
