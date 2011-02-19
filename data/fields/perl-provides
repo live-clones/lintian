@@ -16,10 +16,12 @@ libio-compress-zlib-perl 2.020
 libio-compress-perl 2.020
 libio-compress-bzip2-perl 2.020
 libio-compress-base-perl 2.020
+libencode-perl 2.35
 libdigest-sha-perl 5.47
 libcompress-zlib-perl 2.020
 libcompress-raw-zlib-perl 2.020
 libcompress-raw-bzip2-perl 2.020
+libversion-perl 0.77
 libtime-local-perl 1.1901
 libthread-queue-perl 2.11
 libtest-simple-perl 0.92
@@ -32,6 +34,7 @@ libmodule-pluggable-perl 3.9
 libmodule-load-conditional-perl 0.30
 libmodule-corelist-perl 2.18
 libmodule-build-perl 0.340201
+libmath-bigint-perl 1.89
 libio-zlib-perl 1.09
 libfile-temp-perl 0.22
 libfile-spec-perl 3.30
