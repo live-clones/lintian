@@ -151,6 +151,10 @@ lintian (2.5.0) UNRELEASED; urgency=low
     + [NT] Added check for dh_make(1) templates in the watch file.
     Thanks to Nelson A. de Oliveira for the report.  (Closes: #600866)
 
+  * collection/objdump-info:
+    + [RG] Support stricter parameter handling of objdump-info from
+      binutils 2.21.  Thanks, Andreas Beckmann.  (Closes: #604047)
+
   * data/changelog-file/ubuntu-dists:
     + [CW] Add natty as a valid Ubuntu distribution, and remove the EOLed
       intrepid and jaunty.  (Closes: #611439)
