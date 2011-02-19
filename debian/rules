@@ -25,7 +25,6 @@ runtests: $(neededfiles) $(allchecks) $(allcollect) $(tagfiles) $(testfiles)
 	@echo .... running tests ....
 	rm -rf debian/tests
 	mkdir debian/tests
-	chmod g+s debian/tests
 	private/runtests $(onlyrun)
 	if [ "$(onlyrun)" = "" ]; then touch $@; fi
 
@@ -37,7 +36,6 @@ check-tag:
 	fi
 	rm -rf debian/tests
 	mkdir debian/tests
-	chmod g+s debian/tests
 	private/runtests -t $(tag)
 
 # this target is only run manually

@@ -199,8 +199,6 @@ lintian (2.5.0) UNRELEASED; urgency=low
     + [NT] Replace dh_clean -k with dh_prep.
     + [NT] Add support for skipping the test suite per policy 4.9.1.
       Many thanks to David Bremner for the patch.
-    + [RG] Chmod the tests directory setgid to better simulate
-      lintian.d.o's environment.
   * debian/compat:
     + [NT] Bump debhelper comat to 7.
 
