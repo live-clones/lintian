@@ -211,10 +211,11 @@ tag 'package-name-doesnt-match-sonames', "@sonames"
     if @sonames && !$match_found;
 
 my %directories;
-foreach (@{$info->sorted_file_info}) {
+foreach (@{$info->sorted_index}) {
     next unless length $_;
-    my $data = $info->file_info->{$_};
-    next unless $data eq 'directory' or $data =~ / link to /;
+    my $ftype = $info->index->{$_}->{'type'};
+    next unless ($ftype eq 'd' || $ftype eq 'l');
+    s,/\z,,;
     $directories{"/$_"}++;
 }
 
