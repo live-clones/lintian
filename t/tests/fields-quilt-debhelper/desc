@@ -1,7 +1,0 @@
-Testname: fields-quilt-debhelper
-Sequence: 6000
-Type: non-native
-Version: 1.0-1
-Description: Recognize quilt's debhelper add-ons
-Test-For: missing-build-dependency
-References: Debian Bug #528003
