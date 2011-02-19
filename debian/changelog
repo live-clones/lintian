@@ -178,6 +178,8 @@ lintian (2.5.0) UNRELEASED; urgency=low
     + [NT] Made tipa replace xfonts-tipa as font provider.
       (Closes: #595530)
     + [RG] Refresh against unstable.
+  * data/files/locale-codes:
+    + [RG] Refresh against isoquery 1.4.
   * data/shared-libs/ldconfig-dirs:
     + [NT] Removed the emul/ia32-linux directories as they are no longer
       used.  (Closes: #596848)
