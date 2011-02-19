@@ -2,10 +2,10 @@ dh_cligacpolicy
 dh_config_model_upgrade
 dh_consoledata
 dh_dkms
-dh_gconf
 dh_icons
 dh_installcatalogs
 dh_installcligac
+dh_installdeb
 dh_installdebconf
 dh_installdefoma
 dh_installemacsen
@@ -29,5 +29,7 @@ dh_nativejava
 dh_pycentral
 dh_pysupport
 dh_python
+dh_python2
+dh_python3
 dh_suidregister
 dh_usrlocal
