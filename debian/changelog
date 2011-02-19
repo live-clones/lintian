@@ -26,9 +26,10 @@ lintian (2.5.0) UNRELEASED; urgency=low
         package-installs-python-bytecode)
 
   * checks/*:
-    + [NT] Use the new pre-sorted file {index,info} when iterating over files.
-    + [NT] All checks now report files without any "./" or "/" prefix.  This
-      may break existing overrides.  (Closes: #534940)
+    + [NT] Use the new pre-sorted file {index,info} when iterating over
+      files.
+    + [NT] All checks now report files without any "./" or "/" prefix.
+      This may break existing overrides.  (Closes: #534940)
   * checks/binaries:
     + [RA] Exclude kfreebsd-kernel-di-{amd64,i386} from the
       embedded-zlib check since it's in the kernel.  (Closes: #593397)
@@ -121,8 +122,8 @@ lintian (2.5.0) UNRELEASED; urgency=low
     + [RG] Raise severity of init.d-script-starts-in-stop-runlevel.
       (Closes: #603800)
   * checks/manpages:
-    + [NT] Fixed typo in locale name. Thanks to Christoph Biedl for spotting
-      this.  (Closes: #606933)
+    + [NT] Fixed typo in locale name. Thanks to Christoph Biedl for
+      spotting this.  (Closes: #606933)
   * checks/menu-format.desc:
     + [CW] Fix several typos.
   * checks/menus.desc:
@@ -200,7 +201,7 @@ lintian (2.5.0) UNRELEASED; urgency=low
     + [NT] Add support for skipping the test suite per policy 4.9.1.
       Many thanks to David Bremner for the patch.
   * debian/compat:
-    + [NT] Bump debhelper comat to 7.
+    + [NT] Bump debhelper compat to 7.
 
   * frontend/lintian:
     + [NT] Ensure that Lintian always reaps processes it started before
