@@ -141,6 +141,8 @@ lintian (2.5.0) UNRELEASED; urgency=low
       (Closes: #612137)
     + [RG] Correctly handle include directives preceded by a tab.
       (Closes: #607281)
+    + [RG] Allow 'ocaml' as an alternative to 'ocaml-nox'.  Thanks,
+      Ralf Treinen.  (Closes: #612568)
   * checks/scripts:
     + [NT] Added mscgen as interpreter.
   * checks/standards-version:

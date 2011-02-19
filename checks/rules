@@ -56,7 +56,7 @@ our @GLOBAL_CLEAN_DEPENDS =
 # Build-Depends-Indep as appropriate; and optional tags as above.
 my @GLOBAL_DEPENDS =
     (
-     [ 'dh-ocaml (>= 0.9~), ocaml-nox (>= 3.11.1-3~)' => qr'^\t\s*dh_ocaml(?:init|doc)\s' ],
+     [ 'dh-ocaml, ocaml-nox | ocaml' => qr'^\t\s*dh_ocaml(?:init|doc)\s' ],
      [ $PYTHON_DEPEND => qr'^\t\s*dh_python\s', 'missing-dh_python-build-dependency' ],
      [ 'python-central' => qr'^\t\s*dh_pycentral\s' ],
      [ 'python-support' => qr'^\t\s*dh_pysupport\s' ],
@@ -71,7 +71,7 @@ my @RULE_CLEAN_DEPENDS =
     (
      [ 'ant | ant1.7' => qr'^\t\s*(\S+=\S+\s+)*ant\s' ],
      [ debhelper => qr'^\t\s*dh_.+' ],
-     [ 'dh-ocaml (>= 0.9~), ocaml-nox (>= 3.11.1-3~) ' => qr'^\t\s*(?:dh_ocamlinit|dh\s.*--with\s+(?:\S+,)*ocaml)\s' ],
+     [ 'dh-ocaml, ocaml-nox | ocaml' => qr'^\t\s*(?:dh_ocamlinit|dh\s.*--with\s+(?:\S+,)*ocaml)\s' ],
      [ dpatch => qr'^\t\s*(\S+=\S+\s+)*dpatch\s' ],
      [ "po-debconf" => qr'^\t\s*debconf-updatepo\s' ],
      [ $PYTHON_DEPEND => qr'^\t\s*python\s', 'missing-python-build-dependency' ],
