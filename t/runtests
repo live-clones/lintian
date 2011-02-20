@@ -29,6 +29,9 @@
 use strict;
 use warnings;
 
+use threads;
+use Thread::Queue;
+
 use Data::Dumper;
 use Getopt::Long qw(GetOptions);
 use Text::Template;
@@ -152,7 +155,7 @@ $| = 1;
 # 0 - success
 # 1 - one or more tests failed
 # 2 - an error prevented proper running of the tests
-my $status = 0;
+my $status :shared = 0;
 
 # If we don't run any tests, we'll want to warn that we couldn't find
 # anything.
@@ -160,6 +163,16 @@ my $tests_run = 0;
 
 my @tests;
 my $prev;
+
+my $q = Thread::Queue->new();
+our $MSG_Q = Thread::Queue->new();
+
+sub msg_flush;
+sub msg_print;
+sub msg_queue_handler;
+
+# Thread to nicely handle the output of each thread:
+threads->create('msg_queue_handler')->detach();
 
 # --- Run all test scripts
 
@@ -210,14 +223,27 @@ if ($singletest) {
 }
 print "Found the following changes tests: @tests\n" if $DEBUG;
 print "Changes tests:\n" if @tests;
-for (@tests) {
-    my $okay = test_changes($_);
-    unless ($okay) {
-	exit 1 unless $run_all_tests;
-	$status = 1;
-    }
-    $tests_run++;
+
+$q->enqueue(@tests);
+
+for (my $i = 0; $i < $JOBS; $i++) {
+    threads->create(sub {
+	while (my $t = $q->dequeue_nb()) {
+	    my $okay = test_changes($t);
+	    unless ($okay) {
+		exit 1 unless $run_all_tests;
+		lock($status);
+		$status = 1;
+	    }
+	}
+    });
 }
+$tests_run += scalar(@tests);
+
+for my $thr (threads->list()) {
+    $thr->join();
+}
+msg_flush;
 
 # --- Run all debs tests
 
@@ -249,14 +275,27 @@ if ($prev and @tests) {
 }
 print "Found the following debs tests: @tests\n" if $DEBUG;
 print "Raw Debian package tests:\n" if @tests;
-for (@tests) {
-    my $okay = test_deb($_);
-    unless ($okay) {
-	exit 1 unless $run_all_tests;
-	$status = 1;
-    }
-    $tests_run++;
+
+$q->enqueue(@tests);
+
+for (my $i = 0; $i < $JOBS; $i++) {
+    threads->create(sub {
+	while (my $t = $q->dequeue_nb()) {
+	    my $okay = test_deb($t);
+	    unless ($okay) {
+		exit 1 unless $run_all_tests;
+		lock($status);
+		$status = 1;
+	    }
+	}
+    });
 }
+$tests_run += scalar(@tests);
+
+for my $thr (threads->list()) {
+    $thr->join();
+}
+msg_flush;
 
 # --- Run all source tests
 
@@ -288,14 +327,27 @@ if ($prev and @tests) {
 }
 print "Found the following source tests: @tests\n" if $DEBUG;
 print "Raw Debian source package tests:\n" if @tests;
-for (@tests) {
-    my $okay = test_source($_);
-    unless ($okay) {
-	exit 1 unless $run_all_tests;
-	$status = 1;
-    }
-    $tests_run++;
+
+$q->enqueue(@tests);
+
+for (my $i = 0; $i < $JOBS; $i++) {
+    threads->create(sub {
+	while (my $t = $q->dequeue_nb()) {
+	    my $okay = test_source($t);
+	    unless ($okay) {
+		exit 1 unless $run_all_tests;
+		lock($status);
+		$status = 1;
+	    }
+	}
+    });
 }
+$tests_run += scalar(@tests);
+
+for my $thr (threads->list()) {
+    $thr->join();
+}
+msg_flush;
 
 # --- Run all package tests
 
@@ -327,14 +379,27 @@ if ($DEBUG) {
     print "\n";
 }
 print "Package tests:\n" if @tests;
-for my $test (@tests) {
-    my $okay = test_package($test);
-    unless ($okay) {
-	exit 1 unless $run_all_tests;
-	$status = 1;
-    }
-    $tests_run++;
+
+$q->enqueue(@tests);
+
+for (my $i = 0; $i < $JOBS; $i++) {
+    threads->create(sub {
+	while (my $t = $q->dequeue_nb()) {
+	    my $okay = test_package($t);
+	    unless ($okay) {
+		exit 1 unless $run_all_tests;
+		lock($status);
+		$status = 1;
+	    }
+	}
+    });
 }
+$tests_run += scalar(@tests);
+
+for my $thr (threads->list()) {
+    $thr->join();
+}
+msg_flush;
 
 # --- Check whether we ran any tests
 
@@ -383,11 +448,11 @@ sub test_package {
     my ($testdata) = @_;
 
     if (!check_test_is_sane($TESTSET, $testdata)) {
-	print "Skipping test $testdata->{testname} $testdata->{version}... architecture mismatch\n";
+	msg_print "Skipping test $testdata->{testname} $testdata->{version}... architecture mismatch\n";
 	return 1;
     }
 
-    print "Running test $testdata->{testname} $testdata->{version}... ";
+    msg_print "Running test $testdata->{testname} $testdata->{version}... ";
 
     my $pkg = $testdata->{srcpkg};
     my $pkgdir = "$pkg-$testdata->{version}";
@@ -422,7 +487,7 @@ sub test_package {
 	runsystem("rm", "-f", "$targetdir/.dummy");
 	runsystem("rsync", "-rpc", "$origdir/upstream/", "$targetdir/");
 	if (-x "$origdir/pre_upstream") {
-	    print "running pre_upstream hook... " if $VERBOSE;
+	    msg_print "running pre_upstream hook... " if $VERBOSE;
 	    runsystem("$origdir/pre_upstream", $targetdir);
 	}
 	runsystem("cd $RUNDIR && ".
@@ -443,18 +508,18 @@ sub test_package {
 	runsystem("echo >$targetdir/debian/watch");
     }
     if (-x "$origdir/pre_build") {
-	print "running pre_build hook... " if $VERBOSE;
+	msg_print "running pre_build hook... " if $VERBOSE;
 	runsystem("$origdir/pre_build", $targetdir);
     }
 
-    print "building... ";
+    msg_print "building... ";
     runsystem("cd $RUNDIR/$pkgdir && $DPKG_BUILDPACKAGE >../build.$pkg 2>&1");
 
     my $version = $testdata->{version};
     $version =~ s/^(\d+)://;
     my @options = split(' ', $testdata->{options});
     my ($file) = glob("$RUNDIR/$pkg\_$version*.changes");
-    print "testing... ";
+    msg_print "testing... ";
     my $opts = { err => "$RUNDIR/tags.$pkg", fail => 'never' };
     my $status;
     unshift(@options, '--allow-root');
@@ -464,7 +529,7 @@ sub test_package {
 	$status = spawn($opts, [ $LINTIAN, @options, $file ]);
     }
     unless ($status == 0 or $status == 1) {
-	print "FAILED:\n";
+	msg_print "FAILED:\n";
 	fail("$LINTIAN @options $file exited with status $status\n");
     }
     open(OUT, '>>', "$RUNDIR/tags.$pkg")
@@ -480,13 +545,13 @@ sub test_package {
     # Compare the output to the expected tags.
     my $testok = runsystem_ok(qw(cmp -s), "$RUNDIR/tags.$pkg", "$origdir/tags");
     if ($testok) {
-	print "ok.\n";
+	msg_print "ok.\n";
     } else {
 	if ($testdata->{'todo'} eq 'yes') {
-	    print "TODO\n";
+	    msg_print "TODO\n";
 	    return 1;
 	} else {
-	    print "FAILED:\n";
+	    msg_print "FAILED:\n";
 	    runsystem_ok("diff", "-u", "$origdir/tags", "$RUNDIR/tags.$pkg");
 	    return;
 	}
@@ -500,7 +565,7 @@ sub test_package {
     my %test_against = map { $_ => 1 } split(' ', $testdata->{'test-against'});
     if (not %test_for and not %test_against and $testdata->{'output-format'} ne 'EWI') {
 	if ($testdata->{'todo'} eq 'yes') {
-	    print "E: marked as TODO but succeeded.\n";
+	    msg_print "E: marked as TODO but succeeded.\n";
 	    return;
 	} else {
 	    return 1;
@@ -511,15 +576,15 @@ sub test_package {
 	while (<TAGS>) {
 		next if m/^N: /;
 		if (not /^(.): (\S+)(?: (?:changes|source|udeb))?: (\S+)/) {
-		    print (($testdata->{'todo'} eq 'yes')? "TODO" : "E");
-		    print ": Invalid line:\n$_";
+		    msg_print (($testdata->{'todo'} eq 'yes')? "TODO" : "E");
+		    msg_print ": Invalid line:\n$_";
 		    $okay = 0;
 		    next;
 		}
 		my $tag = $3;
 		if ($test_against{$tag}) {
-		    print (($testdata->{'todo'} eq 'yes')? "TODO" : "E");
-		    print ": Tag $tag seen but listed in Test-Against\n";
+		    msg_print (($testdata->{'todo'} eq 'yes')? "TODO" : "E");
+		    msg_print ": Tag $tag seen but listed in Test-Against\n";
 		    $okay = 0;
 		}
 		delete $test_for{$tag};
@@ -527,13 +592,13 @@ sub test_package {
 	close TAGS;
 	if (%test_for) {
 		for my $tag (sort keys %test_for) {
-		    print (($testdata->{'todo'} eq 'yes')? "TODO" : "E");
-		    print ": Tag $tag listed in Test-For but not found\n";
+		    msg_print (($testdata->{'todo'} eq 'yes')? "TODO" : "E");
+		    msg_print ": Tag $tag listed in Test-For but not found\n";
 		    $okay = 0;
 		}
 	}
 	if ($okay && $testdata->{'todo'} eq 'yes') {
-	    print "E: marked as TODO but succeeded.\n";
+	    msg_print "E: marked as TODO but succeeded.\n";
 	    return;
 	} else {
 	    return ($okay || $testdata->{'todo'} eq 'yes');
@@ -572,11 +637,11 @@ sub find_changes_for_tag {
 # passes and false if it fails.
 sub test_changes {
     my ($test) = @_;
-    print "Running test $test... ";
+    msg_print "Running test $test... ";
 
     my $testdir = "$TESTSET/changes";
 
-    print "testing... ";
+    msg_print "testing... ";
     runsystem_ok("$LINTIAN --allow-root -I -E $testdir/$test.changes 2>&1"
 		 . " | sort > $RUNDIR/tags.changes-$test");
 
@@ -584,10 +649,10 @@ sub test_changes {
     my $testok = runsystem_ok('cmp', '-s', "$testdir/$test.tags",
 			      "$RUNDIR/tags.changes-$test");
     if ($testok) {
-	print "ok.\n";
+	msg_print "ok.\n";
 	return 1;
     } else {
-	print "FAILED:\n";
+	msg_print "FAILED:\n";
 	runsystem_ok("diff", "-u", "$testdir/$test.tags",
 		     "$RUNDIR/tags.changes-$test");
 	return;
@@ -625,12 +690,12 @@ sub find_debs_for_tag {
 # passes and false if it fails.
 sub test_deb {
     my ($test) = @_;
-    print "Running test $test... ";
+    msg_print "Running test $test... ";
 
     my $testdir = "$TESTSET/debs/$test";
     my $targetdir = "$RUNDIR/$test";
     if (-f "$testdir/skip") {
-	print "skipped.\n";
+	msg_print "skipped.\n";
 	return 1;
     }
 
@@ -638,10 +703,10 @@ sub test_deb {
     runsystem_ok("rm", "-rf", $targetdir);
     runsystem("cp", "-rp", $testdir, $targetdir);
 
-    print "building... ";
+    msg_print "building... ";
     runsystem("cd $targetdir && fakeroot make >../build.$test 2>&1");
 
-    print "testing... ";
+    msg_print "testing... ";
     runsystem_ok("$LINTIAN --allow-root -I -E $targetdir/$test.deb 2>&1"
 		 . " | sort > $RUNDIR/tags.$test");
 
@@ -649,10 +714,10 @@ sub test_deb {
     my $testok = runsystem_ok('cmp', '-s', "$testdir/tags",
 			      "$RUNDIR/tags.$test");
     if ($testok) {
-	print "ok.\n";
+	msg_print "ok.\n";
 	return 1;
     } else {
-	print "FAILED:\n";
+	msg_print "FAILED:\n";
 	runsystem_ok("diff", "-u", "$testdir/tags", "$RUNDIR/tags.$test");
 	return;
     }
@@ -689,12 +754,12 @@ sub find_source_for_tag {
 # passes and false if it fails.
 sub test_source {
     my ($test) = @_;
-    print "Running test $test... ";
+    msg_print "Running test $test... ";
 
     my $testdir = "$TESTSET/source/$test";
     my $targetdir = "$RUNDIR/$test";
     if (-f "$testdir/skip") {
-	print "skipped.\n";
+	msg_print "skipped.\n";
 	return 1;
     }
 
@@ -702,10 +767,10 @@ sub test_source {
     runsystem_ok("rm", "-rf", $targetdir);
     runsystem("cp", "-rp", $testdir, $targetdir);
 
-    print "building... ";
+    msg_print "building... ";
     runsystem("cd $targetdir && make >../build.$test 2>&1");
 
-    print "testing... ";
+    msg_print "testing... ";
     runsystem_ok("$LINTIAN --allow-root -I -E $targetdir/*.dsc 2>&1"
 		 . " | sort > $RUNDIR/tags.$test");
 
@@ -713,10 +778,10 @@ sub test_source {
     my $testok = runsystem_ok('cmp', '-s', "$testdir/tags",
 			      "$RUNDIR/tags.$test");
     if ($testok) {
-	print "ok.\n";
+	msg_print "ok.\n";
 	return 1;
     } else {
-	print "FAILED:\n";
+	msg_print "FAILED:\n";
 	runsystem_ok("diff", "-u", "$testdir/tags", "$RUNDIR/tags.$test");
 	return;
     }
@@ -807,6 +872,69 @@ sub check_test_is_sane {
     }
 
     return 1;
+}
+
+sub msg_flush {
+    my %msg = ( id => threads->tid() );
+    $MSG_Q->enqueue(\%msg);
+}
+
+sub msg_print {
+    my %msg = ( id => threads->tid(), msg => "@_" );
+    $MSG_Q->enqueue(\%msg);
+}
+
+sub msg_queue_handler {
+    my %thrs;
+    my $length = 0;
+
+    while (my $msg = $MSG_Q->dequeue()) {
+	my $id = $msg->{'id'};
+	# master thread calls msg_flush to flush all messages
+	if ($id == 0) {
+	    for my $tid (keys %thrs) {
+		my %msg = (id => $tid);
+		$MSG_Q->insert(0, \%msg);
+	    }
+	    %thrs = ();
+	} else {
+	    if (!exists($msg->{'msg'}) && exists($thrs{$id})) {
+		while (my $m = shift @{$thrs{$id}}) {
+		    print $m;
+		}
+		delete $thrs{$id};
+	    } elsif (exists($msg->{'msg'})) {
+		$thrs{$id} = []
+		    unless (exists($thrs{$id}));
+
+		my $flush = 0;
+		# We need to split by line because the code that prints
+		# the status line can only handle a newline at the end
+		# of every message
+		for my $line (split /(?=\n)/, $msg->{'msg'}) {
+		    my $line_copy = $line;
+
+		    push @{$thrs{$id}}, $line;
+		    $flush = 1 if (chomp $line_copy);
+		}
+
+		# Insert a flush request, if needed
+		$MSG_Q->insert(0, { id => $id }) if $flush;
+	    }
+	}
+
+	# Status line: 'thr1 msg || thr2 msg || ...'
+	my @output;
+	for my $tid (keys %thrs) {
+	    my $p = $thrs{$tid}[-1];
+	    chomp $p;
+
+	    push @output, $p;
+	}
+	my $output = join(' || ', @output);
+	printf "%-${length}s\r", $output;
+	$length = length($output);
+    }
 }
 
 # Local Variables:

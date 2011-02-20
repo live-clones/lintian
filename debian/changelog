@@ -240,6 +240,8 @@ lintian (2.5.0) UNRELEASED; urgency=low
   * man/*:
     + [NT] Rewrote the man pages in pod.  (Closes: #600906)
 
+  * t/runtests:
+    + [RG] Run blackbox tests in parallel too.
   * t/tests/{rules-not-makefile,scripts-missing-dep}:
     + [NT] Added new tests.  (Closes: #607731)
 
