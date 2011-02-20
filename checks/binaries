@@ -52,6 +52,7 @@ our %ARCH_REGEX = (
 	'm68k' 		 => qr'ELF 32-bit MSB .* 680[02]0',
 	'mips' 		 => qr'ELF 32-bit MSB .* MIPS',
 	'mipsel' 	 => qr'ELF 32-bit LSB .* MIPS',
+#	'mipsn32' 	 => qr'ELF 32-bit LSB .* MIPS.* N32',
 	'mips64' 	 => qr'ELF 64-bit MSB .* MIPS',
 	'mipsel64'       => qr'ELF 64-bit LSB .* MIPS',
 	'powerpc'        => qr'ELF 32-bit MSB .* PowerPC',
@@ -61,6 +62,7 @@ our %ARCH_REGEX = (
 	's390x'   	 => qr'ELF 64-bit MSB .* S.390',
 	'sh4'   	 => qr'ELF 32-bit LSB .* Renesas SH',
 	'sparc'   	 => qr'ELF 32-bit MSB .* SPARC',
+#	'sparcv9b'   	 => qr'ELF 32-bit MSB .* SPARC.* V8\+',
 	'sparc64' 	 => qr'ELF 64-bit MSB .* SPARC');
 
 our %ARCH_64BIT_EQUIVS = (
