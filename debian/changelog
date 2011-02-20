@@ -95,7 +95,7 @@ lintian (2.5.0) UNRELEASED; urgency=low
       the patch.  (Closes: #591331)
     + [NT] Fixed spelling of metapackage in empty-binary-package tag
       description.  (Closes: #591300)
-    + [NT] Fixed false-positive extra-license-file for games. Instead
+    + [NT] Fixed false-positive extra-license-file for games.  Instead
       of skipping PATH directories Lintian now ignores all executable
       files.  (Closes: #608866)
     + [NT] Added compressed-objects.inv tag to catch compressed
@@ -106,7 +106,7 @@ lintian (2.5.0) UNRELEASED; urgency=low
       Jakub Wilk for the report.  (Closes: #576014)
     + [NT] Added check for missing dependency on python-central.
       Thanks to Jakub Wilk for the report.  (Closes: #592533)
-    + [NT] Added check for malplaced Python modules. Thanks to
+    + [NT] Added check for malplaced Python modules.  Thanks to
       Jakub Wilk for the report.  (Closes: #576012)
     + [NT] Removed the "!= 0755" part from the out of the tag
       executable-is-not-world-readable, since there are other valid
@@ -122,7 +122,7 @@ lintian (2.5.0) UNRELEASED; urgency=low
     + [RG] Raise severity of init.d-script-starts-in-stop-runlevel.
       (Closes: #603800)
   * checks/manpages:
-    + [NT] Fixed typo in locale name. Thanks to Christoph Biedl for
+    + [NT] Fixed typo in locale name.  Thanks to Christoph Biedl for
       spotting this.  (Closes: #606933)
   * checks/menu-format.desc:
     + [CW] Fix several typos.
@@ -132,7 +132,7 @@ lintian (2.5.0) UNRELEASED; urgency=low
   * checks/nmu:
     + [RG] Completely abort if debian/changelog is a symlink.
       (Closes: #582408)
-  * checks/patch-systems{,.desc}
+  * checks/patch-systems{,.desc}:
     + [NT] Added check for new unneeded-build-dep-on-quilt.
       (Closes: #582767)
   * checks/rules:
@@ -149,7 +149,7 @@ lintian (2.5.0) UNRELEASED; urgency=low
     + [RG] Correctly handle cases where debian/changelog is a symlink.
   * checks/watch-file{,.desc}:
     + [NT] Added check for dh_make(1) templates in the watch file.
-    Thanks to Nelson A. de Oliveira for the report.  (Closes: #600866)
+      Thanks to Nelson A. de Oliveira for the report.  (Closes: #600866)
     + [RG] Document that relying on SourceForge's webpages for finding
       new versions is not recommended either.  (Closes: #593603)
 
@@ -241,7 +241,7 @@ lintian (2.5.0) UNRELEASED; urgency=low
     + [NT] Rewrote the man pages in pod.  (Closes: #600906)
 
   * t/tests/{rules-not-makefile,scripts-missing-dep}:
-    + [NT] Added new tests. (Closes: #607731)
+    + [NT] Added new tests.  (Closes: #607731)
 
  -- Raphael Geissert <geissert@debian.org>  Thu, 29 Jul 2010 21:09:55 -0400
 
