@@ -927,7 +927,7 @@ sub msg_queue_handler {
 	my @output;
 	for my $tid (keys %thrs) {
 	    my $p = $thrs{$tid}[-1];
-	    chomp $p;
+	    $p =~ s/\s+$//;
 
 	    push @output, $p;
 	}
