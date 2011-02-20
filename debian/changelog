@@ -40,7 +40,7 @@ lintian (2.5.0) UNRELEASED; urgency=low
     + [RG] Merge embedded-{zlib,lib{png,jpeg,openjpeg}} into
       embedded-library.
     + [RG] Find directories based on the file's type instead of file(1)'s
-      unforgiving ouput.  Thanks, Gabriele Giacone.  (Closes: #597990)
+      unforgiving output.  Thanks, Gabriele Giacone.  (Closes: #597990)
   * checks/cruft{,.desc}:
     + [NT] Extended the diff-contains-substvars check to also catch files
       prefixed with a package name.
@@ -59,7 +59,7 @@ lintian (2.5.0) UNRELEASED; urgency=low
       been removed by dh_clean.  (Closes: #598251)
     + [NT] Added check for unused build dependency on cdbs.  Thanks to
       Jari Aalto for suggesting this.  (Closes: #582769)
-    + [NT] Added check for incorrection debhelper version when using the
+    + [NT] Added check for incorrect debhelper version when using the
       maintscript feature from debhelper 8.1.0.
   * checks/debian-source-dir:
     + [NT] Added missing import of "Util" perl module.  Thanks to David
@@ -106,7 +106,7 @@ lintian (2.5.0) UNRELEASED; urgency=low
       Jakub Wilk for the report.  (Closes: #576014)
     + [NT] Added check for missing dependency on python-central.
       Thanks to Jakub Wilk for the report.  (Closes: #592533)
-    + [NT] Added check for malplaced Python modules.  Thanks to
+    + [NT] Added check for misplaced Python modules.  Thanks to
       Jakub Wilk for the report.  (Closes: #576012)
     + [NT] Removed the "!= 0755" part from the out of the tag
       executable-is-not-world-readable, since there are other valid
@@ -201,7 +201,7 @@ lintian (2.5.0) UNRELEASED; urgency=low
       during the build.  Many thanks to Niels Thykier for the investigative
       work to determine which packages are required.  (Closes: #593832)
     + [RA] Remove versions from dependencies when those versions are
-      satisifed by stable (lenny).
+      satisfied by oldstable (lenny).
     + [NT] Bump debhelper build dependency to 7.0.50~, since some tests
       depend on using dh7 with override targets.  (Closes: #607730)
     + [NT] Added Niels Thykier to uploaders.
@@ -227,7 +227,7 @@ lintian (2.5.0) UNRELEASED; urgency=low
       for the initial patch.  (Closes: #600905)
 
   * lib/Lintian/Check.pm:
-    + [NT] Use Email::Valid to validate email addreses.
+    + [NT] Use Email::Valid to validate email addresses.
       (Closes: #602655)
     + [NT] Allow package names to be excluded from regular spelling
       checks.  They are still subject to multi word and case sensitive
