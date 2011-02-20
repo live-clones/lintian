@@ -43,7 +43,7 @@ my $pkg_mode = 'a';		# auto -- automatically search for
 				# binary and source pkgs
 my $verbose = 0;		#flag for -v|--verbose switch
 my $quiet = 0;			#flag for -q|--quiet switch
-my @debug;
+my $debug = 0;
 my $check_everything = 0;	#flag for -a|--all switch
 my $lintian_info = 0;		#flag for -i|--info switch
 our $display_experimentaltags = 0; #flag for -E|--display-experimental switch
@@ -372,7 +372,7 @@ my %opthash = (			# ------------------ actions
 	       'print-version' => \&banner,
 
 	       'verbose|v' => \$verbose,
-	       'debug|d' => \@debug, # Count the -d flags
+	       'debug|d+' => \$debug, # Count the -d flags
 	       'quiet|q' => \$quiet,
 
 	       # ------------------ behaviour options
@@ -544,7 +544,6 @@ foreach (('ROOT', 'CFG', VARS)) {
     }
 }
 
-my $debug = $#debug + 1;
 $verbose = 1 if $debug;
 $ENV{'LINTIAN_DEBUG'} = $debug;
 
