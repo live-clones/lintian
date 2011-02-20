@@ -193,8 +193,8 @@ lintian (2.5.0) UNRELEASED; urgency=low
     + [NT] Added DocBook corrections.  Thanks to Jakub Wilk.
       (Closes: #611349)
   * data/spelling/corrections-multiword:
-    + [NT] Added "allows to" and other similar cases.  Thanks to
-      Matthew Paul Thomas for the report.  (LP: #608231)
+    + [NT] Added "allows to" and other similar misspellings.  Thanks
+      to Matthew Paul Thomas for the report.  (LP: #608231)
 
   * debian/control:
     + [RA] Add the build dependencies required to run the test suite
