@@ -26,7 +26,9 @@ binary-indep:
 	dh_link
 	dh_compress
 	dh_fixperms
-	dh_installdeb
+	# dh_installdeb needs #DEBHELPER# token too
+	mkdir -p debian/$(pkg)/DEBIAN
+	install -m 755 debian/postinst debian/$(pkg)/DEBIAN
 	dh_gencontrol
 	dh_md5sums
 	dh_builddeb
