@@ -896,7 +896,6 @@ sub msg_queue_handler {
 		my %msg = (id => $tid);
 		$MSG_Q->insert(0, \%msg);
 	    }
-	    %thrs = ();
 	} else {
 	    if (!exists($msg->{'msg'}) && exists($thrs{$id})) {
 		while (my $m = shift @{$thrs{$id}}) {
