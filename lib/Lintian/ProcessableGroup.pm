@@ -24,6 +24,37 @@ use warnings;
 
 use Util;
 use Lintian::Processable;
+=head1 NAME
+
+Lintian::ProcessableGroup -- A group of objects that Lintian can process
+
+=head1 SYNOPSIS
+
+ use Lintian::ProcessableGroup;
+
+ my $group = Lintian::ProcessableGroup->new('lintian_2.5.0_i386.changes');
+ foreach my $proc ($group->get_processables()){
+     printf "%s %s (%s)\n", $proc->pkg_name(),
+            $proc->pkg_version(), $proc->pkg_type();
+ }
+ # etc.
+
+=head1 DESCRIPTION
+
+Instances of this perl class are sets of
+L<Lintian::Processable|processables>.  It allows at most one source
+and one changes package per set, but multiple binary packages
+(provided that the binary is not already in the set).
+
+=head1 METHODS
+
+=over 4
+
+=item Lintian::ProcessableGroup->new([$changes_file])
+
+Creates a group and optionally add all processables from $changes_file.
+
+=cut
 
 sub new {
     my ($class, $changes) = @_;
@@ -34,6 +65,8 @@ sub new {
     return $self;
 }
 
+# Internal initialization sub
+#  populates $self from a changes file.
 sub _init_group_from_changes {
     my ($self, $changes) = @_;
     my ($group, $pch, $cinfo, $cdir);
@@ -79,13 +112,34 @@ sub _init_group_from_changes {
     return 1;
 }
 
-# Short hand for:
-#  $self->add_processable(Lintian::Processable->new($pkg_type, $pkg_path))
+=item $group->add_new_processable($pkg_type, $pkg_path)
+
+Adds a new processable of type $pkg_type from $pkg_path.
+
+This is short hand for:
+
+ $group->add_processable(
+    Lintian::Processable->new($pkg_type, $pkg_path));
+
+=cut
+
 sub add_new_processable {
     my ($self, $pkg_type, $pkg_path) = @_;
     return $self->add_processable(
         Lintian::Processable->new($pkg_type, $pkg_path));
 }
+
+=item $group->add_processable($proc)
+
+Adds $proc to $group.  At most one source and one changes $proc can be
+in a $group.  There can be multiple binary $proc's, as long as they
+are all unique.
+
+This will error out if an additional source or changes $proc is added
+to the group. Otherwise it will return a truth value if $proc was
+added.
+
+=cut
 
 sub add_processable{
     my ($self, $processable) = @_;
@@ -117,6 +171,20 @@ sub add_processable{
     return 1;
 }
 
+=item $group->get_processables()
+
+Returns an array of all processables in $group.  The processables are
+returned in the following order: changes (if any), source (if any),
+all binaries (if any) and all udebs (if any).
+
+This order is based on the original order that Lintian processed
+packages in and some parts of the code relies on this order.
+
+In scalar context, this will return a copy to a list ref containing
+the processables.
+
+=cut
+
 sub get_processables {
     my ($self) = @_;
     my @result = ();
@@ -134,14 +202,45 @@ sub get_processables {
     return wantarray ? @result : \@result;
 }
 
+=item $group->get_source_processable()
+
+Returns the processable identified as the "source" package (e.g. the dsc).
+
+If $group does not have a source processable, this method returns C<undef>.
+
+=cut
+
 sub get_source_processable {
     my ($self) = @_;
     return $self->{source};
 }
 
+=item $group->get_changes_processable()
+
+Returns the processable identified as the "changes" processable (e.g.
+the changes file).
+
+If $group does not have a changes processable, this method returns C<undef>.
+
+=cut
+
 sub get_changes_processable {
     my ($self) = @_;
     return $self->{changes};
 }
+
+=back
+
+=head1 AUTHOR
+
+Originally written by Niels Thykier <niels@thykier.net> for Lintian.
+
+=head1 SEE ALSO
+
+lintian(1)
+
+L<Lintain::Processable>
+
+=cut
 
 1;
