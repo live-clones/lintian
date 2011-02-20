@@ -104,16 +104,17 @@ Tag: debian-watch-file-should-use-sf-redirector
 Severity: normal
 Certainty: certain
 Ref: uscan(1)
-Info: The watch file specifies a SourceForge download server directly.
- This is not recommended; SourceForge changes their download servers
- periodically, requiring watch files to be modified every time.  Instead,
- use the qa.debian.org redirector by using the magic URL:
+Info: The watch file specifies a SourceForge page or download server
+ directly.  This is not recommended; SourceForge changes their download
+ servers and website periodically, requiring watch files to be modified
+ every time.  Instead, use the qa.debian.org redirector by using the magic
+ URL:
  .
    http://sf.net/&lt;project&gt;/&lt;tar-name&gt;-(.+)\.tar\.gz
  .
  replacing <tt>&lt;project&gt;</tt> with the name of the SourceForge
  project and <tt>&lt;tar-name&gt;</tt> with the name of the tarball
- distributed within that project.
+ distributed within that project.  Adjust the filename regex as necessary.
 
 Tag: debian-watch-file-specifies-wrong-upstream-version
 Severity: normal

@@ -150,6 +150,8 @@ lintian (2.5.0) UNRELEASED; urgency=low
   * checks/watch-file{,.desc}:
     + [NT] Added check for dh_make(1) templates in the watch file.
     Thanks to Nelson A. de Oliveira for the report.  (Closes: #600866)
+    + [RG] Document that relying on SourceForge's webpages for finding
+      new versions is not recommended either.  (Closes: #593603)
 
   * collection/objdump-info:
     + [RG] Support stricter parameter handling of objdump-info from
