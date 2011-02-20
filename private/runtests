@@ -2,6 +2,15 @@
 
 set -e
 
+if [ "$1" = "-j" ] ; then
+    NUMJOBS="$2"
+    test "$NUMJOBS" -gt 0 || (
+        echo "$NUMJOBS is not an integer greater than 0" >&2 && exit 1)
+    PARALLEL_ARGS="-j $NUMJOBS"
+    shift
+    shift
+fi
+
 if [ "$1" = "-t" ] ; then
     TAG=yes
 fi
@@ -28,7 +37,7 @@ if [ ! -e "$LOCPATH"/en_US.UTF-8 ] ; then
         --quiet "$LOCPATH"/en_US.UTF-8 || fail "Locale generation failed"
 fi
 
-t/runtests -k t debian/tests "$@"
+t/runtests -k $PARALLEL_ARGS t debian/tests "$@"
 if [ "$TAG" = "" ] ; then
     testset/runtests -k testset debian/tests "$@"
 fi

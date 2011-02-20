@@ -21,11 +21,18 @@ else
 	testtarget =
 endif
 
+ifneq (,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
+	jobs = $(patsubst parallel=%,%,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
+	PAR_ARGS=-j $(jobs)
+endif
+
+
+
 runtests: $(neededfiles) $(allchecks) $(allcollect) $(tagfiles) $(testfiles)
 	@echo .... running tests ....
 	rm -rf debian/tests
 	mkdir debian/tests
-	private/runtests $(onlyrun)
+	private/runtests $(PAR_ARGS) $(onlyrun)
 	if [ "$(onlyrun)" = "" ]; then touch $@; fi
 
 # Like runtests but only runs tests affecting a particular tag.  That tag
@@ -36,7 +43,7 @@ check-tag:
 	fi
 	rm -rf debian/tests
 	mkdir debian/tests
-	private/runtests -t $(tag)
+	private/runtests $(PAR_ARGS) -t $(tag)
 
 # this target is only run manually
 refresh-perl-provides:
