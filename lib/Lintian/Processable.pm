@@ -26,6 +26,40 @@ use warnings;
 
 use Util;
 
+=head1 NAME
+
+Lintian::Processable -- An object that Lintian can process
+
+=head1 SYNOPSIS
+
+ use Lintian::Processable;
+
+ my $proc = Lintian::Processable->new('binary', 'lintian_2.5.0_all.deb');
+ my $pkg_name = $proc->pkg_name();
+ my $pkg_version = $proc->pkg_version();
+ # etc.
+
+=head1 DESCRIPTION
+
+Instances of this perl class are objects that Lintian can process (e.g.
+deb files).  Multiple objects can then be combined into
+L<Lintain::ProcessableGroup|groups>, which Lintian will process
+together.
+
+=head1 METHODS
+
+=over 4
+
+=item Lintian::Processable->new($pkg_type, $pkg_path)
+
+Creates a new processable of type $pkg_type, which must be one of:
+ 'binary', 'udeb', 'source' or 'changes'
+
+$pkg_path should be the absolute path to the package file that
+defines this type of processable (e.g. the changes file).
+
+=cut
+
 sub new {
     my ($class, $pkg_type, $pkg_path) = @_;
     my $self = {};
@@ -36,8 +70,47 @@ sub new {
     return $self;
 }
 
+=pod
+
+
+=item $proc->pkg_name()
+
+Returns the package name.
+
+=item $proc->pkg_version();
+
+Returns the version of the package.
+
+=item $proc->pkg_path()
+
+Returns the path to the packaged version of actual package.  This path
+is used in case the data needs to be extracted from the package.
+
+=item $proc->pkg_type()
+
+Returns the type of package (e.g. binary, source, udeb ...)
+
+=item $proc->pkg_arch()
+
+Returns the architecture(s) of the package. May return multiple values
+from source and changes processables.
+
+=item $proc->group()
+
+Returns the L<Lintain::ProcessableGroup|group> $proc is in,
+if any.  If the processable is not in a group, this returns C<undef>.
+
+=cut
+
 Lintian::Processable->mk_accessors (qw(pkg_name pkg_version pkg_src pkg_arch pkg_path pkg_type group));
 
+=pod
+
+=item $proc->set_group($group)
+
+Sets the L<Lintain::ProcessableGroup|group> of $proc.
+
+=cut
 
 sub set_group{
     my ($self, $group) = @_;
@@ -45,6 +118,8 @@ sub set_group{
     return 1;
 }
 
+# internal initialization method.
+#  reads values from fields etc.
 sub _init{
     my ($self, $pkg_type, $pkg_path) = @_;
     if ($pkg_type eq 'binary' or $pkg_type eq 'udeb'){
@@ -85,5 +160,19 @@ sub _init{
     $self->{pkg_arch}    = '' unless (defined $self->{pkg_arch});
     return 1;
 }
+
+=back
+
+=head1 AUTHOR
+
+Originally written by Niels Thykier <niels@thykier.net> for Lintian.
+
+=head1 SEE ALSO
+
+lintian(1)
+
+L<Lintain::ProcessableGroup>
+
+=cut
 
 1;

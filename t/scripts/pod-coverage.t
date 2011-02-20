@@ -20,6 +20,7 @@ our %MODULES =
      'Lintian::Data'               => [],
      'Lintian::DepMap'             => [],
      'Lintian::DepMap::Properties' => [],
+     'Lintian::Processable'        => [],
      'Lintian::Relation'           => [ qr/^parse_element$/,
                                         qr/^implies_(element|array)/ ],
      'Lintian::Relation::Version'  => [ qr/^compare$/ ],
