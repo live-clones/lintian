@@ -215,10 +215,13 @@ tag 'package-name-doesnt-match-sonames', "@sonames"
 my %directories;
 foreach (@{$info->sorted_index}) {
     next unless length $_;
-    my $ftype = $info->index->{$_}->{'type'};
+    # create copy, don't modify the index
+    my $path = $_;
+
+    my $ftype = $info->index->{$path}->{'type'};
     next unless ($ftype eq 'd' || $ftype eq 'l');
-    s,/\z,,;
-    $directories{"/$_"}++;
+    $path =~ s,/\z,,;
+    $directories{"/$path"}++;
 }
 
 # If we have an unknown architecture, pretend that all binaries are fine.
