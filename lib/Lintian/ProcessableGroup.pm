@@ -1,0 +1,147 @@
+# Copyright (C) 2011 Niels Thykier <niels@thykier.net>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+## Represents a group of 'Lintian::Processable's
+package Lintian::ProcessableGroup;
+
+use strict;
+use warnings;
+
+use Util;
+use Lintian::Processable;
+
+sub new {
+    my ($class, $changes) = @_;
+    my $self = {};
+    bless $self, $class;
+    $self->_init_group_from_changes($changes)
+        if defined $changes;
+    return $self;
+}
+
+sub _init_group_from_changes {
+    my ($self, $changes) = @_;
+    my ($group, $pch, $cinfo, $cdir);
+    fail "$changes does not exist" unless -e $changes;
+    $cinfo = get_dsc_info ($changes) or
+        fail "$changes is not a valid changes file";
+    $self->add_new_processable('changes', $changes);
+    $cdir = $changes;
+    $cdir =~ s,(.+)/[^/]+$,$1,;
+    foreach my $line (split (/\n/o, $cinfo->{'files'}//'')) {
+	my ($file, $proc, $pkg_type);
+        next unless defined $line;
+        chomp($line);
+        $line =~ s/^\s++//o;
+        next if $line eq '';
+        # Ignore files that may lead to path traversal issues.
+
+        # We do not need (in order) md5sum, size, section or priority
+        # - just the file name please.
+        (undef, undef, undef, undef, $file) = split(/\s+/o, $line);
+
+        next if $file =~ m,/,;
+
+        if (not -f "$cdir/$file") {
+            print STDERR "$cdir/$file does not exist, exiting\n";
+            exit 2;
+        }
+	
+        if ($file =~ /\.deb$/o) {
+            $pkg_type = 'binary';
+        } elsif ($file =~ /\.udeb$/o){
+            $pkg_type = 'udeb';
+        } elsif ($file =~ /\.dsc$/o){
+            $pkg_type = 'source';
+        } else {
+            # Some file we do not care about (at least not here).
+            next;
+        }
+
+        $self->add_new_processable($pkg_type, "$cdir/$file");
+
+    }
+    return 1;
+}
+
+# Short hand for:
+#  $self->add_processable(Lintian::Processable->new($pkg_type, $pkg_path))
+sub add_new_processable {
+    my ($self, $pkg_type, $pkg_path) = @_;
+    return $self->add_processable(
+        Lintian::Processable->new($pkg_type, $pkg_path));
+}
+
+sub add_processable{
+    my ($self, $processable) = @_;
+    my $pkg_type = $processable->pkg_type();
+
+    if ($pkg_type eq 'changes'){
+        fail 'Cannot add another changes file' if (exists $self->{changes});
+        $self->{changes} = $processable;
+    } elsif ($pkg_type eq 'source'){
+        fail 'Cannot add another source package' if (exists $self->{source});
+        $self->{source} = $processable;
+    } else {
+        my $phash;
+        my $name = $processable->pkg_name;
+        my $version = $processable->pkg_version;
+        my $arch = $processable->pkg_arch;
+        fail "Unknown type $pkg_type"
+            unless ($pkg_type eq 'binary' or $pkg_type eq 'udeb');
+        $phash = $self->{$pkg_type};
+        if (!defined $phash){
+            $phash = {};
+            $self->{$pkg_type} = $phash;
+        }
+        # duplicate ?
+        return 0 if (exists $phash->{"${name}_${version}_${arch}"});
+        $phash->{"${name}_${version}_${arch}"} = $processable;
+    }
+    $processable->set_group($self);
+    return 1;
+}
+
+sub get_processables {
+    my ($self) = @_;
+    my @result = ();
+    # We return changes, dsc, debs and udebs in that order,
+    # because that is the order lintian used to process a changes
+    # file (modulo debs<->udebs ordering).
+    #
+    # Also correctness of other parts rely on this order.
+    foreach my $type (qw(changes source)){
+        push @result, $self->{$type} if (exists $self->{$type});
+    }
+    foreach my $type (qw(binary udeb)){
+        push @result, values %{$self->{$type}} if (exists $self->{$type});
+    }
+    return wantarray ? @result : \@result;
+}
+
+sub get_source_processable {
+    my ($self) = @_;
+    return $self->{source};
+}
+
+sub get_changes_processable {
+    my ($self) = @_;
+    return $self->{changes};
+}
+
+1;
