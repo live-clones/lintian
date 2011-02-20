@@ -3,7 +3,7 @@
 # If a language has 639-1 and 639-2 codes, the -2 code is also included
 # as a key to be mapped to the -1 code.
 #
-# Last updated: 2010-06-27
+# Last updated: 2011-02-19
 
 aa
 aaa
@@ -4789,6 +4789,7 @@ nkm
 nkn
 nko
 nkp
+nkq
 nkr
 nks
 nkt
@@ -5919,6 +5920,7 @@ sgn
 sgo
 sgp
 sgr
+sgs
 sgt
 sgu
 sgw

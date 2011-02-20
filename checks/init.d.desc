@@ -230,7 +230,7 @@ Info: The given <tt>/etc/init.d</tt> script seems to be sourcing an
 Ref: policy 9.3.2
 
 Tag: init.d-script-starts-in-stop-runlevel
-Severity: normal
+Severity: serious
 Certainty: certain
 Info: This <tt>/etc/init.d</tt> script specifies the 0 or 6 runlevels in
  Default-Start in its LSB keyword section.  The 0 and 6 runlevels are

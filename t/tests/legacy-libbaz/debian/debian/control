@@ -1,4 +1,4 @@
-Source: libbaz
+Source: legacy-libbaz
 Section: libs
 Priority: extra
 Maintainer: Lintian Maintainer <lintian-maint@debian.org>

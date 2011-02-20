@@ -8,3 +8,4 @@ Test-For:
  package-installs-python-bytecode
  package-installs-python-egg
  package-installs-python-pycache-dir
+ python-debug-in-wrong-location

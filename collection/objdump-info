@@ -87,6 +87,8 @@ while (<FILES>) {
 			$failed = 0;
 		    } elsif (m/File truncated$/) {
 			$failed = 0;
+		    } elsif (m/: not a dynamic object$/) {
+			$failed = 0;
 		    }
 		}
 		close PIPE;

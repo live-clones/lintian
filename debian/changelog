@@ -16,6 +16,7 @@ lintian (2.5.0) UNRELEASED; urgency=low
       - python-module-in-wrong-location
       - missing-dependency-on-python-support
       - package-installs-python-bytecode
+      - debhelper-maintscript-needs-versioned-build-depends
     + Removed:
       - embedded-zlib (now in embedded-library)
       - embedded-libpng (now in embedded-library)
@@ -25,9 +26,10 @@ lintian (2.5.0) UNRELEASED; urgency=low
         package-installs-python-bytecode)
 
   * checks/*:
-    + [NT] Use the new pre-sorted file {index,info} when iterating over files.
-    + [NT] All checks now report files without any "./" or "/" prefix.  This
-      may break existing overrides.  (Closes: #534940)
+    + [NT] Use the new pre-sorted file {index,info} when iterating over
+      files.
+    + [NT] All checks now report files without any "./" or "/" prefix.
+      This may break existing overrides.  (Closes: #534940)
   * checks/binaries:
     + [RA] Exclude kfreebsd-kernel-di-{amd64,i386} from the
       embedded-zlib check since it's in the kernel.  (Closes: #593397)
@@ -37,6 +39,8 @@ lintian (2.5.0) UNRELEASED; urgency=low
       libmsn, libmikmod, libmysqlclient, and tinyxml.
     + [RG] Merge embedded-{zlib,lib{png,jpeg,openjpeg}} into
       embedded-library.
+    + [RG] Find directories based on the file's type instead of file(1)'s
+      unforgiving output.  Thanks, Gabriele Giacone.  (Closes: #597990)
   * checks/cruft{,.desc}:
     + [NT] Extended the diff-contains-substvars check to also catch files
       prefixed with a package name.
@@ -55,6 +59,8 @@ lintian (2.5.0) UNRELEASED; urgency=low
       been removed by dh_clean.  (Closes: #598251)
     + [NT] Added check for unused build dependency on cdbs.  Thanks to
       Jari Aalto for suggesting this.  (Closes: #582769)
+    + [NT] Added check for incorrect debhelper version when using the
+      maintscript feature from debhelper 8.1.0.
   * checks/debian-source-dir:
     + [NT] Added missing import of "Util" perl module.  Thanks to David
       Bremner for the patch.
@@ -77,6 +83,10 @@ lintian (2.5.0) UNRELEASED; urgency=low
       will no longer be emitted if the package listed in Breaks is also
       listed in Replaces.  Thanks to Modestas Vainius for the report.
       (Closes: #605744)
+    + [NT] Clarified that old-versioned-python-dependency can also be
+      triggered if dh_python2 is used and the package is missing
+      ${python:Breaks}. Thanks to Piotr Ożarowski for the report.
+      (Closes: #604167)
   * checks/files{,.desc}:
     + [NT] Fixed false-positive extra-license-file for license.ui files.
       Thanks to Jeremy Sanders for the report.  (Closes: #595941)
@@ -85,7 +95,7 @@ lintian (2.5.0) UNRELEASED; urgency=low
       the patch.  (Closes: #591331)
     + [NT] Fixed spelling of metapackage in empty-binary-package tag
       description.  (Closes: #591300)
-    + [NT] Fixed false-positive extra-license-file for games. Instead
+    + [NT] Fixed false-positive extra-license-file for games.  Instead
       of skipping PATH directories Lintian now ignores all executable
       files.  (Closes: #608866)
     + [NT] Added compressed-objects.inv tag to catch compressed
@@ -96,7 +106,7 @@ lintian (2.5.0) UNRELEASED; urgency=low
       Jakub Wilk for the report.  (Closes: #576014)
     + [NT] Added check for missing dependency on python-central.
       Thanks to Jakub Wilk for the report.  (Closes: #592533)
-    + [NT] Added check for malplaced Python modules. Thanks to
+    + [NT] Added check for misplaced Python modules.  Thanks to
       Jakub Wilk for the report.  (Closes: #576012)
     + [NT] Removed the "!= 0755" part from the out of the tag
       executable-is-not-world-readable, since there are other valid
@@ -108,6 +118,12 @@ lintian (2.5.0) UNRELEASED; urgency=low
       check to include ".pyo" files.  Thanks to Piotr Ożarowski,
       Jakub Wilk and the people in #debian-python for the report and
       help with implementing this.  (Closes: #576005)
+  * checks/init.d.desc:
+    + [RG] Raise severity of init.d-script-starts-in-stop-runlevel.
+      (Closes: #603800)
+  * checks/manpages:
+    + [NT] Fixed typo in locale name.  Thanks to Christoph Biedl for
+      spotting this.  (Closes: #606933)
   * checks/menu-format.desc:
     + [CW] Fix several typos.
   * checks/menus.desc:
@@ -116,14 +132,30 @@ lintian (2.5.0) UNRELEASED; urgency=low
   * checks/nmu:
     + [RG] Completely abort if debian/changelog is a symlink.
       (Closes: #582408)
-  * checks/patch-systems{,.desc}
+  * checks/patch-systems{,.desc}:
     + [NT] Added check for new unneeded-build-dep-on-quilt.
       (Closes: #582767)
+  * checks/rules:
+    + [RG] Drop some checks for versioned dependencies that can now be
+      satisfied in stable (squeeze).  Thanks, Cyril Brulebois.
+      (Closes: #612137)
+    + [RG] Correctly handle include directives preceded by a tab.
+      (Closes: #607281)
+    + [RG] Allow 'ocaml' as an alternative to 'ocaml-nox'.  Thanks,
+      Ralf Treinen.  (Closes: #612568)
+  * checks/scripts:
+    + [NT] Added mscgen as interpreter.
   * checks/standards-version:
     + [RG] Correctly handle cases where debian/changelog is a symlink.
   * checks/watch-file{,.desc}:
     + [NT] Added check for dh_make(1) templates in the watch file.
-    Thanks to Nelson A. de Oliveira for the report.  (Closes: #600866)
+      Thanks to Nelson A. de Oliveira for the report.  (Closes: #600866)
+    + [RG] Document that relying on SourceForge's webpages for finding
+      new versions is not recommended either.  (Closes: #593603)
+
+  * collection/objdump-info:
+    + [RG] Support stricter parameter handling of objdump-info from
+      binutils 2.21.  Thanks, Andreas Beckmann.  (Closes: #604047)
 
   * data/changelog-file/ubuntu-dists:
     + [CW] Add natty as a valid Ubuntu distribution, and remove the EOLed
@@ -133,6 +165,8 @@ lintian (2.5.0) UNRELEASED; urgency=low
       suppress the {ancient,outdated}-autotools-helper-file tags.
       Currently this is manually updated.  This new list includes
       dh-autoreconf, thanks to Felix Geyer.  (Closes: #592358)
+  * data/debhelper/*:
+    + [RG] Refresh against unstable.
   * data/debian-source-dir/known-files:
     + [NT] Added the file and included git-patches in it.  Thanks to
       Ron for the report and David Bremner for the initial patch.
@@ -142,9 +176,14 @@ lintian (2.5.0) UNRELEASED; urgency=low
   * data/fields/obsolete-packages:
     + [NT] Added default-jdk-builddep.  See README.gcj-native-transition
       in java-common for the replacement.
+  * data/fields/perl-provides:
+    + [RG] Refresh against perl 5.10.1.
   * data/files/fonts:
     + [NT] Made tipa replace xfonts-tipa as font provider.
       (Closes: #595530)
+    + [RG] Refresh against unstable.
+  * data/files/locale-codes:
+    + [RG] Refresh against isoquery 1.4.
   * data/shared-libs/ldconfig-dirs:
     + [NT] Removed the emul/ia32-linux directories as they are no longer
       used.  (Closes: #596848)
@@ -162,7 +201,7 @@ lintian (2.5.0) UNRELEASED; urgency=low
       during the build.  Many thanks to Niels Thykier for the investigative
       work to determine which packages are required.  (Closes: #593832)
     + [RA] Remove versions from dependencies when those versions are
-      satisifed by stable (lenny).
+      satisfied by oldstable (lenny).
     + [NT] Bump debhelper build dependency to 7.0.50~, since some tests
       depend on using dh7 with override targets.  (Closes: #607730)
     + [NT] Added Niels Thykier to uploaders.
@@ -177,7 +216,7 @@ lintian (2.5.0) UNRELEASED; urgency=low
     + [NT] Add support for skipping the test suite per policy 4.9.1.
       Many thanks to David Bremner for the patch.
   * debian/compat:
-    + [NT] Bump debhelper comat to 7.
+    + [NT] Bump debhelper compat to 7.
 
   * frontend/lintian:
     + [NT] Ensure that Lintian always reaps processes it started before
@@ -188,7 +227,7 @@ lintian (2.5.0) UNRELEASED; urgency=low
       for the initial patch.  (Closes: #600905)
 
   * lib/Lintian/Check.pm:
-    + [NT] Use Email::Valid to validate email addreses.
+    + [NT] Use Email::Valid to validate email addresses.
       (Closes: #602655)
     + [NT] Allow package names to be excluded from regular spelling
       checks.  They are still subject to multi word and case sensitive
@@ -202,7 +241,7 @@ lintian (2.5.0) UNRELEASED; urgency=low
     + [NT] Rewrote the man pages in pod.  (Closes: #600906)
 
   * t/tests/{rules-not-makefile,scripts-missing-dep}:
-    + [NT] Added new tests. (Closes: #607731)
+    + [NT] Added new tests.  (Closes: #607731)
 
  -- Raphael Geissert <geissert@debian.org>  Thu, 29 Jul 2010 21:09:55 -0400
 

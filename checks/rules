@@ -35,7 +35,6 @@ our @GLOBAL_CLEAN_DEPENDS =
     (
      [ 'ant | ant1.7' => qr'^include\s*/usr/share/cdbs/1/rules/ant\.mk' ],
      [ cdbs => qr'^include\s+/usr/share/cdbs/' ],
-     [ 'cdbs (>= 0.4.73~)' => qr'^include\s+/usr/share/cdbs/1/class/(?:scons|perl-build)\.mk' ],
      [ cdbs => qr'^include\s+/usr/share/R/debian/r-cran\.mk' ],
      [ dbs => qr'^include\s+/usr/share/dbs/' ],
      [ 'dh-make-php' => qr'^include\s+/usr/share/cdbs/1/class/pear\.mk' ],
@@ -57,8 +56,7 @@ our @GLOBAL_CLEAN_DEPENDS =
 # Build-Depends-Indep as appropriate; and optional tags as above.
 my @GLOBAL_DEPENDS =
     (
-     [ 'debhelper (>= 7.1.0~)' => qr'^\t\s*dh_ocaml\s+.*--(?:runtime-map|no-defined-map|checksum)' ],
-     [ 'dh-ocaml (>= 0.9~), ocaml-nox (>= 3.11.1-3~)' => qr'^\t\s*dh_ocaml(?:init|doc)\s' ],
+     [ 'dh-ocaml, ocaml-nox | ocaml' => qr'^\t\s*dh_ocaml(?:init|doc)\s' ],
      [ $PYTHON_DEPEND => qr'^\t\s*dh_python\s', 'missing-dh_python-build-dependency' ],
      [ 'python-central' => qr'^\t\s*dh_pycentral\s' ],
      [ 'python-support' => qr'^\t\s*dh_pysupport\s' ],
@@ -73,13 +71,12 @@ my @RULE_CLEAN_DEPENDS =
     (
      [ 'ant | ant1.7' => qr'^\t\s*(\S+=\S+\s+)*ant\s' ],
      [ debhelper => qr'^\t\s*dh_.+' ],
-     [ 'dh-ocaml (>= 0.9~), ocaml-nox (>= 3.11.1-3~) ' => qr'^\t\s*(?:dh_ocamlinit|dh\s.*--with\s+(?:\S+,)*ocaml)\s' ],
+     [ 'dh-ocaml, ocaml-nox | ocaml' => qr'^\t\s*(?:dh_ocamlinit|dh\s.*--with\s+(?:\S+,)*ocaml)\s' ],
      [ dpatch => qr'^\t\s*(\S+=\S+\s+)*dpatch\s' ],
      [ "po-debconf" => qr'^\t\s*debconf-updatepo\s' ],
      [ $PYTHON_DEPEND => qr'^\t\s*python\s', 'missing-python-build-dependency' ],
      [ $PYTHON_DEPEND => qr'\ssetup\.py\b', 'missing-python-build-dependency' ],
-     [ 'quilt (>= 0.46-7~)' => qr'^\t\s*dh_quilt_.+' ],
-     [ 'quilt (>= 0.46-7~)' => qr'^\t\s*dh\s.*--with\s+(?:\S+,)*quilt' ],
+     [ quilt => qr'^\t\s*dh\s.*--with\s+(?:\S+,)*quilt' ],
      [ quilt => qr'^\t\s*(\S+=\S+\s+)*quilt\s' ],
      [ yada => qr'^\t\s*yada\s' ],
     );
@@ -152,7 +149,7 @@ my $maybe_skipping;
 my $uses_makefile_pl = 0;
 while (<RULES>) {
     next if /^\s*\#/;
-    $includes = 1 if m/^ *[s-]?include\s+/;
+    $includes = 1 if m/^\s*[s-]?include\s+/;
     $uses_makefile_pl = 1 if m/Makefile\.PL/;
 
     # Check for DH_COMPAT settings outside of any rule, which are now

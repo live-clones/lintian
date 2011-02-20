@@ -179,6 +179,20 @@ Info: The override targets facility in debhelper, involving debian/rules
  assumes a newer version should explicitly declare so for the sake of lenny
  backports.
 
+Tag: debhelper-maintscript-needs-versioned-build-depends
+Severity: normal
+Certainty: certain
+Ref: dh(1)
+Info: The maintscript files used by this package was introduced in a later
+ version of debhelper than the package Build-Depends on.  The package's
+ Build-Depends should be updated to require at least debhelper 8.1.0.
+ Giving the version followed by <tt>~</tt> is recommended so that
+ backports will satisfy the dependency.
+ .
+ squeeze was released with debhelper version 8.0.0, so every package that
+ assumes a newer version should explicitly declare so for the sake of
+ squeeze backports.
+
 Tag: brace-expansion-in-debhelper-config-file
 Severity: normal
 Certainty: possible

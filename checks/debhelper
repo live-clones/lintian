@@ -71,11 +71,17 @@ my $seendhcleank = '';
 my $overridetargets = 0;
 my %missingbdeps;
 
-open(RULES, '<', 'debfiles/rules') or fail("cannot read debian/rules: $!");
 my $maybe_skipping;
 my $dhcompatvalue;
 my @versioncheck;
 my $inclcdbs = 0;
+
+my $seenmaintscript = 0;
+my $bdepends_noarch;
+my $bdepends;
+
+open(RULES, '<', 'debfiles/rules') or fail("cannot read debian/rules: $!");
+
 while (<RULES>) {
     if (/^ifn?(?:eq|def)\s/) {
         $maybe_skipping++;
@@ -280,42 +286,13 @@ foreach my $file (sort readdir(DEBIAN)) {
 	    }
 	}
     } elsif ($file eq 'control') {
-	my $bdepends_noarch = $info->relation_noarch('build-depends-all');
-        my $bdepends = $info->relation('build-depends-all');
-        if ($needbuilddepends && ! $bdepends->implies('debhelper')) {
-	    tag 'package-uses-debhelper-but-lacks-build-depends';
-	}
-	while (my ($dep, $command) = each %missingbdeps) {
-	    next if $dep eq 'debhelper'; #handled above
-	    tag 'missing-build-dependency-for-dh_-command', "$command=$dep"
-		unless ($bdepends_noarch->implies($dep));
-	}
-	if (not $bdepends->implies("debhelper (>= $level~)")) {
-	    tag 'package-lacks-versioned-build-depends-on-debhelper', $level;
-	} elsif (@versioncheck or $overridetargets) {
-	    my %seen;
-	    @versioncheck = grep { !$seen{$_}++ } @versioncheck;
-	    for my $program (@versioncheck) {
-		my $required = $versions{$program};
-		my $needed = "debhelper (>= $required)";
-		unless ($bdepends->implies($needed)) {
-		    tag 'debhelper-script-needs-versioned-build-depends',
-			$program, "(>= $required)";
-		}
-	    }
-	    if ($overridetargets) {
-		my $required = '7.0.50~';
-		my $needed = "debhelper (>= $required)";
-		unless ($bdepends->implies($needed)) {
-		    tag 'debhelper-overrides-need-versioned-build-depends',
-			"(>= $required)";
-		}
-	    }
-	}
+	next; # ignore
     } elsif ($file =~ m/^ex\.|\.ex$/i) {
         tag 'dh-make-template-in-source', "debian/$file";
     } elsif ($file =~ m/^(?:.+\.)?debhelper(?:\.log)?$/){
 	push(@indebfiles, $file);
+    } elsif ($file =~ m/^(?:(.*)\.)?maintscript$/) {
+	$seenmaintscript = 1;
     } else {
 	my $base = $file;
 	$base =~ s/^[.]+\.//;
@@ -341,6 +318,48 @@ foreach my $file (sort readdir(DEBIAN)) {
     }
 }
 closedir(DEBIAN);
+
+$bdepends_noarch = $info->relation_noarch('build-depends-all');
+$bdepends = $info->relation('build-depends-all');
+if ($needbuilddepends && ! $bdepends->implies('debhelper')) {
+    tag 'package-uses-debhelper-but-lacks-build-depends';
+}
+while (my ($dep, $command) = each %missingbdeps) {
+    next if $dep eq 'debhelper'; #handled above
+    tag 'missing-build-dependency-for-dh_-command', "$command=$dep"
+	unless ($bdepends_noarch->implies($dep));
+}
+if (not $bdepends->implies("debhelper (>= $level~)")) {
+    tag 'package-lacks-versioned-build-depends-on-debhelper', $level;
+} elsif (@versioncheck or $overridetargets) {
+    my %seen;
+    @versioncheck = grep { !$seen{$_}++ } @versioncheck;
+    for my $program (@versioncheck) {
+	my $required = $versions{$program};
+	my $needed = "debhelper (>= $required)";
+	unless ($bdepends->implies($needed)) {
+	    tag 'debhelper-script-needs-versioned-build-depends',
+	    $program, "(>= $required)";
+	}
+    }
+    if ($seenmaintscript) {
+	my $required = '8.1.0~';
+	my $needed = "debhelper (>= $required)";
+	unless ($bdepends->implies($needed)) {
+	    tag 'debhelper-maintscript-needs-versioned-build-depends',
+	    "(>= $required)";
+	}
+    }
+    if ($overridetargets) {
+	my $required = '7.0.50~';
+	my $needed = "debhelper (>= $required)";
+	unless ($bdepends->implies($needed)) {
+	    tag 'debhelper-overrides-need-versioned-build-depends',
+	    "(>= $required)";
+	}
+    }
+}
+
 
 if(scalar(@indebfiles)){
     my $f = pop(@indebfiles);
