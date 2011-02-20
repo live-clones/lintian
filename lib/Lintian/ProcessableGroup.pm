@@ -69,7 +69,7 @@ sub new {
 #  populates $self from a changes file.
 sub _init_group_from_changes {
     my ($self, $changes) = @_;
-    my ($group, $pch, $cinfo, $cdir);
+    my ($cinfo, $cdir);
     fail "$changes does not exist" unless -e $changes;
     $cinfo = get_dsc_info ($changes) or
         fail "$changes is not a valid changes file";
@@ -77,7 +77,7 @@ sub _init_group_from_changes {
     $cdir = $changes;
     $cdir =~ s,(.+)/[^/]+$,$1,;
     foreach my $line (split (/\n/o, $cinfo->{'files'}//'')) {
-	my ($file, $proc, $pkg_type);
+	my ($file, $pkg_type);
         next unless defined $line;
         chomp($line);
         $line =~ s/^\s++//o;
@@ -94,7 +94,7 @@ sub _init_group_from_changes {
             print STDERR "$cdir/$file does not exist, exiting\n";
             exit 2;
         }
-	
+
         if ($file =~ /\.deb$/o) {
             $pkg_type = 'binary';
         } elsif ($file =~ /\.udeb$/o){
