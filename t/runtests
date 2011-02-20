@@ -452,7 +452,7 @@ sub test_package {
 	return 1;
     }
 
-    msg_print "Running test $testdata->{testname} $testdata->{version}... ";
+    msg_print "Running $testdata->{testname} $testdata->{version}... ";
 
     my $pkg = $testdata->{srcpkg};
     my $pkgdir = "$pkg-$testdata->{version}";
@@ -637,7 +637,7 @@ sub find_changes_for_tag {
 # passes and false if it fails.
 sub test_changes {
     my ($test) = @_;
-    msg_print "Running test $test... ";
+    msg_print "Running $test... ";
 
     my $testdir = "$TESTSET/changes";
 
@@ -690,7 +690,7 @@ sub find_debs_for_tag {
 # passes and false if it fails.
 sub test_deb {
     my ($test) = @_;
-    msg_print "Running test $test... ";
+    msg_print "Running $test... ";
 
     my $testdir = "$TESTSET/debs/$test";
     my $targetdir = "$RUNDIR/$test";
@@ -754,7 +754,7 @@ sub find_source_for_tag {
 # passes and false if it fails.
 sub test_source {
     my ($test) = @_;
-    msg_print "Running test $test... ";
+    msg_print "Running $test... ";
 
     my $testdir = "$TESTSET/source/$test";
     my $targetdir = "$RUNDIR/$test";
