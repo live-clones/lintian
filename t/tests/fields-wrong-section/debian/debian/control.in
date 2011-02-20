@@ -159,3 +159,15 @@ Description: {$description} (oldlibs)
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may
  be an empty package.
+
+Package: {$srcpkg}-contrib-doc
+Architecture: any
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Section: contrib/{$section}
+Description: {$description} (contrib docs)
+ Test for suggestion for packages not in main.
+ .
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.

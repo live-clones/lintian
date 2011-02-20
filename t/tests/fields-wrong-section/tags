@@ -1,3 +1,4 @@
+W: fields-wrong-section-contrib-doc: wrong-section-according-to-package-name fields-wrong-section-contrib-doc => contrib/doc
 W: fields-wrong-section-dbg: wrong-section-according-to-package-name fields-wrong-section-dbg => debug
 W: fields-wrong-section-doc: wrong-section-according-to-package-name fields-wrong-section-doc => doc
 W: libfields-wrong-section-cil: wrong-section-according-to-package-name libfields-wrong-section-cil => cli-mono

@@ -87,6 +87,8 @@ lintian (2.5.0) UNRELEASED; urgency=low
       triggered if dh_python2 is used and the package is missing
       ${python:Breaks}. Thanks to Piotr Ożarowski for the report.
       (Closes: #604167)
+    + [RG] Mention the package's original area in
+      wrong-section-according-to-package-name.  (Closes: #608554)
   * checks/files{,.desc}:
     + [NT] Fixed false-positive extra-license-file for license.ui files.
       Thanks to Jeremy Sanders for the report.  (Closes: #595941)
