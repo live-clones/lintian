@@ -56,7 +56,7 @@ foreach (split /\n/,$changes) {
 	    pass('line is a bullet list item');
 	    ok(m/:$/, 'bullet item ends in colon')
 		or diag("line: $line");
-	} elsif ($line == 4) {
+	} elsif ($line == 3) {
 	    ok(m/^[A-Z]/, 'line is the release header')
 		or diag("line: $line");
 	} else {
