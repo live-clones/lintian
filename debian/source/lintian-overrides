@@ -1,0 +1,4 @@
+# We build-depend on quilt for the test suite
+lintian source: quilt-build-dep-but-no-series-file
+# We don't have a patch system for lintian itself
+lintian source: patch-system-but-no-source-readme

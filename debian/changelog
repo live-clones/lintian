@@ -220,6 +220,8 @@ lintian (2.5.0~rc1) UNRELEASED; urgency=low
       Many thanks to David Bremner for the patch.
   * debian/compat:
     + [NT] Bump debhelper compat to 7.
+  * debian/source/lintian-overrides:
+    + [RG] Add overrides for quilt-related checks.
 
   * frontend/lintian:
     + [NT] Ensure that Lintian always reaps processes it started before
