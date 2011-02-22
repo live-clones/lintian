@@ -33,6 +33,7 @@ foreach my $file (@ARGV) {
     my $type;
     my $proc;
     my $tmap;
+    my $prockey;
     $file = "$cwd/$file" unless ($file =~ m@^/@o);
 
     if ($file =~ m/\.changes$/o){
@@ -42,7 +43,7 @@ foreach my $file (@ARGV) {
         # get_processables
         foreach my $gmember (@{$group->get_processables()}){
             my $mtype = $gmember->pkg_type();
-            my $mname = $gmember->pkg_name();
+            my $mname = gen_proc_key($gmember);
             my $tmap = $type_map{$mtype};
             if (exists $tmap->{$mname}){
                 if ($mtype eq 'changes'){
@@ -67,7 +68,7 @@ foreach my $file (@ARGV) {
         #
         # ... and for crafted packages we have more to worry about
         # than suboptimal check accuracy.
-        $group_map{$src_proc->pkg_src()} = $group;
+        $group_map{gen_src_proc_key($src_proc)} = $group;
         next;
     }
 
@@ -81,11 +82,12 @@ foreach my $file (@ARGV) {
         fail "cannot handle $file";
     }
     $proc = Lintian::Processable->new($type, $file);
+    $prockey = gen_proc_key($proc);
     $tmap = $type_map{$type};
-    if (exists $tmap->{$proc->pkg_name()}){
-        warning ("Skipping " . $proc->pkg_name() . " ($type) - duplicate package");
+    if (exists $tmap->{$prockey}){
+        warning ("Skipping " . $prockey . " ($type) - duplicate package");
     } else {
-        $tmap->{$proc->pkg_name()} = $proc;
+        $tmap->{$prockey} = $proc;
     }
 }
 
@@ -94,20 +96,20 @@ foreach my $file (@ARGV) {
 foreach my $source (values %{ $type_map{'source'} }) {
     my $group;
     next if defined $source->group();
-    print STDERR "Creating group for " . $source->pkg_src(), "\n";
+    debug(1, 'Creating group for ' . $source->pkg_src());
     $group = Lintian::ProcessableGroup->new();
     $group->add_processable($source);
-    $group_map{$source->pkg_src()} = $group;
+    $group_map{gen_src_proc_key($source)} = $group;
 }
 
 foreach my $bin (values %{ $type_map{'binary'} }, values %{ $type_map{'udeb'} }){
-    my $src_name = $bin->pkg_src();
-    my $group = $group_map{$src_name};
+    my $src_key = gen_src_proc_key($bin);
+    my $group = $group_map{$src_key};
     if (! defined $group){
         # Create a new group based on the name of the source package
         # - perhaps we will get more binaries from the same source.
         $group = Lintian::ProcessableGroup->new();
-        $group_map{$src_name} = $group;
+        $group_map{$src_key} = $group;
     }
     $group->add_processable($bin);
 }
@@ -128,9 +130,8 @@ sub stringify_proc {
     my ($proc) = @_;
     my $pkg_name = $proc->pkg_name();
     my $pkg_type = $proc->pkg_type();
-    my $pkg_arch = $proc->pkg_arch();
     my $pkg_version = $proc->pkg_version();
-    return "${pkg_name} ($pkg_type)";
+    return "${pkg_name} $pkg_version ($pkg_type)";
 }
 
 sub debug {
@@ -142,5 +143,15 @@ sub debug {
 sub warning {
     my ($msg) = @_;
     print STDERR "$msg\n";
+}
+
+sub gen_proc_key{
+    my ($proc) = @_;
+    return $proc->pkg_name() . '_' . $proc->pkg_version();
+}
+
+sub gen_src_proc_key{
+    my ($proc) = @_;
+    return $proc->pkg_src() . '_' . $proc->pkg_src_version();
 }
 

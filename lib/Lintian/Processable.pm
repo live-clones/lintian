@@ -77,7 +77,7 @@ sub new {
 
 Returns the package name.
 
-=item $proc->pkg_version();
+=item $proc->pkg_version()
 
 Returns the version of the package.
 
@@ -95,6 +95,14 @@ Returns the type of package (e.g. binary, source, udeb ...)
 Returns the architecture(s) of the package. May return multiple values
 from source and changes processables.
 
+=item $proc->pkg_src()
+
+Returns the name of the source package.
+
+=item $proc->pkg_src_version()
+
+Returns the version of the source package.
+
 =item $proc->group()
 
 Returns the L<Lintain::ProcessableGroup|group> $proc is in,
@@ -102,7 +110,7 @@ if any.  If the processable is not in a group, this returns C<undef>.
 
 =cut
 
-Lintian::Processable->mk_accessors (qw(pkg_name pkg_version pkg_src pkg_arch pkg_path pkg_type group));
+Lintian::Processable->mk_accessors (qw(pkg_name pkg_version pkg_src pkg_arch pkg_path pkg_type pkg_src_version group));
 
 =pod
 
@@ -128,36 +136,47 @@ sub _init{
         my $pkg_name = $dinfo->{package} or
             fail "$pkg_path ($pkg_type) is missing mandatory \"Package\" field";
         my $pkg_src = $dinfo->{source};
+        my $pkg_version = $dinfo->{version};
+        my $pkg_src_version = $pkg_version;
         # Source may be left out if it is the same as $pkg_name
         $pkg_src = $pkg_name unless ( defined $pkg_src && length $pkg_src );
 
         # Source may contain the version (in parentheses)
-        $pkg_src =~ s/\s*\(.+$//o;
+        if ($pkg_src =~ m/(\S++)\s*\(([^\)]+)\)/o){
+            $pkg_src = $1;
+            $pkg_src_version = $2;
+        }
         $self->{pkg_name} = $pkg_name;
-        $self->{pkg_version} = $dinfo->{version};
+        $self->{pkg_version} = $pkg_version;
         $self->{pkg_arch} = $dinfo->{architecture};
         $self->{pkg_src} = $pkg_src;
+        $self->{pkg_src_version} = $pkg_src_version;
     } elsif ($pkg_type eq 'source'){
         my $dinfo = get_dsc_info ($pkg_path) or fail "$pkg_path is not valid dsc file";
         my $pkg_name = $dinfo->{source} or fail "$pkg_path is missing or has empty source field";
+        my $pkg_version = $dinfo->{version};
         $self->{pkg_name} = $pkg_name;
-        $self->{pkg_version} = $dinfo->{version};
+        $self->{pkg_version} = $pkg_version;
         $self->{pkg_arch} = 'source';
         $self->{pkg_src} = $pkg_name; # it is own source pkg
+        $self->{pkg_src_version} = $pkg_version;
     } elsif ($pkg_type eq 'changes'){
         my $cinfo = get_dsc_info ($pkg_path) or fail "$pkg_path is not a valid changes file";
         my $pkg_name = $pkg_path;
-        $pkg_name =~ s,.*/([^/]+)\.changes$,$1,;
+        my $pkg_version = $cinfo->{version};
+        $pkg_name =~ s,.*/([^/_]+)_[^/]+\.changes$,$1,;
         $self->{pkg_name} = $pkg_name;
-        $self->{pkg_version} = $cinfo->{version};
+        $self->{pkg_version} = $pkg_version;
         $self->{pkg_src} = $cinfo->{source}//$pkg_name;
+        $self->{pkg_src_version} = $pkg_version;
         $self->{pkg_arch} = $cinfo->{architecture};
     } else {
         fail "Unknown package type $pkg_type";
     }
     # make sure these are not undefined
-    $self->{pkg_version} = '' unless (defined $self->{pkg_version});
-    $self->{pkg_arch}    = '' unless (defined $self->{pkg_arch});
+    $self->{pkg_version}     = '' unless (defined $self->{pkg_version});
+    $self->{pkg_src_version} = '' unless (defined $self->{pkg_src_version});
+    $self->{pkg_arch}        = '' unless (defined $self->{pkg_arch});
     return 1;
 }
 
