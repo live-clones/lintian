@@ -85,7 +85,7 @@ foreach my $file (@ARGV) {
     $prockey = gen_proc_key($proc);
     $tmap = $type_map{$type};
     if (exists $tmap->{$prockey}){
-        warning ("Skipping " . $prockey . " ($type) - duplicate package");
+        warning ('Skipping ' . $prockey . " ($type) - duplicate package");
     } else {
         $tmap->{$prockey} = $proc;
     }
@@ -95,8 +95,23 @@ foreach my $file (@ARGV) {
 # create a proc-group for each of the remaining source packages.
 foreach my $source (values %{ $type_map{'source'} }) {
     my $group;
+    my $srckey;
     next if defined $source->group();
-    debug(1, 'Creating group for ' . $source->pkg_src());
+    $srckey = gen_src_proc_key($source);
+    $group = $group_map{$srckey};
+    if (defined $group){
+        if (!defined $group->get_source_processable()){
+            # Happens e.g. with dpkg-buildpackage -b
+            # Technically the source is most likely out of date
+            # but just process it together with the rest anyway.
+            $group->add_processable($source);
+        } else {
+            warning ("Skipping  $srckey (source) - duplicate package");
+        }
+        next;
+    }
+    debug(1, 'Creating group for ' . $source->pkg_src() .
+          '(' . $source->pkg_src_version . ')');
     $group = Lintian::ProcessableGroup->new();
     $group->add_processable($source);
     $group_map{gen_src_proc_key($source)} = $group;
