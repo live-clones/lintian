@@ -15,6 +15,8 @@
 
 package Lintian::rules;
 use strict;
+use warnings;
+
 use Util;
 use Lintian::Tags qw(tag);
 
@@ -73,7 +75,7 @@ my @RULE_CLEAN_DEPENDS =
      [ debhelper => qr'^\t\s*dh_.+' ],
      [ 'dh-ocaml, ocaml-nox | ocaml' => qr'^\t\s*(?:dh_ocamlinit|dh\s.*--with\s+(?:\S+,)*ocaml)\s' ],
      [ dpatch => qr'^\t\s*(\S+=\S+\s+)*dpatch\s' ],
-     [ "po-debconf" => qr'^\t\s*debconf-updatepo\s' ],
+     [ 'po-debconf' => qr'^\t\s*debconf-updatepo\s' ],
      [ $PYTHON_DEPEND => qr'^\t\s*python\s', 'missing-python-build-dependency' ],
      [ $PYTHON_DEPEND => qr'\ssetup\.py\b', 'missing-python-build-dependency' ],
      [ quilt => qr'^\t\s*dh\s.*--with\s+(?:\S+,)*quilt' ],
@@ -105,13 +107,13 @@ my $info = shift;
 # file, and in a native Debian package it could be a symlink to a file that we
 # didn't unpack.  Warn if it's a symlink (dpkg-source does as well) and skip
 # all the tests if we then can't read it.
-if (-l "debfiles/rules") {
-    tag "debian-rules-is-symlink", "";
-    return 0 unless -f "debfiles/rules";
+if (-l 'debfiles/rules') {
+    tag 'debian-rules-is-symlink';
+    return 0 unless -f 'debfiles/rules';
 }
 
 #get architecture field:
-unless (-d "fields") {
+unless (-d 'fields') {
     fail("directory in lintian laboratory for $type package $pkg missing: fields");
 }
 
@@ -122,7 +124,7 @@ open(RULES, '<', 'debfiles/rules') or fail("Failed opening rules: $!");
 # Check for required #!/usr/bin/make -f opening line.  Allow -r or -e; a
 # strict reading of Policy doesn't allow either, but they seem harmless.
 my $start = <RULES>;
-tag "debian-rules-not-a-makefile", ""
+tag 'debian-rules-not-a-makefile'
     unless $start =~ m%^\#!\s*/usr/bin/make\s+-[re]?f[re]?\s*$%;
 
 # Holds which dependencies are required.  The keys in %needed and
@@ -149,36 +151,36 @@ my $maybe_skipping;
 my $uses_makefile_pl = 0;
 while (<RULES>) {
     next if /^\s*\#/;
-    $includes = 1 if m/^\s*[s-]?include\s+/;
-    $uses_makefile_pl = 1 if m/Makefile\.PL/;
+    $includes = 1 if m/^\s*[s-]?include\s+/o;
+    $uses_makefile_pl = 1 if m/Makefile\.PL/o;
 
     # Check for DH_COMPAT settings outside of any rule, which are now
     # deprecated.  It's a bit easier structurally to do this here than in
     # debhelper.
-    if (/^\s*(export\s+)?DH_COMPAT\s*:?=/ && keys(%seen) == 0) {
-        tag "debian-rules-sets-DH_COMPAT", "line $.";
+    if (/^\s*(?:export\s+)?DH_COMPAT\s*:?=/ && keys(%seen) == 0) {
+        tag 'debian-rules-sets-DH_COMPAT', "line $.";
     }
 
     # Check for problems that can occur anywhere in debian/rules.
     if (/\$[\(\{]PWD[\)\}]/) {
-        tag "debian-rules-uses-pwd", "line $.";
+        tag 'debian-rules-uses-pwd', "line $.";
     }
     if (/^\t\s*-(?:\$[\(\{]MAKE[\}\)]|make)\s.*(?:dist)?clean/ ||
 	/^\t\s*(?:\$[\(\{]MAKE[\}\)]|make)\s(?:.*\s)?-\w*i.*(?:dist)?clean/) {
-        tag "debian-rules-ignores-make-clean-error", "line $.";
+        tag 'debian-rules-ignores-make-clean-error', "line $.";
     }
     if (/\$[\(\{]DEB_BUILD_OPTS[\)\}]/) {
-        tag "debian-rules-uses-DEB_BUILD_OPTS", "line $.";
+        tag 'debian-rules-uses-DEB_BUILD_OPTS', "line $.";
     }
     if (/^\s*DEB_AUTO_UPDATE_DEBIAN_CONTROL\s*=\s*yes/) {
         tag 'debian-rules-automatically-updates-control', "line $.";
     }
-    if ($uses_makefile_pl && /install.*PREFIX/ && !/DESTDIR/) {
+    if ($uses_makefile_pl && m/install.*PREFIX/ && !/DESTDIR/) {
         tag 'debian-rules-makemaker-prefix-is-deprecated', "line $.";
     }
 
     # Keep track of whether this portion of debian/rules may be optional
-    if (/^ifn?(eq|def)\s/) {
+    if (/^ifn?(?:eq|def)\s/) {
         $maybe_skipping++;
     } elsif (/^endif\s/) {
         $maybe_skipping--;
@@ -208,15 +210,15 @@ while (<RULES>) {
         }
     }
 
-    if (!/^ifn?(eq|def)\s/ && /^([^\s:][^:]*):+(.*)/) {
+    if (!/^ifn?(?:eq|def)\s/ && m/^([^\s:][^:]*):+(.*)/) {
 	@current_targets = split (' ', $1);
         my @depends = map {
             $_ = quotemeta $_;
             s/\\\$\\\([^\):]+\\:([^=]+)\\=([^\)]+)\1\\\)/$2.*/g;
             qr/^$_$/;
-        } split (' ', $2);
+        } split (m/ /o, $2);
 	for my $target (@current_targets) {
-            if ($target =~ /%/) {
+            if ($target =~ m/%/o) {
                 my $pattern = quotemeta $target;
                 $pattern =~ s/\\%/.*/g;
                 for my $required (keys %required) {
@@ -272,7 +274,7 @@ while (<RULES>) {
                 my $group = $debhelper_order{$command};
                 $debhelper_group{$package} ||= 0;
                 if ($group < $debhelper_group{$package}) {
-                    tag "debian-rules-calls-debhelper-in-odd-order",
+                    tag 'debian-rules-calls-debhelper-in-odd-order',
                         $command, "(line $.)";
                 } else {
                     $debhelper_group{$package} = $group;
@@ -286,14 +288,14 @@ close RULES;
 unless ($includes) {
     # Make sure all the required rules were seen.
     for my $target (sort keys %required) {
-        tag "debian-rules-missing-required-target", $target
+        tag 'debian-rules-missing-required-target', $target
             unless $seen{$target};
     }
 }
 
 # Make sure we have no content for binary-arch if we are arch-indep:
 $rules_per_target{'binary-arch'} ||= [];
-if ($architecture eq "all" && scalar @{$rules_per_target{'binary-arch'}}) {
+if ($architecture eq 'all' && scalar @{$rules_per_target{'binary-arch'}}) {
     my $nonempty = 0;
     foreach (@{$rules_per_target{'binary-arch'}}) {
         # dh binary-arch is actually a no-op if there is no
@@ -302,7 +304,7 @@ if ($architecture eq "all" && scalar @{$rules_per_target{'binary-arch'}}) {
             $nonempty = 1;
         }
     }
-    tag "binary-arch-rules-but-pkg-is-arch-indep" if $nonempty;
+    tag 'binary-arch-rules-but-pkg-is-arch-indep' if $nonempty;
 }
 
 # Make sure that all the required build dependencies are there.	 Don't
@@ -315,7 +317,7 @@ for my $package (keys %needed_clean) {
     my $tag = $needed_clean{$package} || 'missing-build-dependency';
     unless ($build_regular->implies($package)) {
         if ($build_indep->implies($package)) {
-            tag "clean-should-be-satisfied-by-build-depends", $package;
+            tag 'clean-should-be-satisfied-by-build-depends', $package;
         } else {
             if ($tag eq 'missing-build-dependency') {
                 tag $tag, $package if $package ne 'debhelper';
