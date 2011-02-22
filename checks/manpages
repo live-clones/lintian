@@ -226,7 +226,7 @@ foreach my $file (@{$info->sorted_index}) {
 	    if ($desc =~ /(\S+)\s+-\s+manual page for \1/i) {
 		tag 'manpage-has-useless-whatis-entry', $file;
 	    } elsif ($desc =~ /(\S+)\s+-\s+programs? to do something/i) {
-		tag "manpage-is-dh_make-template", $file;
+		tag 'manpage-is-dh_make-template', $file;
 	    }
 	    1 while <LEXGROG>;
 	    close LEXGROG;
@@ -325,7 +325,7 @@ foreach my $file (@{$info->sorted_index}) {
 		if ($path =~ m,/man/man\d/,);
 	}
 	tag 'hyphen-used-as-minus-sign', $file, ($hc - 10),
-	    "more occurrences not shown"
+	    'more occurrences not shown'
 	    if ($hc > 10 && ! $ENV{'LINTIAN_DEBUG'});
     }
 }
