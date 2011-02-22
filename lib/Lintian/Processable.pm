@@ -177,6 +177,10 @@ sub _init{
     $self->{pkg_version}     = '' unless (defined $self->{pkg_version});
     $self->{pkg_src_version} = '' unless (defined $self->{pkg_src_version});
     $self->{pkg_arch}        = '' unless (defined $self->{pkg_arch});
+    # make sure none of the fields can cause traversal.
+    foreach my $field (qw(pkg_name pkg_version pkg_src pkg_src_version pkg_arch)) {
+        $self->{$field} =~ s,/,_,o;
+    }
     return 1;
 }
 
