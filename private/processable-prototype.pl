@@ -43,8 +43,13 @@ foreach my $file (@ARGV) {
         # get_processables
         foreach my $gmember (@{$group->get_processables()}){
             my $mtype = $gmember->pkg_type();
-            my $mname = gen_proc_key($gmember);
+            my $mname;
             my $tmap = $type_map{$mtype};
+            if ($mtype eq 'binary' or $mtype eq 'udeb'){
+                $mname = gen_proc_key($gmember);
+            } else {
+                $mname = gen_src_proc_key($gmember);
+            }
             if (exists $tmap->{$mname}){
                 if ($mtype eq 'changes'){
                     # Skip this changes file - we have seen it before
@@ -146,6 +151,10 @@ sub stringify_proc {
     my $pkg_name = $proc->pkg_name();
     my $pkg_type = $proc->pkg_type();
     my $pkg_version = $proc->pkg_version();
+    if ($pkg_type eq 'binary' or $pkg_type eq 'udeb'){
+        my $pkg_arch = $proc->pkg_arch();
+        return "${pkg_name} $pkg_version ($pkg_type:$pkg_arch)";
+    }
     return "${pkg_name} $pkg_version ($pkg_type)";
 }
 
@@ -162,7 +171,8 @@ sub warning {
 
 sub gen_proc_key{
     my ($proc) = @_;
-    return $proc->pkg_name() . '_' . $proc->pkg_version();
+    return $proc->pkg_name() . '_' . $proc->pkg_version() .
+        '_' . $proc->pkg_arch();
 }
 
 sub gen_src_proc_key{
