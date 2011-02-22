@@ -157,7 +157,8 @@ lintian (2.5.0) UNRELEASED; urgency=low
 
   * collection/objdump-info:
     + [RG] Support stricter parameter handling of objdump-info from
-      binutils 2.21.  Thanks, Andreas Beckmann.  (Closes: #604047)
+      binutils 2.21.  Thanks, Andreas Beckmann.
+      (Closes: #604047, LP: #683347)
 
   * data/changelog-file/ubuntu-dists:
     + [CW] Add natty as a valid Ubuntu distribution, and remove the EOLed
