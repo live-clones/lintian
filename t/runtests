@@ -898,23 +898,23 @@ sub msg_queue_handler {
 	    }
 	} else {
 	    if (!exists($msg->{'msg'}) && exists($thrs{$id})) {
+		print (' 'x$length,"\r");
+		$length = 0;
 		while (my $m = shift @{$thrs{$id}}) {
 		    print $m;
 		}
+		print "\n";
 		delete $thrs{$id};
 	    } elsif (exists($msg->{'msg'})) {
 		$thrs{$id} = []
 		    unless (exists($thrs{$id}));
 
 		my $flush = 0;
-		# We need to split by line because the code that prints
-		# the status line can only handle a newline at the end
-		# of every message
+		# We split by line. Every time a newline is found the
+		# messages queue is flushed (by the above code)
 		for my $line (split /(?=\n)/, $msg->{'msg'}) {
-		    my $line_copy = $line;
-
+		    $flush = 1 if ($line =~ s/^\n//);
 		    push @{$thrs{$id}}, $line;
-		    $flush = 1 if (chomp $line_copy);
 		}
 
 		# Insert a flush request, if needed
