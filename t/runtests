@@ -456,8 +456,9 @@ sub test_package {
 
     my $pkg = $testdata->{srcpkg};
     my $pkgdir = "$pkg-$testdata->{version}";
+    my $rundir = "$RUNDIR/$pkg";
     my $origdir = "$TESTSET/tests/$testdata->{testname}";
-    my $targetdir = "$RUNDIR/$pkgdir";
+    my $targetdir = "$rundir/$pkgdir";
     my $tmpldir = "$TESTSET/templates";
 
     my $is_native = ($testdata->{type} eq 'native');
@@ -475,7 +476,8 @@ sub test_package {
     }
 
     print "Cleaning up and repopulating $targetdir...\n" if $DEBUG;
-    runsystem_ok("rm", "-rf", $targetdir);
+    runsystem_ok("rm", "-rf", $rundir);
+    runsystem_ok("mkdir", "-p", $rundir);
     my $skel = $testdata->{skeleton};
     if ($is_native) {
 	runsystem("cp", "-rp", "$tmpldir/$skel", $targetdir);
@@ -490,7 +492,7 @@ sub test_package {
 	    msg_print "running pre_upstream hook... " if $VERBOSE;
 	    runsystem("$origdir/pre_upstream", $targetdir);
 	}
-	runsystem("cd $RUNDIR && ".
+	runsystem("cd $rundir && ".
 		  "tar czf ${pkg}_${orig_version}.orig.tar.gz $pkgdir");
 	runsystem("rsync", "-rpc", "--exclude=debian/changelog",
 		  "$tmpldir/$skel/", "$targetdir/");
@@ -513,14 +515,14 @@ sub test_package {
     }
 
     msg_print "building... ";
-    runsystem("cd $RUNDIR/$pkgdir && $DPKG_BUILDPACKAGE >../build.$pkg 2>&1");
+    runsystem("cd $rundir/$pkgdir && $DPKG_BUILDPACKAGE >../build.$pkg 2>&1");
 
     my $version = $testdata->{version};
     $version =~ s/^(\d+)://;
     my @options = split(' ', $testdata->{options});
-    my ($file) = glob("$RUNDIR/$pkg\_$version*.changes");
+    my ($file) = glob("$rundir/$pkg\_$version*.changes");
     msg_print "testing... ";
-    my $opts = { err => "$RUNDIR/tags.$pkg", fail => 'never' };
+    my $opts = { err => "$rundir/tags.$pkg", fail => 'never' };
     my $status;
     unshift(@options, '--allow-root');
     if ($testdata->{sort}) {
@@ -532,18 +534,18 @@ sub test_package {
 	msg_print "FAILED:\n";
 	fail("$LINTIAN @options $file exited with status $status\n");
     }
-    open(OUT, '>>', "$RUNDIR/tags.$pkg")
-	or fail("cannot append to $RUNDIR/tags.$pkg: $!");
+    open(OUT, '>>', "$rundir/tags.$pkg")
+	or fail("cannot append to $rundir/tags.$pkg: $!");
     print OUT ${ $opts->{out} };
     close OUT;
 
     # Run a sed-script if it exists, for tests that have slightly variable
     # output
-    runsystem_ok("sed -ri -f $origdir/post_test $RUNDIR/tags.$pkg")
+    runsystem_ok("sed -ri -f $origdir/post_test $rundir/tags.$pkg")
 	if -e "$origdir/post_test";
 
     # Compare the output to the expected tags.
-    my $testok = runsystem_ok(qw(cmp -s), "$RUNDIR/tags.$pkg", "$origdir/tags");
+    my $testok = runsystem_ok(qw(cmp -s), "$rundir/tags.$pkg", "$origdir/tags");
     if ($testok) {
 	msg_print "ok.\n";
     } else {
@@ -552,7 +554,7 @@ sub test_package {
 	    return 1;
 	} else {
 	    msg_print "FAILED:\n";
-	    runsystem_ok("diff", "-u", "$origdir/tags", "$RUNDIR/tags.$pkg");
+	    runsystem_ok("diff", "-u", "$origdir/tags", "$rundir/tags.$pkg");
 	    return;
 	}
     }
@@ -572,7 +574,7 @@ sub test_package {
 	}
     } else {
 	my $okay = 1;
-	open TAGS, "$RUNDIR/tags.$pkg" or fail("Cannot open $RUNDIR/tags.$pkg");
+	open TAGS, "$rundir/tags.$pkg" or fail("Cannot open $rundir/tags.$pkg");
 	while (<TAGS>) {
 		next if m/^N: /;
 		if (not /^(.): (\S+)(?: (?:changes|source|udeb))?: (\S+)/) {
