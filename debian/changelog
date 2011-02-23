@@ -1,4 +1,6 @@
-lintian (2.5.0~rc1) UNRELEASED; urgency=low
+lintian (2.5.0~rc1) experimental; urgency=low
+
+  The "welcome Niels Thykier!" release.
 
   * Summary of tag changes:
     + Added:
@@ -250,7 +252,7 @@ lintian (2.5.0~rc1) UNRELEASED; urgency=low
   * t/tests/{rules-not-makefile,scripts-missing-dep}:
     + [NT] Added new tests.  (Closes: #607731)
 
- -- Raphael Geissert <geissert@debian.org>  Thu, 29 Jul 2010 21:09:55 -0400
+ -- Raphael Geissert <geissert@debian.org>  Tue, 22 Feb 2011 20:28:48 -0600
 
 lintian (2.4.3) unstable; urgency=low
 
