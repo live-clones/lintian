@@ -1,3 +1,11 @@
+lintian (2.5.0~rc2) UNRELEASED; urgency=low
+
+  * checks/binaries:
+    + [ADB] Update binary-from-other-architecture's tests in line with the
+      changes to filename output introduced in 2.5.0~rc1.  (Closes: #614906)
+
+ -- Adam D. Barratt <adam@adam-barratt.org.uk>  Fri, 25 Feb 2011 17:48:59 +0000
+
 lintian (2.5.0~rc1) experimental; urgency=low
 
   The "welcome Niels Thykier!" release.

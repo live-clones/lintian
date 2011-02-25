@@ -262,7 +262,7 @@ foreach my $file (@{$info->sorted_file_info}) {
     }
 
     if ($arch ne 'all' and $fileinfo !~ m/$ARCH_REGEX{$arch}/) {
-	if ($file =~ m,/lib(\d{2})/, or $file =~ m,/emul/ia(\d{2}),) {
+	if ($file =~ m,(?:^|/)lib(\d{2})/, or $file =~ m,^emul/ia(\d{2}),) {
 	    tag 'binary-from-other-architecture', $file
 		unless ($fileinfo =~ m/$ARCH_REGEX{$1}/);
 	} elsif ($arch eq 'amd64' and $fileinfo =~ m/$ARCH_REGEX{i386}/) {
