@@ -61,9 +61,12 @@ if ($success) {
             "second member $members[1] not control.tar.gz";
     } elsif ($members[2] eq 'data.tar.lzma') {
         # Ubuntu's archive allows lzma packages.
-        my ($entry) = $info->changelog->data;
-        my $distribution = $entry->Distribution;
-        if ($distribution =~ /$UBUNTU_REGEX/) {
+        my $distribution = '';
+        if (defined $info->changelog) {
+            my ($entry) = $info->changelog->data;
+            $distribution = $entry->Distribution;
+        }
+        if ($distribution =~ m/$UBUNTU_REGEX/) {
             $okay = 1;
         } else {
             tag 'lzma-deb-archive';
