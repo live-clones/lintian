@@ -187,13 +187,19 @@ sub create_entry(){
     # It already exists.
     return 1 if ($self->entry_exists());
     # We still use the "legacy" unpack for some things.
-    return $self->_unpack() unless ($pkg_type eq 'changes');
+    return $self->_unpack() unless ($pkg_type ne 'source');
 
     unless (-d $base_dir) {
 	mkdir($base_dir, 0777) or return 0;
 	$madedir = 1;
     }
-    $link = "$base_dir/changes";
+    if ($pkg_type eq 'changes'){
+	$link = "$base_dir/changes";
+    } elsif ($pkg_type eq 'binary' or $pkg_type eq 'udeb') {
+	$link = "$base_dir/deb";
+    } else {
+	fail "create_entry cannot handle $pkg_type";
+    }
     unless (symlink($pkg_path, $link)){
 	# "undo" the mkdir if the symlink fails.
 	rmdir($base_dir) if($madedir);
@@ -238,10 +244,7 @@ sub _unpack {
 
     # create new directory
     debug_msg(1, "Unpacking package ...");
-    if (($pkg_type eq 'binary') || ($pkg_type eq 'udeb')) {
-	Lintian::Command::Simple::run("$ENV{LINTIAN_ROOT}/unpack/unpack-binpkg-l1", $base_dir, $pkg_path) == 0
-	    or return 0;
-    } elsif ($pkg_type eq 'source') {
+    if ($pkg_type eq 'source') {
 	Lintian::Command::Simple::run("$ENV{LINTIAN_ROOT}/unpack/unpack-srcpkg-l1", $base_dir, $pkg_path) == 0
 	    or return 0;
     } else {

@@ -7,4 +7,4 @@ Info: This script scans a binary package for scripts that start with #! and
  because linux only looks at the first word when executing a script.
 Type: binary, udeb
 Version: 1
-Needs-Info: unpacked, bin-pkg-control
+Needs-Info: unpacked, bin-pkg-control, index
