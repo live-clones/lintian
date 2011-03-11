@@ -23,6 +23,7 @@
 
 # {{{ libraries and such
 use strict;
+use warnings;
 
 use Getopt::Long;
 use Cwd;
@@ -581,7 +582,6 @@ import Lintian::Command qw(spawn reap);
 require Lintian::Tags;
 import Lintian::Tags qw(tag);
 
-no warnings 'once';
 if (defined $experimental_output_opts) {
     my %opts = map { split(/=/) } split( /,/, $experimental_output_opts );
     foreach (keys %opts) {
@@ -646,8 +646,6 @@ for my $level (@display_level) {
 	die $error, "\n";
     }
 }
-
-use warnings;
 
 # }}}
 

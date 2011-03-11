@@ -78,7 +78,7 @@ our %KNOWN_BINARY_FIELDS = map { $_ => 1 }
      'recommends', 'suggests', 'enhances', 'conflicts', 'provides',
      'replaces', 'breaks', 'essential', 'maintainer', 'section', 'priority',
      'source', 'description', 'installed-size', 'python-version', 'homepage',
-     'bugs', 'origin');
+     'bugs', 'origin', 'multi-arch');
 
 # The Ubuntu original-maintainer field is handled separately.
 our %KNOWN_UDEB_FIELDS = map { $_ => 1 }
@@ -288,6 +288,15 @@ if (not defined $info->field('version')) {
 	}
 }
 
+#---- Multi-Arch
+
+if (defined $info->field('multi-arch')){
+    my $march = $info->field('multi-arch');
+    unfold('multi-arch', \$march);
+    tag 'unknown-multi-arch-value', $pkg, $march
+	unless $march =~ m/^no|foreign|allowed|same$/o;
+}
+
 #---- Architecture
 
 if (not defined $info->field('architecture')) {
@@ -384,12 +393,10 @@ if (not defined $info->field('source')) {
 		if ($source !~ /^[a-z0-9][-+\.a-z0-9]+\z/) {
 			tag 'source-field-malformed', $source;
 		}
-	} else {
-		if ($source !~ /^[a-z0-9][-+\.a-z0-9]+ # Package name
-		                \s*
-		                (?:\((?:\d+:)?(?:[-\.+:a-zA-Z0-9~]+?)(?:-[\.+a-zA-Z0-9~]+)?\))?\s*$/x) { #Version
-			tag 'source-field-malformed', $source;
-		}
+	} elsif ($source !~ /^[a-z0-9][-+\.a-z0-9]+ # Package name
+			\s*
+			(?:\((?:\d+:)?(?:[-\.+:a-zA-Z0-9~]+?)(?:-[\.+a-zA-Z0-9~]+)?\))?\s*$/x) { #Version
+		tag 'source-field-malformed', $source;
 	}
 }
 
@@ -437,11 +444,13 @@ if (not defined $info->field('section')) {
 	    # anything go there.
 	    if ($parts[-1] ne 'oldlibs') {
 		    foreach my $map (@NAME_SECTION_MAPPINGS) {
-			    if ($pkg =~ $map->[0]) {
-				    tag 'wrong-section-according-to-package-name', "$pkg => $map->[1]"
-					unless $parts[-1] eq $map->[1];
-				    last;
-			    }
+			    next unless ($pkg =~ $map->[0]);
+
+			    my $area = '';
+			    $area = "$parts[0]/" if (scalar @parts == 2);
+			    tag 'wrong-section-according-to-package-name', "$pkg => ${area}$map->[1]"
+				unless $parts[-1] eq $map->[1];
+			    last;
 		    }
 	    }
 	}

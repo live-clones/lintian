@@ -1,4 +1,36 @@
-lintian (2.5.0) UNRELEASED; urgency=low
+lintian (2.5.0~rc2) UNRELEASED; urgency=low
+
+  * Summary of tag changes:
+    + Added:
+      - unknown-multi-arch-value
+
+  * checks/binaries:
+    + [ADB] Update binary-from-other-architecture's tests in line with the
+      changes to filename output introduced in 2.5.0~rc1.
+      (Closes: #614906)
+  * checks/changes-file.desc:
+    + [NT] Added oneiric as valid Ubuntu distribution.  Thanks to Benjamin
+      Drung for the patch.  (Closes: #617227)
+  * checks/deb-format:
+    + [NT] Removed assumption that there was always a changelog in a binary
+      with a data.tar.lzma member.
+  * checks/fields{,.desc}:
+    + [NT] Recognise Multi-Arch as a known binary field.  (Closes: #617816)
+    + [NT] Fixed typo in a tag description.
+  * checks/huge-usr-share:
+    + [NT] Removed assumption that there is always files in usr/share.
+
+  * data/changelog-file/ubuntu-dists:
+    + [NT] Added oneiric as valid Ubuntu distribution.  Thanks to Benjamin
+      Drung for the patch.
+  * data/spelling/corrections:
+    + [NT] Added more misspellings.
+
+ -- Adam D. Barratt <adam@adam-barratt.org.uk>  Fri, 25 Feb 2011 17:48:59 +0000
+
+lintian (2.5.0~rc1) experimental; urgency=low
+
+  The "welcome Niels Thykier!" release.
 
   * Summary of tag changes:
     + Added:
@@ -87,6 +119,8 @@ lintian (2.5.0) UNRELEASED; urgency=low
       triggered if dh_python2 is used and the package is missing
       ${python:Breaks}. Thanks to Piotr Ożarowski for the report.
       (Closes: #604167)
+    + [RG] Mention the package's original area in
+      wrong-section-according-to-package-name.  (Closes: #608554)
   * checks/files{,.desc}:
     + [NT] Fixed false-positive extra-license-file for license.ui files.
       Thanks to Jeremy Sanders for the report.  (Closes: #595941)
@@ -155,7 +189,8 @@ lintian (2.5.0) UNRELEASED; urgency=low
 
   * collection/objdump-info:
     + [RG] Support stricter parameter handling of objdump-info from
-      binutils 2.21.  Thanks, Andreas Beckmann.  (Closes: #604047)
+      binutils 2.21.  Thanks, Andreas Beckmann.
+      (Closes: #604047, LP: #683347)
 
   * data/changelog-file/ubuntu-dists:
     + [CW] Add natty as a valid Ubuntu distribution, and remove the EOLed
@@ -193,8 +228,8 @@ lintian (2.5.0) UNRELEASED; urgency=low
     + [NT] Added DocBook corrections.  Thanks to Jakub Wilk.
       (Closes: #611349)
   * data/spelling/corrections-multiword:
-    + [NT] Added "allows to" and other similar cases.  Thanks to
-      Matthew Paul Thomas for the report.  (LP: #608231)
+    + [NT] Added "allows to" and other similar misspellings.  Thanks
+      to Matthew Paul Thomas for the report.  (LP: #608231)
 
   * debian/control:
     + [RA] Add the build dependencies required to run the test suite
@@ -217,6 +252,8 @@ lintian (2.5.0) UNRELEASED; urgency=low
       Many thanks to David Bremner for the patch.
   * debian/compat:
     + [NT] Bump debhelper compat to 7.
+  * debian/source/lintian-overrides:
+    + [RG] Add overrides for quilt-related checks.
 
   * frontend/lintian:
     + [NT] Ensure that Lintian always reaps processes it started before
@@ -240,10 +277,12 @@ lintian (2.5.0) UNRELEASED; urgency=low
   * man/*:
     + [NT] Rewrote the man pages in pod.  (Closes: #600906)
 
+  * t/runtests:
+    + [RG] Run blackbox tests in parallel too.
   * t/tests/{rules-not-makefile,scripts-missing-dep}:
     + [NT] Added new tests.  (Closes: #607731)
 
- -- Raphael Geissert <geissert@debian.org>  Thu, 29 Jul 2010 21:09:55 -0400
+ -- Raphael Geissert <geissert@debian.org>  Tue, 22 Feb 2011 20:28:48 -0600
 
 lintian (2.4.3) unstable; urgency=low
 
