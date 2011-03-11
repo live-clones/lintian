@@ -115,6 +115,12 @@ Info: Architecture wildcards, including the special architecture value
  either be architecture-independent or built for a specific architecture.
 Ref: policy 5.6.8
 
+Tag: unknown-multi-arch-value
+Severity: serious
+Certainty: certain
+Info: The package has an unknown value in its Multi-Arch field.  The
+ value must be one of "no", "same", "foreign" or "allowed".
+
 Tag: aspell-package-not-arch-all
 Severity: normal
 Certainty: certain
@@ -1024,7 +1030,7 @@ Info: The package appear to be a Java library and depending on one
  longer mandates that Java libraries depend on Java Runtimes.
  .
  If the library package ships executables along with the library,
- then please consider making this an application package or mvoe the
+ then please consider making this an application package or move the
  binaries to a (new) application package.
  .
  If there is otherwise a valid reason for this dependency, please override

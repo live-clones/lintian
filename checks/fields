@@ -78,7 +78,7 @@ our %KNOWN_BINARY_FIELDS = map { $_ => 1 }
      'recommends', 'suggests', 'enhances', 'conflicts', 'provides',
      'replaces', 'breaks', 'essential', 'maintainer', 'section', 'priority',
      'source', 'description', 'installed-size', 'python-version', 'homepage',
-     'bugs', 'origin');
+     'bugs', 'origin', 'multi-arch');
 
 # The Ubuntu original-maintainer field is handled separately.
 our %KNOWN_UDEB_FIELDS = map { $_ => 1 }
@@ -286,6 +286,15 @@ if (not defined $info->field('version')) {
 	} else {
 		tag 'bad-version-number', $version;
 	}
+}
+
+#---- Multi-Arch
+
+if (defined $info->field('multi-arch')){
+    my $march = $info->field('multi-arch');
+    unfold('multi-arch', \$march);
+    tag 'unknown-multi-arch-value', $pkg, $march
+	unless $march =~ m/^no|foreign|allowed|same$/o;
 }
 
 #---- Architecture
