@@ -2,7 +2,8 @@ lintian (2.5.0~rc2) UNRELEASED; urgency=low
 
   * checks/binaries:
     + [ADB] Update binary-from-other-architecture's tests in line with the
-      changes to filename output introduced in 2.5.0~rc1.  (Closes: #614906)
+      changes to filename output introduced in 2.5.0~rc1.
+      (Closes: #614906)
   * checks/deb-format:
     + [NT] Removed assumption that there was always a changelog in a binary
       with a data.tar.lzma member.
