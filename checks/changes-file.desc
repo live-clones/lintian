@@ -41,8 +41,8 @@ Info: You've specified an unknown target distribution for your upload in
  the <tt>debian/changelog</tt> file.
  .
  Your version string suggests this package is for Ubuntu, so your
- distribution should be one of natty, maverick, lucid, karmic, hardy, or
- dapper.
+ distribution should be one of oneiric, natty, maverick, lucid, karmic, hardy,
+ or dapper.
 
 Tag: multiple-distributions-in-changes-file
 Severity: important

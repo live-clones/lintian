@@ -4,11 +4,18 @@ lintian (2.5.0~rc2) UNRELEASED; urgency=low
     + [ADB] Update binary-from-other-architecture's tests in line with the
       changes to filename output introduced in 2.5.0~rc1.
       (Closes: #614906)
+  * checks/changes-file.desc:
+    + [NT] Added oneiric as valid Ubuntu distribution.  Thanks to Benjamin
+      Drung for the patch.  (Closes: #617227)
   * checks/deb-format:
     + [NT] Removed assumption that there was always a changelog in a binary
       with a data.tar.lzma member.
   * checks/huge-usr-share:
     + [NT] Removed assumption that there is always files in usr/share.
+
+  * data/changelog-file/ubuntu-dists:
+    + [NT] Added oneiric as valid Ubuntu distribution.  Thanks to Benjamin
+      Drung for the patch.
 
  -- Adam D. Barratt <adam@adam-barratt.org.uk>  Fri, 25 Feb 2011 17:48:59 +0000
 
