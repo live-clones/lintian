@@ -46,7 +46,6 @@ W: legacy-libbaz source: debhelper-but-no-misc-depends libbaz2
 W: legacy-libbaz source: debhelper-but-no-misc-depends libbaz2-dbg
 W: legacy-libbaz source: debhelper-but-no-misc-depends libbaz2-dev
 W: legacy-libbaz source: native-package-with-dash-version
-W: legacy-libbaz source: package-lacks-versioned-build-depends-on-debhelper 6
 W: legacy-libbaz source: source-nmu-has-incorrect-version-number 1-1
 W: legacy-libbaz source: substvar-source-version-is-deprecated libbaz2-dev
 W: libbaz1-dev: wrong-section-according-to-package-name libbaz1-dev => libdevel

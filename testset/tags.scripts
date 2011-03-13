@@ -39,7 +39,6 @@ W: scripts source: debian-watch-file-specifies-old-upstream-version 5 line 8
 W: scripts source: debian-watch-file-uses-deprecated-sf-redirector-method line 5
 W: scripts source: maintainer-script-lacks-debhelper-token debian/postinst
 W: scripts source: maintainer-script-lacks-debhelper-token debian/postrm
-W: scripts source: package-lacks-versioned-build-depends-on-debhelper 1
 W: scripts source: package-uses-deprecated-debhelper-compat-version 1
 W: scripts source: patch-system-but-no-source-readme
 W: scripts source: uses-dh-python-with-no-pycompat
