@@ -7,4 +7,4 @@ debian-symlink (1) unstable; urgency=low
 
   * Suppress "should close ITP bug" messages.  (Closes: #123456)
 
- -- Debian Lintian Maintainers <lintian-maint@debian.org>  Tue, 5 Jan 2010 01:01:01 -0001
+ -- Debian Lintian Maintainers <lintian-maint@debian.org>  Sun, 13 Mar 2011 14:30:00 +0100
