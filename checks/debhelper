@@ -329,7 +329,9 @@ while (my ($dep, $command) = each %missingbdeps) {
     tag 'missing-build-dependency-for-dh_-command', "$command=$dep"
 	unless ($bdepends_noarch->implies($dep));
 }
-if (not $bdepends->implies("debhelper (>= $level~)")) {
+# debhelper 7 was in Lenny, so an unversioned B-D will guarantee
+# to pull at least debhelper 7.
+if ($level > 7 && not $bdepends->implies("debhelper (>= $level~)")) {
     tag 'package-lacks-versioned-build-depends-on-debhelper', $level;
 } elsif (@versioncheck or $overridetargets) {
     my %seen;
