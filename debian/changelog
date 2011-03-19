@@ -3,6 +3,7 @@ lintian (2.5.0~rc2) UNRELEASED; urgency=low
   * Summary of tag changes:
     + Added:
       - unknown-multi-arch-value
+      - package-needs-versioned-debhelper-build-depends
 
   * checks/binaries:
     + [ADB] Update binary-from-other-architecture's tests in line with the
@@ -15,9 +16,13 @@ lintian (2.5.0~rc2) UNRELEASED; urgency=low
     + [NT] Removed assumption that there was always a changelog in a binary
       with a data.tar.lzma member.
   * checks/debhelper:
-    + [NT] Only emit package-lacks-versioned-build-depends-on-debhelper if
-      the version required is greater than 7, since debhelper 7 is in
-      all supported releases of Debian.
+    + [NT] Reduced package-lacks-versioned-build-depends-on-debhelper to a
+      pedantic tag.  It is now only emitted for debhelper compat levels of
+      7 or less, since even oldstable ships with debhelper 7.
+    + [NT] Added package-needs-versioned-debhelper-build-depends, which
+      replaces package-lacks-versioned-build-depends-on-debhelper old
+      task of warning if a missing versioned depends may lead to a build
+      failure.  Currently this is only emitted for compat 8 (or higher).
   * checks/fields{,.desc}:
     + [NT] Recognise Multi-Arch as a known binary field.  (Closes: #617816)
     + [NT] Fixed typo in a tag description.

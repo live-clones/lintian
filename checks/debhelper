@@ -27,6 +27,10 @@ use Util;
 use Lintian::Data;
 use Lintian::Tags qw(tag);
 
+# If compat is less than or equal to this, then a missing version
+# for this level is only a pedantic issue.
+use constant PEDANTIC_COMPAT => 7;
+
 # If there is no debian/compat file present but cdbs is being used, cdbs will
 # create one automatically.  Currently it always uses compatibility level 5.
 # It may be better to look at what version of cdbs the package depends on and
@@ -329,11 +333,17 @@ while (my ($dep, $command) = each %missingbdeps) {
     tag 'missing-build-dependency-for-dh_-command', "$command=$dep"
 	unless ($bdepends_noarch->implies($dep));
 }
-# debhelper 7 was in Lenny, so an unversioned B-D will guarantee
-# to pull at least debhelper 7.
-if ($level > 7 && not $bdepends->implies("debhelper (>= $level~)")) {
-    tag 'package-lacks-versioned-build-depends-on-debhelper', $level;
-} elsif (@versioncheck or $overridetargets) {
+
+
+unless ($bdepends->implies("debhelper (>= $level~)")){
+    my $tagname = 'package-needs-versioned-debhelper-build-depends';
+    $tagname = 'package-lacks-versioned-build-depends-on-debhelper'
+	if ($level <= PEDANTIC_COMPAT);
+
+    tag $tagname, $level;
+}
+
+if (@versioncheck) {
     my %seen;
     @versioncheck = grep { !$seen{$_}++ } @versioncheck;
     for my $program (@versioncheck) {
@@ -344,21 +354,23 @@ if ($level > 7 && not $bdepends->implies("debhelper (>= $level~)")) {
 	    $program, "(>= $required)";
 	}
     }
-    if ($seenmaintscript) {
-	my $required = '8.1.0~';
-	my $needed = "debhelper (>= $required)";
-	unless ($bdepends->implies($needed)) {
-	    tag 'debhelper-maintscript-needs-versioned-build-depends',
-	    "(>= $required)";
-	}
+}
+
+if ($overridetargets) {
+    my $required = '7.0.50~';
+    my $needed = "debhelper (>= $required)";
+    unless ($bdepends->implies($needed)) {
+	tag 'debhelper-overrides-need-versioned-build-depends',
+	"(>= $required)";
     }
-    if ($overridetargets) {
-	my $required = '7.0.50~';
-	my $needed = "debhelper (>= $required)";
-	unless ($bdepends->implies($needed)) {
-	    tag 'debhelper-overrides-need-versioned-build-depends',
-	    "(>= $required)";
-	}
+}
+
+if ($seenmaintscript) {
+    my $required = '8.1.0~';
+    my $needed = "debhelper (>= $required)";
+    unless ($bdepends->implies($needed)) {
+	tag 'debhelper-maintscript-needs-versioned-build-depends',
+	"(>= $required)";
     }
 }
 
