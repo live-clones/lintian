@@ -45,16 +45,7 @@ my $filename_configs = Lintian::Data->new ('debhelper/filename-config-files');
 # one of these commands must have a dependency on that version of debhelper or
 # newer.
 my %versions
-    = (dh                 => '7',
-       dh_auto_configure  => '7',
-       dh_auto_build      => '7',
-       dh_auto_clean      => '7',
-       dh_auto_install    => '7',
-       dh_bugfiles        => '7.2.3~',
-       dh_icons           => '5.0.51~',
-       dh_installifupdown => '5.0.44~',
-       dh_lintian         => '6.0.7~',
-       dh_prep            => '7');
+    = (dh_bugfiles        => '7.2.3~');
 
 sub run {
 
@@ -151,7 +142,6 @@ while (<RULES>) {
 	$seencommand = 1;
 	$needbuilddepends = 1;
 	$needtomodifyscripts = 1;
-	push (@versioncheck, 'dh');
     } elsif (m,^include\s+/usr/share/cdbs/1/rules/debhelper.mk,) {
 	$seencommand = 1;
 	$needbuilddepends = 1;

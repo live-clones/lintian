@@ -23,6 +23,8 @@ lintian (2.5.0~rc2) UNRELEASED; urgency=low
       replaces package-lacks-versioned-build-depends-on-debhelper old
       task of warning if a missing versioned depends may lead to a build
       failure.  Currently this is only emitted for compat 8 (or higher).
+    + [NT] Stopped emitting tags for using dh_* (and dh) if these scripts
+      is in debhelper 7 (or earlier).
   * checks/fields{,.desc}:
     + [NT] Recognise Multi-Arch as a known binary field.  (Closes: #617816)
     + [NT] Fixed typo in a tag description.
