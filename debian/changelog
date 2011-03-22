@@ -24,6 +24,8 @@ lintian (2.5.0~rc2) UNRELEASED; urgency=low
   * checks/files:
     + [NT] Also check files in /etc/cron.d for dots in filenames.  Thanks
       to Thijs Kinkhorst for the report and patch.  (Closes: #615072)
+    + [NT] Applied patch to also detect copies of CKEditor.  Thanks to
+      Jeroen Dekkers for the report and the patch.  (Closes: #616505)
   * checks/huge-usr-share:
     + [NT] Removed assumption that there is always files in usr/share.
 
