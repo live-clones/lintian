@@ -41,6 +41,10 @@ lintian (2.5.0~rc2) UNRELEASED; urgency=low
       Drung for the patch.
   * data/spelling/corrections:
     + [NT] Added more misspellings.
+  
+  * t/tests/shared-libs-la-files:
+    + [NT] Fixed an issue where files would not be included in the tarball
+      due to dpkg-source's exclude patterns.  (Closes: #619287)
 
  -- Adam D. Barratt <adam@adam-barratt.org.uk>  Fri, 25 Feb 2011 17:48:59 +0000
 
