@@ -18,6 +18,7 @@ format
 homepage
 maintainer
 origin
+package-list
 python-version
 source
 standards-version

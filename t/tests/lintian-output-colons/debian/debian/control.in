@@ -7,7 +7,7 @@ Build-Depends: debhelper (>= 7.0.50~)
 
 Package: {$srcpkg}
 Architecture: {$architecture}
-Depends: $\{misc:Depends\}, libssl0.9.8 (>= abcd)
+Depends: $\{misc:Depends\}, libssl0.9.8 (>= 0abcd)
 Essential:yes
 Section: {$section}
 Description: {$description}.

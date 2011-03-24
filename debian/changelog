@@ -39,12 +39,17 @@ lintian (2.5.0~rc2) UNRELEASED; urgency=low
   * data/changelog-file/ubuntu-dists:
     + [NT] Added oneiric as valid Ubuntu distribution.  Thanks to Benjamin
       Drung for the patch.
+  * data/common/source-fields:
+    + [NT] Added 'package-list' field, which is emitted by dpkg 1.16.0.
   * data/spelling/corrections:
     + [NT] Added more misspellings.
   
   * t/tests/shared-libs-la-files:
     + [NT] Fixed an issue where files would not be included in the tarball
       due to dpkg-source's exclude patterns.  (Closes: #619287)
+  * t/tests/*:
+    + [NT] Modified some versioned dependencies that the new dpkg will
+      not consider valid from 1.16.0.
 
  -- Adam D. Barratt <adam@adam-barratt.org.uk>  Fri, 25 Feb 2011 17:48:59 +0000
 
