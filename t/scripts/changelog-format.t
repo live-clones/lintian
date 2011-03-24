@@ -27,6 +27,8 @@ use Parse::DebianChangelog;
 my $changelog = Parse::DebianChangelog->init({ infile => 'debian/changelog' })
 		or BAIL_OUT('fatal error while loading parser');
 
+plan skip_all => 'Only valid for Debian releases'
+    if should_skip($changelog);
 my $changes = $changelog->dpkg()->{'Changes'};
 my $line = 0;
 my $prev_head = '';
@@ -92,3 +94,9 @@ foreach (split /\n/,$changes) {
 }
 
 done_testing();
+
+sub should_skip{
+    my ($changelog) = @_;
+    return $changelog->dpkg->{'Version'} =~ m/ubuntu/;
+}
+
