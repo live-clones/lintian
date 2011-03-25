@@ -1,4 +1,4 @@
-Last generated 2011-02-07
+Last generated 2011-03-25
 
 The following tags are not tested by the test suite:
 
@@ -115,14 +115,12 @@ manpages manpage-in-wrong-directory
 menu-format bad-test-in-menu-item
 menu-format duplicated-tag-in-menu-item
 menu-format menu-icon-cannot-be-parsed
-menu-format menu-icon-missing
 menu-format menu-icon-not-in-xpm-format
 menu-format menu-icon-too-big
 menu-format menu-item-contains-unknown-tag
 menu-format menu-item-creates-new-root-section
 menu-format menu-item-needs-dwww
 menu-format menu-item-uses-apps-games-section
-menu-format menu-item-uses-icon-none
 menu-format old-format-menu-file
 menu-format pkg-not-in-package-test
 menu-format unparsable-menu-item
@@ -221,6 +219,7 @@ debconf using-first-person-in-templates
 debconf using-imperative-form-in-templates
 debconf using-question-in-extended-description-in-templates
 
+debhelper package-lacks-versioned-build-depends-on-debhelper
 debhelper uses-dh-python-with-no-pycompat
 
 fields build-depends-indep-without-arch-indep
@@ -496,6 +495,7 @@ libbaz
   maintainer-shell-script-fails-syntax-check
   missing-dependency-on-perlapi
   missing-depends-line
+  package-lacks-versioned-build-depends-on-debhelper
   package-name-doesnt-match-sonames
   postinst-should-not-set-usr-doc-link
   shlib-with-executable-bit

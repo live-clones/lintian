@@ -1,0 +1,4 @@
+W: menu-none: menu-icon-missing non-existent.xpm
+W: menu-none: menu-icon-missing usr/share/menu-none/non-existent16.xpm
+W: menu-none: menu-icon-missing usr/share/menu-none/non-existent32.xpm
+W: menu-none: menu-item-uses-icon-none usr/share/menu/menu-none:4

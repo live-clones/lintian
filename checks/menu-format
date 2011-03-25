@@ -694,6 +694,8 @@ sub VerifyIcon {
 	return;
     }
 
+    $icon =~ s|^/*||og;
+
     if (not ($icon =~ m/\.xpm$/i)) {
 	tag 'menu-icon-not-in-xpm-format', $icon;
 	return;
