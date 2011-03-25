@@ -116,9 +116,7 @@ menu-format menu-icon-cannot-be-parsed
 menu-format menu-icon-not-in-xpm-format
 menu-format menu-icon-too-big
 menu-format menu-item-contains-unknown-tag
-menu-format menu-item-creates-new-root-section
 menu-format menu-item-needs-dwww
-menu-format menu-item-uses-apps-games-section
 menu-format old-format-menu-file
 menu-format pkg-not-in-package-test
 menu-format whitespace-after-continuation-character
@@ -281,10 +279,8 @@ init.d prerm-calls-updaterc.d
 menu-format deprecated-kdelnk-file
 menu-format desktop-contains-deprecated-header
 menu-format desktop-entry-missing-required-key
-menu-format menu-item-creates-new-section
 menu-format menu-item-missing-required-tag
 menu-format menu-item-needs-tag-has-unknown-value
-menu-format menu-item-uses-apps-section
 menu-format menu-item-uses-windowmanagers-section
 menu-format non-wm-in-windowmanager-menu-section
 menu-format non-wm-module-in-wm-modules-menu-section
@@ -380,10 +376,8 @@ binary
   file-name-ends-in-whitespace
   lengthy-symlink
   menu-file-in-usr-lib
-  menu-item-creates-new-section
   menu-item-missing-required-tag
   menu-item-needs-tag-has-unknown-value
-  menu-item-uses-apps-section
   menu-item-uses-windowmanagers-section
   menu-method-should-include-menu-h
   non-wm-in-windowmanager-menu-section
