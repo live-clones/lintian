@@ -1,3 +1,6 @@
+E: menu-broken: bad-test-in-menu-item usr/share/menu/menu-broken:4
+E: menu-broken: unparsable-menu-item usr/share/menu/menu-broken:9
+W: menu-broken: duplicated-tag-in-menu-item usr/share/menu/menu-broken longtitle:9
 W: menu-cmd: menu-command-not-in-package usr/share/menu/menu-cmd:3 usr/bin/not-here
 W: menu-none: menu-icon-missing non-existent.xpm
 W: menu-none: menu-icon-missing usr/share/menu-none/non-existent16.xpm

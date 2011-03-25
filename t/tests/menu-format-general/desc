@@ -3,6 +3,9 @@ Sequence: 6000
 Version: 1.0
 Description: Test menu file tags
 Test-For:
+ bad-test-in-menu-item
+ duplicated-tag-in-menu-item
  menu-command-not-in-package
  menu-icon-missing
  menu-item-uses-icon-none
+ unparsable-menu-item

@@ -112,8 +112,6 @@ manpages manpage-for-non-x11-binary-in-wrong-directory
 manpages manpage-for-x11-binary-in-wrong-directory
 manpages manpage-in-wrong-directory
 
-menu-format bad-test-in-menu-item
-menu-format duplicated-tag-in-menu-item
 menu-format menu-icon-cannot-be-parsed
 menu-format menu-icon-not-in-xpm-format
 menu-format menu-icon-too-big
@@ -123,7 +121,6 @@ menu-format menu-item-needs-dwww
 menu-format menu-item-uses-apps-games-section
 menu-format old-format-menu-file
 menu-format pkg-not-in-package-test
-menu-format unparsable-menu-item
 menu-format whitespace-after-continuation-character
 
 menus doc-base-abstract-field-is-template
@@ -284,7 +281,6 @@ init.d prerm-calls-updaterc.d
 menu-format deprecated-kdelnk-file
 menu-format desktop-contains-deprecated-header
 menu-format desktop-entry-missing-required-key
-menu-format menu-command-not-in-package
 menu-format menu-item-creates-new-section
 menu-format menu-item-missing-required-tag
 menu-format menu-item-needs-tag-has-unknown-value
@@ -383,7 +379,6 @@ binary
   executable-not-elf-or-script
   file-name-ends-in-whitespace
   lengthy-symlink
-  menu-command-not-in-package
   menu-file-in-usr-lib
   menu-item-creates-new-section
   menu-item-missing-required-tag

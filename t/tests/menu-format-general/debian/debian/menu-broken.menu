@@ -1,0 +1,9 @@
+?package(menu-broken):needs="X11" section="Applications/Programming"\
+  title="pargs (missing slash)" command="/usr/bin/pargs"\
+  longtitle="Argument printer (bad-test)"
+  icon="none"
+?package(menu-broken):needs="X11" section="Applications/Programming"\
+  title="pargs (dup)" command="/usr/bin/pargs"\
+  longtitle="Argument printer"\
+  longtitle="Argument printer"\
+  unparseable-stuff

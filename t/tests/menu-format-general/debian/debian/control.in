@@ -27,3 +27,13 @@ Description: {$description} (cmd)
  .
  Test for command not being in the package.
 
+Package: menu-broken
+Architecture: all
+Depends: $\{misc:Depends\},
+Description: {$description} (broken)
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+ .
+ Test for broken menu file.
