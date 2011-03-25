@@ -920,7 +920,7 @@ sub VerifyCmd {
 	    || $cmd =~ m,^(/bin/)?sh,
 	    || $cmd =~ m,^(/usr/bin/)?sensible-(pager|editor|browser),
 	    || grep { $info->index->{$_ . $cmd} } @path);
-    return ($okay, $cmd);
+    return ($okay, $cmd_file);
 }
 
 1;

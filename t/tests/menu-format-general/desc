@@ -3,5 +3,6 @@ Sequence: 6000
 Version: 1.0
 Description: Test menu file tags
 Test-For:
+ menu-command-not-in-package
  menu-icon-missing
  menu-item-uses-icon-none
