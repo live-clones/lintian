@@ -7,3 +7,6 @@
 ?package(menu-section):needs="X11" section="Apps/Programming"\
   title="pargs (apps/prog)" command="/usr/bin/pargs"\
   longtitle="Argument printer"
+?package(menu-section):needs="X11" section="WindowManagers/Programming"\
+  title="pargs (vm)" command="/usr/bin/pargs"\
+  longtitle="Argument printer"

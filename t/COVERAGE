@@ -117,7 +117,6 @@ menu-format menu-icon-too-big
 menu-format menu-item-contains-unknown-tag
 menu-format menu-item-needs-dwww
 menu-format old-format-menu-file
-menu-format pkg-not-in-package-test
 menu-format whitespace-after-continuation-character
 
 menus doc-base-abstract-field-is-template
@@ -278,8 +277,6 @@ menu-format desktop-contains-deprecated-header
 menu-format desktop-entry-missing-required-key
 menu-format menu-item-missing-required-tag
 menu-format menu-item-needs-tag-has-unknown-value
-menu-format menu-item-uses-windowmanagers-section
-menu-format non-wm-in-windowmanager-menu-section
 menu-format non-wm-module-in-wm-modules-menu-section
 menu-format su-to-root-with-usr-sbin
 menu-format su-wrapper-not-su-to-root
@@ -375,9 +372,7 @@ binary
   menu-file-in-usr-lib
   menu-item-missing-required-tag
   menu-item-needs-tag-has-unknown-value
-  menu-item-uses-windowmanagers-section
   menu-method-should-include-menu-h
-  non-wm-in-windowmanager-menu-section
   non-wm-module-in-wm-modules-menu-section
   old-fsf-address-in-copyright-file
   package-contains-hardlink
