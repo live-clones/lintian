@@ -45,6 +45,10 @@ lintian (2.5.0~rc2) UNRELEASED; urgency=low
     + [NT] Fixed an inconsistency in output of file names.  Thanks to
       أحمد المحمودي (Ahmed El-Mahmoudy) for the report.
       (Closes: #618921)
+  * checks/menus:
+    + [NT] Fixed check for special files that does not need to be
+      registered with doc-base (e.g. README.html).  Thanks to
+      Tanguy Ortolo for the report.  (Closes: #617266)
 
   * data/changelog-file/ubuntu-dists:
     + [NT] Added oneiric as valid Ubuntu distribution.  Thanks to Benjamin

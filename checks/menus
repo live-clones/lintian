@@ -146,10 +146,10 @@ for my $file (@{$info->sorted_index}) {
 		unless $menumethod_includes_menu_h or $pkg eq 'menu';
 	}
 	# package doc dir?
-	elsif ($file =~ m,^usr/share/doc/(.+\.(?:html|pdf))(?:\.gz)?$,
-	       and $file !~ /examples/) {
+	elsif ($file =~ m,^usr/share/doc/(?:[^/]+/)?(.+\.(?:html|pdf))(?:\.gz)?$,o) {
 	    my $name = $1;
-	    unless ($name =~ /^changelog\.html$/ or $name =~ /^README[.-]/) {
+	    unless ($name =~ m/^changelog\.html$/o or $name =~ m/^README[.-]/o
+		    or $name =~ m|examples|o) {
 		$documentation = 1;
 	    }
 	}
