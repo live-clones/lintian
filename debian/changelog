@@ -4,6 +4,8 @@ lintian (2.5.0~rc2) UNRELEASED; urgency=low
     + Added:
       - unknown-multi-arch-value
       - package-needs-versioned-debhelper-build-depends
+    + Removed:
+      - old-versioned-python-dependency
 
   * checks/binaries:
     + [ADB] Update binary-from-other-architecture's tests in line with the
@@ -28,6 +30,10 @@ lintian (2.5.0~rc2) UNRELEASED; urgency=low
   * checks/fields{,.desc}:
     + [NT] Recognise Multi-Arch as a known binary field.  (Closes: #617816)
     + [NT] Fixed typo in a tag description.
+    + [NT] Removed old-versioned-python-dependency per request of the
+      Python team.  The tag was outdated and most instances of it was
+      false positives.  Thanks to Piotr Ożarowski and Jakub Wilk for
+      the report and clarification.  (Closes: #619487)
   * checks/files:
     + [NT] Also check files in /etc/cron.d for dots in filenames.  Thanks
       to Thijs Kinkhorst for the report and patch.  (Closes: #615072)

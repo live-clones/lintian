@@ -1,4 +1,4 @@
-Last generated 2011-03-25
+Last generated 2011-03-26
 
 The following tags are not tested by the test suite:
 
@@ -60,7 +60,6 @@ fields no-package-name
 fields no-source-field
 fields no-version-field
 fields obsolete-field
-fields old-versioned-python-dependency
 fields package-depends-on-an-x-font-package
 fields package-not-lowercase
 fields package-superseded-by-perl
