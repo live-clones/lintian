@@ -37,7 +37,7 @@ if [ ! -e "$LOCPATH"/en_US.UTF-8 ] ; then
         --quiet "$LOCPATH"/en_US.UTF-8 || fail "Locale generation failed"
 fi
 
-t/runtests -k $PARALLEL_ARGS t debian/tests "$@"
+t/runtests --dump-logs -k $PARALLEL_ARGS t debian/tests "$@"
 if [ "$TAG" = "" ] ; then
     testset/runtests -k testset debian/tests "$@"
 fi

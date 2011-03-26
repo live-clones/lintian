@@ -9,6 +9,10 @@ lintian (2.5.0~rc3) UNRELEASED; urgency=low
   * data/files/triplets:
     + [NT] Updated to include armhf triplet.
 
+  * private/runtests:
+    + [NT] Added support for dumping build logs if a test fails.
+      (Closes: #621658)
+
  -- Niels Thykier <niels@thykier.net>  Thu, 07 Apr 2011 19:00:59 +0200
 
 lintian (2.5.0~rc2) unstable; urgency=low
