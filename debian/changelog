@@ -41,6 +41,10 @@ lintian (2.5.0~rc2) UNRELEASED; urgency=low
       Jeroen Dekkers for the report and the patch.  (Closes: #616505)
   * checks/huge-usr-share:
     + [NT] Removed assumption that there is always files in usr/share.
+  * checks/menu-format:
+    + [NT] Fixed an inconsistency in output of file names.  Thanks to
+      أحمد المحمودي (Ahmed El-Mahmoudy) for the report.
+      (Closes: #618921)
 
   * data/changelog-file/ubuntu-dists:
     + [NT] Added oneiric as valid Ubuntu distribution.  Thanks to Benjamin
