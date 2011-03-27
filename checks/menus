@@ -203,7 +203,7 @@ if ($docbase_file) {
     }
     closedir DOCBASEDIR;
 } elsif ($documentation) {
-    if ($pkg =~ /^libghc6-.*-doc$/) {
+    if ($pkg =~ /^libghc6?-.*-doc$/) {
         # This is the library documentation for a haskell library. Haskell
         # libraries register their documentation via the ghc compiler's
         # documetation registration mechanism.  See bug #586877.
