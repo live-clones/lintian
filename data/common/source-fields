@@ -9,6 +9,7 @@ build-conflicts
 build-conflicts-indep
 build-depends
 build-depends-indep
+built-using
 checksums-md5
 checksums-sha1
 checksums-sha256

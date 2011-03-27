@@ -62,7 +62,9 @@ lintian (2.5.0~rc2) UNRELEASED; urgency=low
     + [NT] Added oneiric as valid Ubuntu distribution.  Thanks to Benjamin
       Drung for the patch.
   * data/common/source-fields:
-    + [NT] Added 'package-list' field, which is emitted by dpkg 1.16.0.
+    + [NT] Added 'package-list' and 'built-using' fields to known list of
+      source fields.  These fields are introduced in/accepted by dpkg
+      1.16.0.
   * data/spelling/corrections:
     + [NT] Added more misspellings.
   
