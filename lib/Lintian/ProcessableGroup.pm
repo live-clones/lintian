@@ -229,6 +229,25 @@ sub get_changes_processable {
     return $self->{changes};
 }
 
+=item $group->get_binary_processables()
+
+Returns all binary (and udeb) processables in $group.
+
+If $group does not have any binary processables then an empty list (or a
+ref to an empty list) is returned (based on context).
+
+=cut
+
+sub get_binary_processables {
+    my ($self) = @_;
+    my @result = ();
+    foreach my $type (qw(binary udeb)){
+        push @result, values %{$self->{$type}} if (exists $self->{$type});
+    }
+    return wantarray ? @result : \@result;
+}
+
+
 =back
 
 =head1 AUTHOR
