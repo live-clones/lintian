@@ -78,7 +78,7 @@ our %KNOWN_BINARY_FIELDS = map { $_ => 1 }
      'recommends', 'suggests', 'enhances', 'conflicts', 'provides',
      'replaces', 'breaks', 'essential', 'maintainer', 'section', 'priority',
      'source', 'description', 'installed-size', 'python-version', 'homepage',
-     'bugs', 'origin', 'multi-arch');
+     'bugs', 'origin', 'multi-arch', 'built-using');
 
 # The Ubuntu original-maintainer field is handled separately.
 our %KNOWN_UDEB_FIELDS = map { $_ => 1 }
@@ -86,7 +86,7 @@ our %KNOWN_UDEB_FIELDS = map { $_ => 1 }
      'recommends', 'enhances', 'provides', 'replaces', 'breaks', 'replaces',
      'maintainer', 'section', 'priority', 'source', 'description',
      'installed-size', 'kernel-version', 'installer-menu-item', 'bugs',
-     'origin');
+     'origin', 'built-using');
 
 our %known_obsolete_fields = map { $_ => 1 }
     ('revision', 'package-revision', 'package_revision',

@@ -36,6 +36,8 @@ lintian (2.5.0~rc2) UNRELEASED; urgency=low
       the report and clarification.  (Closes: #619487)
     + [NT] Accepted patch from Joachim Breitner to support new Haskell
       package naming scheme.
+    + [NT] Added Built-Using as a known binary and udeb field.  This
+      field is supported with dpkg 1.16.0.
   * checks/files:
     + [NT] Also check files in /etc/cron.d for dots in filenames.  Thanks
       to Thijs Kinkhorst for the report and patch.  (Closes: #615072)
