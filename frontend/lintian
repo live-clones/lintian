@@ -75,7 +75,7 @@ my @display_level;
 my %display_source = ();
 my %suppress_tags = ();
 
-my $schedule;
+my $pool;
 
 my $action;
 my $checks;
@@ -573,12 +573,12 @@ require Checker;
 require Lintian::Collect;
 require Lintian::DepMap::Properties;
 require Lintian::Data;
-require Lintian::Schedule;
 require Lintian::Output;
 import Lintian::Output qw(:messages);
 require Lintian::Command::Simple;
 require Lintian::Command;
 import Lintian::Command qw(spawn reap);
+require Lintian::ProcessablePool;
 require Lintian::Tags;
 import Lintian::Tags qw(tag);
 
@@ -706,34 +706,13 @@ $LINTIAN_LAB = $LAB->{dir};
 
 # {{{ Compile list of files to process
 
-$schedule = new Lintian::Schedule(verbose => $verbose);
+$pool = Lintian::ProcessablePool->new();
 # process package/file arguments
 while (my $arg = shift) {
     # file?
     if (-f $arg) {
-	# $arg contains absolute dir spec?
-	unless ($arg =~ m,^/,) {
-	    $arg = "$cwd/$arg";
-	}
-
-	# .deb file?
-	if ($arg =~ /\.deb$/) {
-	    $schedule->add_deb('b', $arg)
-		or warning("$arg is a zero-byte file, skipping");
-	}
-	# .udeb file?
-	elsif ($arg =~ /\.udeb$/) {
-	    $schedule->add_deb('u', $arg)
-		or warning("$arg is a zero-byte file, skipping");
-	}
-	# .dsc file?
-	elsif ($arg =~ /\.dsc$/) {
-	    $schedule->add_dsc($arg)
-		or warning("$arg is a zero-byte file, skipping");
-	}
-	# .changes file?
-	elsif ($arg =~ /\.changes$/) {
-	    $schedule->add_changes($arg);
+	if ($arg =~ m/\.(?:u?deb|dsc|changes)$/o){
+	    $pool->add_file($arg);
 	} else {
 	    fail("bad package file name $arg (neither .deb, .udeb or .dsc file)");
 	}
@@ -759,22 +738,19 @@ while (my $arg = shift) {
 
 	    if (($pkg_mode eq 'b') or ($pkg_mode eq 'a')) {
 		if ($binary_info{$arg}) {
-		    $schedule->add_file('b', "$LINTIAN_ARCHIVEDIR/$binary_info{$arg}->{'file'}",
-					%{$binary_info{$arg}});
+		    $pool->add_file("$LINTIAN_ARCHIVEDIR/$binary_info{$arg}->{'file'}");
 		    $found = 1;
 		}
 	    }
 	    if (($pkg_mode eq 'u') or ($pkg_mode eq 'a')) {
 		if ($udeb_info{$arg}) {
-		    $schedule->add_file('u', "$LINTIAN_ARCHIVEDIR/$udeb_info{$arg}->{'file'}",
-					%{$udeb_info{$arg}});
+		    $pool->add_file("$LINTIAN_ARCHIVEDIR/$udeb_info{$arg}->{'file'}");
 		    $found = 1;
 		}
 	    }
 	    if (($pkg_mode eq 's') or ($pkg_mode eq 'a')) {
 		if ($source_info{$arg}) {
-		    $schedule->add_file('s', "$LINTIAN_ARCHIVEDIR/$source_info{$arg}->{'file'}",
-					%{$source_info{$arg}});
+		    $pool->add_file("$LINTIAN_ARCHIVEDIR/$source_info{$arg}->{'file'}");
 		    $found = 1;
 		}
 	    }
@@ -815,14 +791,15 @@ while (my $arg = shift) {
 	    }
 	}
 
+	# FIXME: Use Lab to find the deb/dsc instead?
 	if (($pkg_mode eq 'b') or (($pkg_mode eq 'a') and (-d $b))) {
-	    $schedule->add_file('b', get_bin_info_from_lab($b));
+	    $pool->add_file("$b/deb");
 	}
 	if (($pkg_mode eq 's') or (($pkg_mode eq 'a') and (-d $s))) {
-	    $schedule->add_file('s', get_src_info_from_lab($s));
+	    $pool->add_file("$s/dsc");
 	}
 	if (($pkg_mode eq 'u') or (($pkg_mode eq 'a') and (-d $u))) {
-	    $schedule->add_file('u', get_bin_info_from_lab($u));
+	    $pool->add_file("$u/deb");
 	}
     }
 }
@@ -838,37 +815,35 @@ if ($check_everything) {
     if (($pkg_mode eq 'a') or ($pkg_mode eq 's')) {
 	for my $arg (sort keys %source_info) {
 	    debug_msg(1, "doing stuff with $LINTIAN_ARCHIVEDIR/$source_info{$arg}->{'file'}");
-	    $schedule->add_file('s', "$LINTIAN_ARCHIVEDIR/$source_info{$arg}->{'file'}",
-				%{$source_info{$arg}});
+	    $pool->add_file("$LINTIAN_ARCHIVEDIR/$source_info{$arg}->{'file'}");
 	}
     }
     if (($pkg_mode eq 'a') or ($pkg_mode eq 'b')) {
 	for my $arg (sort keys %binary_info) {
 	    debug_msg(1, "doing stuff with $LINTIAN_ARCHIVEDIR/$binary_info{$arg}->{'file'}");
-	    $schedule->add_file('b', "$LINTIAN_ARCHIVEDIR/$binary_info{$arg}->{'file'}",
-				%{$binary_info{$arg}});
+	    $pool->add_file("$LINTIAN_ARCHIVEDIR/$binary_info{$arg}->{'file'}");
 	}
     }
     if (($pkg_mode eq 'a') or ($pkg_mode eq 'u')) {
 	for my $arg (sort keys %udeb_info) {
 	    debug_msg(1, "doing stuff with $LINTIAN_ARCHIVEDIR/$udeb_info{$arg}->{'file'}");
-	    $schedule->add_file('u', "$LINTIAN_ARCHIVEDIR/$udeb_info{$arg}->{'file'}",
-				%{$udeb_info{$arg}});
+	    $pool->add_file("$LINTIAN_ARCHIVEDIR/$udeb_info{$arg}->{'file'}");
 	}
     }
-
-    # package list still empty?
-    unless ($schedule->count) {
-	warning('no packages found in distribution directory');
+} elsif ($packages_file) {
+    # process all packages listed in packages file?
+    open(my $pkgin, '<', $packages_file) or fail("Reading $packages_file: $!");
+    while (my $line = <$pkgin>) {
+	chomp($line);
+	my (undef, undef, undef, $file) = split(/\s+/, $line, 4);
+	$pool->add_file($file);
     }
-} elsif ($packages_file) {	# process all packages listed in packages file?
-    $schedule->add_pkg_list($packages_file);
+    close($pkgin);
 }
 # }}}
 
 # {{{ Some silent exit
-my $count = $schedule->count;
-unless ($count) {
+if ($pool->empty()) {
     v_msg('No packages selected.');
     exit $exit_code;
 }
@@ -1001,7 +976,6 @@ for my $c (keys %enabled_checks) {
 # }}}
 
 # {{{ Okay, now really processing the packages in one huge loop
-v_msg(sprintf('Processing %d packages...', $count));
 debug_msg(1,
 	  "Selected action: $action",
 	  sprintf('Requested data to collect: %s', join(',',sort keys %unpack_infos)),
@@ -1019,21 +993,29 @@ scalar($map->missing()) == 0
 
 if($action eq 'remove'){
     # Handle remove here - makes the unpack/check loop simpler.
-    foreach my $pkg_info ($schedule->get_all) {
-	my ($type, $pkg, $ver, $arch, $file) =
-	    @$pkg_info{qw(type package version architecture file)};
-	my $lpkg;
-	eval{ $lpkg = $LAB->get_lab_package($pkg, $ver, $type, $file); };
-	if(!defined($lpkg)){
-	    my $err = '.';
-	    $err = ": $@" if(defined($@));
-	    warning("skipping $action of $type package $pkg$err");
-	    $exit_code = 2;
-	    next;
-	}
-	$TAGS->file_start($file, $pkg, $ver, $arch, $lpkg->pkg_type());
-	unless($lpkg->delete_lab_entry()){
-	    $exit_code = 2;
+    foreach my $group ($pool->get_groups()){
+	foreach my $proc ($group->get_processables()){
+	    my $lpkg;
+	    my $pkg_name = $proc->pkg_name();
+	    my $pkg_ver  = $proc->pkg_version();
+	    my $pkg_type = $proc->pkg_type();
+	    my $pkg_path = $proc->pkg_path();
+	    eval{
+		$lpkg = $LAB->get_lab_package($pkg_name, $pkg_ver,
+					      $pkg_type, $pkg_path);
+	    };
+	    if(!defined($lpkg)){
+		my $err = '.';
+		$err = ": $@" if(defined($@));
+		warning("skipping $action of $pkg_type package ${pkg_name}$err");
+		$exit_code = 2;
+		next;
+	    }
+	    $TAGS->file_start($pkg_path, $pkg_name, $pkg_ver,
+			      $proc->pkg_arch(), $pkg_type);
+	    unless($lpkg->delete_lab_entry()){
+		$exit_code = 2;
+	    }
 	}
     }
     $TAGS->file_end();
@@ -1041,31 +1023,42 @@ if($action eq 'remove'){
 }
 
 # Now action is always either "check" or "unpack"
-
-my %overrides;
+# these two variables are used by process_package
+#  and need to persist between invocations.
 my %running_jobs;
-PACKAGE:
-foreach my $pkg_info ($schedule->get_all) {
-    my ($type, $pkg, $ver, $arch, $file) =
-	@$pkg_info{qw(type package version architecture file)};
+my %overrides;
+
+foreach my $gname (sort $pool->get_group_names()) {
+    my $group = $pool->get_group($gname);
+    foreach my $proc ($group->get_processables()){
+	process_package($proc, $action);
+    }
+}
+
+sub process_package {
+    my ($proc, $action) = @_;
+    my $pkg_name = $proc->pkg_name();
+    my $pkg_ver  = $proc->pkg_version();
+    my $pkg_type = $proc->pkg_type();
+    my $pkg_path = $proc->pkg_path();
+    my $pkg_arch = $proc->pkg_arch();
     my $lpkg;
-    my $long_type;
     my $base;
     my $info;
     my $loaded_overrides = 0;
-    eval{ $lpkg = $LAB->get_lab_package($pkg, $ver, $type, $file); };
+    eval{
+	$lpkg = $LAB->get_lab_package($pkg_name, $pkg_ver,
+				      $pkg_type, $pkg_path);
+    };
     if(!defined($lpkg)){
 	my $err = '.';
 	$err = ": $@" if(defined($@));
-	warning("skipping $action of $type package $pkg$err");
+	warning("skipping $action of $pkg_type package ${pkg_name}$err");
 	$exit_code = 2;
-	next PACKAGE;
+	return 0;
     }
 
-    # The Lab will normalize it.
-    $long_type = $lpkg->pkg_type();
-
-    $TAGS->file_start($file, $pkg, $ver, $arch, $long_type);
+    $TAGS->file_start($pkg_path, $pkg_name, $pkg_ver, $pkg_arch, $pkg_type);
     $map->initialise();
 
     # Kill pending jobs, if any
@@ -1079,18 +1072,18 @@ foreach my $pkg_info ($schedule->get_all) {
     # Ensure it has been unpacked
     unless ($lpkg->create_entry()){
 	warning('could not create the package entry in the lab',
-		"skipping $action of $long_type package $pkg");
+		"skipping $action of $pkg_type package $pkg_name");
 	$exit_code = 2;
-	next PACKAGE;
+	return 0;
     }
-    $info = Lintian::Collect->new($pkg, $long_type);
+    $info = Lintian::Collect->new($pkg_name, $pkg_type);
 
     # chdir to base directory
     unless (chdir($base)) {
 	warning("could not chdir into directory $base: $!",
-		"skipping $action of $long_type package $pkg");
+		"skipping $action of $pkg_type package $pkg_name");
 	$exit_code = 2;
-	next PACKAGE;
+	return 0;
     }
 
     while ($map->pending) {
@@ -1101,7 +1094,7 @@ foreach my $pkg_info ($schedule->get_all) {
 		my $ci = $collection_info{$coll};
 
 		# current type?
-		unless (exists $ci->{'type'}{$type}) {
+		unless (exists $ci->{'type'}{$pkg_type}) {
 		    $map->satisfy($req);
 		    next;
 		}
@@ -1128,11 +1121,11 @@ foreach my $pkg_info ($schedule->get_all) {
 		debug_msg(1, "Collecting info: $coll ...");
 		my $script = "$LINTIAN_ROOT/collection/$ci->{'script'}";
 		my $cmd = Lintian::Command::Simple->new();
-		unless ($cmd->background($script, $pkg, $long_type) > 0) {
-		    warning("collect info $coll about package $pkg failed",
-			    "skipping $action of $long_type package $pkg");
+		unless ($cmd->background($script, $pkg_name, $pkg_type) > 0) {
+		    warning("collect info $coll about package $pkg_name failed",
+			    "skipping $action of $pkg_type package $pkg_name");
 		    $exit_code = 2;
-		    next PACKAGE;
+		    return 0;
 		}
 		$running_jobs{$coll} = $cmd;
 	    } elsif ($ri->{'type'} eq 'check') {
@@ -1142,20 +1135,20 @@ foreach my $pkg_info ($schedule->get_all) {
 		my $ci = $check_info{$check};
 
 		# current type?
-		unless (exists $ci->{'type'}{$type}) {
+		unless (exists $ci->{'type'}{$pkg_type}) {
 		    $map->satisfy($req);
 		    next;
 		}
 
 		debug_msg(1, "Running check: $check ...");
-		my $returnvalue = Checker::runcheck($pkg, $long_type, $info, $check);
+		my $returnvalue = Checker::runcheck($pkg_name, $pkg_type, $info, $check);
 		# Set exit_code correctly if there was not yet an exit code
 		$exit_code = $returnvalue unless $exit_code;
 
 		if ($returnvalue == 2) {
-		    warning("skipping $action of $long_type package $pkg");
+		    warning("skipping $action of $pkg_type package $pkg_name");
 		    $exit_code = 2;
-		    next PACKAGE;
+		    return 0;
 		}
 		$map->satisfy($req);
 	    }
@@ -1175,10 +1168,10 @@ foreach my $pkg_info ($schedule->get_all) {
 		close(VERSION);
 		debug_msg(1, "Collection script $coll done");
 	    } else {
-		warning("collect info $coll about package $pkg failed");
-		warning("skipping $action of $long_type package $pkg");
+		warning("collect info $coll about package $pkg_name failed");
+		warning("skipping $action of $pkg_type package $pkg_name");
 		$exit_code = 2;
-		next PACKAGE;
+		return 0;
 	    }
 
 	    $map->satisfy('coll-' . $coll);
@@ -1201,7 +1194,7 @@ foreach my $pkg_info ($schedule->get_all) {
 
     if ($action eq 'check') {
 	unless ($exit_code) {
-	    my $stats = $TAGS->statistics($file);
+	    my $stats = $TAGS->statistics($pkg_path);
 	    if ($stats->{types}{E}) {
 		$exit_code = 1;
 	    } elsif ($fail_on_warnings && $stats->{types}{W}) {
@@ -1211,7 +1204,7 @@ foreach my $pkg_info ($schedule->get_all) {
 
 	# report unused overrides
 	if (not $no_override) {
-	    my $overrides = $TAGS->overrides($file);
+	    my $overrides = $TAGS->overrides($pkg_path);
 
 	    for my $tag (sort keys %$overrides) {
 		next if $TAGS->suppressed($tag);
@@ -1232,7 +1225,7 @@ foreach my $pkg_info ($schedule->get_all) {
 
 	# Report override statistics.
 	if (not $no_override and not $show_overrides) {
-	    my $stats = $TAGS->statistics($file);
+	    my $stats = $TAGS->statistics($pkg_path);
 	    my $errors = $stats->{overrides}{types}{E} || 0;
 	    my $warnings = $stats->{overrides}{types}{W} || 0;
 	    my $info = $stats->{overrides}{types}{I} || 0;
@@ -1245,9 +1238,9 @@ foreach my $pkg_info ($schedule->get_all) {
     # chdir to lintian root directory (to unlock $base so it can be removed below)
     unless (chdir($LINTIAN_ROOT)) {
 	warning("could not chdir into directory $LINTIAN_ROOT: $!",
-		"skipping $action of $long_type package $pkg");
+		"skipping $action of $pkg_type package $pkg_name");
 	$exit_code = 2;
-	next PACKAGE;
+	return 0;
     }
 
     # if the package's basedir was not removed then run the
@@ -1260,14 +1253,14 @@ foreach my $pkg_info ($schedule->get_all) {
 		next unless (-f "$base/.${coll}-$ci->{'version'}");
 		my $script = "$LINTIAN_ROOT/collection/$ci->{'script'}";
 		debug_msg(1, "Auto removing: $ci->{'script'} ...");
-		unless (Lintian::Command::Simple::run($script, $pkg, "remove-$long_type") == 0) {
-		    warning("removing collect info $coll about package $pkg failed",
-			    "skipping cleanup of $long_type package $pkg");
+		unless (Lintian::Command::Simple::run($script, $pkg_name, "remove-${pkg_type}") == 0) {
+		    warning("removing collect info $coll about package $pkg_name failed",
+			    "skipping cleanup of $pkg_type package $pkg_name");
 		    $exit_code = 2;
-		    next PACKAGE;
+		    return 0;
 		}
 		unlink("$base/.${coll}-$ci->{'version'}")
-		    or fail("failed to remove status file of collect info $coll about package $pkg");
+		    or fail("failed to remove status file of collect info $coll about package $pkg_name");
 	    }
 	}
 	chdir($LINTIAN_ROOT);
@@ -1276,7 +1269,9 @@ foreach my $pkg_info ($schedule->get_all) {
     # All successful, make sure to record it so we do not recheck the same package
     # in a later run (mostly for archive-wide checks).
     $lpkg->update_status_file($LINTIAN_VERSION);
-}
+    return 1;
+} ## End of process_package sub
+
 $TAGS->file_end();
 
 if ($action eq 'check' and not $no_override and not $show_overrides) {
@@ -1357,14 +1352,9 @@ sub load_collections{
 	# convert Type:
 	my %type;
 	for (split(/\s*,\s*/o,$p->{'type'})) {
-	    if ($_ eq 'binary') {
-		$type{'b'} = 1;
-	    } elsif ($_ eq 'source') {
-		$type{'s'} = 1;
-	    } elsif ($_ eq 'udeb') {
-		$type{'u'} = 1;
-	    } elsif ($_ eq 'changes') {
-		$type{'c'} = 1;
+	    if ($_ eq 'binary' || $_ eq 'source' || $_ eq 'udeb'
+		|| $_ eq 'changes') {
+		$type{$_} = 1;
 	    } else {
 		fail("unknown type $_ specified in description file $f");
 	    }
@@ -1425,18 +1415,13 @@ sub load_checks{
 	my %type;
 	# convert Type:
 	for (split(/\s*,\s*/o,$p->{'type'})) {
-	    if ($_ eq 'binary') {
-		$type{'b'} = 1;
-	    } elsif ($_ eq 'source') {
-		$type{'s'} = 1;
-	    } elsif ($_ eq 'udeb') {
-		$type{'u'} = 1;
-	    } elsif ($_ eq 'changes') {
-		$type{'c'} = 1;
+	    if ($_ eq 'binary' || $_ eq 'source' || $_ eq 'udeb'
+		|| $_ eq 'changes') {
+		$type{$_} = 1;
 	    } else {
 		fail("unknown type $_ specified in description file $f");
 	    }
-    }
+	}
 	$p->{'type'} = \%type;
 
 	set_value($f,$p,'abbrev',$secs[0],1);
