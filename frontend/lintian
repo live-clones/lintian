@@ -1468,58 +1468,6 @@ sub sort_coll {
     return ($ap->{'name'} cmp $bp->{'name'});
 }
 
-# -------------------------------
-
-# get package name, version, and file name from the lab
-sub get_bin_info_from_lab {
-    my ($base_dir) = @_;
-    my ($pkg,$ver,$arch,$file);
-
-    ($pkg = read_file("$base_dir/fields/package"))
-	or fail("cannot read file $base_dir/fields/package: $!");
-
-    ($ver = read_file("$base_dir/fields/version"))
-	or fail("cannot read file $base_dir/fields/version: $!");
-
-    ($arch = read_file("$base_dir/fields/architecture"))
-	or fail("cannot read file $base_dir/fields/architecture: $!");
-
-    ($file = readlink("$base_dir/deb"))
-	or fail("cannot read link $base_dir/deb: $!");
-
-    return ($file, package => $pkg, version => $ver, architecture => $arch);
-}
-
-# get package name, version, and file name from the lab
-sub get_src_info_from_lab {
-    my ($base_dir) = @_;
-    my ($pkg,$ver,$file);
-
-    ($pkg = read_file("$base_dir/fields/source"))
-	or fail("cannot read file $base_dir/fields/source: $!");
-
-    ($ver = read_file("$base_dir/fields/version"))
-	or fail("cannot read file $base_dir/fields/version: $!");
-
-    ($file = readlink("$base_dir/dsc"))
-	or fail("cannot read link $base_dir/dsc: $!");
-
-    return ($file, source => $pkg, version => $ver);
-}
-
-# -------------------------------
-
-# read first line of a file
-sub read_file {
-    my $t;
-
-    open(T, '<', $_[0]) or return;
-    chop($t = <T>);
-    close(T) or return;
-
-    return $t;
-}
-
 # }}}
 
 # {{{ Exit handler.
