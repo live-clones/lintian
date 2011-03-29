@@ -1035,6 +1035,202 @@ foreach my $gname (sort $pool->get_group_names()) {
     }
 }
 
+$TAGS->file_end();
+
+if ($action eq 'check' and not $no_override and not $show_overrides) {
+    my $errors = $overrides{errors} || 0;
+    my $warnings = $overrides{warnings} || 0;
+    my $info = $overrides{info} || 0;
+    my $total = $errors + $warnings + $info;
+    if ($total > 0) {
+	my $total = ($total == 1)
+	    ? "$total tag overridden"
+	    : "$total tags overridden";
+	my @output;
+	if ($errors) {
+	    push (@output, ($errors == 1) ? "$errors error" : "$errors errors");
+	}
+	if ($warnings) {
+	    push (@output, ($warnings == 1) ? "$warnings warning" : "$warnings warnings");
+	}
+	if ($info) {
+	    push (@output, "$info info");
+	}
+	msg("$total (". join (', ', @output). ')');
+    }
+}
+
+# }}}
+
+
+# Wait for any remaining jobs - %running_jobs will usually be empty here
+# unless we had an issue examining the last package.  We patiently wait
+# for them here; if the user cannot be bothered to wait, he/she can send
+# us a signal and the END handler will kill any remaining jobs.
+while (my ($coll, undef) = Lintian::Command::Simple::wait(\%running_jobs)) {
+    delete $running_jobs{$coll};
+}
+%running_jobs = ();
+
+exit $exit_code;
+
+# {{{ Some subroutines
+
+#  Check to make sure there are packages to check.
+sub set_value {
+    my ($f,$target,$field,$source,$required) = @_;
+    if ($required and not defined($source->{$field})) {
+	fail("description file $f does not define required tag $field");
+    }
+    $target->{$field} = $source->{$field};
+    delete $source->{$field};
+}
+
+# Given a ref to %collection_info and the path to the collection
+# directory, this will load all the collection information into
+# %collection_info.
+sub load_collections{
+    my ($cinfo, $dirname) = @_;
+    opendir(my $dir, $dirname)
+	or fail("cannot read directory $dirname");
+
+    for my $f (readdir($dir)) {
+	next if $f =~ /^\./;
+	next unless $f =~ /\.desc$/;
+
+	debug_msg(2, "Reading collector description file $f ...");
+	my @secs = read_dpkg_control("$dirname/$f");
+	my $script;
+	($#secs+1 == 1)
+	    or fail("syntax error in description file $f: too many sections");
+
+	($script = $secs[0]->{'collector-script'})
+	    or fail("error in description file $f: `Collector-Script:' not defined");
+
+	delete $secs[0]->{'collector-script'};
+	$cinfo->{$script}->{'script'} = $script;
+	my $p = $cinfo->{$script};
+
+	set_value($f, $p,'type',$secs[0],1);
+	# convert Type:
+	my %type;
+	for (split(/\s*,\s*/o,$p->{'type'})) {
+	    if ($_ eq 'binary' || $_ eq 'source' || $_ eq 'udeb'
+		|| $_ eq 'changes') {
+		$type{$_} = 1;
+	    } else {
+		fail("unknown type $_ specified in description file $f");
+	    }
+	}
+	$p->{'type'} = \%type;
+
+	set_value($f,$p,'version',$secs[0],1);
+	set_value($f,$p,'auto-remove',$secs[0],0);
+
+	if (exists $secs[0]->{'needs-info'} && defined $secs[0]->{'needs-info'}) {
+	    for (split(/\s*,\s*/o,$secs[0]->{'needs-info'})) {
+		push @{$p->{'needs-info'}}, $_;
+	    }
+	    delete $secs[0]->{'needs-info'};
+	}
+
+	# ignore Info: and other fields for now
+	delete $secs[0]->{'info'};
+	delete $secs[0]->{'author'};
+
+	for (keys %{$secs[0]}) {
+	    warning("unused tag $_ in description file $f");
+	}
+
+	debug_msg(2, map( { "$_: $p->{$_}" if defined($p->{$_}) } sort keys %$p ));
+    }
+
+    closedir($dir);
+}
+
+# Given a ref to %check_info, $TAGS  and the path to the checks
+# directory, this will load all the information about checks into
+# %check_info.
+sub load_checks{
+    my ($cinfo, $tags, $dirname) = @_;
+    opendir(my $dir, $dirname)
+	or fail("cannot read directory $dirname");
+
+    for my $f (readdir($dir)) {
+	next if $f =~ /^\./;
+	next unless $f =~ /\.desc$/;
+	debug_msg(2, "Reading checker description file $f ...");
+
+	my @secs = read_dpkg_control("$dirname/$f");
+	my $script;
+	($script = $secs[0]->{'check-script'})
+	    or fail("error in description file $f: `Check-Script:' not defined");
+
+	# ignore check `lintian' (this check is a special case and contains the
+	# tag info for the lintian frontend--this script here)
+	next if $script eq 'lintian';
+
+	delete $secs[0]->{'check-script'};
+	$cinfo->{$script}->{'script'} = $script;
+	my $p = $cinfo->{$script};
+
+	set_value($f,$p,'type',$secs[0],1);
+	my %type;
+	# convert Type:
+	for (split(/\s*,\s*/o,$p->{'type'})) {
+	    if ($_ eq 'binary' || $_ eq 'source' || $_ eq 'udeb'
+		|| $_ eq 'changes') {
+		$type{$_} = 1;
+	    } else {
+		fail("unknown type $_ specified in description file $f");
+	    }
+	}
+	$p->{'type'} = \%type;
+
+	set_value($f,$p,'abbrev',$secs[0],1);
+
+	if (exists $secs[0]->{'needs-info'} && defined $secs[0]->{'needs-info'}) {
+	    for (split(/\s*,\s*/o,$secs[0]->{'needs-info'})) {
+		push @{$p->{'needs-info'}}, $_;
+		$p->{$_} = 1;
+	    }
+	    delete $secs[0]->{'needs-info'};
+	}
+
+	# ignore Info: and other fields for now...
+	delete $secs[0]->{'info'};
+	delete $secs[0]->{'standards-version'};
+	delete $secs[0]->{'author'};
+
+	for (keys %{$secs[0]}) {
+	    warning("unused tag $_ in description file $f");
+	}
+
+	debug_msg(2, map( { "$_: $p->{$_}" } sort keys %$p ));
+
+	shift(@secs);
+	$p->{'requested-tags'} = 0;
+	foreach my $tag (@secs) {
+	    $p->{'requested-tags'}++ if $tags->displayed($tag->{'tag'});
+	}
+    }
+    closedir($dir);
+}
+
+
+sub sort_coll {
+    my ($ap, $bp);
+    $ap = $map->getProp($a);
+    $bp = $map->getProp($b);
+    # override-file should be the first script to be run
+    return -1 if ($ap->{'name'} eq 'override-file');
+    return 1 if ($bp->{'name'} eq 'override-file');
+    # sort collection scripts first
+    return -1 if ($ap->{'type'} eq 'collection' && $bp->{'type'} ne 'collection');
+    return 1 if ($bp->{'type'} eq 'collection' && $ap->{'type'} ne 'collection');
+    return ($ap->{'name'} cmp $bp->{'name'});
+}
+
 sub process_package {
     my ($proc, $action) = @_;
     my $pkg_name = $proc->pkg_name();
@@ -1270,202 +1466,6 @@ sub process_package {
     # in a later run (mostly for archive-wide checks).
     $lpkg->update_status_file($LINTIAN_VERSION);
     return 1;
-} ## End of process_package sub
-
-$TAGS->file_end();
-
-if ($action eq 'check' and not $no_override and not $show_overrides) {
-    my $errors = $overrides{errors} || 0;
-    my $warnings = $overrides{warnings} || 0;
-    my $info = $overrides{info} || 0;
-    my $total = $errors + $warnings + $info;
-    if ($total > 0) {
-	my $total = ($total == 1)
-	    ? "$total tag overridden"
-	    : "$total tags overridden";
-	my @output;
-	if ($errors) {
-	    push (@output, ($errors == 1) ? "$errors error" : "$errors errors");
-	}
-	if ($warnings) {
-	    push (@output, ($warnings == 1) ? "$warnings warning" : "$warnings warnings");
-	}
-	if ($info) {
-	    push (@output, "$info info");
-	}
-	msg("$total (". join (', ', @output). ')');
-    }
-}
-
-# }}}
-
-
-# Wait for any remaining jobs - %running_jobs will usually be empty here
-# unless we had an issue examining the last package.  We patiently wait
-# for them here; if the user cannot be bothered to wait, he/she can send
-# us a signal and the END handler will kill any remaining jobs.
-while (my ($coll, undef) = Lintian::Command::Simple::wait(\%running_jobs)) {
-    delete $running_jobs{$coll};
-}
-%running_jobs = ();
-
-exit $exit_code;
-
-# {{{ Some subroutines
-
-#  Check to make sure there are packages to check.
-sub set_value {
-    my ($f,$target,$field,$source,$required) = @_;
-    if ($required and not defined($source->{$field})) {
-	fail("description file $f does not define required tag $field");
-    }
-    $target->{$field} = $source->{$field};
-    delete $source->{$field};
-}
-
-# Given a ref to %collection_info and the path to the collection
-# directory, this will load all the collection information into
-# %collection_info.
-sub load_collections{
-    my ($cinfo, $dirname) = @_;
-    opendir(my $dir, $dirname)
-	or fail("cannot read directory $dirname");
-
-    for my $f (readdir($dir)) {
-	next if $f =~ /^\./;
-	next unless $f =~ /\.desc$/;
-
-	debug_msg(2, "Reading collector description file $f ...");
-	my @secs = read_dpkg_control("$dirname/$f");
-	my $script;
-	($#secs+1 == 1)
-	    or fail("syntax error in description file $f: too many sections");
-
-	($script = $secs[0]->{'collector-script'})
-	    or fail("error in description file $f: `Collector-Script:' not defined");
-
-	delete $secs[0]->{'collector-script'};
-	$cinfo->{$script}->{'script'} = $script;
-	my $p = $cinfo->{$script};
-
-	set_value($f, $p,'type',$secs[0],1);
-	# convert Type:
-	my %type;
-	for (split(/\s*,\s*/o,$p->{'type'})) {
-	    if ($_ eq 'binary' || $_ eq 'source' || $_ eq 'udeb'
-		|| $_ eq 'changes') {
-		$type{$_} = 1;
-	    } else {
-		fail("unknown type $_ specified in description file $f");
-	    }
-	}
-	$p->{'type'} = \%type;
-
-	set_value($f,$p,'version',$secs[0],1);
-	set_value($f,$p,'auto-remove',$secs[0],0);
-
-	if (exists $secs[0]->{'needs-info'} && defined $secs[0]->{'needs-info'}) {
-	    for (split(/\s*,\s*/o,$secs[0]->{'needs-info'})) {
-		push @{$p->{'needs-info'}}, $_;
-	    }
-	    delete $secs[0]->{'needs-info'};
-	}
-
-	# ignore Info: and other fields for now
-	delete $secs[0]->{'info'};
-	delete $secs[0]->{'author'};
-
-	for (keys %{$secs[0]}) {
-	    warning("unused tag $_ in description file $f");
-	}
-
-	debug_msg(2, map( { "$_: $p->{$_}" if defined($p->{$_}) } sort keys %$p ));
-    }
-
-    closedir($dir);
-}
-
-# Given a ref to %check_info, $TAGS  and the path to the checks
-# directory, this will load all the information about checks into
-# %check_info.
-sub load_checks{
-    my ($cinfo, $tags, $dirname) = @_;
-    opendir(my $dir, $dirname)
-	or fail("cannot read directory $dirname");
-
-    for my $f (readdir($dir)) {
-	next if $f =~ /^\./;
-	next unless $f =~ /\.desc$/;
-	debug_msg(2, "Reading checker description file $f ...");
-
-	my @secs = read_dpkg_control("$dirname/$f");
-	my $script;
-	($script = $secs[0]->{'check-script'})
-	    or fail("error in description file $f: `Check-Script:' not defined");
-
-	# ignore check `lintian' (this check is a special case and contains the
-	# tag info for the lintian frontend--this script here)
-	next if $script eq 'lintian';
-
-	delete $secs[0]->{'check-script'};
-	$cinfo->{$script}->{'script'} = $script;
-	my $p = $cinfo->{$script};
-
-	set_value($f,$p,'type',$secs[0],1);
-	my %type;
-	# convert Type:
-	for (split(/\s*,\s*/o,$p->{'type'})) {
-	    if ($_ eq 'binary' || $_ eq 'source' || $_ eq 'udeb'
-		|| $_ eq 'changes') {
-		$type{$_} = 1;
-	    } else {
-		fail("unknown type $_ specified in description file $f");
-	    }
-	}
-	$p->{'type'} = \%type;
-
-	set_value($f,$p,'abbrev',$secs[0],1);
-
-	if (exists $secs[0]->{'needs-info'} && defined $secs[0]->{'needs-info'}) {
-	    for (split(/\s*,\s*/o,$secs[0]->{'needs-info'})) {
-		push @{$p->{'needs-info'}}, $_;
-		$p->{$_} = 1;
-	    }
-	    delete $secs[0]->{'needs-info'};
-	}
-
-	# ignore Info: and other fields for now...
-	delete $secs[0]->{'info'};
-	delete $secs[0]->{'standards-version'};
-	delete $secs[0]->{'author'};
-
-	for (keys %{$secs[0]}) {
-	    warning("unused tag $_ in description file $f");
-	}
-
-	debug_msg(2, map( { "$_: $p->{$_}" } sort keys %$p ));
-
-	shift(@secs);
-	$p->{'requested-tags'} = 0;
-	foreach my $tag (@secs) {
-	    $p->{'requested-tags'}++ if $tags->displayed($tag->{'tag'});
-	}
-    }
-    closedir($dir);
-}
-
-
-sub sort_coll {
-    my ($ap, $bp);
-    $ap = $map->getProp($a);
-    $bp = $map->getProp($b);
-    # override-file should be the first script to be run
-    return -1 if ($ap->{'name'} eq 'override-file');
-    return 1 if ($bp->{'name'} eq 'override-file');
-    # sort collection scripts first
-    return -1 if ($ap->{'type'} eq 'collection' && $bp->{'type'} ne 'collection');
-    return 1 if ($bp->{'type'} eq 'collection' && $ap->{'type'} ne 'collection');
-    return ($ap->{'name'} cmp $bp->{'name'});
 }
 
 # }}}
