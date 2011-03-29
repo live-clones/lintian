@@ -267,7 +267,7 @@ sub delete_force {
         'c' => 'changes',
         'changes' => 'changes',
         's' => 'source',
-        'sources' => 'source',
+        'source' => 'source',
         'u' => 'udeb',
         'udeb' => 'udeb',
     );
