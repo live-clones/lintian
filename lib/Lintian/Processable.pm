@@ -162,7 +162,7 @@ sub _init{
         $self->{pkg_src_version} = $pkg_version;
     } elsif ($pkg_type eq 'changes'){
         my $cinfo = get_dsc_info ($pkg_path) or fail "$pkg_path is not a valid changes file";
-        my $pkg_name = ($pkg_path =~ m,.*/([^/]+)\.changes,);
+        my ($pkg_name) = ($pkg_path =~ m,.*/([^/]+)\.changes,);
         my $pkg_version = $cinfo->{version};
         $self->{pkg_name} = $pkg_name;
         $self->{pkg_version} = $pkg_version;
