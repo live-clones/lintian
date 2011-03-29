@@ -158,6 +158,17 @@ sub get_groups{
     return ();
 }
 
+=item $pool->empty()
+
+Returns true if the pool is empty.
+
+=cut
+
+sub empty{
+    my ($self) = @_;
+    return scalar keys %{ $self->{groups} } < 1;
+}
+
 #### Internal subs ####
 
 sub _init {
