@@ -92,6 +92,11 @@ sub add_file {
     # Just insert these for now.
     $tmap = $self->{$pkg_type};
     $proc = Lintian::Processable->new($pkg_type, $pkg_path);
+    if ($proc->tainted()){
+        warn(sprintf("warning: bad name for %1\$s package '%2\$s', skipping\n",
+             $pkg_type, $proc->pkg_name()));
+        return 0;
+    }
     $procid = _get_proc_id($proc);
     return 0 if exists $tmap->{$procid};
     $groupid = _get_group_id($proc);

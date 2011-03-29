@@ -66,6 +66,7 @@ sub new {
     bless $self, $class;
     $self->{pkg_type} = $pkg_type;
     $self->{pkg_path} = $pkg_path;
+    $self->{tainted} = 0;
     $self->_init ($pkg_type, $pkg_path);
     return $self;
 }
@@ -108,9 +109,15 @@ Returns the version of the source package.
 Returns the L<Lintain::ProcessableGroup|group> $proc is in,
 if any.  If the processable is not in a group, this returns C<undef>.
 
+=item $proc->tainted()
+
+Returns a truth value if one or more fields in this Processable is
+tainted.  On a best effort basis tainted fields will be sanitized
+to less dangerous (but possibly invalid) values.
+
 =cut
 
-Lintian::Processable->mk_accessors (qw(pkg_name pkg_version pkg_src pkg_arch pkg_path pkg_type pkg_src_version group));
+Lintian::Processable->mk_accessors (qw(pkg_name pkg_version pkg_src pkg_arch pkg_path pkg_type pkg_src_version group tainted));
 
 =pod
 
@@ -178,7 +185,13 @@ sub _init{
     $self->{pkg_arch}        = '' unless (defined $self->{pkg_arch});
     # make sure none of the fields can cause traversal.
     foreach my $field (qw(pkg_name pkg_version pkg_src pkg_src_version pkg_arch)) {
-        $self->{$field} =~ s,/,_,o;
+        if ($self->{$field} =~ m,/,o){
+            # None of these fields are allowed to contain a slash,
+            # this package is most likely crafted to cause
+            # Path traversals.
+            $self->{tainted} = 1;
+            $self->{$field} =~ s,/,_,o;
+        }
     }
     return 1;
 }
