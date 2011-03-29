@@ -162,16 +162,8 @@ sub _init{
         $self->{pkg_src_version} = $pkg_version;
     } elsif ($pkg_type eq 'changes'){
         my $cinfo = get_dsc_info ($pkg_path) or fail "$pkg_path is not a valid changes file";
-        my $pkg_name = $pkg_path;
+        my $pkg_name = ($pkg_path =~ m,.*/([^/]+)\.changes,);
         my $pkg_version = $cinfo->{version};
-        $pkg_name =~ s,.*/,,og; # strip directories (if any)
-        if ($pkg_name =~ m/_/o){
-            # regular named changes file
-            $pkg_name =~ s,^([^/_]+)_[^/]+\.changes$,$1,;
-        } else {
-            # irregular changes file (e.g. some of our tests trigger this)
-            $pkg_name =~ s,\.changes$,,o;
-        }
         $self->{pkg_name} = $pkg_name;
         $self->{pkg_version} = $pkg_version;
         $self->{pkg_src} = $cinfo->{source}//$pkg_name;
