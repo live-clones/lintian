@@ -3,6 +3,9 @@ lintian (2.5.0~rc2) UNRELEASED; urgency=low
   * Summary of tag changes:
     + Added:
       - unknown-multi-arch-value
+      - package-needs-versioned-debhelper-build-depends
+    + Removed:
+      - old-versioned-python-dependency
 
   * checks/binaries:
     + [ADB] Update binary-from-other-architecture's tests in line with the
@@ -14,17 +17,63 @@ lintian (2.5.0~rc2) UNRELEASED; urgency=low
   * checks/deb-format:
     + [NT] Removed assumption that there was always a changelog in a binary
       with a data.tar.lzma member.
+  * checks/debhelper:
+    + [NT] Reduced package-lacks-versioned-build-depends-on-debhelper to a
+      pedantic tag.  It is now only emitted for debhelper compat levels of
+      7 or less, since even oldstable ships with debhelper 7.
+    + [NT] Added package-needs-versioned-debhelper-build-depends, which
+      replaces package-lacks-versioned-build-depends-on-debhelper old
+      task of warning if a missing versioned depends may lead to a build
+      failure.  Currently this is only emitted for compat 8 (or higher).
+    + [NT] Stopped emitting tags for using dh_* (and dh) if these scripts
+      is in debhelper 7 (or earlier).
   * checks/fields{,.desc}:
     + [NT] Recognise Multi-Arch as a known binary field.  (Closes: #617816)
     + [NT] Fixed typo in a tag description.
+    + [NT] Removed old-versioned-python-dependency per request of the
+      Python team.  The tag was outdated and most instances of it was
+      false positives.  Thanks to Piotr Ożarowski and Jakub Wilk for
+      the report and clarification.  (Closes: #619487)
+    + [NT] Accepted patch from Joachim Breitner to support new Haskell
+      package naming scheme.
+    + [NT] Added Built-Using as a known binary and udeb field.  This
+      field is supported with dpkg 1.16.0.
+  * checks/files:
+    + [NT] Also check files in /etc/cron.d for dots in filenames.  Thanks
+      to Thijs Kinkhorst for the report and patch.  (Closes: #615072)
+    + [NT] Applied patch to also detect copies of CKEditor.  Thanks to
+      Jeroen Dekkers for the report and the patch.  (Closes: #616505)
   * checks/huge-usr-share:
     + [NT] Removed assumption that there is always files in usr/share.
+  * checks/menu-format:
+    + [NT] Fixed an inconsistency in output of file names.  Thanks to
+      أحمد المحمودي (Ahmed El-Mahmoudy) for the report.
+      (Closes: #618921)
+  * checks/menus:
+    + [NT] Fixed check for special files that does not need to be
+      registered with doc-base (e.g.  README.html).  Thanks to
+      Tanguy Ortolo for the report.  (Closes: #617266)
+    + [NT] Accepted patch from Joachim Breitner to support new Haskell
+      package naming scheme.  (Closes: #616403)
+  * checks/patch-systems.desc:
+    + [NT] Reduced unneeded-build-dep-on-quilt to a pedantic tag,
+      since some people keep the dependency on quilt to ease
+      backporting for older releases.
 
   * data/changelog-file/ubuntu-dists:
     + [NT] Added oneiric as valid Ubuntu distribution.  Thanks to Benjamin
       Drung for the patch.
+  * data/common/source-fields:
+    + [NT] Added 'package-list' field, which is emitted by dpkg 1.16.0.
   * data/spelling/corrections:
     + [NT] Added more misspellings.
+  
+  * t/tests/shared-libs-la-files:
+    + [NT] Fixed an issue where files would not be included in the tarball
+      due to dpkg-source's exclude patterns.  (Closes: #619287)
+  * t/tests/*:
+    + [NT] Modified some versioned dependencies that the new dpkg will
+      not consider valid from 1.16.0.  (Closes: #619290)
 
  -- Adam D. Barratt <adam@adam-barratt.org.uk>  Fri, 25 Feb 2011 17:48:59 +0000
 

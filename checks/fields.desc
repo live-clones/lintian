@@ -871,24 +871,6 @@ Info: The Python-Version control field is not in one of the valid
  (One or more specific versions may be listed with the last form.)  A.B
  and X.Y should be Python versions.
 
-Tag: old-versioned-python-dependency
-Severity: normal
-Certainty: certain
-Info: This package appears to be an architecture-independent Python module
- but has a dependency on a version of python less than a particular
- version, doesn't use python-support and no Python-Version control field.
- This normally means that the package isn't using the current Python
- policy; most architecture-independent Python packages will work with any
- future version of Python if they follow the new policy.
- .
- If this package really does require only a particular range of Python
- versions and uses python-central, add a Python-Version control field (as
- described in 2.3 of the Python policy) to resolve this warning.
- .
- Note that this can also be triggered if dh_python2 is used and it cannot
- add anything to the Breaks field, beceause the package has no
- ${python:Breaks} substition variable.
-
 Tag: malformed-dm-upload-allowed
 Severity: important
 Certainty: certain

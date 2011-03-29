@@ -34,6 +34,7 @@
 
 package Lintian::menu_format;
 use strict;
+use warnings;
 
 use Lintian::Tags qw(tag);
 use Util;
@@ -387,10 +388,10 @@ my $type = shift;
 my $info = shift;
 
 my @menufiles;
-opendir (MENUDIR, "menu/lib") or fail("cannot read menu/lib file directory.");
+opendir (MENUDIR, 'menu/lib') or fail('cannot read menu/lib file directory.');
 push @menufiles, map { "menu/lib/$_" } readdir(MENUDIR);
 closedir MENUDIR;
-opendir (MENUDIR, "menu/share") or fail("cannot read menu/share file directory.");
+opendir (MENUDIR, 'menu/share') or fail('cannot read menu/share file directory.');
 push @menufiles, map { "menu/share/$_" } readdir(MENUDIR);
 closedir MENUDIR;
 
@@ -406,9 +407,9 @@ foreach my $file (@{$info->sorted_index}) {
 	$file =~ m,^usr/share/applications/.*\.desktop$,) {
 
 	if ($operm & 0100 or $operm & 010 or $operm & 01) {
-           tag 'executable-desktop-file', sprintf("%s %04o",$file,$operm);
+           tag 'executable-desktop-file', sprintf('%s %04o',$file,$operm);
 	}
-        unless ($file =~ m,template,) {
+        unless ($file =~ m,template,o) {
             push (@desktop_files, $file);
         }
     }
@@ -693,6 +694,8 @@ sub VerifyIcon {
 	return;
     }
 
+    $icon =~ s|^/*||og;
+
     if (not ($icon =~ m/\.xpm$/i)) {
 	tag 'menu-icon-not-in-xpm-format', $icon;
 	return;
@@ -709,12 +712,12 @@ sub VerifyIcon {
 	return;
     }
 
-    my $parse = "XPM header";
+    my $parse = 'XPM header';
     my $line;
     do { defined ($line = <IN>) or goto parse_error; }
     until ($line =~ /\/\*\s*XPM\s*\*\//);
 
-    $parse = "size line";
+    $parse = 'size line';
     do { defined ($line = <IN>) or goto parse_error; }
     until ($line =~ /"\s*([0-9]+)\s*([0-9]+)\s*([0-9]+)\s*([0-9]+)\s*"/);
     my $width = $1 + 0;
@@ -869,7 +872,7 @@ sub VerifyCmd {
     # allows one, and gksu has the command at the end of its arguments.
     my @com = split (' ', $exec);
     my $cmd;
-    if ($com[0] and $com[0] eq "/usr/sbin/su-to-root") {
+    if ($com[0] and $com[0] eq '/usr/sbin/su-to-root') {
         tag 'su-to-root-with-usr-sbin', $location;
     }
     if ($com[0] and $com[0] =~ m,^(?:/usr/s?bin/)?(su-to-root|gksu|kdesu|sux)$,) {
@@ -917,7 +920,7 @@ sub VerifyCmd {
 	    || $cmd =~ m,^(/bin/)?sh,
 	    || $cmd =~ m,^(/usr/bin/)?sensible-(pager|editor|browser),
 	    || grep { $info->index->{$_ . $cmd} } @path);
-    return ($okay, $cmd);
+    return ($okay, $cmd_file);
 }
 
 1;

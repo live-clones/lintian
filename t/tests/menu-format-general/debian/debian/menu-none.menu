@@ -1,0 +1,10 @@
+?package(menu-none):needs="X11" section="Applications/Programming"\
+  title="pargs (icon none)" command="/usr/bin/pargs"\
+  longtitle="Argument printer"\
+  icon="none"
+?package(menu-none):needs="X11" section="Applications/Programming"\
+  title="pargs (mis. icon)" command="/usr/bin/pargs"\
+  longtitle="Argument printer"\
+  icon="non-existent.xpm"\
+  icon32x32="/usr/share/menu-none/non-existent32.xpm"\
+  icon16x16="/usr/share/menu-none/non-existent16.xpm"

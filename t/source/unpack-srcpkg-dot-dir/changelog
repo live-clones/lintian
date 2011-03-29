@@ -5,5 +5,5 @@ unpack-srcpkg-dot-dir (1.0-1) unstable; urgency=low
 
   * Suppress "should close ITP bug" messages.  (Closes: #123456)
 
- -- Debian Lintian Maintainers <lintian-maint@debian.org>  Sat, 21 Feb 2009 15:30:54 -0800
+ -- Debian Lintian Maintainers <lintian-maint@debian.org>  Sun, 13 Mar 2011 14:30:00 +0100
 

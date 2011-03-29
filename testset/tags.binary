@@ -95,11 +95,11 @@ W: binary: file-name-ends-in-whitespace usr/share/doc-base/space
 W: binary: menu-command-not-in-package usr/lib/menu/binary:18 imnothere
 W: binary: menu-command-not-in-package usr/lib/menu/binary:20 cfdisk
 W: binary: menu-command-not-in-package usr/lib/menu/binary:4 xfdisk
-W: binary: menu-command-not-in-package usr/lib/menu/binary:7 /imnothere
+W: binary: menu-command-not-in-package usr/lib/menu/binary:7 imnothere
 W: binary: menu-command-not-in-package usr/share/menu/binary:18 imnothere
 W: binary: menu-command-not-in-package usr/share/menu/binary:20 cfdisk
 W: binary: menu-command-not-in-package usr/share/menu/binary:4 xfdisk
-W: binary: menu-command-not-in-package usr/share/menu/binary:7 /imnothere
+W: binary: menu-command-not-in-package usr/share/menu/binary:7 imnothere
 W: binary: menu-file-in-usr-lib usr/lib/menu/binary
 W: binary: menu-item-creates-new-section Applications/System usr/lib/menu/binary:2
 W: binary: menu-item-creates-new-section Applications/System usr/share/menu/binary:2

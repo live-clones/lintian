@@ -7,7 +7,7 @@ W: libfields-wrong-section-java: wrong-section-according-to-package-name libfiel
 W: libfields-wrong-section-ocaml-dev: wrong-section-according-to-package-name libfields-wrong-section-ocaml-dev => ocaml
 W: libfields-wrong-section-perl: wrong-section-according-to-package-name libfields-wrong-section-perl => perl
 W: libfields-wrong-section-ruby1.8: wrong-section-according-to-package-name libfields-wrong-section-ruby1.8 => ruby
-W: libghc6-fields-wrong-section: wrong-section-according-to-package-name libghc6-fields-wrong-section => haskell
+W: libghc-fields-wrong-section: wrong-section-according-to-package-name libghc-fields-wrong-section => haskell
 W: libphp-fields-wrong-section: wrong-section-according-to-package-name libphp-fields-wrong-section => php
 W: python-fields-wrong-section: wrong-section-according-to-package-name python-fields-wrong-section => python
 W: r-cran-fields-wrong-section: wrong-section-according-to-package-name r-cran-fields-wrong-section => gnu-r

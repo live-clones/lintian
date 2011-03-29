@@ -1,0 +1,18 @@
+Testname: menu-format-general
+Sequence: 6000
+Version: 1.0
+Description: Test menu file tags
+Test-For:
+ bad-test-in-menu-item
+ duplicated-tag-in-menu-item
+ menu-command-not-in-package
+ menu-icon-missing
+ menu-item-creates-new-root-section
+ menu-item-creates-new-section
+ menu-item-uses-apps-games-section
+ menu-item-uses-apps-section
+ menu-item-uses-icon-none
+ menu-item-uses-windowmanagers-section
+ non-wm-in-windowmanager-menu-section
+ pkg-not-in-package-test
+ unparsable-menu-item

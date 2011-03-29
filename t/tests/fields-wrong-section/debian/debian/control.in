@@ -82,7 +82,7 @@ Description: {$description} (OCaml)
  things.  It should not be installed like a regular package.  It may
  be an empty package.
 
-Package: libghc6-{$srcpkg}
+Package: libghc-{$srcpkg}
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description} (Haskell)

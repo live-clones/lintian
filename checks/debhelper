@@ -27,6 +27,10 @@ use Util;
 use Lintian::Data;
 use Lintian::Tags qw(tag);
 
+# If compat is less than or equal to this, then a missing version
+# for this level is only a pedantic issue.
+use constant PEDANTIC_COMPAT => 7;
+
 # If there is no debian/compat file present but cdbs is being used, cdbs will
 # create one automatically.  Currently it always uses compatibility level 5.
 # It may be better to look at what version of cdbs the package depends on and
@@ -41,16 +45,7 @@ my $filename_configs = Lintian::Data->new ('debhelper/filename-config-files');
 # one of these commands must have a dependency on that version of debhelper or
 # newer.
 my %versions
-    = (dh                 => '7',
-       dh_auto_configure  => '7',
-       dh_auto_build      => '7',
-       dh_auto_clean      => '7',
-       dh_auto_install    => '7',
-       dh_bugfiles        => '7.2.3~',
-       dh_icons           => '5.0.51~',
-       dh_installifupdown => '5.0.44~',
-       dh_lintian         => '6.0.7~',
-       dh_prep            => '7');
+    = (dh_bugfiles        => '7.2.3~');
 
 sub run {
 
@@ -147,7 +142,6 @@ while (<RULES>) {
 	$seencommand = 1;
 	$needbuilddepends = 1;
 	$needtomodifyscripts = 1;
-	push (@versioncheck, 'dh');
     } elsif (m,^include\s+/usr/share/cdbs/1/rules/debhelper.mk,) {
 	$seencommand = 1;
 	$needbuilddepends = 1;
@@ -329,9 +323,17 @@ while (my ($dep, $command) = each %missingbdeps) {
     tag 'missing-build-dependency-for-dh_-command', "$command=$dep"
 	unless ($bdepends_noarch->implies($dep));
 }
-if (not $bdepends->implies("debhelper (>= $level~)")) {
-    tag 'package-lacks-versioned-build-depends-on-debhelper', $level;
-} elsif (@versioncheck or $overridetargets) {
+
+
+unless ($bdepends->implies("debhelper (>= $level~)")){
+    my $tagname = 'package-needs-versioned-debhelper-build-depends';
+    $tagname = 'package-lacks-versioned-build-depends-on-debhelper'
+	if ($level <= PEDANTIC_COMPAT);
+
+    tag $tagname, $level;
+}
+
+if (@versioncheck) {
     my %seen;
     @versioncheck = grep { !$seen{$_}++ } @versioncheck;
     for my $program (@versioncheck) {
@@ -342,21 +344,23 @@ if (not $bdepends->implies("debhelper (>= $level~)")) {
 	    $program, "(>= $required)";
 	}
     }
-    if ($seenmaintscript) {
-	my $required = '8.1.0~';
-	my $needed = "debhelper (>= $required)";
-	unless ($bdepends->implies($needed)) {
-	    tag 'debhelper-maintscript-needs-versioned-build-depends',
-	    "(>= $required)";
-	}
+}
+
+if ($overridetargets) {
+    my $required = '7.0.50~';
+    my $needed = "debhelper (>= $required)";
+    unless ($bdepends->implies($needed)) {
+	tag 'debhelper-overrides-need-versioned-build-depends',
+	"(>= $required)";
     }
-    if ($overridetargets) {
-	my $required = '7.0.50~';
-	my $needed = "debhelper (>= $required)";
-	unless ($bdepends->implies($needed)) {
-	    tag 'debhelper-overrides-need-versioned-build-depends',
-	    "(>= $required)";
-	}
+}
+
+if ($seenmaintscript) {
+    my $required = '8.1.0~';
+    my $needed = "debhelper (>= $required)";
+    unless ($bdepends->implies($needed)) {
+	tag 'debhelper-maintscript-needs-versioned-build-depends',
+	"(>= $required)";
     }
 }
 

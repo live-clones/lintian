@@ -7,4 +7,4 @@ fields (1.5-.3) unstable; urgency=low
     - debian-revision-should-not-be-zero
     - new-essential-package
 
- -- Tobias Quathamer <toddy@debian.org>  Wed, 30 Jul 2008 12:35:09 +0200
+ -- Tobias Quathamer <toddy@debian.org>  Sun, 13 Mar 2011 14:30:00 +0100

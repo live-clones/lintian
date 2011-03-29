@@ -5,3 +5,4 @@
 /doc/lintian.html/
 /doc/lintian.txt
 /runtests
+/debian/test.locale/

@@ -45,7 +45,7 @@ while (<ARINFO>) {
     if (/^\.\/([^:]+): (.*)$/) {
         my $filename = $1;
         my $dirname = dirname($filename);
-        foreach (split(" ", $2)) {
+        foreach (split(m/ /o, $2)) {
             # Note: a .o may be legitimately in several different .a
             $provided_o{"$dirname/$_"} = $filename;
         }

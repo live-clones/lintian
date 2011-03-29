@@ -42,6 +42,7 @@ our @jslibraries = (
     [ qr,(?i)prototype(-[\d\.]+)?\.js(\.gz)?$, => qr'libjs-prototype' ],
     [ qr,(?i)scriptaculous\.js(\.gz)?$, => qr'libjs-scriptaculous' ],
     [ qr,(?i)fckeditor\.js(\.gz)?$, => qr'fckeditor' ],
+    [ qr,(?i)ckeditor\.js(\.gz)?$, => qr'ckeditor' ],
     [ qr,(?i)cropper(\.uncompressed)?\.js(\.gz)?$, => qr'libjs-cropper' ],
     [ qr,(?i)(yahoo|yui)-(dom-event|min)\.js(\.gz)?$, => qr'libjs-yui' ],
 # Disabled due to false positives.  Needs a content check adding to verify
@@ -288,7 +289,7 @@ foreach my $file (@{$info->sorted_index}) {
 	    tag 'package-uses-obsolete-file', $file;
 	}
 	# ---------------- /etc/cron.daily, etc.
-	elsif ($file =~ m,^etc/cron\.(?:daily|hourly|monthly|weekly)/[^\.].*\., ) {
+	elsif ($file =~ m,^etc/cron\.(?:daily|hourly|monthly|weekly|d)/[^\.].*\., ) {
 	    tag 'run-parts-cron-filename-contains-full-stop', $file;
 	}
 	# ---------------- /etc/cron.d
