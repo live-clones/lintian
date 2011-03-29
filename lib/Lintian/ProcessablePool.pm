@@ -93,7 +93,7 @@ sub add_file {
     $tmap = $self->{$pkg_type};
     $proc = Lintian::Processable->new($pkg_type, $pkg_path);
     if ($proc->tainted()){
-        warn(sprintf("warning: bad name for %1\$s package '%2\$s', skipping\n",
+        warn(sprintf("warning: tainted %1\$s package '%2\$s', skipping\n",
              $pkg_type, $proc->pkg_name()));
         return 0;
     }
