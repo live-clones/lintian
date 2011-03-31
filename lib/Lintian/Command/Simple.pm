@@ -100,6 +100,50 @@ sub run {
     return $? >> 8;
 }
 
+=item rundir(dir, command, argument  [, ...])
+
+Executes the given C<command> with the given arguments and in C<dir>
+returns the status code as one would see it from a shell script.
+
+Being fair, the only advantage of this function (or method) over the
+CORE::system() function is the way the return status is reported.
+
+=cut
+
+sub rundir {
+    my $self;
+    my $pid;
+    my $res;
+
+    if (ref $_[0]) {
+	$self = shift;
+	return -1
+	    if defined($self->{'pid'});
+    }
+    $pid = fork();
+    if (not defined($pid)) {
+	# failed
+        $res = -1;
+    } elsif ($pid > 0) {
+	# parent
+        if (defined($self)){
+            $self->{'pid'} = $pid;
+            $res = $self->wait();
+        } else {
+            $res = Lintian::Command::Simple::wait($pid);
+        }
+    } else {
+	# child
+        my $dir = shift;
+	close(STDIN);
+	open(STDIN, '<', '/dev/null');
+        chdir($dir) or die("Failed to chdir to $dir: $!\n");
+	CORE::exec @_ or die("Failed to exec '$_[0]': $!\n");
+    }
+
+    return $res;
+}
+
 =item background(command, argument  [, ...])
 
 Executes the given C<command> with the given arguments asynchronously
