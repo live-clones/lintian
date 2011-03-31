@@ -1231,6 +1231,31 @@ sub sort_coll {
     return ($ap->{'name'} cmp $bp->{'name'});
 }
 
+# Removes all collections with "Auto-Remove: yes"; takes a Lab::Package
+#  - depends on global variables %collection_info and $LINTIAN_ROOT
+sub auto_clean_package {
+    my ($lpkg) = @_;
+    my $pkg_name = $lpkg->pkg_name();
+    my $pkg_type = $lpkg->pkg_type();
+    my $base = $lpkg->base_dir();
+    for my $coll (keys %collection_info) {
+	my $ci = $collection_info{$coll};
+	if (defined($ci->{'auto-remove'}) && $ci->{'auto-remove'} eq 'yes') {
+	    next unless (-f "$base/.${coll}-$ci->{'version'}");
+	    my $script = "$LINTIAN_ROOT/collection/$ci->{'script'}";
+	    debug_msg(1, "Auto removing: $ci->{'script'} ...");
+	    unless (Lintian::Command::Simple::rundir($base, $script, $pkg_name, "remove-${pkg_type}") == 0) {
+		warning("removing collect info $coll about package $pkg_name failed",
+			"skipping cleanup of $pkg_type package $pkg_name");
+		return 0;
+	    }
+	    unlink("$base/.${coll}-$ci->{'version'}")
+		or fail("failed to remove status file of collect info $coll about package $pkg_name");
+	}
+    }
+    return 1;
+}
+
 sub process_package {
     my ($proc, $action) = @_;
     my $pkg_name = $proc->pkg_name();
@@ -1439,27 +1464,8 @@ sub process_package {
 	return 0;
     }
 
-    # if the package's basedir was not removed then run the
-    # auto-remove: yes collection scripts
     if (!$keep_lab) {
-	chdir($base);
-	for my $coll (keys %collection_info) {
-	    my $ci = $collection_info{$coll};
-	    if (defined($ci->{'auto-remove'}) && $ci->{'auto-remove'} eq 'yes') {
-		next unless (-f "$base/.${coll}-$ci->{'version'}");
-		my $script = "$LINTIAN_ROOT/collection/$ci->{'script'}";
-		debug_msg(1, "Auto removing: $ci->{'script'} ...");
-		unless (Lintian::Command::Simple::run($script, $pkg_name, "remove-${pkg_type}") == 0) {
-		    warning("removing collect info $coll about package $pkg_name failed",
-			    "skipping cleanup of $pkg_type package $pkg_name");
-		    $exit_code = 2;
-		    return 0;
-		}
-		unlink("$base/.${coll}-$ci->{'version'}")
-		    or fail("failed to remove status file of collect info $coll about package $pkg_name");
-	    }
-	}
-	chdir($LINTIAN_ROOT);
+	auto_clean_package($lpkg) or $exit_code = 2;
     }
 
     # All successful, make sure to record it so we do not recheck the same package
