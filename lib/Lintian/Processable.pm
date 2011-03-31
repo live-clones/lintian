@@ -26,6 +26,9 @@ use warnings;
 
 use Util;
 
+# Black listed characters - any match will be replaced with a _.
+use constant EVIL_CHARACTERS => qr,[/&|;\$"'<>],o;
+
 =head1 NAME
 
 Lintian::Processable -- An object that Lintian can process
@@ -185,12 +188,12 @@ sub _init{
     $self->{pkg_arch}        = '' unless (defined $self->{pkg_arch});
     # make sure none of the fields can cause traversal.
     foreach my $field (qw(pkg_name pkg_version pkg_src pkg_src_version pkg_arch)) {
-        if ($self->{$field} =~ m,/,o){
-            # None of these fields are allowed to contain a slash,
-            # this package is most likely crafted to cause
-            # Path traversals.
+        if ($self->{$field} =~ m,${\EVIL_CHARACTERS},o){
+            # None of these fields are allowed to contain a these
+            # characters.  This package is most likely crafted to
+            # cause Path traversals or other "fun" things.
             $self->{tainted} = 1;
-            $self->{$field} =~ s,/,_,o;
+            $self->{$field} =~ s,${\EVIL_CHARACTERS},_,go;
         }
     }
     return 1;
