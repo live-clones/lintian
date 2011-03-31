@@ -1256,6 +1256,40 @@ sub auto_clean_package {
     return 1;
 }
 
+sub post_pkg_process_overrides{
+    my ($pkg_path) = @_;
+    # report unused overrides
+    if (not $no_override) {
+	my $overrides = $TAGS->overrides($pkg_path);
+
+	for my $tag (sort keys %$overrides) {
+	    next if $TAGS->suppressed($tag);
+
+	    # Did we run the check script containing the tag?
+	    my $taginfo = Lintian::Tag::Info->new($tag);
+	    if (defined $taginfo) {
+		next unless $enabled_checks{$taginfo->script};
+	    }
+
+	    for my $extra (sort keys %{$overrides->{$tag}}) {
+		next if $overrides->{$tag}{$extra};
+		tag( 'unused-override', $tag, $extra );
+	    }
+	}
+    }
+
+    # Report override statistics.
+    if (not $no_override and not $show_overrides) {
+	my $stats = $TAGS->statistics($pkg_path);
+	my $errors = $stats->{overrides}{types}{E} || 0;
+	my $warnings = $stats->{overrides}{types}{W} || 0;
+	my $info = $stats->{overrides}{types}{I} || 0;
+	$overrides{errors} += $errors;
+	$overrides{warnings} += $warnings;
+	$overrides{info} += $info;
+    }
+}
+
 sub process_package {
     my ($proc, $action) = @_;
     my $pkg_name = $proc->pkg_name();
@@ -1422,38 +1456,7 @@ sub process_package {
 		$exit_code = 1;
 	    }
 	}
-
-	# report unused overrides
-	if (not $no_override) {
-	    my $overrides = $TAGS->overrides($pkg_path);
-
-	    for my $tag (sort keys %$overrides) {
-		next if $TAGS->suppressed($tag);
-
-		# Did we run the check script containing the tag?
-		my $taginfo = Lintian::Tag::Info->new($tag);
-		if (defined $taginfo) {
-		    next unless $enabled_checks{$taginfo->script};
-		}
-
-		for my $extra (sort keys %{$overrides->{$tag}}) {
-		    next if $overrides->{$tag}{$extra};
-
-		    tag( 'unused-override', $tag, $extra );
-		}
-	    }
-	}
-
-	# Report override statistics.
-	if (not $no_override and not $show_overrides) {
-	    my $stats = $TAGS->statistics($pkg_path);
-	    my $errors = $stats->{overrides}{types}{E} || 0;
-	    my $warnings = $stats->{overrides}{types}{W} || 0;
-	    my $info = $stats->{overrides}{types}{I} || 0;
-	    $overrides{errors} += $errors;
-	    $overrides{warnings} += $warnings;
-	    $overrides{info} += $info;
-	}
+	post_pkg_process_overrides($pkg_path);
     }
 
     # chdir to lintian root directory (to unlock $base so it can be removed below)
