@@ -187,6 +187,50 @@ sub background {
     }
 }
 
+=item background_dir(dir, command, argument  [, ...])
+
+Executes the given C<command> with the given arguments asynchronously
+in dir and returns the process id of the child process.
+
+A return value of -1 indicates an error. This can either be a problem
+when calling CORE::fork() or when trying to run another command before
+calling wait() to reap the previous command.
+
+=cut
+
+sub background_dir {
+    my $self;
+
+    if (ref $_[0]) {
+	$self = shift;
+	return -1
+	    if (defined($self->{'pid'}));
+
+	$self->{'status'} = undef;
+    }
+
+    my $pid = fork();
+
+    if (not defined($pid)) {
+	# failed
+	return -1;
+    } elsif ($pid > 0) {
+	# parent
+
+	$self->{'pid'} = $pid
+	    if (defined($self));
+
+	return $pid;
+    } else {
+	# child
+        my $dir = shift;
+	close(STDIN);
+	open(STDIN, '<', '/dev/null');
+        chdir($dir) or die("Failed to chdir to $dir: $!\n");
+	CORE::exec @_ or die("Failed to exec '$_[0]': $!\n");
+    }
+}
+
 =item wait([pid|hashref])
 
 When called as a function:
