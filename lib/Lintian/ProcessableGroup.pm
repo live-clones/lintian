@@ -202,6 +202,27 @@ sub get_processables {
     return wantarray ? @result : \@result;
 }
 
+=item $group->remove_processable($proc)
+
+Removes $proc from $group
+
+=cut
+
+sub remove_processable {
+    my ($self, $proc) = @_;
+    my $pkg_type = $proc->pkg_type();
+    if ($pkg_type eq 'source' or $pkg_type eq 'changes'){
+        delete $self->{$pkg_type};
+    } elsif (defined $self->{$pkg_type}) {
+        my $phash = $self->{$pkg_type};
+        my $name = $proc->pkg_name();
+        my $version = $proc->pkg_version();
+        my $arch = $proc->pkg_arch();
+        delete $phash->{"${name}_${version}_${arch}"};
+    }
+    return 1;
+}
+
 =item $group->get_source_processable()
 
 Returns the processable identified as the "source" package (e.g. the dsc).
