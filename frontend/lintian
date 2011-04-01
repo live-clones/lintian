@@ -1447,6 +1447,14 @@ sub process_package {
     }
     %running_jobs = ();
 
+    # chdir to lintian root directory (to unlock $base so it can be removed below)
+    unless (chdir($LINTIAN_ROOT)) {
+	warning("could not chdir into directory $LINTIAN_ROOT: $!",
+		"skipping $action of $pkg_type package $pkg_name");
+	$exit_code = 2;
+	return 0;
+    }
+
     if ($action eq 'check') {
 	unless ($exit_code) {
 	    my $stats = $TAGS->statistics($pkg_path);
@@ -1457,14 +1465,6 @@ sub process_package {
 	    }
 	}
 	post_pkg_process_overrides($pkg_path);
-    }
-
-    # chdir to lintian root directory (to unlock $base so it can be removed below)
-    unless (chdir($LINTIAN_ROOT)) {
-	warning("could not chdir into directory $LINTIAN_ROOT: $!",
-		"skipping $action of $pkg_type package $pkg_name");
-	$exit_code = 2;
-	return 0;
     }
 
     if (!$keep_lab) {
