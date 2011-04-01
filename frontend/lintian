@@ -849,6 +849,41 @@ if ($pool->empty()) {
 }
 # }}}
 
+# {{{ Handle $action eq 'remove'
+# We have enough information to handle remove now.
+
+if($action eq 'remove'){
+    # Handle remove here - makes the unpack/check loop simpler.
+    foreach my $group ($pool->get_groups()){
+	foreach my $proc ($group->get_processables()){
+	    my $lpkg;
+	    my $pkg_name = $proc->pkg_name();
+	    my $pkg_ver  = $proc->pkg_version();
+	    my $pkg_type = $proc->pkg_type();
+	    my $pkg_path = $proc->pkg_path();
+	    eval{
+		$lpkg = $LAB->get_lab_package($pkg_name, $pkg_ver,
+					      $pkg_type, $pkg_path);
+	    };
+	    if(!defined($lpkg)){
+		my $err = '.';
+		$err = ": $@" if(defined($@));
+		warning("skipping $action of $pkg_type package ${pkg_name}$err");
+		$exit_code = 2;
+		next;
+	    }
+	    $TAGS->file_start($pkg_path, $pkg_name, $pkg_ver,
+			      $proc->pkg_arch(), $pkg_type);
+	    unless($lpkg->delete_lab_entry()){
+		$exit_code = 2;
+	    }
+	}
+    }
+    $TAGS->file_end();
+    exit $exit_code;
+}
+# }}}
+
 # {{{ Load information about collector scripts
 load_collections(\%collection_info, "$LINTIAN_ROOT/collection");
 # }}}
@@ -986,41 +1021,6 @@ debug_msg(1,
 # Make sure the resolver is in a sane state:
 scalar($map->missing()) == 0
     or fail('There are missing nodes on the resolver: '.join(', ', $map->missing()));
-
-## REFACTORING NOTES:
-## If we are here $action is one of "check", "unpack" or "remove"
-##  
-
-if($action eq 'remove'){
-    # Handle remove here - makes the unpack/check loop simpler.
-    foreach my $group ($pool->get_groups()){
-	foreach my $proc ($group->get_processables()){
-	    my $lpkg;
-	    my $pkg_name = $proc->pkg_name();
-	    my $pkg_ver  = $proc->pkg_version();
-	    my $pkg_type = $proc->pkg_type();
-	    my $pkg_path = $proc->pkg_path();
-	    eval{
-		$lpkg = $LAB->get_lab_package($pkg_name, $pkg_ver,
-					      $pkg_type, $pkg_path);
-	    };
-	    if(!defined($lpkg)){
-		my $err = '.';
-		$err = ": $@" if(defined($@));
-		warning("skipping $action of $pkg_type package ${pkg_name}$err");
-		$exit_code = 2;
-		next;
-	    }
-	    $TAGS->file_start($pkg_path, $pkg_name, $pkg_ver,
-			      $proc->pkg_arch(), $pkg_type);
-	    unless($lpkg->delete_lab_entry()){
-		$exit_code = 2;
-	    }
-	}
-    }
-    $TAGS->file_end();
-    exit $exit_code;
-}
 
 # Now action is always either "check" or "unpack"
 # these two variables are used by process_package
