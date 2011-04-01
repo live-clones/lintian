@@ -983,12 +983,16 @@ if ($action eq 'unpack') {
 # execution order.
 
 my $map = Lintian::DepMap::Properties->new();
+my $collmap = Lintian::DepMap::Properties->new();
 
 unless ($no_override) {
     # add the override-file collection
     $map->add('coll-override-file', {'type' => 'collection', 'name' =>  'override-file'});
+    $collmap->add('coll-override-file', {'type' => 'collection', 'name' =>  'override-file'});
     if (exists $collection_info{'override-file'}{'needs-info'}) {
 	$map->addp('coll-override-file', 'coll-',
+		   @{$collection_info{'override-file'}{'needs-info'}});
+	$collmap->addp('coll-override-file', 'coll-',
 		   @{$collection_info{'override-file'}{'needs-info'}});
     }
 }
@@ -996,8 +1000,10 @@ unless ($no_override) {
 for my $c (keys %unpack_infos) {
     # Add the collections with their dependency information
     $map->add('coll-' . $c, {'type' => 'collection', 'name' => $c});
+    $collmap->add('coll-' . $c, {'type' => 'collection', 'name' => $c});
     if (exists $collection_info{$c}{'needs-info'}) {
 	$map->addp('coll-' . $c, 'coll-', @{$collection_info{$c}{'needs-info'}});
+	$collmap->addp('coll-' . $c, 'coll-', @{$collection_info{$c}{'needs-info'}});
     }
 }
 
@@ -1030,9 +1036,10 @@ my %overrides;
 
 foreach my $gname (sort $pool->get_group_names()) {
     my $group = $pool->get_group($gname);
-    foreach my $proc ($group->get_processables()){
-	process_package($proc, $action);
-    }
+    my $ginfo = {};
+    my $glpkg = {};
+    unpack_group($group, $ginfo, $glpkg);
+    process_group($group, $ginfo, $glpkg) if $action eq 'check';
 }
 
 $TAGS->file_end();
@@ -1290,67 +1297,55 @@ sub post_pkg_process_overrides{
     }
 }
 
-sub process_package {
-    my ($proc, $action) = @_;
-    my $pkg_name = $proc->pkg_name();
-    my $pkg_ver  = $proc->pkg_version();
-    my $pkg_type = $proc->pkg_type();
-    my $pkg_path = $proc->pkg_path();
-    my $pkg_arch = $proc->pkg_arch();
-    my $lpkg;
-    my $base;
-    my $info;
-    my $loaded_overrides = 0;
-    eval{
-	$lpkg = $LAB->get_lab_package($pkg_name, $pkg_ver,
-				      $pkg_type, $pkg_path);
-    };
-    if(!defined($lpkg)){
-	my $err = '.';
-	$err = ": $@" if(defined($@));
-	warning("skipping $action of $pkg_type package ${pkg_name}$err");
-	$exit_code = 2;
-	return 0;
-    }
+sub unpack_group {
+    my ($group, $ginfo, $glpkg) = @_;
+  PROC:
+    foreach my $proc ($group->get_processables()){
+	my $pkg_name = $proc->pkg_name();
+	my $pkg_type = $proc->pkg_type();
+	my $pkg_path = $proc->pkg_path();
+	my $pkg_ver  = $proc->pkg_version();
+	my $lpkg;
+	my $base;
+	my $info;
+	my $cid;
+	eval{
+	    $lpkg = $LAB->get_lab_package($pkg_name, $pkg_ver,
+					  $pkg_type, $pkg_path);
+	};
+	if(!defined($lpkg)){
+	    my $err = '.';
+	    $err = ": $@" if(defined($@));
+	    warning("skipping $action of $pkg_type package ${pkg_name}$err");
+	    $exit_code = 2;
+	    $group->remove_processable($proc);
+	    next;
+	}
+	# determine base directory
+	$base = $lpkg->base_dir();
+	debug_msg(1, "Unpacking $pkg_name $pkg_ver ($pkg_type)  in $base");
 
-    $TAGS->file_start($pkg_path, $pkg_name, $pkg_ver, $pkg_arch, $pkg_type);
-    $map->initialise();
-
-    # Kill pending jobs, if any
-    Lintian::Command::Simple::kill(\%running_jobs);
-    %running_jobs = ();
-
-    # determine base directory
-    $base = $lpkg->base_dir();
-    debug_msg(1, "Base directory in lab: $base");
-
-    # Ensure it has been unpacked
-    unless ($lpkg->create_entry()){
-	warning('could not create the package entry in the lab',
-		"skipping $action of $pkg_type package $pkg_name");
-	$exit_code = 2;
-	return 0;
-    }
-    $info = Lintian::Collect->new($pkg_name, $pkg_type);
-
-    # chdir to base directory
-    unless (chdir($base)) {
-	warning("could not chdir into directory $base: $!",
-		"skipping $action of $pkg_type package $pkg_name");
-	$exit_code = 2;
-	return 0;
-    }
-
-    while ($map->pending) {
-	foreach my $req (sort sort_coll $map->selectable) {
-	    my $ri = $map->getProp($req);
-	    if ($ri->{'type'} eq 'collection') {
+	# Ensure it has been unpacked
+	unless ($lpkg->create_entry()){
+	    warning('could not create the package entry in the lab',
+		    "skipping $action of $pkg_type package $pkg_name");
+	    $exit_code = 2;
+	    $group->remove_processable($proc);
+	    next;
+	}
+	# Kill pending jobs, if any
+	Lintian::Command::Simple::kill(\%running_jobs);
+	%running_jobs = ();
+	$collmap->initialise();
+	while ($collmap->pending) {
+	    foreach my $req ($collmap->selectable) {
+		my $ri = $collmap->getProp($req);
 		my $coll = $ri->{'name'};
 		my $ci = $collection_info{$coll};
 
 		# current type?
 		unless (exists $ci->{'type'}{$pkg_type}) {
-		    $map->satisfy($req);
+		    $collmap->satisfy($req);
 		    next;
 		}
 
@@ -1358,7 +1353,7 @@ sub process_package {
 		# collected this information and we can skip it.  Otherwise,
 		# remove any .SCRIPT-* files (which are old version information).
 		if (-f "$base/.${coll}-$ci->{'version'}") {
-		    $map->satisfy($req);
+		    $collmap->satisfy($req);
 		    next;
 		}
 		opendir(BASE, $base)
@@ -1371,21 +1366,120 @@ sub process_package {
 		closedir(BASE);
 
 		# collect info
-		$map->select($req);
+		$collmap->select($req);
 		$lpkg->remove_status_file();
 		debug_msg(1, "Collecting info: $coll ...");
 		my $script = "$LINTIAN_ROOT/collection/$ci->{'script'}";
 		my $cmd = Lintian::Command::Simple->new();
-		unless ($cmd->background($script, $pkg_name, $pkg_type) > 0) {
+		unless ($cmd->background_dir($base, $script, $pkg_name, $pkg_type) > 0) {
 		    warning("collect info $coll about package $pkg_name failed",
 			    "skipping $action of $pkg_type package $pkg_name");
 		    $exit_code = 2;
-		    return 0;
+		    $group->remove_processable($proc);
+		    next PROC;
 		}
 		$running_jobs{$coll} = $cmd;
-	    } elsif ($ri->{'type'} eq 'check') {
-		# skip check if overrides were not yet loaded
-		last unless $loaded_overrides or $no_override;
+	    }
+	    # wait until a job finishes to run its branches, if any, or skip
+	    # this package if any of the jobs failed.
+	    debug_msg(1, "Reaping done jobs ... unpack $pkg_name $pkg_ver ($pkg_type)");
+
+	    while (my ($coll, $cmd) = Lintian::Command::Simple::wait(\%running_jobs)) {
+		delete $running_jobs{$coll};
+		if ($cmd->status() == 0) {
+		    my $ci = $collection_info{$coll};
+		    open(VERSION, '>', "$base/.${coll}-$ci->{'version'}")
+			or fail("cannot create $base/.${coll}-$ci->{'version'}: $!");
+		    print VERSION "Lintian-Version: $LINTIAN_VERSION\n"
+			. 'Timestamp: ' . time . "\n";
+		    close(VERSION);
+		    debug_msg(1, "Collection script $coll done");
+		} else {
+		    warning("collect info $coll about package $pkg_name failed");
+		    warning("skipping $action of $pkg_type package $pkg_name");
+		    $exit_code = 2;
+		    $group->remove_processable($proc);
+		    next PROC;
+		}
+
+		$collmap->satisfy('coll-' . $coll);
+	    }
+	    debug_msg(1, "Reap done jobs ... unpack $pkg_name $pkg_ver ($pkg_type)");
+	}
+	%running_jobs = ();
+
+	if ($action eq 'check') {
+	    # We only need this if we are checking the package later
+	    $cid = $pkg_name . '_' . $proc->pkg_arch() . '_' . $pkg_ver;
+	    $ginfo->{$pkg_type}->{$cid} = Lintian::Collect->new($pkg_name, $pkg_type);
+	    $glpkg->{$pkg_type}->{$cid} = $lpkg;
+	} else {
+	    # else we are done - not sure if it makes any sense if we are unpacking
+	    # but this is the old behaviour, so we stick with it.
+	    if (!$keep_lab) {
+		auto_clean_package($lpkg) or $exit_code = 2;
+	    }
+
+	    # All successful, make sure to record it so we do not recheck the same package
+	    # in a later run (mostly for archive-wide checks).
+	    $lpkg->update_status_file($LINTIAN_VERSION);
+	}
+    }
+    return 1;
+}
+
+sub process_group {
+    my ($group, $ginfo, $glpkg) = @_;
+  PROC:
+    foreach my $proc ($group->get_processables()){
+	my $pkg_name = $proc->pkg_name();
+	my $pkg_ver  = $proc->pkg_version();
+	my $pkg_type = $proc->pkg_type();
+	my $pkg_path = $proc->pkg_path();
+	my $pkg_arch = $proc->pkg_arch();
+	my $cid = $pkg_name . '_' . $proc->pkg_arch() . '_' . $proc->pkg_version();
+	my $lpkg = $glpkg->{$pkg_type}->{$cid};
+	my $info = $ginfo->{$pkg_type}->{$cid};
+
+	my $base = $lpkg->base_dir();
+
+	$TAGS->file_start($pkg_path, $pkg_name, $pkg_ver, $pkg_arch, $pkg_type);
+	$collmap->initialise();
+	$map->initialise();
+	# put the check map into a state where all collections has been run
+	#  - this may seem redundant, but it allowed re-use of existing
+	#    code to skip checks that are irrevalant for the type of pkg.
+	while ($collmap->pending){
+	    foreach my $req ($collmap->selectable){
+		$collmap->satisfy($req);
+		$map->satisfy($req);
+	    }
+	}
+
+	# Kill pending jobs, if any
+	Lintian::Command::Simple::kill(\%running_jobs);
+	%running_jobs = ();
+
+	debug_msg(1, "Base directory in lab: $base");
+
+	# chdir to base directory
+	unless (chdir($base)) {
+	    warning("could not chdir into directory $base: $!",
+		    "skipping $action of $pkg_type package $pkg_name");
+	    $exit_code = 2;
+	    next;
+	}
+
+	unless ($no_override) {
+	    if ($collmap->done('coll-override-file')) {
+		debug_msg(1, 'Override file collected, loading it ...');
+		$TAGS->file_overrides("$base/override")
+		    if (-f "$base/override");
+	    }
+	}
+	while ($map->pending) {
+	    foreach my $req (sort sort_coll $map->selectable) {
+		my $ri = $map->getProp($req);
 		my $check = $ri->{'name'};
 		my $ci = $check_info{$check};
 
@@ -1403,59 +1497,19 @@ sub process_package {
 		if ($returnvalue == 2) {
 		    warning("skipping $action of $pkg_type package $pkg_name");
 		    $exit_code = 2;
-		    return 0;
+		    next PROC;
 		}
 		$map->satisfy($req);
 	    }
 	}
-	# wait until a job finishes to run its branches, if any, or skip
-	# this package if any of the jobs failed.
-	debug_msg(1, 'Reaping done jobs ...');
-
-	while (my ($coll, $cmd) = Lintian::Command::Simple::wait(\%running_jobs)) {
-	    delete $running_jobs{$coll};
-	    if ($cmd->status() == 0) {
-		my $ci = $collection_info{$coll};
-		open(VERSION, '>', "$base/.${coll}-$ci->{'version'}")
-		    or fail("cannot create $base/.${coll}-$ci->{'version'}: $!");
-		print VERSION "Lintian-Version: $LINTIAN_VERSION\n"
-				. 'Timestamp: ' . time . "\n";
-		close(VERSION);
-		debug_msg(1, "Collection script $coll done");
-	    } else {
-		warning("collect info $coll about package $pkg_name failed");
-		warning("skipping $action of $pkg_type package $pkg_name");
-		$exit_code = 2;
-		return 0;
-	    }
-
-	    $map->satisfy('coll-' . $coll);
-
-	    # give a chance to other jobs to finish while we
-	    # process other stuff:
-	    last;
+	# chdir to lintian root directory (to unlock $base so it can be removed below)
+	unless (chdir($LINTIAN_ROOT)) {
+	    warning("could not chdir into directory $LINTIAN_ROOT: $!",
+		    "skipping $action of $pkg_type package $pkg_name");
+	    $exit_code = 2;
+	    next;
 	}
 
-	unless ($no_override or $loaded_overrides) {
-	    if ($map->done('coll-override-file')) {
-		debug_msg(1, 'Override file collected, loading it ...');
-		$loaded_overrides = 1;
-		$TAGS->file_overrides("$base/override")
-		    if (-f "$base/override");
-	    }
-	}
-    }
-    %running_jobs = ();
-
-    # chdir to lintian root directory (to unlock $base so it can be removed below)
-    unless (chdir($LINTIAN_ROOT)) {
-	warning("could not chdir into directory $LINTIAN_ROOT: $!",
-		"skipping $action of $pkg_type package $pkg_name");
-	$exit_code = 2;
-	return 0;
-    }
-
-    if ($action eq 'check') {
 	unless ($exit_code) {
 	    my $stats = $TAGS->statistics($pkg_path);
 	    if ($stats->{types}{E}) {
@@ -1465,15 +1519,18 @@ sub process_package {
 	    }
 	}
 	post_pkg_process_overrides($pkg_path);
-    }
 
-    if (!$keep_lab) {
-	auto_clean_package($lpkg) or $exit_code = 2;
-    }
+	if (!$keep_lab) {
+	    auto_clean_package($lpkg) or $exit_code = 2;
+	}
 
-    # All successful, make sure to record it so we do not recheck the same package
-    # in a later run (mostly for archive-wide checks).
-    $lpkg->update_status_file($LINTIAN_VERSION);
+	# All successful, make sure to record it so we do not recheck the same package
+	# in a later run (mostly for archive-wide checks).
+	$lpkg->update_status_file($LINTIAN_VERSION);
+
+    } # end foreach my $proc ($group->get_processable())
+    %running_jobs = ();
+
     return 1;
 }
 
