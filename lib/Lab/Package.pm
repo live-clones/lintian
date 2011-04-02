@@ -118,7 +118,7 @@ Returns the base directory of this package inside the lab.
 
 =cut
 
-Lab::Package->mk_accessors(qw(lab pkg_name pkg_version pkg_path pkg_type base_dir));
+Lab::Package->mk_ro_accessors(qw(lab pkg_name pkg_version pkg_path pkg_type base_dir));
 
 =pod
 

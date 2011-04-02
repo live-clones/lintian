@@ -120,7 +120,7 @@ to less dangerous (but possibly invalid) values.
 
 =cut
 
-Lintian::Processable->mk_accessors (qw(pkg_name pkg_version pkg_src pkg_arch pkg_path pkg_type pkg_src_version group tainted));
+Lintian::Processable->mk_ro_accessors (qw(pkg_name pkg_version pkg_src pkg_arch pkg_path pkg_type pkg_src_version group tainted));
 
 =pod
 
