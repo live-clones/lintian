@@ -1038,8 +1038,8 @@ foreach my $gname (sort $pool->get_group_names()) {
     my $group = $pool->get_group($gname);
     my $ginfo = {};
     my $glpkg = {};
-    unpack_group($group, $ginfo, $glpkg);
-    process_group($group, $ginfo, $glpkg) if $action eq 'check';
+    unpack_group($group);
+    process_group($group) if $action eq 'check';
 }
 
 $TAGS->file_end();
@@ -1298,7 +1298,7 @@ sub post_pkg_process_overrides{
 }
 
 sub unpack_group {
-    my ($group, $ginfo, $glpkg) = @_;
+    my ($group) = @_;
   PROC:
     foreach my $proc ($group->get_processables()){
 	my $pkg_name = $proc->pkg_name();
@@ -1410,9 +1410,7 @@ sub unpack_group {
 
 	if ($action eq 'check') {
 	    # We only need this if we are checking the package later
-	    $cid = $pkg_name . '_' . $proc->pkg_arch() . '_' . $pkg_ver;
-	    $ginfo->{$pkg_type}->{$cid} = Lintian::Collect->new($pkg_name, $pkg_type);
-	    $glpkg->{$pkg_type}->{$cid} = $lpkg;
+	    $proc->lab_pkg($lpkg);
 	} else {
 	    # else we are done - not sure if it makes any sense if we are unpacking
 	    # but this is the old behaviour, so we stick with it.
@@ -1429,7 +1427,7 @@ sub unpack_group {
 }
 
 sub process_group {
-    my ($group, $ginfo, $glpkg) = @_;
+    my ($group) = @_;
   PROC:
     foreach my $proc ($group->get_processables()){
 	my $pkg_name = $proc->pkg_name();
@@ -1437,10 +1435,8 @@ sub process_group {
 	my $pkg_type = $proc->pkg_type();
 	my $pkg_path = $proc->pkg_path();
 	my $pkg_arch = $proc->pkg_arch();
-	my $cid = $pkg_name . '_' . $proc->pkg_arch() . '_' . $proc->pkg_version();
-	my $lpkg = $glpkg->{$pkg_type}->{$cid};
-	my $info = $ginfo->{$pkg_type}->{$cid};
-
+	my $lpkg = $proc->lab_pkg();
+	my $info = $proc->info();
 	my $base = $lpkg->base_dir();
 
 	$TAGS->file_start($pkg_path, $pkg_name, $pkg_ver, $pkg_arch, $pkg_type);

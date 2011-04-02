@@ -122,7 +122,31 @@ to less dangerous (but possibly invalid) values.
 
 Lintian::Processable->mk_ro_accessors (qw(pkg_name pkg_version pkg_src pkg_arch pkg_path pkg_type pkg_src_version group tainted));
 
-=pod
+=item $proc->info()
+
+Returns L<Lintian::Collect|$info> element for this processable.
+
+=cut
+
+sub info{
+    my ($self) = @_;
+    my $info = $self->{info};
+    if (! defined $info) {
+        # load only if we need it
+        require Lintian::Collect;
+        my $info = Lintian::Collect->new($self->pkg_name(), $self->pkg_type());
+        $self->{info} = $info;
+    }
+    return $info;
+}
+
+=item $proc->lab_pkg([$lpkg])
+
+Returns or sets the L<Lab::Package|$info> element for this processable.
+
+=cut
+
+Lintian::Processable->mk_accessors (qw(lab_pkg));
 
 =item $proc->set_group($group)
 
