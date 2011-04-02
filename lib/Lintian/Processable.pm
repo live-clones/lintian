@@ -132,9 +132,13 @@ sub info{
     my ($self) = @_;
     my $info = $self->{info};
     if (! defined $info) {
+        my $lpkg = $self->lab_pkg();
+        fail "Need a Lab package before creating a Lintian::Collect\n"
+            unless defined $lpkg;
         # load only if we need it
         require Lintian::Collect;
-        $info = Lintian::Collect->new($self->pkg_name(), $self->pkg_type());
+        $info = Lintian::Collect->new($self->pkg_name(), $self->pkg_type(),
+            $lpkg->base_dir());
         $self->{info} = $info;
     }
     return $info;

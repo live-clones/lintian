@@ -26,7 +26,7 @@ use Util qw(fail);
 # based on the package type, and return it.  fail with unknown types,
 # since we do not check in other packes if this returns a value.
 sub new {
-    my ($class, $pkg, $type) = @_;
+    my ($class, $pkg, $type, $base_dir) = @_;
     my $object;
     if ($type eq 'source') {
         require Lintian::Collect::Source;
@@ -42,6 +42,7 @@ sub new {
     }
     $object->{name} = $pkg;
     $object->{type} = $type;
+    $object->{base_dir} = $base_dir;
     return $object;
 }
 
@@ -59,6 +60,13 @@ sub type {
     return $self->{type};
 }
 
+# Return the base dir of the package's lab.
+# sub base_dir Needs-Info <>
+sub base_dir {
+    my ($self) = @_;
+    return $self->{base_dir};
+}
+
 # Return the value of the specified control field of the package, or undef if
 # that field wasn't present in the control file for the package.  For source
 # packages, this is the *.dsc file; for binary packages, this is the control
@@ -68,7 +76,8 @@ sub type {
 sub field {
     my ($self, $field) = @_;
     return $self->{field}{$field} if exists $self->{field}{$field};
-    if (open(FIELD, '<', "fields/$field")) {
+    my $base_dir = $self->base_dir();
+    if (open(FIELD, '<', "$base_dir/fields/$field")) {
         local $/;
         my $value = <FIELD>;
         close FIELD;
@@ -145,6 +154,10 @@ Returns the name of the package.
 =item type()
 
 Returns the type of the package.
+
+=item base_dir()
+
+Returns the base_dir where all the package information is stored.
 
 =back
 

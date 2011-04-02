@@ -54,11 +54,12 @@ sub native {
 sub changelog {
     my ($self) = @_;
     return $self->{changelog} if exists $self->{changelog};
+    my $base_dir = $self->base_dir();
     # sub changelog Needs-Info changelog-file
-    if (-l 'changelog' || ! -f 'changelog') {
+    if (-l "$base_dir/changelog" || ! -f "$base_dir/changelog") {
         $self->{changelog} = undef;
     } else {
-        my %opts = (infile => 'changelog', quiet => 1);
+        my %opts = (infile => "$base_dir/changelog", quiet => 1);
         $self->{changelog} = Parse::DebianChangelog->init(\%opts);
     }
     return $self->{changelog};
@@ -70,12 +71,12 @@ sub changelog {
 sub index {
     my ($self) = @_;
     return $self->{index} if exists $self->{index};
-
+    my $base_dir = $self->base_dir();
     my (%idx, %dir_counts);
-    open my $idx, '<', 'index'
-        or fail("cannot open index file index: $!");
-    open my $num_idx, '<', 'index-owner-id'
-        or fail("cannot open index file index-owner-id: $!");
+    open my $idx, '<', "$base_dir/index"
+        or fail("cannot open index file $base_dir/index: $!");
+    open my $num_idx, '<', "$base_dir/index-owner-id"
+        or fail("cannot open index file $base_dir/index-owner-id: $!");
     while (<$idx>) {
         chomp;
 
@@ -139,11 +140,11 @@ sub sorted_index {
 sub file_info {
     my ($self) = @_;
     return $self->{file_info} if exists $self->{file_info};
-
+    my $base_dir = $self->base_dir();
     my %file_info;
     # sub file_info Needs-Info file-info
-    open(my $idx, '<', 'file-info')
-        or fail("cannot open file-info: $!");
+    open(my $idx, '<', "$base_dir/file-info")
+        or fail("cannot open $base_dir/file-info: $!");
     while (<$idx>) {
         chomp;
 
@@ -180,11 +181,11 @@ sub sorted_file_info{
 sub scripts {
     my ($self) = @_;
     return $self->{scripts} if exists $self->{scripts};
-
+    my $base_dir = $self->base_dir();
     my %scripts;
     # sub scripts Needs-Info scripts
-    open(SCRIPTS, '<', 'scripts')
-	or fail("cannot open scripts file: $!");
+    open(SCRIPTS, '<', "$base_dir/scripts")
+	or fail("cannot open scripts $base_dir/file: $!");
     while (<SCRIPTS>) {
 	chomp;
 	my (%file, $name);
@@ -209,12 +210,12 @@ sub scripts {
 sub objdump_info {
     my ($self) = @_;
     return $self->{objdump_info} if exists $self->{objdump_info};
-
+    my $base_dir = $self->base_dir();
     my %objdump_info;
     my ($dynsyms, $file);
     # sub objdump_info Needs-Info objdump-info
-    open(my $idx, '<', 'objdump-info')
-        or fail("cannot open objdump-info: $!");
+    open(my $idx, '<', "$base_dir/objdump-info")
+        or fail("cannot open $base_dir/objdump-info: $!");
     while (<$idx>) {
         chomp;
 
