@@ -134,7 +134,7 @@ sub info{
     if (! defined $info) {
         # load only if we need it
         require Lintian::Collect;
-        my $info = Lintian::Collect->new($self->pkg_name(), $self->pkg_type());
+        $info = Lintian::Collect->new($self->pkg_name(), $self->pkg_type());
         $self->{info} = $info;
     }
     return $info;

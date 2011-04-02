@@ -1036,8 +1036,6 @@ my %overrides;
 
 foreach my $gname (sort $pool->get_group_names()) {
     my $group = $pool->get_group($gname);
-    my $ginfo = {};
-    my $glpkg = {};
     unpack_group($group);
     process_group($group) if $action eq 'check';
 }
