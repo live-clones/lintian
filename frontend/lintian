@@ -1484,7 +1484,7 @@ sub process_group {
 		}
 
 		debug_msg(1, "Running check: $check ...");
-		my $returnvalue = Checker::runcheck($pkg_name, $pkg_type, $info, $check);
+		my $returnvalue = Checker::runcheck($pkg_name, $pkg_type, $info, $check, $proc, $group);
 		# Set exit_code correctly if there was not yet an exit code
 		$exit_code = $returnvalue unless $exit_code;
 

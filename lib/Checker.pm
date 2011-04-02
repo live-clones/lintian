@@ -30,7 +30,7 @@ my $LINTIAN_ROOT = $main::LINTIAN_ROOT;
 my $debug = $::debug;
 
 sub runcheck {
-	my ($pkg, $type, $info, $name) = @_;
+	my ($pkg, $type, $info, $name, @args) = @_;
 
 	# Will be set to 2 if error is encountered
 	my $return = 0;
@@ -41,7 +41,7 @@ sub runcheck {
 	require "$LINTIAN_ROOT/checks/$name";
 
 	$name =~ s/[-.]/_/g;
-	eval { &{'Lintian::'.$name.'::run'}($pkg, $type, $info) };
+	eval { &{'Lintian::'.$name.'::run'}($pkg, $type, $info, @args) };
 	if ( $@ ) {
 	    print STDERR $@;
 	    print STDERR "internal error: cannot run $name check on package $pkg\n";
