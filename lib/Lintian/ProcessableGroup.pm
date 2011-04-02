@@ -171,7 +171,7 @@ sub add_processable{
     return 1;
 }
 
-=item $group->get_processables()
+=item $group->get_processables([$type])
 
 Returns an array of all processables in $group.  The processables are
 returned in the following order: changes (if any), source (if any),
@@ -183,11 +183,23 @@ packages in and some parts of the code relies on this order.
 In scalar context, this will return a copy to a list ref containing
 the processables.
 
+Note if $type is given, then only processables of that type is
+returned.
+
 =cut
 
 sub get_processables {
-    my ($self) = @_;
+    my ($self, $type) = @_;
     my @result = ();
+    if (defined $type){
+        # We only want $type
+        if ($type eq 'changes' or $type eq 'source'){
+            push @result, $self->{$type} if defined $self->{$type};
+            return @result;
+        }
+        return values %{$self->{$type}} if $type eq 'binary' or $type eq 'udeb';
+        fail "Unknown type of processable: $type";
+    }
     # We return changes, dsc, debs and udebs in that order,
     # because that is the order lintian used to process a changes
     # file (modulo debs<->udebs ordering).
