@@ -1,0 +1,99 @@
+# symlinks -- lintian check script -*- perl -*-
+#
+# Copyright (C) 2011 Niels Thykier
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+package Lintian::symlinks;
+use strict;
+use warnings;
+
+use Lintian::Relation ();
+use Lintian::Tags qw(tag);
+use Util;
+
+sub run {
+
+my $pkg = shift;
+my $type = shift;
+my $info = shift;
+my $proc = shift;
+my $group = shift;
+
+my $index = $info->index;
+my @brokenlinks;
+my @dindexes;
+my $relation;
+
+foreach my $file (@{$info->sorted_index}) {
+    my $index_info = $index->{$file};
+    my $perm = $index_info->{type};
+    if ($perm =~ m/^l/o){
+        my $target = $index_info->{link}//'';
+        my $mylink = $target;
+        # Should not happen (too often) - but just in case
+        next unless $target or $target =~ m@^/++$@;
+	$mylink =~ s,//+,/,g;
+        $mylink =~ s@/$@@o;
+
+
+        if ($target =~ m@^/@o){
+            # absolute link - remove the initial slash
+            $mylink = substr $mylink, 1;
+        } else {
+            # relative - break down the link
+            # FIXME
+            next;
+        }
+
+        # Ignore links pointing to common things that may exist
+        # even if they are not shipped by any binary from this
+        # source package.
+        next if $mylink =~ m@man/man\d/undocumented@o or
+            $mylink =~ m@^etc/alternatives/@o;
+        
+        # Possibly broken symlink
+        push @brokenlinks, [$file, $mylink, $target] unless $index->{$mylink};
+    }
+
+}
+
+return unless @brokenlinks;
+
+# Check our dependencies:
+$relation = $info->relation('strong');
+foreach my $depproc ($group->get_processables($type)){
+    if ($relation->implies($depproc->pkg_name())){
+	push @dindexes, $depproc->info->index;        
+    }
+}
+
+BLINK:
+foreach my $blink (@brokenlinks){
+    my ($file, $mylink, $target) = @$blink;
+    foreach my $dindex (@dindexes){
+        # Is it in our dependency?
+        next BLINK if $dindex->{$mylink};
+    }
+    # nope - not found in any of our direct dependencies.
+    tag 'package-contains-broken-symlink', $file, $target
+}
+
+}
+
+1;
+__END__

@@ -1,0 +1,5 @@
+# broken links
+etc/some.conf usr/lib/broken-links/some.conf
+
+# valid links
+etc/valid.conf usr/lib/data-pkg/valid.conf

@@ -1,0 +1,13 @@
+Check-Script: symlinks
+Author: Christian Schwarz <schwarz@debian.org>
+Abbrev: sym
+Type: binary, udeb
+Needs-Info: fields, index
+Info: This script checks for broken symlinks.
+
+Tag: package-contains-broken-symlink
+Severity: normal
+Certainty: possible
+Info: The package contains a symlink but the destination
+ for the link does not exist in the package nor in its
+ direct dependencies.

@@ -1,0 +1,29 @@
+Source: {$srcpkg}
+Priority: extra
+Section: devel
+Maintainer: {$author}
+Standards-Version: {$standards_version}
+Build-Depends: debhelper (>= 7.0.50~)
+
+Package: broken-links
+Architecture: all
+Depends: $\{misc:Depends\}, data-pkg
+Description: {$description} - symlinks
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+ .
+ Contains only symlinks.
+
+Package: data-pkg
+Architecture: all
+Depends: $\{misc:Depends\}
+Description: {$description} - data
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+ .
+ Contains actual files.
+
