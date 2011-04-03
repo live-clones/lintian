@@ -159,7 +159,6 @@ my $py_support_nver = undef;
 # read data from objdump-info file
 foreach my $file (sort keys %{$info->objdump_info}) {
     my $objdump = $info->objdump_info->{$file};
-    $file = './' . $file;
 
     if (defined $objdump->{NEEDED}) {
 	my $lib = $objdump->{NEEDED};
