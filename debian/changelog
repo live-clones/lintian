@@ -5,6 +5,13 @@ lintian (2.5.0~rc3) UNRELEASED; urgency=low
       - dir-or-file-in-run
       - intra-source-package-circular-dependency
       - package-contains-broken-symlink
+      - classpath-contains-relative-path
+      - classpath-contains-files-not-in-usr-share
+      - jar-not-in-usr-share
+      - executable-jar-without-main-class
+      - missing-dep-on-jarwrapper
+      - missing-classpath
+      - javalib-but-no-public-jars
 
   * checks/*.desc:
     + [NT] Updated the Needs-Info field to include the new
@@ -29,6 +36,8 @@ lintian (2.5.0~rc3) UNRELEASED; urgency=low
       (Closes: #622396)
   * checks/files{,.desc}:
     + [NT] Added dir-or-file-in-run tag.
+  * checks/java{,.desc}:
+    + [NT] Added file from patches submitted by Vicent Fourmond.
   * checks/manpages:
     + [NT] Fixed false-positive binary-without-manpage when the
       manpage is in a direct dependency of the package and the

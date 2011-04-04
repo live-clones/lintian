@@ -1,0 +1,68 @@
+Check-Script: java
+Author: Vincent Fourmond <fourmond@debian.org>
+Abbrev: java
+Type: binary
+Needs-Info: java-info
+Info: This script checks if the packages comply with various aspects of the
+ debian Java policy.
+
+Tag: classpath-contains-relative-path
+Severity: normal
+Certainty: possible
+Info: The classpath listed in some of the files references relative path
+ with subdirectories. This is probably the remnants of a build-time
+ classpath that are not relevant for a JAR bundled in a Debian package.
+
+Tag: classpath-contains-files-not-in-usr-share
+Severity: normal
+Certainty: certain
+Info: The classpath listed in some of the files references files outside
+ of /usr/share, while all installed JAR files must be within
+ /usr/share/java for libraries or /usr/share/<i>package</i> for JARs for
+ private use.
+
+Tag: jar-not-in-usr-share
+Severity: important
+Certainty: certain
+Ref: java-policy 2.2, java-policy 2.3
+Info: The classpath listed in some of the files references files outside
+ of /usr/share, while all installed JAR files must be within
+ /usr/share/java for libraries or /usr/share/<i>package</i> for JARs for
+ private use.
+
+Tag: executable-jar-without-main-class
+Severity: serious
+Certainty: certain
+Ref: java-policy 2.2
+Info: An executable JAR must have a Main-Class set in its manifest.
+
+Tag: missing-dep-on-jarwrapper
+Severity: serious
+Certainty: certain
+Ref: java-policy 2.2
+Info: Packages containing an executable JAR must depend on jarwrapper or
+ other packages providing similar functionalities.
+
+Tag: missing-classpath
+Severity: normal
+Certainty: possible
+Info: None of the jar files contained in the package declare a Class-Path
+ in their manifest, but the package depends on at least one java library.
+ That means that either the dependency is not needed or at least one of
+ the JARs should include a classpath.
+ .
+ It is important to keep the classpath up-to-date to allow the
+ automatic detection of dependencies at run time. Having a Class-Path
+ element in the manifest allows for painless transitions if the class
+ path of the dependencies of the library ever changes.
+ .
+ Failing to do that means that for every change in class path, all
+ rdepends must update their wrapper scripts, which is a lot of work
+ for nothing.
+
+Tag: javalib-but-no-public-jars
+Severity: minor
+Certainty: possible
+Info: The name of the package suggests that it contains a java library but
+ it does not contain any JAR file in /usr/share/java, while the java policy
+ mandates that JAR files outside /usr/share/java are for private use.
