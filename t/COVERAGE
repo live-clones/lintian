@@ -212,7 +212,6 @@ debconf using-first-person-in-templates
 debconf using-imperative-form-in-templates
 debconf using-question-in-extended-description-in-templates
 
-debhelper package-lacks-versioned-build-depends-on-debhelper
 debhelper uses-dh-python-with-no-pycompat
 
 fields build-depends-indep-without-arch-indep
@@ -475,7 +474,6 @@ libbaz
   maintainer-shell-script-fails-syntax-check
   missing-dependency-on-perlapi
   missing-depends-line
-  package-lacks-versioned-build-depends-on-debhelper
   package-name-doesnt-match-sonames
   postinst-should-not-set-usr-doc-link
   shlib-with-executable-bit
