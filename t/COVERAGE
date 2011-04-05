@@ -1,4 +1,4 @@
-Last generated 2011-03-26
+Last generated 2011-04-05
 
 The following tags are not tested by the test suite:
 
@@ -218,7 +218,6 @@ debhelper uses-dh-python-with-no-pycompat
 fields build-depends-indep-without-arch-indep
 fields dbg-package-missing-depends
 fields debug-package-should-be-priority-extra
-fields versioned-dependency-satisfied-by-perl
 fields wrong-debian-qa-address-set-as-maintainer
 fields wrong-debian-qa-group-name
 
@@ -509,7 +508,6 @@ maintainer-scripts
   wrong-debian-qa-group-name
 
 relations
-  versioned-dependency-satisfied-by-perl
 
 scripts
   calls-suidperl-directly
