@@ -1,5 +1,5 @@
 Check-Script: symlinks
-Author: Christian Schwarz <schwarz@debian.org>
+Author: Niels Thykier <niels@thykier.net>
 Abbrev: sym
 Type: binary, udeb
 Needs-Info: fields, index
