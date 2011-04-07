@@ -75,7 +75,7 @@ if ($firstline) {
 }
 
 my $version = $info->field('version');
-my $maintainer = canonicalize($info->field('maintainer'));
+my $maintainer = canonicalize($info->field('maintainer')//'');
 my $uploaders = $info->field('uploaders');
 
 my $version_nmuness = 0;
