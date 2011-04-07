@@ -335,12 +335,8 @@ foreach my $file (@{$info->sorted_index}) {
 	    }
 	    close(PHPINI);
 	}
-	# ---------------- /etc/rc.d
-	elsif ($type ne 'udeb' and $file =~ m,^etc/rc\.d/\S, and $pkg !~ /^(?:sysvinit|file-rc)$/) {
-	    tag 'package-installs-into-etc-rc.d', $file;
-	}
-	# ---------------- /etc/rc?.d
-	elsif ($type ne 'udeb' and $file =~ m,^etc/rc(?:\d|S)\.d/\S, and $pkg !~ /^(?:sysvinit|file-rc)$/) {
+	# ---------------- /etc/rc.d && /etc/rc?.d
+	elsif ($type ne 'udeb' and $file =~ m,^etc/rc(?:\d|S)?\.d/\S, and $pkg !~ /^(?:sysvinit|file-rc)$/) {
 	    tag 'package-installs-into-etc-rc.d', $file;
 	}
 	# ---------------- /etc/rc.boot
