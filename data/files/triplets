@@ -1,7 +1,7 @@
 # List of "triplet architecture" relationships as provided by
 # dpkg-architecture
-# Last updated: 2011-02-19
-# With: Debian dpkg-architecture version 1.15.8.10.
+# Last updated: 2011-04-07
+# With: Debian dpkg-architecture version 1.16.0.1.
 
 alpha-darwin darwin-alpha
 alpha-freebsd freebsd-alpha
@@ -23,6 +23,7 @@ arm-knetbsd-gnu knetbsd-arm
 arm-kopensolaris-gnu kopensolaris-arm
 arm-linux-gnu arm
 arm-linux-gnueabi armel
+arm-linux-gnueabihf armhf
 arm-linux-uclibc uclibc-linux-arm
 arm-linux-uclibceabi uclibc-linux-armel
 arm-netbsd netbsd-arm

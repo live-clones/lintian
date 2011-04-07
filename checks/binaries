@@ -39,6 +39,7 @@ our %ARCH_REGEX = (
 	'arm'            => qr'ELF 32-bit LSB .* ARM, version \d,',
 	'armeb'          => qr'ELF 32-bit MSB .* ARM',
 	'armel'          => qr'ELF 32-bit LSB .* ARM, .* \(SYSV\)',
+	'armhf'          => qr'ELF 32-bit LSB .* ARM, .* \(SYSV\)',
 #	'avr32'          => qr'ELF 32-bit MSB .* \(SYSV\)',
 	'hppa'           => qr'ELF 32-bit MSB .* PA-RISC',
 	'hppa64'         => qr'ELF 64-bit MSB .* PA-RISC',
