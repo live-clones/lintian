@@ -12,6 +12,7 @@ lintian (2.5.0~rc3) UNRELEASED; urgency=low
   * private/runtests:
     + [NT] Added support for dumping build logs if a test fails.
       (Closes: #621658)
+    + [NT] Disabled pkgbinarymangler during tests.  (Closes: #621681)
 
  -- Niels Thykier <niels@thykier.net>  Thu, 07 Apr 2011 19:00:59 +0200
 
