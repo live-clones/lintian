@@ -1,8 +1,14 @@
 lintian (2.5.0~rc3) UNRELEASED; urgency=low
 
+  * Summary of tag changes:
+    + Added:
+      - dir-or-file-in-run
+
   * checks/binaries:
     + [NT] Accepted patch from Loïc Minier to support the armhf
       architecture.  (Closes: #618587)
+  * checks/files{,.desc}:
+    + [NT] Added dir-or-file-in-run tag.
 
   * data/fields/architectures:
     + [NT] Updated to include armhf.
