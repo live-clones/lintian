@@ -275,7 +275,7 @@ sub check_debfiles {
     }
 
     # Additional special checks only for the diff, not the full source.
-    if ($name =~ m@(?:.+\.)?substvars$@) {
+    if ($name =~ m@^(?:.+\.)?substvars$@o) {
         tag 'diff-contains-substvars', "debian/$name";
     }
 }
