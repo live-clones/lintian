@@ -12,6 +12,8 @@ lintian (2.5.0~rc3) UNRELEASED; urgency=low
       - missing-dep-on-jarwrapper
       - missing-classpath
       - javalib-but-no-public-jars
+      - missing-manifest
+      - codeless-jar
 
   * checks/*.desc:
     + [NT] Updated the Needs-Info field to include the new

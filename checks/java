@@ -27,7 +27,6 @@ use lib "$ENV{'LINTIAN_ROOT'}/checks/";
 use Lintian::Tags qw(tag);
 use Util;
 
-
 sub run {
 
 my $pkg = shift;
@@ -45,43 +44,48 @@ my @java_lib_depends = ($info->relation('strong')->unparse() =~
 # We first loop over jar files to find problems
 
 for my $jar_file (keys %{$java_info}) {
-    my $manifest = $java_info->{$jar_file};
+    my $file_list = $java_info->{$jar_file}->{files};
+    my $manifest = $java_info->{$jar_file}->{manifest};
+    my $operm = $info->{index}->{$jar_file}->{operm};
 
-    if($manifest->{'Manifest-Version'}) {
-	# We do have a real JAR with a real manifest.
-
-	my $operm = $info->{index}->{$jar_file}->{operm};
-	if(($operm & 01 or
-	    $operm & 010 or $operm & 0100)) {
-	    # Executable ?
-	    tag "executable-jar-without-main-class", "$jar_file" unless
-		$manifest->{'Main-Class'};
-
-	    # Here, we need to check that the package depends on
-	    # jarwrapper.
-	    if(! $info->relation('strong')->implies('jarwrapper')) {
-		$missing_jarwrapper = 1;
-	    }
-	}
-	elsif ($jar_file !~ m#^usr/share/#) {
-	    tag "jar-not-in-usr-share", "$jar_file";
-	}
-    }
-    if($jar_file =~ m#^usr/share/java#) {
+    if($jar_file =~ m#^usr/share/java#o) {
 	$has_public_jars = 1;
     }
 
-    my $cp = $manifest->{'Class-Path'};
+    if(! grep(/\.class$/, @{$file_list})) {
+	tag "codeless-jar", $jar_file;
+    } elsif (! $manifest) {
+        tag "missing-manifest", $jar_file;
+    }
+
+    if($operm & 0111) {
+	# Executable ?
+	tag "executable-jar-without-main-class", "$jar_file" unless
+	    $manifest && $manifest->{'Main-Class'};
+
+	# Here, we need to check that the package depends on
+	# jarwrapper.
+        $missing_jarwrapper = 1
+            unless $info->relation('strong')->implies('jarwrapper');
+    }
+    elsif ($jar_file !~ m#^usr/share/#) {
+	tag "jar-not-in-usr-share", "$jar_file";
+    }
+
+    my $cp = '';
+    $cp = $manifest->{'Class-Path'} if $manifest;
     # Only run the tests when a classpath is present
     if($cp) {
 	my $relative = 0;
 	my $outside_usr_share = 0;
-	my @paths = split(/\s+/, $cp);
+	my @paths = split(m/\s++/o, $cp);
 	$has_classpath = 1;
 	for my $p (@paths) {
 	    if($p) {
-		if($p !~ m#^/#) {
-		    if($p =~ m#/#) {
+                # Strip leading ./
+                $p =~ s@^\./++@@og;
+		if($p !~ m#^/#o) {
+		    if($p =~ m#/#o) {
 			# Relative path with subdirectories.
 			$relative++;
 		    }
@@ -89,7 +93,7 @@ for my $jar_file (keys %{$java_info}) {
 		    # @todo add an info tag for relative paths, to educate
 		    # maintainers ?
 		}
-		elsif($p !~ m#/usr/share/#) {
+		elsif($p !~ m#/usr/share/#o) {
 		    $outside_usr_share++;
 		}
 	    }
@@ -105,9 +109,9 @@ for my $jar_file (keys %{$java_info}) {
     }
 }
 
-if($missing_jarwrapper) {
-    tag 'missing-dep-on-jarwrapper';
-}
+
+tag 'missing-dep-on-jarwrapper' if $missing_jarwrapper;
+
 
 if(! $has_classpath && @java_lib_depends) {
     tag "missing-classpath", join(", ", @java_lib_depends);

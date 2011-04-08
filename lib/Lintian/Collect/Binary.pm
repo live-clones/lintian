@@ -299,16 +299,32 @@ sub java_info {
     open(my $idx, '<', 'java-info')
         or fail("cannot open java-info: $!");
     my $file;
+    my $file_list = 0;
+    my $manifest = 0;
     while (<$idx>) {
         chomp;
         next if m/^\s*$/o;
 
         if (m#^-- \./(.+)$#o) {
             $file = $1;
-            $java_info{$file} = {};
+            $java_info{$file}->{files} = [];
+            $file_list = $java_info{$file}->{files};
+            $manifest = 0;
         }
-        elsif (m#^  (\S+):\s(.*)$#o) {
-            $java_info{$file}->{$1} = $2;
+        elsif (m#^-- MANIFEST: \./(.+)$#o) {
+            # TODO: check $file == $1 ?
+            $java_info{$file}->{manifest} = {};
+            $manifest = $java_info{$file}->{manifest};
+            $file_list = 0;
+        }
+        else {
+            if($manifest && m#^  (\S+):\s(.*)$#o) {
+                $manifest->{$1} = $2;
+            }
+            elsif($file_list) {
+                push @{$file_list}, $_;
+            }
+
         }
     }
     $self->{java_info} = \%java_info;
@@ -404,11 +420,23 @@ this method expects to find in F<changelog>.
 =item java_info()
 
 Returns a hash containing information about JAR files found in binary
-packages, in the form I<file name> -> I<manifest>, where manifest is a
-hash containing the contents of the JAR file manifest. For instance,
+packages, in the form I<file name> -> I<info>, where I<info> is a hash
+containing the following keys:
+
+=over 4
+
+=item manifest
+
+A hash containing the contents of the JAR file manifest. For instance,
 to find the classpath of I<$file>, you could use:
 
  my $cp = $info->java_info()->{$file}->{'Class-Path'};
+
+=item files
+
+the list of the files contained in the archive.
+
+=back
 
 =item native()
 
