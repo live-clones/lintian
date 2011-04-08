@@ -61,6 +61,9 @@ lintian (2.5.0~rc3) UNRELEASED; urgency=low
     + [NT] Updated to include armhf.
   * data/files/triplets:
     + [NT] Updated to include armhf triplet.
+  * data/output/manual-references:
+    + [NT] Accepted patch from Vincent Fourmond to add the links
+      to the Java Policy.
   * data/spelling/corrections:
     + [NT] Added a lot of spelling mistakes with corrections.
       Kudos to Kevin Ryde for these.  (Closes: #619075)

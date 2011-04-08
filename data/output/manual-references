@@ -436,6 +436,9 @@ fhs::generalguidelines::General Guidelines::http://www.pathname.com/fhs/pub/fhs-
 fhs::scope::Scope::http://www.pathname.com/fhs/pub/fhs-2.3.html#SCOPE
 fhs::acknowledgments::Acknowledgments::http://www.pathname.com/fhs/pub/fhs-2.3.html#ACKNOWLEDGMENTS
 fhs::contributors::Contributors::http://www.pathname.com/fhs/pub/fhs-2.3.html#CONTRIBUTORS
+java-policy::::Debian Java Policy::http://www.debian.org/doc/packaging-manuals/java-policy/
+java-policy::2.2::Debian Java Policy::http://www.debian.org/doc/packaging-manuals/java-policy/x85.html
+java-policy::2.3::Debian Java Policy::http://www.debian.org/doc/packaging-manuals/java-policy/x104.html
 libpkg-guide::::Debian Library Packaging Guide::http://www.netfort.gr.jp/~dancer/column/libpkg-guide/libpkg-guide.html
 libpkg-guide::1::Introduction::http://www.netfort.gr.jp/~dancer/column/libpkg-guide/libpkg-guide.html#introduction
 libpkg-guide::2::Traits of Debian::http://www.netfort.gr.jp/~dancer/column/libpkg-guide/libpkg-guide.html#debiantrait
