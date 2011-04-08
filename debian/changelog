@@ -14,6 +14,9 @@ lintian (2.5.0~rc3) UNRELEASED; urgency=low
     + [NT] Updated to include armhf.
   * data/files/triplets:
     + [NT] Updated to include armhf triplet.
+  * data/spelling/corrections:
+    + [NT] Added a lot of spelling mistakes with corrections.
+      Kudos to Kevin Ryde for these.  (Closes: #619075)
 
   * private/runtests:
     + [NT] Added support for dumping build logs if a test fails.
