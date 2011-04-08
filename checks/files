@@ -633,7 +633,7 @@ foreach my $file (@{$info->sorted_index}) {
     }
     elsif ($file =~ m,^hurd/.,) {
 	next;
-    } elsif ($file =~ m,^server/.,) {
+    } elsif ($file =~ m,^servers/.,) {
 	next;
     }
     # ---------------- /tmp, /var/tmp, /usr/tmp
