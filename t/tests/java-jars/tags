@@ -1,0 +1,9 @@
+E: libtesta-java: executable-jar-without-main-class usr/bin/testc.jar
+E: libtesta-java: jar-not-in-usr-share usr/lib/testb.jar
+E: libtesta-java: missing-dep-on-jarwrapper
+I: libtestc-java: javalib-but-no-public-jars
+W: libtesta-java: binary-without-manpage usr/bin/testc.jar
+W: libtesta-java: executable-not-elf-or-script usr/bin/testc.jar
+W: libtesta-java: missing-classpath libstuff-java
+W: libtestb-java: classpath-contains-files-not-in-usr-share usr/share/java/testd-1.0.jar: obviously-relative/stuff.jar /usr/lib/biniou.jar
+W: libtestb-java: classpath-contains-relative-path usr/share/java/testd-1.0.jar: obviously-relative/stuff.jar /usr/lib/biniou.jar

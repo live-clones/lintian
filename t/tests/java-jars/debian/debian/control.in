@@ -1,0 +1,34 @@
+Source: {$srcpkg}
+Priority: extra
+Section: {$section}
+Maintainer: {$author}
+Standards-Version: {$standards_version}
+Build-Depends: debhelper (>= 7.0.50~), javahelper, default-jdk
+
+Package: libtesta-java
+Architecture: {$architecture}
+Depends: $\{misc:Depends\}, libstuff-java
+Description: {$description} - part A
+ This is a test package designed to test various aspects of the
+ java-related QA code in lintian. First part.
+ .
+ This package should not be installed.
+
+Package: libtestb-java
+Architecture: {$architecture}
+Depends: $\{misc:Depends\}, libstuff-java
+Description: {$description} - part B
+ This is a test package designed to test various aspects of the
+ java-related QA code in lintian. Second part.
+ .
+ This package should not be installed.
+
+
+Package: libtestc-java
+Architecture: {$architecture}
+Depends: $\{misc:Depends\}
+Description: {$description} - part C
+ This is a test package designed to test various aspects of the
+ java-related QA code in lintian. Third part.
+ .
+ This package should not be installed.
