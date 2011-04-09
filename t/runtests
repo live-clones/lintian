@@ -231,7 +231,7 @@ $q->enqueue(@tests);
 for (my $i = 0; $i < $JOBS; $i++) {
     threads->create(sub {
 	while (my $t = $q->dequeue_nb()) {
-	    my $okay = test_changes($t);
+	    my $okay = eval { test_changes($t); };
 	    unless ($okay) {
 		exit 1 unless $run_all_tests;
 		lock($status);
@@ -244,6 +244,12 @@ $tests_run += scalar(@tests);
 
 for my $thr (threads->list()) {
     $thr->join();
+    if ($thr->error){
+	# This should not happen, but if a thread terminate
+	# badly make sure we do not return success.
+	lock($status);
+	$status = 1;
+    }
 }
 msg_flush;
 
@@ -283,7 +289,7 @@ $q->enqueue(@tests);
 for (my $i = 0; $i < $JOBS; $i++) {
     threads->create(sub {
 	while (my $t = $q->dequeue_nb()) {
-	    my $okay = test_deb($t);
+	    my $okay = eval { test_deb($t); };
 	    unless ($okay) {
 		exit 1 unless $run_all_tests;
 		lock($status);
@@ -296,6 +302,12 @@ $tests_run += scalar(@tests);
 
 for my $thr (threads->list()) {
     $thr->join();
+    if ($thr->error){
+	# This should not happen, but if a thread terminate
+	# badly make sure we do not return success.
+	lock($status);
+	$status = 1;
+    }
 }
 msg_flush;
 
@@ -335,7 +347,7 @@ $q->enqueue(@tests);
 for (my $i = 0; $i < $JOBS; $i++) {
     threads->create(sub {
 	while (my $t = $q->dequeue_nb()) {
-	    my $okay = test_source($t);
+	    my $okay = eval { test_source($t); };
 	    unless ($okay) {
 		exit 1 unless $run_all_tests;
 		lock($status);
@@ -348,6 +360,12 @@ $tests_run += scalar(@tests);
 
 for my $thr (threads->list()) {
     $thr->join();
+    if ($thr->error){
+	# This should not happen, but if a thread terminate
+	# badly make sure we do not return success.
+	lock($status);
+	$status = 1;
+    }
 }
 msg_flush;
 
@@ -387,7 +405,7 @@ $q->enqueue(@tests);
 for (my $i = 0; $i < $JOBS; $i++) {
     threads->create(sub {
 	while (my $t = $q->dequeue_nb()) {
-	    my $okay = test_package($t);
+	    my $okay = eval { test_package($t); };
 	    unless ($okay) {
 		exit 1 unless $run_all_tests;
 		lock($status);
@@ -400,6 +418,12 @@ $tests_run += scalar(@tests);
 
 for my $thr (threads->list()) {
     $thr->join();
+    if ($thr->error){
+	# This should not happen, but if a thread terminate
+	# badly make sure we do not return success.
+	lock($status);
+	$status = 1;
+    }
 }
 msg_flush;
 
