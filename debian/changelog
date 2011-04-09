@@ -10,6 +10,9 @@ lintian (2.5.0~rc3) UNRELEASED; urgency=low
   * checks/files{,.desc}:
     + [NT] Added dir-or-file-in-run tag.
 
+  * debian/control:
+    + [NT] Bumped Standards-Version to 3.9.2.
+
   * data/fields/architectures:
     + [NT] Updated to include armhf.
   * data/files/triplets:
@@ -17,6 +20,9 @@ lintian (2.5.0~rc3) UNRELEASED; urgency=low
   * data/spelling/corrections:
     + [NT] Added a lot of spelling mistakes with corrections.
       Kudos to Kevin Ryde for these.  (Closes: #619075)
+  * data/standards-version/release-dates:
+    + [NT] Added 3.9.2 as the newest Standards-Version.  Thanks to
+      Sven Joachim for the report.  (Closes: #621667)
 
   * private/runtests:
     + [NT] Added support for dumping build logs if a test fails.

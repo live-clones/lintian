@@ -40,7 +40,7 @@ Build-Depends: binutils,
                python,
                quilt,
                rsync
-Standards-Version: 3.9.1
+Standards-Version: 3.9.2
 Vcs-Git: git://git.debian.org/git/lintian/lintian.git
 Vcs-Browser: http://git.debian.org/?p=lintian/lintian.git
 
