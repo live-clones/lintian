@@ -9,6 +9,10 @@ lintian (2.5.0~rc3) UNRELEASED; urgency=low
       architecture.  (Closes: #618587)
   * checks/files{,.desc}:
     + [NT] Added dir-or-file-in-run tag.
+  * checks/scripts:
+    + [NT] Fixed false positive missing-dep-for-interpreter, if
+      the interpreter was dash, since dash is now essential.
+      (Closes: #620120)
 
   * debian/control:
     + [NT] Bumped Standards-Version to 3.9.2.
