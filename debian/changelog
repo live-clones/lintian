@@ -50,6 +50,9 @@ lintian (2.5.0~rc3) UNRELEASED; urgency=low
       collections where needed.
   * collection/{bin-pkg-control,fields,index}{,.desc}:
     + [NT] Added to replace various unpack scripts.
+  * collection/java-info{,.desc}:
+    + [NT] Accepted patch from Vincent Fourmond to implement
+      Java related data collection.
 
   * data/debhelper/alt-dh_commands:
     + [NT] New file; contains alternative dependencies for

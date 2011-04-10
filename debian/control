@@ -39,7 +39,8 @@ Build-Depends: binutils,
                perl (>= 5.12) | libtest-simple-perl (>= 0.93),
                python,
                quilt,
-               rsync
+               rsync,
+               unzip
 Standards-Version: 3.9.2
 Vcs-Git: git://git.debian.org/git/lintian/lintian.git
 Vcs-Browser: http://git.debian.org/?p=lintian/lintian.git
@@ -63,7 +64,8 @@ Depends: ${misc:Depends},
          liburi-perl,
          locales,
          man-db,
-         perl
+         perl,
+         unzip
 Suggests: binutils-multiarch, libtext-template-perl, man-db (>= 2.5.1-1)
 Description: Debian package checker
  Lintian dissects Debian packages and reports bugs and policy

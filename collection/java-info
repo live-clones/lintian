@@ -1,0 +1,72 @@
+#!/usr/bin/perl -w
+# java-info -- lintian collection script
+
+# Copyright (C) 2011 Vincent Fourmond
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+use strict;
+use warnings;
+
+# Sanity check
+unless (-d 'unpacked/') {
+    print STDERR 'error: collection script called in wrong directory!\n';
+    exit 2;
+}
+
+open (INDEX, '<', 'index')
+    or fail("cannot open index: $!\n");
+
+open (OUT, '>', 'java-info')
+    or fail("cannot open java-info: $!\n");
+
+chdir ('unpacked')
+    or fail ("unable to chdir to unpacked: $!\n");
+
+while (<INDEX>) {
+    chomp;
+    $_ = (split(' ', $_, 6))[5];
+    next if / -> .*/;		# We skip symlinks.
+    if (m#(\S+).jar$#i) {
+	my $file = $_;
+
+	# This script needs unzip, there's no way around.
+	print OUT "-- $file\n";
+
+	open MANIFEST, '-|', 'unzip', '-p', $file, 'META-INF/MANIFEST.MF';
+	my $first = 1;
+	while(my $line = <MANIFEST>) {
+	    chomp $line;
+	    $line =~ s/\r//g;
+	    if($line =~ m/^(\S+:)\s*(.*)/o) {
+		print OUT "\n" unless $first;
+		$first = 0;
+		print OUT "  $1 $2";
+	    }
+	    if($line =~ m/^ (.*)/o) {
+		print OUT "$1";
+	    }
+	}
+	close MANIFEST;
+	print OUT "\n" unless $first;
+    }
+}
+
+close INDEX;
+close OUT or fail("cannot write java-info: $!");
+
+exit 0

@@ -288,6 +288,33 @@ sub objdump_info {
     return $self->{objdump_info};
 }
 
+
+# Returns the information from collect/objdump-info
+# sub java_info Needs-Info java-info
+sub java_info {
+    my ($self) = @_;
+    return $self->{java_info} if exists $self->{java_info};
+
+    my %java_info;
+    open(my $idx, '<', 'java-info')
+        or fail("cannot open java-info: $!");
+    my $file;
+    while (<$idx>) {
+        chomp;
+        next if m/^\s*$/o;
+
+        if (m#^-- \./(.+)$#o) {
+            $file = $1;
+            $java_info{$file} = {};
+        }
+        elsif (m#^  (\S+):\s(.*)$#o) {
+            $java_info{$file}->{$1} = $2;
+        }
+    }
+    $self->{java_info} = \%java_info;
+    return $self->{java_info};
+}
+
 # Return a Lintian::Relation object for the given relationship field.  In
 # addition to all the normal relationship fields, the following special
 # field names are supported: all (pre-depends, depends, recommends, and
@@ -373,6 +400,15 @@ Returns the changelog of the binary package as a Parse::DebianChangelog
 object, or undef if the changelog doesn't exist.  The changelog-file
 collection script must have been run to create the changelog file, which
 this method expects to find in F<changelog>.
+
+=item java_info()
+
+Returns a hash containing information about JAR files found in binary
+packages, in the form I<file name> -> I<manifest>, where manifest is a
+hash containing the contents of the JAR file manifest. For instance,
+to find the classpath of I<$file>, you could use:
+
+ my $cp = $info->java_info()->{$file}->{'Class-Path'};
 
 =item native()
 
