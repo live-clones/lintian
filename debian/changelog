@@ -31,6 +31,9 @@ lintian (2.5.0~rc3) UNRELEASED; urgency=low
   * data/spelling/corrections:
     + [NT] Added a lot of spelling mistakes with corrections.
       Kudos to Kevin Ryde for these.  (Closes: #619075)
+  * data/spelling/corrections-multiword:
+    + [NT] Removed "helps to" as a spelling mistake.  Thanks to
+      Nicholas Bamber for the report.  (Closes: #622124)
   * data/standards-version/release-dates:
     + [NT] Added 3.9.2 as the newest Standards-Version.  Thanks to
       Sven Joachim for the report.  (Closes: #621667)
