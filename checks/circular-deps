@@ -1,0 +1,150 @@
+# circular-deps -- lintian check script -*- perl -*-
+
+# Copyright (C) 2011 Niels Thykier <niels@thykier.net>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+package Lintian::circular_deps;
+use strict;
+use warnings;
+
+use Lintian::Tags qw(tag);
+
+sub run {
+
+my $pkg = shift;
+my $type = shift;
+my $info = shift;
+my $proc = shift;
+my $group = shift;
+
+## To find circular dependencies, we will first generate
+## Strongly Connected Components using Tarjan's algorithm
+##
+## We are not using DepMap, because it cannot tell how the
+## circles are made - only that there exists at least 1
+## circle.
+
+# The packages a.k.a. nodes
+my @nodes = ();
+my %edges = ();
+my $sccs;
+
+foreach my $proc ($group->get_processables('binary')) {
+    my $pname = $proc->pkg_name;
+    my $relation = $proc->info->relation('strong');
+    my $deps = [];
+    foreach my $oproc ($group->get_processables('binary')) {
+        my $opname = $oproc->pkg_name;
+        next if $opname eq $pname;
+        push @$deps, $opname if $relation->implies($opname);
+    }
+    if (scalar @$deps > 0) {
+        # it depends on another package - it can cause
+        # a circular dependency
+        push @nodes, $pname;
+        $edges{$pname} = $deps;
+    }
+}
+
+# Bail now if we do not have at least two packages depending
+# on some other package from this source.
+return if scalar @nodes < 2;
+
+$sccs = Lintian::circular_deps::Graph->new(\@nodes, \%edges)->tarjans();
+
+foreach my $comp (@$sccs) {
+    # It takes two to tango... erh. make a circular dependency.
+    next if scalar @$comp < 2;
+    tag 'intra-source-package-circular-dependency', sort @$comp;
+}
+
+
+}
+
+## Encapsulate Tarjan's algorithm in an class/object to keep
+## the run sub somewhat sane.
+package Lintian::circular_deps::Graph;
+
+sub new{
+    my ($type, $nodes, $edges) = @_;
+    my $self = { nodes => $nodes, edges => $edges};
+    bless $self, $type;
+    return $self;
+}
+
+sub tarjans {
+    my ($self) = @_;
+    my $nodes = $self->{nodes};
+    $self->{index} = 0;
+    $self->{scc} = [];
+    $self->{stack} = [];
+    $self->{on_stack} = {};
+    # The information for each node:
+    #  $self->{node_info}->{$node}->[X], where X is:
+    #    0 => index
+    #    1 => low_index
+    $self->{node_info} = {};
+    foreach my $node (@$nodes) {
+        $self->_tarjans_sc($node)
+            unless defined $self->{node_info}->{$node};
+    }
+    return $self->{scc};
+}
+
+sub _tarjans_sc{
+    my ($self, $node) = @_;
+    my $index = $self->{index};
+    my $stack = $self->{stack};
+    my $ninfo = [$index, $index];
+    my $on_stack = $self->{on_stack};
+    $self->{node_info}->{$node} = $ninfo;
+    $index++;
+    $self->{index} = $index;
+    push @$stack, $node;
+    $on_stack->{$node} = 1;
+    foreach my $neighbour (@{ $self->{edges}->{$node} }){
+        my $nb_info;
+        $nb_info = $self->{node_info}->{$neighbour};
+        if (!defined $nb_info){
+            # First time visit
+            $self->_tarjans_sc($neighbour);
+            # refresh $nb_info
+            $nb_info = $self->{node_info}->{$neighbour};
+            # min($node.low_index, $neigh.low_index)
+            $ninfo->[1] = $nb_info->[1] if $nb_info->[1] < $ninfo->[1];
+        } elsif (exists $on_stack->{$neighbour})  {
+            # Node is in this component
+            # min($node.low_index, $neigh.index)
+            $ninfo->[1] = $nb_info->[0] if $nb_info->[0] < $ninfo->[1];
+        }
+    }
+    if ($ninfo->[0] == $ninfo->[1]){
+        # the "root" node - create the SSC.
+        my $component = [];
+        my $scc = $self->{scc};
+        my $elem = '';
+        do {
+            $elem = pop @$stack;
+            delete $on_stack->{$elem};
+            push @$component, $elem;
+        } until $node eq $elem;
+        push @$scc, $component;
+    }
+}
+
+1;

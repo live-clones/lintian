@@ -1,0 +1,24 @@
+Check-Script: circular-deps
+Author: Niels Thykier <niels@thykier.net>
+Abbrev: cdeps
+# This is a source check, so we only calculate the dependency
+# graphs once.
+Type: source
+Needs-info: fields
+Info: This script checks for circular dependencies between packages
+ built from the same source.
+
+Tag: intra-source-package-circular-dependency
+Severity: normal
+Certainty: certain
+Info: The listed packages from the same source circularly depend
+ (or pre-depend) on each other.  This makes it difficult for tools
+ to properly handle install/upgrade sequences.  Furthermore this
+ complicates automated removal of unused packages.
+ .
+ If possible, consider removing or reducing one of the depends.
+ .
+ Note: This check is limited to packages created from the same
+ source package.  Full circular dependencies between bianries from
+ different source packages is beyond the scope of Lintian.
+Ref: policy 7.2
