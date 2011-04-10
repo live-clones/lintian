@@ -658,8 +658,8 @@ foreach my $file (@{$info->sorted_index}) {
 	tag 'dir-or-file-in-srv', $file;
     }
     # ---------------- FHS directory?
-    elsif ($file =~ m,^[^/]+/$, and
-	   $file !~ m,^(?:bin|boot|dev|etc|home|lib(?:64|32)?|mnt|opt|root|sbin|selinux|srv|sys|tmp|usr|var)/,) {
+    elsif ($file =~ m,^[^/]+/$,o and
+	   $file !~ m,^(?:bin|boot|dev|etc|home|lib(?:64|32)?|mnt|opt|root|run|sbin|selinux|srv|sys|tmp|usr|var)/,o) {
 	# Make an exception for the base-files package here and other similar
 	# packages because they install a slew of top-level directories for
 	# setting up the base system.  (Specifically, /cdrom, /floppy,
@@ -700,7 +700,7 @@ foreach my $file (@{$info->sorted_index}) {
 		or $file =~ m,^usr/[^/]+-linux[^/]*/,
 		or $file =~ m,^usr/iraf/,
 		# not allowed, but tested indivudually
-		or $file =~ m,^(?:mnt|opt|srv|(?:(?:usr|var)/)?tmp)|var/www/,) {
+		or $file =~ m,^(?:mnt|opt|run|srv|(?:(?:usr|var)/)?tmp)|var/www/,) {
 	    tag 'file-in-unusual-dir', $file;
 	}
     }

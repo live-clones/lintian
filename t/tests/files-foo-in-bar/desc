@@ -5,6 +5,7 @@ Description: Test tags about files or dirs in given paths
 Test-For:
  dir-in-usr-local
  dir-or-file-in-mnt
+ dir-or-file-in-run
  dir-or-file-in-srv
  dir-or-file-in-tmp
  dir-or-file-in-var-lock
