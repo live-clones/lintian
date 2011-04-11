@@ -352,6 +352,7 @@ foreach my $depproc ($group->get_processables('binary')){
 	    next unless ($path =~ m,man\d/$,o);
 	    $manpage{$fname} = [] unless exists $manpage{$fname};
 	    $lang = $1 if $path =~ m,/([^/]+)/man\d/$,o;
+	    $lang = '' if $lang eq 'man';
 	    push @{$manpage{$fname}}, {file => $file, lang => $lang};
 	}
     }
