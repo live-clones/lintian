@@ -46,10 +46,10 @@ foreach my $file (@{$info->sorted_index}) {
         my $target = $index_info->{link}//'';
         my $mylink = $target;
         # Should not happen (too often) - but just in case
-        next unless $target or $target =~ m@^/++$@;
-	$mylink =~ s,//+,/,g;
+        next unless $target;
+        $mylink =~ s,//++,/,g;
         $mylink =~ s@/$@@o;
-
+        next if $mylink eq ''; # skip links to "/"
 
         if ($target =~ m@^/@o){
             # absolute link - remove the initial slash
