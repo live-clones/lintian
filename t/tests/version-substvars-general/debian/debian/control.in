@@ -19,7 +19,6 @@ Description: {$description}
 Package: program-data
 Architecture: all
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\},
-         program-bin (= $\{binary:Version\}),
          foreign-pkg (= $\{Source-Version\})
 Description: {$description} - data
  This is a test package designed to exercise some feature or tag of
@@ -40,3 +39,15 @@ Description: {$description} - extra utils
  be an empty package.
  .
  Extra utils.
+
+Package: program-data-extra
+Architecture: all
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\},
+         program-bin (= $\{binary:Version\}),
+Description: {$description} - extra data
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+ .
+ Extra-Data package.

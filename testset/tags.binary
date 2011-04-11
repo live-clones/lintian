@@ -61,6 +61,7 @@ I: binary: no-md5sums-control-file
 W: binary source: ancient-standards-version 3.2.1 (current is 3.9.1)
 W: binary source: debian-rules-ignores-make-clean-error line 12
 W: binary source: debian-rules-uses-pwd line 9
+W: binary source: intra-source-package-circular-dependency binary binary-data
 W: binary source: maintainer-upload-has-incorrect-version-number 4-1.1
 W: binary source: native-package-with-dash-version
 W: binary source: substvar-source-version-is-deprecated binary
@@ -114,6 +115,7 @@ W: binary: menu-item-uses-apps-section usr/share/menu/binary:7
 W: binary: menu-item-uses-windowmanagers-section usr/lib/menu/binary:13
 W: binary: menu-item-uses-windowmanagers-section usr/share/menu/binary:13
 W: binary: old-fsf-address-in-copyright-file
+W: binary: package-contains-broken-symlink usr/share/doc/binary/html/ch3.html /usr/share/doc/binary/htm/ch1.html
 W: binary: package-contains-hardlink usr/bar2 -> usr/share/baz
 W: binary: package-contains-upstream-install-documentation usr/share/doc/binary/INSTALL
 W: binary: spelling-error-in-description dont don't

@@ -1,4 +1,4 @@
-Testname: manpages-general
+Testname: manpages-dependencies
 Sequence: 6000
 Version: 1.0
 Description: Test for manpages in dependencies

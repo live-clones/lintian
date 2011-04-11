@@ -1,4 +1,4 @@
-E: version-substvars-general source: not-binnmuable-all-depends-any program-data -> program-bin
+E: version-substvars-general source: not-binnmuable-all-depends-any program-data-extra -> program-bin
 E: version-substvars-general source: not-binnmuable-any-depends-all program-bin -> program-data
 E: version-substvars-general source: not-binnmuable-any-depends-any program-utils -> program-bin
 E: version-substvars-general source: version-substvar-for-external-package program-data -> foreign-pkg

@@ -67,7 +67,8 @@ foreach my $file (@{$info->sorted_index}) {
         # even if they are not shipped by any binary from this
         # source package.
         next if $mylink =~ m@man/man\d/undocumented@o or
-            $mylink =~ m@^etc/alternatives/@o;
+            $mylink =~ m@^etc/alternatives/@o or
+            $mylink eq 'lib/init/upstart-job';
 
         # Possibly broken symlink
         push @brokenlinks, [$file, $mylink, $target] unless $index->{$mylink};

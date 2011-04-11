@@ -7,7 +7,7 @@ Build-Depends: debhelper (>= 7.0.50~)
 
 Package: pecho
 Architecture: all
-Depends: $\{misc:Depends\}, {$srcpkg}-data
+Depends: $\{misc:Depends\}, pecho-data
 Description: {$description}
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
