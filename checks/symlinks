@@ -60,12 +60,15 @@ foreach my $file (@{$info->sorted_index}) {
             next;
         }
 
+	# Check if the desstination is in the package itself
+        next if $index->{$mylink} || $index->{"$mylink/"};
+
         # Ignore links pointing to common things that may exist
         # even if they are not shipped by any binary from this
         # source package.
         next if $mylink =~ m@man/man\d/undocumented@o or
             $mylink =~ m@^etc/alternatives/@o;
-        
+
         # Possibly broken symlink
         push @brokenlinks, [$file, $mylink, $target] unless $index->{$mylink};
     }
@@ -87,7 +90,7 @@ foreach my $blink (@brokenlinks){
     my ($file, $mylink, $target) = @$blink;
     foreach my $dindex (@dindexes){
         # Is it in our dependency?
-        next BLINK if $dindex->{$mylink};
+        next BLINK if $dindex->{$mylink} || $dindex->{"$mylink/"};
     }
     # nope - not found in any of our direct dependencies.
     tag 'package-contains-broken-symlink', $file, $target
