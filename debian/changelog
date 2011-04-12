@@ -3,20 +3,47 @@ lintian (2.5.0~rc3) UNRELEASED; urgency=low
   * Summary of tag changes:
     + Added:
       - dir-or-file-in-run
+      - intra-source-package-circular-dependency
+      - package-contains-broken-symlink
 
+  * checks/*.desc:
+    + [NT] Updated the Needs-Info field to include the new
+      collections where needed.
   * checks/binaries:
     + [NT] Accepted patch from Loïc Minier to support the armhf
       architecture.  (Closes: #618587)
+  * checks/circular-deps{,.desc}:
+    + [NT] Added to check for circular dependencies between
+      binaries from the same source.  It requires all binaries
+      packages to be present as well as the source package to be
+      effective.
   * checks/debhelper:
     + [NT] Use new alt-dh_commands data file to fetch alternative
       dependencies for dh_commands, which are sometimes provided
       indirectly by meta or API packages.
   * checks/files{,.desc}:
     + [NT] Added dir-or-file-in-run tag.
+  * checks/manpages:
+    + [NT] Fixed false-positive binary-without-manpage when the
+      manpage is in a direct dependency of the package and the
+      package is checked together with its dependency.
+      (Closes: #120323)
   * checks/scripts:
     + [NT] Fixed false positive missing-dep-for-interpreter, if
       the interpreter was dash, since dash is now essential.
       (Closes: #620120)
+  * checks/symlinks{,.desc}:
+    + [NT] New file that checks for broken symlinks.  A symlink
+      is considered broken if it does not exist in the package
+      itself or in its direct dependecies.  Since only absolute
+      symlinks are checked at the moment, this only partly
+      fixes #217023.
+
+  * collection/*.desc:
+    + [NT] Updated the Needs-Info field to include the new
+      collections where needed.
+  * collection/{bin-pkg-control,fields,index}{,.desc}:
+    + [NT] Added to replace various unpack scripts.
 
   * debian/control:
     + [NT] Bumped Standards-Version to 3.9.2.
@@ -38,10 +65,35 @@ lintian (2.5.0~rc3) UNRELEASED; urgency=low
     + [NT] Added 3.9.2 as the newest Standards-Version.  Thanks to
       Sven Joachim for the report.  (Closes: #621667)
 
+  * frontend/lintian:
+    + [NT] Removed the deprecated --unpack-level argument.  Only
+      two unpack levels were available and they were equal to
+      the --remove and --unpack options.
+    + [NT] Stopped accepting the environment/config variables
+      LINTIAN_UNPACK_LEVEL and LINTIAN_SECTION.  The former is
+      redundant as explained above and the latter was deprecated
+      in favor of LINTIAN_AREA.
+    + [NT] Refactored the frontend to group packages together based
+      on their source package.  This allows for cross-package checks.
+      (Closes: #513663)
+
+  * lib/{Lab/Package,Lintian/Processable*}.pm:
+    + [NT] Added files to assist in package grouping.
+  * lib/Lintian/Command/Simple.pm:
+    + [NT] Added support for chanding directory before running the
+      command.
+  * lib/Lintian/Collect.pm,lib/Lintian/Collect/*.pm:
+    + [NT] Removed assumption that all the information handled by
+      these are available in the current directory.
+
   * private/runtests:
     + [NT] Added support for dumping build logs if a test fails.
       (Closes: #621658)
     + [NT] Disabled pkgbinarymangler during tests.  (Closes: #621681)
+
+  * unpack/unpack-{binpkg,changes}-l1:
+    + [NT] Removed unpack scripts for binpkg and changes as these have
+      been replaced by collections.
 
  -- Niels Thykier <niels@thykier.net>  Thu, 07 Apr 2011 19:00:59 +0200
 
