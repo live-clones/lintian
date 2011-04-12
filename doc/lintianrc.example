@@ -17,11 +17,6 @@
 # about packages being checked.
 #LINTIAN_LAB="/var/spool/lintian"
 
-# Override default unpack level. By setting this to 0, Lintian will
-# automatically remove any unpacked packages after they have been
-# processed.
-#LINTIAN_UNPACK_LEVEL="0"
-
 # If you want lintian to check the whole Debian archive instead of just
 # single packages you have to set the LINTIAN_DIST variable to the root
 # directory of the distribution archive (i.e., a local Debian mirror).

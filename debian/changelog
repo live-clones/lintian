@@ -46,9 +46,6 @@ lintian (2.5.0~rc3) UNRELEASED; urgency=low
   * collection/{bin-pkg-control,fields,index}{,.desc}:
     + [NT] Added to replace various unpack scripts.
 
-  * debian/control:
-    + [NT] Bumped Standards-Version to 3.9.2.
-
   * data/debhelper/alt-dh_commands:
     + [NT] New file; contains alternative dependencies for
       dh_python2 and dh_python3.  (Closes: #614879)
@@ -65,6 +62,13 @@ lintian (2.5.0~rc3) UNRELEASED; urgency=low
   * data/standards-version/release-dates:
     + [NT] Added 3.9.2 as the newest Standards-Version.  Thanks to
       Sven Joachim for the report.  (Closes: #621667)
+
+  * debian/control:
+    + [NT] Bumped Standards-Version to 3.9.2.
+
+
+  * doc/lintianrc.example:
+    + [NT] Removed reference to LINTIAN_UNPACK_LEVEL.
 
   * frontend/lintian:
     + [NT] Removed the deprecated --unpack-level argument.  Only
