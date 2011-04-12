@@ -31,7 +31,7 @@ our (@EXPORT, @EXPORT_OK, %EXPORT_TAGS);
 
 BEGIN {
     @EXPORT = ();
-    %EXPORT_TAGS = ( 
+    %EXPORT_TAGS = (
         constants => [qw(LAB_FORMAT)],
         );
     @EXPORT_OK = (
@@ -79,7 +79,7 @@ sub setup {
     my ( $self, $dir, $dist ) = @_;
 
     if ( $dir ) {
-         # Make sure we can always find it, even if we chdir around a lot.
+        # Make sure we can always find it, even if we chdir around a lot.
         my $absdir = Cwd::realpath($dir);
         fail("Cannot determine the absolute path of $dir: $!") unless($absdir);
 	$self->{mode} = 'static';
@@ -259,7 +259,7 @@ sub delete_force {
 
 
 {
-    
+
     # private helper variable.
     my %pkg_types = (
         'b' => 'binary',
@@ -282,7 +282,7 @@ sub delete_force {
         $dir = $self->{dir} . '/' . $vpkg_type . '/' . $pkg_name;
         return new Lab::Package($self, $pkg_name, $pkg_version, $vpkg_type,
                                 $realpath, $dir);
-              
+
     }
 }
 

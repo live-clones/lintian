@@ -154,7 +154,7 @@ sub entry_exists(){
     my $pkg_type = $self->{pkg_type};
     my $base_dir = $self->{base_dir};
 
-    # If we have a positive unpack level, something exists 
+    # If we have a positive unpack level, something exists
     return 1 if ($self->{_unpack_level} > 0);
 
     # Check if the relevant symlink exists.

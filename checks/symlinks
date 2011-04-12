@@ -82,7 +82,7 @@ return unless @brokenlinks;
 $relation = $info->relation('strong');
 foreach my $depproc ($group->get_processables($type)){
     if ($relation->implies($depproc->pkg_name())){
-	push @dindexes, $depproc->info->index;        
+	push @dindexes, $depproc->info->index;
     }
 }
 

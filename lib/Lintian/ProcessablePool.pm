@@ -159,7 +159,7 @@ sub get_groups{
     my $groups = $self->{groups};
     if (scalar keys %$groups) {
         return values %$groups;
-    } 
+    }
     return ();
 }
 

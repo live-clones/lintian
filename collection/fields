@@ -1,5 +1,5 @@
 #!/usr/bin/perl -w
-# bin-pkg-control -- lintian collector script
+# fields -- lintian collector script
 
 # Copyright (C) 1998 Christian Schwarz
 #
@@ -35,9 +35,6 @@ if ($type eq 'changes'){
     $file = 'changes';
 } elsif ($type eq 'binary' or $type eq 'udeb'){
     $file = 'control/control';
-} else {
-
-
 }
 
 if (!defined($file)) {
@@ -61,7 +58,7 @@ if($type eq 'changes'){
     $data = (read_dpkg_control($file))[0];
     $data->{'source'} or ($data->{'source'} = $data->{'package'});
 }
-    
+
 # create control field files
 for my $field (keys %$data) {
     my $value = $data->{$field};
@@ -85,5 +82,5 @@ if($type eq 'binary' or $type eq 'udeb'){
             or fail("symlink: $!");
     }
 }
-    
+
 exit 0;
