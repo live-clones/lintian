@@ -95,7 +95,11 @@ sub setup {
 
 	my $created = 0;
 	for (1..10) {
-	    $dir = tmpnam(); # [NT] Double check this - would tempdir be better? Is it always absolute?
+            my $absdir;
+            $dir = tmpnam(); # Not always absolute (e.g. if TMPDIR is relative)
+            $absdir = Cwd::realpath($dir);
+            fail("Cannot determine the absolute path of $dir: $!")
+                unless $absdir;
 
 	    if ($self->setup_force( $dir, $dist )) {
 		$created = 1;
