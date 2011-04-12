@@ -22,6 +22,7 @@ our %MODULES =
      'Lintian::DepMap::Properties' => [],
      'Lintian::Processable'        => [],
      'Lintian::ProcessableGroup'   => [],
+     'Lintian::ProcessablePool'    => [],
      'Lintian::Relation'           => [ qr/^parse_element$/,
                                         qr/^implies_(element|array)/ ],
      'Lintian::Relation::Version'  => [ qr/^compare$/ ],
@@ -35,7 +36,6 @@ our %MODULES =
 #		Lintian::Output::ColonSeparated
 #		Lintian::Output::LetterQualifier
 #		Lintian::Output::XML
-#		Lintian::Schedule
 
 plan tests => scalar keys(%MODULES);
 
