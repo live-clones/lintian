@@ -418,6 +418,13 @@ Info: <tt>/var/run</tt> may be a temporary filesystem, so any directories
  or files needed there must be created dynamically at boot time.
 Ref: policy 9.3.2
 
+Tag: dir-or-file-in-run
+Severity: serious
+Certainty: possible
+Info: <tt>/run</tt> may be a temporary filesystem, so any directories
+ or files needed there must be created dynamically at boot time.
+Ref: policy 9.3.2
+
 Tag: dir-or-file-in-var-www
 Severity: serious
 Certainty: possible

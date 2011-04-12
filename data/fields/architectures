@@ -1,6 +1,6 @@
 # List of known architectures as provided by dpkg-architecture
-# Last updated: 2011-02-19
-# With: Debian dpkg-architecture version 1.15.8.10.
+# Last updated: 2011-04-07
+# With: Debian dpkg-architecture version 1.16.0.1.
 
 all
 alpha
@@ -9,6 +9,7 @@ any
 arm
 armeb
 armel
+armhf
 avr32
 darwin-alpha
 darwin-amd64

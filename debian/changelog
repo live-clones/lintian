@@ -1,4 +1,53 @@
-lintian (2.5.0~rc2) UNRELEASED; urgency=low
+lintian (2.5.0~rc3) UNRELEASED; urgency=low
+
+  * Summary of tag changes:
+    + Added:
+      - dir-or-file-in-run
+
+  * checks/binaries:
+    + [NT] Accepted patch from Loïc Minier to support the armhf
+      architecture.  (Closes: #618587)
+  * checks/debhelper:
+    + [NT] Use new alt-dh_commands data file to fetch alternative
+      dependencies for dh_commands, which are sometimes provided
+      indirectly by meta or API packages.
+  * checks/files{,.desc}:
+    + [NT] Added dir-or-file-in-run tag.
+  * checks/scripts:
+    + [NT] Fixed false positive missing-dep-for-interpreter, if
+      the interpreter was dash, since dash is now essential.
+      (Closes: #620120)
+
+  * debian/control:
+    + [NT] Bumped Standards-Version to 3.9.2.
+
+  * data/debhelper/alt-dh_commands:
+    + [NT] New file; contains alternative dependencies for
+      dh_python2 and dh_python3.  (Closes: #614879)
+  * data/fields/architectures:
+    + [NT] Updated to include armhf.
+  * data/files/triplets:
+    + [NT] Updated to include armhf triplet.
+  * data/spelling/corrections:
+    + [NT] Added a lot of spelling mistakes with corrections.
+      Kudos to Kevin Ryde for these.  (Closes: #619075)
+  * data/spelling/corrections-multiword:
+    + [NT] Removed "helps to" as a spelling mistake.  Thanks to
+      Nicholas Bamber for the report.  (Closes: #622124)
+  * data/standards-version/release-dates:
+    + [NT] Added 3.9.2 as the newest Standards-Version.  Thanks to
+      Sven Joachim for the report.  (Closes: #621667)
+
+  * private/runtests:
+    + [NT] Added support for dumping build logs if a test fails.
+      (Closes: #621658)
+    + [NT] Disabled pkgbinarymangler during tests.  (Closes: #621681)
+
+ -- Niels Thykier <niels@thykier.net>  Thu, 07 Apr 2011 19:00:59 +0200
+
+lintian (2.5.0~rc2) unstable; urgency=low
+
+  Uploading to unstable.
 
   * Summary of tag changes:
     + Added:
@@ -43,6 +92,7 @@ lintian (2.5.0~rc2) UNRELEASED; urgency=low
       to Thijs Kinkhorst for the report and patch.  (Closes: #615072)
     + [NT] Applied patch to also detect copies of CKEditor.  Thanks to
       Jeroen Dekkers for the report and the patch.  (Closes: #616505)
+    + [NT] Fixed a regression in caused by inconsistent prefixes.
   * checks/huge-usr-share:
     + [NT] Removed assumption that there is always files in usr/share.
   * checks/menu-format:
@@ -75,7 +125,7 @@ lintian (2.5.0~rc2) UNRELEASED; urgency=low
     + [NT] Modified some versioned dependencies that the new dpkg will
       not consider valid from 1.16.0.  (Closes: #619290)
 
- -- Adam D. Barratt <adam@adam-barratt.org.uk>  Fri, 25 Feb 2011 17:48:59 +0000
+ -- Niels Thykier <niels@thykier.net>  Tue, 05 Apr 2011 20:25:09 +0200
 
 lintian (2.5.0~rc1) experimental; urgency=low
 

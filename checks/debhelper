@@ -40,6 +40,7 @@ my $cdbscompat = 5;
 my $maint_commands = Lintian::Data->new ('debhelper/maint_commands');
 my $dh_commands_depends = Lintian::Data->new ('debhelper/dh_commands', '=');
 my $filename_configs = Lintian::Data->new ('debhelper/filename-config-files');
+my $dh_alt_deps = Lintian::Data->new ('debhelper/alt-dh_commands', '\|\|');
 
 # The version at which debhelper commands were introduced.  Packages that use
 # one of these commands must have a dependency on that version of debhelper or
@@ -122,13 +123,10 @@ while (<RULES>) {
 	unless ($maybe_skipping) {
 	    if ($dh_commands_depends->known($dhcommand)) {
 		my $dep = $dh_commands_depends->value($dhcommand);
+		my $alt = $dh_alt_deps->value($dhcommand)//'';
 
-		# Special-case gcj-native-helper, which is a metapackage to
-		# pull this helper. default-jdk-builddep is obsolete, but
-		# we keep it for backwards compatibility, because it used to
-		# serve this purpose.
-		if ($dhcommand eq 'dh_nativejava') {
-		    $dep = "$dep | gcj-native-helper | default-jdk-builddep";
+		if ($alt) {
+		    $dep = "$dep | $alt";
 		}
 		$missingbdeps{$dep} = $dhcommand;
 	    }

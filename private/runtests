@@ -19,11 +19,13 @@ LANG="en_US.UTF-8"
 LC_COLLATE="C"
 LINTIAN_ROOT=""
 LOCPATH="$(pwd)/debian/test.locale"
+NO_PKG_MANGLE=true
 
 export LANG
 export LC_COLLCATE
 export LINTIAN_ROOT
 export LOCPATH
+export NO_PKG_MAGNGLE
 
 fail(){
     echo "$1" >&2
@@ -37,7 +39,7 @@ if [ ! -e "$LOCPATH"/en_US.UTF-8 ] ; then
         --quiet "$LOCPATH"/en_US.UTF-8 || fail "Locale generation failed"
 fi
 
-t/runtests -k $PARALLEL_ARGS t debian/tests "$@"
+t/runtests --dump-logs -k $PARALLEL_ARGS t debian/tests "$@"
 if [ "$TAG" = "" ] ; then
     testset/runtests -k testset debian/tests "$@"
 fi

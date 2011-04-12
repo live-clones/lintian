@@ -159,7 +159,6 @@ my $py_support_nver = undef;
 # read data from objdump-info file
 foreach my $file (sort keys %{$info->objdump_info}) {
     my $objdump = $info->objdump_info->{$file};
-    $file = './' . $file;
 
     if (defined $objdump->{NEEDED}) {
 	my $lib = $objdump->{NEEDED};
@@ -336,12 +335,8 @@ foreach my $file (@{$info->sorted_index}) {
 	    }
 	    close(PHPINI);
 	}
-	# ---------------- /etc/rc.d
-	elsif ($type ne 'udeb' and $file =~ m,^etc/rc\.d/\S, and $pkg !~ /^(?:sysvinit|file-rc)$/) {
-	    tag 'package-installs-into-etc-rc.d', $file;
-	}
-	# ---------------- /etc/rc?.d
-	elsif ($type ne 'udeb' and $file =~ m,^etc/rc(?:\d|S)\.d/\S, and $pkg !~ /^(?:sysvinit|file-rc)$/) {
+	# ---------------- /etc/rc.d && /etc/rc?.d
+	elsif ($type ne 'udeb' and $file =~ m,^etc/rc(?:\d|S)?\.d/\S, and $pkg !~ /^(?:sysvinit|file-rc)$/) {
 	    tag 'package-installs-into-etc-rc.d', $file;
 	}
 	# ---------------- /etc/rc.boot
@@ -625,6 +620,9 @@ foreach my $file (@{$info->sorted_index}) {
     elsif ($type ne 'udeb' and $file =~ m,^var/run/.,) {
 	tag 'dir-or-file-in-var-run', $file;
     }
+    elsif ($type ne 'udeb' and $file =~ m,^run/.,o) {
+	tag 'dir-or-file-in-run', $file;
+    }
     # ---------------- /var/www
     # Packages are allowed to create /var/www since it's historically been the
     # default document root, but they shouldn't be installing stuff under that
@@ -638,7 +636,7 @@ foreach my $file (@{$info->sorted_index}) {
     }
     elsif ($file =~ m,^hurd/.,) {
 	next;
-    } elsif ($file =~ m,^server/.,) {
+    } elsif ($file =~ m,^servers/.,) {
 	next;
     }
     # ---------------- /tmp, /var/tmp, /usr/tmp
@@ -660,8 +658,8 @@ foreach my $file (@{$info->sorted_index}) {
 	tag 'dir-or-file-in-srv', $file;
     }
     # ---------------- FHS directory?
-    elsif ($file =~ m,^[^/]+/$, and $file ne './' and
-	   $file !~ m,^(?:bin|boot|dev|etc|home|lib(?:64|32)?|mnt|opt|root|sbin|selinux|srv|sys|tmp|usr|var)/,) {
+    elsif ($file =~ m,^[^/]+/$,o and
+	   $file !~ m,^(?:bin|boot|dev|etc|home|lib(?:64|32)?|mnt|opt|root|run|sbin|selinux|srv|sys|tmp|usr|var)/,o) {
 	# Make an exception for the base-files package here and other similar
 	# packages because they install a slew of top-level directories for
 	# setting up the base system.  (Specifically, /cdrom, /floppy,
@@ -702,7 +700,7 @@ foreach my $file (@{$info->sorted_index}) {
 		or $file =~ m,^usr/[^/]+-linux[^/]*/,
 		or $file =~ m,^usr/iraf/,
 		# not allowed, but tested indivudually
-		or $file =~ m,^(?:mnt|opt|srv|(?:(?:usr|var)/)?tmp)|var/www/,) {
+		or $file =~ m,^(?:mnt|opt|run|srv|(?:(?:usr|var)/)?tmp)|var/www/,) {
 	    tag 'file-in-unusual-dir', $file;
 	}
     }

@@ -78,7 +78,6 @@ clean: $(neededfiles)
 	rm -rf debian/tests
 	rm -rf man/man1/
 	rm -fr debian/test.locale
-	find -name "*.py?" -print0 | xargs -0r rm
 	dh_clean
 
 binary-indep: $(neededfiles) build
