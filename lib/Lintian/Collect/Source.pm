@@ -45,10 +45,12 @@ sub new {
 sub changelog {
     my ($self) = @_;
     return $self->{changelog} if exists $self->{changelog};
-    if (-l 'debfiles/changelog' || ! -f 'debfiles/changelog') {
+    my $base_dir = $self->base_dir();
+    if (-l "$base_dir/debfiles/changelog" ||
+        ! -f "$base_dir/debfiles/changelog") {
         $self->{changelog} = undef;
     } else {
-        my %opts = (infile => 'debfiles/changelog', quiet => 1);
+        my %opts = (infile => "$base_dir/debfiles/changelog", quiet => 1);
         $self->{changelog} = Parse::DebianChangelog->init(\%opts);
     }
     return $self->{changelog};
@@ -63,13 +65,16 @@ sub native {
     my ($self) = @_;
     return $self->{native} if exists $self->{native};
     my $format = $self->field('format');
-    if ($format =~ /^\s*2\.0\s*$/ or $format =~ /^\s*3\.0\s+\(quilt\)\s*$/) {
+    if ($format =~ m/^\s*2\.0\s*$/o or $format =~ m/^\s*3\.0\s+\(quilt\)\s*$/o) {
         $self->{native} = 0;
+    } elsif ($format =~ m/^\s*3\.0\s+\(native\)\s*$/o) {
+        $self->{native} = 1;
     } else {
         my $version = $self->field('version');
+        my $base_dir = $self->base_dir();
         $version =~ s/^\d+://;
         my $name = $self->{name};
-        $self->{native} = (-f "${name}_${version}.diff.gz" ? 0 : 1);
+        $self->{native} = (-f "$base_dir/${name}_${version}.diff.gz" ? 0 : 1);
     }
     return $self->{native};
 }
@@ -80,8 +85,9 @@ sub binaries {
     my ($self) = @_;
     return $self->{binaries} if exists $self->{binaries};
     my %binaries;
+    my $base_dir = $self->base_dir();
     # sub binaries Needs-Info source-control-file
-    opendir(BINPKGS, 'control') or fail("can't open control directory: $!");
+    opendir(BINPKGS, "$base_dir/control") or fail("can't open control directory: $!");
     for my $package (readdir BINPKGS) {
         next if $package =~ /^\.\.?$/;
         my $type = $self->binary_field($package, 'xc-package-type') || 'deb';
@@ -100,9 +106,10 @@ sub binary_field {
     return $self->{binary_field}{$package}{$field}
         if exists $self->{binary_field}{$package}{$field};
     my $value = '';
+    my $base_dir = $self->base_dir();
     # sub binary_field Needs-Info source-control-file
-    if (-f "control/$package/$field") {
-        $value = slurp_entire_file("control/$package/$field");
+    if (-f "$base_dir/control/$package/$field") {
+        $value = slurp_entire_file("$base_dir/control/$package/$field");
         chomp $value;
     }
     $self->{binary_field}{$package}{$field} = $value;
@@ -152,8 +159,9 @@ sub file_info {
     return $self->{file_info} if exists $self->{file_info};
 
     my %file_info;
+    my $base_dir = $self->base_dir();
     # sub file_info Needs-Info file-info
-    open(my $idx, '<', 'file-info') or fail("cannot open file-info: $!");
+    open(my $idx, '<', "$base_dir/file-info") or fail("cannot open file-info: $!");
     while (<$idx>) {
         chomp;
         m/^(.+?)\x00\s+(.*)$/o or fail("cannot parse file output: $_");
