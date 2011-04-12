@@ -159,7 +159,9 @@ sub entry_exists(){
 
     # Check if the relevant symlink exists.
     if ($pkg_type eq 'changes'){
-	return 1 if ( -l "$base_dir/changes");
+	return 1 if -l "$base_dir/changes";
+    } elsif ($pkg_type eq 'binary' or $pkg_type eq 'udeb') {
+	return 1 if -l "$base_dir/deb";
     }
 
     # No unpack level and no symlink => the entry does not
