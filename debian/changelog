@@ -16,7 +16,8 @@ lintian (2.5.0~rc3) UNRELEASED; urgency=low
     + [NT] Added to check for circular dependencies between
       binaries from the same source.  It requires all binaries
       packages to be present as well as the source package to be
-      effective.
+      effective.  Thanks to Bill Allombert for the suggestion.
+      (Closes: #316283)
   * checks/debhelper:
     + [NT] Use new alt-dh_commands data file to fetch alternative
       dependencies for dh_commands, which are sometimes provided
