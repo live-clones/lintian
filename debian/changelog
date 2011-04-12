@@ -85,6 +85,8 @@ lintian (2.5.0~rc3) UNRELEASED; urgency=low
   * lib/Lintian/Collect.pm,lib/Lintian/Collect/*.pm:
     + [NT] Removed assumption that all the information handled by
       these are available in the current directory.
+  *  lib/Lintian/Schedule.pm:
+    + [NT] Removed file, replaced by Lintian::ProcessablePool.
 
   * private/runtests:
     + [NT] Added support for dumping build logs if a test fails.
