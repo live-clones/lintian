@@ -3,7 +3,6 @@ Description record for collection scripts:
   Collector-Script: <file name of collector script>
   Info: <description of what this script does>
   Type: comma-separated list of <binary | changes | source | udeb>
-  Unpack-Level: <1>
   Version: <integer to be bumped when a change that requires script to be re-run is made>
   Order: <order--necessary if this script needs info from other scripts, see Needs-Info>
   Needs-Info: <info this scripts needs from other collector scripts>
@@ -16,7 +15,6 @@ Description record for checks scripts:
   Info: <description of what this check does>
   Type: comma-separated list of <binary | changes | source | udeb>
   Standards-Version: <standards-version for which this check has been designed>
-  Unpack-Level: <1>
   Needs-Info: <info this script needs>
 
 Description record of a Lintian tag:
