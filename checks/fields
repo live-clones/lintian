@@ -542,7 +542,8 @@ if (($type eq 'binary') || ($type eq 'udeb')) {
 	my (%fields, %parsed);
 	my $javalib = 0;
 	my $replaces = Lintian::Relation->new($info->field('replaces')//'');
-	$javalib = 1 if($pkg =~ m/^lib.*-(?:java|gcj)$/o);
+	my %nag_once = ();
+	$javalib = 1 if($pkg =~ m/^lib.*-java$/o);
 	for my $field (qw(depends pre-depends recommends suggests conflicts provides enhances replaces breaks)) {
 		next unless defined $info->field($field);
 		#Get data and clean it
@@ -692,8 +693,11 @@ if (($type eq 'binary') || ($type eq 'udeb')) {
 
 			# Only emit the tag if all the alternatives are JVM/JRE/JDKs
 			# - assume that <some-lib> | openjdk-6-jre-headless makes sense for now.
-			tag 'needless-dependency-on-jre'
-			    if (scalar(@alternatives) == $javadep);
+			if (scalar(@alternatives) == $javadep
+			    && !exists $nag_once{'needless-dependency-on-jre'}){
+			    $nag_once{'needless-dependency-on-jre'} = 1;
+			    tag 'needless-dependency-on-jre'
+			}
 		}
 		tag 'package-depends-on-multiple-libstdc-versions', @seen_libstdcs
 		    if (scalar @seen_libstdcs > 1);

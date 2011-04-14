@@ -22,6 +22,11 @@ lintian (2.5.0~rc3) UNRELEASED; urgency=low
     + [NT] Use new alt-dh_commands data file to fetch alternative
       dependencies for dh_commands, which are sometimes provided
       indirectly by meta or API packages.
+  * checks/fields:
+    + [NT] Do not emit needless-dependency-on-jre for libX-gcj
+      packages and only emit the tag at most once per package.
+      Thanks to Rene Engelhard for the report.
+      (Closes: #622396)
   * checks/files{,.desc}:
     + [NT] Added dir-or-file-in-run tag.
   * checks/manpages:
