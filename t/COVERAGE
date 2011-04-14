@@ -1,4 +1,4 @@
-Last generated 2011-04-05
+Last generated 2011-04-14
 
 The following tags are not tested by the test suite:
 
@@ -23,6 +23,8 @@ control-file debian-control-with-duplicate-fields
 control-files control-file-has-bad-owner
 control-files not-allowed-control-file
 control-files unknown-control-file
+
+copyright-file cannot-check-whether-usr-share-doc-symlink-points-to-foreign-package
 
 cruft documentation-package-not-architecture-independent
 cruft source-contains-prebuilt-windows-binary
@@ -332,7 +334,6 @@ shared-libs duplicate-entry-in-symbols-control-file
 shared-libs invalid-template-id-in-symbols-file
 shared-libs ldconfig-symlink-missing-for-shlib
 shared-libs sharedobject-in-library-directory-missing-soname
-shared-libs shlib-with-executable-bit
 shared-libs symbols-declared-but-not-shlib
 shared-libs symbols-declares-dependency-on-other-package
 shared-libs syntax-error-in-symbols-file
@@ -476,7 +477,6 @@ libbaz
   missing-depends-line
   package-name-doesnt-match-sonames
   postinst-should-not-set-usr-doc-link
-  shlib-with-executable-bit
 
 maintainer-scripts
   ancient-dpkg-epoch-check
