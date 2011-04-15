@@ -36,6 +36,7 @@ my $info = shift;
 my $java_info = $info->java_info;
 my $missing_jarwrapper = 0;
 my $has_classpath = 0;
+my $has_osgi = 0;
 my $has_public_jars = 0;
 
 my @java_lib_depends = ($info->relation('strong')->unparse() =~
@@ -47,21 +48,26 @@ for my $jar_file (keys %{$java_info}) {
     my $file_list = $java_info->{$jar_file}->{files};
     my $manifest = $java_info->{$jar_file}->{manifest};
     my $operm = $info->{index}->{$jar_file}->{operm};
+    my $classes = 1;
+    my $datafiles = 1;
+    my $cp = '';
+    my $bsname = '';
 
-    if($jar_file =~ m#^usr/share/java#o) {
+    # The Java Policy says very little about requires for (jars in) JVMs
+    next if $jar_file =~ m#usr/lib/jvm(?:-exports)?/[^/]++/#o;
+
+    if($jar_file =~ m#^usr/share/java/[^/]+\.jar$#o) {
 	$has_public_jars = 1;
     }
 
-    if(! grep(/\.class$/, @{$file_list})) {
-	tag "codeless-jar", $jar_file;
-    } elsif (! $manifest) {
-        tag "missing-manifest", $jar_file;
-    }
+    $classes = 0 unless grep m/\.class$/o, @{$file_list};
+    $datafiles = 0
+        unless grep m/\.(?:xml|properties|x?html|xhp)$/o, @{$file_list};
 
     if($operm & 0111) {
 	# Executable ?
-	tag "executable-jar-without-main-class", "$jar_file" unless
-	    $manifest && $manifest->{'Main-Class'};
+	tag 'executable-jar-without-main-class', $jar_file
+            unless $manifest && $manifest->{'Main-Class'};
 
 	# Here, we need to check that the package depends on
 	# jarwrapper.
@@ -69,21 +75,37 @@ for my $jar_file (keys %{$java_info}) {
             unless $info->relation('strong')->implies('jarwrapper');
     }
     elsif ($jar_file !~ m#^usr/share/#) {
-	tag "jar-not-in-usr-share", "$jar_file";
+	tag 'jar-not-in-usr-share', $jar_file;
     }
 
-    my $cp = '';
-    $cp = $manifest->{'Class-Path'} if $manifest;
-    # Only run the tests when a classpath is present
-    if($cp) {
+    $cp = $manifest->{'Class-Path'}//'' if $manifest;
+    $bsname = $manifest->{'Bundle-SymbolicName'}//'' if $manifest;
+
+    if ($manifest) {
+        if(!$classes) {
+
+            # Eclipse / OSGi bundles are sometimes source bundles
+            #   these do not ship classes but java files and other sources.
+            if ($bsname !~ m/\.source$/o || $cp) {
+                tag 'codeless-jar', $jar_file;
+            }
+        }
+    } elsif ($classes) {
+        tag 'missing-manifest', $jar_file;
+    }
+
+    if(!$cp) {
+        # Do we have OSGi instead?
+        $has_osgi = 1 if $bsname;
+    } else {
+        # Only run the tests when a classpath is present
 	my $relative = 0;
-	my $outside_usr_share = 0;
 	my @paths = split(m/\s++/o, $cp);
 	$has_classpath = 1;
 	for my $p (@paths) {
 	    if($p) {
                 # Strip leading ./
-                $p =~ s@^\./++@@og;
+                $p =~ s#^\./++##og;
 		if($p !~ m#^/#o) {
 		    if($p =~ m#/#o) {
 			# Relative path with subdirectories.
@@ -93,19 +115,11 @@ for my $jar_file (keys %{$java_info}) {
 		    # @todo add an info tag for relative paths, to educate
 		    # maintainers ?
 		}
-		elsif($p !~ m#/usr/share/#o) {
-		    $outside_usr_share++;
-		}
 	    }
 	}
 
-	if($relative) {
-	    tag "classpath-contains-relative-path", "$jar_file: $cp";
-	}
-
-	if($outside_usr_share) {
-	    tag "classpath-contains-files-not-in-usr-share", "$jar_file: $cp";
-	}
+        tag 'classpath-contains-relative-path', "$jar_file: $cp"
+            if $relative;
     }
 }
 
@@ -113,12 +127,14 @@ for my $jar_file (keys %{$java_info}) {
 tag 'missing-dep-on-jarwrapper' if $missing_jarwrapper;
 
 
-if(! $has_classpath && @java_lib_depends) {
-    tag "missing-classpath", join(", ", @java_lib_depends);
+if(! $has_classpath && ! $has_osgi && @java_lib_depends) {
+    tag 'missing-classpath', join(', ', @java_lib_depends);
 }
 
 if(! $has_public_jars && $pkg =~ /^lib[^\s,]+-java$/) {
-    tag "javalib-but-no-public-jars";
+    # Skip this if it installs a symlink in usr/share/java
+    return if grep m@^usr/share/java/[^/]+\.jar$@o, @{ $info->sorted_index };
+    tag 'javalib-but-no-public-jars';
 }
 
 }

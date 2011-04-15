@@ -6,7 +6,6 @@ lintian (2.5.0~rc3) UNRELEASED; urgency=low
       - intra-source-package-circular-dependency
       - package-contains-broken-symlink
       - classpath-contains-relative-path
-      - classpath-contains-files-not-in-usr-share
       - jar-not-in-usr-share
       - executable-jar-without-main-class
       - missing-dep-on-jarwrapper
@@ -39,7 +38,8 @@ lintian (2.5.0~rc3) UNRELEASED; urgency=low
   * checks/files{,.desc}:
     + [NT] Added dir-or-file-in-run tag.
   * checks/java{,.desc}:
-    + [NT] Added file from patches submitted by Vicent Fourmond.
+    + [NT] Added file based on patches submitted by Vicent Fourmond.
+      (Closes: #620829)
   * checks/manpages:
     + [NT] Fixed false-positive binary-without-manpage when the
       manpage is in a direct dependency of the package and the
