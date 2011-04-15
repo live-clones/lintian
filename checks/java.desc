@@ -22,13 +22,19 @@ Info: The classpath listed in some of the files references files outside
  private use.
 
 Tag: jar-not-in-usr-share
-Severity: important
-Certainty: certain
+Severity: normal
+Certainty: possible
 Ref: java-policy 2.2, java-policy 2.3
 Info: The classpath listed in some of the files references files outside
  of /usr/share, while all installed JAR files must be within
  /usr/share/java for libraries or /usr/share/<i>package</i> for JARs for
  private use.
+ .
+ The rationale is that jar files are in almost all cases architecture
+ independent and therefore should be in /usr/share.  If the jar file is
+ truly architecture dependent or it cannot be moved since symlinked jar
+ files are not accepted by the application, then please override this
+ tag.
 
 Tag: executable-jar-without-main-class
 Severity: serious
