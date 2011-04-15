@@ -42,7 +42,8 @@ Build-Depends: binutils,
                python,
                quilt,
                rsync,
-               unzip
+               unzip,
+               zip
 Standards-Version: 3.9.2
 Vcs-Git: git://git.debian.org/git/lintian/lintian.git
 Vcs-Browser: http://git.debian.org/?p=lintian/lintian.git

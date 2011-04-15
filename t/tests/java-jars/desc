@@ -6,9 +6,9 @@ Description: Various checks about JAR files
 Author: Vincent Fourmond <fourmond@debian.org>
 Section: java
 Test-For:
- missing-classpath
+ codeless-jar
  executable-jar-without-main-class
  jar-not-in-usr-share
- classpath-contains-relative-path
- missing-dep-on-jarwrapper
  javalib-but-no-public-jars
+ missing-dep-on-jarwrapper
+ missing-manifest

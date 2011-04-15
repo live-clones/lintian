@@ -1,0 +1,26 @@
+Source: {$srcpkg}
+Priority: extra
+Section: {$section}
+Maintainer: {$author}
+Standards-Version: {$standards_version}
+Build-Depends: debhelper (>= 7.0.50~), javahelper (>= 0.32~), default-jdk
+
+Package: libcp-missing-java
+Architecture: {$architecture}
+Depends: $\{misc:Depends\}, libdepends-java
+Description: {$description} - missing
+ This is a test package designed to test various aspects of the
+ java-related QA code in lintian. This package should not be
+ installed.
+ .
+ Test for missing classpaths.
+
+Package: libcp-relative-java
+Architecture: {$architecture}
+Depends: $\{misc:Depends\}, libdepends-java
+Description: {$description} - relative
+ This is a test package designed to test various aspects of the
+ java-related QA code in lintian. This package should not be
+ installed.
+ .
+ Test for relative classpaths.

@@ -7,22 +7,32 @@ Build-Depends: debhelper (>= 7.0.50~), javahelper, default-jdk
 
 Package: libtesta-java
 Architecture: {$architecture}
-Depends: $\{misc:Depends\}, libstuff-java
+Depends: $\{misc:Depends\}
 Description: {$description} - part A
  This is a test package designed to test various aspects of the
  java-related QA code in lintian. First part.
  .
  This package should not be installed.
 
-Package: libtestb-java
+Package: libcodeless-java
 Architecture: {$architecture}
-Depends: $\{misc:Depends\}, libstuff-java
-Description: {$description} - part B
+Depends: $\{misc:Depends\}
+Description: {$description} - codeless
  This is a test package designed to test various aspects of the
- java-related QA code in lintian. Second part.
+ java-related QA code in lintian. This package should not be
+ installed.
  .
- This package should not be installed.
+ This package tests for codeless jars.
 
+Package: libmanifestless-java
+Architecture: {$architecture}
+Depends: $\{misc:Depends\}
+Description: {$description} - manifestless
+ This is a test package designed to test various aspects of the
+ java-related QA code in lintian. This package should not be
+ installed.
+ .
+ This package tests for mainifest-less code jars.
 
 Package: libtestc-java
 Architecture: {$architecture}

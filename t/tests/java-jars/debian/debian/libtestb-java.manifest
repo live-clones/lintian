@@ -1,2 +1,0 @@
-usr/share/java/testd.jar:
- Class-Path: obviously-relative/stuff.jar /usr/lib/biniou.jar

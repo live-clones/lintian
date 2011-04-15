@@ -1,3 +1,12 @@
 #!/usr/bin/make -f
 %:
 	dh $@ --with javahelper
+
+override_jh_build:
+	jh_build
+	unzip testa.jar
+	zip -r codeless.jar META-INF/
+	zip -r manifestless.jar org/
+
+override_dh_auto_clean:
+	rm -fr META-INF/ org/
