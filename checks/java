@@ -106,7 +106,7 @@ for my $jar_file (keys %{$java_info}) {
 	    if($p) {
                 # Strip leading ./
                 $p =~ s#^\./++##og;
-		if($p !~ m#^/#o) {
+		if($p !~ m#^(?:file://)?/#o) {
 		    if($p =~ m#/#o) {
 			# Relative path with subdirectories.
 			$relative++;
