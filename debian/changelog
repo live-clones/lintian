@@ -120,6 +120,10 @@ lintian (2.5.0~rc3) UNRELEASED; urgency=low
       (Closes: #621658)
     + [NT] Disabled pkgbinarymangler during tests.  (Closes: #621681)
 
+  * t/tests/binaries-from-other-arch:
+    + [NT] Accepted patch from Benjamin Drung to accept i686-linux-gnu
+      as a valid triplet.  This fixes test failure in Ubuntu.
+      (Closes: #622974)
   * unpack/unpack-{binpkg,changes}-l1:
     + [NT] Removed unpack scripts for binpkg and changes as these have
       been replaced by collections.

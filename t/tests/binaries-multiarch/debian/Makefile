@@ -1,7 +1,7 @@
 
 TRIPLETT = $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
 
-ifeq (i486-linux-gnu,$(TRIPLETT))
+ifeq (,$(filter-out i486-linux-gnu i686-linux-gnu,$(TRIPLETT)))
     WRONG_TRIPLETT = x86_64-linux-gnu
 else
     WRONG_TRIPLETT = i486-linux-gnu

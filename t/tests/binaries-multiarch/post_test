@@ -1,2 +1,2 @@
-s/i486-linux-gnu/x86_64-linux-gnu/
+s/i[46]86-linux-gnu/x86_64-linux-gnu/
 s/is for i386/is for amd64/
