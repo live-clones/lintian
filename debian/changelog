@@ -36,7 +36,7 @@ lintian (2.5.0~rc3) UNRELEASED; urgency=low
       Thanks to Rene Engelhard for the report.
       (Closes: #622396)
   * checks/files{,.desc}:
-    + [NT] Added dir-or-file-in-run tag.
+    + [NT] Added dir-or-file-in-run tag.  (Closes: #623031)
   * checks/java{,.desc}:
     + [NT] Added file based on patches submitted by Vicent Fourmond.
       (Closes: #620829)
