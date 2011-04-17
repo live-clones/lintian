@@ -87,10 +87,17 @@ lintian (2.5.0~rc3) UNRELEASED; urgency=low
 
   * debian/control:
     + [NT] Bumped Standards-Version to 3.9.2.
-
+    + [NT] Updated Build-Depends for debiandoc -> docbook change of
+      the manual.
+  * debian/{docs,rules}:
+    + [NT] Updated to use/install docbook instead of debiandoc.
 
   * doc/lintianrc.example:
     + [NT] Removed reference to LINTIAN_UNPACK_LEVEL.
+  * doc/lintian.sgml:
+    + [RG] Removed file - replaced by doc/lintian.xml.
+  * doc/lintian.xml:
+    + [RG] Added to migrate away from debiandoc.  (Closes: #587925)
 
   * frontend/lintian:
     + [NT] Removed the deprecated --unpack-level argument.  Only

@@ -5,7 +5,7 @@ PERL ?= /usr/bin/perl
 VER := $(shell head -1 debian/changelog | sed -e 's/^.*(//' -e 's/).*$$//')
 tmp := $(CURDIR)/debian/lintian
 neededfiles := debian/rules frontend/lintian
-docsource := doc/lintian.sgml doc/README.in man/lintian.pod.in \
+docsource := doc/lintian.xml doc/README.in man/lintian.pod.in \
 	     man/lintian-info.pod
 allchecks := $(wildcard checks/*)
 allcollect := $(wildcard collection/*)
@@ -53,8 +53,8 @@ build: build-stamp
 build-stamp: $(neededfiles) $(docsource) $(testtarget)
 	@echo .... running build ....
 	dh_testdir
-	cd doc && LANG=C debiandoc2html lintian.sgml
-	cd doc && LANG=C debiandoc2text lintian.sgml
+	cd doc && LANG=C docbook2html  -V "%use-id-as-filename%" -o lintian.html lintian.xml
+	cd doc && LANG=C jw -b txt lintian.xml
 	mkdir man/man1/
 	private/generate-lintian-pod | \
 		pod2man --name lintian --center "Debian Package Checker" --section=1 > man/man1/lintian.1

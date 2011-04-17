@@ -1,0 +1,753 @@
+<?xml version="1.0"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN" "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd" [
+  <!ENTITY tex "TeX">
+  <!ENTITY latex "LaTeX">
+]>
+<book id="book-root" lang="en">
+  <bookinfo>
+    <title>Lintian User's Manual</title>
+    <abstract>
+      <para>
+        This manual describes Lintian, the Debian package checker.
+      </para>
+    </abstract>
+    <copyright>
+      <year>1998</year>
+      <holder>Christian Schwarz</holder>
+      <holder>Richard Braakman</holder>
+    </copyright>
+    <copyright>
+      <year>2000</year>
+      <holder>Sean 'Shaleh' Perry</holder>
+    </copyright>
+    <copyright>
+      <year>2004</year>
+      <year>2008</year>
+      <holder>Frank Lichtenheld</holder>
+    </copyright>
+    <legalnotice>
+      <para>
+        This manual is free software; you may redistribute it and/or
+        modify it under the terms of the GNU General Public License as
+        published by the Free Software Foundation; either version 2,
+        or (at your option) any later version.
+      </para>
+      <para>
+        This is distributed in the hope that it will be useful, but
+        without any warranty; without even the implied warranty of
+        merchantability or fitness for a particular purpose. See the
+        GNU General Public License for more details.
+      </para>
+      <para>
+        A copy of the GNU General Public License is available as
+        <filename>/usr/share/common-licenses/GPL</filename> in the
+        Debian GNU/Linux distribution or on the World Wide Web at
+	<ulink url="http://www.gnu.org/copyleft/gpl.html">the GNU web site</ulink>.
+        You can also obtain it by writing to the Free Software Foundation,
+        Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.
+      </para>
+    </legalnotice>
+  </bookinfo>
+  <chapter label="1" id="chapter-1">
+    <title>Introduction</title>
+    <sect1 label="1.1" id="section-1.1">
+      <title>About Lintian</title>
+      <para>
+        Lintian is a Debian package checker. It can be used to check
+        binary and source packages for compliance with the Debian
+        policy and for other common packaging errors.
+      </para>
+      <para>
+        Lintian uses an archive directory, called laboratory, in which
+        it stores information about the packages it examines.  It can
+        keep this information between multiple invocations in order to
+        avoid repeating expensive data-collection operations. It's
+        also possible to check the complete Debian archive for bugs
+        &mdash; in a timely manner.
+      </para>
+    </sect1>
+
+    <sect1 label="1.2" id="section-1.2">
+      <title>The intention of Lintian</title>
+      <para>
+        Packaging has become complicated&mdash;not because dpkg is
+        complicated (indeed, dpkg-deb is very simple to use) but
+        because of the high requirements of our policy. If a developer
+        releases a new package, she has to consider hundreds of
+        guidelines to make the package `policy compliant.'
+      </para>
+      <para>
+        All parts of our policy have been introduced by the same procedure:
+        Some developer has a good idea how to make packages more `unique' with
+        respect to a certain aspect&mdash;then the idea is discussed and a policy
+        proposal is prepared. If we have a consensus about the policy change,
+        it's introduced in our manuals.
+      </para>
+      <para>
+        Therefore, our policy is <emphasis>not</emphasis> designed to
+        make life harder for the maintainers! The intention is to make
+        Debian the best Linux distribution out there. With this in
+        mind, lots of policy changes are discussed on the mailing
+        lists each week.
+      </para>
+      <para>
+        But changing the policy is only a small part of the story:
+        Just having some statement included in the manual does not
+        make Debian any better. What's needed is for that policy to
+        become `real life,' i.e.,
+        it's <emphasis>implemented</emphasis> in our packages. And
+        this is where Lintian comes in: Lintian checks packages and
+        reports possible policy violations. (Of course, not everything
+        can be checked mechanically &mdash; but a lot of things can
+        and this is what Lintian is for.)
+      </para>
+      <para>Thus, Lintian has the following goals:</para>
+      <itemizedlist mark="bullet">
+        <listitem>
+          <para>
+            <emphasis>To give us some impression of the `gap'
+              between theory (written policy) and praxis (current state of
+              implementation).</emphasis>
+          </para>
+          <para>
+            From the results of the first two Lintian checks I
+            implemented, I see that there is a big need to make this
+            gap smaller. Introducing more policy aspects is worthless
+            unless they are implemented. We first should fix packages
+            to comply with current policy before searching for new
+            ways to make policy more detailed. (Of course, there are
+            also important policy changes that need to be introduced
+            &mdash; but this is not what's meant here.)
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <emphasis>
+              To make us re-think about certain aspects of our policy.
+            </emphasis>
+          </para>
+          <para>
+            For example, it could turn out that some ideas that once
+            sounded great in theory are hard to implement in all our
+            packages &mdash; in which case we should rework this
+            aspect of policy.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <emphasis>
+              To show us where to concentrate our efforts in order to
+              make Debian a higher quality distribution.
+            </emphasis>
+          </para>
+          <para>
+            Most release requirements will be implemented through
+            policy.  Lintian reports provide an easy way to
+            compare <emphasis>all</emphasis> our packages against
+            policy and keep track of the fixing process by watching
+            bug reports.  Note, that all this can be
+            done <emphasis>automatically</emphasis>.
+          </para>
+        </listitem>
+        <listitem>
+          <para><emphasis>To make us avoid making the same mistakes all over again.</emphasis>
+          </para>
+          <para>
+            Being humans, it's natural for us to make errors. Since we
+            all have the ability to learn from our mistakes, this is
+            actually no big problem.  Once an important bug is
+            discovered, a Lintian check could be written to check for
+            exactly this bug. This will prevent the bug from appearing
+            in any future revisions of any of our packages.
+          </para>
+        </listitem>
+      </itemizedlist>
+    </sect1>
+
+    <sect1 label="1.3" id="section-1.3">
+      <title>Design issues</title>
+      <para>There are three fields of application for Lintian:</para>
+      <itemizedlist mark="bullet">
+        <listitem>
+          <para>
+            one person could use Lintian to check the whole Debian
+            archive and reports bugs,
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            each maintainer runs Lintian over her packages before
+            uploading them,
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            dinstall checks packages which are uploaded to master
+            before they are installed in the archive.
+          </para>
+        </listitem>
+      </itemizedlist>
+      <para>
+        The authors of Lintian decided to use a very modular design to
+        achieve the following goals:
+      </para>
+      <itemizedlist mark="bullet">
+        <listitem>
+          <para>
+            flexibility: Lintian can be used to check single packages
+            or the whole archive and to report and keep track of bug
+            reports, etc.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            completeness: Lintian will eventually include checks for
+            (nearly) everything that can be checked mechanically.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            uptodateness: Lintian will be updated whenever policy is
+            changed.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            performance: Lintian should make it possible to check
+            single packages within seconds or check the full archive
+            within a few hours.
+          </para>
+        </listitem>
+      </itemizedlist>
+    </sect1>
+
+    <sect1 label="1.4" id="section-1.4">
+      <title>Disclaimer</title>
+      <para>Here is a list of important notes on how to use Lintian:</para>
+      <orderedlist numeration="arabic">
+        <listitem>
+          <para>
+            Lintian is not finished yet and will probably never
+            be. Please don't use Lintian as a reference for Debian
+            policy. Lintian might miss a lot of policy violations
+            while it might also report some violations by mistake. If
+            in doubt, please check out the policy manuals.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            The Debian policy gives the maintainers a lot of
+            freedom. In most cases, the guidelines included in the
+            manuals allow exceptions. Thus, if Lintian reports a
+            policy violation on a package and you think this is such
+            an exception (or if you think Lintian has a bug) you can
+            do two things: If your package is a bit non-standard and
+            weird in this regard, you can install an override. If you
+            think however that the check is too easily or outright
+            wrongly triggered, please file a bug on the lintian
+            package.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Please DO NOT use Lintian to file bug reports (neither
+            single ones nor mass bug reports). This is done by the
+            authors of Lintian already and duplication of efforts and
+            bug reports should be avoided! If you think a certain bug
+            is `critical' and should be reported/fixed immediately,
+            please contact the maintainer of the corresponding package
+            and/or the Lintian maintainers.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Any feedback about Lintian is welcomed! Please send your
+            comments to the lintian
+            maintainers <email>lintian-maint@debian.org</email>.</para>
+        </listitem>
+      </orderedlist>
+    </sect1>
+  </chapter>
+
+  <chapter label="2" id="chapter-2">
+    <title>Getting started</title>
+    <sect1 label="2.1" id="section-2.1">
+      <title>Installing Lintian</title>
+      <para>
+        Before you can start to check your packages with Lintian,
+        you'll have to install
+        the <systemitem role="package">lintian</systemitem> Debian
+        package.
+      </para>
+    </sect1>
+
+    <sect1 label="2.2" id="section-2.2">
+      <title>Running lintian</title>
+      <para>
+        After that, you can run Lintian over any Debian binary, udeb
+        or source packages like this:
+      </para>
+      <screen>
+$ lintian libc5_5.4.38-1.deb
+W: libc5: old-fsf-address-in-copyright-file
+W: libc5: shlib-without-dependency-information usr/lib/libgnumalloc.so.5.4.38
+W: libc5: shlib-without-dependency-information lib/libc.so.5.4.38
+W: libc5: shlib-without-dependency-information lib/libm.so.5.0.9
+E: libc5: shlib-with-executable-bit lib/libc.so.5.4.38 0755
+E: libc5: shlib-with-executable-bit lib/libm.so.5.0.9 0755
+E: libc5: shlib-missing-in-control-file libgnumalloc usr/lib/libgnumalloc.so.5.4.38
+$
+</screen>
+      <para>
+        As you can see, Lintian uses a special format for all its
+        error and warning messages. With that, its very easy to write
+        other programs which run Lintian and interpret the displayed
+        messages.
+      </para>
+    </sect1>
+
+    <sect1 label="2.3" id="section-2.3">
+      <title>Lintian Tags</title>
+      <para>
+        The first character of each line indicates the type of
+        message. Currently, the following types are supported:
+      </para>
+      <variablelist>
+        <varlistentry>
+          <term><emphasis>Errors (E)</emphasis></term>
+          <listitem>
+            <para>
+              The displayed message indicates a policy violation or a
+              packaging error. For policy violations, Lintian will
+              cite the appropriate policy section when it is invoked
+              with the <option>-i</option> option.
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term><emphasis>Warnings (W)</emphasis></term>
+          <listitem>
+            <para>
+              The displayed message might be a policy violation or packaging
+              error. A warning is usually an indication that the test is
+              known to sometimes produce false positive alarms, because either
+              the corresponding rule in policy has many exceptions or the test
+              uses some sort of heuristic to find errors.
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term><emphasis>Info (I)</emphasis></term>
+          <listitem>
+            <para>
+              The displayed message is meant to inform the maintainer
+              about a certain packaging aspect. Such messages do not
+              usually indicate errors, but might still be of interest
+              to the curious.  They are not displayed unless
+              the <option>-I</option> option is set.
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term><emphasis>Notes (N)</emphasis></term>
+          <listitem>
+            <para>
+              The displayed message is a debugging message which
+              informs you about the current state of Lintian.
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term><emphasis>Experimental (X)</emphasis></term>
+          <listitem>
+            <para>
+              The displayed message is one of the types listed above,
+              but has been flagged as `experimental' by the Lintian
+              maintainers.  This means that the code that generates
+              this message is not as well tested as the rest of
+              Lintian, and might still give surprising results.  Feel
+              free to ignore Experimental messages that do not seem to
+              make sense, though of course bug reports are always
+              welcomed.  They are not displayed unless
+              the <option>-E</option> option is set.
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term><emphasis>Overridden (O)</emphasis></term>
+          <listitem>
+            <para>
+              The displayed message indicates a previous
+              <emphasis>Warning</emphasis>
+              or <emphasis>Error</emphasis> message which has been
+              <emphasis>overridden</emphasis> (see below). They are
+              not displayed unless
+              the <option>--show-overrides</option> option is set.
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term><emphasis>Pedantic (P)</emphasis></term>
+          <listitem>
+            <para>
+              The displayed message indicates a message of Lintian at
+              its most pickiest and include checks for particular
+              Debian packaging styles, checks that are very frequently
+              wrong, and checks that many people disagree with.  They
+              are not displayed unless the <option>--pedantic</option>
+              option is set.
+            </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+      <para>
+        The following parameters after the type indicator tell you about the
+        <emphasis>package</emphasis> that has been processed (this can
+        either be a binary or a source package) and about
+        the <emphasis>problem</emphasis> that has been discovered. The
+        problem is identified by a so-called <emphasis>tag</emphasis>
+        (for
+        example, <literal>old-fsf-address-in-copyright-file</literal>).
+      </para>
+      <para>
+        Depending on which tag has been reported, the line may contain
+        additional arguments which tell you, for example, which files
+        are involved.
+      </para>
+      <para>
+        If you do not understand what a certain tag is about, you can
+        specify the <option>-i</option> option when calling Lintian to
+        get a detailed description of the reported tags:
+      </para>
+      <screen>
+$ lintian -i libc5_5.4.38-1.deb
+W: libc5: old-fsf-address-in-copyright-file
+N:
+N:   The /usr/share/doc/&lt;pkg&gt;/copyright file refers to the old postal
+N:   address of the Free Software Foundation (FSF). The new address is:
+N:   
+N:     Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+N:     MA 02110-1301, USA.
+N:   
+N:   Severity: normal, Certainty: certain
+N:
+[...]
+$
+</screen>
+      <para>
+        In some cases, the messages contain some additional text with a
+        leading hash character (<literal>#</literal>). This text should be ignored by any other
+        programs which interpret Lintian's output because it doesn't follow a
+        unique format between different messages and it's only meant as
+        additional information for the maintainer.
+      </para>
+    </sect1>
+
+    <sect1 label="2.4" id="section-2.4">
+      <title>Overrides</title>
+      <para>
+        In some cases, the checked package does not have a bug or does
+        not violate policy, but Lintian still reports an error or
+        warning. This can have the following reasons: Lintian has a
+        bug itself, a specific Lintian check is not smart enough to
+        know about a special case allowed by policy, or the policy
+        does allow exceptions to some rule in general.
+      </para>
+      <para>
+        In the first case (where Lintian has a bug) you should send a
+        bug report to the Debian bug tracking system and describe
+        which package you checked, which messages have been displayed,
+        and why you think Lintian has a bug. Best would be, if you
+        would run Lintian again over your packages using
+        the <option>-d</option> (or <option>--debug</option>) option,
+        which will cause Lintian to output much more information
+        (debugging info), and include these messages in your bug
+        report. This will simplify the debugging process for the
+        authors of Lintian.
+      </para>
+      <para>
+        In the other two cases (where the error is actually an exception to
+        policy), you should probably add an override. If you're unsure though whether
+        it's indeed a good case for an override, you should contact the Lintian
+        maintainers too, including the Lintian error message and a short note, stating
+        why you think this is an exception. This way, the Lintian maintainers can be
+        sure the problem is not actually a bug in Lintian or an error in the author's
+        reading of policy. Please do not override bugs in lintian, they should rather
+        be fixed than overridden.
+        Once it has been decided that an override is needed, you can easily add one by
+        supplying an overrides file. If the override is for a binary or udeb
+        package, you have to place it at
+        <filename>/usr/share/lintian/overrides/<replaceable>&lt;package&gt;</replaceable></filename>
+        inside the package. If the override is for a source package,
+        you have to place it
+        at <filename>debian/source/lintian-overrides</filename>
+        or <filename>debian/source.lintian-overrides</filename> (the
+        former path is preferred). With that, Lintian will know about
+        this exception and not report the problem again when checking
+        your package. (Actually, Lintian will report the problem
+        again, but with type <emphasis>overridden</emphasis>, see
+        above.)
+      </para>
+      <para>
+        Note that Lintian extracts the override file from the (u)deb
+        and stores it in the laboratory. The files currently installed
+        on the system are not used in current Lintian versions.
+      </para>
+      <para>
+        The format of the overrides file is simple, it consists of one override per
+        line (and may contain empty lines and comments, starting with a <literal>#</literal>, on others):
+        <literal>[<replaceable>&lt;package&gt;</replaceable>[ <replaceable>&lt;type&gt;</replaceable>]: ]<replaceable>&lt;lintian-tag&gt;</replaceable>[
+          [*]<replaceable>&lt;lintian-info&gt;</replaceable>[*]]</literal>.  <replaceable>&lt;package&gt;</replaceable> is the package name;
+        <replaceable>&lt;type&gt;</replaceable> is one of <literal>binary</literal>, <literal>udeb</literal> and
+        <literal>source</literal>,
+        and <replaceable>&lt;lintian-info&gt;</replaceable> is all
+        additional information provided by Lintian except for the
+        tag. What's inside brackets is optional and may be omitted if
+        you want to match it all.  An example file for a binary
+        package would look like:
+      </para>
+      <screen>
+/usr/share/lintian/overrides/foo, where foo is the name of your package
+
+# We use a non-standard dir permission to only allow the webserver to look
+# into this directory:
+foo binary: non-standard-dir-perm
+foo binary: FSSTND-dir-in-usr /usr/man/man1/foo.1.gz
+</screen>
+      <para>An example file for a source package would look like:</para>
+      <screen>
+debian/source.lintian-overrides in your base source directory
+foo source: debian-files-list-in-source
+# Upstream distributes it like this, repacking would be overkill though, so
+# tell lintian to not complain:
+foo source: configure-generated-file-in-source config.cache
+</screen>
+      <para>
+        Many tags can occur more than once (e.g. if the same error is
+        found in more than one file). You can override a tag either
+        completely by specifying its name (first line in the examples)
+        or only one occurrence of it by specifying the additional
+        info, too (second line in the examples).  If you add an
+        asterisk (<literal>*</literal>) at the start and/or end of the
+        additional info, this will match arbitrary strings similar to
+        the shell wildcard.  Asterisks located at any other place in
+        the info have no special meaning.  This wildcard support was
+        added in Lintian version 2.0.0.
+      </para>
+    </sect1>
+  </chapter>
+
+  <chapter label="3" id="chapter-3">
+    <title>Advanced usage</title>
+    <sect1 label="3.1" id="section-3.1">
+      <title>How Lintian works</title>
+      <para>Lintian is divided into the following layers:</para>
+      <variablelist>
+        <varlistentry>
+          <term><emphasis>frontend</emphasis></term>
+          <listitem>
+            <para>
+              the command line interface (currently, this layer
+              consists of two scripts,
+              namely <command>lintian</command>
+              and <command>lintian-info</command>)
+             </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term><emphasis>checkers</emphasis></term>
+          <listitem>
+            <para>
+              a set of scripts that check different aspects of binary
+              or source packages
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term><emphasis>data collectors</emphasis></term>
+          <listitem>
+            <para>
+              a set of scripts that prepares specific information
+              about a package needed by the checker scripts
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term><emphasis>unpacking scripts</emphasis></term>
+          <listitem>
+            <para>
+              a set of scripts that unpack binary and source packages and
+              extract some basic information about the package contents
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term><emphasis>bug reporting scripts</emphasis></term>
+          <listitem>
+            <para>
+              a collection of scripts to report bugs and keep track of
+              them afterwards
+            </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+      <para>
+        When you check a package with Lintian, the following steps are
+        performed (not exactly in this order&mdash;but the details aren't important
+        now):
+      </para>
+      <orderedlist numeration="arabic">
+        <listitem>
+          <para>
+            The package contents are unpacked in
+            the <emphasis>laboratory</emphasis> (or
+            just <emphasis>lab</emphasis>).
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Some data is collected about the package. (That's done by the
+            so-called <emphasis>collector scripts</emphasis>.) For example, the <command>file</command>
+            program is run on each file in the package and the output is saved in the
+            <command>file-info</command> file in the lab.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            The package contents are removed again (to save disk
+            space), but the <emphasis>statistics files</emphasis>
+            produced in the last step remain in the lab.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            The <emphasis>checker scripts</emphasis> are run over the
+            package and report any discovered policy violations or
+            other errors. These scripts don't access the package
+            contents directly, but use the collected data as input.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Depending on the <emphasis>lab mode</emphasis> Lintian
+            uses (see below), the whole lab directory is removed
+            again.
+          </para>
+        </listitem>
+      </orderedlist>
+      <para>
+        This separation of the <emphasis>checker scripts</emphasis>
+        from the <emphasis>unpacking tools</emphasis> and
+        the <emphasis>data collector scripts</emphasis> makes it
+        possible to run Lintian several times over a package without
+        having to unpack the package each time. In addition, the
+        checker scripts don't have to worry about packaging details
+        since they just access the statistics files (not the package
+        files directly).
+      </para>
+      <para>
+        Furthermore, since it is sufficient to save the statistics
+        files of each package in order to run the checks, one can
+        store these files for all packages of the Debian archive if
+        one wants to check the whole distribution several times.  The
+        space savings is substantial and continues to grow as the
+        archive does.
+      </para>
+    </sect1>
+
+    <sect1 label="3.2" id="section-3.2">
+      <title>The laboratory</title>
+      <para>
+        Lintian's laboratory directory can be defined via
+        the <constant>LINTIAN_LAB</constant> variable (either in the
+        configuration file or as environment variable). If this
+        variable is not defined, Lintian creates a temporary lab
+        in <filename class="directory">/tmp</filename> which is
+        removed again after Lintian has completed its checks. This
+        mode is called <emphasis>temporary lab mode</emphasis>.
+      </para>
+      <para>
+        In the <emphasis>static lab mode</emphasis> (if the laboratory
+        directory is defined by the user), the laboratory has to be
+        set up first before it can be used by Lintian. This can be
+        done with the <option>-S</option>
+        (or <option>--setup-lab</option>) command line option (see
+        also the next section about the distribution directory).
+      </para>
+      <para>Here is a sketch of the Lintian laboratory:</para>
+      <screen>
+
+   $LINTIAN_LAB/
+
+      source/
+       &lt;src-pkg-name&gt;/
+        .lintian-status
+        dsc                 dsc file
+        foo.diff.gz
+        foo.orig.tar.gz     (symlinks to actual files)
+        binary/
+	     &lt;binary 1&gt; -&gt; ../../../binary/&lt;binary 1&gt;
+	     ...
+	unpacked/           (opt., contains unpacked source package)
+
+      binary/
+       &lt;bin-pkg-name&gt;/
+        .lintian-status
+        index               (output of `dpkg -c')
+        control-index       (same for the control.tar.gz of the pkg)
+        control/            (contains all control files)
+        fields/             (contains all control field settings)
+	source -&gt; ../../source/&lt;source pkg&gt;
+        deb                 (symlink to actual file)
+	unpacked/           (opt., contains unpacked binary package)
+
+      udeb/
+       &lt;udeb-pkg-name&gt;/
+	...                 (same structure as for binary packages)
+
+      info/
+        binary-packages     list of binary packages in archive
+        udeb-packages       list of udeb packages in archive
+	source-packages     list of source packages in archive
+</screen>
+    </sect1>
+
+    <sect1 label="3.3" id="section-3.3">
+      <title>Distribution directory</title>
+      <para>
+        If you want to check the full Debian distribution with Lintian, you
+        have to set up the <constant>LINTIAN_DIST</constant> variable in the configuration
+        file (or as environment variable). Then, you have to run <command>lintian
+          <option>-S</option></command> to set up the laboratory and
+        to create lists of all binary and source packages in the
+        distribution. (Note, that this might take some time&hellip;)
+      </para>
+      <para>After that, you can either check single packages simply be running
+      <screen>
+  $ lintian foo
+</screen>
+      (without path or extension for the
+      package <systemitem role="package">foo</systemitem>) or check
+      the whole distribution with
+      <screen>
+  $ lintian --all
+</screen>
+</para>
+      <para>
+        Since Lintian needs an up-to-date list of packages in the
+	distribution, you'll have to rerun
+	the <command>lintian <option>-S</option></command> command
+	whenever the distribution directory has been changed. (But
+	there is no need to remove the laboratory in this situation:
+	Lintian is smart enough to only re-unpack packages that have
+	been changed.)
+      </para>
+    </sect1>
+  </chapter>
+</book><!-- Keep this comment at the end of the file
+Local variables:
+mode: sgml
+sgml-indent-step:1
+sgml-indent-data:nil
+End:
+-->
