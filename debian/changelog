@@ -39,7 +39,8 @@ lintian (2.5.0~rc3) UNRELEASED; urgency=low
     + [NT] Added dir-or-file-in-run tag.  (Closes: #623031)
   * checks/java{,.desc}:
     + [NT] Added file based on patches submitted by Vicent Fourmond.
-      (Closes: #620829)
+      - This new file checks for jar files in weird locations.
+      (Closes: #620829, #575447)
   * checks/manpages:
     + [NT] Fixed false-positive binary-without-manpage when the
       manpage is in a direct dependency of the package and the
