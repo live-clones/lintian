@@ -115,8 +115,6 @@ our %EMBEDDED_LIBRARIES = (
 	'libpcap'	=> qr'(?:pcap_activate: The "any" device isn\'t supported|corrupted frame on kernel ring mac offset)',
 );
 
-our $MULTIARCH;
-
 sub run {
 
 my $pkg = shift;
@@ -239,16 +237,9 @@ foreach my $file (@{$info->sorted_file_info}) {
     # binary or object file?
     next unless ($fileinfo =~ m/^[^,]*\bELF\b/) or ($fileinfo =~ m/\bcurrent ar archive\b/);
 
-    # Warn about Architecture: all packages that contain shared libraries, but
-    # only if those libraries aren't installed in a multiarch directory.  The
-    # package may be a support package for cross-compiles.
+    # Warn about Architecture: all packages that contain shared libraries.
     if ($arch eq 'all') {
-	my ($arch_path) = ($file =~ m,^(?:usr/)?lib/([^/]+)/,);
-	$MULTIARCH = Lintian::Data->new('binaries/multiarch')
-	    unless defined($MULTIARCH);
-	unless ($arch_path and $MULTIARCH->known($arch_path)) {
-	    tag 'arch-independent-package-contains-binary-or-object', $file;
-	}
+	tag 'arch-independent-package-contains-binary-or-object', $file;
     }
 
     # ELF?
@@ -273,10 +264,7 @@ foreach my $file (@{$info->sorted_file_info}) {
 	    and $file =~ m,^lib/modules/,) {
 	    # Allow amd64 kernel modules to be installed on i386.
 	} else {
-	    $MULTIARCH = Lintian::Data->new('binaries/multiarch')
-		unless defined($MULTIARCH);
-	    tag 'binary-from-other-architecture', $file
-		unless (grep { $file =~ m,/\Q$_\E/, } $MULTIARCH->all);
+	    tag 'binary-from-other-architecture', $file;
 	}
     }
 

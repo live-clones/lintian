@@ -20,6 +20,8 @@ lintian (2.5.0~rc3) UNRELEASED; urgency=low
   * checks/binaries:
     + [NT] Accepted patch from Loïc Minier to support the armhf
       architecture.  (Closes: #618587)
+    + [SRL] Drop wrong checks for multiarch directories.  Multiarch
+      directories are only allowed in packages of the given architecture.
   * checks/circular-deps{,.desc}:
     + [NT] Added to check for circular dependencies between
       binaries from the same source.  It requires all binaries
@@ -66,6 +68,8 @@ lintian (2.5.0~rc3) UNRELEASED; urgency=low
     + [NT] Accepted patch from Vincent Fourmond to implement
       Java related data collection.
 
+  * data/binaries/multiarch:
+    + [SRL] Drop.
   * data/debhelper/alt-dh_commands:
     + [NT] New file; contains alternative dependencies for
       dh_python2 and dh_python3.  (Closes: #614879)
