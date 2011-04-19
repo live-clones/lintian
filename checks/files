@@ -705,13 +705,23 @@ foreach my $file (@{$info->sorted_index}) {
 	}
     }
 
-    if ($file =~ m,^(?:usr/)lib/([^/]+)/$,) {
+    if ($file =~ m,^(?:usr/)?lib/([^/]+)/$,o) {
 	my $subdir = $1;
 	$TRIPLETS = Lintian::Data->new('files/triplets', '\s+')
 	    unless defined($TRIPLETS);
 	if ($TRIPLETS->known($subdir)) {
 	    tag 'triplet-dir-and-architecture-mismatch', "$file is for", $TRIPLETS->value($subdir)
 		if ($info->field('architecture') ne $TRIPLETS->value($subdir));
+	}
+    }
+
+    if ($pkg !~ m/^libc[0-9]/o && $file =~ m,^(?:usr/)?lib/([^/]+)/lib[^/]+(?:-\d[^/]*\.so|\.so\.[^/]+)$,o) {
+	my $subdir = $1;
+	$TRIPLETS = Lintian::Data->new('files/triplets', '\s+')
+	    unless defined($TRIPLETS);
+	if ($TRIPLETS->known($subdir) && $info->field('architecture') eq $TRIPLETS->value($subdir)) {
+	    my $dep = Lintian::Relation->new($info->field('pre-depends')//'');
+	    tag 'missing-pre-dependency-on-multiarch-support' unless ($dep->implies('multiarch-support'));
 	}
     }
 
