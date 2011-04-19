@@ -1,6 +1,6 @@
 # List of "triplet architecture" relationships as provided by
 # dpkg-architecture
-# Last updated: 2011-04-07
+# Last updated: 2011-04-19
 # With: Debian dpkg-architecture version 1.16.0.1.
 
 alpha-darwin darwin-alpha
@@ -67,19 +67,19 @@ hppa-netbsd netbsd-hppa
 hppa-openbsd openbsd-hppa
 hppa-solaris solaris-hppa
 hppa-uclinux-uclibc uclinux-hppa
-i486-darwin darwin-i386
-i486-freebsd freebsd-i386
-i486-gnu hurd-i386
-i486-kfreebsd-gnu kfreebsd-i386
-i486-knetbsd-gnu knetbsd-i386
-i486-kopensolaris-gnu kopensolaris-i386
-i486-linux-gnu i386
-i486-linux-gnulp lpia
-i486-linux-uclibc uclibc-linux-i386
-i486-netbsd netbsd-i386
-i486-openbsd openbsd-i386
-i486-solaris solaris-i386
-i486-uclinux-uclibc uclinux-i386
+i386-darwin darwin-i386
+i386-freebsd freebsd-i386
+i386-gnu hurd-i386
+i386-kfreebsd-gnu kfreebsd-i386
+i386-knetbsd-gnu knetbsd-i386
+i386-kopensolaris-gnu kopensolaris-i386
+i386-linux-gnu i386
+i386-linux-gnulp lpia
+i386-linux-uclibc uclibc-linux-i386
+i386-netbsd netbsd-i386
+i386-openbsd openbsd-i386
+i386-solaris solaris-i386
+i386-uclinux-uclibc uclinux-i386
 ia64-darwin darwin-ia64
 ia64-freebsd freebsd-ia64
 ia64-gnu hurd-ia64

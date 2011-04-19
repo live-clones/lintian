@@ -60,7 +60,7 @@ EOF
 
 { # run this in a subshell to avoid multiple fd redirections
 for arch in $(dpkg-architecture -L); do
-    triplet="$(dpkg-architecture -a"$arch" -qDEB_HOST_GNU_TYPE 2>/dev/null)"
+    triplet="$(dpkg-architecture -a"$arch" -qDEB_HOST_MULTIARCH 2>/dev/null)"
     printf "%s %s\n" "$triplet" "$arch"
 done
 } | sort >> "$f"
