@@ -90,6 +90,9 @@ lintian (2.5.0~rc3) UNRELEASED; urgency=low
     + [NT] Bumped Standards-Version to 3.9.2.
     + [NT] Updated Build-Depends for debiandoc -> docbook change of
       the manual.
+    + [NT] Added a breaks on emdebian-crush and xdeb, since their
+      checks will most likely not work without bumping their
+      Needs-Info for the checks.
   * debian/{docs,rules}:
     + [NT] Updated to use/install docbook instead of debiandoc.
 
