@@ -1037,7 +1037,10 @@ my %overrides;
 foreach my $gname (sort $pool->get_group_names()) {
     my $group = $pool->get_group($gname);
     unpack_group($group);
-    process_group($group) if $action eq 'check';
+    if ($action eq 'check'){
+	process_group($group);
+	clear_group_cache($group);
+    }
 }
 
 $TAGS->file_end();
@@ -1525,6 +1528,18 @@ sub process_group {
     } # end foreach my $proc ($group->get_processable())
     %running_jobs = ();
 
+    return 1;
+}
+
+
+# cleans the cache of all elements in this group - this avoids
+# memory being hogged by packages/groups that have been checked
+# and will not be checked again.
+sub clear_group_cache {
+    my ($group) = @_;
+    foreach my $proc ($group->get_processables()){
+	$proc->clear_cache;
+    }
     return 1;
 }
 

@@ -144,6 +144,18 @@ sub info{
     return $info;
 }
 
+=item $proc->clear_cache()
+
+Discard the info element, so the memory used by it can be reclaimed.
+Mostly useful when checking a lot of packages (e.g. on lintian.d.o).
+
+=cut
+
+sub clear_cache {
+    my ($self) = @_;
+    delete $self->{info};
+}
+
 =item $proc->lab_pkg([$lpkg])
 
 Returns or sets the L<Lab::Package|$info> element for this processable.
