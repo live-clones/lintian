@@ -71,7 +71,6 @@ Depends: ${misc:Depends},
          perl,
          unzip
 Suggests: binutils-multiarch, libtext-template-perl, man-db (>= 2.5.1-1)
-Breaks: emdebian-crush (<= 2.2.15), xdeb (<= 0.6.4)
 Description: Debian package checker
  Lintian dissects Debian packages and reports bugs and policy
  violations. It contains automated checks for many aspects of Debian
