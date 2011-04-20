@@ -1,11 +1,18 @@
 
-TRIPLETT = $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
+# Since dpkg in stable (Squeeze) does not support MULTIARCH we cannot use
+#  dpkg-architecture -qDEB_HOST_MULTIARCH
+# Therefore this test is hardcoded to x86 and amd64
 
-ifeq (i386-linux-gnu,$(TRIPLETT))
+ARCH=$(shell dpkg-architecture -qDEB_HOST_ARCH)
+
+ifeq (i386,$(ARCH))
+    TRIPLETT = i386-linux-gnu
     WRONG_TRIPLETT = x86_64-linux-gnu
 else
+    TRIPLETT = x86_64-linux-gnu
     WRONG_TRIPLETT = i386-linux-gnu
 endif
+
 
 all:
 	gcc -o basic basic.c
