@@ -25,6 +25,7 @@ Build-Depends: binutils,
                libclass-accessor-perl,
                libdigest-sha-perl,
                libemail-valid-perl,
+               libhtml-parser-perl,
                libipc-run-perl,
                libparse-debianchangelog-perl,
                libtest-minimumversion-perl,
@@ -70,7 +71,8 @@ Depends: ${misc:Depends},
          man-db,
          perl,
          unzip
-Suggests: binutils-multiarch, libtext-template-perl, man-db (>= 2.5.1-1)
+Suggests: binutils-multiarch, libtext-template-perl,
+ libhtml-parser-perl, man-db (>= 2.5.1-1)
 Description: Debian package checker
  Lintian dissects Debian packages and reports bugs and policy
  violations. It contains automated checks for many aspects of Debian

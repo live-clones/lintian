@@ -100,6 +100,8 @@ lintian (2.5.0~rc3) UNRELEASED; urgency=low
     + [NT] Bumped Standards-Version to 3.9.2.
     + [NT] Updated Build-Depends for debiandoc -> docbook change of
       the manual.
+    + [NT] Added missing Build-Depends on libhtml-parser-perl. Also
+      added it to suggests, since it is used for XML output.
   * debian/{docs,rules}:
     + [NT] Updated to use/install docbook instead of debiandoc.
 
