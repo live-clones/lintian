@@ -21,8 +21,9 @@ lintian (2.5.0~rc3) UNRELEASED; urgency=low
   * checks/binaries:
     + [NT] Accepted patch from Loïc Minier to support the armhf
       architecture.  (Closes: #618587)
-    + [SRL] Drop wrong checks for multiarch directories.  Multiarch
+    + [NT] Drop wrong checks for multiarch directories.  Multiarch
       directories are only allowed in packages of the given architecture.
+      Thanks to Steve R. Langasek for the patch.
   * checks/circular-deps{,.desc}:
     + [NT] Added to check for circular dependencies between
       binaries from the same source.  It requires all binaries
@@ -40,9 +41,10 @@ lintian (2.5.0~rc3) UNRELEASED; urgency=low
       (Closes: #622396)
   * checks/files{,.desc}:
     + [NT] Added dir-or-file-in-run tag.  (Closes: #623031)
-    + [SRL] New tag missing-pre-dependency-on-multiarch-support,
+    + [NT] New tag missing-pre-dependency-on-multiarch-support,
       Severity: serious, to warn when a package installs libraries to the
-      multiarch directory without taking care of upgrades.
+      multiarch directory without taking care of upgrades.  Thanks to
+      Steve R. Langasek for the patch.
 
   * checks/java{,.desc}:
     + [NT] Added file based on patches submitted by Vicent Fourmond.
@@ -74,7 +76,7 @@ lintian (2.5.0~rc3) UNRELEASED; urgency=low
       Java related data collection.
 
   * data/binaries/multiarch:
-    + [SRL] Drop.
+    + [NT] Removed by patch from Steve R. Langasek.
   * data/debhelper/alt-dh_commands:
     + [NT] New file; contains alternative dependencies for
       dh_python2 and dh_python3.  (Closes: #614879)
@@ -82,7 +84,8 @@ lintian (2.5.0~rc3) UNRELEASED; urgency=low
     + [NT] Updated to include armhf.
   * data/files/triplets:
     + [NT] Updated to include armhf triplet.
-    + [SRL] refresh with the final approved multiarch paths.
+    + [NT] Refresh with the final approved multiarch paths by patch
+      from Steve R. Langasek.
   * data/output/manual-references:
     + [NT] Accepted patch from Vincent Fourmond to add the links
       to the Java Policy.
@@ -100,7 +103,7 @@ lintian (2.5.0~rc3) UNRELEASED; urgency=low
     + [NT] Bumped Standards-Version to 3.9.2.
     + [NT] Updated Build-Depends for debiandoc -> docbook change of
       the manual.
-    + [NT] Added missing Build-Depends on libhtml-parser-perl. Also
+    + [NT] Added missing Build-Depends on libhtml-parser-perl.  Also
       added it to suggests, since it is used for XML output.
   * debian/{docs,rules}:
     + [NT] Updated to use/install docbook instead of debiandoc.
