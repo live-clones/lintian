@@ -115,7 +115,6 @@ W: binary: menu-item-uses-apps-section usr/share/menu/binary:7
 W: binary: menu-item-uses-windowmanagers-section usr/lib/menu/binary:13
 W: binary: menu-item-uses-windowmanagers-section usr/share/menu/binary:13
 W: binary: old-fsf-address-in-copyright-file
-W: binary: package-contains-broken-symlink usr/share/doc/binary/html/ch3.html /usr/share/doc/binary/htm/ch1.html
 W: binary: package-contains-hardlink usr/bar2 -> usr/share/baz
 W: binary: package-contains-upstream-install-documentation usr/share/doc/binary/INSTALL
 W: binary: spelling-error-in-description dont don't
@@ -137,3 +136,4 @@ W: binary: unquoted-string-in-menu-item usr/lib/menu/binary needs:1
 W: binary: unquoted-string-in-menu-item usr/lib/menu/binary needs:2
 W: binary: unquoted-string-in-menu-item usr/share/menu/binary needs:1
 W: binary: unquoted-string-in-menu-item usr/share/menu/binary needs:2
+X: binary: package-contains-broken-symlink usr/share/doc/binary/html/ch3.html /usr/share/doc/binary/htm/ch1.html

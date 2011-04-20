@@ -106,8 +106,6 @@ W: filenames: menu-file-in-usr-lib usr/lib/menu/menu
 W: filenames: no-priority-field
 W: filenames: no-section-field
 W: filenames: non-standard-dir-perm usr/lib/filenames/readonly/ 0555 != 0755
-W: filenames: package-contains-broken-symlink usr/lib/filenames/symlink2ok /etc/symlink
-W: filenames: package-contains-broken-symlink usr/lib/filenames/symlink3wrong /usr/lib/filenames/symlink2
 W: filenames: package-contains-bts-control-dir usr/lib/perl5/.be/
 W: filenames: package-contains-bts-control-dir usr/lib/perl5/.ditrack/
 W: filenames: package-contains-devhelp-file-without-symlink usr/share/doc/filenames/bad-devhelp/c.devhelp.gz
@@ -146,3 +144,5 @@ W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/news.debia
 W: more-filename-games: binary-without-manpage usr/bin/another-test-game
 W: more-filename-games: binary-without-manpage usr/games/yet-another-test-game
 W: more-filename-games: package-section-games-but-has-usr-bin
+X: filenames: package-contains-broken-symlink usr/lib/filenames/symlink2ok /etc/symlink
+X: filenames: package-contains-broken-symlink usr/lib/filenames/symlink3wrong /usr/lib/filenames/symlink2
