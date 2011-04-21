@@ -3,19 +3,20 @@ Section: devel
 Priority: optional
 Maintainer: Debian Lintian Maintainers <lintian-maint@debian.org>
 Uploaders: Josip Rodin <joy-packages@debian.org>,
- Jeroen van Wolffelaar <jeroen@wolffelaar.nl>,
- Frank Lichtenheld <djpig@debian.org>,
- Marc 'HE' Brockschmidt <he@debian.org>,
- Colin Watson <cjwatson@debian.org>, Russ Allbery <rra@debian.org>,
- Adam D. Barratt <adam@adam-barratt.org.uk>,
- Raphael Geissert <geissert@debian.org>,
- Niels Thykier <niels@thykier.net>
+           Jeroen van Wolffelaar <jeroen@wolffelaar.nl>,
+           Frank Lichtenheld <djpig@debian.org>,
+           Marc 'HE' Brockschmidt <he@debian.org>,
+           Colin Watson <cjwatson@debian.org>,
+           Russ Allbery <rra@debian.org>,
+           Adam D. Barratt <adam@adam-barratt.org.uk>,
+           Raphael Geissert <geissert@debian.org>,
+           Niels Thykier <niels@thykier.net>
 Build-Depends: binutils,
                debhelper (>= 7.0.50~),
-               docbook-utils,
-               docbook-xml,
                default-jdk,
                diffstat,
+               docbook-utils,
+               docbook-xml,
                fakeroot,
                file,
                gettext,
@@ -29,8 +30,8 @@ Build-Depends: binutils,
                libipc-run-perl,
                libparse-debianchangelog-perl,
                libtest-minimumversion-perl,
-               libtest-pod-perl,
                libtest-pod-coverage-perl,
+               libtest-pod-perl,
                libtest-strict-perl,
                libtest-synopsis-perl,
                libtext-template-perl,
@@ -52,8 +53,7 @@ Vcs-Browser: http://git.debian.org/?p=lintian/lintian.git
 
 Package: lintian
 Architecture: all
-Depends: ${misc:Depends},
-         binutils,
+Depends: binutils,
          diffstat,
          dpkg-dev,
          file,
@@ -70,9 +70,12 @@ Depends: ${misc:Depends},
          locales,
          man-db,
          perl,
-         unzip
-Suggests: binutils-multiarch, libtext-template-perl,
- libhtml-parser-perl, man-db (>= 2.5.1-1)
+         unzip,
+         ${misc:Depends}
+Suggests: binutils-multiarch,
+          libhtml-parser-perl,
+          libtext-template-perl,
+          man-db (>= 2.5.1-1)
 Description: Debian package checker
  Lintian dissects Debian packages and reports bugs and policy
  violations. It contains automated checks for many aspects of Debian
@@ -84,7 +87,7 @@ Description: Debian package checker
  expensive data-collection operations. This makes it possible to check the
  complete Debian archive for bugs, in a reasonable time.
  .
- This package is useful for all people who want to check Debian 
+ This package is useful for all people who want to check Debian
  packages for compliance with Debian policy. Every Debian maintainer
  should check packages with this tool before uploading them to the
  archive.
