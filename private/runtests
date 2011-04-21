@@ -25,7 +25,7 @@ export LANG
 export LC_COLLCATE
 export LINTIAN_ROOT
 export LOCPATH
-export NO_PKG_MAGNGLE
+export NO_PKG_MANGLE
 
 fail(){
     echo "$1" >&2
