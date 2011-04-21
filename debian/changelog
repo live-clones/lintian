@@ -1,4 +1,4 @@
-lintian (2.5.0~rc3) UNRELEASED; urgency=low
+lintian (2.5.0~rc3) unstable; urgency=low
 
   * Summary of tag changes:
     + Added:
@@ -150,11 +150,12 @@ lintian (2.5.0~rc3) UNRELEASED; urgency=low
     + [NT] Accepted patch from Benjamin Drung to accept i686-linux-gnu
       as a valid triplet.  This fixes test failure in Ubuntu.
       (Closes: #622974)
+
   * unpack/unpack-{binpkg,changes}-l1:
     + [NT] Removed unpack scripts for binpkg and changes as these have
       been replaced by collections.
 
- -- Niels Thykier <niels@thykier.net>  Thu, 07 Apr 2011 19:00:59 +0200
+ -- Niels Thykier <niels@thykier.net>  Thu, 21 Apr 2011 12:29:45 +0200
 
 lintian (2.5.0~rc2) unstable; urgency=low
 
