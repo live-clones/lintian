@@ -2,18 +2,18 @@ lintian (2.5.0~rc3) unstable; urgency=low
 
   * Summary of tag changes:
     + Added:
-      - classpath-contains-relative-path
-      - codeless-jar
       - dir-or-file-in-run
-      - executable-jar-without-main-class
       - intra-source-package-circular-dependency
-      - jar-not-in-usr-share
-      - javalib-but-no-public-jars
-      - missing-classpath
-      - missing-dep-on-jarwrapper
-      - missing-manifest
-      - missing-pre-dependency-on-multiarch-support
       - package-contains-broken-symlink
+      - classpath-contains-relative-path
+      - jar-not-in-usr-share
+      - executable-jar-without-main-class
+      - missing-dep-on-jarwrapper
+      - missing-classpath
+      - javalib-but-no-public-jars
+      - missing-manifest
+      - codeless-jar
+      - missing-pre-dependency-on-multiarch-support
 
   * checks/*.desc:
     + [NT] Updated the Needs-Info field to include the new
