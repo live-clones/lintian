@@ -67,7 +67,8 @@ sub new {
     };
     $self = bless $self, $type;
     $profile = $self->_find_profile($name);
-    fail "Cannot find $name.\n" unless $profile;
+    fail "Cannot find profile $name (in " . join(', ', @$ppath).").\n"
+        unless $profile;
     $self->_read_profile($profile);
     return $self;
 }

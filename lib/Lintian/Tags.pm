@@ -636,6 +636,12 @@ sub displayed {
     my ($self, $tag) = @_;
     my $info = Lintian::Tag::Info->new($tag);
     return 0 if ($info->experimental and not $self->{show_experimental});
+    my $only = $self->{only_issue};
+    if (%$only) {
+        return 1 if $only->{$tag};
+        return 0;
+    }
+    return 0 if $self->suppressed($tag);
     my $severity = $info->severity;
     my $certainty = $info->certainty;
 

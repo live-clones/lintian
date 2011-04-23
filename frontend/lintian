@@ -27,6 +27,15 @@ use warnings;
 
 use Getopt::Long;
 use Cwd;
+
+# The profile search path except LINTIAN_ROOT/profiles
+#  which will be added later (we dont know LINTIAN_ROOT
+#  at this point)
+use constant PROFILE_PATH => (
+    "$ENV{HOME}/.lintian/profiles",
+    '/etc/lintian/profiles'
+    );
+
 # }}}
 
 # {{{ Global Variables
@@ -58,6 +67,7 @@ my $allow_root = 0;		#flag for --allow-root switch
 my $fail_on_warnings = 0;       #flag for --fail-on-warnings switch
 my $keep_lab = 0;		#flag for --keep-lab switch
 my $packages_file = 0;		#string for the -p option
+our $OPT_LINTIAN_PROFILE = '';  #string for the --profile option
 our $OPT_LINTIAN_LAB = '';	#string for the --lab option
 our $OPT_LINTIAN_ARCHIVEDIR = '';#string for the --archivedir option
 our $OPT_LINTIAN_DIST = '';	#string for the --dist option
@@ -100,6 +110,7 @@ our $LINTIAN_DIST = undef;
 our $LINTIAN_ARCH = undef;
 our $LINTIAN_SECTION = undef;
 our $LINTIAN_AREA = undef;
+our $LINTIAN_PROFILE = undef;
 # }}}
 
 # {{{ Setup Code
@@ -179,6 +190,7 @@ Configuration options:
     --cfg CONFIGFILE          read CONFIGFILE for configuration
     --dist DIST               scan packages in this distribution (e.g. sid)
     --lab LABDIR              use LABDIR as permanent laboratory
+    --profile X               Use the profile X or use vendor X checks
     --root ROOTDIR            use ROOTDIR instead of /usr/share/lintian
 Package selection options:
     -a, --all                 process all packages in distribution
@@ -406,6 +418,7 @@ my %opthash = (			# ------------------ actions
 	       'area=s' => \$OPT_LINTIAN_AREA,
 	       'section=s' => \$OPT_LINTIAN_AREA,
 	       'arch=s' => \$OPT_LINTIAN_ARCH,
+	       'profile=s' => \$OPT_LINTIAN_PROFILE,
 	       'root=s' => \$LINTIAN_ROOT,
 
 	       # ------------------ package selection options
@@ -483,7 +496,7 @@ if ($LINTIAN_CFG) {
     undef $LINTIAN_CFG;
 }
 
-use constant VARS => qw(LAB ARCHIVEDIR DIST AREA ARCH);
+use constant VARS => qw(LAB ARCHIVEDIR DIST AREA ARCH PROFILE);
 # read configuration file
 if ($LINTIAN_CFG) {
     open(CFG, '<', $LINTIAN_CFG)
@@ -533,6 +546,11 @@ unless (defined $LINTIAN_ARCH) {
     }
 }
 
+# Allow DEB_VENDOR as alternative to LINTIAN_PROFILE
+if (!$LINTIAN_PROFILE && $ENV{'DEB_VENDOR'}){
+    $LINTIAN_PROFILE = $ENV{'DEB_VENDOR'};
+}
+
 # export current settings for our helper scripts
 foreach (('ROOT', 'CFG', VARS)) {
     no strict 'refs';
@@ -579,6 +597,7 @@ require Lintian::Command::Simple;
 require Lintian::Command;
 import Lintian::Command qw(spawn reap);
 require Lintian::ProcessablePool;
+require Lintian::Profile;
 require Lintian::Tags;
 import Lintian::Tags qw(tag);
 
@@ -601,6 +620,7 @@ if (defined $experimental_output_opts) {
 	${"Tags::$_"} = $opts{$_};
     }
 }
+
 
 $Lintian::Output::GLOBAL->verbose($verbose);
 $Lintian::Output::GLOBAL->debug($debug);
@@ -636,6 +656,16 @@ $TAGS->show_overrides($show_overrides);
 $TAGS->sources(keys %display_source) if %display_source;
 $TAGS->only(split(/,/, $check_tags)) if defined $check_tags;
 $TAGS->suppress(keys %suppress_tags) if %suppress_tags;
+
+unless (defined $check_tags || %suppress_tags){
+    if ($LINTIAN_PROFILE) {
+	my $profile = Lintian::Profile->new($LINTIAN_PROFILE,
+					    [PROFILE_PATH, "$LINTIAN_ROOT/profiles"]);
+	my @ptags = $profile->tags;
+	print STDERR 'N: Using profile ' . $profile->name . ".\n";
+	$TAGS->only(@ptags);
+    }
+}
 
 # Initialize display level settings.
 for my $level (@display_level) {
