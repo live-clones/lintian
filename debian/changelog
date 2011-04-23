@@ -30,10 +30,6 @@ lintian (2.5.0~rc3) unstable; urgency=low
       packages to be present as well as the source package to be
       effective.  Thanks to Bill Allombert for the suggestion.
       (Closes: #316283)
-  * checks/copyright-file.desc:
-    + [ADB] Correct a spelling mistake ("coypright" -> "copyright") in the
-      description of copyright-refers-to-deprecated-bsd-license-file; thanks,
-      Kees Cook.  (Closes: #623780)
   * checks/debhelper:
     + [NT] Use new alt-dh_commands data file to fetch alternative
       dependencies for dh_commands, which are sometimes provided
