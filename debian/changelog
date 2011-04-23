@@ -45,6 +45,7 @@ lintian (2.5.0~rc3) unstable; urgency=low
       Severity: serious, to warn when a package installs libraries to the
       multiarch directory without taking care of upgrades.  Thanks to
       Steve R. Langasek for the patch.
+
   * checks/java{,.desc}:
     + [NT] Added file based on patches submitted by Vicent Fourmond.
       This new file checks for jar files in weird locations.
