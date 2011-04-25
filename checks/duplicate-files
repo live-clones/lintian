@@ -1,0 +1,59 @@
+# duplicate-files -- lintian check script -*- perl -*-
+
+# Copyright (C) 2011 Niels Thykier
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+package Lintian::duplicate_files;
+use strict;
+use warnings;
+
+use Lintian::Tags qw(tag);
+use Util;
+
+sub run {
+
+my $pkg = shift;
+my $type = shift;
+my $info = shift;
+
+my %hashmap;
+
+foreach my $file (@{ $info->sorted_index }){
+    my $md5 = $info->md5sums->{$file};
+    my $fs;
+    next unless defined $md5;
+    next unless $info->index->{$file}->{type} eq '-';
+    next unless $file =~ m@usr/share/doc/@o;
+    $fs = $hashmap{$md5};
+    unless (defined $fs){
+        $fs = [$file];
+        $hashmap{$md5} = $fs;
+    } else {
+        push @$fs, $file;
+    }
+}
+
+foreach my $hash (keys %hashmap){
+    my @files = @{ $hashmap{$hash} };
+    next if scalar(@files) < 2;
+    tag 'duplicate-files', sort @files;
+}
+
+}
+
+1;

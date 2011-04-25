@@ -2,12 +2,16 @@ lintian (2.5.0~rc4) UNRELEASED; urgency=low
 
   * Summary of tag changes:
     + Added:
+      - duplicate-files
       - format-3.0-but-debian-changes-patch
 
   * checks/copyright-file.desc:
     + [ADB] Correct a spelling mistake ("coypright" -> "copyright") in the
       description of copyright-refers-to-deprecated-bsd-license-file; thanks,
       Kees Cook.  (Closes: #623780)
+  * checks/duplicate-files{,.desc}:
+    + [NT] Added to check for duplicate files in usr/share/doc.  Thanks to
+      Axel Beckert for the suggestion.  (Closes: #614715)
   * checks/patch-systems{,.desc}:
     + [NT] Detect when 3.0 (quilt) packages have a debian-changes-VERSION
       patch without a patch header.  Thanks to Iain Lane for suggestion
