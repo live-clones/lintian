@@ -144,5 +144,7 @@ W: filenames: zero-byte-file-in-doc-directory usr/share/doc/filenames/news.debia
 W: more-filename-games: binary-without-manpage usr/bin/another-test-game
 W: more-filename-games: binary-without-manpage usr/games/yet-another-test-game
 W: more-filename-games: package-section-games-but-has-usr-bin
+X: filenames: duplicate-files usr/share/doc/filenames/.DS_Store usr/share/doc/filenames/._NEWS.Debian usr/share/doc/filenames/Thumbs.db usr/share/doc/filenames/link-one
+X: filenames: duplicate-files usr/share/doc/filenames/NEWS.Debian usr/share/doc/filenames/README.macosx usr/share/doc/filenames/examples/__init__.py usr/share/doc/filenames/examples/very_interesting_example
 X: filenames: package-contains-broken-symlink usr/lib/filenames/symlink2ok /etc/symlink
 X: filenames: package-contains-broken-symlink usr/lib/filenames/symlink3wrong /usr/lib/filenames/symlink2
