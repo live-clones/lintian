@@ -61,8 +61,8 @@ unless (-f $control) {
     # be redundant
     my $only_conffiles = 1;
     foreach my $file (@{ $info->sorted_index }) {
-        # skip symlinks
-        next if $info->index->{$file}->{type} eq 'l';
+	# Skip non-files, they will not appear in the md5sums file
+        next if !$file or $info->index->{$file}->{type} ne '-';
 	unless ($conffile{$file}) {
 	    $only_conffiles = 0;
 	    last;
