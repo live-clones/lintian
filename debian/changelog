@@ -4,11 +4,15 @@ lintian (2.5.0~rc4) UNRELEASED; urgency=low
     + Added:
       - duplicate-files
       - format-3.0-but-debian-changes-patch
+      - extended-description-contains-empty-paragraph
 
   * checks/copyright-file.desc:
     + [ADB] Correct a spelling mistake ("coypright" -> "copyright") in the
       description of copyright-refers-to-deprecated-bsd-license-file;
       thanks, Kees Cook.  (Closes: #623780)
+  * checks/description{,.desc}:
+    + [NT] Check for empty paragraphs in extended description.  Thanks to
+      Gerfried Fuchs for the patch.
   * checks/duplicate-files{,.desc}:
     + [NT] Added to check for duplicate files in usr/share/doc.  Thanks to
       Axel Beckert for the suggestion.  (Closes: #614715)

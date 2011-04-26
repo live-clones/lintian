@@ -17,6 +17,12 @@ Severity: serious
 Certainty: certain
 Info: The first line in the "Description:" is empty.
 
+Tag: extended-description-contains-empty-paragraph
+Severity: normal
+Certainty: certain
+Info: The extended description (the lines after the first line of the
+ "Description:" field) contains an empty paragraph.
+
 Tag: extended-description-is-empty
 Severity: serious
 Certainty: certain
