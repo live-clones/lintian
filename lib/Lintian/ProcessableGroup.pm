@@ -75,7 +75,15 @@ sub _init_group_from_changes {
         fail "$changes is not a valid changes file";
     $self->add_new_processable('changes', $changes);
     $cdir = $changes;
-    $cdir =~ s,(.+)/[^/]+$,$1,;
+    if ( $changes =~ m,^/+[^/]++$,o){
+        # it is "/files.changes?"
+        #  - In case you were wondering, we were told not to ask :)
+        #   See #624149
+        $cdir = '/';
+    } else {
+        # it is "<something>/files.changes"
+        $cdir =~ s,(.+)/[^/]+$,$1,;
+    }
     foreach my $line (split (/\n/o, $cinfo->{'files'}//'')) {
 	my ($file, $pkg_type);
         next unless defined $line;
