@@ -7,8 +7,8 @@ lintian (2.5.0~rc4) UNRELEASED; urgency=low
 
   * checks/copyright-file.desc:
     + [ADB] Correct a spelling mistake ("coypright" -> "copyright") in the
-      description of copyright-refers-to-deprecated-bsd-license-file; thanks,
-      Kees Cook.  (Closes: #623780)
+      description of copyright-refers-to-deprecated-bsd-license-file;
+      thanks, Kees Cook.  (Closes: #623780)
   * checks/duplicate-files{,.desc}:
     + [NT] Added to check for duplicate files in usr/share/doc.  Thanks to
       Axel Beckert for the suggestion.  (Closes: #614715)
@@ -19,8 +19,8 @@ lintian (2.5.0~rc4) UNRELEASED; urgency=low
 
   * lib/Lintian/ProcessableGroup.pm:
     + [NT] Properly handle if the changes file is located directly in the
-      file system root (e.g. /pkg_version_arch.changes).  Thanks to
-      Trent W. Buck for the bug report.  (Closes: #624149)
+      file system root.  Thanks to Trent W. Buck for the bug report.
+      (Closes: #624149)
 
  -- Adam D. Barratt <adam@adam-barratt.org.uk>  Sat, 23 Apr 2011 13:37:52 +0100
 
