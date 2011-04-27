@@ -1,4 +1,4 @@
-Last generated 2011-04-15
+Last generated 2011-04-27
 
 The following tags are not tested by the test suite:
 
@@ -322,7 +322,6 @@ scripts calls-suidperl-directly
 scripts executable-not-elf-or-script
 scripts maintainer-script-ignores-errors
 scripts maintainer-script-removes-device-files
-scripts maintainer-shell-script-fails-syntax-check
 scripts php-script-but-no-phpX-cli-dep
 scripts python-script-but-no-python-dep
 scripts script-not-executable
@@ -472,7 +471,6 @@ libbaz
   control-file-has-bad-permissions
   debug-package-should-be-priority-extra
   ldconfig-symlink-missing-for-shlib
-  maintainer-shell-script-fails-syntax-check
   missing-dependency-on-perlapi
   missing-depends-line
   package-name-doesnt-match-sonames
