@@ -528,11 +528,14 @@ foo source: configure-generated-file-in-source config.cache
         completely by specifying its name (first line in the examples)
         or only one occurrence of it by specifying the additional
         info, too (second line in the examples).  If you add an
-        asterisk (<literal>*</literal>) at the start and/or end of the
-        additional info, this will match arbitrary strings similar to
-        the shell wildcard.  Asterisks located at any other place in
-        the info have no special meaning.  This wildcard support was
-        added in Lintian version 2.0.0.
+        asterisk (<literal>*</literal>) in the additional info, this
+        will match arbitrary strings similar to the shell wildcard.
+      </para>
+      <para>
+        The first wildcard support appeared in Lintian 2.0.0, which
+        only allowed the wildcards in the very beginning or end.
+        Version 2.5.0~rc4 extended this to allow wildcards any where
+        in the additional info.
       </para>
     </sect1>
   </chapter>

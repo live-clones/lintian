@@ -25,6 +25,9 @@ lintian (2.5.0~rc4) UNRELEASED; urgency=low
     + [NT] Properly handle if the changes file is located directly in the
       file system root.  Thanks to Trent W. Buck for the bug report.
       (Closes: #624149)
+  * lib/Lintian/Tags.pm:
+    + [NT] Allow overrides to use wildcards anywhere instead of only in
+      the beginning or the end.  (Closes: #617991)
 
  -- Adam D. Barratt <adam@adam-barratt.org.uk>  Sat, 23 Apr 2011 13:37:52 +0100
 

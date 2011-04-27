@@ -201,11 +201,24 @@ sub _check_overrides {
     } elsif ($extra ne '') {
         for (sort keys %$overrides) {
             my $pattern = $_;
-            next unless ($pattern =~ /^\*/ or $pattern =~ /\*\z/);
-            my ($start, $end) = ('', '');
-            $start = '.*' if $pattern =~ s/^\*//;
-            $end   = '.*' if $pattern =~ s/\*$//;
-            if ($extra =~ /^$start\Q$pattern\E$end\z/) {
+            my $end = '';
+            my $pat = '';
+            next unless $pattern =~ m/\Q*\E/o;
+            # Split does not help us if $text ends with *
+            # so we deal with that now
+            if ($pattern =~ s/\Q*\E+\z//o){
+                $end = '.*';
+            }
+            # Are there any * left (after the above)?
+            if ($pattern =~ m/\Q*\E/o) {
+                # this works even if $text starts with a *, since
+                # that is split as '', <text>
+                my @pargs = split(m/\Q*\E++/o, $pattern);
+                $pat = join('.*', map { quotemeta($_) } @pargs);
+            } else {
+                $pat = $pattern;
+            }
+            if ($extra =~ m/^$pat$end\z/) {
                 $overrides->{$_}++;
                 return "$tag $_";
             }
