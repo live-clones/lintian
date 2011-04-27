@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 int
-main(void)
+lib_interface(void)
 {
     printf("Hello world!\n");
 }
