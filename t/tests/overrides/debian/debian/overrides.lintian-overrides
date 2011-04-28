@@ -1,5 +1,9 @@
 # override without extra information
 manpage-has-bad-whatis-entry
+# Architecture specific override - which is retarded considering
+# it is an arch: all package we are testing >.>
+[i386]: hyphen-used-as-minus-sign usr/share/man/man1/foo.1.gz:12
+[!i386]: hyphen-used-as-minus-sign usr/share/man/man1/foo.1.gz:6
 # exact extra information
 hyphen-used-as-minus-sign usr/share/man/man1/foo.1.gz:4
 # wildcards

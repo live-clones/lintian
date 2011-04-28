@@ -496,8 +496,10 @@ $
       <para>
         The format of the overrides file is simple, it consists of one override per
         line (and may contain empty lines and comments, starting with a <literal>#</literal>, on others):
-        <literal>[<replaceable>&lt;package&gt;</replaceable>[ <replaceable>&lt;type&gt;</replaceable>]: ]<replaceable>&lt;lintian-tag&gt;</replaceable>[
+        <literal>[[<replaceable>&lt;package&gt;</replaceable>][ <replaceable>&lt;archlist&gt;</replaceable>][ <replaceable>&lt;type&gt;</replaceable>]: ]<replaceable>&lt;lintian-tag&gt;</replaceable>[
           [*]<replaceable>&lt;lintian-info&gt;</replaceable>[*]]</literal>.  <replaceable>&lt;package&gt;</replaceable> is the package name;
+        <replaceable>&lt;archlist&gt;</replaceable> is an architecture list
+        in the same format as for the Build-Depends field (except architecture wildcards are not supported);
         <replaceable>&lt;type&gt;</replaceable> is one of <literal>binary</literal>, <literal>udeb</literal> and
         <literal>source</literal>,
         and <replaceable>&lt;lintian-info&gt;</replaceable> is all

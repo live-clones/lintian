@@ -28,6 +28,10 @@ lintian (2.5.0~rc4) UNRELEASED; urgency=low
   * lib/Lintian/Tags.pm:
     + [NT] Allow overrides to use wildcards anywhere instead of only in
       the beginning or the end.  (Closes: #617991)
+    + [NT] Allow simple architecture overrides such as [i386] or [!i386].
+      Architecture wildcards are not supported yet.  The actual syntax
+      for the architecture the same as the one used in the Build-Depends.
+      (Closes: #622888)
 
  -- Adam D. Barratt <adam@adam-barratt.org.uk>  Sat, 23 Apr 2011 13:37:52 +0100
 

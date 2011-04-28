@@ -1,5 +1,4 @@
 I: overrides: hyphen-used-as-minus-sign usr/share/man/man1/foo.1.gz:12
 I: overrides: hyphen-used-as-minus-sign usr/share/man/man1/foo.1.gz:13
 I: overrides: hyphen-used-as-minus-sign usr/share/man/man1/foo.1.gz:14
-I: overrides: hyphen-used-as-minus-sign usr/share/man/man1/foo.1.gz:6
-N: 8 tags overridden (1 warning, 7 info)
+N: 9 tags overridden (1 warning, 8 info)
