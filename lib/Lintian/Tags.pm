@@ -550,12 +550,12 @@ sub file_overrides {
         my $override = $_;
         # The override looks like the following:
         # [[pkg-name] [arch-list] [pkg-type]:] <tag> [extra]
-        if ($override =~ m/^(?:                 # start optional part
-                  (?:\Q$info->{package}\E)?     # Optionally starts with package name
-                  (?: \s*+ \[([^\]]+?)\])?      # optionally followed by an [arch-list] (like in B-D) -> $1
-                  (?: \s*+ \Q$info->{type}\E)?  # optionally followed by the type
-                :\s++)?                         # end optional part
-                (.+)$/x){                       # <tag-name> [extra] -> $2
+        if ($override =~ m/^(?:                    # start optional part
+                  (?:\Q$info->{package}\E)?        # Optionally starts with package name
+                  (?: \s*+ \[([^\]]+?)\])?         # optionally followed by an [arch-list] (like in B-D) -> $1
+                  (?: \s*+ \Q$info->{type}\E)?     # optionally followed by the type
+                :\s++)?                            # end optional part
+                ([\-\.a-zA-Z_0-9]+ (?:\s.+)?)$/x){ # <tag-name> [extra] -> $2
             # Valid - so far at least
             my ($archlist, $tagdata) = ($1, $2);
             my ($tag, $extra) = split(m/ /o, $tagdata, 2);
