@@ -40,8 +40,12 @@ my $has_osgi = 0;
 my $has_public_jars = 0;
 my $has_jars = 0;
 
-my @java_lib_depends = ($info->relation('strong')->unparse() =~
-			/^lib[^\s,]+-java$/g);
+my $depends = $info->relation('strong')->unparse();
+# Remove all libX-java-doc packages to avoid thinking they are java libs
+#  - note the result may not be a valid dependency listing
+$depends =~ s/lib[^\s,]+-java-doc//go;
+
+my @java_lib_depends = ($depends =~ m/\b(lib[^\s,]+-java)\b/og);
 
 # We first loop over jar files to find problems
 
