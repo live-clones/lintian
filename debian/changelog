@@ -17,6 +17,10 @@ lintian (2.5.0~rc4) UNRELEASED; urgency=low
   * checks/duplicate-files{,.desc}:
     + [NT] Added to check for duplicate files in usr/share/doc.  Thanks to
       Axel Beckert for the suggestion.  (Closes: #614715)
+  * check/fields:
+    + [NT] Accepted pach from Antonio Terceiro to add Ruby-Version as a
+      accepted field in binary packages.  Thanks to Vincent Carmona for
+      the report.  (Closes: #623390)
   * checks/patch-systems{,.desc}:
     + [NT] Detect when 3.0 (quilt) packages have a debian-changes-VERSION
       patch without a patch header.  Thanks to Iain Lane for suggestion
@@ -34,6 +38,11 @@ lintian (2.5.0~rc4) UNRELEASED; urgency=low
     + [NT] Accepted patch from Antonio Terceiro to allow ruby-interpreter
       as alternative to ruby for /usr/bin/ruby scripts.
       (Closes: #626210)
+
+  * data/common/source-fields:
+    + [NT] Accepted pach from Antonio Terceiro to add Ruby-Version as a
+      accepted field in binary packages.  Thanks to Vincent Carmona for
+      the report.
 
   * lib/Lintian/ProcessableGroup.pm:
     + [NT] Properly handle if the changes file is located directly in the

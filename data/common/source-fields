@@ -20,6 +20,7 @@ maintainer
 origin
 package-list
 python-version
+ruby-versions
 source
 standards-version
 uploaders
