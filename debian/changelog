@@ -30,6 +30,10 @@ lintian (2.5.0~rc4) UNRELEASED; urgency=low
       contain at least one jar file we check.  This fixes false-positives
       for packages that depended on libX-java-doc packages or packages
       that only contain jar files we ignore.
+  * check/scripts{,.desc}:
+    + [NT] Accepted patch from Antonio Terceiro to allow ruby-interpreter
+      as alternative to ruby for /usr/bin/ruby scripts.
+      (Closes: #626210)
 
   * lib/Lintian/ProcessableGroup.pm:
     + [NT] Properly handle if the changes file is located directly in the
