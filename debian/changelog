@@ -7,6 +7,10 @@ lintian (2.5.0~rc4) UNRELEASED; urgency=low
       - extended-description-contains-empty-paragraph
       - git-patches-not-exported
 
+  * checks/binaries:
+    + [NT] Fixed false-positive embedded-library.  Lintian incorrectly
+      assumed that none of these binary packages would contain a source
+      version in their source field.  (Closes: #626038)
   * checks/copyright-file.desc:
     + [ADB] Correct a spelling mistake ("coypright" -> "copyright") in the
       description of copyright-refers-to-deprecated-bsd-license-file;
