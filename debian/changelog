@@ -1,4 +1,4 @@
-lintian (2.5.0~rc4) UNRELEASED; urgency=low
+lintian (2.5.0) unstable; urgency=low
 
   * Summary of tag changes:
     + Added:
@@ -27,7 +27,7 @@ lintian (2.5.0~rc4) UNRELEASED; urgency=low
       the report.  (Closes: #623390)
   * check/files:
     + [NT] Accepted multiple patches (merged into one) from Marcelo Jorge
-      Vieira to detech a number of new javascript libraries.
+      Vieira to detect a number of new javascript libraries.
       (Closes: #623878)
   * checks/patch-systems{,.desc}:
     + [NT] Detect when 3.0 (quilt) packages have a debian-changes-VERSION
@@ -58,13 +58,15 @@ lintian (2.5.0~rc4) UNRELEASED; urgency=low
       (Closes: #624149)
   * lib/Lintian/Tags.pm:
     + [NT] Allow overrides to use wildcards anywhere instead of only in
-      the beginning or the end.  (Closes: #617991)
+      the beginning or the end.  Thanks to Steve R. Langasek for the
+      report.  (Closes: #617991)
     + [NT] Allow simple architecture overrides such as [i386] or [!i386].
       Architecture wildcards are not supported yet.  The actual syntax
       for the architecture the same as the one used in the Build-Depends.
-      (Closes: #622888)
+      Thanks to Andreas Beckmann for the bug report and the solution
+      proposal.  (Closes: #622888)
 
- -- Adam D. Barratt <adam@adam-barratt.org.uk>  Sat, 23 Apr 2011 13:37:52 +0100
+ -- Niels Thykier <niels@thykier.net>  Tue, 10 May 2011 20:44:32 +0200
 
 lintian (2.5.0~rc3) unstable; urgency=low
 
