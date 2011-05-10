@@ -25,6 +25,10 @@ lintian (2.5.0~rc4) UNRELEASED; urgency=low
     + [NT] Accepted pach from Antonio Terceiro to add Ruby-Version as a
       accepted field in binary packages.  Thanks to Vincent Carmona for
       the report.  (Closes: #623390)
+  * check/files:
+    + [NT] Accepted multiple patches (merged into one) from Marcelo Jorge
+      Vieira to detech a number of new javascript libraries.
+      (Closes: #623878)
   * checks/patch-systems{,.desc}:
     + [NT] Detect when 3.0 (quilt) packages have a debian-changes-VERSION
       patch without a patch header.  Thanks to Iain Lane for suggestion
