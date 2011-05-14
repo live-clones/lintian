@@ -48,18 +48,25 @@ if ($type =~ m/^remove-/) {
 if ($type eq 'source') {
     # Ignore STDOUT of the child process because older versions of
     # dpkg-source print things out even with -q.
-    my $opts = { out => '/dev/null', err => 'unpacked-errors' };
-    unless (spawn($opts, ['dpkg-source', '-q', '-x', 'dsc', 'unpacked'])) {
-	open(ERRORS, '<', 'unpacked-errors')
-	    or fail("cannot open unpacked-errors: $!");
-	print STDERR while <ERRORS>;
-	close ERRORS;
-	fail('dpkg-source -x failed with status ', $opts->{harness}->result);
+    if (0) {
+        my $opts = { out => '/dev/null', err => 'unpacked-errors' };
+        unless (spawn($opts, ['dpkg-source', '-q', '-x', 'dsc', 'unpacked'])) {
+            open(ERRORS, '<', 'unpacked-errors')
+                or fail("cannot open unpacked-errors: $!");
+            print STDERR while <ERRORS>;
+            close ERRORS;
+            fail('dpkg-source -x failed with status ', $opts->{harness}->result);
+        }
+
+
+    } else {
+        print STDERR "N: Using libdpkg-perl.\n";
+        libdpkg_unpack_dsc ('dsc', 'unpacked');
     }
 
     # fix permissions
     spawn({ fail => 'error' },
-	  ['chmod', '-R', 'u+rwX,o+rX,o-w', 'unpacked']);
+          ['chmod', '-R', 'u+rwX,o+rX,o-w', 'unpacked']);
 
 } else {
     mkdir('unpacked', 0777) or fail("mkdir unpacked: $!");
@@ -85,3 +92,16 @@ if ($type eq 'source') {
 	    ['chmod', '-R', 'u+rwX,go-w', 'unpacked']);
 }
 
+sub libdpkg_unpack_dsc {
+    my ($dsc, $target) = @_;
+    require Dpkg::Source::Package;
+    open(STDOUT, '>', '/dev/null') or fail "Redirecting stdout failed: $!";
+    # Create the object that does everything
+    my $srcpkg = Dpkg::Source::Package->new(filename => $dsc);
+
+    $srcpkg->check_checksums();
+
+    # Unpack the source package (delegated to Dpkg::Source::Package::*)
+    $srcpkg->extract($target);
+    return 1;
+}
