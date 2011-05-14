@@ -575,9 +575,7 @@ sub file_overrides {
                 }
                 # missing wildcard checks and sanity checking archs $arch
                 if ($negated) {
-                    $found = 1 if !$found;
-                } else {
-                    $found = 0 if $found;
+                    $found = $found ? 0 : 1;
                 }
                 next unless $found;
             }
