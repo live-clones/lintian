@@ -48,7 +48,7 @@ if ($type =~ m/^remove-/) {
 if ($type eq 'source') {
     # Ignore STDOUT of the child process because older versions of
     # dpkg-source print things out even with -q.
-    if (0) {
+    if (check_path('dpkg-source')) {
         my $opts = { out => '/dev/null', err => 'unpacked-errors' };
         unless (spawn($opts, ['dpkg-source', '-q', '-x', 'dsc', 'unpacked'])) {
             open(ERRORS, '<', 'unpacked-errors')
@@ -60,7 +60,6 @@ if ($type eq 'source') {
 
 
     } else {
-        print STDERR "N: Using libdpkg-perl.\n";
         libdpkg_unpack_dsc ('dsc', 'unpacked');
     }
 
@@ -100,6 +99,8 @@ sub libdpkg_unpack_dsc {
     my $srcpkg = Dpkg::Source::Package->new(filename => $dsc);
 
     $srcpkg->check_checksums();
+
+    # FIXME: check signatures if present.
 
     # Unpack the source package (delegated to Dpkg::Source::Package::*)
     $srcpkg->extract($target);

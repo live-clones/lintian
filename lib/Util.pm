@@ -44,7 +44,8 @@ BEGIN {
 	copy_dir
 	gunzip_file
 	touch_file
-	perm2oct);
+	perm2oct
+        check_path);
 }
 
 use FileHandle;
@@ -313,6 +314,24 @@ sub fail {
     $! = 2; # set return code outside eval()
     die $str;
 }
+
+#check_path($command)>
+#
+#Return true if and only if $command is on the executable search path.
+#
+
+sub check_path {
+    my $command = shift;
+
+    return 0 unless exists $ENV{PATH};
+    for my $element (split ':', $ENV{PATH}) {
+	next unless length $element;
+	return 1 if -f "$element/$command" and -x _;
+    }
+    return 0;
+}
+
+
 
 1;
 
