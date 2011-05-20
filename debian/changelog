@@ -3,9 +3,18 @@ lintian (2.5.1) UNRELEASED; urgency=low
   * collection/unpacked:
     + [NT] Added support for unpacking source packages using libdpkg-perl,
       instead of dpkg-source, if the latter is not present.
+      (Closes: #626476)
 
   * data/fields/{perl-provides,virtual-packages}:
     + [NT] Refreshed.  (Closes: #627082, #627431)
+
+  * debian/control:
+    + [NT] (Build-)Dependency changes.
+      - xz-lzma is now preferred to lzma as Build-Dependency
+      - Added depends on libdpkg-perl
+      - Reduced dpkg-dev to a suggests, we can use libdpkg-perl as fallback.
+      - Explicitly depends on bzip2 to always support bz2 source packages.
+      - Added xz-utils as suggests - needed for .xz source packages.
 
   * lib/Lintian/Tags.pm:
     + [NT] Fixed a flaw in logic that gave incorrect results for architecture
