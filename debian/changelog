@@ -1,5 +1,9 @@
 lintian (2.5.1) UNRELEASED; urgency=low
 
+  * collection/unpacked:
+    + [NT] Added support for unpacking source packages using libdpkg-perl,
+      instead of dpkg-source, if the latter is not present.
+
   * data/fields/{perl-provides,virtual-packages}:
     + [NT] Refreshed.  (Closes: #627082, #627431)
 
