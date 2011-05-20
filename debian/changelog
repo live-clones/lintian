@@ -1,7 +1,7 @@
 lintian (2.5.1) UNRELEASED; urgency=low
 
-  * data/fields/virtual-packages:
-    + [NT] Refreshed.  (Closes: #627082)
+  * data/fields/{perl-provides,virtual-packages}:
+    + [NT] Refreshed.  (Closes: #627082, #627431)
 
   * lib/Lintian/Tags.pm:
     + [NT] Fixed a flaw in logic that gave incorrect results for architecture
