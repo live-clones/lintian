@@ -1,5 +1,8 @@
 lintian (2.5.1) UNRELEASED; urgency=low
 
+  * data/fields/virtual-packages:
+    + [NT] Refreshed.  (Closes: #627082)
+
   * lib/Lintian/Tags.pm:
     + [NT] Fixed a flaw in logic that gave incorrect results for architecture
       dependent overrides.  Thanks to Andreas Beckmann for the report and the
