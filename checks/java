@@ -49,7 +49,7 @@ my @java_lib_depends = ($depends =~ m/\b(lib[^\s,]+-java)\b/og);
 
 # We first loop over jar files to find problems
 
-for my $jar_file (keys %{$java_info}) {
+for my $jar_file (sort keys %{$java_info}) {
     my $file_list = $java_info->{$jar_file}->{files};
     my $manifest = $java_info->{$jar_file}->{manifest};
     my $operm = $info->{index}->{$jar_file}->{operm};

@@ -1,5 +1,9 @@
 lintian (2.5.1) UNRELEASED; urgency=low
 
+  * checks/java:
+    + [NT] Sort the jar files by name, so they are checked in the same
+      order.
+
   * collection/unpacked:
     + [NT] Added support for unpacking source packages using libdpkg-perl,
       instead of dpkg-source, if the latter is not present.
