@@ -16,20 +16,21 @@ lintian (2.5.1) UNRELEASED; urgency=low
     + [NT] (Build-)Dependency changes.
       - xz-lzma is now preferred to lzma as Build-Dependency
       - Added depends on libdpkg-perl
-      - Reduced dpkg-dev to a suggests, we can use libdpkg-perl as fallback.
+      - Reduced dpkg-dev to a suggests, we can use libdpkg-perl as
+        fallback.
       - Explicitly depends on bzip2 to always support bz2 source packages.
       - Added xz-utils as suggests - needed for .xz source packages.
 
   * lib/Lintian/Tags.pm:
-    + [NT] Fixed a flaw in logic that gave incorrect results for architecture
-      dependent overrides.  Thanks to Andreas Beckmann for the report and the
-      patch.  (Closes: #626587)
+    + [NT] Fixed a flaw in logic that gave incorrect results for
+      architecture dependent overrides.  Thanks to Andreas Beckmann for
+      the report and the patch.  (Closes: #626587)
 
   * unpack/list-srcpkg:
-    + [ADB] Don't rely on the order of fields in the Sources file.  The files
-      produced by the Debian archive no longer follow the order which the code
-      previously assumed, and we shouldn't assume that the order won't change
-      again in the future.  (Closes: #626597)
+    + [ADB] Don't rely on the order of fields in the Sources file.  The
+      files produced by the Debian archive no longer follow the order
+      which the code previously assumed, and we shouldn't assume that
+      the order won't change again in the future.  (Closes: #626597)
 
  -- Adam D. Barratt <adam@adam-barratt.org.uk>  Fri, 13 May 2011 20:20:51 +0100
 
