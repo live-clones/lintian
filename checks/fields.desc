@@ -86,10 +86,11 @@ Ref: policy 5.3
 Tag: magic-arch-in-arch-list
 Severity: serious
 Certainty: certain
-Info: The special architecture value "any" only make sense if it occurs
- alone.  The value "all" may appear together with other architectures
- in a *.dsc file but must occur alone if used in a binary package.
-Ref: policy 5.6.8
+Info: The special architecture value "any" only makes sense if it occurs
+ alone or (in a *.dsc file) together with "all".  The value "all" may
+ appear together with other architectures in a *.dsc file but must
+ occur alone if used in a binary package.
+Ref: policy 5.6.8, http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=626775
 
 Tag: unknown-architecture
 Severity: normal
