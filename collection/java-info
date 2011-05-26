@@ -41,7 +41,7 @@ while (<INDEX>) {
     chomp;
     $_ = (split(' ', $_, 6))[5];
     next if / -> .*/;		# We skip symlinks.
-    if (m#(\S+).jar$#i) {
+    if (m#(\S+)\.jar$#i) {
 	my $file = $_;
 	my $has_manifest = 0;
 

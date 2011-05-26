@@ -7,6 +7,10 @@ lintian (2.5.1) UNRELEASED; urgency=low
     + [NT] Sort the jar files by name, so they are checked in the same
       order.
 
+  * collection/java:
+    + [NT] Fixed a regex that would accept any file ending with "jar" to
+      be a jar file rather than only accepting ".jar".  This fixes a
+      number of false-positives java checks.
   * collection/unpacked:
     + [NT] Added support for unpacking source packages using libdpkg-perl,
       instead of dpkg-source, if the latter is not present.
