@@ -25,7 +25,6 @@ Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Recommends: debconf-doc
 Section: libs
-Breaks: xserver-xorg-video-6
 Description: {$description} -- fake library
  This is a fake library designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
