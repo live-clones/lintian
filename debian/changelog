@@ -11,7 +11,7 @@ lintian (2.5.1) UNRELEASED; urgency=low
     + [NT] Sort the jar files by name, so they are checked in the same
       order.
   * checks/shared-libs{,.desc}:
-    + [NT] Added non-empty-dependency_libs-in-la-file. (Closes: #628673)
+    + [NT] Added non-empty-dependency_libs-in-la-file.  (Closes: #628673)
 
   * collection/java:
     + [NT] Fixed a regex that would accept any file ending with "jar" to
