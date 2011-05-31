@@ -32,7 +32,7 @@ profiles: $(profiles)
 $(profiles): $(allchecks) private/generate-profiles.pl
 	LINTIAN_ROOT='.' private/generate-profiles.pl
 
-runtests: $(neededfiles) $(allchecks) $(allcollect) $(tagfiles) $(testfiles)
+runtests: $(neededfiles) $(allchecks) $(allcollect) $(tagfiles) $(testfiles) $(profiles)
 	@echo .... running tests ....
 	rm -rf debian/tests
 	mkdir debian/tests
@@ -54,7 +54,7 @@ refresh-perl-provides:
 	perl private/refresh-perl-provides > $(perlprovides)
 
 build: build-stamp
-build-stamp: $(neededfiles) $(docsource) $(testtarget)
+build-stamp: $(neededfiles) $(docsource) $(testtarget) $(profiles)
 	@echo .... running build ....
 	dh_testdir
 	cd doc && LANG=C docbook2html  -V "%use-id-as-filename%" -o lintian.html lintian.xml
@@ -81,7 +81,7 @@ clean: $(neededfiles)
 	rm -rf doc/lintian.html/ doc/lintian.txt
 	rm -rf debian/tests
 	rm -rf man/man1/
-	rm -fr debian/test.locale profiles/debian/main.profile
+	rm -fr debian/test.locale $(profiles)
 	dh_clean
 
 binary-indep: $(neededfiles) build

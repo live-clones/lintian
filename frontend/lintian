@@ -662,7 +662,7 @@ unless (defined $check_tags || %suppress_tags){
 	my $profile = Lintian::Profile->new($LINTIAN_PROFILE,
 					    [PROFILE_PATH, "$LINTIAN_ROOT/profiles"]);
 	my @ptags = $profile->tags;
-	print STDERR 'N: Using profile ' . $profile->name . ".\n";
+	v_msg('Using profile ' . $profile->name . ".\n");
 	$TAGS->only(@ptags);
     }
 }
