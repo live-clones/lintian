@@ -45,7 +45,7 @@ generate_profile('debian/main', {
 generate_profile('debian/ftp-master-auto-reject', {
     'Enable-Tag' => [@fatal, @nonfatal],
     },
-    { 'Tags' => \@fatal,
+    { 'Tag' => \@fatal,
        'Overwritable' => 'no',
     });
 
@@ -65,7 +65,7 @@ sub generate_profile {
     }
     print $fd "\n";
     foreach my $para (@other) {
-        format_field($fd, 'Tags', sort @{ $para->{'Tags'} });
+        format_field($fd, 'Tag', sort @{ $para->{'Tag'} });
         foreach my $f (PARAGRAPH_ORDER) {
             my $val = $para->{$f};
             next unless defined $val;
