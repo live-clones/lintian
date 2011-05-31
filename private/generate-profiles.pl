@@ -12,7 +12,7 @@ use constant FIELD_ORDER => ('Enable-Tags-From-Check',
                              'Enable-Tag',
                              'Disable-Tag',
     );
-use constant PARAGRAPH_ORDER => ( 'Overwritable' );
+use constant PARAGRAPH_ORDER => ( 'Overridable' );
 
 use lib "$ENV{LINTIAN_ROOT}/lib";
 use Lintian::Data;
@@ -46,7 +46,7 @@ generate_profile('debian/ftp-master-auto-reject', {
     'Enable-Tag' => [@fatal, @nonfatal],
     },
     { 'Tag' => \@fatal,
-       'Overwritable' => 'no',
+       'Overridable' => 'no',
     });
 
 exit 0;

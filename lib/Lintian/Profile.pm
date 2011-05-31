@@ -142,12 +142,12 @@ sub _read_profile {
 sub _read_profile_section {
     my ($self, $pname, $section, $sno) = @_;
     my @tags = $self->_split_comma_sep_field($section->{'tag'});
-    my $overwritable = $self->_parse_boolean($section->{'overwritable'}, 0, $pname, $sno);
+    my $overridable = $self->_parse_boolean($section->{'overridable'}, 0, $pname, $sno);
     my $ignore_map = $self->{'ignored-overrides'};
     fail "Profile \"$pname\" is missing Tag field (or it is empty) in section $sno." unless @tags;
     foreach my $tag (@tags) {
 	fail "Unknown check $tag in $pname (section $sno)\n" unless exists $TAG_MAP{$tag};
-	if ($overwritable) {
+	if ($overridable) {
 	    delete $ignore_map->{$tag};
 	} else {
 	    $ignore_map->{$tag} = 1;
