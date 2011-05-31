@@ -473,6 +473,10 @@ if ($action =~ /^(?:check|unpack|remove)$/ and $#ARGV == -1 and not $check_every
     syntax();
 }
 
+die "Cannot use profile together wtih --ftp-master-rejects.\n" if $OPT_LINTIAN_PROFILE and $ftpmaster_tags;
+# --ftp-master-rejects is implemented in a profile
+$OPT_LINTIAN_PROFILE = 'debian/ftp-master-auto-reject' if $ftpmaster_tags;
+
 # }}}
 
 # {{{ Setup Configuration
@@ -627,14 +631,6 @@ $Lintian::Output::GLOBAL->debug($debug);
 $Lintian::Output::GLOBAL->quiet($quiet);
 $Lintian::Output::GLOBAL->color($color);
 $Lintian::Output::GLOBAL->showdescription($lintian_info);
-
-# Now that we can load the data, process the -F or --ftp-master-rejects
-# option.
-if ($ftpmaster_tags) {
-    my $fatal = Lintian::Data->new('output/ftp-master-fatal');
-    my $nonfatal = Lintian::Data->new('output/ftp-master-nonfatal');
-    $check_tags = join(',', $fatal->all, $nonfatal->all);
-}
 
 # Print Debug banner, now that we're finished determining
 # the values and have Lintian::Output available
