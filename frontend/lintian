@@ -662,8 +662,10 @@ unless (defined $check_tags || %suppress_tags){
 	my $profile = Lintian::Profile->new($LINTIAN_PROFILE,
 					    [PROFILE_PATH, "$LINTIAN_ROOT/profiles"]);
 	my @ptags = $profile->tags;
-	v_msg('Using profile ' . $profile->name . ".\n");
-	$TAGS->only(@ptags);
+	my @ign_overrides = $profile->ignored_overrides;
+	v_msg('Using profile ' . $profile->name . '.');
+	$TAGS->only(@ptags) if @ptags;
+	$TAGS->ignore_overrides(@ign_overrides) if @ign_overrides;
     }
 }
 

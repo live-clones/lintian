@@ -159,6 +159,7 @@ sub new {
         show_pedantic     => 0,
         statistics        => {},
         suppress          => {},
+        ignored_overrides => {},
     };
     bless($self, $class);
     $GLOBAL = $self unless $GLOBAL;
@@ -522,6 +523,7 @@ file cannot be opened.
 
 sub file_overrides {
     my ($self, $overrides) = @_;
+    my $ignored = $self->{ignored_overrides};
     unless (defined $self->{current}) {
         die 'no current file when adding overrides';
     }
@@ -540,6 +542,7 @@ sub file_overrides {
             tag('malformed-override', $_);
         } else {
             my ($tag, $extra) = split(/ /, $override, 2);
+            next if $ignored->{$tag};
             $extra = '' unless defined $extra;
             $info->{overrides}{$tag}{$extra} = 0;
         }
@@ -690,6 +693,21 @@ sub suppressed {
     }
     return 1 if $self->{suppress}{$tag};
     return;
+}
+
+=item ignore_overrides(TAG[, ...])
+
+Ignores all future overrides for all tags given as arguments.
+
+=cut
+
+sub ignore_overrides {
+    my ($self, @tags) = @_;
+    my $ignored = $self->{ignored_overrides};
+    foreach my $tag (@tags){
+        $ignored->{$tag} = 1;
+    }
+    return 1;
 }
 
 =back

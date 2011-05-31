@@ -60,10 +60,11 @@ sub new {
         if $name =~ m,^/,o or $name =~ m/\./o;
     _load_checks() unless %TAG_MAP;
     my $self = {
-        'parent-map' => {},
-        'parents' => [],
-        'profile-path' => $ppath,
-        'enabled-tags' => {},
+        'parent-map'        => {},
+        'parents'           => [],
+        'profile-path'      => $ppath,
+        'enabled-tags'      => {},
+	'ignored-overrides' => {},
     };
     $self = bless $self, $type;
     $profile = $self->_find_profile($name);
@@ -78,6 +79,11 @@ Lintian::Profile->mk_ro_accessors (qw(parents name));
 sub tags {
     my ($self) = @_;
     return keys %{ $self->{'enabled-tags'} };
+}
+
+sub ignored_overrides {
+    my ($self) = @_;
+    return keys %{ $self->{'ignored-overrides'} };
 }
 
 sub _find_profile {
@@ -102,7 +108,7 @@ sub _read_profile {
     open(my $fd, '<', $pfile) or fail "$pfile: $!";
     @pdata = parse_dpkg_control($fd, 0);
     close $fd;
-    $pheader = $pdata[0];
+    $pheader = shift @pdata;
     fail "Profile field is missing from $pfile."
         unless defined $pheader && $pheader->{'profile'};
     $pname = $pheader->{'profile'};
@@ -125,12 +131,34 @@ sub _read_profile {
         push @$plist, $parent;
     }
     $self->_read_profile_tags($pname, $pheader);
+    if (@pdata){
+	my $i = 2; # section counter
+	foreach my $psection (@pdata){
+	    $self->_read_profile_section($pname, $psection, $i++);
+	}
+    }
+}
+
+sub _read_profile_section {
+    my ($self, $pname, $section, $sno) = @_;
+    my @tags = $self->_split_comma_sep_field($section->{'tag'});
+    my $overwritable = $self->_parse_boolean($section->{'overwritable'}, 0, $pname, $sno);
+    my $ignore_map = $self->{'ignored-overrides'};
+    fail "Profile \"$pname\" is missing Tag field (or it is empty) in section $sno." unless @tags;
+    foreach my $tag (@tags) {
+	fail "Unknown check $tag in $pname (section $sno)\n" unless exists $TAG_MAP{$tag};
+	if ($overwritable) {
+	    delete $ignore_map->{$tag};
+	} else {
+	    $ignore_map->{$tag} = 1;
+	}
+    }
 }
 
 sub _read_profile_tags{
     my ($self, $pname, $pheader) = @_;
-    Lintian::Profile::_check_duplicates($pname, $pheader, 'enable-tags-from-check', 'disable-tags-from-check');
-    Lintian::Profile::_check_duplicates($pname, $pheader, 'enable-tag', 'disable-tag');
+    $self->_check_duplicates($pname, $pheader, 'enable-tags-from-check', 'disable-tags-from-check');
+    $self->_check_duplicates($pname, $pheader, 'enable-tag', 'disable-tag');
     my $tags_from_check_sub = sub {
         my ($field, $check) = @_;
         fail "Unknown check $check in $pname\n" unless exists $CHECK_MAP{$check};
@@ -151,7 +179,7 @@ sub _enable_tags_from_field {
     my ($self, $pname, $pheader, $field, $code, $enable) = @_;
     my $tags = $self->{'enabled-tags'};
     return unless $pheader->{$field};
-    foreach my $tag (map { $code->($field, $_) } split m/\s*+,\s*+/o, $pheader->{$field}){
+    foreach my $tag (map { $code->($field, $_) } $self->_split_comma_sep_field($pheader->{$field})){
         if($enable) {
             $tags->{$tag} = 1;
         } else {
@@ -161,7 +189,7 @@ sub _enable_tags_from_field {
 }
 
 sub _check_duplicates{
-    my ($name, $map, @fields) = @_;
+    my ($self, $name, $map, @fields) = @_;
     my %dupmap;
     foreach my $field (@fields) {
         next unless exists $map->{$field};
@@ -175,6 +203,31 @@ sub _check_duplicates{
             $dupmap{$element} = $field;
         }
     }
+}
+
+# $self->($bool, $def, $pname, $sno);
+#
+# Parse $bool as a string representing a bool; if undefined return $def.
+# $pname and $sno are the Profile name and section number - used for
+# error reporting.
+sub _parse_boolean {
+    my ($self, $bool, $def, $pname, $sno) = @_;
+    return $def unless defined $bool;
+    $bool = lc $bool;
+    return 1 if $bool eq 'yes' || $bool eq 'true' ||
+	($bool =~ m/^\d++$/o && $bool != 0);
+    return 0  if $bool eq 'no' || $bool eq 'false' ||
+	($bool =~ m/^\d++$/o && $bool == 0);
+    fail "\"$bool\" is not a boolean value in $pname (section $sno).";
+}
+
+sub _split_comma_sep_field {
+    my ($self, $data) = @_;
+    return () unless defined $data;
+    # remove trailing and leading white-space
+    $data =~ s/^\s++//o;
+    $data =~ s/\s++$//o;
+    return split m/\s*,\s*/o, $data;
 }
 
 1;
