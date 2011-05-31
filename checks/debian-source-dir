@@ -47,6 +47,25 @@ if (-e 'debfiles/source/format') {
     tag 'missing-debian-source-format';
 }
 
+if (-s 'debfiles/source/git-patches') {
+    open (GITPATCHES, 'debfiles/source/git-patches')
+	or fail("cannot open debian/source/git-patches: $!");
+    if (grep !/^\s*+#|^\s*+$/o, <GITPATCHES>) {
+	if (! -r "debfiles/patches/series" ) {
+	    tag "git-patches-not-exported";
+	} else {
+	    open (DEBSERIES, 'debfiles/patches/series')
+		or fail("cannot open debian/patches/series: $!");
+	    my $comment_line = <DEBSERIES>;
+	    my $count = grep !/^\s*+\#|^\s*+$/o, <DEBSERIES>;
+	    tag "git-patches-not-exported"
+		unless ($count && ($comment_line =~ m/^\s*\#.*quilt-patches-deb-export-hook/o));
+	    close(DEBSERIES);
+	}
+    }
+    close(GITPATCHES);
+}
+
 if (-d 'debfiles/source') {
     opendir(DEBSRC, 'debfiles/source') or fail("cannot opendir debian/source/: $!");
     my $file;

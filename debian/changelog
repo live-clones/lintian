@@ -1,3 +1,125 @@
+lintian (2.5.1) UNRELEASED; urgency=low
+
+  * Summary of tag changes:
+    + Added:
+      - non-empty-dependency_libs-in-la-file
+
+  * checks/fields{,.desc}:
+    + [NT] Allow "all" and "any" to appear together in the Architecture
+      field of a .dsc file.  (Closes: #626775)
+  * checks/java:
+    + [NT] Sort the jar files by name, so they are checked in the same
+      order.
+  * checks/shared-libs{,.desc}:
+    + [NT] Added non-empty-dependency_libs-in-la-file. (Closes: #628673)
+
+  * collection/java:
+    + [NT] Fixed a regex that would accept any file ending with "jar" to
+      be a jar file rather than only accepting ".jar".  This fixes a
+      number of false-positives java checks.
+  * collection/unpacked:
+    + [NT] Added support for unpacking source packages using libdpkg-perl,
+      instead of dpkg-source, if the latter is not present.
+      (Closes: #626476)
+
+  * data/fields/{perl-provides,virtual-packages}:
+    + [NT] Refreshed.  (Closes: #627082, #627431)
+  * data/spelling/corrections-multiword:
+    + [CW] Remove the "requires to" correction; it has too many common false
+      positives, especially involving relative clauses.  (Closes: #625886)
+
+  * debian/control:
+    + [NT] (Build-)Dependency changes.
+      - xz-lzma is now preferred to lzma as Build-Dependency
+      - Added depends on libdpkg-perl
+      - Reduced dpkg-dev to a suggests, we can use libdpkg-perl as
+        fallback.
+      - Explicitly depends on bzip2 to always support bz2 source packages.
+      - Added xz-utils as suggests - needed for .xz source packages.
+
+  * lib/Lintian/Tags.pm:
+    + [NT] Fixed a flaw in logic that gave incorrect results for
+      architecture dependent overrides.  Thanks to Andreas Beckmann for
+      the report and the patch.  (Closes: #626587)
+
+  * unpack/list-srcpkg:
+    + [ADB] Don't rely on the order of fields in the Sources file.  The
+      files produced by the Debian archive no longer follow the order
+      which the code previously assumed, and we shouldn't assume that
+      the order won't change again in the future.  (Closes: #626597)
+
+ -- Adam D. Barratt <adam@adam-barratt.org.uk>  Fri, 13 May 2011 20:20:51 +0100
+
+lintian (2.5.0) unstable; urgency=low
+
+  * Summary of tag changes:
+    + Added:
+      - duplicate-files
+      - format-3.0-but-debian-changes-patch
+      - extended-description-contains-empty-paragraph
+      - git-patches-not-exported
+
+  * checks/binaries:
+    + [NT] Fixed false-positive embedded-library.  Lintian incorrectly
+      assumed that none of these binary packages would contain a source
+      version in their source field.  (Closes: #626038)
+  * checks/copyright-file.desc:
+    + [ADB] Correct a spelling mistake ("coypright" -> "copyright") in the
+      description of copyright-refers-to-deprecated-bsd-license-file;
+      thanks, Kees Cook.  (Closes: #623780)
+  * checks/description{,.desc}:
+    + [NT] Check for empty paragraphs in extended description.  Thanks to
+      Gerfried Fuchs for the patch.
+  * checks/duplicate-files{,.desc}:
+    + [NT] Added to check for duplicate files in usr/share/doc.  Thanks to
+      Axel Beckert for the suggestion.  (Closes: #614715)
+  * check/fields:
+    + [NT] Accepted pach from Antonio Terceiro to add Ruby-Version as a
+      accepted field in binary packages.  Thanks to Vincent Carmona for
+      the report.  (Closes: #623390)
+  * check/files:
+    + [NT] Accepted multiple patches (merged into one) from Marcelo Jorge
+      Vieira to detect a number of new javascript libraries.
+      (Closes: #623878)
+  * checks/patch-systems{,.desc}:
+    + [NT] Detect when 3.0 (quilt) packages have a debian-changes-VERSION
+      patch without a patch header.  Thanks to Iain Lane for suggestion
+      and patch.  (Closes: #588873)
+  * checks/debian-source-dir{,.desc}:
+    + [NT] Applied patch from David Bremner to enable
+      git-patches-not-exported.  (Closes: #607694)
+  * checks/java:
+    + [NT] Tightened the regex for finding java libraries and restricted
+      missing-classpath tag to only be emitted for packages that actually
+      contain at least one jar file we check.  This fixes false-positives
+      for packages that depended on libX-java-doc packages or packages
+      that only contain jar files we ignore.
+  * check/scripts{,.desc}:
+    + [NT] Accepted patch from Antonio Terceiro to allow ruby-interpreter
+      as alternative to ruby for /usr/bin/ruby scripts.
+      (Closes: #626210)
+
+  * data/common/source-fields:
+    + [NT] Accepted pach from Antonio Terceiro to add Ruby-Version as a
+      accepted field in binary packages.  Thanks to Vincent Carmona for
+      the report.
+
+  * lib/Lintian/ProcessableGroup.pm:
+    + [NT] Properly handle if the changes file is located directly in the
+      file system root.  Thanks to Trent W. Buck for the bug report.
+      (Closes: #624149)
+  * lib/Lintian/Tags.pm:
+    + [NT] Allow overrides to use wildcards anywhere instead of only in
+      the beginning or the end.  Thanks to Steve R. Langasek for the
+      report.  (Closes: #617991)
+    + [NT] Allow simple architecture overrides such as [i386] or [!i386].
+      Architecture wildcards are not supported yet.  The actual syntax
+      for the architecture the same as the one used in the Build-Depends.
+      Thanks to Andreas Beckmann for the bug report and the solution
+      proposal.  (Closes: #622888)
+
+ -- Niels Thykier <niels@thykier.net>  Tue, 10 May 2011 20:44:32 +0200
+
 lintian (2.5.0~rc3) unstable; urgency=low
 
   * Summary of tag changes:

@@ -38,13 +38,18 @@ my $missing_jarwrapper = 0;
 my $has_classpath = 0;
 my $has_osgi = 0;
 my $has_public_jars = 0;
+my $has_jars = 0;
 
-my @java_lib_depends = ($info->relation('strong')->unparse() =~
-			/(lib[^\s,]+-java)/g);
+my $depends = $info->relation('strong')->unparse();
+# Remove all libX-java-doc packages to avoid thinking they are java libs
+#  - note the result may not be a valid dependency listing
+$depends =~ s/lib[^\s,]+-java-doc//go;
+
+my @java_lib_depends = ($depends =~ m/\b(lib[^\s,]+-java)\b/og);
 
 # We first loop over jar files to find problems
 
-for my $jar_file (keys %{$java_info}) {
+for my $jar_file (sort keys %{$java_info}) {
     my $file_list = $java_info->{$jar_file}->{files};
     my $manifest = $java_info->{$jar_file}->{manifest};
     my $operm = $info->{index}->{$jar_file}->{operm};
@@ -55,6 +60,8 @@ for my $jar_file (keys %{$java_info}) {
 
     # The Java Policy says very little about requires for (jars in) JVMs
     next if $jar_file =~ m#usr/lib/jvm(?:-exports)?/[^/]++/#o;
+
+    $has_jars = 1;
 
     if($jar_file =~ m#^usr/share/java/[^/]+\.jar$#o) {
 	$has_public_jars = 1;
@@ -127,7 +134,11 @@ for my $jar_file (keys %{$java_info}) {
 tag 'missing-dep-on-jarwrapper' if $missing_jarwrapper;
 
 
-if(! $has_classpath && ! $has_osgi && @java_lib_depends) {
+if($has_jars && ! $has_classpath && ! $has_osgi && @java_lib_depends) {
+    # Only tag if there is at least one jar file and one strong java dependency
+    # and no classpath/osgi.  Technically there should be no reason to have a
+    # strong relation with a java library without having a jar file, but
+    # we ignore some jars (e.g. in JVMs) so going safe here.
     tag 'missing-classpath', join(', ', @java_lib_depends);
 }
 

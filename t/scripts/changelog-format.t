@@ -44,7 +44,7 @@ foreach (split /\n/,$changes) {
     my $spaces = 0;
     $spaces++ while (s/^\s//);
 
-    cmp_ok (($spaces + length), '<=', 75, 'Changelog line is not too long');
+    cmp_ok (($spaces + length), '<=', 75, "Changelog line is not too long: line $line");
 
 =meh
     # Disabled because Parse::DebianChangelog trims lines for us

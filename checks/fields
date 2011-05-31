@@ -78,7 +78,7 @@ our %KNOWN_BINARY_FIELDS = map { $_ => 1 }
      'recommends', 'suggests', 'enhances', 'conflicts', 'provides',
      'replaces', 'breaks', 'essential', 'maintainer', 'section', 'priority',
      'source', 'description', 'installed-size', 'python-version', 'homepage',
-     'bugs', 'origin', 'multi-arch', 'built-using');
+     'bugs', 'origin', 'multi-arch', 'built-using', 'ruby-versions');
 
 # The Ubuntu original-maintainer field is handled separately.
 our %KNOWN_UDEB_FIELDS = map { $_ => 1 }
@@ -303,15 +303,22 @@ if (not defined $info->field('architecture')) {
 	tag 'no-architecture-field';
 } else {
 	my $archs = $info->field('architecture');
-
 	unfold('architecture', \$archs);
 
-	my @archs = split / /, $archs;
-
-	if (@archs > 1 && grep { $_ eq 'any' || ($type ne 'source' && $_ eq 'all') } @archs) {
-		tag 'magic-arch-in-arch-list';
+	my @archs = split m/ /o, $archs;
+	if (@archs > 1) { # Check for magic architecture combinations.
+	    my %archmap;
+	    my $magic = 0;
+	    $archmap{$_}++ for (@archs);
+	    $magic++ if ($type ne 'source' && $archmap{'all'});
+	    if ($archmap{'any'}){
+		delete $archmap{'any'};
+		# Allow 'all' to be present in source packages as well (#626775)
+		delete $archmap{'all'} if $type eq 'source';
+		$magic++ if %archmap;
+	    }
+	    tag 'magic-arch-in-arch-list' if $magic;
 	}
-
 	for my $arch (@archs) {
 		tag 'unknown-architecture', $arch
 		    unless $KNOWN_ARCHS->known($arch) || $ARCH_WILDCARDS{$arch};

@@ -120,6 +120,7 @@ sub run {
 my $pkg = shift;
 my $type = shift;
 my $info = shift;
+my $proc = shift;
 
 my $arch;
 my $dynsyms = 0;
@@ -312,10 +313,10 @@ foreach my $file (@{$info->sorted_file_info}) {
 
     while (my ($src, $regex) = each %EMBEDDED_LIBRARIES) {
 	if (ref $regex eq 'HASH') {
-	    next if ($info->field('source') =~ m/^$regex->{'source'}$/);
+	    next if ($proc->pkg_src =~ m/^$regex->{'source'}$/);
 
 	    $regex = $regex->{'match'};
-	} elsif ($info->field('source') eq $src) {
+	} elsif ($proc->pkg_src eq $src) {
 	    next;
 	}
 	if ($strings =~ /$regex/) {

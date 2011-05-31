@@ -44,7 +44,9 @@ BEGIN {
 	copy_dir
 	gunzip_file
 	touch_file
-	perm2oct);
+	perm2oct
+	check_path
+	resolve_pkg_path);
 }
 
 use FileHandle;
@@ -313,6 +315,95 @@ sub fail {
     $! = 2; # set return code outside eval()
     die $str;
 }
+
+#check_path($command)>
+#
+#Return true if and only if $command is on the executable search path.
+#
+
+sub check_path {
+    my $command = shift;
+
+    return 0 unless exists $ENV{PATH};
+    for my $element (split ':', $ENV{PATH}) {
+	next unless length $element;
+	return 1 if -f "$element/$command" and -x _;
+    }
+    return 0;
+}
+
+#resolve_pkg_path($curdir, $dest)
+#
+# Using $curdir as current directory from the (package) root,
+# resolve $dest and return (the absolute) path to the destination.
+# Note that the result will never start with a slash, even if
+# $curdir or $dest does. Nor will it end with a slash.
+#
+# Note it will return '.' if the result is the package root.
+#
+# Returns a non-truth value, if it cannot safely resolve the path
+# (e.g. $dest would be outside the package root).
+#
+# Example:
+#  resolve_pkg_path('/usr/share/java', '../ant/file') eq  'usr/share/ant/file'
+#  resolve_pkg_path('/usr/share/java', '../../../usr/share/ant/file') eq  'usr/share/ant/file'
+#  resolve_pkg_path('/', 'usr/..') eq '.';
+#
+# The following will give a non-truth result:
+#  resolve_pkg_path('/usr/bin', '../../../../etc/passwd')
+#  resolve_pkg_path('/usr/bin', '/../etc/passwd')
+#
+sub resolve_pkg_path {
+    my ($curdir, $dest) = @_;
+    my (@cc, @dc);
+    my $target;
+    $dest =~ s,//++,/,o;
+    # short curcuit $dest eq '/' case.
+    return '.' if $dest eq '/';
+    # remove any initial ./ and trailing slashes.
+    $dest =~ s,^\./,,o;
+    $dest =~ s,/$,,o;
+    if ($dest =~ m,^/,o){
+	# absolute path, strip leading slashes and resolve
+	# as relative to the root.
+	$dest =~ s,^/,,o;
+	return resolve_pkg_path('/', $dest);
+    }
+
+    # clean up $curdir (as well)
+    $curdir =~ s,//++,/,o;
+    $curdir =~ s,/$,,o;
+    $curdir =~ s,^/,,o;
+    $curdir =~ s,^\./,,o;
+    # Short circuit the '.' (or './' -> '') case.
+    if ($dest eq '.' or $dest eq '') {
+	$curdir =~ s,^/,,o;
+	return '.' unless $curdir;
+	return $curdir;
+    }
+    # Relative path from src
+    @dc = split(m,/,o, $dest);
+    @cc = split(m,/,o, $curdir);
+    # Loop through @dc and modify @cc so that in the
+    # end of the loop, @cc will contain the path that
+    # - note that @cc will be empty if we end in the
+    # root (e.g. '/' + 'usr' + '..' -> '/'), this is
+    # fine.
+    while ($target = shift @dc) {
+	if($target eq '..') {
+	    # are we out of bounds?
+	    return '' unless @cc;
+	    # usr/share/java + '..' -> usr/share
+	    pop @cc;
+	} else {
+	    # usr/share + java -> usr/share/java
+	    push @cc, $target;
+	}
+    }
+    return '.' unless @cc;
+    return join '/', @cc;
+}
+
 
 1;
 

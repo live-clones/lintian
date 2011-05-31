@@ -46,20 +46,26 @@ if ($type =~ m/^remove-/) {
 }
 
 if ($type eq 'source') {
-    # Ignore STDOUT of the child process because older versions of
-    # dpkg-source print things out even with -q.
-    my $opts = { out => '/dev/null', err => 'unpacked-errors' };
-    unless (spawn($opts, ['dpkg-source', '-q', '-x', 'dsc', 'unpacked'])) {
-	open(ERRORS, '<', 'unpacked-errors')
-	    or fail("cannot open unpacked-errors: $!");
-	print STDERR while <ERRORS>;
-	close ERRORS;
-	fail('dpkg-source -x failed with status ', $opts->{harness}->result);
+    if (can_use_dpkg_source()) {
+        # Ignore STDOUT of the child process because older versions of
+        # dpkg-source print things out even with -q.
+        my $opts = { out => '/dev/null', err => 'unpacked-errors' };
+        print "N: Using dpkg-source to unpack $pkg\n" if $ENV{'LINTIAN_DEBUG'};
+        unless (spawn($opts, ['dpkg-source', '-q', '-x', 'dsc', 'unpacked'])) {
+            open(ERRORS, '<', 'unpacked-errors')
+                or fail("cannot open unpacked-errors: $!");
+            print STDERR while <ERRORS>;
+            close ERRORS;
+            fail('dpkg-source -x failed with status ', $opts->{harness}->result);
+        }
+    } else {
+        print "N: Using libdpkg-perl to unpack $pkg\n" if $ENV{'LINTIAN_DEBUG'};
+        libdpkg_unpack_dsc('dsc', 'unpacked');
     }
 
     # fix permissions
     spawn({ fail => 'error' },
-	  ['chmod', '-R', 'u+rwX,o+rX,o-w', 'unpacked']);
+          ['chmod', '-R', 'u+rwX,o+rX,o-w', 'unpacked']);
 
 } else {
     mkdir('unpacked', 0777) or fail("mkdir unpacked: $!");
@@ -84,4 +90,34 @@ if ($type eq 'source') {
     spawn({ fail => 'error' },
 	    ['chmod', '-R', 'u+rwX,go-w', 'unpacked']);
 }
+
+sub libdpkg_unpack_dsc {
+    my ($dsc, $target) = @_;
+    my $opt = {
+        # If there is a signature, we require it to be valid
+        'require_valid_signature' => 1,
+        'quiet' => 1
+    };
+    require Dpkg::Source::Package;
+    open(STDOUT, '>', '/dev/null') or fail "Redirecting stdout failed: $!";
+    # Create the object that does everything
+    my $srcpkg = Dpkg::Source::Package->new(filename => $dsc, options => $opt);
+
+    $srcpkg->check_checksums();
+
+    if ($srcpkg->is_signed()) {
+        $srcpkg->check_signature();
+    }
+
+    # Unpack the source package (delegated to Dpkg::Source::Package::*)
+    $srcpkg->extract($target);
+    return 1;
+}
+
+sub can_use_dpkg_source{
+    my $test = $ENV{LINTIAN_TEST_FEATURE};
+    return 0 if defined $test && $test =~ m/unpack-libdpkg-perl/;
+    return check_path('dpkg-source');
+}
+
 

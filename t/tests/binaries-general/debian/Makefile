@@ -1,10 +1,11 @@
 all:
 	# rpath not matching any of the exceptions to the rpath checks
+	#  - with profiling enabled.
 	gcc -o basic basic.c -pg -Wl,--rpath,/usr/local/lib
 	# rpath shipped in the package, but one of {/usr}?/lib
-	gcc -o basiclibrpath basic.c -ph -Wl,--rpath,/usr/lib
+	gcc -o basiclibrpath basic.c -Wl,--rpath,/usr/lib
 	# non-special rpath shipped in the package
-	gcc -o basicshippedrpath basic.c -ph -Wl,--rpath,/usr/share/foo
+	gcc -o basicshippedrpath basic.c -Wl,--rpath,/usr/share/foo
 	# static version of basic for debugging checks
 	gcc -static -o basic.static basic.c
 

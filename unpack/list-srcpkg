@@ -107,11 +107,18 @@ foreach my $sources (@sources) {
   my $line;
 
   while (!eof(IN)) {
-    do { $line = <IN> } until ($line =~ m/^Directory: (.*)$/m);
-    my $pkg_dir = $1;
-    do { $line = <IN> } until ($line =~ m/^ [0-9a-f]{32} [0-9]+ (.+\.dsc)$/m);
-    my $dsc_file = "$pkg_dir/$1";
-    do { $line = <IN> } until ($line =~ m/^\s*$/m);
+    my $pkg_dir;
+    my $dsc_file;
+
+    do {
+      $line = <IN>;
+      if ($line =~ m/^Directory: (.*)$/) {
+        $pkg_dir = $1;
+      } elsif ($line =~ m/^ [0-9a-f]{32} [0-9]+ (.+\.dsc)$/) {
+        $dsc_file = $1;
+      }
+    } until (not defined($line) or $line =~ /^\s*$/);
+    $dsc_file = "$pkg_dir/$dsc_file";
 
     my @stat;
     # get timestamp...

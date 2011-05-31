@@ -29,6 +29,7 @@ sub run {
 
 my $pkg = shift;
 my $type = shift;
+my $info = shift;
 
 my $control = 'control/md5sums';
 
@@ -36,27 +37,14 @@ my %control_entry;
 my %info_entry;
 my %conffile;
 
-# read in md5sums info file
-open(C, '<', 'md5sums') or fail("cannot open md5sums info file: $!");
-while (<C>) {
-    chop;
-    next if m/^\s*$/;
-    m/^(\S+)\s*(\S.*)$/ or fail("syntax error in md5sums info file: $_");
-    my $zzsum = $1;
-    my $zzfile = $2;
-    $zzfile =~ s,^(\./)?,,;
-    $info_entry{$zzfile} = $zzsum;
-}
-close(C);
-
 # read in conffiles
 if (-f 'control/conffiles') {
     open(C, '<', 'control/conffiles')
 	or fail("cannot open control file conffiles: $!");
     while (<C>) {
 	chop;
-	next if m/^\s*$/;
-	s,^/,,;
+	next if m/^\s*$/o;
+	s,^/,,o;
 	$conffile{$_} = 1;
     }
     close(C);
@@ -72,7 +60,9 @@ unless (-f $control) {
     # for conffiles since this information would
     # be redundant
     my $only_conffiles = 1;
-    foreach my $file (keys %info_entry) {
+    foreach my $file (@{ $info->sorted_index }) {
+	# Skip non-files, they will not appear in the md5sums file
+        next if !$file or $info->index->{$file}->{type} ne '-';
 	unless ($conffile{$file}) {
 	    $only_conffiles = 0;
 	    last;
@@ -104,17 +94,19 @@ close(C);
 
 for my $file (keys %control_entry) {
 
-    if (not exists $info_entry{$file}) {
+    my $md5sum = $info->md5sums->{$file};
+    if (not defined $md5sum) {
 	tag 'md5sums-lists-nonexisting-file', $file;
-    } elsif ($info_entry{$file} ne $control_entry{$file}) {
+    } elsif ($md5sum ne $control_entry{$file}) {
 	tag 'md5sum-mismatch', $file;
     }
 
     delete $info_entry{$file};
 }
-for my $file (keys %info_entry) {
+for my $file (keys %{ $info->md5sums }) {
+    next if $control_entry{$file};
     tag 'file-missing-in-md5sums', $file
-	unless ($conffile{$file} || $file =~ m%^var/lib/[ai]spell/.%);
+	unless ($conffile{$file} || $file =~ m%^var/lib/[ai]spell/.%o);
 }
 
 }

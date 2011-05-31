@@ -202,11 +202,24 @@ sub _check_overrides {
     } elsif ($extra ne '') {
         for (sort keys %$overrides) {
             my $pattern = $_;
-            next unless ($pattern =~ /^\*/ or $pattern =~ /\*\z/);
-            my ($start, $end) = ('', '');
-            $start = '.*' if $pattern =~ s/^\*//;
-            $end   = '.*' if $pattern =~ s/\*$//;
-            if ($extra =~ /^$start\Q$pattern\E$end\z/) {
+            my $end = '';
+            my $pat = '';
+            next unless $pattern =~ m/\Q*\E/o;
+            # Split does not help us if $text ends with *
+            # so we deal with that now
+            if ($pattern =~ s/\Q*\E+\z//o){
+                $end = '.*';
+            }
+            # Are there any * left (after the above)?
+            if ($pattern =~ m/\Q*\E/o) {
+                # this works even if $text starts with a *, since
+                # that is split as '', <text>
+                my @pargs = split(m/\Q*\E++/o, $pattern);
+                $pat = join('.*', map { quotemeta($_) } @pargs);
+            } else {
+                $pat = $pattern;
+            }
+            if ($extra =~ m/^$pat$end\z/) {
                 $overrides->{$_}++;
                 return "$tag $_";
             }
@@ -537,14 +550,42 @@ sub file_overrides {
         next if /^(?:\#|\z)/;
         s/\s+/ /go;
         my $override = $_;
-        $override =~ s/^\Q$info->{package}\E( \Q$info->{type}\E)?: //;
-        if ($override eq '' or $override !~ /^[\w.+-]+(?:\s.*)?$/) {
-            tag('malformed-override', $_);
-        } else {
-            my ($tag, $extra) = split(/ /, $override, 2);
+        # The override looks like the following:
+        # [[pkg-name] [arch-list] [pkg-type]:] <tag> [extra]
+        if ($override =~ m/^(?:                    # start optional part
+                  (?:\Q$info->{package}\E)?        # Optionally starts with package name
+                  (?: \s*+ \[([^\]]+?)\])?         # optionally followed by an [arch-list] (like in B-D) -> $1
+                  (?: \s*+ \Q$info->{type}\E)?     # optionally followed by the type
+                :\s++)?                            # end optional part
+                ([\-\.a-zA-Z_0-9]+ (?:\s.+)?)$/x){ # <tag-name> [extra] -> $2
+            # Valid - so far at least
+            my ($archlist, $tagdata) = ($1, $2);
+            my ($tag, $extra) = split(m/ /o, $tagdata, 2);
+            if ($archlist) {
+                # parse and figure
+                my (@archs) = split(m/\s++/o, $archlist);
+                my $negated = 0;
+                my $found = 0;
+                foreach my $a (@archs){
+                    $negated++ if $a =~ s/^!//o;
+                    $found = 1 if $a eq $info->{arch};
+                }
+                if ($negated > 0 && scalar @archs != $negated){
+                    # missing a ! somewhere
+                    tag 'malformed-override', $_, 'Inconsistent architecture negation';
+                    next;
+                }
+                # missing wildcard checks and sanity checking archs $arch
+                if ($negated) {
+                    $found = $found ? 0 : 1;
+                }
+                next unless $found;
+            }
             next if $ignored->{$tag};
             $extra = '' unless defined $extra;
             $info->{overrides}{$tag}{$extra} = 0;
+        } else {
+            tag('malformed-override', $_);
         }
     }
     close $file;

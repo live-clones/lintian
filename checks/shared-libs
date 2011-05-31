@@ -165,18 +165,21 @@ for my $cur_file (@{$info->sorted_index}) {
 	open(LAFILE, "< unpacked/$cur_file")
 	    or fail("Could not open unpacked/$cur_file for reading!");
 	while(<LAFILE>) {
-	    next unless (m/^libdir='(.+?)'$/);
-	    my $actual = $1;
-	    $actual =~ s,/+$,,;
-	    my ($expected) = ("/$cur_file" =~ m,^(.+)/[^/]+$,);
+	    next unless (m/^(libdir)='(.+?)'$/) or (m/^(dependency_libs)='(.+?)'$/);
+	    my ($field, $value) = ($1, $2);
+	    if ($field eq 'libdir') {
+		$value =~ s,/+$,,;
+		my ($expected) = ("/$cur_file" =~ m,^(.+)/[^/]+$,);
 
-	    # python-central is a special case since the libraries are moved
-	    # at install time.
-	    next if ($actual =~ m,^/usr/lib/python[\d.]+/(?:site|dist)-packages,
-		     and $expected =~ m,^/usr/share/pyshared,);
-	    tag "incorrect-libdir-in-la-file", $cur_file, "$actual != $expected"
-		unless($expected eq $actual);
-	    last;
+		# python-central is a special case since the libraries are moved
+		# at install time.
+		next if ($value =~ m,^/usr/lib/python[\d.]+/(?:site|dist)-packages,
+			 and $expected =~ m,^/usr/share/pyshared,);
+		tag 'incorrect-libdir-in-la-file', $cur_file, "$value != $expected"
+		    unless($expected eq $value);
+	    } elsif ($field eq 'dependency_libs'){
+		tag 'non-empty-dependency_libs-in-la-file', $cur_file;
+	    }
 	}
 	close(LAFILE);
     }

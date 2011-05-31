@@ -178,6 +178,32 @@ sub sorted_file_info{
     return \@result;
 }
 
+# Returns the md5sums as calculated by the md5sums collection
+#  sub md5sums Needs-Info md5sums
+sub md5sums {
+    my ($self) = @_;
+    return $self->{md5sums} if exists $self->{md5sums};
+    my $base_dir = $self->base_dir();
+    my $result = {};
+
+    # read in md5sums info file
+    open(my $fd, '<', "$base_dir/md5sums")
+        or fail("cannot open $base_dir/md5sums info file: $!");
+    while (my $line = <$fd>) {
+        chop($line);
+        next if $line =~ m/^\s*$/o;
+        $line =~ m/^(\S+)\s*(\S.*)$/o
+            or fail("syntax error in $base_dir/md5sums info file: $line");
+        my $zzsum = $1;
+        my $zzfile = $2;
+        $zzfile =~ s,^(?:\./)?,,o;
+        $result->{$zzfile} = $zzsum;
+    }
+    close($fd);
+    $self->{md5sums} = $result;
+    return $result;
+}
+
 sub scripts {
     my ($self) = @_;
     return $self->{scripts} if exists $self->{scripts};

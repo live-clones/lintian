@@ -3,4 +3,6 @@ Sequence: 6000
 Version: 1.0
 Description: Multiarch-related tests but not multiarch itself
 Architecture: i386 amd64
-Test-For: triplet-dir-and-architecture-mismatch
+Test-For:
+ triplet-dir-and-architecture-mismatch
+ missing-pre-dependency-on-multiarch-support

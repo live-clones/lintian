@@ -38,7 +38,7 @@ Build-Depends: binutils,
                libtimedate-perl,
                liburi-perl,
                locales,
-               lzma,
+               xz-lzma | lzma,
                man-db,
                perl,
                perl (>= 5.12) | libtest-simple-perl (>= 0.93),
@@ -54,14 +54,15 @@ Vcs-Browser: http://git.debian.org/?p=lintian/lintian.git
 Package: lintian
 Architecture: all
 Depends: binutils,
+         bzip2,
          diffstat,
-         dpkg-dev,
          file,
          gettext,
          intltool-debian,
          libapt-pkg-perl,
          libclass-accessor-perl,
          libdigest-sha-perl,
+         libdpkg-perl,
          libemail-valid-perl,
          libipc-run-perl,
          libparse-debianchangelog-perl,
@@ -73,9 +74,11 @@ Depends: binutils,
          unzip,
          ${misc:Depends}
 Suggests: binutils-multiarch,
+          dpkg-dev,
           libhtml-parser-perl,
           libtext-template-perl,
-          man-db (>= 2.5.1-1)
+          man-db (>= 2.5.1-1),
+          xz-utils
 Description: Debian package checker
  Lintian dissects Debian packages and reports bugs and policy
  violations. It contains automated checks for many aspects of Debian
