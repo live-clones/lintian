@@ -24,6 +24,9 @@ lintian (2.5.1) UNRELEASED; urgency=low
 
   * data/fields/{perl-provides,virtual-packages}:
     + [NT] Refreshed.  (Closes: #627082, #627431)
+  * data/spelling/corrections-multiword:
+    + [CW] Remove the "requires to" correction; it has too many common false
+      positives, especially involving relative clauses.  (Closes: #625886)
 
   * debian/control:
     + [NT] (Build-)Dependency changes.
