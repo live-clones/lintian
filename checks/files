@@ -510,7 +510,7 @@ foreach my $file (@{$info->sorted_index}) {
 	# ---------------- /usr/share/man and /usr/X11R6/man
 	elsif ($file =~ m,^usr/X11R6/man/\S+, or $file =~ m,^usr/share/man/\S+,) {
 	    if ($type eq 'udeb') {
-		tag 'documentation-file', $file;
+		tag 'udeb-contains-documentation-file', $file;
 	    }
 	    if ($index_info->{type} =~ m/^d/) {
 		tag 'stray-directory-in-manpage-directory', $file
@@ -535,7 +535,7 @@ foreach my $file (@{$info->sorted_index}) {
 	# ---------------- /usr/share/info
 	elsif ($file =~ m,^usr/share/info\S+,) {
 	    if ($type eq 'udeb') {
-		tag 'documentation-file', $file;
+		tag 'udeb-contains-documentation-file', $file;
 	    }
 	    if ($file =~ m,^usr/share/info/dir(?:\.old)?(?:\.gz)?$,) {
 		tag 'package-contains-info-dir-file', $file;

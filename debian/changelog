@@ -7,6 +7,10 @@ lintian (2.5.1) UNRELEASED; urgency=low
   * checks/fields{,.desc}:
     + [NT] Allow "all" and "any" to appear together in the Architecture
       field of a .dsc file.  (Closes: #626775)
+  * checks/files:
+    + [NT] Fixed two misnamed udeb tags, which lead to an internal
+      error if triggered.  Thanks to Guillem Jover for the report.
+      (Closes: #628754)
   * checks/java:
     + [NT] Sort the jar files by name, so they are checked in the same
       order.
