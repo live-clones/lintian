@@ -1,5 +1,4 @@
 E: debconf source: declares-possibly-conflicting-debhelper-compat-versions rules=4 compat=4
-E: debconf source: missing-dh_python-build-dependency
 E: debconf-test-noscripts: copyright-contains-dh_make-todo-boilerplate
 E: debconf-test-noscripts: no-debconf-config
 E: debconf-test-postinst: copyright-contains-dh_make-todo-boilerplate
@@ -33,6 +32,7 @@ W: debconf source: ancient-standards-version 3.7.2 (current is 3.9.2)
 W: debconf source: debian-rules-calls-debhelper-in-odd-order dh_makeshlibs (line 49)
 W: debconf source: debian-rules-calls-debhelper-in-odd-order dh_makeshlibs (line 53)
 W: debconf source: debian-rules-sets-DH_COMPAT line 3
+W: debconf source: dh_python-is-obsolete line 40
 W: debconf source: dpatch-build-dep-but-no-patch-list
 W: debconf source: invalid-po-file debian/po/fr.po
 W: debconf source: invalid-po-file debian/po/sample-file.po
