@@ -5,6 +5,7 @@ Description: Test for use of deprecated dh_* commands
 Test-For:
  dh_desktop-is-deprecated
  dh_dhelp-is-deprecated
+ dh_python-is-obsolete
  dh_scrollkeeper-is-deprecated
  dh_suidregister-is-obsolete
  dh_undocumented-is-obsolete
