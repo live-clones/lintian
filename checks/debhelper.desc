@@ -165,14 +165,6 @@ Info: The debhelper compatibility version used by this package is marked
  <tt>debian/rules</tt>.  If it is not set in either place, debhelper
  defaults to the deprecated compatibility version 1.
 
-Tag: uses-dh-python-with-no-pycompat
-Severity: normal
-Certainty: possible
-Info: This package uses dh_python but apparently does not tell it to use
- the current Python policy by putting 2 in <tt>debian/pycompat</tt>.  This
- may mean that the package has not been converted to the current Python
- policy, in which case it probably should be.
-
 Tag: debhelper-but-no-misc-depends
 Severity: normal
 Certainty: possible

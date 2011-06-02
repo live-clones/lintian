@@ -41,7 +41,6 @@ W: scripts source: maintainer-script-lacks-debhelper-token debian/postinst
 W: scripts source: maintainer-script-lacks-debhelper-token debian/postrm
 W: scripts source: package-uses-deprecated-debhelper-compat-version 1
 W: scripts source: patch-system-but-no-source-readme
-W: scripts source: uses-dh-python-with-no-pycompat
 W: scripts: binary-without-manpage usr/bin/envfoo
 W: scripts: binary-without-manpage usr/bin/guile-bizarre
 W: scripts: binary-without-manpage usr/bin/jruby-broken

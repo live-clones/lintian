@@ -1,4 +1,4 @@
-Last generated 2011-04-27
+Last generated 2011-06-02
 
 The following tags are not tested by the test suite:
 
@@ -213,8 +213,6 @@ debconf unknown-debconf-priority
 debconf using-first-person-in-templates
 debconf using-imperative-form-in-templates
 debconf using-question-in-extended-description-in-templates
-
-debhelper uses-dh-python-with-no-pycompat
 
 fields build-depends-indep-without-arch-indep
 fields dbg-package-missing-depends
@@ -524,4 +522,3 @@ scripts
   setuid-binary
   shell-script-fails-syntax-check
   suid-perl-script-but-no-perl-suid-dep
-  uses-dh-python-with-no-pycompat
