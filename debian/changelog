@@ -21,6 +21,11 @@ lintian (2.5.1) UNRELEASED; urgency=low
   * checks/java:
     + [NT] Sort the jar files by name, so they are checked in the same
       order.
+  * checks/rules:
+    + [NT] Removed code for handling packages with dh_python.
+    + [NT] Fixed the code for determining Build-Depends for python
+      packages.  Thanks to Jakub Wilk for the patch.
+      (Closes: #614876, #616553)
   * checks/shared-libs{,.desc}:
     + [NT] Added non-empty-dependency_libs-in-la-file.  (Closes: #628673)
 

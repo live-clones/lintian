@@ -20,11 +20,11 @@ use warnings;
 use Util;
 use Lintian::Tags qw(tag);
 
-# The allowed Python dependencies currently.  This is the list of alternatives
-# that, either directly or through transitive dependencies that can be relied
-# upon, ensure /usr/bin/python will exist for the use of dh_python.
-our $PYTHON_DEPEND = 'python | python-dev | python-all | python-all-dev | '
-    . join (' | ', map { "python$_ | python$_-dev" } qw(2.4 2.5 2.6));
+our $PYTHON_DEPEND = 'python | python-dev | python-all | python-all-dev';
+our $PYTHON3_DEPEND = 'python3 | python3-dev | python3-all | python3-all-dev';
+our $PYTHON2X_DEPEND = join (' | ', map { "python$_ | python$_-dev" } qw(2.6 2.7));
+our $PYTHON3X_DEPEND = join (' | ', map { "python$_ | python$_-dev" } qw(3.2));
+our $ANYPYTHON_DEPEND = "$PYTHON_DEPEND | $PYTHON2X_DEPEND | $PYTHON3_DEPEND | $PYTHON3X_DEPEND";
 
 # Certain build tools must be listed in Build-Depends even if there are no
 # arch-specific packages because they're required in order to run the clean
@@ -50,7 +50,7 @@ our @GLOBAL_CLEAN_DEPENDS =
      [ quilt => qr'^include\s+/usr/share/quilt/' ],
      [ 'ruby-pkg-tools' => qr'^include\s+/usr/share/ruby-pkg-tools/1/class/' ],
      [ 'r-base-dev' => qr'^include\s+/usr/share/R/debian/r-cran\.mk' ],
-     [ $PYTHON_DEPEND => qr'/usr/share/cdbs/1/class/python-distutils\.mk', 'missing-python-build-dependency' ],
+     [ $ANYPYTHON_DEPEND => qr'/usr/share/cdbs/1/class/python-distutils\.mk', 'missing-python-build-dependency' ],
     );
 
 # A list of packages; regular expressions that, if they match anywhere in the
@@ -76,7 +76,8 @@ my @RULE_CLEAN_DEPENDS =
      [ dpatch => qr'^\t\s*(\S+=\S+\s+)*dpatch\s' ],
      [ 'po-debconf' => qr'^\t\s*debconf-updatepo\s' ],
      [ $PYTHON_DEPEND => qr'^\t\s*python\s', 'missing-python-build-dependency' ],
-     [ $PYTHON_DEPEND => qr'\ssetup\.py\b', 'missing-python-build-dependency' ],
+     [ $PYTHON3_DEPEND => qr'^\t\s*python3\s', 'missing-python-build-dependency' ],
+     [ $ANYPYTHON_DEPEND => qr'\ssetup\.py\b', 'missing-python-build-dependency' ],
      [ quilt => qr'^\t\s*dh\s.*--with\s+(?:\S+,)*quilt' ],
      [ quilt => qr'^\t\s*(\S+=\S+\s+)*quilt\s' ],
      [ yada => qr'^\t\s*yada\s' ],
