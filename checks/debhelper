@@ -100,6 +100,9 @@ while (<RULES>) {
 	if ($dhcommand eq 'dh_python') {
 	    tag 'dh_python-is-obsolete', "line $.";
 	}
+	if ($dhcommand eq 'dh_pycentral') {
+	    tag 'dh_pycentral-is-obsolete', "line $.";
+	}
 
 	# Don't warn about recently deprecated commands in code that may be
 	# optional.  It may be there only for backports.

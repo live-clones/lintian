@@ -1,0 +1,17 @@
+Source: {$srcpkg}
+Priority: extra
+Section: {$section}
+Maintainer: {$author}
+Standards-Version: {$standards_version}
+Build-Depends: debhelper (>= 7.0.50~), python-central
+
+Package: {$srcpkg}
+Architecture: {$architecture}
+Depends: $\{misc:Depends\}
+Description: {$description}
+ This is a test package designed to test various aspects of the
+ debhelper-related QA code in lintian.  This may be a useless
+ empty package.
+ .
+ This package should not be installed.
+

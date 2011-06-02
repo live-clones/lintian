@@ -2,11 +2,13 @@ lintian (2.5.1) UNRELEASED; urgency=low
 
   * Summary of tag changes:
     + Added:
+      - dh_pycentral-is-obsolete
       - dh_python-is-obsolete
       - non-empty-dependency_libs-in-la-file
 
   * checks/debhelper{,.desc}:
-    + [NT] Recognise that dh_python is obsolete.  (Closes: #541978)
+    + [NT] Recognise that dh_python and dh_pycentral are now obsolete.
+      (Closes: #541978)
   * checks/fields{,.desc}:
     + [NT] Allow "all" and "any" to appear together in the Architecture
       field of a .dsc file.  (Closes: #626775)
