@@ -550,11 +550,6 @@ unless (defined $LINTIAN_ARCH) {
     }
 }
 
-# Allow DEB_VENDOR as alternative to LINTIAN_PROFILE
-if (!$LINTIAN_PROFILE && $ENV{'DEB_VENDOR'}){
-    $LINTIAN_PROFILE = $ENV{'DEB_VENDOR'};
-}
-
 # export current settings for our helper scripts
 foreach (('ROOT', 'CFG', VARS)) {
     no strict 'refs';
@@ -653,16 +648,36 @@ $TAGS->sources(keys %display_source) if %display_source;
 $TAGS->only(split(/,/, $check_tags)) if defined $check_tags;
 $TAGS->suppress(keys %suppress_tags) if %suppress_tags;
 
-unless (defined $check_tags || %suppress_tags){
-    if ($LINTIAN_PROFILE) {
-	my $profile = Lintian::Profile->new($LINTIAN_PROFILE,
-					    [PROFILE_PATH, "$LINTIAN_ROOT/profiles"]);
-	my @ptags = $profile->tags;
-	my @ign_overrides = $profile->ignored_overrides;
-	v_msg('Using profile ' . $profile->name . '.');
-	$TAGS->only(@ptags) if @ptags;
-	$TAGS->ignore_overrides(@ign_overrides) if @ign_overrides;
+if (defined $check_tags || %suppress_tags) {
+    # No profile if we have been given explicit list
+    $LINTIAN_PROFILE = ''
+} else {
+    unless ($LINTIAN_PROFILE){
+	# Time to ask dpkg-vendor for a vendor name
+	my ($vendor, $orig);
+	chomp($orig = `dpkg-vendor --query Vendor`);
+	$vendor = $orig;
+	while ($vendor) {
+	    my $p;
+	    v_msg("Checking for default profile for $vendor.");
+	    $p = Lintian::Profile->find_profile(lc($vendor), PROFILE_PATH, "$LINTIAN_ROOT/profiles");
+	    last if $p;
+	    chomp($vendor = `dpkg-vendor --vendor "$vendor" --query Parent`);
+	}
+	fail("Could not find a profile for vendor $orig") unless $vendor;
+	$LINTIAN_PROFILE = lc($vendor);
+	v_msg("Found default profile for vendor $orig");
     }
+}
+
+if ($LINTIAN_PROFILE) {
+    my $profile = Lintian::Profile->new($LINTIAN_PROFILE,
+					[PROFILE_PATH, "$LINTIAN_ROOT/profiles"]);
+    my @ptags = $profile->tags;
+    my @ign_overrides = $profile->ignored_overrides;
+    v_msg('Using profile ' . $profile->name . '.');
+    $TAGS->only(@ptags) if @ptags;
+    $TAGS->ignore_overrides(@ign_overrides) if @ign_overrides;
 }
 
 # Initialize display level settings.

@@ -67,7 +67,7 @@ sub new {
 	'ignored-overrides' => {},
     };
     $self = bless $self, $type;
-    $profile = $self->_find_profile($name);
+    $profile = $self->find_profile($name);
     fail "Cannot find profile $name (in " . join(', ', @$ppath).").\n"
         unless $profile;
     $self->_read_profile($profile);
@@ -86,14 +86,16 @@ sub ignored_overrides {
     return keys %{ $self->{'ignored-overrides'} };
 }
 
-sub _find_profile {
-    my ($self, $pname) = @_;
+sub find_profile {
+    my ($self, $pname, @dirs) = @_;
     my $pfile;
     fail "$pname is not a valid profile name\n" if $pname =~ m/\./o;
+    # Allow @dirs to override the default path for this profile-search
+    push @dirs, @{ $self->{'profile-path'} } if ref $self;
     # $vendor is short for $vendor/main
     $pname = "$pname/main" unless $pname =~ m,/,o;
     $pfile = "$pname.profile";
-    foreach my $path (@{ $self->{'profile-path'} }){
+    foreach my $path (@dirs){
         return "$path/$pfile" if -e "$path/$pfile";
     }
     return '';
@@ -124,10 +126,10 @@ sub _read_profile {
             unless $parent && $parent !~ m/\./o;
         fail "Recursive definition of $parent.\n"
             if exists $pmap->{$parent};
-        $parentf = $self->_find_profile($parent);
+        $parentf = $self->find_profile($parent);
         fail "Cannot find $parent, which $pname extends.\n"
             unless $parentf;
-        $self->_read_profile($parentf);
+        $self->read_profile($parentf);
         push @$plist, $parent;
     }
     $self->_read_profile_tags($pname, $pheader);
