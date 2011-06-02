@@ -7,4 +7,3 @@ Test-For:
  debian-rules-automatically-updates-control
  debian-rules-uses-DEB_BUILD_OPTS
  debian-rules-uses-pwd
- missing-dh_python-build-dependency
