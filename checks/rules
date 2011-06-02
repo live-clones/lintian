@@ -59,7 +59,6 @@ our @GLOBAL_CLEAN_DEPENDS =
 my @GLOBAL_DEPENDS =
     (
      [ 'dh-ocaml, ocaml-nox | ocaml' => qr'^\t\s*dh_ocaml(?:init|doc)\s' ],
-     [ $PYTHON_DEPEND => qr'^\t\s*dh_python\s', 'missing-dh_python-build-dependency' ],
      [ 'python-central' => qr'^\t\s*dh_pycentral\s' ],
      [ 'python-support' => qr'^\t\s*dh_pysupport\s' ],
      [ 'python-central' => qr'^DEB_PYTHON_SYSTEM\s*:?=\s*pycentral' ],
@@ -331,11 +330,6 @@ my $noarch = $info->relation_noarch('build-depends-all');
 for my $package (keys %needed) {
     my $tag = $needed{$package} || 'missing-build-dependency';
 
-    # dh_python deactivates itself if the new Python build policy is enabled.
-    if ($tag eq 'missing-dh_python-build-dependency') {
-        next if -f 'debfiles/pycomat';
-        next if defined $info->field('python-version');
-    }
     unless ($noarch->implies($package)) {
         if ($tag eq 'missing-build-dependency') {
             tag $tag, $package;
