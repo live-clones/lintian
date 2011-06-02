@@ -5,11 +5,7 @@ CFLAGS=-Wall -Winline -O2
 
 OBJS=baz.o extra.o
 SHOBJS=baz.sho extra.sho
-NOPICOBJS = $(OBJS)
-DEB_HOST_ARCH := $(shell dpkg-architecture -qDEB_HOST_ARCH)
-ifneq ($(DEB_HOST_ARCH),i386)
 NOPICOBJS = $(SHOBJS)
-endif
 
 all: libbaz1.a libbaz2.a libbaz1.so.1.0.3b libbaz2.so libbaz3.so.1.0.3b \
 	libbaz.so

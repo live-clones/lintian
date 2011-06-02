@@ -1,5 +1,0 @@
-Testname: legacy-libbaz
-Sequence: 6000
-Version: 1-1
-Architecture: i386
-Description: libbaz test from the legacy suite
