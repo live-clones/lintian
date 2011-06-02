@@ -650,7 +650,10 @@ $TAGS->suppress(keys %suppress_tags) if %suppress_tags;
 
 if (defined $check_tags || %suppress_tags) {
     # No profile if we have been given explicit list
-    $LINTIAN_PROFILE = ''
+    $LINTIAN_PROFILE = '';
+    # If we are given explicit list, we use that regardless
+    # of show_pedantic/display.
+    $TAGS->respect_display_level(0);
 } else {
     unless ($LINTIAN_PROFILE){
 	# Time to ask dpkg-vendor for a vendor name
