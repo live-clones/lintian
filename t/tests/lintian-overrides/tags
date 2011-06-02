@@ -1,2 +1,2 @@
 E: lintian-overrides: malformed-override lintian-override:
-I: lintian-overrides: unused-override say hi :)
+I: lintian-overrides: unused-override copyright-contains-dh_make-todo-boilerplate foo-bar-extra

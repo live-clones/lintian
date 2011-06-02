@@ -1,2 +1,2 @@
 lintian-override: 
-lintian-overrides: say hi :)
+lintian-overrides: copyright-contains-dh_make-todo-boilerplate foo-bar-extra

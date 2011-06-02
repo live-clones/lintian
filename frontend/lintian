@@ -681,15 +681,14 @@ if ($LINTIAN_PROFILE) {
     v_msg('Using profile ' . $profile->name . '.');
     $TAGS->only(@ptags) if @ptags;
     $TAGS->ignore_overrides(@ign_overrides) if @ign_overrides;
-}
-
-# Initialize display level settings.
-for my $level (@display_level) {
-    eval { $TAGS->display(@$level) };
-    if ($@) {
-	my $error = $@;
-	$error =~ s/ at .*//;
-	die $error, "\n";
+    # Initialize display level settings.
+    for my $level (@display_level) {
+	eval { $TAGS->display(@$level) };
+	if ($@) {
+	    my $error = $@;
+	    $error =~ s/ at .*//;
+	    die $error, "\n";
+	}
     }
 }
 
