@@ -1,6 +1,10 @@
 #!/usr/bin/make -f
 
-build:
+build-arch:
+
+build-indep:
+
+build: build-arch build-indep
 
 binary-arch:
 
@@ -29,4 +33,4 @@ clean2:
 	dh_clean
 clean3:
 
-.PHONY: build binary-arch binary-indep binary clean
+.PHONY: build-arch build-indep build binary-arch binary-indep binary clean

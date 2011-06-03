@@ -1,9 +1,14 @@
 #!/usr/bin/make -f
 
-build: build-stamp
+build-indep:
+
+build-arch: build-stamp
+
 build-stamp:
-	dh build
+	dh build-arch
 	touch $@
+
+build: build-arch build-indep
 
 # From deejayd 0.8.2-1
 clean: $(PYVERS:%=clean-python%)
@@ -29,4 +34,4 @@ binary-indep: install
 	dh $@
 
 binary: binary-arch binary-indep
-.PHONY: binary binary-arch binary-indep install clean build
+.PHONY: binary binary-arch binary-indep install clean build build-arch build-indep

@@ -2,7 +2,12 @@
 
 tmp=debian/tmp
 
-build:
+build-arch:
+	echo "Hi, in an arch: all package, I am a bug!"
+
+build-indep:
+
+build: build-arch build-indep
 
 binary-arch:
 	echo "Hi, in an arch: all package, I am a bug!"
@@ -99,4 +104,4 @@ binary: binary-arch binary-indep
 clean:
 	rm -rf debian/files $(tmp) debian/substvars
 
-.PHONY: build binary-arch binary-indep binary clean
+.PHONY: build-arch build-indep build binary-arch binary-indep binary clean

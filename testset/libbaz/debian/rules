@@ -6,8 +6,12 @@ dev_tmp=debian/tmp-dev
 LIB=libbaz1
 DEV=libbaz1-dev
 
-build:
+build-arch:
 	$(MAKE)
+
+build-indep:
+
+build: build-arch build-indep
 
 clean:
 	$(MAKE) clean
@@ -57,7 +61,7 @@ binary-correct:
 	dh_builddeb -plibbaz2 -plibbaz2-dev -plibbaz2-dbg -pia32-libbaz2
 
 # and the incorrect one
-binary-arch: build binary-correct
+binary-arch: build-arch binary-correct
 	# first, the lib package
 	install -d $(lib_tmp)/usr/lib
 	# resp. no soname (check), wrong soname (check), and no-pic (check)
@@ -120,4 +124,4 @@ binary: binary-arch
 
 # The mention of binary-indep here should be sufficient to suppress the
 # warning that it's not present.
-.PHONY: build binary-arch binary-indep binary clean
+.PHONY: build-arch build-indep build binary-arch binary-indep binary clean

@@ -2,7 +2,9 @@
 
 pkg = $(shell dh_listpackages)
 
-build:
+build: build-indep build-arch
+build-arch:
+build-indep:
 
 clean:
 	dh_testdir
@@ -39,4 +41,4 @@ endif
 	dh_md5sums
 	dh_builddeb
 
-.PHONY: binary binary-arch binary-indep build clean
+.PHONY: build-arch build-indep build binary binary-arch binary-indep clean

@@ -9,6 +9,8 @@ clean:
 	rm -rf debian/only-etcfiles
 
 build:
+build-arch:
+build-indep:
 binary-indep:
 	install -d $(tmp)/etc
 	install -m 644 proper $(tmp)/etc

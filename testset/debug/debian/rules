@@ -4,7 +4,10 @@
 
 export DH_COMPAT := 5
 
-build: build-stamp
+build-indep:
+
+build-arch: build-stamp
+
 build-stamp:
 	dh_testdir
 	gcc -D_REENTRANT -fPIC -c libhello.c
@@ -12,6 +15,8 @@ build-stamp:
 	ln -s libhello.so.0.0 libhello.so
 	gcc -o hello hello.c -L. -lhello
 	touch build-stamp
+
+build: build-arch build-indep
 
 clean:
 	dh_testdir
@@ -86,4 +91,4 @@ binary-arch: build-stamp install
 
 binary-indep:
 binary: binary-indep binary-arch
-.PHONY: binary binary-indep binary-arch build clean install
+.PHONY: build-arch build-indep build binary binary-indep binary-arch clean install

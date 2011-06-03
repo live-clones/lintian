@@ -6,9 +6,16 @@ deb_dir		=	debian/debconf
 udeb_dir	=	debian/debconf-udeb
 build_dirs	=	$(deb_dir) $(udeb_dir)
 
-build:
+build-indep:
+# There are no architecture-independent files to be built
+# by this package.  If there were any they would be made
+# here.
+
+build-arch:
 	dh_testdir
 	touch build
+
+build: build-indep build-arch
 
 clean:
 	dh_testdir
@@ -56,4 +63,4 @@ binary-arch:	build
 
 binary:		binary-indep binary-arch
 
-.PHONY: binary binary-arch binary-indep clean checkroot
+.PHONY: build-arch build-indep build binary binary-arch binary-indep clean checkroot

@@ -1,9 +1,14 @@
 #!/usr/bin/make -f
 
-build: build-stamp
+build-indep:
+
+build-arch: build-stamp
+
 build-stamp:
-	dh build
+	dh build-arch
 	touch $@
+
+build: build-arch build-indep
 
 clean:
 	dh $@
@@ -21,4 +26,4 @@ binary-indep: install
 
 binary: binary-arch binary-indep
 
-.PHONY: binary binary-arch binary-indep install clean build
+.PHONY: binary binary-arch binary-indep install clean build build-arch build-indep

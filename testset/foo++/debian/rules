@@ -3,7 +3,11 @@
 foo=foo++
 helper=foo++-helper
 
-build:
+build-arch:
+
+build-indep:
+
+build: build-arch build-indep
 
 binary-arch:
 
@@ -29,4 +33,4 @@ binary: binary-arch binary-indep
 
 clean:
 
-.PHONY: build binary-arch binary-indep binary clean
+.PHONY: build-arch build-indep build binary-arch binary-indep binary clean

@@ -4,9 +4,11 @@ tmp=debian/tmp
 
 # This reference to $(PWD) should not cause an error but the one below
 # should.
-build:
+build-arch:
 	make
 	echo $(PWD)
+
+build: build-arch
 
 clean:
 	make -i clean
@@ -88,4 +90,4 @@ binary-arch: build
 
 binary: binary-arch
 
-.PHONY: build binary-arch binary clean
+.PHONY: build-arch build binary-arch binary clean
