@@ -9,9 +9,18 @@ Info: This script checks if the packages comply with various aspects of the
 Tag: classpath-contains-relative-path
 Severity: normal
 Certainty: possible
-Info: The classpath listed in some of the files references relative path
- with subdirectories. This is probably the remnants of a build-time
- classpath that are not relevant for a JAR bundled in a Debian package.
+Info: The classpath listed in the jar file refers to a potential
+ missing jar file.  This could be the remnants of a build-time
+ classpath that are not relevant for a JAR bundled in a Debian
+ package.
+ .
+ Alternatively, the classpath may be correct, but the package is
+ lacking a jar file or a symlink to it.
+ .
+ Note, Lintian assumes that all (relative) classpaths pointing to
+ /usr/share/java/ (but not subdirs thereof) are satisfied by
+ dependencies as long as there is at least one strong libX-java
+ dependency.
 
 Tag: jar-not-in-usr-share
 Severity: normal

@@ -18,9 +18,16 @@ lintian (2.5.1) UNRELEASED; urgency=low
     + [NT] Fixed two misnamed udeb tags, which lead to an internal
       error if triggered.  Thanks to Guillem Jover for the report.
       (Closes: #628754)
-  * checks/java:
+  * checks/java{,.desc}:
     + [NT] Sort the jar files by name, so they are checked in the same
       order.
+    + [NT] Improved the description of classpath-contains-relative-path.
+      (Closes: #629189)
+    + [NT] Reduced false-positives of classpath-contains-relative-path.
+      Relative classpaths are now okay if they point to jar files in
+      /usr/share/java (but not subdirs thereof) and there is a strong
+      libX-java dependency.  Alternatively if the classpath points to
+      a file or a symlink in the package itself, then it is also okay.
   * checks/rules:
     + [NT] Removed code for handling packages with dh_python.
     + [NT] Fixed the code for determining Build-Depends for python
