@@ -1,3 +1,4 @@
+E: files-general: bad-perm-for-file-in-etc-sudoers.d etc/sudoers.d/sudotest 0644 != 0440
 E: files-general: dir-or-file-in-var-lock var/lock/lintian/
 E: files-general: dir-or-file-in-var-run var/run/lintian/
 E: files-general: executable-manpage usr/share/man/man5/foo.5.gz

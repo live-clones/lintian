@@ -4,8 +4,9 @@ lintian (2.5.1) UNRELEASED; urgency=low
     + Added:
       - dh_pycentral-is-obsolete
       - dh_python-is-obsolete
-      - non-empty-dependency_libs-in-la-file
       - illegal-multi-arch-value
+      - non-empty-dependency_libs-in-la-file
+      - bad-perm-for-file-in-etc-sudoers.d
     + Removed:
       - uses-dh-python-with-no-pycompat
 
@@ -20,6 +21,8 @@ lintian (2.5.1) UNRELEASED; urgency=low
     + [NT] Fixed two misnamed udeb tags, which lead to an internal
       error if triggered.  Thanks to Guillem Jover for the report.
       (Closes: #628754)
+    + [NT] Added bad-perm-for-file-in-etc-sudoers.d tag.
+      (Closes: #588831)
   * checks/java{,.desc}:
     + [NT] Sort the jar files by name, so they are checked in the same
       order.

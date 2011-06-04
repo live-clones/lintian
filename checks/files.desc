@@ -243,6 +243,14 @@ Info: The file has a mode different from 0644. In some cases this is
  intentional, but in other cases this is a bug.
 Ref: policy 10.9
 
+Tag: bad-perm-for-file-in-etc-sudoers.d
+Severity: serious
+Certainty: certain
+Info: Files in /etc/sudoers.d/ must be 0440 or sudo will refuse to
+ parse them.
+Ref: http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=588831,
+     http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=576527
+
 Tag: special-file
 Severity: serious
 Certainty: certain
