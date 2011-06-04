@@ -105,6 +105,7 @@ sub _load_tag_data {
             }
             $tag->{info} = '' unless exists($tag->{info});
             $tag->{script} = $header->{'check-script'};
+            $tag->{'script-type'} = $header->{'type'};
             $INFO{$tag->{tag}} = $tag;
         }
     }
@@ -280,6 +281,11 @@ sub description {
         my $severity = $self->{severity};
         my $certainty = $self->{certainty};
         push(@text, '', "Severity: $severity, Certainty: $certainty");
+    }
+    if ($self->{script} and $self->{'script-type'}){
+        my $script = $self->{script};
+        my $stype = $self->{'script-type'};
+        push(@text, '', "Check: $script, Type: $stype");
     }
     if ($self->{experimental}) {
         push(@text, '',

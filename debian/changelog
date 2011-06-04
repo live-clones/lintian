@@ -102,6 +102,10 @@ lintian (2.5.1) UNRELEASED; urgency=low
       - Explicitly depends on bzip2 to always support bz2 source packages.
       - Added xz-utils as suggests - needed for .xz source packages.
 
+  * doc/lintian.xml:
+    + [NT] Clarify that the package type is not listed in the output for
+      binary packages.  (Closes: #629193)
+
   * frontend/lintian:
     + [NT] Allow some options to be put into the lintianrc file.
       (Closes: #460350)
@@ -115,6 +119,9 @@ lintian (2.5.1) UNRELEASED; urgency=low
       available.  Thanks to Toby Corkindale for the report.
       (Closes: #630560, LP: #797553)
 
+  * lib/Lintian/Tag/Info.pm:
+    + [NT] Output the name of the check and the type of the check
+      along with the description of the tag.
   * lib/Lintian/Tags.pm:
     + [NT] Fixed a flaw in logic that gave incorrect results for
       architecture dependent overrides.  Thanks to Andreas Beckmann for
