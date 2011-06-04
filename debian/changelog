@@ -5,6 +5,7 @@ lintian (2.5.1) UNRELEASED; urgency=low
       - dh_pycentral-is-obsolete
       - dh_python-is-obsolete
       - non-empty-dependency_libs-in-la-file
+      - illegal-multi-arch-value
     + Removed:
       - uses-dh-python-with-no-pycompat
 
@@ -14,6 +15,7 @@ lintian (2.5.1) UNRELEASED; urgency=low
   * checks/fields{,.desc}:
     + [NT] Allow "all" and "any" to appear together in the Architecture
       field of a .dsc file.  (Closes: #626775)
+    + [NT] Added illegal-multi-arch-value.  (Closes: #616493)
   * checks/files:
     + [NT] Fixed two misnamed udeb tags, which lead to an internal
       error if triggered.  Thanks to Guillem Jover for the report.
