@@ -2,7 +2,7 @@
 # be overridden (nonfatal tags).  It is based on the data file retrieved from
 # http://ftp-master.debian.org/static/lintian.tags
 #
-# Last updated: 2011-01-26
+# Last updated: 2011-06-05
 
 arch-dependent-file-in-usr-share
 arch-independent-package-contains-binary-or-object
@@ -12,8 +12,10 @@ control-interpreter-without-depends
 copyright-contains-dh_make-todo-boilerplate
 dir-or-file-in-var-www
 embedded-library
+install-info-used-in-maintainer-script
 missing-build-dependency
 missing-dependency-on-libc
+missing-pre-dependency-on-multiarch-support
 mknod-in-maintainer-script
 no-shlibs-control-file
 non-etc-file-marked-as-conffile
