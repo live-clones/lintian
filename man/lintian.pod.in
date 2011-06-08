@@ -332,6 +332,11 @@ Read the configuration from configfile rather than the default
 locations.  This option overrides the B<LINTIAN_CFG> environment
 variable.
 
+=item B<--no-cfg>
+
+Do not read any configuration file.  This option overrides the
+B<--cfg> above.
+
 =item B<--dist> distdir
 
 Scan for packages in the I<distdir> directory.  (See the L</FILES>

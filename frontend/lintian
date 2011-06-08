@@ -60,6 +60,7 @@ our $OPT_LINTIAN_AREA = '';	#string for the --area option
 # These options can also be used via default or environment variables
 our $LINTIAN_CFG = '';		#config file to use
 our $LINTIAN_ROOT;		#location of the lintian modules
+my $no_conf = 0;                #flag for --no-cfg
 my %opt;                        #hash of some flags from cmd or cfg
 my %conf_opt;                   #names of options set in the cfg file
 
@@ -173,6 +174,7 @@ Configuration options:
     --area AREA               scan packages in this archive area (e.g. main)
     --archivedir ARCHIVEDIR   location of Debian archive to scan for packages
     --cfg CONFIGFILE          read CONFIGFILE for configuration
+    --no-cfg CONFIGFILE       do not read any CONFIGFILE
     --dist DIST               scan packages in this distribution (e.g. sid)
     --lab LABDIR              use LABDIR as permanent laboratory
     --root ROOTDIR            use ROOTDIR instead of /usr/share/lintian
@@ -424,6 +426,7 @@ my %opthash = (			# ------------------ actions
 
 	       # ------------------ configuration options
 	       'cfg=s' => \$LINTIAN_CFG,
+	       'no-cfg' => \$no_conf,
 	       'lab=s' => \$OPT_LINTIAN_LAB,
 	       'archivedir=s' => \$OPT_LINTIAN_ARCHIVEDIR,
 	       'dist=s' => \$OPT_LINTIAN_DIST,
@@ -504,15 +507,17 @@ if ($> == 0 and not $allow_root) {
 
 # search for configuration file if it was not set with --cfg
 # do not search the default locations if it was set.
-if ($LINTIAN_CFG) {
-} elsif (exists $ENV{'LINTIAN_CFG'} &&
-	 -f ($LINTIAN_CFG = $ENV{'LINTIAN_CFG'})) {
-} elsif (-f ($LINTIAN_CFG = $LINTIAN_ROOT . '/lintianrc')) {
-} elsif (exists $ENV{'HOME'} &&
-	 -f ($LINTIAN_CFG = $ENV{'HOME'} . '/.lintianrc')) {
-} elsif (-f ($LINTIAN_CFG = '/etc/lintianrc')) {
-} else {
-    undef $LINTIAN_CFG;
+unless ($no_conf) {
+    if ($LINTIAN_CFG) {
+    } elsif (exists $ENV{'LINTIAN_CFG'} &&
+	     -f ($LINTIAN_CFG = $ENV{'LINTIAN_CFG'})) {
+    } elsif (-f ($LINTIAN_CFG = $LINTIAN_ROOT . '/lintianrc')) {
+    } elsif (exists $ENV{'HOME'} &&
+	     -f ($LINTIAN_CFG = $ENV{'HOME'} . '/.lintianrc')) {
+    } elsif (-f ($LINTIAN_CFG = '/etc/lintianrc')) {
+    } else {
+	undef $LINTIAN_CFG;
+    }
 }
 
 use constant VARS => qw(LAB ARCHIVEDIR DIST AREA ARCH);
