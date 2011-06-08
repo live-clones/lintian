@@ -78,6 +78,10 @@ lintian (2.5.1) UNRELEASED; urgency=low
       - Explicitly depends on bzip2 to always support bz2 source packages.
       - Added xz-utils as suggests - needed for .xz source packages.
 
+  * frontend/lintian:
+    + [NT] Allow some options to be put into the lintianrc file.
+      (Closes: #460350)
+
   * lib/Lintian/Tags.pm:
     + [NT] Fixed a flaw in logic that gave incorrect results for
       architecture dependent overrides.  Thanks to Andreas Beckmann for
