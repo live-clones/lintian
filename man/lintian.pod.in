@@ -248,9 +248,11 @@ configuration file.
 
 =item B<-m>, B<--md5sums>, B<--checksums>
 
-Check checksums when processing a .changes file.  Normally, Lintian
-only checks the checksums for .dsc files when processing a .changes
-file.
+This has become redundant in lintian 2.5.1 and may be removed in a
+later release.
+
+This option used to control whether Lintian would verify checksums
+in changes files.  As of 2.5.1, Lintian always does this.
 
 =item B<-o>, B<--no-override>
 

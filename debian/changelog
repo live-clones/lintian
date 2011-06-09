@@ -17,6 +17,8 @@ lintian (2.5.1) UNRELEASED; urgency=low
   * checks/debhelper{,.desc}:
     + [NT] Recognise that dh_python and dh_pycentral are now obsolete.
       (Closes: #496902, #541978)
+  * checks/changes-file:
+    + [NT] Always verify the checksums of changes-files.
   * checks/copyright-file:
     + [NT] Extended current dh_make template checks.  Thanks to
       Nelson A. de Oliveira for the report and investigative work.
@@ -86,12 +88,19 @@ lintian (2.5.1) UNRELEASED; urgency=low
       (Closes: #460350)
     + [NT] Added --no-cfg option that can be specified if no config
       file should be read.
+    + [NT] Deprecated --checksums (also known as --md5sums and -m).
+      Lintian will now always verify the checksums in changes files.
+      The options will be accepted with a warning for now, but may
+      be removed in a later release.  (Closes: #629453)
 
   * lib/Lintian/Tags.pm:
     + [NT] Fixed a flaw in logic that gave incorrect results for
       architecture dependent overrides.  Thanks to Andreas Beckmann for
       the report and the patch.  (Closes: #626587)
 
+  * man/lintian.pod.in:
+    + [NT] Mentioned that --checksums and aliases are deprecated.
+  
   * unpack/list-srcpkg:
     + [ADB] Don't rely on the order of fields in the Sources file.  The
       files produced by the Debian archive no longer follow the order

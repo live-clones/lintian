@@ -48,7 +48,6 @@ my $debug = 0;
 my $check_everything = 0;	#flag for -a|--all switch
 my $lintian_info = 0;		#flag for -i|--info switch
 our $ftpmaster_tags = 0;	#flag for -F|--ftp-master-rejects switch
-my $check_checksums = 0;	#flag for -m|--md5sums|--checksums switch
 my $allow_root = 0;		#flag for --allow-root switch
 my $keep_lab = 0;		#flag for --keep-lab switch
 my $packages_file = 0;		#string for the -p option
@@ -162,7 +161,6 @@ Behaviour options:
     -I, --display-info        display "I:" tags (normally suppressed)
     --keep-lab                keep lab after run, even if temporary
     -L, --display-level       display tags with the specified level
-    -m, --md5sums, --checksums check checksums when processing a .changes file
     -o, --no-override         ignore overrides
     --pedantic                display "P:" tags (normally suppressed)
     --show-overrides          output tags that have been overriden
@@ -352,6 +350,12 @@ sub record_display_source {
     $display_source{$_[1]} = 1;
 }
 
+# Process deprecated flags
+sub deprecated{
+    print STDERR "warning: $_[0] is deprecated and may be removed\n";
+    print STDERR "in a future Lintian release.\n";
+}
+
 # Process display-info and display-level options in cfg files
 #  - dies if display-info and display-level are used together
 #  - adds the relevant display level unless the command-line
@@ -415,7 +419,7 @@ my %opthash = (			# ------------------ actions
 	       'show-overrides' => \$opt{'show-overrides'},
 	       'color=s' => \$opt{'color'},
 	       'unpack-info|U=s' => \&record_unpack_info,
-	       'checksums|md5sums|m' => \$check_checksums,
+	       'checksums|md5sums|m' => \&deprecated,
 	       'allow-root' => \$allow_root,
 	       'fail-on-warnings' => \$opt{'fail-on-warnings'},
 	       'keep-lab' => \$keep_lab,
