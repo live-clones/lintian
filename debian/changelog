@@ -21,8 +21,7 @@ lintian (2.5.1) UNRELEASED; urgency=low
     + [NT] Always verify the checksums of changes-files.
   * checks/copyright-file:
     + [NT] Extended current dh_make template checks.  Thanks to
-      Nelson A. de Oliveira for the report and investigative work.
-      (Closes: #598412)
+      Nelson A. de Oliveira for the patch.  (Closes: #598412)
   * checks/fields{,.desc}:
     + [NT] Allow "all" and "any" to appear together in the Architecture
       field of a .dsc file.  (Closes: #626775)

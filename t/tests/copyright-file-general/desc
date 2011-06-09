@@ -25,4 +25,5 @@ Test-For:
  copyright-should-refer-to-common-license-file-for-lgpl
  copyright-without-copyright-notice
  debian-copyright-file-uses-obsolete-national-encoding
+ helper-templates-in-copyright
  old-style-copyright-file
