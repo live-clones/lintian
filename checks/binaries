@@ -113,6 +113,9 @@ our %EMBEDDED_LIBRARIES = (
 	'openjpeg'	=> qr'tcd_decode: incomplete bistream',
 	'tinyxml'	=> qr'Error when TiXmlDocument added to document',
 	'libpcap'	=> qr'(?:pcap_activate: The "any" device isn\'t supported|corrupted frame on kernel ring mac offset)',
+	'glee'		=> qr'Extension name exceeds 1023 characters.',
+	'glew'		=> qr'Missing GL version',
+	'libtheora'	=> qr'Xiph.Org libtheora ',
 );
 
 sub run {

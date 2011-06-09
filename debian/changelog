@@ -11,6 +11,9 @@ lintian (2.5.1) UNRELEASED; urgency=low
     + Removed:
       - uses-dh-python-with-no-pycompat
 
+  * checks/binaries:
+    + [NT] Applied patch from Paul Wise to detect binaries embeddeding
+      glee, glew and libtheora.  (Closes: #629288)
   * checks/debhelper{,.desc}:
     + [NT] Recognise that dh_python and dh_pycentral are now obsolete.
       (Closes: #496902, #541978)
