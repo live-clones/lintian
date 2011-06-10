@@ -729,7 +729,7 @@ foreach my $file (@{$info->sorted_index}) {
 	}
     }
 
-    if ($pkg !~ m/^libc[0-9]/o && $file =~ m,^(?:usr/)?lib/([^/]+)/lib[^/]+(?:-\d[^/]*\.so|\.so\.[^/]+)$,o) {
+    if ($type ne 'udeb' && $pkg !~ m/^libc[0-9]/o && $file =~ m,^(?:usr/)?lib/([^/]+)/lib[^/]+(?:-\d[^/]*\.so|\.so\.[^/]+)$,o) {
 	my $subdir = $1;
 	$TRIPLETS = Lintian::Data->new('files/triplets', '\s+')
 	    unless defined($TRIPLETS);
