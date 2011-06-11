@@ -32,8 +32,11 @@ lintian (2.5.1) UNRELEASED; urgency=low
       (Closes: #628754)
     + [NT] Added bad-perm-for-file-in-etc-sudoers.d tag.
       (Closes: #588831)
-    + [CW] Don't issue missing-pre-dependency-on-multiarch-support for
+    + [CW] Do not issue missing-pre-dependency-on-multiarch-support for
       udebs.
+    + [NT] Limit missing-pre-dependency-on-multiarch-support to real
+      files only.  Previously it would also check symlinks.
+      (Closes: #629648)
   * checks/java{,.desc}:
     + [NT] Sort the jar files by name, so they are checked in the same
       order.
