@@ -272,7 +272,7 @@ foreach my $file (@{$info->sorted_index}) {
     }
 
     if (!($index_info->{uid} < 100 || $index_info->{uid} == 65_534
-	  || ($index_info->{uid} >= 60000 && $index_info->{uid} < 65_000))
+	  || ($index_info->{uid} >= 60_000 && $index_info->{uid} < 65_000))
 	|| !($index_info->{gid} < 100 || $index_info->{gid} == 65_534
 	     || ($index_info->{gid} >= 60_000 && $index_info->{gid} < 65_000))) {
 	tag 'wrong-file-owner-uid-or-gid', $file, $index_info->{uid} . '/' . $index_info->{gid};
@@ -744,19 +744,19 @@ foreach my $file (@{$info->sorted_index}) {
     #  skip any file installed inside a __pycache__ directory
     #  - we have a separate check for that directory.
     if ($file =~ m,\.py[co]$,o && $file !~ m,/__pycache__/,o) {
-	tag "package-installs-python-bytecode", "$file";
+	tag "package-installs-python-bytecode", $file;
     }
 
     # ---------------- __pycache__ (directory for pyc/pyo files)
     if ($index_info->{type} =~ m/^d/o && $file =~ m,/__pycache__/,o){
-	tag "package-installs-python-pycache-dir", "$file";
+	tag 'package-installs-python-pycache-dir', $file;
     }
 
     # ---------------- .egg (python egg files)
     if ($file =~ m,\.egg$,o && 	($file =~ m,usr/lib/python\d+(?:\.\d+/),o ||
 				 $file =~ m,usr/lib/pyshared,o ||
 				 $file =~ m,usr/share/,o)){
-	tag "package-installs-python-egg", "$file";
+	tag 'package-installs-python-egg', $file;
     }
 
     # ---------------- /usr/lib/site-python
