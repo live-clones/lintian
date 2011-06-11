@@ -46,6 +46,9 @@ lintian (2.5.1) UNRELEASED; urgency=low
       a file or a symlink in the package itself, then it is also okay.
     + [NT] Allow maven plugins to be without classpaths.
       (Closes: #629056)
+  * checks/md5sums.desc:
+    + [ADB] Drop references to obsolete debstd.  Thanks to Steve Langasek
+      for the pointer.
   * checks/rules:
     + [NT] Removed code for handling packages with dh_python.
     + [NT] Fixed the code for determining Build-Depends for python
