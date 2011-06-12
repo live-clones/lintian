@@ -1,0 +1,21 @@
+Source: {$srcpkg}
+Priority: extra
+Section: libs
+Maintainer: {$author}
+Standards-Version: {$standards_version}
+Build-Depends: debhelper (>= 7.0.50~)
+
+Package: libbasic2
+Architecture: any
+Pre-Depends: $\{misc:Pre-Depends\}, multiarch-support
+Depends: $\{misc:Depends\}, $\{shlibs:Depends\}
+Description: {$description}
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.
+ .
+ Note there is an explicitly pre-depends on multiarch-support, since
+ older versions of debhelper might not use it yet.  dpkg-dev will
+ remove the duplicate entry (if any).
+

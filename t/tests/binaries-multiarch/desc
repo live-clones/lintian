@@ -1,8 +1,8 @@
 Testname: binaries-multiarch
 Sequence: 6000
 Version: 1.0
-Description: Multiarch-related tests but not multiarch itself
+Description: Test of a correct multiarch package
 Architecture: i386 amd64
-Test-For:
+Test-Against:
  triplet-dir-and-architecture-mismatch
  missing-pre-dependency-on-multiarch-support

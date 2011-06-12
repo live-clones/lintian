@@ -14,6 +14,8 @@ lintian (2.5.1) UNRELEASED; urgency=low
   * checks/binaries:
     + [NT] Applied patch from Paul Wise to detect binaries embeddeding
       glee, glew and libtheora.  (Closes: #629288)
+    + [NT] Also consider multiarch dirs when looking for public shared
+      libraries.  (Closes: #630164)
   * checks/debhelper{,.desc}:
     + [NT] Recognise that dh_python and dh_pycentral are now obsolete.
       (Closes: #496902, #541978)
@@ -75,10 +77,15 @@ lintian (2.5.1) UNRELEASED; urgency=low
       instead of dpkg-source, if the latter is not present.
       (Closes: #626476)
 
+  * data/binaries/multiarch-dirs:
+    + [NT] New file - maps architectures to multiarch dirs.
   * data/fields/{perl-provides,virtual-packages}:
     + [NT] Refreshed.  (Closes: #627082, #627431)
   * data/output/ftp-master-*:
     + [NT] Refreshed.
+  * data/shared-libs/ldconfig-dirs:
+    + [NT] Updated ldconfig path for i386 multiarch paths.  Thanks to
+      Raphaël Hertzog for the reminder.
   * data/spelling/corrections-multiword:
     + [CW] Remove the "requires to" correction; it has too many common
       false positives, especially involving relative clauses.

@@ -27,7 +27,7 @@ usr/X11R6/lib
 # See Bug#469301 and Bug#464796 for more details.
 lib/arm-linux-gnu
 lib/arm-linux-gnueabi
-lib/i486-linux-gnu
+lib/i386-linux-gnu
 lib/hppa-linux-gnu
 lib/m68k-linux-gnu
 lib/mips-linux-gnu
@@ -38,7 +38,7 @@ lib/sparc-linux-gnu
 lib/x86_64-linux-gnu
 usr/lib/arm-linux-gnu
 usr/lib/arm-linux-gnueabi
-usr/lib/i486-linux-gnu
+usr/lib/i386-linux-gnu
 usr/lib/hppa-linux-gnu
 usr/lib/m68k-linux-gnu
 usr/lib/mips-linux-gnu

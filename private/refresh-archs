@@ -66,3 +66,24 @@ done
 } | sort >> "$f"
 
 mv "$f" "$1"/files/triplets
+
+### Multiarch dirs ###
+
+f="$(mktemp)"
+
+cat > "$f" <<EOF
+# List of "Multiarch dirs" relationships as provided by
+# dpkg-architecture - arch -> dir mapping
+# Last updated: $(date -u +'%Y-%m-%d')
+# With: $dpkg_version
+
+EOF
+
+{ # run this in a subshell to avoid multiple fd redirections
+for arch in $(dpkg-architecture -L); do
+    triplet="$(dpkg-architecture -a"$arch" -qDEB_HOST_MULTIARCH 2>/dev/null)"
+    printf "%s %s\n" "$arch" "$triplet"
+done
+} | sort >> "$f"
+
+mv "$f" "$1"/binaries/multiarch-dirs
