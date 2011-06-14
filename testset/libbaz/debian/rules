@@ -30,15 +30,9 @@ binary-correct:
 	cp -a libbaz2.so.* debian/libbaz2/usr/lib
 	chmod a-x debian/libbaz2/usr/lib/*
 
-	# Also install in the multiarch path.
-	install -d debian/ia32-libbaz2/usr/lib/i486-linux-gnu
-	cp -a libbaz2.so.* debian/ia32-libbaz2/usr/lib/i486-linux-gnu
-	chmod a-x debian/ia32-libbaz2/usr/lib/i486-linux-gnu/*
-
 	# General stuff that is tested in other testsets:
-	dh_installdocs -plibbaz2 -plibbaz2-dev -plibbaz2-dbg -pia32-libbaz2
-	dh_installchangelogs -pia32-libbaz2
-	dh_compress -plibbaz2 -plibbaz2-dev -plibbaz2-dbg -pia32-libbaz2
+	dh_installdocs -plibbaz2 -plibbaz2-dev -plibbaz2-dbg
+	dh_compress -plibbaz2 -plibbaz2-dev -plibbaz2-dbg
 
 	# Mess up the libbaz2 changelog files to test the symlink handling.
 	ln -s /usr/share/doc/lintian/changelog.gz \
@@ -49,16 +43,14 @@ binary-correct:
 
 	# Okay, if either line is omitted, it should be noted
 	dh_strip --dbg-package=libbaz2-dbg -plibbaz2 -plibbaz2-dev
-	dh_strip -pia32-libbaz2
-	dh_makeshlibs -plibbaz2 -plibbaz2-dev -plibbaz2-dbg -pia32-libbaz2
-	dh_shlibdeps -plibbaz2 -plibbaz2-dev -plibbaz2-dbg -pia32-libbaz2
+	dh_makeshlibs -plibbaz2 -plibbaz2-dev -plibbaz2-dbg
+	dh_shlibdeps -plibbaz2 -plibbaz2-dev -plibbaz2-dbg
 
 	# and again, regular packaging stuff
-	dh_installdeb -plibbaz2 -plibbaz2-dev -plibbaz2-dbg -pia32-libbaz2
+	dh_installdeb -plibbaz2 -plibbaz2-dev -plibbaz2-dbg
 	echo udeb: libbaz2 1.0 libbaz2 >> debian/libbaz2/DEBIAN/shlibs
-	dh_gencontrol -plibbaz2 -plibbaz2-dev -plibbaz2-dbg -pia32-libbaz2
-	dh_md5sums -pia32-libbaz2
-	dh_builddeb -plibbaz2 -plibbaz2-dev -plibbaz2-dbg -pia32-libbaz2
+	dh_gencontrol -plibbaz2 -plibbaz2-dev -plibbaz2-dbg
+	dh_builddeb -plibbaz2 -plibbaz2-dev -plibbaz2-dbg
 
 # and the incorrect one
 binary-arch: build-arch binary-correct
