@@ -1,4 +1,4 @@
-Last generated 2011-06-02
+Last generated 2011-06-14
 
 The following tags are not tested by the test suite:
 
@@ -167,7 +167,6 @@ binaries binary-with-bad-dynamic-table
 binaries debug-file-should-use-detached-symbols
 binaries missing-dependency-on-libc
 binaries missing-dependency-on-perlapi
-binaries missing-depends-line
 binaries package-name-doesnt-match-sonames
 binaries shared-lib-without-dependency-information
 binaries statically-linked-binary
@@ -470,7 +469,6 @@ libbaz
   debug-package-should-be-priority-extra
   ldconfig-symlink-missing-for-shlib
   missing-dependency-on-perlapi
-  missing-depends-line
   package-name-doesnt-match-sonames
   postinst-should-not-set-usr-doc-link
 
