@@ -1,0 +1,10 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@
+
+override_dh_gencontrol:
+	# Remove the shlib:Depends since it will contain libc
+	sed -i '/shlib:Depends=/ d' debian/libbasic2.substvars
+	echo "shlib:depends=" >> debian/libbasic2.substvars
+	dh_gencontrol

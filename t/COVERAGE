@@ -165,7 +165,6 @@ The following tags are only tested by the legacy test suite:
 binaries binary-has-unneeded-section
 binaries binary-with-bad-dynamic-table
 binaries debug-file-should-use-detached-symbols
-binaries missing-dependency-on-libc
 binaries missing-dependency-on-perlapi
 binaries package-name-doesnt-match-sonames
 binaries shared-lib-without-dependency-information
@@ -416,7 +415,6 @@ debug
   debug-file-should-use-detached-symbols
   duplicate-entry-in-symbols-control-file
   invalid-template-id-in-symbols-file
-  missing-dependency-on-libc
   shared-lib-without-dependency-information
   sharedobject-in-library-directory-missing-soname
   symbols-declared-but-not-shlib
