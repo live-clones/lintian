@@ -10,6 +10,7 @@ lintian (2.5.1) UNRELEASED; urgency=low
       - non-empty-dependency_libs-in-la-file
     + Removed:
       - uses-dh-python-with-no-pycompat
+      - ldconfig-symlink-before-shlib-in-deb
 
   * checks/binaries:
     + [NT] Applied patch from Paul Wise to detect binaries embeddeding
@@ -67,6 +68,7 @@ lintian (2.5.1) UNRELEASED; urgency=low
       (Closes: #605012)
   * checks/shared-libs{,.desc}:
     + [NT] Added non-empty-dependency_libs-in-la-file.  (Closes: #628673)
+    + [NT] Removed ldconfig-symlink-before-shlib-in-deb.
 
   * collection/java:
     + [NT] Fixed a regex that would accept any file ending with "jar" to

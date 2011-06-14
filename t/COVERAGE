@@ -150,7 +150,6 @@ scripts maintainer-script-needs-depends-on-update-inetd
 scripts mknod-in-maintainer-script
 
 shared-libs dev-pkg-without-shlib-symlink
-shared-libs ldconfig-symlink-before-shlib-in-deb
 shared-libs ldconfig-symlink-is-not-a-symlink
 shared-libs ldconfig-symlink-referencing-wrong-file
 shared-libs non-dev-pkg-with-shlib-symlink

@@ -223,11 +223,6 @@ for my $shlib_file (keys %SONAME) {
 	    } else {
 		tag 'ldconfig-symlink-is-not-a-symlink', "$shlib_file $link_file";
 	    }
-
-	    # symlink after shlib?
-	    #if ($info->index->{$link_file} < $info->index->{$shlib_file}) {
-	    #    tag "ldconfig-symlink-before-shlib-in-deb", "$link_file";
-	    #}
 	}
     }
 

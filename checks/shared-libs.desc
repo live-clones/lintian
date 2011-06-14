@@ -69,13 +69,6 @@ Info: The package should not only include the shared library itself, but also
  library matches the info in the shlibs file.
 Ref: policy 8.1
 
-Tag: ldconfig-symlink-before-shlib-in-deb
-Severity: important
-Certainty: certain
-Info: In the package contents list, the shared library has to come before
- any symbolic links referencing the shared library.
-Ref: policy 8.1
-
 Tag: dev-pkg-without-shlib-symlink
 Severity: normal
 Certainty: certain
