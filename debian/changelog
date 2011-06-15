@@ -1,4 +1,4 @@
-lintian (2.5.1) UNRELEASED; urgency=low
+lintian (2.5.1) unstable; urgency=low
 
   * Summary of tag changes:
     + Added:
@@ -101,6 +101,8 @@ lintian (2.5.1) UNRELEASED; urgency=low
         fallback.
       - Explicitly depends on bzip2 to always support bz2 source packages.
       - Added xz-utils as suggests - needed for .xz source packages.
+  * debian/rules:
+    + [NT] Added recommended targets build-arch and build-indep.
 
   * doc/lintian.xml:
     + [NT] Clarify that the package type is not listed in the output for
@@ -136,7 +138,7 @@ lintian (2.5.1) UNRELEASED; urgency=low
       which the code previously assumed, and we shouldn't assume that
       the order won't change again in the future.  (Closes: #626597)
 
- -- Adam D. Barratt <adam@adam-barratt.org.uk>  Fri, 13 May 2011 20:20:51 +0100
+ -- Niels Thykier <niels@thykier.net>  Wed, 15 Jun 2011 23:05:28 +0200
 
 lintian (2.5.0) unstable; urgency=low
 
