@@ -247,7 +247,7 @@ sub record_check_tags {
 sub record_check_tags_from_file {
     my ($option, $name) = @_;
     open(my $file, '<', $name)
-	or fail("failed to open $name: $!");
+	or die("failed to open $name: $!");
     my @tags;
     for my $line (<$file>) {
 	$line =~ s/^\s+//;
@@ -274,7 +274,7 @@ sub record_suppress_tags {
 sub record_suppress_tags_from_file {
     my ($option, $name) = @_;
     open(my $file, '<', $name)
-	or fail("failed to open $name: $!");
+	or die("failed to open $name: $!");
     for my $line (<$file>) {
 	$line =~ s/^\s+//;
 	$line =~ s/\s+$//;

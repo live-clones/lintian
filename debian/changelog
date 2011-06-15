@@ -111,6 +111,9 @@ lintian (2.5.1) UNRELEASED; urgency=low
       Lintian will now always verify the checksums in changes files.
       The options will be accepted with a warning for now, but may
       be removed in a later release.  (Closes: #629453)
+    + [NT] Fixed an issue where fail was called before it was
+      available.  Thanks to Toby Corkindale for the report.
+      (Closes: #630560, LP: #797553)
 
   * lib/Lintian/Tags.pm:
     + [NT] Fixed a flaw in logic that gave incorrect results for
