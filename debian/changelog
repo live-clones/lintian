@@ -1,5 +1,9 @@
 lintian (2.5.2) UNRELEASED; urgency=low
 
+  * checks/binaries:
+    + [NT] Added lib/${MULTIARCH_DIR} to the list of paths to
+      check for public shared libraries.  Thanks to Sven Joachim
+      for the report and the patch.  (Closes: #630698)
   * checks/circular-deps.desc:
     + [NT] Fixed typo; thanks to Nicolás Alvarez for the report
       and patch.  (Closes: #630925)

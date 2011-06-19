@@ -189,6 +189,7 @@ sub lib_soname_path {
 	return 1 if $path =~ m%^(?:\.?/)?lib/[^/]+$%;
 	return 1 if $path =~ m%^(?:\.?/)?usr/lib/[^/]+$%;
 	return 1 if $path =~ m%^(?:\.?/)?usr/X11R6/lib/[^/]+$%;
+	return 1 if defined $dir && $path =~ m%(?:\.?/)?lib/$dir/[^/]++$%;
 	return 1 if defined $dir && $path =~ m%(?:\.?/)?usr/lib/$dir/[^/]++$%;
     }
     return 0;
