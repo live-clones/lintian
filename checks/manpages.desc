@@ -25,7 +25,7 @@ Info: Symbolic links to the undocumented(7) manual page may be provided
  .
  For help with writing manual pages, refer to the Man-Page-HOWTO at
  http://www.schweikhardt.net/man_page_howto.html, the examples created
- by <tt>debmake</tt> or <tt>dh_make</tt>, or the
+ by <tt>dh_make</tt>, or the
  <tt>/usr/share/doc/man-db/examples</tt> directory.
  If the package provides <tt>--help</tt> output, you might want to use
  the <tt>help2man</tt> utility to generate a simple manual page.

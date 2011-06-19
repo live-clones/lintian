@@ -18,7 +18,11 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-build:
+build-arch:
+
+build-indep:
+
+build: build-arch build-indep
 
 binary-arch:
 
@@ -45,4 +49,4 @@ clean::
 # Test requiring perl Build-Depends for manual perl invocations.
 	[ ! -f Build ] || $(PERL) Build distclean
 
-.PHONY: build binary-arch binary-indep binary clean
+.PHONY: build-arch build-indep build binary-arch binary-indep binary clean

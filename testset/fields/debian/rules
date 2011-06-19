@@ -2,7 +2,11 @@
 
 tmp=debian/tmp
 
-build:
+build-arch:
+
+build-indep:
+
+build: build-arch build-indep
 
 binary-arch:
 
@@ -26,4 +30,4 @@ binary: binary-arch binary-indep
 clean:
 	rm -rf debian/files $(tmp) debian/substvars
 
-.PHONY: build binary-arch binary-indep binary clean
+.PHONY: build-arch build-indep build binary-arch binary-indep binary clean

@@ -267,26 +267,31 @@ if (m,(?:under )?(?:the )?(?:same )?(?:terms )?as Perl itself,i &&
 
 # Checks for various packaging helper boilerplate.
 
-if (m,\<put author[\'\(]s\)? name and email here\>,) {
+if (m,\<put author[\'\(]s\)? name and email here\>,o) {
     tag 'helper-templates-in-copyright';
 }
-if (m,\<Copyright \(C\) YYYY Name OfAuthor\>,) {
+if (m,\<Copyright \(C\) YYYY Name OfAuthor\>,o or
+    m,Author\(s\),o or
+    m,\<years\>,o or
+    m,\<special license\>,o or
+    m,\<likewise for another author\>,o) {
     tag 'helper-templates-in-copyright';
 }
 
-if (m/This copyright info was automatically extracted/) {
+if (m/This copyright info was automatically extracted/o) {
     tag 'copyright-contains-dh-make-perl-boilerplate';
 }
 
-if (m,url://example\.com,) {
+if (m,url://,o) {
     tag 'copyright-has-url-from-dh_make-boilerplate';
 }
 
-if (m{\# Please also look if there are files or directories which have a\n\# different copyright/license attached and list them here\.}) {
+if (m{\# Please also look if there are files or directories which have a\n\# different copyright/license attached and list them here\.}o, or
+    m{\# If you want to use GPL v2 or later for the /debian/\* files use\n\# the following clauses, or change it to suit. Delete these two lines}o) {
     tag 'copyright-contains-dh_make-todo-boilerplate';
 }
 
-if (m,The\s+Debian\s+packaging\s+is\s+\(C\)\s+\d+,i) {
+if (m,The\s+Debian\s+packaging\s+is\s+\(C\)\s+\d+,io) {
     tag 'copyright-with-old-dh-make-debian-copyright';
 }
 

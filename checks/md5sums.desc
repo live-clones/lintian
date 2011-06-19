@@ -34,8 +34,8 @@ Info: The md5sum listed for the file does not match the actual file
  contents.
  .
  Usually, this error occurs during the package build process, if the
- <tt>debian/tmp/</tt> directory is touched after <tt>dh_md5sums</tt> or
- <tt>debstd</tt> is run.
+ <tt>debian/tmp/</tt> directory is touched after <tt>dh_md5sums</tt>
+ is run.
 
 Tag: md5sums-lists-nonexisting-file
 Severity: important
@@ -44,13 +44,8 @@ Info: The md5sums control file lists a file which is not included in the
  package.
  .
  Usually, this error occurs during the package build process, if the
- <tt>debian/tmp/</tt> directory is touched after <tt>dh_md5sums</tt> or
- <tt>debstd</tt> is run.
- .
- If all the files in the <tt>DEBIAN/</tt> subdirectory are listed
- above, the problem was probably caused by building the package using a
- buggy debstd/debmake. In this case, rebuilding the package with an
- updated debstd should fix the problem.
+ <tt>debian/tmp/</tt> directory is touched after <tt>dh_md5sums</tt>
+ is run.
 
 Tag: file-missing-in-md5sums
 Severity: normal
@@ -59,5 +54,5 @@ Info: The package contains a file which isn't listed in the md5sums control
  file.
  .
  Usually, this error occurs during the package build process, if the
- <tt>debian/tmp/</tt> directory is touched after <tt>dh_md5sums</tt> or
- <tt>debstd</tt> is run.
+ <tt>debian/tmp/</tt> directory is touched after <tt>dh_md5sums</tt>
+ is run.

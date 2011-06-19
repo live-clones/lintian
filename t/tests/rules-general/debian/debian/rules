@@ -6,7 +6,7 @@ DEB_AUTO_UPDATE_DEBIAN_CONTROL = yes
 	dh $@
 
 override_dh_python:
-	dh_python
+	dh_python2
 
 clean:
 	dh_clean

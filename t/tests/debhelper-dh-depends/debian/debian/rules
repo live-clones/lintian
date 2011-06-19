@@ -1,6 +1,9 @@
 #!/usr/bin/make -f
 
-build: build-stamp
+build: build-arch build-indep
+build-arch:
+build-indep: build-stamp
+
 build-stamp:
 	dh_testdir
 	dh_auto_configure

@@ -2,7 +2,9 @@
 
 pkg = $(shell dh_listpackages)
 
-build:
+build: build-indep build-arch
+build-arch:
+build-indep:
 
 clean:
 	dh_testdir
@@ -21,6 +23,8 @@ binary-indep:
 	dh_desktop
 	-dh_dhelp
 	dh_scrollkeeper
+	-dh_python
+	-dh_pycentral
 # Check not warning about deprecated commands in optional portions, but
 # commands that have been toast for a long time are still warned about.
 ifneq "$(LENNY_BACKPORT)" "y"
@@ -37,4 +41,4 @@ endif
 	dh_md5sums
 	dh_builddeb
 
-.PHONY: binary binary-arch binary-indep build clean
+.PHONY: build-arch build-indep build binary binary-arch binary-indep clean

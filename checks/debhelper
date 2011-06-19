@@ -61,8 +61,6 @@ my $level;
 my $seenversiondepends = '0';
 my $compat = 0;
 my $usescdbs = '';
-my $seendhpython = '';
-my $usescdbspython = '';
 my $seendhcleank = '';
 my $overridetargets = 0;
 my %missingbdeps;
@@ -96,6 +94,12 @@ while (<RULES>) {
 	}
 	if ($dhcommand eq 'dh_undocumented') {
 	    tag 'dh_undocumented-is-obsolete', "line $.";
+	}
+	if ($dhcommand eq 'dh_python') {
+	    tag 'dh_python-is-obsolete', "line $.";
+	}
+	if ($dhcommand eq 'dh_pycentral') {
+	    tag 'dh_pycentral-is-obsolete', "line $.";
 	}
 
 	# Don't warn about recently deprecated commands in code that may be
@@ -163,11 +167,6 @@ while (<RULES>) {
 	$overridetargets = 1;
     } elsif (m,^include\s+/usr/share/cdbs/,){
 	$inclcdbs = 1;
-    }
-    if (/^\s+dh_python\s/) {
-        $seendhpython = 1;
-    } elsif (m,^include\s+/usr/share/cdbs/1/class/python-distutils.mk,) {
-        $usescdbspython = 1;
     }
 }
 close RULES;
@@ -373,20 +372,6 @@ if(scalar(@indebfiles)){
 	$otext = ' and 1 other';
     }
     tag 'temporary-debhelper-file', "$f$otext";
-}
-
-# Check for Python policy usage and the required debhelper dependency for
-# dh_python policy support.  Assume people who intentionally set pycompat to
-# something earlier than 2 know what they're doing.  Skip CDBS packages since
-# CDBS creates pycompat internally at build time.
-if ($seendhpython && !$usescdbspython) {
-    if (open(PYCOMPAT, '<', 'debfiles/pycompat')) {
-	local $/;
-	my $pycompat = <PYCOMPAT>;
-	close PYCOMPAT;
-    } else {
-	tag 'uses-dh-python-with-no-pycompat';
-    }
 }
 
 }

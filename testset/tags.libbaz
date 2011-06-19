@@ -15,7 +15,6 @@ E: libbaz1: postinst-must-call-ldconfig usr/lib/libfoo2.so.1.0.3b
 E: libbaz1: sharedobject-in-library-directory-missing-soname usr/lib/libbaz1.so.1.0.3b
 E: libbaz1: shlib-missing-in-control-file libbaz2 1.0 for usr/lib/libfoo2.so.1.0.3b
 E: libbaz1: shlib-with-executable-bit usr/lib/libfoo2.so.1.0.3b 0755
-E: libbaz1: shlib-with-non-pic-code usr/lib/libbaz3.so.1.0.3b
 E: libbaz1: symbols-declared-but-not-shlib libbaz 2
 E: libbaz1: symbols-file-contains-current-version-with-debian-revision on symbol pw
 E: libbaz1: unstripped-binary-or-object usr/lib/libbaz1.so.1.0.3b
@@ -25,7 +24,6 @@ E: libbaz2-dbg: debian-changelog-file-missing
 E: libbaz2-dev: changelog-file-not-compressed changelog
 E: libbaz2-dev: debian-changelog-file-missing-or-wrong-name
 E: libbaz2: debian-changelog-file-missing-or-wrong-name
-I: ia32-libbaz2: no-symbols-control-file usr/lib/i486-linux-gnu/libbaz2.so.1.0.3b
 I: libbaz source: missing-debian-source-format
 I: libbaz1-dev: binary-has-unneeded-section usr/lib/perl5/auto/Foo/Foo.so .comment
 I: libbaz1-dev: no-md5sums-control-file
@@ -37,17 +35,14 @@ I: libbaz2-dev: no-md5sums-control-file
 I: libbaz2: no-md5sums-control-file
 I: libbaz2: no-symbols-control-file usr/lib/libbaz2.so.1.0.3b
 N: 4 tags overridden (4 warnings)
-W: ia32-libbaz2: new-package-should-close-itp-bug
 W: libbaz source: ancient-standards-version 3.2.1 (current is 3.9.2)
 W: libbaz source: changelog-should-mention-nmu
-W: libbaz source: debhelper-but-no-misc-depends ia32-libbaz2
 W: libbaz source: debhelper-but-no-misc-depends libbaz1
 W: libbaz source: debhelper-but-no-misc-depends libbaz1-dev
 W: libbaz source: debhelper-but-no-misc-depends libbaz2
 W: libbaz source: debhelper-but-no-misc-depends libbaz2-dbg
 W: libbaz source: debhelper-but-no-misc-depends libbaz2-dev
 W: libbaz source: native-package-with-dash-version
-W: libbaz source: package-lacks-versioned-build-depends-on-debhelper 6
 W: libbaz source: source-nmu-has-incorrect-version-number 1-1
 W: libbaz source: substvar-source-version-is-deprecated libbaz2-dev
 W: libbaz1-dev: wrong-section-according-to-package-name libbaz1-dev => libdevel
@@ -76,3 +71,4 @@ W: libbaz2-dev: wrong-section-according-to-package-name libbaz2-dev => libdevel
 W: libbaz2: debian-changelog-file-is-a-symlink
 W: libbaz2: package-name-doesnt-match-sonames libbaz2-1.0
 W: libbaz2: symlink-should-be-relative usr/share/doc/libbaz2/changelog.gz /usr/share/doc/lintian/changelog.gz
+X: libbaz2: package-contains-broken-symlink usr/share/doc/libbaz2/changelog.gz /usr/share/doc/lintian/changelog.gz

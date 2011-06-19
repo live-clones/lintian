@@ -56,15 +56,8 @@ my $quiet = 0;			#flag for -q|--quiet switch
 my $debug = 0;
 my $check_everything = 0;	#flag for -a|--all switch
 my $lintian_info = 0;		#flag for -i|--info switch
-our $display_experimentaltags = 0; #flag for -E|--display-experimental switch
-our $display_pedantictags = 0;	#flag for --pedantic switch
 our $ftpmaster_tags = 0;	#flag for -F|--ftp-master-rejects switch
-our $no_override = 0;		#flag for -o|--no-override switch
-our $show_overrides = 0;	#flag for --show-overrides switch
-my $color = 'never';		#flag for --color switch
-my $check_checksums = 0;	#flag for -m|--md5sums|--checksums switch
 my $allow_root = 0;		#flag for --allow-root switch
-my $fail_on_warnings = 0;       #flag for --fail-on-warnings switch
 my $keep_lab = 0;		#flag for --keep-lab switch
 my $packages_file = 0;		#string for the -p option
 our $OPT_LINTIAN_PROFILE = '';  #string for the --profile option
@@ -76,6 +69,9 @@ our $OPT_LINTIAN_AREA = '';	#string for the --area option
 # These options can also be used via default or environment variables
 our $LINTIAN_CFG = '';		#config file to use
 our $LINTIAN_ROOT;		#location of the lintian modules
+my $no_conf = 0;                #flag for --no-cfg
+my %opt;                        #hash of some flags from cmd or cfg
+my %conf_opt;                   #names of options set in the cfg file
 
 my $experimental_output_opts = undef;
 
@@ -176,7 +172,6 @@ Behaviour options:
     -I, --display-info        display "I:" tags (normally suppressed)
     --keep-lab                keep lab after run, even if temporary
     -L, --display-level       display tags with the specified level
-    -m, --md5sums, --checksums check checksums when processing a .changes file
     -o, --no-override         ignore overrides
     --pedantic                display "P:" tags (normally suppressed)
     --show-overrides          output tags that have been overriden
@@ -188,6 +183,7 @@ Configuration options:
     --area AREA               scan packages in this archive area (e.g. main)
     --archivedir ARCHIVEDIR   location of Debian archive to scan for packages
     --cfg CONFIGFILE          read CONFIGFILE for configuration
+    --no-cfg CONFIGFILE       do not read any CONFIGFILE
     --dist DIST               scan packages in this distribution (e.g. sid)
     --lab LABDIR              use LABDIR as permanent laboratory
     --profile X               Use the profile X or use vendor X checks
@@ -263,7 +259,7 @@ sub record_check_tags {
 sub record_check_tags_from_file {
     my ($option, $name) = @_;
     open(my $file, '<', $name)
-	or fail("failed to open $name: $!");
+	or die("failed to open $name: $!");
     my @tags;
     for my $line (<$file>) {
 	$line =~ s/^\s+//;
@@ -290,7 +286,7 @@ sub record_suppress_tags {
 sub record_suppress_tags_from_file {
     my ($option, $name) = @_;
     open(my $file, '<', $name)
-	or fail("failed to open $name: $!");
+	or die("failed to open $name: $!");
     for my $line (<$file>) {
 	$line =~ s/^\s+//;
 	$line =~ s/\s+$//;
@@ -366,6 +362,40 @@ sub record_display_source {
     $display_source{$_[1]} = 1;
 }
 
+# Process deprecated flags
+sub deprecated{
+    print STDERR "warning: $_[0] is deprecated and may be removed\n";
+    print STDERR "in a future Lintian release.\n";
+}
+
+# Process display-info and display-level options in cfg files
+#  - dies if display-info and display-level are used together
+#  - adds the relevant display level unless the command-line
+#    added something to it.
+#  - uses @display_level to track cmd-line appearences of
+#    --display-level/--display-info
+sub cfg_display_level {
+    my ($var, $val) = @_;
+    if ($var eq 'display-info'){
+	die "display-info and display-level may not both appear in the config file.\n"
+	    if $conf_opt{'display-level'};
+
+	return unless $val; # case "display-info=no"
+	push @display_level, [ '+', '>=', 'wishlist' ] unless @display_level;
+    } elsif ($var eq 'display-level'){
+	die "display-info and display-level may not both appear in the config file.\n"
+	    if $conf_opt{'display-info'};
+
+	return if @display_level;
+	$val =~ s/^\s++//;
+	$val =~ s/\s++$//;
+	foreach my $dl (split m/\s++/, $val) {
+	    record_display_level('display-level', $dl);
+	}
+    }
+
+}
+
 # Hash used to process commandline options
 my %opthash = (			# ------------------ actions
 	       'setup-lab|S' => \&record_action,
@@ -389,21 +419,21 @@ my %opthash = (			# ------------------ actions
 	       'quiet|q' => \$quiet,
 
 	       # ------------------ behaviour options
-	       'info|i' => \$lintian_info,
+	       'info|i' => \$opt{'info'},
 	       'display-info|I' => \&display_infotags,
-	       'display-experimental|E' => \$display_experimentaltags,
-	       'pedantic' => \$display_pedantictags,
+	       'display-experimental|E' => \$opt{'display-experimental'},
+	       'pedantic' => \$opt{'pedantic'},
 	       'display-level|L=s' => \&record_display_level,
 	       'display-source=s' => \&record_display_source,
 	       'suppress-tags=s' => \&record_suppress_tags,
 	       'suppress-tags-from-file=s' => \&record_suppress_tags_from_file,
-	       'no-override|o' => \$no_override,
-	       'show-overrides' => \$show_overrides,
-	       'color=s' => \$color,
+	       'no-override|o' => \$opt{'no-override'},
+	       'show-overrides' => \$opt{'show-overrides'},
+	       'color=s' => \$opt{'color'},
 	       'unpack-info|U=s' => \&record_unpack_info,
-	       'checksums|md5sums|m' => \$check_checksums,
+	       'checksums|md5sums|m' => \&deprecated,
 	       'allow-root' => \$allow_root,
-	       'fail-on-warnings' => \$fail_on_warnings,
+	       'fail-on-warnings' => \$opt{'fail-on-warnings'},
 	       'keep-lab' => \$keep_lab,
 
 	       # Note: Ubuntu has (and other derivatives might gain) a
@@ -412,6 +442,7 @@ my %opthash = (			# ------------------ actions
 
 	       # ------------------ configuration options
 	       'cfg=s' => \$LINTIAN_CFG,
+	       'no-cfg' => \$no_conf,
 	       'lab=s' => \$OPT_LINTIAN_LAB,
 	       'archivedir=s' => \$OPT_LINTIAN_ARCHIVEDIR,
 	       'dist=s' => \$OPT_LINTIAN_DIST,
@@ -431,6 +462,19 @@ my %opthash = (			# ------------------ actions
 	       # ------------------ experimental
 	       'exp-output:s' => \$experimental_output_opts,
 	      );
+
+# Options that can appear in the config file
+my %cfghash = (
+	       'color'                => \$opt{'color'},
+	       'display-experimental' => \$opt{'display-experimental'},
+	       'display-info'         => \&cfg_display_level,
+	       'display-level'        => \&cfg_display_level,
+	       'fail-on-warnings'     => \$opt{'fail-on-warnings'},
+	       'info'                 => \$opt{'info'},
+	       'pedantic'             => \$opt{'pedantic'},
+	       'no-override'          => \$opt{'no-override'},
+	       'show-overrides'       => \$opt{'show-overrides'},
+    );
 
 # init commandline parser
 Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
@@ -460,11 +504,6 @@ if (($check_everything or $packages_file) and $#ARGV+1 > 0) {
     undef $packages_file;
 }
 
-# check permitted values for --color
-if ($color and $color !~ /^(?:never|always|auto|html)$/) {
-    die "invalid argument to --color: $color\n";
-}
-
 # check specified action
 $action = 'check' unless $action;
 
@@ -489,15 +528,17 @@ if ($> == 0 and not $allow_root) {
 
 # search for configuration file if it was not set with --cfg
 # do not search the default locations if it was set.
-if ($LINTIAN_CFG) {
-} elsif (exists $ENV{'LINTIAN_CFG'} &&
-	 -f ($LINTIAN_CFG = $ENV{'LINTIAN_CFG'})) {
-} elsif (-f ($LINTIAN_CFG = $LINTIAN_ROOT . '/lintianrc')) {
-} elsif (exists $ENV{'HOME'} &&
-	 -f ($LINTIAN_CFG = $ENV{'HOME'} . '/.lintianrc')) {
-} elsif (-f ($LINTIAN_CFG = '/etc/lintianrc')) {
-} else {
-    undef $LINTIAN_CFG;
+unless ($no_conf) {
+    if ($LINTIAN_CFG) {
+    } elsif (exists $ENV{'LINTIAN_CFG'} &&
+	     -f ($LINTIAN_CFG = $ENV{'LINTIAN_CFG'})) {
+    } elsif (-f ($LINTIAN_CFG = $LINTIAN_ROOT . '/lintianrc')) {
+    } elsif (exists $ENV{'HOME'} &&
+	     -f ($LINTIAN_CFG = $ENV{'HOME'} . '/.lintianrc')) {
+    } elsif (-f ($LINTIAN_CFG = '/etc/lintianrc')) {
+    } else {
+	undef $LINTIAN_CFG;
+    }
 }
 
 use constant VARS => qw(LAB ARCHIVEDIR DIST AREA ARCH PROFILE);
@@ -526,10 +567,47 @@ if ($LINTIAN_CFG) {
 	    }
 	}
 	unless ($found) {
+	    # check if it is a config option
+	    if (m/^\s*([-a-z]+)\s*=\s*(.*\S)\s*$/o){
+		my ($var, $val) = ($1, $2);
+		my $ref = $cfghash{$var};
+		die "Unknown configuration variable $var at line: ${.}.\n"
+		    unless $ref;
+		if (exists $conf_opt{$var}){
+		    print STDERR "Configuration variable $var appears more than once\n";
+		    print STDERR " in $LINTIAN_CFG (line: $.) - Using the first value!\n";
+		    next;
+		}
+		$conf_opt{$var} = 1;
+		$found = 1;
+		if ($val =~ m/^y(?:es)|true$/o){
+		    $val = 1;
+		} elsif ($val =~ m/^no?|false$/o){
+		    $val = 0;
+		}
+		if (ref $ref eq 'SCALAR'){
+		    # Check it was already set
+		    next if defined $$ref;
+		    $$ref = $val;
+		} elsif (ref $ref eq 'CODE'){
+		    $ref->($var, $val);
+		}
+
+	    }
+	}
+	unless ($found) {
 	    die "syntax error in configuration file: $_\n";
 	}
     }
     close(CFG);
+}
+
+# check permitted values for --color / color
+#  - We set the default to 'never' here; because we cannot do
+#    it before the config check.
+$opt{'color'} = 'never' unless defined $opt{'color'};
+if ($opt{'color'} and $opt{'color'} !~ /^(?:never|always|auto|html)$/) {
+    die "The color value must be one of \"never\", \"always\", \"auto\" or \"html\"\n";
 }
 
 # environment variables overwrite settings in conf file:
@@ -624,8 +702,8 @@ if (defined $experimental_output_opts) {
 $Lintian::Output::GLOBAL->verbose($verbose);
 $Lintian::Output::GLOBAL->debug($debug);
 $Lintian::Output::GLOBAL->quiet($quiet);
-$Lintian::Output::GLOBAL->color($color);
-$Lintian::Output::GLOBAL->showdescription($lintian_info);
+$Lintian::Output::GLOBAL->color($opt{'color'});
+$Lintian::Output::GLOBAL->showdescription($opt{'info'});
 
 # Print Debug banner, now that we're finished determining
 # the values and have Lintian::Output available
@@ -641,9 +719,9 @@ debug_msg(1,
     );
 
 our $TAGS = Lintian::Tags->new;
-$TAGS->show_experimental($display_experimentaltags);
-$TAGS->show_pedantic($display_pedantictags);
-$TAGS->show_overrides($show_overrides);
+$TAGS->show_experimental($opt{'display-experimental'});
+$TAGS->show_pedantic($opt{'pedantic'});
+$TAGS->show_overrides($opt{'show-overrides'});
 $TAGS->sources(keys %display_source) if %display_source;
 $TAGS->only(split(/,/, $check_tags)) if defined $check_tags;
 $TAGS->suppress(keys %suppress_tags) if %suppress_tags;
@@ -1030,7 +1108,7 @@ if ($action eq 'unpack') {
 my $map = Lintian::DepMap::Properties->new();
 my $collmap = Lintian::DepMap::Properties->new();
 
-unless ($no_override) {
+unless ($opt{'no-override'}) {
     # add the override-file collection
     $map->add('coll-override-file', {'type' => 'collection', 'name' =>  'override-file'});
     $collmap->add('coll-override-file', {'type' => 'collection', 'name' =>  'override-file'});
@@ -1090,7 +1168,7 @@ foreach my $gname (sort $pool->get_group_names()) {
 
 $TAGS->file_end();
 
-if ($action eq 'check' and not $no_override and not $show_overrides) {
+if ($action eq 'check' and not $opt{'no-override'} and not $opt{'show-overrides'}) {
     my $errors = $overrides{errors} || 0;
     my $warnings = $overrides{warnings} || 0;
     my $info = $overrides{info} || 0;
@@ -1312,7 +1390,7 @@ sub auto_clean_package {
 sub post_pkg_process_overrides{
     my ($pkg_path) = @_;
     # report unused overrides
-    if (not $no_override) {
+    if (not $opt{'no-override'}) {
 	my $overrides = $TAGS->overrides($pkg_path);
 
 	for my $tag (sort keys %$overrides) {
@@ -1332,7 +1410,7 @@ sub post_pkg_process_overrides{
     }
 
     # Report override statistics.
-    if (not $no_override and not $show_overrides) {
+    if (not $opt{'no-override'} and not $opt{'show-overrides'}) {
 	my $stats = $TAGS->statistics($pkg_path);
 	my $errors = $stats->{overrides}{types}{E} || 0;
 	my $warnings = $stats->{overrides}{types}{W} || 0;
@@ -1512,7 +1590,7 @@ sub process_group {
 	    next;
 	}
 
-	unless ($no_override) {
+	unless ($opt{'no-override'}) {
 	    if ($collmap->done('coll-override-file')) {
 		debug_msg(1, 'Override file collected, loading it ...');
 		$TAGS->file_overrides("$base/override")
@@ -1556,7 +1634,7 @@ sub process_group {
 	    my $stats = $TAGS->statistics($pkg_path);
 	    if ($stats->{types}{E}) {
 		$exit_code = 1;
-	    } elsif ($fail_on_warnings && $stats->{types}{W}) {
+	    } elsif ($opt{'fail-on-warnings'} && $stats->{types}{W}) {
 		$exit_code = 1;
 	    }
 	}

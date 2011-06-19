@@ -1,0 +1,2 @@
+E: binaries-multiarch-wrong-dir: triplet-dir-and-architecture-mismatch usr/lib/x86_64-linux-gnu/ is for amd64
+I: binaries-multiarch-wrong-dir: no-symbols-control-file usr/lib/x86_64-linux-gnu/libbasic.so.2

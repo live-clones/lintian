@@ -1,0 +1,5 @@
+Testname: rules-missing-targets
+Sequence: 6000
+Version: 1.0
+Description: Test for missing targets in debian/rules
+Test-For: debian-rules-missing-recommended-target

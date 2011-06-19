@@ -19,6 +19,6 @@ Info: The listed packages from the same source circularly depend
  If possible, consider removing or reducing one of the depends.
  .
  Note: This check is limited to packages created from the same
- source package.  Full circular dependencies between bianries from
+ source package.  Full circular dependencies between binaries from
  different source packages is beyond the scope of Lintian.
 Ref: policy 7.2

@@ -401,13 +401,11 @@ $
         </varlistentry>
       </variablelist>
       <para>
-        The following parameters after the type indicator tell you about the
-        <emphasis>package</emphasis> that has been processed (this can
-        either be a binary or a source package) and about
-        the <emphasis>problem</emphasis> that has been discovered. The
-        problem is identified by a so-called <emphasis>tag</emphasis>
-        (for
-        example, <literal>old-fsf-address-in-copyright-file</literal>).
+        The type indicator is followed by the name of the package and
+        for non-binary packages the type of the package.  Then comes
+        the <emphasis>problem</emphasis> that was discovered, also
+        known as a <emphasis>tag</emphasis> (for example,
+        <literal>old-fsf-address-in-copyright-file</literal>).
       </para>
       <para>
         Depending on which tag has been reported, the line may contain

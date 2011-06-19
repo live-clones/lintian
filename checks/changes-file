@@ -26,8 +26,6 @@ use Util;
 use Lintian::Tags qw(tag);
 use Lintian::Check qw(check_maintainer);
 
-our $CHECK_CHECKSUMS = $main::check_checksums;
-
 sub run {
 
 my $pkg = shift;
@@ -100,6 +98,8 @@ if (defined $info->field('distribution')) {
     }
 
     my $files = $info->files;
+    my $path = readlink('changes');
+    $path =~ s#/[^/]+$##;
     foreach my $file (keys %$files) {
         my $file_info = $files->{$file};
 
@@ -121,8 +121,6 @@ if (defined $info->field('distribution')) {
 	}
 
 	# check size
-	my $path = readlink('changes');
-	$path =~ s#/[^/]+$##;
 	my $filename = "$path/$file";
 	my $size = -s $filename;
 
@@ -132,15 +130,13 @@ if (defined $info->field('distribution')) {
 	}
 
 	# check checksums
-	if ($CHECK_CHECKSUMS or $file =~ m/\.dsc$/o) {
-	    foreach my $alg (qw(md5 sha1 sha256)) {
-		next unless exists $file_info->{checksums}{$alg};
+	foreach my $alg (qw(md5 sha1 sha256)) {
+	    next unless exists $file_info->{checksums}{$alg};
 
-		my $real_checksum = get_file_checksum($alg, $filename);
+	    my $real_checksum = get_file_checksum($alg, $filename);
 
-		if ($real_checksum ne $file_info->{checksums}{$alg}{sum}) {
-		    tag 'checksum-mismatch-in-changes-file', $alg, $file;
-		}
+	    if ($real_checksum ne $file_info->{checksums}{$alg}{sum}) {
+		tag 'checksum-mismatch-in-changes-file', $alg, $file;
 	    }
 	}
     }

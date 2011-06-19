@@ -122,6 +122,14 @@ Certainty: certain
 Info: The package has an unknown value in its Multi-Arch field.  The
  value must be one of "no", "same", "foreign" or "allowed".
 
+Tag: illegal-multi-arch-value
+Severity: serious
+Certainty: certain
+Info: The package is architecture all and has the Multi-Arch same value.
+ .
+ This combination is not allowed by the Multi-Arch specification.
+Ref: https://wiki.ubuntu.com/MultiarchSpec
+
 Tag: aspell-package-not-arch-all
 Severity: normal
 Certainty: certain

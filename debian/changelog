@@ -1,17 +1,86 @@
-lintian (2.5.1) UNRELEASED; urgency=low
+lintian (2.5.2) UNRELEASED; urgency=low
+
+  * checks/binaries:
+    + [NT] Added lib/${MULTIARCH_DIR} to the list of paths to
+      check for public shared libraries.  Thanks to Sven Joachim
+      for the report and the patch.  (Closes: #630698)
+  * checks/circular-deps.desc:
+    + [NT] Fixed typo; thanks to Nicolás Alvarez for the report
+      and patch.  (Closes: #630925)
+
+ -- Niels Thykier <niels@thykier.net>  Sun, 19 Jun 2011 13:39:10 +0200
+
+lintian (2.5.1) unstable; urgency=low
 
   * Summary of tag changes:
     + Added:
+      - bad-perm-for-file-in-etc-sudoers.d
+      - debian-rules-missing-recommended-target
+      - dh_pycentral-is-obsolete
+      - dh_python-is-obsolete
+      - illegal-multi-arch-value
       - non-empty-dependency_libs-in-la-file
+    + Removed:
+      - uses-dh-python-with-no-pycompat
+      - ldconfig-symlink-before-shlib-in-deb
 
+  * checks/binaries:
+    + [NT] Applied patch from Paul Wise to detect binaries embeddeding
+      glee, glew and libtheora.  (Closes: #629288)
+    + [NT] Also consider multiarch dirs when looking for public shared
+      libraries.  (Closes: #630164)
+  * checks/debhelper{,.desc}:
+    + [NT] Recognise that dh_python and dh_pycentral are now obsolete.
+      (Closes: #496902, #541978)
+  * checks/changes-file:
+    + [NT] Always verify the checksums of changes-files.
+  * checks/copyright-file:
+    + [NT] Extended current dh_make template checks.  Thanks to
+      Nelson A. de Oliveira for the patch.  (Closes: #598412)
   * checks/fields{,.desc}:
     + [NT] Allow "all" and "any" to appear together in the Architecture
       field of a .dsc file.  (Closes: #626775)
-  * checks/java:
+    + [NT] Added illegal-multi-arch-value.  (Closes: #616493)
+  * checks/files:
+    + [NT] Fixed two misnamed udeb tags, which lead to an internal
+      error if triggered.  Thanks to Guillem Jover for the report.
+      (Closes: #628754)
+    + [NT] Added bad-perm-for-file-in-etc-sudoers.d tag.
+      (Closes: #588831)
+    + [CW] Do not issue missing-pre-dependency-on-multiarch-support for
+      udebs.
+    + [NT] Limit missing-pre-dependency-on-multiarch-support to real
+      files only.  Previously it would also check symlinks.
+      (Closes: #629648)
+  * checks/java{,.desc}:
     + [NT] Sort the jar files by name, so they are checked in the same
       order.
+    + [NT] Improved the description of classpath-contains-relative-path.
+      (Closes: #629189)
+    + [NT] Reduced false-positives of classpath-contains-relative-path.
+      Relative classpaths are now okay if they point to jar files in
+      /usr/share/java (but not subdirs thereof) and there is a strong
+      libX-java dependency.  Alternatively if the classpath points to
+      a file or a symlink in the package itself, then it is also okay.
+    + [NT] Allow maven plugins to be without classpaths.
+      (Closes: #629056)
+  * checks/manpages.desc:
+    + [ADB] Don't suggest using debmake's output as a reference.  The
+      package is not even in oldstable any more.
+  * checks/md5sums.desc:
+    + [ADB] Drop references to obsolete debstd.  Thanks to Steve Langasek
+      for the pointer.
+  * checks/rules:
+    + [NT] Removed code for handling packages with dh_python.
+    + [NT] Fixed the code for determining Build-Depends for python
+      packages.  Thanks to Jakub Wilk for the patch.
+      (Closes: #614876, #616553)
+    + [NT] Applied patch from Roger Leigh to implement the check for
+      rules files missing the build-arch and build-indep targets.
+      (Closes: #605012)
   * checks/shared-libs{,.desc}:
     + [NT] Added non-empty-dependency_libs-in-la-file.  (Closes: #628673)
+    + [NT] Removed ldconfig-symlink-before-shlib-in-deb.
 
   * collection/java:
     + [NT] Fixed a regex that would accept any file ending with "jar" to
@@ -22,8 +91,15 @@ lintian (2.5.1) UNRELEASED; urgency=low
       instead of dpkg-source, if the latter is not present.
       (Closes: #626476)
 
+  * data/binaries/multiarch-dirs:
+    + [NT] New file - maps architectures to multiarch dirs.
   * data/fields/{perl-provides,virtual-packages}:
     + [NT] Refreshed.  (Closes: #627082, #627431)
+  * data/output/ftp-master-*:
+    + [NT] Refreshed.
+  * data/shared-libs/ldconfig-dirs:
+    + [NT] Updated ldconfig path for i386 multiarch paths.  Thanks to
+      Raphaël Hertzog for the reminder.
   * data/spelling/corrections-multiword:
     + [CW] Remove the "requires to" correction; it has too many common
       false positives, especially involving relative clauses.
@@ -37,19 +113,44 @@ lintian (2.5.1) UNRELEASED; urgency=low
         fallback.
       - Explicitly depends on bzip2 to always support bz2 source packages.
       - Added xz-utils as suggests - needed for .xz source packages.
+  * debian/rules:
+    + [NT] Added recommended targets build-arch and build-indep.
 
+  * doc/lintian.xml:
+    + [NT] Clarify that the package type is not listed in the output for
+      binary packages.  (Closes: #629193)
+
+  * frontend/lintian:
+    + [NT] Allow some options to be put into the lintianrc file.
+      (Closes: #460350)
+    + [NT] Added --no-cfg option that can be specified if no config
+      file should be read.
+    + [NT] Deprecated --checksums (also known as --md5sums and -m).
+      Lintian will now always verify the checksums in changes files.
+      The options will be accepted with a warning for now, but may
+      be removed in a later release.  (Closes: #629453)
+    + [NT] Fixed an issue where fail was called before it was
+      available.  Thanks to Toby Corkindale for the report.
+      (Closes: #630560, LP: #797553)
+
+  * lib/Lintian/Tag/Info.pm:
+    + [NT] Output the name of the check and the type of the check
+      along with the description of the tag.
   * lib/Lintian/Tags.pm:
     + [NT] Fixed a flaw in logic that gave incorrect results for
       architecture dependent overrides.  Thanks to Andreas Beckmann for
       the report and the patch.  (Closes: #626587)
 
+  * man/lintian.pod.in:
+    + [NT] Mentioned that --checksums and aliases are deprecated.
+  
   * unpack/list-srcpkg:
     + [ADB] Don't rely on the order of fields in the Sources file.  The
       files produced by the Debian archive no longer follow the order
       which the code previously assumed, and we shouldn't assume that
       the order won't change again in the future.  (Closes: #626597)
 
- -- Adam D. Barratt <adam@adam-barratt.org.uk>  Fri, 13 May 2011 20:20:51 +0100
+ -- Niels Thykier <niels@thykier.net>  Wed, 15 Jun 2011 23:05:28 +0200
 
 lintian (2.5.0) unstable; urgency=low
 

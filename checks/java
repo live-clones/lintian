@@ -35,8 +35,7 @@ my $info = shift;
 
 my $java_info = $info->java_info;
 my $missing_jarwrapper = 0;
-my $has_classpath = 0;
-my $has_osgi = 0;
+my $need_cp = 0;
 my $has_public_jars = 0;
 my $has_jars = 0;
 
@@ -47,12 +46,15 @@ $depends =~ s/lib[^\s,]+-java-doc//go;
 
 my @java_lib_depends = ($depends =~ m/\b(lib[^\s,]+-java)\b/og);
 
+$need_cp = 1 if @java_lib_depends;
+
 # We first loop over jar files to find problems
 
 for my $jar_file (sort keys %{$java_info}) {
     my $file_list = $java_info->{$jar_file}->{files};
     my $manifest = $java_info->{$jar_file}->{manifest};
     my $operm = $info->{index}->{$jar_file}->{operm};
+    my $jar_dir;
     my $classes = 1;
     my $datafiles = 1;
     my $cp = '';
@@ -61,6 +63,8 @@ for my $jar_file (sort keys %{$java_info}) {
     # The Java Policy says very little about requires for (jars in) JVMs
     next if $jar_file =~ m#usr/lib/jvm(?:-exports)?/[^/]++/#o;
 
+    $jar_dir = $jar_file;
+    $jar_dir =~ s,[^/]+$,,o;
     $has_jars = 1;
 
     if($jar_file =~ m#^usr/share/java/[^/]+\.jar$#o) {
@@ -103,20 +107,33 @@ for my $jar_file (sort keys %{$java_info}) {
 
     if(!$cp) {
         # Do we have OSGi instead?
-        $has_osgi = 1 if $bsname;
+        $need_cp = 0 if $bsname;
+        # Maybe it is a maven plugin?
+        $need_cp = 0 if $need_cp
+            && grep { m,^META-INF/maven/plugin.xml$,io } @{$file_list};
     } else {
         # Only run the tests when a classpath is present
-	my $relative = 0;
+	my @relative = ();
 	my @paths = split(m/\s++/o, $cp);
-	$has_classpath = 1;
+        $need_cp = 0;
 	for my $p (@paths) {
 	    if($p) {
                 # Strip leading ./
                 $p =~ s#^\./++##og;
 		if($p !~ m#^(?:file://)?/#o) {
 		    if($p =~ m#/#o) {
+                        my $target = resolve_pkg_path($jar_dir, $p);
+                        my $tinfo;
+                        # Relative link to usr/share/java ? Works if we
+                        # are depending of a Java library.
+                        next if $target =~ m,^usr/share/java/[^/]+.jar$,o
+                            and @java_lib_depends;
+                        $tinfo = $info->{index}->{$target};
+                        # Points to file or link in this package, which is sometimes
+                        #  easier than re-writing the classpath.
+                        next if defined $tinfo && ($tinfo->{type} =~ m/^[-hl]/o);
 			# Relative path with subdirectories.
-			$relative++;
+			push @relative, $p;
 		    }
 
 		    # @todo add an info tag for relative paths, to educate
@@ -125,8 +142,8 @@ for my $jar_file (sort keys %{$java_info}) {
 	    }
 	}
 
-        tag 'classpath-contains-relative-path', "$jar_file: $cp"
-            if $relative;
+        tag 'classpath-contains-relative-path',
+            "$jar_file: " . join(', ', @relative) if @relative;
     }
 }
 
@@ -134,7 +151,7 @@ for my $jar_file (sort keys %{$java_info}) {
 tag 'missing-dep-on-jarwrapper' if $missing_jarwrapper;
 
 
-if($has_jars && ! $has_classpath && ! $has_osgi && @java_lib_depends) {
+if($has_jars && $need_cp) {
     # Only tag if there is at least one jar file and one strong java dependency
     # and no classpath/osgi.  Technically there should be no reason to have a
     # strong relation with a java library without having a jar file, but

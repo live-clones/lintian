@@ -35,6 +35,31 @@ Info: The <tt>debian/rules</tt> file for this package does not provide one
  binary-indep, and clean must be provided, even if they don't do anything
  for this package.
 
+Tag: debian-rules-missing-recommended-target
+Severity: normal
+Certainty: certain
+Ref: policy 4.9
+Info: The <tt>debian/rules</tt> file for this package does not provide
+ one of the recommended targets.  All of build-arch and build-indep
+ should be provided, even if they don't do anything for this package.
+ If this package does not currently split building of architecture
+ dependent and independent packages, the following rules may be added
+ to fall back to the build target:
+ .
+   build-arch: build
+   build-indep: build
+ .
+ Note that the following form is recommended however:
+ .
+   build: build-arch build-indep
+   build-arch: build-stamp
+   build-indep: build-stamp
+   build-stamp:
+	build here
+ .
+ These targets will be required by policy in the future, so should be
+ added to prevent future breakage.
+
 Tag: debian-rules-uses-pwd
 Severity: normal
 Certainty: certain
@@ -140,16 +165,6 @@ Info: The package appears to use Python as part of its build process in
  build process.  Packages that depend on a specific version of Python may
  build-depend on the appropriate pythonX.Y or pythonX.Y-dev package
  instead.
-
-Tag: missing-dh_python-build-dependency
-Severity: important
-Certainty: certain
-Ref: dh_python(1)
-Info: The package runs dh_python in <tt>debian/rules</tt> but doesn't
- build-depend on python or python-dev. dh_python requires
- <tt>/usr/bin/python</tt> to run, so packages using dh_python must
- build-depend on python (or python-dev or python-all-dev, which in turn
- depend on python), even if they don't otherwise need Python to build.
 
 Tag: clean-should-be-satisfied-by-build-depends
 Severity: important

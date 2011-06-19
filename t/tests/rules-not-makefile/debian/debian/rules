@@ -8,4 +8,6 @@ binary:
 binary-arch:
 binary-indep:
 build:
+build-arch:
+build-indep:
 clean:

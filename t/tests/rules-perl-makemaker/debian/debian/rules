@@ -15,7 +15,10 @@ configure-stamp:
 
 	touch configure-stamp
 
-build: build-stamp
+build-indep:
+
+build-arch: build-stamp
+
 build-stamp: configure-stamp
 	dh_testdir
 
@@ -23,6 +26,8 @@ build-stamp: configure-stamp
 	$(MAKE) test
 
 	touch build-stamp
+
+build: build-arch build-indep
 
 clean:
 	dh_testdir

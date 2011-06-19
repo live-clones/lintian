@@ -27,7 +27,12 @@ clean:
 	touch "files/'\\ "
 	touch filenames.c~
 
-build:
+build-arch:
+
+build-indep:
+
+build: build-arch build-indep
+
 
 binary-arch:
 
@@ -232,4 +237,4 @@ binary-indep:
 
 binary: binary-arch binary-indep
 
-.PHONY: build binary-arch binary-indep binary clean
+.PHONY: build-indep build-arch build binary-arch binary-indep binary clean

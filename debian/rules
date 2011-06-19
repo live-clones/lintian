@@ -53,7 +53,7 @@ check-tag:
 refresh-perl-provides:
 	perl private/refresh-perl-provides > $(perlprovides)
 
-build: build-stamp
+build-arch build-indep build: build-stamp
 build-stamp: $(neededfiles) $(docsource) $(testtarget) $(profiles)
 	@echo .... running build ....
 	dh_testdir

@@ -13,6 +13,7 @@ override_dh_install:
 override_dh_fixperms:
 	dh_fixperms
 	chmod 755 $(tmp)/usr/share/man/man5/foo.5.gz
+	chmod 644 $(tmp)/etc/sudoers.d/*
 
 override_dh_compress:
 	dh_compress

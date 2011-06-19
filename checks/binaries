@@ -113,7 +113,12 @@ our %EMBEDDED_LIBRARIES = (
 	'openjpeg'	=> qr'tcd_decode: incomplete bistream',
 	'tinyxml'	=> qr'Error when TiXmlDocument added to document',
 	'libpcap'	=> qr'(?:pcap_activate: The "any" device isn\'t supported|corrupted frame on kernel ring mac offset)',
+	'glee'		=> qr'Extension name exceeds 1023 characters.',
+	'glew'		=> qr'Missing GL version',
+	'libtheora'	=> qr'Xiph.Org libtheora ',
 );
+
+our $MULTIARCH_DIRS = Lintian::Data->new('binaries/multiarch-dirs', '\s+');
 
 sub run {
 
@@ -123,6 +128,7 @@ my $info = shift;
 my $proc = shift;
 
 my $arch;
+my $madir;
 my $dynsyms = 0;
 my $needs_libc = '';
 my $needs_libc_file;
@@ -175,17 +181,20 @@ foreach my $file (sort keys %{$info->objdump_info}) {
 # positives with plugins like Apache modules, which may have their own SONAMEs
 # but which don't matter for the purposes of this check.  Also filter out
 # nsswitch modules
+$madir = $MULTIARCH_DIRS->value($arch);
 sub lib_soname_path {
-    my (@paths) = @_;
+    my ($dir, @paths) = @_;
     foreach my $path (@paths) {
 	next if $path =~ m%^(?:\.?/)?lib/libnss_[^.]+\.so(?:\.[0-9]+)$%;
 	return 1 if $path =~ m%^(?:\.?/)?lib/[^/]+$%;
 	return 1 if $path =~ m%^(?:\.?/)?usr/lib/[^/]+$%;
 	return 1 if $path =~ m%^(?:\.?/)?usr/X11R6/lib/[^/]+$%;
+	return 1 if defined $dir && $path =~ m%(?:\.?/)?lib/$dir/[^/]++$%;
+	return 1 if defined $dir && $path =~ m%(?:\.?/)?usr/lib/$dir/[^/]++$%;
     }
     return 0;
 }
-my @sonames = sort grep { lib_soname_path (@{$SONAME{$_}}) } keys %SONAME;
+my @sonames = sort grep { lib_soname_path($madir, @{$SONAME{$_}}) } keys %SONAME;
 
 # try to identify transition strings
 my $base_pkg = $pkg;

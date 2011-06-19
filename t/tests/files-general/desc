@@ -3,6 +3,7 @@ Sequence: 6000
 Version: 1.0
 Description: Test tags for file paths, names, and modes
 Test-For:
+ bad-perm-for-file-in-etc-sudoers.d
  dir-or-file-in-var-lock
  dir-or-file-in-var-run
  duplicated-compressed-file

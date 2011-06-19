@@ -295,6 +295,13 @@ if (defined $info->field('multi-arch')){
     unfold('multi-arch', \$march);
     tag 'unknown-multi-arch-value', $pkg, $march
 	unless $march =~ m/^no|foreign|allowed|same$/o;
+    if ($march eq 'same' && $type eq 'binary' &&
+	  defined $info->field('architecture')){
+	my $arch = $info->field('architecture');
+	# Do not use unfold to avoid duplicate warning
+	$arch =~ s/\n//o;
+	tag 'illegal-multi-arch-value', $arch, $march if ($arch eq 'all');
+    }
 }
 
 #---- Architecture
