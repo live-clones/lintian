@@ -1,3 +1,11 @@
+lintian (2.5.2) UNRELEASED; urgency=low
+
+  * checks/circular-deps.desc:
+    + [NT] Fixed typo; thanks to Nicolás Alvarez for the report
+      and patch.  (Closes: #630925)
+
+ -- Niels Thykier <niels@thykier.net>  Sun, 19 Jun 2011 13:39:10 +0200
+
 lintian (2.5.1) unstable; urgency=low
 
   * Summary of tag changes:
