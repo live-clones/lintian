@@ -675,6 +675,7 @@ require Lintian::Command;
 import Lintian::Command qw(spawn reap);
 require Lintian::ProcessablePool;
 require Lintian::Profile;
+require Lintian::Tag::Info;
 require Lintian::Tags;
 import Lintian::Tags qw(tag);
 
@@ -744,9 +745,14 @@ if ($LINTIAN_PROFILE) {
 					[PROFILE_PATH, "$LINTIAN_ROOT/profiles"]);
     my @ptags = $profile->tags;
     my @ign_overrides = $profile->ignored_overrides;
+    my $severities = $profile->severity_changes;
     v_msg('Using profile ' . $profile->name . '.');
     $TAGS->only(@ptags) if @ptags;
     $TAGS->ignore_overrides(@ign_overrides) if @ign_overrides;
+    while ( my ($tagname, $severity) = each(%$severities) ){
+	my $tag = Lintian::Tag::Info->new($tagname);
+	$tag->set_severity($severity);
+    }
     # Initialize display level settings.
     for my $level (@display_level) {
 	eval { $TAGS->display(@$level) };

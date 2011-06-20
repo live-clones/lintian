@@ -30,6 +30,15 @@ use Util;
 my %TAG_MAP = ();
 # maps check name to list of tag names.
 my %CHECK_MAP = ();
+my %SEVERITIES = (
+    'pedantic'  => 1,
+    'wishlist'  => 1,
+    'minor'     => 1,
+    'normal'    => 1,
+    'important' => 1,
+    'serious'   => 1,
+    );
+
 
 sub _load_checks {
     my $root = $ENV{LINTIAN_ROOT} || '/usr/share/lintian';
@@ -64,7 +73,8 @@ sub new {
         'parents'           => [],
         'profile-path'      => $ppath,
         'enabled-tags'      => {},
-	'ignored-overrides' => {},
+        'ignored-overrides' => {},
+        'severity-changes'  => {},
     };
     $self = bless $self, $type;
     $profile = $self->find_profile($name);
@@ -79,6 +89,11 @@ Lintian::Profile->mk_ro_accessors (qw(parents name));
 sub tags {
     my ($self) = @_;
     return keys %{ $self->{'enabled-tags'} };
+}
+
+sub severity_changes {
+    my ($self) = @_;
+    return $self->{'severity-changes'};
 }
 
 sub ignored_overrides {
@@ -129,7 +144,7 @@ sub _read_profile {
         $parentf = $self->find_profile($parent);
         fail "Cannot find $parent, which $pname extends.\n"
             unless $parentf;
-        $self->read_profile($parentf);
+        $self->_read_profile($parentf);
         push @$plist, $parent;
     }
     $self->_read_profile_tags($pname, $pheader);
@@ -144,16 +159,23 @@ sub _read_profile {
 sub _read_profile_section {
     my ($self, $pname, $section, $sno) = @_;
     my @tags = $self->_split_comma_sep_field($section->{'tag'});
-    my $overridable = $self->_parse_boolean($section->{'overridable'}, 0, $pname, $sno);
+    my $overridable = $self->_parse_boolean($section->{'overridable'}, -1, $pname, $sno);
+    my $severity = $section->{'severity'}//'';
     my $ignore_map = $self->{'ignored-overrides'};
+    my $sev_map = $self->{'severity-changes'};
     fail "Profile \"$pname\" is missing Tag field (or it is empty) in section $sno." unless @tags;
+    fail "Profile \"$pname\" contains invalid severity \"$severity\" in section $sno."
+        if $severity && !$SEVERITIES{$severity};
     foreach my $tag (@tags) {
 	fail "Unknown check $tag in $pname (section $sno)\n" unless exists $TAG_MAP{$tag};
-	if ($overridable) {
-	    delete $ignore_map->{$tag};
-	} else {
-	    $ignore_map->{$tag} = 1;
-	}
+        $sev_map->{$tag} = $severity if $severity;
+        if ( $overridable < 0 ) {
+            if ($overridable) {
+                delete $ignore_map->{$tag};
+            } else {
+                $ignore_map->{$tag} = 1;
+            }
+        }
     }
 }
 

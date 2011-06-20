@@ -106,6 +106,7 @@ sub _load_tag_data {
             $tag->{info} = '' unless exists($tag->{info});
             $tag->{script} = $header->{'check-script'};
             $tag->{'script-type'} = $header->{'type'};
+            $tag->{'effective-severity'} = $tag->{severity};
             $INFO{$tag->{tag}} = $tag;
         }
     }
@@ -156,7 +157,7 @@ separately.
 
 sub code {
     my ($self) = @_;
-    return $CODES{$self->{severity}}{$self->{certainty}};
+    return $CODES{$self->{'effective-severity'}}{$self->{certainty}};
 }
 
 =item description([FORMAT [, INDENT]])
@@ -315,15 +316,31 @@ sub experimental {
     return ($self->{experimental} and $self->{experimental} eq 'yes');
 }
 
-=item severity()
+=item severity([$real])
 
-Returns the severity of the tag.
+Returns the severity of the tag; if $real is a truth value
+the real (original) severity is returned, otherwise the
+effective severity is returned.
+
+See set_severity()
 
 =cut
 
 sub severity {
-    my ($self) = @_;
+    my ($self, $real) = @_;
+    return $self->{'effective-severity'} unless $real;
     return $self->{severity};
+}
+
+=item set_severity($severity)
+
+Modifies the effective severity of the tag.
+
+=cut
+
+sub set_severity{
+    my ($self, $sev) = @_;
+    $self->{'effective-severity'} = $sev;
 }
 
 =item script()
