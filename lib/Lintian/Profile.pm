@@ -169,7 +169,7 @@ sub _read_profile_section {
     foreach my $tag (@tags) {
 	fail "Unknown check $tag in $pname (section $sno)\n" unless exists $TAG_MAP{$tag};
         $sev_map->{$tag} = $severity if $severity;
-        if ( $overridable < 0 ) {
+        if ( $overridable != -1 ) {
             if ($overridable) {
                 delete $ignore_map->{$tag};
             } else {
