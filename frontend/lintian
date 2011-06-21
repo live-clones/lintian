@@ -28,14 +28,6 @@ use warnings;
 use Getopt::Long;
 use Cwd;
 
-# The profile search path except LINTIAN_ROOT/profiles
-#  which will be added later (we dont know LINTIAN_ROOT
-#  at this point)
-use constant PROFILE_PATH => (
-    "$ENV{HOME}/.lintian/profiles",
-    '/etc/lintian/profiles'
-    );
-
 # }}}
 
 # {{{ Global Variables
@@ -72,6 +64,14 @@ our $LINTIAN_ROOT;		#location of the lintian modules
 my $no_conf = 0;                #flag for --no-cfg
 my %opt;                        #hash of some flags from cmd or cfg
 my %conf_opt;                   #names of options set in the cfg file
+
+# The profile search path except LINTIAN_ROOT/profiles
+#  which will be added later (we dont know LINTIAN_ROOT
+#  at this point)
+my @prof_inc = (
+    "$ENV{HOME}/.lintian/profiles",
+    '/etc/lintian/profiles'
+);
 
 my $experimental_output_opts = undef;
 
@@ -640,6 +640,12 @@ foreach (('ROOT', 'CFG', VARS)) {
     }
 }
 
+# If we are running the test suite we should ignore
+# user/system profiles.
+if ($ENV{'LINTIAN_INTERNAL_TESTSUITE'}){
+    @prof_inc = ();
+}
+
 $verbose = 1 if $debug;
 $ENV{'LINTIAN_DEBUG'} = $debug;
 
@@ -742,7 +748,7 @@ if (defined $check_tags || %suppress_tags) {
 
 if ($LINTIAN_PROFILE) {
     my $profile = Lintian::Profile->new($LINTIAN_PROFILE,
-					[PROFILE_PATH, "$LINTIAN_ROOT/profiles"]);
+					[@prof_inc, "$LINTIAN_ROOT/profiles"]);
     my @ptags = $profile->tags;
     my @ign_overrides = $profile->ignored_overrides;
     my $severities = $profile->severity_changes;
@@ -1265,7 +1271,7 @@ sub find_default_profile {
     while ($vendor) {
 	my $p;
 	v_msg("Checking for default profile for $vendor.");
-	$p = Lintian::Profile->find_profile(lc($vendor), PROFILE_PATH, "$LINTIAN_ROOT/profiles");
+	$p = Lintian::Profile->find_profile(lc($vendor), @prof_inc, "$LINTIAN_ROOT/profiles");
 	last if $p;
 	$vendor = $qparent->($vendor);
     }
