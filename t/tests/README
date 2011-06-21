@@ -88,6 +88,13 @@ the test case as a non-native package, add:
 to the .desc file.  You will also want to change the version number to
 be non-native unless you're testing a mismatch.
 
+By default all tests are run with the default Lintian profile.  If a
+different profile is needed it can be specified via:
+
+    Profile: test/profile
+
+The value will be passed to Lintian via the --profile parameter.
+
 There are times when one wants to add a test for something that needs
 to be done.  To mark it as such, preventing the test suite from
 failing, use:

@@ -555,6 +555,7 @@ sub test_package {
     my $opts = { err => "$rundir/tags.$pkg", fail => 'never' };
     my $status;
     unshift(@options, '--allow-root', '--no-cfg');
+    unshift(@options, '--profile', $testdata->{profile}) if $testdata->{profile};
     if ($testdata->{sort}) {
 	$status = spawn($opts, [ $LINTIAN, @options, $file ], '|', [ 'sort' ]);
     } else {
