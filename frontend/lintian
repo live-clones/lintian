@@ -733,7 +733,7 @@ $TAGS->sources(keys %display_source) if %display_source;
 $TAGS->only(split(/,/, $check_tags)) if defined $check_tags;
 $TAGS->suppress(keys %suppress_tags) if %suppress_tags;
 
-if (defined $check_tags || %suppress_tags) {
+if (defined $check_tags) {
     # No profile if we have been given explicit list
     $LINTIAN_PROFILE = '';
     # If we are given explicit list, we use that regardless
