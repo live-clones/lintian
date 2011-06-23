@@ -43,6 +43,11 @@ use Lintian::Tag::Info ();
 use Text_utils;
 
 my %already_displayed = ();
+my @proc_inc = (
+    "$ENV{HOME}/.lintian/profiles",
+    '/etc/lintian/profiles',
+    "$ENV{'LINTIAN_ROOT'}/profiles"
+);
 my ($annotate, $tags, $help, $prof);
 Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
 GetOptions(
@@ -69,12 +74,10 @@ EOT
 }
 
 unless ($prof) {
-    $prof = find_default_profile(
-	"$ENV{HOME}/.lintian/profiles",
-	'/etc/lintian/profiles',
-	"$ENV{'LINTIAN_ROOT'}/profiles");
+    $prof = find_default_profile(@proc_inc);
+
 }
-load_profile($prof);
+load_profile($prof, \@proc_inc);
 
 # If tag mode was specified, read the arguments as tags and display the
 # descriptions for each one.  (We don't currently display the severity,
@@ -135,12 +138,12 @@ while (<>) {
 
 exit 0;
 
-# load_profile($profname)
+# load_profile($profname, $proc_inc_ref)
 #  Loads the profile called $profname and applies
 #  the relevant changes from it.
 sub load_profile{
-    my ($profname) = @_;
-    my $profile = Lintian::Profile->new($prof);
+    my ($profname, $proc_inc_ref) = @_;
+    my $profile = Lintian::Profile->new($prof, $proc_inc_ref);
     my $severities = $profile->severity_changes;
     while ( my ($tagname, $severity) = each(%$severities) ){
 	my $tag = Lintian::Tag::Info->new($tagname);

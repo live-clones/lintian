@@ -106,7 +106,9 @@ sub find_profile {
     my $pfile;
     fail "$pname is not a valid profile name\n" if $pname =~ m/\./o;
     # Allow @dirs to override the default path for this profile-search
-    push @dirs, @{ $self->{'profile-path'} } if ref $self;
+    if (ref $self) {
+        push @dirs, @{ $self->{'profile-path'} } if defined $self->{'profile-path'};
+    }
     # $vendor is short for $vendor/main
     $pname = "$pname/main" unless $pname =~ m,/,o;
     $pfile = "$pname.profile";
