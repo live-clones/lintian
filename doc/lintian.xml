@@ -538,6 +538,199 @@ foo source: configure-generated-file-in-source config.cache
         in the additional info.
       </para>
     </sect1>
+    <sect1 label="2.5" id="section-2.5">
+      <title>Vendor Profiles</title>
+      <para>
+        Vendor profiles allows vendors and users to customize Lintian
+        without having to modify the underlying code.  If a profile
+        is not explicitly given, Lintian will derive the best
+        possible profile for the current vendor from dpkg-vendor.
+      </para>
+      <sect2 label="2.5.1" id="section-2.5.1">
+        <title>Rules for profile names and location</title>
+        <para>
+          Profile names should only consist of the lower case
+          characters ([a-z]), underscore (_), dash (-) and
+          forward slashes (/).  Particularly note that dot (.) are
+          specificially <emphasis>not</emphasis> allowed in a
+          profile name.
+        </para>
+        <para>
+          The default profile for a vendor is called
+          <filename>$VENDOR/main</filename>.  If Lintian sees a
+          profile name without a slash, it is taken as a short
+          form of the default profile for a vendor with that
+          name.
+        </para>
+        <para>
+          The filename for the profile is derived from the name by
+          simply concatenating it with <filename>.profile</filename>,
+          Lintian will then look for a file with that name in the
+          follownig directories:
+        </para>
+        <itemizedlist>
+          <listitem>
+            <para>
+              <filename>$HOME/.lintian/profiles</filename>
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              <filename>/etc/lintian/profiles</filename>
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              <filename>$LINTIAN_ROOT/profiles</filename>
+            </para>
+          </listitem>
+        </itemizedlist>
+        <para>
+          Note that an implication of the handling of default
+          vendor profiles implies that profiles must be in
+          subdirectories of the directories above for Lintian
+          to recognise them.
+        </para>
+      </sect2>
+      <sect2 label="2.5.2" id="section-2.5.2">
+        <title>Profile syntax and semantics</title>
+        <para>
+          Profiles are written in the same syntax as Debian
+          control files as described in the
+          <ulink url="http://www.debian.org/doc/debian-policy/ch-controlfields.html#s-controlsyntax">
+          Debian Policy Manual §5.1</ulink>.  Profiles allow
+          comments as described.
+        </para>
+        <sect3 label="2.5.2.1" id="section-2.5.2.1">
+          <title>Main profile paragraph</title>
+          <para>
+            The fields in the first paragraph are:
+          </para>
+	  <variablelist>
+            <varlistentry>
+	      <term><emphasis>Profile</emphasis> (simple, mandatory)</term>
+              <listitem>
+		<para>
+                  Name of the profile.
+		</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+	      <term><emphasis>Extends</emphasis> (simple, optional)</term>
+              <listitem>
+		<para>
+                  Name of the (parent) profile, which this profile
+                  extends.  Lintian will recursively process the
+                  extended profile before continuing with processing
+                  this profile.  In the absence of this field, the
+                  profile is not based on another profile.
+		</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+	      <term><emphasis>Enable-Tags-From-Check</emphasis> (folded, optional)</term>
+              <listitem>
+		<para>
+		  Comma-separated list of checks.  All tags from each
+                  check listed will be enabled in this profile.
+		</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+	      <term><emphasis>Disable-Tags-From-Check</emphasis> (folded, optional)</term>
+              <listitem>
+		<para>
+		Comma-separated list of checks.  All tags from each
+                check listed will be disabled in this profile.
+		</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+	      <term><emphasis>Enable-Tag</emphasis> (folded, optional)</term>
+              <listitem>
+		<para> Comma-separated list of tags that should be
+                enabled.
+		</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term><emphasis>Disable-Tag</emphasis> (folded, optional)</term>
+              <listitem>
+		<para>
+		  Comma-separated list of tags that should be
+		  disabled.
+		</para>
+              </listitem>
+            </varlistentry>
+	  </variablelist>
+          <para>
+            The profile is invalid and is rejected, if Enable-Tag and
+            Disable-Tag lists the same tag twice - even if it is in
+            the same field.  This holds analogously for
+            Enable-Tags-From-Check and Disable-Tags-From-Check.
+          </para>
+          <para>
+            It is allowed to allowed to list a tag in Enable-Tag or
+            Disable-Tag even if the check that provides this tag is
+            listed in the Disable-Check or Enable-Check field. In case
+            of conflict, Enable-Tag / Disable-Tag shall overrule
+            Disable-Tags-From-Check / Enable-Tags-From-Check within
+            the profile.
+          </para>
+          <para>
+            It is not an error to enable or disable a check that is
+            already enabled or disabled respectively (e.g. by a
+            parent profile).
+          </para>
+          <para>
+            A profile is invalid if it directly or indirectly extends
+            itself or if it extends an invalid profile.
+          </para>
+        </sect3>
+        <sect3 label="2.5.2.2" id="section-2.5.2.2">
+          <title>Tag alteration paragraphs</title>
+          <para>
+            The fields in the secondary paragraphs are:
+          </para>
+	  <variablelist>
+            <varlistentry>
+	      <term><emphasis>Tag</emphasis> (folded, mandatory)</term>
+              <listitem>
+		<para>
+		  Comma separated list of tags affected by this
+		  paragraph.
+		</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+	      <term><emphasis>Overridable</emphasis> (simple, optional)</term>
+              <listitem>
+		<para>
+		  Either "Yes" or "No", which decides whether these
+                  tags can be overriden.  Overrides for these tags
+                  will silently be ignored.
+		</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+	      <term><emphasis>Severity</emphasis> (simple, optional)</term>
+              <listitem>
+		<para>
+                  The value must be a valid tag severity; the severity
+                  of the affected is set to this value.  Note
+                  that <emphasis>experimental</emphasis> is not a
+                  severity.
+		</para>
+              </listitem>
+            </varlistentry>
+	  </variablelist>
+          <para>
+            The paragraph must contain at least one other field than the
+            Tag field.
+          </para>
+        </sect3>
+      </sect2>
+    </sect1>
   </chapter>
 
   <chapter label="3" id="chapter-3">
