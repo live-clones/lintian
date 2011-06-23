@@ -1,0 +1,4 @@
+E: fields-general-bad?: bad-package-name
+E: fields-general-bad?: bad-relation depends: another-package (>< 1.0)
+E: fields-general-bad?: bad-version-in-relation depends: other-package (>= 1.0?)
+E: fields-general-bad?: bad-version-number 1.0?

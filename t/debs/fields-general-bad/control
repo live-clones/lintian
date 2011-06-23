@@ -1,0 +1,13 @@
+Package: fields-general-bad?
+Source: fields-general-bad
+Version: 1.0?
+Architecture: all
+Maintainer: Debian Lintian Maintainers <lintian-maint@debian.org>
+Section: devel
+Priority: extra
+Depends: other-package (>= 1.0?), another-package (>< 1.0)
+Description: test for bad source package name
+ This is a test package designed to exercise some feature or tag of
+ Lintian.  It is part of the Lintian test suite and may do very odd
+ things.  It should not be installed like a regular package.  It may
+ be an empty package.

@@ -46,10 +46,6 @@ debian-source-dir unknown-source-format
 fields alternates-not-allowed
 fields aspell-package-not-arch-all
 fields bad-menu-item
-fields bad-package-name
-fields bad-relation
-fields bad-version-in-relation
-fields bad-version-number
 fields depends-on-libdb1-compat
 fields doc-package-depends-on-main-package
 fields malformed-python-version
