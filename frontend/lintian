@@ -1037,9 +1037,14 @@ if ($action eq 'unpack') {
 	$unpack_infos{$c} = 1;
     }
 } else {
-    for my $c (keys %unpack_infos) {
+    my @needed = keys %unpack_infos;
+    my %added = ();
+    while ( my $c = pop @needed ) {
+	next if $added{$c};
+	$added{$c} = 1;
+	$unpack_infos{$c} = 1;
 	if (exists $collection_info{$c}{'needs-info'}) {
-	    map { $unpack_infos{$_} = 1; } @{$collection_info{$c}{'needs-info'}};
+	    push @needed, @{$collection_info{$c}{'needs-info'}};
 	}
     }
     if ($unpack_info) {
