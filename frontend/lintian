@@ -174,6 +174,7 @@ Behaviour options:
     -L, --display-level       display tags with the specified level
     -o, --no-override         ignore overrides
     --pedantic                display "P:" tags (normally suppressed)
+    --profile X               Use the profile X or use vendor X checks
     --show-overrides          output tags that have been overriden
     --suppress-tags T,...     don\'t show the specified tags
     --suppress-tags-from-file X don\'t show the tags listed in file X
@@ -186,7 +187,6 @@ Configuration options:
     --no-cfg CONFIGFILE       do not read any CONFIGFILE
     --dist DIST               scan packages in this distribution (e.g. sid)
     --lab LABDIR              use LABDIR as permanent laboratory
-    --profile X               Use the profile X or use vendor X checks
     --root ROOTDIR            use ROOTDIR instead of /usr/share/lintian
 Package selection options:
     -a, --all                 process all packages in distribution
