@@ -280,7 +280,10 @@ Use the profile from vendor (or the profile with that name).  If the
 profile name does not contain a slash, the default profile for than
 vendor is chosen.
 
-Prefer to the Lintian User Manual for the full documentation of
+If not specified, B<lintian> loads the best profile for the current
+vendor.
+
+Please Refer to the Lintian User Manual for the full documentation of
 profiles.
 
 =item B<--show-overrides>
