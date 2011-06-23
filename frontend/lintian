@@ -64,6 +64,7 @@ our $LINTIAN_ROOT;		#location of the lintian modules
 my $no_conf = 0;                #flag for --no-cfg
 my %opt;                        #hash of some flags from cmd or cfg
 my %conf_opt;                   #names of options set in the cfg file
+my $no_profile = 0;             #whether a profile should be loaded
 
 # The profile search path except LINTIAN_ROOT/profiles
 #  which will be added later (we dont know LINTIAN_ROOT
@@ -233,6 +234,7 @@ sub record_check_part {
     }
     $action = 'check';
     $checks = "$_[1]";
+    $no_profile = 1;
 }
 
 # Record Parts requested for checking
@@ -252,6 +254,7 @@ sub record_check_tags {
     }
     $action = 'check';
     $check_tags = "$_[1]";
+    $no_profile = 1;
 }
 
 # Record Parts requested for checking
@@ -735,7 +738,7 @@ $TAGS->sources(keys %display_source) if %display_source;
 $TAGS->only(split(/,/, $check_tags)) if defined $check_tags;
 $TAGS->suppress(keys %suppress_tags) if %suppress_tags;
 
-if (defined $check_tags) {
+if ($no_profile) {
     # No profile if we have been given explicit list
     $LINTIAN_PROFILE = '';
     # If we are given explicit list, we use that regardless

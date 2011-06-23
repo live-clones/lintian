@@ -67,6 +67,8 @@ Run only the specified checks.  You can either specify the name of the
 check script or the abbreviation.  For details, see the L</CHECKS> section
 below.
 
+Note: This option skips profile loading, even if B<--profile> was passed.
+
 =item B<-F>, B<--ftp-master-rejects>
 
 Run only the checks that issue tags that result in automatic rejects
@@ -94,12 +96,16 @@ Run only the checks that issue the requested tags.  The tests for
 other tags within the check scripts will be run but the tags will not
 be issued.
 
+Note: This option skips profile loading, even if B<--profile> was passed.
+
 =item B<--tags-from-file> filename
 
 Same functionality as B<--tags>, but read the list of tags from a
 file.  Blank lines and lines beginning with # are ignored.  All other
 lines are taken to be tag names or comma-separated lists of tag names
 to (potentially) issue.
+
+Note: This option skips profile loading, even if B<--profile> was passed.
 
 =item B<-u>, B<--unpack>
 
