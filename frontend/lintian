@@ -679,6 +679,8 @@ import Lintian::Output qw(:messages);
 require Lintian::Command::Simple;
 require Lintian::Command;
 import Lintian::Command qw(spawn reap);
+require Lintian::Internal::FrontendUtil;
+import Lintian::Internal::FrontendUtil;
 require Lintian::ProcessablePool;
 require Lintian::Profile;
 require Lintian::Tag::Info;
@@ -742,7 +744,7 @@ if (defined $check_tags) {
 } else {
     unless ($LINTIAN_PROFILE){
 	# Time to ask dpkg-vendor for a vendor name
-	$LINTIAN_PROFILE = find_default_profile();
+	$LINTIAN_PROFILE = find_default_profile(@prof_inc, "$LINTIAN_ROOT/profiles");
     }
 }
 
@@ -1217,68 +1219,6 @@ sub set_value {
     delete $source->{$field};
 }
 
-# Check if we are testing a specific feature
-#  - e.g. vendor-libdpkg-perl
-sub _check_test_feature{
-    my $env = $ENV{LINTIAN_TEST_FEATURE};
-    return 0 unless $env;
-    foreach my $feat (@_){
-	return 1 if($env =~ m/$feat/);
-    }
-    return 0;
-}
-
-sub find_default_profile {
-    my ($vendor, $orig);
-    # CODE-ref to query for the parent vendor
-    #  $qparent->("Ubuntu")
-    my $qparent;
-    # Use dpkg-vendor if present (unless we are testing our libdpkg-perl code)
-    if(Util::check_path('dpkg-vendor') && !_check_test_feature('vendor-libdpkg-perl')){
-	v_msg('Using dpkg-vendor to determine the default profile.');
-	chomp($vendor = `dpkg-vendor --query Vendor`);
-	fail('dpkg-vendor failed (status: ' .  ($? >> 8). ").\n") if $?;
-	$qparent = sub {
-	    my ($cur) = @_;
-	    my $par;
-	    chomp($par = `dpkg-vendor --vendor "$cur" --query Parent`);
-	    # dpkg-vendor returns 1 if there is no parent (because the query failed),
-	    # which we translate into ''; but other values suggests an internal
-	    # dpkg-vendor error.
-	    if ( $? ){
-		my $err = ($? >> 8) & 256;
-		fail('dpkg-vendor failed (status: ' .  ($? >> 8). ").\n") if $err != 1;
-		return '';
-	    }
-	    return $par;
-	}; # End of $qparent sub
-
-    } else {
-	v_msg('Using Dpkg::Vendor to determine the default profile.');
-	require Dpkg::Vendor;
-	$vendor = Dpkg::Vendor::get_current_vendor();
-	fail("Could not determine the current vendor.\n") unless $vendor;
-	$qparent = sub {
-	    my ($cur) = @_;
-	    my $info = Dpkg::Vendor::get_vendor_info($cur);
-	    # Cannot happen atm, but in case Dpkg::Vendor changes its internals
-	    #  or our code changes
-	    fail("Could not look up the parent vendor of $cur.\n") unless $vendor;
-	    return $info->{'Parent'};
-	}; # End of $qparent sub
-    }
-    $orig = $vendor;
-    while ($vendor) {
-	my $p;
-	v_msg("Checking for default profile for $vendor.");
-	$p = Lintian::Profile->find_profile(lc($vendor), @prof_inc, "$LINTIAN_ROOT/profiles");
-	last if $p;
-	$vendor = $qparent->($vendor);
-    }
-    fail("Could not find a profile for vendor $orig") unless $vendor;
-    v_msg("Found default profile for vendor $orig");
-    return lc($vendor);
-}
 
 # Given a ref to %collection_info and the path to the collection
 # directory, this will load all the collection information into
