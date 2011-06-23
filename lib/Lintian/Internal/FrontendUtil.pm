@@ -80,12 +80,10 @@ sub find_default_profile {
     my $qparent;
     # Use dpkg-vendor if present (unless we are testing our libdpkg-perl code)
     if(check_path('dpkg-vendor') && !check_test_feature('vendor-libdpkg-perl')){
-	v_msg('Using dpkg-vendor to determine the default profile.');
 	chomp($vendor = `dpkg-vendor --query Vendor`);
 	fail('dpkg-vendor failed (status: ' .  ($? >> 8). ").\n") if $?;
 	$qparent = \&_find_parent_vendor_dpkg_vendor;
     } else {
-	v_msg('Using Dpkg::Vendor to determine the default profile.');
 	require Dpkg::Vendor;
 	$vendor = Dpkg::Vendor::get_current_vendor();
 	fail("Could not determine the current vendor.\n") unless $vendor;
@@ -94,13 +92,11 @@ sub find_default_profile {
     $orig = $vendor;
     while ($vendor) {
 	my $p;
-	v_msg("Checking for default profile for $vendor.");
 	$p = Lintian::Profile->find_profile(lc($vendor), @prof_path);
 	last if $p;
 	$vendor = $qparent->($vendor);
     }
     fail("Could not find a profile for vendor $orig") unless $vendor;
-    v_msg("Found default profile for vendor $orig");
     return lc($vendor);
 }
 
