@@ -7,6 +7,10 @@ lintian (2.5.2) UNRELEASED; urgency=low
   * checks/circular-deps.desc:
     + [NT] Fixed typo; thanks to Nicolás Alvarez for the report
       and patch.  (Closes: #630925)
+  * checks/files:
+    + [NT] Check for embedded copies of the underscore javascript
+      library.  Thanks to Jakub Wilk for report and the patch.
+      (Closes: #631513)
 
   * frontend/lintian:
     + [NT] Ensure that all dependency collections of a check are
