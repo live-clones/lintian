@@ -74,8 +74,10 @@ Note: This option skips profile loading, even if B<--profile> was passed.
 Run only the checks that issue tags that result in automatic rejects
 from the Debian upload queue.  The list of such tags is refreshed with
 each Lintian release, so may be slightly out of date if it has changed
-recently.  This option does not, as yet, ignore overrides for fatal
-tags for which overrides aren't allowed.
+recently.
+
+This is implemented via a profile and thus this option cannot be used
+together with B<--profile>.
 
 =item B<-r>, B<--remove>
 
