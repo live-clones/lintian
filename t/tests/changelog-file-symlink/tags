@@ -1,1 +1,2 @@
 W: changelog-file-symlink: debian-changelog-file-is-a-symlink
+X: changelog-file-symlink: package-contains-broken-symlink usr/share/doc/changelog-file-symlink/changelog.gz ../lintian/changelog.gz
