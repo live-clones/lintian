@@ -22,6 +22,7 @@ package Lintian::symlinks;
 use strict;
 use warnings;
 
+use File::Basename qw(dirname);
 use Lintian::Relation ();
 use Lintian::Tags qw(tag);
 use Util;
@@ -43,35 +44,27 @@ foreach my $file (@{$info->sorted_index}) {
     my $index_info = $index->{$file};
     my $perm = $index_info->{type};
     if ($perm =~ m/^l/o){
-        my $target = $index_info->{link}//'';
-        my $mylink = $target;
+        my $target = $index_info->{link}//''; # the link target
+        my $path; # the target (from the pkg root)
         # Should not happen (too often) - but just in case
         next unless $target;
-        $mylink =~ s,//++,/,g;
-        $mylink =~ s@/$@@o;
-        next if $mylink eq ''; # skip links to "/"
+        $path = resolve_pkg_path(dirname($file), $target);
+        next if $path eq ''; # skip links to "/"
 
-        if ($target =~ m@^/@o){
-            # absolute link - remove the initial slash
-            $mylink = substr $mylink, 1;
-        } else {
-            # relative - break down the link
-            # FIXME
-            next;
-        }
+	# Check if the destination is in the package itself
+        next if $index->{$path} || $index->{"$path/"};
 
-	# Check if the desstination is in the package itself
-        next if $index->{$mylink} || $index->{"$mylink/"};
+        $target =~ s,^/++,,o; # strip leading slashes (for reporting)
 
         # Ignore links pointing to common things that may exist
         # even if they are not shipped by any binary from this
         # source package.
-        next if $mylink =~ m@man/man\d/undocumented@o or
-            $mylink =~ m@^etc/alternatives/@o or
-            $mylink eq 'lib/init/upstart-job';
+        next if $path =~ m@man/man\d/undocumented@o or
+            $path =~ m@^etc/alternatives/@o or
+            $path eq 'lib/init/upstart-job';
 
         # Possibly broken symlink
-        push @brokenlinks, [$file, $mylink, $target] unless $index->{$mylink};
+        push @brokenlinks, [$file, $path, $target] unless $index->{$path};
     }
 
 }
@@ -88,10 +81,10 @@ foreach my $depproc ($group->get_processables($type)){
 
 BLINK:
 foreach my $blink (@brokenlinks){
-    my ($file, $mylink, $target) = @$blink;
+    my ($file, $path, $target) = @$blink;
     foreach my $dindex (@dindexes){
         # Is it in our dependency?
-        next BLINK if $dindex->{$mylink} || $dindex->{"$mylink/"};
+        next BLINK if $dindex->{$path} || $dindex->{"$path/"};
     }
     # nope - not found in any of our direct dependencies.
     tag 'package-contains-broken-symlink', $file, $target
