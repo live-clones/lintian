@@ -4,6 +4,9 @@ lintian (2.5.2) UNRELEASED; urgency=low
     + [NT] Added lib/${MULTIARCH_DIR} to the list of paths to
       check for public shared libraries.  Thanks to Sven Joachim
       for the report and the patch.  (Closes: #630698)
+    + [NT] Recognise .gox files as object files that cannot be
+      stripped.  Thanks to Matthias Klose for the report.
+      (Closes: #624521)
   * checks/circular-deps.desc:
     + [NT] Fixed typo; thanks to Nicolás Alvarez for the report
       and patch.  (Closes: #630925)

@@ -286,7 +286,7 @@ foreach my $file (@{$info->sorted_file_info}) {
 	# Is it an object file (which generally can not be stripped),
 	# a kernel module, debugging symbols, or perhaps a debugging package?
 	unless ($file =~ m,\.k?o$, or $pkg =~ m/-dbg$/ or $pkg =~ m/debug/
-		or $file =~ m,/lib/debug/,) {
+		or $file =~ m,/lib/debug/, or $file =~ m,\.gox$,o) {
 	    if ($fileinfo =~ m/executable/
 		and $strings =~ m/^Caml1999X0[0-9][0-9]$/m) {
 		# Check for OCaml custom executables (#498138)
