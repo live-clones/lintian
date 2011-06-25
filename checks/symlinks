@@ -61,7 +61,7 @@ foreach my $file (@{$info->sorted_index}) {
         # source package.
         next if $path =~ m@man/man\d/undocumented@o or
             $path =~ m@^etc/alternatives/@o or
-            $path =~ m@^usr/share/javascript/@o or
+            $path =~ m@^usr/share/javascript/(?:[^/]++/)++[^/]+\.js$@o or
             $path eq 'lib/init/upstart-job';
 
         # Possibly broken symlink
