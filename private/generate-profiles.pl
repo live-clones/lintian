@@ -9,10 +9,10 @@ use warnings;
 use constant LINE_LENGTH => 80;
 use constant FIELD_ORDER => ('Enable-Tags-From-Check',
                              'Disable-Tags-From-Check',
-                             'Enable-Tag',
-                             'Disable-Tag',
+                             'Enable-Tags',
+                             'Disable-Tags',
     );
-use constant PARAGRAPH_ORDER => ( 'Overridable' );
+use constant PARAGRAPH_ORDER => ( 'Overridable', 'Severity' );
 
 use lib "$ENV{LINTIAN_ROOT}/lib";
 use Lintian::Data;
@@ -43,9 +43,9 @@ generate_profile('debian/main', {
     });
 
 generate_profile('debian/ftp-master-auto-reject', {
-    'Enable-Tag' => [@fatal, @nonfatal],
+    'Enable-Tags' => [@fatal, @nonfatal],
     },
-    { 'Tag' => \@fatal,
+    { 'Tags' => \@fatal,
        'Overridable' => 'no',
     });
 
@@ -65,7 +65,7 @@ sub generate_profile {
     }
     print $fd "\n";
     foreach my $para (@other) {
-        format_field($fd, 'Tag', sort @{ $para->{'Tag'} });
+        format_field($fd, 'Tags', sort @{ $para->{'Tags'} });
         foreach my $f (PARAGRAPH_ORDER) {
             my $val = $para->{$f};
             next unless defined $val;

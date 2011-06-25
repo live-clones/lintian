@@ -1,6 +1,6 @@
 # This profile is auto-generated
 Profile: debian/ftp-master-auto-reject
-Enable-Tag: FSSTND-dir-in-usr, FSSTND-dir-in-var, arch-dependent-file-in-usr-share,
+Enable-Tags: FSSTND-dir-in-usr, FSSTND-dir-in-var, arch-dependent-file-in-usr-share,
  arch-independent-package-contains-binary-or-object, bad-package-name,
  bad-relation, bad-version-number, binary-file-compressed-with-upx,
  binary-in-etc, binary-or-shlib-defines-rpath, binary-with-bad-dynamic-table,
@@ -38,7 +38,7 @@ Enable-Tag: FSSTND-dir-in-usr, FSSTND-dir-in-var, arch-dependent-file-in-usr-sha
  usr-share-doc-symlink-to-foreign-package,
  usr-share-doc-symlink-without-dependency, wrong-file-owner-uid-or-gid
 
-Tag: FSSTND-dir-in-usr, FSSTND-dir-in-var, bad-package-name, bad-relation, bad-version-number,
+Tags: FSSTND-dir-in-usr, FSSTND-dir-in-var, bad-package-name, bad-relation, bad-version-number,
  binary-file-compressed-with-upx, binary-in-etc,
  build-info-in-binary-control-file-section, control-file-has-bad-owner,
  control-file-has-bad-permissions, control-interpreter-in-usr-local,

@@ -160,12 +160,12 @@ sub _read_profile {
 
 sub _read_profile_section {
     my ($self, $pname, $section, $sno) = @_;
-    my @tags = $self->_split_comma_sep_field($section->{'tag'});
+    my @tags = $self->_split_comma_sep_field($section->{'tags'});
     my $overridable = $self->_parse_boolean($section->{'overridable'}, -1, $pname, $sno);
     my $severity = $section->{'severity'}//'';
     my $ignore_map = $self->{'ignored-overrides'};
     my $sev_map = $self->{'severity-changes'};
-    fail "Profile \"$pname\" is missing Tag field (or it is empty) in section $sno." unless @tags;
+    fail "Profile \"$pname\" is missing Tags field (or it is empty) in section $sno." unless @tags;
     fail "Profile \"$pname\" contains invalid severity \"$severity\" in section $sno."
         if $severity && !$SEVERITIES{$severity};
     foreach my $tag (@tags) {
@@ -184,7 +184,7 @@ sub _read_profile_section {
 sub _read_profile_tags{
     my ($self, $pname, $pheader) = @_;
     $self->_check_duplicates($pname, $pheader, 'enable-tags-from-check', 'disable-tags-from-check');
-    $self->_check_duplicates($pname, $pheader, 'enable-tag', 'disable-tag');
+    $self->_check_duplicates($pname, $pheader, 'enable-tags', 'disable-tags');
     my $tags_from_check_sub = sub {
         my ($field, $check) = @_;
         fail "Unknown check $check in $pname\n" unless exists $CHECK_MAP{$check};
@@ -197,8 +197,8 @@ sub _read_profile_tags{
     };
     $self->_enable_tags_from_field($pname, $pheader, 'enable-tags-from-check', $tags_from_check_sub, 1);
     $self->_enable_tags_from_field($pname, $pheader, 'disable-tags-from-check', $tags_from_check_sub, 0);
-    $self->_enable_tags_from_field($pname, $pheader, 'enable-tag', $tag_sub, 1);
-    $self->_enable_tags_from_field($pname, $pheader, 'disable-tag', $tag_sub, 0);
+    $self->_enable_tags_from_field($pname, $pheader, 'enable-tags', $tag_sub, 1);
+    $self->_enable_tags_from_field($pname, $pheader, 'disable-tags', $tag_sub, 0);
 }
 
 sub _enable_tags_from_field {

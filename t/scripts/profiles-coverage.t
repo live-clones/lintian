@@ -51,16 +51,16 @@ sub parse_profile {
     my ($header, @section) = Util::read_dpkg_control($profile);
     my $en_checks = $header->{'enable-tags-from-check'}//'';
     my $dis_checks = $header->{'disable-tags-from-check'}//'';
-    my $en_tag = $header->{'enable-tag'}//'';
-    my $dis_tag = $header->{'disable-tag'}//'';
+    my $en_tag = $header->{'enable-tags'}//'';
+    my $dis_tag = $header->{'disable-tags'}//'';
     foreach my $check (split m/\s*+,\s*+/o, $en_checks){
-        die "Unknown check in $profile.\n" unless $CHECKS{$check};
+        die "Unknown check ($check) in $profile.\n" unless $CHECKS{$check};
         foreach my $tag (@{$CHECKS{$check}}){
             $TAGS{$tag}++;
         }
     }
     foreach my $tag (split m/\s*+,\s*+/o, $en_tag){
-        die "Unknown tag in $profile.\n" unless exists $TAGS{$tag};
+        die "Unknown tag ($tag) in $profile.\n" unless exists $TAGS{$tag};
         $TAGS{$tag}++;
     }
 
@@ -73,8 +73,8 @@ sub parse_profile {
     }
     # ... and other fields
     foreach my $sect (@section){
-        foreach my $tag (split m/\s*+,\s*+/o, $sect->{'tag'}){
-            die "Unknown tag in $profile.\n" unless exists $TAGS{$tag};
+        foreach my $tag (split m/\s*+,\s*+/o, $sect->{'tags'}//''){
+            die "Unknown tag ($tag) in $profile.\n" unless exists $TAGS{$tag};
         }
     }
 }
