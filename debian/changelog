@@ -14,6 +14,9 @@ lintian (2.5.2) UNRELEASED; urgency=low
     + [NT] Check for embedded copies of the underscore javascript
       library.  Thanks to Jakub Wilk for report and the patch.
       (Closes: #631513)
+    + [NT] Removed a leading slash from the filename part of the
+      extra for python-debug-in-wrong-location.  Thanks to
+      Jakub Wilk for the report and the patch.  (Closes: #631530)
 
   * frontend/lintian:
     + [NT] Ensure that all dependency collections of a check are

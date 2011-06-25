@@ -467,7 +467,7 @@ foreach my $file (@{$info->sorted_index}) {
 
 	    if ($index_info->{type} =~ m/^[-h]/o &&
 		$file =~ m,^usr/lib/debug/usr/lib/pyshared/(python\d?(?:\.\d+))/(.++)$,o){
-		my $correct = "/usr/lib/debug/usr/lib/pymodules/$1/$2";
+		my $correct = "usr/lib/debug/usr/lib/pymodules/$1/$2";
 		tag 'python-debug-in-wrong-location', $file, $correct;
 	    }
 	}
