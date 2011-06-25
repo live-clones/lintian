@@ -29,12 +29,12 @@ my $type = shift;
 my $file;
 my $data;
 
-exit 0 if ($type eq 'source'); #FIXME
-
 if ($type eq 'changes'){
     $file = 'changes';
 } elsif ($type eq 'binary' or $type eq 'udeb'){
     $file = 'control/control';
+} elsif ($type eq 'source') {
+    $file = 'dsc';
 }
 
 if (!defined($file)) {
@@ -52,7 +52,7 @@ exit 0 unless (defined($file));
 
 mkdir("fields", 0777) or fail("mkdir fields: $!");
 
-if($type eq 'changes'){
+if ($type eq 'changes' or $type eq 'source'){
     $data = get_dsc_info($file);
 } elsif ($type eq 'binary' or $type eq 'udeb'){
     $data = (read_dpkg_control($file))[0];
@@ -68,6 +68,19 @@ for my $field (keys %$data) {
     open(F, '>', $field_file) or fail("cannot open file $field_file for writing: $!");
     print F $value,"\n";
     close(F) or fail("Could not write $field_file: $!");
+}
+
+if ($type eq 'source'){
+    # FIXME - the LAB really ought to handle this as it involves
+    # cross-pkg LAB layout.
+
+    # Create symbolic links to binary packages
+    mkdir('binary', 0777) or fail("mkdir binary: $!");
+    for my $bin (split(m/,\s+/o,$data->{'binary'})) {
+        next if ($bin =~ m,/,o);
+        symlink("../../../binary/$bin", "binary/$bin")
+            or fail("cannot symlink binary package $bin: $!");
+    }
 }
 
 if($type eq 'binary' or $type eq 'udeb'){
