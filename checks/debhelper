@@ -83,8 +83,9 @@ while (<RULES>) {
         $maybe_skipping--;
     }
 
-    if (m/^\s+-?(dh_\w+)/) {
+    if (m/^\s+-?(dh_\w+)(.)?/) {
         my $dhcommand = $1;
+        my $trail = $2//'';
 
 	if ($dhcommand eq 'dh_dhelp') {
 	    tag 'dh_dhelp-is-deprecated', "line $.";
@@ -95,7 +96,9 @@ while (<RULES>) {
 	if ($dhcommand eq 'dh_undocumented') {
 	    tag 'dh_undocumented-is-obsolete', "line $.";
 	}
-	if ($dhcommand eq 'dh_python') {
+	# Some use dh_python$(VER) to run dh_python2 and dh_python3,
+	# so ignore this if it is followed by a $
+	if ($dhcommand eq 'dh_python' and $trail ne '$') {
 	    tag 'dh_python-is-obsolete', "line $.";
 	}
 	if ($dhcommand eq 'dh_pycentral') {

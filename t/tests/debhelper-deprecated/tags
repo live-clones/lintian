@@ -1,7 +1,7 @@
-W: debhelper-deprecated source: dh_desktop-is-deprecated line 23
-W: debhelper-deprecated source: dh_dhelp-is-deprecated line 24
-W: debhelper-deprecated source: dh_pycentral-is-obsolete line 27
-W: debhelper-deprecated source: dh_python-is-obsolete line 26
-W: debhelper-deprecated source: dh_scrollkeeper-is-deprecated line 25
-W: debhelper-deprecated source: dh_suidregister-is-obsolete line 37
-W: debhelper-deprecated source: dh_undocumented-is-obsolete line 38
+W: debhelper-deprecated source: dh_desktop-is-deprecated line 24
+W: debhelper-deprecated source: dh_dhelp-is-deprecated line 25
+W: debhelper-deprecated source: dh_pycentral-is-obsolete line 29
+W: debhelper-deprecated source: dh_python-is-obsolete line 27
+W: debhelper-deprecated source: dh_scrollkeeper-is-deprecated line 26
+W: debhelper-deprecated source: dh_suidregister-is-obsolete line 39
+W: debhelper-deprecated source: dh_undocumented-is-obsolete line 40

@@ -10,6 +10,12 @@ lintian (2.5.2) UNRELEASED; urgency=low
   * checks/circular-deps.desc:
     + [NT] Fixed typo; thanks to Nicolás Alvarez for the report
       and patch.  (Closes: #630925)
+  * checks/debhelper:
+    + [NT] Do not trigger deprecation warning for dh_python if it
+      is followed by a "$".  This prevents false-positives when
+      a Makefile variable is used to choose between dh_python2
+      and dh_python3.  Thanks to Leonid Borisenko for the report.
+      (Closes: #631662)
   * checks/files:
     + [NT] Check for embedded copies of the underscore javascript
       library.  Thanks to Jakub Wilk for report and the patch.
