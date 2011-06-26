@@ -1,5 +1,6 @@
 # This profile is auto-generated
 Profile: debian/main
+Extends: debian/ftp-master-auto-reject
 Enable-Tags-From-Check: binaries, changelog-file, changes-file, circular-deps, conffiles,
  control-file, control-files, copyright-file, cruft, deb-format, debconf,
  debhelper, debian-readme, debian-source-dir, description, duplicate-files,

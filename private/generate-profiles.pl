@@ -7,7 +7,9 @@ use strict;
 use warnings;
 
 use constant LINE_LENGTH => 80;
-use constant FIELD_ORDER => ('Enable-Tags-From-Check',
+use constant FIELD_ORDER => (
+                             'Extends',
+                             'Enable-Tags-From-Check',
                              'Disable-Tags-From-Check',
                              'Enable-Tags',
                              'Disable-Tags',
@@ -39,6 +41,7 @@ foreach my $dir (@dirs) {
 }
 
 generate_profile('debian/main', {
+    'Extends' => 'debian/ftp-master-auto-reject',
     'Enable-Tags-From-Check' => \@checks,
     });
 
@@ -61,7 +64,11 @@ sub generate_profile {
     foreach my $f (FIELD_ORDER) {
         my $val = $main->{$f};
         next unless defined $val;
-        format_field($fd, $f, sort @$val);
+        if ($f eq 'Extends') {
+            format_field($fd, $f, $val);
+        } else {
+            format_field($fd, $f, sort @$val);
+        }
     }
     print $fd "\n";
     foreach my $para (@other) {
