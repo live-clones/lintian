@@ -271,7 +271,7 @@ if (m,\<put author[\'\(]s\)? name and email here\>,o) {
     tag 'helper-templates-in-copyright';
 }
 if (m,\<Copyright \(C\) YYYY Name OfAuthor\>,o or
-    m,Author\(s\),o or
+    m,Upstream Author\(s\),o or
     m,\<years\>,o or
     m,\<special license\>,o or
     m,\<likewise for another author\>,o) {
