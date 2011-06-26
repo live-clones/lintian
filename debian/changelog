@@ -28,9 +28,19 @@ lintian (2.5.2) UNRELEASED; urgency=low
     + [NT] Removed a leading slash from the filename part of the
       extra for python-debug-in-wrong-location.  Thanks to
       Jakub Wilk for the report and the patch.  (Closes: #631530)
+  * checks/rules:
+    + [NT] Check included files in d/rules against a limited
+      number of common makefile snippets, which are known not
+      to implement all the required targets.  This prevents
+      false negatives of missing targets.  Thanks to
+      Jakub Wilk for the suggestion and the initial makefile
+      list.  (Closes: #631711)
   * checks/symlinks:
     + [NT] Symlink checking extended to relative paths as well.
       (Closes: #217023)
+
+  * data/rules/known-makefiles:
+    + [NT] Added file.
 
   * frontend/lintian:
     + [NT] Ensure that all dependency collections of a check are

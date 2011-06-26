@@ -1,0 +1,4 @@
+E: rules-missing-targets-with-known-includes source: debian-rules-missing-required-target binary-arch
+E: rules-missing-targets-with-known-includes source: debian-rules-missing-required-target binary-indep
+W: rules-missing-targets-with-known-includes source: debian-rules-missing-recommended-target build-arch
+W: rules-missing-targets-with-known-includes source: debian-rules-missing-recommended-target build-indep

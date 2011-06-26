@@ -1,0 +1,7 @@
+Testname: rules-missing-targets-with-known-includes
+Sequence: 6000
+Version: 1.0
+Description: Test for debian/rules with known included file
+Test-For:
+ debian-rules-missing-required-target
+ debian-rules-missing-recommended-target
