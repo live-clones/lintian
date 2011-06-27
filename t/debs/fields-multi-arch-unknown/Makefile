@@ -1,4 +1,4 @@
-name = fields-multi-arch-illegal
+name = fields-multi-arch-unknown
 
 all:
 	echo '2.0' > debian-binary

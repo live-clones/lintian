@@ -2,4 +2,6 @@ Testname: fields-multi-arch
 Sequence: 6000
 Version: 1.0
 Description: Tests for the Multi-Arch field
-Test-For: unknown-multi-arch-value
+Test-Against:
+ illegal-multi-arch-value
+ unknown-multi-arch-value
