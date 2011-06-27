@@ -60,6 +60,18 @@ about that tag.
 
 Display usage information and exit.
 
+=item B<--profile> prof
+
+Use the severities from the vendor profile prof when displaying tags.
+If the profile name does not contain a slash, the default profile for
+than vendor is chosen.
+
+If not specified, B<lintian-info> loads the best profile for the
+current vendor.
+
+Please Refer to the Lintian User Manual for the full documentation of
+profiles.
+
 =item B<-t>, B<--tags>
 
 Rather than treating them as log file names, treat any command-line

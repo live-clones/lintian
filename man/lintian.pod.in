@@ -67,13 +67,17 @@ Run only the specified checks.  You can either specify the name of the
 check script or the abbreviation.  For details, see the L</CHECKS> section
 below.
 
+Note: This option skips profile loading, even if B<--profile> was passed.
+
 =item B<-F>, B<--ftp-master-rejects>
 
 Run only the checks that issue tags that result in automatic rejects
 from the Debian upload queue.  The list of such tags is refreshed with
 each Lintian release, so may be slightly out of date if it has changed
-recently.  This option does not, as yet, ignore overrides for fatal
-tags for which overrides aren't allowed.
+recently.
+
+This is implemented via a profile and thus this option cannot be used
+together with B<--profile>.
 
 =item B<-r>, B<--remove>
 
@@ -94,12 +98,16 @@ Run only the checks that issue the requested tags.  The tests for
 other tags within the check scripts will be run but the tags will not
 be issued.
 
+Note: This option skips profile loading, even if B<--profile> was passed.
+
 =item B<--tags-from-file> filename
 
 Same functionality as B<--tags>, but read the list of tags from a
 file.  Blank lines and lines beginning with # are ignored.  All other
 lines are taken to be tag names or comma-separated lists of tag names
 to (potentially) issue.
+
+Note: This option skips profile loading, even if B<--profile> was passed.
 
 =item B<-u>, B<--unpack>
 
@@ -273,6 +281,18 @@ tags is probably not worth the effort.
 
 This option overrides the B<pedantic> variable in the configuration
 file.
+
+=item B<--profile> vendor[/prof]
+
+Use the profile from vendor (or the profile with that name).  If the
+profile name does not contain a slash, the default profile for than
+vendor is chosen.
+
+If not specified, B<lintian> loads the best profile for the current
+vendor.
+
+Please Refer to the Lintian User Manual for the full documentation of
+profiles.
 
 =item B<--show-overrides>
 

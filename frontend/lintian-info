@@ -37,15 +37,25 @@ BEGIN {
 
 # import perl libraries
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
+use Lintian::Internal::FrontendUtil;
+use Lintian::Profile;
 use Lintian::Tag::Info ();
 use Text_utils;
 
 my %already_displayed = ();
-
-my ($annotate, $tags, $help);
+my @proc_inc = (
+    "$ENV{HOME}/.lintian/profiles",
+    '/etc/lintian/profiles',
+    "$ENV{'LINTIAN_ROOT'}/profiles"
+);
+my ($annotate, $tags, $help, $prof);
 Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
-GetOptions('annotate|a' => \$annotate, 'tags|t' => \$tags, 'help|h' => \$help)
-    or die("error parsing options\n");
+GetOptions(
+    'annotate|a' => \$annotate,
+    'tags|t' => \$tags,
+    'help|h' => \$help,
+    'profile' => \$prof,
+) or die("error parsing options\n");
 
 # help
 if ($help) {
@@ -57,11 +67,17 @@ Usage: lintian-info [log-file...] ...
 Options:
     -a, --annotate    display descriptions of tags in Lintian overrides
     -t, --tags        display tag descriptions
+    --profile X       use vendor profile X to determine severities
 EOT
 
     exit 0;
 }
 
+unless ($prof) {
+    $prof = find_default_profile(@proc_inc);
+
+}
+load_profile($prof, \@proc_inc);
 
 # If tag mode was specified, read the arguments as tags and display the
 # descriptions for each one.  (We don't currently display the severity,
@@ -69,12 +85,14 @@ EOT
 my $unknown;
 if ($tags) {
     for my $tag (@ARGV) {
-	print "N: $tag\n";
-	print "N:\n";
 	my $info = Lintian::Tag::Info->new($tag);
 	if ($info) {
+	    print $info->code . ": $tag\n";
+	    print "N:\n";
 	    print $info->description('text', 'N:   ');
 	} else {
+	    print "N: $tag\n";
+	    print "N:\n";
 	    print "N:	Unknown tag.\n";
 	    $unknown = 1;
 	}
@@ -119,6 +137,19 @@ while (<>) {
 }
 
 exit 0;
+
+# load_profile($profname, $proc_inc_ref)
+#  Loads the profile called $profname and applies
+#  the relevant changes from it.
+sub load_profile{
+    my ($profname, $proc_inc_ref) = @_;
+    my $profile = Lintian::Profile->new($prof, $proc_inc_ref);
+    my $severities = $profile->severity_changes;
+    while ( my ($tagname, $severity) = each(%$severities) ){
+	my $tag = Lintian::Tag::Info->new($tagname);
+	$tag->set_severity($severity);
+    }
+}
 
 # Local Variables:
 # indent-tabs-mode: t

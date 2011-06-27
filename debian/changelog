@@ -42,10 +42,38 @@ lintian (2.5.2) UNRELEASED; urgency=low
   * data/rules/known-makefiles:
     + [NT] Added file.
 
+  * debian/lintian.install:
+    + [NT] Added the profiles directory.
+  * debian/rules:
+    + [NT] Added target to update the profiles.
+
+  * doc/lintian.xml:
+    + [NT] Added information about the new Vendor profiles.
+
+  * frontend/{lintian,lintian-info}:
+    + [NT] Added profile support (new option --profile), please
+      refer to the Lintian User Manual for more information.
   * frontend/lintian:
     + [NT] Ensure that all dependency collections of a check are
       loaded.  Previously Lintian would only load direct
       dependencies of a collection and assume that was enough.
+
+  * lib/Lintian/{Internal/FrontendUtil,Profile}.pm:
+    + [NT] New files.
+  * lib/Lintian/{Tag/Info,Tags}.pm:
+    + [NT] Updated for profile support.
+
+  * man/lintian.pod.in:
+    + [NT] Documented the new --profile option.  Note that the
+      options --suppress-tags{,-from-file} now supresses tags
+      in the active profile.
+  * man/lintian-info.pod:
+    + [NT] Documented the new --profile option.
+
+  * profiles/*:
+    + [NT] Added default profiles for Debian and Ubuntu.  Note
+      that these profiles will silently ignore overrides for
+      "fatal" (non-overridable) tags.  (Closes: #536364)
 
  -- Niels Thykier <niels@thykier.net>  Sun, 19 Jun 2011 13:39:10 +0200
 

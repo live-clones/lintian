@@ -4,7 +4,9 @@ PERL ?= /usr/bin/perl
 
 VER := $(shell head -1 debian/changelog | sed -e 's/^.*(//' -e 's/).*$$//')
 tmp := $(CURDIR)/debian/lintian
-neededfiles := debian/rules frontend/lintian
+profiles := profiles/debian/main.profile \
+	    profiles/debian/ftp-master-auto-reject.profile
+neededfiles := debian/rules frontend/lintian $(profiles)
 docsource := doc/lintian.xml doc/README.in man/lintian.pod.in \
 	     man/lintian-info.pod
 allchecks := $(wildcard checks/*)
@@ -26,7 +28,9 @@ ifneq (,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
 	PAR_ARGS=-j $(jobs)
 endif
 
-
+profiles: $(profiles)
+$(profiles): $(allchecks) private/generate-profiles.pl
+	LINTIAN_ROOT='.' private/generate-profiles.pl
 
 runtests: $(neededfiles) $(allchecks) $(allcollect) $(tagfiles) $(testfiles)
 	@echo .... running tests ....

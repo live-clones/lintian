@@ -153,7 +153,9 @@ sub new {
         },
         display_source    => {},
         files             => {},
+        ignored_overrides => {},
         only_issue        => {},
+        respect_display   => 1,
         show_experimental => 0,
         show_overrides    => 0,
         show_pedantic     => 0,
@@ -535,6 +537,7 @@ file cannot be opened.
 
 sub file_overrides {
     my ($self, $overrides) = @_;
+    my $ignored = $self->{ignored_overrides};
     unless (defined $self->{current}) {
         die 'no current file when adding overrides';
     }
@@ -579,6 +582,7 @@ sub file_overrides {
                 }
                 next unless $found;
             }
+            next if $ignored->{$tag};
             $extra = '' unless defined $extra;
             $info->{overrides}{$tag}{$extra} = 0;
         } else {
@@ -677,6 +681,13 @@ sub displayed {
     my ($self, $tag) = @_;
     my $info = Lintian::Tag::Info->new($tag);
     return 0 if ($info->experimental and not $self->{show_experimental});
+    my $only = $self->{only_issue};
+    if (%$only) {
+        return 0 unless $only->{$tag};
+        return 1 unless $self->{respect_display};
+    } else {
+        return 0 if $self->suppressed($tag);
+    }
     my $severity = $info->severity;
     my $certainty = $info->certainty;
 
@@ -725,6 +736,45 @@ sub suppressed {
     }
     return 1 if $self->{suppress}{$tag};
     return;
+}
+
+=item ignore_overrides(TAG[, ...])
+
+Ignores all future overrides for all tags given as arguments.
+
+=cut
+
+sub ignore_overrides {
+    my ($self, @tags) = @_;
+    my $ignored = $self->{ignored_overrides};
+    foreach my $tag (@tags){
+        $ignored->{$tag} = 1;
+    }
+    return 1;
+}
+
+=item respect_display_level([BOOL])
+
+Whether or not the display level should be considered for
+tags that can be emitted.
+
+Calling this with a defined non-truth value and calling
+only(TAG) will emit all of the tags passed to only(),
+regardless of what is passed to show_pedantic() and
+display() etc.
+
+Returns the old value.
+
+Note: This does not effect suppressed tags, which will
+always be suppressed regardless.
+
+=cut
+
+sub respect_display_level{
+    my ($self, $val) = @_;
+    my $old = $self->{respect_display};
+    $self->{respect_display} = $val if defined $val;
+    return $old;
 }
 
 =back

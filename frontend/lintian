@@ -27,6 +27,7 @@ use warnings;
 
 use Getopt::Long;
 use Cwd;
+
 # }}}
 
 # {{{ Global Variables
@@ -51,6 +52,7 @@ our $ftpmaster_tags = 0;	#flag for -F|--ftp-master-rejects switch
 my $allow_root = 0;		#flag for --allow-root switch
 my $keep_lab = 0;		#flag for --keep-lab switch
 my $packages_file = 0;		#string for the -p option
+our $OPT_LINTIAN_PROFILE = '';  #string for the --profile option
 our $OPT_LINTIAN_LAB = '';	#string for the --lab option
 our $OPT_LINTIAN_ARCHIVEDIR = '';#string for the --archivedir option
 our $OPT_LINTIAN_DIST = '';	#string for the --dist option
@@ -62,6 +64,15 @@ our $LINTIAN_ROOT;		#location of the lintian modules
 my $no_conf = 0;                #flag for --no-cfg
 my %opt;                        #hash of some flags from cmd or cfg
 my %conf_opt;                   #names of options set in the cfg file
+my $no_profile = 0;             #whether a profile should be loaded
+
+# The profile search path except LINTIAN_ROOT/profiles
+#  which will be added later (we dont know LINTIAN_ROOT
+#  at this point)
+my @prof_inc = (
+    "$ENV{HOME}/.lintian/profiles",
+    '/etc/lintian/profiles'
+);
 
 my $experimental_output_opts = undef;
 
@@ -96,6 +107,7 @@ our $LINTIAN_DIST = undef;
 our $LINTIAN_ARCH = undef;
 our $LINTIAN_SECTION = undef;
 our $LINTIAN_AREA = undef;
+our $LINTIAN_PROFILE = undef;
 # }}}
 
 # {{{ Setup Code
@@ -163,6 +175,7 @@ Behaviour options:
     -L, --display-level       display tags with the specified level
     -o, --no-override         ignore overrides
     --pedantic                display "P:" tags (normally suppressed)
+    --profile X               Use the profile X or use vendor X checks
     --show-overrides          output tags that have been overriden
     --suppress-tags T,...     don\'t show the specified tags
     --suppress-tags-from-file X don\'t show the tags listed in file X
@@ -221,6 +234,7 @@ sub record_check_part {
     }
     $action = 'check';
     $checks = "$_[1]";
+    $no_profile = 1;
 }
 
 # Record Parts requested for checking
@@ -240,6 +254,7 @@ sub record_check_tags {
     }
     $action = 'check';
     $check_tags = "$_[1]";
+    $no_profile = 1;
 }
 
 # Record Parts requested for checking
@@ -437,6 +452,7 @@ my %opthash = (			# ------------------ actions
 	       'area=s' => \$OPT_LINTIAN_AREA,
 	       'section=s' => \$OPT_LINTIAN_AREA,
 	       'arch=s' => \$OPT_LINTIAN_ARCH,
+	       'profile=s' => \$OPT_LINTIAN_PROFILE,
 	       'root=s' => \$LINTIAN_ROOT,
 
 	       # ------------------ package selection options
@@ -499,6 +515,10 @@ if ($action =~ /^(?:check|unpack|remove)$/ and $#ARGV == -1 and not $check_every
     syntax();
 }
 
+die "Cannot use profile together wtih --ftp-master-rejects.\n" if $OPT_LINTIAN_PROFILE and $ftpmaster_tags;
+# --ftp-master-rejects is implemented in a profile
+$OPT_LINTIAN_PROFILE = 'debian/ftp-master-auto-reject' if $ftpmaster_tags;
+
 # }}}
 
 # {{{ Setup Configuration
@@ -524,7 +544,7 @@ unless ($no_conf) {
     }
 }
 
-use constant VARS => qw(LAB ARCHIVEDIR DIST AREA ARCH);
+use constant VARS => qw(LAB ARCHIVEDIR DIST AREA ARCH PROFILE);
 # read configuration file
 if ($LINTIAN_CFG) {
     open(CFG, '<', $LINTIAN_CFG)
@@ -623,6 +643,12 @@ foreach (('ROOT', 'CFG', VARS)) {
     }
 }
 
+# If we are running the test suite we should ignore
+# user/system profiles.
+if ($ENV{'LINTIAN_INTERNAL_TESTSUITE'}){
+    @prof_inc = ();
+}
+
 $verbose = 1 if $debug;
 $ENV{'LINTIAN_DEBUG'} = $debug;
 
@@ -656,7 +682,11 @@ import Lintian::Output qw(:messages);
 require Lintian::Command::Simple;
 require Lintian::Command;
 import Lintian::Command qw(spawn reap);
+require Lintian::Internal::FrontendUtil;
+import Lintian::Internal::FrontendUtil;
 require Lintian::ProcessablePool;
+require Lintian::Profile;
+require Lintian::Tag::Info;
 require Lintian::Tags;
 import Lintian::Tags qw(tag);
 
@@ -680,19 +710,12 @@ if (defined $experimental_output_opts) {
     }
 }
 
+
 $Lintian::Output::GLOBAL->verbose($verbose);
 $Lintian::Output::GLOBAL->debug($debug);
 $Lintian::Output::GLOBAL->quiet($quiet);
 $Lintian::Output::GLOBAL->color($opt{'color'});
 $Lintian::Output::GLOBAL->showdescription($opt{'info'});
-
-# Now that we can load the data, process the -F or --ftp-master-rejects
-# option.
-if ($ftpmaster_tags) {
-    my $fatal = Lintian::Data->new('output/ftp-master-fatal');
-    my $nonfatal = Lintian::Data->new('output/ftp-master-nonfatal');
-    $check_tags = join(',', $fatal->all, $nonfatal->all);
-}
 
 # Print Debug banner, now that we're finished determining
 # the values and have Lintian::Output available
@@ -715,13 +738,40 @@ $TAGS->sources(keys %display_source) if %display_source;
 $TAGS->only(split(/,/, $check_tags)) if defined $check_tags;
 $TAGS->suppress(keys %suppress_tags) if %suppress_tags;
 
-# Initialize display level settings.
-for my $level (@display_level) {
-    eval { $TAGS->display(@$level) };
-    if ($@) {
-	my $error = $@;
-	$error =~ s/ at .*//;
-	die $error, "\n";
+if ($no_profile) {
+    # No profile if we have been given explicit list
+    $LINTIAN_PROFILE = '';
+    # If we are given explicit list, we use that regardless
+    # of show_pedantic/display.
+    $TAGS->respect_display_level(0);
+} else {
+    unless ($LINTIAN_PROFILE){
+	# Time to ask dpkg-vendor for a vendor name
+	$LINTIAN_PROFILE = find_default_profile(@prof_inc, "$LINTIAN_ROOT/profiles");
+    }
+}
+
+if ($LINTIAN_PROFILE) {
+    my $profile = Lintian::Profile->new($LINTIAN_PROFILE,
+					[@prof_inc, "$LINTIAN_ROOT/profiles"]);
+    my @ptags = $profile->tags;
+    my @ign_overrides = $profile->ignored_overrides;
+    my $severities = $profile->severity_changes;
+    v_msg('Using profile ' . $profile->name . '.');
+    $TAGS->only(@ptags) if @ptags;
+    $TAGS->ignore_overrides(@ign_overrides) if @ign_overrides;
+    while ( my ($tagname, $severity) = each(%$severities) ){
+	my $tag = Lintian::Tag::Info->new($tagname);
+	$tag->set_severity($severity);
+    }
+    # Initialize display level settings.
+    for my $level (@display_level) {
+	eval { $TAGS->display(@$level) };
+	if ($@) {
+	    my $error = $@;
+	    $error =~ s/ at .*//;
+	    die $error, "\n";
+	}
     }
 }
 
@@ -1176,6 +1226,7 @@ sub set_value {
     $target->{$field} = $source->{$field};
     delete $source->{$field};
 }
+
 
 # Given a ref to %collection_info and the path to the collection
 # directory, this will load all the collection information into

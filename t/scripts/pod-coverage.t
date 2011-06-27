@@ -20,6 +20,7 @@ our %MODULES =
      'Lintian::Data'               => [],
      'Lintian::DepMap'             => [],
      'Lintian::DepMap::Properties' => [],
+     'Lintian::Profile'            => [],
      'Lintian::Processable'        => [],
      'Lintian::ProcessableGroup'   => [],
      'Lintian::ProcessablePool'    => [],
