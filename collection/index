@@ -29,6 +29,8 @@ use vars qw($verbose);
 
 # import perl libraries
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
+use Cwd();
+use File::Spec;
 use Util;
 use Lintian::Command qw(spawn reap);
 
@@ -36,37 +38,189 @@ use Lintian::Command qw(spawn reap);
 my $pkg = shift;
 my $type = shift;
 
-my (@jobs, $job);
+unlink 'index' or fail "Could not unlink index: $!" if -e 'index' && -s 'index';
+unlink 'index-errors' or fail "Could not unlink index-errors: $!" if -e 'index-errors' && -s 'index-errors';
 
-foreach my $file qw(index index-errors index-owner-id) {
-    unlink $file or fail "$file: $!" if -f $file;
+if ($type ne 'source') {
+    index_deb();
+} else {
+    index_src();
 }
 
-$job = { fail => 'error',
-         out  => 'index',
-         err  => 'index-errors' };
-push @jobs, $job;
-# (replaces dpkg-deb -c)
-# create index file for package
-spawn($job,
-      ['dpkg-deb', '--fsys-tarfile', 'deb' ],
-      '|', ['tar', 'tfv', '-'],
-      '|', ['sed', '-e', 's/^h/-/'],
-      '|', ['sort', '-k', '6'], '&');
-
-$job = { fail => 'error',
-         out  => 'index-owner-id',
-         err  => '/dev/null' };
-push @jobs, $job;
-# (replaces dpkg-deb -c)
-# create index file for package with owner IDs instead of names
-spawn($job,
-      ['dpkg-deb', '--fsys-tarfile', 'deb' ],
-      '|', ['tar', '--numeric-owner', '-tvf', '-'],
-      '|', ['sed', '-e', 's/^h/-/'],
-      '|', ['sort', '-k', '6'], '&');
-
-reap(@jobs);
-undef @jobs;
-
 exit 0;
+
+# returns all (orig) tarballs.
+sub gather_tarballs {
+    my $file = Cwd::realpath('dsc');
+    my $dir;
+    my $data;
+    my $version;
+    my @tarballs;
+    my $base;
+    my $baserev;
+    fail "Cannot resolve \"dsc\" link for $pkg or it does not point to a file.\n" unless $file and -e $file;
+    (undef, $dir, undef) = File::Spec->splitpath($file);
+    $data = get_dsc_info($file) or fail "Could not parse dsc file for $pkg.\n";
+    #  Version handling is based on Dpkg::Version::parseversion.
+    $version = $data->{'version'};
+    if ($version =~ /:/) {
+        $version =~ s/^(?:\d+):(.+)/$1/ or fail("bad version number '$version'");
+    }
+    $baserev = $data->{'source'} . '_' . $version;
+    $version =~ s/(.+)-(.*)$/$1/;
+    $base = $data->{'source'} . '_' . $version;
+    for my $fs (split(/\n/,$data->{'files'})) {
+        $fs =~ s/^\s*//;
+        next if $fs eq '';
+        my @t = split(/\s+/o,$fs);
+        next if ($t[2] =~ m,/,);
+        # Look for $pkg_$version.orig(-$comp)?.tar.$ext (non-native)
+        #       or $pkg_$version.tar.$ext (native)
+        #  - This deliberately does not look for the debian packaging
+        #    even when this would be a tarball.
+        if ($t[2] =~ /^(?:\Q$base\E\.orig(?:-(.*))?|\Q$baserev\E)\.tar\.(?:gz|bz2|lzma|xz)$/) {
+            push @tarballs, [$t[2], $1//''];
+        }
+    }
+    fail('could not find the source tarball') unless @tarballs;
+    return @tarballs;
+}
+
+# Creates an index for the source package
+sub index_src {
+    my @tarballs = gather_tarballs();
+    my @result;
+    foreach my $tardata (@tarballs) {
+	my ($tarball, $compname) = @$tardata;
+	my @index;
+        # Collect a list of the files in the source package.  tar currently doesn't
+        # automatically recognize LZMA / XZ, so we need to add the option where it's
+        # needed.  Change hard link status (h) to regular files and remove a leading
+        # ./ prefix on filenames while we're reading the tar output.  We intentionally
+        # don't parallelize this job because we need to use the output below.
+        my @tar_options = ('-tvf');
+        my $last = '';
+        my $collect;
+        if ($tarball =~ /\.(lzma|xz)\z/) {
+            unshift(@tar_options, "--$1");
+        }
+        $collect = sub {
+            my @lines = map { split "\n" } @_;
+            if ($last ne '') {
+                $lines[0] = $last . $lines[0];
+            }
+            if ($_[-1] !~ /\n\z/) {
+                $last = pop @lines;
+            } else {
+                $last = '';
+            }
+            for my $line (@lines) {
+                $line =~ s/^h/-/;
+                if ($line and $line !~ m,^(?:\S+\s+){5}\./$,) {
+                    push(@index, $line . "\n");
+                }
+            }
+        }; # End $collect = sub;
+        spawn({ fail => 'never', out => $collect, err_append => 'index-errors' },
+              ['tar', @tar_options, $tarball]);
+        if ($last) {
+            fail("tar output (for $tarball from $pkg) does not end in a newline");
+        }
+	# We now need to see if all files in the tarball have a common prefix.  If so,
+	# we're going to strip that prefix off each file name.  We also remove lines
+	# that consist solely of the prefix.
+	my $prefix;
+	for my $line (@index) {
+	    my ($filename) = ($line =~ /^(?:\S+\s+){5}(.*)/);
+	    $filename =~ s,^\./+,,o;
+	    my ($dirname) = ($filename =~ m,^([^/]+),);
+	    if (defined($dirname) and $dirname eq $filename and not $line =~ m/^d/o) {
+		$prefix = '';
+	    } elsif (defined $dirname) {
+		if (not defined $prefix) {
+		    $prefix = $dirname;
+		} elsif ($dirname ne $prefix) {
+		    $prefix = '';
+		}
+	    } else {
+		$prefix = '';
+	    }
+	}
+	# If there is a common prefix and it is $compname, then we use that
+	# becaues that is where they will be extracted by unpacked.
+	if ($prefix ne $compname) {
+	    # If there is a common prefix and it is not $compname
+	    # then strip the prefix and add $compname (if any)
+	    if ($prefix) {
+		@index = map {
+		    if (m,^((?:\S+\s+){5})(?:\./)?\Q$prefix\E(?:/+(.*+)?|\Z),){
+			my ($data, $file) = ($1, $2);
+			if ($file && $file !~ m,^(?:/++)?\Z,o){
+			    $file = "$compname/$file" if $compname;
+			    "$data$file\n";
+			} else {
+			    ();
+			}
+		    } else {
+			();
+		    }
+		} @index;
+		my $filename = 'source-prefix';
+		$filename .= "-$compname" if $compname;
+		open(PREFIX, '>', $filename)
+		    or fail("cannot create $filename for $pkg: $!");
+                print PREFIX "$prefix\n";
+		close PREFIX;
+	    } elsif ($compname) {
+		# Prefix with the compname (because that is where they will be
+		# unpacked to.
+		@index = map { s,^((?:\S++\s++){5})(?:\./)?\Q$prefix\E(?:/+)?,$1$compname/, } @index;
+	    }
+	}
+	push @result, @index;
+    }
+    # Now that we have the file names we want, write them out sorted to the index
+    # file.
+    spawn({ fail => 'error', out_append => "index" },
+	  sub { print @result }, '|', ['sort', '-k', '6']);
+    return 1;
+}
+
+# Creates an index for binary packages
+sub index_deb {
+    my (@jobs, $job);
+
+    foreach my $file qw(index index-errors index-owner-id) {
+        unlink $file or fail "$file: $!" if -f $file;
+    }
+
+    $job = { fail => 'error',
+             out  => 'index',
+             err  => 'index-errors' };
+    push @jobs, $job;
+    # (replaces dpkg-deb -c)
+    # create index file for package
+    spawn($job,
+          ['dpkg-deb', '--fsys-tarfile', 'deb' ],
+          '|', ['tar', 'tfv', '-'],
+          '|', ['sed', '-e', 's/^h/-/'],
+          '|', ['sort', '-k', '6'], '&');
+
+    $job = { fail => 'error',
+             out  => 'index-owner-id',
+             err  => '/dev/null' };
+    push @jobs, $job;
+    # (replaces dpkg-deb -c)
+    # create index file for package with owner IDs instead of names
+    spawn($job,
+          ['dpkg-deb', '--fsys-tarfile', 'deb' ],
+          '|', ['tar', '--numeric-owner', '-tvf', '-'],
+          '|', ['sed', '-e', 's/^h/-/'],
+          '|', ['sort', '-k', '6'], '&');
+
+    reap(@jobs);
+    undef @jobs;
+
+    return 1;
+}
+

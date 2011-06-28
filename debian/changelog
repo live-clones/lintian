@@ -74,6 +74,10 @@ lintian (2.5.2) UNRELEASED; urgency=low
     + [NT] Symlink checking extended to relative paths as well.
       (Closes: #217023)
 
+  * collection/index{,.desc}:
+    + [NT] Updated to handle source packages and with support for
+      multi tarball source packages.
+
   * data/rules/{deprecated,known}-makefiles:
     + [NT] Added file.
   * data/spelling/corrections:
@@ -102,6 +106,10 @@ lintian (2.5.2) UNRELEASED; urgency=low
       loaded.  Previously Lintian would only load direct
       dependencies of a collection and assume that was enough.
 
+  * lib/Lab/Package.pm:
+    + [NT] Symlink in all components of the source package when
+      creating the source entry in the lab.  Also removed legacy
+      code for using the old unpack scripts.
   * lib/Lintian/Command.pm:
     + [NT] Added support for appending output to files without
       truncating them first via the new out_append and
@@ -122,6 +130,9 @@ lintian (2.5.2) UNRELEASED; urgency=low
     + [NT] Added default profiles for Debian and Ubuntu.  Note
       that these profiles will silently ignore overrides for
       "fatal" (non-overridable) tags.  (Closes: #536364)
+
+  * unpack/unpack-srcpkg-l1:
+    + [NT] Removed in favour of the collection system.
 
  -- Niels Thykier <niels@thykier.net>  Sun, 19 Jun 2011 13:39:10 +0200
 

@@ -1,6 +1,5 @@
 Collector-Script: index
-Info: This script create an index file of the contents in the
- binary package.
-Type: binary, udeb
-Version: 1
+Info: This script create an index file of the contents of a package.
+Type: source, binary, udeb
+Version: 2
 

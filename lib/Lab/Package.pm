@@ -46,6 +46,9 @@ Hallo world
 use base qw(Class::Accessor);
 
 use strict;
+use warnings;
+
+use File::Spec;
 
 use Util;
 use Lintian::Output qw(:messages); # debug_msg and warning
@@ -154,14 +157,13 @@ sub entry_exists(){
     my $pkg_type = $self->{pkg_type};
     my $base_dir = $self->{base_dir};
 
-    # If we have a positive unpack level, something exists
-    return 1 if ($self->{_unpack_level} > 0);
-
     # Check if the relevant symlink exists.
     if ($pkg_type eq 'changes'){
 	return 1 if -l "$base_dir/changes";
     } elsif ($pkg_type eq 'binary' or $pkg_type eq 'udeb') {
 	return 1 if -l "$base_dir/deb";
+    } elsif ($pkg_type eq 'source'){
+	return 1 if -l "$base_dir/dsc";
     }
 
     # No unpack level and no symlink => the entry does not
@@ -188,8 +190,6 @@ sub create_entry(){
     my $madedir = 0;
     # It already exists.
     return 1 if ($self->entry_exists());
-    # We still use the "legacy" unpack for some things.
-    return $self->_unpack() unless ($pkg_type ne 'source');
 
     unless (-d $base_dir) {
 	mkdir($base_dir, 0777) or return 0;
@@ -199,6 +199,8 @@ sub create_entry(){
 	$link = "$base_dir/changes";
     } elsif ($pkg_type eq 'binary' or $pkg_type eq 'udeb') {
 	$link = "$base_dir/deb";
+    } elsif ($pkg_type eq 'source'){
+	$link = "$base_dir/dsc";
     } else {
 	fail "create_entry cannot handle $pkg_type";
     }
@@ -207,55 +209,24 @@ sub create_entry(){
 	rmdir($base_dir) if($madedir);
 	return 0;
     }
-    # Set the legacy "_unpack_level"
-    $self->{_unpack_level} = 1;
+    if ($pkg_type eq 'source'){
+	# If it is a source package, pull in all the related files
+	#  - else unpacked will fail or we would need a separate
+	#    collection for the symlinking.
+	my $data = get_dsc_info($pkg_path);
+	my (undef, $dir, undef) = File::Spec->splitpath($pkg_path);
+	for my $fs (split(m/\n/o,$data->{'files'})) {
+	    $fs =~ s/^\s*//o;
+	    next if $fs eq '';
+	    my @t = split(/\s+/o,$fs);
+	    next if ($t[2] =~ m,/,o);
+	    symlink("$dir/$t[2]", "$base_dir/$t[2]")
+		or fail("cannot symlink file $t[2]: $!");
+	}
+    }
     return 1;
 }
 
-
-=pod
-
-=item $lpkg->_unpack()
-
-DEPRECATED
-
-Runs the unpack script for the type of package.  This is
-deprecated but remains until all the unpack scripts have
-been replaced by coll scripts.
-
-=cut
-
-sub _unpack {
-    my ($self) = @_;
-    my $level = $self->{_unpack_level};
-    my $base_dir = $self->{base_dir};
-    my $pkg_type = $self->{pkg_type};
-    my $pkg_path = $self->{pkg_path};
-
-    debug_msg(1, sprintf("Current unpack level is %d",$level));
-
-    # Have we already run the unpack script?
-    return 1 if $level;
-
-    $self->remove_status_file();
-
-    if ( -d $base_dir ) {
-        # We were lied to, there's something already there - clean it up first
-        $self->delete_lab_entry() or return 0;
-    }
-
-    # create new directory
-    debug_msg(1, "Unpacking package ...");
-    if ($pkg_type eq 'source') {
-	Lintian::Command::Simple::run("$ENV{LINTIAN_ROOT}/unpack/unpack-srcpkg-l1", $base_dir, $pkg_path) == 0
-	    or return 0;
-    } else {
-	fail("_unpack does not know how to handle $pkg_type");
-    }
-
-    $self->{_unpack_level} = 1;
-    return 1;
-}
 
 sub update_status_file{
     my ($self, $lint_version) = @_;
@@ -264,7 +235,7 @@ sub update_status_file{
     my $fd;
     my $stf = "$self->{base_dir}/.lintian-status";
     # We are not unpacked => no place to put the status file.
-    return 0 if($self->{_unpack_level} < 1);
+    return 0 if $self->entry_exists();
     $pkg_path = $self->{pkg_path};
     unless( @stat = stat($pkg_path)){
 	warning("cannot stat file $pkg_path: $!",
@@ -308,20 +279,16 @@ sub remove_status_file{
 
 ## INTERNAL METHODS ##
 
-# Determines / Guesses the current unpack level - used by the constructor.
+# Checks if the existing (if any) entry is compatible,
+# if not, it will be removed.
 sub _check {
     my ($self) = @_;
-    my $act_unpack_level = 0;
     my $basedir = $self->{base_dir};
     if( -d $basedir ) {
 	my $remove_basedir = 0;
 	my $pkg_path = $self->{pkg_path};
 	my $data;
 	my $pkg_version = $self->{pkg_version};
-
-	# there's a base dir, so we assume that at least
-	# one level of unpacking has been done
-	$act_unpack_level = 1;
 
 	# lintian status file exists?
 	unless (-f "$basedir/.lintian-status") {
@@ -372,10 +339,8 @@ sub _check {
 	    my $lab = $self->{lab};
 	    v_msg("Removing $pkg_name");
 	    $self->delete_lab_entry() or die("Could not remove $pkg_name from lab.");
-	    $act_unpack_level = 0;
 	}
     }
-    $self->{_unpack_level} = $act_unpack_level;
     return 1;
 }
 
