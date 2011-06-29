@@ -98,6 +98,12 @@ STDOUT of the last forked child.  Will be set to a newly created
 scalar reference by default which can be used to retrieve the output
 after the call.
 
+=item out_append
+
+STDOUT of all forked childs, cannot be used with out and should only be
+used with files.  Unlike out, this appends the output to the file
+instread of truncating the file.
+
 =item pipe_out
 
 Use a pipe for STDOUT and start the process in the background.
@@ -107,6 +113,12 @@ process to end properly.
 =item err
 
 STDERR of all forked childs.  Defaults to STDERR of the parent.
+
+=item err_append
+
+STDERR of all forked childs, cannot be used with err and should only be
+used with files.  Unlike err, this appends the output to the file
+instread of truncating the file.
 
 =item pipe_err
 
@@ -170,15 +182,23 @@ sub spawn {
 	@out = ('>pipe', $opts->{pipe_out});
 	$background = 1;
     } else {
-	$opts->{out} ||= \$out;
-	@out = ('>', $opts->{out});
+	if (!exists $opts->{out} && defined $opts->{out_append}){
+	    @out = ('>>', $opts->{out_append});
+	} else {
+	    $opts->{out} ||= \$out;
+	    @out = ('>', $opts->{out});
+	}
     }
     if ($opts->{pipe_err}) {
 	@err = ('2>pipe', $opts->{pipe_err});
 	$background = 1;
     } else {
-	$opts->{err} ||= \*STDERR;
-	@err = ('2>', $opts->{err});
+	if (!exists $opts->{err} && defined $opts->{err_append}){
+	    @err = ('2>>', $opts->{err_append});
+	} else {
+	    $opts->{err} ||= \*STDERR;
+	    @err = ('2>', $opts->{err});
+	}
     }
 
 #    use Data::Dumper;
