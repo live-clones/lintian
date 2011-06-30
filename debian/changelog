@@ -41,6 +41,9 @@ lintian (2.5.2) UNRELEASED; urgency=low
 
   * data/rules/known-makefiles:
     + [NT] Added file.
+  * data/spelling/corrections:
+    + [RA] Remove discontiguous correction.  The OED lists this as valid.
+      Thanks, Charles Plessy.  (Closes: #632159)
 
   * debian/lintian.install:
     + [NT] Added the profiles directory.
