@@ -1,0 +1,3 @@
+W: filename-length-really-really-really-really-long-package-name source: package-has-long-file-name 101 > 80
+W: filename-length-really-really-really-really-long-package-name source: source-package-component-has-long-file-name 107 > 80
+W: filename-length-really-really-really-really-long-package-name: package-has-long-file-name 105 > 80

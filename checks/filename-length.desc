@@ -1,0 +1,33 @@
+Check-Script: filename-length
+Author: Niels Thykier <niels@thykier.net>
+Abbrev: flen
+Type: source, binary, udeb
+Needs-info: fields
+Info: This script checks for long package file names
+
+Tag: package-has-long-file-name
+Severity: normal
+Certainty: certain
+Info: The package has a very long package name.  This may complicate
+ shipping the package on some media such as CDs, where the filename
+ length may be limited.
+ .
+ For architecture dependent package names, the number in the brackets
+ represents the filename length on of the package on the architecture
+ with the longest name known to Lintian.
+ .
+ The tag is emitted based on the longest architecture rather than the
+ current architecture.
+Ref: http://lists.debian.org/debian-devel/2011/03/msg00943.html
+
+Tag: source-package-component-has-long-file-name
+Severity: normal
+Certainty: certain
+Info: The source package has a component with a very long filename.
+ This may complicate shipping the package on some media such as CDs,
+ where the filename length may be limited.
+ .
+ Note for architecture dependent packages, this will tag will be
+ triggered for the longest architecture known.
+Ref: http://lists.debian.org/debian-devel/2011/03/msg00943.html
+
