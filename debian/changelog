@@ -4,6 +4,7 @@ lintian (2.5.2) UNRELEASED; urgency=low
     + Added:
       - package-has-long-file-name
       - source-package-component-has-long-file-name
+      - upstart-job-in-etc-init.d-not-registered-via-update-rc.d
 
   * checks/binaries:
     + [NT] Added lib/${MULTIARCH_DIR} to the list of paths to
@@ -36,6 +37,13 @@ lintian (2.5.2) UNRELEASED; urgency=low
     + [NT] Removed a leading slash from the filename part of the
       extra for python-debug-in-wrong-location.  Thanks to
       Jakub Wilk for the report and the patch.  (Closes: #631530)
+  * checks/init.d{,.desc}:
+    + [NT] Provide a separate tag for upstart-jobs not registered
+      via update-rc.d in postinst.  This allows vendors (such as
+      Ubuntu) to disable this tag for upstart-jobs only using the
+      new vendor profiles.  While this would break overrides, all
+      existing overrides appears to be for normal scripts rather
+      than upstart-jobs.  (Closes: #631872)
   * checks/rules:
     + [NT] Check included files in d/rules against a limited
       number of common makefile snippets, which are known not

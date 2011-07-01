@@ -186,14 +186,24 @@ for (keys %initd_postinst) {
 opendir(INITD, 'init.d') or fail("cannot read init.d directory: $!");
 for (readdir(INITD)) {
     my $script = $_;
+    my $tagname = 'script-in-etc-init.d-not-registered-via-update-rc.d';
     next if grep {$script eq $_} qw(. .. README skeleton rc rcS);
+
+    # In an upstart system, such as Ubuntu, init scripts are symlinks to
+    # upstart-job which are not registered with update-rc.d.
+    if (-l "init.d/$_") {
+        my $target = readlink("init.d/$_");
+        if ($target =~ m,(?:\A|/)lib/init/upstart-job\z,) {
+            $tagname = 'upstart-job-in-etc-init.d-not-registered-via-update-rc.d';
+        }
+    }
+
 
     # If $initd_postinst is true for this script, we already checked the
     # syntax in the above loop.  Check the syntax of unregistered scripts so
     # that we get more complete Lintian coverage in the first pass.
     unless ($initd_postinst{$script}) {
-	tag 'script-in-etc-init.d-not-registered-via-update-rc.d',
-	    "etc/init.d/$script";
+	tag $tagname, "etc/init.d/$script";
 	check_init("init.d/$script") if -f "init.d/$script";
     }
 }

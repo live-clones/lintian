@@ -6,4 +6,4 @@ Test-Against:
  init.d-script-not-included-in-package
  init.d-script-not-marked-as-conffile
 Test-For:
- script-in-etc-init.d-not-registered-via-update-rc.d
+ upstart-job-in-etc-init.d-not-registered-via-update-rc.d
