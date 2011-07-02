@@ -7,7 +7,8 @@ Build-Depends: debhelper (>= 7.0.50~), bd-conflict, revision-1 (>= 1.0-1),
  bash, make, x-dev, build-essential, new-package | xlibmesa-gl-dev,
  xorg-dev, java-propose-classpath, python3.2-dev, foo [all],
  bar [i386 any], baz [source i3!86], baz [i386 !amd64],
- other-pkg [kfreebsd-any], yet-another [any-powerpc]
+ other-pkg [kfreebsd-any], yet-another [any-powerpc],
+ packaging-dev
 Build-Conflicts: bd-conflict
 
 Package: {$srcpkg}

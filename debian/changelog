@@ -6,6 +6,7 @@ lintian (2.5.3) UNRELEASED; urgency=low
       - comma-separated-files-in-dep5-copyright
       - copyright-has-crs
       - debian-copyright-is-symlink
+      - depends-on-packaging-dev
       - dh_installmanpages-is-obsolete
       - missing-field-in-dep5-copyright
       - missing-license-paragraph-in-dep5-copyright
@@ -43,11 +44,14 @@ lintian (2.5.3) UNRELEASED; urgency=low
       all empty files from the check.  The bug (#632789) only requests
       an exception for "empty __init__.py" files and generally empty
       files are unlikely to cause a serious size-waste.
-  * checks/fields.desc:
+  * checks/fields{,.desc}:
     + [NT] Mention that perl modules included in perl itself should
       be the first dependency if it is only included in the perl
       from experimental.  Thanks to Dominic Hargreaves for the
       report and the patch.  (Closes: #637793)
+    + [NT] Warn about (build)depending/recommending on packaging-dev.
+      Thanks to Luk Claes for the report and the initial patch.
+      (Closes: #629308)
   * checks/{filenames,rules}.desc:
     + [NT] Improved the descriptions of some tags.  (Closes: #639018)
   * checks/files:

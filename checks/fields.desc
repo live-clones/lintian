@@ -863,6 +863,12 @@ Severity: important
 Certainty: certain
 Ref: policy 7.7
 
+Tag: depends-on-packaging-dev
+Info: You depend/recommend/build-depend on packaging-dev, which is
+ only a metapackage to install common packages needed for packaging.
+Severity: normal
+Certainty: certain
+
 Tag: malformed-python-version
 Severity: important
 Certainty: certain

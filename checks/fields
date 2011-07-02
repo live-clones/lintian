@@ -629,6 +629,9 @@ if (($type eq 'binary') || ($type eq 'udeb')) {
 				tag 'package-depends-on-an-x-font-package', "$field: $part_d_orig"
 				    if ($field =~ /^(pre-)?depends$/ && $d_pkg =~ /^xfont.*/ && $d_pkg ne 'xfonts-utils' && $d_pkg ne 'xfonts-encodings');
 
+				tag 'depends-on-packaging-dev', $field
+				    if (($field =~ /^(?:pre-)?depends$/ || $field eq 'recommends') && $d_pkg eq 'packaging-dev');
+
 				tag 'needlessly-depends-on-awk', $field
 				    if ($d_pkg eq 'awk' && ! $d_version->[0] && &$is_dep_field($field) && $pkg ne 'base-files');
 
@@ -775,6 +778,10 @@ if ($type eq 'source') {
 
 					tag 'conflicting-negation-in-source-relation', "$field: $part_d_orig"
 					    unless (not $d_arch or $d_arch->[1] == 0 or $d_arch->[1] eq @{ $d_arch->[0] });
+
+
+					tag 'depends-on-packaging-dev', $field
+					    if ($d_pkg eq 'packaging-dev');
 
 					tag 'build-depends-on-build-essential', $field
 					    if ($d_pkg eq 'build-essential');
