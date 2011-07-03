@@ -73,7 +73,7 @@ lintian (2.5.2) UNRELEASED; urgency=low
   * debian/control:
     + [NT] Bumped debhelper version to 8.1.0 due to the build-arch and
       build-indep targets.  Thanks to Mark Hymers for the heads up and
-      a patch.
+      a patch.  (Closes: #632550)
   * debian/lintian.install:
     + [NT] Added the profiles directory.
   * debian/rules:
