@@ -28,6 +28,7 @@ our $PYTHON3X_DEPEND = join (' | ', map { "python$_ | python$_-dev" } qw(3.2));
 our $ANYPYTHON_DEPEND = "$PYTHON_DEPEND | $PYTHON2X_DEPEND | $PYTHON3_DEPEND | $PYTHON3X_DEPEND";
 
 my $KNOWN_MAKEFILES = Lintian::Data->new('rules/known-makefiles', '\|\|');
+my $DEPRECATED_MAKEFILES = Lintian::Data->new('rules/deprecated-makefiles');
 
 # Certain build tools must be listed in Build-Depends even if there are no
 # arch-specific packages because they're required in order to run the clean
@@ -168,6 +169,9 @@ while (<RULES>) {
             }
         } else {
             $includes = 1;
+        }
+        if ($DEPRECATED_MAKEFILES->known($makefile)){
+            tag 'debian-rules-uses-deprecated-makefile', "line $.", $makefile;
         }
     }
     $uses_makefile_pl = 1 if m/Makefile\.PL/o;

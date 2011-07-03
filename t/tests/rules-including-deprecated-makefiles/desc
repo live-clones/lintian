@@ -1,0 +1,6 @@
+Testname: rules-including-deprecated-makefiles
+Sequence: 6000
+Version: 1.0
+Description: Test for debian/rules with deprecated included file
+Test-For:
+ debian-rules-uses-deprecated-makefile

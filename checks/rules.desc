@@ -60,6 +60,13 @@ Info: The <tt>debian/rules</tt> file for this package does not provide
  These targets will be required by policy in the future, so should be
  added to prevent future breakage.
 
+Tag: debian-rules-uses-deprecated-makefile
+Severity: normal
+Certainty: certain
+Info: The <tt>debian/rules</tt> file for this package appears to
+ include a Makefile, which has been deprecated.  Please refer to the
+ documentation of the providing package for a replacement (if any).
+
 Tag: debian-rules-uses-pwd
 Severity: normal
 Certainty: certain

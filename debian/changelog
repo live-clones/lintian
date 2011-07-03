@@ -5,6 +5,7 @@ lintian (2.5.2) UNRELEASED; urgency=low
       - package-has-long-file-name
       - source-package-component-has-long-file-name
       - upstart-job-in-etc-init.d-not-registered-via-update-rc.d
+      - debian-rules-uses-deprecated-makefile
 
   * checks/binaries:
     + [NT] Added lib/${MULTIARCH_DIR} to the list of paths to
@@ -55,11 +56,15 @@ lintian (2.5.2) UNRELEASED; urgency=low
       false negatives of missing targets.  Thanks to
       Jakub Wilk for the suggestion and the initial makefile
       list.  (Closes: #631711)
+    + [NT] Warn about including the CDBS simple-patchsys and dpatch
+      as they are both deprecated by source format 3.0 (quilt).
+      Thanks to Nelson A. de Oliveira for reporting and Luk Claes
+      for providing an initial patch.  (Closes: #624201)
   * checks/symlinks:
     + [NT] Symlink checking extended to relative paths as well.
       (Closes: #217023)
 
-  * data/rules/known-makefiles:
+  * data/rules/{deprecated,known}-makefiles:
     + [NT] Added file.
   * data/spelling/corrections:
     + [RA] Remove discontiguous correction.  The OED lists this as valid.
