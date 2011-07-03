@@ -71,9 +71,9 @@ if ($success) {
         } else {
             tag 'lzma-deb-archive';
         }
-    } elsif ($members[2] !~ /^data\.tar\.(?:gz|bz2)\z/) {
+    } elsif ($members[2] !~ /^data\.tar\.(?:gz|bz2|xz)\z/) {
         tag 'malformed-deb-archive',
-            "third member $members[2] not data.tar.(gz|bz2)";
+            "third member $members[2] not data.tar.(gz|bz2|xz)";
     } else {
         $okay = 1;
     }

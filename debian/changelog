@@ -21,6 +21,10 @@ lintian (2.5.2) UNRELEASED; urgency=low
       helper templates.  This should prevent false-positives for
       some license texts.  Thanks to Charles Plessy for the
       report.  (Closes: #631674)
+  * checks/deb-format{,.desc}:
+    + [NT] Allow data.tar.xz as the second member.  Thanks to
+      Ansgar Burchardt for the report and patch.
+      (Closes: #632556)
   * checks/debhelper:
     + [NT] Do not trigger deprecation warning for dh_python if it
       is followed by a "$".  This prevents false-positives when
