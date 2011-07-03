@@ -65,6 +65,10 @@ lintian (2.5.2) UNRELEASED; urgency=low
     + [RA] Remove discontiguous correction.  The OED lists this as valid.
       Thanks, Charles Plessy.  (Closes: #632159)
 
+  * debian/control:
+    + [NT] Bumped debhelper version to 8.1.0 due to the build-arch and
+      build-indep targets.  Thanks to Mark Hymers for the heads up and
+      a patch.
   * debian/lintian.install:
     + [NT] Added the profiles directory.
   * debian/rules:

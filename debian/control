@@ -12,7 +12,7 @@ Uploaders: Josip Rodin <joy-packages@debian.org>,
            Raphael Geissert <geissert@debian.org>,
            Niels Thykier <niels@thykier.net>
 Build-Depends: binutils,
-               debhelper (>= 7.0.50~),
+               debhelper (>= 8.1.0~),
                default-jdk,
                diffstat,
                docbook-utils,
