@@ -3,5 +3,8 @@
 #
 # Please keep it sorted by file name.
 
+/usr/share/cdbs/1/class/perlmodule-vars.mk
+/usr/share/cdbs/1/class/perlmodule.mk
 /usr/share/cdbs/1/rules/dpatch.mk
 /usr/share/cdbs/1/rules/simple-patchsys.mk
+/usr/share/cdbs/1/rules/tarball.mk
