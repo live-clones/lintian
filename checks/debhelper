@@ -286,7 +286,7 @@ foreach my $file (sort readdir(DEBIAN)) {
 	$seenmaintscript = 1;
     } else {
 	my $base = $file;
-	$base =~ s/^[.]+\.//;
+	$base =~ s/^.+\.//;
 
 	# Check whether this is a debhelper config file that takes a list of
 	# filenames.  If so, check it for brace expansions, which aren't
