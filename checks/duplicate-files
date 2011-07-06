@@ -39,6 +39,9 @@ foreach my $file (@{ $info->sorted_index }){
     next unless defined $md5;
     next unless $info->index->{$file}->{type} eq '-';
     next unless $file =~ m@usr/share/doc/@o;
+    # skip __init__.py files; if they trigger this, they are
+    # most likely empty (see #632789)
+    next if $file =~ m,/__init__\.py$,o;
     $fs = $hashmap{$md5};
     unless (defined $fs){
         $fs = [$file];

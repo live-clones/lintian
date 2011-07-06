@@ -35,6 +35,10 @@ lintian (2.5.2) UNRELEASED; urgency=low
     + [NT] Do not trigger deprecation warning for dh_python-ply,
       which Lintian incorrectly identified as dh_python.  Thanks
       to Daniele Tricoli for the report.  (Closes: #632693)
+  * checks/duplicate-files:
+    + [NT] Exclude  __init__.py files from the check as they are
+      required even if they are empty.  Thanks to Daniele Tricoli
+      for the report.  (Closes: #632789)
   * checks/filename-length{,.desc}:
     + [NT] New file that checks the length of the package file
       names.  (Closes: #631656)
