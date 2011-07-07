@@ -97,6 +97,9 @@ lintian (2.5.2) UNRELEASED; urgency=low
 
   * doc/lintian.xml:
     + [NT] Added information about the new Vendor profiles.
+    + [NT] Improved various parts of the User Manual.  Especially
+      mention that Lintian can be run on changes files and this
+      processes all packages related to the changes file.
 
   * frontend/{lintian,lintian-info}:
     + [NT] Added profile support (new option --profile), please

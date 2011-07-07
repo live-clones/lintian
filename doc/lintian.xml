@@ -279,13 +279,26 @@
         the <systemitem role="package">lintian</systemitem> Debian
         package.
       </para>
+      <para>
+        Alternatively you can checkout Lintian from the source
+        repository and use that directly.  By setting LINTIAN_ROOT (or
+        using the --root option) lintian can be run from the source
+        directory as if it had been installed on your system.
+      </para>
+      <para>
+        The only known caveat of using Lintian from the source
+        directory is that Lintian requires a C.UTF-8 (or en_US.UTF-8)
+        locale to correctly process some files.
+        The <systemitem role="package">lintian</systemitem> Debian
+        package will set up this locale during installation.
+      </para>
     </sect1>
 
     <sect1 label="2.2" id="section-2.2">
       <title>Running lintian</title>
       <para>
-        After that, you can run Lintian over any Debian binary, udeb
-        or source packages like this:
+        After that, you can run Lintian on a changes file or any
+        Debian binary, udeb or source packages like this:
       </para>
       <screen>
 $ lintian libc5_5.4.38-1.deb
@@ -299,15 +312,27 @@ E: libc5: shlib-missing-in-control-file libgnumalloc usr/lib/libgnumalloc.so.5.4
 $
 </screen>
       <para>
-        As you can see, Lintian uses a special format for all its
-        error and warning messages. With that, its very easy to write
-        other programs which run Lintian and interpret the displayed
-        messages.
+        Please note that some checks are cross-package checks and can
+        only be (accurately) performed if the binary packages and the
+        source are processed together.  If Lintian is passed a changes
+        file, it will attempt to process all packages listed in the
+        changes file.
+      </para>
+      <para>
+        Lintian supports a number of command line options, which are
+        documented in the manpage of lintian(1).  Some of the options
+        may appear in the lintianrc file (without the leading dashes)
+        in Lintian 2.5.1 (or newer).
       </para>
     </sect1>
 
     <sect1 label="2.3" id="section-2.3">
       <title>Lintian Tags</title>
+      <para>
+        Lintian uses a special format for all its error and warning
+        messages. With that it is very easy to write other programs
+        which run Lintian and interpret the displayed messages.
+      </para>
       <para>
         The first character of each line indicates the type of
         message. Currently, the following types are supported:
@@ -472,12 +497,19 @@ $
         sure the problem is not actually a bug in Lintian or an error in the author's
         reading of policy. Please do not override bugs in lintian, they should rather
         be fixed than overridden.
+      </para>
+      <para>
         Once it has been decided that an override is needed, you can easily add one by
         supplying an overrides file. If the override is for a binary or udeb
         package, you have to place it at
         <filename>/usr/share/lintian/overrides/<replaceable>&lt;package&gt;</replaceable></filename>
-        inside the package. If the override is for a source package,
-        you have to place it
+        inside the package.  The tool <command>dh_lintian</command>
+        from the Debian
+        package <systemitem role="package">debhelper</systemitem> may
+        be useful for this purpose.
+      </para>
+      <para>
+        If the override is for a source package, you have to place it
         at <filename>debian/source/lintian-overrides</filename>
         or <filename>debian/source.lintian-overrides</filename> (the
         former path is preferred). With that, Lintian will know about
