@@ -23,7 +23,7 @@ lintian (2.5.2) UNRELEASED; urgency=low
       some license texts.  Thanks to Charles Plessy for the
       report.  (Closes: #631674)
   * checks/deb-format{,.desc}:
-    + [NT] Allow data.tar.xz as the second member.  Thanks to
+    + [NT] Allow data.tar.xz as the third member.  Thanks to
       Ansgar Burchardt for the report and patch.
       (Closes: #632556)
   * checks/debhelper:
