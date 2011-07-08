@@ -17,7 +17,7 @@ Description: {$description}
  be an empty package.
 
 Package: {$srcpkg}-doc
-Architecture: {$architecture}
+Architecture: all
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: {$description} (doc)
  Test for doc section.
@@ -161,7 +161,7 @@ Description: {$description} (oldlibs)
  be an empty package.
 
 Package: {$srcpkg}-contrib-doc
-Architecture: any
+Architecture: all
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Section: contrib/{$section}
 Description: {$description} (contrib docs)
