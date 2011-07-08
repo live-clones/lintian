@@ -614,37 +614,7 @@ sub find_debs_for_tag {
 # passes and false if it fails.
 sub test_deb {
     my ($test) = @_;
-    msg_print "Running $test... ";
-
-    my $testdir = "$TESTSET/debs/$test";
-    my $targetdir = "$RUNDIR/$test";
-    if (-f "$testdir/skip") {
-	msg_print "skipped.\n";
-	return 1;
-    }
-
-    print "Cleaning up and repopulating $targetdir...\n" if $DEBUG;
-    runsystem_ok("rm", "-rf", $targetdir);
-    runsystem("cp", "-rp", $testdir, $targetdir);
-
-    msg_print "building... ";
-    runsystem("cd $targetdir && fakeroot make >../build.$test 2>&1");
-
-    msg_print "testing... ";
-    runsystem_ok("$LINTIAN --allow-root --no-cfg -I -E $targetdir/$test.deb 2>&1"
-		 . " | sort > $RUNDIR/tags.$test");
-
-    # Compare the output to the expected tags.
-    my $testok = runsystem_ok('cmp', '-s', "$testdir/tags",
-			      "$RUNDIR/tags.$test");
-    if ($testok) {
-	msg_print "ok.\n";
-	return 1;
-    } else {
-	msg_print "FAILED:\n";
-	runsystem_ok("diff", "-u", "$testdir/tags", "$RUNDIR/tags.$test");
-	return;
-    }
+    return generic_test_runner($test, 'debs', 'deb');
 }
 
 # --- Raw Debian source package testing
@@ -668,9 +638,23 @@ sub find_source_for_tag {
 # passes and false if it fails.
 sub test_source {
     my ($test) = @_;
+    return generic_test_runner($test, 'source', 'dsc');
+}
+
+# --------------
+
+# Unquote a heredoc, used to make them a bit more readable in Perl code.
+sub unquote {
+    my ($string) = @_;
+    $string =~ s/^:( {0,7}|\t)//gm;
+    return $string
+}
+
+sub generic_test_runner {
+    my ($test, $dir, $ext) = @_;
     msg_print "Running $test... ";
 
-    my $testdir = "$TESTSET/source/$test";
+    my $testdir = "$TESTSET/$dir/$test";
     my $targetdir = "$RUNDIR/$test";
     if (-f "$testdir/skip") {
 	msg_print "skipped.\n";
@@ -678,14 +662,14 @@ sub test_source {
     }
 
     print "Cleaning up and repopulating $targetdir...\n" if $DEBUG;
-    runsystem_ok("rm", "-rf", $targetdir);
-    runsystem("cp", "-rp", $testdir, $targetdir);
+    runsystem_ok('rm', '-rf', $targetdir);
+    runsystem('cp', '-rp', $testdir, $targetdir);
 
-    msg_print "building... ";
+    msg_print 'building... ';
     runsystem("cd $targetdir && make >../build.$test 2>&1");
 
-    msg_print "testing... ";
-    runsystem_ok("$LINTIAN --allow-root --no-cfg -I -E $targetdir/*.dsc 2>&1"
+    msg_print 'testing... ';
+    runsystem_ok("$LINTIAN --allow-root --no-cfg -I -E $targetdir/*.$ext 2>&1"
 		 . " | sort > $RUNDIR/tags.$test");
 
     # Compare the output to the expected tags.
@@ -696,18 +680,9 @@ sub test_source {
 	return 1;
     } else {
 	msg_print "FAILED:\n";
-	runsystem_ok("diff", "-u", "$testdir/tags", "$RUNDIR/tags.$test");
+	runsystem_ok('diff', '-u', "$testdir/tags", "$RUNDIR/tags.$test");
 	return;
     }
-}
-
-# --------------
-
-# Unquote a heredoc, used to make them a bit more readable in Perl code.
-sub unquote {
-    my ($string) = @_;
-    $string =~ s/^:( {0,7}|\t)//gm;
-    return $string
 }
 
 sub is_tag_in_file {
