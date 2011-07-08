@@ -52,11 +52,7 @@ fields package-depends-on-an-x-font-package
 fields package-not-lowercase
 fields package-superseded-by-perl
 fields source-field-does-not-match-pkg-name
-fields too-many-architectures
-fields unknown-architecture
-fields unknown-field-in-control
 fields unknown-field-in-dsc
-fields unknown-priority
 fields wrong-section-for-udeb
 
 files FSSTND-dir-in-var
