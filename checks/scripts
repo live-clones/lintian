@@ -302,7 +302,6 @@ sub script_tag {
 sub run {
 
 my %executable = ();
-my %suid = ();
 my %ELF = ();
 my %scripts = ();
 
@@ -321,7 +320,6 @@ foreach (@{$info->sorted_index}) {
 	$operm & 010 or $operm & 0100));
     my $is_suid = $operm & 04000;
     $executable{$_} = 1;
-    $suid{$_} = $is_suid;
 }
 
 for my $file (@{$info->sorted_file_info}) {
@@ -441,8 +439,6 @@ for my $filename (sort keys %{$info->scripts}) {
     } elsif ($executable{'.' . $interpreter}) {
 	# Package installs the interpreter itself, so it's probably ok.  Don't
 	# emit any tag for this.
-    } elsif ($base eq 'suidperl') {
-	tag("calls-suidperl-directly", $filename);
     } elsif ($interpreter eq '/bin/env') {
 	script_tag("script-uses-bin-env", $filename);
     } else {
@@ -506,10 +502,6 @@ for my $filename (sort keys %{$info->scripts}) {
 		tag('missing-dep-for-interpreter', "$base => $depends",
 		    "($filename)");
 	    }
-	}
-	if ($base eq 'perl' && $suid{$filename}) {
-	    tag("suid-perl-script-but-no-perl-suid-dep", $filename)
-		unless $all_parsed->implies('perl-suid');
 	}
     } elsif ($versioned_interpreters{$base}) {
 	my @versions = @$data[4 .. @$data - 1];

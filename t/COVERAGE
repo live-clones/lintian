@@ -1,4 +1,4 @@
-Last generated 2011-06-26
+Last generated 2011-07-08
 
 The following tags are not tested by the test suite:
 
@@ -306,7 +306,6 @@ scripts ancient-dpkg-epoch-check
 scripts ancient-dpkg-long-filenames-check
 scripts ancient-dpkg-multi-conrep-check
 scripts ancient-dpkg-predepends-check
-scripts calls-suidperl-directly
 scripts executable-not-elf-or-script
 scripts maintainer-script-ignores-errors
 scripts maintainer-script-removes-device-files
@@ -314,7 +313,6 @@ scripts php-script-but-no-phpX-cli-dep
 scripts python-script-but-no-python-dep
 scripts script-not-executable
 scripts shell-script-fails-syntax-check
-scripts suid-perl-script-but-no-perl-suid-dep
 scripts update-alternatives-remove-called-in-postrm
 
 shared-libs duplicate-entry-in-symbols-control-file
@@ -492,7 +490,6 @@ maintainer-scripts
 relations
 
 scripts
-  calls-suidperl-directly
   duplicate-updaterc.d-calls-in-postrm
   executable-is-not-world-readable
   init.d-script-has-bad-lsb-line
@@ -509,4 +506,3 @@ scripts
   script-with-language-extension
   setuid-binary
   shell-script-fails-syntax-check
-  suid-perl-script-but-no-perl-suid-dep

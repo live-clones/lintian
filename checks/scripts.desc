@@ -181,15 +181,6 @@ Info: The Debian policy for scripts explicitly warns against using csh
  and tcsh as scripting languages.
 Ref: policy 10.4
 
-Tag: suid-perl-script-but-no-perl-suid-dep
-Severity: important
-Certainty: certain
-Info: Packages that use perl scripts that are suid must depend on the
- perl-suid package.
- .
- In some cases a weaker relationship, such as Suggests or Recommends, will
- be more appropriate.
-
 Tag: wrong-path-for-interpreter
 Severity: important
 Certainty: certain
@@ -301,14 +292,6 @@ Info: Packages that include tclsh scripts must depend on the virtual
  .
  In some cases a weaker relationship, such as Suggests or Recommends, will
  be more appropriate.
-
-Tag: calls-suidperl-directly
-Severity: important
-Certainty: certain
-Info: Since perl version 5.8.3-3, /usr/bin/suidperl shouldn't be called
- directly anymore (and doing so will lead to errors in most cases) but the
- script should just use /usr/bin/perl as interpreter which will call
- suidperl automatically if the script has the suid permission bit set.
 
 Tag: shell-script-fails-syntax-check
 Severity: important
