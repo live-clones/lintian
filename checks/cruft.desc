@@ -30,12 +30,6 @@ Info: This package has a native version number (a version number without a
  parent directory fooling <tt>dpkg-source</tt> into thinking it was
  supposed to be a non-native package.
 
-Tag: documentation-package-not-architecture-independent
-Severity: normal
-Certainty: certain
-Info: Documentation packages usually shouldn't carry anything that requires
- recompiling on various architectures, in order to save space on mirrors.
-
 Tag: debian-files-list-in-source
 Severity: important
 Certainty: certain

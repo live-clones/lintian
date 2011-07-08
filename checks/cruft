@@ -109,15 +109,6 @@ if ($info->native) {
     }
 }
 
-# Check if this is a documentation package that's not arch: all.  This doesn't
-# really belong here either.
-if (defined $info->field('architecture')) {
-    my $arch = $info->field('architecture');
-    if ($pkg =~ /-docs?$/ && $arch ne 'all') {
-        tag 'documentation-package-not-architecture-independent';
-    }
-}
-
 # Check if the package build-depends on autotools-dev, automake, or libtool.
 my $atdinbd = $info->relation('build-depends-all')->implies($AUTOTOOLS);
 my $ltinbd  = $info->relation('build-depends-all')->implies('libtool');

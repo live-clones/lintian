@@ -21,7 +21,6 @@ changes-file file-size-mismatch-in-changes-file
 control-files not-allowed-control-file
 control-files unknown-control-file
 
-cruft documentation-package-not-architecture-independent
 cruft source-contains-prebuilt-windows-binary
 
 deb-format tar-errors-from-data

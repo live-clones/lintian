@@ -311,10 +311,14 @@ if (not defined $info->field('architecture')) {
 
 	if ($type eq 'binary') {
 		tag 'too-many-architectures' if (@archs > 1);
-                tag 'aspell-package-not-arch-all'
-                    if ($pkg =~ /^aspell-[a-z]{2}(?:-.*)?$/ && (@archs > 1 || $archs[0] ne 'all'));
+		if (@archs > 0) {
+		    tag 'aspell-package-not-arch-all'
+			if ($pkg =~ /^aspell-[a-z]{2}(?:-.*)?$/ && $archs[0] ne 'all');
+		    if ($pkg =~ /-docs?$/ && $archs[0] ne 'all') {
+			tag 'documentation-package-not-architecture-independent';
+		    }
+		}
 	}
-
 	# Used for later tests.
 	$arch_indep = 1 if (@archs == 1 && $archs[0] eq 'all');
 }

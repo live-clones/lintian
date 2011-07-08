@@ -10,6 +10,10 @@ lintian (2.5.2) UNRELEASED; urgency=low
       - calls-suidperl-directly
       - suid-perl-script-but-no-perl-suid-dep
 
+  * checks/{cruft,fields}{,.desc}:
+    + [NT] Relocated doc pkg not arch all tag; it was never
+      triggered since cruft was a source check and the tag
+      could only be triggered for binary packages.
   * checks/binaries:
     + [NT] Added lib/${MULTIARCH_DIR} to the list of paths to
       check for public shared libraries.  Thanks to Sven Joachim
