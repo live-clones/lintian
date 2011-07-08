@@ -148,8 +148,8 @@ my %VCS_VALID_URIS = (
 # Python development packages that are used almost always just for building
 # architecture-dependent modules.  Used to check for unnecessary build
 # dependencies for architecture-independent source packages.
-our $PYTHON_DEV = join(' | ', qw(python-dev python-all-dev python3-all-dev),
-		       map { "python$_-dev" } qw(2.4 2.5 2.6 3 3.1));
+our $PYTHON_DEV = join(' | ', qw(python-dev python-all-dev python3-dev python3-all-dev),
+		       map { "python$_-dev" } qw(2.6 3 3.1));
 
 our $PERL_CORE_PROVIDES = Lintian::Data->new('fields/perl-provides', '\s+');
 our $OBSOLETE_PACKAGES  = Lintian::Data->new('fields/obsolete-packages');
