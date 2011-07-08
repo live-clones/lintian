@@ -38,8 +38,6 @@ debconf select-without-choices
 debconf unknown-field-in-templates
 debconf unknown-template-type
 
-debian-source-dir unknown-source-format
-
 fields alternates-not-allowed
 fields aspell-package-not-arch-all
 fields bad-menu-item
