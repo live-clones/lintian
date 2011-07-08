@@ -262,7 +262,7 @@ if ($prev and @tests) {
 print "Found the following debs tests: @tests\n" if $DEBUG;
 print "Raw Debian package tests:\n" if @tests;
 
-run_tests(\&test_deb, @tests);
+run_tests( sub { generic_test_runner('debs', 'deb', @_) }, @tests);
 $tests_run += scalar(@tests);
 msg_flush;
 
@@ -297,7 +297,7 @@ if ($prev and @tests) {
 print "Found the following source tests: @tests\n" if $DEBUG;
 print "Raw Debian source package tests:\n" if @tests;
 
-run_tests(\&test_source, @tests);
+run_tests( sub { generic_test_runner('source', 'dsc', @_) }, @tests);
 
 $tests_run += scalar(@tests);
 msg_flush;
@@ -556,38 +556,7 @@ sub test_changes {
     runsystem_ok("$LINTIAN --allow-root --no-cfg -I -E $testdir/$test.changes 2>&1"
 		 . " | sort > $RUNDIR/tags.changes-$test");
 
-    # Compare the output to the expected tags.
-    my $testok = runsystem_ok('cmp', '-s', "$testdir/$test.tags",
-			      "$RUNDIR/tags.changes-$test");
-    if ($testok) {
-	msg_print "ok.\n";
-	return 1;
-    } else {
-	msg_print "FAILED:\n";
-	runsystem_ok("diff", "-u", "$testdir/$test.tags",
-		     "$RUNDIR/tags.changes-$test");
-	return;
-    }
-}
-
-# --- Raw Debian package testing
-
-# Run a test on a .deb file and show any diffs in the expected tags or any
-# other errors detected.  Takes the test name.  Returns true if the test
-# passes and false if it fails.
-sub test_deb {
-    my ($test) = @_;
-    return generic_test_runner($test, 'debs', 'deb');
-}
-
-# --- Raw Debian source package testing
-
-# Run a test on a source package and show any diffs in the expected tags or
-# any other errors detected.  Takes the test name.  Returns true if the test
-# passes and false if it fails.
-sub test_source {
-    my ($test) = @_;
-    return generic_test_runner($test, 'source', 'dsc');
+    return _check_result("$testdir/$test.tags", "$RUNDIR/tags.changes-$test");
 }
 
 # --------------
@@ -633,7 +602,7 @@ sub generic_find_test_for_tag {
     return @tests;
 }
 
-# generic_test_runner($test, $dir, $ext)
+# generic_test_runner($dir, $ext, $test)
 #
 # Runs the test called $test assumed to be located in $TESTSET/$dir/$test/.
 # The resulting package produced by the test is assumed to have the extension
@@ -642,7 +611,7 @@ sub generic_find_test_for_tag {
 # Returns a truth value on success, undef on test failure.  May call die/fail
 # if the test is broken.
 sub generic_test_runner {
-    my ($test, $dir, $ext) = @_;
+    my ($dir, $ext, $test) = @_;
     msg_print "Running $test... ";
 
     my $testdir = "$TESTSET/$dir/$test";
@@ -663,15 +632,20 @@ sub generic_test_runner {
     runsystem_ok("$LINTIAN --allow-root --no-cfg -I -E $targetdir/*.$ext 2>&1"
 		 . " | sort > $RUNDIR/tags.$test");
 
+    return _check_result("$testdir/tags", "$RUNDIR/tags.$test");
+}
+
+sub _check_result {
+    my ($expected, $actual) = @_;
     # Compare the output to the expected tags.
-    my $testok = runsystem_ok('cmp', '-s', "$testdir/tags",
-			      "$RUNDIR/tags.$test");
+    my $testok = runsystem_ok('cmp', '-s', $expected, $actual);
+
     if ($testok) {
 	msg_print "ok.\n";
 	return 1;
     } else {
 	msg_print "FAILED:\n";
-	runsystem_ok('diff', '-u', "$testdir/tags", "$RUNDIR/tags.$test");
+	runsystem_ok('diff', '-u', $expected, $actual);
 	return;
     }
 }
