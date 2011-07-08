@@ -21,6 +21,7 @@ lintian (2.5.2) UNRELEASED; urgency=low
     + [NT] Recognise .gox files as object files that cannot be
       stripped.  Thanks to Matthias Klose for the report.
       (Closes: #624521)
+    + [NT] Do not assume that the architecture field is present.
   * checks/circular-deps.desc:
     + [NT] Fixed typo; thanks to Nicolás Alvarez for the report
       and patch.  (Closes: #630925)
