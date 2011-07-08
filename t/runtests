@@ -212,7 +212,7 @@ if ($singletest) {
 	@tests = ($test);
     }
 } elsif ($tag) {
-    @tests = find_changes_for_tag($tag);
+    @tests = generic_find_test_for_tag($tag, "$TESTSET/changes/*.tags");
 } else {
     unless (-d "$TESTSET/changes") {
 	fail("cannot find $TESTSET/changes: $!");
@@ -241,7 +241,7 @@ if ($singletest) {
 	@tests = ($test);
     }
 } elsif ($tag) {
-    @tests = find_debs_for_tag($tag);
+    @tests = generic_find_test_for_tag($tag, "$TESTSET/debs/*/tags");
 } else {
     unless (-d "$TESTSET/debs") {
 	fail("cannot find $TESTSET/debs: $!");
@@ -276,7 +276,7 @@ if ($singletest) {
 	@tests = ($test);
     }
 } elsif ($tag) {
-    @tests = find_source_for_tag($tag);
+    @tests = generic_find_test_for_tag($tag, "$TESTSET/source/*/tags");
 } else {
     unless (-d "$TESTSET/source") {
 	fail("cannot find $TESTSET/source: $!");
@@ -358,24 +358,15 @@ exit $status;
 # the end.
 sub find_tests_for_tag {
     my ($tag) = @_;
-    my @tests;
-    for my $desc (<$TESTSET/tests/*/desc>) {
+    return generic_find_test_for_tag($tag, "$TESTSET/tests/*/desc", sub {
+	my ($tag, $desc) = @_;
 	my ($data) = read_dpkg_control($desc);
-	if ($data->{'test-for'}) {
-	    my %for = map { $_ => 1 } split(' ', $data->{'test-for'});
-	    if ($for{$tag}) {
-		push (@tests, $data);
-		next;
-	    }
-	}
-	if ($data->{'test-against'}) {
-	    my %against = map { $_ => 1 } split(' ', $data->{'test-against'});
-	    if ($against{$tag}) {
-		push (@tests, $data);
-	    }
-	}
-    }
-    return @tests;
+	my $tagnames = $data->{'test-for'}//'';
+	$tagnames .= ' ' . $data->{'test-against'} if $data->{'test-against'};
+	my %table = map { $_ => 1 } split(m/\s++/o, $tagnames);
+	return $data if $table{$tag};
+	return 0;
+    });
 }
 
 # Run a package test and show any diffs in the expected tags or any other
@@ -552,20 +543,6 @@ sub test_package {
 
 # --- Changes file testing
 
-# Find all changes tests that check a particular tag, either for its presence
-# or absence.  Returns a list of check names.
-sub find_changes_for_tag {
-    my ($tag) = @_;
-    my @tests;
-    for my $test (<$TESTSET/changes/*.tags>) {
-	if (is_tag_in_file($tag, $test)) {
-	    my ($testname) = ($test =~ m,.*/([^/]+)\.tags$,);
-	    push @tests, $testname;
-	}
-    }
-    return @tests;
-}
-
 # Run a test on a changes file and show any diffs in the expected tags or any
 # other errors detected.  Takes the test name.  Returns true if the test
 # passes and false if it fails.
@@ -595,20 +572,6 @@ sub test_changes {
 
 # --- Raw Debian package testing
 
-# Find all debs tests that check a particular tag, either for its presence
-# or absence.  Returns a list of check names.
-sub find_debs_for_tag {
-    my ($tag) = @_;
-    my @tests;
-    for my $test (<$TESTSET/debs/*/tags>) {
-	if (is_tag_in_file($tag, $test)) {
-	    my ($testname) = ($test =~ m,.*/([^/]+)/tags$,);
-	    push @tests, $testname;
-	}
-    }
-    return @tests;
-}
-
 # Run a test on a .deb file and show any diffs in the expected tags or any
 # other errors detected.  Takes the test name.  Returns true if the test
 # passes and false if it fails.
@@ -618,20 +581,6 @@ sub test_deb {
 }
 
 # --- Raw Debian source package testing
-
-# Find all source tests that check a particular tag, either for its presence
-# or absence.  Returns a list of check names.
-sub find_source_for_tag {
-    my ($tag) = @_;
-    my @tests;
-    for my $test (<$TESTSET/source/*/tags>) {
-	if (is_tag_in_file($tag, $test)) {
-	    my ($testname) = ($test =~ m,.*/([^/]+)/tags$,);
-	    push @tests, $testname;
-	}
-    }
-    return @tests;
-}
 
 # Run a test on a source package and show any diffs in the expected tags or
 # any other errors detected.  Takes the test name.  Returns true if the test
@@ -650,6 +599,48 @@ sub unquote {
     return $string
 }
 
+# generic_find_test_for_tag($tag, $globstr[, $tcode])
+#
+# Looks for $tag in all files returned by using glob on $globstr.
+# $tcode is called for each file with $tag as first argument and the filename
+# as second argument.  $tcode is expected to return a truth value that if the
+# test should be run.  If $tcode returns something that is not just a raw
+# truth value (e.g. a list ref), this will be taken as the "test", otherwise
+# this sub will attempt to guess the test name from the file.
+#
+# If $tcode is omitted, \&is_tag_in_file will be used.
+#
+# Returns a list of values returned by $tcode or guessed test names (as per
+# above)
+sub generic_find_test_for_tag {
+    my ($tag, $globstr, $tcode) = @_;
+    my @tests;
+    $tcode = \&is_tag_in_file unless defined $tcode;
+    for my $file (glob $globstr){
+	my $res = $tcode->($tag, $file);
+	my $testname;
+	next unless $res;
+
+	if ($res =~ m/^\d+$/o){
+	    # returned a truth value; use the regex to deduce the test name
+	    ($testname) = ($file =~ m,.*/([^/]+)[/\.]tags$,);
+	} else {
+	    # The code returned the test name for us
+	    $testname = $res;
+	}
+	push @tests, $testname;
+    }
+    return @tests;
+}
+
+# generic_test_runner($test, $dir, $ext)
+#
+# Runs the test called $test assumed to be located in $TESTSET/$dir/$test/.
+# The resulting package produced by the test is assumed to have the extension
+# $ext.
+#
+# Returns a truth value on success, undef on test failure.  May call die/fail
+# if the test is broken.
 sub generic_test_runner {
     my ($test, $dir, $ext) = @_;
     msg_print "Running $test... ";
@@ -691,7 +682,7 @@ sub is_tag_in_file {
     open my $tags, '<', $file or fail "Cannot open $file";
     while (my $line = <$tags>){
 	    next if $line =~ m/^N: /;
-	    next unless ($line =~ m/^.: \S+(?: (?:source|udeb))?: (\S+)/);
+	    next unless ($line =~ m/^.: \S+(?: (?:changes|source|udeb))?: (\S+)/);
 	    next unless $1 eq $tag;
 	    $res = 1;
 	    last;
