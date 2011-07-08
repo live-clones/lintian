@@ -44,8 +44,6 @@ fields depends-on-libdb1-compat
 fields doc-package-depends-on-main-package
 fields malformed-python-version
 fields multiline-field
-fields no-architecture-field
-fields no-maintainer-field
 fields no-package-name
 fields no-source-field
 fields no-version-field
