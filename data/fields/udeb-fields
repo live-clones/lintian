@@ -1,4 +1,4 @@
-# Manual maintained list of known udeb fields
+# Manually maintained list of known udeb fields
 #  - note the Ubuntu original-maintainer field is handled separately.
 
 package
