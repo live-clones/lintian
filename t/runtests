@@ -316,8 +316,8 @@ if ($singletest) {
 } elsif ($tag) {
     @tests = find_tests_for_tag($tag);
 } else {
-    unless (-d $TESTSET) {
-	fail("cannot find $TESTSET: $!");
+    unless (-d "$TESTSET/tests/") {
+	fail("cannot find $TESTSET/tests: $!");
     }
     @tests = map { read_dpkg_control($_) } <$TESTSET/tests/*/desc>;
 }
