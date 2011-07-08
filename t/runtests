@@ -226,31 +226,9 @@ if ($singletest) {
 print "Found the following changes tests: @tests\n" if $DEBUG;
 print "Changes tests:\n" if @tests;
 
-$q->enqueue(@tests);
+run_tests(\&test_changes, @tests);
 
-for (my $i = 0; $i < $JOBS; $i++) {
-    threads->create(sub {
-	while (my $t = $q->dequeue_nb()) {
-	    my $okay = eval { test_changes($t); };
-	    unless ($okay) {
-		exit 1 unless $run_all_tests;
-		lock($status);
-		$status = 1;
-	    }
-	}
-    });
-}
 $tests_run += scalar(@tests);
-
-for my $thr (threads->list()) {
-    $thr->join();
-    if ($thr->error){
-	# This should not happen, but if a thread terminate
-	# badly make sure we do not return success.
-	lock($status);
-	$status = 1;
-    }
-}
 msg_flush;
 
 # --- Run all debs tests
@@ -284,31 +262,8 @@ if ($prev and @tests) {
 print "Found the following debs tests: @tests\n" if $DEBUG;
 print "Raw Debian package tests:\n" if @tests;
 
-$q->enqueue(@tests);
-
-for (my $i = 0; $i < $JOBS; $i++) {
-    threads->create(sub {
-	while (my $t = $q->dequeue_nb()) {
-	    my $okay = eval { test_deb($t); };
-	    unless ($okay) {
-		exit 1 unless $run_all_tests;
-		lock($status);
-		$status = 1;
-	    }
-	}
-    });
-}
+run_tests(\&test_deb, @tests);
 $tests_run += scalar(@tests);
-
-for my $thr (threads->list()) {
-    $thr->join();
-    if ($thr->error){
-	# This should not happen, but if a thread terminate
-	# badly make sure we do not return success.
-	lock($status);
-	$status = 1;
-    }
-}
 msg_flush;
 
 # --- Run all source tests
@@ -342,31 +297,9 @@ if ($prev and @tests) {
 print "Found the following source tests: @tests\n" if $DEBUG;
 print "Raw Debian source package tests:\n" if @tests;
 
-$q->enqueue(@tests);
+run_tests(\&test_source, @tests);
 
-for (my $i = 0; $i < $JOBS; $i++) {
-    threads->create(sub {
-	while (my $t = $q->dequeue_nb()) {
-	    my $okay = eval { test_source($t); };
-	    unless ($okay) {
-		exit 1 unless $run_all_tests;
-		lock($status);
-		$status = 1;
-	    }
-	}
-    });
-}
 $tests_run += scalar(@tests);
-
-for my $thr (threads->list()) {
-    $thr->join();
-    if ($thr->error){
-	# This should not happen, but if a thread terminate
-	# badly make sure we do not return success.
-	lock($status);
-	$status = 1;
-    }
-}
 msg_flush;
 
 # --- Run all package tests
@@ -400,31 +333,9 @@ if ($DEBUG) {
 }
 print "Package tests:\n" if @tests;
 
-$q->enqueue(@tests);
+run_tests(\&test_package, @tests);
 
-for (my $i = 0; $i < $JOBS; $i++) {
-    threads->create(sub {
-	while (my $t = $q->dequeue_nb()) {
-	    my $okay = eval { test_package($t); };
-	    unless ($okay) {
-		exit 1 unless $run_all_tests;
-		lock($status);
-		$status = 1;
-	    }
-	}
-    });
-}
 $tests_run += scalar(@tests);
-
-for my $thr (threads->list()) {
-    $thr->join();
-    if ($thr->error){
-	# This should not happen, but if a thread terminate
-	# badly make sure we do not return success.
-	lock($status);
-	$status = 1;
-    }
-}
 msg_flush;
 
 # --- Check whether we ran any tests
@@ -647,20 +558,10 @@ sub find_changes_for_tag {
     my ($tag) = @_;
     my @tests;
     for my $test (<$TESTSET/changes/*.tags>) {
-	my ($testname) = ($test =~ m,.*/([^/]+)\.tags$,);
-	open(TAGS, '<', $test) or fail("Cannot open $test");
-	local $_;
-	while (<TAGS>) {
-	    next if /^N: /;
-	    if (not /^.: \S+(?: (?:source|udeb))?: (\S+)/) {
-		next;
-	    }
-	    if ($1 eq $tag) {
-		push(@tests, $testname);
-		last;
-	    }
+	if (is_tag_in_file($tag, $test)) {
+	    my ($testname) = ($test =~ m,.*/([^/]+)\.tags$,);
+	    push @tests, $testname;
 	}
-	close TAGS;
     }
     return @tests;
 }
@@ -700,20 +601,10 @@ sub find_debs_for_tag {
     my ($tag) = @_;
     my @tests;
     for my $test (<$TESTSET/debs/*/tags>) {
-	my ($testname) = ($test =~ m,.*/([^/]+)/tags$,);
-	open(TAGS, '<', $test) or fail("Cannot open $test");
-	local $_;
-	while (<TAGS>) {
-	    next if /^N: /;
-	    if (not /^.: \S+(?: (?:source|udeb))?: (\S+)/) {
-		next;
-	    }
-	    if ($1 eq $tag) {
-		push(@tests, $testname);
-		last;
-	    }
+	if (is_tag_in_file($tag, $test)) {
+	    my ($testname) = ($test =~ m,.*/([^/]+)/tags$,);
+	    push @tests, $testname;
 	}
-	close TAGS;
     }
     return @tests;
 }
@@ -764,20 +655,10 @@ sub find_source_for_tag {
     my ($tag) = @_;
     my @tests;
     for my $test (<$TESTSET/source/*/tags>) {
-	my ($testname) = ($test =~ m,.*/([^/]+)/tags$,);
-	open(TAGS, '<', $test) or fail("Cannot open $test");
-	local $_;
-	while (<TAGS>) {
-	    next if /^N: /;
-	    if (not /^.: \S+(?: (?:source|udeb))?: (\S+)/) {
-		next;
-	    }
-	    if ($1 eq $tag) {
-		push(@tests, $testname);
-		last;
-	    }
+	if (is_tag_in_file($tag, $test)) {
+	    my ($testname) = ($test =~ m,.*/([^/]+)/tags$,);
+	    push @tests, $testname;
 	}
-	close TAGS;
     }
     return @tests;
 }
@@ -827,6 +708,62 @@ sub unquote {
     my ($string) = @_;
     $string =~ s/^:( {0,7}|\t)//gm;
     return $string
+}
+
+sub is_tag_in_file {
+    my ($tag, $file) = @_;
+    my $res = 0;
+    open my $tags, '<', $file or fail "Cannot open $file";
+    while (my $line = <$tags>){
+	    next if $line =~ m/^N: /;
+	    next unless ($line =~ m/^.: \S+(?: (?:source|udeb))?: (\S+)/);
+	    next unless $1 eq $tag;
+	    $res = 1;
+	    last;
+    }
+    close $tags;
+    return $res;
+}
+
+# run_tests(&subref, @tests)
+#
+# Runs all the tests by passing them (one at the time) to &subref;
+# note that it may do so in a threaded manner so &subref must be
+# re-entrant. Blocks until all tests have been run.
+#
+# The result of &subref is ignored; if a test fails, &subref should
+# invoke die (or similar).
+#
+# Note, if "continue on error" is not set ($run_all_tests) a failing
+# test will terminate the program.
+#
+sub run_tests{
+    my ($code, @tsts) = @_;
+    $q->enqueue(@tsts);
+    for (my $i = 0; $i < $JOBS; $i++) {
+	threads->create(sub {
+	    while (my $t = $q->dequeue_nb()) {
+		my $okay = eval { $code->($t); };
+		unless ($okay) {
+		    exit 1 unless $run_all_tests;
+		    lock($status);
+		    $status = 1;
+		}
+	    }
+	}); # treads->create( sub { ...
+    } # for loop
+
+    # wait for the results;
+    for my $thr (threads->list()) {
+	$thr->join();
+	if ($thr->error){
+	    # This should not happen, but if a thread terminate
+	    # badly make sure we do not return success.
+	    lock($status);
+	    $status = 1;
+	}
+    }
+
 }
 
 sub dump_log{
