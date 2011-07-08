@@ -1,0 +1,1 @@
+E: control-file-duplicate-field source: debian-control-with-duplicate-fields depends: 10, 11

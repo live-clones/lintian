@@ -18,8 +18,6 @@ changes-file bad-section-in-changes-file
 changes-file checksum-mismatch-in-changes-file
 changes-file file-size-mismatch-in-changes-file
 
-control-file debian-control-with-duplicate-fields
-
 control-files not-allowed-control-file
 control-files unknown-control-file
 
