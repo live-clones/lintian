@@ -40,6 +40,10 @@ our $KNOWN_ARCHS = Lintian::Data->new('fields/architectures');
 our $KNOWN_ESSENTIAL = Lintian::Data->new('fields/essential');
 our $KNOWN_METAPACKAGES = Lintian::Data->new('fields/metapackages');
 our $NO_BUILD_DEPENDS = Lintian::Data->new('fields/no-build-depends');
+our $KNOWN_SECTIONS = Lintian::Data->new('fields/archive-sections');
+our $known_build_essential = Lintian::Data->new('fields/build-essential-packages');
+our $KNOWN_BINARY_FIELDS = Lintian::Data->new('fields/binary-fields');
+our $KNOWN_UDEB_FIELDS = Lintian::Data->new('fields/udeb-fields');
 
 # Generate the list of valid architecture wildcards.  We can ignore all
 # architectures not containing a - for our purposes and transform any
@@ -59,34 +63,9 @@ $ARCH_WILDCARDS{any} = 1;
 our %KNOWN_ARCHIVE_PARTS = map { $_ => 1 }
     ('non-free', 'contrib');
 
-our %KNOWN_SECTIONS = map { $_ => 1 }
-    ('admin', 'comm', 'cli-mono', 'database', 'debug', 'devel', 'doc',
-     'editors', 'electronics', 'embedded', 'fonts', 'games', 'gnome', 'gnu-r',
-     'gnustep', 'graphics', 'hamradio', 'haskell', 'httpd', 'interpreters',
-     'java', 'kde', 'libdevel', 'libs', 'lisp', 'localization', 'kernel', 'mail',
-     'math', 'misc', 'net', 'news', 'ocaml', 'oldlibs', 'otherosfs', 'perl',
-     'php', 'python', 'ruby', 'science', 'shells', 'sound', 'tex', 'text',
-     'utils', 'vcs', 'video', 'web', 'x11', 'xfce', 'zope'
-    );
 
 our %KNOWN_PRIOS = map { $_ => 1 }
     ('required', 'important', 'standard', 'optional', 'extra');
-
-# The Ubuntu original-maintainer field is handled separately.
-our %KNOWN_BINARY_FIELDS = map { $_ => 1 }
-    ('package', 'version', 'architecture', 'depends', 'pre-depends',
-     'recommends', 'suggests', 'enhances', 'conflicts', 'provides',
-     'replaces', 'breaks', 'essential', 'maintainer', 'section', 'priority',
-     'source', 'description', 'installed-size', 'python-version', 'homepage',
-     'bugs', 'origin', 'multi-arch', 'built-using', 'ruby-versions');
-
-# The Ubuntu original-maintainer field is handled separately.
-our %KNOWN_UDEB_FIELDS = map { $_ => 1 }
-    ('package', 'version', 'architecture', 'subarchitecture', 'depends',
-     'recommends', 'enhances', 'provides', 'replaces', 'breaks', 'replaces',
-     'maintainer', 'section', 'priority', 'source', 'description',
-     'installed-size', 'kernel-version', 'installer-menu-item', 'bugs',
-     'origin', 'built-using');
 
 our %known_obsolete_fields = map { $_ => 1 }
     ('revision', 'package-revision', 'package_revision',
@@ -94,9 +73,6 @@ our %known_obsolete_fields = map { $_ => 1 }
 
 our @supported_source_formats =
   ( qr/1\.0/, qr/3\.0\s*\((quilt|native)\)/ );
-
-our %known_build_essential = map { $_ => 1 }
-    ('libc6-dev', 'libc-dev', 'gcc', 'g++', 'make', 'dpkg-dev');
 
 # Still in the archive but shouldn't be the primary Emacs dependency.
 our %known_obsolete_emacs = map { $_ => 1 }
@@ -447,11 +423,11 @@ if (not defined $info->field('section')) {
 
 	    if (scalar @parts > 1) {
 		tag 'unknown-section', $section unless $KNOWN_ARCHIVE_PARTS{$parts[0]};
-		tag 'unknown-section', $section unless $KNOWN_SECTIONS{$parts[1]};
+		tag 'unknown-section', $section unless $KNOWN_SECTIONS->known($parts[1]);
 	    } elsif ($parts[0] eq 'unknown') {
 		tag 'section-is-dh_make-template';
 	    } else {
-		tag 'unknown-section', $section unless $KNOWN_SECTIONS{$parts[0]};
+		tag 'unknown-section', $section unless $KNOWN_SECTIONS->known($parts[0]);
 	    }
 
 	    # Check package name <-> section.  oldlibs is a special case; let
@@ -801,7 +777,7 @@ if ($type eq 'source') {
 					    if ($d_pkg eq 'build-essential');
 
 					tag 'depends-on-build-essential-package-without-using-version', "$d_pkg [$field: $part_d_orig]"
-					    if ($known_build_essential{$d_pkg} && ! $d_version->[1]);
+					    if ($known_build_essential->known($d_pkg) && ! $d_version->[1]);
 
 					tag 'build-depends-on-essential-package-without-using-version', "$field: $part_d_orig"
 					    if ($KNOWN_ESSENTIAL->known($d_pkg) && ! $d_version->[0] && $d_pkg ne 'dash');
@@ -984,10 +960,10 @@ for my $field (readdir FIELDS) {
 	    if ($type eq 'source' && ! $SOURCE_FIELDS->known($field) && ! $known_obsolete_fields{$field});
 
 	tag 'unknown-field-in-control', $field
-	    if ($type eq 'binary' && ! $KNOWN_BINARY_FIELDS{$field} && ! $known_obsolete_fields{$field});
+	    if ($type eq 'binary' && ! $KNOWN_BINARY_FIELDS->known($field) && ! $known_obsolete_fields{$field});
 
 	tag 'unknown-field-in-control', $field
-	    if ($type eq 'udeb' && ! $KNOWN_UDEB_FIELDS{$field} && ! $known_obsolete_fields{$field});
+	    if ($type eq 'udeb' && ! $KNOWN_UDEB_FIELDS->known($field) && ! $known_obsolete_fields{$field});
 }
 closedir(FIELDS);
 

@@ -42,6 +42,9 @@ lintian (2.5.2) UNRELEASED; urgency=low
     + [NT] Exclude  __init__.py files from the check as they are
       required even if they are empty.  Thanks to Daniele Tricoli
       for the report.  (Closes: #632789)
+  * checks/fields:
+    + [NT] Refactored to use Lintian::Data and use new data files
+      from data/fields.
   * checks/filename-length{,.desc}:
     + [NT] New file that checks the length of the package file
       names.  (Closes: #631656)
@@ -78,6 +81,8 @@ lintian (2.5.2) UNRELEASED; urgency=low
     + [NT] Updated to handle source packages and with support for
       multi tarball source packages.
 
+  * data/fields/*:
+    + [NT] Added new files based on data variables from checks/fields.
   * data/rules/{deprecated,known}-makefiles:
     + [NT] Added file.
   * data/spelling/corrections:

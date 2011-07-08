@@ -1,0 +1,25 @@
+# Manual maintained list of known udeb fields
+#  - note the Ubuntu original-maintainer field is handled separately.
+
+package
+version
+architecture
+subarchitecture
+depends
+recommends
+enhances
+provides
+replaces
+breaks
+replaces
+maintainer
+section
+priority
+source
+description
+installed-size
+kernel-version
+installer-menu-item
+bugs
+origin
+built-using

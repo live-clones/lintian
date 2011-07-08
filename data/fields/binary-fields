@@ -1,0 +1,29 @@
+# Manual maintained list of known binary fields
+#  - note the Ubuntu original-maintainer field is handled separately.
+
+package
+version
+architecture
+depends
+pre-depends
+recommends
+suggests
+enhances
+conflicts
+provides
+replaces
+breaks
+essential
+maintainer
+section
+priority
+source
+description
+installed-size
+python-version
+homepage
+bugs
+origin
+multi-arch
+built-using
+ruby-versions
