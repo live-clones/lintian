@@ -30,6 +30,7 @@ use Lintian::Command qw(spawn reap);
 ($#ARGV == 1) or fail('syntax: file-info <pkg> <type>');
 my $pkg = shift;
 my $type = shift;
+my $last = '';
 
 -f 'fields/source' or fail('file-info invoked in wrong directory');
 
@@ -37,12 +38,56 @@ unlink('file-info');
 chdir('unpacked')
     or fail("cannot chdir to unpacked directory: $!");
 
+open(FILE_INFO, '>', '../file-info')
+    or fail("cannot open file-info: $!");
+
+my $collect = sub {
+    my @lines = map { split "\n" } @_;
+    if ($last ne '') {
+        $lines[0] = $last . $lines[0];
+    }
+    if ($_[-1] !~ /\n\z/) {
+        $last = pop @lines;
+    } else {
+        $last = '';
+    }
+    for my $line (@lines) {
+        my ($file, $type) = $line =~ (m/^(.*?)\x00(.*)$/o);
+        if ($file =~ m/\.gz$/o && -e $file && ! -l $file && $type !~ m/compressed/o){
+            # While file could be right, it is unfortunately
+            # regularly wrong here as well; double check the type
+	    my $text = '';
+	    if (open(my $gzf, '<', $file)) {
+		my $buff;
+		# We need to read at least 9 bytes
+		if (sysread($gzf, $buff, 1024) >= 9) {
+		    # translation of the unpack
+		    #  nn nn ,  NN NN NN NN, nn nn, cc     - bytes read (in hex, network order)
+		    #  $magic,  __ __ __ __, __ __, $comp  - variables
+		    my ($magic, undef, undef, $comp) = unpack('nNnc', $buff);
+		    if ($magic == 0x1f8b){ # the gzip file magic
+			$text = 'gzip compressed';
+			# 2 for max compression; RFC1952 suggests this is a flag and not a value,
+			# hench the bit and operation
+			if (($comp & 2) == 2){
+			    $text = "$text, max compression";
+			}
+		    }
+		}
+		close($gzf);
+	    }
+	    $type = "$type, $text" if $text;
+        }
+        printf FILE_INFO "%s%c%s\n", $file , 0, $type;
+    }
+}; # End $collect = sub;
+
 # We ignore failures from file because sometimes file returns a non-zero exit
 # status when it can't parse a file.  So far, the resulting output still
 # appears to be usable (although will contain "ERROR" strings, which Lintian
 # doesn't care about), and the only problem was the exit status.
 my %opts = ( pipe_in => FileHandle->new,
-	     out => '../file-info',
+	     out => $collect,
 	     fail => 'never' );
 spawn(\%opts, ['xargs', '-0r', 'file', '-F', '', '--print0', '--']);
 $opts{pipe_in}->blocking(1);
@@ -61,3 +106,6 @@ close(INDEX) or fail("cannot close index file: $!");
 
 close $opts{pipe_in};
 reap(\%opts);
+
+close(FILE_INFO) or fail("cannot close file-info: $!");
+

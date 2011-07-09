@@ -92,6 +92,11 @@ lintian (2.5.2) UNRELEASED; urgency=low
     + [NT] Symlink checking extended to relative paths as well.
       (Closes: #217023)
 
+  * collection/file-info:
+    + [NT] Double check the output of file(1) when it says a ".gz"
+      file is not gzip compressed.  This should reduce the number
+      of false-positives gz-file-not-gzip tags.
+      (Closes: #620289)
   * collection/index{,.desc}:
     + [NT] Updated to handle source packages and with support for
       multi tarball source packages.
