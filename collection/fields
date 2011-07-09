@@ -70,30 +70,4 @@ for my $field (keys %$data) {
     close(F) or fail("Could not write $field_file: $!");
 }
 
-if ($type eq 'source'){
-    # FIXME - the LAB really ought to handle this as it involves
-    # cross-pkg LAB layout.
-
-    # Create symbolic links to binary packages
-    mkdir('binary', 0777) or fail("mkdir binary: $!");
-    for my $bin (split(m/,\s+/o,$data->{'binary'})) {
-        next if ($bin =~ m,/,o);
-        symlink("../../../binary/$bin", "binary/$bin")
-            or fail("cannot symlink binary package $bin: $!");
-    }
-}
-
-if($type eq 'binary' or $type eq 'udeb'){
-    # FIXME - the LAB really ought to handle this as it involves
-    # cross-pkg LAB layout.
-
-    # create symlink to source package
-    $data->{'source'} =~ s/\s*\(.*\)\s*$//;
-    # but only create it if it doesn't traverse directories
-    if ($data->{'source'} !~ m,/,) {
-        symlink("../../source/$data->{'source'}","source")
-            or fail("symlink: $!");
-    }
-}
-
 exit 0;

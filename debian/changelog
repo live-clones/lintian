@@ -96,6 +96,10 @@ lintian (2.5.2) UNRELEASED; urgency=low
     + [NT] Symlink checking extended to relative paths as well.
       (Closes: #217023)
 
+  * collections/fields:
+    + [NT] Removed creation of cross package symlinks.  They have
+      been replaced by the group information that checks are
+      passed.
   * collection/file-info:
     + [NT] Double check the output of file(1) when it says a ".gz"
       file is not gzip compressed.  This should reduce the number
