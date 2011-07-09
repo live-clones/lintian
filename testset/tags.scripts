@@ -81,3 +81,4 @@ W: scripts: script-uses-bin-env usr/bin/envfoo
 W: scripts: script-with-language-extension usr/bin/test.sh
 W: scripts: setuid-binary usr/bin/suidperlfoo 4555 root/root
 W: scripts: setuid-binary usr/bin/suidperlfoo2 4751 root/root
+W: scripts: unusual-interpreter usr/bin/suidperlfoo #!/usr/bin/suidperl
