@@ -39,6 +39,8 @@ sub run {
 my $pkg = shift;
 my $type = shift;
 my $info = shift;
+my $proc = shift;
+my $group = shift;
 
 my $ppkg = quotemeta($pkg);
 
@@ -105,23 +107,8 @@ foreach (@{$info->sorted_index}) {
 	    tag 'usr-share-doc-symlink-without-dependency', $link;
 	    last;
     	}
-
-    	# We can only check if both packages come from the same source
-    	# if our source package is currently unpacked in the lab, too!
-	if (-d 'source') { 	# yes, it's unpacked
-
-	    # $link from the same source pkg?
-	    if (-l "source/binary/$link") {
-		# yes, everything is ok.
-	    } else {
-		# no, it is not.
-		tag 'usr-share-doc-symlink-to-foreign-package', $link;
-	    }
-    	} else {		# no, source is not available
-	    tag 'cannot-check-whether-usr-share-doc-symlink-points-to-foreign-package';
-    	}
-
-    	# everything is ok.
+	# Check if the link points to a package from the same source.
+	check_cross_link($group, $link);
     	last;
     } elsif (m,usr/doc/copyright/$ppkg$,) {
 	tag 'old-style-copyright-file';
@@ -341,6 +328,28 @@ sub depends_on {
     return 1 if $KNOWN_ESSENTIAL->known($package);
     return 1 if $info->relation('strong')->implies($package);
     return 0;
+}
+
+# Checks cross pkg links for /usr/share/doc/$pkg links
+sub check_cross_link {
+    my ($group, $fpkg) = @_;
+    my $src = $group->get_source_processable();
+    if ( $src ) {
+	# source package is available; check it's list of binary
+	my $bin = $src->info->binaries;
+	return if $bin->{$fpkg};
+	tag 'usr-share-doc-symlink-to-foreign-package', $fpkg;
+    } else {
+	# The source package is not available, but the binary could
+	# be present anyway;  If they are in the same group, they claim
+	# to have the same source (and source version)
+	foreach my $proc ($group->get_processables('binary')){
+	    return if($proc->pkg_name eq $fpkg);
+	}
+	# It was not, but since the source package was not present, we cannot
+	# tell if it is foreign or not at this point.
+	tag 'cannot-check-whether-usr-share-doc-symlink-points-to-foreign-package';
+    }
 }
 
 1;

@@ -30,6 +30,10 @@ lintian (2.5.2) UNRELEASED; urgency=low
       helper templates.  This should prevent false-positives for
       some license texts.  Thanks to Charles Plessy for the
       report.  (Closes: #631674)
+    + [NT] Use group data to determine if a package is foreign
+      or not for symlinked /usr/share/doc/<pkg> dirs.  This
+      avoids the need for symlinks between packages in the
+      lab.
   * checks/deb-format{,.desc}:
     + [NT] Allow data.tar.xz as the third member.  Thanks to
       Ansgar Burchardt for the report and patch.
