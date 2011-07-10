@@ -152,6 +152,9 @@ lintian (2.5.2) UNRELEASED; urgency=low
     + [NT] Symlink in all components of the source package when
       creating the source entry in the lab.  Also removed legacy
       code for using the old unpack scripts.
+  * lib/Lintian/Collect/{Binary,Source}.pm:
+    + [NT] Refactored code from these files into the module
+      Lintian::Collect::Package.
   * lib/Lintian/Collect/Package.pm:
     + [NT] New file.  This serves as a base for Lintian::Collect
       modules that can be unpacked.

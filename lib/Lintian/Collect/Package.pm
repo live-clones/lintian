@@ -24,6 +24,7 @@ use warnings;
 use base 'Lintian::Collect';
 
 use Carp qw(croak);
+use Util qw(perm2oct);
 
 # Returns the path to the dir where the package is unpacked
 #  or a file therein (see pod below)
@@ -45,6 +46,105 @@ sub unpacked {
     }
     return $unpacked;
 }
+
+# Returns the information from collect/file-info
+sub file_info {
+    my ($self) = @_;
+    return $self->{file_info} if exists $self->{file_info};
+    my $base_dir = $self->base_dir();
+    my %file_info;
+    # sub file_info Needs-Info file-info
+    open(my $idx, '<', "$base_dir/file-info")
+        or fail("cannot open $base_dir/file-info: $!");
+    while (<$idx>) {
+        chomp;
+
+        m/^(.+?)\x00\s+(.*)$/o
+            or fail("an error in the file pkg is preventing lintian from checking this package: $_");
+        my ($file, $info) = ($1,$2);
+
+        $file =~ s,^\./,,o;
+        $file =~ s,/+$,,o;
+
+        $file_info{$file} = $info;
+    }
+    close $idx;
+    $self->{file_info} = \%file_info;
+
+    return $self->{file_info};
+}
+
+# Returns the information from the indices
+# FIXME: should maybe return an object
+# sub index Needs-Info index
+sub index {
+    my ($self) = @_;
+    return $self->{index} if exists $self->{index};
+    my $base_dir = $self->base_dir();
+    my (%idx, %dir_counts);
+    open my $idx, '<', "$base_dir/index"
+        or fail("cannot open index file $base_dir/index: $!");
+    open my $num_idx, '<', "$base_dir/index-owner-id"
+        or fail("cannot open index file $base_dir/index-owner-id: $!");
+    while (<$idx>) {
+        chomp;
+
+        my (%file, $perm, $owner, $name);
+        ($perm,$owner,$file{size},$file{date},$file{time},$name) =
+            split(' ', $_, 6);
+        $file{operm} = perm2oct($perm);
+        $file{type} = substr $perm, 0, 1;
+
+        my $numeric = <$num_idx>;
+        chomp $numeric;
+        fail('cannot read index file index-owner-id') unless defined $numeric;
+        my ($owner_id, $name_chk) = (split(' ', $numeric, 6))[1, 5];
+        fail("mismatching contents of index files: $name $name_chk")
+            if $name ne $name_chk;
+
+        ($file{owner}, $file{group}) = split '/', $owner, 2;
+        ($file{uid}, $file{gid}) = split '/', $owner_id, 2;
+
+        $name =~ s,^\./,,;
+        if ($name =~ s/ link to (.*)//) {
+            $file{type} = 'h';
+            $file{link} = $1;
+            $file{link} =~ s,^\./,,;
+        } elsif ($file{type} eq 'l') {
+            ($name, $file{link}) = split ' -> ', $name, 2;
+        }
+        $file{name} = $name;
+
+        # count directory contents:
+        $dir_counts{$name} ||= 0 if $file{type} eq 'd';
+        $dir_counts{$1} = ($dir_counts{$1} || 0) + 1
+            if $name =~ m,^(.+/)[^/]+/?$,;
+
+        $idx{$name} = \%file;
+    }
+    foreach my $file (keys %idx) {
+        if ($dir_counts{$idx{$file}->{name}}) {
+            $idx{$file}->{count} = $dir_counts{$idx{$file}->{name}};
+        }
+    }
+    $self->{index} = \%idx;
+
+    return $self->{index};
+}
+
+# Returns sorted file index (eqv to sort keys %{$info->index}), except it is cached.
+#  sub sorted_index Needs-Info index
+sub sorted_index {
+    my ($self) = @_;
+    my $index;
+    my @result;
+    return $self->{sorted_index} if exists $self->{sorted_index};
+    $index = $self->index();
+    @result = sort keys %{$index};
+    $self->{sorted_index} = \@result;
+    return \@result;
+}
+
 
 
 1;
@@ -119,6 +219,24 @@ The following code may be helpful in checking for path traversal:
  }
 
 Alternatively one can use Util::resolve_pkg_path.
+
+=item file_info
+
+Returns a hashref mapping file names to the output of file for that file.
+
+Note the file names do not have any leading "./" nor "/".
+
+=item index
+
+Returns a hashref to the index information (permissions, file type etc).
+
+Note the file names do not have any leading "./" nor "/".
+
+=item sorted_index
+
+Returns a sorted list of all files listed in index (or file_info hashref).
+
+It may contain an "empty" entry denoting the "root dir".
 
 =back
 
