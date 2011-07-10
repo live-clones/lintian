@@ -22,9 +22,6 @@ package Lintian::copyright_file;
 use strict;
 use warnings;
 
-use lib "$ENV{'LINTIAN_ROOT'}/checks/";
-use common_data;
-
 use Lintian::Check qw(check_spelling);
 use Lintian::Data ();
 use Lintian::Tags qw(tag);
