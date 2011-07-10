@@ -91,11 +91,12 @@ foreach my $file (@{$info->sorted_index}) {
 	if (not defined $pid) {
 	    fail("cannot fork: $!");
 	} elsif ($pid == 0) {
+	    my $f = quotemeta($info->unpacked($file));
 	    my %newenv = (LANG => 'C', PATH => $ENV{PATH},
 			  LOCPATH => $ENV{LOCPATH});
 	    undef %ENV;
 	    %ENV = %newenv;
-	    exec "zcat \Qunpacked/$file\E 2>&1"
+	    exec "zcat $f 2>&1"
 		or fail("cannot run zcat: $!");
 	}
 	local $_;

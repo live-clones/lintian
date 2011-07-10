@@ -340,6 +340,7 @@ my $all_parsed = Lintian::Relation->new($all_deps);
 for my $filename (sort keys %{$info->scripts}) {
     my $interpreter = $info->scripts->{$filename}->{interpreter};
     my $calls_env = $info->scripts->{$filename}->{calls_env};
+    my $path;
     $scripts{$filename} = 1;
 
     my $in_docs = $filename =~ m,usr/share/doc/,;
@@ -397,17 +398,18 @@ for my $filename (sort keys %{$info->scripts}) {
 	    and $filename !~ m,^etc/csh/login\.d/,)
 	    and !$in_docs;
 
+    $path = $info->unpacked($filename);
     # Syntax-check most shell scripts, but don't syntax-check scripts that end
     # in .dpatch.  bash -n doesn't stop checking at exit 0 and goes on to blow
     # up on the patch itself.
     if ($base =~ /^$known_shells_regex$/) {
 	if (-x $interpreter
-	    and ! script_is_evil_and_wrong("unpacked/$filename")
+	    and ! script_is_evil_and_wrong($path)
 	    and $filename !~ m,\.dpatch$,
 	    # exclude some shells. zsh -n is broken, see #485885
 	    and $base !~ m/^(z|t?c)sh$/) {
 
-	    if (check_script_syntax($interpreter, "unpacked/$filename")) {
+	    if (check_script_syntax($interpreter, $path)) {
 		script_tag("shell-script-fails-syntax-check", $filename);
 	    }
 	}
@@ -452,7 +454,7 @@ for my $filename (sort keys %{$info->scripts}) {
     if ($filename =~ m,^etc/, and $base =~ /^$known_shells_regex$/) {
 	my ($saw_init, $saw_invoke);
 	local $.;
-	open(FH, '<', 'unpacked/' . $filename);
+	open(FH, '<', $path);
 	while (<FH>) {
 	    next if m,^\s*$,;  # skip empty lines
 	    next if m,^\s*\#,; # skip comment lines

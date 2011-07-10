@@ -21,7 +21,7 @@ package Lintian::Collect::Binary;
 
 use strict;
 use warnings;
-use base 'Lintian::Collect';
+use base 'Lintian::Collect::Package';
 
 use Lintian::Relation;
 use Carp qw(croak);

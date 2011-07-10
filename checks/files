@@ -341,7 +341,7 @@ foreach my $file (@{$info->sorted_index}) {
 	}
 	#----------------- /etc/php5/conf.d
 	elsif ($file =~ m,^etc/php5/conf.d/.+\.ini$,) {
-	    open (PHPINI, '<', "unpacked/$file") or fail("cannot open .ini file: $!");
+	    open (PHPINI, '<', $info->unpacked($file)) or fail("cannot open .ini file: $!");
 	    while (<PHPINI>) {
 		next unless (m/^\s*#/);
 		tag 'obsolete-comments-style-in-php-ini', $file;
@@ -407,7 +407,8 @@ foreach my $file (@{$info->sorted_index}) {
 		if ($file =~ m,.gz$, and $index_info->{size} <= 276
 		    and $index_info->{type} =~ m,^[-h],
 		    and $info->file_info->{$file} =~ m/gzip compressed/) {
-		    unless (`gzip -dc unpacked/$file`) {
+		    my $f = quotemeta($info->unpacked($file));
+		    unless (`gzip -dc $f`) {
 			tag 'zero-byte-file-in-doc-directory', $file;
 		    }
 		}
@@ -956,7 +957,7 @@ foreach my $file (@{$info->sorted_index}) {
 
 	# ---------------- embedded Feedparser library
 	if ($file =~ m,/feedparser\.py$, and $pkg ne 'python-feedparser') {
-	    open(FEEDPARSER, '<', "unpacked/$file") or fail("cannot open feedparser.py file: $!");
+	    open(FEEDPARSER, '<', $info->unpacked($file)) or fail("cannot open feedparser.py file: $!");
 	    while (<FEEDPARSER>) {
 		if (m,Universal feed parser,) {
 		    tag 'embedded-feedparser-library', $file;
@@ -969,7 +970,7 @@ foreach my $file (@{$info->sorted_index}) {
 	# ---------------- embedded PEAR modules
 	foreach my $pearmodule (@pearmodules) {
 	    if ($file =~ m,/$pearmodule->[0], and $pkg ne $pearmodule->[1]) {
-		open (PEAR, '<', "unpacked/$file") or fail("cannot open PHP file: $!");
+		open (PEAR, '<', $info->unpacked($file)) or fail("cannot open PHP file: $!");
 		while (<PEAR>) {
 		    if (m,/pear[/.],i) {
 			tag 'embedded-pear-module', $file;

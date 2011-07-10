@@ -124,8 +124,8 @@ if ($format =~ /^\s*2\.0\s*\z/ or $format =~ /^\s*3\.0\s*\(quilt\)/) {
 } elsif (not $info->native) {
     check_diffstat('diffstat', \%warned);
 }
-my $wanted = sub { find_cruft($pkg, $info, \%warned, $atdinbd, $ltinbd) };
-find($wanted, 'unpacked');
+my $wanted = sub { find_cruft($pkg, $info, $info->unpacked, \%warned, $atdinbd, $ltinbd) };
+find($wanted, $info->unpacked);
 
 # Look for cruft based on file's results, but allow cruft in test directories
 # where it may be part of a test suite.
@@ -279,8 +279,8 @@ sub check_debfiles {
 # "source-contains" tag.  The tag isn't entirely accurate, but it's better
 # than creating yet a third set of tags, and this gets the severity right.
 sub find_cruft {
-    my ($pkg, $info, $warned, $atdinbd, $ltinbd) = @_;
-    (my $name = $File::Find::name) =~ s,^(\./)?unpacked/,,;
+    my ($pkg, $info, $root, $warned, $atdinbd, $ltinbd) = @_;
+    (my $name = $File::Find::name) =~ s,^$root/,,;
 
     # Ignore the .pc directory and its contents, created as part of the
     # unpacking of a 3.0 (quilt) source package.

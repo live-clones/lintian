@@ -28,6 +28,7 @@ our @DESCS = (<$ENV{LINTIAN_ROOT}/collection/*.desc>,
 plan tests => scalar(@DESCS) * 2;
 
 my @l2refs = (
+        qr|->unpacked|,
 	qr<unpacked/>,
 	qr<unpacked-errors>,
 	qr<chdir\s*\(\s*["']unpacked/?['"]\s*\)>,

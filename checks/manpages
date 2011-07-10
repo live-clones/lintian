@@ -166,7 +166,8 @@ foreach my $file (@{$info->sorted_index}) {
 	    }
 	}
     } else { # not a symlink
-	open (MANFILE, '-|', "zcat unpacked/\Q$file\E 2>/dev/null")
+	my $path = $info->unpacked($file);
+	open (MANFILE, '-|', "zcat \Q$path\E 2>/dev/null")
 	    or fail("cannot open $file: $!");
 	my @manfile = ();
 	while (<MANFILE>) { push @manfile, $_; }
@@ -221,7 +222,7 @@ foreach my $file (@{$info->sorted_index}) {
 			      LOCPATH => $ENV{LOCPATH});
 		undef %ENV;
 		%ENV = %newenv;
-		exec "lexgrog unpacked/\Q$file\E 2>&1"
+		exec "lexgrog \Q$path\E 2>&1"
 		    or fail("cannot run lexgrog: $!");
 	    }
 	    my $desc = <LEXGROG>;
@@ -242,10 +243,10 @@ foreach my $file (@{$info->sorted_index}) {
 	# processed properly.  (Yes, there are man pages that include other
 	# pages with .so but aren't simple links; rbash, for instance.)
 	my $cmd;
-	if ($file =~ m,^(.*)/(man\d/.*)$,) {
-	    $cmd = "cd unpacked/\Q$1\E && man --warnings -E UTF-8 -l \Q$2\E";
+	if ($path =~ m,^(.*)/(man\d/.*)$,) {
+	    $cmd = "cd \Q$1\E && man --warnings -E UTF-8 -l \Q$2\E";
 	} else {
-	    $cmd = "man --warnings -E UTF-8 -l unpacked/\Q$file\E";
+	    $cmd = "man --warnings -E UTF-8 -l \Q$path\E";
 	}
 	my $pid = open MANERRS, '-|';
 	if (not defined $pid) {

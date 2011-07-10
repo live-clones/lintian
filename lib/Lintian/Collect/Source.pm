@@ -21,14 +21,12 @@ package Lintian::Collect::Source;
 
 use strict;
 use warnings;
-use base 'Lintian::Collect';
+use base 'Lintian::Collect::Package';
 
 use Lintian::Relation;
 use Parse::DebianChangelog;
 
 use Util;
-
-our @ISA = qw(Lintian::Collect);
 
 # Initialize a new source package collect object.  Takes the package name,
 # which is currently unused.
@@ -41,7 +39,7 @@ sub new {
 
 # Get the changelog file of a source package as a Parse::DebianChangelog
 # object.  Returns undef if the changelog file couldn't be found.
-# sub changelog Needs-Info <>
+# sub changelog Needs-Info debfiles
 sub changelog {
     my ($self) = @_;
     return $self->{changelog} if exists $self->{changelog};

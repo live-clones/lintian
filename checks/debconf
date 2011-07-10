@@ -513,7 +513,7 @@ if ($usespreinst) {
 return 0 if ($pkg eq 'debconf') || ($type eq 'udeb');
 
 foreach my $filename (sort keys %{$info->scripts}) {
-    open(IN, '<', "unpacked/$filename") or fail("cannot open $filename: $!");
+    open(IN, '<', $info->unpacked($filename)) or fail("cannot open $filename: $!");
     while (<IN>) {
 	s/#.*//;    # Not perfect for Perl, but should be OK
 	if (m,/usr/share/debconf/confmodule, or

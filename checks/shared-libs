@@ -163,8 +163,8 @@ for my $cur_file (@{$info->sorted_index}) {
 	tag 'sharedobject-in-library-directory-missing-soname', $cur_file;
     } elsif ($cur_file =~ m/\.la$/ and not defined($cur_file_data->{link})) {
 	local $_;
-	open(LAFILE, '<', "unpacked/$cur_file")
-	    or fail("Could not open unpacked/$cur_file for reading!");
+	open(LAFILE, '<', $info->unpacked($cur_file))
+	    or fail("Could not open $cur_file for reading!");
 	while(<LAFILE>) {
 	    next unless (m/^(libdir)='(.+?)'$/) or (m/^(dependency_libs)='(.+?)'$/);
 	    my ($field, $value) = ($1, $2);

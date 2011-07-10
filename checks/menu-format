@@ -625,13 +625,13 @@ sub VerifyLine {
                 or ($section =~ m:^(WindowManagers/Modules|FVWM Modules|Window Maker):));
 
     if (exists($vals{'icon'})) {
-	VerifyIcon($menufile, $fullname, $linecount, $vals{'icon'}, 32);
+	VerifyIcon($info, $menufile, $fullname, $linecount, $vals{'icon'}, 32);
     }
     if (exists($vals{'icon32x32'})) {
-	VerifyIcon($menufile, $fullname, $linecount, $vals{'icon32x32'}, 32);
+	VerifyIcon($info, $menufile, $fullname, $linecount, $vals{'icon32x32'}, 32);
     }
     if (exists($vals{'icon16x16'})) {
-	VerifyIcon($menufile, $fullname, $linecount, $vals{'icon16x16'}, 16);
+	VerifyIcon($info, $menufile, $fullname, $linecount, $vals{'icon16x16'}, 16);
     }
 
     # Check the needs tag.
@@ -686,7 +686,7 @@ sub VerifyLine {
 
 
 sub VerifyIcon {
-    my ($menufile, $fullname, $linecount, $icon, $size) = @_;
+    my ($info, $menufile, $fullname, $linecount, $icon, $size) = @_;
     local *IN;
 
     if ($icon eq 'none') {
@@ -702,9 +702,9 @@ sub VerifyIcon {
     }
 
     # Try the explicit location, and if that fails, try the standard path.
-    my $iconfile = "unpacked/$icon";
+    my $iconfile = $info->unpacked($icon);
     if (! -f $iconfile) {
-	$iconfile = "unpacked/usr/share/pixmaps/$icon";
+	$iconfile = $info->unpacked("/usr/share/pixmaps/$icon");
     }
 
     if (! open (IN, '<', $iconfile)) {
@@ -743,7 +743,7 @@ parse_error:
 sub VerifyDesktopFile {
     my ($desktopfile, $file, $pkg, $info) = @_;
     my %vals;
-    open (DESKTOP, '<', "unpacked/$file")
+    open (DESKTOP, '<', $info->unpacked($file))
 	or fail("cannot open desktop file $file: $!");
     my ($line, $saw_first, $warned_cr);
     my @pending;
