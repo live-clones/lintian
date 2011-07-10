@@ -54,6 +54,18 @@ sub changelog {
     return $self->{changelog};
 }
 
+# Returns the path to diffstat result on the diff (if it exists) or an empty file
+# if there is no diff.gz
+#  sub diffstat Needs-Info diffstat
+sub diffstat {
+    my ($self) = @_;
+    return $self->{diffstat} if exists $self->{diffstat};
+    my $dstat = $self->base_dir() . '/diffstat';
+    $dstat = '/dev/null' unless -e $dstat;
+    $self->{diffstat} = $dstat;
+    return $dstat;
+}
+
 # Returns whether the package is a native package.  For everything except
 # format 3.0 (quilt) packages, we base this on whether we have a Debian
 # *.diff.gz file.  3.0 (quilt) packages are always non-native.  Returns true

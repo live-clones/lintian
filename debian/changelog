@@ -104,7 +104,11 @@ lintian (2.5.2) UNRELEASED; urgency=low
     + [NT] Symlink checking extended to relative paths as well.
       (Closes: #217023)
 
-  * collections/fields:
+  * collection/diffstat:
+    + [NT] No longer unconditionally creates a diffstat file,
+      since the Lintian::Collect interface will fall back to
+      using /dev/null in its absence.
+  * collection/fields:
     + [NT] Removed creation of cross package symlinks.  They have
       been replaced by the group information that checks are
       passed.

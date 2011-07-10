@@ -196,7 +196,7 @@ sub run {
 		tag "more-than-one-patch-system";
 	}
 	my @direct;
-	open(STAT, '<', "diffstat") or fail("cannot open diffstat file: $!");
+	open(STAT, '<', $info->diffstat) or fail("cannot open diffstat file: $!");
 	while (<STAT>) {
 		my ($file) = (m,^\s+(.*?)\s+\|,)
 		     or fail("syntax error in diffstat file: $_");

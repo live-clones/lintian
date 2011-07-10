@@ -46,11 +46,7 @@ unlink('debian-patch') or fail("cannot unlink debian-patch: $!")
 $ver =~ s/^\d://; #Remove epoch for this
 
 my $diff_file = "${pkg}_${ver}.diff.gz";
-unless (-f $diff_file) {
-# we have to write an empty file so that the checks don't crap out. <sigh>
-  touch_file('diffstat');
-  exit 0;
-}
+exit 0 unless (-f $diff_file);
 
 gunzip_file($diff_file, 'debian-patch');
 
