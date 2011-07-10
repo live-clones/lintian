@@ -70,8 +70,8 @@ for my $jar_file (sort keys %{$java_info}) {
     if($jar_file =~ m#^usr/share/java/[^/]+\.jar$#o) {
 	$has_public_jars = 1;
     }
-
-    $classes = 0 unless grep m/\.class$/o, @{$file_list};
+    # check for common code files like .class or .clj (Clojure files)
+    $classes = 0 unless grep m/\.(?:class|clj)$/o, @{$file_list};
     $datafiles = 0
         unless grep m/\.(?:xml|properties|x?html|xhp)$/o, @{$file_list};
 
