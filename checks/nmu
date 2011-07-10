@@ -48,8 +48,8 @@ my $changelog_mentions_team_upload = 0;
 # This isn't really an NMU check, but right now no other check looks at
 # debian/changelog in source packages.  Catch a debian/changelog file that's a
 # symlink.
-if (-l 'debfiles/changelog') {
-    tag 'changelog-is-symlink', '';
+if (-l $info->debfiles('changelog')) {
+    tag 'changelog-is-symlink';
     return 0;
 }
 

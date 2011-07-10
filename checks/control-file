@@ -38,20 +38,23 @@ sub run {
 
 my $pkg = shift;
 my $type = shift;
+my $info = shift;
 
-if (-l 'debfiles/control') {
+my $dcontrol = $info->debfiles('control');
+
+if (-l $dcontrol) {
     tag 'debian-control-file-is-a-symlink';
 }
 
 # check that control is UTF-8 encoded
-my $line = file_is_encoded_in_non_utf8('debfiles/control', $type, $pkg);
+my $line = file_is_encoded_in_non_utf8($dcontrol, $type, $pkg);
 if ($line) {
     tag 'debian-control-file-uses-obsolete-national-encoding', "at line $line"
 }
 
 # Check that each field is only used once:
 my $seen_fields = {};
-open (CONTROL, '<', 'debfiles/control')
+open (CONTROL, '<', $dcontrol)
     or fail "Couldn't read debfiles/control: $!";
 while (<CONTROL>) {
 	s/\s*\n$//;
@@ -83,7 +86,7 @@ while (<CONTROL>) {
 }
 close CONTROL;
 
-my ($header, @binary_controls) = read_dpkg_control('debfiles/control');
+my ($header, @binary_controls) = read_dpkg_control($dcontrol);
 
 for my $binary_control (@binary_controls) {
 	tag 'build-info-in-binary-control-file-section', 'Package '.$binary_control->{'package'}

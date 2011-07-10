@@ -111,23 +111,20 @@ my $pkg = shift;
 my $type = shift;
 my $info = shift;
 
+my $rules = $info->debfiles('rules');
+
 # Policy could be read as allowing debian/rules to be a symlink to some other
 # file, and in a native Debian package it could be a symlink to a file that we
 # didn't unpack.  Warn if it's a symlink (dpkg-source does as well) and skip
 # all the tests if we then can't read it.
-if (-l 'debfiles/rules') {
+if (-l $rules) {
     tag 'debian-rules-is-symlink';
-    return 0 unless -f 'debfiles/rules';
-}
-
-#get architecture field:
-unless (-d 'fields') {
-    fail("directory in lintian laboratory for $type package $pkg missing: fields");
+    return 0 unless -f $rules;
 }
 
 my $architecture = $info->field('architecture') || '';
 
-open(RULES, '<', 'debfiles/rules') or fail("Failed opening rules: $!");
+open(RULES, '<', $rules) or fail("Failed opening rules: $!");
 
 # Check for required #!/usr/bin/make -f opening line.  Allow -r or -e; a
 # strict reading of Policy doesn't allow either, but they seem harmless.

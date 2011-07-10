@@ -37,8 +37,10 @@ my $pkg = shift;
 my $type = shift;
 my $info = shift;
 
-if (-e 'debfiles/source/format') {
-    open(FORMAT, '<', 'debfiles/source/format') or
+my $dsrc = $info->debfiles('source');
+
+if (-e "$dsrc/format") {
+    open(FORMAT, '<', "$dsrc/format") or
         fail("cannot read debian/source/format: $!");
     my $format = <FORMAT>;
     chomp $format;
@@ -47,18 +49,19 @@ if (-e 'debfiles/source/format') {
     tag 'missing-debian-source-format';
 }
 
-if (-s 'debfiles/source/git-patches') {
-    open (GITPATCHES, 'debfiles/source/git-patches')
+if (-s "$dsrc/git-patches") {
+    open (GITPATCHES, "$dsrc/git-patches")
 	or fail("cannot open debian/source/git-patches: $!");
     if (grep !/^\s*+#|^\s*+$/o, <GITPATCHES>) {
-	if (! -r "debfiles/patches/series" ) {
-	    tag "git-patches-not-exported";
+	my $dpseries = $info->debfiles('patches/series');
+	if (! -r $dpseries ) {
+	    tag 'git-patches-not-exported';
 	} else {
-	    open (DEBSERIES, 'debfiles/patches/series')
+	    open (DEBSERIES, $dpseries)
 		or fail("cannot open debian/patches/series: $!");
 	    my $comment_line = <DEBSERIES>;
 	    my $count = grep !/^\s*+\#|^\s*+$/o, <DEBSERIES>;
-	    tag "git-patches-not-exported"
+	    tag 'git-patches-not-exported'
 		unless ($count && ($comment_line =~ m/^\s*\#.*quilt-patches-deb-export-hook/o));
 	    close(DEBSERIES);
 	}
@@ -66,8 +69,8 @@ if (-s 'debfiles/source/git-patches') {
     close(GITPATCHES);
 }
 
-if (-d 'debfiles/source') {
-    opendir(DEBSRC, 'debfiles/source') or fail("cannot opendir debian/source/: $!");
+if (-d $dsrc ) {
+    opendir(DEBSRC, $dsrc) or fail("cannot opendir debian/source/: $!");
     my $file;
     while ($file = readdir(DEBSRC)) {
         next if $file eq '.' or $file eq '..';

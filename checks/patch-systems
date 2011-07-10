@@ -29,10 +29,6 @@ use Cwd qw(realpath);
 sub run {
 	my ($pkg, $type, $info) = @_;
 
-	unless (-d "fields") {
-    	fail("directory in lintian laboratory for $type package $pkg missing: fields");
-	}
-
 	#Some (cruft) checks are valid for every patch system, so we need to record that:
 	my $uses_patch_system = 0;
 
@@ -46,17 +42,18 @@ sub run {
 	}
 	my $quilt_format = ($format =~ /3\.\d+ \(quilt\)/) ? 1 : 0;
 
-	my $cwd = realpath('.');
+	my $droot = realpath($info->debfiles);
+	my $dpdir = "$droot/patches";
 
 	#----- dpatch
 	if ($build_deps->implies("dpatch")) {
 		$uses_patch_system++;
 		#check for a debian/patches file:
-		if (! -r "debfiles/patches/00list") {
-			tag "dpatch-build-dep-but-no-patch-list";
+		if (! -r "$dpdir/00list") {
+			tag 'dpatch-build-dep-but-no-patch-list';
 		} else {
 			my $list_uses_cpp = 0;
-			if (open(OPTS, '<', "debfiles/patches/00options")) {
+			if (open(OPTS, '<', "$dpdir/00options")) {
 				while(<OPTS>) {
 					if (/DPATCH_OPTION_CPP=1/) {
 						$list_uses_cpp = 1;
@@ -65,7 +62,7 @@ sub run {
 				}
 				close(OPTS);
 			}
-			foreach my $listfile (glob("debfiles/patches/00list*")) {
+			foreach my $listfile (glob("$dpdir/00list*")) {
 				my @patches;
 				if (open(IN, '<', $listfile)) {
 					while(<IN>) {
@@ -85,17 +82,17 @@ sub run {
 
 				# Check each patch.
 				foreach my $patch_file (@patches) {
-					$patch_file .= ".dpatch" if -e "debfiles/patches/$patch_file.dpatch"
-						and not -e "debfiles/patches/$patch_file";
-					next if ( -l "debfiles/patches/$patch_file" );
-					unless (realpath("debfiles/patches/$patch_file") =~ m,^\Q$cwd\E/debfiles/,) {
+					$patch_file .= '.dpatch' if -e "$dpdir/$patch_file.dpatch"
+						and not -e "$dpdir/$patch_file";
+					next if ( -l "$dpdir/$patch_file" );
+					unless (realpath("$dpdir/$patch_file") =~ m,^\Q$droot/,) {
 					    next;
 					}
-					if (! -r "debfiles/patches/$patch_file") {
-						tag "dpatch-index-references-non-existent-patch", $patch_file;
+					if (! -r "$dpdir/$patch_file") {
+						tag 'dpatch-index-references-non-existent-patch', $patch_file;
 						next;
 					}
-					if (open(PATCH_FILE, '<', "debfiles/patches/$patch_file")) {
+					if (open(PATCH_FILE, '<', "$dpdir/$patch_file")) {
 						my $has_comment = 0;
 						while (<PATCH_FILE>) {
 							#stop if something looking like a patch starts:
@@ -109,7 +106,7 @@ sub run {
 							tag "dpatch-missing-description", $patch_file;
 						}
 					}
-					check_patch($patch_file);
+					check_patch($dpdir, $patch_file);
 				}
 			}
 		}
@@ -122,10 +119,10 @@ sub run {
 		    tag "unneeded-build-dep-on-quilt";
 		}
 		#check for a debian/patches file:
-		if (! -r "debfiles/patches/series") {
-			tag "quilt-build-dep-but-no-series-file" unless $quilt_format;
+		if (! -r "$dpdir/series") {
+			tag 'quilt-build-dep-but-no-series-file' unless $quilt_format;
 		} else {
-			if (open(IN, '<', "debfiles/patches/series")) {
+			if (open(IN, '<', "$dpdir/series")) {
 				my @patches;
 				my @badopts;
 				while(<IN>) {
@@ -147,15 +144,15 @@ sub run {
 
 				# Check each patch.
 				foreach my $patch_file (@patches) {
-					next if ( -l "debfiles/patches/$patch_file" );
-					unless (realpath("debfiles/patches/$patch_file") =~ m,^\Q$cwd\E/debfiles/,) {
+					next if ( -l "$dpdir/$patch_file" );
+					unless (realpath("$dpdir/$patch_file") =~ m,^\Q$droot\E/,) {
 					    next;
 					}
-					if (! -r "debfiles/patches/$patch_file") {
-						tag "quilt-series-references-non-existent-patch", $patch_file;
+					if (! -r "$dpdir/$patch_file") {
+						tag 'quilt-series-references-non-existent-patch', $patch_file;
 						next;
 					}
-					if (open(PATCH_FILE, '<', "debfiles/patches/$patch_file")) {
+					if (open(PATCH_FILE, '<', "$dpdir/$patch_file")) {
 						my $has_description = 0;
 						while (<PATCH_FILE>) {
 							# stop if something looking like a patch starts:
@@ -169,28 +166,28 @@ sub run {
 							tag "quilt-patch-missing-description", $patch_file;
 						}
 					}
-					check_patch($patch_file);
+					check_patch($dpdir, $patch_file);
 				}
 			}
 		}
 		if ($quilt_format) { # 3.0 (quilt) specific checks
 		    # Format 3.0 packages may generate a debian-changes-$version patch
 		    my $version = $info->field('version');
-		    if (-f "debfiles/patches/debian-changes-$version" &&
-			! -f 'debfiles/debian/source/patch-header') {
+		    if (-f "$dpdir/debian-changes-$version" &&
+			! -f "$droot/source/patch-header") {
 			tag 'format-3.0-but-debian-changes-patch';
 		    }
 		}
 	} else {
-		if (-r "debfiles/patches/series" and
-		    -f "debfiles/patches/series") {
+		if (-r "$dpdir/series" and
+		    -f "$dpdir/series") {
 			# 3.0 (quilt) sources don't need quilt as dpkg-source will do the work
-			tag "quilt-series-but-no-build-dep" unless $quilt_format;
+			tag 'quilt-series-but-no-build-dep' unless $quilt_format;
 		}
 	}
 
 	#----- look for README.source
-	if ($uses_patch_system && ! $quilt_format && ! -f 'debfiles/README.source') {
+	if ($uses_patch_system && ! $quilt_format && ! -f "$droot/README.source") {
 		tag "patch-system-but-no-source-readme";
 	}
 
@@ -217,8 +214,8 @@ sub run {
 }
 
 # Checks on patches common to all build systems.
-sub check_patch($) {
-	my $patch_file = shift;
+sub check_patch {
+	my ($dpdir, $patch_file) = @_;
 
 	# Use -p1 to strip off the first layer of directory in case the parent
 	# directory in which the patches were generated was named "debian".
@@ -226,7 +223,7 @@ sub check_patch($) {
 	# in the debian/* directory, but as of 2010-01-01, all cases where the
 	# first level of the patch path is "debian/" in the archive are false
 	# positives.
-	open(DIFFSTAT, "-|", 'diffstat', '-p1', '-l', "debfiles/patches/$patch_file")
+	open(DIFFSTAT, "-|", 'diffstat', '-p1', '-l', "$dpdir/$patch_file")
 	  or fail("can't fork diffstat");
 	while (<DIFFSTAT>) {
 		chomp;

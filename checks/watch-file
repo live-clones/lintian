@@ -34,8 +34,9 @@ my $type = shift;
 my $info = shift;
 
 my $template = 0;
+my $wfile = $info->debfiles('watch');
 
-if (! -f 'debfiles/watch') {
+if (! -f $wfile) {
     tag 'debian-watch-file-is-missing' unless ($info->native);
     return;
 }
@@ -57,7 +58,7 @@ if ($version =~ /(alpha|beta|rc)/i) {
 
 # Gather information from the watch file and look for problems we can
 # diagnose on the first time through.
-open(WATCH, '<', 'debfiles/watch') or fail("cannot open watch file: $!");
+open(WATCH, '<', $wfile) or fail("cannot open watch file: $!");
 local $_;
 my ($watchver, %dversions);
 while (<WATCH>) {

@@ -32,19 +32,7 @@ use Util qw(perm2oct);
 # sub unpacked Needs-Info unpacked
 sub unpacked {
     my ($self, $file) = @_;
-    my $unpacked = $self->{unpacked};
-    if ( not defined $unpacked ) {
-	my $base_dir = $self->base_dir;
-	$unpacked = "$base_dir/unpacked";
-	croak "Unpacked not available" unless defined $unpacked && -d "$unpacked/";
-	$self->{unpacked} = $unpacked;
-    }
-    if ($file) {
-	# strip leading ./ - if that leaves something, return the path there
-	$file =~ s,^\.?/*+,,go;
-	return "$unpacked/$file" if $file;
-    }
-    return $unpacked;
+    return $self->_fetch_extracted_dir('unpacked', 'unpacked', $file);
 }
 
 # Returns the information from collect/file-info
@@ -145,6 +133,27 @@ sub sorted_index {
     return \@result;
 }
 
+
+
+# Backing method for unpacked, debfiles and others; this is not a part of the
+# API.
+# sub _fetch_extracted_dir Needs-Info <>
+sub _fetch_extracted_dir {
+    my ($self, $field, $dirname, $file) = @_;
+    my $dir = $self->{$field};
+    if ( not defined $dir ) {
+	my $base_dir = $self->base_dir;
+	$dir = "$base_dir/$dirname";
+	croak "$field ($dirname) is not available" unless -d "$dir/";
+	$self->{$field} = $dir;
+    }
+    if ($file) {
+	# strip leading ./ - if that leaves something, return the path there
+	$file =~ s,^\.?/*+,,go;
+	return "$dir/$file" if $file;
+    }
+    return $dir;
+}
 
 
 1;

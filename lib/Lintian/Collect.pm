@@ -72,7 +72,7 @@ sub base_dir {
 # packages, this is the *.dsc file; for binary packages, this is the control
 # file in the control section of the package.  For .changes files, the 
 # information will be retrieved from the file itself.
-# sub field Needs-Info <>
+# sub field Needs-Info fields
 sub field {
     my ($self, $field) = @_;
     return $self->{field}{$field} if exists $self->{field}{$field};

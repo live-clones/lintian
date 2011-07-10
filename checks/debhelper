@@ -54,6 +54,8 @@ my $pkg = shift;
 my $type = shift;
 my $info = shift;
 
+my $droot = $info->debfiles;
+
 my $seencommand = '';
 my $needbuilddepends = '';
 my $needtomodifyscripts = '';
@@ -74,7 +76,7 @@ my $seenmaintscript = 0;
 my $bdepends_noarch;
 my $bdepends;
 
-open(RULES, '<', 'debfiles/rules') or fail("cannot read debian/rules: $!");
+open(RULES, '<', "$droot/rules") or fail("cannot read debian/rules: $!");
 
 while (<RULES>) {
     if (/^ifn?(?:eq|def)\s/) {
@@ -204,8 +206,8 @@ for my $binpkg (keys %$pkgs) {
 my $compatnan = 0;
 # Check the compat file.  Do this separately from looping over all of the
 # other files since we use the compat value when checking for brace expansion.
-if (-f 'debfiles/compat') {
-    my $compat_file = slurp_entire_file('debfiles/compat');
+if (-f "$droot/compat") {
+    my $compat_file = slurp_entire_file("$droot/compat");
     ($compat) = split(/\n/, $compat_file);
     $compat =~ s/^\s+$//;
     if ($compat) {
@@ -250,7 +252,7 @@ if ($seendhcleank and $level >= 7) {
 # Check the files in the debian directory for various debhelper-related
 # things.
 my @indebfiles = ();
-opendir(DEBIAN, 'debfiles')
+opendir(DEBIAN, $droot)
     or fail("Can't open debfiles directory.");
 foreach my $file (sort readdir(DEBIAN)) {
     if ($file =~ m/^(?:(.*)\.)?(?:post|pre)(?:inst|rm)$/) {
@@ -259,7 +261,7 @@ foreach my $file (sort readdir(DEBIAN)) {
 	# They need to have #DEBHELPER# in their scripts.  Search for scripts
 	# that look like maintainer scripts and make sure the token is there.
         my $binpkg = $1 || '';
-	open(IN, '<', "debfiles/$file")
+	open(IN, '<', "$droot/$file")
 	    or fail("Can't open debfiles/$file: $!");
 	my $seentag = '';
 	while (<IN>) {
@@ -293,7 +295,7 @@ foreach my $file (sort readdir(DEBIAN)) {
 	# supported.
 	if ($filename_configs->known($base)) {
 	    next if $level < 3;
-	    open (IN, '<', "debfiles/$file")
+	    open (IN, '<', "$droot/$file")
 		or fail("Can't open debfiles/$file: $!");
 	    local $_;
 	    while (<IN>) {

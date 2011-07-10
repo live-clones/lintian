@@ -75,7 +75,7 @@ if ($type eq 'source') {
     push @files, 'templates';
 
     foreach my $file (@files) {
-	my $templates_file = "debfiles/$file";
+	my $templates_file = $info->debfiles($file);
 	my $binary = $file;
 	$binary =~ s/\.?templates$//;
 	# Single binary package (so @files contains "templates" and

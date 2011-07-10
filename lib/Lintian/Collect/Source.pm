@@ -157,7 +157,7 @@ sub binary_relation {
 # following special field names are supported:  build-depends-all
 # (build-depends and build-depends-indep) and build-conflicts-all
 # (build-conflicts and build-conflicts-indep).
-# sub relation Needs-Info <>
+# sub relation Needs-Info fields
 sub relation {
     my ($self, $field) = @_;
     $field = lc $field;
@@ -186,7 +186,7 @@ sub relation {
 # Similar to relation(), return a Lintian::Relation object for the given build
 # relationship field, but ignore architecture restrictions.  It supports the
 # same special field names.
-# sub relation_noarch Needs-Info <>
+# sub relation_noarch Needs-Info fields
 sub relation_noarch {
     my ($self, $field) = @_;
     $field = lc $field;
@@ -212,6 +212,15 @@ sub relation_noarch {
     $self->{relation_noarch}->{$field}
         = Lintian::Relation->new_noarch($result);
     return $self->{relation_noarch}->{$field};
+}
+
+# Like unpacked except this only contains the contents of debian/ from a source
+# package.
+#
+# sub debfiles Needs-Info debfiles
+sub debfiles {
+    my ($self, $file) = @_;
+    return $self->_fetch_extracted_dir('debfiles', 'debfiles', $file);
 }
 
 =head1 NAME
