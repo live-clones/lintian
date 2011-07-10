@@ -29,8 +29,9 @@ sub run {
 
 my $pkg = shift;
 my $type = shift;
+my $info = shift;
 
-my $cf = 'control/conffiles';
+my $cf = $info->control('conffiles');
 
 # conffiles?
 unless (-f $cf) {

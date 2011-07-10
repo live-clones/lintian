@@ -75,17 +75,17 @@ my $menumethod_file;
 my $anymenu_file;
 my $documentation;
 
-if (-f 'control/preinst') {
-    check_script($pkg, 'preinst', \%preinst);
+if (-f $info->control('preinst')) {
+    check_script($pkg, $info->control('preinst'), 'preinst', \%preinst);
 }
-if (-f 'control/postinst') {
-    check_script($pkg, 'postinst', \%postinst);
+if (-f $info->control('postinst')) {
+    check_script($pkg, $info->control('postinst'), 'postinst', \%postinst);
 }
-if (-f 'control/prerm') {
-    check_script($pkg, 'prerm', \%prerm);
+if (-f $info->control('prerm')) {
+    check_script($pkg, $info->control('prerm'), 'prerm', \%prerm);
 }
-if (-f 'control/postrm') {
-    check_script($pkg, 'postrm', \%postrm);
+if (-f $info->control('postrm')) {
+    check_script($pkg, $info->control('postrm'), 'postrm', \%postrm);
 }
 
 # read package contents
@@ -585,11 +585,11 @@ sub delink {
 }
 
 sub check_script {
-    my ($pkg, $script, $pres) = @_;
+    my ($pkg, $spath, $script, $pres) = @_;
     my ($no_check_menu,$no_check_installdocs,$no_check_wmmenu,$calls_wmmenu);
     my $interp;
 
-    open(IN, '<', "control/$script") or
+    open(IN, '<', $spath) or
 	fail("cannot open maintainer script control/$script for reading: $!");
     $interp = <IN>;
     $interp = '' unless defined $interp;

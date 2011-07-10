@@ -214,7 +214,7 @@ sub relation_noarch {
     return $self->{relation_noarch}->{$field};
 }
 
-# Like unpacked except this only contains the contents of debian/ from a source
+# Like unpacked except this only returns the contents of debian/ from a source
 # package.
 #
 # sub debfiles Needs-Info debfiles

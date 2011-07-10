@@ -65,6 +65,15 @@ sub changelog {
     return $self->{changelog};
 }
 
+# Like unpacked except this returns the contents of the control.tar.gz
+# in an unpacked directory.
+#
+# sub control Needs-Info bin-pkg-control
+sub control {
+    my ($self, $file) = @_;
+    return $self->_fetch_extracted_dir('control', 'control', $file);
+}
+
 # Returns sorted file info (eqv to sort keys %{$info->file_info'}), except it is cached.
 #  sub sorted_file_info Needs-Info file-info
 sub sorted_file_info{

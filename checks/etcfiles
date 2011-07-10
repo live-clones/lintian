@@ -33,7 +33,7 @@ my $info = shift;
 
 my %conffiles;
 
-my $conffiles = 'control/conffiles';
+my $conffiles = $info->control('conffiles');
 
 # load conffiles
 if (open(IN, '<', $conffiles)) {

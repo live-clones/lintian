@@ -31,15 +31,15 @@ my $pkg = shift;
 my $type = shift;
 my $info = shift;
 
-my $control = 'control/md5sums';
+my $control = $info->control('md5sums');
 
 my %control_entry;
 my %info_entry;
 my %conffile;
 
 # read in conffiles
-if (-f 'control/conffiles') {
-    open(C, '<', 'control/conffiles')
+if (-f $info->control('conffiles')) {
+    open(C, '<', $info->control('conffiles'))
 	or fail("cannot open control file conffiles: $!");
     while (<C>) {
 	chop;

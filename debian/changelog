@@ -13,6 +13,8 @@ lintian (2.5.2) UNRELEASED; urgency=low
   * checks/*:
     + [NT] Migrated to use new methods in the Lintian::Collect
       interfaces rather than accessing the Lab directly.
+  * checks/{debconf,conffiles}.desc:
+    + [NT] Added missing bin-pkg-control Needs-Info.
   * checks/{cruft,fields}{,.desc}:
     + [NT] Relocated doc pkg not arch all tag; it was never
       triggered since cruft was a source check and the tag

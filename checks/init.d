@@ -60,12 +60,13 @@ sub run {
 
 my $pkg = shift;
 my $type = shift;
+my $info = shift;
 
-my $postinst = "control/postinst";
-my $preinst = "control/preinst";
-my $postrm = "control/postrm";
-my $prerm = "control/prerm";
-my $conffiles = "control/conffiles";
+my $postinst = $info->control('postinst');
+my $preinst = $info->control('preinst');
+my $postrm = $info->control('postrm');
+my $prerm = $info->control('prerm');
+my $conffiles = $info->control('conffiles');
 
 my %initd_postinst;
 my %initd_postrm;

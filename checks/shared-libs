@@ -260,6 +260,8 @@ if (defined $info->field('provides')) {
 }
 $provides = Lintian::Relation->new($provides);
 
+my $shlibsf = $info->control('shlibs');
+my $symbolsf = $info->control('symbols');
 my %shlibs_control;
 my %symbols_control;
 
@@ -281,12 +283,12 @@ for (keys %SONAME) {
 if ($#shlibs == -1) {
     # no shared libraries included in package, thus shlibs control file should
     # not be present
-    if (-f 'control/shlibs') {
+    if (-f $shlibsf) {
 	tag 'pkg-has-shlibs-control-file-but-no-actual-shared-libs';
     }
 } else {
     # shared libraries included, thus shlibs control file has to exist
-    if (not -f 'control/shlibs') {
+    if (not -f $shlibsf) {
 	if ($type ne 'udeb') {
 	    for my $shlib (@shlibs) {
 		# skip it if it's not a public shared library
@@ -297,7 +299,7 @@ if ($#shlibs == -1) {
     } else {
 	my %shlibs_control_used;
 	my @shlibs_depends;
-	open(SHLIBS, '<', 'control/shlibs')
+	open(SHLIBS, '<', $shlibsf)
 	    or fail("cannot open control/shlibs for reading: $!");
 	while (<SHLIBS>) {
 	    chop;
@@ -359,10 +361,10 @@ if ($#shlibs == -1) {
 if ($#shlibs == -1 and not %unversioned_shlibs) {
     # no shared libraries included in package, thus symbols control file should
     # not be present
-    if (-f 'control/symbols') {
+    if (-f $symbolsf) {
         tag 'pkg-has-symbols-control-file-but-no-shared-libs';
     }
-} elsif (not -f 'control/symbols') {
+} elsif (not -f $symbolsf) {
     if ($type ne 'udeb') {
 	for my $shlib (@shlibs, keys %unversioned_shlibs) {
 	    # skip it if it's not a public shared library
@@ -370,7 +372,7 @@ if ($#shlibs == -1 and not %unversioned_shlibs) {
 	    tag 'no-symbols-control-file', $shlib;
 	}
     }
-} elsif (open(IN, '<', 'control/symbols')) {
+} elsif (open(IN, '<', $symbolsf)) {
     my $version_wo_rev = $version;
     $version_wo_rev =~ s/^(.+)-([^-]+)$/$1/;
     my ($full_version_count, $full_version_sym) = (0, undef);
@@ -548,16 +550,16 @@ if (keys %shlibs_control and keys %symbols_control) {
 }
 
 # 6th step: check pre- and post- control files
-if (-f 'control/preinst') {
-    local $_ = slurp_entire_file('control/preinst');
+if (-f $info->control('preinst')) {
+    local $_ = slurp_entire_file($info->control('preinst'));
     if (/^[^\#]*\bldconfig\b/m) {
 	tag 'preinst-calls-ldconfig';
     }
 }
 
 my $we_call_postinst=0;
-if (-f 'control/postinst') {
-    local $_ = slurp_entire_file('control/postinst');
+if (-f $info->control('postinst')) {
+    local $_ = slurp_entire_file($info->control('postinst'));
 
     # Decide if we call ldconfig
     if (/^[^\#]*\bldconfig\b/m) {
@@ -575,15 +577,15 @@ if ($type eq 'udeb') {
 	if not $we_call_postinst and $must_call_ldconfig;
 }
 
-if (-f 'control/prerm') {
-    local $_ = slurp_entire_file('control/prerm');
+if (-f $info->control('prerm')) {
+    local $_ = slurp_entire_file($info->control('prerm'));
     if (/^[^\#]*\bldconfig\b/m) {
 	tag 'prerm-calls-ldconfig';
     }
 }
 
-if (-f 'control/postrm') {
-    local $_ = slurp_entire_file('control/postrm');
+if (-f $info->control('postrm')) {
+    local $_ = slurp_entire_file($info->control('postrm'));
 
     # Decide if we call ldconfig
     if (/^[^\#]*\bldconfig\b/m) {

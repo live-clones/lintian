@@ -566,25 +566,25 @@ while (<SCRIPTS>) {
     m/^(\S*) (.*)$/ or fail("bad line in control-scripts file: $_");
     my $interpreter = $1;
     my $file = $2;
-    my $filename = "control/$file";
+    my $filename = $info->control($file);
 
     $interpreter =~ m|([^/]*)$|;
     my $base = $1;
 
-    if ($interpreter eq "") {
-	tag("script-without-interpreter", $filename);
+    if ($interpreter eq '') {
+	tag("script-without-interpreter", "control/$file");
 	next;
     }
 
-    tag("interpreter-not-absolute", $filename, "#!$interpreter")
+    tag("interpreter-not-absolute", "control/$file", "#!$interpreter")
 	unless ($interpreter =~ m|^/|);
 
     if ($interpreter =~ m|/usr/local/|) {
-	tag("control-interpreter-in-usr-local", $filename, "#!$interpreter");
+	tag("control-interpreter-in-usr-local", "control/$file", "#!$interpreter");
     } elsif ($base eq 'sh' or $base eq 'bash' or $base eq 'perl') {
 	my $expected = $interpreters{$base}->[0] . '/' . $base;
 	tag("wrong-path-for-interpreter", "#!$interpreter != $expected",
-	    "($filename)")
+	    "(control/$file)")
 	    unless ($interpreter eq $expected);
     } elsif ($file eq 'config') {
 	tag('forbidden-config-interpreter', "#!$interpreter");
@@ -595,9 +595,9 @@ while (<SCRIPTS>) {
 	my $expected = $data->[0] . '/' . $base;
 	unless ($interpreter eq $expected) {
 	    tag("wrong-path-for-interpreter", "#!$interpreter != $expected",
-		"($filename)")
+		"(control/$file)")
 	}
-	tag('unusual-control-interpreter', $filename, "#!$interpreter");
+	tag('unusual-control-interpreter', "control/$file", "#!$interpreter");
 
 	# Interpreters used by preinst scripts must be in Pre-Depends.
 	# Interpreters used by postinst or prerm scripts must be in Depends.
@@ -610,19 +610,19 @@ while (<SCRIPTS>) {
 		}
 	    } else {
 		unless ($info->relation('strong')->implies($depends)) {
-		    tag('control-interpreter-without-depends', $filename,
+		    tag('control-interpreter-without-depends', "control/$file",
 			"#!$interpreter")
 		}
 	    }
 	}
     } else {
-	tag("unknown-control-interpreter", $filename, "#!$interpreter");
+	tag("unknown-control-interpreter", "control/$file", "#!$interpreter");
 	next; # no use doing further checks if it's not a known interpreter
     }
 
     # perhaps we should warn about *csh even if they're somehow screwed,
     # but that's not really important...
-    tag("csh-considered-harmful", $filename)
+    tag("csh-considered-harmful", "control/$file")
 	if ($base eq 'csh' or $base eq 'tcsh');
 
     my $shellscript = $base =~ /^$known_shells_regex$/ ? 1 : 0;

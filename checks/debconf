@@ -100,7 +100,9 @@ if ($type eq 'source') {
     return 0;
 }
 
-if (open(PREINST, '<', 'control/preinst')) {
+my $cdir = $info->control;
+
+if (open(PREINST, '<', "$cdir/preinst")) {
     while (<PREINST>) {
 	s/\#.*//;    # Not perfect for Perl, but should be OK
 	if (m,/usr/share/debconf/confmodule, or
@@ -112,12 +114,8 @@ if (open(PREINST, '<', 'control/preinst')) {
     close PREINST;
 }
 
-if (-f 'control/config') {
-    $seenconfig=1;
-}
-if (-f 'control/templates') {
-    $seentemplates=1;
-}
+$seenconfig=1 if -f "$cdir/config";
+$seentemplates=1 if -f "$cdir/templates";
 
 # This still misses packages that use debconf only in the postrm.  Packages
 # that ask debconf questions in the postrm should load the confmodule in the
@@ -161,13 +159,13 @@ if ($seenconfig and not $seentemplates and not $usesdbconfig) {
     tag 'no-debconf-config';
 }
 
-if ($seenconfig and not -x 'control/config') {
+if ($seenconfig and not -x "$cdir/config") {
     tag 'debconf-config-not-executable';
 }
 
 # First check that templates look valid
 if ($seentemplates) {
-    open(TMPL, '<', 'control/templates')
+    open(TMPL, '<', "$cdir/templates")
         or fail("Can't open control/templates: $!");
     local $/ = "\n\n";
     while (<TMPL>) {
@@ -197,7 +195,7 @@ if ($seentemplates) {
 
 # Lots of template checks.
 
-my @templates = $seentemplates ? read_dpkg_control('control/templates', 'templates file') : ();
+my @templates = $seentemplates ? read_dpkg_control("$cdir/templates", 'templates file') : ();
 my %potential_db_abuse;
 my @templates_seen;
 
@@ -363,7 +361,7 @@ my %templates_used;
 my %template_aliases;
 for my $file (qw(config prerm postrm preinst postinst)) {
     my $potential_makedev = {};
-    if (open(IN, '<', "control/$file")) {
+    if (open(IN, '<', "$cdir/$file")) {
 	my $usesconfmodule='';
 	my $obsoleteconfmodule='';
 	my $db_input='';
