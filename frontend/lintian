@@ -790,7 +790,7 @@ $SIG{'QUIT'} = \&interrupted;
 
 # {{{ Create/Maintain Lab and add any specified Debian Archives (*.debs)
 
-$LAB = new Lab( $LINTIAN_LAB, $LINTIAN_DIST );
+$LAB = Lab->new( $LINTIAN_LAB );
 
 #######################################
 # Process -S option

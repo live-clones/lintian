@@ -55,12 +55,12 @@ use File::Temp;
 my $LINTIAN_ROOT = $main::LINTIAN_ROOT;
 
 sub new {
-    my ( $class, $dir, $dist ) = @_;
+    my ( $class, $dir ) = @_;
 
     my $self = {};
     bless $self, $class;
 
-    $self->setup( $dir, $dist );
+    $self->setup( $dir );
     return $self;
 }
 
@@ -76,7 +76,7 @@ sub is_lab {
 }
 
 sub setup {
-    my ( $self, $dir, $dist ) = @_;
+    my ( $self, $dir ) = @_;
 
     if ( $dir ) {
         # Make sure we can always find it, even if we chdir around a lot.
@@ -84,7 +84,6 @@ sub setup {
         fail("Cannot determine the absolute path of $dir: $!") unless($absdir);
 	$self->{mode} = 'static';
 	$self->{dir} = $absdir;
-	$self->{dist} = $dist;
 
 	if (-d "$absdir" && ! -d "$absdir/changes") {
 	    mkdir("$absdir/changes", 0777)
@@ -101,7 +100,7 @@ sub setup {
             fail("Cannot determine the absolute path of $dir: $!")
                 unless $absdir;
 
-	    if ($self->setup_force( $dir, $dist )) {
+	    if ($self->setup_force( $dir )) {
 		$created = 1;
 		last;
 	    }
@@ -122,12 +121,12 @@ sub setup_static {
 	return 0;
     }
 
-    return $self->setup_force( $self->{dir}, $self->{dist} );
+    return $self->setup_force( $self->{dir} );
 }
 
 
 sub setup_force {
-    my ( $self, $dir, $dist ) = @_;
+    my ( $self, $dir ) = @_;
 
     return unless $dir;
 
@@ -160,18 +159,18 @@ sub setup_force {
 
     $self->{dir} = $dir;
     $ENV{'LINTIAN_LAB'} = $dir;
-    $self->populate_with_dist( $dist );
+    $self->_populate_with_dist();
 
     return 1;
 }
 
-sub populate_with_dist {
-    my ( $self, $dist ) = @_;
+sub _populate_with_dist {
+    my ( $self ) = @_;
 
-    return 0 unless $dist;
+    return 0 unless $ENV{'LINTIAN_DIST'};
     return 0 unless $self->{dir};
 
-    debug_msg(2, "spawning list-binpkg, list-udebpkg and list-srcpkg since LINTIAN_DIST=$dist");
+    debug_msg(2, "spawning list-binpkg, list-udebpkg and list-srcpkg since LINTIAN_DIST=$ENV{'LINTIAN_DIST'}");
 
     my $v = $Lintian::Output::GLOBAL->verbose ? '-v' : '';
     my %opts = ( out => $Lintian::Output::GLOBAL->stdout );

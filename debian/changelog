@@ -159,6 +159,9 @@ lintian (2.5.2) UNRELEASED; urgency=low
       loaded.  Previously Lintian would only load direct
       dependencies of a collection and assume that was enough.
 
+  * lib/Lab.pm:
+    + [NT] Removed $dist argument to lab creation, since we rely on
+      LINTIAN_DIST being exported anyway.
   * lib/Lab/Package.pm:
     + [NT] Symlink in all components of the source package when
       creating the source entry in the lab.  Also removed legacy
