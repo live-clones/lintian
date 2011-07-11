@@ -32,8 +32,9 @@ Lab::Package - A package inside the Lab
  my $lab = new Lab("dir", "dist");
  my $lpkg = $lab->get_lab_package("name", "version", "type", "path");
 
- # Unpack the package
- $lpkg->unpack() or die("Could not unpack: $!");
+ # create the entry if it does not exist
+ $lpkg->create_entry unless $lpkg->entry_exists;
+
  # Remove package from lab.
  $lpkg->delete_lab_entry();
 
