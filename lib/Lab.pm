@@ -40,6 +40,7 @@ BEGIN {
 };
 
 use Util;
+# Only used by _populate_with_dist; remove when not needed
 use Lintian::Output qw(:messages);
 use Lintian::Command qw(spawn);
 use Lab::Package;
@@ -50,6 +51,7 @@ use File::Temp;
 
 
 # Quiet "Name "main::LINTIAN_ROOT" used only once"
+# only used by _populate_with_dist
 () = ($main::LINTIAN_ROOT);
 
 my $LINTIAN_ROOT = $main::LINTIAN_ROOT;
@@ -60,11 +62,11 @@ sub new {
     my $self = {};
     bless $self, $class;
 
-    $self->setup( $dir );
+    $self->_init( $dir );
     return $self;
 }
 
-
+# returns a truth value if the lab is initialized and exists
 sub is_lab {
     my ( $self ) = @_;
 
@@ -75,7 +77,7 @@ sub is_lab {
 	&& -d "$self->{dir}/info";
 }
 
-sub setup {
+sub _init {
     my ( $self, $dir ) = @_;
 
     if ( $dir ) {
@@ -100,7 +102,7 @@ sub setup {
             fail("Cannot determine the absolute path of $dir: $!")
                 unless $absdir;
 
-	    if ($self->setup_force( $dir )) {
+	    if ($self->_do_setup( $dir )) {
 		$created = 1;
 		last;
 	    }
@@ -113,6 +115,7 @@ sub setup {
     return 1;
 }
 
+# Initialization method for static labs; must be called after new.
 sub setup_static {
     my ( $self ) = @_;
 
@@ -121,11 +124,11 @@ sub setup_static {
 	return 0;
     }
 
-    return $self->setup_force( $self->{dir} );
+    return $self->_do_setup( $self->{dir} );
 }
 
-
-sub setup_force {
+# backing sub for setup_static and (in some cases) _init
+sub _do_setup {
     my ( $self, $dir ) = @_;
 
     return unless $dir;
@@ -164,6 +167,7 @@ sub setup_force {
     return 1;
 }
 
+# Deprecated; we need a better API for keeping the Lab in sync with a mirror.
 sub _populate_with_dist {
     my ( $self ) = @_;
 
@@ -187,6 +191,8 @@ sub _populate_with_dist {
     return 1;
 }
 
+# Deletes the lab if (and only if) it exists and is a static lab
+# Returns a truth value on success
 sub delete_static {
     my ( $self ) = @_;
 
@@ -195,19 +201,21 @@ sub delete_static {
 	return 0;
     }
 
-    return $self->delete_force;
+    return $self->_do_delete;
 }
 
+# Deletes the lab if (and only if) it is a temporary lab
+# Returns a truth value on success (or it is not a temp lab)
 sub delete {
     my ( $self ) = @_;
 
     return 1 unless $self->{mode} eq 'temporary';
 
-    return $self->delete_force;
+    return $self->_do_delete;
 }
 
-# Remove is apparantly some reserved name...
-sub delete_force {
+# The backing sub for delete and delete_static
+sub _do_delete {
     my ( $self ) = @_;
 
     return 0 unless $self->{dir};
