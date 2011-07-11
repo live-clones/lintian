@@ -87,10 +87,6 @@ sub _init {
 	$self->{mode} = 'static';
 	$self->{dir} = $absdir;
 
-	if (-d "$absdir" && ! -d "$absdir/changes") {
-	    mkdir("$absdir/changes", 0777)
-		or fail("cannot create lab directory $absdir/changes");
-	}
     } else {
 	$self->{mode} = 'temporary';
 
