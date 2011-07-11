@@ -413,7 +413,7 @@ Info: The dependency_libs field in the .la file has not been cleared.  It has
  A non-empty dependency_libs field will also stall the Multi-Arch
  conversation.
  .
- The in itself .la file may be useful, if the library is loaded dynamically
+ The .la file in itself may be useful, if the library is loaded dynamically
  via libltdl.
 Ref: http://wiki.debian.org/ReleaseGoals/LAFileRemoval,
      http://lists.debian.org/debian-devel/2011/05/msg01003.html,

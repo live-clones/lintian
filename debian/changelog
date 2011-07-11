@@ -100,6 +100,9 @@ lintian (2.5.2) UNRELEASED; urgency=low
     + [NT] Removed perl-suid related tags as the package is no
       longer available and we have no known packages triggering
       the tags at the moment.  (Closes: #631432)
+  * checks/shared-libs.desc:
+    + [NT] Fixed broken sentence.  Thanks to Norbert Preining for
+      reporting the issue.
   * checks/symlinks:
     + [NT] Symlink checking extended to relative paths as well.
       (Closes: #217023)
