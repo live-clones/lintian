@@ -65,10 +65,22 @@ use Digest::MD5;
 #    (a hash contains one sections,
 #    keys in hash are lower case letters of control fields)
 sub parse_dpkg_control {
-    my ($CONTROL, $debconf_flag) = @_;
+    my @result;
+    my $c = sub { push @result, @_; };
+    _parse_dpkg_control_iterative( $c, @_);
+    return @result;
+}
 
-    my @data;
+# parses a dpkg-control file like parse_dpkg_control, except
+# at the end of each section (or paragraph) it will pass the
+# section to a piece of code to handle it.  This allows reading
+# large dpkg-control based files without having the entire file
+# in memory.
+sub _parse_dpkg_control_iterative {
+    my ($code, $CONTROL, $debconf_flag) = @_;
+
     my $cur_section = 0;
+    my $section = {};
     my $open_section = 0;
     my $last_tag;
 
@@ -83,6 +95,9 @@ sub parse_dpkg_control {
 	# empty line?
 	if ((!$debconf_flag && m/^\s*$/) or ($debconf_flag && $_ eq '')) {
 	    if ($open_section) { # end of current section
+		# pass the current section to the handler
+		$code->($section);
+		$section = {};
 		$cur_section++;
 		$open_section = 0;
 	    }
@@ -104,7 +119,7 @@ sub parse_dpkg_control {
 	    $open_section = 1;
 
 	    my ($tag) = (lc $1);
-	    $data[$cur_section]->{$tag} = '';
+	    $section->{$tag} = '';
 
 	    $last_tag = $tag;
 	}
@@ -116,7 +131,7 @@ sub parse_dpkg_control {
 	    # immediately before or after the value and is ignored there.
 	    my ($tag,$value) = (lc $1,$2);
 	    $value =~ s/\s+$//;
-	    $data[$cur_section]->{$tag} = $value;
+	    $section->{$tag} = $value;
 
 	    $last_tag = $tag;
 	}
@@ -130,11 +145,11 @@ sub parse_dpkg_control {
 	    # field value are ignored.
 	    my $value = $1;
 	    $value =~ s/\s+$//;
-	    $data[$cur_section]->{$last_tag} .= "\n" . $value;
+	    $section->{$last_tag} .= "\n" . $value;
 	}
     }
-
-    return @data;
+    # pass the last section (if not already done).
+    $code->($section) if $open_section;
 }
 
 sub read_dpkg_control {
