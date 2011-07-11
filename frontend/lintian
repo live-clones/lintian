@@ -1484,21 +1484,13 @@ sub unpack_group {
 		    next;
 		}
 
-		# If a file named .SCRIPT-VERSION already exists, we've already
-		# collected this information and we can skip it.  Otherwise,
-		# remove any .SCRIPT-* files (which are old version information).
-		if (-f "$base/.${coll}-$ci->{'version'}") {
+		# check if it has been run previously
+		if ($lpkg->_is_coll_finished($coll, $ci->{'version'})) {
 		    $collmap->satisfy($req);
 		    next;
 		}
-		opendir(BASE, $base)
-		    or fail("cannot read directory $base: $!");
-		for my $file (readdir BASE) {
-		    if ($file =~ /^\.\Q$coll-/) {
-			unlink("$base/$file");
-		    }
-		}
-		closedir(BASE);
+		# Not run before (or out of date)
+		$lpkg->_clear_coll_status($coll);
 
 		# collect info
 		$collmap->select($req);
@@ -1523,11 +1515,8 @@ sub unpack_group {
 		delete $running_jobs{$coll};
 		if ($cmd->status() == 0) {
 		    my $ci = $collection_info{$coll};
-		    open(VERSION, '>', "$base/.${coll}-$ci->{'version'}")
-			or fail("cannot create $base/.${coll}-$ci->{'version'}: $!");
-		    print VERSION "Lintian-Version: $LINTIAN_VERSION\n"
-			. 'Timestamp: ' . time . "\n";
-		    close(VERSION);
+		    $lpkg->_mark_coll_finished($coll, $ci->{'version'})
+			or fail("cannot mark $coll for complete: $!");
 		    debug_msg(1, "Collection script $coll done");
 		} else {
 		    warning("collect info $coll about package $pkg_name failed");

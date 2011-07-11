@@ -227,6 +227,58 @@ sub create_entry(){
     return 1;
 }
 
+# $lpkg->_mark_coll_finished($name, $version)
+#
+#  Record that the collection $name (at version) has been run on this
+#  entry.
+#
+#  returns a truth value on success; otherwise $! will contain the error
+#
+#  This is used by frontend/lintian, but probably should not be.
+sub _mark_coll_finished {
+    my ($self, $collname, $collver) = @_;
+    # In the "old days" we would also write the Lintian version and the time
+    # stamp in these files, but since we never read them it seems like overkill.
+    #  - for the timestamp we could use the mtime of the file anyway
+    return touch_file "$self->{base_dir}/.$collname-$collver";
+}
+
+# $lpkg->_is_coll_finished($name, $version)
+#
+#  returns a truth value if a collection with $name at $version has been
+#  marked as completed.
+#
+#  This is used by frontend/lintian, but probably should not be.
+sub _is_coll_finished {
+    my ($self, $collname, $collver) = @_;
+    return -e "$self->{base_dir}/.$collname-$collver";
+}
+
+# $lpkg->_clear_coll_status($name)
+#
+#  Removes all completation status for collection $name.
+#
+#  Returns a truth value on success; otherwise $! will contain the error
+#
+#  This is used by frontend/lintian, but probably should not be.
+sub _clear_coll_status {
+    my ($self, $collname) = @_;
+    my $ok = 1;
+    my $serr;
+    opendir my $d, $self->{base_dir} or return 0;
+    foreach my $file (readdir $d) {
+	next unless $file =~ m,^\.$collname-\d++$,;
+	unless (unlink "$d/$file") {
+	    # store the first error
+	    next unless $ok;
+	    $serr = $!;
+	    $ok = 0;
+	}
+    }
+    closedir $d or return 0;
+    $! = $serr unless $ok;
+    return $ok;
+}
 
 sub update_status_file{
     my ($self, $lint_version) = @_;
