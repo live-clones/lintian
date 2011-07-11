@@ -340,7 +340,7 @@ sub print_start_pkg {
     }
 
     $self->v_msg($self->delimiter,
-		 "Processing $pkg_info->{type} $object $pkg_info->{package} (version $pkg_info->{version}) ...");
+		 "Processing $pkg_info->{type} $object $pkg_info->{package} (version $pkg_info->{version}, arch $pkg_info->{arch}) ...");
 }
 
 =item C<print_start_pkg($pkg_info)>

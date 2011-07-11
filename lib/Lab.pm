@@ -289,17 +289,36 @@ sub _do_delete {
     );
 
     sub get_lab_package {
-        my ($self, $pkg_name, $pkg_version, $pkg_type, $pkg_path) = @_;
+        my ($self, $pkg_name, $pkg_version, $pkg_arch, $pkg_type, $pkg_path) = @_;
         my $vpkg_type = $pkg_types{$pkg_type};
         my $realpath = Cwd::realpath($pkg_path);
         my $dir;
         fail("Unknown package type $pkg_type") unless($vpkg_type);
         fail("Could not resolve the path of $pkg_path") unless($realpath);
         $dir = $self->{dir} . '/' . $vpkg_type . '/' . $pkg_name;
+        $dir .= '/' . $pkg_version if $self->_supports_multiple_versions();
+        $dir .= '/' . $pkg_arch if $self->_supports_multiple_architectures();
         return new Lab::Package($self, $pkg_name, $pkg_version, $vpkg_type,
                                 $realpath, $dir);
 
     }
+}
+
+# Returns a truth value if this is a "multi-version" Lab
+# This means that a new version of the same package can be extracted to the lab
+# without overwriting the old one.
+sub _supports_multiple_versions{
+    my ($self) = @_;
+    return $self->{mode} eq 'temporary';
+}
+
+# Returns a truth value if this is a "multi-arch" Lab
+# This means that (e.g.) an i386 and amd64 package with the same name will be stored
+# separatedly.  Otherwise unpacking a new package with different architecture will
+# override the old one.
+sub _supports_multiple_architectures{
+    my ($self) = @_;
+    return $self->{mode} eq 'temporary';
 }
 
 1;

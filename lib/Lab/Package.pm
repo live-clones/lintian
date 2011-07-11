@@ -30,7 +30,7 @@ Lab::Package - A package inside the Lab
  use Lab;
  
  my $lab = new Lab("dir", "dist");
- my $lpkg = $lab->get_lab_package("name", "version", "type", "path");
+ my $lpkg = $lab->get_lab_package("name", "version", "arch", "type", "path");
 
  # create the entry if it does not exist
  $lpkg->create_entry unless $lpkg->entry_exists;
@@ -224,7 +224,11 @@ sub create_entry(){
     return 1 if ($self->entry_exists());
 
     unless (-d $base_dir) {
-	mkdir($base_dir, 0777) or return 0;
+	# if we are in a multi-arch or/and multi-version lab we may
+	# need to make more than one dir.  On error we will only kill
+	# the "top dir" and that is enough.
+	system ('mkdir', '-p', $base_dir) == 0
+	    or return 0;
 	$madedir = 1;
     }
     if ($pkg_type eq 'changes'){

@@ -1036,8 +1036,9 @@ if($action eq 'remove'){
 	    my $pkg_ver  = $proc->pkg_version();
 	    my $pkg_type = $proc->pkg_type();
 	    my $pkg_path = $proc->pkg_path();
+	    my $pkg_arch = $proc->pkg_arch();
 	    eval{
-		$lpkg = $LAB->get_lab_package($pkg_name, $pkg_ver,
+		$lpkg = $LAB->get_lab_package($pkg_name, $pkg_ver, $pkg_arch,
 					      $pkg_type, $pkg_path);
 	    };
 	    if(!defined($lpkg)){
@@ -1048,7 +1049,7 @@ if($action eq 'remove'){
 		next;
 	    }
 	    $TAGS->file_start($pkg_path, $pkg_name, $pkg_ver,
-			      $proc->pkg_arch(), $pkg_type);
+			      $pkg_arch, $pkg_type);
 	    debug_msg(1, 'Removing package in lab ...');
 	    unless($lpkg->delete_lab_entry()){
 		warning("cannot remove entry for $pkg_name: $!");
@@ -1476,11 +1477,12 @@ sub unpack_group {
 	my $pkg_type = $proc->pkg_type();
 	my $pkg_path = $proc->pkg_path();
 	my $pkg_ver  = $proc->pkg_version();
+	my $pkg_arch = $proc->pkg_arch();
 	my $lpkg;
 	my $base;
 	my $info;
 	eval{
-	    $lpkg = $LAB->get_lab_package($pkg_name, $pkg_ver,
+	    $lpkg = $LAB->get_lab_package($pkg_name, $pkg_ver, $pkg_arch,
 					  $pkg_type, $pkg_path);
 	};
 	if(!defined($lpkg)){
@@ -1493,7 +1495,7 @@ sub unpack_group {
 	}
 	# determine base directory
 	$base = $lpkg->base_dir();
-	debug_msg(1, "Unpacking $pkg_name $pkg_ver ($pkg_type) in $base");
+	debug_msg(1, "Unpacking $pkg_name $pkg_ver [$pkg_arch] ($pkg_type) in $base");
 
 	# Ensure it has been unpacked
 	unless ($lpkg->create_entry()){
@@ -1546,7 +1548,7 @@ sub unpack_group {
 	    }
 	    # wait until a job finishes to run its branches, if any, or skip
 	    # this package if any of the jobs failed.
-	    debug_msg(1, "Reaping done jobs ... unpack $pkg_name $pkg_ver ($pkg_type)");
+	    debug_msg(1, "Reaping done jobs ... unpack $pkg_name $pkg_ver [$pkg_arch] ($pkg_type)");
 
 	    while (my ($coll, $cmd) = Lintian::Command::Simple::wait(\%running_jobs)) {
 		delete $running_jobs{$coll};
@@ -1565,7 +1567,7 @@ sub unpack_group {
 
 		$collmap->satisfy('coll-' . $coll);
 	    }
-	    debug_msg(1, "Reap done jobs ... unpack $pkg_name $pkg_ver ($pkg_type)");
+	    debug_msg(1, "Reap done jobs ... unpack $pkg_name $pkg_ver [$pkg_arch] ($pkg_type)");
 	}
 
 	if ($action eq 'check') {
