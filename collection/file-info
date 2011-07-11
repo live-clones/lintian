@@ -35,11 +35,17 @@ my $last = '';
 -f 'fields/source' or fail('file-info invoked in wrong directory');
 
 unlink('file-info');
+
+# Open files before we chdir, since unpacked could be a symlink (at
+# the time of writing, it never is, but it could be a reasonable way
+# of fixing #262783)
+open(FILE_INFO, '>', 'file-info')
+    or fail("cannot open file-info: $!");
+open(INDEX, '<', 'index')
+    or fail("cannot open index file: $!");
+
 chdir('unpacked')
     or fail("cannot chdir to unpacked directory: $!");
-
-open(FILE_INFO, '>', '../file-info')
-    or fail("cannot open file-info: $!");
 
 my $collect = sub {
     my @lines = map { split "\n" } @_;
@@ -91,8 +97,7 @@ my %opts = ( pipe_in => FileHandle->new,
 	     fail => 'never' );
 spawn(\%opts, ['xargs', '-0r', 'file', '-F', '', '--print0', '--']);
 $opts{pipe_in}->blocking(1);
-open(INDEX, '<', '../index')
-    or fail("cannot open index file: $!");
+
 while (<INDEX>) {
     chomp;
     $_ = (split(' ', $_, 6))[5];
