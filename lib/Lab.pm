@@ -87,6 +87,13 @@ sub _init {
 	$self->{mode} = 'static';
 	$self->{dir} = $absdir;
 
+        # This code is here fore BACKWARDS COMPATABILITY!
+        #  - we can kill it when LAB_FORMAT goes from 10 to 11.
+        #  Basically this auto-upgrades existing static labs to support changes files
+	if (-d "$absdir" && ! -d "$absdir/changes") {
+	    mkdir("$absdir/changes", 0777)
+		or fail("cannot create lab directory $absdir/changes");
+	}
     } else {
 	$self->{mode} = 'temporary';
 
