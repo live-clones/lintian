@@ -784,11 +784,10 @@ foo source: configure-generated-file-in-source config.cache
           </listitem>
         </varlistentry>
         <varlistentry>
-          <term><emphasis>checkers</emphasis></term>
+          <term><emphasis>checks</emphasis></term>
           <listitem>
             <para>
-              a set of scripts that check different aspects of binary
-              or source packages
+              a set of modules that check different aspects of packages.
             </para>
           </listitem>
         </varlistentry>
@@ -797,25 +796,7 @@ foo source: configure-generated-file-in-source config.cache
           <listitem>
             <para>
               a set of scripts that prepares specific information
-              about a package needed by the checker scripts
-            </para>
-          </listitem>
-        </varlistentry>
-        <varlistentry>
-          <term><emphasis>unpacking scripts</emphasis></term>
-          <listitem>
-            <para>
-              a set of scripts that unpack binary and source packages and
-              extract some basic information about the package contents
-            </para>
-          </listitem>
-        </varlistentry>
-        <varlistentry>
-          <term><emphasis>bug reporting scripts</emphasis></term>
-          <listitem>
-            <para>
-              a collection of scripts to report bugs and keep track of
-              them afterwards
+              about a package needed by the check modules
             </para>
           </listitem>
         </varlistentry>
@@ -828,59 +809,44 @@ foo source: configure-generated-file-in-source config.cache
       <orderedlist numeration="arabic">
         <listitem>
           <para>
-            The package contents are unpacked in
+            An entry is created for the package in
             the <emphasis>laboratory</emphasis> (or
             just <emphasis>lab</emphasis>).
           </para>
         </listitem>
         <listitem>
           <para>
-            Some data is collected about the package. (That's done by the
-            so-called <emphasis>collector scripts</emphasis>.) For example, the <command>file</command>
-            program is run on each file in the package and the output is saved in the
-            <command>file-info</command> file in the lab.
+            Some data is collected about the package. (That is done by
+            the so-called <emphasis>data collector</emphasis>
+            scripts.) For example, the <command>file</command> program
+            is run on each file in the package and the output is
+            stored in the lab.
           </para>
         </listitem>
         <listitem>
           <para>
-            The package contents are removed again (to save disk
-            space), but the <emphasis>statistics files</emphasis>
-            produced in the last step remain in the lab.
-          </para>
-        </listitem>
-        <listitem>
-          <para>
-            The <emphasis>checker scripts</emphasis> are run over the
-            package and report any discovered policy violations or
-            other errors. These scripts don't access the package
-            contents directly, but use the collected data as input.
+            The <emphasis>checks</emphasis> are run over the package
+            and report any discovered policy violations or other
+            errors. These scripts don't access the package contents
+            directly, but use the collected data as input.
           </para>
         </listitem>
         <listitem>
           <para>
             Depending on the <emphasis>lab mode</emphasis> Lintian
             uses (see below), the whole lab directory is removed
-            again.
+            again.  If the lab is not removed, parts of the data
+            collected may be auto cleaned to reduce disk space.
           </para>
         </listitem>
       </orderedlist>
       <para>
-        This separation of the <emphasis>checker scripts</emphasis>
-        from the <emphasis>unpacking tools</emphasis> and
-        the <emphasis>data collector scripts</emphasis> makes it
+        This separation of the <emphasis>check</emphasis>
+        from the <emphasis>data collector scripts</emphasis> makes it
         possible to run Lintian several times over a package without
-        having to unpack the package each time. In addition, the
-        checker scripts don't have to worry about packaging details
-        since they just access the statistics files (not the package
-        files directly).
-      </para>
-      <para>
-        Furthermore, since it is sufficient to save the statistics
-        files of each package in order to run the checks, one can
-        store these files for all packages of the Debian archive if
-        one wants to check the whole distribution several times.  The
-        space savings is substantial and continues to grow as the
-        archive does.
+        having to recollect all the data each time. In addition, the
+        checker scripts do not have to worry about packaging details
+        since this is abstracted away by the collector scripts.
       </para>
     </sect1>
 
