@@ -29,13 +29,61 @@ use Getopt::Long;
 
 # }}}
 
-# {{{ Global Variables
+# {{{ Application Variables
+
+
+### LIST OF MAGIC VARIABLES
+#
+# List of variables that has a scope greater than this file in one
+# way or another.
+#
+# $LINTIAN_ROOT
+#  - must be "our" as it is used by Checker and Lab
+#  - it is set it after opt parsing and left at that; this allows it
+#    to be trivially removed once Checker and Lab have been fixed.
+#
+# LINTIAN_{ARCH,ARCHIVEDIR,AREA,DIST,LAB,ROOT}
+#  - These must be exported as environment variables as unpack/*
+#    and Read_pkglists depend on it.
+#
+# Please do not introduce any new magical variables, Thank You!
+#
+### END LIST OF MAGIC VARIABLES
+
+our $LINTIAN_ROOT;
+
+# List of "no strict ref" magic variables
+use constant VARS => qw(LAB ARCHIVEDIR DIST AREA ARCH PROFILE);
+
+my @MUST_EXPORT = (qw(
+    LINTIAN_ARCH
+    LINTIAN_ARCHIVEDIR
+    LINTIAN_AREA
+    LINTIAN_DIST
+    LINTIAN_LAB
+    LINTIAN_ROOT
+));
+# LINTIAN_DEBUG, but that is handled separately
+
+# Environment variables Lintian cares about - the list contains
+# the ones that can also be set via the config file
+my @ENV_VARS = (
+# LINTIAN_CFG  - handled manually
+# LINTIAN_ROOT - handled manually
+qw(
+    LINTIAN_ARCH
+    LINTIAN_ARCHIVEDIR
+    LINTIAN_AREA
+    LINTIAN_DIST
+    LINTIAN_LAB
+));
+
+
+### "Normal" application variables
+
+# Version number - Is replaced during build with sed, see d/rules
 my $LINTIAN_VERSION = '<VERSION>';	#External Version number
 my $BANNER = "Lintian v$LINTIAN_VERSION"; #Version Banner - text form
-my $LAB_FORMAT = 10;		#Lab format Version Number
-				#increased whenever incompatible
-				#changes are done to the lab
-				#so that all packages are re-unpacked
 
 # Variables used to record commandline options
 # Commented out variables have "defined" checks somewhere to determine if
@@ -47,19 +95,11 @@ my $quiet = 0;			#flag for -q|--quiet switch
 my $debug = 0;
 my $check_everything = 0;	#flag for -a|--all switch
 my $lintian_info = 0;		#flag for -i|--info switch
-our $ftpmaster_tags = 0;	#flag for -F|--ftp-master-rejects switch
+my $ftpmaster_tags = 0; 	#flag for -F|--ftp-master-rejects switch
 my $allow_root = 0;		#flag for --allow-root switch
 my $keep_lab = 0;		#flag for --keep-lab switch
 my $packages_file = 0;		#string for the -p option
-our $OPT_LINTIAN_PROFILE = '';  #string for the --profile option
-our $OPT_LINTIAN_LAB = '';	#string for the --lab option
-our $OPT_LINTIAN_ARCHIVEDIR = '';#string for the --archivedir option
-our $OPT_LINTIAN_DIST = '';	#string for the --dist option
-our $OPT_LINTIAN_ARCH = '';	#string for the --arch option
-our $OPT_LINTIAN_AREA = '';	#string for the --area option
-# These options can also be used via default or environment variables
-our $LINTIAN_CFG = '';		#config file to use
-our $LINTIAN_ROOT;		#location of the lintian modules
+
 my $no_conf = 0;                #flag for --no-cfg
 my %opt;                        #hash of some flags from cmd or cfg
 my %conf_opt;                   #names of options set in the cfg file
@@ -98,14 +138,6 @@ my %check_abbrev;
 my %unpack_infos;
 my %check_info;
 
-# reset configuration variables
-our $LINTIAN_LAB = undef;
-our $LINTIAN_ARCHIVEDIR = undef;
-our $LINTIAN_DIST = undef;
-our $LINTIAN_ARCH = undef;
-our $LINTIAN_SECTION = undef;
-our $LINTIAN_AREA = undef;
-our $LINTIAN_PROFILE = undef;
 # }}}
 
 # {{{ Setup Code
@@ -442,16 +474,16 @@ my %opthash = (			# ------------------ actions
 	       # is, to revert distribution-specific changes
 
 	       # ------------------ configuration options
-	       'cfg=s' => \$LINTIAN_CFG,
+	       'cfg=s' => \$opt{'LINTIAN_CFG'},
 	       'no-cfg' => \$no_conf,
-	       'lab=s' => \$OPT_LINTIAN_LAB,
-	       'archivedir=s' => \$OPT_LINTIAN_ARCHIVEDIR,
-	       'dist=s' => \$OPT_LINTIAN_DIST,
-	       'area=s' => \$OPT_LINTIAN_AREA,
-	       'section=s' => \$OPT_LINTIAN_AREA,
-	       'arch=s' => \$OPT_LINTIAN_ARCH,
-	       'profile=s' => \$OPT_LINTIAN_PROFILE,
-	       'root=s' => \$LINTIAN_ROOT,
+	       'lab=s' => \$opt{'LINTIAN_LAB'},
+	       'archivedir=s' => \$opt{'LINTIAN_ARCHIVEDIR'},
+	       'dist=s' => \$opt{'LINTIAN_DIST'},
+	       'area=s' => \$opt{'LINTIAN_AREA'},
+	       'section=s' => \$opt{'LINTIAN_AREA'},
+	       'arch=s' => \$opt{'LINTIAN_ARCH'},
+	       'profile=s' => \$opt{'LINTIAN_PROFILE'},
+	       'root=s' => \$opt{'LINTIAN_ROOT'},
 
 	       # ------------------ package selection options
 	       'all|a' => \$check_everything,
@@ -485,16 +517,19 @@ GetOptions(%opthash)
     or die("error parsing options\n");
 
 # determine LINTIAN_ROOT if it was not set with --root.
-$LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'} unless (defined($LINTIAN_ROOT));
-if (defined $LINTIAN_ROOT) {
-    unless ($LINTIAN_ROOT =~ m,^/,) {
+$opt{'LINTIAN_ROOT'} = $ENV{'LINTIAN_ROOT'} unless (defined($opt{'LINTIAN_ROOT'}));
+if (defined $opt{'LINTIAN_ROOT'}) {
+    unless ($opt{'LINTIAN_ROOT'} =~ m,^/,) {
 	require Cwd;
 	my $cwd = Cwd::getcwd();
-	$LINTIAN_ROOT = "$cwd/$LINTIAN_ROOT";
+	$opt{'LINTIAN_ROOT'} = "$cwd/$LINTIAN_ROOT";
     }
 } else {
-    $LINTIAN_ROOT = '/usr/share/lintian';
+    $opt{'LINTIAN_ROOT'} = '/usr/share/lintian';
 }
+
+## Update our MAGIC $LINTIAN_ROOT for the first and last time!
+$LINTIAN_ROOT = $opt{'LINTIAN_ROOT'};
 
 # option --all and packages specified at the same time?
 if (($check_everything or $packages_file) and $#ARGV+1 > 0) {
@@ -512,9 +547,9 @@ if ($action =~ /^(?:check|unpack|remove)$/ and $#ARGV == -1 and not $check_every
     syntax();
 }
 
-die "Cannot use profile together wtih --ftp-master-rejects.\n" if $OPT_LINTIAN_PROFILE and $ftpmaster_tags;
+die "Cannot use profile together wtih --ftp-master-rejects.\n" if $opt{'LINTIAN_PROFILE'} and $ftpmaster_tags;
 # --ftp-master-rejects is implemented in a profile
-$OPT_LINTIAN_PROFILE = 'debian/ftp-master-auto-reject' if $ftpmaster_tags;
+$opt{'LINTIAN_PROFILE'} = 'debian/ftp-master-auto-reject' if $ftpmaster_tags;
 
 # }}}
 
@@ -526,26 +561,32 @@ if ($> == 0 and not $allow_root) {
     print STDERR "warning: the authors of lintian do not recommend running it with root privileges!\n";
 }
 
+# environment variables overwrite settings in conf file, so load them now
+foreach my $var (@ENV_VARS) {
+    $opt{$var} = $ENV{$var} if $ENV{$var};
+}
+
 # search for configuration file if it was not set with --cfg
 # do not search the default locations if it was set.
 unless ($no_conf) {
-    if ($LINTIAN_CFG) {
+    if ($opt{'LINTIAN_CFG'}) {
     } elsif (exists $ENV{'LINTIAN_CFG'} &&
-	     -f ($LINTIAN_CFG = $ENV{'LINTIAN_CFG'})) {
-    } elsif (-f ($LINTIAN_CFG = $LINTIAN_ROOT . '/lintianrc')) {
+	     -f ($opt{'LINTIAN_CFG'} = $ENV{'LINTIAN_CFG'})) {
+    } elsif (-f ($opt{'LINTIAN_CFG'} = $LINTIAN_ROOT . '/lintianrc')) {
     } elsif (exists $ENV{'HOME'} &&
-	     -f ($LINTIAN_CFG = $ENV{'HOME'} . '/.lintianrc')) {
-    } elsif (-f ($LINTIAN_CFG = '/etc/lintianrc')) {
+	     -f ($opt{'LINTIAN_CFG'} = $ENV{'HOME'} . '/.lintianrc')) {
+    } elsif (-f ($opt{'LINTIAN_CFG'} = '/etc/lintianrc')) {
     } else {
-	undef $LINTIAN_CFG;
+	$opt{'LINTIAN_CFG'} = '';
     }
+} else {
+    $opt{'LINTIAN_CFG'} = '';
 }
 
-use constant VARS => qw(LAB ARCHIVEDIR DIST AREA ARCH PROFILE);
 # read configuration file
-if ($LINTIAN_CFG) {
-    open(CFG, '<', $LINTIAN_CFG)
-	or die("cannot open configuration file $LINTIAN_CFG for reading: $!");
+if ($opt{'LINTIAN_CFG'}) {
+    open(CFG, '<', $opt{'LINTIAN_CFG'})
+	or die("cannot open configuration file $opt{'LINTIAN_CFG'} for reading: $!");
     while (<CFG>) {
 	chop;
 	s/\#.*$//go;
@@ -558,10 +599,15 @@ if ($LINTIAN_CFG) {
 
 	my $found = 0;
 	foreach my $var (VARS) {
-	    no strict 'refs';
 	    $var = "LINTIAN_$var";
 	    if (m/^\s*$var\s*=\s*(.*\S)\s*$/i) {
-		$$var = $1;
+		if (exists $conf_opt{$var}){
+		    print STDERR "Configuration variable $var appears more than once\n";
+		    print STDERR " in $opt{'LINTIAN_CFG'} (line: $.) - Using the first value!\n";
+		    next;
+		}
+		$opt{$var} = $1 unless defined $opt{$var};
+		$conf_opt{$var} = 1;
 		$found = 1;
 		last;
 	    }
@@ -575,7 +621,7 @@ if ($LINTIAN_CFG) {
 		    unless $ref;
 		if (exists $conf_opt{$var}){
 		    print STDERR "Configuration variable $var appears more than once\n";
-		    print STDERR " in $LINTIAN_CFG (line: $.) - Using the first value!\n";
+		    print STDERR " in $opt{'LINTIAN_CFG'} (line: $.) - Using the first value!\n";
 		    next;
 		}
 		$conf_opt{$var} = 1;
@@ -610,33 +656,22 @@ if ($opt{'color'} and $opt{'color'} !~ /^(?:never|always|auto|html)$/) {
     die "The color value must be one of \"never\", \"always\", \"auto\" or \"html\"\n";
 }
 
-# environment variables overwrite settings in conf file:
-foreach (VARS) {
-    no strict 'refs';
-    my $var = "LINTIAN_$_";
-    my $opt_var = "OPT_$var";
-    $$var = $ENV{$var} if $ENV{$var};
-    $$var = $$opt_var if $$opt_var;
-}
-
 # LINTIAN_ARCH must have a value.
-unless (defined $LINTIAN_ARCH) {
-    if ($LINTIAN_DIST) {
-	chop($LINTIAN_ARCH=`dpkg --print-architecture`);
+unless (defined $opt{'LINTIAN_ARCH'}) {
+    if ($opt{'LINTIAN_DIST'}) {
+	chop($opt{'LINTIAN_ARCH'}=`dpkg --print-architecture`);
     } else {
-	$LINTIAN_ARCH = 'any';
+	$opt{'LINTIAN_ARCH'} = 'any';
     }
 }
 
 # export current settings for our helper scripts
-foreach (('ROOT', 'CFG', VARS)) {
-    no strict 'refs';
-    my $var = "LINTIAN_$_";
-    if ($$var) {
-	$ENV{$var} = $$var;
+foreach my $var (@MUST_EXPORT) {
+    if ($opt{$var}) {
+	$ENV{$var} = $opt{$var};
     } else {
 	$ENV{$var} ='';
-	$$var = '';
+	$opt{$var} = ''; # Avoids some undef warnings later
     }
 }
 
@@ -661,7 +696,7 @@ if (-d "$LINTIAN_ROOT/locale/en_US.UTF-8") {
 # }}}
 
 # {{{ Loading lintian's own libraries (now LINTIAN_ROOT is known)
-unshift @INC, "$LINTIAN_ROOT/lib";
+unshift @INC, "$opt{'LINTIAN_ROOT'}/lib";
 
 require Lab;
 
@@ -718,12 +753,12 @@ $Lintian::Output::GLOBAL->showdescription($opt{'info'});
 # the values and have Lintian::Output available
 debug_msg(1,
 	  $BANNER,
-	  "Lintian root directory: $LINTIAN_ROOT",
-	  "Configuration file: $LINTIAN_CFG",
-	  "Laboratory: $LINTIAN_LAB",
-	  "Archive directory: $LINTIAN_ARCHIVEDIR",
-	  "Distribution: $LINTIAN_DIST",
-	  "Architecture: $LINTIAN_ARCH",
+	  "Lintian root directory: $opt{'LINTIAN_ROOT'}",
+	  "Configuration file: $opt{'LINTIAN_CFG'}",
+	  "Laboratory: $opt{'LINTIAN_LAB'}",
+	  "Archive directory: $opt{'LINTIAN_ARCHIVEDIR'}",
+	  "Distribution: $opt{'LINTIAN_DIST'}",
+	  "Architecture: $opt{'LINTIAN_ARCH'}",
 	  delimiter(),
     );
 
@@ -737,20 +772,20 @@ $TAGS->suppress(keys %suppress_tags) if %suppress_tags;
 
 if ($no_profile) {
     # No profile if we have been given explicit list
-    $LINTIAN_PROFILE = '';
+    $opt{'LINTIAN_PROFILE'} = '';
     # If we are given explicit list, we use that regardless
     # of show_pedantic/display.
     $TAGS->respect_display_level(0);
 } else {
-    unless ($LINTIAN_PROFILE){
+    unless ($opt{'LINTIAN_PROFILE'}){
 	# Time to ask dpkg-vendor for a vendor name
-	$LINTIAN_PROFILE = find_default_profile(@prof_inc, "$LINTIAN_ROOT/profiles");
+	$opt{'LINTIAN_PROFILE'} = find_default_profile(@prof_inc, "$opt{'LINTIAN_ROOT'}/profiles");
     }
 }
 
-if ($LINTIAN_PROFILE) {
-    my $profile = Lintian::Profile->new($LINTIAN_PROFILE,
-					[@prof_inc, "$LINTIAN_ROOT/profiles"]);
+if ($opt{'LINTIAN_PROFILE'}) {
+    my $profile = Lintian::Profile->new($opt{'LINTIAN_PROFILE'},
+					[@prof_inc, "$opt{'LINTIAN_ROOT'}/profiles"]);
     my @ptags = $profile->tags;
     my @ign_overrides = $profile->ignored_overrides;
     my $severities = $profile->severity_changes;
@@ -786,7 +821,7 @@ $SIG{'QUIT'} = \&interrupted;
 
 # {{{ Create/Maintain Lab and add any specified Debian Archives (*.debs)
 
-$LAB = Lab->new( $LINTIAN_LAB );
+$LAB = Lab->new( $opt{'LINTIAN_LAB'} );
 
 #######################################
 # Process -S option
@@ -824,7 +859,9 @@ fail('lintian lab has not been set up correctly (perhaps you forgot to run linti
     unless $LAB->is_lab();
 
 #XXX: There has to be a cleaner way to do this
-$LINTIAN_LAB = $LAB->{dir};
+#  Update the ENV var as well
+$ENV{'LINTIAN_LAB'} = $opt{'LINTIAN_LAB'} = $LAB->{dir};
+
 
 # }}}
 
@@ -856,25 +893,25 @@ while (my $arg = shift) {
 	    my $found = 0;
 
 	    # read package info
-	    read_src_list("$LINTIAN_LAB/info/source-packages", 0);
-	    read_bin_list("$LINTIAN_LAB/info/binary-packages", 0);
-	    read_udeb_list("$LINTIAN_LAB/info/udeb-packages", 0);
+	    read_src_list("$opt{'LINTIAN_LAB'}/info/source-packages", 0);
+	    read_bin_list("$opt{'LINTIAN_LAB'}/info/binary-packages", 0);
+	    read_udeb_list("$opt{'LINTIAN_LAB'}/info/udeb-packages", 0);
 
 	    if (($pkg_mode eq 'b') or ($pkg_mode eq 'a')) {
 		if ($binary_info{$arg}) {
-		    $pool->add_file("$LINTIAN_ARCHIVEDIR/$binary_info{$arg}->{'file'}");
+		    $pool->add_file("$opt{'LINTIAN_ARCHIVEDIR'}/$binary_info{$arg}->{'file'}");
 		    $found = 1;
 		}
 	    }
 	    if (($pkg_mode eq 'u') or ($pkg_mode eq 'a')) {
 		if ($udeb_info{$arg}) {
-		    $pool->add_file("$LINTIAN_ARCHIVEDIR/$udeb_info{$arg}->{'file'}");
+		    $pool->add_file("$opt{'LINTIAN_ARCHIVEDIR'}/$udeb_info{$arg}->{'file'}");
 		    $found = 1;
 		}
 	    }
 	    if (($pkg_mode eq 's') or ($pkg_mode eq 'a')) {
 		if ($source_info{$arg}) {
-		    $pool->add_file("$LINTIAN_ARCHIVEDIR/$source_info{$arg}->{'file'}");
+		    $pool->add_file("$opt{'LINTIAN_ARCHIVEDIR'}/$source_info{$arg}->{'file'}");
 		    $found = 1;
 		}
 	    }
@@ -884,9 +921,9 @@ while (my $arg = shift) {
 
 	# nothing found so far, so search the lab
 
-	my $b = "$LINTIAN_LAB/binary/$arg";
-	my $s = "$LINTIAN_LAB/source/$arg";
-	my $u = "$LINTIAN_LAB/udeb/$arg";
+	my $b = "$opt{'LINTIAN_LAB'}/binary/$arg";
+	my $s = "$opt{'LINTIAN_LAB'}/source/$arg";
+	my $u = "$opt{'LINTIAN_LAB'}/udeb/$arg";
 
 	if ($pkg_mode eq 'b') {
 	    unless (-d $b) {
@@ -930,28 +967,28 @@ while (my $arg = shift) {
 
 if ($check_everything) {
     # make sure package info is available
-    read_src_list("$LINTIAN_LAB/info/source-packages", 0);
-    read_bin_list("$LINTIAN_LAB/info/binary-packages", 0);
-    read_udeb_list("$LINTIAN_LAB/info/udeb-packages", 0);
+    read_src_list("$opt{'LINTIAN_LAB'}/info/source-packages", 0);
+    read_bin_list("$opt{'LINTIAN_LAB'}/info/binary-packages", 0);
+    read_udeb_list("$opt{'LINTIAN_LAB'}/info/udeb-packages", 0);
 
     debug_msg(2, "pkg_mode = $pkg_mode");
 
     if (($pkg_mode eq 'a') or ($pkg_mode eq 's')) {
 	for my $arg (sort keys %source_info) {
-	    debug_msg(1, "doing stuff with $LINTIAN_ARCHIVEDIR/$source_info{$arg}->{'file'}");
-	    $pool->add_file("$LINTIAN_ARCHIVEDIR/$source_info{$arg}->{'file'}");
+	    debug_msg(1, "doing stuff with $opt{'LINTIAN_ARCHIVEDIR'}/$source_info{$arg}->{'file'}");
+	    $pool->add_file("$opt{'LINTIAN_ARCHIVEDIR'}/$source_info{$arg}->{'file'}");
 	}
     }
     if (($pkg_mode eq 'a') or ($pkg_mode eq 'b')) {
 	for my $arg (sort keys %binary_info) {
-	    debug_msg(1, "doing stuff with $LINTIAN_ARCHIVEDIR/$binary_info{$arg}->{'file'}");
-	    $pool->add_file("$LINTIAN_ARCHIVEDIR/$binary_info{$arg}->{'file'}");
+	    debug_msg(1, "doing stuff with $opt{'LINTIAN_ARCHIVEDIR'}/$binary_info{$arg}->{'file'}");
+	    $pool->add_file("$opt{'LINTIAN_ARCHIVEDIR'}/$binary_info{$arg}->{'file'}");
 	}
     }
     if (($pkg_mode eq 'a') or ($pkg_mode eq 'u')) {
 	for my $arg (sort keys %udeb_info) {
-	    debug_msg(1, "doing stuff with $LINTIAN_ARCHIVEDIR/$udeb_info{$arg}->{'file'}");
-	    $pool->add_file("$LINTIAN_ARCHIVEDIR/$udeb_info{$arg}->{'file'}");
+	    debug_msg(1, "doing stuff with $opt{'LINTIAN_ARCHIVEDIR'}/$udeb_info{$arg}->{'file'}");
+	    $pool->add_file("$opt{'LINTIAN_ARCHIVEDIR'}/$udeb_info{$arg}->{'file'}");
 	}
     }
 } elsif ($packages_file) {
@@ -1009,13 +1046,13 @@ if($action eq 'remove'){
 # }}}
 
 # {{{ Load information about collector scripts
-load_collections(\%collection_info, "$LINTIAN_ROOT/collection");
+load_collections(\%collection_info, "$opt{'LINTIAN_ROOT'}/collection");
 # }}}
 
 # {{{ Now we're ready to load info about checks & tags
 
 # load information about checker scripts
-load_checks(\%check_info, $TAGS, "$LINTIAN_ROOT/checks");
+load_checks(\%check_info, $TAGS, "$opt{'LINTIAN_ROOT'}/checks");
 
 # }}}
 
@@ -1357,7 +1394,7 @@ sub load_checks{
 
 
 # Removes all collections with "Auto-Remove: yes"; takes a Lab::Package
-#  - depends on global variables %collection_info and $LINTIAN_ROOT
+#  - depends on global variables %collection_info and $opt{'LINTIAN_ROOT'}
 sub auto_clean_package {
     my ($lpkg) = @_;
     my $pkg_name = $lpkg->pkg_name();
@@ -1367,7 +1404,7 @@ sub auto_clean_package {
 	my $ci = $collection_info{$coll};
 	if (defined($ci->{'auto-remove'}) && $ci->{'auto-remove'} eq 'yes') {
 	    next unless (-f "$base/.${coll}-$ci->{'version'}");
-	    my $script = "$LINTIAN_ROOT/collection/$ci->{'script'}";
+	    my $script = "$opt{'LINTIAN_ROOT'}/collection/$ci->{'script'}";
 	    debug_msg(1, "Auto removing: $ci->{'script'} ...");
 	    unless (Lintian::Command::Simple::rundir($base, $script, $pkg_name, "remove-${pkg_type}") == 0) {
 		warning("removing collect info $coll about package $pkg_name failed",
@@ -1478,7 +1515,7 @@ sub unpack_group {
 		$collmap->select($req);
 		$lpkg->remove_status_file();
 		debug_msg(1, "Collecting info: $coll ...");
-		my $script = "$LINTIAN_ROOT/collection/$ci->{'script'}";
+		my $script = "$opt{'LINTIAN_ROOT'}/collection/$ci->{'script'}";
 		my $cmd = Lintian::Command::Simple->new();
 		unless ($cmd->background_dir($base, $script, $pkg_name, $pkg_type) > 0) {
 		    warning("collect info $coll about package $pkg_name failed",
@@ -1600,8 +1637,8 @@ sub process_group {
 	    }
 	}
 	# chdir to lintian root directory (to unlock $base so it can be removed below)
-	unless (chdir($LINTIAN_ROOT)) {
-	    warning("could not chdir into directory $LINTIAN_ROOT: $!",
+	unless (chdir($opt{'LINTIAN_ROOT'})) {
+	    warning("could not chdir into directory $opt{'LINTIAN_ROOT'}: $!",
 		    "skipping $action of $pkg_type package $pkg_name");
 	    $exit_code = 2;
 	    next;
