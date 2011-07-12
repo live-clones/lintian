@@ -90,7 +90,6 @@ my $check_tags;
 my $dont_check;
 my $unpack_info;
 my $cwd;
-my $cleanup_filename;
 my $exit_code = 0;
 my $LAB;
 
@@ -782,7 +781,6 @@ if ($LINTIAN_PROFILE) {
 use vars qw(%source_info %binary_info %udeb_info); # from the above
 
 # Set up clean-up handlers.
-undef $cleanup_filename;
 $SIG{'INT'} = \&interrupted;
 $SIG{'QUIT'} = \&interrupted;
 
@@ -1184,7 +1182,7 @@ if ($action eq 'check' and not $opt{'no-override'} and not $opt{'show-overrides'
     my $info = $overrides{info} || 0;
     my $total = $errors + $warnings + $info;
     if ($total > 0) {
-	my $total = ($total == 1)
+	my $text = ($total == 1)
 	    ? "$total tag overridden"
 	    : "$total tags overridden";
 	my @output;
@@ -1197,7 +1195,7 @@ if ($action eq 'check' and not $opt{'no-override'} and not $opt{'show-overrides'
 	if ($info) {
 	    push (@output, "$info info");
 	}
-	msg("$total (". join (', ', @output). ')');
+	msg("$text (". join (', ', @output). ')');
     }
 }
 
@@ -1430,7 +1428,6 @@ sub unpack_group {
 	my $lpkg;
 	my $base;
 	my $info;
-	my $cid;
 	eval{
 	    $lpkg = $LAB->get_lab_package($pkg_name, $pkg_ver,
 					  $pkg_type, $pkg_path);
