@@ -18,54 +18,51 @@
 # Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
+package Read_pkglists;
 
 use strict;
 use warnings;
 
-use lib "$ENV{'LINTIAN_ROOT'}/lib";
+use Carp qw(croak);
 use Util;
-
-use vars qw($BINLIST_FORMAT $SRCLIST_FORMAT $UDEBLIST_FORMAT %source_info %binary_info %udeb_info %bin_src_ref);
+use base 'Exporter';
 
 # these banner lines have to be changed with every incompatible change of the
 # binary and source list file formats
-$BINLIST_FORMAT = "Lintian's list of binary packages in the archive--V4";
-$SRCLIST_FORMAT = "Lintian's list of source packages in the archive--V4";
-$UDEBLIST_FORMAT = "Lintian's list of udeb packages in the archive--V3";
+use constant BINLIST_FORMAT => "Lintian's list of binary packages in the archive--V4";
+use constant SRCLIST_FORMAT => "Lintian's list of source packages in the archive--V4";
+use constant UDEBLIST_FORMAT => "Lintian's list of udeb packages in the archive--V3";
 
-%source_info = ();
-%binary_info = ();
-%udeb_info = ();
-%bin_src_ref = ();
+our @EXPORT = (qw(
+    BINLIST_FORMAT
+    SRCLIST_FORMAT
+    UDEBLIST_FORMAT
+    read_src_list
+    read_bin_list
+    read_udeb_list
+));
 
 sub read_src_list {
-  my ($src_list,$quiet) = @_;
-  my $LINTIAN_LAB = $ENV{'LINTIAN_LAB'};
+  my ($src_list) = @_;
+  my %source_info;
 
-  if (%source_info) {
-    warn "\%source_info exists, nothing to do in read_src_list\n" unless $quiet;
-    return;
-  }
+  return {} unless $src_list && -s $src_list;
 
-  $src_list or ($src_list = "$LINTIAN_LAB/info/source-packages");
-  return unless -s $src_list;
-
-  open(IN, '<', $src_list) or fail("cannot open source list file $src_list: $!");
+  open my $IN, '<', $src_list or croak "open $src_list: $!";
 
   # compatible file format?
   my $f;
-  chop($f = <IN>);
-  if ($f ne $SRCLIST_FORMAT) {
-    close(IN);
-    return 0 if $quiet;
-    fail("the source list file $src_list has an incompatible file format (run lintian --setup-lab)");
+  chop($f = <$IN>);
+  if ($f ne SRCLIST_FORMAT) {
+    close($IN);
+    croak "$src_list has an incompatible file format";
   }
 
   # compatible format, so read file
-  while (<IN>) {
+  while (<$IN>) {
     chop;
-    next if /^\s*$/o;
-    my ($src,$ver,$maint,$uploaders,$arch,$area,$std,$bin,$files,$file,$timestamp) = split(/\;/,$_);
+    next if m/^\s*$/o;
+    my ($src,$ver,$maint,$uploaders,$arch,$area,$std,$bin,$files,$file,$timestamp) = split(m/\;/o,$_);
 
     my $src_struct;
     %$src_struct =
@@ -86,38 +83,32 @@ sub read_src_list {
     $source_info{$src} = $src_struct;
   }
 
-  close(IN);
+  close($IN);
+  return \%source_info;
 }
 
 sub read_bin_list {
-  my ($bin_list,$quiet) = @_;
-  my $LINTIAN_LAB = $ENV{'LINTIAN_LAB'};
+  my ($bin_list) = @_;
+  my %binary_info;
 
-  if (%binary_info) {
-    warn "\%binary_info exists, nothing to do in read_bin_list\n" unless $quiet;
-    return;
-  }
+  return {} unless $bin_list && -s $bin_list;
 
-  $bin_list or ($bin_list = "$LINTIAN_LAB/info/binary-packages");
-  return unless -s $bin_list;
-
-  open(IN, '<', $bin_list) or fail("cannot open binary list file $bin_list: $!");
+  open(my $IN, '<', $bin_list) or fail("open $bin_list: $!");
 
   # compatible file format?
   my $f;
-  chop($f = <IN>);
-  if ($f ne $BINLIST_FORMAT) {
-    close(IN);
-    return 0 if $quiet;
-    fail("the binary list file $bin_list has an incompatible file format (run lintian --setup-lab)");
+  chop($f = <$IN>);
+  if ($f ne BINLIST_FORMAT) {
+    close($IN);
+    croak "$bin_list has an incompatible file format";
   }
 
   # compatible format, so read file
-  while (<IN>) {
+  while (<$IN>) {
     chop;
 
-    next if /^\s*$/o;
-    my ($bin,$ver,$source,$source_ver,$file,$timestamp,$area) = split(/\;/o,$_);
+    next if m/^\s*$/o;
+    my ($bin,$ver,$source,$source_ver,$file,$timestamp,$area) = split(m/\;/o,$_);
 
     my $bin_struct;
     %$bin_struct =
@@ -134,38 +125,32 @@ sub read_bin_list {
     $binary_info{$bin} = $bin_struct;
   }
 
-  close(IN);
+  close($IN);
+  return \%binary_info;
 }
 
 sub read_udeb_list {
-  my ($udeb_list,$quiet) = @_;
-  my $LINTIAN_LAB = $ENV{'LINTIAN_LAB'};
+  my ($udeb_list) = @_;
+  my %udeb_info;
 
-  if (%udeb_info) {
-    warn "\%udeb_info exists, nothing to do in read_bin_list\n" unless $quiet;
-    return;
-  }
+  return {} unless $udeb_list && -s $udeb_list;
 
-  $udeb_list or ($udeb_list = "$LINTIAN_LAB/info/udeb-packages");
-  return unless -s $udeb_list;
-
-  open(IN, '<', $udeb_list) or fail("cannot open udeb list file $udeb_list: $!");
+  open(my $IN, '<', $udeb_list) or croak("open $udeb_list: $!");
 
   # compatible file format?
   my $f;
-  chop($f = <IN>);
-  if ($f ne $UDEBLIST_FORMAT) {
-    close(IN);
-    return 0 if $quiet;
-    fail("the udeb list file $udeb_list has an incompatible file format (run lintian --setup-lab)");
+  chop($f = <$IN>);
+  if ($f ne UDEBLIST_FORMAT) {
+    close($IN);
+    croak "$udeb_list has an incompatible file format";
   }
 
   # compatible format, so read file
-  while (<IN>) {
+  while (<$IN>) {
     chop;
 
-    next if /^\s*$/o;
-    my ($udeb,$ver,$source,$source_ver,$file,$timestamp,$area) = split(/\;/o,$_);
+    next if m/^\s*$/o;
+    my ($udeb,$ver,$source,$source_ver,$file,$timestamp,$area) = split(m/\;/o,$_);
 
     my $udeb_struct;
     %$udeb_struct =
@@ -182,19 +167,10 @@ sub read_udeb_list {
     $udeb_info{$udeb} = $udeb_struct;
   }
 
-  close(IN);
+  close($IN);
+  return \%udeb_info;
 }
 
-
-
-sub get_bin_src_ref {
-  read_src_list();
-  for my $source (keys %source_info) {
-    for my $binary (split(/,\s+/o,$source_info{$source}->{'binary'})) {
-      $bin_src_ref{$binary} = $source;
-    }
-  }
-}
 
 1;
 

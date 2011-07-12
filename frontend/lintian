@@ -44,7 +44,7 @@ use Getopt::Long;
 #
 # LINTIAN_{ARCH,ARCHIVEDIR,AREA,DIST,LAB,ROOT}
 #  - These must be exported as environment variables as unpack/*
-#    and Read_pkglists depend on it.
+#    depend on it.
 #
 # Please do not introduce any new magical variables, Thank You!
 #
@@ -808,11 +808,8 @@ if ($opt{'LINTIAN_PROFILE'}) {
 
 # }}}
 
-# {{{ No clue why this code is here...
+# {{{ Set up clean-up handlers.
 
-use vars qw(%source_info %binary_info %udeb_info); # from the above
-
-# Set up clean-up handlers.
 $SIG{'INT'} = \&interrupted;
 $SIG{'QUIT'} = \&interrupted;
 
@@ -868,6 +865,11 @@ $ENV{'LINTIAN_LAB'} = $opt{'LINTIAN_LAB'} = $LAB->{dir};
 
 $pool = Lintian::ProcessablePool->new();
 # process package/file arguments
+
+# Store contents of the packages files in these if needed
+my ($src_info, $bin_info, $udeb_info);
+
+
 while (my $arg = shift) {
     # file?
     if (-f $arg) {
@@ -891,26 +893,25 @@ while (my $arg = shift) {
 
 	    my $found = 0;
 
-	    # read package info
-	    read_src_list("$opt{'LINTIAN_LAB'}/info/source-packages", 0);
-	    read_bin_list("$opt{'LINTIAN_LAB'}/info/binary-packages", 0);
-	    read_udeb_list("$opt{'LINTIAN_LAB'}/info/udeb-packages", 0);
-
 	    if (($pkg_mode eq 'b') or ($pkg_mode eq 'a')) {
-		if ($binary_info{$arg}) {
-		    $pool->add_file("$opt{'LINTIAN_ARCHIVEDIR'}/$binary_info{$arg}->{'file'}");
+		$bin_info = read_bin_list("$opt{'LINTIAN_LAB'}/info/binary-packages") unless $bin_info;
+		if ($bin_info->{$arg}) {
+		    $pool->add_file("$opt{'LINTIAN_ARCHIVEDIR'}/" . $bin_info->{$arg}->{'file'});
 		    $found = 1;
 		}
 	    }
 	    if (($pkg_mode eq 'u') or ($pkg_mode eq 'a')) {
-		if ($udeb_info{$arg}) {
-		    $pool->add_file("$opt{'LINTIAN_ARCHIVEDIR'}/$udeb_info{$arg}->{'file'}");
+		$udeb_info = read_udeb_list("$opt{'LINTIAN_LAB'}/info/udeb-packages") unless $udeb_info;
+		if ($udeb_info->{$arg}) {
+		    $pool->add_file("$opt{'LINTIAN_ARCHIVEDIR'}/" . $udeb_info->{$arg}->{'file'});
 		    $found = 1;
 		}
 	    }
 	    if (($pkg_mode eq 's') or ($pkg_mode eq 'a')) {
-		if ($source_info{$arg}) {
-		    $pool->add_file("$opt{'LINTIAN_ARCHIVEDIR'}/$source_info{$arg}->{'file'}");
+		$src_info = read_src_list("$opt{'LINTIAN_LAB'}/info/source-packages") unless $src_info;
+
+		if ($src_info->{$arg}) {
+		    $pool->add_file("$opt{'LINTIAN_ARCHIVEDIR'}/" . $src_info->{$arg}->{'file'});
 		    $found = 1;
 		}
 	    }
@@ -966,28 +967,28 @@ while (my $arg = shift) {
 
 if ($check_everything) {
     # make sure package info is available
-    read_src_list("$opt{'LINTIAN_LAB'}/info/source-packages", 0);
-    read_bin_list("$opt{'LINTIAN_LAB'}/info/binary-packages", 0);
-    read_udeb_list("$opt{'LINTIAN_LAB'}/info/udeb-packages", 0);
+    $src_info  = read_src_list("$opt{'LINTIAN_LAB'}/info/source-packages") unless $src_info;
+    $bin_info  = read_bin_list("$opt{'LINTIAN_LAB'}/info/binary-packages") unless $bin_info;
+    $udeb_info = read_udeb_list("$opt{'LINTIAN_LAB'}/info/udeb-packages") unless $udeb_info;
 
     debug_msg(2, "pkg_mode = $pkg_mode");
 
     if (($pkg_mode eq 'a') or ($pkg_mode eq 's')) {
-	for my $arg (sort keys %source_info) {
-	    debug_msg(1, "doing stuff with $opt{'LINTIAN_ARCHIVEDIR'}/$source_info{$arg}->{'file'}");
-	    $pool->add_file("$opt{'LINTIAN_ARCHIVEDIR'}/$source_info{$arg}->{'file'}");
+	for my $arg (sort keys %$src_info) {
+	    debug_msg(1, "doing stuff with $opt{'LINTIAN_ARCHIVEDIR'}/" . $src_info->{$arg}->{'file'});
+	    $pool->add_file("$opt{'LINTIAN_ARCHIVEDIR'}/" . $src_info->{$arg}->{'file'});
 	}
     }
     if (($pkg_mode eq 'a') or ($pkg_mode eq 'b')) {
-	for my $arg (sort keys %binary_info) {
-	    debug_msg(1, "doing stuff with $opt{'LINTIAN_ARCHIVEDIR'}/$binary_info{$arg}->{'file'}");
-	    $pool->add_file("$opt{'LINTIAN_ARCHIVEDIR'}/$binary_info{$arg}->{'file'}");
+	for my $arg (sort keys %$bin_info) {
+	    debug_msg(1, "doing stuff with $opt{'LINTIAN_ARCHIVEDIR'}/" . $bin_info->{$arg}->{'file'});
+	    $pool->add_file("$opt{'LINTIAN_ARCHIVEDIR'}/" . $bin_info->{$arg}->{'file'});
 	}
     }
     if (($pkg_mode eq 'a') or ($pkg_mode eq 'u')) {
-	for my $arg (sort keys %udeb_info) {
-	    debug_msg(1, "doing stuff with $opt{'LINTIAN_ARCHIVEDIR'}/$udeb_info{$arg}->{'file'}");
-	    $pool->add_file("$opt{'LINTIAN_ARCHIVEDIR'}/$udeb_info{$arg}->{'file'}");
+	for my $arg (sort keys %$udeb_info) {
+	    debug_msg(1, "doing stuff with $opt{'LINTIAN_ARCHIVEDIR'}/" . $udeb_info->{$arg}->{'file'});
+	    $pool->add_file("$opt{'LINTIAN_ARCHIVEDIR'}/" . $udeb_info->{$arg}->{'file'});
 	}
     }
 } elsif ($packages_file) {
@@ -1000,6 +1001,13 @@ if ($check_everything) {
     }
     close($pkgin);
 }
+
+# undef these as they are not needed any more and they give a cheap
+# extra 5+ MB of RAM back on lintian.d.o.
+undef $src_info;
+undef $bin_info;
+undef $udeb_info;
+
 # }}}
 
 # {{{ Some silent exit

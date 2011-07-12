@@ -63,10 +63,6 @@ use Read_pkglists;
 use Text_utils;
 use Util;
 
-# Global variables from Read_pkglists.  Ugh.
-# FIXME: Read_pkglists should return this information instead.
-our (%binary_info, %source_info, %udeb_info, %bin_src_ref);
-
 # Get additional tag information.
 our %tag_extra = ();
 
@@ -117,11 +113,18 @@ for my $template (qw/head foot clean index maintainer maintainers packages tag
 
 # Read the package lists.
 #
-# FIXME: get_bin_src_ref runs read_src_list unconditionally so we can't call
-# it directly, which is confusing.
-read_bin_list;
-read_udeb_list;
-get_bin_src_ref;
+
+my %binary_info = %{ read_bin_list("$LINTIAN_LAB/info/binary-packages"); };
+my %udeb_info = %{ read_udeb_list("$LINTIAN_LAB/info/udeb-packages"); };
+my %source_info = %{ read_src_list("$LINTIAN_LAB/info/source-packages"); };
+my %bin_src_ref;
+
+for my $source (keys %source_info) {
+    for my $binary (split(/,\s+/o,$source_info{$source}->{'binary'})) {
+        $bin_src_ref{$binary} = $source;
+    }
+}
+
 
 # Create output directories.
 mkdir($HTML_TMP_DIR, 0777)

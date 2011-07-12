@@ -63,7 +63,6 @@ unless ($output_file) {
 # import perl libraries
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Read_pkglists;
-use vars qw(%source_info $SRCLIST_FORMAT); # from the above
 use Util;
 
 # get variables out of environment
@@ -73,7 +72,11 @@ my $LINTIAN_LAB = $ENV{'LINTIAN_LAB'};
 my $LINTIAN_AREA = $ENV{'LINTIAN_AREA'};
 
 # read old list file (this command does nothing if the file does not exist)
-read_src_list($output_file,1);
+my $ref = {};
+# ignore the contents if the contents cannot be read - that is what we
+# used to do!
+eval { $ref = read_src_list($output_file) };
+my %source_info = %$ref;
 
 my %pkgfile;
 # map filenames to package names
@@ -83,7 +86,7 @@ for my $pkg (keys %source_info) {
 
 # open output file
 open(OUT, '>', $output_file) or fail("cannot open list file $output_file for writing: $!");
-print OUT "$SRCLIST_FORMAT\n";
+print OUT Read_pkglists::SRCLIST_FORMAT ."\n";
 
 # parse Sources.gz to get list of packages
 my @sources;

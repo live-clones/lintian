@@ -64,7 +64,6 @@ use vars qw($LINTIAN_ROOT $LINTIAN_LAB $LINTIAN_ARCHIVEDIR $LINTIAN_DIST
 # import perl libraries
 unshift @INC, "$LINTIAN_ROOT/lib";
 require Read_pkglists;
-use vars qw(%binary_info %source_info %udeb_info); # from the above
 require Util;
 
 # turn file buffering off
@@ -162,17 +161,17 @@ if ($opt_i) { # process changes only
     # read binary packages files
     $pkgfile = "$LINTIAN_LAB/info/binary-packages";
     (-f $pkgfile) or Die("cannot find list of binary packages $pkgfile");
-    read_bin_list($pkgfile);
+    my %binary_info = %{ read_bin_list($pkgfile) };
 
     # read udeb packages files
     $pkgfile = "$LINTIAN_LAB/info/udeb-packages";
     (-f $pkgfile) or Die("cannot find list of udeb packages $pkgfile");
-    read_udeb_list($pkgfile);
+    my %udeb_info = %{ read_udeb_list($pkgfile) };
 
     # read source packages files
     $pkgfile = "$LINTIAN_LAB/info/source-packages";
     (-f $pkgfile) or Die("cannot find list of source packages $pkgfile");
-    read_src_list($pkgfile);
+    my %source_info = %{ read_src_list($pkgfile) };
 
     # process changes file and create list of packages to process
     Log('Reading changes file...');
