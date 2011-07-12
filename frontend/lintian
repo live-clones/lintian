@@ -701,6 +701,7 @@ require Lab;
 
 require Util;
 require Read_pkglists;
+import Read_pkglists qw(read_bin_list read_src_list);
 
 import Util;
 
@@ -901,7 +902,7 @@ while (my $arg = shift) {
 		}
 	    }
 	    if (($pkg_mode eq 'u') or ($pkg_mode eq 'a')) {
-		$udeb_info = read_udeb_list("$opt{'LINTIAN_LAB'}/info/udeb-packages") unless $udeb_info;
+		$udeb_info = read_bin_list("$opt{'LINTIAN_LAB'}/info/udeb-packages") unless $udeb_info;
 		if ($udeb_info->{$arg}) {
 		    $pool->add_file("$opt{'LINTIAN_ARCHIVEDIR'}/" . $udeb_info->{$arg}->{'file'});
 		    $found = 1;
@@ -969,7 +970,7 @@ if ($check_everything) {
     # make sure package info is available
     $src_info  = read_src_list("$opt{'LINTIAN_LAB'}/info/source-packages") unless $src_info;
     $bin_info  = read_bin_list("$opt{'LINTIAN_LAB'}/info/binary-packages") unless $bin_info;
-    $udeb_info = read_udeb_list("$opt{'LINTIAN_LAB'}/info/udeb-packages") unless $udeb_info;
+    $udeb_info = read_bin_list("$opt{'LINTIAN_LAB'}/info/udeb-packages") unless $udeb_info;
 
     debug_msg(2, "pkg_mode = $pkg_mode");
 

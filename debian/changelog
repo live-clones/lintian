@@ -180,6 +180,10 @@ lintian (2.5.2) UNRELEASED; urgency=low
     + [NT] New files.
   * lib/Lintian/{Tag/Info,Tags}.pm:
     + [NT] Updated for profile support.
+  * lib/Read_pkglists.pm:
+    + [NT] Merged the binary and udeb format since they were
+      essentially the same.  Old udeb files can still be parsed
+      as binary ones.
 
   * man/lintian.pod.in:
     + [NT] Documented the new --profile option.  Note that the
@@ -193,6 +197,12 @@ lintian (2.5.2) UNRELEASED; urgency=low
       that these profiles will silently ignore overrides for
       "fatal" (non-overridable) tags.  (Closes: #536364)
 
+  * unpack/list-binpkg:
+    + [NT] Added a -u option to make it fetch udebs insteaad of
+      regular binaries.  This and the udeb/bin format merge makes
+      list-udebpkg obsolete.
+  * unpack/list-udebpkg:
+    + [NT] Removed in favour of list-binpkg.
   * unpack/unpack-srcpkg-l1:
     + [NT] Removed in favour of the collection system.
 

@@ -33,16 +33,20 @@ if ($#ARGV == -1) {
     print "list-binpkg [-v] <output-list-file>\n";
     print "options:\n";
     print "   -v  verbose\n";
+    print "   -u  Fetch udebs\n";
     exit 0;
 }
 
 my $verbose = 0;
+my $udeb = 0;
 my $output_file = undef;
 
 while (my $arg = shift) {
     if ($arg =~ s,^-,,o) {
 	if ($arg eq 'v') {
 	    $verbose = 1;
+	} elsif ($arg eq 'u') {
+	    $udeb = 1;
 	} else {
 	    print STDERR "error: unknown command line argument: $arg\n";
 	    exit 1;
@@ -95,11 +99,18 @@ print OUT Read_pkglists::BINLIST_FORMAT. "\n";
 my @packages_files;
 foreach my $area (split /\s*,\s*/,$LINTIAN_AREA) {
     my %hash;
+    my $file;
     $hash{'dist'} = $LINTIAN_DIST;
     $hash{'arch'} = $LINTIAN_ARCH;
     $hash{'area'} = $area;
-    $hash{'file'} = "$LINTIAN_ARCHIVEDIR/dists/$hash{'dist'}/$hash{'area'}/" .
-		    "binary-$hash{'arch'}/Packages";
+    if ($udeb) {
+	$file = "$LINTIAN_ARCHIVEDIR/dists/$hash{'dist'}/$hash{'area'}/" .
+	        "debian-installer/binary-$hash{'arch'}/Packages";
+    } else {
+	$file = "$LINTIAN_ARCHIVEDIR/dists/$hash{'dist'}/$hash{'area'}/" .
+	        "binary-$hash{'arch'}/Packages";
+    }
+    $hash{'file'} = $file;
     push @packages_files, \%hash;
 }
 

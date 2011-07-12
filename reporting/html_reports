@@ -115,7 +115,7 @@ for my $template (qw/head foot clean index maintainer maintainers packages tag
 #
 
 my %binary_info = %{ read_bin_list("$LINTIAN_LAB/info/binary-packages"); };
-my %udeb_info = %{ read_udeb_list("$LINTIAN_LAB/info/udeb-packages"); };
+my %udeb_info = %{ read_bin_list("$LINTIAN_LAB/info/udeb-packages"); };
 my %source_info = %{ read_src_list("$LINTIAN_LAB/info/source-packages"); };
 my %bin_src_ref;
 

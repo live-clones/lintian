@@ -166,7 +166,7 @@ if ($opt_i) { # process changes only
     # read udeb packages files
     $pkgfile = "$LINTIAN_LAB/info/udeb-packages";
     (-f $pkgfile) or Die("cannot find list of udeb packages $pkgfile");
-    my %udeb_info = %{ read_udeb_list($pkgfile) };
+    my %udeb_info = %{ read_bin_list($pkgfile) };
 
     # read source packages files
     $pkgfile = "$LINTIAN_LAB/info/source-packages";
