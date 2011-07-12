@@ -24,6 +24,8 @@ use strict;
 use warnings;
 use base qw(Exporter);
 
+# Lab format Version Number increased whenever incompatible changes
+# are done to the lab so that all packages are re-unpacked
 use constant LAB_FORMAT => 10;
 
 # Export now due to cicular depends between Lab and Lab::Package.
