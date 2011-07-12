@@ -1360,19 +1360,6 @@ sub load_checks{
 }
 
 
-sub sort_coll {
-    my ($ap, $bp);
-    $ap = $map->getProp($a);
-    $bp = $map->getProp($b);
-    # override-file should be the first script to be run
-    return -1 if ($ap->{'name'} eq 'override-file');
-    return 1 if ($bp->{'name'} eq 'override-file');
-    # sort collection scripts first
-    return -1 if ($ap->{'type'} eq 'collection' && $bp->{'type'} ne 'collection');
-    return 1 if ($bp->{'type'} eq 'collection' && $ap->{'type'} ne 'collection');
-    return ($ap->{'name'} cmp $bp->{'name'});
-}
-
 # Removes all collections with "Auto-Remove: yes"; takes a Lab::Package
 #  - depends on global variables %collection_info and $LINTIAN_ROOT
 sub auto_clean_package {
@@ -1598,7 +1585,7 @@ sub process_group {
 	    }
 	}
 	while ($map->pending) {
-	    foreach my $req (sort sort_coll $map->selectable) {
+	    foreach my $req (sort $map->selectable) {
 		my $ri = $map->getProp($req);
 		my $check = $ri->{'name'};
 		my $ci = $check_info{$check};
