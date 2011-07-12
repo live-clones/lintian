@@ -26,7 +26,6 @@ use strict;
 use warnings;
 
 use Getopt::Long;
-use Cwd;
 
 # }}}
 
@@ -485,13 +484,12 @@ Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
 GetOptions(%opthash)
     or die("error parsing options\n");
 
-# determine current working directory--we'll need this later
-$cwd = Cwd::getcwd();
-
 # determine LINTIAN_ROOT if it was not set with --root.
 $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'} unless (defined($LINTIAN_ROOT));
 if (defined $LINTIAN_ROOT) {
     unless ($LINTIAN_ROOT =~ m,^/,) {
+	require Cwd;
+	my $cwd = Cwd::getcwd();
 	$LINTIAN_ROOT = "$cwd/$LINTIAN_ROOT";
     }
 } else {
@@ -1668,6 +1666,7 @@ sub interrupted {
     $SIG{$_[0]} = 'DEFAULT';
     die "N: Interrupted.\n";
 }
+
 # }}}
 
 # Local Variables:
