@@ -255,11 +255,7 @@ while (<>) {
         } else {
             warn "source for package $package not found!\n";
             $source = $package;
-            if ($type eq 'binary') {
-                $maintainer = $binary_info{$package}->{maintainer};
-            } elsif ($type eq 'udeb') {
-                $maintainer = $udeb_info{$package}->{maintainer};
-            }
+            $maintainer = undef;
         }
         if ($type eq 'binary') {
             $version = $binary_info{$package}->{version};
