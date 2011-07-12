@@ -1514,7 +1514,6 @@ sub unpack_group {
 	    }
 	    debug_msg(1, "Reap done jobs ... unpack $pkg_name $pkg_ver ($pkg_type)");
 	}
-	%running_jobs = ();
 
 	if ($action eq 'check') {
 	    # We only need this if we are checking the package later
@@ -1559,10 +1558,6 @@ sub process_group {
 		$map->satisfy($req);
 	    }
 	}
-
-	# Kill pending jobs, if any
-	Lintian::Command::Simple::kill(\%running_jobs);
-	%running_jobs = ();
 
 	debug_msg(1, "Base directory in lab: $base");
 
@@ -1633,7 +1628,6 @@ sub process_group {
 	$lpkg->update_status_file($LINTIAN_VERSION);
 
     } # end foreach my $proc ($group->get_processable())
-    %running_jobs = ();
 
     return 1;
 }
