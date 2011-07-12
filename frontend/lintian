@@ -115,7 +115,6 @@ my @prof_inc = (
 
 my $experimental_output_opts = undef;
 
-my @severities = qw(wishlist minor normal important serious);
 my @certainties = qw(wild-guess possible certain);
 my @display_level;
 my %display_source = ();
@@ -377,7 +376,7 @@ sub record_display_level {
     $op = '=' unless defined $op;
     $rel = '=' unless defined $rel;
     if (not defined $certainty) {
-	if (grep { $severity eq $_ } qw(wild-guess possible certain)) {
+	if (grep { $severity eq $_ } @certainties) {
 	    $certainty = $severity;
 	    undef $severity;
 	}
