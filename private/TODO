@@ -41,14 +41,12 @@ collection:
   broken binaries and non-native architectures.  We already use readelf
   and hack its output where we have to; replace all of that with always
   using readelf and modify lib/Lintian/Collect/Binary.pm to understand the
-  readelf output syntax instead.
+  readelf output syntax instead.  This is #614034.
 
 doc:
 
 - Either update doc/CREDITS based on the changelog file or archive it
   somewhere and say that it's not going to be updated.
-
-- Rewrite the Lintian manual in something other than DebianDoc-SGML.
 
 - Update the Lintian manual:
   + document severity/certainty
@@ -116,27 +114,18 @@ t:
 - t/runtests has a lot of duplicate code and could stand some
   restructuring and factoring of common code.
 
-- Add support to t/runtests for running a single test, moving the logic
-  out of debian/rules.  It should probably be the default action if
-  t/runtests is just given some command-line parameters.
-
 - udebs are generally undertested right now and could use some general
   tests, particularly for things that we don't care about with udebs but
   do care about with regular packages.
 
 General:
 
-- [Raphael Geissert] Turn unpack scripts into another type of collect
-  script that many collect scripts depend on and run all collect and
-  unpack scripts based on their dependency order, in parallel as much as
-  possible.
-
 - Write a real parser for shell scripts that can at least tokenize them
   half-way decently, do some basic analysis of whether code is conditional
   or not, and provide reasonable answers to questions like "is this
   command called in the script" without heinous regex matches.  Replace
   all the ugly, ad hoc script parsing code elsewhere in Lintian with that
-  parser.
+  parser.  This is #629247.
 
 External:
 
