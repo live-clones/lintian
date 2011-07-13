@@ -52,9 +52,6 @@ use Getopt::Long;
 
 our $LINTIAN_ROOT;
 
-# List of "no strict ref" magic variables
-use constant VARS => qw(LAB ARCHIVEDIR DIST AREA ARCH PROFILE);
-
 my @MUST_EXPORT = (qw(
     LINTIAN_ARCH
     LINTIAN_ARCHIVEDIR
@@ -1043,7 +1040,7 @@ if($action eq 'remove'){
 	    }
 	    $TAGS->file_start($pkg_path, $pkg_name, $pkg_ver,
 			      $proc->pkg_arch(), $pkg_type);
-	    debug_msg(1, "Removing package in lab ...");
+	    debug_msg(1, 'Removing package in lab ...');
 	    unless($lpkg->delete_lab_entry()){
 		warning("cannot remove entry for $pkg_name: $!");
 		$exit_code = 2;
