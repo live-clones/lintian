@@ -64,6 +64,11 @@ my @MUST_EXPORT = (qw(
 
 # Environment variables Lintian cares about - the list contains
 # the ones that can also be set via the config file
+#
+# %opt (definde below) will be updated with values of the env
+# after parsing cmd-line options.  A given value in %opt is
+# updated to use the ENV variable if the one in %opt is undef
+# and ENV has a value.
 my @ENV_VARS = (
 # LINTIAN_CFG  - handled manually
 # LINTIAN_ROOT - handled manually
@@ -519,7 +524,7 @@ if (defined $opt{'LINTIAN_ROOT'}) {
     unless ($opt{'LINTIAN_ROOT'} =~ m,^/,) {
 	require Cwd;
 	my $cwd = Cwd::getcwd();
-	$opt{'LINTIAN_ROOT'} = "$cwd/$LINTIAN_ROOT";
+	$opt{'LINTIAN_ROOT'} = "$cwd/$opt{'LINTIAN_ROOT'}";
     }
 } else {
     $opt{'LINTIAN_ROOT'} = '/usr/share/lintian';
@@ -559,8 +564,11 @@ if ($> == 0 and not $allow_root) {
 }
 
 # environment variables overwrite settings in conf file, so load them now
+# assuming they were not set by cmd-line options
 foreach my $var (@ENV_VARS) {
-    $opt{$var} = $ENV{$var} if $ENV{$var};
+    # note $opt{$var} will usually always exists due to the call to GetOptions
+    # so we have to use "defined" here
+    $opt{$var} = $ENV{$var} if $ENV{$var} && ! defined $opt{$var};
 }
 
 # search for configuration file if it was not set with --cfg
