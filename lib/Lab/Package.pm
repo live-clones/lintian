@@ -49,10 +49,12 @@ use base qw(Class::Accessor);
 use strict;
 use warnings;
 
+use Carp qw(croak);
 use File::Spec;
 
 use Util;
 use Lintian::Output qw(:messages); # debug_msg and warning
+use Lintian::Collect;
 use Lintian::Command qw();
 use Lab qw(:constants); # LAB_FORMAT
 
@@ -79,12 +81,13 @@ sub new{
     my ($class, $lab, $pkg_name, $pkg_version, $pkg_type, $pkg_path, $base_dir) = @_;
     my $self = {};
     bless $self, $class;
-    fail("$pkg_path does not exist.") unless( -e $pkg_path );
+    croak("$pkg_path does not exist.") unless( -e $pkg_path );
     $self->{pkg_name} = $pkg_name;
     $self->{pkg_version} = $pkg_version;
     $self->{pkg_path} = $pkg_path;
     $self->{pkg_type} = $pkg_type;
     $self->{lab} = $lab;
+    $self->{info} = undef; # load on demand.
     # ask the lab to find the base directory of this package.
     $self->{base_dir} = $base_dir;
     # Figure out our unpack level and such
@@ -124,7 +127,36 @@ Returns the base directory of this package inside the lab.
 
 Lab::Package->mk_ro_accessors(qw(lab pkg_name pkg_version pkg_path pkg_type base_dir));
 
-=pod
+=item $lpkg->info()
+
+Returns the L<Lintian::Collect|info> object associated with this entry.
+
+=cut
+
+sub info {
+    my ($self) = @_;
+    my $info;
+    croak 'Cannot load info, extry does not exists' unless $self->entry_exists;
+    $info = $self->{info};
+    if ( ! defined $info ) {
+	$info = Lintian::Collect->new($self->pkg_name, $self->pkg_type, $self->base_dir);
+	$self->{info} = $info;
+    }
+    return $info;
+}
+
+
+=item $lpkg->clear_cache
+
+Clears any caches held; this includes discarding the L<Lintian::Collect|info> object.
+
+=cut
+
+sub clear_cache {
+    my ($self) = @_;
+    delete $self->{info};
+}
+
 
 =item $lpkg->delete_lab_entry()
 
@@ -137,9 +169,8 @@ sub delete_lab_entry {
     my ($self) = @_;
     my $basedir = $self->{base_dir};
     return 1 if( ! -e $basedir);
-    debug_msg(1, "Removing package in lab ...");
+    $self->clear_cache;
     unless(delete_dir($basedir)) {
-        warning("cannot remove directory $basedir: $!");
         return 0;
     }
     return 1;
@@ -203,7 +234,7 @@ sub create_entry(){
     } elsif ($pkg_type eq 'source'){
 	$link = "$base_dir/dsc";
     } else {
-	fail "create_entry cannot handle $pkg_type";
+	croak "create_entry cannot handle $pkg_type";
     }
     unless (symlink($pkg_path, $link)){
 	# "undo" the mkdir if the symlink fails.
@@ -222,7 +253,7 @@ sub create_entry(){
 	    my @t = split(/\s+/o,$fs);
 	    next if ($t[2] =~ m,/,o);
 	    symlink("$dir/$t[2]", "$base_dir/$t[2]")
-		or fail("cannot symlink file $t[2]: $!");
+		or croak("cannot symlink file $t[2]: $!");
 	}
     }
     return 1;
@@ -288,15 +319,12 @@ sub update_status_file{
     my $fd;
     my $stf = "$self->{base_dir}/.lintian-status";
     # We are not unpacked => no place to put the status file.
-    return 0 if $self->entry_exists();
+    return 0 unless $self->entry_exists();
     $pkg_path = $self->{pkg_path};
     unless( @stat = stat($pkg_path)){
-	warning("cannot stat file $pkg_path: $!",
-		"skipping creation of status file");
 	return -1;
     }
     unless(open($fd, '>', $stf)){
-	warning("could not create status file $stf for package $self->{pkg_name}: $!");
 	return -1;
     }
 
@@ -316,7 +344,6 @@ sub remove_status_file{
     my $stfile = "$self->{base_dir}/.lintian-status";
     return 1 unless( -e $stfile );
     if(!unlink($stfile)){
-	warning("cannot remove status file $stfile: $!");
 	return 0;
     }
     return 1;
@@ -391,7 +418,7 @@ sub _check {
 	    my $pkg_name = $self->{pkg_name};
 	    my $lab = $self->{lab};
 	    v_msg("Removing $pkg_name");
-	    $self->delete_lab_entry() or die("Could not remove $pkg_name from lab.");
+	    $self->delete_lab_entry() or croak("Could not remove outdated/corrupted $pkg_name entry from lab.");
 	}
     }
     return 1;

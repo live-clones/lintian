@@ -135,11 +135,7 @@ sub info{
         my $lpkg = $self->lab_pkg();
         fail "Need a Lab package before creating a Lintian::Collect\n"
             unless defined $lpkg;
-        # load only if we need it
-        require Lintian::Collect;
-        $info = Lintian::Collect->new($self->pkg_name(), $self->pkg_type(),
-            $lpkg->base_dir());
-        $self->{info} = $info;
+        return $lpkg->info;
     }
     return $info;
 }
@@ -153,7 +149,8 @@ Mostly useful when checking a lot of packages (e.g. on lintian.d.o).
 
 sub clear_cache {
     my ($self) = @_;
-    delete $self->{info};
+    my $lpkg = $self->lab_pkg;
+    $lpkg->clear_cache if defined $lpkg;
 }
 
 =item $proc->lab_pkg([$lpkg])

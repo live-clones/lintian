@@ -1043,7 +1043,9 @@ if($action eq 'remove'){
 	    }
 	    $TAGS->file_start($pkg_path, $pkg_name, $pkg_ver,
 			      $proc->pkg_arch(), $pkg_type);
+	    debug_msg(1, "Removing package in lab ...");
 	    unless($lpkg->delete_lab_entry()){
+		warning("cannot remove entry for $pkg_name: $!");
 		$exit_code = 2;
 	    }
 	}
@@ -1521,7 +1523,9 @@ sub unpack_group {
 
 		# collect info
 		$collmap->select($req);
-		$lpkg->remove_status_file();
+		unless ($lpkg->remove_status_file()) {
+		    warning("cannot remove status file $pkg_name: $!");
+		}
 		debug_msg(1, "Collecting info: $coll ...");
 		my $script = "$opt{'LINTIAN_ROOT'}/collection/$ci->{'script'}";
 		my $cmd = Lintian::Command::Simple->new();
@@ -1570,7 +1574,9 @@ sub unpack_group {
 
 	    # All successful, make sure to record it so we do not recheck the same package
 	    # in a later run (mostly for archive-wide checks).
-	    $lpkg->update_status_file($LINTIAN_VERSION);
+	    if ($lpkg->update_status_file($LINTIAN_VERSION) < 1) {
+		warning("could not create status file for package $pkg_name: $!");
+	    }
 	}
     }
     return 1;
@@ -1668,7 +1674,9 @@ sub process_group {
 
 	# All successful, make sure to record it so we do not recheck the same package
 	# in a later run (mostly for archive-wide checks).
-	$lpkg->update_status_file($LINTIAN_VERSION);
+	if ($lpkg->update_status_file($LINTIAN_VERSION) < 1) {
+	    warning("could not create status file for package $pkg_name: $!");
+	}
 
     } # end foreach my $proc ($group->get_processable())
 
