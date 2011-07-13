@@ -219,7 +219,7 @@ sub get_entry {
                               $pkg_type, $pdata->{'file'}, $lpdir);
     unless ($lpkg->entry_exists) {
         # State is outdated (or $lpkg auto-removed itself)
-        $state->delete($pkg_name);
+        $self->_lpkg_removed($pkg_type, $pkg_name);
         return;
     }
     return $lpkg;
@@ -247,6 +247,17 @@ sub _get_state{
     $state->read_list($file);
     $self->{state}->{$pkg_type} = $state;
     return $state;
+}
+
+# $lab->_lpkg_removed($pkg_type, $pkg_name)
+#
+# Internal sub to notify the lab that a package was removed from the lab
+# Updates the state cache
+sub _lpkg_removed {
+    my ($self, $pkg_type, $pkg_name) = @_;
+    my $state = $self->_get_state($pkg_type);
+    $state->delete($pkg_name);
+    return 1;
 }
 
 # $lab->write_state()

@@ -173,6 +173,7 @@ sub delete_lab_entry {
     unless(delete_dir($basedir)) {
         return 0;
     }
+    $self->{lab}->_lpkg_removed($self->pkg_type, $self->pkg_name);
     return 1;
 }
 

@@ -1079,6 +1079,8 @@ if($action eq 'remove'){
 	}
     }
     $TAGS->file_end();
+    # Write the lab state to the disk, so it remembers they are gone.
+    $LAB->write_state();
     exit $exit_code;
 }
 # }}}
@@ -1238,6 +1240,8 @@ foreach my $gname (sort $pool->get_group_names()) {
     }
 }
 
+# Write the lab state to the disk, so it remembers the new packages
+$LAB->write_state();
 $TAGS->file_end();
 
 if ($action eq 'check' and not $opt{'no-override'} and not $opt{'show-overrides'}) {
