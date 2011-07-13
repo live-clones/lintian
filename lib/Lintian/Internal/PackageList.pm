@@ -24,8 +24,6 @@ use strict;
 use warnings;
 
 use Carp qw(croak);
-# used for the file headers (for now)
-use Read_pkglists;
 
 =head1 NAME
 
@@ -60,6 +58,17 @@ the Lab as caches.
 =over 4
 
 =cut
+
+# these banner lines have to be changed with every incompatible change of the
+# binary and source list file formats
+## NB: If bumping the BINLIST_FORMAT, remember to kill the UDEB fall back
+##     see read_bin_list
+use constant BINLIST_FORMAT => "Lintian's list of binary packages in the archive--V4";
+use constant SRCLIST_FORMAT => "Lintian's list of source packages in the archive--V4";
+
+# Previously udeb-files had a different format; allow parsing a udeb file as
+# a binary file V4, assuming that is still the binary format at the time.
+my $UDEBLIST_FORMAT = "Lintian's list of udeb packages in the archive--V3";
 
 # List of fields in the formats and the order they appear in
 #  - for internal usage to read and write the files
@@ -278,9 +287,12 @@ sub _do_read_file {
     my $hd = <$fd>;
     chop $hd;
     unless ($hd eq $header) {
-        ### FIXME: udeb fallback
-        close $fd;
-        croak "Unknown/unsupported file format ($hd)";
+      # accept the UDEB 3 header as alternative to the BIN 4 file
+      if ($hd ne $UDEBLIST_FORMAT || BINLIST_FORMAT !~ m/archive--V4$/o) {
+          close($fd);
+          croak "Unknown/unsupported file format ($hd)";
+      }
+      # ok - was an UDEB 3 file, which is a BIN 4 file with a different header
     }
 
     while ( my $line = <$fd> ) {
