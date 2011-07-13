@@ -23,7 +23,9 @@ use strict;
 use warnings;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
+use Lintian::Internal::PackageList;
 use Lintian::Relation::Version qw(versions_lte);
+use Util;
 
 # turn file buffering off:
 $| = 1;
@@ -67,10 +69,7 @@ unless ($output_file) {
     exit 1;
 }
 
-# import perl libraries
-use lib "$ENV{'LINTIAN_ROOT'}/lib";
-use Read_pkglists;
-use Util;
+
 
 # get variables out of environment
 my $LINTIAN_ARCHIVEDIR = $ENV{'LINTIAN_ARCHIVEDIR'};
@@ -80,22 +79,19 @@ my $LINTIAN_AREA = $ENV{'LINTIAN_AREA'};
 my $LINTIAN_LAB = $ENV{'LINTIAN_LAB'};
 
 # read old list file (this command does nothing if the file does not exist)
-my $ref = {};
+my $plist = Lintian::Internal::PackageList->new($type);
+# This stores all the new ones (allows us to use $plist to find old entries)
+my $nlist = Lintian::Internal::PackageList->new($type);
 # ignore the contents if the contents cannot be read - that is what we
 # used to do!
-eval { $ref = read_bin_list($output_file) };
-my %binary_info = %$ref;
+eval { $plist->read_list($output_file) };
 
 my %pkgfile;
 # map filenames to package names
-for my $pkg (keys %binary_info) {
-    $pkgfile{$binary_info{$pkg}->{'file'}} = $pkg;
+for my $pkg ($plist->get_all) {
+    my $entry = $plist->get($pkg);
+    $pkgfile{$entry->{'file'}} = $pkg;
 }
-
-# open output file
-open(OUT, '>', $output_file)
-    or fail("cannot open list file $output_file for writing: $!");
-print OUT Read_pkglists::BINLIST_FORMAT. "\n";
 
 # parse Packages file to get list of packages
 my @packages_files;
@@ -116,8 +112,8 @@ foreach my $area (split /\s*,\s*/,$LINTIAN_AREA) {
     push @packages_files, \%hash;
 }
 
-my %packages;
 my $total = 0;
+my %status_map;
 
 foreach my $packages_file (@packages_files) {
     my $pkgs_file = $packages_file->{'file'};
@@ -159,7 +155,7 @@ foreach my $packages_file (@packages_files) {
 	if (exists $pkgfile{$deb_file}) {
 	    # yes!
 	    $pkg = $pkgfile{$deb_file};
-	    $data = $binary_info{$pkg};
+	    $data = $plist->get($pkg);
 
 	    # file changed since last run?
 	    if ($timestamp == $data->{'timestamp'}) {
@@ -167,7 +163,7 @@ foreach my $packages_file (@packages_files) {
 		$status = 'unchanged';
 	    } else {
 		$status = 'changed';
-		delete $binary_info{$pkg};
+		$plist->delete($pkg);
 	    }
 	} else {
 	    # new package, get info
@@ -182,8 +178,8 @@ foreach my $packages_file (@packages_files) {
 
 	# Check for duplicates.	 In the case of a duplicate, we take the one
 	# with the latest version.
-	if (exists $packages{$pkg}) {
-	    if (versions_lte($data->{version}, $packages{$pkg}{version})) {
+	if ($nlist->get($pkg)) {
+	    if (versions_lte($data->{version}, $nlist->get($pkg)->{version})) {
 		next;
 	    }
 	}
@@ -201,34 +197,25 @@ foreach my $packages_file (@packages_files) {
 	$data->{file} = $deb_file;
 	$data->{timestamp} = $timestamp;
 	$data->{area} = $packages_file->{area};
-	$data->{status} = $status;
-	$packages{$pkg} = $data;
+	$status_map{$pkg} = $status;
+	$nlist->set($pkg, $data);
 
-	# remove record from hash
-	delete $binary_info{$pkg} if $status eq 'unchanged';
+	# remove record
+	plist->delete($pkg) if $status eq 'unchanged';
 	$total++;
     }
     close(IN) or fail("cannot close input pipe: $!");
 }
-for my $pkg (sort keys %packages) {
-    print OUT join(';',
-		   $pkg,
-		   $packages{$pkg}{version},
-		   $packages{$pkg}{source},
-		   $packages{$pkg}{'source-version'},
-		   $packages{$pkg}{file},
-		   $packages{$pkg}{timestamp},
-		   $packages{$pkg}{area}
-		  ),"\n";
-    printf "N: Listed %s $type package %s %s\n", $packages{$pkg}{status},
-	$pkg, $packages{$pkg}{version} if $verbose;
+$nlist->write_list($output_file);
+foreach my $pkg (sort $nlist->get_all) {
+    printf "N: Listed %s $type package %s %s\n", $status_map{$pkg},
+        $pkg, $nlist->get($pkg)->{version} if $verbose;
 }
-close(OUT) or fail("cannot close output pipe: $!");
 
 if ($verbose) {
-    # All packages that are still included in %binary_info have disappeared
+    # All packages that are still included in $plist have disappeared
     # from the archive.
-    for my $pkg (sort keys %binary_info) {
+    for my $pkg (sort $plist->get_all) {
 	print "N: Removed $type package $pkg from list\n";
     }
     printf "N: Listed %d $type packages\n",$total;

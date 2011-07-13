@@ -23,6 +23,7 @@ use strict;
 use warnings;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
+use Lintian::Internal::PackageList;
 use Lintian::Relation::Version qw(versions_lte);
 
 # turn file buffering off:
@@ -60,11 +61,6 @@ unless ($output_file) {
   exit 1;
 }
 
-# import perl libraries
-use lib "$ENV{'LINTIAN_ROOT'}/lib";
-use Read_pkglists;
-use Util;
-
 # get variables out of environment
 my $LINTIAN_ARCHIVEDIR = $ENV{'LINTIAN_ARCHIVEDIR'};
 my $LINTIAN_DIST = $ENV{'LINTIAN_DIST'};
@@ -72,21 +68,20 @@ my $LINTIAN_LAB = $ENV{'LINTIAN_LAB'};
 my $LINTIAN_AREA = $ENV{'LINTIAN_AREA'};
 
 # read old list file (this command does nothing if the file does not exist)
-my $ref = {};
+my $plist = Lintian::Internal::PackageList->new('source');
+my $nlist = Lintian::Internal::PackageList->new('source');
 # ignore the contents if the contents cannot be read - that is what we
 # used to do!
-eval { $ref = read_src_list($output_file) };
-my %source_info = %$ref;
+eval { $plist->read_list($output_file) };
+
+my %status_map;
 
 my %pkgfile;
 # map filenames to package names
-for my $pkg (keys %source_info) {
-  $pkgfile{$source_info{$pkg}->{'file'}} = $pkg;
+for my $pkg ($plist->get_all) {
+    my $entry = $plist->get($pkg);
+    $pkgfile{$entry->{'file'}} = $pkg;
 }
-
-# open output file
-open(OUT, '>', $output_file) or fail("cannot open list file $output_file for writing: $!");
-print OUT Read_pkglists::SRCLIST_FORMAT ."\n";
 
 # parse Sources.gz to get list of packages
 my @sources;
@@ -99,7 +94,6 @@ foreach my $area (split /\s*,\s*/,$LINTIAN_AREA) {
     push @sources, \%hash;
 }
 
-my %packages;
 my $total = 0;
 
 foreach my $sources (@sources) {
@@ -137,7 +131,7 @@ foreach my $sources (@sources) {
     if (exists $pkgfile{$dsc_file}) {
       # yes!
       $pkg = $pkgfile{$dsc_file};
-      $data = $source_info{$pkg};
+      $data = $plist->get($pkg);
 
       # file changed since last run?
       if ($timestamp == $data->{'timestamp'}) {
@@ -145,7 +139,7 @@ foreach my $sources (@sources) {
         $status = 'unchanged';
       } else {
         $status = 'changed';
-        delete $source_info{$pkg};
+        $plist->delete($pkg);
       }
     } else {
       # new package, get info
@@ -175,8 +169,8 @@ foreach my $sources (@sources) {
 
     # Check for duplicates.  In the case of a duplicate, we take the one with
     # the latest version.
-    if (exists $packages{$pkg}) {
-      if (versions_lte($data->{version}, $packages{$pkg}{version})) {
+    if ($nlist->get($pkg)) {
+      if (versions_lte($data->{version}, $nlist->get($pkg)->{version})) {
         next;
       }
     }
@@ -185,42 +179,31 @@ foreach my $sources (@sources) {
     $data->{file} = $dsc_file;
     $data->{area} = $sources->{area};
     $data->{timestamp} = $timestamp;
-    $data->{status} = $status;
     for (qw(version maintainer uploaders architecture standards-version
             binary files)) {
       $data->{$_} =~ tr/;\n/_ / if $data->{$_};
     }
-    $packages{$pkg} = $data;
+    $status_map{$pkg} = $status;
+    $nlist->set($pkg, $data);
 
     # remove record from hash
-    delete $source_info{$pkg} if $status eq 'unchanged';
+    $plist->delete($pkg) if $status eq 'unchanged';
     $total++;
   }
   close(IN) or fail("cannot close input pipe: $!");
 }
-for my $pkg (sort keys %packages) {
-  print OUT join(';',
-                 $pkg,
-                 $packages{$pkg}{version},
-                 $packages{$pkg}{maintainer},
-                 $packages{$pkg}{uploaders} || '',
-                 $packages{$pkg}{architecture},
-                 $packages{$pkg}{area},
-                 $packages{$pkg}{'standards-version'},
-                 $packages{$pkg}{binary},
-                 $packages{$pkg}{files},
-                 $packages{$pkg}{file},
-                 $packages{$pkg}{timestamp},
-                ),"\n";
-  printf "N: Listed %s source package %s %s\n", $packages{$pkg}{status},
-      $pkg, $packages{$pkg}{version} if $verbose;
+
+$nlist->write_list($output_file);
+
+foreach my $pkg (sort $nlist->get_all) {
+  printf "N: Listed %s source package %s %s\n", $status_map{$pkg},
+      $pkg, $nlist->get($pkg)->{version} if $verbose;
 }
-close(OUT) or fail("cannot close output pipe: $!");
 
 if ($verbose) {
   # All packages that are still included in %source_info have disappeared from
   # the archive.
-  for my $pkg (sort keys %source_info) {
+  for my $pkg (sort $plist->get_all) {
     print "N: Removed source package $pkg from list\n";
   }
   printf "N: Listed %d source packages\n",$total;
