@@ -55,6 +55,9 @@ lintian (2.5.2) UNRELEASED; urgency=low
     + [NT] Fix a broken regex that caused Lintian skip brace
       expansion checks for some debhelper files.  Thanks to
       Jakub Wilk for the report and the patch.  (Closes: #632883)
+  * checks/debian-source-dir.desc:
+    + [NT] Added missing word in the tag description for
+      git-patches-not-exported.
   * checks/duplicate-files:
     + [NT] Exclude  __init__.py files from the check as they are
       required even if they are empty.  Thanks to Daniele Tricoli
