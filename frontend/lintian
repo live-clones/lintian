@@ -72,6 +72,7 @@ qw(
     LINTIAN_ARCHIVEDIR
     LINTIAN_AREA
     LINTIAN_DIST
+    LINTIAN_PROFILE
     LINTIAN_LAB
 ));
 
@@ -594,7 +595,7 @@ if ($opt{'LINTIAN_CFG'}) {
 	s,\~/,$ENV{'HOME'}/,go;
 
 	my $found = 0;
-	foreach my $var (VARS) {
+	foreach my $var (@ENV_VARS) {
 	    $var = "LINTIAN_$var";
 	    if (m/^\s*$var\s*=\s*(.*\S)\s*$/i) {
 		if (exists $conf_opt{$var}){
