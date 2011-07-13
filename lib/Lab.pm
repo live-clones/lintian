@@ -24,6 +24,8 @@ use strict;
 use warnings;
 use base qw(Exporter);
 
+use Carp qw(croak);
+
 # Lab format Version Number increased whenever incompatible changes
 # are done to the lab so that all packages are re-unpacked
 use constant LAB_FORMAT => 10;
@@ -45,6 +47,7 @@ use Util;
 # Only used by _populate_with_dist; remove when not needed
 use Lintian::Output qw(:messages);
 use Lintian::Command qw(spawn);
+use Lintian::Internal::PackageList;
 use Lab::Package;
 
 use Cwd;
@@ -61,7 +64,9 @@ my $LINTIAN_ROOT = $main::LINTIAN_ROOT;
 sub new {
     my ( $class, $dir ) = @_;
 
-    my $self = {};
+    my $self = {
+        state => {},
+    };
     bless $self, $class;
 
     $self->_init( $dir );
@@ -196,6 +201,77 @@ sub _populate_with_dist {
     return 1;
 }
 
+# $lab->get_entry($pkg_type, $pkg_name)
+#
+# Fetches an entry from the Lab
+#
+# On success this returns a Lab::Package, on error it returns C<undef>
+sub get_entry {
+    my ($self, $pkg_type, $pkg_name) = @_;
+    my $state = $self->_get_state($pkg_type);
+    my $lpkg;
+    my $pdata = $state->get($pkg_name);
+    my $lpdir;
+    return unless $pdata;
+
+    $lpdir = $self->_get_lpkg_dir($pkg_type, $pkg_name, $pdata->{'version'});
+    $lpkg = Lab::Package->new($self, $pkg_name, $pdata->{'version'},
+                              $pkg_type, $pdata->{'file'}, $lpdir);
+    unless ($lpkg->entry_exists) {
+        # State is outdated (or $lpkg auto-removed itself)
+        $state->delete($pkg_name);
+        return;
+    }
+    return $lpkg;
+}
+
+# Internal sub to find the directory in the Lab for a Lab entry
+sub _get_lpkg_dir {
+    my ($self, $pkg_type, $pkg_name, $pkg_version, $pkg_arch) = @_;
+    my $dir = $self->{dir} . "/$pkg_type/$pkg_name";
+    $dir .= '/' . $pkg_version if $self->_supports_multiple_versions();
+    $dir .= '/' . $pkg_arch if $self->_supports_multiple_architectures();
+    return $dir;
+}
+
+# $lab->_load_state($pkg_type)
+#
+# Internal sub to load the state for a package type
+sub _get_state{
+    my ($self, $pkg_type) = @_;
+    my $state = $self->{state}->{$pkg_type};
+    return $state if defined $state;
+
+    my $file = $self->{dir} . "/info/${pkg_type}-packages";
+    $state = Lintian::Internal::PackageList->new($pkg_type);
+    $state->read_list($file);
+    $self->{state}->{$pkg_type} = $state;
+    return $state;
+}
+
+# $lab->write_state()
+#
+# Flushes the state data to the disk; this is important for static
+# labs to ensure that the package lists are in sync with the contents.
+#
+# Will croak if it fails.
+#
+# Note: this is a "no-op" for temp labs, since they are not intended to
+# be reused later.
+sub write_state {
+    my ($self) = @_;
+    my $infodir;
+    return 1 if $self->{mode} eq 'temporary';
+    croak "Lab does not exists" unless $self->is_lab;
+    $infodir = $self->{dir} . "/info";
+    foreach my $pkg_type (keys %{$self->{'state'}}){
+        my $state = $self->{$pkg_type};
+        next unless $state->dirty;
+        $state->write_list("$infodir/${pkg_type}-packages");
+    }
+    return 1;
+}
+
 # Deletes the lab if (and only if) it exists and is a static lab
 # Returns a truth value on success
 sub delete_static {
@@ -288,6 +364,7 @@ sub _do_delete {
         'udeb' => 'udeb',
     );
 
+    # deprecated - needs a reasonable public API replacement
     sub get_lab_package {
         my ($self, $pkg_name, $pkg_version, $pkg_arch, $pkg_type, $pkg_path) = @_;
         my $vpkg_type = $pkg_types{$pkg_type};
@@ -295,9 +372,7 @@ sub _do_delete {
         my $dir;
         fail("Unknown package type $pkg_type") unless($vpkg_type);
         fail("Could not resolve the path of $pkg_path") unless($realpath);
-        $dir = $self->{dir} . '/' . $vpkg_type . '/' . $pkg_name;
-        $dir .= '/' . $pkg_version if $self->_supports_multiple_versions();
-        $dir .= '/' . $pkg_arch if $self->_supports_multiple_architectures();
+        $dir = $self->_get_lpkg_dir($vpkg_type, $pkg_name, $pkg_version, $pkg_arch);
         return new Lab::Package($self, $pkg_name, $pkg_version, $vpkg_type,
                                 $realpath, $dir);
 
