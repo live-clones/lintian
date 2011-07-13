@@ -40,6 +40,7 @@ if ($#ARGV == -1) {
 my $verbose = 0;
 my $udeb = 0;
 my $output_file = undef;
+my $type = 'binary';
 
 while (my $arg = shift) {
     if ($arg =~ s,^-,,o) {
@@ -47,6 +48,7 @@ while (my $arg = shift) {
 	    $verbose = 1;
 	} elsif ($arg eq 'u') {
 	    $udeb = 1;
+	    $type = 'udeb';
 	} else {
 	    print STDERR "error: unknown command line argument: $arg\n";
 	    exit 1;
@@ -218,7 +220,7 @@ for my $pkg (sort keys %packages) {
 		   $packages{$pkg}{timestamp},
 		   $packages{$pkg}{area}
 		  ),"\n";
-    printf "N: Listed %s binary package %s %s\n", $packages{$pkg}{status},
+    printf "N: Listed %s $type package %s %s\n", $packages{$pkg}{status},
 	$pkg, $packages{$pkg}{version} if $verbose;
 }
 close(OUT) or fail("cannot close output pipe: $!");
@@ -227,9 +229,9 @@ if ($verbose) {
     # All packages that are still included in %binary_info have disappeared
     # from the archive.
     for my $pkg (sort keys %binary_info) {
-	print "N: Removed binary package $pkg from list\n";
+	print "N: Removed $type package $pkg from list\n";
     }
-    printf "N: Listed %d binary packages\n",$total;
+    printf "N: Listed %d $type packages\n",$total;
 }
 
 exit 0;
@@ -242,7 +244,7 @@ sub safe_get_deb_info {
     if ($@) {
 	# error!
 	print STDERR "$@\n";
-	print "E: general: bad-binary-package $_[0]\n";
+	print "E: general: bad-$type-package $_[0]\n";
 	return;
     }
     $data->{'source'} or ($data->{'source'} = $data->{'package'});
