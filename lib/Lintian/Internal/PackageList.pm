@@ -65,6 +65,7 @@ the Lab as caches.
 ##     see read_bin_list
 use constant BINLIST_FORMAT => "Lintian's list of binary packages in the archive--V4";
 use constant SRCLIST_FORMAT => "Lintian's list of source packages in the archive--V4";
+use constant CHGLIST_FORMAT => "Lintian's list of changes packages in the archive--V1";
 
 # Previously udeb-files had a different format; allow parsing a udeb file as
 # a binary file V4, assuming that is still the binary format at the time.
@@ -96,6 +97,13 @@ my @BIN_FILE_FIELDS = (
         'file',
         'timestamp',
         'area',
+    );
+# changes packages lists
+my @CHG_FILE_FIELDS = (
+        'source',
+        'version',
+        'file',
+        'timestamp',
     );
 
 =item Lintian::Internal::PackageList->new($pkg_type)
@@ -157,8 +165,8 @@ sub read_list {
         $ehd = BINLIST_FORMAT;
         $fields = \@BIN_FILE_FIELDS;
     } elsif ($self->{'type'} eq 'changes') {
-        ## FIXME:
-        return 0;
+        $ehd = CHGLIST_FORMAT;
+        $fields = \@CHG_FILE_FIELDS;
     }
     $self->{'state'} = $self->_read_state($file, $ehd, $fields);
     $self->_mark_dirty(0);
@@ -186,8 +194,8 @@ sub write_list {
         $header = BINLIST_FORMAT;
         $fields = \@BIN_FILE_FIELDS;
     } elsif ($self->{'type'} eq 'changes') {
-        ## FIXME:
-        return 0;
+        $header = CHGLIST_FORMAT;
+        $fields = \@CHG_FILE_FIELDS;
     }
     open my $fd, '>', $file or croak "open $file: $!";
     print $fd "$header\n";
@@ -207,7 +215,7 @@ entry is not known.
 
 =cut
 
-sub get{
+sub get {
     my ($self, $pkg_name) = @_;
     return $self->{'state'}->{$pkg_name};
 }
@@ -218,7 +226,7 @@ Creates (or overwrites) the entry for $pkg_name.
 
 =cut
 
-sub set{
+sub set {
     my ($self, $pkg_name, $data) = @_;
     my $fields;
     my $pdata;
@@ -228,8 +236,7 @@ sub set{
     } elsif ($pkg_type eq 'binary' || $pkg_type eq 'udeb') {
         $fields = \@BIN_FILE_FIELDS;
     } else {
-        ## FIXME
-        return 1;
+        $fields = \@CHG_FILE_FIELDS;
     }
 
     $pdata = map { $_ => $data->{$_} } @$fields;
