@@ -24,6 +24,7 @@ use strict;
 use warnings;
 
 use Carp qw(croak);
+use Lintian::Internal::PackageListDiff;
 
 =head1 NAME
 
@@ -268,6 +269,29 @@ Returns the all the entry names in the list
 sub get_all {
     my ($self) = @_;
     return keys %{ $self->{'state'} };
+}
+
+sub diff {
+    my ($self, $olist) = @_;
+    croak "Diffing incompatible types" unless $self->{'type'} eq $olist->{'type'};
+    my %ocopy = %{ $olist->{'state'} };
+    my @changed;
+    my @added;
+    my @removed;
+    my $sstate = $self->{'state'};
+    foreach my $sen (keys %$sstate) {
+        my $sentry = $sstate->{$sen};
+        my $oentry = $ocopy{$sen};
+        unless (defined $oentry) {
+            push @added, $sen;
+            next;
+        }
+        ### FIXME: handle changed
+        delete $ocopy{$sen}
+    }
+    @removed = keys %ocopy;
+    return Lintian::Internal::PackageListDiff->_new($self->{'type'}, $self, $olist,
+                                                   \@added, \@removed, \@changed);
 }
 
 ### Internal methods ###
