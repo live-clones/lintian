@@ -1,4 +1,4 @@
-Last generated 2011-07-08
+Last generated 2011-07-15
 
 The following tags are not tested by the test suite:
 
@@ -136,7 +136,6 @@ shared-libs ldconfig-symlink-is-not-a-symlink
 shared-libs ldconfig-symlink-referencing-wrong-file
 shared-libs non-dev-pkg-with-shlib-symlink
 shared-libs pkg-has-shlibs-control-file-but-no-actual-shared-libs
-shared-libs shlib-calls-exit
 shared-libs shlib-with-bad-permissions
 shared-libs shlib-with-executable-stack
 shared-libs shlib-without-PT_GNU_STACK-section

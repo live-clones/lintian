@@ -1,0 +1,6 @@
+Testname: shared-libs-exit-fork
+Sequence: 6000
+Version: 1.0
+Description: Test checks related to libs invoking both exit(3) and fork(2)
+Test-Against:
+ shlib-calls-exit
