@@ -1,0 +1,12 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@
+
+override_dh_perl:
+
+override_dh_builddeb:
+	# Work around debhelper bug (triggers useless call to ldconfig)
+	rm -f debian/*/DEBIAN/postinst debian/*/DEBIAN/postrm
+	dh_builddeb
+
