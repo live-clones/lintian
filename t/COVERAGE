@@ -192,8 +192,6 @@ debconf using-imperative-form-in-templates
 debconf using-question-in-extended-description-in-templates
 
 fields build-depends-indep-without-arch-indep
-fields wrong-debian-qa-address-set-as-maintainer
-fields wrong-debian-qa-group-name
 
 files bad-permissions-for-ali-file
 files desktop-file-in-wrong-dir
@@ -434,7 +432,6 @@ filenames
 foo++
   debian-changelog-file-uses-obsolete-national-encoding
   debian-control-file-uses-obsolete-national-encoding
-  wrong-debian-qa-address-set-as-maintainer
 
 libbaz
   ldconfig-symlink-missing-for-shlib
@@ -467,7 +464,6 @@ maintainer-scripts
   prerm-calls-updaterc.d
   qa-upload-has-incorrect-version-number
   update-alternatives-remove-called-in-postrm
-  wrong-debian-qa-group-name
 
 relations
 
