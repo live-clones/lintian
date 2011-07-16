@@ -22,7 +22,7 @@ Description: {$description}
 
 Package: lib{$srcpkg}
 Architecture: {$architecture}
-Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Depends: $\{shlibs:Depends\}, $\{misc:Depends\}, libdb1-compat
 Recommends: debconf-doc
 Section: libs
 Description: {$description} -- fake library

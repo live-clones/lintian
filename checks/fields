@@ -634,7 +634,7 @@ if (($type eq 'binary') || ($type eq 'udeb')) {
 				    if ($d_pkg eq 'awk' && ! $d_version->[0] && &$is_dep_field($field) && $pkg ne 'base-files');
 
 				tag 'depends-on-libdb1-compat', $field
-				    if ($d_pkg eq 'libdb1-compat' && $pkg !~ /^libc(?:6|6.1|0.3)/ && $field =~ /^(pre-)depends$/);
+				    if ($d_pkg eq 'libdb1-compat' && $pkg !~ /^libc(?:6|6.1|0.3)/ && $field =~ m/^(?:pre-)?depends$/o);
 
 				tag 'depends-on-python-minimal', $field,
 				    if ($d_pkg =~ /^python[\d.]*-minimal$/ && &$is_dep_field($field)

@@ -68,6 +68,8 @@ lintian (2.5.2) UNRELEASED; urgency=low
     + [NT] Added python3-dev and rmeoved python2.{4,5} from
       $PYTHON_DEV.  Thanks to Jakub Wilk for the report and the
       patch.  (Closes: #633044)
+    + [NT] Fixed a bug where the libdb1-compat tag only triggered
+      if libdb1-compat was listed in Pre-Depends.
   * checks/filename-length{,.desc}:
     + [NT] New file that checks the length of the package file
       names.  (Closes: #631656)
