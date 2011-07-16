@@ -1,0 +1,8 @@
+#!/bin/sh
+
+set -e
+
+DDIR="$1/debian/"
+iconv -f UTF-8 -t ISO-8859-1 "$DDIR/changelog" > "$DDIR/changelog.enc"
+mv -f "$DDIR/changelog.enc" "$DDIR/changelog"
+

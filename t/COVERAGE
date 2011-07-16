@@ -152,7 +152,6 @@ changelog-file changelog-file-missing-in-native-package
 changelog-file changelog-file-not-compressed
 changelog-file debian-changelog-file-contains-invalid-email-address
 changelog-file debian-changelog-file-missing-or-wrong-name
-changelog-file debian-changelog-file-uses-obsolete-national-encoding
 changelog-file debian-news-file-not-compressed
 changelog-file wrong-name-for-debian-news-file
 
@@ -421,7 +420,6 @@ filenames
   wrong-name-for-debian-news-file
 
 foo++
-  debian-changelog-file-uses-obsolete-national-encoding
   debian-control-file-uses-obsolete-national-encoding
 
 libbaz

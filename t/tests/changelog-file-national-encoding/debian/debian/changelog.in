@@ -1,0 +1,9 @@
+{$srcpkg} ({$version}) UNRELEASED; urgency=low
+
+  * Lintian Test Suite.
+  * Test: {$testname}
+  * Fun fact: did you know that "Rød grød med fløde" has the same
+    colours as the danish flag.
+
+ -- {$author}  {$date}
+
