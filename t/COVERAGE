@@ -155,8 +155,6 @@ changelog-file debian-changelog-file-missing-or-wrong-name
 changelog-file debian-news-file-not-compressed
 changelog-file wrong-name-for-debian-news-file
 
-control-file debian-control-file-uses-obsolete-national-encoding
-
 copyright-file old-fsf-address-in-copyright-file
 
 debconf config-does-not-load-confmodule
@@ -420,7 +418,6 @@ filenames
   wrong-name-for-debian-news-file
 
 foo++
-  debian-control-file-uses-obsolete-national-encoding
 
 libbaz
   ldconfig-symlink-missing-for-shlib

@@ -1,0 +1,8 @@
+#!/bin/sh
+
+set -e
+
+DDIR="$1/debian/"
+iconv -f UTF-8 -t EUC-JP "$DDIR/control" > "$DDIR/control.enc"
+mv -f "$DDIR/control.enc" "$DDIR/control"
+
