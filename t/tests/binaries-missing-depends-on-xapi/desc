@@ -1,0 +1,8 @@
+Testname: binaries-missing-depends-on-xapi
+Sequence: 6000
+Version: 1.0
+Description: Test for missing perlapi depends
+Architecture: any
+Test-For:
+ missing-dependency-on-perlapi
+ missing-dependency-on-phpapi

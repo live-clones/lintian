@@ -1,6 +1,0 @@
-Testname: binaries-missing-depends-on-perlapi
-Sequence: 6000
-Version: 1.0
-Description: Test for missing perlapi depends
-Architecture: any
-Test-For: missing-dependency-on-perlapi
