@@ -1,0 +1,2 @@
+E: control-files-bad: control-file-has-bad-owner md5sums nobody/root != root/root
+E: control-files-bad: control-file-has-bad-permissions md5sums 0755 != 0644

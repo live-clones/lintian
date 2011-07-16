@@ -161,7 +161,6 @@ changelog-file wrong-name-for-debian-news-file
 
 control-file debian-control-file-uses-obsolete-national-encoding
 
-control-files control-file-has-bad-permissions
 control-files control-file-is-empty
 
 copyright-file old-fsf-address-in-copyright-file
@@ -438,7 +437,6 @@ foo++
   wrong-debian-qa-address-set-as-maintainer
 
 libbaz
-  control-file-has-bad-permissions
   ldconfig-symlink-missing-for-shlib
   missing-dependency-on-perlapi
   package-name-doesnt-match-sonames

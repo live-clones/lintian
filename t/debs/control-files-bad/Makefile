@@ -1,4 +1,4 @@
-name = control-file-bad-owner
+name = control-files-bad
 
 all:
 	echo '2.0' > debian-binary
@@ -9,6 +9,7 @@ all:
 	chown 0:0 control
 	chmod 644 control
 	md5sum usr/share/doc/$(name)/* > md5sums
+	chmod 755 md5sums
 	tar -czf control.tar.gz --owner=nobody control md5sums
 	ar rc $(name).deb \
 	    debian-binary control.tar.gz data.tar.gz

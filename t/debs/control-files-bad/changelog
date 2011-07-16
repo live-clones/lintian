@@ -1,4 +1,4 @@
-control-file-bad-owner (1.0) unstable; urgency=low
+control-files-bad (1.0) unstable; urgency=low
 
   * A Lintian test case.
 

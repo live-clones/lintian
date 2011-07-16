@@ -1,4 +1,4 @@
-Package: control-file-bad-owner
+Package: control-files-bad
 Version: 1.0
 Architecture: all
 Maintainer: Debian Lintian Maintainers <lintian-maint@debian.org>
