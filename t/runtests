@@ -626,7 +626,7 @@ sub generic_test_runner {
     runsystem('cp', '-rp', $testdir, $targetdir);
 
     msg_print 'building... ';
-    runsystem("cd $targetdir && make >../build.$test 2>&1");
+    runsystem("cd $targetdir && fakeroot make >../build.$test 2>&1");
 
     msg_print 'testing... ';
     runsystem_ok("$LINTIAN --allow-root --no-cfg -I -E $targetdir/*.$ext 2>&1"
