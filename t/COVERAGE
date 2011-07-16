@@ -191,8 +191,6 @@ debconf using-first-person-in-templates
 debconf using-imperative-form-in-templates
 debconf using-question-in-extended-description-in-templates
 
-fields build-depends-indep-without-arch-indep
-
 files bad-permissions-for-ali-file
 files desktop-file-in-wrong-dir
 files embedded-feedparser-library
@@ -381,7 +379,6 @@ debconf
 
 debug
   binary-with-bad-dynamic-table
-  build-depends-indep-without-arch-indep
   changelog-file-missing-in-native-package
   changelog-should-not-mention-nmu
   debug-file-should-use-detached-symbols

@@ -3,3 +3,4 @@ Sequence: 6000
 Version: 1.0
 Description: Test for B-D-I and no indep pkgs
 Test-For:
+ build-depends-indep-without-arch-indep
