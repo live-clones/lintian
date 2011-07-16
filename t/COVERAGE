@@ -18,9 +18,6 @@ changes-file bad-section-in-changes-file
 changes-file checksum-mismatch-in-changes-file
 changes-file file-size-mismatch-in-changes-file
 
-control-files not-allowed-control-file
-control-files unknown-control-file
-
 cruft source-contains-prebuilt-windows-binary
 
 deb-format tar-errors-from-data
@@ -160,8 +157,6 @@ changelog-file debian-news-file-not-compressed
 changelog-file wrong-name-for-debian-news-file
 
 control-file debian-control-file-uses-obsolete-national-encoding
-
-control-files control-file-is-empty
 
 copyright-file old-fsf-address-in-copyright-file
 
@@ -312,7 +307,6 @@ Breakdown of remaining tags in legacy test suite by test case:
 binary
   binary-has-unneeded-section
   changelog-file-not-compressed
-  control-file-is-empty
   debian-changelog-file-missing-or-wrong-name
   deprecated-kdelnk-file
   desktop-contains-deprecated-header
