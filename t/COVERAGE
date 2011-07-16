@@ -50,7 +50,6 @@ fields package-not-lowercase
 fields package-superseded-by-perl
 fields source-field-does-not-match-pkg-name
 fields unknown-field-in-dsc
-fields wrong-section-for-udeb
 
 files FSSTND-dir-in-var
 files backup-file-in-package
