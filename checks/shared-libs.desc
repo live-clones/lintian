@@ -135,6 +135,11 @@ Info: Although the package does not include any shared libraries, it does
  SONAMEs are set with something like <tt>gcc -Wl,-soname,libfoo.so.0</tt>,
  where 0 is the major version of the library. If your package uses libtool,
  then libtool invoked with the right options should be doing this.
+ .
+ Note this is sometimes triggered for packages with a private shared
+ library due to a bug in Debhelper.
+Ref: http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=204975,
+ http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=633853
 
 Tag: duplicate-entry-in-shlibs-control-file
 Severity: important
@@ -191,7 +196,10 @@ Severity: minor
 Certainty: certain
 Info: The postinst script calls ldconfig even though no shared libraries are
  installed in a directory controlled by the dynamic library loader.
-Ref: policy 8.1.1
+ .
+ Note this may be triggered by a bug in debhelper, that causes it to
+ auto-generate an ldconfig snippet for packages that does not need it.
+Ref: policy 8.1.1, http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=204975
 
 Tag: udeb-postinst-must-not-call-ldconfig
 Severity: important
@@ -204,7 +212,10 @@ Severity: minor
 Certainty: certain
 Info: The postrm script calls ldconfig even though no shared libraries are
  installed in a directory controlled by the dynamic library loader.
-Ref: policy 8.1.1
+ .
+ Note this may be triggered by a bug in debhelper, that causes it to
+ auto-generate an ldconfig snippet for packages that does not need it.
+Ref: policy 8.1.1, http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=204975
 
 Tag: postinst-must-call-ldconfig
 Severity: serious
