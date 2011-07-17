@@ -251,6 +251,12 @@ sub tag {
     unless ($self->{current}) {
         die "tried to issue tag $tag without starting a file";
     }
+    # Retrieve the tag metadata and display the tag if the configuration
+    # says to display it.
+    my $info = Lintian::Tag::Info->new($tag);
+    unless ($info) {
+        die "tried to issue unknown tag $tag";
+    }
     return if $self->suppressed($tag);
 
     # Clean up @extra and collapse it to a string.  Lintian code
@@ -260,12 +266,6 @@ sub tag {
     my $extra = join(' ', @extra);
     $extra = '' unless defined $extra;
 
-    # Retrieve the tag metadata and display the tag if the configuration
-    # says to display it.
-    my $info = Lintian::Tag::Info->new($tag);
-    unless ($info) {
-        die "tried to issue unknown tag $tag";
-    }
     my $overridden = $self->_check_overrides($tag, $extra);
     $self->_record_stats($tag, $info, $overridden);
     return if (defined($overridden) and not $self->{show_overrides});
