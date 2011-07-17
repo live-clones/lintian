@@ -199,6 +199,10 @@ lintian (2.5.2) UNRELEASED; urgency=low
     + [NT] Documented the new --profile option.  Note that the
       options --suppress-tags{,-from-file} now supresses tags
       in the active profile.
+    + [NT] Removed all refereces to "unpack-level".  All unpack
+      levels have been replaced by collections.
+    + [NT] Clarified that some command-line arguments are only
+      useful when using a static lintian lab.
   * man/lintian-info.pod:
     + [NT] Documented the new --profile option.
 

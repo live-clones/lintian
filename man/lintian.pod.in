@@ -81,16 +81,17 @@ together with B<--profile>.
 
 =item B<-r>, B<--remove>
 
-Clean up the lintian directory of the specified packages up to the
-current unpack level.  The default unpack level is 0 for this option.
+Removed the specified packages from the lintian lab.  This is only
+useful with static labs.
 
 =item B<-R>, B<--remove-lab>
 
-Remove the laboratory directory.
+Remove the laboratory directory.  This is only useful with static
+labs.
 
 =item B<-S>, B<--setup-lab>
 
-Set up or update the laboratory.
+Set up or update a static lintian laboratory.
 
 =item B<-T> tag1,tag2,..., B<--tags> tag1,tag2,...
 
@@ -422,38 +423,6 @@ The following packages listed on the command line are source packages.
 The following packages listed on the command line are udeb packages.
 
 =back
-
-=head1 UNPACK LEVELS
-
-Note that the UNPACK LEVEL system is deprecated in favour of the
-L</COLLECTION> system.
-
-=over 4
-
-=item B<0 (none)>
-
-The package does not exist in the I<laboratory> at all.
-
-=item B<1 (basic)>
-
-A directory for this package exists in the I<laboratory> and basic
-information is extracted.  This does not take much space.
-
-For binary and udeb packages, the I<control> and I<fields> directories
-and the index file are unpacked, and symbolic links are made to the
-B<.deb> file and to the lintian directory for the source package.
-
-For source packages, the binary and fields directories are unpacked,
-and symbolic links are made to the source package files.
-
-=back
-
-Lintian will unpack packages as far as is necessary to do its checks,
-but it will leave the package in whatever unpack level was specified
-when it is done.
-
-The default unpack level can be overwritten by setting the
-B<LINTIAN_UNPACK_LEVEL> variable in the configuration file.
 
 =head1 CHECKS
 
