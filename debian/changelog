@@ -93,6 +93,9 @@ lintian (2.5.2) UNRELEASED; urgency=low
   * checks/java:
     + [NT] Jar files containing clojure files are no longer
       considered to be codeless.
+  * checks/menu-format.desc:
+    + [NT] Mentioned how to git rid of the CR characters in the
+      desktop file.  Thanks to Jakub Wilk.
   * checks/rules:
     + [NT] Check included files in d/rules against a limited
       number of common makefile snippets, which are known not
