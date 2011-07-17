@@ -283,7 +283,11 @@ foreach my $file (sort readdir(DEBIAN)) {
     } elsif ($file =~ m/^ex\.|\.ex$/i) {
         tag 'dh-make-template-in-source', "debian/$file";
     } elsif ($file =~ m/^(?:.+\.)?debhelper(?:\.log)?$/){
-	push(@indebfiles, $file);
+	# The regex matches "debhelper", but debhelper/Dh_Lib does not
+	# make those, so skip it.
+	if ($file ne 'debhelper') {
+	    push(@indebfiles, $file);
+	}
     } elsif ($file =~ m/^(?:(.*)\.)?maintscript$/) {
 	$seenmaintscript = 1;
     } else {

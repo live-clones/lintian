@@ -55,6 +55,9 @@ lintian (2.5.2) UNRELEASED; urgency=low
     + [NT] Fix a broken regex that caused Lintian skip brace
       expansion checks for some debhelper files.  Thanks to
       Jakub Wilk for the report and the patch.  (Closes: #632883)
+    + [NT] Do not consider "debian/debhelper" a temporary debhelper
+      file.  Some packages uses this a directory to store their
+      debhelper files.
   * checks/debian-source-dir.desc:
     + [NT] Added missing word in the tag description for
       git-patches-not-exported.
