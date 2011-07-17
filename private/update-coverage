@@ -38,6 +38,8 @@ unless (-f 't/runtests') {
 
 # Gather a list of all tags.
 my %tags;
+my $total;
+my ($tc, $ltc);
 for my $desc (<checks/*.desc>) {
     for my $data (read_dpkg_control($desc)) {
         $desc =~ s,.*/,,;
@@ -47,6 +49,8 @@ for my $desc (<checks/*.desc>) {
         }
     }
 }
+$total = scalar keys %tags;
+
 
 # Parse all test configuration files from the new test suite looking for
 # Test-For configuration options and remove those from the %tags hash.
@@ -71,6 +75,8 @@ for my $tagfile (<t/changes/*.tags>, <t/debs/*/tags>, <t/source/*/tags>) {
     close IN;
 }
 
+$tc = $total - scalar keys %tags;
+
 # Now parse all tags files from the old test suite looking for what tags that
 # test reveals.
 my (%legacy, %legacy_test);
@@ -94,9 +100,14 @@ for my $tagfile (<testset/tags.*>) {
     close IN;
 }
 
+$ltc = $total - scalar keys %tags;
+
+my $tcr = $total ? sprintf ' (%.02f%%)', ($tc / $total) * 100 : '';
+my $ltcr = $total ? sprintf ' (%.02f%%)', ($ltc / $total) * 100 : '';
 # Open COVERAGE and print out a date stamp.
 open(OUT, '>', 't/COVERAGE') or die "Cannot create t/COVERAGE: $!\n";
-print OUT 'Last generated ', strftime ('%Y-%m-%d', gmtime), "\n\n";
+print OUT 'Last generated ', strftime ('%Y-%m-%d', gmtime), "\n";
+print OUT "Coverage: $tc/$total$tcr, w. legacy tests: $ltc/$total$ltcr\n\n";
 
 # Whatever is left in the %tags hash are untested.  Print them out sorted by
 # checks file.
