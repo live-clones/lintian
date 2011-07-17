@@ -1,5 +1,5 @@
 Last generated 2011-07-17
-Coverage: 648/912 (71.05%), w. legacy tests: 795/912 (87.17%)
+Coverage: 653/912 (71.60%), w. legacy tests: 799/912 (87.61%)
 
 The following tags are not tested by the test suite:
 
@@ -52,9 +52,6 @@ fields unknown-field-in-dsc
 
 files FSSTND-dir-in-var
 files backup-file-in-package
-files bad-owner-for-doc-file
-files bad-permissions-for-etc-cron.d-script
-files bad-permissions-for-etc-emacs-script
 files compressed-symlink-with-wrong-ext
 files config-file-reserved
 files debug-package-should-be-named-dbg
@@ -62,7 +59,6 @@ files embedded-php-library
 files executable-in-usr-share-doc
 files image-file-in-usr-lib
 files nfs-temporary-file-in-package
-files non-standard-file-perm
 files non-standard-file-permissions-for-etc-init.d-script
 files non-standard-game-executable-perm
 files old-app-defaults-directory
@@ -180,7 +176,6 @@ debconf using-first-person-in-templates
 debconf using-imperative-form-in-templates
 debconf using-question-in-extended-description-in-templates
 
-files bad-permissions-for-ali-file
 files desktop-file-in-wrong-dir
 files embedded-feedparser-library
 files embedded-javascript-library
@@ -386,7 +381,6 @@ fields
 
 filenames
   bad-menu-file-name
-  bad-permissions-for-ali-file
   debian-news-file-not-compressed
   desktop-file-in-wrong-dir
   embedded-feedparser-library

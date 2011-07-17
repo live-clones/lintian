@@ -1,0 +1,10 @@
+Testname: files-bad-perm-owner
+Sequence: 6000
+Version: 1.0
+Description: General permissions and owner tests
+Test-For:
+ bad-owner-for-doc-file
+ bad-permissions-for-ali-file
+ bad-permissions-for-etc-cron.d-script
+ bad-permissions-for-etc-emacs-script
+ non-standard-file-perm

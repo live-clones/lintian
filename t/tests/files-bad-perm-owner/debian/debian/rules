@@ -1,0 +1,9 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@
+
+override_dh_fixperms:
+	# :)
+	find debian/*/ -name 'README' -exec chown "daemon:daemon" {} \;
+	find debian/*/ -name 'read-only' -exec chmod a=r {} \;
