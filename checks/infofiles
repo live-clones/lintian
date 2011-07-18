@@ -23,9 +23,6 @@ package Lintian::infofiles;
 use strict;
 use warnings;
 
-use lib "$ENV{'LINTIAN_ROOT'}/checks/";
-use common_data;
-
 use Lintian::Tags qw(tag);
 use Util;
 
