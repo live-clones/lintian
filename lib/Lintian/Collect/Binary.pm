@@ -74,6 +74,15 @@ sub control {
     return $self->_fetch_extracted_dir('control', 'control', $file);
 }
 
+# Like index except it returns the index for the control/metadata of
+# binary package.
+#
+# sub control_index Needs-Info bin-pkg-control
+sub control_index {
+    my ($self) = @_;
+    return $self->_fetch_index_data('control-index', 'control-index');
+}
+
 # Returns sorted file info (eqv to sort keys %{$info->file_info'}), except it is cached.
 #  sub sorted_file_info Needs-Info file-info
 sub sorted_file_info{

@@ -67,57 +67,7 @@ sub file_info {
 # sub index Needs-Info index
 sub index {
     my ($self) = @_;
-    return $self->{index} if exists $self->{index};
-    my $base_dir = $self->base_dir();
-    my (%idx, %dir_counts);
-    open my $idx, '<', "$base_dir/index"
-        or fail("cannot open index file $base_dir/index: $!");
-    open my $num_idx, '<', "$base_dir/index-owner-id"
-        or fail("cannot open index file $base_dir/index-owner-id: $!");
-    while (<$idx>) {
-        chomp;
-
-        my (%file, $perm, $owner, $name);
-        ($perm,$owner,$file{size},$file{date},$file{time},$name) =
-            split(' ', $_, 6);
-        $file{operm} = perm2oct($perm);
-        $file{type} = substr $perm, 0, 1;
-
-        my $numeric = <$num_idx>;
-        chomp $numeric;
-        fail('cannot read index file index-owner-id') unless defined $numeric;
-        my ($owner_id, $name_chk) = (split(' ', $numeric, 6))[1, 5];
-        fail("mismatching contents of index files: $name $name_chk")
-            if $name ne $name_chk;
-
-        ($file{owner}, $file{group}) = split '/', $owner, 2;
-        ($file{uid}, $file{gid}) = split '/', $owner_id, 2;
-
-        $name =~ s,^\./,,;
-        if ($name =~ s/ link to (.*)//) {
-            $file{type} = 'h';
-            $file{link} = $1;
-            $file{link} =~ s,^\./,,;
-        } elsif ($file{type} eq 'l') {
-            ($name, $file{link}) = split ' -> ', $name, 2;
-        }
-        $file{name} = $name;
-
-        # count directory contents:
-        $dir_counts{$name} ||= 0 if $file{type} eq 'd';
-        $dir_counts{$1} = ($dir_counts{$1} || 0) + 1
-            if $name =~ m,^(.+/)[^/]+/?$,;
-
-        $idx{$name} = \%file;
-    }
-    foreach my $file (keys %idx) {
-        if ($dir_counts{$idx{$file}->{name}}) {
-            $idx{$file}->{count} = $dir_counts{$idx{$file}->{name}};
-        }
-    }
-    $self->{index} = \%idx;
-
-    return $self->{index};
+    return $self->_fetch_index_data('index', 'index', 'index-owner-id');
 }
 
 # Returns sorted file index (eqv to sort keys %{$info->index}), except it is cached.
@@ -155,6 +105,69 @@ sub _fetch_extracted_dir {
     return $dir;
 }
 
+# Backing method for index and others; this is not a part of the API.
+# sub _fetch_index_data Needs-Info <>
+sub _fetch_index_data {
+    my ($self, $field, $index, $indexown) = @_;
+    return $self->{$field} if exists $self->{$index};
+    my $base_dir = $self->base_dir();
+    my (%idxh, %dir_counts);
+    my $num_idx;
+    open my $idx, '<', "$base_dir/$index"
+        or fail("cannot open index file $base_dir/$index: $!");
+    if ($indexown) {
+        open $num_idx, '<', "$base_dir/$indexown"
+            or fail("cannot open index file $base_dir/$indexown: $!");
+    }
+    while (<$idx>) {
+        chomp;
+
+        my (%file, $perm, $owner, $name);
+        ($perm,$owner,$file{size},$file{date},$file{time},$name) =
+            split(' ', $_, 6);
+        $file{operm} = perm2oct($perm);
+        $file{type} = substr $perm, 0, 1;
+
+        if ($num_idx) {
+            # If we have a "numeric owner" index file, read that as well
+            my $numeric = <$num_idx>;
+            chomp $numeric;
+            fail('cannot read index file $indexown') unless defined $numeric;
+            my ($owner_id, $name_chk) = (split(' ', $numeric, 6))[1, 5];
+            fail("mismatching contents of index files: $name $name_chk")
+                if $name ne $name_chk;
+            ($file{uid}, $file{gid}) = split '/', $owner_id, 2;
+        }
+
+        ($file{owner}, $file{group}) = split '/', $owner, 2;
+
+        $name =~ s,^\./,,;
+        if ($name =~ s/ link to (.*)//) {
+            $file{type} = 'h';
+            $file{link} = $1;
+            $file{link} =~ s,^\./,,;
+        } elsif ($file{type} eq 'l') {
+            ($name, $file{link}) = split ' -> ', $name, 2;
+        }
+        $file{name} = $name;
+
+        # count directory contents:
+        $dir_counts{$name} ||= 0 if $file{type} eq 'd';
+        $dir_counts{$1} = ($dir_counts{$1} || 0) + 1
+            if $name =~ m,^(.+/)[^/]+/?$,;
+
+        $idxh{$name} = \%file;
+    }
+    foreach my $file (keys %idxh) {
+        if ($dir_counts{$idxh{$file}->{name}}) {
+            $idxh{$file}->{count} = $dir_counts{$idxh{$file}->{name}};
+        }
+    }
+    $self->{$field} = \%idxh;
+    close $idx;
+    close $num_idx if $num_idx;
+    return $self->{$field};
+}
 
 1;
 

@@ -54,23 +54,19 @@ sub run {
 
 my $pkg = shift;
 my $type = shift;
+my $info = shift;
 
 my %ctrl = $type eq 'udeb' ? %ctrl_udeb : %ctrl_deb;
 my %ctrl_alt = $type eq 'udeb' ? %ctrl_deb : %ctrl_udeb;
 
 # process control-index file
-open(IN, '<', 'control-index') or fail("cannot open control-index file: $!");
-while (<IN>) {
-    chop;
-
-    my ($perm,$owner,$size,$date,$time,$file) = split(' ', $_, 6);
+my $cindex = $info->control_index;
+foreach my $file (sort keys %$cindex) {
+    next unless $file;
+    my $cindex_info = $cindex->{$file};
+    my $owner;
     my $operm;
 
-    next if $file eq './';
-
-    $file =~ s,^(\./),,;
-    $file =~ s/ link to .*//;
-    $file =~ s/ -> .*//;
 
     next if $file eq './';
 
@@ -86,7 +82,7 @@ while (<IN>) {
     }
 
     # I'm not sure about the udeb case
-    if ($type ne 'udeb' and $size == 0) {
+    if ($type ne 'udeb' and $cindex_info->{size} == 0) {
 	tag 'control-file-is-empty', $file;
     }
 
@@ -95,13 +91,15 @@ while (<IN>) {
     # this file isn't installed on the systems anyways)
     next if $file eq 'control';
 
-    $operm = perm2oct($perm);
+    $operm = $cindex_info->{operm};
 
     # correct permissions?
     unless ($operm == $ctrl{$file}) {
 	tag 'control-file-has-bad-permissions',
 	    sprintf('%s %04o != %04o',$file,$operm,$ctrl{$file});
     }
+
+    $owner = $cindex_info->{owner} . '/' . $cindex_info->{group};
 
     # correct owner?
     unless ($owner eq 'root/root') {
