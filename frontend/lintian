@@ -1493,11 +1493,11 @@ sub unpack_group {
 	}
 	# determine base directory
 	$base = $lpkg->base_dir();
-	debug_msg(1, "Unpacking $pkg_name $pkg_ver ($pkg_type)  in $base");
+	debug_msg(1, "Unpacking $pkg_name $pkg_ver ($pkg_type) in $base");
 
 	# Ensure it has been unpacked
 	unless ($lpkg->create_entry()){
-	    warning('could not create the package entry in the lab',
+	    warning("could not create the package entry in the lab': $!",
 		    "skipping $action of $pkg_type package $pkg_name");
 	    $exit_code = 2;
 	    $group->remove_processable($proc);
