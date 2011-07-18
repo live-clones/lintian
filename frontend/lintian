@@ -1497,7 +1497,7 @@ sub unpack_group {
 
 	# Ensure it has been unpacked
 	unless ($lpkg->create_entry()){
-	    warning("could not create the package entry in the lab': $!",
+	    warning("could not create the package entry in the lab: $!",
 		    "skipping $action of $pkg_type package $pkg_name");
 	    $exit_code = 2;
 	    $group->remove_processable($proc);
