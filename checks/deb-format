@@ -75,6 +75,9 @@ if ($success) {
         tag 'malformed-deb-archive',
             "third member $members[2] not data.tar.(gz|bz2|xz)";
     } else {
+        if ($type eq 'udeb' && $members[2] ne 'data.tar.gz') {
+            tag 'udeb-uses-non-gzip-data-tarball';
+        }
         $okay = 1;
     }
 } else {

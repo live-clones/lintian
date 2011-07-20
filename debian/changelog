@@ -6,6 +6,7 @@ lintian (2.5.2) UNRELEASED; urgency=low
       - source-package-component-has-long-file-name
       - upstart-job-in-etc-init.d-not-registered-via-update-rc.d
       - debian-rules-uses-deprecated-makefile
+      - udeb-uses-non-gzip-data-tarball
     + Removed:
       - calls-suidperl-directly
       - suid-perl-script-but-no-perl-suid-dep
@@ -48,6 +49,9 @@ lintian (2.5.2) UNRELEASED; urgency=low
     + [NT] Allow data.tar.xz as the third member.  Thanks to
       Ansgar Burchardt for the report and patch.
       (Closes: #632556)
+    + [NT] Added test for udebs having non-gzip data members,
+      since the debian-installer does not support them.  Thanks
+      to Luk Claes.  (Closes: #634874)
   * checks/debhelper:
     + [NT] Do not trigger deprecation warning for dh_python if it
       is followed by a "$".  This prevents false-positives when

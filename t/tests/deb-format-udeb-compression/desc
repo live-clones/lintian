@@ -1,0 +1,5 @@
+Testname: deb-format-udeb-compression
+Sequence: 0000
+Version: 1.0
+Description: Test of compression of udeb data member
+Test-For: udeb-uses-non-gzip-data-tarball

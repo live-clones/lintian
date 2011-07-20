@@ -12,6 +12,7 @@ Uploaders: Josip Rodin <joy-packages@debian.org>,
            Raphael Geissert <geissert@debian.org>,
            Niels Thykier <niels@thykier.net>
 Build-Depends: binutils,
+               bzip2,
                cdbs,
                debhelper (>= 8.1.0~),
                default-jdk,
