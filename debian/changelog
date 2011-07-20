@@ -27,6 +27,11 @@ lintian (2.5.2) UNRELEASED; urgency=low
       stripped.  Thanks to Matthias Klose for the report.
       (Closes: #624521)
     + [NT] Do not assume that the architecture field is present.
+  * checks/changelog-file:
+    + [NT] Removed exception for symlinked changelogs if the
+      package had an Ubuntu version.  This exception is now
+      handled by the profile.  Thanks to Benjamin Drung for the
+      heads up.
   * checks/circular-deps.desc:
     + [NT] Fixed typo; thanks to Nicolás Alvarez for the report
       and patch.  (Closes: #630925)
