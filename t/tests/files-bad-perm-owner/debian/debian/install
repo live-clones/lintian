@@ -1,3 +1,4 @@
+script usr/games/
 sample.ali usr/lib/some-where/
 script etc/cron.d/
 script etc/emacs.d/

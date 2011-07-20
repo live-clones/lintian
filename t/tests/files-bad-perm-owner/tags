@@ -3,3 +3,4 @@ E: files-bad-perm-owner: bad-permissions-for-etc-cron.d-script etc/cron.d/script
 E: files-bad-perm-owner: bad-permissions-for-etc-emacs-script etc/emacs.d/script 0755 != 0644
 W: files-bad-perm-owner: bad-permissions-for-ali-file usr/lib/some-where/sample.ali
 W: files-bad-perm-owner: non-standard-file-perm usr/share/doc/files-bad-perm-owner/read-only 0444 != 0644
+W: files-bad-perm-owner: non-standard-game-executable-perm usr/games/script 0755 != 2755

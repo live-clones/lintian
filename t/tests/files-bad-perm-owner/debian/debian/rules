@@ -3,7 +3,11 @@
 %:
 	dh $@
 
+override_dh_auto_build:
+	pod2man --section 1 script > script.1
+
 override_dh_fixperms:
 	# :)
 	find debian/*/ -name 'README' -exec chown "daemon:daemon" {} \;
 	find debian/*/ -name 'read-only' -exec chmod a=r {} \;
+	chown 'root:games' debian/*/usr/games/script
