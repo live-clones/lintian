@@ -1,6 +1,9 @@
-E: files-bad-perm-owner: bad-owner-for-doc-file usr/share/doc/files-bad-perm-owner/README daemon/daemon != root/root
-E: files-bad-perm-owner: bad-permissions-for-etc-cron.d-script etc/cron.d/script 0755 != 0644
-E: files-bad-perm-owner: bad-permissions-for-etc-emacs-script etc/emacs.d/script 0755 != 0644
-W: files-bad-perm-owner: bad-permissions-for-ali-file usr/lib/some-where/sample.ali
-W: files-bad-perm-owner: non-standard-file-perm usr/share/doc/files-bad-perm-owner/read-only 0444 != 0644
-W: files-bad-perm-owner: non-standard-game-executable-perm usr/games/script 0755 != 2755
+E: binary: bad-owner-for-doc-file usr/share/doc/binary/README daemon/daemon != root/root
+E: binary: bad-permissions-for-etc-cron.d-script etc/cron.d/script 0755 != 0644
+E: binary: bad-permissions-for-etc-emacs-script etc/emacs.d/script 0755 != 0644
+W: binary: bad-permissions-for-ali-file usr/lib/some-where/sample.ali
+W: binary: non-standard-file-perm usr/share/doc/binary/read-only 0444 != 0644
+W: binary: setgid-binary usr/bin/script-gid 2755 root/root
+W: binary: setuid-binary usr/bin/script-uid 4755 root/root
+W: binary: setuid-gid-binary usr/bin/script-ugid 6755 root/root
+W: game: non-standard-game-executable-perm usr/games/script 0755 != 2755

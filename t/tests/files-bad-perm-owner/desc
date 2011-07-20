@@ -10,3 +10,6 @@ Test-For:
  bad-permissions-for-etc-emacs-script
  non-standard-file-perm
  non-standard-game-executable-perm
+ setgid-binary
+ setuid-binary
+ setuid-gid-binary

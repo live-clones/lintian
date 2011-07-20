@@ -1,13 +1,24 @@
 #!/usr/bin/make -f
 
+GPKG:=game
+PKG:=binary
+
 %:
 	dh $@
 
 override_dh_auto_build:
+	for N in uid gid ugid ; do \
+		sed s/script/script-$$N/ < script > script-$$N ; \
+		pod2man --section 1 script-$$N > script-$$N.1 ; \
+	done
 	pod2man --section 1 script > script.1
 
 override_dh_fixperms:
-	# :)
-	find debian/*/ -name 'README' -exec chown "daemon:daemon" {} \;
-	find debian/*/ -name 'read-only' -exec chmod a=r {} \;
-	chown 'root:games' debian/*/usr/games/script
+	# game
+	chown 'root:games' debian/$(GPKG)/usr/games/script
+	# binary
+	find debian/$(PKG)/ -name 'README' -exec chown "daemon:daemon" {} \;
+	find debian/$(PKG)/ -name 'read-only' -exec chmod a=r {} \;
+	chmod +x,u+s debian/$(PKG)/usr/bin/script-uid
+	chmod +x,g+s debian/$(PKG)/usr/bin/script-gid
+	chmod +x,ug+s debian/$(PKG)/usr/bin/script-ugid
