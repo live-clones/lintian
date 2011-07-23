@@ -1,5 +1,5 @@
 Last generated 2011-07-23
-Coverage: 667/913 (73.06%), w. legacy tests: 804/913 (88.06%)
+Coverage: 668/913 (73.17%), w. legacy tests: 804/913 (88.06%)
 
 The following tags are not tested by the test suite:
 
@@ -264,7 +264,6 @@ scripts executable-not-elf-or-script
 scripts maintainer-script-ignores-errors
 scripts maintainer-script-removes-device-files
 scripts script-not-executable
-scripts shell-script-fails-syntax-check
 scripts update-alternatives-remove-called-in-postrm
 
 shared-libs duplicate-entry-in-symbols-control-file
@@ -437,4 +436,3 @@ scripts
   init.d-script-missing-lsb-short-description
   script-in-usr-share-doc
   script-with-language-extension
-  shell-script-fails-syntax-check

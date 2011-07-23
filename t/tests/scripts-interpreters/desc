@@ -15,6 +15,7 @@ Test-For:
  interpreter-in-usr-local
  interpreter-not-absolute
  missing-dep-for-interpreter
+ shell-script-fails-syntax-check
  script-uses-bin-env
  script-without-interpreter
  unusual-interpreter
