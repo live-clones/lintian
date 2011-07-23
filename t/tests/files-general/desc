@@ -9,8 +9,10 @@ Test-For:
  duplicated-compressed-file
  executable-manpage
  file-in-unusual-dir
+ file-name-ends-in-whitespace
  global-data-in-games-directory
  icon-size-and-directory-name-mismatch
+ lengthy-symlink
  non-conf-file-in-modprobe.d
  non-standard-toplevel-dir
  obsolete-comments-style-in-php-ini

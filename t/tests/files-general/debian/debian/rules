@@ -9,6 +9,7 @@ override_dh_install:
 	dh_install
 	mkdir -p $(tmp)/usr/share/foo
 	touch $(tmp)/usr/share/foo/'*'
+	touch $(tmp)/usr/share/foo/'ws '
 
 override_dh_fixperms:
 	dh_fixperms
@@ -21,3 +22,9 @@ override_dh_compress:
 	gzip -1 $(tmp)/usr/share/doc/lintian/lintian-16x16.png
 	zcat $(tmp)/usr/share/doc/lintian/lintian-16x16.png.gz > \
 		$(tmp)/usr/share/doc/lintian/lintian-16x16.png
+
+override_dh_link:
+	dh_link
+	mkdir -p $(tmp)/usr/share/doc/bar
+	echo "Hallo World" > $(tmp)/usr/share/doc/bar/foo
+	ln -s ../bar/foo $(tmp)/usr/share/doc/bar/star
