@@ -8,6 +8,7 @@ Test-For:
  bad-permissions-for-ali-file
  bad-permissions-for-etc-cron.d-script
  bad-permissions-for-etc-emacs-script
+ executable-is-not-world-readable
  non-standard-dir-perm
  non-standard-executable-perm
  non-standard-file-perm

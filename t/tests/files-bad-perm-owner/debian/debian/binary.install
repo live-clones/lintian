@@ -4,5 +4,6 @@ script-ugid usr/bin/
 script-gid usr/bin/
 script-wexec usr/bin/
 script-wuid usr/bin/
+script-ro usr/bin/
 script etc/cron.d/
 script etc/emacs.d/
