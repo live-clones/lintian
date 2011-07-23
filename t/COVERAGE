@@ -1,5 +1,5 @@
 Last generated 2011-07-23
-Coverage: 659/913 (72.18%), w. legacy tests: 804/913 (88.06%)
+Coverage: 661/913 (72.40%), w. legacy tests: 804/913 (88.06%)
 
 The following tags are not tested by the test suite:
 
@@ -269,8 +269,6 @@ scripts ancient-dpkg-predepends-check
 scripts executable-not-elf-or-script
 scripts maintainer-script-ignores-errors
 scripts maintainer-script-removes-device-files
-scripts php-script-but-no-phpX-cli-dep
-scripts python-script-but-no-python-dep
 scripts script-not-executable
 scripts shell-script-fails-syntax-check
 scripts update-alternatives-remove-called-in-postrm
@@ -449,8 +447,6 @@ scripts
   init.d-script-missing-lsb-short-description
   non-standard-executable-perm
   non-standard-setuid-executable-perm
-  php-script-but-no-phpX-cli-dep
-  python-script-but-no-python-dep
   script-in-usr-share-doc
   script-with-language-extension
   shell-script-fails-syntax-check
