@@ -7,7 +7,7 @@ PKG:=binary
 	dh $@
 
 override_dh_auto_build:
-	for N in uid gid ugid ; do \
+	for N in uid gid ugid wexec wuid; do \
 		sed s/script/script-$$N/ < script > script-$$N ; \
 		pod2man --section 1 script-$$N > script-$$N.1 ; \
 	done
@@ -19,6 +19,9 @@ override_dh_fixperms:
 	# binary
 	find debian/$(PKG)/ -name 'README' -exec chown "daemon:daemon" {} \;
 	find debian/$(PKG)/ -name 'read-only' -exec chmod a=r {} \;
-	chmod +x,u+s debian/$(PKG)/usr/bin/script-uid
-	chmod +x,g+s debian/$(PKG)/usr/bin/script-gid
+	chmod +x,u+s  debian/$(PKG)/usr/bin/script-uid
+	chmod +x,g+s  debian/$(PKG)/usr/bin/script-gid
 	chmod +x,ug+s debian/$(PKG)/usr/bin/script-ugid
+	chmod +x,g+w  debian/$(PKG)/usr/bin/script-wexec
+	chmod u+x,u+s debian/$(PKG)/usr/bin/script-wuid
+	chmod go-x    debian/$(PKG)/usr/share/doc/$(PKG)

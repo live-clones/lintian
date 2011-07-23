@@ -1,5 +1,5 @@
 Last generated 2011-07-23
-Coverage: 661/913 (72.40%), w. legacy tests: 804/913 (88.06%)
+Coverage: 664/913 (72.73%), w. legacy tests: 804/913 (88.06%)
 
 The following tags are not tested by the test suite:
 
@@ -180,9 +180,6 @@ files file-name-ends-in-whitespace
 files lengthy-symlink
 files macos-ds-store-file-in-package
 files macos-resource-fork-file-in-package
-files non-standard-dir-perm
-files non-standard-executable-perm
-files non-standard-setuid-executable-perm
 files package-contains-bts-control-dir
 files package-contains-devhelp-file-without-symlink
 files package-contains-hardlink
@@ -380,7 +377,6 @@ filenames
   embedded-javascript-library
   macos-ds-store-file-in-package
   macos-resource-fork-file-in-package
-  non-standard-dir-perm
   package-contains-bts-control-dir
   package-contains-devhelp-file-without-symlink
   package-contains-linda-override
@@ -445,8 +441,6 @@ scripts
   init.d-script-has-unterminated-lsb-section
   init.d-script-missing-lsb-keyword
   init.d-script-missing-lsb-short-description
-  non-standard-executable-perm
-  non-standard-setuid-executable-perm
   script-in-usr-share-doc
   script-with-language-extension
   shell-script-fails-syntax-check
