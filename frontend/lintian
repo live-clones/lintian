@@ -870,7 +870,7 @@ $ENV{'LINTIAN_LAB'} = $opt{'LINTIAN_LAB'} = $LAB->{dir};
 
 # {{{ Compile list of files to process
 
-$pool = Lintian::ProcessablePool->new();
+$pool = Lintian::ProcessablePool->new($LAB);
 # process package/file arguments
 
 # Store contents of the packages files in these if needed

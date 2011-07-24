@@ -49,17 +49,17 @@ Lintian::ProcessablePool -- Pool of processables
 
 =over 4
 
-=item Lintian::ProcessablePool->new()
+=item Lintian::ProcessablePool->new([$lab])
 
 Creates a new empty pool.
 
 =cut
 
 sub new {
-    my ($class) = @_;
+    my ($class, $lab) = @_;
     my $self = {};
     bless $self, $class;
-    $self->_init();
+    $self->_init($lab);
     return $self;
 }
 
@@ -97,9 +97,9 @@ sub add_file {
              $pkg_type, $proc->pkg_name()));
         return 0;
     }
-    $procid = _get_proc_id($proc);
+    $procid = $self->_get_proc_id($proc);
     return 0 if exists $tmap->{$procid};
-    $groupid = _get_group_id($proc);
+    $groupid = $self->_get_group_id($proc);
     $group = $self->{groups}->{$groupid};
     if (defined $group){
         if ($pkg_type eq 'source'){
@@ -177,23 +177,29 @@ sub empty{
 #### Internal subs ####
 
 sub _init {
-    my ($self) = @_;
+    my ($self, $lab) = @_;
     foreach my $field (qw(binary changes groups source udeb)){
         $self->{$field} = {};
     }
+    $self->{'lab'} = $lab if $lab;
     return 1;
+}
+
+sub _supports {
+    my ($self, $feat) = @_;
+    return $self->{"supports-$feat"};
 }
 
 sub _add_changes_file{
     my ($self, $pkg_path) = @_;
     my $group = Lintian::ProcessableGroup->new($pkg_path);
     my $cproc = $group->get_changes_processable();
-    my $gid = _get_group_id($cproc);
+    my $gid = $self->_get_group_id($cproc);
     my $ogroup = $self->{groups}->{$gid};
     if (defined($ogroup)){
         # Group already exists...
         my $tmap = $self->{'changes'};
-        my $cid = _get_proc_id($cproc);
+        my $cid = $self->_get_proc_id($cproc);
         my $added = 0;
         # duplicate changes file?
         return 0 if (exists $tmap->{$cid});
@@ -206,7 +212,7 @@ sub _add_changes_file{
         }
         foreach my $bin ($group->get_binary_processables()){
             my $tbmap = $self->{$bin->pkg_type()};
-            my $procid = _get_proc_id($bin);
+            my $procid = $self->_get_proc_id($bin);
             if (! exists $tbmap->{$procid}){
                 # New binary package
                 $tbmap->{$procid} = $bin;
@@ -225,16 +231,22 @@ sub _add_changes_file{
 #  - this id is based on the name and the version of the
 #    src-pkg.
 sub _get_group_id{
-    my ($pkg) = @_;
-    return $pkg->pkg_src() . '_' . $pkg->pkg_src_version();
+    my ($self, $pkg) = @_;
+    my $id = $pkg->pkg_src;
+    my $lab = $self->{'lab'};
+    $id .= '_' . $pkg->pkg_src_version if $lab && $lab->_supports_multiple_versions;
+    return $id;
 }
 
 # Fetches the id of the processable; note this is different
 # than _get_group_id even for src processables.
 sub _get_proc_id {
-    my ($pkg) = @_;
-    return $pkg->pkg_name() . '_' . $pkg->pkg_version() .
-        '_' . $pkg->pkg_arch();
+    my ($self, $pkg) = @_;
+    my $id = $pkg->pkg_name;
+    my $lab = $self->{'lab'};
+    $id .= '_' . $pkg->pkg_version if $lab && $lab->_supports_multiple_versions;
+    $id .= '_' . $pkg->pkg_arch if $lab && $lab->_supports_multiple_architectures;
+    return $id;
 }
 
 =back
