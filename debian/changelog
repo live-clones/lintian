@@ -95,6 +95,9 @@ lintian (2.5.2) UNRELEASED; urgency=low
     + [NT] Removed a leading slash from the filename part of the
       extra for python-debug-in-wrong-location.  Thanks to
       Jakub Wilk for the report and the patch.  (Closes: #631530)
+    + [NT] Accepted patch from Marcelo Jorge Vieira to catch
+      four additional embedded javascript libraries.
+      (Closes: #635447)
   * checks/init.d{,.desc}:
     + [NT] Provide a separate tag for upstart-jobs not registered
       via update-rc.d in postinst.  This allows vendors (such as
