@@ -1,6 +1,9 @@
-Testname: files-embedded-pear-module
+Testname: files-embedded
 Sequence: 6000
 Version: 1.0
 Description: Check for detection of embedded PEAR modules
-Test-For: embedded-pear-module
 References: <g8t2fb$r9t$4@ger.gmane.org>
+Test-For:
+ embedded-javascript-library
+ embedded-pear-module
+

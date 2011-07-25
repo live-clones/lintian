@@ -1,5 +1,5 @@
-Last generated 2011-07-23
-Coverage: 668/913 (73.17%), w. legacy tests: 804/913 (88.06%)
+Last generated 2011-07-25
+Coverage: 669/913 (73.27%), w. legacy tests: 804/913 (88.06%)
 
 The following tags are not tested by the test suite:
 
@@ -174,7 +174,6 @@ debconf using-question-in-extended-description-in-templates
 
 files desktop-file-in-wrong-dir
 files embedded-feedparser-library
-files embedded-javascript-library
 files macos-ds-store-file-in-package
 files macos-resource-fork-file-in-package
 files package-contains-bts-control-dir
@@ -368,7 +367,6 @@ filenames
   debian-news-file-not-compressed
   desktop-file-in-wrong-dir
   embedded-feedparser-library
-  embedded-javascript-library
   macos-ds-store-file-in-package
   macos-resource-fork-file-in-package
   package-contains-bts-control-dir
