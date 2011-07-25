@@ -185,11 +185,6 @@ sub _init {
     return 1;
 }
 
-sub _supports {
-    my ($self, $feat) = @_;
-    return $self->{"supports-$feat"};
-}
-
 sub _add_changes_file{
     my ($self, $pkg_path) = @_;
     my $group = Lintian::ProcessableGroup->new($pkg_path);

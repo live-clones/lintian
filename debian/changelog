@@ -189,6 +189,8 @@ lintian (2.5.2) UNRELEASED; urgency=low
   * lib/Lab.pm:
     + [NT] Removed $dist argument to lab creation, since we rely on
       LINTIAN_DIST being exported anyway.
+    + [NT] Allow temporary labs to contain the same package twice if
+      the version or/and architecture differs.  (Closes: #632115)
   * lib/Lab/Package.pm:
     + [NT] Symlink in all components of the source package when
       creating the source entry in the lab.  Also removed legacy
@@ -205,6 +207,12 @@ lintian (2.5.2) UNRELEASED; urgency=low
       err_append options.
   * lib/Lintian/{Internal/FrontendUtil,Profile}.pm:
     + [NT] New files.
+  * lib/Lintian/ProcessablePool.pm:
+    + [NT] Made the pool consider two packages with the same name
+      as duplicates even if their version or architecture differs,
+      when the underlying Lab does not support this run.  This
+      causes lintian to drop one of the packages rather than ending
+      up with an internal error.
   * lib/Lintian/{Tag/Info,Tags}.pm:
     + [NT] Updated for profile support.
   * lib/Read_pkglists.pm:
