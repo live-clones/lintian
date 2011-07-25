@@ -4,6 +4,7 @@ Version: 1.0
 Description: Check for detection of embedded PEAR modules
 References: <g8t2fb$r9t$4@ger.gmane.org>
 Test-For:
+ embedded-feedparser-library
  embedded-javascript-library
  embedded-pear-module
 
