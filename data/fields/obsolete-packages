@@ -60,3 +60,5 @@ xutils
 # Last seen in Squeeze
 default-jdk-builddep
 
+# See: http://wiki.debian.org/Teams/DebianPerlGroup/OpenTasks/Transitions/DigestSHA1ToDigestSHA
+libdigest-sha1-perl
