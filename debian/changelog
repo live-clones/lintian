@@ -108,6 +108,11 @@ lintian (2.5.2) UNRELEASED; urgency=low
   * checks/menu-format.desc:
     + [NT] Mentioned how to git rid of the CR characters in the
       desktop file.  Thanks to Jakub Wilk.
+  * checks/nmu:
+    + [NT] "LowThresholdNMU" will now work as an alternative to
+      "NMU" in changelogs for suppressing
+      changelog-should-mention-nmu.  Thanks to Jordi Mallach for
+      the report.  (Closes: #620418)
   * checks/rules:
     + [NT] Check included files in d/rules against a limited
       number of common makefile snippets, which are known not
