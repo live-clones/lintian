@@ -59,6 +59,10 @@ our @jslibraries = (
     [ qr,(?i)jquery\.meiomask(\.min)?\.js(\.gz)?$, => qr'libjs-jquery-meiomask' ],
     [ qr,(?i)jquery\.opacityrollover(\.min)?\.js(\.gz)?$, => qr'libjs-jquery-opacityrollover' ],
     [ qr,(?i)jquery\.tipsy(\.min)?\.js(\.gz)?$, => qr'libjs-jquery-tipsy' ],
+    [ qr,(?i)jquery\.metadata(\.min)?\.js(\.gz)?$, => qr'libjs-jquery-metadata' ],
+    [ qr,(?i)jquery\.tablesorter(\.min)?\.js(\.gz)?$, => qr'libjs-jquery-tablesorter' ],
+    [ qr,(?i)jquery\.livequery(\.min)?\.js(\.gz)?$, => qr'libjs-jquery-livequery' ],
+    [ qr,(?i)jquery\.treetable(\.min)?\.js(\.gz)?$, => qr'libjs-jquery-treetable' ],
 # Disabled due to false positives.  Needs a content check adding to verify
 # that the file being checked is /the/ yahoo.js
 #    [ qr,(?i)yahoo\.js(\.gz)?$, => qr'libjs-yui' ],
