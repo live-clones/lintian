@@ -164,6 +164,10 @@ lintian (2.5.2) UNRELEASED; urgency=low
 
   * data/fields/*:
     + [NT] Added new files based on data variables from checks/fields.
+  * data/fields/obsolete-packages:
+    + [NT] Added ligdigest-sha1-perl on request of the Perl Team.
+      Thanks to Salvatore Bonaccorso for the report and patch.
+      (Closes: #635441)
   * data/rules/{deprecated,known}-makefiles:
     + [NT] Added file.
   * data/spelling/corrections:
@@ -562,10 +566,6 @@ lintian (2.5.0~rc3) unstable; urgency=low
       dh_python2 and dh_python3.  (Closes: #614879)
   * data/fields/architectures:
     + [NT] Updated to include armhf.
-  * data/fields/obsolete-packages:
-    + [NT] Added ligdigest-sha1-perl on request of the Perl Team.
-      Thanks to Salvatore Bonaccorso for the report and patch.
-      (Closes: #635441)
   * data/files/triplets:
     + [NT] Updated to include armhf triplet.
     + [NT] Refresh with the final approved multiarch paths by patch
