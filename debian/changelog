@@ -196,6 +196,7 @@ lintian (2.5.2) UNRELEASED; urgency=low
     + [NT] Ensure that all dependency collections of a check are
       loaded.  Previously Lintian would only load direct
       dependencies of a collection and assume that was enough.
+    + [NT] Allow "verbose" to appear in the lintianrc file.
 
   * lib/Lab.pm:
     + [NT] Removed $dist argument to lab creation, since we rely on

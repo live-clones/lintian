@@ -93,7 +93,6 @@ my $BANNER = "Lintian v$LINTIAN_VERSION"; #Version Banner - text form
 # they were set via commandline or environment variables
 my $pkg_mode = 'a';		# auto -- automatically search for
 				# binary and source pkgs
-my $verbose = 0;		#flag for -v|--verbose switch
 my $quiet = 0;			#flag for -q|--quiet switch
 my $debug = 0;
 my $check_everything = 0;	#flag for -a|--all switch
@@ -449,7 +448,7 @@ my %opthash = (			# ------------------ actions
 	       'version|V' => \&banner,
 	       'print-version' => \&banner,
 
-	       'verbose|v' => \$verbose,
+	       'verbose|v' => \$opt{'verbose'},
 	       'debug|d+' => \$debug, # Count the -d flags
 	       'quiet|q' => \$quiet,
 
@@ -509,6 +508,7 @@ my %cfghash = (
 	       'pedantic'             => \$opt{'pedantic'},
 	       'no-override'          => \$opt{'no-override'},
 	       'show-overrides'       => \$opt{'show-overrides'},
+	       'verbose'              => \$opt{'verbose'},
     );
 
 # init commandline parser
@@ -686,7 +686,7 @@ if ($ENV{'LINTIAN_INTERNAL_TESTSUITE'}){
     @prof_inc = ();
 }
 
-$verbose = 1 if $debug;
+$opt{'verbose'} = 1 if $debug;
 $ENV{'LINTIAN_DEBUG'} = $debug;
 
 # Use our custom-generated locale for programs we call, if it's available.  We
@@ -749,7 +749,7 @@ if (defined $experimental_output_opts) {
 }
 
 
-$Lintian::Output::GLOBAL->verbose($verbose);
+$Lintian::Output::GLOBAL->verbose($opt{'verbose'});
 $Lintian::Output::GLOBAL->debug($debug);
 $Lintian::Output::GLOBAL->quiet($quiet);
 $Lintian::Output::GLOBAL->color($opt{'color'});
