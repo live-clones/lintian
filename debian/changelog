@@ -248,6 +248,13 @@ lintian (2.5.2) UNRELEASED; urgency=low
       that these profiles will silently ignore overrides for
       "fatal" (non-overridable) tags.  (Closes: #536364)
 
+  * reporting/{html_reports,templates/index.tmpl}:
+    + [NT] Always emit a page for tags, even if they are not emitted.
+      It will also include a link to the entire list of known tags.
+      (Closes: #631763)
+  * reporting/templates/{tag-not-seen,tags-all}.tmpl:
+    + [NT] New files.
+
   * unpack/list-binpkg:
     + [NT] Added a -u option to make it fetch udebs insteaad of
       regular binaries.  This and the udeb/bin format merge makes

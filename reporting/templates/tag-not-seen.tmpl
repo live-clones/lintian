@@ -1,0 +1,16 @@
+{ head("Lintian Tag: $tag", 1) }
+  <h1><span class="type-{$code}">{$code}</span> {$tag}</h1>
+
+  <p>
+    All reports of {$tag} for the archive. The extended description of this
+    tag is:
+  </p>
+
+  <blockquote class="type-{$code}">
+{$description}
+  </blockquote>
+
+  <p>
+    This tag has not been emitted in any package tested by Lintian.
+  </p>
+{ foot() }

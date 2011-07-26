@@ -101,7 +101,7 @@ our $TEMPLATES = "$LINTIAN_ROOT/reporting/templates";
 # templates throughout.
 our %templates;
 for my $template (qw/head foot clean index maintainer maintainers packages tag
-                     tags tags-severity/) {
+                     tags tags-severity tag-not-seen tags-all/) {
     my %options = (TYPE => 'FILE', SOURCE => "$TEMPLATES/$template.tmpl");
     $templates{$template} = Text::Template->new (%options)
         or die "cannot load template $template: $Text::Template::ERROR\n";
@@ -458,19 +458,26 @@ for my $id (keys %clean) {
 
 # Create the pages for each tag.  Each page shows the extended description for
 # the tag and all the packages for which that tag was issued.
-for my $tag (sort keys %by_tag) {
+for my $tag (sort keys %tag_extra) {
     my $info = Lintian::Tag::Info->new($tag);
     next unless $info;
     my $description = $info->description('html', '    ');
     my ($count, $overrides) = (0, 0);
     my %seen_tags;
-    foreach (@{$by_tag{$tag}}) {
-        if ($_->{code} ne 'O') {
-            $count++;
-            $seen_tags{$_->{xref}}++;
-        } else {
-            $overrides++;
+    my $tmpl = 'tag-not-seen';
+    if (exists $by_tag{$tag}) {
+        $tmpl = 'tag';
+        foreach (@{$by_tag{$tag}}) {
+            if ($_->{code} ne 'O') {
+                $count++;
+                $seen_tags{$_->{xref}}++;
+            } else {
+                $overrides++;
+            }
         }
+        $tag_statistics{$tag}{'count'} = $count;
+        $tag_statistics{$tag}{'overrides'} = $overrides;
+        $tag_statistics{$tag}{'packages'} = scalar keys %seen_tags;
     }
 
     my %maint_data = (
@@ -479,20 +486,18 @@ for my $tag (sort keys %by_tag) {
         code        => $info->code,
         tags        => $by_tag{$tag},
     );
-    output_template ("tags/$tag.html", $templates{tag}, \%maint_data);
-
-    $tag_statistics{$tag}{'count'} = $count;
-    $tag_statistics{$tag}{'overrides'} = $overrides;
-    $tag_statistics{$tag}{'packages'} = scalar keys %seen_tags;
+    output_template ("tags/$tag.html", $templates{$tmpl}, \%maint_data);
 }
 
 # Create the general tag indices.
 %data = (
-    tags      => \%by_tag,
-    stats     => \%tag_statistics,
+    tags       => \%by_tag,
+    stats      => \%tag_statistics,
+    all        => \%tag_extra,
 );
 output_template ('tags.html', $templates{tags}, \%data);
 output_template ('tags-severity.html', $templates{'tags-severity'}, \%data);
+output_template ('tags-all.html', $templates{'tags-all'}, \%data);
 
 # Generate the package lists.  These are huge, so we break them into four
 # separate pages.
