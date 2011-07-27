@@ -59,10 +59,11 @@ for my $jar_file (sort keys %{$java_info}) {
     my $datafiles = 1;
     my $cp = '';
     my $bsname = '';
-    my $xpi = 0;
 
     # The Java Policy says very little about requires for (jars in) JVMs
     next if $jar_file =~ m#usr/lib/jvm(?:-exports)?/[^/]++/#o;
+    # Ignore Mozilla's jar files, see #635495
+    next if $jar_file =~ m#usr/lib/xul(?:-ext|runner[^/]*+)/#o;
 
     $jar_dir = $jar_file;
     $jar_dir =~ s,[^/]+$,,o;
@@ -73,7 +74,6 @@ for my $jar_file (sort keys %{$java_info}) {
     }
     # check for common code files like .class or .clj (Clojure files)
     $classes = 0 unless grep m/\.(?:class|clj)$/oi, @{$file_list};
-    $xpi = 1 if grep m/\.xpi$/oi, @{$file_list};
     $datafiles = 0
         unless grep m/\.(?:xml|properties|x?html|xhp)$/io, @{$file_list};
 
@@ -88,9 +88,7 @@ for my $jar_file (sort keys %{$java_info}) {
             unless $info->relation('strong')->implies('jarwrapper');
     }
     elsif ($jar_file !~ m#^usr/share/#) {
-        # XPI files are architecture dependent,
-        # see #635495
-	tag 'jar-not-in-usr-share', $jar_file unless $xpi;
+	tag 'jar-not-in-usr-share', $jar_file;
     }
 
     $cp = $manifest->{'Class-Path'}//'' if $manifest;

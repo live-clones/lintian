@@ -108,7 +108,7 @@ lintian (2.5.2) UNRELEASED; urgency=low
   * checks/java:
     + [NT] Jar files containing clojure files are no longer
       considered to be codeless.
-    + [NT] Exclude jar files containing xpi files from the
+    + [NT] Exclude jar files in /usr/lib/xul{-ext,runner} from the
       "jar-not-in-usr-share" check.  (Closes: #635495)
   * checks/menu-format.desc:
     + [NT] Mentioned how to git rid of the CR characters in the
