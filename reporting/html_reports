@@ -30,10 +30,6 @@ use Text::Template ();
 # ------------------------------
 # Global variables and configuration
 
-# Maximum number of identical tags per package to display.  Any remaining tags
-# will be compressed into a "... reported %d more times" line.
-our $MAX_TAGS = 8;
-
 # These have no default and must be set in the configuration file.
 # FIXME: $statistics_file should be in all caps as well.
 our ($LINTIAN_ROOT, $LINTIAN_LAB, $LINTIAN_ARCHIVEDIR, $LINTIAN_DIST,
