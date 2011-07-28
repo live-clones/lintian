@@ -14,15 +14,18 @@ override_dh_auto_build:
 	pod2man --section 1 script > script.1
 
 override_dh_fixperms:
+	dh_fixperms
 	# game
 	chown 'root:games' debian/$(GPKG)/usr/games/script
 	# binary
-	find debian/$(PKG)/ -name 'README' -exec chown "daemon:daemon" {} \;
-	find debian/$(PKG)/ -name 'read-only' -exec chmod a=r {} \;
-	chmod +x,u+s  debian/$(PKG)/usr/bin/script-uid
-	chmod +x,g+s  debian/$(PKG)/usr/bin/script-gid
-	chmod +x,ug+s debian/$(PKG)/usr/bin/script-ugid
-	chmod +x,g+w  debian/$(PKG)/usr/bin/script-wexec
-	chmod u+x,u+s debian/$(PKG)/usr/bin/script-wuid
-	chmod +x,o-r  debian/$(PKG)/usr/bin/script-ro
-	chmod go-x    debian/$(PKG)/usr/share/doc/$(PKG)
+	chown "daemon:daemon" debian/$(PKG)/usr/share/doc/$(PKG)/README
+	chmod 0444 debian/$(PKG)/usr/share/doc/$(PKG)/read-only
+	chmod 4755 debian/$(PKG)/usr/bin/script-uid
+	chmod 2755 debian/$(PKG)/usr/bin/script-gid
+	chmod 6755 debian/$(PKG)/usr/bin/script-ugid
+	chmod 0775 debian/$(PKG)/usr/bin/script-wexec
+	chmod 4744 debian/$(PKG)/usr/bin/script-wuid
+	chmod 0751 debian/$(PKG)/usr/bin/script-ro
+	chmod 0744 debian/$(PKG)/usr/share/doc/$(PKG)
+	chmod 0755 debian/$(PKG)/etc/cron.d/script
+	chmod 0755 debian/$(PKG)/etc/emacs.d/script

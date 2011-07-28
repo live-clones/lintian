@@ -24,6 +24,7 @@ use warnings;
 
 use Lintian::Output;
 use Lintian::Tag::Info;
+use Lintian::Tag::Override;
 use Util qw(fail);
 
 use base 'Exporter';
@@ -193,36 +194,20 @@ called first or if an attempt is made to issue an unknown tag.
 sub _check_overrides {
     my ($self, $tag, $extra) = @_;
     my $overrides = $self->{info}{$self->{current}}{overrides}{$tag};
+    my $stats = $self->{info}{$self->{current}}{'overrides-stats'}{$tag};
     return unless $overrides;
     if (exists $overrides->{''}) {
-        $overrides->{''}++;
+        $stats->{''}++;
         return $tag;
     } elsif ($extra ne '' and exists $overrides->{$extra}) {
-        $overrides->{$extra}++;
+        $stats->{$extra}++;
         return "$tag $extra";
     } elsif ($extra ne '') {
         for (sort keys %$overrides) {
-            my $pattern = $_;
-            my $end = '';
-            my $pat = '';
-            next unless $pattern =~ m/\Q*\E/o;
-            # Split does not help us if $text ends with *
-            # so we deal with that now
-            if ($pattern =~ s/\Q*\E+\z//o){
-                $end = '.*';
-            }
-            # Are there any * left (after the above)?
-            if ($pattern =~ m/\Q*\E/o) {
-                # this works even if $text starts with a *, since
-                # that is split as '', <text>
-                my @pargs = split(m/\Q*\E++/o, $pattern);
-                $pat = join('.*', map { quotemeta($_) } @pargs);
-            } else {
-                $pat = $pattern;
-            }
-            if ($extra =~ m/^$pat$end\z/) {
-                $overrides->{$_}++;
-                return "$tag $_";
+            my $override = $overrides->{$_};
+            if ($override->is_pattern && $override->overrides($extra)){
+                $stats->{$_}++;
+                return $tag . ' ' . $override->extra;
             }
         }
     }
@@ -235,7 +220,7 @@ sub _record_stats {
     my ($self, $tag, $info, $overridden) = @_;
     my $stats = $self->{statistics}{$self->{current}};
     if ($overridden) {
-        $stats = $self->{statistics}{$self->{current}}{overrides};
+        $stats = $self->{statistics}{$self->{current}}{'overrides-stats'};
     }
     $stats->{tags}{$tag}++;
     $stats->{severity}{$info->severity}++;
@@ -501,12 +486,13 @@ sub file_start {
         die "duplicate of file $file added to Lintian::Tags object";
     }
     $self->{info}{$file} = {
-        file      => $file,
-        package   => $pkg,
-        version   => $version,
-        arch      => $arch,
-        type      => $type,
-        overrides => {},
+        file              => $file,
+        package           => $pkg,
+        version           => $version,
+        arch              => $arch,
+        type              => $type,
+        overrides         => {},
+        'overrides-stats' => {},
     };
     $self->{statistics}{$file} = {
         types     => {},
@@ -562,6 +548,7 @@ sub file_overrides {
             # Valid - so far at least
             my ($archlist, $tagdata) = ($1, $2);
             my ($tag, $extra) = split(m/ /o, $tagdata, 2);
+            my $tagover;
             if ($archlist) {
                 # parse and figure
                 my (@archs) = split(m/\s++/o, $archlist);
@@ -584,7 +571,9 @@ sub file_overrides {
             }
             next if $ignored->{$tag};
             $extra = '' unless defined $extra;
-            $info->{overrides}{$tag}{$extra} = 0;
+            $tagover = Lintian::Tag::Override->new($tag, { 'extra' => $extra } );
+            $info->{'overrides-stats'}{$tag}{$extra} = 0;
+            $info->{overrides}{$tag}{$extra} = $tagover;
         } else {
             tag('malformed-override', $_);
         }
@@ -634,7 +623,7 @@ tag some-tag, regardless of what extra data was associated with it.
 sub overrides {
     my ($self, $file) = @_;
     if ($self->{info}{$file}) {
-        return $self->{info}{$file}{overrides};
+        return $self->{info}{$file}{'overrides-stats'};
     } else {
         return;
     }
