@@ -1139,6 +1139,9 @@ if ($action eq 'unpack') {
 } else {
     my @needed = keys %unpack_infos;
     my %added = ();
+    unless ($opt{'no-override'}) {
+	push @needed, 'override-file';
+    }
     while ( my $c = pop @needed ) {
 	next if $added{$c};
 	$added{$c} = 1;
@@ -1167,18 +1170,6 @@ if ($action eq 'unpack') {
 
 my $map = Lintian::DepMap::Properties->new();
 my $collmap = Lintian::DepMap::Properties->new();
-
-unless ($opt{'no-override'}) {
-    # add the override-file collection
-    $map->add('coll-override-file', {'type' => 'collection', 'name' =>  'override-file'});
-    $collmap->add('coll-override-file', {'type' => 'collection', 'name' =>  'override-file'});
-    if (exists $collection_info{'override-file'}{'needs-info'}) {
-	$map->addp('coll-override-file', 'coll-',
-		   @{$collection_info{'override-file'}{'needs-info'}});
-	$collmap->addp('coll-override-file', 'coll-',
-		   @{$collection_info{'override-file'}{'needs-info'}});
-    }
-}
 
 for my $c (keys %unpack_infos) {
     # Add the collections with their dependency information
