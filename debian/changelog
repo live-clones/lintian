@@ -118,6 +118,9 @@ lintian (2.5.2) UNRELEASED; urgency=low
       "NMU" in changelogs for suppressing
       changelog-should-mention-nmu.  Thanks to Jordi Mallach for
       the report.  (Closes: #620418)
+  * checks/po-debconf:
+    + [NT] Allow po-files with an "@modifier", which works with
+      debconf (>= 1.5.34).  (Closes: #617905)
   * checks/rules:
     + [NT] Check included files in d/rules against a limited
       number of common makefile snippets, which are known not
