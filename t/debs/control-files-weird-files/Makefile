@@ -9,12 +9,11 @@ all:
 	chown 0:0 control
 	chmod 644 control
 	md5sum usr/share/doc/$(name)/* > md5sums
-	touch triggers
 	tar -czf control.tar.gz control md5sums \
 	    special-file isinstallable triggers
 	ar rc $(name).deb \
 	    debian-binary control.tar.gz data.tar.gz
 
 clean:
-	rm -f *.tar.gz *.tar.lzma *.deb md5sums debian-binary triggers
+	rm -f *.tar.gz *.tar.lzma *.deb md5sums debian-binary
 	rm -rf usr
