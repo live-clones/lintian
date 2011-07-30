@@ -1,0 +1,6 @@
+Testname: overrides-shown
+Sequence: 1500
+Version: 1.0
+Options: --show-overrides -I -E
+Sort: no
+Description: Test override handling

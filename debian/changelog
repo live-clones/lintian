@@ -107,8 +107,13 @@ lintian (2.5.3) UNRELEASED; urgency=low
     + [JW,NT] Replace use of fail with croak.  (Closes: #637741)
   * lib/Lintian/Profile.pm:
     + [NT] Reject profiles containing an unknown field.
+  * lib/Lintian/Tag/Override.pm:
+    + [NT] New file.
   * lib/Lintian/Tags.pm:
     + [NT] Track which tags had overrides that have been dropped.
+    + [NT,RG] Collect override comments and print the comments
+      above the overridden tag (with --show-overrides).  Thanks
+      to Carl Fürstenberg for the report.  (Closes: #474590)
   * lib/Text_utils.pm:
     + [NT] Close <p>-tags in dtml_to_html since the output is used
       in xhtml (xml), where all tags must be closed properly.

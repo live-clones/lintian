@@ -297,7 +297,10 @@ profiles.
 
 =item B<--show-overrides>
 
-Output tags that have been overridden.
+Output tags that have been overridden.  The related override comments
+will also be printed (unless --quiet is used).  Please refer to the
+Lintian User Manual for the documentation on how lintian relates
+comments to a given override.
 
 This option overrides the B<show-overrides> variable in the
 configuration file.

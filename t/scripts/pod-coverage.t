@@ -29,6 +29,7 @@ our %MODULES =
      'Lintian::Relation::Version'  => [ qr/^compare$/ ],
      'Lintian::Tags'               => [],
      'Lintian::Tag::Info'          => [],
+     'Lintian::Tag::Override'      => [],
     );
 # TODO:
 #		Lintian::Collect::Binary
