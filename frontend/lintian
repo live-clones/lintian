@@ -224,6 +224,7 @@ Package selection options:
     -a, --all                 process all packages in distribution
     -b, --binary              process only binary packages
     -p X, --packages-file X   process all files in file (special syntax!)
+    --packages-from-file  X   process the packages in a file (if "-" use stdin)
     -s, --source              process only source packages
     --udeb                    process only udeb packages
 EOT-EOT-EOT
@@ -492,6 +493,7 @@ my %opthash = (			# ------------------ actions
 	       'source|s' => \&record_pkgmode,
 	       'udeb' => \&record_pkgmode,
 	       'packages-file|p=s' => \$packages_file,
+	       'packages-from-file=s' => \$opt{'packages-from-file'},
 
 	       # ------------------ experimental
 	       'exp-output:s' => \$experimental_output_opts,
@@ -534,18 +536,23 @@ if (defined $opt{'LINTIAN_ROOT'}) {
 $LINTIAN_ROOT = $opt{'LINTIAN_ROOT'};
 
 # option --all and packages specified at the same time?
-if (($check_everything or $packages_file) and $#ARGV+1 > 0) {
-    print STDERR "warning: options -a or -p cannot be mixed with package parameters!\n";
-    print STDERR "(will ignore -a or -p option)\n";
+if (($check_everything or $packages_file or $opt{'packages-from-file'}) and $#ARGV+1 > 0) {
+    print STDERR "warning: options -a, -p and --packages-from-file cannot be mixed with package parameters!\n";
+    print STDERR "(will ignore -a, -p or/and --packages-from-file option)\n";
     undef $check_everything;
     undef $packages_file;
+    delete $opt{'packages-from-file'};
+}
+
+if ($packages_file && $opt{'packages-from-file'}) {
+    die "The options -p and --packages-from-file cannot be used together.\n"
 }
 
 # check specified action
 $action = 'check' unless $action;
 
 # check for arguments
-if ($action =~ /^(?:check|unpack|remove)$/ and $#ARGV == -1 and not $check_everything and not $packages_file) {
+if ($action =~ /^(?:check|unpack|remove)$/ and $#ARGV == -1 and not $check_everything and not $packages_file and not $opt{'packages-from-file'}) {
     syntax();
 }
 
@@ -1003,10 +1010,29 @@ if ($check_everything) {
     open(my $pkgin, '<', $packages_file) or fail("Reading $packages_file: $!");
     while (my $line = <$pkgin>) {
 	chomp($line);
-	my (undef, undef, undef, $file) = split(/\s+/, $line, 4);
+	my ($t, undef, undef, $file) = split(/\s+/, $line, 4);
+	unless (defined $file && length $t == 1) {
+	    print STDERR "Syntax error in packages-file at line $.\n";
+	    print STDERR " - perhaps you meant to use \"--packages-from-file $packages_file\"\n";
+	    exit 1;
+	}
 	$pool->add_file($file);
     }
     close($pkgin);
+} elsif ($opt{'packages-from-file'}){
+    my $fd;
+    if ($opt{'packages-from-file'} eq '-') {
+	$fd = \*STDIN;
+    } else {
+	open $fd, '<', $opt{'packages-from-file'} or die "opening $opt{'packages-from-file'}: $!";
+    }
+    while (my $file = <$fd>) {
+	chomp($file);
+	$pool->add_file($file);
+    }
+    # close unless it is STDIN (else we will see a lot of warnings
+    # about STDIN being reopened as "output only")
+    close $fd unless $opt{'packages-from-file'} eq '-';
 }
 
 # undef these as they are not needed any more and they give a cheap

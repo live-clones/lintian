@@ -206,6 +206,10 @@ lintian (2.5.2) UNRELEASED; urgency=low
       loaded.  Previously Lintian would only load direct
       dependencies of a collection and assume that was enough.
     + [NT] Allow "verbose" to appear in the lintianrc file.
+    + [NT] Added new "--packages-from-file" option.  Lintian will
+      read packages from the file (one package per line) and process
+      these.  Unlike "--packages-file" it allows its argument to be
+      "-" for stdin and the format is simpler.
 
   * lib/Lab.pm:
     + [NT] Removed $dist argument to lab creation, since we rely on
