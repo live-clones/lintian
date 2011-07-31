@@ -210,6 +210,8 @@ lintian (2.5.2) UNRELEASED; urgency=low
       read packages from the file (one package per line) and process
       these.  Unlike "--packages-file" it allows its argument to be
       "-" for stdin and the format is simpler.
+    + [NT] Deprecated "--packages-file" in favour of the new
+      "--packages-from-file" option.
 
   * lib/Lab.pm:
     + [NT] Removed $dist argument to lab creation, since we rely on
@@ -261,6 +263,8 @@ lintian (2.5.2) UNRELEASED; urgency=low
       that these profiles will silently ignore overrides for
       "fatal" (non-overridable) tags.  (Closes: #536364)
 
+  * reporting/harness:
+    + [NT] Use --packages-from-file instead of --packages-file.
   * reporting/{html_reports,templates/index.tmpl}:
     + [NT] Always emit a page for tags, even if they are not emitted.
       It will also include a link to the entire list of known tags.

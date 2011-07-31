@@ -414,6 +414,9 @@ package), B<package> is the package name, B<version> is the package's
 version, and B<file> is the package file name (absolute path
 specification).
 
+Please note this has been deprecated in favour B<--packages-from-file>,
+which does not require a weird/special syntax.
+
 =item B<--packages-from-file> X
 
 Process the packages listed in X.  Lintian will parse each line (all

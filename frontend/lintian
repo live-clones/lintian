@@ -1007,6 +1007,8 @@ if ($check_everything) {
     }
 } elsif ($packages_file) {
     # process all packages listed in packages file?
+    print STDERR "warning: --packages-file is deprecated and may be removed in a later release.\n";
+    print STDERR "  - consider using --packages-from-file (one pkg per line)\n";
     open(my $pkgin, '<', $packages_file) or fail("Reading $packages_file: $!");
     while (my $line = <$pkgin>) {
 	chomp($line);
