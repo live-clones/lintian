@@ -115,6 +115,10 @@ my $udeb_info   = Lintian::Internal::PackageList->new('udeb');
 my $source_info = Lintian::Internal::PackageList->new('source');
 my %bin_src_ref;
 
+$binary_info->read_list("$LINTIAN_LAB/info/binary-packages");
+$udeb_info->read_list("$LINTIAN_LAB/info/udeb-packages");
+$source_info->read_list("$LINTIAN_LAB/info/source-packages");
+
 foreach my $source ($source_info->get_all){
     foreach my $binary (split m/\s*,\s++/o, $source_info->get($source)->{'binary'}) {
         $bin_src_ref{$binary} = $source;
