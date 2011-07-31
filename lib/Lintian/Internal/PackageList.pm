@@ -290,7 +290,10 @@ sub diff {
             push @added, $sen;
             next;
         }
-        ### FIXME: handle changed
+        if ($sentry->{'version'} ne $oentry->{'version'} ||
+            $sentry->{'timestamp'} ne $oentry->{'timestamp'}) {
+            push @changed, $sen;
+        }
         delete $ocopy{$sen}
     }
     @removed = keys %ocopy;
