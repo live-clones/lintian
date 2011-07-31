@@ -23,6 +23,8 @@ package Lintian::Internal::PackageList;
 use strict;
 use warnings;
 
+use base qw(Class::Accessor);
+
 use Carp qw(croak);
 use Lintian::Internal::PackageListDiff;
 
@@ -138,12 +140,14 @@ sub new {
 Returns a truth value if the packages list has changed since it was
 last written.
 
+=item $plist->type()
+
+Returns the type of this list.  (one of binary, udeb, source or changes)
+
 =cut
 
-sub dirty {
-    my ($self) = @_;
-    return $self->{'dirty'};
-}
+
+Lintian::Internal::PackageList->mk_ro_accessors(qw(dirty type));
 
 =item $plist->read_list($file)
 
