@@ -55,7 +55,7 @@ $ENV{'LINTIAN_ROOT'} = $LINTIAN_ROOT;
 # Import Lintian Perl libraries.
 use lib "$ENV{LINTIAN_ROOT}/lib";
 use Lintian::Tag::Info ();
-use Read_pkglists;
+use Lintian::Internal::PackageList;
 use Text_utils;
 use Util;
 
@@ -110,13 +110,13 @@ for my $template (qw/head foot clean index maintainer maintainers packages tag
 # Read the package lists.
 #
 
-my %binary_info = %{ read_bin_list("$LINTIAN_LAB/info/binary-packages"); };
-my %udeb_info = %{ read_bin_list("$LINTIAN_LAB/info/udeb-packages"); };
-my %source_info = %{ read_src_list("$LINTIAN_LAB/info/source-packages"); };
+my $binary_info = Lintian::Internal::PackageList->new('binary');
+my $udeb_info   = Lintian::Internal::PackageList->new('udeb');
+my $source_info = Lintian::Internal::PackageList->new('source');
 my %bin_src_ref;
 
-for my $source (keys %source_info) {
-    for my $binary (split(/,\s+/o,$source_info{$source}->{'binary'})) {
+foreach my $source ($source_info->get_all){
+    foreach my $binary (split m/\s*,\s++/o, $source_info->get($source)->{'binary'}) {
         $bin_src_ref{$binary} = $source;
     }
 }
@@ -234,34 +234,39 @@ while (<>) {
     # there is any.
     my ($source, $version, $area, $source_version, $maintainer, $uploaders);
     if ($type eq 'source') {
+        my $srcdata = $source_info->get($source);
         $source = $package;
-        if (exists $source_info{$source}) {
-            $version = $source_info{$source}->{version};
-            $area = $source_info{$source}->{area};
-            $maintainer = $source_info{$source}->{maintainer};
-            $uploaders = $source_info{$source}->{uploaders};
+        if (defined $srcdata) {
+            $version = $srcdata->{version};
+            $area = $srcdata->{area};
+            $maintainer = $srcdata->{maintainer};
+            $uploaders = $srcdata->{uploaders};
         } else {
             warn "source package $package not listed!\n";
         }
     } else {
+        my $srcdata;
+        my $bindata;
         $source = $bin_src_ref{$package};
-        if ($source and exists $source_info{$source}) {
-            $maintainer = $source_info{$source}->{maintainer};
-            $uploaders = $source_info{$source}->{uploaders};
+        $srcdata = $source_info->get($source) if $source;
+        if (defined $srcdata) {
+            $maintainer = $srcdata->{maintainer};
+            $uploaders = $srcdata->{uploaders};
         } else {
             warn "source for package $package not found!\n";
             $source = $package;
             $maintainer = undef;
         }
         if ($type eq 'binary') {
-            $version = $binary_info{$package}->{version};
-            $area = $binary_info{$source}->{area};
-            $source_version = $binary_info{$package}->{'source-version'};
+            $bindata = $binary_info->get($package);
         } elsif ($type eq 'udeb') {
-            $version = $udeb_info{$package}->{version};
-            $area = $udeb_info{$source}->{area};
-            $source_version = $udeb_info{$package}->{'source-version'};
+            $bindata = $udeb_info->get($package);
+        } else {
+            fail "Unknown type or unhandled case ($type).\n";
         }
+        $version = $bindata->{version};
+        $area = $bindata->{area};
+        $source_version = $bindata->{'source-version'};
     }
     $maintainer ||= '(unknown)';
     $area ||= 'main';
@@ -320,8 +325,8 @@ while (<>) {
 # this later to generate stub pages for maintainers whose packages are all
 # Lintian-clean.
 my %clean;
-for my $source (keys %source_info) {
-    my $maintainer = $source_info{$source}->{maintainer};
+for my $source ($source_info->get_all) {
+    my $maintainer = $source_info->get($source)->{maintainer};
     my $id = maintainer_url ($maintainer);
     $clean{$id} = $maintainer;
 }
