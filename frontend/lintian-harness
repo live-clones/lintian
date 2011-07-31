@@ -54,6 +54,7 @@ my %opthash = (
     'help|h' => \&usage,
     'root=s' => \$opt{'LINTIAN_ROOT'},
     'cfg'    => \$opt{'LINTIAN_CFG'},
+    'lab'    => \$opt{'LINTIAN_LAB'},
 );
 # Options accepted in the config file
 my %cfghash = (
@@ -78,12 +79,20 @@ GetOptions(%opthash)
 # file can be parsed.
 
 unshift @INC, "$opt{'LINTIAN_ROOT'}/lib";
+require Lab;
 require Lintian::Config;
+require Lintian::Internal::PackageList;
 require Util;
 import Util qw(fail);
 
 $conf = Lintian::Config->new(\%cfghash);
 
+my $lab = Lab->new($opt{'LINTIAN_LAB'});
+
+my ($nblist,$nulist, $nslist) = read_archive($opt{'LINTIAN_ARCHIVEDIR'}, trim($opt{'LINTIAN_DIST'}),
+                                              trim($opt{'LINTIAN_AREA'}), trim($opt{'LINTIAN_ARCH'}));
+
+my ($bdiff, $udiff, $sdiff) = generate_diffs($lab, $nblist, $nulist, $nslist);
 
 exit 0
 
@@ -99,7 +108,151 @@ EOF
 
 #### Helper Subs ####
 
+# Generates a list of PackageListDiffs by diffing the input lists
+# against the ones in the lab.
+#
+# FIXME: the lab should do more of the diffing
+sub generate_diffs {
+    my ($lab, @lists) = @_;
+    my $labdir = $lab->{dir}; #FIXME internal access
+    my $infodir;
+    my @diffs;
+    fail "$labdir is not a valid lab (run lintian --setup-lab first?).\n" unless $labdir->is_lab;
+    $infodir = "$labdir/info";
+    foreach my $list (@lists) {
+        my $type = $list->type;
+        my $lab_list = Lintian::Internal::PackageList->new($type);
+        $lab_list->read_list("$infodir/$type-packages");
+        push @diffs, $lab_list->diff($list);
+    }
+    return @diffs;
+}
+
+# read_archive($arc_root, $dist, $area, $arch)
+#
+# $arc_root => the root of the archive dir
+# $dist     => the dist
+# $area_str => comma separated list of areas.
+# $arch     => the architecture
+#
+sub read_archive {
+    my ($archive_root, $dist, $area_str, $arch) = @_;
+    my @areas = split m/\s*,\s++/o, $area_str;
+    my @pkgs = ();
+    # Handle binary packages
+    foreach my $type (qw(binary udeb)) {
+        my $nlist = Lintian::Internal::PackageList->new($type);
+        foreach my $area (@areas) {
+            my $file;
+            if ($type eq 'binary') {
+                $file = "$archive_root/dists/$dist/$area/binary-$arch/Packages";
+            } elsif ($type eq 'udeb') {
+                $file =  "$archive_root/dists/$dist/$area/debian-installer/binary-$arch/Packages";
+            } elsif ($type eq 'source') {
+                $file = "$archive_root/dists/$dist/$area/source/Sources";
+            } else {
+                fail "Assertion Error: unhandled type ($type).\n";
+            }
+
+            my $pkg_data = {
+                dist => $dist,
+                area => $area,
+                arch => $arch,
+                type => $type,
+            }
+            parse_packages_file($archive_root, $file, $pkg_data, $nlist);
+        }
+    }
+
+}
+
 sub run {
 
+}
+
+sub trim {
+    my ($a) = @_;
+    $a =~ s/^\s++//o;
+    $a =~ s/\s++$//o;
+    return $a;
+}
+
+sub open_data_file {
+    my ($file) = @_;
+    if (-e $file) {
+        open my $fd, '<', $file or fail "opening $file: $!";
+        return $fd;
+    }
+    foreach my $com (['gz', ['gzip', '-dc']] ){
+        my ($ext, $cmd) = @$com;
+        if ( -e "$file.$ext") {
+            open my $c, '-|', @$cmd, "$file.$ext" or fail "running @$cmd $file.$ext";
+            return $fd;
+        }
+    }
+    fail "Cannot find $file.\n";
+}
+
+sub parse_packages_file {
+    my ($archive_root, $file, $pkg_data, $nlist) = @_;
+    my $fd = open_data_file($file);
+    my $helper = sub {
+        my ($paragraph) = @_;
+        _pkg_parser($paragraph, $archive_root, $pkg_data, $nlist);
+    }
+    Util::_parse_dpkg_control_iterative($helper, $fd, 0);
+    close $fd;
+}
+
+sub _pkg_parser {
+    my ($paragraph, $archive_root, $pkg_data, $nlist) = @_;
+    my $file = "$archive_root/$paragraph->{'filename'}";
+    my $type = $pkg_data->{'type'};
+    my @stat;
+    my $data;
+    unless (@data = stat $file) {
+        print "E: general: cannot stat $LINTIAN_ARCHIVEDIR/$deb_file\n";
+        next;
+    }
+    if ($type ne 'source') {
+        $data = safe_get_deb_info($file, $type);
+    } else {
+        # FIXME - handle source.
+    }
+    return unless $data;
+
+    if ($type ne 'source') {
+        unless (exists $data->{'source-version'}) {
+            if ($data->{'source'} =~ /^([-+\.\w]+)\s+\((.+)\)$/) {
+                $data->{'source'} = $1;
+                $data->{'source-version'} = $2;
+            } else {
+                $data->{'source-version'} = $data->{'version'};
+            }
+        }
+    }
+    # Save entry for writing to output file.
+    $data->{file} = $deb_file;
+    $data->{timestamp} = $timestamp;
+    $data->{area} = $packages_file->{area};
+    $status_map{$pkg} = $status;
+    $nlist->set($pkg, $data);
+}
+
+
+sub safe_get_deb_info {
+    # use eval when calling get_deb_info, since we don't want to `die' just
+    # because of a single broken package
+    my ($file, $type) = @_;
+    my $data;
+    eval { $data = get_deb_info("$LINTIAN_ARCHIVEDIR/$file"); };
+    if ($@) {
+	# error!
+	print STDERR "$@\n";
+	print "E: general: bad-$type-package $file\n";
+	return;
+    }
+    $data->{'source'} or ($data->{'source'} = $data->{'package'});
+    return $data;
 }
 
