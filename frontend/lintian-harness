@@ -1,0 +1,105 @@
+#!/usr/bin/perl
+# {{{ Legal stuff
+# Lintian-harness -- frontend for updating a Lintian website
+#
+# Copyright (C) 2011 Niels Thykier
+#  Based on the work of Christian Schwarz and Richard Braakman, which
+#  is Copyright (C) 1998 Christian Schwarz and Richard Braakman
+#
+# This program is free software.  It is distributed under the terms of
+# the GNU General Public License as published by the Free Software
+# Foundation; either version 2 of the License, or (at your option) any
+# later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+# }}}
+
+
+use strict;
+use warnings;
+
+use Getopt::Long;
+
+# List of variables we accept/impor for lintian; these may be
+# overriden by cmd-line options below.
+my @ENV_VARS = (qw(
+    LINTIAN_ROOT
+    LINTIAN_CFG
+    LINTIAN_LAB
+));
+
+# List of variables that we export for lintian.
+# Among things, it saves us from passing a lot of command-line
+# options.
+my @EXPORT_VARS = @ENV_VARS;
+
+# Values of options from env/cmd-line
+#  - pre-seed options, where we do not need to know
+#    if the user explicitly set them via cmd-line or ENV
+my %opt = (
+    'LINTIAN_ROOT' => '/usr/share/lintian'
+);
+# Options accepted via command line.
+#  - for the subs, search/look for "Argument Parser Subs" below
+my %opthash = (
+    'help|h' => \&usage,
+    'root=s' => \$opt{'LINTIAN_ROOT'},
+    'cfg'    => \$opt{'LINTIAN_CFG'},
+);
+# Options accepted in the config file
+my %cfghash = (
+);
+
+my $conf;
+
+# Fill in the default values for environment variables.
+#  - GetOptions(%opthash) will override them
+foreach my $var (@ENV_VARS) {
+    $opt{$var} = $ENV{$var} if $ENV{$var};
+}
+
+# init commandline parser
+Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
+
+# process commandline options
+GetOptions(%opthash)
+    or die("error parsing options\n");
+
+# At this point LINTIAN_ROOT and LINTIAN_CFG are known, so the config
+# file can be parsed.
+
+unshift @INC, "$opt{'LINTIAN_ROOT'}/lib";
+require Lintian::Config;
+require Util;
+import Util qw(fail);
+
+$conf = Lintian::Config->new(\%cfghash);
+
+
+exit 0
+
+#### Argument Parser Subs ####
+
+sub usage {
+    print <<EOF ;
+Syntax: lintian-harness ...
+Actions:
+    TODO ...
+EOF
+}
+
+#### Helper Subs ####
+
+sub run {
+
+}
+
