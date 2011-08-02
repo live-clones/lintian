@@ -39,7 +39,7 @@ use Getopt::Long;
 #
 # $LINTIAN_ROOT
 #  - must be "our" as it is used by Checker and Lab
-#  - it is set it after opt parsing and left at that; this allows it
+#  - it is set after opt parsing and left at that; this allows it
 #    to be trivially removed once Checker and Lab have been fixed.
 #
 # LINTIAN_{ARCH,ARCHIVEDIR,AREA,DIST,LAB,ROOT}
@@ -65,7 +65,7 @@ my @MUST_EXPORT = (qw(
 # Environment variables Lintian cares about - the list contains
 # the ones that can also be set via the config file
 #
-# %opt (definde below) will be updated with values of the env
+# %opt (defined below) will be updated with values of the env
 # after parsing cmd-line options.  A given value in %opt is
 # updated to use the ENV variable if the one in %opt is undef
 # and ENV has a value.
