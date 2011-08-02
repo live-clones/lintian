@@ -1,0 +1,5 @@
+Testname: rules-special-variables
+Sequence: 6000
+Version: 1.0
+Description: Test for debian/rules using special variables
+Test-For: debian-rules-uses-or-modifies-user-only-variable

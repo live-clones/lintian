@@ -199,3 +199,16 @@ Info: The package appears to use an <tt>ExtUtils::MakeMaker</tt>
    make install PREFIX=$(TMP)/usr          # WRONG
  should be replaced with
    make install DESTDIR=$(TMP)             # RIGHT
+
+Tag: debian-rules-uses-or-modifies-user-only-variable
+Severity: normal
+Certainty: possible
+Ref: http://bugs.debian.org/631786
+Info: The rules files appear to be reading or modifying a variable not
+ intended for use by package maintainers.  The special variables
+ .
+ DEB_*FLAGS_{SET,APPEND}
+ .
+ can be used by users, who wants to re-compile debian packages with
+ special (or non-standard) build flags.
+

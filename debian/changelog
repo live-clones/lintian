@@ -2,11 +2,12 @@ lintian (2.5.2) UNRELEASED; urgency=low
 
   * Summary of tag changes:
     + Added:
+      - debian-rules-uses-deprecated-makefile
+      - debian-rules-uses-or-modifies-user-only-variable
       - package-has-long-file-name
       - source-package-component-has-long-file-name
-      - upstart-job-in-etc-init.d-not-registered-via-update-rc.d
-      - debian-rules-uses-deprecated-makefile
       - udeb-uses-non-gzip-data-tarball
+      - upstart-job-in-etc-init.d-not-registered-via-update-rc.d
     + Removed:
       - calls-suidperl-directly
       - suid-perl-script-but-no-perl-suid-dep
@@ -132,6 +133,8 @@ lintian (2.5.2) UNRELEASED; urgency=low
       as they are both deprecated by source format 3.0 (quilt).
       Thanks to Nelson A. de Oliveira for reporting and Luk Claes
       for providing an initial patch.  (Closes: #624201)
+    + [NT] Added check for using DEB_*FLAGS_{SET,APPEND} in d/rules.
+      Thanks to Raphaël Hertzog for the report.  (Closes: #631786)
   * checks/scripts{,.desc}:
     + [NT] Removed perl-suid related tags as the package is no
       longer available and we have no known packages triggering
