@@ -39,13 +39,12 @@ use Text::Template;
 BEGIN {
     my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
     if (not $LINTIAN_ROOT) {
-	use Cwd ();
+	require Cwd;
 	$ENV{'LINTIAN_ROOT'} = $LINTIAN_ROOT = Cwd::cwd();
     }
     delete $ENV{'LINTIAN_CFG'};
     delete $ENV{'LINTIAN_LAB'};
     delete $ENV{'LINTIAN_DIST'};
-    delete $ENV{'LINTIAN_UNPACK_LEVEL'};
     $ENV{'LC_COLLATE'} = 'C';
 
     # Set standard umask because many of the test packages rely on this
@@ -327,7 +326,7 @@ if ($singletest) {
     } @tests;
 print "\n" if ($prev and @tests);
 if ($DEBUG) {
-    print "Found the following tests: ";
+    print 'Found the following tests: ';
     print join(' ', map { $_->{testname} } @tests);
     print "\n";
 }
@@ -404,27 +403,27 @@ sub test_package {
     }
 
     print "Cleaning up and repopulating $targetdir...\n" if $DEBUG;
-    runsystem_ok("rm", "-rf", $rundir);
-    runsystem_ok("mkdir", "-p", $rundir);
+    runsystem_ok('rm', '-rf', $rundir);
+    runsystem_ok('mkdir', '-p', $rundir);
     my $skel = $testdata->{skeleton};
     if ($is_native) {
-	runsystem("cp", "-rp", "$tmpldir/$skel", $targetdir);
-	runsystem("rm", "-f", "$targetdir/debian/changelog");
-	runsystem("rsync", "-rpc", "$origdir/debian/", "$targetdir/")
+	runsystem('cp', '-rp', "$tmpldir/$skel", $targetdir);
+	runsystem('rm', '-f', "$targetdir/debian/changelog");
+	runsystem('rsync', '-rpc', "$origdir/debian/", "$targetdir/")
 	    if -d "$origdir/debian/";
     } else {
-	runsystem("cp", "-rp", "$tmpldir/${skel}.upstream", $targetdir);
-	runsystem("rm", "-f", "$targetdir/.dummy");
-	runsystem("rsync", "-rpc", "$origdir/upstream/", "$targetdir/");
+	runsystem('cp', '-rp', "$tmpldir/${skel}.upstream", $targetdir);
+	runsystem('rm', '-f', "$targetdir/.dummy");
+	runsystem('rsync', '-rpc', "$origdir/upstream/", "$targetdir/");
 	if (-x "$origdir/pre_upstream") {
-	    msg_print "running pre_upstream hook... " if $VERBOSE;
+	    msg_print 'running pre_upstream hook... ' if $VERBOSE;
 	    runsystem("$origdir/pre_upstream", $targetdir);
 	}
 	runsystem("cd $rundir && ".
 		  "tar czf ${pkg}_${orig_version}.orig.tar.gz $pkgdir");
-	runsystem("rsync", "-rpc", "--exclude=debian/changelog",
+	runsystem('rsync', '-rpc', '--exclude=debian/changelog',
 		  "$tmpldir/$skel/", "$targetdir/");
-	runsystem("rsync", "-rpc", "$origdir/debian/", "$targetdir/")
+	runsystem('rsync', '-rpc', "$origdir/debian/", "$targetdir/")
 	    if -d "$origdir/debian/";
     }
 
@@ -438,11 +437,11 @@ sub test_package {
 	runsystem("echo >$targetdir/debian/watch");
     }
     if (-x "$origdir/pre_build") {
-	msg_print "running pre_build hook... " if $VERBOSE;
+	msg_print 'running pre_build hook... ' if $VERBOSE;
 	runsystem("$origdir/pre_build", $targetdir);
     }
 
-    msg_print "building... ";
+    msg_print 'building... ';
     my $res = system("cd $rundir/$pkgdir && $DPKG_BUILDPACKAGE >../build.$pkg 2>&1");
     if ($res){
 	dump_log($pkg, "$rundir/build.$pkg") if $DUMP_LOGS;
@@ -453,7 +452,7 @@ sub test_package {
     $version =~ s/^(\d+)://;
     my @options = split(' ', $testdata->{options});
     my ($file) = glob("$rundir/$pkg\_$version*.changes");
-    msg_print "testing... ";
+    msg_print 'testing... ';
     my $opts = { err => "$rundir/tags.$pkg", fail => 'never' };
     my $status;
     unshift(@options, '--allow-root', '--no-cfg');
@@ -487,7 +486,7 @@ sub test_package {
 	    return 1;
 	} else {
 	    msg_print "FAILED:\n";
-	    runsystem_ok("diff", "-u", "$origdir/tags", "$rundir/tags.$pkg");
+	    runsystem_ok('diff', '-u', "$origdir/tags", "$rundir/tags.$pkg");
 	    return;
 	}
     }
@@ -507,18 +506,19 @@ sub test_package {
 	}
     } else {
 	my $okay = 1;
-	open TAGS, "$rundir/tags.$pkg" or fail("Cannot open $rundir/tags.$pkg");
+	open TAGS, '<', "$rundir/tags.$pkg" or fail("Cannot open $rundir/tags.$pkg");
 	while (<TAGS>) {
 		next if m/^N: /;
-		if (not /^(.): (\S+)(?: (?:changes|source|udeb))?: (\S+)/) {
-		    msg_print (($testdata->{'todo'} eq 'yes')? "TODO" : "E");
+		# Looks for "$code: $package[ $type]: $tag"
+		if (not /^.: \S+(?: (?:changes|source|udeb))?: (\S+)/o) {
+		    msg_print (($testdata->{'todo'} eq 'yes')? 'TODO' : 'E');
 		    msg_print ": Invalid line:\n$_";
 		    $okay = 0;
 		    next;
 		}
-		my $tag = $3;
+		my $tag = $1;
 		if ($test_against{$tag}) {
-		    msg_print (($testdata->{'todo'} eq 'yes')? "TODO" : "E");
+		    msg_print (($testdata->{'todo'} eq 'yes')? 'TODO' : 'E');
 		    msg_print ": Tag $tag seen but listed in Test-Against\n";
 		    $okay = 0;
 		}
@@ -527,7 +527,7 @@ sub test_package {
 	close TAGS;
 	if (%test_for) {
 		for my $tag (sort keys %test_for) {
-		    msg_print (($testdata->{'todo'} eq 'yes')? "TODO" : "E");
+		    msg_print (($testdata->{'todo'} eq 'yes')? 'TODO' : 'E');
 		    msg_print ": Tag $tag listed in Test-For but not found\n";
 		    $okay = 0;
 		}
@@ -552,7 +552,7 @@ sub test_changes {
 
     my $testdir = "$TESTSET/changes";
 
-    msg_print "testing... ";
+    msg_print 'testing... ';
     runsystem_ok("$LINTIAN --allow-root --no-cfg -I -E $testdir/$test.changes 2>&1"
 		 . " | sort > $RUNDIR/tags.changes-$test");
 
@@ -751,11 +751,11 @@ sub check_test_is_sane {
     my ($dir, $data) = @_;
 
     if ($DEBUG) {
-	print "check_test_is_sane <= " . Dumper($data);
+	print 'check_test_is_sane <= ' . Dumper($data);
     }
 
     unless ($data->{testname} && $data->{version}) {
-	fail("Name or Version missing");
+	fail('Name or Version missing');
     }
 
     $data->{srcpkg} ||= $data->{testname};
@@ -783,7 +783,7 @@ sub check_test_is_sane {
     $data->{options} =~ s/TESTSET/$dir/g;
 
     if ($DEBUG) {
-	print "check_test_is_sane => ".Dumper($data);
+	print 'check_test_is_sane => '.Dumper($data);
     }
 
     my @architectures = qw(all any);
