@@ -471,10 +471,6 @@ my %opthash = (			# ------------------ actions
 	       'fail-on-warnings' => \$opt{'fail-on-warnings'},
 	       'keep-lab' => \$keep_lab,
 
-	       # Note: Ubuntu has (and other derivatives might gain) a
-	       # -D/--debian option to make lintian behave like in Debian, that
-	       # is, to revert distribution-specific changes
-
 	       # ------------------ configuration options
 	       'cfg=s' => \$opt{'LINTIAN_CFG'},
 	       'no-cfg' => \$no_conf,
