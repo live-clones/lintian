@@ -319,7 +319,7 @@ unless ($includes) {
             unless $seen{$target};
     }
     for my $target (sort keys %recommended) {
-        tag "debian-rules-missing-recommended-target", $target
+        tag 'debian-rules-missing-recommended-target', $target
             unless $seen{$target};
     }
 }

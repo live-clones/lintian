@@ -38,7 +38,7 @@ my %hwcap_dir = map { $_ => 1 }
 # The following architectures should always have a STACK setting in shared
 # libraries to disable executable stack.  Other architectures don't always add
 # this section and therefore can't be checked.
-our %stack_arches = map { $_ => 1 }
+my %stack_arches = map { $_ => 1 }
     qw(
        alpha
        amd64
@@ -49,7 +49,7 @@ our %stack_arches = map { $_ => 1 }
        sparc
       );
 
-our $ldconfig_dirs = Lintian::Data->new('shared-libs/ldconfig-dirs');
+my $ldconfig_dirs = Lintian::Data->new('shared-libs/ldconfig-dirs');
 
 sub run {
 

@@ -20,6 +20,8 @@
 
 package Lintian::po_debconf;
 use strict;
+use warnings;
+
 use Util;
 use Lintian::Tags qw(tag);
 
@@ -49,7 +51,7 @@ for my $file (readdir(DEB)) {
 				or fail("Can't open debfiles/$file file.");
 			my $in_template = 0;
 			while (<PO>) {
-				tag "translated-default-field", "$file: $."
+				tag 'translated-default-field', "$file: $."
 					if (m/^_Default(Choice)?: [^\[]*$/);
 				if (/^Template: (\S+)/i) {
 					my $template = $1;
@@ -73,7 +75,7 @@ closedir(DEB);
 #TODO: check whether all templates are named in TEMPLATES.pot
 if ( $has_template ) {
     if ( ! -d "$debfiles/po" ) {
-	tag "not-using-po-debconf", "";
+	tag 'not-using-po-debconf';
 	return 0;
     }
 } else {
@@ -83,7 +85,7 @@ if ( $has_template ) {
 # If we got here, we're using po-debconf, so there shouldn't be any stray
 # language templates left over from debconf-mergetemplate.
 for (@lang_templates) {
-    tag "stray-translated-debconf-templates", $_ unless /templates\.in$/;
+    tag 'stray-translated-debconf-templates', $_ unless /templates\.in$/;
 }
 
 # yada builds its template and po/POTFILES.in dynamically at build time, so
@@ -111,40 +113,40 @@ if (!$yada && -f "$debfiles/po/POTFILES.in") {
 		#  Cannot check files which are not under debian/
 		next if m,^\.\./, or $_ eq '';
 		unless (-f "$debfiles/$_") {
-			tag "missing-file-from-potfiles-in", $_;
+			tag 'missing-file-from-potfiles-in', $_;
 			$missing_files = 1;
-		} 
+		}
 	}
 	close(POTFILES);
 } elsif (!$yada) {
-	tag "missing-potfiles-in", "";
+	tag 'missing-potfiles-in';
 	$missing_files = 1;
 }
 if (! -f "$debfiles/po/templates.pot") {
-	tag "missing-templates-pot", "";
+	tag 'missing-templates-pot';
 	$missing_files = 1;
 }
 
-if (-x "/usr/bin/msgcmp" && -x "/usr/share/intltool-debian/intltool-update" ) {
+if (-x '/usr/bin/msgcmp' && -x '/usr/share/intltool-debian/intltool-update' ) {
 	if ($missing_files == 0) {
-		$ENV{"INTLTOOL_EXTRACT"} ||= "/usr/share/intltool-debian/intltool-extract";
+		$ENV{'INTLTOOL_EXTRACT'} ||= '/usr/share/intltool-debian/intltool-extract';
 		system_env("cd \Q$debfiles/po\E && /usr/share/intltool-debian/intltool-update --gettext-package=test --pot");
 		system_env("/usr/bin/msgcmp --use-untranslated \Q$debfiles/po/test.pot\E \Q$debfiles/po/templates.pot\E >/dev/null 2>&1"
                            . "&& /usr/bin/msgcmp --use-untranslated \Q$debfiles/po/templates.pot\E \Q$debfiles/po/test.pot\E >/dev/null 2>&1") == 0
-                	or tag "newer-debconf-templates";
+                	or tag 'newer-debconf-templates';
 	}
 } else {
-	fail("either msgcmp or intltool-update not found");
+	fail('either msgcmp or intltool-update not found');
 }
 
-if (! -x "/usr/bin/msgfmt" ) {
-	fail("msgfmt not found");
+if (! -x '/usr/bin/msgfmt' ) {
+	fail('msgfmt not found');
 }
 opendir(DEBIAN, "$debfiles/po")
         or fail("Can't open debfiles/po directory.");
 while (defined(my $file=readdir(DEBIAN))) {
         next unless $file =~ m/\.po$/;
-        tag "misnamed-po-file", "debian/po/$file"
+        tag 'misnamed-po-file', "debian/po/$file"
                 unless ($file =~ /^[a-z]{2,3}(_[A-Z]{2})?(?:\@[^\.]+)?\.po$/o);
         local ($/) = "\n\n";
         $_ = '';
@@ -155,7 +157,7 @@ while (defined(my $file=readdir(DEBIAN))) {
         }
         close(PO);
 	unless ($_) {
-		tag "invalid-po-file", "debian/po/$file";
+		tag 'invalid-po-file', "debian/po/$file";
 		next;
 	}
         s/"\n"//g;
@@ -163,10 +165,10 @@ while (defined(my $file=readdir(DEBIAN))) {
         if (m/charset=(.*?)\\n/) {
                 $charset = ($1 eq 'CHARSET' ? '' : $1);
         }
-        tag "unknown-encoding-in-po-file", "debian/po/$file"
+        tag 'unknown-encoding-in-po-file', "debian/po/$file"
                 unless length($charset);
 	system_env("msgfmt -o /dev/null \Q$debfiles/po/$file\E 2>/dev/null") == 0
-		or tag "invalid-po-file", "debian/po/$file";
+		or tag 'invalid-po-file', "debian/po/$file";
 
 	my $stats = `LANG=C msgfmt -o /dev/null --statistics \Q$debfiles/po/$file\E 2>&1`;
 	if (!$full_translation && $stats =~ m/^\w+ \w+ \w+\.$/) {
@@ -174,7 +176,7 @@ while (defined(my $file=readdir(DEBIAN))) {
 	}
 }
 
-tag "no-complete-debconf-translation", "" if !$full_translation;
+tag 'no-complete-debconf-translation' if !$full_translation;
 
 }
 
