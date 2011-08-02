@@ -20,10 +20,11 @@
 # MA 02110-1301, USA.
 
 use strict;
+use warnings;
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Util;
 
-($#ARGV == 1) or fail("syntax: fields <pkg> <type>");
+($#ARGV == 1) or fail('syntax: fields <pkg> <type>');
 my $pkg = shift;
 my $type = shift;
 my $file;
@@ -40,17 +41,17 @@ if ($type eq 'changes'){
 if (!defined($file)) {
     fail("Cannot extract files for $type") unless ($type =~ m/^remove-/);
 } elsif (not -e $file) {
-    fail("fields invoked in the wrong directory");
+    fail('fields invoked in the wrong directory');
 }
 
 if (-d 'fields'){
-    delete_dir('fields') or fail("Could not remove old fields directory");
+    delete_dir('fields') or fail('Could not remove old fields directory');
 }
 
 # Exit now if we are just removing.
 exit 0 unless (defined($file));
 
-mkdir("fields", 0777) or fail("mkdir fields: $!");
+mkdir('fields', 0777) or fail("mkdir fields: $!");
 
 if ($type eq 'changes' or $type eq 'source'){
     $data = get_dsc_info($file);

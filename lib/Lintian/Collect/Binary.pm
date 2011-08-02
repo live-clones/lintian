@@ -255,7 +255,7 @@ sub java_info {
             $file_list = $java_info{$file}->{files};
             $manifest = 0;
         }
-        elsif (m#^-- MANIFEST: \./(.+)$#o) {
+        elsif (m#^-- MANIFEST: \./(?:.+)$#o) {
             # TODO: check $file == $1 ?
             $java_info{$file}->{manifest} = {};
             $manifest = $java_info{$file}->{manifest};

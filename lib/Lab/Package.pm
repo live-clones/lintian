@@ -333,7 +333,7 @@ sub update_status_file{
     }
 
     print $fd "Lintian-Version: $lint_version\n";
-    print $fd "Lab-Format: " . LAB_FORMAT ."\n";
+    print $fd 'Lab-Format: ' . LAB_FORMAT ."\n";
     print $fd "Package: $self->{pkg_name}\n";
     print $fd "Version: $self->{pkg_version}\n";
     print $fd "Type: $self->{pkg_type}\n";
@@ -376,7 +376,7 @@ sub _check {
 
 	# lintian status file exists?
 	unless (-f "$basedir/.lintian-status") {
-	    v_msg("No lintian status file found (removing old directory in lab)");
+	    v_msg('No lintian status file found (removing old directory in lab)');
 	    $remove_basedir = 1;
 	    goto REMOVE_BASEDIR;
 	}
@@ -391,14 +391,14 @@ sub _check {
 
 	# compatible lintian version?
 	if (not exists $data->{'lab-format'} or ($data->{'lab-format'} < LAB_FORMAT)) {
-	    v_msg("Lab directory was created by incompatible lintian version");
+	    v_msg('Lab directory was created by incompatible lintian version');
 	    $remove_basedir = 1;
 	    goto REMOVE_BASEDIR;
 	}
 
 	# version up to date?
 	if (not exists $data->{'version'} or ($data->{'version'} ne $pkg_version)) {
-	    debug_msg(1, "Removing package in lab (newer version exists) ...");
+	    debug_msg(1, 'Removing package in lab (newer version exists) ...');
 	    $remove_basedir = 1;
 	    goto REMOVE_BASEDIR;
 	}
@@ -412,7 +412,7 @@ sub _check {
 	    $timestamp = $stat[9];
 	}
 	if ((not defined $timestamp) or (not exists $data->{'timestamp'}) or ($data->{'timestamp'} != $timestamp)) {
-	    debug_msg(1, "Removing package in lab (package has been changed) ...");
+	    debug_msg(1, 'Removing package in lab (package has been changed) ...');
 	    $remove_basedir = 1;
 	    goto REMOVE_BASEDIR;
 	}

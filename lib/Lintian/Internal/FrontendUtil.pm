@@ -100,3 +100,5 @@ sub find_default_profile {
     return lc($vendor);
 }
 
+1;
+

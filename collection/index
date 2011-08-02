@@ -25,7 +25,6 @@
 
 use strict;
 use warnings;
-use vars qw($verbose);
 
 # import perl libraries
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
@@ -181,7 +180,7 @@ sub index_src {
     }
     # Now that we have the file names we want, write them out sorted to the index
     # file.
-    spawn({ fail => 'error', out_append => "index" },
+    spawn({ fail => 'error', out_append => 'index' },
 	  sub { print @result }, '|', ['sort', '-k', '6']);
     return 1;
 }
