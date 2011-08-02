@@ -136,6 +136,8 @@ lintian (2.5.2) UNRELEASED; urgency=low
     + [NT] Removed perl-suid related tags as the package is no
       longer available and we have no known packages triggering
       the tags at the moment.  (Closes: #631432)
+    + [NT] Added perl6/rakudo as a known interpreter.  Thanks to
+      Alessandro Ghedini for the report and patch.  (Closes: #636354)
   * checks/shared-libs{,.desc}:
     + [NT] Fixed broken sentence.  Thanks to Norbert Preining for
       reporting the issue.
