@@ -14,6 +14,7 @@ bar usr/lib/site-python/foo
 bar usr/local/foo
 bar usr/share
 bar usr/share/doc
+bar usr/share/doc/files-foo-in-bar/.xvpics/
 bar usr/share/doc/files-foo-in-bar/examples/examples
 bar usr/X11R6/bin
 bar var/foo

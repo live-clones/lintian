@@ -1151,7 +1151,7 @@ foreach my $file (@{$info->sorted_index}) {
 	if ($file =~ m,/\.(?:be|ditrack)/?$,) {
 	    tag 'package-contains-bts-control-dir', $file;
 	}
-	if ($file =~ m,/.xvpics/?$,) {
+	if ($file =~ m,/\.xvpics/?$,) {
 	    tag 'package-contains-xvpics-dir', $file;
 	}
 	if ($file =~ m,usr/share/doc/[^/]+/examples/examples/?$,) {
