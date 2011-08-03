@@ -1,5 +1,5 @@
-Last generated 2011-07-25
-Coverage: 671/913 (73.49%), w. legacy tests: 805/913 (88.17%)
+Last generated 2011-08-03
+Coverage: 676/914 (73.96%), w. legacy tests: 806/914 (88.18%)
 
 The following tags are not tested by the test suite:
 
@@ -253,10 +253,6 @@ nmu qa-upload-has-incorrect-version-number
 po-debconf newer-debconf-templates
 po-debconf unknown-encoding-in-po-file
 
-scripts ancient-dpkg-epoch-check
-scripts ancient-dpkg-long-filenames-check
-scripts ancient-dpkg-multi-conrep-check
-scripts ancient-dpkg-predepends-check
 scripts executable-not-elf-or-script
 scripts maintainer-script-ignores-errors
 scripts maintainer-script-removes-device-files
@@ -394,10 +390,6 @@ libbaz
   postinst-should-not-set-usr-doc-link
 
 maintainer-scripts
-  ancient-dpkg-epoch-check
-  ancient-dpkg-long-filenames-check
-  ancient-dpkg-multi-conrep-check
-  ancient-dpkg-predepends-check
   changelog-should-mention-qa
   config-does-not-load-confmodule
   debconf-config-not-executable

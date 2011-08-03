@@ -1,0 +1,10 @@
+Testname: scripts-ancient-dpkg
+Sequence: 6000
+Version: 1.0
+Description: Tests for ancient dpkg stuff
+Test-For:
+ ancient-dpkg-epoch-check
+ ancient-dpkg-long-filenames-check
+ ancient-dpkg-multi-conrep-check
+ ancient-dpkg-predepends-check
+
