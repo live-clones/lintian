@@ -1,6 +1,13 @@
 #!/usr/bin/make -f
 %:
 	dh $@
-binary:
-	dh --before dh_usrlocal binary
-	dh --after dh_usrlocal binary
+
+override_dh_auto_build:
+	pod2man --section 1 bar.pod > bar.1
+	gzip --best bar.1
+
+override_dh_auto_install:
+	dh_install bar.1.gz usr/X11R6/man/man1/
+
+override_dh_usrlocal:
+	# skip

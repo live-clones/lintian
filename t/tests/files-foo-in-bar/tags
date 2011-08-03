@@ -20,6 +20,12 @@ E: files-foo-in-bar: file-in-usr-lib-site-python usr/lib/site-python/foo/bar
 E: files-foo-in-bar: file-in-usr-local usr/local/foo/bar
 E: files-foo-in-bar: nested-examples-directory usr/share/doc/files-foo-in-bar/examples/examples/
 E: files-foo-in-bar: non-standard-dir-in-var var/foo/
+E: files-foo-in-bar: package-installs-file-to-usr-x11r6 usr/X11R6/
+E: files-foo-in-bar: package-installs-file-to-usr-x11r6 usr/X11R6/man/
+E: files-foo-in-bar: package-installs-file-to-usr-x11r6 usr/X11R6/man/man1/
+E: files-foo-in-bar: package-installs-file-to-usr-x11r6 usr/X11R6/man/man1/bar.1.gz
+E: files-foo-in-bar: package-installs-file-to-usr-x11r6-bin usr/X11R6/bin/
+E: files-foo-in-bar: package-installs-file-to-usr-x11r6-bin usr/X11R6/bin/bar
 E: files-foo-in-bar: subdir-in-bin bin/foo/
 E: files-foo-in-bar: subdir-in-usr-bin usr/bin/foo/
 E: files-foo-in-bar: udev-rule-in-etc etc/udev/rules.d/bar

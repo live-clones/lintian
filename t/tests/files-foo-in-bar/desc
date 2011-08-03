@@ -16,8 +16,12 @@ Test-For:
  file-in-usr-lib-sgml
  file-in-usr-lib-site-python
  file-in-usr-local
+ package-installs-file-to-usr-x11r6
+ package-installs-file-to-usr-x11r6-bin
  nested-examples-directory
  non-standard-dir-in-usr
  non-standard-dir-in-var
  subdir-in-bin
  udev-rule-in-etc
+
+
