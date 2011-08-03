@@ -2,12 +2,12 @@ Testname: files-bad-perm-owner
 Sequence: 6000
 Version: 1.0
 Description: General permissions and owner tests
-Section: games
 Test-For:
  bad-owner-for-doc-file
  bad-permissions-for-ali-file
  bad-permissions-for-etc-cron.d-script
  bad-permissions-for-etc-emacs-script
+ executable-in-usr-share-doc
  executable-is-not-world-readable
  non-standard-dir-perm
  non-standard-executable-perm
@@ -17,3 +17,4 @@ Test-For:
  setgid-binary
  setuid-binary
  setuid-gid-binary
+
