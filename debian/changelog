@@ -40,6 +40,8 @@ lintian (2.5.2) UNRELEASED; urgency=low
   * checks/circular-deps.desc:
     + [NT] Fixed typo; thanks to Nicolás Alvarez for the report
       and patch.  (Closes: #630925)
+  * checks/control-files:
+    + [NT] Refactored static tables into data-files.
   * checks/copyright-file:
     + [NT] Stricten one of the regexes for catching left over
       helper templates.  This should prevent false-positives for
@@ -172,6 +174,8 @@ lintian (2.5.2) UNRELEASED; urgency=low
     + [NT] Updated to handle source packages and with support for
       multi tarball source packages.
 
+  * data/control-files/{,u}deb-permissions:
+    + [NT] Added files.
   * data/fields/*:
     + [NT] Added new files based on data variables from checks/fields.
   * data/fields/obsolete-packages:
@@ -239,6 +243,9 @@ lintian (2.5.2) UNRELEASED; urgency=low
     + [NT] Added support for appending output to files without
       truncating them first via the new out_append and
       err_append options.
+  * lib/Lintian/Data.pm:
+    + [NT] Let new take an optional fourth argument, a code sub,
+      that can be used to pre-process the value.
   * lib/Lintian/{Internal/FrontendUtil,Profile}.pm:
     + [NT] New files.
   * lib/Lintian/ProcessablePool.pm:

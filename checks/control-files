@@ -25,30 +25,13 @@ use warnings;
 use Util;
 use Lintian::Tags qw(tag);
 
-my %ctrl_deb =
-    (clilibs   => 0644,
-     config    => 0755,
-     control   => 0644,
-     conffiles => 0644,
-     md5sums   => 0644,
-     postinst  => 0755,
-     preinst   => 0755,
-     postrm    => 0755,
-     prerm     => 0755,
-     shlibs    => 0644,
-     symbols   => 0644,
-     templates => 0644,
-     triggers  => 0644);
+sub octify {
+    my (undef, $val) = @_;
+    return oct($val);
+}
 
-my %ctrl_udeb =
-    (config        => 0755,
-     control       => 0644,
-     isinstallable => 0755,
-     menutest      => 0755,
-     postinst      => 0755,
-     shlibs        => 0644,
-     symbols       => 0644,
-     templates     => 0644);
+my $DEB_PERMISSIONS  = Lintian::Data->new('control-files/deb-permissions',  qr/\s++/o, \&octify);
+my $UDEB_PERMISSIONS = Lintian::Data->new('control-files/udeb-permissions', qr/\s++/o, \&octify);
 
 sub run {
 
@@ -56,8 +39,8 @@ my $pkg = shift;
 my $type = shift;
 my $info = shift;
 
-my %ctrl = $type eq 'udeb' ? %ctrl_udeb : %ctrl_deb;
-my %ctrl_alt = $type eq 'udeb' ? %ctrl_deb : %ctrl_udeb;
+my $ctrl = $type eq 'udeb' ? $UDEB_PERMISSIONS : $DEB_PERMISSIONS;
+my $ctrl_alt = $type eq 'udeb' ? $DEB_PERMISSIONS : $UDEB_PERMISSIONS;
 
 # process control-index file
 my $cindex = $info->control_index;
@@ -66,13 +49,13 @@ foreach my $file (sort keys %$cindex) {
     my $cindex_info = $cindex->{$file};
     my $owner;
     my $operm;
+    my $experm;
 
-
-    next if $file eq './';
+    next if $file eq '';
 
     # valid control file?
-    unless ( exists $ctrl{$file} ) {
-	if ( exists $ctrl_alt{$file} ) {
+    unless ( $ctrl->known($file) ) {
+	if ( $ctrl_alt->known($file) ) {
 	    tag 'not-allowed-control-file', $file;
 	    next;
 	} else {
@@ -80,6 +63,8 @@ foreach my $file (sort keys %$cindex) {
 	    next;
 	}
     }
+
+    $experm = $ctrl->value($file);
 
     # I'm not sure about the udeb case
     if ($type ne 'udeb' and $cindex_info->{size} == 0) {
@@ -94,9 +79,9 @@ foreach my $file (sort keys %$cindex) {
     $operm = $cindex_info->{operm};
 
     # correct permissions?
-    unless ($operm == $ctrl{$file}) {
+    unless ($operm == $experm) {
 	tag 'control-file-has-bad-permissions',
-	    sprintf('%s %04o != %04o',$file,$operm,$ctrl{$file});
+	    sprintf('%s %04o != %04o', $file, $operm, $experm);
     }
 
     $owner = $cindex_info->{owner} . '/' . $cindex_info->{group};

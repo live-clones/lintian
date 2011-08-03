@@ -30,7 +30,7 @@ use Carp qw(croak);
 {
     my %data;
     sub new {
-        my ($class, $type, $separator) = @_;
+        my ($class, $type, $separator, $code) = @_;
         croak('no data type specified') unless $type;
         unless (exists $data{$type}) {
             my $dir = $ENV{LINTIAN_ROOT} . '/data';
@@ -45,6 +45,7 @@ use Carp qw(croak);
                 my ($key, $val);
                 if (defined $separator) {
                     ($key, $val) = split(/$separator/, $_, 2);
+                    $val = $code->($key, $val) if $code;
                 } else {
                     ($key, $val) = ($_ => 1);
                 }
@@ -115,7 +116,7 @@ easily editable files.
 
 =over 4
 
-=item new(TYPE [,SEPARATOR])
+=item new(TYPE [,SEPARATOR[, CODE]])
 
 Creates a new Lintian::Data object for the given TYPE.  TYPE is a partial
 path relative to the F<data> directory and should correspond to a file in
@@ -125,6 +126,11 @@ exception.
 
 If SEPARATOR is given, it will be used as a regular expression for splitting
 the lines into key/value pairs.
+
+If CODE is also given, it is assumed to be a sub that will pre-process
+the key/value pairs.  The sub will be called once for each key/pair
+value with the key as the first and the value as the second argument.
+The value returned is will be used as the value for the key.
 
 A given file will only be loaded once.  If new() is called again with the
 same TYPE argument, the data previously loaded will be reused, avoiding
