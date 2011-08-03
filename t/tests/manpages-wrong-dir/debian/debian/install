@@ -1,0 +1,5 @@
+jecho usr/X11R6/bin
+pecho usr/bin
+pecho.1.gz usr/X11R6/man/man1/
+zecho.1.gz usr/share/man
+zecho.1.gz usr/share/man/man-lintian

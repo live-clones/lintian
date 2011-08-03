@@ -1,0 +1,10 @@
+E: manpages-wrong-dir: manpage-for-non-x11-binary-in-wrong-directory usr/bin/pecho usr/X11R6/man/man1/pecho.1.gz
+E: manpages-wrong-dir: manpage-for-x11-binary-in-wrong-directory usr/X11R6/bin/jecho usr/share/man/man1/jecho.1.gz
+E: manpages-wrong-dir: manpage-in-wrong-directory usr/share/man/man-lintian/zecho.1.gz
+E: manpages-wrong-dir: manpage-in-wrong-directory usr/share/man/zecho.1.gz
+E: manpages-wrong-dir: package-installs-file-to-usr-x11r6 usr/X11R6/
+E: manpages-wrong-dir: package-installs-file-to-usr-x11r6 usr/X11R6/man/
+E: manpages-wrong-dir: package-installs-file-to-usr-x11r6 usr/X11R6/man/man1/
+E: manpages-wrong-dir: package-installs-file-to-usr-x11r6 usr/X11R6/man/man1/pecho.1.gz
+E: manpages-wrong-dir: package-installs-file-to-usr-x11r6-bin usr/X11R6/bin/
+E: manpages-wrong-dir: package-installs-file-to-usr-x11r6-bin usr/X11R6/bin/jecho

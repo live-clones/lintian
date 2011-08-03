@@ -1,5 +1,5 @@
 Last generated 2011-08-03
-Coverage: 680/914 (74.40%), w. legacy tests: 808/914 (88.40%)
+Coverage: 683/914 (74.73%), w. legacy tests: 811/914 (88.73%)
 
 The following tags are not tested by the test suite:
 
@@ -76,9 +76,6 @@ init.d init.d-script-has-duplicate-lsb-keyword
 
 manpages FSSTND-dir-in-manual-page
 manpages bad-so-link-within-manual-page
-manpages manpage-for-non-x11-binary-in-wrong-directory
-manpages manpage-for-x11-binary-in-wrong-directory
-manpages manpage-in-wrong-directory
 
 menu-format menu-icon-cannot-be-parsed
 menu-format menu-icon-not-in-xpm-format
