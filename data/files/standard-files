@@ -1,0 +1,21 @@
+# Manually maintained list of "standard" files in /usr/share/doc/$pkg
+# These are not enough to consider the package "not-empty"
+#
+# Please keep this sorted (ignoring case)
+
+AUTHORS
+AUTHORS.gz
+changelog.Debian.gz
+changelog.gz
+COPYING.gz
+copyright
+HACKING
+HACKING.gz
+NEWS
+NEWS.gz
+README
+README.gz
+TODO
+TODO.gz
+
+

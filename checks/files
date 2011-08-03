@@ -28,14 +28,14 @@ use Lintian::Data;
 use Lintian::Tags qw(tag);
 use Util;
 
-our $FONT_PACKAGES;
-our $TRIPLETS;
-our $LOCALE_CODES;
-our $INCORRECT_LOCALE_CODES;
+my $FONT_PACKAGES;
+my $TRIPLETS;
+my $LOCALE_CODES;
+my $INCORRECT_LOCALE_CODES;
 
 # A list of known packaged Javascript libraries
 # and the packages providing them
-our @jslibraries = (
+my @jslibraries = (
     [ qr,(?i)mochikit\.js(\.gz)?$, => qr'libjs-mochikit' ],
     [ qr,(?i)mootools((\.v|-)[\d\.]+)?(-((core(-server)?)|more)(-(yc|jm|nc))?)?\.js(\.gz)?$, => qr'libjs-mootools' ],
     [ qr,(?i)jquery(\.(min|lite|pack))?\.js(\.gz)?$, => qr'libjs-jquery' ],
@@ -79,7 +79,7 @@ our @jslibraries = (
 
 # A list of known packaged PEAR modules
 # and the packages providing them
-our @pearmodules = (
+my @pearmodules = (
     [ qr,(?<!Auth/)HTTP\.php$, => 'php-http' ],
     [ qr,Auth\.php$, => 'php-auth' ],
     [ qr,Auth/HTTP\.php$, => 'php-auth-http' ],
@@ -107,7 +107,7 @@ our @pearmodules = (
 
 # A list of known packaged php (!PEAR) libraries
 # and the packages providing them
-our @phplibraries = (
+my @phplibraries = (
     [ qr,(?i)adodb\.inc\.php$, => 'libphp-adodb' ],
     [ qr,(?i)Smarty(_Compiler)?\.class\.php$, => 'smarty' ],
     [ qr,(?i)class\.phpmailer(\.(php|inc))+$, => 'libphp-phpmailer' ],
@@ -137,7 +137,7 @@ our @phplibraries = (
 );
 
 # A list of known non-free flash executables
-our @flash_nonfree = (
+my @flash_nonfree = (
     qr<(?i)dewplayer(?:-\w+)?\.swf$>,
     qr<(?i)(?:mp3|flv)player\.swf$>,
 # Situation needs to be clarified:
@@ -147,15 +147,13 @@ our @flash_nonfree = (
 
 # Regexes to try against the package description to find metapackages or
 # transitional packages.
-our @METAPKG_REGEX =
+my @METAPKG_REGEX =
     (qr/meta[ -]?package/, qr/dummy/,
      qr/(?:dependency|empty|transitional|virtual) package/);
 
 # Common files stored in /usr/share/doc/$pkg that aren't sufficient to
 # consider the package non-empty.
-our %STANDARD_FILE = map { $_ => 1 }
-    qw(AUTHORS AUTHORS.gz COPYING.gz HACKING HACKING.gz NEWS NEWS.gz README
-       README.gz TODO TODO.gz copyright changelog.gz changelog.Debian.gz);
+my $STANDARD_FILES = Lintian::Data->new('files/standard-files');
 
 sub run {
 
@@ -238,7 +236,7 @@ if ($is_empty) {
 	    }
             # For files directly in /usr/share/doc/$pkg, if the file isn't one
             # of the uninteresting ones, the package isn't empty.
-	    unless ($STANDARD_FILE{basename($file)}) {
+	    unless ($STANDARD_FILES->known(basename($file))) {
 		$is_empty = 0;
 		last;
 	    }
@@ -750,7 +748,7 @@ foreach my $file (@{$info->sorted_index}) {
     #  skip any file installed inside a __pycache__ directory
     #  - we have a separate check for that directory.
     if ($file =~ m,\.py[co]$,o && $file !~ m,/__pycache__/,o) {
-	tag "package-installs-python-bytecode", $file;
+	tag 'package-installs-python-bytecode', $file;
     }
 
     # ---------------- __pycache__ (directory for pyc/pyo files)
