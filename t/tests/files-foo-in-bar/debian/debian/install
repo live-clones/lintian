@@ -21,3 +21,5 @@ bar var/foo
 bar var/lock/foo
 bar var/run/foo
 bar var/www/foo
+
+bar.png usr/lib/files-foo-in-bar

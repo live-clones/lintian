@@ -41,4 +41,5 @@ W: files-foo-in-bar: file-in-unusual-dir var/foo/bar
 W: files-foo-in-bar: file-in-unusual-dir var/lock/foo/bar
 W: files-foo-in-bar: file-in-unusual-dir var/run/foo/bar
 W: files-foo-in-bar: file-in-usr-lib-sgml usr/lib/sgml/bar
+W: files-foo-in-bar: image-file-in-usr-lib usr/lib/files-foo-in-bar/bar.png
 W: files-foo-in-bar: non-standard-dir-in-usr usr/foo/
