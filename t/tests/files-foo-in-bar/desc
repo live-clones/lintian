@@ -18,10 +18,11 @@ Test-For:
  file-in-usr-local
  package-installs-file-to-usr-x11r6
  package-installs-file-to-usr-x11r6-bin
+ package-installs-into-etc-rc.boot
+ package-installs-into-etc-rc.d
  nested-examples-directory
  non-standard-dir-in-usr
  non-standard-dir-in-var
  subdir-in-bin
  udev-rule-in-etc
-
 

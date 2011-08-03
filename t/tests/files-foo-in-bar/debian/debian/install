@@ -1,4 +1,6 @@
 bar bin/foo
+bar etc/rc.boot
+bar etc/rc.d
 bar etc/udev/rules.d
 bar mnt/foo
 bar run/foo
