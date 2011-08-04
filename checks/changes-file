@@ -26,6 +26,13 @@ use Util;
 use Lintian::Tags qw(tag);
 use Lintian::Check qw(check_maintainer);
 
+my $UBUNTU_REGEX;
+{
+    my $ubuntu_dists = Lintian::Data->new ('changelog-file/ubuntu-dists');
+    my $reg_str = join('|', $ubuntu_dists->all);
+    $UBUNTU_REGEX = qr/$reg_str/o;
+}
+
 sub run {
 
 my $pkg = shift;
@@ -47,15 +54,13 @@ if (!$info->field('description') && $info->field('architecture') ne 'source') {
 
 # check distribution field
 if (defined $info->field('distribution')) {
-    my $ubuntu_dists = Lintian::Data->new ('changelog-file/ubuntu-dists');
-    my $ubuntu_regex = join('|', $ubuntu_dists->all);
     my @distributions = split /\s+/o, $info->field('distribution');
     for my $distribution (@distributions) {
 	if ($distribution eq 'UNRELEASED') {
 	    # ignore
-	} elsif ($info->field('version') =~ /ubuntu|$ubuntu_regex/
-	    or $distribution =~ /$ubuntu_regex/) {
-		if ($distribution !~ /^(?:$ubuntu_regex)(?:-(?:proposed|updates|backports|security))?$/ ) {
+	} elsif ($info->field('version') =~ m/ubuntu|$UBUNTU_REGEX/o
+	    or $distribution =~ m/$UBUNTU_REGEX/o) {
+		if ($distribution !~ m/^(?:$UBUNTU_REGEX)(?:-(?:proposed|updates|backports|security))?$/o ) {
 		    tag 'bad-ubuntu-distribution-in-changes-file',
 			$distribution;
 		}
