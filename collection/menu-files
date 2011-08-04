@@ -29,8 +29,6 @@ use Util;
 my $pkg = shift;
 my $type = shift;
 
--f 'fields/package' or fail('menu-files invoked in wrong directory');
-
 if (-e 'menu') {
     delete_dir('menu')
 	or fail('cannot rm old menu directory');

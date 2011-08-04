@@ -4,4 +4,4 @@ Info: This script copies the contents of /usr/share/doc-base into the
  lintian doc-base/ directory.
 Type: binary
 Version: 1
-Needs-Info: unpacked, fields
+Needs-Info: unpacked

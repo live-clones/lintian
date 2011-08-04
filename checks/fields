@@ -164,10 +164,6 @@ my $info = shift;
 my $version;
 my $arch_indep;
 
-unless (-d 'fields') {
-	fail("directory in lintian laboratory for $type package $pkg missing: fields");
-}
-
 #---- Format
 
 if ($type eq 'source') {
@@ -945,15 +941,7 @@ while (my ($vcs, $regex) = each %VCS_RECOMMENDED_URIS) {
 
 #----- Field checks (without checking the value)
 
-opendir(FIELDS, 'fields/')
-    or fail("cannot read fields/ directory: $!");
-
-for my $field (readdir FIELDS) {
-	next if ($field eq '.' || $field eq '..');
-
-	# The unpack scripts turn slashes into colons
-	# This is safe since a control field name can't contain colons
-	$field =~ s,:,/,g;
+for my $field (keys %{$info->field}) {
 
 	next if ($field eq 'original-maintainer') and $version =~ /ubuntu/;
 
@@ -969,7 +957,6 @@ for my $field (readdir FIELDS) {
 	tag 'unknown-field-in-control', $field
 	    if ($type eq 'udeb' && ! $KNOWN_UDEB_FIELDS->known($field) && ! $known_obsolete_fields{$field});
 }
-closedir(FIELDS);
 
 }
 

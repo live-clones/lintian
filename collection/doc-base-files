@@ -30,8 +30,6 @@ use Util;
 my $pkg = shift;
 my $type = shift;
 
--f 'fields/package' or fail('doc-base-files invoked in wrong directory');
-
 
 if (-e 'doc-base') {
     delete_dir('doc-base')

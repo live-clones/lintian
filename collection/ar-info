@@ -31,8 +31,6 @@ use Util qw(fail);
 my $pkg = shift;
 my $type = shift;
 
--f 'fields/source' or fail('ar-info invoked in wrong directory');
-
 unlink('ar-info');
 chdir('unpacked')
     or fail("cannot chdir to unpacked directory: $!");

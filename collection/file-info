@@ -36,8 +36,6 @@ my $last = '';
 my $helper = realpath("$0-helper");
 my $outfile = realpath('./file-info');
 
--f 'fields/source' or fail('file-info invoked in wrong directory');
-
 unlink($outfile);
 
 # Open files before we chdir, since unpacked could be a symlink (at

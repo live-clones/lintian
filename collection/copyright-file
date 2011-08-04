@@ -31,8 +31,6 @@ use File::Copy qw(copy);
 my $pkg = shift;
 my $type = shift;
 
--f 'fields/package' or fail('copyright-file invoked in wrong directory');
-
 unlink('copyright');
 
 my $file1 = "unpacked/usr/share/doc/$pkg/copyright";

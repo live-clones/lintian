@@ -31,8 +31,6 @@ use Util;
 my $pkg = shift;
 my $type = shift;
 
--f 'fields/package' or fail('md5sums invoked in wrong directory');
-
 unlink('md5sums');
 chdir('unpacked')
     or fail("cannot chdir to unpacked directory: $!");

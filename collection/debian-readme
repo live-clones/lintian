@@ -29,8 +29,6 @@ use Util;
 my $pkg = shift;
 my $type = shift;
 
--f 'fields/package' or fail('debian-readme invoked in wrong directory');
-
 if (-f 'README.Debian') {
     unlink('README.Debian') or fail("Could not remove old README.Debian: $!");
 }

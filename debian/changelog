@@ -15,6 +15,7 @@ lintian (2.5.2) UNRELEASED; urgency=low
   * checks/*:
     + [NT] Migrated to use new methods in the Lintian::Collect
       interfaces rather than accessing the Lab directly.
+    + [NT] Removed "fields" from Needs-Info.
   * checks/{debconf,conffiles}.desc:
     + [NT] Added missing bin-pkg-control Needs-Info.
   * checks/{cruft,fields}{,.desc}:
@@ -156,6 +157,10 @@ lintian (2.5.2) UNRELEASED; urgency=low
     + [NT] Symlink checking extended to relative paths as well.
       (Closes: #217023)
 
+  * collection/*:
+    + [NT] Removed all Needs-Info on "fields" and all checks that
+      used the "fields" dir (or files therein) to determine if the
+      scripts had been called in the wrong dir.
   * collection/diffstat:
     + [NT] No longer unconditionally creates a diffstat file,
       since the Lintian::Collect interface will fall back to
@@ -164,6 +169,9 @@ lintian (2.5.2) UNRELEASED; urgency=low
     + [NT] Removed creation of cross package symlinks.  They have
       been replaced by the group information that checks are
       passed.
+    + [NT] Deprecated it in favour of a smarter Lintian::Collect.
+      It will be removed in a later release; for now it will just
+      remove the "fields" directory in the lab.
   * collection/file-info:
     + [NT] Double check the output of file(1) when it says a ".gz"
       file is not gzip compressed.  This should reduce the number

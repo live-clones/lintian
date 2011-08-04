@@ -20,7 +20,8 @@ package Lintian::Collect;
 use strict;
 use warnings;
 
-use Util qw(fail);
+use Util qw(get_dsc_info get_deb_info);
+use Carp qw(croak);
 
 # Take the package name and type, initialize an appropriate collect object
 # based on the package type, and return it.  fail with unknown types,
@@ -38,7 +39,7 @@ sub new {
 	require Lintian::Collect::Changes;
 	$object = Lintian::Collect::Changes->new ($pkg);
     } else {
-        fail("Undefined type: $type");
+        croak("Undefined type: $type");
     }
     $object->{name} = $pkg;
     $object->{type} = $type;
@@ -72,21 +73,45 @@ sub base_dir {
 # packages, this is the *.dsc file; for binary packages, this is the control
 # file in the control section of the package.  For .changes files, the 
 # information will be retrieved from the file itself.
-# sub field Needs-Info fields
+# sub field Needs-Info <>
 sub field {
     my ($self, $field) = @_;
-    return $self->{field}{$field} if exists $self->{field}{$field};
-    my $base_dir = $self->base_dir();
-    if (open(FIELD, '<', "$base_dir/fields/$field")) {
-        local $/;
-        my $value = <FIELD>;
-        close FIELD;
-        $value =~ s/\n\z//;
-        $self->{field}{$field} = $value;
+    return $self->_get_field($field);
+}
+
+# $self->_get_field([$name])
+#
+# Method getting the fields; this is the backing method of $self->field
+#
+# It must return either a field (if $name is given) or a hash, where the keys are
+# the name of the fields.
+#
+# It must cache the result if possible, since field and fields are called often.
+# sub _get_field Needs-Info <>
+sub _get_field {
+    my ($self, $field) = @_;
+    my $fields;
+    unless (exists $self->{field}) {
+        my $base_dir = $self->base_dir();
+        my $type = $self->{type};
+        if ($type eq 'changes' or $type eq 'source'){
+            my $file = 'changes';
+            $file = 'dsc' if $type eq 'source';
+            $fields = get_dsc_info("$base_dir/$file");
+        } elsif ($type eq 'binary' or $type eq 'udeb'){
+            # (ab)use the unpacked control dir if it is present
+            if ( -f "$base_dir/control/control" && -s "$base_dir/control/control") {
+                $fields = get_dsc_info("$base_dir/control/control");
+            } else {
+                $fields = (get_deb_info("$base_dir/deb"));
+            }
+        }
+        $self->{field} = $fields;
     } else {
-        $self->{field}{$field} = undef;
+        $fields = $self->{field};
     }
-    return $self->{field}{$field};
+    return $fields->{$field} if $field;
+    return $fields;
 }
 
 =head1 NAME
@@ -137,15 +162,15 @@ binary / udeb packages and .changes files.
 
 =over 4
 
-=item field(FIELD)
+=item field([FIELD])
 
-Returns the value of the control field FIELD in the control file for the
-package.  For a source package, this is the *.dsc file; for a binary
-package, this is the control file in the control section of the package.
-The value will be read from the F<fields/> subdirectory of the current
-directory if it hasn't previously been requested and cached in memory so
-that subsequent requests for the same field can be answered without file
-accesses.
+If FIELD is given, this method returns the value of the control field
+FIELD in the control file for the package.  For a source package, this
+is the *.dsc file; for a binary package, this is the control file in
+the control section of the package.
+
+Otherwise this will return a hash of fields, where the key is the field
+name (in all lowercase).
 
 =item name()
 

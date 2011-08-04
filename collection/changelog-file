@@ -29,8 +29,6 @@ use Util;
 my $pkg = shift;
 my $type = shift;
 
--f 'fields/package' or fail('changelog-file invoked in wrong directory');
-
 unlink('changelog') or fail("cannot remove changelog file: $!")
     if ( -e 'changelog' or -l 'changelog');
 

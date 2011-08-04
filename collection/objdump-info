@@ -26,12 +26,6 @@
 use strict;
 use warnings;
 
-# Sanity check
-unless (-f 'fields/package') {
-    print STDERR 'error: collection script called in wrong directory!\n';
-    exit 2;
-}
-
 my $failed = 0;
 
 open (FILES, '<', 'file-info')

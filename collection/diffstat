@@ -33,12 +33,13 @@ use Util;
 
 ($#ARGV == 1) or fail('syntax: diffstat <pkg> <type>');
 my $pkg = shift;
+my $data;
+my $ver;
 
--f 'fields/version' or fail('diffstat invoked in wrong directory');
+-f 'dsc' or fail('diffstat invoked in wrong directory');
 
-open (V, '<', 'fields/version') or fail("cannot open fields/version: $!");
-my $ver = <V>; chomp $ver;
-close V;
+$data = get_dsc_info('dsc');
+$ver = $data->{'version'};
 
 unlink('debian-patch') or fail("cannot unlink debian-patch: $!")
     if( -e 'debian-patch' or -l 'debian-patch');

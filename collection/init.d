@@ -29,8 +29,6 @@ use Util;
 my $pkg = shift;
 my $type = shift;
 
--f 'fields/package' or fail('init.d invoked in wrong directory');
-
 if (-e 'init.d') {
     delete_dir('init.d')
 	or fail('cannot rm old init.d directory');
