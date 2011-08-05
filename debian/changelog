@@ -207,9 +207,9 @@ lintian (2.5.2) UNRELEASED; urgency=low
       a patch.  (Closes: #632550)
     + [NT] Added Build-Depends on cdbs, it is needed for some of the
       tests.
-    + [NT] Pruned the Uploaders list a bit.  We would to thank Jeroen
-      van Wolffelaar, Frank Lichtenheld and Marc 'HE' Brockschmidt
-      for their work on Lintian in the past.
+    + [NT] Pruned the Uploaders list a bit.  We would like to thank
+      Jeroen van Wolffelaar, Frank Lichtenheld and Marc 'HE'
+      Brockschmidt for their work on Lintian in the past.
   * debian/lintian.install:
     + [NT] Added the profiles directory.
   * debian/rules:
