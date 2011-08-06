@@ -1,0 +1,7 @@
+Testname: changed-by-malformed
+Sequence: 6000
+Version: 1.0
+Description: Test malformed Changed-By field
+Test-For:
+ changed-by-address-malformed
+ changed-by-address-looks-weird

@@ -4,9 +4,9 @@ Source: {$srcpkg}
 Binary: {$srcpkg}
 Architecture: source all
 Version: {$version}
-Distribution: unstable
+Distribution: wispy
 Urgency: low
 Maintainer: {$author}
-Changed-By: someone@example.com
+Changed-By: {$author}
 Description:
  {$srcpkg} - {$description}

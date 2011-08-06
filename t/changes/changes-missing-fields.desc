@@ -1,0 +1,7 @@
+Testname: changes-missing-fields
+Sequence: 6000
+Version: 1.0
+Description: Test for changes missing fields
+Test-For:
+ no-description-in-changes-file
+ no-urgency-in-changes-file

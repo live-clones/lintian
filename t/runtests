@@ -71,6 +71,8 @@ chomp $ARCHITECTURE;
 my %TEMPLATES = (
     'tests' => ['debian/changelog', 'debian/control'],
 );
+my $DATE = `date -R`;
+chomp $DATE;
 
 # --- Usage information
 
@@ -209,22 +211,19 @@ if (@tests) {
 $prev = scalar(@tests);
 @tests = ();
 if ($singletest) {
-    my $test = $singletest;
-    $test =~ s/\.changes$//;
-    if (-f "$TESTSET/changes/$test.changes") {
-	@tests = ($test);
+    my $desc = "$TESTSET/changes/$singletest";
+    $desc =~ s/\.changes$//;
+    $desc = "$desc.desc";
+    if (-f $desc) {
+	@tests = read_dpkg_control($desc);
     }
 } elsif ($tag) {
-    @tests = generic_find_test_for_tag($tag, "$TESTSET/changes/*.tags");
+    @tests = find_tests_for_tag($tag, "$TESTSET/changes/*.desc");
 } else {
     unless (-d "$TESTSET/changes") {
 	fail("cannot find $TESTSET/changes: $!");
     }
-    @tests = map {
-	s,^\Q$TESTSET/changes/\E,,;
-	s/\.changes$//;
-	$_;
-    } sort(<$TESTSET/changes/*.changes>);
+    @tests = map { read_dpkg_control($_) } sort(<$TESTSET/changes/*.desc>);
 }
 print "Found the following changes tests: @tests\n" if $DEBUG;
 print "Changes tests:\n" if @tests;
@@ -317,7 +316,7 @@ if ($singletest) {
 	@tests = map { read_dpkg_control($_) } <$TESTSET/tests/$singletest-*/desc>;
     }
 } elsif ($tag) {
-    @tests = find_tests_for_tag($tag);
+    @tests = find_tests_for_tag($tag, "$TESTSET/tests/*/desc");
 } else {
     unless (-d "$TESTSET/tests/") {
 	fail("cannot find $TESTSET/tests: $!");
@@ -360,8 +359,8 @@ exit $status;
 # absence.  Returns a list of names of the *.desc files, without the *.desc at
 # the end.
 sub find_tests_for_tag {
-    my ($tag) = @_;
-    return generic_find_test_for_tag($tag, "$TESTSET/tests/*/desc", sub {
+    my ($tag, $glob) = @_;
+    return generic_find_test_for_tag($tag, $glob, sub {
 	my ($tag, $desc) = @_;
 	my ($data) = read_dpkg_control($desc);
 	my $tagnames = $data->{'test-for'}//'';
@@ -447,20 +446,40 @@ sub test_package {
 	runsystem("$origdir/pre_build", $targetdir);
     }
 
-    msg_print 'building... ';
-    my $res = system("cd $rundir/$pkgdir && $DPKG_BUILDPACKAGE >../build.$pkg 2>&1");
-    if ($res){
-	dump_log($pkg, "$rundir/build.$pkg") if $DUMP_LOGS;
-	fail("cd $rundir/$pkgdir && $DPKG_BUILDPACKAGE >../build.$pkg 2>&1");
-    }
+    my $file = _builder_tests($testdata, "$rundir/$pkgdir", "$rundir/build.$pkg");
 
+    run_lintian($testdata, $file, "$rundir/tags.$pkg");
+
+    # Run a sed-script if it exists, for tests that have slightly variable
+    # output
+    runsystem_ok("sed -ri -f $origdir/post_test $rundir/tags.$pkg")
+	if -e "$origdir/post_test";
+
+    return _check_result($testdata, "$origdir/tags", "$rundir/tags.$pkg");
+}
+
+sub _builder_tests {
+    my ($testdata, $testdir, $log) = @_;
+    my $pkg = $testdata->{srcpkg};
+    msg_print 'building... ';
+    my $res = system("cd $testdir && $DPKG_BUILDPACKAGE >$log 2>&1");
+    if ($res){
+	dump_log($pkg, $log) if $DUMP_LOGS;
+	fail("cd $testdir && $DPKG_BUILDPACKAGE >$log 2>&1");
+    }
     my $version = $testdata->{version};
     $version =~ s/^(\d+)://;
-    my @options = split(' ', $testdata->{options});
-    my ($file) = glob("$rundir/$pkg\_$version*.changes");
+
+    my ($file) = glob("$testdir/../$pkg\_$version*.changes");
+    return $file;
+}
+
+sub run_lintian {
+    my ($testdata, $file, $out) = @_;
     msg_print 'testing... ';
-    my $opts = { err => "$rundir/tags.$pkg", fail => 'never' };
+    my $opts = { err => "$out", fail => 'never' };
     my $status;
+    my @options = split(' ', $testdata->{options}//'');
     unshift(@options, '--allow-root', '--no-cfg');
     unshift(@options, '--profile', $testdata->{profile}) if $testdata->{profile};
     if ($testdata->{sort}) {
@@ -472,17 +491,11 @@ sub test_package {
 	msg_print "FAILED:\n";
 	fail("$LINTIAN @options $file exited with status $status\n");
     }
-    open(OUT, '>>', "$rundir/tags.$pkg")
-	or fail("cannot append to $rundir/tags.$pkg: $!");
-    print OUT ${ $opts->{out} };
-    close OUT;
-
-    # Run a sed-script if it exists, for tests that have slightly variable
-    # output
-    runsystem_ok("sed -ri -f $origdir/post_test $rundir/tags.$pkg")
-	if -e "$origdir/post_test";
-
-    return _check_result($testdata, "$origdir/tags", "$rundir/tags.$pkg");
+    open(my $fd, '>>', "$out")
+	or fail("cannot append to $out: $!");
+    print $fd ${ $opts->{out} };
+    close $fd or fail "closing $out: $!";
+    return 1;
 }
 
 # --- Changes file testing
@@ -491,16 +504,28 @@ sub test_package {
 # other errors detected.  Takes the test name.  Returns true if the test
 # passes and false if it fails.
 sub test_changes {
-    my ($test) = @_;
-    msg_print "Running $test... ";
+    my ($testdata) = @_;
 
+    if (!check_test_is_sane($TESTSET, $testdata)) {
+	msg_print "Skipping test $testdata->{testname} $testdata->{version}... architecture mismatch\n";
+	return 1;
+    }
+
+    msg_print "Running $testdata->{testname} $testdata->{version}... ";
+
+    my $test = $testdata->{srcpkg};
     my $testdir = "$TESTSET/changes";
+    my $file = "$testdir/$test.changes";
+    if ( ! -e $file && -e "$file.in" ) {
+	msg_print "building... ";
+	runsystem('cp', '-f', "${file}.in", "$RUNDIR/${test}.changes.in");
+	$file = "$RUNDIR/${test}.changes";
+	fill_in_tmpl($file, $testdata);
+    }
 
-    msg_print 'testing... ';
-    runsystem_ok("$LINTIAN --allow-root --no-cfg -I -E $testdir/$test.changes 2>&1"
-		 . " | sort > $RUNDIR/tags.changes-$test");
+    run_lintian($testdata, $file, "$RUNDIR/tags.changes-$test");
 
-    return _check_result(undef, "$testdir/$test.tags", "$RUNDIR/tags.changes-$test");
+    return _check_result($testdata, "$testdir/$test.tags", "$RUNDIR/tags.changes-$test");
 }
 
 # --------------
@@ -765,7 +790,7 @@ sub check_test_is_sane {
 
     $data->{srcpkg} ||= $data->{testname};
     $data->{type} ||= 'native';
-    $data->{date} ||= `date -R`; chomp $data->{date};
+    $data->{date} ||= $DATE;
     $data->{description} ||= 'No Description Available';
     $data->{author} ||= 'Debian Lintian Maintainers <lintian-maint@debian.org>';
     $data->{architecture} ||= 'all';

@@ -1,9 +1,0 @@
-Format: 1.8
-Date: Sat,  3 Apr 2010 18:21:15 +0100
-Source: changes-missing-fields
-Binary: changes-missing-fields
-Architecture: source all
-Version: 1.0
-Distribution: unstable
-Maintainer: Debian Lintian Maintainers <lintian-maint@debian.org>
-Changed-By: Debian Lintian Maintainers <lintian-maint@debian.org>

@@ -7,6 +7,6 @@ Version: {$version}
 Distribution: unstable
 Urgency: low
 Maintainer: {$author}
-Changed-By: someone@example.com
+Changed-By: Someone <someone@localhost.localdomain>
 Description:
  {$srcpkg} - {$description}
