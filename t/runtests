@@ -666,8 +666,8 @@ sub is_tag_in_file {
 # note that it may do so in a threaded manner so &subref must be
 # re-entrant. Blocks until all tests have been run.
 #
-# The result of &subref is ignored; if a test fails, &subref should
-# invoke die (or similar).
+# If &subref returns a truth value, the test is considered for passed
+# (also used for skipped tests).  Otherwise it is a failure.
 #
 # Note, if "continue on error" is not set ($run_all_tests) a failing
 # test will terminate the program.
