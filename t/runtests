@@ -476,69 +476,7 @@ sub test_package {
     runsystem_ok("sed -ri -f $origdir/post_test $rundir/tags.$pkg")
 	if -e "$origdir/post_test";
 
-    # Compare the output to the expected tags.
-    my $testok = runsystem_ok(qw(cmp -s), "$rundir/tags.$pkg", "$origdir/tags");
-    if ($testok) {
-	msg_print "ok.\n";
-    } else {
-	if ($testdata->{'todo'} eq 'yes') {
-	    msg_print "TODO\n";
-	    return 1;
-	} else {
-	    msg_print "FAILED:\n";
-	    runsystem_ok('diff', '-u', "$origdir/tags", "$rundir/tags.$pkg");
-	    return;
-	}
-    }
-
-    # Check the output for invalid lines.  Also verify that all Test-For tags
-    # are seen and all Test-Against tags are not.  Skip this part of the test
-    # if neither Test-For nor Test-Against are set and Sort is also not set,
-    # since in that case we probably have non-standard output.
-    my %test_for = map { $_ => 1 } split(' ', $testdata->{'test-for'});
-    my %test_against = map { $_ => 1 } split(' ', $testdata->{'test-against'});
-    if (not %test_for and not %test_against and $testdata->{'output-format'} ne 'EWI') {
-	if ($testdata->{'todo'} eq 'yes') {
-	    msg_print "E: marked as TODO but succeeded.\n";
-	    return;
-	} else {
-	    return 1;
-	}
-    } else {
-	my $okay = 1;
-	open TAGS, '<', "$rundir/tags.$pkg" or fail("Cannot open $rundir/tags.$pkg");
-	while (<TAGS>) {
-		next if m/^N: /;
-		# Looks for "$code: $package[ $type]: $tag"
-		if (not /^.: \S+(?: (?:changes|source|udeb))?: (\S+)/o) {
-		    msg_print (($testdata->{'todo'} eq 'yes')? 'TODO' : 'E');
-		    msg_print ": Invalid line:\n$_";
-		    $okay = 0;
-		    next;
-		}
-		my $tag = $1;
-		if ($test_against{$tag}) {
-		    msg_print (($testdata->{'todo'} eq 'yes')? 'TODO' : 'E');
-		    msg_print ": Tag $tag seen but listed in Test-Against\n";
-		    $okay = 0;
-		}
-		delete $test_for{$tag};
-	}
-	close TAGS;
-	if (%test_for) {
-		for my $tag (sort keys %test_for) {
-		    msg_print (($testdata->{'todo'} eq 'yes')? 'TODO' : 'E');
-		    msg_print ": Tag $tag listed in Test-For but not found\n";
-		    $okay = 0;
-		}
-	}
-	if ($okay && $testdata->{'todo'} eq 'yes') {
-	    msg_print "E: marked as TODO but succeeded.\n";
-	    return;
-	} else {
-	    return ($okay || $testdata->{'todo'} eq 'yes');
-	}
-    }
+    return _check_result($testdata, "$origdir/tags", "$rundir/tags.$pkg");
 }
 
 # --- Changes file testing
@@ -556,7 +494,7 @@ sub test_changes {
     runsystem_ok("$LINTIAN --allow-root --no-cfg -I -E $testdir/$test.changes 2>&1"
 		 . " | sort > $RUNDIR/tags.changes-$test");
 
-    return _check_result("$testdir/$test.tags", "$RUNDIR/tags.changes-$test");
+    return _check_result(undef, "$testdir/$test.tags", "$RUNDIR/tags.changes-$test");
 }
 
 # --------------
@@ -632,21 +570,78 @@ sub generic_test_runner {
     runsystem_ok("$LINTIAN --allow-root --no-cfg -I -E $targetdir/*.$ext 2>&1"
 		 . " | sort > $RUNDIR/tags.$test");
 
-    return _check_result("$testdir/tags", "$RUNDIR/tags.$test");
+    return _check_result(undef, "$testdir/tags", "$RUNDIR/tags.$test");
 }
 
 sub _check_result {
-    my ($expected, $actual) = @_;
+    my ($testdata, $expected, $actual) = @_;
     # Compare the output to the expected tags.
     my $testok = runsystem_ok('cmp', '-s', $expected, $actual);
 
     if ($testok) {
 	msg_print "ok.\n";
-	return 1;
+	# Continue to check the "test-for/test-against" tags
     } else {
-	msg_print "FAILED:\n";
-	runsystem_ok('diff', '-u', $expected, $actual);
-	return;
+	if ($testdata->{'todo'} eq 'yes') {
+	    msg_print "TODO\n";
+	    return 1;
+	} else {
+	    msg_print "FAILED:\n";
+	    runsystem_ok('diff', '-u', $expected, $actual);
+	    return;
+	}
+    }
+    return 1 unless $testdata;
+
+    # Check the output for invalid lines.  Also verify that all Test-For tags
+    # are seen and all Test-Against tags are not.  Skip this part of the test
+    # if neither Test-For nor Test-Against are set and Sort is also not set,
+    # since in that case we probably have non-standard output.
+    my %test_for = map { $_ => 1 } split(' ', $testdata->{'test-for'});
+    my %test_against = map { $_ => 1 } split(' ', $testdata->{'test-against'});
+    if (not %test_for and not %test_against and $testdata->{'output-format'} ne 'EWI') {
+	if ($testdata->{'todo'} eq 'yes') {
+	    msg_print "E: marked as TODO but succeeded.\n";
+	    return;
+	} else {
+	    return 1;
+	}
+    } else {
+	my $okay = 1;
+	open my $etags, '<', $actual or fail("opening: $actual");
+	while (<$etags>) {
+		next if m/^N: /;
+		# Looks for "$code: $package[ $type]: $tag"
+		if (not /^.: \S+(?: (?:changes|source|udeb))?: (\S+)/o) {
+		    msg_print (($testdata->{'todo'} eq 'yes')? 'TODO' : 'E');
+		    msg_print ": Invalid line:\n$_";
+		    $okay = 0;
+		    next;
+		}
+		my $tag = $1;
+		if ($test_against{$tag}) {
+		    msg_print (($testdata->{'todo'} eq 'yes')? 'TODO' : 'E');
+		    msg_print ": Tag $tag seen but listed in Test-Against\n";
+		    $okay = 0;
+		    # Warn only once about each "test-against" tag
+		    delete $test_against{$tag};
+		}
+		delete $test_for{$tag};
+	}
+	close $etags;
+	if (%test_for) {
+		for my $tag (sort keys %test_for) {
+		    msg_print (($testdata->{'todo'} eq 'yes')? 'TODO' : 'E');
+		    msg_print ": Tag $tag listed in Test-For but not found\n";
+		    $okay = 0;
+		}
+	}
+	if ($okay && $testdata->{'todo'} eq 'yes') {
+	    msg_print "E: marked as TODO but succeeded.\n";
+	    return;
+	} else {
+	    return ($okay || $testdata->{'todo'} eq 'yes');
+	}
     }
 }
 
