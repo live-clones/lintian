@@ -25,8 +25,8 @@
 # Enable colored output for terminal output (--color)
 #color = auto
 
-# Show overridden tags (--show-overriden)
-#show-overriden = yes
+# Show overridden tags (--show-overrides)
+#show-overrides = yes
 
 # Ignore all overrides (--no-override)
 #override = no
