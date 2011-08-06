@@ -578,13 +578,7 @@ Run the copyright checks on source package foo.
 
 =item B<$ lintian -u foo>
 
-Unpack package foo in the Lintian laboratory up to level 1. (If it's
-already unpacked at level 1 or 2, nothing is done.)
-
-=item B<$ lintian -l1 -r foo>
-
-Search for package foo in the Debian archive and, if found, reduce the
-package disk usage in the laboratory to level 1.
+Unpack package foo in the Lintian laboratory.
 
 =item B<$ lintian -r foo>
 
