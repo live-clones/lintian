@@ -235,6 +235,9 @@ lintian (2.5.2) UNRELEASED; urgency=low
       "-" for stdin and the format is simpler.
     + [NT] Deprecated "--packages-file" in favour of the new
       "--packages-from-file" option.
+    + [NT] Allow "y" as short form of "yes" in the configuration file.
+      Furthermore, ignore case when doing the check for boolean
+      values.
 
   * lib/Lab.pm:
     + [NT] Removed $dist argument to lab creation, since we rely on
@@ -281,6 +284,8 @@ lintian (2.5.2) UNRELEASED; urgency=low
       levels have been replaced by collections.
     + [NT] Clarified that some command-line arguments are only
       useful when using a static lintian lab.
+    + [NT] Described the configuration file format.  Thanks to
+      Sven Joachim for the report.  (Closes: #636681)
   * man/lintian-info.pod:
     + [NT] Documented the new --profile option.
 

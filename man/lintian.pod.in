@@ -515,6 +515,64 @@ I<debian/source.lintian-overrides> if the first file is not found.
 The first path is preferred.  See the Lintian User's Manual for the
 syntax of overrides.
 
+=head1 CONFIGURATION FILE
+
+The configuration file can be used to specify default values for some
+options.  The general format is:
+
+ option = value
+
+All whitespace adjacent to the "=" sign as well as leading and
+trailing whitespace is ignored.  However whitespace within the
+value is respected, as demonstrated by this example:
+
+ # Parsed as "opt1" with value "val1"
+    opt1    =   val1
+ # Parsed as "opt2" with value "val2.1  val2.2     val2.3"
+ opt2 = val2.1  val2.2     val2.3
+
+Unless otherwise specified, no option may appear more than once.
+Lintian will ignore empty lines or lines starting with the
+B<#>-character.
+
+Generally options will be the long form of the command-line option
+without the leading dashes.  There some exceptions (such as --area),
+where Lintian uses the same name as the environment variable.
+
+Lintian only allows a subset of the options specified in the
+configuration file; please refer to the individual options in
+L</OPTIONS>.
+
+In the configuration file, all options listed must have a value, even
+if they do not accept a value on command line (i.e. --pedantic).  The
+values "yes", "y", "1", or "true" will enable such a option and "no",
+"n", "0" or "false" will disable it.  Prior to the 2.5.2 release,
+these values were case sensitive.
+
+For other options, they generally take the same values as they do on
+the command line.  Though some options allow a slightly different
+format (i.e. --display-level); these exceptions are explained for the
+relevant options in L</OPTIONS>.
+
+A sample configuration file could look like:
+
+ # Sample configuration file for lintian
+ #
+ # Set the default profile (--profile)
+ LINTIAN_PROFILE = debian
+ 
+ # Show info (I:) tags by default (--display-info)
+ #  NB: this cannot be used with display-level
+ display-info=yes
+ 
+ # Ignore all overrides (--no-override)
+ #  NB: called "overrides" in the config file
+ #      and has inverted value!
+ overrides = no
+ 
+ # Automatically determine if color should be used
+ color = auto
+
 =head1 EXIT STATUS
 
 =over 4

@@ -634,9 +634,9 @@ if ($opt{'LINTIAN_CFG'}) {
 		}
 		$conf_opt{$var} = 1;
 		$found = 1;
-		if ($val =~ m/^y(?:es)|true$/o){
+		if ($val =~ m/^y(?:es)?|true$/oi){
 		    $val = 1;
-		} elsif ($val =~ m/^no?|false$/o){
+		} elsif ($val =~ m/^no?|false$/oi){
 		    $val = 0;
 		}
 		if (ref $ref eq 'SCALAR'){
