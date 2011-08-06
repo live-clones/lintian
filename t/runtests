@@ -679,7 +679,11 @@ sub run_tests{
 	threads->create(sub {
 	    while (my $t = $q->dequeue_nb()) {
 		my $okay = eval { $code->($t); };
-		unless ($okay) {
+		if (!$okay || $@) {
+		    if ($@) {
+			msg_print "FAIELD\n";
+			print STDERR "$@\n";
+		    }
 		    exit 1 unless $run_all_tests;
 		    lock($status);
 		    $status = 1;
