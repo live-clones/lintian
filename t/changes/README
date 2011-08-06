@@ -1,27 +1,39 @@
 WRITING A TEST
 ==============
 
-A test in this framework consists of two components: a .changes file
-on which lintian is run and a .tags file giving the sorted expected
-output of lintian when run on that .changes file.  Both files should
-have the same name prior to the extension.  If the .changes file
-references additional files, they should also have the same name up
-to the extension and shouldn't end in .changes or .tags.
+A test in this framework consists of three components: a .desc file
+with basic metadata, a .changes (or a .changes.in) file on which
+lintian is run and a .tags file giving the (sorted) expected output of
+lintian when run on that .changes file.  All files should have the
+same name prior to the extension.  If the .changes(.in) file
+references additional files, they should also have the same name up to
+the extension and shouldn't end in .desc, .changes(.in) or .tags.
 
 This framework should be used to test the checks performed by the
 lintian front-end itself on the .changes file.  Do not include .deb,
 .dsc, .orig.tar.gz, .tar.gz, or .diff.gz files in this test framework.
 To build a complete package, the tests framework is more appropriate.
 
+If the test provides a .changes file, this will be tested as is.
+Otherwise, if it provides a .changes.in, the .in file will be
+considered a template and the fields from the .desc file can be
+expanded in the .changes file.
+  This is particularly useful, since the test-runner provides values
+for a lot of common variables.  This feature is (and the variables)
+inherited from the "t/tests" framework.  The .desc file is described
+in detail in "t/tests/README".
+  Please note that there is no "skeleton" for this framework, since it
+does not make sense to have them for this suite. :)
 
 TEST NAMING CONVENTIONS
 =======================
 
 Try to avoid naming conflicts between checks in this directory and
-checks in the other frameworks.  Otherwise, there is no strict naming
-convention here since there are few enough tags to check that require
-a custom .changes file that there shouldn't be too many tests in this
-framework.
+checks in the other frameworks.  For tests to trigger certain tags,
+please use the check name as a prefix.  Otherwise, there is no strict
+naming convention here since there are few enough tags to check that
+require a custom .changes file that there shouldn't be too many tests
+in this framework.
 
 
 RUNNING THE TEST SUITE
@@ -34,10 +46,9 @@ check.
 
 To run a specific test case, run:
 
-    debian/rules runtests onlyrun=<desc-name>
+    debian/rules runtests onlyrun=<test-name>
 
-You can omit the .desc from the end of <desc-name>.  Give only the
-file name, not the full path.
+Give only the test name, not the full path.
 
 It's often more useful to run every test that is relevant to a
 particular tag.  To do that, run:
