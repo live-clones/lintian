@@ -23,6 +23,8 @@ LINTIAN_INTERNAL_TESTSUITE=1
 LOCPATH="$(pwd)/debian/test.locale"
 NO_PKG_MANGLE=true
 
+[ "$TEST_WORK_DIR" ] || TEST_WORK_DIR="debian/test-out"
+
 export LANG
 export LC_COLLCATE
 export LINTIAN_ROOT
@@ -43,7 +45,7 @@ if [ ! -e "$LOCPATH"/en_US.UTF-8 ] ; then
         --quiet "$LOCPATH"/en_US.UTF-8 || fail "Locale generation failed"
 fi
 
-t/runtests --dump-logs -k $PARALLEL_ARGS t debian/tests "$@"
+t/runtests --dump-logs -k $PARALLEL_ARGS t "$TEST_WORK_DIR" "$@"
 if [ "$TAG" = "" ] ; then
-    testset/runtests -k testset debian/tests "$@"
+    testset/runtests -k testset "$TEST_WORK_DIR" "$@"
 fi

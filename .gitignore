@@ -1,5 +1,5 @@
 /build-stamp
-/debian/tests
+/debian/test-out/
 /doc/README
 /doc/help.tmp
 /doc/lintian.html/

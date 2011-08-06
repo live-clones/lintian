@@ -17,6 +17,10 @@ perlprovides := data/fields/perl-provides
 onlyrun =
 tag =
 
+# Work/output dir for tests
+# private/runtests gets TEST_WORK_DIR from environment
+export TEST_WORK_DIR:= $(CURDIR)/debian/test-out
+
 ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
 	testtarget = runtests
 else
@@ -34,8 +38,8 @@ $(profiles): $(allchecks) private/generate-profiles.pl
 
 runtests: $(neededfiles) $(allchecks) $(allcollect) $(tagfiles) $(testfiles)
 	@echo .... running tests ....
-	rm -rf debian/tests
-	mkdir debian/tests
+	rm -rf "$(TEST_WORK_DIR)"
+	mkdir "$(TEST_WORK_DIR)"
 	private/runtests $(PAR_ARGS) $(onlyrun)
 	if [ "$(onlyrun)" = "" ]; then touch $@; fi
 
@@ -45,8 +49,8 @@ check-tag:
 	@if [ "$(tag)" = "" ]; then \
 		echo 'Specify tag to test with tag=<tag>'; exit 1; \
 	fi
-	rm -rf debian/tests
-	mkdir debian/tests
+	rm -rf "$(TEST_WORK_DIR)"
+	mkdir "$(TEST_WORK_DIR)"
 	private/runtests $(PAR_ARGS) -t $(tag)
 
 # this target is only run manually
@@ -79,7 +83,7 @@ clean: $(neededfiles)
 	rm -f runtests build-stamp
 	rm -f doc/help.tmp doc/README
 	rm -rf doc/lintian.html/ doc/lintian.txt
-	rm -rf debian/tests
+	rm -rf "$(TEST_WORK_DIR)"
 	rm -rf man/man1/
 	rm -fr debian/test.locale
 	dh_clean
