@@ -68,6 +68,10 @@ our $STANDARDS_VERSION = '3.9.2';
 our $ARCHITECTURE = `dpkg-architecture -qDEB_HOST_ARCH`;
 chomp $ARCHITECTURE;
 
+my %TEMPLATES = (
+    'tests' => ['debian/changelog', 'debian/control'],
+);
+
 # --- Usage information
 
 sub usage {
@@ -368,6 +372,16 @@ sub find_tests_for_tag {
     });
 }
 
+
+sub copy_template_dir {
+    my ($skel, $tsrc, $targetdir, $exskel) = @_;
+    my @exs = ();
+    @exs = @$exskel if $exskel;
+    runsystem('rsync', '-rpc', "$skel/", "$targetdir/", @exs);
+    runsystem('rsync', '-rpc', "$tsrc/", "$targetdir/")
+	if -d "$tsrc/";
+}
+
 # Run a package test and show any diffs in the expected tags or any other
 # errors detected.  Takes the description data for the test.  Returns true if
 # the test passes and false if it fails.
@@ -406,33 +420,25 @@ sub test_package {
     runsystem_ok('rm', '-rf', $rundir);
     runsystem_ok('mkdir', '-p', $rundir);
     my $skel = $testdata->{skeleton};
-    if ($is_native) {
-	runsystem('cp', '-rp', "$tmpldir/$skel", $targetdir);
-	runsystem('rm', '-f', "$targetdir/debian/changelog");
-	runsystem('rsync', '-rpc', "$origdir/debian/", "$targetdir/")
-	    if -d "$origdir/debian/";
-    } else {
-	runsystem('cp', '-rp', "$tmpldir/${skel}.upstream", $targetdir);
-	runsystem('rm', '-f', "$targetdir/.dummy");
-	runsystem('rsync', '-rpc', "$origdir/upstream/", "$targetdir/");
+    unless ($is_native) {
+	copy_template_dir("$tmpldir/${skel}.upstream", "$origdir/upstream/", $targetdir);
+	unlink "$targetdir/.dummy" if -e "$targetdir/.dummy";
 	if (-x "$origdir/pre_upstream") {
 	    msg_print 'running pre_upstream hook... ' if $VERBOSE;
 	    runsystem("$origdir/pre_upstream", $targetdir);
 	}
 	runsystem("cd $rundir && ".
 		  "tar czf ${pkg}_${orig_version}.orig.tar.gz $pkgdir");
-	runsystem('rsync', '-rpc', '--exclude=debian/changelog',
-		  "$tmpldir/$skel/", "$targetdir/");
-	runsystem('rsync', '-rpc', "$origdir/debian/", "$targetdir/")
-	    if -d "$origdir/debian/";
+    }
+    copy_template_dir("$tmpldir/$skel", "$origdir/debian/", $targetdir,
+		      ['--exclude=debian/changelog']);
+
+    foreach my $tfile (@{ $TEMPLATES{'tests'} }) {
+	unless (-e "$targetdir/$tfile") {
+	    fill_in_tmpl("$targetdir/$tfile", $testdata);
+	}
     }
 
-    unless (-e "$targetdir/debian/changelog") {
-	fill_in_tmpl("$targetdir/debian/changelog", $testdata);
-    }
-    unless (-e "$targetdir/debian/control") {
-	fill_in_tmpl("$targetdir/debian/control", $testdata);
-    }
     unless ($is_native || -e "$targetdir/debian/watch") {
 	runsystem("echo >$targetdir/debian/watch");
     }
