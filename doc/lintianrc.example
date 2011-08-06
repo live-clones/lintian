@@ -13,6 +13,27 @@
 # It is allowed to use `~' and `$HOME' in the variables, but not other
 # shell/environment variables.
 
+# Enable info tags by default (--display info)
+#display-info = yes
+
+# Enable pedantic tags by default (--pedantic)
+#pedantic = yes
+
+# Enable experimental tags by default (--display-experimental)
+#display-experimental = yes
+
+# Enable colored output for terminal output (--color)
+#color = auto
+
+# Show overridden tags (--show-overriden)
+#show-overriden = yes
+
+# Ignore all overrides (--no-override)
+#override = no
+
+# Verbose output by default (--verbose)
+#verbose = yes
+
 # Specify a laboratory--a directory where Lintian should store some info
 # about packages being checked.
 #LINTIAN_LAB="/var/spool/lintian"
