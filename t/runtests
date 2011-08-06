@@ -386,7 +386,7 @@ sub test_package {
     my $rundir = "$RUNDIR/$pkg";
     my $origdir = "$TESTSET/tests/$testdata->{testname}";
     my $targetdir = "$rundir/$pkgdir";
-    my $tmpldir = "$TESTSET/templates";
+    my $tmpldir = "$TESTSET/templates/tests/";
 
     my $is_native = ($testdata->{type} eq 'native');
     my $orig_version = $testdata->{version};
