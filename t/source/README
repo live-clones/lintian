@@ -35,6 +35,12 @@ file, such as running dpkg-source.
 The Makefile does not have to clean up after itself.  It can assume
 that the directory is deleted and recreated between test runs.
 
+The desc file
+-------------
+
+Please refer to t/tests/README for the full description of the desc
+file.
+
 Skipping tests
 --------------
 

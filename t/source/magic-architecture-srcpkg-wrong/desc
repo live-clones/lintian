@@ -1,5 +1,6 @@
 Testname: magic-architecture-srcpkg-wrong
 Sequence: 6000
-Version: 1.0
+Version: 1.0-1
+Type: non-native
 Description: Test package for "any" plus specific arch in .dscs
 Test-For: magic-arch-in-arch-list

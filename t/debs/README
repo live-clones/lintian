@@ -42,6 +42,12 @@ before creating the deb.
 Note that t/helper/bin/create-deb can handle most of the common deb
 creation cases;  the Makefile can assume this script is in PATH.
 
+The desc file
+-------------
+
+Please refer to t/tests/README for the full description of the desc
+file.
+
 Skipping tests
 --------------
 

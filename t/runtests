@@ -71,7 +71,9 @@ our $ARCHITECTURE = `dpkg-architecture -qDEB_HOST_ARCH`;
 chomp $ARCHITECTURE;
 
 my %TEMPLATES = (
-    'tests' => ['debian/changelog', 'debian/control'],
+    'tests'  => ['debian/changelog', 'debian/control'],
+    'debs'   => ['changelog', 'control'],
+    'source' => ['changelog', 'control'],
 );
 my $DATE = `date -R`;
 chomp $DATE;
@@ -251,7 +253,7 @@ foreach my $tsi (['debs', "$TESTSET/debs/*/desc", sub { generic_test_runner('deb
     if ($singletest) {
 	my $test = $singletest;
 	if (-d "$TESTSET/$tdir/$test") {
-	    @tests = ($test);
+	    @tests = read_dpkg_control("$TESTSET/$tdir/$test/desc");
 	} elsif (-f "$LINTIAN_ROOT/checks/$singletest.desc"){
 	    @tests = map { read_dpkg_control($_) } <$TESTSET/tests/$singletest-*/desc>;
 	}
@@ -314,11 +316,13 @@ sub find_tests_for_tag {
 
 
 sub copy_template_dir {
-    my ($skel, $tsrc, $targetdir, $exskel) = @_;
+    my ($skel, $tsrc, $targetdir, $exskel, $extsrc) = @_;
     my @exs = ();
+    my @ext = ();
     @exs = @$exskel if $exskel;
+    @ext = @$extsrc if $extsrc;
     runsystem('rsync', '-rpc', "$skel/", "$targetdir/", @exs);
-    runsystem('rsync', '-rpc', "$tsrc/", "$targetdir/")
+    runsystem('rsync', '-rpc', "$tsrc/", "$targetdir/", @ext)
 	if -d "$tsrc/";
 }
 
@@ -521,7 +525,7 @@ sub generic_find_test_for_tag {
 # Returns a truth value on success, undef on test failure.  May call die/fail
 # if the test is broken.
 sub generic_test_runner {
-    my ($dir, $ext, $testdata) = @_;
+    my ($suite, $ext, $testdata) = @_;
 
     if (!check_test_is_sane($TESTSET, $testdata)) {
 	msg_print "Skipping test $testdata->{testname} $testdata->{version}... architecture mismatch\n";
@@ -532,8 +536,9 @@ sub generic_test_runner {
 
     msg_print "Running $test... ";
 
-    my $testdir = "$TESTSET/$dir/$test";
+    my $testdir = "$TESTSET/$suite/$test";
     my $targetdir = "$RUNDIR/$test";
+    my $tmpldir = "$TESTSET/templates/$suite/";
     if (-f "$testdir/skip") {
 	msg_print "skipped.\n";
 	return 1;
@@ -542,6 +547,17 @@ sub generic_test_runner {
     print "Cleaning up and repopulating $targetdir...\n" if $DEBUG;
     runsystem_ok('rm', '-rf', $targetdir);
     runsystem('cp', '-rp', $testdir, $targetdir);
+
+    my $skel = $testdata->{skeleton};
+
+    copy_template_dir("$tmpldir/$skel", "$testdir/", $targetdir,
+		      ['--exclude=changelog'], ['--exclude=desc']);
+
+    foreach my $tfile (@{ $TEMPLATES{$suite} }) {
+	unless (-e "$targetdir/$tfile") {
+	    fill_in_tmpl("$targetdir/$tfile", $testdata);
+	}
+    }
 
     msg_print 'building... ';
     my $res = system("cd $targetdir && fakeroot make >../build.$test 2>&1");

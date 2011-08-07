@@ -1,6 +1,0 @@
-fields-wildcard-binary (1.0) unstable; urgency=low
-
-  * A Lintian test case.
-
- -- Debian Lintian Maintainers <lintian-maint@debian.org>  Thu, 24 Dec 2009 15:23:13 -0800
-
