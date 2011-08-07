@@ -1,0 +1,13 @@
+Testname: fields-general-bad
+Sequence: 6000
+Version: 1.0
+Description: Test for package with control bad values
+Test-For:
+ bad-package-name
+ bad-relation
+ bad-version-in-relation
+ bad-version-number
+ too-many-architectures
+ unknown-architecture
+ unknown-field-in-control
+ unknown-priority

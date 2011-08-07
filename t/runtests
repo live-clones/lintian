@@ -242,112 +242,44 @@ run_tests(\&test_changes, @tests);
 $tests_run += scalar(@tests);
 msg_flush;
 
-# --- Run all debs tests
-
-$prev = $prev || scalar(@tests);
-@tests = ();
-if ($singletest) {
-    my $test = $singletest;
-    if (-d "$TESTSET/debs/$test") {
-	@tests = ($test);
-    }
-} elsif ($tag) {
-    @tests = generic_find_test_for_tag($tag, "$TESTSET/debs/*/tags");
-} else {
-    unless (-d "$TESTSET/debs") {
-	fail("cannot find $TESTSET/debs: $!");
-    }
-    @tests = map {
-	if (-d $_) {
-	    s,^\Q$TESTSET/debs/\E,,;
-	    $_;
-	} else {
-	    ();
+foreach my $tsi (['debs', "$TESTSET/debs/*/desc", sub { generic_test_runner('debs', 'deb', @_) } ],
+		 ['source', "$TESTSET/source/*/desc", sub { generic_test_runner('source', 'dsc', @_) } ],
+		 ['tests', "$TESTSET/tests/*/desc", sub { test_package('tests', @_) } ]) {
+    my ($tdir, $globstr, $runner) = @$tsi;
+    $prev = $prev || scalar(@tests);
+    @tests = ();
+    if ($singletest) {
+	my $test = $singletest;
+	if (-d "$TESTSET/$tdir/$test") {
+	    @tests = ($test);
+	} elsif (-f "$LINTIAN_ROOT/checks/$singletest.desc"){
+	    @tests = map { read_dpkg_control($_) } <$TESTSET/tests/$singletest-*/desc>;
 	}
-    } sort(<$TESTSET/debs/*>);
-}
-if ($prev and @tests) {
-    print "\n";
-    $prev = 0;
-}
-print "Found the following debs tests: @tests\n" if $DEBUG;
-print "Raw Debian package tests:\n" if @tests;
-
-run_tests( sub { generic_test_runner('debs', 'deb', @_) }, @tests);
-$tests_run += scalar(@tests);
-msg_flush;
-
-# --- Run all source tests
-
-$prev = $prev || scalar(@tests);
-@tests = ();
-if ($singletest) {
-    my $test = $singletest;
-    if (-d "$TESTSET/source/$test") {
-	@tests = ($test);
-    }
-} elsif ($tag) {
-    @tests = generic_find_test_for_tag($tag, "$TESTSET/source/*/tags");
-} else {
-    unless (-d "$TESTSET/source") {
-	fail("cannot find $TESTSET/source: $!");
-    }
-    @tests = map {
-	if (-d $_) {
-	    s,^\Q$TESTSET/source/\E,,;
-	    $_;
-	} else {
-	    ();
+    } elsif ($tag) {
+	@tests = find_tests_for_tag($tag, "$globstr");
+    } else {
+	unless (-d "$TESTSET/$tdir/") {
+	    fail("cannot find $TESTSET/$tdir: $!");
 	}
-    } sort(<$TESTSET/source/*>);
-}
-if ($prev and @tests) {
-    print "\n";
-    $prev = 0;
-}
-print "Found the following source tests: @tests\n" if $DEBUG;
-print "Raw Debian source package tests:\n" if @tests;
-
-run_tests( sub { generic_test_runner('source', 'dsc', @_) }, @tests);
-
-$tests_run += scalar(@tests);
-msg_flush;
-
-# --- Run all package tests
-
-$prev = $prev || scalar(@tests);
-@tests = ();
-if ($singletest) {
-    my $desc = "$TESTSET/tests/$singletest/desc";
-    if (-f $desc) {
-	@tests = read_dpkg_control($desc);
-    } elsif (-f "$LINTIAN_ROOT/checks/$singletest.desc"){
-	@tests = map { read_dpkg_control($_) } <$TESTSET/tests/$singletest-*/desc>;
+	@tests = map { read_dpkg_control($_) } glob $globstr;
     }
-} elsif ($tag) {
-    @tests = find_tests_for_tag($tag, "$TESTSET/tests/*/desc");
-} else {
-    unless (-d "$TESTSET/tests/") {
-	fail("cannot find $TESTSET/tests: $!");
-    }
-    @tests = map { read_dpkg_control($_) } <$TESTSET/tests/*/desc>;
-}
-@tests = sort {
-    $a->{sequence} <=> $b->{sequence}
-	|| $a->{testname} cmp $b->{testname}
+    @tests = sort {
+	$a->{sequence} <=> $b->{sequence}
+          || $a->{testname} cmp $b->{testname}
     } @tests;
-print "\n" if ($prev and @tests);
-if ($DEBUG) {
-    print 'Found the following tests: ';
-    print join(' ', map { $_->{testname} } @tests);
-    print "\n";
+    print "\n" if ($prev and @tests);
+    if ($DEBUG) {
+	print 'Found the following tests: ';
+	print join(' ', map { $_->{testname} } @tests);
+	print "\n";
+    }
+    print "Package tests ($tdir):\n" if @tests;
+
+    run_tests($runner, @tests);
+    $tests_run += scalar(@tests);
+    msg_flush;
 }
-print "Package tests:\n" if @tests;
 
-run_tests(sub { test_package('tests', @_) }, @tests);
-
-$tests_run += scalar(@tests);
-msg_flush;
 
 # --- Check whether we ran any tests
 
@@ -589,7 +521,15 @@ sub generic_find_test_for_tag {
 # Returns a truth value on success, undef on test failure.  May call die/fail
 # if the test is broken.
 sub generic_test_runner {
-    my ($dir, $ext, $test) = @_;
+    my ($dir, $ext, $testdata) = @_;
+
+    if (!check_test_is_sane($TESTSET, $testdata)) {
+	msg_print "Skipping test $testdata->{testname} $testdata->{version}... architecture mismatch\n";
+	return 1;
+    }
+
+    my $test = $testdata->{testname};
+
     msg_print "Running $test... ";
 
     my $testdir = "$TESTSET/$dir/$test";
@@ -614,7 +554,7 @@ sub generic_test_runner {
     runsystem_ok("$LINTIAN --allow-root --no-cfg -I -E $targetdir/*.$ext 2>&1"
 		 . " | sort > $RUNDIR/tags.$test");
 
-    return _check_result(undef, "$testdir/tags", "$RUNDIR/tags.$test");
+    return _check_result($testdata, "$testdir/tags", "$RUNDIR/tags.$test");
 }
 
 sub _check_result {
@@ -655,6 +595,8 @@ sub _check_result {
 	open my $etags, '<', $actual or fail("opening: $actual");
 	while (<$etags>) {
 		next if m/^N: /;
+		# Some of the traversal tests are skipped; accept that in the output
+		next if m/tainted/o && m/skipping/o;
 		# Looks for "$code: $package[ $type]: $tag"
 		if (not /^.: \S+(?: (?:changes|source|udeb))?: (\S+)/o) {
 		    msg_print (($testdata->{'todo'} eq 'yes')? 'TODO' : 'E');
@@ -797,7 +739,7 @@ sub check_test_is_sane {
 	print 'check_test_is_sane <= ' . Dumper($data);
     }
 
-    unless ($data->{testname} && $data->{version}) {
+    unless ($data->{testname} && exists $data->{version}) {
 	fail('Name or Version missing');
     }
 

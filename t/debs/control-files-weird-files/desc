@@ -1,0 +1,8 @@
+Testname: control-files-weird-files
+Sequence: 6000
+Version: 1.0
+Description: Test for bad owner of control files
+Test-For:
+ not-allowed-control-file
+ control-file-is-empty
+ unknown-control-file

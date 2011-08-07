@@ -1,0 +1,7 @@
+Testname: deb-format-ancient-file
+Sequence: 6000
+Version: 1.0
+Description: Test package containing an ancient file
+Test-For:
+ package-contains-ancient-file
+ tar-errors-from-control

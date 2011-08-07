@@ -1,0 +1,4 @@
+Testname: deb-format-record-size
+Sequence: 6000
+Version: 1.0
+Description: Test package with a non-standard tar record size

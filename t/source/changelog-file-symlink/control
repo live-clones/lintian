@@ -8,7 +8,7 @@ Standards-Version: 3.9.1
 Package: changelog-file-symlink
 Architecture: all
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: Test for directory traversal issues via field names or values
+Description: Test for d/changelog being a symlink
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.
