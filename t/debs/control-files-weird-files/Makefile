@@ -1,20 +1,14 @@
 name = control-files-weird-files
 
 all:
-	echo '2.0' > debian-binary
-	mkdir -p usr/share/doc/$(name)
-	cp copyright changelog usr/share/doc/$(name)
-	gzip -9 usr/share/doc/$(name)/changelog
-	tar cfz data.tar.gz usr
-	chown 0:0 control
-	chmod 644 control
-	md5sum usr/share/doc/$(name)/* > md5sums
+	mkdir -p root/usr/share/doc/$(name)
+	cp copyright changelog root/usr/share/doc/$(name)
+	gzip -9 root/usr/share/doc/$(name)/changelog
+
 	touch triggers
-	tar -czf control.tar.gz control md5sums \
-	    special-file isinstallable triggers
-	ar rc $(name).deb \
-	    debian-binary control.tar.gz data.tar.gz
+	create-deb -o $(name).deb --root root/ control triggers \
+		special-file isinstallable
 
 clean:
-	rm -f *.tar.gz *.tar.lzma *.deb md5sums debian-binary triggers
-	rm -rf usr
+	rm -f *.tar.gz *.deb md5sums debian-binary triggers
+	rm -rf root/

@@ -1,17 +1,12 @@
+name = deb-format-lzma
+
 all:
-	echo '2.0' > debian-binary
-	mkdir -p usr/share/doc/deb-format-lzma
-	cp copyright changelog usr/share/doc/deb-format-lzma
-	gzip -9 usr/share/doc/deb-format-lzma/changelog
-	tar cf data.tar usr
-	lzma data.tar
-	chown 0:0 control
-	chmod 644 control
-	md5sum usr/share/doc/deb-format-lzma/* > md5sums
-	tar cfz control.tar.gz control md5sums
-	ar rc deb-format-lzma.deb \
-	    debian-binary control.tar.gz data.tar.lzma
+	mkdir -p root/usr/share/doc/$(name)
+	cp copyright changelog root/usr/share/doc/$(name)
+	gzip -9 root/usr/share/doc/$(name)/changelog
+
+	create-deb -o $(name).deb --root root -c lzma control
 
 clean:
 	rm -f *.tar.gz *.tar.lzma *.deb md5sums debian-binary
-	rm -rf usr
+	rm -rf root

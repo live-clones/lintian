@@ -1,0 +1,158 @@
+#!/usr/bin/perl
+
+# create-deb -- helper tool for the lintian test suite
+#
+# Copyright (C) 2011 Niels Thykier
+#
+# This program is free software.  It is distributed under the terms of
+# the GNU General Public License as published by the Free Software
+# Foundation; either version 2 of the License, or (at your option) any
+# later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, you can find it on the World Wide
+# Web at http://www.gnu.org/copyleft/gpl.html, or write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+use strict;
+use warnings;
+
+
+use Getopt::Long;
+use Cwd();
+
+# known compression styles
+my %TAR_OPTIONS = (
+    'gz' => ['-z'],
+    'bz2' => ['-j'],
+    'lzma' => ['-I', 'lzma'],
+);
+
+# Permissions
+#  Only added the files actually used in the test suite so far
+#  - extend as needed
+my %PERM = (
+    'control'       => 0644,
+    'md5sums'       => 0644,
+    'triggers'      => 0644,
+    'isinstallable' => 0755, # udeb
+);
+
+# default values
+my %val  = (
+    'compression' => 'gz',
+    'fix-perm'    => 1,
+);
+
+# Accepted options
+my %opts = (
+    'out-file|o=s' => \$val{'out-file'},
+    'help|h' => sub { usage(); exit 0; },
+    'root=s' => \$val{'root'},
+    'compression|c=s' => \$val{'compression'},
+    'md5sums!' => \$val{'md5sums'},
+    'fix-perm!' => \$val{'fix-perm'},
+);
+
+my $cwd;
+my $data;
+
+Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
+
+GetOptions(%opts)
+    or die "error parsing options\n";
+
+die "Missing --out-file option\n" unless $val{'out-file'};
+
+die "Missing --root option\n" unless $val{'root'};
+
+die "Unknown compression \"$val{'compression'}\"\n" unless exists $TAR_OPTIONS{$val{'compression'}};
+
+# default to "on" unless we are given an md5sums file explicitly
+$val{'md5sums'} = 1 unless defined $val{'md5sums'} || grep { $_ eq 'md5sums'} @ARGV;
+
+$cwd = Cwd::cwd();
+
+if ($val{'md5sums'}) {
+    runsystem("cd $val{'root'} && find -type f -a -! -ipath etc/ -print0 | xargs -0 md5sum >> $cwd/md5sums");
+    push @ARGV, 'md5sums' if -s 'md5sums'; # only add if it is not empty.
+}
+
+# Create the data.tar.$ext
+$data = "data.tar.$val{'compression'}";
+
+runsystem('tar', '-C', $val{'root'}, @{ $TAR_OPTIONS{$val{'compression'}} },
+          '-cf', "$cwd/$data", '.');
+
+# control.tar.gz
+
+unless ( -e 'control.tar.gz' ) {
+    if ($val{'fix-perm'}) {
+        chown 0, 0,  @ARGV;
+        foreach my $f (@ARGV) {
+            if (my $perm = $PERM{$f}) {
+                chmod $perm, $f;
+            }
+        }
+    }
+    runsystem('tar', 'czf', 'control.tar.gz', @ARGV);
+}
+
+# debian-binary
+open my $bv, '>', 'debian-binary' or die "opening debian-binary: $!";
+print $bv "2.0\n";
+close $bv or die "closing debian-binary: $!";
+
+# ar the deb file
+runsystem('ar', 'rc', $val{'out-file'}, 'debian-binary', 'control.tar.gz', $data);
+
+exit 0;
+
+### helpers ###
+
+sub usage {
+    print <<EOF ;
+usage: $0 [options] -o <file.deb> --root <dir> control-file[... files]
+
+ --root <dir>            Everything in <dir> will be put in the data.tar
+ -c, --compression <c>   The extension used for the data.tar; defaults to "gz"
+ --help                  Prints usage info and exits
+ -o, --out-file <file>   The name of the resulting deb file.
+ --[no-]md5sums          Whether to auto-generate an md5sums.  This file will
+                         automatically be added to the control files if
+                         generated.  This is on by default, unless an md5sums
+                         is passed.
+ --[no-]fix-perm         Whether to auto-fix permissions and owner for control
+                         files.  Defaults to on.  This will modify the perm of
+                         the actual controls passed!
+
+Creates a deb file from a root directory and some control files.  The
+control files are assumed to be in the current directory or the
+resulting control.tar.gz may be messed up (which may, of course, be
+intentional).
+
+If control.tar.gz already exists, it will be reused instead of creating a
+new one.
+
+Note: This writes debian-binary, data.tar.<c> and control.tar.gz to
+the current directory.  If --md5sums is in effect, it will also generate
+a md5sums in the current directory.
+
+Note: This does not use dpkg-deb, so it can be used to generate deb
+files that dpkg-deb would (now or in the future) refuse to build.
+
+EOF
+
+}
+
+sub runsystem {
+    my $r = system @_;
+    die "system @_ failed (exit status: " . (($r >> 8) & 0xff) .")\n" if $r;
+}
+

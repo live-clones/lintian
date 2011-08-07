@@ -29,6 +29,8 @@
 use strict;
 use warnings;
 
+use Cwd();
+
 use threads;
 use Thread::Queue;
 
@@ -125,6 +127,13 @@ unless (-d $RUNDIR) {
 }
 unless (-d $TESTSET) {
     fail("test set directory $TESTSET does not exist");
+}
+
+if ( -d "$TESTSET/helpers/bin") {
+    # Add the test helpers to PATH
+    my $tpath = Cwd::abs_path("$TESTSET/helpers/bin");
+    fail "Cannot resolve $TESTSET/helpers/bin: $!" unless $tpath;
+    $ENV{'PATH'} = "$tpath:$ENV{'PATH'}";
 }
 
 # Getopt::Long assigns 0 as default value if none was specified
@@ -712,7 +721,7 @@ sub run_tests{
 		my $okay = eval { $code->($t); };
 		if (!$okay || $@) {
 		    if ($@) {
-			msg_print "FAIELD\n";
+			msg_print "FAILED\n";
 			print STDERR "$@\n";
 		    }
 		    exit 1 unless $run_all_tests;
