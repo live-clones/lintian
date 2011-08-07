@@ -205,6 +205,8 @@ lintian (2.5.2) UNRELEASED; urgency=low
       Thanks, Charles Plessy.  (Closes: #632159)
     + [NT] Added another correction for "specification".  Thanks to
       Jakub Wilk for the hint.  (Closes: #634222)
+    + [NT] Added another correction for "development".  Thanks to Pinto
+      Toscano for the suggestion.
 
   * debian/control:
     + [NT] Bumped debhelper version to 8.1.0 due to the build-arch and
