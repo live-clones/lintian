@@ -12,3 +12,13 @@ Experimental: yes
 Info: The package ships the two (or more) files with the exact same
  contents.
 
+Tag: duplicate-changelog-files
+Severity: normal
+Certainty: possible
+Info: The package appears to be shipping two copies of the changelog.
+ .
+ If the second copy is really needed, consider making it a symlink to
+ the canonical place for the relevant changelog.
+ .
+ Both upstream and debian changelogs are checked with this tag.
+

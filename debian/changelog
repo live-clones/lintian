@@ -4,6 +4,7 @@ lintian (2.5.2) UNRELEASED; urgency=low
     + Added:
       - debian-rules-uses-deprecated-makefile
       - debian-rules-uses-or-modifies-user-only-variable
+      - duplicate-changelog-files
       - package-has-long-file-name
       - source-package-component-has-long-file-name
       - udeb-uses-non-gzip-data-tarball
@@ -81,6 +82,7 @@ lintian (2.5.2) UNRELEASED; urgency=low
     + [NT] Exclude  __init__.py files from the check as they are
       required even if they are empty.  Thanks to Daniele Tricoli
       for the report.  (Closes: #632789)
+    + [NT] Report duplicate changelogs as a separate tag.
   * checks/fields:
     + [NT] Refactored to use Lintian::Data and use new data files
       from data/fields.

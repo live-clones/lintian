@@ -2,5 +2,7 @@ Testname: duplicate-files
 Sequence: 6000
 Version: 1.0
 Description: Test for duplicate files
+Skeleton: pedantic
 Test-For:
+ duplicate-changelog-files
  duplicate-files

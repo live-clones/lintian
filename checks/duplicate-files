@@ -54,7 +54,11 @@ foreach my $file (@{ $info->sorted_index }){
 foreach my $hash (keys %hashmap){
     my @files = @{ $hashmap{$hash} };
     next if scalar(@files) < 2;
-    tag 'duplicate-files', sort @files;
+    if (grep { m,changelog,io} @files) {
+        tag 'duplicate-changelog-files', sort @files;
+    } else {
+        tag 'duplicate-files', sort @files;
+    }
 }
 
 }
