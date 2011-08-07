@@ -103,6 +103,8 @@ lintian (2.5.2) UNRELEASED; urgency=low
       four additional embedded javascript libraries.
       (Closes: #635447)
     + [NT] Stricten the regex for finding .xvpics dirs.
+    + [NT] Shipping a lintian override is no longer enough to
+      make lintian consider the package for "non-empty".
   * checks/init.d{,.desc}:
     + [NT] Provide a separate tag for upstart-jobs not registered
       via update-rc.d in postinst.  This allows vendors (such as
