@@ -344,7 +344,7 @@ if ($DEBUG) {
 }
 print "Package tests:\n" if @tests;
 
-run_tests(\&test_package, @tests);
+run_tests(sub { test_package('tests', @_) }, @tests);
 
 $tests_run += scalar(@tests);
 msg_flush;
@@ -394,7 +394,7 @@ sub copy_template_dir {
 # errors detected.  Takes the description data for the test.  Returns true if
 # the test passes and false if it fails.
 sub test_package {
-    my ($testdata) = @_;
+    my ($suite, $testdata) = @_;
 
     if (!check_test_is_sane($TESTSET, $testdata)) {
 	msg_print "Skipping test $testdata->{testname} $testdata->{version}... architecture mismatch\n";
@@ -406,9 +406,9 @@ sub test_package {
     my $pkg = $testdata->{srcpkg};
     my $pkgdir = "$pkg-$testdata->{version}";
     my $rundir = "$RUNDIR/$pkg";
-    my $origdir = "$TESTSET/tests/$testdata->{testname}";
+    my $origdir = "$TESTSET/$suite/$testdata->{testname}";
     my $targetdir = "$rundir/$pkgdir";
-    my $tmpldir = "$TESTSET/templates/tests/";
+    my $tmpldir = "$TESTSET/templates/$suite/";
 
     my $is_native = ($testdata->{type} eq 'native');
     my $orig_version = $testdata->{version};
@@ -441,7 +441,7 @@ sub test_package {
     copy_template_dir("$tmpldir/$skel", "$origdir/debian/", $targetdir,
 		      ['--exclude=debian/changelog']);
 
-    foreach my $tfile (@{ $TEMPLATES{'tests'} }) {
+    foreach my $tfile (@{ $TEMPLATES{$suite} }) {
 	unless (-e "$targetdir/$tfile") {
 	    fill_in_tmpl("$targetdir/$tfile", $testdata);
 	}
@@ -604,7 +604,11 @@ sub generic_test_runner {
     runsystem('cp', '-rp', $testdir, $targetdir);
 
     msg_print 'building... ';
-    runsystem("cd $targetdir && fakeroot make >../build.$test 2>&1");
+    my $res = system("cd $targetdir && fakeroot make >../build.$test 2>&1");
+    if ($res){
+	dump_log($test, "$RUNDIR/build.$test") if $DUMP_LOGS;
+	fail("cd $targetdir && fakeroot make >../build.$test 2>&1");
+    }
 
     msg_print 'testing... ';
     runsystem_ok("$LINTIAN --allow-root --no-cfg -I -E $targetdir/*.$ext 2>&1"
