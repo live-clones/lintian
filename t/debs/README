@@ -39,6 +39,9 @@ need to worry about file ownership when creating the files as long
 as all files included in the archive are newly created or chowned
 before creating the deb.
 
+Note that t/helper/bin/create-deb can handle most of the common deb
+creation cases;  the Makefile can assume this script is in PATH.
+
 Skipping tests
 --------------
 
