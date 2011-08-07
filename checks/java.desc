@@ -78,7 +78,7 @@ Tag: missing-manifest
 Severity: minor
 Certainty: possible
 Info: The jar file contains .class files but no manifest. This may
- indicates a build misconfiguration.
+ indicate a build misconfiguration.
 
 Tag: codeless-jar
 Severity: normal
