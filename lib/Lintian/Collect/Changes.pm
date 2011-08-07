@@ -22,8 +22,6 @@ use strict;
 use warnings;
 use base 'Lintian::Collect';
 
-use Util;
-
 # Initialize a new .changes file collect object.  Takes the package name,
 # which is currently unused.
 sub new {
