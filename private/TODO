@@ -69,8 +69,6 @@ lib:
 
 - Finish documentation of Lintian::Output*.
 
-- Finish documentation of Lintian::Schedule.
-
 - Add collect function to return the sort of symlink information that's
   currently gathered by checks/menus; we'll find other uses for it.
 
