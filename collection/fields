@@ -26,7 +26,8 @@ use strict;
 use warnings;
 
 if (-d 'fields'){
-    delete_dir('fields') or die 'Could not remove old fields directory';
+    system('rm', '-rf', 'fields') == 0
+        or die 'Could not remove old fields directory';
 }
 
 exit 0;
