@@ -26,6 +26,8 @@ package Lintian::fields;
 use strict;
 use warnings;
 
+use Dpkg::Version qw(version_check);
+
 use lib "$ENV{'LINTIAN_ROOT'}/checks/";
 
 use Util;
@@ -202,35 +204,36 @@ if (not defined $info->field('version')) {
 	$version = $info->field('version');
 
 	unfold('version', \$version);
+	my $dversion = Dpkg::Version->new($version);
 
-	if (@_ = _valid_version($version)) {
-		my ($epoch, $upstream, $debian) = @_;
+	if ($dversion->is_valid) {
+		my ($upstream, $debian) = ($dversion->version, $dversion->revision);
 		if ($upstream !~ /^\d/i) {
 			tag 'upstream-version-not-numeric', $version;
 		}
-		if (defined $debian) {
-			tag 'debian-revision-should-not-be-zero', $version
-				if $debian eq '-0';
-			my $ubuntu;
-			if($debian =~ /^-(?:[^.]+)(?:\.[^.]+)?(?:\.[^.]+)?(\..*)?$/o){
-			    my $extra = $1;
-			    if (defined $extra
-				&& $debian =~ /^-(?:[^.]+ubuntu[^.]+)(?:\.\d+){1,3}(\..*)?$/o){
-				$ubuntu = 1;
-				$extra = $1;
-			    }
-			    if (defined $extra) {
-				tag 'debian-revision-not-well-formed', $version;
-			    }
-			} else {
-			    tag 'debian-revision-not-well-formed', $version;
-			}
-			if ($debian =~ /^-[^.-]+\.[^.-]+\./ and not $ubuntu) {
-				tag 'binary-nmu-uses-old-version-style', $version
-					if $type eq 'binary';
-				tag 'binary-nmu-debian-revision-in-source', $version
-					if $type eq 'source';
-			}
+		# Dpkg::Version sets the debian revision to 0 if there is no revision.
+		# - so we need to check if the raw version ends with "-0".
+		tag 'debian-revision-should-not-be-zero', $version
+		    if $version =~ m/-0$/o;
+		my $ubuntu;
+		if($debian =~ m/^(?:[^.]+)(?:\.[^.]+)?(?:\.[^.]+)?(\..*)?$/o){
+		    my $extra = $1;
+		    if (defined $extra
+			&& $debian =~ /^(?:[^.]+ubuntu[^.]+)(?:\.\d+){1,3}(\..*)?$/o){
+			$ubuntu = 1;
+			$extra = $1;
+		    }
+		    if (defined $extra) {
+			tag 'debian-revision-not-well-formed', $version;
+		    }
+		} else {
+		    tag 'debian-revision-not-well-formed', $version;
+		}
+		if ($debian =~ /^[^.-]+\.[^.-]+\./o and not $ubuntu) {
+		    tag 'binary-nmu-uses-old-version-style', $version
+			if $type eq 'binary';
+		    tag 'binary-nmu-debian-revision-in-source', $version
+			if $type eq 'source';
 		}
 		if ($version =~ /\+b\d+$/ && $type eq 'source') {
 			tag 'binary-nmu-debian-revision-in-source', $version;
@@ -602,7 +605,7 @@ if (($type eq 'binary') || ($type eq 'udeb')) {
 				    if ($d_version && grep { $d_version->[0] eq $_ } ('<', '>'));
 
 				tag 'bad-version-in-relation', "$field: $part_d_orig"
-				    if ($d_version->[0] && ! defined((_valid_version($d_version->[1]))[1]));
+				    if ($d_version->[0] && ! version_check($d_version->[1]));
 
 				tag 'package-relation-with-self', "$field: $part_d_orig"
 				    if ($pkg eq $d_pkg) && ($field ne 'conflicts');
@@ -989,24 +992,11 @@ sub _split_dep {
 	return ($pkg, $version, $darch, $dep);
 }
 
-sub _valid_version {
-	my $ver = shift;
-
-	# epoch check means nothing here... This check is only useful to detect
-	# weird characters in version (and to get the debian revision)
-	if ($ver =~ m/^(\d+:)?([-\.+:~A-Z0-9]+?)(-[\.+~A-Z0-9]+)?$/i) {
-		return ($1, $2, $3);
-	} else {
-		return ();
-	}
-}
-
 sub perl_core_has_version {
 	my ($package, $op, $version) = @_;
 	my $core_version = $PERL_CORE_PROVIDES->value($package);
 	return 0 if !defined $core_version;
-	my @version = _valid_version($version);
-	return 0 if !@version;
+	return 0 unless version_check($version);
 	return versions_compare($core_version, $op, $version);
 }
 
