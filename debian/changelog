@@ -34,6 +34,9 @@ lintian (2.5.2) UNRELEASED; urgency=low
     + [NT] Emit "arch-dependent-file-in-usr-share" and
       "binary-in-etc" also for static compiled files.  Thanks to
       Jakub Wilk for the report and the patch.  (Closes: #635354)
+    + [NT] Fixed false-negative for rpath, if the rpath included
+      the multi-arch dir.  Thanks to Jakub Wilk for the report and
+      the patch.  (Closes: #637259)
   * checks/changelog-file:
     + [NT] Removed exception for symlinked changelogs if the
       package had an Ubuntu version.  This exception is now

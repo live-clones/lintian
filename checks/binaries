@@ -315,7 +315,7 @@ foreach my $file (@{$info->sorted_file_info}) {
 	foreach my $rpath (map {File::Spec->canonpath($_)} keys %{$objdump->{RPATH}}) {
 	    next if $rpath =~ m,^/usr/lib/(?:games/)?\Q$pkg\E(?:/|\z),;
 	    next if $rpath =~ m,^\$\{?ORIGIN\}?,;
-	    next if $directories{$rpath} and $rpath !~ m,^(?:/usr)?/lib/?\z,;
+	    next if $directories{$rpath} and $rpath !~ m,^(?:/usr)?/lib(?:/$madir)?/?\z,;
 	    tag 'binary-or-shlib-defines-rpath', "$file $rpath";
 	}
     }
