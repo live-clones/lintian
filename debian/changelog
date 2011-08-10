@@ -75,9 +75,12 @@ lintian (2.5.2) UNRELEASED; urgency=low
     + [NT] Do not consider "debian/debhelper" a temporary debhelper
       file.  Some packages uses this a directory to store their
       debhelper files.
-  * checks/debian-source-dir.desc:
+  * checks/debian-source-dir{,.desc}:
     + [NT] Added missing word in the tag description for
       git-patches-not-exported.
+    + [NT] Fixed information disclosure issue, where Lintian could
+      be tricked into disclosing the present of files on the host
+      system via specially crafted source packages.
   * checks/duplicate-files:
     + [NT] Exclude  __init__.py files from the check as they are
       required even if they are empty.  Thanks to Daniele Tricoli

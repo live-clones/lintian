@@ -1,0 +1,2 @@
+I: debian-source-dir-traversal-2 source: missing-debian-source-format
+W: debian-source-dir-traversal-2 source: package-uses-deprecated-debhelper-compat-version 1
