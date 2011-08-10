@@ -1,4 +1,4 @@
-lintian (2.5.2) UNRELEASED; urgency=low
+lintian (2.5.2) unstable; urgency=low
 
   * Summary of tag changes:
     + Added:
@@ -204,6 +204,8 @@ lintian (2.5.2) UNRELEASED; urgency=low
     + [NT] Added ligdigest-sha1-perl on request of the Perl Team.
       Thanks to Salvatore Bonaccorso for the report and patch.
       (Closes: #635441)
+  * data/fields/perl-provides:
+    + [NT] Refreshed against perl 5.12.4.
   * data/files/standard-files:
     + [NT] Added file.
   * data/rules/{deprecated,known}-makefiles:
@@ -329,7 +331,7 @@ lintian (2.5.2) UNRELEASED; urgency=low
   * unpack/unpack-srcpkg-l1:
     + [NT] Removed in favour of the collection system.
 
- -- Niels Thykier <niels@thykier.net>  Sun, 19 Jun 2011 13:39:10 +0200
+ -- Niels Thykier <niels@thykier.net>  Wed, 10 Aug 2011 18:35:47 +0200
 
 lintian (2.5.1) unstable; urgency=low
 

@@ -7,7 +7,7 @@
 #   debian/rules refresh-perl-provides
 # in the lintian source tree
 #
-# last updated for PERL_VERSION=5.012003
+# last updated for PERL_VERSION=5.012004
 libtime-piece-perl 1.15.01
 libthreads-shared-perl 1.32
 libthreads-perl 1.75
@@ -18,6 +18,7 @@ libio-compress-bzip2-perl 2.024
 libio-compress-base-perl 2.024
 libencode-perl 2.39
 libdigest-sha-perl 5.47
+libdevel-dprof-perl 20080331.00
 libcompress-zlib-perl 2.024
 libcompress-raw-zlib-perl 2.024
 libcompress-raw-bzip2-perl 2.024
@@ -33,7 +34,7 @@ libparse-cpan-meta-perl 1.40
 libparent-perl 0.223
 libmodule-pluggable-perl 3.9
 libmodule-load-conditional-perl 0.38
-libmodule-corelist-perl 2.43
+libmodule-corelist-perl 2.50
 libmodule-build-perl 0.3603
 libmath-complex-perl 1.56
 libmath-bigint-perl 1.89.01
@@ -42,7 +43,6 @@ libfile-temp-perl 0.22
 libfile-spec-perl 3.31.01
 libfile-path-perl 2.08.01
 libextutils-parsexs-perl 2.21
-libextutils-install-perl 1.55
 libextutils-command-perl 1.16
 libextutils-cbuilder-perl 0.27
 libdigest-perl 1.16
