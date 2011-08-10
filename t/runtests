@@ -255,10 +255,10 @@ foreach my $tsi (['debs', "$TESTSET/debs/*/desc", sub { generic_test_runner('deb
 	if (-d "$TESTSET/$tdir/$test") {
 	    @tests = read_dpkg_control("$TESTSET/$tdir/$test/desc");
 	} elsif (-f "$LINTIAN_ROOT/checks/$singletest.desc"){
-	    @tests = map { read_dpkg_control($_) } <$TESTSET/tests/$singletest-*/desc>;
+	    @tests = map { read_dpkg_control($_) } glob "$TESTSET/$tdir/$singletest-*/desc";
 	}
     } elsif ($tag) {
-	@tests = find_tests_for_tag($tag, "$globstr");
+	@tests = find_tests_for_tag($tag, $globstr);
     } else {
 	unless (-d "$TESTSET/$tdir/") {
 	    fail("cannot find $TESTSET/$tdir: $!");
