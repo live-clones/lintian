@@ -1,0 +1,14 @@
+Format: 1.0
+Source: debian-source-dir-traversal-2
+Binary: debian-source-dir-traversal-2
+Architecture: all
+Version: 1
+Maintainer: Debian Lintian Maintainers <lintian-maint@debian.org>
+Standards-Version: 3.9.1
+Build-Depends: debhelper (>= 7)
+Checksums-Sha1:
+ @SHA1@ @SIZE@ debian-source-dir-traversal-2_1.tar.gz
+Checksums-Sha256:
+ @SHA256@ @SIZE@ debian-source-dir-traversal-2_1.tar.gz
+Files:
+ @MD5@ @SIZE@ debian-source-dir-traversal-2_1.tar.gz

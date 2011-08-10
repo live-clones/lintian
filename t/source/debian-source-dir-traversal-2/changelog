@@ -1,0 +1,8 @@
+debian-source-dir-traversal-2 (1) unstable; urgency=low
+
+  * Lintian Test Suite.
+  * Test: debian-source-dir-traversal-2
+
+  * Suppress "should close ITP bug" messages.  (Closes: #123456)
+
+ -- Debian Lintian Maintainers <lintian-maint@debian.org>  Fri, 15 Jul 2011 15:30:00 +0200
