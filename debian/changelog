@@ -1,3 +1,11 @@
+lintian (2.5.3) UNRELEASED; urgency=low
+
+  * data/spelling/corrections:
+    + [NT] Added some corrections for "remove" etc.  Thanks to
+      Jakub Wilk for spotting those.
+
+ -- Niels Thykier <niels@thykier.net>  Wed, 10 Aug 2011 21:09:24 +0200
+
 lintian (2.5.2) unstable; urgency=low
 
   * Summary of tag changes:
@@ -92,7 +100,7 @@ lintian (2.5.2) unstable; urgency=low
   * checks/fields:
     + [NT] Refactored to use Lintian::Data and use new data files
       from data/fields.
-    + [NT] Added python3-dev and rmeoved python2.{4,5} from
+    + [NT] Added python3-dev and removed python2.{4,5} from
       $PYTHON_DEV.  Thanks to Jakub Wilk for the report and the
       patch.  (Closes: #633044)
     + [NT] Fixed a bug where the libdb1-compat tag only triggered
