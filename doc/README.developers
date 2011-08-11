@@ -1,0 +1,15 @@
+README file for developers of Lintian
+=====================================
+
+Lintian dissects Debian packages and tries to find bugs and policy
+violations. It contains automated checks for many aspects of Debian
+policy as well as some checks for common errors.
+
+This document describes how you can contribute to Lintian's
+development as well as adapt it to your needs.
+
+Lintian has a large code base which has as its starting point the
+directory "frontend". This directory holds the "lintian" executable.
+This is what gets called when a user calls lintian. The frontend
+then calls the lintian checks which run over the Debian package
+that Lintian is checking.
