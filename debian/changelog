@@ -2,6 +2,8 @@ lintian (2.5.3) UNRELEASED; urgency=low
 
   * checks/*.desc:
     + [NT] Dropped fields from Needs-Info, it is no longer needed.
+  * checks/{conffile,etcfiles}{,.desc}:
+    + [JW] Merged etcfiles into conffile.  (Closes: #637590)
 
   * collection/fields{,.desc}:
     + [NT] Removed, no longer used.
@@ -12,6 +14,9 @@ lintian (2.5.3) UNRELEASED; urgency=low
   * data/spelling/corrections:
     + [NT] Added some corrections for "remove" etc.  Thanks to
       Jakub Wilk for spotting those.
+
+  * debian/copyright:
+    + [NT] Added Jakub Wilk to maintainers.
 
   * doc/README.developers:
     + [NT] New file.  Thanks to Jeremiah C. Foster for the initial
