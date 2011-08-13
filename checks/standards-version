@@ -39,8 +39,9 @@ my $STANDARDS = Lintian::Data->new('standards-version/release-dates', qr/\s+/o);
 # by release date.  We can also use this to get the current standards version.
 my @STANDARDS = sort { $b->[1] <=> $a->[1] }
     map { [ $_, $STANDARDS->value($_) ] } $STANDARDS->all;
-my $CURRENT_VER = $STANDARDS[0][0];
-my @CURRENT     = split(m/\./, $CURRENT_VER);
+my $CURRENT_VER  = $STANDARDS[0][0];
+my $CURRENT_DATE = $STANDARDS[0][1];
+my @CURRENT      = split(m/\./, $CURRENT_VER);
 
 sub run {
 
@@ -82,10 +83,10 @@ my $changes = $info->changelog;
 my ($pkgdate, $dist);
 if (defined $changes) {
     my ($entry) = $changes->data;
-    $pkgdate = ($entry && $entry->Timestamp) ? $entry->Timestamp : time;
+    $pkgdate = ($entry && $entry->Timestamp) ? $entry->Timestamp : $CURRENT_DATE;
     $dist = ($entry && $entry->Distribution)? $entry->Distribution : '';
 } else {
-    $pkgdate = time;
+    $pkgdate = $CURRENT_DATE;
 }
 
 # Check for packages dated prior to the date of release of the standards
