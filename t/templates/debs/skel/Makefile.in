@@ -1,0 +1,8 @@
+name = {%srcpkg}
+
+all:
+	create-deb -o $(name).deb control
+
+clean:
+	rm -f *.tar.gz *.deb md5sums debian-binary
+	rm -rf root/

@@ -23,9 +23,11 @@
 use strict;
 use warnings;
 
-
 use Getopt::Long;
 use Cwd();
+
+use lib "$ENV{'LINTIAN_ROOT'}/lib";
+use Util qw(get_dsc_info);
 
 # known compression styles
 my %TAR_OPTIONS = (
@@ -48,6 +50,7 @@ my %PERM = (
 my %val  = (
     'compression' => 'gz',
     'fix-perm'    => 1,
+    'auto-build-data'  => 1,
 );
 
 # Accepted options
@@ -55,6 +58,7 @@ my %opts = (
     'out-file|o=s' => \$val{'out-file'},
     'help|h' => sub { usage(); exit 0; },
     'root=s' => \$val{'root'},
+    'auto-build-data!' => \$val{'auto-build-data'},
     'compression|c=s' => \$val{'compression'},
     'md5sums!' => \$val{'md5sums'},
     'fix-perm!' => \$val{'fix-perm'},
@@ -70,14 +74,30 @@ GetOptions(%opts)
 
 die "Missing --out-file option\n" unless $val{'out-file'};
 
-die "Missing --root option\n" unless $val{'root'};
+die "Needs either --root option or --auto-build-data\n" unless $val{'root'} || $val{'auto-build-data'};
 
 die "Unknown compression \"$val{'compression'}\"\n" unless exists $TAR_OPTIONS{$val{'compression'}};
+
+$val{'auto-build-data'} = 0 if $val{'root'};
+
+die "Cannot find ./control.\n" if $val{'auto-build-data'} && ! -e './control';
 
 # default to "on" unless we are given an md5sums file explicitly
 $val{'md5sums'} = 1 unless defined $val{'md5sums'} || grep { $_ eq 'md5sums'} @ARGV;
 
 $cwd = Cwd::cwd();
+
+if ($val{'auto-build-data'}) {
+    my $data = get_dsc_info('./control');
+    my $pkg = $data->{'package'} || die "Cannot read package name from ./control.\n";
+    runsystem('mkdir', '-p', "root/usr/share/doc/$pkg");
+    foreach my $file (qw(copyright changelog)) {
+        runsystem('install', '-m', '0644', $file,  "root/usr/share/doc/$pkg/$file") if -e $file;
+    }
+    runsystem('gzip', '--best', "root/usr/share/doc/$pkg/changelog") if -e './changelog';
+    # set root so it works for later :)
+    $val{'root'} = 'root/';
+}
 
 if ($val{'md5sums'}) {
     runsystem("cd $val{'root'} && find -type f -a -! -ipath etc/ -print0 | xargs -0 md5sum >> $cwd/md5sums");
@@ -118,9 +138,11 @@ exit 0;
 
 sub usage {
     print <<EOF ;
-usage: $0 [options] -o <file.deb> --root <dir> control-file[... files]
+usage: $0 [options] -o <file.deb> [--root <dir>] control-file[... files]
 
  --root <dir>            Everything in <dir> will be put in the data.tar
+ --[no-]auto-build-data  Auto-build a data.tar, cannot be used with --root.
+                         This is the default if --root is not given.
  -c, --compression <c>   The extension used for the data.tar; defaults to "gz"
  --help                  Prints usage info and exits
  -o, --out-file <file>   The name of the resulting deb file.
@@ -140,6 +162,14 @@ intentional).
 If control.tar.gz already exists, it will be reused instead of creating a
 new one.
 
+If --root is used, --auto-build-data is silently ignored.  If
+--auto-build-data is used, it will take the changelog and copyright
+files from the current directory and build a data.tar.<c> containing
+those files.
+  In order to auto-build the package, the package field must be
+available in the control file and it will use "root/" as the storage
+for creating the data.tar.<c>.
+
 Note: This writes debian-binary, data.tar.<c> and control.tar.gz to
 the current directory.  If --md5sums is in effect, it will also generate
 a md5sums in the current directory.
@@ -152,6 +182,7 @@ EOF
 }
 
 sub runsystem {
+    print "create-deb system:  @_\n";
     my $r = system @_;
     die "system @_ failed (exit status: " . (($r >> 8) & 0xff) .")\n" if $r;
 }

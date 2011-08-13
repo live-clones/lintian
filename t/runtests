@@ -72,7 +72,7 @@ chomp $ARCHITECTURE;
 
 my %TEMPLATES = (
     'tests'  => ['debian/changelog', 'debian/control'],
-    'debs'   => ['changelog', 'control'],
+    'debs'   => ['changelog', 'control', 'Makefile'],
     'source' => ['changelog', 'control'],
 );
 my $DATE = `date -R`;
