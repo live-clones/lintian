@@ -6,6 +6,9 @@ lintian (2.5.3) UNRELEASED; urgency=low
   * collection/fields{,.desc}:
     + [NT] Removed, no longer used.
 
+  * data/fields/archive-sections:
+    + [NT] Fixed a typo in "otherosfs" section name.  Thanks to
+      Stefan Potyra for the report.  (Closes: #637596)
   * data/spelling/corrections:
     + [NT] Added some corrections for "remove" etc.  Thanks to
       Jakub Wilk for spotting those.
