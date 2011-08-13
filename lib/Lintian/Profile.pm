@@ -24,7 +24,8 @@ use base qw(Class::Accessor);
 use strict;
 use warnings;
 
-use Util;
+use Carp qw(croak);
+use Util qw(read_dpkg_control);
 
 =head1 NAME
 
@@ -68,6 +69,23 @@ my %SEVERITIES = (
     'serious'   => 1,
     );
 
+# List of fields in the main profile paragraph
+my %MAIN_FIELDS = (
+    'profile'                 => 1,
+    'extends'                 => 1,
+    'enable-tags-from-check'  => 1,
+    'disable-tags-from-check' => 1,
+    'enable-tags'             => 1,
+    'disable-tags'            => 1,
+    );
+
+# List of fields in secondary profile paragraphs
+my %SEC_FIELDS = (
+    'tags'        => 1,
+    'overridable' => 1,
+    'severity'    => 1,
+    );
+
 # _load_checks
 #
 # Internal sub to load and fill up %TAG_MAP and %CHECK_MAP
@@ -78,12 +96,12 @@ sub _load_checks {
         my $cname = $header->{'check-script'};
         my $tagnames = [];
         unless ($cname){
-            fail("missing Check-Script field in $desc");
+            croak "Missing Check-Script field in $desc.\n";
         }
         $CHECK_MAP{$cname} = $tagnames;
         for my $tag (@tags) {
             unless ($tag->{tag}) {
-                fail("missing Tag field in $desc");
+                croak "Missing Tag field in $desc.\n";
             }
             push @$tagnames, $tag->{tag};
             $tag->{info} = '' unless exists($tag->{info});
@@ -107,7 +125,7 @@ the profile and (if any) its parents.
 sub new {
     my ($type, $name, $ppath) = @_;
     my $profile;
-    fail "Illegal profile name $name\n"
+    croak "Illegal profile name \"$name\".\n"
         if $name =~ m,^/,o or $name =~ m/\./o;
     _load_checks() unless %TAG_MAP;
     my $self = {
@@ -120,7 +138,7 @@ sub new {
     };
     $self = bless $self, $type;
     $profile = $self->find_profile($name);
-    fail "Cannot find profile $name (in " . join(', ', @$ppath).").\n"
+    croak "Cannot find profile $name (in " . join(', ', @$ppath).").\n"
         unless $profile;
     $self->_read_profile($profile);
     return $self;
@@ -205,7 +223,7 @@ the object was created.
 sub find_profile {
     my ($self, $pname, @dirs) = @_;
     my $pfile;
-    fail "$pname is not a valid profile name\n" if $pname =~ m/\./o;
+    croak "\"$pname\" is not a valid profile name.\n" if $pname =~ m/\./o;
     # Allow @dirs to override the default path for this profile-search
     if (ref $self) {
         push @dirs, @{ $self->{'profile-path'} } if defined $self->{'profile-path'};
@@ -230,14 +248,12 @@ sub _read_profile {
     my $pheader;
     my $pmap = $self->{'parent-map'};
     my $pname;
-    open(my $fd, '<', $pfile) or fail "$pfile: $!";
-    @pdata = parse_dpkg_control($fd, 0);
-    close $fd;
+    @pdata = read_dpkg_control($pfile, 0);
     $pheader = shift @pdata;
-    fail "Profile field is missing from $pfile."
+    croak "Profile field is missing from $pfile.\n"
         unless defined $pheader && $pheader->{'profile'};
     $pname = $pheader->{'profile'};
-    fail "Invalid Profile field in $pfile.\n"
+    croak "Invalid Profile field in $pfile.\n"
             if $pname =~ m,^/,o or $pname =~ m/\./o;
     $pmap->{$pname} = 0; # Mark as being loaded.
     $self->{'name'} = $pname unless exists $self->{'name'};
@@ -245,12 +261,12 @@ sub _read_profile {
         my $parent = $pheader->{'extends'};
         my $plist = $self->{'parents'};
         my $parentf;
-        fail "Invalid Extends field in $pfile.\n"
+        croak "Invalid Extends field in $pfile.\n"
             unless $parent && $parent !~ m/\./o;
-        fail "Recursive definition of $parent.\n"
+        croak "Recursive definition of $parent.\n"
             if exists $pmap->{$parent};
         $parentf = $self->find_profile($parent);
-        fail "Cannot find $parent, which $pname extends.\n"
+        croak "Cannot find $parent, which $pname extends.\n"
             unless $parentf;
         $self->_read_profile($parentf);
         push @$plist, $parent;
@@ -278,11 +294,12 @@ sub _read_profile_section {
     my $severity = $section->{'severity'}//'';
     my $ignore_map = $self->{'ignored-overrides'};
     my $sev_map = $self->{'severity-changes'};
-    fail "Profile \"$pname\" is missing Tags field (or it is empty) in section $sno." unless @tags;
-    fail "Profile \"$pname\" contains invalid severity \"$severity\" in section $sno."
+    $self->_check_for_invalid_fields($section, \%SEC_FIELDS, $pname, "section $sno");
+    croak "Profile \"$pname\" is missing Tags field (or it is empty) in section $sno.\n" unless @tags;
+    croak "Profile \"$pname\" contains invalid severity \"$severity\" in section $sno.\n"
         if $severity && !$SEVERITIES{$severity};
     foreach my $tag (@tags) {
-	fail "Unknown check $tag in $pname (section $sno)\n" unless exists $TAG_MAP{$tag};
+	croak "Unknown check $tag in $pname (section $sno).\n" unless exists $TAG_MAP{$tag};
         $sev_map->{$tag} = $severity if $severity;
         if ( $overridable != -1 ) {
             if ($overridable) {
@@ -305,16 +322,17 @@ sub _read_profile_section {
 #  parents).
 sub _read_profile_tags{
     my ($self, $pname, $pheader) = @_;
+    $self->_check_for_invalid_fields($pheader, \%MAIN_FIELDS, $pname, 'profile header');
     $self->_check_duplicates($pname, $pheader, 'enable-tags-from-check', 'disable-tags-from-check');
     $self->_check_duplicates($pname, $pheader, 'enable-tags', 'disable-tags');
     my $tags_from_check_sub = sub {
         my ($field, $check) = @_;
-        fail "Unknown check $check in $pname\n" unless exists $CHECK_MAP{$check};
+        croak "Unknown check \"$check\" in profile \"$pname\".\n" unless exists $CHECK_MAP{$check};
         return @{$CHECK_MAP{$check}};
     };
     my $tag_sub = sub {
         my ($field, $tag) = @_;
-        fail "Unknown check $tag in $pname\n" unless exists $TAG_MAP{$tag};
+        croak "Unknown tag \"$tag\" in profile \"$pname\".\n" unless exists $TAG_MAP{$tag};
         return $tag;
     };
     $self->_enable_tags_from_field($pname, $pheader, 'enable-tags-from-check', $tags_from_check_sub, 1);
@@ -359,9 +377,9 @@ sub _check_duplicates{
         foreach my $element (split m/\s*+,\s*+/o, $map->{$field}){
             if (exists $dupmap{$element}){
                 my $other = $dupmap{$element};
-                fail "$element appears in both $field and $other in $name.\n"
+                croak "\"$element\" appears in both \"$field\" and \"$other\" in profile \"$name\".\n"
                     unless $other eq $field;
-                fail "$element appears twice in $field in $name.\n";
+                croak "\"$element\" appears twice in the field \"$field\" in profile \"$name\".\n";
             }
             $dupmap{$element} = $field;
         }
@@ -381,7 +399,7 @@ sub _parse_boolean {
 	($bool =~ m/^\d++$/o && $bool != 0);
     return 0  if $bool eq 'no' || $bool eq 'false' ||
 	($bool =~ m/^\d++$/o && $bool == 0);
-    fail "\"$bool\" is not a boolean value in $pname (section $sno).";
+    croak "\"$bool\" is not a boolean value in $pname (section $sno).\n";
 }
 
 # $self->_split_comma_sep_field($data)
@@ -395,6 +413,19 @@ sub _split_comma_sep_field {
     $data =~ s/^\s++//o;
     $data =~ s/\s++$//o;
     return split m/\s*,\s*/o, $data;
+}
+
+# $self->_check_for_invalid_fields($para, $known, $pname, $paraname)
+#
+# Check $para for unknown fields (e.g. fields not in $known).
+# If an unknown field is found, croak using $pname and $paraname
+# to identify the profile name and paragraph (respectively)
+sub _check_for_invalid_fields {
+    my ($self, $para, $known, $pname, $paraname) = @_;
+    foreach my $field (keys %$para) {
+        next if exists $known->{$field};
+        croak "Unknown field \"$field\" in $pname ($paraname).\n";
+    }
 }
 
 =back
