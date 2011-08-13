@@ -1,7 +1,6 @@
 Check-Script: changes-file
 Abbrev: chng
 Type: changes
-Needs-info: fields
 Info: This script checks for various problems with .changes files
 
 Tag: malformed-changes-file

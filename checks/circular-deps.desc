@@ -4,7 +4,6 @@ Abbrev: cdeps
 # This is a source check, so we only calculate the dependency
 # graphs once.
 Type: source
-Needs-info: fields
 Info: This script checks for circular dependencies between packages
  built from the same source.
 

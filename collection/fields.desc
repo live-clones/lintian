@@ -1,6 +1,0 @@
-Collector-Script: fields
-Info: This script extracts the contents of the control file into
- fields/<tt>field</tt>.
-Type: binary, udeb, source, changes
-Version: 1
-Auto-Remove: yes

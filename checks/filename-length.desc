@@ -2,7 +2,6 @@ Check-Script: filename-length
 Author: Niels Thykier <niels@thykier.net>
 Abbrev: flen
 Type: source, binary, udeb
-Needs-info: fields
 Info: This script checks for long package file names
 
 Tag: package-has-long-file-name
