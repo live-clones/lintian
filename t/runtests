@@ -38,6 +38,8 @@ use Data::Dumper;
 use Getopt::Long qw(GetOptions);
 use Text::Template;
 
+use constant SUITES => qw(scripts changes debs source tests);
+
 BEGIN {
     my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
     if (not $LINTIAN_ROOT) {
@@ -179,11 +181,28 @@ my $status :shared = 0;
 # anything.
 my $tests_run = 0;
 
+my %suites = ();
+
 my @tests;
 my $prev;
 
 my $q = Thread::Queue->new();
 our $MSG_Q = Thread::Queue->new();
+
+if ($singletest && $singletest =~ m/^suite:(.++)/) {
+    my $list = $1;
+    %suites = ();
+    foreach my $s (split m/\s*+,\s*+/, $list) {
+	$suites{$s} = 1;
+    }
+    # clear singletest to avoid find a "single" test.
+    $singletest = '';
+} else {
+    # run / check all of them
+    foreach my $s (SUITES) {
+	$suites{$s} = 1;
+    }
+}
 
 sub msg_flush;
 sub msg_print;
@@ -199,7 +218,7 @@ if ($singletest) {
     if (-f $script) {
 	@tests = ($script);
     }
-} elsif (not $tag) {
+} elsif (! $tag && $suites{'scripts'}) {
     unless (-d "$TESTSET/scripts") {
 	fail("cannot find $TESTSET/scripts: $!");
     }
@@ -230,7 +249,7 @@ if ($singletest) {
     }
 } elsif ($tag) {
     @tests = find_tests_for_tag($tag, "$TESTSET/changes/*.desc");
-} else {
+} elsif ($suites{'changes'}) {
     unless (-d "$TESTSET/changes") {
 	fail("cannot find $TESTSET/changes: $!");
     }
@@ -259,7 +278,7 @@ foreach my $tsi (['debs', "$TESTSET/debs/*/desc", sub { generic_test_runner('deb
 	}
     } elsif ($tag) {
 	@tests = find_tests_for_tag($tag, $globstr);
-    } else {
+    } elsif ($suites{$tdir}) {
 	unless (-d "$TESTSET/$tdir/") {
 	    fail("cannot find $TESTSET/$tdir: $!");
 	}
