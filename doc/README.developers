@@ -1,5 +1,18 @@
-README file for developers of Lintian
-=====================================
+# -*- perl -*-
+
+=head1 NAME
+
+README.developers -- README file for developers of Lintian
+
+=head1 SYNOPSIS
+
+This document aims to give an overview of the Lintian internals
+and is intended for people, who wants to develop or work on Lintian.
+
+For how to use Lintian, please refer to the (other) README, the manual
+pages lintian(1) and lintian-info(1) or the User Manual.
+
+=head1 DESCRIPTION
 
 Lintian dissects Debian packages and tries to find bugs and policy
 violations. It contains automated checks for many aspects of Debian
@@ -13,3 +26,117 @@ directory "frontend". This directory holds the "lintian" executable.
 This is what gets called when a user calls lintian. The frontend
 then calls the lintian checks which run over the Debian package
 that Lintian is checking.
+
+=head2 The source code layout
+
+The source code is divided into self-contained groups.  Here is a
+quick overview.
+
+=over 4
+
+=item checks
+
+contains the checks and the tag descriptions.
+
+=item collection
+
+contains unpacking scripts
+
+=item data
+
+data sets used by checks via the Lintian::Data API
+
+=item debian
+
+contains Debian packaging
+
+=item doc
+
+contains the User Manuals and general docs (see man/ below)
+
+=item frontend
+
+contains the frontends (e.g. code installed in /usr/bin)
+
+=item lib
+
+contains Perl modules/library for common tasks.
+
+=item man
+
+contains the manpages for tools in frontend/
+
+=item private
+
+various private helpers etc.
+
+=item profiles
+
+contains vendor profiles
+
+=item reporting
+
+tools/code for the lintian.d.o setup
+
+=item t
+
+the new test suite
+
+=item testset
+
+the legacy test suite
+
+=item unpack
+
+deprecated; used to contain unpack tools (see collection above)
+
+=back
+
+=head2 Core concepts in Lintian
+
+In Lintian there are a number of concepts (or terms), here is a list of the
+most important ones:
+
+=over 4
+
+=item Emit (Tag)
+
+Tag that was not supressed and was triggered.
+
+=item Lab(oratory)
+
+The Laboratory is Lintian's private little play-ground.  When Lintian
+is asked to process a package, it will generally unpack (parts of) the
+package in the laboratory.  It comes in two variants, static or
+temporary.
+
+Temporary laboratories (as the name suggests) expire as soon as
+Lintian is done with its tasks.
+
+Static laboratories are generally used on lintian.d.o(-like) setups,
+where packages remain in a (semi-)unpacked state after processing.
+
+Note that the laboratory is usually abbreviated to "Lab".
+
+=item Overridden (Tag)
+
+Tag that was overriden by the maintainer.  Usually it means that the
+maintainer believes Lintian misdiagnosed the issue.  In some cases it
+is also used for tags that does not handle "corner-cases"
+
+Overriden tags are not displayed by default, but they are still
+counted in statistics.  This should not be confused with "Suppressed".
+
+=item Suppressed (Tag)
+
+Tags that are suppressed cannot be emitted.
+
+Note that suppressed tags are ignored by Lintian, so they are not
+counted in statistics.  Not to be confused with "Overriden".
+
+=item Tag
+
+Issue reported by Lintian.
+
+=back
+
