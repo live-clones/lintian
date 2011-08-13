@@ -37,3 +37,10 @@ Info: The file is listed more than once in your <tt>debian/conffiles</tt> file.
  Usually, this is because debhelper (dh_installdeb, compat level 3 or higher)
  will add any files in your package located in /etc automatically to the list
  of conffiles, so if you do that manually too, you'll get duplicates.
+
+Tag: file-in-etc-not-marked-as-conffile
+Severity: serious
+Certainty: certain
+Ref: policy 10.7
+Info: Files in <tt>/etc</tt> must be marked conffiles if they are included
+ in a package.  Otherwise they should be created by maintainer scripts.
