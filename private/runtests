@@ -15,8 +15,7 @@ if [ "$1" = "-t" ] ; then
     TAG=yes
 fi
 
-LANG="en_US.UTF-8"
-LC_COLLATE="C"
+LC_ALL="en_US.UTF-8"
 LINTIAN_ROOT=""
 LINTIAN_PROFILE=debian
 LINTIAN_INTERNAL_TESTSUITE=1
@@ -25,8 +24,7 @@ NO_PKG_MANGLE=true
 
 [ "$TEST_WORK_DIR" ] || TEST_WORK_DIR="debian/test-out"
 
-export LANG
-export LC_COLLCATE
+export LC_ALL
 export LINTIAN_ROOT
 export LINTIAN_PROFILE
 export LINTIAN_INTERNAL_TESTSUITE

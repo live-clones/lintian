@@ -1,7 +1,9 @@
 lintian (2.5.3) UNRELEASED; urgency=low
 
-  * checks/*.desc:
+  * checks/*:
     + [NT] Dropped fields from Needs-Info, it is no longer needed.
+    + [JW] Use LC_ALL rather than LANG, since LC_ALL overrules
+      LANG.  (Closes: #637595)
   * checks/{conffile,etcfiles}{,.desc}:
     + [JW] Merged etcfiles into conffile.  (Closes: #637590)
 
@@ -17,13 +19,23 @@ lintian (2.5.3) UNRELEASED; urgency=low
 
   * debian/copyright:
     + [NT] Added Jakub Wilk to maintainers.
+  * debian/rules:
+    + [JW] Use LC_ALL rather than LANG, since LC_ALL overrules
+      LANG.
 
   * doc/README.developers:
     + [NT] New file.  Thanks to Jeremiah C. Foster for the initial
       contribution.
 
+  * lib/Util.pm:
+    + [JW] Use LC_ALL rather than LANG, since LC_ALL overrules
+      LANG.
   * lib/Lintian/Collect/Source.pm:
     + [NT] Removed a requirement for fields that was not needed.
+
+  * private/*:
+    + [JW] Use LC_ALL rather than LANG, since LC_ALL overrules
+      LANG.
 
  -- Niels Thykier <niels@thykier.net>  Wed, 10 Aug 2011 21:09:24 +0200
 

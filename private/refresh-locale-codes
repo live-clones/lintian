@@ -54,7 +54,7 @@ cat > "$tmpfile" <<EOF
 
 EOF
 
-export LANG=C
+export LC_ALL=C
 
 {
     isoquery -i 639

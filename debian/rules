@@ -61,8 +61,8 @@ build-arch build-indep build: build-stamp
 build-stamp: $(neededfiles) $(docsource) $(testtarget)
 	@echo .... running build ....
 	dh_testdir
-	cd doc && LANG=C docbook2html  -V "%use-id-as-filename%" -o lintian.html lintian.xml
-	cd doc && LANG=C jw -b txt lintian.xml
+	cd doc && LC_ALL=C docbook2html  -V "%use-id-as-filename%" -o lintian.html lintian.xml
+	cd doc && LC_ALL=C jw -b txt lintian.xml
 	mkdir man/man1/
 	private/generate-lintian-pod | \
 		pod2man --name lintian --center "Debian Package Checker" --section=1 > man/man1/lintian.1

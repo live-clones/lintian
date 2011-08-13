@@ -170,7 +170,7 @@ while (defined(my $file=readdir(DEBIAN))) {
 	system_env("msgfmt -o /dev/null \Q$debfiles/po/$file\E 2>/dev/null") == 0
 		or tag 'invalid-po-file', "debian/po/$file";
 
-	my $stats = `LANG=C msgfmt -o /dev/null --statistics \Q$debfiles/po/$file\E 2>&1`;
+	my $stats = `LC_ALL=C msgfmt -o /dev/null --statistics \Q$debfiles/po/$file\E 2>&1`;
 	if (!$full_translation && $stats =~ m/^\w+ \w+ \w+\.$/) {
 		$full_translation = 1;
 	}
