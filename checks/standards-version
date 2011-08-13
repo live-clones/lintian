@@ -20,7 +20,9 @@
 # MA 02110-1301, USA.
 
 package Lintian::standards_version;
+
 use strict;
+use warnings;
 
 use POSIX qw(strftime);
 
@@ -28,17 +30,17 @@ use Lintian::Data;
 use Lintian::Tags qw(tag);
 use Util;
 
-our $STANDARDS = Lintian::Data->new('standards-version/release-dates', '\s+');
+my $STANDARDS = Lintian::Data->new('standards-version/release-dates', qr/\s+/o);
 
 # In addition to the normal Lintian::Data structure, we also want a list of
 # all standards and their release dates so that we can check things like the
 # release date of the standard released after the one a package declared.  Do
 # that by pulling all data out of the Lintian::Data structure and sorting it
 # by release date.  We can also use this to get the current standards version.
-our @STANDARDS = sort { $b->[1] <=> $a->[1] }
+my @STANDARDS = sort { $b->[1] <=> $a->[1] }
     map { [ $_, $STANDARDS->value($_) ] } $STANDARDS->all;
-our $CURRENT   = $STANDARDS[0][0];
-our @CURRENT   = split(/\./, $CURRENT);
+my $CURRENT_VER = $STANDARDS[0][0];
+my @CURRENT     = split(m/\./, $CURRENT_VER);
 
 sub run {
 
@@ -96,7 +98,7 @@ if (defined $dist && $dist ne 'UNRELEASED' && $STANDARDS->known($stdver)
     tag 'timewarp-standards-version', "($package < $release)";
 }
 
-my $tag = "$version (current is $CURRENT)";
+my $tag = "$version (current is $CURRENT_VER)";
 if (not $STANDARDS->known($stdver)) {
     # Unknown standards version.  Perhaps newer?
     if (   ($major > $CURRENT[0])
@@ -107,7 +109,7 @@ if (not $STANDARDS->known($stdver)) {
     } else {
         tag 'invalid-standards-version', $version;
     }
-} elsif ($stdver eq $CURRENT) {
+} elsif ($stdver eq $CURRENT_VER) {
     # Current standard.  Nothing more to check.
     return 0;
 } else {
