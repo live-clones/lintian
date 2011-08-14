@@ -15,7 +15,7 @@ if [ "$1" = "-t" ] ; then
     TAG=yes
 fi
 
-LC_ALL="en_US.UTF-8"
+LC_ALL="C"
 LINTIAN_ROOT=""
 LINTIAN_PROFILE=debian
 LINTIAN_INTERNAL_TESTSUITE=1
