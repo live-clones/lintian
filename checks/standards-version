@@ -39,9 +39,12 @@ my $STANDARDS = Lintian::Data->new('standards-version/release-dates', qr/\s+/o);
 # by release date.  We can also use this to get the current standards version.
 my @STANDARDS = sort { $b->[1] <=> $a->[1] }
     map { [ $_, $STANDARDS->value($_) ] } $STANDARDS->all;
-my $CURRENT_VER  = $STANDARDS[0][0];
 my $CURRENT_DATE = $STANDARDS[0][1];
-my @CURRENT      = split(m/\./, $CURRENT_VER);
+
+# In scalar context you get the string (e.g. "3.9.2")
+# and in list context you get it split into pieces (3, 9, 2)
+my $CURRENT      = $STANDARDS[0][0];
+my @CURRENT      = split(m/\./, $CURRENT);
 
 sub run {
 
@@ -99,7 +102,7 @@ if (defined $dist && $dist ne 'UNRELEASED' && $STANDARDS->known($stdver)
     tag 'timewarp-standards-version', "($package < $release)";
 }
 
-my $tag = "$version (current is $CURRENT_VER)";
+my $tag = "$version (current is $CURRENT)";
 if (not $STANDARDS->known($stdver)) {
     # Unknown standards version.  Perhaps newer?
     if (   ($major > $CURRENT[0])
@@ -110,7 +113,7 @@ if (not $STANDARDS->known($stdver)) {
     } else {
         tag 'invalid-standards-version', $version;
     }
-} elsif ($stdver eq $CURRENT_VER) {
+} elsif ($stdver eq $CURRENT) {
     # Current standard.  Nothing more to check.
     return 0;
 } else {
