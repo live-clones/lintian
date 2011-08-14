@@ -32,6 +32,8 @@ lintian (2.5.3) UNRELEASED; urgency=low
       LANG.
   * lib/Lintian/Collect/Source.pm:
     + [NT] Removed a requirement for fields that was not needed.
+  * lib/Lintian/Collect/Package.pm:
+    + [JW,NT] Replace use of fail with croak.  (Closes: #637741)
   * lib/Lintian/Profile.pm:
     + [NT] Reject profiles containing an unknown field.
 

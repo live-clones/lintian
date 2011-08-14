@@ -43,12 +43,12 @@ sub file_info {
     my %file_info;
     # sub file_info Needs-Info file-info
     open(my $idx, '<', "$base_dir/file-info")
-        or fail("cannot open $base_dir/file-info: $!");
+        or croak "cannot open $base_dir/file-info: $!";
     while (<$idx>) {
         chomp;
 
         m/^(.+?)\x00\s+(.*)$/o
-            or fail("an error in the file pkg is preventing lintian from checking this package: $_");
+            or croak "an error in the file pkg is preventing lintian from checking this package: $_";
         my ($file, $info) = ($1,$2);
 
         $file =~ s,^\./,,o;
@@ -114,10 +114,10 @@ sub _fetch_index_data {
     my (%idxh, %dir_counts);
     my $num_idx;
     open my $idx, '<', "$base_dir/$index"
-        or fail("cannot open index file $base_dir/$index: $!");
+        or croak "cannot open index file $base_dir/$index: $!";
     if ($indexown) {
         open $num_idx, '<', "$base_dir/$indexown"
-            or fail("cannot open index file $base_dir/$indexown: $!");
+            or croak "cannot open index file $base_dir/$indexown: $!";
     }
     while (<$idx>) {
         chomp;
@@ -132,9 +132,9 @@ sub _fetch_index_data {
             # If we have a "numeric owner" index file, read that as well
             my $numeric = <$num_idx>;
             chomp $numeric;
-            fail('cannot read index file $indexown') unless defined $numeric;
+            croak 'cannot read index file $indexown' unless defined $numeric;
             my ($owner_id, $name_chk) = (split(' ', $numeric, 6))[1, 5];
-            fail("mismatching contents of index files: $name $name_chk")
+            croak "mismatching contents of index files: $name $name_chk"
                 if $name ne $name_chk;
             ($file{uid}, $file{gid}) = split '/', $owner_id, 2;
         }
