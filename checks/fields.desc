@@ -934,6 +934,12 @@ Info: This package declares an unnecessary versioned dependency
  versioned dependency a secondary one.
  .
  Example: perl (&gt;= 5.10.0) | libmodule-build-perl (&gt;= 0.26)
+ .
+ An exception to this is when the dependency is only satisfied in a
+ version of perl in experimental. In this case, the dependency on perl
+ should come second.
+ .
+ Example: libextutils-parsexs-perl (&gt;= 2.210000) | perl (&gt;= 5.14)
 Ref: policy 7.5
 
 Tag: package-superseded-by-perl
