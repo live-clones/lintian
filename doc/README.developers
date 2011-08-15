@@ -169,20 +169,20 @@ is installed.
 
 =head3 Running tests
 
-Lintian has a large test suite that easily takes up to 30 minutes.  So when
-debugging a particular test or check, you may want to run only parts of the
-test suite.
-
-To start with Lintian has two "major" test-suites; the first one is
-the "new" test suite, which is devided into 5 sub-suites, and then
-there is the "legacy" test suite.  Unless otherwise stated, only the
-new test suite supports the "extra" run options.  The legacy
-test-suite will generally give a warning about it being unable to find
-a test to run.
-
-Running all of the tests is as simple as invoking:
+Lintian has two "major" test-suites; the first one is the "new" test
+suite, which is devided into 5 sub-suites, and then there is the
+"legacy" test suite.  Running all of the tests is as simple as
+invoking:
 
  $ debian/rules runtests
+
+Lintian has a large test suite that easily takes up to 30 minutes.  So
+when debugging a particular test or check, you may want to run only
+parts of the test suite.
+
+Unless otherwise stated, only the new test suite supports the "extra"
+run options listed below.  The legacy test-suite will generally give a
+warning about it being unable to find a test to run.
 
 =over 4
 
@@ -190,7 +190,7 @@ Running all of the tests is as simple as invoking:
 
 The test suite respects the "DEB_BUILD_OPTIONS=parallel=n", though "n"
 denotes the amount of "worker" threads.  The test runner will
-generally have 2 threads more than that.  Also ach "worker" will run
+generally have 2 threads more than that.  Also each "worker" will run
 lintian, which parallelizes its unpacking as well.
 
 In case you are wondering about the 2 extra threads in the test
