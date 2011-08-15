@@ -1,4 +1,6 @@
 # -*- perl -*-
+#
+# Use "perldoc doc/README.developers" to read it like a manpage.
 
 =head1 NAME
 
@@ -139,4 +141,117 @@ counted in statistics.  Not to be confused with "Overriden".
 Issue reported by Lintian.
 
 =back
+
+=head2 Useful tricks
+
+There is an extended description of tricks on
+L<http://wiki.debian.org/Teams/Lintian/HackersGuide>, but some of them
+are also listed here.
+
+=head3 Running lintian from the git repository
+
+Lintian was designed to be run directly from the git repository.  This
+allows you to quickly test your changes on a live package.  The following
+shell snippet can be used for this purpose:
+
+ #!/bin/sh
+ LINTIAN_ROOT="<INSERT PATH TO LINTIAN GIT DIR>"
+ export LINTIAN_ROOT
+ exec "$LINTIAN_ROOT/frontend/lintian" "$@"
+
+Beware of two things: If LINTIAN_ROOT is not set, Lintian will attempt to
+use the code from the installed version (in /usr/share/lintian).
+
+The other issue is that Lintian needs a en_US.UTF-8 locale, so if this is
+absent, it may trigger some issues with some (i.e. manpage) checks.  Lintian
+currently generates a private locale when the test-suite is run and if Lintian
+is installed.
+
+=head3 Running tests
+
+Lintian has a large test suite that easily takes up to 30 minutes.  So when
+debugging a particular test or check, you may want to run only parts of the
+test suite.
+
+To start with Lintian has two "major" test-suites; the first one is
+the "new" test suite, which is devided into 5 sub-suites, and then
+there is the "legacy" test suite.  Unless otherwise stated, only the
+new test suite supports the "extra" run options.  The legacy
+test-suite will generally give a warning about it being unable to find
+a test to run.
+
+Running all of the tests is as simple as invoking:
+
+ $ debian/rules runtests
+
+=over 4
+
+=item Changing parallelization
+
+The test suite respects the "DEB_BUILD_OPTIONS=parallel=n", though "n"
+denotes the amount of "worker" threads.  The test runner will
+generally have 2 threads more than that.  Also ach "worker" will run
+lintian, which parallelizes its unpacking as well.
+
+In case you are wondering about the 2 extra threads in the test
+runner, the first of them is the "coordinator"-thread (which will
+generally be waiting when the workers are active) and the second one
+is the "output"-thread (which handles the fancy output).
+
+Note: the legacy test suite only runs a single test at a time regardless
+of this setting.
+
+=item Running a single test
+
+To run a single test by its name, use:
+
+ $ debian/rules runtests onlyrun=$name
+
+The legacy test suite supports this.
+
+Note: if the name does not match any test you will see up to two
+warnings about the test could not be found.  If the test only exists
+in one of the suites (which is usually the case), you will see a
+warning from the other suite.
+
+=item Running all tests for a check
+
+To run all tests for a given check, use:
+
+ $ debian/rules runtests onlyrun=$check
+
+$check must be the name of a check (it will test for
+checks/$check.desc).  This will run all tests that starts with
+"$check-".
+
+Note: The "changes" sub-suite in the new test suite does not support
+this.
+
+If the name of the check clashes with the name of a test in the legacy
+test suite, then that test will also be run.  Otherwise a warning will
+be printed from the legacy test suite.
+
+=item Running all tests in a sub-suite
+
+To run all tests in a given sub-suite, use:
+
+ $ debian/rules runtests onlyrun=suite:$suites
+
+$suites is a comma-separated list of names of sub-suites to run.
+
+Note: this cannot be used to influence the order, in which the sub-suites
+are run.
+
+=item Running all tests designed for a specific tag
+
+To run all tests that has a "Test-For" or a "Test-Against" for a given
+tag, use:
+
+ $ debian/rules check-tag tag=$tag
+
+The legacy test suite will not be run in this case.
+
+=back
+
+=cut
 
