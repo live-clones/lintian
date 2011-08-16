@@ -1,5 +1,5 @@
-Last generated 2011-08-07
-Coverage: 687/915 (75.08%), w. legacy tests: 815/915 (89.07%)
+Last generated 2011-08-16
+Coverage: 690/915 (75.41%), w. legacy tests: 815/915 (89.07%)
 
 The following tags are not tested by the test suite:
 
@@ -123,7 +123,6 @@ The following tags are only tested by the legacy test suite:
 binaries binary-has-unneeded-section
 binaries binary-with-bad-dynamic-table
 binaries debug-file-should-use-detached-symbols
-binaries package-name-doesnt-match-sonames
 binaries shared-lib-without-dependency-information
 binaries statically-linked-binary
 binaries unstripped-binary-or-object
@@ -232,7 +231,6 @@ menus maintainer-script-does-not-check-for-existence-of-wm-menu-config
 menus menu-file-in-usr-lib
 menus menu-method-should-include-menu-h
 menus postinst-does-not-call-updatemenus
-menus postinst-should-not-set-usr-doc-link
 menus postrm-does-not-call-updatemenus
 
 nmu changelog-should-mention-qa
@@ -251,7 +249,6 @@ scripts update-alternatives-remove-called-in-postrm
 
 shared-libs duplicate-entry-in-symbols-control-file
 shared-libs invalid-template-id-in-symbols-file
-shared-libs ldconfig-symlink-missing-for-shlib
 shared-libs sharedobject-in-library-directory-missing-soname
 shared-libs symbols-declared-but-not-shlib
 shared-libs symbols-declares-dependency-on-other-package
@@ -373,9 +370,6 @@ filenames
 foo++
 
 libbaz
-  ldconfig-symlink-missing-for-shlib
-  package-name-doesnt-match-sonames
-  postinst-should-not-set-usr-doc-link
 
 maintainer-scripts
   changelog-should-mention-qa

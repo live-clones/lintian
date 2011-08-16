@@ -1,0 +1,14 @@
+#!/bin/sh
+
+set -e 
+
+PKG=menus-usr-doc-link
+
+if [ "$1" = "configure" ] ; then
+    if [ -d /usr/doc -a ! -e /usr/doc/$PKG -a -d /usr/share/doc/$PKG ] ; then
+        ln -sf ../share/doc/$PKG /usr/doc/$PKG
+    fi
+fi
+
+#DEBHELPER#
+

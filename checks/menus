@@ -649,7 +649,6 @@ sub check_script {
 	# does the script call wm-menu-config?
 	if (m/(?:^\s*|[;&|]\s*|(?:then|do)\s+)(?:\/usr\/sbin\/)?wm-menu-config(?:\s|[;&|<>]|$)/) {
 	    # yes, it does.
-	    $pres->{'calls-wmmenuconfig'} = 1;
 	    tag 'maintainer-script-calls-deprecated-wm-menu-config', "$script:$." unless $calls_wmmenu++;
 
 	    # checked first?
@@ -663,9 +662,6 @@ sub check_script {
 	if ($interp eq 'sh') {
 	    if (m,ln\s+(?:-\w+)?\s+\"?\.\./share/doc/\S+, ) {
 		$pres->{'sets-link'} = 1;
-	    }
-	    if (m,rm\s+(?:-\w+\s+)?\"?/usr/doc/\S+, ) {
-		$pres->{'removes-link'} = 1;
 	    }
 	} elsif ($interp eq 'perl') {
 	    if (m|symlink\s*\(?\s*[\"\']\.\./share/doc/\.+?[\"\']\s*,|) {

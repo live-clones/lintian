@@ -25,33 +25,9 @@ use warnings;
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Util;
 
-($#ARGV == 1) or fail('syntax: source-control-file <pkg> <type>');
-my $pkg = shift;
-my $type = shift;
-
--f 'debfiles/control' or fail('control invoked in wrong directory');
-
-my @control_data = read_dpkg_control('debfiles/control');
-shift @control_data; # we don't need the source information
-
-delete_dir('control');
-mkdir 'control', 0777  or fail( "can't create dir control: $!" );
-
-foreach (@control_data) {
-    my $pkg_name = $_->{'package'};
-    fail("no package line found in control file of $pkg $type")
-        if !$pkg_name;
-    mkdir "control/$pkg_name", 0777
-        or fail( "can't create dir control/$pkg_name: $!" );
-    for my $field (keys %$_) {
-	my $value = $_->{$field};
-	# checks/fields will convert colons into slashes
-	$field =~ s,/,:,g;
-
-        my $field_file = "control/$pkg_name/$field";
-        open (F, '>', $field_file)
-            or fail("cannot open file $field_file for writing: $!");
-        print F $value,"\n";
-        close F or fail("cannot write control/$pkg_name/$field: $!");
+if ( -d 'control/' ) {
+    my $r = system('rm', '-r', 'control/');
+    if ($r) {
+        die "system: rm -r control/ died with: " . (($r >> 8) & 0xff) . ".\n";
     }
 }
