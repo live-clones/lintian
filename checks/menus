@@ -649,7 +649,6 @@ sub check_script {
 	# does the script call wm-menu-config?
 	if (m/(?:^\s*|[;&|]\s*|(?:then|do)\s+)(?:\/usr\/sbin\/)?wm-menu-config(?:\s|[;&|<>]|$)/) {
 	    # yes, it does.
-	    $pres->{'calls-wmmenuconfig'} = 1;
 	    tag 'maintainer-script-calls-deprecated-wm-menu-config', "$script:$." unless $calls_wmmenu++;
 
 	    # checked first?
