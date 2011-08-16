@@ -234,7 +234,7 @@ Creates (or overwrites) the entry for $pkg_name.
 sub set {
     my ($self, $pkg_name, $data) = @_;
     my $fields;
-    my $pdata;
+    my %pdata;
     my $pkg_type = $self->{'type'};
     if ($pkg_type eq 'source') {
         $fields = \@SRC_FILE_FIELDS;
@@ -244,9 +244,9 @@ sub set {
         $fields = \@CHG_FILE_FIELDS;
     }
 
-    $pdata = map { $_ => $data->{$_} } @$fields;
-    $pdata->{$fields->[0]} = $pkg_name;
-    $self->{'state'}->{$pkg_name} = $pdata;
+    %pdata = map { $_ => $data->{$_} } @$fields;
+    $pdata{$fields->[0]} = $pkg_name;
+    $self->{'state'}->{$pkg_name} = \%pdata;
     return 1;
 }
 

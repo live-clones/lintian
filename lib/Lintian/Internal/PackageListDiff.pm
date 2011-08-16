@@ -39,7 +39,7 @@ Lintian::Inernal::PackageListDiff -- Difference representation between two Packa
  $nlist->read_list('new/binary-packages');
  my $diff = $nlist->diff($olist);
  foreach my $added (@{ $diff->added }) {
-    my $entry = $nlist->get($removed);
+    my $entry = $nlist->get($added);
     # do something
  }
  foreach my $removed (@{ $diff->removed }) {
