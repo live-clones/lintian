@@ -52,7 +52,6 @@ W: filenames source: ancient-standards-version 3.1.1 (current is 3.9.2)
 W: filenames source: diff-contains-arch-control-dir .arch-ids
 W: filenames source: diff-contains-arch-control-dir {arch}
 W: filenames source: diff-contains-arch-inventory-file files/.arch-inventory
-W: filenames source: diff-contains-bts-control-dir debian/.be
 W: filenames source: diff-contains-bzr-control-dir .bzr
 W: filenames source: diff-contains-cvs-conflict-copy files/.#Maelstrom Sound.1.1.1
 W: filenames source: diff-contains-cvs-control-dir CVS
