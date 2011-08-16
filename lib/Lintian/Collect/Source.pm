@@ -23,6 +23,8 @@ use strict;
 use warnings;
 use base 'Lintian::Collect::Package';
 
+use Cwd();
+
 use Lintian::Relation;
 use Parse::DebianChangelog;
 
@@ -91,19 +93,19 @@ sub native {
 
 # Returns a hash of binaries to the package type, assuming a type of deb
 # unless the package type field is present.
+# sub binaries Needs-Info debfiles
 sub binaries {
     my ($self) = @_;
     return $self->{binaries} if exists $self->{binaries};
+    # we need the binary fields for this.
+    $self->_load_binary_fields unless exists $self->{binary_field};
+
     my %binaries;
-    my $base_dir = $self->base_dir();
-    # sub binaries Needs-Info source-control-file
-    opendir(BINPKGS, "$base_dir/control") or fail("can't open control directory: $!");
-    for my $package (readdir BINPKGS) {
-        next if $package =~ /^\.\.?$/;
-        my $type = $self->binary_field($package, 'xc-package-type') || 'deb';
-        $binaries{$package} = lc $type;
+    foreach my $pkg (keys %{ $self->{binary_field} } ) {
+        my $type = $self->binary_field($pkg, 'xc-package-type') || 'deb';
+        $binaries{$pkg} = lc $type;
     }
-    closedir BINPKGS;
+
     $self->{binaries} = \%binaries;
     return $self->{binaries};
 }
@@ -111,19 +113,58 @@ sub binaries {
 # Returns the value of a control field for a binary package or the empty
 # string if that control field isn't present.  This does not implement
 # inheritance from the settings in the source stanza.
+# sub binary_field Needs-Info debfiles
 sub binary_field {
     my ($self, $package, $field) = @_;
+    $self->_load_binary_fields unless exists $self->{binary_field};
+
+    # Check if the package actually exists, otherwise it may create an
+    # empty entry for it.
     return $self->{binary_field}{$package}{$field}
-        if exists $self->{binary_field}{$package}{$field};
-    my $value = '';
-    my $base_dir = $self->base_dir();
-    # sub binary_field Needs-Info source-control-file
-    if (-f "$base_dir/control/$package/$field") {
-        $value = slurp_entire_file("$base_dir/control/$package/$field");
-        chomp $value;
+        if exists $self->{binary_field}{$package};
+
+    return;
+}
+
+# Internal method to load binary fields from debfiles/control
+# sub _load_binary_fields Needs-Info debfiles
+sub _load_binary_fields {
+    my ($self) = @_;
+    # Load the fields from d/control
+    my $dctrl = $self->debfiles('control');
+    my $ok = 0;
+    if ( -l $dctrl ) {
+        # hmmm - this smells of trouble...
+        if ( -e $dctrl ) {
+            # it exists, but what does it point to?
+            my $droot = Cwd::abs_path($self->debfiles);
+            my $target = Cwd::abs_path($dctrl);
+            if ($droot && $target && $target =~ m,^$droot/,) {
+                # does not escape $droot, so it could work.
+                $ok = 1;
+            }
+        }
+    } else {
+        $ok = 1 if -e $dctrl;
     }
-    $self->{binary_field}{$package}{$field} = $value;
-    return $self->{binary_field}{$package}{$field};
+
+    unless ($ok) {
+        # Bad file, assume the package and field does not exist.
+        $self->{binary_field} = {};
+        return;
+    }
+    my @control_data = read_dpkg_control($dctrl);
+    my %packages;
+
+    shift @control_data; # throw away the source part
+
+    foreach my $binary (@control_data) {
+        my $pkg = $binary->{'package'};
+        $packages{$pkg} = $binary;
+    }
+    $self->{binary_field} = \%packages;
+
+    return 1;
 }
 
 # Return a Lintian::Relation object for the given relationship field in a

@@ -1,6 +1,9 @@
 Collector-Script: source-control-file
 Author: Frank Lichtenheld <djpig@debian.org>
 Info: Collects information about binary packages from debian/control in source packages
+ .
+ This is deprecated and does nothing (but clean up).  Checks should migrate to
+ Lintian::Collect::Source::{binaries,binary_field}.
 Type: source
 Version: 1
-Needs-Info: debfiles
+Auto-Remove: yes

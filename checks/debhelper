@@ -188,10 +188,10 @@ for my $binpkg (keys %$pkgs) {
     my ($weak_depends, $strong_depends, $depends) = ('','','');
 
     foreach my $field (qw(pre-depends depends)) {
-	$strong_depends .= $info->binary_field($binpkg, $field);
+	$strong_depends .= ($info->binary_field($binpkg, $field)//'');
     }
     foreach my $field (qw(recommends suggests)) {
-	$weak_depends .= $info->binary_field($binpkg, $field);
+	$weak_depends .= ($info->binary_field($binpkg, $field)//'');
     }
     $depends = $weak_depends . $strong_depends;
 
