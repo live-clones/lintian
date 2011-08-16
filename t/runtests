@@ -584,11 +584,14 @@ sub generic_test_runner {
 	dump_log($test, "$RUNDIR/build.$test") if $DUMP_LOGS;
 	fail("cd $targetdir && fakeroot make >../build.$test 2>&1");
     }
+    my @matches = glob "$targetdir/*.$ext";
+    my $file = shift @matches;
+    unless ( $file && -e $file ) {
+	fail "$test did not produce any file matching \"$targetdir/*.$ext\" ($file)";
+    }
+    fail "$test produced more than one file matching \"$targetdir/*.$ext\"" if @matches;
 
-    msg_print 'testing... ';
-    runsystem_ok("$LINTIAN --allow-root --no-cfg -I -E $targetdir/*.$ext 2>&1"
-		 . " | sort > $RUNDIR/tags.$test");
-
+    run_lintian($testdata, $file, "$RUNDIR/tags.$test");
     return _check_result($testdata, "$testdir/tags", "$RUNDIR/tags.$test");
 }
 
