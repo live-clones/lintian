@@ -1,0 +1,6 @@
+Testname: binaries-doesnt-match-sonames
+Sequence: 6000
+Architecture: any
+Version: 1.0
+Description: Test for library package that does not match SONAME
+Test-For: package-name-doesnt-match-sonames

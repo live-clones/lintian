@@ -1,0 +1,5 @@
+Testname: shared-libs-missing-ldconfig-symlink
+Sequence: 6000
+Version: 1.0
+Description: Test for missing ldconfig symlink for shared libs
+Test-For: ldconfig-symlink-missing-for-shlib
