@@ -664,9 +664,6 @@ sub check_script {
 	    if (m,ln\s+(?:-\w+)?\s+\"?\.\./share/doc/\S+, ) {
 		$pres->{'sets-link'} = 1;
 	    }
-	    if (m,rm\s+(?:-\w+\s+)?\"?/usr/doc/\S+, ) {
-		$pres->{'removes-link'} = 1;
-	    }
 	} elsif ($interp eq 'perl') {
 	    if (m|symlink\s*\(?\s*[\"\']\.\./share/doc/\.+?[\"\']\s*,|) {
 		$pres->{'sets-link'} = 1;
