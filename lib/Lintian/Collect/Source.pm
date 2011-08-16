@@ -110,8 +110,8 @@ sub binaries {
     return $self->{binaries};
 }
 
-# Returns the value of a control field for a binary package or the empty
-# string if that control field isn't present.  This does not implement
+# Returns the value of a control field for a binary package or undef
+# if that control field isn't present.  This does not implement
 # inheritance from the settings in the source stanza.
 # sub binary_field Needs-Info debfiles
 sub binary_field {
@@ -324,20 +324,18 @@ documented in the Lintian::Collect module are also available.
 
 Returns a hash reference with the binary package names as keys and the
 Package-Type as value (which should be either C<deb> or C<udeb>
-currently).  The source-control-file collection script must have been run
-to parse the F<debian/control> file and put the fields in the F<control>
-directory in the lab.
+currently).  The debfiles collection script must have been run
+to make the F<debfiles/control> file available.
 
 =item binary_field(PACKAGE, FIELD)
 
 Returns the content of the field FIELD for the binary package PACKAGE in
-the F<debian/control> file, or an empty string if that field isn't set.
+the F<debian/control> file, or an undef if the field is not present.
 Inheritance of field values from the source section of the control file is
 not implemented.  Only the literal value of the field is returned.
 
-The source-control-file collection script must have been run to parse the
-F<debian/control> file and put the fields in the F<control> directory in
-the lab.
+The debfiles collection script must have been run to make the
+F<debfiles/control> file available.
 
 =item binary_relation(PACKAGE, FIELD)
 
