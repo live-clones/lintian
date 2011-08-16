@@ -22,7 +22,7 @@ my $orig_file = $input->{'file'}; # safe for later
 $plist->set($input->{'source'}, $input);
 @contents = $plist->get_all;
 
-ok(scalar @contents == 1, "Contents one element");
+is(@contents, 1, "Contents one element");
 is($contents[0], $input->{'source'}, "Element has the right name");
 
 # Change input, output should be unaffected

@@ -161,7 +161,13 @@ sub read_list {
     my ($self, $file) = @_;
     my $ehd;
     my $fields;
-    return unless -s $file; # empty file -> ignore
+
+    # Accept a scalar (as an "in-memory file") - write_list does the same
+    if (my $r = ref $file) {
+        croak "Attempt to pass non-scalar ref to read_list.\n" unless $r eq 'SCALAR';
+    } else {
+        return unless -s $file;
+    }
 
     if ($self->{'type'} eq 'source') {
         $ehd = SRCLIST_FORMAT;
@@ -173,7 +179,7 @@ sub read_list {
         $ehd = CHGLIST_FORMAT;
         $fields = \@CHG_FILE_FIELDS;
     }
-    $self->{'state'} = $self->_read_state($file, $ehd, $fields);
+    $self->{'state'} = $self->_do_read_file($file, $ehd, $fields);
     $self->_mark_dirty(0);
     return 1;
 }
@@ -306,7 +312,7 @@ sub diff {
 # $plist->_mark_dirty($val)
 #
 # Internal sub to alter the dirty flag. 1 for dirty, 0 for "not dirty"
-sub _mark_diry {
+sub _mark_dirty {
     my ($self, $dirty) = @_;
     $self->{'dirty'} = $dirty;
 }
