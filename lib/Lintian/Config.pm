@@ -84,3 +84,4 @@ sub get_variable {
     return $def;
 }
 
+1;

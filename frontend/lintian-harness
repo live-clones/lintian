@@ -27,9 +27,11 @@
 use strict;
 use warnings;
 
+use Cwd();
+
 use Getopt::Long;
 
-# List of variables we accept/impor for lintian; these may be
+# List of variables we accept/import for lintian; these may be
 # overriden by cmd-line options below.
 my @ENV_VARS = (qw(
     LINTIAN_ROOT
@@ -65,7 +67,7 @@ my $conf;
 # Fill in the default values for environment variables.
 #  - GetOptions(%opthash) will override them
 foreach my $var (@ENV_VARS) {
-    $opt{$var} = $ENV{$var} if $ENV{$var};
+    $opt{$var} = $ENV{$var} if exists $ENV{$var};
 }
 
 # init commandline parser
@@ -77,6 +79,13 @@ GetOptions(%opthash)
 
 # At this point LINTIAN_ROOT and LINTIAN_CFG are known, so the config
 # file can be parsed.
+
+# If LINTIAN_ROOT is "", then we got it from the env or --root, so
+# translate it into cwd
+
+unless ($opt{'LINTIAN_ROOT'}) {
+    $opt{'LINTIAN_ROOT'} = Cwd::cwd();
+}
 
 unshift @INC, "$opt{'LINTIAN_ROOT'}/lib";
 require Lab;
@@ -94,7 +103,7 @@ my ($nblist,$nulist, $nslist) = read_archive($opt{'LINTIAN_ARCHIVEDIR'}, trim($o
 
 my ($bdiff, $udiff, $sdiff) = generate_diffs($lab, $nblist, $nulist, $nslist);
 
-exit 0
+exit 0;
 
 #### Argument Parser Subs ####
 
@@ -104,6 +113,7 @@ Syntax: lintian-harness ...
 Actions:
     TODO ...
 EOF
+     exit 0;
 }
 
 #### Helper Subs ####
@@ -117,7 +127,7 @@ sub generate_diffs {
     my $labdir = $lab->{dir}; #FIXME internal access
     my $infodir;
     my @diffs;
-    fail "$labdir is not a valid lab (run lintian --setup-lab first?).\n" unless $labdir->is_lab;
+    fail("$labdir is not a valid lab (run lintian --setup-lab first?).\n") unless $labdir->is_lab;
     $infodir = "$labdir/info";
     foreach my $list (@lists) {
         my $type = $list->type;
@@ -151,7 +161,7 @@ sub read_archive {
             } elsif ($type eq 'source') {
                 $file = "$archive_root/dists/$dist/$area/source/Sources";
             } else {
-                fail "Assertion Error: unhandled type ($type).\n";
+                fail("Assertion Error: unhandled type ($type).\n");
             }
 
             my $pkg_data = {
@@ -159,7 +169,7 @@ sub read_archive {
                 area => $area,
                 arch => $arch,
                 type => $type,
-            }
+            };
             parse_packages_file($archive_root, $file, $pkg_data, $nlist);
         }
     }
@@ -180,17 +190,17 @@ sub trim {
 sub open_data_file {
     my ($file) = @_;
     if (-e $file) {
-        open my $fd, '<', $file or fail "opening $file: $!";
+        open my $fd, '<', $file or fail("opening $file: $!");
         return $fd;
     }
     foreach my $com (['gz', ['gzip', '-dc']] ){
         my ($ext, $cmd) = @$com;
         if ( -e "$file.$ext") {
-            open my $c, '-|', @$cmd, "$file.$ext" or fail "running @$cmd $file.$ext";
-            return $fd;
+            open my $c, '-|', @$cmd, "$file.$ext" or fail("running @$cmd $file.$ext");
+            return $c;
         }
     }
-    fail "Cannot find $file.\n";
+    fail("Cannot find $file.\n");
 }
 
 sub parse_packages_file {
@@ -199,7 +209,7 @@ sub parse_packages_file {
     my $helper = sub {
         my ($paragraph) = @_;
         _pkg_parser($paragraph, $archive_root, $pkg_data, $nlist);
-    }
+    };
     Util::_parse_dpkg_control_iterative($helper, $fd, 0);
     close $fd;
 }
@@ -210,9 +220,10 @@ sub _pkg_parser {
     my $type = $pkg_data->{'type'};
     my @stat;
     my $data;
-    unless (@data = stat $file) {
-        print "E: general: cannot stat $LINTIAN_ARCHIVEDIR/$deb_file\n";
-        next;
+    my $pkg;
+    unless (@stat = stat $file) {
+        print "E: general: cannot stat $file\n";
+        return;
     }
     if ($type ne 'source') {
         $data = safe_get_deb_info($file, $type);
@@ -231,11 +242,11 @@ sub _pkg_parser {
             }
         }
     }
+    $pkg = $paragraph->{'package'};
     # Save entry for writing to output file.
-    $data->{file} = $deb_file;
-    $data->{timestamp} = $timestamp;
-    $data->{area} = $packages_file->{area};
-    $status_map{$pkg} = $status;
+    $data->{file} = $file;
+    $data->{timestamp} = $stat[9];
+    $data->{area} = $paragraph->{area}//''; # source does not have this
     $nlist->set($pkg, $data);
 }
 
@@ -245,7 +256,7 @@ sub safe_get_deb_info {
     # because of a single broken package
     my ($file, $type) = @_;
     my $data;
-    eval { $data = get_deb_info("$LINTIAN_ARCHIVEDIR/$file"); };
+    eval { $data = get_deb_info($file); };
     if ($@) {
 	# error!
 	print STDERR "$@\n";
