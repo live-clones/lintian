@@ -37,6 +37,10 @@ my $cf = $info->control('conffiles');
 
 my %conffiles = ();
 
+# Stop if conffiles is a link; no real package uses links in
+# control.tar.gz.
+return if -l $cf;
+
 if (-f $cf) {
 
     open(IN, '<', $cf) or fail("cannot open $cf for reading: $!");

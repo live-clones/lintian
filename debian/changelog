@@ -53,6 +53,8 @@ lintian (2.5.3) UNRELEASED; urgency=low
       changelog.
   * checks/{conffile,etcfiles}{,.desc}:
     + [JW] Merged etcfiles into conffile.  (Closes: #637590)
+  * checks/conffile:
+    + [NT] Skip all checks if "conffiles" is a symlink.
   * checks/copyright-file{,.desc}:
     + [JW] Check for CRLF line endings in copyright files.
       (Closes: #634191)
