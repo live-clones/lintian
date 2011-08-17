@@ -31,7 +31,7 @@ my $type = shift;
 my $cf = "control/conffiles";
 
 # conffiles?
-unless (-f $cf) {
+unless (-f $cf && ! -l $cf) {
     return 0;
 }
 

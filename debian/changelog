@@ -1,5 +1,7 @@
 lintian (2.4.3+squeeze1) stable; urgency=low
 
+  * checks/{conffiles,etcfiles}:
+    + [NT] Skip all checks in conffiles is a symlink.
   * checks/debian-source-dir:
     + [NT] Fixed information disclosure issue, where Lintian could
       be tricked into disclosing the presence of files on the host
