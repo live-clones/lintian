@@ -96,7 +96,10 @@ sub _init_group_from_changes {
         # - just the file name please.
         (undef, undef, undef, undef, $file) = split(/\s+/o, $line);
 
-        next if $file =~ m,/,;
+        # If the field is malformed, $file may be undefined; we also
+        # skip it, if it contains a "/" since that is most likely a
+        # traversal attempt
+        next if !$file || $file =~ m,/,o;
 
         if (not -f "$cdir/$file") {
             print STDERR "$cdir/$file does not exist, exiting\n";
