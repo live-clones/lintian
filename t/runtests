@@ -480,9 +480,15 @@ sub test_changes {
     my $test = $testdata->{srcpkg};
     my $testdir = "$TESTSET/changes";
     my $file = "$testdir/$test.changes";
+    # Check if we need to copy these files over.
     if ( ! -e $file && -e "$file.in" ) {
+	my @files;
 	msg_print "building... ";
-	runsystem('cp', '-f', "${file}.in", "$RUNDIR/${test}.changes.in");
+	# copy all files but "tags" and desc.  Usually this will only
+	# be ".changes.in", but in rare cases we have "other files"
+	# as well.
+	@files = grep { !/\.(?:desc|tags)$/o } glob "$testdir/$test.*";
+	runsystem('cp', '-f', @files, "$RUNDIR/");
 	$file = "$RUNDIR/${test}.changes";
 	fill_in_tmpl($file, $testdata);
     }

@@ -1,0 +1,4 @@
+E: changes-file-size-checksum-mismatch changes: checksum-mismatch-in-changes-file md5 changes-file-size-checksum-mismatch.log
+E: changes-file-size-checksum-mismatch changes: checksum-mismatch-in-changes-file sha1 changes-file-size-checksum-mismatch.log
+E: changes-file-size-checksum-mismatch changes: checksum-mismatch-in-changes-file sha256 changes-file-size-checksum-mismatch.log
+E: changes-file-size-checksum-mismatch changes: file-size-mismatch-in-changes-file changes-file-size-checksum-mismatch.log 0 != 12
