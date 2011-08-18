@@ -46,6 +46,10 @@ lintian (2.5.3) UNRELEASED; urgency=low
     + [JW] Use LC_ALL rather than LANG, since LC_ALL overrules
       LANG.
 
+  * t/*:
+    + [JW,NT] Fixed test failures caused by unpacking the source
+      with a umask different from 0022.  (Closes: #637649)
+
  -- Niels Thykier <niels@thykier.net>  Wed, 10 Aug 2011 21:09:24 +0200
 
 lintian (2.5.2) unstable; urgency=low
