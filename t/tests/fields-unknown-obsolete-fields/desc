@@ -1,0 +1,7 @@
+Testname: fields-unknown-obsolete-fields
+Sequence: 6000
+Version: 1.0
+Description: General tests for unknown and obsolete fields
+Test-For:
+ obsolete-field
+ unknown-field-in-dsc

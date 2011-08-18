@@ -1,5 +1,5 @@
-Last generated 2011-08-16
-Coverage: 690/915 (75.41%), w. legacy tests: 815/915 (89.07%)
+Last generated 2011-08-17
+Coverage: 697/915 (76.17%), w. legacy tests: 820/915 (89.62%)
 
 The following tags are not tested by the test suite:
 
@@ -13,10 +13,6 @@ changelog-file html-changelog-without-text-version
 changelog-file wrong-name-for-changelog-of-native-package
 changelog-file wrong-name-for-debian-changelog-file
 changelog-file wrong-name-for-upstream-changelog
-
-changes-file bad-section-in-changes-file
-changes-file checksum-mismatch-in-changes-file
-changes-file file-size-mismatch-in-changes-file
 
 cruft source-contains-prebuilt-windows-binary
 
@@ -43,12 +39,10 @@ fields multiline-field
 fields no-package-name
 fields no-source-field
 fields no-version-field
-fields obsolete-field
 fields package-depends-on-an-x-font-package
 fields package-not-lowercase
 fields package-superseded-by-perl
 fields source-field-does-not-match-pkg-name
-fields unknown-field-in-dsc
 
 files FSSTND-dir-in-var
 files backup-file-in-package
@@ -128,10 +122,8 @@ binaries statically-linked-binary
 binaries unstripped-binary-or-object
 
 changelog-file changelog-file-missing-in-native-package
-changelog-file changelog-file-not-compressed
 changelog-file debian-changelog-file-contains-invalid-email-address
 changelog-file debian-changelog-file-missing-or-wrong-name
-changelog-file debian-news-file-not-compressed
 changelog-file wrong-name-for-debian-news-file
 
 copyright-file old-fsf-address-in-copyright-file
@@ -261,7 +253,6 @@ Breakdown of remaining tags in legacy test suite by test case:
 
 binary
   binary-has-unneeded-section
-  changelog-file-not-compressed
   debian-changelog-file-missing-or-wrong-name
   deprecated-kdelnk-file
   desktop-contains-deprecated-header
@@ -345,7 +336,6 @@ fields
 
 filenames
   bad-menu-file-name
-  debian-news-file-not-compressed
   desktop-file-in-wrong-dir
   macos-ds-store-file-in-package
   macos-resource-fork-file-in-package

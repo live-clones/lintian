@@ -64,6 +64,7 @@ use vars qw($LINTIAN_ROOT $LINTIAN_LAB $LINTIAN_ARCHIVEDIR $LINTIAN_DIST
 # import perl libraries
 unshift @INC, "$LINTIAN_ROOT/lib";
 require Read_pkglists;
+import Read_pkglists;
 require Util;
 
 # turn file buffering off
