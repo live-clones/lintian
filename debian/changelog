@@ -46,6 +46,9 @@ lintian (2.5.3) UNRELEASED; urgency=low
     + [JW] Use LC_ALL rather than LANG, since LC_ALL overrules
       LANG.
 
+  * reporting/harness:
+    + [NT] Added missing import statement.
+
   * t/*:
     + [JW,NT] Fixed test failures caused by unpacking the source
       with a umask different from 0022.  (Closes: #637649)
