@@ -151,16 +151,16 @@ sub new {
             important => { 'wild-guess' => 1, possible => 1, certain => 1 },
             serious   => { 'wild-guess' => 1, possible => 1, certain => 1 },
         },
-        display_source    => {},
-        files             => {},
-        ignored_overrides => {},
-        only_issue        => {},
-        respect_display   => 1,
-        show_experimental => 0,
-        show_overrides    => 0,
-        show_pedantic     => 0,
-        statistics        => {},
-        suppress          => {},
+        display_source       => {},
+        files                => {},
+        non_overridable_tags => {},
+        only_issue           => {},
+        respect_display      => 1,
+        show_experimental    => 0,
+        show_overrides       => 0,
+        show_pedantic        => 0,
+        statistics           => {},
+        suppress             => {},
     };
     bless($self, $class);
     $GLOBAL = $self unless $GLOBAL;
@@ -537,7 +537,7 @@ file cannot be opened.
 
 sub file_overrides {
     my ($self, $overrides) = @_;
-    my $ignored = $self->{ignored_overrides};
+    my $ignored = $self->{non_overridable_tags};
     unless (defined $self->{current}) {
         die 'no current file when adding overrides';
     }
@@ -738,15 +738,15 @@ sub suppressed {
     return;
 }
 
-=item ignore_overrides(TAG[, ...])
+=item non_overridable_tags(TAG[, ...])
 
-Ignores all future overrides for all tags given as arguments.
+Marks all tags (given as arguments) for non-overridable.
 
 =cut
 
-sub ignore_overrides {
+sub non_overridable_tags {
     my ($self, @tags) = @_;
-    my $ignored = $self->{ignored_overrides};
+    my $ignored = $self->{non_overridable_tags};
     foreach my $tag (@tags){
         $ignored->{$tag} = 1;
     }

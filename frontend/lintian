@@ -796,11 +796,11 @@ if ($opt{'LINTIAN_PROFILE'}) {
     my $profile = Lintian::Profile->new($opt{'LINTIAN_PROFILE'},
 					[@prof_inc, "$opt{'LINTIAN_ROOT'}/profiles"]);
     my @ptags = $profile->tags;
-    my @ign_overrides = $profile->ignored_overrides;
+    my @non_overridable = $profile->non_overridable_tags;
     my $severities = $profile->severity_changes;
     v_msg('Using profile ' . $profile->name . '.');
     $TAGS->only(@ptags) if @ptags;
-    $TAGS->ignore_overrides(@ign_overrides) if @ign_overrides;
+    $TAGS->non_overridable_tags(@non_overridable) if @non_overridable;
     while ( my ($tagname, $severity) = each(%$severities) ){
 	my $tag = Lintian::Tag::Info->new($tagname);
 	$tag->set_severity($severity);
