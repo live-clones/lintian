@@ -1266,6 +1266,19 @@ if ($action eq 'check' and not $opt{'no-override'} and not $opt{'show-overrides'
     }
 }
 
+my $ign_over = $TAGS->ignored_overrides;
+if (keys %$ign_over) {
+    msg('Some overrides were ignored, since the tags were marked "non-overridable".');
+    if ($opt{'verbose'}) {
+	v_msg('The following tags were "non-overridable" and had at least one override');
+	foreach my $tag (sort keys %$ign_over) {
+	    v_msg("  - $tag");
+	}
+    } else {
+	msg('Use --verbose for more information.');
+    }
+}
+
 # }}}
 
 

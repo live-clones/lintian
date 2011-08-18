@@ -34,6 +34,12 @@ lintian (2.5.3) UNRELEASED; urgency=low
     + [NT] New file.  Thanks to Jeremiah C. Foster for the initial
       contribution.
 
+  * frontend/lintian:
+    + [NT] Lintian now mentions if overrides may have been ignored.
+      This happens if a package contains an override for a tag
+      that has been marked "non-overridable" by the current vendor
+      profile.
+
   * lib/Util.pm:
     + [JW] Use LC_ALL rather than LANG, since LC_ALL overrules
       LANG.
@@ -43,6 +49,8 @@ lintian (2.5.3) UNRELEASED; urgency=low
     + [JW,NT] Replace use of fail with croak.  (Closes: #637741)
   * lib/Lintian/Profile.pm:
     + [NT] Reject profiles containing an unknown field.
+  * lib/Lintian/Tags.pm:
+    + [NT] Track which tags had overrides that have been dropped.
 
   * private/*:
     + [JW] Use LC_ALL rather than LANG, since LC_ALL overrules
