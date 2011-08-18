@@ -836,7 +836,26 @@ sub msg_print {
     $MSG_Q->enqueue(\%msg);
 }
 
+sub _flush {
+    my ($thrs, $id, $length) = @_;
+    print (' 'x$length,"\r");
+    while (my $m = shift @{$thrs->{$id}}) {
+	print $m;
+    }
+    print "\n";
+    delete $thrs->{$id};
+}
+
 sub msg_queue_handler {
+    # if _msg_qh fails
+    eval {
+	_msg_qh();
+    };
+    die "Error (msg_queue_handler): $@\n" if $@;
+    die "_msg_qh returned!?\n";
+}
+
+sub _msg_qh {
     my %thrs;
     my $length = 0;
 
@@ -845,18 +864,13 @@ sub msg_queue_handler {
 	# master thread calls msg_flush to flush all messages
 	if ($id == 0) {
 	    for my $tid (keys %thrs) {
-		my %msg = (id => $tid);
-		$MSG_Q->insert(0, \%msg);
+		_flush(\%thrs, $tid, $length);
 	    }
+	    $length = 0;
 	} else {
 	    if (!exists($msg->{'msg'}) && exists($thrs{$id})) {
-		print (' 'x$length,"\r");
+		_flush(\%thrs, $id, $length);
 		$length = 0;
-		while (my $m = shift @{$thrs{$id}}) {
-		    print $m;
-		}
-		print "\n";
-		delete $thrs{$id};
 	    } elsif (exists($msg->{'msg'})) {
 		$thrs{$id} = []
 		    unless (exists($thrs{$id}));
@@ -870,7 +884,10 @@ sub msg_queue_handler {
 		}
 
 		# Insert a flush request, if needed
-		$MSG_Q->insert(0, { id => $id }) if $flush;
+		if ($flush) {
+		    _flush(\%thrs, $id, $length);
+		    $length = 0;
+		}
 	    }
 	}
 
