@@ -228,7 +228,13 @@ sub _pkg_parser {
     if ($type ne 'source') {
         $data = safe_get_deb_info($file, $type);
     } else {
-        # FIXME - handle source.
+        eval { $data = get_dsc_info($file); };
+        if ($@) {
+            # error!
+            print STDERR "$@\n";
+            print "E: general: bad-source-package $dsc_file\n";
+            next;
+        }
     }
     return unless $data;
 
@@ -246,7 +252,7 @@ sub _pkg_parser {
     # Save entry for writing to output file.
     $data->{file} = $file;
     $data->{timestamp} = $stat[9];
-    $data->{area} = $paragraph->{area}//''; # source does not have this
+    $data->{area} = $pkg_data->{area};
     $nlist->set($pkg, $data);
 }
 
