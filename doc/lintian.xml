@@ -702,7 +702,7 @@ foo source: configure-generated-file-in-source config.cache
             Enable-Tags-From-Check and Disable-Tags-From-Check.
           </para>
           <para>
-            It is allowed to allowed to list a tag in Enable-Tags or
+            It is allowed to list a tag in Enable-Tags or
             Disable-Tags even if the check that provides this tag is
             listed in the Disable-Tags-From-Check or
             Enable-Tags-From-Check field. In case of conflict,

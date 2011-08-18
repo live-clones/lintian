@@ -28,6 +28,8 @@ lintian (2.5.3) UNRELEASED; urgency=low
     + [JW] Use LC_ALL rather than LANG, since LC_ALL overrules
       LANG.
 
+  * doc/lintian.xml:
+    + [NT] Removed duplicate "allowed to" in same sentence.
   * doc/README.developers:
     + [NT] New file.  Thanks to Jeremiah C. Foster for the initial
       contribution.
