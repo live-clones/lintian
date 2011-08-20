@@ -6,6 +6,11 @@ lintian (2.5.3) UNRELEASED; urgency=low
       LANG.  (Closes: #637595)
   * checks/{conffile,etcfiles}{,.desc}:
     + [JW] Merged etcfiles into conffile.  (Closes: #637590)
+  * checks/duplicate-files{,.desc}:
+    + [NT] Replace the exception for "__init__.py" files by excluding
+      all empty files from the check.  The bug (#632789) only requests
+      an exception for "empty __init__.py" files and generally empty
+      files are unlikely to cause a serious size-waste.
   * checks/fields.desc:
     + [NT] Mention that perl modules included in perl itself should
       be the first dependency if it is only included in the perl

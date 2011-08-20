@@ -11,6 +11,8 @@ Certainty: possible
 Experimental: yes
 Info: The package ships the two (or more) files with the exact same
  contents.
+ .
+ Note: empty files are exempt from this check.
 
 Tag: duplicate-changelog-files
 Severity: normal

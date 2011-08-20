@@ -38,10 +38,11 @@ foreach my $file (@{ $info->sorted_index }){
     my $fs;
     next unless defined $md5;
     next unless $info->index->{$file}->{type} eq '-';
+    # Ignore empty files; in some cases (e.g. python) a file is
+    # required even if it is empty and we are never looking at a
+    # substantial gain in such a case.  Also see #632789
+    next unless $info->index->{$file}->{size};
     next unless $file =~ m@usr/share/doc/@o;
-    # skip __init__.py files; if they trigger this, they are
-    # most likely empty (see #632789)
-    next if $file =~ m,/__init__\.py$,o;
     $fs = $hashmap{$md5};
     unless (defined $fs){
         $fs = [$file];
