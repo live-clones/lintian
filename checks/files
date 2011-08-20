@@ -831,8 +831,8 @@ foreach my $file (@{$info->sorted_index}) {
 	# okay, we cannot rule it out based on file name; but if it is an elf or a static
 	# library, we also skip it.  (In case you hadn't guessed; liblicense)
 	my $fileinfo = $info->file_info->{$file};
-	next if $fileinfo && ($fileinfo =~ m/^[^,]*\bELF\b/) or ($fileinfo =~ m/\bcurrent ar archive\b/);
-	tag 'extra-license-file', $file;
+	tag 'extra-license-file', $file
+	    unless $fileinfo && ($fileinfo =~ m/^[^,]*\bELF\b/) or ($fileinfo =~ m/\bcurrent ar archive\b/);
     }
 
     # ---------------- .devhelp2? files
