@@ -21,6 +21,9 @@ lintian (2.5.3) UNRELEASED; urgency=low
       static libraries, .pc-, elf and pyshared-data-files.  This
       covers all the false-positives currently found in the liblicense
       package.  (Closes: #617901)
+  * checks/standards-version:
+    + [NT] Made the ancient-standards-version independent of the
+      system time.
 
   * collection/fields{,.desc}:
     + [NT] Removed, no longer used.
