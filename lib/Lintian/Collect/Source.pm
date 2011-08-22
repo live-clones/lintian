@@ -276,6 +276,16 @@ sub debfiles {
     return $self->_fetch_extracted_dir('debfiles', 'debfiles', $file);
 }
 
+# Overriden method; please see Lintian::Collect::Package::index for
+# more information.
+#
+#
+# sub index Needs-Info index
+sub index {
+    my ($self) = @_;
+    return $self->_fetch_index_data('index', 'index', undef);
+}
+
 =head1 NAME
 
 Lintian::Collect::Source - Lintian interface to source package data collection

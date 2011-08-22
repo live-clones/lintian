@@ -1,5 +1,23 @@
 lintian (2.5.3) UNRELEASED; urgency=low
 
+  * Summary of tag changes:
+    + Added:
+      - boilerplate-copyright-format-uri
+      - comma-separated-files-in-dep5-copyright
+      - debian-copyright-is-symlink
+      - missing-field-in-dep5-copyright
+      - missing-license-paragraph-in-dep5-copyright
+      - missing-license-text-in-dep5-copyright
+      - no-debian-copyright
+      - obsolete-field-in-dep5-copyright
+      - out-of-date-copyright-format-uri
+      - syntax-error-in-dep5-copyright
+      - unknown-copyright-format-uri
+      - unknown-paragraph-in-dep5-copyright
+      - unused-license-paragraph-in-dep5-copyright
+      - unversioned-copyright-format-uri
+      - wiki-copyright-format-uri
+
   * checks/*:
     + [NT] Dropped fields from Needs-Info, it is no longer needed.
     + [JW] Use LC_ALL rather than LANG, since LC_ALL overrules
@@ -24,6 +42,8 @@ lintian (2.5.3) UNRELEASED; urgency=low
       static libraries, .pc-, elf and pyshared-data-files.  This
       covers all the false-positives currently found in the liblicense
       package.  (Closes: #617901)
+  * checks/source-copyright{,.desc}:
+    + [JW] Added check for DEP-5 copyright files.  (Closes: #633779)
   * checks/standards-version:
     + [NT] Made the ancient-standards-version independent of the
       system time.
@@ -61,6 +81,7 @@ lintian (2.5.3) UNRELEASED; urgency=low
       LANG.
   * lib/Lintian/Collect/Source.pm:
     + [NT] Removed a requirement for fields that was not needed.
+    + [NT] Fixed "index" method for source packages.
   * lib/Lintian/Collect/Package.pm:
     + [JW,NT] Replace use of fail with croak.  (Closes: #637741)
   * lib/Lintian/Profile.pm:

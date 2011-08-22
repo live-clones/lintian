@@ -1,0 +1,12 @@
+Testname: source-copyright-dep5-general
+Sequence: 6000
+Version: 1.0
+Description: Test for various errors in DEP-5 copyright files
+Test-For:
+ comma-separated-files-in-dep5-copyright
+ missing-field-in-dep5-copyright
+ missing-license-paragraph-in-dep5-copyright
+ missing-license-text-in-dep5-copyright
+ obsolete-field-in-dep5-copyright
+ unknown-paragraph-in-dep5-copyright
+ unused-license-paragraph-in-dep5-copyright

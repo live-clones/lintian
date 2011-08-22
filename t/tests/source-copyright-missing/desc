@@ -1,0 +1,7 @@
+Testname: source-copyright-missing
+Sequence: 6000
+Version: 1.0
+Description: Test for missing copyright
+Test-For:
+ no-copyright-file
+ no-debian-copyright
