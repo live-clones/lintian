@@ -37,6 +37,8 @@ lintian (2.5.3) UNRELEASED; urgency=low
       be the first dependency if it is only included in the perl
       from experimental.  Thanks to Dominic Hargreaves for the
       report and the patch.  (Closes: #637793)
+  * checks/{filenames,rules}.desc:
+    + [NT] Improved the descriptions of some tags.  (Closes: #639018)
   * checks/files:
     + [NT] Added exceptions to "extra-license-file" for manpages,
       static libraries, .pc-, elf and pyshared-data-files.  This
