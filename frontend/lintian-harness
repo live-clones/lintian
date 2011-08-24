@@ -101,7 +101,7 @@ my $lab = Lab->new($opt{'LINTIAN_LAB'});
 my ($nblist,$nulist, $nslist) = read_archive($opt{'LINTIAN_ARCHIVEDIR'}, trim($opt{'LINTIAN_DIST'}),
                                               trim($opt{'LINTIAN_AREA'}), trim($opt{'LINTIAN_ARCH'}));
 
-my ($bdiff, $udiff, $sdiff) = generate_diffs($lab, $nblist, $nulist, $nslist);
+my ($bdiff, $udiff, $sdiff) = $lab->generate_diffs($nblist, $nulist, $nslist);
 
 exit 0;
 
@@ -117,26 +117,6 @@ EOF
 }
 
 #### Helper Subs ####
-
-# Generates a list of PackageListDiffs by diffing the input lists
-# against the ones in the lab.
-#
-# FIXME: the lab should do more of the diffing
-sub generate_diffs {
-    my ($lab, @lists) = @_;
-    my $labdir = $lab->{dir}; #FIXME internal access
-    my $infodir;
-    my @diffs;
-    fail("$labdir is not a valid lab (run lintian --setup-lab first?).\n") unless $labdir->is_lab;
-    $infodir = "$labdir/info";
-    foreach my $list (@lists) {
-        my $type = $list->type;
-        my $lab_list = Lintian::Internal::PackageList->new($type);
-        $lab_list->read_list("$infodir/$type-packages");
-        push @diffs, $lab_list->diff($list);
-    }
-    return @diffs;
-}
 
 # read_archive($arc_root, $dist, $area, $arch)
 #

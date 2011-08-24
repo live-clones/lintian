@@ -260,6 +260,31 @@ sub _lpkg_removed {
     return 1;
 }
 
+# lab->generate_diffs(@lists)
+#
+# Each member of @lists must be a Lintian::Internal::PackageList.
+#
+# The lab will generate a diff between the given member and its
+# state for the given package type.  The diffs are returned in the
+# same order as they appear in @lists.
+#
+# The diffs are valid until the original list is modified or a
+# package is added or removed to the lab.
+sub generate_diffs {
+    my ($self, @lists) = @_;
+    my $labdir = $self->{dir};
+    my $infodir;
+    my @diffs;
+    fail("$labdir is not a valid lab (run lintian --setup-lab first?).\n") unless $self->is_lab;
+    $infodir = "$labdir/info";
+    foreach my $list (@lists) {
+        my $type = $list->type;
+        my $lab_list = $self->_get_state($type);
+        push @diffs, $lab_list->diff($list);
+    }
+    return @diffs;
+}
+
 # $lab->write_state()
 #
 # Flushes the state data to the disk; this is important for static
