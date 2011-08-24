@@ -167,7 +167,7 @@ while (<RULES>) {
     } elsif (/^override_dh_/) {
 	$needbuilddepends = 1;
 	$overridetargets = 1;
-    } elsif (m,^include\s+/usr/share/cdbs/,){
+    } elsif (m,^include\s+/usr/share/cdbs/, or m,^include\s+/usr/share/R/debian/r-cran.mk,o){
 	$inclcdbs = 1;
     }
 }

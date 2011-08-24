@@ -1,0 +1,72 @@
+#!/usr/bin/perl
+#
+# Test for keeping "ancient standards version" date
+# recent.
+#
+
+use strict;
+use warnings;
+
+use Test::More;
+
+# How much out of date the check may be; measured in seconds
+# 1 month
+use constant ERROR_MARGIN => 3600 * 24 * 31;
+# How long before a SV is considered "Ancient" in seconds.
+# 2 years.
+use constant ANCIENT_AGE  => 3600 * 24 * 365 * 2;
+use Date::Parse qw(str2time);
+
+# STOP! Before you even consider to make this run always
+# remember that this test will fail (causing FTBFS) every
+# "ERROR_MARGIN" seconds!
+#   This check is here to remind us to update ANCIENT_DATE
+# in checks/standards-version every now and then during
+# development cycles!
+plan skip_all => 'Only checked for UNRELEASED versions'
+    if should_skip();
+
+plan tests => 2;
+
+my $check = "$ENV{'LINTIAN_ROOT'}/checks/standards-version";
+my $found = 0;
+open my $fd, '<', $check or die "opening $check: $!";
+while ( my $line = <$fd> ) {
+    # We are looking for:
+    #   my $ANCIENT_DATE = str2time('20 Aug 2009')
+    $line =~ s,\#.*+,,o;
+    if ($line =~ m/ANCIENT_DATE \s* = \s* str2time\s*\(\s*
+                  [\'\"]([^\'\"]+)[\'\"]/ox){
+        my $date = $1;
+        my $and = str2time($date) or die "Cannot parse date ($date, line $.): $!";
+        my $time = time - ANCIENT_AGE;
+        $found = 1;
+        cmp_ok($time, '<', $and + ERROR_MARGIN, "ANCIENT_DATE is up to date");
+        cmp_ok($time, '>', $and - ERROR_MARGIN, "ANCIENT_DATE is not too far ahead");
+        last;
+    }
+}
+close $fd;
+
+die "Cannot find ANCIENT_DATE.\n" unless $found;
+
+
+sub should_skip {
+    my $skip = 1;
+    my $pid;
+
+    $pid = open (DPKG, '-|', 'dpkg-parsechangelog', '-c0');
+
+    die("failed to execute dpkg-parsechangelog: $!")
+	unless defined ($pid);
+
+    while (<DPKG>) {
+	$skip = 0 if m/^Distribution: UNRELEASED$/;
+    }
+
+    close(DPKG)
+	or die ("dpkg-parsechangelog returned: $?");
+
+    return $skip;
+}
+

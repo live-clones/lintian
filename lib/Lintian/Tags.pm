@@ -151,16 +151,17 @@ sub new {
             important => { 'wild-guess' => 1, possible => 1, certain => 1 },
             serious   => { 'wild-guess' => 1, possible => 1, certain => 1 },
         },
-        display_source    => {},
-        files             => {},
-        ignored_overrides => {},
-        only_issue        => {},
-        respect_display   => 1,
-        show_experimental => 0,
-        show_overrides    => 0,
-        show_pedantic     => 0,
-        statistics        => {},
-        suppress          => {},
+        display_source       => {},
+        files                => {},
+        non_overridable_tags => {},
+        ignored_overrides    => {},
+        only_issue           => {},
+        respect_display      => 1,
+        show_experimental    => 0,
+        show_overrides       => 0,
+        show_pedantic        => 0,
+        statistics           => {},
+        suppress             => {},
     };
     bless($self, $class);
     $GLOBAL = $self unless $GLOBAL;
@@ -537,7 +538,7 @@ file cannot be opened.
 
 sub file_overrides {
     my ($self, $overrides) = @_;
-    my $ignored = $self->{ignored_overrides};
+    my $noover = $self->{non_overridable_tags};
     unless (defined $self->{current}) {
         die 'no current file when adding overrides';
     }
@@ -582,7 +583,10 @@ sub file_overrides {
                 }
                 next unless $found;
             }
-            next if $ignored->{$tag};
+            if ( $noover->{$tag} ) {
+                $self->{ignored_overrides}{$tag}++;
+                next;
+            }
             $extra = '' unless defined $extra;
             $info->{overrides}{$tag}{$extra} = 0;
         } else {
@@ -738,19 +742,32 @@ sub suppressed {
     return;
 }
 
-=item ignore_overrides(TAG[, ...])
+=item non_overridable_tags(TAG[, ...])
 
-Ignores all future overrides for all tags given as arguments.
+Marks all tags (given as arguments) for non-overridable.
 
 =cut
 
-sub ignore_overrides {
+sub non_overridable_tags {
     my ($self, @tags) = @_;
-    my $ignored = $self->{ignored_overrides};
+    my $noover = $self->{non_overridable_tags};
     foreach my $tag (@tags){
-        $ignored->{$tag} = 1;
+        $noover->{$tag} = 1;
     }
     return 1;
+}
+
+=item ignored_overrides()
+
+Returns a hash of tags, for which overrides have been ignored.  The
+keys are tag names and the value is the number of overrides that has
+been ignored.
+
+=cut
+
+sub ignored_overrides {
+    my ($self) = @_;
+    return $self->{ignored_overrides};
 }
 
 =item respect_display_level([BOOL])

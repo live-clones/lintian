@@ -129,12 +129,12 @@ sub new {
         if $name =~ m,^/,o or $name =~ m/\./o;
     _load_checks() unless %TAG_MAP;
     my $self = {
-        'parent-map'        => {},
-        'parents'           => [],
-        'profile-path'      => $ppath,
-        'enabled-tags'      => {},
-        'ignored-overrides' => {},
-        'severity-changes'  => {},
+        'parent-map'           => {},
+        'parents'              => [],
+        'profile-path'         => $ppath,
+        'enabled-tags'         => {},
+        'non-overridable-tags' => {},
+        'severity-changes'     => {},
     };
     $self = bless $self, $type;
     $profile = $self->find_profile($name);
@@ -189,7 +189,7 @@ sub severity_changes {
     return $self->{'severity-changes'};
 }
 
-=item $prof->ignored_overrides
+=item $prof->non_overridable_tags
 
 List of tags that has been marked as non-overridable.
 
@@ -197,9 +197,9 @@ Note: This list nor its contents should be modified.
 
 =cut
 
-sub ignored_overrides {
+sub non_overridable_tags {
     my ($self) = @_;
-    return keys %{ $self->{'ignored-overrides'} };
+    return keys %{ $self->{'non-overridable-tags'} };
 }
 
 =item Lintian::Profile->find_profile($pname, @dirs), $prof->find_profile($pname[, @dirs])
@@ -292,7 +292,7 @@ sub _read_profile_section {
     my @tags = $self->_split_comma_sep_field($section->{'tags'});
     my $overridable = $self->_parse_boolean($section->{'overridable'}, -1, $pname, $sno);
     my $severity = $section->{'severity'}//'';
-    my $ignore_map = $self->{'ignored-overrides'};
+    my $noover = $self->{'non-overridable-tags'};
     my $sev_map = $self->{'severity-changes'};
     $self->_check_for_invalid_fields($section, \%SEC_FIELDS, $pname, "section $sno");
     croak "Profile \"$pname\" is missing Tags field (or it is empty) in section $sno.\n" unless @tags;
@@ -303,9 +303,9 @@ sub _read_profile_section {
         $sev_map->{$tag} = $severity if $severity;
         if ( $overridable != -1 ) {
             if ($overridable) {
-                delete $ignore_map->{$tag};
+                delete $noover->{$tag};
             } else {
-                $ignore_map->{$tag} = 1;
+                $noover->{$tag} = 1;
             }
         }
     }

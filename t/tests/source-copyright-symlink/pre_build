@@ -1,0 +1,4 @@
+#!/bin/sh
+cd "$1/debian"
+mv copyright source-copyright-symlink.copyright
+ln -sf source-copyright-symlink.copyright copyright

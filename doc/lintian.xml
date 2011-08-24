@@ -740,8 +740,10 @@ foo source: configure-generated-file-in-source config.cache
               <listitem>
 		<para>
 		  Either "Yes" or "No", which decides whether these
-                  tags can be overriden.  Overrides for these tags
-                  will silently be ignored.
+                  tags can be overriden.  Lintian will print an
+                  informal message if it sees an override for a tag
+                  marked as non-overridable (except if --quiet is
+                  passed).
 		</para>
               </listitem>
             </varlistentry>

@@ -58,7 +58,6 @@ BEGIN {
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 
-use Lintian::Command qw(spawn);
 use Util;
 
 # --- Global configuration
@@ -441,24 +440,31 @@ sub _builder_tests {
 sub run_lintian {
     my ($testdata, $file, $out) = @_;
     msg_print 'testing... ';
-    my $opts = { err => "$out", fail => 'never' };
-    my $status;
-    my @options = split(' ', $testdata->{options}//'');
+    my $status = 0;
+    # Quote (A test use -L <=, which blows up if we don't... plus it is safer that way)
+    my @options = map { quotemeta $_ } split(' ', $testdata->{options}//'');
+    my $cmd;
+    my $ret;
     unshift(@options, '--allow-root', '--no-cfg');
     unshift(@options, '--profile', $testdata->{profile}) if $testdata->{profile};
-    if ($testdata->{sort}) {
-	$status = spawn($opts, [ $LINTIAN, @options, $file ], '|', [ 'sort' ]);
+    $cmd = "$LINTIAN " . join(' ', @options). " $file 2>&1";
+    if (open my $in, '-|', $cmd) {
+	my @data = <$in>;
+	close $in;
+	$status = ($? >> 8) & 255;
+	@data = sort @data if $testdata->{sort};
+	open my $fd, '>', $out or fail "opening $out: $!";
+	print $fd $_ for @data;
+	close $fd or fail "closing $out: $!";
     } else {
-	$status = spawn($opts, [ $LINTIAN, @options, $file ]);
+	# Set it to 255 so it fails below
+	$status = 255;
     }
+
     unless ($status == 0 or $status == 1) {
 	msg_print "FAILED:\n";
 	fail("$LINTIAN @options $file exited with status $status\n");
     }
-    open(my $fd, '>>', "$out")
-	or fail("cannot append to $out: $!");
-    print $fd ${ $opts->{out} };
-    close $fd or fail "closing $out: $!";
     return 1;
 }
 
@@ -836,7 +842,26 @@ sub msg_print {
     $MSG_Q->enqueue(\%msg);
 }
 
+sub _flush {
+    my ($thrs, $id, $length) = @_;
+    print (' 'x$length,"\r");
+    while (my $m = shift @{$thrs->{$id}}) {
+	print $m;
+    }
+    print "\n";
+    delete $thrs->{$id};
+}
+
 sub msg_queue_handler {
+    # if _msg_qh fails
+    eval {
+	_msg_qh();
+    };
+    die "Error (msg_queue_handler): $@\n" if $@;
+    die "_msg_qh returned!?\n";
+}
+
+sub _msg_qh {
     my %thrs;
     my $length = 0;
 
@@ -845,18 +870,13 @@ sub msg_queue_handler {
 	# master thread calls msg_flush to flush all messages
 	if ($id == 0) {
 	    for my $tid (keys %thrs) {
-		my %msg = (id => $tid);
-		$MSG_Q->insert(0, \%msg);
+		_flush(\%thrs, $tid, $length);
 	    }
+	    $length = 0;
 	} else {
 	    if (!exists($msg->{'msg'}) && exists($thrs{$id})) {
-		print (' 'x$length,"\r");
+		_flush(\%thrs, $id, $length);
 		$length = 0;
-		while (my $m = shift @{$thrs{$id}}) {
-		    print $m;
-		}
-		print "\n";
-		delete $thrs{$id};
 	    } elsif (exists($msg->{'msg'})) {
 		$thrs{$id} = []
 		    unless (exists($thrs{$id}));
@@ -870,7 +890,10 @@ sub msg_queue_handler {
 		}
 
 		# Insert a flush request, if needed
-		$MSG_Q->insert(0, { id => $id }) if $flush;
+		if ($flush) {
+		    _flush(\%thrs, $id, $length);
+		    $length = 0;
+		}
 	    }
 	}
 

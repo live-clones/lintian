@@ -1,0 +1,132 @@
+Check-Script: source-copyright
+Author: Jakub Wilk <jwilk@debian.org>
+Abbrev: scpy
+Type: source
+Needs-Info: debfiles, index
+Info: This script checks if a source package conforms to policy
+ with regard to copyright files.
+ .
+ Each source package should have a debian/copyright file.
+
+Tag: debian-copyright-is-symlink
+Severity: normal
+Certainty: certain
+Info: The file <tt>debian/copyright</tt> is a symlink instead of a regular
+ file.  This makes package checking and manipulation more difficult.
+ .
+ This problem may have prevented lintian from performing other checks.
+
+Tag: no-debian-copyright
+Severity: minor
+Certainty: certain
+Ref: policy 12.5
+Info: Every package must include the file <tt>/usr/share/doc/<i>pkg</i>/copyright</tt>.
+ A copy of this file should be in <tt>debian/copyright</tt> in the source package.
+
+Tag: unknown-copyright-format-uri
+Severity: pedantic
+Certainty: wild-guess
+Info: The copyright file appears to intended as machine-readable, but lintian
+ cannot recognize its format URI.  It could be a typo for a common URI or a
+ syntax error in the first paragraph.  Please file a bug against Lintian if you
+ believe that the copyright file in syntactically valid and the URI is
+ correct.
+
+Tag: boilerplate-copyright-format-uri
+Severity: normal
+Certainty: possible
+Info: Format URI of the machine-readable copyright file contains
+ <tt>VERSIONED_FORMAT_URL</tt> or <tt>REVISION</tt> string.  Please replace it
+ with an actual URI or an actual revision number respectively.
+
+Tag: wiki-copyright-format-uri
+Severity: pedantic
+Certainty: possible
+Ref: http://dep.debian.net/deps/dep5/
+Info: Format URI of the machine-readable copyright file refers to Debian Wiki.
+ .
+ Debian Wiki is not used for the format development anymore.  Please use
+ <tt>http://anonscm.debian.org/viewvc/dep/web/deps/dep5.mdwn?revision=<i>revision</i></tt>
+ as the format URI instead.
+
+Tag: unversioned-copyright-format-uri
+Severity: pedantic
+Certainty: possible
+Ref: http://dep.debian.net/deps/dep5/
+Info: Format URI of the machine-readable copyright file is not versioned.
+ .
+ Please use
+ <tt>http://anonscm.debian.org/viewvc/dep/web/deps/dep5.mdwn?revision=<i>revision</i></tt>
+ as the format URI instead.
+
+Tag: out-of-date-copyright-format-uri
+Severity: pedantic
+Certainty: possible
+Ref: http://dep.debian.net/deps/dep5/
+Info: A newer version of the machine-readable copyright file specification,
+ than the one referenced by the copyright file, is available.
+ .
+ This problem may have prevented lintian from performing other checks.
+
+Tag: syntax-error-in-dep5-copyright
+Severity: normal
+Certainty: possible
+Ref: http://dep.debian.net/deps/dep5/
+Info: The machine-readable copyright file didn't pass Debian control file
+ syntax check.
+
+Tag: obsolete-field-in-dep5-copyright
+Severity: normal
+Certainty: possible
+Ref: http://dep.debian.net/deps/dep5/
+Info: The machine-readable copyright file uses a field, that used to be defined
+ by the specification, but has been renamed since then.
+ .
+ Please use Format instead of Format-Specification.
+ .
+ Please use Upstream-Contact instead of Contact, Maintainer or Upstream-Maintainer.
+ .
+ Please use Upstream-Name instead of Name.
+
+Tag: comma-separated-files-in-dep5-copyright
+Severity: normal
+Certainty: possible
+Ref: http://dep.debian.net/deps/dep5/
+Info: A list of files in the machine-readable copyright format appears to be
+ separated by commas.  The file list should be whitespace separated instead.
+
+Tag: missing-field-in-dep5-copyright
+Severity: normal
+Certainty: possible
+Ref: http://dep.debian.net/deps/dep5/
+Info: The paragraph in the machine readable copyright file is missing a field
+ that is required by the specification.
+
+Tag: missing-license-paragraph-in-dep5-copyright
+Severity: normal
+Certainty: possible
+Ref: http://dep.debian.net/deps/dep5/
+Info: The files paragraph in the machine readable copyright file references a
+ license, for which no standalone license paragraph exists.
+
+Tag: missing-license-text-in-dep5-copyright
+Severity: normal
+Certainty: possible
+Ref: http://dep.debian.net/deps/dep5/
+Info: The standalone license header contains only short license name, but not
+ the license text.
+
+Tag: unused-license-paragraph-in-dep5-copyright
+Severity: minor
+Certainty: possible
+Ref: http://dep.debian.net/deps/dep5/
+Info: The license paragraph in the machine-readable copyright file is not
+ referenced by any files paragraph.  It could be a typo in the license name or
+ the license paragraph is simply not needed and can be removed.
+
+Tag: unknown-paragraph-in-dep5-copyright
+Severity: normal
+Certainty: possible
+Ref: http://dep.debian.net/deps/dep5/
+Info: The machine-readable copyright file contains a paragraph that is neither
+ a standalone license paragraph nor a files paragraph.

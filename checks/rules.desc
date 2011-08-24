@@ -64,7 +64,7 @@ Tag: debian-rules-uses-deprecated-makefile
 Severity: normal
 Certainty: certain
 Info: The <tt>debian/rules</tt> file for this package appears to
- include a Makefile, which has been deprecated.  Please refer to the
+ include a Makefile that has been deprecated.  Please refer to the
  documentation of the providing package for a replacement (if any).
 
 Tag: debian-rules-uses-pwd

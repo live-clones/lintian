@@ -820,12 +820,19 @@ foreach my $file (@{$info->sorted_index}) {
 	# Ignore extra license files in examples, since various package
 	# building software includes example packages with licenses.
 	and ($operm & 0111) == 0
-	and not $file =~ m/\.(?:el|[ch]|py|cc|pl|pm|hi|p_hi|html|php|rb|xpm|png|jpe?g|gif|svg|dtd|ui)$/
+	and not $file =~ m/\.(?:el|[ch]|py|cc|pl|pm|hi|p_hi|html|php|rb|xpm|png|jpe?g|gif|svg|dtd|ui|pc)$/
 	and not $file =~ m,^usr/share/zope/Products/.*\.(?:dtml|pt|cpt)$,
 	and not $file =~ m,/under\S+License\.docbook$,
 	and not $file =~ m,^usr/share/doc/[^/]+/examples/,
+	and not $file =~ m,^usr/share/man/(?:[^/]+/)?man\d/,o # liblicense has a manpage called license
+	and not $file =~ m,^usr/share/pyshared-data/,o        # liblicense (again)
 	and not defined $link) {
-	tag 'extra-license-file', $file;
+
+	# okay, we cannot rule it out based on file name; but if it is an elf or a static
+	# library, we also skip it.  (In case you hadn't guessed; liblicense)
+	my $fileinfo = $info->file_info->{$file};
+	tag 'extra-license-file', $file
+	    unless $fileinfo && ($fileinfo =~ m/^[^,]*\bELF\b/) or ($fileinfo =~ m/\bcurrent ar archive\b/);
     }
 
     # ---------------- .devhelp2? files

@@ -25,10 +25,14 @@ use strict;
 use warnings;
 
 use POSIX qw(strftime);
+use Date::Parse qw(str2time);
 
 use Lintian::Data;
 use Lintian::Tags qw(tag);
 use Util;
+
+# Any Standards Version released before this day is "ancient"
+my $ANCIENT_DATE = str2time('21 Aug 2009') or fail "Cannot parse ANCIENT_DATE: $!";
 
 my $STANDARDS = Lintian::Data->new('standards-version/release-dates', qr/\s+/o);
 
@@ -124,19 +128,12 @@ if (not $STANDARDS->known($stdver)) {
     # A given standards version is considered obsolete if the version
     # following it has been out for at least two years (so the current version
     # is never obsolete).
-    my $obsdate = time;
-    for my $index (0 .. $#STANDARDS) {
-        if ($STANDARDS[$index][0] eq $stdver) {
-            $obsdate = $STANDARDS[$index - 1][1] if $index > 0;
-            last;
-        }
-    }
-    if ($obsdate + (60 * 60 * 24 * 365 * 2) < time) {
+    my $rdate = $STANDARDS->value($stdver);
+    if ($rdate < $ANCIENT_DATE) {
         tag 'ancient-standards-version', $tag;
     } else {
         # We have to get the package date from the changelog file.  If we
         # can't find the changelog file, always issue the tag.
-        my $changes = $info->changelog;
         if (not defined $changes) {
             tag 'out-of-date-standards-version', $tag;
             return 0;

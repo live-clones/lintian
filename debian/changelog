@@ -1,16 +1,54 @@
 lintian (2.5.3) UNRELEASED; urgency=low
 
+  * Summary of tag changes:
+    + Added:
+      - boilerplate-copyright-format-uri
+      - comma-separated-files-in-dep5-copyright
+      - debian-copyright-is-symlink
+      - missing-field-in-dep5-copyright
+      - missing-license-paragraph-in-dep5-copyright
+      - missing-license-text-in-dep5-copyright
+      - no-debian-copyright
+      - obsolete-field-in-dep5-copyright
+      - out-of-date-copyright-format-uri
+      - syntax-error-in-dep5-copyright
+      - unknown-copyright-format-uri
+      - unknown-paragraph-in-dep5-copyright
+      - unused-license-paragraph-in-dep5-copyright
+      - unversioned-copyright-format-uri
+      - wiki-copyright-format-uri
+
   * checks/*:
     + [NT] Dropped fields from Needs-Info, it is no longer needed.
     + [JW] Use LC_ALL rather than LANG, since LC_ALL overrules
       LANG.  (Closes: #637595)
   * checks/{conffile,etcfiles}{,.desc}:
     + [JW] Merged etcfiles into conffile.  (Closes: #637590)
+  * checks/debhelper:
+    + [NT] Recognise /usr/share/R/debian/r-cran.mk as a cdbs-based
+      build.  This prevents false-positive "unneeded cdbs" warning.
+  * checks/duplicate-files{,.desc}:
+    + [NT] Replace the exception for "__init__.py" files by excluding
+      all empty files from the check.  The bug (#632789) only requests
+      an exception for "empty __init__.py" files and generally empty
+      files are unlikely to cause a serious size-waste.
   * checks/fields.desc:
     + [NT] Mention that perl modules included in perl itself should
       be the first dependency if it is only included in the perl
       from experimental.  Thanks to Dominic Hargreaves for the
       report and the patch.  (Closes: #637793)
+  * checks/{filenames,rules}.desc:
+    + [NT] Improved the descriptions of some tags.  (Closes: #639018)
+  * checks/files:
+    + [NT] Added exceptions to "extra-license-file" for manpages,
+      static libraries, .pc-, elf and pyshared-data-files.  This
+      covers all the false-positives currently found in the liblicense
+      package.  (Closes: #617901)
+  * checks/source-copyright{,.desc}:
+    + [JW] Added check for DEP-5 copyright files.  (Closes: #633779)
+  * checks/standards-version:
+    + [NT] Made the ancient-standards-version independent of the
+      system time.
 
   * collection/fields{,.desc}:
     + [NT] Removed, no longer used.
@@ -34,15 +72,24 @@ lintian (2.5.3) UNRELEASED; urgency=low
     + [NT] New file.  Thanks to Jeremiah C. Foster for the initial
       contribution.
 
+  * frontend/lintian:
+    + [NT] Lintian now mentions if overrides may have been ignored.
+      This happens if a package contains an override for a tag
+      that has been marked "non-overridable" by the current vendor
+      profile.
+
   * lib/Util.pm:
     + [JW] Use LC_ALL rather than LANG, since LC_ALL overrules
       LANG.
   * lib/Lintian/Collect/Source.pm:
     + [NT] Removed a requirement for fields that was not needed.
+    + [NT] Fixed "index" method for source packages.
   * lib/Lintian/Collect/Package.pm:
     + [JW,NT] Replace use of fail with croak.  (Closes: #637741)
   * lib/Lintian/Profile.pm:
     + [NT] Reject profiles containing an unknown field.
+  * lib/Lintian/Tags.pm:
+    + [NT] Track which tags had overrides that have been dropped.
 
   * private/*:
     + [JW] Use LC_ALL rather than LANG, since LC_ALL overrules

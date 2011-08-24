@@ -60,6 +60,7 @@ W: filenames source: diff-contains-svk-commit-file files/svk-commitsEr9P.tmp
 W: filenames source: diff-contains-svn-commit-file files/svn-commit.tmp
 W: filenames source: diff-contains-svn-conflict-file files/Maelstrom Sounce.r121
 W: filenames source: diff-contains-svn-control-dir .svn
+W: filenames source: no-debian-copyright
 W: filenames source: no-section-field-for-source
 W: filenames: bad-permissions-for-ali-file usr/lib/ada/adalib/test.ali
 W: filenames: binary-without-manpage usr/X11R6/bin/testxbin2
@@ -144,7 +145,6 @@ W: more-filename-games: binary-without-manpage usr/bin/another-test-game
 W: more-filename-games: binary-without-manpage usr/games/yet-another-test-game
 W: more-filename-games: package-section-games-but-has-usr-bin
 X: filenames: duplicate-files usr/share/doc/filenames/.DS_Store usr/share/doc/filenames/._NEWS.Debian usr/share/doc/filenames/Thumbs.db usr/share/doc/filenames/link-one
-X: filenames: duplicate-files usr/share/doc/filenames/NEWS.Debian usr/share/doc/filenames/README.macosx usr/share/doc/filenames/examples/very_interesting_example
 X: filenames: package-contains-broken-symlink usr/lib/filenames/symlink1ok ../../share/symlink
 X: filenames: package-contains-broken-symlink usr/lib/filenames/symlink1wrong ../../../etc/symlink
 X: filenames: package-contains-broken-symlink usr/lib/filenames/symlink2ok etc/symlink
