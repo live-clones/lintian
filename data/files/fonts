@@ -1,6 +1,6 @@
 # The list of known font filenames already packaged for Debian and the
 # package that contains the font.  Only packages starting with ttf-,
-# otf-, t1-, and xfonts- are searched for fonts.
+# otf-, t1-, xfonts- and fonts- are searched for fonts.
 #
 # Last updated: 2011-02-19
 

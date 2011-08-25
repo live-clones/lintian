@@ -69,7 +69,7 @@ mkdir -p "$lintian_data/files"
 cat > "$workdir/fonts" <<EOF
 # The list of known font filenames already packaged for Debian and the
 # package that contains the font.  Only packages starting with ttf-,
-# otf-, t1-, and xfonts- are searched for fonts.
+# otf-, t1-, xfonts- and fonts- are searched for fonts.
 #
 # Last updated: $(date -u +'%Y-%m-%d')
 
@@ -80,7 +80,7 @@ if [ -z "$contents" ] ; then
     contents="$workdir/Contents-i386.gz"
 fi
 zcat "$contents" \
-    | perl -n -w -E 'print lc $_ if (s%^.+/([\w-]+\.(?:[to]tf|pfb))\s+\w+/((?:[to]tf|t1|xfonts)-[^,]+)(,.+)?$%$1 $2%i);' \
+    | perl -n -w -E 'print lc $_ if (s%^.+/([\w-]+\.(?:[to]tf|pfb))\s+\w+/((?:[to]tf|t1|x?fonts)-[^,]+)(,.+)?$%$1 $2%i);' \
     | LC_ALL=C sort >> "$workdir/fonts"
 # Fonts in xfonts-tipa are really shipped by tipa.
 sed -i 's/ xfonts-tipa$/ tipa/g' "$workdir/fonts"
