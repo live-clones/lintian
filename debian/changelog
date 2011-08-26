@@ -94,6 +94,10 @@ lintian (2.5.3) UNRELEASED; urgency=low
     + [NT] Reject profiles containing an unknown field.
   * lib/Lintian/Tags.pm:
     + [NT] Track which tags had overrides that have been dropped.
+  * lib/Text_utils.pm:
+    + [NT] Close <p>-tags in dtml_to_html since the output is used
+      in xhtml (xml), where all tags must be closed properly.
+      (Closes: #639292)
 
   * private/*:
     + [JW] Use LC_ALL rather than LANG, since LC_ALL overrules
