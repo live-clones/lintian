@@ -422,7 +422,7 @@ Info: The dependency_libs field in the .la file has not been cleared.  It has
  dependency_libs field from the rest of them.
  .
  A non-empty dependency_libs field will also stall the Multi-Arch
- conversation.
+ conversion.
  .
  The .la file in itself may be useful, if the library is loaded dynamically
  via libltdl.

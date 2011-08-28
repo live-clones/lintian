@@ -44,6 +44,8 @@ lintian (2.5.3) UNRELEASED; urgency=low
       static libraries, .pc-, elf and pyshared-data-files.  This
       covers all the false-positives currently found in the liblicense
       package.  (Closes: #617901)
+  * checks/shared-libs.desc:
+    + [JW] Fixed a typo in a tag description.  (Closes: #639177)
   * checks/source-copyright{,.desc}:
     + [JW] Added check for DEP-5 copyright files.  (Closes: #633779)
   * checks/standards-version:
