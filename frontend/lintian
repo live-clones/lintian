@@ -886,7 +886,7 @@ while (my $arg = shift) {
 	if ($arg =~ m/\.(?:u?deb|dsc|changes)$/o){
 	    $pool->add_file($arg);
 	} else {
-	    fail("bad package file name $arg (neither .deb, .udeb or .dsc file)");
+	    fail("bad package file name $arg (neither .deb, .udeb, .changes or .dsc file)");
 	}
     } else {
 	# parameter is a package name--so look it up

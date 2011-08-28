@@ -82,6 +82,9 @@ lintian (2.5.3) UNRELEASED; urgency=low
       This happens if a package contains an override for a tag
       that has been marked "non-overridable" by the current vendor
       profile.
+    + [NT] Mention ".changes" as a valid file type in the "unknown
+      file" error.  Thanks to Michael Gilbert for the report and
+      the patch.   (Closes: #639430)
 
   * lib/Util.pm:
     + [JW] Use LC_ALL rather than LANG, since LC_ALL overrules
