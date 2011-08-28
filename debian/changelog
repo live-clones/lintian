@@ -63,6 +63,7 @@ lintian (2.5.3) UNRELEASED; urgency=low
   * data/spelling/corrections:
     + [NT] Added some corrections for "remove" etc.  Thanks to
       Jakub Wilk for spotting those.
+    + [JW] Added more corrections.  (Closes: #639367)
 
   * debian/copyright:
     + [NT] Added Jakub Wilk to maintainers.
