@@ -31,7 +31,8 @@ Description: {$description} - data
 Package: program-utils
 Architecture: any
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\},
-         program-bin (= $\{source:Version\})
+         program-bin (= $\{source:Version\}),
+         program-data (>= $\{binary:Version\})
 Description: {$description} - extra utils
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd

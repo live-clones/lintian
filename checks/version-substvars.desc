@@ -21,6 +21,9 @@ Info: The package is not safely binNMUable because an arch:any package
  depends on an arch:all package with a (= ${Source-Version}) or
  (= ${binary:Version}) relationship. Please use (= ${source:Version})
  instead.
+ .
+ Note this is also triggered if the dependency uses (>= ${var}), since
+ that has the same issue.
 
 Tag: not-binnmuable-all-depends-any
 Severity: important

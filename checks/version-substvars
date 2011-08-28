@@ -24,10 +24,12 @@
 # What breaks
 # -----------
 #
-# (b1) any -> any (= ${source:Version})		 -> use b:V
-# (b2) any -> all (= ${Source-Version}) [or b:V] -> use s:V
-# (b3) all -> any (= ${either-of-them})		 -> use (>= ${s:V}),
-#						    optionally (<< ${s:V}.1~)
+# (b1) any -> any (= ${source:Version})          -> use b:V
+# (b2) any -> all (= ${binary:Version}) [or S-V] -> use s:V
+# (b3) all -> any (= ${either-of-them})          -> use (>= ${s:V}),
+#                                                   optionally (<< ${s:V}.1~)
+#
+# Note (b2) also breaks if (>= ${binary:Version}) [or S-V] is used.
 #
 # Always warn on ${Source-Version} even if it doesn't break since the substvar
 # is now considered deprecated.
@@ -64,7 +66,7 @@ foreach (keys %$binpkgs) {
 
 	foreach (split(m/,/, ($info->binary_field($pkg1, 'pre-depends')//'').', '.
 		       ($info->binary_field($pkg1, 'depends')//''))) {
-		next unless m/(\S+)\s*\(\s*=\s*\${((?:Source-|source:|binary:)Version)}/x;
+		next unless m/(\S+)\s*\(\s*>?=\s*\${((?:Source-|source:|binary:)Version)}/x;
 
 		$pkg2 = $1;
 		$substvar_strips_binNMU = ($2 eq 'source:Version');
@@ -84,7 +86,8 @@ foreach (keys %$binpkgs) {
 				# (b1) any -> any (= ${source:Version})
 				tag 'not-binnmuable-any-depends-any', "$pkg1 -> $pkg2";
 			} elsif (not $pkg2_is_any and not $substvar_strips_binNMU) {
-				# (b2) any -> all (= ${Source-Version}) [or b:V]
+				# (b2) any -> all ( = ${binary:Version}) [or S-V]
+				# or  -- same --  (>= ${binary:Version}) [or S-V]
 				tag 'not-binnmuable-any-depends-all', "$pkg1 -> $pkg2";
 			}
 		} elsif ($pkg2_is_any) {

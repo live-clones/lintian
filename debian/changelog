@@ -51,6 +51,10 @@ lintian (2.5.3) UNRELEASED; urgency=low
   * checks/standards-version:
     + [NT] Made the ancient-standards-version independent of the
       system time.
+  * checks/version-substvars{,.desc}:
+    + [NT] Also emit the any-depends-all tag if the ">=" relation is
+      used.  Thanks to Konstantinos Margaritis and Cyril Brulebois for
+      the report and the research.  (Closes: #639144)
 
   * collection/fields{,.desc}:
     + [NT] Removed, no longer used.
