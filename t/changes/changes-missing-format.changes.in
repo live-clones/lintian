@@ -1,0 +1,11 @@
+Date: {$date}
+Source: {$srcpkg}
+Binary: {$srcpkg}
+Architecture: source all
+Version: {$version}
+Distribution: unstable
+Urgency: low
+Maintainer: {$author}
+Changed-By: {$author}
+Description:
+ {$srcpkg} - {$description}

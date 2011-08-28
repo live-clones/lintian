@@ -147,6 +147,12 @@ sub _parse_dpkg_control_iterative {
 	    $value =~ s/\s+$//;
 	    $section->{$last_tag} .= "\n" . $value;
 	}
+	# None of the above => syntax error
+	else {
+	    my $message = "syntax error in section $cur_section";
+	    $message.= " after the tag $last_tag: $_" if defined $last_tag;
+	    fail($message);
+	}
     }
     # pass the last section (if not already done).
     $code->($section) if $open_section;

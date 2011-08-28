@@ -86,6 +86,8 @@ lintian (2.5.3) UNRELEASED; urgency=low
   * lib/Util.pm:
     + [JW] Use LC_ALL rather than LANG, since LC_ALL overrules
       LANG.
+    + [JW] Stricten the DCtrl parser to choke on some syntax errors
+      that was silently ignored.  (Closes: #639516)
   * lib/Lintian/Collect/Source.pm:
     + [NT] Removed a requirement for fields that was not needed.
     + [NT] Fixed "index" method for source packages.
