@@ -66,10 +66,11 @@ foreach (keys %$binpkgs) {
 
 	foreach (split(m/,/, ($info->binary_field($pkg1, 'pre-depends')//'').', '.
 		       ($info->binary_field($pkg1, 'depends')//''))) {
-		next unless m/(\S+)\s*\(\s*>?=\s*\${((?:Source-|source:|binary:)Version)}/x;
+		next unless m/(\S+)\s*\(\s*(\>)?=\s*\${((?:Source-|source:|binary:)Version)}/x;
 
+		my $gt = $2//'';
 		$pkg2 = $1;
-		$substvar_strips_binNMU = ($2 eq 'source:Version');
+		$substvar_strips_binNMU = ($3 eq 'source:Version');
 
 		# We can't test dependencies on packages whose names are
 		# formed via substvars expanded during the build.  Assume
@@ -83,14 +84,21 @@ foreach (keys %$binpkgs) {
 
 		if ($pkg1_is_any) {
 			if ($pkg2_is_any and $substvar_strips_binNMU) {
-				# (b1) any -> any (= ${source:Version})
-				tag 'not-binnmuable-any-depends-any', "$pkg1 -> $pkg2";
+				unless ($gt) {
+					# (b1) any -> any (= ${source:Version})
+					tag 'not-binnmuable-any-depends-any', "$pkg1 -> $pkg2";
+				} else {
+					# any -> any (= ${source:Version})
+					# technically this can be "binNMU'ed", though it is
+					# a bit weird.
+					1;
+				}
 			} elsif (not $pkg2_is_any and not $substvar_strips_binNMU) {
 				# (b2) any -> all ( = ${binary:Version}) [or S-V]
 				# or  -- same --  (>= ${binary:Version}) [or S-V]
 				tag 'not-binnmuable-any-depends-all', "$pkg1 -> $pkg2";
 			}
-		} elsif ($pkg2_is_any) {
+		} elsif ($pkg2_is_any && !$gt) {
 			# (b3) all -> any (= ${either-of-them})
 			tag 'not-binnmuable-all-depends-any', "$pkg1 -> $pkg2";
 		}
