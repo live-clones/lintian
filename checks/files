@@ -738,7 +738,9 @@ foreach my $file (@{$info->sorted_index}) {
     if ($type ne 'udeb' && $index_info->{type} ne 'l' && $pkg !~ m/^libc[0-9]/o &&
 	    $file =~ m,^(?:usr/)?lib/([^/]+)/lib[^/]+\.so(?:\.[^/]+)?$,o) {
 	my $subdir = $1;
-	$TRIPLETS = Lintian::Data->new('files/triplets', '\s+')
+	# Skip if it not an ELF file (probably a .so script)
+	next unless ($info->file_info->{$file}//'') =~ m/\bELF\b/o;
+	$TRIPLETS = Lintian::Data->new('files/triplets', qr/\s++/o)
 	    unless defined($TRIPLETS);
 	if ($TRIPLETS->known($subdir) && $info->field('architecture') eq $TRIPLETS->value($subdir)) {
 	    my $dep = Lintian::Relation->new($info->field('pre-depends')//'');

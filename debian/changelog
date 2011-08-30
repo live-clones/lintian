@@ -47,6 +47,9 @@ lintian (2.5.3) UNRELEASED; urgency=low
       static libraries, .pc-, elf and pyshared-data-files.  This
       covers all the false-positives currently found in the liblicense
       package.  (Closes: #617901)
+    + [NT] Ignore non-ELF files in multiarch paths, when checking for
+      a missing pre-depends on multiarch-support.  Thanks to Sven
+      Joachim for the report.  (Closes: #639735)
   * checks/shared-libs.desc:
     + [JW] Fixed a typo in a tag description.  (Closes: #639177)
   * checks/source-copyright{,.desc}:
