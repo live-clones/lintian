@@ -219,6 +219,38 @@
           </para>
         </listitem>
       </itemizedlist>
+      <para>
+        The design also has a number of constrains that limits the
+        things Lintian can check for and what tools it can use:
+      </para>
+      <itemizedlist mark="bullet">
+        <listitem>
+          <para>
+            static analysis: The code in a package may be analyzed,
+            but it should <emphasis>never</emphasis> be executed.
+            However, Lintian can (and does) use external tools to
+            analyze files in the package.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            deterministic replay-ability: Checks should not rely on
+            the state of system caches or even the system time.  These
+            things makes it harder for others to reproduce (the
+            absence of) tags.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            same source analysis: Lintian checks packages in small
+            isolated groups based on the source package.  Requiring
+            the presence of all the dependencies to provide the full
+            results make it harder to run lintian (not to mention, it
+            makes "deterministic replay-ability" a lot harder as
+            well).
+          </para>
+        </listitem>
+      </itemizedlist>
     </sect1>
 
     <sect1 label="1.4" id="section-1.4">
