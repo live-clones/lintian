@@ -743,7 +743,7 @@ foreach my $file (@{$info->sorted_index}) {
 	$TRIPLETS = Lintian::Data->new('files/triplets', qr/\s++/o)
 	    unless defined($TRIPLETS);
 	if ($TRIPLETS->known($subdir) && $info->field('architecture') eq $TRIPLETS->value($subdir)) {
-	    my $dep = Lintian::Relation->new($info->field('pre-depends')//'');
+	    my $dep = $info->relation('pre-depends');
 	    tag 'missing-pre-dependency-on-multiarch-support' unless ($dep->implies('multiarch-support'));
 	}
     }
@@ -863,7 +863,7 @@ foreach my $file (@{$info->sorted_index}) {
 
     # ---------------- pyshared-data
     if ($file =~ m,^usr/share/pyshared-data/$tmp$,){
-	my $dep = Lintian::Relation->new($info->field('depends')//'');
+	my $dep = $info->relation('depends');
 	tag 'missing-dependency-on-python-central' unless ($dep->implies('python-central (>= 0.6)'));
     }
 
@@ -1314,7 +1314,7 @@ if (defined($py_support_nver) && $pkg ne 'python-support'){
     # We also skip debug packages since they are okay as long as
     # foo-dbg depends on foo (= $version) and foo has its dependency
     # correct.
-    my $dep = Lintian::Relation->new($info->field('depends')//'');
+    my $dep = $info->relation('depends');
     tag 'missing-dependency-on-python-support', "python-support $py_support_nver"
 	unless ($pkg =~ m/-dbg$/ || $dep->implies("python-support $py_support_nver"));
 }
