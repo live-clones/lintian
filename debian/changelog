@@ -5,6 +5,7 @@ lintian (2.5.3) UNRELEASED; urgency=low
       - boilerplate-copyright-format-uri
       - comma-separated-files-in-dep5-copyright
       - debian-copyright-is-symlink
+      - dh_installmanpages-is-obsolete
       - missing-field-in-dep5-copyright
       - missing-license-paragraph-in-dep5-copyright
       - missing-license-text-in-dep5-copyright
@@ -27,6 +28,8 @@ lintian (2.5.3) UNRELEASED; urgency=low
   * checks/debhelper:
     + [NT] Recognise /usr/share/R/debian/r-cran.mk as a cdbs-based
       build.  This prevents false-positive "unneeded cdbs" warning.
+    + [JW] Check for use of the obsolete dh_installmanpages debhelper
+      program.  Thanks to Joey Hess for the report.  (Closes: #634112).
   * checks/duplicate-files{,.desc}:
     + [NT] Replace the exception for "__init__.py" files by excluding
       all empty files from the check.  The bug (#632789) only requests
