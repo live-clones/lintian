@@ -1,4 +1,4 @@
-Testname: binaries-multiarch-missing-pre-deps
+Testname: files-multiarch-missing-pre-deps
 Sequence: 6000
 Version: 1.0
 Description: Multiarch-related tests but not multiarch itself
