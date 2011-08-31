@@ -24,6 +24,8 @@ lintian (2.5.3) UNRELEASED; urgency=low
     + [NT] Dropped fields from Needs-Info, it is no longer needed.
     + [JW] Use LC_ALL rather than LANG, since LC_ALL overrules
       LANG.  (Closes: #637595)
+    + [JW] Removed all whitespace lines to avoid confusing some
+      dctrl parsers (notably grep-dctrl).  (Closes: #639928)
   * checks/{conffile,etcfiles}{,.desc}:
     + [JW] Merged etcfiles into conffile.  (Closes: #637590)
   * checks/copyright-file{,.desc}:

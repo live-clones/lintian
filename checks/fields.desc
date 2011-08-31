@@ -283,7 +283,7 @@ Severity: important
 Certainty: certain
 Info: This field should only appear in binary packages.
 Ref: policy 5.6.9
- 
+
 Tag: essential-no-not-needed
 Severity: normal
 Certainty: certain

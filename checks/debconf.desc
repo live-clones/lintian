@@ -18,7 +18,7 @@ Info: Packages using debconf in their preinst script must pre-depend
  on debconf, with appropriate discussion on &debdev;.  Since debconf is
  almost always already installed, this is normally better than depending
  on it and falling back to a different configuration system.
- 
+
 Tag: duplicate-fields-in-templates
 Severity: important
 Certainty: certain

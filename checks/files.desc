@@ -504,7 +504,7 @@ Info: Third-party Python packages should install their files in
  for Python 2.6 and later.  All other directories in
  <tt>/usr/lib/python<i>VERSION</i></tt> are for use by the core python
  packages.
- 
+
 Tag: perl-module-in-core-directory
 Severity: important
 Certainty: certain
