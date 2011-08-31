@@ -764,7 +764,7 @@ Info: The package seems to conflict with one of its dependencies,
 Tag: breaks-without-version
 Severity: normal
 Certainty: possible
-Ref: policy 7.3, policy 7.4
+Ref: policy 7.3, policy 7.4,
  http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=605744
 Info: This package declares a Breaks relationship with another package
  that has no version number.  Normally, Breaks should be used to indicate

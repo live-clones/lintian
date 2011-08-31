@@ -14,7 +14,7 @@ Info: This package seems to be using debconf templates, but it does not
  gettext-based translation system.  If this package uses one other than
  po-debconf, please report this as a lintian bug along with how to detect
  that system.
-Ref: 3.9.1
+Ref: policy 3.9.1
 
 Tag: stray-translated-debconf-templates
 Severity: normal

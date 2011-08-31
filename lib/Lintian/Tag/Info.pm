@@ -246,6 +246,8 @@ sub _format_reference {
             $text = qq(the <a href="$url">$ref</a> manual page);
         } elsif ($ref =~ m,^(ftp|https?)://,) {
             $text = qq(<a href="$ref">$ref</a>);
+        } elsif ($ref =~ m,^/,) {
+            $text = qq(<a href="file://$ref">$ref</a>);
         }
         push (@refs, $text) if $text;
     }

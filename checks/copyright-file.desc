@@ -381,7 +381,7 @@ Info: The copyright file refers to a license in
 Tag: copyright-refers-to-deprecated-bsd-license-file
 Severity: minor
 Certainty: certain
-Ref: Policy 12.5
+Ref: policy 12.5
 Info: The copyright file refers to
  <tt>/usr/share/common-licenses/BSD</tt>.  Due to the brevity of this
  license, the specificity of this copy to code whose copyright is held by

@@ -759,7 +759,7 @@ Info: The directory /usr/lib/site-python has been deprecated as a
 Tag: python-module-in-wrong-location
 Severity: normal
 Certainty: possible
-Ref: python-policy1.5,  http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=576012
+Ref: python-policy 1.5, http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=576012
 Info: The package installs a Python module or debug information for a Python
  module in the wrong location for the given version of Python.
  .

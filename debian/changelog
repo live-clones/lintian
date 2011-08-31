@@ -26,6 +26,8 @@ lintian (2.5.3) UNRELEASED; urgency=low
       LANG.  (Closes: #637595)
     + [JW] Removed all whitespace lines to avoid confusing some
       dctrl parsers (notably grep-dctrl).  (Closes: #639928)
+    + [JW] Fix a number of broken references in the tag
+      descriptions.  (Closes: #639923)
   * checks/{conffile,etcfiles}{,.desc}:
     + [JW] Merged etcfiles into conffile.  (Closes: #637590)
   * checks/copyright-file{,.desc}:
@@ -118,6 +120,9 @@ lintian (2.5.3) UNRELEASED; urgency=low
     + [JW,NT] Replace use of fail with croak.  (Closes: #637741)
   * lib/Lintian/Profile.pm:
     + [NT] Reject profiles containing an unknown field.
+  * lib/Lintian/Tag/Info.pm:
+    + [JW] Create links for references pointing to files in html
+      output.
   * lib/Lintian/Tag/Override.pm:
     + [NT] New file.
   * lib/Lintian/Tags.pm:
