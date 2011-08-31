@@ -58,6 +58,9 @@ lintian (2.5.3) UNRELEASED; urgency=low
     + [NT] Ignore non-ELF files in multiarch paths, when checking for
       a missing pre-depends on multiarch-support.  Thanks to Sven
       Joachim for the report.  (Closes: #639735)
+  * checks/menus.desc:
+    + [NT] Added reference to the doc-base manual to help people
+      find the list of valid doc-base sections.  (Closes: #584280)
   * checks/shared-libs{,.desc}:
     + [JW] Fixed a typo in a tag description.  (Closes: #639177)
     + [NT] Do not emit shlib-calls-exit for libraries that have an
