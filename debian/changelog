@@ -53,7 +53,7 @@ lintian (2.5.3) UNRELEASED; urgency=low
   * checks/shared-libs{,.desc}:
     + [JW] Fixed a typo in a tag description.  (Closes: #639177)
     + [NT] Do not emit shlib-calls-exit for libraries that have an
-      INTERP section.  (Closes: #607339)
+      INTERP section.  (Closes: #607399)
   * checks/source-copyright{,.desc}:
     + [JW] Added check for DEP-5 copyright files.  (Closes: #633779)
   * checks/standards-version:
