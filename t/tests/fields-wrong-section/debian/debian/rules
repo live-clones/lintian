@@ -1,0 +1,9 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@
+
+override_dh_auto_install:
+	for P in $$(dh_listpackages) ; do \
+		dh_install -p$$P some-file usr/lib/$$P ; \
+	done

@@ -1,14 +1,18 @@
 E: debconf source: declares-possibly-conflicting-debhelper-compat-versions rules=4 compat=4
 E: debconf-test-noscripts: copyright-contains-dh_make-todo-boilerplate
 E: debconf-test-noscripts: no-debconf-config
+E: debconf-test-noscripts: package-contains-no-arch-dependent-files
 E: debconf-test-postinst: copyright-contains-dh_make-todo-boilerplate
 E: debconf-test-postinst: no-debconf-config
+E: debconf-test-postinst: package-contains-no-arch-dependent-files
 E: debconf-test-preinst: copyright-contains-dh_make-todo-boilerplate
+E: debconf-test-preinst: package-contains-no-arch-dependent-files
 E: debconf-test: copyright-contains-dh_make-todo-boilerplate
 E: debconf-test: extended-description-is-empty
 E: debconf-test: mismatch-translated-choices debconf/testmulti-escape choices-de.utf-8
 E: debconf-test: no-template-description debconf/no-description
 E: debconf-test: no-template-type debconf/language
+E: debconf-test: package-contains-no-arch-dependent-files
 E: debconf-test: unknown-debconf-priority config:10 LOW
 E: debconf-test: unknown-debconf-priority config:11 normal
 E: debconf-udeb udeb: udeb-postinst-must-not-call-ldconfig

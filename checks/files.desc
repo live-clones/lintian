@@ -1275,3 +1275,14 @@ Info: The package ships a library in one of the multiarch lib directories,
  pre-dependency on multiarch-support.  Packages installing to these
  paths must Pre-Depend: multiarch-support to ensure the library can be
  found by the dynamic linker at every point during an upgrade.
+
+Tag: package-contains-no-arch-dependent-files
+Severity: important
+Certainty: certain
+Info: The package is not marked architecture all, but all the files it
+ ships are installed in /usr/share.
+ .
+ Most likely this package should be marked architecture all, but there
+ is a chance that the package is missing files.
+Ref: policy 5.6.8
+

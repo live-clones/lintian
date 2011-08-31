@@ -14,6 +14,7 @@ lintian (2.5.3) UNRELEASED; urgency=low
       - no-debian-copyright
       - obsolete-field-in-dep5-copyright
       - out-of-date-copyright-format-uri
+      - package-contains-no-arch-dependent-files
       - syntax-error-in-dep5-copyright
       - unknown-copyright-format-uri
       - unknown-paragraph-in-dep5-copyright
@@ -62,6 +63,10 @@ lintian (2.5.3) UNRELEASED; urgency=low
     + [NT] Ignore non-ELF files in multiarch paths, when checking for
       a missing pre-depends on multiarch-support.  Thanks to Sven
       Joachim for the report.  (Closes: #639735)
+    + [NT] Added check for packages that only ships files in /usr/share
+      and are not marked "Architecture: all".  Thanks to Evgeni Golov,
+      Carl Fürstenberg and Jari Aalto for the suggestions.
+      (Closes: #574689)
   * checks/menus.desc:
     + [NT] Added reference to the doc-base manual to help people
       find the list of valid doc-base sections.  (Closes: #584280)

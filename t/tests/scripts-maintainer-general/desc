@@ -2,7 +2,6 @@ Testname: scripts-maintainer-general
 Sequence: 6000
 Type: native
 Version: 1.0
-Architecture: any
 Description: Check general problems in maintainer scripts
 Test-For:
  command-with-path-in-maintainer-script

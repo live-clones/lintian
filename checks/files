@@ -173,6 +173,8 @@ my %linked_against_libvga;
 
 my $py_support_nver = undef;
 
+my $arch_dep_files = 0;
+
 # read data from objdump-info file
 foreach my $file (sort keys %{$info->objdump_info}) {
     my $objdump = $info->objdump_info->{$file};
@@ -254,6 +256,9 @@ foreach my $file (@{$info->sorted_index}) {
     my $owner = $index_info->{owner} . '/' . $index_info->{group};
     my $operm = $index_info->{operm};
     my $link = $index_info->{link};
+
+    $arch_dep_files = 1 if $file !~ m,^usr/share/,o && $file ne 'usr/';
+
     if ($index_info->{type} eq 'h') {
 	my $link_target_dir = $link;
 	$link_target_dir =~ s,[^/]*$,,;
@@ -1303,6 +1308,10 @@ foreach my $file (@{$info->sorted_index}) {
 	# special file
 	tag 'special-file', $file, sprintf('%04o',$operm);
     }
+}
+
+if (!$arch_dep_files && ($info->field('architecture')//'') ne 'all') {
+    tag 'package-contains-no-arch-dependent-files' unless $type eq 'udeb';
 }
 
 # python-support check
