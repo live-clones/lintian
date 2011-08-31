@@ -4,6 +4,7 @@ lintian (2.5.3) UNRELEASED; urgency=low
     + Added:
       - boilerplate-copyright-format-uri
       - comma-separated-files-in-dep5-copyright
+      - copyright-has-crs
       - debian-copyright-is-symlink
       - dh_installmanpages-is-obsolete
       - missing-field-in-dep5-copyright
@@ -25,6 +26,9 @@ lintian (2.5.3) UNRELEASED; urgency=low
       LANG.  (Closes: #637595)
   * checks/{conffile,etcfiles}{,.desc}:
     + [JW] Merged etcfiles into conffile.  (Closes: #637590)
+  * checks/copyright-file{,.desc}:
+    + [JW] Check for CRLF line endings in copyright files.
+      (Closes: #634191)
   * checks/debhelper:
     + [NT] Recognise /usr/share/R/debian/r-cran.mk as a cdbs-based
       build.  This prevents false-positive "unneeded cdbs" warning.

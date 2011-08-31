@@ -130,6 +130,10 @@ if ($line) {
 $_ = slurp_entire_file('copyright');
 study $_;
 
+if (m,\r,) {
+    tag 'copyright-has-crs';
+}
+
 my $wrong_directory_detected = 0;
 
 if (m,\<fill in (?:http/)?ftp site\>, or m/\<Must follow here\>/) {
