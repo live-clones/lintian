@@ -50,8 +50,10 @@ lintian (2.5.3) UNRELEASED; urgency=low
     + [NT] Ignore non-ELF files in multiarch paths, when checking for
       a missing pre-depends on multiarch-support.  Thanks to Sven
       Joachim for the report.  (Closes: #639735)
-  * checks/shared-libs.desc:
+  * checks/shared-libs{,.desc}:
     + [JW] Fixed a typo in a tag description.  (Closes: #639177)
+    + [NT] Do not emit shlib-calls-exit for libraries that have an
+      INTERP section.  (Closes: #607339)
   * checks/source-copyright{,.desc}:
     + [JW] Added check for DEP-5 copyright files.  (Closes: #633779)
   * checks/standards-version:
