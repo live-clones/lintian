@@ -1,4 +1,4 @@
-name = {%srcpkg}
+name = {$srcpkg}
 
 all:
 	create-deb -o $(name).deb control
