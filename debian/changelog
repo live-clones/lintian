@@ -148,6 +148,11 @@ lintian (2.5.3) UNRELEASED; urgency=low
 
   * reporting/harness:
     + [NT] Added missing import statement.
+  * reporting/html_reports:
+    + [JW,NT] Create a gzip'ed version of the raw lintian.log.
+      (Closes: #637819)
+  * reporting/templates/index.tmpl:
+    + [NT] Added link to the new gzip'ed lintian.log.
 
   * t/*:
     + [JW,NT] Fixed test failures caused by unpacking the source

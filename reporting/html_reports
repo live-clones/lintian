@@ -138,6 +138,8 @@ symlink("$LINTIAN_ROOT/doc/lintian.html", "$HTML_TMP_DIR/manual")
 if ($ARGV[0]) {
     symlink($ARGV[0], "$HTML_TMP_DIR/lintian.log")
         or die "cannot create symlink $HTML_TMP_DIR/lintian.log: $!\n";
+    system("gzip --best -c > \"$HTML_TMP_DIR/lintian.log.gz\" < \"$ARGV[0]\"")  == 0
+        or die "cannot create $HTML_TMP_DIR/lintian.log.gz.\n";
 }
 copy("$LINTIAN_ROOT/reporting/lintian.css", "$HTML_TMP_DIR/lintian.css")
     or die "cannot copy lintian.css to $HTML_TMP_DIR: $!\n";
