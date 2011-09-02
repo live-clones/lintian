@@ -4,6 +4,6 @@
 	dh $@
 
 override_dh_auto_install:
-	for P in $$(dh_listpackages) ; do \
+	set -e ; for P in $$(dh_listpackages -a) ; do \
 		dh_install -p$$P some-file usr/lib/$$P ; \
 	done

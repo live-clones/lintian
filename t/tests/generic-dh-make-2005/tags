@@ -2,7 +2,6 @@ E: generic-dh-make-2005: description-is-dh_make-template
 E: generic-dh-make-2005: helper-templates-in-copyright
 E: generic-dh-make-2005: helper-templates-in-copyright
 E: generic-dh-make-2005: helper-templates-in-copyright
-E: generic-dh-make-2005: package-contains-no-arch-dependent-files
 E: generic-dh-make-2005: section-is-dh_make-template
 I: generic-dh-make-2005 source: debian-watch-file-is-missing
 I: generic-dh-make-2005: extended-description-is-probably-too-short
@@ -17,3 +16,4 @@ W: generic-dh-make-2005: copyright-without-copyright-notice
 W: generic-dh-make-2005: new-package-should-close-itp-bug
 W: generic-dh-make-2005: readme-debian-contains-debmake-template
 W: generic-dh-make-2005: wrong-bug-number-in-closes l3:#nnnn
+X: generic-dh-make-2005: package-contains-no-arch-dependent-files

@@ -1277,8 +1277,9 @@ Info: The package ships a library in one of the multiarch lib directories,
  found by the dynamic linker at every point during an upgrade.
 
 Tag: package-contains-no-arch-dependent-files
-Severity: important
-Certainty: certain
+Severity: minor
+Certainty: possible
+Experimental: yes
 Info: The package is not marked architecture all, but all the files it
  ships are installed in /usr/share.
  .
