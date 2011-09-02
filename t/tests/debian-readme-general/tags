@@ -1,4 +1,4 @@
-W: debian-readme-general: readme-debian-contains-debmake-default-email-address
+W: debian-readme-general: readme-debian-contains-invalid-email-address unknown@unknown
 W: debian-readme-general: readme-debian-mentions-usr-doc line 4
 W: debian-readme-general: spelling-error-in-readme-debian CHNAGES CHANGES
 W: debian-readme-general: spelling-error-in-readme-debian accidentaly accidentally

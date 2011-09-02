@@ -144,12 +144,6 @@ Info: The add-log-mailing-address variable is no longer honored in
  .
  (setq debian-changelog-mailing-address "userid@debian.org")
 
-Tag: debian-changelog-file-contains-debmake-default-email-address
-Severity: important
-Certainty: certain
-Info: The changelog file contains an email address (&lt;..@unknown&gt;)
- that was not updated to the maintainer's real address.
-
 Tag: debian-changelog-file-contains-invalid-email-address
 Severity: important
 Certainty: certain

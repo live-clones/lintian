@@ -49,8 +49,8 @@ my @template =
 my $regex = join ('|', @template);
 if ($readme =~ m/$regex/io) {
     tag 'readme-debian-contains-debmake-template';
-} elsif ($readme =~ m/^\s*-- [^<]*<[^> ]+.\@unknown>/m) {
-    tag 'readme-debian-contains-debmake-default-email-address';
+} elsif ($readme =~ m/^\s*-- [^<]*<([^> ]+.\@[^>.]*)>/m) {
+    tag 'readme-debian-contains-invalid-email-address', $1;
 }
 
 check_spelling('spelling-error-in-readme-debian', $readme, undef, { $pkg => 1 });

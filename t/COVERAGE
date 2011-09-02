@@ -1,5 +1,5 @@
-Last generated 2011-09-01
-Coverage: 716/934 (76.66%), w. legacy tests: 839/934 (89.83%)
+Last generated 2011-09-02
+Coverage: 716/933 (76.74%), w. legacy tests: 838/933 (89.82%)
 
 The following tags are not tested by the test suite:
 
@@ -122,7 +122,6 @@ binaries statically-linked-binary
 binaries unstripped-binary-or-object
 
 changelog-file changelog-file-missing-in-native-package
-changelog-file debian-changelog-file-contains-invalid-email-address
 changelog-file debian-changelog-file-missing-or-wrong-name
 changelog-file wrong-name-for-debian-news-file
 
@@ -365,7 +364,6 @@ maintainer-scripts
   changelog-should-mention-qa
   config-does-not-load-confmodule
   debconf-config-not-executable
-  debian-changelog-file-contains-invalid-email-address
   init.d-script-not-included-in-package
   init.d-script-not-marked-as-conffile
   maintainer-script-calls-deprecated-wm-menu-config

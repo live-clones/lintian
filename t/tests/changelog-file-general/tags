@@ -1,4 +1,4 @@
-E: changelog-file-general: debian-changelog-file-contains-debmake-default-email-address unknown@unknown
+E: changelog-file-general: debian-changelog-file-contains-invalid-email-address unknown@unknown
 E: changelog-file-general: possible-missing-colon-in-closes Closes #555555
 W: changelog-file-general: changelog-not-compressed-with-max-compression changelog.Debian.gz
 W: changelog-file-general: debian-changelog-file-contains-obsolete-user-emacs-settings

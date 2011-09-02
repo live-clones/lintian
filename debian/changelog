@@ -15,12 +15,16 @@ lintian (2.5.3) UNRELEASED; urgency=low
       - obsolete-field-in-dep5-copyright
       - out-of-date-copyright-format-uri
       - package-contains-no-arch-dependent-files
+      - readme-debian-contains-invalid-email-address
       - syntax-error-in-dep5-copyright
       - unknown-copyright-format-uri
       - unknown-paragraph-in-dep5-copyright
       - unused-license-paragraph-in-dep5-copyright
       - unversioned-copyright-format-uri
       - wiki-copyright-format-uri
+    + Removed:
+      - debian-changelog-file-contains-debmake-default-email-address
+      - readme-debian-contains-debmake-default-email-address
 
   * checks/*:
     + [NT] Dropped fields from Needs-Info, it is no longer needed.
@@ -30,6 +34,10 @@ lintian (2.5.3) UNRELEASED; urgency=low
       dctrl parsers (notably grep-dctrl).  (Closes: #639928)
     + [JW] Fix a number of broken references in the tag
       descriptions.  (Closes: #639923)
+  * checks/changelog-file{,.desc}:
+    + [JW] Remove debmake-specific tag in favour of more general
+      debian-changelog-file-contains-invalid-email-address.
+      (Closes: #639946)
   * checks/{conffile,etcfiles}{,.desc}:
     + [JW] Merged etcfiles into conffile.  (Closes: #637590)
   * checks/copyright-file{,.desc}:
@@ -40,6 +48,9 @@ lintian (2.5.3) UNRELEASED; urgency=low
       build.  This prevents false-positive "unneeded cdbs" warning.
     + [JW] Check for use of the obsolete dh_installmanpages debhelper
       program.  Thanks to Joey Hess for the report.  (Closes: #634112).
+  * checks/debian-readme{,.desc}:
+    + [JW] Replace debmake-specific tag with more general
+      readme-debian-contains-invalid-email-address.
   * checks/duplicate-files{,.desc}:
     + [NT] Replace the exception for "__init__.py" files by excluding
       all empty files from the check.  The bug (#632789) only requests

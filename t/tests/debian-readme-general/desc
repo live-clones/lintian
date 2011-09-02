@@ -3,7 +3,7 @@ Sequence: 6000
 Version: 1.0
 Description: General tests for README.Debian
 Test-For:
- readme-debian-contains-debmake-default-email-address
+ readme-debian-contains-invalid-email-address
  readme-debian-mentions-usr-doc
  spelling-error-in-readme-debian
 References: Debian Bug#556456
