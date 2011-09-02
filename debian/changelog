@@ -164,6 +164,8 @@ lintian (2.5.3) UNRELEASED; urgency=low
     + [JW] Use LC_ALL rather than LANG, since LC_ALL overrules
       LANG.
 
+  * reporting/{config,html_reports,templates/foot.tmpl}:
+    + [NT] Added a link to the Lintian source code.
   * reporting/harness:
     + [NT] Added missing import statement.
   * reporting/html_reports:

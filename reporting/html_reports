@@ -34,7 +34,7 @@ use Text::Template ();
 # FIXME: $statistics_file should be in all caps as well.
 our ($LINTIAN_ROOT, $LINTIAN_LAB, $LINTIAN_ARCHIVEDIR, $LINTIAN_DIST,
      $LINTIAN_SECTION, $LINTIAN_ARCH, $HTML_TMP_DIR, $statistics_file,
-     $LINTIAN_AREA, $HISTORY, $HISTORY_DIR);
+     $LINTIAN_AREA, $HISTORY, $HISTORY_DIR, $LINTIAN_SOURCE);
 
 # Read the configuration.
 require './config';
@@ -657,7 +657,8 @@ sub output_template {
     $data->{head} ||= sub { $templates{head}->fill_in (HASH => { page_title => $_[0],
                                                                  path_prefix => '../' x ($_[1]||0),
                                                                  %$data }) };
-    $data->{foot} ||= sub { $templates{foot}->fill_in (HASH => $data) };
+    $data->{foot} ||= sub { $templates{foot}->fill_in (HASH => { LINTIAN_SOURCE => $LINTIAN_SOURCE,
+                                                                 %$data }) };
     open (OUTPUT, '>', "$HTML_TMP_DIR/$file")
         or die "creating $HTML_TMP_DIR/$file falied: $!\n";
     $template->fill_in (OUTPUT => \*OUTPUT, HASH => $data)
