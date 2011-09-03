@@ -162,8 +162,8 @@ my $type = shift;
 my $info = shift;
 
 my $file;
-my $source_pkg = '';
-my $pkg_section = '';
+my $source_pkg;
+my $pkg_section;
 my $is_python;
 my $is_perl;
 my $has_binary_perl_file;
@@ -187,14 +187,13 @@ foreach my $file (sort keys %{$info->objdump_info}) {
 }
 
 # Get source package name, if possible.
-if (defined $info->field('source')) {
-    $source_pkg = $info->field('source') || '';
-}
+#
+# Otherwise set it to the empty string to avoid "unitialized value"
+# warnings if we end up using it a bit too carelessly.
+$source_pkg = $info->field('source')//'';
 
-# Get section.
-if (defined $info->field('section')) {
-   $pkg_section = $info->field('section');
-}
+# Get section if available.
+$pkg_section = $info->field('section')//'';
 
 # find out which files are scripts
 my %script = map {$_ => 1} (sort keys %{$info->scripts});
