@@ -81,10 +81,17 @@ my %manuals = (
         'http://www.debian.org/doc/packaging-manuals/python-policy/',
         $link_re, $fields
     ],
+    'java-policy' => [
+        '/usr/share/doc/java-common/debian-java-policy/index.html',
+        'http://www.debian.org/doc/packaging-manuals/java-policy/',
+        qr/([\d.]+?)\.\s+<a\s*href="(.+?)"\s*>([\w\s[:punct:]]+?)<\/a\s*>/i,
+        [ [ 'section' ], [ 'url' ], [ 'title' ] ]
+    ],
     'lintian' => [
         '/usr/share/doc/lintian/lintian.html/index.html',
         'http://lintian.debian.org/manual/',
-        $link_re, $fields
+        qr/([\d.]+?)\.\s+<a\s*href="(.+?)"\s*>([\w\s[:punct:]]+?)<\/a\s*>/i,
+        [ [ 'section' ], [ 'url' ], [ 'title' ] ]
     ],
     'devref' => [
         '/usr/share/doc/developers-reference/index.html',

@@ -186,6 +186,7 @@ lintian (2.5.3) UNRELEASED; urgency=low
   * private/refresh-manual-refs:
     + [NT] Remove code to refresh refs to the Library Packaging
       Guide.
+    + [JW] Added the java-policy and fixed the lintian ref.
 
   * reporting/{config,html_reports,templates/foot.tmpl}:
     + [NT] Added a link to the Lintian source code.
