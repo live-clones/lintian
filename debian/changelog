@@ -105,6 +105,8 @@ lintian (2.5.3) UNRELEASED; urgency=low
     + [NT] Refreshed against sid and now includes packages starting
       with "fonts-" as well.  Thanks to Paul Wise for the patches.
       (Closes: #622149)
+  * data/output/ftp-master-{,non}fatal:
+    + [NT] Refreshed.
   * data/spelling/corrections:
     + [NT] Added some corrections for "remove" etc.  Thanks to
       Jakub Wilk for spotting those.
@@ -165,6 +167,9 @@ lintian (2.5.3) UNRELEASED; urgency=low
       (Closes: #639292)
     + [NT] Remove the last new line (if any) before a </pre> in tag
       to reduce the empty space to the next paragraph.
+
+  * profiles/debian/ftp-master-auto-reject.profile:
+    + [NT] Refreshed to include udeb-uses-non-gzip-data-tarball.
 
   * private/*:
     + [JW] Use LC_ALL rather than LANG, since LC_ALL overrules

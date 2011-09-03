@@ -2,7 +2,7 @@
 # be overridden (nonfatal tags).  It is based on the data file retrieved from
 # http://ftp-master.debian.org/static/lintian.tags
 #
-# Last updated: 2011-06-05
+# Last updated: 2011-09-03
 
 arch-dependent-file-in-usr-share
 arch-independent-package-contains-binary-or-object
