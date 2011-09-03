@@ -163,6 +163,8 @@ lintian (2.5.3) UNRELEASED; urgency=low
     + [NT] Close <p>-tags in dtml_to_html since the output is used
       in xhtml (xml), where all tags must be closed properly.
       (Closes: #639292)
+    + [NT] Remove the last new line (if any) before a </pre> in tag
+      to reduce the empty space to the next paragraph.
 
   * private/*:
     + [JW] Use LC_ALL rather than LANG, since LC_ALL overrules

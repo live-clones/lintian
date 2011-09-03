@@ -142,14 +142,18 @@ sub dtml_to_html {
 	# normal line
 	else {
 	    if ($pre) {
-		push(@o,'</pre>');
+		my $last = pop @o;
+		$last =~ s,\n?$,</pre>\n,o;
+		push @o, $last;
 		$pre=0;
 	    }
 	    push(@o,"<p>$_</p>\n");
 	}
     }
     if ($pre) {
-	push(@o,'</pre>');
+	my $last = pop @o;
+	$last =~ s,\n?$,</pre>\n,o;
+	push @o, $last;
 	$pre=0;
     }
 
