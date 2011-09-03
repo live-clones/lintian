@@ -114,10 +114,10 @@ lintian (2.5.3) UNRELEASED; urgency=low
       (Closes: #622149)
   * data/output/ftp-master-{,non}fatal:
     + [NT] Refreshed.
-  * data/spelling/corrections:
+  * data/spelling/corrections{,-multiword}:
     + [NT] Added some corrections for "remove" etc.  Thanks to
       Jakub Wilk for spotting those.
-    + [JW] Added more corrections.  (Closes: #639367)
+    + [JW] Added more corrections.  (Closes: #639367, #640149)
 
   * debian/copyright:
     + [NT] Added Jakub Wilk to maintainers.
