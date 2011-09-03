@@ -34,6 +34,9 @@ lintian (2.5.3) UNRELEASED; urgency=low
       dctrl parsers (notably grep-dctrl).  (Closes: #639928)
     + [JW] Fix a number of broken references in the tag
       descriptions.  (Closes: #639923)
+  * checks/binaries.desc:
+    + [NT] Remove the reference to the Library Packaging Guide,
+      since it is no longer available (in Debian).  (Closes: #640228)
   * checks/changelog-file{,.desc}:
     + [JW] Remove debmake-specific tag in favour of more general
       debian-changelog-file-contains-invalid-email-address.
@@ -178,6 +181,9 @@ lintian (2.5.3) UNRELEASED; urgency=low
   * private/*:
     + [JW] Use LC_ALL rather than LANG, since LC_ALL overrules
       LANG.
+  * private/refresh-manual-refs:
+    + [NT] Remove code to refresh refs to the Library Packaging
+      Guide.
 
   * reporting/{config,html_reports,templates/foot.tmpl}:
     + [NT] Added a link to the Lintian source code.
