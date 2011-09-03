@@ -486,7 +486,8 @@ if (defined $info->field('homepage')) {
 	require URI;
 	my $uri = URI->new($homepage);
 
-	unless ($uri->scheme) { # not an absolute URI
+	# not an absolute URI or (most likely) an invalid protocol
+	unless ($uri->scheme && $uri->scheme =~ m/^https?$/) {
 		tag 'bad-homepage', $homepage;
 	}
 
