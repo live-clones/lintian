@@ -786,7 +786,8 @@ foreach my $file (@{$info->sorted_index}) {
 	unless (defined $is_python) {
 	    $is_python = 0;
 	    if ($source_pkg) {
-		$is_python = 1 if $source_pkg =~ m/^python(?:\d\.\d)?$/;
+		$is_python = 1 if $source_pkg =~ m/^python(?:\d\.\d)?$/
+		    or $source_pkg =~ m/^python\d?-(?:stdlib-extensions|profiler|old-doctools)$/;
 	    }
 	}
 	tag 'third-party-package-in-python-dir', $file

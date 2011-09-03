@@ -66,7 +66,7 @@ lintian (2.5.3) UNRELEASED; urgency=low
       (Closes: #629308)
   * checks/{filenames,rules}.desc:
     + [NT] Improved the descriptions of some tags.  (Closes: #639018)
-  * checks/files:
+  * checks/files{,.desc}:
     + [NT] Added exceptions to "extra-license-file" for manpages,
       static libraries, .pc-, elf and pyshared-data-files.  This
       covers all the false-positives currently found in the liblicense
@@ -78,6 +78,10 @@ lintian (2.5.3) UNRELEASED; urgency=low
       and are not marked "Architecture: all".  Thanks to Evgeni Golov,
       Carl Fürstenberg and Jari Aalto for the suggestions.
       (Closes: #574689)
+    + [JW] Do not emit third-party-package-in-python-dir for packages built
+      from python{,3}-{stdlib-extensions,profiler,old-doctools} sources.
+      Add reference to Python Policy in the tag description.
+      (Closes: #640211)
   * checks/menus.desc:
     + [NT] Added reference to the doc-base manual to help people
       find the list of valid doc-base sections.  (Closes: #584280)
