@@ -138,6 +138,10 @@ lintian (2.5.3) UNRELEASED; urgency=low
       LANG.
     + [JW] Stricten the DCtrl parser to choke on some syntax errors
       that was silently ignored.  (Closes: #639516)
+  * lib/Lintian/Collect.pm:
+    + [JW,NT] Create the source field from the package field if the
+      former is not present.  This fixes a number of false-positves
+      introduced in 2.5.2.  (Closes: #640186)
   * lib/Lintian/Collect/Source.pm:
     + [NT] Removed a requirement for fields that was not needed.
     + [NT] Fixed "index" method for source packages.
