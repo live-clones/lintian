@@ -783,9 +783,8 @@ foreach my $file (@{$info->sorted_index}) {
         # check if it's one of the Python proper packages
 	unless (defined $is_python) {
 	    $is_python = 0;
-	    if (defined $info->field('source')) {
-		local $_ = $info->field('source');
-		$is_python = 1 if /^python(?:\d\.\d)?(?:$|\s)/;
+	    if ($source_pkg) {
+		$is_python = 1 if $source_pkg =~ m/^python(?:\d\.\d)?(?:$|\s)/;
 	    }
 	}
 	tag 'third-party-package-in-python-dir', $file
@@ -796,9 +795,8 @@ foreach my $file (@{$info->sorted_index}) {
        # check if it's the "perl" package itself
        unless (defined $is_perl) {
            $is_perl = 0;
-	   if (defined $info->field('source')) {
-               local $_ = $info->field('source');;
-               $is_perl = 1 if /^perl(?:$|\s)/;
+	   if ($source_pkg) {
+               $is_perl = 1 if $source_pkg =~ m/^perl(?:$|\s)/;
            }
        }
        tag 'perl-module-in-core-directory', $file
