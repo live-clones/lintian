@@ -69,7 +69,7 @@ lintian (2.5.3) UNRELEASED; urgency=low
       (Closes: #629308)
     + [NT] Also emit bad-homepage if the Homepage URL does not seem to
       be using a known protocol (for homepages).  (Closes: #580427)
-  * checks/{filenames,rules}.desc:
+  * checks/{filename-length,rules}.desc:
     + [NT] Improved the descriptions of some tags.  (Closes: #639018)
   * checks/files{,.desc}:
     + [NT] Added exceptions to "extra-license-file" for manpages,
