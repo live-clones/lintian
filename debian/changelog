@@ -90,6 +90,9 @@ lintian (2.5.3) UNRELEASED; urgency=low
   * checks/menus.desc:
     + [NT] Added reference to the doc-base manual to help people
       find the list of valid doc-base sections.  (Closes: #584280)
+  * checks/patch-systems:
+    + [NT] Use lsdiff to determine if a patch modifies the debian dir as
+      it is more accurate than diffstat for this.  (Closes: #640131)
   * checks/shared-libs{,.desc}:
     + [JW] Fixed a typo in a tag description.  (Closes: #639177)
     + [NT] Do not emit shlib-calls-exit for libraries that have an
@@ -121,6 +124,8 @@ lintian (2.5.3) UNRELEASED; urgency=low
       Jakub Wilk for spotting those.
     + [JW] Added more corrections.  (Closes: #639367, #640149)
 
+  * debian/control:
+    + [NT] (Build-)Depends on patchutils for lsdiff.
   * debian/copyright:
     + [NT] Added Jakub Wilk to maintainers.
   * debian/rules:
