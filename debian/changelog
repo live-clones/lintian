@@ -96,6 +96,10 @@ lintian (2.5.3) UNRELEASED; urgency=low
   * checks/patch-systems:
     + [NT] Use lsdiff to determine if a patch modifies the debian dir as
       it is more accurate than diffstat for this.  (Closes: #640131)
+  * checks/rules:
+    + [NT] Do a simple and minimal variable tracking.  In very simple
+      cases, it can determine which targets a variable contains (when
+      the variable is used as a target).  (Closes: #638411)
   * checks/shared-libs{,.desc}:
     + [JW] Fixed a typo in a tag description.  (Closes: #639177)
     + [NT] Do not emit shlib-calls-exit for libraries that have an
