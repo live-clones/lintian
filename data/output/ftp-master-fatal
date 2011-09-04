@@ -2,7 +2,7 @@
 # be overridden.  It is based on the data file retrieved from
 # http://ftp-master.debian.org/static/lintian.tags
 #
-# Last updated: 2011-09-03
+# Last updated: 2011-09-04
 
 FSSTND-dir-in-usr
 FSSTND-dir-in-var
