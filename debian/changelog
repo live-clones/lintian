@@ -119,6 +119,8 @@ lintian (2.5.3) UNRELEASED; urgency=low
       (Closes: #622149)
   * data/output/ftp-master-{,non}fatal:
     + [NT] Refreshed.
+  * data/output/manual-references:
+    + [JW] Refreshed.
   * data/spelling/corrections{,-multiword}:
     + [NT] Added some corrections for "remove" etc.  Thanks to
       Jakub Wilk for spotting those.
