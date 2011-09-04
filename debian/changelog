@@ -124,7 +124,8 @@ lintian (2.5.3) UNRELEASED; urgency=low
   * data/spelling/corrections{,-multiword}:
     + [NT] Added some corrections for "remove" etc.  Thanks to
       Jakub Wilk for spotting those.
-    + [JW] Added more corrections.  (Closes: #639367, #640149)
+    + [JW,NT] Added more corrections.
+      (Closes: #639367, #640149, #613604)
 
   * debian/control:
     + [NT] (Build-)Depends on patchutils for lsdiff.
