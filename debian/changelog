@@ -21,6 +21,7 @@ lintian (2.5.3) UNRELEASED; urgency=low
       - unknown-paragraph-in-dep5-copyright
       - unused-license-paragraph-in-dep5-copyright
       - unversioned-copyright-format-uri
+      - vim-addon-within-vim-runtime-path
       - wiki-copyright-format-uri
     + Removed:
       - debian-changelog-file-contains-debmake-default-email-address
@@ -87,6 +88,8 @@ lintian (2.5.3) UNRELEASED; urgency=low
       from python{,3}-{stdlib-extensions,profiler,old-doctools} sources.
       Add reference to Python Policy in the tag description.
       (Closes: #640211)
+    + [JW] Add check for Vim addons installing files into a directory
+      within Vim runtime path.  (Closes: #640371)
   * checks/menus.desc:
     + [NT] Added reference to the doc-base manual to help people
       find the list of valid doc-base sections.  (Closes: #584280)

@@ -1,5 +1,5 @@
-Last generated 2011-09-02
-Coverage: 716/933 (76.74%), w. legacy tests: 838/933 (89.82%)
+Last generated 2011-09-04
+Coverage: 719/934 (76.98%), w. legacy tests: 841/934 (90.04%)
 
 The following tags are not tested by the test suite:
 
@@ -56,9 +56,7 @@ files old-style-example-dir
 files package-installs-font-to-usr-x11r6
 files package-installs-perllocal-pod
 files package-uses-obsolete-file
-files perl-module-in-core-directory
 files special-file
-files third-party-package-in-python-dir
 files udeb-contains-documentation-file
 
 init.d duplicate-updaterc.d-calls-in-postinst

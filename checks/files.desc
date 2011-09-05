@@ -1288,3 +1288,10 @@ Info: The package is not marked architecture all, but all the files it
  is a chance that the package is missing files.
 Ref: policy 5.6.8
 
+Tag: vim-addon-within-vim-runtime-path
+Severity: normal
+Certainty: certain
+Info: Vim addons should not be installed directly under a directory contained
+ in the Vim runtime path.  Users shall be given the freedom to choose which
+ addons they want to have enabled and which they don't.
+Ref: vim-policy 3.1

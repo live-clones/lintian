@@ -88,6 +88,11 @@ my %manuals = (
         'http://www.debian.org/doc/packaging-manuals/java-policy/',
         $dbk_index_re, $dbk_fields
     ],
+    'vim-policy' => [
+        '/usr/share/doc/vim-doc/vim-policy.html/index.html',
+        'http://pkg-vim.alioth.debian.org/vim-policy.html/',
+        $dbk_index_re, $dbk_fields
+    ],
     'lintian' => [
         '/usr/share/doc/lintian/lintian.html/index.html',
         'http://lintian.debian.org/manual/',

@@ -562,6 +562,13 @@ foreach my $file (@{$info->sorted_index}) {
 	elsif ($file =~ m,^usr/share/mime/[^/]+$,) {
 	    tag 'package-contains-mime-cache-file', $file;
 	}
+	# ---------------- /usr/share/vim
+	elsif ($file =~ m,^usr/share/vim/vim(?:current|\d{2})/([^/]++),) {
+	    my $is_vimhelp = $1 eq 'doc' && $pkg =~ m,^vimhelp-\w++$,;
+	    my $is_vim = $source_pkg =~ m,vim,;
+	    tag 'vim-addon-within-vim-runtime-path', $file
+		unless $is_vim or $is_vimhelp;
+	}
 	# ---------------- /usr/share
 	elsif ($file =~ m,^usr/share/[^/]+$,) {
 	    if ($index_info->{type} =~ m/^[-h]/) {
