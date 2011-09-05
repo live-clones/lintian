@@ -59,6 +59,8 @@ my $title_re = qr/<title\s?>(.+?)<\/title\s?>/i;
 my $link_re = qr/<link href="(.+?)" rel="[\w]+" title="([A-Z]|[A-Z]?[\d\.]+?)\.?\s+([\w\s[:punct:]]+?)">/;
 my $index_re = qr/<a href="(.+?)">([A-Z]|[A-Z]?[\d\.]+?)\.?\s+([\w\s[:punct:]]+?)<\/a>/;
 my $fields = [ [ 'url' ], [ 'section' ], [ 'title' ] ];
+my $dbk_index_re = qr/([\d.]+?)\.\s+<a\s*href="(.+?)"\s*>([\w\s[:punct:]]+?)<\/a\s*>/i;
+my $dbk_fields = [ [ 'section' ], [ 'url' ], [ 'title' ] ];
 
 my %manuals = (
     'policy' => [
@@ -84,14 +86,12 @@ my %manuals = (
     'java-policy' => [
         '/usr/share/doc/java-common/debian-java-policy/index.html',
         'http://www.debian.org/doc/packaging-manuals/java-policy/',
-        qr/([\d.]+?)\.\s+<a\s*href="(.+?)"\s*>([\w\s[:punct:]]+?)<\/a\s*>/i,
-        [ [ 'section' ], [ 'url' ], [ 'title' ] ]
+        $dbk_index_re, $dbk_fields
     ],
     'lintian' => [
         '/usr/share/doc/lintian/lintian.html/index.html',
         'http://lintian.debian.org/manual/',
-        qr/([\d.]+?)\.\s+<a\s*href="(.+?)"\s*>([\w\s[:punct:]]+?)<\/a\s*>/i,
-        [ [ 'section' ], [ 'url' ], [ 'title' ] ]
+        $dbk_index_re, $dbk_fields
     ],
     'devref' => [
         '/usr/share/doc/developers-reference/index.html',
@@ -165,8 +165,9 @@ sub extract_refs {
             }
 
             $ref{section} =~ s/^\#(.+)$/\L$1/;
-            $ref{title} =~ s/\n//g;
             $ref{title} =~ s/\s+/ /g;
+            $ref{title} =~ s,<span[^>]*>(.*?)</span ?>,$1,ig;
+            $ref{title} =~ s,<code[^>]*>(.*?)</code ?>,<code>$1</code>,ig;
             $ref{url} = "$url$ref{url}";
             $ref{url} = '' if not $url;
 

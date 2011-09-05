@@ -195,6 +195,9 @@ lintian (2.5.3) UNRELEASED; urgency=low
     + [NT] Remove code to refresh refs to the Library Packaging
       Guide.
     + [JW] Added the java-policy and fixed the lintian ref.
+    + [JW] Don't strip newlines from titles, but treat them as regular
+      whitespace characters.
+    + [JW] Strip some superfluous HTML markup from titles.
 
   * reporting/{config,html_reports,templates/foot.tmpl}:
     + [NT] Added a link to the Lintian source code.
