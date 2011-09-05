@@ -274,7 +274,7 @@ if (@entries) {
 		tag 'debian-changelog-file-contains-invalid-email-address', $1;
 	    }
 	}
-	$versions{$entry->Version} = 1;
+	$versions{$entry->Version} = 1 if defined $entry->Version;
     }
 
     if (@entries > 1) {

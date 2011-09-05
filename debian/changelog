@@ -42,6 +42,8 @@ lintian (2.5.3) UNRELEASED; urgency=low
     + [JW] Remove debmake-specific tag in favour of more general
       debian-changelog-file-contains-invalid-email-address.
       (Closes: #639946)
+    + [JW,NT] Fixed use of uninitialized value as hash key.
+      (Closes: #640238)
   * checks/{conffile,etcfiles}{,.desc}:
     + [JW] Merged etcfiles into conffile.  (Closes: #637590)
   * checks/copyright-file{,.desc}:
