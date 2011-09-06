@@ -67,11 +67,6 @@ Run only the specified checks.  You can either specify the name of the
 check script or the abbreviation.  For details, see the L</CHECKS> section
 below.
 
-With this options all normal tags from the checks will be displayed
-regardless of the display settings.  The pedantic and experimental
-tags from this given checks are only displayed if the relevant options
-are passed as well.  (see B<--pedantic> and B<--display-experimental>)
-
 Note: This option skips profile loading, even if B<--profile> was passed.
 
 =item B<-F>, B<--ftp-master-rejects>

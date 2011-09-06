@@ -157,7 +157,6 @@ sub new {
         non_overridable_tags => {},
         ignored_overrides    => {},
         only_issue           => {},
-        respect_display      => 1,
         show_experimental    => 0,
         show_overrides       => 0,
         show_pedantic        => 0,
@@ -726,7 +725,6 @@ sub displayed {
     my $only = $self->{only_issue};
     if (%$only) {
         return 0 unless $only->{$tag};
-        return 1 unless $self->{respect_display};
     } else {
         return 0 if $self->suppressed($tag);
     }
@@ -806,30 +804,6 @@ been ignored.
 sub ignored_overrides {
     my ($self) = @_;
     return $self->{ignored_overrides};
-}
-
-=item respect_display_level([BOOL])
-
-Whether or not the display level should be considered for
-tags that can be emitted.
-
-Calling this with a defined non-truth value and calling
-only(TAG) will emit all of the tags passed to only(),
-regardless of what is passed to show_pedantic() and
-display() etc.
-
-Returns the old value.
-
-Note: This does not effect suppressed tags, which will
-always be suppressed regardless.
-
-=cut
-
-sub respect_display_level{
-    my ($self, $val) = @_;
-    my $old = $self->{respect_display};
-    $self->{respect_display} = $val if defined $val;
-    return $old;
 }
 
 =back

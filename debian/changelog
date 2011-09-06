@@ -164,6 +164,8 @@ lintian (2.5.3) UNRELEASED; urgency=low
       or --tags-from-file.  Previously, pedantic and experimental
       tags were not shown unless the relevant options were also
       passed.
+    + [JW,NT] Fixed a regression where --check-part ignored display
+      settings (such as --display-info).  (Closes: #640694)
 
   * lib/Util.pm:
     + [JW] Use LC_ALL rather than LANG, since LC_ALL overrules
@@ -191,6 +193,8 @@ lintian (2.5.3) UNRELEASED; urgency=low
     + [NT,RG] Collect override comments and print the comments
       above the overridden tag (with --show-overrides).  Thanks
       to Carl Fürstenberg for the report.  (Closes: #474590)
+    + [NT] Remove the "respect-display-level" code.  It is not as
+      useful as intended.
   * lib/Text_utils.pm:
     + [NT] Close <p>-tags in dtml_to_html since the output is used
       in xhtml (xml), where all tags must be closed properly.
@@ -200,8 +204,8 @@ lintian (2.5.3) UNRELEASED; urgency=low
 
   * man/lintian.pod.in:
     + [JW] Fixed some stray POD markup.  (Closes: #640705)
-    + [JW,NT] Clarified that some options ignores the display
-      settings.  (Closes: #640694)
+    + [JW,NT] Clarified that --tags and --tags-from-file ignores
+      display settings.
 
   * profiles/debian/ftp-master-auto-reject.profile:
     + [NT] Refreshed to include udeb-uses-non-gzip-data-tarball.
