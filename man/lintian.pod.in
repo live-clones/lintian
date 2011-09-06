@@ -67,6 +67,11 @@ Run only the specified checks.  You can either specify the name of the
 check script or the abbreviation.  For details, see the L</CHECKS> section
 below.
 
+With this options all normal tags from the checks will be displayed
+regardless of the display settings.  The pedantic and experimental
+tags from this given checks are only displayed if the relevant options
+are passed as well.  (see B<--pedantic> and B<--display-experimental>)
+
 Note: This option skips profile loading, even if B<--profile> was passed.
 
 =item B<-F>, B<--ftp-master-rejects>
@@ -99,6 +104,9 @@ Run only the checks that issue the requested tags.  The tests for
 other tags within the check scripts will be run but the tags will not
 be issued.
 
+With this options all tags listed will be displayed regardless of the
+display settings.
+
 Note: This option skips profile loading, even if B<--profile> was passed.
 
 =item B<--tags-from-file> filename
@@ -107,6 +115,9 @@ Same functionality as B<--tags>, but read the list of tags from a
 file.  Blank lines and lines beginning with # are ignored.  All other
 lines are taken to be tag names or comma-separated lists of tag names
 to (potentially) issue.
+
+With this options all tags listed will be displayed regardless of the
+display settings.
 
 Note: This option skips profile loading, even if B<--profile> was passed.
 

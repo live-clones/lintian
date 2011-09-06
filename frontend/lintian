@@ -785,6 +785,12 @@ if ($no_profile) {
     # If we are given explicit list, we use that regardless
     # of show_pedantic/display.
     $TAGS->respect_display_level(0);
+    # if tags are listed explicitly (--tags) then show them even if
+    # they are pedantic/experimental.  However, for --check-part
+    # people explictly have to pass --display-experimental and
+    # --pedantic to see them (above).
+    $TAGS->show_experimental(1) if $check_tags;
+    $TAGS->show_pedantic(1) if $check_tags;
 } else {
     unless ($opt{'LINTIAN_PROFILE'}){
 	# Time to ask dpkg-vendor for a vendor name

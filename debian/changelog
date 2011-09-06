@@ -160,6 +160,10 @@ lintian (2.5.3) UNRELEASED; urgency=low
     + [NT] Mention ".changes" as a valid file type in the "unknown
       file" error.  Thanks to Michael Gilbert for the report and
       the patch.   (Closes: #639430)
+    + [NT] Always display a given tag if requested with --tags
+      or --tags-from-file.  Previously, pedantic and experimental
+      tags were not shown unless the relevant options were also
+      passed.
 
   * lib/Util.pm:
     + [JW] Use LC_ALL rather than LANG, since LC_ALL overrules
@@ -196,6 +200,8 @@ lintian (2.5.3) UNRELEASED; urgency=low
 
   * man/lintian.pod.in:
     + [JW] Fixed some stray POD markup.  (Closes: #640705)
+    + [JW,NT] Clarified that some options ignores the display
+      settings.  (Closes: #640694)
 
   * profiles/debian/ftp-master-auto-reject.profile:
     + [NT] Refreshed to include udeb-uses-non-gzip-data-tarball.
