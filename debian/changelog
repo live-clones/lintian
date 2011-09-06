@@ -194,6 +194,9 @@ lintian (2.5.3) UNRELEASED; urgency=low
     + [NT] Remove the last new line (if any) before a </pre> in tag
       to reduce the empty space to the next paragraph.
 
+  * man/lintian.pod.in:
+    + [JW] Fixed some stray POD markup.  (Closes: #640705)
+
   * profiles/debian/ftp-master-auto-reject.profile:
     + [NT] Refreshed to include udeb-uses-non-gzip-data-tarball.
 

@@ -505,7 +505,11 @@ When looking for packages in a Debian archive, lintian constructs the
 path to the archive from the I<archivedir>, I<distdir>, I<release>,
 and I<arch> as follows:
 
- I<archivedir>/dists/I<distdir>/I<release>/I<arch>
+=over 2
+
+I<archivedir>/dists/I<distdir>/I<release>/I<arch>
+
+=back
 
 Lintian always expects the "/dists/" path component in paths to Debian archives.
 
