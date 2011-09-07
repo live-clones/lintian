@@ -248,6 +248,9 @@ sub _format_reference {
             $text = qq(<a href="$ref">$ref</a>);
         } elsif ($ref =~ m,^/,) {
             $text = qq(<a href="file://$ref">$ref</a>);
+        } elsif ($ref =~ m,^#(\d+)$,) {
+            my $url = qq(http://bugs.debian.org/$1);
+            $text = qq(<a href="$url">$url</a>);
         }
         push (@refs, $text) if $text;
     }

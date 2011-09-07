@@ -90,7 +90,7 @@ Info: The special architecture value "any" only makes sense if it occurs
  alone or (in a *.dsc file) together with "all".  The value "all" may
  appear together with other architectures in a *.dsc file but must
  occur alone if used in a binary package.
-Ref: policy 5.6.8, http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=626775
+Ref: policy 5.6.8, #626775
 
 Tag: unknown-architecture
 Severity: normal
@@ -769,8 +769,7 @@ Info: The package seems to conflict with one of its dependencies,
 Tag: breaks-without-version
 Severity: normal
 Certainty: possible
-Ref: policy 7.3, policy 7.4,
- http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=605744
+Ref: policy 7.3, policy 7.4, #605744
 Info: This package declares a Breaks relationship with another package
  that has no version number.  Normally, Breaks should be used to indicate
  an incompatibility with a specific version of another package, or with
@@ -1044,7 +1043,7 @@ Info: The package appear to be a Java library and depending on one
  If there is otherwise a valid reason for this dependency, please override
  the tag.
 Ref: http://packages.qa.debian.org/j/java-common/news/20100405T221415Z.html,
- http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=227587
+ #227587
 
 Tag: documentation-package-not-architecture-independent
 Severity: normal

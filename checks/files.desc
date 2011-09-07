@@ -248,8 +248,7 @@ Severity: serious
 Certainty: certain
 Info: Files in /etc/sudoers.d/ must be 0440 or sudo will refuse to
  parse them.
-Ref: http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=588831,
-     http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=576527
+Ref: #588831, #576527
 
 Tag: special-file
 Severity: serious
@@ -760,7 +759,7 @@ Info: The directory /usr/lib/site-python has been deprecated as a
 Tag: python-module-in-wrong-location
 Severity: normal
 Certainty: possible
-Ref: python-policy 1.5, http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=576012
+Ref: python-policy 1.5, #576012
 Info: The package installs a Python module or debug information for a Python
  module in the wrong location for the given version of Python.
  .
@@ -769,7 +768,7 @@ Info: The package installs a Python module or debug information for a Python
 Tag: python-debug-in-wrong-location
 Severity: normal
 Certainty: possible
-Ref: http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=576014
+Ref: #576014
 Info: The package appears to be installing debug modules in
  /usr/lib/debug/usr/lib/pyshared/pythonX.Y/.  However, gdb(1)
  will not look for it there, making it less useful.  The file
@@ -779,7 +778,7 @@ Info: The package appears to be installing debug modules in
 Tag: missing-dependency-on-python-central
 Severity: important
 Certainty: possible
-Ref: http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=592533
+Ref: #592533
 Info: The package installs a file with the package name in
  /usr/share/pyshared-data/ without depending on python-central (&gt;= 0.6).
  .
@@ -1184,7 +1183,7 @@ Info: The given, apparently compressed, file is shipped in the package
 Tag: udev-rule-in-etc
 Severity: important
 Certainty: certain
-Ref: http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=559208
+Ref: #559208
 Info: This package ships a udev rule and installs it under
  <tt>/etc/udev/rules.d</tt>, which is reserved for user-installed files.
  The correct directory for system rules is <tt>/lib/udev/rules.d</tt>.

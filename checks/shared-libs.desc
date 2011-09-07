@@ -138,8 +138,7 @@ Info: Although the package does not include any shared libraries, it does
  .
  Note this is sometimes triggered for packages with a private shared
  library due to a bug in Debhelper.
-Ref: http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=204975,
- http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=633853
+Ref: #204975, #633853
 
 Tag: duplicate-entry-in-shlibs-control-file
 Severity: important
@@ -199,7 +198,7 @@ Info: The postinst script calls ldconfig even though no shared libraries are
  .
  Note this may be triggered by a bug in debhelper, that causes it to
  auto-generate an ldconfig snippet for packages that does not need it.
-Ref: policy 8.1.1, http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=204975
+Ref: policy 8.1.1, #204975
 
 Tag: udeb-postinst-must-not-call-ldconfig
 Severity: important
@@ -215,7 +214,7 @@ Info: The postrm script calls ldconfig even though no shared libraries are
  .
  Note this may be triggered by a bug in debhelper, that causes it to
  auto-generate an ldconfig snippet for packages that does not need it.
-Ref: policy 8.1.1, http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=204975
+Ref: policy 8.1.1, #204975
 
 Tag: postinst-must-call-ldconfig
 Severity: serious
