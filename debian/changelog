@@ -173,7 +173,7 @@ lintian (2.5.3) UNRELEASED; urgency=low
       settings (such as --display-info).  (Closes: #640694)
     + [NT] If both --verbose and --quiet is used together, then use
       the last of them to appear rather than "both at the same time".
-      (Closes: #643066)
+      (Closes: #640366)
     + [NT] Accept --quiet in lintianrc as "quiet".  This option may
       not be used together with "verbose" in the config file.
 
