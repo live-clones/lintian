@@ -113,6 +113,7 @@ sub _fetch_index_data {
     my $base_dir = $self->base_dir();
     my (%idxh, %dir_counts);
     my $num_idx;
+    my %rhlinks;
     open my $idx, '<', "$base_dir/$index"
         or croak "cannot open index file $base_dir/$index: $!";
     if ($indexown) {
@@ -146,9 +147,12 @@ sub _fetch_index_data {
 
         $name =~ s,^\./,,;
         if ($name =~ s/ link to (.*)//) {
+            my $target = $1;
+            $target =~ s,^\./,,;
             $file{type} = 'h';
-            $file{link} = $1;
-            $file{link} =~ s,^\./,,;
+            $file{link} = $target;
+
+            push @{$rhlinks{$target}}, $name;
         } elsif ($file{type} eq 'l') {
             ($name, $file{link}) = split ' -> ', $name, 2;
         }
@@ -162,8 +166,48 @@ sub _fetch_index_data {
         $idxh{$name} = \%file;
     }
     foreach my $file (keys %idxh) {
-        if ($dir_counts{$idxh{$file}->{name}}) {
-            $idxh{$file}->{count} = $dir_counts{$idxh{$file}->{name}};
+        my $e = $idxh{$file};
+        if ($dir_counts{$e->{name}}) {
+            $e->{count} = $dir_counts{$e->{name}};
+        }
+        if ($rhlinks{$e->{name}}) {
+            # There is hard link pointing to this file (or hardlink).
+            my %candidates = ();
+            my @check = ($e->{name});
+            my @sorted;
+            my $target;
+            while ( my $current = pop @check) {
+                $candidates{$current} = 1;
+                foreach my $rdep (@{$rhlinks{$current}}) {
+                    # There should not be any cicles, but just in case
+                    push @check, $rdep unless $candidates{$rdep};
+                }
+                # Remove links we are fixing
+                delete $rhlinks{$current};
+            }
+            # keys %candidates will be a complete list of hardlinks
+            # that points (in)directly to $file.  Time to normalize
+            # the links.
+            #
+            # Sort in reverse order (allows pop instead of unshift)
+            @sorted = sort {$b cmp $a} keys %candidates;
+            # Our prefered target
+            $target = pop @sorted;
+
+            foreach my $link (@sorted) {
+                next unless exists $idxh{$target};
+                my $le = $idxh{$link};
+                # We may be "demoting" a "real file" to a "hardlink"
+                $le->{type} = 'h';
+                $le->{link} = $target;
+            }
+            if ($target ne $e->{name}) {
+                $idxh{$target}->{type} = '-';
+                # hardlinks does not have size, so copy that from the original
+                # entry.
+                $idxh{$target}->{size} = $e->{size};
+                delete $idxh{$target}->{link};
+            }
         }
     }
     $self->{$field} = \%idxh;
