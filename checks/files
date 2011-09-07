@@ -813,6 +813,21 @@ foreach my $file (@{$info->sorted_index}) {
            unless $is_perl;
     }
 
+    # ---------------- perl modules using old libraries
+    # we do the same check on perl scripts in checks/scripts
+    {
+        my $dep = $info->relation('strong');
+        if ($index_info->{type} =~ m/^[-h]/o && $file =~ m,\.pm$, && !$dep->implies('libperl4-corelibs-perl')) {
+            open (PM, '<', $info->unpacked($file)) or fail("cannot open .pm file: $!");
+            while (<PM>) {
+                if (/(?:do|require)\s+(?:'|")(abbrev|assert|bigfloat|bigint|bigrat|cacheout|complete|ctime|dotsh|exceptions|fastcwd|find|finddepth|flush|getcwd|getopt|getopts|hostname|importenv|look|newgetopt|open2|open3|pwd|shellwords|stat|syslog|tainted|termcap|timelocal|validate)\.pl(?:'|")/) {
+                    tag 'perl-module-uses-perl4-libs-without-dep', "$file:$. ${1}.pl";
+                }
+            }
+            close(PM);
+        }
+    }
+
     # ---------------- license files
     if ($file =~ m,(?:copying|licen[cs]e)(?:\.[^/]+)?$,i
 	# Ignore some common extensions for source or compiled extension files.

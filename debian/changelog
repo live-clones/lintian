@@ -15,7 +15,9 @@ lintian (2.5.3) UNRELEASED; urgency=low
       - obsolete-field-in-dep5-copyright
       - out-of-date-copyright-format-uri
       - package-contains-no-arch-dependent-files
+      - perl-module-uses-perl4-libs-without-dep
       - readme-debian-contains-invalid-email-address
+      - script-uses-perl4-libs-without-dep
       - syntax-error-in-dep5-copyright
       - unknown-copyright-format-uri
       - unknown-paragraph-in-dep5-copyright
@@ -93,6 +95,9 @@ lintian (2.5.3) UNRELEASED; urgency=low
       (Closes: #640211)
     + [JW] Add check for Vim addons installing files into a directory
       within Vim runtime path.  (Closes: #640371)
+    + [NT] Added check for Perl modules using perl4 libs without depending
+      on libperl4-core-libs-perl.  Thanks to Dominic Hargreaves for the
+      initial patch.
   * checks/menus.desc:
     + [NT] Added reference to the doc-base manual to help people
       find the list of valid doc-base sections.  (Closes: #584280)
@@ -105,6 +110,9 @@ lintian (2.5.3) UNRELEASED; urgency=low
       the variable is used as a target).  (Closes: #638411)
   * checks/scripts{,.desc}:
     + [NT] Remove script-calls-init-script-directly.  (Closes: #617959)
+    + [NT] Added check for Perl scripts using perl4 libs without depending
+      on libperl4-core-libs-perl.  Thanks to Dominic Hargreaves for the
+      initial patch.  (Closes: #636994)
   * checks/shared-libs{,.desc}:
     + [JW] Fixed a typo in a tag description.  (Closes: #639177)
     + [NT] Do not emit shlib-calls-exit for libraries that have an
