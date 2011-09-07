@@ -26,6 +26,7 @@ lintian (2.5.3) UNRELEASED; urgency=low
     + Removed:
       - debian-changelog-file-contains-debmake-default-email-address
       - readme-debian-contains-debmake-default-email-address
+      - script-calls-init-script-directly
 
   * checks/*:
     + [NT] Dropped fields from Needs-Info, it is no longer needed.
@@ -102,6 +103,8 @@ lintian (2.5.3) UNRELEASED; urgency=low
     + [NT] Do a simple and minimal variable tracking.  In very simple
       cases, it can determine which targets a variable contains (when
       the variable is used as a target).  (Closes: #638411)
+  * checks/scripts{,.desc}:
+    + [NT] Remove script-calls-init-script-directly.  (Closes: #617959)
   * checks/shared-libs{,.desc}:
     + [JW] Fixed a typo in a tag description.  (Closes: #639177)
     + [NT] Do not emit shlib-calls-exit for libraries that have an
