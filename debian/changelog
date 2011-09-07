@@ -52,6 +52,8 @@ lintian (2.5.3) UNRELEASED; urgency=low
   * checks/copyright-file{,.desc}:
     + [JW] Check for CRLF line endings in copyright files.
       (Closes: #634191)
+    + [JW] Extended helper-templates-in-copyright and ensure it is
+      only emitted once per package.
   * checks/debhelper:
     + [NT] Recognise /usr/share/R/debian/r-cran.mk as a cdbs-based
       build.  This prevents false-positive "unneeded cdbs" warning.

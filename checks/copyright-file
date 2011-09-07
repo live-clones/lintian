@@ -136,13 +136,6 @@ if (m,\r,) {
 
 my $wrong_directory_detected = 0;
 
-if (m,\<fill in (?:http/)?ftp site\>, or m/\<Must follow here\>/) {
-    tag 'helper-templates-in-copyright';
-}
-if (m,\<Put the license of the package here,) {
-    tag 'helper-templates-in-copyright';
-}
-
 if (m,(usr/share/common-licenses/(?:GPL|LGPL|BSD|Artistic)\.gz),) {
     tag 'copyright-refers-to-compressed-license', $1;
 }
@@ -255,13 +248,17 @@ if (m,(?:under )?(?:the )?(?:same )?(?:terms )?as Perl itself,i &&
 
 # Checks for various packaging helper boilerplate.
 
-if (m,\<put author[\'\(]s\)? name and email here\>,o) {
-    tag 'helper-templates-in-copyright';
-}
-if (m,\<Copyright \(C\) YYYY Name OfAuthor\>,o or
+if (m,\<fill in (?:http/)?ftp site\>,o or
+    m,\<Must follow here\>,o or
+    m,\<Put the license of the package here,o or
+    m,\<put author[\'\(]s\)? name and email here\>,o or
+    m,\<Copyright \(C\) YYYY Name OfAuthor\>,o or
     m,Upstream Author\(s\),o or
     m,\<years\>,o or
     m,\<special license\>,o or
+    m,\<Put the license of the package here indented by 1 space\>,o or
+    m,\<This follows the format of Description: lines in control file\>,o or
+    m,\<Including paragraphs\>,o or
     m,\<likewise for another author\>,o) {
     tag 'helper-templates-in-copyright';
 }
