@@ -151,6 +151,8 @@ lintian (2.5.3) UNRELEASED; urgency=low
     + [NT] Removed duplicate "allowed to" in same sentence.
     + [NT] Added a paragraph on some of the constrains in design
       of Lintian.
+  * doc/lintianrc.example:
+    + [NT] Add an example on how to enable "--quiet" via lintianrc.
   * doc/README.developers:
     + [NT] New file.  Thanks to Jeremiah C. Foster for the initial
       contribution.
@@ -169,6 +171,11 @@ lintian (2.5.3) UNRELEASED; urgency=low
       passed.
     + [JW,NT] Fixed a regression where --check-part ignored display
       settings (such as --display-info).  (Closes: #640694)
+    + [NT] If both --verbose and --quiet is used together, then use
+      the last of them to appear rather than "both at the same time".
+      (Closes: #643066)
+    + [NT] Accept --quiet in lintianrc as "quiet".  This option may
+      not be used together with "verbose" in the config file.
 
   * lib/Util.pm:
     + [JW] Use LC_ALL rather than LANG, since LC_ALL overrules
@@ -184,6 +191,8 @@ lintian (2.5.3) UNRELEASED; urgency=low
     + [NT] Fixed "index" method for source packages.
   * lib/Lintian/Collect/Package.pm:
     + [JW,NT] Replace use of fail with croak.  (Closes: #637741)
+  * lib/Lintian/Output.pm:
+    + [NT] Merged "quiet" and "verbose" into "verbosity_level".
   * lib/Lintian/Profile.pm:
     + [NT] Reject profiles containing an unknown field.
   * lib/Lintian/Tag/Info.pm:
@@ -209,6 +218,11 @@ lintian (2.5.3) UNRELEASED; urgency=low
     + [JW] Fixed some stray POD markup.  (Closes: #640705)
     + [JW,NT] Clarified that --tags and --tags-from-file ignores
       display settings.
+    + [NT] Documented how lintian behaves if --quiet is used together
+      with --verbose or --debug.
+    + [NT] Documented how --verbose and --quiet can be enabled via
+      the config file.  Only one of "verbose" and "quiet" may
+      appear in the config file.
 
   * profiles/debian/ftp-master-auto-reject.profile:
     + [NT] Refreshed to include udeb-uses-non-gzip-data-tarball.
