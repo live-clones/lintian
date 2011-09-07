@@ -251,6 +251,15 @@ tag, use:
 
 The legacy test suite will not be run in this case.
 
+=item Running only the legacy test suite
+
+To run only the tests in legacy test suite use:
+
+ $ debian/rules runtests onlyrun=--legacy-only
+
+The new test suite will not be run in this case, but it is not possible
+to select specific tests to run.
+
 =back
 
 =cut
