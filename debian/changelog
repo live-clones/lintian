@@ -148,6 +148,8 @@ lintian (2.5.3) UNRELEASED; urgency=low
     + [NT] Refreshed.
   * data/output/manual-references:
     + [JW] Refreshed.
+  * data/rules/known-makefiles:
+    + [JW] Added Makefiles from (the future) dpkg.  (Closes: #640921)
   * data/spelling/corrections{,-multiword}:
     + [NT] Added some corrections for "remove" etc.  Thanks to
       Jakub Wilk for spotting those.
