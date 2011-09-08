@@ -271,6 +271,9 @@ lintian (2.5.3) UNRELEASED; urgency=low
   * reporting/html_reports:
     + [JW,NT] Create a gzip'ed version of the raw lintian.log.
       (Closes: #637819)
+  * reporting/templates/head.tmpl:
+    + [NT] Show the list of all tags in the page header.  Thanks to
+      Arno Töll for the suggestion and the patch.  (Closes: #640962)
   * reporting/templates/index.tmpl:
     + [NT] Added link to the new gzip'ed lintian.log.
 
