@@ -55,7 +55,7 @@ lintian (2.5.3) UNRELEASED; urgency=low
       (Closes: #634191)
     + [JW] Extended helper-templates-in-copyright and ensure it is
       only emitted once per package.
-  * checks/debhelper:
+  * checks/debhelper{,.desc}:
     + [NT] Recognise /usr/share/R/debian/r-cran.mk as a cdbs-based
       build.  This prevents false-positive "unneeded cdbs" warning.
     + [JW] Check for use of the obsolete dh_installmanpages debhelper
@@ -192,11 +192,6 @@ lintian (2.5.3) UNRELEASED; urgency=low
     + [NT] Accept --quiet in lintianrc as "quiet".  This option may
       not be used together with "verbose" in the config file.
 
-  * lib/Util.pm:
-    + [JW] Use LC_ALL rather than LANG, since LC_ALL overrules
-      LANG.
-    + [JW] Stricten the DCtrl parser to choke on some syntax errors
-      that was silently ignored.  (Closes: #639516)
   * lib/Lintian/Check.pm:
     + [NT] Catch "Name <Name <Email>>" as a malformed email address.
       (Closes: #640489)
@@ -232,6 +227,11 @@ lintian (2.5.3) UNRELEASED; urgency=low
       (Closes: #639292)
     + [NT] Remove the last new line (if any) before a </pre> in tag
       to reduce the empty space to the next paragraph.
+  * lib/Util.pm:
+    + [JW] Use LC_ALL rather than LANG, since LC_ALL overrules
+      LANG.
+    + [JW] Stricten the DCtrl parser to choke on some syntax errors
+      that was silently ignored.  (Closes: #639516)
 
   * man/lintian.pod.in:
     + [JW] Fixed some stray POD markup.  (Closes: #640705)
