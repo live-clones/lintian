@@ -80,6 +80,8 @@ lintian (2.5.3) UNRELEASED; urgency=low
       (Closes: #629308)
     + [NT] Also emit bad-homepage if the Homepage URL does not seem to
       be using a known protocol (for homepages).  (Closes: #580427)
+    + [JW] Bumped the severity of "no-human-maintainers", since it is
+      now a Policy "must" directive.  (Closes: #640856)
   * checks/{filename-length,rules}.desc:
     + [NT] Improved the descriptions of some tags.  (Closes: #639018)
   * checks/files{,.desc}:

@@ -245,12 +245,12 @@ Info: Orphaned packages should have "Debian QA Group
 Ref: devref 5.9.4
 
 Tag: no-human-maintainers
-Severity: normal
+Severity: serious
 Certainty: possible
 Info: The Maintainer address for this package is a mailing list and there
- are no Uploaders listed.  Team-maintained packages should list the human
+ are no Uploaders listed.  Team-maintained packages must list the human
  maintainers in the Uploaders field.
-Ref: devref 5.12
+Ref: policy 3.3, devref 5.12
 
 Tag: no-source-field
 Severity: serious
