@@ -233,7 +233,7 @@ lintian (2.5.3) UNRELEASED; urgency=low
     + [JW] Use LC_ALL rather than LANG, since LC_ALL overrules
       LANG.
     + [JW] Stricten the DCtrl parser to choke on some syntax errors
-      that was silently ignored.  (Closes: #639516)
+      that were silently ignored.  (Closes: #639516)
 
   * man/lintian.pod.in:
     + [JW] Fixed some stray POD markup.  (Closes: #640705)
