@@ -200,6 +200,8 @@ lintian (2.5.3) UNRELEASED; urgency=low
   * lib/Lintian/Check.pm:
     + [NT] Catch "Name <Name <Email>>" as a malformed email address.
       (Closes: #640489)
+    + [JW] Catch misspellings of the "Debian QA Group" maintainer
+      email (used for orphaned packages).  (Closes: #640834)
   * lib/Lintian/Collect.pm:
     + [JW,NT] Create the source field from the package field if the
       former is not present.  This fixes a number of false-positves

@@ -179,7 +179,8 @@ sub check_maintainer {
 
 	# Some additional checks that we only do for maintainer fields.
 	if ($field eq 'maintainer') {
-            if ($mail eq 'debian-qa@lists.debian.org') {
+            if (($mail eq 'debian-qa@lists.debian.org') or
+                ($name =~ /\bdebian\s+qa\b/i and $mail ne 'packages@qa.debian.org')) {
                 tag 'wrong-debian-qa-address-set-as-maintainer', $maintainer;
             } elsif ($mail eq 'packages@qa.debian.org') {
                 tag 'wrong-debian-qa-group-name', $maintainer
