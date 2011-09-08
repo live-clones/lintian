@@ -476,11 +476,13 @@ if (not defined $info->field('priority')) {
 
 if (defined $info->field('homepage')) {
 	my $homepage = $info->field('homepage');
+	my $orig = $homepage;
 
 	unfold('homepage', \$homepage);
 
 	if ($homepage =~ /^<(?:UR[LI]:)?.*>$/i) {
-		tag 'superfluous-clutter-in-homepage', $homepage;
+		tag 'superfluous-clutter-in-homepage', $orig;
+		$homepage = substr($homepage, 1, length($homepage) - 2);
 	}
 
 	require URI;
@@ -488,11 +490,11 @@ if (defined $info->field('homepage')) {
 
 	# not an absolute URI or (most likely) an invalid protocol
 	unless ($uri->scheme && $uri->scheme =~ m/^ftp|https?|gopher$/o) {
-		tag 'bad-homepage', $homepage;
+		tag 'bad-homepage', $orig;
 	}
 
 	if ($homepage =~ m,/search\.cpan\.org/.*-[0-9._]+/*$,) {
-		tag 'homepage-for-cpan-package-contains-version', $homepage;
+		tag 'homepage-for-cpan-package-contains-version', $orig;
 	}
 } elsif ($type eq 'binary' and not $info->native) {
 	tag 'no-homepage-field';

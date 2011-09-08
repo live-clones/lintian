@@ -2,4 +2,6 @@ Testname: fields-bad-homepage
 Sequence: 6000
 Version: 1.0
 Description: Test for invalid Homepage protocol
-Test-For: bad-homepage
+Test-For:
+ bad-homepage
+ superfluous-clutter-in-homepage

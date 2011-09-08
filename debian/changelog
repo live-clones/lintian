@@ -82,6 +82,9 @@ lintian (2.5.3) UNRELEASED; urgency=low
       be using a known protocol (for homepages).  (Closes: #580427)
     + [JW] Bumped the severity of "no-human-maintainers", since it is
       now a Policy "must" directive.  (Closes: #640856)
+    + [JW,NT] If superfluous-clutter-in-homepage has been emitted,
+      ignore the surrounding "<>" for the rest of the homepage checks.
+      (Closes: #640947)
   * checks/{filename-length,rules}.desc:
     + [NT] Improved the descriptions of some tags.  (Closes: #639018)
   * checks/files{,.desc}:
