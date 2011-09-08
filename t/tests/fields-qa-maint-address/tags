@@ -1,3 +1,3 @@
+E: fields-qa-maint-address source: no-human-maintainers
 E: fields-qa-maint-address source: wrong-debian-qa-address-set-as-maintainer Debian QA Group <debian-qa@lists.debian.org>
 E: fields-qa-maint-address: wrong-debian-qa-address-set-as-maintainer Debian QA Group <debian-qa@lists.debian.org>
-W: fields-qa-maint-address source: no-human-maintainers
