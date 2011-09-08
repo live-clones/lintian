@@ -7,6 +7,7 @@ Uploaders: Mrs. Localhost <user@localhost>,
            One-name <has-only-1-name@elsewhere.com>,
            Malformed Email <@ddress@myspace.com>,
            John A. J. Doe <i.am.ok@somewhere.com>,
+           Doris Double-Email <Doris Double-Email <doris@demail.com>>,
            I have no email
 Standards-Version: {$standards_version}
 Build-Depends: debhelper (>= 7)

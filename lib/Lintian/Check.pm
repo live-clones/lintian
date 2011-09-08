@@ -137,7 +137,16 @@ sub check_maintainer {
 
     # Some basic tests.
     my $malformed;
-    if ($extra) {
+    # If there is something after the mail address OR if there is a
+    # ">" after the last "@" in the mail it is malformed.  This
+    # happens with "name <name <email>>", where $mail will be "name
+    # <email>" (#640489).  Email::Valid->address (below) will accept
+    # this in most cases (because that is generally valid), but we
+    # only want Email::Valid to validate the "email" part and not the
+    # name (Policy allows "." to be unqouted in names, Email::Valid
+    # does not etc.).  Thus this check is to ensure we only pass the
+    # "email"-part to Email::Valid.
+    if ($extra or ($mail && $mail =~ m/\@[^\>\@]+\>[^\>\@]*$/o)) {
         tag "$field-address-malformed", $maintainer;
         $malformed = 1;
     }
@@ -159,7 +168,7 @@ sub check_maintainer {
     if (not $mail) {
         tag "$field-address-missing", $maintainer;
     } else {
-	if (not $malformed and not Email::Valid->address($mail)){
+	if (not $malformed and not Email::Valid->address($mail)) {
             # Either not a valid email or possibly missing a comma between
             # two entries.
             tag "$field-address-malformed", $maintainer;

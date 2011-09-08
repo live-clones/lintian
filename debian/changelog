@@ -197,6 +197,9 @@ lintian (2.5.3) UNRELEASED; urgency=low
       LANG.
     + [JW] Stricten the DCtrl parser to choke on some syntax errors
       that was silently ignored.  (Closes: #639516)
+  * lib/Lintian/Check.pm:
+    + [NT] Catch "Name <Name <Email>>" as a malformed email address.
+      (Closes: #640489)
   * lib/Lintian/Collect.pm:
     + [JW,NT] Create the source field from the package field if the
       former is not present.  This fixes a number of false-positves
