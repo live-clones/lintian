@@ -10,11 +10,13 @@ Severity: serious
 Certainty: certain
 Info: The binary package does not have a "Description:" control field.
 Tested: empty
+Ref: policy 3.4
 
 Tag: description-synopsis-is-empty
 Severity: serious
 Certainty: certain
 Info: The first line in the "Description:" is empty.
+Ref: policy 3.4
 
 Tag: extended-description-contains-empty-paragraph
 Severity: normal
@@ -27,6 +29,7 @@ Severity: serious
 Certainty: certain
 Info: The extended description (the lines after the first line of the
  "Description:" field) is empty.
+Ref: policy 3.4
 
 Tag: extended-description-is-probably-too-short
 Severity: minor

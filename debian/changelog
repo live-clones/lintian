@@ -63,6 +63,8 @@ lintian (2.5.3) UNRELEASED; urgency=low
   * checks/debian-readme{,.desc}:
     + [JW] Replace debmake-specific tag with more general
       readme-debian-contains-invalid-email-address.
+  * checks/description.desc:
+    + [JW] Added references to some tags.  (Closes: #640853)
   * checks/duplicate-files{,.desc}:
     + [NT] Replace the exception for "__init__.py" files by excluding
       all empty files from the check.  The bug (#632789) only requests
