@@ -31,7 +31,7 @@ sub check_test_feature{
     my $env = $ENV{LINTIAN_TEST_FEATURE};
     return 0 unless $env;
     foreach my $feat (@_){
-	return 1 if($env =~ m/$feat/);
+        return 1 if($env =~ m/$feat/);
     }
     return 0;
 }
@@ -80,21 +80,21 @@ sub find_default_profile {
     my $qparent;
     # Use dpkg-vendor if present (unless we are testing our libdpkg-perl code)
     if(check_path('dpkg-vendor') && !check_test_feature('vendor-libdpkg-perl')){
-	chomp($vendor = `dpkg-vendor --query Vendor`);
-	fail('dpkg-vendor failed (status: ' .  ($? >> 8). ").\n") if $?;
-	$qparent = \&_find_parent_vendor_dpkg_vendor;
+        chomp($vendor = `dpkg-vendor --query Vendor`);
+        fail('dpkg-vendor failed (status: ' .  ($? >> 8). ").\n") if $?;
+        $qparent = \&_find_parent_vendor_dpkg_vendor;
     } else {
-	require Dpkg::Vendor;
-	$vendor = Dpkg::Vendor::get_current_vendor();
-	fail("Could not determine the current vendor.\n") unless $vendor;
-	$qparent = \&_find_parent_vendor_libdpkg_perl;
+        require Dpkg::Vendor;
+        $vendor = Dpkg::Vendor::get_current_vendor();
+        fail("Could not determine the current vendor.\n") unless $vendor;
+        $qparent = \&_find_parent_vendor_libdpkg_perl;
     }
     $orig = $vendor;
     while ($vendor) {
-	my $p;
-	$p = Lintian::Profile->find_profile(lc($vendor), @prof_path);
-	last if $p;
-	$vendor = $qparent->($vendor);
+        my $p;
+        $p = Lintian::Profile->find_profile(lc($vendor), @prof_path);
+        last if $p;
+        $vendor = $qparent->($vendor);
     }
     fail("Could not find a profile for vendor $orig") unless $vendor;
     return lc($vendor);
