@@ -34,24 +34,24 @@ unlink('changelog') or fail("cannot remove changelog file: $!")
 
 # Pick the first of these files that exists.
 my @changelogs = ("unpacked/usr/share/doc/$pkg/changelog.Debian.gz",
-	       "unpacked/usr/share/doc/$pkg/changelog.Debian",
-	       "unpacked/usr/share/doc/$pkg/changelog.debian.gz",
-	       "unpacked/usr/share/doc/$pkg/changelog.debian",
-	       "unpacked/usr/share/doc/$pkg/changelog.gz",
-	       "unpacked/usr/share/doc/$pkg/changelog",
-	       "unpacked/usr/doc/$pkg/changelog.Debian.gz",
-	       "unpacked/usr/doc/$pkg/changelog.Debian",
-	       "unpacked/usr/doc/$pkg/changelog.debian.gz",
-	       "unpacked/usr/doc/$pkg/changelog.debian",
-	       "unpacked/usr/doc/$pkg/changelog.gz",
-	       "unpacked/usr/doc/$pkg/changelog");
+                  "unpacked/usr/share/doc/$pkg/changelog.Debian",
+                  "unpacked/usr/share/doc/$pkg/changelog.debian.gz",
+                  "unpacked/usr/share/doc/$pkg/changelog.debian",
+                  "unpacked/usr/share/doc/$pkg/changelog.gz",
+                  "unpacked/usr/share/doc/$pkg/changelog",
+                  "unpacked/usr/doc/$pkg/changelog.Debian.gz",
+                  "unpacked/usr/doc/$pkg/changelog.Debian",
+                  "unpacked/usr/doc/$pkg/changelog.debian.gz",
+                  "unpacked/usr/doc/$pkg/changelog.debian",
+                  "unpacked/usr/doc/$pkg/changelog.gz",
+                  "unpacked/usr/doc/$pkg/changelog");
 
 my $chl;
 
 for (@changelogs) {
     if (-l $_ || -f $_) {
-	$chl = $_;
-	last;
+        $chl = $_;
+        last;
     }
 }
 
@@ -63,9 +63,9 @@ for (@changelogs) {
 if (defined ($chl) && -l $chl) {
     my $link = readlink $chl or fail("cannot readlink $chl: $!");
     if ($link =~ /\.\./ || ($link =~ m%/% && $link !~ m%^[^/]+(?:/+[^/]+)*\z%)) {
-	symlink('file-is-in-another-package', 'changelog')
-	    or fail("cannot create changelog symlink: $!");
-	undef $chl;
+        symlink('file-is-in-another-package', 'changelog')
+            or fail("cannot create changelog symlink: $!");
+        undef $chl;
     } elsif (! -f $chl) {
         undef $chl;
     }
@@ -88,7 +88,7 @@ if (not defined $chl) {
     close (COPY) or fail("cannot write changelog: $!");
 } else {
     link($chl, 'changelog')
-	or fail("cannot link $chl to changelog: $!");
+        or fail("cannot link $chl to changelog: $!");
 }
 
 if ($chl && $chl !~ m/changelog\.debian/i) {
@@ -126,6 +126,6 @@ if (-f $news) {
         }
     }
     if ($news) {
-	gunzip_file($news, 'NEWS.Debian');
+        gunzip_file($news, 'NEWS.Debian');
     }
 }
