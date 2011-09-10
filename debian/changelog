@@ -7,6 +7,11 @@ lintian (2.4.3+squeeze1) stable; urgency=low
       be tricked into disclosing the presence of files on the host
       system via specially crafted source packages.
 
+  * debian/source/options:
+    + [NT] Added tar-ignore option that only excludes .git to
+      prevent some files from being "lost" when rebuilding the
+      package.
+
  -- Niels Thykier <niels@thykier.net>  Wed, 10 Aug 2011 20:53:04 +0200
 
 lintian (2.4.3) unstable; urgency=low
