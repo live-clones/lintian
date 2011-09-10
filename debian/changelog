@@ -1,4 +1,6 @@
-lintian (2.5.3) UNRELEASED; urgency=low
+lintian (2.5.3) unstable; urgency=low
+
+  The "Another 51 bites the dust.  169 left to go." release.
 
   * Summary of tag changes:
     + Added:
@@ -299,7 +301,7 @@ lintian (2.5.3) UNRELEASED; urgency=low
     + [JW,NT] Fixed test failures caused by unpacking the source
       with a umask different from 0022.  (Closes: #637649)
 
- -- Niels Thykier <niels@thykier.net>  Wed, 10 Aug 2011 21:09:24 +0200
+ -- Niels Thykier <niels@thykier.net>  Sat, 10 Sep 2011 11:53:51 +0200
 
 lintian (2.5.2) unstable; urgency=low
 
