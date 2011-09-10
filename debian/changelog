@@ -1,3 +1,11 @@
+lintian (2.5.4) UNRELEASED; urgency=low
+
+  * lib/Lab.pm:
+    + [NT] Updated it to use Lintian::Output::verbosity_level rather
+      than verbose.
+
+ -- Niels Thykier <niels@thykier.net>  Sat, 10 Sep 2011 13:44:01 +0200
+
 lintian (2.5.3) unstable; urgency=low
 
   The "Another 51 bites the dust.  169 left to go." release.
