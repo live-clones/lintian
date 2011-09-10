@@ -775,8 +775,12 @@ if ($type eq 'source') {
 						}
 					}
 
-					if($d_pkg =~ m/openjdk-\d+-doc/o or $d_pkg eq 'classpath-doc'){
+					if ($d_pkg =~ m/^openjdk-\d+-doc$/o or $d_pkg eq 'classpath-doc'){
 					    tag 'build-depends-on-specific-java-doc-package', $d_pkg;
+					}
+
+					if ($d_pkg =~ m/^libdb\d+\.\d+.*-dev$/o and &$is_dep_field($field)) {
+					    tag 'build-depends-on-versioned-berkeley-db', "$field:$d_pkg";
 					}
 
 					tag 'conflicting-negation-in-source-relation', "$field: $part_d_orig"

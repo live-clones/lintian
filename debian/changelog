@@ -85,6 +85,10 @@ lintian (2.5.3) UNRELEASED; urgency=low
     + [JW,NT] If superfluous-clutter-in-homepage has been emitted,
       ignore the surrounding "<>" for the rest of the homepage checks.
       (Closes: #640947)
+    + [NT] Added check for Build-Depending on libdbX.Y-dev (and related
+      packages.  Most packages should be able to use unversioned -dev
+      packages.  Thanks to Ondřej Surý for the report and the initial
+      tag description.  (Closes: #624434)
   * checks/{filename-length,rules}.desc:
     + [NT] Improved the descriptions of some tags.  (Closes: #639018)
   * checks/files{,.desc}:

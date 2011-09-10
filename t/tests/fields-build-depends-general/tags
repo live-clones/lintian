@@ -12,4 +12,6 @@ E: fields-build-depends-general source: invalid-arch-string-in-source-relation s
 I: fields-build-depends-general source: ored-build-depends-on-obsolete-package build-depends: xlibmesa-gl-dev
 W: fields-build-depends-general source: build-depends-on-1-revision build-depends: revision-1 (>= 1.0-1)
 W: fields-build-depends-general source: build-depends-on-python-dev-with-no-arch-any
+W: fields-build-depends-general source: build-depends-on-versioned-berkeley-db build-depends:libdb5.1++-dev
+W: fields-build-depends-general source: build-depends-on-versioned-berkeley-db build-depends:libdb5.1-java-dev
 W: fields-build-depends-general source: depends-on-packaging-dev build-depends
