@@ -91,6 +91,26 @@ if (not defined $chl) {
 	or fail("cannot link $chl to changelog: $!");
 }
 
+if ($chl && $chl !~ m/changelog\.debian/i) {
+    # Either this is a native package OR a non-native package where the
+    # debian changelog is missing.  checks/changelog is not too happy
+    # with the latter case, so check looks like a Debian changelog.
+    open my $fd, '<', 'changelog' or fail "Opening changelog: $!";
+    my $ok = 0;
+    while ( my $line = <$fd> ) {
+        next if $line =~ m/^\s*+$/o;
+        # look for something like
+        # lintian (2.5.3) UNRELEASED; urgency=low
+        if ($line =~ m/^\S+\s*\([^\)]+\)\s*(?:UNRELEASED|(?:[^ \t;]+\s*)+)\;/o) {
+            $ok = 1;
+        }
+        last;
+    }
+    close $fd;
+    # Remove it if it not the Debian changelog.
+    unlink 'changelog' unless $ok;
+}
+
 # Extract NEWS.Debian files as well, with similar precautious.  Ignore any
 # symlinks to other packages here; in that case, we just won't check the file.
 unlink('NEWS.Debian') or fail("cannot unlink NEWS.Debian: $!")

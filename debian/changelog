@@ -48,6 +48,9 @@ lintian (2.5.3) UNRELEASED; urgency=low
       (Closes: #639946)
     + [JW,NT] Fixed use of uninitialized value as hash key.
       (Closes: #640238)
+    + [NT] Mention that the missing native changelog tag can, in
+      some cases, be emitted if it does not look like a Debian
+      changelog.
   * checks/{conffile,etcfiles}{,.desc}:
     + [JW] Merged etcfiles into conffile.  (Closes: #637590)
   * checks/copyright-file{,.desc}:
@@ -143,6 +146,11 @@ lintian (2.5.3) UNRELEASED; urgency=low
 
   * collection/fields{,.desc}:
     + [NT] Removed, no longer used.
+  * collection/changelog-file:
+    + [NT] Double check changelogs that does not explicitly contains
+      "debian" in the filename.  This should avoid a myriad of syntax
+      error tags in some cases (such as perl), where the Debian
+      changelog is not present and there is an upstream changelog.
 
   * data/fields/archive-sections:
     + [NT] Fixed a typo in "otherosfs" section name.  Thanks to
