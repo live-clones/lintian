@@ -1,5 +1,5 @@
 Last generated 2011-09-10
-Coverage: 721/936 (77.03%), w. legacy tests: 843/936 (90.06%)
+Coverage: 723/937 (77.16%), w. legacy tests: 844/937 (90.07%)
 
 The following tags are not tested by the test suite:
 
@@ -120,7 +120,6 @@ binaries statically-linked-binary
 binaries unstripped-binary-or-object
 
 changelog-file changelog-file-missing-in-native-package
-changelog-file debian-changelog-file-missing-or-wrong-name
 changelog-file wrong-name-for-debian-news-file
 
 copyright-file old-fsf-address-in-copyright-file
@@ -250,7 +249,6 @@ Breakdown of remaining tags in legacy test suite by test case:
 
 binary
   binary-has-unneeded-section
-  debian-changelog-file-missing-or-wrong-name
   deprecated-kdelnk-file
   desktop-contains-deprecated-header
   desktop-entry-missing-required-key

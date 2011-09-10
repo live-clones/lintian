@@ -51,7 +51,16 @@ foreach my $file (sort keys %$cindex) {
     my $operm;
     my $experm;
 
-    next if $file eq '';
+    # the control.tar.gz should only contain files (and the "root"
+    # dir, but that /should/ the "empty file" case in the beginning of
+    # the loop) In any event, allow directories just in case - the
+    # check here is mostly to catch symlinks (and "devices" etc.)
+    if ($cindex_info->{type} !~ m/^[-d]$/o) {
+        tag 'control-file-is-not-a-file', $file;
+        # Doing further checks is probably not going to yield anything
+        # remotely useful.
+        next;
+    }
 
     # valid control file?
     unless ( $ctrl->known($file) ) {
