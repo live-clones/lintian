@@ -27,18 +27,24 @@ use Lintian::Output qw(:util);
 use base qw(Lintian::Output);
 
 sub print_tag {
-    my ($self, $pkg_info, $tag_info, $information, $overridden) = @_;
+    my ($self, $pkg_info, $tag_info, $information, $override) = @_;
     $self->issued_tag($tag_info->tag);
     my $flags = ($tag_info->experimental ? 'experimental' : '');
-    if ($overridden) {
+    my $comment;
+    if ($override) {
         $flags .= ',' if $flags;
         $flags .= 'overridden';
+        if (@{ $override->comments }) {
+            my $c = $self->_make_xml_tag ('comment', [],
+                                          join ("\n", @{ $override->comments }));
+            $comment = [ $c ];
+        }
     }
     my @attrs = ([ severity  => $tag_info->severity ],
                  [ certainty => $tag_info->certainty ],
                  [ flags     => $flags ],
                  [ name      => $tag_info->tag ]);
-    $self->_print_xml_tag('tag', \@attrs, $information);
+    print { $self->stdout } $self->_make_xml_tag('tag', \@attrs, $information, $comment), "\n";
 }
 
 sub print_start_pkg {
@@ -66,6 +72,12 @@ sub _print {
     print { $stream } $output;
 }
 
+# Create a start tag (or a self-closed tag)
+# $tag is the name of the tag
+# $attrs is an anonymous array of pairs of attributes and their values
+# $close is a boolean.  If a truth-value, the tag will closed
+#
+# returns the string.
 sub _open_xml_tag {
     my ($self, $tag, $attrs, $close) = @_;
     my $output = "<$tag";
@@ -82,14 +94,22 @@ sub _open_xml_tag {
 
 # Print a given XML tag to standard output.  Takes the tag, an anonymous array
 # of pairs of attributes and values, and then the contents of the tag.
-sub _print_xml_tag {
-    my ($self, $tag, $attrs, $content) = @_;
-    my $empty = ($content//'') eq '';
+sub _make_xml_tag {
+    my ($self, $tag, $attrs, $content, $children) = @_;
+    # $empty is true if $content is empty and there are no children
+    my $empty = ($content//'') eq '' && (!defined $children || !@$children);
     my $output = $self->_open_xml_tag($tag, $attrs, $empty);
-    if (defined $content && $content ne '') {
-        $output .= encode_entities($content,"<>&\"'") . "</$tag>";
+    if (!$empty) {
+        $output .= encode_entities($content,"<>&\"'") if $content;
+        if (defined $children) {
+            foreach my $child (@$children) {
+                $output .= "\n\t$child";
+            }
+            $output .= "\n";
+        }
+        $output .= "</$tag>";
     }
-    print { $self->stdout } $output, "\n";
+    return $output;
 }
 
 1;

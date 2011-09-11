@@ -273,23 +273,24 @@ can only be called as instance methods.
 
 =over 4
 
-=item C<print_tag($pkg_info, $tag_info, $extra, $overridden)>
+=item C<print_tag($pkg_info, $tag_info, $extra, $override)>
 
 Print a tag.  The first two arguments are hash reference with the
-information about the package and the tag, $extra is the extra information
-for the tag (if any) as an array reference, and $overridden is either
-undef if the tag is not overridden or the override for this tag.  Called
-from Lintian::Tags::tag().
+information about the package and the tag, $extra is the extra
+information for the tag (if any) as an array reference, and $override
+is either undef if the tag is not overridden or the
+L<Lintian::Tag::Override|override> for this tag.  Called from
+Lintian::Tags::tag().
 
 =cut
 
 sub print_tag {
-    my ($self, $pkg_info, $tag_info, $information, $overridden) = @_;
+    my ($self, $pkg_info, $tag_info, $information, $override) = @_;
     $information = ' ' . $information if $information ne '';
     my $code = $tag_info->code;
     my $tag_color = $self->{colors}{$code};
     $code = 'X' if $tag_info->experimental;
-    $code = 'O' if defined($overridden);
+    $code = 'O' if defined($override);
     my $type = '';
     $type = " $pkg_info->{type}" if $pkg_info->{type} ne 'binary';
 
@@ -306,6 +307,10 @@ sub print_tag {
 	}
     } else {
 	$tag .= $tag_info->tag;
+    }
+
+    if ($override && @{ $override->comments }) {
+	$self->msg(@{ $override->comments } );
     }
 
     $self->_print('', "$code: $pkg_info->{package}$type", "$tag$information");

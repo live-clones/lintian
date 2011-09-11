@@ -201,16 +201,16 @@ sub _check_overrides {
     return unless $overrides;
     if (exists $overrides->{''}) {
         $stats->{''}++;
-        return [$tag, ''];
+        return $overrides->{''};
     } elsif ($extra ne '' and exists $overrides->{$extra}) {
         $stats->{$extra}++;
-        return [$tag, $extra];
+        return $overrides->{$extra};
     } elsif ($extra ne '') {
         for (sort keys %$overrides) {
             my $override = $overrides->{$_};
             if ($override->is_pattern && $override->overrides($extra)){
                 $stats->{$_}++;
-                return [$tag, $override->extra];
+                return $override;
             }
         }
     }
@@ -220,9 +220,9 @@ sub _check_overrides {
 # Record tag statistics.  Takes the tag, the Lintian::Tag::Info object and a
 # flag saying whether the tag was overridden.
 sub _record_stats {
-    my ($self, $tag, $info, $overridden) = @_;
+    my ($self, $tag, $info, $override) = @_;
     my $stats = $self->{statistics}{$self->{current}};
-    if ($overridden) {
+    if ($override) {
         $stats = $self->{statistics}{$self->{current}}{overrides};
     }
     $stats->{tags}{$tag}++;
@@ -254,26 +254,12 @@ sub tag {
     my $extra = join(' ', @extra);
     $extra = '' unless defined $extra;
 
-    my $overridden = $self->_check_overrides($tag, $extra);
-    $self->_record_stats($tag, $info, $overridden);
-    return if (defined($overridden) and not $self->{show_overrides});
+    my $override = $self->_check_overrides($tag, $extra);
+    $self->_record_stats($tag, $info, $override);
+    return if (defined($override) and not $self->{show_overrides});
     return unless $self->displayed($tag);
     my $file = $self->{info}{$self->{current}};
-    my $ovout;
-    if ($overridden) {
-        my $overrides = $self->{info}{$self->{current}}{'overrides-data'}{$tag}{$overridden->[1]};
-        my $comments = $overrides->comments;
-        if ($comments && @$comments) {
-            $Lintian::Output::GLOBAL->msg(@$comments);
-        }
-        # We have to use undef, "$tag" or "$tag $extra" due to the Lintian::Output API
-        if ($overridden->[1]) {
-            $ovout = join(' ', @$overridden);
-        } else {
-            $ovout = $overridden->[0];
-        }
-    }
-    $Lintian::Output::GLOBAL->print_tag($file, $info, $extra, $ovout);
+    $Lintian::Output::GLOBAL->print_tag($file, $info, $extra, $override);
 }
 
 =back
