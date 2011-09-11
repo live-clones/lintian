@@ -3,6 +3,9 @@ lintian (2.5.4) UNRELEASED; urgency=low
   * lib/Lab.pm:
     + [NT] Updated it to use Lintian::Output::verbosity_level rather
       than verbose.
+  * lib/Lintian/Output/XML.pm:
+    + [NT] Use self-closing tags (if possible) and do not write
+      attributes with an empty value.
 
  -- Niels Thykier <niels@thykier.net>  Sat, 10 Sep 2011 13:44:01 +0200
 

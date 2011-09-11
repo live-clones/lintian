@@ -47,7 +47,7 @@ sub print_start_pkg {
                  [ name         => $pkg_info->{package} ],
                  [ architecture => $pkg_info->{arch} ],
                  [ version      => $pkg_info->{version} ]);
-    $self->_print_xml_tag('package', \@attrs);
+    print { $self->stdout } $self->_open_xml_tag('package', \@attrs, 0), "\n";
 }
 
 sub print_end_pkg {
@@ -66,17 +66,27 @@ sub _print {
     print { $stream } $output;
 }
 
+sub _open_xml_tag {
+    my ($self, $tag, $attrs, $close) = @_;
+    my $output = "<$tag";
+    for my $attr (@$attrs) {
+        my ($name, $value) = @$attr;
+        # Skip attributes with "empty" values
+        next unless defined $value && $value ne '';
+        $output .= " $name=" . '"' . $value . '"';
+    }
+    $output .= ' /' if $close;
+    $output .= '>';
+    return $output;
+}
+
 # Print a given XML tag to standard output.  Takes the tag, an anonymous array
 # of pairs of attributes and values, and then the contents of the tag.
 sub _print_xml_tag {
     my ($self, $tag, $attrs, $content) = @_;
-    my $output = "<$tag";
-    for my $attr (@$attrs) {
-        my ($name, $value) = @$attr;
-        $output .= " $name=" . '"' . $value . '"';
-    }
-    $output .= '>';
-    if (defined $content) {
+    my $empty = ($content//'') eq '';
+    my $output = $self->_open_xml_tag($tag, $attrs, $empty);
+    if (defined $content && $content ne '') {
         $output .= encode_entities($content,"<>&\"'") . "</$tag>";
     }
     print { $self->stdout } $output, "\n";
