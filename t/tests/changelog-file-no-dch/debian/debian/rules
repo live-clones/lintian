@@ -3,6 +3,10 @@
 %:
 	dh $@
 
+override_dh_installchangelogs:
+	# This is needed for Ubuntu, where debhelper does not install
+	# upstream changelogs by default
+	dh_installchangelogs ChangeLog
 
 override_dh_md5sums:
 	find debian/*/ -type f -a -iname 'changelog.debian*' -delete
