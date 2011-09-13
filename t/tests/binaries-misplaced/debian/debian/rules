@@ -6,4 +6,7 @@ binary:
 	dh --before dh_install binary
 	mkdir debian/$(pkg)/etc/
 	cp -a /bin/true debian/$(pkg)/etc/foo
+	# explicitly call dh_shlibdeps since debhelper is being
+	# "smart" and not calling it in newer versons (8.9.something)
+	dh_shlibdeps
 	dh --remaining binary
