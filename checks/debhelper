@@ -41,12 +41,16 @@ my $maint_commands = Lintian::Data->new ('debhelper/maint_commands');
 my $dh_commands_depends = Lintian::Data->new ('debhelper/dh_commands', '=');
 my $filename_configs = Lintian::Data->new ('debhelper/filename-config-files');
 my $dh_alt_deps = Lintian::Data->new ('debhelper/alt-dh_commands', '\|\|');
+my $dh_ver_deps = Lintian::Data->new ('debhelper/dh_commands-versions', qr/\|\|/o);
 
 # The version at which debhelper commands were introduced.  Packages that use
 # one of these commands must have a dependency on that version of debhelper or
 # newer.
-my %versions
-    = (dh_bugfiles        => '7.2.3~');
+my %versions = (
+    dh_bugfiles         => '7.2.3~',
+    dh_installgsettings => '8.1.3~',
+    dh_ucf              => '8.1.5~',
+);
 
 sub run {
 
@@ -130,7 +134,10 @@ while (<RULES>) {
 	# maintainer knows what they're doing and don't check build
 	# dependencies.
 	unless ($maybe_skipping) {
-	    if ($dh_commands_depends->known($dhcommand)) {
+	    if ($dh_ver_deps->known ($dhcommand)) {
+		my $dep = $dh_ver_deps->value($dhcommand);
+		$missingbdeps{$dep} = $dhcommand;
+	    } elsif ($dh_commands_depends->known($dhcommand)) {
 		my $dep = $dh_commands_depends->value($dhcommand);
 		my $alt = $dh_alt_deps->value($dhcommand)//'';
 

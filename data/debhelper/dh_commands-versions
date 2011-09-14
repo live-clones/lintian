@@ -1,0 +1,25 @@
+# Manually maintained list of dh_commands that requires a versioned
+# dependency *AND* are not provided by debhelper.  Commands provided
+# by debhelper is handled in checks/debhelper.
+#
+#  dh_X||dependency
+#
+# Note spaces are not allowed around the "||"-separator.
+#
+# The dh_X is the dh_command and the dependency is the full dependency
+# (including both package and version).  This overrules any thing
+# listed in dh_commands (which is auto-generated).  Please do not use
+# this together with alt-dh_commands!
+#
+# Please keep this sorted.
+
+dh_dpatch_patch||dpatch (>= 2.0.32~)
+dh_dpatch_unpatch||dpatch (>= 2.0.32~)
+dh_haskell_extra_depends||haskell-devscripts (>= 0.8.8~)
+dh_lv2config||lv2core (>= 4.0-2~)
+dh_pyppd||pyppd (>= 0.4.9-3~)
+dh_python-ply||python-ply (>= 3.4-1~)
+dh_sphinxdoc||python-sphinx (>= 1.0.7+dfsg)
+dh_xsf_substvars||xserver-xorg-dev (>= 2:1.9.4-1~)
+
+

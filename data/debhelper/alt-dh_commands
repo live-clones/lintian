@@ -1,7 +1,11 @@
 # Manually maintained list of dh_commands provided by additional
-#  packages beyond the primary one.  The format is:
+# packages beyond the primary one.  The format is:
 #
-#  dh_X || dep1 | dep2 
+#  dh_X||dep1 | dep2
+#
+# Note spaces are not allowed around the "||"-separator
+#
+# Please do not use this together with dh_commands-versions.
 #
 # Please keep this sorted.
 

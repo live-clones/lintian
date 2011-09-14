@@ -1,7 +1,13 @@
 lintian (2.5.4) UNRELEASED; urgency=low
 
+  * checks/dehelper:
+    + [JW,NT] Check for versioned dependencies for some dh_commands.
+      (Closes: #641035)
+
   * data/debhelper/{dh_commands,maint_commands,miscDepends_commands}:
     + [NT] Refreshed.
+  * data/debhelper/dh_commands-versions:
+    + [NT] New file.
 
   * lib/Lab.pm:
     + [NT] Updated it to use Lintian::Output::verbosity_level rather
