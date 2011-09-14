@@ -22,7 +22,6 @@ dh_installxmlcatalogs
 dh_installxsp
 dh_installzope
 dh_installzopeinstance
-dh_lisp
 dh_makeshlibs
 dh_metainit
 dh_nativejava
@@ -32,4 +31,5 @@ dh_python
 dh_python2
 dh_python3
 dh_suidregister
+dh_ucf
 dh_usrlocal

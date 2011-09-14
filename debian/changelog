@@ -1,5 +1,8 @@
 lintian (2.5.4) UNRELEASED; urgency=low
 
+  * data/debhelper/{dh_commands,maint_commands,miscDepends_commands}:
+    + [NT] Refreshed.
+
   * lib/Lab.pm:
     + [NT] Updated it to use Lintian::Output::verbosity_level rather
       than verbose.

@@ -5,6 +5,7 @@ dh_gtkmodules
 dh_installcatalogs
 dh_installdebconf
 dh_installdocs
+dh_installgsettings
 dh_installinfo
 dh_installinit
 dh_installlisting
@@ -15,3 +16,5 @@ dh_lisp
 dh_nativejava
 dh_pangomodules
 dh_pidgin
+dh_pyppd
+dh_ucf
