@@ -1,8 +1,10 @@
 /build-stamp
 /debian/test-out/
+/debian/test.locale/
 /doc/README
 /doc/help.tmp
 /doc/lintian.html/
 /doc/lintian.txt
+/man/man1/
 /runtests
-/debian/test.locale/
+

@@ -492,15 +492,6 @@ Info: This script apparently runs an init script directly rather than
  available.
 Ref: policy 9.3.3.2
 
-Tag: script-calls-init-script-directly
-Severity: normal
-Certainty: possible
-Info: This script apparently runs an init script directly rather than
- using <tt>invoke-rc.d</tt>.  While use of <tt>invoke-rc.d</tt> is only
- required for maintainer scripts, supporting the policy layer that it
- implements is a good idea in any script.
-Ref: policy 9.3.3.2
-
 Tag: gconftool-used-in-maintainer-script
 Severity: normal
 Certainty: possible
@@ -680,3 +671,12 @@ Info: The maintainer script removes a diversion that it didn't add.  If
  you're cleaning up unnecessary diversions from older versions of the
  package, remove them in <tt>preinst</tt> or <tt>postinst</tt> instead of
  waiting for <tt>postrm</tt> to do it.
+
+Tag: script-uses-perl4-libs-without-dep
+Severity: normal
+Certainty: possible
+Info: This package includes perl scripts using obsoleted perl 4-era
+ libraries. These libraries have been deprecated in perl in 5.14, and
+ are likely to be removed from the core in perl 5.16. Please either
+ remove references to these libraries, or add a dependency on
+ <tt>libperl4-corelibs-perl | perl (&lt;&lt; 5.12.3-7)</tt> to this package.

@@ -109,6 +109,13 @@ Info: This package calls dh_pycentral in its <tt>debian/rules</tt> file.
  Lenny or older system, please ignore this warning.
 Ref: http://wiki.debian.org/Python/PyCentral2DhPython2
 
+Tag: dh_installmanpages-is-obsolete
+Severity: normal
+Certainty: certain
+Ref: dh_installmanpages(1)
+Info: This package calls dh_installmanpages in its <tt>debian/rules</tt> file.
+ dh_installmanpages is deprecated in favour of dh_installman.
+
 Tag: dh_desktop-is-deprecated
 Severity: normal
 Certainty: certain

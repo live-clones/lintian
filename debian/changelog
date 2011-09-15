@@ -1,65 +1,209 @@
-lintian (2.5.3) UNRELEASED; urgency=low
+lintian (2.5.4) UNRELEASED; urgency=low
+
+  * checks/dehelper:
+    + [JW,NT] Check for versioned dependencies for some dh_commands.
+      (Closes: #641035)
+
+  * data/debhelper/{dh_commands,maint_commands,miscDepends_commands}:
+    + [NT] Refreshed.
+  * data/debhelper/dh_commands-versions:
+    + [NT] New file.
+
+  * lib/Lab.pm:
+    + [NT] Updated it to use Lintian::Output::verbosity_level rather
+      than verbose.
+  * lib/Lintian/Collect/Source.pm:
+    + [JW] Fixed call to binary_field in binary_relation.
+      (Closes: #641609)
+  * lib/Lintian/Output/XML.pm:
+    + [NT] Use self-closing tags (if possible) and do not write
+      attributes with an empty value.
+
+ -- Niels Thykier <niels@thykier.net>  Sat, 10 Sep 2011 13:44:01 +0200
+
+lintian (2.5.3) unstable; urgency=low
+
+  The "Another 51 bites the dust.  169 left to go." release.
 
   * Summary of tag changes:
     + Added:
       - boilerplate-copyright-format-uri
+      - control-file-is-not-a-file
       - comma-separated-files-in-dep5-copyright
+      - copyright-has-crs
       - debian-copyright-is-symlink
+      - depends-on-packaging-dev
+      - dh_installmanpages-is-obsolete
       - missing-field-in-dep5-copyright
       - missing-license-paragraph-in-dep5-copyright
       - missing-license-text-in-dep5-copyright
       - no-debian-copyright
       - obsolete-field-in-dep5-copyright
       - out-of-date-copyright-format-uri
+      - package-contains-no-arch-dependent-files
+      - perl-module-uses-perl4-libs-without-dep
+      - readme-debian-contains-invalid-email-address
+      - script-uses-perl4-libs-without-dep
       - syntax-error-in-dep5-copyright
       - unknown-copyright-format-uri
       - unknown-paragraph-in-dep5-copyright
       - unused-license-paragraph-in-dep5-copyright
       - unversioned-copyright-format-uri
+      - vim-addon-within-vim-runtime-path
       - wiki-copyright-format-uri
+    + Removed:
+      - debian-changelog-file-contains-debmake-default-email-address
+      - readme-debian-contains-debmake-default-email-address
+      - script-calls-init-script-directly
 
   * checks/*:
     + [NT] Dropped fields from Needs-Info, it is no longer needed.
     + [JW] Use LC_ALL rather than LANG, since LC_ALL overrules
       LANG.  (Closes: #637595)
+    + [JW] Removed all whitespace lines to avoid confusing some
+      dctrl parsers (notably grep-dctrl).  (Closes: #639928)
+    + [JW] Fix a number of broken references in the tag
+      descriptions.  (Closes: #639923)
+    + [JW] Rewrote Debian Bug references using #nnnnnn notation.
+  * checks/binaries.desc:
+    + [NT] Remove the reference to the Library Packaging Guide,
+      since it is no longer available (in Debian).  (Closes: #640228)
+  * checks/changelog-file{,.desc}:
+    + [JW] Remove debmake-specific tag in favour of more general
+      debian-changelog-file-contains-invalid-email-address.
+      (Closes: #639946)
+    + [JW,NT] Fixed use of uninitialized value as hash key.
+      (Closes: #640238)
+    + [NT] Mention that the missing native changelog tag can, in
+      some cases, be emitted if it does not look like a Debian
+      changelog.
   * checks/{conffile,etcfiles}{,.desc}:
     + [JW] Merged etcfiles into conffile.  (Closes: #637590)
-  * checks/debhelper:
+  * checks/conffile:
+    + [NT] Skip all checks if "conffiles" is a symlink.
+  * checks/control-files{,.desc}:
+    + [NT] Check that all members of the control.tar.gz are either
+      regular files or directories.
+  * checks/copyright-file{,.desc}:
+    + [JW] Check for CRLF line endings in copyright files.
+      (Closes: #634191)
+    + [JW] Extended helper-templates-in-copyright and ensure it is
+      only emitted once per package.
+  * checks/debhelper{,.desc}:
     + [NT] Recognise /usr/share/R/debian/r-cran.mk as a cdbs-based
       build.  This prevents false-positive "unneeded cdbs" warning.
+    + [JW] Check for use of the obsolete dh_installmanpages debhelper
+      program.  Thanks to Joey Hess for the report.  (Closes: #634112).
+  * checks/debian-readme{,.desc}:
+    + [JW] Replace debmake-specific tag with more general
+      readme-debian-contains-invalid-email-address.
+  * checks/description.desc:
+    + [JW] Added references to some tags.  (Closes: #640853)
   * checks/duplicate-files{,.desc}:
     + [NT] Replace the exception for "__init__.py" files by excluding
       all empty files from the check.  The bug (#632789) only requests
       an exception for "empty __init__.py" files and generally empty
       files are unlikely to cause a serious size-waste.
-  * checks/fields.desc:
+  * checks/fields{,.desc}:
     + [NT] Mention that perl modules included in perl itself should
       be the first dependency if it is only included in the perl
       from experimental.  Thanks to Dominic Hargreaves for the
       report and the patch.  (Closes: #637793)
-  * checks/{filenames,rules}.desc:
+    + [NT] Warn about (build)depending/recommending on packaging-dev.
+      Thanks to Luk Claes for the report and the initial patch.
+      (Closes: #629308)
+    + [NT] Also emit bad-homepage if the Homepage URL does not seem to
+      be using a known protocol (for homepages).  (Closes: #580427)
+    + [JW] Bumped the severity of "no-human-maintainers", since it is
+      now a Policy "must" directive.  (Closes: #640856)
+    + [JW,NT] If superfluous-clutter-in-homepage has been emitted,
+      ignore the surrounding "<>" for the rest of the homepage checks.
+      (Closes: #640947)
+    + [NT] Added check for Build-Depending on libdbX.Y-dev (and related
+      packages.  Most packages should be able to use unversioned -dev
+      packages.  Thanks to Ondřej Surý for the report and the initial
+      tag description.  (Closes: #624434)
+  * checks/{filename-length,rules}.desc:
     + [NT] Improved the descriptions of some tags.  (Closes: #639018)
-  * checks/files:
+  * checks/files{,.desc}:
     + [NT] Added exceptions to "extra-license-file" for manpages,
       static libraries, .pc-, elf and pyshared-data-files.  This
       covers all the false-positives currently found in the liblicense
       package.  (Closes: #617901)
+    + [NT] Ignore non-ELF files in multiarch paths, when checking for
+      a missing pre-depends on multiarch-support.  Thanks to Sven
+      Joachim for the report.  (Closes: #639735)
+    + [NT] Added check for packages that only ships files in /usr/share
+      and are not marked "Architecture: all".  Thanks to Evgeni Golov,
+      Carl Fürstenberg and Jari Aalto for the suggestions.
+      (Closes: #574689)
+    + [JW] Do not emit third-party-package-in-python-dir for packages built
+      from python{,3}-{stdlib-extensions,profiler,old-doctools} sources.
+      Add reference to Python Policy in the tag description.
+      (Closes: #640211)
+    + [JW] Add check for Vim addons installing files into a directory
+      within Vim runtime path.  (Closes: #640371)
+    + [NT] Added check for Perl modules using perl4 libs without depending
+      on libperl4-core-libs-perl.  Thanks to Dominic Hargreaves for the
+      initial patch.
+  * checks/menus.desc:
+    + [NT] Added reference to the doc-base manual to help people
+      find the list of valid doc-base sections.  (Closes: #584280)
+  * checks/patch-systems:
+    + [NT] Use lsdiff to determine if a patch modifies the debian dir as
+      it is more accurate than diffstat for this.  (Closes: #640131)
+  * checks/rules:
+    + [NT] Do a simple and minimal variable tracking.  In very simple
+      cases, it can determine which targets a variable contains (when
+      the variable is used as a target).  (Closes: #638411)
+  * checks/scripts{,.desc}:
+    + [NT] Remove script-calls-init-script-directly.  (Closes: #617959)
+    + [NT] Added check for Perl scripts using perl4 libs without depending
+      on libperl4-core-libs-perl.  Thanks to Dominic Hargreaves for the
+      initial patch.  (Closes: #636994)
+  * checks/shared-libs{,.desc}:
+    + [JW] Fixed a typo in a tag description.  (Closes: #639177)
+    + [NT] Do not emit shlib-calls-exit for libraries that have an
+      INTERP section.  (Closes: #607399)
   * checks/source-copyright{,.desc}:
     + [JW] Added check for DEP-5 copyright files.  (Closes: #633779)
   * checks/standards-version:
     + [NT] Made the ancient-standards-version independent of the
       system time.
+  * checks/version-substvars{,.desc}:
+    + [NT] Also emit the any-depends-all tag if the ">=" relation is
+      used.  Thanks to Konstantinos Margaritis and Cyril Brulebois for
+      the report and the research.  (Closes: #639144)
 
   * collection/fields{,.desc}:
     + [NT] Removed, no longer used.
+  * collection/changelog-file:
+    + [NT] Double check changelogs that does not explicitly contains
+      "debian" in the filename.  This should avoid a myriad of syntax
+      error tags in some cases (such as perl), where the Debian
+      changelog is not present and there is an upstream changelog.
 
   * data/fields/archive-sections:
     + [NT] Fixed a typo in "otherosfs" section name.  Thanks to
       Stefan Potyra for the report.  (Closes: #637596)
-  * data/spelling/corrections:
+  * data/files/fonts:
+    + [NT] Refreshed against sid and now includes packages starting
+      with "fonts-" as well.  Thanks to Paul Wise for the patches.
+      (Closes: #622149)
+  * data/output/ftp-master-{,non}fatal:
+    + [NT] Refreshed.
+  * data/output/manual-references:
+    + [JW] Refreshed.
+  * data/rules/known-makefiles:
+    + [JW] Added Makefiles from (the future) dpkg.  (Closes: #640921)
+  * data/spelling/corrections{,-multiword}:
     + [NT] Added some corrections for "remove" etc.  Thanks to
       Jakub Wilk for spotting those.
+    + [JW,NT] Added more corrections.
+      (Closes: #639367, #640149, #613604)
 
+  * debian/control:
+    + [NT] (Build-)Depends on patchutils for lsdiff.
   * debian/copyright:
     + [NT] Added Jakub Wilk to maintainers.
   * debian/rules:
@@ -68,6 +212,10 @@ lintian (2.5.3) UNRELEASED; urgency=low
 
   * doc/lintian.xml:
     + [NT] Removed duplicate "allowed to" in same sentence.
+    + [NT] Added a paragraph on some of the constrains in design
+      of Lintian.
+  * doc/lintianrc.example:
+    + [NT] Add an example on how to enable "--quiet" via lintianrc.
   * doc/README.developers:
     + [NT] New file.  Thanks to Jeremiah C. Foster for the initial
       contribution.
@@ -77,32 +225,106 @@ lintian (2.5.3) UNRELEASED; urgency=low
       This happens if a package contains an override for a tag
       that has been marked "non-overridable" by the current vendor
       profile.
+    + [NT] Mention ".changes" as a valid file type in the "unknown
+      file" error.  Thanks to Michael Gilbert for the report and
+      the patch.   (Closes: #639430)
+    + [NT] Always display a given tag if requested with --tags
+      or --tags-from-file.  Previously, pedantic and experimental
+      tags were not shown unless the relevant options were also
+      passed.
+    + [JW,NT] Fixed a regression where --check-part ignored display
+      settings (such as --display-info).  (Closes: #640694)
+    + [NT] If both --verbose and --quiet is used together, then use
+      the last of them to appear rather than "both at the same time".
+      (Closes: #640366)
+    + [NT] Accept --quiet in lintianrc as "quiet".  This option may
+      not be used together with "verbose" in the config file.
 
-  * lib/Util.pm:
-    + [JW] Use LC_ALL rather than LANG, since LC_ALL overrules
-      LANG.
+  * lib/Lintian/Check.pm:
+    + [NT] Catch "Name <Name <Email>>" as a malformed email address.
+      (Closes: #640489)
+    + [JW] Catch misspellings of the "Debian QA Group" maintainer
+      email (used for orphaned packages).  (Closes: #640834)
+  * lib/Lintian/Collect.pm:
+    + [JW,NT] Create the source field from the package field if the
+      former is not present.  This fixes a number of false-positves
+      introduced in 2.5.2.  (Closes: #640186)
   * lib/Lintian/Collect/Source.pm:
     + [NT] Removed a requirement for fields that was not needed.
     + [NT] Fixed "index" method for source packages.
   * lib/Lintian/Collect/Package.pm:
     + [JW,NT] Replace use of fail with croak.  (Closes: #637741)
+  * lib/Lintian/Output.pm:
+    + [NT] Merged "quiet" and "verbose" into "verbosity_level".
   * lib/Lintian/Profile.pm:
     + [NT] Reject profiles containing an unknown field.
+  * lib/Lintian/Tag/Info.pm:
+    + [JW] Create links for references pointing to files in html
+      output.
+    + [JW] Parse "#nnnnnn" references as links to Debian bugs.
+  * lib/Lintian/Tag/Override.pm:
+    + [NT] New file.
   * lib/Lintian/Tags.pm:
     + [NT] Track which tags had overrides that have been dropped.
+    + [NT,RG] Collect override comments and print the comments
+      above the overridden tag (with --show-overrides).  Thanks
+      to Carl Fürstenberg for the report.  (Closes: #474590)
+    + [NT] Remove the "respect-display-level" code.  It is not as
+      useful as intended.
+  * lib/Text_utils.pm:
+    + [NT] Close <p>-tags in dtml_to_html since the output is used
+      in xhtml (xml), where all tags must be closed properly.
+      (Closes: #639292)
+    + [NT] Remove the last new line (if any) before a </pre> in tag
+      to reduce the empty space to the next paragraph.
+  * lib/Util.pm:
+    + [JW] Use LC_ALL rather than LANG, since LC_ALL overrules
+      LANG.
+    + [JW] Stricten the DCtrl parser to choke on some syntax errors
+      that were silently ignored.  (Closes: #639516)
+
+  * man/lintian.pod.in:
+    + [JW] Fixed some stray POD markup.  (Closes: #640705)
+    + [JW,NT] Clarified that --tags and --tags-from-file ignores
+      display settings.
+    + [NT] Documented how lintian behaves if --quiet is used together
+      with --verbose or --debug.
+    + [NT] Documented how --verbose and --quiet can be enabled via
+      the config file.  Only one of "verbose" and "quiet" may
+      appear in the config file.
+
+  * profiles/debian/ftp-master-auto-reject.profile:
+    + [NT] Refreshed to include udeb-uses-non-gzip-data-tarball.
 
   * private/*:
     + [JW] Use LC_ALL rather than LANG, since LC_ALL overrules
       LANG.
+  * private/refresh-manual-refs:
+    + [NT] Remove code to refresh refs to the Library Packaging
+      Guide.
+    + [JW] Added the java-policy and fixed the lintian ref.
+    + [JW] Don't strip newlines from titles, but treat them as regular
+      whitespace characters.
+    + [JW] Strip some superfluous HTML markup from titles.
 
+  * reporting/{config,html_reports,templates/foot.tmpl}:
+    + [NT] Added a link to the Lintian source code.
   * reporting/harness:
     + [NT] Added missing import statement.
+  * reporting/html_reports:
+    + [JW,NT] Create a gzip'ed version of the raw lintian.log.
+      (Closes: #637819)
+  * reporting/templates/head.tmpl:
+    + [NT] Show the list of all tags in the page header.  Thanks to
+      Arno Töll for the suggestion and the patch.  (Closes: #640962)
+  * reporting/templates/index.tmpl:
+    + [NT] Added link to the new gzip'ed lintian.log.
 
   * t/*:
     + [JW,NT] Fixed test failures caused by unpacking the source
       with a umask different from 0022.  (Closes: #637649)
 
- -- Niels Thykier <niels@thykier.net>  Wed, 10 Aug 2011 21:09:24 +0200
+ -- Niels Thykier <niels@thykier.net>  Sat, 10 Sep 2011 11:53:51 +0200
 
 lintian (2.5.2) unstable; urgency=low
 

@@ -219,6 +219,38 @@
           </para>
         </listitem>
       </itemizedlist>
+      <para>
+        The design also has a number of constrains that limits the
+        things Lintian can check for and what tools it can use:
+      </para>
+      <itemizedlist mark="bullet">
+        <listitem>
+          <para>
+            static analysis: The code in a package may be analyzed,
+            but it should <emphasis>never</emphasis> be executed.
+            However, Lintian can (and does) use external tools to
+            analyze files in the package.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            deterministic replay-ability: Checks should not rely on
+            the state of system caches or even the system time.  These
+            things makes it harder for others to reproduce (the
+            absence of) tags.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            same source analysis: Lintian checks packages in small
+            isolated groups based on the source package.  Requiring
+            the presence of all the dependencies to provide the full
+            results make it harder to run lintian (not to mention, it
+            makes "deterministic replay-ability" a lot harder as
+            well).
+          </para>
+        </listitem>
+      </itemizedlist>
     </sect1>
 
     <sect1 label="1.4" id="section-1.4">
@@ -523,22 +555,24 @@ $
         and stores it in the laboratory. The files currently installed
         on the system are not used in current Lintian versions.
       </para>
-      <para>
-        The format of the overrides file is simple, it consists of one override per
-        line (and may contain empty lines and comments, starting with a <literal>#</literal>, on others):
-        <literal>[[<replaceable>&lt;package&gt;</replaceable>][ <replaceable>&lt;archlist&gt;</replaceable>][ <replaceable>&lt;type&gt;</replaceable>]: ]<replaceable>&lt;lintian-tag&gt;</replaceable>[
-          [*]<replaceable>&lt;lintian-info&gt;</replaceable>[*]]</literal>.  <replaceable>&lt;package&gt;</replaceable> is the package name;
-        <replaceable>&lt;archlist&gt;</replaceable> is an architecture list
-        in the same format as for the Build-Depends field (except architecture wildcards are not supported);
-        <replaceable>&lt;type&gt;</replaceable> is one of <literal>binary</literal>, <literal>udeb</literal> and
-        <literal>source</literal>,
-        and <replaceable>&lt;lintian-info&gt;</replaceable> is all
-        additional information provided by Lintian except for the
-        tag. What's inside brackets is optional and may be omitted if
-        you want to match it all.  An example file for a binary
-        package would look like:
-      </para>
-      <screen>
+      <sect2 label="2.4.1" id="section-2.4.1">
+        <title>Format of override files</title>
+        <para>
+          The format of the overrides file is simple, it consists of one override per
+          line (and may contain empty lines and comments, starting with a <literal>#</literal>, on others):
+          <literal>[[<replaceable>&lt;package&gt;</replaceable>][ <replaceable>&lt;archlist&gt;</replaceable>][ <replaceable>&lt;type&gt;</replaceable>]: ]<replaceable>&lt;lintian-tag&gt;</replaceable>[
+            [*]<replaceable>&lt;lintian-info&gt;</replaceable>[*]]</literal>.  <replaceable>&lt;package&gt;</replaceable> is the package name;
+          <replaceable>&lt;archlist&gt;</replaceable> is an architecture list
+          in the same format as for the Build-Depends field (except architecture wildcards are not supported);
+          <replaceable>&lt;type&gt;</replaceable> is one of <literal>binary</literal>, <literal>udeb</literal> and
+          <literal>source</literal>,
+          and <replaceable>&lt;lintian-info&gt;</replaceable> is all
+          additional information provided by Lintian except for the
+          tag. What's inside brackets is optional and may be omitted if
+          you want to match it all.  An example file for a binary
+          package would look like:
+        </para>
+        <screen>
 /usr/share/lintian/overrides/foo, where foo is the name of your package
 
 # We use a non-standard dir permission to only allow the webserver to look
@@ -546,29 +580,67 @@ $
 foo binary: non-standard-dir-perm
 foo binary: FSSTND-dir-in-usr /usr/man/man1/foo.1.gz
 </screen>
-      <para>An example file for a source package would look like:</para>
-      <screen>
+        <para>An example file for a source package would look like:</para>
+        <screen>
 debian/source.lintian-overrides in your base source directory
 foo source: debian-files-list-in-source
 # Upstream distributes it like this, repacking would be overkill though, so
 # tell lintian to not complain:
 foo source: configure-generated-file-in-source config.cache
 </screen>
-      <para>
-        Many tags can occur more than once (e.g. if the same error is
-        found in more than one file). You can override a tag either
-        completely by specifying its name (first line in the examples)
-        or only one occurrence of it by specifying the additional
-        info, too (second line in the examples).  If you add an
-        asterisk (<literal>*</literal>) in the additional info, this
-        will match arbitrary strings similar to the shell wildcard.
-      </para>
-      <para>
-        The first wildcard support appeared in Lintian 2.0.0, which
-        only allowed the wildcards in the very beginning or end.
-        Version 2.5.0~rc4 extended this to allow wildcards any where
-        in the additional info.
-      </para>
+        <para>
+          Many tags can occur more than once (e.g. if the same error is
+          found in more than one file). You can override a tag either
+          completely by specifying its name (first line in the examples)
+          or only one occurrence of it by specifying the additional
+          info, too (second line in the examples).  If you add an
+          asterisk (<literal>*</literal>) in the additional info, this
+          will match arbitrary strings similar to the shell wildcard.
+        </para>
+        <para>
+          The first wildcard support appeared in Lintian 2.0.0, which
+          only allowed the wildcards in the very beginning or end.
+          Version 2.5.0~rc4 extended this to allow wildcards any where
+          in the additional info.
+        </para>
+      </sect2>
+      <sect2 label="2.4.2" id="section-2.4.2">
+        <title>Documenting overrides</title>
+        <para>
+          To assist reviewers, Lintian will extract the comments from
+          the overrides file and display the related comments next to
+          the overridden tags.
+        </para>
+        <para>
+          Comments directly above an override will be shown next to all
+          tags it overrides.  If an override for the same tags appears
+          on the very next line, it will inherit the comment from the
+          override above it.
+        </para>
+        <screen>
+# This comment will be shown above all tags overriden by the following
+# two overrides, (because they apply to the same tag and there is no
+# empty line between them)
+foo source: some-tag extact match
+foo source: some-tag wildcard * match
+# This override has its own comment, and it is not shared with the
+# override below (because there is an empty line inbetween them).
+foo source: some-tag another exact match
+
+foo source: some-tag override without a comment
+</screen>
+        <para>
+          Empty lines can be used to disassociate a comment from an
+          override following it.  This can also be used to make a general
+          comment about the overrides that will not be displayed.
+        </para>
+        <screen>
+# This is a general comment not connected to any override, since there
+# is one (or more) empty lines after it.
+
+foo source: another-tag without any comments
+</screen>
+      </sect2>
     </sect1>
     <sect1 label="2.5" id="section-2.5">
       <title>Vendor Profiles</title>

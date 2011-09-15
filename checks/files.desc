@@ -248,8 +248,7 @@ Severity: serious
 Certainty: certain
 Info: Files in /etc/sudoers.d/ must be 0440 or sudo will refuse to
  parse them.
-Ref: http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=588831,
-     http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=576527
+Ref: #588831, #576527
 
 Tag: special-file
 Severity: serious
@@ -504,7 +503,8 @@ Info: Third-party Python packages should install their files in
  for Python 2.6 and later.  All other directories in
  <tt>/usr/lib/python<i>VERSION</i></tt> are for use by the core python
  packages.
- 
+Ref: python-policy 1.5
+
 Tag: perl-module-in-core-directory
 Severity: important
 Certainty: certain
@@ -759,7 +759,7 @@ Info: The directory /usr/lib/site-python has been deprecated as a
 Tag: python-module-in-wrong-location
 Severity: normal
 Certainty: possible
-Ref: python-policy1.5,  http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=576012
+Ref: python-policy 1.5, #576012
 Info: The package installs a Python module or debug information for a Python
  module in the wrong location for the given version of Python.
  .
@@ -768,7 +768,7 @@ Info: The package installs a Python module or debug information for a Python
 Tag: python-debug-in-wrong-location
 Severity: normal
 Certainty: possible
-Ref: http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=576014
+Ref: #576014
 Info: The package appears to be installing debug modules in
  /usr/lib/debug/usr/lib/pyshared/pythonX.Y/.  However, gdb(1)
  will not look for it there, making it less useful.  The file
@@ -778,7 +778,7 @@ Info: The package appears to be installing debug modules in
 Tag: missing-dependency-on-python-central
 Severity: important
 Certainty: possible
-Ref: http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=592533
+Ref: #592533
 Info: The package installs a file with the package name in
  /usr/share/pyshared-data/ without depending on python-central (&gt;= 0.6).
  .
@@ -1183,7 +1183,7 @@ Info: The given, apparently compressed, file is shipped in the package
 Tag: udev-rule-in-etc
 Severity: important
 Certainty: certain
-Ref: http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=559208
+Ref: #559208
 Info: This package ships a udev rule and installs it under
  <tt>/etc/udev/rules.d</tt>, which is reserved for user-installed files.
  The correct directory for system rules is <tt>/lib/udev/rules.d</tt>.
@@ -1275,3 +1275,31 @@ Info: The package ships a library in one of the multiarch lib directories,
  pre-dependency on multiarch-support.  Packages installing to these
  paths must Pre-Depend: multiarch-support to ensure the library can be
  found by the dynamic linker at every point during an upgrade.
+
+Tag: package-contains-no-arch-dependent-files
+Severity: minor
+Certainty: possible
+Experimental: yes
+Info: The package is not marked architecture all, but all the files it
+ ships are installed in /usr/share.
+ .
+ Most likely this package should be marked architecture all, but there
+ is a chance that the package is missing files.
+Ref: policy 5.6.8
+
+Tag: vim-addon-within-vim-runtime-path
+Severity: normal
+Certainty: certain
+Info: Vim addons should not be installed directly under a directory contained
+ in the Vim runtime path.  Users shall be given the freedom to choose which
+ addons they want to have enabled and which they don't.
+Ref: vim-policy 3.1
+
+Tag: perl-module-uses-perl4-libs-without-dep
+Severity: normal
+Certainty: possible
+Info: This package includes perl modules using obsoleted perl 4-era
+ libraries. These libraries have been deprecated in perl in 5.14, and
+ are likely to be removed from the core in perl 5.16. Please either
+ remove references to these libraries, or add a dependency on
+ <tt>libperl4-corelibs-perl | perl (&lt;&lt; 5.12.3-7)</tt> to this package.

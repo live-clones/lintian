@@ -1,8 +1,6 @@
 E: generic-dh-make-2008: copyright-contains-dh_make-todo-boilerplate
 E: generic-dh-make-2008: description-is-dh_make-template
 E: generic-dh-make-2008: helper-templates-in-copyright
-E: generic-dh-make-2008: helper-templates-in-copyright
-E: generic-dh-make-2008: helper-templates-in-copyright
 E: generic-dh-make-2008: section-is-dh_make-template
 I: generic-dh-make-2008 source: debian-watch-file-is-missing
 I: generic-dh-make-2008: copyright-with-old-dh-make-debian-copyright

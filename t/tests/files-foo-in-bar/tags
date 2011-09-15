@@ -29,6 +29,8 @@ E: files-foo-in-bar: package-installs-file-to-usr-x11r6-bin usr/X11R6/bin/
 E: files-foo-in-bar: package-installs-file-to-usr-x11r6-bin usr/X11R6/bin/bar
 E: files-foo-in-bar: package-installs-into-etc-rc.boot etc/rc.boot/bar
 E: files-foo-in-bar: package-installs-into-etc-rc.d etc/rc.d/bar
+E: files-foo-in-bar: perl-module-in-core-directory usr/lib/perl/bar
+E: files-foo-in-bar: perl-module-in-core-directory usr/share/perl/bar
 E: files-foo-in-bar: subdir-in-bin bin/foo/
 E: files-foo-in-bar: subdir-in-usr-bin usr/bin/foo/
 E: files-foo-in-bar: udev-rule-in-etc etc/udev/rules.d/bar
@@ -43,3 +45,6 @@ W: files-foo-in-bar: file-in-unusual-dir var/run/foo/bar
 W: files-foo-in-bar: file-in-usr-lib-sgml usr/lib/sgml/bar
 W: files-foo-in-bar: image-file-in-usr-lib usr/lib/files-foo-in-bar/bar.png
 W: files-foo-in-bar: non-standard-dir-in-usr usr/foo/
+W: files-foo-in-bar: third-party-package-in-python-dir usr/lib/python2.6/bar
+W: files-foo-in-bar: vim-addon-within-vim-runtime-path usr/share/vim/vim73/bar
+W: files-foo-in-bar: vim-addon-within-vim-runtime-path usr/share/vim/vimcurrent/bar

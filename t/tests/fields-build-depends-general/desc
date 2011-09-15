@@ -11,8 +11,10 @@ Test-For:
  build-depends-on-non-build-package
  build-depends-on-obsolete-package
  build-depends-on-python-dev-with-no-arch-any
+ build-depends-on-versioned-berkeley-db
  conflicting-negation-in-source-relation
  depends-on-build-essential-package-without-using-version
+ depends-on-packaging-dev
  invalid-arch-string-in-source-relation
  ored-build-depends-on-obsolete-package
 References: Debian Bug#540594, Debian Bug#551793

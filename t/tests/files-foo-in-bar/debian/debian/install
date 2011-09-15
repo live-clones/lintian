@@ -9,6 +9,8 @@ bar tmp/foo
 bar usr/bin/foo
 bar usr/foo
 bar usr/lib/debug/
+bar usr/lib/perl/
+bar usr/lib/python2.6/
 bar usr/lib/sgml
 bar usr/lib/site-python/foo
 bar usr/local/foo
@@ -16,6 +18,9 @@ bar usr/share
 bar usr/share/doc
 bar usr/share/doc/files-foo-in-bar/.xvpics/
 bar usr/share/doc/files-foo-in-bar/examples/examples
+bar usr/share/perl/
+bar usr/share/vim/vimcurrent/
+bar usr/share/vim/vim73/
 bar usr/X11R6/bin
 bar var/foo
 bar var/lock/foo

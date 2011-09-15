@@ -217,21 +217,21 @@ sub run {
 sub check_patch {
 	my ($dpdir, $patch_file) = @_;
 
-	# Use -p1 to strip off the first layer of directory in case the parent
+	# Use --strip=1 to strip off the first layer of directory in case the parent
 	# directory in which the patches were generated was named "debian".
-	# This will produce false negatives for -p0 patches that modify files
+	# This will produce false negatives for --strip=0 patches that modify files
 	# in the debian/* directory, but as of 2010-01-01, all cases where the
 	# first level of the patch path is "debian/" in the archive are false
 	# positives.
-	open(DIFFSTAT, "-|", 'diffstat', '-p1', '-l', "$dpdir/$patch_file")
-	  or fail("can't fork diffstat");
-	while (<DIFFSTAT>) {
+	open(my $fd, '-|', 'lsdiff', '--strip=1', "$dpdir/$patch_file")
+	  or fail('cannot fork lsdiff');
+	while (<$fd>) {
 		chomp;
-		if (m|^(\./)?debian/|) {
-			tag "patch-modifying-debian-files", $patch_file, $_;
+		if (m|^(?:\./)?debian/|o) {
+			tag 'patch-modifying-debian-files', $patch_file, $_;
 		}
 	}
-	close(DIFFSTAT) or fail("cannot close pipe to diffstat on $patch_file: $!");
+	close($fd) or fail("cannot close pipe to lsdiff on $patch_file: $!");
 }
 
 1;

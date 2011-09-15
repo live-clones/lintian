@@ -107,7 +107,7 @@ if (m{
 	}
 	elsif ($uri =~ s,^http://anonscm\.debian\.org/viewvc/dep/web/deps/dep5\.mdwn\b,,) {
 	    $version = '0+svn';
-	    $uri =~ m,^\?(?:\S+&)?revision=(\d+)(?:&\S+)?$, and $version = "$version~$1";
+	    $uri =~ m,^\?(?:\S+&)?(?:pathrev|revision)=(\d+)(?:&\S+)?$, and $version = "$version~$1";
 	}
 	elsif ($uri =~ m,^http://www\.debian\.org/doc/(?:packaging-manuals/)?copyright-format/(\d+\.\d+)$,) {
 	    $version = $1;

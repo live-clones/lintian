@@ -27,11 +27,11 @@ Info: The README.Debian file installed by this package contains one of the
  template phrases.  If there is nothing to say in the file, it is best
  removed.
 
-Tag: readme-debian-contains-debmake-default-email-address
+Tag: readme-debian-contains-invalid-email-address
 Severity: normal
 Certainty: certain
-Info: The README.Debian file contains an email address (&lt;..@unknown&gt;)
- that was not updated to the maintainer's real address.
+Info: The README.Debian file contains an invalid email address: the domain
+ needs at least one dot. This looks like a mistake.
 
 Tag: spelling-error-in-readme-debian
 Severity: minor

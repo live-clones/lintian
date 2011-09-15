@@ -1,0 +1,6 @@
+Testname: control-files-traversal
+Sequence: 6000
+Version: 1.0
+Description: Test for bad owner of control files
+Options: -C conffiles,md5sums,control-files -IE
+Test-For: control-file-is-not-a-file

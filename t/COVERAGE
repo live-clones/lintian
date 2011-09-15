@@ -1,5 +1,5 @@
-Last generated 2011-08-22
-Coverage: 712/930 (76.56%), w. legacy tests: 835/930 (89.78%)
+Last generated 2011-09-10
+Coverage: 723/937 (77.16%), w. legacy tests: 844/937 (90.07%)
 
 The following tags are not tested by the test suite:
 
@@ -56,9 +56,7 @@ files old-style-example-dir
 files package-installs-font-to-usr-x11r6
 files package-installs-perllocal-pod
 files package-uses-obsolete-file
-files perl-module-in-core-directory
 files special-file
-files third-party-package-in-python-dir
 files udeb-contains-documentation-file
 
 init.d duplicate-updaterc.d-calls-in-postinst
@@ -122,8 +120,6 @@ binaries statically-linked-binary
 binaries unstripped-binary-or-object
 
 changelog-file changelog-file-missing-in-native-package
-changelog-file debian-changelog-file-contains-invalid-email-address
-changelog-file debian-changelog-file-missing-or-wrong-name
 changelog-file wrong-name-for-debian-news-file
 
 copyright-file old-fsf-address-in-copyright-file
@@ -253,7 +249,6 @@ Breakdown of remaining tags in legacy test suite by test case:
 
 binary
   binary-has-unneeded-section
-  debian-changelog-file-missing-or-wrong-name
   deprecated-kdelnk-file
   desktop-contains-deprecated-header
   desktop-entry-missing-required-key
@@ -365,7 +360,6 @@ maintainer-scripts
   changelog-should-mention-qa
   config-does-not-load-confmodule
   debconf-config-not-executable
-  debian-changelog-file-contains-invalid-email-address
   init.d-script-not-included-in-package
   init.d-script-not-marked-as-conffile
   maintainer-script-calls-deprecated-wm-menu-config

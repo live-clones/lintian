@@ -1,0 +1,37 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+BEGIN {
+    my $root = $ENV{'LINTIAN_ROOT'}//'.';
+    $ENV{'LINTIAN_ROOT'} = $root;
+}
+use lib "$ENV{'LINTIAN_ROOT'}/lib";
+
+use Util;
+
+my %coll_needs;
+
+my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
+
+foreach my $collf (glob ("$LINTIAN_ROOT/collection/*.desc")) {
+    my $coll = get_dsc_info($collf) or die "$collf: $!";
+    my $name = $coll->{'collector-script'} or die "$collf is missing collector-script field.\n";
+    my @needs = split m/\s*+,\s*+/o, $coll->{'needs-info'}//'';
+    $coll_needs{$name} = \@needs;
+}
+
+print <<EOF ;
+digraph "lintian-collections" {
+// This graph shows the dependency relation ships between various
+// collections.
+EOF
+
+foreach my $coll (sort keys %coll_needs) {
+    foreach my $dep (@{ $coll_needs{$coll} }) {
+        print "\"$coll\" -> \"$dep\"\n";
+    }
+}
+
+print "}\n";

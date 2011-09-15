@@ -154,6 +154,7 @@ my %rules_per_target;
 my %debhelper_group;
 my $maybe_skipping;
 my $uses_makefile_pl = 0;
+my %variables;
 while (<RULES>) {
     next if /^\s*\#/;
     if (m/^\s*[s-]?include\s+(\S++)/o){
@@ -201,6 +202,14 @@ while (<RULES>) {
         tag 'debian-rules-makemaker-prefix-is-deprecated', "line $.";
     }
 
+    # General assignment - save the variable
+    if (/^\s*(?:\S+\s+)*?(\S+)\s*([:\?\+])?=\s*(.*+)?$/o) {
+        # This is far too simple from a theoretical PoV, but should do
+        # rather well.
+        my ($var, $atype, $value) = ($1, $2, $3);
+        $variables{$var} = $value;
+    }
+
     # Keep track of whether this portion of debian/rules may be optional
     if (/^ifn?(?:eq|def)\s/) {
         $maybe_skipping++;
@@ -227,10 +236,29 @@ while (<RULES>) {
     # requirement.
     if (/^(?:[^:]+\s)?\.PHONY(?:\s[^:]+)?:(.+)/) {
         my @targets = split (' ', $1);
+        local $_;
         for (@targets) {
+            # Is it $(VAR) ?
+            if (m/^\$[\(\{]([^\)\}]++)[\)\}]$/) {
+                my $name = $1;
+                my $val = $variables{$name};
+                if ($val) {
+                    # we think we know what it will expand to - note
+                    # we ought to "delay" it was a "=" variable rather
+                    # than ":=" or "+=".
+                    $val =~ s/\s++$//o;
+                    for (split m/\s++/o, $val) {
+                        $seen{$_}++ if $required{$_};
+                        $seen{$_}++ if $recommended{$_};
+                    }
+                    last;
+                }
+                # We don't know, so just mark the target as seen.
+            }
             $seen{$_}++ if $required{$_};
             $seen{$_}++ if $recommended{$_};
         }
+        next; #.PHONY implies the rest will not match
     }
 
     if (!/^ifn?(?:eq|def)\s/ && m/^([^\s:][^:]*):+(.*)/) {
@@ -251,6 +279,24 @@ while (<RULES>) {
                     $seen{$recommended}++ if $recommended =~ m/$pattern/;
                 }
             } else {
+                # Is it $(VAR) ?
+                if ($target =~ m/^\$[\(\{]([^\)\}]++)[\)\}]$/) {
+                    my $name = $1;
+                    my $val = $variables{$name};
+                    if ($val) {
+                        # we think we know what it will expand to - note
+                        # we ought to "delay" it was a "=" variable rather
+                        # than ":=" or "+=".
+                        $val =~ s/\s++$//o;
+                        local $_;
+                        for (split m/\s++/o, $val) {
+                            $seen{$_}++ if $required{$_};
+                            $seen{$_}++ if $recommended{$_};
+                        }
+                        last;
+                    }
+                    # We don't know, so just mark the target as seen.
+                }
                 $seen{$target}++ if $required{$target};
                 $seen{$target}++ if $recommended{$target};
             }

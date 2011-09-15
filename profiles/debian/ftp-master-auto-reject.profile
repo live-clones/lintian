@@ -2,11 +2,11 @@
 Profile: debian/ftp-master-auto-reject
 Enable-Tags: FSSTND-dir-in-usr, FSSTND-dir-in-var, arch-dependent-file-in-usr-share,
  arch-independent-package-contains-binary-or-object, bad-package-name,
- bad-relation, bad-version-number, binary-file-compressed-with-upx,
- binary-in-etc, binary-or-shlib-defines-rpath, binary-with-bad-dynamic-table,
- build-info-in-binary-control-file-section, control-file-has-bad-owner,
- control-file-has-bad-permissions, control-interpreter-in-usr-local,
- control-interpreter-without-depends,
+ bad-perm-for-file-in-etc-sudoers.d, bad-relation, bad-version-number,
+ binary-file-compressed-with-upx, binary-in-etc, binary-or-shlib-defines-rpath,
+ binary-with-bad-dynamic-table, build-info-in-binary-control-file-section,
+ control-file-has-bad-owner, control-file-has-bad-permissions,
+ control-interpreter-in-usr-local, control-interpreter-without-depends,
  copyright-contains-dh_make-todo-boilerplate, copyright-file-compressed,
  copyright-file-is-symlink, copyright-refers-to-incorrect-directory,
  copyright-refers-to-old-directory,
@@ -33,9 +33,9 @@ Enable-Tags: FSSTND-dir-in-usr, FSSTND-dir-in-var, arch-dependent-file-in-usr-sh
  package-uses-local-diversion, preinst-interpreter-without-predepends,
  section-is-dh_make-template, source-field-does-not-match-pkg-name,
  statically-linked-binary, symlink-has-too-many-up-segments,
- too-many-architectures, uploader-address-is-on-localhost,
- uploader-address-malformed, uploader-name-missing,
- usr-share-doc-symlink-to-foreign-package,
+ too-many-architectures, udeb-uses-non-gzip-data-tarball,
+ uploader-address-is-on-localhost, uploader-address-malformed,
+ uploader-name-missing, usr-share-doc-symlink-to-foreign-package,
  usr-share-doc-symlink-without-dependency, wrong-file-owner-uid-or-gid
 
 Tags: FSSTND-dir-in-usr, FSSTND-dir-in-var, bad-package-name, bad-relation, bad-version-number,
@@ -62,8 +62,8 @@ Tags: FSSTND-dir-in-usr, FSSTND-dir-in-var, bad-package-name, bad-relation, bad-
  package-installs-python-bytecode, package-not-lowercase,
  package-uses-local-diversion, section-is-dh_make-template,
  source-field-does-not-match-pkg-name, symlink-has-too-many-up-segments,
- too-many-architectures, uploader-address-is-on-localhost,
- uploader-address-malformed, uploader-name-missing,
- usr-share-doc-symlink-to-foreign-package
+ too-many-architectures, udeb-uses-non-gzip-data-tarball,
+ uploader-address-is-on-localhost, uploader-address-malformed,
+ uploader-name-missing, usr-share-doc-symlink-to-foreign-package
 Overridable: no
 

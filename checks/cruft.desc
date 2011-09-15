@@ -214,7 +214,7 @@ Certainty: certain
 Info: The upstream source contains an <tt>svk-commitNNN.tmp</tt>,
  almost certainly a left-over from a failed Subversion commit.  You may
  want to report this as an upstream bug.
- 
+
 Tag: diff-contains-arch-inventory-file
 Severity: normal
 Certainty: certain
@@ -264,7 +264,7 @@ info: The upstream source contains a CVS conflict copy.  These have file
  source repository.  They're useful only while resolving the conflict and
  were probably included by accident.  You may want to report this as an
  upstream bug.
- 
+
 Tag: diff-contains-svn-conflict-file
 Severity: normal
 Certainty: certain

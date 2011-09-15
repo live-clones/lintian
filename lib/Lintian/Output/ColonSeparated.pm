@@ -27,7 +27,12 @@ use Lintian::Output qw(:util);
 use base qw(Lintian::Output);
 
 sub print_tag {
-    my ($self, $pkg_info, $tag_info, $information, $overridden) = @_;
+    my ($self, $pkg_info, $tag_info, $information, $override) = @_;
+    my $odata = '';
+    if ($override) {
+        $odata = $override->tag;
+        $odata .= ' ' . $override->extra if $override->extra;
+    }
 
     $self->issued_tag($tag_info->tag);
     $self->_print(
@@ -36,11 +41,11 @@ sub print_tag {
 	$tag_info->severity,
 	$tag_info->certainty,
 	($tag_info->experimental ? 'X' : '').
-	(defined($overridden) ? 'O' : ''),
+	(defined($override) ? 'O' : ''),
 	@{$pkg_info}{'package','version','arch','type'},
 	$tag_info->tag,
 	$information,
-        $overridden || '',
+        $odata,
 	);
 }
 

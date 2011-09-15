@@ -22,9 +22,12 @@ Test-For:
  package-installs-file-to-usr-x11r6-bin
  package-installs-into-etc-rc.boot
  package-installs-into-etc-rc.d
+ perl-module-in-core-directory
+ perl-module-in-core-directory
  nested-examples-directory
  non-standard-dir-in-usr
  non-standard-dir-in-var
  subdir-in-bin
+ third-party-package-in-python-dir
  udev-rule-in-etc
-
+ vim-addon-within-vim-runtime-path

@@ -1,0 +1,18 @@
+# This comment will not appear in the output, also the last
+# tag should not have a comment due to the empty line between
+# it and the one before it.
+
+# override without extra information
+manpage-has-bad-whatis-entry
+# Architecture specific override - which is retarded considering
+# it is an arch: all package we are testing >.>
+[i386]: hyphen-used-as-minus-sign usr/share/man/man1/foo.1.gz:12
+[!i386]: hyphen-used-as-minus-sign usr/share/man/man1/foo.1.gz:6
+# exact extra information
+hyphen-used-as-minus-sign usr/share/man/man1/foo.1.gz:4
+# These are wildcard overrides
+hyphen-used-as-minus-sign usr/share/man/man1/foo.1.gz:2*
+hyphen-used-as-minus-sign */foo.1.gz:5
+hyphen-used-as-minus-sign */foo.1.gz:3*
+
+hyphen-used-as-minus-sign usr/share/man/man1/foo.1.gz * more occurrences not shown

@@ -186,7 +186,7 @@ sub _populate_with_dist {
 
     debug_msg(2, "spawning list-binpkg and list-srcpkg since LINTIAN_DIST=$ENV{'LINTIAN_DIST'}");
 
-    my $v = $Lintian::Output::GLOBAL->verbose ? '-v' : '';
+    my $v = $Lintian::Output::GLOBAL->verbosity_level() > 0 ? '-v' : '';
     my %opts = ( out => $Lintian::Output::GLOBAL->stdout );
     spawn(\%opts, ["$LINTIAN_ROOT/unpack/list-binpkg",
 		  "$self->{dir}/info/binary-packages", $v])

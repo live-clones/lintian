@@ -203,7 +203,7 @@ Info: The package appears to use an <tt>ExtUtils::MakeMaker</tt>
 Tag: debian-rules-uses-or-modifies-user-only-variable
 Severity: normal
 Certainty: possible
-Ref: http://bugs.debian.org/631786
+Ref: #631786
 Info: The rules files appear to be reading or modifying a variable not
  intended for use by package maintainers.  The special variables
  .

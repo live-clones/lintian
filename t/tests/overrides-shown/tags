@@ -1,0 +1,21 @@
+N: override without extra information
+O: overrides-shown: manpage-has-bad-whatis-entry usr/share/man/man1/foo.1.gz
+N: exact extra information
+O: overrides-shown: hyphen-used-as-minus-sign usr/share/man/man1/foo.1.gz:4
+N: These are wildcard overrides
+O: overrides-shown: hyphen-used-as-minus-sign usr/share/man/man1/foo.1.gz:5
+N: Architecture specific override - which is retarded considering
+N: it is an arch: all package we are testing >.>
+O: overrides-shown: hyphen-used-as-minus-sign usr/share/man/man1/foo.1.gz:6
+I: overrides-shown: hyphen-used-as-minus-sign usr/share/man/man1/foo.1.gz:12
+I: overrides-shown: hyphen-used-as-minus-sign usr/share/man/man1/foo.1.gz:13
+I: overrides-shown: hyphen-used-as-minus-sign usr/share/man/man1/foo.1.gz:14
+N: These are wildcard overrides
+O: overrides-shown: hyphen-used-as-minus-sign usr/share/man/man1/foo.1.gz:21
+N: These are wildcard overrides
+O: overrides-shown: hyphen-used-as-minus-sign usr/share/man/man1/foo.1.gz:22
+N: These are wildcard overrides
+O: overrides-shown: hyphen-used-as-minus-sign usr/share/man/man1/foo.1.gz:23
+N: These are wildcard overrides
+O: overrides-shown: hyphen-used-as-minus-sign usr/share/man/man1/foo.1.gz:30
+O: overrides-shown: hyphen-used-as-minus-sign usr/share/man/man1/foo.1.gz 2 more occurrences not shown

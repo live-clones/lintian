@@ -476,22 +476,25 @@ if (not defined $info->field('priority')) {
 
 if (defined $info->field('homepage')) {
 	my $homepage = $info->field('homepage');
+	my $orig = $homepage;
 
 	unfold('homepage', \$homepage);
 
 	if ($homepage =~ /^<(?:UR[LI]:)?.*>$/i) {
-		tag 'superfluous-clutter-in-homepage', $homepage;
+		tag 'superfluous-clutter-in-homepage', $orig;
+		$homepage = substr($homepage, 1, length($homepage) - 2);
 	}
 
 	require URI;
 	my $uri = URI->new($homepage);
 
-	unless ($uri->scheme) { # not an absolute URI
-		tag 'bad-homepage', $homepage;
+	# not an absolute URI or (most likely) an invalid protocol
+	unless ($uri->scheme && $uri->scheme =~ m/^ftp|https?|gopher$/o) {
+		tag 'bad-homepage', $orig;
 	}
 
 	if ($homepage =~ m,/search\.cpan\.org/.*-[0-9._]+/*$,) {
-		tag 'homepage-for-cpan-package-contains-version', $homepage;
+		tag 'homepage-for-cpan-package-contains-version', $orig;
 	}
 } elsif ($type eq 'binary' and not $info->native) {
 	tag 'no-homepage-field';
@@ -534,7 +537,7 @@ if ($type eq 'binary') {
 if (($type eq 'binary') || ($type eq 'udeb')) {
 	my (%fields, %parsed);
 	my $javalib = 0;
-	my $replaces = Lintian::Relation->new($info->field('replaces')//'');
+	my $replaces = $info->relation('replaces');
 	my %nag_once = ();
 	$javalib = 1 if($pkg =~ m/^lib.*-java$/o);
 	for my $field (qw(depends pre-depends recommends suggests conflicts provides enhances replaces breaks)) {
@@ -628,6 +631,9 @@ if (($type eq 'binary') || ($type eq 'udeb')) {
 
 				tag 'package-depends-on-an-x-font-package', "$field: $part_d_orig"
 				    if ($field =~ /^(pre-)?depends$/ && $d_pkg =~ /^xfont.*/ && $d_pkg ne 'xfonts-utils' && $d_pkg ne 'xfonts-encodings');
+
+				tag 'depends-on-packaging-dev', $field
+				    if (($field =~ /^(?:pre-)?depends$/ || $field eq 'recommends') && $d_pkg eq 'packaging-dev');
 
 				tag 'needlessly-depends-on-awk', $field
 				    if ($d_pkg eq 'awk' && ! $d_version->[0] && &$is_dep_field($field) && $pkg ne 'base-files');
@@ -769,12 +775,20 @@ if ($type eq 'source') {
 						}
 					}
 
-					if($d_pkg =~ m/openjdk-\d+-doc/o or $d_pkg eq 'classpath-doc'){
+					if ($d_pkg =~ m/^openjdk-\d+-doc$/o or $d_pkg eq 'classpath-doc'){
 					    tag 'build-depends-on-specific-java-doc-package', $d_pkg;
+					}
+
+					if ($d_pkg =~ m/^libdb\d+\.\d+.*-dev$/o and &$is_dep_field($field)) {
+					    tag 'build-depends-on-versioned-berkeley-db', "$field:$d_pkg";
 					}
 
 					tag 'conflicting-negation-in-source-relation', "$field: $part_d_orig"
 					    unless (not $d_arch or $d_arch->[1] == 0 or $d_arch->[1] eq @{ $d_arch->[0] });
+
+
+					tag 'depends-on-packaging-dev', $field
+					    if ($d_pkg eq 'packaging-dev');
 
 					tag 'build-depends-on-build-essential', $field
 					    if ($d_pkg eq 'build-essential');

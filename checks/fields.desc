@@ -90,7 +90,7 @@ Info: The special architecture value "any" only makes sense if it occurs
  alone or (in a *.dsc file) together with "all".  The value "all" may
  appear together with other architectures in a *.dsc file but must
  occur alone if used in a binary package.
-Ref: policy 5.6.8, http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=626775
+Ref: policy 5.6.8, #626775
 
 Tag: unknown-architecture
 Severity: normal
@@ -245,12 +245,12 @@ Info: Orphaned packages should have "Debian QA Group
 Ref: devref 5.9.4
 
 Tag: no-human-maintainers
-Severity: normal
+Severity: serious
 Certainty: possible
 Info: The Maintainer address for this package is a mailing list and there
- are no Uploaders listed.  Team-maintained packages should list the human
+ are no Uploaders listed.  Team-maintained packages must list the human
  maintainers in the Uploaders field.
-Ref: devref 5.12
+Ref: policy 3.3, devref 5.12
 
 Tag: no-source-field
 Severity: serious
@@ -283,7 +283,7 @@ Severity: important
 Certainty: certain
 Info: This field should only appear in binary packages.
 Ref: policy 5.6.9
- 
+
 Tag: essential-no-not-needed
 Severity: normal
 Certainty: certain
@@ -370,6 +370,11 @@ Certainty: certain
 Info: The "Homepage:" field in this package's control file does not
  contain a valid absolute URL. Most probably you forgot to specify
  the scheme (e.g. http).
+ .
+ This tag is also triggered if the scheme is not known by Lintian.
+ .
+ Please file a bug against Lintian, if this tag is triggered for a
+ valid homepage URL.
 
 Tag: no-homepage-field
 Severity: pedantic
@@ -764,8 +769,7 @@ Info: The package seems to conflict with one of its dependencies,
 Tag: breaks-without-version
 Severity: normal
 Certainty: possible
-Ref: policy 7.3, policy 7.4
- http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=605744
+Ref: policy 7.3, policy 7.4, #605744
 Info: This package declares a Breaks relationship with another package
  that has no version number.  Normally, Breaks should be used to indicate
  an incompatibility with a specific version of another package, or with
@@ -862,6 +866,12 @@ Info: You depend on the build-essential package, which is only a
 Severity: important
 Certainty: certain
 Ref: policy 7.7
+
+Tag: depends-on-packaging-dev
+Info: You depend/recommend/build-depend on packaging-dev, which is
+ only a metapackage to install common packages needed for packaging.
+Severity: normal
+Certainty: certain
 
 Tag: malformed-python-version
 Severity: important
@@ -1033,7 +1043,7 @@ Info: The package appear to be a Java library and depending on one
  If there is otherwise a valid reason for this dependency, please override
  the tag.
 Ref: http://packages.qa.debian.org/j/java-common/news/20100405T221415Z.html,
- http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=227587
+ #227587
 
 Tag: documentation-package-not-architecture-independent
 Severity: normal
@@ -1041,3 +1051,28 @@ Certainty: certain
 Info: Documentation packages usually shouldn't carry anything that requires
  recompiling on various architectures, in order to save space on mirrors.
 
+Tag: build-depends-on-versioned-berkeley-db
+Severity: normal
+Certainty: possible
+Info: The package build-depends on a versioned development package of
+ Berkeley DB (libdbX.Y-dev) instead of versionless package
+ (libdb-dev).  Unfortunately this prevents binNMUs when default
+ Berkeley DB version changes.
+ .
+ Unless the package absolutely have to depend on specific Berkeley DB
+ version, it should build-depends on libdb-dev. For more information
+ on the upgrade process, please see the references.
+ .
+ The package can usually be made Berkeley DB version agnostic by the
+ following steps:
+ .
+  1. note the version of Berkeley DB used to compile the package on build time
+  2. on first install copy the used version to active version
+  3. on upgrades compare the versions and if they differ do the upgrade procedure
+ .
+ If you are unsure you can contact Berkeley DB maintainer, who would be
+ glad to help.
+ .
+ Should the package have a legitimate reason for using the versioned development
+ package, please add an override.
+Ref: http://download.oracle.com/docs/cd/E17076_02/html/upgrading/upgrade_process.html

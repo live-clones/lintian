@@ -1,4 +1,5 @@
 E: fields-uploaders source: uploader-address-is-on-localhost Mrs. Localhost <user@localhost>
+E: fields-uploaders source: uploader-address-malformed Doris Double-Email <Doris Double-Email <doris@demail.com>>
 E: fields-uploaders source: uploader-address-malformed Malformed Email <@ddress@myspace.com>
 E: fields-uploaders source: uploader-address-malformed Mrs. Localhost <user@localhost>
 E: fields-uploaders source: uploader-address-missing I have no email

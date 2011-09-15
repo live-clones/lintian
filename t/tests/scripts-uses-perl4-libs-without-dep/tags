@@ -1,0 +1,1 @@
+W: scripts-uses-perl4-libs-without-dep: script-uses-perl4-libs-without-dep usr/bin/naughty-script:20 newgetopt.pl

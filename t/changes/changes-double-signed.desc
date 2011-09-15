@@ -1,5 +1,0 @@
-Testname: changes-double-signed
-Sequence: 6000
-Version: 1.0
-Description: Test double-signed changes file
-Test-For: malformed-changes-file

@@ -93,7 +93,6 @@ my $BANNER = "Lintian v$LINTIAN_VERSION"; #Version Banner - text form
 # they were set via commandline or environment variables
 my $pkg_mode = 'a';		# auto -- automatically search for
 				# binary and source pkgs
-my $quiet = 0;			#flag for -q|--quiet switch
 my $debug = 0;
 my $check_everything = 0;	#flag for -a|--all switch
 my $lintian_info = 0;		#flag for -i|--info switch
@@ -397,6 +396,11 @@ sub record_display_source {
     $display_source{$_[1]} = 1;
 }
 
+# Process -q|--quite flag
+sub record_quiet {
+    $opt{'verbose'} = -1;
+}
+
 # Process deprecated flags
 sub deprecated{
     print STDERR "warning: $_[0] is deprecated and may be removed\n";
@@ -431,6 +435,29 @@ sub cfg_display_level {
 
 }
 
+# Processes quiet and verbose options in cfg files.
+# - dies if quiet and verbose are used together
+# - sets the verbosity level ($opt{'verbose'}) unless
+#   already set.
+sub cfg_verbosity {
+    my ($var, $val) = @_;
+    if (($var eq 'verbose' && exists $conf_opt{'quiet'}) ||
+	($var eq 'quiet' && exists $conf_opt{'verbose'})) {
+	die "verbose and quiet may not both appear in the config file.\n";
+    }
+    # quiet = no or verbose = no => no change
+    return unless $val;
+    # Do not change the value if set by command line.
+    return if defined $opt{'verbose'};
+    # quiet = yes => verbosity_level = -1
+    #
+    # technically this allows you to enable verbose by using "quiet =
+    # -1" (etc.), but most people will probably not use this
+    # "feature".
+    $val = -$val if $var eq 'quiet';
+    $opt{'verbose'} = $val;
+}
+
 # Hash used to process commandline options
 my %opthash = (			# ------------------ actions
 	       'setup-lab|S' => \&record_action,
@@ -451,7 +478,7 @@ my %opthash = (			# ------------------ actions
 
 	       'verbose|v' => \$opt{'verbose'},
 	       'debug|d+' => \$debug, # Count the -d flags
-	       'quiet|q' => \$quiet,
+	       'quiet|q' => \&record_quiet, # sets $opt{'verbose'} to -1
 
 	       # ------------------ behaviour options
 	       'info|i' => \$opt{'info'},
@@ -504,9 +531,10 @@ my %cfghash = (
 	       'fail-on-warnings'     => \$opt{'fail-on-warnings'},
 	       'info'                 => \$opt{'info'},
 	       'pedantic'             => \$opt{'pedantic'},
+	       'quiet'                => \&cfg_verbosity,
 	       'no-override'          => \$opt{'no-override'},
 	       'show-overrides'       => \$opt{'show-overrides'},
-	       'verbose'              => \$opt{'verbose'},
+	       'verbose'              => \&cfg_verbosity,
     );
 
 # init commandline parser
@@ -689,8 +717,13 @@ if ($ENV{'LINTIAN_INTERNAL_TESTSUITE'}){
     @prof_inc = ();
 }
 
-$opt{'verbose'} = 1 if $debug;
-$ENV{'LINTIAN_DEBUG'} = $debug;
+if ($debug) {
+    $opt{'verbose'} = 1;
+    $ENV{'LINTIAN_DEBUG'} = $debug;
+} else {
+    # Ensure verbose has a defined value
+    $opt{'verbose'} = 0 unless defined $opt{'verbose'};
+}
 
 # Use our custom-generated locale for programs we call, if it's available.  We
 # first look in the Lintian root and then in /var/lib/lintian, which is the
@@ -750,9 +783,8 @@ if (defined $experimental_output_opts) {
 }
 
 
-$Lintian::Output::GLOBAL->verbose($opt{'verbose'});
+$Lintian::Output::GLOBAL->verbosity_level($opt{'verbose'});
 $Lintian::Output::GLOBAL->debug($debug);
-$Lintian::Output::GLOBAL->quiet($quiet);
 $Lintian::Output::GLOBAL->color($opt{'color'});
 $Lintian::Output::GLOBAL->showdescription($opt{'info'});
 
@@ -780,9 +812,17 @@ $TAGS->suppress(keys %suppress_tags) if %suppress_tags;
 if ($no_profile) {
     # No profile if we have been given explicit list
     $opt{'LINTIAN_PROFILE'} = '';
-    # If we are given explicit list, we use that regardless
-    # of show_pedantic/display.
-    $TAGS->respect_display_level(0);
+    # if tags are listed explicitly (--tags) then show them even if
+    # they are pedantic/experimental etc.  However, for --check-part
+    # people explictly have to pass the relevant options.
+    if ($check_tags) {
+	$TAGS->show_experimental(1);
+	$TAGS->show_pedantic(1);
+	# discard whatever is in @display_level and request
+	# everything
+	@display_level = ();
+	display_infotags();
+    }
 } else {
     unless ($opt{'LINTIAN_PROFILE'}){
 	# Time to ask dpkg-vendor for a vendor name
@@ -803,16 +843,18 @@ if ($opt{'LINTIAN_PROFILE'}) {
 	my $tag = Lintian::Tag::Info->new($tagname);
 	$tag->set_severity($severity);
     }
-    # Initialize display level settings.
-    for my $level (@display_level) {
-	eval { $TAGS->display(@$level) };
-	if ($@) {
-	    my $error = $@;
-	    $error =~ s/ at .*//;
-	    die $error, "\n";
-	}
+}
+
+# Initialize display level settings.
+for my $level (@display_level) {
+    eval { $TAGS->display(@$level) };
+    if ($@) {
+	my $error = $@;
+	$error =~ s/ at .*//;
+	die $error, "\n";
     }
 }
+
 
 # }}}
 
@@ -884,7 +926,7 @@ while (my $arg = shift) {
 	if ($arg =~ m/\.(?:u?deb|dsc|changes)$/o){
 	    $pool->add_file($arg);
 	} else {
-	    fail("bad package file name $arg (neither .deb, .udeb or .dsc file)");
+	    fail("bad package file name $arg (neither .deb, .udeb, .changes or .dsc file)");
 	}
     } else {
 	# parameter is a package name--so look it up

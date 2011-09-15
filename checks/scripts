@@ -338,6 +338,8 @@ for my $field (qw/suggests recommends depends pre-depends provides/) {
 $all_deps .= ', ' if $all_deps;
 $all_deps .= $pkg;
 my $all_parsed = Lintian::Relation->new($all_deps);
+my $str_deps = $info->relation('strong');
+
 
 for my $filename (sort keys %{$info->scripts}) {
     my $interpreter = $info->scripts->{$filename}->{interpreter};
@@ -449,39 +451,15 @@ for my $filename (sort keys %{$info->scripts}) {
 	script_tag('unusual-interpreter', $filename, "#!$interpreter");
     }
 
-    # Do some additional checks on shell scripts in /etc.  This should
-    # probably be extended eventually to any script in a public directory.
-    # This also needs smarter processing of multiline quoted strings,
-    # heredocs, and so forth.  Hopefully it will do for right now.
-    if ($filename =~ m,^etc/, and $base =~ /^$known_shells_regex$/) {
-	my ($saw_init, $saw_invoke);
-	local $.;
-	open(FH, '<', $path);
-	while (<FH>) {
-	    next if m,^\s*$,;  # skip empty lines
-	    next if m,^\s*\#,; # skip comment lines
-	    $_ = remove_comments($_);
-	    chomp;
-
-	    # Check for running init scripts directly instead of via
-	    # invoke-rc.d.  Scripts are allowed to reinvoke themselves with a
-	    # different argument; some init scripts implement actions that
-	    # way.  Scripts are also allowed to do this for actions other than
-	    # those defined for invoke-rc.d.
-	    if (m,$LEADIN/etc/init.d/(\S+)\s+[\"\']?(\S+)[\"\']?,) {
-		my ($script, $action) = ($1, $2);
-		next if "etc/init.d/$script" eq $filename;
-		next unless $action =~ /^(force-)?(start|stop|restart|reload|status)$/;
-		$saw_init = $.;
-	    }
-	    if (m%^\s*invoke-rc\.d\s+%) {
-		$saw_invoke = 1;
-	    }
-	}
-	close(FH);
-	if ($saw_init and not $saw_invoke) {
-	    tag 'script-calls-init-script-directly', "$filename:$saw_init";
-	}
+    # Check for obsolete perl libraries
+    if ($base eq 'perl' && !$str_deps->implies('libperl4-corelibs-perl')) {
+        open(FH, '<', $path) or fail("could not open script $path");
+        while (<FH>) {
+            if (/(?:do|require)\s+(?:'|")(abbrev|assert|bigfloat|bigint|bigrat|cacheout|complete|ctime|dotsh|exceptions|fastcwd|find|finddepth|flush|getcwd|getopt|getopts|hostname|importenv|look|newgetopt|open2|open3|pwd|shellwords|stat|syslog|tainted|termcap|timelocal|validate)\.pl(?:'|")/) {
+                tag 'script-uses-perl4-libs-without-dep', "$filename:$. ${1}.pl";
+            }
+        }
+        close(FH);
     }
 
     # If we found the interpreter and the script is executable, check

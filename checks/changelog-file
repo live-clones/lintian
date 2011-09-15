@@ -270,13 +270,11 @@ if (@entries) {
     my %versions;
     for my $entry (@entries) {
 	if ($entry->Maintainer) {
-	    if ($entry->Maintainer =~ /<([^>\@]+\@unknown)>/) {
-		tag 'debian-changelog-file-contains-debmake-default-email-address', $1;
-	    } elsif ($entry->Maintainer =~ /<([^>\@]+\@[^>.]*)>/) {
+	    if ($entry->Maintainer =~ /<([^>\@]+\@[^>.]*)>/) {
 		tag 'debian-changelog-file-contains-invalid-email-address', $1;
 	    }
 	}
-	$versions{$entry->Version} = 1;
+	$versions{$entry->Version} = 1 if defined $entry->Version;
     }
 
     if (@entries > 1) {

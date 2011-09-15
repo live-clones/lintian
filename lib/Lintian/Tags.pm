@@ -24,6 +24,7 @@ use warnings;
 
 use Lintian::Output;
 use Lintian::Tag::Info;
+use Lintian::Tag::Override;
 use Util qw(fail);
 
 use base 'Exporter';
@@ -156,7 +157,6 @@ sub new {
         non_overridable_tags => {},
         ignored_overrides    => {},
         only_issue           => {},
-        respect_display      => 1,
         show_experimental    => 0,
         show_overrides       => 0,
         show_pedantic        => 0,
@@ -191,39 +191,26 @@ called first or if an attempt is made to issue an unknown tag.
 # overrides for the current file.  This may require checking for matches
 # against override data with wildcards.  Returns undef if the tag is not
 # overridden or the override if the tag is.
+#
+# The override will be returned as a list ref where the first element is the
+# name of the tag and the second is the "extra" for the override (if any).
 sub _check_overrides {
     my ($self, $tag, $extra) = @_;
-    my $overrides = $self->{info}{$self->{current}}{overrides}{$tag};
+    my $overrides = $self->{info}{$self->{current}}{'overrides-data'}{$tag};
+    my $stats = $self->{info}{$self->{current}}{overrides}{$tag};
     return unless $overrides;
     if (exists $overrides->{''}) {
-        $overrides->{''}++;
-        return $tag;
+        $stats->{''}++;
+        return $overrides->{''};
     } elsif ($extra ne '' and exists $overrides->{$extra}) {
-        $overrides->{$extra}++;
-        return "$tag $extra";
+        $stats->{$extra}++;
+        return $overrides->{$extra};
     } elsif ($extra ne '') {
         for (sort keys %$overrides) {
-            my $pattern = $_;
-            my $end = '';
-            my $pat = '';
-            next unless $pattern =~ m/\Q*\E/o;
-            # Split does not help us if $text ends with *
-            # so we deal with that now
-            if ($pattern =~ s/\Q*\E+\z//o){
-                $end = '.*';
-            }
-            # Are there any * left (after the above)?
-            if ($pattern =~ m/\Q*\E/o) {
-                # this works even if $text starts with a *, since
-                # that is split as '', <text>
-                my @pargs = split(m/\Q*\E++/o, $pattern);
-                $pat = join('.*', map { quotemeta($_) } @pargs);
-            } else {
-                $pat = $pattern;
-            }
-            if ($extra =~ m/^$pat$end\z/) {
-                $overrides->{$_}++;
-                return "$tag $_";
+            my $override = $overrides->{$_};
+            if ($override->is_pattern && $override->overrides($extra)){
+                $stats->{$_}++;
+                return $override;
             }
         }
     }
@@ -233,9 +220,9 @@ sub _check_overrides {
 # Record tag statistics.  Takes the tag, the Lintian::Tag::Info object and a
 # flag saying whether the tag was overridden.
 sub _record_stats {
-    my ($self, $tag, $info, $overridden) = @_;
+    my ($self, $tag, $info, $override) = @_;
     my $stats = $self->{statistics}{$self->{current}};
-    if ($overridden) {
+    if ($override) {
         $stats = $self->{statistics}{$self->{current}}{overrides};
     }
     $stats->{tags}{$tag}++;
@@ -267,12 +254,12 @@ sub tag {
     my $extra = join(' ', @extra);
     $extra = '' unless defined $extra;
 
-    my $overridden = $self->_check_overrides($tag, $extra);
-    $self->_record_stats($tag, $info, $overridden);
-    return if (defined($overridden) and not $self->{show_overrides});
+    my $override = $self->_check_overrides($tag, $extra);
+    $self->_record_stats($tag, $info, $override);
+    return if (defined($override) and not $self->{show_overrides});
     return unless $self->displayed($tag);
     my $file = $self->{info}{$self->{current}};
-    $Lintian::Output::GLOBAL->print_tag($file, $info, $extra, $overridden);
+    $Lintian::Output::GLOBAL->print_tag($file, $info, $extra, $override);
 }
 
 =back
@@ -502,12 +489,13 @@ sub file_start {
         die "duplicate of file $file added to Lintian::Tags object";
     }
     $self->{info}{$file} = {
-        file      => $file,
-        package   => $pkg,
-        version   => $version,
-        arch      => $arch,
-        type      => $type,
-        overrides => {},
+        file              => $file,
+        package           => $pkg,
+        version           => $version,
+        arch              => $arch,
+        type              => $type,
+        overrides         => {},
+        'overrides-data'  => {},
     };
     $self->{statistics}{$file} = {
         types     => {},
@@ -543,13 +531,27 @@ sub file_overrides {
         die 'no current file when adding overrides';
     }
     my $info = $self->{info}{$self->{current}};
+    my $comments = [];
+    my $last_over = undef;
     open(my $file, '<', $overrides)
         or fail("cannot open override file $overrides: $!");
     local $_;
     while (<$file>) {
         s/^\s+//;
         s/\s+$//;
-        next if /^(?:\#|\z)/;
+        if ($_ eq '') {
+            # Throw away comments, as they are not attached to a tag
+            # also throw away the option of "carrying over" the last
+            # comment
+            $comments = [];
+            $last_over = undef;
+            next;
+        }
+        if (/^#/o){
+            s/^# ?//o;
+            push @$comments, $_;
+            next;
+        }
         s/\s+/ /go;
         my $override = $_;
         # The override looks like the following:
@@ -563,6 +565,9 @@ sub file_overrides {
             # Valid - so far at least
             my ($archlist, $tagdata) = ($1, $2);
             my ($tag, $extra) = split(m/ /o, $tagdata, 2);
+            my $tagover;
+            my $com;
+            my $data;
             if ($archlist) {
                 # parse and figure
                 my (@archs) = split(m/\s++/o, $archlist);
@@ -587,8 +592,26 @@ sub file_overrides {
                 $self->{ignored_overrides}{$tag}++;
                 next;
             }
+
+            if ($last_over && $last_over->tag eq $tag && !scalar @$comments) {
+                # There are no new comments, no "empty line" in between and
+                # this tag is the same as the last, so we "carry over" the
+                # comment from the previous override (if any).
+                #
+                # Since L::T::Override is (supposed to be) immutable, the new
+                # override can share the reference with the previous one.
+                $comments = $last_over->comments;
+            }
             $extra = '' unless defined $extra;
+            $data =  {
+                'extra' => $extra,
+                'comments' => $comments,
+            };
+            $comments = [];
+            $tagover = Lintian::Tag::Override->new($tag, $data);
+            $info->{'overrides-data'}{$tag}{$extra} = $tagover;
             $info->{overrides}{$tag}{$extra} = 0;
+            $last_over = $tagover;
         } else {
             tag('malformed-override', $_);
         }
@@ -688,7 +711,6 @@ sub displayed {
     my $only = $self->{only_issue};
     if (%$only) {
         return 0 unless $only->{$tag};
-        return 1 unless $self->{respect_display};
     } else {
         return 0 if $self->suppressed($tag);
     }
@@ -768,30 +790,6 @@ been ignored.
 sub ignored_overrides {
     my ($self) = @_;
     return $self->{ignored_overrides};
-}
-
-=item respect_display_level([BOOL])
-
-Whether or not the display level should be considered for
-tags that can be emitted.
-
-Calling this with a defined non-truth value and calling
-only(TAG) will emit all of the tags passed to only(),
-regardless of what is passed to show_pedantic() and
-display() etc.
-
-Returns the old value.
-
-Note: This does not effect suppressed tags, which will
-always be suppressed regardless.
-
-=cut
-
-sub respect_display_level{
-    my ($self, $val) = @_;
-    my $old = $self->{respect_display};
-    $self->{respect_display} = $val if defined $val;
-    return $old;
 }
 
 =back

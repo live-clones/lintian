@@ -2,7 +2,6 @@ Testname: scripts-control-interpreters
 Sequence: 6000
 Type: native
 Version: 1.0
-Architecture: any
 Description: Check maintainer and config script interpreters
 Test-For: control-interpreter-in-usr-local
  wrong-path-for-interpreter

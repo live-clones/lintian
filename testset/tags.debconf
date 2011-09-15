@@ -72,3 +72,7 @@ W: debconf-test: using-imperative-form-in-templates debconf/1st-person
 W: debconf-test: using-imperative-form-in-templates debconf/should-be-boolean
 W: debconf-test: using-question-in-extended-description-in-templates debconf/testboolean
 W: debconf-udeb udeb: missing-debconf-dependency
+X: debconf-test-noscripts: package-contains-no-arch-dependent-files
+X: debconf-test-postinst: package-contains-no-arch-dependent-files
+X: debconf-test-preinst: package-contains-no-arch-dependent-files
+X: debconf-test: package-contains-no-arch-dependent-files

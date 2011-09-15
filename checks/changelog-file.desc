@@ -62,6 +62,9 @@ Info: Each Debian package (which provides a /usr/share/doc/<i>pkg</i>
  to be a native Debian package (i.e., there is no upstream source),
  the file should usually be installed as
  /usr/share/doc/<i>pkg</i>/changelog.gz
+ .
+ Note that Lintian may emit this tag if the changelog exists, but it
+ does not look like a Debian changelog.
 Ref: policy 12.7
 
 Tag: wrong-name-for-upstream-changelog
@@ -143,12 +146,6 @@ Info: The add-log-mailing-address variable is no longer honored in
  files.  Instead, put something like this in your ~/.emacs:
  .
  (setq debian-changelog-mailing-address "userid@debian.org")
-
-Tag: debian-changelog-file-contains-debmake-default-email-address
-Severity: important
-Certainty: certain
-Info: The changelog file contains an email address (&lt;..@unknown&gt;)
- that was not updated to the maintainer's real address.
 
 Tag: debian-changelog-file-contains-invalid-email-address
 Severity: important

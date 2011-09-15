@@ -14,6 +14,11 @@
 /usr/share/cli-common/cli-nant.make||
 /usr/share/cli-common/cli.make||
 /usr/share/coq/coqvars.mk||
+/usr/share/dpkg/architecture.mk||
+/usr/share/dpkg/buildflags.mk||
+/usr/share/dpkg/default.mk||
+/usr/share/dpkg/pkg-info.mk||
+/usr/share/dpkg/vendor.mk||
 /usr/share/gcj/debian_defaults||
 /usr/share/hardening-includes/hardening.make||
 /usr/share/javahelper/java-vars.mk||

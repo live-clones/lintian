@@ -59,6 +59,8 @@ my $title_re = qr/<title\s?>(.+?)<\/title\s?>/i;
 my $link_re = qr/<link href="(.+?)" rel="[\w]+" title="([A-Z]|[A-Z]?[\d\.]+?)\.?\s+([\w\s[:punct:]]+?)">/;
 my $index_re = qr/<a href="(.+?)">([A-Z]|[A-Z]?[\d\.]+?)\.?\s+([\w\s[:punct:]]+?)<\/a>/;
 my $fields = [ [ 'url' ], [ 'section' ], [ 'title' ] ];
+my $dbk_index_re = qr/([\d.]+?)\.\s+<a\s*href="(.+?)"\s*>([\w\s[:punct:]]+?)<\/a\s*>/i;
+my $dbk_fields = [ [ 'section' ], [ 'url' ], [ 'title' ] ];
 
 my %manuals = (
     'policy' => [
@@ -81,10 +83,20 @@ my %manuals = (
         'http://www.debian.org/doc/packaging-manuals/python-policy/',
         $link_re, $fields
     ],
+    'java-policy' => [
+        '/usr/share/doc/java-common/debian-java-policy/index.html',
+        'http://www.debian.org/doc/packaging-manuals/java-policy/',
+        $dbk_index_re, $dbk_fields
+    ],
+    'vim-policy' => [
+        '/usr/share/doc/vim-doc/vim-policy.html/index.html',
+        'http://pkg-vim.alioth.debian.org/vim-policy.html/',
+        $dbk_index_re, $dbk_fields
+    ],
     'lintian' => [
         '/usr/share/doc/lintian/lintian.html/index.html',
         'http://lintian.debian.org/manual/',
-        $link_re, $fields
+        $dbk_index_re, $dbk_fields
     ],
     'devref' => [
         '/usr/share/doc/developers-reference/index.html',
@@ -106,15 +118,6 @@ my %manuals = (
         'http://www.debian.org/doc/packaging-manuals/debconf_specification.html',
         qr/<a href="(#.+?)">([\w\s[:punct:]]+?)<\/a>/,
         [ [ 'section', 'url' ], [ 'title' ] ]
-    ],
-    # Extract chapters only, since the HTML available in netfort.gr.jp isn't
-    # exactly the same with regards to section IDs as the version included in
-    # the package.
-    'libpkg-guide' => [
-        '/usr/share/doc/libpkg-guide/libpkg-guide.html',
-        'http://www.netfort.gr.jp/~dancer/column/libpkg-guide/libpkg-guide.html',
-        qr/class="chapter"><a href="(.+?)">([\d\.]+?)\.? ([\w\s[:punct:]]+?)<\/a>/,
-        $fields
     ],
     'fhs' => [
         '/usr/share/doc/debian-policy/fhs/fhs-2.3.html',
@@ -167,8 +170,9 @@ sub extract_refs {
             }
 
             $ref{section} =~ s/^\#(.+)$/\L$1/;
-            $ref{title} =~ s/\n//g;
             $ref{title} =~ s/\s+/ /g;
+            $ref{title} =~ s,<span[^>]*>(.*?)</span ?>,$1,ig;
+            $ref{title} =~ s,<code[^>]*>(.*?)</code ?>,<code>$1</code>,ig;
             $ref{url} = "$url$ref{url}";
             $ref{url} = '' if not $url;
 

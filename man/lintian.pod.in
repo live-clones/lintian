@@ -99,6 +99,9 @@ Run only the checks that issue the requested tags.  The tests for
 other tags within the check scripts will be run but the tags will not
 be issued.
 
+With this options all tags listed will be displayed regardless of the
+display settings.
+
 Note: This option skips profile loading, even if B<--profile> was passed.
 
 =item B<--tags-from-file> filename
@@ -107,6 +110,9 @@ Same functionality as B<--tags>, but read the list of tags from a
 file.  Blank lines and lines beginning with # are ignored.  All other
 lines are taken to be tag names or comma-separated lists of tag names
 to (potentially) issue.
+
+With this options all tags listed will be displayed regardless of the
+display settings.
 
 Note: This option skips profile loading, even if B<--profile> was passed.
 
@@ -132,7 +138,13 @@ General options:
 
 =item B<-d>, B<--debug>
 
-Display debugging messages. (Implies B<-v>).
+Display debugging messages. (Implies B<-v> and overrules any B<-q>).
+
+Can be used multiple times to increase the debug information.
+
+This option cannot be specified in the config file.  If used on the
+command line it will override the B<verbose> and the B<quiet> options
+in the config file.
 
 =item B<-h>, B<--help>
 
@@ -140,13 +152,30 @@ Display usage information and exit.
 
 =item B<-q>, B<--quiet>
 
-Suppress all informational messages.  Currently, the only message this
-suppresses is the message at the end of the run giving the total count
-of overrides.
+Suppress all informational messages including override comments
+(nornally shown wiht B<--show-overrides>).
+
+This option is silently ignored if B<--debug> is given.  Otherwise, if
+both B<--verbose> and B<--quiet> is used, the last of these two options
+take effect.
+
+This option overrides the B<verbose> and the B<quiet> variable in the
+configuration file.  In the configuration file, this option is enabled
+by using B<quiet> variable.  The B<verbose> and B<quiet> variables may
+not both appear in the config file.
 
 =item B<-v>, B<--verbose>
 
 Display verbose messages.
+
+If B<--debug> is used this option is always enabled.  Otherwise, if
+both B<--verbose> and B<--quiet> is used (and B<--debug> is not used),
+the last of these two options take effect.
+
+This option overrides the B<quiet> variable in the configuration file.
+In the configuration file, this option is enabled by using B<verbose>
+variable.  The B<verbose> and B<quiet> variables may not both appear
+in the config file.
 
 =item B<-V>, B<--version>
 
@@ -297,7 +326,10 @@ profiles.
 
 =item B<--show-overrides>
 
-Output tags that have been overridden.
+Output tags that have been overridden.  The related override comments
+will also be printed (unless --quiet is used).  Please refer to the
+Lintian User Manual for the documentation on how lintian relates
+comments to a given override.
 
 This option overrides the B<show-overrides> variable in the
 configuration file.
@@ -502,7 +534,11 @@ When looking for packages in a Debian archive, lintian constructs the
 path to the archive from the I<archivedir>, I<distdir>, I<release>,
 and I<arch> as follows:
 
- I<archivedir>/dists/I<distdir>/I<release>/I<arch>
+=over 2
+
+I<archivedir>/dists/I<distdir>/I<release>/I<arch>
+
+=back
 
 Lintian always expects the "/dists/" path component in paths to Debian archives.
 

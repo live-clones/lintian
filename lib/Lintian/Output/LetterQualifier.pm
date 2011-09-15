@@ -103,11 +103,11 @@ sub new {
 
 
 sub print_tag {
-    my ($self, $pkg_info, $tag_info, $information, $overridden) = @_;
+    my ($self, $pkg_info, $tag_info, $information, $override) = @_;
 
     my $code = $tag_info->code;
     $code = 'X' if $tag_info->experimental;
-    $code = 'O' if defined($overridden);
+    $code = 'O' if defined($override);
 
     my $sev = $tag_info->severity;
     my $cer = $tag_info->certainty;
