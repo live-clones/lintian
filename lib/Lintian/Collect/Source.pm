@@ -23,6 +23,7 @@ use strict;
 use warnings;
 use base 'Lintian::Collect::Package';
 
+use Carp qw(croak);
 use Cwd();
 
 use Lintian::Relation;
@@ -186,7 +187,7 @@ sub binary_relation {
         my $merged;
         for my $f (@{ $special{$field} }) {
 	    # sub binary_relation Needs-Info :binary_field
-            my $value = $self->binary_field($f);
+            my $value = $self->binary_field($package, $f);
             $merged .= ', ' if (defined($merged) and defined($value));
             $merged .= $value if defined($value);
         }
@@ -196,12 +197,12 @@ sub binary_relation {
             qw(pre-depends depends recommends suggests enhances breaks
                conflicts provides replaces);
         croak("unknown relation field $field") unless $known{$field};
-        my $value = $self->binary_field($field);
+        my $value = $self->binary_field($package, $field);
         $result = $value if defined($value);
     }
     $result = Lintian::Relation->new($result);
     $self->{binary_relation}->{$package}->{$field} = $result;
-    return $self->{binary_relation}->{$field};
+    return $result;
 }
 
 
