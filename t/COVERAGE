@@ -1,5 +1,5 @@
-Last generated 2011-09-10
-Coverage: 723/937 (77.16%), w. legacy tests: 844/937 (90.07%)
+Last generated 2011-09-16
+Coverage: 727/937 (77.59%), w. legacy tests: 845/937 (90.18%)
 
 The following tags are not tested by the test suite:
 
@@ -45,7 +45,6 @@ fields package-superseded-by-perl
 fields source-field-does-not-match-pkg-name
 
 files FSSTND-dir-in-var
-files backup-file-in-package
 files compressed-symlink-with-wrong-ext
 files config-file-reserved
 files debug-package-should-be-named-dbg
@@ -161,12 +160,9 @@ files package-contains-readme-for-other-platform-or-distro
 files package-contains-upstream-install-documentation
 files package-contains-vcs-control-dir
 files package-contains-vcs-control-file
-files package-installs-into-etc-gconf-schemas
-files package-installs-nonbinary-perl-in-usr-lib-perl5
 files package-installs-packlist
 files script-in-usr-share-doc
 files script-with-language-extension
-files subdir-in-usr-bin
 files svk-commit-file-in-package
 files svn-commit-file-in-package
 files use-of-compat-symlink
@@ -340,11 +336,8 @@ filenames
   package-contains-readme-for-other-platform-or-distro
   package-contains-vcs-control-dir
   package-contains-vcs-control-file
-  package-installs-into-etc-gconf-schemas
-  package-installs-nonbinary-perl-in-usr-lib-perl5
   package-installs-packlist
   script-not-executable
-  subdir-in-usr-bin
   svk-commit-file-in-package
   svn-commit-file-in-package
   use-of-compat-symlink

@@ -1,4 +1,5 @@
 bar bin/foo
+bar etc/gconf/schemas/
 bar etc/rc.boot
 bar etc/rc.d
 bar etc/udev/rules.d
@@ -27,4 +28,5 @@ bar var/lock/foo
 bar var/run/foo
 bar var/www/foo
 
+Bar.pm usr/lib/perl5/Foo
 bar.png usr/lib/files-foo-in-bar
