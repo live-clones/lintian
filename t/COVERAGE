@@ -1,5 +1,5 @@
 Last generated 2011-09-16
-Coverage: 727/937 (77.59%), w. legacy tests: 845/937 (90.18%)
+Coverage: 729/937 (77.80%), w. legacy tests: 847/937 (90.39%)
 
 The following tags are not tested by the test suite:
 
@@ -30,12 +30,10 @@ debconf select-without-choices
 debconf unknown-field-in-templates
 debconf unknown-template-type
 
-fields alternates-not-allowed
 fields aspell-package-not-arch-all
 fields bad-menu-item
 fields doc-package-depends-on-main-package
 fields malformed-python-version
-fields multiline-field
 fields no-package-name
 fields no-source-field
 fields no-version-field

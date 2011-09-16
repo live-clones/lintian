@@ -4,9 +4,11 @@ Version: 1.0?
 Architecture: weird i386 amd64
 Maintainer: Debian Lintian Maintainers <lintian-maint@debian.org>
 Section: devel
-Priority: weird
+Priority: is
+ weird
 Unknown-Field: Hallo World
 Depends: other-package (>= 1.0?), another-package (>< 1.0)
+Conflicts: somepkg | anotherpkg
 Description: test for bad source package name
  This is a test package designed to exercise some feature or tag of
  Lintian.  It is part of the Lintian test suite and may do very odd
