@@ -18,12 +18,15 @@ my %opt = (
     'dep-level'  => 1,
 );
 
-# $coll -> Needs-Info
-my %coll_needs;
-# Reverse %coll_needs - note values are "$type-$name"
-my %coll_rneeds;
-# $check -> Needs-Info
-my %check_needs;
+#  %needs + %rneeds - note keys and values are "$type-$name"
+my %needs;
+my %rneeds;
+# node -> "level" - also counts as "marker" in the BFS in gen_depth_level
+my %depth = ();
+my @levels;
+
+my @colls  = ();
+my @checks = ();
 
 my %nodes = ();
 my %edges = ();
@@ -33,7 +36,8 @@ my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
 
 my %opthash = (
     'checks!' => \$opt{'checks'},
-    'dep-level' => \$opt{'dep-level'},
+    'dep-level!' => \$opt{'dep-level'},
+    'longest-paths' => \$opt{'longest-paths'},
     'h|help' => \&usage,
 );
 
@@ -44,14 +48,16 @@ Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
 GetOptions(%opthash)
     or die("error parsing options\n");
 
+$opt{'dep-level'} = 1 if $opt{'longest-paths'};
 
 foreach my $collf (glob ("$LINTIAN_ROOT/collection/*.desc")) {
     my $coll = get_dsc_info($collf) or die "$collf: $!";
     my $name = $coll->{'collector-script'} or die "$collf is missing collector-script field.\n";
     my @needs = split m/\s*+,\s*+/o, $coll->{'needs-info'}//'';
-    $coll_needs{$name} = \@needs;
+    push @colls, $name;
+    $needs{"coll-$name"} = \@needs;
     foreach my $n (@needs) {
-        push @{ $coll_rneeds{$n} }, "coll-$name";
+        push @{ $rneeds{"coll-$n"} }, "coll-$name";
     }
 }
 
@@ -60,15 +66,12 @@ if ($opt{'checks'}) {
         my $check = get_dsc_info($checkf) or die "$checkf: $!";
         my $name = $check->{'check-script'} or die "$checkf is missing check-script field.\n";
         my @needs = split m/\s*+,\s*+/o, $check->{'needs-info'}//'';
-        $check_needs{$name} = \@needs;
+        push @checks, $name;
+        $needs{"check-$name"} = \@needs;
         foreach my $n (@needs) {
-            push @{ $coll_rneeds{$n} }, "check-$name";
+            push @{ $rneeds{"coll-$n"} }, "check-$name";
         }
     }
-}
-
-if ($opt{'dep-level'}) {
-    gen_tree_coll();
 }
 
 gen_coll_check();
@@ -77,51 +80,50 @@ make_graph();
 
 exit 0;
 
-sub gen_tree_coll {
-    my @levels;
+sub gen_depth_level {
     my @queue;
-    my %visited = (); # key -> "level" - also counts as "marker"
     my %re = (); # "remaining" edges
     # Breadth first search with multiple source nodes
     # - Note we visit a node when we reach it through its LAST egde
     # - first find the source nodes and enqueue them
-    foreach my $node (keys %coll_needs) {
-        my $needed = $coll_needs{$node};
+    foreach my $node (@colls) {
+        my $needed = $needs{"coll-$node"};
         if (scalar @$needed < 1) {
-            push @queue, $node; #enqueue
-            $visited{$node} = 0;
+            push @queue, "coll-$node"; #enqueue
+            $depth{"coll-$node"} = 0;
         } else {
             # "remaining" edges
-            my %e = map { $_ => 1 } @$needed;
-            $re{$node} = \%e;
+            my %e = map {; "coll-$_" => 1 } @$needed;
+            $re{"coll-$node"} = \%e;
         }
     }
     # Do the BFS
     while (@queue) {
         my $node = shift @queue; #dequeue
-        my $level = $visited{$node};
-        push @{ $levels[$level] }, "coll-$node";
-        foreach my $other (@{ $coll_rneeds{$node} }) {
-            next unless $other =~ s/^coll-//o;
-            next if exists $visited{$other};
+        my $level = $depth{$node};
+        push @{ $levels[$level] }, $node;
+        foreach my $other (@{ $rneeds{$node} }) {
+            next unless $other =~ m/^coll-/o;
+            next if exists $depth{$other};
             delete $re{$other}->{$node};
             # Is this the last edge to this node?
             next if scalar keys %{ $re{$other} };
             # Yes, then we visit it.
-            $visited{$other} = $level + 1;
+            $depth{$other} = $level + 1;
             push @queue, $other; #enqueue
         }
     }
     # BFS done, create ranks for checks (if needed)
     if ($opt{'checks'}) {
-        foreach my $c (sort keys %check_needs) {
-            my $needs = $check_needs{$c};
+        foreach my $c (sort @checks) {
+            my $needs = $needs{"check-$c"};
             my $level = 0;
             if (@$needs) {
                 foreach my $dep (@$needs) {
-                    $level = $visited{$dep} if $visited{$dep} > $level;
+                    $level = $depth{"coll-$dep"} if $depth{"coll-$dep"} > $level;
                 }
                 $level++;
+                $depth{"check-$c"} = $level;
             }
             push @{ $levels[$level] }, "check-$c";
         }
@@ -129,6 +131,34 @@ sub gen_tree_coll {
     # Done - generate ranks and the graph
 
     @ranks = map { ['same', $_] } @levels;
+}
+
+sub mark_longest_paths {
+    # We exploit the fact that all nodes in level n must have a path
+    # consisting of n - 1 edges.  If this was not the case, the node
+    # should not be in that level.  Therefore we only need to consider
+    # the nodes in the "highest level" since they will *all* have a
+    # path of max length in this graph!
+    #
+    # These nodes may have paths that are shorter than the max length.
+    # However, related to the assertion above, we know the longest
+    # paths *must* pass through a node in each level.
+
+    my $path_marks = {};
+    my @c = @{ $levels[$#levels] };
+    for ( my $i = $#levels ; $i >= 0 ; $i--) {
+        my $next = $i - 1;
+        my @nc = ();
+        foreach my $node (@c) {
+            foreach my $dep (@{ $needs{$node} }) {
+                next unless $depth{"coll-$dep"} == $next;
+                $path_marks->{$node}->{"coll-$dep"} = 1;
+                push @nc, "coll-$dep";
+            }
+        }
+        @c = @nc;
+    }
+    return $path_marks;
 }
 
 sub make_graph {
@@ -153,23 +183,44 @@ sub make_graph {
     _footer();
 }
 
-sub gen_coll_check {
+sub is_marked {
+    my ($paths, $start, $end) = @_;
+    return unless $paths;
+    return unless exists $paths->{$start} && exists $paths->{$start}->{$end};
+    return 1;
+}
 
-    foreach my $coll (sort keys %coll_needs) {
+sub gen_coll_check {
+    my $marked_paths;
+    my $style = 'style=solid arrowhead=normal';
+    my $mstyle = 'color=red style=solid arrowhead=normal';
+    if ($opt{'dep-level'}) {
+        gen_depth_level();
+    }
+    if ($opt{'longest-paths'}) {
+        $marked_paths = mark_longest_paths();
+        $style = 'style=dotted arrowhead=none';
+    }
+
+    foreach my $coll (sort @colls) {
         my %ed;
         $nodes{"coll-$coll"} = "label=\"$coll\"";
-        foreach my $dep (@{ $coll_needs{$coll} }) {
-            $ed{"coll-$dep"} = ['->'];
+        foreach my $dep (@{ $needs{"coll-$coll"} }) {
+            my $s = $style;
+            $s = $mstyle if is_marked($marked_paths, "coll-$coll", "coll-$dep");
+            $ed{"coll-$dep"} = ['->', $s];
         }
         $edges{"coll-$coll"} = \%ed;
     }
 
     if ($opt{'checks'}) {
-        foreach my $check (sort keys %check_needs) {
+        foreach my $check (sort @checks) {
             my %ed;
             $nodes{"check-$check"} = "label=\"$check\" shape=box color=blue";
-            foreach my $dep (@{ $check_needs{$check} }) {
-                $ed{"coll-$dep"} = ['->'];
+            foreach my $dep (@{ $needs{"check-$check"} }) {
+                my $s = $style;
+                $s = $mstyle if is_marked($marked_paths, "check-$check", "coll-$dep");
+                $ed{"coll-$dep"} = ['->', $s];
             }
             $edges{"check-$check"} = \%ed;
         }
@@ -209,6 +260,8 @@ Usage: $p [options]
 
   --[no-]checks    - Whether to include checks in the graph
   --[no-]dep-level - Try to prettify the graph by using "dependency levels"
+  --longest-paths  - Highlight the longest paths in the graph.
+                     implies --dep-level
 
 Generates a (Graphviz dot) graph that describes relations between
 various checks and collections.
@@ -219,6 +272,10 @@ is considered schedulable when all of its dependencies (if any) have
 been scheduled.
   This option has no effect on the "semantics" of the graph.  It just
 tends to make dot generate images that are easier to understand.
+
+If --longest-paths is used, the longest path will be marked.  Edges
+in the longest path will be red, solid and have arrows on them.  All
+other edges will be black, dotted and have no arrows.
 
 In a dot-generated image, the boxes (with blue borders) will be the checks
 and the ellipses are collections.
