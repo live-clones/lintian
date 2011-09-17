@@ -298,8 +298,8 @@ sub _do_delete {
         $dir = $self->{dir} . '/' . $vpkg_type . '/' . $pkg_name;
         $dir .= '/' . $pkg_version if $self->_supports_multiple_versions();
         $dir .= '/' . $pkg_arch if $self->_supports_multiple_architectures();
-        return new Lab::Package($self, $pkg_name, $pkg_version, $vpkg_type,
-                                $realpath, $dir);
+        return Lab::Package->new ($self, $pkg_name, $pkg_version, $vpkg_type,
+                                  $realpath, $dir);
 
     }
 }

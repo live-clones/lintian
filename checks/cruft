@@ -41,7 +41,7 @@ use File::Basename;
 # autoconf and automake and then use autoreconf to update config.guess and
 # config.sub, and automake depends on autotools-dev.
 our $AUTOTOOLS = Lintian::Relation->new(join(' | ',
-    new Lintian::Data('cruft/autotools')->all()));
+    Lintian::Data->new ('cruft/autotools')->all));
 
 # The files that contain error messages from tar, which we'll check and issue
 # tags for if they contain something unexpected, and their corresponding tags.
