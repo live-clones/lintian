@@ -24,6 +24,9 @@ lintian (2.5.4) UNRELEASED; urgency=low
       if it contained a colon and there was no space before the vaue.
       Thanks to Pino Toscano for reporting the issue.
 
+  * reporting/*:
+    + [NT] Recognise and display pedantic tags.
+
  -- Niels Thykier <niels@thykier.net>  Sat, 10 Sep 2011 13:44:01 +0200
 
 lintian (2.5.3) unstable; urgency=low

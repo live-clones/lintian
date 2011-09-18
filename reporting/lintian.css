@@ -316,6 +316,11 @@ span.type-O {
     background-color: #DDD;
 }
 
+span.type-P {
+    color: #111;
+    background-color: #C7EA3C;
+}
+
 li.type-O {
     color: #444;
 }
@@ -344,6 +349,11 @@ blockquote.type-E {
 blockquote.type-X {
     background-color: #FECCFE;
     border: 1px solid #DE66DE;
+}
+
+blockquote.type-P {
+    background-color: #DFA;
+    border: 1px solid #C7EA3C;
 }
 
 
