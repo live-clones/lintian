@@ -262,5 +262,21 @@ to select specific tests to run.
 
 =back
 
+=head2 collections and checks
+
+Collections (as the names suggests) are used to extract or/and
+structure data from a package.  This data is then used by the checks
+(usually via Lintian::Collect API) to examine the package.
+
+The check may be doing the extraction (or structuring) of data itself,
+but it should generally be avoided for "heavy" tasks.  Unlike checks,
+collections can (and generally is) run in parallel to improve the
+effective runtime.
+
+
+An overview of how the collections and checks relate can be obtained
+by I<private/graph>, which generates a "Graphviz Dot" graph of the
+relations.
+
 =cut
 

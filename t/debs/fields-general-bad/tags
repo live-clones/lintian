@@ -1,8 +1,10 @@
+E: fields-general-bad?: alternates-not-allowed conflicts
 E: fields-general-bad?: bad-package-name
 E: fields-general-bad?: bad-relation depends: another-package (>< 1.0)
 E: fields-general-bad?: bad-version-in-relation depends: other-package (>= 1.0?)
 E: fields-general-bad?: bad-version-number 1.0?
+E: fields-general-bad?: multiline-field priority
 E: fields-general-bad?: too-many-architectures
-E: fields-general-bad?: unknown-priority weird
+E: fields-general-bad?: unknown-priority is weird
 I: fields-general-bad?: unknown-field-in-control unknown-field
 W: fields-general-bad?: unknown-architecture weird

@@ -8,6 +8,7 @@ tmp = $(CURDIR)/debian/$(shell dh_listpackages)
 override_dh_install:
 	dh_install
 	mkdir -p $(tmp)/usr/share/foo
+	echo "Back-up file" > $(tmp)/usr/share/foo/file~
 	touch $(tmp)/usr/share/foo/'*'
 	touch $(tmp)/usr/share/foo/'ws '
 

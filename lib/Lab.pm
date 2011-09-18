@@ -409,8 +409,8 @@ sub _do_delete {
         fail("Unknown package type $pkg_type") unless($vpkg_type);
         fail("Could not resolve the path of $pkg_path") unless($realpath);
         $dir = $self->_get_lpkg_dir($vpkg_type, $pkg_name, $pkg_version, $pkg_arch);
-        return new Lab::Package($self, $pkg_name, $pkg_version, $vpkg_type,
-                                $realpath, $dir);
+        return Lab::Package->new ($self, $pkg_name, $pkg_version, $vpkg_type,
+                                  $realpath, $dir);
 
     }
 }

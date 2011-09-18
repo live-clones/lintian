@@ -14,6 +14,7 @@ E: files-general: star-file usr/share/foo/*
 E: files-general: stray-directory-in-manpage-directory usr/share/man/man1/random/
 I: files-general: duplicated-compressed-file usr/share/doc/lintian/lintian-16x16.png.gz
 I: files-general: package-contains-empty-directory usr/share/man/man1/random/
+W: files-general: backup-file-in-package usr/share/foo/file~
 W: files-general: executable-not-elf-or-script usr/share/man/man5/foo.5.gz
 W: files-general: file-in-unusual-dir new-top-level-dir/file-in-new-top-level-dir
 W: files-general: file-name-ends-in-whitespace usr/share/foo/ws 

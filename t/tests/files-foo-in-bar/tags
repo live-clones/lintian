@@ -45,6 +45,8 @@ W: files-foo-in-bar: file-in-unusual-dir var/run/foo/bar
 W: files-foo-in-bar: file-in-usr-lib-sgml usr/lib/sgml/bar
 W: files-foo-in-bar: image-file-in-usr-lib usr/lib/files-foo-in-bar/bar.png
 W: files-foo-in-bar: non-standard-dir-in-usr usr/foo/
+W: files-foo-in-bar: package-installs-into-etc-gconf-schemas etc/gconf/schemas/bar
+W: files-foo-in-bar: package-installs-nonbinary-perl-in-usr-lib-perl5 usr/lib/perl5/Foo/Bar.pm
 W: files-foo-in-bar: third-party-package-in-python-dir usr/lib/python2.6/bar
 W: files-foo-in-bar: vim-addon-within-vim-runtime-path usr/share/vim/vim73/bar
 W: files-foo-in-bar: vim-addon-within-vim-runtime-path usr/share/vim/vimcurrent/bar

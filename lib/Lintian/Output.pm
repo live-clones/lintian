@@ -55,7 +55,7 @@ Lintian::Output - Lintian messaging handling
     # OO
     use Lintian::Output;
 
-    my $out = new Lintian::Output;
+    my $out = Lintian::Output->new;
 
     $out->verbosity_level(-1);
     $out->msg("Something interesting");
@@ -134,7 +134,7 @@ Lintian::Output->mk_accessors(qw(verbosity_level debug color colors stdout
 my %default_colors = ( 'E' => 'red' , 'W' => 'yellow' , 'I' => 'cyan',
 		       'P' => 'green' );
 
-our $GLOBAL = new Lintian::Output;
+our $GLOBAL = Lintian::Output->new;
 
 sub new {
     my ($class, %options) = @_;

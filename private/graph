@@ -3,6 +3,8 @@
 use strict;
 use warnings;
 
+use Getopt::Long;
+
 BEGIN {
     my $root = $ENV{'LINTIAN_ROOT'}//'.';
     $ENV{'LINTIAN_ROOT'} = $root;
@@ -11,27 +13,272 @@ use lib "$ENV{'LINTIAN_ROOT'}/lib";
 
 use Util;
 
-my %coll_needs;
+my %opt = (
+    'checks'     => 1,
+    'dep-level'  => 1,
+);
+
+#  %needs + %rneeds - note keys and values are "$type-$name"
+my %needs;
+my %rneeds;
+# node -> "level" - also counts as "marker" in the BFS in gen_depth_level
+my %depth = ();
+my @levels;
+
+my @colls  = ();
+my @checks = ();
+
+my %nodes = ();
+my %edges = ();
+my @ranks = ();
 
 my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
+
+my %opthash = (
+    'checks!' => \$opt{'checks'},
+    'dep-level!' => \$opt{'dep-level'},
+    'longest-paths' => \$opt{'longest-paths'},
+    'h|help' => \&usage,
+);
+
+# init commandline parser
+Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
+
+# process commandline options
+GetOptions(%opthash)
+    or die("error parsing options\n");
+
+$opt{'dep-level'} = 1 if $opt{'longest-paths'};
 
 foreach my $collf (glob ("$LINTIAN_ROOT/collection/*.desc")) {
     my $coll = get_dsc_info($collf) or die "$collf: $!";
     my $name = $coll->{'collector-script'} or die "$collf is missing collector-script field.\n";
     my @needs = split m/\s*+,\s*+/o, $coll->{'needs-info'}//'';
-    $coll_needs{$name} = \@needs;
-}
-
-print <<EOF ;
-digraph "lintian-collections" {
-// This graph shows the dependency relation ships between various
-// collections.
-EOF
-
-foreach my $coll (sort keys %coll_needs) {
-    foreach my $dep (@{ $coll_needs{$coll} }) {
-        print "\"$coll\" -> \"$dep\"\n";
+    push @colls, $name;
+    $needs{"coll-$name"} = \@needs;
+    foreach my $n (@needs) {
+        push @{ $rneeds{"coll-$n"} }, "coll-$name";
     }
 }
 
-print "}\n";
+if ($opt{'checks'}) {
+    foreach my $checkf (glob ("$LINTIAN_ROOT/checks/*.desc")) {
+        my $check = get_dsc_info($checkf) or die "$checkf: $!";
+        my $name = $check->{'check-script'} or die "$checkf is missing check-script field.\n";
+        my @needs = split m/\s*+,\s*+/o, $check->{'needs-info'}//'';
+        push @checks, $name;
+        $needs{"check-$name"} = \@needs;
+        foreach my $n (@needs) {
+            push @{ $rneeds{"coll-$n"} }, "check-$name";
+        }
+    }
+}
+
+gen_coll_check();
+
+make_graph();
+
+exit 0;
+
+sub gen_depth_level {
+    my @queue;
+    my %re = (); # "remaining" edges
+    # Breadth first search with multiple source nodes
+    # - Note we visit a node when we reach it through its LAST egde
+    # - first find the source nodes and enqueue them
+    foreach my $node (@colls) {
+        my $needed = $needs{"coll-$node"};
+        if (scalar @$needed < 1) {
+            push @queue, "coll-$node"; #enqueue
+            $depth{"coll-$node"} = 0;
+        } else {
+            # "remaining" edges
+            my %e = map {; "coll-$_" => 1 } @$needed;
+            $re{"coll-$node"} = \%e;
+        }
+    }
+    # Do the BFS
+    while (@queue) {
+        my $node = shift @queue; #dequeue
+        my $level = $depth{$node};
+        push @{ $levels[$level] }, $node;
+        foreach my $other (@{ $rneeds{$node} }) {
+            next unless $other =~ m/^coll-/o;
+            next if exists $depth{$other};
+            delete $re{$other}->{$node};
+            # Is this the last edge to this node?
+            next if scalar keys %{ $re{$other} };
+            # Yes, then we visit it.
+            $depth{$other} = $level + 1;
+            push @queue, $other; #enqueue
+        }
+    }
+    # BFS done, create ranks for checks (if needed)
+    if ($opt{'checks'}) {
+        foreach my $c (sort @checks) {
+            my $needs = $needs{"check-$c"};
+            my $level = 0;
+            if (@$needs) {
+                foreach my $dep (@$needs) {
+                    $level = $depth{"coll-$dep"} if $depth{"coll-$dep"} > $level;
+                }
+                $level++;
+                $depth{"check-$c"} = $level;
+            }
+            push @{ $levels[$level] }, "check-$c";
+        }
+    }
+    # Done - generate ranks and the graph
+
+    @ranks = map { ['same', $_] } @levels;
+}
+
+sub mark_longest_paths {
+    # We exploit the fact that all nodes in level n must have a path
+    # consisting of n - 1 edges.  If this was not the case, the node
+    # should not be in that level.  Therefore we only need to consider
+    # the nodes in the "highest level" since they will *all* have a
+    # path of max length in this graph!
+    #
+    # These nodes may have paths that are shorter than the max length.
+    # However, related to the assertion above, we know the longest
+    # paths *must* pass through a node in each level.
+
+    my $path_marks = {};
+    my @c = @{ $levels[$#levels] };
+    for ( my $i = $#levels ; $i >= 0 ; $i--) {
+        my $next = $i - 1;
+        my @nc = ();
+        foreach my $node (@c) {
+            foreach my $dep (@{ $needs{$node} }) {
+                next unless $depth{"coll-$dep"} == $next;
+                $path_marks->{$node}->{"coll-$dep"} = 1;
+                push @nc, "coll-$dep";
+            }
+        }
+        @c = @nc;
+    }
+    return $path_marks;
+}
+
+sub make_graph {
+    _header();
+    print "// Nodes\n";
+    foreach my $node (sort keys %nodes) {
+        my $attr = $nodes{$node}//'';
+        my $n = "\"$node\"";
+        $n .= " [ $attr ]" if $attr;
+        print "    $n\n";
+    }
+    print "\n// Edges\n";
+    foreach my $sn (sort keys %edges) {
+        foreach my $en (sort keys %{ $edges{$sn} }) {
+            my ($et, $attr) = @{ $edges{$sn}->{$en} };
+            my $e = "\"$sn\" $et \"$en\"";
+            $e .= " [ $attr ]" if $attr;
+            print "    $e\n";
+        }
+    }
+    print "\n";
+    _footer();
+}
+
+sub is_marked {
+    my ($paths, $start, $end) = @_;
+    return unless $paths;
+    return unless exists $paths->{$start} && exists $paths->{$start}->{$end};
+    return 1;
+}
+
+sub gen_coll_check {
+    my $marked_paths;
+    my $style = 'style=solid arrowhead=normal';
+    my $mstyle = 'color=red style=solid arrowhead=normal';
+    if ($opt{'dep-level'}) {
+        gen_depth_level();
+    }
+    if ($opt{'longest-paths'}) {
+        $marked_paths = mark_longest_paths();
+        $style = 'style=dotted arrowhead=none';
+    }
+
+    foreach my $coll (sort @colls) {
+        my %ed;
+        $nodes{"coll-$coll"} = "label=\"$coll\"";
+        foreach my $dep (@{ $needs{"coll-$coll"} }) {
+            my $s = $style;
+            $s = $mstyle if is_marked($marked_paths, "coll-$coll", "coll-$dep");
+            $ed{"coll-$dep"} = ['->', $s];
+        }
+        $edges{"coll-$coll"} = \%ed;
+    }
+
+    if ($opt{'checks'}) {
+        foreach my $check (sort @checks) {
+            my %ed;
+            $nodes{"check-$check"} = "label=\"$check\" shape=box color=blue";
+            foreach my $dep (@{ $needs{"check-$check"} }) {
+                my $s = $style;
+                $s = $mstyle if is_marked($marked_paths, "check-$check", "coll-$dep");
+                $ed{"coll-$dep"} = ['->', $s];
+            }
+            $edges{"check-$check"} = \%ed;
+        }
+    }
+
+}
+
+sub _header {
+
+    print <<EOF ;
+digraph "lintian-collections" {
+// This graph shows the dependency relation ships between various
+// collections (and possibly also checks)
+
+EOF
+
+}
+
+sub _footer {
+    if (@ranks) {
+        print "//Ranks\n";
+        foreach my $r (@ranks) {
+            my ($rank, $nodes) = @$r;
+            print "    { rank=$rank; \"" . join('" "', @$nodes) . "\" }\n";
+        }
+        print "\n";
+    }
+    print "}\n";
+}
+
+sub usage {
+    my $p = $0;
+    $p=~ s,.*/,,g;
+
+    print <<EOF ;
+Usage: $p [options]
+
+  --[no-]checks    - Whether to include checks in the graph
+  --[no-]dep-level - Try to prettify the graph by using "dependency levels"
+  --longest-paths  - Highlight the longest paths in the graph.
+                     implies --dep-level
+
+Generates a (Graphviz dot) graph that describes relations between
+various checks and collections.
+
+If --dep-level is used, the nodes will be grouped together by how late
+the collection (or check) can be scheduled.  A collection (or check)
+is considered schedulable when all of its dependencies (if any) have
+been scheduled.
+  This option has no effect on the "semantics" of the graph.  It just
+tends to make dot generate images that are easier to understand.
+
+If --longest-paths is used, the longest path will be marked.  Edges
+in the longest path will be red, solid and have arrows on them.  All
+other edges will be black, dotted and have no arrows.
+
+In a dot-generated image, the boxes (with blue borders) will be the checks
+and the ellipses are collections.
+
+EOF
+}

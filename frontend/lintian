@@ -768,13 +768,13 @@ if (defined $experimental_output_opts) {
 	if ($_ eq 'format') {
 	    if ($opts{$_} eq 'colons') {
 		require Lintian::Output::ColonSeparated;
-		$Lintian::Output::GLOBAL = new Lintian::Output::ColonSeparated;
+		$Lintian::Output::GLOBAL = Lintian::Output::ColonSeparated->new;
 	    } elsif ($opts{$_} eq 'letterqualifier') {
 		require Lintian::Output::LetterQualifier;
-		$Lintian::Output::GLOBAL = new Lintian::Output::LetterQualifier;
+		$Lintian::Output::GLOBAL = Lintian::Output::LetterQualifier->new;
 	    } elsif ($opts{$_} eq 'xml') {
 		require Lintian::Output::XML;
-		$Lintian::Output::GLOBAL = new Lintian::Output::XML;
+		$Lintian::Output::GLOBAL = Lintian::Output::XML->new;
 	    }
 	}
 	no strict 'refs';

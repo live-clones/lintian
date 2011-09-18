@@ -41,7 +41,7 @@ use File::Basename;
 # autoconf and automake and then use autoreconf to update config.guess and
 # config.sub, and automake depends on autotools-dev.
 our $AUTOTOOLS = Lintian::Relation->new(join(' | ',
-    new Lintian::Data('cruft/autotools')->all()));
+    Lintian::Data->new ('cruft/autotools')->all));
 
 # The files that contain error messages from tar, which we'll check and issue
 # tags for if they contain something unexpected, and their corresponding tags.
@@ -121,12 +121,13 @@ my $ltinbd  = $info->relation('build-depends-all')->implies('libtool');
 my %warned;
 my $format = $info->field('format');
 if ($format =~ /^\s*2\.0\s*\z/ or $format =~ /^\s*3\.0\s*\(quilt\)/) {
-    my $wanted = sub { check_debfiles($pkg, $info, $droot, \%warned) };
+    my $wanted = sub { check_debfiles($pkg, $info, qr/\Q$droot\E/, \%warned) };
     find($wanted, $droot);
 } elsif (not $info->native) {
     check_diffstat($info->diffstat, \%warned);
 }
-my $wanted = sub { find_cruft($pkg, $info, $info->unpacked, \%warned, $atdinbd, $ltinbd) };
+my $uroot = $info->unpacked;
+my $wanted = sub { find_cruft($pkg, $info, qr/\Q$uroot\E/, \%warned, $atdinbd, $ltinbd) };
 find($wanted, $info->unpacked);
 
 # Look for cruft based on file's results, but allow cruft in test directories

@@ -1,5 +1,5 @@
-Last generated 2011-09-10
-Coverage: 723/937 (77.16%), w. legacy tests: 844/937 (90.07%)
+Last generated 2011-09-16
+Coverage: 731/937 (78.01%), w. legacy tests: 849/937 (90.61%)
 
 The following tags are not tested by the test suite:
 
@@ -10,8 +10,6 @@ binaries ocaml-custom-executable
 binaries program-not-linked-against-libc
 
 changelog-file html-changelog-without-text-version
-changelog-file wrong-name-for-changelog-of-native-package
-changelog-file wrong-name-for-debian-changelog-file
 changelog-file wrong-name-for-upstream-changelog
 
 cruft source-contains-prebuilt-windows-binary
@@ -30,12 +28,10 @@ debconf select-without-choices
 debconf unknown-field-in-templates
 debconf unknown-template-type
 
-fields alternates-not-allowed
 fields aspell-package-not-arch-all
 fields bad-menu-item
 fields doc-package-depends-on-main-package
 fields malformed-python-version
-fields multiline-field
 fields no-package-name
 fields no-source-field
 fields no-version-field
@@ -45,7 +41,6 @@ fields package-superseded-by-perl
 fields source-field-does-not-match-pkg-name
 
 files FSSTND-dir-in-var
-files backup-file-in-package
 files compressed-symlink-with-wrong-ext
 files config-file-reserved
 files debug-package-should-be-named-dbg
@@ -161,12 +156,9 @@ files package-contains-readme-for-other-platform-or-distro
 files package-contains-upstream-install-documentation
 files package-contains-vcs-control-dir
 files package-contains-vcs-control-file
-files package-installs-into-etc-gconf-schemas
-files package-installs-nonbinary-perl-in-usr-lib-perl5
 files package-installs-packlist
 files script-in-usr-share-doc
 files script-with-language-extension
-files subdir-in-usr-bin
 files svk-commit-file-in-package
 files svn-commit-file-in-package
 files use-of-compat-symlink
@@ -340,11 +332,8 @@ filenames
   package-contains-readme-for-other-platform-or-distro
   package-contains-vcs-control-dir
   package-contains-vcs-control-file
-  package-installs-into-etc-gconf-schemas
-  package-installs-nonbinary-perl-in-usr-lib-perl5
   package-installs-packlist
   script-not-executable
-  subdir-in-usr-bin
   svk-commit-file-in-package
   svn-commit-file-in-package
   use-of-compat-symlink

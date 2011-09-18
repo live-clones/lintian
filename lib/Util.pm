@@ -115,7 +115,7 @@ sub _parse_dpkg_control_iterative {
 	    }
 	}
 	# new empty field?
-	elsif (m/^(\S+):\s*$/o) {
+	elsif (m/^([^: \t]+):\s*$/o) {
 	    $open_section = 1;
 
 	    my ($tag) = (lc $1);
@@ -124,7 +124,7 @@ sub _parse_dpkg_control_iterative {
 	    $last_tag = $tag;
 	}
 	# new field?
-	elsif (m/^(\S+):\s*(.*)$/o) {
+	elsif (m/^([^: \t]+):\s*(.*)$/o) {
 	    $open_section = 1;
 
 	    # Policy: Horizontal whitespace (spaces and tabs) may occur

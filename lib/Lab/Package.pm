@@ -29,14 +29,14 @@ Lab::Package - A package inside the Lab
 
  use Lab;
  
- my $lab = new Lab("dir", "dist");
- my $lpkg = $lab->get_lab_package("name", "version", "arch", "type", "path");
+ my $lab = Lab->new ("dir", "dist");
+ my $lpkg = $lab->get_lab_package ("name", "version", "arch", "type", "path");
 
  # create the entry if it does not exist
  $lpkg->create_entry unless $lpkg->entry_exists;
 
  # Remove package from lab.
- $lpkg->delete_lab_entry();
+ $lpkg->delete_lab_entry;
 
 =head1 DESCRIPTION
 
@@ -62,7 +62,7 @@ use Lab qw(:constants); # LAB_FORMAT
 
 =over 4
 
-=item new Lab::Package($lab, $pkg_type, $pkg_name, $pkg_path, $base_dir)
+=item Lab::Package->new ($lab, $pkg_type, $pkg_name, $pkg_path, $base_dir)
 
 Creates a new Lab::Package inside B<$lab>.  B<$pkg_type> denotes the
 (long) type of package (e.g. binary, source, udeb ...) and

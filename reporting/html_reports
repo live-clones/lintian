@@ -213,7 +213,7 @@ my (%by_maint, %by_uploader, %by_tag);
 my (%seen, %saw_maintainer);
 while (<>) {
     chomp;
-    next unless m/^([EWIXO]): (\S+)(?: (\S+))?: (\S+)(?:\s+(.*))?/;
+    next unless m/^([EWIXOP]): (\S+)(?: (\S+))?: (\S+)(?:\s+(.*))?/;
     my ($code, $package, $type, $tag, $extra) = ($1, $2, $3, $4, $5);
     $type = 'binary' unless (defined $type);
     $extra = '' unless (defined $extra);
@@ -225,7 +225,8 @@ while (<>) {
         W => 'warnings',
         I => 'info',
         X => 'experimental',
-        O => 'overridden'
+        O => 'overridden',
+        P => 'pedantic',
     }->{$code};
     $statistics{$key}++;
     unless ($seen{"$package $type"}) {
@@ -541,7 +542,7 @@ if (-f $statistics_file) {
 }
 my %delta;
 my @attrs = qw(maintainers source-packages binary-packages udeb-packages
-               errors warnings info experimental overridden);
+               errors warnings info experimental pedantic overridden);
 for my $attr (@attrs) {
     my $old = $old_statistics->{$attr} || 0;
     $statistics{$attr} ||= 0;
