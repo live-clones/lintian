@@ -238,7 +238,7 @@ sub _get_lpkg_dir {
         $dir .= substr $pkg_name, 0, 1;
     }
     $dir .= "/$pkg_name";
-    $dir .= "_$pkg_version";
+    $dir .= "${pkg_name}_${pkg_version}";
     # avoid "_source_source" entries for source packages
     $dir .= "_$pkg_arch" if $pkg_type ne 'source';
     $dir .= "_$pkg_type";
