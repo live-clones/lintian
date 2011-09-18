@@ -28,7 +28,7 @@ use Carp qw(croak);
 
 # Lab format Version Number increased whenever incompatible changes
 # are done to the lab so that all packages are re-unpacked
-use constant LAB_FORMAT => 10;
+use constant LAB_FORMAT => 10.1;
 
 # Export now due to cicular depends between Lab and Lab::Package.
 our (@EXPORT, @EXPORT_OK, %EXPORT_TAGS);
@@ -76,12 +76,15 @@ sub new {
 # returns a truth value if the lab is initialized and exists
 sub is_lab {
     my ( $self ) = @_;
-
-    return unless $self->{dir};
-    return -d "$self->{dir}/binary"
-	&& -d "$self->{dir}/udeb"
-	&& -d "$self->{dir}/source"
-	&& -d "$self->{dir}/info";
+    my $dir = $self->{dir};
+    return unless $dir;
+    # New style lab?
+    return 1 if -d "$dir/info" && -d "$dir/pool";
+    # 10-style lab?
+    return -d "$dir/binary"
+	&& -d "$dir/udeb"
+	&& -d "$dir/source"
+	&& -d "$dir/info";
 }
 
 sub _init {
@@ -97,7 +100,7 @@ sub _init {
         # This code is here fore BACKWARDS COMPATABILITY!
         #  - we can kill it when LAB_FORMAT goes from 10 to 11.
         #  Basically this auto-upgrades existing static labs to support changes files
-	if (-d "$absdir" && ! -d "$absdir/changes") {
+	if (-d "$absdir" && -d "$absdir/binary" && ! -d "$absdir/changes") {
 	    mkdir("$absdir/changes", 0777)
 		or fail("cannot create lab directory $absdir/changes");
 	}
@@ -152,7 +155,7 @@ sub _do_setup {
     }
 
     # create base directories
-    for my $subdir (qw( binary source udeb changes info )) {
+    for my $subdir (qw( pool info )) {
 	my $fulldir = "$dir/$subdir";
 	if (not -d $fulldir) {
 	    mkdir($fulldir, 0777)
@@ -228,9 +231,17 @@ sub get_entry {
 # Internal sub to find the directory in the Lab for a Lab entry
 sub _get_lpkg_dir {
     my ($self, $pkg_type, $pkg_name, $pkg_version, $pkg_arch) = @_;
-    my $dir = $self->{dir} . "/$pkg_type/$pkg_name";
-    $dir .= '/' . $pkg_version if $self->_supports_multiple_versions();
-    $dir .= '/' . $pkg_arch if $self->_supports_multiple_architectures();
+    my $dir = "$self->{dir}/pool/";
+    if ($pkg_name =~ m/^lib/o) {
+        $dir .= substr $pkg_name, 0, 4;
+    } else {
+        $dir .= substr $pkg_name, 0, 1;
+    }
+    $dir .= "/$pkg_name";
+    $dir .= "_$pkg_version";
+    # avoid "_source_source" entries for source packages
+    $dir .= "_$pkg_arch" if $pkg_type ne 'source';
+    $dir .= "_$pkg_type";
     return $dir;
 }
 
@@ -334,49 +345,61 @@ sub delete {
 # The backing sub for delete and delete_static
 sub _do_delete {
     my ( $self ) = @_;
+    my $dir = $self->{dir};
 
-    return 0 unless $self->{dir};
+    return 0 unless $dir;
 
-    v_msg("Removing $self->{dir} ...");
+    v_msg("Removing $dir ...");
 
     # chdir to root (otherwise, the shell will complain if we happen
     # to sit in the directory we want to delete :)
     chdir('/');
 
     # does the lab exist?
-    unless (-d $self->{dir}) {
+    unless (-d $dir) {
 		# no.
-		warning("cannot remove lab in directory $self->{dir} ! (directory does not exist)");
+		warning("cannot remove lab in directory $dir ! (directory does not exist)");
 		return 0;
     }
 
     # sanity check if $self->{dir} really points to a lab :)
-    unless (-d "$self->{dir}/binary") {
-		# binary/ subdirectory does not exist--empty directory?
-		my @t = glob("$self->{dir}/*");
+    unless (-d "$dir/info") {
+		# info/ subdirectory does not exist--empty directory?
+		my @t = glob("$dir/*");
 		if ($#t+1 <= 2) {
 			# yes, empty directory--skip it
 			return 1;
 		} else {
 			# non-empty directory that does not look like a lintian lab!
-			warning("directory $self->{dir} does not look like a lab! (please remove it yourself)");
+			warning("directory $dir does not look like a lab! (please remove it yourself)");
 			return 0;
 		}
     }
 
     # looks ok.
-    unless (delete_dir("$self->{dir}/binary",
-		       "$self->{dir}/source",
-		       "$self->{dir}/udeb",
-		       "$self->{dir}/changes",
-		       "$self->{dir}/info")) {
-		warning("cannot remove lab directory $self->{dir} (please remove it yourself)");
+    if ( -d "$dir/pool") {
+        # New lab style
+        unless (delete_dir("$dir/pool", "$dir/info")) {
+            warning("cannot remove lab directory $dir (please remove it yourself)");
+            return 0;
+        }
+    } else {
+        # 10-style Lab
+        unless (delete_dir("$dir/binary",
+                           "$dir/source",
+                           "$dir/udeb",
+                           "$dir/changes",
+                           "$dir/info")) {
+            warning("cannot remove lab directory $dir (please remove it yourself)");
+            return 0;
+        }
     }
 
     # dynamic lab?
     if ($self->{mode} eq 'temporary') {
-		if (rmdir($self->{dir}) != 1) {
-			warning("cannot remove lab directory $self->{dir} (please remove it yourself)");
+		if (rmdir($dir) != 1) {
+			warning("cannot remove lab directory $dir (please remove it yourself)");
+                        return 0;
 		}
     }
 
