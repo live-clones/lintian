@@ -1,5 +1,7 @@
 lintian (2.5.4) UNRELEASED; urgency=low
 
+  * checks/cruft:
+    + [NT] Escape path when using them in regexes.
   * checks/dehelper:
     + [JW,NT] Check for versioned dependencies for some dh_commands.
       (Closes: #641035)
