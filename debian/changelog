@@ -5,6 +5,9 @@ lintian (2.5.4) UNRELEASED; urgency=low
   * checks/dehelper:
     + [JW,NT] Check for versioned dependencies for some dh_commands.
       (Closes: #641035)
+  * checks/files.desc:
+    + [JW] Suggest the usage of "-delete" rather than "| xargs rm -f".
+      (Closes: #641983)
   * checks/source-copyright:
     + [JW] Added some more DEP-5 URLs.  (Closes: #642027)
 
