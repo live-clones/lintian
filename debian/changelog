@@ -22,6 +22,8 @@ lintian (2.5.4) UNRELEASED; urgency=low
   * lib/Lab.pm:
     + [NT] Updated it to use Lintian::Output::verbosity_level rather
       than verbose.
+    + [JW,NT] Correctly handle $TMPDIR not being an absolute path.
+      (Closes: #642113)
   * lib/Lintian/Collect/Source.pm:
     + [JW] Fixed call to binary_field in binary_relation.
       (Closes: #641609)
