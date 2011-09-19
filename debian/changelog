@@ -1,5 +1,8 @@
 lintian (2.5.4) UNRELEASED; urgency=low
 
+  * checks/binaries:
+    + [JW] Allow binaries to use "/usr/lib/$srcpkg/" in RPATHs.
+      (Closes: #642092)
   * checks/cruft:
     + [NT] Escape path when using them in regexes.
   * checks/dehelper:
