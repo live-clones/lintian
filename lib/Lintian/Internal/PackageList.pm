@@ -105,6 +105,7 @@ my @BIN_FILE_FIELDS = (
 my @CHG_FILE_FIELDS = (
         'source',
         'version',
+        'architecture',
         'file',
         'timestamp',
     );

@@ -40,6 +40,14 @@ use constant LAB_FORMAT => 10.1;
 use constant LAB_MODE_STATIC => 'static';
 use constant LAB_MODE_TEMP   => 'temporary';
 
+# A private table of suported types.
+my %SUPPORTED_TYPES = (
+    'binary'  => 1,
+    'changes' => 1,
+    'source'  => 1,
+    'udeb'    => 1,
+);
+
 # Export now due to cicular depends between Lab and Lab::Package.
 our (@EXPORT, @EXPORT_OK, %EXPORT_TAGS);
 
@@ -58,6 +66,25 @@ use Util qw/delete_dir/; # Used by $lab->remove_lab
 =head1 NAME
 
 Lintian::Lab -- Interface to the Lintian Lab
+
+=head1 SYNOPSIS
+
+ use Lintian::Lab;
+ 
+ # Static lab
+ my $lab = Lintian::Lab->new ('/var/lib/lintian/static-lab');
+
+ if (!$lab->lab_exists) {
+     $lab->create_lab;
+ }
+ $lab->open_lab
+ 
+ # Fetch a package from the lab
+ my $pkg = $lab->get_package ('lintian', 'binary', '2.5.4', 'all');
+ 
+ #FIXME: Add more to the synopsis here
+ 
+ $lab->close;
 
 =head2 Methods
 
@@ -138,10 +165,87 @@ sub lab_exists {
 	&& -d "$dir/info";
 }
 
+=item $lab->get_package ($pkg_name, $pkg_type, $pkg_version, $pkg_arch)
+
+Fetches an existing package from the lab.
+
+=cut
+
 sub get_package {
-    croak "Not implemented";
+    my ($self, $pkg_name, $pkg_type, $pkg_version, $pkg_arch) = @_;
+    my $path;
+    my $lindex;
+    my $table;
+    my $result;
+
+    croak "Package name and type must be defined" unless $pkg_name && $pkg_type;
+
+    $lindex = $self->_get_lab_index($pkg_type);
+    $table = $lindex->{$pkg_name};
+    return unless $table; # No package with this name of this type?
+
+    # TODO allow version to be blank to mean "any" ?
+    return unless defined $pkg_version; # Allow version "0"
+
+    $result = $table->{$pkg_version};
+    return unless $result; # No package with that version?
+
+    # Source packages have no "architecture", so we are done here.
+    return $result if $pkg_type eq 'source';
+
+    # TODO allow version to be blank to mean "any" ?
+    return unless $pkg_arch;
+
+    return $result->{$pkg_arch};
 }
 
+# Returns the index of packages in the lab of a given type (of packages).
+#
+# Unlike $lab->_load_lab_index, this uses the cache'd version if it is
+# available.
+sub _get_lab_index {
+    my ($self, $type) = @_;
+    croak "Unknown package type $pkg_type" unless $SUPPORTED_TYPES{$pkg_type};
+    # Fetch (or load) the index of that type
+    return $self->{'state'}->{$pkg_type} // $self->_load_lab_index($pkg_type);
+}
+
+# Unconditionally (Re-)loads the index of packages in the lab of a
+# given type (of packages).
+#
+# $lab->_get_lab_index is generally faster since it uses the cache if
+# available.
+sub _load_lab_index {
+    my ($self, $pkg_type) = @_;
+    my $dir = $self->dir;
+    my $pf = Lintian::Internal::PackageList->new ($pkg_type);
+    my $lif = "$dir/info/${pkg_type}-packages";
+    my $lindex = {};
+    $pf->read_list ($lif);
+    # FIXME: make a dedicated object for this structure ?
+    #  - Maybe extend L::I::PackageList
+    foreach my $pd ( $pf->get_all ) {
+        my $pkg_name;
+        my $pkg_version = $pd->{'version'};
+        my $pkg_arch;
+        if ($pkg_type ne 'source' && $pkg_type ne 'changes') {
+            $pkg_name = $pd->{'source'};
+        } else {
+            $pkg_name = $pd->{'package'};
+        }
+        if ($pkg_type eq 'source') {
+            $lindex{$pkg_name}->{$pkg_version} = $pd;
+        } else {
+            $pkg_arch = $pd->{'architecture'};
+            $lindex->{$pkg_name}->{$pkg_version}->{$pkg_ach} = $pd;
+        }
+    }
+    $self->{'state'}->{$pkg_type} = $lindex;
+    return $lindex;
+}
+
+# Given the package meta data (name, type, version, arch) return the
+# path to it in the Lab.  Path returned will be absolute.
 sub _pool_path {
     my ($self, $pkg_name, $pkg_type, $pkg_version, $pkg_arch) = @_;
     my $path = $self->dir;
@@ -203,6 +307,7 @@ sub create_lab {
         mkdir "$dir/info" or croak "mkdir $dir/info: $!";
         $mid = 1; # remember we created the info dir
     }
+
     unless (-d "$dir/pool") {
         unless (mkdir "$dir/pool") {
             my $err = $!; # store the error
@@ -219,7 +324,8 @@ sub create_lab {
     # Okay - $dir/info and $dir/pool exists... The subdirs in
     # $dir/pool will be created as needed.
 
-    # TODO: populate $dir/info
+    # TODO: populate $dir/info ?  L::I::PackageList probably
+    # does not care... ( see L::I::PackageList::read_list )
     return 1;
 }
 
@@ -272,6 +378,7 @@ sub close_lab {
     } else {
         # TODO flush/write stuff
     }
+    $self->{'is_open'} = 0;
     return 1;
 }
 
@@ -337,6 +444,7 @@ sub remove_lab {
     }
 
     $self->{'dir'} = '';
+    $self->{'is_open'} = 0;
     return 1;
 }
 
