@@ -311,7 +311,7 @@ sub create_lab {
         } else {
             # This should not be possible - but then again,
             # code should not have any bugs either...
-            croak 'Lab path may not be empty of a static dir̈́';
+            croak 'Lab path may not be empty for a static lab';
         }
     }
     # Create the top dir if needed - note due to Lintian::Lab->new
