@@ -31,6 +31,8 @@ use Cwd();
 
 use File::Temp qw(tempdir); # For temporary labs
 
+use Scalar::Util qw(blessed);
+
 # Lab format Version Number increased whenever incompatible changes
 # are done to the lab so that all packages are re-unpacked
 use constant LAB_FORMAT => 10.1;
@@ -61,7 +63,7 @@ BEGIN {
         );
 };
 
-use Util qw/delete_dir/; # Used by $lab->remove_lab
+use Util qw(delete_dir); # Used by $lab->remove_lab
 
 =head1 NAME
 
@@ -165,20 +167,33 @@ sub lab_exists {
 	&& -d "$dir/info";
 }
 
-=item $lab->get_package ($pkg_name, $pkg_type, $pkg_version, $pkg_arch)
+=item $lab->get_package ($pkg_name, $pkg_type, $pkg_version, $pkg_arch), $lab->get_package ($proc)
 
 Fetches an existing package from the lab.
+
+First argument can be a L<Lintian::Processable|proccessable>.  In that
+case all other arguments are ignored.
 
 =cut
 
 sub get_package {
-    my ($self, $pkg_name, $pkg_type, $pkg_version, $pkg_arch) = @_;
+    my ($self, $pkg, $pkg_type, $pkg_version, $pkg_arch) = @_;
+    my $pkg_name;
     my $path;
     my $lindex;
     my $table;
     my $result;
 
-    croak "Package name and type must be defined" unless $pkg_name && $pkg_type;
+    if (blessed $pkg && $pkg->isa 'Lintian::Processable') {
+        my $proc = $pkg_name;
+        $pkg_name = $proc->pkg_name;
+        $pkg_type = $proc->pkg_type;
+        $pkg_version = $proc->pkg_version;
+        $pkg_arch = $proc->pkg_arch;
+    } else {
+        $pkg_name = $pkg;
+        croak "Package name and type must be defined" unless $pkg_name && $pkg_type;
+    }
 
     $lindex = $self->_get_lab_index($pkg_type);
     $table = $lindex->{$pkg_name};
@@ -353,6 +368,14 @@ sub open_lab {
     croak 'Lab is already open' if $self->is_open();
     if ($self->{'mode'} eq LAB_MODE_TEMP) {
         $self->create_lab() unless $self->lab_exists();
+    } else {
+        my $dir = $self->dir;
+        unless ($self->lab_exists()) {
+            my $msg = "Open Lab failed: ";
+            croak "$msg: $dir does not exists" unless -e $dir;
+            croak "$msg: $dir is not a lab or the lab is corrupt";
+        }
+
     }
     $self->{'is_open'} = 1;
     return 1;
@@ -376,8 +399,13 @@ sub close_lab {
         # Temporary lab (without "keep-lab" property)
         $self->remove_lab();
     } else {
-        # TODO flush/write stuff
+        my $dir = $self->dir;
+        while ( my ($pkg_type, $plist) = (each %{ $self->{'state'} }) ) {
+            # write_list croaks on error, so no need for "or croak/die"
+            $plist->write_list ("$dir/info/${pkg_type}-packages")  if $plist->dirty;
+        }
     }
+    $self->{'state'} = {};
     $self->{'is_open'} = 0;
     return 1;
 }
