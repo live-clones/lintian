@@ -309,7 +309,9 @@ sub create_lab {
             $self->{'dir'} = $dir;
             $self->{'keep-lab'} = $keep;
         } else {
-            croak 'Labs cannot be re-opened'
+            # This should not be possible - but then again,
+            # code should not have any bugs either...
+            croak 'Lab path may not be empty of a static dir̈́';
         }
     }
     # Create the top dir if needed - note due to Lintian::Lab->new
@@ -419,9 +421,9 @@ If this is a temporary lab, the lab root dir (as returned $lab->dir)
 will be removed as well on success.  Otherwise the lab root dir will
 not be removed by this call.
 
-On success, this will return a truth value and the directory path will
-be set to the empty string (that is, $lab->dir will return '').  It
-will generally not be possible to use B<$lab> to create a new lab.
+On success, this will return a truth value.  If the lab is a temporary
+lab, the directory path will be set to the empty string (that is,
+$lab->dir will return '').
 
 On error, this method will croak.
 
@@ -469,9 +471,9 @@ sub remove_lab {
     # dynamic lab?
     if ($self->{'mode'} eq LAB_MODE_TEMP) {
         rmdir $dir or croak "rmdir $dir: $!";
+        $self->{'dir'} = '';
     }
 
-    $self->{'dir'} = '';
     $self->{'is_open'} = 0;
     return 1;
 }
