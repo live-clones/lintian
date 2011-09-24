@@ -44,6 +44,7 @@ use constant {
     LAB_MODE_TEMP   => 'temporary',
 };
 
+
 # A private table of suported types.
 my %SUPPORTED_TYPES = (
     'binary'  => 1,
@@ -51,6 +52,8 @@ my %SUPPORTED_TYPES = (
     'source'  => 1,
     'udeb'    => 1,
 );
+
+
 
 # Export now due to cicular depends between Lab and Lab::Package.
 our (@EXPORT, @EXPORT_OK, %EXPORT_TAGS);
@@ -66,6 +69,8 @@ BEGIN {
 };
 
 use Util qw(delete_dir); # Used by $lab->remove_lab
+
+use Lintian::Lab::Entry;
 
 =head1 NAME
 
@@ -90,6 +95,8 @@ Lintian::Lab -- Interface to the Lintian Lab
  
  $lab->close;
 
+=head1 DESCRIPTION
+
 =head2 Methods
 
 =over 4
@@ -108,8 +115,8 @@ sub new {
     my $absdir;
     my $mode = LAB_MODE_TEMP;
     if ($dir) {
-        $absdir = Cwd::abs_path($dir);
-        croak ("Cannot resolve $dir: $!") unless $absdir;
+        $absdir = Cwd::abs_path ($dir);
+        croak "Cannot resolve $dir: $!" unless $absdir;
         $mode = LAB_MODE_STATIC;
     } else {
         $absdir = ''; #Ensure it is defined.
@@ -182,39 +189,29 @@ case all other arguments are ignored.
 sub get_package {
     my ($self, $pkg, $pkg_type, $pkg_version, $pkg_arch) = @_;
     my $pkg_name;
-    my $path;
-    my $lindex;
-    my $table;
-    my $result;
+    my $dir;
+    my $pkg_path;
+
+    croak 'Lab is not open' unless $self->is_open;
 
     if (blessed $pkg && $pkg->isa ('Lintian::Processable')) {
-        my $proc = $pkg_name;
-        $pkg_name = $proc->pkg_name;
-        $pkg_type = $proc->pkg_type;
-        $pkg_version = $proc->pkg_version;
-        $pkg_arch = $proc->pkg_arch;
+        $pkg_name = $pkg->pkg_name;
+        $pkg_type = $pkg->pkg_type;
+        $pkg_version = $pkg->pkg_version;
+        $pkg_arch = $pkg->pkg_arch;
+        $pkg_path = $pkg->pkg_path;
     } else {
         $pkg_name = $pkg;
-        croak ("Package name and type must be defined") unless $pkg_name && $pkg_type;
+        croak "Package name and type must be defined" unless $pkg_name && $pkg_type;
+        croak 'Not implemented';
     }
 
-    $lindex = $self->_get_lab_index($pkg_type);
-    $table = $lindex->{$pkg_name};
-    return unless $table; # No package with this name of this type?
+    # TODO: Cache and check for existing entries to avoid passing out
+    # the same entry twice.
 
-    # TODO allow version to be blank to mean "any" ?
-    return unless defined $pkg_version; # Allow version "0"
+    $dir = $self->_pool_path ($pkg_name, $pkg_type, $pkg_version, $pkg_arch);
 
-    $result = $table->{$pkg_version};
-    return unless $result; # No package with that version?
-
-    # Source packages have no "architecture", so we are done here.
-    return $result if $pkg_type eq 'source';
-
-    # TODO allow version to be blank to mean "any" ?
-    return unless $pkg_arch;
-
-    return $result->{$pkg_arch};
+    return Lintian::Lab::Entry->new ($self, $pkg_name, $pkg_version, $pkg_type, $pkg_path, $dir);
 }
 
 # Returns the index of packages in the lab of a given type (of packages).
@@ -223,9 +220,9 @@ sub get_package {
 # available.
 sub _get_lab_index {
     my ($self, $pkg_type) = @_;
-    croak ("Unknown package type $pkg_type") unless $SUPPORTED_TYPES{$pkg_type};
+    croak "Unknown package type $pkg_type" unless $SUPPORTED_TYPES{$pkg_type};
     # Fetch (or load) the index of that type
-    return $self->{'state-table'}->{$pkg_type} // $self->_load_lab_index($pkg_type);
+    return $self->{'state-table'}->{$pkg_type} // $self->_load_lab_index ($pkg_type);
 }
 
 # Unconditionally (Re-)loads the index of packages in the lab of a
@@ -274,7 +271,7 @@ sub _pool_path {
     } else {
         $p = substr $pkg_name, 0, 1;
     }
-    $path .= "/$p/$pkg_name/${pkg_name}_${pkg_version}";
+    $path .= "pool/$p/$pkg_name/${pkg_name}_${pkg_version}";
     $path .= "_${pkg_arch}" unless $pkg_type eq 'source';
     $path .= "_${pkg_type}";
     return $path;
@@ -309,23 +306,23 @@ sub create_lab {
             my $topts = { CLEAN => !$keep, TMPDIR => 1 };
             my $t = tempdir ('temp-lintian-lab-XXXXXX', $topts);
             $dir = Cwd::abs_path ($t);
-            croak ("Could not resolve $dir: $!") unless $dir;
+            croak "Could not resolve $dir: $!" unless $dir;
             $self->{'dir'} = $dir;
             $self->{'keep-lab'} = $keep;
         } else {
             # This should not be possible - but then again,
             # code should not have any bugs either...
-            croak ('Lab path may not be empty for a static lab');
+            croak 'Lab path may not be empty for a static lab';
         }
     }
     # Create the top dir if needed - note due to Lintian::Lab->new
     # and the above tempdir creation code, we know that $dir is
     # absolute.
-    croak ("Cannot create $dir: $!") unless -d $dir or mkdir $dir;
+    croak "Cannot create $dir: $!" unless -d $dir or mkdir $dir;
 
     # Top dir exists, time to create the minimal directories.
     unless (-d "$dir/info") {
-        mkdir "$dir/info" or croak ("mkdir $dir/info: $!");
+        mkdir "$dir/info" or croak "mkdir $dir/info: $!";
         $mid = 1; # remember we created the info dir
     }
 
@@ -339,7 +336,7 @@ sub create_lab {
             # ignore the error (if any) - we can only do so much
             rmdir "$dir/info" if $mid;
             $! = $err;
-            croak ("mkdir $dir/pool: $!");
+            croak "mkdir $dir/pool: $!";
         }
     }
     # Okay - $dir/info and $dir/pool exists... The subdirs in
@@ -371,15 +368,15 @@ $lab->create_lab.
 
 sub open_lab {
     my ($self) = @_;
-    croak ('Lab is already open') if $self->is_open();
+    croak ('Lab is already open') if $self->is_open;
     if ($self->{'mode'} eq LAB_MODE_TEMP) {
-        $self->create_lab() unless $self->lab_exists();
+        $self->create_lab unless $self->lab_exists;
     } else {
         my $dir = $self->dir;
-        unless ($self->lab_exists()) {
+        unless ($self->lab_exists) {
             my $msg = "Open Lab failed: ";
-            croak ("$msg: $dir does not exists") unless -e $dir;
-            croak ("$msg: $dir is not a lab or the lab is corrupt");
+            croak "$msg: $dir does not exists" unless -e $dir;
+            croak "$msg: $dir is not a lab or the lab is corrupt";
         }
 
     }
@@ -400,10 +397,10 @@ was created with "keep-lab" (see $lab->create_lab).
 
 sub close_lab {
     my ($self) = @_;
-    return unless $self->lab_exists();
+    return unless $self->lab_exists;
     if ($self->{'mode'} eq LAB_MODE_TEMP && !$self->{'keep-lab'}) {
         # Temporary lab (without "keep-lab" property)
-        $self->remove_lab();
+        $self->remove_lab;
     } else {
         my $dir = $self->dir;
         while ( my ($pkg_type, $plist) = (each %{ $self->{'state'} }) ) {
@@ -453,7 +450,7 @@ sub remove_lab {
             $empty = 1;
         } else {
             # non-empty directory that does not look like a lintian lab!
-            croak ("$dir: Does not look like a lab");
+            croak "$dir: Does not look like a lab";
         }
     }
 
@@ -468,13 +465,13 @@ sub remove_lab {
             push @subdirs, 'changes' if -d "$dir/changes";
         }
         unless (delete_dir( map { "$dir/$_" } @subdirs )) {
-            croak ("delete_dir (\$contents): $!");
+            croak "delete_dir (\$contents): $!";
         }
     }
 
     # dynamic lab?
     if ($self->{'mode'} eq LAB_MODE_TEMP) {
-        rmdir $dir or croak ("rmdir $dir: $!");
+        rmdir $dir or croak "rmdir $dir: $!";
         $self->{'dir'} = '';
     }
 
@@ -491,6 +488,7 @@ sub _init {
     my ($self) = @_;
 }
 
+# event - triggered by Lintian::Lab::Entry
 sub _entry_removed {
     my ($self, $entry) = @_;
     my $pkg_name    = $entry->pkg_name;
@@ -500,19 +498,13 @@ sub _entry_removed {
     $pf->delete ($pkg_name);
 }
 
+# event - triggered by Lintian::Lab::Entry
 sub _entry_created {
     my ($self, $entry) = @_;
     my $pkg_name    = $entry->pkg_name;
     my $pkg_type    = $entry->pkg_type;
 
-    croak ("Not implemented");
-
-#    my %data = (
-#        'source'  => undef,
-#    );
-#    my $pf = $self->{'state'};
-#    $pf->set ($pkg_name, \%data);
-
+    # FIXME: update $self->{'state'} etc.
 }
 
 =back
