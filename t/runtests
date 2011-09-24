@@ -372,6 +372,11 @@ sub test_package {
     my $is_native = ($testdata->{type} eq 'native');
     my $orig_version = $testdata->{version};
 
+    if (-f "$origdir/skip") {
+	msg_print "skipped.\n";
+	return 1;
+    }
+
     # Strip the Debian revision off of the name of the target directory and
     # the *.orig.tar.gz file if the package is non-native.  Otherwise, it
     # confuses dpkg-source, which then fails to find the upstream tarball and
