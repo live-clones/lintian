@@ -88,7 +88,7 @@ unless ($opt{'LINTIAN_ROOT'}) {
 }
 
 unshift @INC, "$opt{'LINTIAN_ROOT'}/lib";
-require Lab;
+require Lintian::Lab;
 require Lintian::Config;
 require Lintian::Internal::PackageList;
 require Util;
@@ -96,7 +96,7 @@ import Util qw(fail);
 
 $conf = Lintian::Config->new(\%cfghash);
 
-my $lab = Lab->new($opt{'LINTIAN_LAB'});
+my $lab = Lintian::Lab->new($opt{'LINTIAN_LAB'});
 
 my ($nblist,$nulist, $nslist) = read_archive($opt{'LINTIAN_ARCHIVEDIR'}, trim($opt{'LINTIAN_DIST'}),
                                               trim($opt{'LINTIAN_AREA'}), trim($opt{'LINTIAN_ARCH'}));
@@ -212,7 +212,7 @@ sub _pkg_parser {
         if ($@) {
             # error!
             print STDERR "$@\n";
-            print "E: general: bad-source-package $dsc_file\n";
+            print "E: general: bad-source-package $file\n";
             next;
         }
     }

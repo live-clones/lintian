@@ -277,6 +277,34 @@ sub _pool_path {
     return $path;
 }
 
+# lab->generate_diffs(@lists)
+#
+# Each member of @lists must be a Lintian::Internal::PackageList.
+#
+# The lab will generate a diff between the given member and its
+# state for the given package type.  The diffs are returned in the
+# same order as they appear in @lists.
+#
+# The diffs are valid until the original list is modified or a
+# package is added or removed to the lab.
+sub generate_diffs {
+    my ($self, @lists) = @_;
+    my $labdir = $self->dir;
+    my @diffs;
+    croak "$labdir is not a valid lab (run lintian --setup-lab first?).\n"
+        unless $self->is_open;
+    foreach my $list (@lists) {
+        my $type = $list->type;
+        my $lab_list;
+        # Ensure the state list is loaded
+        $self->_get_lab_index ($type);
+        $lab_list = $self->{'state'}->{$type};
+        push @diffs, $lab_list->diff ($list);
+    }
+    return @diffs;
+}
+
+
 =item $lab->create_lab ([$opts])
 
 Creates a new lab.  It will create $self->dir if it does not
