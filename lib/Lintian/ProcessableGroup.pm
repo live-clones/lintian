@@ -137,7 +137,7 @@ This is short hand for:
 sub add_new_processable {
     my ($self, $pkg_type, $pkg_path) = @_;
     return $self->add_processable(
-        Lintian::Processable->new($pkg_type, $pkg_path));
+        Lintian::Processable::Package->new($pkg_type, $pkg_path));
 }
 
 =item $group->add_processable($proc)
@@ -178,7 +178,7 @@ sub add_processable{
         return 0 if (exists $phash->{"${name}_${version}_${arch}"});
         $phash->{"${name}_${version}_${arch}"} = $processable;
     }
-    $processable->set_group($self);
+    $processable->group($self);
     return 1;
 }
 

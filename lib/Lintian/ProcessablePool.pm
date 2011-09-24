@@ -25,7 +25,7 @@ use warnings;
 use Cwd();
 use Util;
 
-use Lintian::Processable;
+use Lintian::Processable::Package;
 use Lintian::ProcessableGroup;
 
 =head1 NAME
@@ -91,7 +91,7 @@ sub add_file {
     }
     # Just insert these for now.
     $tmap = $self->{$pkg_type};
-    $proc = Lintian::Processable->new($pkg_type, $pkg_path);
+    $proc = Lintian::Processable::Package->new($pkg_type, $pkg_path);
     if ($proc->tainted()){
         warn(sprintf("warning: tainted %1\$s package '%2\$s', skipping\n",
              $pkg_type, $proc->pkg_name()));
