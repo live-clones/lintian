@@ -33,14 +33,16 @@ use File::Temp qw(tempdir); # For temporary labs
 
 use Scalar::Util qw(blessed);
 
+
+use constant {
 # Lab format Version Number increased whenever incompatible changes
 # are done to the lab so that all packages are re-unpacked
-use constant LAB_FORMAT => 10.1;
-
+    LAB_FORMAT      => 10.1,
 # Constants to avoid semantic errors due to typos in the $lab->{'mode'}
 # field values.
-use constant LAB_MODE_STATIC => 'static';
-use constant LAB_MODE_TEMP   => 'temporary';
+    LAB_MODE_STATIC => 'static',
+    LAB_MODE_TEMP   => 'temporary',
+};
 
 # A private table of suported types.
 my %SUPPORTED_TYPES = (
@@ -57,10 +59,10 @@ BEGIN {
     @EXPORT = ();
     %EXPORT_TAGS = (
         constants => [qw(LAB_FORMAT)],
-        );
+    );
     @EXPORT_OK = (
-        @{$EXPORT_TAGS{constants}}
-        );
+        @{ $EXPORT_TAGS{constants} }
+    );
 };
 
 use Util qw(delete_dir); # Used by $lab->remove_lab
@@ -79,7 +81,7 @@ Lintian::Lab -- Interface to the Lintian Lab
  if (!$lab->lab_exists) {
      $lab->create_lab;
  }
- $lab->open_lab
+ $lab->open_lab;
  
  # Fetch a package from the lab
  my $pkg = $lab->get_package ('lintian', 'binary', '2.5.4', 'all');
@@ -107,7 +109,7 @@ sub new {
     my $mode = LAB_MODE_TEMP;
     if ($dir) {
         $absdir = Cwd::abs_path($dir);
-        croak "Cannot resolve $dir: $!" unless $absdir;
+        croak ("Cannot resolve $dir: $!") unless $absdir;
         $mode = LAB_MODE_STATIC;
     } else {
         $absdir = ''; #Ensure it is defined.
@@ -116,11 +118,12 @@ sub new {
         # Must be absolute (frontend/lintian depends on it)
         #  - also $self->dir promises this
         #  - it may be the empty string (see $self->dir)
-        'dir'      => $absdir,
-        'state'    => {},
-        'mode'     => $mode,
-        'is_open'  => 0,
-        'keep-lab' => 0,
+        'dir'         => $absdir,
+        'state'       => {},
+        'state-table' => {},
+        'mode'        => $mode,
+        'is_open'     => 0,
+        'keep-lab'    => 0,
     };
     bless $self, $class;
     $self->_init ($dir);
@@ -184,7 +187,7 @@ sub get_package {
     my $table;
     my $result;
 
-    if (blessed $pkg && $pkg->isa 'Lintian::Processable') {
+    if (blessed $pkg && $pkg->isa ('Lintian::Processable')) {
         my $proc = $pkg_name;
         $pkg_name = $proc->pkg_name;
         $pkg_type = $proc->pkg_type;
@@ -192,7 +195,7 @@ sub get_package {
         $pkg_arch = $proc->pkg_arch;
     } else {
         $pkg_name = $pkg;
-        croak "Package name and type must be defined" unless $pkg_name && $pkg_type;
+        croak ("Package name and type must be defined") unless $pkg_name && $pkg_type;
     }
 
     $lindex = $self->_get_lab_index($pkg_type);
@@ -219,10 +222,10 @@ sub get_package {
 # Unlike $lab->_load_lab_index, this uses the cache'd version if it is
 # available.
 sub _get_lab_index {
-    my ($self, $type) = @_;
-    croak "Unknown package type $pkg_type" unless $SUPPORTED_TYPES{$pkg_type};
+    my ($self, $pkg_type) = @_;
+    croak ("Unknown package type $pkg_type") unless $SUPPORTED_TYPES{$pkg_type};
     # Fetch (or load) the index of that type
-    return $self->{'state'}->{$pkg_type} // $self->_load_lab_index($pkg_type);
+    return $self->{'state-table'}->{$pkg_type} // $self->_load_lab_index($pkg_type);
 }
 
 # Unconditionally (Re-)loads the index of packages in the lab of a
@@ -249,13 +252,14 @@ sub _load_lab_index {
             $pkg_name = $pd->{'package'};
         }
         if ($pkg_type eq 'source') {
-            $lindex{$pkg_name}->{$pkg_version} = $pd;
+            $lindex->{$pkg_name}->{$pkg_version} = $pd;
         } else {
             $pkg_arch = $pd->{'architecture'};
-            $lindex->{$pkg_name}->{$pkg_version}->{$pkg_ach} = $pd;
+            $lindex->{$pkg_name}->{$pkg_version}->{$pkg_arch} = $pd;
         }
     }
-    $self->{'state'}->{$pkg_type} = $lindex;
+    $self->{'state'}->{$pkg_type} = $pf;
+    $self->{'state-table'}->{$pkg_type} = $lindex;
     return $lindex;
 }
 
@@ -305,23 +309,23 @@ sub create_lab {
             my $topts = { CLEAN => !$keep, TMPDIR => 1 };
             my $t = tempdir ('temp-lintian-lab-XXXXXX', $topts);
             $dir = Cwd::abs_path ($t);
-            croak "Could not resolve $dir: $!" unless $dir;
+            croak ("Could not resolve $dir: $!") unless $dir;
             $self->{'dir'} = $dir;
             $self->{'keep-lab'} = $keep;
         } else {
             # This should not be possible - but then again,
             # code should not have any bugs either...
-            croak 'Lab path may not be empty for a static lab';
+            croak ('Lab path may not be empty for a static lab');
         }
     }
     # Create the top dir if needed - note due to Lintian::Lab->new
     # and the above tempdir creation code, we know that $dir is
     # absolute.
-    croak "Cannot create $dir: $!" unless -d $dir or mkdir $dir;
+    croak ("Cannot create $dir: $!") unless -d $dir or mkdir $dir;
 
     # Top dir exists, time to create the minimal directories.
     unless (-d "$dir/info") {
-        mkdir "$dir/info" or croak "mkdir $dir/info: $!";
+        mkdir "$dir/info" or croak ("mkdir $dir/info: $!");
         $mid = 1; # remember we created the info dir
     }
 
@@ -335,7 +339,7 @@ sub create_lab {
             # ignore the error (if any) - we can only do so much
             rmdir "$dir/info" if $mid;
             $! = $err;
-            croak "mkdir $dir/pool: $!";
+            croak ("mkdir $dir/pool: $!");
         }
     }
     # Okay - $dir/info and $dir/pool exists... The subdirs in
@@ -367,15 +371,15 @@ $lab->create_lab.
 
 sub open_lab {
     my ($self) = @_;
-    croak 'Lab is already open' if $self->is_open();
+    croak ('Lab is already open') if $self->is_open();
     if ($self->{'mode'} eq LAB_MODE_TEMP) {
         $self->create_lab() unless $self->lab_exists();
     } else {
         my $dir = $self->dir;
         unless ($self->lab_exists()) {
             my $msg = "Open Lab failed: ";
-            croak "$msg: $dir does not exists" unless -e $dir;
-            croak "$msg: $dir is not a lab or the lab is corrupt";
+            croak ("$msg: $dir does not exists") unless -e $dir;
+            croak ("$msg: $dir is not a lab or the lab is corrupt");
         }
 
     }
@@ -449,7 +453,7 @@ sub remove_lab {
             $empty = 1;
         } else {
             # non-empty directory that does not look like a lintian lab!
-            croak "$dir: Does not look like a lab";
+            croak ("$dir: Does not look like a lab");
         }
     }
 
@@ -464,13 +468,13 @@ sub remove_lab {
             push @subdirs, 'changes' if -d "$dir/changes";
         }
         unless (delete_dir( map { "$dir/$_" } @subdirs )) {
-            croak "delete_dir (\$contents): $!";
+            croak ("delete_dir (\$contents): $!");
         }
     }
 
     # dynamic lab?
     if ($self->{'mode'} eq LAB_MODE_TEMP) {
-        rmdir $dir or croak "rmdir $dir: $!";
+        rmdir $dir or croak ("rmdir $dir: $!");
         $self->{'dir'} = '';
     }
 
@@ -487,6 +491,30 @@ sub _init {
     my ($self) = @_;
 }
 
+sub _entry_removed {
+    my ($self, $entry) = @_;
+    my $pkg_name    = $entry->pkg_name;
+    my $pkg_type    = $entry->pkg_type;
+
+    my $pf = $self->{'state'};
+    $pf->delete ($pkg_name);
+}
+
+sub _entry_created {
+    my ($self, $entry) = @_;
+    my $pkg_name    = $entry->pkg_name;
+    my $pkg_type    = $entry->pkg_type;
+
+    croak ("Not implemented");
+
+#    my %data = (
+#        'source'  => undef,
+#    );
+#    my $pf = $self->{'state'};
+#    $pf->set ($pkg_name, \%data);
+
+}
+
 =back
 
 =head1 AUTHOR
@@ -496,4 +524,6 @@ Niels Thykier <niels@thykier.net>
 Based on the work of various others.
 
 =cut
+
+1;
 
