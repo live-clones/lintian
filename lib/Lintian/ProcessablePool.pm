@@ -229,7 +229,7 @@ sub _get_group_id{
     my ($self, $pkg) = @_;
     my $id = $pkg->pkg_src;
     my $lab = $self->{'lab'};
-    $id .= '_' . $pkg->pkg_src_version if $lab && $lab->_supports_multiple_versions;
+    $id .= '_' . $pkg->pkg_src_version;
     return $id;
 }
 
@@ -239,8 +239,8 @@ sub _get_proc_id {
     my ($self, $pkg) = @_;
     my $id = $pkg->pkg_name;
     my $lab = $self->{'lab'};
-    $id .= '_' . $pkg->pkg_version if $lab && $lab->_supports_multiple_versions;
-    $id .= '_' . $pkg->pkg_arch if $lab && $lab->_supports_multiple_architectures;
+    $id .= '_' . $pkg->pkg_version;
+    $id .= '_' . $pkg->pkg_arch;
     return $id;
 }
 

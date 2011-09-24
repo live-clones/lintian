@@ -739,7 +739,7 @@ if (-d "$LINTIAN_ROOT/locale/en_US.UTF-8") {
 # {{{ Loading lintian's own libraries (now LINTIAN_ROOT is known)
 unshift @INC, "$opt{'LINTIAN_ROOT'}/lib";
 
-require Lab;
+require Lintian::Lab;
 
 require Util;
 import Util;
@@ -867,7 +867,7 @@ $SIG{'QUIT'} = \&interrupted;
 
 # {{{ Create/Maintain Lab and add any specified Debian Archives (*.debs)
 
-$LAB = Lab->new( $opt{'LINTIAN_LAB'} );
+$LAB = Lintian::Lab->new( $opt{'LINTIAN_LAB'} );
 
 #######################################
 # Process -S option
@@ -876,7 +876,7 @@ if ($action eq 'setup-lab') {
 	warning('ignoring additional command line arguments');
     }
 
-    $LAB->setup_static()
+    $LAB->create_lab()
 	or fail('There was an error while setting up the static lab.');
 
     exit 0;
@@ -888,7 +888,7 @@ if ($action eq 'setup-lab') {
 	warning('ignoring additional command line arguments');
     }
 
-    $LAB->delete_static()
+    $LAB->remove_lab()
 	or fail('There was an error while removing the static lab.');
 
     exit 0;
@@ -900,13 +900,19 @@ if ($action eq 'setup-lab') {
     fail("bad action $action specified");
 }
 
-# sanity check:
-fail('lintian lab has not been set up correctly (perhaps you forgot to run lintian --setup-lab?)')
-    unless $LAB->is_lab();
+if ($LAB->dir) {
+    # sanity check:
+    fail('lintian lab has not been set up correctly (perhaps you forgot to run lintian --setup-lab?)')
+	unless $LAB->lab_exists;
+} else {
+    $LAB->create_lab ( {'keep-lab' => $keep_lab} );
+}
 
-#XXX: There has to be a cleaner way to do this
-#  Update the ENV var as well
-$ENV{'LINTIAN_LAB'} = $opt{'LINTIAN_LAB'} = $LAB->{dir};
+$LAB->open_lab;
+
+#  Update the ENV var as well - unlike the original values,
+#  $LAB->dir is always absolute
+$ENV{'LINTIAN_LAB'} = $opt{'LINTIAN_LAB'} = $LAB->dir;
 
 
 # }}}
@@ -1101,8 +1107,7 @@ if($action eq 'remove'){
 	    my $pkg_path = $proc->pkg_path();
 	    my $pkg_arch = $proc->pkg_arch();
 	    eval{
-		$lpkg = $LAB->get_lab_package($pkg_name, $pkg_ver, $pkg_arch,
-					      $pkg_type, $pkg_path);
+		$lpkg = $LAB->get_package($proc);
 	    };
 	    if(!defined($lpkg)){
 		my $err = '.';
@@ -1122,7 +1127,7 @@ if($action eq 'remove'){
     }
     $TAGS->file_end();
     # Write the lab state to the disk, so it remembers they are gone.
-    $LAB->write_state();
+    $LAB->close_lab();
     exit $exit_code;
 }
 # }}}
@@ -1283,7 +1288,7 @@ foreach my $gname (sort $pool->get_group_names()) {
 }
 
 # Write the lab state to the disk, so it remembers the new packages
-$LAB->write_state();
+$LAB->close_lab();
 $TAGS->file_end();
 
 if ($action eq 'check' and not $opt{'no-override'} and not $opt{'show-overrides'}) {
@@ -1499,8 +1504,7 @@ sub auto_clean_package {
 			"skipping cleanup of $pkg_type package $pkg_name");
 		return 0;
 	    }
-	    unlink("$base/.${coll}-$ci->{'version'}")
-		or fail("failed to remove status file of collect info $coll about package $pkg_name");
+	    $lpkg->_clear_coll_status ($coll);
 	}
     }
     return 1;
@@ -1553,8 +1557,7 @@ sub unpack_group {
 	my $base;
 	my $info;
 	eval{
-	    $lpkg = $LAB->get_lab_package($pkg_name, $pkg_ver, $pkg_arch,
-					  $pkg_type, $pkg_path);
+	    $lpkg = $LAB->get_package($proc);
 	};
 	if(!defined($lpkg)){
 	    my $err = '.';
@@ -1593,7 +1596,7 @@ sub unpack_group {
 		}
 
 		# check if it has been run previously
-		if ($lpkg->_is_coll_finished($coll, $ci->{'version'})) {
+		if ($lpkg->is_coll_finished($coll, $ci->{'version'})) {
 		    $collmap->satisfy($req);
 		    next;
 		}
@@ -1602,9 +1605,6 @@ sub unpack_group {
 
 		# collect info
 		$collmap->select($req);
-		unless ($lpkg->remove_status_file()) {
-		    warning("cannot remove status file $pkg_name: $!");
-		}
 		debug_msg(1, "Collecting info: $coll ...");
 		my $script = "$opt{'LINTIAN_ROOT'}/collection/$ci->{'script'}";
 		my $cmd = Lintian::Command::Simple->new();
@@ -1800,7 +1800,7 @@ sub END {
 	%running_jobs = ();
     }
 
-    $LAB->delete() if $LAB and not $keep_lab;
+    $LAB->close_lab if $LAB;
 }
 
 sub interrupted {
