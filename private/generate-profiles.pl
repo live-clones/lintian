@@ -16,6 +16,12 @@ use constant FIELD_ORDER => (
     );
 use constant PARAGRAPH_ORDER => ( 'Overridable', 'Severity' );
 
+
+BEGIN {
+    my $root = $ENV{'LINTIAN_ROOT'}//'.';
+    $ENV{'LINTIAN_ROOT'} = $root;
+}
+
 use lib "$ENV{LINTIAN_ROOT}/lib";
 use Lintian::Data;
 use Util;

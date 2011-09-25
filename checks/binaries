@@ -140,6 +140,7 @@ my $has_php_ext = 0;
 my %SONAME;
 
 $arch = $info->field('architecture')//'';
+my $srcpkg = $proc->pkg_src()//'';
 
 foreach my $file (sort keys %{$info->objdump_info}) {
     my $objdump = $info->objdump_info->{$file};
@@ -313,7 +314,7 @@ foreach my $file (@{$info->sorted_file_info}) {
     # rpath is disallowed, except in private directories
     if (exists $objdump->{RPATH}) {
 	foreach my $rpath (map {File::Spec->canonpath($_)} keys %{$objdump->{RPATH}}) {
-	    next if $rpath =~ m,^/usr/lib/(?:games/)?\Q$pkg\E(?:/|\z),;
+	    next if $rpath =~ m,^/usr/lib/(?:games/)?(?:\Q$pkg\E|\Q$srcpkg\E)(?:/|\z),;
 	    next if $rpath =~ m,^\$\{?ORIGIN\}?,;
 	    next if $directories{$rpath} and $rpath !~ m,^(?:/usr)?/lib(?:/$madir)?/?\z,;
 	    tag 'binary-or-shlib-defines-rpath', "$file $rpath";

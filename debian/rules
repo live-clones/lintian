@@ -34,7 +34,7 @@ endif
 
 profiles: $(profiles)
 $(profiles): $(allchecks) private/generate-profiles.pl
-	LINTIAN_ROOT='.' private/generate-profiles.pl
+	private/generate-profiles.pl
 
 runtests: $(neededfiles) $(allchecks) $(allcollect) $(tagfiles) $(testfiles)
 	@echo .... running tests ....

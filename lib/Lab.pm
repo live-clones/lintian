@@ -114,8 +114,7 @@ sub _init {
             $absdir = Cwd::realpath($dir);
             fail("Cannot determine the absolute path of $dir: $!")
                 unless $absdir;
-
-	    if ($self->_do_setup( $dir )) {
+	    if ($self->_do_setup( $absdir )) {
 		$created = 1;
 		last;
 	    }
