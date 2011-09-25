@@ -1788,7 +1788,7 @@ sub load_pkg_list {
 # {{{ Exit handler.
 
 sub END {
-    # Prevent Lab::delete from affecting the exit code.
+    # Prevent Lab->close_lab from affecting the exit code.
     local $?;
 
     $SIG{'INT'} = 'DEFAULT';
