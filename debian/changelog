@@ -33,7 +33,7 @@ lintian (2.5.4) UNRELEASED; urgency=low
   * lib/Util.pm:
     + [NT] Stricten the parser to not accept a field name with a ":".
       This could cause the parser to eat the first part of the value,
-      if it contained a colon and there was no space before the vaue.
+      if it contained a colon and there was no space before the value.
       Thanks to Pino Toscano for reporting the issue.
 
   * reporting/*:
