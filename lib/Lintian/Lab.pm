@@ -93,7 +93,7 @@ Lintian::Lab -- Interface to the Lintian Lab
  
  #FIXME: Add more to the synopsis here
  
- $lab->close;
+ $lab->close_lab;
 
 =head1 DESCRIPTION
 
@@ -271,7 +271,7 @@ sub _pool_path {
     } else {
         $p = substr $pkg_name, 0, 1;
     }
-    $path .= "pool/$p/$pkg_name/${pkg_name}_${pkg_version}";
+    $path .= "/pool/$p/$pkg_name/${pkg_name}_${pkg_version}";
     $path .= "_${pkg_arch}" unless $pkg_type eq 'source';
     $path .= "_${pkg_type}";
     return $path;
