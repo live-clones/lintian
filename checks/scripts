@@ -389,6 +389,7 @@ for my $filename (sort keys %{$info->scripts}) {
 		or $filename =~ m,^usr/(lib|share)/.*\.py,
 		or $filename =~ m,^usr/(lib|share)/ruby/.*\.rb,
 		or $filename =~ m,\.in$,
+		or $filename =~ m,\.erb$,
 		or $filename =~ m,\.ex$,
 		or $filename eq 'etc/init.d/skeleton'
 		or $filename =~ m,^etc/menu-methods,
@@ -410,6 +411,7 @@ for my $filename (sort keys %{$info->scripts}) {
 	if (-x $interpreter
 	    and ! script_is_evil_and_wrong($path)
 	    and $filename !~ m,\.dpatch$,
+	    and $filename !~ m,\.erb$,
 	    # exclude some shells. zsh -n is broken, see #485885
 	    and $base !~ m/^(z|t?c)sh$/) {
 

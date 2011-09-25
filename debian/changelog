@@ -11,6 +11,11 @@ lintian (2.5.4) UNRELEASED; urgency=low
   * checks/files.desc:
     + [JW] Suggest the usage of "-delete" rather than "| xargs rm -f".
       (Closes: #641983)
+  * checks/scripts:
+    + [RA] Exclude files ending in *.erb from several shell script
+      checks.  ERB is a Ruby templating language, so these will probably
+      have mixed shell and Ruby code and may not be executable.  Thanks,
+      Laurent Arnoud.
   * checks/source-copyright:
     + [JW] Added some more DEP-5 URLs.  (Closes: #642027)
 
