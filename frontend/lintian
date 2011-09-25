@@ -976,6 +976,8 @@ while (my $arg = shift) {
 
 	# nothing found so far, so search the lab
 
+	# FIXME: needs "remove by name"
+
 	my $b = "$opt{'LINTIAN_LAB'}/binary/$arg";
 	my $s = "$opt{'LINTIAN_LAB'}/source/$arg";
 	my $u = "$opt{'LINTIAN_LAB'}/udeb/$arg";
@@ -1496,7 +1498,7 @@ sub auto_clean_package {
     for my $coll (keys %collection_info) {
 	my $ci = $collection_info{$coll};
 	if (defined($ci->{'auto-remove'}) && $ci->{'auto-remove'} eq 'yes') {
-	    next unless (-f "$base/.${coll}-$ci->{'version'}");
+	    next unless $lpkg->is_coll_finished ($coll, $ci->{'version'});
 	    my $script = "$opt{'LINTIAN_ROOT'}/collection/$ci->{'script'}";
 	    debug_msg(1, "Auto removing: $ci->{'script'} ...");
 	    unless (Lintian::Command::Simple::rundir($base, $script, $pkg_name, "remove-${pkg_type}") == 0) {
