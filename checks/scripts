@@ -26,11 +26,9 @@ package Lintian::scripts;
 use strict;
 use warnings;
 
-use lib "$ENV{'LINTIAN_ROOT'}/checks/";
-use common_data;
-
 use Util;
 
+use Lintian::Check qw($known_shells_regex);
 use Lintian::Relation;
 use Lintian::Tags qw(tag);
 

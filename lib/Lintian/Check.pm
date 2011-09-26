@@ -29,7 +29,7 @@ use Lintian::Data;
 use Lintian::Tags qw(tag);
 
 our @ISA    = qw(Exporter);
-our @EXPORT = qw(check_maintainer check_spelling check_spelling_picky);
+our @EXPORT = qw(check_maintainer check_spelling check_spelling_picky $known_shells_regex);
 
 =head1 NAME
 
@@ -305,6 +305,20 @@ sub check_spelling_picky {
 
     return $counter;
 }
+
+=back
+
+=head1 VARIABLES
+
+=over 4
+
+=item $known_shells_regex
+
+Regular expression that maches names of any known shell.
+
+=cut
+
+our $known_shells_regex = qr'(?:[bd]?a|t?c|(?:pd|m)?k|z)?sh';
 
 =back
 
