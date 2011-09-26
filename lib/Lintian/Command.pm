@@ -46,8 +46,8 @@ Lintian::Command - Utilities to execute other commands from lintian code
     my $opts = {};
     $success = spawn($opts, ['command']);
     if ($success) {
-	print "STDOUT: $opts->{out}\n";
-	print "STDERR: $opts->{err}\n";
+        print "STDOUT: $opts->{out}\n";
+        print "STDERR: $opts->{err}\n";
     }
 
     # from file to file
@@ -165,89 +165,89 @@ sub spawn {
     my ($opts, @cmds) = @_;
 
     if (ref($opts) ne 'HASH') {
-	$opts = {};
+        $opts = {};
     }
     $opts->{fail} ||= 'exception';
 
     my ($out, $background);
     my (@out, @in, @err);
     if ($opts->{pipe_in}) {
-	@in = ('<pipe', $opts->{pipe_in});
-	$background = 1;
+        @in = ('<pipe', $opts->{pipe_in});
+        $background = 1;
     } else {
-	$opts->{in} ||= \undef;
-	@in = ('<', $opts->{in});
+        $opts->{in} ||= \undef;
+        @in = ('<', $opts->{in});
     }
     if ($opts->{pipe_out}) {
-	@out = ('>pipe', $opts->{pipe_out});
-	$background = 1;
+        @out = ('>pipe', $opts->{pipe_out});
+        $background = 1;
     } else {
-	if (!exists $opts->{out} && defined $opts->{out_append}){
-	    @out = ('>>', $opts->{out_append});
-	} else {
-	    $opts->{out} ||= \$out;
-	    @out = ('>', $opts->{out});
-	}
+        if (!exists $opts->{out} && defined $opts->{out_append}){
+            @out = ('>>', $opts->{out_append});
+        } else {
+            $opts->{out} ||= \$out;
+            @out = ('>', $opts->{out});
+        }
     }
     if ($opts->{pipe_err}) {
-	@err = ('2>pipe', $opts->{pipe_err});
-	$background = 1;
+        @err = ('2>pipe', $opts->{pipe_err});
+        $background = 1;
     } else {
-	if (!exists $opts->{err} && defined $opts->{err_append}){
-	    @err = ('2>>', $opts->{err_append});
-	} else {
-	    $opts->{err} ||= \*STDERR;
-	    @err = ('2>', $opts->{err});
-	}
+        if (!exists $opts->{err} && defined $opts->{err_append}){
+            @err = ('2>>', $opts->{err_append});
+        } else {
+            $opts->{err} ||= \*STDERR;
+            @err = ('2>', $opts->{err});
+        }
     }
 
 #    use Data::Dumper;
 #    print STDERR Dumper($opts, \@cmds);
     eval {
-	if (@cmds == 1) {
-	    my $cmd = pop @cmds;
-	    my $last = pop @$cmd;
-	    # Support shell-style "command &"
-	    if ($last eq '&') {
-		$background = 1;
-	    } else {
-		push @$cmd, $last;
-	    }
-	    $opts->{harness} = harness($cmd, @in, @out, @err);
-	} else {
-	    my ($first, $last) = (shift @cmds, pop @cmds);
-	    # Support shell-style "command &"
-	    if ($last eq '&') {
-		$background = 1;
-	    } else {
-		push @cmds, $last;
-	    }
-	    $opts->{harness} = harness($first, @in, @cmds, @out, @err);
-	}
-	if ($background) {
-	    $opts->{success} = $opts->{harness}->start;
-	} else {
-	    $opts->{success} = $opts->{harness}->run;
-	}
+        if (@cmds == 1) {
+            my $cmd = pop @cmds;
+            my $last = pop @$cmd;
+            # Support shell-style "command &"
+            if ($last eq '&') {
+                $background = 1;
+            } else {
+                push @$cmd, $last;
+            }
+            $opts->{harness} = harness($cmd, @in, @out, @err);
+        } else {
+            my ($first, $last) = (shift @cmds, pop @cmds);
+            # Support shell-style "command &"
+            if ($last eq '&') {
+                $background = 1;
+            } else {
+                push @cmds, $last;
+            }
+            $opts->{harness} = harness($first, @in, @cmds, @out, @err);
+        }
+        if ($background) {
+            $opts->{success} = $opts->{harness}->start;
+        } else {
+            $opts->{success} = $opts->{harness}->run;
+        }
     };
     if ($@) {
-	require Util;
-	Util::fail($@) if $opts->{fail} ne 'never';
-	$opts->{success} = 0;
-	$opts->{exception} = $@;
+        require Util;
+        Util::fail($@) if $opts->{fail} ne 'never';
+        $opts->{success} = 0;
+        $opts->{exception} = $@;
     } elsif ($opts->{fail} eq 'error'
-	     and not $opts->{success}) {
-	require Util;
-	if ($opts->{description}) {
-	    Util::fail("$opts->{description} failed with error code ".
-		       $opts->{harness}->result);
-	} elsif (@cmds == 1) {
-	    Util::fail("$cmds[0][0] failed with error code ".
-		       $opts->{harness}->result);
-	} else {
-	    Util::fail('command failed with error code '.
-		       $opts->{harness}->result);
-	}
+             and not $opts->{success}) {
+        require Util;
+        if ($opts->{description}) {
+            Util::fail("$opts->{description} failed with error code ".
+                       $opts->{harness}->result);
+        } elsif (@cmds == 1) {
+            Util::fail("$cmds[0][0] failed with error code ".
+                       $opts->{harness}->result);
+        } else {
+            Util::fail('command failed with error code '.
+                       $opts->{harness}->result);
+        }
     }
 #    print STDERR Dumper($opts, \@cmds);
     return $opts->{success};
@@ -286,28 +286,28 @@ All other keys are probably just ignored.
 sub reap {
     my $status = 1;
     while (my $opts = shift @_) {
-	next unless defined($opts->{harness});
+        next unless defined($opts->{harness});
 
-	eval {
-	    $opts->{success} = $opts->{harness}->finish;
-	};
-	if ($@) {
-	    require Util;
-	    Util::fail($@) if $opts->{fail} ne 'never';
-	    $opts->{success} = 0;
-	    $opts->{exception} = $@;
-	} elsif ($opts->{fail} eq 'error'
-		 and not $opts->{success}) {
-	    require Util;
-	    if ($opts->{description}) {
-		Util::fail("$opts->{description} failed with error code ".
-			   $opts->{harness}->result);
-	    } else {
-		Util::fail('command failed with error code '.
-			   $opts->{harness}->result);
-	    }
-	}
-	$status &&= $opts->{success};
+        eval {
+            $opts->{success} = $opts->{harness}->finish;
+        };
+        if ($@) {
+            require Util;
+            Util::fail($@) if $opts->{fail} ne 'never';
+            $opts->{success} = 0;
+            $opts->{exception} = $@;
+        } elsif ($opts->{fail} eq 'error'
+                 and not $opts->{success}) {
+            require Util;
+            if ($opts->{description}) {
+                Util::fail("$opts->{description} failed with error code ".
+                           $opts->{harness}->result);
+            } else {
+                Util::fail('command failed with error code '.
+                           $opts->{harness}->result);
+            }
+        }
+        $status &&= $opts->{success};
     }
     return $status;
 }
@@ -325,7 +325,7 @@ all the executions of kill_kill.
 sub kill {
     my $status = 1;
     while (my $opts = shift @_) {
-	$status &&= kill_kill($opts->{'harness'}, grace => 2);
+        $status &&= kill_kill($opts->{'harness'}, grace => 2);
     }
     return $status;
 }
@@ -346,10 +346,10 @@ sub done {
     return 0 unless($@);
 
     if ($@ =~ m/process ended prematurely/) {
-	return 1;
+        return 1;
     } else {
-	require Util;
-	Util::fail("Unknown failure when trying to pump_nb: $@");
+        require Util;
+        Util::fail("Unknown failure when trying to pump_nb: $@");
     }
 }
 
@@ -370,3 +370,9 @@ Originally written by Frank Lichtenheld <djpig@debian.org> for Lintian.
 lintian(1), IPC::Run
 
 =cut
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

@@ -53,8 +53,8 @@ chdir('unpacked')
 # appears to be usable (although will contain "ERROR" strings, which Lintian
 # doesn't care about), and the only problem was the exit status.
 my %opts = ( pipe_in => FileHandle->new,
-	     out => $outfile,
-	     fail => 'never' );
+             out => $outfile,
+             fail => 'never' );
 spawn(\%opts, ['xargs', '-0r', 'file', '-F', '', '--print0', '--'], '|', [$helper]);
 $opts{pipe_in}->blocking(1);
 
@@ -72,4 +72,8 @@ close(INDEX) or fail("cannot close index file: $!");
 close $opts{pipe_in};
 reap(\%opts);
 
-
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

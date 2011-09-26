@@ -75,25 +75,25 @@ if ($type eq 'source') {
     push @files, 'templates';
 
     foreach my $file (@files) {
-	my $templates_file = $info->debfiles($file);
-	my $binary = $file;
-	$binary =~ s/\.?templates$//;
-	# Single binary package (so @files contains "templates" and
-	# "binary.templates")?
-	if (!$binary && $#files == 1) {
-	    $binary = $binaries;
-	}
+        my $templates_file = $info->debfiles($file);
+        my $binary = $file;
+        $binary =~ s/\.?templates$//;
+        # Single binary package (so @files contains "templates" and
+        # "binary.templates")?
+        if (!$binary && $#files == 1) {
+            $binary = $binaries;
+        }
 
-	if (-f $templates_file) {
-	    my @templates = read_dpkg_control($templates_file, 'templates file');
+        if (-f $templates_file) {
+            my @templates = read_dpkg_control($templates_file, 'templates file');
 
-	    foreach my $template (@templates) {
-		if (exists $template->{template} and exists $template->{_choices}) {
-		    tag 'template-uses-unsplit-choices',
-			"$binary - $template->{template}";
-		}
-	    }
-	}
+            foreach my $template (@templates) {
+                if (exists $template->{template} and exists $template->{_choices}) {
+                    tag 'template-uses-unsplit-choices',
+                        "$binary - $template->{template}";
+                }
+            }
+        }
     }
 
     # The remainder of the checks are for binary packages, so we exit now
@@ -104,12 +104,12 @@ my $cdir = $info->control;
 
 if (open(PREINST, '<', "$cdir/preinst")) {
     while (<PREINST>) {
-	s/\#.*//;    # Not perfect for Perl, but should be OK
-	if (m,/usr/share/debconf/confmodule, or
-	        m/(?:Debconf|Debian::DebConf)::Client::ConfModule/) {
-	    $usespreinst=1;
-	    last;
-	}
+        s/\#.*//;    # Not perfect for Perl, but should be OK
+        if (m,/usr/share/debconf/confmodule, or
+                m/(?:Debconf|Debian::DebConf)::Client::ConfModule/) {
+            $usespreinst=1;
+            last;
+        }
     }
     close PREINST;
 }
@@ -135,13 +135,13 @@ my (%dependencies, @alldeps);
 
 for my $field (qw(depends pre-depends)) {
     if (defined $info->field($field)) {
-	$_ = $info->field($field);
-	$_ .= ", $version" if defined $version;
-	push @alldeps, $_;
-	$dependencies{$field} = Lintian::Relation->new($_);
+        $_ = $info->field($field);
+        $_ .= ", $version" if defined $version;
+        push @alldeps, $_;
+        $dependencies{$field} = Lintian::Relation->new($_);
     } else {
-	push @alldeps, $version;
-	$dependencies{$field} = Lintian::Relation->new($version);
+        push @alldeps, $version;
+        $dependencies{$field} = Lintian::Relation->new($version);
     }
 }
 
@@ -169,26 +169,26 @@ if ($seentemplates) {
         or fail("Can't open control/templates: $!");
     local $/ = "\n\n";
     while (<TMPL>) {
-	chomp;
-	my %fields = ();
-	my $name = 'unknown';
+        chomp;
+        my %fields = ();
+        my $name = 'unknown';
 
-	foreach my $line (split "\n", $_) {
-	    if ($line =~ s/^([-_.A-Za-z0-9]+):\s*(.+)//) {
-		$fields{$1}++;
-		$name = $2 if ($1 eq 'Template');
-	    }
-	}
+        foreach my $line (split "\n", $_) {
+            if ($line =~ s/^([-_.A-Za-z0-9]+):\s*(.+)//) {
+                $fields{$1}++;
+                $name = $2 if ($1 eq 'Template');
+            }
+        }
 
-	foreach (keys %fields) {
-	    if ($fields{$_} > 1) {
-		local $/ = "\n";
-		tag 'duplicate-fields-in-templates', "$name $_";
-		#  Templates file is corrupted, no need to report
-		#  further errors
-		$seentemplates = '';
-	    }
-	}
+        foreach (keys %fields) {
+            if ($fields{$_} > 1) {
+                local $/ = "\n";
+                tag 'duplicate-fields-in-templates', "$name $_";
+                #  Templates file is corrupted, no need to report
+                #  further errors
+                $seentemplates = '';
+            }
+        }
     }
     close TMPL;
 }
@@ -203,72 +203,72 @@ foreach my $template (@templates) {
     my $isselect='';
 
     if (not exists $template->{template}) {
-	tag 'no-template-name';
-	$template->{template} = 'no-template-name';
+        tag 'no-template-name';
+        $template->{template} = 'no-template-name';
     } else {
-	push @templates_seen, $template->{template};
-	if ($template->{template}!~m|[A-Za-z0-9.+-](?:/[A-Za-z0-9.+-])|) {
-	    tag 'malformed-template-name', "$template->{template}";
-	}
+        push @templates_seen, $template->{template};
+        if ($template->{template}!~m|[A-Za-z0-9.+-](?:/[A-Za-z0-9.+-])|) {
+            tag 'malformed-template-name', "$template->{template}";
+        }
     }
 
     if (not exists $template->{type}) {
-	tag 'no-template-type', "$template->{template}";
+        tag 'no-template-type', "$template->{template}";
     } elsif (not $valid_types{$template->{type}}) {
-	tag 'unknown-template-type', "$template->{type}";
+        tag 'unknown-template-type', "$template->{type}";
     } elsif ($template->{type} eq 'select') {
-	$isselect=1;
+        $isselect=1;
     } elsif ($template->{type} eq 'multiselect') {
-	$isselect=1;
-	$usesmultiselect=1;
+        $isselect=1;
+        $usesmultiselect=1;
     } elsif ($template->{type} eq 'boolean') {
-	tag 'boolean-template-has-bogus-default',
-	    "$template->{template} $template->{default}"
-		if defined $template->{default}
-		    and $template->{default} ne 'true'
-		    and $template->{default} ne 'false';
+        tag 'boolean-template-has-bogus-default',
+            "$template->{template} $template->{default}"
+                if defined $template->{default}
+                    and $template->{default} ne 'true'
+                    and $template->{default} ne 'false';
     }
 
     if ($template->{choices} && ($template->{choices} !~ /^\s*$/)) {
-	my $nrchoices = count_choices ($template->{choices});
-	for my $key (keys %$template) {
-	    if ($key =~ /^choices-/) {
-		if (! $template->{$key} || ($template->{$key} =~ /^\s*$/o)) {
-		    tag 'empty-translated-choices', "$template->{template} $key";
-		}
-		if (count_choices ($template->{$key}) != $nrchoices) {
-		    tag 'mismatch-translated-choices', "$template->{template} $key";
-		}
-	    }
-	}
-	if ($template->{choices} =~ /^\s*(yes\s*,\s*no|no\s*,\s*yes)\s*$/i) {
-	    tag 'select-with-boolean-choices', "$template->{template}";
-	}
+        my $nrchoices = count_choices ($template->{choices});
+        for my $key (keys %$template) {
+            if ($key =~ /^choices-/) {
+                if (! $template->{$key} || ($template->{$key} =~ /^\s*$/o)) {
+                    tag 'empty-translated-choices', "$template->{template} $key";
+                }
+                if (count_choices ($template->{$key}) != $nrchoices) {
+                    tag 'mismatch-translated-choices', "$template->{template} $key";
+                }
+            }
+        }
+        if ($template->{choices} =~ /^\s*(yes\s*,\s*no|no\s*,\s*yes)\s*$/i) {
+            tag 'select-with-boolean-choices', "$template->{template}";
+        }
     }
 
     if ($isselect and not exists $template->{choices}) {
-	tag 'select-without-choices', "$template->{template}";
+        tag 'select-without-choices', "$template->{template}";
     }
 
     if (not exists $template->{description}) {
-	tag 'no-template-description', "$template->{template}";
+        tag 'no-template-description', "$template->{template}";
     } elsif ($template->{description}=~m/^\s*(.*?)\s*?\n\s*\1\s*$/) {
-	# Check for duplication. Should all this be folded into the
-	# description checks?
-	tag 'duplicate-long-description-in-template',
-	      "$template->{template}";
+        # Check for duplication. Should all this be folded into the
+        # description checks?
+        tag 'duplicate-long-description-in-template',
+              "$template->{template}";
     }
 
     my %languages;
     foreach my $field (sort keys %$template) {
-	# Tests on translations
-	my ($mainfield, $lang) = split m/-/, $field, 2;
-	if (defined $lang) {
-	    $languages{$lang}{$mainfield}=1;
-	}
-	unless ($template_fields{$mainfield}) { # Ignore language codes here
-	    tag 'unknown-field-in-templates', "$template->{template} $field";
-	}
+        # Tests on translations
+        my ($mainfield, $lang) = split m/-/, $field, 2;
+        if (defined $lang) {
+            $languages{$lang}{$mainfield}=1;
+        }
+        unless ($template_fields{$mainfield}) { # Ignore language codes here
+            tag 'unknown-field-in-templates', "$template->{template} $field";
+        }
     }
 
     if ($template->{template} && $template->{type}) {
@@ -284,41 +284,41 @@ foreach my $template (@templates) {
         ($short, $extended) = split(/\n/, $template->{description}, 2);
         unless (defined $short) {
             $short = $template->{description};
-	    $extended = '';
+            $extended = '';
         }
     } else {
         ($short, $extended) = ('', '');
     }
     my $ttype = $template->{type} || '';
     unless ($short =~ /for internal use/i) {
-	my $isprompt = grep { $_ eq $ttype } qw(string password);
-	if ($isprompt) {
-	    if ($short && ($short !~ m/:$/ || $short =~ m/^(what|who|when|where|which|how)/i)) {
-		tag 'malformed-prompt-in-templates', $template->{template};
-	    }
+        my $isprompt = grep { $_ eq $ttype } qw(string password);
+        if ($isprompt) {
+            if ($short && ($short !~ m/:$/ || $short =~ m/^(what|who|when|where|which|how)/i)) {
+                tag 'malformed-prompt-in-templates', $template->{template};
+            }
         }
         if ($isselect) {
-	    if ($short =~ /^(Please|Cho+se|Enter|Select|Specify|Give)/) {
-		tag 'using-imperative-form-in-templates', $template->{template};
-	    }
-	}
-	if ($ttype eq 'boolean') {
-	    if ($short !~ /\?/) {
-		tag 'malformed-question-in-templates', $template->{template};
-	    }
-	}
-	if (defined ($extended) && $extended =~ /[^\?]\?(\s+|$)/) {
-	    tag 'using-question-in-extended-description-in-templates', $template->{template};
-	}
-	if ($ttype eq 'note') {
-	    if ($short =~ /[.?;:]$/) {
-		tag 'malformed-title-in-templates', $template->{template};
-	    }
-	}
-	if (length ($short) > 75) {
-	    tag 'too-long-short-description-in-templates', $template->{template}
-		unless $type eq 'udeb' && $ttype eq 'text';
-	}
+            if ($short =~ /^(Please|Cho+se|Enter|Select|Specify|Give)/) {
+                tag 'using-imperative-form-in-templates', $template->{template};
+            }
+        }
+        if ($ttype eq 'boolean') {
+            if ($short !~ /\?/) {
+                tag 'malformed-question-in-templates', $template->{template};
+            }
+        }
+        if (defined ($extended) && $extended =~ /[^\?]\?(\s+|$)/) {
+            tag 'using-question-in-extended-description-in-templates', $template->{template};
+        }
+        if ($ttype eq 'note') {
+            if ($short =~ /[.?;:]$/) {
+                tag 'malformed-title-in-templates', $template->{template};
+            }
+        }
+        if (length ($short) > 75) {
+            tag 'too-long-short-description-in-templates', $template->{template}
+                unless $type eq 'udeb' && $ttype eq 'text';
+        }
         if (defined $template->{description}) {
             if ($template->{description} =~ /(\A|\s)(I|[Mm]y|[Ww]e|[Oo]ur|[Oo]urs|mine|myself|ourself|me|us)(\Z|\s)/) {
                 tag 'using-first-person-in-templates', $template->{template};
@@ -328,28 +328,28 @@ foreach my $template (@templates) {
             }
         }
 
-	# Check whether the extended description is too long.
-	if ($extended) {
-	    my $lines = 0;
-	    for my $string (split ("\n", $extended)) {
-		while (length ($string) > 80) {
-		    my $pos = rindex ($string, ' ', 80);
-		    if ($pos == -1) {
-			$pos = index ($string, ' ');
-		    }
-		    if ($pos == -1) {
-			$string = '';
-		    } else {
-			$string = substr ($string, $pos + 1);
-			$lines++;
-		    }
-		}
-		$lines++;
-	    }
-	    if ($lines > 20) {
-		tag 'too-long-extended-description-in-templates', $template->{template};
-	    }
-	}
+        # Check whether the extended description is too long.
+        if ($extended) {
+            my $lines = 0;
+            for my $string (split ("\n", $extended)) {
+                while (length ($string) > 80) {
+                    my $pos = rindex ($string, ' ', 80);
+                    if ($pos == -1) {
+                        $pos = index ($string, ' ');
+                    }
+                    if ($pos == -1) {
+                        $string = '';
+                    } else {
+                        $string = substr ($string, $pos + 1);
+                        $lines++;
+                    }
+                }
+                $lines++;
+            }
+            if ($lines > 20) {
+                tag 'too-long-extended-description-in-templates', $template->{template};
+            }
+        }
     }
 }
 
@@ -362,105 +362,105 @@ my %template_aliases;
 for my $file (qw(config prerm postrm preinst postinst)) {
     my $potential_makedev = {};
     if (open(IN, '<', "$cdir/$file")) {
-	my $usesconfmodule='';
-	my $obsoleteconfmodule='';
-	my $db_input='';
-	my $isdefault='';
-	my $usesseen='';
+        my $usesconfmodule='';
+        my $obsoleteconfmodule='';
+        my $db_input='';
+        my $isdefault='';
+        my $usesseen='';
 
-	# Only check scripts.
-	my $fl = <IN>;
-	unless ($fl && $fl =~ /^\#!/) {
-	    close IN;
-	    next;
-	}
+        # Only check scripts.
+        my $fl = <IN>;
+        unless ($fl && $fl =~ /^\#!/) {
+            close IN;
+            next;
+        }
 
-	while (<IN>) {
-	    s/#.*//;    # Not perfect for Perl, but should be OK
-	    next unless m/\S/;
-	    while (s%\\$%%) {
-		my $next = <IN>;
-		last unless $next;
-		$_ .= $next;
-	    }
-	    if (m,(?:\.|source)\s+/usr/share/debconf/confmodule, ||
-	            m/(?:use|require)\s+Debconf::Client::ConfModule/) {
-	        $usesconfmodule=1;
-	    }
-	    if (not $obsoleteconfmodule and
-	        m,(/usr/share/debconf/confmodule\.sh|
-	           Debian::DebConf::Client::ConfModule),x) {
-		my $cmod = $1;
-		tag 'loads-obsolete-confmodule', "$file:$. $cmod";
-	        $usesconfmodule=1;
-	        $obsoleteconfmodule=1;
-	    }
-	    if ($file eq 'config' and m/db_input/) {
-		$config_calls_db_input = 1;
-	    }
-	    if ($file eq 'postinst' and not $db_input and m/db_input/
-		and not $config_calls_db_input) {
-	        # TODO: Perl?
-	        tag 'postinst-uses-db-input'
-		    unless $type eq 'udeb';
-	        $db_input=1;
-	    }
-	    if (m%/dev/%) {
-	        $potential_makedev->{$.} = 1;
-	    }
-	    if (m/^\s*(?:db_input|db_text)\s+[\"\']?(\S+?)[\"\']?\s+(\S+)\s/) {
-		my ($priority, $template) = ($1, $2);
-		$templates_used{$template} = 1;
-		if ($priority !~ /^\$\S+$/) {
-		    tag 'unknown-debconf-priority', "$file:$. $1"
-		        unless ($valid_priorities{$priority});
-		    tag 'possible-debconf-note-abuse', "$file:$. $template"
-			if ($potential_db_abuse{$template}
-			    and (not ($potential_makedev->{($. - 1)} and ($priority eq 'low')))
-			    and ($priority =~ /^(low|medium)$/));
-		}
-	    }
-	    if (m/^\s*(?:db_get|db_set(?:title)?)\s+[\"\']?(\S+?)[\"\']?(?:\s|\Z)/) {
-		$templates_used{$1} = 1;
-	    }
-	    # Try to handle Perl somewhat.
-	    if (m/^\s*(?:.*=\s*get|set)\s*\(\s*[\"\'](\S+?)[\"\']/) {
-		$templates_used{$1} = 1;
-	    }
-	    if (m/^\s*db_register\s+[\"\']?(\S+?)[\"\']?\s+(\S+)\s/) {
-		my ($template, $question) = ($1, $2);
-		push @{$template_aliases{$template}}, $question;
-	    }
-	    if (not $isdefault and m/db_fset.*isdefault/) {
-	        # TODO: Perl?
-	        tag 'isdefault-flag-is-deprecated', $file;
-	        $isdefault=1;
-	    }
-	    if (not $db_purge and m/db_purge/) {    # TODO: Perl?
-		$db_purge=1;
-	    }
-	}
+        while (<IN>) {
+            s/#.*//;    # Not perfect for Perl, but should be OK
+            next unless m/\S/;
+            while (s%\\$%%) {
+                my $next = <IN>;
+                last unless $next;
+                $_ .= $next;
+            }
+            if (m,(?:\.|source)\s+/usr/share/debconf/confmodule, ||
+                    m/(?:use|require)\s+Debconf::Client::ConfModule/) {
+                $usesconfmodule=1;
+            }
+            if (not $obsoleteconfmodule and
+                m,(/usr/share/debconf/confmodule\.sh|
+                   Debian::DebConf::Client::ConfModule),x) {
+                my $cmod = $1;
+                tag 'loads-obsolete-confmodule', "$file:$. $cmod";
+                $usesconfmodule=1;
+                $obsoleteconfmodule=1;
+            }
+            if ($file eq 'config' and m/db_input/) {
+                $config_calls_db_input = 1;
+            }
+            if ($file eq 'postinst' and not $db_input and m/db_input/
+                and not $config_calls_db_input) {
+                # TODO: Perl?
+                tag 'postinst-uses-db-input'
+                    unless $type eq 'udeb';
+                $db_input=1;
+            }
+            if (m%/dev/%) {
+                $potential_makedev->{$.} = 1;
+            }
+            if (m/^\s*(?:db_input|db_text)\s+[\"\']?(\S+?)[\"\']?\s+(\S+)\s/) {
+                my ($priority, $template) = ($1, $2);
+                $templates_used{$template} = 1;
+                if ($priority !~ /^\$\S+$/) {
+                    tag 'unknown-debconf-priority', "$file:$. $1"
+                        unless ($valid_priorities{$priority});
+                    tag 'possible-debconf-note-abuse', "$file:$. $template"
+                        if ($potential_db_abuse{$template}
+                            and (not ($potential_makedev->{($. - 1)} and ($priority eq 'low')))
+                            and ($priority =~ /^(low|medium)$/));
+                }
+            }
+            if (m/^\s*(?:db_get|db_set(?:title)?)\s+[\"\']?(\S+?)[\"\']?(?:\s|\Z)/) {
+                $templates_used{$1} = 1;
+            }
+            # Try to handle Perl somewhat.
+            if (m/^\s*(?:.*=\s*get|set)\s*\(\s*[\"\'](\S+?)[\"\']/) {
+                $templates_used{$1} = 1;
+            }
+            if (m/^\s*db_register\s+[\"\']?(\S+?)[\"\']?\s+(\S+)\s/) {
+                my ($template, $question) = ($1, $2);
+                push @{$template_aliases{$template}}, $question;
+            }
+            if (not $isdefault and m/db_fset.*isdefault/) {
+                # TODO: Perl?
+                tag 'isdefault-flag-is-deprecated', $file;
+                $isdefault=1;
+            }
+            if (not $db_purge and m/db_purge/) {    # TODO: Perl?
+                $db_purge=1;
+            }
+        }
 
-	if ($file eq 'postinst' or $file eq 'config') {
-	    unless ($usesconfmodule) {
-		tag "$file-does-not-load-confmodule"
-		    unless ($type eq 'udeb' || ($file eq 'postinst' && !$seenconfig));
-	    }
-	}
+        if ($file eq 'postinst' or $file eq 'config') {
+            unless ($usesconfmodule) {
+                tag "$file-does-not-load-confmodule"
+                    unless ($type eq 'udeb' || ($file eq 'postinst' && !$seenconfig));
+            }
+        }
 
-	if ($file eq 'postrm') {
-	    unless ($db_purge) {
-		tag 'postrm-does-not-purge-debconf';
-	    }
-	}
+        if ($file eq 'postrm') {
+            unless ($db_purge) {
+                tag 'postrm-does-not-purge-debconf';
+            }
+        }
 
-	close IN;
+        close IN;
     } elsif ($file eq 'postinst') {
-	tag 'postinst-does-not-load-confmodule'
-	    unless ($type eq 'udeb' || !$seenconfig);
+        tag 'postinst-does-not-load-confmodule'
+            unless ($type eq 'udeb' || !$seenconfig);
     } elsif ($file eq 'postrm') {
-	tag 'postrm-does-not-purge-debconf'
-	    unless ($type eq 'udeb');
+        tag 'postrm-does-not-purge-debconf'
+            unless ($type eq 'udeb');
     }
 }
 
@@ -470,20 +470,20 @@ foreach my $template (@templates_seen) {
     my $used = 0;
 
     if ($templates_used{$template}) {
-	$used = 1;
+        $used = 1;
     } else {
-	foreach my $alias (@{$template_aliases{$template}}) {
-	    if ($templates_used{$alias}) {
-		$used = 1;
-		last;
-	    }
-	}
+        foreach my $alias (@{$template_aliases{$template}}) {
+            if ($templates_used{$alias}) {
+                $used = 1;
+                last;
+            }
+        }
     }
 
     unless ($used or $pkg eq 'debconf' or $type eq 'udeb') {
-	tag 'unused-debconf-template', $template
-	    unless $template =~ m,^shared/packages-(wordlist|ispell)$,
-	        or $template =~ m,/languages$,;
+        tag 'unused-debconf-template', $template
+            unless $template =~ m,^shared/packages-(wordlist|ispell)$,
+                or $template =~ m,/languages$,;
     }
 }
 
@@ -493,12 +493,12 @@ foreach my $template (@templates_seen) {
 my $anydebconf = join (' | ', @debconfs);
 if ($usespreinst) {
     unless ($dependencies{'pre-depends'}->implies($anydebconf)) {
-	tag 'missing-debconf-dependency-for-preinst'
-	    unless $type eq 'udeb';
+        tag 'missing-debconf-dependency-for-preinst'
+            unless $type eq 'udeb';
     }
 } else {
     unless ($alldependencies->implies($anydebconf) or $usesdbconfig) {
-	tag 'missing-debconf-dependency';
+        tag 'missing-debconf-dependency';
     }
 }
 
@@ -513,12 +513,12 @@ return 0 if ($pkg eq 'debconf') || ($type eq 'udeb');
 foreach my $filename (sort keys %{$info->scripts}) {
     open(IN, '<', $info->unpacked($filename)) or fail("cannot open $filename: $!");
     while (<IN>) {
-	s/#.*//;    # Not perfect for Perl, but should be OK
-	if (m,/usr/share/debconf/confmodule, or
-	        m/(?:Debconf|Debian::DebConf)::Client::ConfModule/) {
-	    tag 'debconf-is-not-a-registry', $filename;
-	    last;
-	}
+        s/#.*//;    # Not perfect for Perl, but should be OK
+        if (m,/usr/share/debconf/confmodule, or
+                m/(?:Debconf|Debian::DebConf)::Client::ConfModule/) {
+            tag 'debconf-is-not-a-registry', $filename;
+            last;
+        }
     }
     close IN;
 }
@@ -527,21 +527,21 @@ foreach my $filename (sort keys %{$info->scripts}) {
 
 # -----------------------------------
 
-# Count the number of choices.	Splitting code copied from debconf 1.5.8
+# Count the number of choices.  Splitting code copied from debconf 1.5.8
 # (Debconf::Question).
 sub count_choices {
     my ($choices) = @_;
     my @items;
     my $item = '';
     for my $chunk (split /(\\[, ]|,\s+)/, $choices) {
-	if ($chunk =~ /^\\([, ])$/) {
-	    $item .= $1;
-	} elsif ($chunk =~ /^,\s+$/) {
-	    push (@items, $item);
-	    $item = '';
-	} else {
-	    $item .= $chunk;
-	}
+        if ($chunk =~ /^\\([, ])$/) {
+            $item .= $1;
+        } elsif ($chunk =~ /^,\s+$/) {
+            push (@items, $item);
+            $item = '';
+        } else {
+            $item .= $chunk;
+        }
     }
     push (@items, $item) if $item ne '';
     return scalar (@items);
@@ -550,7 +550,7 @@ sub count_choices {
 1;
 
 # Local Variables:
-# indent-tabs-mode: t
+# indent-tabs-mode: nil
 # cperl-indent-level: 4
 # End:
-# vim: syntax=perl ts=8
+# vim: syntax=perl sw=4 sts=4 sr et

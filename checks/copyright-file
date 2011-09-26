@@ -48,69 +48,69 @@ my $linked = 0;
 foreach (@{$info->sorted_index}) {
     my $index_info = $info->index->{$_};
     if (m,usr/(?:share/)?doc/$ppkg/copyright(\.\S+)?$,) {
-	my $ext = $1;
+        my $ext = $1;
 
-	$ext = '' if (! defined $ext);
-	#an extension other than .gz doesn't count as copyright file
-	next unless ($ext eq '') or ($ext eq '.gz');
-	$found = 1;
+        $ext = '' if (! defined $ext);
+        #an extension other than .gz doesn't count as copyright file
+        next unless ($ext eq '') or ($ext eq '.gz');
+        $found = 1;
 
-	#search for an extension
-	if ($ext eq '.gz') {
-	    tag 'copyright-file-compressed';
-	    last;
-    	}
+        #search for an extension
+        if ($ext eq '.gz') {
+            tag 'copyright-file-compressed';
+            last;
+        }
 
-	#make sure copyright is not a symlink
-    	if ($index_info->{link}) {
-	    tag 'copyright-file-is-symlink';
-	    last;
-    	}
+        #make sure copyright is not a symlink
+        if ($index_info->{link}) {
+            tag 'copyright-file-is-symlink';
+            last;
+        }
 
-	#otherwise, pass
-    	if (($ext eq '') and not $index_info->{link}) {
-	    # everything is ok.
-	    last;
-    	}
-    	fail("unhandled case: $_");
+        #otherwise, pass
+        if (($ext eq '') and not $index_info->{link}) {
+            # everything is ok.
+            last;
+        }
+        fail("unhandled case: $_");
 
     } elsif (m,usr/share/doc/$ppkg$, and $index_info->{link}) {
-	my $link = $index_info->{link};
+        my $link = $index_info->{link};
 
-    	$found = 1;
-	$linked = 1;
+        $found = 1;
+        $linked = 1;
 
-    	# check if this symlink references a directory elsewhere
-	if ($link =~ m,^(?:\.\.)?/,) {
-	    tag 'usr-share-doc-symlink-points-outside-of-usr-share-doc', $link;
-	    last;
-    	}
+        # check if this symlink references a directory elsewhere
+        if ($link =~ m,^(?:\.\.)?/,) {
+            tag 'usr-share-doc-symlink-points-outside-of-usr-share-doc', $link;
+            last;
+        }
 
-	# The symlink may point to a subdirectory of another /usr/share/doc
-	# directory.  This is allowed if this package depends on link and both
-	# packages come from the same source package.
-	#
-	# Policy requires that packages be built from the same source if
-	# they're going to do this, which by my (rra's) reading means that we
-	# should have a strict version dependency.  However, in practice the
-	# copyright file doesn't change a lot and strict version dependencies
-	# cause other problems (such as with arch: any / arch: all package
-	# combinations and binNMUs).
-	#
-	# We therefore just require the dependency for now and don't worry
-	# about the version number.
-	$link =~ s,/.*,,;
-	if (not depends_on($info, $link)) {
-	    tag 'usr-share-doc-symlink-without-dependency', $link;
-	    last;
-    	}
-	# Check if the link points to a package from the same source.
-	check_cross_link($group, $link);
-    	last;
+        # The symlink may point to a subdirectory of another /usr/share/doc
+        # directory.  This is allowed if this package depends on link and both
+        # packages come from the same source package.
+        #
+        # Policy requires that packages be built from the same source if
+        # they're going to do this, which by my (rra's) reading means that we
+        # should have a strict version dependency.  However, in practice the
+        # copyright file doesn't change a lot and strict version dependencies
+        # cause other problems (such as with arch: any / arch: all package
+        # combinations and binNMUs).
+        #
+        # We therefore just require the dependency for now and don't worry
+        # about the version number.
+        $link =~ s,/.*,,;
+        if (not depends_on($info, $link)) {
+            tag 'usr-share-doc-symlink-without-dependency', $link;
+            last;
+        }
+        # Check if the link points to a package from the same source.
+        check_cross_link($group, $link);
+        last;
     } elsif (m,usr/doc/copyright/$ppkg$,) {
-	tag 'old-style-copyright-file';
-	$found = 1;
-    	last;
+        tag 'old-style-copyright-file';
+        $found = 1;
+        last;
     }
 }
 
@@ -147,16 +147,16 @@ if (m,(usr/share/common-licenses/(?:GPL|LGPL|BSD|Artistic)\.gz),) {
 if (m,(usr/share/common-licenses/(L?GPL|GFDL))([^-]),i) {
     my ($ref, $license, $separator) = ($1, $2, $3);
     if ($separator =~ /[\d\w]/) {
-	tag 'copyright-refers-to-nonexistent-license-file', "$ref$separator";
+        tag 'copyright-refers-to-nonexistent-license-file', "$ref$separator";
     } elsif (m,\b(?:any|or)\s+later(?:\s+version)?\b,i
-	     || m,License: $license-[\d\.]+\+,i
-	     || m,as Perl itself,i
-	     || m,License-Alias:\s+Perl,
-	     || m,License:\s+Perl,) {
-	tag 'copyright-refers-to-symlink-license', $ref;
+             || m,License: $license-[\d\.]+\+,i
+             || m,as Perl itself,i
+             || m,License-Alias:\s+Perl,
+             || m,License:\s+Perl,) {
+        tag 'copyright-refers-to-symlink-license', $ref;
     } else {
-	tag 'copyright-refers-to-versionless-license-file', $ref
-	    if /\bversion\b/;
+        tag 'copyright-refers-to-versionless-license-file', $ref
+            if /\bversion\b/;
     }
 }
 
@@ -302,16 +302,16 @@ check_spelling('spelling-error-in-copyright', $_, undef, { $pkg => 1 });
 # or Artistic licensing or with an exception or exemption.
 if ($gpl || m,/usr/share/common-licenses/GPL,) {
     unless (m,exception|exemption|/usr/share/common-licenses/(?!GPL)\S,) {
-	my @depends;
-	if (defined $info->field('depends')) {
-	    @depends = split (/\s*,\s*/, scalar $info->field('depends'));
-	}
-	if (defined $info->field('pre-depends')) {
-	    push @depends, split (/\s*,\s*/, scalar $info->field('pre-depends'));
-	}
-	if (grep { /^libssl[0-9.]+(?:\s|\z)/ && !/\|/ } @depends) {
-	    tag 'possible-gpl-code-linked-with-openssl';
-	}
+        my @depends;
+        if (defined $info->field('depends')) {
+            @depends = split (/\s*,\s*/, scalar $info->field('depends'));
+        }
+        if (defined $info->field('pre-depends')) {
+            push @depends, split (/\s*,\s*/, scalar $info->field('pre-depends'));
+        }
+        if (grep { /^libssl[0-9.]+(?:\s|\z)/ && !/\|/ } @depends) {
+            tag 'possible-gpl-code-linked-with-openssl';
+        }
     }
 }
 
@@ -333,27 +333,27 @@ sub check_cross_link {
     my ($group, $fpkg) = @_;
     my $src = $group->get_source_processable();
     if ( $src ) {
-	# source package is available; check it's list of binary
-	my $bin = $src->info->binaries;
-	return if $bin->{$fpkg};
-	tag 'usr-share-doc-symlink-to-foreign-package', $fpkg;
+        # source package is available; check it's list of binary
+        my $bin = $src->info->binaries;
+        return if $bin->{$fpkg};
+        tag 'usr-share-doc-symlink-to-foreign-package', $fpkg;
     } else {
-	# The source package is not available, but the binary could
-	# be present anyway;  If they are in the same group, they claim
-	# to have the same source (and source version)
-	foreach my $proc ($group->get_processables('binary')){
-	    return if($proc->pkg_name eq $fpkg);
-	}
-	# It was not, but since the source package was not present, we cannot
-	# tell if it is foreign or not at this point.
-	tag 'cannot-check-whether-usr-share-doc-symlink-points-to-foreign-package';
+        # The source package is not available, but the binary could
+        # be present anyway;  If they are in the same group, they claim
+        # to have the same source (and source version)
+        foreach my $proc ($group->get_processables('binary')){
+            return if($proc->pkg_name eq $fpkg);
+        }
+        # It was not, but since the source package was not present, we cannot
+        # tell if it is foreign or not at this point.
+        tag 'cannot-check-whether-usr-share-doc-symlink-points-to-foreign-package';
     }
 }
 
 1;
 
 # Local Variables:
-# indent-tabs-mode: t
+# indent-tabs-mode: nil
 # cperl-indent-level: 4
 # End:
-# vim: syntax=perl ts=8 sw=4
+# vim: syntax=perl sw=4 sts=4 sr et

@@ -32,90 +32,90 @@ use File::Spec;
 # Table based on checks/emdebian's %archdetecttable, as found in
 # emdebian-tools.
 our %ARCH_REGEX = (
-	'32' 		 => qr'ELF 32-bit',
-	'64' 		 => qr'ELF 64-bit',
-	'alpha'          => qr'ELF 64-bit LSB .* Alpha',
-	'amd64'          => qr'ELF 64-bit LSB .* x86-64, .* (?:GNU/Linux|(?!GNU))',
-	'arm'            => qr'ELF 32-bit LSB .* ARM, version \d,',
-	'armeb'          => qr'ELF 32-bit MSB .* ARM',
-	'armel'          => qr'ELF 32-bit LSB .* ARM, .* \(SYSV\)',
-	'armhf'          => qr'ELF 32-bit LSB .* ARM, .* \(SYSV\)',
-#	'avr32'          => qr'ELF 32-bit MSB .* \(SYSV\)',
-	'hppa'           => qr'ELF 32-bit MSB .* PA-RISC',
-	'hppa64'         => qr'ELF 64-bit MSB .* PA-RISC',
-	'hurd-i386' 	 => qr'ELF 32-bit LSB .* Intel 80386, .* (?:GNU/Hurd|(?!GNU))',
-	'i386'      	 => qr'ELF 32-bit LSB .* 80386, .* (?:GNU/Linux|(?!GNU))',
-	'ia64'      	 => qr'ELF 64-bit LSB .* IA-64',
-	'kfreebsd-amd64' => qr'ELF 64-bit LSB .* x86-64, .* (?:GNU/kFreeBSD|(?!GNU))',
-	'kfreebsd-i386'  => qr'ELF 32-bit LSB .* 80386, .* (?:GNU/kFreeBSD|(?!GNU))',
-	'lpia'      	 => qr'ELF 32-bit LSB .* 80386, .* (?:GNU/Linux|(?!GNU))',
-	'm32r' 		 => qr'ELF 32-bit MSB .* M32R',
-	'm68k' 		 => qr'ELF 32-bit MSB .* 680[02]0',
-	'mips' 		 => qr'ELF 32-bit MSB .* MIPS',
-	'mipsel' 	 => qr'ELF 32-bit LSB .* MIPS',
-#	'mipsn32' 	 => qr'ELF 32-bit LSB .* MIPS.* N32',
-	'mips64' 	 => qr'ELF 64-bit MSB .* MIPS',
-	'mipsel64'       => qr'ELF 64-bit LSB .* MIPS',
-	'powerpc'        => qr'ELF 32-bit MSB .* PowerPC',
-	'powerpcspe'     => qr'ELF 32-bit MSB .* PowerPC .* cisco 4500',
-	'ppc64'          => qr'ELF 64-bit MSB .* PowerPC',
-	's390'    	 => qr'ELF 32-bit MSB .* S.390',
-	's390x'   	 => qr'ELF 64-bit MSB .* S.390',
-	'sh4'   	 => qr'ELF 32-bit LSB .* Renesas SH',
-	'sparc'   	 => qr'ELF 32-bit MSB .* SPARC',
-#	'sparcv9b'   	 => qr'ELF 32-bit MSB .* SPARC.* V8\+',
-	'sparc64' 	 => qr'ELF 64-bit MSB .* SPARC');
+        '32'            => qr'ELF 32-bit',
+        '64'            => qr'ELF 64-bit',
+        'alpha'         => qr'ELF 64-bit LSB .* Alpha',
+        'amd64'         => qr'ELF 64-bit LSB .* x86-64, .* (?:GNU/Linux|(?!GNU))',
+        'arm'           => qr'ELF 32-bit LSB .* ARM, version \d,',
+        'armeb'         => qr'ELF 32-bit MSB .* ARM',
+        'armel'         => qr'ELF 32-bit LSB .* ARM, .* \(SYSV\)',
+        'armhf'         => qr'ELF 32-bit LSB .* ARM, .* \(SYSV\)',
+#       'avr32'         => qr'ELF 32-bit MSB .* \(SYSV\)',
+        'hppa'          => qr'ELF 32-bit MSB .* PA-RISC',
+        'hppa64'        => qr'ELF 64-bit MSB .* PA-RISC',
+        'hurd-i386'     => qr'ELF 32-bit LSB .* Intel 80386, .* (?:GNU/Hurd|(?!GNU))',
+        'i386'          => qr'ELF 32-bit LSB .* 80386, .* (?:GNU/Linux|(?!GNU))',
+        'ia64'          => qr'ELF 64-bit LSB .* IA-64',
+        'kfreebsd-amd64'=> qr'ELF 64-bit LSB .* x86-64, .* (?:GNU/kFreeBSD|(?!GNU))',
+        'kfreebsd-i386' => qr'ELF 32-bit LSB .* 80386, .* (?:GNU/kFreeBSD|(?!GNU))',
+        'lpia'          => qr'ELF 32-bit LSB .* 80386, .* (?:GNU/Linux|(?!GNU))',
+        'm32r'          => qr'ELF 32-bit MSB .* M32R',
+        'm68k'          => qr'ELF 32-bit MSB .* 680[02]0',
+        'mips'          => qr'ELF 32-bit MSB .* MIPS',
+        'mipsel'        => qr'ELF 32-bit LSB .* MIPS',
+#       'mipsn32'       => qr'ELF 32-bit LSB .* MIPS.* N32',
+        'mips64'        => qr'ELF 64-bit MSB .* MIPS',
+        'mipsel64'      => qr'ELF 64-bit LSB .* MIPS',
+        'powerpc'       => qr'ELF 32-bit MSB .* PowerPC',
+        'powerpcspe'    => qr'ELF 32-bit MSB .* PowerPC .* cisco 4500',
+        'ppc64'         => qr'ELF 64-bit MSB .* PowerPC',
+        's390'          => qr'ELF 32-bit MSB .* S.390',
+        's390x'         => qr'ELF 64-bit MSB .* S.390',
+        'sh4'           => qr'ELF 32-bit LSB .* Renesas SH',
+        'sparc'         => qr'ELF 32-bit MSB .* SPARC',
+#       'sparcv9b'      => qr'ELF 32-bit MSB .* SPARC.* V8\+',
+        'sparc64'       => qr'ELF 64-bit MSB .* SPARC');
 
 our %ARCH_64BIT_EQUIVS = (
-	'hppa'		=> 'hppa64',
-	'i386'		=> 'amd64',
-	'kfreebsd-i386'	=> 'kfreebsd-amd64',
-	'mips'		=> 'mips64',
-	'mipsel'	=> 'mipsel64',
-	'powerpc'	=> 'ppc64',
-	's390'		=> 's390x',
-	'sparc'		=> 'sparc64',
+        'hppa'          => 'hppa64',
+        'i386'          => 'amd64',
+        'kfreebsd-i386' => 'kfreebsd-amd64',
+        'mips'          => 'mips64',
+        'mipsel'        => 'mipsel64',
+        'powerpc'       => 'ppc64',
+        's390'          => 's390x',
+        'sparc'         => 'sparc64',
 );
 
 our %EMBEDDED_LIBRARIES = (
-	# We exclude version strings starting with "4 " since that's a mark of the
-	# Pascal implementation, which is not what this tag is designed to detect.
-	# (The "4" is actually the string length (52 characters) in the Pascal
-	# counted string format.)
-	'zlib'		=> {
-			    source => qr'(?:zlib|klibc|kfreebsd-kernel-di-\w+)',
-			    match => qr'(?m)(?<!4 )(?:in|de)flate (?:\d[ \w.\-]{1,20}[\w.\-])'
-			   },
+        # We exclude version strings starting with "4 " since that's a mark of the
+        # Pascal implementation, which is not what this tag is designed to detect.
+        # (The "4" is actually the string length (52 characters) in the Pascal
+        # counted string format.)
+        'zlib'          => {
+                            source => qr'(?:zlib|klibc|kfreebsd-kernel-di-\w+)',
+                            match => qr'(?m)(?<!4 )(?:in|de)flate (?:\d[ \w.\-]{1,20}[\w.\-])'
+                           },
 
-	'bzip2'		=> qr'(?m)^This is a bug in bzip2',
-	'expat'		=> qr'(?m)^requested feature requires XML_DTD support in Expat',
-	'file'		=> qr'(?m)^could not find any magic files',
-	'libxml2'	=> qr'root and DTD name do not match',
-	'pcre3'		=> qr'this version of PCRE is not compiled with PCRE_UTF8 support',
-	'tiff'		=> qr'No space for PixarLog state block',
-	'ftgl'		=> qr'FTGlyphContainer',
-	't1lib'		=> qr't1lib is copyright \(c\) Rainer Menzner',
-	'gl2ps'		=> qr'\(C\) 1999-2009 C\. Geuzaine',
-	'libgd2'	=> qr'gd-(?:png|jpeg:) error:',
-	'ncurses'	=> qr'Not enough memory to create terminal structure',
-	'openssl'	=> qr'You need to read the OpenSSL FAQ',
-	'sqlite'	=> {source => qr'sqlite3?', match => qr'CREATE TABLE sqlite_master\('},
-	'libm'		=> {source => qr'eglibc', match => qr'neg\*\*non-integral: DOMAIN error'},
-	'ltdl'		=> {source => qr'libtool', match => qr'(?m)^library already shutdown'},
-	'curl'		=> qr'A libcurl function was given a bad argument',
-	'libmng'	=> qr'TERM misplaced during creation of MNG stream',
-	'libmsn'	=> qr'The MSN server has terminated the connection with an unknown reason code\.',
-	'libmikmod'	=> qr'APUN \(APlayer\) and UNI \(MikMod\)',
-	'libmysqlclient'=> {source => qr'mysql-\d.*', match => qr'MySQL client ran out of memory'},
-	'libpng'	=> qr'(?m)^Potential overflow in png_zalloc',
-	'libjpeg'	=> { source => qr'^libjpeg.*',
-			     match => qr'(?m)^Caution: quantization tables are too coarse for baseline JPEG'},
-	'openjpeg'	=> qr'tcd_decode: incomplete bistream',
-	'tinyxml'	=> qr'Error when TiXmlDocument added to document',
-	'libpcap'	=> qr'(?:pcap_activate: The "any" device isn\'t supported|corrupted frame on kernel ring mac offset)',
-	'glee'		=> qr'Extension name exceeds 1023 characters.',
-	'glew'		=> qr'Missing GL version',
-	'libtheora'	=> qr'Xiph.Org libtheora ',
+        'bzip2'         => qr'(?m)^This is a bug in bzip2',
+        'expat'         => qr'(?m)^requested feature requires XML_DTD support in Expat',
+        'file'          => qr'(?m)^could not find any magic files',
+        'libxml2'       => qr'root and DTD name do not match',
+        'pcre3'         => qr'this version of PCRE is not compiled with PCRE_UTF8 support',
+        'tiff'          => qr'No space for PixarLog state block',
+        'ftgl'          => qr'FTGlyphContainer',
+        't1lib'         => qr't1lib is copyright \(c\) Rainer Menzner',
+        'gl2ps'         => qr'\(C\) 1999-2009 C\. Geuzaine',
+        'libgd2'        => qr'gd-(?:png|jpeg:) error:',
+        'ncurses'       => qr'Not enough memory to create terminal structure',
+        'openssl'       => qr'You need to read the OpenSSL FAQ',
+        'sqlite'        => {source => qr'sqlite3?', match => qr'CREATE TABLE sqlite_master\('},
+        'libm'          => {source => qr'eglibc', match => qr'neg\*\*non-integral: DOMAIN error'},
+        'ltdl'          => {source => qr'libtool', match => qr'(?m)^library already shutdown'},
+        'curl'          => qr'A libcurl function was given a bad argument',
+        'libmng'        => qr'TERM misplaced during creation of MNG stream',
+        'libmsn'        => qr'The MSN server has terminated the connection with an unknown reason code\.',
+        'libmikmod'     => qr'APUN \(APlayer\) and UNI \(MikMod\)',
+        'libmysqlclient'=> {source => qr'mysql-\d.*', match => qr'MySQL client ran out of memory'},
+        'libpng'        => qr'(?m)^Potential overflow in png_zalloc',
+        'libjpeg'       => { source => qr'^libjpeg.*',
+                             match => qr'(?m)^Caution: quantization tables are too coarse for baseline JPEG'},
+        'openjpeg'      => qr'tcd_decode: incomplete bistream',
+        'tinyxml'       => qr'Error when TiXmlDocument added to document',
+        'libpcap'       => qr'(?:pcap_activate: The "any" device isn\'t supported|corrupted frame on kernel ring mac offset)',
+        'glee'          => qr'Extension name exceeds 1023 characters.',
+        'glew'          => qr'Missing GL version',
+        'libtheora'     => qr'Xiph.Org libtheora ',
 );
 
 our $MULTIARCH_DIRS = Lintian::Data->new('binaries/multiarch-dirs', '\s+');
@@ -146,34 +146,34 @@ foreach my $file (sort keys %{$info->objdump_info}) {
     my $objdump = $info->objdump_info->{$file};
 
     if (defined $objdump->{SONAME}) {
-	foreach my $soname (@{$objdump->{SONAME}}) {
-	    $SONAME{$soname} ||= [];
-	    push @{$SONAME{$soname}}, $file;
-	}
+        foreach my $soname (@{$objdump->{SONAME}}) {
+            $SONAME{$soname} ||= [];
+            push @{$SONAME{$soname}}, $file;
+        }
     }
     foreach my $symbol (@{$objdump->{SYMBOLS}}) {
-	my ($foo, $sec, $sym) = @{$symbol};
-	if ($arch ne 'hppa') {
-	    if ($foo eq '.text' and $sec eq 'Base' and
-		$sym eq '__gmon_start__') {
-		tag 'binary-compiled-with-profiling-enabled', $file;
-	    }
-	} else {
-	    if ( ($sec =~ /^GLIBC_.*/) and ($sym eq '_mcount') ) {
-		tag 'binary-compiled-with-profiling-enabled', $file;
-	    }
-	}
+        my ($foo, $sec, $sym) = @{$symbol};
+        if ($arch ne 'hppa') {
+            if ($foo eq '.text' and $sec eq 'Base' and
+                $sym eq '__gmon_start__') {
+                tag 'binary-compiled-with-profiling-enabled', $file;
+            }
+        } else {
+            if ( ($sec =~ /^GLIBC_.*/) and ($sym eq '_mcount') ) {
+                tag 'binary-compiled-with-profiling-enabled', $file;
+            }
+        }
     }
     foreach (@{$objdump->{NOTES}}) {
-	if ($_ eq 'File format not recognized') {
+        if ($_ eq 'File format not recognized') {
             tag 'apparently-corrupted-elf-binary', $file;
-	} elsif ($_ eq 'File truncated') {
+        } elsif ($_ eq 'File truncated') {
             tag 'apparently-truncated-elf-binary', $file;
-	} elsif ($_ eq 'Packed with UPX') {
-	    tag 'binary-file-compressed-with-upx', $file;
-	} elsif ($_ eq 'Invalid operation') {
-	    tag 'binary-with-bad-dynamic-table', $file unless $file =~ m%^usr/lib/debug/%;
-	}
+        } elsif ($_ eq 'Packed with UPX') {
+            tag 'binary-file-compressed-with-upx', $file;
+        } elsif ($_ eq 'Invalid operation') {
+            tag 'binary-with-bad-dynamic-table', $file unless $file =~ m%^usr/lib/debug/%;
+        }
     }
 }
 
@@ -186,12 +186,12 @@ $madir = $MULTIARCH_DIRS->value($arch);
 sub lib_soname_path {
     my ($dir, @paths) = @_;
     foreach my $path (@paths) {
-	next if $path =~ m%^(?:\.?/)?lib/libnss_[^.]+\.so(?:\.[0-9]+)$%;
-	return 1 if $path =~ m%^(?:\.?/)?lib/[^/]+$%;
-	return 1 if $path =~ m%^(?:\.?/)?usr/lib/[^/]+$%;
-	return 1 if $path =~ m%^(?:\.?/)?usr/X11R6/lib/[^/]+$%;
-	return 1 if defined $dir && $path =~ m%(?:\.?/)?lib/$dir/[^/]++$%;
-	return 1 if defined $dir && $path =~ m%(?:\.?/)?usr/lib/$dir/[^/]++$%;
+        next if $path =~ m%^(?:\.?/)?lib/libnss_[^.]+\.so(?:\.[0-9]+)$%;
+        return 1 if $path =~ m%^(?:\.?/)?lib/[^/]+$%;
+        return 1 if $path =~ m%^(?:\.?/)?usr/lib/[^/]+$%;
+        return 1 if $path =~ m%^(?:\.?/)?usr/X11R6/lib/[^/]+$%;
+        return 1 if defined $dir && $path =~ m%(?:\.?/)?lib/$dir/[^/]++$%;
+        return 1 if defined $dir && $path =~ m%(?:\.?/)?usr/lib/$dir/[^/]++$%;
     }
     return 0;
 }
@@ -213,9 +213,9 @@ foreach my $expected_name (@sonames) {
     $expected_name =~ s/_/-/g;
 
     if ((lc($expected_name) eq $pkg)
-	|| (lc($expected_name) eq $base_pkg)) {
-	$match_found = 1;
-	last;
+        || (lc($expected_name) eq $base_pkg)) {
+        $match_found = 1;
+        last;
     }
 }
 
@@ -250,33 +250,33 @@ foreach my $file (@{$info->sorted_file_info}) {
 
     # Warn about Architecture: all packages that contain shared libraries.
     if ($arch eq 'all') {
-	tag 'arch-independent-package-contains-binary-or-object', $file;
+        tag 'arch-independent-package-contains-binary-or-object', $file;
     }
 
     if ($file =~ m,^etc/,) {
-	tag 'binary-in-etc', $file;
+        tag 'binary-in-etc', $file;
     }
 
     if ($file =~ m,^usr/share/,) {
-	tag 'arch-dependent-file-in-usr-share', $file;
+        tag 'arch-dependent-file-in-usr-share', $file;
     }
 
     # ELF?
     next unless $fileinfo =~ m/^[^,]*\bELF\b/o;
 
     if ($arch ne 'all' and $fileinfo !~ m/$ARCH_REGEX{$arch}/) {
-	if ($file =~ m,(?:^|/)lib(\d{2})/, or $file =~ m,^emul/ia(\d{2}),) {
-	    tag 'binary-from-other-architecture', $file
-		unless ($fileinfo =~ m/$ARCH_REGEX{$1}/);
-	} elsif ($arch eq 'amd64' and $fileinfo =~ m/$ARCH_REGEX{i386}/) {
-	    # Ignore i386 binaries in amd64 packages for right now.
-	} elsif (exists $ARCH_64BIT_EQUIVS{$arch}
-	    and $fileinfo =~ m/$ARCH_REGEX{$ARCH_64BIT_EQUIVS{$arch}}/
-	    and $file =~ m,^lib/modules/,) {
-	    # Allow amd64 kernel modules to be installed on i386.
-	} else {
-	    tag 'binary-from-other-architecture', $file;
-	}
+        if ($file =~ m,(?:^|/)lib(\d{2})/, or $file =~ m,^emul/ia(\d{2}),) {
+            tag 'binary-from-other-architecture', $file
+                unless ($fileinfo =~ m/$ARCH_REGEX{$1}/);
+        } elsif ($arch eq 'amd64' and $fileinfo =~ m/$ARCH_REGEX{i386}/) {
+            # Ignore i386 binaries in amd64 packages for right now.
+        } elsif (exists $ARCH_64BIT_EQUIVS{$arch}
+            and $fileinfo =~ m/$ARCH_REGEX{$ARCH_64BIT_EQUIVS{$arch}}/
+            and $file =~ m,^lib/modules/,) {
+            # Allow amd64 kernel modules to be installed on i386.
+        } else {
+            tag 'binary-from-other-architecture', $file;
+        }
     }
 
     my $strings = slurp_entire_file("strings/$file");
@@ -284,54 +284,54 @@ foreach my $file (@{$info->sorted_file_info}) {
 
     # stripped?
     if ($fileinfo =~ m,not stripped\s*$,o) {
-	# Is it an object file (which generally can not be stripped),
-	# a kernel module, debugging symbols, or perhaps a debugging package?
-	unless ($file =~ m,\.k?o$, or $pkg =~ m/-dbg$/ or $pkg =~ m/debug/
-		or $file =~ m,/lib/debug/, or $file =~ m,\.gox$,o) {
-	    if ($fileinfo =~ m/executable/
-		and $strings =~ m/^Caml1999X0[0-9][0-9]$/m) {
-		# Check for OCaml custom executables (#498138)
-		tag 'ocaml-custom-executable', $file;
-	    } else {
-		tag 'unstripped-binary-or-object', $file;
-	    }
-	}
+        # Is it an object file (which generally can not be stripped),
+        # a kernel module, debugging symbols, or perhaps a debugging package?
+        unless ($file =~ m,\.k?o$, or $pkg =~ m/-dbg$/ or $pkg =~ m/debug/
+                or $file =~ m,/lib/debug/, or $file =~ m,\.gox$,o) {
+            if ($fileinfo =~ m/executable/
+                and $strings =~ m/^Caml1999X0[0-9][0-9]$/m) {
+                # Check for OCaml custom executables (#498138)
+                tag 'ocaml-custom-executable', $file;
+            } else {
+                tag 'unstripped-binary-or-object', $file;
+            }
+        }
     } else {
-	# stripped but a debug or profiling library?
-	if (($file =~ m,/lib/debug/,o) or ($file =~ m,/lib/profile/,o)) {
-	    tag 'library-in-debug-or-profile-should-not-be-stripped', $file;
-	} else {
-	    # appropriately stripped, but is it stripped enough?
-	    if (exists $objdump->{NOTE_SECTION}) {
-		tag 'binary-has-unneeded-section', "$file .note";
-	    }
-	    if (exists $objdump->{COMMENT_SECTION}) {
-		tag 'binary-has-unneeded-section', "$file .comment";
-	    }
-	}
+        # stripped but a debug or profiling library?
+        if (($file =~ m,/lib/debug/,o) or ($file =~ m,/lib/profile/,o)) {
+            tag 'library-in-debug-or-profile-should-not-be-stripped', $file;
+        } else {
+            # appropriately stripped, but is it stripped enough?
+            if (exists $objdump->{NOTE_SECTION}) {
+                tag 'binary-has-unneeded-section', "$file .note";
+            }
+            if (exists $objdump->{COMMENT_SECTION}) {
+                tag 'binary-has-unneeded-section', "$file .comment";
+            }
+        }
     }
 
     # rpath is disallowed, except in private directories
     if (exists $objdump->{RPATH}) {
-	foreach my $rpath (map {File::Spec->canonpath($_)} keys %{$objdump->{RPATH}}) {
-	    next if $rpath =~ m,^/usr/lib/(?:games/)?(?:\Q$pkg\E|\Q$srcpkg\E)(?:/|\z),;
-	    next if $rpath =~ m,^\$\{?ORIGIN\}?,;
-	    next if $directories{$rpath} and $rpath !~ m,^(?:/usr)?/lib(?:/$madir)?/?\z,;
-	    tag 'binary-or-shlib-defines-rpath', "$file $rpath";
-	}
+        foreach my $rpath (map {File::Spec->canonpath($_)} keys %{$objdump->{RPATH}}) {
+            next if $rpath =~ m,^/usr/lib/(?:games/)?(?:\Q$pkg\E|\Q$srcpkg\E)(?:/|\z),;
+            next if $rpath =~ m,^\$\{?ORIGIN\}?,;
+            next if $directories{$rpath} and $rpath !~ m,^(?:/usr)?/lib(?:/$madir)?/?\z,;
+            tag 'binary-or-shlib-defines-rpath', "$file $rpath";
+        }
     }
 
     while (my ($src, $regex) = each %EMBEDDED_LIBRARIES) {
-	if (ref $regex eq 'HASH') {
-	    next if ($proc->pkg_src =~ m/^$regex->{'source'}$/);
+        if (ref $regex eq 'HASH') {
+            next if ($proc->pkg_src =~ m/^$regex->{'source'}$/);
 
-	    $regex = $regex->{'match'};
-	} elsif ($proc->pkg_src eq $src) {
-	    next;
-	}
-	if ($strings =~ /$regex/) {
-	    tag 'embedded-library', "$file: $src";
-	}
+            $regex = $regex->{'match'};
+        } elsif ($proc->pkg_src eq $src) {
+            next;
+        }
+        if ($strings =~ /$regex/) {
+            tag 'embedded-library', "$file: $src";
+        }
     }
 
     # binary or shared object?
@@ -340,70 +340,70 @@ foreach my $file (@{$info->sorted_file_info}) {
 
     # Perl library?
     if ($file =~ m,^usr/lib/perl5/.*\.so$,) {
-	$has_perl_lib = 1;
+        $has_perl_lib = 1;
     }
 
     # PHP extension?
     if ($file =~ m,^usr/lib/php\d/.*\.so$,) {
-	$has_php_ext = 1;
+        $has_php_ext = 1;
     }
 
     # Something other than detached debugging symbols in /usr/lib/debug paths.
     if ($file =~ m,^usr/lib/debug/(?:lib\d*|s?bin|usr|opt|dev|emul)/,) {
-	if (exists($objdump->{NEEDED})) {
-	    tag 'debug-file-should-use-detached-symbols', $file;
-	}
+        if (exists($objdump->{NEEDED})) {
+            tag 'debug-file-should-use-detached-symbols', $file;
+        }
     }
 
     # Detached debugging symbols directly in /usr/lib/debug.
     if ($file =~ m,^usr/lib/debug/[^/]+$,) {
-	unless (exists($objdump->{NEEDED})
-	    || $fileinfo =~ m/statically linked/) {
-	    tag 'debug-symbols-directly-in-usr-lib-debug', $file;
-	}
+        unless (exists($objdump->{NEEDED})
+            || $fileinfo =~ m/statically linked/) {
+            tag 'debug-symbols-directly-in-usr-lib-debug', $file;
+        }
     }
 
     # statically linked?
     if (!exists($objdump->{NEEDED}) || !defined($objdump->{NEEDED})) {
-	if ($fileinfo =~ m/shared object/o) {
+        if ($fileinfo =~ m/shared object/o) {
             # Some exceptions: detached debugging information and the dynamic
             # loader (which itself has no dependencies).
             next if ($file =~ m%^usr/lib/debug/%);
             next if ($file =~ m%^lib(?:|32|64)/(?:[\w/]+/)?ld-[\d.]+\.so$%);
-	    tag 'shared-lib-without-dependency-information', $file;
-	} else {
-	    # Some exceptions: files in /boot, /usr/lib/debug/*, named *-static or
-	    # *.static, or *-static as package-name.
-	    next if ($file =~ m%^boot/%);
-	    next if ($file =~ /[\.-]static$/);
-	    next if ($pkg =~ /-static$/);
-	    # klibc binaries appear to be static.
-	    next if ($objdump->{KLIBC});
-	    # Location of debugging symbols.
-	    next if ($file =~ m%^usr/lib/debug/%);
-	    # ldconfig must be static.
-	    next if ($file eq 'sbin/ldconfig');
-	    tag 'statically-linked-binary', $file;
-	}
+            tag 'shared-lib-without-dependency-information', $file;
+        } else {
+            # Some exceptions: files in /boot, /usr/lib/debug/*, named *-static or
+            # *.static, or *-static as package-name.
+            next if ($file =~ m%^boot/%);
+            next if ($file =~ /[\.-]static$/);
+            next if ($pkg =~ /-static$/);
+            # klibc binaries appear to be static.
+            next if ($objdump->{KLIBC});
+            # Location of debugging symbols.
+            next if ($file =~ m%^usr/lib/debug/%);
+            # ldconfig must be static.
+            next if ($file eq 'sbin/ldconfig');
+            tag 'statically-linked-binary', $file;
+        }
     } else {
-	my $lib;
-	my $no_libc = 1;
-	$needs_depends_line = 1;
-	for $lib (@{$objdump->{NEEDED}}) {
-	    if ($lib =~ /^libc\.so\.(\d+.*)/) {
-		$needs_libc = "libc$1";
-		$needs_libc_file = $file unless $needs_libc_file;
-		$needs_libc_count++;
-		$no_libc = 0;
-	    }
-	}
-	if ($no_libc and not $file =~ m,/libc\b,) {
-	    if ($fileinfo =~ m/shared object/) {
-		tag 'library-not-linked-against-libc', $file;
-	    } else {
-		tag 'program-not-linked-against-libc', $file;
-	    }
-	}
+        my $lib;
+        my $no_libc = 1;
+        $needs_depends_line = 1;
+        for $lib (@{$objdump->{NEEDED}}) {
+            if ($lib =~ /^libc\.so\.(\d+.*)/) {
+                $needs_libc = "libc$1";
+                $needs_libc_file = $file unless $needs_libc_file;
+                $needs_libc_count++;
+                $no_libc = 0;
+            }
+        }
+        if ($no_libc and not $file =~ m,/libc\b,) {
+            if ($fileinfo =~ m/shared object/) {
+                tag 'library-not-linked-against-libc', $file;
+            } else {
+                tag 'program-not-linked-against-libc', $file;
+            }
+        }
     }
 }
 
@@ -425,15 +425,15 @@ if ($needs_depends_line) {
         my $re = qr/(?:^|,)\s*\Q$needs_libc\E\b/;
         if ($depends !~ /$re/) {
             my $others = '';
-	    $needs_libc_count--;
+            $needs_libc_count--;
             if ($needs_libc_count > 0) {
                 $others = " and $needs_libc_count others";
             }
             tag 'missing-dependency-on-libc',
-		"needed by $needs_libc_file$others";
+                "needed by $needs_libc_file$others";
         }
     } elsif (!$depends) {
-	tag 'missing-depends-line';
+        tag 'missing-depends-line';
     }
 }
 
@@ -441,14 +441,14 @@ if ($needs_depends_line) {
 if ($has_perl_lib) {
     my $re = qr/(?:^|,)\s*perlapi-[\d.]+(?:\s*\[[^\]]+\])?\s*(?:,|\z)/;
     unless ($depends =~ /$re/) {
-	tag 'missing-dependency-on-perlapi';
+        tag 'missing-dependency-on-perlapi';
     }
 }
 
 # Check for a phpapi- dependency.
 if ($has_php_ext) {
     unless ($depends =~ /(?:^|,)\s*phpapi-[\d\w+]+\s*(?:,|\z)/) {
-	tag 'missing-dependency-on-phpapi';
+        tag 'missing-dependency-on-phpapi';
     }
 }
 
@@ -457,7 +457,7 @@ if ($has_php_ext) {
 1;
 
 # Local Variables:
-# indent-tabs-mode: t
+# indent-tabs-mode: nil
 # cperl-indent-level: 4
 # End:
-# vim: syntax=perl ts=8 sw=4
+# vim: syntax=perl sw=4 sts=4 sr et

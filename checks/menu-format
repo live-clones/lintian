@@ -46,18 +46,18 @@ my @req_tags=qw(needs section title command);
 
 # This is a list of all known tags.
 my @known_tags=qw(
-	needs
-	section
-	title
-	sort
-	command
-	longtitle
-	icon
-	icon16x16
-	icon32x32
-	description
-	hotkey
-	hints
+        needs
+        section
+        title
+        sort
+        command
+        longtitle
+        icon
+        icon16x16
+        icon32x32
+        description
+        hotkey
+        hints
     );
 
 # These 'needs' tags are always valid, no matter the context, and no other
@@ -74,64 +74,64 @@ my @root_sections = ('Applications', 'Games', 'Help', 'Screen',
 
 # This is a list of all valid sections a menu item or submenu can go in.
 my @sections = ('Applications/Accessibility',
-		'Applications/Amateur Radio',
-		'Applications/Data Management',
-		'Applications/Editors',
-		'Applications/Education',
-		'Applications/Emulators',
-		'Applications/File Management',
-		'Applications/Graphics',
-		'Applications/Mobile Devices',
-		'Applications/Network/Communication',
-		'Applications/Network/File Transfer',
-		'Applications/Network/Monitoring',
-		'Applications/Network/Web Browsing',
-		'Applications/Network/Web News',
-		'Applications/Office',
-		'Applications/Programming',
-		'Applications/Project Management',
-		'Applications/Science/Astronomy',
-		'Applications/Science/Biology',
-		'Applications/Science/Chemistry',
-		'Applications/Science/Data Analysis',
-		'Applications/Science/Electronics',
-		'Applications/Science/Engineering',
-		'Applications/Science/Geoscience',
-		'Applications/Science/Mathematics',
-		'Applications/Science/Medicine',
-		'Applications/Science/Physics',
-		'Applications/Science/Social',
-		'Applications/Shells',
-		'Applications/Sound',
-		'Applications/System/Administration',
-		'Applications/System/Hardware',
-		'Applications/System/Language Environment',
-		'Applications/System/Monitoring',
-		'Applications/System/Package Management',
-		'Applications/System/Security',
-		'Applications/Terminal Emulators',
-		'Applications/Text',
-		'Applications/TV and Radio',
-		'Applications/Video',
-		'Applications/Viewers',
-		'Applications/Web Development',
-		'Games/Action',
-		'Games/Adventure',
-		'Games/Blocks',
-		'Games/Board',
-		'Games/Card',
-		'Games/Puzzles',
-		'Games/Simulation',
-		'Games/Strategy',
-		'Games/Tools',
-		'Games/Toys',
-		'Help',
-		'Screen/Saving',
-		'Screen/Locking',
-		'Window Managers',
-		'FVWM Modules',
-		'Window Maker'
-	       );
+                'Applications/Amateur Radio',
+                'Applications/Data Management',
+                'Applications/Editors',
+                'Applications/Education',
+                'Applications/Emulators',
+                'Applications/File Management',
+                'Applications/Graphics',
+                'Applications/Mobile Devices',
+                'Applications/Network/Communication',
+                'Applications/Network/File Transfer',
+                'Applications/Network/Monitoring',
+                'Applications/Network/Web Browsing',
+                'Applications/Network/Web News',
+                'Applications/Office',
+                'Applications/Programming',
+                'Applications/Project Management',
+                'Applications/Science/Astronomy',
+                'Applications/Science/Biology',
+                'Applications/Science/Chemistry',
+                'Applications/Science/Data Analysis',
+                'Applications/Science/Electronics',
+                'Applications/Science/Engineering',
+                'Applications/Science/Geoscience',
+                'Applications/Science/Mathematics',
+                'Applications/Science/Medicine',
+                'Applications/Science/Physics',
+                'Applications/Science/Social',
+                'Applications/Shells',
+                'Applications/Sound',
+                'Applications/System/Administration',
+                'Applications/System/Hardware',
+                'Applications/System/Language Environment',
+                'Applications/System/Monitoring',
+                'Applications/System/Package Management',
+                'Applications/System/Security',
+                'Applications/Terminal Emulators',
+                'Applications/Text',
+                'Applications/TV and Radio',
+                'Applications/Video',
+                'Applications/Viewers',
+                'Applications/Web Development',
+                'Games/Action',
+                'Games/Adventure',
+                'Games/Blocks',
+                'Games/Board',
+                'Games/Card',
+                'Games/Puzzles',
+                'Games/Simulation',
+                'Games/Strategy',
+                'Games/Tools',
+                'Games/Toys',
+                'Help',
+                'Screen/Saving',
+                'Screen/Locking',
+                'Window Managers',
+                'FVWM Modules',
+                'Window Maker'
+               );
 
 # Authorative source of desktop keys:
 # http://standards.freedesktop.org/desktop-entry-spec/1.0/
@@ -404,11 +404,11 @@ foreach my $file (@{$info->sorted_index}) {
     tag 'deprecated-kdelnk-file', $file if ($file =~ m,\.kdelnk$,);
 
     if ($index_info->{type} =~ m/[-h]/ &&
-	$file =~ m,^usr/share/applications/.*\.desktop$,) {
+        $file =~ m,^usr/share/applications/.*\.desktop$,) {
 
-	if ($operm & 0100 or $operm & 010 or $operm & 01) {
+        if ($operm & 0100 or $operm & 010 or $operm & 01) {
            tag 'executable-desktop-file', sprintf('%s %04o',$file,$operm);
-	}
+        }
         unless ($file =~ m,template,o) {
             push (@desktop_files, $file);
         }
@@ -432,46 +432,46 @@ foreach my $menufile (@menufiles) {
 
     my $menufile_line ='';
     open (IN, '<', $menufile) or
-	fail("cannot open menu file $menufile for reading.");
+        fail("cannot open menu file $menufile for reading.");
     # line below is commented out in favour of the while loop
     # do { $_=<IN>; } while defined && (m/^\s* \#/ || m/^\s*$/);
     while (<IN>) {
-	if (m/^\s*\#/ || m/^\s*$/) {
-	    next;
-	} else {
-	    $menufile_line = $_;
-	    last;
-	}
+        if (m/^\s*\#/ || m/^\s*$/) {
+            next;
+        } else {
+            $menufile_line = $_;
+            last;
+        }
     }
 
     # Check first line of file to see if it matches the old menu file format.
     if ($menufile_line =~ m/^(?!\?package\(.*\)).* .* .* .* "?.*"? .*$/o) {
-	tag 'old-format-menu-file', $fullname;
-	close IN;
-	next;
+        tag 'old-format-menu-file', $fullname;
+        close IN;
+        next;
     } elsif ($menufile_line =~ m/^!C\s*menu-2/o) {
-	# we can't parse that yet
-	close IN;
-	next;
+        # we can't parse that yet
+        close IN;
+        next;
     }
 
     # Parse entire file as a new format menu file.
     my $line='';
     my $lc=0;
     do {
-	$lc++;
+        $lc++;
 
-	# Ignore lines that are comments.
-	if ($menufile_line =~ m/^\s*\#/o) {
-	    next;
-	}
-	$line .= $menufile_line;
-	# Note that I allow whitespace after the continuation character.
-	# This is caught by VerifyLine().
-	if (! ($menufile_line =~ m/\\\s*?$/)) {
-	    VerifyLine($pkg, $info, $type, $menufile, $fullname, $line, $lc);
-	    $line='';
-	}
+        # Ignore lines that are comments.
+        if ($menufile_line =~ m/^\s*\#/o) {
+            next;
+        }
+        $line .= $menufile_line;
+        # Note that I allow whitespace after the continuation character.
+        # This is caught by VerifyLine().
+        if (! ($menufile_line =~ m/\\\s*?$/)) {
+            VerifyLine($pkg, $info, $type, $menufile, $fullname, $line, $lc);
+            $line='';
+        }
     } while ($menufile_line = <IN>);
     VerifyLine($pkg, $info, $type, $menufile, $fullname, $line, $lc);
 
@@ -498,7 +498,7 @@ sub VerifyLine {
     # This is in here to fix a common mistake: whitespace after a '\'
     # character.
     if ($line =~ s/\\\s+\n/ /mgo) {
-	tag 'whitespace-after-continuation-character', "$fullname:$linecount";
+        tag 'whitespace-after-continuation-character', "$fullname:$linecount";
     }
 
     # Ignore lines that are all whitespace or empty.
@@ -509,14 +509,14 @@ sub VerifyLine {
 
     # Start by testing the package check.
     if (not $line =~ m/^\?package\((.*?)\):/o) {
-	tag 'bad-test-in-menu-item', "$fullname:$linecount";
-	return;
+        tag 'bad-test-in-menu-item', "$fullname:$linecount";
+        return;
     }
     my $pkg_test = $1;
     my %tested_packages = map { $_ => 1 } split( /\s*,\s*/, $pkg_test);
     my $tested_packages = scalar keys %tested_packages;
     unless (exists $tested_packages{$pkg}) {
-	tag 'pkg-not-in-package-test', "$pkg_test $fullname";
+        tag 'pkg-not-in-package-test', "$pkg_test $fullname";
     }
     $line =~ s/^\?package\(.*?\)://;
 
@@ -528,49 +528,49 @@ sub VerifyLine {
     # when we have no more matches, there should be no text left on
     # the line - if there is, it's a parse error.
     while ($line =~ m/
-	   \s*?			# allow whitespace between pairs
-	   (			# capture what follows in $1, it's our tag
-	    [^\"\s=]		# a non-quote, non-whitespace, character
-	    *			# match as many as we can
-	   )
-	   =
-	   (			# capture what follows in $2, it's our value
-	    (?:
-	     \"			# this is a quoted string
-	     (?:
-	      \\.		# any quoted character
-	      |			# or
-	      [^\"]		# a non-quote character
-	     )
-	     *			# repeat as many times as possible
-	     \"			# end of the quoted value string
-	    )
-	    |			# the other possibility is a non-quoted string
-	    (?:
-	     [^\"\s]		# a non-quote, non-whitespace character
-	     *			# match as many times as we can
-	    )
-	   )
-	   /ogcx) {
-	my $tag = $1;
-	my $value = $2;
+           \s*?                 # allow whitespace between pairs
+           (                    # capture what follows in $1, it's our tag
+            [^\"\s=]            # a non-quote, non-whitespace, character
+            *                   # match as many as we can
+           )
+           =
+           (                    # capture what follows in $2, it's our value
+            (?:
+             \"                 # this is a quoted string
+             (?:
+              \\.               # any quoted character
+              |                 # or
+              [^\"]             # a non-quote character
+             )
+             *                  # repeat as many times as possible
+             \"                 # end of the quoted value string
+            )
+            |                   # the other possibility is a non-quoted string
+            (?:
+             [^\"\s]            # a non-quote, non-whitespace character
+             *                  # match as many times as we can
+            )
+           )
+           /ogcx) {
+        my $tag = $1;
+        my $value = $2;
 
-	if (exists $vals{$tag}) {
-	    tag 'duplicated-tag-in-menu-item', "$fullname $1:$linecount";
-	}
+        if (exists $vals{$tag}) {
+            tag 'duplicated-tag-in-menu-item', "$fullname $1:$linecount";
+        }
 
-	# If the value was quoted, remove those quotes.
-	if ($value =~ m/^\"(.*)\"$/) {
-	    $value = $1;
-	} else {
-	    tag 'unquoted-string-in-menu-item', "$fullname $1:$linecount";
-	}
+        # If the value was quoted, remove those quotes.
+        if ($value =~ m/^\"(.*)\"$/) {
+            $value = $1;
+        } else {
+            tag 'unquoted-string-in-menu-item', "$fullname $1:$linecount";
+        }
 
-	# If the value has escaped characters, remove the
-	# escapes.
-	$value =~ s/\\(.)/$1/g;
+        # If the value has escaped characters, remove the
+        # escapes.
+        $value =~ s/\\(.)/$1/g;
 
-	$vals{$tag} = $value;
+        $vals{$tag} = $value;
     }
 
     # This is not really a no-op. Note the use of the /c
@@ -585,39 +585,39 @@ sub VerifyLine {
     # If that loop didn't match up to end of line, we have a
     # problem..
     if (pos($line) < length($line)) {
-	tag 'unparsable-menu-item', "$fullname:$linecount";
-	# Give up now, before things just blow up in our face.
-	return;
+        tag 'unparsable-menu-item', "$fullname:$linecount";
+        # Give up now, before things just blow up in our face.
+        return;
     }
 
     # Now validate the data in the menu file.
 
     # Test for important tags.
     foreach my $tag (@req_tags) {
-	unless ( exists($vals{$tag}) && defined($vals{$tag}) ) {
-	    tag 'menu-item-missing-required-tag', "$tag $fullname:$linecount";
-	    # Just give up right away, if such an essential tag is missing,
-	    # chance is high the rest doesn't make sense either. And now all
-	    # following checks can assume those tags to be there
-	    return;
-	}
+        unless ( exists($vals{$tag}) && defined($vals{$tag}) ) {
+            tag 'menu-item-missing-required-tag', "$tag $fullname:$linecount";
+            # Just give up right away, if such an essential tag is missing,
+            # chance is high the rest doesn't make sense either. And now all
+            # following checks can assume those tags to be there
+            return;
+        }
     }
 
     # Make sure all tags are known.
     foreach my $tag (keys %vals) {
-	if (! $known_tags_hash{$tag}) {
-	    tag 'menu-item-contains-unknown-tag', "$tag $fullname:$linecount";
-	}
+        if (! $known_tags_hash{$tag}) {
+            tag 'menu-item-contains-unknown-tag', "$tag $fullname:$linecount";
+        }
     }
 
     # Sanitize the section tag
     my $section = $vals{'section'};
-    $section =~ tr:/:/:s;	# eliminate duplicate slashes. # Hallo emacs ;;
-    $section =~ s:/$::;		# remove trailing slash.
+    $section =~ tr:/:/:s;       # eliminate duplicate slashes. # Hallo emacs ;;
+    $section =~ s:/$::;         # remove trailing slash.
 
     # Be sure the command is provided by the package.
     my ($okay, $command) = VerifyCmd ($fullname, $linecount, $vals{'command'},
-				      $pkg, $info);
+                                      $pkg, $info);
     tag 'menu-command-not-in-package', "$fullname:$linecount $command"
         unless ($okay
                 or not $command
@@ -625,35 +625,35 @@ sub VerifyLine {
                 or ($section =~ m:^(WindowManagers/Modules|FVWM Modules|Window Maker):));
 
     if (exists($vals{'icon'})) {
-	VerifyIcon($info, $menufile, $fullname, $linecount, $vals{'icon'}, 32);
+        VerifyIcon($info, $menufile, $fullname, $linecount, $vals{'icon'}, 32);
     }
     if (exists($vals{'icon32x32'})) {
-	VerifyIcon($info, $menufile, $fullname, $linecount, $vals{'icon32x32'}, 32);
+        VerifyIcon($info, $menufile, $fullname, $linecount, $vals{'icon32x32'}, 32);
     }
     if (exists($vals{'icon16x16'})) {
-	VerifyIcon($info, $menufile, $fullname, $linecount, $vals{'icon16x16'}, 16);
+        VerifyIcon($info, $menufile, $fullname, $linecount, $vals{'icon16x16'}, 16);
     }
 
     # Check the needs tag.
     my $needs = lc($vals{'needs'}); # needs is case insensitive.
 
     if ($section =~ m:^(WindowManagers/Modules|FVWM Modules|Window Maker):) {
-	# WM/Modules: needs must not be the regular ones nor wm
-	if ($needs_tag_vals_hash{$needs} or $needs eq 'wm') {
-	    tag 'non-wm-module-in-wm-modules-menu-section', "$needs $fullname:$linecount";
-	}
+        # WM/Modules: needs must not be the regular ones nor wm
+        if ($needs_tag_vals_hash{$needs} or $needs eq 'wm') {
+            tag 'non-wm-module-in-wm-modules-menu-section', "$needs $fullname:$linecount";
+        }
     } elsif ($section =~ m:^Window ?Managers:) {
-	# Other WM sections: needs must be wm
+        # Other WM sections: needs must be wm
         if ($needs ne 'wm') {
-	    tag 'non-wm-in-windowmanager-menu-section', "$needs $fullname:$linecount";
-	}
+            tag 'non-wm-in-windowmanager-menu-section', "$needs $fullname:$linecount";
+        }
     } else {
-	# Any other section: just only the general ones
-	if ($needs eq 'dwww') {
-	    tag 'menu-item-needs-dwww', "$fullname:$linecount";
-	} elsif (not $needs_tag_vals_hash{$needs}) {
-	    tag 'menu-item-needs-tag-has-unknown-value', "$needs $fullname:$linecount";
-	}
+        # Any other section: just only the general ones
+        if ($needs eq 'dwww') {
+            tag 'menu-item-needs-dwww', "$fullname:$linecount";
+        } elsif (not $needs_tag_vals_hash{$needs}) {
+            tag 'menu-item-needs-tag-has-unknown-value', "$needs $fullname:$linecount";
+        }
     }
 
     # Check the section tag
@@ -690,26 +690,26 @@ sub VerifyIcon {
     local *IN;
 
     if ($icon eq 'none') {
-	tag 'menu-item-uses-icon-none', "$fullname:$linecount";
-	return;
+        tag 'menu-item-uses-icon-none', "$fullname:$linecount";
+        return;
     }
 
     $icon =~ s|^/*||og;
 
     if (not ($icon =~ m/\.xpm$/i)) {
-	tag 'menu-icon-not-in-xpm-format', $icon;
-	return;
+        tag 'menu-icon-not-in-xpm-format', $icon;
+        return;
     }
 
     # Try the explicit location, and if that fails, try the standard path.
     my $iconfile = $info->unpacked($icon);
     if (! -f $iconfile) {
-	$iconfile = $info->unpacked("/usr/share/pixmaps/$icon");
+        $iconfile = $info->unpacked("/usr/share/pixmaps/$icon");
     }
 
     if (! open (IN, '<', $iconfile)) {
-	tag 'menu-icon-missing', $icon;
-	return;
+        tag 'menu-icon-missing', $icon;
+        return;
     }
 
     my $parse = 'XPM header';
@@ -726,7 +726,7 @@ sub VerifyIcon {
     my $cpp = $4 + 0;
 
     if ($width > $size || $height > $size) {
-	tag 'menu-icon-too-big', "$icon: ${width}x${height} > ${size}x${size}";
+        tag 'menu-icon-too-big', "$icon: ${width}x${height} > ${size}x${size}";
     }
 
     close IN or die;
@@ -744,7 +744,7 @@ sub VerifyDesktopFile {
     my ($desktopfile, $file, $pkg, $info) = @_;
     my %vals;
     open (DESKTOP, '<', $info->unpacked($file))
-	or fail("cannot open desktop file $file: $!");
+        or fail("cannot open desktop file $file: $!");
     my ($line, $saw_first, $warned_cr);
     my @pending;
     while (defined ($line = <DESKTOP>)) {
@@ -765,32 +765,32 @@ sub VerifyDesktopFile {
             tag 'desktop-contains-deprecated-header', "$file:$." if ($line =~ /^\[KDE Desktop Entry\]\s*$/);
         }
 
-	# Tag = Value.	For most errors, just add the error to pending rather
-	# than warning on it immediately since we want to not warn on tag
-	# errors if we didn't know the file type.
-	#
-	# TODO: We do not check for properly formatted localised values for
-	# keys but might be worth checking if they are properly formatted (not
-	# their value)
-	if ($line =~ /^(.*?)\s*=\s*(.*)$/) {
-	    my ($tag, $value) = ($1, $2);
-	    my $basetag = $tag;
-	    my ($encoding) = ($basetag =~ s/\[([^\]]+)\]$//);
-	    if (exists $vals{$tag}) {
-		tag 'duplicated-key-in-desktop-entry', "$file:$. $tag";
-	    } elsif ($deprecated_desktop_keys{$basetag}) {
-		if ($basetag eq 'Encoding') {
-		    push (@pending, [ 'desktop-entry-contains-encoding-key', "$file:$. $tag" ]);
-		} else {
-		    push (@pending, [ 'desktop-entry-contains-deprecated-key', "$file:$. $tag" ]);
-		}
-	    } elsif (	 not $known_desktop_keys{$basetag}
-		     and not $kde_desktop_keys{$basetag}
-		     and not $basetag =~ /^X-/) {
-		push (@pending, [ 'desktop-entry-contains-unknown-key', "$file:$. $tag" ]);
-	    }
-	    $vals{$tag} = $value;
-	}
+        # Tag = Value.  For most errors, just add the error to pending rather
+        # than warning on it immediately since we want to not warn on tag
+        # errors if we didn't know the file type.
+        #
+        # TODO: We do not check for properly formatted localised values for
+        # keys but might be worth checking if they are properly formatted (not
+        # their value)
+        if ($line =~ /^(.*?)\s*=\s*(.*)$/) {
+            my ($tag, $value) = ($1, $2);
+            my $basetag = $tag;
+            my ($encoding) = ($basetag =~ s/\[([^\]]+)\]$//);
+            if (exists $vals{$tag}) {
+                tag 'duplicated-key-in-desktop-entry', "$file:$. $tag";
+            } elsif ($deprecated_desktop_keys{$basetag}) {
+                if ($basetag eq 'Encoding') {
+                    push (@pending, [ 'desktop-entry-contains-encoding-key', "$file:$. $tag" ]);
+                } else {
+                    push (@pending, [ 'desktop-entry-contains-deprecated-key', "$file:$. $tag" ]);
+                }
+            } elsif (    not $known_desktop_keys{$basetag}
+                     and not $kde_desktop_keys{$basetag}
+                     and not $basetag =~ /^X-/) {
+                push (@pending, [ 'desktop-entry-contains-unknown-key', "$file:$. $tag" ]);
+            }
+            $vals{$tag} = $value;
+        }
     }
     close DESKTOP;
 
@@ -799,7 +799,7 @@ sub VerifyDesktopFile {
 
     # Now we can issue any pending tags.
     for my $pending (@pending) {
-	tag @$pending;
+        tag @$pending;
     }
 
     # Test for important keys.
@@ -817,7 +817,7 @@ sub VerifyDesktopFile {
     # codes in Exec for desktop files.
     if ($file =~ m,^usr/share/applications/, and $vals{'Exec'} and $vals{'Exec'} =~ /\S/) {
         my ($okay, $command) = VerifyCmd ($file, undef, $vals{'Exec'}, $pkg,
-					  $info);
+                                          $info);
         tag 'desktop-command-not-in-package', "$file $command"
             unless $okay or $command eq 'kcmshell';
     }
@@ -833,7 +833,7 @@ sub VerifyDesktopFile {
                 tag 'desktop-entry-uses-reserved-category', "$cat $file"
                     unless $vals{'OnlyShowIn'};
                 $saw_main = 1;
-		$in_reserved = 1;
+                $in_reserved = 1;
             } elsif (not $categories{$cat} and not $main_categories{$cat}) {
                 tag 'desktop-entry-invalid-category', "$cat $file";
             } elsif ($main_categories{$cat}) {
@@ -850,10 +850,10 @@ sub VerifyDesktopFile {
     # more than one environment.  In that case, the application probably
     # should be using NotShowIn instead.
     if (defined $vals{OnlyShowIn} and not $in_reserved) {
-	my @envs = split (';', $vals{OnlyShowIn});
-	if (@envs > 1) {
-	    tag 'desktop-entry-limited-to-environments', $file;
-	}
+        my @envs = split (';', $vals{OnlyShowIn});
+        if (@envs > 1) {
+            tag 'desktop-entry-limited-to-environments', $file;
+        }
     }
 }
 
@@ -900,33 +900,33 @@ sub VerifyCmd {
                 $cmd = $com[0];
             } else {
                 $cmd = $wrapper;
-		undef $wrapper;
+                undef $wrapper;
             }
         }
         tag 'su-wrapper-without--c', "$location $wrapper" unless $cmd;
-	if ($wrapper && $wrapper !~ /su-to-root/ && $wrapper ne $pkg) {
-	    tag 'su-wrapper-not-su-to-root', "$location $wrapper";
-	}
+        if ($wrapper && $wrapper !~ /su-to-root/ && $wrapper ne $pkg) {
+            tag 'su-wrapper-not-su-to-root', "$location $wrapper";
+        }
     } else {
         $cmd = $com[0];
     }
     my $cmd_file = $cmd;
     if ($cmd_file) {
-	$cmd_file =~ s,^/,,;
+        $cmd_file =~ s,^/,,;
     }
     my $okay = $cmd
-	&& ($cmd =~ /^[\'\"]/
-	    || $info->index->{$cmd_file}
-	    || $cmd =~ m,^(/bin/)?sh,
-	    || $cmd =~ m,^(/usr/bin/)?sensible-(pager|editor|browser),
-	    || grep { $info->index->{$_ . $cmd} } @path);
+        && ($cmd =~ /^[\'\"]/
+            || $info->index->{$cmd_file}
+            || $cmd =~ m,^(/bin/)?sh,
+            || $cmd =~ m,^(/usr/bin/)?sensible-(pager|editor|browser),
+            || grep { $info->index->{$_ . $cmd} } @path);
     return ($okay, $cmd_file);
 }
 
 1;
 
 # Local Variables:
-# indent-tabs-mode: t
+# indent-tabs-mode: nil
 # cperl-indent-level: 4
 # End:
-# vim: syntax=perl ts=8 sw=4
+# vim: syntax=perl sw=4 sts=4 sr et

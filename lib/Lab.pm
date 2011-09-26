@@ -74,9 +74,9 @@ sub is_lab {
 
     return unless $self->{dir};
     return -d "$self->{dir}/binary"
-	&& -d "$self->{dir}/udeb"
-	&& -d "$self->{dir}/source"
-	&& -d "$self->{dir}/info";
+        && -d "$self->{dir}/udeb"
+        && -d "$self->{dir}/source"
+        && -d "$self->{dir}/info";
 }
 
 sub _init {
@@ -86,34 +86,34 @@ sub _init {
         # Make sure we can always find it, even if we chdir around a lot.
         my $absdir = Cwd::realpath($dir);
         fail("Cannot determine the absolute path of $dir: $!") unless($absdir);
-	$self->{mode} = 'static';
-	$self->{dir} = $absdir;
+        $self->{mode} = 'static';
+        $self->{dir} = $absdir;
 
         # This code is here fore BACKWARDS COMPATABILITY!
         #  - we can kill it when LAB_FORMAT goes from 10 to 11.
         #  Basically this auto-upgrades existing static labs to support changes files
-	if (-d "$absdir" && ! -d "$absdir/changes") {
-	    mkdir("$absdir/changes", 0777)
-		or fail("cannot create lab directory $absdir/changes");
-	}
+        if (-d "$absdir" && ! -d "$absdir/changes") {
+            mkdir("$absdir/changes", 0777)
+                or fail("cannot create lab directory $absdir/changes");
+        }
     } else {
-	$self->{mode} = 'temporary';
+        $self->{mode} = 'temporary';
 
-	my $created = 0;
-	for (1..10) {
+        my $created = 0;
+        for (1..10) {
             my $absdir;
             $dir = tmpnam(); # Not always absolute (e.g. if TMPDIR is relative)
             $absdir = Cwd::realpath($dir);
             fail("Cannot determine the absolute path of $dir: $!")
                 unless $absdir;
-	    if ($self->_do_setup( $absdir )) {
-		$created = 1;
-		last;
-	    }
-	}
-	unless ($created) {
-	    fail("cannot create lab directory $dir");
-	}
+            if ($self->_do_setup( $absdir )) {
+                $created = 1;
+                last;
+            }
+        }
+        unless ($created) {
+            fail("cannot create lab directory $dir");
+        }
     }
 
     return 1;
@@ -124,8 +124,8 @@ sub setup_static {
     my ( $self ) = @_;
 
     unless ( $self->{mode} eq 'static' and $self->{dir} ) {
-	warning('no laboratory specified (need to define LINTIAN_LAB)');
-	return 0;
+        warning('no laboratory specified (need to define LINTIAN_LAB)');
+        return 0;
     }
 
     return $self->_do_setup( $self->{dir} );
@@ -142,26 +142,26 @@ sub _do_setup {
     # create lab directory
     # (Note, that the mode 0777 is reduced by the current umask.)
     unless (-d $dir && ( $self->{mode} eq 'static' )) {
-    	mkdir($dir,0777) or return 0;
+        mkdir($dir,0777) or return 0;
     }
 
     # create base directories
     for my $subdir (qw( binary source udeb changes info )) {
-	my $fulldir = "$dir/$subdir";
-	if (not -d $fulldir) {
-	    mkdir($fulldir, 0777)
-		or fail("cannot create lab directory $fulldir");
-	}
+        my $fulldir = "$dir/$subdir";
+        if (not -d $fulldir) {
+            mkdir($fulldir, 0777)
+                or fail("cannot create lab directory $fulldir");
+        }
     }
 
     # Just create empty files if they don't already exist.  If they do already
     # exist, we need to keep the old files so that the list-* unpack programs
     # can analyze what changed.
     for my $pkgtype (qw( binary source udeb )) {
-	if (not -f "$dir/info/$pkgtype-packages") {
-	    touch_file("$dir/info/$pkgtype-packages")
-		or fail("cannot create $pkgtype package list");
-	}
+        if (not -f "$dir/info/$pkgtype-packages") {
+            touch_file("$dir/info/$pkgtype-packages")
+                or fail("cannot create $pkgtype package list");
+        }
     }
 
     $self->{dir} = $dir;
@@ -183,14 +183,14 @@ sub _populate_with_dist {
     my $v = $Lintian::Output::GLOBAL->verbosity_level() > 0 ? '-v' : '';
     my %opts = ( out => $Lintian::Output::GLOBAL->stdout );
     spawn(\%opts, ["$LINTIAN_ROOT/unpack/list-binpkg",
-		  "$self->{dir}/info/binary-packages", $v])
-	or fail('cannot create binary package list');
+                  "$self->{dir}/info/binary-packages", $v])
+        or fail('cannot create binary package list');
     spawn(\%opts, ["$LINTIAN_ROOT/unpack/list-srcpkg",
-		  "$self->{dir}/info/source-packages", $v])
-	or fail('cannot create source package list');
+                  "$self->{dir}/info/source-packages", $v])
+        or fail('cannot create source package list');
     spawn(\%opts, ["$LINTIAN_ROOT/unpack/list-binpkg",
-		  "$self->{dir}/info/udeb-packages", '-u', $v])
-	or fail('cannot create udeb package list');
+                  "$self->{dir}/info/udeb-packages", '-u', $v])
+        or fail('cannot create udeb package list');
 
     return 1;
 }
@@ -201,8 +201,8 @@ sub delete_static {
     my ( $self ) = @_;
 
     unless ( $self->{mode} eq 'static' and $self->{dir} ) {
-	warning('no laboratory specified (need to define LINTIAN_LAB)');
-	return 0;
+        warning('no laboratory specified (need to define LINTIAN_LAB)');
+        return 0;
     }
 
     return $self->_do_delete;
@@ -232,39 +232,39 @@ sub _do_delete {
 
     # does the lab exist?
     unless (-d $self->{dir}) {
-		# no.
-		warning("cannot remove lab in directory $self->{dir} ! (directory does not exist)");
-		return 0;
+        # no.
+        warning("cannot remove lab in directory $self->{dir} ! (directory does not exist)");
+        return 0;
     }
 
     # sanity check if $self->{dir} really points to a lab :)
     unless (-d "$self->{dir}/binary") {
-		# binary/ subdirectory does not exist--empty directory?
-		my @t = glob("$self->{dir}/*");
-		if ($#t+1 <= 2) {
-			# yes, empty directory--skip it
-			return 1;
-		} else {
-			# non-empty directory that does not look like a lintian lab!
-			warning("directory $self->{dir} does not look like a lab! (please remove it yourself)");
-			return 0;
-		}
+        # binary/ subdirectory does not exist--empty directory?
+        my @t = glob("$self->{dir}/*");
+        if ($#t+1 <= 2) {
+            # yes, empty directory--skip it
+            return 1;
+        } else {
+            # non-empty directory that does not look like a lintian lab!
+            warning("directory $self->{dir} does not look like a lab! (please remove it yourself)");
+            return 0;
+        }
     }
 
     # looks ok.
     unless (delete_dir("$self->{dir}/binary",
-		       "$self->{dir}/source",
-		       "$self->{dir}/udeb",
-		       "$self->{dir}/changes",
-		       "$self->{dir}/info")) {
-		warning("cannot remove lab directory $self->{dir} (please remove it yourself)");
+                       "$self->{dir}/source",
+                       "$self->{dir}/udeb",
+                       "$self->{dir}/changes",
+                       "$self->{dir}/info")) {
+        warning("cannot remove lab directory $self->{dir} (please remove it yourself)");
     }
 
     # dynamic lab?
     if ($self->{mode} eq 'temporary') {
-		if (rmdir($self->{dir}) != 1) {
-			warning("cannot remove lab directory $self->{dir} (please remove it yourself)");
-		}
+        if (rmdir($self->{dir}) != 1) {
+            warning("cannot remove lab directory $self->{dir} (please remove it yourself)");
+        }
     }
 
     $self->{dir} = '';
@@ -322,4 +322,8 @@ sub _supports_multiple_architectures{
 
 1;
 
-# vim: ts=4 sw=4 noet
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

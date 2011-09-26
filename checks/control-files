@@ -64,20 +64,20 @@ foreach my $file (sort keys %$cindex) {
 
     # valid control file?
     unless ( $ctrl->known($file) ) {
-	if ( $ctrl_alt->known($file) ) {
-	    tag 'not-allowed-control-file', $file;
-	    next;
-	} else {
-	    tag 'unknown-control-file', $file;
-	    next;
-	}
+        if ( $ctrl_alt->known($file) ) {
+            tag 'not-allowed-control-file', $file;
+            next;
+        } else {
+            tag 'unknown-control-file', $file;
+            next;
+        }
     }
 
     $experm = $ctrl->value($file);
 
     # I'm not sure about the udeb case
     if ($type ne 'udeb' and $cindex_info->{size} == 0) {
-	tag 'control-file-is-empty', $file;
+        tag 'control-file-is-empty', $file;
     }
 
 
@@ -89,15 +89,15 @@ foreach my $file (sort keys %$cindex) {
 
     # correct permissions?
     unless ($operm == $experm) {
-	tag 'control-file-has-bad-permissions',
-	    sprintf('%s %04o != %04o', $file, $operm, $experm);
+        tag 'control-file-has-bad-permissions',
+            sprintf('%s %04o != %04o', $file, $operm, $experm);
     }
 
     $owner = $cindex_info->{owner} . '/' . $cindex_info->{group};
 
     # correct owner?
     unless ($owner eq 'root/root') {
-	tag 'control-file-has-bad-owner', "$file $owner != root/root";
+        tag 'control-file-has-bad-owner', "$file $owner != root/root";
     }
 
 # for other maintainer scripts checks, see the scripts check
@@ -108,4 +108,8 @@ close IN;
 
 1;
 
-# vim: syntax=perl sw=4 ts=8
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

@@ -42,25 +42,25 @@ while (<INDEX>) {
     # see if all files in the index can be opened should be done elsewhere.
     open(FILE, '<', "unpacked/$file") or next;
     if (read(FILE, $magic, 2) and $magic eq '#!' and not eof(FILE)) {
-	$scriptpath = <FILE>;
-	chomp($scriptpath);
-	next if ($scriptpath =~ m/^\#!/); # skip lincity data files
-	                                  # #!#!#!
-	my $copy_path = $scriptpath;
-	$scriptpath =~ s/^\s+//; # remove leading whitespace
-	$scriptpath =~ s/^\#.*//; # remove comments
-	if ($scriptpath eq '') {
-	    print SCRIPTS "$copy_path $file\n";
-	} else {
-	# This used to have (\S+) rather than (\S*), but that went wrong
-	# with scripts that start with an empty #! line.
-	    my $env = '';
-	    if ($scriptpath =~ s,^/usr/bin/env\s+,,) {
-	        $env = 'env ';
-	    }
+        $scriptpath = <FILE>;
+        chomp($scriptpath);
+        next if ($scriptpath =~ m/^\#!/); # skip lincity data files
+                                          # #!#!#!
+        my $copy_path = $scriptpath;
+        $scriptpath =~ s/^\s+//; # remove leading whitespace
+        $scriptpath =~ s/^\#.*//; # remove comments
+        if ($scriptpath eq '') {
+            print SCRIPTS "$copy_path $file\n";
+        } else {
+        # This used to have (\S+) rather than (\S*), but that went wrong
+        # with scripts that start with an empty #! line.
+            my $env = '';
+            if ($scriptpath =~ s,^/usr/bin/env\s+,,) {
+                $env = 'env ';
+            }
             $scriptpath =~ s/^(\S*).*/$1/s;
-	    print SCRIPTS $env . "$scriptpath $file\n";
-	}
+            print SCRIPTS $env . "$scriptpath $file\n";
+        }
     }
     close(FILE);
 }
@@ -77,9 +77,9 @@ for $file (readdir CONTROL) {
     next unless -f "control/$file";
     open(FILE, '<', "control/$file") or fail("cannot open control/$file: $!");
     if (read(FILE, $magic, 2) and $magic eq '#!') {
-	$scriptpath = <FILE>;
-	$scriptpath =~ s/^\s*(\S*).*/$1/s;
-	print SCRIPTS "$scriptpath $file\n"
+        $scriptpath = <FILE>;
+        $scriptpath =~ s/^\s*(\S*).*/$1/s;
+        print SCRIPTS "$scriptpath $file\n"
     }
     close(FILE);
 }
@@ -100,3 +100,9 @@ sub fail {
     }
     exit 1;
 }
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

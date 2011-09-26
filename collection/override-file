@@ -59,11 +59,11 @@ if (not defined $file) {
     gunzip_file($file, 'override');
 } else {
     link($file, 'override')
-	or fail("cannot link $file to override: $!");
+        or fail("cannot link $file to override: $!");
 }
 
 # Local Variables:
 # indent-tabs-mode: nil
 # cperl-indent-level: 4
 # End:
-# vim: syntax=perl sw=4 ts=8 et
+# vim: syntax=perl sw=4 sts=4 sr et

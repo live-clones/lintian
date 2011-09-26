@@ -51,24 +51,24 @@ if ( ! -l "$dsrc/format" && -e "$dsrc/format") {
 
 if ( ! -l "$dsrc/git-patches" && -s "$dsrc/git-patches") {
     open (GITPATCHES, "$dsrc/git-patches")
-	or fail("cannot open debian/source/git-patches: $!");
+        or fail("cannot open debian/source/git-patches: $!");
     if (grep !/^\s*+#|^\s*+$/o, <GITPATCHES>) {
-	my $dpseries = $info->debfiles('patches/series');
-	# gitpkg does not create series as a link, so this is most likely
-	# a traversal attempt.
-	if (! -l $dpseries ) {
-	    if (! -r $dpseries ) {
-		tag 'git-patches-not-exported';
-	    } else {
-		open (DEBSERIES, $dpseries)
-		    or fail("cannot open debian/patches/series: $!");
-		my $comment_line = <DEBSERIES>;
-		my $count = grep !/^\s*+\#|^\s*+$/o, <DEBSERIES>;
-		tag 'git-patches-not-exported'
-		    unless ($count && ($comment_line =~ m/^\s*\#.*quilt-patches-deb-export-hook/o));
-		close(DEBSERIES);
-	    }
-	}
+        my $dpseries = $info->debfiles('patches/series');
+        # gitpkg does not create series as a link, so this is most likely
+        # a traversal attempt.
+        if (! -l $dpseries ) {
+            if (! -r $dpseries ) {
+                tag 'git-patches-not-exported';
+            } else {
+                open (DEBSERIES, $dpseries)
+                    or fail("cannot open debian/patches/series: $!");
+                my $comment_line = <DEBSERIES>;
+                my $count = grep !/^\s*+\#|^\s*+$/o, <DEBSERIES>;
+                tag 'git-patches-not-exported'
+                    unless ($count && ($comment_line =~ m/^\s*\#.*quilt-patches-deb-export-hook/o));
+                close(DEBSERIES);
+            }
+        }
     }
     close(GITPATCHES);
 }
@@ -89,7 +89,7 @@ if ( ! -l $dsrc && -d $dsrc ) {
 1;
 
 # Local Variables:
-# indent-tabs-mode: t
-# cperl-indent-level: nil
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
 # End:
-# vim: syntax=perl sw=4 ts=8 et shiftround
+# vim: syntax=perl sw=4 sts=4 sr et

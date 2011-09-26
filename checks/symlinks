@@ -55,7 +55,7 @@ foreach my $file (@{$info->sorted_index}) {
         # skip unresolvable links and links to "/"
         next if $path eq '' or $path eq '.';
 
-	# Check if the destination is in the package itself
+        # Check if the destination is in the package itself
         next if $index->{$path} || $index->{"$path/"};
 
         $target =~ s,^/++,,o; # strip leading slashes (for reporting)
@@ -81,7 +81,7 @@ return unless @brokenlinks;
 $relation = $info->relation('strong');
 foreach my $depproc ($group->get_processables($type)){
     if ($relation->implies($depproc->pkg_name())){
-	push @dindexes, $depproc->info->index;
+        push @dindexes, $depproc->info->index;
     }
 }
 
@@ -99,4 +99,9 @@ foreach my $blink (@brokenlinks){
 }
 
 1;
-__END__
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

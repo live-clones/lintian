@@ -89,7 +89,7 @@ EOF
 
 [ -f "$lintian_data/fields/virtual-packages" ] && {
     egrep '^#\s*Keep:\s*.+$' "$lintian_data/fields/virtual-packages" \
-	>> "$workdir/virtual-packages" || true
+        >> "$workdir/virtual-packages" || true
 }
 [ -z "$VIRTUAL_PACKAGES" ] || {
     printf "# Keep: %s\n" "$VIRTUAL_PACKAGES" >> "$workdir/virtual-packages"
@@ -115,26 +115,32 @@ esac
 # virtual packages that are only used once in the archive.
 { $CAT "$packages"
   sed -rn 's/^#\s*Keep:\s*/Provides: /;T;s/([^,:])\s+([^,])/\1, \2/g;p' \
-	"$workdir/virtual-packages"
+        "$workdir/virtual-packages"
   sed -rn 's/^#\s*Keep:\s*/Provides: /;T;s/([^,:])\s+([^,])/\1, \2/g;p' \
-	"$workdir/virtual-packages"
+        "$workdir/virtual-packages"
 } |
     perl -w -E 'my (%seen, %pkgs);
-		while (<>) {
-		    chomp;
-		    if (m/^Package:\s*(.+)$/) {
-			$pkgs{$1} = 1;
-			next;
-		    }
-		    next unless (s/^Provides:\s*//);
-		    for my $pkg (split /\s*,\s*/) {
-			$seen{$pkg}++;
-		    }
-		}
-		for my $pkg (keys %seen) {
-		    print "$pkg\n"
-			unless ($seen{$pkg} == 1 or exists($pkgs{$pkg}));
-		}' \
+                while (<>) {
+                    chomp;
+                    if (m/^Package:\s*(.+)$/) {
+                        $pkgs{$1} = 1;
+                        next;
+                    }
+                    next unless (s/^Provides:\s*//);
+                    for my $pkg (split /\s*,\s*/) {
+                        $seen{$pkg}++;
+                    }
+                }
+                for my $pkg (keys %seen) {
+                    print "$pkg\n"
+                        unless ($seen{$pkg} == 1 or exists($pkgs{$pkg}));
+                }' \
     | sort -u >> "$workdir/virtual-packages"
 
 mv "$workdir/virtual-packages" "$lintian_data/fields/"
+
+
+# Local Variables:
+# indent-tabs-mode: nil
+# End:
+# vim: syntax=sh sw=4 sts=4 sr et

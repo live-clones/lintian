@@ -42,36 +42,36 @@ sub files {
 
     my $file_list = $self->field('files') || '';
     for (split /\n/, $file_list) {
-	chomp;
-	s/^\s+//o;
-	next if $_ eq '';
+        chomp;
+        s/^\s+//o;
+        next if $_ eq '';
 
-	my ($md5sum,$size,$section,$priority,$file) = split(/\s+/o, $_);
-	next if $file =~ m,/,;
+        my ($md5sum,$size,$section,$priority,$file) = split(/\s+/o, $_);
+        next if $file =~ m,/,;
 
-	$files{$file}{checksums}{md5} = {
-	    'sum' => $md5sum, 'filesize' => $size,
-	};
-	$files{$file}{name} = $file;
-	$files{$file}{size} = $size;
-	$files{$file}{section} = $section;
-	$files{$file}{priority} = $priority;
+        $files{$file}{checksums}{md5} = {
+            'sum' => $md5sum, 'filesize' => $size,
+        };
+        $files{$file}{name} = $file;
+        $files{$file}{size} = $size;
+        $files{$file}{section} = $section;
+        $files{$file}{priority} = $priority;
     }
 
     foreach my $alg (qw(sha1 sha256)) {
-	my $list = $self->field("checksums-$alg") || '';
-	for (split /\n/, $list) {
-	    chomp;
-	    s/^\s+//o;
-	    next if $_ eq '';
+        my $list = $self->field("checksums-$alg") || '';
+        for (split /\n/, $list) {
+            chomp;
+            s/^\s+//o;
+            next if $_ eq '';
 
-	    my ($checksum, $size, $file) = split(/\s+/o, $_);
-	    next if $file =~ m,/,;
+            my ($checksum, $size, $file) = split(/\s+/o, $_);
+            next if $file =~ m,/,;
 
-	    $files{$file}{checksums}{$alg} = {
-		'sum' => $checksum, 'filesize' => $size
-	    };
-	}
+            $files{$file}{checksums}{$alg} = {
+                'sum' => $checksum, 'filesize' => $size
+            };
+        }
     }
 
     $self->{files} = \%files;
@@ -179,4 +179,4 @@ lintian(1), Lintian::Collect(3)
 # indent-tabs-mode: nil
 # cperl-indent-level: 4
 # End:
-# vim: syntax=perl sw=4 sts=4 ts=4 et shiftround
+# vim: syntax=perl sw=4 sts=4 sr et

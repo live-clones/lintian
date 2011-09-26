@@ -33,13 +33,19 @@ my $type = shift;
 
 if (-e 'doc-base') {
     delete_dir('doc-base')
-	or fail('cannot rm old doc-base directory');
+        or fail('cannot rm old doc-base directory');
 }
 
 if (-d 'unpacked/usr/share/doc-base') {
     copy_dir('unpacked/usr/share/doc-base', 'doc-base')
-	or fail('cannot copy directory unpacked/usr/share/doc-base');
+        or fail('cannot copy directory unpacked/usr/share/doc-base');
 } else {
     # no doc-base directory
     mkdir('doc-base', 0777) or fail("cannot mkdir doc-base: $!");
 }
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

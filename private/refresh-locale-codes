@@ -59,24 +59,29 @@ export LC_ALL=C
 {
     isoquery -i 639
     sed -nr '/\bid=/{s/^.*id="([^"]+)".*$/xxx \1 x/;p}' \
-	/usr/share/xml/iso-codes/iso_639_3.xml
+        /usr/share/xml/iso-codes/iso_639_3.xml
 } | perl -w -e ' my %codes;
-		 while (<>) {
-		    next unless m/^\w{3}\s+(\w{3})\s+(?:(\w{2})\s+)?/;
-		    ($iso1, $iso2) = ($2, $1);
-		    if (!defined($iso1)) {
-			$iso1 = $iso2;
-			$iso2 = undef;
-		    }
-		    $iso1 = lc $iso1;
-		    $codes{$iso1} = undef unless (exists $codes{$iso1});
-		    if (defined $iso2) {
-			$codes{lc $iso2} = $iso1;
-		    }
-		}
-		while (my ($a, $b) = each %codes) {
-		    print $a.(defined($b)? " $b" : "")."\n";
-		} ' |
+                 while (<>) {
+                    next unless m/^\w{3}\s+(\w{3})\s+(?:(\w{2})\s+)?/;
+                    ($iso1, $iso2) = ($2, $1);
+                    if (!defined($iso1)) {
+                        $iso1 = $iso2;
+                        $iso2 = undef;
+                    }
+                    $iso1 = lc $iso1;
+                    $codes{$iso1} = undef unless (exists $codes{$iso1});
+                    if (defined $iso2) {
+                        $codes{lc $iso2} = $iso1;
+                    }
+                }
+                while (my ($a, $b) = each %codes) {
+                    print $a.(defined($b)? " $b" : "")."\n";
+                } ' |
     sort -u >> "$tmpfile"
 
 mv "$tmpfile" "$lintian_data/files/locale-codes"
+
+# Local Variables:
+# indent-tabs-mode: nil
+# End:
+# vim: syntax=sh sw=4 sts=4 sr et

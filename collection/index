@@ -90,8 +90,8 @@ sub index_src {
     my @tarballs = gather_tarballs();
     my @result;
     foreach my $tardata (@tarballs) {
-	my ($tarball, $compname) = @$tardata;
-	my @index;
+        my ($tarball, $compname) = @$tardata;
+        my @index;
         # Collect a list of the files in the source package.  tar currently doesn't
         # automatically recognize LZMA / XZ, so we need to add the option where it's
         # needed.  Change hard link status (h) to regular files and remove a leading
@@ -125,63 +125,63 @@ sub index_src {
         if ($last) {
             fail("tar output (for $tarball from $pkg) does not end in a newline");
         }
-	# We now need to see if all files in the tarball have a common prefix.  If so,
-	# we're going to strip that prefix off each file name.  We also remove lines
-	# that consist solely of the prefix.
-	my $prefix;
-	for my $line (@index) {
-	    my ($filename) = ($line =~ /^(?:\S+\s+){5}(.*)/);
-	    $filename =~ s,^\./+,,o;
-	    my ($dirname) = ($filename =~ m,^([^/]+),);
-	    if (defined($dirname) and $dirname eq $filename and not $line =~ m/^d/o) {
-		$prefix = '';
-	    } elsif (defined $dirname) {
-		if (not defined $prefix) {
-		    $prefix = $dirname;
-		} elsif ($dirname ne $prefix) {
-		    $prefix = '';
-		}
-	    } else {
-		$prefix = '';
-	    }
-	}
-	# If there is a common prefix and it is $compname, then we use that
-	# becaues that is where they will be extracted by unpacked.
-	if ($prefix ne $compname) {
-	    # If there is a common prefix and it is not $compname
-	    # then strip the prefix and add $compname (if any)
-	    if ($prefix) {
-		@index = map {
-		    if (m,^((?:\S+\s+){5})(?:\./)?\Q$prefix\E(?:/+(.*+)?|\Z),){
-			my ($data, $file) = ($1, $2);
-			if ($file && $file !~ m,^(?:/++)?\Z,o){
-			    $file = "$compname/$file" if $compname;
-			    "$data$file\n";
-			} else {
-			    ();
-			}
-		    } else {
-			();
-		    }
-		} @index;
-		my $filename = 'source-prefix';
-		$filename .= "-$compname" if $compname;
-		open(PREFIX, '>', $filename)
-		    or fail("cannot create $filename for $pkg: $!");
+        # We now need to see if all files in the tarball have a common prefix.  If so,
+        # we're going to strip that prefix off each file name.  We also remove lines
+        # that consist solely of the prefix.
+        my $prefix;
+        for my $line (@index) {
+            my ($filename) = ($line =~ /^(?:\S+\s+){5}(.*)/);
+            $filename =~ s,^\./+,,o;
+            my ($dirname) = ($filename =~ m,^([^/]+),);
+            if (defined($dirname) and $dirname eq $filename and not $line =~ m/^d/o) {
+                $prefix = '';
+            } elsif (defined $dirname) {
+                if (not defined $prefix) {
+                    $prefix = $dirname;
+                } elsif ($dirname ne $prefix) {
+                    $prefix = '';
+                }
+            } else {
+                $prefix = '';
+            }
+        }
+        # If there is a common prefix and it is $compname, then we use that
+        # becaues that is where they will be extracted by unpacked.
+        if ($prefix ne $compname) {
+            # If there is a common prefix and it is not $compname
+            # then strip the prefix and add $compname (if any)
+            if ($prefix) {
+                @index = map {
+                    if (m,^((?:\S+\s+){5})(?:\./)?\Q$prefix\E(?:/+(.*+)?|\Z),){
+                        my ($data, $file) = ($1, $2);
+                        if ($file && $file !~ m,^(?:/++)?\Z,o){
+                            $file = "$compname/$file" if $compname;
+                            "$data$file\n";
+                        } else {
+                            ();
+                        }
+                    } else {
+                        ();
+                    }
+                } @index;
+                my $filename = 'source-prefix';
+                $filename .= "-$compname" if $compname;
+                open(PREFIX, '>', $filename)
+                    or fail("cannot create $filename for $pkg: $!");
                 print PREFIX "$prefix\n";
-		close PREFIX;
-	    } elsif ($compname) {
-		# Prefix with the compname (because that is where they will be
-		# unpacked to.
-		@index = map { s,^((?:\S++\s++){5})(?:\./)?\Q$prefix\E(?:/+)?,$1$compname/, } @index;
-	    }
-	}
-	push @result, @index;
+                close PREFIX;
+            } elsif ($compname) {
+                # Prefix with the compname (because that is where they will be
+                # unpacked to.
+                @index = map { s,^((?:\S++\s++){5})(?:\./)?\Q$prefix\E(?:/+)?,$1$compname/, } @index;
+            }
+        }
+        push @result, @index;
     }
     # Now that we have the file names we want, write them out sorted to the index
     # file.
     spawn({ fail => 'error', out_append => 'index' },
-	  sub { print @result }, '|', ['sort', '-k', '6']);
+          sub { print @result }, '|', ['sort', '-k', '6']);
     return 1;
 }
 
@@ -223,3 +223,8 @@ sub index_deb {
     return 1;
 }
 
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

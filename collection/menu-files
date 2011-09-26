@@ -31,7 +31,7 @@ my $type = shift;
 
 if (-e 'menu') {
     delete_dir('menu')
-	or fail('cannot rm old menu directory');
+        or fail('cannot rm old menu directory');
 }
 
 mkdir('menu', 0777) or fail("cannot mkdir menu: $!");
@@ -43,10 +43,16 @@ $dirs{'methods'} = 'etc/menu-methods';
 
 while (my ($shortn, $path) = each %dirs) {
     if (-d "unpacked/$path") {
-	 copy_dir("unpacked/$path", "menu/$shortn")
-	    or fail("cannot copy unpacked/$path/ directory");
+         copy_dir("unpacked/$path", "menu/$shortn")
+            or fail("cannot copy unpacked/$path/ directory");
     } else {
-	# no menu directory
-	mkdir("menu/$shortn", 0777) or fail("cannot mkdir menu/$shortn: $!");
+        # no menu directory
+        mkdir("menu/$shortn", 0777) or fail("cannot mkdir menu/$shortn: $!");
     }
 }
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

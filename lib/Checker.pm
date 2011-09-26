@@ -30,31 +30,31 @@ my $LINTIAN_ROOT = $main::LINTIAN_ROOT;
 my $debug = $::debug;
 
 sub runcheck {
-	my ($pkg, $type, $info, $name, @args) = @_;
+    my ($pkg, $type, $info, $name, @args) = @_;
 
-	# Will be set to 2 if error is encountered
-	my $return = 0;
+    # Will be set to 2 if error is encountered
+    my $return = 0;
 
-	print "N: Running check: $name ...\n" if $debug;
+    print "N: Running check: $name ...\n" if $debug;
 
-	# require has an anti-require-twice cache
-	require "$LINTIAN_ROOT/checks/$name";
+    # require has an anti-require-twice cache
+    require "$LINTIAN_ROOT/checks/$name";
 
-	$name =~ s/[-.]/_/g;
-	eval { &{'Lintian::'.$name.'::run'}($pkg, $type, $info, @args) };
-	if ( $@ ) {
-	    print STDERR $@;
-	    print STDERR "internal error: cannot run $name check on package $pkg\n";
-	    $return = 2;
-	}
+    $name =~ s/[-.]/_/g;
+    eval { &{'Lintian::'.$name.'::run'}($pkg, $type, $info, @args) };
+    if ( $@ ) {
+        print STDERR $@;
+        print STDERR "internal error: cannot run $name check on package $pkg\n";
+        $return = 2;
+    }
 
-	return $return;
+    return $return;
 }
 
 1;
 
 # Local Variables:
-# indent-tabs-mode: t
-# cperl-indent-level: 8
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
 # End:
-# vim: ts=4 sw=4 noet
+# vim: syntax=perl sw=4 sts=4 sr et

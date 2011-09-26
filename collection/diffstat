@@ -65,3 +65,9 @@ while (<DIFF>) {
 }
 close DIFF or fail("cannot close pipe to diffstat on debian-patch: $!");
 close STAT or fail("error writing diffstat file: $!");
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

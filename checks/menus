@@ -35,16 +35,16 @@ our %known_doc_base_formats = map { $_ => 1 }
 # Known fields for doc-base files.  The value is 1 for required fields and 0
 # for optional fields.
 our %KNOWN_DOCBASE_MAIN_FIELDS = (
-	'document' => 1,
-	'title'    => 1,
-	'section'  => 1,
-	'abstract' => 0,
-	'author'   => 0
+        'document' => 1,
+        'title'    => 1,
+        'section'  => 1,
+        'abstract' => 0,
+        'author'   => 0
 );
 our %KNOWN_DOCBASE_FORMAT_FIELDS = (
-	'format'  => 1,
-	'files'   => 1,
-	'index'   => 0
+        'format'  => 1,
+        'files'   => 1,
+        'index'   => 0
 );
 
 # Will contain the list of valid sections as a Lintian::Data object if it's
@@ -94,62 +94,62 @@ for my $file (@{$info->sorted_index}) {
     my $operm = $index_info->{operm};
 
     if ($index_info->{type} =~ m,^[-h],) { # file checks
-	# menu file?
-	if ($file =~ m,^usr/(lib|share)/menu/\S,o) { # correct permissions?
-	    if ($operm & 01 or $operm & 010 or $operm & 0100) {
-		tag 'executable-menu-file', sprintf("%s %04o",$file,$operm);
-	    }
+        # menu file?
+        if ($file =~ m,^usr/(lib|share)/menu/\S,o) { # correct permissions?
+            if ($operm & 01 or $operm & 010 or $operm & 0100) {
+                tag 'executable-menu-file', sprintf("%s %04o",$file,$operm);
+            }
 
-	    next if $file =~ m,^usr/(lib|share)/menu/README$,;
+            next if $file =~ m,^usr/(lib|share)/menu/README$,;
 
-	    if ($file =~ m,^usr/lib/,o) {
-		tag 'menu-file-in-usr-lib', $file;
-	    }
+            if ($file =~ m,^usr/lib/,o) {
+                tag 'menu-file-in-usr-lib', $file;
+            }
 
-	    $menu_file = $file;
+            $menu_file = $file;
 
-	    if ($file =~ m,usr/(lib|share)/menu/menu$,o and $pkg ne 'menu') {
-		tag 'bad-menu-file-name', $file;
-	    }
-	}
-	# doc-base file?
-	elsif ($file =~ m,^usr/share/doc-base/\S,o) { # correct permissions?
-	    if ($operm & 01 or $operm & 010 or $operm & 0100) {
-		tag 'executable-in-usr-share-docbase', $file, sprintf("%04o",$operm);
-	    }
-	    $docbase_file = $file;
-	}
-	#menu-methods file?
-	elsif ( $file =~ m,^etc/menu-methods/\S,o ) {
-	    #TODO: we should test if the menu-methods file
-	    # is made executable in the postinst as recommended by
-	    # the menu manual
+            if ($file =~ m,usr/(lib|share)/menu/menu$,o and $pkg ne 'menu') {
+                tag 'bad-menu-file-name', $file;
+            }
+        }
+        # doc-base file?
+        elsif ($file =~ m,^usr/share/doc-base/\S,o) { # correct permissions?
+            if ($operm & 01 or $operm & 010 or $operm & 0100) {
+                tag 'executable-in-usr-share-docbase', $file, sprintf("%04o",$operm);
+            }
+            $docbase_file = $file;
+        }
+        #menu-methods file?
+        elsif ( $file =~ m,^etc/menu-methods/\S,o ) {
+            #TODO: we should test if the menu-methods file
+            # is made executable in the postinst as recommended by
+            # the menu manual
 
-	    my $menumethod_includes_menu_h = 0;
-	    my $local_file = $file;
-	    $local_file =~ s,^etc/menu-methods/,,;
-	    $menumethod_file = $file;
+            my $menumethod_includes_menu_h = 0;
+            my $local_file = $file;
+            $local_file =~ s,^etc/menu-methods/,,;
+            $menumethod_file = $file;
 
-	    open(MM, '<', "menu/methods/$local_file") or fail("cannot open menu-method file $local_file: $!");
-	    while (<MM>) {
-		chomp;
-		if (m,^!include menu.h,o) {
-		    $menumethod_includes_menu_h = 1;
-		    last;
-		}
-	    }
-	    close MM;
-	    tag 'menu-method-should-include-menu-h', $file
-		unless $menumethod_includes_menu_h or $pkg eq 'menu';
-	}
-	# package doc dir?
-	elsif ($file =~ m,^usr/share/doc/(?:[^/]+/)?(.+\.(?:html|pdf))(?:\.gz)?$,o) {
-	    my $name = $1;
-	    unless ($name =~ m/^changelog\.html$/o or $name =~ m/^README[.-]/o
-		    or $name =~ m|examples|o) {
-		$documentation = 1;
-	    }
-	}
+            open(MM, '<', "menu/methods/$local_file") or fail("cannot open menu-method file $local_file: $!");
+            while (<MM>) {
+                chomp;
+                if (m,^!include menu.h,o) {
+                    $menumethod_includes_menu_h = 1;
+                    last;
+                }
+            }
+            close MM;
+            tag 'menu-method-should-include-menu-h', $file
+                unless $menumethod_includes_menu_h or $pkg eq 'menu';
+        }
+        # package doc dir?
+        elsif ($file =~ m,^usr/share/doc/(?:[^/]+/)?(.+\.(?:html|pdf))(?:\.gz)?$,o) {
+            my $name = $1;
+            unless ($name =~ m/^changelog\.html$/o or $name =~ m/^README[.-]/o
+                    or $name =~ m|examples|o) {
+                $documentation = 1;
+            }
+        }
     }
 }
 close IN;
@@ -194,9 +194,9 @@ if ($docbase_file) {
     opendir DOCBASEDIR, 'doc-base' or fail("cannot read doc-base directory.");
     my $dbfile;
     while (defined ($dbfile = readdir DOCBASEDIR)) {
-	# don't try to parse executables, plus we already warned about it
-	next if -x "doc-base/$dbfile";
-	check_doc_base_file($dbfile, $pkg, $type, \%all_files, \%all_links);
+        # don't try to parse executables, plus we already warned about it
+        next if -x "doc-base/$dbfile";
+        check_doc_base_file($dbfile, $pkg, $type, \%all_files, \%all_links);
     }
     closedir DOCBASEDIR;
 } elsif ($documentation) {
@@ -220,18 +220,18 @@ if ($anymenu_file) {
     # debhelper apparently currently still adds that to the maintainer script,
     # so don't warn if it's done.
     if (not $postinst{'calls-updatemenus'}) {
-	tag 'postinst-does-not-call-updatemenus', $anymenu_file;
+        tag 'postinst-does-not-call-updatemenus', $anymenu_file;
     }
     if ($menumethod_file and not $postrm{'calls-updatemenus'}) {
-	tag 'postrm-does-not-call-updatemenus', $menumethod_file
-	    unless $pkg eq 'menu';
+        tag 'postrm-does-not-call-updatemenus', $menumethod_file
+            unless $pkg eq 'menu';
     }
 } else {
     if ($postinst{'calls-updatemenus'}) {
-	tag 'postinst-has-useless-call-to-update-menus';
+        tag 'postinst-has-useless-call-to-update-menus';
     }
     if ($postrm{'calls-updatemenus'}) {
-	tag 'postrm-has-useless-call-to-update-menus';
+        tag 'postrm-has-useless-call-to-update-menus';
     }
 }
 
@@ -244,7 +244,7 @@ sub check_doc_base_file {
 
     my $line = file_is_encoded_in_non_utf8("doc-base/$dbfile", $type, $pkg);
     if ($line) {
-	tag 'doc-base-file-uses-obsolete-national-encoding', "$dbfile:$line";
+        tag 'doc-base-file-uses-obsolete-national-encoding', "$dbfile:$line";
     }
 
     open (IN, '<', "doc-base/$dbfile")
@@ -263,9 +263,9 @@ sub check_doc_base_file {
         if (/^(\S+)\s*:\s*(.*)$/) {
             my (@new) = ($1, $2);
             if ($field) {
-		check_doc_base_field($pkg, $dbfile, $line, $field, \@vals,
-				     \%sawfields, \%sawformats, $knownfields,
-				     $all_files, $all_links);
+                check_doc_base_field($pkg, $dbfile, $line, $field, \@vals,
+                                     \%sawfields, \%sawformats, $knownfields,
+                                     $all_files, $all_links);
             }
             $field = lc $new[0];
             @vals  = ($new[1]);
@@ -286,9 +286,9 @@ sub check_doc_base_file {
             next unless $field; # skip successive empty lines
 
             # Check previously defined field and section.
-	    check_doc_base_field($pkg, $dbfile, $line, $field, \@vals,
-				 \%sawfields, \%sawformats, $knownfields,
-				 $all_files, $all_links);
+            check_doc_base_field($pkg, $dbfile, $line, $field, \@vals,
+                                 \%sawfields, \%sawformats, $knownfields,
+                                 $all_files, $all_links);
             check_doc_base_file_section($dbfile, $line + 1, \%sawfields,
                                         \%sawformats, $knownfields);
 
@@ -309,9 +309,9 @@ sub check_doc_base_file {
 
     # Check the last field/section of the control file.
     if ($field) {
-	check_doc_base_field($pkg, $dbfile, $line, $field, \@vals, \%sawfields,
-			     \%sawformats, $knownfields, $all_files,
-			     $all_links);
+        check_doc_base_field($pkg, $dbfile, $line, $field, \@vals, \%sawfields,
+                             \%sawformats, $knownfields, $all_files,
+                             $all_links);
         check_doc_base_file_section($dbfile, $line, \%sawfields, \%sawformats,
                                     $knownfields);
     }
@@ -349,7 +349,7 @@ sub check_doc_base_field {
             tag 'doc-base-index-references-multiple-files', "$dbfile:$line";
         }
         for my $file (@files) {
-	    next if $file eq '';
+            next if $file eq '';
             if ($file =~ m%^/usr/doc%) {
                 tag 'doc-base-file-references-usr-doc', "$dbfile:$line";
             }
@@ -413,17 +413,17 @@ sub check_doc_base_field {
 
     # Section field.
     } elsif ($field eq 'section') {
-	$SECTIONS = Lintian::Data->new('doc-base/sections') unless $SECTIONS;
-	$_ = join (' ', @$vals);
-	unless ($SECTIONS->known($_)) {
-	    if (m,^App(?:lication)?s/(.+)$, and $SECTIONS->known($1)) {
-		tag 'doc-base-uses-applications-section', "$dbfile:$line", $_;
-	    } elsif (m,^(.+)/(?:[^/]+)$, and $SECTIONS->known($1)) {
-		# allows creating a new subsection to a known section
-	    } else {
-		tag 'doc-base-unknown-section', "$dbfile:$line", $_;
-	    }
-	}
+        $SECTIONS = Lintian::Data->new('doc-base/sections') unless $SECTIONS;
+        $_ = join (' ', @$vals);
+        unless ($SECTIONS->known($_)) {
+            if (m,^App(?:lication)?s/(.+)$, and $SECTIONS->known($1)) {
+                tag 'doc-base-uses-applications-section', "$dbfile:$line", $_;
+            } elsif (m,^(.+)/(?:[^/]+)$, and $SECTIONS->known($1)) {
+                # allows creating a new subsection to a known section
+            } else {
+                tag 'doc-base-unknown-section', "$dbfile:$line", $_;
+            }
+        }
 
     # Abstract field.
     } elsif ($field eq 'abstract') {
@@ -511,27 +511,27 @@ sub add_file_link_info {
     my $ishard = ($info->index->{$file}->{type} eq 'h');
 
     $file = "/" . $file if (not $file =~ m%^/%); # make file absolute
-    $file =~ s%/+%/%g;				 # remove duplicated `/'
+    $file =~ s%/+%/%g;                           # remove duplicated `/'
     $all_files->{$file} = 1;
 
     if (defined $link) {
-	$link = './' . $link if $link !~ m,^/,;
-	if ($ishard) {
-	    $link =~ s,^\./,/,;
-	} elsif (not $link =~ m,^/,) {		  # not absolute link
-	    $link = "/" . $link;		  # make sure link starts with '/'
-	    $link =~ s,/+\./+,/,g;		  # remove all /./ parts
-	    my $dcount = 1;
-	    while ($link =~ s,^/+\.\./+,/,) {	  #\ count & remove
-	       $dcount++;			  #/ any leading /../ parts
-	    }
-	    my $f = $file;
-	    while ($dcount--) {			  #\ remove last $dcount
-		$f =~ s,/[^/]*$,,;		  #/ path components from $file
-	    }
-	    $link = $f . $link;			  # now we should have absolute link
-	}
-	$all_links->{$file} = $link unless ($link eq $file);
+        $link = './' . $link if $link !~ m,^/,;
+        if ($ishard) {
+            $link =~ s,^\./,/,;
+        } elsif (not $link =~ m,^/,) {            # not absolute link
+            $link = "/" . $link;                  # make sure link starts with '/'
+            $link =~ s,/+\./+,/,g;                # remove all /./ parts
+            my $dcount = 1;
+            while ($link =~ s,^/+\.\./+,/,) {     #\ count & remove
+               $dcount++;                         #/ any leading /../ parts
+            }
+            my $f = $file;
+            while ($dcount--) {                   #\ remove last $dcount
+                $f =~ s,/[^/]*$,,;                #/ path components from $file
+            }
+            $link = $f . $link;                   # now we should have absolute link
+        }
+        $all_links->{$file} = $link unless ($link eq $file);
     }
 }
 
@@ -540,8 +540,8 @@ sub add_file_link_info {
 sub delink {
     my ($file, $all_links) = @_;
 
-    $file =~ s%/+%/%g;				  # remove duplicated '/'
-    return $file unless %$all_links;		  # package doesn't symlinks
+    $file =~ s%/+%/%g;                            # remove duplicated '/'
+    return $file unless %$all_links;              # package doesn't symlinks
 
     my $p1 = '';
     my $p2 = $file;
@@ -553,26 +553,26 @@ sub delink {
     # beginning.
     #
     # Example:
-    #	 Let $all_links{"/a/b"} == "/d", and $file == "/a/b/c"
-    #	 Then 0) $p1 == "",	$p2 == "/a/b/c"
-    #	      1) $p1 == "/a",	$p2 == "/b/c"
-    #	      2) $p1 == "/a/b", $p2 == "/c"	 ; substitute "/d" for "/a/b"
-    #	      3) $p1 == "",	$p2 == "/d/c"
-    #	      4) $p1 == "/d",	$p2 == "/c"
-    #	      5) $p1 == "/d/c", $p2 == ""
+    #    Let $all_links{"/a/b"} == "/d", and $file == "/a/b/c"
+    #    Then 0) $p1 == "",     $p2 == "/a/b/c"
+    #         1) $p1 == "/a",   $p2 == "/b/c"
+    #         2) $p1 == "/a/b", $p2 == "/c"      ; substitute "/d" for "/a/b"
+    #         3) $p1 == "",     $p2 == "/d/c"
+    #         4) $p1 == "/d",   $p2 == "/c"
+    #         5) $p1 == "/d/c", $p2 == ""
     #
     # Note that the algorithm supposes, that
-    #	 i) $all_links{$X} != $X for each $X
-    #	ii) both keys and values of %all_links start with '/'
+    #    i) $all_links{$X} != $X for each $X
+    #   ii) both keys and values of %all_links start with '/'
 
     while (($p2 =~ s%^(/[^/]*)%%g) > 0) {
-	$p1 .= $1;
-	if (defined $all_links->{$p1}) {
-	    return '!!! SYMLINK LOOP !!!' if defined $used_links{$p1};
-	    $p2 = $all_links->{$p1} . $p2;
-	    $p1 = '';
-	    $used_links{$p1} = 1;
-	}
+        $p1 .= $1;
+        if (defined $all_links->{$p1}) {
+            return '!!! SYMLINK LOOP !!!' if defined $used_links{$p1};
+            $p2 = $all_links->{$p1} . $p2;
+            $p1 = '';
+            $used_links{$p1} = 1;
+        }
     }
 
     # After the loop $p2 should be empty and $p1 should contain the target
@@ -587,7 +587,7 @@ sub check_script {
     my $interp;
 
     open(IN, '<', $spath) or
-	fail("cannot open maintainer script control/$script for reading: $!");
+        fail("cannot open maintainer script control/$script for reading: $!");
     $interp = <IN>;
     $interp = '' unless defined $interp;
     if ($interp =~ m,^\#\!\s*/bin/$known_shells_regex,) {
@@ -595,101 +595,101 @@ sub check_script {
     } elsif ($interp =~ m,^\#\!\s*/usr/bin/perl,) {
         $interp = 'perl';
     } else {
-	if ($interp =~ m,^\#\!\s*(.+),) {
+        if ($interp =~ m,^\#\!\s*(.+),) {
             $interp = $1;
-	}
-	else { # hmm, doesn't seem to start with #!
-	    # is it a binary? look for ELF header
-	    if ($interp =~ m/^\177ELF/) {
-		return; # nothing to do here
-	    }
-	    $interp = 'unknown';
-	}
+        }
+        else { # hmm, doesn't seem to start with #!
+            # is it a binary? look for ELF header
+            if ($interp =~ m/^\177ELF/) {
+                return; # nothing to do here
+            }
+            $interp = 'unknown';
+        }
     }
 
     while (<IN>) {
-	# skip comments
-	s/\#.*$//o;
+        # skip comments
+        s/\#.*$//o;
 
-	##
-	# either update-menus or wm-menu-config will satisfy
-	# the checks that the menu file installed is properly used
-	##
+        ##
+        # either update-menus or wm-menu-config will satisfy
+        # the checks that the menu file installed is properly used
+        ##
 
-	# does the script check whether update-menus exists?
-	if (/-x\s+\S*update-menus/o or /(?:which|type)\s+update-menus/o
-	    or /command\s+.*?update-menus/o) {
-	    # yes, it does.
-	    $pres->{'checks-for-updatemenus'} = 1;
-	}
+        # does the script check whether update-menus exists?
+        if (/-x\s+\S*update-menus/o or /(?:which|type)\s+update-menus/o
+            or /command\s+.*?update-menus/o) {
+            # yes, it does.
+            $pres->{'checks-for-updatemenus'} = 1;
+        }
 
-	# does the script call update-menus?
-	# TODO this regex-magic should be moved to some lib for checking
-	# whether a certain word is likely called as command... --Jeroen
-	if (/(?:^\s*|[;&|]\s*|(?:then|do|exec)\s+)(?:\/usr\/bin\/)?update-menus(?:\s|[;&|<>]|$)/) {
-	    # yes, it does.
-	    $pres->{'calls-updatemenus'} = 1;
+        # does the script call update-menus?
+        # TODO this regex-magic should be moved to some lib for checking
+        # whether a certain word is likely called as command... --Jeroen
+        if (/(?:^\s*|[;&|]\s*|(?:then|do|exec)\s+)(?:\/usr\/bin\/)?update-menus(?:\s|[;&|<>]|$)/) {
+            # yes, it does.
+            $pres->{'calls-updatemenus'} = 1;
 
-	    # checked first?
-	    if (not $pres->{'checks-for-updatemenus'} and $pkg ne 'menu') {
-		tag 'maintainer-script-does-not-check-for-existence-of-updatemenus', "$script:$." unless $no_check_menu++;
-	    }
-	}
+            # checked first?
+            if (not $pres->{'checks-for-updatemenus'} and $pkg ne 'menu') {
+                tag 'maintainer-script-does-not-check-for-existence-of-updatemenus', "$script:$." unless $no_check_menu++;
+            }
+        }
 
-	# does the script check whether wm-menu-config exists?
-	if (s/-x\s+\S*wm-menu-config//o or /(?:which|type)\s+wm-menu-config/o
-	    or s/command\s+.*?wm-menu-config//o) {
-	    # yes, it does.
-	    $pres->{'checks-for-wmmenuconfig'} = 1;
-	}
+        # does the script check whether wm-menu-config exists?
+        if (s/-x\s+\S*wm-menu-config//o or /(?:which|type)\s+wm-menu-config/o
+            or s/command\s+.*?wm-menu-config//o) {
+            # yes, it does.
+            $pres->{'checks-for-wmmenuconfig'} = 1;
+        }
 
-	# does the script call wm-menu-config?
-	if (m/(?:^\s*|[;&|]\s*|(?:then|do)\s+)(?:\/usr\/sbin\/)?wm-menu-config(?:\s|[;&|<>]|$)/) {
-	    # yes, it does.
-	    tag 'maintainer-script-calls-deprecated-wm-menu-config', "$script:$." unless $calls_wmmenu++;
+        # does the script call wm-menu-config?
+        if (m/(?:^\s*|[;&|]\s*|(?:then|do)\s+)(?:\/usr\/sbin\/)?wm-menu-config(?:\s|[;&|<>]|$)/) {
+            # yes, it does.
+            tag 'maintainer-script-calls-deprecated-wm-menu-config', "$script:$." unless $calls_wmmenu++;
 
-	    # checked first?
-	    if (not $pres->{'checks-for-wmmenuconfig'} and $pkg ne 'menu') {
-		tag 'maintainer-script-does-not-check-for-existence-of-wm-menu-config', "$script:$." unless $no_check_wmmenu++;
-	    }
-	}
+            # checked first?
+            if (not $pres->{'checks-for-wmmenuconfig'} and $pkg ne 'menu') {
+                tag 'maintainer-script-does-not-check-for-existence-of-wm-menu-config', "$script:$." unless $no_check_wmmenu++;
+            }
+        }
 
-	# does the script set a link in /usr/doc?
-	# does the script remove a link in /usr/doc?
-	if ($interp eq 'sh') {
-	    if (m,ln\s+(?:-\w+)?\s+\"?\.\./share/doc/\S+, ) {
-		$pres->{'sets-link'} = 1;
-	    }
-	} elsif ($interp eq 'perl') {
-	    if (m|symlink\s*\(?\s*[\"\']\.\./share/doc/\.+?[\"\']\s*,|) {
-		$pres->{'sets-link'} = 1;
-	    } elsif (m,ln\s+(?:-\w+)?\s+\"?\.\./share/doc/\S+, ) {
-		$pres->{'sets-link'} = 1;
-	    }
-	} else {
-	    # just fall through for now
-	}
+        # does the script set a link in /usr/doc?
+        # does the script remove a link in /usr/doc?
+        if ($interp eq 'sh') {
+            if (m,ln\s+(?:-\w+)?\s+\"?\.\./share/doc/\S+, ) {
+                $pres->{'sets-link'} = 1;
+            }
+        } elsif ($interp eq 'perl') {
+            if (m|symlink\s*\(?\s*[\"\']\.\./share/doc/\.+?[\"\']\s*,|) {
+                $pres->{'sets-link'} = 1;
+            } elsif (m,ln\s+(?:-\w+)?\s+\"?\.\./share/doc/\S+, ) {
+                $pres->{'sets-link'} = 1;
+            }
+        } else {
+            # just fall through for now
+        }
 
-	# does the script check whether install-docs exists?
-	if (s/-x\s+\S*install-docs//o or /(?:which|type)\s+install-docs/o
-	    or s/command\s+.*?install-docs//o) {
-	    # yes, it does.
-	    $pres->{'checks-for-installdocs'} = 1;
-	}
+        # does the script check whether install-docs exists?
+        if (s/-x\s+\S*install-docs//o or /(?:which|type)\s+install-docs/o
+            or s/command\s+.*?install-docs//o) {
+            # yes, it does.
+            $pres->{'checks-for-installdocs'} = 1;
+        }
 
-	# does the script call install-docs?
-	if (m/(?:^\s*|[;&|]\s*|(?:then|do)\s+)(?:\/usr\/sbin\/)?install-docs(?:\s|[;&|<>]|$)/) {
-	    # yes, it does.  Does it remove or add a doc?
-	    if (m/install-docs\s+(?:-r|--remove)\s/) {
-		$pres->{'calls-installdocs-r'} = 1;
-	    } else {
-		$pres->{'calls-installdocs'} = 1;
-	    }
-	    # checked first?
-	    if (not $pres->{'checks-for-installdocs'}) {
-		tag 'maintainer-script-does-not-check-for-existence-of-installdocs', $script unless $no_check_installdocs++;
-	    }
-	}
+        # does the script call install-docs?
+        if (m/(?:^\s*|[;&|]\s*|(?:then|do)\s+)(?:\/usr\/sbin\/)?install-docs(?:\s|[;&|<>]|$)/) {
+            # yes, it does.  Does it remove or add a doc?
+            if (m/install-docs\s+(?:-r|--remove)\s/) {
+                $pres->{'calls-installdocs-r'} = 1;
+            } else {
+                $pres->{'calls-installdocs'} = 1;
+            }
+            # checked first?
+            if (not $pres->{'checks-for-installdocs'}) {
+                tag 'maintainer-script-does-not-check-for-existence-of-installdocs', $script unless $no_check_installdocs++;
+            }
+        }
     }
     close IN;
 }
@@ -697,7 +697,7 @@ sub check_script {
 1;
 
 # Local Variables:
-# indent-tabs-mode: t
+# indent-tabs-mode: nil
 # cperl-indent-level: 4
 # End:
-# vim: syntax=perl
+# vim: syntax=perl sw=4 sts=4 sr et

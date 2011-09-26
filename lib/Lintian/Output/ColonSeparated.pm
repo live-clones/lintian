@@ -36,17 +36,17 @@ sub print_tag {
 
     $self->issued_tag($tag_info->tag);
     $self->_print(
-	'tag',
-	$tag_info->code,
-	$tag_info->severity,
-	$tag_info->certainty,
-	($tag_info->experimental ? 'X' : '').
-	(defined($override) ? 'O' : ''),
-	@{$pkg_info}{'package','version','arch','type'},
-	$tag_info->tag,
-	$information,
+        'tag',
+        $tag_info->code,
+        $tag_info->severity,
+        $tag_info->certainty,
+        ($tag_info->experimental ? 'X' : '').
+        (defined($override) ? 'O' : ''),
+        @{$pkg_info}{'package','version','arch','type'},
+        $tag_info->tag,
+        $information,
         $odata,
-	);
+        );
 }
 
 sub _delimiter {
@@ -57,7 +57,7 @@ sub _message {
     my ($self, @args) = @_;
 
     foreach (@args) {
-	$self->_print('message', $_);
+        $self->_print('message', $_);
     }
 }
 
@@ -65,7 +65,7 @@ sub _warning {
     my ($self, @args) = @_;
 
     foreach (@args) {
-	$self->_print('warning', $_);
+        $self->_print('warning', $_);
     }
 }
 
@@ -86,8 +86,8 @@ sub _quote_char {
     my ( $char, @items ) = @_;
 
     foreach (@items) {
-	s/\\/\\\\/go;
-	s/\Q$char\E/\\$char/go;
+        s/\\/\\\\/go;
+        s/\Q$char\E/\\$char/go;
     }
 
     return @items;
@@ -95,3 +95,8 @@ sub _quote_char {
 
 1;
 
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

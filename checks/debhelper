@@ -92,93 +92,93 @@ while (<RULES>) {
     if (m/^\s+-?(dh_\S+)/) {
         my $dhcommand = $1;
 
-	if ($dhcommand eq 'dh_dhelp') {
-	    tag 'dh_dhelp-is-deprecated', "line $.";
-	}
-	if ($dhcommand eq 'dh_suidregister') {
-	    tag 'dh_suidregister-is-obsolete', "line $.";
-	}
-	if ($dhcommand eq 'dh_undocumented') {
-	    tag 'dh_undocumented-is-obsolete', "line $.";
-	}
-	if ($dhcommand eq 'dh_python') {
-	    tag 'dh_python-is-obsolete', "line $.";
-	}
-	if ($dhcommand eq 'dh_pycentral') {
-	    tag 'dh_pycentral-is-obsolete', "line $.";
-	}
-	if ($dhcommand eq 'dh_installmanpages') {
-	    tag 'dh_installmanpages-is-obsolete', "line $.";
-	}
+        if ($dhcommand eq 'dh_dhelp') {
+            tag 'dh_dhelp-is-deprecated', "line $.";
+        }
+        if ($dhcommand eq 'dh_suidregister') {
+            tag 'dh_suidregister-is-obsolete', "line $.";
+        }
+        if ($dhcommand eq 'dh_undocumented') {
+            tag 'dh_undocumented-is-obsolete', "line $.";
+        }
+        if ($dhcommand eq 'dh_python') {
+            tag 'dh_python-is-obsolete', "line $.";
+        }
+        if ($dhcommand eq 'dh_pycentral') {
+            tag 'dh_pycentral-is-obsolete', "line $.";
+        }
+        if ($dhcommand eq 'dh_installmanpages') {
+            tag 'dh_installmanpages-is-obsolete', "line $.";
+        }
 
-	# Don't warn about recently deprecated commands in code that may be
-	# optional.  It may be there only for backports.
-	unless ($maybe_skipping) {
-	    if ($dhcommand eq 'dh_desktop') {
-		tag 'dh_desktop-is-deprecated', "line $.";
-	    }
-	    if ($dhcommand eq 'dh_scrollkeeper') {
-		tag 'dh_scrollkeeper-is-deprecated', "line $.";
-	    }
-	    if ($dhcommand eq 'dh_clean' and m/\s+\-k(?:\s+.*)?$/) {
-		$seendhcleank = 1;
-	    }
-	}
+        # Don't warn about recently deprecated commands in code that may be
+        # optional.  It may be there only for backports.
+        unless ($maybe_skipping) {
+            if ($dhcommand eq 'dh_desktop') {
+                tag 'dh_desktop-is-deprecated', "line $.";
+            }
+            if ($dhcommand eq 'dh_scrollkeeper') {
+                tag 'dh_scrollkeeper-is-deprecated', "line $.";
+            }
+            if ($dhcommand eq 'dh_clean' and m/\s+\-k(?:\s+.*)?$/) {
+                $seendhcleank = 1;
+            }
+        }
 
-	# if command is passed -n, it does not modify the scripts
-	if ($maint_commands->known($dhcommand) and not m/\s+\-n\s+/) {
-	    $needtomodifyscripts = 1;
-	}
+        # if command is passed -n, it does not modify the scripts
+        if ($maint_commands->known($dhcommand) and not m/\s+\-n\s+/) {
+            $needtomodifyscripts = 1;
+        }
 
-	# If debhelper commands are wrapped in make conditionals, assume the
-	# maintainer knows what they're doing and don't check build
-	# dependencies.
-	unless ($maybe_skipping) {
-	    if ($dh_ver_deps->known ($dhcommand)) {
-		my $dep = $dh_ver_deps->value($dhcommand);
-		$missingbdeps{$dep} = $dhcommand;
-	    } elsif ($dh_commands_depends->known($dhcommand)) {
-		my $dep = $dh_commands_depends->value($dhcommand);
-		my $alt = $dh_alt_deps->value($dhcommand)//'';
+        # If debhelper commands are wrapped in make conditionals, assume the
+        # maintainer knows what they're doing and don't check build
+        # dependencies.
+        unless ($maybe_skipping) {
+            if ($dh_ver_deps->known ($dhcommand)) {
+                my $dep = $dh_ver_deps->value($dhcommand);
+                $missingbdeps{$dep} = $dhcommand;
+            } elsif ($dh_commands_depends->known($dhcommand)) {
+                my $dep = $dh_commands_depends->value($dhcommand);
+                my $alt = $dh_alt_deps->value($dhcommand)//'';
 
-		if ($alt) {
-		    $dep = "$dep | $alt";
-		}
-		$missingbdeps{$dep} = $dhcommand;
-	    }
-	    if ($versions{$dhcommand}) {
-		push (@versioncheck, $dhcommand);
-	    }
-	}
-	$seencommand = 1;
-	$needbuilddepends = 1;
+                if ($alt) {
+                    $dep = "$dep | $alt";
+                }
+                $missingbdeps{$dep} = $dhcommand;
+            }
+            if ($versions{$dhcommand}) {
+                push (@versioncheck, $dhcommand);
+            }
+        }
+        $seencommand = 1;
+        $needbuilddepends = 1;
     } elsif (m,^\s+dh\s+,) {
-	$seencommand = 1;
-	$needbuilddepends = 1;
-	$needtomodifyscripts = 1;
+        $seencommand = 1;
+        $needbuilddepends = 1;
+        $needtomodifyscripts = 1;
     } elsif (m,^include\s+/usr/share/cdbs/1/rules/debhelper.mk,) {
-	$seencommand = 1;
-	$needbuilddepends = 1;
-	$needtomodifyscripts = 1;
-	$inclcdbs = 1;
+        $seencommand = 1;
+        $needbuilddepends = 1;
+        $needtomodifyscripts = 1;
+        $inclcdbs = 1;
 
-	# CDBS sets DH_COMPAT but doesn't export it.  It does, however, create
-	# a debian/compat file if none was found; that logic is handled later.
-	$dhcompatvalue = $cdbscompat;
-	$usescdbs = 1;
+        # CDBS sets DH_COMPAT but doesn't export it.  It does, however, create
+        # a debian/compat file if none was found; that logic is handled later.
+        $dhcompatvalue = $cdbscompat;
+        $usescdbs = 1;
     } elsif (/^\s*export\s+DH_COMPAT\s*:?=\s*([^\s]+)/) {
-	$level = $1;
+        $level = $1;
     } elsif (/^\s*export\s+DH_COMPAT/) {
-	$level = $dhcompatvalue if $dhcompatvalue;
+        $level = $dhcompatvalue if $dhcompatvalue;
     } elsif (/^\s*DH_COMPAT\s*:?=\s*([^\s]+)/) {
-	$dhcompatvalue = $1;
-	# one can export and then set the value:
-	$level = $1 if ($level);
+        $dhcompatvalue = $1;
+        # one can export and then set the value:
+        $level = $1 if ($level);
     } elsif (/^override_dh_/) {
-	$needbuilddepends = 1;
-	$overridetargets = 1;
+        $needbuilddepends = 1;
+        $overridetargets = 1;
     } elsif (m,^include\s+/usr/share/cdbs/, or m,^include\s+/usr/share/R/debian/r-cran.mk,o){
-	$inclcdbs = 1;
+        $inclcdbs = 1;
     }
 }
 close RULES;
@@ -198,19 +198,19 @@ for my $binpkg (keys %$pkgs) {
     my ($weak_depends, $strong_depends, $depends) = ('','','');
 
     foreach my $field (qw(pre-depends depends)) {
-	$strong_depends .= ($info->binary_field($binpkg, $field)//'');
+        $strong_depends .= ($info->binary_field($binpkg, $field)//'');
     }
     foreach my $field (qw(recommends suggests)) {
-	$weak_depends .= ($info->binary_field($binpkg, $field)//'');
+        $weak_depends .= ($info->binary_field($binpkg, $field)//'');
     }
     $depends = $weak_depends . $strong_depends;
 
     tag 'debhelper-but-no-misc-depends', $binpkg
-	if $depends !~ m/\$\{misc:Depends\}/ and $pkgs->{$binpkg} eq 'deb';
+        if $depends !~ m/\$\{misc:Depends\}/ and $pkgs->{$binpkg} eq 'deb';
 
     tag 'weak-dependency-on-misc-depends', $binpkg
-	if $weak_depends =~ m/\$\{misc:Depends\}/
-	   and $pkgs->{$binpkg} eq 'deb';
+        if $weak_depends =~ m/\$\{misc:Depends\}/
+           and $pkgs->{$binpkg} eq 'deb';
 }
 
 my $compatnan = 0;
@@ -221,23 +221,23 @@ if (-f "$droot/compat") {
     ($compat) = split(/\n/, $compat_file);
     $compat =~ s/^\s+$//;
     if ($compat) {
-	$compat =~ s/^\s+//;
-	$compat =~ s/\s+$//;
-	if ($compat !~ m/^\d+$/) {
-	    tag 'debhelper-compat-not-a-number', $compat;
-	    $compat =~ s/[^\d]//g;
-	    $compatnan = 1;
-	}
-	if ($level) {
-	    tag 'declares-possibly-conflicting-debhelper-compat-versions',
-		"rules=$level compat=$compat";
-	} else {
-	    # this is not just to fill in the gap, but because debhelper
-	    # prefers DH_COMPAT over debian/compat
-	    $level = $compat;
-	}
+        $compat =~ s/^\s+//;
+        $compat =~ s/\s+$//;
+        if ($compat !~ m/^\d+$/) {
+            tag 'debhelper-compat-not-a-number', $compat;
+            $compat =~ s/[^\d]//g;
+            $compatnan = 1;
+        }
+        if ($level) {
+            tag 'declares-possibly-conflicting-debhelper-compat-versions',
+                "rules=$level compat=$compat";
+        } else {
+            # this is not just to fill in the gap, but because debhelper
+            # prefers DH_COMPAT over debian/compat
+            $level = $compat;
+        }
     } else {
-	tag 'debhelper-compat-file-is-empty';
+        tag 'debhelper-compat-file-is-empty';
     }
 }
 if (defined($level) and $level !~ m/^\d+$/ and not $compatnan) {
@@ -266,62 +266,62 @@ opendir(DEBIAN, $droot)
     or fail("Can't open debfiles directory.");
 foreach my $file (sort readdir(DEBIAN)) {
     if ($file =~ m/^(?:(.*)\.)?(?:post|pre)(?:inst|rm)$/) {
-	next unless $needtomodifyscripts;
+        next unless $needtomodifyscripts;
 
-	# They need to have #DEBHELPER# in their scripts.  Search for scripts
-	# that look like maintainer scripts and make sure the token is there.
+        # They need to have #DEBHELPER# in their scripts.  Search for scripts
+        # that look like maintainer scripts and make sure the token is there.
         my $binpkg = $1 || '';
-	open(IN, '<', "$droot/$file")
-	    or fail("Can't open debfiles/$file: $!");
-	my $seentag = '';
-	while (<IN>) {
-	    if (m/\#DEBHELPER\#/) {
-		$seentag = 1;
-		last;
-	    }
-	}
-	close IN;
-	if (!$seentag) {
-	    unless (($binpkg && exists($pkgs->{$binpkg})
-		     && ($pkgs->{$binpkg} eq 'udeb'))
-		    or (!$binpkg && ($single_pkg eq 'udeb'))) {
-		tag 'maintainer-script-lacks-debhelper-token', "debian/$file";
-	    }
-	}
+        open(IN, '<', "$droot/$file")
+            or fail("Can't open debfiles/$file: $!");
+        my $seentag = '';
+        while (<IN>) {
+            if (m/\#DEBHELPER\#/) {
+                $seentag = 1;
+                last;
+            }
+        }
+        close IN;
+        if (!$seentag) {
+            unless (($binpkg && exists($pkgs->{$binpkg})
+                     && ($pkgs->{$binpkg} eq 'udeb'))
+                    or (!$binpkg && ($single_pkg eq 'udeb'))) {
+                tag 'maintainer-script-lacks-debhelper-token', "debian/$file";
+            }
+        }
     } elsif ($file eq 'control') {
-	next; # ignore
+        next; # ignore
     } elsif ($file =~ m/^ex\.|\.ex$/i) {
         tag 'dh-make-template-in-source', "debian/$file";
     } elsif ($file =~ m/^(?:.+\.)?debhelper(?:\.log)?$/){
-	# The regex matches "debhelper", but debhelper/Dh_Lib does not
-	# make those, so skip it.
-	if ($file ne 'debhelper') {
-	    push(@indebfiles, $file);
-	}
+        # The regex matches "debhelper", but debhelper/Dh_Lib does not
+        # make those, so skip it.
+        if ($file ne 'debhelper') {
+            push(@indebfiles, $file);
+        }
     } elsif ($file =~ m/^(?:(.*)\.)?maintscript$/) {
-	$seenmaintscript = 1;
+        $seenmaintscript = 1;
     } else {
-	my $base = $file;
-	$base =~ s/^.+\.//;
+        my $base = $file;
+        $base =~ s/^.+\.//;
 
-	# Check whether this is a debhelper config file that takes a list of
-	# filenames.  If so, check it for brace expansions, which aren't
-	# supported.
-	if ($filename_configs->known($base)) {
-	    next if $level < 3;
-	    open (IN, '<', "$droot/$file")
-		or fail("Can't open debfiles/$file: $!");
-	    local $_;
-	    while (<IN>) {
-		next if /^\s*$/;
-		next if (/^\#/ and $level >= 5);
-		if (m/(?<!\\)\{(?:[^\s\\\}]+?,)+[^\\\}\s]+\}/) {
-		    tag 'brace-expansion-in-debhelper-config-file',
-			"debian/$file";
-		}
-	    }
-	    close IN;
-	}
+        # Check whether this is a debhelper config file that takes a list of
+        # filenames.  If so, check it for brace expansions, which aren't
+        # supported.
+        if ($filename_configs->known($base)) {
+            next if $level < 3;
+            open (IN, '<', "$droot/$file")
+                or fail("Can't open debfiles/$file: $!");
+            local $_;
+            while (<IN>) {
+                next if /^\s*$/;
+                next if (/^\#/ and $level >= 5);
+                if (m/(?<!\\)\{(?:[^\s\\\}]+?,)+[^\\\}\s]+\}/) {
+                    tag 'brace-expansion-in-debhelper-config-file',
+                        "debian/$file";
+                }
+            }
+            close IN;
+        }
     }
 }
 closedir(DEBIAN);
@@ -334,14 +334,14 @@ if ($needbuilddepends && ! $bdepends->implies('debhelper')) {
 while (my ($dep, $command) = each %missingbdeps) {
     next if $dep eq 'debhelper'; #handled above
     tag 'missing-build-dependency-for-dh_-command', "$command=$dep"
-	unless ($bdepends_noarch->implies($dep));
+        unless ($bdepends_noarch->implies($dep));
 }
 
 
 unless ($bdepends->implies("debhelper (>= $level~)")){
     my $tagname = 'package-needs-versioned-debhelper-build-depends';
     $tagname = 'package-lacks-versioned-build-depends-on-debhelper'
-	if ($level <= PEDANTIC_COMPAT);
+        if ($level <= PEDANTIC_COMPAT);
 
     tag $tagname, $level;
 }
@@ -350,12 +350,12 @@ if (@versioncheck) {
     my %seen;
     @versioncheck = grep { !$seen{$_}++ } @versioncheck;
     for my $program (@versioncheck) {
-	my $required = $versions{$program};
-	my $needed = "debhelper (>= $required)";
-	unless ($bdepends->implies($needed)) {
-	    tag 'debhelper-script-needs-versioned-build-depends',
-	    $program, "(>= $required)";
-	}
+        my $required = $versions{$program};
+        my $needed = "debhelper (>= $required)";
+        unless ($bdepends->implies($needed)) {
+            tag 'debhelper-script-needs-versioned-build-depends',
+            $program, "(>= $required)";
+        }
     }
 }
 
@@ -363,8 +363,8 @@ if ($overridetargets) {
     my $required = '7.0.50~';
     my $needed = "debhelper (>= $required)";
     unless ($bdepends->implies($needed)) {
-	tag 'debhelper-overrides-need-versioned-build-depends',
-	"(>= $required)";
+        tag 'debhelper-overrides-need-versioned-build-depends',
+        "(>= $required)";
     }
 }
 
@@ -372,8 +372,8 @@ if ($seenmaintscript) {
     my $required = '8.1.0~';
     my $needed = "debhelper (>= $required)";
     unless ($bdepends->implies($needed)) {
-	tag 'debhelper-maintscript-needs-versioned-build-depends',
-	"(>= $required)";
+        tag 'debhelper-maintscript-needs-versioned-build-depends',
+        "(>= $required)";
     }
 }
 
@@ -383,9 +383,9 @@ if(scalar(@indebfiles)){
     my $others = scalar(@indebfiles);
     my $otext = '';
     if($others > 1){
-	$otext = " and $others others";
+        $otext = " and $others others";
     } elsif($others == 1){
-	$otext = ' and 1 other';
+        $otext = ' and 1 other';
     }
     tag 'temporary-debhelper-file', "$f$otext";
 }
@@ -395,7 +395,7 @@ if(scalar(@indebfiles)){
 1;
 
 # Local Variables:
-# indent-tabs-mode: t
+# indent-tabs-mode: nil
 # cperl-indent-level: 4
 # End:
-# vim: syntax=perl sw=4 ts=8 noet shiftround
+# vim: syntax=perl sw=4 sts=4 sr et

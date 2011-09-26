@@ -273,10 +273,10 @@ sub _read_profile {
     }
     $self->_read_profile_tags($pname, $pheader);
     if (@pdata){
-	my $i = 2; # section counter
-	foreach my $psection (@pdata){
-	    $self->_read_profile_section($pname, $psection, $i++);
-	}
+        my $i = 2; # section counter
+        foreach my $psection (@pdata){
+            $self->_read_profile_section($pname, $psection, $i++);
+        }
     }
 }
 
@@ -299,7 +299,7 @@ sub _read_profile_section {
     croak "Profile \"$pname\" contains invalid severity \"$severity\" in section $sno.\n"
         if $severity && !$SEVERITIES{$severity};
     foreach my $tag (@tags) {
-	croak "Unknown check $tag in $pname (section $sno).\n" unless exists $TAG_MAP{$tag};
+        croak "Unknown check $tag in $pname (section $sno).\n" unless exists $TAG_MAP{$tag};
         $sev_map->{$tag} = $severity if $severity;
         if ( $overridable != -1 ) {
             if ($overridable) {
@@ -396,9 +396,9 @@ sub _parse_boolean {
     return $def unless defined $bool;
     $bool = lc $bool;
     return 1 if $bool eq 'yes' || $bool eq 'true' ||
-	($bool =~ m/^\d++$/o && $bool != 0);
+        ($bool =~ m/^\d++$/o && $bool != 0);
     return 0  if $bool eq 'no' || $bool eq 'false' ||
-	($bool =~ m/^\d++$/o && $bool == 0);
+        ($bool =~ m/^\d++$/o && $bool == 0);
     croak "\"$bool\" is not a boolean value in $pname (section $sno).\n";
 }
 
@@ -446,5 +446,4 @@ lintian(1)
 # indent-tabs-mode: nil
 # cperl-indent-level: 4
 # End:
-# vim: syntax=perl ts=4 sw=4 et
-
+# vim: syntax=perl sw=4 sts=4 sr et

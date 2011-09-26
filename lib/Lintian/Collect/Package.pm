@@ -92,15 +92,15 @@ sub _fetch_extracted_dir {
     my ($self, $field, $dirname, $file) = @_;
     my $dir = $self->{$field};
     if ( not defined $dir ) {
-	my $base_dir = $self->base_dir;
-	$dir = "$base_dir/$dirname";
-	croak "$field ($dirname) is not available" unless -d "$dir/";
-	$self->{$field} = $dir;
+        my $base_dir = $self->base_dir;
+        $dir = "$base_dir/$dirname";
+        croak "$field ($dirname) is not available" unless -d "$dir/";
+        $self->{$field} = $dir;
     }
     if ($file) {
-	# strip leading ./ - if that leaves something, return the path there
-	$file =~ s,^\.?/*+,,go;
-	return "$dir/$file" if $file;
+        # strip leading ./ - if that leaves something, return the path there
+        $file =~ s,^\.?/*+,,go;
+        return "$dir/$file" if $file;
     }
     return $dir;
 }
@@ -273,3 +273,8 @@ Lintian::Collect::Source(3)
 
 =cut
 
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

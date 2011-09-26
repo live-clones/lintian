@@ -22,7 +22,7 @@ set -eu
 
 if [ -z "${1:-}" ]; then
     printf "Usage: %s path/to/lintian/data\n" \
-	"$(basename "$0")"
+        "$(basename "$0")"
     cat <<INFO
 
 The script downloads the following files from a mirror (which should be
@@ -86,10 +86,15 @@ for package in $(cat packages); do
     dpkg-deb -x "$file" "$(mktemp -d -p .)"
     rm -rf "$file"
     find */ | grep -Ev '^[^/]+/etc/insserv.+$' \
-	| xargs rm >/dev/null 2>&1 || true
+        | xargs rm >/dev/null 2>&1 || true
     find */ -type l -print | xargs rm >/dev/null 2>&1 || true
 done
 
 sed -nr '/^\$/{s/\s.*$//;p}' */etc/insserv.conf */etc/insserv.conf.d/* |
     sort -u >> virtual_facilities
 mv virtual_facilities "$lintian_data/init.d/"
+
+# Local Variables:
+# indent-tabs-mode: nil
+# End:
+# vim: syntax=sh sw=4 sts=4 sr et

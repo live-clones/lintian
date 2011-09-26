@@ -57,45 +57,45 @@ my $seen_fields = {};
 open (CONTROL, '<', $dcontrol)
     or fail "Couldn't read debfiles/control: $!";
 while (<CONTROL>) {
-	s/\s*\n$//;
-	next if /^\#/;
+    s/\s*\n$//;
+    next if /^\#/;
 
-	#Reset seen_fields if we enter a new section:
-	$seen_fields = {} if $_ eq '';
+    #Reset seen_fields if we enter a new section:
+    $seen_fields = {} if $_ eq '';
 
-	#line with field:
-	if (/^(\S+):/) {
-		my $field = lc ($1);
-		if ($seen_fields->{$field}) {
-			tag 'debian-control-with-duplicate-fields', "$field: $$seen_fields{$field}, $.";
-		}
-		$seen_fields->{$field} = $.;
-		if ($field =~ /^xs-vcs-/) {
-			my $base = $field;
-			$base =~ s/^xs-//;
-			tag 'xs-vcs-header-in-debian-control', $field
-			    if $src_fields->known($base);
-		}
-		if ($field eq 'xc-package-type') {
-			tag 'xc-package-type-in-debian-control', "line $.";
-		}
-		unless (/^\S+: \S/ || /^\S+:$/) {
-			tag 'debian-control-has-unusual-field-spacing', "line $.";
-		}
-	}
+    #line with field:
+    if (/^(\S+):/) {
+        my $field = lc ($1);
+        if ($seen_fields->{$field}) {
+            tag 'debian-control-with-duplicate-fields', "$field: $$seen_fields{$field}, $.";
+        }
+        $seen_fields->{$field} = $.;
+        if ($field =~ /^xs-vcs-/) {
+            my $base = $field;
+            $base =~ s/^xs-//;
+            tag 'xs-vcs-header-in-debian-control', $field
+                if $src_fields->known($base);
+        }
+        if ($field eq 'xc-package-type') {
+            tag 'xc-package-type-in-debian-control', "line $.";
+        }
+        unless (/^\S+: \S/ || /^\S+:$/) {
+            tag 'debian-control-has-unusual-field-spacing', "line $.";
+        }
+    }
 }
 close CONTROL;
 
 my ($header, @binary_controls) = read_dpkg_control($dcontrol);
 
 for my $binary_control (@binary_controls) {
-	tag 'build-info-in-binary-control-file-section', 'Package '.$binary_control->{'package'}
-	    if ($binary_control->{'build-depends'} || $binary_control->{'build-depends-indep'} ||
-	        $binary_control->{'build-conflicts'} || $binary_control->{'build-conflicts-indep'});
-	for my $field (keys %$binary_control) {
-		tag 'binary-control-field-duplicates-source', "field \"$field\" in package ".$binary_control->{'package'},
-		    if ($header->{$field} && $binary_control->{$field} eq $header->{$field});
-	}
+    tag 'build-info-in-binary-control-file-section', 'Package '.$binary_control->{'package'}
+        if ($binary_control->{'build-depends'} || $binary_control->{'build-depends-indep'} ||
+            $binary_control->{'build-conflicts'} || $binary_control->{'build-conflicts-indep'});
+    for my $field (keys %$binary_control) {
+        tag 'binary-control-field-duplicates-source', "field \"$field\" in package ".$binary_control->{'package'},
+            if ($header->{$field} && $binary_control->{$field} eq $header->{$field});
+    }
 }
 
 # Check that fields which should be comma-separated or pipe-separated have
@@ -118,45 +118,45 @@ for my $binary_control (@binary_controls) {
 # transforms them in the output to <= and >=, but it's easy to miss the error
 # message.  Similarly, check for duplicates, which dpkg-source eliminates.
 for my $control ($header, @binary_controls) {
-	for my $field (qw(pre-depends depends recommends suggests breaks
-			  conflicts provides replaces enhances
-			  build-depends build-depends-indep
-			  build-conflicts build-conflicts-indep)) {
-		next unless $control->{$field};
-		my $relation = Lintian::Relation->new($control->{$field});
-		my @dups = $relation->duplicates;
-		for my $dup (@dups) {
-			tag 'duplicate-in-relation-field', 'in',
-			    ($control->{source} ? 'source' : $control->{package}),
-			    "$field:", join(', ', @$dup);
-		}
-		my $value = $control->{$field};
-		$value =~ s/\n(\s)/$1/g;
-		$value =~ s/\[[^\]]*\]//g;
-		if ($value =~ /(?:^|\s)
-			       (
-				(?:\w[^\s,|\$\(]+|\$\{\S+:Depends\})\s*
-				(?:\([^\)]*\)\s*)?
-			       )
-			       \s+
-			       (
-				(?:\w[^\s,|\$\(]+|\$\{\S+:Depends\})\s*
-				(?:\([^\)]*\)\s*)?
-			       )/x) {
-			my ($prev, $next) = ($1, $2);
-			for ($prev, $next) {
-				s/\s+$//;
-			}
-			tag 'missing-separator-between-items', 'in',
-			    ($control->{source} ? 'source' : $control->{package}),
-			    "$field field between '$prev' and '$next'";
-		}
-		while ($value =~ /([^\s\(]+\s*\([<>]\s*[^<>=]+\))/g) {
-			tag 'obsolete-relation-form-in-source', 'in',
-			    ($control->{source} ? 'source' : $control->{package}),
-			    "$field: $1";
-		}
-	}
+    for my $field (qw(pre-depends depends recommends suggests breaks
+              conflicts provides replaces enhances
+              build-depends build-depends-indep
+              build-conflicts build-conflicts-indep)) {
+        next unless $control->{$field};
+        my $relation = Lintian::Relation->new($control->{$field});
+        my @dups = $relation->duplicates;
+        for my $dup (@dups) {
+            tag 'duplicate-in-relation-field', 'in',
+                ($control->{source} ? 'source' : $control->{package}),
+                "$field:", join(', ', @$dup);
+        }
+        my $value = $control->{$field};
+        $value =~ s/\n(\s)/$1/g;
+        $value =~ s/\[[^\]]*\]//g;
+        if ($value =~ /(?:^|\s)
+                   (
+                (?:\w[^\s,|\$\(]+|\$\{\S+:Depends\})\s*
+                (?:\([^\)]*\)\s*)?
+                   )
+                   \s+
+                   (
+                (?:\w[^\s,|\$\(]+|\$\{\S+:Depends\})\s*
+                (?:\([^\)]*\)\s*)?
+                   )/x) {
+            my ($prev, $next) = ($1, $2);
+            for ($prev, $next) {
+                s/\s+$//;
+            }
+            tag 'missing-separator-between-items', 'in',
+                ($control->{source} ? 'source' : $control->{package}),
+                "$field field between '$prev' and '$next'";
+        }
+        while ($value =~ /([^\s\(]+\s*\([<>]\s*[^<>=]+\))/g) {
+            tag 'obsolete-relation-form-in-source', 'in',
+                ($control->{source} ? 'source' : $control->{package}),
+                "$field: $1";
+        }
+    }
 }
 
 # Make sure that a stronger dependency field doesn't imply any of the elements
@@ -176,23 +176,23 @@ my @dep_fields = qw(pre-depends depends recommends suggests);
 my $libcs = Lintian::Relation->new(join(' | ', @LIBCS));
 my @package_names;
 for my $control (@binary_controls) {
-	push (@package_names, $control->{package});
-	for my $strong (0 .. $#dep_fields) {
-		next unless $control->{$dep_fields[$strong]};
-		my $relation = Lintian::Relation->new($control->{$dep_fields[$strong]});
-		tag 'package-depends-on-itself', $control->{package}, $dep_fields[$strong]
-		    if $relation->implies($control->{package});
-		tag 'package-depends-on-hardcoded-libc', $control->{package}, $dep_fields[$strong]
-		    if ($relation->implies($libcs) and $pkg !~ /^e?glibc$/);
-		for my $weak (($strong + 1) .. $#dep_fields) {
-			next unless $control->{$dep_fields[$weak]};
-			for my $dependency (split /\s*,\s*/, $control->{$dep_fields[$weak]}) {
-				next unless $dependency;
-				tag 'stronger-dependency-implies-weaker', $control->{package}, "$dep_fields[$strong] -> $dep_fields[$weak]", $dependency
-				    if $relation->implies($dependency);
-			}
-		}
-	}
+    push (@package_names, $control->{package});
+    for my $strong (0 .. $#dep_fields) {
+        next unless $control->{$dep_fields[$strong]};
+        my $relation = Lintian::Relation->new($control->{$dep_fields[$strong]});
+        tag 'package-depends-on-itself', $control->{package}, $dep_fields[$strong]
+            if $relation->implies($control->{package});
+        tag 'package-depends-on-hardcoded-libc', $control->{package}, $dep_fields[$strong]
+            if ($relation->implies($libcs) and $pkg !~ /^e?glibc$/);
+        for my $weak (($strong + 1) .. $#dep_fields) {
+            next unless $control->{$dep_fields[$weak]};
+            for my $dependency (split /\s*,\s*/, $control->{$dep_fields[$weak]}) {
+                next unless $dependency;
+                tag 'stronger-dependency-implies-weaker', $control->{package}, "$dep_fields[$strong] -> $dep_fields[$weak]", $dependency
+                    if $relation->implies($dependency);
+            }
+        }
+    }
 }
 
 # Check that every package is in the same archive area, except that
@@ -214,70 +214,70 @@ for my $control (@binary_controls) {
 # user.
 my $area;
 if ($header->{'section'}) {
-	if ($header->{'section'} =~ m%^([^/]+)/%) {
-		$area = $1;
-	} else {
-		$area = '';
-	}
+    if ($header->{'section'} =~ m%^([^/]+)/%) {
+        $area = $1;
+    } else {
+        $area = '';
+    }
 } else {
-	tag 'no-section-field-for-source';
+    tag 'no-section-field-for-source';
 }
 my @descriptions;
 for my $binary_control (@binary_controls) {
-	my $package = $binary_control->{'package'};
+    my $package = $binary_control->{'package'};
 
-	# Accumulate the description.
-	my $desc = $binary_control->{'description'};
-	if ($desc and (not $binary_control->{'xc-package-type'}
-		       or $binary_control->{'xc-package-type'} ne 'udeb')) {
-		push(@descriptions, [ $package, split("\n", $desc, 2) ]);
-	}
+    # Accumulate the description.
+    my $desc = $binary_control->{'description'};
+    if ($desc and (not $binary_control->{'xc-package-type'}
+               or $binary_control->{'xc-package-type'} ne 'udeb')) {
+        push(@descriptions, [ $package, split("\n", $desc, 2) ]);
+    }
 
-	# If this looks like a -dev package, check its dependencies.
-	if ($package =~ /-dev$/ and $binary_control->{'depends'}) {
-		check_dev_depends($package, $binary_control->{depends},
-				  @package_names);
-	}
+    # If this looks like a -dev package, check its dependencies.
+    if ($package =~ /-dev$/ and $binary_control->{'depends'}) {
+        check_dev_depends($package, $binary_control->{depends},
+                  @package_names);
+    }
 
-	# Check mismatches in archive area.
-	next unless $binary_control->{'section'};
-	if (!defined ($area)) {
-		if ($binary_control->{'section'} =~ m%^([^/]+)/%) {
-			$area = ($1 eq 'contrib') ? '' : $1;
-		} else {
-			$area = '';
-		}
-		next;
-	}
-	tag 'section-area-mismatch', 'Package ' . $package
-		if ($area && $binary_control->{'section'} !~ m%^$area/%);
-	tag 'section-area-mismatch', 'Package ' . $package
-		if (!$area && $binary_control->{'section'} =~ m%^([^/]+)/% && $1 ne 'contrib');
+    # Check mismatches in archive area.
+    next unless $binary_control->{'section'};
+    if (!defined ($area)) {
+        if ($binary_control->{'section'} =~ m%^([^/]+)/%) {
+            $area = ($1 eq 'contrib') ? '' : $1;
+        } else {
+            $area = '';
+        }
+        next;
+    }
+    tag 'section-area-mismatch', 'Package ' . $package
+        if ($area && $binary_control->{'section'} !~ m%^$area/%);
+    tag 'section-area-mismatch', 'Package ' . $package
+        if (!$area && $binary_control->{'section'} =~ m%^([^/]+)/% && $1 ne 'contrib');
 }
 
 # Check for duplicate descriptions.
 my (%seen_short, %seen_long);
 for my $i (0 .. $#descriptions) {
-	my (@short, @long);
-	for my $j (($i + 1) .. $#descriptions) {
-		if ($descriptions[$i][1] eq $descriptions[$j][1]) {
-			my $package = $descriptions[$j][0];
-			push(@short, $package) unless $seen_short{$package};
-		}
-		next unless ($descriptions[$i][2] and $descriptions[$j][2]);
-		if ($descriptions[$i][2] eq $descriptions[$j][2]) {
-			my $package = $descriptions[$j][0];
-			push(@long, $package) unless $seen_long{$package};
-		}
-	}
-	if (@short) {
-		tag 'duplicate-short-description', $descriptions[$i][0], @short;
-		for (@short) { $seen_short{$_} = 1 }
-	}
-	if (@long) {
-		tag 'duplicate-long-description', $descriptions[$i][0], @long;
-		for (@long) { $seen_long{$_} = 1 }
-	}
+    my (@short, @long);
+    for my $j (($i + 1) .. $#descriptions) {
+        if ($descriptions[$i][1] eq $descriptions[$j][1]) {
+            my $package = $descriptions[$j][0];
+            push(@short, $package) unless $seen_short{$package};
+        }
+        next unless ($descriptions[$i][2] and $descriptions[$j][2]);
+        if ($descriptions[$i][2] eq $descriptions[$j][2]) {
+            my $package = $descriptions[$j][0];
+            push(@long, $package) unless $seen_long{$package};
+        }
+    }
+    if (@short) {
+        tag 'duplicate-short-description', $descriptions[$i][0], @short;
+        for (@short) { $seen_short{$_} = 1 }
+    }
+    if (@long) {
+        tag 'duplicate-long-description', $descriptions[$i][0], @long;
+        for (@long) { $seen_long{$_} = 1 }
+    }
 }
 
 }
@@ -288,50 +288,50 @@ for my $i (0 .. $#descriptions) {
 # have a version restriction that's at least as strict as the same upstream
 # version.
 sub check_dev_depends {
-	my ($package, $depends, @packages) = @_;
-	$depends =~ s/^\s+//;
-	$depends =~ s/\s+$//;
-	for my $target (@packages) {
-		next unless ($target =~ /^lib[\w.+-]+\d/
-			     and $target !~ /-(?:dev|docs?|common)$/);
-		my @depends = grep { /(?:^|[\s|])\Q$target\E(?:[\s|\(]|\z)/ }
-		    split (/\s*,\s*/, $depends);
+    my ($package, $depends, @packages) = @_;
+    $depends =~ s/^\s+//;
+    $depends =~ s/\s+$//;
+    for my $target (@packages) {
+        next unless ($target =~ /^lib[\w.+-]+\d/
+                 and $target !~ /-(?:dev|docs?|common)$/);
+        my @depends = grep { /(?:^|[\s|])\Q$target\E(?:[\s|\(]|\z)/ }
+            split (/\s*,\s*/, $depends);
 
-		# If there are any alternatives here, something special is
-		# going on.  Assume that the maintainer knows what they're
-		# doing.  Otherwise, separate out just the versions.
-		next if grep { /\|/ } @depends;
-		my @versions = sort map {
-			if (/^[\w.+-]+(?:\s*\(([^\)]+)\))/) {
-				$1;
-			} else {
-				'';
-			}
-		} @depends;
+        # If there are any alternatives here, something special is
+        # going on.  Assume that the maintainer knows what they're
+        # doing.  Otherwise, separate out just the versions.
+        next if grep { /\|/ } @depends;
+        my @versions = sort map {
+            if (/^[\w.+-]+(?:\s*\(([^\)]+)\))/) {
+                $1;
+            } else {
+                '';
+            }
+        } @depends;
 
-		# If there's only one mention of this package, the dependency
-		# should be tight.  Otherwise, there should be both >>/>= and
-		# <</<= dependencies that mention the source, binary, or
-		# upstream version.  If there are more than three mentions of
-		# the package, again something is weird going on, so we assume
-		# they know what they're doing.
-		if (@depends == 1) {
-			unless ($versions[0] =~ /^\s*=\s*\$\{(?:binary:Version|Source-Version)\}/) {
-				tag 'weak-library-dev-dependency', "$package on $depends[0]";
-			}
-		} elsif (@depends == 2) {
-			unless ($versions[0] =~ /^\s*<[=<]\s*\$\{(?:(?:binary|source):(?:Upstream-)?Version|Source-Version)\}/
-				and $versions[1] =~ /^\s*>[=>]\s*\$\{(?:(?:binary|source):(?:Upstream-)?Version|Source-Version)\}/) {
-				tag 'weak-library-dev-dependency', "$package on $depends[0], $depends[1]";
-			}
-		}
-	}
+        # If there's only one mention of this package, the dependency
+        # should be tight.  Otherwise, there should be both >>/>= and
+        # <</<= dependencies that mention the source, binary, or
+        # upstream version.  If there are more than three mentions of
+        # the package, again something is weird going on, so we assume
+        # they know what they're doing.
+        if (@depends == 1) {
+            unless ($versions[0] =~ /^\s*=\s*\$\{(?:binary:Version|Source-Version)\}/) {
+                tag 'weak-library-dev-dependency', "$package on $depends[0]";
+            }
+        } elsif (@depends == 2) {
+            unless ($versions[0] =~ /^\s*<[=<]\s*\$\{(?:(?:binary|source):(?:Upstream-)?Version|Source-Version)\}/
+                and $versions[1] =~ /^\s*>[=>]\s*\$\{(?:(?:binary|source):(?:Upstream-)?Version|Source-Version)\}/) {
+                tag 'weak-library-dev-dependency', "$package on $depends[0], $depends[1]";
+            }
+        }
+    }
 }
 
 1;
 
 # Local Variables:
-# indent-tabs-mode: t
-# cperl-indent-level: 8
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
 # End:
-# vim: syntax=perl sw=4 ts=4 noet shiftround
+# vim: syntax=perl sw=4 sts=4 sr et

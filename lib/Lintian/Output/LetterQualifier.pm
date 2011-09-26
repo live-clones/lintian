@@ -29,9 +29,9 @@ use base qw(Lintian::Output);
 
 my %codes = (
     'pedantic' => {
-	'wild-guess' => 'P?',
-	'possible' => 'P ',
-	'certain' => 'P!'
+        'wild-guess' => 'P?',
+        'possible' => 'P ',
+        'certain' => 'P!'
     },
     'wishlist' => {
         'wild-guess' => 'W?',
@@ -62,9 +62,9 @@ my %codes = (
 
 my %lq_default_colors = (
     'pedantic' => {
-	'wild-guess' => 'green',
-	'possible' => 'green',
-	'certain' => 'green'
+        'wild-guess' => 'green',
+        'possible' => 'green',
+        'certain' => 'green'
     },
     'wishlist' => {
         'wild-guess' => 'green',
@@ -141,4 +141,4 @@ sub print_tag {
 # indent-tabs-mode: nil
 # cperl-indent-level: 4
 # End:
-# vim: syntax=perl sw=4 sts=4 ts=8 et shiftround
+# vim: syntax=perl sw=4 sts=4 sr et

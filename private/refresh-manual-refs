@@ -233,4 +233,4 @@ rename('data/output/manual-references.new',
 # indent-tabs-mode: nil
 # cperl-indent-level: 4
 # End:
-# vim: syntax=perl sw=4 sts=4 ts=4 et sr
+# vim: syntax=perl sw=4 sts=4 sr et

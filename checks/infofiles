@@ -44,7 +44,7 @@ foreach my $file (@{$info->sorted_index}) {
     my ($fname, $path) = fileparse($file);
 
     next unless ($index_info->{type} =~ m,^[\-lh],o)
-	    and ($path =~ m,^usr/share/info/, or $path =~ m,^usr/info/,);
+            and ($path =~ m,^usr/share/info/, or $path =~ m,^usr/info/,);
 
     # Ignore dir files.  That's a different error which we already catch in
     # the files check.
@@ -59,53 +59,53 @@ foreach my $file (@{$info->sorted_index}) {
     my @fname_pieces = split /\./, $fname;
     my $ext = pop @fname_pieces;
     if ($ext eq 'gz') { # ok!
-	if ($index_info->{type} =~ m,^[-h],o) { # compressed with maximum compression rate?
-	    if ($file_info !~ m/gzip compressed data/o) {
-		tag 'info-document-not-compressed-with-gzip', $file;
-	    } else {
-		if ($file_info !~ m/max compression/o) {
-		    tag 'info-document-not-compressed-with-max-compression', $file;
-		}
-	    }
-	}
+        if ($index_info->{type} =~ m,^[-h],o) { # compressed with maximum compression rate?
+            if ($file_info !~ m/gzip compressed data/o) {
+                tag 'info-document-not-compressed-with-gzip', $file;
+            } else {
+                if ($file_info !~ m/max compression/o) {
+                    tag 'info-document-not-compressed-with-max-compression', $file;
+                }
+            }
+        }
     } elsif ($ext eq 'png') {
         next;
     } else {
-	push (@fname_pieces, $ext);
-	tag 'info-document-not-compressed', $file;
+        push (@fname_pieces, $ext);
+        tag 'info-document-not-compressed', $file;
     }
     my $infoext = pop @fname_pieces;
     unless ($infoext && $infoext =~ /^info(-\d+)?$/) { # it's not foo.info
-	unless (!@fname_pieces) { # it's not foo{,-{1,2,3,...}}
-	    tag 'info-document-has-wrong-extension', $file;
-	}
+        unless (!@fname_pieces) { # it's not foo{,-{1,2,3,...}}
+            tag 'info-document-has-wrong-extension', $file;
+        }
     }
 
     # If this is the main info file (no numeric extension). make sure it has
     # appropriate dir entry information.
     if ($fname !~ /-\d+\.gz/ && $file_info =~ /gzip compressed data/) {
-	my $pid = open INFO, '-|';
-	if (not defined $pid) {
-	    fail("cannot fork: $!");
-	} elsif ($pid == 0) {
-	    my $f = quotemeta($info->unpacked($file));
-	    my %newenv = (LC_ALL => 'C', PATH => $ENV{PATH},
-			  LOCPATH => $ENV{LOCPATH});
-	    undef %ENV;
-	    %ENV = %newenv;
-	    exec "zcat $f 2>&1"
-		or fail("cannot run zcat: $!");
-	}
-	local $_;
-	my ($section, $start, $end);
-	while (<INFO>) {
-	    $section = 1 if /^INFO-DIR-SECTION\s+\S/;
-	    $start   = 1 if /^START-INFO-DIR-ENTRY\b/;
-	    $end     = 1 if /^END-INFO-DIR-ENTRY\b/;
-	}
-	close INFO;
-	tag 'info-document-missing-dir-section', $file unless $section;
-	tag 'info-document-missing-dir-entry', $file unless $start && $end;
+        my $pid = open INFO, '-|';
+        if (not defined $pid) {
+            fail("cannot fork: $!");
+        } elsif ($pid == 0) {
+            my $f = quotemeta($info->unpacked($file));
+            my %newenv = (LC_ALL => 'C', PATH => $ENV{PATH},
+                          LOCPATH => $ENV{LOCPATH});
+            undef %ENV;
+            %ENV = %newenv;
+            exec "zcat $f 2>&1"
+                or fail("cannot run zcat: $!");
+        }
+        local $_;
+        my ($section, $start, $end);
+        while (<INFO>) {
+            $section = 1 if /^INFO-DIR-SECTION\s+\S/;
+            $start   = 1 if /^START-INFO-DIR-ENTRY\b/;
+            $end     = 1 if /^END-INFO-DIR-ENTRY\b/;
+        }
+        close INFO;
+        tag 'info-document-missing-dir-section', $file unless $section;
+        tag 'info-document-missing-dir-entry', $file unless $start && $end;
     }
 }
 
@@ -115,7 +115,7 @@ foreach my $file (@{$info->sorted_index}) {
 if ($has_info_file) {
     my $depends = $info->relation('depends');
     unless ($depends->implies('dpkg (>= 1.15.4) | install-info')) {
-	tag 'missing-dependency-on-install-info';
+        tag 'missing-dependency-on-install-info';
     }
 }
 
@@ -124,7 +124,7 @@ if ($has_info_file) {
 1;
 
 # Local Variables:
-# indent-tabs-mode: t
+# indent-tabs-mode: nil
 # cperl-indent-level: 4
 # End:
-# vim: syntax=perl sw=4 ts=8
+# vim: syntax=perl sw=4 sts=4 sr et

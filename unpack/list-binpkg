@@ -44,21 +44,21 @@ my $type = 'binary';
 
 while (my $arg = shift) {
     if ($arg =~ s,^-,,o) {
-	if ($arg eq 'v') {
-	    $verbose = 1;
-	} elsif ($arg eq 'u') {
-	    $udeb = 1;
-	    $type = 'udeb';
-	} else {
-	    print STDERR "error: unknown command line argument: $arg\n";
-	    exit 1;
-	}
+        if ($arg eq 'v') {
+            $verbose = 1;
+        } elsif ($arg eq 'u') {
+            $udeb = 1;
+            $type = 'udeb';
+        } else {
+            print STDERR "error: unknown command line argument: $arg\n";
+            exit 1;
+        }
     } else {
-	if ($output_file) {
-	    print STDERR "error: too many command line arguments: $arg\n";
-	    exit 1;
-	}
-	$output_file = $arg;
+        if ($output_file) {
+            print STDERR "error: too many command line arguments: $arg\n";
+            exit 1;
+        }
+        $output_file = $arg;
     }
 }
 
@@ -106,11 +106,11 @@ foreach my $area (split /\s*,\s*/,$LINTIAN_AREA) {
     $hash{'arch'} = $LINTIAN_ARCH;
     $hash{'area'} = $area;
     if ($udeb) {
-	$file = "$LINTIAN_ARCHIVEDIR/dists/$hash{'dist'}/$hash{'area'}/" .
-	        "debian-installer/binary-$hash{'arch'}/Packages";
+        $file = "$LINTIAN_ARCHIVEDIR/dists/$hash{'dist'}/$hash{'area'}/" .
+                "debian-installer/binary-$hash{'arch'}/Packages";
     } else {
-	$file = "$LINTIAN_ARCHIVEDIR/dists/$hash{'dist'}/$hash{'area'}/" .
-	        "binary-$hash{'arch'}/Packages";
+        $file = "$LINTIAN_ARCHIVEDIR/dists/$hash{'dist'}/$hash{'area'}/" .
+                "binary-$hash{'arch'}/Packages";
     }
     $hash{'file'} = $file;
     push @packages_files, \%hash;
@@ -122,106 +122,106 @@ my $total = 0;
 foreach my $packages_file (@packages_files) {
     my $pkgs_file = $packages_file->{'file'};
     if (-e $pkgs_file) {
-	print "N: Parsing $pkgs_file ...\n" if $verbose;
-	open(IN, '<', $pkgs_file)
-	    or fail("cannot open Packages file $pkgs_file: $!");
+        print "N: Parsing $pkgs_file ...\n" if $verbose;
+        open(IN, '<', $pkgs_file)
+            or fail("cannot open Packages file $pkgs_file: $!");
     } elsif (-e "$pkgs_file.gz") {
-	print "N: Parsing $pkgs_file.gz ...\n" if $verbose;
-	open (IN, '-|', 'gzip', '-dc', "$pkgs_file.gz")
-	    or fail("cannot open Packages file $pkgs_file.gz: $!");
+        print "N: Parsing $pkgs_file.gz ...\n" if $verbose;
+        open (IN, '-|', 'gzip', '-dc', "$pkgs_file.gz")
+            or fail("cannot open Packages file $pkgs_file.gz: $!");
     } else {
-	fail("No packages file $pkgs_file");
+        fail("No packages file $pkgs_file");
     }
 
     my $line;
 
     while (!eof(IN)) {
-	my ($arch, $deb_file);
-	do {
-	    $line = <IN>;
-	    if ($line =~ /^Architecture: (.*)$/m) {
-		$arch = $1;
-	    } elsif ($line =~ /^Filename: (.*)$/m) {
-		$deb_file = $1;
-	    }
-	} until (not defined($line) or $line =~ /^\s*$/m);
+        my ($arch, $deb_file);
+        do {
+            $line = <IN>;
+            if ($line =~ /^Architecture: (.*)$/m) {
+                $arch = $1;
+            } elsif ($line =~ /^Filename: (.*)$/m) {
+                $deb_file = $1;
+            }
+        } until (not defined($line) or $line =~ /^\s*$/m);
 
-	my @stat;
-	# get timestamp...
-	unless (@stat = stat "$LINTIAN_ARCHIVEDIR/$deb_file") {
-	    print "E: general: cannot stat $LINTIAN_ARCHIVEDIR/$deb_file\n";
-	    next;
-	}
-	my $timestamp = $stat[9];
-	my ($status, $pkg, $data);
+        my @stat;
+        # get timestamp...
+        unless (@stat = stat "$LINTIAN_ARCHIVEDIR/$deb_file") {
+            print "E: general: cannot stat $LINTIAN_ARCHIVEDIR/$deb_file\n";
+            next;
+        }
+        my $timestamp = $stat[9];
+        my ($status, $pkg, $data);
 
-	# was package already included in last list?
-	if (exists $pkgfile{$deb_file}) {
-	    # yes!
-	    $pkg = $pkgfile{$deb_file};
-	    $data = $binary_info{$pkg};
+        # was package already included in last list?
+        if (exists $pkgfile{$deb_file}) {
+            # yes!
+            $pkg = $pkgfile{$deb_file};
+            $data = $binary_info{$pkg};
 
-	    # file changed since last run?
-	    if ($timestamp == $data->{'timestamp'}) {
-		# no.
-		$status = 'unchanged';
-	    } else {
-		$status = 'changed';
-		delete $binary_info{$pkg};
-	    }
-	} else {
-	    # new package, get info
-	    $status = 'new';
-	}
+            # file changed since last run?
+            if ($timestamp == $data->{'timestamp'}) {
+                # no.
+                $status = 'unchanged';
+            } else {
+                $status = 'changed';
+                delete $binary_info{$pkg};
+            }
+        } else {
+            # new package, get info
+            $status = 'new';
+        }
 
-	if (($status eq 'new') or ($status eq 'changed')) {
-	    $data = &safe_get_deb_info($deb_file);
-	    next if not defined $data;
-	    $pkg = $data->{'package'};
-	}
+        if (($status eq 'new') or ($status eq 'changed')) {
+            $data = &safe_get_deb_info($deb_file);
+            next if not defined $data;
+            $pkg = $data->{'package'};
+        }
 
-	# Check for duplicates.	 In the case of a duplicate, we take the one
-	# with the latest version.
-	if (exists $packages{$pkg}) {
-	    if (versions_lte($data->{version}, $packages{$pkg}{version})) {
-		next;
-	    }
-	}
+        # Check for duplicates.  In the case of a duplicate, we take the one
+        # with the latest version.
+        if (exists $packages{$pkg}) {
+            if (versions_lte($data->{version}, $packages{$pkg}{version})) {
+                next;
+            }
+        }
 
-	unless (exists $data->{'source-version'}) {
-	    if ($data->{'source'} =~ /^([-+\.\w]+)\s+\((.+)\)$/) {
-		$data->{'source'} = $1;
-		$data->{'source-version'} = $2;
-	    } else {
-		$data->{'source-version'} = $data->{'version'};
-	    }
-	}
+        unless (exists $data->{'source-version'}) {
+            if ($data->{'source'} =~ /^([-+\.\w]+)\s+\((.+)\)$/) {
+                $data->{'source'} = $1;
+                $data->{'source-version'} = $2;
+            } else {
+                $data->{'source-version'} = $data->{'version'};
+            }
+        }
 
-	# Save entry for writing to output file.
-	$data->{file} = $deb_file;
-	$data->{timestamp} = $timestamp;
-	$data->{area} = $packages_file->{area};
-	$data->{status} = $status;
-	$packages{$pkg} = $data;
+        # Save entry for writing to output file.
+        $data->{file} = $deb_file;
+        $data->{timestamp} = $timestamp;
+        $data->{area} = $packages_file->{area};
+        $data->{status} = $status;
+        $packages{$pkg} = $data;
 
-	# remove record from hash
-	delete $binary_info{$pkg} if $status eq 'unchanged';
-	$total++;
+        # remove record from hash
+        delete $binary_info{$pkg} if $status eq 'unchanged';
+        $total++;
     }
     close(IN) or fail("cannot close input pipe: $!");
 }
 for my $pkg (sort keys %packages) {
     print OUT join(';',
-		   $pkg,
-		   $packages{$pkg}{version},
-		   $packages{$pkg}{source},
-		   $packages{$pkg}{'source-version'},
-		   $packages{$pkg}{file},
-		   $packages{$pkg}{timestamp},
-		   $packages{$pkg}{area}
-		  ),"\n";
+                   $pkg,
+                   $packages{$pkg}{version},
+                   $packages{$pkg}{source},
+                   $packages{$pkg}{'source-version'},
+                   $packages{$pkg}{file},
+                   $packages{$pkg}{timestamp},
+                   $packages{$pkg}{area}
+                  ),"\n";
     printf "N: Listed %s $type package %s %s\n", $packages{$pkg}{status},
-	$pkg, $packages{$pkg}{version} if $verbose;
+        $pkg, $packages{$pkg}{version} if $verbose;
 }
 close(OUT) or fail("cannot close output pipe: $!");
 
@@ -229,7 +229,7 @@ if ($verbose) {
     # All packages that are still included in %binary_info have disappeared
     # from the archive.
     for my $pkg (sort keys %binary_info) {
-	print "N: Removed $type package $pkg from list\n";
+        print "N: Removed $type package $pkg from list\n";
     }
     printf "N: Listed %d $type packages\n",$total;
 }
@@ -242,17 +242,17 @@ sub safe_get_deb_info {
     my $data;
     eval { $data = get_deb_info("$LINTIAN_ARCHIVEDIR/$_[0]"); };
     if ($@) {
-	# error!
-	print STDERR "$@\n";
-	print "E: general: bad-$type-package $_[0]\n";
-	return;
+        # error!
+        print STDERR "$@\n";
+        print "E: general: bad-$type-package $_[0]\n";
+        return;
     }
     $data->{'source'} or ($data->{'source'} = $data->{'package'});
     return $data;
 }
 
 # Local Variables:
-# indent-tabs-mode: t
+# indent-tabs-mode: nil
 # cperl-indent-level: 4
 # End:
-# vim: syntax=perl sw=4 ts=4 noet shiftround
+# vim: syntax=perl sw=4 sts=4 sr et

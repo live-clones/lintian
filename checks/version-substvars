@@ -9,7 +9,7 @@
 #
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
@@ -52,57 +52,57 @@ my $binpkgs = $info->binaries;
 my @dep_fields = qw(depends pre-depends recommends suggests conflicts replaces);
 
 foreach (keys %$binpkgs) {
-	my ($pkg1, $pkg1_is_any, $pkg2, $pkg2_is_any, $substvar_strips_binNMU);
+    my ($pkg1, $pkg1_is_any, $pkg2, $pkg2_is_any, $substvar_strips_binNMU);
 
-	$pkg1 = $_;
-	$pkg1_is_any = (($info->binary_field($pkg1, 'architecture')//'') ne 'all');
+    $pkg1 = $_;
+    $pkg1_is_any = (($info->binary_field($pkg1, 'architecture')//'') ne 'all');
 
-	foreach my $field (@dep_fields) {
-		next unless $info->binary_field($pkg1, $field);
-		if ($info->binary_field($pkg1, $field) =~ m/\${Source-Version}/) {
-			tag 'substvar-source-version-is-deprecated', $pkg1;
-		}
-	}
+    foreach my $field (@dep_fields) {
+        next unless $info->binary_field($pkg1, $field);
+        if ($info->binary_field($pkg1, $field) =~ m/\${Source-Version}/) {
+            tag 'substvar-source-version-is-deprecated', $pkg1;
+        }
+    }
 
-	foreach (split(m/,/, ($info->binary_field($pkg1, 'pre-depends')//'').', '.
-		       ($info->binary_field($pkg1, 'depends')//''))) {
-		next unless m/(\S+)\s*\(\s*(\>)?=\s*\${((?:Source-|source:|binary:)Version)}/x;
+    foreach (split(m/,/, ($info->binary_field($pkg1, 'pre-depends')//'').', '.
+               ($info->binary_field($pkg1, 'depends')//''))) {
+        next unless m/(\S+)\s*\(\s*(\>)?=\s*\${((?:Source-|source:|binary:)Version)}/x;
 
-		my $gt = $2//'';
-		$pkg2 = $1;
-		$substvar_strips_binNMU = ($3 eq 'source:Version');
+        my $gt = $2//'';
+        $pkg2 = $1;
+        $substvar_strips_binNMU = ($3 eq 'source:Version');
 
-		# We can't test dependencies on packages whose names are
-		# formed via substvars expanded during the build.  Assume
-		# those maintainers know what they're doing.
-		if (not $info->binary_field($pkg2, 'architecture')) {
-			tag 'version-substvar-for-external-package', "$pkg1 -> $pkg2"
-				unless ($pkg2 =~ /\$\{\S+\}/);
-			next;
-		}
-		$pkg2_is_any = (($info->binary_field($pkg2, 'architecture')//'') ne 'all');
+        # We can't test dependencies on packages whose names are
+        # formed via substvars expanded during the build.  Assume
+        # those maintainers know what they're doing.
+        if (not $info->binary_field($pkg2, 'architecture')) {
+            tag 'version-substvar-for-external-package', "$pkg1 -> $pkg2"
+                unless ($pkg2 =~ /\$\{\S+\}/);
+            next;
+        }
+        $pkg2_is_any = (($info->binary_field($pkg2, 'architecture')//'') ne 'all');
 
-		if ($pkg1_is_any) {
-			if ($pkg2_is_any and $substvar_strips_binNMU) {
-				unless ($gt) {
-					# (b1) any -> any (= ${source:Version})
-					tag 'not-binnmuable-any-depends-any', "$pkg1 -> $pkg2";
-				} else {
-					# any -> any (= ${source:Version})
-					# technically this can be "binNMU'ed", though it is
-					# a bit weird.
-					1;
-				}
-			} elsif (not $pkg2_is_any and not $substvar_strips_binNMU) {
-				# (b2) any -> all ( = ${binary:Version}) [or S-V]
-				# or  -- same --  (>= ${binary:Version}) [or S-V]
-				tag 'not-binnmuable-any-depends-all', "$pkg1 -> $pkg2";
-			}
-		} elsif ($pkg2_is_any && !$gt) {
-			# (b3) all -> any (= ${either-of-them})
-			tag 'not-binnmuable-all-depends-any', "$pkg1 -> $pkg2";
-		}
-	}
+        if ($pkg1_is_any) {
+            if ($pkg2_is_any and $substvar_strips_binNMU) {
+                unless ($gt) {
+                    # (b1) any -> any (= ${source:Version})
+                    tag 'not-binnmuable-any-depends-any', "$pkg1 -> $pkg2";
+                } else {
+                    # any -> any (= ${source:Version})
+                    # technically this can be "binNMU'ed", though it is
+                    # a bit weird.
+                    1;
+                }
+            } elsif (not $pkg2_is_any and not $substvar_strips_binNMU) {
+                # (b2) any -> all ( = ${binary:Version}) [or S-V]
+                # or  -- same --  (>= ${binary:Version}) [or S-V]
+                tag 'not-binnmuable-any-depends-all', "$pkg1 -> $pkg2";
+            }
+        } elsif ($pkg2_is_any && !$gt) {
+            # (b3) all -> any (= ${either-of-them})
+            tag 'not-binnmuable-all-depends-any', "$pkg1 -> $pkg2";
+        }
+    }
 }
 
 }
@@ -110,7 +110,7 @@ foreach (keys %$binpkgs) {
 1;
 
 # Local Variables:
-# indent-tabs-mode: t
-# cperl-indent-level: 8
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
 # End:
-# vim: syntax=perl sw=4 ts=4 noet shiftround
+# vim: syntax=perl sw=4 sts=4 sr et

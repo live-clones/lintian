@@ -32,10 +32,10 @@ Create and maintain Lintian reports automatically
 Usage: harness [ -i | -c [-f] ] [ -r ]
 
 Options:
-  -c	clean mode, erase everything and start from scratch
-  -f	full mode, blithely overwrite lintian.log
-  -i	incremental mode, use old lintian.log data, process changes only
-  -r	generate HTML reports only
+  -c    clean mode, erase everything and start from scratch
+  -f    full mode, blithely overwrite lintian.log
+  -i    incremental mode, use old lintian.log data, process changes only
+  -r    generate HTML reports only
 
 Incremental mode is the default if you have a lintian.log;
 otherwise, it's full.
@@ -177,51 +177,51 @@ if ($opt_i) { # process changes only
     # process changes file and create list of packages to process
     Log('Reading changes file...');
     open(IN, '<', $changes_file)
-	or Die("cannot open changes file $changes_file for reading: $!");
+        or Die("cannot open changes file $changes_file for reading: $!");
     open(OUT, '>', $list_file)
-	or Die("cannot open list file $list_file for writing: $!");
+        or Die("cannot open list file $list_file for writing: $!");
     while (<IN>) {
-	chop;
+        chop;
 
-	if (/^N: Listed (changed|new) (binary|udeb|source) package (\S+) (\S+)/o) {
-	    my ($type,$binsrc,$pkg,$ver) = ($1,$2,$3,$4);
+        if (/^N: Listed (changed|new) (binary|udeb|source) package (\S+) (\S+)/o) {
+            my ($type,$binsrc,$pkg,$ver) = ($1,$2,$3,$4);
 
-	    Log("$type $binsrc package $pkg $ver");
+            Log("$type $binsrc package $pkg $ver");
 
-	    if ($binsrc eq 'binary') {
-		my $data = $binary_info{$pkg};
-		$data or Die("cannot find binary package $pkg in binary-packages file");
-		print OUT "$LINTIAN_ARCHIVEDIR/$binary_info{$pkg}->{'file'}\n";
-		$skip_binary{$pkg} = 1;
-	    } elsif ($binsrc eq 'udeb') {
-		my $data = $udeb_info{$pkg};
-		$data or Die("cannot find udeb package $pkg in udeb-packages file");
-		print OUT "$LINTIAN_ARCHIVEDIR/$udeb_info{$pkg}->{'file'}\n";
-		$skip_udeb{$pkg} = 1;
-	    } else {
-		my $data = $source_info{$pkg};
-		$data or Die("cannot find source package $pkg in source-packages file");
-		print OUT "$LINTIAN_ARCHIVEDIR/$source_info{$pkg}->{'file'}\n";
-		$skip_source{$pkg} = 1;
-	    }
-	} elsif (/^N: Removed (binary|udeb|source) package (\S+)/o) {
-	    my ($binsrc,$pkg) = ($1,$2);
+            if ($binsrc eq 'binary') {
+                my $data = $binary_info{$pkg};
+                $data or Die("cannot find binary package $pkg in binary-packages file");
+                print OUT "$LINTIAN_ARCHIVEDIR/$binary_info{$pkg}->{'file'}\n";
+                $skip_binary{$pkg} = 1;
+            } elsif ($binsrc eq 'udeb') {
+                my $data = $udeb_info{$pkg};
+                $data or Die("cannot find udeb package $pkg in udeb-packages file");
+                print OUT "$LINTIAN_ARCHIVEDIR/$udeb_info{$pkg}->{'file'}\n";
+                $skip_udeb{$pkg} = 1;
+            } else {
+                my $data = $source_info{$pkg};
+                $data or Die("cannot find source package $pkg in source-packages file");
+                print OUT "$LINTIAN_ARCHIVEDIR/$source_info{$pkg}->{'file'}\n";
+                $skip_source{$pkg} = 1;
+            }
+        } elsif (/^N: Removed (binary|udeb|source) package (\S+)/o) {
+            my ($binsrc,$pkg) = ($1,$2);
 
-	    Log("removed $binsrc package $pkg");
-	    run("rm -r -- \"$LINTIAN_LAB/$binsrc/$pkg\"")
-		or Log("could not remove $binsrc package $pkg");
-	    if ($binsrc eq 'binary') {
-		$skip_binary{$pkg} = 1;
-	    } elsif ($binsrc eq 'udeb') {
-		$skip_udeb{$pkg} = 1;
-	    } else {
-		$skip_source{$pkg} = 1;
-	    }
-	} elsif (/^N/o) {
-	    # ignore other notes
-	} else {
-	    Log("skipping changes line: $_");
-	}
+            Log("removed $binsrc package $pkg");
+            run("rm -r -- \"$LINTIAN_LAB/$binsrc/$pkg\"")
+                or Log("could not remove $binsrc package $pkg");
+            if ($binsrc eq 'binary') {
+                $skip_binary{$pkg} = 1;
+            } elsif ($binsrc eq 'udeb') {
+                $skip_udeb{$pkg} = 1;
+            } else {
+                $skip_source{$pkg} = 1;
+            }
+        } elsif (/^N/o) {
+            # ignore other notes
+        } else {
+            Log("skipping changes line: $_");
+        }
     }
     close(OUT);
     close(IN);
@@ -231,26 +231,26 @@ if ($opt_i) { # process changes only
     Log('Updating lintian.log...');
     rename $lintian_log, $old_lintian_log;
     open(IN, '<', $old_lintian_log)
-	or Die("cannot open old lintian.log $old_lintian_log for reading: $!");
+        or Die("cannot open old lintian.log $old_lintian_log for reading: $!");
     open(OUT, '>', $lintian_log)
-	or Die("cannot open lintian.log $lintian_log for writing: $!");
+        or Die("cannot open lintian.log $lintian_log for writing: $!");
     my $copy_mode = 1;
     while (<IN>) {
-	if (/^N: Processing (binary|udeb|source) package (\S+)/o) {
-	    my ($type,$pkg) = ($1,$2);
+        if (/^N: Processing (binary|udeb|source) package (\S+)/o) {
+            my ($type,$pkg) = ($1,$2);
 
-	    if ($type eq 'binary') {
-		$copy_mode = not exists $skip_binary{$pkg};
-	    } elsif ($type eq 'udeb') {
-		$copy_mode = not exists $skip_udeb{$pkg};
-	    } else {
-		$copy_mode = not exists $skip_source{$pkg};
-	    }
-	}
+            if ($type eq 'binary') {
+                $copy_mode = not exists $skip_binary{$pkg};
+            } elsif ($type eq 'udeb') {
+                $copy_mode = not exists $skip_udeb{$pkg};
+            } else {
+                $copy_mode = not exists $skip_source{$pkg};
+            }
+        }
 
-	if ($copy_mode) {
-	    print OUT $_;
-	}
+        if ($copy_mode) {
+            print OUT $_;
+        }
     }
     print OUT 'N: ---end-of-old-lintian-log-file---\n';
     close(OUT);
@@ -275,8 +275,8 @@ Log('');
 
 # rotate the statistics file updated by $html_reports_cmd
 if (-f $statistics_file) {
-  system("cp $statistics_file $LOG_DIR/stats/statistics-`date +%Y%m%d`") == 0
-    or Log('warning: could not rotate the statistics file');
+    system("cp $statistics_file $LOG_DIR/stats/statistics-`date +%Y%m%d`") == 0
+        or Log('warning: could not rotate the statistics file');
 }
 
 #Log("Creating depcheck pages...");
@@ -312,3 +312,9 @@ sub Die {
     Log("fatal error: $_[0]");
     exit 1;
 }
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

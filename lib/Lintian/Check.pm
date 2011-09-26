@@ -130,9 +130,9 @@ sub check_maintainer {
     $maintainer =~ /^([^<\s]*(?:\s+[^<\s]+)*)?(\s*)(?:<(.+)>)?(.*)$/;
     my ($name, $del, $mail, $extra) = ($1, $2, $3, $4);
     if (not $mail and $name =~ m/@/) {
-	# Name probably missing and address has no <>.
-	$mail = $name;
-	$name = undef;
+        # Name probably missing and address has no <>.
+        $mail = $name;
+        $name = undef;
     }
 
     # Some basic tests.
@@ -168,17 +168,17 @@ sub check_maintainer {
     if (not $mail) {
         tag "$field-address-missing", $maintainer;
     } else {
-	if (not $malformed and not Email::Valid->address($mail)) {
+        if (not $malformed and not Email::Valid->address($mail)) {
             # Either not a valid email or possibly missing a comma between
             # two entries.
             tag "$field-address-malformed", $maintainer;
-	}
-	if ($mail =~ /(?:localhost|\.localdomain|\.localnet)$/) {
+        }
+        if ($mail =~ /(?:localhost|\.localdomain|\.localnet)$/) {
             tag "$field-address-is-on-localhost", $maintainer;
-	}
+        }
 
-	# Some additional checks that we only do for maintainer fields.
-	if ($field eq 'maintainer') {
+        # Some additional checks that we only do for maintainer fields.
+        if ($field eq 'maintainer') {
             if (($mail eq 'debian-qa@lists.debian.org') or
                 ($name =~ /\bdebian\s+qa\b/i and $mail ne 'packages@qa.debian.org')) {
                 tag 'wrong-debian-qa-address-set-as-maintainer', $maintainer;
@@ -186,7 +186,7 @@ sub check_maintainer {
                 tag 'wrong-debian-qa-group-name', $maintainer
                     if ($name ne 'Debian QA Group');
             }
-	}
+        }
     }
 }
 
@@ -233,8 +233,8 @@ sub check_spelling {
             $counter++;
             my $correction = $corrections->value($lcword);
             if ($word =~ /^[A-Z]+$/) {
-		$correction = uc $correction;
-	    } elsif ($word =~ /^[A-Z]/) {
+                $correction = uc $correction;
+            } elsif ($word =~ /^[A-Z]/) {
                 $correction = ucfirst $correction;
             }
             _tag($tag, $filename, $word, $correction) if defined $tag;
@@ -244,18 +244,18 @@ sub check_spelling {
     # Special case for correcting multi-word strings.
     for my $oregex ($corrections_multiword->all) {
         my $regex = qr($oregex);
-	if ($text =~ m,\b($regex)\b,) {
-	    my $word = $1;
-	    my $correction = $corrections_multiword->value($oregex);
-	    if ($word =~ /^[A-Z]+$/) {
-		$correction = uc $correction;
-	    } elsif ($word =~ /^[A-Z]/) {
-		$correction = ucfirst $correction;
-	    }
-	    $counter++;
-	    _tag($tag, $filename, $word, $correction)
-		if defined $tag;
-	}
+        if ($text =~ m,\b($regex)\b,) {
+            my $word = $1;
+            my $correction = $corrections_multiword->value($oregex);
+            if ($word =~ /^[A-Z]+$/) {
+                $correction = uc $correction;
+            } elsif ($word =~ /^[A-Z]/) {
+                $correction = ucfirst $correction;
+            }
+            $counter++;
+            _tag($tag, $filename, $word, $correction)
+                if defined $tag;
+        }
     }
 
     return $counter;
@@ -339,4 +339,4 @@ lintian(1)
 # indent-tabs-mode: nil
 # cperl-indent-level: 4
 # End:
-# vim: syntax=perl sw=4 sts=4 ts=4 et shiftround
+# vim: syntax=perl sw=4 sts=4 sr et

@@ -42,48 +42,48 @@ our @EXPORT = (qw(
 ));
 
 sub read_src_list {
-  my ($src_list) = @_;
-  my %source_info;
+    my ($src_list) = @_;
+    my %source_info;
 
-  return {} unless $src_list && -s $src_list;
+    return {} unless $src_list && -s $src_list;
 
-  open my $IN, '<', $src_list or croak "open $src_list: $!";
+    open my $IN, '<', $src_list or croak "open $src_list: $!";
 
-  # compatible file format?
-  my $f;
-  chop($f = <$IN>);
-  if ($f ne SRCLIST_FORMAT) {
+    # compatible file format?
+    my $f;
+    chop($f = <$IN>);
+    if ($f ne SRCLIST_FORMAT) {
+        close($IN);
+        croak "$src_list has an incompatible file format";
+    }
+
+    # compatible format, so read file
+    while (<$IN>) {
+        chop;
+        next if m/^\s*$/o;
+        my ($src,$ver,$maint,$uploaders,$arch,$area,$std,$bin,$files,$file,$timestamp) = split(m/\;/o,$_);
+
+        my $src_struct;
+        %$src_struct =
+            (
+             'source' => $src,
+             'version' => $ver,
+             'maintainer' => $maint,
+             'uploaders' => $uploaders,
+             'architecture' => $arch,
+             'area' => $area,
+             'standards-version' => $std,
+             'binary' => $bin,
+             'files' => $files,
+             'file' => $file,
+             'timestamp' => $timestamp,
+             );
+
+        $source_info{$src} = $src_struct;
+    }
+
     close($IN);
-    croak "$src_list has an incompatible file format";
-  }
-
-  # compatible format, so read file
-  while (<$IN>) {
-    chop;
-    next if m/^\s*$/o;
-    my ($src,$ver,$maint,$uploaders,$arch,$area,$std,$bin,$files,$file,$timestamp) = split(m/\;/o,$_);
-
-    my $src_struct;
-    %$src_struct =
-      (
-       'source' => $src,
-       'version' => $ver,
-       'maintainer' => $maint,
-       'uploaders' => $uploaders,
-       'architecture' => $arch,
-       'area' => $area,
-       'standards-version' => $std,
-       'binary' => $bin,
-       'files' => $files,
-       'file' => $file,
-       'timestamp' => $timestamp,
-       );
-
-    $source_info{$src} = $src_struct;
-  }
-
-  close($IN);
-  return \%source_info;
+    return \%source_info;
 }
 
 # Previously udeb-files had a different format; allow parsing a udeb file as
@@ -92,55 +92,55 @@ my $UDEBLIST_FORMAT = "Lintian's list of udeb packages in the archive--V3";
 
 
 sub read_bin_list {
-  my ($bin_list) = @_;
-  my %binary_info;
+    my ($bin_list) = @_;
+    my %binary_info;
 
-  return {} unless $bin_list && -s $bin_list;
+    return {} unless $bin_list && -s $bin_list;
 
-  open(my $IN, '<', $bin_list) or fail("open $bin_list: $!");
+    open(my $IN, '<', $bin_list) or fail("open $bin_list: $!");
 
-  # compatible file format?
-  my $f;
-  chop($f = <$IN>);
-  if ($f ne BINLIST_FORMAT) {
-      # accept the UDEB 3 header as alternative to the BIN 4 file
-      if ($f ne $UDEBLIST_FORMAT || BINLIST_FORMAT !~ m/archive--V4$/o) {
-          close($IN);
-          croak "$bin_list has an incompatible file format";
-      }
-      # ok - was an UDEB 3 file, which is a BIN 4 file with a different header
-  }
+    # compatible file format?
+    my $f;
+    chop($f = <$IN>);
+    if ($f ne BINLIST_FORMAT) {
+        # accept the UDEB 3 header as alternative to the BIN 4 file
+        if ($f ne $UDEBLIST_FORMAT || BINLIST_FORMAT !~ m/archive--V4$/o) {
+            close($IN);
+            croak "$bin_list has an incompatible file format";
+        }
+        # ok - was an UDEB 3 file, which is a BIN 4 file with a different header
+    }
 
-  # compatible format, so read file
-  while (<$IN>) {
-    chop;
+    # compatible format, so read file
+    while (<$IN>) {
+        chop;
 
-    next if m/^\s*$/o;
-    my ($bin,$ver,$source,$source_ver,$file,$timestamp,$area) = split(m/\;/o,$_);
+        next if m/^\s*$/o;
+        my ($bin,$ver,$source,$source_ver,$file,$timestamp,$area) = split(m/\;/o,$_);
 
-    my $bin_struct;
-    %$bin_struct =
-      (
-       'package' => $bin,
-       'version' => $ver,
-       'source' => $source,
-       'source-version' => $source_ver,
-       'file' => $file,
-       'timestamp' => $timestamp,
-       'area' => $area,
-       );
+        my $bin_struct;
+        %$bin_struct =
+          (
+           'package' => $bin,
+           'version' => $ver,
+           'source' => $source,
+           'source-version' => $source_ver,
+           'file' => $file,
+           'timestamp' => $timestamp,
+           'area' => $area,
+           );
 
-    $binary_info{$bin} = $bin_struct;
-  }
+        $binary_info{$bin} = $bin_struct;
+    }
 
-  close($IN);
-  return \%binary_info;
+    close($IN);
+    return \%binary_info;
 }
 
 1;
 
 # Local Variables:
 # indent-tabs-mode: nil
-# cperl-indent-level: 2
+# cperl-indent-level: 4
 # End:
-# vim: syntax=perl sw=2 sts=2 ts=2 et shiftround
+# vim: syntax=perl sw=4 sts=4 sr et

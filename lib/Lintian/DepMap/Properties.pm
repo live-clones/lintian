@@ -69,11 +69,11 @@ sub add {
     my $self = shift;
     my $ref = pop;
     if (not defined $ref) {
-	# do nothing if not defined
+        # do nothing if not defined
     } elsif (not ref($ref)) {
-	push @_, $ref;
+        push @_, $ref;
     } else {
-	$self->{'properties'}->{$_[0]} = $ref;
+        $self->{'properties'}->{$_[0]} = $ref;
     }
     return $self->SUPER::add(@_);
 }
@@ -97,11 +97,11 @@ sub addp {
     my $self = shift;
     my $ref = pop;
     if (not defined $ref) {
-	# do nothing if not defined
+        # do nothing if not defined
     } elsif (not ref($ref)) {
-	push @_, $ref;
+        push @_, $ref;
     } else {
-	$self->{'properties'}->{$_[0]} = $ref;
+        $self->{'properties'}->{$_[0]} = $ref;
     }
     return $self->SUPER::addp(@_);
 }
@@ -139,3 +139,9 @@ __END__
 Originally written by Raphael Geissert <atomo64@gmail.com> for Lintian.
 
 =cut
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

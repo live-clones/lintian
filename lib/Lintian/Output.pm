@@ -31,10 +31,10 @@ our (@EXPORT, %EXPORT_TAGS, @EXPORT_OK);
 BEGIN {
     @EXPORT = ();
     %EXPORT_TAGS = ( messages => [qw(msg v_msg warning debug_msg delimiter)],
-		     util => [qw(_global_or_object)]);
+                     util => [qw(_global_or_object)]);
     @EXPORT_OK = (@{$EXPORT_TAGS{messages}},
-		  @{$EXPORT_TAGS{util}},
-		  'string');
+                  @{$EXPORT_TAGS{util}},
+                  'string');
 }
 
 =head1 NAME
@@ -132,7 +132,7 @@ Lintian::Output->mk_accessors(qw(verbosity_level debug color colors stdout
 
 # for the non-OO interface
 my %default_colors = ( 'E' => 'red' , 'W' => 'yellow' , 'I' => 'cyan',
-		       'P' => 'green' );
+                       'P' => 'green' );
 
 our $GLOBAL = Lintian::Output->new;
 
@@ -253,11 +253,11 @@ sub string {
 
     my $output = '';
     if (@args) {
-	foreach (@args) {
-	    $output .= $lead.': '.$_."\n";
-	}
+        foreach (@args) {
+            $output .= $lead.': '.$_."\n";
+        }
     } elsif ($lead) {
-	$output .= $lead.".\n";
+        $output .= $lead.".\n";
     }
 
     return $output;
@@ -296,34 +296,34 @@ sub print_tag {
 
     my $tag;
     if ($self->_do_color) {
-	if ($self->color eq 'html') {
-	    my $escaped = $tag_info->{tag};
-	    $escaped =~ s/&/&amp;/g;
-	    $escaped =~ s/</&lt;/g;
-	    $escaped =~ s/>/&gt;/g;
-	    $tag .= qq(<span style="color: $tag_color">$escaped</span>)
-	} else {
-	    $tag .= Term::ANSIColor::colored($tag_info->tag, $tag_color);
-	}
+        if ($self->color eq 'html') {
+            my $escaped = $tag_info->{tag};
+            $escaped =~ s/&/&amp;/g;
+            $escaped =~ s/</&lt;/g;
+            $escaped =~ s/>/&gt;/g;
+            $tag .= qq(<span style="color: $tag_color">$escaped</span>)
+        } else {
+            $tag .= Term::ANSIColor::colored($tag_info->tag, $tag_color);
+        }
     } else {
-	$tag .= $tag_info->tag;
+        $tag .= $tag_info->tag;
     }
 
     if ($override && @{ $override->comments }) {
-	$self->msg(@{ $override->comments } );
+        $self->msg(@{ $override->comments } );
     }
 
     $self->_print('', "$code: $pkg_info->{package}$type", "$tag$information");
     if (not $self->issued_tag($tag_info->tag) and $self->showdescription) {
-	my $description;
-	if ($self->_do_color && $self->color eq 'html') {
-	    $description = $tag_info->description('html', '   ');
-	} else {
-	    $description = $tag_info->description('text', '   ');
-	}
-	$self->_print('', 'N', '');
-	$self->_print('', 'N', split("\n", $description));
-	$self->_print('', 'N', '');
+        my $description;
+        if ($self->_do_color && $self->color eq 'html') {
+            $description = $tag_info->description('html', '   ');
+        } else {
+            $description = $tag_info->description('text', '   ');
+        }
+        $self->_print('', 'N', '');
+        $self->_print('', 'N', split("\n", $description));
+        $self->_print('', 'N', '');
     }
 }
 
@@ -339,11 +339,11 @@ sub print_start_pkg {
 
     my $object = 'package';
     if ($pkg_info->{type} eq 'changes') {
-	$object = 'file';
+        $object = 'file';
     }
 
     $self->v_msg($self->delimiter,
-		 "Processing $pkg_info->{type} $object $pkg_info->{package} (version $pkg_info->{version}, arch $pkg_info->{arch}) ...");
+                 "Processing $pkg_info->{type} $object $pkg_info->{package} (version $pkg_info->{version}, arch $pkg_info->{arch}) ...");
 }
 
 =item C<print_start_pkg($pkg_info)>
@@ -442,8 +442,8 @@ sub _do_color {
     my ($self) = @_;
 
     return ($self->color eq 'always' || $self->color eq 'html'
-	    || ($self->color eq 'auto'
-		&& -t $self->stdout));
+            || ($self->color eq 'auto'
+                && -t $self->stdout));
 }
 
 =back
@@ -463,9 +463,9 @@ returns @args, otherwise returns C<($Lintian::Output::GLOBAL, @_)>.
 
 sub _global_or_object {
     if (ref($_[0]) and $_[0]->isa('Lintian::Output')) {
-	return @_;
+        return @_;
     } else {
-	return ($Lintian::Output::GLOBAL, @_);
+        return ($Lintian::Output::GLOBAL, @_);
     }
 }
 
@@ -500,7 +500,7 @@ lintian(1)
 =cut
 
 # Local Variables:
-# indent-tabs-mode: t
+# indent-tabs-mode: nil
 # cperl-indent-level: 4
 # End:
-# vim: syntax=perl sw=4 ts=8 noet shiftround
+# vim: syntax=perl sw=4 sts=4 sr et

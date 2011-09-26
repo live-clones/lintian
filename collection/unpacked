@@ -34,11 +34,11 @@ my $type = shift;
 
 if (-d 'unpacked/') {
     delete_dir('unpacked/') or
-	fail("failed to remove unpacked directory of $pkg");
+        fail("failed to remove unpacked directory of $pkg");
 }
 if (-f 'unpacked-errors') {
     unlink('unpacked-errors') or
-	fail("failed to remove unpacked-errors file of $pkg");
+        fail("failed to remove unpacked-errors file of $pkg");
 }
 # If we are asked to only remove the files stop right here
 if ($type =~ m/^remove-/) {
@@ -76,19 +76,19 @@ if ($type eq 'source') {
 
     my $opts = { err => 'unpacked-errors' };
     spawn($opts,
-	    ['dpkg-deb', '--fsys-tarfile', 'deb'],
-	    '|', ['tar', 'xf', '-', '-C', 'unpacked']);
+            ['dpkg-deb', '--fsys-tarfile', 'deb'],
+            '|', ['tar', 'xf', '-', '-C', 'unpacked']);
     unless ($opts->{success}) {
-	open(ERRORS, '<', 'unpacked-errors')
-	    or fail("cannot open unpacked-errors: $!");
-	print STDERR while <ERRORS>;
-	close ERRORS;
-	fail('dpkg-deb | tar failed with status ', $opts->{harness}->result);
+        open(ERRORS, '<', 'unpacked-errors')
+            or fail("cannot open unpacked-errors: $!");
+        print STDERR while <ERRORS>;
+        close ERRORS;
+        fail('dpkg-deb | tar failed with status ', $opts->{harness}->result);
     }
 
     # fix permissions
     spawn({ fail => 'error' },
-	    ['chmod', '-R', 'u+rwX,go-w', 'unpacked']);
+            ['chmod', '-R', 'u+rwX,go-w', 'unpacked']);
 }
 
 sub libdpkg_unpack_dsc {
@@ -120,4 +120,8 @@ sub can_use_dpkg_source{
     return check_path('dpkg-source');
 }
 
-
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

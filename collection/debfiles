@@ -34,9 +34,15 @@ my $type = shift;
 
 if (-e 'debfiles') {
     delete_dir('debfiles')
-	or fail('cannot rm old debfiles directory');
+        or fail('cannot rm old debfiles directory');
 }
 
 # Copy the whole debian directory
 copy_dir('unpacked/debian/', 'debfiles')
     or fail("cannot copy unpacked/debian to debfiles: $!");
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

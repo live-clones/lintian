@@ -45,28 +45,28 @@ if (-f $cf) {
 
     open(IN, '<', $cf) or fail("cannot open $cf for reading: $!");
     while (<IN>) {
-	chop;
-	next if m/^\s*$/;
+        chop;
+        next if m/^\s*$/;
 
-	unless (m,^/,) {
-	    tag 'relative-conffile', $_;
-	    $_ = '/' . $_;
-	}
-	my $file = $_;
-	$file =~ s@^/++@@o;
-	$conffiles{$file}++;
+        unless (m,^/,) {
+            tag 'relative-conffile', $_;
+            $_ = '/' . $_;
+        }
+        my $file = $_;
+        $file =~ s@^/++@@o;
+        $conffiles{$file}++;
 
-	if ($conffiles{$file} > 1) {
-	    tag 'duplicate-conffile', $file;
-	}
+        if ($conffiles{$file} > 1) {
+            tag 'duplicate-conffile', $file;
+        }
 
-	if (m,^/usr/,) {
-	    tag 'file-in-usr-marked-as-conffile', $file;
-	} else {
-	    unless (m,^/etc/,) {
-		tag 'non-etc-file-marked-as-conffile', $file;
-	    }
-	}
+        if (m,^/usr/,) {
+            tag 'file-in-usr-marked-as-conffile', $file;
+        } else {
+            unless (m,^/etc/,) {
+                tag 'non-etc-file-marked-as-conffile', $file;
+            }
+        }
 
     }
     close(IN);
@@ -80,14 +80,20 @@ foreach my $file (@{$info->sorted_index}) {
 
     # If there is a /etc/foo, it must be a conffile (with a few exceptions).
     if (not exists($conffiles{$file})
-	and $file !~ m,/README$,
-	and $file ne 'etc/init.d/skeleton'
-	and $file ne 'etc/init.d/rc'
-	and $file ne 'etc/init.d/rcS') {
-	tag 'file-in-etc-not-marked-as-conffile', $file;
+        and $file !~ m,/README$,
+        and $file ne 'etc/init.d/skeleton'
+        and $file ne 'etc/init.d/rc'
+        and $file ne 'etc/init.d/rcS') {
+        tag 'file-in-etc-not-marked-as-conffile', $file;
     }
 }
 
 }
 
 1;
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et
