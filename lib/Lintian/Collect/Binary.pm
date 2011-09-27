@@ -129,19 +129,19 @@ sub scripts {
     my %scripts;
     # sub scripts Needs-Info scripts
     open(SCRIPTS, '<', "$base_dir/scripts")
-	or fail("cannot open scripts $base_dir/file: $!");
+        or fail("cannot open scripts $base_dir/file: $!");
     while (<SCRIPTS>) {
-	chomp;
-	my (%file, $name);
+        chomp;
+        my (%file, $name);
 
-	m/^(env )?(\S*) (.*)$/o
-	    or fail("bad line in scripts file: $_");
-	($file{calls_env}, $file{interpreter}, $name) = ($1, $2, $3);
+        m/^(env )?(\S*) (.*)$/o
+            or fail("bad line in scripts file: $_");
+        ($file{calls_env}, $file{interpreter}, $name) = ($1, $2, $3);
 
-	$name =~ s,^\./,,o;
-	$name =~ s,/+$,,o;
-	$file{name} = $name;
-	$scripts{$name} = \%file;
+        $name =~ s,^\./,,o;
+        $name =~ s,/+$,,o;
+        $file{name} = $name;
+        $scripts{$name} = \%file;
     }
     close SCRIPTS;
     $self->{scripts} = \%scripts;
@@ -208,21 +208,21 @@ sub objdump_info {
                 $file->{CXXABI} = 1;
             } elsif (m%Requesting program interpreter:\s+/lib/klibc-\S+\.so%) {
                 $file->{KLIBC} = 1;
-	    } elsif (m/^\s*TEXTREL\s/o) {
-		$file->{TEXTREL} = 1;
-	    } elsif (m/^\s*INTERP\s/) {
-		$file->{INTERP} = 1;
-	    } elsif (m/^\s*STACK\s/) {
-		$file->{STACK} = '0';
-	    } else {
-		if (defined $file->{STACK} and $file->{STACK} eq '0') {
-		    m/\sflags\s+(\S+)/o;
-		    $file->{STACK} = $1;
-		} else {
-		    $file->{OTHER_DATA} = 1;
-		}
-	    }
-	}
+            } elsif (m/^\s*TEXTREL\s/o) {
+                $file->{TEXTREL} = 1;
+            } elsif (m/^\s*INTERP\s/) {
+                $file->{INTERP} = 1;
+            } elsif (m/^\s*STACK\s/) {
+                $file->{STACK} = '0';
+            } else {
+                if (defined $file->{STACK} and $file->{STACK} eq '0') {
+                    m/\sflags\s+(\S+)/o;
+                    $file->{STACK} = $1;
+                } else {
+                    $file->{OTHER_DATA} = 1;
+                }
+            }
+        }
     }
     if ($file) {
         $objdump_info{$file->{name}} = $file;
@@ -486,4 +486,4 @@ lintian(1), Lintian::Collect(3), Lintian::Relation(3)
 # indent-tabs-mode: nil
 # cperl-indent-level: 4
 # End:
-# vim: syntax=perl sw=4 sts=4 ts=4 et shiftround
+# vim: syntax=perl sw=4 sts=4 sr et

@@ -136,9 +136,9 @@ my $file_info = $info->file_info;
 for my $file (keys(%$file_info)) {
     next if ($file =~ m,(?:^|/)t(?:est(?:s(?:et)?)?)?/,);
     if ($file_info->{$file} =~ m/\bELF\b/) {
-	tag 'source-contains-prebuilt-binary', $file;
+        tag 'source-contains-prebuilt-binary', $file;
     } elsif ($file_info->{$file} =~ m/\bPE(32|64)\b/) {
-	tag 'source-contains-prebuilt-windows-binary', $file;
+        tag 'source-contains-prebuilt-windows-binary', $file;
     }
 }
 
@@ -149,7 +149,7 @@ for my $file (@EOL_TERMINATORS_FILES) {
 
 
     tag 'control-file-with-CRLF-EOLs', $file
-	if ($file_info->{$file} =~ m/\bCRLF\b/);
+        if ($file_info->{$file} =~ m/\bCRLF\b/);
 }
 
 # Report any error messages from tar while unpacking the source package if it
@@ -368,4 +368,4 @@ sub find_cruft {
 # indent-tabs-mode: nil
 # cperl-indent-level: 4
 # End:
-# vim: ts=8 sw=4 noet syntax=perl
+# vim: syntax=perl sw=4 sts=4 sr et

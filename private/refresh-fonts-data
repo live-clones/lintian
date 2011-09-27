@@ -85,3 +85,8 @@ zcat "$contents" \
 # Fonts in xfonts-tipa are really shipped by tipa.
 sed -i 's/ xfonts-tipa$/ tipa/g' "$workdir/fonts"
 mv "$workdir/fonts" "$lintian_data/files/fonts"
+
+# Local Variables:
+# indent-tabs-mode: nil
+# End:
+# vim: syntax=sh sw=4 sts=4 sr et

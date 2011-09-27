@@ -87,3 +87,9 @@ done
 } | sort >> "$f"
 
 mv "$f" "$1"/binaries/multiarch-dirs
+
+
+# Local Variables:
+# indent-tabs-mode: nil
+# End:
+# vim: syntax=sh sw=4 sts=4 sr et

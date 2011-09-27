@@ -40,44 +40,44 @@ chdir ('unpacked')
 while (<INDEX>) {
     chomp;
     $_ = (split(' ', $_, 6))[5];
-    next if / -> .*/;		# We skip symlinks.
+    next if / -> .*/;           # We skip symlinks.
     if (m#\S+\.jar$#i) {
-	my $file = $_;
-	my $has_manifest = 0;
+        my $file = $_;
+        my $has_manifest = 0;
 
-	# This script needs unzip, there's no way around.
-	print OUT "-- $file\n";
+        # This script needs unzip, there's no way around.
+        print OUT "-- $file\n";
 
-	# First, the file list:
-	open FILE_LIST, '-|', 'zipinfo', '-1', $file;
-	while(<FILE_LIST>) {
-	    $has_manifest = 1 if $_ =~ m@^META-INF/MANIFEST.MF$@oi;
-	    next if( m#/$#o);	# Skip directories
-	    print OUT;
-	}
-	close FILE_LIST;
+        # First, the file list:
+        open FILE_LIST, '-|', 'zipinfo', '-1', $file;
+        while(<FILE_LIST>) {
+            $has_manifest = 1 if $_ =~ m@^META-INF/MANIFEST.MF$@oi;
+            next if( m#/$#o);   # Skip directories
+            print OUT;
+        }
+        close FILE_LIST;
 
-	if($has_manifest) {
-	    print OUT "-- MANIFEST: $file\n";
+        if($has_manifest) {
+            print OUT "-- MANIFEST: $file\n";
 
-	    open MANIFEST, '-|', 'unzip', '-p', $file, 'META-INF/MANIFEST.MF';
-	    my $first = 1;
-	    while(my $line = <MANIFEST>) {
-		chomp $line;
-		$line =~ s/\r//go;
-		if($line =~ m/^(\S+:)\s*(.*)/o) {
-		    print OUT "\n" unless $first;
-		    $first = 0;
-		    print OUT "  $1 $2";
-		}
-		if($line =~ m/^ /o) {
-		    print OUT substr $line, 1;
-		}
-	    }
-	    close MANIFEST;
-	    print OUT "\n" unless $first;
+            open MANIFEST, '-|', 'unzip', '-p', $file, 'META-INF/MANIFEST.MF';
+            my $first = 1;
+            while(my $line = <MANIFEST>) {
+                chomp $line;
+                $line =~ s/\r//go;
+                if($line =~ m/^(\S+:)\s*(.*)/o) {
+                    print OUT "\n" unless $first;
+                    $first = 0;
+                    print OUT "  $1 $2";
+                }
+                if($line =~ m/^ /o) {
+                    print OUT substr $line, 1;
+                }
+            }
+            close MANIFEST;
+            print OUT "\n" unless $first;
 
-	}
+        }
     }
 }
 
@@ -85,3 +85,9 @@ close INDEX;
 close OUT or fail("cannot write java-info: $!");
 
 exit 0
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

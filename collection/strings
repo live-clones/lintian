@@ -53,10 +53,16 @@ while (<FILE_INFO>) {
     $dir =~ s,/[^/]+?$,,;
 
     Lintian::Command::Simple::run('mkdir', '-p', "strings/$dir") == 0
-	or fail("Failed to create directory 'strings/$dir'\n");
+        or fail("Failed to create directory 'strings/$dir'\n");
 
     spawn({out => "strings/$bin", fail => 'error'}, ['strings', "unpacked/$bin"]);
 }
 
 close(ELF_INDEX) or fail("cannot write elf-index file: $!");
 close(FILE_INFO);
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

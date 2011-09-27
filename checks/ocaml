@@ -188,4 +188,4 @@ if ($is_dev_package) {
 # indent-tabs-mode: nil
 # cperl-indent-level: 4
 # End:
-# vim: ts=8 sw=4 noet syntax=perl
+# vim: syntax=perl sw=4 sts=4 sr et

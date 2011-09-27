@@ -635,4 +635,4 @@ lintian(1)
 # indent-tabs-mode: nil
 # cperl-indent-level: 4
 # End:
-# vim: syntax=perl sw=4 ts=8
+# vim: syntax=perl sw=4 sts=4 sr et

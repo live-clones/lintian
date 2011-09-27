@@ -40,12 +40,12 @@ my %conffile;
 # read in conffiles
 if (-f $info->control('conffiles')) {
     open(C, '<', $info->control('conffiles'))
-	or fail("cannot open control file conffiles: $!");
+        or fail("cannot open control file conffiles: $!");
     while (<C>) {
-	chop;
-	next if m/^\s*$/o;
-	s,^/,,o;
-	$conffile{$_} = 1;
+        chop;
+        next if m/^\s*$/o;
+        s,^/,,o;
+        $conffile{$_} = 1;
     }
     close(C);
 }
@@ -61,12 +61,12 @@ unless (-f $control) {
     # be redundant
     my $only_conffiles = 1;
     foreach my $file (@{ $info->sorted_index }) {
-	# Skip non-files, they will not appear in the md5sums file
+        # Skip non-files, they will not appear in the md5sums file
         next if !$file or $info->index->{$file}->{type} ne '-';
-	unless ($conffile{$file}) {
-	    $only_conffiles = 0;
-	    last;
-	}
+        unless ($conffile{$file}) {
+            $only_conffiles = 0;
+            last;
+        }
     }
 
     tag 'no-md5sums-control-file' unless $only_conffiles;
@@ -85,9 +85,9 @@ while (<C>) {
     chop;
     next if m/^\s*$/;
     if (m{^([a-f0-9]+)\s*(?:\./)?(\S.*)$} && length($1) == 32) {
-	$control_entry{$2} = $1;
+        $control_entry{$2} = $1;
     } else {
-	tag 'malformed-md5sums-control-file', "line $.";
+        tag 'malformed-md5sums-control-file', "line $.";
     }
 }
 close(C);
@@ -96,9 +96,9 @@ for my $file (keys %control_entry) {
 
     my $md5sum = $info->md5sums->{$file};
     if (not defined $md5sum) {
-	tag 'md5sums-lists-nonexisting-file', $file;
+        tag 'md5sums-lists-nonexisting-file', $file;
     } elsif ($md5sum ne $control_entry{$file}) {
-	tag 'md5sum-mismatch', $file;
+        tag 'md5sum-mismatch', $file;
     }
 
     delete $info_entry{$file};
@@ -106,11 +106,15 @@ for my $file (keys %control_entry) {
 for my $file (keys %{ $info->md5sums }) {
     next if $control_entry{$file};
     tag 'file-missing-in-md5sums', $file
-	unless ($conffile{$file} || $file =~ m%^var/lib/[ai]spell/.%o);
+        unless ($conffile{$file} || $file =~ m%^var/lib/[ai]spell/.%o);
 }
 
 }
 
 1;
 
-# vim: syntax=perl
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

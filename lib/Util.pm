@@ -32,21 +32,21 @@ our (@ISA, @EXPORT);
 BEGIN {
     @ISA = qw(Exporter);
     @EXPORT = qw(parse_dpkg_control
-	read_dpkg_control
-	get_deb_info
-	get_dsc_info
-	slurp_entire_file
-	get_file_checksum
-	file_is_encoded_in_non_utf8
-	fail
-	system_env
-	delete_dir
-	copy_dir
-	gunzip_file
-	touch_file
-	perm2oct
-	check_path
-	resolve_pkg_path);
+                 read_dpkg_control
+                 get_deb_info
+                 get_dsc_info
+                 slurp_entire_file
+                 get_file_checksum
+                 file_is_encoded_in_non_utf8
+                 fail
+                 system_env
+                 delete_dir
+                 copy_dir
+                 gunzip_file
+                 touch_file
+                 perm2oct
+                 check_path
+                 resolve_pkg_path);
 }
 
 use FileHandle;
@@ -86,73 +86,73 @@ sub _parse_dpkg_control_iterative {
 
     local $_;
     while (<$CONTROL>) {
-	chomp;
+        chomp;
 
-	# FIXME: comment lines are only allowed in debian/control and should
-	# be an error for other control files.
-	next if /^\#/;
+        # FIXME: comment lines are only allowed in debian/control and should
+        # be an error for other control files.
+        next if /^\#/;
 
-	# empty line?
-	if ((!$debconf_flag && m/^\s*$/) or ($debconf_flag && $_ eq '')) {
-	    if ($open_section) { # end of current section
-		# pass the current section to the handler
-		$code->($section);
-		$section = {};
-		$cur_section++;
-		$open_section = 0;
-	    }
-	}
-	# pgp sig?
-	elsif (m/^-----BEGIN PGP SIGNATURE/) { # skip until end of signature
-	    while (<$CONTROL>) {
-		last if m/^-----END PGP SIGNATURE/o;
-	    }
-	}
-	# other pgp control?
-	elsif (m/^-----BEGIN PGP/) { # skip until the next blank line
-	    while (<$CONTROL>) {
-		last if /^\s*$/o;
-	    }
-	}
-	# new empty field?
-	elsif (m/^([^: \t]+):\s*$/o) {
-	    $open_section = 1;
+        # empty line?
+        if ((!$debconf_flag && m/^\s*$/) or ($debconf_flag && $_ eq '')) {
+            if ($open_section) { # end of current section
+                # pass the current section to the handler
+                $code->($section);
+                $section = {};
+                $cur_section++;
+                $open_section = 0;
+            }
+        }
+        # pgp sig?
+        elsif (m/^-----BEGIN PGP SIGNATURE/) { # skip until end of signature
+            while (<$CONTROL>) {
+                last if m/^-----END PGP SIGNATURE/o;
+            }
+        }
+        # other pgp control?
+        elsif (m/^-----BEGIN PGP/) { # skip until the next blank line
+            while (<$CONTROL>) {
+                last if /^\s*$/o;
+            }
+        }
+        # new empty field?
+        elsif (m/^([^: \t]+):\s*$/o) {
+            $open_section = 1;
 
-	    my ($tag) = (lc $1);
-	    $section->{$tag} = '';
+            my ($tag) = (lc $1);
+            $section->{$tag} = '';
 
-	    $last_tag = $tag;
-	}
-	# new field?
-	elsif (m/^([^: \t]+):\s*(.*)$/o) {
-	    $open_section = 1;
+            $last_tag = $tag;
+        }
+        # new field?
+        elsif (m/^([^: \t]+):\s*(.*)$/o) {
+            $open_section = 1;
 
-	    # Policy: Horizontal whitespace (spaces and tabs) may occur
-	    # immediately before or after the value and is ignored there.
-	    my ($tag,$value) = (lc $1,$2);
-	    $value =~ s/\s+$//;
-	    $section->{$tag} = $value;
+            # Policy: Horizontal whitespace (spaces and tabs) may occur
+            # immediately before or after the value and is ignored there.
+            my ($tag,$value) = (lc $1,$2);
+            $value =~ s/\s+$//;
+            $section->{$tag} = $value;
 
-	    $last_tag = $tag;
-	}
-	# continued field?
-	elsif (m/^([ \t].*)$/o) {
-	    $open_section or fail("syntax error in section $cur_section after the tag $last_tag: $_");
+            $last_tag = $tag;
+        }
+        # continued field?
+        elsif (m/^([ \t].*)$/o) {
+            $open_section or fail("syntax error in section $cur_section after the tag $last_tag: $_");
 
-	    # Policy: Many fields' values may span several lines; in this case
-	    # each continuation line must start with a space or a tab.  Any
-	    # trailing spaces or tabs at the end of individual lines of a
-	    # field value are ignored.
-	    my $value = $1;
-	    $value =~ s/\s+$//;
-	    $section->{$last_tag} .= "\n" . $value;
-	}
-	# None of the above => syntax error
-	else {
-	    my $message = "syntax error in section $cur_section";
-	    $message.= " after the tag $last_tag: $_" if defined $last_tag;
-	    fail($message);
-	}
+            # Policy: Many fields' values may span several lines; in this case
+            # each continuation line must start with a space or a tab.  Any
+            # trailing spaces or tabs at the end of individual lines of a
+            # field value are ignored.
+            my $value = $1;
+            $value =~ s/\s+$//;
+            $section->{$last_tag} .= "\n" . $value;
+        }
+        # None of the above => syntax error
+        else {
+            my $message = "syntax error in section $cur_section";
+            $message.= " after the tag $last_tag: $_" if defined $last_tag;
+            fail($message);
+        }
     }
     # pass the last section (if not already done).
     $code->($section) if $open_section;
@@ -162,14 +162,14 @@ sub read_dpkg_control {
     my ($file, $debconf_flag) = @_;
 
     if (not _ensure_file_is_sane($file)) {
-	return;
+        return;
     }
 
     open(my $CONTROL, '<', $file)
-	or fail("cannot open control file $file for reading: $!");
+        or fail("cannot open control file $file for reading: $!");
     my @data = parse_dpkg_control($CONTROL, $debconf_flag);
     close($CONTROL)
-	or fail("pipe for control file $file exited with status: $?");
+        or fail("pipe for control file $file exited with status: $?");
     return @data;
 }
 
@@ -177,15 +177,15 @@ sub get_deb_info {
     my ($file) = @_;
 
     if (not _ensure_file_is_sane($file)) {
-	return;
+        return;
     }
 
     # dpkg-deb -f $file is very slow. Instead, we use ar and tar.
     my $opts = { pipe_out => FileHandle->new };
     spawn($opts,
-	  ['ar', 'p', $file, 'control.tar.gz'],
-	  '|', ['tar', '--wildcards', '-xzO', '-f', '-', '*control'])
-	or fail("cannot fork to unpack $file: $opts->{exception}\n");
+          ['ar', 'p', $file, 'control.tar.gz'],
+          '|', ['tar', '--wildcards', '-xzO', '-f', '-', '*control'])
+        or fail("cannot fork to unpack $file: $opts->{exception}\n");
     my @data = parse_dpkg_control($opts->{pipe_out});
 
     # Consume all data before exiting so that we don't kill child processes
@@ -207,7 +207,7 @@ sub _ensure_file_is_sane {
 
     # if file exists and is not 0 bytes
     if (-f $file and -s $file) {
-	return 1;
+        return 1;
     }
     return 0;
 }
@@ -215,7 +215,7 @@ sub _ensure_file_is_sane {
 sub slurp_entire_file {
     my $file = shift;
     open(C, '<', $file)
-	or fail("cannot open file $file for reading: $!");
+        or fail("cannot open file $file for reading: $!");
     local $/;
     local $_ = <C>;
     close(C);
@@ -223,38 +223,38 @@ sub slurp_entire_file {
 }
 
 sub get_file_checksum {
-	my ($alg, $file) = @_;
-	open (FILE, '<', $file) or fail("Couldn't open $file");
-	my $digest;
-	if ($alg eq 'md5') {
-	    $digest = Digest::MD5->new;
-	} elsif ($alg =~ /sha(\d+)/) {
-	    require Digest::SHA;
-	    $digest = Digest::SHA->new($1);
-	}
-	$digest->addfile(*FILE);
-	close FILE or fail("Couldn't close $file");
-	return $digest->hexdigest;
+    my ($alg, $file) = @_;
+    open (FILE, '<', $file) or fail("Couldn't open $file");
+    my $digest;
+    if ($alg eq 'md5') {
+        $digest = Digest::MD5->new;
+    } elsif ($alg =~ /sha(\d+)/) {
+        require Digest::SHA;
+        $digest = Digest::SHA->new($1);
+    }
+    $digest->addfile(*FILE);
+    close FILE or fail("Couldn't close $file");
+    return $digest->hexdigest;
 }
 
 sub file_is_encoded_in_non_utf8 {
-	my ($file, $type, $pkg) = @_;
-	my $non_utf8 = 0;
+    my ($file, $type, $pkg) = @_;
+    my $non_utf8 = 0;
 
-	open (ICONV, '-|', "env LC_ALL=C iconv -f utf8 -t utf8 \Q$file\E 2>&1")
-	    or fail("failure while checking encoding of $file for $type package $pkg");
-	my $line = 1;
-	while (<ICONV>) {
-		if (m/iconv: illegal input sequence at position \d+$/) {
-			$non_utf8 = 1;
-			last;
-		}
-		$line++
-	}
-	close ICONV;
+    open (ICONV, '-|', "env LC_ALL=C iconv -f utf8 -t utf8 \Q$file\E 2>&1")
+        or fail("failure while checking encoding of $file for $type package $pkg");
+    my $line = 1;
+    while (<ICONV>) {
+        if (m/iconv: illegal input sequence at position \d+$/) {
+            $non_utf8 = 1;
+            last;
+        }
+        $line++
+    }
+    close ICONV;
 
-	return $line if $non_utf8;
-	return 0;
+    return $line if $non_utf8;
+    return 0;
 }
 
 # Just like system, except cleanses the environment first to avoid any strange
@@ -264,13 +264,13 @@ sub system_env {
     my %newenv = map { exists $ENV{$_} ? ($_ => $ENV{$_}) : () } @whitelist;
     my $pid = fork;
     if (not defined $pid) {
-	return -1;
+        return -1;
     } elsif ($pid == 0) {
-	%ENV = %newenv;
-	exec @_ or die("exec of $_[0] failed: $!\n");
+        %ENV = %newenv;
+        exec @_ or die("exec of $_[0] failed: $!\n");
     } else {
-	waitpid $pid, 0;
-	return $?;
+        waitpid $pid, 0;
+        return $?;
     }
 }
 
@@ -282,21 +282,21 @@ sub perm2oct {
 
     $t =~ m/^.(.)(.)(.)(.)(.)(.)(.)(.)(.)/o;
 
-    $o += 00400 if $1 eq 'r';	# owner read
-    $o += 00200 if $2 eq 'w';	# owner write
-    $o += 00100 if $3 eq 'x';	# owner execute
-    $o += 04000 if $3 eq 'S';	# setuid
-    $o += 04100 if $3 eq 's';	# setuid + owner execute
-    $o += 00040 if $4 eq 'r';	# group read
-    $o += 00020 if $5 eq 'w';	# group write
-    $o += 00010 if $6 eq 'x';	# group execute
-    $o += 02000 if $6 eq 'S';	# setgid
-    $o += 02010 if $6 eq 's';	# setgid + group execute
-    $o += 00004 if $7 eq 'r';	# other read
-    $o += 00002 if $8 eq 'w';	# other write
-    $o += 00001 if $9 eq 'x';	# other execute
-    $o += 01000 if $9 eq 'T';	# stickybit
-    $o += 01001 if $9 eq 't';	# stickybit + other execute
+    $o += 00400 if $1 eq 'r';   # owner read
+    $o += 00200 if $2 eq 'w';   # owner write
+    $o += 00100 if $3 eq 'x';   # owner execute
+    $o += 04000 if $3 eq 'S';   # setuid
+    $o += 04100 if $3 eq 's';   # setuid + owner execute
+    $o += 00040 if $4 eq 'r';   # group read
+    $o += 00020 if $5 eq 'w';   # group write
+    $o += 00010 if $6 eq 'x';   # group execute
+    $o += 02000 if $6 eq 'S';   # setgid
+    $o += 02010 if $6 eq 's';   # setgid + group execute
+    $o += 00004 if $7 eq 'r';   # other read
+    $o += 00002 if $8 eq 'w';   # other write
+    $o += 00001 if $9 eq 'x';   # other execute
+    $o += 01000 if $9 eq 'T';   # stickybit
+    $o += 01001 if $9 eq 't';   # stickybit + other execute
 
     return $o;
 }
@@ -312,7 +312,7 @@ sub copy_dir {
 sub gunzip_file {
     my ($in, $out) = @_;
     spawn({out => $out, fail => 'error'},
-	  ['gzip', '-dc', $in]);
+          ['gzip', '-dc', $in]);
 }
 
 # create an empty file
@@ -327,11 +327,11 @@ sub touch_file {
 sub fail {
     my $str;
     if (@_) {
-	$str = string('internal error', @_);
+        $str = string('internal error', @_);
     } elsif ($!) {
-	$str = string('internal error', $!);
+        $str = string('internal error', $!);
     } else {
-	$str = string('internal error');
+        $str = string('internal error');
     }
     $! = 2; # set return code outside eval()
     die $str;
@@ -347,8 +347,8 @@ sub check_path {
 
     return 0 unless exists $ENV{PATH};
     for my $element (split ':', $ENV{PATH}) {
-	next unless length $element;
-	return 1 if -f "$element/$command" and -x _;
+        next unless length $element;
+        return 1 if -f "$element/$command" and -x _;
     }
     return 0;
 }
@@ -385,10 +385,10 @@ sub resolve_pkg_path {
     $dest =~ s,^\./,,o;
     $dest =~ s,/$,,o;
     if ($dest =~ m,^/,o){
-	# absolute path, strip leading slashes and resolve
-	# as relative to the root.
-	$dest =~ s,^/,,o;
-	return resolve_pkg_path('/', $dest);
+        # absolute path, strip leading slashes and resolve
+        # as relative to the root.
+        $dest =~ s,^/,,o;
+        return resolve_pkg_path('/', $dest);
     }
 
     # clean up $curdir (as well)
@@ -398,9 +398,9 @@ sub resolve_pkg_path {
     $curdir =~ s,^\./,,o;
     # Short circuit the '.' (or './' -> '') case.
     if ($dest eq '.' or $dest eq '') {
-	$curdir =~ s,^/,,o;
-	return '.' unless $curdir;
-	return $curdir;
+        $curdir =~ s,^/,,o;
+        return '.' unless $curdir;
+        return $curdir;
     }
     # Relative path from src
     @dc = split(m,/,o, $dest);
@@ -411,15 +411,15 @@ sub resolve_pkg_path {
     # root (e.g. '/' + 'usr' + '..' -> '/'), this is
     # fine.
     while ($target = shift @dc) {
-	if($target eq '..') {
-	    # are we out of bounds?
-	    return '' unless @cc;
-	    # usr/share/java + '..' -> usr/share
-	    pop @cc;
-	} else {
-	    # usr/share + java -> usr/share/java
-	    push @cc, $target;
-	}
+        if($target eq '..') {
+            # are we out of bounds?
+            return '' unless @cc;
+            # usr/share/java + '..' -> usr/share
+            pop @cc;
+        } else {
+            # usr/share + java -> usr/share/java
+            push @cc, $target;
+        }
     }
     return '.' unless @cc;
     return join '/', @cc;
@@ -429,7 +429,7 @@ sub resolve_pkg_path {
 1;
 
 # Local Variables:
-# indent-tabs-mode: t
+# indent-tabs-mode: nil
 # cperl-indent-level: 4
 # End:
-# vim: syntax=perl sw=4 ts=8
+# vim: syntax=perl sw=4 sts=4 sr et

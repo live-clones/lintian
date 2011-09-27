@@ -97,12 +97,12 @@ sub initialise {
     delete $self->{'selected'};
 
     while (my ($parent, $childs) = each %{$self->{'satisfied_nodes'}}) {
-	if (@{$childs}) {
-	    for my $child (@{$childs}) {
-		$self->add($child, $parent);
-	    }
-	}
-	$self->add($parent);
+        if (@{$childs}) {
+            for my $child (@{$childs}) {
+                $self->add($child, $parent);
+            }
+        }
+        $self->add($parent);
     }
     delete $self->{'satisfied_nodes'};
 
@@ -127,32 +127,32 @@ sub add {
     my $parents = 0;
 
     if (exists($self->{'unknown'}{$node}) && defined($self->{'unknown'}{$node})) {
-	$self->{'known'}{$node} = $self->{'unknown'}{$node};
-	delete $self->{'unknown'}{$node};
+        $self->{'known'}{$node} = $self->{'unknown'}{$node};
+        delete $self->{'unknown'}{$node};
     }
     $self->{'known'}{$node}++;
 
     $self->{'nodes'}{$node}->{'branches'} = {}
-	unless(exists($self->{'nodes'}{$node}->{'branches'}));
+        unless(exists($self->{'nodes'}{$node}->{'branches'}));
     $self->{'nodes'}{$node}->{'parents'} = {}
-	unless(exists($self->{'nodes'}{$node}->{'parents'}));
+        unless(exists($self->{'nodes'}{$node}->{'parents'}));
 
     while (my $parent = pop @parents) {
-	$parents = 1;
+        $parents = 1;
 
-	if (exists($self->{'known'}{$parent})) {
-	    $self->{'known'}{$parent}++;
-	} else {
-	    $self->{'unknown'}{$parent}++;
-	}
+        if (exists($self->{'known'}{$parent})) {
+            $self->{'known'}{$parent}++;
+        } else {
+            $self->{'unknown'}{$parent}++;
+        }
 
-	$self->{'nodes'}{$parent}->{'branches'}->{$node} = $self->{'nodes'}{$node};
-	$self->{'nodes'}{$node}->{'parents'}->{$parent} = $self->{'nodes'}{$parent};
+        $self->{'nodes'}{$parent}->{'branches'}->{$node} = $self->{'nodes'}{$node};
+        $self->{'nodes'}{$node}->{'parents'}->{$parent} = $self->{'nodes'}{$parent};
     }
     unless ($parents || scalar %{$self->{'nodes'}{$node}->{'parents'}}) {
-	$self->{'map'}{$node} = $self->{'nodes'}{$node};
+        $self->{'map'}{$node} = $self->{'nodes'}{$node};
     } elsif (exists $self->{'map'}{$node}) {
-	delete $self->{'map'}{$node};
+        delete $self->{'map'}{$node};
     } else { 1; }
 }
 
@@ -174,7 +174,7 @@ sub addp {
     my @deps;
 
     while (my $dep = shift) {
-	push @deps, $prefix . $dep;
+        push @deps, $prefix . $dep;
     }
 
     return $self->add($node, @deps);
@@ -209,26 +209,26 @@ sub satisfy {
     my $node = shift;
 
     if (grep {$_ eq $node} $self->missing()) {
-	Util::fail("Attempted to mark node '$node' as satisfied but it is not ".
-		    'reachable, perhaps you forgot to add() it first?');
+        Util::fail("Attempted to mark node '$node' as satisfied but it is not ".
+                    'reachable, perhaps you forgot to add() it first?');
     }
     if (not exists($self->{'nodes'}{$node})) {
-	Util::fail("Attempted to mark node '$node' as satisfied but it is not ".
-		    'reachable, perhaps you forgot to satisfy() its dependencies first?');
+        Util::fail("Attempted to mark node '$node' as satisfied but it is not ".
+                    'reachable, perhaps you forgot to satisfy() its dependencies first?');
     }
     return 0 unless (exists($self->{'map'}{$node}));
 
     delete $self->{'selected'}{$node}
-	if exists($self->{'selected'}{$node});
+        if exists($self->{'selected'}{$node});
 
     $self->{'satisfied_nodes'}{$node} = [ keys %{$self->{'nodes'}{$node}{'branches'}} ];
 
     for my $branch (keys %{$self->{'nodes'}{$node}->{'branches'}}) {
-	delete $self->{'nodes'}{$branch}->{'parents'}->{$node};
-	delete $self->{'nodes'}{$node}->{'branches'}->{$branch};
-	unless (scalar keys %{$self->{'nodes'}{$branch}->{'parents'}}) {
-	    $self->{'map'}{$branch} = $self->{'nodes'}{$branch};
-	}
+        delete $self->{'nodes'}{$branch}->{'parents'}->{$node};
+        delete $self->{'nodes'}{$node}->{'branches'}->{$branch};
+        unless (scalar keys %{$self->{'nodes'}{$branch}->{'parents'}}) {
+            $self->{'map'}{$branch} = $self->{'nodes'}{$branch};
+        }
     }
 
     delete $self->{'map'}{$node};
@@ -247,7 +247,7 @@ E.g.
     $map->satisfy('A');
 
     print "A is done!"
-	if ($map->done('A'));
+        if ($map->done('A'));
 
 =cut
 
@@ -294,27 +294,27 @@ sub unlink {
     $soft = (defined($soft) && $soft eq 'soft');
 
     if (not exists($self->{'nodes'}{$node})) {
-	Util::fail("Attempted to unlink node '$node' but it can not be found".
-		    ', perhaps it has already been satisfied?');
+        Util::fail("Attempted to unlink node '$node' but it can not be found".
+                    ', perhaps it has already been satisfied?');
     }
 
     delete $self->{'map'}{$node}
-	if (exists($self->{'map'}{$node}));
+        if (exists($self->{'map'}{$node}));
 
     delete $self->{'selected'}{$node}
-	if (exists($self->{'selected'}{$node}));
+        if (exists($self->{'selected'}{$node}));
 
     unless ($soft) {
-	for my $parent (keys %{$self->{'nodes'}{$node}->{'parents'}}) {
-	    delete $self->{'nodes'}{$parent}{'branches'}{$node}
-		if exists $self->{'nodes'}{$parent}{'branches'}{$node};
-	    delete $self->{'nodes'}{$node}{'parents'}{$parent};
-	}
+        for my $parent (keys %{$self->{'nodes'}{$node}->{'parents'}}) {
+            delete $self->{'nodes'}{$parent}{'branches'}{$node}
+                if exists $self->{'nodes'}{$parent}{'branches'}{$node};
+            delete $self->{'nodes'}{$node}{'parents'}{$parent};
+        }
 
-	for my $branch (keys %{$self->{'nodes'}{$node}->{'branches'}}) {
-	    delete $self->{'nodes'}{$branch}{'parents'}{$node};
-	    delete $self->{'nodes'}{$node}{'branches'}{$branch};
-	}
+        for my $branch (keys %{$self->{'nodes'}{$node}->{'branches'}}) {
+            delete $self->{'nodes'}{$branch}{'parents'}{$node};
+            delete $self->{'nodes'}{$node}{'branches'}{$branch};
+        }
     }
 
     delete $self->{'nodes'}{$node};
@@ -332,11 +332,11 @@ E.g.
     $map->add('A');
     $map->add('B', 'A');
     while($map->pending()) {
-	for my $node ($map->selectable()) {
-	    $map->select($node);
-	    # work work work
-	    $map->satisfy($node);
-	}
+        for my $node ($map->selectable()) {
+            $map->select($node);
+            # work work work
+            $map->satisfy($node);
+        }
     }
 
 =cut
@@ -346,8 +346,8 @@ sub select {
     my $node = shift;
 
     if (not exists($self->{'map'}{$node})) {
-	Util::fail("Attempted to mark node '$node' as selected but it is not ".
-		    'known, perhaps its parents are not yet satisfied?');
+        Util::fail("Attempted to mark node '$node' as selected but it is not ".
+                    'known, perhaps its parents are not yet satisfied?');
     }
     return 0 if (exists($self->{'selected'}{$node}));
 
@@ -372,7 +372,7 @@ sub selectable {
     my $node = shift;
 
     return (exists $self->{'map'}{$node} and not exists $self->{'selected'}{$node})
-	if (defined($node));
+        if (defined($node));
     return grep {not exists $self->{'selected'}{$_}} keys %{$self->{'map'}};
 }
 
@@ -400,7 +400,7 @@ sub selected {
     my $node = shift;
 
     return exists $self->{'selected'}{$node}
-	if (defined($node));
+        if (defined($node));
     return keys %{$self->{'selected'}};
 }
 
@@ -414,7 +414,7 @@ sub selectAll {
     my $self = shift;
 
     for my $node ($self->selectable()) {
-	$self->select($node);
+        $self->select($node);
     }
 }
 
@@ -438,8 +438,8 @@ sub parents {
     my $node = shift;
 
     if (not exists($self->{'nodes'}{$node})) {
-	Util::fail("Attempted to get the parents of node '$node' but it is not".
-		    'known, perhaps you forgot to add() it first?');
+        Util::fail("Attempted to get the parents of node '$node' but it is not".
+                    'known, perhaps you forgot to add() it first?');
     }
 
     return keys %{$self->{'nodes'}{$node}{'parents'}};
@@ -542,24 +542,24 @@ sub circular {
     $deep = (defined($deep) && $deep eq 'deep');
 
     if ($deep) {
-	my @nodes;
-	my ($prev_satisfied, $prev_selected) = ($self->{'satisfied_nodes'}, $self->{'selected'});
-	while(@nodes = $self->selectable()) {
-	    for my $node (@nodes) {
-		$self->satisfy($node);
-	    }
-	}
-	# there should be no nodes left:
-	@circ = keys %{$self->{'nodes'}};
+        my @nodes;
+        my ($prev_satisfied, $prev_selected) = ($self->{'satisfied_nodes'}, $self->{'selected'});
+        while(@nodes = $self->selectable()) {
+            for my $node (@nodes) {
+                $self->satisfy($node);
+            }
+        }
+        # there should be no nodes left:
+        @circ = keys %{$self->{'nodes'}};
 
-	$self->{'satisfied_nodes'} = $prev_satisfied;
-	$self->{'selected'} = $prev_selected;
-	$self->initialise();
+        $self->{'satisfied_nodes'} = $prev_satisfied;
+        $self->{'selected'} = $prev_selected;
+        $self->initialise();
     } else {
-	for my $node (keys %{$self->{'nodes'}}) {
-	    push @circ, grep $self->{'nodes'}{$node}->{'parents'}->{$_},
-			     keys %{$self->{'nodes'}{$node}->{'branches'}};
-	}
+        for my $node (keys %{$self->{'nodes'}}) {
+            push @circ, grep $self->{'nodes'}{$node}->{'parents'}->{$_},
+                             keys %{$self->{'nodes'}{$node}->{'branches'}};
+        }
     }
 
     return @circ;
@@ -576,3 +576,9 @@ __END__
 Originally written by Raphael Geissert <atomo64@gmail.com> for Lintian.
 
 =cut
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

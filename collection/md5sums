@@ -36,8 +36,8 @@ chdir('unpacked')
     or fail("cannot chdir to unpacked directory: $!");
 
 my %opts = ( pipe_in => FileHandle->new,
-	     out => '../md5sums',
-	     fail => 'error' );
+             out => '../md5sums',
+             fail => 'error' );
 spawn(\%opts, ['xargs', '-0r', 'md5sum'] );
 $opts{pipe_in}->blocking(1);
 open(INDEX, '<', '../index')
@@ -56,3 +56,8 @@ close(INDEX);
 close $opts{pipe_in};
 reap(\%opts);
 
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

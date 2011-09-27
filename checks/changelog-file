@@ -53,29 +53,29 @@ for my $file (@{$info->sorted_file_info}) {
     $file_info{$file} = $info->file_info->{$file};
 
     if ($file_info{$file} =~ m/^(?:broken )?symbolic link to (.*)/) {
-	$is_a_symlink{$file} = 1;
-	# Figure out the link destination.  This algorithm is
-	# not perfect but should be good enough.  (If it fails,
-	# all that happens is that an evil symlink causes a bogus warning).
-	my $newfile;
-	my $link = $1;
-	if ($link =~ m/^\//) {
-	    # absolute path; replace
-	    $newfile = $link;
-	} else {
-	    $newfile = $file;	# relative path; base on $file
-	    $newfile =~ s,/[^/]+$,,; # strip final pathname component
-	    # strip another component for every leading ../ in $link
-	    while ($link =~ m,^\.\./,) {
-		$newfile =~ s,/[^/]+$,,;
-		$link =~ s,^\.\./,,;
-	    }
-	    # concatenate the results
-	    $newfile .= '/' . $link;
-	}
-	if (exists $info->file_info->{$newfile}) {
-	    $file_info{$file} = $info->file_info->{$newfile};
-	}
+        $is_a_symlink{$file} = 1;
+        # Figure out the link destination.  This algorithm is
+        # not perfect but should be good enough.  (If it fails,
+        # all that happens is that an evil symlink causes a bogus warning).
+        my $newfile;
+        my $link = $1;
+        if ($link =~ m/^\//) {
+            # absolute path; replace
+            $newfile = $link;
+        } else {
+            $newfile = $file;   # relative path; base on $file
+            $newfile =~ s,/[^/]+$,,; # strip final pathname component
+            # strip another component for every leading ../ in $link
+            while ($link =~ m,^\.\./,) {
+                $newfile =~ s,/[^/]+$,,;
+                $link =~ s,^\.\./,,;
+            }
+            # concatenate the results
+            $newfile .= '/' . $link;
+        }
+        if (exists $info->file_info->{$newfile}) {
+            $file_info{$file} = $info->file_info->{$newfile};
+        }
     }
 }
 
@@ -84,53 +84,53 @@ foreach (@{$info->sorted_index}) {
     next unless length $_;
     # skip packages which have a /usr/share/doc/$pkg -> foo symlink
     if (m,usr/share/doc/$ppkg$, and defined $info->index->{$_}->{link}) {
-	return 0;
+        return 0;
     }
 
     # we are only interested in files or symlinks in /usr/(share/)?doc/$pkg
     if (m,usr/(?:share/)?doc/$ppkg/([^/\s]+), ) {
-	my $file = $1;
-	my $file1 = "usr/share/doc/$pkg/$file";
+        my $file = $1;
+        my $file1 = "usr/share/doc/$pkg/$file";
 
-	push(@doc_files, $file);
+        push(@doc_files, $file);
 
-	# Check a few things about the NEWS.Debian file.
-	if ($file =~ /^NEWS.Debian(?:\.gz)?$/i) {
-	    if (not $file =~ /\.gz$/) {
-		tag 'debian-news-file-not-compressed', $file1;
-	    } elsif ($file ne 'NEWS.Debian.gz') {
-		tag 'wrong-name-for-debian-news-file', $file1;
-	    }
-	}
+        # Check a few things about the NEWS.Debian file.
+        if ($file =~ /^NEWS.Debian(?:\.gz)?$/i) {
+            if (not $file =~ /\.gz$/) {
+                tag 'debian-news-file-not-compressed', $file1;
+            } elsif ($file ne 'NEWS.Debian.gz') {
+                tag 'wrong-name-for-debian-news-file', $file1;
+            }
+        }
 
-	# Check if changelog files are compressed with gzip -9.  It's a bit of
-	# an open question here what we should do with a file named ChangeLog.
-	# If there's also a changelog file, it might be a duplicate, or the
-	# packager may have installed NEWS as changelog intentionally.
-	next unless $file =~ m/^changelog(?:\.html)?(?:\.gz)?$|changelog.Debian(?:\.gz)?$/;
+        # Check if changelog files are compressed with gzip -9.  It's a bit of
+        # an open question here what we should do with a file named ChangeLog.
+        # If there's also a changelog file, it might be a duplicate, or the
+        # packager may have installed NEWS as changelog intentionally.
+        next unless $file =~ m/^changelog(?:\.html)?(?:\.gz)?$|changelog.Debian(?:\.gz)?$/;
 
-	if (not $file =~ m/\.gz$/) {
-	    tag 'changelog-file-not-compressed', $file;
-	} else {
-	    my $max_compressed = 0;
-	    if (exists $file_info{$file1} && defined $file_info{$file1}) {
-		if ($file_info{$file1} =~ m/max compression/o) {
-		    $max_compressed = 1;
-		}
-	    }
-	    if (not $max_compressed and $file_info{$file1} =~ m/gzip compressed/) {
-		unless ($is_a_symlink{$file1}) {
-		    tag 'changelog-not-compressed-with-max-compression', $file;
-		}
-	    }
-	}
+        if (not $file =~ m/\.gz$/) {
+            tag 'changelog-file-not-compressed', $file;
+        } else {
+            my $max_compressed = 0;
+            if (exists $file_info{$file1} && defined $file_info{$file1}) {
+                if ($file_info{$file1} =~ m/max compression/o) {
+                    $max_compressed = 1;
+                }
+            }
+            if (not $max_compressed and $file_info{$file1} =~ m/gzip compressed/) {
+                unless ($is_a_symlink{$file1}) {
+                    tag 'changelog-not-compressed-with-max-compression', $file;
+                }
+            }
+        }
 
-	if ($file =~ m/^changelog\.html(?:\.gz)?$/ ) {
-	    $found_html = 1;
-	}
-	if ($file =~ m/^changelog(?:\.gz)?$/ ) {
-	    $found_text = 1;
-	}
+        if ($file =~ m/^changelog\.html(?:\.gz)?$/ ) {
+            $found_html = 1;
+        }
+        if ($file =~ m/^changelog(?:\.gz)?$/ ) {
+            $found_text = 1;
+        }
     }
 }
 
@@ -146,13 +146,13 @@ my $news;
 if (-f 'NEWS.Debian') {
     my $line = file_is_encoded_in_non_utf8('NEWS.Debian', $type, $pkg);
     if ($line) {
-	tag 'debian-news-file-uses-obsolete-national-encoding', "at line $line"
+        tag 'debian-news-file-uses-obsolete-national-encoding', "at line $line"
     }
     my $changes = Parse::DebianChangelog->init( { infile => 'NEWS.Debian', quiet => 1 } );
     if (my @errors = $changes->get_parse_errors) {
-	for (@errors) {
-	    tag 'syntax-error-in-debian-news-file', "line $_->[1]", "\"$_->[2]\"";
-	}
+        for (@errors) {
+            tag 'syntax-error-in-debian-news-file', "line $_->[1]", "\"$_->[2]\"";
+        }
     }
 
     # Some checks on the most recent entry.
@@ -162,10 +162,10 @@ if (-f 'NEWS.Debian') {
             tag 'debian-news-entry-has-strange-distribution', $news->Distribution;
         }
         check_spelling('spelling-error-in-news-debian', $news->Changes,
-		       undef, { $pkg => 1});
-	if ($news->Changes =~ /^\s*\*\s/) {
-	    tag 'debian-news-entry-uses-asterisk';
-	}
+                       undef, { $pkg => 1});
+        if ($news->Changes =~ /^\s*\*\s/) {
+            tag 'debian-news-entry-uses-asterisk';
+        }
     }
 }
 
@@ -190,11 +190,11 @@ if ($native_pkg) {
     my @foo;
     # native Debian package
     if (grep m/^changelog(?:\.gz)?$/,@doc_files) {
-	# everything is fine
+        # everything is fine
     } elsif (@foo = grep m/^changelog\.debian(?:\.gz)$/i,@doc_files) {
-	tag 'wrong-name-for-changelog-of-native-package', "usr/share/doc/$pkg/$foo[0]";
+        tag 'wrong-name-for-changelog-of-native-package', "usr/share/doc/$pkg/$foo[0]";
     } else {
-	tag 'changelog-file-missing-in-native-package';
+        tag 'changelog-file-missing-in-native-package';
     }
 } else {
     # non-native (foreign :) Debian package
@@ -202,39 +202,39 @@ if ($native_pkg) {
     # 1. check for upstream changelog
     my $found_upstream_text_changelog = 0;
     if (grep m/^changelog(\.html)?(?:\.gz)?$/,@doc_files) {
-	$found_upstream_text_changelog = 1 unless $1;
-	# everything is fine
+        $found_upstream_text_changelog = 1 unless $1;
+        # everything is fine
     } else {
-	# search for changelogs with wrong file name
-    	my $found = 0;
-    	for (@doc_files) {
-	    if (m/^change/i and not m/debian/i) {
-		tag 'wrong-name-for-upstream-changelog', "usr/share/doc/$pkg/$_";
-		$found = 1;
-		last;
-	    }
-    	}
-	if (not $found) {
-	    tag 'no-upstream-changelog';
-	}
+        # search for changelogs with wrong file name
+        my $found = 0;
+        for (@doc_files) {
+            if (m/^change/i and not m/debian/i) {
+                tag 'wrong-name-for-upstream-changelog', "usr/share/doc/$pkg/$_";
+                $found = 1;
+                last;
+            }
+        }
+        if (not $found) {
+            tag 'no-upstream-changelog';
+        }
     }
 
     # 2. check for Debian changelog
     if (grep m/^changelog\.Debian(?:\.gz)?$/,@doc_files) {
-	# everything is fine
+        # everything is fine
     } elsif (my @foo = grep m/^changelog\.debian(?:\.gz)?$/i,@doc_files) {
-	tag 'wrong-name-for-debian-changelog-file', "usr/share/doc/$pkg/$foo[0]";
+        tag 'wrong-name-for-debian-changelog-file', "usr/share/doc/$pkg/$foo[0]";
     } else {
-	if ($foreign_pkg && $found_upstream_text_changelog) {
-	    tag 'debian-changelog-file-missing-or-wrong-name';
-	} elsif ($foreign_pkg) {
-	    tag 'debian-changelog-file-missing';
-	}
-	# TODO: if uncertain whether foreign or native, either changelog.gz or
-	# changelog.debian.gz should exists though... but no tests catches
-	# this (extremely rare) border case... Keep in mind this is only
-	# happening if we have a -0.x version number... So not my priority to
-	# fix --Jeroen
+        if ($foreign_pkg && $found_upstream_text_changelog) {
+            tag 'debian-changelog-file-missing-or-wrong-name';
+        } elsif ($foreign_pkg) {
+            tag 'debian-changelog-file-missing';
+        }
+        # TODO: if uncertain whether foreign or native, either changelog.gz or
+        # changelog.debian.gz should exists though... but no tests catches
+        # this (extremely rare) border case... Keep in mind this is only
+        # happening if we have a -0.x version number... So not my priority to
+        # fix --Jeroen
     }
 }
 
@@ -261,7 +261,7 @@ if ($line) {
 my $changelog = $info->changelog;
 if (my @errors = $changelog->get_parse_errors) {
     foreach (@errors) {
-	tag 'syntax-error-in-debian-changelog', "line $_->[1]", "\"$_->[2]\"";
+        tag 'syntax-error-in-debian-changelog', "line $_->[1]", "\"$_->[2]\"";
     }
 }
 
@@ -269,50 +269,50 @@ my @entries = $changelog->data;
 if (@entries) {
     my %versions;
     for my $entry (@entries) {
-	if ($entry->Maintainer) {
-	    if ($entry->Maintainer =~ /<([^>\@]+\@[^>.]*)>/) {
-		tag 'debian-changelog-file-contains-invalid-email-address', $1;
-	    }
-	}
-	$versions{$entry->Version} = 1 if defined $entry->Version;
+        if ($entry->Maintainer) {
+            if ($entry->Maintainer =~ /<([^>\@]+\@[^>.]*)>/) {
+                tag 'debian-changelog-file-contains-invalid-email-address', $1;
+            }
+        }
+        $versions{$entry->Version} = 1 if defined $entry->Version;
     }
 
     if (@entries > 1) {
-	my $first_timestamp = $entries[0]->Timestamp;
-	my $second_timestamp = $entries[1]->Timestamp;
+        my $first_timestamp = $entries[0]->Timestamp;
+        my $second_timestamp = $entries[1]->Timestamp;
 
-	if ($first_timestamp && $second_timestamp) {
-	    tag 'latest-debian-changelog-entry-without-new-date'
-		unless (($first_timestamp - $second_timestamp) > 0
-		        or lc($entries[0]->Distribution) eq 'unreleased');
-	}
+        if ($first_timestamp && $second_timestamp) {
+            tag 'latest-debian-changelog-entry-without-new-date'
+                unless (($first_timestamp - $second_timestamp) > 0
+                        or lc($entries[0]->Distribution) eq 'unreleased');
+        }
 
-	my $first_version = $entries[0]->Version;
-	my $second_version = $entries[1]->Version;
-	if ($first_version and $second_version) {
-	    tag 'latest-debian-changelog-entry-without-new-version'
-		unless versions_gt($first_version, $second_version)
+        my $first_version = $entries[0]->Version;
+        my $second_version = $entries[1]->Version;
+        if ($first_version and $second_version) {
+            tag 'latest-debian-changelog-entry-without-new-version'
+                unless versions_gt($first_version, $second_version)
                     or $entries[0]->Changes =~ /backport/i;
-	    tag 'latest-debian-changelog-entry-changed-to-native'
-		if $native_pkg and $second_version =~ m/-/;
-	}
+            tag 'latest-debian-changelog-entry-changed-to-native'
+                if $native_pkg and $second_version =~ m/-/;
+        }
 
-	my $first_upstream = $first_version;
-	$first_upstream =~ s/-[^-]+$//;
-	my $second_upstream = $second_version;
-	$second_upstream =~ s/-[^-]+$//;
-	if ($first_upstream eq $second_upstream
-	    and $entries[0]->Changes =~ /^\s*\*\s+new\s+upstream\s+(?:\S+\s+)?release\b/im) {
-	    tag 'possible-new-upstream-release-without-new-version';
-	}
+        my $first_upstream = $first_version;
+        $first_upstream =~ s/-[^-]+$//;
+        my $second_upstream = $second_version;
+        $second_upstream =~ s/-[^-]+$//;
+        if ($first_upstream eq $second_upstream
+            and $entries[0]->Changes =~ /^\s*\*\s+new\s+upstream\s+(?:\S+\s+)?release\b/im) {
+            tag 'possible-new-upstream-release-without-new-version';
+        }
 
-	my $first_dist = lc $entries[0]->Distribution;
-	my $second_dist = lc $entries[1]->Distribution;
-	if ($first_dist eq 'unstable' and $second_dist eq 'experimental') {
-	    unless ($entries[0]->Changes =~ /\bto\s+unstable\b/) {
-		tag 'experimental-to-unstable-without-comment';
-	    }
-	}
+        my $first_dist = lc $entries[0]->Distribution;
+        my $second_dist = lc $entries[1]->Distribution;
+        if ($first_dist eq 'unstable' and $second_dist eq 'experimental') {
+            unless ($entries[0]->Changes =~ /\bto\s+unstable\b/) {
+                tag 'experimental-to-unstable-without-comment';
+            }
+        }
     }
 
     # Some checks should only be done against the most recent changelog entry.
@@ -323,7 +323,7 @@ if (@entries) {
     }
     my $changes = $entry->Changes || '';
     while ($changes =~ /(closes\s*(?:bug)?\#?\s?\d{6,})[^\w]/ig) {
-	tag 'possible-missing-colon-in-closes', $1 if $1;
+        tag 'possible-missing-colon-in-closes', $1 if $1;
     }
     my $closes = $entry->Closes;
     for my $bug (@$closes) {
@@ -340,11 +340,11 @@ if (@entries) {
     if ($info->native) {
         $changelog_version = $entry->Version || '';
     } else {
-      if( $entry->Version ){
-        ($changelog_version) = (split('-', $entry->Version))[-1];
-      }else{
-	$changelog_version = '';
-      }
+        if ($entry->Version) {
+            ($changelog_version) = (split('-', $entry->Version))[-1];
+        } else {
+            $changelog_version = '';
+        }
     }
     unless (not $info->native and $changelog_version =~ /\./) {
         if ($info->native and $changelog_version =~ /testing|(?:un)?stable/i) {
@@ -359,17 +359,17 @@ if (@entries) {
 
     # Compare against NEWS.Debian if available.
     if ($news and $news->Version) {
-	if ($entry->Version eq $news->Version) {
-	    for my $field (qw/Distribution Urgency/) {
-		if ($entry->$field ne $news->$field) {
-		    tag 'changelog-news-debian-mismatch', lc ($field),
-			$entry->$field . ' != ' . $news->$field;
-		}
-	    }
-	}
-	unless ($versions{$news->Version}) {
-	    tag 'debian-news-entry-has-unknown-version', $news->Version;
-	}
+        if ($entry->Version eq $news->Version) {
+            for my $field (qw/Distribution Urgency/) {
+                if ($entry->$field ne $news->$field) {
+                    tag 'changelog-news-debian-mismatch', lc ($field),
+                        $entry->$field . ' != ' . $news->$field;
+                }
+            }
+        }
+        unless ($versions{$news->Version}) {
+            tag 'debian-news-entry-has-unknown-version', $news->Version;
+        }
     }
 
     # We have to decode into UTF-8 to get the right length for the length
@@ -382,7 +382,7 @@ if (@entries) {
     my @lines = split ("\n", decode ('utf-8', $changes));
     for my $i (0 .. $#lines) {
         if (length($lines[$i]) > 81
-	    and $lines[$i] !~ /^[\s.o*+-]*(?:[Ss]ee:?\s+)?\S+$/) {
+            and $lines[$i] !~ /^[\s.o*+-]*(?:[Ss]ee:?\s+)?\S+$/) {
             tag 'debian-changelog-line-too-long', 'line ' . ($i + 1);
         }
     }
@@ -405,20 +405,20 @@ my ($prefix, $suffix);
 while (<IN>) {
 
     if (/closes:\s*(((?:bug)?\#?\s?\d*)[[:alpha:]]\w*)/io
-	|| /closes:\s*(?:bug)?\#?\s?\d+
-	      (?:,\s*(?:bug)?\#?\s?\d+)*
-	      (?:,\s*(((?:bug)?\#?\s?\d*)[[:alpha:]]\w*))/iox) {
-	tag 'wrong-bug-number-in-closes', "l$.:$1" if $2;
+        || /closes:\s*(?:bug)?\#?\s?\d+
+              (?:,\s*(?:bug)?\#?\s?\d+)*
+              (?:,\s*(((?:bug)?\#?\s?\d*)[[:alpha:]]\w*))/iox) {
+        tag 'wrong-bug-number-in-closes', "l$.:$1" if $2;
     }
 
     if (/^(.*)Local\ variables:(.*)$/i) {
-	$prefix = $1;
-	$suffix = $2;
+        $prefix = $1;
+        $suffix = $2;
     }
     # emacs allows whitespace between prefix and variable, hence \s*
     if (defined $prefix && defined $suffix
-	&& /^\Q$prefix\E\s*add-log-mailing-address:.*\Q$suffix\E$/) {
-	tag 'debian-changelog-file-contains-obsolete-user-emacs-settings';
+        && /^\Q$prefix\E\s*add-log-mailing-address:.*\Q$suffix\E$/) {
+        tag 'debian-changelog-file-contains-obsolete-user-emacs-settings';
     }
 }
 close IN;
@@ -428,7 +428,7 @@ close IN;
 1;
 
 # Local Variables:
-# indent-tabs-mode: t
+# indent-tabs-mode: nil
 # cperl-indent-level: 4
 # End:
-# vim: syntax=perl ts=8 sw=4
+# vim: syntax=perl sw=4 sts=4 sr et

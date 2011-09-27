@@ -42,7 +42,7 @@
         A copy of the GNU General Public License is available as
         <filename>/usr/share/common-licenses/GPL</filename> in the
         Debian GNU/Linux distribution or on the World Wide Web at
-	<ulink url="http://www.gnu.org/copyleft/gpl.html">the GNU web site</ulink>.
+        <ulink url="http://www.gnu.org/copyleft/gpl.html">the GNU web site</ulink>.
         You can also obtain it by writing to the Free Software Foundation,
         Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.
       </para>
@@ -710,63 +710,63 @@ foo source: another-tag without any comments
           <para>
             The fields in the first paragraph are:
           </para>
-	  <variablelist>
+          <variablelist>
             <varlistentry>
-	      <term><emphasis>Profile</emphasis> (simple, mandatory)</term>
+              <term><emphasis>Profile</emphasis> (simple, mandatory)</term>
               <listitem>
-		<para>
+                <para>
                   Name of the profile.
-		</para>
+                </para>
               </listitem>
             </varlistentry>
             <varlistentry>
-	      <term><emphasis>Extends</emphasis> (simple, optional)</term>
+              <term><emphasis>Extends</emphasis> (simple, optional)</term>
               <listitem>
-		<para>
+                <para>
                   Name of the (parent) profile, which this profile
                   extends.  Lintian will recursively process the
                   extended profile before continuing with processing
                   this profile.  In the absence of this field, the
                   profile is not based on another profile.
-		</para>
+                </para>
               </listitem>
             </varlistentry>
             <varlistentry>
-	      <term><emphasis>Enable-Tags-From-Check</emphasis> (folded, optional)</term>
+              <term><emphasis>Enable-Tags-From-Check</emphasis> (folded, optional)</term>
               <listitem>
-		<para>
-		  Comma-separated list of checks.  All tags from each
+                <para>
+                  Comma-separated list of checks.  All tags from each
                   check listed will be enabled in this profile.
-		</para>
+                </para>
               </listitem>
             </varlistentry>
             <varlistentry>
-	      <term><emphasis>Disable-Tags-From-Check</emphasis> (folded, optional)</term>
+              <term><emphasis>Disable-Tags-From-Check</emphasis> (folded, optional)</term>
               <listitem>
-		<para>
-		Comma-separated list of checks.  All tags from each
+                <para>
+                Comma-separated list of checks.  All tags from each
                 check listed will be disabled in this profile.
-		</para>
+                </para>
               </listitem>
             </varlistentry>
             <varlistentry>
-	      <term><emphasis>Enable-Tags</emphasis> (folded, optional)</term>
+              <term><emphasis>Enable-Tags</emphasis> (folded, optional)</term>
               <listitem>
-		<para> Comma-separated list of tags that should be
+                <para> Comma-separated list of tags that should be
                 enabled.
-		</para>
+                </para>
               </listitem>
             </varlistentry>
             <varlistentry>
               <term><emphasis>Disable-Tags</emphasis> (folded, optional)</term>
               <listitem>
-		<para>
-		  Comma-separated list of tags that should be
-		  disabled.
-		</para>
+                <para>
+                  Comma-separated list of tags that should be
+                  disabled.
+                </para>
               </listitem>
             </varlistentry>
-	  </variablelist>
+          </variablelist>
           <para>
             The profile is invalid and is rejected, if Enable-Tags and
             Disable-Tags lists the same tag twice - even if it is in
@@ -797,40 +797,40 @@ foo source: another-tag without any comments
           <para>
             The fields in the secondary paragraphs are:
           </para>
-	  <variablelist>
+          <variablelist>
             <varlistentry>
-	      <term><emphasis>Tags</emphasis> (folded, mandatory)</term>
+              <term><emphasis>Tags</emphasis> (folded, mandatory)</term>
               <listitem>
-		<para>
-		  Comma separated list of tags affected by this
-		  paragraph.
-		</para>
+                <para>
+                  Comma separated list of tags affected by this
+                  paragraph.
+                </para>
               </listitem>
             </varlistentry>
             <varlistentry>
-	      <term><emphasis>Overridable</emphasis> (simple, optional)</term>
+              <term><emphasis>Overridable</emphasis> (simple, optional)</term>
               <listitem>
-		<para>
-		  Either "Yes" or "No", which decides whether these
+                <para>
+                  Either "Yes" or "No", which decides whether these
                   tags can be overriden.  Lintian will print an
                   informal message if it sees an override for a tag
                   marked as non-overridable (except if --quiet is
                   passed).
-		</para>
+                </para>
               </listitem>
             </varlistentry>
             <varlistentry>
-	      <term><emphasis>Severity</emphasis> (simple, optional)</term>
+              <term><emphasis>Severity</emphasis> (simple, optional)</term>
               <listitem>
-		<para>
+                <para>
                   The value must be a valid tag severity; the severity
                   of the affected is set to this value.  Note
                   that <emphasis>experimental</emphasis> is not a
                   severity.
-		</para>
+                </para>
               </listitem>
             </varlistentry>
-	  </variablelist>
+          </variablelist>
           <para>
             The paragraph must contain at least one other field than the
             Tag field.
@@ -955,9 +955,9 @@ foo source: another-tag without any comments
         foo.diff.gz
         foo.orig.tar.gz     (symlinks to actual files)
         binary/
-	     &lt;binary 1&gt; -&gt; ../../../binary/&lt;binary 1&gt;
-	     ...
-	unpacked/           (opt., contains unpacked source package)
+             &lt;binary 1&gt; -&gt; ../../../binary/&lt;binary 1&gt;
+             ...
+        unpacked/           (opt., contains unpacked source package)
 
       binary/
        &lt;bin-pkg-name&gt;/
@@ -966,18 +966,18 @@ foo source: another-tag without any comments
         control-index       (same for the control.tar.gz of the pkg)
         control/            (contains all control files)
         fields/             (contains all control field settings)
-	source -&gt; ../../source/&lt;source pkg&gt;
+        source -&gt; ../../source/&lt;source pkg&gt;
         deb                 (symlink to actual file)
-	unpacked/           (opt., contains unpacked binary package)
+        unpacked/           (opt., contains unpacked binary package)
 
       udeb/
        &lt;udeb-pkg-name&gt;/
-	...                 (same structure as for binary packages)
+        ...                 (same structure as for binary packages)
 
       info/
         binary-packages     list of binary packages in archive
         udeb-packages       list of udeb packages in archive
-	source-packages     list of source packages in archive
+        source-packages     list of source packages in archive
 </screen>
     </sect1>
 
@@ -1004,12 +1004,12 @@ foo source: another-tag without any comments
 </para>
       <para>
         Since Lintian needs an up-to-date list of packages in the
-	distribution, you'll have to rerun
-	the <command>lintian <option>-S</option></command> command
-	whenever the distribution directory has been changed. (But
-	there is no need to remove the laboratory in this situation:
-	Lintian is smart enough to only re-unpack packages that have
-	been changed.)
+        distribution, you'll have to rerun
+        the <command>lintian <option>-S</option></command> command
+        whenever the distribution directory has been changed. (But
+        there is no need to remove the laboratory in this situation:
+        Lintian is smart enough to only re-unpack packages that have
+        been changed.)
       </para>
     </sect1>
   </chapter>

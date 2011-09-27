@@ -31,13 +31,19 @@ my $type = shift;
 
 if (-e 'init.d') {
     delete_dir('init.d')
-	or fail('cannot rm old init.d directory');
+        or fail('cannot rm old init.d directory');
 }
 
 if (-d 'unpacked/etc/init.d') {
     copy_dir('unpacked/etc/init.d', 'init.d')
-	or fail('cannot copy init.d directory');
+        or fail('cannot copy init.d directory');
 } else {
     # no etc/init.d
     mkdir('init.d', 0777) or fail("cannot mkdir init.d: $!");
 }
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

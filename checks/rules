@@ -10,7 +10,7 @@
 #
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 
 package Lintian::rules;
@@ -186,7 +186,7 @@ while (<RULES>) {
         tag 'debian-rules-uses-pwd', "line $.";
     }
     if (m/^\t\s*-(?:\$[\(\{]MAKE[\}\)]|make)\s.*(?:dist)?clean/ ||
-	m/^\t\s*(?:\$[\(\{]MAKE[\}\)]|make)\s(?:.*\s)?-\w*i.*(?:dist)?clean/) {
+        m/^\t\s*(?:\$[\(\{]MAKE[\}\)]|make)\s(?:.*\s)?-\w*i.*(?:dist)?clean/) {
         tag 'debian-rules-ignores-make-clean-error', "line $.";
     }
     if (/\$[\(\{]DEB_BUILD_OPTS[\)\}]/) {
@@ -262,13 +262,13 @@ while (<RULES>) {
     }
 
     if (!/^ifn?(?:eq|def)\s/ && m/^([^\s:][^:]*):+(.*)/) {
-	@current_targets = split (' ', $1);
+        @current_targets = split (' ', $1);
         my @depends = map {
             $_ = quotemeta $_;
             s/\\\$\\\([^\):]+\\:([^=]+)\\=([^\)]+)\1\\\)/$2.*/g;
             qr/^$_$/;
         } split (m/ /o, $2);
-	for my $target (@current_targets) {
+        for my $target (@current_targets) {
             if ($target =~ m/%/o) {
                 my $pattern = quotemeta $target;
                 $pattern =~ s/\\%/.*/g;
@@ -303,7 +303,7 @@ while (<RULES>) {
             if (grep { $target =~ /$_/ } @arch_rules) {
                 push (@arch_rules, @depends);
             }
-	}
+        }
         undef %debhelper_group;
     } elsif (/^define /) {
         # We don't want to think the body of the define is part of the
@@ -312,10 +312,10 @@ while (<RULES>) {
         # end of the current rule, although that isn't very accurate either.
         @current_targets = ();
     } else {
-    	# If we have non-empty, non-comment lines, store them for all current
-    	# targets and check whether debhelper programs are called in a
-    	# reasonable order.
-	if (m/^\s+[^\#]/) {
+        # If we have non-empty, non-comment lines, store them for all current
+        # targets and check whether debhelper programs are called in a
+        # reasonable order.
+        if (m/^\s+[^\#]/) {
             my ($arch, $indep) = (0, 0);
             for my $target (@current_targets) {
                 $rules_per_target{$target} ||= [];
@@ -332,7 +332,7 @@ while (<RULES>) {
                             = $rule->[2] || $needed_clean{$rule->[0]} || '';
                     }
                 }
-	    } elsif ($indep) {
+            } elsif ($indep) {
                 for my $rule (@RULE_CLEAN_DEPENDS) {
                     if (/$rule->[1]/ and not $maybe_skipping) {
                         $needed{$rule->[0]}
@@ -353,7 +353,7 @@ while (<RULES>) {
                     $debhelper_group{$package} = $group;
                 }
             }
-	}
+        }
     }
 }
 close RULES;
@@ -384,7 +384,7 @@ if ($architecture eq 'all' && scalar @{$rules_per_target{'binary-arch'}}) {
     tag 'binary-arch-rules-but-pkg-is-arch-indep' if $nonempty;
 }
 
-# Make sure that all the required build dependencies are there.	 Don't
+# Make sure that all the required build dependencies are there.  Don't
 # issue missing-build-dependency errors for debhelper, since there's
 # another test that does that and it would just be a duplicate.
 my $build_regular = $info->relation('build-depends');
@@ -425,4 +425,4 @@ for my $package (keys %needed) {
 # indent-tabs-mode: nil
 # cperl-indent-level: 4
 # End:
-# vim: syntax=perl sw=4 sts=4 ts=4 et shiftround
+# vim: syntax=perl sw=4 sts=4 sr et

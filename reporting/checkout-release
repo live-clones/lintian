@@ -10,8 +10,8 @@
 set -e
 
 if [ $# -ne 1 ]; then
-	echo "Usage: checkout-release <version-number>"
-	exit 2
+    echo "Usage: checkout-release <version-number>"
+    exit 2
 fi
 release=$1
 
@@ -22,3 +22,8 @@ git fetch
 git merge "$release"
 perl -i -pe "s/(LINTIAN_VERSION = )\S+/$1\"$release\";/" root/frontend/lintian
 debian/rules build
+
+# Local Variables:
+# indent-tabs-mode: nil
+# End:
+# vim: syntax=sh sw=4 sts=4 sr et

@@ -1,16 +1,25 @@
 lintian (2.5.4) UNRELEASED; urgency=low
 
+  * checks/*:
+    + [JW] Replace common_data.pm with Lintian::Check.
   * checks/binaries:
     + [JW] Allow binaries to use "/usr/lib/$srcpkg/" in RPATHs.
       (Closes: #642092)
+  * checks/common_data.pm:
+    + [JW] Merged into Lintian::Check.
   * checks/cruft:
-    + [NT] Escape path when using them in regexes.
+    + [NT] Escape path when using them in regexes.  (Closes: #642902)
   * checks/dehelper:
     + [JW,NT] Check for versioned dependencies for some dh_commands.
       (Closes: #641035)
   * checks/files.desc:
     + [JW] Suggest the usage of "-delete" rather than "| xargs rm -f".
       (Closes: #641983)
+  * checks/scripts:
+    + [RA] Exclude files ending in *.erb from several shell script
+      checks.  ERB is a Ruby templating language, so these will probably
+      have mixed shell and Ruby code and may not be executable.  Thanks,
+      Laurent Arnoud.
   * checks/source-copyright:
     + [JW] Added some more DEP-5 URLs.  (Closes: #642027)
 
@@ -24,6 +33,8 @@ lintian (2.5.4) UNRELEASED; urgency=low
       than verbose.
     + [JW,NT] Correctly handle $TMPDIR not being an absolute path.
       (Closes: #642113)
+  * lib/Lintian/Check.pm:
+    + [JW] Merged with common_data.pm.
   * lib/Lintian/Collect/Source.pm:
     + [JW] Fixed call to binary_field in binary_relation.
       (Closes: #641609)

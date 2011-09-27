@@ -186,7 +186,7 @@ sub binary_relation {
     if ($special{$field}) {
         my $merged;
         for my $f (@{ $special{$field} }) {
-	    # sub binary_relation Needs-Info :binary_field
+            # sub binary_relation Needs-Info :binary_field
             my $value = $self->binary_field($package, $f);
             $merged .= ', ' if (defined($merged) and defined($value));
             $merged .= $value if defined($value);
@@ -432,4 +432,4 @@ lintian(1), Lintian::Collect(3), Lintian::Relation(3)
 # indent-tabs-mode: nil
 # cperl-indent-level: 4
 # End:
-# vim: syntax=perl sw=4 sts=4 ts=4 et shiftround
+# vim: syntax=perl sw=4 sts=4 sr et

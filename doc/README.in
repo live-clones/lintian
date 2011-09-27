@@ -38,10 +38,10 @@ Here is what you have to do at minimum to get lintian up and running:
 
   2. Run lintian over your packages:
 
-	$ lintian <something>.deb
-	$ lintian <something>.udeb
-	$ lintian <something>.dsc
-	$ lintian <something>.changes
+        $ lintian <something>.deb
+        $ lintian <something>.udeb
+        $ lintian <something>.dsc
+        $ lintian <something>.changes
 
 (Yes, Lintian is really easy to use! ;-)
 

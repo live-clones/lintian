@@ -31,3 +31,9 @@ if ( -d 'control/' ) {
         die "system: rm -r control/ died with: " . (($r >> 8) & 0xff) . ".\n";
     }
 }
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

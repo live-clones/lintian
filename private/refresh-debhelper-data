@@ -22,7 +22,7 @@ set -e
 
 if [ -z "$1" ]; then
     printf "Usage: %s path/to/lintian/data [Contents-arch.(gz|bz2|)]\n" \
-	"$(basename "$0")"
+        "$(basename "$0")"
     cat <<INFO
 
 If the Contents file is specified, the list of dh_ commands found there will
@@ -73,29 +73,29 @@ if [ $offline -eq 1 ]; then
     new_commands="$workdir/new"
 
     case "$contents" in
-	*.gz)
-	    command="zgrep"
-	;;
-	*.bz2)
-	    command="bzgrep"
-	;;
-	*)
-	    command="grep"
-	;;
+        *.gz)
+            command="zgrep"
+        ;;
+        *.bz2)
+            command="bzgrep"
+        ;;
+        *)
+            command="grep"
+        ;;
     esac
     which "$command" 2>&1 1>/dev/null || exit 2
 
     $command -E "$dh_regex" "$contents" \
-	| perl -p -w -E 's#'"$dh_perl_regex"'#$1=$2#g;' \
-	| sort > "$new_commands"
+        | perl -p -w -E 's#'"$dh_perl_regex"'#$1=$2#g;' \
+        | sort > "$new_commands"
     cmp -s "$known_commands" "$new_commands"
     exit
 else
     mirror="${DEB_MIRROR:=http://i386-geomirror.debian.net/debian}"
     WGET_ARGS="${WGET_ARGS:=-nv}"
     wget() {
-	echo wget "$mirror"/"$1"
-	/usr/bin/wget $WGET_ARGS "$mirror"/"$1"
+        echo wget "$mirror"/"$1"
+        /usr/bin/wget $WGET_ARGS "$mirror"/"$1"
     }
     mkdir -p "$lintian_data/debhelper"
 
@@ -103,42 +103,47 @@ else
     wget dists/sid/Contents-i386.gz
     zgrep -E "$dh_regex" Contents-i386.gz > dh_entries
     cat dh_entries \
-	| perl -p -w -E 's#'"$dh_perl_regex"'#$1=$2#g;' \
-	| LC_ALL=C sort > dh_commands
+        | perl -p -w -E 's#'"$dh_perl_regex"'#$1=$2#g;' \
+        | LC_ALL=C sort > dh_commands
     cat dh_entries \
-	| perl -p -w -E 's#'"$dh_perl_regex"'#$2#g;' \
-	| LC_ALL=C sort -u > dh_packages
+        | perl -p -w -E 's#'"$dh_perl_regex"'#$2#g;' \
+        | LC_ALL=C sort -u > dh_packages
 
     for f in commands packages; do
-	rf="$lintian_data/debhelper/dh_$f"
-	[ ! -f "$rf" ] ||
-	    mv "$rf" "${rf}.old"
-	cp -a "dh_$f" "$rf"
+        rf="$lintian_data/debhelper/dh_$f"
+        [ ! -f "$rf" ] ||
+            mv "$rf" "${rf}.old"
+        cp -a "dh_$f" "$rf"
     done
 
     wget dists/sid/main/binary-i386/Packages.gz
     gunzip Packages.gz
     for package in $(cat dh_packages); do
-	fn="$(grep-dctrl -n -P -X "$package" -sFilename Packages)"
-	wget "$fn"
-	file="$(basename "$fn")"
-	dpkg-deb -x "$file" "$(mktemp -d -p .)"
-	rm -rf "$file"
-	find */ | grep -Ev '^[^/]+/usr/bin/dh_.+$' \
-	    | xargs rm >/dev/null 2>&1 || true
-	find */ -type l -print | xargs rm >/dev/null 2>&1 || true
+        fn="$(grep-dctrl -n -P -X "$package" -sFilename Packages)"
+        wget "$fn"
+        file="$(basename "$fn")"
+        dpkg-deb -x "$file" "$(mktemp -d -p .)"
+        rm -rf "$file"
+        find */ | grep -Ev '^[^/]+/usr/bin/dh_.+$' \
+            | xargs rm >/dev/null 2>&1 || true
+        find */ -type l -print | xargs rm >/dev/null 2>&1 || true
     done
 
     grep -lr autoscript */ \
-	| sed 's,.*/usr/bin/,,g' | sort -u > maint_commands
+        | sed 's,.*/usr/bin/,,g' | sort -u > maint_commands
     grep -lr misc:Depends */ \
-	| sed 's,.*/usr/bin/,,g' | sort -u | grep -v dh_gencontrol \
-	> miscDepends_commands
+        | sed 's,.*/usr/bin/,,g' | sort -u | grep -v dh_gencontrol \
+        > miscDepends_commands
 
     for f in maint miscDepends; do
-	rf="$lintian_data/debhelper/${f}_commands"
-	[ ! -f "$rf" ] ||
-	    mv "$rf" "${rf}.old"
-	cp -a "${f}_commands" "$rf"
+        rf="$lintian_data/debhelper/${f}_commands"
+        [ ! -f "$rf" ] ||
+            mv "$rf" "${rf}.old"
+        cp -a "${f}_commands" "$rf"
     done
 fi
+
+# Local Variables:
+# indent-tabs-mode: nil
+# End:
+# vim: syntax=sh sw=4 sts=4 sr et

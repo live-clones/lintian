@@ -38,45 +38,45 @@ my $debfiles = $info->debfiles;
 # Read the templates file and look at the template names it provides, since
 # some shared templates aren't translated.
 opendir(DEB, $debfiles)
-	or fail("Can't open debfiles directory.");
+    or fail("Can't open debfiles directory.");
 my $has_template = my $has_depends = my $has_config = 0;
 my @lang_templates;
 for my $file (readdir(DEB)) {
-	next if -d "$debfiles/$file";
-	if ($file =~ m/^(.+\.)?templates(\..+)?$/) {
-		if ($file =~ m/templates\.\w\w(_\w\w)?$/) {
-			push (@lang_templates, $file);
-		} else {
-			open(PO, '<', "$debfiles/$file")
-				or fail("Can't open debfiles/$file file.");
-			my $in_template = 0;
-			while (<PO>) {
-				tag 'translated-default-field', "$file: $."
-					if (m/^_Default(Choice)?: [^\[]*$/);
-				if (/^Template: (\S+)/i) {
-					my $template = $1;
-					next if $template =~ m,^shared/packages-(wordlist|ispell)$,;
-					next if $template =~ m,/languages$,;
-					$in_template = 1;
-				} elsif ($in_template and /^_?Description: (.+)/i) {
-					my $description = $1;
-					next if $description =~ /for internal use/;
-					$has_template = 1;
-				} elsif ($in_template and /^$/) {
-					$in_template = 0;
-				}
-			}
-			close PO;
-		}
-	}
+    next if -d "$debfiles/$file";
+    if ($file =~ m/^(.+\.)?templates(\..+)?$/) {
+        if ($file =~ m/templates\.\w\w(_\w\w)?$/) {
+            push (@lang_templates, $file);
+        } else {
+            open(PO, '<', "$debfiles/$file")
+                or fail("Can't open debfiles/$file file.");
+            my $in_template = 0;
+            while (<PO>) {
+                tag 'translated-default-field', "$file: $."
+                    if (m/^_Default(Choice)?: [^\[]*$/);
+                if (/^Template: (\S+)/i) {
+                    my $template = $1;
+                    next if $template =~ m,^shared/packages-(wordlist|ispell)$,;
+                    next if $template =~ m,/languages$,;
+                    $in_template = 1;
+                } elsif ($in_template and /^_?Description: (.+)/i) {
+                    my $description = $1;
+                    next if $description =~ /for internal use/;
+                    $has_template = 1;
+                } elsif ($in_template and /^$/) {
+                    $in_template = 0;
+                }
+            }
+            close PO;
+        }
+    }
 }
 closedir(DEB);
 
 #TODO: check whether all templates are named in TEMPLATES.pot
 if ( $has_template ) {
     if ( ! -d "$debfiles/po" ) {
-	tag 'not-using-po-debconf';
-	return 0;
+        tag 'not-using-po-debconf';
+        return 0;
     }
 } else {
     return 0;
@@ -96,84 +96,84 @@ my $yada = 0;
 if (open (RULES, '<', "$debfiles/rules")) {
     local $_;
     while (<RULES>) {
-	if (m%^\t\s*(?:perl debian/)?yada\s%) {
-	    $yada = 1;
-	    $missing_files = 1;
-	}
+        if (m%^\t\s*(?:perl debian/)?yada\s%) {
+            $yada = 1;
+            $missing_files = 1;
+        }
     }
 }
 
 if (!$yada && -f "$debfiles/po/POTFILES.in") {
-	open(POTFILES, '<', "$debfiles/po/POTFILES.in")
-		or fail("Can't open debfiles/po/POTFILES.in.");
-	while (<POTFILES>) {
-		chomp;
-		next if /^\s*\#/;
-		s/.*\]\s*//;
-		#  Cannot check files which are not under debian/
-		next if m,^\.\./, or $_ eq '';
-		unless (-f "$debfiles/$_") {
-			tag 'missing-file-from-potfiles-in', $_;
-			$missing_files = 1;
-		}
-	}
-	close(POTFILES);
+    open(POTFILES, '<', "$debfiles/po/POTFILES.in")
+        or fail("Can't open debfiles/po/POTFILES.in.");
+    while (<POTFILES>) {
+        chomp;
+        next if /^\s*\#/;
+        s/.*\]\s*//;
+        #  Cannot check files which are not under debian/
+        next if m,^\.\./, or $_ eq '';
+        unless (-f "$debfiles/$_") {
+            tag 'missing-file-from-potfiles-in', $_;
+            $missing_files = 1;
+        }
+    }
+    close(POTFILES);
 } elsif (!$yada) {
-	tag 'missing-potfiles-in';
-	$missing_files = 1;
+    tag 'missing-potfiles-in';
+    $missing_files = 1;
 }
 if (! -f "$debfiles/po/templates.pot") {
-	tag 'missing-templates-pot';
-	$missing_files = 1;
+    tag 'missing-templates-pot';
+    $missing_files = 1;
 }
 
 if (-x '/usr/bin/msgcmp' && -x '/usr/share/intltool-debian/intltool-update' ) {
-	if ($missing_files == 0) {
-		$ENV{'INTLTOOL_EXTRACT'} ||= '/usr/share/intltool-debian/intltool-extract';
-		system_env("cd \Q$debfiles/po\E && /usr/share/intltool-debian/intltool-update --gettext-package=test --pot");
-		system_env("/usr/bin/msgcmp --use-untranslated \Q$debfiles/po/test.pot\E \Q$debfiles/po/templates.pot\E >/dev/null 2>&1"
-                           . "&& /usr/bin/msgcmp --use-untranslated \Q$debfiles/po/templates.pot\E \Q$debfiles/po/test.pot\E >/dev/null 2>&1") == 0
-                	or tag 'newer-debconf-templates';
-	}
+    if ($missing_files == 0) {
+        $ENV{'INTLTOOL_EXTRACT'} ||= '/usr/share/intltool-debian/intltool-extract';
+        system_env("cd \Q$debfiles/po\E && /usr/share/intltool-debian/intltool-update --gettext-package=test --pot");
+        system_env("/usr/bin/msgcmp --use-untranslated \Q$debfiles/po/test.pot\E \Q$debfiles/po/templates.pot\E >/dev/null 2>&1"
+                   . "&& /usr/bin/msgcmp --use-untranslated \Q$debfiles/po/templates.pot\E \Q$debfiles/po/test.pot\E >/dev/null 2>&1") == 0
+                or tag 'newer-debconf-templates';
+    }
 } else {
-	fail('either msgcmp or intltool-update not found');
+    fail('either msgcmp or intltool-update not found');
 }
 
 if (! -x '/usr/bin/msgfmt' ) {
-	fail('msgfmt not found');
+    fail('msgfmt not found');
 }
 opendir(DEBIAN, "$debfiles/po")
         or fail("Can't open debfiles/po directory.");
 while (defined(my $file=readdir(DEBIAN))) {
-        next unless $file =~ m/\.po$/;
-        tag 'misnamed-po-file', "debian/po/$file"
-                unless ($file =~ /^[a-z]{2,3}(_[A-Z]{2})?(?:\@[^\.]+)?\.po$/o);
-        local ($/) = "\n\n";
-        $_ = '';
-        open(PO, '<', "$debfiles/po/$file")
-                or fail("Can't open debfiles/po/$file file.");
-        while (<PO>) {
-                last if m/^msgstr/m;
-        }
-        close(PO);
-	unless ($_) {
-		tag 'invalid-po-file', "debian/po/$file";
-		next;
-	}
-        s/"\n"//g;
-        my $charset = '';
-        if (m/charset=(.*?)\\n/) {
-                $charset = ($1 eq 'CHARSET' ? '' : $1);
-        }
-        tag 'unknown-encoding-in-po-file', "debian/po/$file"
-                unless length($charset);
-	system_env("msgfmt -o /dev/null \Q$debfiles/po/$file\E 2>/dev/null") == 0
-		or tag 'invalid-po-file', "debian/po/$file";
+    next unless $file =~ m/\.po$/;
+    tag 'misnamed-po-file', "debian/po/$file"
+        unless ($file =~ /^[a-z]{2,3}(_[A-Z]{2})?(?:\@[^\.]+)?\.po$/o);
+    local ($/) = "\n\n";
+    $_ = '';
+    open(PO, '<', "$debfiles/po/$file")
+        or fail("Can't open debfiles/po/$file file.");
+    while (<PO>) {
+        last if m/^msgstr/m;
+    }
+    close(PO);
+    unless ($_) {
+        tag 'invalid-po-file', "debian/po/$file";
+        next;
+    }
+    s/"\n"//g;
+    my $charset = '';
+    if (m/charset=(.*?)\\n/) {
+        $charset = ($1 eq 'CHARSET' ? '' : $1);
+    }
+    tag 'unknown-encoding-in-po-file', "debian/po/$file"
+            unless length($charset);
+    system_env("msgfmt -o /dev/null \Q$debfiles/po/$file\E 2>/dev/null") == 0
+        or tag 'invalid-po-file', "debian/po/$file";
 
-	my $stats = `LC_ALL=C msgfmt -o /dev/null --statistics \Q$debfiles/po/$file\E 2>&1`;
-	if (!$full_translation && $stats =~ m/^\w+ \w+ \w+\.$/) {
-		$full_translation = 1;
-	}
+    my $stats = `LC_ALL=C msgfmt -o /dev/null --statistics \Q$debfiles/po/$file\E 2>&1`;
+    if (!$full_translation && $stats =~ m/^\w+ \w+ \w+\.$/) {
+        $full_translation = 1;
+    }
 }
 
 tag 'no-complete-debconf-translation' if !$full_translation;
@@ -183,7 +183,7 @@ tag 'no-complete-debconf-translation' if !$full_translation;
 1;
 
 # Local Variables:
-# indent-tabs-mode: t
-# cperl-indent-level: 8
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
 # End:
-# vim: syntax=perl
+# vim: syntax=perl sw=4 sts=4 sr et

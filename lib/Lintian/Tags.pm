@@ -810,4 +810,4 @@ lintian(1), Lintian::Output(3), Lintian::Tag::Info(3)
 # indent-tabs-mode: nil
 # cperl-indent-level: 4
 # End:
-# vim: syntax=perl ts=4 sw=4 et
+# vim: syntax=perl sw=4 sts=4 sr et

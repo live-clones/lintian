@@ -87,15 +87,15 @@ sub run {
     my $self;
 
     if (ref $_[0]) {
-	$self = shift;
-	return -1
-	    if defined($self->{'pid'});
+        $self = shift;
+        return -1
+            if defined($self->{'pid'});
     }
 
     system(@_);
 
     $self->{'status'} = $?
-	if defined $self;
+        if defined $self;
 
     return $? >> 8;
 }
@@ -116,16 +116,16 @@ sub rundir {
     my $res;
 
     if (ref $_[0]) {
-	$self = shift;
-	return -1
-	    if defined($self->{'pid'});
+        $self = shift;
+        return -1
+            if defined($self->{'pid'});
     }
     $pid = fork();
     if (not defined($pid)) {
-	# failed
+        # failed
         $res = -1;
     } elsif ($pid > 0) {
-	# parent
+        # parent
         if (defined($self)){
             $self->{'pid'} = $pid;
             $res = $self->wait();
@@ -133,12 +133,12 @@ sub rundir {
             $res = Lintian::Command::Simple::wait($pid);
         }
     } else {
-	# child
+        # child
         my $dir = shift;
-	close(STDIN);
-	open(STDIN, '<', '/dev/null');
+        close(STDIN);
+        open(STDIN, '<', '/dev/null');
         chdir($dir) or die("Failed to chdir to $dir: $!\n");
-	CORE::exec @_ or die("Failed to exec '$_[0]': $!\n");
+        CORE::exec @_ or die("Failed to exec '$_[0]': $!\n");
     }
 
     return $res;
@@ -159,31 +159,31 @@ sub background {
     my $self;
 
     if (ref $_[0]) {
-	$self = shift;
-	return -1
-	    if (defined($self->{'pid'}));
+        $self = shift;
+        return -1
+            if (defined($self->{'pid'}));
 
-	$self->{'status'} = undef;
+        $self->{'status'} = undef;
     }
 
     my $pid = fork();
 
     if (not defined($pid)) {
-	# failed
-	return -1;
+        # failed
+        return -1;
     } elsif ($pid > 0) {
-	# parent
+        # parent
 
-	$self->{'pid'} = $pid
-	    if (defined($self));
+        $self->{'pid'} = $pid
+            if (defined($self));
 
-	return $pid;
+        return $pid;
     } else {
-	# child
-	close(STDIN);
-	open(STDIN, '<', '/dev/null');
+        # child
+        close(STDIN);
+        open(STDIN, '<', '/dev/null');
 
-	CORE::exec @_ or die("Failed to exec '$_[0]': $!\n");
+        CORE::exec @_ or die("Failed to exec '$_[0]': $!\n");
     }
 }
 
@@ -202,32 +202,32 @@ sub background_dir {
     my $self;
 
     if (ref $_[0]) {
-	$self = shift;
-	return -1
-	    if (defined($self->{'pid'}));
+        $self = shift;
+        return -1
+            if (defined($self->{'pid'}));
 
-	$self->{'status'} = undef;
+        $self->{'status'} = undef;
     }
 
     my $pid = fork();
 
     if (not defined($pid)) {
-	# failed
-	return -1;
+        # failed
+        return -1;
     } elsif ($pid > 0) {
-	# parent
+        # parent
 
-	$self->{'pid'} = $pid
-	    if (defined($self));
+        $self->{'pid'} = $pid
+            if (defined($self));
 
-	return $pid;
+        return $pid;
     } else {
-	# child
+        # child
         my $dir = shift;
-	close(STDIN);
-	open(STDIN, '<', '/dev/null');
+        close(STDIN);
+        open(STDIN, '<', '/dev/null');
         chdir($dir) or die("Failed to chdir to $dir: $!\n");
-	CORE::exec @_ or die("Failed to exec '$_[0]': $!\n");
+        CORE::exec @_ or die("Failed to exec '$_[0]': $!\n");
     }
 }
 
@@ -285,60 +285,60 @@ sub wait {
     my ($self, $pid);
 
     if (ref $_[0] eq 'Lintian::Command::Simple') {
-	$self = shift;
-	$pid = $self->{'pid'};
+        $self = shift;
+        $pid = $self->{'pid'};
     } else {
-	$pid = shift;
+        $pid = shift;
     }
 
     if (defined($pid) && !ref $pid) {
-	$self->{'pid'} = undef
-	    if defined($self);
+        $self->{'pid'} = undef
+            if defined($self);
 
-	my $ret = waitpid($pid, 0);
-	my $status = $?;
+        my $ret = waitpid($pid, 0);
+        my $status = $?;
 
-	$self->{'status'} = $?
-	    if defined($self);
+        $self->{'status'} = $?
+            if defined($self);
 
-	return ($ret == -1)? -1 : $status >> 8;
+        return ($ret == -1)? -1 : $status >> 8;
     } elsif (defined($pid)) {
-	# in this case $pid is a ref (must be a hash ref)
-	# rename it accordingly:
-	my $jobs = $pid;
-	$pid = 0;
+        # in this case $pid is a ref (must be a hash ref)
+        # rename it accordingly:
+        my $jobs = $pid;
+        $pid = 0;
 
-	my ($reaped_pid, $reaped_status);
+        my ($reaped_pid, $reaped_status);
 
-	# count the number of members and reset the internal hash iterator
-	if (scalar keys %$jobs == 0) {
+        # count the number of members and reset the internal hash iterator
+        if (scalar keys %$jobs == 0) {
             return;
-	}
+        }
 
-	$reaped_pid = CORE::wait();
-	$reaped_status = $?;
+        $reaped_pid = CORE::wait();
+        $reaped_status = $?;
 
-	if ($reaped_pid == -1) {
+        if ($reaped_pid == -1) {
             return;
-	}
+        }
 
-	while (my ($k, $cmd) = each %$jobs) {
-	    next unless (defined($cmd->pid()) && $reaped_pid == $cmd->pid());
+        while (my ($k, $cmd) = each %$jobs) {
+            next unless (defined($cmd->pid()) && $reaped_pid == $cmd->pid());
 
-	    $cmd->status($reaped_status)
-		or die("internal error: object of pid $reaped_pid " .
-			"failed to recognise its termination\n");
+            $cmd->status($reaped_status)
+                or die("internal error: object of pid $reaped_pid " .
+                        "failed to recognise its termination\n");
 
-	    if (wantarray) {
-		return ($k, $cmd);
-	    } else {
-		return $cmd;
-	    }
-	}
+            if (wantarray) {
+                return ($k, $cmd);
+            } else {
+                return $cmd;
+            }
+        }
     } elsif (not defined($self)) {
-	return (CORE::wait() == -1)? -1 : ($? >> 8);
+        return (CORE::wait() == -1)? -1 : ($? >> 8);
     } else {
-	return -1;
+        return -1;
     }
 }
 
@@ -375,30 +375,30 @@ sub kill {
     my ($self, $pid);
 
     if (ref $_[0] eq 'Lintian::Command::Simple') {
-	$self = shift;
-	$pid = $self->pid();
+        $self = shift;
+        $pid = $self->pid();
     } elsif (ref $_[0]) {
-	my $jobs = shift;
-	my $count = 0;
-	my @killed_jobs;
+        my $jobs = shift;
+        my $count = 0;
+        my @killed_jobs;
 
-	# reset internal iterator
-	keys %$jobs;
-	# send signals
-	while (my ($k, $cmd) = each %$jobs) {
-	    if ($cmd->kill()) {
-		$count++;
-		push @killed_jobs, $k;
-	    }
-	}
-	# and reap afterwards
-	while (my $k = shift @killed_jobs) {
-	    $jobs->{$k}->wait();
-	}
+        # reset internal iterator
+        keys %$jobs;
+        # send signals
+        while (my ($k, $cmd) = each %$jobs) {
+            if ($cmd->kill()) {
+                $count++;
+                push @killed_jobs, $k;
+            }
+        }
+        # and reap afterwards
+        while (my $k = shift @killed_jobs) {
+            $jobs->{$k}->wait();
+        }
 
-	return $count;
+        return $count;
     } else {
-	$pid = shift;
+        $pid = shift;
     }
 
     return CORE::kill('TERM', $pid);
@@ -439,12 +439,12 @@ sub status {
     # It performs a sanity check by making sure the executed command is
     # indeed done.
     if (defined($status)) {
-	my $rstatus = $self->wait();
+        my $rstatus = $self->wait();
 
-	return 0 if ($rstatus != -1);
+        return 0 if ($rstatus != -1);
 
-	$self->{'status'} = $status;
-	return 1;
+        $self->{'status'} = $status;
+        return 1;
     }
 
     return (defined $self->{'status'})? $self->{'status'} >> 8 : undef;
@@ -487,3 +487,9 @@ with a hash ref.
 Originally written by Raphael Geissert <atomo64@gmail.com> for Lintian.
 
 =cut
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

@@ -70,7 +70,7 @@ for my $jar_file (sort keys %{$java_info}) {
     $has_jars = 1;
 
     if($jar_file =~ m#^usr/share/java/[^/]+\.jar$#o) {
-	$has_public_jars = 1;
+        $has_public_jars = 1;
     }
     # check for common code files like .class or .clj (Clojure files)
     $classes = 0 unless grep m/\.(?:class|clj)$/oi, @{$file_list};
@@ -78,17 +78,17 @@ for my $jar_file (sort keys %{$java_info}) {
         unless grep m/\.(?:xml|properties|x?html|xhp)$/io, @{$file_list};
 
     if($operm & 0111) {
-	# Executable ?
-	tag 'executable-jar-without-main-class', $jar_file
+        # Executable ?
+        tag 'executable-jar-without-main-class', $jar_file
             unless $manifest && $manifest->{'Main-Class'};
 
-	# Here, we need to check that the package depends on
-	# jarwrapper.
+        # Here, we need to check that the package depends on
+        # jarwrapper.
         $missing_jarwrapper = 1
             unless $info->relation('strong')->implies('jarwrapper');
     }
     elsif ($jar_file !~ m#^usr/share/#) {
-	tag 'jar-not-in-usr-share', $jar_file;
+        tag 'jar-not-in-usr-share', $jar_file;
     }
 
     $cp = $manifest->{'Class-Path'}//'' if $manifest;
@@ -115,15 +115,15 @@ for my $jar_file (sort keys %{$java_info}) {
             && grep { m,^META-INF/maven/plugin.xml$,io } @{$file_list};
     } else {
         # Only run the tests when a classpath is present
-	my @relative = ();
-	my @paths = split(m/\s++/o, $cp);
+        my @relative = ();
+        my @paths = split(m/\s++/o, $cp);
         $need_cp = 0;
-	for my $p (@paths) {
-	    if($p) {
+        for my $p (@paths) {
+            if($p) {
                 # Strip leading ./
                 $p =~ s#^\./++##og;
-		if($p !~ m#^(?:file://)?/#o) {
-		    if($p =~ m#/#o) {
+                if($p !~ m#^(?:file://)?/#o) {
+                    if($p =~ m#/#o) {
                         my $target = resolve_pkg_path($jar_dir, $p);
                         my $tinfo;
                         # Relative link to usr/share/java ? Works if we
@@ -134,15 +134,15 @@ for my $jar_file (sort keys %{$java_info}) {
                         # Points to file or link in this package, which is sometimes
                         #  easier than re-writing the classpath.
                         next if defined $tinfo && ($tinfo->{type} =~ m/^[-hl]/o);
-			# Relative path with subdirectories.
-			push @relative, $p;
-		    }
+                        # Relative path with subdirectories.
+                        push @relative, $p;
+                    }
 
-		    # @todo add an info tag for relative paths, to educate
-		    # maintainers ?
-		}
-	    }
-	}
+                    # @todo add an info tag for relative paths, to educate
+                    # maintainers ?
+                }
+            }
+        }
 
         tag 'classpath-contains-relative-path',
             "$jar_file: " . join(', ', @relative) if @relative;
@@ -169,3 +169,9 @@ if(! $has_public_jars && $pkg =~ /^lib[^\s,]+-java$/) {
 
 }
 1;
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

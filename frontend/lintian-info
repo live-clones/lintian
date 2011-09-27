@@ -85,18 +85,18 @@ load_profile($prof, \@proc_inc);
 my $unknown;
 if ($tags) {
     for my $tag (@ARGV) {
-	my $info = Lintian::Tag::Info->new($tag);
-	if ($info) {
-	    print $info->code . ": $tag\n";
-	    print "N:\n";
-	    print $info->description('text', 'N:   ');
-	} else {
-	    print "N: $tag\n";
-	    print "N:\n";
-	    print "N:	Unknown tag.\n";
-	    $unknown = 1;
-	}
-	print "N:\n";
+        my $info = Lintian::Tag::Info->new($tag);
+        if ($info) {
+            print $info->code . ": $tag\n";
+            print "N:\n";
+            print $info->description('text', 'N:   ');
+        } else {
+            print "N: $tag\n";
+            print "N:\n";
+            print "N:   Unknown tag.\n";
+            $unknown = 1;
+        }
+        print "N:\n";
     }
     exit ($unknown ? 1 : 0);
 }
@@ -119,20 +119,20 @@ while (<>) {
         $pkg = shift @pieces if
             ($pieces[0] =~ /^\S+( (binary|changes|udeb))?$/);
     } else {
-	$type = shift @pieces;
-	$pkg = shift @pieces;
+        $type = shift @pieces;
+        $pkg = shift @pieces;
     }
     if ($annotate or (defined $type and $type =~ m/^[OEWIXP]$/)) {
-	my $tag = shift @pieces;
-	next if not defined $tag;
-	($tag) = split(/\s+/, $tag, 2);
+        my $tag = shift @pieces;
+        next if not defined $tag;
+        ($tag) = split(/\s+/, $tag, 2);
 
-	next if $already_displayed{$tag}++;
-	my $info = Lintian::Tag::Info->new($tag);
-	next unless $info;
-	print "N:\n";
-	print $info->description('text', 'N:   ');
-	print "N:\n";
+        next if $already_displayed{$tag}++;
+        my $info = Lintian::Tag::Info->new($tag);
+        next unless $info;
+        print "N:\n";
+        print $info->description('text', 'N:   ');
+        print "N:\n";
     }
 }
 
@@ -146,13 +146,13 @@ sub load_profile{
     my $profile = Lintian::Profile->new($prof, $proc_inc_ref);
     my $severities = $profile->severity_changes;
     while ( my ($tagname, $severity) = each(%$severities) ){
-	my $tag = Lintian::Tag::Info->new($tagname);
-	$tag->set_severity($severity);
+        my $tag = Lintian::Tag::Info->new($tagname);
+        $tag->set_severity($severity);
     }
 }
 
 # Local Variables:
-# indent-tabs-mode: t
+# indent-tabs-mode: nil
 # cperl-indent-level: 4
 # End:
-# vim: syntax=perl sw=4 ts=8
+# vim: syntax=perl sw=4 sts=4 sr et

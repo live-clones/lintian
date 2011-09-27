@@ -36,8 +36,8 @@ sub new {
         require Lintian::Collect::Binary;
         $object = Lintian::Collect::Binary->new ($pkg);
     } elsif ($type eq 'changes') {
-	require Lintian::Collect::Changes;
-	$object = Lintian::Collect::Changes->new ($pkg);
+        require Lintian::Collect::Changes;
+        $object = Lintian::Collect::Changes->new ($pkg);
     } else {
         croak("Undefined type: $type");
     }
@@ -212,4 +212,4 @@ Lintian::Collect::Source(3)
 # indent-tabs-mode: nil
 # cperl-indent-level: 4
 # End:
-# vim: syntax=perl sw=4 sts=4 ts=4 et shiftround
+# vim: syntax=perl sw=4 sts=4 sr et

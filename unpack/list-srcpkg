@@ -41,24 +41,24 @@ my $verbose = 0;
 my $output_file = undef;
 
 while (my $arg = shift) {
-  if ($arg =~ s,^-,,o) {
-    if ($arg eq 'v') {
-      $verbose = 1;
+    if ($arg =~ s,^-,,o) {
+        if ($arg eq 'v') {
+            $verbose = 1;
+        } else {
+            print STDERR "error: unknown command line argument: $arg\n";
+            exit 1;
+        }
     } else {
-      print STDERR "error: unknown command line argument: $arg\n";
-      exit 1;
+        if ($output_file) {
+            print STDERR "error: too many command line arguments: $arg\n";
+            exit 1;
+        }
+        $output_file = $arg;
     }
-  } else {
-    if ($output_file) {
-      print STDERR "error: too many command line arguments: $arg\n";
-      exit 1;
-    }
-    $output_file = $arg;
-  }
 }
 unless ($output_file) {
-  print STDERR "error: no output file specified\n";
-  exit 1;
+    print STDERR "error: no output file specified\n";
+    exit 1;
 }
 
 # get variables out of environment
@@ -97,122 +97,122 @@ foreach my $area (split /\s*,\s*/,$LINTIAN_AREA) {
 my $total = 0;
 
 foreach my $sources (@sources) {
-  print "N: Parsing $sources->{'file'} ...\n" if $verbose;
-  open(IN, '-|', 'zcat', $sources->{'file'})
-    or fail("Cannot open input pipe from zcat $sources->{'file'}: $!");
+    print "N: Parsing $sources->{'file'} ...\n" if $verbose;
+    open(IN, '-|', 'zcat', $sources->{'file'})
+        or fail("Cannot open input pipe from zcat $sources->{'file'}: $!");
 
-  my $line;
+    my $line;
 
-  while (!eof(IN)) {
-    my $pkg_dir;
-    my $dsc_file;
+    while (!eof(IN)) {
+        my $pkg_dir;
+        my $dsc_file;
 
-    do {
-      $line = <IN>;
-      if ($line =~ m/^Directory: (.*)$/) {
-        $pkg_dir = $1;
-      } elsif ($line =~ m/^ [0-9a-f]{32} [0-9]+ (.+\.dsc)$/) {
-        $dsc_file = $1;
-      }
-    } until (not defined($line) or $line =~ /^\s*$/);
-    $dsc_file = "$pkg_dir/$dsc_file";
+        do {
+            $line = <IN>;
+            if ($line =~ m/^Directory: (.*)$/) {
+                $pkg_dir = $1;
+            } elsif ($line =~ m/^ [0-9a-f]{32} [0-9]+ (.+\.dsc)$/) {
+                $dsc_file = $1;
+            }
+        } until (not defined($line) or $line =~ /^\s*$/);
+        $dsc_file = "$pkg_dir/$dsc_file";
 
-    my @stat;
-    # get timestamp...
-    unless (@stat = stat "$LINTIAN_ARCHIVEDIR/$dsc_file") {
-      warn "E: general: cannot stat file $LINTIAN_ARCHIVEDIR/$dsc_file: $!\n";
-      next;
+        my @stat;
+        # get timestamp...
+        unless (@stat = stat "$LINTIAN_ARCHIVEDIR/$dsc_file") {
+            warn "E: general: cannot stat file $LINTIAN_ARCHIVEDIR/$dsc_file: $!\n";
+            next;
+        }
+        my $timestamp = $stat[9];
+
+        my ($status,$pkg,$data);
+
+        # was package already included in last list?
+        if (exists $pkgfile{$dsc_file}) {
+            # yes!
+            $pkg = $pkgfile{$dsc_file};
+            $data = $plist->get($pkg);
+
+            # file changed since last run?
+            if ($timestamp == $data->{'timestamp'}) {
+                # no.
+                $status = 'unchanged';
+            } else {
+                $status = 'changed';
+                $plist->delete($pkg);
+            }
+        } else {
+            # new package, get info
+            $status = 'new';
+        }
+
+        if (($status eq 'new') or ($status eq 'changed')) {
+            # use eval when calling get_dsc_info, since we don't want to `die' just
+            # because of a single broken package
+            eval { $data = get_dsc_info("$LINTIAN_ARCHIVEDIR/$dsc_file"); };
+            if ($@) {
+                # error!
+                print STDERR "$@\n";
+                print "E: general: bad-source-package $dsc_file\n";
+                next;
+            }
+            my @f = ();
+            for my $fs (split(/\n/,$data->{'files'})) {
+                next if $fs =~ /^\s*$/o;
+                my @t = split(/\s+/o,$fs);
+                push(@f,$t[2]);
+            }
+            $data->{'files'} = join(',',@f);
+            $data->{'standards-version'} ||= '';
+            $pkg = $data->{'source'};
+        }
+
+        # Check for duplicates.  In the case of a duplicate, we take the one with
+        # the latest version.
+        if ($nlist->get($pkg)) {
+            if (versions_lte($data->{version}, $nlist->get($pkg)->{version})) {
+                next;
+            }
+        }
+
+        # Save entry for writing to output file.
+        $data->{file} = $dsc_file;
+        $data->{area} = $sources->{area};
+        $data->{timestamp} = $timestamp;
+        for (qw(version maintainer uploaders architecture standards-version
+                binary files)) {
+            $data->{$_} =~ tr/;\n/_ / if $data->{$_};
+        }
+        $status_map{$pkg} = $status;
+        $nlist->set($pkg, $data);
+
+        # remove record from hash
+        $plist->delete($pkg) if $status eq 'unchanged';
+        $total++;
     }
-    my $timestamp = $stat[9];
-
-    my ($status,$pkg,$data);
-
-    # was package already included in last list?
-    if (exists $pkgfile{$dsc_file}) {
-      # yes!
-      $pkg = $pkgfile{$dsc_file};
-      $data = $plist->get($pkg);
-
-      # file changed since last run?
-      if ($timestamp == $data->{'timestamp'}) {
-        # no.
-        $status = 'unchanged';
-      } else {
-        $status = 'changed';
-        $plist->delete($pkg);
-      }
-    } else {
-      # new package, get info
-      $status = 'new';
-    }
-
-    if (($status eq 'new') or ($status eq 'changed')) {
-      # use eval when calling get_dsc_info, since we don't want to `die' just
-      # because of a single broken package
-      eval { $data = get_dsc_info("$LINTIAN_ARCHIVEDIR/$dsc_file"); };
-      if ($@) {
-        # error!
-        print STDERR "$@\n";
-        print "E: general: bad-source-package $dsc_file\n";
-        next;
-      }
-      my @f = ();
-      for my $fs (split(/\n/,$data->{'files'})) {
-        next if $fs =~ /^\s*$/o;
-        my @t = split(/\s+/o,$fs);
-        push(@f,$t[2]);
-      }
-      $data->{'files'} = join(',',@f);
-      $data->{'standards-version'} ||= '';
-      $pkg = $data->{'source'};
-    }
-
-    # Check for duplicates.  In the case of a duplicate, we take the one with
-    # the latest version.
-    if ($nlist->get($pkg)) {
-      if (versions_lte($data->{version}, $nlist->get($pkg)->{version})) {
-        next;
-      }
-    }
-
-    # Save entry for writing to output file.
-    $data->{file} = $dsc_file;
-    $data->{area} = $sources->{area};
-    $data->{timestamp} = $timestamp;
-    for (qw(version maintainer uploaders architecture standards-version
-            binary files)) {
-      $data->{$_} =~ tr/;\n/_ / if $data->{$_};
-    }
-    $status_map{$pkg} = $status;
-    $nlist->set($pkg, $data);
-
-    # remove record from hash
-    $plist->delete($pkg) if $status eq 'unchanged';
-    $total++;
-  }
-  close(IN) or fail("cannot close input pipe: $!");
+    close(IN) or fail("cannot close input pipe: $!");
 }
 
 $nlist->write_list($output_file);
 
 foreach my $pkg (sort $nlist->get_all) {
-  printf "N: Listed %s source package %s %s\n", $status_map{$pkg},
-      $pkg, $nlist->get($pkg)->{version} if $verbose;
+    printf "N: Listed %s source package %s %s\n", $status_map{$pkg},
+        $pkg, $nlist->get($pkg)->{version} if $verbose;
 }
 
 if ($verbose) {
-  # All packages that are still included in %source_info have disappeared from
-  # the archive.
-  for my $pkg (sort $plist->get_all) {
-    print "N: Removed source package $pkg from list\n";
-  }
-  printf "N: Listed %d source packages\n",$total;
+    # All packages that are still included in %source_info have disappeared from
+    # the archive.
+    for my $pkg (sort $plist->get_all) {
+        print "N: Removed source package $pkg from list\n";
+    }
+    printf "N: Listed %d source packages\n",$total;
 }
 
 exit 0;
 
 # Local Variables:
 # indent-tabs-mode: nil
-# cperl-indent-level: 2
+# cperl-indent-level: 4
 # End:
-# vim: syntax=perl sw=2 sts=2 ts=2 et shiftround
+# vim: syntax=perl sw=4 sts=4 sr et

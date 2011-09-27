@@ -54,3 +54,8 @@ fi
 if [ "$TAG" = "" ] ; then
     testset/runtests -k testset "$TEST_WORK_DIR" "$@"
 fi
+
+# Local Variables:
+# indent-tabs-mode: nil
+# End:
+# vim: syntax=sh sw=4 sts=4 sr et

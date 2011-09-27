@@ -85,7 +85,7 @@ sub _init_group_from_changes {
         $cdir =~ s,(.+)/[^/]+$,$1,;
     }
     foreach my $line (split (/\n/o, $cinfo->{'files'}//'')) {
-	my ($file, $pkg_type);
+        my ($file, $pkg_type);
         next unless defined $line;
         chomp($line);
         $line =~ s/^\s++//o;
@@ -307,3 +307,9 @@ L<Lintain::Processable>
 =cut
 
 1;
+
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et
