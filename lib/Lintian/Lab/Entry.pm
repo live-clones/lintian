@@ -116,8 +116,8 @@ sub info {
     croak 'Cannot load info, extry does not exists' unless $self->entry_exists;
     $info = $self->{info};
     if ( ! defined $info ) {
-	$info = Lintian::Collect->new($self->pkg_name, $self->pkg_type, $self->base_dir);
-	$self->{info} = $info;
+        $info = Lintian::Collect->new($self->pkg_name, $self->pkg_type, $self->base_dir);
+        $self->{info} = $info;
     }
     return $info;
 }
@@ -166,11 +166,11 @@ sub entry_exists {
 
     # Check if the relevant symlink exists.
     if ($pkg_type eq 'changes'){
-	return 1 if -l "$base_dir/changes";
+        return 1 if -l "$base_dir/changes";
     } elsif ($pkg_type eq 'binary' or $pkg_type eq 'udeb') {
-	return 1 if -l "$base_dir/deb";
+        return 1 if -l "$base_dir/deb";
     } elsif ($pkg_type eq 'source'){
-	return 1 if -l "$base_dir/dsc";
+        return 1 if -l "$base_dir/dsc";
     }
 
     # No unpack level and no symlink => the entry does not
@@ -198,41 +198,41 @@ sub create_entry {
     return 1 if ($self->entry_exists());
 
     unless (-d $base_dir) {
-	# if we are in a multi-arch or/and multi-version lab we may
-	# need to make more than one dir.  On error we will only kill
-	# the "top dir" and that is enough.
-	system ('mkdir', '-p', $base_dir) == 0
-	    or return 0;
-	$madedir = 1;
+        # if we are in a multi-arch or/and multi-version lab we may
+        # need to make more than one dir.  On error we will only kill
+        # the "top dir" and that is enough.
+        system ('mkdir', '-p', $base_dir) == 0
+            or return 0;
+        $madedir = 1;
     }
     if ($pkg_type eq 'changes'){
-	$link = "$base_dir/changes";
+        $link = "$base_dir/changes";
     } elsif ($pkg_type eq 'binary' or $pkg_type eq 'udeb') {
-	$link = "$base_dir/deb";
+        $link = "$base_dir/deb";
     } elsif ($pkg_type eq 'source'){
-	$link = "$base_dir/dsc";
+        $link = "$base_dir/dsc";
     } else {
-	croak "create_entry cannot handle $pkg_type";
+        croak "create_entry cannot handle $pkg_type";
     }
     unless (symlink($pkg_path, $link)){
-	# "undo" the mkdir if the symlink fails.
-	rmdir($base_dir) if($madedir);
-	return 0;
+        # "undo" the mkdir if the symlink fails.
+        rmdir($base_dir) if($madedir);
+        return 0;
     }
     if ($pkg_type eq 'source'){
-	# If it is a source package, pull in all the related files
-	#  - else unpacked will fail or we would need a separate
-	#    collection for the symlinking.
-	my $data = get_dsc_info($pkg_path);
-	my (undef, $dir, undef) = File::Spec->splitpath($pkg_path);
-	for my $fs (split(m/\n/o,$data->{'files'})) {
-	    $fs =~ s/^\s*//o;
-	    next if $fs eq '';
-	    my @t = split(/\s+/o,$fs);
-	    next if ($t[2] =~ m,/,o);
-	    symlink("$dir/$t[2]", "$base_dir/$t[2]")
-		or croak("cannot symlink file $t[2]: $!");
-	}
+        # If it is a source package, pull in all the related files
+#  - else unpacked will fail or we would need a separate
+        #    collection for the symlinking.
+        my $data = get_dsc_info($pkg_path);
+        my (undef, $dir, undef) = File::Spec->splitpath($pkg_path);
+        for my $fs (split(m/\n/o,$data->{'files'})) {
+            $fs =~ s/^\s*//o;
+            next if $fs eq '';
+            my @t = split(/\s+/o,$fs);
+            next if ($t[2] =~ m,/,o);
+            symlink("$dir/$t[2]", "$base_dir/$t[2]")
+                or croak("cannot symlink file $t[2]: $!");
+        }
     }
     $lab->_entry_created ($self);
     return 1;
@@ -349,3 +349,8 @@ Niels Thykier <niels@thykier.net>
 
 1;
 
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

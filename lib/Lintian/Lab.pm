@@ -172,9 +172,9 @@ sub lab_exists {
     return 1 if -d "$dir/info" && -d "$dir/pool";
     # 10-style lab?
     return -d "$dir/binary"
-	&& -d "$dir/udeb"
-	&& -d "$dir/source"
-	&& -d "$dir/info";
+        && -d "$dir/udeb"
+        && -d "$dir/source"
+        && -d "$dir/info";
 }
 
 =item $lab->get_package ($pkg_name, $pkg_type, $pkg_version, $pkg_arch), $lab->get_package ($proc)
@@ -547,3 +547,8 @@ Based on the work of various others.
 
 1;
 
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et

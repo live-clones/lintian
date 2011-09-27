@@ -121,8 +121,6 @@ The known types are:
  * source
  * udeb
 
-FIXME: changes do not have a format at the moment.
-
 =cut
 
 sub new {
