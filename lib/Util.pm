@@ -223,38 +223,38 @@ sub slurp_entire_file {
 }
 
 sub get_file_checksum {
-        my ($alg, $file) = @_;
-        open (FILE, '<', $file) or fail("Couldn't open $file");
-        my $digest;
-        if ($alg eq 'md5') {
-            $digest = Digest::MD5->new;
-        } elsif ($alg =~ /sha(\d+)/) {
-            require Digest::SHA;
-            $digest = Digest::SHA->new($1);
-        }
-        $digest->addfile(*FILE);
-        close FILE or fail("Couldn't close $file");
-        return $digest->hexdigest;
+    my ($alg, $file) = @_;
+    open (FILE, '<', $file) or fail("Couldn't open $file");
+    my $digest;
+    if ($alg eq 'md5') {
+        $digest = Digest::MD5->new;
+    } elsif ($alg =~ /sha(\d+)/) {
+        require Digest::SHA;
+        $digest = Digest::SHA->new($1);
+    }
+    $digest->addfile(*FILE);
+    close FILE or fail("Couldn't close $file");
+    return $digest->hexdigest;
 }
 
 sub file_is_encoded_in_non_utf8 {
-        my ($file, $type, $pkg) = @_;
-        my $non_utf8 = 0;
+    my ($file, $type, $pkg) = @_;
+    my $non_utf8 = 0;
 
-        open (ICONV, '-|', "env LC_ALL=C iconv -f utf8 -t utf8 \Q$file\E 2>&1")
-            or fail("failure while checking encoding of $file for $type package $pkg");
-        my $line = 1;
-        while (<ICONV>) {
-                if (m/iconv: illegal input sequence at position \d+$/) {
-                        $non_utf8 = 1;
-                        last;
-                }
-                $line++
+    open (ICONV, '-|', "env LC_ALL=C iconv -f utf8 -t utf8 \Q$file\E 2>&1")
+        or fail("failure while checking encoding of $file for $type package $pkg");
+    my $line = 1;
+    while (<ICONV>) {
+        if (m/iconv: illegal input sequence at position \d+$/) {
+            $non_utf8 = 1;
+            last;
         }
-        close ICONV;
+        $line++
+    }
+    close ICONV;
 
-        return $line if $non_utf8;
-        return 0;
+    return $line if $non_utf8;
+    return 0;
 }
 
 # Just like system, except cleanses the environment first to avoid any strange
