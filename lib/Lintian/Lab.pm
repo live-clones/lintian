@@ -71,6 +71,7 @@ BEGIN {
 use Util qw(delete_dir); # Used by $lab->remove_lab
 
 use Lintian::Lab::Entry;
+use Lintian::Lab::Manifest;
 
 =head1 NAME
 
@@ -127,7 +128,6 @@ sub new {
         #  - it may be the empty string (see $self->dir)
         'dir'         => $absdir,
         'state'       => {},
-        'state-table' => {},
         'mode'        => $mode,
         'is_open'     => 0,
         'keep-lab'    => 0,
@@ -207,7 +207,7 @@ sub get_package {
     }
 
     # TODO: Cache and check for existing entries to avoid passing out
-    # the same entry twice.
+    # the same entry twice with different instances.
 
     $dir = $self->_pool_path ($pkg_name, $pkg_type, $pkg_version, $pkg_arch);
 
@@ -222,7 +222,7 @@ sub _get_lab_index {
     my ($self, $pkg_type) = @_;
     croak "Unknown package type $pkg_type" unless $SUPPORTED_TYPES{$pkg_type};
     # Fetch (or load) the index of that type
-    return $self->{'state-table'}->{$pkg_type} // $self->_load_lab_index ($pkg_type);
+    return $self->{'state'}->{$pkg_type} // $self->_load_lab_index ($pkg_type);
 }
 
 # Unconditionally (Re-)loads the index of packages in the lab of a
@@ -233,31 +233,11 @@ sub _get_lab_index {
 sub _load_lab_index {
     my ($self, $pkg_type) = @_;
     my $dir = $self->dir;
-    my $pf = Lintian::Internal::PackageList->new ($pkg_type);
+    my $manifest = Lintian::Lab::Manifest->new ($pkg_type);
     my $lif = "$dir/info/${pkg_type}-packages";
-    my $lindex = {};
-    $pf->read_list ($lif);
-    # FIXME: make a dedicated object for this structure ?
-    #  - Maybe extend L::I::PackageList
-    foreach my $pd ( $pf->get_all ) {
-        my $pkg_name;
-        my $pkg_version = $pd->{'version'};
-        my $pkg_arch;
-        if ($pkg_type ne 'source' && $pkg_type ne 'changes') {
-            $pkg_name = $pd->{'source'};
-        } else {
-            $pkg_name = $pd->{'package'};
-        }
-        if ($pkg_type eq 'source') {
-            $lindex->{$pkg_name}->{$pkg_version} = $pd;
-        } else {
-            $pkg_arch = $pd->{'architecture'};
-            $lindex->{$pkg_name}->{$pkg_version}->{$pkg_arch} = $pd;
-        }
-    }
-    $self->{'state'}->{$pkg_type} = $pf;
-    $self->{'state-table'}->{$pkg_type} = $lindex;
-    return $lindex;
+    $manifest->read_list ($lif);
+    $self->{'state'}->{$pkg_type} = $manifest;
+    return $manifest;
 }
 
 # Given the package meta data (name, type, version, arch) return the
@@ -279,7 +259,7 @@ sub _pool_path {
 
 # lab->generate_diffs(@lists)
 #
-# Each member of @lists must be a Lintian::Internal::PackageList.
+# Each member of @lists must be a Lintian::Lab::Manifest.
 #
 # The lab will generate a diff between the given member and its
 # state for the given package type.  The diffs are returned in the
@@ -293,12 +273,11 @@ sub generate_diffs {
     my @diffs;
     croak "$labdir is not a valid lab (run lintian --setup-lab first?).\n"
         unless $self->is_open;
+    croak "Not support"; # Manifest does not support this yet
     foreach my $list (@lists) {
         my $type = $list->type;
         my $lab_list;
-        # Ensure the state list is loaded
-        $self->_get_lab_index ($type);
-        $lab_list = $self->{'state'}->{$type};
+        $lab_list = $self->_get_lab_index ($type);
         push @diffs, $lab_list->diff ($list);
     }
     return @diffs;
@@ -370,8 +349,8 @@ sub create_lab {
     # Okay - $dir/info and $dir/pool exists... The subdirs in
     # $dir/pool will be created as needed.
 
-    # TODO: populate $dir/info ?  L::I::PackageList probably
-    # does not care... ( see L::I::PackageList::read_list )
+    # TODO: populate $dir/info ?  L::Lab::Manifest probably
+    # does not care... ( see L::Lab::Manifest::read_list )
     return 1;
 }
 
@@ -519,11 +498,15 @@ sub _init {
 # event - triggered by Lintian::Lab::Entry
 sub _entry_removed {
     my ($self, $entry) = @_;
+    my $pf = $self->{'state'};
     my $pkg_name    = $entry->pkg_name;
     my $pkg_type    = $entry->pkg_type;
+    my $pkg_version = $entry->pkg_version;
+    my @keys = ($pkg_name, $pkg_version);
 
-    my $pf = $self->{'state'};
-    $pf->delete ($pkg_name);
+    push @keys, $entry->pkg_arch if $pkg_type ne 'source';
+
+    $pf->delete (@keys);
 }
 
 # event - triggered by Lintian::Lab::Entry
