@@ -126,7 +126,7 @@ my @BIN_QUERY = (
     'architecture',
 );
 
-my @SRC_QUERY = (
+my @CHG_QUERY = (
     'source',
     'version',
     'architecture',
@@ -183,7 +183,7 @@ will croak.
 
 sub read_list {
     my ($self, $file) = @_;
-    my $ehd;
+    my $header;
     my $fields;
     my $qf;
 
@@ -195,20 +195,9 @@ sub read_list {
         return unless -s $file;
     }
 
-    if ($self->{'type'} eq 'source') {
-        $ehd = SRCLIST_FORMAT;
-        $fields = \@SRC_FILE_FIELDS;
-        $qf = \@SRC_QUERY;
-    } elsif ($self->{'type'} eq 'binary' || $self->{'type'} eq 'udeb') {
-        $ehd = BINLIST_FORMAT;
-        $fields = \@BIN_FILE_FIELDS;
-        $qf = \@BIN_QUERY;
-    } elsif ($self->{'type'} eq 'changes') {
-        $ehd = CHGLIST_FORMAT;
-        $fields = \@CHG_FILE_FIELDS;
-        $qf = \@CHG_QUERY;
-    }
-    $self->{'state'} = $self->_do_read_file($file, $ehd, $fields, $qf);
+    ($header, $fields, $qf) = $self->_type_to_fields;
+
+    $self->{'state'} = $self->_do_read_file($file, $header, $fields, $qf);
     $self->_mark_dirty(0);
     return 1;
 }
@@ -226,41 +215,57 @@ On error, the contents of $file is undefined.
 
 sub write_list {
     my ($self, $file) = @_;
-    my $header;
     my $state = $self->{'state'};
-    my $fields;
+    my ($header, $fields, undef) = $self->_type_to_fields;
+    my $visitor;
 
-    if ($self->{'type'} eq 'source') {
-        $header = SRCLIST_FORMAT;
-        $fields = \@SRC_FILE_FIELDS;
-    } elsif ($self->{'type'} eq 'binary' || $self->{'type'} eq 'udeb') {
-        $header = BINLIST_FORMAT;
-        $fields = \@BIN_FILE_FIELDS;
-    } elsif ($self->{'type'} eq 'changes') {
-        $header = CHGLIST_FORMAT;
-        $fields = \@CHG_FILE_FIELDS;
-    }
+
     open my $fd, '>', $file or croak "open $file: $!";
     print $fd "$header\n";
-    foreach my $entry (sort $self->get_all) {
-        my %values = %{ $state->{$entry} };
+
+    $visitor = sub {
+        my ($entry) = @_;
+        my %values = %$entry;
         print $fd join(';', @values{@$fields}) . "\n";
-    }
+    };
+
+    $self->visit_all ($visitor);
+
     close $fd or croak "close $file: $!";
     $self->_mark_dirty(0);
     return 1;
 }
 
+=item $manifest->visit_all ($visitor[, $key1, ..., $keyN])
 
-=item $manifest->get_all
+Visits entries and passes them to $visitor.  If any keys are passed they
+are used to reduce the search.  See get for a list of (common) keys.
 
-Returns the all the entry names in the manifest
+The $visitor is called as:
+
+ $visitor->($entry, @keys)
+
+Where $entry is the entry and @keys are the keys to be used to look up
+this entry via get method.  So for the lintian 2.5.2 binary the keys
+would be something like:
+ ('lintian', '2.5.2', 'all')
 
 =cut
 
-sub get_all {
-    my ($self) = @_;
-    croak "Not implemented";
+sub visit_all {
+    my ($self, $visitor, @keys) = @_;
+    my $root;
+    my $type = $self->type;
+    my (undef, undef, $qf) = $self->_type_to_fields;
+
+    if (@keys) {
+        $root = $self->_do_get ($self->{'state'}, @keys);
+        return unless $root;
+    } else {
+        $root = $self->{'state'};
+    }
+
+    $self->_recurse_visit ($root, $visitor, scalar @$qf - 1, @keys);
 }
 
 =item $manifest->get (@keys)
@@ -292,28 +297,15 @@ to $entry will not affect the data in $manifest.
 
 sub set {
     my ($self, $entry) = @_;
-    my $fields;
-    my $qf;
     my %pdata;
-    my $pkg_type = $self->{'type'};
-    if ($pkg_type eq 'source') {
-        $fields = \@SRC_FILE_FIELDS;
-        $qf = \@SRC_QUERY;
-    } elsif ($pkg_type eq 'binary' || $pkg_type eq 'udeb') {
-        $fields = \@BIN_FILE_FIELDS;
-        $qf = \@BIN_QUERY;
-    } else {
-        $fields = \@CHG_FILE_FIELDS;
-        $qf = \@CHG_QUERY;
-    }
+    my (undef, $fields, $qf) = $self->_type_to_fields;
 
     # Copy the relevant fields - ensuring all fields are defined.
-    %pdata = map { $_ => $data->{$_}//'' } @$fields;
+    %pdata = map { $_ => $entry->{$_}//'' } @$fields;
     $self->_do_set ($self->{'state'}, $qf, \%pdata);
     $self->_mark_dirty(1);
     return 1;
 }
-
 
 =item $manifest->delete (@keys)
 
@@ -430,7 +422,7 @@ sub _do_set {
     for ( my $i = 0 ; $i < $qfl ; $i++) {
         # Current key
         my $curk = $entry->{$qf->[$i]};
-        my $element = $n->{$curk};
+        my $element = $cur->{$curk};
         unless (defined $element) {
             $element = {};
             $cur->{$curk} = $element;
@@ -440,6 +432,50 @@ sub _do_set {
     $k = $entry->{$qf->[$qfl]};
     $cur->{$k} = $entry;
     return 1;
+}
+
+
+# Returns ($header, $fields, $qf) - their value is based on $self->type.
+# - $header is XXXLIST_FORMAT
+# - $fields is \@XXX_FILE_FIELDS
+# - $qf     is \@XXX_QUERY
+sub _type_to_fields {
+    my ($self) = @_;
+    my $header;
+    my $fields;
+    my $qf;
+    my $type = $self->{'type'};
+
+    if ($type eq 'source') {
+        $fields = \@SRC_FILE_FIELDS;
+        $qf = \@SRC_QUERY;
+        $header = SRCLIST_FORMAT;
+    } elsif ($type eq 'binary' || $type eq 'udeb') {
+        $fields = \@BIN_FILE_FIELDS;
+        $qf = \@BIN_QUERY;
+        $header = BINLIST_FORMAT;
+    } elsif ($type eq 'changes') {
+        $fields = \@CHG_FILE_FIELDS;
+        $qf = \@CHG_QUERY;
+        $header = CHGLIST_FORMAT;
+    } else {
+        croak "Unknown type $type";
+    }
+    return ($header, $fields, $qf);
+}
+
+# Self-recursing method powering visit_all
+sub _recurse_visit {
+    my ($self, $hash, $visitor, $vdep, @keys) = @_;
+    # if false, we recurse, if true we pass it to $visitor
+    my $visit = $vdep == scalar @keys;
+    foreach my $k (sort keys %$hash) {
+        my $v = $hash->{$k};
+        # Should we recurse into $v?
+        $self->_recurse_visit ($v, $visitor, $vdep, @keys, $k) unless $visit;
+        # ... or is it the value to be visited?
+        $visitor->($v, @keys, $k) if $visit;
+    }
 }
 
 =back
