@@ -23,7 +23,7 @@ use strict;
 use warnings;
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
-use Lintian::Internal::PackageList;
+use Lintian::Lab::Manifest;
 use Lintian::Relation::Version qw(versions_lte);
 
 # turn file buffering off:
@@ -68,20 +68,20 @@ my $LINTIAN_LAB = $ENV{'LINTIAN_LAB'};
 my $LINTIAN_AREA = $ENV{'LINTIAN_AREA'};
 
 # read old list file (this command does nothing if the file does not exist)
-my $plist = Lintian::Internal::PackageList->new('source');
-my $nlist = Lintian::Internal::PackageList->new('source');
+my $plist = Lintian::Lab::Manifest->new ('source');
+my $nlist = Lintian::Lab::Manifest->new ('source');
 # ignore the contents if the contents cannot be read - that is what we
 # used to do!
 eval { $plist->read_list($output_file) };
 
-my %status_map;
+my @status_list;
 
 my %pkgfile;
-# map filenames to package names
-for my $pkg ($plist->get_all) {
-    my $entry = $plist->get($pkg);
-    $pkgfile{$entry->{'file'}} = $pkg;
-}
+# map filenames to package keys (so we can look them up later)
+$plist->visit_all (sub {
+    my ($v, @k) = @_;
+    $pkgfile{$v->{'file'}} = \@k;
+});
 
 # parse Sources.gz to get list of packages
 my @sources;
@@ -125,13 +125,14 @@ foreach my $sources (@sources) {
         }
         my $timestamp = $stat[9];
 
-        my ($status,$pkg,$data);
+        my ($status,$data);
+        my @keys;
 
         # was package already included in last list?
         if (exists $pkgfile{$dsc_file}) {
             # yes!
-            $pkg = $pkgfile{$dsc_file};
-            $data = $plist->get($pkg);
+            @keys = @{ $pkgfile{$dsc_file} };
+            $data = $plist->get (@keys);
 
             # file changed since last run?
             if ($timestamp == $data->{'timestamp'}) {
@@ -139,7 +140,7 @@ foreach my $sources (@sources) {
                 $status = 'unchanged';
             } else {
                 $status = 'changed';
-                $plist->delete($pkg);
+                $plist->delete (@keys);
             }
         } else {
             # new package, get info
@@ -156,38 +157,21 @@ foreach my $sources (@sources) {
                 print "E: general: bad-source-package $dsc_file\n";
                 next;
             }
-            my @f = ();
-            for my $fs (split(/\n/,$data->{'files'})) {
-                next if $fs =~ /^\s*$/o;
-                my @t = split(/\s+/o,$fs);
-                push(@f,$t[2]);
-            }
-            $data->{'files'} = join(',',@f);
-            $data->{'standards-version'} ||= '';
-            $pkg = $data->{'source'};
-        }
-
-        # Check for duplicates.  In the case of a duplicate, we take the one with
-        # the latest version.
-        if ($nlist->get($pkg)) {
-            if (versions_lte($data->{version}, $nlist->get($pkg)->{version})) {
-                next;
-            }
+            @keys = ($data->{'source'}, $data->{'version'});
         }
 
         # Save entry for writing to output file.
         $data->{file} = $dsc_file;
         $data->{area} = $sources->{area};
         $data->{timestamp} = $timestamp;
-        for (qw(version maintainer uploaders architecture standards-version
-                binary files)) {
+        for (qw(version maintainer uploaders binary)) {
             $data->{$_} =~ tr/;\n/_ / if $data->{$_};
         }
-        $status_map{$pkg} = $status;
-        $nlist->set($pkg, $data);
+        push @status_list, [$status, @keys];
+        $nlist->set ($data);
 
         # remove record from hash
-        $plist->delete($pkg) if $status eq 'unchanged';
+        $plist->delete (@keys) if $status eq 'unchanged';
         $total++;
     }
     close(IN) or fail("cannot close input pipe: $!");
@@ -195,17 +179,14 @@ foreach my $sources (@sources) {
 
 $nlist->write_list($output_file);
 
-foreach my $pkg (sort $nlist->get_all) {
-    printf "N: Listed %s source package %s %s\n", $status_map{$pkg},
-        $pkg, $nlist->get($pkg)->{version} if $verbose;
-}
-
 if ($verbose) {
-    # All packages that are still included in %source_info have disappeared from
-    # the archive.
-    for my $pkg (sort $plist->get_all) {
-        print "N: Removed source package $pkg from list\n";
+    foreach my $status (@status_list) {
+        print "N: Listed %s source package %s %s\n", @$status;
     }
+
+    # All packages that are still included in $plist have disappeared
+    # from the archive.
+    $plist->visit_all (sub { print "N: Removed source $_[1] $_[2] $_[3] from list\n" });
     printf "N: Listed %d source packages\n",$total;
 }
 
