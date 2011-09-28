@@ -49,6 +49,7 @@ BEGIN {
                  resolve_pkg_path);
 }
 
+use Encode ();
 use FileHandle;
 use Lintian::Command qw(spawn);
 use Lintian::Output qw(string);
@@ -241,20 +242,26 @@ sub file_is_encoded_in_non_utf8 {
     my ($file, $type, $pkg) = @_;
     my $non_utf8 = 0;
 
-    open (ICONV, '-|', "env LC_ALL=C iconv -f utf8 -t utf8 \Q$file\E 2>&1")
+    open (ICONV, '<', $file)
         or fail("failure while checking encoding of $file for $type package $pkg");
-    my $line = 1;
+    my $line = 0;
     while (<ICONV>) {
-        if (m/iconv: illegal input sequence at position \d+$/) {
-            $non_utf8 = 1;
+        if (m,\e[-!"\$%()*+./],) {
+            # ISO-2022
+            $line = $.;
             last;
         }
-        $line++
+        eval {
+            $_ = Encode::decode('UTF-8', $_, Encode::FB_CROAK);
+        };
+        if ($@) {
+            $line = $.;
+            last;
+        }
     }
     close ICONV;
 
-    return $line if $non_utf8;
-    return 0;
+    return $line;
 }
 
 # Just like system, except cleanses the environment first to avoid any strange

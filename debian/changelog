@@ -48,6 +48,8 @@ lintian (2.5.4) UNRELEASED; urgency=low
       This could cause the parser to eat the first part of the value,
       if it contained a colon and there was no space before the value.
       Thanks to Pino Toscano for reporting the issue.
+    + [JW] Explicitly check that files are not encoded using ISO-2022,
+      when they should be encoded with UTF-8.  (Closes: #643009)
 
   * reporting/*:
     + [NT] Recognise and display pedantic tags.
