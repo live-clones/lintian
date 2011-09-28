@@ -117,11 +117,16 @@ sub _init {
         $self->{pkg_src_version} = $pkg_version;
     } elsif ($pkg_type eq 'changes'){
         my $cinfo = get_dsc_info ($pkg_path) or croak "$pkg_path is not a valid changes file";
-        my ($pkg_name) = ($pkg_path =~ m,.*/([^/]+)\.changes,);
         my $pkg_version = $cinfo->{version};
+        my $pkg_name = $cinfo->{source}//'';
+        unless ($pkg_name) {
+            # No source field? Derive the name from the file name
+            # lintian_2.5.2_amd64.changes => $pkg_name = 'lintian'
+            ($pkg_name) = ($pkg_path =~ m,.*/([^_/]+)[^/]*+\.changes$,);
+        }
         $self->{pkg_name} = $pkg_name;
         $self->{pkg_version} = $pkg_version;
-        $self->{pkg_src} = $cinfo->{source}//$pkg_name;
+        $self->{pkg_src} = $pkg_name;
         $self->{pkg_src_version} = $pkg_version;
         $self->{pkg_arch} = $cinfo->{architecture};
     } else {
