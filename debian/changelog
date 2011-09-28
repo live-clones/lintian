@@ -12,9 +12,11 @@ lintian (2.5.4) UNRELEASED; urgency=low
   * checks/dehelper:
     + [JW,NT] Check for versioned dependencies for some dh_commands.
       (Closes: #641035)
-  * checks/files.desc:
+  * checks/files{,.desc}:
     + [JW] Suggest the usage of "-delete" rather than "| xargs rm -f".
       (Closes: #641983)
+    + [JW] Improve "linked against libvga.so" test.  This avoid
+      setuid-binary false-positives.  (Closes: #642038)
   * checks/scripts:
     + [RA] Exclude files ending in *.erb from several shell script
       checks.  ERB is a Ruby templating language, so these will probably
