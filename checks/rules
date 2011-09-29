@@ -76,13 +76,13 @@ my @RULE_CLEAN_DEPENDS =
     (
      [ 'ant | ant1.7' => qr'^\t\s*(\S+=\S+\s+)*ant\s' ],
      [ debhelper => qr'^\t\s*dh_.+' ],
-     [ 'dh-ocaml, ocaml-nox | ocaml' => qr'^\t\s*(?:dh_ocamlinit|dh\s.*--with\s+(?:\S+,)*ocaml)\s' ],
+     [ 'dh-ocaml, ocaml-nox | ocaml' => qr'^\t\s*(?:dh_ocamlinit|dh\s.*--with(?:=|\s+)(?:\S+,)*ocaml)\s' ],
      [ dpatch => qr'^\t\s*(\S+=\S+\s+)*dpatch\s' ],
      [ 'po-debconf' => qr'^\t\s*debconf-updatepo\s' ],
      [ $PYTHON_DEPEND => qr'^\t\s*python\s', 'missing-python-build-dependency' ],
      [ $PYTHON3_DEPEND => qr'^\t\s*python3\s', 'missing-python-build-dependency' ],
      [ $ANYPYTHON_DEPEND => qr'\ssetup\.py\b', 'missing-python-build-dependency' ],
-     [ quilt => qr'^\t\s*dh\s.*--with\s+(?:\S+,)*quilt' ],
+     [ quilt => qr'^\t\s*dh\s.*--with(?:=|\s+)(?:\S+,)*quilt' ],
      [ quilt => qr'^\t\s*(\S+=\S+\s+)*quilt\s' ],
      [ yada => qr'^\t\s*yada\s' ],
     );

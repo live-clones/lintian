@@ -181,9 +181,10 @@ foreach my $file (sort keys %{$info->objdump_info}) {
     my $objdump = $info->objdump_info->{$file};
 
     if (defined $objdump->{NEEDED}) {
-        my $lib = $objdump->{NEEDED};
-        $linked_against_libvga{$file} = 1
-            if $lib =~ m/libvga/;
+        for my $lib (@{$objdump->{NEEDED}}) {
+            $linked_against_libvga{$file} = 1
+                if $lib =~ /^libvga\.so\./;
+        }
     }
 }
 

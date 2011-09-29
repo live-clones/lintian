@@ -14,7 +14,8 @@
             my $packages = $stats{$tag}{'packages'};
             my $count = $stats{$tag}{'count'};
             my $overrides = $stats{$tag}{'overrides'};
-            $text = "$packages packages, $count tags, plus $overrides overrides";
+            $text = "$packages packages, $count tags"
+                . ($overrides > 0 ? ", plus $overrides overrides" : "");
         } else {
             $text = 'Not emitted';
         }

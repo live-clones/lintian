@@ -14,8 +14,9 @@
         my $count = $stats{$tag}{'count'};
         my $overrides = $stats{$tag}{'overrides'};
         $OUT .= qq(    <li><a href="tags/$tag.html">$tag</a>)
-            . " ($packages packages, $count tags, plus $overrides overrides)"
-            . "</li>\n";
+            . " ($packages packages, $count tags"
+            . ($overrides > 0 ? ", plus $overrides overrides" : "")
+            . ")</li>\n";
     }
 }  </ul>
 { foot() }
