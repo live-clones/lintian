@@ -30,8 +30,12 @@ lintian (2.5.4) UNRELEASED; urgency=low
 
   * data/debhelper/{dh_commands,maint_commands,miscDepends_commands}:
     + [NT] Refreshed.
-  * data/debhelper/dh_commands-versions:
-    + [NT] New file.
+  * data/debhelper/alt-dh_commands:
+    + [NT] Renamed to dh_commands-manual.
+  * data/debhelper/dh_commands-manual:
+    + [NT] Support arbitrary dependency relations.  This new change
+      also fixes a "duplicate" in the dependency output.
+      (Closes: #643716)
 
   * lib/Lab.pm:
     + [NT] Updated it to use Lintian::Output::verbosity_level rather
