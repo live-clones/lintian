@@ -17,6 +17,9 @@ lintian (2.5.4) UNRELEASED; urgency=low
       (Closes: #641983)
     + [JW] Improve "linked against libvga.so" test.  This avoid
       setuid-binary false-positives.  (Closes: #642038)
+  * checks/rules:
+    + [JW] Fixed false negative "missing-build-dependency" when using
+      "dh --with=X" rather than "dh --with X".  (Closes: #643714)
   * checks/scripts:
     + [RA] Exclude files ending in *.erb from several shell script
       checks.  ERB is a Ruby templating language, so these will probably
