@@ -1,3 +1,4 @@
+E: scripts changes: bad-ubuntu-distribution-in-changes-file unstable
 E: scripts source: dpatch-index-references-non-existent-patch 01_not_here_right_now.dpatch
 E: scripts source: dpatch-index-references-non-existent-patch 01_some_other_patch_thats_not_in_the_package.dpatch
 E: scripts source: missing-build-dependency debhelper
@@ -18,7 +19,6 @@ E: scripts: python-script-but-no-python-dep usr/bin/pyfoo
 E: scripts: shell-script-fails-syntax-check usr/bin/sh-broken
 E: scripts: wrong-path-for-interpreter usr/bin/lefty-foo (#!/usr/local/bin/lefty != /usr/bin/lefty)
 E: scripts: wrong-path-for-interpreter usr/bin/rubyfoo (#!/bin/ruby1.8 != /usr/bin/ruby1.8)
-E: scripts_6ds-1ubuntu0.5.10.1_arch changes: bad-ubuntu-distribution-in-changes-file unstable
 I: scripts source: debian-watch-file-should-dversionmangle-not-uversionmangle line 5
 I: scripts source: dpatch-missing-description 02_i_dont_have_a_description.patch
 I: scripts source: dpatch-missing-description 04_i_dont_have_a_description_either.patch

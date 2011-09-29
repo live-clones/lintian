@@ -2,7 +2,7 @@
 </package>
 </package>
 <package type="binary" name="lintian-output-xml" architecture="all" version="1.0+dsfg-1.1">
-<package type="changes" name="lintian-output-xml_1.0+dsfg-1.1_ARCH" architecture="source all" version="1.0+dsfg-1.1">
+<package type="changes" name="lintian-output-xml" architecture="source all" version="1.0+dsfg-1.1">
 <package type="source" name="lintian-output-xml" architecture="source" version="1.0+dsfg-1.1">
 <tag severity="important" certainty="possible" name="new-essential-package" />
 <tag severity="minor" certainty="certain" flags="overridden" name="dfsg-version-misspelled">1.0+dsfg-1.1</tag>
