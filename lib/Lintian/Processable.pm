@@ -37,12 +37,12 @@ Lintian::Processable -- An (abstract) object that Lintian can process
 
 =head1 SYNOPSIS
 
- use Lintian::Processable;
+ use Lintian::Processable::Package;
  
  # Instantiate via Lintian::Processable::Package
- my $proc = Lintian::Processable::Package->new('binary', 'lintian_2.5.0_all.deb');
- my $pkg_name = $proc->pkg_name();
- my $pkg_version = $proc->pkg_version();
+ my $proc = Lintian::Processable::Package->new ('binary', 'lintian_2.5.0_all.deb');
+ my $pkg_name = $proc->pkg_name;
+ my $pkg_version = $proc->pkg_version;
  # etc.
 
 =head1 DESCRIPTION
@@ -56,13 +56,17 @@ together.
 
 =over 4
 
-=item Lintian::Processable->new($pkg_type, $pkg_path)
+=item Lintian::Processable->new ($pkg_type[, ...])
 
 Creates a new processable of type $pkg_type, which must be one of:
  'binary', 'udeb', 'source' or 'changes'
 
-$pkg_path should be the absolute path to the package file that
-defines this type of processable (e.g. the changes file).
+This rest of the arguments (if any) will be passed to $self->_init,
+which sub-classes must override.
+
+Note: This method should not be called directly via
+Lintian::Processable.  Please refer to a sub-class like
+L<Lintian::Processable::Package>.
 
 =cut
 
