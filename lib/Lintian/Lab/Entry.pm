@@ -48,7 +48,7 @@ Lintian::Lab::Entry - A package inside the Lab
 
 =cut
 
-use base qw(Class::Accessor);
+use base qw(Lintian::Processable Class::Accessor);
 
 use strict;
 use warnings;
@@ -64,7 +64,7 @@ sub new {
     my ($type, $lab, $pkg_name, $pkg_version, $pkg_type, $pkg_path, $base_dir) = @_;
     my $self = {};
     bless $self, $type;
-    croak("$pkg_path does not exist.") unless( -e $pkg_path );
+    croak "$pkg_path does not exist." unless -e $pkg_path;
     $self->{pkg_name}    = $pkg_name;
     $self->{pkg_version} = $pkg_version;
     $self->{pkg_path}    = $pkg_path;
@@ -79,34 +79,19 @@ sub new {
     return $self;
 }
 
-=item $lpkg->pkg_name()
-
-Returns the package name.
-
-=item $lpkg->pkg_version();
-
-Returns the version of the package.
-
-=item $lpkg->pkg_path()
-
-Returns the path to the packaged version of actual package.  This path
-is used in case the data needs to be extracted from the package.
-
-=item $lpkg->pkg_type()
-
-Returns the type of package (e.g. binary, source, udeb ...)
-
-=item $lpkg->base_dir()
+=item $lpkg->base_dir
 
 Returns the base directory of this package inside the lab.
 
 =cut
 
-Lintian::Lab::Entry->mk_ro_accessors(qw(pkg_name pkg_version pkg_path pkg_type base_dir));
+Lintian::Lab::Entry->mk_ro_accessors (qw(base_dir));
 
-=item $lpkg->info()
+=item $lpkg->info
 
 Returns the L<Lintian::Collect|info> object associated with this entry.
+
+Overrides info from L<Lintian::Processable>.
 
 =cut
 
@@ -116,7 +101,7 @@ sub info {
     croak 'Cannot load info, extry does not exists' unless $self->entry_exists;
     $info = $self->{info};
     if ( ! defined $info ) {
-        $info = Lintian::Collect->new($self->pkg_name, $self->pkg_type, $self->base_dir);
+        $info = Lintian::Collect->new ($self->pkg_name, $self->pkg_type, $self->base_dir);
         $self->{info} = $info;
     }
     return $info;
@@ -126,6 +111,8 @@ sub info {
 =item $lpkg->clear_cache
 
 Clears any caches held; this includes discarding the L<Lintian::Collect|info> object.
+
+Overrides clear_cache from L<Lintian::Processable>.
 
 =cut
 
@@ -198,9 +185,8 @@ sub create_entry {
     return 1 if ($self->entry_exists());
 
     unless (-d $base_dir) {
-        # if we are in a multi-arch or/and multi-version lab we may
-        # need to make more than one dir.  On error we will only kill
-        # the "top dir" and that is enough.
+        # In the pool we may have to create multiple directories On
+        # error we only remove the "top dir" and that is enough.
         system ('mkdir', '-p', $base_dir) == 0
             or return 0;
         $madedir = 1;
@@ -221,7 +207,7 @@ sub create_entry {
     }
     if ($pkg_type eq 'source'){
         # If it is a source package, pull in all the related files
-#  - else unpacked will fail or we would need a separate
+        #  - else unpacked will fail or we would need a separate
         #    collection for the symlinking.
         my $data = get_dsc_info($pkg_path);
         my (undef, $dir, undef) = File::Spec->splitpath($pkg_path);

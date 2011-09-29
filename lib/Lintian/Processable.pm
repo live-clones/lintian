@@ -26,8 +26,6 @@ use warnings;
 
 use Carp qw(croak);
 
-use Util;
-
 # Black listed characters - any match will be replaced with a _.
 use constant EVIL_CHARACTERS => qr,[/&|;\$"'<>],o;
 
@@ -128,9 +126,11 @@ to less dangerous (but possibly invalid) values.
 
 Lintian::Processable->mk_ro_accessors (qw(pkg_name pkg_version pkg_src pkg_arch pkg_path pkg_type pkg_src_version tainted));
 
-=item $proc->info()
+=item $proc->info
 
 Returns L<Lintian::Collect|$info> element for this processable.
+
+Note: This method is must implemented by sub-classes.
 
 =cut
 
@@ -139,24 +139,25 @@ sub info {
     my $info = $self->{info};
     if (! defined $info) {
         my $lpkg = $self->lab_pkg();
-        fail "Need a Lab package before creating a Lintian::Collect\n"
+        croak "Need a Lab package before creating a Lintian::Collect\n"
             unless defined $lpkg;
         return $lpkg->info;
     }
     return $info;
 }
 
-=item $proc->clear_cache()
+=item $proc->clear_cache
 
 Discard the info element, so the memory used by it can be reclaimed.
 Mostly useful when checking a lot of packages (e.g. on lintian.d.o).
+
+Note: By default this does nothing, but it may (and should) be
+overriden by sub-classes.
 
 =cut
 
 sub clear_cache {
     my ($self) = @_;
-    my $lpkg = $self->lab_pkg;
-    $lpkg->clear_cache if defined $lpkg;
 }
 
 sub _init {
