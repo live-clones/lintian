@@ -26,6 +26,7 @@ override_dh_fixperms:
 	chmod 0775 debian/$(PKG)/usr/bin/script-wexec
 	chmod 4744 debian/$(PKG)/usr/bin/script-wuid
 	chmod 0751 debian/$(PKG)/usr/bin/script-ro
+	chmod 0644 debian/$(PKG)/usr/lib/some-where/sample.ali
 	chmod 0744 debian/$(PKG)/usr/share/doc/$(PKG)
 	chmod 0755 debian/$(PKG)/usr/share/doc/$(PKG)/some-file
 	chmod 0755 debian/$(PKG)/etc/cron.d/script
