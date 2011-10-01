@@ -177,22 +177,55 @@ sub lab_exists {
         && -d "$dir/info";
 }
 
-=item $lab->get_package ($pkg_name, $pkg_type, $pkg_version, $pkg_arch), $lab->get_package ($proc)
+=item $lab->get_package ($pkg_name, $pkg_type[, @extra]), $lab->get_package ($proc)
 
 Fetches an existing package from the lab.
 
 First argument can be a L<Lintian::Processable|proccessable>.  In that
 case all other arguments are ignored.
 
+If the first calling convention is used then this method will by
+default search for an existing package.  The @extra argument cna be
+used to narrow the search or even to add a new entry.
+
+@extra consists of (in order):
+ - version
+ - arch (May be omitted $pkg_type is "source")
+ - path to package
+
+If version or arch is omitted (or undef) then that search parameter is
+consider a wildcard for "any".  Example:
+
+ # Returns all eclipse-platform packages with architecture i386 regardless
+ # of their version (if any)
+ @ps  = $lab->get_package ('eclipse-platform', 'binary', undef, 'i386');
+ # Returns all eclipse-platform packages with version 3.5.2-11 regardless
+ # of their architecture (if any)
+ @ps  = $lab->get_package ('eclipse-platform', 'binary', '3.5.2-11');
+ # Return the eclipse-platform package with version 3.5.2-11 and architecture
+ # i386 (or undef)
+ $pkg = $lab->get_package ('eclipse-platform', 'binary', '3.5.2-11', 'i386');
+
+
+If all 3 (2 for source packages) @extra arguments are given, then the
+entry will be created if it does not exists.
+
+In list context, this returns a list of matches.  In scalar context
+this returns the first match (if any).
+
 =cut
 
 sub get_package {
-    my ($self, $pkg, $pkg_type, $pkg_version, $pkg_arch) = @_;
+    my ($self, $pkg, $pkg_type, $pkg_version, $pkg_arch, $pkg_path) = @_;
     my $pkg_name;
-    my $dir;
-    my $pkg_path;
+    my @entries;
+    my $index;
 
     croak 'Lab is not open' unless $self->is_open;
+
+    # TODO: Cache and check for existing entries to avoid passing out
+    # the same entry twice with different instances.  Problem being
+    # circular references (and weaken may be un-available)
 
     if (blessed $pkg && $pkg->isa ('Lintian::Processable')) {
         $pkg_name = $pkg->pkg_name;
@@ -203,15 +236,51 @@ sub get_package {
     } else {
         $pkg_name = $pkg;
         croak "Package name and type must be defined" unless $pkg_name && $pkg_type;
-        croak 'Not implemented';
+        # For source packages $pkg_arch does not make sense, so allow it to be omitted
+        if ($pkg_type eq 'source' && defined $pkg_arch && ! defined $pkg_path) {
+            $pkg_path = $pkg_arch;
+            undef $pkg_arch;
+        }
     }
 
-    # TODO: Cache and check for existing entries to avoid passing out
-    # the same entry twice with different instances.
+    $index = $self->_get_lab_index ($pkg_type);
 
-    $dir = $self->_pool_path ($pkg_name, $pkg_type, $pkg_version, $pkg_arch);
+    if (defined $pkg_version && (defined $pkg_arch || $pkg_type eq 'source')) {
+        # We know everything - just do a regular look up
+        my $dir;
+        unless ($pkg_path) {
+            my @keys = ($pkg_name, $pkg_version);
+            my $e;
+            push @keys, $pkg_arch if $pkg_type ne 'source';
+            $e = $index->get (@keys);
+            $pkg_path = $e->{'file'};
+        }
+        if ($pkg_path) {
+            $dir = $self->_pool_path ($pkg_name, $pkg_type, $pkg_version, $pkg_arch);
+            push @entries, Lintian::Lab::Entry->new ($self, $pkg_name, $pkg_version, $pkg_type, $pkg_path, $dir);
+        }
+    } else {
+        # clear $pkg_arch if it is a source package - it simplifies
+        # the search code below
+        undef $pkg_arch if $pkg_type eq 'source';
+        my $searcher = sub {
+            my ($entry, @keys) = @_;
+            my ($n, $v, $a) = @keys;
+            my $dir;
+            my $pp;
+            # We do not have to check version - if we have a specific
+            # version, only entries with that version will be visited.
+            return if defined $pkg_arch && $a ne $pkg_arch;
+            $pp = $entry->{'file'};
+            $dir = $self->_pool_path ($pkg_name, $pkg_type, $pkg_version, $pkg_arch);
+            push @entries,  Lintian::Lab::Entry->new ($self, $pkg_name, $pkg_version, $pkg_type, $pp, $dir);
+        };
+        my @sk = ($pkg_name);
+        push @sk, $pkg_version if defined $pkg_version;
+        $index->visit_all ($searcher, @sk);
+    }
 
-    return Lintian::Lab::Entry->new ($self, $pkg_name, $pkg_version, $pkg_type, $pkg_path, $dir);
+    return wantarray ? @entries : $entries[0];
 }
 
 # Returns the index of packages in the lab of a given type (of packages).
