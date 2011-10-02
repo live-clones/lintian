@@ -126,6 +126,17 @@ to less dangerous (but possibly invalid) values.
 
 Lintian::Processable->mk_ro_accessors (qw(pkg_name pkg_version pkg_src pkg_arch pkg_path pkg_type pkg_src_version tainted));
 
+=item $proc->group([$group])
+
+Returns the L<Lintain::ProcessableGroup|group> $proc is in,
+if any.  If the processable is not in a group, this returns C<undef>.
+
+Can also be used to set the group of this processable.
+
+=cut
+
+Lintian::Processable->mk_accessors (qw(group));
+
 =item $proc->info
 
 Returns L<Lintian::Collect|$info> element for this processable.

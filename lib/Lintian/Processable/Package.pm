@@ -63,13 +63,6 @@ Creates a new processable of type $pkg_type, which must be one of:
 $pkg_path should be the absolute path to the package file that
 defines this type of processable (e.g. the changes file).
 
-=item $proc->group([$group])
-
-Returns the L<Lintain::ProcessableGroup|group> $proc is in,
-if any.  If the processable is not in a group, this returns C<undef>.
-
-Can also be used to set the group of this processable.
-
 =item $proc->lab_pkg([$lpkg])
 
 Returns or sets the L<Lab::Package|$info> element for this processable.

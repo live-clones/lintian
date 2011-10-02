@@ -61,17 +61,25 @@ use Lintian::Lab;
 use Util qw(delete_dir read_dpkg_control get_dsc_info);
 
 sub new {
-    my ($type, $lab, $pkg_name, $pkg_version, $pkg_type, $pkg_path, $base_dir) = @_;
+    my ($type, $lab, $pkg_name, $pkg_version, $pkg_arch, $pkg_type, $pkg_path, $pkg_src, $pkg_src_version, $base_dir) = @_;
     my $self = {};
     bless $self, $type;
     croak "$pkg_path does not exist." unless -e $pkg_path;
-    $self->{pkg_name}    = $pkg_name;
-    $self->{pkg_version} = $pkg_version;
-    $self->{pkg_path}    = $pkg_path;
-    $self->{pkg_type}    = $pkg_type;
-    $self->{lab}         = $lab;
-    $self->{info}        = undef; # load on demand.
-    $self->{coll}        = {};
+    $self->{pkg_name}        = $pkg_name;
+    $self->{pkg_version}     = $pkg_version;
+    $self->{pkg_path}        = $pkg_path;
+    $self->{pkg_type}        = $pkg_type;
+    $self->{pkg_src}         = $pkg_src;
+    $self->{pkg_src_version} = $pkg_src_version;
+    $self->{lab}             = $lab;
+    $self->{info}            = undef; # load on demand.
+    $self->{coll}            = {};
+    if ($pkg_type ne 'source') {
+        $self->{pkg_arch} = $pkg_arch;
+    } else {
+        $self->{pkg_arch} = 'source';
+    }
+
     # ask the lab to find the base directory of this package.
     $self->{base_dir} = $base_dir;
 

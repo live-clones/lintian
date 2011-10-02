@@ -220,6 +220,7 @@ sub get_package {
     my $pkg_name;
     my @entries;
     my $index;
+    my $proc;
 
     croak 'Lab is not open' unless $self->is_open;
 
@@ -233,14 +234,10 @@ sub get_package {
         $pkg_version = $pkg->pkg_version;
         $pkg_arch = $pkg->pkg_arch;
         $pkg_path = $pkg->pkg_path;
+        $proc = $pkg;
     } else {
         $pkg_name = $pkg;
         croak "Package name and type must be defined" unless $pkg_name && $pkg_type;
-        # For source packages $pkg_arch does not make sense, so allow it to be omitted
-        if ($pkg_type eq 'source' && defined $pkg_arch && ! defined $pkg_path) {
-            $pkg_path = $pkg_arch;
-            undef $pkg_arch;
-        }
     }
 
     $index = $self->_get_lab_index ($pkg_type);
@@ -248,17 +245,21 @@ sub get_package {
     if (defined $pkg_version && (defined $pkg_arch || $pkg_type eq 'source')) {
         # We know everything - just do a regular look up
         my $dir;
-        unless ($pkg_path) {
-            my @keys = ($pkg_name, $pkg_version);
-            my $e;
-            push @keys, $pkg_arch if $pkg_type ne 'source';
+        my @keys = ($pkg_name, $pkg_version);
+        my $e;
+        my ($pkg_src, $pkg_src_version);
+        push @keys, $pkg_arch if $pkg_type ne 'source';
+        if ($proc) {
+            $pkg_src = $proc->pkg_src;
+            $pkg_src_version = $proc->pkg_src_version;
+        } else {
             $e = $index->get (@keys);
-            $pkg_path = $e->{'file'};
+            return unless $e;
+            $pkg_src = $e->{'source'};
+            $pkg_src_version = $e->{'source-version'}//$pkg_version;
         }
-        if ($pkg_path) {
-            $dir = $self->_pool_path ($pkg_name, $pkg_type, $pkg_version, $pkg_arch);
-            push @entries, Lintian::Lab::Entry->new ($self, $pkg_name, $pkg_version, $pkg_type, $pkg_path, $dir);
-        }
+        $dir = $self->_pool_path ($pkg_name, $pkg_type, $pkg_version, $pkg_arch);
+        push @entries, Lintian::Lab::Entry->new ($self, $pkg_name, $pkg_version, $pkg_arch, $pkg_type, $pkg_path, $pkg_src, $pkg_src_version, $dir);
     } else {
         # clear $pkg_arch if it is a source package - it simplifies
         # the search code below
@@ -272,8 +273,8 @@ sub get_package {
             # version, only entries with that version will be visited.
             return if defined $pkg_arch && $a ne $pkg_arch;
             $pp = $entry->{'file'};
-            $dir = $self->_pool_path ($pkg_name, $pkg_type, $pkg_version, $pkg_arch);
-            push @entries,  Lintian::Lab::Entry->new ($self, $pkg_name, $pkg_version, $pkg_type, $pp, $dir);
+            $dir = $self->_pool_path ($pkg_name, $pkg_type, $v, $a);
+            push @entries,  Lintian::Lab::Entry->new ($self, $pkg_name, $v, $a, $pkg_type, $pp, $entry->{'source'}, $entry->{'source-version'}//$v, $dir);
         };
         my @sk = ($pkg_name);
         push @sk, $pkg_version if defined $pkg_version;
@@ -313,17 +314,20 @@ sub _load_lab_index {
 # path to it in the Lab.  Path returned will be absolute.
 sub _pool_path {
     my ($self, $pkg_name, $pkg_type, $pkg_version, $pkg_arch) = @_;
-    my $path = $self->dir;
+    my $dir = $self->dir;
     my $p;
     if ($pkg_name =~ m/^lib/o) {
         $p = substr $pkg_name, 0, 4;
     } else {
         $p = substr $pkg_name, 0, 1;
     }
-    $path .= "/pool/$p/$pkg_name/${pkg_name}_${pkg_version}";
-    $path .= "_${pkg_arch}" unless $pkg_type eq 'source';
-    $path .= "_${pkg_type}";
-    return $path;
+    $p  = "$p/$pkg_name/${pkg_name}_${pkg_version}";
+    $p .= "_${pkg_arch}" unless $pkg_type eq 'source';
+    $p .= "_${pkg_type}";
+    # Turn spaces into dashes - spaces do appear in architectures
+    # (i.e. for changes files).
+    $p =~ s/\s/-/go;
+    return "$dir/pool/$p";
 }
 
 # lab->generate_diffs(@lists)
@@ -481,7 +485,7 @@ sub close_lab {
         my $dir = $self->dir;
         while ( my ($pkg_type, $plist) = (each %{ $self->{'state'} }) ) {
             # write_list croaks on error, so no need for "or croak/die"
-            $plist->write_list ("$dir/info/${pkg_type}-packages")  if $plist->dirty;
+            $plist->write_list ("$dir/info/${pkg_type}-packages");
         }
     }
     $self->{'state'} = {};
@@ -567,11 +571,11 @@ sub _init {
 # event - triggered by Lintian::Lab::Entry
 sub _entry_removed {
     my ($self, $entry) = @_;
-    my $pf = $self->{'state'};
     my $pkg_name    = $entry->pkg_name;
     my $pkg_type    = $entry->pkg_type;
     my $pkg_version = $entry->pkg_version;
     my @keys = ($pkg_name, $pkg_version);
+    my $pf = $self->_get_lab_index ($pkg_type);
 
     push @keys, $entry->pkg_arch if $pkg_type ne 'source';
 
@@ -583,8 +587,63 @@ sub _entry_created {
     my ($self, $entry) = @_;
     my $pkg_name    = $entry->pkg_name;
     my $pkg_type    = $entry->pkg_type;
+    my $pkg_version = $entry->pkg_version;
+    my $pkg_path    = $entry->pkg_path;
+    my $ts = 0;
+    my $pf = $self->_get_lab_index ($pkg_type);
+    my %data = (
+        'file'    => $pkg_path,
+        'version' => $pkg_version,
+    );
 
-    # FIXME: update $self->{'state'} etc.
+    if (my @stat = stat $pkg_path) {
+        $ts = $stat[9];
+    }
+    $data{'timestamp'} = $ts;
+    if ($pkg_type eq 'source') {
+        my $info = $entry->info;
+        my $up = $info->field ('uploaders')//'';
+        my $maint = $info->field ('maintainer')//'';
+        my $bin = $info->field ('binary')//'';
+
+        # Normalize the fields - usually this will be "no-ops", but we
+        # do check some really warped packages every now and then...
+
+        if ($up) {
+            $up =~ s/\n/ /og;
+            $up = join (', ', split (m/\s*,\s*/o, $up));
+        }
+        if ($bin) {
+            $bin   =~ s/\n\s*//og;
+            $bin = join (', ', split (m/\s*,\s*/o, $bin));
+        }
+
+        $maint =~ s/\n\s*//og if $maint;
+        $data{'binary'}     = $bin;
+        $data{'source'}     = $pkg_name;
+        $data{'area'}       = ''; # just blank this - we do not know it :)
+        $data{'maintainer'} = $maint;
+        $data{'uploaders'}  = $up;
+    } elsif ($pkg_type eq 'changes') {
+        $data{'architecture'} = $entry->pkg_arch;
+        $data{'source'}       = $pkg_name;
+    } elsif ($pkg_type eq 'binary' or $pkg_type eq 'udeb') {
+        my $info = $entry->info;
+        my $area = 'main';
+        my $s = $info->field ('section')//'';
+        if ($s && $s =~ m,\s*([a-zA-Z0-9-_]+)/,o) {
+            $area = $1;
+        }
+        $data{'architecture'}   = $entry->pkg_arch;
+        $data{'area'}           = 'main';
+        $data{'package'}        = $pkg_name;
+        $data{'source'}         = $entry->pkg_src;
+        $data{'source-version'} = $entry->pkg_src_version;
+    } else {
+        croak "Unknown package type: $pkg_type";
+    }
+
+    $pf->set (\%data);
 }
 
 =back

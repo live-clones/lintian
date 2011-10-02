@@ -215,7 +215,6 @@ On error, the contents of $file is undefined.
 
 sub write_list {
     my ($self, $file) = @_;
-    my $state = $self->{'state'};
     my ($header, $fields, undef) = $self->_type_to_fields;
     my $visitor;
 
