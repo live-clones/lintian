@@ -41,6 +41,8 @@ my $maint_commands = Lintian::Data->new ('debhelper/maint_commands');
 my $dh_commands_depends = Lintian::Data->new ('debhelper/dh_commands', '=');
 my $filename_configs = Lintian::Data->new ('debhelper/filename-config-files');
 my $dh_ver_deps = Lintian::Data->new ('debhelper/dh_commands-manual', qr/\|\|/o);
+my $dh_addons = Lintian::Data->new ('debhelper/dh_addons', '=');
+my $dh_addons_manual = Lintian::Data->new ('debhelper/dh_addons-manual', qr/\|\|/o);
 
 # The version at which debhelper commands were introduced.  Packages that use
 # one of these commands must have a dependency on that version of debhelper or
@@ -69,6 +71,7 @@ my $usescdbs = '';
 my $seendhcleank = '';
 my $overridetargets = 0;
 my %missingbdeps;
+my %missingbdeps_addons;
 
 my $maybe_skipping;
 my $dhcompatvalue;
@@ -150,6 +153,17 @@ while (<RULES>) {
         $seencommand = 1;
         $needbuilddepends = 1;
         $needtomodifyscripts = 1;
+        while (m/\s--with(?:=|\s+)(\S+)/go) {
+            for my $addon (split(m/,/o, $1)) {
+                $addon =~ y,-,_,;
+                my $depends =
+                    $dh_addons_manual->value($addon) ||
+                    $dh_addons->value($addon);
+                if (defined $depends) {
+                    $missingbdeps_addons{$depends} = $addon;
+                }
+            }
+        }
     } elsif (m,^include\s+/usr/share/cdbs/1/rules/debhelper.mk,) {
         $seencommand = 1;
         $needbuilddepends = 1;
@@ -328,6 +342,10 @@ if ($needbuilddepends && ! $bdepends->implies('debhelper')) {
 while (my ($dep, $command) = each %missingbdeps) {
     next if $dep eq 'debhelper'; #handled above
     tag 'missing-build-dependency-for-dh_-command', "$command=$dep"
+        unless ($bdepends_noarch->implies($dep));
+}
+while (my ($dep, $addon) = each %missingbdeps_addons) {
+    tag 'missing-build-dependency-for-dh-addon', "$addon => $dep"
         unless ($bdepends_noarch->implies($dep));
 }
 

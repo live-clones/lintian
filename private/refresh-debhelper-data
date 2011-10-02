@@ -45,8 +45,9 @@ fi
 
 readonly lintian_data="$(readlink -f "$1")"
 readonly contents="$(readlink -f "$2")"
-readonly dh_regex='^usr/bin/dh_.'
-readonly dh_perl_regex='^usr/bin/(dh_[^\s]+)\s+[\w-]+/([^,]+).*'
+readonly dh_regex='^(usr/bin/dh_|usr/share/perl5/Debian/Debhelper/Sequence/).'
+readonly dh_command_perl_regex='^usr/bin/(dh_[^\s]+)\s+[\w-]+/([^,]+).*'
+readonly dh_addon_perl_regex='^usr/share/perl5/Debian/Debhelper/Sequence/([^\s]+)\.pm\s+[\w-]+/([^,]+).*'
 offline=0
 
 [ -d "$lintian_data" ] || {
@@ -86,7 +87,7 @@ if [ $offline -eq 1 ]; then
     which "$command" 2>&1 1>/dev/null || exit 2
 
     $command -E "$dh_regex" "$contents" \
-        | perl -p -w -E 's#'"$dh_perl_regex"'#$1=$2#g;' \
+        | perl -p -w -E 's#'"$dh_command_perl_regex"'#$1=$2#g;' \
         | sort > "$new_commands"
     cmp -s "$known_commands" "$new_commands"
     exit
@@ -103,13 +104,16 @@ else
     wget dists/sid/Contents-i386.gz
     zgrep -E "$dh_regex" Contents-i386.gz > dh_entries
     cat dh_entries \
-        | perl -p -w -E 's#'"$dh_perl_regex"'#$1=$2#g;' \
+        | perl -n -w -E 's#'"$dh_command_perl_regex"'#$1=$2# and print' \
         | LC_ALL=C sort > dh_commands
     cat dh_entries \
-        | perl -p -w -E 's#'"$dh_perl_regex"'#$2#g;' \
+        | perl -n -w -E 's#'"$dh_addon_perl_regex"'#$1=$2# and print' \
+        | LC_ALL=C sort > dh_addons
+    cat dh_commands \
+        | cut -d '=' -f 2 \
         | LC_ALL=C sort -u > dh_packages
 
-    for f in commands packages; do
+    for f in commands addons packages; do
         rf="$lintian_data/debhelper/dh_$f"
         [ ! -f "$rf" ] ||
             mv "$rf" "${rf}.old"
