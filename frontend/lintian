@@ -940,6 +940,7 @@ while (my $arg = shift) {
         # special case: search only in lab if action is `remove'
 
         my $search;
+        my @res;
         if ($action eq 'remove') {
             # search only in lab--see below
             $search = 'lab';
@@ -976,49 +977,33 @@ while (my $arg = shift) {
 
         # nothing found so far, so search the lab
 
-        # FIXME: needs "remove by name"
+        if ($pkg_mode eq 'b' or $pkg_mode eq 'a') {
+            my @pkgs = $LAB->get_package ($arg, 'binary');
+            push @res, @pkgs;
+        }
+        if ($pkg_mode eq 's' or $pkg_mode eq 'a') {
+            my @pkgs = $LAB->get_package ($arg, 'source');
+            push @res, @pkgs;
+        }
+        if ($pkg_mode eq 'u' or $pkg_mode eq 'a') {
+            my @pkgs = $LAB->get_package ($arg, 'udeb');
+            push @res, @pkgs;
+        }
+        if ($pkg_mode eq 'c' or $pkg_mode eq 'a') {
+            my @pkgs = $LAB->get_package ($arg, 'changes');
+            push @res, @pkgs;
+        }
 
-        my $b = "$opt{'LINTIAN_LAB'}/binary/$arg";
-        my $s = "$opt{'LINTIAN_LAB'}/source/$arg";
-        my $u = "$opt{'LINTIAN_LAB'}/udeb/$arg";
-
-        if ($pkg_mode eq 'b') {
-            unless (-d $b) {
-                warn "error: cannot find binary package $arg in $search (skipping)\n";
-                $exit_code = 2;
-                next;
-            }
-        } elsif ($pkg_mode eq 's') {
-            unless (-d $s) {
-                warning("cannot find source package $arg in $search (skipping)");
-                $exit_code = 2;
-                next;
-            }
-        } elsif ($pkg_mode eq 'u') {
-            unless (-d $u) {
-                warning("cannot find udeb package $arg in $search (skipping)");
-                $exit_code = 2;
-                next;
+        if (@res) {
+            foreach my $p (@res) {
+                $pool->add_proc ($p);
             }
         } else {
-            # $pkg_mode eq 'a'
-            unless (-d $b or -d $s or -d $u) {
-                warning("cannot find binary, udeb or source package $arg in $search (skipping)");
-                $exit_code = 2;
-                next;
-            }
+            warning("cannot find binary, udeb or source package $arg in $search (skipping)");
+            $exit_code = 2;
+            next;
         }
 
-        # FIXME: Use Lab to find the deb/dsc instead?
-        if (($pkg_mode eq 'b') or (($pkg_mode eq 'a') and (-d $b))) {
-            $pool->add_file("$b/deb");
-        }
-        if (($pkg_mode eq 's') or (($pkg_mode eq 'a') and (-d $s))) {
-            $pool->add_file("$s/dsc");
-        }
-        if (($pkg_mode eq 'u') or (($pkg_mode eq 'a') and (-d $u))) {
-            $pool->add_file("$u/deb");
-        }
     }
 }
 
