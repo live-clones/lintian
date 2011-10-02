@@ -190,6 +190,13 @@ Info: The source package appears to be using a dh_ command but doesn't build
  depend on the package that actually provides it.  If it uses it, it must
  build depend on it.
 
+Tag: missing-build-dependency-for-dh-addon
+Severity: important
+Certainty: possible
+Info: The source package appears to be using a dh addon but doesn't build
+ depend on the package that actually provides it.  If it uses it, it must
+ build depend on it.
+
 Tag: debhelper-script-needs-versioned-build-depends
 Severity: normal
 Certainty: certain
