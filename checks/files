@@ -1334,7 +1334,7 @@ foreach my $file (@{$info->sorted_index}) {
     }
 }
 
-if (!$arch_dep_files && ($info->field('architecture')//'') ne 'all') {
+if (!$is_empty && !$arch_dep_files && ($info->field('architecture')//'') ne 'all') {
     tag 'package-contains-no-arch-dependent-files' unless $type eq 'udeb';
 }
 
