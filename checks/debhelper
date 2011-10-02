@@ -85,6 +85,9 @@ my $bdepends;
 open(RULES, '<', "$droot/rules") or fail("cannot read debian/rules: $!");
 
 while (<RULES>) {
+    while (s,\\$,, and defined (my $cont = <RULES>)) {
+        $_ .= $cont;
+    }
     if (/^ifn?(?:eq|def)\s/) {
         $maybe_skipping++;
     } elsif (/^endif\s/) {
@@ -122,7 +125,7 @@ while (<RULES>) {
             if ($dhcommand eq 'dh_scrollkeeper') {
                 tag 'dh_scrollkeeper-is-deprecated', "line $.";
             }
-            if ($dhcommand eq 'dh_clean' and m/\s+\-k(?:\s+.*)?$/) {
+            if ($dhcommand eq 'dh_clean' and m/\s+\-k(?:\s+.*)?$/s) {
                 $seendhcleank = 1;
             }
         }

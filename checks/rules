@@ -155,6 +155,9 @@ my $maybe_skipping;
 my $uses_makefile_pl = 0;
 my %variables;
 while (<RULES>) {
+    while (s,\\$,, and defined (my $cont = <RULES>)) {
+        $_ .= $cont;
+    }
     next if /^\s*\#/;
     if (m/^\s*[s-]?include\s+(\S++)/o){
         my $makefile = $1;
@@ -184,8 +187,8 @@ while (<RULES>) {
     if (/\$[\(\{]PWD[\)\}]/) {
         tag 'debian-rules-uses-pwd', "line $.";
     }
-    if (m/^\t\s*-(?:\$[\(\{]MAKE[\}\)]|make)\s.*(?:dist)?clean/ ||
-        m/^\t\s*(?:\$[\(\{]MAKE[\}\)]|make)\s(?:.*\s)?-\w*i.*(?:dist)?clean/) {
+    if (m/^\t\s*-(?:\$[\(\{]MAKE[\}\)]|make)\s.*(?:dist)?clean/s ||
+        m/^\t\s*(?:\$[\(\{]MAKE[\}\)]|make)\s(?:.*\s)?-\w*i.*(?:dist)?clean/s) {
         tag 'debian-rules-ignores-make-clean-error', "line $.";
     }
     if (/\$[\(\{]DEB_BUILD_OPTS[\)\}]/) {
@@ -197,12 +200,12 @@ while (<RULES>) {
     if (m/\bDEB_[^_ \t]+FLAGS_(?:SET|APPEND)\b/o) {
         tag 'debian-rules-uses-or-modifies-user-only-variable', "line $.";
     }
-    if ($uses_makefile_pl && m/install.*PREFIX/ && !/DESTDIR/) {
+    if ($uses_makefile_pl && m/install.*PREFIX/s && !/DESTDIR/) {
         tag 'debian-rules-makemaker-prefix-is-deprecated', "line $.";
     }
 
     # General assignment - save the variable
-    if (/^\s*(?:\S+\s+)*?(\S+)\s*([:\?\+])?=\s*(.*+)?$/o) {
+    if (/^\s*(?:\S+\s+)*?(\S+)\s*([:\?\+])?=\s*(.*+)?$/so) {
         # This is far too simple from a theoretical PoV, but should do
         # rather well.
         my ($var, $atype, $value) = ($1, $2, $3);
@@ -233,7 +236,7 @@ while (<RULES>) {
     # Listing a rule as a dependency of .PHONY is sufficient to make it
     # present for the purposes of GNU make and therefore the Policy
     # requirement.
-    if (/^(?:[^:]+\s)?\.PHONY(?:\s[^:]+)?:(.+)/) {
+    if (/^(?:[^:]+\s)?\.PHONY(?:\s[^:]+)?:(.+)/s) {
         my @targets = split (' ', $1);
         local $_;
         for (@targets) {
@@ -260,13 +263,13 @@ while (<RULES>) {
         next; #.PHONY implies the rest will not match
     }
 
-    if (!/^ifn?(?:eq|def)\s/ && m/^([^\s:][^:]*):+(.*)/) {
+    if (!/^ifn?(?:eq|def)\s/ && m/^([^\s:][^:]*):+(.*)/s) {
         @current_targets = split (' ', $1);
         my @depends = map {
             $_ = quotemeta $_;
             s/\\\$\\\([^\):]+\\:([^=]+)\\=([^\)]+)\1\\\)/$2.*/g;
             qr/^$_$/;
-        } split (m/ /o, $2);
+        } split (' ', $2);
         for my $target (@current_targets) {
             if ($target =~ m/%/o) {
                 my $pattern = quotemeta $target;
