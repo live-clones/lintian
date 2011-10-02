@@ -115,10 +115,18 @@ sub new {
     my ($class, $dir) = @_;
     my $absdir;
     my $mode = LAB_MODE_TEMP;
+    my $dok = 1;
     if ($dir) {
-        $absdir = Cwd::abs_path ($dir);
-        croak "Cannot resolve $dir: $!" unless $absdir;
         $mode = LAB_MODE_STATIC;
+        $absdir = Cwd::abs_path ($dir);
+        if (!$absdir) {
+            if ($dir =~ m,^/,o) {
+                $absdir = $dir;
+            } else {
+                $absdir = Cwd::cwd . '/' . $dir;
+            }
+            $dok = 0;
+        }
     } else {
         $absdir = ''; #Ensure it is defined.
     }
@@ -132,6 +140,7 @@ sub new {
         'is_open'     => 0,
         'keep-lab'    => 0,
     };
+    $self->{'_correct_dir'} = 1 unless $dok;
     bless $self, $class;
     $self->_init ($dir);
     return $self;
@@ -359,19 +368,21 @@ sub generate_diffs {
 
 =item $lab->create_lab ([$opts])
 
-Creates a new lab.  It will create $self->dir if it does not
-exists.  It will also create a basic lab empty lab.  If this is
-a temporary lab, this method will also setup the temporary dir
-for the lab.
+Creates a new lab.  It will create $lab->dir if it does not exists.
+It will also create a basic lab empty lab.  If this is a temporary
+lab, this method will also setup the temporary dir for the lab.
 
 B<$opts> (if present) is a hashref containing options.  Currently only
 "keep-lab" is recognized.  If "keep-lab" points to a truth value the
 temporary directory will I<not> be removed by closing the lab (nor
 exiting the application).  However, explicitly calling
-$self->remove_lab will remove the lab.
+$lab->remove_lab will remove the lab.
 
-Note: This will not create parent directories of $self->dir and will
+Note: This will not create parent directories of $lab->dir and will
 croak if these does not exists.
+
+Note: This may update the value of $lab->dir as resolving the path
+requires it to exists.
 
 =cut
 
@@ -399,6 +410,17 @@ sub create_lab {
     # and the above tempdir creation code, we know that $dir is
     # absolute.
     croak "Cannot create $dir: $!" unless -d $dir or mkdir $dir;
+
+    if ($self->{'_correct_dir'}) {
+        # This happens if $dir has been created in this call.
+        # Until now we have been unable to fully resolve the path,
+        # so we try now.
+        my $absdir = Cwd::abs_path ($dir);
+        croak "Cannot resolve $dir: $!" unless $absdir;
+        delete $self->{'_correct_dir'};
+        $dir = $absdir;
+        $self->{'dir'} = $absdir;
+    }
 
     # Top dir exists, time to create the minimal directories.
     unless (-d "$dir/info") {
