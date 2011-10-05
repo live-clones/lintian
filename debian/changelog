@@ -21,6 +21,10 @@ lintian (2.5.4) UNRELEASED; urgency=low
     + [JW] Parse continuation lines in d/rules.
     + [JW] Only emit brace-expansion-in-debhelper-config-file at most
       once per file.  (Closes: #644344)
+    + [JW] Replaced "=" with " => " in the tag extra for missing-
+      build-dependency-for-dh_-command to improve readability.  This
+      breaks overrides, but according to lintian.d.o there are none
+      of these.  (Closes: #644339)
   * checks/files{,.desc}:
     + [JW] Suggest the usage of "-delete" rather than "| xargs rm -f".
       (Closes: #641983)
