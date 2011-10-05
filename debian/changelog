@@ -54,6 +54,8 @@ lintian (2.5.4) UNRELEASED; urgency=low
     + [NT] Support arbitrary dependency relations.  This new change
       also fixes a "duplicate" in the dependency output.
       (Closes: #643716)
+  * data/fields/essential:
+    + [NT] Add libc-bin to the list of known essential packages.
 
   * lib/Lab.pm:
     + [NT] Updated it to use Lintian::Output::verbosity_level rather

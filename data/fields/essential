@@ -16,6 +16,7 @@ grep
 gzip
 hostname
 hurd
+libc-bin
 login
 mktemp
 mount
