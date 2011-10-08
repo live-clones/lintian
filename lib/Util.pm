@@ -138,7 +138,7 @@ sub _parse_dpkg_control_iterative {
         }
         # continued field?
         elsif (m/^([ \t].*)$/o) {
-            $open_section or fail("syntax error in section $cur_section after the tag $last_tag: $_");
+            $open_section or fail("syntax error in paragraph $cur_section after the field $last_tag: $_");
 
             # Policy: Many fields' values may span several lines; in this case
             # each continuation line must start with a space or a tab.  Any
@@ -150,8 +150,8 @@ sub _parse_dpkg_control_iterative {
         }
         # None of the above => syntax error
         else {
-            my $message = "syntax error in section $cur_section";
-            $message.= " after the tag $last_tag: $_" if defined $last_tag;
+            my $message = "syntax error in paragraph $cur_section";
+            $message.= " after the field $last_tag: $_" if defined $last_tag;
             fail($message);
         }
     }

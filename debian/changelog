@@ -48,6 +48,8 @@ lintian (2.5.4) UNRELEASED; urgency=low
       Laurent Arnoud.
   * checks/source-copyright:
     + [JW] Added some more DEP-5 URLs.  (Closes: #642027)
+    + [JW] Improved the wording of the extra information for the tag
+      syntax-error-in-dep5-copyright.  (Closes: #644556)
 
   * data/changelog-file/ubuntu-dists:
     + [NT] Added the "precise".  Thanks to Loïc Minier for the
@@ -83,6 +85,8 @@ lintian (2.5.4) UNRELEASED; urgency=low
       Thanks to Pino Toscano for reporting the issue.
     + [JW] Explicitly check that files are not encoded using ISO-2022,
       when they should be encoded with UTF-8.  (Closes: #643009)
+    + [JW] Use "paragraph" and "field" rather than "section" and "tag"
+      when referring to a Debian control file.
 
   * reporting/*:
     + [NT] Recognise and display pedantic tags.
