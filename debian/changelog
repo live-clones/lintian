@@ -9,6 +9,9 @@ lintian (2.5.4) UNRELEASED; urgency=low
   * checks/binaries:
     + [JW] Allow binaries to use "/usr/lib/$srcpkg/" in RPATHs.
       (Closes: #642092)
+  * checks/changes-file.desc:
+    + [NT] Added the "precise" to the list of Ubuntu distributions.
+      Thanks to Loïc Minier for the patch.
   * checks/common_data.pm:
     + [JW] Merged into Lintian::Check.
   * checks/cruft:
@@ -46,6 +49,9 @@ lintian (2.5.4) UNRELEASED; urgency=low
   * checks/source-copyright:
     + [JW] Added some more DEP-5 URLs.  (Closes: #642027)
 
+  * data/changelog-file/ubuntu-dists:
+    + [NT] Added the "precise".  Thanks to Loïc Minier for the
+      patch.  (Closes: #644488)
   * data/debhelper/{dh_commands,maint_commands,miscDepends_commands}:
     + [NT] Refreshed.
   * data/debhelper/alt-dh_commands:
