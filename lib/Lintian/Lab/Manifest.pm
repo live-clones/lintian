@@ -23,9 +23,11 @@ package Lintian::Lab::Manifest;
 use strict;
 use warnings;
 
-use base qw(Class::Accessor);
+use base qw(Class::Accessor Clone);
 
 use Carp qw(croak);
+
+use Lintian::Lab::ManifestDiff;
 
 =head1 NAME
 
@@ -350,6 +352,53 @@ sub delete {
         return 0;
     }
     return 1;
+}
+
+=item $manifest->diff ($newlist)
+
+Returns a L<Lintian::Lab::ManifestDiff|diff> between $manifest and
+$newlist.
+
+$manifest is considered the "original" and "$newlist" is "new" version
+of the manifest.  (See the olist and nlist methods of
+L<Lintian::Lab::ManifestDiff> for more information.
+
+=cut
+
+sub diff {
+    my ($self, $other) = @_;
+    my $copy;
+    my @changed;
+    my @added;
+    my @removed;
+    my $visitor;
+    croak "Diffing incompatible types" unless $self->{'type'} eq $other->{'type'};
+    $copy = $self->clone;
+
+    $visitor = sub {
+        my ($ov, @keys) = @_;
+        my $sv = $copy->get (@keys);
+        unless (defined $sv) {
+            push @added, \@keys;
+            return;
+        }
+        if ($sv->{'version'} ne $ov->{'version'} ||
+            $sv->{'timestamp'} ne $ov->{'timestamp'}) {
+            push @changed, \@keys;
+        }
+        # Remove the entry from $copy
+        $copy->delete (@keys);
+    }; # End of visitor sub
+
+    # Find all the added and changed entries - since $visitor removes
+    # all entries it finds from $copy, $copy will contiain the elements
+    # only in $self after this call.
+    $other->visit_all ($visitor);
+    # Thus we can just add all of these entries to @removed.  :)
+    $copy->visit_all (sub { my (undef, @keys) = @_; push @removed, \@keys; });
+
+    return Lintian::Lab::ManifestDiff->_new ($self->{'type'}, $other, $self,
+                                             \@added, \@removed, \@changed);
 }
 
 ### Internal methods ###
