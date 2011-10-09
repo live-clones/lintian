@@ -102,6 +102,10 @@ lintian (2.5.4) UNRELEASED; urgency=low
     + [JW] Use "paragraph" and "field" rather than "section" and "tag"
       when referring to a Debian control file.
 
+  * private/generate-lintian-pod:
+    + [NT] Document which collections are auto-removed by default in
+      static labs.
+
   * reporting/*:
     + [NT] Recognise and display pedantic tags.
     + [JW] Only emit "plus X overrides" if there any overrides.
