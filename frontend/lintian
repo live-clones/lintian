@@ -1216,16 +1216,23 @@ if ($action eq 'unpack') {
             push @needed, @{$collection_info{$c}{'needs-info'}};
         }
     }
-    if ($unpack_info) {
-        # Add collections specifically requested by the user (--unpack-info)
-        for my $i (split(/,/,$unpack_info)) {
-            unless ($collection_info{$i}) {
-                fail("unknown info specified: $i");
-            }
-            $unpack_infos{$i} = 1;
+}
+
+if ($unpack_info) {
+    # Add collections specifically requested by the user (--unpack-info)
+    for my $i (split(/,/,$unpack_info)) {
+        unless ($collection_info{$i}) {
+            fail("unknown info specified: $i");
         }
+        $unpack_infos{$i} = 1;
+        # This implies always keeping them as well!  Note that auto_clean_package
+        # depends on this to do the "right thing".  If you remove this, please
+        # remember to update auto_clean_package.
+        $collection_info{$i}{'auto-remove'} = 0;
     }
 }
+
+
 # }}}
 
 # {{{ Create the dependency tree and populate it with checks and collections
@@ -1482,6 +1489,10 @@ sub load_checks{
 
 # Removes all collections with "Auto-Remove: yes"; takes a Lab::Package
 #  - depends on global variables %collection_info and $opt{'LINTIAN_ROOT'}
+#
+# Note: collections explicitly requested by the user (using -U coll) will
+# not be auto-removed *because* the argument handling of -U alters the
+# Auto-Remove value for these collections.
 sub auto_clean_package {
     my ($lpkg) = @_;
     my $pkg_name = $lpkg->pkg_name();
@@ -1644,8 +1655,7 @@ sub unpack_group {
             # We only need this if we are checking the package later
             $proc->lab_pkg($lpkg);
         } else {
-            # else we are done - not sure if it makes any sense if we are unpacking
-            # but this is the old behaviour, so we stick with it.
+            # else we are done
             if (!$keep_lab) {
                 auto_clean_package($lpkg) or $exit_code = 2;
             }

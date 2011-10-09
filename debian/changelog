@@ -74,6 +74,11 @@ lintian (2.5.4) UNRELEASED; urgency=low
     + [NT] Added a correction for "propagate", thanks to Guillem Jover
       for the suggestion.  (Closes: #644793)
 
+  * frontend/lintian:
+    + [NT] Collections explicitly requested (by -U) are no longer
+      auto-removed.  Previously the only way to prevent auto-removal
+      was to use --keep-lab.
+
   * lib/Lab.pm:
     + [NT] Updated it to use Lintian::Output::verbosity_level rather
       than verbose.
