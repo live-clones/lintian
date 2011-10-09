@@ -145,6 +145,11 @@ sub index_src {
                 $prefix = '';
             }
         }
+        # Ensure $prefix is defined - this may appear to be redundant, but
+        # no tarballs are present (happens if you wget rather than dget
+        # the .dsc file >.>)
+        $prefix //= '';
+
         # If there is a common prefix and it is $compname, then we use that
         # becaues that is where they will be extracted by unpacked.
         if ($prefix ne $compname) {

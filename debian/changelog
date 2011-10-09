@@ -51,6 +51,12 @@ lintian (2.5.4) UNRELEASED; urgency=low
     + [JW] Improved the wording of the extra information for the tag
       syntax-error-in-dep5-copyright.  (Closes: #644556)
 
+  * collection/index:
+    + [NT] Fixed an "uninitialized variable" warning if no tarballs were
+      present.
+  * collcetion/debfiles:
+    + [NT] Bail if the debian dir is a symlink.
+
   * data/changelog-file/ubuntu-dists:
     + [NT] Added the "precise".  Thanks to Loïc Minier for the
       patch.  (Closes: #644488)

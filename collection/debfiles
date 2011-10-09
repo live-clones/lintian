@@ -37,6 +37,9 @@ if (-e 'debfiles') {
         or fail('cannot rm old debfiles directory');
 }
 
+fail ("debian dir for $pkg is a symlink")
+    if -l 'unpacked/debian';
+
 # Copy the whole debian directory
 copy_dir('unpacked/debian/', 'debfiles')
     or fail("cannot copy unpacked/debian to debfiles: $!");
