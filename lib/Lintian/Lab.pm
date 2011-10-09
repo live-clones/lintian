@@ -372,11 +372,23 @@ Creates a new lab.  It will create $lab->dir if it does not exists.
 It will also create a basic lab empty lab.  If this is a temporary
 lab, this method will also setup the temporary dir for the lab.
 
-B<$opts> (if present) is a hashref containing options.  Currently only
-"keep-lab" is recognized.  If "keep-lab" points to a truth value the
-temporary directory will I<not> be removed by closing the lab (nor
-exiting the application).  However, explicitly calling
-$lab->remove_lab will remove the lab.
+B<$opts> (if present) is a hashref containing options.  The following
+options are accepted:
+
+=over 4
+
+=item keep-lab
+
+If "keep-lab" points to a truth value the temporary directory will
+I<not> be removed by closing the lab (nor exiting the application).
+However, explicitly calling $lab->remove_lab will remove the lab.
+
+=item mode
+
+If present, this will be used as mode for creating directories.
+Will default to 0777 if not specified.
+
+=back
 
 Note: This will not create parent directories of $lab->dir and will
 croak if these does not exists.
@@ -390,7 +402,9 @@ sub create_lab {
     my ($self, $opts) = @_;
     my $dir = $self->dir;
     my $mid = 0;
+    my $mode = 0777;
     $opts = {} unless $opts;
+    $mode = $opts->{'mode'} if exists $opts->{'mode'};
     if ( !$dir or $self->{'mode'} eq LAB_MODE_TEMP) {
         if ($self->{'mode'} eq LAB_MODE_TEMP) {
             my $keep = $opts->{'keep-lab'}//0;
@@ -409,7 +423,7 @@ sub create_lab {
     # Create the top dir if needed - note due to Lintian::Lab->new
     # and the above tempdir creation code, we know that $dir is
     # absolute.
-    croak "Cannot create $dir: $!" unless -d $dir or mkdir $dir;
+    croak "Cannot create $dir: $!" unless -d $dir or mkdir $dir, $mode;
 
     if ($self->{'_correct_dir'}) {
         # This happens if $dir has been created in this call.
@@ -424,12 +438,12 @@ sub create_lab {
 
     # Top dir exists, time to create the minimal directories.
     unless (-d "$dir/info") {
-        mkdir "$dir/info" or croak "mkdir $dir/info: $!";
+        mkdir "$dir/info", $mode or croak "mkdir $dir/info: $!";
         $mid = 1; # remember we created the info dir
     }
 
     unless (-d "$dir/pool") {
-        unless (mkdir "$dir/pool") {
+        unless (mkdir "$dir/pool", $mode) {
             my $err = $!; # store the error
             # Remove the info dir if we made it.  This attempts to
             # prevent a semi-created lab that the API cannot remove
