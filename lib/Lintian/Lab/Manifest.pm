@@ -391,8 +391,8 @@ sub diff {
     }; # End of visitor sub
 
     # Find all the added and changed entries - since $visitor removes
-    # all entries it finds from $copy, $copy will contiain the elements
-    # only in $self after this call.
+    # all entries it finds from $copy, $copy will contain the elements
+    # that are only in $self after this call.
     $other->visit_all ($visitor);
     # Thus we can just add all of these entries to @removed.  :)
     $copy->visit_all (sub { my (undef, @keys) = @_; push @removed, \@keys; });
