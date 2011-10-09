@@ -9,6 +9,9 @@ lintian (2.5.4) UNRELEASED; urgency=low
   * checks/binaries:
     + [JW] Allow binaries to use "/usr/lib/$srcpkg/" in RPATHs.
       (Closes: #642092)
+  * checks/changes-file.desc:
+    + [NT] Added the "precise" to the list of Ubuntu distributions.
+      Thanks to Loïc Minier for the patch.
   * checks/common_data.pm:
     + [JW] Merged into Lintian::Check.
   * checks/cruft:
@@ -19,6 +22,12 @@ lintian (2.5.4) UNRELEASED; urgency=low
     + [JW] Detect missing dependencies for using dh sequences.
       (Closes: #613327)
     + [JW] Parse continuation lines in d/rules.
+    + [JW] Only emit brace-expansion-in-debhelper-config-file at most
+      once per file.  (Closes: #644344)
+    + [JW] Replaced "=" with " => " in the tag extra for missing-
+      build-dependency-for-dh_-command to improve readability.  This
+      breaks overrides, but according to lintian.d.o there are none
+      of these.  (Closes: #644339)
   * checks/files{,.desc}:
     + [JW] Suggest the usage of "-delete" rather than "| xargs rm -f".
       (Closes: #641983)
@@ -39,7 +48,18 @@ lintian (2.5.4) UNRELEASED; urgency=low
       Laurent Arnoud.
   * checks/source-copyright:
     + [JW] Added some more DEP-5 URLs.  (Closes: #642027)
+    + [JW] Improved the wording of the extra information for the tag
+      syntax-error-in-dep5-copyright.  (Closes: #644556)
 
+  * collection/index:
+    + [NT] Fixed an "uninitialized variable" warning if no tarballs were
+      present.
+  * collcetion/debfiles:
+    + [NT] Bail if the debian dir is a symlink.
+
+  * data/changelog-file/ubuntu-dists:
+    + [NT] Added the "precise".  Thanks to Loïc Minier for the
+      patch.  (Closes: #644488)
   * data/debhelper/{dh_commands,maint_commands,miscDepends_commands}:
     + [NT] Refreshed.
   * data/debhelper/alt-dh_commands:
@@ -48,6 +68,16 @@ lintian (2.5.4) UNRELEASED; urgency=low
     + [NT] Support arbitrary dependency relations.  This new change
       also fixes a "duplicate" in the dependency output.
       (Closes: #643716)
+  * data/fields/essential:
+    + [NT] Add libc-bin to the list of known essential packages.
+  * data/spelling/corrections:
+    + [NT] Added a correction for "propagate", thanks to Guillem Jover
+      for the suggestion.  (Closes: #644793)
+
+  * frontend/lintian:
+    + [NT] Collections explicitly requested (by -U) are no longer
+      auto-removed.  Previously the only way to prevent auto-removal
+      was to use --keep-lab.
 
   * lib/Lab.pm:
     + [NT] Updated it to use Lintian::Output::verbosity_level rather
@@ -69,10 +99,20 @@ lintian (2.5.4) UNRELEASED; urgency=low
       Thanks to Pino Toscano for reporting the issue.
     + [JW] Explicitly check that files are not encoded using ISO-2022,
       when they should be encoded with UTF-8.  (Closes: #643009)
+    + [JW] Use "paragraph" and "field" rather than "section" and "tag"
+      when referring to a Debian control file.
+
+  * private/generate-lintian-pod:
+    + [NT] Document which collections are auto-removed by default in
+      static labs.
 
   * reporting/*:
     + [NT] Recognise and display pedantic tags.
     + [JW] Only emit "plus X overrides" if there any overrides.
+  * reporting/{harness,html_reports}:
+    + [NT] Do not accept LINTIAN_UNPACK_LEVEL nor LINTIAN_SECTION
+      anymore.  The lintian frontend lost support for these in
+      2.5.0~rc3.
 
  -- Niels Thykier <niels@thykier.net>  Sat, 10 Sep 2011 13:44:01 +0200
 

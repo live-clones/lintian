@@ -329,6 +329,7 @@ foreach my $file (sort readdir(DEBIAN)) {
                 if (m/(?<!\\)\{(?:[^\s\\\}]+?,)+[^\\\}\s]+\}/) {
                     tag 'brace-expansion-in-debhelper-config-file',
                         "debian/$file";
+                    last;
                 }
             }
             close IN;
@@ -344,7 +345,7 @@ if ($needbuilddepends && ! $bdepends->implies('debhelper')) {
 }
 while (my ($dep, $command) = each %missingbdeps) {
     next if $dep eq 'debhelper'; #handled above
-    tag 'missing-build-dependency-for-dh_-command', "$command=$dep"
+    tag 'missing-build-dependency-for-dh_-command', "$command => $dep"
         unless ($bdepends_noarch->implies($dep));
 }
 while (my ($dep, $addon) = each %missingbdeps_addons) {

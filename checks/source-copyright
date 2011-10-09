@@ -132,7 +132,9 @@ if (m{
                     @dep5 = read_dpkg_control($copyright_filename);
                 };
                 if ($@) {
+                    chomp $@;
                     $@ =~ s/^internal error: //;
+                    $@ =~ s/^syntax error in //;
                     tag 'syntax-error-in-dep5-copyright', $@;
                 }
             }

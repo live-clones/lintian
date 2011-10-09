@@ -37,6 +37,18 @@ if (-e 'debfiles') {
         or fail('cannot rm old debfiles directory');
 }
 
+if ( -l 'unpacked/debian' ) {
+    require Cwd;
+    my $target = Cwd::abs_path ('unpacked/debian');
+    my $ud = Cwd::abs_path ('unpacked');
+    fail ("cannot resolve debian directory symlink in $pkg: $!") unless $target;
+    fail ("cannot resolve unpacked dir for $pkg: $!") unless $ud;
+    # We need the the trailing slash on $ud to ensure $target is a subdir of $ud.  However
+    # if $target eq $ud, we also need a trailing slash on $target for the comparision to
+    # be successful
+    fail ("debian directory in $pkg is an unsafe symlink!") unless "$target/" =~ m,^$ud/,;
+}
+
 # Copy the whole debian directory
 copy_dir('unpacked/debian/', 'debfiles')
     or fail("cannot copy unpacked/debian to debfiles: $!");

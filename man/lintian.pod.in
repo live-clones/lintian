@@ -350,7 +350,10 @@ the exit status of Lintian.
 =item B<-U> info1,info2,..., B<--unpack-info> info1,info2,...
 
 Collect information info1, info2, etc. even if these are not required
-by the checks.
+by the checks.  Collections requested by this option are also not
+auto-removed (in this run).
+
+This option is mostly useful for debugging or special purpose setups.
 
 =back
 

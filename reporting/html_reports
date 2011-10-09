@@ -33,15 +33,11 @@ use Text::Template ();
 # These have no default and must be set in the configuration file.
 # FIXME: $statistics_file should be in all caps as well.
 our ($LINTIAN_ROOT, $LINTIAN_LAB, $LINTIAN_ARCHIVEDIR, $LINTIAN_DIST,
-     $LINTIAN_SECTION, $LINTIAN_ARCH, $HTML_TMP_DIR, $statistics_file,
+     $LINTIAN_ARCH, $HTML_TMP_DIR, $statistics_file,
      $LINTIAN_AREA, $HISTORY, $HISTORY_DIR, $LINTIAN_SOURCE);
 
 # Read the configuration.
 require './config';
-
-if (defined $LINTIAN_SECTION and not defined $LINTIAN_AREA) {
-    $LINTIAN_AREA = $LINTIAN_SECTION;
-}
 
 # The path to the mirror timestamp.
 our $LINTIAN_TIMESTAMP
