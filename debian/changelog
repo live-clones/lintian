@@ -64,6 +64,9 @@ lintian (2.5.4) UNRELEASED; urgency=low
       (Closes: #643716)
   * data/fields/essential:
     + [NT] Add libc-bin to the list of known essential packages.
+  * data/spelling/corrections:
+    + [NT] Added a correction for "propagate", thanks to Guillem Jover
+      for the suggestion.  (Closes: #644793)
 
   * lib/Lab.pm:
     + [NT] Updated it to use Lintian::Output::verbosity_level rather
