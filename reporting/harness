@@ -53,7 +53,7 @@ die 'Cannot use other modes with reports only.' if ($opt_r && ($opt_i || $opt_f 
 # read configuration
 require './config';
 use vars qw($LINTIAN_ROOT $LINTIAN_LAB $LINTIAN_ARCHIVEDIR $LINTIAN_DIST
-            $LINTIAN_SECTION $LINTIAN_ARCH $LINTIAN_UNPACK_LEVEL $LINTIAN_CFG
+            $LINTIAN_ARCH $LINTIAN_CFG
             $lintian_cmd $html_reports_cmd
             $log_file $lintian_log $old_lintian_log
             $changes_file $list_file $html_reports_log
@@ -86,18 +86,6 @@ $ENV{'LINTIAN_CFG'} = $LINTIAN_CFG;
 $ENV{'LINTIAN_LAB'} = $LINTIAN_LAB;
 $ENV{'LINTIAN_ARCHIVEDIR'} = $LINTIAN_ARCHIVEDIR;
 $ENV{'LINTIAN_DIST'} = $LINTIAN_DIST;
-$ENV{'LINTIAN_UNPACK_LEVEL'} = $LINTIAN_UNPACK_LEVEL;
-# LINTIAN_SECTION is deprecated in favour of LINTIAN_AREA
-if (defined $LINTIAN_SECTION) {
-    print STDERR 'warning: LINTIAN_SECTION has been deprecated in favour of LINTIAN_AREA.\n';
-    if (defined $LINTIAN_AREA) {
-        print STDERR 'Using LINTIAN_AREA as both were defined.\n';
-    } else {
-        print STDERR 'Both are currently accepted, but LINTIAN_SECTION may be removed\n';
-        print STDERR 'in a future Lintian release.\n';
-        $LINTIAN_AREA = $LINTIAN_SECTION;
-    }
-}
 $ENV{'LINTIAN_AREA'} = $LINTIAN_AREA;
 $ENV{'LINTIAN_ARCH'} = $LINTIAN_ARCH;
 $ENV{'PATH'} = $LINTIAN_BIN_DIR . ':' . $ENV{'PATH'};

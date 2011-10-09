@@ -100,6 +100,10 @@ lintian (2.5.4) UNRELEASED; urgency=low
   * reporting/*:
     + [NT] Recognise and display pedantic tags.
     + [JW] Only emit "plus X overrides" if there any overrides.
+  * reporting/{harness,html_reports}:
+    + [NT] Do not accept LINTIAN_UNPACK_LEVEL nor LINTIAN_SECTION
+      anymore.  The lintian frontend lost support for these in
+      2.5.0~rc3.
 
  -- Niels Thykier <niels@thykier.net>  Sat, 10 Sep 2011 13:44:01 +0200
 
