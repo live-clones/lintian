@@ -25,7 +25,7 @@
     my $num_packages = keys(%packages) + keys(%uploads);
     if ($num_packages > 1 and $num_packages < 20) {
         $OUT .= qq(  <div id="summary">\n    <ul>\n);
-        foreach $source (sort(keys(%packages), keys(%uploads))) {
+        foreach my $source (sort(keys(%packages), keys(%uploads))) {
             # Only display a link for the package if either we're
             # displaying the full report, or the package has error
             # or warning tags
