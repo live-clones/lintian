@@ -28,6 +28,8 @@ lintian (2.5.4) UNRELEASED; urgency=low
       build-dependency-for-dh_-command to improve readability.  This
       breaks overrides, but according to lintian.d.o there are none
       of these.  (Closes: #644339)
+  * checks/fields:
+    + [NT] Fixed source-field-does-not-match-pkg-name.
   * checks/files{,.desc}:
     + [JW] Suggest the usage of "-delete" rather than "| xargs rm -f".
       (Closes: #641983)

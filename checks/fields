@@ -163,6 +163,7 @@ sub run {
 my $pkg = shift;
 my $type = shift;
 my $info = shift;
+my $proc = shift;
 my $version;
 my $arch_indep;
 
@@ -380,8 +381,12 @@ if (not defined $info->field('source')) {
     unfold('source', \$source);
 
     if ($type eq 'source') {
-        if ($source ne $pkg) {
-            tag 'source-field-does-not-match-pkg-name', "$source != $pkg";
+        my $filename = $proc->pkg_path;
+        my ($base) = ($filename =~ m,(?:\a|/)([^/]+)$,o);
+        my ($n) = ($base =~ m/^([^_]+)_/o);
+
+        if ($source ne $n) {
+            tag 'source-field-does-not-match-pkg-name', "$source != $n";
         }
         if ($source !~ /^[a-z0-9][-+\.a-z0-9]+\z/) {
             tag 'source-field-malformed', $source;
