@@ -24,8 +24,8 @@ BEGIN {
 my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
-use Read_pkglists;
 use Lintian::Tag::Info;
+use Util;
 
 my @severities = reverse qw(pedantic wishlist minor normal important serious);
 my @certainties = reverse qw(wild-guess possible certain);
