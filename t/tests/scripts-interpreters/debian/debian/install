@@ -1,4 +1,5 @@
 bin-env                 usr/bin/
+csh-shell               usr/bin/
 no-interpreter          usr/bin/
 not-absolute            usr/bin/
 python2.6               usr/bin/

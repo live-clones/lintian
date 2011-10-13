@@ -121,4 +121,8 @@ true `/usr/bin/foo "$0"`
 # the || true.  (Bug#541372)
 ucf -p /etc/sensors3.conf || true
 
+if false ; then
+    mknod some thing
+fi
+
 #DEBHELPER#

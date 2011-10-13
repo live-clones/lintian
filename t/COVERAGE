@@ -1,5 +1,5 @@
-Last generated 2011-10-12
-Coverage: 734/938 (78.25%), w. legacy tests: 852/938 (90.83%)
+Last generated 2011-10-13
+Coverage: 749/938 (79.85%), w. legacy tests: 858/938 (91.47%)
 
 The following tags are not tested by the test suite:
 
@@ -46,8 +46,6 @@ files nfs-temporary-file-in-package
 files non-standard-file-permissions-for-etc-init.d-script
 files old-app-defaults-directory
 files old-style-example-dir
-files package-installs-font-to-usr-x11r6
-files package-installs-perllocal-pod
 files package-uses-obsolete-file
 files special-file
 files udeb-contains-documentation-file
@@ -88,11 +86,6 @@ menus prerm-calls-updatemenus
 po-debconf missing-potfiles-in
 po-debconf missing-templates-pot
 po-debconf not-using-po-debconf
-
-scripts csh-considered-harmful
-scripts maintainer-script-needs-depends-on-adduser
-scripts maintainer-script-needs-depends-on-update-inetd
-scripts mknod-in-maintainer-script
 
 shared-libs dev-pkg-without-shlib-symlink
 shared-libs ldconfig-symlink-is-not-a-symlink
@@ -144,21 +137,12 @@ debconf using-imperative-form-in-templates
 debconf using-question-in-extended-description-in-templates
 
 files desktop-file-in-wrong-dir
-files macos-ds-store-file-in-package
-files macos-resource-fork-file-in-package
-files package-contains-bts-control-dir
 files package-contains-devhelp-file-without-symlink
 files package-contains-hardlink
-files package-contains-linda-override
-files package-contains-readme-for-other-platform-or-distro
 files package-contains-upstream-install-documentation
-files package-contains-vcs-control-dir
-files package-contains-vcs-control-file
 files package-installs-packlist
 files script-in-usr-share-doc
 files script-with-language-extension
-files svk-commit-file-in-package
-files svn-commit-file-in-package
 files use-of-compat-symlink
 files windows-thumbnail-database-in-package
 files wrong-file-owner-uid-or-gid
@@ -322,18 +306,9 @@ fields
 filenames
   bad-menu-file-name
   desktop-file-in-wrong-dir
-  macos-ds-store-file-in-package
-  macos-resource-fork-file-in-package
-  package-contains-bts-control-dir
   package-contains-devhelp-file-without-symlink
-  package-contains-linda-override
-  package-contains-readme-for-other-platform-or-distro
-  package-contains-vcs-control-dir
-  package-contains-vcs-control-file
   package-installs-packlist
   script-not-executable
-  svk-commit-file-in-package
-  svn-commit-file-in-package
   use-of-compat-symlink
   windows-thumbnail-database-in-package
   wrong-file-owner-uid-or-gid
