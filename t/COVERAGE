@@ -1,5 +1,5 @@
 Last generated 2011-10-13
-Coverage: 749/938 (79.85%), w. legacy tests: 858/938 (91.47%)
+Coverage: 750/938 (79.96%), w. legacy tests: 859/938 (91.58%)
 
 The following tags are not tested by the test suite:
 
@@ -10,7 +10,6 @@ binaries ocaml-custom-executable
 binaries program-not-linked-against-libc
 
 changelog-file html-changelog-without-text-version
-changelog-file wrong-name-for-upstream-changelog
 
 cruft source-contains-prebuilt-windows-binary
 

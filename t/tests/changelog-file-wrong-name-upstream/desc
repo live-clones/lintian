@@ -1,0 +1,6 @@
+Testname: changelog-file-wrong-name-upstream
+Sequence: 6000
+Type: non-native
+Version: 1.0-1
+Description: Check a wrong name for an upstream changelog
+Test-For: wrong-name-for-upstream-changelog
