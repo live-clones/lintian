@@ -1,0 +1,10 @@
+E: menus-foo-calls-bar: maintainer-script-does-not-check-for-existence-of-installdocs postinst
+E: menus-foo-calls-bar: maintainer-script-does-not-check-for-existence-of-updatemenus postinst:5
+E: menus-foo-calls-bar: postrm-calls-installdocs
+E: menus-foo-calls-bar: preinst-calls-installdocs
+E: menus-foo-calls-bar: preinst-calls-updatemenus
+E: menus-foo-calls-bar: prerm-calls-updatemenus
+W: menus-foo-calls-bar: postinst-has-useless-call-to-install-docs
+W: menus-foo-calls-bar: postinst-has-useless-call-to-update-menus
+W: menus-foo-calls-bar: postrm-has-useless-call-to-update-menus
+W: menus-foo-calls-bar: prerm-has-useless-call-to-install-docs
