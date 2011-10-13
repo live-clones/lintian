@@ -3,6 +3,8 @@ lintian (2.5.4) UNRELEASED; urgency=low
   * Summary of tag changes:
     + Added:
       - missing-build-dependency-for-dh-addon
+      - python-depends-but-no-python-helper
+      - python3-depends-but-no-python3-helper
 
   * checks/*:
     + [JW] Replace common_data.pm with Lintian::Check.
@@ -28,6 +30,8 @@ lintian (2.5.4) UNRELEASED; urgency=low
       build-dependency-for-dh_-command to improve readability.  This
       breaks overrides, but according to lintian.d.o there are none
       of these.  (Closes: #644339)
+    + [JW] Added check for missing python helpers when using python
+      substvars in d/control.  (Closes: #582511)
   * checks/fields:
     + [NT] Fixed source-field-does-not-match-pkg-name.
   * checks/files{,.desc}:

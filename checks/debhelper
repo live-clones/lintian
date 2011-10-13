@@ -81,6 +81,9 @@ my $inclcdbs = 0;
 my $seenmaintscript = 0;
 my $bdepends_noarch;
 my $bdepends;
+my $seen_dh = 0;
+my $seen_python_helper = 0;
+my $seen_python3_helper = 0;
 
 open(RULES, '<', "$droot/rules") or fail("cannot read debian/rules: $!");
 
@@ -108,12 +111,20 @@ while (<RULES>) {
         }
         if ($dhcommand eq 'dh_python') {
             tag 'dh_python-is-obsolete', "line $.";
+            $seen_python_helper = 1;
         }
         if ($dhcommand eq 'dh_pycentral') {
             tag 'dh_pycentral-is-obsolete', "line $.";
+            $seen_python_helper = 1;
         }
         if ($dhcommand eq 'dh_installmanpages') {
             tag 'dh_installmanpages-is-obsolete', "line $.";
+        }
+        if ($dhcommand eq 'dh_python3') {
+            $seen_python3_helper = 1;
+        }
+        if ($dhcommand =~ m,^dh_(?:pysupport$|python(?:2$|\$.*)),) {
+            $seen_python_helper = 1;
         }
 
         # Don't warn about recently deprecated commands in code that may be
@@ -153,6 +164,7 @@ while (<RULES>) {
         $seencommand = 1;
         $needbuilddepends = 1;
     } elsif (m,^\s+dh\s+,) {
+        $seen_dh = 1;
         $seencommand = 1;
         $needbuilddepends = 1;
         $needtomodifyscripts = 1;
@@ -165,7 +177,15 @@ while (<RULES>) {
                 if (defined $depends) {
                     $missingbdeps_addons{$depends} = $addon;
                 }
+                if ($addon =~ m,python(?:2|_central|_support)$,) {
+                    $seen_python_helper = 1;
+                } elsif ($addon eq 'python3') {
+                    $seen_python3_helper = 1;
+                }
             }
+        }
+        if ($seen_python_helper == 0) {
+            $seen_python_helper = -1; # maybe; we'll check that later
         }
     } elsif (m,^include\s+/usr/share/cdbs/1/rules/debhelper.mk,) {
         $seencommand = 1;
@@ -404,6 +424,37 @@ if(scalar(@indebfiles)){
         $otext = ' and 1 other';
     }
     tag 'temporary-debhelper-file', "$f$otext";
+}
+
+if ($seen_python_helper == -1 and $level >= 9) {
+    $seen_python_helper = 0;
+}
+if ($seen_dh and $seen_python_helper != 1) {
+    my %python_depends = ();
+    for my $binpkg (keys %$pkgs) {
+        if ($info->binary_relation($binpkg, 'all')->implies('${python:Depends}')) {
+            $python_depends{$binpkg} = 1;
+        }
+    }
+    if (%python_depends) {
+        if ($seen_python_helper == -1) {
+            $seen_python_helper = $bdepends_noarch->implies('python-support');
+        }
+        if (not $seen_python_helper) {
+            tag 'python-depends-but-no-python-helper', sort(keys %python_depends);
+        }
+    }
+}
+if ($seen_dh and $seen_python3_helper != 1) {
+    my %python3_depends = ();
+    for my $binpkg (keys %$pkgs) {
+        if ($info->binary_relation($binpkg, 'all')->implies('${python3:Depends}')) {
+            $python3_depends{$binpkg} = 1;
+        }
+    }
+    if (%python3_depends and not $seen_python3_helper) {
+        tag 'python3-depends-but-no-python3-helper', sort(keys %python3_depends);
+    }
 }
 
 }
