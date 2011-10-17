@@ -39,8 +39,9 @@ lintian (2.5.4) UNRELEASED; urgency=low
       (Closes: #641983)
     + [JW] Improve "linked against libvga.so" test.  This avoid
       setuid-binary false-positives.  (Closes: #642038)
-    + [NT] Skip package-contains-no-arch-dependent-files for empty
-      packages.  (Closes: #642339)
+    + [NT] Skip package-contains-no-arch-dependent-files for
+      transitional packages.  Thanks to Andreas Beckmann for the patch.
+      (Closes: #642339)
   * checks/rules:
     + [JW] Fixed false negative "missing-build-dependency" when using
       "dh --with=X" rather than "dh --with X".  (Closes: #643714)

@@ -213,17 +213,18 @@ my @devhelp_links;
 my %x11_font_dirs;
 
 # Check if package is empty
-my $is_empty = 1;
+my $is_dummy = 0;
 my $description = $info->field('description');
 if ($description) {
     for my $regex (@METAPKG_REGEX) {
         if ($description =~ /$regex/) {
-            $is_empty = 0;
+            $is_dummy = 1;
             last;
         }
     }
 }
-if ($is_empty) {
+if (!$is_dummy) {
+    my $is_empty = 1;
     for my $file (@{$info->sorted_index}) {
         # Ignore directories
         unless ($file =~ m,/$,) {
@@ -1334,7 +1335,7 @@ foreach my $file (@{$info->sorted_index}) {
     }
 }
 
-if (!$is_empty && !$arch_dep_files && ($info->field('architecture')//'') ne 'all') {
+if (!$is_dummy && !$arch_dep_files && ($info->field('architecture')//'') ne 'all') {
     tag 'package-contains-no-arch-dependent-files' unless $type eq 'udeb';
 }
 
