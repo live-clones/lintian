@@ -22,7 +22,6 @@ package Lintian::debhelper;
 use strict;
 use warnings;
 
-use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Util;
 use Lintian::Data;
 use Lintian::Tags qw(tag);

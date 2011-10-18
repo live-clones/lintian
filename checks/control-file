@@ -22,8 +22,6 @@ package Lintian::control_file;
 use strict;
 use warnings;
 
-use lib "$ENV{'LINTIAN_ROOT'}/checks/";
-
 use Lintian::Data ();
 use Lintian::Relation ();
 use Lintian::Tags qw(tag);

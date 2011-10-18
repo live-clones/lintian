@@ -28,8 +28,6 @@ use warnings;
 
 use Dpkg::Version qw(version_check);
 
-use lib "$ENV{'LINTIAN_ROOT'}/checks/";
-
 use Util;
 
 use Lintian::Data ();

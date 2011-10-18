@@ -8,6 +8,7 @@ lintian (2.5.4) UNRELEASED; urgency=low
 
   * checks/*:
     + [JW] Replace common_data.pm with Lintian::Check.
+    + [NT] Remove some unused "use lib <expr>" from various checks.
   * checks/binaries:
     + [JW] Allow binaries to use "/usr/lib/$srcpkg/" in RPATHs.
       (Closes: #642092)
