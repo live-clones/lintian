@@ -80,6 +80,7 @@ lintian (2.5.4) UNRELEASED; urgency=low
   * data/spelling/corrections:
     + [NT] Added a correction for "propagate", thanks to Guillem Jover
       for the suggestion.  (Closes: #644793)
+    + [JW] Added a number of corrections.  (Closes: #645393)
 
   * frontend/lintian:
     + [NT] Collections explicitly requested (by -U) are no longer
