@@ -8,3 +8,5 @@
 /usr/share/cdbs/1/rules/dpatch.mk
 /usr/share/cdbs/1/rules/simple-patchsys.mk
 /usr/share/cdbs/1/rules/tarball.mk
+/usr/share/dbs/dbs-build.mk
+/usr/share/dbs/dpkg-arch.mk
