@@ -199,7 +199,7 @@ used to narrow the search or even to add a new entry.
 
 @extra consists of (in order):
  - version
- - arch (May be omitted $pkg_type is "source")
+ - arch (Ignored if $pkg_type is "source")
  - path to package
 
 If version or arch is omitted (or undef) then that search parameter is
@@ -216,8 +216,8 @@ consider a wildcard for "any".  Example:
  $pkg = $lab->get_package ('eclipse-platform', 'binary', '3.5.2-11', 'i386');
 
 
-If all 3 (2 for source packages) @extra arguments are given, then the
-entry will be created if it does not exists.
+If all 3 @extra arguments are given, then the entry will be created if
+it does not exists.
 
 In list context, this returns a list of matches.  In scalar context
 this returns the first match (if any).

@@ -56,6 +56,8 @@ use warnings;
 use Carp qw(croak);
 use File::Spec;
 
+use Cwd();
+
 use Lintian::Lab;
 
 use Util qw(delete_dir read_dpkg_control get_dsc_info);
@@ -79,10 +81,8 @@ sub new {
     my ($type, $lab, $pkg_name, $pkg_version, $pkg_arch, $pkg_type, $pkg_path, $pkg_src, $pkg_src_version, $base_dir) = @_;
     my $self = {};
     bless $self, $type;
-    croak "$pkg_path does not exist." unless -e $pkg_path;
     $self->{pkg_name}        = $pkg_name;
     $self->{pkg_version}     = $pkg_version;
-    $self->{pkg_path}        = $pkg_path;
     $self->{pkg_type}        = $pkg_type;
     $self->{pkg_src}         = $pkg_src;
     $self->{pkg_src_version} = $pkg_src_version;
@@ -95,8 +95,29 @@ sub new {
         $self->{pkg_arch} = 'source';
     }
 
-    # ask the lab to find the base directory of this package.
     $self->{base_dir} = $base_dir;
+
+    if (defined $pkg_path) {
+        croak "$pkg_path does not exist." unless -e $pkg_path;
+    } else {
+        # This error should not happen unless someone (read: me) breaks
+        # Lintian::Lab::get_package
+        croak "$pkg_name $pkg_type ($pkg_version) [$pkg_arch] does not exists"
+            unless $self->entry_exists;
+        my $link;
+        $link = 'deb' if $pkg_type eq 'binary' or $pkg_type eq 'udeb';
+        $link = 'dsc' if $pkg_type eq 'source';
+        $link = 'changes' if $pkg_type eq 'changes';
+
+        croak "Unknown package type $pkg_type" unless $link;
+        # Resolve the link if possible, but else just fall back to the link
+        # - this is not safe in case of a "delete and create", but if
+        #   abs_path fails odds are the package cannot be read anyway.
+        $pkg_path = Cwd::abs_path("$base_dir/$link") // "$base_dir/$link";
+    }
+
+    $self->{pkg_path} = $pkg_path;
+
 
     $self->_init();
     return $self;
