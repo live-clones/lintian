@@ -1,0 +1,8 @@
+Testname: debhelper-dh-python-helpers
+Sequence: 6000
+Version: 1.0
+Description: Check if helpers that substitute python:Depends and
+ python3:Depends are called in debian/rules
+Test-For:
+ python-depends-but-no-python-helper
+ python3-depends-but-no-python3-helper

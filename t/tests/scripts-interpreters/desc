@@ -5,6 +5,7 @@ Description: Check various script interpreter issues
 Skeleton: pedantic
 Options: --pedantic -I -E
 Test-For:
+ csh-considered-harmful
  example-interpreter-in-usr-local
  example-interpreter-not-absolute
  example-script-uses-bin-env

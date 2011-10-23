@@ -1,0 +1,38 @@
+#!/usr/bin/make -f
+
+PKG  :=$(shell dh_listpackages)
+SHARE:= debian/$(PKG)/usr/share
+DATA := $(SHARE)/$(PKG)
+DOC  := $(SHARE)/doc/$(PKG)
+
+%:
+	dh $@
+
+override_dh_install:
+	dh_install
+	mkdir -p $(DOC) $(DATA)
+
+	# Vcs stuff
+	mkdir $(DATA)/.svn $(DATA)/.git
+	touch $(DATA)/.svn/file
+	touch $(DATA)/.git/file
+	touch $(DATA)/.gitignore
+	touch $(DATA)/svn-commit-yeehaa.tmp
+	touch $(DATA)/svk-commit-yeehaa.tmp
+
+	# bts control dir
+	mkdir $(DATA)/.be
+	touch $(DATA)/.be/file
+
+	# macos stuff
+	touch $(DATA)/.DS_Store
+	touch $(DATA)/._stuff
+
+	# Foreign READMEs
+	echo "Hallo World Mac" > $(DOC)/README.mac
+	echo "Hallo World Win" > $(DOC)/README.windows
+
+	# Linda override
+	mkdir -p $(SHARE)/linda/overrides
+	touch $(SHARE)/linda/overrides/$(PKG)
+

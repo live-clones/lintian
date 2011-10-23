@@ -3,9 +3,12 @@ lintian (2.5.4) UNRELEASED; urgency=low
   * Summary of tag changes:
     + Added:
       - missing-build-dependency-for-dh-addon
+      - python-depends-but-no-python-helper
+      - python3-depends-but-no-python3-helper
 
   * checks/*:
     + [JW] Replace common_data.pm with Lintian::Check.
+    + [NT] Remove some unused "use lib <expr>" from various checks.
   * checks/binaries:
     + [JW] Allow binaries to use "/usr/lib/$srcpkg/" in RPATHs.
       (Closes: #642092)
@@ -28,13 +31,18 @@ lintian (2.5.4) UNRELEASED; urgency=low
       build-dependency-for-dh_-command to improve readability.  This
       breaks overrides, but according to lintian.d.o there are none
       of these.  (Closes: #644339)
+    + [JW] Added check for missing python helpers when using python
+      substvars in d/control.  (Closes: #582511)
+  * checks/fields:
+    + [NT] Fixed source-field-does-not-match-pkg-name.
   * checks/files{,.desc}:
     + [JW] Suggest the usage of "-delete" rather than "| xargs rm -f".
       (Closes: #641983)
     + [JW] Improve "linked against libvga.so" test.  This avoid
       setuid-binary false-positives.  (Closes: #642038)
-    + [NT] Skip package-contains-no-arch-dependent-files for empty
-      packages.  (Closes: #642339)
+    + [NT] Skip package-contains-no-arch-dependent-files for
+      transitional packages.  Thanks to Andreas Beckmann for the patch.
+      (Closes: #642339)
   * checks/rules:
     + [JW] Fixed false negative "missing-build-dependency" when using
       "dh --with=X" rather than "dh --with X".  (Closes: #643714)
@@ -70,9 +78,13 @@ lintian (2.5.4) UNRELEASED; urgency=low
       (Closes: #643716)
   * data/fields/essential:
     + [NT] Add libc-bin to the list of known essential packages.
+  * data/rules/deprecated-makefiles:
+    + [JW] Added dbs makefiles, since dbs maintainer deprecated the
+      package in 0.47.  (Closes: #646126)
   * data/spelling/corrections:
     + [NT] Added a correction for "propagate", thanks to Guillem Jover
       for the suggestion.  (Closes: #644793)
+    + [JW] Added a number of corrections.  (Closes: #645393)
 
   * frontend/lintian:
     + [NT] Collections explicitly requested (by -U) are no longer
@@ -113,6 +125,9 @@ lintian (2.5.4) UNRELEASED; urgency=low
     + [NT] Do not accept LINTIAN_UNPACK_LEVEL nor LINTIAN_SECTION
       anymore.  The lintian frontend lost support for these in
       2.5.0~rc3.
+  * reporting/html_reports:
+    + [NT] Ensure source tags appear before binary tags.
+      (Closes: #580945)
 
  -- Niels Thykier <niels@thykier.net>  Sat, 10 Sep 2011 13:44:01 +0200
 

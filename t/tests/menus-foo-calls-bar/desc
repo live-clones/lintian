@@ -1,0 +1,15 @@
+Testname: menus-foo-calls-bar
+Sequence: 6000
+Version: 1.0
+Description: check for installdocs and updatemenus calls
+Test-For:
+ maintainer-script-does-not-check-for-existence-of-installdocs
+ maintainer-script-does-not-check-for-existence-of-updatemenus
+ postinst-has-useless-call-to-install-docs
+ postinst-has-useless-call-to-update-menus
+ postrm-calls-installdocs
+ postrm-has-useless-call-to-update-menus
+ preinst-calls-installdocs
+ preinst-calls-updatemenus
+ prerm-calls-updatemenus
+ prerm-has-useless-call-to-install-docs

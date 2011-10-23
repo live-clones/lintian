@@ -7,6 +7,7 @@ override_dh_auto_build:
 	gzip --best bar.1
 	cp bar Bar.pm
 	cp bar bar.png
+	cp bar perllocal.pod
 
 override_dh_auto_install:
 	dh_install bar.1.gz usr/X11R6/man/man1/

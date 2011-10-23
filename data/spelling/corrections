@@ -90,6 +90,7 @@ assigment||assignment
 assigments||assignments
 assistent||assistant
 asuming||assuming
+asycronous||asynchronous
 atomatically||automatically
 attemps||attempts
 attruibutes||attributes
@@ -151,6 +152,7 @@ compatibiliy||compatibility
 compatibilty||compatibility
 compleatly||completely
 completly||completely
+compilant||compliant
 complient||compliant
 compres||compress
 compresion||compression
@@ -184,6 +186,10 @@ debians||Debian's
 decompres||decompress
 definate||definite
 definately||definitely
+delared||declared
+delares||declares
+delare||declare
+delaring||declaring
 delemiter||delimiter
 dependancies||dependencies
 dependancy||dependency
@@ -212,6 +218,7 @@ easilly||easily
 ecspecially||especially
 edditable||editable
 editting||editing
+efficently||efficiently
 eletronic||electronic
 enchanced||enhanced
 encorporating||incorporating
@@ -224,6 +231,7 @@ enviroiment||environment
 enviroment||environment
 environement||environment
 environent||environment
+equiped||equipped
 equivelant||equivalent
 equivilant||equivalent
 excecutable||executable
@@ -238,6 +246,7 @@ explicitely||explicitly
 expresion||expression
 exprimental||experimental
 extention||extension
+extracter||extractor
 failuer||failure
 familar||familiar
 fatser||faster
@@ -253,6 +262,7 @@ fuction||function
 fuctions||functions
 functionaly||functionally
 functionnality||functionality
+functionallity||functionality
 functonality||functionality
 futhermore||furthermore
 generiously||generously
@@ -262,6 +272,7 @@ grahpical||graphical
 grapic||graphic
 guage||gauge
 halfs||halves
+handfull||handful
 heirarchically||hierarchically
 helpfull||helpful
 hierachy||hierarchy
@@ -277,13 +288,16 @@ inconsistant||inconsistent
 indendation||indentation
 indended||intended
 independant||independent
+independed||independent
 informatiom||information
 informations||information
 infromation||information
+intial||initial
 initalize||initialize
 initators||initiators
 initializiation||initialization
 inofficial||unofficial
+intregral||integral
 integreated||integrated
 integrety||integrity
 integrey||integrity
@@ -291,6 +305,7 @@ intendet||intended
 interchangable||interchangeable
 intermittant||intermittent
 interupted||interrupted
+intuative||intuitive
 jave||java
 langage||language
 langauage||language
@@ -306,6 +321,7 @@ loggging||logging
 loggin||login
 logile||logfile
 machinary||machinery
+maintan||maintain
 maintainance||maintenance
 maintainence||maintenance
 makeing||making
@@ -370,6 +386,7 @@ paramater||parameter
 parametes||parameters
 paramter||parameter
 paramters||parameters
+parametised||parametrised
 particularily||particularly
 pased||passed
 peprocessor||preprocessor
@@ -395,6 +412,7 @@ priorty||priority
 procceed||proceed
 proccesors||processors
 proces||process
+processess||processes
 processessing||processing
 processpr||processor
 processsing||processing
@@ -448,6 +466,7 @@ requried||required
 resizeable||resizable
 ressize||resize
 ressource||resource
+ressources||resources
 retransmited||retransmitted
 runned||ran
 runnning||running
@@ -504,6 +523,8 @@ syncronus||synchronous
 syste||system
 sythesis||synthesis
 taht||that
+targetted||targeted
+targetting||targeting
 throught||through
 transfering||transferring
 trasmission||transmission
@@ -539,5 +560,6 @@ whataver||whatever
 wheter||whether
 wierd||weird
 writeable||writable
+writting||writing
 xwindows||X
 yur||your

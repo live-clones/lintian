@@ -19,6 +19,7 @@ Test-For:
  maintainer-script-needs-depends-on-xml-core
  maintainer-script-uses-dpkg-status-directly
  maintainer-shell-script-fails-syntax-check
+ mknod-in-maintainer-script
  possibly-insecure-handling-of-tmp-files-in-maintainer-script
  read-in-maintainer-script
  start-stop-daemon-in-maintainer-script

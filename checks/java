@@ -22,8 +22,6 @@ package Lintian::java;
 use strict;
 use warnings;
 
-use lib "$ENV{'LINTIAN_ROOT'}/checks/";
-
 use Lintian::Tags qw(tag);
 use Util;
 

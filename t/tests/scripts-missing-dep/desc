@@ -5,6 +5,8 @@ Description: Check missing dep on various script interpreters
 Test-For: wish-script-but-no-wish-dep
  ruby-script-but-no-ruby-dep
  gawk-script-but-no-gawk-dep
+ maintainer-script-needs-depends-on-adduser
+ maintainer-script-needs-depends-on-update-inetd
  mawk-script-but-no-mawk-dep
  php-script-but-no-phpX-cli-dep
  python-script-but-no-python-dep

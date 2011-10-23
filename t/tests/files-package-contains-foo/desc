@@ -1,0 +1,14 @@
+Testname: files-package-contains-foo
+Sequence: 6000
+Version: 1.0
+Description: Test tags about cruft in binary packages
+Test-For:
+ macos-ds-store-file-in-package
+ macos-resource-fork-file-in-package
+ package-contains-bts-control-dir
+ package-contains-linda-override
+ package-contains-readme-for-other-platform-or-distro
+ package-contains-vcs-control-dir
+ package-contains-vcs-control-file
+ svk-commit-file-in-package
+ svn-commit-file-in-package

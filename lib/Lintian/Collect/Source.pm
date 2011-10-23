@@ -186,7 +186,7 @@ sub binary_relation {
     if ($special{$field}) {
         my $merged;
         for my $f (@{ $special{$field} }) {
-            # sub binary_relation Needs-Info :binary_field
+            # sub binary_relation Needs-Info debfiles
             my $value = $self->binary_field($package, $f);
             $merged .= ', ' if (defined($merged) and defined($value));
             $merged .= $value if defined($value);

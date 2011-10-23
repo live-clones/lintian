@@ -9,6 +9,7 @@ Test-For:
  bad-version-in-relation
  bad-version-number
  multiline-field
+ package-not-lowercase
  too-many-architectures
  unknown-architecture
  unknown-field-in-control

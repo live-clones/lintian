@@ -20,10 +20,12 @@ Test-For:
  package-contains-xvpics-dir
  package-installs-file-to-usr-x11r6
  package-installs-file-to-usr-x11r6-bin
+ package-installs-font-to-usr-x11r6
  package-installs-into-etc-gconf-schemas
  package-installs-into-etc-rc.boot
  package-installs-into-etc-rc.d
  package-installs-nonbinary-perl-in-usr-lib-perl5
+ package-installs-perllocal-pod
  perl-module-in-core-directory
  perl-module-in-core-directory
  nested-examples-directory
