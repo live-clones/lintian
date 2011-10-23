@@ -48,7 +48,7 @@ Lintian::Lab::Entry - A package inside the Lab
 
 =cut
 
-use base qw(Lintian::Processable Class::Accessor);
+use base qw(Lintian::Processable Class::Accessor Exporter);
 
 use strict;
 use warnings;
@@ -59,6 +59,21 @@ use File::Spec;
 use Lintian::Lab;
 
 use Util qw(delete_dir read_dpkg_control get_dsc_info);
+
+# This is the entry format version - this changes whenever the layout of
+# entries changes.  This differs from LAB_FORMAT in that LAB_FORMAT
+# presents the things "outside" the entry.
+use constant LAB_ENTRY_FORMAT => 1;
+
+our (@EXPORT, @EXPORT_OK, %EXPORT_TAGS);
+
+@EXPORT = ();
+%EXPORT_TAGS = (
+    constants => [qw(LAB_FORMAT_ENTRY)],
+);
+@EXPORT_OK = (
+    @{ $EXPORT_TAGS{constants} }
+);
 
 sub new {
     my ($type, $lab, $pkg_name, $pkg_version, $pkg_arch, $pkg_type, $pkg_path, $pkg_src, $pkg_src_version, $base_dir) = @_;
@@ -301,7 +316,12 @@ sub update_status_file {
 
     $file = $self->base_dir () . '/.lintian-status';
     open my $sfd, '>', $file or return 0;
-    print $sfd 'Lab-Format: ' . Lintian::Lab::LAB_FORMAT . "\n";
+    print $sfd 'Lab-Entry-Format: ' . LAB_ENTRY_FORMAT . "\n";
+    # Basic package meta-data - this is redundant, but having it may
+    # greatly simplify a migration or detecting a broken lab later.
+    print $sfd 'Package: ' . $self->pkg_name, "\n";
+    print $sfd 'Version: ' . $self->pkg_version, "\n";
+    print $sfd 'Package-Type: ' . $self->pkg_type, "\n";
 
     @sc = sort keys %{ $self->{coll} };
     print $sfd "Collections: \n";
@@ -323,7 +343,7 @@ sub _init {
     $head = $data[0];
 
     # Check that we know the format.
-    return unless (Lintian::Lab::LAB_FORMAT eq $head->{'lab-format'}//'');
+    return unless (LAB_ENTRY_FORMAT eq ($head->{'lab-entry-format'}//'') );
 
     $coll = $head->{'collections'}//'';
     $coll =~ s/\n/ /go;
