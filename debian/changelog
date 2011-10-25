@@ -80,6 +80,9 @@ lintian (2.5.4) UNRELEASED; urgency=low
       (Closes: #643716)
   * data/fields/essential:
     + [NT] Add libc-bin to the list of known essential packages.
+  * data/fields/virtual-packages:
+    + [NT] Refreshed against sid.  Thanks to Gregor Herrman for the
+      report.  (Closes: #646604)
   * data/rules/deprecated-makefiles:
     + [JW] Added dbs makefiles, since dbs maintainer deprecated the
       package in 0.47.  (Closes: #646126)
