@@ -84,8 +84,9 @@ lintian (2.5.4) UNRELEASED; urgency=low
     + [JW] Added dbs makefiles, since dbs maintainer deprecated the
       package in 0.47.  (Closes: #646126)
   * data/spelling/corrections:
-    + [NT] Added a correction for "propagate", thanks to Guillem Jover
-      for the suggestion.  (Closes: #644793)
+    + [NT] Added a correction for "propagate" and "separate", thanks
+      to Guillem Jover for the suggestions.
+      (Closes: #644793, #646529)
     + [JW] Added a number of corrections.  (Closes: #645393)
 
   * frontend/lintian:
