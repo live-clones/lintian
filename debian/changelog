@@ -132,7 +132,7 @@ lintian (2.5.4) UNRELEASED; urgency=low
     + [NT] Ensure source tags appear before binary tags.
       (Closes: #580945)
 
-  * t/runtests:
+  * t/*:
     + [NT] Skip some tests broken by a recent dpkg upload.
       (Closes: #643205)
 
