@@ -775,6 +775,9 @@ if (defined $experimental_output_opts) {
             } elsif ($opts{$_} eq 'xml') {
                 require Lintian::Output::XML;
                 $Lintian::Output::GLOBAL = Lintian::Output::XML->new;
+            } elsif ($opts{$_} eq 'fullewi') {
+                require Lintian::Output::FullEWI;
+                $Lintian::Output::GLOBAL = Lintian::Output::FullEWI->new;
             }
         }
         no strict 'refs';
