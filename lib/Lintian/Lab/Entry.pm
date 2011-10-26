@@ -131,6 +131,18 @@ Returns the base directory of this package inside the lab.
 
 Lintian::Lab::Entry->mk_ro_accessors (qw(base_dir));
 
+=item $lpkg->lab_pkg
+
+Return $lpkg.  This method is here to simplify using a
+L::Lab::Entry as a replacement for L::Processable::Package.
+
+=cut
+
+sub lab_pkg {
+    my ($self) = @_;
+    return $self;
+}
+
 =item $lpkg->info
 
 Returns the L<Lintian::Collect|info> object associated with this entry.
