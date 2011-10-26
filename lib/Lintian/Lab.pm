@@ -68,7 +68,7 @@ BEGIN {
     );
 };
 
-use Util qw(delete_dir); # Used by $lab->remove_lab
+use Util qw(delete_dir get_dsc_info);
 
 use Lintian::Lab::Entry;
 use Lintian::Lab::Manifest;
@@ -139,6 +139,7 @@ sub new {
         'mode'        => $mode,
         'is_open'     => 0,
         'keep-lab'    => 0,
+        'lab-info'    => {},
     };
     $self->{'_correct_dir'} = 1 unless $dok;
     bless $self, $class;
@@ -460,8 +461,23 @@ sub create_lab {
     # Okay - $dir/info and $dir/pool exists... The subdirs in
     # $dir/pool will be created as needed.
 
-    # TODO: populate $dir/info ?  L::Lab::Manifest probably
-    # does not care... ( see L::Lab::Manifest::read_list )
+    # Create the meta-data file - note at this point we can use
+    # $lab->remove_lab
+    my $ok = 0;
+    eval {
+        open my $lfd, '>', "$dir/info/lab-info" or croak "opening $dir/info/lab-info: $!";
+
+        print $lfd 'Lab-Format: ' . LAB_FORMAT . "\n";
+        print $lfd "Layout: pool\n";
+
+        close $lfd or croak "closing $dir/info/lab-info: $!";
+        $ok = 1;
+    };
+    unless ($ok) {
+        my $err = $@;
+        eval { $self->remove_lab; };
+        croak $err;
+    }
     return 1;
 }
 
@@ -486,18 +502,39 @@ $lab->create_lab.
 
 sub open_lab {
     my ($self) = @_;
+    my $dir;
+    my $msg = "Open Lab failed";
     croak ('Lab is already open') if $self->is_open;
     if ($self->{'mode'} eq LAB_MODE_TEMP) {
         $self->create_lab unless $self->lab_exists;
+        $dir = $self->dir;
     } else {
-        my $dir = $self->dir;
+        $dir = $self->dir;
         unless ($self->lab_exists) {
-            my $msg = "Open Lab failed: ";
             croak "$msg: $dir does not exists" unless -e $dir;
             croak "$msg: $dir is not a lab or the lab is corrupt";
         }
-
     }
+
+    croak "$msg: Lab is too old or corrupt - $dir/info/lab-info does not exists"
+        unless -e "$dir/info/lab-info";
+
+    # Check the lab-format - this ought to be redundant for temp labs, but
+    # it simple to do it that way.
+    my $header = get_dsc_info ("$dir/info/lab-info");
+    my $format = $header->{'lab-format'}//'';
+    my $layout = $header->{'layout'}//'pool';
+    unless ($format && $format eq LAB_FORMAT) {
+        croak "$msg: Lab format $format is not supported ($dir)" if $format;
+        croak "$msg: No lab format specification in $dir/info/lab-info";
+    }
+    if ($layout && lc($layout) ne 'pool') {
+        # Unknown layout style?
+        croak "$msg: Implementation does not support the layout \"$layout\"";
+    }
+
+    # Looks decent so far
+    $self->{'lab-info'} = $header;
     $self->{'is_open'} = 1;
     return 1;
 }
@@ -528,6 +565,7 @@ sub close_lab {
     }
     $self->{'state'} = {};
     $self->{'is_open'} = 0;
+    $self->{'lab-info'} = {};
     return 1;
 }
 
@@ -683,6 +721,42 @@ sub _entry_created {
 
     $pf->set (\%data);
 }
+
+=back
+
+=head1 Changes to the lab format.
+
+Lab formats up to (and including) "10" used to store the lab format
+with each entry.  The files in $LAB/info/ were used to list packages
+from a mirror (dist).
+
+In Lab format 11 the lab format is stored in $LAB/info/lab-info.  The
+rest of the files in $LAB/info/* has been re-purposed to be a list of
+packages in the lab.
+
+The $LAB/info/lab-info file also contain modifying parameters.  All
+parameters are matched case-insensitively and the accepted parameters
+are:
+
+=over 4
+
+=item Layout
+
+The layout parameter describes how packages are stored in the lab.
+Currently the only accepted value is "pool" and the value is not
+case-sensitive.
+
+The pool format dictates that packages are stored in:
+
+ pool/$l/${name}/${name}_${version}[_${arch}]_${type}/
+
+Note that $arch is left out for source packages, $l is the first
+letter of the package name (except if the name starts with "lib", then
+it is the first 4 letters of the package name).  Whitespaces (i.e. "
+") are replaced with dashes ("-") and colons (":") with underscores
+"_".
+
+If the field is missing, it defaults to "pool".
 
 =back
 
