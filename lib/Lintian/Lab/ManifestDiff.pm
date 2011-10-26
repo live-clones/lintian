@@ -1,4 +1,4 @@
-# Lintian::Internal::PackageListDiff -- Representation of a diff between two PackageLists
+# Lintian::Lab::ManifestDiff -- Representation of a diff between two manifests
 
 # Copyright (C) 2011 Niels Thykier
 #
@@ -113,5 +113,20 @@ copied and may have been changed since the diff has been created.
 
 Lintian::Lab::ManifestDiff->mk_ro_accessors (qw(added removed changed type nlist olist));
 
+=back
+
+Originally written by Niels Thykier <niels@thykier.net> for Lintian.
+
+=head1 SEE ALSO
+
+lintian(1)
+
+=cut
+
 1;
 
+# Local Variables:
+# indent-tabs-mode: nil
+# cperl-indent-level: 4
+# End:
+# vim: syntax=perl sw=4 sts=4 sr et
