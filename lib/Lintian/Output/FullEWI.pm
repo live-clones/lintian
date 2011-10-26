@@ -40,8 +40,9 @@ package Lintian::Output::FullEWI;
 # * binary packages include type classification
 # * source packages include an architecture, which is always
 #   "source".
-# * [arch] may contain spaces (and generally do for .changes)
+# * "[arch]" may contain spaces (and generally do for .changes)
 #   files.
+# * "(version)" may contain colon (i.e. epoch versions)
 
 use strict;
 use warnings;
