@@ -336,6 +336,8 @@ sub _pool_path {
     # Turn spaces into dashes - spaces do appear in architectures
     # (i.e. for changes files).
     $p =~ s/\s/-/go;
+    # Also replace ":" with "_" as : is usually used for path separator
+    $p =~ s/:/_/go;
     return "$dir/pool/$p";
 }
 
