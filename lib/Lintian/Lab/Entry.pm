@@ -354,6 +354,7 @@ sub update_status_file {
     # greatly simplify a migration or detecting a broken lab later.
     print $sfd 'Package: ' . $self->pkg_name, "\n";
     print $sfd 'Version: ' . $self->pkg_version, "\n";
+    print $sfd 'Architecture: ' . $self->pkg_arch, "\n" if $self->pkg_type ne 'source';
     print $sfd 'Package-Type: ' . $self->pkg_type, "\n";
 
     @sc = sort keys %{ $self->{coll} };
