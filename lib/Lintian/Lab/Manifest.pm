@@ -302,7 +302,13 @@ sub set {
     my (undef, $fields, $qf) = $self->_type_to_fields;
 
     # Copy the relevant fields - ensuring all fields are defined.
-    %pdata = map { $_ => $entry->{$_}//'' } @$fields;
+    foreach my $field (@$fields) {
+        my $val = $entry->{$field} // '';
+        # Avoid some problematic characters that would break the file
+        # format.
+        $val =~ tr/;\n/_ /;
+        $pdata{$field} = $val;
+    }
     $self->_do_set ($self->{'state'}, $qf, \%pdata);
     $self->_mark_dirty(1);
     return 1;
