@@ -934,51 +934,7 @@ while (my $arg = shift) {
         }
     } else {
         # parameter is a package name--so look it up
-        my @res;
-        my $type = $pkg_mode;
-        my ($pkg, $version, $arch);
-        my $orig = $arg; # Save for the error message later
-
-
-        # "britney"-like format - note this catches the old style, where only the
-        # package name was specified.
-        # Check if it starts with a type specifier (i.e. binary:eclipse/3.5.2-1/amd64)
-        if ($arg =~ m,^([^:]+):(.*),) {
-            ($type, $arg) = ($1, $2);
-        }
-        # Split on /
-        ($pkg, $version, $arch) = split m,/,o, $arg;
-
-        # if version (or/and arch) is omitted or is the special
-        # value "_", let it be wildcard.
-        $version = undef if !$version or $version eq '_';
-        $arch = undef if !$arch or $arch eq '_';
-        debug_msg (2, "$orig => $type, $pkg, " . ($version//'*') . ', ' . ($arch//'*'));
-
-        if ($type eq 'auto' or $type eq 'ALL') {
-            # Check for all types
-            foreach my $t (qw(binary source udeb changes)) {
-                my @pkgs = $LAB->get_package ($pkg, $t, $version, $arch);
-                push @res, @pkgs;
-            }
-        } else {
-            # specific type requested
-            my @pkgs = $LAB->get_package ($pkg, $type, $version, $arch);
-            push @res, @pkgs;
-        }
-
-        if (@res) {
-            foreach my $p (@res) {
-                $pool->add_proc ($p);
-            }
-        } else {
-            my $tuple = join (', ', map { $_//'*'} ($type, $pkg, $version, $arch));
-            debug_msg (1, "Did not find a match for $orig (pkg_mode = $pkg_mode)",
-                       " - Search tuple: ($tuple)");
-            warning ("cannot find binary, udeb or source package $orig in lab (skipping)");
-            $exit_code = 2;
-            next;
-        }
+        handle_lab_query ($arg);
     }
 }
 
@@ -1014,8 +970,13 @@ if ($check_everything) {
         open $fd, '<', $opt{'packages-from-file'} or die "opening $opt{'packages-from-file'}: $!";
     }
     while (my $file = <$fd>) {
-        chomp($file);
-        $pool->add_file($file);
+        chomp $file;
+        if ($file =~ m/^!query:\s*(\S(?:.*\S)?)/o) {
+            my $query = $1;
+            handle_lab_query ($query);
+        } else {
+            $pool->add_file ($file);
+        }
     }
     # close unless it is STDIN (else we will see a lot of warnings
     # about STDIN being reopened as "output only")
@@ -1720,6 +1681,54 @@ sub clear_group_cache {
         $proc->clear_cache;
     }
     return 1;
+}
+
+sub handle_lab_query {
+    my ($query) = @_;
+    my @res;
+    my $type = $pkg_mode;
+    my ($pkg, $version, $arch);
+    my $orig = $query; # Save for the error message later
+
+
+    # "britney"-like format - note this catches the old style, where only the
+    # package name was specified.
+    # Check if it starts with a type specifier (i.e. binary:eclipse/3.5.2-1/amd64)
+    if ($query =~ m,^([^:]+):(.*),) {
+        ($type, $query) = ($1, $2);
+    }
+    # Split on /
+    ($pkg, $version, $arch) = split m,/,o, $query;
+
+    # if version (or/and arch) is omitted or is the special
+    # value "_", let it be wildcard.
+    $version = undef if !$version or $version eq '_';
+    $arch = undef if !$arch or $arch eq '_';
+    debug_msg (2, "$orig => $type, $pkg, " . ($version//'*') . ', ' . ($arch//'*'));
+
+    if ($type eq 'auto' or $type eq 'ALL') {
+        # Check for all types
+        foreach my $t (qw(binary source udeb changes)) {
+            my @pkgs = $LAB->get_package ($pkg, $t, $version, $arch);
+            push @res, @pkgs;
+        }
+    } else {
+        # specific type requested
+        my @pkgs = $LAB->get_package ($pkg, $type, $version, $arch);
+        push @res, @pkgs;
+    }
+
+    if (@res) {
+        foreach my $p (@res) {
+            $pool->add_proc ($p);
+        }
+    } else {
+        my $tuple = join (', ', map { $_//'*'} ($type, $pkg, $version, $arch));
+        debug_msg (1, "Did not find a match for $orig (pkg_mode = $pkg_mode)",
+                   " - Search tuple: ($tuple)");
+        warning ("cannot find binary, udeb or source package $orig in lab (skipping)");
+        $exit_code = 2;
+    }
 }
 
 # }}}

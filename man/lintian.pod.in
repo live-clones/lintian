@@ -454,10 +454,13 @@ which does not require a weird/special syntax.
 
 =item B<--packages-from-file> X
 
-Process the packages listed in X.  Lintian will parse each line (all
-whitespace included) as the path to a package it should process.
+Process the packages listed in X.  If the line starts with "!query:",
+then the rest of that line is processed as a lab query (see L</LAB QUERY>).
 
-If the file is "-", Lintian will read the packages from STDIN.
+Otherwise the line is read as the path to a file to process (all
+whitespace is included!).
+
+If X is "-", Lintian will read the packages from STDIN.
 
 =item B<-s>, B<--source>
 
