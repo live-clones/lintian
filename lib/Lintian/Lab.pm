@@ -269,7 +269,7 @@ sub get_package {
             $pkg_src_version = $e->{'source-version'}//$pkg_version;
         }
         $dir = $self->_pool_path ($pkg_name, $pkg_type, $pkg_version, $pkg_arch);
-        push @entries, Lintian::Lab::Entry->new ($self, $pkg_name, $pkg_version, $pkg_arch, $pkg_type, $pkg_path, $pkg_src, $pkg_src_version, $dir);
+        push @entries, Lintian::Lab::Entry->_new ($self, $pkg_name, $pkg_version, $pkg_arch, $pkg_type, $pkg_path, $pkg_src, $pkg_src_version, $dir);
     } else {
         # clear $pkg_arch if it is a source package - it simplifies
         # the search code below
@@ -284,7 +284,7 @@ sub get_package {
             return if defined $pkg_arch && $a ne $pkg_arch;
             $pp = $entry->{'file'};
             $dir = $self->_pool_path ($pkg_name, $pkg_type, $v, $a);
-            push @entries,  Lintian::Lab::Entry->new ($self, $pkg_name, $v, $a, $pkg_type, $pp, $entry->{'source'}, $entry->{'source-version'}//$v, $dir);
+            push @entries,  Lintian::Lab::Entry->_new ($self, $pkg_name, $v, $a, $pkg_type, $pp, $entry->{'source'}, $entry->{'source-version'}//$v, $dir);
         };
         my @sk = ($pkg_name);
         push @sk, $pkg_version if defined $pkg_version;
@@ -314,7 +314,7 @@ sub visit_packages {
             my $pp = $me->{'file'};
             my $pkg_src = $me->{'source'}//$pkg_name;
             my $pkg_src_version = $me->{'source-version'}//$pkg_version;
-            my $lentry = Lintian::Lab::Entry->new ($self, $pkg_name, $pkg_version, $pkg_arch,
+            my $lentry = Lintian::Lab::Entry->_new ($self, $pkg_name, $pkg_version, $pkg_arch,
                                                    $pkg_type, $pp, $pkg_src, $pkg_src_version, $dir);
             $visitor->($lentry, $pkg_name, $pkg_version, $pkg_arch);
         };
@@ -393,16 +393,19 @@ sub _pool_path {
     return "$dir/pool/$p";
 }
 
-# lab->generate_diffs(@lists)
-#
-# Each member of @lists must be a Lintian::Lab::Manifest.
-#
-# The lab will generate a diff between the given member and its
-# state for the given package type.  The diffs are returned in the
-# same order as they appear in @lists.
-#
-# The diffs are valid until the original list is modified or a
-# package is added or removed to the lab.
+=item lab->generate_diffs(@lists)
+
+Each member of @lists must be a Lintian::Lab::Manifest.
+
+The lab will generate a diff between the given member and its state
+for the given package type.  The diffs are returned in the same order
+as they appear in @lists.
+
+The diffs are valid until the original list is modified or a package
+is added or removed to the lab.
+
+=cut
+
 sub generate_diffs {
     my ($self, @lists) = @_;
     my $labdir = $self->dir;

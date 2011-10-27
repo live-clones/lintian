@@ -77,7 +77,8 @@ our (@EXPORT, @EXPORT_OK, %EXPORT_TAGS);
     @{ $EXPORT_TAGS{constants} }
 );
 
-sub new {
+# private constructor (called by Lintian::Lab)
+sub _new {
     my ($type, $lab, $pkg_name, $pkg_version, $pkg_arch, $pkg_type, $pkg_path, $pkg_src, $pkg_src_version, $base_dir) = @_;
     my $self = {};
     bless $self, $type;
