@@ -349,6 +349,8 @@ sub _get_lab_manifest_data {
 #
 # Unlike $lab->_load_lab_index, this uses the cache'd version if it is
 # available.
+#
+# Note this is also used by reporting/html_reports
 sub _get_lab_index {
     my ($self, $pkg_type) = @_;
     croak "Unknown package type $pkg_type" unless $SUPPORTED_TYPES{$pkg_type};

@@ -52,7 +52,6 @@ $ENV{'LINTIAN_ROOT'} = $LINTIAN_ROOT;
 use lib "$ENV{LINTIAN_ROOT}/lib";
 use Lintian::Lab;
 use Lintian::Tag::Info ();
-use Lintian::Lab::Manifest;
 use Text_utils;
 use Util;
 
@@ -104,14 +103,10 @@ for my $template (qw/head foot clean index maintainer maintainers packages tag
 # ------------------------------
 # Main routine
 
-# Read the package lists.
-#
-
 my $LAB = Lintian::Lab->new ($LINTIAN_LAB);
-my $source_info = Lintian::Lab::Manifest->new ('source');
-
+my $source_info;
 $LAB->open_lab;
-$source_info->read_list("$LINTIAN_LAB/info/source-packages");
+$source_info = $LAB->_get_lab_index ('source');
 
 
 # Create output directories.
