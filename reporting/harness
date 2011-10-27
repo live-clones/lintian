@@ -63,8 +63,6 @@ use vars qw($LINTIAN_ROOT $LINTIAN_LAB $LINTIAN_ARCHIVEDIR $LINTIAN_DIST
 
 # import perl libraries
 unshift @INC, "$LINTIAN_ROOT/lib";
-require Read_pkglists;
-import Read_pkglists;
 require Util;
 require Lintian::Lab;
 require Lintian::Lab::Manifest;
@@ -125,7 +123,9 @@ unless ($opt_r) {
     my @manifests = local_mirror_manifests ($LINTIAN_ARCHIVEDIR, [_trim_split ($LINTIAN_DIST)],
                                             [_trim_split ($LINTIAN_AREA)], [_trim_split ($LINTIAN_ARCH)]);
     my @diffs = $LAB->generate_diff (@manifests);
-
+    my %skip = ();
+    my @inc;
+    my $cmd ="$lintian_cmd -I -E --pedantic -v -a --show-overrides -U changelog-file";
     # Remove old/stale packages from the lab
     foreach my $diff (@diffs) {
         my $type = $diff->type;
@@ -133,11 +133,17 @@ unless ($opt_r) {
         foreach my $removed (@{ $diff->removed }, @{ $diff->changed }) {
             my ($pkg_name, $pkg_version, $pkg_arch) = @$removed;
             my $entry = $LAB->get_package ($type, @$removed);
+            my $sk = "$type:$pkg_name/$pkg_version";
+            $sk .= "/$pkg_arch" if $pkg_arch;
+            $skip{$sk} = 1; # For log-cleaning (incremental runs)
             if ($entry) {
                 my $arch = '';
                 $arch = " [$pkg_arch]" if $pkg_arch;
-                $entry->delete_lab_entry or
-                    Log ("Removing $pkg_name ($pkg_version) $arch failed.");
+                if ($entry->delete_lab_entry) {
+                    Log ("Removed $type $pkg_name ($pkg_version)$arch");
+                } else {
+                    Log ("Removing $type $pkg_name ($pkg_version)$arch failed.");
+                }
             }
         }
         Log ("Adding new and changed $type packages to the lab");
@@ -159,136 +165,68 @@ unless ($opt_r) {
                         die "creating status file: $!";
                     $ok = 1;
                 };
-                Log ("Adding $pkg_name ($pkg_version) $arch failed: $@")
-                    unless $ok;
+                if ($ok) {
+                    my $query = "$type:$pkg_name/$pkg_version";
+                    $query .= "/$pkg_arch" if $pkg_arch;
+                    Log ("Added $type $pkg_name ($pkg_version)$arch");
+                    push @inc, $query;
+                } else {
+                    Log ("Adding $type $pkg_name ($pkg_version)$arch failed: $@");
+                }
             }
         }
     }
+
     # Flushes the changed manifest to the file system - croaks on error
     $LAB->close_lab;
-}
 
+    if ($opt_i) {
+        # Extra work for the incremental run
 
-if ($opt_f) { # check all packages
-  Log('Running Lintian over all packages...');
-  my $cmd = "$lintian_cmd -I -E --pedantic -v -a --show-overrides -U changelog-file >$lintian_log 2>&1";
-  Log("Executing $cmd");
-  my $res = (system($cmd) >> 8);
-  (($res == 0) or ($res == 1))
-    or Log("warning: executing lintian returned $res");
-  Log('');
-}
+        die "Old Lintian log file $lintian_log not found!\n" unless -f $lintian_log;
 
-if ($opt_i) { # process changes only
-
-    die "Old Lintian log file $lintian_log not found!\n" unless -f $lintian_log;
-
-    my $pkgfile;
-    my %skip_binary;
-    my %skip_udeb;
-    my %skip_source;
-
-    # read binary packages files
-    $pkgfile = "$LINTIAN_LAB/info/binary-packages";
-    (-f $pkgfile) or Die("cannot find list of binary packages $pkgfile");
-    my %binary_info = %{ read_bin_list($pkgfile) };
-
-    # read udeb packages files
-    $pkgfile = "$LINTIAN_LAB/info/udeb-packages";
-    (-f $pkgfile) or Die("cannot find list of udeb packages $pkgfile");
-    my %udeb_info = %{ read_bin_list($pkgfile) };
-
-    # read source packages files
-    $pkgfile = "$LINTIAN_LAB/info/source-packages";
-    (-f $pkgfile) or Die("cannot find list of source packages $pkgfile");
-    my %source_info = %{ read_src_list($pkgfile) };
-
-    # process changes file and create list of packages to process
-    Log('Reading changes file...');
-    open(IN, '<', $changes_file)
-        or Die("cannot open changes file $changes_file for reading: $!");
-    open(OUT, '>', $list_file)
-        or Die("cannot open list file $list_file for writing: $!");
-    while (<IN>) {
-        chop;
-
-        if (/^N: Listed (changed|new) (binary|udeb|source) package (\S+) (\S+)/o) {
-            my ($type,$binsrc,$pkg,$ver) = ($1,$2,$3,$4);
-
-            Log("$type $binsrc package $pkg $ver");
-
-            if ($binsrc eq 'binary') {
-                my $data = $binary_info{$pkg};
-                $data or Die("cannot find binary package $pkg in binary-packages file");
-                print OUT "$LINTIAN_ARCHIVEDIR/$binary_info{$pkg}->{'file'}\n";
-                $skip_binary{$pkg} = 1;
-            } elsif ($binsrc eq 'udeb') {
-                my $data = $udeb_info{$pkg};
-                $data or Die("cannot find udeb package $pkg in udeb-packages file");
-                print OUT "$LINTIAN_ARCHIVEDIR/$udeb_info{$pkg}->{'file'}\n";
-                $skip_udeb{$pkg} = 1;
-            } else {
-                my $data = $source_info{$pkg};
-                $data or Die("cannot find source package $pkg in source-packages file");
-                print OUT "$LINTIAN_ARCHIVEDIR/$source_info{$pkg}->{'file'}\n";
-                $skip_source{$pkg} = 1;
+        # update lintian.log
+        Log('Updating lintian.log...');
+        rename $lintian_log, $old_lintian_log;
+        open my $ofd, '<', $old_lintian_log
+            or Die ("cannot open old lintian.log $old_lintian_log for reading: $!");
+        open my $nfd, '>', $lintian_log
+            or Die ("cannot open lintian.log $lintian_log for writing: $!");
+        my $copy_mode = 1;
+        while (<$ofd>) {
+            if (/^N: Processing (binary|udeb|source) package (\S+) \(version (\S+), arch (\S+)\) \.\.\./o) {
+                my ($type, $pkg, $ver, $arch) = ($1,$2, $3, $4);
+                my $k = "$type:$pkg/$ver";
+                $k .= "/$arch" if $type ne 'source';
+                $copy_mode = 1;
+                $copy_mode = 0 if exists $skip{$k};
             }
-        } elsif (/^N: Removed (binary|udeb|source) package (\S+)/o) {
-            my ($binsrc,$pkg) = ($1,$2);
-
-            Log("removed $binsrc package $pkg");
-            run("rm -r -- \"$LINTIAN_LAB/$binsrc/$pkg\"")
-                or Log("could not remove $binsrc package $pkg");
-            if ($binsrc eq 'binary') {
-                $skip_binary{$pkg} = 1;
-            } elsif ($binsrc eq 'udeb') {
-                $skip_udeb{$pkg} = 1;
-            } else {
-                $skip_source{$pkg} = 1;
+            if ($copy_mode) {
+                print $nfd $_;
             }
-        } elsif (/^N/o) {
-            # ignore other notes
-        } else {
-            Log("skipping changes line: $_");
         }
+        print $nfd 'N: ---end-of-old-lintian-log-file---\n';
+        close $nfd;
+        close $ofd;
+        Log ('');
+        Log ('Creating work list for lintian');
+        open my $lfd, '>', $list_file
+            or Die ("opening $list_file: $!");
+        foreach my $query (@inc) {
+            print $lfd "$query\n";
+        }
+        close $lfd;
+        Log ('');
+
+        # incremental run cmd changes
+        Log('Running Lintian over newly introduced and changed packages...');
+        $cmd .= " --packages-from-file $list_file >>$lintian_log 2>&1";
+    } else {
+        # full run cmd changes
+        Log('Running Lintian over all packages...');
+        $cmd .= " >$lintian_log 2>&1";
     }
-    close(OUT);
-    close(IN);
-    Log('');
 
-    # update lintian.log
-    Log('Updating lintian.log...');
-    rename $lintian_log, $old_lintian_log;
-    open(IN, '<', $old_lintian_log)
-        or Die("cannot open old lintian.log $old_lintian_log for reading: $!");
-    open(OUT, '>', $lintian_log)
-        or Die("cannot open lintian.log $lintian_log for writing: $!");
-    my $copy_mode = 1;
-    while (<IN>) {
-        if (/^N: Processing (binary|udeb|source) package (\S+)/o) {
-            my ($type,$pkg) = ($1,$2);
-
-            if ($type eq 'binary') {
-                $copy_mode = not exists $skip_binary{$pkg};
-            } elsif ($type eq 'udeb') {
-                $copy_mode = not exists $skip_udeb{$pkg};
-            } else {
-                $copy_mode = not exists $skip_source{$pkg};
-            }
-        }
-
-        if ($copy_mode) {
-            print OUT $_;
-        }
-    }
-    print OUT 'N: ---end-of-old-lintian-log-file---\n';
-    close(OUT);
-    close(IN);
-    Log('');
-
-    # run Lintian over the newly introduced or changed packages
-    Log('Running Lintian over newly introduced and changed packages...');
-    my $cmd = "$lintian_cmd -I -E --pedantic -v --show-overrides --packages-from-file $list_file -U changelog-file >>$lintian_log 2>&1";
     Log("Executing $cmd");
     my $res = (system($cmd) >> 8);
     (($res == 0) or ($res == 1))
@@ -307,11 +245,6 @@ if (-f $statistics_file) {
     system("cp $statistics_file $LOG_DIR/stats/statistics-`date +%Y%m%d`") == 0
         or Log('warning: could not rotate the statistics file');
 }
-
-#Log("Creating depcheck pages...");
-#run("$LINTIAN_ROOT/depcheck/deppages.pl >>$html_reports_log")
-#    or Log("warning: executing deppages.pl returned $?");
-#Log("");
 
 # install new html directory
 Log('Installing HTML reports...');
