@@ -48,6 +48,9 @@ lintian (2.5.4) UNRELEASED; urgency=low
     + [NT] Skip package-contains-no-arch-dependent-files for
       transitional packages.  Thanks to Andreas Beckmann for the patch.
       (Closes: #642339)
+    + [NT] Applied patch from Andrew Starr-Bochicchio to update the
+      description of font-in-non-font-package to better reflect current
+      font policy.  (Closes: #646838)
   * checks/rules:
     + [JW] Fixed false negative "missing-build-dependency" when using
       "dh --with=X" rather than "dh --with X".  (Closes: #643714)
