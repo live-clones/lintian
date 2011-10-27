@@ -358,7 +358,6 @@ sub generate_diffs {
     my @diffs;
     croak "$labdir is not a valid lab (run lintian --setup-lab first?).\n"
         unless $self->is_open;
-    croak "Not support"; # Manifest does not support this yet
     foreach my $list (@lists) {
         my $type = $list->type;
         my $lab_list;
@@ -399,6 +398,8 @@ croak if these does not exists.
 Note: This may update the value of $lab->dir as resolving the path
 requires it to exists.
 
+Note: This does nothing if the lab appears to already exists.
+
 =cut
 
 sub create_lab {
@@ -406,6 +407,9 @@ sub create_lab {
     my $dir = $self->dir;
     my $mid = 0;
     my $mode = 0777;
+
+    return if $self->lab_exists;
+
     $opts = {} unless $opts;
     $mode = $opts->{'mode'} if exists $opts->{'mode'};
     if ( !$dir or $self->{'mode'} eq LAB_MODE_TEMP) {
@@ -516,8 +520,12 @@ sub open_lab {
         }
     }
 
-    croak "$msg: Lab is too old or corrupt - $dir/info/lab-info does not exists"
-        unless -e "$dir/info/lab-info";
+    unless ( -e "$dir/info/lab-info") {
+        if ( $self->lab_exists ) {
+            croak "$msg: The Lab format is not supported";
+        }
+        croak "$msg: Lab is corrupt - $dir/info/lab-info does not exists";
+    }
 
     # Check the lab-format - this ought to be redundant for temp labs, but
     # it simple to do it that way.
