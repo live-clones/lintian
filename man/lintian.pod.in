@@ -358,26 +358,15 @@ Configuration options:
 
 =item B<--arch> arch
 
-When scanning for packages in the distdir, select only packages for
-architecture I<arch>.  This option overrides the B<LINTIAN_ARCH>
-environment variable and the configuration file entry of the same
-name.
+Deprecated, does nothing and may be removed in a later release.
 
 =item B<--area> area
 
-When scanning for packages in the distdir, select only packages from
-the comma-separated list of archive I<areas> (e.g. main, contrib).
-This option overrides the B<LINTIAN_AREA> environment variable and the
-configuration file entry of the same name.
+Deprecated, does nothing and may be removed in a later release.
 
 =item B<--archivedir> archivedir
 
-Location of Debian archive to scan for packages.  (See the L</FILES>
-section for complete information on how the path is constructed.)  Use
-this if you want Lintian to check the whole Debian archive instead of
-just single packages. This option overrides the B<LINTIAN_ARCHIVEDIR>
-environment variable and the configuration file entry of the same
-name.
+Deprecated, does nothing and may be removed in a later release.
 
 =item B<--cfg> configfile
 
@@ -392,17 +381,11 @@ B<--cfg> above.
 
 =item B<--dist> distdir
 
-Scan for packages in the I<distdir> directory.  (See the L</FILES>
-section for complete information on how the path is constructed.)  Use
-this if you want Lintian to check the whole Debian archive instead of
-just single packages.  This option overrides the B<LINTIAN_DIST>
-environment variable and the configuration file entry of the same
-name.
+Deprecated, does nothing and may be removed in a later release.
 
 =item B<--section> area
 
-This is an old name for the B<--area> option and accepted as a synonym
-for that option.
+Deprecated, does nothing and may be removed in a later release.
 
 =item B<--lab> labdir
 
@@ -543,18 +526,6 @@ Scripts that manage the I<laboratory>.
 
 The I</usr/share/lintian> directory can be overridden with the
 B<LINTIAN_ROOT> environment variable or the B<--root> option.
-
-When looking for packages in a Debian archive, lintian constructs the
-path to the archive from the I<archivedir>, I<distdir>, I<release>,
-and I<arch> as follows:
-
-=over 2
-
-I<archivedir>/dists/I<distdir>/I<release>/I<arch>
-
-=back
-
-Lintian always expects the "/dists/" path component in paths to Debian archives.
 
 For binary packages, Lintian looks for overrides in a file named
 I<usr/share/lintian/overrides/E<lt>packageE<gt>> inside the binary

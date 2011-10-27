@@ -42,10 +42,6 @@ use Getopt::Long;
 #  - it is set after opt parsing and left at that; this allows it
 #    to be trivially removed once Checker and Lab have been fixed.
 #
-# LINTIAN_{ARCH,ARCHIVEDIR,AREA,DIST,LAB,ROOT}
-#  - These must be exported as environment variables as unpack/*
-#    depend on it.
-#
 # Please do not introduce any new magical variables, Thank You!
 #
 ### END LIST OF MAGIC VARIABLES
@@ -53,10 +49,6 @@ use Getopt::Long;
 our $LINTIAN_ROOT;
 
 my @MUST_EXPORT = (qw(
-    LINTIAN_ARCH
-    LINTIAN_ARCHIVEDIR
-    LINTIAN_AREA
-    LINTIAN_DIST
     LINTIAN_LAB
     LINTIAN_ROOT
 ));
@@ -73,10 +65,6 @@ my @ENV_VARS = (
 # LINTIAN_CFG  - handled manually
 # LINTIAN_ROOT - handled manually
 qw(
-    LINTIAN_ARCH
-    LINTIAN_ARCHIVEDIR
-    LINTIAN_AREA
-    LINTIAN_DIST
     LINTIAN_PROFILE
     LINTIAN_LAB
 ));
@@ -502,11 +490,11 @@ my %opthash = (                 # ------------------ actions
                'cfg=s' => \$opt{'LINTIAN_CFG'},
                'no-cfg' => \$no_conf,
                'lab=s' => \$opt{'LINTIAN_LAB'},
-               'archivedir=s' => \$opt{'LINTIAN_ARCHIVEDIR'},
-               'dist=s' => \$opt{'LINTIAN_DIST'},
-               'area=s' => \$opt{'LINTIAN_AREA'},
-               'section=s' => \$opt{'LINTIAN_AREA'},
-               'arch=s' => \$opt{'LINTIAN_ARCH'},
+               'archivedir=s' => \&deprecated,
+               'dist=s' => \&deprecated,
+               'area=s' => \&deprecated,
+               'section=s' => \&deprecated,
+               'arch=s' => \&deprecated,
                'profile=s' => \$opt{'LINTIAN_PROFILE'},
                'root=s' => \$opt{'LINTIAN_ROOT'},
 
@@ -648,6 +636,10 @@ if ($opt{'LINTIAN_CFG'}) {
                 last;
             }
         }
+        if (m/^\s*LINTIAN_(ARCH|ARCHIVEDIR|AREA|DIST)\s*=/o) {
+            print STDERR "LINTIAN_$1 is deprecated (Seen $opt{'LINTIAN_CFG'} at line $.)\n";
+            $found = 1;
+        }
         unless ($found) {
             # check if it is a config option
             if (m/^\s*([-a-z]+)\s*=\s*(.*\S)\s*$/o){
@@ -690,15 +682,6 @@ if ($opt{'LINTIAN_CFG'}) {
 $opt{'color'} = 'never' unless defined $opt{'color'};
 if ($opt{'color'} and $opt{'color'} !~ /^(?:never|always|auto|html)$/) {
     die "The color value must be one of \"never\", \"always\", \"auto\" or \"html\"\n";
-}
-
-# LINTIAN_ARCH must have a value.
-unless (defined $opt{'LINTIAN_ARCH'}) {
-    if ($opt{'LINTIAN_DIST'}) {
-        chop($opt{'LINTIAN_ARCH'}=`dpkg --print-architecture`);
-    } else {
-        $opt{'LINTIAN_ARCH'} = 'any';
-    }
 }
 
 # export current settings for our helper scripts
@@ -797,9 +780,6 @@ debug_msg(1,
           "Lintian root directory: $opt{'LINTIAN_ROOT'}",
           "Configuration file: $opt{'LINTIAN_CFG'}",
           "Laboratory: $opt{'LINTIAN_LAB'}",
-          "Archive directory: $opt{'LINTIAN_ARCHIVEDIR'}",
-          "Distribution: $opt{'LINTIAN_DIST'}",
-          "Architecture: $opt{'LINTIAN_ARCH'}",
           delimiter(),
     );
 
