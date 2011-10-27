@@ -294,6 +294,35 @@ sub get_package {
     return wantarray ? @entries : $entries[0];
 }
 
+=item $lab->visit_packages ($visitor[, $pkg_type])
+
+Passes each lab entry to visitor.  If $pkg_type is passed, then only
+entries of that time is passed.
+
+=cut
+
+sub visit_packages {
+    my ($self, $visitor, $type) = @_;
+    my @types;
+    push @types, $type if $type;
+    @types = keys %SUPPORTED_TYPES unless $type;
+    foreach my $pkg_type (@types) {
+        my $index = $self->_get_lab_index ($pkg_type);
+        my $intv = sub {
+            my ($me, $pkg_name, $pkg_version, $pkg_arch) = @_;
+            my $dir = $self->_pool_path ($pkg_name, $pkg_type, $pkg_version, $pkg_arch);
+            my $pp = $me->{'file'};
+            my $pkg_src = $me->{'source'}//$pkg_name;
+            my $pkg_src_version = $me->{'source-version'}//$pkg_version;
+            my $lentry = Lintian::Lab::Entry->new ($self, $pkg_name, $pkg_version, $pkg_arch,
+                                                   $pkg_type, $pp, $pkg_src, $pkg_src_version, $dir);
+            $visitor->($lentry, $pkg_name, $pkg_version, $pkg_arch);
+        };
+        $index->visit_all ($intv);
+    }
+}
+
+
 # Non-API method used by reporting to look up the manifest data via the Lab
 # rather than bypassing it.
 sub _get_lab_manifest_data {

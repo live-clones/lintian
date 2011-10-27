@@ -755,7 +755,6 @@ require Lintian::Command;
 import Lintian::Command qw(spawn reap);
 require Lintian::Internal::FrontendUtil;
 import Lintian::Internal::FrontendUtil;
-require Lintian::Internal::PackageList;
 require Lintian::ProcessablePool;
 require Lintian::Profile;
 require Lintian::Tag::Info;
@@ -925,10 +924,6 @@ $ENV{'LINTIAN_LAB'} = $opt{'LINTIAN_LAB'} = $LAB->dir;
 $pool = Lintian::ProcessablePool->new($LAB);
 # process package/file arguments
 
-# Store contents of the packages files in these if needed
-my ($src_info, $bin_info, $udeb_info);
-
-
 while (my $arg = shift) {
     # file?
     if (-f $arg) {
@@ -988,31 +983,13 @@ while (my $arg = shift) {
 }
 
 if ($check_everything) {
-    # make sure package info is available
-    $src_info  = load_pkg_list('source', "$opt{'LINTIAN_LAB'}/info/source-packages") unless $src_info;
-    $bin_info  = load_pkg_list('binary', "$opt{'LINTIAN_LAB'}/info/binary-packages") unless $bin_info;
-    $udeb_info = load_pkg_list('udeb', "$opt{'LINTIAN_LAB'}/info/udeb-packages") unless $udeb_info;
-
-    debug_msg(2, "pkg_mode = $pkg_mode");
-
-    if (($pkg_mode eq 'auto') or ($pkg_mode eq 'source')) {
-        for my $arg (sort $src_info->get_all) {
-            debug_msg(1, "doing stuff with $opt{'LINTIAN_ARCHIVEDIR'}/" . $src_info->get($arg)->{'file'});
-            $pool->add_file("$opt{'LINTIAN_ARCHIVEDIR'}/" . $src_info->get($arg)->{'file'});
-        }
-    }
-    if (($pkg_mode eq 'auto') or ($pkg_mode eq 'binary')) {
-        for my $arg (sort $bin_info->get_all) {
-            debug_msg(1, "doing stuff with $opt{'LINTIAN_ARCHIVEDIR'}/" . $bin_info->get($arg)->{'file'});
-            $pool->add_file("$opt{'LINTIAN_ARCHIVEDIR'}/" . $bin_info->get($arg)->{'file'});
-        }
-    }
-    if (($pkg_mode eq 'auto') or ($pkg_mode eq 'udeb')) {
-        for my $arg (sort $udeb_info->get_all) {
-            debug_msg(1, "doing stuff with $opt{'LINTIAN_ARCHIVEDIR'}/" . $udeb_info->get($arg)->{'file'});
-            $pool->add_file("$opt{'LINTIAN_ARCHIVEDIR'}/" . $udeb_info->get($arg)->{'file'});
-        }
-    }
+    my $t = $pkg_mode;
+    my $visitor = sub {
+        my ($lpkg) = @_;
+        $pool->add_proc ($lpkg);
+    };
+    $t = undef if $pkg_mode eq 'auto';
+    $LAB->visit_packages($visitor, $t);
 } elsif ($packages_file) {
     # process all packages listed in packages file?
     print STDERR "warning: --packages-file is deprecated and may be removed in a later release.\n";
@@ -1044,12 +1021,6 @@ if ($check_everything) {
     # about STDIN being reopened as "output only")
     close $fd unless $opt{'packages-from-file'} eq '-';
 }
-
-# undef these as they are not needed any more and they give a cheap
-# extra 5+ MB of RAM back on lintian.d.o.
-undef $src_info;
-undef $bin_info;
-undef $udeb_info;
 
 # }}}
 
@@ -1749,15 +1720,6 @@ sub clear_group_cache {
         $proc->clear_cache;
     }
     return 1;
-}
-
-# Loads a package list using Lintian::Internal::PackageList and returns
-# the newly created object.
-sub load_pkg_list {
-    my ($pkg_type, $file) = @_;
-    my $plist = Lintian::Internal::PackageList->new($pkg_type);
-    $plist->read_list($file);
-    return $plist;
 }
 
 # }}}
