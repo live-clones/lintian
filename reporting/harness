@@ -121,22 +121,51 @@ unless ($opt_f || $opt_c) {
 }
 
 unless ($opt_r) {
+    $LAB->open_lab;
     my @manifests = local_mirror_manifests ($LINTIAN_ARCHIVEDIR, [_trim_split ($LINTIAN_DIST)],
                                             [_trim_split ($LINTIAN_AREA)], [_trim_split ($LINTIAN_ARCH)]);
     my @diffs = $LAB->generate_diff (@manifests);
 
     # Remove old/stale packages from the lab
-
     foreach my $diff (@diffs) {
         my $type = $diff->type;
-        foreach my $removed (@{ $diff->removed }) {
-            my @keys = @$removed;
-            my $entry = $LAB->get_package ($type, @keys);
+        Log ("Removing old or changed $type packages from the lab");
+        foreach my $removed (@{ $diff->removed }, @{ $diff->changed }) {
+            my ($pkg_name, $pkg_version, $pkg_arch) = @$removed;
+            my $entry = $LAB->get_package ($type, @$removed);
             if ($entry) {
-                $entry->delete_lab_entry;
+                my $arch = '';
+                $arch = " [$pkg_arch]" if $pkg_arch;
+                $entry->delete_lab_entry or
+                    Log ("Removing $pkg_name ($pkg_version) $arch failed.");
+            }
+        }
+        Log ("Adding new and changed $type packages to the lab");
+        foreach my $added (@{ $diff->added }, @{ $diff->changed }) {
+            my ($pkg_name, $pkg_version, $pkg_arch) = @$added;
+            my $man = $diff->nlist;
+            my $me = $man->get (@$added);
+            my $file = $me->{'file'};
+            # We cannot use @$added here, since $pkg_arch must be present (even if undef)
+            # when passing the $file parameter.
+            my $entry = $LAB->get_package ($type, $pkg_name, $pkg_version, $pkg_arch, $file);
+            if ($entry) {
+                my $ok = 0;
+                my $arch = '';
+                $arch = " [$pkg_arch]" if $pkg_arch;
+                eval {
+                    $entry->create_entry;
+                    $entry->update_status_file or
+                        die "creating status file: $!";
+                    $ok = 1;
+                };
+                Log ("Adding $pkg_name ($pkg_version) $arch failed: $@")
+                    unless $ok;
             }
         }
     }
+    # Flushes the changed manifest to the file system - croaks on error
+    $LAB->close_lab;
 }
 
 
