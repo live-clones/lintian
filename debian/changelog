@@ -12,6 +12,8 @@ lintian (2.5.4) UNRELEASED; urgency=low
   * checks/binaries:
     + [JW] Allow binaries to use "/usr/lib/$srcpkg/" in RPATHs.
       (Closes: #642092)
+    + [JW] Fixed a false-positive when using the multiarch dir in
+      RPATH.  (Closes: #646817)
   * checks/changes-file.desc:
     + [NT] Added the "precise" to the list of Ubuntu distributions.
       Thanks to Loïc Minier for the patch.
