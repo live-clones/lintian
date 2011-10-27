@@ -8,13 +8,14 @@
 # separated by comma and/or white space. Multiple "Keep: " lines can be used
 # as well.
 #
-# Last updated: 2011-05-20
+# Last updated: 2011-10-25
 
 # Keep: xserver-xorg-input, xserver-xorg-input-2, xserver-xorg-input-2.1
 # Keep: xserver-xorg-input-4
 # Keep: xserver-xorg-video, xserver-xorg-video-1.0, xserver-xorg-video-1.9
 # Keep: xserver-xorg-video-2, xserver-xorg-video-4, xserver-xorg-video-5
 
+ada-compiler
 aide-binary
 alsaplayer-interface
 alsaplayer-output
@@ -41,18 +42,12 @@ childsplay-alphabet-sounds
 cl-sql-backend
 console-utilities
 cudf-solver
-cyrus21-admin
-cyrus21-clients
-cyrus21-common
-cyrus21-imapd
-cyrus21-murder
-cyrus21-pop3d
-cyrus22-admin
-cyrus22-clients
-cyrus22-common
-cyrus22-imapd
-cyrus22-murder
-cyrus22-pop3d
+cyrus-admin-2.2
+cyrus-clients-2.2
+cyrus-common-2.2
+cyrus-imapd-2.2
+cyrus-pop3d-2.2
+d-compiler
 debconf-2.0
 debian-installer-netboot
 dhcp-client
@@ -61,11 +56,13 @@ dict-server
 dictd-dictionary
 djvu-viewer
 docbook-xsl-doc
+docutils
 dssi-plugin
 dyndns-client
 editor
 emacsen
 erlang-abi-13.a
+ettercap
 exim4-localscanapi-1.0
 exim4-localscanapi-1.1
 expeyes-doc
@@ -75,6 +72,8 @@ firebird-dbg
 firebird-server
 firebird-udf
 firebird-utils
+fonts-japanese-gothic
+fonts-japanese-mincho
 fortran95-compiler
 fortune-cookie-db
 freeciv
@@ -82,16 +81,18 @@ freeciv-client
 freediams-doc
 fsck-backend
 fso-config
+fso-deviced-player
 fso-sounds
 ftp-server
+fuse-emulator
+fusionforge-plugin-scm
 gcompris-sound
+geoclue-provider
 gforge-mta
-gforge-plugin-scm
 gfxboot-theme
 ggz-core-client
 gimp-help
 gnome-www-browser
-gnumach-image
 gnustep-back0.18-alt
 go-compiler
 gstreamer0.10-audiosink
@@ -109,7 +110,6 @@ hunspell-dictionary-en
 hunspell-dictionary-fr
 hunspell-dictionary-hu
 hyphen-hyphenation-patterns
-icedove-nostalgy
 ident-server
 ike-server
 imap-client
@@ -137,24 +137,22 @@ java5-sdk
 java6-runtime
 java6-runtime-headless
 java6-sdk
-kde-l10n
-kdevelop-l10n
-kdevelop-php-docs-l10n
-kdevelop-php-l10n
-kdevplatform-l10n
-kfreebsd-source
+kde-l10n-without-pim
+kfreebsd-headers
+kfreebsd-headers-8
+kfreebsd-image
+kfreebsd-image-8
 koffice-l10n
 ladspa-host
 ladspa-plugin
-lfcdaemon
-lib64readline-dev
+libasound-dev
 libblas-3gf.so
 libblas.so.3gf
+libcompress-zlib-perl
 libcurl-dev
 libcurl-ssl-dev
 libcurl4-dev
-libcyrus-imap-perl21
-libdeps-renderer
+libcyrus-imap-perl22
 libdesktop-agnostic-cfg
 libdesktop-agnostic-fdo
 libdesktop-agnostic-vfs
@@ -162,6 +160,7 @@ libdspam7-drv
 libedac
 libfcgi-ruby
 libfilesystem-ruby
+libfltk-dev
 libgd-dev
 libgd2
 libgdchart
@@ -176,10 +175,12 @@ libhdf5-1.8.4
 libhdf5-dev
 libhtml-wikiconverter-dialect
 libimage-size-ruby
+libio-compress-base-perl
+libio-compress-bzip2-perl
+libio-compress-zlib-perl
 libjack-0.116
 libjack-dev-session
 libjack0.100.0-dev
-libjgrapht-java
 libjpeg-dbg
 liblapack-3gf.so
 liblapack.so.3gf
@@ -188,29 +189,24 @@ libmpich-dev
 libneon-dev
 libode0-dev
 libreadline-dbg
-libreoffice-help-3.3.2
-libreoffice-l10n-3.3.2
+libreoffice-help-3.4
+libreoffice-l10n-3.4
 libreoffice-style
 libstdc++-dev
 libstlport-dev
 libzip-ruby
 licq-plugin
+lightdm-greeter
 linux-headers
-linux-headers-2.6
 linux-image
-linux-image-2.6
 linux-initramfs-tool
 linux-kernel-log-daemon
-linux-latest-modules-2.6.38-2-486
-linux-latest-modules-2.6.38-2-686
-linux-latest-modules-2.6.38-2-686-bigmem
-linux-latest-modules-2.6.38-2-amd64
-linux-source
 lisp-compiler
 live-config-backend
+live-manual
 lsb-qt4-ia32
 lsb-qt4-noarch
-lua
+lv2-host
 lv2-plugin
 mail-reader
 mail-transport-agent
@@ -220,6 +216,8 @@ monodoc-viewer
 mp3-decoder
 mpd-client
 mpipython
+mupen64plus-rsp
+mupen64plus-video
 myspell-dictionary
 myspell-dictionary-de
 myspell-dictionary-en
@@ -236,13 +234,11 @@ news-reader
 news-transport-system
 objc++-compiler
 objc-compiler
-open
 opendnssec-enforcer-backend
 openoffice.org-hyphenation
 openoffice.org-spellcheck-de-at
 openoffice.org-spellcheck-de-ch
 openoffice.org-spellcheck-de-de
-openoffice.org2-thesaurus
 paw-binary
 pcsc-ifd-handler
 pd
@@ -257,7 +253,6 @@ plymouth-theme
 pop3-server
 postscript-viewer
 python-carquinyol
-python-gnuradio-audio
 python-jarabe
 python-pg
 python-pysvn
@@ -273,8 +268,6 @@ readline-editor
 roaraudio-server
 ruby-interpreter
 skkserv
-skytools-modules
-snd-gtk
 snd-gtk-alsa
 snort-rules
 ssh-server
@@ -291,7 +284,6 @@ sword-comm
 sword-dict
 sword-frontend
 sword-text
-syslinux-theme
 syslogd
 system-log-daemon
 tads2-interpreter
@@ -303,14 +295,13 @@ telnet-client
 telnet-server
 tesseract-ocr-language
 time-daemon
-tipptrainer-data
 tkdoc
-ttf-japanese-gothic
 ttf-japanese-mincho
 ups-monitor
 va-driver
 vala-doc
 vala-utils
+vim-lua
 vim-perl
 vim-python
 vim-ruby
@@ -331,6 +322,7 @@ x-terminal-emulator
 x-window-manager
 xen-hypervisor
 xen-hypervisor-4.1
+xen-linux-system
 xmp-player
 xorg-driver-input
 xorg-driver-video
@@ -340,7 +332,6 @@ xserver-xorg-input-2
 xserver-xorg-input-2.1
 xserver-xorg-input-4
 xserver-xorg-video
-xserver-xorg-video-
 xserver-xorg-video-1.0
 xserver-xorg-video-1.9
 xserver-xorg-video-2

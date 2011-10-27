@@ -12,6 +12,8 @@ lintian (2.5.4) UNRELEASED; urgency=low
   * checks/binaries:
     + [JW] Allow binaries to use "/usr/lib/$srcpkg/" in RPATHs.
       (Closes: #642092)
+    + [JW] Fixed a false-positive when using the multiarch dir in
+      RPATH.  (Closes: #646817)
   * checks/changes-file.desc:
     + [NT] Added the "precise" to the list of Ubuntu distributions.
       Thanks to Loïc Minier for the patch.
@@ -49,6 +51,8 @@ lintian (2.5.4) UNRELEASED; urgency=low
     + [NT] Do not emit missing-build-dependency for missing dh sequences,
       since the new tag will handle those.
     + [JW] Parse continuation lines in d/rules.  (Closes: #644021)
+    + [JW] Check for versioned dependency on dpkg-dev when using the new
+      dpkg makefiles.  (Closes: #646495)
   * checks/scripts:
     + [RA] Exclude files ending in *.erb from several shell script
       checks.  ERB is a Ruby templating language, so these will probably
@@ -61,7 +65,7 @@ lintian (2.5.4) UNRELEASED; urgency=low
 
   * collection/index:
     + [NT] Fixed an "uninitialized variable" warning if no tarballs were
-      present.
+      present or the tarball is empty.  (Closes: #645660)
   * collcetion/debfiles:
     + [NT] Bail if the debian dir is a symlink.
 
@@ -78,12 +82,16 @@ lintian (2.5.4) UNRELEASED; urgency=low
       (Closes: #643716)
   * data/fields/essential:
     + [NT] Add libc-bin to the list of known essential packages.
+  * data/fields/virtual-packages:
+    + [NT] Refreshed against sid.  Thanks to Gregor Herrmann for the
+      report.  (Closes: #646604)
   * data/rules/deprecated-makefiles:
     + [JW] Added dbs makefiles, since dbs maintainer deprecated the
       package in 0.47.  (Closes: #646126)
   * data/spelling/corrections:
-    + [NT] Added a correction for "propagate", thanks to Guillem Jover
-      for the suggestion.  (Closes: #644793)
+    + [NT] Added a correction for "propagate" and "separate", thanks
+      to Guillem Jover for the suggestions.
+      (Closes: #644793, #646529)
     + [JW] Added a number of corrections.  (Closes: #645393)
 
   * frontend/lintian:
@@ -128,6 +136,10 @@ lintian (2.5.4) UNRELEASED; urgency=low
   * reporting/html_reports:
     + [NT] Ensure source tags appear before binary tags.
       (Closes: #580945)
+
+  * t/*:
+    + [NT] Skip some tests broken by a recent dpkg upload.
+      (Closes: #643205)
 
  -- Niels Thykier <niels@thykier.net>  Sat, 10 Sep 2011 13:44:01 +0200
 

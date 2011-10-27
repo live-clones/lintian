@@ -151,7 +151,7 @@ sub index_src {
         $prefix //= '';
 
         # If there is a common prefix and it is $compname, then we use that
-        # becaues that is where they will be extracted by unpacked.
+        # because that is where they will be extracted by unpacked.
         if ($prefix ne $compname) {
             # If there is a common prefix and it is not $compname
             # then strip the prefix and add $compname (if any)
@@ -172,9 +172,9 @@ sub index_src {
                 my $filename = 'source-prefix';
                 $filename .= "-$compname" if $compname;
                 open(PREFIX, '>', $filename)
-                    or fail("cannot create $filename for $pkg: $!");
+                    or fail "opening $filename for $pkg: $!";
                 print PREFIX "$prefix\n";
-                close PREFIX;
+                close PREFIX or fail "closing $filename for $pkg: $!";
             } elsif ($compname) {
                 # Prefix with the compname (because that is where they will be
                 # unpacked to.
