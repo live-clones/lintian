@@ -459,7 +459,7 @@ sub create_lab {
     my $mid = 0;
     my $mode = 0777;
 
-    return if $self->lab_exists;
+    return 1 if $self->lab_exists;
 
     $opts = {} unless $opts;
     $mode = $opts->{'mode'} if exists $opts->{'mode'};
