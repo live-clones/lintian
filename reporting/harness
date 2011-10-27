@@ -125,7 +125,10 @@ unless ($opt_r) {
     my @diffs = $LAB->generate_diff (@manifests);
     my %skip = ();
     my @inc;
-    my $cmd ="$lintian_cmd -I -E --pedantic -v -a --show-overrides -U changelog-file";
+    # Use the FullEWI output as it is less ambiguous for html_reports - it shouldn't make a difference
+    # but still...
+    my $cmd ="$lintian_cmd -I -E --pedantic -v -a --show-overrides -U changelog-file".
+        " --exp-output=format=fullewi";
     # Remove old/stale packages from the lab
     foreach my $diff (@diffs) {
         my $type = $diff->type;
