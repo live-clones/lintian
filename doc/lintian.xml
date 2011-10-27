@@ -940,78 +940,10 @@ foo source: another-tag without any comments
         directory is defined by the user), the laboratory has to be
         set up first before it can be used by Lintian. This can be
         done with the <option>-S</option>
-        (or <option>--setup-lab</option>) command line option (see
-        also the next section about the distribution directory).
-      </para>
-      <para>Here is a sketch of the Lintian laboratory:</para>
-      <screen>
-
-   $LINTIAN_LAB/
-
-      source/
-       &lt;src-pkg-name&gt;/
-        .lintian-status
-        dsc                 dsc file
-        foo.diff.gz
-        foo.orig.tar.gz     (symlinks to actual files)
-        binary/
-             &lt;binary 1&gt; -&gt; ../../../binary/&lt;binary 1&gt;
-             ...
-        unpacked/           (opt., contains unpacked source package)
-
-      binary/
-       &lt;bin-pkg-name&gt;/
-        .lintian-status
-        index               (output of `dpkg -c')
-        control-index       (same for the control.tar.gz of the pkg)
-        control/            (contains all control files)
-        fields/             (contains all control field settings)
-        source -&gt; ../../source/&lt;source pkg&gt;
-        deb                 (symlink to actual file)
-        unpacked/           (opt., contains unpacked binary package)
-
-      udeb/
-       &lt;udeb-pkg-name&gt;/
-        ...                 (same structure as for binary packages)
-
-      info/
-        binary-packages     list of binary packages in archive
-        udeb-packages       list of udeb packages in archive
-        source-packages     list of source packages in archive
-</screen>
-    </sect1>
-
-    <sect1 label="3.3" id="section-3.3">
-      <title>Distribution directory</title>
-      <para>
-        If you want to check the full Debian distribution with Lintian, you
-        have to set up the <constant>LINTIAN_DIST</constant> variable in the configuration
-        file (or as environment variable). Then, you have to run <command>lintian
-          <option>-S</option></command> to set up the laboratory and
-        to create lists of all binary and source packages in the
-        distribution. (Note, that this might take some time&hellip;)
-      </para>
-      <para>After that, you can either check single packages simply be running
-      <screen>
-  $ lintian foo
-</screen>
-      (without path or extension for the
-      package <systemitem role="package">foo</systemitem>) or check
-      the whole distribution with
-      <screen>
-  $ lintian --all
-</screen>
-</para>
-      <para>
-        Since Lintian needs an up-to-date list of packages in the
-        distribution, you'll have to rerun
-        the <command>lintian <option>-S</option></command> command
-        whenever the distribution directory has been changed. (But
-        there is no need to remove the laboratory in this situation:
-        Lintian is smart enough to only re-unpack packages that have
-        been changed.)
+        (or <option>--setup-lab</option>) command line option.
       </para>
     </sect1>
+
   </chapter>
 </book><!-- Keep this comment at the end of the file
 Local variables:
