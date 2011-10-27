@@ -294,6 +294,28 @@ sub get_package {
     return wantarray ? @entries : $entries[0];
 }
 
+# Non-API method used by reporting to look up the manifest data via the Lab
+# rather than bypassing it.
+sub _get_lab_manifest_data {
+    my ($self, $pkg_name, $pkg_type, @keys) = @_;
+    my $index = $self->_get_lab_index ($pkg_type);
+    if (scalar @keys >= 2 || (scalar @keys >= 1 && $pkg_type eq 'source')) {
+        # All we need to know
+        return $index->get ($pkg_name, @keys);
+    } else {
+        # Time to guess (or hope)
+        my @result = ();
+        my $searcher = sub {
+            my ($v) = @_;
+            push @result, $v;
+        }; # end searcher
+        $index->visit_all ($searcher, $pkg_name, @keys);
+        return $result[0] if @result;
+    }
+    # Nothing so far, then it does not exists
+    return;
+}
+
 # Returns the index of packages in the lab of a given type (of packages).
 #
 # Unlike $lab->_load_lab_index, this uses the cache'd version if it is

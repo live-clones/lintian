@@ -50,6 +50,7 @@ $ENV{'LINTIAN_ROOT'} = $LINTIAN_ROOT;
 
 # Import Lintian Perl libraries.
 use lib "$ENV{LINTIAN_ROOT}/lib";
+use Lintian::Lab;
 use Lintian::Tag::Info ();
 use Lintian::Lab::Manifest;
 use Text_utils;
@@ -106,22 +107,12 @@ for my $template (qw/head foot clean index maintainer maintainers packages tag
 # Read the package lists.
 #
 
-my $binary_info = Lintian::Lab::Manifest->new ('binary');
-my $udeb_info   = Lintian::Lab::Manifest->new ('udeb');
+my $LAB = Lintian::Lab->new ($LINTIAN_LAB);
 my $source_info = Lintian::Lab::Manifest->new ('source');
-my %bin_src_ref;
 
-$binary_info->read_list("$LINTIAN_LAB/info/binary-packages");
-$udeb_info->read_list("$LINTIAN_LAB/info/udeb-packages");
+$LAB->open_lab;
 $source_info->read_list("$LINTIAN_LAB/info/source-packages");
 
-$source_info->visit_all (sub {
-    my ($entry) = @_;
-    my $source = $entry->{'source'};
-    foreach my $binary (split m/\s*,\s*+/o, $entry->{'binary'}) {
-        $bin_src_ref{$binary} = $source;
-    }
-});
 
 # Create output directories.
 mkdir($HTML_TMP_DIR, 0777)
@@ -208,10 +199,24 @@ my (%by_maint, %by_uploader, %by_tag);
 # just assume that the second maintainer is the same as the first (but warn
 # about it).
 my (%seen, %saw_maintainer);
+
+# Matches something like:  (1:2.0-3) [arch1 arch2]
+# - captures the version and the architectures
+my $verarchre = qr,(?: \s* \(( [^)]++ )\) \s* \[ ( [^]]++ ) \]),xo;
+#                             ^^^^^^^^          ^^^^^^^^^^^^
+#                           ( version   )      [architecture ]
+
+# matches the full deal:
+#    1  222 3333  4444444   5555   666  777
+# -  T: pkg type (version) [arch]: tag [...]
+#           ^^^^^^^^^^^^^^^^^^^^^
+# Where the marked part(s) are optional values.  The numbers above the example
+# are the capture groups.
+my $fullre = qr/([EWIXOP]): (\S+)(?: (\S+)(?:$verarchre)?)?: (\S+)(?:\s+(.*))?/o;
 while (<>) {
     chomp;
-    next unless m/^([EWIXOP]): (\S+)(?: (\S+))?: (\S+)(?:\s+(.*))?/;
-    my ($code, $package, $type, $tag, $extra) = ($1, $2, $3, $4, $5);
+    next unless m/^$fullre/o;
+    my ($code, $package, $type, $pver, $parch, $tag, $extra) = ($1, $2, $3, $4, $5, $6, $7);
     $type = 'binary' unless (defined $type);
     $extra = '' unless (defined $extra);
     next unless ($type eq 'source' || $type eq 'binary' || $type eq 'udeb');
@@ -237,44 +242,41 @@ while (<>) {
     # pulling information from a binary package or udeb of the same name if
     # there is any.
     my ($source, $version, $area, $source_version, $maintainer, $uploaders);
+    my $pkg_data = $LAB->_get_lab_manifest_data ($package, $type, $pver, $parch);
     if ($type eq 'source') {
-        my $srcdata;
-        $source_info->visit_all (sub { $srcdata = $_[0] });
         $source = $package;
-        if (defined $srcdata) {
-            $version = $srcdata->{version};
-            $area = $srcdata->{area};
-            $maintainer = $srcdata->{maintainer};
-            $uploaders = $srcdata->{uploaders};
+        if (defined $pkg_data) {
+            $source_version = $version = $pkg_data->{version};
+            $area = $pkg_data->{area};
+            $maintainer = $pkg_data->{maintainer};
+            $uploaders = $pkg_data->{uploaders};
         } else {
             warn "source package $package not listed!\n";
+            $source_version = $version = $pver;
         }
     } else {
-        my $srcdata;
-        my $bindata;
-        $source = $bin_src_ref{$package};
-        $source_info->visit_all (sub { $srcdata = $_[0] }) if $source;
-        if (defined $srcdata) {
-            $maintainer = $srcdata->{maintainer};
-            $uploaders = $srcdata->{uploaders};
+        my $src_data;
+        if (defined $pkg_data) {
+            $version = $pkg_data->{version};
+            $area = $pkg_data->{area};
+            $source = $pkg_data->{source}//$package;
+            $source_version = $pkg_data->{'source-version'}//$version;
+            $src_data = $LAB->_get_lab_manifest_data ($source, 'source', $source_version);
+        } else {
+            $version = $pver;
+        }
+        if (defined $src_data) {
+            $maintainer = $src_data->{maintainer};
+            $uploaders = $src_data->{uploaders};
         } else {
             warn "source for package $package not found!\n";
-            $source = $package;
             $maintainer = undef;
+            $uploaders = undef;
         }
-        if ($type eq 'binary') {
-            $binary_info->visit_all (sub { $bindata = $_[0] });
-        } elsif ($type eq 'udeb') {
-            $udeb_info->visit_all (sub { $bindata = $_[0] });
-        } else {
-            fail "Unknown type or unhandled case ($type).\n";
-        }
-        $version = $bindata->{version};
-        $area = $bindata->{area};
-        $source_version = $bindata->{'source-version'};
     }
     $maintainer ||= '(unknown)';
     $area ||= 'main';
+    $source ||= '';
     $version = 'unknown'
         unless (defined ($version) and length ($version) > 0);
     $source_version = $version
