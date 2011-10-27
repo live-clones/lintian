@@ -674,11 +674,6 @@ Check source package foo given by foo.dsc.
 Check source package foo given by foo.dsc, including minor/possible
 tags.
 
-=item B<$ lintian --archivedir /var/packages --dist custom --area main>
-
-Check all packages found in the Debian archive at
-I</var/packages/dists/custom/main>.
-
 =item B<$ lintian -i foo.changes>
 
 Check the changes file and, if listed, the source and binary package
@@ -687,11 +682,12 @@ reported tags.
 
 =item B<$ lintian -c --binary foo>
 
-Search for binary package foo in the Debian archive and check it.
+Check the binary package foo in the Lintian laboratory.
 
 =item B<$ lintian -C cpy --source foo>
 
-Run the copyright checks on source package foo.
+Run the copyright checks on source package foo.  The package foo must
+be in the Lintian laboratory.
 
 =item B<$ lintian -u foo -U unpacked>
 
