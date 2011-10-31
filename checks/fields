@@ -948,11 +948,12 @@ if (defined $info->field('dm-upload-allowed')) {
 while (my ($vcs, $regex) = each %VCS_RECOMMENDED_URIS) {
     if (defined $info->field("vcs-$vcs")) {
         my $uri = $info->field("vcs-$vcs");
+        unfold("vcs-$vcs", \$uri);
         if ($uri !~ $regex) {
             if ($VCS_VALID_URIS{$vcs} and $uri =~ $VCS_VALID_URIS{$vcs}) {
-            tag 'vcs-field-uses-not-recommended-uri-format', "vcs-$vcs", $uri;
+                tag 'vcs-field-uses-not-recommended-uri-format', "vcs-$vcs", $uri;
             } else {
-            tag 'vcs-field-uses-unknown-uri-format', "vcs-$vcs", $uri;
+                tag 'vcs-field-uses-unknown-uri-format', "vcs-$vcs", $uri;
             }
         }
     }
@@ -1025,6 +1026,13 @@ sub unfold {
 
     if ($$line =~ s/\n//g) {
         tag 'multiline-field', $field;
+        # Remove leading space as it confuses some of the other checks
+        # that are anchored.  This happens if the field starts with a
+        # space and a newline, i.e ($ marks line end):
+        #
+        # Vcs-Browser: $
+        #  http://somewhere.com/$
+        $$line=~s/^\s*+//;
     }
 }
 
