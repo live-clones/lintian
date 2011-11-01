@@ -378,8 +378,11 @@ sub diff {
     my @added;
     my @removed;
     my $visitor;
-    # TODO: worth mentioning the types in the error?
-    croak "Diffing incompatible types" unless $self->{'type'} eq $other->{'type'};
+    unless ($self->{'type'} eq $other->{'type'}) {
+        my $st = $self->{'type'};
+        my $ot = $other->{'type'});
+        croak "Diffing incompatible types ($st != $ot)";
+    }
     $copy = $self->clone;
 
     $visitor = sub {

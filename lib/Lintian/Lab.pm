@@ -160,8 +160,8 @@ non-empty value from this method.
 
 Returns a truth value if this lab is open.
 
-XXX: What is this trying to say?
-Note: This does not imply that the underlying lab does not exist.
+Note: If the lab is open, it also exists.  However, if the lab is
+closed then the lab may or may not exists (see L</lab_exists>).
 
 =cut
 
@@ -171,7 +171,8 @@ Lintian::Lab->mk_ro_accessors (qw(dir is_open));
 
 Returns a truth value if B<$lab> points to an existing lab.
 
-Note: This does not imply whether or not the lab is open.
+Note: This never implies that the lab is open.  Though it may imply
+the lab is closed (see L</is_open>).
 
 =cut
 
