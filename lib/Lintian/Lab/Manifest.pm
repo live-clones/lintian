@@ -380,7 +380,7 @@ sub diff {
     my $visitor;
     unless ($self->{'type'} eq $other->{'type'}) {
         my $st = $self->{'type'};
-        my $ot = $other->{'type'});
+        my $ot = $other->{'type'};
         croak "Diffing incompatible types ($st != $ot)";
     }
     $copy = $self->clone;
