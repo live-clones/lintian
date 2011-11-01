@@ -54,15 +54,15 @@ Lintian::Lab::Manifest -- Lintian Lab manifest
 
 =head1 DESCRIPTION
 
-Instances of this class provides access to the packages list used by
-the Lab as caches.
+Instances of this class provide access to the packages list used by
+the lab as caches.
 
 The data structure is basically a tree (using hashes).  For binaries
 is looks (something) like:
 
  $self->{'state'}->{$name}->{$version}->{$architecture}
 
-The (order of the) fields used in the tree is listed in the
+The (order of the) fields used in the tree are listed in the
 @{BIN,SRC,CHG}_QUERY lists below.  The fields may (and generally do)
 differ between package types.
 
@@ -211,7 +211,7 @@ Writes the manifest to $file.
 On success, this will clear the L<dirty|/dirty> flag and on error it
 will croak.
 
-On error, the contents of $file is undefined.
+On error, the contents of $file are undefined.
 
 =cut
 
@@ -246,7 +246,7 @@ The $visitor is called as:
 
  $visitor->($entry, @keys)
 
-Where $entry is the entry and @keys are the keys to be used to look up
+where $entry is the entry and @keys are the keys to be used to look up
 this entry via get method.  So for the lintian 2.5.2 binary the keys
 would be something like:
  ('lintian', '2.5.2', 'all')
@@ -291,7 +291,7 @@ sub get {
 
 Inserts $entry into the manifest.  This may replace an existing entry.
 
-Note: The interesting fields from $entry is copied, so later changes
+Note: The interesting fields from $entry are copied, so later changes
 to $entry will not affect the data in $manifest.
 
 =cut
@@ -378,6 +378,7 @@ sub diff {
     my @added;
     my @removed;
     my $visitor;
+    # TODO: worth mentioning the types in the error?
     croak "Diffing incompatible types" unless $self->{'type'} eq $other->{'type'};
     $copy = $self->clone;
 

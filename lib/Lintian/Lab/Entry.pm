@@ -155,7 +155,7 @@ Overrides info from L<Lintian::Processable>.
 sub info {
     my ($self) = @_;
     my $info;
-    croak 'Cannot load info, extry does not exists' unless $self->entry_exists;
+    croak 'Cannot load info, extry does not exist' unless $self->entry_exists;
     $info = $self->{info};
     if ( ! defined $info ) {
         $info = Lintian::Collect->new ($self->pkg_name, $self->pkg_type, $self->base_dir);
@@ -242,7 +242,7 @@ sub create_entry {
     return 1 if ($self->entry_exists());
 
     unless (-d $base_dir) {
-        # In the pool we may have to create multiple directories On
+        # In the pool we may have to create multiple directories. On
         # error we only remove the "top dir" and that is enough.
         system ('mkdir', '-p', $base_dir) == 0
             or return 0;
@@ -299,9 +299,9 @@ sub coll_version {
 
 =item $lpkg->is_coll_finished ($coll, $version)
 
-Returns a truth value if the collection $coll has been completed as
+Returns a truth value if the collection $coll has been completed and
 its version is at least $version.  The versions are assumed to be
-integers (the comparision is done with ">=").
+integers (the comparision is performed with ">=").
 
 This returns 0 if the collection $coll has not been marked as
 finished.
@@ -326,7 +326,7 @@ sub _mark_coll_finished {
 
 # $lpkg->_clear_coll_status ($coll)
 #
-# Removes the notion that $coll has been fixed.
+# Removes the notion that $coll has been finished.
 sub _clear_coll_status {
     my ($self, $coll) = @_;
     delete $self->{coll}->{$coll};

@@ -160,7 +160,8 @@ non-empty value from this method.
 
 Returns a truth value if this lab is open.
 
-Note: This does not imply that the underlying does not exists.
+XXX: What is this trying to say?
+Note: This does not imply that the underlying lab does not exist.
 
 =cut
 
@@ -191,11 +192,11 @@ sub lab_exists {
 
 Fetches an existing package from the lab.
 
-First argument can be a L<Lintian::Processable|proccessable>.  In that
+The first argument can be a L<Lintian::Processable|proccessable>.  In that
 case all other arguments are ignored.
 
 If the first calling convention is used then this method will by
-default search for an existing package.  The @extra argument cna be
+default search for an existing package.  The @extra argument can be
 used to narrow the search or even to add a new entry.
 
 @extra consists of (in order):
@@ -218,7 +219,7 @@ consider a wildcard for "any".  Example:
 
 
 If all 3 @extra arguments are given, then the entry will be created if
-it does not exists.
+it does not exist.
 
 In list context, this returns a list of matches.  In scalar context
 this returns the first match (if any).
@@ -296,8 +297,8 @@ sub get_package {
 
 =item $lab->visit_packages ($visitor[, $pkg_type])
 
-Passes each lab entry to visitor.  If $pkg_type is passed, then only
-entries of that time is passed.
+Passes each lab entry to $visitor.  If $pkg_type is passed, then only
+entries of that type are passed.
 
 =cut
 
@@ -341,13 +342,13 @@ sub _get_lab_manifest_data {
         $index->visit_all ($searcher, $pkg_name, @keys);
         return $result[0] if @result;
     }
-    # Nothing so far, then it does not exists
+    # Nothing so far, then it does not exist
     return;
 }
 
 # Returns the index of packages in the lab of a given type (of packages).
 #
-# Unlike $lab->_load_lab_index, this uses the cache'd version if it is
+# Unlike $lab->_load_lab_index, this uses the cached version if it is
 # available.
 #
 # Note this is also used by reporting/html_reports
@@ -358,7 +359,7 @@ sub _get_lab_index {
     return $self->{'state'}->{$pkg_type} // $self->_load_lab_index ($pkg_type);
 }
 
-# Unconditionally (Re-)loads the index of packages in the lab of a
+# Unconditionally (re-)loads the index of packages in the lab of a
 # given type (of packages).
 #
 # $lab->_get_lab_index is generally faster since it uses the cache if
@@ -374,7 +375,7 @@ sub _load_lab_index {
 }
 
 # Given the package meta data (name, type, version, arch) return the
-# path to it in the Lab.  Path returned will be absolute.
+# path to it in the Lab.  The path returned will be absolute.
 sub _pool_path {
     my ($self, $pkg_name, $pkg_type, $pkg_version, $pkg_arch) = @_;
     my $dir = $self->dir;
@@ -426,8 +427,8 @@ sub generate_diffs {
 
 =item $lab->create_lab ([$opts])
 
-Creates a new lab.  It will create $lab->dir if it does not exists.
-It will also create a basic lab empty lab.  If this is a temporary
+Creates a new lab.  It will create $lab->dir if it does not exist.
+It will also create a basic empty lab.  If this is a temporary
 lab, this method will also setup the temporary dir for the lab.
 
 B<$opts> (if present) is a hashref containing options.  The following
@@ -449,10 +450,10 @@ Will default to 0777 if not specified.
 =back
 
 Note: This will not create parent directories of $lab->dir and will
-croak if these does not exists.
+croak if these does not exist.
 
 Note: This may update the value of $lab->dir as resolving the path
-requires it to exists.
+requires it to exist.
 
 Note: This does nothing if the lab appears to already exists.
 
@@ -474,6 +475,7 @@ sub create_lab {
             my $topts = { CLEAN => !$keep, TMPDIR => 1 };
             my $t = tempdir ('temp-lintian-lab-XXXXXX', $topts);
             $dir = Cwd::abs_path ($t);
+            # Should the croak() be using $t rather than $dir?
             croak "Could not resolve $dir: $!" unless $dir;
             $self->{'dir'} = $dir;
             $self->{'keep-lab'} = $keep;
@@ -543,7 +545,7 @@ sub create_lab {
 
 =item $lab->open_lab
 
-Opens the lab and reads the contents into caches.  If the Lab is
+Opens the lab and reads the contents into caches.  If the lab is
 temporary this will create a temporary dir to store the contents of
 the lab.
 
@@ -580,11 +582,11 @@ sub open_lab {
         if ( $self->lab_exists ) {
             croak "$msg: The Lab format is not supported";
         }
-        croak "$msg: Lab is corrupt - $dir/info/lab-info does not exists";
+        croak "$msg: Lab is corrupt - $dir/info/lab-info does not exist";
     }
 
     # Check the lab-format - this ought to be redundant for temp labs, but
-    # it simple to do it that way.
+    # it's simpler to do it that way.
     my $header = get_dsc_info ("$dir/info/lab-info");
     my $format = $header->{'lab-format'}//'';
     my $layout = $header->{'layout'}//'pool';
@@ -648,7 +650,7 @@ $lab->dir will return '').
 
 On error, this method will croak.
 
-If the lab has already been removed (or does not exists), this will
+If the lab has already been removed (or does not exist), this will
 return a truth value.
 
 =cut
@@ -794,11 +796,11 @@ Lab formats up to (and including) "10" used to store the lab format
 with each entry.  The files in $LAB/info/ were used to list packages
 from a mirror (dist).
 
-In Lab format 11 the lab format is stored in $LAB/info/lab-info.  The
-rest of the files in $LAB/info/* has been re-purposed to be a list of
+In lab format 11 the lab format is stored in $LAB/info/lab-info.  The
+rest of the files in $LAB/info/* have been re-purposed to be a list of
 packages in the lab.
 
-The $LAB/info/lab-info file also contain modifying parameters.  All
+The $LAB/info/lab-info file also contains modifying parameters.  All
 parameters are matched case-insensitively and the accepted parameters
 are:
 
@@ -818,7 +820,7 @@ Note that $arch is left out for source packages, $l is the first
 letter of the package name (except if the name starts with "lib", then
 it is the first 4 letters of the package name).  Whitespaces (i.e. "
 ") are replaced with dashes ("-") and colons (":") with underscores
-"_".
+("_").
 
 If the field is missing, it defaults to "pool".
 
