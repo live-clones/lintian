@@ -161,7 +161,7 @@ non-empty value from this method.
 Returns a truth value if this lab is open.
 
 Note: If the lab is open, it also exists.  However, if the lab is
-closed then the lab may or may not exists (see L</lab_exists>).
+closed then the lab may or may not exist (see L</lab_exists>).
 
 =cut
 
