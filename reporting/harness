@@ -66,6 +66,7 @@ unshift @INC, "$LINTIAN_ROOT/lib";
 require Util;
 require Lintian::Lab;
 require Lintian::Lab::Manifest;
+require Lintian::Processable::Package;
 
 # turn file buffering off
 $| = 1;
@@ -101,10 +102,10 @@ if ($LINTIAN_GPG_CHECK) {
     unless(-f $LINTIAN_BIN_DIR . '/gpg');
 }
 
-my $LAB = Lintian::Lab ($LINTIAN_LAB);
+my $LAB = Lintian::Lab->new ($LINTIAN_LAB);
 
 # purge the old packages
-$LAB->delete_lab if $opt_c;
+$LAB->remove_lab if $opt_c;
 
 $LAB->create_lab ({ 'mode' => 02775}) unless $LAB->lab_exists;
 
@@ -122,7 +123,7 @@ unless ($opt_r) {
     $LAB->open_lab;
     my @manifests = local_mirror_manifests ($LINTIAN_ARCHIVEDIR, [_trim_split ($LINTIAN_DIST)],
                                             [_trim_split ($LINTIAN_AREA)], [_trim_split ($LINTIAN_ARCH)]);
-    my @diffs = $LAB->generate_diff (@manifests);
+    my @diffs = $LAB->generate_diffs (@manifests);
     my %skip = ();
     my @inc;
     # Use the FullEWI output as it is less ambiguous for html_reports - it shouldn't make a difference
@@ -135,7 +136,7 @@ unless ($opt_r) {
         Log ("Removing old or changed $type packages from the lab");
         foreach my $removed (@{ $diff->removed }, @{ $diff->changed }) {
             my ($pkg_name, $pkg_version, $pkg_arch) = @$removed;
-            my $entry = $LAB->get_package ($type, @$removed);
+            my $entry = $LAB->get_package ($pkg_name, $type, $pkg_version, $pkg_arch);
             my $sk = "$type:$pkg_name/$pkg_version";
             $sk .= "/$pkg_arch" if $pkg_arch;
             $skip{$sk} = 1; # For log-cleaning (incremental runs)
@@ -155,9 +156,10 @@ unless ($opt_r) {
             my $man = $diff->nlist;
             my $me = $man->get (@$added);
             my $file = $me->{'file'};
+            my $proc = Lintian::Processable::Package->new ($type, $file);
             # We cannot use @$added here, since $pkg_arch must be present (even if undef)
             # when passing the $file parameter.
-            my $entry = $LAB->get_package ($type, $pkg_name, $pkg_version, $pkg_arch, $file);
+            my $entry = $LAB->get_package ($proc);
             if ($entry) {
                 my $ok = 0;
                 my $arch = '';
@@ -208,7 +210,7 @@ unless ($opt_r) {
                 print $nfd $_;
             }
         }
-        print $nfd 'N: ---end-of-old-lintian-log-file---\n';
+        print $nfd "N: ---end-of-old-lintian-log-file---\n";
         close $nfd;
         close $ofd;
         Log ('');
@@ -308,6 +310,8 @@ sub local_mirror_manifests {
             my $srcs = "$mirdir/dists/$dist/$area/source/Sources";
             my $srcfd = _open_data_file ($srcs);
             my $srcsub = sub { _parse_srcs_pg ($srcman, $mirdir, $area, @_) };
+            Util::_parse_dpkg_control_iterative ($srcsub, $srcfd);
+            close $srcfd;
             # Binaries have a "per arch" file.
             foreach my $arch (@$archs) {
                 my $pkgs = "$mirdir/dists/$dist/$area/binary-$arch/Packages";
@@ -354,6 +358,7 @@ sub _open_data_file {
 # Helper for local_mirror_manifests - it parses a paragraph from Packages file
 sub _parse_pkgs_pg {
     my ($manifest, $mirdir, $area, $data) = @_;
+    my $ts = 0;
     unless ($data->{'source'}) {
         $data->{'source'} = $data->{'package'};
     } elsif ($data->{'source'} =~ /^([-+\.\w]+)\s+\((.+)\)$/) {
@@ -372,12 +377,18 @@ sub _parse_pkgs_pg {
     # remove the "filename" field.
     delete $data->{'filename'};
 
+    if (my @stat = stat $data->{'file'}) {
+        $ts = $stat[9];
+    }
+    $data->{'timestamp'} = $ts;
+
     $manifest->set ($data);
 }
 
 # Helper for local_mirror_manifests - it parses a paragraph from Sources file
 sub _parse_srcs_pg {
     my ($manifest, $mirdir, $area, $data) = @_;
+    my $ts = 0;
     my $dir = $data->{'directory'}//'';
     $dir .= '/' if $dir;
     foreach my $f (split m/\n/, $data->{'files'}) {
@@ -391,6 +402,11 @@ sub _parse_srcs_pg {
     $data->{'area'} = $area;
     # Rename a field :)
     $data->{'source'} = $data->{'package'};
+
+    if (my @stat = stat $data->{'file'}) {
+        $ts = $stat[9];
+    }
+    $data->{'timestamp'} = $ts;
 
     # $manifest strips redundant fields for us.
     $manifest->set ($data);
