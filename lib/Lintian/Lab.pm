@@ -70,6 +70,7 @@ BEGIN {
 
 use Util qw(delete_dir get_dsc_info);
 
+use Lintian::Collect;
 use Lintian::Lab::Entry;
 use Lintian::Lab::Manifest;
 
@@ -203,7 +204,6 @@ used to narrow the search or even to add a new entry.
 @extra consists of (in order):
  - version
  - arch (Ignored if $pkg_type is "source")
- - path to package
 
 If version or arch is omitted (or undef) then that search parameter is
 consider a wildcard for "any".  Example:
@@ -218,9 +218,6 @@ consider a wildcard for "any".  Example:
  # i386 (or undef)
  $pkg = $lab->get_package ('eclipse-platform', 'binary', '3.5.2-11', 'i386');
 
-
-If all 3 @extra arguments are given, then the entry will be created if
-it does not exist.
 
 In list context, this returns a list of matches.  In scalar context
 this returns the first match (if any).
@@ -355,6 +352,7 @@ sub _get_lab_manifest_data {
 # Note this is also used by reporting/html_reports
 sub _get_lab_index {
     my ($self, $pkg_type) = @_;
+    croak "Undefined (or empty) package type" unless $pkg_type;
     croak "Unknown package type $pkg_type" unless $SUPPORTED_TYPES{$pkg_type};
     # Fetch (or load) the index of that type
     return $self->{'state'}->{$pkg_type} // $self->_load_lab_index ($pkg_type);
