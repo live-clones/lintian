@@ -472,7 +472,11 @@ sub _do_read_file {
 sub _do_get {
     my ($self, $root, @keys) = @_;
     my $cur = $root;
-    foreach my $key (@keys) {
+    my (undef, undef, $qf) = $self->_type_to_fields;
+    my $max = scalar @$qf;
+    $max = scalar @keys if scalar @keys < $max;
+    for (my $i = 0 ; $i < $max ; $i++) {
+        my $key = $keys[$i];
         $cur = $cur->{$key};
         return unless defined $cur;
     }
