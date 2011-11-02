@@ -245,7 +245,7 @@ sub create_entry {
         # In the pool we may have to create multiple directories. On
         # error we only remove the "top dir" and that is enough.
         system ('mkdir', '-p', $base_dir) == 0
-            or return 0;
+            or croak "mkdir -p $base_dir failed";
         $madedir = 1;
     }
     if ($pkg_type eq 'changes'){
@@ -257,10 +257,12 @@ sub create_entry {
     } else {
         croak "create_entry cannot handle $pkg_type";
     }
-    unless (symlink($pkg_path, $link)){
+    unless (symlink ($pkg_path, $link)){
+        my $err = $!;
         # "undo" the mkdir if the symlink fails.
-        rmdir($base_dir) if($madedir);
-        return 0;
+        rmdir $base_dir  if $madedir;
+        $! = $err;
+        croak "symlinking $pkg_path failed: $!";
     }
     if ($pkg_type eq 'source'){
         # If it is a source package, pull in all the related files
@@ -346,7 +348,10 @@ sub update_status_file {
     my $file;
     my @sc;
 
-    return 0 unless $self->entry_exists;
+    unless ($self->entry_exists) {
+        $! = "Entry does not exists";
+        return 0;
+    }
 
     $file = $self->base_dir () . '/.lintian-status';
     open my $sfd, '>', $file or return 0;
