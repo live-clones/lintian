@@ -1531,6 +1531,13 @@ sub unpack_group {
             debug_msg(1, "Reap done jobs ... unpack $pkg_name $pkg_ver [$pkg_arch] ($pkg_type)");
         }
 
+        # All successful, make sure to record it so we do not unpack the same package
+        # in a later run (mostly for archive-wide checks).
+        unless ($lpkg->update_status_file) {
+            warning("could not create status file for package $pkg_name: $!");
+        }
+
+
         if ($action eq 'check') {
             # We only need this if we are checking the package later
             $proc->lab_pkg($lpkg);
@@ -1538,12 +1545,6 @@ sub unpack_group {
             # else we are done
             if (!$keep_lab) {
                 auto_clean_package($lpkg) or $exit_code = 2;
-            }
-
-            # All successful, make sure to record it so we do not recheck the same package
-            # in a later run (mostly for archive-wide checks).
-            if ($lpkg->update_status_file($LINTIAN_VERSION) < 1) {
-                warning("could not create status file for package $pkg_name: $!");
             }
         }
     }
@@ -1638,12 +1639,6 @@ sub process_group {
 
         if (!$keep_lab) {
             auto_clean_package($lpkg) or $exit_code = 2;
-        }
-
-        # All successful, make sure to record it so we do not recheck the same package
-        # in a later run (mostly for archive-wide checks).
-        if ($lpkg->update_status_file($LINTIAN_VERSION) < 1) {
-            warning("could not create status file for package $pkg_name: $!");
         }
 
     } # end foreach my $proc ($group->get_processable())
