@@ -156,9 +156,17 @@ unless ($opt_r) {
             my $man = $diff->nlist;
             my $me = $man->get (@$added);
             my $file = $me->{'file'};
-            my $proc = Lintian::Processable::Package->new ($type, $file);
-            # We cannot use @$added here, since $pkg_arch must be present (even if undef)
-            # when passing the $file parameter.
+            my $proc;
+            eval {
+                $proc = Lintian::Processable::Package->new ($type, $file);
+            };
+            unless ($proc) {
+                my $name = "$type:$pkg_name/$pkg_version";
+                $name .= "/$pkg_arch" if $pkg_arch;
+                Log ("Skipping $name due to errors ($@)");
+                next;
+            }
+
             my $entry = $LAB->get_package ($proc);
             if ($entry) {
                 my $ok = 0;
