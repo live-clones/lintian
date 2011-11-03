@@ -33,10 +33,10 @@ Lintian::Lab::Entry - A package inside the Lab
  my $lpkg = $lab->get_package ("name", "version", "arch", "type", "path");
  
  # create the entry if it does not exist
- $lpkg->create_entry unless $lpkg->entry_exists;
+ $lpkg->create unless $lpkg->exists;
  
  # Remove package from lab.
- $lpkg->delete_lab_entry;
+ $lpkg->remove;
 
 =head1 DESCRIPTION
 
@@ -104,7 +104,7 @@ sub _new {
         # This error should not happen unless someone (read: me) breaks
         # Lintian::Lab::get_package
         croak "$pkg_name $pkg_type ($pkg_version) [$pkg_arch] does not exists"
-            unless $self->entry_exists;
+            unless $self->exists;
         my $link;
         $link = 'deb' if $pkg_type eq 'binary' or $pkg_type eq 'udeb';
         $link = 'dsc' if $pkg_type eq 'source';
@@ -155,7 +155,7 @@ Overrides info from L<Lintian::Processable>.
 sub info {
     my ($self) = @_;
     my $info;
-    croak 'Cannot load info, extry does not exist' unless $self->entry_exists;
+    croak 'Cannot load info, extry does not exist' unless $self->exists;
     $info = $self->{info};
     if ( ! defined $info ) {
         $info = Lintian::Collect->new ($self->pkg_name, $self->pkg_type, $self->base_dir);
@@ -178,14 +178,14 @@ sub clear_cache {
     delete $self->{info};
 }
 
-=item $lpkg->delete_lab_entry()
+=item $lpkg->remove
 
 Removes all unpacked parts of the package in the lab.  Returns a truth
 value if successful.
 
 =cut
 
-sub delete_lab_entry {
+sub remove {
     my ($self) = @_;
     my $basedir = $self->{base_dir};
     return 1 if( ! -e $basedir);
@@ -197,13 +197,13 @@ sub delete_lab_entry {
     return 1;
 }
 
-=item $lpkg->entry_exists()
+=item $lpkg->exists
 
 Returns a truth value if the lab-entry exists.
 
 =cut
 
-sub entry_exists {
+sub exists {
     my ($self) = @_;
     my $pkg_type = $self->{pkg_type};
     my $base_dir = $self->{base_dir};
@@ -222,7 +222,7 @@ sub entry_exists {
     return 0;
 }
 
-=item $lpkg->create_entry()
+=item $lpkg->create
 
 Creates a minimum lab-entry, in which collections and checks
 can be run.  Note if it already exists, then this will do
@@ -230,7 +230,7 @@ nothing.
 
 =cut
 
-sub create_entry {
+sub create {
     my ($self) = @_;
     my $pkg_type = $self->{pkg_type};
     my $base_dir = $self->{base_dir};
@@ -239,7 +239,7 @@ sub create_entry {
     my $link;
     my $madedir = 0;
     # It already exists.
-    return 1 if ($self->entry_exists());
+    return 1 if $self->exists;
 
     unless (-d $base_dir) {
         # In the pool we may have to create multiple directories. On
@@ -255,7 +255,7 @@ sub create_entry {
     } elsif ($pkg_type eq 'source'){
         $link = "$base_dir/dsc";
     } else {
-        croak "create_entry cannot handle $pkg_type";
+        croak "create cannot handle $pkg_type";
     }
     unless (symlink ($pkg_path, $link)){
         my $err = $!;
@@ -348,7 +348,7 @@ sub update_status_file {
     my $file;
     my @sc;
 
-    unless ($self->entry_exists) {
+    unless ($self->exists) {
         $! = "Entry does not exists";
         return 0;
     }
@@ -377,7 +377,7 @@ sub _init {
     my @data;
     my $head;
     my $coll;
-    return unless $self->entry_exists;
+    return unless $self->exists;
     return unless -e "$base_dir/.lintian-status";
     @data = read_dpkg_control ("$base_dir/.lintian-status");
     $head = $data[0];

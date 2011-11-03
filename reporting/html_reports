@@ -105,7 +105,7 @@ for my $template (qw/head foot clean index maintainer maintainers packages tag
 
 my $LAB = Lintian::Lab->new ($LINTIAN_LAB);
 my $source_info;
-$LAB->open_lab;
+$LAB->open;
 $source_info = $LAB->_get_lab_index ('source');
 
 
@@ -333,6 +333,12 @@ $source_info->visit_all (sub {
     my $id = maintainer_url ($maintainer);
     $clean{$id} = $maintainer;
 });
+
+# Done with the lab and its metadata
+$LAB->close;
+undef $LAB;
+undef $source_info
+
 
 # Now, walk through the tags by source package (sorted by maintainer).  Output
 # a summary page of errors and warnings for each maintainer, output a full

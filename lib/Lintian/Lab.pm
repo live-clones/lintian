@@ -85,17 +85,17 @@ Lintian::Lab -- Interface to the Lintian Lab
  # Static lab
  my $lab = Lintian::Lab->new ('/var/lib/lintian/static-lab');
 
- if (!$lab->lab_exists) {
-     $lab->create_lab;
+ if (!$lab->exists) {
+     $lab->create;
  }
- $lab->open_lab;
+ $lab->open;
  
  # Fetch a package from the lab
  my $pkg = $lab->get_package ('lintian', 'binary', '2.5.4', 'all');
  
  #FIXME: Add more to the synopsis here
  
- $lab->close_lab;
+ $lab->close;
 
 =head1 DESCRIPTION
 
@@ -154,7 +154,7 @@ Returns the absolute path to the base of the lab.
 
 Note: This may return the empty string if either the lab has been
 deleted or this is a temporary lab that has not been created yet.
-In the latter case, $lab->create_lab should be run to get a
+In the latter case, $lab->create should be run to get a
 non-empty value from this method.
 
 =item $lab->is_open
@@ -162,13 +162,13 @@ non-empty value from this method.
 Returns a truth value if this lab is open.
 
 Note: If the lab is open, it also exists.  However, if the lab is
-closed then the lab may or may not exist (see L</lab_exists>).
+closed then the lab may or may not exist (see L</exists>).
 
 =cut
 
 Lintian::Lab->mk_ro_accessors (qw(dir is_open));
 
-=item $lab->lab_exists
+=item $lab->exists
 
 Returns a truth value if B<$lab> points to an existing lab.
 
@@ -177,7 +177,7 @@ the lab is closed (see L</is_open>).
 
 =cut
 
-sub lab_exists {
+sub exists {
     my ( $self ) = @_;
     my $dir = $self->dir;
     return unless $dir;
@@ -424,7 +424,7 @@ sub generate_diffs {
 }
 
 
-=item $lab->create_lab ([$opts])
+=item $lab->create ([$opts])
 
 Creates a new lab.  It will create $lab->dir if it does not exist.
 It will also create a basic empty lab.  If this is a temporary
@@ -439,7 +439,7 @@ options are accepted:
 
 If "keep-lab" points to a truth value the temporary directory will
 I<not> be removed by closing the lab (nor exiting the application).
-However, explicitly calling $lab->remove_lab will remove the lab.
+However, explicitly calling $lab->remove will remove the lab.
 
 =item mode
 
@@ -458,13 +458,13 @@ Note: This does nothing if the lab appears to already exists.
 
 =cut
 
-sub create_lab {
+sub create {
     my ($self, $opts) = @_;
     my $dir = $self->dir;
     my $mid = 0;
     my $mode = 0777;
 
-    return 1 if $self->lab_exists;
+    return 1 if $self->exists;
 
     $opts = {} unless $opts;
     $mode = $opts->{'mode'} if exists $opts->{'mode'};
@@ -523,7 +523,7 @@ sub create_lab {
     # $dir/pool will be created as needed.
 
     # Create the meta-data file - note at this point we can use
-    # $lab->remove_lab
+    # $lab->remove
     my $ok = 0;
     eval {
         open my $lfd, '>', "$dir/info/lab-info" or croak "opening $dir/info/lab-info: $!";
@@ -536,49 +536,49 @@ sub create_lab {
     };
     unless ($ok) {
         my $err = $@;
-        eval { $self->remove_lab; };
+        eval { $self->remove; };
         croak $err;
     }
     return 1;
 }
 
-=item $lab->open_lab
+=item $lab->open
 
 Opens the lab and reads the contents into caches.  If the lab is
 temporary this will create a temporary dir to store the contents of
 the lab.
 
 This will croak if the lab is already open.  It may also croak for
-the same reasons as $lab->create_lab if this is a temporary lab.
+the same reasons as $lab->create if this is a temporary lab.
 
 Note: for static labs, $lab->dir must point to an existing consistent
 lab or this will croak.  To open a new lab, please use
-$lab->create_lab.
+$lab->create.
 
 Note: It is not possible to pass options to the creation of the
 temporary lab.  If special options are required, please use
-$lab->create_lab.
+$lab->create.
 
 =cut
 
-sub open_lab {
+sub open {
     my ($self) = @_;
     my $dir;
     my $msg = "Open Lab failed";
     croak ('Lab is already open') if $self->is_open;
     if ($self->{'mode'} eq LAB_MODE_TEMP) {
-        $self->create_lab unless $self->lab_exists;
+        $self->create unless $self->exists;
         $dir = $self->dir;
     } else {
         $dir = $self->dir;
-        unless ($self->lab_exists) {
+        unless ($self->exists) {
             croak "$msg: $dir does not exists" unless -e $dir;
             croak "$msg: $dir is not a lab or the lab is corrupt";
         }
     }
 
     unless ( -e "$dir/info/lab-info") {
-        if ( $self->lab_exists ) {
+        if ( $self->exists ) {
             croak "$msg: The Lab format is not supported";
         }
         croak "$msg: Lab is corrupt - $dir/info/lab-info does not exist";
@@ -604,23 +604,23 @@ sub open_lab {
     return 1;
 }
 
-=item $lab->close_lab
+=item $lab->close
 
 Close the lab - all state caches will be flushed to the disk and the
 lab can no longer be used.  All references to entries in the lab
 should be considered invalid.
 
 Note: if the lab is a temporary one, this will be deleted unless it
-was created with "keep-lab" (see $lab->create_lab).
+was created with "keep-lab" (see $lab->create).
 
 =cut
 
-sub close_lab {
+sub close {
     my ($self) = @_;
-    return unless $self->lab_exists;
+    return unless $self->exists;
     if ($self->{'mode'} eq LAB_MODE_TEMP && !$self->{'keep-lab'}) {
         # Temporary lab (without "keep-lab" property)
-        $self->remove_lab;
+        $self->remove;
     } else {
         my $dir = $self->dir;
         while ( my ($pkg_type, $plist) = (each %{ $self->{'state'} }) ) {
@@ -634,7 +634,7 @@ sub close_lab {
     return 1;
 }
 
-=item $lab->remove_lab
+=item $lab->remove
 
 Removes the lab and everything in it.  Any reference to an entry
 returned from this lab will immediately become invalid.
@@ -654,7 +654,7 @@ return a truth value.
 
 =cut
 
-sub remove_lab {
+sub remove {
     my ($self) = @_;
     my $dir = $self->dir;
     my @subdirs = ();

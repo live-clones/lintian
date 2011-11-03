@@ -858,7 +858,7 @@ if ($action eq 'setup-lab') {
         warning('ignoring additional command line arguments');
     }
 
-    $LAB->create_lab()
+    $LAB->create
         or fail('There was an error while setting up the static lab.');
 
     exit 0;
@@ -870,7 +870,7 @@ if ($action eq 'setup-lab') {
         warning('ignoring additional command line arguments');
     }
 
-    $LAB->remove_lab()
+    $LAB->remove
         or fail('There was an error while removing the static lab.');
 
     exit 0;
@@ -885,12 +885,12 @@ if ($action eq 'setup-lab') {
 if ($LAB->dir) {
     # sanity check:
     fail('lintian lab has not been set up correctly (perhaps you forgot to run lintian --setup-lab?)')
-        unless $LAB->lab_exists;
+        unless $LAB->exists;
 } else {
-    $LAB->create_lab ( {'keep-lab' => $keep_lab} );
+    $LAB->create ( {'keep-lab' => $keep_lab} );
 }
 
-$LAB->open_lab;
+$LAB->open;
 
 #  Update the ENV var as well - unlike the original values,
 #  $LAB->dir is always absolute
@@ -998,7 +998,7 @@ if($action eq 'remove'){
             $TAGS->file_start($pkg_path, $pkg_name, $pkg_ver,
                               $pkg_arch, $pkg_type);
             debug_msg(1, 'Removing package in lab ...');
-            unless($lpkg->delete_lab_entry()){
+            unless ($lpkg->remove){
                 warning("cannot remove entry for $pkg_name: $!");
                 $exit_code = 2;
             }
@@ -1006,7 +1006,7 @@ if($action eq 'remove'){
     }
     $TAGS->file_end();
     # Write the lab state to the disk, so it remembers they are gone.
-    $LAB->close_lab();
+    $LAB->close;
     exit $exit_code;
 }
 # }}}
@@ -1174,7 +1174,7 @@ foreach my $gname (sort $pool->get_group_names()) {
 }
 
 # Write the lab state to the disk, so it remembers the new packages
-$LAB->close_lab();
+$LAB->close;
 $TAGS->file_end();
 
 if ($action eq 'check' and not $opt{'no-override'} and not $opt{'show-overrides'}) {
@@ -1462,7 +1462,7 @@ sub unpack_group {
         debug_msg(1, "Unpacking $pkg_name $pkg_ver [$pkg_arch] ($pkg_type) in $base");
 
         # Ensure it has been unpacked
-        unless ($lpkg->create_entry()){
+        unless ($lpkg->create){
             warning("could not create the package entry in the lab: $!",
                     "skipping $action of $pkg_type package $pkg_name");
             $exit_code = 2;
@@ -1716,7 +1716,7 @@ sub handle_lab_query {
 # {{{ Exit handler.
 
 sub END {
-    # Prevent Lab->close_lab from affecting the exit code.
+    # Prevent Lab->close from affecting the exit code.
     local $?;
 
     $SIG{'INT'} = 'DEFAULT';
@@ -1728,7 +1728,7 @@ sub END {
         %running_jobs = ();
     }
 
-    $LAB->close_lab if $LAB;
+    $LAB->close if $LAB;
 }
 
 sub interrupted {

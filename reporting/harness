@@ -105,9 +105,9 @@ if ($LINTIAN_GPG_CHECK) {
 my $LAB = Lintian::Lab->new ($LINTIAN_LAB);
 
 # purge the old packages
-$LAB->remove_lab if $opt_c;
+$LAB->remove if $opt_c;
 
-$LAB->create_lab ({ 'mode' => 02775}) unless $LAB->lab_exists;
+$LAB->create ({ 'mode' => 02775}) unless $LAB->exists;
 
 unless ($opt_f || $opt_c) {
   unless ($opt_r) {
@@ -120,7 +120,7 @@ unless ($opt_f || $opt_c) {
 }
 
 unless ($opt_r) {
-    $LAB->open_lab;
+    $LAB->open;
     my @manifests = local_mirror_manifests ($LINTIAN_ARCHIVEDIR, [_trim_split ($LINTIAN_DIST)],
                                             [_trim_split ($LINTIAN_AREA)], [_trim_split ($LINTIAN_ARCH)]);
     my @diffs = $LAB->generate_diffs (@manifests);
@@ -143,7 +143,7 @@ unless ($opt_r) {
             if ($entry) {
                 my $arch = '';
                 $arch = " [$pkg_arch]" if $pkg_arch;
-                if ($entry->delete_lab_entry) {
+                if ($entry->remove) {
                     Log ("Removed $type $pkg_name ($pkg_version)$arch");
                 } else {
                     Log ("Removing $type $pkg_name ($pkg_version)$arch failed.");
@@ -173,7 +173,7 @@ unless ($opt_r) {
                 my $arch = '';
                 $arch = " [$pkg_arch]" if $pkg_arch;
                 eval {
-                    $entry->create_entry;
+                    $entry->create;
                     $entry->update_status_file or
                         die "creating status file: $!";
                     $ok = 1;
@@ -191,7 +191,7 @@ unless ($opt_r) {
     }
 
     # Flushes the changed manifest to the file system - croaks on error
-    $LAB->close_lab;
+    $LAB->close;
 
     if ($opt_i) {
         # Extra work for the incremental run
