@@ -289,10 +289,7 @@ sub print_tag {
     $information = ' ' . $information if $information ne '';
     my $code = $tag_info->code;
     my $tag_color = $self->{colors}{$code};
-    $code = 'X' if $tag_info->experimental;
-    $code = 'O' if defined($override);
-    my $type = '';
-    $type = " $pkg_info->{type}" if $pkg_info->{type} ne 'binary';
+    my $fpkg_info = $self->_format_pkg_info ($pkg_info, $tag_info, $override);
 
     my $tag;
     if ($self->_do_color) {
@@ -313,7 +310,7 @@ sub print_tag {
         $self->msg(@{ $override->comments } );
     }
 
-    $self->_print('', "$code: $pkg_info->{package}$type", "$tag$information");
+    $self->_print('', $fpkg_info, "$tag$information");
     if (not $self->issued_tag($tag_info->tag) and $self->showdescription) {
         my $description;
         if ($self->_do_color && $self->color eq 'html') {
@@ -326,6 +323,20 @@ sub print_tag {
         $self->_print('', 'N', '');
     }
 }
+
+# Helper function to "print_tag" to decide the output format of the tag line.  Used by
+# the "FullEWI" subclass.
+#
+sub _format_pkg_info {
+    my ($self, $pkg_info, $tag_info, $override) = @_;
+    my $code = $tag_info->code;
+    $code = 'X' if $tag_info->experimental;
+    $code = 'O' if defined $override;
+    my $type = '';
+    $type = " $pkg_info->{type}" if $pkg_info->{type} ne 'binary';
+    return "$code: $pkg_info->{package}$type";
+}
+
 
 =item C<print_start_pkg($pkg_info)>
 

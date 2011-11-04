@@ -1,3 +1,6 @@
+E: generic-empty changes: bad-urgency-in-changes-file unknown
+E: generic-empty changes: changed-by-address-malformed a <>
+E: generic-empty changes: changed-by-address-missing a <>
 E: generic-empty source: debian-rules-missing-required-target binary-arch
 E: generic-empty source: debian-rules-missing-required-target binary-indep
 E: generic-empty source: maintainer-address-missing a
@@ -5,9 +8,6 @@ E: generic-empty source: no-standards-version-field
 E: generic-empty: maintainer-address-missing a
 E: generic-empty: no-copyright-file
 E: generic-empty: package-has-no-description
-E: generic-empty_1.0_arch changes: bad-urgency-in-changes-file unknown
-E: generic-empty_1.0_arch changes: changed-by-address-malformed a <>
-E: generic-empty_1.0_arch changes: changed-by-address-missing a <>
 W: generic-empty source: changelog-should-mention-nmu
 W: generic-empty source: debian-rules-missing-recommended-target build-arch
 W: generic-empty source: debian-rules-missing-recommended-target build-indep

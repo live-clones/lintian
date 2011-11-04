@@ -42,10 +42,6 @@ use Getopt::Long;
 #  - it is set after opt parsing and left at that; this allows it
 #    to be trivially removed once Checker and Lab have been fixed.
 #
-# LINTIAN_{ARCH,ARCHIVEDIR,AREA,DIST,LAB,ROOT}
-#  - These must be exported as environment variables as unpack/*
-#    depend on it.
-#
 # Please do not introduce any new magical variables, Thank You!
 #
 ### END LIST OF MAGIC VARIABLES
@@ -53,10 +49,6 @@ use Getopt::Long;
 our $LINTIAN_ROOT;
 
 my @MUST_EXPORT = (qw(
-    LINTIAN_ARCH
-    LINTIAN_ARCHIVEDIR
-    LINTIAN_AREA
-    LINTIAN_DIST
     LINTIAN_LAB
     LINTIAN_ROOT
 ));
@@ -73,10 +65,6 @@ my @ENV_VARS = (
 # LINTIAN_CFG  - handled manually
 # LINTIAN_ROOT - handled manually
 qw(
-    LINTIAN_ARCH
-    LINTIAN_ARCHIVEDIR
-    LINTIAN_AREA
-    LINTIAN_DIST
     LINTIAN_PROFILE
     LINTIAN_LAB
 ));
@@ -91,7 +79,7 @@ my $BANNER = "Lintian v$LINTIAN_VERSION"; #Version Banner - text form
 # Variables used to record commandline options
 # Commented out variables have "defined" checks somewhere to determine if
 # they were set via commandline or environment variables
-my $pkg_mode = 'a';             # auto -- automatically search for
+my $pkg_mode = 'auto';          # auto -- automatically search for
                                 # binary and source pkgs
 my $debug = 0;
 my $check_everything = 0;       #flag for -a|--all switch
@@ -359,9 +347,9 @@ sub record_unpack_info {
 # Record what type of data is specified
 # Options: -b|--binary, -s|--source, --udeb
 sub record_pkgmode {
-    $pkg_mode = 'b' if $_[0] eq 'binary';
-    $pkg_mode = 's' if $_[0] eq 'source';
-    $pkg_mode = 'u' if $_[0] eq 'udeb';
+    $pkg_mode = 'binary' if $_[0] eq 'binary';
+    $pkg_mode = 'source' if $_[0] eq 'source';
+    $pkg_mode = 'udeb' if $_[0] eq 'udeb';
 }
 
 # Process -L|--display-level flag
@@ -502,11 +490,11 @@ my %opthash = (                 # ------------------ actions
                'cfg=s' => \$opt{'LINTIAN_CFG'},
                'no-cfg' => \$no_conf,
                'lab=s' => \$opt{'LINTIAN_LAB'},
-               'archivedir=s' => \$opt{'LINTIAN_ARCHIVEDIR'},
-               'dist=s' => \$opt{'LINTIAN_DIST'},
-               'area=s' => \$opt{'LINTIAN_AREA'},
-               'section=s' => \$opt{'LINTIAN_AREA'},
-               'arch=s' => \$opt{'LINTIAN_ARCH'},
+               'archivedir=s' => \&deprecated,
+               'dist=s' => \&deprecated,
+               'area=s' => \&deprecated,
+               'section=s' => \&deprecated,
+               'arch=s' => \&deprecated,
                'profile=s' => \$opt{'LINTIAN_PROFILE'},
                'root=s' => \$opt{'LINTIAN_ROOT'},
 
@@ -648,6 +636,10 @@ if ($opt{'LINTIAN_CFG'}) {
                 last;
             }
         }
+        if (m/^\s*LINTIAN_(ARCH|ARCHIVEDIR|AREA|DIST)\s*=/o) {
+            print STDERR "LINTIAN_$1 is deprecated (seen in $opt{'LINTIAN_CFG'} at line $.)\n";
+            $found = 1;
+        }
         unless ($found) {
             # check if it is a config option
             if (m/^\s*([-a-z]+)\s*=\s*(.*\S)\s*$/o){
@@ -692,15 +684,6 @@ if ($opt{'color'} and $opt{'color'} !~ /^(?:never|always|auto|html)$/) {
     die "The color value must be one of \"never\", \"always\", \"auto\" or \"html\"\n";
 }
 
-# LINTIAN_ARCH must have a value.
-unless (defined $opt{'LINTIAN_ARCH'}) {
-    if ($opt{'LINTIAN_DIST'}) {
-        chop($opt{'LINTIAN_ARCH'}=`dpkg --print-architecture`);
-    } else {
-        $opt{'LINTIAN_ARCH'} = 'any';
-    }
-}
-
 # export current settings for our helper scripts
 foreach my $var (@MUST_EXPORT) {
     if ($opt{$var}) {
@@ -739,12 +722,9 @@ if (-d "$LINTIAN_ROOT/locale/en_US.UTF-8") {
 # {{{ Loading lintian's own libraries (now LINTIAN_ROOT is known)
 unshift @INC, "$opt{'LINTIAN_ROOT'}/lib";
 
-require Lab;
+require Lintian::Lab;
 
 require Util;
-require Read_pkglists;
-import Read_pkglists qw(read_bin_list read_src_list);
-
 import Util;
 
 require Checker;
@@ -777,6 +757,9 @@ if (defined $experimental_output_opts) {
             } elsif ($opts{$_} eq 'xml') {
                 require Lintian::Output::XML;
                 $Lintian::Output::GLOBAL = Lintian::Output::XML->new;
+            } elsif ($opts{$_} eq 'fullewi') {
+                require Lintian::Output::FullEWI;
+                $Lintian::Output::GLOBAL = Lintian::Output::FullEWI->new;
             }
         }
         no strict 'refs';
@@ -797,9 +780,6 @@ debug_msg(1,
           "Lintian root directory: $opt{'LINTIAN_ROOT'}",
           "Configuration file: $opt{'LINTIAN_CFG'}",
           "Laboratory: $opt{'LINTIAN_LAB'}",
-          "Archive directory: $opt{'LINTIAN_ARCHIVEDIR'}",
-          "Distribution: $opt{'LINTIAN_DIST'}",
-          "Architecture: $opt{'LINTIAN_ARCH'}",
           delimiter(),
     );
 
@@ -869,7 +849,7 @@ $SIG{'QUIT'} = \&interrupted;
 
 # {{{ Create/Maintain Lab and add any specified Debian Archives (*.debs)
 
-$LAB = Lab->new( $opt{'LINTIAN_LAB'} );
+$LAB = Lintian::Lab->new( $opt{'LINTIAN_LAB'} );
 
 #######################################
 # Process -S option
@@ -878,7 +858,7 @@ if ($action eq 'setup-lab') {
         warning('ignoring additional command line arguments');
     }
 
-    $LAB->setup_static()
+    $LAB->create
         or fail('There was an error while setting up the static lab.');
 
     exit 0;
@@ -890,7 +870,7 @@ if ($action eq 'setup-lab') {
         warning('ignoring additional command line arguments');
     }
 
-    $LAB->delete_static()
+    $LAB->remove
         or fail('There was an error while removing the static lab.');
 
     exit 0;
@@ -902,13 +882,19 @@ if ($action eq 'setup-lab') {
     fail("bad action $action specified");
 }
 
-# sanity check:
-fail('lintian lab has not been set up correctly (perhaps you forgot to run lintian --setup-lab?)')
-    unless $LAB->is_lab();
+if ($LAB->dir) {
+    # sanity check:
+    fail('lintian lab has not been set up correctly (perhaps you forgot to run lintian --setup-lab?)')
+        unless $LAB->exists;
+} else {
+    $LAB->create ( {'keep-lab' => $keep_lab} );
+}
 
-#XXX: There has to be a cleaner way to do this
-#  Update the ENV var as well
-$ENV{'LINTIAN_LAB'} = $opt{'LINTIAN_LAB'} = $LAB->{dir};
+$LAB->open;
+
+#  Update the ENV var as well - unlike the original values,
+#  $LAB->dir is always absolute
+$ENV{'LINTIAN_LAB'} = $opt{'LINTIAN_LAB'} = $LAB->dir;
 
 
 # }}}
@@ -917,10 +903,6 @@ $ENV{'LINTIAN_LAB'} = $opt{'LINTIAN_LAB'} = $LAB->{dir};
 
 $pool = Lintian::ProcessablePool->new($LAB);
 # process package/file arguments
-
-# Store contents of the packages files in these if needed
-my ($src_info, $bin_info, $udeb_info);
-
 
 while (my $arg = shift) {
     # file?
@@ -932,117 +914,18 @@ while (my $arg = shift) {
         }
     } else {
         # parameter is a package name--so look it up
-        # search the distribution first, then the lab
-        # special case: search only in lab if action is `remove'
-
-        my $search;
-        if ($action eq 'remove') {
-            # search only in lab--see below
-            $search = 'lab';
-        } else {
-            # search in dist, then in lab
-            $search = 'dist or lab';
-
-            my $found = 0;
-
-            if (($pkg_mode eq 'b') or ($pkg_mode eq 'a')) {
-                $bin_info = read_bin_list("$opt{'LINTIAN_LAB'}/info/binary-packages") unless $bin_info;
-                if ($bin_info->{$arg}) {
-                    $pool->add_file("$opt{'LINTIAN_ARCHIVEDIR'}/" . $bin_info->{$arg}->{'file'});
-                    $found = 1;
-                }
-            }
-            if (($pkg_mode eq 'u') or ($pkg_mode eq 'a')) {
-                $udeb_info = read_bin_list("$opt{'LINTIAN_LAB'}/info/udeb-packages") unless $udeb_info;
-                if ($udeb_info->{$arg}) {
-                    $pool->add_file("$opt{'LINTIAN_ARCHIVEDIR'}/" . $udeb_info->{$arg}->{'file'});
-                    $found = 1;
-                }
-            }
-            if (($pkg_mode eq 's') or ($pkg_mode eq 'a')) {
-                $src_info = read_src_list("$opt{'LINTIAN_LAB'}/info/source-packages") unless $src_info;
-
-                if ($src_info->{$arg}) {
-                    $pool->add_file("$opt{'LINTIAN_ARCHIVEDIR'}/" . $src_info->{$arg}->{'file'});
-                    $found = 1;
-                }
-            }
-
-            next if $found;
-        }
-
-        # nothing found so far, so search the lab
-
-        my $b = "$opt{'LINTIAN_LAB'}/binary/$arg";
-        my $s = "$opt{'LINTIAN_LAB'}/source/$arg";
-        my $u = "$opt{'LINTIAN_LAB'}/udeb/$arg";
-
-        if ($pkg_mode eq 'b') {
-            unless (-d $b) {
-                warn "error: cannot find binary package $arg in $search (skipping)\n";
-                $exit_code = 2;
-                next;
-            }
-        } elsif ($pkg_mode eq 's') {
-            unless (-d $s) {
-                warning("cannot find source package $arg in $search (skipping)");
-                $exit_code = 2;
-                next;
-            }
-        } elsif ($pkg_mode eq 'u') {
-            unless (-d $u) {
-                warning("cannot find udeb package $arg in $search (skipping)");
-                $exit_code = 2;
-                next;
-            }
-        } else {
-            # $pkg_mode eq 'a'
-            unless (-d $b or -d $s or -d $u) {
-                warning("cannot find binary, udeb or source package $arg in $search (skipping)");
-                $exit_code = 2;
-                next;
-            }
-        }
-
-        # FIXME: Use Lab to find the deb/dsc instead?
-        if (($pkg_mode eq 'b') or (($pkg_mode eq 'a') and (-d $b))) {
-            $pool->add_file("$b/deb");
-        }
-        if (($pkg_mode eq 's') or (($pkg_mode eq 'a') and (-d $s))) {
-            $pool->add_file("$s/dsc");
-        }
-        if (($pkg_mode eq 'u') or (($pkg_mode eq 'a') and (-d $u))) {
-            $pool->add_file("$u/deb");
-        }
+        handle_lab_query ($arg);
     }
 }
 
 if ($check_everything) {
-    # make sure package info is available
-    $src_info  = read_src_list("$opt{'LINTIAN_LAB'}/info/source-packages") unless $src_info;
-    $bin_info  = read_bin_list("$opt{'LINTIAN_LAB'}/info/binary-packages") unless $bin_info;
-    $udeb_info = read_bin_list("$opt{'LINTIAN_LAB'}/info/udeb-packages") unless $udeb_info;
-
-    debug_msg(2, "pkg_mode = $pkg_mode");
-
-    if (($pkg_mode eq 'a') or ($pkg_mode eq 's')) {
-        for my $arg (sort keys %$src_info) {
-            debug_msg(1, "doing stuff with $opt{'LINTIAN_ARCHIVEDIR'}/" . $src_info->{$arg}->{'file'});
-            $pool->add_file("$opt{'LINTIAN_ARCHIVEDIR'}/" . $src_info->{$arg}->{'file'});
-        }
-    }
-    if (($pkg_mode eq 'a') or ($pkg_mode eq 'b')) {
-        for my $arg (sort keys %$bin_info) {
-            debug_msg(1, "doing stuff with $opt{'LINTIAN_ARCHIVEDIR'}/" . $bin_info->{$arg}->{'file'});
-            $pool->add_file("$opt{'LINTIAN_ARCHIVEDIR'}/" . $bin_info->{$arg}->{'file'});
-        }
-    }
-    if (($pkg_mode eq 'a') or ($pkg_mode eq 'u')) {
-        for my $arg (sort keys %$udeb_info) {
-            debug_msg(1, "doing stuff with $opt{'LINTIAN_ARCHIVEDIR'}/" . $udeb_info->{$arg}->{'file'});
-            $pool->add_file("$opt{'LINTIAN_ARCHIVEDIR'}/" . $udeb_info->{$arg}->{'file'});
-        }
-    }
+    my $t = $pkg_mode;
+    my $visitor = sub {
+        my ($lpkg) = @_;
+        $pool->add_proc ($lpkg);
+    };
+    $t = undef if $pkg_mode eq 'auto';
+    $LAB->visit_packages($visitor, $t);
 } elsif ($packages_file) {
     # process all packages listed in packages file?
     print STDERR "warning: --packages-file is deprecated and may be removed in a later release.\n";
@@ -1067,19 +950,18 @@ if ($check_everything) {
         open $fd, '<', $opt{'packages-from-file'} or die "opening $opt{'packages-from-file'}: $!";
     }
     while (my $file = <$fd>) {
-        chomp($file);
-        $pool->add_file($file);
+        chomp $file;
+        if ($file =~ m/^!query:\s*(\S(?:.*\S)?)/o) {
+            my $query = $1;
+            handle_lab_query ($query);
+        } else {
+            $pool->add_file ($file);
+        }
     }
     # close unless it is STDIN (else we will see a lot of warnings
     # about STDIN being reopened as "output only")
     close $fd unless $opt{'packages-from-file'} eq '-';
 }
-
-# undef these as they are not needed any more and they give a cheap
-# extra 5+ MB of RAM back on lintian.d.o.
-undef $src_info;
-undef $bin_info;
-undef $udeb_info;
 
 # }}}
 
@@ -1104,12 +986,11 @@ if($action eq 'remove'){
             my $pkg_path = $proc->pkg_path();
             my $pkg_arch = $proc->pkg_arch();
             eval{
-                $lpkg = $LAB->get_lab_package($pkg_name, $pkg_ver, $pkg_arch,
-                                              $pkg_type, $pkg_path);
+                $lpkg = $LAB->get_package($proc);
             };
-            if(!defined($lpkg)){
+            if (!defined $lpkg){
                 my $err = '.';
-                $err = ": $@" if(defined($@));
+                $err = ": $@" if defined $@;
                 warning("skipping $action of $pkg_type package ${pkg_name}$err");
                 $exit_code = 2;
                 next;
@@ -1117,13 +998,15 @@ if($action eq 'remove'){
             $TAGS->file_start($pkg_path, $pkg_name, $pkg_ver,
                               $pkg_arch, $pkg_type);
             debug_msg(1, 'Removing package in lab ...');
-            unless($lpkg->delete_lab_entry()){
+            unless ($lpkg->remove){
                 warning("cannot remove entry for $pkg_name: $!");
                 $exit_code = 2;
             }
         }
     }
     $TAGS->file_end();
+    # Write the lab state to the disk, so it remembers they are gone.
+    $LAB->close;
     exit $exit_code;
 }
 # }}}
@@ -1290,6 +1173,8 @@ foreach my $gname (sort $pool->get_group_names()) {
     }
 }
 
+# Write the lab state to the disk, so it remembers the new packages
+$LAB->close;
 $TAGS->file_end();
 
 if ($action eq 'check' and not $opt{'no-override'} and not $opt{'show-overrides'}) {
@@ -1501,7 +1386,7 @@ sub auto_clean_package {
     for my $coll (keys %collection_info) {
         my $ci = $collection_info{$coll};
         if (defined($ci->{'auto-remove'}) && $ci->{'auto-remove'} eq 'yes') {
-            next unless (-f "$base/.${coll}-$ci->{'version'}");
+            next unless $lpkg->is_coll_finished ($coll, $ci->{'version'});
             my $script = "$opt{'LINTIAN_ROOT'}/collection/$ci->{'script'}";
             debug_msg(1, "Auto removing: $ci->{'script'} ...");
             unless (Lintian::Command::Simple::rundir($base, $script, $pkg_name, "remove-${pkg_type}") == 0) {
@@ -1509,8 +1394,7 @@ sub auto_clean_package {
                         "skipping cleanup of $pkg_type package $pkg_name");
                 return 0;
             }
-            unlink("$base/.${coll}-$ci->{'version'}")
-                or fail("failed to remove status file of collect info $coll about package $pkg_name");
+            $lpkg->_clear_coll_status ($coll);
         }
     }
     return 1;
@@ -1563,12 +1447,11 @@ sub unpack_group {
         my $base;
         my $info;
         eval{
-            $lpkg = $LAB->get_lab_package($pkg_name, $pkg_ver, $pkg_arch,
-                                          $pkg_type, $pkg_path);
+            $lpkg = $LAB->get_package($proc);
         };
-        if(!defined($lpkg)){
+        if (!defined $lpkg) {
             my $err = '.';
-            $err = ": $@" if(defined($@));
+            $err = ": $@" if defined $@;
             warning("skipping $action of $pkg_type package ${pkg_name}$err");
             $exit_code = 2;
             $group->remove_processable($proc);
@@ -1579,7 +1462,7 @@ sub unpack_group {
         debug_msg(1, "Unpacking $pkg_name $pkg_ver [$pkg_arch] ($pkg_type) in $base");
 
         # Ensure it has been unpacked
-        unless ($lpkg->create_entry()){
+        unless ($lpkg->create){
             warning("could not create the package entry in the lab: $!",
                     "skipping $action of $pkg_type package $pkg_name");
             $exit_code = 2;
@@ -1603,7 +1486,7 @@ sub unpack_group {
                 }
 
                 # check if it has been run previously
-                if ($lpkg->_is_coll_finished($coll, $ci->{'version'})) {
+                if ($lpkg->is_coll_finished($coll, $ci->{'version'})) {
                     $collmap->satisfy($req);
                     next;
                 }
@@ -1612,9 +1495,6 @@ sub unpack_group {
 
                 # collect info
                 $collmap->select($req);
-                unless ($lpkg->remove_status_file()) {
-                    warning("cannot remove status file $pkg_name: $!");
-                }
                 debug_msg(1, "Collecting info: $coll ...");
                 my $script = "$opt{'LINTIAN_ROOT'}/collection/$ci->{'script'}";
                 my $cmd = Lintian::Command::Simple->new();
@@ -1659,13 +1539,13 @@ sub unpack_group {
             if (!$keep_lab) {
                 auto_clean_package($lpkg) or $exit_code = 2;
             }
-
-            # All successful, make sure to record it so we do not recheck the same package
-            # in a later run (mostly for archive-wide checks).
-            if ($lpkg->update_status_file($LINTIAN_VERSION) < 1) {
-                warning("could not create status file for package $pkg_name: $!");
-            }
         }
+        # All successful, make sure to record it so we do not unpack the same package
+        # in a later run (mostly for archive-wide checks).
+        unless ($lpkg->update_status_file) {
+            warning("could not create status file for package $pkg_name: $!");
+        }
+
     }
     return 1;
 }
@@ -1758,12 +1638,12 @@ sub process_group {
 
         if (!$keep_lab) {
             auto_clean_package($lpkg) or $exit_code = 2;
-        }
+            # Update the status file as auto_clean_package may have removed some
+            # collections
+            unless ($lpkg->update_status_file) {
+                warning("could not create status file for package $pkg_name: $!");
+            }
 
-        # All successful, make sure to record it so we do not recheck the same package
-        # in a later run (mostly for archive-wide checks).
-        if ($lpkg->update_status_file($LINTIAN_VERSION) < 1) {
-            warning("could not create status file for package $pkg_name: $!");
         }
 
     } # end foreach my $proc ($group->get_processable())
@@ -1783,12 +1663,60 @@ sub clear_group_cache {
     return 1;
 }
 
+sub handle_lab_query {
+    my ($query) = @_;
+    my @res;
+    my $type = $pkg_mode;
+    my ($pkg, $version, $arch);
+    my $orig = $query; # Save for the error message later
+
+
+    # "britney"-like format - note this catches the old style, where only the
+    # package name was specified.
+    # Check if it starts with a type specifier (i.e. binary:eclipse/3.5.2-1/amd64)
+    if ($query =~ m,^([^:]+):(.*),) {
+        ($type, $query) = ($1, $2);
+    }
+    # Split on /
+    ($pkg, $version, $arch) = split m,/,o, $query;
+
+    # if version (or/and arch) is omitted or is the special
+    # value "_", let it be wildcard.
+    $version = undef if !$version or $version eq '_';
+    $arch = undef if !$arch or $arch eq '_';
+    debug_msg (2, "$orig => $type, $pkg, " . ($version//'*') . ', ' . ($arch//'*'));
+
+    if ($type eq 'auto' or $type eq 'ALL') {
+        # Check for all types
+        foreach my $t (qw(binary source udeb changes)) {
+            my @pkgs = $LAB->get_package ($pkg, $t, $version, $arch);
+            push @res, @pkgs;
+        }
+    } else {
+        # specific type requested
+        my @pkgs = $LAB->get_package ($pkg, $type, $version, $arch);
+        push @res, @pkgs;
+    }
+
+    if (@res) {
+        foreach my $p (@res) {
+            $pool->add_proc ($p);
+        }
+    } else {
+        my $tuple = join (', ', map { $_//'*'} ($type, $pkg, $version, $arch));
+        debug_msg (1, "Did not find a match for $orig (pkg_mode = $pkg_mode)",
+                   " - Search tuple: ($tuple)");
+        warning ("cannot find binary, udeb or source package $orig in lab (skipping)");
+        $exit_code = 2;
+    }
+}
+
 # }}}
 
 # {{{ Exit handler.
 
 sub END {
-    # Prevent Lab::delete from affecting the exit code.
+    # Prevent Lab->close from affecting the exit code.
     local $?;
 
     $SIG{'INT'} = 'DEFAULT';
@@ -1800,7 +1728,7 @@ sub END {
         %running_jobs = ();
     }
 
-    $LAB->delete() if $LAB and not $keep_lab;
+    $LAB->close if $LAB;
 }
 
 sub interrupted {

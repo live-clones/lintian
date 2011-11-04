@@ -50,8 +50,8 @@ $ENV{'LINTIAN_ROOT'} = $LINTIAN_ROOT;
 
 # Import Lintian Perl libraries.
 use lib "$ENV{LINTIAN_ROOT}/lib";
+use Lintian::Lab;
 use Lintian::Tag::Info ();
-use Read_pkglists;
 use Text_utils;
 use Util;
 
@@ -103,19 +103,10 @@ for my $template (qw/head foot clean index maintainer maintainers packages tag
 # ------------------------------
 # Main routine
 
-# Read the package lists.
-#
-
-my %binary_info = %{ read_bin_list("$LINTIAN_LAB/info/binary-packages"); };
-my %udeb_info = %{ read_bin_list("$LINTIAN_LAB/info/udeb-packages"); };
-my %source_info = %{ read_src_list("$LINTIAN_LAB/info/source-packages"); };
-my %bin_src_ref;
-
-for my $source (keys %source_info) {
-    for my $binary (split(/,\s+/o,$source_info{$source}->{'binary'})) {
-        $bin_src_ref{$binary} = $source;
-    }
-}
+my $LAB = Lintian::Lab->new ($LINTIAN_LAB);
+my $source_info;
+$LAB->open;
+$source_info = $LAB->_get_lab_index ('source');
 
 
 # Create output directories.
@@ -203,10 +194,24 @@ my (%by_maint, %by_uploader, %by_tag);
 # just assume that the second maintainer is the same as the first (but warn
 # about it).
 my (%seen, %saw_maintainer);
+
+# Matches something like:  (1:2.0-3) [arch1 arch2]
+# - captures the version and the architectures
+my $verarchre = qr,(?: \s* \(( [^)]++ )\) \s* \[ ( [^]]++ ) \]),xo;
+#                             ^^^^^^^^          ^^^^^^^^^^^^
+#                           ( version   )      [architecture ]
+
+# matches the full deal:
+#    1  222 3333  4444444   5555   666  777
+# -  T: pkg type (version) [arch]: tag [...]
+#           ^^^^^^^^^^^^^^^^^^^^^
+# Where the marked part(s) are optional values.  The numbers above the example
+# are the capture groups.
+my $fullre = qr/([EWIXOP]): (\S+)(?: (\S+)(?:$verarchre)?)?: (\S+)(?:\s+(.*))?/o;
 while (<>) {
     chomp;
-    next unless m/^([EWIXOP]): (\S+)(?: (\S+))?: (\S+)(?:\s+(.*))?/;
-    my ($code, $package, $type, $tag, $extra) = ($1, $2, $3, $4, $5);
+    next unless m/^$fullre/o;
+    my ($code, $package, $type, $pver, $parch, $tag, $extra) = ($1, $2, $3, $4, $5, $6, $7);
     $type = 'binary' unless (defined $type);
     $extra = '' unless (defined $extra);
     next unless ($type eq 'source' || $type eq 'binary' || $type eq 'udeb');
@@ -232,38 +237,41 @@ while (<>) {
     # pulling information from a binary package or udeb of the same name if
     # there is any.
     my ($source, $version, $area, $source_version, $maintainer, $uploaders);
+    my $pkg_data = $LAB->_get_lab_manifest_data ($package, $type, $pver, $parch);
     if ($type eq 'source') {
         $source = $package;
-        if (exists $source_info{$source}) {
-            $version = $source_info{$source}->{version};
-            $area = $source_info{$source}->{area};
-            $maintainer = $source_info{$source}->{maintainer};
-            $uploaders = $source_info{$source}->{uploaders};
+        if (defined $pkg_data) {
+            $source_version = $version = $pkg_data->{version};
+            $area = $pkg_data->{area};
+            $maintainer = $pkg_data->{maintainer};
+            $uploaders = $pkg_data->{uploaders};
         } else {
             warn "source package $package not listed!\n";
+            $source_version = $version = $pver;
         }
     } else {
-        $source = $bin_src_ref{$package};
-        if ($source and exists $source_info{$source}) {
-            $maintainer = $source_info{$source}->{maintainer};
-            $uploaders = $source_info{$source}->{uploaders};
+        my $src_data;
+        if (defined $pkg_data) {
+            $version = $pkg_data->{version};
+            $area = $pkg_data->{area};
+            $source = $pkg_data->{source}//$package;
+            $source_version = $pkg_data->{'source-version'}//$version;
+            $src_data = $LAB->_get_lab_manifest_data ($source, 'source', $source_version);
+        } else {
+            $version = $pver;
+        }
+        if (defined $src_data) {
+            $maintainer = $src_data->{maintainer};
+            $uploaders = $src_data->{uploaders};
         } else {
             warn "source for package $package not found!\n";
-            $source = $package;
             $maintainer = undef;
-        }
-        if ($type eq 'binary') {
-            $version = $binary_info{$package}->{version};
-            $area = $binary_info{$source}->{area};
-            $source_version = $binary_info{$package}->{'source-version'};
-        } elsif ($type eq 'udeb') {
-            $version = $udeb_info{$package}->{version};
-            $area = $udeb_info{$source}->{area};
-            $source_version = $udeb_info{$package}->{'source-version'};
+            $uploaders = undef;
         }
     }
     $maintainer ||= '(unknown)';
     $area ||= 'main';
+    $source ||= '';
     $version = 'unknown'
         unless (defined ($version) and length ($version) > 0);
     $source_version = $version
@@ -319,11 +327,18 @@ while (<>) {
 # this later to generate stub pages for maintainers whose packages are all
 # Lintian-clean.
 my %clean;
-for my $source (keys %source_info) {
-    my $maintainer = $source_info{$source}->{maintainer};
+$source_info->visit_all (sub {
+    my ($srcdata) = @_;
+    my $maintainer = $srcdata->{maintainer};
     my $id = maintainer_url ($maintainer);
     $clean{$id} = $maintainer;
-}
+});
+
+# Done with the lab and its metadata
+$LAB->close;
+undef $LAB;
+undef $source_info;
+
 
 # Now, walk through the tags by source package (sorted by maintainer).  Output
 # a summary page of errors and warnings for each maintainer, output a full

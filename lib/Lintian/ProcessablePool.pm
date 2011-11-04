@@ -22,10 +22,12 @@ package Lintian::ProcessablePool;
 use strict;
 use warnings;
 
+use Carp qw(croak);
+
 use Cwd();
 use Util;
 
-use Lintian::Processable;
+use Lintian::Processable::Package;
 use Lintian::ProcessableGroup;
 
 =head1 NAME
@@ -73,45 +75,60 @@ processables from the same source package (if any).
 
 sub add_file {
     my ($self, $file) = @_;
-    my ($pkg_path, $pkg_type, $tmap, $proc, $procid);
-    my ($group, $groupid);
-    fail "$file does not exist" unless -e $file;
-    $pkg_path = Cwd::abs_path($file);
+    my ($pkg_path, $pkg_type, $proc, $procid);
+    croak "$file does not exist" unless -e $file;
+    $pkg_path = Cwd::abs_path ($file);
     if ($pkg_path =~ m/\.changes$/o){
-        return $self->_add_changes_file($pkg_path);
+        return $self->_add_changes_file ($pkg_path);
     }
-    if ($pkg_path =~ m/\.dsc$/o){
+    if ($pkg_path =~ m/\.dsc$/o) {
         $pkg_type = 'source';
-    } elsif ($pkg_path =~ m/\.deb$/o){
+    } elsif ($pkg_path =~ m/\.deb$/o) {
         $pkg_type = 'binary';
-    } elsif ($pkg_path =~ m/\.udeb$/o){
+    } elsif ($pkg_path =~ m/\.udeb$/o) {
         $pkg_type = 'udeb';
     } else {
-        fail "$pkg_path is not a known type of package.";
+        croak "$pkg_path is not a known type of package.";
     }
-    # Just insert these for now.
-    $tmap = $self->{$pkg_type};
-    $proc = Lintian::Processable->new($pkg_type, $pkg_path);
-    if ($proc->tainted()){
-        warn(sprintf("warning: tainted %1\$s package '%2\$s', skipping\n",
-             $pkg_type, $proc->pkg_name()));
+
+    $proc = Lintian::Processable::Package->new ($pkg_type, $pkg_path);
+    return $self->add_proc ($proc);
+}
+
+=item $pool->add_proc ($proc)
+
+Adds a L<Lintian::Processable|processable> to the pool.
+
+=cut
+
+sub add_proc {
+    my ($self, $proc) = @_;
+    my $procid;
+    my ($group, $groupid);
+    my $pkg_type = $proc->pkg_type;
+    my $tmap = $self->{$pkg_type};
+
+
+   if ($proc->tainted) {
+        warn (sprintf ("warning: tainted %1\$s package '%2\$s', skipping\n",
+             $pkg_type, $proc->pkg_name));
         return 0;
     }
-    $procid = $self->_get_proc_id($proc);
+    $procid = $self->_get_proc_id ($proc);
     return 0 if exists $tmap->{$procid};
-    $groupid = $self->_get_group_id($proc);
+    $groupid = $self->_get_group_id ($proc);
     $group = $self->{groups}->{$groupid};
     if (defined $group){
         if ($pkg_type eq 'source'){
             # if this is a source pkg, then this is a duplicate
             # assuming the group already has a source package.
-            return 0 if (defined($group->get_source_processable()));
+            return 0 if defined $group->get_source_processable;
         }
         # else add the binary/udeb proc to the group
-        return $group->add_processable($proc);
+        return $group->add_processable ($proc);
     } else {
         # Create a new group
-        $group = Lintian::ProcessableGroup->new();
+        $group = Lintian::ProcessableGroup->new;
         $group->add_processable($proc);
         $self->{groups}->{$groupid} = $group;
     }
@@ -229,7 +246,7 @@ sub _get_group_id{
     my ($self, $pkg) = @_;
     my $id = $pkg->pkg_src;
     my $lab = $self->{'lab'};
-    $id .= '_' . $pkg->pkg_src_version if $lab && $lab->_supports_multiple_versions;
+    $id .= '_' . $pkg->pkg_src_version;
     return $id;
 }
 
@@ -239,8 +256,8 @@ sub _get_proc_id {
     my ($self, $pkg) = @_;
     my $id = $pkg->pkg_name;
     my $lab = $self->{'lab'};
-    $id .= '_' . $pkg->pkg_version if $lab && $lab->_supports_multiple_versions;
-    $id .= '_' . $pkg->pkg_arch if $lab && $lab->_supports_multiple_architectures;
+    $id .= '_' . $pkg->pkg_version;
+    $id .= '_' . $pkg->pkg_arch;
     return $id;
 }
 

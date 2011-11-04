@@ -104,20 +104,51 @@ lintian (2.5.4) UNRELEASED; urgency=low
     + [NT] Collections explicitly requested (by -U) are no longer
       auto-removed.  Previously the only way to prevent auto-removal
       was to use --keep-lab.
+    + [NT] Removed all archive-wide testing code.  This has been moved
+      into reporting/harness.  This deprecates a lot options and config
+      variables (--arch, --archivedir, --area, --dist, --section and
+      LINTIAN_{ARCH,ARCHIVEDIR,AREA,DIST}).
+    + [NT] Support new lab query format, replacing the old "package
+      name"-based search.
 
-  * lib/Lab.pm:
-    + [NT] Updated it to use Lintian::Output::verbosity_level rather
-      than verbose.
-    + [JW,NT] Correctly handle $TMPDIR not being an absolute path.
-      (Closes: #642113)
+  * lib/Lab{,/Package}.pm:
+    + [NT] Removed, replaced by Lintian::Package{,::Entry}.
   * lib/Lintian/Check.pm:
     + [JW] Merged with common_data.pm.
   * lib/Lintian/Collect/Source.pm:
     + [JW] Fixed call to binary_field in binary_relation.
       (Closes: #641609)
+  * lib/Lintian/Lab{,/Entry,/Manifest,/ManifestDiff}.pm:
+    + [NT] New files.  Replaces the Read_pkglists, Lab and
+      Lab::Package modules.
+  * lib/Lintian/Lab.pm:
+    + [JW,NT] Correctly handle $TMPDIR not being an absolute path.
+      (Closes: #642113)
+    + [NT] New lab layout style resembling the "pool" dirs of the
+      Debian mirrors.  This allows more than 32 000 packages of a
+      given type in the laboratory.  It also allows multiple
+      versions/architectures of the same package in static labs.
+      A feature previously only enabled in temporary labs.  The new
+      layout is incompatible with the old format.  (Closes: #641468)
+  * lib/Lintian/Output.pm:
+    + [NT] Minor refactoring to simplify creation of the FullEWI
+      module.
+  * lib/Lintian/Output/FullEWI.pm:
+    + [NT] New experimental output.  More machine-friendly version
+      of the normal Lintian output format.
   * lib/Lintian/Output/XML.pm:
     + [NT] Use self-closing tags (if possible) and do not write
       attributes with an empty value.
+  * lib/Lintian/Processable.pm:
+    + [NT] Reduced to an abstract class.  The "old" implementation
+      has been put into Lintian::Processable::Package.
+  * lib/Lintian/Processable/Package.pm:
+    + [NT] New file.
+    + [NT] Changed the "name" of changes files.  It is now equal to
+      the name of the source package.  Previously it was the filename
+      (without extension and without the dir part).
+  * lib/Read_pkglists.pm:
+    + [NT] Removed - replaced by Lintian::Lab::Manifest.
   * lib/Util.pm:
     + [NT] Stricten the parser to not accept a field name with a ":".
       This could cause the parser to eat the first part of the value,
@@ -139,13 +170,21 @@ lintian (2.5.4) UNRELEASED; urgency=low
     + [NT] Do not accept LINTIAN_UNPACK_LEVEL nor LINTIAN_SECTION
       anymore.  The lintian frontend lost support for these in
       2.5.0~rc3.
+  * reporting/harness:
+    + [NT] Refactored to handle the archive-wide checking directly.
+    + [NT] Use the new FullEWI output format for the archive-wide
+      logs.
   * reporting/html_reports:
     + [NT] Ensure source tags appear before binary tags.
       (Closes: #580945)
+    + [NT] Supports the FullEWI output format.
 
   * t/*:
     + [NT] Skip some tests broken by a recent dpkg upload.
       (Closes: #643205)
+
+  * unpack/*:
+    + [NT] Removed, no longer used.
 
  -- Niels Thykier <niels@thykier.net>  Sat, 10 Sep 2011 13:44:01 +0200
 

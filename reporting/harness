@@ -63,9 +63,10 @@ use vars qw($LINTIAN_ROOT $LINTIAN_LAB $LINTIAN_ARCHIVEDIR $LINTIAN_DIST
 
 # import perl libraries
 unshift @INC, "$LINTIAN_ROOT/lib";
-require Read_pkglists;
-import Read_pkglists;
 require Util;
+require Lintian::Lab;
+require Lintian::Lab::Manifest;
+require Lintian::Processable::Package;
 
 # turn file buffering off
 $| = 1;
@@ -101,22 +102,12 @@ if ($LINTIAN_GPG_CHECK) {
     unless(-f $LINTIAN_BIN_DIR . '/gpg');
 }
 
-if ($opt_c) { # purge the old packages
-  system("rm -rf $LINTIAN_LAB/binary") == 0 || die "$!";
-  system("mkdir -m 2775 $LINTIAN_LAB/binary") == 0 || die "$!";
-  system("rm -rf $LINTIAN_LAB/udeb") == 0 || die "$!";
-  system("mkdir -m 2775 $LINTIAN_LAB/udeb") == 0 || die "$!";
-  system("rm -rf $LINTIAN_LAB/source") == 0 || die "$!";
-  system("mkdir -m 2775 $LINTIAN_LAB/source") == 0 || die "$!";
-  system("rm -f $LINTIAN_LAB/info/*") == 0 || die "$!";
-}
+my $LAB = Lintian::Lab->new ($LINTIAN_LAB);
 
-unless ($opt_r) {
-  # make lintian update its packages files and save output
-  run("$lintian_cmd -v --setup-lab >$changes_file")
-      or Die('cannot run lintian --setup-lab');
-  Log('');
-}
+# purge the old packages
+$LAB->remove if $opt_c;
+
+$LAB->create ({ 'mode' => 02775}) unless $LAB->exists;
 
 unless ($opt_f || $opt_c) {
   unless ($opt_r) {
@@ -128,137 +119,146 @@ unless ($opt_f || $opt_c) {
   }
 }
 
-if ($opt_f) { # check all packages
-  Log('Running Lintian over all packages...');
-  my $cmd = "$lintian_cmd -I -E --pedantic -v -a --show-overrides -U changelog-file >$lintian_log 2>&1";
-  Log("Executing $cmd");
-  my $res = (system($cmd) >> 8);
-  (($res == 0) or ($res == 1))
-    or Log("warning: executing lintian returned $res");
-  Log('');
-}
-
-if ($opt_i) { # process changes only
-
-    die "Old Lintian log file $lintian_log not found!\n" unless -f $lintian_log;
-
-    my $pkgfile;
-    my %skip_binary;
-    my %skip_udeb;
-    my %skip_source;
-
-    # read binary packages files
-    $pkgfile = "$LINTIAN_LAB/info/binary-packages";
-    (-f $pkgfile) or Die("cannot find list of binary packages $pkgfile");
-    my %binary_info = %{ read_bin_list($pkgfile) };
-
-    # read udeb packages files
-    $pkgfile = "$LINTIAN_LAB/info/udeb-packages";
-    (-f $pkgfile) or Die("cannot find list of udeb packages $pkgfile");
-    my %udeb_info = %{ read_bin_list($pkgfile) };
-
-    # read source packages files
-    $pkgfile = "$LINTIAN_LAB/info/source-packages";
-    (-f $pkgfile) or Die("cannot find list of source packages $pkgfile");
-    my %source_info = %{ read_src_list($pkgfile) };
-
-    # process changes file and create list of packages to process
-    Log('Reading changes file...');
-    open(IN, '<', $changes_file)
-        or Die("cannot open changes file $changes_file for reading: $!");
-    open(OUT, '>', $list_file)
-        or Die("cannot open list file $list_file for writing: $!");
-    while (<IN>) {
-        chop;
-
-        if (/^N: Listed (changed|new) (binary|udeb|source) package (\S+) (\S+)/o) {
-            my ($type,$binsrc,$pkg,$ver) = ($1,$2,$3,$4);
-
-            Log("$type $binsrc package $pkg $ver");
-
-            if ($binsrc eq 'binary') {
-                my $data = $binary_info{$pkg};
-                $data or Die("cannot find binary package $pkg in binary-packages file");
-                print OUT "$LINTIAN_ARCHIVEDIR/$binary_info{$pkg}->{'file'}\n";
-                $skip_binary{$pkg} = 1;
-            } elsif ($binsrc eq 'udeb') {
-                my $data = $udeb_info{$pkg};
-                $data or Die("cannot find udeb package $pkg in udeb-packages file");
-                print OUT "$LINTIAN_ARCHIVEDIR/$udeb_info{$pkg}->{'file'}\n";
-                $skip_udeb{$pkg} = 1;
-            } else {
-                my $data = $source_info{$pkg};
-                $data or Die("cannot find source package $pkg in source-packages file");
-                print OUT "$LINTIAN_ARCHIVEDIR/$source_info{$pkg}->{'file'}\n";
-                $skip_source{$pkg} = 1;
+unless ($opt_r) {
+    $LAB->open;
+    my @manifests = local_mirror_manifests ($LINTIAN_ARCHIVEDIR, [_trim_split ($LINTIAN_DIST)],
+                                            [_trim_split ($LINTIAN_AREA)], [_trim_split ($LINTIAN_ARCH)]);
+    my @diffs = $LAB->generate_diffs (@manifests);
+    my %skip = ();
+    my @inc;
+    # Use the FullEWI output as it is less ambiguous for html_reports - it shouldn't make a difference
+    # but still...
+    my $cmd ="$lintian_cmd -I -E --pedantic -v --show-overrides -U changelog-file".
+        " --exp-output=format=fullewi";
+    # Remove old/stale packages from the lab
+    foreach my $diff (@diffs) {
+        my $type = $diff->type;
+        Log ("Removing old or changed $type packages from the lab");
+        foreach my $removed (@{ $diff->removed }, @{ $diff->changed }) {
+            my ($pkg_name, $pkg_version, $pkg_arch) = @$removed;
+            my $entry = $LAB->get_package ($pkg_name, $type, $pkg_version, $pkg_arch);
+            my $sk = "$type:$pkg_name/$pkg_version";
+            $sk .= "/$pkg_arch" if $pkg_arch;
+            $skip{$sk} = 1; # For log-cleaning (incremental runs)
+            if ($entry) {
+                my $arch = '';
+                $arch = " [$pkg_arch]" if $pkg_arch;
+                if ($entry->remove) {
+                    Log ("Removed $type $pkg_name ($pkg_version)$arch");
+                } else {
+                    Log ("Removing $type $pkg_name ($pkg_version)$arch failed.");
+                }
             }
-        } elsif (/^N: Removed (binary|udeb|source) package (\S+)/o) {
-            my ($binsrc,$pkg) = ($1,$2);
-
-            Log("removed $binsrc package $pkg");
-            run("rm -r -- \"$LINTIAN_LAB/$binsrc/$pkg\"")
-                or Log("could not remove $binsrc package $pkg");
-            if ($binsrc eq 'binary') {
-                $skip_binary{$pkg} = 1;
-            } elsif ($binsrc eq 'udeb') {
-                $skip_udeb{$pkg} = 1;
-            } else {
-                $skip_source{$pkg} = 1;
+        }
+        Log ("Adding new and changed $type packages to the lab");
+        foreach my $added (@{ $diff->added }, @{ $diff->changed }) {
+            my ($pkg_name, $pkg_version, $pkg_arch) = @$added;
+            my $man = $diff->nlist;
+            my $me = $man->get (@$added);
+            my $file = $me->{'file'};
+            my $proc;
+            eval {
+                $proc = Lintian::Processable::Package->new ($type, $file);
+            };
+            unless ($proc) {
+                my $name = "$type:$pkg_name/$pkg_version";
+                $name .= "/$pkg_arch" if $pkg_arch;
+                Log ("Skipping $name due to errors ($@)");
+                next;
             }
-        } elsif (/^N/o) {
-            # ignore other notes
+
+            my $entry = $LAB->get_package ($proc);
+            if ($entry) {
+                my $ok = 0;
+                my $arch = '';
+                $arch = " [$pkg_arch]" if $pkg_arch;
+                eval {
+                    $entry->create;
+                    $entry->update_status_file or
+                        die "creating status file: $!";
+                    $ok = 1;
+                };
+                if ($ok) {
+                    my $query = "$type:$pkg_name/$pkg_version";
+                    $query .= "/$pkg_arch" if $pkg_arch;
+                    Log ("Added $type $pkg_name ($pkg_version)$arch");
+                    push @inc, $query;
+                } else {
+                    Log ("Adding $type $pkg_name ($pkg_version)$arch failed: $@");
+                }
+            }
+        }
+    }
+
+    # Flushes the changed manifest to the file system - croaks on error
+    $LAB->close;
+
+    if ($opt_i) {
+        # Extra work for the incremental run
+
+        die "Old Lintian log file $lintian_log not found!\n" unless -f $lintian_log;
+
+        # update lintian.log
+        Log('Updating lintian.log...');
+        rename $lintian_log, $old_lintian_log;
+        open my $ofd, '<', $old_lintian_log
+            or Die ("cannot open old lintian.log $old_lintian_log for reading: $!");
+        open my $nfd, '>', $lintian_log
+            or Die ("cannot open lintian.log $lintian_log for writing: $!");
+        my $copy_mode = 1;
+        while (<$ofd>) {
+            if (/^N: Processing (binary|udeb|source) package (\S+) \(version (\S+), arch (\S+)\) \.\.\./o) {
+                my ($type, $pkg, $ver, $arch) = ($1,$2, $3, $4);
+                my $k = "$type:$pkg/$ver";
+                $k .= "/$arch" if $type ne 'source';
+                $copy_mode = 1;
+                $copy_mode = 0 if exists $skip{$k};
+            }
+            if ($copy_mode) {
+                print $nfd $_;
+            }
+        }
+        print $nfd "N: ---end-of-old-lintian-log-file---\n";
+        close $nfd;
+        close $ofd;
+        Log ('');
+        if (@inc) {
+            Log ('Creating work list for lintian');
+            open my $lfd, '>', $list_file
+                or Die ("opening $list_file: $!");
+            foreach my $query (@inc) {
+                Log (" - TODO - !query: $query\n");
+                print $lfd "!query: $query\n";
+            }
+            close $lfd;
+            Log ('');
+
+            # incremental run cmd changes
+            Log ('Running Lintian over newly introduced and changed packages...');
+            $cmd .= " --packages-from-file $list_file >>$lintian_log 2>&1";
         } else {
-            Log("skipping changes line: $_");
+            $cmd = undef;
+            Log ('Skipping Lintian run - nothing to do...');
         }
+    } else {
+        # full run cmd changes
+        Log('Running Lintian over all packages...');
+        $cmd .= " -a >$lintian_log 2>&1";
     }
-    close(OUT);
-    close(IN);
-    Log('');
 
-    # update lintian.log
-    Log('Updating lintian.log...');
-    rename $lintian_log, $old_lintian_log;
-    open(IN, '<', $old_lintian_log)
-        or Die("cannot open old lintian.log $old_lintian_log for reading: $!");
-    open(OUT, '>', $lintian_log)
-        or Die("cannot open lintian.log $lintian_log for writing: $!");
-    my $copy_mode = 1;
-    while (<IN>) {
-        if (/^N: Processing (binary|udeb|source) package (\S+)/o) {
-            my ($type,$pkg) = ($1,$2);
-
-            if ($type eq 'binary') {
-                $copy_mode = not exists $skip_binary{$pkg};
-            } elsif ($type eq 'udeb') {
-                $copy_mode = not exists $skip_udeb{$pkg};
-            } else {
-                $copy_mode = not exists $skip_source{$pkg};
-            }
-        }
-
-        if ($copy_mode) {
-            print OUT $_;
-        }
+    if ($cmd) {
+        Log("Executing $cmd");
+        my $res = (system($cmd) >> 8);
+        (($res == 0) or ($res == 1))
+            or Log("warning: executing lintian returned $res");
+        Log('');
     }
-    print OUT 'N: ---end-of-old-lintian-log-file---\n';
-    close(OUT);
-    close(IN);
-    Log('');
-
-    # run Lintian over the newly introduced or changed packages
-    Log('Running Lintian over newly introduced and changed packages...');
-    my $cmd = "$lintian_cmd -I -E --pedantic -v --show-overrides --packages-from-file $list_file -U changelog-file >>$lintian_log 2>&1";
-    Log("Executing $cmd");
-    my $res = (system($cmd) >> 8);
-    (($res == 0) or ($res == 1))
-        or Log("warning: executing lintian returned $res");
-    Log('');
 }
 
 # create html reports
 Log('Creating HTML reports...');
 run("$html_reports_cmd $lintian_log >$html_reports_log 2>&1")
-    or Log("warning: executing $html_reports_cmd returned $?");
+    or Log("warning: executing $html_reports_cmd returned " . (($? >> 8) & 0xff));
 Log('');
 
 # rotate the statistics file updated by $html_reports_cmd
@@ -266,11 +266,6 @@ if (-f $statistics_file) {
     system("cp $statistics_file $LOG_DIR/stats/statistics-`date +%Y%m%d`") == 0
         or Log('warning: could not rotate the statistics file');
 }
-
-#Log("Creating depcheck pages...");
-#run("$LINTIAN_ROOT/depcheck/deppages.pl >>$html_reports_log")
-#    or Log("warning: executing deppages.pl returned $?");
-#Log("");
 
 # install new html directory
 Log('Installing HTML reports...');
@@ -299,6 +294,138 @@ sub run {
 sub Die {
     Log("fatal error: $_[0]");
     exit 1;
+}
+
+sub _trim_split {
+    my ($val) = @_;
+    return () unless $val;
+    $val =~ s/^\s++//o;
+    $val =~ s/\s++$//o;
+    return split m/\s*+,\s*+/o, $val;
+}
+
+# local_mirror_manifests ($mirdir, $dists, $areas, $archs)
+#
+# Returns a list of manifests that represents what is on the local mirror
+# at $mirdir.  3 manifests will be returned, one for "source", one for "binary"
+# and one for "udeb" packages.  They are populated based on the "Sources" and
+# "Packages" files.
+#
+# $mirdir - the path to the local mirror
+# $dists  - listref of dists to consider (i.e. ['unstable'])
+# $areas  - listref of areas to consider (i.e. ['main', 'contrib', 'non-free'])
+# $archs  - listref of archs to consider (i.e. ['i386', 'amd64'])
+#
+sub local_mirror_manifests {
+    my ($mirdir, $dists, $areas, $archs) = @_;
+    my $srcman = Lintian::Lab::Manifest->new ('source');
+    my $binman = Lintian::Lab::Manifest->new ('binary');
+    my $udebman = Lintian::Lab::Manifest->new ('udeb');
+    foreach my $dist (@$dists) {
+        foreach my $area (@$areas) {
+            my $srcs = "$mirdir/dists/$dist/$area/source/Sources";
+            my $srcfd = _open_data_file ($srcs);
+            my $srcsub = sub { _parse_srcs_pg ($srcman, $mirdir, $area, @_) };
+            Util::_parse_dpkg_control_iterative ($srcsub, $srcfd);
+            close $srcfd;
+            # Binaries have a "per arch" file.
+            foreach my $arch (@$archs) {
+                my $pkgs = "$mirdir/dists/$dist/$area/binary-$arch/Packages";
+                my $upkgs = "$mirdir/dists/$dist/$area/debian-installer/" .
+                    "binary-$arch/Packages";
+                my $pkgfd = _open_data_file ($pkgs);
+                my $binsub = sub { _parse_pkgs_pg ($binman, $mirdir, $area, @_) };
+                my $upkgfd = _open_data_file ($upkgs);
+                my $udebsub = sub { _parse_pkgs_pg ($udebman, $mirdir, $area, @_) };
+                Util::_parse_dpkg_control_iterative ($binsub, $pkgfd);
+                Util::_parse_dpkg_control_iterative ($udebsub, $upkgfd);
+                close $pkgfd;
+                close $upkgfd;
+            }
+        }
+    }
+    return ($srcman, $binman, $udebman);
+}
+
+# _open_data_file ($file)
+#
+# Opens $file if it exists, otherwise it tries common extensions (i.e. .gz) and opens
+# that instead.  It may pipe the file through a external decompressor, so the returned
+# file descriptor cannot be assumed to be a file.
+#
+# If $file does not exists and no common extensions are found, this dies.  It may also
+# die if it finds a file, but is unable to open it.
+sub _open_data_file {
+    my ($file) = @_;
+    if (-e $file) {
+        open my $fd, '<', $file or Die "opening $file: $!";
+        return $fd;
+    }
+    foreach my $com (['gz', ['gzip', '-dc']] ){
+        my ($ext, $cmd) = @$com;
+        if ( -e "$file.$ext") {
+            open my $c, '-|', @$cmd, "$file.$ext" or Die "running @$cmd $file.$ext";
+            return $c;
+        }
+    }
+    Die "Cannot find $file";
+}
+
+# Helper for local_mirror_manifests - it parses a paragraph from Packages file
+sub _parse_pkgs_pg {
+    my ($manifest, $mirdir, $area, $data) = @_;
+    my $ts = 0;
+    unless ($data->{'source'}) {
+        $data->{'source'} = $data->{'package'};
+    } elsif ($data->{'source'} =~ /^([-+\.\w]+)\s+\((.+)\)$/) {
+        $data->{'source'} = $1;
+        $data->{'source-version'} = $2;
+    } else {
+        $data->{'source-version'} = $data->{'version'};
+    }
+    unless (defined $data->{'source-version'}) {
+        $data->{'source-version'} = $data->{'version'};
+    }
+    $data->{'file'} = $mirdir . '/' . $data->{'filename'};
+    $data->{'area'} = $area;
+    # $manifest strips redundant fields for us.  But for clarity and to
+    # avoid "hard to debug" cases $manifest renames the fields, we explicitly
+    # remove the "filename" field.
+    delete $data->{'filename'};
+
+    if (my @stat = stat $data->{'file'}) {
+        $ts = $stat[9];
+    }
+    $data->{'timestamp'} = $ts;
+
+    $manifest->set ($data);
+}
+
+# Helper for local_mirror_manifests - it parses a paragraph from Sources file
+sub _parse_srcs_pg {
+    my ($manifest, $mirdir, $area, $data) = @_;
+    my $ts = 0;
+    my $dir = $data->{'directory'}//'';
+    $dir .= '/' if $dir;
+    foreach my $f (split m/\n/, $data->{'files'}) {
+        $f =~ s/^\s++//o;
+        next unless $f && $f =~ m/\.dsc$/;
+        my (undef, undef, $file) = split m/\s++/, $f;
+        # $dir should end with a slash if it is non-empty.
+        $data->{'file'} = $mirdir . "/$dir" . $file;
+        last;
+    }
+    $data->{'area'} = $area;
+    # Rename a field :)
+    $data->{'source'} = $data->{'package'};
+
+    if (my @stat = stat $data->{'file'}) {
+        $ts = $stat[9];
+    }
+    $data->{'timestamp'} = $ts;
+
+    # $manifest strips redundant fields for us.
+    $manifest->set ($data);
 }
 
 # Local Variables:
