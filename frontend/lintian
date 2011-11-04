@@ -637,7 +637,7 @@ if ($opt{'LINTIAN_CFG'}) {
             }
         }
         if (m/^\s*LINTIAN_(ARCH|ARCHIVEDIR|AREA|DIST)\s*=/o) {
-            print STDERR "LINTIAN_$1 is deprecated (Seen $opt{'LINTIAN_CFG'} at line $.)\n";
+            print STDERR "LINTIAN_$1 is deprecated (seen in $opt{'LINTIAN_CFG'} at line $.)\n";
             $found = 1;
         }
         unless ($found) {
