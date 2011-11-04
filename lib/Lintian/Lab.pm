@@ -267,7 +267,7 @@ sub get_package {
             $pkg_src = $e->{'source'};
             $pkg_src_version = $e->{'source-version'}//$pkg_version;
         }
-        $dir = $self->_pool_path ($pkg_name, $pkg_type, $pkg_version, $pkg_arch);
+        $dir = $self->_pool_path ($pkg_src, $pkg_type, $pkg_name, $pkg_version, $pkg_arch);
         push @entries, Lintian::Lab::Entry->_new ($self, $pkg_name, $pkg_version, $pkg_arch, $pkg_type, $pkg_path, $pkg_src, $pkg_src_version, $dir);
     } else {
         # clear $pkg_arch if it is a source package - it simplifies
@@ -278,12 +278,14 @@ sub get_package {
             my ($n, $v, $a) = @keys;
             my $dir;
             my $pp;
+            my $pkg_src;
             # We do not have to check version - if we have a specific
             # version, only entries with that version will be visited.
             return if defined $pkg_arch && $a ne $pkg_arch;
             $pp = $entry->{'file'};
-            $dir = $self->_pool_path ($pkg_name, $pkg_type, $v, $a);
-            push @entries,  Lintian::Lab::Entry->_new ($self, $pkg_name, $v, $a, $pkg_type, $pp, $entry->{'source'}, $entry->{'source-version'}//$v, $dir);
+            $pkg_src = $entry->{'source'};
+            $dir = $self->_pool_path ($pkg_src, $pkg_type, $pkg_name, $v, $a);
+            push @entries,  Lintian::Lab::Entry->_new ($self, $pkg_name, $v, $a, $pkg_type, $pp, $pkg_src, $entry->{'source-version'}//$v, $dir);
         };
         my @sk = ($pkg_name);
         push @sk, $pkg_version if defined $pkg_version;
@@ -309,9 +311,9 @@ sub visit_packages {
         my $index = $self->_get_lab_index ($pkg_type);
         my $intv = sub {
             my ($me, $pkg_name, $pkg_version, $pkg_arch) = @_;
-            my $dir = $self->_pool_path ($pkg_name, $pkg_type, $pkg_version, $pkg_arch);
-            my $pp = $me->{'file'};
             my $pkg_src = $me->{'source'}//$pkg_name;
+            my $dir = $self->_pool_path ($pkg_src, $pkg_type, $pkg_name, $pkg_version, $pkg_arch);
+            my $pp = $me->{'file'};
             my $pkg_src_version = $me->{'source-version'}//$pkg_version;
             my $lentry = Lintian::Lab::Entry->_new ($self, $pkg_name, $pkg_version, $pkg_arch,
                                                    $pkg_type, $pp, $pkg_src, $pkg_src_version, $dir);
@@ -373,18 +375,20 @@ sub _load_lab_index {
     return $manifest;
 }
 
-# Given the package meta data (name, type, version, arch) return the
+# Given the package meta data (src_name, type, name, version, arch) return the
 # path to it in the Lab.  The path returned will be absolute.
 sub _pool_path {
-    my ($self, $pkg_name, $pkg_type, $pkg_version, $pkg_arch) = @_;
+    my ($self, $pkg_src, $pkg_type, $pkg_name, $pkg_version, $pkg_arch) = @_;
     my $dir = $self->dir;
     my $p;
-    if ($pkg_name =~ m/^lib/o) {
-        $p = substr $pkg_name, 0, 4;
+    # If it is at least 4 characters and starts with "lib", use "libX"
+    # as prefix
+    if ($pkg_src =~ m/^lib./o) {
+        $p = substr $pkg_src, 0, 4;
     } else {
-        $p = substr $pkg_name, 0, 1;
+        $p = substr $pkg_src, 0, 1;
     }
-    $p  = "$p/$pkg_name/${pkg_name}_${pkg_version}";
+    $p  = "$p/$pkg_src/${pkg_name}_${pkg_version}";
     $p .= "_${pkg_arch}" unless $pkg_type eq 'source';
     $p .= "_${pkg_type}";
     # Turn spaces into dashes - spaces do appear in architectures
