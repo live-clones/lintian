@@ -62,3 +62,6 @@ default-jdk-builddep
 
 # See: http://wiki.debian.org/Teams/DebianPerlGroup/OpenTasks/Transitions/DigestSHA1ToDigestSHA
 libdigest-sha1-perl
+
+# Deprecated in Wheezy by maintainer (#646420)
+dpatch

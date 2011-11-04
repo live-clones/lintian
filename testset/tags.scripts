@@ -1,4 +1,5 @@
 E: scripts changes: bad-ubuntu-distribution-in-changes-file unstable
+E: scripts source: build-depends-on-obsolete-package build-depends-indep: dpatch
 E: scripts source: dpatch-index-references-non-existent-patch 01_not_here_right_now.dpatch
 E: scripts source: dpatch-index-references-non-existent-patch 01_some_other_patch_thats_not_in_the_package.dpatch
 E: scripts source: missing-build-dependency debhelper

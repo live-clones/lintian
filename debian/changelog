@@ -88,6 +88,9 @@ lintian (2.5.4) UNRELEASED; urgency=low
       (Closes: #643716)
   * data/fields/essential:
     + [NT] Add libc-bin to the list of known essential packages.
+  * data/fields/obsolete-packages:
+    + [NT] Added dpatch per request of the maintainer.  Thanks to
+      Gergely Nagy for the report.  (Closes: #646420)
   * data/fields/virtual-packages:
     + [NT] Refreshed against sid.  Thanks to Gregor Herrmann for the
       report.  (Closes: #646604)
