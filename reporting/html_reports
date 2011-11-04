@@ -337,7 +337,7 @@ $source_info->visit_all (sub {
 # Done with the lab and its metadata
 $LAB->close;
 undef $LAB;
-undef $source_info
+undef $source_info;
 
 
 # Now, walk through the tags by source package (sorted by maintainer).  Output
