@@ -9,6 +9,8 @@ case "$1" in
     ;;
     restart|force-reload)
     ;;
+    status)
+    ;;
     *)
     ;;
 esac

@@ -24,6 +24,10 @@ I: scripts source: debian-watch-file-should-dversionmangle-not-uversionmangle li
 I: scripts source: dpatch-missing-description 02_i_dont_have_a_description.patch
 I: scripts source: dpatch-missing-description 04_i_dont_have_a_description_either.patch
 I: scripts source: missing-debian-source-format
+I: scripts: init.d-script-does-not-implement-optional-option etc/init.d/lsb-broken status
+I: scripts: init.d-script-does-not-implement-optional-option etc/init.d/lsb-other status
+I: scripts: init.d-script-does-not-implement-optional-option etc/init.d/no-lsb status
+I: scripts: init.d-script-does-not-implement-optional-option etc/init.d/skeleton status
 I: scripts: init.d-script-does-not-provide-itself etc/init.d/lsb-broken
 I: scripts: init.d-script-missing-lsb-short-description etc/init.d/lsb-other
 I: scripts: no-md5sums-control-file

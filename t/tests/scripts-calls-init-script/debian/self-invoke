@@ -18,6 +18,9 @@ case "$1" in
   restart)
     /etc/init.d/self-invoke start
     ;;
+  status)
+    :
+    ;;
   force-reload)
     :
     ;;

@@ -282,7 +282,7 @@ sub check_init {
         $needs_fs{'remote'} = 1 if ($l =~ m,^[^\#]*/usr/,);
         $needs_fs{'local'}  = 1 if ($l =~ m,^[^\#]*/var/,);
 
-        while ($l =~ s/^[^\#]*?(start|stop|restart|force-reload)//o) {
+        while ($l =~ s/^[^\#]*?(start|stop|restart|force-reload|status)//o) {
             $tag{$1} = 1;
         }
     }
@@ -432,6 +432,11 @@ sub check_init {
     for my $option qw(start stop restart force-reload) {
         $tag{$option}
             or tag 'init.d-script-does-not-implement-required-option', "etc/init.d/$_ $option";
+    }
+
+    for my $option qw(status) {
+        $tag{$option}
+            or tag 'init.d-script-does-not-implement-optional-option', "etc/init.d/$_ $option";
     }
 }
 

@@ -10,4 +10,4 @@
 # Description:       Enable service provided by daemon.
 ### END INIT INFO
 
-printf "start stop reload restart force-reload\n";
+printf "start status stop reload restart force-reload\n";

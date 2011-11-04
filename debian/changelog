@@ -2,6 +2,7 @@ lintian (2.5.4) UNRELEASED; urgency=low
 
   * Summary of tag changes:
     + Added:
+      - init.d-script-does-not-implement-optional-option
       - missing-build-dependency-for-dh-addon
       - python-depends-but-no-python-helper
       - python3-depends-but-no-python3-helper
@@ -51,6 +52,10 @@ lintian (2.5.4) UNRELEASED; urgency=low
     + [NT] Applied patch from Andrew Starr-Bochicchio to update the
       description of font-in-non-font-package to better reflect current
       font policy.  (Closes: #646838)
+  * checks/init.d{,.desc}:
+    + [NT] Applied patch from Peter Eisentraut to detect init.d scripts
+      without support for the optional "status" option.
+      (Closes: #647250)
   * checks/rules:
     + [JW] Fixed false negative "missing-build-dependency" when using
       "dh --with=X" rather than "dh --with X".  (Closes: #643714)

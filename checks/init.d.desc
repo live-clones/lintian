@@ -75,6 +75,14 @@ Ref: policy 9.3.2
 Info: The <tt>/etc/init.d</tt> scripts have to support the following
  command line arguments: start, stop, restart, force-reload.
 
+Tag: init.d-script-does-not-implement-optional-option
+Severity: wishlist
+Certainty: certain
+Ref: http://wiki.debian.org/LSBInitScripts
+Info: The <tt>/etc/init.d</tt> script does not implement the status
+ option.  This is not required by the Policy, but often requested by
+ users.
+
 Tag: init.d-script-not-included-in-package
 Severity: important
 Certainty: certain
