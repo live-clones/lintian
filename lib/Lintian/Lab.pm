@@ -37,7 +37,7 @@ use Scalar::Util qw(blessed);
 use constant {
 # Lab format Version Number increased whenever incompatible changes
 # are done to the lab so that all packages are re-unpacked
-    LAB_FORMAT      => 10.1,
+    LAB_FORMAT      => 11,
 # Constants to avoid semantic errors due to typos in the $lab->{'mode'}
 # field values.
     LAB_MODE_STATIC => 'static',
