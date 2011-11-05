@@ -176,6 +176,9 @@ lintian (2.5.4) UNRELEASED; urgency=low
     + [JW] Use "paragraph" and "field" rather than "section" and "tag"
       when referring to a Debian control file.
 
+  * man/lintian.pod.in:
+    + [NT] Fixed a typo, thanks to Evgeni Golov for spotting it,
+
   * private/generate-lintian-pod:
     + [NT] Document which collections are auto-removed by default in
       static labs.

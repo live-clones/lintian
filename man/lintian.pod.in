@@ -148,7 +148,7 @@ Display usage information and exit.
 =item B<-q>, B<--quiet>
 
 Suppress all informational messages including override comments
-(nornally shown wiht B<--show-overrides>).
+(normally shown with B<--show-overrides>).
 
 This option is silently ignored if B<--debug> is given.  Otherwise, if
 both B<--verbose> and B<--quiet> is used, the last of these two options
