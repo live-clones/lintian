@@ -24,11 +24,21 @@ Info: Native packaging should only be used if a piece of software was
 Tag: non-native-package-with-native-version
 Severity: normal
 Certainty: certain
-Info: This package has a native version number (a version number without a
- dash and a Debian portion) but is built as a non-native package.  Usually
- this is an error caused by a stray <tt>*.orig.tar.gz</tt> file in the
- parent directory fooling <tt>dpkg-source</tt> into thinking it was
- supposed to be a non-native package.
+Info: This package has a native version number (a version number
+ without a dash and a Debian portion) but is built as a non-native
+ package.  Usually this is an error caused by forgetting the debian
+ reivision for a non-native package.  In this case the solution is to
+ add a debian revision.
+ .
+ This error can also happen if the package is a 1.0 source format and
+ there is a stray <tt>*.orig.tar.gz</tt> file in the parent directory.
+ The file will trick <tt>dpkg-source</tt> into believing it was
+ supposed to be a non-native package.  Here the error can be solved by
+ converting it to 3.0 (native) package or removing/renaming the
+ <tt>*.orig.tar.gz</tt> file.
+ .
+ If you do not know what a "native" or a "non-native" package is, you are
+ very likely working on a non-native package.
 
 Tag: debian-files-list-in-source
 Severity: important

@@ -20,8 +20,11 @@ lintian (2.5.4) UNRELEASED; urgency=low
       Thanks to Loïc Minier for the patch.
   * checks/common_data.pm:
     + [JW] Merged into Lintian::Check.
-  * checks/cruft:
+  * checks/cruft{,.desc}:
     + [NT] Escape path when using them in regexes.  (Closes: #642902)
+    + [NT] Extended the description of the tag for non-native packages
+      with native versions.  Thanks to Jari Aalto for the report.
+      (Closes: #580048)
   * checks/dehelper{,.desc}:
     + [JW,NT] Check for versioned dependencies for some dh_commands.
       (Closes: #641035)
