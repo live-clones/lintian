@@ -15,9 +15,11 @@ lintian (2.5.4) UNRELEASED; urgency=low
       (Closes: #642092)
     + [JW] Fixed a false-positive when using the multiarch dir in
       RPATH.  (Closes: #646817)
-  * checks/changes-file.desc:
+  * checks/changes-file{,.desc}:
     + [NT] Added the "precise" to the list of Ubuntu distributions.
       Thanks to Loïc Minier for the patch.
+    + [NT] Accept release codename in the changes file.  Thanks to
+      Julien Cristau for the report.  (Closes: #637540)
   * checks/common_data.pm:
     + [JW] Merged into Lintian::Check.
   * checks/cruft{,.desc}:
@@ -85,6 +87,8 @@ lintian (2.5.4) UNRELEASED; urgency=low
   * collcetion/debfiles:
     + [NT] Bail if the debian dir is a symlink.
 
+  * data/changelog-file/debian-dists:
+    + [NT] New file.
   * data/changelog-file/ubuntu-dists:
     + [NT] Added the "precise".  Thanks to Loïc Minier for the
       patch.  (Closes: #644488)

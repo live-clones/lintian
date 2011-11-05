@@ -26,6 +26,7 @@ use Util;
 use Lintian::Tags qw(tag);
 use Lintian::Check qw(check_maintainer);
 
+my $DEBIAN_DISTS = Lintian::Data->new ('changelog-file/debian-dists');
 my $UBUNTU_REGEX;
 {
     my $ubuntu_dists = Lintian::Data->new ('changelog-file/ubuntu-dists');
@@ -64,11 +65,7 @@ if (defined $info->field('distribution')) {
                     tag 'bad-ubuntu-distribution-in-changes-file',
                         $distribution;
                 }
-        } elsif (! (($distribution eq 'oldstable')
-                     or ($distribution eq 'stable')
-                     or ($distribution eq 'testing')
-                     or ($distribution eq 'unstable')
-                     or ($distribution eq 'experimental')
+        } elsif (! ($DEBIAN_DISTS->known ($distribution)
                      or ($distribution =~ /^\w+-backports$/)
                      or ($distribution =~ /^\w+-proposed-updates$/)
                      or ($distribution =~ /^\w+-security$/)

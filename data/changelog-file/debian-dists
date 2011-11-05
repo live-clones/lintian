@@ -1,0 +1,15 @@
+# A list of Debian distributions, both code names and their
+# aliases
+
+# Codenames
+lenny
+wheezy
+sid
+
+# Aliases
+oldstable
+stable
+testing
+unstable
+experimental
+
