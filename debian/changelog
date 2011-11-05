@@ -83,7 +83,7 @@ lintian (2.5.4) UNRELEASED; urgency=low
 
   * collection/index:
     + [NT] Fixed an "uninitialized variable" warning if no tarballs were
-      present or the tarball is empty.  (Closes: #645660)
+      present or the tarball is empty.  (Closes: #645660, LP: #886487)
   * collcetion/debfiles:
     + [NT] Bail if the debian dir is a symlink.
 
