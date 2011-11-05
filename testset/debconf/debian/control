@@ -2,7 +2,7 @@ Source: debconf
 Section: utils
 Priority: optional
 Build-Depends: debhelper (>= 4), dpatch
-Maintainer: Lintian Maintainers <lintian@packages.debian.org>
+Maintainer: Lintian Maintainers <debian-lint-maint@debian.org>
 Standards-Version: 3.7.2
 
 Package: debconf-test

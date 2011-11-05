@@ -1,5 +1,5 @@
-Last generated 2011-11-20
-Coverage: 767/944 (81.25%), w. legacy tests: 876/944 (92.80%)
+Last generated 2011-11-21
+Coverage: 773/949 (81.45%), w. legacy tests: 881/949 (92.83%)
 
 The following tags are not tested by the test suite:
 
@@ -140,7 +140,6 @@ init.d init.d-script-has-duplicate-lsb-section
 init.d init.d-script-has-unknown-lsb-keyword
 init.d init.d-script-has-unterminated-lsb-section
 init.d init.d-script-missing-lsb-keyword
-init.d init.d-script-missing-lsb-short-description
 init.d init.d-script-not-included-in-package
 init.d init.d-script-not-marked-as-conffile
 init.d output-of-updaterc.d-not-redirected-to-dev-null
@@ -335,6 +334,5 @@ scripts
   init.d-script-has-unknown-lsb-keyword
   init.d-script-has-unterminated-lsb-section
   init.d-script-missing-lsb-keyword
-  init.d-script-missing-lsb-short-description
   script-in-usr-share-doc
   script-with-language-extension

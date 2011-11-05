@@ -1,14 +1,11 @@
 Source: {$srcpkg}
 Priority: extra
-Section: {$section}
-Maintainer: <lintian-maint@debian.org>
-Uploaders: <lintian-maint@debian.org>, Russ Allbery <rra@debian.org>,
- Russ Allbery <rra@debian.org>,
- I L. Oop  <fields-maintainer-general@packages.qa.debian.org>,
- Mr. Missing Comma <mrmc@comma.com>
- Mrs. Missing Comma <mrsmc@comma.com>
+Section: devel
+Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
+Uploaders: I Will Loop <fields-maintainer-bounces@packages.debian.org>,
+ I Will Loop Too <fields-maintainer-bounces@PACKAGES.QA.DEBIAN.ORG>
 Standards-Version: {$standards_version}
-Build-Depends: debhelper (>= 7)
+Build-Depends: debhelper (>= 7.0.50~)
 
 Package: {$srcpkg}
 Architecture: {$architecture}
@@ -18,3 +15,4 @@ Description: {$description}
  Lintian.  It is part of the Lintian test suite and may do very odd
  things.  It should not be installed like a regular package.  It may
  be an empty package.
+

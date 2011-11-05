@@ -186,6 +186,19 @@ Info: The maintainer address includes localhost(.localdomain), which is
  an invalid e-mail address.
 Ref: policy 5.6.2
 
+Tag: maintainer-address-causes-mail-loops-or-bounces
+Severity: serious
+Certainty: certain
+Info: The maintainer e-mail address either loops back to itself because
+ it is set to package@packages.debian.org or
+ package@packages.qa.debian.org  or references an email address
+ (typically a mailing list) which is  known to bounce mails. Policy
+ states: The email address given in the Maintainer control field must
+ accept  mail from those role accounts in Debian used to send automated
+ mails  regarding the package. This includes non-spam mail from the bug-
+ tracking system.
+Ref: policy 3.3
+
 Tag: uploader-name-missing
 Severity: serious
 Certainty: certain
@@ -226,6 +239,19 @@ Certainty: certain
 Info: The uploader address includes localhost(.localdomain), which is
  an invalid e-mail address.
 Ref: policy 5.6.3
+
+Tag: uploader-address-causes-mail-loops-or-bounces
+Severity: serious
+Certainty: certain
+Info: The maintainer e-mail address either loops back to itself because
+ it is set to package@packages.debian.org or
+ package@packages.qa.debian.org  or references an email address
+ (typically a mailing list) which is  known to bounce mails. Policy
+ states: The email address given in the Maintainer control field must
+ accept  mail from those role accounts in Debian used to send automated
+ mails  regarding the package. This includes non-spam mail from the bug-
+ tracking system.
+Ref: policy 3.3
 
 Tag: wrong-debian-qa-address-set-as-maintainer
 Severity: important

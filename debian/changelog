@@ -6,12 +6,14 @@ lintian (2.5.4) UNRELEASED; urgency=low
       - gzip-file-is-not-multi-arch-same-safe
       - init.d-script-does-not-implement-optional-option
       - init.d-script-missing-lsb-description
+      - maintainer-address-causes-mail-loops-or-bounces
       - missing-build-dependency-for-dh-addon
       - package-depends-on-lower-priority-package
       - package-would-benefit-from-build-arch-targets
       - python-depends-but-no-python-helper
       - python3-depends-but-no-python3-helper
       - transitional-package-should-be-oldlibs-extra
+      - uploader-address-causes-mail-loops-or-bounces
 
   * checks/*:
     + [JW] Replace common_data.pm with Lintian::Check.
@@ -73,6 +75,9 @@ lintian (2.5.4) UNRELEASED; urgency=low
     + [NT] Ensure transitional packages are in section oldlibs and
       priority extra.  Thanks to Josh Triplett for the report.
       (Closes: #645438)
+    + [NT] Check for bouncing and looping email addresses.  Thanks to
+      Ansgar Burchardt and Arno Töll for the bug report and patch.
+      (Closes: #636599)
   * checks/files{,.desc}:
     + [JW] Suggest the usage of "-delete" rather than "| xargs rm -f".
       (Closes: #641983)

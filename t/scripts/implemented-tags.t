@@ -36,6 +36,7 @@ our $EXCLUDE =
                  .*-not-full-name$
                  .*-address-looks-weird$
                  .*-address-is-on-localhost$
+                 .*-address-causes-mail-loops-or-bounces$
                  ^wrong-debian-qa-address-set-as-maintainer$
                  ^wrong-debian-qa-group-name$
                  ^malformed-override$

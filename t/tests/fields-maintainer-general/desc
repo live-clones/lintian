@@ -8,4 +8,4 @@ Test-For:
  maintainer-name-missing
  uploader-address-malformed
  uploader-name-missing
-
+ uploader-address-causes-mail-loops-or-bounces

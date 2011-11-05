@@ -28,6 +28,8 @@ use Email::Valid;
 use Lintian::Data;
 use Lintian::Tags qw(tag);
 
+our $KNOWN_BOUNCE_ADDRESSES = Lintian::Data->new('fields/bounce-addresses');
+
 our @ISA    = qw(Exporter);
 our @EXPORT = qw(check_maintainer check_spelling check_spelling_picky $known_shells_regex);
 
@@ -78,6 +80,14 @@ the tags below will be replaced with the value of FIELD.
 
 The e-mail address portion of MAINTAINER is at C<localhost> or some other
 similar domain.
+
+=item %s-address-causes-mail-loops-or-bounces
+
+The e-mail address portion of MAINTAINER or UPLOADER refers to the PTS
+e-mail addresses  C<package@packages.debian.org> or
+C<package@packages.qa.debian.org>, or, alternatively refers to a mailing
+list which is known to bounce off-list mails sent by Debian role accounts.
+
 
 =item %s-address-looks-weird
 
@@ -176,6 +186,12 @@ sub check_maintainer {
         if ($mail =~ /(?:localhost|\.localdomain|\.localnet)$/) {
             tag "$field-address-is-on-localhost", $maintainer;
         }
+
+        if (($field ne 'changed-by') and
+            ($mail =~ /\@packages\.(?:qa\.)?debian\.org/i or $KNOWN_BOUNCE_ADDRESSES->known($mail))) {
+            tag "$field-address-causes-mail-loops-or-bounces", $maintainer
+        }
+
 
         # Some additional checks that we only do for maintainer fields.
         if ($field eq 'maintainer') {
