@@ -824,7 +824,7 @@ foo source: another-tag without any comments
               <listitem>
                 <para>
                   The value must be a valid tag severity; the severity
-                  of the affected is set to this value.  Note
+                  of the affected tags are set to this value.  Note
                   that <emphasis>experimental</emphasis> is not a
                   severity.
                 </para>
