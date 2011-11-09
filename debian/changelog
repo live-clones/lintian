@@ -188,6 +188,10 @@ lintian (2.5.4) UNRELEASED; urgency=low
     + [NT] Document which collections are auto-removed by default in
       static labs.
 
+  * profiles/ubuntu/main.profile:
+    + [NT] Disable lzma-deb-archive for Ubuntu.  Thanks to Evan Broder
+      for the report and patch.  (Closes: #648117)
+
   * reporting/*:
     + [NT] Recognise and display pedantic tags.
     + [JW] Only emit "plus X overrides" if there any overrides.
