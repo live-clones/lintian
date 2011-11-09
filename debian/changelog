@@ -191,8 +191,9 @@ lintian (2.5.4) UNRELEASED; urgency=low
       static labs.
 
   * profiles/ubuntu/main.profile:
-    + [NT] Disable lzma-deb-archive for Ubuntu.  Thanks to Evan Broder
-      for the report and patch.  (Closes: #648117)
+    + [NT] Disable no-upstream-changelog and lzma-deb-archive for
+      Ubuntu.  Thanks to Evan Broder for the report and patch.
+      (Closes: #648117)
 
   * reporting/*:
     + [NT] Recognise and display pedantic tags.

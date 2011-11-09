@@ -2,6 +2,7 @@
 Profile: ubuntu/main
 Extends: debian/main
 Disable-Tags: debian-changelog-file-is-a-symlink,
- upstart-job-in-etc-init.d-not-registered-via-update-rc.d,
- lzma-deb-archive
+ lzma-deb-archive, no-upstream-changelog,
+ upstart-job-in-etc-init.d-not-registered-via-update-rc.d
+
 
