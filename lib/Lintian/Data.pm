@@ -34,10 +34,10 @@ use Carp qw(croak);
         croak('no data type specified') unless $type;
         unless (exists $data{$type}) {
             my $dir = $ENV{LINTIAN_ROOT} . '/data';
-            open(LIST, '<', "$dir/$type")
+            open(my $fd, '<', "$dir/$type")
                 or croak("unknown data type $type");
             local ($_, $.);
-            while (<LIST>) {
+            while (<$fd>) {
                 chomp;
                 s/^\s+//;
                 next if /^\#/;
@@ -51,6 +51,7 @@ use Carp qw(croak);
                 }
                 $data{$type}{$key} = $val;
             }
+            close $fd;
         }
         my $self = { data => $data{$type} };
         bless($self, $class);

@@ -137,6 +137,8 @@ lintian (2.5.4) UNRELEASED; urgency=low
     + [NT] Removed, replaced by Lintian::Package{,::Entry}.
   * lib/Lintian/Check.pm:
     + [JW] Merged with common_data.pm.
+  * lib/Lintian/Data.pm:
+    + [NT] Fixed a file descriptor leak.
   * lib/Lintian/Collect/Source.pm:
     + [JW] Fixed call to binary_field in binary_relation.
       (Closes: #641609)
