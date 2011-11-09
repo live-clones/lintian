@@ -83,6 +83,7 @@ Suggests: binutils-multiarch,
           libtext-template-perl,
           man-db (>= 2.5.1-1),
           xz-utils
+Multi-Arch: foreign
 Description: Debian package checker
  Lintian dissects Debian packages and reports bugs and policy
  violations. It contains automated checks for many aspects of Debian

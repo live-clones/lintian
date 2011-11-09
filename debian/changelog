@@ -117,6 +117,11 @@ lintian (2.5.4) UNRELEASED; urgency=low
       (Closes: #644793, #646529)
     + [JW] Added a number of corrections.  (Closes: #645393)
 
+  * debian/control:
+    + [CW] Mark lintian Multi-Arch: foreign (there does exist one
+      Architecture: any package that Build-Depends: lintian, so this helps
+      multiarch cross-building slightly).
+
   * frontend/lintian:
     + [NT] Collections explicitly requested (by -U) are no longer
       auto-removed.  Previously the only way to prevent auto-removal
