@@ -111,6 +111,9 @@ lintian (2.5.4) UNRELEASED; urgency=low
   * data/rules/deprecated-makefiles:
     + [JW] Added dbs makefiles, since dbs maintainer deprecated the
       package in 0.47.  (Closes: #646126)
+  * data/shared-libs/ldconfig-dirs:
+    + [NT] Add multi-arch dirs for hurd-i386.  Thanks to Julien
+      Cristau for noticing that they were missing.
   * data/spelling/corrections:
     + [NT] Added a correction for "propagate" and "separate", thanks
       to Guillem Jover for the suggestions.
