@@ -360,6 +360,11 @@ sub update_status_file {
     # greatly simplify a migration or detecting a broken lab later.
     print $sfd 'Package: ' . $self->pkg_name, "\n";
     print $sfd 'Version: ' . $self->pkg_version, "\n";
+    # Add Source{,-Version} if it is different from Package/Version
+    print $sfd 'Source: ' . $self->pkg_src, "\n"
+        unless $self->pkg_src eq $self->pkg_name;
+    print $sfd 'Source-Version: ' . $self->pkg_src_version, "\n"
+        unless $self->pkg_src_version eq $self->pkg_version;
     print $sfd 'Architecture: ' . $self->pkg_arch, "\n" if $self->pkg_type ne 'source';
     print $sfd 'Package-Type: ' . $self->pkg_type, "\n";
 
