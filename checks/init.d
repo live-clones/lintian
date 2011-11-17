@@ -413,7 +413,7 @@ sub check_init {
     }
 
     # Check syntax rules that apply to all of the keywords.
-    for my $keyword qw(required-start should-start required-stop should-stop) {
+    for my $keyword (qw(required-start should-start required-stop should-stop)) {
         next unless defined $lsb{$keyword};
         for my $dependency (split(/\s+/, $lsb{$keyword})) {
             if (defined $implied_dependencies{$dependency}) {
@@ -429,12 +429,12 @@ sub check_init {
     }
 
     # all tags included in file?
-    for my $option qw(start stop restart force-reload) {
+    for my $option (qw(start stop restart force-reload)) {
         $tag{$option}
             or tag 'init.d-script-does-not-implement-required-option', "etc/init.d/$_ $option";
     }
 
-    for my $option qw(status) {
+    for my $option (qw(status)) {
         $tag{$option}
             or tag 'init.d-script-does-not-implement-optional-option', "etc/init.d/$_ $option";
     }

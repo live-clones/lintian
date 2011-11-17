@@ -63,6 +63,7 @@ lintian (2.5.4) UNRELEASED; urgency=low
     + [NT] Applied patch from Peter Eisentraut to detect init.d scripts
       without support for the optional "status" option.
       (Closes: #647250)
+    + [NT] Fixed deprecation warning when using perl 5.14.
   * checks/rules:
     + [JW] Fixed false negative "missing-build-dependency" when using
       "dh --with=X" rather than "dh --with X".  (Closes: #643714)
@@ -84,6 +85,7 @@ lintian (2.5.4) UNRELEASED; urgency=low
   * collection/index:
     + [NT] Fixed an "uninitialized variable" warning if no tarballs were
       present or the tarball is empty.  (Closes: #645660, LP: #886487)
+    + [NT] Fixed deprecation warning when using perl 5.14.
   * collcetion/debfiles:
     + [NT] Bail if the debian dir is a symlink.
 

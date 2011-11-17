@@ -194,7 +194,7 @@ sub index_src {
 sub index_deb {
     my (@jobs, $job);
 
-    foreach my $file qw(index index-errors index-owner-id) {
+    foreach my $file (qw(index index-errors index-owner-id)) {
         unlink $file or fail "$file: $!" if -f $file;
     }
 
