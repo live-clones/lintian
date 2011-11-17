@@ -406,6 +406,8 @@ lintian (2.5.3) unstable; urgency=low
   * data/fields/archive-sections:
     + [NT] Fixed a typo in "otherosfs" section name.  Thanks to
       Stefan Potyra for the report.  (Closes: #637596)
+  * data/fields/perl-provides:
+    + [NT] Refreshed with perl 5.14 in sid.
   * data/files/fonts:
     + [NT] Refreshed against sid and now includes packages starting
       with "fonts-" as well.  Thanks to Paul Wise for the patches.
