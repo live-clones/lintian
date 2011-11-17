@@ -151,11 +151,11 @@ lintian (2.5.4) UNRELEASED; urgency=low
     + [JW] Merged with common_data.pm.
   * lib/Lintian/Collect/Group.pm:
     + [NT] New file - Collect like API for group data.
-  * lib/Lintian/Data.pm:
-    + [NT] Fixed a file descriptor leak.
   * lib/Lintian/Collect/Source.pm:
     + [JW] Fixed call to binary_field in binary_relation.
       (Closes: #641609)
+  * lib/Lintian/Data.pm:
+    + [NT] Fixed a file descriptor leak.
   * lib/Lintian/Lab{,/Entry,/Manifest,/ManifestDiff}.pm:
     + [NT] New files.  Replaces the Read_pkglists, Lab and
       Lab::Package modules.
