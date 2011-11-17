@@ -23,7 +23,9 @@ use strict;
 use warnings;
 
 use Util;
+use Lintian::Collect::Group;
 use Lintian::Processable;
+
 =head1 NAME
 
 Lintian::ProcessableGroup -- A group of objects that Lintian can process
@@ -291,6 +293,33 @@ sub get_binary_processables {
     return wantarray ? @result : \@result;
 }
 
+
+=item $group->info
+
+Returns L<Lintian::Collect::Group|$info> element for this group.
+
+=cut
+
+sub info {
+    my ($self) = @_;
+    my $info = $self->{info};
+    if (! defined $info) {
+        $info = Lintian::Collect::Group->new ($self);
+    }
+    return $info;
+}
+
+=item $group->clear_cache
+
+Discard the info element, so the memory used by it can be reclaimed.
+Mostly useful when checking a lot of packages (e.g. on lintian.d.o).
+
+=cut
+
+sub clear_cache {
+    my ($self) = @_;
+    delete $self->{info};
+}
 
 =back
 

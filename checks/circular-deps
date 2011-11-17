@@ -43,21 +43,16 @@ my $group = shift;
 my @nodes = ();
 my %edges = ();
 my $sccs;
+my $ginfo = $group->info;
 
 foreach my $proc ($group->get_processables('binary')) {
-    my $pname = $proc->pkg_name;
-    my $relation = $proc->info->relation('strong');
-    my $deps = [];
-    foreach my $oproc ($group->get_processables('binary')) {
-        my $opname = $oproc->pkg_name;
-        next if $opname eq $pname;
-        push @$deps, $opname if $relation->implies($opname);
-    }
+    my $deps = $ginfo->direct_dependencies ($proc);
     if (scalar @$deps > 0) {
         # it depends on another package - it can cause
         # a circular dependency
+        my $pname = $proc->pkg_name;
         push @nodes, $pname;
-        $edges{$pname} = $deps;
+        $edges{$pname} = [map { $_->pkg_name } @$deps];
     }
 }
 

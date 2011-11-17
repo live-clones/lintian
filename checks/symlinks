@@ -23,7 +23,6 @@ use strict;
 use warnings;
 
 use File::Basename qw(dirname);
-use Lintian::Relation ();
 use Lintian::Tags qw(tag);
 use Util;
 
@@ -35,10 +34,10 @@ my $info = shift;
 my $proc = shift;
 my $group = shift;
 
+my $ginfo = $group->info;
 my $index = $info->index;
 my @brokenlinks;
 my @dindexes;
-my $relation;
 
 foreach my $file (@{$info->sorted_index}) {
     my $index_info = $index->{$file};
@@ -78,11 +77,8 @@ foreach my $file (@{$info->sorted_index}) {
 return unless @brokenlinks;
 
 # Check our dependencies:
-$relation = $info->relation('strong');
-foreach my $depproc ($group->get_processables($type)){
-    if ($relation->implies($depproc->pkg_name())){
-        push @dindexes, $depproc->info->index;
-    }
+foreach my $depproc (@{ $ginfo->direct_dependencies ($proc)}) {
+    push @dindexes, $depproc->info->index;
 }
 
 BLINK:

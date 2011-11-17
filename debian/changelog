@@ -11,6 +11,7 @@ lintian (2.5.4) UNRELEASED; urgency=low
   * checks/*:
     + [JW] Replace common_data.pm with Lintian::Check.
     + [NT] Remove some unused "use lib <expr>" from various checks.
+    + [NT] Use Lintian::Collect::Group to find direct dependencies.
   * checks/binaries:
     + [JW] Allow binaries to use "/usr/lib/$srcpkg/" in RPATHs.
       (Closes: #642092)
@@ -148,6 +149,8 @@ lintian (2.5.4) UNRELEASED; urgency=low
     + [NT] Removed, replaced by Lintian::Package{,::Entry}.
   * lib/Lintian/Check.pm:
     + [JW] Merged with common_data.pm.
+  * lib/Lintian/Collect/Group.pm:
+    + [NT] New file - Collect like API for group data.
   * lib/Lintian/Data.pm:
     + [NT] Fixed a file descriptor leak.
   * lib/Lintian/Collect/Source.pm:

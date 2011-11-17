@@ -36,13 +36,12 @@ my $info = shift;
 my $proc = shift;
 my $group = shift;
 
-
+my $ginfo = $group->info;
 my %binary;
 my %link;
 # my %sect_by_binary;
 # my %sect_by_manpage;
 my %manpage;
-my $relation;
 
 # Read package contents...
 foreach my $file (@{$info->sorted_index}) {
@@ -335,31 +334,26 @@ foreach my $file (@{$info->sorted_index}) {
 }
 
 # Check our dependencies:
-$relation = $info->relation('strong');
-foreach my $depproc ($group->get_processables('binary')){
-    if ($relation->implies($depproc->pkg_name())){
-        # Find the manpages in our related dependencies
-        my $depinfo = $depproc->info();
-        foreach my $file (@{ $depinfo->sorted_index() }){
-            next if $file eq '';
-            my $index_info = $depinfo->index->{$file};
-            my $perm = $index_info->{type};
-            my ($fname, $path, $suffix) = fileparse($file, qr,\..+$,o);
-            my $lang = '';
-            next unless ($perm =~ m,^[\-lh],o) and
-                (($path =~ m,^usr/man/\S+,o)
-                 or ($path =~ m,^usr/X11R6/man/\S+,o)
-                 or ($path =~ m,^usr/share/man/\S+,o) );
-            next unless ($path =~ m,man\d/$,o);
-            $manpage{$fname} = [] unless exists $manpage{$fname};
-            $lang = $1 if $path =~ m,/([^/]+)/man\d/$,o;
-            $lang = '' if $lang eq 'man';
-            push @{$manpage{$fname}}, {file => $file, lang => $lang};
-        }
+foreach my $depproc (@{ $ginfo->direct_dependencies ($proc) }) {
+    # Find the manpages in our related dependencies
+    my $depinfo = $depproc->info();
+    foreach my $file (@{ $depinfo->sorted_index() }){
+        next if $file eq '';
+        my $index_info = $depinfo->index->{$file};
+        my $perm = $index_info->{type};
+        my ($fname, $path, $suffix) = fileparse($file, qr,\..+$,o);
+        my $lang = '';
+        next unless ($perm =~ m,^[\-lh],o) and
+            (($path =~ m,^usr/man/\S+,o)
+             or ($path =~ m,^usr/X11R6/man/\S+,o)
+             or ($path =~ m,^usr/share/man/\S+,o) );
+        next unless ($path =~ m,man\d/$,o);
+        $manpage{$fname} = [] unless exists $manpage{$fname};
+        $lang = $1 if $path =~ m,/([^/]+)/man\d/$,o;
+        $lang = '' if $lang eq 'man';
+        push @{$manpage{$fname}}, {file => $file, lang => $lang};
     }
 }
-
-
 
 for my $f (sort keys %binary) {
     if (exists $manpage{$f}) {
