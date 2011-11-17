@@ -1,2 +1,0 @@
-W: circular-deps source: intra-source-package-circular-dependency c1-a c1-b c1-c
-W: circular-deps source: intra-source-package-circular-dependency c2-a c2-b c2-c

@@ -2,11 +2,12 @@ lintian (2.5.4) UNRELEASED; urgency=low
 
   * Summary of tag changes:
     + Added:
+      - data.tar.xz-member-without-dpkg-pre-depends
       - init.d-script-does-not-implement-optional-option
       - missing-build-dependency-for-dh-addon
+      - package-depends-on-lower-priority-package
       - python-depends-but-no-python-helper
       - python3-depends-but-no-python3-helper
-      - data.tar.xz-member-without-dpkg-pre-depends
 
   * checks/*:
     + [JW] Replace common_data.pm with Lintian::Check.
@@ -22,6 +23,12 @@ lintian (2.5.4) UNRELEASED; urgency=low
       Thanks to Loïc Minier for the patch.
     + [NT] Accept release codename in the changes file.  Thanks to
       Julien Cristau for the report.  (Closes: #637540)
+  * checks/circular-deps{,.desc}:
+    + [NT] Renamed to group-checks{,.desc}.
+  * checks/group-checks{,.desc}:
+    + [NT] Added check for depending on lower priority packages built
+      from the same source.  Only strong dependencies are considered.
+      Thanks to Neil Williams for the report.  (Closes: #387166)
   * checks/common_data.pm:
     + [JW] Merged into Lintian::Check.
   * checks/cruft{,.desc}:

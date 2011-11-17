@@ -1,4 +1,4 @@
-# circular-deps -- lintian check script -*- perl -*-
+# group-checks -- lintian check script -*- perl -*-
 
 # Copyright (C) 2011 Niels Thykier <niels@thykier.net>
 #
@@ -18,11 +18,14 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-package Lintian::circular_deps;
+package Lintian::group_checks;
 use strict;
 use warnings;
 
 use Lintian::Tags qw(tag);
+use Lintian::Data;
+
+my $KNOWN_PRIOS = Lintian::Data->new ('common/priorities', qr/\s*=\s*/o);
 
 sub run {
 
@@ -53,6 +56,7 @@ foreach my $proc ($group->get_processables('binary')) {
         my $pname = $proc->pkg_name;
         push @nodes, $pname;
         $edges{$pname} = [map { $_->pkg_name } @$deps];
+        _check_priorities ($proc, $deps);
     }
 }
 
@@ -60,7 +64,7 @@ foreach my $proc ($group->get_processables('binary')) {
 # on some other package from this source.
 return if scalar @nodes < 2;
 
-$sccs = Lintian::circular_deps::Graph->new(\@nodes, \%edges)->tarjans();
+$sccs = Lintian::group_checks::Graph->new(\@nodes, \%edges)->tarjans();
 
 foreach my $comp (@$sccs) {
     # It takes two to tango... erh. make a circular dependency.
@@ -71,11 +75,32 @@ foreach my $comp (@$sccs) {
 
 }
 
+# Check that $proc has a priority that is less than or equal to that
+# of its dependencies (Policy §2.5)
+sub _check_priorities {
+    my ($proc, $deps) = @_;
+    my $priority = $proc->info->field ('priority');
+    my $pkg_name = $proc->pkg_name;
+    if ($priority) {
+        my $prival = $KNOWN_PRIOS->value ($priority);
+        foreach my $dep (@$deps) {
+            my $dpri = $dep->info->field ('priority') // '';
+            my $dprival = $KNOWN_PRIOS->value ($dpri);
+            # Ignore packages without priorities - we have a separate
+            # check for that.
+            next unless $dprival;
+            tag 'package-depends-on-lower-priority-package', "$pkg_name:$priority",
+                'depends on', $dep->pkg_name . ":$dpri"
+                    unless $prival <= $dprival;
+        }
+    }
+}
+
 ## Encapsulate Tarjan's algorithm in an class/object to keep
 ## the run sub somewhat sane.
-package Lintian::circular_deps::Graph;
+package Lintian::group_checks::Graph;
 
-sub new{
+sub new {
     my ($type, $nodes, $edges) = @_;
     my $self = { nodes => $nodes, edges => $edges};
     bless $self, $type;

@@ -1,0 +1,14 @@
+# Manually maintained map of priorities
+#
+# It is used by checks/fields to validate the priority fields and
+# checks/group-checks to check policy §2.5.  The numbers are used for
+# the latter (allowing a trivial <= comparison)
+#
+# Do not use a non-integer nor a false-value on the right-hand side.
+
+required  = 5
+important = 4
+standard  = 3
+optional  = 2
+extra     = 1
+

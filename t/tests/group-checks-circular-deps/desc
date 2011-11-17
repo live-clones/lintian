@@ -1,4 +1,4 @@
-Testname: circular-deps
+Testname: group-checks-circular-deps
 Sequence: 6000
 Version: 1.0
 Description: Test for circular dependencies

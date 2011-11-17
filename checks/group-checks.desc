@@ -1,0 +1,35 @@
+Check-Script: group-checks
+Author: Niels Thykier <niels@thykier.net>
+Abbrev: gchck
+# This is a source check, so we only run it once per group
+Type: source
+Info: This script checks for some issues that may appear in packages
+ built from the same source.  This includes intra-source circular
+ dependencies and intra-source priority checks.
+
+Tag: intra-source-package-circular-dependency
+Severity: normal
+Certainty: certain
+Info: The listed packages from the same source circularly depend
+ (or pre-depend) on each other.  This makes it difficult for tools
+ to properly handle install/upgrade sequences.  Furthermore this
+ complicates automated removal of unused packages.
+ .
+ If possible, consider removing or reducing one of the depends.
+ .
+ Note: This check is limited to packages created from the same
+ source package.  Full circular dependencies between binaries from
+ different source packages is beyond the scope of Lintian.
+Ref: policy 7.2
+
+Tag: package-depends-on-lower-priority-package
+Severity: normal
+Certainty: certain
+Ref: policy 2.5, http://qa.debian.org/debcheck.php
+Info: The package depends on a package with lower priority than
+ itself.
+ .
+ Note: This check is limited to packages created from the same source
+ package.  A full check of all dependencies built from different
+ source packages is beyond the scope of Lintian.  The depcheck service
+ can do this.
