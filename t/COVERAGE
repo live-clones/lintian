@@ -1,5 +1,5 @@
 Last generated 2011-11-17
-Coverage: 765/943 (81.12%), w. legacy tests: 874/943 (92.68%)
+Coverage: 766/943 (81.23%), w. legacy tests: 875/943 (92.79%)
 
 The following tags are not tested by the test suite:
 
@@ -32,7 +32,6 @@ fields malformed-python-version
 fields no-package-name
 fields no-source-field
 fields no-version-field
-fields package-superseded-by-perl
 
 files FSSTND-dir-in-var
 files compressed-symlink-with-wrong-ext
