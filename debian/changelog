@@ -78,6 +78,7 @@ lintian (2.5.4) UNRELEASED; urgency=low
       without support for the optional "status" option.
       (Closes: #647250)
     + [NT] Fixed deprecation warning when using perl 5.14.
+      (Closes: #649133)
   * checks/rules:
     + [JW] Fixed false negative "missing-build-dependency" when using
       "dh --with=X" rather than "dh --with X".  (Closes: #643714)
