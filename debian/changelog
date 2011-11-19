@@ -96,7 +96,7 @@ lintian (2.5.4) UNRELEASED; urgency=low
     + [JW] Added some more DEP-5 URLs.  (Closes: #642027)
     + [JW] Improved the wording of the extra information for the tag
       syntax-error-in-dep5-copyright.  (Closes: #644556)
-  + checks/symlinks:
+  * checks/symlinks:
     + [NT] Ignore broken links that appears to point to fonts.
 
   * collection/index:
