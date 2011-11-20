@@ -10,6 +10,7 @@ lintian (2.5.4) UNRELEASED; urgency=low
       - package-would-benefit-from-build-arch-targets
       - python-depends-but-no-python-helper
       - python3-depends-but-no-python3-helper
+      - transitional-package-should-be-oldlibs-extra
 
   * checks/*:
     + [JW] Replace common_data.pm with Lintian::Check.
@@ -68,6 +69,9 @@ lintian (2.5.4) UNRELEASED; urgency=low
       field" tag if they contain newlines.
     + [JW,NT] Clarified that build-depends-on-metapackage is not only
       triggered by X11 metapackages.  (Closes: #642125)
+    + [NT] Ensure transitional packages are in section oldlibs and
+      priority extra.  Thanks to Josh Triplett for the report.
+      (Closes: #645438)
   * checks/files{,.desc}:
     + [JW] Suggest the usage of "-delete" rather than "| xargs rm -f".
       (Closes: #641983)

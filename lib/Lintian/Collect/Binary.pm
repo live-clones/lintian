@@ -310,6 +310,15 @@ sub relation {
     return $self->{relation}->{$field};
 }
 
+# Returns a truth value if the package appears to be transitional package.
+# - this is based on the package description.
+# sub is_transitional Needs-Info <>
+sub is_transitional {
+    my ($self) = @_;
+    my $desc = $self->field ('description')//'';
+    return $desc =~ m/transitional package/;
+}
+
 =head1 NAME
 
 Lintian::Collect::Binary - Lintian interface to binary package data collection
@@ -467,6 +476,13 @@ The concatenation of Recommends and Suggests.
 
 If FIELD isn't present in the package, the returned Lintian::Relation
 object will be empty (always satisfied and implies nothing).
+
+=item is_transitional
+
+Returns a truth value if the package appears to be a transitional
+package.
+
+This is based on the package's description.
 
 =back
 

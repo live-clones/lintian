@@ -1,0 +1,14 @@
+Source: {$srcpkg}
+Priority: standard
+Section: devel
+Maintainer: {$author}
+Standards-Version: {$standards_version}
+Build-Depends: debhelper (>= 7.0.50~)
+
+Package: {$srcpkg}
+Architecture: all
+Depends: $\{misc:Depends\},
+         some-replacement
+Description: {$description}
+ This is a transitional package that should have been in section
+ oldlibs and priority extra.

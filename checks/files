@@ -149,7 +149,7 @@ my @flash_nonfree = (
 # transitional packages.
 my @METAPKG_REGEX =
     (qr/meta[ -]?package/, qr/dummy/,
-     qr/(?:dependency|empty|transitional|virtual) package/);
+     qr/(?:dependency|empty|virtual) package/);
 
 # Common files stored in /usr/share/doc/$pkg that aren't sufficient to
 # consider the package non-empty.
@@ -214,9 +214,9 @@ my @devhelp_links;
 my %x11_font_dirs;
 
 # Check if package is empty
-my $is_dummy = 0;
+my $is_dummy = $info->is_transitional;
 my $description = $info->field('description');
-if ($description) {
+if (!$is_dummy && $description) {
     for my $regex (@METAPKG_REGEX) {
         if ($description =~ /$regex/) {
             $is_dummy = 1;

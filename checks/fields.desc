@@ -1077,3 +1077,13 @@ Info: The package build-depends on a versioned development package of
  Should the package have a legitimate reason for using the versioned development
  package, please add an override.
 Ref: http://download.oracle.com/docs/cd/E17076_02/html/upgrading/upgrade_process.html
+
+Tag: transitional-package-should-be-oldlibs-extra
+Severity: normal
+Certainty: possible
+Ref: #645438
+Info: The package appears to be a transitional package, but it is not
+ priority extra and in the oldlibs section.
+ .
+ Using oldlibs/extra assists packages managers in handling the
+ transition package correctly.

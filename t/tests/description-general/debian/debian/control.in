@@ -67,6 +67,7 @@ Description: This description ends, etc.
  be an empty package.
 
 Package: {$srcpkg}-dummy
+Section: oldlibs
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
 Description: test package (transitional package)
