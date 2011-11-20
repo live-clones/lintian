@@ -820,7 +820,7 @@ foreach my $file (@{$info->sorted_index}) {
     # we do the same check on perl scripts in checks/scripts
     {
         my $dep = $info->relation('strong');
-        if ($index_info->{type} =~ m/^[-h]/o && $file =~ m,\.pm$, && !$dep->implies('libperl4-corelibs-perl')) {
+        if ($index_info->{type} =~ m/^[-h]/o && $file =~ m,\.pm$, && !$dep->implies ('libperl4-corelibs-perl | perl (<< 5.12.3-7)')) {
             open (PM, '<', $info->unpacked($file)) or fail("cannot open .pm file: $!");
             while (<PM>) {
                 if (/(?:do|require)\s+(?:'|")(abbrev|assert|bigfloat|bigint|bigrat|cacheout|complete|ctime|dotsh|exceptions|fastcwd|find|finddepth|flush|getcwd|getopt|getopts|hostname|importenv|look|newgetopt|open2|open3|pwd|shellwords|stat|syslog|tainted|termcap|timelocal|validate)\.pl(?:'|")/) {

@@ -452,7 +452,8 @@ for my $filename (sort keys %{$info->scripts}) {
     }
 
     # Check for obsolete perl libraries
-    if ($base eq 'perl' && !$str_deps->implies('libperl4-corelibs-perl')) {
+    if ($base eq 'perl' &&
+             !$str_deps->implies ('libperl4-corelibs-perl | perl (<< 5.12.3-7)')) {
         open(FH, '<', $path) or fail("could not open script $path");
         while (<FH>) {
             if (/(?:do|require)\s+(?:'|")(abbrev|assert|bigfloat|bigint|bigrat|cacheout|complete|ctime|dotsh|exceptions|fastcwd|find|finddepth|flush|getcwd|getopt|getopts|hostname|importenv|look|newgetopt|open2|open3|pwd|shellwords|stat|syslog|tainted|termcap|timelocal|validate)\.pl(?:'|")/) {

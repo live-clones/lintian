@@ -77,6 +77,8 @@ lintian (2.5.4) UNRELEASED; urgency=low
     + [JW,NT] Check that gzip files are compressed with -n in
       "Multi-Arch: same" packages.  (Closes: #649329)
       packages.
+    + [NT] Corrected perl4 check, thanks to Dominic Hargreaves for the
+      report and the patch.
   * checks/init.d{,.desc}:
     + [NT] Applied patch from Peter Eisentraut to detect init.d scripts
       without support for the optional "status" option.
@@ -96,6 +98,8 @@ lintian (2.5.4) UNRELEASED; urgency=low
       checks.  ERB is a Ruby templating language, so these will probably
       have mixed shell and Ruby code and may not be executable.  Thanks,
       Laurent Arnoud.
+    + [NT] Corrected perl4 check, thanks to Dominic Hargreaves for the
+      report and the patch.  (Closes: #648532)
   * checks/source-copyright:
     + [JW] Added some more DEP-5 URLs.  (Closes: #642027)
     + [JW] Improved the wording of the extra information for the tag
