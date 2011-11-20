@@ -37,6 +37,10 @@ lintian (2.5.4) UNRELEASED; urgency=low
     + [NT] Extended the description of the tag for non-native packages
       with native versions.  Thanks to Jari Aalto for the report.
       (Closes: #580048)
+  * checks/copyright.desc:
+    + [RG,NT] Clarified that the PHP 2.x license is only for the PHP
+      interpreter and PEAR modules cannot use it.  Thanks to
+      Thomas Goirand for the report.  (Closes: #616436)
   * checks/deb-format{,.desc}:
     + [NT] Added check for using .xz compression in deb files without
       versioned Pre-Depends on dpkg.  The severity is pedantic for

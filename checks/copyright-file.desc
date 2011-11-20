@@ -272,8 +272,12 @@ Tag: copyright-refers-to-bad-php-license
 Severity: serious
 Certainty: possible
 Info: This package appears to be covered by version 2.x of the PHP license,
- which is not appropriate for anything other than PHP itself.
-Ref: http://ftp-master.debian.org/REJECT-FAQ.html
+ which is not appropriate for anything other than the PHP interpreter
+ itself.
+ .
+ Note that PEAR modules are not a part of the PHP interpreter and cannot
+ use this license.
+Ref: http://ftp-master.debian.org/REJECT-FAQ.html, #616436
 
 Tag: copyright-refers-to-problematic-php-license
 Severity: serious
