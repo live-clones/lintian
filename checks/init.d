@@ -31,8 +31,11 @@ my %lsb_keywords = (provides            => 1,
                     'should-stop'       => 0,
                     'default-start'     => 1,
                     'default-stop'      => 1,
+                    # These two are actually optional, but we mark
+                    # them as required and give them a weaker tag if
+                    # they are missing.
                     'short-description' => 1,
-                    'description'       => 0);
+                    'description'       => 1);
 
 # These init script names should probably not be used in dependencies.
 # Instead, the corresponding virtual facility should be used.
@@ -296,6 +299,8 @@ sub check_init {
             if ($lsb_keywords{$keyword} && !defined $lsb{$keyword}) {
                 if ($keyword eq 'short-description') {
                     tag 'init.d-script-missing-lsb-short-description', "etc/init.d/$_";
+                } elsif ($keyword eq 'description') {
+                    tag 'init.d-script-missing-lsb-description', "etc/init.d/$_";
                 } else {
                     tag 'init.d-script-missing-lsb-keyword', "etc/init.d/$_ $keyword";
                 }

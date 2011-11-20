@@ -8,7 +8,6 @@ set -e
 # Required-Stop:
 # Default-Start: 2 3 5
 # Default-Stop: 0 6
-# Short-Description: Just a test script
 ### END INIT INFO
 
 . /lib/init/vars.sh

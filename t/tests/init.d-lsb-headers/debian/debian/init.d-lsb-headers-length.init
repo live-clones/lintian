@@ -9,6 +9,7 @@ set -e
 # Default-Start:
 # Default-Stop: 0 1 2 6
 # Short-Description: Do nothing at all
+# Description: The short description pretty much covers it.
 ### END INIT INFO
 
 case "$1" in

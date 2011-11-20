@@ -5,6 +5,7 @@ lintian (2.5.4) UNRELEASED; urgency=low
       - data.tar.xz-member-without-dpkg-pre-depends
       - gzip-file-is-not-multi-arch-same-safe
       - init.d-script-does-not-implement-optional-option
+      - init.d-script-missing-lsb-description
       - missing-build-dependency-for-dh-addon
       - package-depends-on-lower-priority-package
       - package-would-benefit-from-build-arch-targets
@@ -94,6 +95,9 @@ lintian (2.5.4) UNRELEASED; urgency=low
       (Closes: #647250)
     + [NT] Fixed deprecation warning when using perl 5.14.
       (Closes: #649133)
+    + [NT] Added tag for missing LSB Description keyword.  Thanks to
+      Michael Biebl and Petter Reinholdtsen for the bug report.
+      (Closes: #604620)
   * checks/rules{,.desc}:
     + [JW] Fixed false negative "missing-build-dependency" when using
       "dh --with=X" rather than "dh --with X".  (Closes: #643714)
