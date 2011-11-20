@@ -64,8 +64,6 @@ our @GLOBAL_CLEAN_DEPENDS =
 my @GLOBAL_DEPENDS =
     (
      [ 'dh-ocaml, ocaml-nox | ocaml' => qr'^\t\s*dh_ocaml(?:init|doc)\s' ],
-     [ 'python-central' => qr'^\t\s*dh_pycentral\s' ],
-     [ 'python-support' => qr'^\t\s*dh_pysupport\s' ],
      [ 'python-central' => qr'^DEB_PYTHON_SYSTEM\s*:?=\s*pycentral' ],
      [ 'python-support' => qr'^DEB_PYTHON_SYSTEM\s*:?=\s*pysupport' ],
     );

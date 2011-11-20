@@ -104,6 +104,8 @@ lintian (2.5.4) UNRELEASED; urgency=low
       dpkg makefiles.  (Closes: #646495)
     + [NT] Added tracker tag for the build-arch target goal.
       (Closes: #647227)
+    + [JW] Fixed duplicate tags about missing dependency for
+      dh_pycentral/dh_pysupport.  (Closes: #633507)
   * checks/scripts:
     + [RA] Exclude files ending in *.erb from several shell script
       checks.  ERB is a Ruby templating language, so these will probably
