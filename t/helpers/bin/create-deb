@@ -94,7 +94,7 @@ if ($val{'auto-build-data'}) {
     foreach my $file (qw(copyright changelog)) {
         runsystem('install', '-m', '0644', $file,  "root/usr/share/doc/$pkg/$file") if -e $file;
     }
-    runsystem('gzip', '--best', "root/usr/share/doc/$pkg/changelog") if -e './changelog';
+    runsystem('gzip', '-n', '--best', "root/usr/share/doc/$pkg/changelog") if -e './changelog';
     # set root so it works for later :)
     $val{'root'} = 'root/';
 }

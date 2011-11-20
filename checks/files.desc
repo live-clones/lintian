@@ -1302,3 +1302,12 @@ Info: This package includes perl modules using obsoleted perl 4-era
  are likely to be removed from the core in perl 5.16. Please either
  remove references to these libraries, or add a dependency on
  <tt>libperl4-corelibs-perl | perl (&lt;&lt; 5.12.3-7)</tt> to this package.
+
+Tag: gzip-file-is-not-multi-arch-same-safe
+Severity: important
+Certainty: certain
+Info: The gzip file contains a timestamp that will differ between
+ architectures.  Multi-Arch: same implies all shared files must be
+ byte-for-byte identical.
+ .
+ This can usually be fixed by passing -n to gzip.

@@ -175,6 +175,7 @@ my %linked_against_libvga;
 my $py_support_nver = undef;
 
 my $arch_dep_files = 0;
+my $isma_same = ($info->field ('multi-arch')//'') eq 'same';
 
 # read data from objdump-info file
 foreach my $file (sort keys %{$info->objdump_info}) {
@@ -1057,6 +1058,23 @@ foreach my $file (@{$info->sorted_index}) {
             my $finfo = $info->file_info->{$file} || '';
             if ($finfo !~ m/gzip compressed/) {
                 tag 'gz-file-not-gzip', $file;
+            } elsif ($isma_same) {
+                my $path = $info->unpacked ($file);
+                open my $fd, '<', $path or fail "opening $file: $!";
+                my $buff;
+                # We need to read at least 8 bytes
+                if (sysread($fd, $buff, 1024) >= 8) {
+                    # Extract the flags and the mtime.
+                    #  NN NN  NN NN, NN NN NN NN  - bytes read (in hex, network order)
+                    #  __ __  __ __,    $mtime    - variables
+                    my (undef, $mtime) = unpack ('NN', $buff);
+                    if ($mtime){
+                        tag 'gzip-file-is-not-multi-arch-same-safe', $file;
+                    }
+                } else {
+                    fail "reading $file: $!";
+                }
+                close $fd;
             }
         }
 

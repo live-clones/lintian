@@ -3,6 +3,7 @@ lintian (2.5.4) UNRELEASED; urgency=low
   * Summary of tag changes:
     + Added:
       - data.tar.xz-member-without-dpkg-pre-depends
+      - gzip-file-is-not-multi-arch-same-safe
       - init.d-script-does-not-implement-optional-option
       - missing-build-dependency-for-dh-addon
       - package-depends-on-lower-priority-package
@@ -73,6 +74,9 @@ lintian (2.5.4) UNRELEASED; urgency=low
     + [NT] Applied patch from Andrew Starr-Bochicchio to update the
       description of font-in-non-font-package to better reflect current
       font policy.  (Closes: #646838)
+    + [JW,NT] Check that gzip files are compressed with -n in
+      "Multi-Arch: same" packages.  (Closes: #649329)
+      packages.
   * checks/init.d{,.desc}:
     + [NT] Applied patch from Peter Eisentraut to detect init.d scripts
       without support for the optional "status" option.

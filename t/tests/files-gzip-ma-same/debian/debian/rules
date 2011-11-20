@@ -1,0 +1,11 @@
+#!/usr/bin/make -f
+pkg=files-gzip-ma-same
+
+%:
+	dh $@
+
+override_dh_installchangelogs:
+	dh_installchangelogs
+	[ -f debian/$(pkg)/usr/share/doc/$(pkg)/changelog ] || \
+		gunzip debian/$(pkg)/usr/share/doc/$(pkg)/changelog.gz
+	gzip --best debian/$(pkg)/usr/share/doc/$(pkg)/changelog
