@@ -110,6 +110,8 @@ sub run {
 my $pkg = shift;
 my $type = shift;
 my $info = shift;
+my $proc = shift;
+my $group = shift;
 
 my $rules = $info->debfiles('rules');
 
@@ -362,14 +364,28 @@ while (<RULES>) {
 close RULES;
 
 unless ($includes) {
+    my $rec = 0;
     # Make sure all the required rules were seen.
     for my $target (sort keys %required) {
         tag 'debian-rules-missing-required-target', $target
             unless $seen{$target};
     }
     for my $target (sort keys %recommended) {
-        tag 'debian-rules-missing-recommended-target', $target
-            unless $seen{$target};
+        unless ($seen{$target}) {
+            tag 'debian-rules-missing-recommended-target', $target;
+            $rec++;
+        }
+    }
+
+    if ($rec) {
+        my $all = 0;
+        my $notall = 0;
+        foreach my $p ($group->get_processables) {
+            next if $p->pkg_type eq 'source' or $p->pkg_type eq 'changes';
+            $all++ if $p->pkg_arch eq 'all';
+            $notall++ if $p->pkg_arch ne 'all';
+        }
+        tag 'package-would-benefit-from-build-arch-targets' if $all && $notall;
     }
 }
 

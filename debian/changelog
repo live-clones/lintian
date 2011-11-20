@@ -7,6 +7,7 @@ lintian (2.5.4) UNRELEASED; urgency=low
       - init.d-script-does-not-implement-optional-option
       - missing-build-dependency-for-dh-addon
       - package-depends-on-lower-priority-package
+      - package-would-benefit-from-build-arch-targets
       - python-depends-but-no-python-helper
       - python3-depends-but-no-python3-helper
 
@@ -89,7 +90,7 @@ lintian (2.5.4) UNRELEASED; urgency=low
       (Closes: #647250)
     + [NT] Fixed deprecation warning when using perl 5.14.
       (Closes: #649133)
-  * checks/rules:
+  * checks/rules{,.desc}:
     + [JW] Fixed false negative "missing-build-dependency" when using
       "dh --with=X" rather than "dh --with X".  (Closes: #643714)
     + [NT] Do not emit missing-build-dependency for missing dh sequences,
@@ -97,6 +98,8 @@ lintian (2.5.4) UNRELEASED; urgency=low
     + [JW] Parse continuation lines in d/rules.  (Closes: #644021)
     + [JW] Check for versioned dependency on dpkg-dev when using the new
       dpkg makefiles.  (Closes: #646495)
+    + [NT] Added tracker tag for the build-arch target goal.
+      (Closes: #647227)
   * checks/scripts:
     + [RA] Exclude files ending in *.erb from several shell script
       checks.  ERB is a Ruby templating language, so these will probably
