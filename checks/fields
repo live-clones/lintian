@@ -421,7 +421,7 @@ if (not defined $info->field('section')) {
 
     if ($type eq 'udeb') {
         unless ($section eq 'debian-installer') {
-        tag 'wrong-section-for-udeb', $section;
+            tag 'wrong-section-for-udeb', $section;
         }
     } else {
         my @parts = split /\//, $section, 2;
