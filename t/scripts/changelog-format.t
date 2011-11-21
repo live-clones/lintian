@@ -32,6 +32,7 @@ plan skip_all => 'Only valid for regular Debian releases'
 my $changes = $changelog->dpkg()->{'Changes'};
 my $line = 0;
 my $prev_head = '';
+my $release_header = 0;
 
 foreach (split /\n/,$changes) {
     # Parse::DebianChangelog adds an empty line at the beginning:
@@ -40,6 +41,11 @@ foreach (split /\n/,$changes) {
     # P::DC adds a space too:
     s/^ //;
     $line++;
+
+    if (m/^\s*$/o) {
+        $release_header = 0;
+        next;
+    }
 
     my $spaces = 0;
     $spaces++ while (s/^\s//);
@@ -61,9 +67,15 @@ foreach (split /\n/,$changes) {
 	} elsif ($line == 3) {
 	    ok(m/^[A-Z]/, 'line is the release header')
 		or diag("line: $line");
+            $release_header = 1;
 	} else {
-	    fail('line is a bullet list item');
-	    diag("line: $line");
+            # Unless this is a multi-line release header, it should
+            # have been a bullet list.  Also limit the length of the
+            # release header.
+            unless ($release_header && $line < 7) {
+                fail('line is a bullet list item');
+                diag("line: $line");
+            }
 	}
     } elsif ($spaces == 4) {
 	ok(m/^\+/, 'line is a sub-item of a bullet-list item')
@@ -80,7 +92,7 @@ foreach (split /\n/,$changes) {
 	ok($prev_head eq '-', 'line is a continuation of tag change')
 	    or diag("line: $line");
     } else {
-	ok(m/^(:?\.|lintian.+)$/, 'line is either empty, or entry header')
+	ok(m/^(:?\.|lintian.+)$/, 'line is an entry header')
 	    or diag("line: $line");
     }
 
