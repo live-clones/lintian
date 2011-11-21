@@ -1,4 +1,7 @@
-lintian (2.5.4) UNRELEASED; urgency=low
+lintian (2.5.4) unstable; urgency=medium
+
+  The "perl5.14 (+ misc) fix"-upload.  Medium as perl 5.14
+  deprecation warnings tend to make Lintian output unreadable.
 
   * Summary of tag changes:
     + Added:
@@ -173,6 +176,8 @@ lintian (2.5.4) UNRELEASED; urgency=low
     + [CW] Mark lintian Multi-Arch: foreign (there does exist one
       Architecture: any package that Build-Depends: lintian, so this helps
       multiarch cross-building slightly).
+  * debian/lintian.install:
+    + [NT] Removed unpack which was removed.
 
   * frontend/lintian:
     + [NT] Collections explicitly requested (by -U) are no longer
@@ -272,7 +277,7 @@ lintian (2.5.4) UNRELEASED; urgency=low
   * unpack/*:
     + [NT] Removed, no longer used.
 
- -- Niels Thykier <niels@thykier.net>  Sat, 10 Sep 2011 13:44:01 +0200
+ -- Niels Thykier <niels@thykier.net>  Mon, 21 Nov 2011 23:05:12 +0100
 
 lintian (2.5.3) unstable; urgency=low
 
