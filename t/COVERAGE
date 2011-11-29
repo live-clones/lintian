@@ -1,5 +1,5 @@
-Last generated 2011-11-21
-Coverage: 773/949 (81.45%), w. legacy tests: 881/949 (92.83%)
+Last generated 2011-11-29
+Coverage: 774/949 (81.56%), w. legacy tests: 882/949 (92.94%)
 
 The following tags are not tested by the test suite:
 
@@ -42,7 +42,6 @@ files non-standard-file-permissions-for-etc-init.d-script
 files old-app-defaults-directory
 files old-style-example-dir
 files package-uses-obsolete-file
-files special-file
 files udeb-contains-documentation-file
 
 init.d duplicate-updaterc.d-calls-in-postinst
