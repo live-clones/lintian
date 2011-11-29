@@ -1,3 +1,13 @@
+lintian (2.5.5) UNRELEASED; urgency=low
+
+  * data/debhelper/dh_addons-manual:
+    + [JW] Add python3-sphinx as provider of sphinxdoc dh sequence.
+  * data/debhelper/dh_commands-manual:
+    + [JW] Add python3-sphinx as provider of dh_sphinxdoc.
+      (Closes: #649640)
+
+ -- Niels Thykier <niels@thykier.net>  Tue, 29 Nov 2011 18:42:37 +0100
+
 lintian (2.5.4) unstable; urgency=medium
 
   The "perl5.14 (+ misc) fix"-upload.  Medium as perl 5.14
