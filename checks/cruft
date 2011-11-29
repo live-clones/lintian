@@ -40,8 +40,10 @@ use File::Basename;
 # thrilled with having the automake exception as well, but people do depend on
 # autoconf and automake and then use autoreconf to update config.guess and
 # config.sub, and automake depends on autotools-dev.
-our $AUTOTOOLS = Lintian::Relation->new(join(' | ',
+our $AUTOTOOLS = Lintian::Relation->new (join (' | ',
     Lintian::Data->new ('cruft/autotools')->all));
+
+our $LIBTOOL = Lintian::Relation->new ('libtool | dh-autoreconf');
 
 # The files that contain error messages from tar, which we'll check and issue
 # tags for if they contain something unexpected, and their corresponding tags.
@@ -112,8 +114,8 @@ if ($info->native) {
 }
 
 # Check if the package build-depends on autotools-dev, automake, or libtool.
-my $atdinbd = $info->relation('build-depends-all')->implies($AUTOTOOLS);
-my $ltinbd  = $info->relation('build-depends-all')->implies('libtool');
+my $atdinbd = $info->relation ('build-depends-all')->implies ($AUTOTOOLS);
+my $ltinbd  = $info->relation ('build-depends-all')->implies ($LIBTOOL);
 
 # Create a closure so that we can pass our lexical variables into the find
 # wanted function.  We don't want to make them global because we'll then leak

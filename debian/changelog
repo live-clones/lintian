@@ -1,5 +1,10 @@
 lintian (2.5.5) UNRELEASED; urgency=low
 
+  * checks/cruft:
+    + [NT] Added dh-autoreconf as a build-depends alternative to
+      libtool for suppressing ancient-libtool warning.  Thanks to
+      Felix Geyer for the report.  (Closes: #650325)
+
   * data/debhelper/dh_addons-manual:
     + [JW] Add python3-sphinx as provider of sphinxdoc dh sequence.
   * data/debhelper/dh_commands-manual:
