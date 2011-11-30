@@ -21,5 +21,6 @@ W: init.d-lsb-headers: init.d-script-has-bad-start-runlevel etc/init.d/init.d-ls
 W: init.d-lsb-headers: init.d-script-has-bad-stop-runlevel etc/init.d/init.d-lsb-headers Y
 W: init.d-lsb-headers: init.d-script-has-conflicting-start-stop etc/init.d/init.d-lsb-headers 0
 W: init.d-lsb-headers: init.d-script-has-conflicting-start-stop etc/init.d/init.d-lsb-headers 6
+W: init.d-lsb-headers: init.d-script-has-duplicate-lsb-keyword etc/init.d/init.d-lsb-headers:13 short-description
 W: init.d-lsb-headers: init.d-script-possible-missing-stop etc/init.d/init.d-lsb-headers 1
 W: init.d-lsb-headers: init.d-script-provides-virtual-facility etc/init.d/init.d-lsb-headers $bad_facility

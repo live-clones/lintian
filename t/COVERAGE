@@ -1,5 +1,5 @@
-Last generated 2011-11-29
-Coverage: 774/949 (81.56%), w. legacy tests: 882/949 (92.94%)
+Last generated 2011-11-30
+Coverage: 775/949 (81.66%), w. legacy tests: 883/949 (93.05%)
 
 The following tags are not tested by the test suite:
 
@@ -46,7 +46,6 @@ files udeb-contains-documentation-file
 
 init.d duplicate-updaterc.d-calls-in-postinst
 init.d file-in-etc-rc.d-marked-as-conffile
-init.d init.d-script-has-duplicate-lsb-keyword
 
 manpages FSSTND-dir-in-manual-page
 manpages bad-so-link-within-manual-page

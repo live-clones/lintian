@@ -9,6 +9,7 @@ Test-For:
  init.d-script-has-bad-start-runlevel
  init.d-script-has-bad-stop-runlevel
  init.d-script-has-conflicting-start-stop
+ init.d-script-has-duplicate-lsb-keyword
  init.d-script-missing-dependency-on-remote_fs
  init.d-script-missing-dependency-on-local_fs
  init.d-script-missing-lsb-description
