@@ -69,7 +69,7 @@ my $usespreinst='';
 my $usesmultiselect='';
 
 if ($type eq 'source') {
-    my $binaries = $info->field('binary')/;
+    my $binaries = $info->field('binary');
     # no binary field?  There is not much we can do about it here.
     return 0 unless defined $binaries;
     chomp $binaries;
