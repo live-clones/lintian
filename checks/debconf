@@ -69,7 +69,9 @@ my $usespreinst='';
 my $usesmultiselect='';
 
 if ($type eq 'source') {
-    my $binaries = $info->field('binary');
+    my $binaries = $info->field('binary')/;
+    # no binary field?  There is not much we can do about it here.
+    return 0 unless defined $binaries;
     chomp $binaries;
     my @files = map { "$_.templates" } split /,\s+/, $binaries;
     push @files, 'templates';
@@ -125,10 +127,12 @@ return unless $seenconfig or $seentemplates or $usespreinst;
 # parse depends info for later checks
 
 # Consider every package to depend on itself.
-my $version;
+my $selfrel;
 if (defined $info->field('version')) {
     $_ = $info->field('version');
-    $version = "$pkg (= $_)";
+    $selfrel = "$pkg (= $_)";
+} else {
+    $selfrel = "$pkg";
 }
 
 my (%dependencies, @alldeps);
@@ -136,12 +140,12 @@ my (%dependencies, @alldeps);
 for my $field (qw(depends pre-depends)) {
     if (defined $info->field($field)) {
         $_ = $info->field($field);
-        $_ .= ", $version" if defined $version;
+        $_ .= ", $selfrel";
         push @alldeps, $_;
         $dependencies{$field} = Lintian::Relation->new($_);
     } else {
-        push @alldeps, $version;
-        $dependencies{$field} = Lintian::Relation->new($version);
+        push @alldeps, $selfrel;
+        $dependencies{$field} = Lintian::Relation->new($selfrel);
     }
 }
 

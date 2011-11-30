@@ -183,6 +183,12 @@ foreach my $file (sort keys %{$info->objdump_info}) {
 # but which don't matter for the purposes of this check.  Also filter out
 # nsswitch modules
 $madir = $MULTIARCH_DIRS->value($arch);
+
+# In the (unlikely) case that the architecture is unknown (or we do
+# not know the multi-arch path for a known architecture) , we assume
+# it the multi-arch path to be this (hopefully!) non-existent path to
+# avoid warnings about uninitialized variables.
+$madir = './!non-existant-path!/./' unless defined $madir;
 sub lib_soname_path {
     my ($dir, @paths) = @_;
     foreach my $path (@paths) {

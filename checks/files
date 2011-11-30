@@ -748,7 +748,7 @@ foreach my $file (@{$info->sorted_index}) {
             unless defined($TRIPLETS);
         if ($TRIPLETS->known($subdir)) {
             tag 'triplet-dir-and-architecture-mismatch', "$file is for", $TRIPLETS->value($subdir)
-                if ($info->field('architecture') ne $TRIPLETS->value($subdir));
+                if (($info->field('architecture')//'') ne $TRIPLETS->value($subdir));
         }
     }
 
@@ -759,7 +759,7 @@ foreach my $file (@{$info->sorted_index}) {
         next unless ($info->file_info->{$file}//'') =~ m/\bELF\b/o;
         $TRIPLETS = Lintian::Data->new('files/triplets', qr/\s++/o)
             unless defined($TRIPLETS);
-        if ($TRIPLETS->known($subdir) && $info->field('architecture') eq $TRIPLETS->value($subdir)) {
+        if ($TRIPLETS->known($subdir) && ($info->field('architecture')//'') eq $TRIPLETS->value($subdir)) {
             my $dep = $info->relation('pre-depends');
             tag 'missing-pre-dependency-on-multiarch-support' unless ($dep->implies('multiarch-support'));
         }

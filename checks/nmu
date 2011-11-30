@@ -80,6 +80,11 @@ my $uploaders = $info->field('uploaders');
 
 my $version_nmuness = 0;
 my $version_local = 0;
+
+# If the version field is missing, assume it to be a native,
+# maintainer upload as it is probably the most likely case.
+$version = '0-1' unless defined $version;
+
 if ($version =~ /-[^.-]+(\.[^.-]+)?(\.[^.-]+)?$/) {
     $version_nmuness = 1 if defined $1;
     $version_nmuness = 2 if defined $2;

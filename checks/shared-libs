@@ -257,6 +257,9 @@ for my $shlib_file (keys %SONAME) {
 my $version = $info->field('version'); # may be undef in very broken packages
 my $provides = $pkg;
 $provides .= "( = $version)" if defined $version;
+# Assume the version to be a non-native version to avoid
+# uninitialization warnings later.
+$version = '0-1';
 if (defined $info->field('provides')) {
     $provides .= ', ' . $info->field('provides');
 }

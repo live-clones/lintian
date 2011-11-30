@@ -48,6 +48,8 @@ tag 'debian-watch-file-in-native-package' if ($info->native);
 # source package sign, for fine grained version mangling check
 my $version = $info->field('version');
 my $repack;
+# If the version field is missing, we assume a neutral non-native one.
+$version = '0-1' unless defined $version;
 if ($version =~ /(dfsg|debian|ds)/) {
     $repack = $1;
 }

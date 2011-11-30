@@ -103,6 +103,9 @@ if (-e "$droot/files" and not -z "$droot/files") {
 # This doens't really belong here, but there isn't a better place at the
 # moment to put this check.
 my $version = $info->field('version');
+# If the version field is missing, assume it to be a native,
+# maintainer upload as it is probably the most likely case.
+$version = '0-1';
 if ($info->native) {
     if ($version =~ /-/ and $version !~ /-0\.[^-]+$/) {
         tag 'native-package-with-dash-version';
@@ -122,6 +125,11 @@ my $ltinbd  = $info->relation ('build-depends-all')->implies ($LIBTOOL);
 # that data across packages in a large Lintian run.
 my %warned;
 my $format = $info->field('format');
+# Assume the package to be non-native if the field is not present.
+# - while 1.0 is more likely in this case, Lintian will probably get
+#   better results by checking debfiles/ rather than looking for a diffstat
+#   that may not be present.
+$format = '3.0 (quilt)' unless defined $format;
 if ($format =~ /^\s*2\.0\s*\z/ or $format =~ /^\s*3\.0\s*\(quilt\)/) {
     my $wanted = sub { check_debfiles($pkg, $info, qr/\Q$droot\E/, \%warned) };
     find($wanted, $droot);

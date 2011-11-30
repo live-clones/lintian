@@ -78,6 +78,7 @@ sub native {
     my ($self) = @_;
     return $self->{native} if exists $self->{native};
     my $format = $self->field('format');
+    $format = '1.0' unless defined $format;
     if ($format =~ m/^\s*2\.0\s*$/o or $format =~ m/^\s*3\.0\s+\(quilt\)\s*$/o) {
         $self->{native} = 0;
     } elsif ($format =~ m/^\s*3\.0\s+\(native\)\s*$/o) {
@@ -400,6 +401,9 @@ the name of the source package and its version).
 If the source format is 1.0 and the version number is absent, this
 will return false (as native packages are a lot rarer than non-native
 ones).
+
+Note if the source format is missing, it is assumed to be an 1.0
+package.
 
 =item relation(FIELD)
 
