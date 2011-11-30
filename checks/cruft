@@ -105,7 +105,7 @@ if (-e "$droot/files" and not -z "$droot/files") {
 my $version = $info->field('version');
 # If the version field is missing, assume it to be a native,
 # maintainer upload as it is probably the most likely case.
-$version = '0-1';
+$version = '0-1' unless defined $version;
 if ($info->native) {
     if ($version =~ /-/ and $version !~ /-0\.[^-]+$/) {
         tag 'native-package-with-dash-version';

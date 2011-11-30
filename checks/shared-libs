@@ -259,7 +259,7 @@ my $provides = $pkg;
 $provides .= "( = $version)" if defined $version;
 # Assume the version to be a non-native version to avoid
 # uninitialization warnings later.
-$version = '0-1';
+$version = '0-1' unless defined $version;
 if (defined $info->field('provides')) {
     $provides .= ', ' . $info->field('provides');
 }
