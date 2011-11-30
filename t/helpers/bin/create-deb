@@ -62,6 +62,8 @@ my %opts = (
     'compression|c=s' => \$val{'compression'},
     'md5sums!' => \$val{'md5sums'},
     'fix-perm!' => \$val{'fix-perm'},
+    'package-name=s' => \$val{'package-name'},
+    'package-version=s' => \$val{'package-version'},
 );
 
 my $cwd;
@@ -80,7 +82,9 @@ die "Unknown compression \"$val{'compression'}\"\n" unless exists $TAR_OPTIONS{$
 
 $val{'auto-build-data'} = 0 if $val{'root'};
 
-die "Cannot find ./control.\n" if $val{'auto-build-data'} && ! -e './control';
+if ($val{'auto-build-data'}) {
+    die "Cannot find ./control.\n" unless ($val{'package-name'} && defined $val{'package-version'}) || -e './control';
+}
 
 # default to "on" unless we are given an md5sums file explicitly
 $val{'md5sums'} = 1 unless defined $val{'md5sums'} || grep { $_ eq 'md5sums'} @ARGV;
@@ -89,12 +93,25 @@ $cwd = Cwd::cwd();
 
 if ($val{'auto-build-data'}) {
     my $data = get_dsc_info('./control');
-    my $pkg = $data->{'package'} || die "Cannot read package name from ./control.\n";
-    runsystem('mkdir', '-p', "root/usr/share/doc/$pkg");
-    foreach my $file (qw(copyright changelog)) {
-        runsystem('install', '-m', '0644', $file,  "root/usr/share/doc/$pkg/$file") if -e $file;
+    my $pkg = $val{'package-name'};
+    my $ver = $val{'package-version'};
+    my $dch = 'changelog';
+    unless ($pkg) {
+        $pkg = $data->{'package'} || die "Cannot read package name from ./control or missing --package-name <name>.\n";
     }
-    runsystem('gzip', '-n', '--best', "root/usr/share/doc/$pkg/changelog") if -e './changelog';
+    unless (defined $ver) {
+        $ver = $data->{'version'} // die "Cannot read package version from ./control or missing --package-version <v>.\n";
+    }
+    # handle non-native package
+    $dch = 'changelog.Debian' if $ver =~ m/-/o;
+    runsystem('mkdir', '-p', "root/usr/share/doc/$pkg");
+
+    foreach my $file ('copyright', $dch) {
+        my $src = $file;
+        $src = 'changelog' if $file eq 'changelog.Debian';
+        runsystem('install', '-m', '0644', $src,  "root/usr/share/doc/$pkg/$file") if -e $src;
+    }
+    runsystem('gzip', '-n', '--best', "root/usr/share/doc/$pkg/$dch") if -e "root/usr/share/doc/$pkg/$dch";
     # set root so it works for later :)
     $val{'root'} = 'root/';
 }
@@ -153,6 +170,12 @@ usage: $0 [options] -o <file.deb> [--root <dir>] control-file[... files]
  --[no-]fix-perm         Whether to auto-fix permissions and owner for control
                          files.  Defaults to on.  This will modify the perm of
                          the actual controls passed!
+ --package-name <pkg>    Assume the package name is <pkg>.  This overrides
+                         the value in the control file (and allows said value
+                         to be missing as well).
+ --package-version <v>   Assume the package version is <v>.  This overrides
+                         the value in the control file (and allows said value
+                         to be missing as well).
 
 Creates a deb file from a root directory and some control files.  The
 control files are assumed to be in the current directory or the

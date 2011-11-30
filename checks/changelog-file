@@ -178,7 +178,9 @@ my $version;
 if (defined $info->field('version')) {
     $version = $info->field('version');
 } else {
-    fail 'Unable to determine version!';
+    # We do not know, but we assume it to be non-native
+    # as that is most likely.
+    $version = '0-1';
 }
 
 $native_pkg  = $info->native;

@@ -1,2 +1,4 @@
 E: fields-general-missing: no-architecture-field
 E: fields-general-missing: no-maintainer-field
+E: fields-general-missing: no-package-name
+E: fields-general-missing: no-version-field

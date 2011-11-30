@@ -45,7 +45,13 @@ sub native {
     my ($self) = @_;
     return $self->{native} if exists $self->{native};
     my $version = $self->field('version');
-    $self->{native} = ($version !~ m/-/);
+    if (defined $version) {
+        $self->{native} = ($version !~ m/-/);
+    } else {
+        # We do not know, but assume it to non-native as it is
+        # the most likely case.
+        $self->{native} = 0;
+    }
     return $self->{native};
 }
 
@@ -395,6 +401,9 @@ the list of the files contained in the archive.
 
 Returns true if the binary package is native and false otherwise.
 Nativeness will be judged by its version number.
+
+If the version number is absent, this will return false (as
+native packages are a lot rarer than non-native ones).
 
 =item index()
 

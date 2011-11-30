@@ -1,5 +1,5 @@
 Last generated 2011-11-30
-Coverage: 775/949 (81.66%), w. legacy tests: 883/949 (93.05%)
+Coverage: 777/949 (81.88%), w. legacy tests: 885/949 (93.26%)
 
 The following tags are not tested by the test suite:
 
@@ -29,9 +29,7 @@ fields aspell-package-not-arch-all
 fields bad-menu-item
 fields doc-package-depends-on-main-package
 fields malformed-python-version
-fields no-package-name
 fields no-source-field
-fields no-version-field
 
 files FSSTND-dir-in-var
 files compressed-symlink-with-wrong-ext

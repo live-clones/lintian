@@ -254,11 +254,9 @@ for my $shlib_file (keys %SONAME) {
 }
 
 # 4th step: check shlibs control file
-my $version;
-if (defined $info->field('version')) {
-    $version = $info->field('version');
-}
-my $provides = $pkg . "( = $version)";
+my $version = $info->field('version'); # may be undef in very broken packages
+my $provides = $pkg;
+$provides .= "( = $version)" if defined $version;
 if (defined $info->field('provides')) {
     $provides .= ', ' . $info->field('provides');
 }

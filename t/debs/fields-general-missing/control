@@ -1,5 +1,3 @@
-Package: fields-general-missing
-Version: 1.0
 Section: devel
 Priority: extra
 Depends: some-pkg

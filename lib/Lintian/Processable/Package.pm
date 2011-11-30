@@ -81,11 +81,18 @@ sub _init {
     if ($pkg_type eq 'binary' or $pkg_type eq 'udeb'){
         my $dinfo = get_deb_info ($pkg_path) or
             croak "could not read control data in $pkg_path: $!";
-        my $pkg_name = $dinfo->{package} or
-            croak "$pkg_path ($pkg_type) is missing mandatory \"Package\" field";
+        my $pkg_name = $dinfo->{package};
         my $pkg_src = $dinfo->{source};
         my $pkg_version = $dinfo->{version};
         my $pkg_src_version = $pkg_version;
+
+        unless ($pkg_name) {
+            my $type = $pkg_type;
+            $type = 'deb' if $type eq 'binary';
+            $pkg_name = _derive_name ($pkg_path, $type)
+                or croak "Cannot determine the name of $pkg_path";
+        }
+
         # Source may be left out if it is the same as $pkg_name
         $pkg_src = $pkg_name unless ( defined $pkg_src && length $pkg_src );
 
@@ -101,8 +108,12 @@ sub _init {
         $self->{pkg_src_version} = $pkg_src_version;
     } elsif ($pkg_type eq 'source'){
         my $dinfo = get_dsc_info ($pkg_path) or croak "$pkg_path is not valid dsc file";
-        my $pkg_name = $dinfo->{source} or croak "$pkg_path is missing or has empty source field";
+        my $pkg_name = $dinfo->{source};
         my $pkg_version = $dinfo->{version};
+        unless ($pkg_name) {
+            $pkg_name = _derive_name ($pkg_path, 'dsc')
+                or croak "Cannot determine the name of $pkg_path";
+        }
         $self->{pkg_name} = $pkg_name;
         $self->{pkg_version} = $pkg_version;
         $self->{pkg_arch} = 'source';
@@ -113,9 +124,8 @@ sub _init {
         my $pkg_version = $cinfo->{version};
         my $pkg_name = $cinfo->{source}//'';
         unless ($pkg_name) {
-            # No source field? Derive the name from the file name
-            # lintian_2.5.2_amd64.changes => $pkg_name = 'lintian'
-            ($pkg_name) = ($pkg_path =~ m,.*/([^_/]+)[^/]*+\.changes$,);
+            $pkg_name = _derive_name ($pkg_path, 'changes')
+                or croak "Cannot determine the name of $pkg_path";
         }
         $self->{pkg_name} = $pkg_name;
         $self->{pkg_version} = $pkg_version;
@@ -140,6 +150,18 @@ sub _init {
         }
     }
     return 1;
+}
+
+# _derive_name ($file, $ext)
+#
+# Derive the name from the file name
+#  - the name is the part of the basename up to (and excl.) the first "_".
+#
+# _derivate_name ('somewhere/lintian_2.5.2_amd64.changes', 'changes') eq 'lintian'
+sub _derive_name {
+    my ($file, $ext) = @_;
+    my ($name) = ($file =~ m,(?:.*/)?([^_/]+)[^/]*\.$ext$,);
+    return $name;
 }
 
 =item $proc->info

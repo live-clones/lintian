@@ -85,9 +85,15 @@ sub native {
     } else {
         my $version = $self->field('version');
         my $base_dir = $self->base_dir();
-        $version =~ s/^\d+://;
-        my $name = $self->{name};
-        $self->{native} = (-f "$base_dir/${name}_${version}.diff.gz" ? 0 : 1);
+        if (defined $version) {
+            $version =~ s/^\d+://;
+            my $name = $self->{name};
+            $self->{native} = (-f "$base_dir/${name}_${version}.diff.gz" ? 0 : 1);
+        } else {
+            # We do not know, but assume it to non-native as it is
+            # the most likely case.
+            $self->{native} = 0;
+        }
     }
     return $self->{native};
 }
@@ -387,6 +393,13 @@ file, which this method expects to find in F<debfiles/changelog>.
 =item native()
 
 Returns true if the source package is native and false otherwise.
+This is generally determined from the source format, though in the 1.0
+case the nativeness is determined by looking for the diff.gz (using
+the name of the source package and its version).
+
+If the source format is 1.0 and the version number is absent, this
+will return false (as native packages are a lot rarer than non-native
+ones).
 
 =item relation(FIELD)
 

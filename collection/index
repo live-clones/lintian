@@ -32,6 +32,7 @@ use Cwd();
 use File::Spec;
 use Util;
 use Lintian::Command qw(spawn reap);
+use Lintian::Processable::Package;
 
 ($#ARGV == 1) or fail 'syntax: index <pkg> <type>';
 my $pkg = shift;
@@ -57,17 +58,21 @@ sub gather_tarballs {
     my @tarballs;
     my $base;
     my $baserev;
+    my $proc;
     fail "Cannot resolve \"dsc\" link for $pkg or it does not point to a file.\n" unless $file and -e $file;
     (undef, $dir, undef) = File::Spec->splitpath($file);
+    # Use Lintian::Processable::Package to determine source and version as handles missing fields
+    # for us to some extend.
+    $proc = Lintian::Processable::Package->new ('source', $file);
     $data = get_dsc_info($file) or fail "Could not parse dsc file for $pkg.\n";
     #  Version handling is based on Dpkg::Version::parseversion.
-    $version = $data->{'version'};
+    $version = $proc->pkg_src_version;
     if ($version =~ /:/) {
         $version =~ s/^(?:\d+):(.+)/$1/ or fail("bad version number '$version'");
     }
-    $baserev = $data->{'source'} . '_' . $version;
+    $baserev = $proc->pkg_src . '_' . $version;
     $version =~ s/(.+)-(.*)$/$1/;
-    $base = $data->{'source'} . '_' . $version;
+    $base = $proc->pkg_src . '_' . $version;
     for my $fs (split(/\n/,$data->{'files'})) {
         $fs =~ s/^\s*//;
         next if $fs eq '';
