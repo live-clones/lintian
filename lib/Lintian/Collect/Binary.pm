@@ -178,10 +178,11 @@ sub objdump_info {
             $file = { name => $1 };
             $dynsyms = 0;
         } elsif ($dynsyms) {
-            # The .*? near the end is added because a number of optional fields
+            # The (?:(\S+)\s+)? near the end is added because a number of optional fields
             # might be printed.  The symbol name should be the last word.
-            if (m/^[0-9a-fA-F]+.{6}\w\w?\s+(\S+)\s+[0-9a-zA-Z]+\s+(\S+)\s+(\S+)$/){
+            if (m/^[0-9a-fA-F]+.{6}\w\w?\s+(\S+)\s+[0-9a-zA-Z]+\s+(?:(\S+)\s+)?(\S+)$/){
                 my ($foo, $sec, $sym) = ($1, $2, $3);
+                $sec //= '';
                 push @{$file->{SYMBOLS}}, [ $foo, $sec, $sym ];
             }
         } else {
