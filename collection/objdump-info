@@ -86,11 +86,10 @@ while (<FILES>) {
             last if $failed;
 
             if (1) {
-                # This looks weird, but it is effectively the logic we were using[1]
-                # and apparently some of our checks (/tests) relies on this "unholy
-                # marriage" between objdump and readelf output.
-                #
-                # Identically we would completely replace objdump with readelf
+                # This looks weird, but it is effectively the logic we
+                # were using[1] and apparently some of our checks (or
+                # tests) relies on this "unholy marriage" between
+                # objdump and readelf output.
                 #
                 # [1] my $etch_compat = 0;
                 # [...]
