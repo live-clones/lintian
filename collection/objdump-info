@@ -142,6 +142,11 @@ while (<FILES>) {
                         } elsif (m/^\s*\[(\d+)\]\s*(\S+)(?:\s|\Z)/
                               and $section eq 'SH') {
                             $sections[$1] = $2;
+                            # We need sections as well (i.e. for incomplete stripping)
+                            # - The 0 0 0 0 2**3 is just there to make it look like objdump output
+                            #   (supposedly we don't even check for those extra fields in
+                            #    L::Collect::Binary)
+                            print OUT " $1 $2   0 0 0 0 2**3\n";
                         } elsif (m/^\s*0x(?:[0-9A-F]+)\s+\((.*?)\)\s+(\S.*)\Z/i
                               and $section eq 'DS') {
                             my ($type, $value) = ($1, $2);
