@@ -34,11 +34,6 @@ open (FILES, '<', 'file-info')
 open (OUT, '>', 'objdump-info')
     or fail("cannot open objdump-info: $!");
 
-# Disable etch compatibility code.
-# Running dpkg-query every time is too expensive
-# readelf code is not dropped as per private/TODO entry
-my $etch_compat = 0;
-
 chdir ('unpacked')
     or fail ("unable to chdir to unpacked: $!\n");
 
@@ -90,16 +85,16 @@ while (<FILES>) {
 
             last if $failed;
 
-            if ($invalidop || !$etch_compat) {
-                # If we're using a binutils newer than etch's then either
-                # "invalid operation" or "file format not recognized"
-                # are simply passed through to the checks scripts
-                # which handle the output themselves
+            if (1) {
+                # This looks weird, but it is effectively the logic we were using[1]
+                # and apparently some of our checks (/tests) relies on this "unholy
+                # marriage" between objdump and readelf output.
                 #
-                # If objdump returned "invalid operation" and we are
-                # using etch's binutils then the readelf code will tend
-                # to produce false positives so we just return the
-                # objdump output and let the scripts handle it
+                # Identically we would completely replace objdump with readelf
+                #
+                # [1] my $etch_compat = 0;
+                # [...]
+                #      if (<something> || !$etch_compat) {
 
                 print OUT $objdumpout;
             } elsif (system("readelf -l \Q$bin\E 2>&1 | grep -q 'Error: Not an ELF file'") == 0) {
