@@ -106,7 +106,7 @@ while (<FILES>) {
                 my @sections;
                 my @symbol_versions;
 
-                if (open(PIPE, '-|', 'readelf', '-W', '-l', '-t', '-d', '-V', $bin)) {
+                if (open(PIPE, '-|', "readelf -W -l -t -d -V \Q$bin\E 2>&1")) {
                     my $section = '';
                     my %program_headers;
 
@@ -178,7 +178,7 @@ while (<FILES>) {
                     close PIPE;
                 }
 
-                if (open(PIPE, '-|', 'readelf', '-W', '-s', '-D', $bin)) {
+                if (open(PIPE, '-|', "readelf -W -s -D \Q$bin\E 2>&1")) {
                     print OUT "DYNAMIC SYMBOL TABLE:\n";
 
                     while(<PIPE>) {
