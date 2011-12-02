@@ -1,6 +1,7 @@
 # binaries -- lintian check script -*- perl -*-
 
 # Copyright (C) 1998 Christian Schwarz and Richard Braakman
+# Copyright (C) 2012 Kees Cook
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -427,6 +428,15 @@ foreach my $file (@{$info->sorted_index}) {
                 tag 'library-not-linked-against-libc', $file;
             } else {
                 tag 'program-not-linked-against-libc', $file;
+            }
+        }
+
+        # Check for missing hardening characteristics. This currently
+        # handles the following checks:
+        # no-relro no-fortify-functions no-stackprotector no-bindnow no-pie
+        if (exists($info->hardening_info->{$file})) {
+            foreach my $tag (@{$info->hardening_info->{$file}}) {
+                tag "hardening-$tag", $file;
             }
         }
     }

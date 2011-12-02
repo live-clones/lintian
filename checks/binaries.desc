@@ -2,7 +2,7 @@ Check-Script: binaries
 Author: Christian Schwarz <schwarz@debian.org>
 Abbrev: bin
 Type: binary, udeb
-Needs-Info: objdump-info, file-info, strings, index
+Needs-Info: hardening-info, objdump-info, file-info, strings, index
 Info: This script checks binaries and object files for bugs.
 
 Tag: arch-independent-package-contains-binary-or-object
@@ -299,3 +299,36 @@ Info: This package provides an OCaml bytecode executable linked with a
  custom runtime. Such executables cannot be stripped and require
  special care. Their usage is deprecated in favour of shared libraries
  for C stubs (dll*.so).
+
+Tag: hardening-no-stackprotector
+Severity: normal
+Certainty: possible
+Info: This package provides an ELF binary that lacks the stack protector
+ function <tt>__stack_chk_fail</tt>. Either there are no character arrays used
+ on the stack of any routines, or the package was not built with the
+ default Debian compiler flags defined by <tt>dpkg-buildflags</tt>. If built
+ using <tt>dpkg-buildflags</tt> directly, be sure to import <tt>CFLAGS</tt>
+ and/or <tt>CXXFLAGS</tt>.
+Ref: http://wiki.debian.org/Hardening
+
+Tag: hardening-no-fortify-functions
+Severity: normal
+Certainty: possible
+Info: This package provides an ELF binary that lacks the use of fortified
+ libc functions. Either there are no potentially unfortified functions
+ called by any routines, all unfortified calls have already been fully
+ validated at compile-time, or the package was not built with the default
+ Debian compiler flags defined by <tt>dpkg-buildflags</tt>. If built using
+ <tt>dpkg-buildflags</tt> directly, be sure to import <tt>CPPFLAGS</tt>.
+Ref: http://wiki.debian.org/Hardening
+
+Tag: hardening-no-relro
+Severity: normal
+Certainty: certain
+Info: This package provides an ELF binary that lacks the "read-only
+ relocation" link flag. This package was likely not built with the
+ default Debian compiler flags defined by <tt>dpkg-buildflags</tt>.
+ If built using <tt>dpkg-buildflags</tt> directly, be sure to import
+ <tt>LDFLAGS</tt>.
+Ref: http://wiki.debian.org/Hardening
+

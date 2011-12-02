@@ -42,6 +42,7 @@ our $EXCLUDE =
                  ^example.*interpreter.*
                  ^example-script-.*$
                  ^example-shell-script-.*$
+                 ^hardening-.*$
                 ));
 
 # Find all of the check description files.  We'll do one check per

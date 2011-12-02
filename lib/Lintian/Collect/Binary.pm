@@ -3,6 +3,7 @@
 
 # Copyright (C) 2008, 2009 Russ Allbery
 # Copyright (C) 2008 Frank Lichtenheld
+# Copyright (C) 2012 Kees Cook
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -224,6 +225,32 @@ sub objdump_info {
     $self->{objdump_info} = \%objdump_info;
 
     return $self->{objdump_info};
+}
+
+
+# Returns the information from collect/hardening-info
+# sub hardening_info Needs-Info hardening-info
+sub hardening_info {
+    my ($self) = @_;
+    return $self->{hardening_info} if exists $self->{hardening_info};
+    my $base_dir = $self->base_dir();
+    my %hardening_info;
+    my ($file);
+    open(my $idx, '<', "$base_dir/hardening-info")
+        or fail("cannot open $base_dir/hardening-info: $!");
+    while (<$idx>) {
+        chomp;
+
+        if (m,^([^:]+):\./(.*)$,) {
+            my ($tag, $file) = ($1, $2);
+
+            push(@{$hardening_info{$file}}, $tag);
+        }
+    }
+
+    $self->{hardening_info} = \%hardening_info;
+
+    return $self->{hardening_info};
 }
 
 
