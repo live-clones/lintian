@@ -879,7 +879,7 @@ if ($action eq 'setup-lab') {
     fail("bad action $action specified");
 }
 
-if ($LAB->is_temp) {
+if (!$LAB->is_temp) {
     # sanity check:
     fail('lintian lab has not been set up correctly (perhaps you forgot to run lintian --setup-lab?)')
         unless $LAB->exists;
@@ -893,6 +893,8 @@ $LAB->open;
 #  $LAB->dir is always absolute
 $ENV{'LINTIAN_LAB'} = $opt{'LINTIAN_LAB'} = $LAB->dir;
 
+v_msg ("Setting up lab in $opt{'LINTIAN_LAB'} ...")
+    if $LAB->is_temp;
 
 # }}}
 

@@ -24,6 +24,8 @@ lintian (2.5.5) UNRELEASED; urgency=low
 
   * frontend/lintian:
     + [NT] Allow -U to be given more than once.
+    + [JW,NT] If using a temporary lab, print its location when
+      using --verbose option.  (Closes: #650433)
 
   * lib/Lintian/Collect/{Binary,Source}.pm:
     + [NT] Assume packages to be non-native when it cannot be
