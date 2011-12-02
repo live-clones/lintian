@@ -115,7 +115,7 @@ my $action;
 my $checks;
 my $check_tags;
 my $dont_check;
-my $unpack_info;
+my @unpack_info;
 my $cwd;
 my $exit_code = 0;
 my $LAB;
@@ -338,10 +338,7 @@ sub record_dont_check_part {
 
 # Process for -U|--unpack-info flag
 sub record_unpack_info {
-    if ($unpack_info) {
-        die('multiple -U or --unpack-info options not allowed');
-    }
-    $unpack_info = "$_[1]";
+    push @unpack_info, "$_[1]";
 }
 
 # Record what type of data is specified
@@ -1101,9 +1098,9 @@ if ($action eq 'unpack') {
     }
 }
 
-if ($unpack_info) {
+if (@unpack_info) {
     # Add collections specifically requested by the user (--unpack-info)
-    for my $i (split(/,/,$unpack_info)) {
+    for my $i (map { split m/,/ } @unpack_info) {
         unless ($collection_info{$i}) {
             fail("unknown info specified: $i");
         }

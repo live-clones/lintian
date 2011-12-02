@@ -19,6 +19,9 @@ lintian (2.5.5) UNRELEASED; urgency=low
     + [JW] Add python3-sphinx as provider of dh_sphinxdoc.
       (Closes: #649640)
 
+  * frontend/lintian:
+    + [NT] Allow -U to be given more than once.
+
   * lib/Lintian/Collect/{Binary,Source}.pm:
     + [NT] Assume packages to be non-native when it cannot be
       accurately determined due to missing version field.

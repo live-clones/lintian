@@ -350,6 +350,12 @@ auto-removed (in this run).
 
 This option is mostly useful for debugging or special purpose setups.
 
+It is allowed to give this option more than once.  The following
+two lines of arguments are semantically equivalent:
+
+ -U info1 -U info2
+ -U info1,info2
+
 =back
 
 Configuration options:
