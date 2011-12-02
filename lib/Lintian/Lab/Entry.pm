@@ -349,7 +349,8 @@ sub update_status_file {
     my @sc;
 
     unless ($self->exists) {
-        $! = "Entry does not exists";
+        require POSIX;
+        $! = POSIX::ENOENT;
         return 0;
     }
 
