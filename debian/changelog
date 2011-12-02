@@ -8,6 +8,9 @@ lintian (2.5.5) UNRELEASED; urgency=low
     + [NT] Added dh-autoreconf as a build-depends alternative to
       libtool for suppressing ancient-libtool warning.  Thanks to
       Felix Geyer for the report.  (Closes: #650325)
+  * checks/files:
+    + [JW,NT] Skip "Multi-Arch: same" check of gzip files if their
+      install path contains the architecture.  (Closes: #650665)
 
   * collection/index:
     + [NT] Use Lintian::Processable::Package to determine source

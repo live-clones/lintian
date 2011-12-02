@@ -175,6 +175,7 @@ my %linked_against_libvga;
 my $py_support_nver = undef;
 
 my $arch_dep_files = 0;
+my $arch = $info->field ('architecture')//'';
 my $isma_same = ($info->field ('multi-arch')//'') eq 'same';
 
 # read data from objdump-info file
@@ -748,7 +749,7 @@ foreach my $file (@{$info->sorted_index}) {
             unless defined($TRIPLETS);
         if ($TRIPLETS->known($subdir)) {
             tag 'triplet-dir-and-architecture-mismatch', "$file is for", $TRIPLETS->value($subdir)
-                if (($info->field('architecture')//'') ne $TRIPLETS->value($subdir));
+                unless ($arch eq $TRIPLETS->value($subdir));
         }
     }
 
@@ -759,7 +760,7 @@ foreach my $file (@{$info->sorted_index}) {
         next unless ($info->file_info->{$file}//'') =~ m/\bELF\b/o;
         $TRIPLETS = Lintian::Data->new('files/triplets', qr/\s++/o)
             unless defined($TRIPLETS);
-        if ($TRIPLETS->known($subdir) && ($info->field('architecture')//'') eq $TRIPLETS->value($subdir)) {
+        if ($TRIPLETS->known($subdir) && $arch eq $TRIPLETS->value($subdir)) {
             my $dep = $info->relation('pre-depends');
             tag 'missing-pre-dependency-on-multiarch-support' unless ($dep->implies('multiarch-support'));
         }
@@ -1058,7 +1059,7 @@ foreach my $file (@{$info->sorted_index}) {
             my $finfo = $info->file_info->{$file} || '';
             if ($finfo !~ m/gzip compressed/) {
                 tag 'gz-file-not-gzip', $file;
-            } elsif ($isma_same) {
+            } elsif ($isma_same && $file !~ m/\Q$arch\E/o) {
                 my $path = $info->unpacked ($file);
                 open my $fd, '<', $path or fail "opening $file: $!";
                 my $buff;
@@ -1353,7 +1354,7 @@ foreach my $file (@{$info->sorted_index}) {
     }
 }
 
-if (!$is_dummy && !$arch_dep_files && ($info->field('architecture')//'') ne 'all') {
+if (!$is_dummy && !$arch_dep_files && $arch ne 'all') {
     tag 'package-contains-no-arch-dependent-files' unless $type eq 'udeb';
 }
 
