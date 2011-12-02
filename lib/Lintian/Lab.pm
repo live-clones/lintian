@@ -472,8 +472,8 @@ sub create {
 
     $opts = {} unless $opts;
     $mode = $opts->{'mode'} if exists $opts->{'mode'};
-    if ( !$dir or $self->{'mode'} eq LAB_MODE_TEMP) {
-        if ($self->{'mode'} eq LAB_MODE_TEMP) {
+    if ( !$dir or $self->is_temp) {
+        if ($self->is_temp) {
             my $keep = $opts->{'keep-lab'}//0;
             my $topts = { CLEAN => !$keep, TMPDIR => 1 };
             my $t = tempdir ('temp-lintian-lab-XXXXXX', $topts);
@@ -570,7 +570,7 @@ sub open {
     my $dir;
     my $msg = "Open Lab failed";
     croak ('Lab is already open') if $self->is_open;
-    if ($self->{'mode'} eq LAB_MODE_TEMP) {
+    if ($self->is_temp) {
         $self->create unless $self->exists;
         $dir = $self->dir;
     } else {
@@ -622,7 +622,7 @@ was created with "keep-lab" (see $lab->create).
 sub close {
     my ($self) = @_;
     return unless $self->exists;
-    if ($self->{'mode'} eq LAB_MODE_TEMP && !$self->{'keep-lab'}) {
+    if ($self->is_temp && !$self->{'keep-lab'}) {
         # Temporary lab (without "keep-lab" property)
         $self->remove;
     } else {
@@ -695,13 +695,27 @@ sub remove {
     }
 
     # dynamic lab?
-    if ($self->{'mode'} eq LAB_MODE_TEMP) {
+    if ($self->is_temp) {
         rmdir $dir or croak "rmdir $dir: $!";
         $self->{'dir'} = '';
     }
 
     $self->{'is_open'} = 0;
     return 1;
+}
+
+=item $lab->is_temp
+
+Returns a truth value if $lab is a temporary lab.
+
+Note: This returns a truth value, even if the lab was created with the
+"keep-lab" property.
+
+=cut
+
+sub is_temp {
+    my ($self) = @_;
+    return $self->{'mode'} eq LAB_MODE_TEMP ? 1 : 0;
 }
 
 # initialize the instance

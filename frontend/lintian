@@ -879,7 +879,7 @@ if ($action eq 'setup-lab') {
     fail("bad action $action specified");
 }
 
-if ($LAB->dir) {
+if ($LAB->is_temp) {
     # sanity check:
     fail('lintian lab has not been set up correctly (perhaps you forgot to run lintian --setup-lab?)')
         unless $LAB->exists;
