@@ -69,6 +69,15 @@ foreach my $file (@{$info->sorted_index}) {
             $path =~ m@^usr/share/java/[^/]+\.jar$@o or
             $path eq 'lib/init/upstart-job';
 
+        # Skip langpack links (used in Ubuntu) - after we check that
+        # it appears to be consistent.
+        if ($path =~ m,/([^/]+)-langpack/,o) {
+            my $pre = $1;
+            my $t = $path;
+            $t =~ s,/\Q$pre\E-langpack/,/help/,;
+            next if $t eq $file;
+        }
+
         # Possibly broken symlink
         push @brokenlinks, [$file, $path, $target] unless $index->{$path};
     }
