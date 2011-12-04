@@ -101,6 +101,21 @@ if ($tags) {
     exit ($unknown ? 1 : 0);
 }
 
+my $type_re = qr/(?:binary|changes|source|udeb)/o;
+# Matches something like:  (1:2.0-3) [arch1 arch2]
+# - captures the version and the architectures
+my $verarchre = qr,(?: \s* \( [^\)]++ \) \s* \[   [^\]]++  \]),xo;
+#                             ^^^^^^^             ^^^^^^^
+#                           ( version )       [architecture ]
+
+# matches the full deal:
+#                                  111
+# -  T: pkg type (version) [arch]: tag [...]
+#           ^^^^^^^^^^^^^^^^^^^^^
+# Where the marked part(s) are optional values.  The numbers above the example
+# are the capture groups.
+my $fullre = qr/[EWIXOP]: \S+(?: $type_re(?:$verarchre)?)?: (\S+)(?:\s+.*)?/o;
+
 # Otherwise, read input files or STDIN, watch for tags, and add descriptions
 # whenever we see one, can, and haven't already explained that tag.  Strip off
 # color and HTML sequences.
@@ -112,28 +127,28 @@ while (<>) {
     s/<span style=\"[^\"]+\">//g;
     s,</span>,,g;
 
+    my $tag;
     my $type;
-    my @pieces = split(/:\s+/);
     if ($annotate) {
-        $type = shift @pieces if ($pieces[0] =~ /^\w$/);
-        shift @pieces if
-            ($pieces[0] =~ /^\S+( (binary|changes|udeb))?$/);
+        my $tagdata;
+        next unless m/^(?:                         # start optional part
+                  (?:\S+)                 ?        # Optionally starts with package name
+                  (?: \s*+ \[[^\]]+?\])?           # optionally followed by an [arch-list] (like in B-D)
+                  (?: \s*+ $type_re)?              # optionally followed by the type
+                :\s++)?                            # end optional part
+                ([\-\.a-zA-Z_0-9]+ (?:\s.+)?)$/ox; # <tag-name> [extra] -> $1
+        $tagdata = $1;
+        ($tag, undef) = split m/ /o, $tagdata, 2;
     } else {
-        $type = shift @pieces;
-        shift @pieces;
+        next unless m/^$fullre$/o;
+        $tag = $1;
     }
-    if ($annotate or (defined $type and $type =~ m/^[OEWIXP]$/)) {
-        my $tag = shift @pieces;
-        next if not defined $tag;
-        ($tag) = split(/\s+/, $tag, 2);
-
-        next if $already_displayed{$tag}++;
-        my $info = Lintian::Tag::Info->new($tag);
-        next unless $info;
-        print "N:\n";
-        print $info->description('text', 'N:   ');
-        print "N:\n";
-    }
+    next if $already_displayed{$tag}++;
+    my $info = Lintian::Tag::Info->new($tag);
+    next unless $info;
+    print "N:\n";
+    print $info->description('text', 'N:   ');
+    print "N:\n";
 }
 
 exit 0;

@@ -53,6 +53,9 @@ lintian (2.5.5) UNRELEASED; urgency=low
       status of some collections.
     + [NT] Keep auto-cleaned collections until all processables in
       the group has been checked.
+  * frontend/lintian-info:
+    + [NT] Support new lintian.log format.
+    + [NT] Support new override file format with -a.
 
   * lib/Lintian/Check.pm:
     + [NT] Do not check for missing uploader address as it cannot be
