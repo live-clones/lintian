@@ -1445,9 +1445,17 @@ sub unpack_group {
         my $lpkg;
         my $base;
         my $info;
-        eval{
-            $lpkg = $LAB->get_package($proc);
-        };
+        # If $proc is an lab entry (i.e. we got it from the Lab already)
+        # just use it directly.
+        if ($proc->isa ('Lintian::Lab::Entry')) {
+            $lpkg = $proc;
+        } else {
+            # Else use the $proc to get the lab entry
+            eval{
+                $lpkg = $LAB->get_package($proc);
+            };
+        }
+
         if (!defined $lpkg) {
             my $err = '.';
             $err = ": $@" if defined $@;
@@ -1532,7 +1540,7 @@ sub unpack_group {
 
         if ($action eq 'check') {
             # We only need this if we are checking the package later
-            $proc->lab_pkg($lpkg);
+            $proc->lab_pkg($lpkg) unless $proc->isa ('Lintian::Lab::Entry');
         } else {
             # else we are done
             if (!$keep_lab) {
