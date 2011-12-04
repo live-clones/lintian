@@ -312,7 +312,7 @@ while (<>) {
     # If the package had uploaders listed, also add the information to
     # %by_uploaders (still sharing the data between hashes).
     if ($uploaders) {
-        my @uploaders = split (/\s*,\s*/, $uploaders);
+        my @uploaders = split (/>\K\s*,\s*/, $uploaders);
         for (@uploaders) {
             my $uploader = map_maintainer ($_);
             next if $uploader eq $maintainer;

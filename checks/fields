@@ -342,8 +342,9 @@ for my $f (qw(maintainer uploaders)) {
         unfold($f, \$maintainer);
 
         if ($f eq 'uploaders') {
-            my @uploaders = split /\s*,\s*/, $maintainer;
             my %duplicate_uploaders;
+            my @uploaders = map { split /\@\S+\K\s*,\s*/ }
+                split />\K\s*,\s*/, $maintainer;
             for my $uploader (@uploaders) {
                 check_maintainer($uploader, 'uploader');
                 if ( ((grep { $_ eq $uploader } @uploaders) > 1) and

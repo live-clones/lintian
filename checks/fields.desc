@@ -206,14 +206,6 @@ Info: The uploader field seems to contain just an email address. It must
  contain the package uploader's name and email address.
 Ref: policy 5.6.3
 
-Tag: uploader-address-missing
-Severity: important
-Certainty: certain
-Info: The uploader field should contain the package uploader's name and
- email address, with the name followed by the address inside angle
- brackets (&lt; and &gt;).  The address seems to be missing.
-Ref: policy 5.6.3
-
 Tag: uploader-address-malformed
 Severity: serious
 Certainty: certain

@@ -176,7 +176,9 @@ sub check_maintainer {
 
     # Don't issue the malformed tag twice if we already saw problems.
     if (not $mail) {
-        tag "$field-address-missing", $maintainer;
+        # Cannot be done accurately for uploaders due to changes with commas
+        # (see #485705)
+        tag "$field-address-missing", $maintainer unless $field eq 'uploader';
     } else {
         if (not $malformed and not Email::Valid->address($mail)) {
             # Either not a valid email or possibly missing a comma between

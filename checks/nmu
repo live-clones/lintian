@@ -101,7 +101,7 @@ if ($version =~ /local/i) {
 
 my $upload_is_nmu = $uploader ne $maintainer;
 if (defined $uploaders) {
-    my @uploaders = map { canonicalize($_) } split /,/, $uploaders;
+    my @uploaders = map { canonicalize($_) } split />\K\s*,\s*/, $uploaders;
     $upload_is_nmu = 0 if grep /^\s*\Q$uploader\E\s*$/, @uploaders;
 }
 

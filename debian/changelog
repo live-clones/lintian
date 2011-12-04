@@ -3,6 +3,8 @@ lintian (2.5.5) UNRELEASED; urgency=low
   * Summary of tag changes:
     + Added:
       - preinst-uses-dpkg-maintscript-helper-without-predepends
+    + Removed:
+      - uploader-address-missing
 
   * checks/*:
     + [NT] Fixed assumptions about certain fields being present.
@@ -12,12 +14,18 @@ lintian (2.5.5) UNRELEASED; urgency=low
     + [NT] Added dh-autoreconf as a build-depends alternative to
       libtool for suppressing ancient-libtool warning.  Thanks to
       Felix Geyer for the report.  (Closes: #650325)
+  * checks/fields{,.desc}:
+    + [JW] Properly handle uploader names with commas.
+      (Closes: #485705)
+    + [NT] Removed uploader-address-missing tag.
   * checks/files:
     + [JW,NT] Skip "Multi-Arch: same" check of gzip files if their
       install path contains the architecture.  (Closes: #650665)
     + [JW]  Fixed a false-negative "empty-binary-package" if the
       package contained the /u/s/doc/$pkg symlink.
       (Closes: #650959)
+  * checks/nmu:
+    + [JW] Properly handle uploader names with commas.
   * checks/scripts:
     + [NT] Accepted patch from Evan Broder to check for missing
       versioned pre-depends on dpkg when using maintscript helper.
@@ -46,6 +54,9 @@ lintian (2.5.5) UNRELEASED; urgency=low
     + [NT] Keep auto-cleaned collections until all processables in
       the group has been checked.
 
+  * lib/Lintian/Check.pm:
+    + [NT] Do not check for missing uploader address as it cannot be
+      done reliably anymore.
   * lib/Lintian/Collect/{Binary,Source}.pm:
     + [NT] Assume packages to be non-native when it cannot be
       accurately determined due to missing version field.
@@ -63,6 +74,9 @@ lintian (2.5.5) UNRELEASED; urgency=low
   * lib/Lintian/Processable/Package.pm:
     + [NT] Use part of the file name as package name if the mandatory
       "Package" or "Source" fields are missing rather than choking.
+
+  * reporting/html_reports:
+    + [JW] Properly handle uploader names with commas.
 
  -- Niels Thykier <niels@thykier.net>  Tue, 29 Nov 2011 18:42:37 +0100
 
