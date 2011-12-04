@@ -112,15 +112,15 @@ while (<>) {
     s/<span style=\"[^\"]+\">//g;
     s,</span>,,g;
 
-    my ($type, $pkg);
+    my $type;
     my @pieces = split(/:\s+/);
     if ($annotate) {
         $type = shift @pieces if ($pieces[0] =~ /^\w$/);
-        $pkg = shift @pieces if
+        shift @pieces if
             ($pieces[0] =~ /^\S+( (binary|changes|udeb))?$/);
     } else {
         $type = shift @pieces;
-        $pkg = shift @pieces;
+        shift @pieces;
     }
     if ($annotate or (defined $type and $type =~ m/^[OEWIXP]$/)) {
         my $tag = shift @pieces;
