@@ -132,10 +132,10 @@ while (<>) {
     if ($annotate) {
         my $tagdata;
         next unless m/^(?:                         # start optional part
-                  (?:\S+)                 ?        # Optionally starts with package name
-                  (?: \s*+ \[[^\]]+?\])?           # optionally followed by an [arch-list] (like in B-D)
-                  (?: \s*+ $type_re)?              # optionally followed by the type
-                :\s++)?                            # end optional part
+                    (?:\S+)?                       # Optionally starts with package name
+                    (?: \s*+ \[[^\]]+?\])?         # optionally followed by an [arch-list] (like in B-D)
+                    (?: \s*+ $type_re)?            # optionally followed by the type
+                  :\s++)?                          # end optional part
                 ([\-\.a-zA-Z_0-9]+ (?:\s.+)?)$/ox; # <tag-name> [extra] -> $1
         $tagdata = $1;
         ($tag, undef) = split m/ /o, $tagdata, 2;
