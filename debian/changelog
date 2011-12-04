@@ -31,6 +31,8 @@ lintian (2.5.5) UNRELEASED; urgency=low
       using --verbose option.  (Closes: #650433)
     + [NT] Fixed an issue where auto-clean would not see the real
       status of some collections.
+    + [NT] Keep auto-cleaned collections until all processables in
+      the group has been checked.
 
   * lib/Lintian/Collect/{Binary,Source}.pm:
     + [NT] Assume packages to be non-native when it cannot be

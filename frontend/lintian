@@ -1642,18 +1642,23 @@ sub process_group {
             }
         }
         post_pkg_process_overrides($pkg_path);
+    } # end foreach my $proc ($group->get_processable())
 
-        if (!$keep_lab) {
+    if (!$keep_lab) {
+        # Invoke auto-clean now that the group has been checked
+        foreach my $proc ($group->get_processables()){
+            my $lpkg = $proc->lab_pkg();
             auto_clean_package($lpkg) or $exit_code = 2;
             # Update the status file as auto_clean_package may have removed some
             # collections
             unless ($lpkg->update_status_file) {
+                my $pkg_name = $proc->pkg_name;
                 warning("could not create status file for package $pkg_name: $!");
             }
 
         }
 
-    } # end foreach my $proc ($group->get_processable())
+    }
 
     return 1;
 }
