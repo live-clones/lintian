@@ -2,6 +2,7 @@ Testname: scripts-maintainer-general
 Sequence: 6000
 Type: native
 Version: 1.0
+Profile: ubuntu/main
 Description: Check general problems in maintainer scripts
 Test-For:
  command-with-path-in-maintainer-script
@@ -21,7 +22,8 @@ Test-For:
  maintainer-shell-script-fails-syntax-check
  mknod-in-maintainer-script
  possibly-insecure-handling-of-tmp-files-in-maintainer-script
+ preinst-uses-dpkg-maintscript-helper-without-predepends
  read-in-maintainer-script
  start-stop-daemon-in-maintainer-script
  suidregister-used-in-maintainer-script
-References: Debian Bug#532984
+References: Debian Bug#532984, Debian Bug#602249
