@@ -69,6 +69,7 @@ W: binary source: package-would-benefit-from-build-arch-targets
 W: binary source: substvar-source-version-is-deprecated binary
 W: binary source: substvar-source-version-is-deprecated binary-data
 W: binary-data: control-file-is-empty md5sums
+W: binary-data: empty-binary-package
 W: binary: binary-without-manpage usr/bin/hello
 W: binary: binary-without-manpage usr/bin/hello-static
 W: binary: binary-without-manpage usr/bin/hello.static

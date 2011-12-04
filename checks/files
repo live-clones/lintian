@@ -244,6 +244,8 @@ if (!$is_dummy) {
                 $is_empty = 0;
                 last;
             }
+            # Skip /usr/share/doc/$pkg symlinks.
+            next if $file eq "usr/share/doc/$pkg";
             # For files directly in /usr/share/doc/$pkg, if the file isn't one
             # of the uninteresting ones, the package isn't empty.
             unless ($STANDARD_FILES->known(basename($file))) {

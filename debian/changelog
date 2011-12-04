@@ -15,6 +15,9 @@ lintian (2.5.5) UNRELEASED; urgency=low
   * checks/files:
     + [JW,NT] Skip "Multi-Arch: same" check of gzip files if their
       install path contains the architecture.  (Closes: #650665)
+    + [JW]  Fixed a false-negative "empty-binary-package" if the
+      package contained the /u/s/doc/$pkg symlink.
+      (Closes: #650959)
   * checks/scripts:
     + [NT] Accepted patch from Evan Broder to check for missing
       versioned pre-depends on dpkg when using maintscript helper.
