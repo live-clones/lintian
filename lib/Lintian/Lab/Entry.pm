@@ -393,9 +393,13 @@ sub _init {
 
     $coll = $head->{'collections'}//'';
     $coll =~ s/\n/ /go;
+    # Strip leading and trailing space to avoid "interesting" issues
+    # with the "first" collection having leading spaces.
+    $coll =~ s/^\s++//go;
+    $coll =~ s/\s++$//go;
     foreach my $c (split m/\s*,\s*+/o, $coll) {
         my ($cname, $cver) = split m/\s*=\s*/, $c;
-        $self->{coll}->{$cname} = $cver;
+        $self->_mark_coll_finished ($cname, $cver);
     }
 }
 
