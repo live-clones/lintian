@@ -38,6 +38,9 @@ lintian (2.5.5) UNRELEASED; urgency=low
   * collection/index:
     + [NT] Use Lintian::Processable::Package to determine source
       name and version.
+  * collection/source-control-file{,.desc}:
+    + [NT] Removed as they are no longer needed.  They have been
+      replaced by a smarter Lintian::Collect.
 
   * data/debhelper/dh_addons-manual:
     + [JW] Add python3-sphinx as provider of sphinxdoc dh sequence.
