@@ -227,7 +227,6 @@ unless ($opt_r) {
             open my $lfd, '>', $list_file
                 or Die ("opening $list_file: $!");
             foreach my $query (@inc) {
-                Log (" - TODO - !query: $query\n");
                 print $lfd "!query: $query\n";
             }
             close $lfd;
