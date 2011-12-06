@@ -18,6 +18,9 @@ lintian (2.5.5) UNRELEASED; urgency=low
     + [JW] Properly handle uploader names with commas.
       (Closes: #485705)
     + [NT] Removed uploader-address-missing tag.
+    + [NT] Added section-mapping for (some) zope packages.  This
+      fixes some false-positives where python-zope packages were
+      wrongly identified as belong to the python section.
   * checks/files:
     + [JW,NT] Skip "Multi-Arch: same" check of gzip files if their
       install path contains the architecture.  (Closes: #650665)

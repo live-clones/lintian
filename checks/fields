@@ -111,6 +111,7 @@ our @known_java_pkg = map { qr/$_/ }
 my @NAME_SECTION_MAPPINGS = (
     [ qr/-docs?$/                      => 'doc'      ],
     [ qr/-dbg$/                        => 'debug'    ],
+    [ qr/^(?:python-)?zope/            => 'zope'     ],
     [ qr/^python-/                     => 'python'   ],
     [ qr/^r-cran-/                     => 'gnu-r'    ],
     [ qr/^lib.*-perl$/                 => 'perl'     ],
@@ -445,7 +446,7 @@ if (not defined $info->field('section')) {
                 my $area = '';
                 $area = "$parts[0]/" if (scalar @parts == 2);
                 tag 'wrong-section-according-to-package-name', "$pkg => ${area}$map->[1]"
-                unless $parts[-1] eq $map->[1];
+                    unless $parts[-1] eq $map->[1];
                 last;
             }
         }
