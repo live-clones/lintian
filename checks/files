@@ -1045,7 +1045,7 @@ foreach my $file (@{$info->sorted_index}) {
             if ($FONT_PACKAGES->known($font)) {
                 tag 'duplicate-font-file', "$file also in", $FONT_PACKAGES->value($font)
                     if ($pkg ne $FONT_PACKAGES->value($font) and $type ne 'udeb');
-            } elsif ($pkg !~ m/^(?:[ot]tf|t1|xfonts)-/) {
+            } elsif ($pkg !~ m/^(?:[ot]tf|t1|x?fonts)-/) {
                 tag 'font-in-non-font-package', $file;
             }
         }
