@@ -215,7 +215,7 @@
           <para>
             performance: Lintian should make it possible to check
             single packages within seconds or check the full archive
-            within a few hours.
+            within 5 days.
           </para>
         </listitem>
       </itemizedlist>
