@@ -5,7 +5,7 @@ use warnings;
 
 while ( my $line = <> ) {
     my ($file, $type) = $line =~ (m/^(.*?)\x00(.*)$/o);
-    if ($file =~ m/\.gz$/o && -e $file && ! -l $file && $type !~ m/compressed/o){
+    if ($file =~ m/\.gz$/o && -f $file && ! -l $file && $type !~ m/compressed/o){
         # While file could be right, it is unfortunately
         # regularly wrong here as well; double check the type
         my $text = '';

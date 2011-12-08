@@ -43,6 +43,8 @@ lintian (2.5.5) UNRELEASED; urgency=low
   * collection/index:
     + [NT] Use Lintian::Processable::Package to determine source
       name and version.
+  * collection/file-info-helper:
+    + [NT] Do not open non-files when double-checking gzip files.
   * collection/source-control-file{,.desc}:
     + [NT] Removed as they are no longer needed.  They have been
       replaced by a smarter Lintian::Collect.
