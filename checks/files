@@ -358,14 +358,16 @@ foreach my $file (@{$info->sorted_index}) {
         }
         #----------------- /etc/php5/conf.d
         elsif ($file =~ m,^etc/php5/conf.d/.+\.ini$,) {
-            open (PHPINI, '<', $info->unpacked($file)) or fail("cannot open .ini file: $!");
-            while (<PHPINI>) {
-                next unless (m/^\s*#/);
-                tag 'obsolete-comments-style-in-php-ini', $file;
-                # only warn once per file:
-                last;
+            if ($index_info->{type} =~ m/^[-h]/) {
+                open (PHPINI, '<', $info->unpacked($file)) or fail("cannot open .ini file: $!");
+                while (<PHPINI>) {
+                    next unless (m/^\s*#/);
+                    tag 'obsolete-comments-style-in-php-ini', $file;
+                    # only warn once per file:
+                    last;
+                }
+                close(PHPINI);
             }
-            close(PHPINI);
         }
         # ---------------- /etc/rc.d && /etc/rc?.d
         elsif ($type ne 'udeb' and $file =~ m,^etc/rc(?:\d|S)?\.d/\S, and $pkg !~ /^(?:sysvinit|file-rc)$/) {
