@@ -21,6 +21,8 @@ lintian (2.5.5) UNRELEASED; urgency=low
     + [NT] Added section-mapping for (some) zope packages.  This
       fixes some false-positives where python-zope packages were
       wrongly identified as belong to the python section.
+    + [NT] Fixed an issue where "doc-pkg-depends-on-main-pkg" would
+      only be triggered if it was a "pre-depends" relation.
   * checks/files:
     + [JW,NT] Skip "Multi-Arch: same" check of gzip files if their
       install path contains the architecture.  (Closes: #650665)

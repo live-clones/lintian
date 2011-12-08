@@ -658,7 +658,7 @@ if (($type eq 'binary') || ($type eq 'udeb')) {
                     && $pkg !~ /^python[\d.]*-minimal$/);
 
                 tag 'doc-package-depends-on-main-package', $field
-                    if ("$d_pkg-doc" eq $pkg && $field =~ /^(pre-)depends$/);
+                    if ("$d_pkg-doc" eq $pkg && $field =~ /^(?:pre-)?depends$/);
 
                 # only trigger this for the the preferred alternative
                 tag 'versioned-dependency-satisfied-by-perl', "$field: $part_d_orig"

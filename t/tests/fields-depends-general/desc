@@ -14,6 +14,7 @@ Test-For:
  depends-on-old-emacs
  depends-on-packaging-dev
  depends-on-python-minimal
+ doc-package-depends-on-main-package
  lib-recommends-documentation
  needlessly-depends-on-awk
  ored-depends-on-obsolete-package
