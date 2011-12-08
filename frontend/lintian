@@ -73,7 +73,15 @@ qw(
 ### "Normal" application variables
 
 # Version number - Is replaced during build with sed, see d/rules
-my $LINTIAN_VERSION = '<VERSION>';      #External Version number
+my $LINTIAN_VERSION = "<VERSION>";      #External Version number
+if ($LINTIAN_VERSION eq '<VERSION>') {
+    # For some reason the version above has not be substituted.
+    # Most likely this means we are a git clone or an unpacked
+    # source package.  If so, we will use a version that best
+    # describes our situation...
+    my $guess = _guess_version (__FILE__);
+    $LINTIAN_VERSION = $guess if $guess;
+}
 my $BANNER = "Lintian v$LINTIAN_VERSION"; #Version Banner - text form
 
 # Variables used to record commandline options
@@ -1721,6 +1729,37 @@ sub handle_lab_query {
         warning ("cannot find binary, udeb or source package $orig in lab (skipping)");
         $exit_code = 2;
     }
+}
+
+sub _guess_version {
+    require File::Basename;
+    require Cwd;
+    my ($frontend) = @_;
+    my $guess;
+    my $absfront = Cwd::abs_path ($frontend);
+    my $rootdir;
+    return '' unless $absfront;
+    $rootdir = File::Basename::dirname (File::Basename::dirname ($absfront));
+
+    if ( -d "$rootdir/.git" ) {
+        # Lets try git
+        eval {
+            require IPC::Run;
+            IPC::Run::run (['git', "--git-dir=$rootdir/.git", 'describe'], \undef, \$guess);
+            chomp $guess;
+        };
+        return $guess if $guess;
+    }
+    # git was not possible - maybe the changelog is available
+    if ( -f "$rootdir/debian/changelog" ) {
+        eval {
+            my $changelog = Parse::DebianChangelog->init({ infile => dirname(__FILE__) . "/../debian/changelog" });
+            $guess = $changelog->dpkg()->{'Version'} if $changelog;
+        };
+        return $guess if $guess;
+    }
+    # Out of guesses ...
+    return;
 }
 
 # }}}

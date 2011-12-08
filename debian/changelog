@@ -61,6 +61,9 @@ lintian (2.5.5) UNRELEASED; urgency=low
       status of some collections.
     + [NT] Keep auto-cleaned collections until all processables in
       the group has been checked.
+    + [NT] Attempt guess the version number when running in an git
+      checkout or unpacked source dir.  Based on patch from Evan
+      Broder.  (Closes: #650701)
   * frontend/lintian-info:
     + [NT] Support new lintian.log format.
     + [NT] Support new override file format with -a.
