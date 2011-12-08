@@ -44,12 +44,14 @@ sub direct_dependencies {
     my $deps = $self->{'direct-dependencies'};
     unless ($deps) {
         my $group = $self->{'group'};
+        my @procs = $group->get_processables ('binary');
+        push @procs, $group->get_processables ('udeb');
         $deps = {};
-        foreach my $proc ($group->get_processables('binary')) {
+        foreach my $proc (@procs) {
             my $pname = $proc->pkg_name;
             my $relation = $proc->info->relation('strong');
             my $d = [];
-            foreach my $oproc ($group->get_processables('binary')) {
+            foreach my $oproc (@procs) {
                 my $opname = $oproc->pkg_name;
                 # Ignore self deps - we have checks for that and it
                 # will just end up complicating "correctness" of

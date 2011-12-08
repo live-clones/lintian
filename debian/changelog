@@ -82,6 +82,9 @@ lintian (2.5.5) UNRELEASED; urgency=low
   * lib/Lintian/Collect/Binary.pm:
     + [NT] Fixed an error in parsing symbol names when using readelf
       as replacement for objdump.
+  * lib/Lintian/Collect/Group.pm:
+    + [NT] Made direct_dependencies properly handle udebs.  This fixes
+      an error that would cause lintian to skip some checks for udebs.
   * lib/Lintian/Collect/Source.pm:
     + [NT] Removed assumption that source packages always have a
       format field.
