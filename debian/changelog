@@ -101,6 +101,9 @@ lintian (2.5.5) UNRELEASED; urgency=low
   * lib/Lintian/Processable/Package.pm:
     + [NT] Use part of the file name as package name if the mandatory
       "Package" or "Source" fields are missing rather than choking.
+  * lib/Lintian/Tag/Info.pm:
+    + [NT] Accepted patch from Evan Broder to always output effective
+      severity in tag descriptions.
 
   * reporting/harness:
     + [NT] Removed useless "TODO" message from the log output.

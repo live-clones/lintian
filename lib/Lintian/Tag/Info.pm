@@ -283,9 +283,9 @@ sub description {
     if ($self->{ref}) {
         push(@text, '', _format_reference($self->{ref}));
     }
-    if ($self->{severity} and $self->{certainty}) {
-        my $severity = $self->{severity};
-        my $certainty = $self->{certainty};
+    if ($self->severity and $self->certainty) {
+        my $severity = $self->severity;
+        my $certainty = $self->certainty;
         push(@text, '', "Severity: $severity, Certainty: $certainty");
     }
     if ($self->{script} and $self->{'script-type'}){
