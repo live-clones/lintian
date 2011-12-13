@@ -51,12 +51,14 @@ $ENV{'LINTIAN_ROOT'} = $LINTIAN_ROOT;
 # Import Lintian Perl libraries.
 use lib "$ENV{LINTIAN_ROOT}/lib";
 use Lintian::Lab;
+use Lintian::Profile;
 use Lintian::Tag::Info ();
+use Lintian::Internal::FrontendUtil;
 use Text_utils;
 use Util;
 
 # Get additional tag information.
-our %tag_extra = ();
+our %tag_info  = ();
 
 opendir(CHECKDIR, "$LINTIAN_ROOT/checks")
     or fail("cannot read directory $LINTIAN_ROOT/checks");
@@ -68,8 +70,7 @@ for my $check (readdir CHECKDIR) {
     foreach my $tag (@tags) {
         next unless $tag->{severity} and $tag->{certainty};
         my $name = $tag->{tag};
-        $tag_extra{$name}{severity} = $tag->{severity};
-        $tag_extra{$name}{certainty} = $tag->{certainty};
+        $tag_info{$name} = Lintian::Tag::Info->new ($name);
     }
 }
 
@@ -215,6 +216,9 @@ while (<>) {
     $type = 'binary' unless (defined $type);
     $extra = '' unless (defined $extra);
     next unless ($type eq 'source' || $type eq 'binary' || $type eq 'udeb');
+    # Ignore unknown tags - happens if we removed a tag that is still present
+    # in the log file.
+    next unless $tag_info{$tag};
 
     # Update statistics.
     my $key = {
@@ -299,8 +303,8 @@ while (<>) {
         area      => html_quote ($area),
         type      => html_quote ($type),
         tag       => html_quote ($tag),
-        severity  => html_quote ($tag_extra{$tag}{severity}),
-        certainty => html_quote ($tag_extra{$tag}{certainty}),
+        severity  => html_quote ($tag_info{$tag}->severity),
+        certainty => html_quote ($tag_info{$tag}->certainty),
         extra     => html_quote ($extra),
         xref      => maintainer_url ($maintainer) . "#$source"
     };
@@ -468,9 +472,8 @@ for my $id (keys %clean) {
 
 # Create the pages for each tag.  Each page shows the extended description for
 # the tag and all the packages for which that tag was issued.
-for my $tag (sort keys %tag_extra) {
-    my $info = Lintian::Tag::Info->new($tag);
-    next unless $info;
+for my $tag (sort keys %tag_info) {
+    my $info = $tag_info{$tag};
     my $description = $info->description('html', '    ');
     my ($count, $overrides) = (0, 0);
     my %seen_tags;
@@ -503,7 +506,7 @@ for my $tag (sort keys %tag_extra) {
 %data = (
     tags       => \%by_tag,
     stats      => \%tag_statistics,
-    all        => \%tag_extra,
+    all        => \%tag_info,
 );
 output_template ('tags.html', $templates{tags}, \%data);
 output_template ('tags-severity.html', $templates{'tags-severity'}, \%data);
