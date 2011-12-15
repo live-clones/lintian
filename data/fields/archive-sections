@@ -9,6 +9,7 @@ debug
 devel
 doc
 editors
+education
 electronics
 embedded
 fonts
@@ -21,15 +22,17 @@ hamradio
 haskell
 httpd
 interpreters
+introspection
 java
+kernel
 kde
 libdevel
 libs
 lisp
 localization
-kernel
 mail
 math
+metapackages
 misc
 net
 news
