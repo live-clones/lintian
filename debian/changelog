@@ -30,8 +30,8 @@ lintian (2.5.5) UNRELEASED; urgency=low
       package contained the /u/s/doc/$pkg symlink.
       (Closes: #650959)
     + [NT] Allow fonts in packages starting with "fonts-".  This
-      completes the fix for #646838.  Thanks to أحمد المحمودي for
-      the follow up report.  (Closes: #651045)
+      completes the fix for #646838.  Thanks to أحمد المحمودي
+      for the follow up report.  (Closes: #651045)
   * checks/nmu:
     + [JW] Properly handle uploader names with commas.
   * checks/scripts:
