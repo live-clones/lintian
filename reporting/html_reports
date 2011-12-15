@@ -80,7 +80,7 @@ my $profile = Lintian::Profile->new (find_default_profile ("$LINTIAN_ROOT/profil
                                     ["$LINTIAN_ROOT/profiles"]);
 
 while ( my ($tagname, $severity) = each (%{$profile->severity_changes}) ) {
-    my $tag = $tag_data{$tagname};
+    my $tag = $tag_info{$tagname};
     $tag->set_severity ($severity);
 }
 
