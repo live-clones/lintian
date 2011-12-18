@@ -89,6 +89,7 @@ my %interpreters =
      procmail       => [ '/usr/bin' ],
      python         => [ '/usr/bin', 'python | python-minimal' ],
      pforth         => [ '/usr/bin' ],
+     racket         => [ '/usr/bin' ],
      r              => [ '/usr/bin', 'littler' ],
      rc             => [ '/usr/bin' ],
      regina         => [ '/usr/bin', 'regina-rexx' ],

@@ -45,6 +45,8 @@ lintian (2.5.5) UNRELEASED; urgency=low
       versioned pre-depends on dpkg when using maintscript helper.
       This dependency is trivially satisfied in Debian, but may
       complicate Ubuntu LTS upgrades.  (Closes: #602249)
+    + [NT] Accepted patch from James McCoy to recognize "racket" as
+      a known interpreter.  (Closes: #652594)
   * checks/symlinks:
     + [NT] Ignore langpack symlinks if they appear to be consistent.
       Thanks to Evan Broder for the report.  (Closes: #650793)
