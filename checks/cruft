@@ -147,7 +147,7 @@ for my $file (keys(%$file_info)) {
     next if ($file =~ m,(?:^|/)t(?:est(?:s(?:et)?)?)?/,);
     if ($file_info->{$file} =~ m/\bELF\b/) {
         tag 'source-contains-prebuilt-binary', $file;
-    } elsif ($file_info->{$file} =~ m/\bPE(32|64)\b/) {
+    } elsif ($file_info->{$file} =~ m/\b(?:PE(?:32|64)|COFF executable)\b/) {
         tag 'source-contains-prebuilt-windows-binary', $file;
     }
 }
