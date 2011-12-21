@@ -1,0 +1,7 @@
+Testname: debhelper-executable-files-compat-9
+Sequence: 6000
+Version: 1.0
+Options: --suppress-tags
+ package-needs-versioned-debhelper-build-depends
+Description: Tests related to executable packaging files
+Test-For: executable-debhelper-file-without-being-executable

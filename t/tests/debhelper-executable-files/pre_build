@@ -1,0 +1,8 @@
+#!/bin/sh
+
+DIR="$1"
+
+for FILE in control copyright changelog ; do
+    chmod +x "$DIR/debian/$FILE"
+done
+

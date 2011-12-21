@@ -1,0 +1,4 @@
+W: debhelper-executable-files source: package-file-is-executable debian/changelog
+W: debhelper-executable-files source: package-file-is-executable debian/control
+W: debhelper-executable-files source: package-file-is-executable debian/copyright
+W: debhelper-executable-files source: package-file-is-executable debian/manpages

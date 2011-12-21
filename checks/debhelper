@@ -295,6 +295,7 @@ my @indebfiles = ();
 opendir(DEBIAN, $droot)
     or fail("Can't open debfiles directory.");
 foreach my $file (sort readdir(DEBIAN)) {
+    next if $file eq 'rules';
     if ($file =~ m/^(?:(.*)\.)?(?:post|pre)(?:inst|rm)$/) {
         next unless $needtomodifyscripts;
 
@@ -318,8 +319,9 @@ foreach my $file (sort readdir(DEBIAN)) {
                 tag 'maintainer-script-lacks-debhelper-token', "debian/$file";
             }
         }
-    } elsif ($file eq 'control') {
-        next; # ignore
+    } elsif ($file eq 'control' or $file =~ m/^(?:.*\.)?(?:copyright|changelog|NEWS)$/o) {
+        # Handle "control", [<pkg>.]copyright, [<pkg>.]changelog and [<pkg>.]NEWS
+        _tag_if_executable ($file, "$droot/$file");
     } elsif ($file =~ m/^ex\.|\.ex$/i) {
         tag 'dh-make-template-in-source', "debian/$file";
     } elsif ($file =~ m/^(?:.+\.)?debhelper(?:\.log)?$/){
@@ -335,13 +337,27 @@ foreach my $file (sort readdir(DEBIAN)) {
         $base =~ s/^.+\.//;
 
         # Check whether this is a debhelper config file that takes a list of
-        # filenames.  If so, check it for brace expansions, which aren't
-        # supported.
+        # filenames.
         if ($filename_configs->known($base)) {
+            if ($level < 9) {
+                # debhelper only use executable files in compat 9
+                _tag_if_executable ($file, "$droot/$file");
+            } else {
+                if (-x "$droot/$file") {
+                    unless (_can_be_run ("debian/$file", "$droot/$file")) {
+                        tag 'executable-debhelper-file-without-being-executable', "debian/$file";
+                    }
+
+                    # Do not make assumptions about the contents of an
+                    # executable debhelper file.
+                    next;
+                }
+            }
+
+            # Skip brace expansion check for compat < 3 as those files
+            # do not allow any form for wildcards.
             next if $level < 3;
-            # Do not make assumptions about the contents of an
-            # executable debhelper file.
-            next if -x "$droot/$file" && $level >= 9;
+
             open (IN, '<', "$droot/$file")
                 or fail("Can't open debfiles/$file: $!");
             local $_;
@@ -459,6 +475,41 @@ if ($seen_dh and $seen_python3_helper != 1) {
     }
 }
 
+}
+
+sub _tag_if_executable {
+    my ($file, $path) = @_;
+    tag 'package-file-is-executable', "debian/$file" if -f $path && -x _;
+}
+
+sub _can_be_run {
+    my ($pkgpath, $fspath) = @_;
+    my $magic;
+    my $cbr = 0;
+    open my $fd, '<', $fspath or fail "opening $pkgpath: $!";
+    if (read $fd, $magic, 2) {
+        if ($magic eq '#!') {
+            my $sp = <$fd>;
+            chomp $sp;
+
+            # It is beyond me why anyone would place a lincity data
+            # file here...  but if they do, we will handle it
+            # correctly.
+            $cbr = 1 unless $sp =~ m/^#!/o;
+        }
+    }
+    close $fd;
+
+    # We are not checking if it is an ELF executable.  While debhelper
+    # allows this (i.e. it also checks for <pkg>.<file>.<arch>), it is
+    # no cross-compilation safe.  This is because debhelper uses
+    # "HOST" (and not "BUILD") arch, despite its documentation and
+    # code (incorrectly) suggests it is using "build".
+    #
+    # Oh yeah, it is also a terrible waste to keep pre-compiled
+    # binaries for all architectures in the source as well. :)
+
+    return $cbr;
 }
 
 1;

@@ -307,3 +307,23 @@ Experimental: yes
 Info: The source package declares a dependency on ${python3:Depends} in the
  given binary package's debian/control entry.  However, debian/rules doesn't
  call any helper that would generate this substitution variable.
+
+Tag: package-file-is-executable
+Severity: normal
+Certainty: certain
+Info: The packaging file is marked exectuable.  For control, changelog and
+ copyright there is no reason for them to be executable.
+ .
+ This tag is also emitted if a debhelper file is marked executable without
+ using compat level 9, since debhelper does not execute them at lower
+ compat levels.
+
+Tag: executable-debhelper-file-without-being-executable
+Severity: important
+Certainty: possible
+Info: The packaging file is marked exectuable, but it does not appear to be
+ executable (e.g. it has no #! line).
+ .
+ If debhelper file is not supposed to be executable, please remove the
+ executable bit from it.
+
