@@ -17,7 +17,8 @@ lintian (2.5.5) UNRELEASED; urgency=low
       Felix Geyer for the report.  (Closes: #650325)
   * checks/debhelper:
     + [NT] Do not check executable debhelper files for brace
-      expansion.  It may be allowed by tool interpretting the file.
+      expansion if compat is 9 (or greater).  It may be allowed by
+      tool interpretting the file.
   * checks/fields{,.desc}:
     + [JW] Properly handle uploader names with commas.
       (Closes: #485705)
