@@ -2,6 +2,7 @@ lintian (2.5.5) UNRELEASED; urgency=low
 
   * Summary of tag changes:
     + Added:
+      - dependency-is-not-multi-archified
       - preinst-uses-dpkg-maintscript-helper-without-predepends
     + Removed:
       - uploader-address-missing
@@ -35,6 +36,8 @@ lintian (2.5.5) UNRELEASED; urgency=low
   * checks/group-check{,.desc}:
     + [NT] Check for file conflicts in binaries built from the same
       source package.  (Closes: #293838)
+    + [JW] Added check for incomplete Multi-arch'ification.
+      (Closes: #650838)
   * checks/nmu:
     + [JW] Properly handle uploader names with commas.
   * checks/scripts:

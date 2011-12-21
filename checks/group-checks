@@ -60,6 +60,7 @@ foreach my $proc (@procs) {
         push @nodes, $pname;
         $edges{$pname} = [map { $_->pkg_name } @$deps];
         _check_priorities ($proc, $deps);
+        _check_multiarch ($proc, $deps);
     }
 }
 
@@ -140,6 +141,21 @@ sub _overlap_check {
             $a_file = $a_info->index->{$file} // $a_info->index->{"$file/"};
             next if $a_file->{type} eq $b_file->{type} && $a_file->{type} eq 'd';
             tag 'binaries-have-file-conflict', $a_proc->pkg_name, $b_proc->pkg_name, $file;
+        }
+    }
+}
+
+sub _check_multiarch {
+    my ($proc, $deps) = @_;
+    my $ma = $proc->info->field('multi-arch') // 'no';
+    if ($ma eq 'same') {
+        foreach my $dep (@$deps) {
+            my $dma = $dep->info->field('multi-arch') // 'no';
+            if ($dma eq 'same' or $dma eq 'foreign') {
+                1; # OK
+            } else {
+                tag 'dependency-is-not-multi-archified', $proc->pkg_name . " depends on " . $dep->pkg_name . " (multi-arch: $dma)";
+            }
         }
     }
 }

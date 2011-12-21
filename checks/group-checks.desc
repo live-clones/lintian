@@ -44,3 +44,10 @@ Info: The binaries appears to have overlapping files without proper
  Note the check is completely based on the file index for the
  packages.  Possible known false-positives include dpkg-diverts in
  maintainer scripts.
+
+Tag: dependency-is-not-multi-archified
+Severity: normal
+Certainty: possible
+Info: The package is Multi-Arch "same", but it depends on a package that
+ is neither Multi-Arch "same" nor "foreign".
+Ref: https://wiki.ubuntu.com/MultiarchSpec
