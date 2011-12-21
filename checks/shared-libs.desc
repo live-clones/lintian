@@ -428,3 +428,10 @@ Info: The dependency_libs field in the .la file has not been cleared.  It has
 Ref: http://wiki.debian.org/ReleaseGoals/LAFileRemoval,
      http://lists.debian.org/debian-devel/2011/05/msg01003.html,
      http://lists.debian.org/debian-devel/2011/05/msg01146.html
+
+Tag: shlib-in-multi-arch-foreign-package
+Severity: serious
+Certainty: certain
+Ref: https://wiki.ubuntu.com/MultiarchSpec
+Info: The package is marked as Multi-Arch: foreign, but it includes a shared
+ library in a public library directory.

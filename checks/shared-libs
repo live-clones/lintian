@@ -582,6 +582,11 @@ if ($type eq 'udeb') {
         if not $we_call_postinst and $must_call_ldconfig;
 }
 
+my $multiarch = $info->field('multi-arch') // 'no';
+if ($multiarch eq 'foreign' and $must_call_ldconfig) {
+    tag 'shlib-in-multi-arch-foreign-package', $must_call_ldconfig;
+}
+
 if (-f $info->control('prerm')) {
     local $_ = slurp_entire_file($info->control('prerm'));
     if (/^[^\#]*\bldconfig\b/m) {
