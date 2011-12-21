@@ -58,6 +58,7 @@ my %interpreters =
      expect         => [ '/usr/bin' ],
      expectk        => [ '/usr/bin' ],
      fish           => [ '/usr/bin' ],
+     fontforge      => [ '/usr/bin' ],
      gawk           => [ '/usr/bin' ],
      gbr2           => [ '/usr/bin', 'gambas2-runtime' ],
      gbx            => [ '/usr/bin', 'gambas-runtime' ],
