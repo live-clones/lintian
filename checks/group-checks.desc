@@ -33,3 +33,14 @@ Info: The package depends on a package with lower priority than
  package.  A full check of all dependencies built from different
  source packages is beyond the scope of Lintian.  The depcheck service
  can do this.
+
+Tag: binaries-have-file-conflict
+Severity: normal
+Certainty: possible
+Experimental: no
+Info: The binaries appears to have overlapping files without proper
+ conflicts relation.
+ .
+ Note the check is completely based on the file index for the
+ packages.  Possible known false-positives include dpkg-diverts in
+ maintainer scripts.

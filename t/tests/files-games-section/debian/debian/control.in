@@ -8,6 +8,7 @@ Build-Depends: debhelper (>= 7)
 Package: {$srcpkg}-both
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Conflicts: {$srcpkg}-good, {$srcpkg}-wrong, {$srcpkg}-no-games
 Description: {$description} (both)
  Package has both regular binaries and games.
  .
@@ -39,6 +40,7 @@ Package: {$srcpkg}-wrong
 Section: devel
 Architecture: {$architecture}
 Depends: $\{shlibs:Depends\}, $\{misc:Depends\}
+Conflicts: {$srcpkg}-good
 Description: {$description} (wrong)
  Games package in wrong section.
  .

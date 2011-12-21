@@ -47,8 +47,11 @@ my @nodes = ();
 my %edges = ();
 my $sccs;
 my $ginfo = $group->info;
+my @procs = $group->get_processables ('binary');
 
-foreach my $proc ($group->get_processables('binary')) {
+_check_file_overlap (@procs);
+
+foreach my $proc (@procs) {
     my $deps = $ginfo->direct_dependencies ($proc);
     if (scalar @$deps > 0) {
         # it depends on another package - it can cause
@@ -92,6 +95,51 @@ sub _check_priorities {
             tag 'package-depends-on-lower-priority-package', "$pkg_name:$priority",
                 'depends on', $dep->pkg_name . ":$dpri"
                     unless $prival <= $dprival;
+        }
+    }
+}
+
+sub _check_file_overlap {
+    my (@procs) = @_;
+    # Sort them for stable output
+    my @sorted = sort { $a->pkg_name cmp $b->pkg_name } @procs;
+    for (my $i = 0 ; $i < scalar @sorted ; $i++) {
+        my $proc = $sorted[$i];
+        my $pinfo = $proc->info;
+        for (my $j = $i ; $j < scalar @sorted ; $j++) {
+            my $other = $sorted[$j];
+            my $oinfo = $other->info;
+            # poor man's "Multi-arch: same" work-around.
+            next if $proc->pkg_name eq $other->pkg_name;
+
+            # $other conflicts/replaces with $proc
+            next if $oinfo->relation ('conflicts')->implies ($proc->pkg_name);
+            next if $oinfo->relation ('replaces')->implies ($proc->pkg_name);
+
+            # $proc conflicts/replaces with $other
+            next if $pinfo->relation ('conflicts')->implies ($other->pkg_name);
+            next if $pinfo->relation ('replaces')->implies ($other->pkg_name);
+
+            _overlap_check ($proc, $pinfo, $other, $oinfo);
+        }
+    }
+}
+
+sub _overlap_check {
+    my ($a_proc, $a_info, $b_proc, $b_info) = @_;
+    my $b_index = $b_info->index;
+    foreach my $raw (@{ $a_info->sorted_index }) {
+        my $file;
+        my $a_file;
+        my $b_file;
+        next unless $raw;
+        $file = $raw; # copy, because we have to modifiy it
+        $file =~ s,/$,,o;
+        $b_file = $b_index->{$file} // $b_index->{"$file/"};
+        if ($b_file) {
+            $a_file = $a_info->index->{$file} // $a_info->index->{"$file/"};
+            next if $a_file->{type} eq $b_file->{type} && $a_file->{type} eq 'd';
+            tag 'binaries-have-file-conflict', $a_proc->pkg_name, $b_proc->pkg_name, $file;
         }
     }
 }

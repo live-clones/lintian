@@ -13,8 +13,8 @@ override_dh_installdirs:
 	touch debian/libocaml-general-ocaml-dev/usr/lib/ocaml/bar.cmi
 	touch debian/libocaml-general-ocaml-dev/usr/lib/ocaml/baz.cmi
 	touch debian/libocaml-general-ocaml-dev/usr/lib/ocaml/boo.cmi
-	touch debian/libocaml-general-ocaml-dev/usr/lib/ocaml/symbol.cmx
 	touch debian/libocaml-general-ocaml-dev/usr/lib/ocaml/symbol2.cmx
+	touch debian/libocaml-general-ocaml-dev/usr/lib/ocaml/symbol-dev.cmx
 	touch debian/libocaml-general-ocaml-dev/usr/lib/ocaml/bleh.cmo
 	touch debian/libocaml-general-ocaml-dev/usr/lib/ocaml/bleh.cma
 	touch debian/libocaml-general-ocaml-dev/usr/lib/ocaml/META

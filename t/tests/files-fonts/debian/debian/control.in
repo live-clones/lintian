@@ -18,6 +18,8 @@ Description: {$description}
 
 Package: ttf-{$srcpkg}
 Architecture: {$architecture}
+# Due to file-conflict
+Conflicts: {$srcpkg}
 Depends: $\{misc:Depends\}
 Description: {$description} (okay)
  Font package containing fonts.

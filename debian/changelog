@@ -32,6 +32,9 @@ lintian (2.5.5) UNRELEASED; urgency=low
     + [NT] Allow fonts in packages starting with "fonts-".  This
       completes the fix for #646838.  Thanks to أحمد المحمودي
       for the follow up report.  (Closes: #651045)
+  * checks/group-check{,.desc}:
+    + [NT] Check for file conflicts in binaries built from the same
+      source package.  (Closes: #293838)
   * checks/nmu:
     + [JW] Properly handle uploader names with commas.
   * checks/scripts:
