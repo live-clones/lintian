@@ -15,6 +15,9 @@ lintian (2.5.5) UNRELEASED; urgency=low
     + [NT] Added dh-autoreconf as a build-depends alternative to
       libtool for suppressing ancient-libtool warning.  Thanks to
       Felix Geyer for the report.  (Closes: #650325)
+  * checks/debhelper:
+    + [NT] Do not check executable debhelper files for brace
+      expansion.  It may be allowed by tool interpretting the file.
   * checks/fields{,.desc}:
     + [JW] Properly handle uploader names with commas.
       (Closes: #485705)

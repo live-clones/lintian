@@ -339,6 +339,9 @@ foreach my $file (sort readdir(DEBIAN)) {
         # supported.
         if ($filename_configs->known($base)) {
             next if $level < 3;
+            # Do not make assumptions about the contents of an
+            # executable debhelper file.
+            next if -x "$droot/$file";
             open (IN, '<', "$droot/$file")
                 or fail("Can't open debfiles/$file: $!");
             local $_;
