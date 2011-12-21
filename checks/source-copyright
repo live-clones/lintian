@@ -109,7 +109,7 @@ if (m{
             $version = '0+svn';
             $uri =~ m,^\?(?:\S+[&;])?(?:pathrev|revision|rev)=(\d+)(?:[&;]\S+)?$, and $version = "$version~$1";
         }
-        elsif ($uri =~ m,^http://www\.debian\.org/doc/(?:packaging-manuals/)?copyright-format/(\d+\.\d+)$,) {
+        elsif ($uri =~ m,^http://www\.debian\.org/doc/(?:packaging-manuals/)?copyright-format/(\d+\.\d+)/?$,) {
             $version = $1;
         }
         else {
