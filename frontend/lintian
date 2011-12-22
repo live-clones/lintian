@@ -102,6 +102,9 @@ my %opt;                        #hash of some flags from cmd or cfg
 my %conf_opt;                   #names of options set in the cfg file
 my $no_profile = 0;             #whether a profile should be loaded
 
+my %group_cache = ();           # Cache to store groups in case of group
+                                # queries
+
 # The profile search path except LINTIAN_ROOT/profiles
 #  which will be added later (we dont know LINTIAN_ROOT
 #  at this point)
@@ -970,6 +973,10 @@ if ($check_everything) {
     close $fd unless $opt{'packages-from-file'} eq '-';
 }
 
+# Remove the group cache in case there has been group lab queries.  We
+# do not need this cache anymore.
+_clear_group_cache();
+
 # }}}
 
 # {{{ Some silent exit
@@ -1717,6 +1724,17 @@ sub handle_lab_query {
             my @pkgs = $LAB->get_package ($pkg, $t, $version, $arch);
             push @res, @pkgs;
         }
+    } elsif ($type eq 'GROUP') {
+        _build_group_cache() unless %group_cache;
+        if (exists $group_cache{$pkg}) {
+            if (defined $version) {
+                push @res, @{ $group_cache{$pkg}->{$version} };
+            } else {
+                foreach my $v (keys %{ $group_cache{$pkg} }) {
+                    push @res, @{ $group_cache{$pkg}->{$v} };
+                }
+            }
+        }
     } else {
         # specific type requested
         my @pkgs = $LAB->get_package ($pkg, $type, $version, $arch);
@@ -1734,6 +1752,20 @@ sub handle_lab_query {
         warning ("cannot find binary, udeb or source package $orig in lab (skipping)");
         $exit_code = 2;
     }
+}
+
+sub _build_group_cache {
+    # Globals %group_cache and $LAB
+    $LAB->visit_packages (sub {
+        my ($entry) = @_;
+        my $src = $entry->pkg_src;
+        my $src_version = $entry->pkg_src_version;
+        push @{ $group_cache{$src}->{$src_version} }, $entry;
+    });
+}
+
+sub _clear_group_cache {
+    undef %group_cache;
 }
 
 sub _guess_version {

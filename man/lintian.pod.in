@@ -633,10 +633,16 @@ Where:
 =item type
 
 This is the type of the package and (if present) must be one of "ALL",
-"binary", "udeb", "source" or "changes".  This is case sensitive.
+"GROUP", "binary", "udeb", "source" or "changes".  This is case
+sensitive.
 
 If omitted this defaults to "ALL" unless another default has been
-specified (see B<--binary>, B<--udeb> or B<--source>).
+specified (see B<--binary>, B<--udeb> or B<--source>).  The pseudo
+type "ALL" acts as a wildcard for any real package type.
+
+The special type "GROUP" can be used to match all packages related to
+a given source package.  For more info, please see L<Group query>
+below.
 
 =item package
 
@@ -655,13 +661,20 @@ then any architecture will do.  Otherwise the architecture must match
 exactly.
 
 Note: This is I<completely> ignored when matching against source
-packages.
+packages or when type is "GROUP".
 
 Note: For changes packages, this must match the contents of the
 architecture field in the changes.  This field may contain a space
 (i.e. "source all") and therefore may also need proper shell escape.
 
 =back
+
+=head2 Group query
+
+A group query can be used to (re-)process all packages in a given
+group.  The I<package> and I<version> part will be used to look up one
+or more source packages.  The binaries, udebs and changes files for
+each matching source package will also be activated.
 
 =head1 EXAMPLES
 

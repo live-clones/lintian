@@ -105,6 +105,9 @@ lintian (2.5.5) UNRELEASED; urgency=low
     + [NT] Attempt guess the version number when running in an git
       checkout or unpacked source dir.  Based on patch from Evan
       Broder.  (Closes: #650701)
+    + [NT] Added support for the virtual "GROUP" type in Lab Queries.
+      This will make Lintian select all packages related to a given
+      source (and version).
   * frontend/lintian-info:
     + [NT] Support new lintian.log format.
     + [NT] Support new override file format with -a.
