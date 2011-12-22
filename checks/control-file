@@ -233,7 +233,7 @@ for my $binary_control (@binary_controls) {
 
     # If this looks like a -dev package, check its dependencies.
     if ($package =~ /-dev$/ and $binary_control->{'depends'}) {
-        check_dev_depends($package, $binary_control->{depends},
+        check_dev_depends ($info, $package, $binary_control->{depends},
                   @package_names);
     }
 
@@ -286,7 +286,7 @@ for my $i (0 .. $#descriptions) {
 # have a version restriction that's at least as strict as the same upstream
 # version.
 sub check_dev_depends {
-    my ($package, $depends, @packages) = @_;
+    my ($info, $package, $depends, @packages) = @_;
     $depends =~ s/^\s+//;
     $depends =~ s/\s+$//;
     for my $target (@packages) {
@@ -315,11 +315,20 @@ sub check_dev_depends {
         # they know what they're doing.
         if (@depends == 1) {
             unless ($versions[0] =~ /^\s*=\s*\$\{(?:binary:Version|Source-Version)\}/) {
+                # Allow "pkg (= ${source:Version})" if (but only if)
+                # the target is an arch:all package.  This happens
+                # with a lot of mono-packages.
+                #
+                # Note, we do not check if the -dev package is
+                # arch:all as well.  The version-substvars check
+                # handles that for us.
+                next if ($info->binary_field ($target, 'architecture')//'') eq 'all'
+                    && $versions[0] =~ /^\s*=\s*\$\{source:Version\}/;
                 tag 'weak-library-dev-dependency', "$package on $depends[0]";
             }
         } elsif (@depends == 2) {
-            unless ($versions[0] =~ /^\s*<[=<]\s*\$\{(?:(?:binary|source):(?:Upstream-)?Version|Source-Version)\}/
-                and $versions[1] =~ /^\s*>[=>]\s*\$\{(?:(?:binary|source):(?:Upstream-)?Version|Source-Version)\}/) {
+            unless    ($versions[0] =~ /^\s*<[=<]\s*\$\{(?:(?:binary|source):(?:Upstream-)?Version|Source-Version)\}/
+                    && $versions[1] =~ /^\s*>[=>]\s*\$\{(?:(?:binary|source):(?:Upstream-)?Version|Source-Version)\}/) {
                 tag 'weak-library-dev-dependency', "$package on $depends[0], $depends[1]";
             }
         }
