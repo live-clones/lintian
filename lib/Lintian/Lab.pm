@@ -225,8 +225,9 @@ this returns the first match (if any).
 =cut
 
 sub get_package {
-    my ($self, $pkg, $pkg_type, $pkg_version, $pkg_arch, $pkg_path) = @_;
+    my ($self, $pkg, $pkg_type, $pkg_version, $pkg_arch) = @_;
     my $pkg_name;
+    my $pkg_path;
     my @entries;
     my $index;
     my $proc;
@@ -313,10 +314,9 @@ sub visit_packages {
             my ($me, $pkg_name, $pkg_version, $pkg_arch) = @_;
             my $pkg_src = $me->{'source'}//$pkg_name;
             my $dir = $self->_pool_path ($pkg_src, $pkg_type, $pkg_name, $pkg_version, $pkg_arch);
-            my $pp = $me->{'file'};
             my $pkg_src_version = $me->{'source-version'}//$pkg_version;
             my $lentry = Lintian::Lab::Entry->_new ($self, $pkg_name, $pkg_version, $pkg_arch,
-                                                   $pkg_type, $pp, $pkg_src, $pkg_src_version, $dir);
+                                                   $pkg_type, undef, $pkg_src, $pkg_src_version, $dir);
             $visitor->($lentry, $pkg_name, $pkg_version, $pkg_arch);
         };
         $index->visit_all ($intv);
