@@ -141,6 +141,9 @@ sub _fetch_index_data {
 
         ($file{owner}, $file{group}) = split '/', $owner, 2;
 
+        $file{owner} = 'root' if $file{owner} eq '0';
+        $file{group} = 'root' if $file{group} eq '0';
+
         $name =~ s,^\./,,;
         if ($name =~ s/ link to (.*)//) {
             $file{type} = 'h';

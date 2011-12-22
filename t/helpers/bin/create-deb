@@ -58,6 +58,7 @@ my %opts = (
     'out-file|o=s' => \$val{'out-file'},
     'help|h' => sub { usage(); exit 0; },
     'root=s' => \$val{'root'},
+    'tar-opts=s' => \$val{'tar-opts'},
     'auto-build-data!' => \$val{'auto-build-data'},
     'compression|c=s' => \$val{'compression'},
     'md5sums!' => \$val{'md5sums'},
@@ -68,6 +69,7 @@ my %opts = (
 
 my $cwd;
 my $data;
+my @taropt = ();
 
 Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
 
@@ -123,8 +125,9 @@ if ($val{'md5sums'}) {
 
 # Create the data.tar.$ext
 $data = "data.tar.$val{'compression'}";
+@taropt = split m/\s++/o, $val{'tar-opts'} if defined $val{'tar-opts'};
 
-runsystem('tar', '-C', $val{'root'}, @{ $TAR_OPTIONS{$val{'compression'}} },
+runsystem('tar', '-C', $val{'root'}, @taropt, @{ $TAR_OPTIONS{$val{'compression'}} },
           '-cf', "$cwd/$data", '.');
 
 # control.tar.gz
@@ -138,7 +141,7 @@ unless ( -e 'control.tar.gz' ) {
             }
         }
     }
-    runsystem('tar', 'czf', 'control.tar.gz', @ARGV);
+    runsystem('tar', @taropt, '-czf', 'control.tar.gz', @ARGV);
 }
 
 # debian-binary
