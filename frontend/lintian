@@ -986,15 +986,13 @@ if($action eq 'remove'){
     # Handle remove here - makes the unpack/check loop simpler.
     foreach my $group ($pool->get_groups()){
         foreach my $proc ($group->get_processables()){
-            my $lpkg;
             my $pkg_name = $proc->pkg_name();
             my $pkg_ver  = $proc->pkg_version();
             my $pkg_type = $proc->pkg_type();
             my $pkg_path = $proc->pkg_path();
             my $pkg_arch = $proc->pkg_arch();
-            eval{
-                $lpkg = $LAB->get_package($proc);
-            };
+            my $lpkg = _get_lpkg ($proc);
+
             if (!defined $lpkg){
                 my $err = '.';
                 $err = ": $@" if defined $@;
@@ -1441,6 +1439,22 @@ sub post_pkg_process_overrides{
     }
 }
 
+sub _get_lpkg {
+    my ($proc) = @_;
+    my $lpkg;
+    # If $proc is an lab entry (i.e. we got it from the Lab already)
+    # just use it directly.
+    if ($proc->isa ('Lintian::Lab::Entry')) {
+        $lpkg = $proc;
+    } else {
+        # Else use the $proc to get the lab entry
+        eval{
+            $lpkg = $LAB->get_package($proc);
+        };
+    }
+    return $lpkg;
+}
+
 sub unpack_group {
     my ($group) = @_;
   PROC:
@@ -1450,19 +1464,10 @@ sub unpack_group {
         my $pkg_path = $proc->pkg_path();
         my $pkg_ver  = $proc->pkg_version();
         my $pkg_arch = $proc->pkg_arch();
-        my $lpkg;
+        my $lpkg = _get_lpkg ($proc);
         my $base;
         my $info;
-        # If $proc is an lab entry (i.e. we got it from the Lab already)
-        # just use it directly.
-        if ($proc->isa ('Lintian::Lab::Entry')) {
-            $lpkg = $proc;
-        } else {
-            # Else use the $proc to get the lab entry
-            eval{
-                $lpkg = $LAB->get_package($proc);
-            };
-        }
+
 
         if (!defined $lpkg) {
             my $err = '.';
