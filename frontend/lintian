@@ -1753,7 +1753,7 @@ sub _guess_version {
     # git was not possible - maybe the changelog is available
     if ( -f "$rootdir/debian/changelog" ) {
         eval {
-            my $changelog = Parse::DebianChangelog->init({ infile => dirname(__FILE__) . "/../debian/changelog" });
+            my $changelog = Parse::DebianChangelog->init({ infile => "$rootdir/debian/changelog" });
             $guess = $changelog->dpkg()->{'Version'} if $changelog;
         };
         return $guess if $guess;
