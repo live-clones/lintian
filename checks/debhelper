@@ -344,7 +344,8 @@ foreach my $file (sort readdir(DEBIAN)) {
                 _tag_if_executable ($file, "$droot/$file");
             } else {
                 if (-x "$droot/$file") {
-                    unless (_can_be_run ("debian/$file", "$droot/$file")) {
+                    my $cmd =  _shebang_cmd  ("debian/$file", "$droot/$file");
+                    unless ( $cmd ) {
                         tag 'executable-debhelper-file-without-being-executable', "debian/$file";
                     }
 
@@ -482,23 +483,30 @@ sub _tag_if_executable {
     tag 'package-file-is-executable', "debian/$file" if -f $path && -x _;
 }
 
-sub _can_be_run {
+# Return the command after the #! in the file (if any).
+# - if there is no command or no #! line, the empty string is returned.
+sub _shebang_cmd {
     my ($pkgpath, $fspath) = @_;
     my $magic;
-    my $cbr = 0;
+    my $cmd = '';
     open my $fd, '<', $fspath or fail "opening $pkgpath: $!";
     if (read $fd, $magic, 2) {
         if ($magic eq '#!') {
-            my $sp = <$fd>;
-            chomp $sp;
+            $cmd = <$fd>;
+            chomp $cmd;
 
             # It is beyond me why anyone would place a lincity data
             # file here...  but if they do, we will handle it
             # correctly.
-            $cbr = 1 unless $sp =~ m/^#!/o;
+            $cmd = '' if $cmd =~ m/^#!/o;
+
+            # Strip whitespace if any
+            $cmd =~ s/^\s++//o;
+            $cmd =~ s/\s++$//o;
         }
     }
     close $fd;
+
 
     # We are not checking if it is an ELF executable.  While debhelper
     # allows this (i.e. it also checks for <pkg>.<file>.<arch>), it is
@@ -509,7 +517,8 @@ sub _can_be_run {
     # Oh yeah, it is also a terrible waste to keep pre-compiled
     # binaries for all architectures in the source as well. :)
 
-    return $cbr;
+
+    return $cmd;
 }
 
 1;
