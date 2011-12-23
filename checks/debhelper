@@ -350,7 +350,10 @@ foreach my $file (sort readdir(DEBIAN)) {
                     }
 
                     # Do not make assumptions about the contents of an
-                    # executable debhelper file.
+                    # executable debhelper file, unless it's a dh-exec
+                    # script.
+                    _check_dh_exec ($cmd, "debian/$file", "$droot/$file")
+                            if ( $cmd =~ /dh-exec/);
                     next;
                 }
             }
@@ -481,6 +484,17 @@ if ($seen_dh and $seen_python3_helper != 1) {
 sub _tag_if_executable {
     my ($file, $path) = @_;
     tag 'package-file-is-executable', "debian/$file" if -f $path && -x _;
+}
+
+# Perform various checks on a dh-exec file.
+sub _check_dh_exec {
+    my ($cmd, $pkgpath, $fspath) = @_;
+
+    # Only /usr/bin/dh-exec is allowed, even if
+    # /usr/lib/dh-exec/dh-exec-subst works too.
+    if ( $cmd =~ m,/usr/lib/dh-exec/, ) {
+        tag 'dh-exec-private-helper', $pkgpath;
+    }
 }
 
 # Return the command after the #! in the file (if any).

@@ -1,0 +1,2 @@
+#! /usr/lib/dh-exec/dh-exec-subst
+## The above works, but is not recommended.
