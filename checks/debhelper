@@ -507,7 +507,14 @@ sub _check_dh_exec {
         or fail ("Can't open $pkgpath: $!");
     my ($dhe_subst, $dhe_install) = (0, 0);
     while (<$fd>) {
-        $dhe_subst = 1 if /\$\{[^\}]+\}/;
+        if (/\$\{([^\}]+)\}/) {
+            my $sv = $1;
+            $dhe_subst = 1;
+
+            if ($sv !~ /^DEB_(?:BUILD|HOST)_(?:ARCH(?:_OS|_CPU|_BITS|_ENDIAN)?|GNU_(?:CPU|SYSTEM|TYPE)|MULTIARCH)$/) {
+                tag 'dh-exec-subst-unknown-variable', $pkgpath, $sv;
+            }
+        }
         $dhe_install = 1 if / => /;
     }
     close $fd;

@@ -359,3 +359,14 @@ Info: The package uses a dh-exec-install contruct in a non-.install
  .
  The dh-exec-install constructs are only allowed in dh_install's
  .install files, and nowhere else.
+
+Tag: dh-exec-subst-unknown-variable
+Severity: minor
+Certainty: wild-guess
+Info: The package uses a variable in one of its debhelper config
+ files, but the variable is not one known to dpkg-architecture.
+ .
+ It is recommended to use a known subset of variables. If the package
+ needs more than that, and makes sure the variable is exported through
+ the build one way or the othern, then this tag can be safely ignored
+ or overriden.

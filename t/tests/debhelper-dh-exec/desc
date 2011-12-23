@@ -3,9 +3,11 @@ Sequence: 6000
 Version: 1.0
 Options: --suppress-tags
  package-needs-versioned-debhelper-build-depends
+ --display-info
 Description: Tests related to executable, dh-exec using packaging files
 Test-For:
  dh-exec-install-not-allowed-here
  dh-exec-private-helper
  dh-exec-script-without-dh-exec-features
+ dh-exec-subst-unknown-variable
  package-uses-dh-exec-but-lacks-build-depends
