@@ -1,3 +1,4 @@
+E: debhelper-dh-exec source: dh-exec-install-not-allowed-here debian/manpages
 E: debhelper-dh-exec source: dh-exec-private-helper debian/manpages
 E: debhelper-dh-exec source: package-uses-dh-exec-but-lacks-build-depends
-W: debhelper-dh-exec source: dh-exec-script-without-dh-exec-features debian/manpages
+W: debhelper-dh-exec source: dh-exec-script-without-dh-exec-features debian/install

@@ -5,6 +5,7 @@ Options: --suppress-tags
  package-needs-versioned-debhelper-build-depends
 Description: Tests related to executable, dh-exec using packaging files
 Test-For:
+ dh-exec-install-not-allowed-here
  dh-exec-private-helper
  dh-exec-script-without-dh-exec-features
  package-uses-dh-exec-but-lacks-build-depends

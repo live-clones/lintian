@@ -355,7 +355,7 @@ foreach my $file (sort readdir(DEBIAN)) {
                     # script.
                     if ( $cmd =~ /dh-exec/) {
                         $needdhexecbuilddepends = 1;
-                        _check_dh_exec ($cmd, "debian/$file", "$droot/$file");
+                        _check_dh_exec ($cmd, $base, "debian/$file", "$droot/$file");
                     }
                     next;
                 }
@@ -495,7 +495,7 @@ sub _tag_if_executable {
 
 # Perform various checks on a dh-exec file.
 sub _check_dh_exec {
-    my ($cmd, $pkgpath, $fspath) = @_;
+    my ($cmd, $base, $pkgpath, $fspath) = @_;
 
     # Only /usr/bin/dh-exec is allowed, even if
     # /usr/lib/dh-exec/dh-exec-subst works too.
@@ -516,6 +516,9 @@ sub _check_dh_exec {
         tag 'dh-exec-script-without-dh-exec-features', $pkgpath;
     }
 
+    if ( $dhe_install && $base ne 'install') {
+        tag 'dh-exec-install-not-allowed-here', $pkgpath;
+    }
 }
 
 # Return the command after the #! in the file (if any).

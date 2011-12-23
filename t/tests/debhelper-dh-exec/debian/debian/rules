@@ -4,3 +4,5 @@
 	dh $@
 
 override_dh_installman:
+
+override_dh_install:
