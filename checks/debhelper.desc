@@ -369,4 +369,4 @@ Info: The package uses a variable in one of its debhelper config
  It is recommended to use a known subset of variables. If the package
  needs more than that, and makes sure the variable is exported through
  the build one way or the othern, then this tag can be safely ignored
- or overriden.
+ or overridden.
