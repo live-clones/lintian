@@ -43,7 +43,7 @@ EOF
 { echo "any"; echo "all";
   dpkg-architecture -L; } | sort >> "$f"
 
-mv "$f" "$1"/fields/architectures
+mv "$f" "$1"/common/architectures
 
 
 ### Triplets list ###

@@ -30,13 +30,13 @@ use Dpkg::Version qw(version_check);
 
 use Util;
 
+use Lintian::Architecture qw(:all);
 use Lintian::Data ();
 use Lintian::Check qw(check_maintainer);
 use Lintian::Relation ();
 use Lintian::Relation::Version qw(versions_compare);
 use Lintian::Tags qw(tag);
 
-our $KNOWN_ARCHS = Lintian::Data->new('fields/architectures');
 our $KNOWN_ESSENTIAL = Lintian::Data->new('fields/essential');
 our $KNOWN_METAPACKAGES = Lintian::Data->new('fields/metapackages');
 our $NO_BUILD_DEPENDS = Lintian::Data->new('fields/no-build-depends');
@@ -44,21 +44,6 @@ our $KNOWN_SECTIONS = Lintian::Data->new('fields/archive-sections');
 our $known_build_essential = Lintian::Data->new('fields/build-essential-packages');
 our $KNOWN_BINARY_FIELDS = Lintian::Data->new('fields/binary-fields');
 our $KNOWN_UDEB_FIELDS = Lintian::Data->new('fields/udeb-fields');
-
-# Generate the list of valid architecture wildcards.  We can ignore all
-# architectures not containing a - for our purposes and transform any
-# architecture like foo-bar into any-bar and foo-any.  Putting this in a hash
-# will then clean up all the duplicates.
-our %ARCH_WILDCARDS = map {
-    if (/-/) {
-        my ($first, $second) = split ('-', $_, 2);
-        ("$first-any" => 1, "any-$second" => 1);
-    } else {
-        ();
-    }
-} $KNOWN_ARCHS->all;
-$ARCH_WILDCARDS{'linux-any'} = 1;
-$ARCH_WILDCARDS{any} = 1;
 
 our %KNOWN_ARCHIVE_PARTS = map { $_ => 1 }
     ('non-free', 'contrib');
@@ -302,9 +287,9 @@ if (not defined $info->field('architecture')) {
     }
     for my $arch (@archs) {
         tag 'unknown-architecture', $arch
-            unless $KNOWN_ARCHS->known($arch) || $ARCH_WILDCARDS{$arch};
+            unless is_arch_or_wildcard ($arch);
         tag 'arch-wildcard-in-binary-package', $arch
-            if ($type eq 'binary' && $ARCH_WILDCARDS{$arch});
+            if ($type eq 'binary' && is_arch_wildcard ($arch));
     }
 
     if ($type eq 'binary') {
@@ -782,7 +767,7 @@ if ($type eq 'source') {
 
                     my $negated = 0;
                     for my $arch (@{$d_arch->[0]}) {
-                        if ($arch eq 'all' || (!$KNOWN_ARCHS->known($arch) && !$ARCH_WILDCARDS{$arch})) {
+                        if ($arch eq 'all' || !is_arch_or_wildcard ($arch)) {
                             tag 'invalid-arch-string-in-source-relation', "$arch [$field: $part_d_orig]"
                         }
                     }

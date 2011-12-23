@@ -48,6 +48,7 @@ lintian (2.5.5) UNRELEASED; urgency=low
       wrongly identified as belong to the python section.
     + [NT] Fixed an issue where "doc-pkg-depends-on-main-pkg" would
       only be triggered if it was a "pre-depends" relation.
+    + [NT] Use new Lintian::Architecture API.
   * checks/files:
     + [JW,NT] Skip "Multi-Arch: same" check of gzip files if their
       install path contains the architecture.  (Closes: #650665)
@@ -92,6 +93,8 @@ lintian (2.5.5) UNRELEASED; urgency=low
     + [NT] Removed as they are no longer needed.  They have been
       replaced by a smarter Lintian::Collect.
 
+  * data/{fields => common}/architectures:
+    + [NT] Moved architectures to data/common.
   * data/debhelper/dh_addons-manual:
     + [JW] Add python3-sphinx as provider of sphinxdoc dh sequence.
   * data/debhelper/dh_commands-manual:
@@ -124,6 +127,8 @@ lintian (2.5.5) UNRELEASED; urgency=low
     + [NT] Support new lintian.log format.
     + [NT] Support new override file format with -a.
 
+  * lib/Lintian/Architecture.pm:
+    + [NT] New file.
   * lib/Lintian/Check.pm:
     + [NT] Do not check for missing uploader address as it cannot be
       done reliably anymore.
