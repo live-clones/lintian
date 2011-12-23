@@ -4,7 +4,10 @@ use strict;
 use warnings;
 
 # Find the lib directory of lintian-root (defaulting to ./lib/)
-use lib ($ENV{LINTIAN_ROOT}//'.') . '/lib/';
+BEGIN {
+    $ENV{LINTIAN_ROOT} //= '.';
+}
+use lib $ENV{LINTIAN_ROOT} . '/lib/';
 
 use Util qw(read_dpkg_control fail);
 
