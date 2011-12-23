@@ -160,6 +160,10 @@ lintian (2.5.5) UNRELEASED; urgency=low
   * lib/Lintian/Tag/Info.pm:
     + [NT] Accepted patch from Evan Broder to always output effective
       severity in tag descriptions.
+  * lib/Lintian/Tags.pm:
+    + [NT] Support architecture wildcards in overrides.
+    + [NT] Emit "malformed-override" for architecture specific tags for
+      unknown architectures and for "arch:all" packages.
 
   * reporting/harness:
     + [NT] Removed useless "TODO" message from the log output.

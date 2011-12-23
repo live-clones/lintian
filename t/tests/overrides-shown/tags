@@ -4,8 +4,7 @@ N: exact extra information
 O: overrides-shown: hyphen-used-as-minus-sign usr/share/man/man1/foo.1.gz:4
 N: These are wildcard overrides
 O: overrides-shown: hyphen-used-as-minus-sign usr/share/man/man1/foo.1.gz:5
-N: Architecture specific override - which is retarded considering
-N: it is an arch: all package we are testing >.>
+N: Architecture specific override
 O: overrides-shown: hyphen-used-as-minus-sign usr/share/man/man1/foo.1.gz:6
 I: overrides-shown: hyphen-used-as-minus-sign usr/share/man/man1/foo.1.gz:12
 I: overrides-shown: hyphen-used-as-minus-sign usr/share/man/man1/foo.1.gz:13

@@ -2,3 +2,4 @@ Testname: overrides
 Sequence: 1500
 Version: 1.0
 Description: Test override handling
+Architecture: any

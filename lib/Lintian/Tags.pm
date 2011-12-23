@@ -22,6 +22,7 @@ package Lintian::Tags;
 use strict;
 use warnings;
 
+use Lintian::Architecture qw(:all);
 use Lintian::Output;
 use Lintian::Tag::Info;
 use Lintian::Tag::Override;
@@ -536,6 +537,7 @@ sub file_overrides {
     open(my $file, '<', $overrides)
         or fail("cannot open override file $overrides: $!");
     local $_;
+  OVERRIDE:
     while (<$file>) {
         s/^\s+//;
         s/\s+$//;
@@ -568,6 +570,10 @@ sub file_overrides {
             my $tagover;
             my $com;
             my $data;
+            if ($info->{arch} eq 'all' && $archlist) {
+                tag 'malformed-override', $_, 'Architecture list for arch:all package';
+                next;
+            }
             if ($archlist) {
                 # parse and figure
                 my (@archs) = split(m/\s++/o, $archlist);
@@ -575,7 +581,14 @@ sub file_overrides {
                 my $found = 0;
                 foreach my $a (@archs){
                     $negated++ if $a =~ s/^!//o;
-                    $found = 1 if $a eq $info->{arch};
+                    if (is_arch_wildcard ($a)) {
+                        $found = 1 if wildcard_includes_arch ($a, $info->{arch});
+                    } elsif (is_arch ($a)) {
+                        $found = 1 if $a eq $info->{arch};
+                    } else {
+                        tag 'malformed-override', $_, "Unknown architecture \"$a\"";
+                        next OVERRIDE;
+                    }
                 }
                 if ($negated > 0 && scalar @archs != $negated){
                     # missing a ! somewhere
