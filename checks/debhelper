@@ -62,6 +62,7 @@ my $droot = $info->debfiles;
 
 my $seencommand = '';
 my $needbuilddepends = '';
+my $needdhexecbuilddepends = '';
 my $needtomodifyscripts = '';
 my $level;
 my $seenversiondepends = '0';
@@ -352,8 +353,10 @@ foreach my $file (sort readdir(DEBIAN)) {
                     # Do not make assumptions about the contents of an
                     # executable debhelper file, unless it's a dh-exec
                     # script.
-                    _check_dh_exec ($cmd, "debian/$file", "$droot/$file")
-                            if ( $cmd =~ /dh-exec/);
+                    if ( $cmd =~ /dh-exec/) {
+                        $needdhexecbuilddepends = 1;
+                        _check_dh_exec ($cmd, "debian/$file", "$droot/$file");
+                    }
                     next;
                 }
             }
@@ -385,6 +388,10 @@ $bdepends = $info->relation('build-depends-all');
 if ($needbuilddepends && ! $bdepends->implies('debhelper')) {
     tag 'package-uses-debhelper-but-lacks-build-depends';
 }
+if ($needdhexecbuilddepends && ! $bdepends->implies('dh-exec')) {
+    tag 'package-uses-dh-exec-but-lacks-build-depends';
+}
+
 while (my ($dep, $command) = each %missingbdeps) {
     next if $dep eq 'debhelper'; #handled above
     tag 'missing-build-dependency-for-dh_-command', "$command => $dep"

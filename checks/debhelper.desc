@@ -335,3 +335,9 @@ Info: The packaging file uses dh-exec, but it does not use /usr/bin/dh-exec.
  If running dh-exec with the default set of helpers is not desired,
  use its --with or --without options instead of directly using the
  desired helper.
+
+Tag: package-uses-dh-exec-but-lacks-build-depends
+Severity: important
+Certainty: possible
+Info: If a package uses dh-exec, it must declare a Build-Depends
+ on it.

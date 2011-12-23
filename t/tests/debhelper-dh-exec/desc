@@ -6,3 +6,4 @@ Options: --suppress-tags
 Description: Tests related to executable, dh-exec using packaging files
 Test-For:
  dh-exec-private-helper
+ package-uses-dh-exec-but-lacks-build-depends
