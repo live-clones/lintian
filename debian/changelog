@@ -3,8 +3,13 @@ lintian (2.5.5) UNRELEASED; urgency=low
   * Summary of tag changes:
     + Added:
       - dependency-is-not-multi-archified
+      - dh-exec-install-not-allowed-here
+      - dh-exec-private-helper
+      - dh-exec-script-without-dh-exec-features
+      - dh-exec-subst-unknown-variable
       - executable-debhelper-file-without-being-executable
       - package-file-is-executable
+      - package-uses-dh-exec-but-lacks-build-depends
       - preinst-uses-dpkg-maintscript-helper-without-predepends
       - shlib-in-multi-arch-foreign-package
     + Removed:
@@ -32,6 +37,8 @@ lintian (2.5.5) UNRELEASED; urgency=low
     + [NT] Added checks for handling executable files in the
       debian dir.  Thanks to Joey Hess and Arno Töll for the
       reports.  (Closes: #651572, #651330)
+    + [NT] Added various dh-exec related checks.  Thanks to Gergely
+      Nagy for the patches.  (Closes: #653071)
   * checks/fields{,.desc}:
     + [JW] Properly handle uploader names with commas.
       (Closes: #485705)
