@@ -502,6 +502,20 @@ sub _check_dh_exec {
     if ( $cmd =~ m,/usr/lib/dh-exec/, ) {
         tag 'dh-exec-private-helper', $pkgpath;
     }
+
+    open (my $fd, '<', $fspath)
+        or fail ("Can't open $pkgpath: $!");
+    my ($dhe_subst, $dhe_install) = (0, 0);
+    while (<$fd>) {
+        $dhe_subst = 1 if /\$\{[^\}]+\}/;
+        $dhe_install = 1 if / => /;
+    }
+    close $fd;
+
+    if ( ! ( $dhe_subst || $dhe_install ) ) {
+        tag 'dh-exec-script-without-dh-exec-features', $pkgpath;
+    }
+
 }
 
 # Return the command after the #! in the file (if any).
