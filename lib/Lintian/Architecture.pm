@@ -21,6 +21,8 @@ package Lintian::Architecture;
 use strict;
 use warnings;
 
+use Lintian::Data;
+
 use base 'Exporter';
 our (@EXPORT_OK, %EXPORT_TAGS);
 
