@@ -108,6 +108,8 @@ lintian (2.5.5) UNRELEASED; urgency=low
     + [NT] Corrected the runtime estimate for an archive-wide run.
       With 35 000+ packages, it can no longer be done in "a few
       hours".
+    + [NT] Documented architecture specific overrides.
+      (Closes: #651816)
 
   * frontend/lintian:
     + [NT] Allow -U to be given more than once.
