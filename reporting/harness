@@ -61,6 +61,15 @@ use vars qw($LINTIAN_ROOT $LINTIAN_LAB $LINTIAN_ARCHIVEDIR $LINTIAN_DIST
             $HTML_DIR $HTML_TMP_DIR $LINTIAN_BIN_DIR $LINTIAN_GPG_CHECK
             $LINTIAN_AREA);
 
+# export Lintian's configuration
+$ENV{'LINTIAN_ROOT'} = $LINTIAN_ROOT;
+$ENV{'LINTIAN_CFG'} = $LINTIAN_CFG;
+$ENV{'LINTIAN_LAB'} = $LINTIAN_LAB;
+$ENV{'LINTIAN_ARCHIVEDIR'} = $LINTIAN_ARCHIVEDIR;
+$ENV{'LINTIAN_DIST'} = $LINTIAN_DIST;
+$ENV{'LINTIAN_AREA'} = $LINTIAN_AREA;
+$ENV{'LINTIAN_ARCH'} = $LINTIAN_ARCH;
+
 # import perl libraries
 unshift @INC, "$LINTIAN_ROOT/lib";
 require Util;
@@ -80,15 +89,6 @@ open(LOG, '>', $log_file)
     or Die("cannot open log file $log_file for writing: $!");
 
 system("mkdir -p -m 775 $LINTIAN_BIN_DIR") == 0 || die "$!";
-
-# export Lintian's configuration
-$ENV{'LINTIAN_ROOT'} = $LINTIAN_ROOT;
-$ENV{'LINTIAN_CFG'} = $LINTIAN_CFG;
-$ENV{'LINTIAN_LAB'} = $LINTIAN_LAB;
-$ENV{'LINTIAN_ARCHIVEDIR'} = $LINTIAN_ARCHIVEDIR;
-$ENV{'LINTIAN_DIST'} = $LINTIAN_DIST;
-$ENV{'LINTIAN_AREA'} = $LINTIAN_AREA;
-$ENV{'LINTIAN_ARCH'} = $LINTIAN_ARCH;
 $ENV{'PATH'} = $LINTIAN_BIN_DIR . ':' . $ENV{'PATH'};
 
 if ($LINTIAN_GPG_CHECK) {
