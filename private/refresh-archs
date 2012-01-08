@@ -36,12 +36,21 @@ f="$(mktemp)"
 
 cat > "$f" <<EOF
 # List of known architectures as provided by dpkg-architecture
+# (excluding "all" and "any", which are handled specially)
 # Last updated: $(date -u +'%Y-%m-%d')
 # With: $dpkg_version
 
 EOF
-{ echo "any"; echo "all";
-  dpkg-architecture -L; } | sort >> "$f"
+
+{
+# Map an Debian arch (e.g. i386) to the "(OS, CPU)" tuple
+for archstr in $(dpkg-architecture -L); do
+    os="$(dpkg-architecture -a"$archstr" -qDEB_HOST_ARCH_OS 2>/dev/null)"
+    cpu="$(dpkg-architecture -a"$archstr" -qDEB_HOST_ARCH_CPU 2>/dev/null)"
+
+    printf "%s || %s %s\n" "$archstr" "$os" "$cpu"
+done
+} | sort >> "$f"
 
 mv "$f" "$1"/common/architectures
 

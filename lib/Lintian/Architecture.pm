@@ -67,23 +67,16 @@ The following methods are exportable:
 
 # Setup code
 
-my $ARCH_RAW = Lintian::Data->new ('common/architectures');
+my $ARCH_RAW = Lintian::Data->new ('common/architectures', qr/\s*+\Q||\E\s*+/o,
+                                   sub { return [split /\s++/o, $_[1]]});
 
-# Generate the list of valid architecture wildcards.  We can ignore all
-# architectures not containing a - for our purposes and transform any
-# architecture like foo-bar into any-bar and foo-any.  Putting this in a hash
-# will then clean up all the duplicates.
+# Generate the list of valid architecture wildcards.
 my $ARCH_WILDCARDS = {};
 
 foreach my $archstr ($ARCH_RAW->all) {
     my ($os, $arch);
     next if $archstr eq 'all' or $archstr eq 'any';
-    ($os, $arch) = split /-/, $archstr;
-    unless ($arch) {
-        # Linux archs do not have a "linux-" prefix like other architectures
-        $arch = $os;
-        $os = 'linux';
-    }
+    ($os, $arch) = @{ $ARCH_RAW->value($archstr) };
     # map $os-any (e.g. "linux-any") and any-$arch (e.g. "any-amd64") to
     # the relevant architectures.
     $ARCH_WILDCARDS->{"$os-any"}->{$archstr} = 1;
