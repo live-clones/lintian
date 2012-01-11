@@ -159,6 +159,10 @@ lintian (2.5.5) UNRELEASED; urgency=low
   * lib/Lintian/Processable/Package.pm:
     + [NT] Use part of the file name as package name if the mandatory
       "Package" or "Source" fields are missing rather than choking.
+  * lib/Lintian/Profile.pm:
+    + [NT] Catch recursively defined profiles when the Profile field
+      contains a (slightly) different name than the Extends field of
+      its parent.  (Closes: #655469)
   * lib/Lintian/Tag/Info.pm:
     + [NT] Accepted patch from Evan Broder to always output effective
       severity in tag descriptions.

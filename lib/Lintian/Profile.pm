@@ -147,7 +147,7 @@ sub new {
 =item $prof->parents
 
 Returns a list ref of the names of its parents, in the order they are
-apply.
+applied.
 
 Note: This list reference and its contents should not be modified.
 
@@ -255,6 +255,8 @@ sub _read_profile {
     $pname = $pheader->{'profile'};
     croak "Invalid Profile field in $pfile.\n"
             if $pname =~ m,^/,o or $pname =~ m/\./o;
+    croak "Recursive definition of $pname.\n"
+        if exists $pmap->{$pname};
     $pmap->{$pname} = 0; # Mark as being loaded.
     $self->{'name'} = $pname unless exists $self->{'name'};
     if (exists $pheader->{'extends'} ){
@@ -263,12 +265,12 @@ sub _read_profile {
         my $parentf;
         croak "Invalid Extends field in $pfile.\n"
             unless $parent && $parent !~ m/\./o;
-        croak "Recursive definition of $parent.\n"
-            if exists $pmap->{$parent};
         $parentf = $self->find_profile($parent);
         croak "Cannot find $parent, which $pname extends.\n"
             unless $parentf;
         $self->_read_profile($parentf);
+        # Use the extends field in parents, even though the extended
+        # profile might actually identity itself differently.
         push @$plist, $parent;
     }
     $self->_read_profile_tags($pname, $pheader);
