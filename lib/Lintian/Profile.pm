@@ -180,7 +180,7 @@ enabled tag is not present in this hashref, then it uses its normal
 severity.  The altered severity may be the same as the normal
 severity.
 
-Note: This hashref nor its contents should be altered.
+Note: Neither hashref nor its contents should be altered.
 
 =cut
 
@@ -193,7 +193,7 @@ sub severity_changes {
 
 List of tags that has been marked as non-overridable.
 
-Note: This list nor its contents should be modified.
+Note: Neither list nor its contents should be modified.
 
 =cut
 
