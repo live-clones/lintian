@@ -118,6 +118,12 @@ created object.
 #     A hash of tags to issue.  If this hash is not empty, only tags noted
 #     in that has will be issued regardless of which tags are seen.
 #
+# profile:
+#     The Lintian::Profile (if any).  If not undef, this is used to
+#     determine known tags, severity of tags (indirectly) and whether
+#     or not a given tag is overridable.  It also partly affects
+#     which tags are suppressed (see the suppressed method below).
+#
 # show_experimental:
 #     True if experimental tags should be displayed.  False by default.
 #
@@ -155,9 +161,9 @@ sub new {
         },
         display_source       => {},
         files                => {},
-        non_overridable_tags => {},
         ignored_overrides    => {},
         only_issue           => {},
+        profile              => undef,
         show_experimental    => 0,
         show_overrides       => 0,
         show_pedantic        => 0,
@@ -242,7 +248,14 @@ sub tag {
     }
     # Retrieve the tag metadata and display the tag if the configuration
     # says to display it.
-    my $info = Lintian::Tag::Info->new($tag);
+    my $info;
+    if ($self->{profile}) {
+        # Note, we get the known as it will be suppressed by
+        # $self->suppressed below if the tag is not enabled.
+        $info = $self->{profile}->get_tag ($tag, 1);
+    } else {
+        $info = Lintian::Tag::Info->new($tag);
+    }
     unless ($info) {
         die "tried to issue unknown tag $tag";
     }
@@ -465,6 +478,23 @@ sub suppress {
     }
 }
 
+=item profile(PROFILE)
+
+Use the PROFILE (Lintian::Profile) to determine which tags are
+suppressed, the severity of the tags and which tags are
+non-overridable.
+
+This can be used together with suppress.  In this case tags are
+only emitted if they are enabled in the profile AND they are not
+suppressed.
+
+=cut
+
+sub profile {
+    my ($self, $profile) = @_;
+    $self->{profile} = $profile;
+}
+
 =back
 
 =head2 File Metadata
@@ -527,7 +557,7 @@ file cannot be opened.
 
 sub file_overrides {
     my ($self, $overrides) = @_;
-    my $noover = $self->{non_overridable_tags};
+    my $profile = $self->{profile};
     unless (defined $self->{current}) {
         die 'no current file when adding overrides';
     }
@@ -601,7 +631,7 @@ sub file_overrides {
                 }
                 next unless $found;
             }
-            if ( $noover->{$tag} ) {
+            if ( $profile && !$profile->is_overridable ($tag) ) {
                 $self->{ignored_overrides}{$tag}++;
                 next;
             }
@@ -719,7 +749,14 @@ configuration.
 
 sub displayed {
     my ($self, $tag) = @_;
-    my $info = Lintian::Tag::Info->new($tag);
+    my $info;
+    if ($self->{profile}) {
+        # Note, we get the known as it will be suppressed by
+        # $self->suppressed below if the tag is not enabled.
+        $info = $self->{profile}->get_tag ($tag, 1);
+    } else {
+        $info = Lintian::Tag::Info->new($tag);
+    }
     return 0 if ($info->experimental and not $self->{show_experimental});
     my $only = $self->{only_issue};
     if (%$only) {
@@ -762,7 +799,7 @@ Returns true if the given tag would be suppressed given the current
 configuration, false otherwise.  This is different than displayed() in
 that a tag is only suppressed if Lintian treats the tag as if it's never
 been seen, doesn't update statistics, and doesn't change its exit status.
-Tags are suppressed via only() or suppress().
+Tags are suppressed via only(), profile() or suppress().
 
 =cut
 
@@ -774,22 +811,8 @@ sub suppressed {
         return 1 unless $self->{only_issue}{$tag};
     }
     return 1 if $self->{suppress}{$tag};
+    return 1 if $self->{profile} and not $self->{profile}->get_tag ($tag);
     return;
-}
-
-=item non_overridable_tags(TAG[, ...])
-
-Marks all tags (given as arguments) for non-overridable.
-
-=cut
-
-sub non_overridable_tags {
-    my ($self, @tags) = @_;
-    my $noover = $self->{non_overridable_tags};
-    foreach my $tag (@tags){
-        $noover->{$tag} = 1;
-    }
-    return 1;
 }
 
 =item ignored_overrides()

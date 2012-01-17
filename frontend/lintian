@@ -748,7 +748,6 @@ require Lintian::Internal::FrontendUtil;
 import Lintian::Internal::FrontendUtil;
 require Lintian::ProcessablePool;
 require Lintian::Profile;
-require Lintian::Tag::Info;
 require Lintian::Tags;
 import Lintian::Tags qw(tag);
 
@@ -791,6 +790,7 @@ debug_msg(1,
           delimiter(),
     );
 
+my $PROFILE;
 our $TAGS = Lintian::Tags->new;
 $TAGS->show_experimental($opt{'display-experimental'});
 $TAGS->show_pedantic($opt{'pedantic'});
@@ -821,18 +821,10 @@ if ($no_profile) {
 }
 
 if ($opt{'LINTIAN_PROFILE'}) {
-    my $profile = Lintian::Profile->new($opt{'LINTIAN_PROFILE'},
+    $PROFILE = Lintian::Profile->new ($opt{'LINTIAN_PROFILE'},
                                         [@prof_inc, "$opt{'LINTIAN_ROOT'}/profiles"]);
-    my @ptags = $profile->tags;
-    my @non_overridable = $profile->non_overridable_tags;
-    my $severities = $profile->severity_changes;
-    v_msg('Using profile ' . $profile->name . '.');
-    $TAGS->only(@ptags) if @ptags;
-    $TAGS->non_overridable_tags(@non_overridable) if @non_overridable;
-    while ( my ($tagname, $severity) = each(%$severities) ){
-        my $tag = Lintian::Tag::Info->new($tagname);
-        $tag->set_severity($severity);
-    }
+    v_msg('Using profile ' . $PROFILE->name . '.');
+    $TAGS->profile ($PROFILE);
 }
 
 # Initialize display level settings.
@@ -1043,7 +1035,14 @@ if ($action eq 'check') {
 
     if ($check_tags) {
         foreach my $t (split(/,/, $check_tags)) {
-            my $info = Lintian::Tag::Info->new($t);
+            my $info;
+            if ($PROFILE) {
+                # At the time of writing (2012-17/01) this code path is
+                # not possible, but one day it may be.
+                $info = $PROFILE->get_tag ($t);
+            } else {
+                $info = Lintian::Tag::Info->new ($t);
+            }
 
             fail("unknown tag specified: $t") unless defined($info);
             my $script = $info->script;
@@ -1422,7 +1421,12 @@ sub post_pkg_process_overrides{
             next if $TAGS->suppressed($tag);
 
             # Did we run the check script containing the tag?
-            my $taginfo = Lintian::Tag::Info->new($tag);
+            my $taginfo;
+            if ($PROFILE) {
+                $taginfo = $PROFILE->get_tag ($tag);
+            } else {
+                $taginfo = Lintian::Tag::Info->new($tag);
+            }
             if (defined $taginfo) {
                 next unless $enabled_checks{$taginfo->script};
             }

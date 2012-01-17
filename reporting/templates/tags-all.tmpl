@@ -8,7 +8,7 @@
 
   <ul>
 {
-    for my $tag (sort keys %all) {
+    for my $tag (sort $profile->tags (1)) {
         my $text;
         if ($stats{$tag}) {
             my $packages = $stats{$tag}{'packages'};

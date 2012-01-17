@@ -27,6 +27,8 @@ use warnings;
 use Carp qw(croak);
 use Util qw(read_dpkg_control);
 
+use Lintian::CheckScript;
+
 =head1 NAME
 
 Lintian::Profile - Profile parser for Lintian
@@ -55,10 +57,6 @@ Lintian::Profile - Profile parser for Lintian
 
 =cut
 
-# maps tag name to tag data.
-my %TAG_MAP = ();
-# maps check name to list of tag names.
-my %CHECK_MAP = ();
 # map of known valid severity allowed by profiles
 my %SEVERITIES = (
     'pedantic'  => 1,
@@ -86,32 +84,6 @@ my %SEC_FIELDS = (
     'severity'    => 1,
     );
 
-# _load_checks
-#
-# Internal sub to load and fill up %TAG_MAP and %CHECK_MAP
-sub _load_checks {
-    my $root = $ENV{LINTIAN_ROOT} || '/usr/share/lintian';
-    for my $desc (<$root/checks/*.desc>) {
-        my ($header, @tags) = read_dpkg_control($desc);
-        my $cname = $header->{'check-script'};
-        my $tagnames = [];
-        unless ($cname){
-            croak "Missing Check-Script field in $desc.\n";
-        }
-        $CHECK_MAP{$cname} = $tagnames;
-        for my $tag (@tags) {
-            unless ($tag->{tag}) {
-                croak "Missing Tag field in $desc.\n";
-            }
-            push @$tagnames, $tag->{tag};
-            $tag->{info} = '' unless exists($tag->{info});
-            $tag->{script} = $header->{'check-script'};
-            $TAG_MAP{$tag->{tag}} = $tag;
-        }
-    }
-}
-
-
 =item Lintian::Profile->new($profname, $ppath)
 
 Creates a new profile from the profile located by
@@ -127,7 +99,6 @@ sub new {
     my $profile;
     croak "Illegal profile name \"$name\".\n"
         if $name =~ m,^/,o or $name =~ m/\./o;
-    _load_checks() unless %TAG_MAP;
     my $self = {
         'parent-map'           => {},
         'parents'              => [],
@@ -135,6 +106,8 @@ sub new {
         'enabled-tags'         => {},
         'non-overridable-tags' => {},
         'severity-changes'     => {},
+        'check-scripts'        => {},
+        'known-tags'           => {},
     };
     $self = bless $self, $type;
     $profile = $self->find_profile($name);
@@ -160,46 +133,46 @@ to create this instance of the profile (e.g. due to symlinks).
 
 Lintian::Profile->mk_ro_accessors (qw(parents name));
 
-=item $prof->tags
+=item $prof->tags([$known])
 
-Returns the list of tags enabled in this profile.
+Returns the list of tags in this profile.  If $known is given
+and it is a truth value, the list of known tags is returned.
+Otherwise only the enabled tags will be returned.
 
 Note: The contents of this list should not be modified.
 
 =cut
 
 sub tags {
-    my ($self) = @_;
+    my ($self, $known) = @_;
+    return keys %{ $self->{'known-tags'} } if $known;
     return keys %{ $self->{'enabled-tags'} };
 }
 
-=item $prof->severity_changes
+=item $prof->is_overridable ($tag)
 
-Returns a hashref mapping tag names to their altered severity.  If an
-enabled tag is not present in this hashref, then it uses its normal
-severity.  The altered severity may be the same as the normal
-severity.
-
-Note: Neither hashref nor its contents should be altered.
+Returns a false value if the tag has been marked as
+"non-overridable".  Otherwise it returns a truth value.
 
 =cut
 
-sub severity_changes {
-    my ($self) = @_;
-    return $self->{'severity-changes'};
+sub is_overridable {
+    my ($self, $tag) = @_;
+    return ! exists $self->{'non-overridable-tags'}->{$tag};
 }
 
-=item $prof->non_overridable_tags
+=item $prof->get_tag ($tag[, $known])
 
-List of tags that has been marked as non-overridable.
-
-Note: Neither list nor its contents should be modified.
+Returns the Lintian::Tag::Info for $tag if it is enabled for the
+profile (or just a "known tag" if $known is given and a truth value).
+Otherwise it returns undef.
 
 =cut
 
-sub non_overridable_tags {
-    my ($self) = @_;
-    return keys %{ $self->{'non-overridable-tags'} };
+sub get_tag {
+    my ($self, $tag, $known) = @_;
+    return unless $known || exists $self->{'enabled-tags'}->{$tag};
+    return $self->{'known-tags'}->{$tag};
 }
 
 =item Lintian::Profile->find_profile($pname, @dirs), $prof->find_profile($pname[, @dirs])
@@ -301,8 +274,11 @@ sub _read_profile_section {
     croak "Profile \"$pname\" contains invalid severity \"$severity\" in section $sno.\n"
         if $severity && !$SEVERITIES{$severity};
     foreach my $tag (@tags) {
-        croak "Unknown check $tag in $pname (section $sno).\n" unless exists $TAG_MAP{$tag};
-        $sev_map->{$tag} = $severity if $severity;
+        croak "Unknown check $tag in $pname (section $sno).\n" unless $self->{'known-tags'}->{$tag};
+        if ($severity) {
+            $self->{'known-tags'}->{$tag}->set_severity ($severity);
+            $sev_map->{$tag} = $severity;
+        }
         if ( $overridable != -1 ) {
             if ($overridable) {
                 delete $noover->{$tag};
@@ -329,12 +305,19 @@ sub _read_profile_tags{
     $self->_check_duplicates($pname, $pheader, 'enable-tags', 'disable-tags');
     my $tags_from_check_sub = sub {
         my ($field, $check) = @_;
-        croak "Unknown check \"$check\" in profile \"$pname\".\n" unless exists $CHECK_MAP{$check};
-        return @{$CHECK_MAP{$check}};
+
+        unless (exists $self->{'check-scripts'}->{$check}) {
+            $self->_load_check ($pname, $check);
+        }
+        return $self->{'check-scripts'}->{$check}->tags;
     };
     my $tag_sub = sub {
         my ($field, $tag) = @_;
-        croak "Unknown tag \"$tag\" in profile \"$pname\".\n" unless exists $TAG_MAP{$tag};
+        unless (exists $self->{'known-tags'}->{$tag}) {
+            $self->_load_checks($pname);
+            croak "Unknown tag \"$tag\" in profile \"$pname\".\n"
+                unless exists $self->{'known-tags'}->{$tag};
+        }
         return $tag;
     };
     $self->_enable_tags_from_field($pname, $pheader, 'enable-tags-from-check', $tags_from_check_sub, 1);
@@ -428,6 +411,34 @@ sub _check_for_invalid_fields {
         next if exists $known->{$field};
         croak "Unknown field \"$field\" in $pname ($paraname).\n";
     }
+}
+
+sub _load_check {
+    my ($self, $profile, $check) = @_;
+    my $root = $ENV{LINTIAN_ROOT} || '/usr/share/lintian';
+    my $cf = "$root/checks/${check}.desc";
+    croak "$profile references unknown $check.\n" unless -f $cf;
+    my $c = Lintian::CheckScript->new ($cf);
+    return if $self->{'check-scripts'}->{$c->name};
+    $self->{'check-scripts'}->{$c->name} = $c;
+    for my $tn ($c->tags) {
+        if ($self->{'known-tags'}->{$tn}) {
+            my $ocn = $self->{'known-tags'}->{$tn}->script;
+            croak $c->name . " redefined tag $tn which was defined by $ocn";
+        }
+        $self->{'known-tags'}->{$tn} = $c->get_tag ($tn);
+    }
+}
+
+sub _load_checks {
+    my ($self, $profile) = @_;
+    my $root = $ENV{LINTIAN_ROOT} || '/usr/share/lintian';
+    opendir my $dirfd, "$root/checks" or croak "opendir $root/checks: $!";
+    for my $desc (sort readdir $dirfd) {
+        next unless $desc =~ s/\.desc$//o;
+        $self->_load_check($profile, $desc);
+    }
+    close $dirfd;
 }
 
 =back

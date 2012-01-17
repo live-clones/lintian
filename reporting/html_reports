@@ -52,37 +52,13 @@ $ENV{'LINTIAN_ROOT'} = $LINTIAN_ROOT;
 use lib "$ENV{LINTIAN_ROOT}/lib";
 use Lintian::Lab;
 use Lintian::Profile;
-use Lintian::Tag::Info ();
 use Lintian::Internal::FrontendUtil;
 use Text_utils;
 use Util;
 
-# Get additional tag information.
-our %tag_info  = ();
-
-opendir(CHECKDIR, "$LINTIAN_ROOT/checks")
-    or fail("cannot read directory $LINTIAN_ROOT/checks");
-
-for my $check (readdir CHECKDIR) {
-    next unless $check =~ /\.desc$/;
-    my @tags = read_dpkg_control("$LINTIAN_ROOT/checks/$check");
-    shift(@tags);
-    foreach my $tag (@tags) {
-        next unless $tag->{severity} and $tag->{certainty};
-        my $name = $tag->{tag};
-        $tag_info{$name} = Lintian::Tag::Info->new ($name);
-    }
-}
-
-closedir(CHECKDIR);
-
 my $profile = Lintian::Profile->new (find_default_profile ("$LINTIAN_ROOT/profiles"),
                                     ["$LINTIAN_ROOT/profiles"]);
 
-while ( my ($tagname, $severity) = each (%{$profile->severity_changes}) ) {
-    my $tag = $tag_info{$tagname};
-    $tag->set_severity ($severity);
-}
 
 # Set the Lintian version, current timestamp, and archive timestamp.
 our $LINTIAN_VERSION = `$LINTIAN_ROOT/frontend/lintian --print-version`;
@@ -226,7 +202,7 @@ while (<>) {
     next unless ($type eq 'source' || $type eq 'binary' || $type eq 'udeb');
     # Ignore unknown tags - happens if we removed a tag that is still present
     # in the log file.
-    next unless $tag_info{$tag};
+    next unless $profile->get_tag ($tag, 1);
 
     # Update statistics.
     my $key = {
@@ -311,8 +287,8 @@ while (<>) {
         area      => html_quote ($area),
         type      => html_quote ($type),
         tag       => html_quote ($tag),
-        severity  => html_quote ($tag_info{$tag}->severity),
-        certainty => html_quote ($tag_info{$tag}->certainty),
+        severity  => html_quote ($profile->get_tag ($tag, 1)->severity),
+        certainty => html_quote ($profile->get_tag ($tag, 1)->certainty),
         extra     => html_quote ($extra),
         xref      => maintainer_url ($maintainer) . "#$source"
     };
@@ -480,8 +456,8 @@ for my $id (keys %clean) {
 
 # Create the pages for each tag.  Each page shows the extended description for
 # the tag and all the packages for which that tag was issued.
-for my $tag (sort keys %tag_info) {
-    my $info = $tag_info{$tag};
+for my $tag (sort $profile->tags (1)) {
+    my $info = $profile->get_tag ($tag, 1);
     my $description = $info->description('html', '    ');
     my ($count, $overrides) = (0, 0);
     my %seen_tags;
@@ -514,7 +490,7 @@ for my $tag (sort keys %tag_info) {
 %data = (
     tags       => \%by_tag,
     stats      => \%tag_statistics,
-    all        => \%tag_info,
+    profile    => \$profile,
 );
 output_template ('tags.html', $templates{tags}, \%data);
 output_template ('tags-severity.html', $templates{'tags-severity'}, \%data);

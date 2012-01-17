@@ -73,7 +73,6 @@ $Lintian::Output::GLOBAL unless their first argument C<isa('Lintian::Output')>.
 
 =cut
 
-use Lintian::Tag::Info ();
 use Lintian::Tags ();
 
 # support for ANSI color output via colored()
