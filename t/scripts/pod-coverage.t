@@ -14,6 +14,7 @@ plan skip_all => 'Test::Pod::Coverage is required for testing POD coverage'
 our %MODULES =
     (
      'Lintian::Check'              => [],
+     'Lintian::CheckScript'        => [],
      'Lintian::Collect'            => [],
      'Lintian::Collect::Group'     => [],
      'Lintian::Command'            => [],

@@ -87,6 +87,11 @@ Lintian::Tag::Info object creation, avoiding multiple file reads.  This
 however means that a running Lintian process will not notice changes to
 tag metadata on disk.
 
+=item new(HASH, SCRIPT_NAME, SCRIPT_TYPE)
+
+Creates a new Lintian::Tag:Info - this constructor does not use the "cache"
+(as mentioned above) in anyway.
+
 =cut
 
 # Load all tag data into the %INFO hash.  Called by new() if %INFO is
@@ -96,33 +101,38 @@ sub _load_tag_data {
     for my $desc (<$root/checks/*.desc>) {
         debug_msg(2, "Reading checker description file $desc ...");
         my ($header, @tags) = read_dpkg_control($desc);
+        my $sn;
+        my $st;
         unless ($header->{'check-script'}) {
             fail("missing Check-Script field in $desc");
         }
+        $sn = $header->{'check-script'};
+        $st = $header->{'type'};
         for my $tag (@tags) {
             unless ($tag->{tag}) {
                 fail("missing Tag field in $desc");
             }
-            $tag->{info} = '' unless exists($tag->{info});
-            $tag->{script} = $header->{'check-script'};
-            $tag->{'script-type'} = $header->{'type'};
-            $tag->{'effective-severity'} = $tag->{severity};
-            $INFO{$tag->{tag}} = $tag;
+            $INFO{$tag->{tag}} = Lintian::Tag::Info->new ($tag, $sn, $st);
         }
     }
 }
 
-# Create a new object for the given tag.  We just use the hash created by
-# read_dpkg_control as the object, which means we slowly bless the objects
-# in %INFO as we return them.
 sub new {
-    my ($class, $tag) = @_;
+    my ($class, $tag, $sn, $st) = @_;
     croak('no tag specified') unless $tag;
+    if (ref $tag eq 'HASH') {
+        my %copy = %$tag;
+        my $self = \%copy;
+        croak "Missing Tag field" unless $self->{'tag'};
+        $self->{'info'} = '' unless $self->{'info'};
+        $self->{'script'} = $sn;
+        $self->{'script-type'} = $st;
+        $self->{'effective-severity'} = $self->{severity};
+        return bless $self, $class;
+    }
     _load_tag_data() unless %INFO;
     if ($INFO{$tag}) {
-        my $self = $INFO{$tag};
-        bless($self, $class) unless ref($self) eq $class;
-        return $self;
+        return $INFO{$tag};
     } else {
         return;
     }
