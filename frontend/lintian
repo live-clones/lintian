@@ -793,7 +793,6 @@ $TAGS->show_experimental($opt{'display-experimental'});
 $TAGS->show_pedantic($opt{'pedantic'});
 $TAGS->show_overrides($opt{'show-overrides'});
 $TAGS->sources(keys %display_source) if %display_source;
-$TAGS->suppress(keys %suppress_tags) if %suppress_tags;
 
 unless ($opt{'LINTIAN_PROFILE'}){
     # Time to ask dpkg-vendor for a vendor name
@@ -803,32 +802,8 @@ $PROFILE = Lintian::Profile->new ($opt{'LINTIAN_PROFILE'},
                                   [@prof_inc, "$opt{'LINTIAN_ROOT'}/profiles"]);
 v_msg('Using profile ' . $PROFILE->name . '.');
 
-# if tags are listed explicitly (--tags) then show them even if
-# they are pedantic/experimental etc.  However, for --check-part
-# people explictly have to pass the relevant options.
-if ($checks || $check_tags) {
-    $PROFILE->disable_tags ($PROFILE->tags);
-    if ($check_tags) {
-        $TAGS->show_experimental(1);
-        $TAGS->show_pedantic(1);
-        # discard whatever is in @display_level and request
-        # everything
-        @display_level = ();
-        display_infotags();
-        $PROFILE->enable_tags (split /,/, $check_tags);
-    } else {
-        my %abbrev = ();
-        for my $c ($PROFILE->scripts (1)) {
-            my $cs = $PROFILE->get_script ($c, 1);
-            next unless $cs->abbrev;
-            $abbrev{$cs->abbrev} = $cs;
-        }
-        for my $c (split /,/, $checks) {
-            my $cs = $PROFILE->get_script ($c, 1) || $abbrev{$c};
-            fail ("Unknown check script $c") unless $cs;
-            $PROFILE->enable_tags ($cs->tags);
-        }
-    }
+if ($dont_check || %suppress_tags || $checks || $check_tags) {
+    _update_profile ($PROFILE, $dont_check, \%suppress_tags, $checks, $check_tags);
 }
 
 $TAGS->profile ($PROFILE);
@@ -1797,6 +1772,52 @@ sub _guess_version {
     }
     # Out of guesses ...
     return;
+}
+
+sub _update_profile {
+    my ($profile, $sup_check, $sup_tags, $only_check, $only_tags) = @_;
+    my %abbrev = ();
+
+    if ($sup_check || $only_check) {
+        # Build an abbrevation map
+        for my $c ($profile->scripts (1)) {
+            my $cs = $profile->get_script ($c, 1);
+            next unless $cs->abbrev;
+            $abbrev{$cs->abbrev} = $cs;
+        }
+    }
+
+    # if tags are listed explicitly (--tags) then show them even if
+    # they are pedantic/experimental etc.  However, for --check-part
+    # people explictly have to pass the relevant options.
+    if ($checks || $check_tags) {
+        $profile->disable_tags ($profile->tags);
+        if ($check_tags) {
+            $TAGS->show_experimental(1);
+            $TAGS->show_pedantic(1);
+            # discard whatever is in @display_level and request
+            # everything
+            @display_level = ();
+            display_infotags();
+            $profile->enable_tags (split /,/, $check_tags);
+        } else {
+            for my $c (split /,/, $checks) {
+                my $cs = $profile->get_script ($c, 1) || $abbrev{$c};
+                fail ("Unknown check script $c") unless $cs;
+                $profile->enable_tags ($cs->tags);
+            }
+        }
+    } elsif ($sup_check) {
+        # we are disabling checks
+        for my $c (split(/,/, $sup_check)) {
+            my $cs = $profile->get_script ($c, 1) || $abbrev{$c};
+            fail ("Unknown check script $c") unless $cs;
+            $profile->disable_tags ($cs->tags);
+        }
+    } elsif (%$sup_tags) {
+        # we are disabling tags
+        $profile->disable_tags (keys %$sup_tags);
+    }
 }
 
 # }}}
