@@ -54,7 +54,7 @@ GetOptions(
     'annotate|a' => \$annotate,
     'tags|t' => \$tags,
     'help|h' => \$help,
-    'profile' => \$prof,
+    'profile=s' => \$prof,
 ) or die("error parsing options\n");
 
 # help

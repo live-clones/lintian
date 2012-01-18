@@ -128,6 +128,8 @@ lintian (2.5.5) UNRELEASED; urgency=low
   * frontend/lintian-info:
     + [NT] Support new lintian.log format.
     + [NT] Support new override file format with -a.
+    + [NT] Fixed the --profile argument, which now accepts the
+      mandatory parameter it is supposed to.
 
   * lib/Lintian/Architecture.pm:
     + [NT] New file.
