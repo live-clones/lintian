@@ -321,10 +321,10 @@ sub record_suppress_tags_from_file {
     open(my $file, '<', $name)
         or die("failed to open $name: $!");
     for my $line (<$file>) {
+        chomp $line;
         $line =~ s/^\s+//;
-        $line =~ s/\s+$//;
+        $line =~ s/(\#.*+|\s+)$//; #Remove trailing white-space/comments
         next unless $line;
-        next if $line eq '';
         record_suppress_tags($option, $line);
     }
     close $file;
