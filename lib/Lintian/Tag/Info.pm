@@ -24,9 +24,8 @@ use warnings;
 
 use Carp qw(croak);
 
-use Lintian::Output qw(debug_msg);
 use Text_utils qw(dtml_to_html dtml_to_text split_paragraphs wrap_paragraphs);
-use Util qw(fail read_dpkg_control);
+use Util qw(fail);
 
 # The URL to a web man page service.  NAME is replaced by the man page
 # name and SECTION with the section to form a valid URL.  This is used
@@ -34,10 +33,6 @@ use Util qw(fail read_dpkg_control);
 # to the manual page.
 our $MANURL
     = 'http://manpages.debian.net/cgi-bin/man.cgi?query=NAME&sektion=SECTION';
-
-# Stores the parsed tag information for all known tags.  Loaded the first
-# time new() is called.
-our %INFO;
 
 # Stores the parsed manual reference data.  Loaded the first time info()
 # is called.
@@ -75,18 +70,6 @@ metadata elements or to format the tag description.
 
 =over 4
 
-=item new(TAG)
-
-Creates a new Lintian::Tag::Info object for the given TAG.  Returns undef
-if the tag is unknown and throws an exception if there is a parse error
-reading the check description files or if TAG is not specified.
-
-The first time this method is called, all tag metadata will be loaded into
-a memory cache.  This information will be used to satisfy all subsequent
-Lintian::Tag::Info object creation, avoiding multiple file reads.  This
-however means that a running Lintian process will not notice changes to
-tag metadata on disk.
-
 =item new(HASH, SCRIPT_NAME, SCRIPT_TYPE)
 
 Creates a new Lintian::Tag:Info - this constructor does not use the "cache"
@@ -94,48 +77,19 @@ Creates a new Lintian::Tag:Info - this constructor does not use the "cache"
 
 =cut
 
-# Load all tag data into the %INFO hash.  Called by new() if %INFO is
-# empty and hence called the first time new() is called.
-sub _load_tag_data {
-    my $root = $ENV{LINTIAN_ROOT} || '/usr/share/lintian';
-    for my $desc (<$root/checks/*.desc>) {
-        debug_msg(2, "Reading checker description file $desc ...");
-        my ($header, @tags) = read_dpkg_control($desc);
-        my $sn;
-        my $st;
-        unless ($header->{'check-script'}) {
-            fail("missing Check-Script field in $desc");
-        }
-        $sn = $header->{'check-script'};
-        $st = $header->{'type'};
-        for my $tag (@tags) {
-            unless ($tag->{tag}) {
-                fail("missing Tag field in $desc");
-            }
-            $INFO{$tag->{tag}} = Lintian::Tag::Info->new ($tag, $sn, $st);
-        }
-    }
-}
-
 sub new {
     my ($class, $tag, $sn, $st) = @_;
-    croak('no tag specified') unless $tag;
-    if (ref $tag eq 'HASH') {
-        my %copy = %$tag;
-        my $self = \%copy;
-        croak "Missing Tag field" unless $self->{'tag'};
-        $self->{'info'} = '' unless $self->{'info'};
-        $self->{'script'} = $sn;
-        $self->{'script-type'} = $st;
-        $self->{'effective-severity'} = $self->{severity};
-        return bless $self, $class;
-    }
-    _load_tag_data() unless %INFO;
-    if ($INFO{$tag}) {
-        return $INFO{$tag};
-    } else {
-        return;
-    }
+    my %copy;
+    my $self;
+    croak 'no tag specified' unless $tag;
+    %copy = %$tag;
+    $self = \%copy;
+    croak "Missing Tag field" unless $self->{'tag'};
+    $self->{'info'} = '' unless $self->{'info'};
+    $self->{'script'} = $sn;
+    $self->{'script-type'} = $st;
+    $self->{'effective-severity'} = $self->{severity};
+    return bless $self, $class;
 }
 
 =back
