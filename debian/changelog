@@ -49,6 +49,8 @@ lintian (2.5.5) UNRELEASED; urgency=low
     + [NT] Fixed an issue where "doc-pkg-depends-on-main-pkg" would
       only be triggered if it was a "pre-depends" relation.
     + [NT] Use new Lintian::Architecture API.
+    + [JW] Include ssh:// as a valid protocol for hg.
+      (Closes: #655907)
   * checks/files:
     + [JW,NT] Skip "Multi-Arch: same" check of gzip files if their
       install path contains the architecture.  (Closes: #650665)
