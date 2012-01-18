@@ -31,22 +31,14 @@ use Getopt::Long;
 
 # {{{ Application Variables
 
-
-### LIST OF MAGIC VARIABLES
+#### NOTE ABOUT LINTIAN_ROOT
 #
-# List of variables that has a scope greater than this file in one
-# way or another.
+# Some of the Lintian modules need LINTIAN_ROOT (e.g. Lintian::Data)
+# and we supply it via $ENV{'LINTIAN_ROOT'}.  This means that
+# $ENV{'LINTIAN_ROOT'} must generally always be update *before* we
+# load Lintian modules.
 #
-# $LINTIAN_ROOT
-#  - must be "our" as it is used by Checker and Lab
-#  - it is set after opt parsing and left at that; this allows it
-#    to be trivially removed once Checker and Lab have been fixed.
-#
-# Please do not introduce any new magical variables, Thank You!
-#
-### END LIST OF MAGIC VARIABLES
-
-our $LINTIAN_ROOT;
+#### END NOTE ABOUT LINTIAN_ROOT
 
 my @MUST_EXPORT = (qw(
     LINTIAN_LAB
@@ -549,9 +541,6 @@ if (defined $opt{'LINTIAN_ROOT'}) {
     $opt{'LINTIAN_ROOT'} = '/usr/share/lintian';
 }
 
-## Update our MAGIC $LINTIAN_ROOT for the first and last time!
-$LINTIAN_ROOT = $opt{'LINTIAN_ROOT'};
-
 # option --all and packages specified at the same time?
 if (($check_everything or $packages_file or $opt{'packages-from-file'}) and $#ARGV+1 > 0) {
     print STDERR "warning: options -a, -p and --packages-from-file cannot be mixed with package parameters!\n";
@@ -601,7 +590,7 @@ unless ($no_conf) {
     if ($opt{'LINTIAN_CFG'}) {
     } elsif (exists $ENV{'LINTIAN_CFG'} &&
              -f ($opt{'LINTIAN_CFG'} = $ENV{'LINTIAN_CFG'})) {
-    } elsif (-f ($opt{'LINTIAN_CFG'} = $LINTIAN_ROOT . '/lintianrc')) {
+    } elsif (-f ($opt{'LINTIAN_CFG'} = $opt{'LINTIAN_ROOT'} . '/lintianrc')) {
     } elsif (exists $ENV{'HOME'} &&
              -f ($opt{'LINTIAN_CFG'} = $ENV{'HOME'} . '/.lintianrc')) {
     } elsif (-f ($opt{'LINTIAN_CFG'} = '/etc/lintianrc')) {
@@ -716,8 +705,8 @@ if ($debug) {
 # Use our custom-generated locale for programs we call, if it's available.  We
 # first look in the Lintian root and then in /var/lib/lintian, which is the
 # standard location for the install-time-generated locale.
-if (-d "$LINTIAN_ROOT/locale/en_US.UTF-8") {
-    $ENV{LOCPATH} = "$LINTIAN_ROOT/locale";
+if (-d "$opt{'LINTIAN_ROOT'}/locale/en_US.UTF-8") {
+    $ENV{LOCPATH} = "$opt{'LINTIAN_ROOT'}/locale";
 } elsif (-d '/var/lib/lintian/locale/en_US.UTF-8') {
     $ENV{LOCPATH} = '/var/lib/lintian/locale';
 }
@@ -732,7 +721,6 @@ require Lintian::Lab;
 require Util;
 import Util;
 
-require Checker;
 require Lintian::Collect;
 require Lintian::DepMap::Properties;
 require Lintian::Data;
@@ -1125,7 +1113,7 @@ for my $c (keys %unpack_infos) {
 
 for my $c (keys %enabled_checks) {
     # Add the checks with their dependency information
-    $map->add('check-' . $c, {'type' => 'check', 'name' => $c});
+    $map->add('check-' . $c, $PROFILE->get_script($c));
     if (exists $check_info{$c}{'needs-info'}) {
         $map->addp('check-' . $c, 'coll-', @{$check_info{$c}{'needs-info'}});
     }
@@ -1597,8 +1585,8 @@ sub process_group {
         }
         while ($map->pending) {
             foreach my $req (sort $map->selectable) {
-                my $ri = $map->getProp($req);
-                my $check = $ri->{'name'};
+                my $cs = $map->getProp($req);
+                my $check = $cs->name;
                 my $ci = $check_info{$check};
 
                 # current type?
@@ -1608,7 +1596,7 @@ sub process_group {
                 }
 
                 debug_msg(1, "Running check: $check ...");
-                my $returnvalue = Checker::runcheck($pkg_name, $pkg_type, $info, $check, $proc, $group);
+                my $returnvalue = _run_check ($cs, $pkg_name, $pkg_type, $info, $proc, $group);
                 # Set exit_code correctly if there was not yet an exit code
                 $exit_code = $returnvalue unless $exit_code;
 
@@ -1818,6 +1806,30 @@ sub _update_profile {
         # we are disabling tags
         $profile->disable_tags (keys %$sup_tags);
     }
+}
+
+sub _run_check {
+    my ($cs, $pkg_name, @args) = @_;
+    my $check = $cs->name;
+    my $ret = 0;
+    my $cs_pkg = $cs->script_pkg;
+
+    debug_msg(1, "Running check: $check ...");
+
+    require "$opt{'LINTIAN_ROOT'}/checks/$check";
+
+    {
+        # minimal "no strict refs" scope.
+        no strict 'refs';
+        eval { &{'Lintian::' . $cs_pkg . '::run'}($pkg_name, @args); };
+    }
+
+    if ( $@ ) {
+        print STDERR $@;
+        print STDERR "internal error: cannot run $check check on package $pkg_name";
+        $ret = 2;
+    }
+    return $ret;
 }
 
 # }}}

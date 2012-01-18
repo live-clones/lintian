@@ -13,7 +13,6 @@ plan skip_all => 'Test::Pod::Coverage is required for testing POD coverage'
 # add underscores; personally, I (rra) think they make the code hard to read.
 our %MODULES =
     (
-     'Lintian::Check'              => [],
      'Lintian::CheckScript'        => [],
      'Lintian::Collect'            => [],
      'Lintian::Collect::Group'     => [],
