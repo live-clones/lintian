@@ -103,11 +103,12 @@ sub new {
         'parent-map'           => {},
         'parents'              => [],
         'profile-path'         => $ppath,
-        'enabled-tags'         => {},
+        'enabled-tags'         => {}, # "set" of tags enabled (value is largely ignored)
+        'enabled-checks'       => {}, # maps script to the number of tags enabled (0 if disabled)
         'non-overridable-tags' => {},
         'severity-changes'     => {},
-        'check-scripts'        => {},
-        'known-tags'           => {},
+        'check-scripts'        => {}, # maps script name to Lintian::CheckScript
+        'known-tags'           => {}, # maps tag name to Lintian::Tag::Info
     };
     $self = bless $self, $type;
     $profile = $self->find_profile($name);
@@ -149,6 +150,22 @@ sub tags {
     return keys %{ $self->{'enabled-tags'} };
 }
 
+=item $prof->scripts ([$known])
+
+Returns the list of Check-Scripts in this profile.  If $known
+is given and it is a turth value, the list of known Check-Scripts
+is returned.  Otherwise only checks with an enabled tag will be
+enabled.
+
+=cut
+
+sub scripts {
+    my ($self, $known) = @_;
+    return keys %{ $self->{'check-scripts'} } if $known;
+    return grep { $self->{'enabled-checks'}->{$_} }
+               keys %{ $self->{'enabled-checks'} };
+}
+
 =item $prof->is_overridable ($tag)
 
 Returns a false value if the tag has been marked as
@@ -173,6 +190,57 @@ sub get_tag {
     my ($self, $tag, $known) = @_;
     return unless $known || exists $self->{'enabled-tags'}->{$tag};
     return $self->{'known-tags'}->{$tag};
+}
+
+=item $prof->get_script ($script[, $known])
+
+Returns the Lintian::CheckScript for $script if it is enabled for the
+profile (or just a "known script" if $known is given and a truth value).
+Otherwise it returns undef.
+
+Note: A script is enabled as long as at least one of the tags it
+provides are enabled.
+
+=cut
+
+sub get_script {
+    my ($self, $script, $known) = @_;
+    return unless $known || $self->{'enabled-checks'}->{$script};
+    return $self->{'check-scripts'}->{$script};
+}
+
+=item $prof->enable_tags (@tags)
+
+Enables all tags named in @tags.  Croaks if an unknown tag is found.
+
+=cut
+
+sub enable_tags {
+    my ($self, @tags) = @_;
+    for my $tag (@tags) {
+        my $ti = $self->{'known-tags'}->{$tag};
+        croak "Unknown tag $tag.\n" unless $ti;
+        next if exists $self->{'enabled-tags'}->{$tag};
+        $self->{'enabled-tags'}->{$tag} = 1;
+        $self->{'enabled-checks'}->{$ti->script}++;
+    }
+}
+
+=item $prof->disable_tags (@tags)
+
+Disable all tags named in @tags.  Croaks if an unknown tag is found.
+
+=cut
+
+sub disable_tags {
+    my ($self, @tags) = @_;
+    for my $tag (@tags) {
+        my $ti = $self->{'known-tags'}->{$tag};
+        croak "Unknown tag $tag.\n" unless $ti;
+        next unless exists $self->{'enabled-tags'}->{$tag};
+        delete $self->{'enabled-tags'}->{$tag};
+        $self->{'enabled-checks'}->{$ti->script}--;
+    }
 }
 
 =item Lintian::Profile->find_profile($pname, @dirs), $prof->find_profile($pname[, @dirs])
@@ -333,15 +401,12 @@ sub _read_profile_tags{
 # these tags are enabled in the profile, otherwise they are disabled.
 sub _enable_tags_from_field {
     my ($self, $pname, $pheader, $field, $code, $enable) = @_;
-    my $tags = $self->{'enabled-tags'};
+    my $method = \&enable_tags;
+    my @tags;
+    $method = \&disable_tags unless $enable;
     return unless $pheader->{$field};
-    foreach my $tag (map { $code->($field, $_) } $self->_split_comma_sep_field($pheader->{$field})){
-        if($enable) {
-            $tags->{$tag} = 1;
-        } else {
-            delete $tags->{$tag};
-        }
-    }
+    @tags = map { $code->($field, $_) } $self->_split_comma_sep_field($pheader->{$field});
+    $self->$method (@tags);
 }
 
 
@@ -431,6 +496,7 @@ sub _load_check {
 }
 
 sub _load_checks {
+    # NB: testset/runtests uses this directly.
     my ($self, $profile) = @_;
     my $root = $ENV{LINTIAN_ROOT} || '/usr/share/lintian';
     opendir my $dirfd, "$root/checks" or croak "opendir $root/checks: $!";

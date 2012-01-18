@@ -24,7 +24,6 @@ use warnings;
 
 use Lintian::Architecture qw(:all);
 use Lintian::Output;
-use Lintian::Tag::Info;
 use Lintian::Tag::Override;
 use Util qw(fail);
 
@@ -248,14 +247,9 @@ sub tag {
     }
     # Retrieve the tag metadata and display the tag if the configuration
     # says to display it.
-    my $info;
-    if ($self->{profile}) {
-        # Note, we get the known as it will be suppressed by
-        # $self->suppressed below if the tag is not enabled.
-        $info = $self->{profile}->get_tag ($tag, 1);
-    } else {
-        $info = Lintian::Tag::Info->new($tag);
-    }
+    # Note, we get the known as it will be suppressed by
+    # $self->suppressed below if the tag is not enabled.
+    my $info = $self->{profile}->get_tag ($tag, 1);
     unless ($info) {
         die "tried to issue unknown tag $tag";
     }
@@ -749,14 +743,9 @@ configuration.
 
 sub displayed {
     my ($self, $tag) = @_;
-    my $info;
-    if ($self->{profile}) {
-        # Note, we get the known as it will be suppressed by
-        # $self->suppressed below if the tag is not enabled.
-        $info = $self->{profile}->get_tag ($tag, 1);
-    } else {
-        $info = Lintian::Tag::Info->new($tag);
-    }
+    # Note, we get the known as it will be suppressed by
+    # $self->suppressed below if the tag is not enabled.
+    my $info = $self->{profile}->get_tag ($tag, 1);
     return 0 if ($info->experimental and not $self->{show_experimental});
     my $only = $self->{only_issue};
     if (%$only) {

@@ -9,7 +9,6 @@ use warnings;
 
 use Test::More;
 
-use Lintian::Tag::Info;
 use File::Find;
 require Util; # Test::More (also) exports fail
 

@@ -113,7 +113,7 @@ BEGIN {
 my $LINTIAN_ROOT = $ENV{'LINTIAN_ROOT'};
 
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
-use Lintian::Tag::Info;
+use Lintian::Profile;
 use Util;
 
 # --- Set the ways to call lintian and dpkg-buildpackage
@@ -135,20 +135,23 @@ $| = 1;
     or fail("test directory $rundir does not exist\n");
 
 $testok = 1;
-for my $desc_file (<$LINTIAN_ROOT/checks/*.desc>) {
-    for my $i (read_dpkg_control($desc_file)) {
-        $desc_file =~ s#.*/##;
-        if (exists $i->{'tag'}) {
-            my $experimental = $i->{'experimental'};
-            my $info = Lintian::Tag::Info->new($i->{tag});
-            my $code = $info->code;
-            $code = 'X' if $experimental and $experimental eq 'yes';
 
-            $tags{$i->{'tag'}}{'desc_file'} = $desc_file;
-            $tags{$i->{'tag'}}{'desc_type'} = $code;
-        }
-    }
+my $profile = Lintian::Profile->new ('debian/main', ["$ENV{'LINTIAN_ROOT'}/profiles"]);
+
+# force all checks to be loaded - not the best solution
+# - At the time of writing it is not needed for 'debian/main', but
+#   that may change...
+$profile->_load_checks();
+
+for my $tag ($profile->tags (1)){
+    my $ti = $profile->get_tag ($tag, 1);
+    my $code = $ti->code;
+    $code = 'X' if $ti->experimental;
+    $tags{$tag}{'desc_file'} = $ti->script .'.desc';
+    $tags{$tag}{'desc_type'} = $code;
 }
+
+undef $profile; # Don't need it any more.
 
 if ($testok) {
     print "done.\n";
