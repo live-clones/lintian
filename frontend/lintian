@@ -123,10 +123,8 @@ my $exit_code = 0;
 my $LAB;
 
 my %collection_info;
-my %enabled_checks;
 my %check_abbrev;
 my %unpack_infos;
-my %check_info;
 
 # }}}
 
@@ -989,64 +987,14 @@ if($action eq 'remove'){
 load_collections(\%collection_info, "$opt{'LINTIAN_ROOT'}/collection");
 # }}}
 
-# {{{ Now we're ready to load info about checks & tags
-
-# load information about checker scripts
-load_checks(\%check_info, $TAGS, "$opt{'LINTIAN_ROOT'}/checks");
-
-# }}}
-
 # {{{ determine which checks have been requested
 if ($action eq 'check') {
-    # create check_abbrev hash
-    for my $c (keys %check_info) {
-        $check_abbrev{$check_info{$c}->{'abbrev'}} = $c;
-    }
-
-    if ($check_tags) {
-        foreach my $t (split(/,/, $check_tags)) {
-            my $info = $PROFILE->get_tag ($t);
-
-            fail("unknown tag specified: $t") unless defined($info);
-            my $script = $info->script;
-            next if $script eq 'lintian';
-            if ($check_info{$script}) {
-                $enabled_checks{$script} = 1;
-            } else {
-                # should never happen
-                fail("no info for script $script");
-            }
-        }
-    } else {
-        my %dont_check = map { $_ => 1 } (split m/,/, ($dont_check || ''));
-        $checks or ($checks = join(',',keys %check_info));
-        for my $c (split(/,/,$checks)) {
-            if ($check_info{$c}) {
-                if ($dont_check{$c}
-                    || ($check_info{$c}->{'abbrev'}
-                        && $dont_check{$check_info{$c}->{'abbrev'}})) {
-                    #user requested not to run this check
-                } elsif ($check_info{$c}->{'requested-tags'} == 0) {
-                    #no need to run this check, no tags will be issued
-                } else {
-                    $enabled_checks{$c} = 1;
-                }
-            } elsif (exists $check_abbrev{$c}) {
-                #abbrevs only used when -C is given, so we don't need %dont_check
-                $enabled_checks{$check_abbrev{$c}} = 1;
-            } else {
-                fail("unknown check specified: $c");
-            }
-        }
-    }
 
     # determine which info is needed by the checks
-    for my $c (keys %enabled_checks) {
-        for my $i (keys %collection_info) {
-            # required by $c ?
-            if ($check_info{$c}->{$i}) {
-                $unpack_infos{$i} = 1;
-            }
+    for my $c (sort $PROFILE->scripts) {
+        my $cs = $PROFILE->get_script($c);
+        for my $i (@{ $cs->needs_info }) {
+            $unpack_infos{$i} = 1;
         }
     }
 }
@@ -1111,11 +1059,12 @@ for my $c (keys %unpack_infos) {
     }
 }
 
-for my $c (keys %enabled_checks) {
+for my $c ($PROFILE->scripts) {
     # Add the checks with their dependency information
-    $map->add('check-' . $c, $PROFILE->get_script($c));
-    if (exists $check_info{$c}{'needs-info'}) {
-        $map->addp('check-' . $c, 'coll-', @{$check_info{$c}{'needs-info'}});
+    my $cs = $PROFILE->get_script ($c);
+    $map->add('check-' . $c, $cs);
+    if (@{ $cs->needs_info }) {
+        $map->addp('check-' . $c, 'coll-', @{ $cs->needs_info });
     }
 }
 # }}}
@@ -1124,7 +1073,7 @@ for my $c (keys %enabled_checks) {
 debug_msg(1,
           "Selected action: $action",
           sprintf('Requested data to collect: %s', join(',',sort keys %unpack_infos)),
-          sprintf('Selected checks: %s', join(',',sort keys %enabled_checks)),
+          sprintf('Selected checks: %s', join(',',sort $PROFILE->scripts)),
     );
 
 
@@ -1276,76 +1225,6 @@ sub load_collections{
     closedir($dir);
 }
 
-# Given a ref to %check_info, $TAGS  and the path to the checks
-# directory, this will load all the information about checks into
-# %check_info.
-sub load_checks{
-    my ($cinfo, $tags, $dirname) = @_;
-    opendir(my $dir, $dirname)
-        or fail("cannot read directory $dirname");
-
-    for my $f (readdir($dir)) {
-        next if $f =~ /^\./;
-        next unless $f =~ /\.desc$/;
-        debug_msg(2, "Reading checker description file $f ...");
-
-        my @secs = read_dpkg_control("$dirname/$f");
-        my $script;
-        ($script = $secs[0]->{'check-script'})
-            or fail("error in description file $f: `Check-Script:' not defined");
-
-        # ignore check `lintian' (this check is a special case and contains the
-        # tag info for the lintian frontend--this script here)
-        next if $script eq 'lintian';
-
-        delete $secs[0]->{'check-script'};
-        $cinfo->{$script}->{'script'} = $script;
-        my $p = $cinfo->{$script};
-
-        set_value($f,$p,'type',$secs[0],1);
-        my %type;
-        # convert Type:
-        for (split(/\s*,\s*/o,$p->{'type'})) {
-            if ($_ eq 'binary' || $_ eq 'source' || $_ eq 'udeb'
-                || $_ eq 'changes') {
-                $type{$_} = 1;
-            } else {
-                fail("unknown type $_ specified in description file $f");
-            }
-        }
-        $p->{'type'} = \%type;
-
-        set_value($f,$p,'abbrev',$secs[0],1);
-
-        if (exists $secs[0]->{'needs-info'} && defined $secs[0]->{'needs-info'}) {
-            for (split(/\s*,\s*/o,$secs[0]->{'needs-info'})) {
-                push @{$p->{'needs-info'}}, $_;
-                $p->{$_} = 1;
-            }
-            delete $secs[0]->{'needs-info'};
-        }
-
-        # ignore Info: and other fields for now...
-        delete $secs[0]->{'info'};
-        delete $secs[0]->{'standards-version'};
-        delete $secs[0]->{'author'};
-
-        for (keys %{$secs[0]}) {
-            warning("unused tag $_ in description file $f");
-        }
-
-        debug_msg(2, map( { "$_: $p->{$_}" } sort keys %$p ));
-
-        shift(@secs);
-        $p->{'requested-tags'} = 0;
-        foreach my $tag (@secs) {
-            $p->{'requested-tags'}++ if $tags->displayed($tag->{'tag'});
-        }
-    }
-    closedir($dir);
-}
-
-
 # Removes all collections with "Auto-Remove: yes"; takes a Lab::Package
 #  - depends on global variables %collection_info and $opt{'LINTIAN_ROOT'}
 #
@@ -1383,12 +1262,7 @@ sub post_pkg_process_overrides{
         for my $tag (sort keys %$overrides) {
             next if $TAGS->suppressed($tag);
 
-            # Did we run the check script containing the tag?
             my $taginfo = $PROFILE->get_tag ($tag);
-
-            if (defined $taginfo) {
-                next unless $enabled_checks{$taginfo->script};
-            }
 
             for my $extra (sort keys %{$overrides->{$tag}}) {
                 next if $overrides->{$tag}{$extra};
@@ -1587,10 +1461,11 @@ sub process_group {
             foreach my $req (sort $map->selectable) {
                 my $cs = $map->getProp($req);
                 my $check = $cs->name;
-                my $ci = $check_info{$check};
 
-                # current type?
-                unless (exists $ci->{'type'}{$pkg_type}) {
+                # The lintian check is done by this frontend and we
+                # also skip the check if it is not for this type of
+                # package.
+                if (!$cs->is_check_type ($pkg_type) || $check eq 'lintian') {
                     $map->satisfy($req);
                     next;
                 }
