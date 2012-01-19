@@ -1,4 +1,4 @@
-# Copyright 2010 Niels Thyker
+# Copyright 2010 Niels Thykier
 #  - based on the work Richard Braakman and Christian
 #    Schwarz (copyrighted 1998).
 #

@@ -1,4 +1,4 @@
-# Copyright 2010 Niels Thyker
+# Copyright 2010 Niels Thykier
 #  - based on the work Richard Braakman and Christian
 #    Schwarz (copyrighted 1998).
 #
@@ -260,7 +260,7 @@ useful for debugging purposes.  You can find out where the temporary
 lab is located by running lintian with the B<--verbose> option.
 
 For static (non-temporary) labs this option causes Lintian to skip
-the automatical clean up of some collections.
+the automatic clean up of some collections.
 
 =item B<-L> [+|-|=][>=|>|<|<=][S|C|S/C], B<--display-level> [+|-|=][>=|>|<|<=][S|C|S/C]
 
