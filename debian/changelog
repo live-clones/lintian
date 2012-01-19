@@ -30,6 +30,9 @@ lintian (2.5.5) UNRELEASED; urgency=low
       Felix Geyer for the report.  (Closes: #650325)
     + [NT] Accepted patch from Paul Wise to detect COFF object
       files as Win32 binaries.
+  * checks/debconf:
+    + [RA] Recognize Perl uses of debconf templates via metaget or
+      settitle.
   * checks/debhelper:
     + [NT] Do not check executable debhelper files for brace
       expansion if compat is 9 (or greater).  It may be allowed by
