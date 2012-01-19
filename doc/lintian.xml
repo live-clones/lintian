@@ -619,13 +619,13 @@ foo source: configure-generated-file-in-source config.cache
           override above it.
         </para>
         <screen>
-# This comment will be shown above all tags overriden by the following
+# This comment will be shown above all tags overridden by the following
 # two overrides, (because they apply to the same tag and there is no
 # empty line between them)
-foo source: some-tag extact match
+foo source: some-tag exact match
 foo source: some-tag wildcard * match
 # This override has its own comment, and it is not shared with the
-# override below (because there is an empty line inbetween them).
+# override below (because there is an empty line in between them).
 foo source: some-tag another exact match
 
 foo source: some-tag override without a comment
@@ -698,7 +698,7 @@ foo [!any-i386] binary: some-tag-not-for-i386 optional-extra
           Profile names should only consist of the lower case
           characters ([a-z]), underscore (_), dash (-) and
           forward slashes (/).  Particularly note that dot (.) are
-          specificially <emphasis>not</emphasis> allowed in a
+          specifically <emphasis>not</emphasis> allowed in a
           profile name.
         </para>
         <para>
@@ -712,7 +712,7 @@ foo [!any-i386] binary: some-tag-not-for-i386 optional-extra
           The filename for the profile is derived from the name by
           simply concatenating it with <filename>.profile</filename>,
           Lintian will then look for a file with that name in the
-          follownig directories:
+          following directories:
         </para>
         <itemizedlist>
           <listitem>
@@ -745,7 +745,7 @@ foo [!any-i386] binary: some-tag-not-for-i386 optional-extra
           control files as described in the
           <ulink url="http://www.debian.org/doc/debian-policy/ch-controlfields.html#s-controlsyntax">
           Debian Policy Manual §5.1</ulink>.  Profiles allow
-          comments as described.
+          comments as described in the Policy Manual.
         </para>
         <sect3 label="2.5.2.1" id="section-2.5.2.1">
           <title>Main profile paragraph</title>
@@ -854,7 +854,7 @@ foo [!any-i386] binary: some-tag-not-for-i386 optional-extra
               <listitem>
                 <para>
                   Either "Yes" or "No", which decides whether these
-                  tags can be overriden.  Lintian will print an
+                  tags can be overridden.  Lintian will print an
                   informal message if it sees an override for a tag
                   marked as non-overridable (except if --quiet is
                   passed).
