@@ -36,7 +36,7 @@ lintian (2.5.5) UNRELEASED; urgency=low
   * checks/debhelper:
     + [NT] Do not check executable debhelper files for brace
       expansion if compat is 9 (or greater).  It may be allowed by
-      tool interpretting the file.
+      tool interpreting the file.
     + [NT] Added checks for handling executable files in the
       debian dir.  Thanks to Joey Hess and Arno Töll for the
       reports.  (Closes: #651572, #651330)
