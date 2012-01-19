@@ -738,7 +738,7 @@ foo [!any-i386] binary: some-tag-not-for-i386 optional-extra
           to recognise them.
         </para>
         <para>
-          The directories are checking in the listed order and the
+          The directories are checked in the listed order and the
           first file matching the profile will be used.  This allows
           users to override a system profile by putting one with the
           same filename
