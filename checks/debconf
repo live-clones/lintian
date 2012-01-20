@@ -87,7 +87,17 @@ if ($type eq 'source') {
         }
 
         if (-f $templates_file) {
-            my @templates = read_dpkg_control($templates_file, 'templates file');
+            my @templates;
+            eval {
+                @templates = read_dpkg_control ($templates_file, 'templates file');
+            };
+            if ($@) {
+                chomp $@;
+                $@ =~ s/^internal error: //;
+                $@ =~ s/^syntax error in //;
+                tag 'syntax-error-in-debconf-template', "$file: $@";
+                next;
+            }
 
             foreach my $template (@templates) {
                 if (exists $template->{template} and exists $template->{_choices}) {
@@ -199,9 +209,22 @@ if ($seentemplates) {
 
 # Lots of template checks.
 
-my @templates = $seentemplates ? read_dpkg_control("$cdir/templates", 'templates file') : ();
+my @templates = ();
 my %potential_db_abuse;
 my @templates_seen;
+
+if ($seentemplates) {
+    eval {
+        @templates = read_dpkg_control("$cdir/templates", 'templates file');
+    };
+    if ($@) {
+        chomp $@;
+        $@ =~ s/^internal error: //;
+        $@ =~ s/^syntax error in //;
+        tag 'syntax-error-in-debconf-template', "templates: $@";
+        @templates = ();
+    }
+}
 
 foreach my $template (@templates) {
     my $isselect='';

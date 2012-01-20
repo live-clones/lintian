@@ -351,3 +351,11 @@ Info: Templates which are not used by the package should be removed from
  understands the shell script debconf functions.
  .
  If any of the above apply, please install an override.
+
+Tag: syntax-error-in-debconf-template
+Severity: important
+Certainty: possible
+Info: The template file contains a syntax error.
+ .
+ This issue may hide other issues as Lintian skips some checks on the
+ file in this case.

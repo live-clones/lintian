@@ -13,6 +13,7 @@ lintian (2.5.5) UNRELEASED; urgency=low
       - preinst-uses-dpkg-maintscript-helper-without-predepends
       - shlib-in-multi-arch-foreign-package
       - syntax-error-in-control-file
+      - syntax-error-in-debconf-template
     + Removed:
       - dh_dhelp-is-deprecated
       - maintainer-script-calls-deprecated-wm-menu-config
