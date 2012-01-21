@@ -399,30 +399,35 @@ sub _trim_split {
 #
 sub local_mirror_manifests {
     my ($mirdir, $dists, $areas, $archs) = @_;
+    my $active_srcs = {};
     my $srcman = Lintian::Lab::Manifest->new ('source');
     my $binman = Lintian::Lab::Manifest->new ('binary');
     my $udebman = Lintian::Lab::Manifest->new ('udeb');
     foreach my $dist (@$dists) {
         foreach my $area (@$areas) {
             my $srcs = "$mirdir/dists/$dist/$area/source/Sources";
-            my $srcfd = _open_data_file ($srcs);
-            my $srcsub = sub { _parse_srcs_pg ($srcman, $mirdir, $area, @_) };
-            Util::_parse_dpkg_control_iterative ($srcsub, $srcfd);
-            close $srcfd;
+            my $srcfd;
+            my $srcsub;
             # Binaries have a "per arch" file.
+            # - we check those first and then include the source packages that
+            #   are referred to by these binaries.
             foreach my $arch (@$archs) {
                 my $pkgs = "$mirdir/dists/$dist/$area/binary-$arch/Packages";
                 my $upkgs = "$mirdir/dists/$dist/$area/debian-installer/" .
                     "binary-$arch/Packages";
                 my $pkgfd = _open_data_file ($pkgs);
-                my $binsub = sub { _parse_pkgs_pg ($binman, $mirdir, $area, @_) };
+                my $binsub = sub { _parse_pkgs_pg ($active_srcs, $binman, $mirdir, $area, @_) };
                 my $upkgfd = _open_data_file ($upkgs);
-                my $udebsub = sub { _parse_pkgs_pg ($udebman, $mirdir, $area, @_) };
+                my $udebsub = sub { _parse_pkgs_pg ($active_srcs, $udebman, $mirdir, $area, @_) };
                 Util::_parse_dpkg_control_iterative ($binsub, $pkgfd);
                 Util::_parse_dpkg_control_iterative ($udebsub, $upkgfd);
                 close $pkgfd;
                 close $upkgfd;
             }
+            $srcfd = _open_data_file ($srcs);
+            $srcsub = sub { _parse_srcs_pg ($active_srcs, $srcman, $mirdir, $area, @_) };
+            Util::_parse_dpkg_control_iterative ($srcsub, $srcfd);
+            close $srcfd;
         }
     }
     return ($srcman, $binman, $udebman);
@@ -454,8 +459,9 @@ sub _open_data_file {
 
 # Helper for local_mirror_manifests - it parses a paragraph from Packages file
 sub _parse_pkgs_pg {
-    my ($manifest, $mirdir, $area, $data) = @_;
+    my ($active_srcs, $manifest, $mirdir, $area, $data) = @_;
     my $ts = 0;
+    my $s;
     unless ($data->{'source'}) {
         $data->{'source'} = $data->{'package'};
     } elsif ($data->{'source'} =~ /^([-+\.\w]+)\s+\((.+)\)$/) {
@@ -467,6 +473,8 @@ sub _parse_pkgs_pg {
     unless (defined $data->{'source-version'}) {
         $data->{'source-version'} = $data->{'version'};
     }
+    $s = $data->{'source'} . '/' . $data->{'source-version'};
+    $active_srcs->{$s}++;
     $data->{'file'} = $mirdir . '/' . $data->{'filename'};
     $data->{'area'} = $area;
     # $manifest strips redundant fields for us.  But for clarity and to
@@ -484,9 +492,14 @@ sub _parse_pkgs_pg {
 
 # Helper for local_mirror_manifests - it parses a paragraph from Sources file
 sub _parse_srcs_pg {
-    my ($manifest, $mirdir, $area, $data) = @_;
+    my ($active_srcs, $manifest, $mirdir, $area, $data) = @_;
     my $ts = 0;
     my $dir = $data->{'directory'}//'';
+    my $s = $data->{'package'} . '/' . $data->{'version'};
+    # only include the source if it has any binaries to be checked.
+    # - Otherwise we may end up checking a source with no binaries
+    #   (happens if the architecture is "behind" in building)
+    return unless $active_srcs->{$s};
     $dir .= '/' if $dir;
     foreach my $f (split m/\n/, $data->{'files'}) {
         $f =~ s/^\s++//o;
