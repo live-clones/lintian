@@ -161,10 +161,21 @@ sub _load_binary_fields {
         $self->{binary_field} = {};
         return;
     }
-    my @control_data = read_dpkg_control($dctrl);
+    my @control_data;
     my %packages;
 
-    shift @control_data; # throw away the source part
+    eval {
+        @control_data = read_dpkg_control($dctrl);
+        shift @control_data; # throw away the source part
+    };
+    if ($@) {
+        # If it is a syntax error, ignore it (we emit
+        # syntax-error-in-control-file in this case via
+        # control-file).
+        die $@ unless $@ =~ /syntax error/;
+        $self->{binary_field} = {};
+        return 0;
+    }
 
     foreach my $binary (@control_data) {
         my $pkg = $binary->{'package'};

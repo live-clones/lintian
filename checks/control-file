@@ -84,7 +84,18 @@ while (<CONTROL>) {
 }
 close CONTROL;
 
-my ($header, @binary_controls) = read_dpkg_control($dcontrol);
+my ($header, @binary_controls);
+
+eval {
+    ($header, @binary_controls) = read_dpkg_control($dcontrol);
+};
+if ($@) {
+    chomp $@;
+    $@ =~ s/^internal error: //;
+    $@ =~ s/^syntax error in //;
+    tag 'syntax-error-in-control-file', "debian/control: $@";
+    return;
+}
 
 for my $binary_control (@binary_controls) {
     tag 'build-info-in-binary-control-file-section', 'Package '.$binary_control->{'package'}

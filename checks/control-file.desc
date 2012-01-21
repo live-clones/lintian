@@ -193,3 +193,11 @@ Info: The given package appears to be a shared library -dev package, but
  ensure that a new upstream version of the library package doesn't satisfy
  the -dev package dependency, since the minor version of the shared
  library may have changed, breaking the <tt>*.so</tt> links.
+
+Tag: syntax-error-in-control-file
+Severity: important
+Certainty: possible
+Info: The control file contains a syntax error.
+ .
+ This issue may hide other issues as Lintian skips some checks on the
+ file in this case.

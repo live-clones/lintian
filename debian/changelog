@@ -12,6 +12,7 @@ lintian (2.5.5) UNRELEASED; urgency=low
       - package-uses-dh-exec-but-lacks-build-depends
       - preinst-uses-dpkg-maintscript-helper-without-predepends
       - shlib-in-multi-arch-foreign-package
+      - syntax-error-in-control-file
     + Removed:
       - dh_dhelp-is-deprecated
       - maintainer-script-calls-deprecated-wm-menu-config
@@ -22,11 +23,13 @@ lintian (2.5.5) UNRELEASED; urgency=low
     + [NT] Fixed assumptions about certain fields being present.
       Where needed, Lintian will make guesses to the most likely
       value (or the least "broken" value).
-  * checks/control-file:
+  * checks/control-file{,.desc}:
     + [NT] Allow "pkg (= ${source:Version})" versioned dependency if
       pkg is architecture all.  This fixes a false-positive
       "weak-library-dev-dependency" for some mono packages.  Thanks
       to David Bremner for the report.  (Closes: #652602)
+    + [NT] Emit a tag if there is a syntax error in d/control rather
+      than just aborting the rest of the check.
   * checks/cruft:
     + [NT] Added dh-autoreconf as a build-depends alternative to
       libtool for suppressing ancient-libtool warning.  Thanks to
