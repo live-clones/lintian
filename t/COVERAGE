@@ -1,5 +1,5 @@
-Last generated 2011-12-21
-Coverage: 784/954 (82.18%), w. legacy tests: 892/954 (93.50%)
+Last generated 2012-01-22
+Coverage: 789/957 (82.45%), w. legacy tests: 895/957 (93.52%)
 
 The following tags are not tested by the test suite:
 
@@ -168,8 +168,6 @@ menus doc-base-file-uses-obsolete-national-encoding
 menus doc-base-index-references-multiple-files
 menus doc-base-invalid-document-field
 menus doc-base-unknown-section
-menus maintainer-script-calls-deprecated-wm-menu-config
-menus maintainer-script-does-not-check-for-existence-of-wm-menu-config
 menus menu-file-in-usr-lib
 menus menu-method-should-include-menu-h
 menus postinst-does-not-call-updatemenus
@@ -304,8 +302,6 @@ maintainer-scripts
   debconf-config-not-executable
   init.d-script-not-included-in-package
   init.d-script-not-marked-as-conffile
-  maintainer-script-calls-deprecated-wm-menu-config
-  maintainer-script-does-not-check-for-existence-of-wm-menu-config
   maintainer-script-ignores-errors
   maintainer-script-removes-device-files
   no-debconf-templates

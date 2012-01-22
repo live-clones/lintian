@@ -1,5 +1,4 @@
-W: menus-script-check-ok: maintainer-script-calls-deprecated-wm-menu-config postinst:12
-W: menus-script-check-ok: possible-bashism-in-maintainer-script postinst:14 'if type '
+W: menus-script-check-ok: possible-bashism-in-maintainer-script postinst:11 'if type '
 W: menus-script-check-ok: possible-bashism-in-maintainer-script postrm:3 'if type '
 W: menus-script-check-ok: postinst-has-useless-call-to-install-docs
 W: menus-script-check-ok: prerm-has-useless-call-to-install-docs

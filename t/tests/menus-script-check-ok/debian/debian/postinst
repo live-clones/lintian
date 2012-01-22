@@ -8,9 +8,6 @@ set -e
 if [ -x /usr/bin/update-menus ] ; then
     update-menus
 fi
-if command -v wm-menu-config >/dev/null 2>&1 ; then
-    wm-menu-config
-fi
 if type install-docs >/dev/null 2>&1 ; then
     install-docs -i /usr/share/doc-base/test-doc
 fi

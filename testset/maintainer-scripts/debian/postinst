@@ -30,8 +30,6 @@ install-info /usr/share/info/foo \
 
 echo Please use update-rc.d or invoke-rc.d to set up blah blah.
 
-wm-menu-config
-
 chown root.root /usr/share/doc/maintainer-scripts/changelog
 chown root:root /usr/share/doc/maintainer-scripts/changelog
 
