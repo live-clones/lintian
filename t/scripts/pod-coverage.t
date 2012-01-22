@@ -15,6 +15,7 @@ our %MODULES =
     (
      'Lintian::Check'              => [],
      'Lintian::Collect'            => [],
+     'Lintian::Collect::Group'     => [],
      'Lintian::Command'            => [],
      'Lintian::Command::Simple'    => [],
      'Lintian::Data'               => [],

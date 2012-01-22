@@ -1,7 +1,7 @@
 # -*- perl -*-
 # Lintian::Collect::Group -- interface to group data collections
 
-# Copyright (C) 2008 Russ Allbery
+# Copyright (C) 2011 Niels Thykier
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -19,10 +19,45 @@
 # This is a "Lintian::Collect"-like interace (as in "not quite a
 # Lintian::Collect").
 package Lintian::Collect::Group;
+
 use strict;
 use warnings;
 
 use Carp qw(croak);
+
+=head1 NAME
+
+Lintian::Collect::Group - Lintain interface to group data collection
+
+=head1 SYNOPSIS
+
+ my $group = Lintian::ProcessableGroup->new ('lintian_2.5.0_i386.changes');
+ my $ginfo = Lintian::Collect::Group->new ($group);
+ 
+ foreach my $bin ($group->get_binary_processables) {
+    my $pkg_name = $bin->pkg_name;
+    foreach my $dirdep ($ginfo->direct_dependencies ($pkg_name)) {
+        print "$pkg_name (pre-)depends on $dirdep (which is also in this group)\n";
+    }
+ }
+
+=head1 DESCRIPTION
+
+Lintian::Collect::Group is a "group" variant of the Lintian::Collect
+modules.  It attempts to expose a similar interface as these and
+provide useful information about the processable group (or members of
+it).
+
+=head1 CLASS METHODS
+
+=over 4
+
+=item Lintian::Collect::Group->new ($group)
+
+Creates a new object to provide information about
+L<$group|Lintian::ProcessableGroup>.
+
+=cut
 
 sub new {
     my ($class, $group) = @_;
@@ -32,12 +67,20 @@ sub new {
     return bless $self, $class;
 }
 
-# Returns the direct strong dependendencies for a package
-# that are available in the group.
-# (strong dependencies are "Depends" and "Pre-Depends")
-#
-# Note: "Self-dependencies" (if any) are *not* included.
-#
+=item $ginfo->direct_dependencies ($pkg_name)
+
+If $pkg_name is a part of the underlying processable group, this
+method returns a listref containing all the direct dependencies of
+$pkg_name.  If $pkg_name is not a part of the group, this returns
+undef.
+
+Note: Only strong dependencies (Pre-Depends and Depends) are
+considered.
+
+Note: Self-dependencies (if any) are I<not> included in the result.
+
+=cut
+
 # sub direct_dependencies Needs-Info <>
 sub direct_dependencies {
     my ($self, $p) = @_;
@@ -67,12 +110,31 @@ sub direct_dependencies {
     return $deps;
 }
 
+=item $ginfo->type
+
+Return the type of this collect object (which is the string 'group').
+
+=cut
+
 # Return the package type.
 # sub type Needs-Info <>
 sub type {
     my ($self) = @_;
     return 'group';
 }
+
+=back
+
+=head1 AUTHOR
+
+Originally written by Niels Thykier <niels@thykier.net> for Lintian.
+
+=head1 SEE ALSO
+
+lintian(1), Lintian::Collect::Binary(3), Lintian::Collect::Changes(3),
+Lintian::Collect::Source(3)
+
+=cut
 
 1;
 __END__;
