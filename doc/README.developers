@@ -88,10 +88,6 @@ the new test suite
 
 the legacy test suite
 
-=item unpack
-
-deprecated; used to contain unpack tools (see collection above)
-
 =back
 
 =head2 Core concepts in Lintian
