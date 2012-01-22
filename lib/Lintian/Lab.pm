@@ -53,9 +53,6 @@ my %SUPPORTED_TYPES = (
     'udeb'    => 1,
 );
 
-
-
-# Export now due to cicular depends between Lab and Lab::Package.
 our (@EXPORT, @EXPORT_OK, %EXPORT_TAGS);
 
 BEGIN {
@@ -153,8 +150,8 @@ sub new {
 Returns the absolute path to the base of the lab.
 
 Note: This may return the empty string if either the lab has been
-deleted or this is a temporary lab that has not been created yet.
-In the latter case, $lab->create should be run to get a
+deleted or this is a temporary lab that has not been created yet.  In
+the latter case, $lab->create or $lab->open should be run to get a
 non-empty value from this method.
 
 =item $lab->is_open
@@ -197,16 +194,16 @@ Fetches an existing package from the lab.
 The first argument can be a L<Lintian::Processable|proccessable>.  In that
 case all other arguments are ignored.
 
-If the first calling convention is used then this method will by
-default search for an existing package.  The @extra argument can be
-used to narrow the search or even to add a new entry.
+If the first calling convention is used then this method will search
+for an existing package.  The @extra argument can be used to narrow
+the search or even to add a new entry.
 
 @extra consists of (in order):
  - version
  - arch (Ignored if $pkg_type is "source")
 
-If version or arch is omitted (or undef) then that search parameter is
-consider a wildcard for "any".  Example:
+If version or arch is omitted (or if it is undef) then that search
+parameter is consider a wildcard for "any".  Example:
 
  # Returns all eclipse-platform packages with architecture i386 regardless
  # of their version (if any)
@@ -221,6 +218,12 @@ consider a wildcard for "any".  Example:
 
 In list context, this returns a list of matches.  In scalar context
 this returns the first match (if any).
+
+If the second calling convention is used, then this method will search
+for an entry matching the the processable passed.  If such an entry
+does not exists, an new "non-existing" L<entry|Lintian::Lab::Entry>
+will be returned.  This entry can be created by using the "create"
+method on the entry.
 
 =cut
 
@@ -300,6 +303,10 @@ sub get_package {
 
 Passes each lab entry to $visitor.  If $pkg_type is passed, then only
 entries of that type are passed.
+
+The visitor is given a reference to the L<entry|Lintian::Lab::Entry>,
+the package name, the package version and the package architecture
+(may be undef for source packages).
 
 =cut
 
@@ -404,10 +411,9 @@ sub _pool_path {
 Each member of @lists must be a Lintian::Lab::Manifest.
 
 The lab will generate a diff between the given member and its state
-for the given package type.  The diffs are returned in the same order
-as they appear in @lists.
+for the given package type.
 
-The diffs are valid until the original list is modified or a package
+The diffs are valid until the original manifest is modified or a package
 is added or removed to the lab.
 
 =cut
@@ -433,6 +439,9 @@ sub generate_diffs {
 Creates a new lab.  It will create $lab->dir if it does not exist.
 It will also create a basic empty lab.  If this is a temporary
 lab, this method will also setup the temporary dir for the lab.
+
+The $lab will I<not> be opened by this method.  This should be done
+afterwards by invoking the open method.
 
 B<$opts> (if present) is a hashref containing options.  The following
 options are accepted:
@@ -478,8 +487,7 @@ sub create {
             my $topts = { CLEAN => !$keep, TMPDIR => 1 };
             my $t = tempdir ('temp-lintian-lab-XXXXXX', $topts);
             $dir = Cwd::abs_path ($t);
-            # Should the croak() be using $t rather than $dir?
-            croak "Could not resolve $dir: $!" unless $dir;
+            croak "Could not resolve $t: $!" unless $dir;
             $self->{'dir'} = $dir;
             $self->{'keep-lab'} = $keep;
         } else {
@@ -549,11 +557,11 @@ sub create {
 =item $lab->open
 
 Opens the lab and reads the contents into caches.  If the lab is
-temporary this will create a temporary dir to store the contents of
-the lab.
+temporary and does not exists, this method will call create to
+initialize the temporary lab.
 
 This will croak if the lab is already open.  It may also croak for
-the same reasons as $lab->create if this is a temporary lab.
+the same reasons as $lab->create if the lab is temporary (see above).
 
 Note: for static labs, $lab->dir must point to an existing consistent
 lab or this will croak.  To open a new lab, please use
@@ -561,7 +569,7 @@ $lab->create.
 
 Note: It is not possible to pass options to the creation of the
 temporary lab.  If special options are required, please use
-$lab->create.
+$lab->create directly.
 
 =cut
 
@@ -589,7 +597,7 @@ sub open {
     }
 
     # Check the lab-format - this ought to be redundant for temp labs, but
-    # it's simpler to do it that way.
+    # it's simpler to do it for them anyway.
     my $header = get_dsc_info ("$dir/info/lab-info");
     my $format = $header->{'lab-format'}//'';
     my $layout = $header->{'layout'}//'pool';
@@ -597,8 +605,9 @@ sub open {
         croak "$msg: Lab format $format is not supported ($dir)" if $format;
         croak "$msg: No lab format specification in $dir/info/lab-info";
     }
-    if ($layout && lc($layout) ne 'pool') {
+    unless ($layout && lc($layout) eq 'pool') {
         # Unknown layout style?
+        croak "$msg: Layout field present but with no value" unless $layout;
         croak "$msg: Implementation does not support the layout \"$layout\"";
     }
 
@@ -817,13 +826,19 @@ In lab format 11 the lab format is stored in $LAB/info/lab-info.  The
 rest of the files in $LAB/info/* have been re-purposed to be a list of
 packages in the lab.
 
-The $LAB/info/lab-info file also contains modifying parameters.  All
-parameters are matched case-insensitively and the accepted parameters
-are:
+The $LAB/info/lab-info is parsed as a debian control file (See Debian
+Policy Manual §5.1 for syntax).  The consists of a single paragraph
+and only the following fields are allowed:
 
 =over 4
 
-=item Layout
+=item Lab-Format (simple, mandatory)
+
+This field contains the lab format of this lab.  Generally this is
+simply an integer (though during development non-integers have been
+used).
+
+=item Layout (simple, optional)
 
 The layout parameter describes how packages are stored in the lab.
 Currently the only accepted value is "pool" and the value is not
@@ -842,6 +857,9 @@ it is the first 4 letters of the package name).  Whitespaces (i.e. "
 If the field is missing, it defaults to "pool".
 
 =back
+
+It is allowed to use comments in $LAB/info/lab-info as described
+in the Debian Policy Manual §5.1.
 
 =head1 AUTHOR
 
