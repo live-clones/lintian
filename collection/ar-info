@@ -32,13 +32,15 @@ my $pkg = shift;
 my $type = shift;
 
 unlink('ar-info');
+
+# Open before chdir, as unpacked may be a symlink
+open(INDEX, '<', 'index')
+    or fail("cannot open index file: $!");
+open(OUT, '>', 'ar-info')
+    or fail("cannot open ar-info file: $!");
+
 chdir('unpacked')
     or fail("cannot chdir to unpacked directory: $!");
-
-open(INDEX, '<', '../index')
-    or fail("cannot open index file: $!");
-open(OUT, '>', '../ar-info')
-    or fail("cannot open ar-info file: $!");
 
 while (<INDEX>) {
     chomp;

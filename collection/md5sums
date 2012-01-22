@@ -22,6 +22,7 @@
 use strict;
 use warnings;
 
+use Cwd();
 use FileHandle;
 use lib "$ENV{'LINTIAN_ROOT'}/lib";
 use Lintian::Command qw(spawn reap);
@@ -30,17 +31,18 @@ use Util;
 ($#ARGV == 1) or fail('syntax: md5sums <pkg> <type>');
 my $pkg = shift;
 my $type = shift;
+my $dir = Cwd::cwd();
 
 unlink('md5sums');
 chdir('unpacked')
     or fail("cannot chdir to unpacked directory: $!");
 
 my %opts = ( pipe_in => FileHandle->new,
-             out => '../md5sums',
+             out => "$dir/md5sums",
              fail => 'error' );
 spawn(\%opts, ['xargs', '-0r', 'md5sum'] );
 $opts{pipe_in}->blocking(1);
-open(INDEX, '<', '../index')
+open(INDEX, '<', "$dir/index")
     or fail("cannot open index file: $!");
 while (<INDEX>) {
     next unless m/^-/;
