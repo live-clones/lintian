@@ -137,8 +137,10 @@ if ($format =~ /^\s*2\.0\s*\z/ or $format =~ /^\s*3\.0\s*\(quilt\)/) {
     check_diffstat($info->diffstat, \%warned);
 }
 my $uroot = $info->unpacked;
-my $wanted = sub { find_cruft($pkg, $info, qr/\Q$uroot\E/, \%warned, $atdinbd, $ltinbd) };
-find($wanted, $info->unpacked);
+my $abs = Cwd::abs_path ("$uroot/") or fail "abs_path $uroot: $!";
+$abs =~ s,/$,,; # remove the trailing slash if any
+my $wanted = sub { find_cruft($pkg, $info, qr/\Q$abs\E/, \%warned, $atdinbd, $ltinbd) };
+find($wanted, $abs);
 
 # Look for cruft based on file's results, but allow cruft in test directories
 # where it may be part of a test suite.

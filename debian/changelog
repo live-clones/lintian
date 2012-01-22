@@ -30,6 +30,7 @@ lintian (2.5.5) UNRELEASED; urgency=low
       Felix Geyer for the report.  (Closes: #650325)
     + [NT] Accepted patch from Paul Wise to detect COFF object
       files as Win32 binaries.
+    + [NT] Properly handle unpacked being a symlink.
   * checks/debconf:
     + [RA] Recognize Perl uses of debconf templates via metaget or
       settitle.
