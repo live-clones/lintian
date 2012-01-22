@@ -23,7 +23,6 @@ binary-indep:
 	dh_installdocs
 	dh_installmanpages
 	dh_desktop
-	-dh_dhelp
 	dh_scrollkeeper
 	-dh_python # Should trigger a tag
 	-dh_python$(VERSION) # This should not

@@ -4,7 +4,6 @@ Version: 1.0
 Description: Test for use of deprecated dh_* commands
 Test-For:
  dh_desktop-is-deprecated
- dh_dhelp-is-deprecated
  dh_installmanpages-is-obsolete
  dh_pycentral-is-obsolete
  dh_python-is-obsolete

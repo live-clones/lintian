@@ -13,6 +13,7 @@ lintian (2.5.5) UNRELEASED; urgency=low
       - preinst-uses-dpkg-maintscript-helper-without-predepends
       - shlib-in-multi-arch-foreign-package
     + Removed:
+      - dh_dhelp-is-deprecated
       - maintainer-script-calls-deprecated-wm-menu-config
       - maintainer-script-does-not-check-for-existence-of-wm-menu-config
       - uploader-address-missing
@@ -36,7 +37,7 @@ lintian (2.5.5) UNRELEASED; urgency=low
   * checks/debconf:
     + [RA] Recognize Perl uses of debconf templates via metaget or
       settitle.
-  * checks/debhelper:
+  * checks/debhelper{,.desc}:
     + [NT] Do not check executable debhelper files for brace
       expansion if compat is 9 (or greater).  It may be allowed by
       tool interpreting the file.
@@ -45,6 +46,9 @@ lintian (2.5.5) UNRELEASED; urgency=low
       reports.  (Closes: #651572, #651330)
     + [NT] Added various dh-exec related checks.  Thanks to Gergely
       Nagy for the patches.  (Closes: #653071)
+    + [NT] Removed tag for using dh_dhelp.  It is not shipped in
+      debhelper anymore (not even Squeeze) and the tag is not
+      emitted anymore (according to lintian.d.o).
   * checks/fields{,.desc}:
     + [JW] Properly handle uploader names with commas.
       (Closes: #485705)
