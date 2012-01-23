@@ -609,7 +609,7 @@ if (($type eq 'binary') || ($type eq 'udeb')) {
                     if ($d_version->[0] && ! version_check($d_version->[1]));
 
                 tag 'package-relation-with-self', "$field: $part_d_orig"
-                    if ($pkg eq $d_pkg) && ($field ne 'conflicts');
+                    if ($pkg eq $d_pkg) && ($field ne 'conflicts' && $field ne 'replaces' && $field ne 'provides');
 
                 tag 'bad-relation', "$field: $part_d_orig"
                     if $rest;

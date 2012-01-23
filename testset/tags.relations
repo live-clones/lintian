@@ -59,7 +59,6 @@ W: relations: bad-homepage lintian.debian.org
 W: relations: depends-exclusively-on-makedev depends
 W: relations: depends-on-old-emacs recommends: emacs21
 W: relations: package-relation-with-self depends: relations (<< 3)
-W: relations: package-relation-with-self replaces: relations
 W: relations: redundant-bugs-field
 W: relations: redundant-origin-field
 W: relations: versioned-dependency-satisfied-by-perl depends: libfile-temp-perl (>= 0.18)

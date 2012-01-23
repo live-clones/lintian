@@ -65,6 +65,8 @@ lintian (2.5.5) UNRELEASED; urgency=low
     + [NT] Use new Lintian::Architecture API.
     + [JW] Include ssh:// as a valid protocol for hg.
       (Closes: #655907)
+    + [NT] Ignore self relations in Replaces and Provides.  This
+      is allowed according to §7.6.2.  (Closes: #657034)
   * checks/files:
     + [JW,NT] Skip "Multi-Arch: same" check of gzip files if their
       install path contains the architecture.  (Closes: #650665)
