@@ -2,6 +2,7 @@ lintian (2.5.5) UNRELEASED; urgency=low
 
   * Summary of tag changes:
     + Added:
+      - control-file-contains-dh_make-vcs-comment
       - dependency-is-not-multi-archified
       - dh-exec-install-not-allowed-here
       - dh-exec-private-helper
@@ -34,6 +35,9 @@ lintian (2.5.5) UNRELEASED; urgency=low
       to David Bremner for the report.  (Closes: #652602)
     + [NT] Emit a tag if there is a syntax error in d/control rather
       than just aborting the rest of the check.
+    + [NT] Accepted patch from Gergely Nagy to catch dh-make vcs
+      templates in comments.  Thanks to Paul Wise for suggesting this
+      check.  (Closes: #657110)
   * checks/cruft{,.desc}:
     + [NT] Added dh-autoreconf as a build-depends alternative to
       libtool for suppressing ancient-libtool warning.  Thanks to

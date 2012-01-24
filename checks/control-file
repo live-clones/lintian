@@ -52,10 +52,19 @@ if ($line) {
 
 # Check that each field is only used once:
 my $seen_fields = {};
+my $seen_vcs_comment = 0;
 open (CONTROL, '<', $dcontrol)
     or fail "Couldn't read debfiles/control: $!";
 while (<CONTROL>) {
     s/\s*\n$//;
+
+    if (m,^\# \s* Vcs-(?:Git|Browser): \s* (?:git|http)://git\.debian\.org/(?:\?p=)?collab-maint/<pkg>\.git,ox) {
+        # Emit it only once per package
+        tag 'control-file-contains-dh_make-vcs-comment'
+            unless $seen_vcs_comment++;
+        next;
+    }
+
     next if /^\#/;
 
     #Reset seen_fields if we enter a new section:

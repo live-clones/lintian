@@ -11,6 +11,8 @@ Build-Depends: debhelper (>= 7.0.50~),
  ]
 Build-Depends-Indep: perl (> 5.8)
 XS-Vcs-Svn: svn://svn.example.com/{$srcpkg}/trunk
+#Vcs-Git: git://git.debian.org/collab-maint/<pkg>.git
+#Vcs-Browser: http://git.debian.org/?p=collab-maint/<pkg>.git;a=summary
 
 
 Package: {$srcpkg}
