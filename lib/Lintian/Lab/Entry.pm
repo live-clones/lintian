@@ -103,7 +103,9 @@ sub _new {
     } else {
         # This error should not happen unless someone (read: me) breaks
         # Lintian::Lab::get_package
-        croak "$pkg_name $pkg_type ($pkg_version) [$pkg_arch] does not exists"
+        my $arch = '';
+        $arch = " [$pkg_arch]" if $pkg_arch;
+        croak "$pkg_name $pkg_type ($pkg_version)$arch does not exists"
             unless $self->exists;
         my $link;
         $link = 'deb' if $pkg_type eq 'binary' or $pkg_type eq 'udeb';
