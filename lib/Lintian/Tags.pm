@@ -113,10 +113,6 @@ created object.
 #      - type: one of 'binary', 'udeb' or 'source'
 #      - overrides: hash with all overrides for this file as keys
 #
-# only_issue:
-#     A hash of tags to issue.  If this hash is not empty, only tags noted
-#     in that has will be issued regardless of which tags are seen.
-#
 # profile:
 #     The Lintian::Profile (if any).  If not undef, this is used to
 #     determine known tags, severity of tags (indirectly) and whether
@@ -142,11 +138,6 @@ created object.
 #      - overrides: hash whose keys and values are the same as the above
 #     The overrides hash holds the tag data for tags that were overridden.
 #     Data for overridden tags is not added to the regular hashes.
-#
-# suppress:
-#     A hash of tags that should be suppressed.  Suppressed tags are not
-#     printed and do not add to any of the statistics.  They're treated as
-#     if they don't exist.
 sub new {
     my ($class) = @_;
     my $self = {
@@ -161,13 +152,11 @@ sub new {
         display_source       => {},
         files                => {},
         ignored_overrides    => {},
-        only_issue           => {},
         profile              => undef,
         show_experimental    => 0,
         show_overrides       => 0,
         show_pedantic        => 0,
         statistics           => {},
-        suppress             => {},
     };
     bless($self, $class);
     $GLOBAL = $self unless $GLOBAL;
@@ -387,22 +376,6 @@ sub display {
     }
 }
 
-=item only([TAG [, ...]])
-
-Limits the displayed tags to only the listed tags.  One or more tags may
-be given.  If no tags are given, resets the Lintian::Tags object to
-display all tags (subject to other constraints).
-
-=cut
-
-sub only {
-    my ($self, @tags) = @_;
-    $self->{only_issue} = {};
-    for my $tag (@tags) {
-        $self->{only_issue}{$tag} = 1;
-    }
-}
-
 =item show_experimental(BOOL)
 
 If BOOL is true, configure experimental tags to be shown.  If BOOL is
@@ -456,31 +429,11 @@ sub sources {
     }
 }
 
-=item suppress(TAG [, ...])
-
-Suppress the specified tags.  These tags will not be shown and will not
-contribute to statistics.  This method may be called more than once,
-adding additional tags to suppress.  There is no way to unsuppress a tag
-after it has been suppressed.
-
-=cut
-
-sub suppress {
-    my ($self, @tags) = @_;
-    for my $tag (@tags) {
-        $self->{suppress}{$tag} = 1;
-    }
-}
-
 =item profile(PROFILE)
 
 Use the PROFILE (Lintian::Profile) to determine which tags are
 suppressed, the severity of the tags and which tags are
 non-overridable.
-
-This can be used together with suppress.  In this case tags are
-only emitted if they are enabled in the profile AND they are not
-suppressed.
 
 =cut
 
@@ -747,12 +700,7 @@ sub displayed {
     # $self->suppressed below if the tag is not enabled.
     my $info = $self->{profile}->get_tag ($tag, 1);
     return 0 if ($info->experimental and not $self->{show_experimental});
-    my $only = $self->{only_issue};
-    if (%$only) {
-        return 0 unless $only->{$tag};
-    } else {
-        return 0 if $self->suppressed($tag);
-    }
+    return 0 if $self->suppressed($tag);
     my $severity = $info->severity;
     my $certainty = $info->certainty;
 
@@ -788,7 +736,7 @@ Returns true if the given tag would be suppressed given the current
 configuration, false otherwise.  This is different than displayed() in
 that a tag is only suppressed if Lintian treats the tag as if it's never
 been seen, doesn't update statistics, and doesn't change its exit status.
-Tags are suppressed via only(), profile() or suppress().
+Tags are suppressed via profile().
 
 =cut
 
@@ -796,10 +744,6 @@ Tags are suppressed via only(), profile() or suppress().
 
 sub suppressed {
     my ($self, $tag) = @_;
-    if (keys %{ $self->{only_issue} }) {
-        return 1 unless $self->{only_issue}{$tag};
-    }
-    return 1 if $self->{suppress}{$tag};
     return 1 if $self->{profile} and not $self->{profile}->get_tag ($tag);
     return;
 }
