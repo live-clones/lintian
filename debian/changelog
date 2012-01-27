@@ -152,17 +152,24 @@ lintian (2.5.5) UNRELEASED; urgency=low
     + [NT] Added support for the virtual "GROUP" type in Lab Queries.
       This will make Lintian select all packages related to a given
       source (and version).
+    + [NT] Removed check loading code.  This has been moved into
+      Lintian::Profile.
+    + [NT] Always load a profile.
   * frontend/lintian-info:
     + [NT] Support new lintian.log format.
     + [NT] Support new override file format with -a.
     + [NT] Fixed the --profile argument, which now accepts the
       mandatory parameter it is supposed to.
 
+  * lib/Checker.pm:
+    + [NT] Removed, merged into frontend/lintian.
   * lib/Lintian/Architecture.pm:
     + [NT] New file.
   * lib/Lintian/Check.pm:
     + [NT] Do not check for missing uploader address as it cannot be
       done reliably anymore.
+  * lib/Lintian/CheckScript.pm:
+    + [NT] New file.
   * lib/Lintian/Collect/{Binary,Source}.pm:
     + [NT] Assume packages to be non-native when it cannot be
       accurately determined due to missing version field.
@@ -192,13 +199,21 @@ lintian (2.5.5) UNRELEASED; urgency=low
     + [NT] Catch recursively defined profiles when the Profile field
       contains a (slightly) different name than the Extends field of
       its parent.  (Closes: #655469)
+    + [NT] Handle loading of checks and tags.
   * lib/Lintian/Tag/Info.pm:
     + [NT] Accepted patch from Evan Broder to always output effective
       severity in tag descriptions.
+    + [NT] Removed code to load tags from checks.  This has moved to
+      Lintian::Profile.
   * lib/Lintian/Tags.pm:
     + [NT] Support architecture wildcards in overrides.
     + [NT] Emit "malformed-override" for architecture specific tags for
       unknown architectures and for "arch:all" packages.
+    + [NT] Use a Profile to determine if a tag is suppressed or not.
+
+  * man/lintian.pod.in:
+    + [NT] Removed the notes that some options disable loading of a
+      profile.  Lintian now always loads a profile when doing checks.
 
   * reporting/harness:
     + [NT] Removed useless "TODO" message from the log output.
@@ -206,6 +221,12 @@ lintian (2.5.5) UNRELEASED; urgency=low
     + [JW] Properly handle uploader names with commas.
     + [NT] Use the severities from profiles when generating tag pages.
       Based on patches from Evan Broder.  (Closes: #650712)
+    + [NT] Removed tag loading code, which has moved into
+      Lintian::Profile.
+    + [NT] Pass a profile to the templates (as $profile) instead of the
+      old %all hash.
+  * reporting/templates/tags-all.tmpl:
+    + [NT] Use $profile instead of the %all hash.
 
  -- Niels Thykier <niels@thykier.net>  Tue, 29 Nov 2011 18:42:37 +0100
 
