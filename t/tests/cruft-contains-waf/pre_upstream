@@ -1,0 +1,18 @@
+#!/bin/sh
+#
+# Time to create a waf binary...
+
+set -e
+
+dir="$1"
+
+cd "$dir"
+
+tar cjf waf-bin.tar.bz2 some-source.c
+cp waf.in waf
+echo "#==>" >> waf
+echo -n "#" >> waf
+perl -pe 's,\n,\#\*,go; s,\r,\#\%,go;' waf-bin.tar.bz2 >> waf
+echo >> waf
+echo "#<==" >> waf
+rm waf-bin.tar.bz2

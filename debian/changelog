@@ -12,6 +12,7 @@ lintian (2.5.5) UNRELEASED; urgency=low
       - package-uses-dh-exec-but-lacks-build-depends
       - preinst-uses-dpkg-maintscript-helper-without-predepends
       - shlib-in-multi-arch-foreign-package
+      - source-contains-waf-binary
       - syntax-error-in-control-file
       - syntax-error-in-debconf-template
     + Removed:
@@ -31,13 +32,15 @@ lintian (2.5.5) UNRELEASED; urgency=low
       to David Bremner for the report.  (Closes: #652602)
     + [NT] Emit a tag if there is a syntax error in d/control rather
       than just aborting the rest of the check.
-  * checks/cruft:
+  * checks/cruft{,.desc}:
     + [NT] Added dh-autoreconf as a build-depends alternative to
       libtool for suppressing ancient-libtool warning.  Thanks to
       Felix Geyer for the report.  (Closes: #650325)
     + [NT] Accepted patch from Paul Wise to detect COFF object
       files as Win32 binaries.
     + [NT] Properly handle unpacked being a symlink.
+    + [NT] Accepted patch from Luca Falavigna to detect waf files
+      with a binary payload.  (Closes: #654523)
   * checks/debconf:
     + [RA] Recognize Perl uses of debconf templates via metaget or
       settitle.

@@ -151,6 +151,8 @@ for my $file (keys(%$file_info)) {
         tag 'source-contains-prebuilt-binary', $file;
     } elsif ($file_info->{$file} =~ m/\b(?:PE(?:32|64)|COFF executable)\b/) {
         tag 'source-contains-prebuilt-windows-binary', $file;
+    } elsif ($file_info->{$file} =~ m/data/ and $file =~ /\bwaf$/) {
+        tag 'source-contains-waf-binary', $file;
     }
 }
 
