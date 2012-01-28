@@ -22,7 +22,6 @@
 # Keep: usr/lib32
 # Keep: usr/lib64
 # Keep: usr/local/lib
-# Keep: usr/X11R6/lib
 
 lib
 lib/alpha-darwin
@@ -297,7 +296,6 @@ lib/x86_64-solaris
 lib/x86_64-uclinux-uclibc
 lib32
 lib64
-usr/X11R6/lib
 usr/lib
 usr/lib/alpha-darwin
 usr/lib/alpha-freebsd
